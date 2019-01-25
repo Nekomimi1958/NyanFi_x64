@@ -1527,7 +1527,7 @@ bool is_quot(UnicodeString s)
 //---------------------------------------------------------------------------
 UnicodeString add_quot_if_spc(UnicodeString s)
 {
-	if (ContainsStr(s, " ") || ContainsStr(s, "Å@")) s = "\"" + s + "\"";
+	if (!is_quot(s) && (ContainsStr(s, " ") || ContainsStr(s, "Å@"))) s = "\"" + s + "\"";
 	return s;
 }
 

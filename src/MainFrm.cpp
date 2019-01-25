@@ -4898,7 +4898,7 @@ void __fastcall TNyanFiForm::SetFlItemWidth(TStringList *lst, int tag)
 		if (x_lst->IndexOf(fext)==-1) x_lst->Add(fext);
 	}
 	for (int i=0; i<x_lst->Count; i++) {
-		lst_stt->lwd_fext = std::max(lst_stt->lwd_fext, cv->TextWidth(x_lst->Strings[i]));
+		lst_stt->lwd_fext = std::max(lst_stt->lwd_fext, get_TextWidth(cv, x_lst->Strings[i], is_irreg));
 	}
 	lst_stt->lwd_fext = std::min(lst_stt->lwd_fext, lst_stt->lwd_fext_max);	//�ő啝
 	if (is_irreg) lst_stt->lwd_fext += lst_stt->lwd_fext/lst_stt->lwd_half;
@@ -14995,7 +14995,9 @@ void __fastcall TNyanFiForm::FileListOnlyActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::FileRunActionExecute(TObject *Sender)
 {
 	if (!ActionParam.IsEmpty()) {
-		if (!Execute_ex("cmd", "/c start " + ActionParam, CurPath[CurListTag], "H"))
+		UnicodeString prm = add_quot_if_spc(ActionParam);
+		if (is_quot(prm)) prm.Insert("\"\" ", 1);
+		if (!Execute_ex("cmd", "/c start " + prm, CurPath[CurListTag], "H"))
 			SetActionAbort(USTR_FaildExec);
 	}
 	else if (!usr_SH->ShowFileRun())
