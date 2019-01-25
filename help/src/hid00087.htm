@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>電卓</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>電卓</h1>
+<p>
+<a href="hid00005.htm#Calculator">Calculator</a> コマンドを実行すると<b>電卓</b>が開きます。また、多くの入力欄の右クリックメニューからも利用できます。 <br>
+入力欄に計算式を入力し、<span class="btn_frame">ENTER</span>キーを押してください。結果が表示され、下の履歴コンボボックスに計算式が追加されます。計算操作は、履歴コンボボックス側でも同様に行えます。<br>
+なお入力欄と履歴コンボボックスのフォントは、<a href="hid00023.htm#Font">オプション設定 - フォント・配色</a> - フォント の「<b>電卓</b>」で指定できます。
+</p>
+
+<dl>
+<dt class="no_bg">計算式
+<dd>
+計算式では以下の表現が使えます。<br>
+
+<div class="spc_box">
+<b>10進整数</b>、<b>実数</b><br>
+<div class="indent1">
+カンマが含まれていてもかまいません。<br>
+　<b>例</b>: <span class="inp_box">1,234*12 = 14,808</span><br>
+実数では指数表記も使えます。<br>
+　<b>例</b>: <span class="inp_box">1.23456E-10*2E+3 = 2.46912E-07</span><br>
+自然数の末尾に <b>!</b> があると、階乗になります。<br>
+　<b>例</b>: <span class="inp_box">20! = 2432902008176640000</span><br>
+</div>
+</div>
+
+<div class="spc_box">
+<b>16進整数</b><br>
+<div class="indent1">
+&quot;<b>0x</b>&quot; で始まる数値は、16進数とみなされます。式中の数値が全て16進表記の場合は、答えも16進表記になります。<br>
+　<b>例</b>: <span class="inp_box">0x100+0xff = 0x1ff</span><br>
+単独の整数を入力すると、16進/10進が交互に変換されます(<a href="#ToolBtn">ツールボタン</a>でも可能)。<br>
+　<b>例</b>: <span class="inp_box">0x7fff = 32767</span><br>
+</div>
+</div>
+
+<div class="spc_box">
+<b>時間</b><br>
+<div class="indent1">
+<b>hh:mm:ss</b> または <b>hh:mm</b> は時間と見なします(内部では秒数に変換して処理)。<br>
+hh は24以上になってもかまいません。<br>
+　<b>例</b>: <span class="inp_box">10:14:40+15:10:20 = 25:25:00</span><br>
+演算によって次元が変わらない場合、結果も時間表記になります(秒以下は四捨五入)。<br>
+　<b>例</b>: <span class="inp_box">24:00/7 = 3:25:43</span><br>
+</div>
+</div>
+<br>
+
+<div class="spc_box">
+<b>括弧</b><br>
+<div class="indent1">
+(、) を多重に使えます。<br>
+　<b>例</b>: <span class="inp_box">(((1+2)*(3+4))+((5+6)*(7+8)))*9 = 1674</span><br>
+</div>
+</div>
+<br>
+
+<div class="spc_box">
+<b>二項演算子</b><br>
+<div class="indent1">
+<table border="0" cellpadding="0">
+<tr><td><b>+</b></td><td>加算</td></tr>
+<tr><td><b>-</b></td><td>減算</td></tr>
+<tr><td><b>*</b></td><td>乗算</td></tr>
+<tr><td><b>/</b></td><td>除算</td></tr>
+<tr><td><b>%</b></td><td>剰余 (左項を右項で割った余り)</td></tr>
+<tr><td><b>^</b></td><td>左項(底)を右項(指数)でべき乗 (^0.5にすれば平方根になります)</td></tr>
+<tr><td><b>&</b> または <b>and</b></td><td>ビット単位のAND (整数に対してのみ有効)</td></tr>
+<tr><td><b>xor</b></td><td>ビット単位のXOR (整数に対してのみ有効)</td></tr>
+<tr><td><b>|</b> または <b>or</b></td><td>ビット単位のOR (整数に対してのみ有効)</td></tr>
+</table>
+</div>
+
+<b>特殊機能</b><br>
+<div class="indent1">
+<table border="0" cellpadding="0">
+<tr><td><b>gcd</b></td><td>二つの整数の最大公約数</td></tr>
+<tr><td><b>lcm</b></td><td>二つの整数の最小公倍数</td></tr>
+</table>
+<div class="spc_box">
+<b>and</b>、<b>xor</b>、<b>or</b>、<b>gcd</b>、<b>lcm</b> については必ず前後に空白を入れてください。大文字・小文字は区別されません。<br>
+その他の演算子については、前後に空白があってもなくてもかまいません。<br>
+　<b>例</b>:<br>
+　<span class="inp_box">(3^2 + 4^2)^0.5 = 5</span><br>
+　<span class="inp_box">(0xaa|0x55) xor 0x0f = 0xf0</span><br>
+　<span class="inp_box">(27 gcd 36) * (27 lcm 36) = 972</span><br>
+</div>
+</div>
+</div>
+<br>
+
+<div class="spc_box">
+<b>関数</b><br>
+<div class="indent1">
+<b>sin</b>、<b>cos</b>、<b>tan</b>　三角関数<br>
+<b>asin</b>、<b>acos</b>、<b>atan</b>　逆三角関数<br>
+<b>sinh</b>、<b>cosh</b>、<b>tanh</b>　双曲線関数<br>
+<b>log</b>　常用対数 (底10)<br>
+<b>ln</b>　自然対数 (底 e)<br>
+<b>abs</b>　絶対値<br>
+<b>ceil</b>　最も近い整数に切り上げ<br>
+<b>floor</b>　最も近い整数に切り下げ<br>
+関数名と引数を空白で区切った表記(例: sin 45)と、括弧を用いた表記(例: sin(45)) のどちらも可能です。<br>
+関数名の大文字・小文字は区別されません。<br>
+　<b>例</b>:<br>
+　<span class="inp_box">(sin 30)^2 +(cos 30)^2 = 1</span><br>
+　<span class="inp_box">atan(tan 45) = 45</span><br>
+　<span class="inp_box">20*log(1/100) = -40</span><br>
+<div class="spc_box">
+後述の<a href="#UserDef">ユーザ定義ファイル</a>によって、関数をマクロ定義することもできます。<br>
+</div>
+</div>
+</div>
+<br>
+
+<div class="spc_box">
+<b>優先順位</b><br>
+<table border="0" cellpadding="0" class="indent1">
+<tr>
+<td>
+1 高　<br>
+2 ↑<br>
+3 <br>
+4 <br>
+5 <br>
+6 <br>
+7 <br>
+8 ↓<br>
+9 低<br>
+</td>
+<td>　</td>
+<td>
+(、)<br>
+関数<br>
+^<br>
+*、 /、 %<br>
++、-<br>
+&、and<br>
+xor<br>
+|、or<br>
+gcd、lcm<br>
+</td>
+</tr>
+</table>
+</div>
+<br>
+
+<div class="spc_box" id="Constant">
+<b>定義済み定数</b><br>
+<div class="indent1">
+式の中で、以下の定数名を使えます(<a href="#ToolBtn">ツールボタン</a>からも参照可能)。大文字・小文字は区別されません。<br>
+<b>pi</b> = 3.141592653589793　　円周率<br>
+<b>e</b> = 2.718281828459045　　自然対数の底<br>
+<b>c</b> = 299792458　　真空中の光速度 [m*sec^-1]<br>
+<b>g</b> = 9.80665　　重力加速度 [m/sec^2]<br>
+<b>h</b> = 6.6260755E-34　　プランク定数 [Js]<br>
+<b>ec</b> = 1.60217733E-19　　素電荷 [C]<br>
+<b>u0</b> = 1.25663706E-6　　真空の透磁率 [H/m]<br>
+<b>e0</b> = 8.85418782E-12　　真空の誘電率 [F/m]<br>
+<b>k</b> = 1.380658E-23　　ボルツマン定数 [J/K]<br>
+<b>NA</b> = 6.0221367E+23	アボガドロ定数 [1/mol]<br>
+<b>Now</b> = hh:nn:ss	　計算時の現在時刻(変数)<br>
+<div class="spc_box">
+　<b>例</b>:<br>
+　<span class="inp_box">-(e^(2*pi)) = -535.4916555247645</span><br>
+　<span class="inp_box">1/c^2 = 1.112650056053618E-17</span><br>
+　<span class="inp_box">now+1:30 = 21:38:58</span><br>
+</div>
+
+<div class="spc_box">
+後述の<a href="#UserDef">ユーザ定義ファイル</a>によって、定数をユーザ定義することもできます。<br>
+</div>
+
+</div>
+</div>
+<br>
+
+<dt class="no_bg" id="ToolBtn">ツールボタン
+<dd>
+画面下部にあるツールバーには以下のボタンがあります。<br>
+
+<div class="spc_box">
+<span class="btn_frame">DEG</span>/<span class="btn_frame">RAD</span>/<span class="btn_frame">GRAD</span><br>
+　三角関数、逆三角関数での角度の単位(度/ラジアン/グラード)を切り替えます。押すたびに順に切り替わります。<br>
+</div>
+
+<div class="spc_box">
+<span class="btn_frame">DEFINE</span><br>
+　<a href="#Constant">定義済み定数</a>、ユーザ定義定数および関数を参照します。<br>
+　なお「<b>定義ファイルの編集</b>」を選ぶと、<a href="#UserDef">定義ファイル</a>をテキストエディタで開きます(無ければ新規作成)。<br>
+<span class="btn_frame">NOW</span><br>
+　現在時刻を入力します。<br>
+</div>
+
+<div class="spc_box">
+<span class="btn_frame">HEX</span>/<span class="btn_frame">DEC</span><br>
+　入力欄が整数の場合、16進/10進変換を行います。<br>
+<span class="btn_frame">NOT</span><br>
+　ビット単位のNOT (整数に対してのみ有効)。<br>
+</div>
+
+<div class="spc_box">
+<span class="btn_frame">AC</span><br>
+　入力欄をクリアします。<br>
+</div>
+<br>
+
+<dt class="no_bg" id="UserDef">ユーザ定義ファイル
+<dd>
+関数および定数は、ファイルでユーザ定義することができます。<br>
+定義ファイルは、<b>NyanFi</b> 実行ディレクトリに &quot;<b>Calculator.INI</b>&quot; という名前で作成してください。<span class="btn_frame">DEFINE</span>ボタンのメニューで「<b>定義ファイルの編集</b>」を選べは、新規作成された定義ファイルがテキストエディタで開かれます。<br>
+書式は一般的なINIファイルと同様です。<br>
+<div class="spc_box">
+<b>関数</b>のマクロ定義は、セクション名 <b>Function</b> に &quot;関数名(引数1[,引数2,引数3...])=定義式 [TAB] 説明&quot; という書式で記述します(説明は省略可)。関数名は、英数字および &quot;_&quot; で定義してください。大文字・小文字は区別されません。実際の計算式では、括弧を用いた表記で使用してください。<br>
+計算式にユーザ定義関数があると、定義にしたがってそれを展開してから実際の計算が行われます。その際、引数は括弧で囲んだ形に展開されます。例えば、SQRT(X)=X^0.5 と定義した場合、SQRT(2+3) は (2+3)^0.5 に展開されるため、定義の際に演算子の優先順位による影響を考慮する必要はありません。<br>
+
+<b>例</b>:　<small><span class="ctrl_text">[TAB]</span> はタブ文字</small><br>
+<pre class="example_box">
+[Function]
+cot(X)=1/tan(X)
+F2C(X)=(5.0/9.0)*(X-32.0) <span class="ctrl_text">[TAB]</span> 華氏→摂氏
+C2F(X)=X*(9.0/5.0)+32.0   <span class="ctrl_text">[TAB]</span> 摂氏→華氏
+hypot(A,B)=(A^2+B^2)^0.5  <span class="ctrl_text">[TAB]</span> 三角形の斜辺の長さ
+</pre>
+　<span class="inp_box">F2C(451) = 232.7777777777778</span><br>
+　<span class="inp_box">hypot(3,4) = 5</span><br>
+</div>
+
+
+<div class="spc_box">
+<b>定数</b>は、セクション名 <b>Constant</b> に &quot;定数名=値 [TAB] 説明&quot; という書式で記述してください(説明は省略可)。<br>
+<b>例</b>:　<small><span class="ctrl_text">[TAB]</span> はタブ文字</small><br>
+<pre class="example_box">
+[Constant]
+Tax=0.08         <span class="ctrl_text">[TAB]</span> 消費税
+me=9.1093897E-31 <span class="ctrl_text">[TAB]</span> 電子の静止質量
+</pre>
+</div>
+
+<div class="spc_box">
+<b>Option</b> セクションに <b>HideDefConst</b>=1 を設定すると、<span class="btn_frame">DEFINE</span>ボタンのメニューに<a href="#Constant">定義済み定数</a>を表示せずに、ユーザが定義した項目だけを表示するようにできます。<br>
+<pre class="example_box">
+[Option]
+HideDefConst=1
+</pre>
+</div>
+
+</dl>
+<br>
+
+<dl>
+<dt class="no_bg"><span class="tips">Tips</span>
+<dd>
+電卓を外部から呼び出して利用することもできます。
+<pre class="example_box">
+NyanFi.exe -XCalculator
+</pre>
+
+クリップボードを介した計算も可能です。この場合、<b>NyanFi</b> はアクティブになりません。
+<pre class="example_box">
+NyanFi.exe -XCalculator_CB
+</pre>
+
+</dl>
+<br><br>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>オプション設定 - 起動時</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>オプション設定 - 起動時</h1>
+<p><b>NyanFi</b> が起動したときの初期状態などを設定します。</p>
+<dl>
+<dt><img src="grpbox.png" alt="" border=0> 初期パス - 左／右
+<dd>起動した直後の、左右ファイルリストのパスとソート方法、パスマスクをそれぞれ設定します。<br>
+<img src="radio.png" alt="" border=0> <b>前回終了時のパス</b>、<img src="radio.png" alt="" border=0> <a href="hid00060.htm"><b>ワークリスト</b></a>、<img src="radio.png" alt="" border=0> <b>指定パス</b> のいずれかを指定できます。<br>
+なお<a href="hid00089.htm">起動時オプション</a>を指定している場合は、そちらが優先されます。<br>
+<br>
+パスマスクは <b>;</b> (セミコロン)で区切って複数指定できます。マスクの先頭に <b>!</b>があると除外になります(<a href="hid00005.htm#PathMaskDlg">→ PathMaskDlg</a>)。また先頭に :文字列: という書式でマスク名を指定できます(無指定の場合は「起動時」)。<br>
+<b>例</b>: <span class="inp_box">:テキスト:*.txt;*.ini</span><br>
+<br>
+<img src="chkbox.png" alt="" border=0> <b>初期パスを最初のタブで開く</b> をチェックすると、左右の初期パスは必ず最初のタブで開きます。チェックしていないと、左右の初期パスと一致する既存タブがあればそれで、なければ先頭に新たなタブを挿入して開きます。<br>
+
+<img src="chkbox.png" alt="" border=0> <b>初期パス以外のタブをホームに戻す</b> をチェックすると、初期パスを設定したタブ以外のすべてのタブを、ホームに戻します(→ <a href="hid00005.htm#TabHome">TabHome</a>)。<br>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> ウィンドウサイズ
+<dd>起動時のウィンドウサイズを指定します。<br>
+<img src="radio.png" alt="" border=0> <b>前回終了時のサイズ</b> または <img src="radio.png" alt="" border=0> <b>指定サイズ</b> を選択できます。<br>
+<b>指定サイズ</b> を選んだ場合、<img src="chkbox.png" alt="" border=0> <b>サイズと位置を固定</b> をチェックすると、ウィンドウのサイズおよび位置の変更を禁止できます。<br>
+この設定は、最初に起動した <b>NyanFi</b> にのみ適用されます。<a href="#Duplicate">二重起動</a>した場合は、前回二重起動したときの位置とサイズが復元されます。<br>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> 起動時に読み込むワークリスト
+<dd>起動時に読み込む<a href="hid00060.htm"><b>ワークリスト</b></a>を指定します。<br>
+<img src="radio.png" alt="" border=0> <b>前回終了時のワークリスト</b> または <img src="radio.png" alt="" border=0> <b>指定ワークリスト(ホーム)</b> を選択できます。<br>
+指定ワークリストは<b>ホームワークリスト</b>としても用いられ、ファイラーやイメージビュアーで <a href="hid00005.htm#HomeWorkList">HomeWorkList</a> コマンドによって呼び出せます。<br>
+なおファイル名にドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対パスとみなされます。<br>
+<br>
+
+<dt id="Duplicate"><img src="grpbox.png" alt="" border=0> 二重起動
+<dd>
+<img src="chkbox.png" alt="" border=0> <b>許可</b> をチェックすると、<b>NyanFi</b> を二重起動できます。<br>
+ただし、<a href="hid00089.htm">起動オプション</a>を指定した場合は二重起動されずに、最初に起動した <b>NyanFi</b> に対して起動オプションが渡されます。<br>
+<img src="chkbox.png" alt="" border=0> <b>終了時に、二重起動したNyanFiも終了する</b> をチェックすると、最初に起動した <b>NyanFi</b> を終了するときに、二重起動された他の <b>NyanFi</b> をすべて終了します。<br>
+なお、この設定にかかわらず、<a href="hid00024.htm#Other">オプション設定 - 一般2</a> で「<b>最小化時にタスクトレイに格納</b>」がチェックされていると、トレイアイコンの右クリックメニューで終了したり、最初に起動した <b>NyanFi</b> を終了したりしたときに、すべての <b>NyanFi</b> が終了します。<br>
+また、最初に起動した <b>NyanFi</b> で <a href="hid00005.htm#Exit">Exit</a>_NX コマンドを実行すると、設定にかかわらず、二重起動した他の <b>NyanFi</b> を終了させないで終了することができます。<br>
+<br>
+
+二重起動した <b>NyanFi</b> では以下のような動作になります。<br>
+<div class="indent1">
+・タイトルに連番が付加されます(NyanFi-2、NyanFi-3 …)。<br>
+・呼び出しホットキーは、受け付けません。<br>
+・INIファイルを保存しません。オプション設定は行えず、各種ダイアログの設定を変更してもINIファイルには反映されません。<br>
+・終了時には、メイン画面の位置・サイズ情報などが最初に起動した <b>NyanFi</b> に送られ、INIファイルに反映されて、次回二重起動時にそれが復元されます。<br>
+・ログファイルは個別に保存されます(tasklog2.txt、tasklog3.txt…)。<br>
+・<a href="hid00005.htm#OptionDlg">OptionDlg</a>、<a href="hid00005.htm#ToolBarDlg">ToolBarDlg</a>、<a href="hid00006.htm#SetColor">SetColor</a>、<a href="hid00005.htm#EditIniFile">EditIniFile</a>、<a href="hid00005.htm#CheckUpdate">CheckUpdate</a>、<a href="hid00005.htm#UpdateFromArc">UpdateFromArc</a>、<a href="hid00005.htm#ExitDupl">ExitDupl</a>、<a href="hid00005.htm#Restart">Restart</a> コマンドは実行できません。<br>
+・複数起動されている状態で、最初の <b>NyanFi</b> を終了させてから新たに二重起動した場合、そのタイトルには連番が付加されず、最初に起動されたものとして扱われます。<br>
+<br>
+</div>
+<p class="note_text">
+<b>※</b>二重起動は、<b>NyanFi</b> から <a href="hid00005.htm#Duplicate">Duplicate</a> コマンドで行ってください。<br>
+また、外部から二重起動する場合は、メインの <b>NyanFi</b> の起動が完了している状態で行ってください。短時間で連続して起動すると、両方がメイン状態になって正常に動作しない恐れがあります。
+</p>
+<br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> スプラッシュ画面を表示
+<dd>起動時にスプラッシュ画面を表示します。<br>
+</dl>
+<br><br><br><br>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>画像ファイルの変換ダイアログ</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>画像ファイルの変換ダイアログ</h1>
+<p>
+ファイラーで <a href="hid00005.htm#ConvertImage">ConvertImageg</a> コマンドを実行するとこのダイアログが開きます。<br>
+選択中(無ければカーソル位置)の画像ファイル(メタファイルを含む)を、別形式に変換したり、縮小・拡大したりして、反対パスに出力します。<br>
+</p>
+
+<dl>
+<dt><img src="grpbox.png" alt="" border=0> 変換形式
+<dd>変換する形式を選択します。<br>
+<b>.BMP</b>、<b>.JPG</b>、<b>.GIF</b>、<b>.PNG</b>、<b>.TIF</b>、<b>.HDP</b> のいずれかに変換可能です。<br>
+<b>.JPG</b> および <b>.HDP</b> の場合、画像の品質を指定できます。<br>
+また <b>.JPG</b> では、<b>YCrCb</b> サブサンプリングを指定できます。<br>
+<b>.TIF</b> の場合、圧縮モードを指定できます。<br>
+なお、元ファイルのExif情報は保存されません。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> グレースケール化
+<dd>画像をグレースケールに変換します。<br>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> 縮小・拡大
+<dd>画像の縮小・拡大方法を設定します。<br>
+選択した方法にしたがって、必用な値を設定してください。<br>
+また、適当な補間<b>アルゴリズム</b>を選択してください。<br>
+入力がメタファイル(<b>.WMF</b>、<b>.EMF</b>)の場合は、ベクタイメージとして縮小・拡大しますので、補間アルゴリズムは無視されます。またこの場合、<b>余白色</b>が背景色として用いられます。<br>
+また、入力が <b>.PNG</b> の場合はアルファチャンネルに、<b>.GIF</b> の場合は透過に対応し、<b>余白色</b>が背景色として用いられます。<br>
+<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> プレビューデータを利用しない(WIC)
+<dd><b>WIC</b> コーデックで画像を読み込む際に、プレビューデータを利用しません。RAWファイルの場合、使用するコーデックによっては処理時間が長くなる可能性があります。また、コーデック側の設定などによっては、プレビュー以外のデータを取得できない場合があります。<br>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> ファイル名の変更
+<dd>変換したファイル名に変更を加えます。<br>
+「<b>ファイル名の先頭に文字列を挿入</b>」または「<b>ファイル名主部の末尾に文字列を追加</b>」のいずれかが可能です。<br>
+<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> タイムスタンプを維持する
+<dd>
+変換したファイルのタイムスタンプを元ファイルのものに合わせます。<br>
+</dl>
+<br><br>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>ワークリスト</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>ワークリスト</h1>
+<p>
+ワークリストとは、いろいろな場所にあるファイルやディレクトリの参照リストです。<br>
+よく使うファイルやディレクトリを登録しておくと素早くアクセスできて便利です。<br>
+</p>
+
+<dl>
+<dt class="no_bg">操作
+<dd>
+ファイラーで <a href="hid00005.htm#WorkList">WorkList</a> コマンドを実行すると、カレント側にワークリストが表示されます。<br>
+また、ワークリスト・ファイル(<b>.nwl</b>)上で<span class="btn_frame">ENTER</span>キーを押すと、それが読み込まれてワークリスト表示になります。<br>
+<a href="hid00007.htm">イメージビュアー</a>では、<b>WorkList</b> コマンドで、ワークリストの画像ファイルなどを表示できます。
+<div class="spc_box">
+通常のファイルリスト表示に戻るには、<b>WorkList</b> コマンドを再び実行するか、<a href="hid00005.htm#ReturnList">ReturnList</a> コマンドを実行してください。<br>
+<span class="btn_frame">ESC</span>キーに押すことによっても戻れます(<a href="hid00063.htm">ExeCommands</a> が割り当てられている場合を除く)。
+</div>
+
+<div class="spc_box">
+タブバーを利用している場合、タブの設定ダイアログ(<a href="hid00005.htm#TabDlg">TabDlg</a>)でワークリスト(そのまま、ホーム、指定)を指定できます。タブを切り替えると、ワークリストも指定されているものに切り替わります。<br>
+特定のタブでだけ用いるディレクトリは、「<a href="hid00054.htm">登録ディレクトリ</a>」ダイアログよりもワークリストに登録した方が便利かもしれません。
+</div>
+
+<div class="spc_box">
+ワークリストへの登録は、反対パスからのコピー(<a href="hid00005.htm#Copy">Copy</a>)で行います。<br>
+ソートが無効な場合(後述を参照)、<a href="hid00009.htm#WorkList">オプション設定 - 一般 - ワークリスト</a> で「<b>カーソル位置に登録</b>」をチェックしていると、ワークリストのカーソル位置(点線表示)に項目が挿入されます。<br>
+ワークリストで削除(<a href="hid00005.htm#Delete">Delete</a>)を行うと、登録から外されます。この場合、元のファイルやディレクトリそのものは削除されません。<br>
+ワークリスト内容が変更されている場合、<a href="hid00004.htm#DirInfo">ディレクトリ情報</a>のワークリスト名に <b>*</b> (アスタリスク)が表示されます。<br>
+</div>
+
+<div class="spc_box">
+<a href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドでは、反対パスをカーソル位置のファイルのパスに変更します。
+</div>
+
+<div class="spc_box">
+<b>編集メニュー</b> - [<b>ファイルにエイリアスを設定</b>] や <a href="hid00005.htm#SetAlias">SetAlias</a> (<a href="hid00005.htm#RenameDlg">RenameDlg</a> でも可)コマンドで、ファイルにエイリアス(別名)を設定できます。エイリアスが設定されていると、リストでファイル名の代わりに表示されます(拡張子はそのまま)。
+</div>
+
+<dt class="no_bg">オプション設定
+<dd>
+<a href="hid00009.htm#WorkList">オプション設定 - 一般 - ワークリスト</a> で「<b>項目をソートしない</b>」をチェックしていると、リストがソートされません(
+<a href="hid00005.htm#SortDlg">SortDlg</a> コマンドを禁止)。この場合、ドラッグ＆ドロップや <a href="hid00005.htm#WorkItemDown">WorkItemDown</a>、<a href="hid00005.htm#WorkItemUp">WorkItemUp</a>、 <a href="hid00005.htm#WorkItemMove">WorkItemMove</a> コマンドで項目を自由に並べ替えることができます。また、編集メニューや <a href="hid00005.htm#InsSeparator">InsSeparator</a> コマンドによって、セパレータ(区切り線)を挿入できます。<br>
+なお「<b>項目をソートしない</b>」をチェックしていない場合でも、ワークリストにセパレータが含まれていると、ソートされません。<br>
+
+<div class="spc_box">
+<a href="hid00009.htm#WorkList">オプション設定 - 一般 - ワークリスト</a> で「<b>項目の自動削除</b>」をチェックしていると、ワークリストの読み込みや更新の際に、存在しない項目が自動的に削除(登録解除)されます。<br>
+チェックを外していると、存在しない項目は「<b>無効な項目の文字色</b>」で表示されます。
+</div>
+
+<dt class="no_bg">ワークリストファイル
+<dd>
+ワークリストの内容は、デフォルトでは、<b>NyanFi</b> のあるディレクトリに &quot;<b>WORKLIST.nwl</b>&quot; という名前で終了時に保存されます。<br>
+これは、登録されている項目を一行ずつフルパス付ファイル名で記述したものです。エイリアスが設定されている場合は、ファイル名の後に TAB で区切って付加されます。またセパレータは、ファイル名無しでエイリアスが &quot;<b>-</b>&quot; になります(行頭 TAB に -)。ファイルは直接編集してもかまいません。<br>
+
+<div class="spc_box">
+<b>例</b>: <small><span class="ctrl_text">[TAB]</span> はタブ文字</small>
+<pre class="example_box">
+D:\NyanFi\
+D:\NyanFi\NyanFi.chm <span class="ctrl_text">[TAB]</span> NyanFiのヘルプ
+<span class="ctrl_text">[TAB]</span> -
+D:\NyanFi\cmd\FindTag_Doc.nbt <span class="ctrl_text">[TAB]</span> タグ検索[Doc]
+</pre>
+</div>
+
+<div class="spc_box">
+ファイルメニューで、新規ワークリストを作成(<a href="hid00005.htm#NewWorkList">NewWorkList</a> )したり、現在のワークリストに名前を付けて保存したり(<a href="hid00005.htm#SaveAsWorkList">SaveAsWorkList</a>)、既存のファイルを読み込んだりできます(<a href="hid00005.htm#LoadWorkList">LoadWorkList</a>)。<br>
+また <a href="hid00005.htm#SaveAsWorkList">SaveAsWorkList</a>_FL コマンドを用いると、カレントのファイルリスト(仮想ディレクトリは除く)または検索結果リストの内容に名前を付け、ワークリストとして保存できます。<br>
+</div>
+<div class="spc_box">
+別のワークリストに切り替えると、直前に使用していたワークリストは自動的に保存されます(無名だった場合は「ワークリストに名前を付けて保存」ダイアログが出ます)。<br>
+保存に失敗した場合、再試行の確認が出ます。これをキャンセルするとファイル名の末尾に <b>.$$$</b> を付加して一時保存されます。<br>
+なお、当該ワークリスト・ファイルのタイムスタンプが変化していたら、保存せずに変更内容を破棄するかを確認するメッセージが出ます。また、使用中のワークリスト・ファイルを外部で更新した場合、<b>NyanFi</b> がアクティブになったときや、ワークリストを開いたときに、再読み込みを促す確認メッセージが出ます。
+</div>
+</dl>
+<br><br>
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>NyanFi が用いるファイル</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1><b>NyanFi</b> が用いるファイル</h1>
+
+<p>
+以下は、<b>NyanFi</b> が用いる設定/定義ファイルやログです。<br>
+重要と思われるものはバックアップしておくことをお勧めします。<br>
+</p>
+<p class="note_text">UTF-8のファイルはBOM付きで保存します。BOMがないと正しく読み込めない場合があります。</p>
+<br>
+
+<dl>
+<dt>NyanFi.INI　<span class="small_nrm">(デフォルト)</span>
+<dd><b>NyanFi</b> の設定情報が保存されています。レジストリは使用していません。<br>
+※<a href="hid00089.htm">起動時オプション</a>(-I)で指定する場合、任意の名前を使用可能。<br>
+
+<dt>Highlight.INI
+<dd><a href="hid00006.htm">テキストビュアー</a>での構文強調表示をユーザ定義できます。<br>
+<a href="hid00084.htm">→ 構文強調表示定義ファイル</a><br>
+
+<dt>DirHistory.INI
+<dd>
+全体としてのディレクトリ履歴を、INIファイルではなく別ファイルとして保存できます。これによって履歴数の制限がなくなります。<br>
+<a href="hid00009.htm#DirHistoryINI">→ オプション設定 - 一般 - ディレクトリ履歴 - 全体履歴を別ファイルに保存</a><br>
+
+<dt>Distribute.INI　<span class="small_nrm">(デフォルト)</span>
+<dd>振り分けダイアログでの登録内容を、INIファイルではなく別ファイルとして保存できます。<br>
+※任意の名前も使用可能。<br>
+<a href="hid00077.htm#DistributeINI">→ 振り分けダイアログ - 振り分け登録ファイル</a>
+
+<dt>Calculator.INI
+<dd><a href="hid00087.htm">電卓</a>で用いる関数および定数をユーザ定義できます。<br>
+<a href="hid00087.htm#UserDef">→ 電卓 - ユーザ定義ファイル</a><br>
+
+<dt id="Swatchbook">Swatchbook.INI
+<dd>色見本のユーザ定義ファイルです。各種配色設定でスポイト使用時に表示される色見本に用いられます。<br>
+実行ディレクトリにこのファイルがあると <b>NyanFi</b> 起動時に読み込まれます。ファイルがない場合はデフォルトの色見本が表示されます。<br>
+<div class="spc_box">
+表示色を変更したい場合は、設定メニュー - 「<b>色見本定義ファイルの編集</b>」で行ってください。<b>Swatchbook.INI</b> (なければデフォルトで新規作成)がテキストエディタで開かれ、<b>NyanFi</b> 側では再読み込みの確認メッセージが出ます。<br>
+色は、[<b>Swatchbook</b>] セクションの <b>Color001</b> ～ <b>Color112</b> に2桁16進数のRRGGBB形式で指定します。113～128番目までの16色は、「色の設定」ダイアログで作成した色になります。<br>
+アーカイブの <b>sample_ini</b> ディレクトリには、デフォルトとは異なる色見本のサンプルファイルがあります。<br>
+</div>
+<div class="spc_box">
+なお名前が Swatchbook で始まり、1行目が &quot;[Swatchbook]&quot; の .INI ファイル(アーカイブ内は除く)は、イメージプレビューで内容を確認できます。<br>
+</div>
+
+<dt id="FontSample">FontSample.INI
+<dd>フォントファイルをイメージプレビューでサンプル表示する際の内容を定義できます。<br>
+実行ディレクトリにこのファイルがあると <b>NyanFi</b> 起動時に読み込まれます。ファイルがない場合はデフォルトで表示されます。<br>
+<div class="spc_box">
+表示内容を変更したい場合は、設定メニュー - 「<b>フォントサンプル定義ファイルの編集</b>」で行ってください(フォントを表示しているイメージプレビューの右クリックメニューからも可能)。<b>FontSample.INI</b> (なければデフォルトで新規作成)がテキストエディタで開かれ、<b>NyanFi</b> 側では再読み込みの確認メッセージが出ます。<br>
+[<b>FontSample</b>] セクションで以下のキーを設定できます。<br>
+<table border="0" cellpadding="0.5em">
+<tr><td><b>Size</b></td><td>フォントサイズ</td></tr>
+<tr><td><b>BgCol</b></td><td>背景色(2桁16進数によるRRGGBB形式)</td></tr>
+<tr><td><b>FgCol</b></td><td>文字色(2桁16進数によるRRGGBB形式)</td></tr>
+<tr><td valign="top"><b>Text1</b> ～</td><td>表示内容です。デフォルトでは Text4 までの4行ですが、Text5 以降を指定すれば行を増やせます。</td></tr>
+<tr><td valign="top" nowrap><b>Symbol1</b> ～</td><td>シンボルフォントの場合、Text1～の代わりに表示される内容です。対応する通常の文字で指定してください。</td></tr>
+<tr><td valign="top"><b>ShowGrid</b></td><td>1行目のサンプルに各種基準線を表示します(1 で表示、0 で非表示)。<br>
+上端、内部レディング、ベースライン、下端を表示します。フォントによっては位置が重なる場合があります。</td></tr>
+<tr><td><b>GridColor</b></td><td>基準線の色(2桁16進数によるRRGGBB形式)</td></tr>
+</table>
+</div>
+
+<dt>xxxx.INI
+<dd>現在のタブバーの状態(ディレクトリ履歴を含む)を、<a href="hid00005.htm#SaveAsTabGroup">SaveAsTabGroup</a> コマンドでタブグループとして保存できます。<br>
+保存したファイルは、<a href="hid00005.htm#LoadTabGroup">LoadTabGroup</a> コマンドで読み込んで復元できます。<br>
+また <a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>タブグループ</b>」をチェックしていると、<a href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
+
+<dt>.nyanfi[_ユーザ名]<br>
+<dd>ディレクトリにこのファイルがあると、カレント側でそこに移動したとき、ファイラー設定を自動的に変更できます。<br>
+
+<a href="hid00075.htm">→ .nyanfi ファイルによるファイラー設定</a><br>
+
+<dt>TAGDATA.TXT
+<dd>ファイルやディレクトリ付けられたタグ(ラベル)情報が保存されます。<br>
+<a href="hid00088.htm">→ タグによるファイル管理</a><br>
+
+<dt>WORKLIST.nwl　<span class="small_nrm">(デフォルト)</span>
+<dd>ワークリストファイルです。ファイルやディレクトリの参照リストで、よく使うものを登録しておくと素早くアクセスできます。<br>
+※任意の名前を使用可能。<br>
+<a href="hid00060.htm">→ ワークリスト</a><br>
+
+<dt>xxxx.nbt
+<dd>一連の処理を記述したコマンドファイルです。制御文などを用いたバッチ処理も可能です。<br>
+<a href="hid00063.htm">→ ExeCommands コマンド</a>　<a href="hid00067.htm">→ コマンドファイル一覧</a>
+
+<dt>xxxx.txt
+<dd>ポップアップメニュー用の定義ファイルです。<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a> コマンドで表示できます。<br>
+一行目に &quot;;[MenuFile]&quot; と記述しておくと、<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>メニュー定義</b>」をチェックすることで <a href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
+
+<dt>xxxx.txt
+<dd>検索結果リストを <a href="hid00005.htm#SaveAsResultList">SaveAsResultList</a> コマンドで保存できます。<br>
+内容はワークリストと同様ですが、先頭に &quot;;[ResultList]&quot; という識別行が、その後に &quot;;&quot; で始まるコメントの形で検索情報が付加されます。<br>
+保存したファイルは、<a href="hid00005.htm#LoadResultList">LoadResultList</a> コマンドで読み込んで再利用できます。<br>
+また <a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>結果リスト</b>」をチェックしていると、<a href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
+
+<dt>WEBMAP.HTM
+<dd>
+画像ファイルのExif GPS情報によって地図(Googleマップ)を表示する際のテンプレートです。<br>
+存在しない場合はデフォルト設定で表示されます。<br>
+<a href="hid00005.htm#WebMap">→ WebMap</a><br>
+
+<dt>autorun.inf
+<dd>ドライブのルートにあって、アイコンが設定されている場合、ドライブ一覧などのアイコン表示にそれが用いられます。<br>
+<pre class="example_box">
+[autorun]
+icon=SSD.ico
+</pre>
+
+<dt>tasklog[n~m].txt
+<dd>タスクログです。終了時にログウィンドウの内容が保存されます。<br>
+二重起動された <b>NyanFi</b> では n を付加、m は世代数です。<br>
+
+<a href="hid00024.htm#Log">→ オプション設定 - 一般2 - ログ</a><br>
+
+<dt>renamelog.txt
+<dd>改名ログです。このファイルに基づいてアンドゥが可能です。<br>
+<a href="hid00005.htm#UndoRename">→ UndoRename</a>　<a href="hid00051.htm">→ 名前の変更ダイアログ</a><br>
+
+<dt>DriveLog.csv
+<dd><a href="hid00086.htm">ドライブ使用率推移</a>のログです。<br>
+
+</dl>
+<br><br>
+
+</body>
+</html>

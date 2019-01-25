@@ -1,0 +1,2884 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>コマンド</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+<h1>コマンド</h1>
+
+<p>
+ファイラーでは以下のコマンドを使用できます。<br>
+これらは、<a href="hid00016.htm">オプション設定 - キー設定</a>でキーに割り当てられます(2ストロークキー操作可能)。<br>
+コマンドによっては<b>パラメータ</b>の設定が必用です(書式: コマンド_パラメータ)。複数のパラメータを指定できる場合は ; (セミコロン)で区切ってください。<br>
+パラメータに文字列を指定できるコマンドの場合、先頭に :文字列: という書式で説明を付けると、キー割り当て一覧や2ストローク・ヒントの説明部分に表示されます。 <br>
+<b>例</b>:　FileEdit_:メモを編集:D:\hoge\memo.txt<br>
+<br>
+なお、<a href="hid00019.htm">オプション設定 - コマンド</a> で動作の設定を行えるものがあります。<br>
+<br>
+キーに割り当てた内容は、<b>一覧メニュー</b> - [<b>キー割り当て一覧</b>] や <a href="#KeyList">KeyList</a> コマンドで表示される <a href="hid00055.htm">キー割り当て一覧</a> で確認、実行できます。<br>
+また、あまり使わないコマンド、キーや<a href="hid00068.htm">ツールバー</a>に割り当てていないコマンドなどは、<a href="#InputCommands">InputCommands</a> コマンドの入力ボックスから実行するとよいかもしれません。
+</p>
+
+<div class="link_box">
+<a href="#AboutNyanFi">A</a> <a href="#BackDirHist">B</a> <a href="#CalcDirSize">C</a> <a href="#DateSelect">D</a> <a href="#EditHighlight">E</a> <a href="#FileEdit">F</a> <a href="#GetHash">G</a> <a href="#HelpContents">H</a> <a href="#ImageViewer">I</a> <a href="#JoinText">J</a> <a href="#KeyList">K</a> <a href="#Library">L</a> <a href="#Mark">M</a> <a href="#NameFromClip">N</a> <a href="#OpenADS">O</a> <a href="#Pack">P</a> <a href="#Reboot">R</a> <a href="#SaveAsResultList">S</a> <a href="#TabDlg">T</a> <a href="#UndoRename">U</a> <a href="#ViewHistory">V</a> <a href="#WatchTail">W</a> <a href="#XmlViewer">X</a> <a href="#ZoomIn">Z</a>　　<a href="#Appendix">付記</a>　　<a href="hid00100.htm#FL">→ コマンド索引</a> ／ <a href="hid00101.htm#FL">→ 機能別索引</a>
+</div>
+
+<dl class="indent1">
+
+<dt id="AboutNyanFi">AboutNyanFi
+<dd><b>NyanFi</b> のバージョン情報を表示します。
+
+<dt id="AlphaBlend">AlphaBlend<span class="pram_text">[_IN|[^]透明度]</span>
+<dd>メインウィンドウを透過表示にします。<br>
+パラメータに <b>IN</b> を指定すると、入力ボックスで透明度(0:透明～255:不透明)を指定できます。<br>
+パラメータで<b>透明度</b>を指定する場合、先頭に <b>^</b> を付けると、すでに透過表示なら解除、そうでなければ指定値で透過表示になります。<br>
+パラメータが指定されていないと透過表示が解除されます。<br>
+
+<div class="spc_box">
+<b>例</b>: 透明度128の透過表示と通常表示とをトグル切り替え<br>
+　AlphaBlend_^128<br>
+</div>
+
+<dt id="AddTab">AddTab<span class="pram_text">[_NX|_PR]</span>
+<dd>現在の左右ディレクトリの組み合わせをタブとして<b>タブバー</b>に追加します。<br>
+タブは、ディレクトリの切り替えボタンとして機能します。ファイルリストの状態や検索結果リストの内容などは保持されません。<br>
+ただし、通常のファイルリストの選択状態(ワークリストのセパレータは除く)については、タブ切り替え時に待避/復元されます。<br>
+<div class="spc_box">
+パラメータに <b>NX</b> を指定すると現在のタブの次に、 <b>PR</b> を指定すると現在のタブの前に、新しいタブが追加(挿入)されます。<br>
+</div>
+<a href="#DelTab">→ DelTab</a>　<a href="#MoveTab">→ MoveTab</a>　<a href="#SoloTab">→ SoloTab</a>　<a href="#TabDlg">→ TabDlg</a>　<a href="#ShowTabBar">→ ShowTabBar</a>
+
+<dt id="AddTag">AddTag<span class="pram_text">[_タグ[;タグ...]]</span><br>
+AddTag<span class="pram_text">_;</span>
+<dd>選択中(無ければカーソル位置)の項目に<b>タグ</b>を追加します。<br>
+ダイアログの入力欄に新たなタグを入力するか、既存のタグを一覧のチェックボックスで選択してください。<br>
+タグは <b>;</b> (セミコロン)で区切って複数指定できます。設定されているタグは、ファイル情報で確認できます。<br>
+なお既存のタグ名は、一覧の右クリックメニューから変更できます。<br>
+<div class="spc_box">
+パラメータに<b>タグ</b>を指定すると、ダイアログを出さずに直接追加できます。タグは、<b>;</b> (セミコロン)で区切って複数指定できます。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>;</b> (セミコロン) だけを指定すると、ダイアログの代わりにタグの入力ボックスが出ます。<br>
+</div>
+
+<a href="hid00088.htm">→ タグによるファイル管理</a><br>
+<a href="#DelTag">→ DelTag</a>　<a href="#SetTag">→ SetTag</a>　<a href="#FindTag">→ FindTag</a>　<a href="#TrimTagData">→ TrimTagData</a>
+
+<dt id="AppList">AppList<span class="pram_text">_FA|_FL|_FI|_AO|_LO|_LI</span>
+<dd><a href="hid00076.htm">アプリケーション一覧</a>が開き、実行中のアプリケーションが表示されます。<br>
+アプリケーションの切り替え、終了、ウィンドウ操作、実行ファイル情報のコピーなどが可能です。<br>
+また、指定ディレクトリ下に置かれたショートカットを一覧表示する簡易ランチャーも備えています。<br>
+
+<div class="spc_box">
+パラメータに <b>FA</b> を指定すると、開いたとき一覧側にフォーカスします。<br>
+また <b>FL</b> を指定するとランチャー側にフォーカス、 <b>FI</b> を指定するとランチャー側をインクリメンタルサーチモードにしてフォーカスします。<br>
+<b>AO</b> を指定すると、一覧のみを表示します。<br>
+<b>LO</b> を指定すると、ランチャーのみを表示します。<br>
+<b>LI</b> を指定すると、ランチャーのみを表示し、インクリメンタルサーチモードにします。<br>
+</div>
+<a href="hid00019.htm#AppList">→ オプション設定 - コマンド</a><br>
+
+<dt id="BackDirHist">BackDirHist
+<dd><a href="hid00057.htm">ディレクトリ履歴</a>を戻ります。<br>
+履歴は、タブ毎に、左右のリストについて個別に管理されます。<br>
+<a href="hid00009.htm#DirHistory">→オプション設定 - ディレクトリ履歴</a><br>
+<a href="#ForwardDirHist">→ ForwardDirHist</a>　<a href="#DirHistory">→ DirHistory</a>　<a href="#PopDir">→ PopDir</a>
+
+<dt id="Backup">Backup<span class="pram_text">[_設定名]</span>
+<dd>カレントパスを反対パスへバックアップします。同名ファイルがある場合、最新なら上書きコピーします。<br>
+設定により、サブディレクトリを含むコピーや、ミラーリング、同期バックアップが可能です。なお、カレントの選択状態は無視されます。<br>
+「<a href="hid00071.htm">バックアップ</a>」ダイアログが開きますので、必要に応じて設定を行ってください。<br>
+あらかじめダイアログで設定内容が保存されている場合、パラメータで<b>設定名</b>を指定すれば、ダイアログを出さずに直ちにバックアップを開始することもできます(<a href="hid00063.htm#MsgOff">MsgOff</a> 補助コマンドで確認メッセージの抑止可能)。<br>
+<a href="#Copy">→ Copy</a>　<a href="#CopyTo">→ CopyTo</a>　<a href="#RegSyncDlg">→ RegSyncDlg</a>
+
+<dt id="BgImgMode">BgImgMode<span class="pram_text">_OFF|_[^]1|_[^]2|_[^]3</span>
+<dd>背景画像の表示モードを設定します。<a href="hid00010.htm#BgImage">→ オプション設定 - デザイン - 「背景画像表示」</a>の設定に対応しています。<br>
+パラメータに <b>OFF</b> を指定すると「<b>非表示</b>」、<b>1</b> で「<b>2画面にわたって表示</b>」、<b>2</b> で「<b>それぞれに表示</b>」、<b>3</b> で「<b>デスクトップ背景を表示</b>」となります。数字の頭に <b>^</b> を付けると、すでにそのモードなら非表示になります。<br>
+<a href="#LoadBgImage">→ LoadBgImage</a>
+
+<dt id="BinaryEdit">BinaryEdit
+<dd>選択中(無ければカーソル位置)のファイルをバイナリエディタで開きます。使用するバイナリエディタは、<a href="hid00012.htm">オプション設定 - エディタ</a>で設定しておいてください。<br>
+なおアーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
+<a href="#FileEdit">→ FileEdit</a>
+
+<dt id="BorderLeft">BorderLeft
+<dd>ファイルリストの境界を左に移動します。<br>
+<a href="hid00019.htm#BorderLeftRight">→ オプション設定 - コマンド</a><br>
+<a href="#WidenCurList">→ WidenCurList</a>　<a href="#EqualListWidth">→ EqualListWidth</a>
+
+<dt id="BorderRight">BorderRight
+<dd>ファイルリストの境界を右に移動します。<br>
+<a href="hid00019.htm#BorderLeftRight">→ オプション設定 - コマンド</a><br>
+<a href="#WidenCurList">→ WidenCurList</a>　<a href="#EqualListWidth">→ EqualListWidth</a>
+
+<dt id="CalcDirSize">CalcDirSize<span class="pram_text">[_[FC][;LO][;CC][;LS][;SA|SD][;ファイル名]</span>
+<dd>選択中(無ければカーソル位置)のディレクトリ容量を計算します。中断したい場合は<span class="btn_frame">ESC</span>キーを押してください。<br>
+仮想ディレクトリでない場合、ファイル情報で占有サイズやクラスタギャップを確認できます。また、NTFS圧縮が適用されていている場合、圧縮サイズと圧縮率が表示されます。<br>
+なお、隠しファイルやシステムファイルを非表示にしている場合でも、ディレクトリ内のものは計算に入ります。<br>
+ディレクトリのサイズ表示は、ファイルリストを更新するとクリアされます。<br>
+
+<div class="spc_box">
+パラメータに <b>FC</b> を指定すると、タイムスタンプの代わりに、ファイル数とサブディレクトリ数が表示されます(<a href="hid00010.htm#TimeStampFmt">オプション設定 - デザイン - ファイルリスト - 「日時の書式」</a> の文字数が10以下の場合はファイル数のみ表示)。<br>
+パラメータに <b>LO</b> を指定すると計算結果をログに出力、<b>CC</b> を指定するクリップボードにコピー、<b>LS</b> を指定すると一覧で表示します。<br>
+パラメータに <b>SA</b> を指定するとサイズの小さい順に、<b>SD</b> を指定するとサイズの大きい順に結果がソートされます。どちらも指定していない場合は、現在のファイルリストの表示順と同じになります。<br>
+またパラメータに<b>ファイル名</b>を指定すると計算結果を保存できます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+ファイル名の指定には以下の書式文字列が使えます。<br>
+<div class="indent1">
+<b>\DT</b>(書式)　現在の日時 (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\TS</b>(書式)　カーソル位置項目のタイムスタンプ (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\C</b>　カレントのパス無しディレクトリ名<br>
+<b>\\</b>　\ そのもの(ディレクトリ区切り)<br>
+</div>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
+
+<b>例</b>: CalcDirSize_SD;dirsize_\DT(yymmdd).txt<br>
+<a href="#CalcDirSizeAll">→ CalcDirSizeAll</a>　<a href="#ReloadList">→ ReloadList</a>
+
+<dt id="CalcDirSizeAll">CalcDirSizeAll<span class="pram_text">[_[FC|SG|DG][;LO][;CC][;LS][;SA|SD][;ファイル名]</span>
+<dd>カレントにある全ディレクトリの容量を計算します。中断したい場合は<span class="btn_frame">ESC</span>キーを押してください。<br>
+仮想ディレクトリでない場合、ファイル情報で占有サイズやクラスタギャップを確認できます([..] 位置ではカレント全体についての情報を表示)。また、NTFS圧縮が適用されていている場合、圧縮サイズや圧縮率が表示されます。<br>
+なお、隠しファイルやシステムファイルを非表示にしている場合でも、ディレクトリ内のものは計算に入ります。<br>
+ディレクトリのサイズ表示は、ファイルリストを更新するとクリアされます。<br>
+
+<div class="spc_box">
+パラメータには、<a href="#CalcDirSize">CalcDirSize</a> コマンドと同じものを使用できます。<br>
+そのほかに <b>SG</b> を指定すると、タイムスタンプの代わりにディレクトリ容量のグラフが表示されます。パーセントは、カレントで表示されている項目の合計サイズに対する相対値です。<br>
+また <b>DG</b> (仮想ディレクトリでは無効)を指定すると、カレントドライブの全体容量に対するグラフが表示されます。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください(FC、SG、DG は何れか一つ)。<br>
+</div>
+<b>例</b>: CalcDirSizeAll_SG;LO<br>
+<a href="#CalcDirSize">→ CalcDirSize</a>　<a href="#ReloadList">→ ReloadList</a>
+
+<dt id="Calculator">Calculator<span class="pram_text">[_計算式]</span><br>
+Calculator<span class="pram_text">_CB[;計算式]</span>
+<dd><a href="hid00087.htm">電卓</a>が開きます。<br>
+パラメータで<b>計算式</b>を指定すると、入力欄にそれを設定して開きます。<br>
+計算式が無指定の場合、選択中の項目があれば、そのサイズが入力欄に設定されます(バイト単位、カンマ付き)。<br>
+<div class="spc_box">
+パラメータに <b>CB</b> を指定すると、電卓画面を表示せずに、クリップボードを介して計算を行います。<br>
+計算式が無指定の場合、クリップボードの内容を計算します。複数行の場合は、各行内容を &quot;<b>+</b>&quot; 記号で連結したものが用いられます(空白行などは無視)。<br>
+計算に成功すると、クリップボードに結果が、失敗するとエラー内容が入ります。<br>
+なお <b>CB</b> が指定された場合、<b>NyanFi</b> はアクティブになりません。
+</div>
+
+<div class="spc_box">
+<span class="tips">Tips</span>外部からクリップボードの内容を計算できます。<br>
+<pre class="example_box">
+NyanFi.exe -XCalculator_CB
+</pre>
+</div>
+
+<dt id="CancelAllTask">CancelAllTask
+<dd>実行中のタスクをすべて中止します。確認メッセージは出ません。<br>
+<a href="#TaskMan">→ TaskMan</a>　<a href="#Suspend">→ Suspend</a>
+
+<dt id="ChangeDir">ChangeDir<span class="pram_text">_ディレクトリ名</span>
+<dd>カレントを、パラメータで指定したディレクトリに変更します。既存のファイル名が指定された場合は、そのディレクトリのファイル位置に移動します。<br>
+<a href="#ExeCommands">ExeCommands</a> コマンドのパラメータ区切り文字との混同を避けるため、ルートディレクトリの場合は <b>:</b> の後に <b>\</b> を付けてください。&quot;%変数名%&quot; という書式で環境変数も使えます。なおドライブ名がない場合はカレントからの相対指定となります。<br>
+<a href="#ChangeOppDir">→ ChangeOppDir</a>　<a href="#InputDir">→ InputDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#SubDirList">→ SubDirList</a>　<a href="#SubDirList">→ SubDirList</a>
+
+<dt id="ChangeDrive">ChangeDrive<span class="pram_text">_ドライブ文字</span>
+<dd>カレントを、パラメータで指定したドライブに変更します。<br>
+<a href="#NextDrive">→ NextDrive</a>　<a href="#PrevDrive">→ PrevDrive</a>　<a href="#DriveList">→ DriveList</a>
+
+<dt id="ChangeOppDir">ChangeOppDir<span class="pram_text">_ディレクトリ名</span>
+<dd>反対側を、パラメータで指定したディレクトリに変更します。<br>
+<a href="#ExeCommands">ExeCommands</a> コマンドのパラメータ区切り文字との混同を避けるため、ルートディレクトリの場合は <b>:</b> の後に <b>\</b> を付けてください(あるいは引用符で囲む)。&quot;%変数名%&quot; という書式で環境変数も使えます。なおドライブ名がない場合は反対パスからの相対指定となります。<br>
+<a href="#ChangeDir">→ ChangeDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>
+
+<dt id="ChangeOppRegDir">ChangeOppRegDir<span class="pram_text">_呼び出しキー</span>
+<dd>「<a href="hid00054.htm">登録ディレクトリ</a>」ダイアログで設定されているディレクトリを、反対側で開きます。<br>
+呼び出しキーを、パラメータに設定しておきます。<br>
+<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#RegDirDlg">→ RegDirDlg</a>　<a href="#RegDirPopup">→ RegDirPopup</a>　<a href="#ChangeDir">→ ChangeDir</a>　<a href="#InputDir">→ InputDir</a>
+
+<dt id="ChangeRegDir">ChangeRegDir<span class="pram_text">_呼び出しキー</span>
+<dd>「<a href="hid00054.htm">登録ディレクトリ</a>」ダイアログで設定されているディレクトリを開きます。<br>
+呼び出しキーを、パラメータに設定しておきます。<br>
+<a href="#RegDirDlg">→ RegDirDlg</a>　<a href="#RegDirPopup">→ RegDirPopup</a>　<a href="#ChangeOppRegDir">→ ChangeOppRegDir</a>　<a href="#ChangeDir">→ ChangeDir</a>　<a href="#InputDir">→ InputDir</a>　<a href="#SubDirList">→ SubDirList</a>
+
+<dt id="CheckUpdate">CheckUpdate<span class="pram_text">[_NC]</span>
+<dd>実行中の <b>NyanFi</b> が最新版かどうかをチェックします。<br>
+更新ファイルがあった場合、指定した場所にダウンロードできます。<br>
+「更新しますか?」の確認後、<b>NyanFi.exe</b> と <b>NyanFi.chm</b> が最新版に更更新され再起動します。<br>
+保存場所は記憶され、次回選択する際の初期ディレクトリとして用いられます。<br>
+パラメータに <b>NC</b> を指定すると、最新版があった場合、確認なしで前回の保存場所にダウンロードし、完了したらそのまま更新を行います。また、最新版がすでに保存場所にある場合は、そのアーカイブから更新します。<br>
+このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
+<a href="#UpdateFromArc">→ UpdateFromArc</a>
+
+<dt id="ClearAll">ClearAll<span class="pram_text">[_AL]</span>
+<dd>すべての選択状態を解除します。<br>
+パラメータに <b>AL</b> を指定すると、左右すべての選択状態を解除します。<br>
+<a href="#SelAllFile">→ SelAllFile</a>　<a href="#SelAllItem">→ SelAllItem</a>
+
+<dt id="ClearLog">ClearLog
+<dd>ログウィンドウの内容をクリアします(ログウィンドウの右クリックメニューからも可能)。<br>
+
+<dt id="ClearMark">ClearMark<span class="pram_text">[_AC]</span>
+<dd>カレントのすべての栞マークを解除します。<br>
+パラメータに <b>AC</b> を指定すると、確認後に、すべての場所のすべての栞マークを解除します(<a href="hid00070.htm">栞マーク一覧</a>の右クリックメニューからも可能)。<br>
+<a href="#Mark">→ Mark</a>　<a href="#NextMark">→ NextMark</a>　<a href="#PrevMark">→ PrevMark</a>　<a href="#SelMark">→ SelMark</a>　<a href="#MarkMask">→ MarkMask</a>
+
+<dt id="ClearMask">ClearMask
+<dd>カレントパスに適用されている選択マスクやパスマスクを解除します。<br>
+両方のマスクがある場合は、実行する毎に、選択マスク、パスマスクの順に解除します。<br>
+<a href="#PathMaskDlg">→ PathMaskDlg</a>　<a href="#InputPathMask">→ InputPathMask</a>　<a href="#SetPathMask">→ SetPathMask</a>　<a href="#SelMask">→ SelMask</a>　<a href="#MarkMask">→ MarkMask</a>
+
+<dt id="Clone">Clone<span class="pram_text">[_書式|_IN]</span>
+<dd>選択中(無ければカーソル位置)の項目のコピー(クローン)を反対パスに作成します。<br>
+コピー処理はバックグラウンド・タスクで行われます。<br>
+パラメータで、同名時の改名書式を指定できます(ファイル拡張子はそのまま)。<br>
+対象がディレクトリの場合は、同名のものがなくても改名書式が適用されます。<br>
+指定には以下の書式文字列が使えます。
+<div class="indent1">
+<b>\N</b>　対象項目のファイル名主部またはディレクトリ名<br>
+<b>\SN</b>(書式)　連番(初期値と桁幅を数字で指定　例:1から始まる3桁　001)<br>
+<b>\DT</b>(書式)　現在の日時 (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\TS</b>(書式)　対象項目のタイムスタンプ (書式は \DT と同じ)<br>
+<b>\-</b>　初回の改名試行では、これ以降の書式指定を無視<br>
+</div>
+書式を指定しないと \N_\SN(1) とみなされます。また書式に \SN(～) が含まれていなく重複を解決できなかった場合、書式の末尾に _\SN(1) を付加して再改名します。<br>
+<div class="spc_box">
+<b>例</b>:<br>
+　\N-コピー\-(\SN(1))　　hoge.txt → hoge-コピー.txt、hoge-コピー(1).txt、hoge-コピー(2).txt …<br>
+　\N_\DT(mmdd)　　hoge.txt → hoge_0401.txt、hoge_0401_1.txt、hoge_0401_2.txt …<br>
+</div>
+
+<div class="spc_box">
+パラメータに <b>IN</b> を指定すると、入力ボックスで書式を指定できます。<br>
+対象が一つの場合、その名前がデフォルトとして表示され、任意に改名してクローン化できます。この場合、同名ファイルがなくても改名が適用されます。<br>
+対象が複数の場合は、<b>\N</b> がデフォルトになります。<br>
+「<b>デフォルトを選択状態に</b>」をチェックしていると、入力欄の初期状態が全選択になります。<br>
+</div>
+
+<a href="#CloneToCurr">→ CloneToCurr</a>　<a href="#Paste">→ Paste</a>
+
+<dt id="CloneToCurr">CloneToCurr<span class="pram_text">[_書式|_IN]]</span>
+<dd>選択中(無ければカーソル位置)の項目のコピー(クローン)をカレントに作成します。<br>
+作成先以外は <a href="#Clone">Clone</a> と同じです。<br>
+<a href="#Clone">→ Clone</a>　<a href="#Paste">→ Paste</a>
+
+<dt id="Close">Close<span class="pram_text">[_NS]</span>
+<dd><a href="#Exit">Exit</a> コマンドのエイリアス(別名)です。<br>
+<a href="#ExeCommands">ExeCommands</a> コマンドのパラメータ内では <b>Exit</b> が補助コマンドとみなされるため、代わりに <b>Close</b> を使ってください。<br>
+パラメータに <b>NS</b> を指定すると、終了時に INIファイルを保存しません。<br>
+<div class="note_text">
+※<a href="hid00017.htm#Duplicate">二重起動</a>された <b>NyanFi</b> では、INIファイルが保存されません。ただし終了時には、画面の位置・サイズ情報などが最初に起動した <b>NyanFi</b> に送られ、変更があれば、それがINIファイルに反映されます。<br>
+</div>
+<a href="#Exit">→ Exit</a>　<a href="#Restart">→ Restart</a>
+
+<dt id="CmdFileList">CmdFileList<span class="pram_text">[_FF]</span>
+<dd><a href="hid00067.htm">コマンドファイル一覧</a>を表示します。一覧からは、コマンドファイルの実行、編集、閲覧ができます。<br>
+パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+<a href="#ExeCommands">→ ExeCommands</a>　<a href="#FileEdit">→ FileEdit</a>　<a href="#TextViewer">→ TextViewer</a>
+
+<dt id="CommandPrompt">CommandPrompt
+<dd>コマンドプロンプトを起動します。作業ディレクトリはカレントパスになります。<br>
+<a href="#PowerShell">→ PowerShell</a>　<a href="#FileRun">→ FileRun</a>
+
+<dt id="CompareDlg">CompareDlg<span class="pram_text">[_NC]</span>
+<dd>「<b>同名ファイルの比較</b>」ダイアログを開きます。<br>
+反対パスと比較して、タイムスタンプ、サイズ、ハッシュ条件に合うカレントパスのファイルを選択します。<br>
+ハッシュ値の比較は、サイズ条件「一致」に該当したファイルに対してのみ行われます(先頭32KBを事前チェック、アーカイブ内ファイルは一時解凍)。<br>
+なお比較中に<span class="btn_frame">ESC</span>キーを押すと処理を中断できます。<br>
+<div class="spc_box">
+「<b>ディレクトリも比較</b>」をチェックしていると、ディレクトリ同士も比較対象とします。その場合、左右にあるすべてのディレクトリ容量が <a href="#CalcDirSize">CalcDirSize</a> コマンドであらかじめ計算されていると、サイズの比較も行えます。<br>
+「<b>ディレクトリとアーカイブを比較</b>」をチェックしていると、ファイル名主部がディレクトリ名と同じアーカイブがあった場合に両者を比較します。このとき、ディレクトリ容量が計算済みだと、アーカイブの元サイズとの比較も行えます。<br>
+「<b>反対側も選択</b>」をチェックしていると、カレント側の項目に対応する反対側の項目も選択します。<br>
+「<b>結果を反転</b>」をチェックしていると、比較結果の選択状態を反転します(「<b>ディレクトリも比較</b>」、「<b>反対側も選択</b>」を考慮)。<br>
+「<b>選択項目だけを残す</b>」をチェックしていると、結果の選択項目だけを残して他を隠します(<b>選択マスク</b>)。<br>
+</div>
+パラメータに <b>NC</b> を指定すると、ダイアログを出さず、名前のみの比較を行います。<br>
+なお、タイムスタンプを比較する場合、<a href="hid00009.htm#Tolerance">→ オプション設定 - 一般 - タイムスタンプの許容誤差</a> で設定されている範囲内なら同じとみなされます。<br>
+<a href="#SelOnlyCur">→ SelOnlyCur</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#FindDuplDlg">→ FindDuplDlg</a>　<a href="#DiffDir">→ DiffDir</a>　<a href="#SelMask">→ SelMask</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>　<a href="#ToOppSameItem">→ ToOppSameItem</a>
+
+<dt id="CompareHash">CompareHash<span class="pram_text">[_MD5|_SHA1|_SHA256|_SHA384|_SHA512|_CRC32]</span>
+<dd>カレント側で選択中(無ければカーソル位置)のファイルと、反対側で選択中(無ければカレント側の対象と同名)のファイルとを、パラメータで指定したハッシュやCRCで比較し、結果をログに表示します。カレント/反対側とも選択する場合は、同数のファイルを選択してください。両側で選択されている場合、ファイル名にかかわらず順番に比較します。<br>
+パラメータを省略した場合は MD5 とみなします。<br>
+なお同名ファイルの同一性チェックだけなら、<a href="#CompareDlg">CompareDlg</a> コマンドでも可能です。<br>
+<a href="#CompareDlg">→ CompareDlg</a>　<a href="#GetHash">→ GetHash</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>　<a href="#CopyFileName">→ CopyFileName</a>
+
+<dt id="CompleteDelete">CompleteDelete<span class="pram_text">[_SO]</span>
+<dd>選択中(無ければカーソル位置)の項目を(たぶん)完全削除します。<br>
+ファイル全体をランダムパターンで上書きし、サイズを0に切り詰めてから削除します。<br>
+途中でタスクを中止すると、上書き中のファイルが残りますので注意してください。<br>
+パラメータに <b>SO</b> を指定すると、選択されている項目のみを削除します。<br>
+削除処理はバックグラウンド・タスクで行われます。<br>
+なおファイルのハードリンクの場合、実体を削除せずに、ごみ箱を使わない通常の削除になります。<br>
+またディレクトリのジャンクションやシンボリックリンクの場合、リンク先の実体は削除されません。<br>
+
+<a href="hid00019.htm#CompleteDelete">→ オプション設定 - コマンド</a><br>
+<a href="#Delete">→ Delete</a>
+
+<dt id="CompressDir">CompressDir<span class="pram_text">[_UN|_AL]</span>
+<dd>選択中(無ければカーソル位置)のディレクトリをNTFS圧縮します。対象ディレクトリおよびその階層下にあるすべてのサブディレクトリとファイルに対して圧縮属性が設定されます。<br>
+デフォルトの圧縮では、アーカイブファイル、.bmp 以外の画像、.wav 以外のサウンド、動画ファイルは除外されます。ただし圧縮されたディレクトリに後から追加されたファイルには圧縮属性が付加されますので注意してください。<br>
+処理はバックグラウンド・タスクで行われます。<br>
+対象デフォルトのみに圧縮属性を設定したい場合は、<a href="hid00051.htm">名前の変更ダイアログ</a>で行ってください。<br>
+<div class="spc_box">
+パラメータに <b>UL</b> を指定すると、圧縮を解除します。<br>
+パラメータに <b>AL</b> を指定すると、デフォルトでは除外される種類のファイルもすべて圧縮します。<br>
+</div>
+
+<dt id="ContextMenu">ContextMenu<span class="pram_text">[_ファイル名]</span>
+<dd>選択中(無ければカーソル位置)の項目に対するコンテキストメニューを表示します([..]位置ではカレントが対象)。<br>
+<div class="note_text">
+<a href="hid00060.htm">ワークリスト</a>では異なるディレクトリの項目が混在する可能性があるため、対象項目が一つの場合にのみ実行できます。
+</div>
+
+<div class="spc_box">
+パラメータに<b>メニュー定義ファイル</b>(ドライブ名がない場合、<b>NyanFi</b> ディレクトリ相対)を指定すると、定義されている項目をコンテキストメニューに追加できます。<br>
+ファイルの書式は、<a href="#ExeMenuFile">ExeMenuFile</a> コマンドの場合と基本的に同じです。項目ごとに１行ずつ、タイトル、コマンド、また必要ならアイコン用ファイル(*.ico、*.exe 等)を、タブで区切って記述してください。なお、タイトルの末尾に <b>|</b> で区切って拡張子を指定すると、対象の拡張子がそれに該当する場合にのみ、そのメニュー項目が表示されます。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<b>\</b> はディレクトリに相当します。<br>
+また <b>!</b> だけの行があると、以降の項目はコンテキストメニューの先頭に表示されます。<br>
+なお、右クリック時に表示されるコンテキストメニューに項目を追加したい場合は、<a href="hid00021.htm">オプション設定 - イベント</a> - 「<b>ファイルリストで右クリック</b>」に <b>ContextMenu</b>_ファイル名 を設定してください。<br>
+</div>
+
+<b>例</b>: <small><span class="ctrl_text">[TAB]</span> はタブ文字</small>
+<pre class="example_box">
+ファイル情報をコピー <span class="ctrl_text">[TAB]</span> CopyFileInfo
+-
+ディレクトリ容量を計算|\    <span class="ctrl_text">[TAB]</span> CalcDirSize     <span class="rem_text">← ディレクトリの場合のみ表示</span>
+画像の変換|.jpg.gif.png.bmp <span class="ctrl_text">[TAB]</span> ConvertImage    <span class="rem_text">← .jpg. gif. png. bmp の場合のみ表示</span>
+アイコンを抽出|.exe.dll     <span class="ctrl_text">[TAB]</span> ExtractIcon     <span class="rem_text">← .exe. dll の場合のみ表示</span>
+!                                                 <span class="rem_text">← 以降の項目はメニューの先頭に表示</span>
+ファイル名をコピー   <span class="ctrl_text">[TAB]</span> CopyFileName
+-
+</pre>
+コンテキストメニューは、ファイルリスト上で右クリックしたときにも表示されます。その場合、選択項目がなく、かつカーソル位置項目以外の場所を右クリックしたときは、カレントディレクトリに対するコンテキストメニューが表示されます。また、選択項目がなく、カーソル位置項目を右クリックしたときは、それが対象となります。<br>
+また、アプリケーションキーや<span class="btn_frame">Shft</span>+<span class="btn_frame">F10</span>キー(無設定の場合)を押した時にも表示されます。<br>
+<a href="#ExeMenuFile">→ ExeMenuFile</a>
+
+<dt id="ConvertDoc2Txt">ConvertDoc2Txt<span class="pram_text">[_SJ|_IJ|_EJ|_U8|_UL|_UB]</span>
+<dd>選択中(無ければカーソル位置)のバイナリ文書(PDF、WORD、EXCEL、一太郎など - .rtf .wri を含む)をテキストに変換して反対パスに出力します(拡張子 <b>.txt</b>)。<br>
+このコマンドを実行するには、<b>xd2txlib.dll</b> がインストールされている必要があります。<br>
+パラメータで出力文字コードを指定できます。<b>SJ</b> (Shift_JIS デフォルト)、<b>IJ</b> (ISO-2022-JP)、<b>EJ</b> (EUC-JP)、<b>U8</b> (UTF-8)、<b>UL</b> (UTF-16)、<b>UB</b> (UTF-16(BE))、無指定の場合は Shift_JIS になります。<br>
+
+<dt id="ConvertHtm2Txt">ConvertHtm2Txt<span class="pram_text">[_HD][;MD|;TX]</span>
+<dd>選択中(無ければカーソル位置)のHTML文書をテキストに変換して反対パスに出力します(拡張子 <b>.txt</b>)。<br>
+変換はテキストビュアーでのHTML→テキスト変換表示に準じます。<br>
+
+<div class="spc_box">
+パラメータに <b>HD</b> を指定した場合、ヘッダ情報に Title や Description があれば先頭に挿入します。<br>
+パラメータに <b>MD</b> を指定すると、オプション設定にかかわらず <b>Markdown</b> 記法に、また <b>TX</b> を指定すると通常のテキストに変換します。<b>HD</b> とともに指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
+<a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー - 「HTML→テキスト変換」</a><br>
+<a href="#JoinText">→ JoinText</a>
+
+<dt id="ConvertImage">ConvertImage
+<dd>「<a href="hid00059.htm">画像ファイルの変換</a>」ダイアログが開きます。<br>
+選択中(無ければカーソル位置)の画像ファイルを、別形式に変換したり、縮小・拡大たりして、反対パスに出力します。<br>
+変換処理はバックグラウンド・タスクで行われます。<br>
+反対側がカレントと同じで、出力ファイル名も同じ場合、確認なしで上書きされます。<br>
+
+<dt id="ConvertTextEnc">ConvertTextEnc
+<dd>「<b>文字コードの変換</b>」ダイアログが開きます。<br>
+選択中(無ければカーソル位置)のテキストファイルの文字コードと改行コードを変換して、反対パスに出力します。<br>
+ユニコードの場合はBOMの有無も指定できます。<br>
+XML や HTML文書では、文字コード指定(encoding、charset)も書き換えます。<br>
+反対側がカレントと同じ場合、確認なしで上書きされます。<br>
+
+<dt id="Copy">Copy<span class="pram_text">[_SO|_OP|_OP2|_TO|_SD|_SS[;日付条件]]</span>
+<dd>選択中(無ければカーソル位置)の項目を反対パスにコピーします。<br>
+<div class="spc_box">
+反対パスが<a href="hid00060.htm">ワークリスト</a>の場合、項目がリストに登録されます。<br>
+<a href="hid00080.htm">FTP接続</a>している場合、反対パスがリモート側ならファイルのアップロードに、カレントがリモート側ならファイルのダウンロードになります。FTPの場合、ディレクトリのコピーには対応していません。<br>
+反対側がタグ検索(<a href="#FindTag">FindTag</a>)の結果リストの場合、項目に検索タグを追加して再検索を行います。<br>
+</div>
+<div class="spc_box">
+通常のファイルコピー処理はバックグラウンド・タスクで行われます(代替データストリームは除く)。<br>
+</div>
+
+<div class="spc_box">
+パラメータに <b>SO</b> を指定すると、選択されている項目のみをコピーします。<br>
+パラメータに <b>OP</b> を指定すると、コピー終了後、反対側のコピー先に移ったときのカーソル位置が最初にコピーしたファイルに設定されます。コピー終了時、すでに反対側に移っていた場合は、カーソル移動が行われません。<br>
+また <b>OP2</b> を指定すると、バックグラウンド・タスク実行中にコピー先ディレクトリの変化が検出されると、そのリストのカーソル位置が、その時点でコピーが終わっているファイルに逐次設定され、タスク終了時には最後にコピーしたファイルに設定されます。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>TO</b> を指定すると、反対パスではなく、入力ボックス(<a href="#InputDir">→ InputDir</a>)で指定したディレクトリがコピー先になります。このとき存在しないディレクトリを指定すると、確認メッセージが出てそれを新規作成できます。<br>
+パラメータに <b>SD</b> を指定すると、フォルダの参照ダイアログでコピー先を選択できます。<br>
+パラメータに <b>SS</b> を指定すると、カレントのサブディレクトリをコピー先として選択するダイアログが開きます。最初の <b>..</b> を選ぶと親ディレクトリにコピーします。<br>
+</div>
+<div class="spc_box">
+パラメータで<b>日付条件</b>を指定すると、それに合うファイルだけがコピーされます。<br>
+他のパラメータとともに指定する場合は、<b>;</b> (セミコロン)で区切ってください。<br>
+以下のように、現在の日付からの相対指定と、絶対指定が可能です。
+<div class="mono_text">
+　相対指定: {<b><</b>|<b>=</b>|<b>></b>}-n{<b>D</b>|<b>M</b>|<b>Y</b>}　　(D:日、M:月、Y:年)<br>
+　絶対指定: {<b><</b>|<b>=</b>|<b>></b>}yyyy/mm/dd<br>
+　　<b><</b> :指定日付より古い、　<b>=</b> :指定日付と同じ、　<b>></b> :指定日付より新しい<br>
+</div>
+<b>例</b>:<br>
+　Copy_>-3D　　　　　　　3日前の日付より新しいファイルのみをコピー<br>
+　Copy_TO;<2017/01/01　　2017年1月1日よりも古いファイルのみを、入力ボックスで指定した場所にコピー
+</div>
+<br>
+<a href="hid00009.htm#Copy">→ オプション設定 - 一般 - コピー動作</a><br>
+<a href="#CopyTo">→ CopyTo</a>　<a href="#Move">→ Move</a>　<a href="#MoveTo">→ MoveTo</a>　<a href="#Backup">→ Backup</a>　<a href="#DateSelect">→ DateSelect</a>
+
+<dt id="CopyDir">CopyDir<span class="pram_text">[_TO|_KT|_CC|_LS]</span>
+<dd>選択中(無ければカーソル位置)のディレクトリの階層構造を反対パスにコピー(作成)します。中のファイルはコピーされません。またコピー先に同名ディレクトリがある場合はスキップします。<br>
+コピー(作成)処理はバックグラウンド・タスクで行われます。<br>
+
+<div class="spc_box">
+パラメータに <b>TO</b> を指定すると、反対パスではなく、入力ボックス(<a href="#InputDir">→ InputDir</a>)で指定したディレクトリがコピー先になります。<br>
+パラメータに <b>KT</b> を指定すると、コピーの際にディレクトリのタイムスタンプを維持します。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>CC</b> を指定すると、対象となるディレクトリ名の一覧をクリップボードにコピー、<b>LS</b> を指定すると<a href="hid00073.htm">一覧ダイアログ</a>で表示します。ディレクトリのコピー(作成)は行いません。<br>
+</div>
+<a href="#CreateDir">→ CreateDir</a>　<a href="#CreateDirsDlg">→ CreateDirsDlg</a>
+
+<dt id="CopyFileInfo">CopyFileInfo
+<dd>カーソル位置のファイル情報をクリップボードにコピーします。<br>
+<a href="#LogFileInfo">→ LogFileInfo</a>　<a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#ListFileInfo">→ ListFileInfo</a>　<a href="#ShowProperty">→ ShowProperty</a>
+
+<dt id="CopyCmdName">CopyCmdName
+<dd>コマンド名を参照して、クリップボードにコピーします。<br>
+ボタンで、ファイラー/テキストビュアー/イメージビュアー/ログウィンドウを切り替えられます。<br>
+文字列を入力すると、それが含まれる候補がドロップダウン表示されます(Migemo 対応)。また &quot;<b>*</b>&quot;、&quot;<b>?</b>&quot;、&quot;<b> </b>&quot; のいずれかを入力すると、すべてのコマンドが表示されます。なお入力履歴機能はありません。<br>
+候補が出ている場合、<span class="btn_frame">ENTER</span>キーを押すか項目をクリックすると確定し、さらに<span class="btn_frame">ENTER</span>キーを押すとコピーされます。<br>
+また<span class="btn_frame">F1</span>キーを押すと、入力されているコマンド、またはドロップダウンで選択されていコマンドについてのヘルプが表示されます。<br>
+<div class="spc_box">
+このダイアログは、<a href="hid00022.htm">オプション設定 - マウス操作</a>/ <a href="hid00014.htm">追加メニュー</a>/ <a href="hid00021.htm"> イベント</a> や、<a href="hid00068.htm">「ツールバーの設定」ダイアログ</a> などにおいて、コマンド名を入力できるテキスト/コンボボックスの右クリックメニュー「<b>コマンド名の参照</b>」でも用いられます。<br>
+</div>
+<a href="#InputCommands">→ InputCommands</a>
+
+<dt id="CopyFileName">CopyFileName<span class="pram_text">[_FN|_書式]</span>
+<dd>選択中(無ければカーソル位置、[..]ならカレントディレクトリ)のファイル名をクリップボードにコピーします。<br>
+パラメータに <b>FN</b> を指定すると、パス名を除いたファイル名部分のみをコピーします。<br>
+またパラメータでコピー項目の<b>書式</b>を指定することもできます。指定には以下の書式文字列が使えます。<br>
+<div class="mgn_btm_h">
+　<b>$P</b>　パス名<br>
+　<b>$U</b>　パス名(ネットワークドライブ名をUNCパスに変換、それ以外の場合は $P と同じ)<br>
+　<b>$M</b>　パス名(可能ならリモートのUNCパスをネットワークドライブ名に変換、それ以外の場合は $P と同じ)<br>
+　<b>$N</b>　パス無しファイル名主部<br>
+　<b>$E</b>　拡張子(ドットを含む)<br>
+　<b>$B</b>　パス無しファイル名($N + $E)<br>
+　<b>$F</b>　パス付ファイル名($P + $B)<br>
+　<b>$A</b>　属性(DRHSAC)<br>
+　<b>$S</b>　サイズ (ファイルリストの表示と同じ書式)<br>
+　<b>$Y</b>　サイズ (バイト単位、カンマ無し)<br>
+　<b>$T</b>　タイムスタンプ(ファイルリストの表示と同じ書式)<br>
+　<b>$D(</b>書式<b>)</b>　タイムスタンプ(書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+　<b>$W</b>　画像の幅<br>
+　<b>$H</b>　画像の高さ<br>
+　<b>$R(</b>プロパティ名<b>)</b>　ファイル情報に表示されるプロパティ<br>
+　<b>$G(</b>MD5|SHA1|SHA256|SHA384|SHA512<b>)</b>　MD5、SHA-1、SHA-256、SHA-384、SHA-512ハッシュ<br>
+　<b>$G(</b>CRC32<b>)</b>　CRC32<br>
+　<b>$$</b>　$ そのもの<br>
+　<b>$L</b>　項目をダブルクォーテーションで囲み、空白で区切って1行に連結<br>
+　<b>$X</b>　最大幅にあわせて整形しない<br>
+　<b>$\</b>　\ を \\ (エスケープシーケンス)に置換<br>
+　<b>$O</b>　コピー後にダイアログを表示し、クリップボード内容に名前を付けて保存<br>
+</div>
+複数のファイルが選択されている場合、<b>$P</b>、<b>$N</b>、<b>$E</b>、<b>$B</b>、<b>$F</b> は最大幅にあわせ空白を付加して整形します(<b>$L</b>、<b>$X</b> 指定時は除く)。<br>
+<b>$L</b>、<b>$X</b>、<b>$\</b>、<b>$O</b> の位置は書式のどこでもかまいません。<br>
+<b>$G(</b>～<b>)</b>で取得した内容は、ファイル情報の表示にも反映されます。<br>
+
+<div class="spc_box">
+<b>例</b>: CopyFileName_$B$L<br>
+<pre>
+"Nayn1.txt" "Nayn2.txt" "Nayn3.txt"
+</pre>
+
+<b>例</b>: CopyFileName_$G(MD5) *$B$O
+<pre>
+ハッシュファイルを作成
+0acaa200b75cb543e7027398008ea2ec *NyanFi.chm
+5e528bf8e16e9a75a981d34edcccfa52 *NyanFi.exe
+</pre>
+
+<b>例</b>: CopyFileName_$O$X&quot;$B&quot;,$Y,$D(yyyy/mm/dd)<br>
+<pre>
+CSV形式で保存
+"NyanFi.chm",768554,2016/11/07
+"NyanFi.exe",6732288,2016/11/07
+"README.TXT",1418,2016/11/07
+</pre>
+
+<b>例</b>: CopyFileName_$B $R(画像サイズ)
+<pre>
+nyanfi_grep.jpg    800 × 320  (5 : 2)
+nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
+</pre>
+
+<b>例</b>: CopyFileName_$X&lt;img src=&quot;$B&quot; width=&quot;$W&quot; height=&quot;$H&quot; alt=&quot;&quot;&gt;
+<pre>
+&lt;img src="nyanfi_grep.jpg" width="800" height="320" alt=""&gt;
+&lt;img src="nyanfi_scr.jpg" width="800" height="600" alt=""&gt;
+</pre>
+</div>
+
+<a href="#ListFileName">→ ListFileName</a>　<a href="#NameFromClip">→ NameFromClip</a>　<a href="#GetHash">→ GetHash</a>
+
+<dt id="CopyTo">CopyTo<span class="pram_text">_ディレクトリ名</span>
+<dd>選択中(無ければカーソル位置)の項目を指定ディレクトリにコピーします。<br>
+<b>ディレクトリ名</b>には、&quot;%変数名%&quot; という書式で環境変数も使えます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+<b>例</b>:　CopyTo_:一時ディレクトリにコピー:%Temp%<br>
+<a href="#Copy">→ Copy</a>　<a href="#Move">→ Move</a>　<a href="#MoveTo">→ MoveTo</a>　<a href="#Backup">→ Backup</a>
+
+<dt id="CopyToClip">CopyToClip
+<dd>選択中(無ければカーソル位置)の項目をコピーします(コンテキストメニューの「コピー」に相当)。<br>
+<a href="#CutToClip">→ CutToClip</a>　<a href="#Paste">→ Paste</a>
+
+<dt id="CountLines">CountLines<span class="pram_text">[_CC|_LS|_ファイル名]</span>
+<dd>選択中(無ければカーソル位置)のテキストファイルの行数をカウントしてログに一覧表示します。<br>
+行数の他に、有効行(実行ステップ)、コメント行(プログラムソースの場合)、空白行(半角空白・タブ以外の文字がない)をカウントします。値は、行数 = 有効 + コメント + 空白 となります。なお、仮想ディレクトリのテキストファイルに対しても実行可能です。<br>
+中断したい場合は<span class="btn_frame">ESC</span>キーを押してください。<br>
+<div class="spc_box">
+パラメータに <b>CC</b> を指定すると結果一覧をクリップボードにコピー、<b>LS</b> を指定すると<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+またパラメータに<b>ファイル名</b>を指定すると結果一覧を保存できます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+ファイル名の指定には、<a href="#ListArchive">ListArchive</a> コマンドと同じ書式文字列が使えます。<br>
+</div>
+
+<dt id="CreateDir">CreateDir<span class="pram_text">[_[/]名前[\\名前...][/|\]]</span><br>
+CreateDir<span class="pram_text">_IN;[/]名前[\\名前...][/|\]</span><br>
+<dd>カレントパスにディレクトリを作成します。また絶対指定による作成も可能です。<br>
+パラメータを指定しないと、入力ボックスが出ます。<br>
+「<b>文字置換を適用</b>」をチェックしていると、<a href="hid00051.htm">名前の変更ダイアログ</a>の「<b>ファイル名主部の文字置換</b>」で設定されている置換内容を、入力した名前に対して適用します。チェックされていない場合、<b>\</b> で区切ることで複数階層のディレクトリを一括作成できます。<br>
+「<b>作成後にカレント変更</b>」をチェックしていると、ディレクトリを作成した後、そのディレクトリへ自動的に移ります。ただし、入力またはパラメータ指定した名前の先頭に <b>/</b> がある場合は、この設定にかかわらず、作成したディレクトリへ移りません。また名前の末尾に <b>/</b> または <b>\</b> がある場合は、設定にかかわらず、作成したディレクトリへ移ります。<br>
+
+<div class="spc_box">
+パラメータを指定すると、入力ボックスを出さずにその名前で直ちに作成します。名前の指定には以下の書式文字列が使えます。名前を <b>\\</b> で区切れば、複数階層のディレクトリを一括作成が可能(<b>\-</b> で文字置換無効)。<br>
+<div class="indent1">
+<b>\DT</b>(書式)　現在の日時 (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\TS</b>(書式)　カーソル位置項目のタイムスタンプ (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\C</b>　カレントのパス無しディレクトリ名<br>
+<b>\N</b>　カーソル位置のファイル名主部またはディレクトリ名<br>
+<b>\E</b>　カーソル位置のファイル拡張子( . は除く)<br>
+<b>\\</b>　\ そのもの(ディレクトリ区切り)<br>
+<b>\-</b>　これ以降 <a href="#RenameDlg">RenameDlg</a> コマンドの文字置換無効 (設定が無効の場合は不要)
+</div>
+</div>
+
+<div class="spc_box">
+<b>例</b>: CreateDir_Tmp\DT(yymmdd)　　→　Tmp140908<br>
+<b>例</b>: CreateDir_\-D:\\Nyan\\Data　　→　D:\Nyan\Data<br>
+</div>
+
+<div class="spc_box">
+パラメータに <b>IN</b> を指定し、その後に <b>;</b> (セミコロン)で区切って名前を記述すると、その名前をデフォルトとする入力ボックスが出ます。<br>
+名前には、上述の書式文字列のうち <b>\-</b> 以外のものが使えます。<br>
+「<b>デフォルトを選択状態に</b>」をチェックしていると、入力欄の初期状態が全選択になります。<br>
+<b>例</b>: CreateDir_IN;\DT(yymmdd)_<br>
+</div>
+
+<a href="#CopyDir">→ CopyDir</a>　<a href="#CreateDirsDlg">→ CreateDirsDlg</a>　<a href="#RenameDlg">→ RenameDlg</a>
+
+<dt id="CreateDirsDlg">CreateDirsDlg
+<dd>「<a href="hid00079.htm">ディレクトリ一括作成</a>」ダイアログが開きます。<br>
+リストに入力した内容にしたがって、複数のディレクトリを一括作成します。<br>
+<a href="#CreateDir">→ CreateDir</a>　<a href="#CopyDir">→ CopyDir</a>
+
+<dt id="CreateHardLink">CreateHardLink
+<dd>選択中(無ければカーソル位置)のファイルのハードリンクを、反対パスに同じ名前で作成します。<br>
+反対側に同名ファイルがある場合は、それを削除してから作成するかの確認メッセージが出ます。<br>
+<div class="note_text">
+ハードリンクを作成できるのは、<b>NTFS</b>の同一ボリューム内のみです。<br>
+</div>
+<div class="spc_box">
+なおハードリンクのファイル情報には、「種類」の末尾にリンク数が表示されます。
+例えば、あるファイルに対してハードリンクを一つ作成すると、元のファイルとハードリンクの両方に &quot;(Link Count=2)&quot; と表示されます。この場合、両者は同等で、両方とも削除してリンク数が0になったときにファイルの実体が削除されます。<br>
+</div>
+<a href="#FindHardLink">→ FindHardLink</a>　<a href="#CreateJunction">→ CreateJunction</a>　<a href="#CreateSymLink">→ CreateSymLink</a>
+
+<dt id="CreateJunction">CreateJunction
+<dd>選択中(無ければカーソル位置)のディレクトリのジャンクションを、反対パスに同じ名前で作成します。<br>
+<a href="#CreateHardLink">→ CreateHardLink</a>　<a href="#CreateSymLink">→ CreateSymLink</a>
+
+<dt id="CreateShortcut">CreateShortcut
+<dd>選択中(無ければカーソル位置)の項目のショートカットを反対パスに作成します。
+link
+
+<dt id="CreateSymLink">CreateSymLink
+<dd>選択中(無ければカーソル位置)のディレクトリまたはファイルのシンボリックリンクを、反対パスに同じ名前で作成します。<br>
+<div class="note_text">
+シンボリックリンクの作成には管理者権限が必要です。<br>
+</div>
+<a href="#CreateHardLink">→ CreateHardLink</a>　<a href="#CreateJunction">→ CreateJunction</a>
+
+<dt id="CreateTestFile">CreateTestFile
+<dd>ファイル名、サイズ、個数を指定して、カレントにテスト用のファイルを作成します(データ内容は全て 00)。<br>
+サイズは、末尾に <b>K</b>、<b>M</b>、<b>G</b> を付けて指定することも可能(例: 8G)。数値は整数で指定してください。<br>
+個数に1より大きな値を指定すると、ファイル名の末尾に連番を付けて複数作成します。連番の桁数は入力内容にしたがいます(例: 010 なら 001～010 を付加)。<br>
+作成には fsutil を利用し、非表示で実行しています。ファイルシステムがNTFSなら、GB単位の巨大ファイルもすぐに作成できるはずです。FATでは時間がかかるので、NTFSで一旦作成してからコピーした方が良いかもしれません。
+
+<dt id="CsrDirToOpp">CsrDirToOpp<span class="pram_text">[_TO]</span>
+<dd>カーソル位置のディレクトリを反対側に開きます。<br>
+カーソル位置がアーカイブファイルの場合は、仮想ディレクトリとして反対側に開きます。<br>
+カーソル位置が <b>.library-ms</b> ファイルの場合は、ライブラリとして反対側に開きます(複数ある場合はポップアップメニューで選択)。<br>
+カーソル位置が <b>.nwl</b> ファイルの場合は、<a href="hid00060.htm">ワークリスト</a>として反対側に開きます。<br>
+カーソル位置が <b>axshell.spi</b> 用の <b>._sf</b> ファイルの場合、通常のパスなら反対側に開きます。<br>
+パラメータに <b>TO</b> を指定すると、反対パス設定後に反対側へ移動します。<br>
+<a href="#LinkToOpp">→ LinkToOpp</a>
+
+<dt id="CurrFromOpp">CurrFromOpp<span class="pram_text">[_SL]</span>
+<dd>カレントパスを反対パスに合わせます。反対パスが仮想ディレクトリの場合は、そのアーカイブのあるディレクトリになります。<br>
+パラメータに <b>SL</b> を指定すると、反対側の選択状態をカレント側に反映します(ファイルリストの場合)。<br>
+<a href="#CurrToOpp">→ CurrToOpp</a>
+
+<dt id="CurrToOpp">CurrToOpp<span class="pram_text">[_SL|_TO]</span>
+<dd>反対パスをカレントパスに合わせます。<br>
+カレントが検索結果リストまたは<a href="hid00060.htm">ワークリスト</a>の場合は、反対パスをカーソル位置のファイルのパス(ディレクトリの場合はそのもの)に変更します。ただし、(ファイル/)<a href="hid00053.htm">ディレクトリ名検索</a>ダイアログで「<b>ディレクトリ名を反映</b>」をチェックしていて、結果リストのカーソル位置がディレクトリ名の場合は、反対パスをその親ディレクトリにし、その中の当該ディレクトリに点線カーソルを表示します。<br>
+
+<div class="spc_box">
+パラメータに <b>SL</b> を指定すると、カレントの選択状態を反対側に反映します(ファイルリストの場合)。<br>
+また <b>TO</b> を指定すると、反対パス設定後に反対側へ移動します。<br>
+</div>
+<a href="#CurrFromOpp">→ CurrFromOpp</a>
+
+<dt id="CursorDown">CursorDown<span class="pram_text">[_行数|_HP|_FP]</span>
+<dd>カーソルを下に移動します。<br>
+パラメータで移動する<b>行数</b>を指定することもできます。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分下に移動します。<br>
+<a href="#CursorUp">→ CursorUp</a>
+
+<dt id="CursorDownSel">CursorDownSel
+<dd>選択しながらカーソルを下に移動します。<br>
+<a href="#CursorUpSel">→ CursorUpSel</a>　<a href="#Select">→ Select</a>
+
+<dt id="CursorEnd">CursorEnd
+<dd>カーソルを最下行に移動します。<br>
+<a href="#CursorTop">→ CursorTop</a>
+
+<dt id="CursorEndSel">CursorEndSel
+<dd>選択しながらカーソルを最下行に移動します。<br>
+<a href="#CursorTopSel">→ CursorTopSel</a>
+
+<dt id="CursorTop">CursorTop
+<dd>カーソルを最上行に移動します。<br>
+<a href="#CursorEnd">→ CursorEnd</a>
+
+<dt id="CursorTopSel">CursorTopSel
+<dd>選択しながらカーソルを最上行に移動します。<br>
+<a href="#CursorEndSel">→ CursorEndSel</a>
+
+<dt id="CursorUp">CursorUp<span class="pram_text">[_行数|_HP|_FP]</span>
+<dd>カーソルを上に移動します。<br>
+パラメータで移動する<b>行数</b>を指定することもできます。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上に移動します。<br>
+<a href="#CursorDown">→ CursorDown</a>
+
+<dt id="CursorUpSel">CursorUpSel
+<dd>選択しながらカーソルを上に移動します。<br>
+<a href="#CursorDownSel">→ CursorDownSel</a>　<a href="#SelectUp">→ SelectUp</a>
+
+<dt id="CutToClip">CutToClip
+<dd>選択中(無ければカーソル位置)の項目を切り取ります(コンテキストメニューの「切り取り」に相当)。<br>
+<a href="#CopyToClip">→ CopyToClip</a>　<a href="#Paste">→ Paste</a>
+
+<dt id="DateSelect">DateSelect<span class="pram_text">_日付条件</span><br>
+<dd>パラメータで指定した<b>日付条件</b>に合うファイルを選択します。<br>
+以下のように、現在の日付からの相対指定と、絶対指定が可能です。
+<div class="mono_text">
+　相対指定: {<b><</b>|<b>=</b>|<b>></b>}-n{<b>D</b>|<b>M</b>|<b>Y</b>}　　(D:日、M:月、Y:年)<br>
+　絶対指定: {<b><</b>|<b>=</b>|<b>></b>}yyyy/mm/dd<br>
+　　<b><</b> :指定日付より古い、　<b>=</b> :指定日付と同じ、　<b>></b> :指定日付より新しい<br>
+<b>例</b>:<br>
+　DateSelect_<-14D　　　　　14日前の日付よりも古い<br>
+　DateSelect_=2014/03/30　　2014年3月30日に一致
+</div>
+<a href="#MaskSelect">→ MaskSelect</a>　<a href="#MatchSelect">→ MatchSelect</a>　<a href="#TagSelect">→ TagSelect</a>
+
+<dt id="DebugCmdFile">DebugCmdFile<span class="pram_text">[_@ファイル名]</span><br>
+<dd>カーソル位置のコマンドファイル(.nbt)に対するデバッグウィンドウを開き、デバッグモードで実行します。<br>
+これにより、コマンドファイル内に <b>Debug</b> 補助コマンドを記述しなくてもデバッグを行えます。<br>
+パラメータに特定の<b>ファイル名</b>を指定して実行することも可能です。<br>
+<div class="spc_box">
+デバッグウィンドウでは、以下のボタンまたはキーで操作を行えます。<br>
+<span class="btn_frame">S</span>: ステップ実行/　<span class="btn_frame">G</span>: 実行/　<span class="btn_frame">B</span>: 停止/　　<span class="btn_frame">Q</span>: デバッグモード終了/　<span class="btn_frame">X</span>: コマンドの実行を終了<br>
+<span class="btn_frame">V</span>: 変数一覧を表示/　<span class="btn_frame">E</span>: エディタで開く/　　<span class="btn_frame">H</span>: ヘルプを表示<br>
+</div>
+<small>補助コマンド</small> <a href="hid00063.htm#Debug">→ Debug</a>
+
+<dt id="Delete">Delete<span class="pram_text">[_SO]</span>
+<dd>選択中(無ければカーソル位置)の項目を削除します。<br>
+<a href="hid00009.htm#Delete">オプション設定 - 一般 - 削除/上書き動作</a> の「<b>削除にごみ箱を使う</b>」をチェックしていると、ごみ箱へ入れます。<br>
+ディレクトリのジャンクションやシンボリックリンクの場合、リンク先の実体は削除されません(ログでは <b>REMOVE</b> と表示)。<br>
+<a href="hid00060.htm">ワークリスト</a>では、項目をリストから外します。この場合、元のファイルは削除されません。<br>
+パラメータに <b>SO</b> を指定すると、選択されている項目のみを削除します。<br>
+削除処理(アーカイブやFTPは除く)はバックグラウンド・タスクで行われます。<br>
+なお、<a href="hid00080.htm">FTP接続</a>時のリモート側では、空でないディレクトリは削除できません。先にディレクトリ内のファイルを削除してください。<br>
+<a href="#CompleteDelete">→ CompleteDelete</a>
+
+<dt id="DeleteADS">DeleteADS<span class="pram_text">[_ZI]</span>
+<dd>選択中(なければカーソル位置)のファイルから代替データストリームを削除します。<br>
+パラメータに <b>ZI</b> を指定すると、<b>Zone.Identifier</b> (ゾーン識別子)のみ削除します。<br>
+<a href="#OpenADS">→ OpenADS</a>
+
+<dt id="DelJpgExif">DelJpgExif<span class="pram_text">[_KT]</span>
+<dd>選択中(なければカーソル位置)の<b>.JPG</b>ファイルからExif情報を削除して反対パスに出力します。Exif情報がないファイルはスキップします。このコマンドでは、<b>APP1</b>(Exif情報)を削除し、代わりに<b>APP0</b>(JFIF)を挿入しています。他のAPPセグメントは削除しません。<br>
+処理はバックグラウンド・タスクで行われます。<br>
+パラメータに <b>KT</b> を指定すると、ファイルのタイムスタンプを維持します。<br>
+<a href="#SetExifTime">→ SetExifTime</a>
+
+<dt id="DelSelMask">DelSelMask
+<dd>選択中(無ければカーソル位置)の項目を、<b>選択マスク</b>から外します。<br>
+選択マスクが適用されていない場合は、その項目以外を選択マスクとして新たに適用します。<br>
+<a href="#SelMask">→ SelMask</a>　<a href="#MarkMask">→ MarkMask</a>　<a href="#ClearMark">→ ClearMark</a>
+
+<dt id="DelTab">DelTab
+<dd>現在のタブを削除します。最後に残った一つは削除できません。<br>
+タブ右上隅のマウスオーバーで削除ボタンが表示される場合、それによってもタブを削除できます。<br>
+<a href="hid00010.htm#TabBar">→ オプション設定 - デザイン - 「タブバー」</a><br>
+<a href="#AddTab">→ AddTab</a>　<a href="#MoveTab">→ MoveTab</a>　<a href="#SoloTab">→ SoloTab</a>　<a href="#TabDlg">→ TabDlg</a>　<a href="#ShowTabBar">→ ShowTabBar</a>
+
+<dt id="DelTag">DelTag
+<dd>選択中(無ければカーソル位置)の項目の<b>タグ</b>を削除します。<br>
+なお、複数あるタグの一部だけを削除したい場合は、<a href="#SetTag">SetTag</a> コマンドを用いてください。<br>
+<a href="hid00088.htm">→ タグによるファイル管理</a><br>
+<a href="#AddTag">→ AddTag</a>　<a href="#SetTag">→ SetTag</a>　<a href="#FindTag">→ FindTag</a>　<a href="#TrimTagData">→ TrimTagData</a>
+
+<dt id="DiffDir">DiffDir<span class="pram_text">[_AL]</span>
+<dd>「<b>ディレクトリの比較</b>」ダイアログを開き、左右のディレクトリ内容を比較します。<br>
+「<b>対象マスク</b>」欄で対象とするファイルのマスクを、「<b>除外マスク</b>」欄で除外しいたファイルのマスクを指定できます。マスクは <b>;</b> (セミコロン)で区切って複数指定可能。<br>
+「<b>サブディレクトリも対象とする</b>」をチェックしていると、すべてのサブディレクトリのファイルも比較対象になります。<br>
+この場合、「<b>除外</b>」欄で除外したいディレクトリを指定できます。マスクは <b>;</b> (セミコロン)で区切って複数指定可能。<br>
+<div class="spc_box">
+パラメータに <b>AL</b> を指定すると、ダイアログを開かずに直ちに比較を開始します。この場合、マスクは <b>*.*</b> で、除外マスク無し、サブディレクトリも対象として比較を行います。<br>
+</div>
+<div class="spc_box">
+比較処理中は、<span class="btn_frame">ESC</span>キーで中断できます。<br>
+</div>
+<div class="spc_box">
+実行後は左右ともに結果リストになります。表示されるのは、サイズまたは更新日時が異なる同名ファイルと、一方にしか存在しないファイルです。<br>
+左右の項目数は同じになっていて、サイズや更新日時の相違箇所が「<b>結果リストの相違箇所背景色</b>」で強調されます。存在しないファイルは 「<b>無効な項目の文字色</b>」/「<b>結果リストの相違箇所背景色</b>」で表示され、サイズと更新日時は空欄になります。ソートは左右とも場所(パス付きファイル名)の昇順で固定となり、左右のファイルの対応が常に保たれます。<br>
+
+</div>
+<div class="spc_box">
+カレントでカーソルを移動すると、反対側のカーソル位置もそれに同期し、点線カーソルが表示されます。<br>
+この状態で可能なファイル操作は、削除とコピーだけです。禁止されている操作を行おうとすると警告が出ます。<br>
+カレントの結果リストから抜けると、反対側の結果リストも解除されます。<br>
+</div>
+<a href="#CompareDlg">→ CompareDlg</a>　<a href="#FindDuplDlg">→ FindDuplDlg</a>
+
+<dt id="DirHistory">DirHistory<span class="pram_text">[_GA|_GS|_FM|_AC|_GC]</span>
+<dd><a href="hid00057.htm">ディレクトリ履歴</a>を表示します。履歴は、タブ毎に、左右のリストについて個別に管理されます。<br>
+<div class="spc_box">
+パラメータに <b>GA</b> を指定すると、全体としての履歴を表示します。<br>
+<b>GS</b> を指定すると、全体としての履歴をソートして表示します。<br>
+<b>FM</b> を指定すると、<b>GS</b> と同様に全体履歴をソートして表示しますが、それらに対してインクリメンタルサーチモードで項目を絞り込むことができます(AND/OR検索可能、Migemo 対応)。<br>
+<b>AC</b> を指定すると、カレント側の履歴をすべて削除できます。また <b>GC</b> を指定すると、全体としての履歴をすべて削除します。これらの削除は一覧の右クリックメニューからも可能です。<br>
+なお全体としての履歴は、タブ/左右の個別履歴とは別に管理されており、このコマンドでの表示にのみ用いられます。<b>GS</b>、<b>FM</b> で履歴をソートすると、以前の並びは失われますので注意してください。<br>
+</div>
+<a href="hid00009.htm#DirHistory">→オプション設定 - ディレクトリ履歴</a><br>
+<a href="#BackDirHist">→ BackDirHist</a>　<a href="#ForwardDirHist">→ ForwardDirHist</a>
+
+<dt id="DirStack">DirStack
+<dd><b>ディレクトリ・スタック</b>を表示します。操作については<a href="hid00057.htm">ディレクトリ履歴</a>と同様で、スタック内の任意のディレクトリに移動できます。<br>
+スタックは、左右のリストで同じものを共用しています。<br>
+<a href="#PushDir">→ PushDir</a>　<a href="#PopDir">→ PopDir</a>　<a href="#DirHistory">→ DirHistory</a>
+
+<dt id="DistributionDlg">DistributionDlg<span class="pram_text">[_XC|_XM|_SN][;振り分け登録ファイル名]</span>
+<dd>「<a href="hid00077.htm">振り分け</a>」ダイアログが開きます。<br>
+設定にしたがって、カレント側で選択中(無ければすべて)の項目を振り分けます(移動/コピー)。<br>
+
+<div class="spc_box">
+パラメータに <b>XC</b> を指定すると、あらかじめダイアログで設定されている内容にしたがって、確認を行わず直ちに振り分けコピーを実行します。また、<b>XM</b> では直ちに振り分け移動を実行。<br>
+パラメータに <b>SN</b> を指定すると、ダイアログを開いたときに、マスク/パターン欄にカーソル位置のファイル名が、振り分け先欄に反対パスのディレクトリ名が設定されます。<br>
+パラメータに既存の <b>振り分け登録ファイル名</b> (ドライブ名がない場合、<b>NyanFi</b> ディレクトリ相対)を指定すると、実行前に振り分け登録ファイルが切り替わります。
+</div>
+<b>例</b>: 振り分け登録ファイル名を指定して直ちに振り分けコピー<br>
+　DistributionDlg_XC;Distribute_Nyan.INI<br>
+
+<dt id="DotNyanDlg">DotNyanDlg
+<dd><b>.nyanfi</b> ファイルの設定ダイアログが開き、カレント側ディレクトリの<a href="hid00075.htm">.naynfi ファイル</a>を作成/変更/削除できます。<br>
+
+<dt id="DriveGraph">DriveGraph<span class="pram_text">[_ドライブ文字]</span>
+<dd>ドライブ使用率の推移をグラフ化する <a href="hid00086.htm">ドライブ使用率推移</a> を表示します。<br>
+パラメータに<b>ドライブ文字</b>を指定すると、そのドライブのグラフが表示されます。無指定の場合は、カレント側ドライブのグラフが表示されます。<br>
+
+<dt id="DriveList">DriveList<span class="pram_text">[_ND|_NS]</span>
+<dd><a href="hid00064.htm">ドライブ一覧</a>を表示します。ドライブ文字キーを押すと、そのドライブに移動します。<br>
+
+<div class="spc_box">
+パラメータに <b>ND</b> を指定すると、ダイアログの代わりに、アクセス可能なドライブを選択するポップアップメニューを表示します。<br>
+また <b>NS</b> を指定すると、<b>ND</b> と同様にポップアップメニューを表示しますが、空き容量を表示しません。アクセスの遅いドライブがある場合、表示が速くなるかもしれません。<a href="hid00004.htm#DirInfo">ディレクトリ情報</a>左端の▼ボタンを押した場合も、このポップアップメニューが表示されます。<br>
+</div>
+<a href="#NextDrive">→ NextDrive</a>　<a href="#PrevDrive">→ PrevDrive</a>　<a href="#ChangeDrive">→ ChangeDrive</a>
+
+<dt id="Duplicate">Duplicate<span class="pram_text">[_RA]</span>
+<dd><a href="hid00017.htm#Duplicate">オプション設定 - 起動時</a> で二重起動が許可されている場合、新たに <b>NyanFi</b> を起動します。<br>
+パラメータに <b>RA</b> を指定すると、管理者として起動します。<br>
+<a href="#ExitDupl">→ ExitDupl</a>　<a href="#NextNyanFi">→ NextNyanFi</a>　<a href="#PrevNyanFi">→ PrevNyanFi</a>
+
+<dt id="EditHighlight">EditHighlight
+<dd><a href="hid00084.htm">構文強調表示定義ファイル</a>(<b>Highlight.INI</b>)をテキストエディタで開きます。<br>
+定義ファイルが存在しない場合には実行できません。<br>
+
+<dt id="EditHistory">EditHistory<span class="pram_text">[_FF|_AC]</span>
+<dd><a href="hid00058.htm">最近編集したファイル一覧</a>が開き、テキストエディタで開いたテキストファイルの履歴が表示されます。<br>
+画面は <a href="#ViewHistory">ViewHistory</a> と共用していますので、表示位置やサイズは同じになります。<br>
+
+<div class="spc_box">
+パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+また <b>AC</b> を指定すると、履歴をすべて削除できます(一覧の右クリックメニューからも可能)。<br>
+</div>
+<a href="#FileEdit">→ FileEdit</a>　<a href="#ViewHistory">→ ViewHistory</a>　<a href="#TextViewer">→ TextViewer</a>　<a href="#RecentList">→ RecentList</a>
+
+<dt id="EditIniFile">EditIniFile
+<dd>現在のINIファイルをテキストエディタで開きます。<br>
+その際、「INIファイルの変更を反映するため NyanFi を再起動しますか?」という確認メッセージが出ます。<br>
+このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
+<a href="#ViewIniFile">→ ViewIniFile</a>　<a href="#FileEdit">→ FileEdit</a>
+
+<dt id="Eject">Eject<span class="pram_text">[_ドライブ文字]</span>
+<dd>CD/DVDドライブのトレイを開きます。<br>
+複数のCD/DVDドライブがある場合は、ポップアップメニューが表示されドライブを選択できます。<br>
+またパラメータで特定のドライブを指定することも可能。<br>
+
+<dt id="EjectDrive">EjectDrive<span class="pram_text">_ドライブ文字</span>
+<dd>パラメータで指定したドライブのデバイスを取り外します。<br>
+ファイルリストでそのドライブを使用中の場合、前のドライブに切り替えてから取り外します。<br>
+パラメータに <b>.</b> を指定するとカレントドライブが対象になります。<br>
+CD/DVDドライブ(OS機能によってマウントされたISOドライブを含む)の場合は、コンテキストメニューの「<b>取り出し</b>」に相当する処理を適用します。<br>
+<a href="#DriveList">→ DriveList</a>
+
+<dt id="EmptyTrash">EmptyTrash
+<dd>ごみ箱を空にします。<br>
+<a href="#UseTrash">→ UseTrash</a>　<a href="#OpenTrash">→ OpenTrash</a>>
+
+<dt id="EqualListWidth">EqualListWidth
+<dd>左右のリスト幅を均等にします。<br>
+<a href="#WidenCurList">→ WidenCurList</a>　<a href="#BorderLeft">→ BorderLeft</a>　<a href="#BorderRight">→ BorderRight</a>
+
+<dt id="ExeCommandLine">ExeCommandLine<span class="pram_text">[_FN|_LC]</span>
+<dd>「<a href="hid00062.htm">コマンドラインの実行</a>」ダイアログを開きます。<br>
+コンソールアプリケーションの標準出力を取り込んで、ログに表示、クリップボードにコピー、一覧で表示、ファイルに保存することも可能です。<br>
+
+<div class="spc_box">
+パラメータに <b>FN</b> を指定すると、ダイアログを開いた時に、カーソル位置のファイル名が自動的に入力されます。このとき、実行ファイルではファイル名の後に空白を付加してカーソルを末尾に、それ以外ではファイル名の前に空白を挿入してカーソルを先頭に設定します。<br>
+また <b>LC</b> を指定すると、ダイアログを開いた時に、前回用いたコマンド内容を初期表示します。<br>
+</div>
+<a href="hid00019.htm#ExeCommandLine">→ オプション設定 - コマンド</a><br>
+<a href="#CommandPrompt">→ CommandPrompt</a>　<a href="#PowerShell">→ PowerShell</a>　<a href="#FileRun">→ FileRun</a>
+
+<dt id="ExeCommands">ExeCommands<span class="pram_text">_{コマンド[:コマンド...] | @[ファイル名]}</span>
+<dd>パラメータで指定したコマンドを実行します。コマンドは <b>:</b> (コロン)で区切って複数指定できます。<br>
+またパラメータでのみ使える補助コマンドや制御文もあります。<br>
+パラメータの先頭が <b>@</b> の場合、<b>コマンドファイル</b>名の指定になります。ファイル名が無く <b>@</b> だけの場合、カーソル位置が <b>.nbt</b> ファイルならそれを実行します。<br>
+パラメータの先頭が <b>$</b> の場合、<a href="hid00014.htm">追加メニュー</a>または<a href="hid00015.htm">外部ツール</a>の<b>エイリアス</b>とみなされます。<br>
+詳細は「<a href="hid00063.htm">ExeCommands コマンド</a>」のページを参照してください。<br>
+<a href="#CmdFileList">→ CmdFileList</a>
+
+<dt id="ExeExtMenu">ExeExtMenu<span class="pram_text">_アクセラレータキー</span>
+<dd><a href="hid00014.htm">オプション設定 - 追加メニュー</a>で設定されているメニュー項目を実行します。パラメータにメニューのアクセラレータキーを設定してください。<br>
+該当する項目がサブメニューの親だった場合は、サブメニュー項目を抽出してポップアップ表示します。この場合、非表示に設定されている項目も表示されます。<br>
+なお、項目にエイリアスが設定されていれば、それをキーに割り当てることも可能です。<br>
+
+<dt id="ExeExtTool">ExeExtTool<span class="pram_text">_アクセラレータキー</span>
+<dd><a href="hid00015.htm">オプション設定 - 外部ツール</a>で設定されている外部ツールを実行します。パラメータにメニューのアクセラレータキーを設定してください。<br>
+該当する項目がサブメニューの親だった場合は、サブメニュー項目を抽出してポップアップ表示します。この場合、非表示に設定されている項目も表示されます。<br>
+なお、項目にエイリアスが設定されていれば、それをキーに割り当てることも可能です。<br>
+
+<dt id="ExeMenuFile">ExeMenuFile<span class="pram_text">_ファイル名</span>
+<dd>指定した<b>メニュー定義ファイル</b>(ドライブ名がない場合、<b>NyanFi</b> ディレクトリ相対)を読み込んで、ポップアップメニューを表示し、選択された項目を実行します。<br>
+メニュー定義ファイルは、項目ごとに１行ずつ、タイトル、コマンド、また必要ならアイコン用ファイルを、タブで区切って記述してください。<br>
+なおアイコンを指定していなくても、<a href="#OpenByWin">OpenByWin</a>、<a href="#FileEdit">FileEdit</a> コマンドや <a href="hid00063.htm#SetExeFile">SetExeFile</a> 補助コマンドなどでファイルが指定されていたら、デフォルトでそのアイコンが表示されます。またアイコン用ファイルが .ico なら <strong>NyanFi</strong> からの相対指定が可能、パスが通っている .exe はパスと拡張子を省略可能です。<br>
+コマンドは、<a href="#ExeCommands">ExeCommands</a> のパラメータとして実行されます。先頭が <b>@</b> の場合は<b>コマンドファイル</b>、<b>$</b> の場合は<a href="hid00014.htm">追加メニュー</a>または<a href="hid00015.htm">外部ツール</a>の<b>エイリアス</b>とみなされます。<br>
+アクセラレータキーは、タイトル中に &quot;&amp;&quot; + 英数字 という書式で記述してください。タイトルを &quot;-&quot; (ハイフン)にすると<b>セパレータ</b>になります。<br>
+タイトルの先頭が &quot;&gt;&quot; の場合、<b>サブメニュー</b>が作られ、以降の項目はその階層に入ります。タイトルを &quot;&lt;&quot; とすると階層が戻ります。<br>
+また、メニュー定義ファイル内でのみ利用できるコマンドとして <b id="EditMenuFile">EditMenuFile</b> があり、メニュー定義ファイル自身をテキストエディタで開くことができます(<a href="#FileEdit">FileEdit</a>_&quot;メニュー定義ファイル名&quot; と同等)。<br>
+
+<div class="spc_box">
+メニュー定義ファイルの一行目に &quot;;[MenuFile]&quot; と記述しておくと、<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>メニュー定義</b>」をチェックすることで <a href="#OpenStandard">OpenStandard</a> コマンドでもメニューを開けます。<br>
+</div>
+
+<div class="spc_box">
+<b>例</b>: <small><span class="ctrl_text">[TAB]</span> はタブ文字</small>
+<pre class="example_box">
+;[MenuFile]
+コントロールパネル(&amp;C) <span class="ctrl_text">[TAB]</span> FileRun_control
+システム情報(&amp;S)       <span class="ctrl_text">[TAB]</span> SetExeFile_systeminfo: SetExeOpt_OH: ShellExecute: ListBuffer_システム情報
+&gt;その他(&amp;O)
+  コマンドファイル     <span class="ctrl_text">[TAB]</span> @Nyan.nbt
+  エイリアス           <span class="ctrl_text">[TAB]</span> $HogeHoge
+  実行ファイル         <span class="ctrl_text">[TAB]</span> OpenByWin_D:\UsrProg\Tool\Nayn.exe
+  実行ファイル2        <span class="ctrl_text">[TAB]</span> FileRun_&quot;hoge -nyan&quot;
+  URIスキーム          <span class="ctrl_text">[TAB]</span> FileRun_&quot;ms-settings:windowsupdate&quot;
+  ショートカット       <span class="ctrl_text">[TAB]</span> OpenByWin_D:\UsrProg\Launch\Nyan.lnk
+  サイトを開く         <span class="ctrl_text">[TAB]</span> OpenByWin_"http://nekomimi.la.coocan.jp/" <span class="ctrl_text">[TAB]</span> favicon.ico
+&lt;
+-
+メニューを編集(&amp;M)     <span class="ctrl_text">[TAB]</span> EditMenuFile
+</pre>
+</div>
+
+<a href="#ExPopupMenu">→ ExPopupMenu</a>　<a href="#ContextMenu">→ ContextMenu</a>
+
+<dt id="ExeToolBtn">ExeToolBtn<span class="pram_text">_ボタン番号</span>
+<dd>パラメータで指定した番号(1～)のツールボタンを実行します。<br>
+<a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ShowToolBar">→ ShowToolBar</a>
+
+<dt id="Exit">Exit<span class="pram_text">[_NS|_NX]</span>
+<dd><b>NyanFi</b> を終了します。<br>
+<a href="hid00060.htm">ワークリスト</a>が新規で無名の場合、「<b>ワークリストに名前を付けて保存</b>」ダイアログが出ます。<br>
+二重起動された <b>NyanFi</b> では、INIファイルが保存されません。<br>
+なお、FTP接続中の場合、切断してから終了します。<br>
+
+<div class="spc_box">
+パラメータに <b>NS</b> を指定すると、終了時に INIファイルを保存しません。<br>
+パラメータに <b>NX</b> を指定して、最初に起動された <b>NyanFi</b> で実行すると、設定にかかわらず、二重起動された他の <b>NyanFi</b> を終了させません。<br>
+</div>
+<a href="#Close">→ Close</a>　<a href="#Restart">→ Restart</a>
+
+<dt id="ExitDupl">ExitDupl
+<dd>二重起動された <b>NyanFi</b> をすべて終了します。<br>
+このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
+<a href="#Duplicate">→ Duplicate</a>　<a href="#NextNyanFi">→ NextNyanFi</a>　<a href="#PrevNyanFi">→ PrevNyanFi</a>
+
+<dt id="ExPopupMenu">ExPopupMenu<span class="pram_text">[_MN|_TL]</span>
+<dd><a href="hid00014.htm">オプション設定 - 追加メニュー</a> と <a href="hid00015.htm">オプション設定 - 外部ツール</a> で設定したメニュー項目を合わせ、一つのポップアップメニューとして表示します。<br>
+パラメータに <b>MN</b> を指定すると追加メニューのみを、また <b>TL</b> を指定すると外部ツールのみを表示します。<br>
+<a href="#ExeExtMenu">→ ExeExtMenu</a>　<a href="#ExeExtTool">→ ExeExtTool</a>　<a href="#ExeMenuFile">→ ExeMenuFile</a>　<a href="#PopupMainMenu">→ PopupMainMenu</a>
+
+<dt id="ExtractChmSrc">ExtractChmSrc
+<dd>カーソル位置のHTMLヘルプファイル(<b>.chm</b>)からソースを抽出(デコンパイル)して反対パスに出力します。<br>
+処理には Windows の <b>hh.exe</b> を利用し、バックグラウンド・タスクから起動します。<br>
+<div class="note_text">
+※hh.exe の仕様のため、出力パスの名前に半角空白が含まれていると処理できません。<br>
+</div>
+
+<div class="spc_box">
+なお、7-zip64.dll 文字化け対策版(x@rgs 氏作)の7z.dll対応版を使用すると、.chm ファイルをアーカイブとして扱うことができます。ソースの一部を確認したい場合には、その方が便利かもしれません。
+</div>
+
+<dt id="ExtractGifBmp">ExtractGifBmp
+<dd>選択中(無ければカーソル位置)のアニメーションGIFファイルからビットマップを抽出して反対パスに出力します。<br>
+出力ファイル名は、元ファイル名 + <b>_</b>00n<b>.bmp</b> (00n はフレーム番号)という形式になります。<br>
+
+<dt id="ExtractIcon">ExtractIcon<span class="pram_text">[_SI][インデックス番号]</span>
+<dd>選択中(無ければカーソル位置)の実行ファイルやDLLなどからラージアイコン(32×32)を抽出して反対パスに出力します。<br>
+出力ファイル名は、元ファイル名 + <b>_</b>00n<b>.ico</b> (00n はアイコンのインデックス)という形式になります。<br>
+パラメータに <b>SI</b> を指定すると、スモールアイコン(16×16)を抽出します。また<b>インデックス番号</b>を指定すると、そのアイコンだけを抽出します。<br>
+<b>例</b>: 7番目のスモールアイコンを抽出<br>
+　ExtractIcon_SI7<br>
+
+<dt id="ExtractImage">ExtractImage
+<dd><b>.mp3</b> または <b>.flac</b> ファイルから埋め込み画像を抽出して、反対パスに出力します。<br>
+出力ファイル名は、埋め込まれている画像形式にしたがって、元ファイル名 + <b>.jpg</b> or <b>.png</b> になります。<br>
+
+<dt id="ExtractMp3Img">ExtractMp3Img
+<dd><b>.mp3</b>ファイルから埋め込み画像を抽出して、反対パスに出力します(<a href="#ExtractImage">ExtractImage</a> で代替可能)。<br>
+出力ファイル名は、埋め込まれている画像形式にしたがって、元ファイル名 + <b>.jpg</b> or <b>.png</b> になります。<br>
+
+<dt id="FileEdit">FileEdit<span class="pram_text">[_ファイル名]</span>
+<dd>選択中(無ければカーソル位置)のファイルをエディタで開きます。<br>
+拡張子に対応するイメージエディタやその他のエディタがあればそれで開きます。そうでない場合、ファイルがテキストとみなされればテキストエディタで開きます。対応するエディタが複数ある場合は、ポップアップメニューで選択できます。<br>
+使用するエディタの設定は <a href="hid00012.htm">オプション設定 - エディタ</a> で行ってください。<br>
+なおアーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。また、<a href="hid00058.htm">最近編集したファイル一覧</a>にも入りません。<br>
+パラメータで<b>ファイル名</b>を指定して開くこともできます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+<a href="#BinaryEdit">→ BinaryEdit</a>
+
+<dt id="FileExtList">FileExtList<span class="pram_text">[_CP]</span>
+<dd>「<a href="hid00072.htm">拡張子別一覧</a>」ダイアログが開き、カレント以下のすべてのファイルについて、拡張子毎のファイル数と合計サイズが一覧表示されます。<br>
+パラメータに <b>CP</b> を指定すると、カーソル位置のディレクトリ内のみが対象になります。[..] ではカレント以下が対象となります(パラメータなしの場合と同じ)。<br>
+
+<dt id="FileListOnly">FileListOnly<span class="pram_text">[_ON|_OFF]</span>
+<dd>ファイルリストのみを表示し、それ以外の部分(プレビュー、ファイル情報、ログウィンドウ)を隠します。再び実行すると通常表示に戻ります(トグル動作)。<br>
+パラメータに <b>ON</b> を指定するとファイルリストのみ表示、<b>OFF</b> では通常表示になります。<br>
+なおファイルリストのみ表示のときにログを確認したい場合、<a href="#ViewLog">ViewLog</a> コマンドを用いてテキストビュアーで見ると便利かもしれません。<br>
+<a href="#ViewLog">→ ViewLog</a>
+
+<dt id="Filter">Filter<span class="pram_text">[_CS[;CA]]</span>
+<dd>ファイルリストに対してフィルタによる絞り込みを行います(<b>選択マスク</b>)。<a href="hid00050.htm">インクリメンタルサーチ</a>のフィルタマスク・モードと似ていますが、フィルタ欄に入力した文字列がそのまま検索語となります(IME使用可能)。<br>
+フィルタ欄で<span class="btn_frame">ESC</span>または<span class="btn_frame">ENTER</span>キーを押すか、フォーカスが失われると通常動作に戻ります。<br>
+ファイルリストのカーソル移動には、<span class="btn_frame">↓</span>、<span class="btn_frame">↑</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">E</span>)、<span class="btn_frame">PGUP</span>、<span class="btn_frame">PGDN</span>キーが使えます。<br>
+インクリメンタルサーチの <b>Select</b>(<b>SelectDown</b>)、<b>ClearAll</b>、<b>ClearIncKeyword</b>、<b>IncSearchDown</b>、<b>IncSearchUp</b> コマンドに割り当てられているキーでフィルタマスク・モードと同様の動作が可能です。また <b>KeywordHistory</b> コマンドが割り当てられているキーを押すと履歴がドロップダウン表示されます。この場合、<span class="btn_frame">↓</span>、<span class="btn_frame">↑</span>キーでドロップダウンの項目を選択、<span class="btn_frame">ESC</span>、<span class="btn_frame">ENTER</span>キーでドロップダウンが閉じます。<br>
+
+<div class="spc_box">
+なお結果リストで「<b>タグ(場所)</b>」列が表示されている場合は、タグも検索対象となります(→ <a href="hid00010.htm#FileList">オプション設定 - デザイン - ファイルリスト</a> - 「<b>タグ検索では「タグ」列を表示</b>」)。<br>
+</div>
+
+<div class="spc_box">
+選択マスクの解除は、<a href="#ClearMask">ClearMask</a> や <a href="#SelMask">SelMask</a>_CA コマンドで行ってください。別のディレクトリに移動した場合にも解除されます。ワークリストの場合は、通常のファイルリスト表示に戻すと解除されます。<br>
+パラメータに <b>CA</b> を指定すると、実行前に選択マスクを解除します。<br>
+<div class="note_text">
+選択マスクが適用された状態のワークリストでは、内容の変更や上書き保存は行えません。注意を促すため、ディレクトリ情報に &quot;<b>!</b>&quot; マークが表示されます。
+</div>
+</div>
+<div class="spc_box">
+パラメータに <b>CS</b> を指定すると、大小文字を区別します。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
+<a href="#IncSearch">→ IncSearch</a>　<a href="#SelMask">→ SelMask</a>　<a href="#ClearMask">→ ClearMask</a>
+
+<dt id="FileRun">FileRun<span class="pram_text">[_ファイル名|_URIスキーム]</span>
+<dd>Windows の「<b>ファイル名を指定して実行</b>」ダイアログを開きます。<br>
+パラメータに<b>ファイル名</b>や<b>URIスキーム</b>を指定すると、ダイアログを開かずに直接実行します(start コマンドを利用)。<br>
+パスが通っている場合、ファイル名のパスと拡張子を省略できます。<br>
+
+<b>例</b>: Windows10 の「設定」を開く<br>
+　FileRun_&quot;ms-settings:&quot;<br>
+<a href="#CommandPrompt">→ CommandPrompt</a>　<a href="#ExeCommandLine">→ ExeCommandLine</a>　<a href="#PowerShell">→ PowerShell</a>
+
+<dt id="FindDirDlg">FindDirDlg
+<dd>「<a href="hid00053.htm">ディレクトリ名検索」</a>」ダイアログを開きます。<br>
+マスク、日付、属性、内容の条件にマッチするファイルを検索できます。<br>
+<a href="#FindFileDlg">→ FindFileDlg</a>　<a href="#FindFileDirDlg">→ FindFileDirDlg</a>　<a href="#MaskFind">→ MaskFind</a>
+
+<dt id="FindFileDirDlg">FindFileDirDlg<span class="pram_text">[_NM|_FK][;R{0|1}]</span>
+<dd>「<a href="hid00052.htm">ファイル/ディレクトリ名検索</a>」ダイアログを開きます。<br>
+マスク、検索語、日付、サイズ、属性の条件にマッチするファイルおよびディレクトリを検索できます。<br>
+パラメータに <b>NM</b> を指定するとマスク欄を表示しません。また <b>FK</b> を指定すると開いたとき検索語欄にフォーカスします。<br>
+<div class="spc_box">
+ダイアログを開いたときの「<b>サブディレクトリも検索</b>」のチェック状態を、パラメータであらかじめ設定しておくこともできます。パラメータに <b>R0</b> を指定するとチェックが外され、<b>R1</b> を指定するとチェックされます。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
+<a href="#FindDirDlg">→ FindDirDlg</a>　<a href="#FindFileDlg">→ FindFileDlg</a>　<a href="#MaskFind">→ MaskFind</a>
+
+<dt id="FindDuplDlg">FindDuplDlg
+<dd>「<b>重複ファイルの検索</b>」ダイアログを開きます。<br>
+対象となるファイルのうち、ハッシュ値が一致するものを重複ファイルとみなして検索します。<br>
+ハッシュ値の取得は、同サイズのファイルについてのみ行います。まず先頭32KBのハッシュ値でファイル数を絞ってから全体のハッシュ値をチェックします。サイズが 0 のファイルは検索されません。<br>
+なお「処理中...」以外のときに<span class="btn_frame">ESC</span>キーを押すと中断できます。<br>
+<div class="spc_box">
+「<b>最大サイズ</b>」(MB単位)を超えるものは無視されます。<br>
+「<b>反対側も検索</b>」をチェックしていると、反対側のパスも検索対象になります。<br>
+「<b>サブディレクトリも検索</b>」をチェックしていると、階層下のすべてのサブディレクトリも検索対象になります(「反対側も検索」にも適用)。<br>
+「<b>ジャンクション/シンボリックリンクを除外</b>」をチェックしていると、ジャンクションやシンボリックリンクが無視されます。<br>
+「<b>結果リストから反対側へ反映</b>」をチェックしていると、検索の結果リストでカーソルを移動した際に、反対側がカーソル位置のファイルのパスに自動的に変更され、当該ファイルに点線カーソルが表示されます。チェックしていない場合でも、<a href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドを実行すると、個々に同様の動作が可能です。<br>
+結果リストでは、見つかった重複ファイルがセパレータで区切って表示されます。ソートは場所順に固定され変更できません。<br>
+また <a href="#ReloadList">ReloadList</a> コマンドによる再検索は行われません。<br>
+</div>
+<a href="#CompareDlg">→ CompareDlg</a>　<a href="#CompareHash">→ CompareHash</a>
+
+<dt id="FindFileDlg">FindFileDlg<span class="pram_text">[_NM|_FK][;R{0|1}][;X{0|1}][;A{0|1}]</span>
+<dd>「<a href="hid00052.htm">ファイル名検索</a>」ダイアログを開きます。<br>
+マスク、検索語、日付、サイズ、属性の条件にマッチするファイルを検索できます。結果リストに対する絞り込み検索も可能です。<br>
+パラメータに <b>NM</b> を指定するとマスク欄を表示しません。また <b>FK</b> を指定すると開いたときに検索語欄にフォーカスします。<br>
+<div class="spc_box">
+ダイアログを開いたときの「<b>サブディレクトリも検索</b>」、「<b>拡張検索</b>」、「<b>アーカイブ内も検索</b>」オプションのチェック状態を、パラメータであらかじめ設定しておくこともできます。<br>
+パラメータに <b>R0</b> を指定すると「サブディレクトリも検索」のチェックが外され、<b>R1</b> を指定するとチェックされます。同様にして <b>X0</b>/<b>X1</b> で「拡張検索」、<b>A0</b>/<b>A1</b> で「アーカイブ内も検索」のチェック状態を設定できます。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
+<a href="#FindDirDlg">→ FindDirDlg</a>　<a href="#FindFileDirDlg">→ FindFileDirDlg</a>　<a href="#MaskFind">→ MaskFind</a>
+
+<dt id="FindHardLink">FindHardLink<span class="pram_text">[_OP]</span>
+<dd>カーソル位置のハードリンク(Link Count>=2)と同じ実体を指しているファイルを列挙します(fsutil を利用)。一覧は結果リストとして表示されます。<br>
+<div class="spc_box">
+パラメータに <b>OP</b> を指定すると、結果リストでカーソルを移動した際に、反対側がカーソル位置のファイルのパスに自動的に変更され、当該ファイルに点線カーソルが表示されます。無指定の場合でも、<a href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドを実行すると、個々に同様の動作が可能です。<br>
+</div>
+<div class="note_text">
+※システムフォルダ内では取得できない場合があります。
+</div>
+<div class="spc_box">
+<span class="tips">Tips</span>結果リストにあるすべてのファイルをごみ箱を使わずに削除すれば、実体も削除できます。<br>
+</div>
+<a href="#CreateHardLink">→ CreateHardLink</a>
+
+<dt id="FindMark">FindMark<span class="pram_text">[_AL][;OP]</span>
+<dd>カレントパス(ディレクトリが選択されていたら、そのディレクトリ)以下で栞マークが設定されている項目を検索します。見つかると結果リストが表示されます。<br>
+<div class="spc_box">
+パラメータに <b>AL</b> を指定すると、アクセス可能なドライブにあるすべての栞マーク項目を検索します。<br>
+パラメータに <b>OP</b> を指定すると、結果リストでカーソルを移動した際に、反対側がカーソル位置のファイルのパスに自動的に変更され、当該ファイルに点線カーソルが表示されます。無指定の場合でも、<a href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドを実行すると、個々に同様の動作が可能です。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+<b>例</b>: FindMark_AL;OP<br>
+</div>
+<div class="spc_box">
+なお、アーカイブ内の検索には対応していません。アーカイブ内の栞マーク項目にアクセスしたい場合は <a href="hid00070.htm">栞マーク一覧</a>(<a href="#MarkList">MarkList</a>)を利用してください。<br>
+</div>
+<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>　<a href="#MarkList">→ MarkList</a>　<a href="#NextMark">→ NextMark</a>　<a href="#PrevMark">→ PrevMark</a>
+
+<dt id="FindTag">FindTag<span class="pram_text">[_タグ[;タグ...]]</span><br>
+FindTag<span class="pram_text">_*</span><br>
+FindTag<span class="pram_text">_;</span>
+<dd>ファイルやディレクトリに設定されている<b>タグ</b>を基に検索を行います。<br>
+パラメータを指定しないと、「<b>タグ検索</b>」ダイアログが開きますので、入力欄に入力するか、一覧のチェックボックスで選択してください。<br>
+タグは <b>;</b> (セミコロン)で区切って複数指定できます。大小文字は区別されません。<br>
+<div class="spc_box">
+「<b>AND検索</b>」をチェックしていると、指定したすべてのタグを含む項目が、チェックを外すと、いずれかのタグを含む項目がマッチします。<br>
+「<b>結果リストから反対側へ反映</b>」をチェックしていると、検索の結果リストでカーソルを移動した際に、反対側がカーソル位置のファイルのパスに自動的に変更され、当該ファイルに点線カーソルが表示されます。チェックしていない場合でも、<a href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドを実行すると、個々に同様の動作が可能です。<br>
+なお右下隅の<span class="btn_frame">∨</span>/<span class="btn_frame">∧</span>ボタンで設定パネルを開閉できます。
+</div>
+<div class="spc_box">
+結果リストに対して反対側から <a href="#Copy">Copy</a> コマンドを実行すると、対象に検索タグが追加され再検索が行われます(結果リストに項目が追加されたようになります)。結果リストから項目を除くには <a href="#DelTag">DelTag</a> コマンドを用いてください。<a href="#Delete">Delete</a> コマンドだと実体が削除されてしまいます。
+</div>
+
+<div class="spc_box">
+パラメータに<b>タグ</b>を指定すると、ダイアログを出さずに直ちに検索を行います。<br>
+複数のタグを指定する場合、<b>;</b> (セミコロン)で区切るとAND検索、<b>|</b> で区切るとOR検索になります(混在不可)。<br>
+&quot;<b>*</b>&quot; を指定すると、すべてのタグにマッチします。<br>
+なお、ダイアログの「<b>結果リストから反対側へ反映</b>」の設定が適用されます。<br>
+<b>例</b>: FindTag_Hoge|Nyan<br>
+</div>
+<div class="spc_box">
+パラメータに <b>;</b> (セミコロン) だけを指定すると、ダイアログの代わりにタグの入力ボックスが出ます。<br>
+複数のタグを入力する場合、<b>;</b> (セミコロン)で区切るとAND検索、<b>|</b> で区切るとOR検索になります(混在不可)。<br>
+</div>
+
+<a href="hid00088.htm">→ タグによるファイル管理</a><br>
+<a href="#AddTag">→ AddTag</a>　<a href="#DelTag">→ DelTag</a>　<a href="#SetTag">→ SetTag</a>　<a href="#TrimTagData">→ TrimTagData</a>　<a href="#TagSelect">→ TagSelect</a>
+
+<dt id="FindTagName">FindTagName<span class="pram_text">[_EJ]</span>
+<dd><a href="hid00083.htm#Dialog">タグ名検索ダイアログ</a> を開き、カレントパスから参照できる <b>tags</b> でタグ名を検索した後、ダイレクトタグジャンプを行います。<br>
+パラメータに <b>EJ</b> を指定すると ダイレクトタグジャンプをテキストエディタで(<a href="hid00006.htm#TagJumpDirect">TagJumpDirect</a>)、そうでない場合はテキストビュアーで(<a href="hid00006.htm#TagViewDirect">TagViewDirect</a>)行います。<br>
+
+<dt id="FixTabPath">FixTabPath<span class="pram_text">[_ON|_OFF]</span>
+<dd>
+タブを切り替えたときに、カレント側のパスが変化しないように一時固定します。<br>
+またワークリストの状態で固定した場合、タブを切り替えてもワークリストが切り替わりません。<br>
+このコマンドはタブ切り替えに対してのみ機能するもので、通常のディレクトリ変更などが制限されるわけではありません。<br>
+<div class="spc_box">
+パラメータを指定しないと、カレント側の固定/解除がトグルで切り替わります。<br>
+パラメータに <b>ON</b> を指定すると、カレント側が固定されます。<b>OFF</b> を指定すると、どちらかの側が固定されていた場合、それが解除されます。<br>
+固定できるのはどちらか一方だけです。反対側のファイルリストが固定されていたら解除されます。<br>
+固定されている側のディレクトリ情報には、ピンマーク(<img src="char_Pin.png" alt="" height="18" width="19">)が表示されます。<br>
+固定を解除すると、すべてのタブが固定前のパスに戻ります。
+</div>
+<a href="#NextTab">→ NextTab</a>　<a href="#PrevTab">→ PrevTab</a>　<a href="#ToTab">→ ToTab</a>
+
+<dt id="ForwardDirHist">ForwardDirHist
+<dd><a href="hid00057.htm">ディレクトリ履歴</a>を進みます。<br>
+履歴は、タブ毎に、左右のリストについて個別に管理されます。<br>
+<a href="hid00009.htm#DirHistory">→オプション設定 - ディレクトリ履歴</a><br>
+<a href="#BackDirHist">→ BackDirHist</a>　<a href="#DirHistory">→ DirHistory</a>　<a href="#PopDir">→ PopDir</a>
+
+<dt id="FTPChmod">FTPChmod<span class="pram_text">[_パーミッション]</span>
+<dd>カレントが<a href="hid00080.htm">FTP接続</a>時のリモート側の場合、選択中(無ければカーソル位置)の項目のパーミッション設定を行います。<br>
+パラメータを指定しないと、「<b>パーミッションの設定</b>」ダイアログが開きます。<br>
+パラメータに3桁8進表記の<b>パーミッション</b>を指定すると、ダイアログを出さずに直ちに設定を行います。<br>
+なお、UNIX形式のパーミッションが取得できなかったり、サーバが <b>CHMOD</b> コマンドに対応していなかったりした場合は設定できません。<br>
+<b>例</b>: FTPChmod_766<br>
+
+<dt id="FTPConnect">FTPConnect<span class="pram_text">[_ホスト名]</span>
+<dd>「<a href="hid00080.htm">FTP接続</a>」ダイアログを開きます。<br>
+あらかじめ登録されている<b>ホスト名</b>をパラメータに指定すると、ダイアログを表示しないで直ちに接続できます。<br>
+<a href="#FTPDisconnect">→ FTPDisconnect</a>
+
+<dt id="FTPDisconnect">FTPDisconnect
+<dd>FTPホストから切断します。<br>
+<a href="#FTPConnect">→ FTPConnect</a>
+
+<dt id="GetHash">GetHash<span class="pram_text">[_MD5|_SHA1|_SHA256|_SHA384|_SHA512|_CRC32]</span>
+<dd>パラメータで指定したハッシュ値またはCRCを、カーソル位置のファイルから取得し、ログおよびファイル情報に表示、クリップボードにコピーします。<br>
+パラメータを省略した場合は MD5 とみなします。<br>
+複数ファイルのハッシュ値をコピーしたい場合は <a href="#CopyFileName">CopyFileName</a>_$G(～) コマンドを利用してください。<br>
+<a href="#CopyFileName">→ CopyFileName</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>
+
+<dt id="Grep">Grep<span class="pram_text">[_検索文字列]</span>
+<dd><a href="hid00056.htm">文字列検索(GREP)</a>を開きます。<br>
+カレントパス以下のテキストファイルに対して、文字列検索を行います。<br>
+またタブを切り替えることにより、<a href="hid00061.htm">文字列置換</a>もできます。<br>
+<a href="hid00052.htm">ファイル名検索</a>の結果リストや<a href="hid00060.htm">ワークリスト</a>に対しても実行可能。<br>
+なお、カレントで選択している項目がある場合は、それらが検索対象となります。<br>
+パラメータに<b>検索文字列</b>を指定すると、文字列検索にしてそれを設定します。<br>
+
+<div class="spc_box">
+<span class="tips">Tips</span>外部からカレントと検索文字列、マスクを指定して実行することも可能。<br>
+<pre class="example_box">
+NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
+</pre>
+</div>
+
+<a href="hid00089.htm">→ 起動時オプション</a><br>
+<small>補助コマンド</small> <a href="hid00063.htm#GrepSetMask">→ GrepSetMask</a>　<a href="hid00063.htm#GrepStart">→ GrepStart</a>
+
+<dt id="HelpContents">HelpContents<span class="pram_text">[_CI|_FI|_CH]</span>
+<dd>ヘルプの目次を表示します。<br>
+パラメータに <b>CI</b> を指定すると「コマンドの索引(アルファベット順)」を、<b>FI</b> を指定すると「コマンドの索引(機能別)」を、<b>CH</b> を指定すると「変更履歴」のページを表示します。<br>
+<div class="note_text">
+仕様上の制約により、オプション設定などのモーダルダイアログを開くと、それまで開いていたヘルプは一旦閉じられます。
+</div>
+
+<dt id="HideSizeTime">HideSizeTime<span class="pram_text">[_ON|_OFF]</span>
+<dd>サイズと更新日時を隠し、名前と種類(拡張子)のみを表示します。
+パラメータに <b>ON</b> を指定すると有効、<b>OFF</b> で無効(通常表示)になります。<br>
+パラメータを指定しない場合は、トグルで切り替わります。<br>
+なおこれは、一時的な変更で、状態は保存されません。<br>
+
+<dt id="HomeWorkList">HomeWorkList
+<dd>ホームワークリストを読み込みます。<br>
+ホームワークリストは、<a href="hid00017.htm">オプション設定 - 起動時</a> で指定されているファイルが用いられます。<br>
+<a href="#WorkList">→ WorkList</a>　<a href="#LoadWorkList">→ LoadWorkList</a>
+
+<dt id="ImageViewer">ImageViewer<span class="pram_text">[_CB|_NN]</span>
+<dd>カーソル位置のファイルを<a href="hid00007.htm">イメージビュアー</a>で表示します。<br>
+実行ファイルやDLLの場合は、アイコンを抽出して一覧表示できます。<br>
+<div class="spc_box">
+アーカイブファイルに対して実行した場合、内部に栞マークの付いた画像があればそれを、無ければ最初に見つかった画像を表示します。この場合、イメージビュアーを閉じると仮想ディレクトリから抜けます。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>CB</b> を指定すると、クリップボードのビットマップを表示します。この場合、サムネイルは非表示になります。<br>
+パラメータに <b>NN</b> を指定すると、複数の <b>NyanFi</b> が起動している場合、次の <b>NyanFi</b> のイメージビュアーで表示します(アーカイブやFTPは除く)。二重起動されていない場合は、自身で表示します。<br>
+<a href="hid00080.htm">FTP接続</a>時にリモート側のファイルを開いた場合、サムネイルは非表示になります。<br>
+</div>
+<a href="#SubViewer">→ SubViewer</a>
+
+<dt id="IncSearch">IncSearch<span class="pram_text">[_[MM|NM][;FM[;CA]]</span>
+<dd><a href="hid00050.htm">インクリメンタルサーチ・モード</a>に移ります。<br>
+パラメータに <b>MM</b> を指定すると Migemo モードで、<b>NM</b> を指定すると通常モードでインクリメンタルサーチに移ります。無指定の場合は前回のモードになります。<br>
+
+<div class="spc_box">
+パラメータに <b>FM</b> を指定すると、マッチした項目だけを残して表示する<b>フィルタマスク・モード</b>になり、インクリメンタルサーチから抜けた後も結果が維持されます(<b>選択マスク</b>)。<br>
+なお、<a href="#Filter">Filter</a> コマンドを用いると、フィルタマスク・モードとよく似た動作を、フィルタ欄に入力した文字列を検索語として行えます。<br>
+</div>
+
+<div class="spc_box">
+なお結果リストで「<b>タグ(場所)</b>」列が表示されている場合は、タグも検索対象となります(→ <a href="hid00010.htm#FileList">オプション設定 - デザイン - ファイルリスト</a> - 「<b>タグ検索では「タグ」列を表示</b>」)。<br>
+</div>
+
+<div class="spc_box">
+マスクの解除は、<a href="#ClearMask">ClearMask</a> や <a href="#SelMask">SelMask</a>_CA コマンドで行ってください。別のディレクトリに移動した場合にも解除されます。ワークリストの場合は、通常のファイルリスト表示に戻すと解除されます。<br>
+パラメータに <b>CA</b> を指定すると、実行前に選択マスクを解除できます。<br>
+</div>
+
+<div class="spc_box">
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
+
+<div class="spc_box note_text">
+選択マスクが適用された状態のワークリストでは、内容の変更や上書き保存は行えません。注意を促すため、ディレクトリ情報に &quot;<b>!</b>&quot; マークが表示されます。
+</div>
+
+<a href="hid00019.htm#IncSearch">→ オプション設定 - コマンド</a><br>
+<a href="#SelMask">→ SelMask</a>　<a href="#Filter">→ Filter</a><br>
+
+<dt id="InitialSearch">InitialSearch
+<dd>ファイルリストで頭文字サーチを行います。<br>
+デフォルトでは <span class="btn_frame">Ctrl</span>+<span class="btn_frame">A</span>～<span class="btn_frame">Z</span>、<span class="btn_frame">＼</span>( _ )に割り当てられていますが、オプション設定で修飾キーを変更できます。また数字キーによって数字や記号をサーチすることも可能です。<br>
+なお、<a href="hid00058.htm">最近編集／閲覧したファイル一覧</a>、<a href="hid00067.htm">コマンドファイル一覧</a>、<a href="hid00055.htm">キー割り当て一覧</a>、サブディレクトリ一覧(<a href="#SubDirList">SubDirList</a>)でも同じキー操作で頭文字サーチが可能です。<br>
+<a href="hid00019.htm#InitialSearch">→ オプション設定 - コマンド</a>
+
+<dt id="InputCommands">InputCommands<span class="pram_text">[_EL]</span>
+<dd>入力したコマンド( : で区切って複数指定可)を、<a href="#ExeCommands">ExeCommands</a> のパラメータとして実行します。<br>
+入力ボックスで文字列を入力すると、それが含まれる候補がドロップダウン表示されます(Migemo 対応)。また &quot;<b>*</b>&quot;、&quot;<b>?</b>&quot;、&quot;<b> </b>&quot; のいずれかを入力すると、すべてのコマンドが表示されます。<br>
+候補が出ている場合、<span class="btn_frame">ENTER</span>キーを押すか項目をクリックすると確定し、さらに<span class="btn_frame">ENTER</span>キーを押すと実行されます。<span class="btn_frame">DEL</span>キーを押すと、入力されているコマンドが(複数の場合は順次)クリアされます(パラメータ入力中は通常の文字削除)。コンボボックスをドロップダウンすると、入力履歴を参照できます。<br>
+先頭が <b>@</b> の場合は<b>コマンドファイル</b>、また <b>$</b> の場合は<a href="hid00014.htm">追加メニュー</a>または<a href="hid00015.htm">外部ツール</a>の<b>エイリアス</b>とみなし、その項目を実行します。<br>
+<b>:</b> (コロン)はコマンドの区切りとみなされますので、パラメータに <b>:</b> が含まれる場合は、パラメータ全体をダブルクォーテーションで囲んでください。<br>
+なお<span class="btn_frame">F1</span>キーを押すと、入力されているコマンド、またはドロップダウンで選択されていコマンドについてのヘルプが表示されます。<br>
+
+<div class="spc_box">
+パラメータに <b>EL</b> を指定すると、ログウィンドウへのエコー機能が有効になり、コマンドファイルの場合、行番号が表示されます(<a href="hid00063.htm#EchoOn">EchoOn_LN</a> に相当)。<br>
+</div>
+<a href="#CopyCmdName">→ CopyCmdName</a>
+
+<dt id="InputDir">InputDir<span class="pram_text">[_ND|_ND2|_SD]</span>
+<dd>カレントを入力ボックスで指定したディレクトリに変更します。<br>
+&quot;%変数名%&quot; という書式で環境変数も使えます。またカレントからの相対指定も可能です。既存のファイル名が入力された場合は、そのディレクトリのファイル位置に移動します。<br>
+入力を行うとフルパスの補完機能が働きます。ドライブ指定がない場合は、カレントパスからの相対とみなして絶対パスに補完します。候補がドロップダウン表示されているとき、<span class="btn_frame">ENTER</span>キーを押すか項目をクリックするとそれが入力欄に設定されます。末尾に &quot;<b>\</b>&quot; を追加するとサブディレクトが候補としてさらに表示され、前方一致で候補を絞り込めます。なお、&quot;<b>\</b>&quot; の代わりに &quot;<b>/</b>&quot; もディレクトリ区切りとして使えます。<br>
+「<b>→で補完</b>」をチェックしていると、<span class="btn_frame">→</span>キーを押したときに補完リストがドロップダウンします。チェックしていない場合は自動的にドロップダウンしますが、空欄の場合(カレントのすべてのサブディレクトリが候補)のみ<span class="btn_frame">→</span>キーでのドロップダウンとなります。<br>
+補完候補が表示されていない場合、<span class="btn_frame">↓</span>キーで入力履歴が表示されます。なお、コンボボックス上の右クリックメニューで入力履歴を削除したりできます。<br>
+この入力ボックスは、<a href="#Copy">Copy</a><span class="pram_text">_TO</span>、<a href="#Move">Move</a><span class="pram_text">_TO</span>、<a href="#CopyDir">CopyDir</a><span class="pram_text">_TO</span> コマンドなどでも用いられます。<br>
+
+<div class="spc_box">
+パラメータに <b>ND</b> を指定すると、ダイアログを出さずに、カレント側の<a href="hid00004.htm#DirInfo">ディレクトリ情報</a>部分に入力コンボボックスを表示します(補完機能無し)。ディレクトリ情報をダブルクリックすることでも、この機能を利用できます。また <b>ND2</b> を指定すると、ドロップダウンを開いた状態で入力コンボボックスを表示します。<br>
+<b>SD</b> を指定すると、フォルダの参照ダイアログを表示します。これは、<b>ND</b> でディレクトリ情報に入力欄を表示して<span class="btn_frame">...</span>ボタンを押した状態と同じです。<br>
+</div>
+<a href="#ChangeDir">→ ChangeDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#RegDirDlg">→ RegDirDlg</a>　<a href="#RegDirPopup">→ RegDirPopup</a>　<a href="#SubDirList">→ SubDirList</a>　<a href="#SubDirList">→ SubDirList</a>
+
+<dt id="InputPathMask">InputPathMask
+<dd>パスマスクを入力します。マスクの指定は「<b>パスマスク</b>」ダイアログと同様です。マスクの先頭に <b>:</b>名前<b>:</b> という形でマスク名を指定することも可能です。<br>
+マスクの履歴は MaskSelect コマンドと共用しています。<br>
+なお、コンボボックス上の右クリックメニューで入力履歴を削除したりできます。<br>
+<a href="#PathMaskDlg">→ PathMaskDlg</a>　<a href="#SetPathMask">→ SetPathMask</a>　<a href="#ClearMask">→ ClearMask</a>　<a href="#MaskSelect">→ MaskSelect</a>
+
+<dt id="InsSeparator">InsSeparator
+<dd><a href="hid00009.htm#WorkList">オプション設定 - 一般 - ワークリスト</a> で「<b>項目をソートしない</b>」をチェックしている場合、<a href="hid00060.htm">ワークリスト</a>で、カーソル位置にセパレータ(区切り線)を挿入します。<br>
+<a href="#WorkItemDown">→ WorkItemDown</a>　<a href="#WorkItemUp">→ WorkItemUp</a>　<a href="#SetAlias">→ SetAlias</a>　<a href="#WorkList">→ WorkList</a>
+
+<dt id="ItemTmpDown">ItemTmpDown
+<dd>選択中(無ければカーソル位置)の項目を一時的に一つ下に移動します。ファイルリストが更新されると元に戻ります。<br>
+なお、<a href="hid00009.htm#WorkList">オプション設定 - 一般 - ワークリスト</a> で「<b>項目をソートしない</b>」がチェックされているか、ワークリストにセパレータが含まれている場合は、一時的な移動ではなく変更が保存されます。<br>
+<a href="#WorkItemDown">→ WorkItemDown</a>　<a href="#ReloadList">→ ReloadList</a>
+
+<dt id="ItemTmpMove">ItemTmpMove
+<dd>選択中の項目を一時的にカーソル位置に移動します。ファイルリストが更新されると元に戻ります。<br>
+なお、<a href="hid00009.htm#WorkList">オプション設定 - 一般 - ワークリスト</a> で「<b>項目をソートしない</b>」がチェックされているか、ワークリストにセパレータが含まれている場合は、一時的な移動ではなく変更が保存されます。<br>
+<a href="#WorkItemMove">→ WorkItemMove</a>　<a href="#ReloadList">→ ReloadList</a>
+
+<dt id="ItemTmpUp">ItemTmpUp
+<dd>選択中(無ければカーソル位置)の項目を一時的に一つ上に移動します。ファイルリストが更新されると元に戻ります。<br>
+なお、<a href="hid00009.htm#WorkList">オプション設定 - 一般 - ワークリスト</a> で「<b>項目をソートしない</b>」がチェックされているか、ワークリストにセパレータが含まれている場合は、一時的な移動ではなく変更が保存されます。<br>
+<a href="#WorkItemUp">→ WorkItemUp</a>　<a href="#ReloadList">→ ReloadList</a>
+
+<dt id="JoinText">JoinText
+<dd>「<a href="hid00078.htm">テキストファイルの結合</a>」ダイアログが開き、選択中のテキストファイルを結合して反対パスに出力できます。<br>
+テンプレートを用いると、ヘッダ/フッタを付加したり、HTML→テキスト変換を行ったりすることも可能。<br>
+<a href="#ConvertHtm2Txt">→ ConvertHtm2Txt</a>
+
+<dt id="JumpTo">JumpTo<span class="pram_text">_ファイル名</span>
+<dd>カレント側で、パラメータで指定した<b>ファイル名</b>の位置に移動します。ドライブ名がない場合はカレントからの相対指定になります。<br>
+パス名以外のファイル名部分にはワイルドカードを使用できます。その場合、カーソル位置から下方向に検索して見つかった位置に移動、見つからなかったら先頭から再検索します。<br>
+<b>例</b>:<br>
+　JumpTo_NyanFi.exe<br>
+　JumpTo_*.ini<br>
+　JumpTo_C:\Windows\SysWOW64\*.dll<br>
+
+<dt id="KeyList">KeyList<span class="pram_text">[_FF]</span>
+<dd><a href="hid00055.htm">キー割り当て一覧</a>を表示します。<br>
+パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+<a href="#CmdFileList">→ CmdFileList</a>
+
+<dt id="Library">Library<span class="pram_text">[_SD|_*|_ライブラリファイル名主部]</span>
+<dd>パラメータに何も指定しないと、ライブラリファイル(<b>.library-ms</b>)のあるディレクトリ(<b>%APPDATA%\Microsoft\Windows\Libraries</b>)に移ります。<br>
+パラメータに <b>_SD</b> を指定すると、ダイアログでライブラリの場所を選択して開きます。<br>
+パラメータに <b>*</b> を指定すると、ポップアップメニューでライブラリの場所を選択して開きます。<br>
+パラメータに<b>ライブラリファイル名主部</b>を指定すると、その場所を開きます(複数ある場合はポップアップメニューで選択)。<br>
+<b>例</b>: Library_Documents<br>
+<a href="#SpecialDirList">→ SpecialDirList</a>　<a href="#SubDirList">→ SubDirList</a>
+
+<dt id="LinkToOpp">LinkToOpp<span class="pram_text">[_TO]</span>
+<dd>カーソル位置のショートカット(.lnk)、シンボリックリンク、ジャンクションのリンク先を反対側に開きます。<br>
+パラメータに <b>TO</b> を指定すると、反対パス設定後に反対側へ移動します。<br>
+<a href="#CsrDirToOpp">→ CsrDirToOpp</a>
+
+<dt id="ListArchive">ListArchive<span class="pram_text">[_CC|_LS|_ファイル名]</span>
+<dd>カーソル位置のアーカイブの内容一覧をログに表示します。<br>
+アーカイバDLLの l コマンドで得られた一覧出力をそのまま表示しています。<br>
+取得用のバッファは1MBにしていますが、ファイル数があまりに多い場合、途中で途切れる可能性があります。<br>
+
+<div class="spc_box">
+パラメータに <b>CC</b> を指定すると結果一覧をクリップボードにコピー、<b>LS</b> を指定すると<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+またパラメータに<b>ファイル名</b>を指定すると結果一覧を保存できます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+ファイル名の指定には以下の書式文字列が使えます。<br>
+<div class="indent1">
+<b>\DT</b>(書式)　現在の日時 (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\TS</b>(書式)　カーソル位置項目のタイムスタンプ (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\C</b>　カレントのパス無しディレクトリ名<br>
+<b>\N</b>　カーソル位置のファイル名主部またはディレクトリ名<br>
+<b>\E</b>　カーソル位置のファイル拡張子( . は除く)<br>
+<b>\\</b>　\ そのもの<br>
+</div>
+</div>
+
+<b>例</b>:<br>
+　ListArchive_\N_\E.txt<br>
+　ListArchive_D:\\ArchiveList\\\C_\N_\E.txt<br>
+<a href="#TestArchive">→ TestArchive</a>
+
+<dt id="ListClipboard">ListClipboard<span class="pram_text">[_FF]</span>
+<dd>クリップボードのテキスト内容を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+<a href="#ListText">→ ListText</a>　<a href="#TextViewer">→ TextViewer</a>
+
+<dt id="ListDuration">ListDuration<span class="pram_text">[_CC|_LS|_ファイル名]</span>
+<dd>選択中のオーディオ/ビデオファイルの再生時間をログに一覧表示します。<br>
+<b>.wav</b>、<b>.wma</b>、<b>.mp3</b>(可能な場合)、<b>.mid</b>、<b>.cda</b> ファイルは1/100秒単位で、それ以外は秒単位で計算・表示します。<br>
+ディレクトリが選択されている場合は、その中にあるすべてのオーディオ/ビデオファイルが計算対象になります。中断したい場合は<span class="btn_frame">ESC</span>キーを押してください。<br>
+
+<div class="spc_box">
+パラメータに <b>CC</b> を指定すると結果一覧をクリップボードにコピー、<b>LS</b> を指定すると<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+またパラメータに<b>ファイル名</b>を指定すると結果一覧を保存できます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+ファイル名の指定には、<a href="#ListArchive">ListArchive</a> コマンドと同じ書式文字列が使えます。<br>
+</div>
+<b>例</b>: 親ディレクトリに一覧を出力<br>
+　ListDuration_..\\list_\C.txt<br>
+
+<dt id="ListExpFunc">ListExpFunc<span class="pram_text">[_CC|_LS|_ファイル名]</span>
+<dd>カーソル位置のファイル(DLLなど)のエクスポート関数一覧をログに表示します。<br>
+パラメータに <b>CC</b> を指定すると一覧をクリップボードにコピー、<b>LS</b> を指定すると<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+またパラメータに<b>ファイル名</b>を指定すると一覧を保存できます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+ファイル名の指定には、<a href="#ListArchive">ListArchive</a> コマンドと同じ書式文字列が使えます。<br>
+<div class="note_text">
+※x86 のファイルには対応していません。<br>
+※指定ファイルからパスを除いた名前の DLL がすでにリンクされている場合、そのファイルはロードせずに、マップされているモジュールから一覧を取得します。<br>
+</div>
+
+<dt id="ListFileInfo">ListFileInfo
+<dd><a href="#ShowFileInfo">ShowFileInfo</a>_SD のエイリアス(別名)です。<br>
+カーソル位置のファイル情報をダイアログ表示します。<br>
+ダイアログでのカーソル移動などは、ファイラーやテキストビュアーで割り当てられているのと同じキー操作や、テキストビュアーで割り当てられているマウスホイール操作によって可能です。
+ただし、2ストロークキー操作はできません。<br>
+<a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#ShowProperty">→ ShowProperty</a>
+
+<dt id="ListFileName">ListFileName<span class="pram_text">[_FN|_書式]</span>
+<dd>選択中(無ければカレントの全ファイル)のファイル名を、指定した<b>書式</b>で<a href="hid00073.htm">一覧ダイアログ</a>に表示します。<br>
+パラメータに <b>FN</b> を指定すると、パス名を除いたファイル名部分のみを表示します。<br>
+書式には、<a href="#CopyFileName">CopyFileName</a> コマンドと同じ書式文字列が使えます。<br>
+一覧で<span class="btn_frame">Enter</span>キーを押すと、ダイアログを閉じてそのファイル位置に移動します(選択項目があればファイルリストに反映)。<br>
+
+<div class="spc_box">
+<b>例</b>: HTML文書のタイトルを一覧表示<br>
+　ListFileName_&quot;$B $R(title)&quot;<br>
+</div>
+
+<a href="#CopyFileName">→ CopyFileName</a>　<a href="#CopyDir">→ CopyDir</a>　<a href="#ListTree">→ ListTree</a>
+
+<dt id="ListLog">ListLog<span class="pram_text">[_[FF][;EO]]</span>
+<dd>現在のログ内容を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+
+<div class="spc_box">
+パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+<b>EO</b> を指定すると、ログの中からエラー箇所を絞り込んで表示します。一覧の右クリックメニューでも「エラー箇所の絞り込み」を切り替え可能。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
+<a href="#ViewLog">→ ViewLog</a>
+
+<dt id="ListNyanFi">ListNyanFi<span class="pram_text">[_CC|_LS|_ファイル名]</span>
+<dd><b>NyanFi</b> についての情報をログに表示します。<br>
+<b>NyanFi</b>、アーカイバDLL、Migemo、WIC などについての詳細が一覧表示されます。<br>
+
+<div class="spc_box">
+パラメータに <b>CC</b> を指定すると一覧をクリップボードにコピー、<b>LS</b> を指定すると<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+またパラメータに<b>ファイル名</b>を指定すると一覧を保存できます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+ファイル名の指定には、<a href="#ListArchive">ListArchive</a> コマンドと同じ書式文字列が使えます。<br>
+</div>
+
+<dt id="ListTail">ListTail<span class="pram_text">[_[R][行数][;TE][;FF][;/見出しパターン/][;ファイル名]]</span>
+<dd>カーソル位置のテキストファイルの末尾から指定行数分を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+表示部分のみを読み込むので、巨大なログファイルなどもすばやく確認できます。またフィルタによる絞り込み表示が可能。<br>
+
+<div class="spc_box">
+パラメータで行数を指定しない場合、デフォルトの100行になります。<br>
+行数の頭に <b>R</b> を付けると、逆順で表示します。<br>
+パラメータに <b>TE</b> を指定すると、テキストの最後尾に移動します。<br>
+パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+パラメータに<b>見出しパターン</b>(正規表現)を指定すると、それがマッチする行が「見出しの文字色」で表示されます。なお見出しパターンを指定しない場合、<a href="hid00084.htm">構文強調表示定義ファイル</a>で定義された見出しパターンや、<a href="hid00066.htm">ユーザ定義文字列一覧</a>で設定された拡張子に対する見出しパターンがあれば、それを用いて強調表示を行います。<br>
+パラメータに特定の<b>ファイル名</b>を指定して直接開くこともできます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。また、ファイル名は最後に指定してください。<br>
+ダイアログで「<b>監視</b>」をチェックすると、ファイルの変化を監視して表示を自動的に更新することもできます(監視間隔=1秒)。また、「<b>通知</b>」をチェックしていると、ファイルが変化(フィルタ中なら表示内容が変化)したときに、<a href="hid00018.htm">オプション設定 - 通知・確認</a>で「<b>ファイル監視の通知音</b>」で設定されている通知音が鳴ります。<br>
+</div>
+
+<div class="spc_box">
+<b>例</b>: 末尾から50行を逆順で表示し、フィルタ欄にフォーカス<br>
+　ListTail_R50;FF<br>
+
+<b>例</b>: 指定ファイルの末尾200行を表示し、最後尾に移動<br>
+　ListTail_200;TE;D:\data\hoge.txt<br>
+</div>
+<a href="#WatchTail">→ WatchTail</a>　<a href="#ViewTail">→ ViewTail</a>
+
+<dt id="ListText">ListText<span class="pram_text">[_[FF][;EO][;/見出しパターン/][;ファイル名]]</span>
+<dd>カーソル位置のテキストファイルを<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+表示処理などが単純な分、テキストビュアーよりも高速に動作します。またフィルタによる絞り込み表示が可能。<br>
+
+<div class="spc_box">
+パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+カーソル位置が <b>NyanFi</b> のログファイル(<b>tasklog*.txt</b>)の場合、パラメータに <b>EO</b> を指定するとエラー箇所を絞り込んで表示します。また、一覧の右クリックメニューでも「エラー箇所の絞り込み」を切り替え可能。なお、ログファイル以外の場合 <b>EO</b> は無視されます。<br>
+パラメータに<b>見出しパターン</b>(正規表現)を指定すると、それがマッチする行が「見出しの文字色」で表示されます。なお見出しパターンを指定しない場合、<a href="hid00084.htm">構文強調表示定義ファイル</a>で定義された見出しパターンや、<a href="hid00066.htm">ユーザ定義文字列一覧</a>で設定された拡張子に対する見出しパターンがあれば、それを用いて強調表示を行います。<br>
+パラメータに特定の<b>ファイル名</b>を指定して直接開くこともできます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
+<b>例</b>: カーソル位置のファイルを表示。●で始まる行は見出しとして強調。<br>
+　ListText_/^●/<br>
+<b>例</b>: カレントの tasklog.txt のエラー箇所を表示し、フィルタ欄にフォーカス<br>
+　ListText_FF;EO;tasklog.txt<br>
+<a href="#ListLog">→ ListLog</a>　<a href="#ListClipboard">→ ListClipboard</a>　<a href="#ListTree">→ ListTree</a>
+
+<dt id="ListTree">ListTree<span class="pram_text">[_ディレクトリ名]</span>
+<dd>カレント以下のディレクトリ構造を<a href="hid00073.htm">一覧ダイアログ</a>でツリー表示します。<br>
+ディレクトリを選択している場合は、それらの階層下だけが対象となります。<br>
+<div class="spc_box">
+基準となる<b>ディレクトリ名</b>をパラメータで指定することもできます。<br>
+<a href="#ExeCommands">ExeCommands</a> コマンドのパラメータ区切り文字との混同を避けるため、ルートディレクトリの場合は <b>:</b> の後に <b>\</b> を付けてください。&quot;%変数名%&quot; という書式で環境変数も使えます。なおドライブ名がない場合はカレントからの相対指定となります。<br>
+</div>
+<div class="spc_box">
+表示内容を右クリックメニューの「<b>一覧をファイルに保存</b>」で保存した場合、それを <a href="#ListText">ListText</a> コマンドで表示すると <b>ListTree</b> コマンドの場合と同様の表示/操作が可能になります。<br>
+</div>
+<div class="spc_box">
+なおフィルタで絞り込んだ場合、ツリー構造が崩れないように階層の抜けが補われます。
+</div>
+<a href="#ListFileName">→ ListFileName</a>　<a href="#ListText">→ ListText</a>
+
+<dt id="LoadBgImage">LoadBgImage<span class="pram_text">[_ファイル名]</span>
+<dd>カーソル位置の画像ファイル(メタファイルは除く)を背景画像として読み込みます。<br>
+<a href="hid00010.htm#BgImage">→ オプション設定 - デザイン - 「背景画像表示」</a> で「<b>2画面にわたって表示</b>」が選択されている場合は<b>画像1</b>に、「<b>それぞれに表示</b>」が選択されている場合は、左側なら<b>画像1</b>に、右側なら<b>画像2</b>に読み込まれます。<br>
+パラメータに<b>ファイル名</b>を指定すると直接開けます(ドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定)。<br>
+<a href="#BgImgMode">→ BgImgMode</a>
+
+<dt id="LoadResultList">LoadResultList<span class="pram_text">[_ファイル名]</span>
+<dd><a href="#SaveAsResultList">SaveAsResultList</a> コマンドで保存しておいたファイルを読み込み、結果リストとして表示します。<br>
+パラメータで<b>ファイル名</b>を指定することも可能(ドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定)。<br>
+<div class="spc_box">
+読み込みの際に存在しない項目は自動的に削除されます(UNCパスが含まれる場合は要注意)。<br>
+表示されたリストは通常と同様に扱えますが、<a href="#ReloadList">ReloadList</a> コマンドによる再検索はできません。<br>
+</div>
+<a href="#SaveAsResultList">→ SaveAsResultList</a><br>
+
+<dt id="LoadTabGroup">LoadTabGroup<span class="pram_text">[_ファイル名]</span>
+<dd><a href="#SaveAsTabGroup">SaveAsTabGroup</a> コマンドで保存しておいたタブグループ・ファイルを読み込んで、タブの状態を復元します。<br>
+パラメータで<b>ファイル名</b>を指定することも可能(ドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定)。<br>
+<a href="#SaveAsTabGroup">→ SaveAsTabGroup</a>　<a href="#SaveTabGroup">→ SaveTabGroup</a>
+
+<dt id="LoadWorkList">LoadWorkList<span class="pram_text">[_ファイル名]</span>
+<dd><a href="hid00060.htm">ワークリスト</a>を選択して読み込みます。<br>
+直前に使用していたワークリストは自動的に保存されます(無名だった場合は「<b>ワークリストに名前を付けて保存</b>」ダイアログが出ます)。<br>
+なお保存しようとした時点で、当該ワークリスト・ファイルのタイムスタンプが変化していたら、保存せずに変更内容を破棄するかを確認するメッセージが出ます。<br>
+パラメータに<b>ファイル名</b>を指定すると直接開けます(ドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定)。<br>
+<a href="#SaveWorkList">→ SaveWorkList</a>　<a href="#SaveAsWorkList">→ SaveAsWorkList</a>　<a href="#NewWorkList">→ NewWorkList</a>
+
+<dt id="LockTextPreview">LockTextPreview<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、<a href="hid00082.htm">テキストプレビュー</a>のロック/解除をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定するとロック、<b>OFF</b> で解除になります。<br>
+ロックされると、別のファイルにカーソルを移動しても、表示内容がそのまま保持されます。<br>
+切り替えは、テキストプレビューの右クリックメニューからも可能。また、プレビュー下部のロック表示をダブルクリックすると解除されます。<br>
+
+<dt id="LogFileInfo">LogFileInfo
+<dd>選択中(無ければカーソル位置)の項目のファイル情報をログに出力します。<br>
+<a href="hid00024.htm#FileInfo">オプション設定 - 一般2 - ファイル情報</a> の「<b>アーカイブ内の情報を表示(一時解凍)</b>」、「<b>情報を取得しない拡張子</b>」、「<b>RARの情報取得をサイズで制限する</b>」の設定は無視されます。<br>
+<a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#ListFileInfo">→ ListFileInfo</a>　<a href="#ShowProperty">→ ShowProperty</a>
+
+<dt id="Mark">Mark<span class="pram_text">[_IM|_ND|_メモ]</span>
+<dd>カーソル位置の項目に<b>栞マーク</b>を設定ます。すでに栞マークが設定されている場合は解除します。<br>
+栞マークは、<a href="hid00070.htm">栞マーク一覧</a>などで参照できます。<br>
+<div class="spc_box">
+パラメータに <b>IM</b> を指定すると、項目に栞マークを設定するとともに、入力ボックスでメモを設定できます。パラメータでメモ内容を直接指定することも可能。なおメモ設定時は、実行後にカーソルを下に移動しません。<br>
+パラメータに <b>ND</b> を指定すると、実行後にカーソルを下に移動しません。<br>
+</div>
+<a href="#ClearMark">→ ClearMark</a>　<a href="#NextMark">→ NextMark</a>　<a href="#PrevMark">→ PrevMark</a>　<a href="#MarkList">→ MarkList</a>　<a href="#FindMark">→ FindMark</a>　<a href="#SelMark">→ SelMark</a>　<a href="#MarkMask">→ MarkMask</a>
+
+<dt id="MarkList">MarkList<span class="pram_text">[_FF]</span>
+<dd><a href="hid00070.htm">栞マーク一覧</a>を表示します。<br>
+パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>　<a href="#FindMark">→ FindMark</a>
+
+<dt id="MarkMask">MarkMask<span class="pram_text">[_CA]</span>
+<dd>栞マーク項目だけを残して他を隠します(栞マーク項目に対する<b>選択マスク</b>)。栞マーク項目がない場合は何もしません。<br>
+マスクを解除するには、パラメータに <b>CA</b> を指定してください。<a href="#ClearMask">ClearMask</a> や <a href="#SelMask">SelMask</a>_CA コマンドでも解除できます。また、別のディレクトリに移動した場合にも解除されます。<br>
+<a href="#Mark">→ Mark</a>　<a href="#SelMask">→ SelMask</a>　<a href="#DelSelMask">→ DelSelMask</a>　<a href="#ClearMark">→ ClearMark</a>　<a href="#ClearMask">→ ClearMask</a>
+
+<dt id="MaskFind">MaskFind<span class="pram_text">_マスク[\]</span>
+<dd>カレントパスまたは選択ディレクトリ以下で、指定マスクにマッチする項目を検索します。マスクの末尾が <b>\</b> の場合はディレクトリに、そうでない場合はファイルにマッチします。<a href="hid00052.htm">ファイル名検索</a>、<a href="hid00053.htm">ディレクトリ名検索</a> でマスクのみ指定した場合と同様になります。見つかるとカレント側に結果リストが表示されます。<br>
+<a href="#FindFileDlg">→ FindFileDlg</a>　<a href="#FindDirDlg">→ FindDirDlg</a>
+
+<dt id="MaskSelect">MaskSelect<span class="pram_text">[_[!]マスク[\][;[!]マスク[\]...]]</span>
+<dd>指定マスクにマッチする項目を選択します。マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
+マスクの末尾が <b>\</b> の場合はディレクトリに、そうでない場合はファイルにマッチします。<br>
+マスクの先頭に <b>!</b> があると、それ以外のファイルまたはディレクトリが選択されます。ファイルとディレクトリに対して別々に適用されますので、例えば !*.txt だけを指定した場合、*.txt 以外のファイルが選択されますがディレクトリは選択されません。<br>
+なお、コンボボックス上の右クリックメニューで入力履歴を削除したりできます。<br>
+パラメータにマスク文字列を指定すると、ダイアログを出さずにそのマスクで直ちに選択します。<br>
+<div class="spc_box">
+<b>例</b>: ZIP と 7z のアーカイブを選択<br>
+　MaskSelect_*.zip;*.7z<br>
+<b>例</b>: temp 以外のディレクトリと、*.bak 以外のファイルを選択<br>
+　MaskSelect_!temp\;!*.bak<br>
+</div>
+<a href="#MatchSelect">→ MatchSelect</a>　<a href="#SelMask">→ SelMask</a>　<a href="#DateSelect">→ DateSelect</a>
+
+<dt id="MatchSelect">MatchSelect<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]]</span>
+<dd>名前に指定文字列が含まれている項目を選択します。文字列は ; (セミコロン)で区切って複数指定できます。大文字・小文字は区別されません。指定文字列を / で囲むと正規表現とみなされます。<br>
+なおコンボボックス上の右クリックメニューで、入力履歴を削除したり正規表現を参照したりできます。<br>
+パラメータを指定すると、ダイアログを出さずにその文字列で直ちに選択します。<br>
+<div class="spc_box">
+<b>例</b>: 4桁の数字を含む項目を選択<br>
+　MatchSelect_/\d{4}/<br>
+</div>
+<a href="#MaskSelect">→ MaskSelect</a>　<a href="#SelMask">→ SelMask</a>　<a href="#DateSelect">→ DateSelect</a>　<a href="#TagSelect">→ TagSelect</a>
+
+<dt id="MenuBar">MenuBar<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、メニューバーの表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+<a href="hid00010.htm#MenuBar">→ オプション設定 - デザイン - 「メニューバーを表示」</a><br>
+<a href="#PopupMainMenu">→ PopupMainMenu</a>
+
+<dt id="MonitorOff">MonitorOff
+<dd>ディスプレイの電源を切ります。<br>
+1秒後から処理を開始しますので、それまでにキーボードやマウスから手を放してください。その後はキーやマウス操作で復帰します。
+
+<dt id="Move">Move<span class="pram_text">[_SO|_OP|_TO|_SD|_SS]</span>
+<dd>選択中(無ければカーソル位置)の項目を反対パスに移動します。<br>
+移動処理はバックグラウンド・タスクで行われます。<br>
+
+<div class="spc_box">
+パラメータに <b>SO</b> を指定すると、選択されている項目のみを移動します。<br>
+パラメータに <b>OP</b> を指定すると、移動終了後、反対側の移動先に移ったときのカーソル位置が最初に移動したファイルに設定されます。移動終了時、すでに反対側に移っていた場合は、カーソル移動が行われません。<br>
+また <b>OP2</b> を指定すると、バックグラウンド・タスク実行中に移動先ディレクトリの変化が検出されると、そのリストのカーソル位置が、その時点で移動が終わっているファイルに逐次設定され、タスク終了時には最後に移動したファイルに設定されます。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>TO</b> を指定すると、反対パスではなく、入力ボックス(<a href="#InputDir">→ InputDir</a>)で指定したディレクトリが移動先になります。このとき存在しないディレクトリを指定すると、確認メッセージが出てそれを新規作成できます。<br>
+パラメータに <b>SD</b> を指定すると、フォルダの参照ダイアログで移動先を選択できます。<br>
+パラメータに <b>SS</b> を指定すると、カレントのサブディレクトリを移動先として選択するダイアログが開きます。最初の <b>..</b> を選ぶと親ディレクトリに移動します。<br>
+</div>
+<a href="hid00009.htm#Copy">→ オプション設定 - 一般 - コピー動作</a><br>
+<a href="#MoveTo">→ MoveTo</a>　<a href="#Copy">→ Copy</a>　<a href="#CopyTo">→ CopyTo</a>
+
+<dt id="MoveTab">MoveTab<span class="pram_text">_PR|_TP|_ED</span>
+<dd>現在のタブの位置を移動します。<br>
+パラメータが指定されていないと、一つ次の位置に移動(交換)します。<br>
+パラメータに <b>PR</b> を指定すると一つ前、<b>TP</b> では先頭、<b>TP</b> では最後に移動します。<br>
+なお、タブの移動はドラッグ＆ドロップでも可能です。<br>
+<a href="#AddTab">→ AddTab</a>　<a href="#DelTab">→ DelTab</a>　<a href="#SoloTab">→ SoloTab</a>　<a href="#MoveTab">→ MoveTab</a>　<a href="#ShowTabBar">→ ShowTabBar</a>
+
+<dt id="MoveTo">MoveTo<span class="pram_text">_ディレクトリ名</span>
+<dd>選択中(無ければカーソル位置)の項目を指定ディレクトリへ移動します。<br>
+ディレクトリ名には、&quot;%変数名%&quot; という書式で環境変数も使えます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+<b>例</b>: 親ディレクトリに移動<br>
+　MoveTo_..<br>
+<a href="#Move">→ Move</a>　<a href="#Copy">→ Copy</a>　<a href="#CopyTo">→ CopyTo</a>
+
+<dt id="MuteVolume">MuteVolume<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、音量ミュートをトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定するとミュート、<b>OFF</b> で解除になります。<br>
+
+<dt id="NameFromClip">NameFromClip<span class="pram_text">[_書式]</span>
+<dd>カーソル位置項目の名前を、クリップボードの内容に変更します。<br>
+文字列が引用符で囲まれていたら外します。ドライブ名やディレクトリ名が含まれている場合、ファイル名部分のみを抽出して用います。また、前後の制御文字や空白は取り除き、複数行の場合は空でない最初の行内容を用います。<br>
+
+<div class="spc_box">
+パラメータで改名の書式を指定することもできます。以下の書式文字列が使え、クリップボードのかかわらない簡単な改名も可能です。<br>
+<div class="indent1">
+<b>\A</b>　元のファイル名主部<br>
+<b>\E</b>　元の拡張子( . は除く)<br>
+<b>\CA</b>　クリップボード内のファイル名主部<br>
+<b>\CE</b>　クリップボード内の拡張子( . は除く)<br>
+</div>
+</div>
+
+<div class="spc_box">
+<b>例</b>:<br>
+　NameFromClip_\CA.\E<br>
+　NameFromClip_\A.\E.bak<br>
+</div>
+<a href="#CopyFileName">→ CopyFileName</a>
+
+<dt id="NameToLower">NameToLower
+<dd>選択中(無ければカーソル位置)の項目のファイル名を小文字化します。
+
+<dt id="NameToUpper">NameToUpper
+<dd>選択中(無ければカーソル位置)の項目のファイル名を大文字化します。
+
+<dt id="NetConnect">NetConnect
+<dd>「<b>ネットワークドライブの割り当て</b>」ダイアログを開きます。
+
+<dt id="NetDisconnect">NetDisconnect
+<dd>「<b>ネットワークドライブの切断</b>」ダイアログを開きます。
+
+<dt id="NewFile">NewFile
+<dd>あらかじめ用意した<b>テンプレート</b>をカレントパスにコピーして、新規ファイルを作成します。<br>
+<span class="btn_frame">...</span>ボタンでテンプレートを選択するとコンボボックスに追加されます。<br>
+作成するファイルの<b>名前</b>は、必要に応じて変更してください。<br>
+「<b>作成後に実行するコマンド</b>」を設定しておくと、それが <a href="#ExeCommands">ExeCommands</a> のパラメータとして実行されます。<br>
+<a href="#NewTextFile">→ NewTextFile</a>
+
+<dt id="NewTextFile">NewTextFile<span class="pram_text">[_名前]</span> 
+<dd>カレントパスに新規テキストファイルを作成します。<br>
+ファイル名の拡張子を省略すると <b>.txt</b> が付加されます(代替データストリーム一覧の場合は除く)。<br>
+「<b>クリップボードから貼り付け</b>」をチェックしていると、クリップボードのテキスト内容をファイルに出力します。文字コードはコンボボックスで選択できます。<br>
+「<b>エディタで開く</b>」チェックしていると、作成したファイルをテキストエディタで開きます。<br>
+<a href="#NewFile">→ NewFile</a>
+
+<div class="spc_box">
+パラメータを指定すると、入力ボックスを出さずにその名前で直ちにファイルを作成します。名前の指定には以下の書式文字列が使えます。<br>
+<div class="indent1">
+<b>\DT</b>(書式)　現在の日時 (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\TS</b>(書式)　カーソル位置項目のタイムスタンプ (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\C</b>　カレントのパス無しディレクトリ名<br>
+<b>\N</b>　カーソル位置のファイル名主部またはディレクトリ名<br>
+<b>\E</b>　カーソル位置のファイル拡張子( . は除く)<br>
+</div>
+<b>例</b>: NewTextFile_hoge\DT(yymmdd).txt　→　hoge180918.txt<br>
+</div>
+
+<dt id="NewWorkList">NewWorkList
+<dd>新規に空の<a href="hid00060.htm">ワークリスト</a>を作成して表示します。<br>
+新規ワークリストは無名ですので、保存するには <a href="#SaveAsWorkList">SaveAsWorkList</a> コマンドを用いてください。<br>
+<a href="#LoadWorkList">→ LoadWorkList</a>
+
+<dt id="NextDrive">NextDrive
+<dd>利用可能な次のドライブに移ります。<br>
+<a href="#PrevDrive">→ PrevDrive</a>　<a href="#ChangeDrive">→ ChangeDrive</a>　<a href="#DriveList">→ DriveList</a>
+
+<dt id="NextMark">NextMark
+<dd>次の栞マーク項目へ移動します。下方向で見つからなかった場合は先頭から探します。<br>
+<a href="#PrevMark">→ PrevMark</a>　<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>　<a href="#FindMark">→ FindMark</a>
+
+<dt id="NextNyanFi">NextNyanFi<span class="pram_text">[_DN]</span>
+<dd>複数起動されている場合、次の <b>NyanFi</b> をアクティブにします。<br>
+パラメータに <b>DN</b> を指定すると、複数起動されていない場合、新たに <b>NyanFi</b> を二重起動します。<br>
+<a href="#PrevNyanFi">→ PrevNyanFi</a>　<a href="#ToNextOnRight">→ ToNextOnRight</a>　<a href="#ToPrevOnLeft">→ ToPrevOnLeft</a>　<a href="#Duplicate">→ Duplicate</a>
+
+<dt id="NextSameName">NextSameName
+<dd>カーソル位置とファイル名主部が同じ次のファイルへ移動します。下方向で見つからなかった場合は先頭から探します。<br>
+<a href="#SelSameName">→ SelSameName</a>
+
+<dt id="NextTab">NextTab
+<dd>次のタブに移ります。<br>
+通常のファイルリストの選択状態(ワークリストのセパレータは除く)は、タブ切り替え時に待避/復元されます。<br>
+<a href="#PrevTab">→ PrevTab</a>　<a href="#ToTab">→ ToTab</a>　<a href="#FixTabPath">→ FixTabPath</a>
+
+<dt id="OpenADS">OpenADS
+<dd>カーソル位置の項目の代替データストリーム一覧を仮想リストとして開きます。<br>
+仮想リストに対しては、コピー、削除、閲覧、編集(アプリケーションが対応している場合)などの基本的な操作が可能ですが、移動や改名、実行、各種変換などはできません。<br>
+また独自の関連付け(<a href="#OpenByApp">OpenByApp</a>)では開けますが、Windowsの関連付け(<a href="#OpenByWin">OpenByWin</a>)では開けません。<br>
+テキストや通常の画像はプレビュー可能ですが、動画、アイコン、カーソル、フォントなどはプレビューできません。<br>
+<div class="note_text">
+※代替データストリームは、<b>NTFS</b>でないと利用できません。他のファイルシステムにファイルをコピーすると、代替データストリームは失われます。<br>
+※同名ファイルで上書きコピーした場合、代替データストリームも上書きされます。代替データストリームを持たないファイルで上書きすると、元あった代替データストリームはすべて失われます。<br>
+※ディレクトリをコピーした場合、代替データストリームはコピーされません。別途コピーしてください。
+</div>
+<a href="#DeleteADS">→ DeleteADS</a>
+
+<dt id="OpenByApp">OpenByApp<span class="pram_text">[_ファイル名]</span>
+<dd>選択中(無ければカーソル位置)の項目を、独自の関連付けで開きます。関連付けは、<a href="hid00013.htm">オプション設定 - 関連付け</a>で行ってください。一つの拡張子に対して複数の関連付けが設定されていると、ポップアップメニューで選択できます。<br>
+アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
+パラメータに<b>ファイル名</b>を指定すると直接開けます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+<a href="hid00019.htm#OpenByApp">→ オプション設定 - コマンド</a><br>
+<a href="#OpenByWin">→ OpenByWin</a>　<a href="#OpenStandard">→ OpenStandard</a>
+
+<dt id="OpenByExp">OpenByExp<span class="pram_text">[_ディレクトリ名|_&quot;CLSID&quot;|_&quot;shell:コマンド&quot;|_/コマンドライン・オプション]</span>
+<dd>カーソル位置のディレクトリをエクスプローラで開きます。[..] の場合はカレントパスが開かれます。<br>
+カーソル位置がファイル場合は、カレントパスを開いて、そのファイルを選択状態にします。<br>
+
+<div class="spc_box">
+パラメータにディレクトリ名を指定すると直接開けます。ルートディレクトリの場合は <b>:</b> の後に <b>\</b> を付けてください。&quot;%変数名%&quot; という書式で環境変数も使えます。なおドライブ名がない場合はカレントからの相対指定となります。<br>
+CLSID や shell コマンドを指定することも可能です。またパラメータが <b>/</b> で始まる場合、エクスプローラのコマンドライン・オプションとみなしてそのまま渡します。<br>
+</div>
+
+<div class="spc_box">
+<b>例</b>: マイドキュメントを開く<br>
+　OpenByExp_&quot;::{450D8FBA-AD25-11D0-98A8-0800361B1103}&quot;<br>
+<b>例</b>: プリンターを開く<br>
+　OpenByExp_&quot;shell:PrintersFolder&quot;<br>
+<b>例</b>: 指定ディレクトリをルートとして開く<br>
+　OpenByExp_/root,D:\qx2<br>
+</div>
+<a href="#OpenCtrlPanel">→ OpenCtrlPanel</a>
+
+<dt id="OpenByWin">OpenByWin<span class="pram_text">[_ファイル名]</span>
+<dd>選択中(無ければカーソル位置)の項目を、Windowsの関連付けで開きます。<br>
+アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
+パラメータで<b>ファイル名</b>を指定して開くこともできます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+またパラメータが、&quot;http://&quot;、&quot;https://&quot;、&quot;mailto:&quot; で始まる場合、URLやアドレスとして開けます。<br>
+<a href="hid00019.htm#OpenByWin">→ オプション設定 - コマンド</a><br>
+<a href="#OpenByApp">→ OpenByApp</a>　<a href="#OpenStandard">→ OpenStandard</a>
+
+<dt id="OpenCtrlPanel">OpenCtrlPanel
+<dd><a href="#OpenByExp">OpenByExp</a>_&quot;shell:ControlPanelFolder&quot; のエイリアス(別名)です。<br>
+コントロールパネルを開きます。<br>
+<a href="#OpenByExp">→ OpenByExp</a>
+
+<dt id="OpenStandard">OpenStandard<span class="pram_text">[_ファイル名|_ディレクトリ名]</span>
+<dd>カーソル位置の項目に対し、<span class="btn_frame">Enter</span>キーによる標準の動作を行います。<br>
+<div class="indent1">
+・実行可能なファイルは実行します(仮想ディレクトリ内は除く)。<br>
+・画像ファイルやアイコンファイルはイメージビュアーで表示。<br>
+・サウンドファイル(<b>.wav</b>、<b>.wma</b>、<b>.mp3</b>、<b>.mid</b>)は秒数制限で再生。<br>
+・アーカイブは仮想ディレクトリとして開きます(<b>.jar</b>、<b>.docx</b>、<b>.dotx</b>、<b>.pptx</b>、<b>.xlsx</b>、<b>.xltx</b>、<b>.odt</b>、<b>.ods</b>、<b>.odp</b>、<b>.odg</b>、<b>.odc</b>、<b>.odf</b>、<b>.odi</b>、<b>.odm</b>、<b>.odb</b>、<b>.epub</b>、<b>.mobi</b> はZIPとして認識。また <b>.cbz</b>、<b>.cb7</b>、<b>.cbt</b>、<b>.cbr</b> は、 それぞれ ZIP、7z、TAR、RAR として認識)。<br>
+・<b>.nwl</b> ファイルは<a href="hid00060.htm">ワークリスト</a>として開きます。<br>
+・コマンドファイル(<b>.nbt</b>)へのショートカット(<b>.lnk</b>)は <a href="#ExeCommands">ExeCommands</a> コマンドで実行。<br>
+・ディレクトリやディレクトリへのショートカット(<b>.lnk</b>)は、そこへ移動。<br>
+・ライブラリファイル(<b>.library-ms</b>)は登録場所を開きます(複数ある場合はポップアップメニューで選択)。<br>
+・<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>タブグループ</b>」をチェックしていると、タブグループ・ファイルを <a href="#LoadTabGroup">LoadTabGroup</a> コマンドで開きます。<br>
+・<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>メニュー定義</b>」をチェックしていると、メニュー定義ファイル(一行目が &quot;;[MenuFile]&quot;) を <a href="#ExeMenuFile">ExeMenuFile</a> コマンドで開きます。<br>
+・<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>結果リスト</b>」をチェックしていると、結果リストファイル(一行目が &quot;;[ResultList]&quot;) を <a href="#LoadResultList">LoadResultList</a> コマンドで開きます。<br>
+・それ以外のファイルはビュアーでテキストまたはバイナリ表示します。<br>
+</div>
+
+<div class="spc_box">
+オプション設定で、特定のファイル拡張子に対し、標準とは異なる動作(<a href="#OpenByWin">OpenByWin</a>、<a href="#OpenByApp">OpenByApp</a>、<a href="#TextViewer">TextViewer</a>、<a href="#FileEdit">FileEdit</a>、<a href="#BinaryEdit">BinaryEdit</a>、<a href="#ExeCommands">ExeCommands</a>)を指定することも可能です。<br>
+なお、<a href="hid00080.htm">FTP接続</a>時のリモート側では、ディレクトリの変更のみ可能です。<br>
+<div class="note_text">
+※<b>.mp3</b> の場合ID3タグの内容によっては再生できない場合がありますが、適切なコーデックを別途インストールすれば再生できるようになります(ADVANCED Codecs など)。<br>
+</div>
+</div>
+
+<div class="spc_box">
+パラメータで<b>ファイル名</b>または<b>ディレクトリ名</b>を指定して開くこともできます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+カレントが通常のファイルリストではない場合、それを解除してからファイルを開きます。なお検索中は実行できません。<br>
+</div>
+
+<a href="hid00019.htm#OpenStandard">→ オプション設定 - コマンド</a><br>
+<a href="hid00024.htm#Sound">→ オプション設定 - 一般2 - サウンド再生 - 「再生制限」</a><br>
+<a href="#OpenByApp">→ OpenByApp</a>　<a href="#OpenByWin">→ OpenByWin</a>　<a href="#SyncLR">→ SyncLR</a>
+
+<dt id="OpenTrash">OpenTrash
+<dd>ごみ箱をエクスプローラで開きます。<br>
+<a href="#UseTrash">→ UseTrash</a>　<a href="#EmptyTrash">→ EmptyTrash</a>　<a href="#OpenByExp">→ OpenByExp</a>
+
+<dt id="OptionDlg">OptionDlg<span class="pram_text">[_GN|_G2|_MO|_DS|_FC|_TV|_IV|_ED|_KY|_AC|_XM|_XT|_ST|_NT|_CM|_EV]</span>
+<dd>「<a href="hid00008.htm">オプション設定</a>」ダイアログを開きます。<br>
+パラメータを指定すると特定のタブを開くことができます。パラメータとタブの対応は次の通りです。<b>GN</b>: 一般、<b>G2</b>: 一般2、<b>MO</b>: マウス操作、<b>DS</b>: デザイン、<b>FC</b>: フォント・配色、<b>TV</b>: テキストビュアー、<b>IV</b>: イメージビュアー、<b>ED</b>: エディタ、<b>KY</b>: キー設定、<b>AC</b>: 関連付け、<b>XM</b>: 追加メニュー、<b>XT</b>: 外部ツール、<b>ST</b>: 起動時、<b>NT</b>: 通知・確認、<b>CM</b>: コマンド、<b>EV</b>: イベント。<br>
+このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
+<div class="spc_box note_text">
+※ダイアログを開く直前に、画面が通常のファイルリスト表示に戻りますので注意してください。FTPも切断されます。<br>
+</div>
+
+<dt id="Pack">Pack<span class="pram_text">[_アーカイブ名]</span>
+<dd>選択中(無ければカーソル位置)の項目を圧縮して、反対パスにアーカイブを作成します。<br>
+ダイアログで必要な設定を行ってください。なお、? を含むパラメータを指定しない場合、カーソル位置のファイル名主部がデフォルトのアーカイブ名となります。<br>
+フォーマットは、<b>ZIP</b>、<b>7z</b>、<b>TAR</b> に対応しています(要 7-zip64.dll、tar64.dll)。<br>
+
+<div class="note_text">
+※高い圧縮レベルを用いたり巨大なファイルを扱ったりすると、アーカイバDLLでエラーが発生する可能性があります。そのような場合は外部ツールを利用することをおすすめします。コマンドライン版の 7z.exe などを登録して用いるのもよいかもしれません。
+</div>
+
+<div class="spc_box">
+各アーカイバDLLに渡すコマンドラインにスイッチオプションを追加指定したい場合は、<b>追加スイッチ</b> に記述してください。指定した内容は、規定スイッチオプションの末尾(構文解析停止の直前)に挿入されます。なお、<a href="hid00024.htm#Log">オプション設定 - 一般2 - ログ</a> の「<b>デバッグ情報</b>」をチェックしていると、実際に渡されたコマンドラインを確認できます。<br>
+<b>例</b>: 7z でソリッドモードをオフにする。<br>
+<span class="inp_box">-ms=off</span>
+</div>
+
+<div class="spc_box">
+パラメータにアーカイブ名(拡張子付)を指定すると、ダイアログを出さずに(<b>?</b> を含む場合は除く)、拡張子に対応したフォーマットですぐにアーカイブを作成します。この場合、圧縮形式や追加スイッチは、ダイアログで前回指定された内容が用いられます。<br>
+アーカイブ名の指定には以下の書式文字列が使えます。<br>
+<div class="indent1">
+<b>\DT</b>(書式)　現在の日時 (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\TS</b>(書式)　カーソル位置項目のタイムスタンプ (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\C</b>　カレントのパス無しディレクトリ名<br>
+<b>\N</b>　カーソル位置のファイル名主部またはディレクトリ名<br>
+<b>\E</b>　カーソル位置のファイル拡張子( . は除く)<br>
+<b>?</b> 　指定アーカイブ名をデフォルトとしてダイアログを表示
+</div>
+</div>
+<b>例</b>:カーソル位置の名前に現在の日付を付けてアーカイブ(zip)を作成<br>
+　Pack_\N_\DT(yymmdd).zip<br>
+<b>例</b>:カレントディレクトリをデフォルト名(zip)としてダイアログを開く<br>
+　Pack_\C.zip?<br>
+
+<div class="note_text">
+※<b>ZIP</b>、<b>7z</b>、<b>LHA</b>、<b>TAR</b> では空のディレクトリも格納されます。<b>CAB</b> は、その仕様上、空のディレクトリは格納できません。<br>
+</div>
+
+<div class="spc_box">
+ディレクトリのみを選択している場合に「<b>ディレクトリ毎に個別作成</b>」をチェックすると、ディレクトリ毎に「ディレクトリ名 + 拡張子」の名前でアーカイブを個別に作成します。<br>
+その際「<b>対象ディレクトリも含める</b>」をチェックしているとそのディレクトリごと、そうでなければディレクトリ内の対象を圧縮します。<br>
+</div>
+
+<div class="spc_box">
+「<b>同名アーカイブがある場合の処理</b>」で、「<b>既存内容に追加</b>」(同名ファイルは上書き)または「<b>削除して新規作成</b>」のいずれかを選択できます。<br>
+また「<b>確認</b>」をチェックしていると、同名アーカイブがある場合に確認メッセージが出ます。<br>
+</div>
+
+<a href="#PackToCurr">→ PackToCurr</a>　<a href="#UnPack">→ UnPack</a>
+
+<dt id="PackToCurr">PackToCurr<span class="pram_text">[_アーカイブ名]</span>
+<dd>選択中(無ければカーソル位置)の項目を圧縮して、カレントパスにアーカイブを作成します。作成先以外は <a href="#Pack">Pack</a> と同じです。<br>
+<a href="#Pack">→ Pack</a>　<a href="#UnPackToCurr">→ UnPackToCurr</a>
+
+<dt id="PageDown">PageDown
+<dd>カーソルを1ページ下に移動します。<br>
+<a href="#PageUp">→ PageUp</a>
+
+<dt id="PageDownSel">PageDownSel
+<dd>選択しながらカーソルを1ページ下に移動します。<br>
+<a href="#PageUpSel">→ PageUpSel</a>
+
+<dt id="PageUp">PageUp
+<dd>カーソルを1ページ上に移動します。<br>
+<a href="#PageDown">→ PageDown</a>
+
+<dt id="PageUpSel">PageUpSel
+<dd>選択しながらカーソルを1ページ上に移動します。<br>
+<a href="#PageDownSel">→ PageDownSel</a>
+
+<dt id="Paste">Paste<span class="pram_text">[_CL]</span>
+<dd><a href="#CopyToClip">CopyToClip</a>(<a href="#CutToClip">CutToClip</a>)コマンドを実行した対象や、エクスプローラなどでコピー(切り取り)した対象をカレントにコピー(移動)します。<br>
+コピー(移動)はバックグラウンド・タスクで行われます。<br>
+<div class="spc_box">
+パラメータに <b>CL</b> を指定すると、コピーの場合に同名のファイルや同一パスの同名ディレクトリがあると、<a href="hid00009.htm#Copy">オプション設定 - 一般 - コピー動作</a>の「<b>同名時の自動改名書式</b>」にしたがってクローン化を行います。<br>
+対象がディレクトリの場合、<a href="#Clone">Clone</a> コマンドとは異なり同一パスの同名でなければ通常のコピーになります。<br>
+なお移動の場合は、このパラメータは無視されます。
+</div>
+<a href="#CopyToClip">→ CopyToClip</a>　<a href="#CutToClip">→ CutToClip</a>　<a href="#Clone">→ Clone</a>　<a href="#CloneToCurr">→ CloneToCurr</a>
+
+<dt id="PathMaskDlg">PathMaskDlg<span class="pram_text">[_ND]</span>
+<dd>「<b>パスマスク</b>」ダイアログを開きます。<br>
+割り当てられているキーを押すと、そのマスクがカレントパスに適用されます。<br>
+マスクの編集・追加もこのダイアログで行えます。<br>
+マスクは <b>;</b> (セミコロン)で区切って複数指定可能。マスクの先頭に <b>!</b>があると除外。また <b>*</b> を指定するとマスク解除になります。マスクの末尾が <b>\</b> の場合はディレクトリとみなされます<br>
+
+<div class="spc_box">
+<b>例</b>: テキストファイルのみ表示、ディレクトリは非表示<br>
+　*.txt;!*\<br>
+</div>
+
+パラメータに <b>ND</b> を指定すると、ダイアログの代わりに、マスクを選択するポップアップメニューを表示します。<br>
+<a href="#InputPathMask">→ InputPathMask</a>　<a href="#SetPathMask">→ SetPathMask</a>　<a href="#ClearMask">→ ClearMask</a>　<a href="#SelMask">→ SelMask</a>
+
+<dt id="PauseAllTask">PauseAllTask<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、すべてのタスクの一旦停止/再開をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると一旦停止、<b>OFF</b> で再開になります。<br>
+<a href="#TaskMan">→ TaskMan</a>　<a href="#CancelAllTask">→ CancelAllTask</a>　<a href="#Suspend">→ Suspend</a>
+
+<dt id="PlayList">PlayList<span class="pram_text">[_RP|_SF|_SR][;ディレクトリ名|リストファイル名]</span><br>
+PlayList<span class="pram_text">[_NX|_PR|_PS|_RS|_FI|_LS]</span><br>
+<dd>選択中の項目からサウンドファイル(<b>.wav</b>、<b>.wma</b>、<b>.mp3</b>、<b>.mid</b>)のプレイリストを作成して再生します。ディレクトリが選択されている場合はその中のサウンドファイル(サブディレクトリを含む)が、リストファイル(ファイル/ディレクトリ名を列挙したテキストファイル、ワークリストも可)が選択されている場合はその内容がプレイリストに追加されます。<br>
+
+<div class="spc_box">
+パラメータに <b>RP</b> を指定するとリピート、<b>SF</b> でシャッフル、<b>SR</b> でシャッフル・リピート再生になります。<br>
+パラメータで<b>ディレクトリ名</b>や<b>リストファイル名</b>を指定することもできます。リストファイル名にドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定となります。再生モードも指定する場合は、間に <b>;</b> (セミコロン)を入れてください。<br>
+プレイリストの再生中、パラメータに <b>NX</b> を指定すると次曲、<b>PR</b> で前曲、<b>PS</b> で一時停止、<b>RS</b> で再開となります。<br>
+またパラメータに <b>FI</b> を指定すると再生中のファイル情報をダイアログ表示、<b>LS</b> を指定すると再生中のプレイリストが<a href="hid00073.htm">一覧ダイアログ</a>で表示されます。この場合、シャッフル再生中だと一覧もそのときのシャッフルされた状態で表示されます。<br>
+選択中の項目が何もなく、パラメータも無指定の場合、プレイリストの再生を終了します。<br>
+なおこのコマンドは、<a href="#OpenStandard">OpenStandard</a> コマンドや <a href="hid00063.htm#PlaySound">PlaySound</a> 補助コマンドによる再生とは独立して動作します。<br>
+<div class="note_text">
+※<b>.mp3</b> の場合ID3タグの内容によっては再生できない場合がありますが、適切なコーデックを別途インストールすれば再生できるようになります(ADVANCED Codecs など)。<br>
+</div>
+</div>
+<b>例</b>: 選択項目をシャッフル・リピート再生<br>
+　PlayList_SR<br>
+<b>例</b>: ディレクトリを指定してリピート再生<br>
+　PlayList_RP;&quot;d:\Music\丸尾めぐみ\ヤーチャイカ&quot;<br>
+<b>例</b>: リストファイルを指定して再生<br>
+　PlayList_favorite.txt<br>
+
+<dt id="PopDir">PopDir<span class="pram_text">[_OP]</span>
+<dd>スタックからディレクトリをポップし、そこに移動します。<br>
+パラメータに <b>OP</b> を指定すると、コマンドを反対側で実行します。<br>
+<a href="#PushDir">→ PushDir</a>　<a href="#DirStack">→ DirStack</a>　<a href="#BackDirHist">→ BackDirHist</a>　<a href="#ForwardDirHist">→ ForwardDirHist</a>
+
+<dt id="PopupMainMenu">PopupMainMenu
+<dd>メインメニューの内容をポップアップメニューに変換して表示します。<br>
+<a href="hid00010.htm#MenuBar">→ オプション設定 - デザイン - 「メニューバーを表示」</a><br>
+<a href="#MenuBar">→ MenuBar</a>　<a href="#ExPopupMenu">→ ExPopupMenu</a>
+
+<dt id="PopupTab">PopupTab
+<dd>タブ選択ポップアップメニューを表示します。メニューでは、左右がフルパスで表示されます。<br>
+このメニューは、タブバー左端のボタンを押しても表示できます。<br>
+<a href="#ShowTabBar">→ ShowTabBar</a>
+
+<dt id="PowerOff">PowerOff
+<dd><b>NyanFi</b> の終了処理後、<b>Windows</b> を終了します。<br>
+<a href="#Reboot">→ Reboot</a>
+
+<dt id="PowerShell">PowerShell
+<dd><b>PowerShell</b> を起動します(<a href="#FileRun">FileRun</a><span class="pram_text">_powershell</span> に相当)。<br>
+作業ディレクトリはカレントパスになります。<br>
+<a href="#CommandPrompt">→ CommandPrompt</a>　<a href="#FileRun">→ FileRun</a>
+
+<dt id="PrevDrive">PrevDrive
+<dd>利用可能な前のドライブに移ります。<br>
+<a href="#NextDrive">→ NextDrive</a>　<a href="#ChangeDrive">→ ChangeDrive</a>　<a href="#DriveList">→ DriveList</a>
+
+<dt id="PrevMark">PrevMark
+<dd>前の栞マーク項目へ移動します。上下方向で見つからなかった場合は最後から探します。<br>
+<a href="#NextMark">→ NextMark</a>　<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>　<a href="#FindMark">→ FindMark</a>
+
+<dt id="PrevNyanFi">PrevNyanFi
+<dd>複数起動されている場合、前の <b>NyanFi</b> をアクティブにします。<br>
+<a href="#NextNyanFi">→ NextNyanFi</a>　<a href="#ToPrevOnLeft">→ ToPrevOnLeft</a>　<a href="#ToNextOnRight">→ ToNextOnRight</a>　<a href="#Duplicate">→ Duplicate</a>
+
+<dt id="PrevTab">PrevTab
+<dd>前のタブに移ります。<br>
+通常のファイルリストの選択状態(ワークリストのセパレータは除く)は、タブ切り替え時に待避/復元されます。<br>
+<a href="#NextTab">→ NextTab</a>　<a href="#ToTab">→ ToTab</a>　<a href="#FixTabPath">→ FixTabPath</a>
+
+<dt id="PropertyDlg">PropertyDlg<span class="pram_text">[_ファイル名|_ディレクトリ名]</span>
+<dd>カーソル位置項目についてのプロパティダイアログを開きます。<br>
+パラメータで、対象のファイル名やディレクトリ名を指定することもできます。<br>
+
+<div class="spc_box">
+<b>例</b>: Cドライブのプロパティを表示<br>
+　PropertyDlg_C:\<br>
+</div>
+<a href="#ShowFileInfo">→ ShowFileInfo</a>
+
+<dt id="PushDir">PushDir<span class="pram_text">[_OP]</span>
+<dd>現在のディレクトリをスタックにプッシュします。<br>
+パラメータに <b>OP</b> を指定すると、コマンドを反対側で実行します。<br>
+<a href="#PopDir">→ PopDir</a>　<a href="#DirStack">→ DirStack</a>
+
+<dt id="Reboot">Reboot
+<dd><b>NyanFi</b> の終了処理後、<b>Windows</b> を再起動します。<br>
+<a href="#PowerOff">→ PowerOff</a>
+
+<dt id="RecentList">RecentList<span class="pram_text">[_AC|_BC]</span>
+<dd><a href="hid00058.htm#RecentList">最近使ったファイル一覧</a> が開きます。<br>
+一覧には、Windows の特殊フォルダにある項目のうち、リンク先のファイルが取得できたものが表示されます。<br>
+パラメータに <b>AC</b> を指定すると、最近使った項目(ファイル以外も含む)がすべて削除されます(一覧の右クリックメニューからも可能)。<br>
+また <b>BC</b> を指定すると、最近使った項目のうちリンク先のファイルやディレクトリが存在しなくなっているものが削除されます(一覧の右クリックメニューからも可能)。<br>
+<a href="#EditHistory">→ EditHistory</a>　<a href="#ViewHistory">→ ViewHistory</a>
+
+<dt id="RegDirDlg">RegDirDlg<span class="pram_text">[_ND]</span>
+<dd>「<a href="hid00054.htm">登録ディレクトリ</a>」ダイアログを開きます。<br>
+割り当てられているキーを押すと、そのディレクトリに移動します。<br>
+また、登録ディレクトリの編集・追加・削除もこのダイアログで行えます。<br>
+ここで割り当てたキーを、<a href="#ChangeRegDir">ChangeRegDir</a> コマンドのパラメータに設定すれば、そのディレクトリを開くこともできます。<br>
+パラメータに <b>ND</b> を指定すると、ダイアログの代わりに、ディレクトリを選択するポップアップメニューを表示します(<a href="#RegDirPopup">RegDirPopup</a> と同じ)。<br>
+<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#RegDirPopup">→ RegDirPopup</a>　<a href="#SpecialDirList">→ SpecialDirList</a>　<a href="#SubDirList">→ SubDirList</a>
+
+<dt id="RegDirPopup">RegDirPopup<span class="pram_text">[_OP]</span>
+<dd><a href="hid00054.htm">登録ディレクトリ</a>を選択するポップアップメニューを表示します。<br>
+パラメータに <b>OP</b> を指定すると、反対側で登録ディレクトリを開きます。無指定の場合、<a href="#RegDirDlg">RegDirDlg</a>_<b>ND</b> と同じです。<br>
+なお、「<a href="hid00054.htm">登録ディレクトリ</a>」ダイアログの「<b>呼出項目を先頭へ</b>」をチェックしていると、呼び出したディレクトリ項目が先頭に移動します(セパレータがある場合はそのブロックの先頭)。<br>
+<a href="#RegDirDlg">→ RegDirDlg</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>
+
+<dt id="RegExChecker">RegExChecker<span class="pram_text">[_パターン]</span>
+<dd><a href="hid00085.htm">正規表現チェッカー</a> を開きます。<br>
+パラメータに<b>パターン</b>を指定すると、チェッカー画面のパターン欄に入力されます。<br>
+
+<div class="spc_box">
+<span class="tips">Tips</span>外部から利用することもできます。<br>
+<pre class="example_box">
+NyanFi.exe -XRegExChecker
+</pre>
+</div>
+
+<dt id="RegSyncDlg">RegSyncDlg
+<dd>「<a href="hid00074.htm">同期コピーの設定</a>」ダイアログが開きます。<br>
+複数のディレクトリをまとめて登録しておくと、そのいずれかにファイルやディレクトリをコピーしたとき、他のディレクトリにも同時にコピーされます。設定により、削除やバックアップの同期も可能です。なお、仮想ディレクトリからのコピー(解凍)には対応していません。<br>
+このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
+<a href="#Copy">→ Copy</a>　<a href="#CopyTo">→ CopyTo</a>　<a href="#Backup">→ Backup</a>
+
+<dt id="ReloadList">ReloadList<span class="pram_text">[_CO|_HL|_OFF]</span>
+<dd>ファイルリストを最新の情報に更新します。検索の結果リストの場合は、同条件で再度検索を行います(重複ファイルの検索を除く)。<br>
+パラメータに <b>CO</b> を指定すると、カレント側のみ更新します。<br>
+パラメータに <b>HL</b> を指定すると、ファイルリストにあるファイルのハードリンク情報をチェックすることで、タイムスタンプ情報を更新します。<br>
+
+<div class="spc_box">
+パラメータに <b>OFF</b> を指定すると、監視ディレクトリに変化があった場合やアクティブになった時などに、ファイルリストの更新が行われなくなります。またファイル操作を行っても表示に反映さないので注意してください。<a href="#CalcDirSize">CalcDirSize</a>/<a href="#CalcDirSizeAll">CalcDirSizeAll</a> コマンドによるディレクトリ容量の計算結果や、<a href="#ItemTmpDown">ItemTmpDown</a>/<a href="#ItemTmpUp">ItemTmpUp</a> コマンドによる一時的な並び替えを保持しておきたい場合などに役立つかもしれません。解除するには、<b>ReloadList</b> コマンドを、パラメータなしか <b>OFF</b> 以外のパラメータを指定して実行してください。<br>
+</div>
+
+<dt id="RenameDlg">RenameDlg
+<dd>「<a href="hid00051.htm">名前の変更</a>」ダイアログが開き、ファイル名や属性、タイムスタンプを変更できます。<br>
+<a href="hid00060.htm">ワークリスト</a>の場合、<a href="#SetAlias">SetAlias</a> コマンドが実行され、カーソル位置の登録ファイルにエイリアス(別名)を設定します。<br>
+<a href="hid00080.htm">FTP接続</a>時のリモート側の場合、カーソル位置の単純な改名のみになります。<br>
+仮想ディレクトリで、アーカイバDLLに <b>7-zip64.dll</b> 文字化け対策版(Ver.15.～)を使用している場合、<b>ZIP</b> および <b>7z</b> 内のファイル名を変更できます(カーソル位置の単純な改名のみ)。<br>
+
+<a href="#SetAlias">→ SetAlias</a>　<a href="#SwapName">→ SwapName</a>　<a href="#UndoRename">→ UndoRename</a>　<a href="#SetArcTime">→ SetArcTime</a>　<a href="#SetDirTime">→ SetDirTime</a>
+
+<dt id="Restart">Restart<span class="pram_text">[_[NS][;RA|DM][;ファイル名]</span>
+<dd><b>NyanFi</b> を再起動します。<br>
+パラメータに <b>NS</b> を指定すると、終了時に INIファイルを保存しません。<br>
+パラメータに <b>RA</b> を指定すると、管理者として再起動します。<br>
+パラメータに <b>DM</b> を指定すると、現在管理者として実行している場合、通常ユーザに降格して再起動します(一時的なタスクスケジュールを作成して起動)。通常実行している場合、このパラメータは無視されます。<br>
+パラメータに<b>ファイル名</b>を指定すると、デフォルトのINIファイル(実行ディレクトリ\NyanFi.INI)の代わりに、指定した名前のINIファイルを用いて再起動します。ドライブ名がない場合、NyanFi ディレクトリからの相対指定とみなされます。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
+複数起動されている場合、最初の <b>NyanFi</b> を再起動すると、それが再び最初に起動された <b>NyanFi</b> として扱われます。<br>
+
+<div class="spc_box">
+<b>例</b>: INIファイルを切り替えて管理者として再起動<br>
+　Restart_RA;admin.INI<br>
+<b>例</b>: 管理者から降格して再起動<br>
+　Restart_DM<br>
+</div>
+
+<a href="#Exit">→ Exit</a>　<a href="#Close">→ Close</a>
+
+<dt id="ReturnList">ReturnList
+<dd>アーカイブの仮想ディレクトリ表示、<a href="hid00052.htm">ファイル名検索</a>／<a href="hid00053.htm">ディレクトリ名検索</a>の結果リスト、<a href="hid00060.htm">ワークリスト</a>から、通常のファイルリスト表示に戻ります。<br>
+これは<span class="btn_frame">ESC</span>キーによっても可能です(<a href="#ExeCommands">ExeCommands</a> が割り当てられている場合を除く)。<br>
+<div class="spc_box">
+また <a href="hid00056.htm">文字列検索(GREP)</a>の結果リスト、<a href="hid00058.htm">最近編集／閲覧したファイル一覧</a>、<a href="hid00057.htm">ディレクトリ履歴</a>、<a href="hid00055.htm">キー割り当て一覧</a>、<a href="hid00067.htm">コマンドファイル一覧</a>、<a href="hid00070.htm">栞マーク一覧</a>、<a href="hid00070.htm">拡張子別一覧</a>、<a href="hid00073.htm">一覧ダイアログ</a>、<a href="hid00069.htm">タスクマネージャ</a> では、<b>ReturnList</b> を割り当てたキーを押すことで画面を閉じられます。<br>
+</div>
+
+<dt id="SaveAsResultList">SaveAsResultList
+<dd>カレントが検索結果リストの場合、それに名前を付けて保存します。<br>
+保存したファイルは、<a href="#LoadResultList">LoadResultList</a> コマンドで読み込んで再利用できます。<br>
+また <a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>結果リスト</b>」をチェックしていると、<a href="#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
+<div class="spc_box">
+ファイルの内容はワークリストと同様ですが、先頭に &quot;;[ResultList]&quot; という識別行が、その後に &quot;;&quot; で始まるコメントの形で検索情報が付加されます。<br>
+<a href="#LoadWorkList">LoadWorkList</a> コマンドでワークリストとして読み込むことも可能です。<br>
+</div>
+<a href="#LoadResultList">→ LoadResultList</a>　<a href="#SaveWorkList">→ SaveWorkList</a>　<a href="#LoadWorkList">→ LoadWorkList</a>　<a href="#OpenStandard">→ OpenStandard</a>
+
+<dt id="SaveAsTabGroup">SaveAsTabGroup<span class="pram_text">[_ファイル名]</span>
+<dd>現在のタブバーの状態(<a href="hid00057.htm">ディレクトリ履歴</a>を含む)をタブグループとしてファイルに保存します。<br>
+保存したファイルを <a href="#LoadTabGroup">LoadTabGroup</a> コマンドで読み込むと、タブの状態を復元できます。<br>
+また <a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>タブグループ</b>」をチェックしていると、<a href="#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
+<div class="spc_box">
+パラメータで<b>ファイル名</b>を指定することも可能です(ドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定)。この場合、既存ファイルは確認なしで上書きされます。<br>
+</div>
+<a href="#LoadTabGroup">→ LoadTabGroup</a>　<a href="#SaveTabGroup">→ SaveTabGroup</a>　<a href="#OpenStandard">→ OpenStandard</a>
+
+<dt id="SaveTabGroup">SaveTabGroup
+<dd><a href="#SaveAsTabGroup">SaveAsTabGroup</a>/<a href="#LoadTabGroup">LoadTabGroup</a> コマンドで用いたタブグループ・ファイルに、現在のタブバーの状態を上書き保存します。<br>
+起動後にタブグループ・ファイルを用いていない場合には、<a href="#SaveAsTabGroup">SaveAsTabGroup</a> コマンドが実行されます。<br>
+<a href="#LoadTabGroup">→ LoadTabGroup</a>　<a href="#SaveAsTabGroup">→ SaveAsTabGroup</a>
+
+<dt id="SaveAsWorkList">SaveAsWorkList<span class="pram_text">[_FL]</span>
+<dd>現在の<a href="hid00060.htm">ワークリスト</a>に名前を付けて保存します。<br>
+パラメータに <b>FL</b> を指定すると、カレントのファイルリスト(仮想ディレクトリは除く)または検索結果リストの内容に名前を付け、ワークリストとして保存します。<br>
+<a href="#SaveWorkList">→ SaveWorkList</a>　<a href="#LoadWorkList">→ LoadWorkList</a>
+
+<dt id="SaveWorkList">SaveWorkList
+<dd>現在の<a href="hid00060.htm">ワークリスト</a>を上書き保存します。無名だった場合は、<a href="#SaveAsWorkList">SaveAsWorkList</a> コマンドが実行されます。<br>
+保存に失敗した場合、再試行の確認が出ます。キャンセルするとファイル名の末尾に <b>.$$$</b> を付加して一時保存されます。<br>
+なお、当該ワークリスト・ファイルのタイムスタンプが変化していたら、保存せずに変更内容を破棄するかを確認するメッセージが出ます。<br>
+<b>NyanFi</b> 終了時には自動的に現在のワークリストが上書き保存されます。<br>
+<a href="#SaveAsWorkList">→ SaveAsWorkList</a>　<a href="#LoadWorkList">→ LoadWorkList</a>
+
+<dt id="ScrollDown">ScrollDown<span class="pram_text">[_行数|_HP|_FP|_ED]</span>
+<dd>ファイルリストをパラメータで指定した行数(無指定の場合はホイール設定)下にスクロールします。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上に、<b>ED</b>では最後へスクロールします。<br>
+
+<dt id="ScrollUp">ScrollUp<span class="pram_text">[_行数|_HP|_FP|_TP]</span>
+<dd>ファイルリストをパラメータで指定した行数(無指定の場合はホイール設定)上にスクロールします。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上に、<b>TP</b>では先頭へスクロールします。<br>
+
+<dt id="ScrollDownLog">ScrollDownLog<span class="pram_text">[_行数|_HP|_FP|_ED]</span>
+<dd>ログウィンドウをパラメータで指定した行数(無指定の場合はホイール設定)下にスクロールします。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上に、<b>ED</b>では最後へスクロールします。フォーカスは移動しません。<br>
+
+<dt id="ScrollUpLog">ScrollUpLog<span class="pram_text">[_行数|_HP|_FP|_TP]</span>
+<dd>ログウィンドウをパラメータで指定した行数(無指定の場合はホイール設定)上にスクロールします。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分下に、<b>TP</b>では先頭へスクロールします。フォーカスは移動しません。<br>
+
+<dt id="ScrollDownText">ScrollDownText<span class="pram_text">[_行数|_HP|_FP|ED]</span>
+<dd><a href="hid00082.htm">テキストプレビュー</a>をパラメータで指定した行数(無指定の場合はホイール設定)下にスクロールします。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上に、<b>ED</b>では最後へスクロールします。フォーカスは移動しません。<br>
+
+<dt id="ScrollUpText">ScrollUpText<span class="pram_text">[_行数|_HP|_FP|_TP]</span>
+<dd><a href="hid00082.htm">テキストプレビュー</a>をパラメータで指定した行数(無指定の場合はホイール設定)上にスクロールします。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分下に、<b>TP</b>では先頭へスクロールします。フォーカスは移動しません。<br>
+
+<dt id="SelAllFile">SelAllFile
+<dd>すべてファイルを選択します。すでに何かが選択されている場合は、すべての選択が解除されます。<br>
+<a href="#ClearAll">→ ClearAll</a>
+
+<dt id="SelAllItem">SelAllItem
+<dd>すべてのファイルとディレクトリを選択します。すでに何かが選択されている場合は、すべての選択が解除されます。<br>
+<a href="#ClearAll">→ ClearAll</a>
+
+<dt id="Select">Select<span class="pram_text">[_ND|_IN|_繰り返し回数]</span>
+<dd>カーソル位置の項目を選択します。すでに選択中の場合は解除します。実行後、カーソルは下に移動します。<br>
+パラメータに <b>ND</b> を指定すると、実行後にカーソルを下に移動しません。<br>
+パラメータに <b>IN</b> を指定すると、入力ボックスで繰り返し回数を指定できます。またパラメータに繰り返し回数を数値指定することも可能です。なおカーソルが最下行に達したら中断します。<br>
+<a href="#CursorDownSel">→ CursorDownSel</a>
+
+<dt id="SelectUp">SelectUp
+<dd><b>Select</b> コマンドと同様ですが、実行後にカーソルが上に移動します。<br>
+<a href="#Select">→ Select</a>　<a href="#CursorUpSel">→ CursorUpSel</a>
+
+<dt id="SelEmptyDir">SelEmptyDir<span class="pram_text">[_NF]</span>
+<dd>カレントで、空のディレクトリだけを選択します。<br>
+パラメータに <b>NF</b> を指定すると、ディレクトリ内にサブディレクトリがあってもファイルが含まれていなければ(サイズ=0)、空とみなして選択します。<br>
+
+<dt id="SelMark">SelMark
+<dd>栞マーク項目を選択します。<br>
+<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
+
+<dt id="SelMask">SelMask<span class="pram_text">[_CA]</span>
+<dd>選択中の項目((ワークリストのセパレータは除く)だけを残して他を隠します(<b>選択マスク</b>)。<br>
+選択マスクを解除するには、パラメータに <b>CA</b> を指定するか、何も選択していない状態で再度コマンドを実行してください。<a href="#ClearMask">ClearMask</a> コマンドでも解除できます。また、別のディレクトリに移動した場合にも解除されます。<br>
+<a href="hid00050.htm">インクリメンタルサーチ</a>の<b>フィルタマスク・モード</b>や <a href="#Filter">Filter</a>、<a href="#MarkMask">MarkMask</a> コマンドによるマスクも選択マスクですので、同様に解除できます。<br>
+なお、選択マスクは、パスマスクとは独立して働きます。<br>
+<a href="#DelSelMask">→ DelSelMask</a>　<a href="#MarkMask">→ MarkMask</a>　<a href="#PathMaskDlg">→ PathMaskDlg</a>　<a href="#MaskSelect">→ MaskSelect</a>　<a href="#MatchSelect">→ MatchSelect</a>　<a href="#IncSearch">→ IncSearch</a>　<a href="#Filter">→ Filter</a>　<a href="#ClearMask">→ ClearMask</a>
+
+<dt id="SelOnlyCur">SelOnlyCur
+<dd>カレント側だけにあって、反対側には存在しないファイルを選択します。<br>
+<a href="#CompareDlg">→ CompareDlg</a>
+
+<dt id="SelReverse">SelReverse
+<dd>ファイルの選択状態を反転させます。<br>
+なお、ディレクトリだけを選択していた場合は、ディレクトリの選択状態を反転させます。<br>
+
+<dt id="SelReverseAll">SelReverseAll
+<dd>選択可能なすべての項目について、選択状態を反転させます。<br>
+
+<dt id="SelSameExt">SelSameExt
+<dd>カーソル位置のファイルと拡張子が同じすべてのファイルを選択します。<br>
+<a href="#SelSameName">→ SelSameName</a>
+
+<dt id="SelSameName">SelSameName
+<dd>カーソル位置のファイルと名前主部が同じすべてのファイルを選択します。<br>
+<a href="#NextSameName">→ NextSameName</a>　<a href="#SelSameExt">→ SelSameExt</a>
+
+<dt id="SelWorkItem">SelWorkItem
+<dd>現在の<a href="hid00060.htm">ワークリスト</a>に登録されている項目を選択します。<br>
+<a href="#WorkList">→ WorkList</a>
+
+<dt id="SetAlias">SetAlias
+<dd><a href="hid00060.htm">ワークリスト</a>で、カーソル位置の登録項目エイリアス(別名)を設定します。<br>
+エイリアスが設定されていると、リストでファイル名の代わりに表示されます(拡張子はそのまま)。<br>
+入力ボックスを空欄にすると、エイリアスが解除されます。<br>
+なお、ワークリストで <a href="#RenameDlg">RenameDlg</a> コマンドを実行すると、代わりにこの <b>SetAlias</b> コマンドが実行されます。<br>
+<a href="#WorkItemDown">→ WorkItemDown</a>　<a href="#WorkItemUp">→ WorkItemUp</a>　<a href="#InsSeparator">→ InsSeparator</a>　<a href="#WorkList">→ WorkList</a>　<a href="#RenameDlg">→ RenameDlg</a>
+
+<dt id="SetArcTime">SetArcTime
+<dd>選択中(無ければカーソル位置)のアーカイブのタイムスタンプを、それに含まれる最新ファイルの日時に設定します。<br>
+
+<dt id="SetDirTime">SetDirTime<span class="pram_text">[_ディレクトリ名]</span>
+<dd>選択中(無ければカーソル位置)のディレクトリのタイムスタンプを、それに含まれる最新ファイルの日時に設定します。中のサブディレクトリについてもそれぞれ再帰的に設定されます。<br>
+パラメータで<b>ディレクトリ名</b>を指定すると、選択状態にかかわらず、そのディレクトリが対象になります。ドライブ名がない場合はカレントからの相対指定になります。<br>
+処理はバックグラウンド・タスクで行われます。<br>
+
+<dt id="SetExifTime">SetExifTime
+<dd>選択中(無ければカーソル位置)の画像ファイルのタイムスタンプを、Exif情報の撮影日時に設定します。<br>
+Jpeg だけでなく、HEIF(.heic)や各種RAWファイルにも対応しています(.CRW ではCIFF情報から取得)。<br>
+<a href="#DelJpgExif">→ DelJpgExif</a>
+
+<dt id="SetFontSize">SetFontSize<span class="pram_text">_[^]サイズ</span>
+<dd>フォントサイズをパラメータで指定した値にします。値はポイント単位で 2～72 を指定できます。<br>
+値の先頭に <b>^</b> を付けると、すでにそのサイズなら通常サイズに戻し、そうでなければ指定値に設定します。<br>
+サイズ変更は一時的なもので、次回起動時には通常サイズに戻ります。<br>
+<a href="#ZoomIn">→ ZoomIn</a>　<a href="#ZoomOut">→ ZoomOut</a>　<a href="#ZoomReset">→ ZoomReset</a>
+
+<dt id="SetPathMask">SetPathMask<span class="pram_text">_[:マスク名:]{[!]マスク[\][;[!]マスク[\]...]}|_EX</span>
+<dd>カレントのパスマスクをパラメータで設定します。<br>
+マスクは「<b>パスマスク</b>」ダイアログと同様、<b>;</b> (セミコロン)で区切って複数指定できます。マスクの先頭に <b>!</b> があると除外になります。また、末尾が <b>\</b> の場合はディレクトリとみなされます。説明文字列の書式でマスク名を指定すると、<a href="hid00004.htm#DriveInfo">ドライブ情報</a>にそれが表示されます。無指定の場合は、マスクがそのまま表示されます。<a href="#ExeCommands">ExeCommands</a> コマンド内でマスク名を指定する場合は、パラメータ全体をダブルクォーテーションで囲んでください。パラメータに <b>EX</b> を指定すると、カーソル位置のファイルの拡張子をマスクとして用います(*.xxx)。<br>
+なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+
+<div class="spc_box">
+<b>例</b>:DLLファイルのみ表示、ディレクトリは非表示<br>
+　SetPathMask_:only DLL:*.dll;!*\<br>
+</div>
+<a href="#PathMaskDlg">→ PathMaskDlg</a>　<a href="#InputPathMask">→ InputPathMask</a>　<a href="#ClearMask">→ ClearMask</a>
+
+<dt id="SetSttBarFmt">SetSttBarFmt_<span class="pram_text">書式</span>
+<dd>ステータスバーの書式を設定します。<br>
+<a href="hid00010.htm#StatusBar">→ オプション設定 - デザイン - 「ステータスバーの書式」</a><br>
+
+<dt id="SetSubSize">SetSubSize<span class="pram_text">_[+|-]高さ/幅</span>
+<dd>サブウィンドウ(プレビュー、ファイル情報、ログを含む部分)のサイズを設定します。<br>
+<a href="hid00010.htm#Layout">オプション設定 - デザイン - 「画面レイアウト」</a>で「<b>ファイルリストが上</b>」の場合は高さが、「<b>ファイルリストが左</b>/<b>右</b>」の場合は幅が変更されます。値の前に符号(+ または -)を付けると、現在のサイズからの相対指定になります。<br>
+
+<dt id="SetTag">SetTag<span class="pram_text">[_タグ[;タグ...]]</span><br>
+SetTag<span class="pram_text">_;</span>
+<dd>選択中(無ければカーソル位置)の項目に<b>タグ</b>を設定します。<br>
+ダイアログの入力欄に新たなタグを入力するか、既存のタグを一覧のチェックボックスで選択してください。<br>
+タグは <b>;</b> (セミコロン)で区切って複数指定できます。無指定にすると、以前に設定されていたタグが削除されます。<br>
+タグ一覧にフォーカスがある場合、ファイラーで割り当てられているのと同じキーで、頭文字サーチ、全選択/解除、タグ名の変更、削除などを行えます。<br>
+また、タグ一覧の右クリックメニューから、「<b>タグ名の変更</b>」、「<b>タグ名の削除</b>」、「<b>タグ色の設定</b>」、「<b>タグの使用数をカウント</b>」、「<b>タグの使用数を常に表示</b>」、「<b>タグデータの整理</b>」(<a href="#TrimTagData">TrimTagData</a>)が可能です(ダイアログ共通)。<br>
+
+<div class="spc_box">
+パラメータに<b>タグ</b>を指定すると、ダイアログを出さずに直接設定できます。タグは、<b>;</b> (セミコロン)で区切って複数指定可能。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>;</b> (セミコロン) だけを指定すると、ダイアログの代わりにタグの入力ボックスが出ます。<br>
+</div>
+
+<a href="hid00088.htm">→ タグによるファイル管理</a><br>
+<a href="#AddTag">→ AddTag</a>　<a href="#DelTag">→ DelTag</a>　<a href="#FindTag">→ FindTag</a>　<a href="#TrimTagData">→ TrimTagData</a>　<a href="#TagSelect">→ TagSelect</a>
+
+<dt id="ShareList">ShareList
+<dd>カレントのコンピュータの共有フォルダ一覧を表示します。フォルダを選択すると、そのUNCパスに移動します。<br>
+一覧でのキー操作は、<a href="hid00057.htm">ディレクトリ履歴</a>などと同様です。<br>
+なお、右クリックメニューで、UNCパスのコピーが可能です。<br>
+表示位置はカレント側の中央になりますが、サイズは変更可能で保存されます。<br>
+
+<dt id="ShowByteSize">ShowByteSize<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、ファイルサイズをバイト単位で表示するか、あるいは <a href="hid00010.htm#SizeFormat">オプション設定 - デザイン - 「サイズ表示」</a>で指定された書式で表示するかをトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定するとバイト表示、<b>OFF</b> で指定書式での表示になります。<br>
+なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+<a href="hid00010.htm#ShowByteSize">→ オプション設定 - デザイン - 「バイト表示」</a><br>
+
+<dt id="ShowFileInfo">ShowFileInfo<span class="pram_text">[_SD]</span>
+<dd>カーソル位置のファイル情報を強制的に表示します。ディレクトリの場合は、容量を計算してから情報を表示します。またプレビュー画面が表示されているとプレビューも強制的に行われます。<br>
+ファイル情報の画面が非表示の場合は、ダイアログを出してファイル情報を表示します。<br>
+<a href="hid00024.htm#FileInfo">オプション設定 - 一般2 - ファイル情報</a> の「<b>アーカイブ内の情報を表示(一時解凍)</b>」、「<b>情報を取得しない拡張子</b>」、「<b>RARの情報取得をサイズで制限する</b>」の設定は無視されます。<br>
+
+<div class="spc_box">
+パラメータに <b>SD</b> を指定すると、ファイル情報の画面の表示状態にかかわらずダイアログで表示します。<br>
+ダイアログでのカーソル移動などは、ファイラーやテキストビュアーで割り当てられているのと同じキー操作や、テキストビュアーで割り当てられているマウスホイール操作によって可能です。
+ただし、2ストロークキー操作はできません。<br>
+</div>
+<a href="#ListFileInfo">→ ListFileInfo</a>　<a href="#CopyFileInfo">→ CopyFileInfo</a>　<a href="#LogFileInfo">→ LogFileInfo</a>　<a href="#ShowProperty">→ ShowProperty</a>　<a href="#PropertyDlg">→ PropertyDlg</a>　<a href="#CalcDirSize">→ CalcDirSize</a>
+
+<dt id="ShowFKeyBar">ShowFKeyBar<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、ファンクションキーバーの表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+ファンクションキーバーのボタンには、キーに割り当てられているコマンド名(パラメータ部分を除く)がデフォルトで表示されますが、変更も可能です。<br>
+ボタンを右クリックするか、<a href="hid00016.htm">オプション設定 - キー設定</a>の一覧で項目をダブルクリックすると、表示名変更のための入力ボックスが表示されます。<br>
+なおツールバーとは異なり、割り当てられているコマンドの有効/無効やチェック状態はボタンに反映されません。<br>
+
+<dt id="ShowHideAtr">ShowHideAtr<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、隠しファイル属性のファイル(ディレクトリ)の表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+<a href="hid00009.htm#Show">→ オプション設定 - 一般 - 表示 - 「隠しファイルを表示」</a><br>
+<a href="#ShowSystemAtr">→ ShowSystemAtr</a>
+
+<dt id="ShowIcon">ShowIcon<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、アイコンの表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+<a href="hid00010.htm#ShowIcon">→ オプション設定 - デザイン - 「アイコンを表示」</a><br>
+
+<dt id="ShowLogWin">ShowLogWin<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、ログウィンドウの表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+<a href="#ShowPreview">→ ShowPreview</a>　<a href="#ShowProperty">→ ShowProperty</a>　<a href="#ViewLog">→ ViewLog</a>
+
+<dt id="ShowPreview">ShowPreview<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、プレビューの表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+<a href="hid00010.htm#ShowPreview">→ オプション設定 - デザイン - 「プレビューを表示」</a>
+<a href="#ShowLogWin">→ ShowLogWin</a>　<a href="#ShowProperty">→ ShowProperty</a>
+
+<dt id="ShowProperty">ShowProperty<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、ファイル情報の表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+<a href="hid00010.htm#ShowProperty">→ オプション設定 - デザイン - 「ファイル情報を表示」</a><br>
+<a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#ListFileInfo">→ ListFileInfo</a>　<a href="#CopyFileInfo">→ CopyFileInfo</a>　<a href="#LogFileInfo">→ LogFileInfo</a>　<a href="#ShowPreview">→ ShowPreview</a>　<a href="#ShowLogWin">→ ShowLogWin</a>
+
+<dt id="ShowStatusBar">ShowStatusBar<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、ステータスバーの表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+ステータスバーには、ファイル操作に関する情報(<a href="hid00010.htm#StatusBar">オプション設定 - デザイン</a> で書式指定可能)、警告メッセージなどが表示されます。<br>
+なお、ステータスバーが非表示のとき、警告は、<a href="hid00018.htm">オプション設定 - 通知・確認</a>で「<b>メッセージをヒント表示</b>」が有効ならヒントウィンドウに、そうでない場合は<a href="hid00004.htm#DriveInfo">ドライブ情報</a>に表示されます。<br>
+
+<dt id="ShowSystemAtr">ShowSystemAtr<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、システムファイル属性のファイル(ディレクトリ)の表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+<a href="hid00009.htm#Show">→ オプション設定 - 一般 - 表示 - 「システムファイルを表示」</a><br>
+<a href="#ShowHideAtr">→ ShowHideAtr</a>
+
+<dt id="ShowTabBar">ShowTabBar<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、<b>タブバー</b>の表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+タブは、一般的なタブ型ファイラーとは異なり、左右のディレクトリを組として切り替えるためのボタンとして機能します。<br>
+<a href="#AddTab">→ AddTab</a>　<a href="#DelTab">→ DelTab</a>　<a href="#MoveTab">→ MoveTab</a>　<a href="#SoloTab">→ SoloTab</a>　<a href="#TabDlg">→ TabDlg</a>
+
+<dt id="ShowToolBar">ShowToolBar<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、<b>ツールバー</b>の表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+<a href="hid00068.htm">「ツールバーの設定」ダイアログ</a>は、ツールバーをダブルクリックするか、<b>設定メニュー</b> - 「<b>ツールバーの設定</b>」あるいは <a href="#ToolBarDlg">ToolBarDlg</a> コマンドで表示されます。<br>
+<a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
+
+<dt id="SoloTab">SoloTab
+<dd>現在のタブだけを残して、他のタブをすべて削除します。<br>
+<a href="#DelTab">→ DelTab</a>
+
+<dt id="SortDlg">SortDlg<span class="pram_text">[_F|_E|_D|_S|_A|_U]</span><br>
+SortDlg<span class="pram_text">_{F|E|D|S|A|U}{F|E|D|S|A|U}</span><br>
+SortDlg<span class="pram_text">_{IV|IA}</span><br>
+SortDlg<span class="pram_text">_{XN|XF|XD|XS|XA|XX|XNX}</span><br>
+SortDlg<span class="pram_text">_L</span>
+<dd>パラメータを指定しない場合、「<b>ソート</b>」ダイアログを開きます。<b>名前</b>、<b>拡張子</b>、<b>更新日時</b>、<b>サイズ</b>、<b>属性</b>、<b>なし</b> によるソートを選べます。<br>
+名前/拡張子の場合、「<b>自然順</b>」をチェックすると、数字を数値とみなすソートになります。また、名前/拡張子および属性には「<b>降順</b>」、更新日時には「<b>古い順</b>」、サイズには「<b>小さい順</b>」のオプションがあり、個別にソート順を指定できます。<br>
+「<b>ディレクトリのソート方法</b>」コンボボックスで、ディレクトリをファイルとは異なるソート方法にすることもできます。また、ここで「<b>ディレクトリを区別しない</b>」を選ぶと、ディレクトリとファイルを区別せずにソートします。<br>
+「<b>左右とも変更</b>」をチェックしていると、反対側も同じソートに変更されます。<br>
+<div class="spc_box">
+パラメータ (<b>F</b> :名前、<b>E</b> :拡張子、<b>D</b> :更新日時、<b>S</b> :サイズ、<b>A</b> :属性、<b>U</b> :なし) を指定すると、ダイアログを出さずに変更できます。<br>
+また <b>F</b>、<b>E</b>、<b>D</b>、<b>S</b>、<b>A</b>、<b>U</b> のうち任意の2つを組み合わせて指定すると、それらの間をトグルで切り替えられます(結果リストで場所ソートの場合は、それを解除)。<br>
+例えば <b>FE</b> を指定すると、名前/拡張子のトグル切り替えになります。<a href="hid00016.htm">オプション設定 - キー設定</a> のパラメータ欄でドロップダウンリストにない組み合わせについては直接入力してください。<br>
+パラメータに <b>IV</b> を指定すると現在のソート方法を逆順に(降順、古い順、小さい順のチェックを個別に反転)、<b>IA</b> を指定するとすべてのソートを逆順にします。<br>
+</div>
+<div class="spc_box">
+<b>X</b> で始まる以下のパラメータは、「<b>ディレクトリのソート方法</b>」を変更します。<b>XN</b> :ファイルと同じ、<b>XF</b> :名前、<b>XD</b> :更新日時、<b>XS</b> :サイズ、<b>XA</b> :属性、<b>XX</b> :ディレクトリを区別しない。<br>
+<b>XNX</b> は、<b>XN</b> と <b>XX</b> をトグルで切り替えます(ファイルと同じ/ディレクトリを区別しない)。<br>
+これらのパラメータについても、ダイアログで「<b>左右とも変更</b>」をチェックしていると反対側にも反映されます。<br>
+</div>
+<div class="spc_box">
+<b>L</b> を指定すると、各種検索の結果リストで場所を表示している場合に、<b>場所</b>によるソートを行います(検索後のデフォルト)。これは、ダイアログでは切り替えられません。
+</div>
+
+<a href="hid00010.htm">オプション設定 - デザイン</a> - <b>ファイルリスト</b> の「<b>ヘッダを表示</b>」をチェックしていると、ヘッダをクリックすることでもソートを変更できます。この場合、ダイアログの「<b>左右とも変更</b>」の状態にかかわらず、カレント側だけが変更されます。<br>
+なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です(ディレクトリのソート方法は除く)。<br>
+
+<dt id="SpecialDirList">SpecialDirList
+<dd>「<b>特殊フォルダ一覧</b>」ダイアログを開きます。<br>
+<span class="btn_frame">ENTER</span>キーを押すかダブルクリックすると、カーソル位置の特殊フォルダに対応するディレクトリに移動します。なお仮想フォルダを選んだ場合は、対応するディレクトリが存在しないためエクスプローラで開きます。<br>
+<div class="spc_box">
+なお <a href="hid00005.htm#OpenByExp">OpenByExp</a> コマンドが割り当てられているキーを押すと、カーソル位置のフォルダをエクスプローラで開けます。また <a href="hid00005.htm#PropertyDlg">PropertyDlg</a> コマンドが割り当てられているキーを押すとプロパティダイアログが開きます。これらは一覧の右クリックメニューからも可能です。右クリックメニューでは「<b>パス名のコピー</b>」や「<b>一覧をワークリストとして保存</b>」なども可能です。<br>
+</div>
+<a href="#RegDirDlg">→ RegDirDlg</a>　<a href="#Library">→ Library</a>
+
+<dt id="SubDirList">SubDirList<span class="pram_text">[_[ND;]ディレクトリ名]</span>
+<dd>パラメータで指定した<b>ディレクトリ名</b>の直下にあるサブディレクトリの一覧を表示し、選択した場所に移動します。<br>
+ディレクトリ名はカレントからの相対指定も可能です。無指定の場合 <b>.</b> とみなし、カレントを基準とします。
+また、<b>\</b> を指定した場合、カーソル位置のディレクトリ名を用います(ディレクトリでない場合はカレント)。<br>
+
+<div class="spc_box">
+一覧でのキー操作は、<a href="hid00057.htm">ディレクトリ履歴</a>などと同様です(頭文字サーチも可能)。<br>
+また<span class="btn_frame">←</span> / <span class="btn_frame">→</span>キーや、<a href="hid00005.htm#ToLeft">ToLeft</a>/<a href="hid00005.htm#ToRight">ToRight</a>、<a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a>/<a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a>、<a href="#PrevTab">PrevTab</a>/<a href="#NextTab">NextTab</a> コマンドが割り当てられているキーによって、基準となるディレクトリをパンくずリストのように遡って変更できます(マウスによる選択も可能)。左端ではドライブの変更(UNCパスの場合は共有フォルダ)やライブラリへの移動が可能。<br>
+一覧の表示位置はカレント側の中央になりますが、サイズは変更可能で保存されます。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>ND</b> をあわせて指定すると、ダイアログの代わりに、サブディレクトリを選択するポップアップメニューを表示します。<br>
+なお<a href="hid00004.htm#DirInfo">ディレクトリ情報</a>を右クリックすると、クリック位置のディレクトリのサブディレクトリを選択するポップアップメニューが出ます(イベント未割り当て時)。<br>
+<b>例</b>:<br>
+　SubDirList_..<br>
+　SubDirList_ND;\<br>
+　SubDirList_D:\hoge<br>
+</div>
+
+<a href="#ChangeDir">→ ChangeDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#RegDirDlg">→ RegDirDlg</a>　<a href="#RegDirPopup">→ RegDirPopup</a>　<a href="#InputDir">→ InputDir</a>　<a href="#Library">→ Library</a>
+
+<dt id="SubViewer">SubViewer<span class="pram_text">[_ON|_OFF|_LK|_RL|_RR]</span>
+<dd>
+パラメータを指定しない場合、<b>サブビュアー</b>の表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+サブビュアーには、ファイルリストのカーソル位置の画像がフィット表示されます(アニメーションGIF対応)。<br>
+縮小の際は単純な補間しか行われませんが、画面のリサイズにしたがってすぐにフィットします。なおアイコンなどは表示されません。<br>
+<div class="spc_box">
+パラメータに <b>LK</b> を指定すると、現在の画像で表示が固定され(赤枠表示)、別のファイルに移動しても変わらなくなります(右クリックメニューからも可能)。<br>
+パラメータに <b>RL</b> を指定すると表示中の画像(GIFやメタファイルは除く)を左に90度、<b>RR</b> を指定すると右に90度回転します(右クリックメニューからも可能)。<br>
+なお、右クリックメニューで背景色を変更できます。<br>
+</div>
+<a href="#ImageViewer">→ ImageViewer</a>
+
+<dt id="Suspend">Suspend<span class="pram_text">[_ON|_OFF]</span>
+<dd>タスク予約項目の実行の保留およびその解除をトグルで切り替えます。保留中は、タスクに空きがあっても予約項目が実行されません。また、タスクを要するコマンドを実行しようとすると予約になります。なお、現在実行中のタスクはそのまま続行されます。<br>
+パラメータに <b>ON</b> を指定すると保留、<b>OFF</b> で解除になります。<br>
+<a href="#TaskMan">→ TaskMan</a>　<a href="#CancelAllTask">→ CancelAllTask</a>　<a href="#PauseAllTask">→ PauseAllTask</a>
+
+<dt id="SwapLR">SwapLR<span class="pram_text">[_TO]</span>
+<dd>左右のファイルリストの内容を入れ替えます。<br>
+パラメータに <b>TO</b> を指定すると、入れ替えとともに反対側へ移動します。<br>
+
+<dt id="SwapName">SwapName<span class="pram_text">[_LR]</span>
+<dd>選択している2項目の名前を入れ替えます。対象がファイルの場合、拡張子はそのままです。<br>
+パラメータに <b>LR</b> を指定すると、左右のファイルリストで一つずつ選択している項目の名前を入れ替えます。これは、左右とも通常のファイルリストの場合のみ可能です。また左右が親子関係にあって、一方のパスが改名される場合には対応していません。<br>
+<a href="#RenameDlg">→ RenameDlg</a>　<a href="#UndoRename">→ UndoRename</a>
+
+<dt id="SyncLR">SyncLR<span class="pram_text">[_ON|_OFF]</span>
+<dd>ディレクトリを変更したときに、反対側のディレクトリも同期して変更する機能の有効/無効をトグルで切り替えます。<br>
+カレントでサブディレクトリに移ったとき、反対側にも同名のサブディレクトリがあれば同期してそのディレクトリに移ります。また親ディレクトリに移った場合、左右のパス無しディレクトリ名が同じなら反対側も親ディレクトリに移ります。<br>
+パラメータに <b>ON</b> を指定すると同期機能を有効、<b>OFF</b> で解除になります。<br>
+同期機能が有効の場合、ディレクトリ関係表示の上下端に横線が引かれます。<br>
+なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+<a href="#OpenStandard">→ OpenStandard</a>　<a href="#ToParent">→ ToParent</a>
+
+<dt id="TabDlg">TabDlg
+<dd>タブの設定ダイアログを開きます<br>
+現在のタブのキャプション(表示名、無指定の場合はディレクトリ名を表示)、アイコン、ホーム(ディレクトリまたはワークリスト)、<a href="hid00060.htm">ワークリスト</a>(そのまま、ホーム、指定)を設定できます。<br>
+ホームを設定していると <a href="#TabHome">TabHome</a> コマンドでそれらを開けます。<br>
+なお、二重起動した <b>NyanFi</b> では、タブ内容の変更は保存されません。<br>
+<a href="#AddTab">→ AddTab</a>　<a href="#TabHome">→ TabHome</a>　<a href="#ToTab">→ ToTab</a>　<a href="#ShowTabBar">→ ShowTabBar</a>
+
+<dt id="TabHome">TabHome<span class="pram_text">[_AL|_CO]</span>
+<dd>タブの設定ダイアログ(<a href="#TabDlg">TabDlg</a>)で設定したホーム(ディレクトリまたはワークリスト)を、現在のタブで開きます。<br>
+カレントのタブにワークリストが設定されている場合は、それも再読み込みします。<br>
+
+<div class="spc_box">
+パラメータに <b>AL</b> を指定すると、すべてのタブをホームにします。<br>
+パラメータに <b>CO</b> を指定すると、カレントのタブのみをホームにします。<br>
+</div>
+<a href="#TabDlg">→ TabDlg</a>　<a href="#ToTab">→ ToTab</a>　<a href="#PrevTab">→ PrevTab</a>　<a href="#NextTab">→ NextTab</a>
+
+<dt id="TagSelect">TagSelect<span class="pram_text">[_タグ[;タグ...]]</span><br>
+TagSelect<span class="pram_text">_*</span><br>
+TagSelect<span class="pram_text">_;</span>
+<dd>指定タグが設定されている項目を選択します。<br>
+パラメータを指定しないと、「<b>タグ選択</b>」ダイアログが開きますので、入力欄に入力するか、一覧のチェックボックスで選択してください。<br>
+タグは <b>;</b> (セミコロン)で区切って複数指定できます。大小文字は区別されません。<br>
+「<b>AND検索</b>」をチェックしていると、指定したすべてのタグを含む項目が、チェックを外すと、いずれかのタグを含む項目がマッチします。<br>
+「<b>選択項目だけを残す</b>」をチェックしていると、結果の選択項目だけを残して他を隠します(<b>選択マスク</b>)。<br>
+
+<div class="spc_box">
+パラメータに<b>タグ</b>を指定すると、ダイアログを出さずに直ちに実行できます。<br>
+複数のタグを指定する場合、<b>;</b> (セミコロン)で区切るとAND検索、<b>|</b> で区切るとOR検索になります。混在はできません。<br>
+&quot;<b>*</b>&quot; を指定すると、すべてのタグにマッチします。<br>
+なお、ダイアログの「<b>選択項目だけを残す</b>」の設定が適用されます。<br>
+<b>例</b>: TagSelect_Hoge|Nyan<br>
+</div>
+<div class="spc_box">
+パラメータに <b>;</b> (セミコロン) だけを指定すると、ダイアログの代わりにタグの入力ボックスが出ます。<br>
+</div>
+
+<a href="hid00088.htm">→ タグによるファイル管理</a><br>
+<a href="#FindTag">→ FindTag</a>　<a href="#MaskSelect">→ MaskSelect</a>　<a href="#DateSelect">→ DateSelect</a>　<a href="#SelMask">→ SelMask</a>
+
+<dt id="TaskMan">TaskMan
+<dd><a href="hid00069.htm">タスクマネージャ</a>を開きます。<br>
+タスクの中止、一旦停止、再開や、予約項目の保留/解除、開始などを行えます。<br>
+<a href="hid00019.htm#TaskMan">→ オプション設定 - コマンド</a><br>
+<a href="#CancelAllTask">→ CancelAllTask</a>　<a href="#PauseAllTask">→ PauseAllTask</a>　<a href="#Suspend">→ Suspend</a>
+
+<dt id="TestArchive">TestArchive
+<dd>カーソル位置のアーカイブの正当性を検査してログに結果を表示します。<br>
+アーカイバDLLの t コマンドで得られた結果出力をそのまま表示しています。<br>
+取得用のバッファは1MBにしていますが、ファイル数があまりに多い場合、途中で途切れる可能性があります。<br>
+なお、<b>TAR</b> (tar642.dll)では正当性検査ではなく、<a href="#ListArchive">ListArchive</a> コマンドと同じ一覧が表示されます。また <b>RAR</b> (unrar64j.dll)では現在未実装のようです。<br>
+<a href="#ListArchive">→ ListArchive</a>
+
+<dt id="TextViewer">TextViewer<span class="pram_text">[_ファイル名|_URL|_CB|_XW|_NN]</span><br>
+TextViewer<span class="pram_text">_{ファイル名|_URL|_CB};XW</span>
+<dd>カーソル位置のファイルを<a href="hid00006.htm">テキストビュアー</a>で表示します。<br>
+テキストファイル以外は、バイナリ・ダンプ表示します。<br>
+
+<div class="spc_box">
+パラメータに特定のファイル名を指定すると直接開けます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+</div>
+<div class="spc_box">
+URLでHTML文書などのファイルを指定すると、一時ディレクトリにダウンロードしてテキストビュアーで表示します。なお、URLの末尾が <b>/</b> の場合 &quot;<b>index.html</b>&quot; が付加されます。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>CB</b> を指定すると、クリップボードのテキストを表示します。<br>
+パラメータに <b>XW</b> を指定すると、テキストビュアーを別ウィンドウで開きます。詳しくは <a href="hid00006.htm#XW">テキストビュアー</a> のページを参照してください。<br>
+２番目の書式のように、表示対象に追加指定することもできます。<br>
+</div>
+<b>例</b>: クリップボードを別ウィンドウで表示<br>
+　TextViewer_CB;XW<br>
+<b>例</b>: Webページをダウンロードして別ウィンドウで表示<br>
+　TextViewer_&quot;http://nekomimi.la.coocan.jp/freesoft/nyanfi.htm&quot;;XW<br>
+
+<div class="spc_box">
+パラメータに <b>NN</b> を指定すると、複数の <b>NyanFi</b> が起動している場合、次の <b>NyanFi</b> のテキストビュアーで表示します(アーカイブやFTPは除く)。二重起動されていない場合は、自身で表示します。<br>
+なお、<a href="hid00021.htm">オプション設定 - イベント</a>で、テキストビュアーを開く直前/開いた直後/閉じる直前/閉じた直後に実行するコマンドを設定できます(別ウィンドウの場合は開く直前のみ)。
+これを利用すれば、例えば拡張子別にビュアーの表示設定を変えるようなことも可能です。<br>
+</div>
+<a href="#ToExViewer">→ ToExViewer</a>　<a href="#ViewTail">→ ViewTail</a>　<a href="#ViewHistory">→ ViewHistory</a>
+
+<dt id="ToExViewer">ToExViewer
+<dd>別ウィンドウのテキストビュアーにフォーカスを移します。<br>
+ウィンドウが複数ある場合は、ポップアップメニューで選択できます。<br>
+なお、<a href="hid00076.htm">アプリケーション一覧</a>によって切り替えることも可能です。<br>
+<a href="#TextViewer">→ TextViewer</a>
+
+<dt id="ToLeft">ToLeft
+<dd>左ファイルリストへ移動します。<br>
+逆カーソルで親ディレクトリに移動したい場合は、<span class="btn_frame">←</span>キーに対して <b>ToLeft</b> の代わりに <a href="#ToParentOnLeft">ToParentOnLeft</a> コマンドを割り当ててください。<br>
+<a href="#ToRight">→ ToRight</a>　<a href="#ToOpposite">→ ToOpposite</a>　<a href="#ToParentOnLeft">→ ToParentOnLeft</a>　<a href="#ToPrevOnLeft">→ ToPrevOnLeft</a>
+
+<dt id="ToLog">ToLog
+<dd>ログウィンドウへ移動します。<br>
+ログウィンドウのキー割り当てで ToLeft/ToRight コマンドが割り当てられていない場合でも、ファイラーで <a href="#ToLeft">ToLeft</a> / <a href="#ToRight">ToRight</a>、<a href="#ToParentOnLeft">ToParentOnLeft</a> / <a href="#ToParentOnRight">ToParentOnRight</a> コマンドが割り当てられているキーや、<span class="btn_frame">←</span> / <span class="btn_frame">→</span>キーを押すことによって、左/右ファイルリストに戻れます。<br>
+<a href="#ToText">→ ToText</a>
+
+<dt id="ToNextOnRight">ToNextOnRight
+<dd>カレントが右ファイルリストの場合、複数起動されていれば、次の <b>NyanFi</b> をアクティブにします。左ファイルリストの場合は右ファイルリストへ移動します(=<a href="#ToRight">ToRight</a>)。<br>
+<a href="#ToPrevOnLeft">→ ToPrevOnLeft</a>　<a href="#NextNyanFi">→ NextNyanFi</a>　<a href="#PrevNyanFi">→ PrevNyanFi</a>
+
+<dt id="ToolBarDlg">ToolBarDlg
+<dd>「<a href="hid00068.htm">ツールバーの設定</a>」ダイアログを表示します。<br>
+ツールボタン上にマウスがある状態で実行すると、そのボタン項目が選択された状態でダイアログが開きます。<br>
+このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
+<a href="#ShowToolBar">→ ShowToolBar</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
+
+<dt id="ToOpposite">ToOpposite
+<dd>反対側のファイルリストへ移動します。<br>
+<a href="#ToLeft">→ ToLeft</a>　<a href="#ToRight">→ ToRight</a>　<a href="#ToParentOnLeft">→ ToParentOnLeft</a>　<a href="#ToPrevOnLeft">→ ToPrevOnLeft</a>
+
+<dt id="ToOppSameHash">ToOppSameHash<span class="pram_text">[_MD5|_SHA1|_SHA256|_SHA384|_SHA512|_CRC32[;NO]]</span>
+<dd>カーソル位置のファイルと同じハッシュ値のファイルが反対側に存在する場合、その位置に移動します。このとき、可能なら表示位置を左右で合わせます。<br>
+パラメータでハッシュの種類を指定してください。省略した場合は、MD5 とみなします。<br>
+パラメータに <b>NO</b> を指定すると、反対側へ移動せずに、同名の項目に点線カーソルを表示します。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+<a href="#CompareHash">→ CompareHash</a>　<a href="#ToOppSameItem">→ ToOppSameItem</a>
+
+<dt id="ToOppSameItem">ToOppSameItem<span class="pram_text">[_NO]</span>
+<dd>カーソル位置と同名の項目が反対パスに存在する場合、反対側のその項目位置に移動します。このとき、可能なら同名項目の表示位置を左右で合わせます。<br>
+パラメータに <b>NO</b> を指定すると、反対側へ移動せずに、同名の項目に点線カーソルを表示します。<br>
+<a href="#ToOppSameHash">→ ToOppSameHash</a>
+
+<dt id="ToParent">ToParent<span class="pram_text">[_DL|_DP]</span>
+<dd>親ディレクトリ(一つ上の階層)に移ります。また検索結果リストから抜けることもできます。<br>
+<a href="hid00060.htm">ワークリスト</a>の場合は、そのワークリスト・ファイルの位置に移動します。<br>
+ライブラリファイル(<b>.library-ms</b>)から開いた登録場所で実行した場合は、そのライブラリファイルの位置に戻ります。<br>
+
+<div class="spc_box">
+パラメータに <b>DL</b> を指定すると、ルートディレクトリだった場合は<a href="hid00064.htm">ドライブ一覧</a>を、UNCパスのルートレベルだった場合は、共有フォルダ一覧(<a href="#ShareList">ShareList</a>)を表示します<br>
+パラメータに <b>DP</b> を指定すると、ルートディレクトリだった場合にドライブ選択ポップアップメニューを表示します。<br>
+</div>
+<a href="#ToParentOnLeft">→ ToParentOnLeft</a>　<a href="#ToParentOnRight">→ ToParentOnRight</a>　<a href="#ToRoot">→ ToRoot</a>　<a href="#DriveList">→ DriveList</a>　<a href="#SyncLR">→ SyncLR</a>
+
+<dt id="ToParentOnLeft">ToParentOnLeft<span class="pram_text">[_DL|_DP]</span>
+<dd>カレントが左ファイルリストの場合、親ディレクトリ(一つ上の階層)へ移ります。右ファイルリストの場合は左ファイルリストへ移動します(=<a href="#ToLeft">ToLeft</a>)。<br>
+したがって<span class="btn_frame">←</span>キーに割り当てれば、「逆カーソルで親ディレクトリに移動」という動作になります。<br>
+<div class="spc_box">
+パラメータに <b>DL</b> を指定すると、左側がルートディレクトリだった場合は<a href="hid00064.htm">ドライブ一覧</a>を、UNCパスのルートレベルだった場合は、共有フォルダ一覧(<a href="#ShareList">ShareList</a>)を表示します<br>
+パラメータに <b>DP</b> を指定すると、左側がルートディレクトリだった場合にドライブ選択ポップアップメニューを表示します。<br>
+</div>
+<a href="#ToParent">→ ToParent</a>　<a href="#DriveList">→ DriveList</a>
+
+<dt id="ToParentOnRight">ToParentOnRight<span class="pram_text">[_DL|_DP]</span>
+<dd>カレントが右ファイルリストの場合、親ディレクトリ(一つ上の階層)へ移ります。左ファイルリストの場合は右ファイルリストへ移動します(=<a href="#ToRight">ToRight</a>)。<br>
+したがって<span class="btn_frame">→</span>キーに割り当てれば、「逆カーソルで親ディレクトリに移動」という動作になります。<br>
+<div class="spc_box">
+パラメータに <b>DL</b> を指定すると、右側がルートディレクトリだった場合は<a href="hid00064.htm">ドライブ一覧</a>を、UNCパスのルートレベルだった場合は、共有フォルダ一覧(<a href="#ShareList">ShareList</a>)を表示します<br>
+パラメータに <b>DP</b> を指定すると、右側がルートディレクトリだった場合にドライブ選択ポップアップメニューを表示します。<br>
+</div>
+<a href="#ToParent">→ ToParent</a>　<a href="#ToRight">→ ToRight</a>　<a href="#DriveList">→ DriveList</a>
+
+<dt id="ToPrevOnLeft">ToPrevOnLeft
+<dd>カレントが左ファイルリストの場合、複数起動されていれば、前の <b>NyanFi</b> をアクティブにします。右ファイルリストの場合は左ファイルリストへ移動します(=<a href="#ToLeft">ToLeft</a>)。<br>
+<a href="#ToNextOnRight">→ ToNextOnRight</a>　<a href="#NextNyanFi">→ NextNyanFi</a>　<a href="#PrevNyanFi">→ PrevNyanFi</a>
+
+<dt id="ToRight">ToRight
+<dd>右ファイルリストへ移動します。<br>
+逆カーソルで親ディレクトリに移動したい場合は、<span class="btn_frame">→</span>キーに対して <b>ToRight</b> の代わりに <a href="#ToParentOnRight">ToParentOnRight</a> コマンドを割り当ててください。<br>
+<a href="#ToLeft">→ ToLeft</a>　<a href="#ToOpposite">→ ToOpposite</a>　<a href="#ToParentOnRight">→ ToParentOnRight</a>　<a href="#ToNextOnRight">→ ToNextOnRight</a>
+
+<dt id="ToRoot">ToRoot
+<dd>ルートディレクトリに移ります。<br>
+<a href="hid00080.htm">FTP接続</a>時のリモート側では、設定されている開始ディレクトリに移ります。
+<a href="#ToParent">→ ToParent</a>
+
+<dt id="ToTab">ToTab<span class="pram_text">_タブ番号|_キャプション</span>
+<dd>指定した番号(1～)のタブに移ります。存在するタブよりも大きな番号が指定された場合は、最後のタブに移ります。<br>
+また、タブの設定ダイアログ(<a href="#TabDlg">TabDlg</a>)でキャプションが設定されている場合、それを指定することも可能です。<br>
+通常のファイルリストの選択状態(ワークリストのセパレータは除く)は、タブ切り替え時に待避/復元されます。<br>
+<a href="#PrevTab">→ PrevTab</a>　<a href="#NextTab">→ NextTab</a>　<a href="#FixTabPath">→ FixTabPath</a>
+
+<dt id="ToText">ToText
+<dd><a href="hid00082.htm">テキストプレビュー</a>が表示されている場合、フォーカスを移します。<br>
+ファイラーで <a href="#ToLeft">ToLeft</a> / <a href="#ToRight">ToRight</a>、<a href="#ToParentOnLeft">ToParentOnLeft</a> / <a href="#ToParentOnRight">ToParentOnRight</a> コマンドが割り当てられているキーや、<span class="btn_frame">←</span> / <span class="btn_frame">→</span>キーを押すことによって、左/右ファイルリストに戻れます。<br>
+なお、テキストプレビューでは、ファイラーやテキストビュアーで割り当てられているのと同じキー(2ストローク操作は除く)でカーソル移動などを行えます。<br>
+<a href="#ToLog">→ ToLog</a>
+
+<dt id="TrimTagData">TrimTagData
+<dd>存在しない項目に関するタグデータを一括削除して、<b>TAGDATA.TXT</b> を更新します。<br>
+無効なドライブのデータも削除されますので注意してください。<br>
+なおタグ検索(<a href="#FindTag">FindTag</a>)でマッチした項目が存在しなくなっていた場合(無効なドライブは除く)、それらは自動的に削除されます。<br>
+<a href="hid00088.htm">→ タグによるファイル管理</a><br>
+<a href="#AddTag">→ AddTag</a>　<a href="#DelTag">→ DelTag</a>　<a href="#SetTag">→ SetTag</a>　<a href="#FindTag">→ FindTag</a>
+
+<dt id="UndoRename">UndoRename
+<dd>直前の <a href="#RenameDlg">RenameDlg</a> または <a href="#SwapName">SwapName</a> コマンドで変更したファイル名を元に戻します。<br>
+改名を行うと、<b>NyanFi</b> ディレクトリに &quot;<b>renamelog.txt</b>&quot; という改名ログが作成されます。アンドゥはこのログファイルに基づいて行われ、実行後には削除されます。<br>
+なお、「<a href="hid00051.htm">名前の変更</a>」ダイアログの 設定 - その他 で「<b>改名ログを作成しない</b>」をチェックしていると、改名ログが作成されませんので注意してください。<br>
+<a href="#RenameDlg">→ RenameDlg</a>　<a href="#SwapName">→ SwapName</a>
+
+<dt id="UnPack">UnPack<span class="pram_text">[_CD|_CD2]</span>
+<dd>選択中(無ければカーソル位置)のアーカイブを反対パスに解凍します。<br>
+<b>ZIP</b>、<b>7Z</b>、<b>TAR</b>、<b>RAR</b> に対応しています(要 7-zip64.dll、tar64.dll、unrar64j.dll/unrar64.dll)。<br>
+アプリケーションパッケージの <b>.apk</b>、Java Archive の <b>.jar</b>、Microsoft Office の <b>.docx</b>、<b>.dotx</b>、<b>.pptx</b>、<b>.xlsx</b>、<b>.xltx</b>、OpenDocument の <b>.odt</b>、<b>.ods</b>、<b>.odp</b>、<b>.odg</b>、<b>.odc</b>、<b>.odf</b>、<b>.odi</b>、<b>.odm</b>、<b>.odb</b> や、電子書籍の <b>.epub</b>、<b>.mobi</b> は <b>ZIP</b> と、また <b>.cbz</b>、<b>.cb7</b>、<b>.cbt</b>、<b>.cbr</b> は、それぞれ <b>ZIP</b>、<b>7z</b>、<b>TAR</b>、<b>RAR</b> とみなして解凍できます。<br>
+
+<div class="spc_box">
+パラメータに <b>CD</b> を指定すると、対象アーカイブのファイル名主部と同じ名前のディレクトリを作成し、その中に解凍します。また <b>CD2</b> を指定すると、アーカイブのルートに複数の対象がある場合にディレクトリを作成して解凍します。<br>
+<div class="note_text">
+※<b>ZIP</b>、<b>7Z</b> では、解凍先ディレクトリ名に連続した空白が含まれていると、それが一つの空白と解釈されてしまうため(<b>7-zip64.dll</b> の仕様?)、一時的にディレクトリ名を変更(空白×2 を &quot;~x~&quot;(x=A～Z) に置換)して処理しています。<br>
+</div>
+</div>
+<a href="#UnPackToCurr">→ UnPackToCurr</a>　<a href="#Pack">→ Pack</a>
+
+<dt id="UnPackToCurr">UnPackToCurr<span class="pram_text">[_CD|_CD2]</span>
+<dd>選択中(無ければカーソル位置)のアーカイブをカレントパスに解凍します。解凍先以外は <a href="#UnPack">UnPack</a> と同じです。<br>
+<a href="#UnPack">→ UnPack</a>　<a href="#PackToCurr">→ PackToCurr</a>
+
+<dt id="UpdateFromArc">UpdateFromArc<span class="pram_text">[_UN]</span>
+<dd>実行中の <b>NyanFi</b> を、既存のアーカイブから更新します。<br>
+ファイルを選択すると、「更新しますか?」の確認後、<b>NyanFi.exe</b> と <b>NyanFi.chm</b> が更新され再起動します。<br>
+参照場所は記憶され、次回選択する際の初期ディレクトリとして用いられます。<br>
+パラメータに <b>UN</b> を指定すると、前回の保存場所に新しいアーカイブが見つかったら確認なしで更新、再起動します。<br>
+なお、バージョン判定はアーカイブのファイル名で行っているので、保存の際に改名していると正しく機能しない場合があります。<br>
+このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
+<div class="note_text">
+※32ビット版と64ビット版のアーカイブを間違えないでください。
+</div>
+<a href="#CheckUpdate">→ CheckUpdate</a>
+
+<dt id="UseTrash">UseTrash<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、削除にごみ箱を使う/使わないをトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると使う、<b>OFF</b> で使わない設定になります。<br>
+<a href="hid00009.htm#UseTrash">→ オプション設定 - 一般 - 「削除にごみ箱を使う」</a><br>
+<a href="#EmptyTrash">→ EmptyTrash</a>　<a href="#OpenTrash">→ OpenTrash</a>
+
+<dt id="ViewHistory">ViewHistory<span class="pram_text">[_FF|_AC]</span>
+<dd><a href="hid00058.htm">最近閲覧したファイル一覧</a>が開き、<a href="hid00006.htm">テキストビュアー</a> (<a href="#TextViewer">TextViewer</a>) で閲覧したファイルの履歴が表示されます。<br>
+画面は <a href="#EditHistory">EditHistory</a> と共用していますので、表示位置やサイズは同じになります。<br>
+パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+また <b>AC</b> を指定すると、履歴をすべて削除できます(一覧の右クリックメニューからも可能)。<br>
+<a href="#TextViewer">→ TextViewer</a>　<a href="#EditHistory">→ EditHistory</a>　<a href="#RecentList">→ RecentList</a>
+
+<dt id="ViewIniFile">ViewIniFile
+<dd>現在のINIファイルを<a href="hid00006.htm">テキストビュアー</a>で表示します。<br>
+<a href="#EditIniFile">→ EditIniFile</a>　<a href="#TextViewer">→ TextViewer</a>
+
+<dt id="ViewLog">ViewLog<span class="pram_text">[_XW]</span>
+<dd>現在のログ内容を<a href="hid00006.htm">テキストビュアー</a>で表示します(ログウィンドウの右クリックメニューからも可能)。<br>
+パラメータに <b>XW</b> を指定すると、別ウィンドウのテキストビュアーで開きます。<br>
+<a href="#ListLog">→ ListLog</a>　<a href="#TextViewer">→ TextViewer</a>
+
+<dt id="ViewTail">ViewTail<span class="pram_text">[_[R][行数]]</span>
+<dd>カーソル位置のテキストファイルの末尾から指定行数分を<a href="hid00006.htm">テキストビュアー</a>で表示します。<br>
+表示部分のみを読み込むので、巨大なログファイルなどもすばやく確認できます。<br>
+パラメータで<b>行数</b>を指定しない場合、デフォルトの100行になります。<br>
+行数の頭に <b>R</b> を付けると、逆順で表示します。<br>
+開いたときのカーソル行は、逆順では先頭、そうでない場合は最後になります。<br>
+
+<div class="spc_box">
+<b>例</b>: 末尾から200行を逆順で表示<br>
+　ViewTail_R200<br>
+</div>
+<a href="#ListTail">→ ListTail</a>　<a href="#WatchTail">→ WatchTail</a>　<a href="#TextViewer">→ TextViewer</a>
+
+<dt id="WatchTail">WatchTail<span class="pram_text">[_{キーワード|/正規表現パターン/}|_ST|_AC]</span>
+<dd>カーソル位置のテキストファイルの追記を監視します(監視間隔=1秒)。<br>
+更新が検出されると、その内容をログに表示します。また、<a href="hid00018.htm">オプション設定 - 通知・確認</a>で「<b>ファイル監視の通知音</b>」が設定されていると、それが鳴ります。なお、タスク表示部の下部に監視数が表示されます。<br>
+
+<div class="spc_box">
+パラメータでキーワードを指定すると、追記内容にそのキーワードが含まれている場合のみ表示します。キーワードを / で囲むと正規表現とみなされます。キーワードが無指定の場合は、すべての追記内容が表示されます。<br>
+パラメータに <b>ST</b> を指定すると、現在監視中のファイル名とキーワードがログに一覧表示されます。<br>
+<b>CC</b> を指定すると、カーソル位置ファイルの監視を中止します。<br>
+<b>AC</b> を指定すると、すべての監視を中止します。<br>
+</div>
+<b>例</b>: ERROR または WARN を含む追記を監視<br>
+　WatchTail_/ERROR|WARN/<br>
+<div class="spc_box">
+<a href="hid00021.htm#WatchTail">オプション設定 - イベント</a> - 「<b>WatchTailコマンドからの通知</b>」を設定することで、追記検出時に特定のコマンドを実行できます。その場合、定義済み変数 <b>LastWatchLog</b> によって、検出されたファイル名と追記内容を参照できます。コマンドライン用メール送信ソフトなどを利用すれば、通知メールの送信も可能。<br>
+</div>
+<a href="#ListTail">→ ListTail</a>　<a href="#ViewTail">→ ViewTail</a>
+
+<dt id="WebMap">WebMap<span class="pram_text">[_IN]</span>
+<dd>カーソル位置の画像ファイルからExif GPS情報を取得し、地図(Googleマップ)を開きます。<br>
+緯度、経度から地図表示用HTMLファイルを生成し、一時ディレクトリに <b>$~WEBMAP.HTM</b> という名前で保存して開きます。<br>
+
+<div class="spc_box">
+パラメータに <b>IN</b> を指定すると、入力ボックスで指定した地点のマップを開けます。指定には10進DEG表記を用い、緯度経度の順に、<b>,</b>(カンマ) 、<b>;</b> (セミコロン)、半角空白のいずれかで区切って入力してください(クリップボードから貼り付けた場合はタブ文字でも可)。<br>
+</div>
+
+<div class="spc_box">
+なお表示をカスタマイズしたい場合、<b>NyanFi</b> 実行ディレクトリに <b>WEBMAP.HTM</b> という名前のHTMLファイルを置くと、それがテンプレートとして用いられます。<br>
+テンプレートでは以下のマクロが使え、それぞれの内容で置き換えられます。<br>
+<div class="indent1">
+<b>$Latitude$</b>　10進DEG表記の緯度。<br>
+<b>$Longitude$</b>　10進DEG表記の経度。<br>
+<b>$PathName$</b>　 画像のパス付ファイル名(入力ボックス指定時は空)<br>
+<b>$FileName$</b>　画像のパス無ファイル名(入力ボックス指定時は空)<br>
+</div>
+</div>
+<b>例</b>:
+<pre class="example_box">
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head&gt;
+&lt;meta http-equiv="content-type" content="text/html; charset=utf-8"/&gt;
+&lt;title&gt;$FileName$&lt;/title&gt;
+&lt;script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+google.maps.event.addDomListener(window, 'load',
+  function() {
+    var latlng = new google.maps.LatLng($Latitude$, $Longitude$);
+    var options = {zoom:16, center:latlng, mapTypeId:google.maps.MapTypeId.ROADMAP};
+    var map = new google.maps.Map(document.getElementById("gmap"), options);
+    var marker = new google.maps.Marker({position:latlng, map:map});
+  }
+);
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;&lt;div id="gmap" style="width:500px; height:500px;"&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;
+</pre>
+<br>
+
+<dt id="WebSearch">WebSearch<span class="pram_text">[_CB|_FN|_検索語]</span>
+<dd>入力ボックスで指定した文字列を Web で検索します。<br>
+パラメータに <b>CB</b> を指定すると、入力ボックスを出さずに、クリップボードのテキスト内容を検索します(複数行ある場合は最初の行内容)。<br>
+<b>FN</b> を指定すると、入力ボックスを出さずに、カーソル位置のパス無しファイル名を検索します。<br>
+それ以外のパラメータは、<b>検索語</b>とみなして検索します。<br>
+使用する検索エンジンのURLは、<a href="hid00019.htm#WebSearch">オプション設定 - コマンド</a> で指定しておいてください。<br>
+
+<dt id="WidenCurList">WidenCurList<span class="pram_text">[_[^]パーセント値]</span>
+<dd>カレント側ファイルリストの幅を広げます。<br>
+デフォルトでは全体の75%になりますが、パラメータで任意の<b>パーセント値</b>を指定することも可能です。その場合、先頭に <b>^</b> を付けると、現在左右が均等でない場合は均等に(<a href="#EqualListWidth">EqualListWidth</a>)、そうでない場合は指定値に広げます。<br>
+なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+<a href="#BorderLeft">→ BorderLeft</a>　<a href="#BorderRight">→ BorderRight</a>　<a href="#EqualListWidth">→ EqualListWidth</a>
+
+<dt id="WinMaximize">WinMaximize
+<dd>ウィンドウを最大化します。
+
+<dt id="WinMinimize">WinMinimize
+<dd>ウィンドウを最小化します。
+
+<dt id="WinNormal">WinNormal
+<dd>ウィンドウを元のサイズに戻します。
+
+<dt id="WinPos">WinPos<span class="pram_text">[_{L|T|R|B}[+|-]数値][;...]</span>
+<dd>ウィンドウの四辺の位置を設定します。<br>
+パラメータで L(左)、T(上)、R(右)、B(下)を任意に組み合わせて設定できます。数値の前に <b>+</b> または <b>-</b> を付けると、現在位置からの相対指定になります。<br>
+パラメータに何も指定しないと、起動時の画面状態に戻ります。<br>
+
+<div class="spc_box">
+<b>例</b><br>
+　WinPos_L600<br>
+　WinPos_L+200;T+200;R-200;B-200<br>
+</div>
+
+<dt id="WorkItemDown">WorkItemDown
+<dd><a href="hid00060.htm">ワークリスト</a>で、選択中(無ければカーソル位置)の項目を一つ下に移動します(<a href="#ItemTmpDown">ItemTmpDown</a> で代替可能)。<br>
+<a href="#ItemTmpDown">→ ItemTmpDown</a>　<a href="#InsSeparator">→ InsSeparator</a>　<a href="#SetAlias">→ SetAlias</a>　<a href="#WorkList">→ WorkList</a>
+
+<dt id="WorkItemMove">WorkItemMove
+<dd><a href="hid00060.htm">ワークリスト</a>で、選択中の項目をカーソル位置に移動します(<a href="#ItemTmpMove">ItemTmpMove</a> で代替可能)。<br>
+<a href="#ItemTmpMove">→ ItemTmpMove</a>　<a href="#InsSeparator">→ InsSeparator</a>　<a href="#SetAlias">→ SetAlias</a>　<a href="#WorkList">→ WorkList</a>
+
+<dt id="WorkItemUp">WorkItemUp
+<dd><a href="hid00060.htm">ワークリスト</a>で、選択中(無ければカーソル位置)の項目を一つ上に移動します(<a href="#ItemTmpUp">ItemTmpUp</a> で代替可能)。<br>
+<a href="#ItemTmpUp">→ ItemTmpUp</a>　<a href="#InsSeparator">→ InsSeparator</a>　<a href="#SetAlias">→ SetAlias</a>　<a href="#WorkList">→ WorkList</a>
+
+<dt id="WorkList">WorkList<span class="pram_text">[_OP|_RL|_DI]</span>
+<dd>カレント側に現在の<a href="hid00060.htm">ワークリスト</a>を表示します。ワークリストになっている場合は通常のファイルリスト表示に戻ります。また、反対側がワークリストの場合、それを通常のファイルリスト表示に戻してから、カレント側をワークリストにします。<br>
+
+<div class="spc_box">
+パラメータに <b>OP</b> を指定すると、コマンドを反対側で実行します。<br>
+<b>RL</b> を指定すると、変更内容を破棄してワークリストを読み込み直します。<br>
+<b>DI</b> を指定すると、カレントで表示中のワークリストに無効な項目がある場合、それを一括削除(登録解除)します。<br>
+</div>
+<a href="hid00009.htm#WorkList">→ オプション設定 - 一般 - ワークリスト</a><br>
+<a href="#HomeWorkList">→ HomeWorkList</a>　<a href="#LoadWorkList">→ LoadWorkList</a>　<a href="#NewWorkList">→ NewWorkList</a>　<a href="#SelWorkItem">→ SelWorkItem</a>
+
+<dt id="XmlViewer">XmlViewer
+<dd>カーソル位置のXMLファイルを<a href="hid00081.htm">XMLビュアー</a>で表示します。<br>
+<b>.xml</b> 以外の拡張子でも、XMLファイルと認識されれば閲覧できます。<br>
+
+<dt id="ZoomIn">ZoomIn<span class="pram_text">[_1～12]</span>
+<dd>フォントサイズをポイント単位で大きくします(最大72ポイント)。<br>
+パラメータで、ポイントの増分を指定することもできます(無指定の場合は 1)。<br>
+この機能は一時的なもので、次回起動時には解除されます。<br>
+<a href="#SetFontSize">→ SetFontSize</a>
+
+<dt id="ZoomOut">ZoomOut<span class="pram_text">[_1～12]</span>
+<dd>フォントサイズをポイント単位で小さくします(最小2ポイント)。<br>
+パラメータで、ポイントの減分を指定することもできます(無指定の場合は 1)。<br>
+この機能は一時的なもので、次回起動時には解除されます。<br>
+<a href="#SetFontSize">→ SetFontSize</a>
+
+<dt id="ZoomReset">ZoomReset
+<dd>フォントサイズを元に戻し、ズーム状態を解除します。<br>
+<a href="#SetFontSize">→ SetFontSize</a>
+
+<br><br>
+</dl>
+
+<p>
+以下は<a href="hid00006.htm">テキストビュアー</a>についてコマンドですが、ファイラーからも実行できます。<br>
+<a href="hid00021.htm">オプション設定 - イベント</a> 「<b>テキストビュアーを開く直前</b>」のコマンドで用いれば、拡張子別に表示設定を変えたりできます。
+</p>
+
+<dl class="indent1">
+<dt id="FixedLen">FixedLen<span class="pram_text">_ON|_OFF</span>
+<dd>パラメータに <b>ON</b> を指定するとCSV/TSVを固定長表示、<b>OFF</b> では通常表示になります。<br>
+
+<dt id="HtmlToText">HtmlToText<span class="pram_text">_ON|_OFF</span>
+<dd>パラメータに <b>ON</b> を指定するとHTML→テキスト変換表示、<b>OFF</b> では通常表示(ソース)になります。<br>
+
+<dt id="SetColor">SetColor<span class="pram_text">_ファイル名</span>
+<dd>
+パラメータで指定したカラー設定ファイル(.INI)を読み込んで、テキストビュアーの配色を一時的に変更します。ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+設定ファイルには、このダイアログでエクスポートしたもの、<a href="hid00023.htm">オプション設定 - フォント・配色</a> - 配色の「エクスポート」で保存したもの、あるいは <b>NyanFi</b> のINIファイルのいずれかを利用できます。読み込む際には、テキストビュアーに関する設定内容だけが用いられます。<br>
+
+<dt id="SetMargin">SetMargin<span class="pram_text">_左側余白幅</span>
+<dd><a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>左側余白幅</b>」を設定します。
+
+<dt id="SetTab">SetTab<span class="pram_text">[_タブストップ幅]</span>
+<dd>タブストップ幅を変更します。4、8以外の値を設定することも可能です。<br>
+0 または無指定の場合は、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>タブストップ4の拡張子</b>」の設定にしたがいます。<br>
+この変更は一時的なもので、テキストビュアーを閉じるとリセットされます。<br>
+
+<dt id="SetWidth">SetWidth<span class="pram_text">[_折り返し幅]</span>
+<dd>
+<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>折り返し幅</b>」を設定します。入力値を 0 (または空欄)にするとウィンドウの幅に合わせます。<br>
+パラメータで幅を指定すると、入力ボックスを出さずに、その値を設定します。<br>
+<a href="#ShowRuler">→ ShowRuler</a>
+
+<dt id="ShowCR">ShowCR<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、改行マーク(<b>&#x21b5;</b>)の表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>改行を表示</b>」に反映されます。<br>
+<a href="#ShowTAB">→ ShowTAB</a>
+
+<dt id="ShowLineNo">ShowLineNo<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、行番号の表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>行番号を表示</b>」に反映されます。
+
+<dt id="ShowRuby">ShowRuby<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、青空文庫形式やHTML→テキスト変換表示で、ルビ部分の表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+
+<dt id="ShowRuler">ShowRuler<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、ルーラの表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>ルーラを表示</b>」に反映されます。<br>
+
+<dt id="ShowTAB">ShowTAB<span class="pram_text">[_ON|_OFF]</span>
+<dd>パラメータを指定しない場合、タブマーク(<b>&#x21c0;</b>)の表示/非表示をトグルで切り替えます。<br>
+パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>タブを表示</b>」に反映されます。<br>
+<a href="#ShowCR">→ ShowCR</a>
+
+</dl>
+<br><br>
+
+<h3 id="Appendix">付記</h3>
+
+<p class="info_text">
+※無効なUNCパスを開こうとしたり、最新の情報に更新しようとしたりした場合、パスの存在チェック処理をタイムアウト前にESCキーで中断できます。チェックを開始して約1秒後に、注意を促すヒント表示が出ます。存在チェックは、その都度スレッドを生成して行います。なお、<a href="hid00009.htm#CheckUnc">オプション設定 - 一般 - 監視/更新 -「UNCパスをチェック」</a> のチェックを外すと、この機器を無効にすることもできます。<br>
+</p>
+<p class="info_text">
+※大量のファイルがあるディレクトリを開こうとした場合、ファイルの列挙処理を<span class="btn_frame">ESC</span>キーで中断できます。
+</p>
+<p class="info_text">
+※外部からファイルリストにリンク項目をドロップした場合、URLが画像(.jpg .png .gif .webp .ico)だったらダウンロード保存、それ以外ではインターネットショートカットが作成されます。
+</p>
+<p class="info_text">
+※<span class="btn_frame">F1</span>キーで状況依存ヘルプを表示している場合、元画面とヘルプ画面の間を<span class="btn_frame">F1</span>キーで交互に行き来できます。
+</p>
+<p class="info_text">
+※ヘルプ画面が開いている状態で何らかのダイアログをモーダル表示すると、そのヘルプは閉じられます。モーダル表示中は、前に開いていたヘルプ画面が操作禁止になってしまうため、このようにしています。
+</p>
+
+<p class="note_text">
+<b>※</b> <b>Windows</b> では、ファイルやディレクトリ名は255文字、パス全体の長さは259文字までに制限されていますが、<b>NyanFi</b> では、ファイルやディレクトリ名の制限はそのままですが、パス全体の長さについては260文字以上でも扱うことができます。また末尾に空白があるものも扱えます。<br>
+ただし、コピー、移動、(ごみ箱を使わない)削除、名前の変更など基本的なファイル操作以外はできない場合があります。
+</p>
+
+<p class="note_text">
+<b>※</b> <b>NyanFi</b> では、名前が <b>.</b> で始まる場合(ドットファイル)、その直後の部分は拡張子ではなくファイル名主部とみなしています。
+</p>
+<br><br><br><br>
+
+</body>
+</html>

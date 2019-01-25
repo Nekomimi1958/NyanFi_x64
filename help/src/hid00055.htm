@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>キー割り当て一覧</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>キー割り当て一覧</h1>
+<p>
+<a href="hid00005.htm#KeyList">KeyList</a> コマンドを実行するとこのダイアログが開きます。<br>
+<b>ファイラー</b>、<a href="hid00050.htm">INC.(インクリメンタル)サーチ</a>、<a href="hid00006.htm">テキストビュアー</a>、<a href="hid00007.htm">イメージビュアー</a>、<b>ログウィンドウ</b>のそれぞれについて、割り当てられているキーの一覧を表示します。また、選択している項目のコマンドを、<span class="btn_frame">ENTER</span>キーまたはダブルクリックで実行できます。
+</p>
+
+<p>
+一覧でのカーソル移動や頭文字サーチは、ファイラーで割り当てられているのと同じキーで行えます。<br>
+タブの切り替えは、<span class="btn_frame">←</span> / <span class="btn_frame">→</span>キーや、<a href="hid00005.htm#ToLeft">ToLeft</a> / <a href="hid00005.htm#ToRight">ToRight</a>、<a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a> / <a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a> コマンドが割り当てられているキーでできます。<br>
+一覧のヘッダをクリックするとソート方法を変更できます(右クリックメニューでも可能)。
+</p>
+<p>
+<b>フィルタ</b>覧に文字列を入力すると、それが含まれる項目だけが絞り込み表示されます。<br>
+このとき<span class="btn_frame">ENTER</span>キーを押すと、一覧で選択されているコマンドが実行されます。<br>
+空欄にすると、絞り込みが解除され、すべての項目が表示されます。<br>
+<img src="chkbox.png" alt="" border=0> <b>Migemo</b> をチェックしていると、<b>Migemo</b> モードで絞り込みを行えます。モード切り替えは、フィルタ欄で <span class="btn_frame">Ctrl</span>+<span class="btn_frame">M</span>キーでも可能です。
+</p>
+<p class="mgn_btm_h">
+<img src="chkbox.png" alt="" border=0> <b>未登録コマンドも表示</b> をチェックしていると、キーに割り当てられていないコマンドもすべて表示され、一覧から実行できます。
+</p>
+<p class="mgn_btm_h">
+<img src="chkbox.png" alt="" border=0> <b>確定即実行</b> をチェックしていると、<b>フィルタ</b>によって候補が一つに確定した場合、0.5秒後にそのコマンドを自動的に実行します。
+</p>
+
+<p>
+フィルタ覧にフォーカスがある場合でも、<span class="btn_frame">↑</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">E</span>) / <span class="btn_frame">↓</span>(選択中でなければ<span class="btn_frame">Ctrl</span>+<span class="btn_frame">X</span>でも可)キーで一覧のカーソル移動が、<span class="btn_frame">PGUP</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">R</span>) / <span class="btn_frame">PGDN</span>(選択中でなければ<span class="btn_frame">Ctrl</span>+<span class="btn_frame">C</span>でも可)キーでページ移動が可能です。
+</p>
+<p>
+一覧とフィルタ欄との間は、<span class="btn_frame">TAB</span>キーで行き来できます。また一覧からは、ファイラーで <a href="hid00005.htm#IncSearch">IncSearch</a> コマンドに割り当てられているキーでフィルタ欄に、フィルタ欄からは<span class="btn_frame">Ctrl</span>+<span class="btn_frame">L</span>で一覧に移れます。
+</p>
+<p>
+画面を閉じたい場合は、<span class="btn_frame">ESC</span>(or <span class="btn_frame">Alt</span>+<span class="btn_frame">F4</span>)キーを押すか、<a href="hid00005.htm#ReturnList">ReturnList</a> コマンドが割り当てられているキーを一覧で押してください。
+</p>
+
+<p>
+使用頻度が低いコマンドや、キーに割り当てていないコマンドにアクセスしたい場合は、<a href="hid00005.htm#InputCommands">InputCommands</a> コマンドを用いるのもよいかもしれません。
+</p>
+
+<p>
+一覧上の右クリックメニューで、「<b>一覧をコピー</b>」、「<b>一覧をファイルに保存</b>」が可能です。この場合、キー [TAB] コマンド [TAB] 説明 という書式になります(TSV形式)。また、「<b>コマンドをコピー</b>」ではカーソル行のコマンド部分のみをクリップボードにコピーできます。
+</p>
+<br><br>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>起動時オプション</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+<h1>起動時オプション</h1>
+
+<p>
+コマンドラインの書式は以下のとおりです。<br>
+<br>
+<b>NyanFi.exe</b> [オプション...] [ファイル名|ディレクトリ名]<br>
+</p>
+<p>
+起動時オプションが指定されている場合、すでに起動している <b>NyanFi</b> があれば、オプションが渡されます(COPYDATASTRUCT 構造体に dwData=1 でオプション文字列を設定し、クラス名=TNyanFiForm のウィンドウに WM_COPYDATA メッセージを送出)。<br>
+また、オプション以外にファイル名またはディレクトリ名が指定されている場合、カレントでその場所を開き、ファイル名ならカーソルをそこに移動します。
+</p>
+<p>
+起動時オプションが指定されていない場合、<a href="hid00017.htm#Duplicate">オプション設定 - 起動時</a> の「<b>二重起動</b>」で <b>許可</b> をチェックしていると、<b>NyanFi</b> を二重起動できます。<br>
+</p>
+<br>
+
+<dl>
+<dt>-L オプション
+<dd>
+<b>書式</b>: -<b>L</b>ディレクトリ名<br>
+<div class="indent1">
+左ファイルリストのディレクトリを指定します。ディレクトリ名に空白が含まれている場合は、ダブルクォーテーションで囲んでください。<br>
+<div class="note_text">
+<b>L</b> とディレクトリ名との間に空白があると、ディレクトリ名無指定の無効なオプション ＋ ディレクトリ名と解釈されるため、左側ではなくカレント側で開かれてしまいます。
+</div>
+</div>
+<br>
+
+<dt>-R オプション<br>
+<dd>
+<b>書式</b>: -<b>R</b>ディレクトリ名<br>
+<div class="indent1">
+右ファイルリストのディレクトリを指定します。ディレクトリ名に空白が含まれている場合は、ダブルクォーテーションで囲んでください。<br>
+<div class="note_text">
+<b>R</b> とディレクトリ名との間に空白があると、ディレクトリ名無指定の無効なオプション ＋ ディレクトリ名と解釈されるため、右側ではなくカレント側で開かれてしまいます。
+</div>
+</div>
+<br>
+<b>例</b>: 左右のディレクトリを指定し、右側をカレントにする<br>
+<pre class="example_box">
+NyanFi.exe -Ld:\hoge -R&quot;d:\nyan\hoge hoge&quot; -CR
+</pre>
+<br>
+
+<dt>-C オプション
+<dd>
+<b>書式</b>: -<b>C</b>{L|R}<br>
+<div class="indent1">
+カレントを左または右側にします。
+</div>
+<br>
+
+<dt>-F オプション
+<dd>
+<b>書式</b>: -<b>F</b>ファイル名<br>
+<div class="indent1">
+カレントパスを指定ファイルのあるディレクトリにし、カーソルをそのファイルの位置に移動します。<br>
+ファイル名に空白が含まれている場合は、ダブルクォーテーションで囲んでください。<br>
+</div>
+<br>
+<b>例</b>: 右側をカレントにし、指定ファイル位置にカーソルを移動する<br>
+<pre class="example_box">
+NyanFi.exe -CR -F&quot;d:\nyan\doko doko.txt&quot;
+</pre>
+-<b>F</b>オプションを用いずにファイル名を指定しても同じ結果になります(V8.78 以降)。<br>
+<pre class="example_box">
+NyanFi.exe -CR &quot;d:\nyan\doko doko.txt&quot;
+</pre>
+<br>
+
+<dt>-X オプション
+<dd>
+<b>書式</b>: -<b>X</b>{コマンド | @ファイル名}<br>
+<div class="indent1">
+指定したコマンドを、<a href="hid00005.htm#ExeCommands">ExeCommands</a> コマンドのパラメータとして実行します。コマンドは <b>:</b> (コロン)で区切って複数指定できます。パラメータの先頭が <b>@</b> の場合、コマンドファイル名の指定になります。<br>
+空白が含まれている場合は、ダブルクォーテーションで囲んでください。<br>
+詳細は「<a href="hid00063.htm">ExeCommands コマンド</a>」のページを参照してください。<br>
+このオプションが指定されている場合、<a href="hid00017.htm">オプション設定 - 起動時</a> の「<b>起動時に実行するコマンド</b>」は無効になります。
+</div>
+<br>
+
+<b>例</b>: 起動音を鳴らす<br>
+<pre class="example_box">
+NyanFi.exe -XPlaySound_start.wav
+</pre>
+
+<b>例</b>: 指定ファイルをテキストビュアーで開き、関数一覧を表示<br>
+<pre class="example_box">
+NyanFi.exe -XTextViewer_&quot;d:\hoge.txt&quot;:FunctionList
+</pre>
+
+<b>例</b>: カレントと検索文字列、マスクを指定し <a href="hid00056.htm">GREP</a> を実行<br>
+<pre class="example_box">
+NyanFi.exe -Ld:\hoge -CL -XGrep_&quot;にゃぁ&quot;:GrepSetMask_*.txt:GrepStart
+</pre>
+
+<b>例</b>: <a href="hid00085.htm">正規表現チェッカー</a>を開く<br>
+<pre class="example_box">
+NyanFi.exe -XRegExChecker
+</pre>
+
+<b>例</b>: クリップボードの内容を<a href="hid00087.htm">電卓</a>(非表示)で計算<br>
+<pre class="example_box">
+NyanFi.exe -XCalculator_CB
+</pre>
+<br>
+
+<dt>-M オプション
+<dd>
+<b>書式</b>: -<b>M</b>メッセージ文字列<br>
+<div class="indent1">
+文字列をメッセージボックスで表示します。
+</div>
+<br>
+
+<dt>-Q オプション
+<dd>
+<b>書式</b>: -<b>Q</b>|<b>q</b><br>
+<div class="indent1">
+すでに起動している <b>NyanFi</b> がある場合、それを終了させてから自身を起動します。<br>
+同じ実行ファイルの場合、再起動ということになります。<br>
+小文字(q)の場合は、INIファイルを保存せずに既存の <b>NyanFi</b> を終了させます。<br>
+他のオプションとともに指定した場合、既存の <b>NyanFi</b> に対しては -Q/q だけが機能します。
+</div>
+<br>
+
+<dt>-I オプション
+<dd>
+<b>書式</b>: -<b>I</b>ファイル名<br>
+<div class="indent1">
+デフォルトのINIファイル(実行ディレクトリ\<b>NyanFi.INI</b>)の代わりに、指定したINIファイルを用いて起動します。<br>
+ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+指定したファイルが存在しない場合は、その名前でデフォルトのINIファイルが新規作成されます。<br>
+なお、すでに起動している <b>NyanFi</b> に対しては機能しません。
+</div>
+<br>
+
+<b>例</b>: INIファイルを切り替えて再起動<br>
+<pre class="example_box">
+NyanFi.exe -Q -INyanFi2.INI
+</pre>
+
+<p>
+INIファイルを指定しての再起動は、<a href="hid00005.htm#Restart">Restart</a> コマンドによっても可能です。
+</p>
+
+<p>
+デフォルトと異なるINIファイルを用いている場合、起動時のログや、オプション設定のタイトルバーにINIファイル名が表示されます。
+</p>
+</dl>
+<br><br>
+
+</body>
+</html>

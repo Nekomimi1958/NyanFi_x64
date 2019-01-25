@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>オプション設定 - テキストビュアー</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>オプション設定 - テキストビュアー</h1>
+
+<p><a href="hid00006.htm">テキストビュアー</a>に関する設定を行います。</p>
+<br>
+
+<dl>
+<dt><img src="grpbox.png" alt="" border=0> 折り返し幅
+<dd>テキスト表示の場合の折り返し幅を設定します。<br>
+<img src="radio.png" alt="" border=0> <b>ウィンドウの幅に合わせる</b> または <img src="radio.png" alt="" border=0> <b>指定(半角単位)</b> のいずれかを選択できます。<br>
+テキストビュアーで<b>ルーラ</b>を表示している場合は、任意の位置をダブルクリックして設定することもできます(0以前の位置ではウィンドウ幅)。<br>
+ファイラー、テキストビュアーの <a href="hid00006.htm#SetWidth">SetWidth</a> コマンドでも設定可能。<br>
+<hr><br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> ルーラを表示
+<dd>ルーラを表示します。<br>
+ルーラを表示している場合、任意の位置をダブルクリックすると折り返し幅を変更できます(0以前の位置ではウィンドウ幅)。<br>
+ファイラー、テキストビュアーの <a href="hid00006.htm#ShowRuler">ShowRuler</a> コマンドでも切り替え可能。
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> 情報ヘッダを下部に表示
+<dd>ビュアーの情報ヘッダを下部(ステータスバーの上)に移動します。
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> 行番号を表示
+<dd>テキスト表示の際に、行番号を表示します。<br>
+バイナリ・ダンプ表示の場合はこの設定にかかわらずアドレスが表示されます。<br>
+ファイラー、テキストビュアーの <a href="hid00006.htm#ShowLineNo">ShowLineNo</a> コマンドでも切り替え可能。
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> 行カーソルを表示
+<dd>現在行にラインカーソルを表示します。
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> 行位置を復元
+<dd>前回ビュアーを閉じたときのカーソルの行位置を復元します。<br>
+ビュアーの履歴数は、<b>NyanFi</b> 起動中は無制限ですが、終了時に保存されるのは最大50です。
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> スクロールバーを折り返し位置に表示
+<dd>折り返しがウィンドウ幅でない場合、スクロールバーを折り返し位置の横(右側余白の左横)に表示します。<br>
+
+<dt class="no_bg">行間 <img src="edit.png" alt="" border=0>
+<dd>テキストの行間をピクセル単位で指定します。
+
+<dt class="no_bg">左側余白 <img src="edit.png" alt="" border=0>
+<dd>左側の余白をピクセル単位で指定します。<br>
+ファイラー、テキストビュアーの <a href="hid00006.htm#SetMargin">SetMargin</a> コマンドでも設定可能。
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> タブを表示
+<dd>タブマークを「タブ表示色」で表示します。<br>
+ファイラー、テキストビュアーの <a href="hid00006.htm#ShowTAB">ShowTAB</a> コマンドでも設定可能。<br>
+この設定は、テキストプレビューや<a href="hid00073.htm">一覧ダイアログ</a>でのテキスト表示にも適用されます。<br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> 改行を表示
+<dd>改行マークを「改行表示色」で表示します。<br>
+ファイラー、テキストビュアーの <a href="hid00006.htm#ShowCR">ShowCR</a> コマンドでも設定可能。<br>
+<div class="note_text">
+テキストファイルは行の集合として読み込まれるため、ファイルの末尾に改行がない場合でも改行マークが表示されます。
+</div>
+
+<dt class="no_bg">タブストップ4の拡張子 <img src="edit.png" alt="" border=0>
+<dd>タブストップを4で表示するファイルの拡張子を指定します。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
+<a href="hid00006.htm#SetTab">SetTab</a> コマンドで一時的に任意のタブストップ幅に変更することも可能。<br>
+
+<dt class="no_bg">タブストップ <img src="edit.png" alt="" border=0> 拡張子 <img src="edit.png" alt="" border=0>
+<dd>任意のタブストップ幅で表示するファイルの拡張子を指定します。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
+<a href="hid00006.htm#SetTab">SetTab</a> コマンドで一時的に任意のタブストップ幅に変更することも可能。<br>
+
+<dt class="no_bg">固定長表示の制限幅 <img src="edit.png" alt="" border=0>
+<dd><a href="hid00006.htm#FixedLen">FixedLen</a> コマンドでCSV/TSVファイルを固定長表示する際の、項目の制限幅を設定します。<br>
+1レコードが1行に収まる場合は、個々の項目で制限幅を超えていても制限はかかりません。1行に収まらない場合、後方の項目から順次制限がかかり、項目内容の末尾が省略されます。<br>
+値は半角単位で指定してください(最小幅=4)。0 を指定すると無制限になります。この値は、<a href="hid00006.htm#FixedLen">FixedLen</a> コマンドのパラメータで設定することもできます。
+
+<dt class="no_bg">セルα <img src="edit.png" alt="" border=0>
+<dd>数値(0:透明～255:不透明)を指定すると、CSV/TSVファイルを固定長表示している場合、カーソルのあるセルにカーソル色がブレンドされます。<br>
+<br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> カーソルを常に可視領域に
+<dd>スクロールした際、カーソルが常に可視領域に入るようにします。<br>
+チェックを外すと、スクロールしてもカーソル位置は変化しません。<br>
+この設定は、<a href="hid00073.htm">一覧ダイアログ</a>での動作にも適用されます。<br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> バイナリ表示でカーソル移動を16進ダンプ内に制限
+<dd>バイナリ・ダンプ表示の場合、カーソル移動を16進ダンプ内に制限し、ASCII表示部分に行かないようにします。<br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> カーソル位置数値のカラー表示
+<dd>テキスト表示で、カーソル位置に #rgb、#rrggbb、0xbbggrr、$bbggrr 形式の数値がある場合、それが表す色をヒント表示します。<br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> ダブルクリックでURLを開く
+<dd>チェックすると、その行にURLが含まれていた場合にそれを開きます。チェックを外すと、URLをダブルクリックした場合、それが選択されます(<a href="hid00006.htm#SelCurWord">SelCurWord</a> に相当)。<br>
+なお、行末より後の部分をダブルクリックしたときはテキストビュアーを閉じます。<br>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> 強調表示
+<dd><img src="chkbox.png" alt="" border=0> <b>コメント</b>、<b>予約語</b>、<b>シンボル</b>、<b>文字列</b>、<b>数値</b>、<b>見出し</b>、<b>ルビ</b><br>
+<div class="indent1">
+プログラムソースなどにおける強調表示の有効／無効を切り替えます。<br>
+コメントはテキストプレビューや<a href="hid00073.htm">一覧ダイアログ</a>での行コメント表示にも適用されます。<br>
+なお、<a href="hid00084.htm">構文強調表示定義ファイル</a>を作成することによってユーザ定義も可能です。
+</div><br>
+<b>バイナリ強調1</b>、<b>2</b>、<b>3</b> <img src="edit.png" alt="" border=0><br>
+<div class="indent1">
+バイナリ・ダンプ表示の場合、指定した語を検索して強調表示できます。指定には正規表現が使えます。<br>
+検索対象は16進表記部分だけですが、対応するASCII表示部分にも強調色が反映されます。<br>
+重複してマッチする場合、強調の優先度は 1 &gt; 2 &gt; 3 となります。<br>
+<b>例</b> <span class="inp_box">[0189EF][0-9A-F]</span><br>
+</div>
+<br>
+強調文字色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> または <a href="hid00006.htm#SetColor">SetColor</a> コマンドで設定してください。<br>
+<br>
+<div class="note_text">
+強調表示を有効にすると描画処理が重くなります。操作性を優先したい場合、不要な強調表示はチェックを外してください。
+</div>
+<br>
+
+<dt id="HtmlToText"><img src="grpbox.png" alt="" border=0> HTML→テキスト変換
+<dd>
+HTML→テキスト変換表示(<a href="hid00006.htm#HtmlToText">HtmlToText</a>)の場合の設定です。<br>
+この設定は、ファイラーの <a href="hid00005.htm#ConvertHtm2Txt">ConvertHtm2Txt</a> コマンドの動作にも適用されます。<br>
+<br>
+
+<b>見出し文字(H1～H6)</b> <img src="edit.png" alt="" border=0><br>
+<div class="indent1">
+見出しの前に付ける文字列を指定します。<b>;</b> (セミコロン)で区切って6個(H1～H6に対応)まで指定できます。
+</div>
+<br>
+
+<b>削除するブロック要素のクラス</b> <img src="edit.png" alt="" border=0><br>
+<b>削除するブロック要素のID</b> <img src="edit.png" alt="" border=0><br>
+<div class="indent1">
+指定したクラス名やIDのブロック要素を削除します。<br>
+削除対象となる要素は、&lt;div&gt;、&lt;table&gt;、&lt;ul&gt;、&lt;ol&gt;、&lt;dl&gt;、&lt;section&gt;、&lt;article&gt;、&lt;nav&gt; です。<br>
+クラス名は <b>;</b> (セミコロン)で区切って複数指定できます。
+</div>
+<br>
+
+<b>&lt;div&gt;の前に罫線を挿入するクラス</b> <img src="edit.png" alt="" border=0><br>
+<div class="indent1">
+指定したクラス名を持つ&lt;div&gt;要素の前に罫線を挿入できます。<br>
+クラス名は <b>;</b> (セミコロン)で区切って複数指定できます。
+</div>
+<br>
+
+<img src="chkbox.png" alt="" border=0> <b>&lt;section&gt; / <img src="chkbox.png" alt="" border=0> &lt;article&gt; / <img src="chkbox.png" alt="" border=0> &lt;nav&gt;の前に罫線挿入</b><br>
+<div class="indent1">
+HTML5で用いられる &lt;section&gt;、&lt;article&gt;、&lt;nav&gt;要素の前に罫線を挿入できます。
+</div>
+<br>
+
+<img src="chkbox.png" alt="" border=0> <b>Markdown記法に変換</b><br>
+<div class="indent1">
+チェックすると、Markdown記法に準じた変換を行います。<br>
+「<b>見出し文字</b>」の設定は無効となり、<b>#</b> を用いた表記で変換されます。<br>
+また、画像が &quot;![alt属性](ファイル名)&quot; という形で挿入されます(alt無指定の場合&quot;画像&quot;)。<br>
+定義リストでは、<b>dd</b> 要素の前に &quot;:&nbsp;&nbsp;&nbsp;&quot; が挿入されます。<br>
+</div>
+<hr><br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> xd2txlib.dll でテキスト表示
+<dd><b>xd2txlib.dll</b> がインストールされている場合、チェックすると、各種バイナリ文書からテキストを抽出して表示します。<br>
+チェックを外すと、バイナリ・ダンプ表示になります。なお、<a href="hid00056.htm">文字列検索(GREP)</a> の結果リストから開いた場合は、チェック状態にかかわらず、テキスト表示になります。<br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> 青空文庫形式に対応する
+<dd>&quot;［＃～］&quot; という書式を含むテキストファイル(.txt)を青空文庫形式とみなし、以下のように表示します。<br>
+&quot;［＃～］&quot; 部分はコメント色で、&quot;《～》&quot; 部分はルビ色で表示します(色は <a href="hid00023.htm">オプション設定 - フォント・配色</a> または <a href="hid00006.htm#SetColor">SetColor</a> コマンドで設定)。<br>
+「字下げ」や「地からの字上げ」にほぼ対応しています。<br>
+<a href="hid00006.htm#FunctionList">FunctionList</a> コマンドでは見出し一覧を表示します。<br>
+<br>
+
+<dt class="no_bg" id="FixedLimit">テキスト最大読込サイズ <img src="edit.png" alt="" border=0>
+<dd>テキストとして読み込む際の最大読込サイズをKB単位で指定します。<br>
+なおリッチテキスト(<b>.RTF</b>)の場合、この制限は効きません。
+
+<dt class="no_bg">バイナリ最大読込サイズ <img src="edit.png" alt="" border=0>
+<dd>バイナリ・ダンプ表示の際の最大読込サイズ(1～1024MB)を指定します。<br>
+<a href="hid00006.htm#SetTopAddr">SetTopAddr</a> コマンドで先頭アドレスを設定して再読み込みすれば、このサイズよりも大きなファイル(4GB超も可)でも任意の部分を閲覧できます。また、表示範囲の最上/最下行からカーソルをさらに移動すると自動的に先頭アドレスが切り替わります。 <br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> メモリマップドファイルとして開く
+<dd>チェックすると、バイナリ・ダンプ表示の場合メモリマップドファイルとして開きます。先頭アドレスから<b>バイナリ最大読込サイズ</b>までの範囲をメモリマッピングして参照するため、読込サイズを大きく設定しても、先頭アドレスの変更などが高速でメモリ使用量も少なくてすみます。閲覧中は、ファイルを開いたままになります。<br>
+チェックを外すと、最大読込サイズまで実際にメモリ上に読み込んで処理します。ファイルは読み込み時にのみ開かれます。<br>
+なお何らかの理由によりメモリマップドファイルとして開けなかった場合、最大読込サイズを8MB以下に一時変更してメモリに読み込みます。<br>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> 外部ビュアー
+<dd>内部テキストビュアーの代わりに外部ビュアーを用いたい場合は、ここで指定してください。<br>
+ただし、リッチテキストやバイナリ・ダンプ表示、現在のログ閲覧(<a href="hid00005.htm#ViewLog">ViewLog</a>)、末尾の閲覧(<a href="hid00005.htm#ViewTail">ViewTail</a>)の場合は、内部テキストビュアーが用いられます。<br>
+<br>
+パラメータとして以下の書式文字列を使えます。<br>
+　<b>$F</b> : パス付ファイル名<br>
+　<b>$L</b> : 行番号<br>
+<br>
+
+</dl>
+<br><br>
+
+</body>
+</html>

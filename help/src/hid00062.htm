@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>コマンドラインの実行</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>コマンドラインの実行ダイアログ</h1>
+<p>
+ファイラーで <a href="hid00005.htm#ExeCommandLine">ExeCommandLine</a> コマンドを実行するとこのダイアログが開きます。<br>
+コンボボックスにコマンドラインを入力して、<span class="btn_frame">Ok</span>ボタンを押してください。<br>
+コンボボックス上の右クリックメニューで、カーソル位置のファイル名を参照したり、履歴を削除したりできます。
+</p>
+
+<dl>
+<dt><img src="grpbox.png" alt="" border=0> コンソールアプリの出力
+<dd>
+以下をチェックしていると、コンソールアプリケーションの標準出力を取り込んで、それぞれの処理を行います。<br>
+その際、コンソールが閉じられるまで <b>NyanFi</b> は待機状態となります。なお、なんらかの理由で制御が返ってこない場合のために、コンソール・ウィンドウは非表示にしていません。<br>
+
+<b>例</b>:<br>
+cmd /u /c dir　　カレントディレクトリの一覧を表示 (Unicode)。<br>
+systeminfo　　システム情報を収集して表示。<br>
+<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ログに表示
+<dd>出力をログに表示します。<br>
+行単位で逐次出力しますので、ある程度途中経過がわかります。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> クリップボードにコピー
+<dd>出力をクリップボードにコピーします。文字コードは、標準出力のそれにしたがいます。
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 一覧で表示
+<dd>出力を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ファイルに保存
+<dd>出力を指定したファイルに保存します。<br>
+ファイル名にドライブ指定がない場合 <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+文字コードは、標準出力のそれにしたがいます。<br>
+<hr>
+<br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> 管理者として実行
+<dd>
+管理者として実行します。<br>
+これがチェックされている場合、「<b>コンソールアプリの出力</b>」の設定はすべて無効となります。<br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> 権限昇格ダイアログを表示
+<dd>
+実行の際に権限の昇格が必要な場合、UACの管理者権限昇格ダイアログを表示します。<br>
+これがチェックされている場合、「<b>コンソールアプリの出力</b>」の設定はすべて無効となります。<br>
+
+</dl>
+<br><br>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>ツールバーの設定ダイアログ</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>ツールバーの設定ダイアログ</h1>
+<p>
+<b>ファイラー</b>、<a href="hid00006.htm">テキストビュアー</a>、<a href="hid00007.htm">イメージビュアー</a>でそれぞれの<b>ツールバー</b>をダブルクリックするか、<b>設定メニュー</b> - 「<b>ツールバーの設定</b>」を選択、あるいは <a href="hid00005.htm#ToolBarDlg">ToolBarDlg</a> コマンドでこのダイアログが表示されます。<br>
+</p>
+
+<p>
+ツールボタンの<b>キャプション</b>、実行する<b>コマンド</b>、また必要なら<b>アイコン</b>を指定して、<span class="btn_frame">追加</span>ボタンを押してください。少なくともキャプションかアイコンのいずれかを指定していないと追加できません。一覧で項目が選択されている場合は、<span class="btn_frame">挿入</span>を押すとその直前に挿入できます。<br>
+</p>
+<p>
+<b>アクセラレータキー</b>を設定する場合は、キャプション文字列中に &quot;&amp;&quot; + 英数字 という書式で記述してください。<br>
+</p>
+<p>
+<b>キャプション</b>の後に ; (セミコロン)で区切って文字列を指定すると、マウスオーバーで表示される<b>ツールヒント</b>になります。キャプションが無指定の場合は、先頭を ; にしてください。<br>
+なお単独の通常コマンドの場合、;* を指定するとそのコマンドの説明が用いられます。
+</p>
+
+<p>
+キャプションを &quot;-&quot; (ハイフン)にすると<b>セパレータ</b>になります。<br>
+この場合、コマンド入力欄(ラベルが「セパレータの幅」に変化)に、セパレータの幅をピクセル単位で指定できます(省略時はデフォルトの4)。なお、分割線は左寄せになります。
+</p>
+
+<p>
+ボタンに割り当てたコマンドは、<a href="hid00005.htm#ExeCommands">ExeCommands</a> のパラメータとして実行されます。コマンドは <b>:</b> (コロン)で区切って複数指定できます。<br>
+コマンドが <b>$</b> で始まる場合、<a href="hid00014.htm">追加メニュー</a>または<a href="hid00015.htm">外部ツール</a>で設定されている<b>エイリアス</b>とみなし、その項目を実行します(サブメニューの親項目の場合は、そのサブメニューをポップアップ表示)。<br>
+先頭が <b>@</b> の場合は<b>コマンドファイル</b>とみなされます。<br>
+詳細は「<a href="hid00063.htm">ExeCommands コマンド</a>」のページを参照してください。<br>
+</p>
+<p>
+コマンド欄のドロップダウンでは、ファイルを対象とする主なコマンドやエイリアスを参照できます。また、右クリックメニューで「<b>コマンド名の参照</b>」が可能です(<a href="hid00005.htm#CopyCmdName">→ CopyCmdName</a>)。<br>
+コマンド欄にファイルをドロップすると、<a href="hid00005.htm#OpenByWin">OpenByWin</a>_&quot;ファイル名&quot; という形で入力されます。また、ファイル(.lnk の場合はリンク先)が .exe の場合、それがアイコンとして設定されます。<br>
+なお、コマンド欄で<span class="btn_frame">F1</span>キーを押すと、入力されているコマンドについてのヘルプが表示されます。<br>
+</p>
+
+<p>
+一覧で選択されている項目の内容を変更したい場合は<span class="btn_frame">変更</span>ボタンを、削除したい場合は<span class="btn_frame">削除</span>ボタンを押してください。また<span class="btn_frame">↑</span>/<span class="btn_frame">↓</span>ボタンで、項目を上下に移動できます。一覧にフォーカスがある場合は、 <span class="btn_frame">Shift</span>+<span class="btn_frame">Ctrl</span>+<span class="btn_frame">↑</span>/<span class="btn_frame">↓</span>キーで項目の上下移動、<span class="btn_frame">DEL</span>キーで削除が可能です。なお、項目の移動はドラッグ＆ドロップでもできます(上下端で自動スクロール)。
+</p>
+
+<p>
+コマンドが @ で始まる<b>コマンドファイル</b>か、<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a>_ で始まる<b>メニューファイル</b>の場合、<span class="btn_frame">ファイル編集</span>ボタンを押すと、テキストエディタでそのファイルを開けます。
+</p>
+
+<p>
+ボタンに <a href="hid00005.htm#ChangeDrive">ChangeDrive</a> コマンドを割り当てている場合、ドライブの有無にしたがってボタンの表示/非表示が自動的に切り替わります。
+</p>
+
+<p>
+ツールバーの表示/非表示は、<b>表示メニュー</b>か、<a href="hid00005.htm#ShowToolBar">ShowToolBar</a> コマンドで切り替えられます。<br>
+またツールボタンは、<a href="hid00005.htm#ExeToolBtn">ExeToolBtn</a> コマンドで番号(1～)を指定してい実行することも 可能です。
+</p>
+
+<br><br>
+
+</body>
+</html>

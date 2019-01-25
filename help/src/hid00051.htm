@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>名前の変更ダイアログ</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>名前の変更ダイアログ</h1>
+<p>
+ファイラーで <a href="hid00005.htm#RenameDlg">RenameDlg</a> コマンドを実行するとこのダイアログが開きます。<br>
+名前や<a href="#Attribute">属性</a>(NTFS圧縮を含む)、<a href="#TimeStamp">タイムスタンプ</a>を変更できます。<br>
+なお、このダイアログはサイズ変更可能で、位置とサイズが保存されます。<br>
+</p>
+
+<p>
+画面の上側にあるタブページでは、名前の変更を行います。<br>
+対象が一つの場合は<span class="tab_frame"><a href="#Name">名前</a></span>および<span class="tab_frame"><a href="#Replace">置換</a></span>タブが、複数選択している場合は<span class="tab_frame"><a href="#Serial">連番</a></span>および<span class="tab_frame"><a href="#Replace">置換</a></span>タブが表示されます。<br>
+また、対象がすべてMP3ファイルの場合は<span class="tab_frame"><a href="#MP3">MP3</a></span>タブが、FLACファイルの場合は<span class="tab_frame"><a href="#MP3">FLAC</a></span>タブが表示されます(混在不可)。
+</p>
+
+<p>
+変更処理に失敗すると、その都度、確認メッセージが表示されます。<br>
+対象が別プロセスで使用されている場合には、それを閉じれば再試行できます。<br>
+ディレクトリの圧縮属性を変更するとき、その階層下にあるファイルが使用中だと失敗しますので注意してください。
+</p>
+
+<p>
+改名を行うと、<b>NyanFi</b> ディレクトリに &quot;<b>renamelog.txt</b>&quot; という名前の改名ログが作成されます。<br>
+<a href="hid00005.htm#UndoRename">UndoRename</a> コマンドを用いると、このファイルに基づいて名前を元に戻すことができます。アンドゥ後にこのログファイルは削除されます。<br>
+</p>
+
+<p>
+なお、コマンドファイル(<b>.nbt</b>)のファイル名主部を変更すると、オプション設定のキー設定、関連付け、追加メニュー、起動時に実行するコマンドなどで <a href="hid00005.htm#ExeCommands">ExeCommands</a> のパラメータとなっている箇所に反映されます。<br>
+</p>
+
+<p class="note_text">
+<b>NyanFi</b> では、名前が <b>.</b> で始まる場合(ドットファイル)、その直後の部分は拡張子ではなくファイル名主部とみなしています。
+</p>
+<br>
+
+<h3 id="Name">名前</h3>
+<p>
+対象が一つの場合、単純にその名前を変更します。<br>
+</p>
+<p>
+入力欄で<span class="btn_frame">Ctrl</span>+<span class="btn_frame">U</span>を押すと、キャレット位置の１文字が大文字化されます。また<span class="btn_frame">Ctrl</span>+<span class="btn_frame">L</span>を押すと小文字化されます。<br>
+この機能は、名前の変更ダイアログによらない単純な改名を行う際の入力ボックスなどでも利用できます。
+</p>
+<br>
+
+<h3 id="Serial">連番</h3>
+<p>
+改名後のファイル名を <b>前部分</b> + <b>連番</b> + <b>後部分</b> + <b>拡張子</b> という形で指定できます。<br>
+<b>前部分</b>および<b>後部分</b>には、通常の文字列の他に、以下のように展開される書式文字列が使用できます(<b>\E</b> は「拡張子」でも使用可)。これらは対応するボタンで参照設定できます。
+</p>
+<table border="0">
+<tr><td width="180">　　<b>\L(</b>n<b>)</b></td><td><span class="btn_frame_4">左n字</span>ファイル名主部の左からn文字</td></tr>
+<tr><td>　　<b>\S(</b>m,n<b>)</b></td><td><span class="btn_frame_4">m..n字</span>ファイル名主部のm番目からn文字</td></tr>
+<tr><td>　　<b>\R(</b>n<b>)</b></td><td><span class="btn_frame_4">右n字</span>ファイル名主部の右からn文字</td></tr>
+<tr><td>　　<b>\A</b></td><td><span class="btn_frame_4">主部</span>ファイル名主部の全体</td></tr>
+<tr><td>　　<b>\E</b></td><td><span class="btn_frame_4">拡張子</span>拡張子( . は除く)</td></tr>
+<tr><td valign="top">　　<b>\TS(</b>日時書式<b>)</b></td>
+<td><span class="btn_frame_4">日時</span>タイムスタンプ<br>
+日時書式には以下の指定子が使えます。<br>
+yyyy 年(4桁)、yy 年(2桁)、mm 月(01～12)、dd 日(01～31)、hh 時(00～23)、nn 分(00～59)、ss 秒(00～59)<br>
+<b>例</b>: <span class="inp_box">\TS(yymmdd_hhnn)</span>　→　160512_0759<br>
+</td></tr>
+<tr><td valign="top">　　<b>\XT(</b>日時書式<b>)</b></td>
+<td><span class="btn_frame_4">Exif</span>Exif情報の撮影日時 (取得できなかった場合は空文字列になります)<br>
+日時書式は <b>\TS</b> と同じです。
+<br>
+</td></tr>
+</table>
+<p>
+<b>連番</b>欄に数値を入れると、それを開始番号とし<b>増分</b>にしたがった連番が付加されます。<br>
+連番の桁は入力された桁幅になります。例えば1から始まる4桁の連番を付けたい場合には、0001 と入力してください。空欄にすると連番は付加されません。<br>
+<b>拡張子</b>欄だけを変更した場合は、拡張子のみの一括変更になります。<br>
+なお、<b>増分</b>と<b>後部分</b>との境界線をドラッグすると左右のサイズを変更できます。
+</p>
+<p>
+<img src="chkbox.png" alt="" border=0> <b>自動プレビュー</b> がチェックされていて、プレビュー表示にフォーカスがある場合、 <span class="btn_frame">Shift</span>+<span class="btn_frame">Ctrl</span>+<span class="btn_frame">↑</span>/<span class="btn_frame">↓</span>キーで項目を上下に移動できます。
+</p>
+<p>
+<span class="btn_frame">保存</span>の右にあるコンボボックスに名前を入力してボタンを押すと、現在の書式設定内容が保存されます(拡張子のみの変更は除く)。そしてコンボボックスで名前を選択すると、その設定が呼び出されます。<br>
+不要な設定項目を削除したい場合は、コンボボックスの右クリックメニュー「<b>この項目を削除</b>」で行ってください。
+</p>
+
+<h3 id="Replace">置換</h3>
+<p>
+ファイル名に対し、<b>検索</b> <img src="combobox.png" alt="" border=0> に入力した文字列にマッチする部分を <b>置換</b> <img src="combobox.png" alt="" border=0> で指定した文字列で置換します。<br>
+<img src="chkbox.png" alt="" border=0> <b>正規表現</b> をチェックしていると正規表現が使えます。<b>検索</b>文字列欄の右クリックメニューから正規表現を参照できます。入力内容が正しくない場合、背景色が変わり(<a href="hid00023.htm">オプション設定 - フォント・配色</a> 「不正な入力項目の背景色」)、置換を開始できません。<br>
+<img src="chkbox.png" alt="" border=0> <b>拡張子は置換しない</b> をチェックしていると、ドットを含む拡張子部分は置換の対象になりません。
+</p>
+
+<h3 id="MP3">MP3 / FLAC</h3>
+<p>
+MP3ファイルの場合はID3タグ情報、FLACファイルの場合はコメント情報をもとに、指定した書式でファイル名を設定できます。<br>
+書式文字列はMP3/FLAC共通で以下のものがあり、対応するボタンで入力できます(TRK1～TRK3は手動入力)。右端は、対応するFLACのコメント項目名です。<br>
+</p>
+<table border="0">
+<tr><td width="180">　　<b>\ID3(TP1)</b></td><td>アーティスト名</td><td>ARTIST</td></tr>
+<tr><td>　　<b>\ID3(TAL)</b></td><td>アルバム名</td><td>ALBUM</td></tr>
+<tr><td>　　<b>\ID3(TT2)</b></td><td>トラック名 (タイトル)</td><td>TITLE</td></tr>
+<tr><td>　　<b>\ID3(TRK)</b></td><td>トラックNo. (記録されている文字列そのもの)</td><td>TRACKNUMBER</td></tr>
+<tr><td>　　<b>\ID3(TRK1)</b></td><td>トラックNo. (1桁表示)</td><td>TRACKNUMBER</td></tr>
+<tr><td>　　<b>\ID3(TRK2)</b></td><td>トラックNo. (02桁表示)</td><td>TRACKNUMBER</td></tr>
+<tr><td>　　<b>\ID3(TRK3)</b></td><td>トラックNo. (03桁表示)</td><td>TRACKNUMBER</td></tr>
+<tr><td>　　<b>\ID3(TYE)</b></td><td>リリース年</td><td>DATE</td></tr>
+</table>
+
+<p><b>例</b> <span class="inp_box">\ID3(TRK)-\ID3(TT2).mp3</span></p>
+
+<p>
+不要な書式設定を履歴から削除したい場合は、コンボボックスの右クリックメニュー「<b>この項目を削除</b>」で行ってください。
+</p>
+
+<p>
+取得したテキスト情報にはファイル名に使用できない記号が含まれている場合があるので、後述の <img src="chkbox.png" alt="" border=0> <b>主部の禁止文字／ユーザ定義文字を置換</b> をチェックしておいた方がよいでしょう。
+</p>
+
+<hr>
+<p>
+各タブページに共通して、「<b>主部</b>」および「<b>拡張子</b>」の文字種設定があります。<br>
+これらの変換は改名結果に対して働きます。改名の設定をせずに、文字種のみの変更も可能です。<br>
+ファイル名主部に対しては全角・半角変換ができます。<img src="chkbox.png" alt="" border=0> <b>カタカナも半角に変換</b> をチェックしていると、全角→半角変換の際にカタカナも変換します。<br>
+ただし半角に変換する場合、ファイル名に使用できない記号は変換されません。<br>
+<img src="chkbox.png" alt="" border=0> <b>主部の禁止文字／ユーザ定義文字を置換</b> をチェックしていると、改名・文字種変更後のファイル名に、禁止文字やユーザ定義文字が含まれていた場合、自動的に置換されます。文字置換の設定は<span class="tab_frame"><a href="#Option">設定</a></span>タブで行えます。
+</p>
+<p>
+<img src="chkbox.png" alt="" border=0> <b>自動プレビュー</b> がチェックされている状態で改名設定を変更すると、下のリストに「現在のファイル名 → 新しいファイル名」という形のプレビューが自動的に表示されます。<br>
+チェックを外すと設定を変更してもプレビューは更新されません。改名対象が多い場合に設定がしやすくなります。必要に応じて<span class="btn_frame">プレビュー</span>ボタンで更新してください。未更新の状態で<span class="btn_frame"> OK </span>ボタンを押すと、プレビューを更新してエラーがなければ改名が行われます。
+</p>
+<p>
+名前の変更がまったくない場合は、リストの背景色がグレー(デフォルト)になります(<a href="hid00023.htm">オプション設定 - フォント・配色</a> 「無効な項目の背景色」)。<br>
+またプレビュー表示の下には、改名した場合のフルパス名の文字数とその名前部分の文字数が表示されています。フルパス名の全体長が260文字以上になる場合、エラー色で注意を促します。ファイルやディレクトリ名は255文字までしか入力できません。
+</p>
+
+<p>
+プレビューで改名後の名前に問題があると警告が表示され、<span class="btn_frame"> OK </span>ボタンが押せません。<br>
+なお複数改名中にファイル名の衝突がある場合、中間名($~NFxxxx.~TMP)を経ることによって衝突を避けています。
+</p>
+<br>
+
+<h3 id="Attribute">属性</h3>
+<p>
+対象の属性を変更できます。NTFSの場合は圧縮属性の設定も可能です。<br>
+</p>
+<p class="note_text">
+ディレクトリに圧縮属性を設定した場合、階層下にある既存のサブディレクトリやファイルの属性は変更されません。<br>
+階層下にあるすべての項目も圧縮したい場合は、<a href="hid00005.htm#CompressDir">CompressDir</a> コマンドを使用してください。<br>
+</p>
+<br>
+
+<h3 id="TimeStamp">タイムスタンプ</h3>
+<p>
+対象のタイムスタンプ(更新日時)を変更できます。<br>
+入力欄が全選択または選択無しの状態で貼り付けを行おうとした場合、可能ならクリップボード内容を yyyy/mm/dd hh:nn:ss 形式に変換して貼り付けます。～年～月～日～時～分～秒 などの形式にも対応。日付のみの場合は、時刻が00:00:00となります。<br>
+<br>
+入力による設定の他に、以下のボタンによる設定も可能です。<br>
+<span class="btn_frame">現在</span> 現在の日時に設定します。<br>
+<span class="btn_frame">最新</span> 複数選択している場合、それらの中の最新日時に設定します。<br>
+<span class="btn_frame">00:00</span> 今日の 00:00:00 に設定します。<br>
+<span class="btn_frame">12:00</span> 今日の 12:00:00 に設定します。<br>
+<span class="btn_frame">xx:00</span> 現在の日時に最も近い前後の正時に設定します<br>
+</p>
+<br>
+
+<h3 id="Option">設定</h3>
+<p>
+名前の変更に関するオプション設定を行います。<br>
+
+<h4>関連ファイルの同時改名</h4>
+<p class="indent1">
+改名対象と名前の主部が同じ関連ファイルがあった場合、それらを同時に改名できます。<br>
+関連ファイルは、複数の拡張子の組み合わせで指定します。関連するファイルのいずれかを改名すると、他のすべてのファイルの主部が改名されます。なお、関連ファイル同士をともに選択して改名する場合、同時改名は行われません。<br>
+<br>
+<b>拡張子</b> <img src="edit.png" alt="" border=0> 欄に、複数の拡張子を <b>.</b> (ピリオド)で区切って入力し(例: .mp3.lrc)、 <span class="btn_frame">登録</span>ボタンで登録してください。<br>
+<img src="chkbox.png" alt="" border=0> <b>部分一致ファイルも改名</b> をチェックすると、改名対象の主部全体を部分として含むファイル(*主部*.*)があった場合、それらの一致部分も改名します。例えば、hoge.mp3、hoge.lrc、hoge_memo.txt があって、hoge.mp3→HOGEHOGE.mp3 とすると、HOGEHOGE.lrc、HOGEHOGE_memo.txt と改名されます。同じ拡張子同士でも機能しますので、場合によっては注意が必要です。<br>
+一覧のチェックボックスで、登録項目の有効/無効を切り替えられます。<br>
+登録内容を変更したい場合は<span class="btn_frame">変更</span>ボタンを、削除したい場合は<span class="btn_frame">削除</span>ボタンを押してください。また<span class="btn_frame">↑</span><span class="btn_frame">↓</span>ボタンで、項目を上下に移動できます。一覧にフォーカスがある場合は、 <span class="btn_frame">Shift</span>+<span class="btn_frame">Ctrl</span>+<span class="btn_frame">↑</span>/<span class="btn_frame">↓</span>キーで項目の上下移動、<span class="btn_frame">DEL</span>キーで削除が可能です。なお、項目の移動はドラッグ＆ドロップでもできます(上下端で自動スクロール)。
+</p>
+<br>
+
+<h4>その他</h4>
+<dl>
+<dt class="no_bg"><img src="grpbox.png" alt="" border=0> ファイル名主部の文字置換
+<dd>
+<img src="chkbox.png" alt="" border=0> <b>主部の禁止文字／ユーザ定義文字を置換</b> をチェックしている場合の文字置換の設定を行います。<br>
+最初の9項目(ファイル名に使えない文字)は、デフォルトとして全角文字への置換に設定されています。これらの置換文字は変更できますが、項目そのものは削除できません。<br>
+これら以外に追加したい変換文字がある場合は、元文字と置換文字を指定して、<span class="btn_frame">追加</span>ボタンを押してください。<br>また一覧で選択されている項目の内容を変更したい場合は<span class="btn_frame">変更</span>ボタンを、項目を削除したい場合は<span class="btn_frame">削除</span>ボタンを押してください。<br>
+なお、<a href="hid00005.htm#CreateDir">CreateDir</a> コマンドの入力ボックスで <b>文字置換を適用</b> をチェックしていると、入力したディレクトリ名に対しても、この設定が適用されます。<br>
+なお、禁止文字や置換文字はそれぞれ1文字を想定していますが、複数文字を指定しても置換可能です(要注意)。<br>
+<br>
+
+<dt class="no_bg"><img src="grpbox.png" alt="" border=0> 名前入力欄の初期状態
+<dd><span class="tab_frame"><a href="#Name">名前</a></span>タブを開いた際の、入力欄の初期状態(キャレット位置、選択範囲)を設定できます。<br>
+「<b>指定語の後</b>」や「<b>指定語の前</b>」を選んだ場合は、下の「<b>指定語</b>」に文字列を設定してください。文字列は <b>;</b> (セミコロン)で区切って複数設定することも可能です。その場合、先のものほど優先順位が高くなります。<br>
+<img src="chkbox.png" alt="" border=0> <b>最後の語にマッチ</b> をチェックしていると、同じ語が名前に複数含まれている場合、一番最後のものにマッチします。<br>
+名前に指定語が含まれていない場合の状態は、「<b>次候補</b>」で指定できます。<br>
+<br>
+
+<dt class="no_bg"><img src="chkbox.png" alt="" border=0> 改名ログを作成しない
+<dd>チェックすると、改名を行っても &quot;<b>renamelog.txt</b>&quot; を作成しません。<a href="hid00005.htm#UndoRename">UndoRename</a> コマンドによるアンドゥはできなくなります。<br>
+この設定は、<a href="hid00005.htm#SwapName">SwapName</a> コマンドに対しても適用されるので注意してください。<br>
+<span class="note_text">特別な理由がない場合は、チェックしないことをお勧めします。</span>
+</dl>
+<br><br>
+
+</body>
+</html>

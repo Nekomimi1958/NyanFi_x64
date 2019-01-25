@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>オプション設定 - エディタ</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>オプション設定 - エディタ</h1>
+
+<p>
+ファイルを編集する際に使用するエディタを指定します。<br>
+<a href="hid00005.htm#FileEdit">FileEdit</a> コマンドでは、対象ファイルの拡張子を調べ、対応する<b>イメージエディタ</b>や<b>その他のエディタ</b>があればそれで開きます。対応するエディタがない場合、ファイルがテキストとみなされれば<b>テキストエディタ</b>で開きます。対応するエディタが複数ある場合は、ポップアップメニューで選択できます。<br>
+また <a href="hid00005.htm#BinaryEdit">BinaryEdit</a> コマンドでは、<b>バイナリエディタ</b>で対象ファイルを開きます。
+</p>
+<p>
+それぞれの実行ファイル入力欄は、外部からのファイルドロップを受け付けます。ファイルのショートカット(.lnk)をドロップした場合は、リンク先の .exe ファイルが設定されます。
+</p>
+<br>
+
+<dl>
+<dt><img src="grpbox.png" alt="" border=0> テキストエディタ
+<dd>テキストファイルの編集に使用するテキストエディタです。<br>
+また、<a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからエディタで開くときや、<a href="hid00006.htm">テキストビュアー</a>からタグジャンプ(<a href="hid00006.htm#TagJump">TagJump</a>)や<a href="hid00083.htm">ダイレクトタグジャンプ</a>(<a href="hid00006.htm#TagJumpDirect">TagJumpDirect</a>)を行う際のパラメータを指定できます。<br>
+パラメータでは以下の書式文字列を使えます。<br>
+　<b>$F</b> : パス付ファイル名<br>
+　<b>$L</b> : 行番号<br>
+<div class="spc_box">
+<b>例</b> <span class="inp_box">$F,$L </span><br>
+</div>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> イメージエディタ
+<dd>画像ファイルの編集に使用するイメージエディタ(ペイントソフト等)です。<br>
+対応拡張子を指定してください。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
+<b>例</b> <span class="inp_box">.jpg.gif.bmp.png </span><br>
+<div class="spc_box">
+<img src="chkbox.png" alt="" border=0> <b>ファイル毎に個別起動</b> をチェックすると、編集対象が複数ある場合、ファイル毎に個別にイメージエディタを起動します。アプリケーションがコマンドラインによる複数ファイル指定に対応していない場合(mspaint.exe など)、チェックしてみてください。実際にどのような動作になるかは、アプリケーション側の仕様によります。<br>
+</div>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> バイナリエディタ
+<dd><a href="hid00005.htm#BinaryEdit">BinaryEdit</a> コマンドで使用するバイナリエディタを指定します。<br>
+<br>
+
+<dt id="EtcEditor"><img src="grpbox.png" alt="" border=0> その他のエディタ
+<dd>その他、バイナリ文書、サウンド、動画などの編集ソフトを任意に指定できます。<br>
+対応拡張子とエディタを指定して<span class="btn_frame">追加</span>ボタンを押してください。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
+一つの拡張子に対して複数のエディタを設定すると、<b>FileEdit</b> コマンド実行時にポップアップメニューで選択できます。<br>
+項目の内容を変更したい場合は<span class="btn_frame">変更</span>ボタンを、項目を削除したい場合は<span class="btn_frame">削除</span>ボタンを押してください。また<span class="btn_frame">↑</span>/<span class="btn_frame">↓</span>ボタンで項目を上下に移動できます。一覧にフォーカスがある場合は、 <span class="btn_frame">Shift</span>+<span class="btn_frame">Ctrl</span>+<span class="btn_frame">↑</span>/<span class="btn_frame">↓</span>キーで項目の上下移動、<span class="btn_frame">DEL</span>キーで項目の削除が可能です。なお、項目の移動はドラッグ＆ドロップでもできます(上下端で自動スクロール)。<br>
+なお、実行ファイル名の代わりに追加メニューや外部ツールのエイリアス(サブメニューの親項目は除く)を指定することもできます。先頭が <b>$</b> でかつ <b>\</b> を含まない場合にエイリアスとみなされます。
+</dl>
+
+<p>
+いずれのエディタ指定でも、実行ファイル名はフルパスで指定してください。その際、以下の書式文字列が使えます。<br>
+　<b>$X</b>　<b>NyanFi</b> の起動パス(末尾の \ は無し)<br>
+　<b>$D</b>　<b>NyanFi</b> の起動ドライブ(末尾の \ は無し、例: &quot;D:&quot;)<br>
+　<b>$$</b>　$ そのもの<br>
+また &quot;%変数名%&quot; という書式で環境変数を用いることも可能です。<br>
+</p>
+
+<br><br>
+
+</body>
+</html>

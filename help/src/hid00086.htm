@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>ドライブ使用率推移</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>ドライブ使用率推移</h1>
+<p>
+ファイラーで <a href="hid00005.htm#DriveGraph">DriveGraph</a> コマンドを実行すると、<b>ドライブ使用率推移</b>が表示されます。<br>
+また<a href="hid00064.htm">ドライブ一覧</a>では、右クリックメニューや、<b>DriveGraph</b> コマンドが割り当てられているキーによって表示できます。
+</p>
+
+<p>
+この画面では、現在までのドライブ使用率の推移を、ドライブ容量ログファイルに基づいて棒グラフ化します。<br>
+ログファイル(<b>DriveLog.csv</b>)は、<b>DriveGraph</b> コマンドを初めて実行した時に、<b>NyanFi</b> 実行ディレクトリに自動的に作成されます。<br>
+ログファイルは、下の例のように「日付,ドライブ文字,使用容量,空き容量」が記録されたCSVファイルで、<b>NyanFi</b> 終了時に最新の内容が追加更新されます。<br>
+なお、ログファイルを編集したり削除したりしたい場合は、<b>NyanFi</b> が起動していない状態で行ってください。
+</p>
+<pre class="example_box margin1">
+Date,Drive,Used,Free
+2018/01/30,C,109605429248,138469822464
+2018/01/30,D,45434306560,200721002496
+2018/01/31,C,105847996416,142227255296
+2018/01/31,D,45905149952,200250159104
+</pre>
+
+<p>
+対象ドライブは、画面上部にあるコンボボックスで変更できます(CD-ROMは除く)。<br>
+<b>棒幅</b> コンボボックスで、一日分の棒グラフの幅(太さ)を変更できます(<span class="btn_frame">Ctrl</span>+マウスホイールでも変更可能)。<br>
+<img src="chkbox.png" alt="" border=0> <b>古い順</b> をチェックすると、グラフが古い日付順に表示されます。<br>
+<img src="chkbox.png" alt="" border=0> <b>Min/Max</b> をチェックすると、使用率の最小(青)/最大(赤)ラインをグラフ上に表示します。<br>
+
+グラフの配色は<a href="hid00064.htm">ドライブ一覧</a>と同様で、50%以下では緑、50%～100%では緑～黄～赤と変化します。<br>
+グラフの描画領域をクリックすると、その位置の日付、使用率、使用容量(前日からの増減)、空き容量がステータスバーに表示されます。
+</p>
+
+</body>
+</html>

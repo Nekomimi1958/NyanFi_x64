@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>ファイル(/ディレクトリ)名検索ダイアログ</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>ファイル(/ディレクトリ)名検索ダイアログ</h1>
+<p>
+ファイラーで <a href="hid00005.htm#FindFileDlg">FindFileDlg</a> コマンドを実行するとファイル名検索ダイアログが開きます。<br>
+また <a href="hid00005.htm#FindFileDirDlg">FindFileDirDlg</a> コマンドを実行するとファイル/ディレクトリ名検索ダイアログが開きます。<br>
+指定したマスク、検索語および、更新日付、サイズ、属性の条件にマッチするファイルをカレントパスで検索します。<br>
+ディレクトリが選択されている場合は、そのディレクトリが対象になります。また、カレントにあるライブラリファイル(<b>.library-ms</b>)が選択されている場合も、ディレクトリの集合とみなして対象になります。<br>
+なおカレントが結果リストだった場合、再度 <b>FindFileDlg</b> コマンドを実行すると、ファイル名の絞り込み検索を行えます(ディレクトリは無視)。
+</p>
+
+<dl>
+<dt class="no_bg_indent1"><img src="combobox.png" alt="" border=0> マスク
+<dd>必用ならマスクを指定します。マスクには &quot;<b>*</b>&quot; または &quot;<b>?</b>&quot; のワイルドカード文字を含めることができます。<br>
+空欄の場合、あるいはパラメータ <b>NM</b> によって非表示の場合は &quot;<b>*.*</b>&quot; とみなされます。<br>
+<br>
+
+<dt class="no_bg_indent1"><img src="combobox.png" alt="" border=0> 検索語
+<dd>必用なら検索語を指定します。マスクが指定されている場合、それにマッチするものからさらに絞り込むことになります。<br>
+半角または全角空白で区切って複数の検索語を指定することも可能です(AND または OR 検索)。<br>
+空白を含む語を検索したい場合は、全体をダブルクォーテーションで囲んでください。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> AND
+<dd>検索語を複数指定している場合に、AND検索を行います。チェックを外すとOR検索になります。
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 大小区別
+<dd>検索語の大文字・小文字を区別します。
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 正規表現
+<dd>検索語に正規表現を用います。検索語欄の右クリックメニューから、正規表現を参照できます。<br>
+入力内容が正しくない場合、背景色が変わり(<a href="hid00023.htm">オプション設定 - フォント・配色</a> 「不正な入力項目の背景色」)、検索を開始できません。<br>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> 更新日付
+<dd>
+<span class="btn_frame">本日</span>ボタンを押すと、今日の日付が設定されます。また<span class="btn_frame">-1D</span>ボタンでは現在設定されている日付に対して相対的に1日前、また<span class="btn_frame">-7D</span>ボタンでは7日前、<span class="btn_frame">-1M</span>ボタンでは1月前、<span class="btn_frame">-1Y</span>ボタンでは1年前に変更します。<br>
+条件が「<b>以前</b>」の場合、設定されている日付を含めて、それより古いファイルがマッチします。<br>
+条件が「<b>以降</b>」の場合、設定されている日付を含めて、それより新しいファイルがマッチします。<br>
+条件が「<b>一致</b>」の場合、日付の設定にワイルドカード <b>?</b> を使えます。<br>
+　<b>例</b>: <span class="inp_box">2???/04/??</span> 2000年以降の4月のファイルを検索<br>
+<br>
+入力欄が全選択または選択無しの状態で貼り付けを行おうとした場合、可能ならクリップボード内容を yyyy/mm/dd 形式に変換して貼り付けます。～年～月～日 などの形式にも対応。<br>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> サイズ
+<dd>
+<img src="radio.png" alt="" border=0> <b>B</b>、<b>KB</b>、<b>MB</b>、<b>GB</b> でサイズの単位を選べます。<br>
+条件が「<b>以下</b>」の場合、設定されているサイズ以下のファイルがマッチします。<br>
+条件が「<b>以降</b>」の場合、設定されているサイズ以上のファイルがマッチします。<br>
+<br>
+ファイル/ディレクトリ名検索の場合、ディレクトリに関しては適用されません。<br>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> 属性
+<dd>
+条件が「<b>含む</b>」の場合、チェックしている属性のいずれかが含まれるファイルがマッチします。<br>
+条件が「<b>含まない</b>」の場合、チェックしている属性のいずれも含まれないファイルがマッチします。<br>
+なお <a href="hid00009.htm#Show">オプション設定 - 一般 - 表示</a> で、隠しファイル属性やシステムファイル属性を非表示にしている場合、それらは条件として設定できません。<br>
+<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> サブディレクトリも検索
+<dd>
+チェックすると、カレントパス以下すべてのサブディレクトリも検索対象になります。<br>
+また、カレントにあるライブラリファイル(<b>.library-ms</b>)もディレクトリの集合としてみなして検索対象になります。<br>
+なおコマンドに <b>R0</b>/<b>R1</b> パラメータを指定することで、チェック状態を事前に設定しておくこともできます。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 拡張検索
+<dd>
+ダイアログの右側に拡張検索のための設定画面が表示されます。<br>
+ファイル名検索でマスク対象の拡張子によって、いくつかのプロパティを条件とした拡張検索を行えます。<br>
+なおコマンドに <b>X0</b>/<b>X1</b> パラメータを指定することで、チェック状態を事前に設定しておくこともできます。<br>
+
+<ul>
+<li>テキスト(拡張子で判断)では内容に対する文字列検索が可能です。<br>
+また、コードページと改行コードを条件として指定できます。Shift_JIS(932) と US-ASCII(20127) は区別されますので注意してください。判定は先頭64KBで行いますが、改行コードを「混在」とした場合はファイル中のすべての改行コードを調べますので、大きなファイルでは時間がかかります(中断可能)。<br>
+<li><b>xd2txlib.dll</b> がインストールされている場合、各種バイナリ文書から抽出されたテキスト内容に対する文字列検索が可能です。<br>
+<li>対象がアプリケーション情報やその他のファイル情報を持つ場合、その内容に対する文字列検索が可能です。<br>
+<li>画像ではサイズやExif情報を指定できます。<br>
+Exif情報にGPS情報が含まれている場合、指定地点(書式: [説明:]緯度,経度)から指定距離内にある画像を検索できます。<br>
+　<b>例</b>: 東京駅から500m以内の画像を検索<br>
+　　緯度,経度 <span class="inp_box">東京駅:35.68114636,139.76684887</span>　　範囲 <span class="inp_box">500</span> m<br>
+<li><b>.wav</b> では長さとサウンド形式を指定できます。<br>
+<li><b>.mp3</b> では長さとビットレート、およびID3タグ内の文字列を指定できます。<br>
+<li><b>.flac</b> では長さとサウンド形式、およびコメント情報の文字列を指定できます。<br>
+<li>動画では長さ、フレーム率、フレームサイズを指定できます。<br>
+<li>実行ファイル、DLL、アイコンファイルなどではアイコン数を指定できます。<br>
+<li>タグを指定できます。複数指定する場合、<b>;</b> 区切りでAND検索、<b>|</b> 区切りでOR検索(混在不可)。<b>*</b> はすべてのタグにマッチ。<br>
+<li>ハードリンクのリンクカウント数を指定できます。ハードリンクではない通常のファイル(リンクカウント数=1)はマッチしません。<br>
+<li>「その他」で <img src="chkbox.png" alt="" border=0> <b>代替データストリームを持つ</b> をチェックすると、ファイルにNTFSの代替データストリームがある場合にマッチします。<br>
+<li>「その他」で <img src="chkbox.png" alt="" border=0> <b>プロセスが使用中</b> をチェックすると、何らかのプロセスによって使用中のファイルがマッチします。この場合、「アプリケーション情報」などの文字列検索でプロセス情報も検索できます。<br>
+<a href="hid00024.htm">オプション設定 - 一般2</a> - 「ファイル情報」の「<b>プロセス使用情報を表示</b>」をチェックしていると、ファイル情報でプロセスを確認できます。<br>
+<li>「その他」で <img src="chkbox.png" alt="" border=0> <b>好ましくないファイル名</b> をチェックすると、長すぎるパス名や、先頭/末尾の全角/半角空白、連続した半角空白、サロゲートペア文字、環境依存文字(ローマ数字、囲み文字、単位記号、合成文字など)、RLO文字を含む名前を検索できます。マッチ理由はファイル情報で確認可能。<br>
+</ul>
+<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> アーカイブ内も検索 <span style="font-weight: normal;">(ファイル名検索のみ)</span>
+<dd>
+チェックすると、アーカイブ内のファイルも検索対象になります。拡張検索はできません。<br>
+なおコマンドに <b>A0</b>/<b>A1</b> パラメータを指定することで、チェック状態を事前に設定しておくこともできます。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 結果リストから反対側へ反映
+<dd>
+チェックすると、検索の結果リストでカーソルを移動した際に、反対パスがカーソル位置のファイルのパスに自動的に変更され、当該ファイルに点線カーソルが表示されます(ディレクトリ関係には &quot;<b>⇔</b>&quot; を表示)。<br>
+チェックしていない場合でも、<a href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドを実行すると、個々に同様の動作が可能です。
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ディレクトリ名を反映 <span style="font-weight: normal;">(ファイル/ディレクトリ名検索のみ)</span>
+<dd>
+「<b>結果リストから反対側へ反映</b>」がチェックされていて、カーソル位置がディレクトリ名の場合、反対パスをその親ディレクトリに変更し、その中の当該ディレクトリに点線カーソルを表示します(ファイル名と同じ扱い)。<a href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドを実行した場合も同様になります。<br>
+<br>
+
+</dl>
+
+<hr>
+<p>
+検索条件で無効になっているものは、わかりやすいように背景がグレー表示になりす(<a href="hid00023.htm">オプション設定 - フォント・配色</a> 「無効な項目の背景色」で変更可能)。
+</p>
+
+<p>
+検索中にファイル(/ディレクトリ)が見つかるとカレント側に表示されていきます。また、ステータスバー(非表示の場合は<a href="hid00004.htm#DriveInfo">ドライブ情報</a>部分)には検索状況が表示されます。括弧内の数字はヒット数です。<br>
+検索を中断したい場合は<span class="btn_frame">ESC</span>キーを押してください。<br>
+検索中は、カーソル移動および <a href="hid00005.htm#BinaryEdit">BinaryEdit</a>、<a href="hid00005.htm#FileEdit">FileEdit</a>、<a href="hid00005.htm#OpenByApp">OpenByApp</a>、<a href="hid00005.htm#OpenByWin">OpenByWin</a>、<a href="hid00005.htm#OpenStandard">OpenStandard</a>、<a href="hid00005.htm#Select">Select</a>、<a href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドのみ受け付けます。なお <a href="hid00005.htm#OpenStandard">OpenStandard</a> については、対象拡張子が <b>OpenByApp</b>、<b>OpenByWin</b>、<b>FileEdit</b>、<b>BinaryEdit</b> コマンドに関連付けられている場合、および WAVのファイルの再生、実行可能ファイルの実行のみ可能です。またメインメニュー、ツールバー、イベント、ログウィンドウでのコマンドはすべて無効になります。<br>
+</p>
+
+<hr>
+<p>
+検索が終わると、カレント側に結果リストが表示されます。<br>
+<a href="hid00010.htm#FileList">オプション設定 - デザイン</a> - <b>ファイルリスト</b> で「<b>結果リストに「場所」列を表示</b>」をチェックしていると、結果リストに「<b>場所</b>」列が表示され、それに基づくソートが行われます。<br>
+</p>
+<p>
+項目上で<span class="btn_frame">ENTER</span>キーを押すと、結果リストから抜けて、そのファイルのある位置に移動します。ただし、<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド</a> - <b>OpenStandard</b> 「<b>検索結果リストでも通常動作</b>」がチェックされていると <a href="hid00005.htm#OpenStandard">OpenStandard</a> と同じ動作になります(アーカイブ内ファイルは除く)。<br>
+その他、ファイル操作なども可能です。なお、アーカイブ内ファイルに対するファイル操作はできません(プレビュー、閲覧、編集、再生などは可能)。
+</p>
+<p>
+通常のファイルリスト表示に戻るには、<span class="btn_frame">ESC</span>キーを押すか、&quot;<b>..</b>&quot; で<span class="btn_frame">ENTER</span>キーを押してください。<br>
+<a href="hid00005.htm#ReturnList">ReturnList</a> コマンドや <a href="hid00005.htm#ToParent">ToParent</a> コマンドでも戻れます。<br>
+なお、<span class="btn_frame">ESC</span>キーに <a href="hid00005.htm#ExeCommands">ExeCommands</a> コマンドが割り当てられている場合は、それが優先的に実行されます。
+</p>
+<br><br>
+
+</body>
+</html>

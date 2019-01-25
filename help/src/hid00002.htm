@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>インストール</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>インストール</h1>
+
+<h2>動作環境</h2>
+<p>
+<b>Windows Vista</b> ～ <b>Windows 10</b> で多分大丈夫です。<br>
+こちらでは主に <b>Windows 10</b> で動作確認を行っています。<br>
+</p>
+<p class="note_text">
+NyanFi.exe が、カスペルスキーなど一部のウィルススキャンで誤検知されることがあるようです。その場合は、セキュリティソフトの信頼/除外リストなどに登録することで対処してください。もし NyanFi は信頼できないということでしたら、利用をお控えください。
+</p>
+<br>
+
+<h2>インストールするファイル</h2>
+<p>
+適当なディレクトリに以下のファイルを置いてください。<b>Program Files</b> などOSの管理下にあるフォルダに入れると色々と面倒なことになるので、別の場所に専用ディレクトリを作ってインストールすることをおすすめします。また、USBメモリなどに必要なファイルをまとめて入れておけば、ポータブルアプリケーションとしても利用できます。
+</p>
+
+<dl>
+<dt class="no_bg">本体<br>
+<dd>
+<b>NyanFi.exe</b>　実行ファイル<br>
+<b>NyanFi.chm</b>　このヘルプファイル<br>
+<p class="note_text">
+NyanFi.chm を開いたときに内容が表示されない場合は、ファイルのプロパティでブロックを解除してください(<a href="hid00005.htm#DeleteADS">DeleteADS</a>_ZI コマンドでも可能)。
+</p>
+
+<dt class="no_bg">アーカイバDLL<br>
+<dd>
+アーカイブを扱うには、別途 <b>7-zip64.dll</b>、<b>tar64.dll</b>、<b>unrar64j.dll</b>/<b>unrar64.dll</b> などが必用です。<br>
+※DLLを利用するのが <b>NyanFi</b> のみの場合は、<b>NyanFi</b> の実行ディレクトリにDLLを置いてもかまいません。<br>
+
+<div class="spc_box">
+アーカイバの中には、独自に拡張された私家版が公開されているものもあります。どのDLLを利用するかは、ユーザ自身で判断してください。<br>
+7-zip64.dll 文字化け対策版(x@rgs 氏作)を使用すると、ZIP/7zアーカイブ内のファイル名を変更できます(<a href="hid00005.htm#RenameDlg">→ RenameDlg</a>)。<br>
+7-zip64.dll 文字化け対策版の7z.dll対応版を使用すると、<b>7z.dll</b> が対応しているアーカイブの拡張子を追加指定できます(<a href="hid00024.htm#Other">→ オプション設定 - 一般2 - その他</a> - 「7-zip64.dll(7z.dll対応版)の対応拡張子」)。<b>.rar</b> を指定すると、unrar64j.dll/unrar64.dll を用いずに 7z.dll で解凍できます。<b>.lzh .cab .iso</b> なども指定可能。<br>
+</div>
+
+<dt class="no_bg">Migemo
+<dd>
+<b>C/Migemo</b> (MURAOKA Taro氏作 www.kaoriya.net/software/cmigemo/)に対応しています。<br>
+利用する場合は、<b>migemo.dll</b> (64bit版)や辞書ファイルをインストールし、<a href="hid00009.htm">オプション設定 - 一般</a> で場所を指定してください。<br>
+
+<dt class="no_bg">xd2txlib.dll
+<dd>
+<b>xd2txlib.dll</b> (xdoc2txt のDLL版 ver2.x hishida氏作 ebstudio.info/home/xdoc2txt.html)に対応しています。<br>
+PDF、WORD、EXCEL、一太郎などの各種バイナリ文書に対して、テキストビュアー表示、文字列検索(GREP)、ファイル名検索での文字列検索が可能です。
+
+</dl>
+<br>
+<hr size="1">
+
+<p>
+最初に起動したときに、実行ディレクトリにINIファイル(<b>NyanFi.INI</b>)が作成されます。設定情報はこのINIファイルに保存されます。<br>
+すべての設定をデフォルトに戻したい場合は、<b>NyanFi</b> が起動していない状態で、<b>NyanFi.INI</b> を削除してください。<br>
+なお、32ビット版の <b>NyanFI.INI</b> を流用してもかまいません。
+</p>
+<p class="note_text">
+FTP接続のパスワードは暗号化して保存されます。ユーザ名とシステムドライブのシリアルナンバーを元に暗号化しているため、別環境に移動した場合は再設定が必要となります。
+</p>
+
+<hr size="1">
+<p>
+<b>sample_cmd</b> ディレクトリには<b>コマンドファイル</b>(.nbt)のサンプルがあります。<br>
+カスタマイズして利用したり、コマンドファイル作成の際の参考にしたりしてください。<br>
+詳細については「<a href="hid00063.htm">ExeCommands コマンド</a>」のページを参照してください。<br>
+</p>
+<br>
+
+<hr size="1">
+<p>
+<b>source</b> ディレクトリにはソースコード(<b>C++Builder 10.2.3</b> 用)がありますので、自由にご利用ください。<br>
+</p>
+<br>
+
+<h2 id="update">バージョンアップ</h2>
+<p>
+ファイルメニュー - [<b>更新の確認</b>] で、最新バージョンかどうかをチェックできます。<br>
+更新ファイルがあった場合、指定した場所にダウンロードできます。<br>
+そして「更新しますか?」の確認後、実行ファイルとヘルプが最新版に更新され、<b>NyanFi</b> が再起動します。<br>
+</p>
+<p>
+ダウンロードしたファイルがすでにある場合は、ヘルプメニュー - [<b>アーカイブから更新</b>]で更新できます。<br>
+あるいは、必用なファイルを解凍し、手動で上書きしてもかまいません。
+</p>
+<!--
+<p>
+なお <b>Vector</b> のソフトライブラリでも公開していますが、更新が月１回程度のため、最新版でない場合があります。
+</p>
+-->
+<br>
+
+<h2>アンインストール</h2>
+<p>
+インストールしたファイルおよび INIファイル等を削除して下さい。レジストリは使用していません。<br>
+<a href="hid00102.htm">→ NyanFi が用いるファイル</a>
+</p>
+<br><br>
+
+</body>
+</html>

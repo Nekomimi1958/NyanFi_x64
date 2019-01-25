@@ -1,0 +1,261 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>オプション設定 - 一般</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+<h1>オプション設定 - 一般</h1>
+<dl>
+<dt class="no_bg"><img src="grpbox.png" alt="" border=0> 一時ディレクトリ
+<dd>アーカイブ内のファイルを一時的に解凍する必用がある場合などに使用されるディレクトリです。<br>
+この中のファイルは、仮想ディレクトリから抜けるときや、<b>NyanFi</b> の起動時に、自動的に削除されます。したがって、他のソフトと共有せずに、<b>専用のディレクトリを指定してください。</b><br>
+デフォルトでは、<b>NyanFi</b> のあるディレクトリに &quot;<b>Temp</b>&quot; というサブディレクトリが作られます。<br>
+ドライブ指定がない場合 <b>NyanFi</b> ディレクトリ下の相対パスとみなされます。<br>
+なお二重起動した場合は、他の <b>NyanFi</b> と競合しないように、ディレクトリ名の末尾に _ で区切って連番が付加されます。<br>
+
+<dt class="no_bg"><img src="grpbox.png" alt="" border=0> Migemo ディレクトリ
+<dd><a href="hid00050.htm">インクリメンタルサーチ</a>やフィルタなどで <b>C/Migemo</b> を利用する場合、関係ファイルをインストールしてある場所を指定します。空欄の場合は、<b>NyanFi</b> のあるディレクトリとみなされます。またドライブ指定がない場合 <b>NyanFi</b> ディレクトリ下の相対パスとみなされます。<br>
+<br><br>
+
+<dt id="Show"><img src="grpbox.png" alt="" border=0> 表示
+<dd></dd>
+<dt class="no_bg_indent1" id="ShowHideAtr"><img src="chkbox.png" alt="" border=0> 隠しファイルを表示
+<dd>ファイルリストで隠しファイル属性のファイル(ディレクトリ)も表示します。<br>
+<a href="hid00005.htm#ShowHideAtr">→ ShowHideAtr</a><br>
+
+<dt class="no_bg_indent1" id="ShowSystemAtr"><img src="chkbox.png" alt="" border=0> システムファイルを表示
+<dd>ファイルリストでシステムファイル属性のファイル(ディレクトリ)も表示します。<br>
+<a href="hid00005.htm#ShowSystemAtr">→ ShowSystemAtr</a>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> パス表示に登録名を使用
+<dd>パス名を、「登録ディレクトリ」ダイアログで登録されている名前で置換表示します。この場合、混乱しないように <b>&lt; &gt;</b> で囲んで表示します。<br>
+なお、ライブラリファイル(<b>.library-ms</b>)のあるディレクトリ名は「ライブラリ」と表示されます。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> UNCをネットワークドライブ名に
+<dd>可能な場合、リモートのUNCパスを、ネットワークドライブ名を用いて表示します。<br>
+ファイル情報には元のUNCパスが表示されます。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> タイトルバーにカレントパスを表示
+<dd>タイトルバーに、カレント側のフルパス名を表示します。<br>
+
+<dt class="no_bg_indent1">ディレクトリ区切り文字 <img src="edit.png" alt="" border=0>
+<dd>画面上でパスを表示する際のディレクトリ区切り文字を指定できます。ログウィンドウや、タスクログを表示している一覧ダイアログにも適用されます。<br>
+日本語フォントでも、U+2216 などの代用文字を指定することでバックスラッシュを表示できます(右クリックメニューから参照可能)。<br>
+なお内容をコピーした場合は、元の &quot;<b>\</b>&quot; (U+005C) になります。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ファイル固有のアイコンを表示
+<dd>チェックすると、ファイルリストでアイコンを表示する場合に、ファイル固有のアイコンを使用します(.exe .ico .cur .ani .lnk .url .library-ms)。<br>
+チェックを外すと、ファイル固有のアイコンの代わりに、拡張子に対応するデフォルトのアイコンを表示します。<br>
+なお、ファイルリスト以外では、この設定にかかわらず固有のアイコンを表示します。<br>
+
+<dt class="no_bg_indent1">アイコンキャッシュ数 <img src="edit.png" alt="" border=0>
+<dd>ファイルリストなどでスモールアイコンを表示する場合、ファイル固有のアイコンを指定した数までキャッシュして利用します。超過した場合は、古いものから一旦破棄していきます。<br>
+なお、拡張子にのみ依存するアイコンについては、この設定にかかわらず、すべてキャッシュされます。<br>
+<br>
+
+<dt id="Operation"><img src="grpbox.png" alt="" border=0> 操作
+<dd></dd>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 上下端でループ移動
+<dd>ファイルリストの上下端でカーソルをループ移動します。最上行でさらに上に移動しようとしたら最下行へ、最下行でさらに下に移動しようとしたら最上行に移ります。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> カーソルを常に可視領域に
+<dd>ファイルリスト、テキストプレビュー、ファイル情報、ログなどをスクロールした際、カーソルが常に可視領域に入るようにします。<br>
+チェックを外すと、スクロールしてもカーソル位置は変化しません(標準的なリストボックス動作)。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ESCキーでヘルプを閉じる
+<dd><b>NyanFi</b> のヘルプ画面を<span class="btn_frame">ESC</span>キーで閉じられるようにします。<br>
+<div class="info_text">
+なお、<span class="btn_frame">F1</span>キーで状況依存ヘルプを表示している場合、元画面とヘルプ画面の間を<span class="btn_frame">F1</span>キーで交互に行き来できます。<br>
+</div>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ダイアログをメイン画面の中央に表示
+<dd>各種ダイアログをメイン画面の中央に表示します。手動で表示位置を移動しても、再度開いたときには画面中央になります。<br>
+<div class="info_text">
+元々はマルチディスプレイ環境対策のために追加したオプションですが、現在では、二重起動された <b>NyanFi</b> でダイアログを開いた場合、メインの <b>NyanFi</b> との位置差を相殺して表示しているため、不要かもしれません。
+二重起動された <b>NyanFi</b> での位置調整は、メインの <b>NyanFi</b> に対する交差面積が1/2以下の場合に適用されます。
+</div>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> アクセラレータキー自動調整
+<dd>メインメニューやポップアップメニュー(コンテキストメニューは除く)で、重複することなくアクセラレータキーが付くよう自動的に調整します。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> Altキーでメニューに移らない
+<dd>チェックすると、<span class="btn_frame">ALT</span>キー単打でメニューにフォーカスが移らなくなります。<span class="btn_frame">ALT</span>+英字によるメニューアクセスは可能です。<br>
+なお、メニューバーが非表示の場合は不要です。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> コンボボックスの自動補完
+<dd>検索語などのコンボボックスで、入力の際に自動補完を行います。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> アクティブ時にコンボボックスの状態を復元
+<dd>チェックすると、編集可能なコンボボックスにフォーカスがある状態で他のアプリケーションに移って再びアクティブになった際に、直前のキャレット位置や選択状態を復元します。<br>
+チェックを外すと、アクティブになった際に全選択状態になります。<br>
+<br>
+
+<dt id="Watch"><img src="grpbox.png" alt="" border=0> 監視/更新
+<dd></dd>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> アクティブ時に最新の情報に
+<dd><b>NyanFi</b> がアクティブになったときに、自動的にファイルリストを最新の情報に更新します。ただし、ダイアログが出ているなどでメイン画面にフォーカスがない場合は更新されません。
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 追加ドライブをカレントに表示
+<dd>ドライブが新たに追加されると、それをカレント側に表示します。このとき <b>NyanFi</b> が最小化されていたら、元のサイズにもどしてからアクティブにします。<br>
+
+<dt class="no_bg_indent1" id="CheckUnc"><img src="chkbox.png" alt="" border=0> UNCパスをチェック
+<dd>ファイルリストでUNCパスを開いていて、そこへフォーカスを移したり、最新の情報に更新したりした場合、あるいは新たにUNCパスを開こうとした場合、そのUNCパスの存在チェックを行います。チェックは、その都度スレッドを生成して行い、タイムアウト前にESCキーで中断できます(チェック開始して約1秒後にヒント表示)。例えば開いているコンピュータがシャットダウンしてしまった場合などに役立ちます。<br>
+チェックを外すと、この機能が無効になります。環境によると思いますが、UNCパスを開いているファイルリストへフォーカス移動などが遅い場合、上述を踏まえた上でチェックを外してみてください。<br>
+
+<dt class="no_bg_indent1">ディレクトリ監視間隔 <img src="edit.png" alt="" border=0>
+<dd>左右ファイルリストのディレクトリの変化を定期的に確認して表示に反映します。その時間間隔を m秒単位で指定します。0 を設定すると監視を行いません。<br>
+監視したいディレクトリをOSに設定しておくと、何らかの変化があった場合OSによって記録されるので、それを定期的に確認しています。<b>NynaFi</b> 側は、確認のたびに対象ディレクトリに直接アクセスしているわけではなく、OSによる記録内容をみているだけなので、この設定によってアクセス頻度が変わるようなことはないはずです。<br>
+
+<dt class="no_bg_indent1">監視から除外するパス <img src="edit.png" alt="" border=0>
+<dd><b>ディレクトリ監視間隔</b> に 0 より大きな値が設定されている場合でも、ここで指定したパス以下に対しては、ディレクトリの変化を監視しません。<br>
+指定はドライブ名から始まるフルパスで行います。 <b>;</b> (セミコロン)で区切って複数指定可能です。前方一致なので、完全なパスの形式になっていなくてもかまいません。例えば &quot;<b>\\</b>&quot; を指定すると、すべてのUNCパスにマッチします。<br>
+ネットワークドライブなどを指定しておくとファイラーの操作性が改善される場合があります。<br>
+なお、監視から除外されていても、タスクの終了時などには更新されます。<br>
+<b>例</b> <span class="inp_box">N:\;P:\\Hoge;\\FileServer\D</span><br>
+<br>
+
+<dt id="Task"><img src="grpbox.png" alt="" border=0> タスク
+<dd></dd>
+<dt class="no_bg_indent1">最大タスク数 <img src="combobox.png" alt="" border=0>
+<dd>
+バックグラウンドで同時に実行する最大タスク数(1～4)を指定します。<br>
+設定数以上のタスクを実行しようとした場合は、予約待機します。予約待機数に制限はありません。<br>
+<br>
+
+<dt id="Tolerance"><img src="grpbox.png" alt="" border=0> タイムスタンプの許容誤差
+<dd>
+同名ファイルの処理でタイムスタンプを比較する場合、ここで設定した範囲内なら同じとみなします。<br>
+値はm秒単位で指定していださい。FATではタイムスタンプの精度が2秒なので、デフォルトを2000m秒(=2秒)としています。<br>
+<br>
+
+<dt id="Copy"><img src="grpbox.png" alt="" border=0> コピー動作
+<dd></dd>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> CD-ROMからのコピー時に読込専用属性を解除する
+<dd>カレントが CD-ROM の場合、ファイルをコピーした際に読込専用属性を解除します。<br>
+
+<dt class="no_bg_indent1"><b>同名時の自動改名書式</b> <img src="edit.png" alt="" border=0><br>
+<dd>
+同名ファイルの処理で「<b>自動的に名前を変更</b>」を選んだ場合の改名書式を指定できます(拡張子はそのまま)。指定には以下の書式文字列が使えます。
+<div class="indent1">
+<b>\N</b>　カーソル位置のファイル名主部またはディレクトリ名<br>
+<b>\SN</b>(書式)　連番(初期値と桁幅を数字で指定　例:1から始まる3桁　001)<br>
+<b>\DT</b>(書式)　現在の日時 (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
+<b>\TS</b>(書式)　コピー元のタイムスタンプ (書式は \DT と同じ)<br>
+<b>\-</b>　初回の改名試行では、これ以降の書式指定を無視<br>
+</div>
+書式に \SN(～) が含まれていなく重複を解決できなかった場合、書式の末尾に _\SN(1) を付加して再改名します。<br>
+<b>例</b>:<br>
+　<span class="inp_box">\N(\SN(01))</span>　hoge.txt → hoge(01).txt、hoge(02).txt …<br>
+　<span class="inp_box">\N_\DT(mmdd)\-_\SN(1)</span>　hoge.txt → hoge_0401.txt、hoge_0401_1.txt …<br>
+<hr>
+
+<dt class="no_bg_indent1"><b>ネットワーク待ち時間</b> <img src="edit.png" alt="" border=0><br>
+<dd>
+コピー/移動元・先がネットワークドライブの場合、バックグラウンド・タスクで一定サイズ転送される毎に呼ばれるコールバック関数に待ち時間を入れタイムスライスを譲ることによって、ファイラー操作の滞りを改善します。コールバック関数は1MB転送される毎に数十～数百m秒間隔で呼ばれるようです。待ち時間を大きくするほど効果がありますが、その分転送速度が遅くなります。逆に転送速度を優先したい場合は、値を小さくしてください。デフォルトでは、操作性を優先した設定になっています。
+
+<dt class="no_bg_indent1"><b>通常待ち時間</b> <img src="edit.png" alt="" border=0><br>
+<dd>
+コピー/移動元・先がネットワーク以外の通常ドライブの場合の待ち時間を指定します。<br>
+アクセスの遅いドライブでは、ある程度の待ち時間を入れないと操作が重くなります。<br>
+
+<dt class="no_bg_indent1"><img src="edit.png" alt="" border=0> <b>秒以上無操作なら待ち時間を最小に</b><br>
+<dd>
+指定した秒数以上、キーやマウス操作をしなかった場合、<b>ネットワーク待ち時間</b>と<b>通常待ち時間</b>を両方とも最小(転送速度が約64MB/秒以上なら 0 そうでなければ 1ms)にして高速実行になります。<br>
+その場合、<a href="hid00069.htm">タスクマネージャ</a>では「高速実行」と表示され、またファイラーのタスク表示部では、進捗バーの左に<span style="color:#ff0000;">■</span>マークが出ます。<br>
+何らかの操作をすると、再び指定待ち時間に戻ります。<br>
+なお、0 を指定するとこの機能は無効になります。<br>
+<hr>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> キャッシュ・リソースをバイパスし、バッファーなしI/Oを使用
+<dd>システムI/Oのキャッシュ・リソースをバイパスし、バッファーなしI/Oを使用してコピーを行います。<br>
+サイズの大きなファイルのコピーや、ネットワーク越しのコピー動作が改善されるかもしれません。なお、サイズが10MB以下のファイルに対しては適用されません。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> アーカイブからのコピーで進捗状況を表示
+<dd>アーカイブ内からファイルをコピーする際に、解凍の進捗状況ダイアログを表示します。<br>
+ダイアログで解凍を取り消すと、コピーも中断されます。<br>
+<br>
+
+<dt id="Delete"><img src="grpbox.png" alt="" border=0> 削除/上書き動作
+<dd></dd>
+<dt class="no_bg_indent1" id="UseTrash"><img src="chkbox.png" alt="" border=0> 削除にごみ箱を使う
+<dd>ファイルを削除する際に、ごみ箱へ入れます。<br>
+<a href="hid00005.htm#UseTrash">→ UseTrash</a>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 読込専用でも強制的に上書き・削除
+<dd>ファイル操作の際に、読込専用属性のファイルも強制的に上書き・変更・削除します。<br>
+<br>
+
+<dt id="WorkList"><img src="grpbox.png" alt="" border=0> ワークリスト
+<dd></dd>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 項目をソートしない
+<dd>ワークリストの項目をソートしないようにします(<b>SortDlg</b> コマンドを禁止)。<a href="hid00005.htm#WorkItemUp">WorkItemUp</a>、<a href="hid00005.htm#WorkItemDown">WorkItemDown</a>、<a href="hid00005.htm#WorkItemMove">WorkItemMove</a> コマンドやマウスドラッグによって、項目を自由に並べ替えられます。<br>
+これが無効の場合でも、ワークリストにセパレータが含まれているとソートされません。
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> カーソル位置に登録
+<dd>チェックすると、<a href="hid00005.htm#Copy">Copy</a> コマンドでワークリストに項目を登録する際に、反対側のカーソル位置(点線表示)に項目が挿入されます。なお項目の追加を可能にするため、リストの末尾に空のダミー項目が追加表示されます。<br>
+チェックを外すと、ワークリストの末尾に項目が追加登録されます。<br>
+ワークリストのソートが有効な場合、この設定は無効です。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 項目の自動削除
+<dd>チェックすると、ワークリストの読み込みや更新の際に、存在しない無効な項目が自動的に削除(登録解除)されます。<br>
+チェックを外すと、無効な項目は「<b>無効な項目の文字色</b>」で表示されます。この場合、<a href="hid00005.htm#WorkList">WorkList</a>_DI コマンドで無効な項目を一括削除(登録解除)できます。
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> UNCパスをチェックしない
+<dd>チェックすると、ワークリストの読み込みや更新の際に、UNCパス項目の存在チェックを行いません。<br>
+リスト表示では、サイズと更新日時が常に空欄となります。<br>
+ファイル情報は、<a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> コマンドで強制的に取得しない限り表示されず、その内容は保持されません。<br>
+<br>
+
+<dt id="DirHistory"><img src="grpbox.png" alt="" border=0> ディレクトリ履歴
+<dd></dd>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> カーソル位置を記憶する
+<dd><a href="hid00057.htm">ディレクトリ履歴</a>でカーソル位置を記憶し、履歴(or スタック)を用いる際にそれを復元します。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 履歴の存在チェックを行わない
+<dd>明示的に、あるいは内部でディレクトリ履歴を参照する前に、ディレクトリの存在チェックを行いません。<br>
+ネットワーク・ドライブなどのために操作が滞るような場合にチェックしてみてください。<br>
+これをチェックしていると、存在しなくなったディレクトリが履歴に残る場合があります。<a href="hid00005.htm#BackDirHist">BackDirHist</a>、<a href="hid00005.htm#ForwardDirHist">ForwardDirHist</a>、<a href="hid00005.htm#PopDir">PopDir</a> コマンドで存在しないディレクトリに移動しようとしたら、その項目を削除・スキップします。また <a href="hid00005.htm#DirHistory">DirHistory</a>、<a href="hid00005.htm#DirStack">DirStack</a> コマンドでは警告を出してその項目を削除します。<br>
+なお全体履歴については、項目数が多くなる場合があるため、事前の存在チェックは行っていません。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 重複する履歴を削除する
+<dd>チェックすると、履歴が追加される際に、既存の重複項目が削除されます。チェックを外すと、重複を調べず、単純に履歴が追加されます。<br>
+<a href="hid00005.htm#BackDirHist">BackDirHist</a>、<a href="hid00005.htm#ForwardDirHist">ForwardDirHist</a> コマンドで履歴をたどりたい場合は、チェックを外しておいた方がよいでしょう。<br>
+なお全体履歴については、この設定にかかわらず重複項目が削除されます。<br>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ワークリストを履歴に含める
+<dd>チェックすると、ワークリストも履歴に追加され、ディレクトリと同様に利用できます。<br>
+
+<dt class="no_bg_indent1" id="DirHistoryINI"><img src="chkbox.png" alt="" border=0> 全体履歴を別ファイルに保存
+<dd>チェックすると、全体としての履歴を、INIファイルではなく別ファイル(<b>DirHistory.INI</b>)に保存します。<br>
+この場合、保存する履歴数の制限がなくなります(INIファイルの場合は100に制限)。<br>
+<a href="hid00005.htm#DirHistory">DirHistory</a>_FM で全体履歴を検索する場合にチェックするとよいでしょう。<br>
+なお、チェックしたときに <b>DirHistory.INI</b> がすでにあった場合、それを読み込むかどうかの確認が出ます。このとき「はい」を選ばなかった場合、現在の履歴内容で上書きされますので注意してください。<br>
+
+<dt class="no_bg_indent1">履歴に入れないパス <img src="edit.png" alt="" border=0>
+<dd>ここに設定した語が含まれているパスは履歴に追加されません。 <b>;</b> (セミコロン)で区切って複数指定可能です。<br>
+<b>例</b> <span class="inp_box">E:\;temp;backup</span><br>
+<br>
+
+<dt id="RecentList"><img src="grpbox.png" alt="" border=0> 最近使ったファイル
+<dd></dd>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 開いたファイルを「最近使った項目」に追加
+<dd>
+<a href="hid00005.htm#OpenByWin">OpenByWin</a>、<a href="hid00005.htm#OpenByApp">OpenByApp</a>、<a href="hid00005.htm#FileEdit">FileEdit</a>、<a href="hid00005.htm#BinaryEdit">BinaryEdit</a> コマンドで開いたファイルを「最近使った項目」に明示的に追加します。<br>
+追加されたファイルは <a href="hid00058.htm#RecentList">最近使ったファイル一覧</a> (<a href="hid00005.htm#RecentList">RecentList</a>)に表示されます。<br>
+<div class="spc_box note_text">
+※Windows 側の設定によって最近使った項目の保存が制限されている場合は機能しません。<br>
+</div>
+
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> UNCパスをチェックしない
+<dd>チェックすると、最近使ったファイル一覧を取得する際に、リンク先のUNCパスの存在チェックを行いません。<br>
+拡張子の有無だけでファイルを判別するため、正しい表示にならない場合があります。また日時は常に空欄となります。<br>
+<br><br>
+</dl>
+<br><br>
+
+</body>
+</html>

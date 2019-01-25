@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>オプション設定 - フォント・配色</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+<body>
+
+<h1>オプション設定 - フォント・配色</h1>
+
+<dl>
+<dt id="Font"><img src="grpbox.png" alt="" border=0> フォント
+<dd>コンボボックスで設定対象を選び、<span class="btn_frame">...</span>ボタンでフォントを参照してください。<br>
+「<b>テキストビュアー</b>」以外では、プロポーショナルフォントも設定できます。<br>
+サイズは整数で指定してください(10.5 などは不可)。なお「<b>ダイアログ</b>」については最大サイズが10ポイントです(UIフォントを推奨)。フォントやサイズによっては表示が欠けるかもしれません。<br>
+
+<div class="note_text spc_box">
+フォントに <b>Ricty Diminished</b> ～ を指定した場合、サイズによっては半角と全角の幅が 1:2 にならず、テキストビュアーなどで桁位置が揃わなくなりますので注意してください。9、10、12、15、18、21ポイントなどは大丈夫のようです。
+</div>
+<br>
+
+<dt id="Color"><img src="grpbox.png" alt="" border=0> 配色
+<dd>一覧で対象を選び、<span class="btn_frame">...</span>ボタンを押して色を指定してください。<br>
+また <img src="spuit.png" alt=""> <b>スポイト</b>アイコンをドラッグすると、マウス位置の色を取り込んで指定できます(<span class="btn_frame">ESC</span>キーでキャンセル)。<br>
+この場合、設定グループボックスの右下に色見本が表示されます(最後の16色は「色の設定」ダイアログで作成した色)。<br>
+色見本の表示色を変更したい場合は、設定メニュー「<b>色見本をファイルに保存</b>」で出力したファイル(<b>Swatchbook.INI</b>)を編集してください(<a href="hid00102.htm#Swatchbook">→ NyanFi が用いるファイル</a>)。<br>
+<div class="spc_box">
+「<b>リストの背景色(交互)</b>」、「<b>選択項目の文字色</b>」、「<b>ディレクトリ(削除制限)の文字色</b>」、「<b>圧縮属性の文字色</b>」、「<b>シンプルスクロールバーのヒット行</b>」、「<b>タブの輪郭線</b>」、「<b>行番号境界線</b>」、「<b>折り返し境界線</b>」、「<b>固定長表示の縦罫線</b>」の場合、色を指定すると有効に、<span class="btn_frame">無効</span>ボタンを押すと無効になります。<br>
+「<b>タブの輪郭線</b>」を無効にすると、タブの表示スタイルが「タブ」または「タブ(斜)」の場合、ボタンと同様の立体的な辺が描かれます。<br>
+</div>
+<div class="spc_box">
+「<b>リストの背景色(交互)</b>」は、通常のファイルリスト(背景画像なしの場合)、<a href="hid00067.htm">コマンドファイル一覧</a>、<a href="hid00072.htm">拡張子別一覧</a>、<a href="hid00058.htm">最近編集/閲覧したファイル一覧</a>、<a href="hid00070.htm">栞マーク一覧</a>、<a href="hid00083.htm">ダイレクトタグジャンプ</a>の候補一覧で、偶数行の表示に用いられます。<br>
+</div>
+<div class="spc_box">
+「<b>ファイル情報の強調文字色</b>」は、ファイル情報の右クリックメニューで「<b>この項目内容を強調表示</b>」をチェックしている場合の強調表示に用いられます。<br>
+</div>
+
+<div class="spc_box">
+テキストビュアーの配色については、ファイラー、テキストビュアーの <a href="hid00006.htm#SetColor">SetColor</a> コマンドでも設定・変更できます。<br>
+</div>
+
+<div class="spc_box">
+<b>検索</b> <img src="edit.png" alt="" border=0> 欄に文字列を入力して<span class="btn_frame">∨</span>/<span class="btn_frame">∧</span>ボタン(or <span class="btn_frame">↓</span>/<span class="btn_frame">↑</span>キー)を押すと一覧の内容を検索できます。<br>
+</div>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> タイムスタンプ/サイズの配色
+<dd>ファイルリストでタイムスタンプやサイズを色分けできます。<br>
+コンボボックスで設定対象を選び、<span class="btn_frame">...</span>ボタンを押して色を指定してください。<img src="spuit.png" alt=""> <b>スポイト</b>アイコンをドラッグすると、マウス位置の色を取り込んで指定できます。<br>
+色を指定すると有効、<span class="btn_frame">無効</span>ボタンを押すと無効になります。無効の場合、「リストの文字色」になります。<br>
+
+<dt><img src="grpbox.png" alt="" border=0> 拡張子別配色
+<dd>ファイルリストでの表示色を拡張子ごとに設定できます。<br>
+拡張子を指定し、<span class="btn_frame">...</span>ボタンを押して色を指定してください。<img src="spuit.png" alt=""> <b>スポイト</b>アイコンをドラッグすると、マウス位置の色を取り込んで指定できます。<br>
+拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。また <b>.</b> のみを入力すると、拡張子なし(ドットファイルを含む)の色を設定できます。<br>
+指定がよければ<span class="btn_frame">追加</span>ボタンで一覧に追加してください。なお追加/変更しようとした拡張子がすでに登録されていたら警告が出ます。<br>
+<div class="spc_box">
+<img src="chkbox.png" alt="" border=0> <b>拡張子部分のみに適用</b> をチェックすると、拡張子部分のみに拡張子別配色が適用され、ファイル名主部は属性色(通常属性では「リストの文字色」)になります。<br>
+<img src="chkbox.png" alt="" border=0> <b>拡張子部分は属性色より優先</b> をチェックすると、ファイル名に属性色が適用されている場合も、拡張子部分は拡張子別配色になります。<br>
+</div>
+<div class="spc_box">
+<b>検索</b> <img src="edit.png" alt="" border=0> 欄に拡張子を入力すると、それが含まれる一覧の項目が選択されます。<br>
+</div>
+
+<dt><img src="grpbox.png" alt="" border=0> タグ別配色
+<dd>ファイルリスト、ファイル情報、およびイメージビュアーのサムネイルにタグを表示する際の文字色を個別に設定できます。<br>
+未設定の場合は「<b>配色</b>」の「<b>デフォルトのタグ色</b>」が用いられます。<span class="btn_frame">デフォルト</span>ボタンを押すとデフォルトに戻ります。<br>
+<img src="chkbox.png" alt="" border=0> <b>反転</b> をチェックすると、タグの文字色/背景色を反転して表示します。<br>
+タグ別配色は、タグ関係のダイアログで、一覧の右クリックメニューから直接設定することも可能です。<br>
+<br>
+
+<dt class="no_bg_indent1">配色の
+<dd>
+<span class="btn_frame">エクスポート...</span>ボタンを押すと、現在の配色設定をファイルに保存できます。<br>
+<span class="btn_frame">インポート...</span>ボタンを押すと、エクスポートされたファイルや、他の <b>Nyanfi.INI</b> から、配色設定を読み込めます。
+</dl>
+<br><br>
+
+</body>
+</html>

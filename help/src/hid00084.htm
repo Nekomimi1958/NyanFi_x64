@@ -1,0 +1,329 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>構文強調表示定義ファイル</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+<h1>構文強調表示定義ファイル</h1>
+
+<p>
+<a href="hid00006.htm">テキストビュアー</a>での構文強調表示を、ファイルによってユーザ定義できます。<br>
+定義ファイルは、<b>NyanFi</b> 実行ディレクトリに &quot;<b>Highlight.INI</b>&quot; という名前で作成してください。<br>
+<b>NyanFi</b> がデフォルトで対応している拡張子についても、ファイルで定義すると、それが優先的に適用されます。<br>
+一旦読み込まれた定義ファイルは、内容を保持して再利用します。タイムスタンプが変化していたら読み込み直します。<br>
+</p>
+
+<p>
+なお、<b>設定メニュー</b> - [<b>デフォルトの構文強調表示定義をコピー</b>] を用いると、特定の拡張子に対するデフォルトの構文強調表示定義をクリップボードにコピーできます(<span class="note_text">例外的な処理もあるため、実際の動作と一致しない場合もあり</span>)。取得した内容を変更して定義ファイルに設定すれば、デフォルトの定義を拡張できます。
+</p>
+
+<p>
+定義ファイルの書式は一般的なINIファイルと同様です。<br>
+ファイルの種類ごとにセクションを作り、その中に定義を記述してください。<br>
+セクション名は、定義したいファイルの拡張子とします。拡張子は . (ピリオド)で区切って複数指定できます。<br>
+なお <b>xd2txlib.dll</b> でバイナリ文書をテキスト表示している場合も、その拡張子に対して定義可能です。<br>
+</p>
+
+<div class="indent1">
+<pre class="example_box">
+[.f03.f08.f90.f95]
+</pre>
+</div>
+
+<p>
+セクション名を <b>CLIPBOARD</b> にすると、<a href="hid00005.htm#TextViewer">TextViewer</a>_CB コマンドでクリップボードを閲覧している場合の構文強調表示を定義できます。
+</p>
+<div class="indent1">
+<pre class="example_box">
+[CLIPBOARD]
+</pre>
+</div>
+
+<p>
+セクション名を <b>TASKLOG</b> にすると、タスクログの構文強調表示を定義できます。
+</p>
+<div class="indent1">
+<pre class="example_box">
+[TASKLOG]
+</pre>
+</div>
+
+<p>
+セクション名を <b>HTML2TEXT</b> にすると、HTML→テキスト変換表示中の構文強調表示を定義できます。
+</p>
+<div class="indent1">
+<pre class="example_box">
+[HTML2TEXT]
+</pre>
+</div>
+<br><br>
+
+<p>
+セクション内では、以下のキーを利用できます。必要に応じて設定してください。
+</p>
+
+<hr>
+<dl class="indent1">
+
+<dt class="no_bg">TargetPath
+<dd>特定のパスでのみ定義を適用したい場合に指定します。<br>
+無指定の場合は、すべてのパスが対象となります。<br>
+パスは、<b>;</b> (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。<br>
+
+<pre class="example_box">
+TargetPath=D:\Projects\Source;E:\Backup\Source
+</pre>
+
+<dt class="no_bg">ExcludePath
+<dd>定義を適用したくないパスを指定します。<br>
+パスは、<b>;</b> (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。<br>
+
+<pre class="example_box">
+TargetPath=D:\Prog\NyanFi\tasklog
+</pre>
+</dl>
+
+<p>
+同一拡張子に対して異なるパス条件で別の定義を適用したい場合は、拡張子の末尾に <b>:</b> (コロン)で区切って任意の文字列を付加し、セクション名が一意的になるようにしてください。<br>
+</p>
+<div class="indent2">
+<pre class="example_box">
+[.txt:D1]
+TargetPath=D:\hoge\data1
+…
+…
+
+[.txt:D2]
+TargetPath=D:\hoge\data2
+…
+…
+</pre>
+</div>
+
+<p>セクション名が <b>CLIPBOARD</b>、<b>TASKLOG</b> の場合、<b>TargetPath</b>、<b>ExcludePath</b> は無効です。</p>
+<br><hr>
+
+<dl class="indent1">
+<dt class="no_bg">FontName
+<dd>通常とは異なる等幅フォントで表示したい場合、その名前を設定してください。<br>
+誤ってプロポーショナルフォントを設定すると表示が崩れますので注意してください。<br>
+
+<dt class="no_bg">FontSize
+<dd>通常とは異なるフォントサイズで表示したい場合に設定してください。<br>
+
+<pre class="example_box">
+FontName=Ricty Diminished
+FontSize=15
+</pre>
+<br>
+
+<dt class="no_bg">Comment1～
+<dd>行コメントの開始文字列です。<br>
+キー名の末尾に連番を振ることで複数指定できます。<br>
+この設定は、テキストプレビューや一覧ダイアログにも適用されます。<br>
+
+<pre class="example_box">
+CommentEnd1=@REM
+CommentEnd2=REM
+CommentEnd3=::
+</pre>
+
+<dt class="no_bg">CommentBgn1～<br>
+CommentEnd1～
+<dd>
+ブロックコメントの開始/終了文字列です。<br>
+キー名の末尾に連番を振ることで複数指定できます。必ず開始/終了を組にして指定してください。<br>
+この設定は、テキストプレビューや一覧ダイアログにも適用されますが、開始/終了文字列が同じだと対応できない場合があります。<br>
+
+<pre class="example_box">
+CommentBgn1={
+CommentEnd1=}
+CommentBgn2=(*
+CommentEnd2=*)
+</pre>
+
+先頭と末尾が同じ引用符になる場合は、全体を &quot; または ' で囲んでください。<br>
+
+<pre class="example_box">
+CommentBgn1='&quot;&quot;&quot;'
+CommentEnd1='&quot;&quot;&quot;'
+CommentBgn2=&quot;'''&quot;
+CommentEnd2=&quot;'''&quot;
+</pre>
+<br>
+
+<dt class="no_bg">ReservedPtn<br>
+<dd>
+予約語の正規表現パターンです。<br>
+多数になる場合でも、一行で記述してください。<br>
+
+<pre class="example_box">
+ReservedPtn=\b(if|begin|else|end|function)\b
+</pre>
+
+<dt class="no_bg">ReservedCase<br>
+<dd>予約語に対する大小文字区別の有無です。<br>
+区別する場合は <b>1</b> (デフォルト)を、区別しない場合は <b>0</b> を指定してください。<br>
+
+<pre class="example_box">
+ReservedCase=0
+</pre>
+<br>
+
+<dt class="no_bg">NumericPtn
+<dd>数値の正規表現パターンです。<br>
+
+<pre class="example_box">
+NumericPtn=\b[0-9]+\b
+</pre>
+<br>
+
+<dt class="no_bg">Symbol
+<dd>シンボルとみなす文字を列挙します。<br>
+
+<pre class="example_box">
+Symbol={}()[]+-*/%&|^!~=&lt;&gt;,:;?
+</pre>
+<br>
+
+<dt class="no_bg">Strings
+<dd>文字列表示のための引用符を列挙します。
+
+<pre class="example_box">
+Strings="'
+</pre>
+
+<dt class="no_bg">UseEsc
+<dd>Strings で指定した引用符内でのエスケープシーケンスの有無です。<br>
+\ によるエスケープシーケンスがある場合は <b>1</b> (デフォルト)を、ない場合は <b>0</b> を指定してください。<br>
+
+<pre class="example_box">
+UseEsc=1
+</pre>
+<br>
+
+<dt class="no_bg">HeadlinePtn
+<dd>見出し行の正規表現パターンです。マッチした行が、「見出しの文字色」で表示されます。<br>
+無指定の場合、デフォルトのパターンがあればそれが用いられます。<br>
+これが指定されていて <a href="#FunctionPtn">FunctionPtn</a> が無指定の場合、<a href="hid00006.htm#FunctionList">FunctionList</a> コマンドを実行すると「見出し一覧」が表示されます。<br>
+またこの設定は、一覧ダイアログでの見出し表示にも適用されます。<br>
+
+<pre class="example_box">
+HeadlinePtn=^[●○◎]\.+
+</pre>
+<br>
+
+<dt class="no_bg">ColorIniFile
+<dd>指定したカラー設定ファイル(.INI)によって、テキストビュアーの配色を一時的に変更します。<br>
+設定ファイルには、<b>テキストビュアーの配色</b>ダイアログ(<a href="hid00006.htm#SetColor">SetColor</a>)や <a href="hid00023.htm">オプション設定 - フォント・配色</a> でエクスポートしたもの、あるいは <b>NyanFi</b> のINIファイルを利用できます。ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+
+<pre class="example_box">
+ColorIniFile=DarkColor.INI
+</pre>
+
+<dt class="no_bg">CommentCol、ReservedCol、NumericCol、SymbolCol、StringsCol、HeadlineCol
+<dd>コメント、予約語、数値、シンボル、文字列、見出しを、通常と異なる文字色で表示したい場合に設定してください。<br>
+色は、2桁の16進数によるRRGGBB形式で指定します。<br>
+なおテキストプレビューや一覧ダイアログに CommentCol は適用されません。また一覧ダイアログに HeadlineCol は適用されません。<br>
+
+<pre class="example_box">
+CommentCol=FFFF66
+ReservedCol=66FFFF
+</pre>
+<br>
+
+<dt class="no_bg">KeywordPtn、KeywordPtn2
+<dd>予約語以外のキーワードの正規表現パターンです。キーワードは2種類まで指定できます。<br>
+
+<pre class="example_box">
+KeywordPtn=\b(hoge|fuga|piyo)\b
+KeywordPtn2=[子丑寅卯辰巳午未申酉戌亥]
+</pre>
+
+<dt class="no_bg">KeywordCase、KeywordCase2
+<dd>KeywordPtn、KeywordPtn2 で指定したキーワードに対する大小文字区別の有無です。<br>
+区別する場合は <b>1</b> (デフォルト)を、区別しない場合は <b>0</b> を指定してください。<br>
+
+<pre class="example_box">
+KeywordCase=0
+KeywordCase2=0
+</pre>
+
+<dt class="no_bg">KeywordCol、KeywordCol2
+<dd>KeywordPtn、KeywordPtn2 で指定したキーワードの表示色です。<br>
+2桁の16進数によるRRGGBB形式で指定してください。<br>
+
+<pre class="example_box">
+KeywordCol=FFFF66
+KeywordCol2=66FFFF
+</pre>
+<br>
+
+<dt class="no_bg" id="FunctionPtn">FunctionPtn
+<dd><a href="hid00066.htm">関数一覧</a>で表示する関数の正規表現パターンです。<br>
+
+<pre class="example_box">
+FunctionPtn=^function\s+[_a-zA-Z]\w*\(
+</pre>
+
+<dt class="no_bg">FuncNamePtn
+<dd><a href="hid00066.htm">関数一覧</a>で、<img src="chkbox.png" alt="" border=0> <b>名前</b> をチェックしている場合に、関数の名前部分を取得するための正規表現パターンです。<br>
+マッチした名前の末尾に括弧がある場合、それを除いて表示します。
+
+<pre class="example_box">
+FuncNamePtn=\b[_a-zA-Z]\w*\(
+</pre>
+</dl>
+<br>
+
+<div class="indent1">
+<p class="note_text">
+不正な正規表現パターンが指定されていると無効になります。強調表示がうまく行われない場合は、設定を確認してください。<br>
+起動時や再読み込み時、構文強調表示定義ファイルに誤りがあったら、その内容がログに出力されます。<br>
+</p>
+</div>
+<br>
+<hr>
+
+<div class="indent1">
+<b>Highlight.INI の例</b><br>
+<pre class="example_box">
+[.h51.mac]
+Comment1=;
+ReservedPtn=\b(BIT|CREF|DATA|DB|DW|END|ENDM|EQU|INCLUDE|MACRO|ORG|PAGE)\b
+ReservedCase=0
+NumericPtn=\b([0-9A-F]{1,5}H)|([01]{1,8}B)\b
+Symbol=,&+-%#
+Strings="'
+
+[.hoge]
+TargetPath=D:\foo
+Comment1=;
+CommentBgn1=/*
+CommentEnd1=*/
+CommentCol=66FF66
+ReservedPtn=\b(cat|dog|if|begin|else|end|function)\b|^#\w+\b
+ReservedCase=1
+NumericPtn=\b[0-9]+\b
+Symbol=+-*/=&lt;&gt;
+Strings="
+UseEsc=0
+KeywordPtn=\b(foo|bar|baz|qux)\b
+KeywordCase=0
+KeywordCol=FFFF66
+KeywordPtn2=\b(spam|ham|eggs)\b
+KeywordCase2=0
+KeywordCol2=FF66FF
+FunctionPtn=^function\s+[_a-zA-Z]\w*\(
+FuncNamePtn=\b[_a-zA-Z]\w*\(
+
+</pre>
+</div>
+<br><br>
+
+</body>
+</html>

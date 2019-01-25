@@ -1,0 +1,1219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>ExeCommands コマンド</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+
+<style TYPE="text/css">
+<!--
+th {
+  text-align: left;
+  vertical-align: top;
+  font-weight: bold;
+  padding-right: 1em;
+  white-space: nowrap;
+}
+-->
+</style>
+</head>
+
+<body>
+<h1>ExeCommands コマンド</h1>
+
+<p>
+ファイラー、<a href="hid00006.htm">テキストビュアー</a>、<a href="hid00007.htm">イメージビュアー</a>、 <a href="hid00013.htm">オプション設定 - 関連付け</a>、<a href="hid00014.htm">オプション設定 - 追加メニュー</a> で <a href="hid00005.htm#ExeCommands">ExeCommands</a> コマンドを用いると、一連の複数コマンドを実行できます。制御文などを用いたバッチ処理も可能です。なお、<b>ExeCommands</b> コマンドの中でさらに <b>ExeCommands</b> コマンドを実行することはできません。<br>
+<a href="hid00021.htm">オプション設定 - イベント</a>や、<a href="hid00068.htm">ツールバーの設定</a>では、実行するコマンドを <b>ExeCommands</b> コマンドのパラメータとして割り当てています。<br>
+また、<a href="hid00089.htm">起動時オプション</a>で <b>-X</b> を指定すると、<b>ExeCommands</b> コマンドのパラメータとして実行されます。<br>
+</p>
+<p>
+<b>ExeCommands</b> コマンドの実行を中断したい場合は、<span class="btn_frame">ESC</span>キーを押してください。中断の確認メッセージが出ます。
+</p>
+<p class="link_box"><a href="#Syntax">構文</a> ／ <a href="#UserVar">ユーザ定義変数</a> ／ <a href="#PreDefVar">定義済み変数</a> ／ <a href="#AuxCommand">補助コマンド</a> ／ <a href="#CtrlStatement">制御文</a> ／　<a href="#Example">例</a>
+</p>
+<br>
+
+<h3 id="Syntax">構文</h3>
+<dl class="sub_item">
+<dt class="no_bg"><b>ExeCommands</b><span class="pram_text">_[:説明:]コマンド[:コマンド...]</span>
+<dd>
+パラメータで指定したコマンドを実行します。コマンドは <b>:</b> (コロン)で区切って複数指定できます。<br>
+コマンドが <b>$</b> で始まる場合、<a href="hid00014.htm">追加メニュー</a>または<a href="hid00015.htm">外部ツール</a>で設定されている<b>エイリアス</b>とみなし、その項目を実行します(サブメニューの親項目の場合は、そのサブメニューをポップアップ表示)。<br>
+<br>
+パラメータの先頭に :文字列: という形で説明を付けると、キー割り当て一覧や2ストローク・ヒントの説明部分に表示されます。
+<pre class="example_box">
+ExeCommands_:空のディレクトリを削除: SelEmptyDir: Delete_SO
+</pre>
+パラメータ中、<b>:\</b> 以外で <b>:</b> を用いたい場合は、パラメータ全体をダブルクォーテーションで囲んでください。 <br>
+<pre class="example_box">
+ExeCommands_MsgBox_":エラー:処理に失敗しました"
+</pre>
+<br>
+
+<dt class="no_bg"><b>ExeCommands</b><span class="pram_text">_[:説明:]@[コマンドファイル名]</span>
+<dd>
+<div class="mgn_btm_h">
+先頭が <b>@</b> の場合、<b>コマンドファイル</b>名の指定になります。ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。拡張子は <b>.nbt</b> としています。それ以外でもかまいませんが、<a href="hid00005.htm#CmdFileList">CmdFileList</a> コマンド(コマンドファイル一覧)では <b>NyanFi</b> ディレクトリ以下(サブディレクトリを含む)にある <b>*.nbt</b> が表示されます。<br>
+なお、ファイル名無しで <b>@</b> だけを指定した場合、ファイラーのカーソル位置が <b>.nbt</b> ファイルならそれを実行します。<br>
+<br>
+コマンドファイルでは、コマンドを <b>:</b> (コロン)だけでなく改行でも区切ることができます。また見やすくするためにインデントしたり空行を入れたりしてもかまいません。<br>
+コマンドのパラメータ中、<b>:\</b> 以外で <b>:</b> を用いたい場合は、パラメータ全体をダブルクォーテーションで囲んでください。なお、空白が含まれている場合なども、わかりやすくするためにダブルクォーテーションで囲んでかまいません。 <br>
+行頭が <b>;</b> (セミコロン) の場合はコメントとみなされます。<br>
+なお、コマンドや制御文の大文字・小文字は区別されません。<br>
+</div>
+実行するコマンドのパラメータでは、&quot;%変数名%&quot; という形で、<a href="#UserVar">ユーザ定義変数</a>、<a href="#PreDefVar">定義済み変数</a>および<b>環境変数</b>を参照できます。<br>
+<br>
+<div class="info_text">
+※実行したコマンドファイルの内容は内部に保持されます。再度実行しようとした際にファイルのタイムスタンプが前回から変化していなければ、保持している内容を再利用します。タイムスタンプが変化していたら、ファイルを読み込み直して実行します。なお、コマンドファイル中に <b>#noreload</b> という行を記述することより、タイムスタンプチェックによる再読み込みを無効にできます。<br>
+※コマンドファイルのファイル名主部を <a href="hid00005.htm#RenameDlg">RenameDlg</a> コマンドで変更すると、キー設定や追加メニューなどで <b>ExeCommands</b> のパラメータとなっている箇所に反映されます。
+</div>
+</dl>
+<br>
+
+<h3 id="UserVar">ユーザ定義変数</h3>
+<div class="indent1">
+<p>
+<b>補助コマンド</b>の <a href="#Set">Set</a>、<a href="#Input">Input</a>、<a href="#Add">Add</a> などで内容を設定できます。<br>
+変数名の大文字・小文字は区別されません。また日本語も使えます。<br>
+値は文字列として設定されますが、<a href="#Set">Set</a> コマンドで複合代入演算子(+=、-=、*=、/=、%=)を用いた場合、整数値とみなして演算できます。<br>
+また <a href="#Test">Test</a> コマンドで、変数の内容と文字列を自然順で比較できます。<br>
+設定された変数は、&quot;%変数名%&quot; という形で、パラメータ内で参照できます。<br>
+</p>
+<b>例</b>: 2つの数を入力し、それらの積を表示<br>
+<pre class="example_box">
+Input_A
+Input_B
+Set_答=%A%
+Set_答*=%B%
+MsgBox_%A%×%B%=%答%
+</pre>
+<p>
+通常、ユーザ定義変数の内容は <b>ExeCommands</b> コマンドが終了すると失われますが、変数名の先頭に &quot;<b>..</b>&quot; を付けると、コマンド終了後も <b>NyanFi</b> が終了するまでそのまま保持されます。
+</p>
+<b>例</b>: 実行されるたびに変数に1を加算
+<pre class="example_box">
+Set_..N+=1
+MsgBox_%..N%回目です
+</pre>
+</div>
+<br>
+
+<h3 id="PreDefVar">定義済み変数</h3>
+<div class="indent1">
+<b>ExeCommands</b> コマンドの実行中に参照できる<b>定義済み変数</b>として以下のものがあります。<br>
+変数名の大文字・小文字は区別されません。<br>
+これらは &quot;%変数名%&quot; という形で、パラメータ内で参照できます。<br>
+<div class="indent1">
+<table border="0">
+<tr><th>UserName</th><td>ユーザ名</td></tr>
+<tr><th>ExePath</th><td><b>NyanFi</b> のディレクトリ(末尾に \)</td></tr>
+<tr><th>TmpPath</th><td><b>NyanFi</b> の一時ディレクトリ(末尾に \)　　<a href="hid00009.htm">→ オプション設定 - 一般</a></td></tr>
+<tr><th>ThisName</th><td>実行中コマンドファイルのパス付きファイル名(無い場合は空)</td></tr>
+<tr><th>CurPath</th><td>カレントのディレクトリ(末尾に \)</td></tr>
+<tr><th>OppPath</th><td>反対側のディレクトリ(末尾に \)</td></tr>
+<tr><th>FileName</th><td>カーソル位置(または閲覧中)のパス付きファイル名</td></tr>
+<tr><th>BaseName</th><td>カーソル位置(または閲覧中)のパス無しファイル名主部</td></tr>
+<tr><th>DirName</th><td>カーソル位置(または閲覧中)ファイルのディレクトリ名(末尾の \ は無し)</td></tr>
+<tr><th>FileSize</th><td>カーソル位置(または閲覧中)ファイルのサイズ(バイト単位、未定の場合 -1)</td></tr>
+<tr><th>FileSizeF</th><td>カーソル位置(または閲覧中)ファイルのサイズ(ファイルリストでの書式)</td></tr>
+<tr><th>FileTime</th><td>カーソル位置(または閲覧中)ファイルのタイムスタンプ(書式 yyyy/mm/dd hh:nn:ss)</td></tr>
+<tr><th>FileTimeF</th><td>カーソル位置(または閲覧中)ファイルのタイムスタンプ(ファイルリストでの書式)</td></tr>
+<tr><th>Date</th><td>現在の日付(書式 yyyy/mm/dd)　　<a href="#FormatDT">→ FormatDT</a></td></tr>
+<tr><th>Time</th><td>現在の時刻(書式 hh:nn:ss)　　<a href="#FormatDT">→ FormatDT</a></td></tr>
+<tr><th>TabNo</th><td>現在のタブ番号(1～)</td></tr>
+<tr><th>FileCount</th><td>カレントのファイル数</td></tr>
+<tr><th>DirCount</th><td>カレントのディレクトリ数</td></tr>
+<tr><th>CurFiles</th><td>カレントのパス付きファイル名リスト(改行区切り、ディレクトリは末尾が <b>\</b>、<b>..</b> は除外)</td></tr>
+<tr><th>SelCount</th><td>カレントの選択項目数</td></tr>
+<tr><th>SelFileCount</th><td>カレントの選択ファイル数</td></tr>
+<tr><th>SelDirCount</th><td>カレントの選択ディレクトリ数</td></tr>
+<tr><th>SelFiles</th><td>カレントで選択中のパス付きファイル名リスト(改行区切り、ディレクトリは末尾が <b>\</b>)</td></tr>
+<tr><th>VolumeLabel</th><td>カレントのボリュームラベル</td></tr>
+<tr><th id="ScrMode">ScrMode</th><td>画面モード (FL:ファイラー、TV:テキストビュアー、IV:イメージビュアー、GR:文字列検索(GREP))</td></tr>
+<tr><th>SortMode</th><td>カレントのソート方法 (F :名前、E :拡張子、D :更新日時、S :サイズ、A :属性、U :なし、L :場所)</td></tr>
+<tr><th>SelText</th><td>テキストビュアーで選択中のテキスト</td></tr>
+<tr><th>LineNo</th><td>テキストビュアーでのカーソル位置の行番号(改行単位)</td></tr>
+<tr><th>LineText</th><td>テキストビュアーでのカーソル位置の行内容(改行まで)</td></tr>
+<tr><th>CursorPosY</th><td>テキストビュアーでのカーソルのY位置(0～)</td></tr>
+<tr><th>CursorPosX</th><td>テキストビュアーでのカーソルのX位置(0～)</td></tr>
+<tr><th>PageSize</th><td>テキストビュアーの1ページ中の表示行数</td></tr>
+<tr><th>Battery</th><td>バッテリー残量(0～100)</td></tr>
+<tr><th>TaskCount</th><td>実行中および待機中タスクの合計数</td></tr>
+<tr><th>MatchedStr</th><td>直前の <a href="#MatchBuffer">MatchBuffer</a>、<a href="#MatchDir">MatchDir</a>、<a href="#MatchExt">MatchExt</a>、<a href="#MatchName">MatchName</a> でマッチした部分の文字列</td></tr>
+<tr><th>CodePage</th><td>コードページ(Buffer の読み込み/保存に使用)<br>
+テキストビュアーでは表示中テキストのコードページ(変更するとその値が優先)</td></tr>
+<tr><th>MenuIndex</th><td><a href="#PopupMenu">PopupMenu</a> で選択された項目番号(1～、キャンセル時は0)</td></tr>
+<tr><th>ModalResult</th><td>直前に閉じられたモーダルダイアログの戻り値<br>
+(1 = OK、2 = キャンセル、6 = はい、7 = いいえ、8 = 閉じる)</td></tr>
+<tr><th>ExitCode</th><td><a href="#ShellExecute">ShellExecute</a> (SetExeOpt で W、O を指定)実行後の終了コード</td></tr>
+<tr><th>WinWidth</th><td>メインウィンドウの幅</td></tr>
+<tr><th>WinHeight</th><td>メインウィンドウの高さ</td></tr>
+<tr><th>Clipboard</th><td>クリップボードのテキスト内容</td></tr>
+<tr><th>DownloadName</th><td><a href="#Download">Download</a> コマンドでダウンロードしたファイル名</td></tr>
+<tr><th>LastWatchLog</th><td><a href="hid00005.htm#WatchTail">WatchTail</a> コマンドで最後に検出されたファイル名とその追記内容</td></tr>
+<tr><th>Buffer</th><td>作業用バッファ、ファイルの読込/保存にも使用可能</td></tr>
+<tr><th>BufferLength</th><td>Buffer の総文字数</td></tr>
+<tr><th>BufferCount</th><td>Buffer の行数</td></tr>
+<tr><th>BufferIndex</th><td>Buffer の行インデックス (0 &lt;= BufferIndex &lt; BufferCount)</td></tr>
+<tr><th>BufferLine</th><td>Buffer の BufferIndex 行の内容</td></tr>
+</table>
+</div>
+<br>
+<div class="spc_box">
+<b>Buffer</b> は自由に内容を設定して利用できます。また、<b>BufferIndex</b> を設定して <b>BufferLine</b> にアクセスすることで、<b>Buffer</b> 内の任意の行内容を参照/設定できます。<br>
+</div>
+<b>Clipboard</b> は、<a href="#SetClipboard">SetClipboard</a> によって設定可能です。<br>
+<div class="spc_box">
+<b>CodePage</b> は設定可能ですが、<a href="#LoadBuffer">LoadBuffer</a> を実行すると、そのとき判定されたコードページが設定されます。またテキストビュアーでは表示中テキストのコードページになりますが、<b>ExeCommands</b> コマンド実行中に変更された場合はその値が優先されます。<br>
+</div>
+それ以外の定義済み変数は<b>参照専用</b>です。<br>
+</div>
+<br><br>
+
+<h3 id="AuxCommand">補助コマンド</h3>
+<b>ExeCommands</b> コマンドのパラメータまたはコマンドファイル内でのみ使える補助コマンドとして、以下のものがあります。<br>
+<p class="link_box">
+<a href="#Add">A</a> <a href="#CallCommands">C</a> <a href="#Debug">D</a> <a href="#Echo">E</a> <a href="#FileExists">F</a> <a href="#GrepSetMask">G</a> <a href="#Ins">I</a> <a href="#JumpCommands">J</a> <a href="#ListBuffer">L</a> <a href="#MatchBuffer">M</a> <a href="#PlaySound">P</a> <a href="#Random">R</a> <a href="#SaveBuffer">S</a> <a href="#Test">T</a> <a href="#WaitForTask2">W</a>
+</p>
+<div class="indent1">
+<dl class="sub_item">
+<dt id="Add" class="no_bg">Add<span class="pram_text">_変数名&lt;&lt;文字列</span>
+<dd>
+変数の末尾に、文字列を行として追加します。<br>
+<a href="#Ins">→ Ins</a>　<a href="#Set">→ Set</a>
+
+<dt id="AppendBuffer" class="no_bg">AppendBuffer<span class="pram_text">_ファイル名</span>
+<dd>定義済み変数 <b>Buffer</b> の内容を指定したファイルに追記保存します。<br>
+保存の際のコードページは、定義済み変数 <b>CodePage</b> が用いられます。ファイルが存在しない場合は新規作成します。<br>
+ファイル名にドライブ指定がない場合、ファイラーではカレント、ビュアーでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
+
+<div class="spc_box">
+<b>例</b>: 現在の日付とファイル名を nyan.log に Shift-JIS で追記
+<pre class="example_box">
+Set_Buffer="%Date% %Time% %FileName%"
+Set_CodePage=932
+AppendBuffer_"nyan.log"
+</pre>
+</div>
+<a href="#SaveBuffer">→ SaveBuffer</a>
+
+<dt id="CallCommands" class="no_bg">CallCommands<span class="pram_text">_@コマンドファイル名</span>
+<dd>パラメータで指定した別のコマンドファイルを呼び出します。呼び出し先からは <a href="#ReturnCommands">ReturnCommands</a> で元のコマンドファイルの呼び出し位置に戻れます。多重呼び出しも可能。<br>
+使用中のユーザ定義変数は、そのまま後続のコマンドファイルへ引き継がれます。<br>
+コマンドファイル名にドライブ指定がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+<a href="#ReturnCommands">→ ReturnCommands</a>　<a href="#JumpCommands">→ JumpCommands</a>
+
+<dt id="Debug" class="no_bg">Debug<span class="pram_text">_ON|_OFF|_BP|_WL&lt;&lt;変数名</span>
+<dd>デバッグモードの有効/無効を切り替えます。<br>
+パラメータに <b>ON</b> を指定すると、そこからデバッグモードになり、<b>デバッグウィンドウ</b>が開きます。<br>
+
+<div class="spc_box">
+デバッグウィンドウでは、以下のボタンまたはキーで操作を行えます。<br>
+<span class="btn_frame">S</span>: ステップ実行/　<span class="btn_frame">G</span>: 実行/　<span class="btn_frame">B</span>: 停止/　　<span class="btn_frame">Q</span>: デバッグモード終了(Debug_OFF)/　<span class="btn_frame">X</span>: コマンドの実行を終了(<a href="#Exit">Exit</a>)<br>
+<span class="btn_frame">V</span>: 変数一覧を表示(<a href="#ListVar">ListVar</a>)/　<span class="btn_frame">E</span>: エディタで開く/　　<span class="btn_frame">H</span>: ヘルプを表示<br>
+上側のリストには、コマンドファイルの内容が表示され、実行位置にカーソルが表示されます。<br>
+下側のリストには、デバッグ状態やユーザ定義変数が表示されます。<br>
+</div>
+
+パラメータに <b>BP</b> を指定すると、デバッグ実行中にその位置に来ると停止します(ブレークポイント)。<br>
+パラメータに <b>WL</b><span class="pram_text">&lt;&lt;変数名</span> の書式で定義済み変数を指定すると、監視変数リストに追加され、デバッグ中にその内容が表示されます(例: Debug_WL&lt;&lt;FileName)<br>
+
+<div class="spc_box">
+なお <b>ExeCommands</b> コマンドの代わりに <a href="hid00005.htm#DebugCmdFile">DebugCmdFile</a> コマンドによってコマンドファイルを実行すると、<b>Debug</b> 補助コマンドが記述されていなくても最初からデバッグモードになります。
+</div>
+
+<dt id="Download" class="no_bg">Download<span class="pram_text">_URL[&gt;&gt;[テキストファイル名]]</span>
+<dd>パラメータで指定したURLのファイルを、一時ディレクトリにダウンロードします(進捗ダイアログを表示)。<br>
+ダウンロードしたファイル名は、定義済み変数 <b>DownloadName</b> で参照できます(キャンセル、失敗時は空文字列)。<br>
+なお、URLの末尾が <b>/</b> の場合 &quot;<b>index.htm</b>&quot; が付加されます。<br>
+<div class="spc_box">
+URLの後に &gt;&gt;[テキストファイル名] を指定すると、ダウンロードしたファイルがHTML文書の場合、それをテキストに変換して保存します。変換はテキストビュアーでのHTML→テキスト変換表示に準じます。ただし拡張子を .md にすると、オプション設定にかかわらず Markdown 記法に変換します。<br>
+ファイル名にドライブ指定がない場合はカレントからの相対指定とみなされます。ファイル名を指定しない場合は、ダウンロードしたファイルの拡張子を .txt に変えて一時ディレクトリに保存します。 <b>DownloadName</b> は変換保存したファイル名になります。<br>
+</div>
+
+<div class="spc_box">
+<b>例</b>: ダウンロードしたHTML文書をテキストに変換して指定ファイルに保存し、一覧ダイアログで表示
+<pre class="example_box">
+Download_"http://nekomimi.la.coocan.jp/freesoft/nyanfi.htm>>D:\hoge\nyan.txt"
+ListText_D:\hoge\nyan.txt
+</pre>
+</div>
+
+<dt id="Echo" class="no_bg">Echo<span class="pram_text">_文字列</span>
+<dd>指定した文字列をログウィンドウに表示します。
+
+<dt id="EchoOff" class="no_bg">EchoOff
+<dd>エコー機能を無効にします。
+
+<dt id="EchoOn" class="no_bg">EchoOn<span class="pram_text">[_LN]</span>
+<dd>エコー機能を有効にします。コマンドやエラー内容をログウィンドウに表示します。<b>ExeCommands</b> コマンド開始時には無効になっています。<br>
+パラメータに <b>LN</b> を指定すると、コマンドファイルの行番号が行頭に表示されます。
+
+<dt id="EchoT" class="no_bg">EchoT<span class="pram_text">_文字列</span>
+<dd>指定した文字列の前に時刻情報を付けてログウィンドウに表示します。<br>
+
+<dt id="Edit" class="no_bg">Edit<span class="pram_text">_変数名</span><br>
+Edit<span class="pram_text">_&quot;:タイトル:変数名&quot;</span>
+<dd>複数行入力可能なテキストボックスによって、変数の内容を編集します。<br>
+バラメータでタイトルを指定できます。その場合、パラメータ全体をダブルクォーテーションで囲んでください。<br>
+フォントや文字色/背景色はテキストビュアーのものが用いられますが、文字色/背景色については右クリックメニューで変更可能です。<br>
+<div class="spc_box">
+ボックスにフォーカスがある場合、<span class="btn_frame">ENTER</span>キーは改行になります。<span class="btn_frame">OK</span>は、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">ENTER</span>で行ってください。<br>
+キャンセルすると後続 <a href="#IfStatement">If 文</a>の <b>Cancel</b> が真になります(OK なら <b>Yes</b> が真)。<br>
+</div>
+<div class="spc_box">
+右クリックメニュー/ショートカットには基本的な編集機能があります。なお「カーソル行を削除」はアンドゥできません。
+</div>
+
+<div class="spc_box">
+<b>例</b>: テキストファイルを編集して保存
+<pre class="example_box">
+Set_MemoFile="D:\Data\memo.txt"
+LoadBuffer_%MemoFile%
+Edit_":メモ:Buffer"
+IfYes
+  SaveBuffer_%MemoFile%
+EndIf
+</pre>
+</div>
+<a href="#Input">→ Input</a>
+
+<dt id="Exit" class="no_bg">Exit
+<dd><b>ExeCommands</b> コマンドの実行を終了します。<br>
+※ファイラーの <a href="hid00005.htm#Exit">Exit</a> コマンドを実行したい場合は、エイリアスの <a href="hid00005.htm#Close">Close</a>  を使ってください。<br>
+<a href="#ReturnCommands">→ ReturnCommands</a>
+
+<dt id="FileExists" class="no_bg">FileExists<span class="pram_text">_ファイル名</span>
+<dd>パラメータで指定したファイルが存在するかを調べます。<br>
+ファイル名にドライブ指定がない場合、ファイラーではカレント、ビュアーでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
+結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
+
+<dt id="FilterBuffer" class="no_bg">FilterBuffer<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>
+<dd>定義済み変数 <b>Buffer</b> の内容から指定文字列が含まれている行だけを残します。文字列は ; (セミコロン)で区切って複数指定できます。大文字・小文字は区別されません。指定文字列を / で囲むと正規表現とみなされます。<br>
+<div class="spc_box">
+<b>例</b>: カーソル位置のテキストファイルから「エラー」または「警告」を含む行を抽出して表示
+<pre class="example_box">
+LoadBuffer_%FileName%
+FilterBuffer_"エラー;警告"
+MsgBox_%Buffer%
+</pre>
+</div>
+<a href="#MatchBuffer">→ MatchBuffer</a>
+
+
+<dt id="FlashWin" class="no_bg">FlashWin<span class="pram_text">[_点滅回数[_点滅間隔(ms)]]</span>
+<dd>メインウィンドウのタイトルバーを点滅させます。<br>
+パラメータを省略した場合は、<a href="hid00018.htm">オプション設定 - 通知・確認</a> - <b>タスク終了時の通知音</b> で設定されている値が用いられます。無設定の場合は、点滅回数 = 3、点滅間隔 = 250 となります。<br>
+<a href="#PlaySound">→ PlaySound</a>
+
+<dt id="Format" class="no_bg">Format<span class="pram_text">_変数名=書式文字列</span>
+<dd>
+<a href="hid00015.htm">オプション設定 - 外部ツール</a> のパラメータで利用できる書式を含んだ文字列を解決して、変数に設定します。<br>
+なお、名前に空白が含まれているとダブルクォーテーションが付加されるため、用途によっては注意が必要です。<br>
+<div class="spc_box">
+<b>例</b>: Format_選択中ファイル名=$F
+</div>
+
+<dt id="FormatDI" class="no_bg">FormatDI<span class="pram_text">_変数名=書式文字列</span>
+<dd>
+カレントのドライブ情報を書式にしたがって変数に設定します。<br>
+使用できる書式文字列は、<a href="hid00010.htm#DriveInfo">オプション設定 - デザイン</a> - <b>ドライブ情報の書式</b> のものと同じです。<br>
+<div class="spc_box">
+<b>例</b>: FormatDI_空き容量=&quot;$DN $FS ($FR)&quot;
+</div>
+
+<dt id="FormatDT" class="no_bg">FormatDT<span class="pram_text">_変数名=書式文字列</span>
+<dd>
+現在の日時を書式にしたがって変数に設定します。<br>
+日付や時刻には以下の指定子が使えます。<br>
+<b>yyyy</b> 年(4桁)、<b>yy</b> 年(2桁)、<b>mm</b> 月、<b>dd</b> 日、<b>ddd</b> 曜日、<b>dddd</b> 曜日(完全名)、<b>hh</b> 時、<b>nn</b> 分、<b>ss</b><br>
+<b>G</b> 元号(略)、<b>gg</b> 元号(完全名)、<b>ee</b> 元号年<br>
+書式文字列の任意の位置に <b>$EN</b> を記述すると、ロケールが英語(en-US)に切り替わり、以下のような表示になります。<br>
+<b>ddd</b> 曜日(Sun～Sat)、<b>dddd</b> (Sunday～Saturday)、<b>mmm</b> 月(Jan～Dec)、<b>mmmm</b> (January～December)<br>
+なおシングルクォーテーションで囲まれた文字はそのまま表示されます。ここに挙げた以外にも指定子として機能する文字があるため、英字はシングルクォーテーションで囲んでおいた方がよいでしょう。<br>
+
+<div class="spc_box">
+<b>例</b>: FormatDT_今日の日付=&quot;yyyy年mm月dd日 (ddd)&quot;<br>
+<b>例</b>: FormatDT_Today=&quot;$EN'Date:' dddd, mmmm dd, yyyy&quot;
+</div>
+
+<dt id="FormatFN" class="no_bg">FormatFN<span class="pram_text">_変数名=書式文字列</span>
+<dd>カーソル位置(または閲覧中)の項目について、ファイル名などの情報を書式にしたがって変数に設定します。<br>
+使用できる書式文字列は、<a href="hid00005.htm#CopyFileName">CopyFileName</a> コマンドのものと同じです。クリップボードには入りません。<br>
+<div class="spc_box">
+<b>例</b>: FormatFN_MD5ハッシュ=$G(MD5)
+<b>例</b>: FormatFN_タグ=$R(タグ)
+</div>
+
+<dt id="GrepSetMask" class="no_bg">GrepSetMask<span class="pram_text">_マスク</span>
+<dd><a href="hid00056.htm">文字列検索(GREP)</a>のマスクを設定します。<a href="hid00005.htm#Grep">Grep</a> コマンドとあわせて用います。<br>
+<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+
+<dt id="GrepStart" class="no_bg">GrepStart
+<dd>可能なら<a href="hid00056.htm">文字列検索(GREP)</a>を開始します。<a href="hid00005.htm#Grep">Grep</a> コマンドとあわせて用います。
+
+<dt id="Hint" class="no_bg">Hint<span class="pram_text">_メッセージ</span>
+<dd>指定したメッセージをヒント表示します。<br>
+<a href="#Warn">→ Warn</a>
+
+<dt id="Ins" class="no_bg">Ins<span class="pram_text">_変数名&lt;&lt;文字列</span>
+<dd>
+変数の先頭に、文字列を行として挿入します。<br>
+<a href="#Add">→ Add</a>　<a href="#Set">→ Set</a>
+
+<dt id="Input" class="no_bg">Input<span class="pram_text">_変数名</span><br>
+Input<span class="pram_text">_&quot;:タイトル:[プロンプト:]変数名&quot;</span>
+<dd>入力ボックスによって、変数に文字列を設定します。<br>
+バラメータでタイトルおよびプロンプトを指定することも可能です。その場合、パラメータ全体をダブルクォーテーションで囲んでください。<br>
+既存のユーザ定義変数の場合、その内容がデフォルトとして入力ボックスに表示されます。<br>
+キャンセルすると後続 <a href="#IfStatement">If 文</a>の <b>Cancel</b> が真になります(OK なら <b>Yes</b> が真)。<br>
+<div class="spc_box">
+<b>例</b>: Input_&quot;:設定:回数を入力してください:N&quot;<br>
+</div>
+<a href="#Set">→ Set</a>　<a href="#Test">→ Test</a>
+
+<dt id="JumpCommands" class="no_bg">JumpCommands<span class="pram_text">_@コマンドファイル名</span>
+<dd>パラメータで指定した別のコマンドファイルへジャンプします。現在実行中のコマンドファイルには戻ってきません。<br>
+使用中のユーザ定義変数は、そのまま後続のコマンドファイルへ引き継がれます。<br>
+コマンドファイル名にドライブ指定がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+<a href="#CallCommands">→ CallCommands</a>
+
+<dt id="ListBuffer" class="no_bg">ListBuffer<span class="pram_text">[_タイトル[;/見出し開始パターン/]]</span>
+<dd>
+定義済み変数 <b>Buffer</b> の内容を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+パラメータでタイトルを指定すると、ダイアログのタイトルバーに表示されます。<br>
+また見出し開始パターン(正規表現、先頭の ^ は不要)を指定すると、そのパターンで始まる行内容が「見出しの文字色」で表示されます。<br>
+なお、すべての行が「名前=値」形式の場合、<b>ListVar</b> コマンドと同様に = 位置を揃えて表示します。<br>
+<div class="spc_box">
+<b>例</b>: ListBuffer_結果一覧;/^[●◆■]/<br>
+</div>
+<a href="#Debug">→ Debug</a>
+
+<dt id="ListVar" class="no_bg">ListVar
+<dd>
+<a href="#PreDefVar">定義済み変数</a>および<a href="#UserVar">ユーザ定義変数</a>の内容を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+コマンドファイルのデバッグなどで役立つかもしれません。<br>
+
+<dt id="LoadBuffer" class="no_bg">LoadBuffer<span class="pram_text">[_ファイル名|_ファイルマスク]</span>
+<dd>指定したテキストファイルを、定義済み変数 <b>Buffer</b> に読み込みます。<br>
+パラメータにファイル名を指定しないとダイアログが表示されます。<br>
+またファイル名に <b>*</b> や <b>?</b> が含まれている場合、それをファイルマスクとしてダイアログが出ます。<br>
+ファイル名/ファイルマスクにドライブ指定がない場合、ファイラーではカレント、ビュアーでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
+ファイルが読み込まれると、判定されたコードページが定義済み変数 <b>CodePage</b> に設定されます。<br>
+なお、定義済み変数 <b>BufferIndex</b> は 0 にリセットします。<br>
+
+<div class="spc_box">
+<b>例</b>: 指定したディレクトリでテキストを選び、内容を一覧ダイアログで表示
+<pre class="example_box">
+LoadBuffer_D:\Hoge\*.txt
+ListBuffer
+</pre>
+<b>例</b>: カーソル位置のファイルの先頭から5行をログウィンドに表示
+<pre class="example_box">
+LoadBuffer_%FileName%
+Repeat_5
+  Test_BufferIndex&lt;%BufferCount%
+  IfFalse_Break
+  Echo_%BufferLine%
+  Set_BufferIndex+=1
+EndRepeat
+</pre>
+</div>
+<a href="#SaveBuffer">→ SaveBuffer</a>
+
+<dt id="MatchBuffer" class="no_bg">MatchBuffer<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>
+<dd>定義済み変数 <b>Buffer</b> の内容に指定文字列が含まれているかを調べます。文字列は ; (セミコロン)で区切って複数指定できます。大文字・小文字は区別されません。指定文字列を / で囲むと正規表現とみなされます。<br>
+結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
+また、マッチした行インデックスが <b>BufferIndex</b> に、マッチした部分の文字列が <b>MatchedStr</b> に設定されます。<br>
+<a href="#FilterBuffer">→ FilterBuffer</a>
+
+<dt id="MatchDir" class="no_bg">MatchDir<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>
+<dd>カレントのディレクトリ名に指定文字列が含まれているかを調べます。文字列は ; (セミコロン)で区切って複数指定できます。大文字・小文字は区別されません。指定文字列を / で囲むと正規表現とみなされます。<br>
+結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
+また、マッチした部分の文字列が、定義済み変数 <b>MatchedStr</b> に設定されます。<br>
+
+<dt id="MatchExt" class="no_bg">MatchExt<span class="pram_text">_拡張子[;拡張子]</span>
+<dd>カーソル位置のファイルの拡張子を調べます。拡張子は ; (セミコロン)または . (ピリオド)で区切って複数指定できます。大文字・小文字は区別されません。<br>
+結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
+また、マッチした部分の文字列が、定義済み変数 <b>MatchedStr</b> に設定されます。<br>
+
+<div class="spc_box">
+<b>例</b>: MatchExt_jpg;jpeg;jpe: IfTrue: MsgBox_Jpeg画像です: EndIf
+</div>
+
+<dt id="MatchName" class="no_bg">MatchName<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>
+<dd>カーソル位置のファイル名主部またはディレクトリ名に指定文字列が含まれているかを調べます。文字列は ; (セミコロン)で区切って複数指定できます。大文字・小文字は区別されません。指定文字列を / で囲むと正規表現とみなされます。<br>
+結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
+また、マッチした部分の文字列が、定義済み変数 <b>MatchedStr</b> に設定されます。<br>
+<div class="spc_box">
+<b>例</b>: MatchName_/\d{4}/
+</div>
+
+<dt id="Mid" class="no_bg">Mid<span class="pram_text">_変数名;開始位置(1～)[;文字数]</span>
+<dd>変数の部分文字列を取り出します。<br>
+文字数を省略すると、開始位置以降のすべてになります。指定した変数自体の内容が変化しますので注意してください。<br>
+
+<a href="#Right">→ Right</a>
+
+<dt id="MsgBox" class="no_bg">MsgBox<span class="pram_text">_メッセージ</span><br>
+MsgBox<span class="pram_text">_&quot;:タイトル:メッセージ&quot;</span>
+<dd>指定したメッセージを表示します。<br>
+タイトルを指定することも可能です。その場合、パラメータ全体をダブルクォーテーションで囲んでください。<br>
+メッセージ内で <b>\n</b> は改行になります。<b>\</b>そのものを文字として指定したい場合は <b>\\</b> と記述してください。<br>
+<div class="spc_box">
+<b>例</b>: MsgBox_&quot;:エラー:失敗しました\n設定を確認してください&quot;
+</div>
+
+<dt id="MsgBoxYN" class="no_bg">MsgBoxYN<span class="pram_text">_[:タイトル:]メッセージ</span>
+<dd>「はい、いいえ」ボタン付きで、指定したメッセージを表示します。<br>
+結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>Yes</b>、<b>No</b>)として利用できます。<br>
+<dt id="MsgBoxYNC" class="no_bg">MsgBoxYNC<span class="pram_text">_[:タイトル:]メッセージ</span>
+<dd>「はい、いいえ、キャンセル」ボタン付きで、指定したメッセージを表示します。
+結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>Yes</b>、<b>No</b>、<b>Cancel</b>)として利用できます。<br>
+
+<dt id="MsgOff" class="no_bg">MsgOff
+<dd>コピー、移動、削除、解凍や、<a href="hid00005.htm#Backup">Backup</a>_設定名、<a href="hid00005.htm#ConvertHtm2Txt">ConvertHtm2Txt</a>、<a href="hid00005.htm#DeleteADS">DeleteADS</a>、<a href="hid00005.htm#DelJpgExif">DelJpgExif</a>、<a href="hid00005.htm#ExtractChmSrc">ExtractChmSrc</a>、<a href="hid00005.htm#ExtractGifBmp">ExtractGifBmp</a>、<a href="hid00005.htm#ExtractIcon">ExtractIcon</a>、<a href="hid00005.htm#ExtractImage">ExtractImage</a>(<a href="hid00005.htm#ExtractMp3Img">ExtractMp3Img</a>)、<a href="hid00005.htm#ClearMark">ClearMark_AC</a>_AC、<a href="hid00005.htm#DirHistory">DirHistory</a>_AC、<a href="hid00005.htm#EditHistory">EditHistory</a>_AC、<a href="hid00005.htm#ViewHistory">ViewHistory</a>_AC、<a href="hid00005.htm#RecentList">RecentList</a>_AC|BC コマンドで確認メッセージを出さないようにします。<br>
+
+<dt id="Nop" class="no_bg">Nop
+<dd>何もしません。
+
+<dt id="PlaySound" class="no_bg">PlaySound<span class="pram_text">_ファイル名</span>
+<dd>指定したサウンドファイル(<b>.wav</b>、<b>.mp3</b>、<b>.mid</b>)を再生します。<br>
+ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+なお再生を中断したいときは、ファイル名を指定せずに <b>PlaySound</b> コマンドを実行してください。<br>
+<div class="note_text">
+※<b>.mp3</b> の場合ID3タグの内容によっては再生できない場合があります。適切なコーデックを別途インストールすれば再生できるようになります。<br>
+</div>
+<a href="#FlashWin">→ FlashWin</a>
+
+<dt id="PopIndex" class="no_bg">PopIndex
+<dd>ファイルリストのカーソル位置をスタックから復帰します。インデックスが範囲を超えていた場合は最下行に移動します。<br>
+<a href="#PushIndex">→ PushIndex</a>　<a href="#SetIndex">→ SetIndex</a>
+
+<dt id="PopTopIndex" class="no_bg">PopTopIndex
+<dd>ファイルリストの先頭項目インデックスをスタックから復帰します。<br>
+<a href="#PushTopIndex">→ PushTopIndex</a>
+
+<dt id="PopVar" class="no_bg">PopVar<span class="pram_text">_変数名</span>
+<dd>変数スタックから取り出した内容を、指定した変数に設定します。
+<a href="#PushVar">→ PushVar</a>
+
+<dt id="PushIndex" class="no_bg">PushIndex
+<dd>ファイルリストのカーソル位置をスタックに退避します。スタックは <b>ExeCommands</b> コマンドの実行中のみ有効です。<br>
+<a href="#PopIndex">→ PopIndex</a>　<a href="#SetIndex">→ SetIndex</a>
+
+<dt id="PushTopIndex" class="no_bg">PushTopIndex
+<dd>ファイルリストの先頭項目インデックスをスタックに退避します。スタックは <b>ExeCommands</b> コマンドの実行中のみ有効です。
+<a href="#PopTopIndex">→ PopTopIndex</a>
+
+<dt id="PushVar" class="no_bg">PushVar<span class="pram_text">_変数名</span>
+<dd>指定した<a href="#PreDefVar">定義済み変数</a>または<a href="#UserVar">ユーザ定義変数</a>の内容を変数スタックに退避します。スタックは <b>ExeCommands</b> コマンドの実行中のみ有効です。<br>
+<a href="#PopVar">→ PopVar</a>
+
+<dt id="PopupMenu" class="no_bg">PopupMenu<span class="pram_text">_変数名</span>
+<dd>変数に設定された項目をポップアップメニューで表示します。<br>
+メニュー項目が選択されると、定義済み変数 <b>MenuIndex</b> に項目番号(1～、キャンセル時は0)が設定されます。<br>
+<div class="spc_box">
+<b>例</b>:
+<pre class="example_box">
+Add_メニュー<<項目1
+Add_メニュー<<項目2
+Add_メニュー<<項目3
+PopupMenu_メニュー
+MsgBox_項目%MenuIndex%が選択されました
+</pre>
+</div>
+
+<dt id="Random" class="no_bg">Random<span class="pram_text">_変数名=[前置文字列][0]数字[後置文字列]</span>
+<dd>指定した値以下の乱数を含む文字列を変数に設定します。<br>
+数字の頭に0を付けると(頭の0を除いた)桁幅に揃えて左側が0で埋められます。<br>
+<div class="spc_box">
+<b>例</b>: Random_ランダム名=ABC0999XYZ　　→ ABC000XYZ ～ ABC999XYZ<br>
+</div>
+<a href="#Set">→ Set</a>
+
+<dt id="ReadINI" class="no_bg">ReadINI<span class="pram_text">_変数名=キー名</span>
+<dd><b>NyanFi.INI</b> [ExeCommands] セクションから指定したキーの内容を変数に読み込みます。<br>
+なお、このコマンドによってINIファイルへのアクセスは生じません。<br>
+<div class="spc_box">
+<b>例</b>: 今日初めて実行したかをチェック
+<pre class="example_box">
+ReadINI_前回の日付=LastDate
+Test_前回の日付!=%Date%
+IfTrue
+  MsgBox_"今日初めて実行しました"
+  WriteINI_LastDate=%Date%
+EndIf
+</pre>
+</div>
+<a href="#WriteINI">→ WriteINI</a>
+
+<dt id="Redraw" class="no_bg">Redraw<span class="pram_text">_[L|R]ON|_[L|R]OFF</span>
+<dd>パラメータに <b>OFF</b> を指定するとファイルリスト(ヘッダとドライブ情報も含む)の描画を停止します。<b>ON</b> を指定すると描画を再開します。先頭に <b>L</b> または <b>R</b> を付けることで左右個別に設定することもできます(無指定の場合は両画面)。<br>
+描画を停止したまま <b>ExeCommands</b> コマンドを終了すると、ファイラー操作は可能ですが、<b>Redraw</b>_ON が実行されるまでリスト表示は一切更新されません。<b>Redraw</b>_OFF を複数回実行した場合は、<b>Redraw</b>_ON を同じ回数実行してください。このコマンドは、ファイラー画面でのみ有効です。<br>
+
+<dt id="ReplaceBuffer" class="no_bg">ReplaceBuffer<span class="pram_text">_{対象文字列|/正規表現パターン/}=置換後文字列</span>
+<dd>定義済み変数 <b>Buffer</b> の内容に対して文字列置換を行います。<br>
+対象文字列を / で囲むと正規表現パターンとみなされます。置換の際に大文字・小文字は区別されません。<br>
+対象文字列やパターンに = が含まれている場合は、ダブルクォーテーションで囲んでください。<br>
+
+<div class="spc_box">
+<b>例</b>: カーソル位置ファイルの日付を yy-mm-dd 形式で取得
+<pre class="example_box">
+Set_Buffer=%FileTime%
+Mid_Buffer;3;8
+ReplaceBuffer_/=-
+</pre>
+</div>
+
+<div class="spc_box">
+<b>例</b>: Buffer の最後の10行を削除
+<pre class="example_box">
+Repeat_10
+  ReplaceBuffer_/^.*\r\n\z/=""
+EndRepeat
+</pre>
+</div>
+
+<div class="spc_box">
+<b>例</b>: カーソル位置のHTML文書からタグを削除し連続改行をつめて表示
+<pre class="example_box">
+LoadBuffer_%FileName%
+ReplaceBuffer_/&lt;[^&lt;&gt;]+&gt;/=&quot;&quot;
+ReplaceBuffer_/(\r\n){3,}/=\r\n
+MsgBox_%Buffer%
+</pre>
+</div>
+
+<dt id="ReturnCommands" class="no_bg">ReturnCommands
+<dd><a href="#CallCommands">CallCommands</a> 補助コマンドによる呼び出し元へ戻ります。<br>
+使用中のユーザ定義変数は、そのまま引き継がれます。<br>
+なお、<a href="#CallCommands">CallCommands</a> で呼び出されていない場合は、そのまま終了します。<br>
+<a href="#CallCommands">→ CallCommands</a>　<a href="#JumpCommands">→ JumpCommands</a>　<a href="#Exit">→ Exit</a>
+
+<dt id="Right" class="no_bg">Right<span class="pram_text">_変数名;文字数</span>
+<dd>変数の右端から指定した文字数の文字列を取り出します。<br>
+指定した変数自体の内容が変化しますので注意してください。<br>
+なお、左端を取り出したい場合は、<b>Mid</b>_1;文字数 で行ってください。<br>
+<a href="#Mid">→ Mid</a>
+
+<dt id="SaveBuffer" class="no_bg">SaveBuffer<span class="pram_text">[_ファイル名]</span>
+<dd>定義済み変数 <b>Buffer</b> の内容を指定したファイル名で保存します。ファイル名を指定しないとダイアログが出ます。<br>
+保存の際のコードページは、定義済み変数 <b>CodePage</b> が用いられます。改行コードは CR/LF になります。<br>
+ファイル名にドライブ指定がない場合、ファイラーではカレント、ビュアーでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
+
+<div class="spc_box">
+<b>例</b>: カーソル位置のテキストファイルをUTF8(コードページ=65001)に変換<br>
+<pre class="example_box">
+LoadBuffer_%FileName%
+Set_CodePage=65001
+SaveBuffer_%FileName%
+</pre>
+
+<b>例</b>: クリップボードのテキスト内容をカーソル位置ファイルに代替データストリームとして保存<br>
+<pre class="example_box">
+Set_Buffer=%Clipboard%
+Set_CodePage=65001
+SaveBuffer_"%FileName%:MetaText"
+</pre>
+</div>
+<a href="#LoadBuffer">→ LoadBuffer</a>　<a href="#AppendBuffer">→ AppendBuffer</a>
+
+<dt id="SearchDown" class="no_bg">SearchDown<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>
+<dd>カレントのファイルリストで、名前に指定文字列が含まれている項目を下方向に検索します。文字列は ; (セミコロン)で区切って複数指定できます。大文字・小文字は区別されません。指定文字列を / で囲むと正規表現とみなされます。<br>
+項目が見つかるとその位置へカーソルが移動します。<br>
+結果は後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
+
+<dt id="SearchDownD" class="no_bg">SearchDownD<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>
+<dd>カレントのファイルリストで、ディレクトリのみを対象に <b>SearchDown</b> を実行します。
+
+<dt id="SearchDownF" class="no_bg">SearchDownF<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>
+<dd>カレントのファイルリストで、ファイルのみを対象に <b>SearchDown</b> を実行します。
+
+<dt id="SearchUp" class="no_bg">SearchUp<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>
+<dd>カレントのファイルリストで、名前に指定文字列が含まれている項目を上方向に検索します。文字列は ; (セミコロン)で区切って複数指定できます。大文字・小文字は区別されません。指定文字列を / で囲むと正規表現とみなされます。<br>
+項目が見つかるとその位置へカーソルが移動します。<br>
+結果は後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
+
+<dt id="SearchUpD" class="no_bg">SearchUpD<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>
+<dd>カレントのファイルリストで、ディレクトリのみを対象に <b>SearchUp</b> を実行します。
+
+<dt id="SearchUpF" class="no_bg">SearchUpF<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>
+<dd>カレントのファイルリストで、ファイルのみを対象に <b>SearchUp</b> を実行します。
+
+<dt id="SendCommands" class="no_bg">SendCommands<span class="pram_text">_{コマンド[:コマンド...] | @ファイル名}</span>
+<dd>複数の <b>NyanFi</b> が起動している場合、パラメータで指定したコマンドを次の <b>NyanFi</b> で実行します(アクティブにはなりません)。<br>
+コマンドは <b>:</b> (コロン)で区切って複数指定できます。その場合、パラメータ全体をダブルクォーテーションで囲んでください。<br>
+
+<div class="spc_box">
+<b>例</b>: 次の NyanFi の左右ディレクトリをこちら側のものに合わせる<br>
+<pre class="example_box">
+ToLeft: SendCommands_"ToLeft: ChangeDir_%CurPath%"
+SendCommands_"ChangeOppDir_%OppPath%"
+</pre>
+</div>
+
+<dt id="Set" class="no_bg">Set<span class="pram_text">_変数名{=|+=|-=|*=|/=|%=}文字列</span>
+<dd>
+変数に文字列を設定します。変数を代入する場合は、Set_変数A=%変数B% というようになりますので注意してください。<br>
+<div class="spc_box">
+複合代入演算子(+=、-=)を用いた場合、変数内容の書式が yyyy/mm/dd hh:nn:ss、yyyy/mm/dd、hh:nn:ssのいずれかだったら、日付や時刻とみなして演算を行います。その場合、文字列の書式が yyyy/mm/dd や hh:nn:ss からなっていたら日時、それ以外は日数の整数値として演算します。結果の書式は元の変数にしたがいます。<br>
+</div>
+
+<div class="spc_box">
+<b>例</b>: 現在 2015/01/01 12:00:00 とすると<br>
+　1時間後　Set_時刻=%Time%: Set_時刻+=&quot;01:00:00&quot;　　→ &quot;13:00:00&quot;<br>
+　7日前　Set_日付=%Date%: Set_日付-=7　　→ &quot;2014/12/25&quot;<br>
+<div class="spc_box">
+それ以外で複合代入演算子(+=、-=、*=、/=、%=)を用いたとき、変数と文字列の内容がともに整数値とみなせる場合は、数値として演算します。結果の桁幅は元の設定値の文字数になります。<br>
+</div>
+<b>例</b>: Set_A=0001: Set_A+=10　　→ &quot;0011&quot;<br>
+また、内容が整数値とみなせない場合に複合代入演算子 += を用いると、文字列の連結になります。<br>
+<b>例</b>: Set_A=ABC: Set_A+=10　　→ &quot;ABC10&quot;<br>
+</div>
+<a href="#Add">→ Add</a>　<a href="#Input">→ Input</a>　<a href="#Random">→ Random</a>　<a href="#Test">→ Test</a>
+
+<dt id="SetCopyMode" class="no_bg">SetCopyMode<span class="pram_text">_O|_N|_S|_R</span>
+<dd>
+後続の <a href="hid00005.htm#Copy">Copy</a>、<a href="hid00005.htm#CopyTo">CopyTo</a>、<a href="hid00005.htm#Move">Move</a>、<a href="hid00005.htm#MoveTo">MoveTo</a> コマンドで同名ファイルがあった場合、「<b>同名ファイルの処理</b>」ダイアログを出さずに、指定したモードを強制適用します。ただし、アーカイブ内へのコピーやFTP接続時には適用されません。<br>
+この設定は、後続の一つのコマンドに対してのみ有効で、コピー/移動コマンドが実行されるとその都度リセットされます。<br>
+パラメータは、<b>O</b>「強制上書き」、<b>N</b>「最新なら上書き」、<b>S</b>「スキップ」、<b>R</b>「自動的に名前を変更」のいずれかを指定してください。<br>
+
+<dt id="SetClipboard" class="no_bg">SetClipboard<span class="pram_text">_文字列</span>
+<dd>クリップボードに文字列を設定します。内容は定義済み変数 <b>Clipboard</b> で参照できます。<br>
+<br>
+
+<dt id="SetExeFile" class="no_bg">SetExeFile<span class="pram_text">_実行ファイル名</span>
+<dt id="SetExeParam" class="no_bg">SetExeParam<span class="pram_text">_パラメータ</span>
+<dt id="SetExeDir" class="no_bg">SetExeDir<span class="pram_text">_作業ディレクトリ</span>
+<dt id="SetExeOpt" class="no_bg">SetExeOpt<span class="pram_text">[_[W][O][L][H]]|[_[H][A]]</span>
+<dt id="ShellExecute" class="no_bg">ShellExecute
+<dd>これらによって、<a href="hid00015.htm">オプション設定 - 外部ツール</a> と同等の機能を、メニューとして登録することなく直接記述できます。<br>
+実行ファイル、パラメータ、作業ディレクトリの書式は、外部ツールの場合と同じです。<br>
+なおパラメータ書式やオプションの設定が不要な場合は、<a href="hid00005.htm#FileRun">FileRun</a> コマンドを用いた方が簡単です。<br>
+
+<div class="spc_box">
+<b>SetExeOpt</b> では、<b>W</b> (終了を待つ)、<b>O</b> (コンソール出力を <b>Buffer</b> に取得)、<b>L</b> (コンソール出力をログウィンドウに行単位で逐次出力)、<b>H</b> (非表示で実行)、<b>A</b> (管理者として実行) というオプションを組み合わせて指定できます。なお、<b>A</b> を指定した場合、<b>W</b>、<b>O</b>、<b>L</b> は無効となります。 <br>
+必要な設定を行ってから <b>ShellExecute</b> を実行してください。<br>
+実行後、設定した実行ファイル、パラメータ、作業ディレクトリ、オプションの内容はクリアされます。<br>
+<b>SetExeOpt</b> で <b>W</b>、<b>O</b> 、<b>L</b> を指定している場合、定義済み変数 <b>ExitCode</b> に終了コードが設定されます。<br>
+</div>
+
+<b>例</b>: 左右の同名ファイルを比較<br>
+<pre class="example_box">
+SetExeFile_"C:\Program Files\WinMerge\WinMergeU.exe"
+SetExeParam_"$F $R"
+ShellExecute
+</pre>
+
+<b>例</b>: カレントのファイル名一覧をログウィンドウに出力<br>
+<pre class="example_box">
+SetExeFile_cmd
+SetExeParam_/u /c dir
+SetExeOpt_LH
+ShellExecute
+</pre>
+
+<b>例</b>: <b>xdoc2txt</b> (hishida 氏作)を用いて、カーソル位置ファイル(doc、pdfなど)を一覧ダイアログでテキスト表示<br>
+<pre class="example_box">
+SetExeFile_"D:\Prg\xdoc2txt.exe"
+SetExeParam_$F
+SetExeOpt_OH
+ShellExecute
+ListBuffer_%FileName%
+</pre>
+<br>
+
+<dt id="SetFileTime" class="no_bg">SetFileTime<span class="pram_text">_&quot;yyyy/mm/dd hh:nn:ss&quot;</span>
+<dd>カーソル位置項目のタイムスタンプを設定します。<br>
+書式が yyyy/mm/dd のみの場合はその日付の 00:00:00 に、hh:nn:ss のみの場合は日付は元のままになります。<br>
+<div class="spc_box">
+<b>例</b>: 時刻部分のみ変更: SetFileTime_&quot;12:00:00&quot;<br>
+<b>例</b>: 現在の日時に設定: SetFileTime_&quot;%Date% %Time%&quot;<br>
+</div>
+
+<dt id="SetIndex" class="no_bg">SetIndex<span class="pram_text">_インデックス</span>
+<dd>ファイルリストのカーソル位置(0～)を設定します。インデックスが範囲を超えている場合は最下行に移動します。<br>
+<a href="#PushIndex">→ PushIndex</a>　<a href="#PopIndex">→ PopIndex</a>
+
+<dt id="Sleep" class="no_bg">Sleep<span class="pram_text">_待ち時間[S|M|H]</span>
+<dd>時間待ちします。この間も<span class="btn_frame">ESC</span>キーによる中断は可能です。<br>
+数字だけの指定ではミリ秒単位になります。数字の後に <b>S</b> を付けると秒、<b>M</b> で分、<b>H</b> で時間単位になります。<br>
+<a href="#Timer">→ Timer</a>
+
+<dt id="Test" class="no_bg">Test<span class="pram_text">_変数名{==|!=|&lt;=|&gt;=|&lt;|&gt;}文字列</span>
+<dd>
+変数の内容と文字列を、大文字・小文字を区別せずに比較します。<br>
+比較は自然順ですので、桁数の違う数字なども数値のように扱えます。また日時の比較も可能です。<br>
+<div class="note_text">
+※変数同士を比較する場合は、Test_変数A==%変数B% というようになりますので注意してください。<br>
+</div>
+結果は後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
+<a href="#Set">→ Set</a>　<a href="#Input">→ Input</a>
+
+<dt id="Timer" class="no_bg">Timer<span class="pram_text">_時間[S|M|H]</span><br>
+Timer<span class="pram_text">_&quot;hh:mm[:ss]&quot;</span>
+<dd>設定した時間が経過するか、設定時刻を過ぎると、<a href="#IfStatement">If 文</a>の <b>TimeOut</b> 条件が成立します。<br>
+時間が数字だけの場合はミリ秒単位、数字の後に <b>S</b> を付けると秒、<b>M</b> で分、<b>H</b> で時間単位になります。<br>
+なお、すでに設定時刻を過ぎている場合は、翌日の時刻とみなします。
+<div class="spc_box">
+<b>例</b>: Timer_90M<br>
+<b>例</b>: Timer_&quot;12:00:00&quot;<br>
+時刻は : を含むため必ずダブルクォーテーションで囲んでください。
+</div>
+<a href="#Sleep">→ Sleep</a>
+
+<dt id="Trim" class="no_bg">Trim<span class="pram_text">_変数名</span>
+<dd>変数の左右端から空白および制御文字を取り除きます。<br>
+
+<dt id="WaitForTask" class="no_bg">WaitForTask
+<dd><b>ExeCommands</b> コマンドで開始されたタスクの終了を待ちます。それ以前に実行されていたタスクについては考慮しません。<br>
+タスクマネージャで中断すると、以降のコマンドも中断されます。
+
+<dt id="WaitForTask2" class="no_bg">WaitForTask2
+<dd>すべてのタスクの終了を待ちます。<br>
+タスクマネージャで中断すると、以降のコマンドも中断されます。
+
+<dt id="Warn" class="no_bg">Warn<span class="pram_text">_メッセージ</span>
+<dd>ヒントウィンドウやステータスバーに警告メッセージを表示します。<br>
+<a href="#Hint">→ Hint</a>
+
+<dt id="WriteINI" class="no_bg">WriteINI<span class="pram_text">_キー名=文字列</span>
+<dd><b>NyanFi.INI</b> [ExeCommands] セクションの指定キーに文字列を書き込みます。<br>
+なお、INIファイルが実際に更新されるのは <b>NyanFi</b> の終了時です。このコマンドによってINIファイルへのアクセスは生じません。<br>
+<a href="#ReadINI">→ ReadINI</a>
+
+</dl>
+</div>
+<br>
+
+<h3 id="CtrlStatement">制御文</h3>
+<p><b>ExeCommands</b> コマンドのパラメータまたはコマンドファイル内では、以下の制御文を使用できます。</p>
+<p class="link_box"><a href="#IfStatement">If</a> ／ <a href="#Repeat">Repeat</a> ／ <a href="#Goto">Goto</a></p>
+
+<dl class="sub_item indent1">
+<dt class="no_bg" id="IfStatement">If 文<br>
+<dd>
+<div class="mono_text">
+構文1: <b>If</b>条件_{<b>Exit</b>|<b>Break</b>|<b>Continue</b>|<b>Goto</b>_ラベル名}<br>
+構文2: <b>If</b>条件: コマンド:... <b>EndIf</b><br>
+構文3: <b>If</b>条件: コマンド:... <b>Else:</b> コマンド:... <b>EndIf</b><br>
+</div>
+<div class="spc_box">
+条件の前に <b>Not</b> (<b>!</b> でも可)を付けると否定になります。また <b>.and.</b> や <b>.or.</b> で条件を連結することで複合条件文にすることもできます(例: IfLeft.and.NotRoot_Exit)。<br>
+</div>
+
+<div class="spc_box">
+条件には以下のものがあります。<br>
+<div class="indent1">
+<table border="0">
+<tr><th>Top</th><td>ファイラーでリストの最上行/ テキストビュアーで最上行/ イメージビュアーで最初の画像</td></tr>
+<tr><th>End</th><td>ファイラーでリストの最下行/ テキストビュアーで最下行/ イメージビュアーで最後の画像</td></tr>
+<tr><th>Left</th><td>ファイラーでカレントが左側</td></tr>
+<tr><th>Right</th><td>ファイラーでカレントが右側</td></tr>
+<tr><th>Sel</th><td>ファイラーのカレント側で選択あり/ テキストビュアーで選択中/ イメージビュアーで選択あり<br></td></tr>
+<tr><th>SelMask</th><td>ファイラーでカレントに選択マスク/フィルタマスク/栞マークマスクあり</td></tr>
+<tr><th>PathMask</th><td>ファイラーでカレントにパスマスクあり</td></tr>
+<tr><th>Empty</th><td>ファイラーでカレントが空</td></tr>
+<tr><th>Root</th><td>ファイラーでカレントがルートディレクトリ</td></tr>
+<tr><th>Remote</th><td>ファイラーでカレントがネットワーク・ドライブ</td></tr>
+<tr><th>Removable</th><td>ファイラーでカレントがリムーバブル・ドライブ</td></tr>
+<tr><th>Virtual</th><td>ファイラーでカレントがアーカイブの仮想ディレクトリ</td></tr>
+<tr><th><b>Found</b></th><td>ファイラーでカレントが検索結果リスト/ テキストビュアーで直前の文字列/リンク先/マーク行検索で発見</td></tr>
+<tr><th>Work</th><td>ファイラーでカレントが<a href="hid00060.htm">ワークリスト</a></td></tr>
+<tr><th>FTP</th><td>ファイラーでカレントがFTPのリモート側</td></tr>
+<tr><th>ADS</th><td>ファイラーでカレントが代替データストリーム一覧</td></tr>
+<tr><th>Selected</th><td>カーソル位置が選択中</td></tr>
+<tr><th>Marked</th><td>カーソル位置が栞マーク項目/ テキストビュアーでカーソル行がマークされている</td></tr>
+<tr><th>Dir</th><td>カーソル位置がディレクトリ</td></tr>
+<tr><th>File</th><td>カーソル位置がファイル</td></tr>
+<tr><th>Arc</th><td>カーソル位置がアーカイブファイル(拡張子で判定)</td></tr>
+<tr><th>Image</th><td>カーソル位置が画像ファイル(アイコンは除く)</td></tr>
+<tr><th>Binary</th><td>カーソル位置がバイナリ・ファイル/ テキストビュアーでバイナリ・ダンプ表示</td></tr>
+<tr><th>Log</th><td>カーソル位置が NyanFi ログファイル/ テキストビュアーでログを閲覧中</td></tr>
+<tr><th>HtmTxt</th><td>テキストビュアーでHTML→テキスト変換表示</td></tr>
+<tr><th>Grep</th><td><a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからテキストビュアーを開いている</td></tr>
+<tr><th>Task</th><td>タスク実行中</td></tr>
+<tr><th>Suspend</th><td>タスク予約項目の実行を保留中</td></tr>
+<tr><th>Connected</th><td>インターネット接続</td></tr>
+<tr><th>Yes</th><td>直前の <a href="#MsgBoxYN">MsgBoxYN</a>、<a href="#MsgBoxYNC">MsgBoxYNC</a> で「はい」、<a href="#Input">Input</a> で「OK」が押された</td></tr>
+<tr><th>No</th><td>直前の <a href="#MsgBoxYN">MsgBoxYN</a>、<a href="#MsgBoxYNC">MsgBoxYNC</a> で「いいえ」が押された</td></tr>
+<tr><th>Cancel</th><td>直前の <a href="#MsgBoxYNC">MsgBoxYNC</a> または <a href="#Input">Input</a> で「キャンセル」が押された</td></tr>
+<tr><th>True</th><td>直前の <a href="#MatchBuffer">MatchBuffer</a>、<a href="#MatchDir">MatchDir</a>、<a href="#MatchExt">MatchExt</a>、<a href="#MatchName">MatchName</a> でマッチ、または <a href="#Test">Test</a>、<a href="#FileExists">FileExists</a> の結果が真</td></tr>
+<tr><th>False</th><td>直前の <a href="#MatchBuffer">MatchBuffer</a>、<a href="#MatchDir">MatchDir</a>、<a href="#MatchExt">MatchExt</a>、<a href="#MatchName">MatchName</a> でマッチしなかった、または <a href="#Test">Test</a>、<a href="#FileExists">FileExists</a> の結果が偽</td></tr>
+<tr><th>TimeOut</th><td><a href="#Timer">Timer</a> で設定した時間が経過するか、設定時刻を過ぎた</td></tr>
+<tr><th>Shift</th><td><span class="btn_frame">Shift</span>キーが押されている</td></tr>
+<tr><th>Ctrl</th><td><span class="btn_frame">Ctrl</span>キーが押されている</td></tr>
+<tr><th>Alt</th><td><span class="btn_frame">Alt</span>キーが押されている</td></tr>
+<tr><th>Primary</th><td>最初に起動された NyanFi</td></tr>
+<tr><th>Duplicated</th><td>複数の NyanFi が起動されている</td></tr>
+</table>
+</div>
+</div>
+<br>
+
+構文1では、条件が真の場合、以下のような処理が可能です。<br>
+<div class="indent1">
+<table border="0">
+<tr><th>Exit</th><td><b>ExeCommands</b> コマンドの実行を終了</td></tr>
+<tr><th>Break</th><td><b>Repeat</b> 文から抜ける</td></tr>
+<tr><th>Continue</th><td><b>Repeat</b> 文内で以降の処理を飛ばして継続</td></tr>
+<tr><th>Goto<span class="pram_text">_ラベル名</span></th><td>ラベル位置へジャンプ</td></tr>
+</table>
+</div>
+これらは単独の文としても使用できます。<br>
+<br>
+構文2、3の場合、If 文の中にさらに If 文を含めることができます。<br>
+<hr>
+<br>
+
+<dt class="no_bg" id="Repeat">Repeat 文<br>
+<dd>
+<div class="mono_text">
+構文: <b>Repeat</b>[_繰り返し回数 | _IN | _YN]: コマンド:... <b>EndRepeat</b>
+</div>
+<div class="spc_box">
+<b>Repeat</b> ～ <b>EndRepeat</b> 間のコマンドを指定回数だけ繰り返し実行します。<br>
+パラメータに <b>IN</b> を指定すると繰り返し回数の入力ボックスが出ます。<br>
+また <b>YN</b> を指定すると繰り返しのたびに継続の確認ボックスが出ます。<br>
+何も指定しない場合は無限ループになりますので、<a href="#IfStatement">If 文</a>のパラメータ <b>Break</b> で抜ける必要があります。<br>
+なお <b>Break</b> および <b>Continue</b> は単独の文としても使用できます。<br>
+多重 Repeat 文も可能です(最大8重)。<br>
+</div>
+
+<b>例</b>: Buffer に001～100の連番を設定
+<pre class="example_box">
+Set_番号=001
+Repeat_100
+  Add_Buffer&lt;&lt;%番号%
+  Set_番号+=1
+EndRepeat
+</pre>
+<hr>
+<br>
+
+<dt class="no_bg" id="Goto">Goto 文<br>
+<dd>
+<div class="mono_text">
+構文: <b>Goto</b>_ラベル名
+</div>
+
+<div class="spc_box">
+指定したラベル位置へジャンプします。<br>
+ラベルは、文字列の先頭に &quot;<b>#</b>&quot; を付けて定義してください。<br>
+なお、<b>Repeat</b> 文内ではラベルを使用できません。<br>
+</div>
+
+<b>例</b>:
+<pre class="example_box">
+IfTrue
+  …
+  …
+Else
+  Goto_失敗
+EndIf
+
+#失敗
+MsgBox_失敗しました
+</pre>
+</dl>
+<br>
+
+<h3 id="Example">例</h3>
+<div class="indent1">
+<b>パラメータの設定例</b><br>
+
+左右を特定のディレクトリに変更<br>
+<pre class="example_box">
+ToLeft: ChangeDir_C:\hoge: ChangeOppDir_D:\nyan
+</pre>
+
+カレント側で、最初のファイル位置にカーソルを移動<br>
+<pre class="example_box">
+CursorTop: SearchDownF_/.+/
+</pre>
+
+選択マスク/パスマスクがあれば解除、なければタスクマネージャを開く<br>
+<pre class="example_box">
+IfSelMask.or.PathMask: ClearMask: Else: TaskMan: EndIf
+</pre>
+
+カーソル位置がディレクトリなら容量を計算、ファイルならファイル情報をダイアログで表示<br>
+<pre class="example_box">
+IfDir: CalcDirSize: Else: ShowFileInfo_SD: EndIf
+</pre>
+
+カーソル位置が .lnk ファイルならリンク先を、ディレクトリならそれを反対側に開く。<br>
+<pre class="example_box">
+MatchExt_lnk: IfTrue: LinkToOpp: Else: CsrDirToOpp: EndIf
+</pre>
+
+同名ファイルがあっても確認なしで強制上書きコピー<br>
+<pre class="example_box">
+SetCopyMode_O: Copy
+</pre>
+
+空のディレクトリを削除<br>
+<pre class="example_box">
+SelEmptyDir: Delete_SO
+</pre>
+
+ランダムに背景画像を設定(IMG_00.jpg～IMG_10.jpg)<br>
+<pre class="example_box">
+Random_画像=IMG_010.jpg: LoadBgImage_%画像%
+</pre>
+
+カレントのディレクトリがパスに登録されているか？<br>
+<pre class="example_box">
+MatchDir_%PATH%: IfTrue: MsgBox_パスに登録されています: EndIf
+</pre>
+
+カーソル位置のテキストファイルをクリップボードに読み込む<br>
+<pre class="example_box">
+IfFile: LoadBuffer_%FileName%: SetClipboard_%Buffer%: EndIf
+</pre>
+
+カレントで選択中のファイル名リストを指定ファイルに保存<br>
+<pre class="example_box">
+Set_Buffer=%SelFiles%: SaveBuffer_D:\filelist.txt
+</pre>
+
+すべてのタスクが終了したら <b>Windows</b> を終了<br>
+<pre class="example_box">
+WaitForTask2: PowerOff
+</pre>
+
+<hr><br>
+
+<b>コマンドファイルの例</b><br>
+NyanFi の設定ファイルなどをアーカイブ(Backup\NyanIni_yymmdd.zip)にまとめてバックアップ。<br>
+<pre class="example_box">
+ToLeft
+PushDir
+ChangeDir_%ExePath%
+MaskSelect_NyanFi.INI;Calculator.INI;DirHistory.INI;Distribute.INI;FontSample.INI;Highlight.INI;Swatchbook.INI;TAGDATA.TXT;WEBMAP.HTM;DriveLog.csv
+
+IfSel
+  PushDir_OP
+  ChangeOppDir_%ExePath%Backup
+  Pack_NyanIni_\DT(yymmdd).zip
+  PopDir_OP
+EndIf
+
+PopDir
+</pre>
+
+D:\hoge\backup に移動し、7日前の日付より古いファイルを選択して削除、終わったら元の場所に戻る。<br>
+<pre class="example_box">
+Echo_古いバックアップを削除
+PushDir
+  ChangeDir_D:\hoge\backup
+  DateSelect_<-7D
+  IfSel
+    MsgBoxYN_古いファイルを削除しますか?
+    IfYes
+      MsgOff
+      Delete_SO
+      WaitForTask
+    EndIf
+  Else
+    Warn_削除対象がありません
+  EndIf
+PopDir
+</pre>
+
+(カーソル位置がディレクトリまたはアーカイブならその中へ入り)最初の栞マークファイル(無ければ最初の .jpg)をイメージビュアーで開く。
+<pre class="example_box">
+IfDir
+  OpenStandard
+Else
+  IfArc
+    OpenStandard
+  EndIf
+EndIf
+
+CursorTop
+NextMark
+IfNotMarked
+  SearchDownF_/.+\.jpg/
+  IfFalse_Exit
+EndIf
+
+ImageViewer
+</pre>
+
+カレントに画像ファイル(*.jpg、*.png、*.gif)があれば選択して反対パスにアーカイブ(Image.zip)を作成。<br>
+<pre class="example_box">
+MaskSelect_*.jpg;*.png;*.gif
+IfSel
+  Pack_image.zip
+  MsgBox_アーカイブを作成しました
+Else
+  Warn_画像ファイルがありません
+EndIf
+</pre>
+
+カーソル位置がアーカイブだったら開き、*.txtを選択して削除、アーカイブを抜けてカーソルを下に移動、という動作をファイルリストの最下行まで繰り返す。終了したらタイトルバーを点滅させサウンド(OK.WAV)を鳴らす。<br>
+<pre class="example_box">
+EchoT_アーカイブ内のテキストを削除
+MsgOff
+
+Repeat
+  IfArc
+    OpenStandard
+    MaskSelect_*.txt
+    Delete_SO
+    ToParent
+  EndIf
+  IfEnd_Break
+  CursorDown
+EndRepeat
+
+FlashWin_3_200
+PlaySound_OK.WAV
+</pre>
+現在時刻が17:00:00以降なら D:\hoge 以下のファイルで14日前の日付より古いものを削除し、NyanFi を終了。
+<pre class="example_box">
+EchoT_終了時処理
+Test_Time>="17:00:00"
+IfTrue
+  MsgOff
+  PushDir
+    ChangeDir_D:\hoge
+    MaskFind_*.*
+    IfFound
+      DateSelect_<-14D
+      Delete_SO
+      ReturnList
+    EndIf
+    WaitForTask
+  PopDir
+  Echo_OK
+EndIf
+
+Close
+</pre>
+
+ログウィンドウを拡大表示(プレビュー、ファイル情報非表示) / 通常表示。
+<pre class="example_box">
+ReadINI_状態=LogOnly
+
+Test_状態==YES
+IfTrue
+  <span class="rem_text">;通常表示に戻す</span>
+  ShowPreview_ON: ShowProperty_ON: SetSubSize_240
+  Set_状態=NO
+Else
+  <span class="rem_text">;ログを拡大表示</span>
+  ShowPreview_OFF: ShowProperty_OFF: SetSubSize_480
+  Set_状態=YES
+EndIf
+
+WriteINI_LogOnly=%状態%
+</pre>
+
+テキストビュアーで、マーク行の一覧をクルップボードに取得。
+<pre class="example_box">
+Test_ScrMode==TV: IfFalse_Exit
+
+TextTop
+IfMarked
+  Add_Buffer&lt;&lt;%LineText%
+EndIf
+
+Repeat
+  FindMarkDown
+  IfNotFound_Break
+  Add_Buffer&lt;&lt;%LineText%
+EndRepeat
+
+Test_BufferCount>0
+IfTrue
+  SetClipboard_%Buffer%
+EndIf
+</pre>
+
+<span class="btn_frame">ESC</span>キーに割り当てて、状態に応じた動作を行う。
+<pre class="example_box">
+<span class="rem_text">;FTP切断</span>
+IfFTP
+  FtpDisconnect: Exit
+EndIf
+
+<span class="rem_text">;タスクマネージャ</span>
+IfTask
+  TaskMan: Exit
+EndIf
+
+<span class="rem_text">;選択マスクを解除</span>
+IfSelMask
+  SelMask_CA: Exit
+EndIf
+
+<span class="rem_text">;通常リストに戻る</span>
+IfVirtual.or.Found.or.Work.or.ADS
+  ReturnList: Exit
+EndIf
+
+<span class="rem_text">;パスマスクを解除</span>
+IfPathMask
+  ClearMask: Exit
+EndIf
+
+<span class="rem_text">;選択を解除</span>
+ClearAll
+</pre>
+
+掲示板「NyanFiだニャン その3」をテキストビュアーで表示し、最新位置へ移動。
+<pre class="example_box">
+IfConnected
+  HtmlToText_ON
+  TextViewer_"https://egg.5ch.net/test/read.cgi/software/1508314110/"
+  TextEnd
+  FindUp_"/^\d{1,4}\s/"
+Else
+  Warn_未接続!
+EndIf
+</pre>
+
+掲示板「NyanFiだニャン その3」をテキストに変換して保存し、末尾200行を一覧ダイアログで表示(コメントの先頭行を強調)。
+<pre class="example_box">
+Set_ログ="D:\Data\NyanFiだニャン_その3.txt"
+
+IfConnected
+  Download_"https://egg.5ch.net/test/read.cgi/software/1508314110/>>%ログ%"
+  ListTail_"200;TE;/^\d{1,4}\s.+\sID:/;%DownloadName%"
+Else
+  Warn_未接続!
+EndIf
+</pre>
+
+
+カーソル位置がインターネットショートカットなら、そのページをテキストビュアーで表示
+<pre class="example_box">
+MatchExt_.url
+IfFalse_Exit
+
+LoadBuffer_%FileName%
+FilterBuffer_"/^URL=/"
+Test_BufferCount>0
+IfFalse_Exit
+
+Set_BufferIndex=0
+Set_URL=%BufferLine%
+Mid_URL;5
+HtmlToText_ON
+TextViewer_%URL%
+</pre>
+
+</div>
+<br>
+
+<p class="info_text">
+※アーカイブの <b>sample_cmd</b> ディレクトリには、コマンドファイルのサンプルがあります。
+</p>
+<br><br>
+
+</body>
+</html>

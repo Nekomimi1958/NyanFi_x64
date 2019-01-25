@@ -1,0 +1,259 @@
+/* óvëf */
+P, TD, caption {
+  padding-left: 0.5em;
+  line-height: 150%;
+}
+
+DL {
+  line-height: 150%;
+}
+
+DL.sub_item {
+  line-height: 150%;
+  border-style: none;
+}
+
+DT {
+  font-weight: bold;
+  padding: 1px 4px;
+  background-color: #ddddff;
+}
+
+DT.no_bg {
+  font-weight: bold;
+  padding: 1px 0.5em;
+  background-color: transparent;
+}
+DT.no_bg_indent1 {
+  font-weight: bold;
+  padding: 1px 1em;
+  background-color: transparent;
+}
+
+DD {
+  font-weight: normal;
+  margin-bottom: 1em;
+}
+
+LI {
+  margin-bottom: 0.25em;
+}
+
+H1 {
+  padding: 4px 10px;
+  background-color: #ddddff;
+  border-style: solid;
+  border-width: 1px 2px 2px 1px;
+  border-color: #666699;
+  font-size: large;
+}
+
+H2 {
+  padding: 4px 6px;
+  background-color: #ddddff;
+  border-style: solid;
+  border-width: 1px 2px 2px 1px;
+  border-color: #666699;
+  font-size: medium;
+}
+
+H3 {
+  padding: 2px 4px;
+  background-color: #ddddff;
+  border-style: none solid solid none;
+  border-width: 1px;
+  border-color: #666699;
+  font-size: small;
+}
+
+H4 {
+  padding: 2px 4px;
+  border-style: none none solid none;
+  border-width: 1px;
+  border-color: #666699;
+  font-size: small;
+}
+
+
+A:hover {
+  background-color: #ddddff;
+}
+
+A {
+  font-weight: bold;
+}
+
+PRE {
+  line-height: 125%;
+  padding-left: 1em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-right: 2em;
+}
+
+/* è¸ÇË */
+.title_box {
+  padding: 20px 20px;
+  background-color: #ddddff;
+  border-style: solid;
+  border-width: 1px 2px 2px 1px;
+  border-color: #666699;
+  letter-spacing: 0.25em;
+  font-weight: bold;
+}
+
+.inf_box {
+  padding: 10px 20px;
+  border-style: solid;
+  border-width: 1px 2px 2px 1px;
+  border-color: #666699;
+}
+
+.inf_box_r {
+  padding: 10px 20px;
+  background-color: #ffdddd;
+  border-style: solid;
+  border-width: 1px 2px 2px 1px;
+  border-color: #666699;
+}
+
+.small {
+  font-size: smaller;
+  line-height: 125%;
+}
+
+.small_nrm {
+  font-size: smaller;
+  font-weight: normal;
+}
+
+.indent1 {
+  padding-left: 1em;
+}
+
+.indent2 {
+  padding-left: 2em;
+}
+
+.margin1 {
+  margin-left: 1em;
+}
+
+.mgn_btm_h {
+  margin-bottom: 0.5em;
+}
+
+.note_text {
+  margin-Top: 0.25em;
+  padding-left: 0.5em;
+  background-color: #ffeeee;
+}
+
+.info_text {
+  margin-Top: 0.25em;
+  background-color: #eeffff;
+}
+
+.tips {
+  margin-Right: 0.25em;
+  padding: 0px 0.2em;
+  color: #03f;
+  background-color: #cce;
+  font-weight: bold;
+}
+
+.btn_frame {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+  padding: 0px 4px;
+  background-color: #dddddd;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #aaaaaa #666666 #666666 #aaaaaa;
+  font-weight: bold;
+  font-size: 90%;
+}
+.btn_frame_4 {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+  text-align: center;
+  width: 4.5em;
+  background-color: #dddddd;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #aaaaaa #666666 #666666 #aaaaaa;
+  font-weight: bold;
+  font-size: 90%;
+}
+.tab_frame {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+  padding: 0px 8px;
+  background-color: #dddddd;
+  border-style: solid solid none solid;
+  border-width: 1px;
+  border-color: #aaaaaa #666666 #666666 #aaaaaa;
+  font-weight: bold;
+  font-size: 90%;
+}
+
+.pram_text {
+  color: #333;
+  font-family: monospace;
+  font-weight: normal;
+}
+
+.mono_text {
+  font-family: monospace;
+}
+
+.ctrl_text {
+  color: #90f;
+  font-weight: normal;
+}
+
+.rem_text {
+  color: #080;
+}
+
+.al_right {
+  text-align: right;
+  margin-right: 2em;
+}
+
+.link_box {
+  margin-left: 1em;
+  margin-right: 1em;
+  padding: 0.25em 1em;
+  background-color: #eef;
+  color: #999;
+  font-size: 90%;
+  margin-bottom: 1em;
+}
+
+.scr_box {
+  padding: 1px 4px;
+  background-color: #aaaaaa;
+  font-family: monospace;
+}
+
+.inp_box {
+  padding: 0px 40px 0px 4px;
+  background-color: #ffffff;
+  border-color: #666666;
+  border-style: solid;
+  border-width: 1px;
+  font-size: 90%;
+}
+
+.example_box {
+  margin-top: 0.25em;
+  padding: 4px;
+  background-color: #cccccc;
+  font-family: monospace;
+  line-height: 120%;
+}
+
+.spc_box {
+  margin: 0.6em 0px;
+}

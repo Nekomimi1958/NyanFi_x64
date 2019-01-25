@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>オプション設定 - イベント</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+<h1>オプション設定 - イベント</h1>
+
+<p>
+以下のイベントが発生したときに、指定したコマンドを <a href="hid00063.htm">ExeCommands コマンド</a> のパラメータとして実行できます。<br>
+設定したいイベントを一覧で選択し、<b>イベント発生時に実行するコマンド</b> <img src="edit.png" alt="" border=0> にコマンドを設定してください。コマンドは <b>:</b> (コロン)で区切って複数指定できます。<br>
+先頭が <b>@</b> の場合、<b>コマンドファイル</b>の指定になります。なお、右クリックメニューで「<b>コマンド名の参照</b>」が可能です(<a href="hid00005.htm#CopyCmdName">→ CopyCmdName</a>)。<br>
+また、先頭 <b>$</b> の場合、<a href="hid00014.htm">追加メニュー</a>または<a href="hid00015.htm">外部ツール</a>で設定されている<b>エイリアス</b>とみなし、その項目を実行します(サブメニューの親項目の場合は、そのサブメニューをポップアップ表示)。<br>
+<br>
+<span class="btn_frame">...</span>ボタンを押すと<a href="hid00067.htm">コマンドファイル一覧</a>(選択)画面が表示され、ファイルを参照できます。また、コマンド欄が <a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a>, <a href="hid00005.htm#FileEdit">FileEdit</a>、<a href="hid00005.htm#LoadWorkList">LoadWorkList</a>、<a href="hid00005.htm#OpenByApp">OpenByApp</a>、<a href="hid00005.htm#OpenByWin">OpenByWin</a>、<a href="hid00005.htm#TextViewer">TextViewer</a> で始まる場合は、通常のファイル選択が出ます。<br>
+<b>コマンドファイル</b>や、<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a>_ で始まる<b>メニュー定義ファイル</b>を指定した場合、<span class="btn_frame">ファイル編集</span>ボタンを押すと、テキストエディタでそのファイルを開けます。<br>
+<b>コマンドファイル</b>や、<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a>、<a href="hid00005.htm#LoadWorkList">LoadWorkList</a> コマンドの対象ファイルは、<b>NyanFi</b> ディレクトリからの相対指定が可能です。<br>
+<br>
+イベント名で括弧内は、コマンドが実行される画面モード(<b>FL</b>:ファイラー、<b>TV</b>:テキストビュアー、<b>IV</b>:イメージビュアー)です。モードに固有のコマンドを用いる際は注意してください。<br>
+<br>
+<b>検索</b> <img src="edit.png" alt="" border=0> 欄に文字列を入力して<span class="btn_frame">∨</span>/<span class="btn_frame">∧</span>ボタン(or <span class="btn_frame">↓</span>/<span class="btn_frame">↑</span>キー)を押すと一覧の内容を検索できます。<br>
+<br>
+
+他の <b>ExeCommands</b> コマンド実行中にイベントが発生した場合、コマンドは実行されません。<br>
+ただし、<b>ExeCommands</b> コマンドの最後(<b>Exit</b> は除く)で <a href="hid00005.htm#FindFileDlg">FindFileDlg</a>、<a href="hid00005.htm#FindFileDirDlg">FindFileDirDlg</a>、<a href="hid00005.htm#FindDirDlg">FindDirDlg</a>、<a href="hid00005.htm#FindHardLink">FindHardLink</a>、<a href="hid00005.htm#FindMark">FindMark</a>、<a href="hid00005.htm#FindTag">FindTag</a>、<a href="hid00005.htm#MaskFind">MaskFind</a> コマンドが実行されて結果リストが表示された場合には、「<b>検索結果リストが表示された直後(FL)</b>」イベントのコマンドが実行されます。<br>
+<br>
+最初に起動した <b>NyanFi</b> と二重起動したものとで動作を変えたい場合は、<a href="hid00063.htm#IfStatement">If 文</a> の <b>Primary</b> 条件を用いてください(例: IfNotPrimary_Exit)。
+</p>
+<br>
+
+<dl>
+<dt class="no_bg_indent1">NyanFi 起動時
+<dd><b>NyanFi</b> 起動時に実行されます。<br>
+なお <a href="hid00089.htm">起動時オプション</a> の <b>-X</b> が指定されていた場合は、そちらが優先されます。
+
+<dt class="no_bg_indent1">NyanFi 終了時
+<dd><b>NyanFi</b> 終了時に実行されます。<br>
+
+<dt class="no_bg_indent1">ウィンドウが最大化された時
+<dd><b>NyanFi</b> のウィンドウが最大化された時に実行されます。<br>
+
+<dt class="no_bg_indent1">ウィンドウが最小化された時
+<dd><b>NyanFi</b> のウィンドウが最小化された時に実行されます。<br>
+
+<dt class="no_bg_indent1">ウィンドウが元のサイズに戻った時
+<dd><b>NyanFi</b> のウィンドウが元のサイズに戻った時に実行されます。<br>
+<br>
+
+<dt class="no_bg_indent1">カレントのディレクトリ変更(FL)
+<dd>ファイラーで、カレント側のディレクトリを変更した時に実行されます。<br>
+なお、特定のディレクトリで表示設定などを変更したい場合は、「<a href="hid00075.htm">.nyanfi ファイルによるファイラー設定</a>」を利用すると便利です。その場合、<b>.nyanfi</b> で <b>Handled</b>=1 が設定されていると、このイベントのコマンドは実行されません。<br>
+
+<dt class="no_bg_indent1">別のタブに移った時(FL)
+<dd>ファイラーで、別のタブに移った時に実行されます。<br>
+左右のディレクトリが変化した後、「カレントのディレクトリ変更」イベントよりも後に発生します。<br>
+<b>例</b>: タブ毎に背景画像を変更<br>
+<span class="inp_box">LoadBgImage_TabImg%TabNo%.jpg</span>
+
+<dt class="no_bg_indent1">追加ドライブがカレントで開かれた時(FL)
+<dd><a href="hid00009.htm#Watch">オプション設定 - 一般 - 監視/更新</a> の「<b>追加ドライブをカレントに表示</b>」がチェックされている場合、追加ドライブがカレントで開かれた時に実行されます。<br>
+メモリカードを挿入した際の、データの自動転送などに便利かもしれません。<br>
+
+<dt class="no_bg_indent1">仮想ディレクトリを開いた直後(FL)
+<dd>ファイラーのカレント側で、アーカイブを仮想ディレクトリとして開いた直後に実行されます。<br>
+
+<dt class="no_bg_indent1">仮想ディレクトリを閉じた直後(FL)
+<dd>ファイラーのカレント側で、仮想ディレクトリを閉じて通常のファイルリストに戻った直後に実行されます。<br>
+
+<dt class="no_bg_indent1">検索結果リストが表示された直後(FL)
+<dd>ファイラーで、各種検索(<a href="hid00005.htm#FindFileDlg">FindFileDlg</a>、<a href="hid00005.htm#FindFileDirDlg">FindFileDirDlg</a>、<a href="hid00005.htm#FindDirDlg">FindDirDlg</a>、<a href="hid00005.htm#FindHardLink">FindHardLink</a>、<a href="hid00005.htm#FindMark">FindMark</a>、<a href="hid00005.htm#FindTag">FindTag</a>、<a href="hid00005.htm#MaskFind">MaskFind</a>)の結果リストが表示された直後に実行されます。<br>
+
+<dt class="no_bg_indent1">ファイルリストでカーソル移動直後(FL)
+<dd>ファイルリストでカーソルを移動した直後に実行されます。<br>
+頻繁に発生するので、あまり複雑な処理はしない方がよいでしょう。<br>
+
+<dt class="no_bg_indent1">ファイルリストでファイル名主部以外をダブルクリック(FL)
+<dd>ファイルリストで、アイコン、ファイル名主部(拡張子は除く)、ディレクトリ名部分以外をダブルクリックしたときに実行されます。<br>
+無指定の場合は、<a href="hid00022.htm">オプション設定 - マウス操作 - ファイラー</a>の「<strong>ファイルリストでのダブルクリック</strong>」で設定されている動作になります。<br>
+
+<dt class="no_bg_indent1">ファイルリストで右クリック(FL)
+<dd>ファイルリストで右クリックしたときに実行されます。<br>
+無指定の場合は、通常のコンテキストメニューが表示されます。コンテキストメニューに項目を追加したい場合は、<a href="hid00005.htm#ContextMenu">ContextMenu</a> コマンドでメニュー定義ファイルを指定してください。<br>
+
+<dt class="no_bg_indent1">ファイルリストからのドラッグ開始時(FL)
+<dd>ファイルリストから項目のドラッグを開始したときに実行されます。<br>
+<b>例</b>: 画面を右下方向に縮める<br>
+<span class="inp_box">WinPos_L600;T400</span>
+
+<dt class="no_bg_indent1">ファイルリストからのドラッグ完了時(FL)
+<dd>ファイルリストからのドラッグが完了したときに実行されます。<br>
+<b>例</b>: 画面を起動時の状態に戻す<br>
+<span class="inp_box">WinPos</span>
+
+<dt class="no_bg_indent1">文字列検索(GREP)を開く直前(FL,TV)
+<dd>ファイラー、テキストビュアーから文字列検索(GREP)を開く直前に実行されます。<br>
+拡張子によって検索ファイルのマスクを設定したいような場合に利用できます。
+
+<dt class="no_bg_indent1">文字列検索(GREP)を閉じた直後(FL)
+<dd>文字列検索(GREP)を閉じて、ファイルリスト表示に戻った直後に実行されます。<br>
+
+<dt class="no_bg_indent1" id="WatchTail">WatchTailコマンドで追記検出
+<dd><a href="hid00005.htm#WatchTail">WatchTail</a> コマンドで監視中ファイルの追記が検出されたときに実行されます。<br>
+<b>ExeCommands</b> の定義済み変数 <b>LastWatchLog</b> によって、検出されたファイル名と追記内容を参照できます。<br>
+<b>例</b>: コマンドラインメール送信ソフト <b>SMAIL</b> (Eva氏作)を利用した通知メールの送信<br>
+<pre class="example_box">
+<span class="rem_text">;更新内容をメール本文として保存</span>
+Set_Buffer=%LastWatchLog%
+SaveBuffer_%TmpPath%notify.txt
+
+<span class="rem_text">;通知メールを送信</span>
+SetExeFile_"D:\prog\smail.exe"
+SetExeDir_%TmpPath%
+SetExeOpt_OH
+SetExeParam_"-i -hsmtp.hoge.com -fnyan@hoge.jp -s監視ファイルが更新されました -Fnotify.txt neko@hoge.jp"
+ShellExecute
+<span class="rem_text">;実行結果をログに出力</span>
+Ins_Buffer<<メール送信完了
+Echo_%Buffer%
+</pre>
+<br>
+
+<dt class="no_bg_indent1">FTPホストに接続した(FL)
+<dd>FTPホストに接続してファイルリストが更新されたときに実行されます。<br>
+
+<dt class="no_bg_indent1">FTPホストから切断した(FL)
+<dd>FTPホストから切断したときに実行されます。<br>
+<br>
+
+<dt class="no_bg_indent1">ファイラーのツールバーを右クリック(FL)
+<dd>ファイラーのツールバーを右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">タブバーの空きスペースをダブルクリック(FL)
+<dd>タブバーの空きスペースをダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">タブバーを右クリック(FL)
+<dd>タブバーを右クリックしたときに実行されます。<br>
+無指定の場合は、タブバーの右クリックメニューが表示されます。<br>
+
+<dt class="no_bg_indent1">ディレクトリ情報をダブルクリック(FL)
+<dd>ファイルリスト上の<a href="hid00004.htm#DirInfo">ディレクトリ情報</a>をダブルクリックしたときに実行されます。<br>
+無指定の場合は、ディレクトリの入力欄が出ます(<a href="hid00005.htm#InputDir">→ InputDir</a>)。<br>
+
+<dt class="no_bg_indent1">ディレクトリ情報を右クリック(FL)
+<dd>ファイルリスト上の<a href="hid00004.htm#DirInfo">ディレクトリ情報</a>を右クリックしたときに実行されます。<br>
+無指定の場合は、クリック位置のディレクトリのサブディレクトリを選択するポップアップメニューが出ます(<a href="hid00005.htm#SubDirList">→ SubDirList</a>)。<br>
+
+<dt class="no_bg_indent1">ディレクトリ関係をダブルクリック(FL)
+<dd><a href="hid00004.htm#DirInfo">ディレクトリ情報</a>の中央にあるディレクトリ関係部分をダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">ディレクトリ関係を右クリック(FL)
+<dd><a href="hid00004.htm#DirInfo">ディレクトリ情報</a>の中央にあるディレクトリ関係部分を右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">ファイルリストのヘッダを右クリック(FL)
+<dd>ファイルリストのヘッダを右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">ファイルリストのシンプルスクロールバーを右クリック(FL)
+<dd><a href="hid00010.htm#ScrollBar">オプション設定 - デザイン -「スクロールバー」</a> でシンプルスクロールバーが選択されている場合、ファイルリストのシンプルスクロールバーを右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">ドライブ情報をダブルクリック(FL)
+<dd>ファイルリスト下の<a href="hid00004.htm#DriveInfo">ドライブ情報</a>をダブルクリックしたときに実行されます。<br>
+なお、クリックした時点でそのファイルリストがカレントになります。<br>
+
+<dt class="no_bg_indent1">ドライブ情報を右クリック(FL)
+<dd>ファイルリスト下の<a href="hid00004.htm#DriveInfo">ドライブ情報</a>を右クリックしたときに実行されます。<br>
+なお、クリックした時点でそのファイルリストがカレントになります。<br>
+
+<dt class="no_bg_indent1">左右分割境界線をダブルクリック(FL)
+<dd>ファイルリストの左右分割境界線をダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">左右分割境界線を右クリック(FL)
+<dd>ファイルリストの左右分割境界線を右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">イメージプレビューをダブルクリック(FL)
+<dd>イメージプレビューをダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">テキストプレビューをダブルクリック(FL)
+<dd>テキストプレビューをダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">ファイル情報をダブルクリック(FL)
+<dd>ファイル情報をダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">タスク表示をダブルクリック
+<dd>ログウィンドウ左側のタスク表示部分をダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">タスク表示を右クリック
+<dd>ログウィンドウ左側のタスク表示部分を右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">ログウィンドウをダブルクリック
+<dd>ログウィンドウをダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">ステータスバーをダブルクリック
+<dd>ステータスバーをダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">ステータスバーを右クリック
+<dd>ステータスバーを右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">時計パネルをダブルクリック
+<dd>時計パネルをダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">時計パネルを右クリック
+<dd>時計パネルを右クリックしたときに実行されます。<br>
+<br>
+
+<dt class="no_bg_indent1">テキストビュアーを開く直前(FL)
+<dd>テキストビュアーを開く直前に実行されます。<br>
+拡張子別に表示設定を変えたいような場合に利用できます。また、折り返し幅などを事前に設定しておくことで、余計な処理を抑止できます。<br>
+サンプルとして <b>OnTxViewerOpen.nbt</b> が同梱されています。<br>
+
+<dt class="no_bg_indent1">テキストビュアーを開いた直後(TV)
+<dd>テキストビュアーを開いた直後に実行されます。<br>
+サンプルとして <b>OnTxViewerOpened.nbt</b> が同梱されています。<br>
+
+<dt class="no_bg_indent1">テキストビュアーを閉じる直前(TV)
+<dd>テキストビュアーを閉じる前に実行されます。<br>
+
+<dt class="no_bg_indent1">テキストビュアーを閉じた直後(FL)
+<dd>テキストビュアーを閉じてファイラー画面に戻ったときに実行されます。<br>
+
+<dt class="no_bg_indent1">テキストビュアーのツールバーを右クリック(TV)
+<dd>テキストビュアーのツールバーを右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">テキストビュアーで情報ヘッダを右クリック(TV)
+<dd>テキストビュアーで、情報ヘッダを右クリックしたときに実行されます。<br>
+ルーラが表示されている場合は、ルーラの右クリックでも実行されます。<br>
+<br>
+
+<dt class="no_bg_indent1">イメージビュアーを開いた直後(IV)
+<dd>イメージビュアーを開いた直後に実行されます。<br>
+
+<dt class="no_bg_indent1">イメージビュアーを閉じた直後(FL)
+<dd>イメージプレビューを閉じてファイラー画面に戻ったときに実行されます。<br>
+
+<dt class="no_bg_indent1">イメージビュアーで全画面表示にした時(IV)
+<dd>イメージプレビューで、全画面表示に切り替えたときに実行されます。<br>
+
+<dt class="no_bg_indent1">イメージビュアーで通常表示に戻った時(IV)
+<dd>イメージプレビューで、全画面表示から通常表示に戻ったときに実行されます。<br>
+
+<dt class="no_bg_indent1">イメージビュアーのツールバーを右クリック(IV)
+<dd>イメージビュアーのツールバーを右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">イメージビュアーで画像部分をダブルクリック(IV)
+<dd>イメージプレビューで、表示されてい画像部分をダブルクリックしたときに実行されます。<br>
+これが指定されている場合、画像部分のクリックによる一時的な等倍表示は行われません。<br>
+
+<dt class="no_bg_indent1">イメージビュアーで画像表示部を右クリック(IV)
+<dd>イメージプレビューで、画像表示部を右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">イメージビュアーで余白部分をダブルクリック(IV)
+<dd>イメージプレビューで、表示されてい画像の余白部分をダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">イメージビュアーでサムネイルをダブルクリック(IV)
+<dd>イメージプレビューで、サムネイルをダブルクリックしたときに実行されます。<br>
+なお、サムネイル外をダブルクリックした場合は、イメージビュアーが閉じられます。<br>
+
+<dt class="no_bg_indent1">イメージビュアーでサムネイルを右クリック(IV)
+<dd>イメージプレビューで、サムネイルを右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">イメージビュアーでファイル情報をダブルクリック(IV)
+<dd>イメージプレビューで、サイドバーのファイル情報をダブルクリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">イメージビュアーでシークバーを右クリック(IV)
+<dd>イメージプレビューで、シークバーを右クリックしたときに実行されます。<br>
+
+<dt class="no_bg_indent1">サムネイルからのドラッグ開始時(IV)
+<dd>イメージプレビューで、サムネイルからファイルのドラッグを開始したときに実行されます。<br>
+
+<dt class="no_bg_indent1">サムネイルからのドラッグ完了時(IV)
+<dd>イメージプレビューで、サムネイルからのドラッグが完了したときに実行されます。<br>
+
+<dt class="no_bg_indent1">クリップボードにテキストをコピー
+<dd>NyanFi 上でクリップボードにテキストをコピーしたときに実行されます。<br>
+<b>例</b>: コピー内容を、ファイル(CLIPMEMO.TXT)に追記保存<br>
+<pre class="example_box">
+FormatDT_Buffer="&lt;&lt;&lt; yyyy-mm-dd hh:mm:ss &gt;&gt;&gt;' --------------------------------------------'"
+Add_Buffer&lt;&lt;%Clipboard%
+Ins_Buffer&lt;&lt;""
+
+<span class="rem_text">;UTF-8で追記保存</span>
+Set_CodePage=65001
+AppendBuffer_%ExePath%CLIPMEMO.TXT
+</pre>
+<br>
+
+<dt><img src="grpbox.png" alt="" border=0> タイマーイベント
+<dd>
+条件で設定した時間間隔や無操作時間で、あるいは設定時刻に、コマンドが実行されます。<br>
+時間間隔の設定では、数字だけの場合ミリ秒単位、数字の後に S を付けると秒、M で分、H で時間単位になります。<br>
+時間の後に <b>,</b> (カンマ)で区切って回数制限を指定できます。何も指定しないと繰り返し実行されます。<br>
+<b>例</b>: <span class="inp_box">45M,8</span> <span class="inp_box">MsgBox_休憩しましょう</span>　45分間隔で8回、メッセージを表示<br>
+<b>例</b>: <span class="inp_box">2H</span> <span class="inp_box">Random_画像=IMG_010.jpg: LoadBgImage_%画像%</span>　2時間間隔でランダムに背景画像を変更<br>
+<br>
+時間の先頭に <b>!</b> を付けると、無操作時間の設定になります。設定した時間以上無操作状態が続いたときに1回コマンドが実行されます。<br>
+
+<b>例</b>: <span class="inp_box">!3M</span> <span class="inp_box">WinMinimize</span>　3分間無操作だったら最小化<br>
+<br>
+<b>hh:mm[:ss]</b> の書式だと時刻指定になります。<b>,</b> (カンマ)で区切って最大6つまで時刻を指定できます。<br>
+先頭(時)が &quot;??:&quot; の場合、毎時の設定になります。また、設定時刻を過ぎると、翌日の時刻として再設定されます。<br>
+<b>例</b>: <span class="inp_box">09:30,12:00,17:45</span> <span class="inp_box">PlaySound_アラーム.wav</span>　9:30、12:00、17:45 にアラーム音を鳴らす<br>
+<b>例</b>: <span class="inp_box">??:00,17:30</span> <span class="inp_box">PlaySound_アラーム.wav</span>　毎正時と17:30 にアラーム音を鳴らす<br>
+</dl>
+<br><br>
+
+</body>
+</html>

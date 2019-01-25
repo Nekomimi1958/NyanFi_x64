@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>タスクマネージャ</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+
+</head>
+
+<body>
+
+<h1>タスクマネージャ</h1>
+<p>
+<a href="hid00005.htm#TaskMan">TaskMan</a> コマンドを実行すると、<b>タスクマネージャ</b>が表示されます。
+</p>
+<p>
+ファイラーでのコピー、移動、削除(アーカイブ内は除く)、完全削除(<a href="hid00005.htm#CompleteDelete">CompleteDelete</a>)、画像ファイル変換(<a href="hid00005.htm#ConvertImage">ConvertImage</a>)、Exif情報の削除(<a href="hid00005.htm#DelJpgExif">DelJpgExif</a>)、ディレクトリのタイムスタンプを最新に設定(<a href="hid00005.htm#SetDirTime">SetDirTime</a>)は、バックグラウンドのタスクで行われます。タスクは最大4つ(<a href="hid00009.htm#Task">オプション設定 - 一般 - タスク</a> で設定可能)まで実行でき、それ以上の実行しようとした場合は予約待機します。タスクマネージャの一覧で、タスクの実行、予約状況を確認できます。<br>
+</p>
+
+<p>
+一覧でのカーソル移動は、ファイラーで割り当てられているのと同じキーで行えます。<br>
+<span class="btn_frame">DEL</span>キー、あるいは <b>Delete</b> コマンドが割り当てられているキーを押すと、カーソル位置の項目を中止し一覧から削除できます。<br>
+画面を閉じたい場合は、<span class="btn_frame">閉じる</span>ボタン、<span class="btn_frame">ESC</span>(or <span class="btn_frame">Alt</span>+<span class="btn_frame">F4</span>)キー、あるいは <a href="hid00005.htm#ReturnList">ReturnList</a> が割り当てられているキーを押してください。
+</p>
+
+<p>
+<span class="btn_frame">中止</span>ボタンを押すと、カーソル位置のタスクを中止します。予約項目の場合は予約を取り消します。<br>
+<span class="btn_frame">すべて中止</span>ボタンを押すと、すべてのタスクを中止し、またすべて予約を取り消します。<br>
+<span class="btn_frame">一旦停止</span>ボタンを押すと、カーソル位置のタスクを一旦停止します。<span class="btn_frame">再開</span>ボタンを押すと実行を再開します。<br>
+</p>
+
+<p>
+<span class="btn_frame">保留</span>ボタンを押すと(表示は解除に変化)、すべてのタスク予約項目が保留状態となり、タスクに空きがあってもすぐに実行されなくなります。また、タスクを要するコマンドを実行しようとすると予約になります。なお、現在実行中のタスクはそのまま続行されます。<br>
+この切り替えは、<a href="hid00005.htm#Suspend">Suspend</a> コマンドでも可能です。<br>
+<span class="btn_frame">解除</span>ボタンを押すと(表示は保留に変化)、保留状態が解除され、通常の動作に戻ります。<br>
+<br>
+<span class="btn_frame">開始</span>ボタンを押すと、保留中に空きタスクがある場合、カーソル位置の予約項目を実行開始できます。<br>
+<span class="btn_frame">割込実行</span>ボタンを押すと、最大タスク数の制限を一時的に緩めて、カーソル位置の予約項目を強制的に割り込み実行できます。制限を超えて実行できるのは2タスクまでです。実行中のタスクが終わるのを待たずに、軽いタスクを実行したい場合などに利用してください。</p>
+
+<a href="hid00009.htm#Copy">オプション設定 - 一般 - コピー動作</a> - 「～<b>秒以上無操作なら待ち時間を最小に</b>」で指定した秒数以上、キーやマウス操作をしなかった場合、<b>ネットワーク待ち時間</b>と<b>通常待ち時間</b>が両方とも最小(転送速度が約64MB/秒以上なら 0 そうでなければ 1ms)となり高速実行になります。このとき一覧には「<b>高速実行</b>」と表示され、またファイラーのタスク表示部では、進捗バーの左に<span style="color:#ff0000;">■</span>マークが出ます。<br>
+<br><br>
+
+</body>
+</html>
