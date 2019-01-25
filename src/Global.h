@@ -1431,6 +1431,15 @@ inline bool is_SelFgCol(bool sel)
 	return (sel && col_fgSelItem!=Graphics::clNone);
 }
 
+inline bool is_X64()
+{
+#if defined(_WIN64)
+	return true;
+#else
+	return false;
+#endif
+}
+
 //---------------------------------------------------------------------------
 //スケーリングされた整数値を取得
 inline int ScaledInt(int n)
@@ -1717,6 +1726,8 @@ bool is_ExtractIcon(file_rec *fp);
 bool test_ArcExt(UnicodeString fext);
 bool test_TxtFile(UnicodeString fnam);
 bool test_NonTxtExt(UnicodeString fext);
+
+UnicodeString get_img_fext();
 
 void add_FExtInfList(TStringList *f_lst, TStringList *lst);
 

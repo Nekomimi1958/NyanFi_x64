@@ -877,7 +877,7 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 	//前後のファイルへ切り替え
 	else if (!FileName.IsEmpty() && !isFTP && contained_wd_i(_T("PrevFile|NextFile"), cmd_V)) {
 		RetStr = cmd_V;
-		this->Perform(WM_SETREDRAW, 0, (LPARAM)0);	//画面を消さずに残す
+		this->Perform(WM_SETREDRAW, 0, (NativeInt)0);	//画面を消さずに残す
 		ModalResult = mrRetry;
 	}
 	//ソート

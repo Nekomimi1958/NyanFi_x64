@@ -29,6 +29,10 @@ void __fastcall TDotNyanDlg::FormCreate(TObject *Sender)
 	PathMaskComboBox->Tag = CBTAG_HISTORY;
 	GrepMaskComboBox->Tag = CBTAG_HISTORY;
 
+	UnicodeString hntstr = LoadUsrMsg(USTR_HintMltSepSC);
+	PathMaskComboBox->Hint = hntstr;
+	GrepMaskComboBox->Hint = hntstr;
+
 	ColBufList	= new TStringList();
 	InheritList = new TStringList();
 
@@ -166,7 +170,14 @@ void __fastcall TDotNyanDlg::SetColorOption(TStringList *lst)
 {
 	TStringDynArray n_lst =
 		SplitString("Color_bgDirInf|Color_fgDirInf|Color_bgDrvInf|Color_fgDrvInf|Color_Cursor|Color_selItem", "|");
-	for (int i=0; i<n_lst.Length; i++) ColBufList->Values[n_lst[i]] = lst->Values[n_lst[i]];
+	int idx = -1;
+	for (int i=0; i<n_lst.Length; i++) {
+		UnicodeString lbuf = lst->Values[n_lst[i]];
+		ColBufList->Values[n_lst[i]] = lbuf;
+		if ((TColor)lbuf.ToIntDef(clNone)!=clNone && idx==-1) idx = i;
+	}
+
+	ColorComboBox->ItemIndex = idx;
 	ColorComboBox->Repaint();
 }
 

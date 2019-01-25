@@ -59,7 +59,7 @@ void __fastcall TSortModeDlg::FormShow(TObject *Sender)
 	SortBothCheckBox->Checked	   = SortBoth;
 	SortModeRadioGroup->SetFocus();
 
-	this->Perform(WM_NEXTDLGCTL, 0, (LPARAM)0);
+	this->Perform(WM_NEXTDLGCTL, 0, (NativeInt)0);
 	InhOk = false;
 }
 //---------------------------------------------------------------------------

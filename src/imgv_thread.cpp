@@ -640,7 +640,7 @@ void __fastcall TImgViewThread::Execute()
 					else if (test_FileExt(fext, FEXT_ZIPIMG)) {
 						//アーカイブ内の画像
 						int res = 0;
-						UnicodeString tmp_name = ExtractInZipImg(Img_f_name, FEXT_WICSTD + WicFextStr);
+						UnicodeString tmp_name = ExtractInZipImg(Img_f_name, get_img_fext());
 						if (!tmp_name.IsEmpty()) {
 							res = load_ImageFile(tmp_name, ImgBuff, WICIMG_PREVIEW, col_bgImage);
 							DeleteFile(tmp_name);
@@ -649,7 +649,7 @@ void __fastcall TImgViewThread::Execute()
 						Rotation = 0;
 					}
 					//画像
-					else if (test_FileExt(fext, FEXT_META FEXT_WICSTD + WicFextStr)) {
+					else if (test_FileExt(fext, FEXT_META + get_img_fext())) {
 						int res = load_ImageFile(Img_f_name, ImgBuff, WICIMG_PREVIEW, col_bgImage);
 						if (res==0) UserAbort(USTR_FaildLoad);
 						//見開きモード

@@ -128,8 +128,8 @@ void ClearKeyBuff(
 //---------------------------------------------------------------------------
 void perform_Key(TControl *cp, int key)
 {
-	cp->Perform(WM_KEYDOWN,	key, (LPARAM)0);
-	cp->Perform(WM_KEYUP,	key, (LPARAM)0);
+	cp->Perform(WM_KEYDOWN,	key, (NativeInt)0);
+	cp->Perform(WM_KEYUP,	key, (NativeInt)0);
 }
 //---------------------------------------------------------------------------
 void perform_Key_RETURN(TControl *cp)

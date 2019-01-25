@@ -1600,8 +1600,8 @@ void TTaskThread::MakeCompList(UnicodeString dnam)
 				UnicodeString fext = get_extension(fnam);
 				if (!test_TxtExt(fext) && !test_FileExt(fext, ".bmp.ico.wav")) {
 					bool skip = test_FileExt(fext, FEXT_ARCHIVE) || test_FileExt(fext, FExt7zDll);
-					if (!skip) skip = test_FileExt(fext, FEXT_IMAGE);
-					if (!skip) skip = test_FileExt(fext, FEXT_META FEXT_WICSTD + WicFextStr);
+					if (!skip) skip = test_FileExt(fext, FEXT_IMAGE FEXT_META);
+					if (!skip) skip = test_FileExt(fext, get_img_fext());
 					if (!skip) skip = is_AudioVideo(fnam);
 					if (skip) {
 						SkipCount++;

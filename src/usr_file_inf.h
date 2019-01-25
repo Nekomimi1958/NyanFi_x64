@@ -15,8 +15,12 @@
 
 //---------------------------------------------------------------------------
 //拡張子
+#if defined(_WIN64)
 #define FEXT_ARCHIVE	FEXT_ZIP FEXT_7Z FEXT_TAR FEXT_RAR
-																				//アーカイブ
+#else
+#define FEXT_ARCHIVE	FEXT_ZIP FEXT_7Z FEXT_LHA FEXT_CAB FEXT_TAR FEXT_RAR FEXT_ISO
+#endif																			//アーカイブ
+
 #define FEXT_EXECUTE	_T(".exe.com.bat.cmd.msi.msu.lnk.scr")					//実行可能
 #define FEXT_JPEG		_T(".jpg.jpeg.jpe")										//Jpeg
 #define FEXT_META		_T(".wmf.emf")											//メタファイル

@@ -438,7 +438,7 @@ void __fastcall TFileInfoDlg::InfListBoxKeyDown(TObject *Sender, WORD &Key, TShi
 		&& contained_wd_i(_T("PrevFile|NextFile"), cmd_V))
 	{
 		CmdStr = cmd_V;
-		this->Perform(WM_SETREDRAW, 0, (LPARAM)0);	//‰æ–Ê‚ðÁ‚³‚¸‚ÉŽc‚·
+		this->Perform(WM_SETREDRAW, 0, (NativeInt)0);	//‰æ–Ê‚ðÁ‚³‚¸‚ÉŽc‚·
 		ModalResult = mrRetry;
 	}
 	else if (USAME_TI(cmd_F, "PropertyDlg"))		PropertyDlgAction->Execute();

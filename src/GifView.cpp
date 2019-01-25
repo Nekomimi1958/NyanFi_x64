@@ -125,7 +125,7 @@ void __fastcall TGifViewer::DrawImage(UnicodeString fnam)
 			Image1->Picture->Assign(meta_buf.get());
 			Image1->Transparent = true;
 		}
-		else if (test_FileExt(fext, FEXT_WICSTD + WicFextStr)) {
+		else if (test_FileExt(fext, get_img_fext())) {
 			std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
 			int res = load_ImageFile(fnam, bmp.get(), WICIMG_PREVIEW, ImgPanel->Color);
 			if (res==0) Abort();

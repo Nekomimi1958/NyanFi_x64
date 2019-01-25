@@ -43,6 +43,12 @@ void __fastcall TEditItemDlg::FormClose(TObject *Sender, TCloseAction &Action)
 
 	RetStr = EmptyStr;
 	if (ModalResult==mrOk) {
+		UnicodeString tit = ItemEdit->EditLabel->Caption;
+		if (remove_top_s(tit, "パスマスク")) {
+			UnicodeString dsc = get_tkn(get_tkn_r(tit, ":"), ":");
+			if (!dsc.IsEmpty()) RetStr.cat_sprintf(_T(":%s:"), dsc.c_str());
+		}
+
 		for (int i=0; i<ItemListBox->Count; i++) {
 			if (i>0) RetStr += ItemDelimiter;
 			RetStr += ItemListBox->Items->Strings[i];
@@ -57,46 +63,46 @@ void __fastcall TEditItemDlg::MakeList(UnicodeString s, UnicodeString delimiter,
 	TStringDynArray i_lst = SplitString(s, ItemDelimiter);
 	for (int i=0; i<i_lst.Length; i++) if (!i_lst[i].IsEmpty()) lst->Add(i_lst[i]);
 }
-//---------------------------------------------------------------------------
-void __fastcall TEditItemDlg::AssignItems(TCustomEdit *ep)
-{
-	ItemEdit->EditLabel->Caption = class_is_LabeledEdit(ep)? ((TLabeledEdit *)ep)->EditLabel->Caption : EmptyStr;
-	if (ItemEdit->EditLabel->Caption.IsEmpty() && Screen->ActiveForm)
-		ItemEdit->EditLabel->Caption = (Screen->ActiveForm!=Application->MainForm)? Screen->ActiveForm->Caption : EmptyStr;
 
-	ItemDelimiter = StartsStr('.', ep->Hint)? "." : ";";
-	std::unique_ptr<TStringList> lst(new TStringList());
-	MakeList(ep->Text, ItemDelimiter, lst.get());
-	ItemListBox->Items->Assign(lst.get());
-}
 //---------------------------------------------------------------------------
-void __fastcall TEditItemDlg::AssignItems(TComboBox *cp)
+void __fastcall TEditItemDlg::AssignItems(TControl *cp)
 {
-	//一番近いラベルを見つける
-	ItemEdit->EditLabel->Caption = EmptyStr;
-	TWinControl *wp = cp->Parent;
-	if (wp) {
-		double min_s = 9999;
-		for (int i=0; i<wp->ControlCount; i++) {
-			if (!wp->Controls[i]->ClassNameIs("TLabel")) continue;
-			TLabel *lp = (TLabel *)wp->Controls[i];
-			if (!lp->Visible) continue;
-			double dx = lp->Top - cp->Top;
-			double dy = lp->Left - cp->Left;
-			double ss = sqrt(dx*dx + dy*dy);
-			if (ss<min_s) {
-				ItemEdit->EditLabel->Caption = lp->Caption;
-				min_s = ss;
+	UnicodeString tit, lbuf;
+	if (class_is_CustomEdit(cp)) {
+		if (class_is_LabeledEdit(cp)) tit = ((TLabeledEdit *)cp)->EditLabel->Caption;
+		lbuf = ((TCustomEdit *)cp)->Text;
+	}
+	else if (class_is_ComboBox(cp)) {
+		//一番近いラベルを見つける
+		TWinControl *wp = cp->Parent;
+		if (wp) {
+			double min_s = 9999;
+			for (int i=0; i<wp->ControlCount; i++) {
+				if (!wp->Controls[i]->ClassNameIs("TLabel")) continue;
+				TLabel *lp = (TLabel *)wp->Controls[i];
+				if (!lp->Visible) continue;
+				double dx = lp->Top - cp->Top;
+				double dy = lp->Left - cp->Left;
+				double ss = sqrt(dx*dx + dy*dy);
+				if (ss<min_s) {
+					tit = lp->Caption;
+					min_s = ss;
+				}
 			}
 		}
+		lbuf = ((TComboBox *)cp)->Text;
 	}
 
-	if (ItemEdit->EditLabel->Caption.IsEmpty() && Screen->ActiveForm)
-		ItemEdit->EditLabel->Caption = Screen->ActiveForm->Caption;
+	if (tit.IsEmpty() && Screen->ActiveForm)
+		tit = (Screen->ActiveForm!=Application->MainForm)? Screen->ActiveForm->Caption : EmptyStr;
+
+	UnicodeString dsc = split_dsc(lbuf);
+	if (StartsStr("パスマスク", tit) && !dsc.IsEmpty()) tit.cat_sprintf(_T(" :%s:"), dsc.c_str());
+	ItemEdit->EditLabel->Caption = tit;
 
 	ItemDelimiter = StartsStr('.', cp->Hint)? "." : ";";
 	std::unique_ptr<TStringList> lst(new TStringList());
-	MakeList(cp->Text, ItemDelimiter, lst.get());
+	MakeList(lbuf, ItemDelimiter, lst.get());
 	ItemListBox->Items->Assign(lst.get());
 }
 

@@ -21,7 +21,11 @@
 #include "usr_msg.h"
 #include "htmconv.h"
 
+#if defined(_WIN64)
 #pragma link "win64\\release\\psdk\\Rstrtmgr.a"
+#else
+#pragma link "win32\\release\\psdk\\Rstrtmgr.lib"
+#endif
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)

@@ -222,7 +222,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 			TDragState State, bool &Accept);
 	void __fastcall ListBoxDragDrop(TObject *Sender, TObject *Source, int X, int Y);
 	void __fastcall ListBoxEndDrag(TObject *Sender, TObject *Target, int X, int Y);
-	void __fastcall ComboBoxContextPopup(TObject *Sender, TPoint MousePos, bool &Handled);
+	void __fastcall ComboBoxContextPopup(TObject *Sender, const TPoint &MousePos, bool &Handled);
 
 	TComboBox   * __fastcall GetActiveComboBox();
 	TCustomEdit * __fastcall GetActiveCustomEdit();

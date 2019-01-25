@@ -6,7 +6,7 @@
 #pragma hdrstop
 #include <memory>
 #include <stdlib.h>
-#include <float.h>
+#include <math.h>
 #include <System.StrUtils.hpp>
 #include <RegularExpressions.hpp>
 #include <Vcl.Clipbrd.hpp>
@@ -247,7 +247,7 @@ long double __fastcall TCalculator::EvalNumStr(UnicodeString s)
 			wchar_t *endptr;
 			v = wcstold(topptr, &endptr);
 			if ((topptr += s.Length()) != endptr) Abort();
-			if (v==_LHUGE_VAL) Abort();
+			if (v==HUGE_VALL) Abort();
 
 			//階乗
 			if (is_fct) {
@@ -262,11 +262,10 @@ long double __fastcall TCalculator::EvalNumStr(UnicodeString s)
 					v = n;
 					for (int i=1; i<n-1; i++) {
 						v *= (n - i);
-						if (!_finitel(v)) Abort();
+						if (IsInfinite(v)) Abort();
 					}
 				}
 			}
-			;
 		}
 	}
 	catch (...) {
@@ -328,7 +327,7 @@ long double __fastcall TCalculator::EvalFunc(UnicodeString s)
 			if (!handled) {
 				ErrMsg = "不明な関数";  Abort();
 			}
-			else if (ans==_LHUGE_VAL || !_finitel(ans) || IsNan(ans)) {
+			else if (ans==HUGE_VALL || IsInfinite(ans) || IsNan(ans)) {
 				ErrMsg = "異常値またはオーバーフロー";  Abort();
 			}
 		}
@@ -438,7 +437,7 @@ void __fastcall TCalculator::EvalOpeItem(
 			}
 		}
 
-		if (ans==_LHUGE_VAL || !_finitel(ans) || IsNan(ans)) {
+		if (ans==HUGE_VALL || IsInfinite(ans) || IsNan(ans)) {
 			ErrMsg = "異常値またはオーバーフロー";  Abort();
 		}
 

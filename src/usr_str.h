@@ -117,6 +117,7 @@ UnicodeString ins_spc_length(UnicodeString s, int len);
 UnicodeString def_if_empty(UnicodeString s, UnicodeString def);
 UnicodeString def_if_empty(UnicodeString s, const _TCHAR *def);
 
+NativeInt str_to_NativeInt(UnicodeString s);
 int extract_int(UnicodeString s);
 int extract_int_def(UnicodeString s, int def = 0);
 UnicodeString extract_top_int_str(UnicodeString s);

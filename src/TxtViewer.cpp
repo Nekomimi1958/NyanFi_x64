@@ -3322,7 +3322,7 @@ UnicodeString __fastcall TTxtViewer::GetCurImgFile()
 	fnam = slash_to_yen(fnam);
 	fnam = rel_to_absdir(fnam, ExtractFilePath(FileName));
 	UnicodeString fext = get_extension(fnam);
-	if (test_FileExt(fext, FEXT_META FEXT_WICSTD + WicFextStr)) return fnam;
+	if (test_FileExt(fext, get_img_fext())) return fnam;
 	return EmptyStr;
 }
 

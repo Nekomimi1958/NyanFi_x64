@@ -53,7 +53,7 @@ void __fastcall TMemoForm::FormShow(TObject *Sender)
 	int tab_size = 8 * 4;
 	MemoBox->Perform(EM_SETTABSTOPS, 1, (LPARAM)&tab_size);
 	//左余白設定
-	MemoBox->Perform(EM_SETMARGINS, EC_LEFTMARGIN, (LPARAM)8);
+	MemoBox->Perform(EM_SETMARGINS, EC_LEFTMARGIN, (NativeInt)8);
 
 	//テキスト内容を設定
 	MemoBox->Lines->Assign(LinesBuff);
@@ -157,7 +157,7 @@ void __fastcall TMemoForm::PasteActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMemoForm::DelLineActionExecute(TObject *Sender)
 {
-	int lno = MemoBox->Perform(EM_LINEFROMCHAR, -1, (LPARAM)0);
+	int lno = MemoBox->Perform(EM_LINEFROMCHAR, -1, (NativeInt)0);
 	if (lno<MemoBox->Lines->Count) MemoBox->Lines->Delete(lno);
 }
 //---------------------------------------------------------------------------

@@ -104,6 +104,15 @@
 #pragma link "IdAllFTPListParsers"
 
 //---------------------------------------------------------------------------
+//※10.3 ZLib のリンクエラー対策
+#if defined(_WIN64)
+extern "C" long  lseek(int, long, int);
+extern "C" long _lseek(int fd, long offset, int origin) {
+  return lseek(fd, offset, origin);
+}
+#endif
+
+//---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 TNyanFiForm *NyanFiForm;
@@ -700,7 +709,7 @@ void __fastcall TNyanFiForm::WmFormShowed(TMessage &msg)
 	SetFileInf();
 
 	UnicodeString tmp;
-	tmp.sprintf(_T("NyanFi %s x64"), VersionStr.c_str());
+	tmp.sprintf(_T("NyanFi %s %s"), VersionStr.c_str(), is_X64()? _T("x64") : _T("x86"));
 	if (MultiInstance) {
 		if (IsPrimary)
 			tmp.UCAT_T(" (Primary)");
@@ -1133,7 +1142,7 @@ void __fastcall TNyanFiForm::FormDestroy(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ActivateMainForm()
 {
-	if (::IsIconic(Handle)) this->Perform(WM_SYSCOMMAND, SC_RESTORE, (LPARAM)0);
+	if (::IsIconic(Handle)) this->Perform(WM_SYSCOMMAND, SC_RESTORE, (NativeInt)0);
 	::SetForegroundWindow(Handle);
 	if (StoreTaskTray) Show();
 	Application->Restore();
@@ -1232,7 +1241,7 @@ bool __fastcall TNyanFiForm::SureOtherActiv()
 void __fastcall TNyanFiForm::WmQueryEndSession(TMessage& msg)
 {
 	StartLog(_T("シャットダウン"));
-	if (!ReqPowerOff && !ReqReboot) Perform(WM_CLOSE, 0, (LPARAM)0);
+	if (!ReqPowerOff && !ReqReboot) Perform(WM_CLOSE, 0, (NativeInt)0);
 	msg.Result = 1;
 }
 
@@ -3189,7 +3198,7 @@ void __fastcall TNyanFiForm::DropMenuItemClick(TObject *Sender)
 	case 2:  DroppedMode = DROPEFFECT_LINK; break;
 	default: DroppedMode = DROPEFFECT_NONE;
 	}
-	if (DroppedMode!=DROPEFFECT_NONE) Perform(WM_FORM_DROPPED, 0, (LPARAM)0);
+	if (DroppedMode!=DROPEFFECT_NONE) Perform(WM_FORM_DROPPED, 0, (NativeInt)0);
 }
 
 //---------------------------------------------------------------------------
@@ -5604,7 +5613,7 @@ void __fastcall TNyanFiForm::SttBarWarn(UnicodeString msg)
 {
 	if (!Initialized || UnInitializing) return;
 
-	if (StartsText("Abort", msg))
+	if (StartsText("Abort", msg) || USAME_TI(msg, "Operation aborted"))
 		StatusBar1->Panels->Items[0]->Text = EmptyStr;
 	else if (!msg.IsEmpty()) {
 		if (ShowMsgHint) ShowMessageHint(msg, col_bgWarn);	//ヒントで表示
@@ -9023,7 +9032,7 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 					ImgViewThread->AddRequest(_T("FILE"), IncludeTrailingPathDelimiter(fnam));
 				}
 				//ZIP (画像)
-				else if (ShowInZipImg && usr_ARC->HasZipImg(fnam, FEXT_WICSTD + WicFextStr)) {
+				else if (ShowInZipImg && usr_ARC->HasZipImg(fnam, get_img_fext())) {
 					ImgViewThread->AddRequest(_T("FILE"), fnam);
 				}
 				//その他 (アイコン/フォント/色見本)
@@ -10415,7 +10424,7 @@ bool __fastcall TNyanFiForm::ExeListBoxCommandV(UnicodeString cmd, HWND hWnd)
 			GeneralInfoDlg->ModalResult = mrCancel;
 		else if (hWnd==lp->Handle || hWnd==GeneralInfoDlg->FilterEdit->Handle) {
 			if (!GeneralInfoDlg->FileName.IsEmpty() && contained_wd_i(_T("PrevFile|NextFile"), cmd)) {
-				GeneralInfoDlg->Perform(WM_SETREDRAW, 0, (LPARAM)0);	//切り替わり時、画面が消えないように
+				GeneralInfoDlg->Perform(WM_SETREDRAW, 0, (NativeInt)0);	//切り替わり時、画面が消えないように
 				GeneralInfoDlg->RetStr = cmd;
 				GeneralInfoDlg->ModalResult = mrRetry;
 			}
@@ -10433,7 +10442,7 @@ bool __fastcall TNyanFiForm::ExeListBoxCommandV(UnicodeString cmd, HWND hWnd)
 			FileInfoDlg->ModalResult = mrCancel;
 		else if (hWnd==lp->Handle) {
 			if (contained_wd_i(_T("PrevFile|NextFile"), cmd)) {
-				FileInfoDlg->Perform(WM_SETREDRAW, 0, (LPARAM)0);	//切り替わり時、画面が消えないように
+				FileInfoDlg->Perform(WM_SETREDRAW, 0, (NativeInt)0);	//切り替わり時、画面が消えないように
 				FileInfoDlg->CmdStr = cmd;
 				FileInfoDlg->ModalResult = mrRetry;
 			}
@@ -10530,7 +10539,7 @@ void __fastcall TNyanFiForm::SetActionAbort(UnicodeString msg)
 
 	if (contained_wd_i(_T("SKIP|HANDLED"), msg)) return;
 
-	if (StartsText("Abort", msg)) msg = EmptyStr;
+	if (StartsText("Abort", msg) || USAME_TI(msg, "Operation aborted")) msg = EmptyStr;
 	ActionOk = false;  ActionErrMsg = msg;
 
 	SttBarWarn(ActionErrMsg);
@@ -11297,7 +11306,7 @@ void __fastcall TNyanFiForm::PreviewImageDblClick(TObject *Sender)
 void __fastcall TNyanFiForm::AboutNyanFiActionExecute(TObject *Sender)
 {
 	if (!AboutBox) AboutBox = new TAboutBox(this);	//初回に動的作成
-	AboutBox->Version->Caption	  = VersionStr + " (x64)";
+	AboutBox->Version->Caption	  = VersionStr + (is_X64()? " (x64)" : " (x86)");
 	AboutBox->Copyright->Caption  = usr_SH->get_PropStr(Application->ExeName, "著作権");
 	AboutBox->SupportURL->Caption = SUPPORT_URL;
 	AboutBox->ShowModal();
@@ -13682,10 +13691,10 @@ void __fastcall TNyanFiForm::DelSelMaskActionExecute(TObject *Sender)
 	TStringList *lst = GetCurList(true);
 	if (GetSelCount(lst)==0) {
 		TListBox *lp = FileListBox[CurListTag];
-		lp->Perform(WM_SETREDRAW, 0, (LPARAM)0);
+		lp->Perform(WM_SETREDRAW, 0, (NativeInt)0);
 		set_select(GetFrecPtr(lp, lst));
 		ListBoxCursorDown(lp);
-		lp->Perform(WM_SETREDRAW, 1, (LPARAM)0);
+		lp->Perform(WM_SETREDRAW, 1, (NativeInt)0);
 	}
 	for (int i=0; i<lst->Count; i++) set_select_r((file_rec*)lst->Objects[i]);
 
@@ -16407,7 +16416,7 @@ void __fastcall TNyanFiForm::ImageViewerActionExecute(TObject *Sender)
 
 			//アーカイブ
 			if (test_ArcExt(cfp->f_ext)) {
-				UnicodeString xlst = FEXT_WICSTD + WicFextStr;
+				UnicodeString xlst = get_img_fext();
 				UnicodeString fnam = IniFile->MarkedInArc(cfp->f_name, xlst);
 				if (fnam.IsEmpty()) fnam = usr_ARC->GetFirstFile(cfp->f_name, xlst);
 				if (fnam.IsEmpty()) TextAbort(_T("表示可能な画像が含まれていません。"));
@@ -25782,16 +25791,17 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 		UnicodeString zip_nam;
 		int new_vno = 0;
 		bool is_inf = false;
+		UnicodeString zip_ptn = is_X64()? "<a href=\"nyanfi64_[0-9]{4}\\.zip\">"
+										: "<a href=\"nyanfi[0-9]{4}\\.zip\">";
 		UnicodeString inf_str, ver_hdr;
 		for (int i=0; i<fbuf->Count; i++) {
 			UnicodeString lbuf = fbuf->Strings[i];
 			//ファイル名を取得
-			if (zip_nam.IsEmpty() && is_match_regex(lbuf, _T("<a href=\"nyanfi64_[0-9]{4}\\.zip\">"))) {
+			if (zip_nam.IsEmpty() && TRegEx::IsMatch(lbuf, zip_ptn)) {
 				zip_nam = get_tkn_m(lbuf, _T("<a href=\""), _T("\">"));
-				new_vno = extract_int_def(get_tkn_r(zip_nam, "nyanfi64_"), 0);
-				break;
+				new_vno = extract_int_def(get_tkn_r(zip_nam, is_X64()? "nyanfi64_" : "nyanfi"), 0);
+				ver_hdr.sprintf(_T("<p><u><b>V%u.%02u</b></u>"), new_vno/100, new_vno%100);
 			}
-/*
 			//変更点を取得
 			else if (new_vno>0) {
 				if (!is_inf) {
@@ -25802,7 +25812,6 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 					inf_str += REPLACE_TI(lbuf, "<br>", "").UCAT_T("\r\n");
 				}
 			}
-*/
 		}
 		if (zip_nam.IsEmpty()) TextAbort(_T("確認に失敗しました。"));
 
@@ -25849,7 +25858,9 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 			}
 		}
 		else {
-			msgbox_OK(msg.sprintf(_T(" NyanFi %s x64 : 最新バージョンを使用しています。"), VersionStr.c_str()), "更新の確認");
+			msg.sprintf(_T(" NyanFi %s (%s) : 最新バージョンを使用しています。"),
+						VersionStr.c_str(), is_X64()? _T("x64") : _T("x86")),
+			msgbox_OK(msg, "更新の確認");
 		}
 	}
 	catch (EAbort &e) {

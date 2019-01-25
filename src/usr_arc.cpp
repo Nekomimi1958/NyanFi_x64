@@ -36,13 +36,18 @@ UserArcUnit::UserArcUnit(HWND hWnd)
 	CabPrm_z   = 0;
 
 	for (int i=0; i<MAX_ARC_DLL; i++) {
-		arc_func *fp = &ArcFunc[i];
+		arc_func *fp  = &ArcFunc[i];
 		fp->Available = false;
 		fp->FileName  = EmptyStr;
 		fp->VerStr	  = EmptyStr;
-		fp->DllName   = get_word_i_idx(_T("7-zip64.dll|unlha64.dll|cab64.dll|tar64.dll|unrar64j.dll|uniso64.dll"), i);
 		fp->Prefix	  = get_word_i_idx(_T("SevenZip|Unlha|Cab|Tar|Unrar|UnIso"), i);
 
+#if defined(_WIN64)
+		fp->DllName = get_word_i_idx(_T("7-zip64.dll|unlha64.dll|cab64.dll|tar64.dll|unrar64j.dll|uniso64.dll"), i);
+		//unlha64.dll cab64.dll uniso64.dll は現存しない
+#else
+		fp->DllName = get_word_i_idx(_T("7-zip32.dll|unlha32.dll|cab32.dll|tar32.dll|unrar32.dll|uniso32.dll"), i);
+#endif
 		fp->hDll = ::LoadLibrary(fp->DllName.c_str());
 		if (fp->hDll) {
 			fp->Command 	 = (FUNC_Arc)GetProcAdr(fp, EmptyStr);
@@ -105,7 +110,7 @@ UserArcUnit::UserArcUnit(HWND hWnd)
 				int v = fp->GetVersion();
 				fp->VerStr.sprintf(_T("v%u.%02u"), v/100, v%100);
 
-				//7-zip64.dll 私家版チェック
+				//7-zipXX.dll 私家版チェック
 				if (i==0) {
 					fp->hasRename = v>=1500;	//Rename 対応 - 文字化け対策版(V15.～)
 				}
@@ -132,17 +137,30 @@ FARPROC UserArcUnit::GetProcAdr(arc_func *fp, UnicodeString pnam)
 //---------------------------------------------------------------------------
 int UserArcUnit::GetArcType(UnicodeString arc_file)
 {
+	int arc_t = 0;
 	UnicodeString fext = get_extension(arc_file);
 
-	int arc_t = 0;
+#if defined(_WIN64)
 	if      (test_FileExt(fext, FEXT_ZIP))	arc_t = UARCTYP_ZIP;
 	else if (test_FileExt(fext, FEXT_7Z) || (Use7zDll && test_FileExt(fext, FExt7zDll)))
 											arc_t = UARCTYP_7Z;
 	else if (test_FileExt(fext, FEXT_TAR))	arc_t = UARCTYP_TAR;
 	else if (test_FileExt(fext, FEXT_RAR))	arc_t = UARCTYP_RAR;
+	//以下は現存しない
 	else if (test_FileExt(fext, FEXT_LHA))	arc_t = UARCTYP_LHA;
 	else if (test_FileExt(fext, FEXT_CAB))	arc_t = UARCTYP_CAB;
 	else if (test_FileExt(fext, FEXT_ISO))	arc_t = UARCTYP_ISO;
+#else
+	if      (test_FileExt(fext, FEXT_ZIP))	arc_t = UARCTYP_ZIP;
+	else if (test_FileExt(fext, FEXT_LHA))	arc_t = UARCTYP_LHA;
+	else if (test_FileExt(fext, FEXT_CAB))	arc_t = UARCTYP_CAB;
+	else if (test_FileExt(fext, FEXT_TAR))	arc_t = UARCTYP_TAR;
+	else if (test_FileExt(fext, FEXT_7Z) || (Use7zDll && test_FileExt(fext, FExt7zDll)))
+											arc_t = UARCTYP_7Z;
+	else if (test_FileExt(fext, FEXT_RAR))	arc_t = UARCTYP_RAR;
+	else if (test_FileExt(fext, FEXT_ISO))	arc_t = UARCTYP_ISO;
+#endif
+
 	return arc_t;
 }
 
@@ -355,7 +373,7 @@ bool UserArcUnit::UnPack(
 
 	if (!DirectoryExists(dst_dir))	return false;
 
-	//7-zip64.dll が解凍先ディレクトリ名内の連続空白を扱えない問題に対処
+	//7-zipXX.dll が解凍先ディレクトリ名内の連続空白を扱えない問題に対処
 	UnicodeString org_dir = dst_dir;
 	if ((arc_t==UARCTYP_ZIP || arc_t==UARCTYP_7Z) && contains_s(dst_dir, _T("  "))) {
 		TStringDynArray o_plst = split_path(org_dir);
@@ -723,7 +741,7 @@ bool UserArcUnit::FindFirst(UnicodeString mask, INDIVIDUALINFO *inf)
 		return (fp->FindFirst(hCurArc, UTF8String(mask).c_str(), inf) == 0);
 	else
 		return (fp->FindFirst(hCurArc, AnsiString(mask).c_str(), inf) == 0);
-	//※uniso64.dll だとUnicodeモードにしてもUTF-8のマスクを受け付けてくれない?
+	//※unisoXX.dll だとUnicodeモードにしてもUTF-8のマスクを受け付けてくれない?
 }
 
 //---------------------------------------------------------------------------

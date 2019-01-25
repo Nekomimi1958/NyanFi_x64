@@ -179,7 +179,9 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 			//ƒo[ƒWƒ‡ƒ“
 			unsigned mj, mi, bl;
 			if (GetProductVersion(Application->ExeName, mj, mi, bl)) {
-				SplashForm->VerLabel->Caption = UnicodeString().sprintf(_T("V%.2f (x64)"), (mj*100 + mi*10 + bl)/100.0);
+				SplashForm->VerLabel->Caption
+					= UnicodeString().sprintf(_T("V%.2f (%s)"),
+						(mj*100 + mi*10 + bl)/100.0, is_X64()? _T("x64") : _T("x86"));
 				SplashForm->Show();
 				SplashForm->SetMsgLabel(_T("‰Šú‰»’†..."));
 			}
@@ -199,16 +201,17 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		Application->CreateForm(__classid(TFuncListDlg), &FuncListDlg);
 		Application->CreateForm(__classid(TGeneralInfoDlg), &GeneralInfoDlg);
 		Application->CreateForm(__classid(TGifViewer), &GifViewer);
-		Application->CreateForm(__classid(TGraphForm), &GraphForm);
 		Application->CreateForm(__classid(THistForm), &HistForm);
 		Application->CreateForm(__classid(TInpCmdsDlg), &InpCmdsDlg);
-		Application->CreateForm(__classid(TInpDirDlg), &InpDirDlg);
 		Application->CreateForm(__classid(TInputExDlg), &InputExDlg);
 		Application->CreateForm(__classid(TInspectForm), &InspectForm);
 		Application->CreateForm(__classid(TKeyListDlg), &KeyListDlg);
 		Application->CreateForm(__classid(TLoupeForm), &LoupeForm);
 		Application->CreateForm(__classid(TModalScrForm), &ModalScrForm);
 		Application->CreateForm(__classid(TSameNameDlg), &SameNameDlg);
+		Application->CreateForm(__classid(TInpDirDlg), &InpDirDlg);
+		Application->CreateForm(__classid(TGraphForm), &GraphForm);
+		cursor_Default();
 		Application->Run();
 	}
 	catch (Exception &exception) {

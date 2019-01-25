@@ -436,7 +436,7 @@ void __fastcall TAppListDlg::UpdateAppList()
 
 			//無応答チェック
 			bool last_nores = ap->isNoRes;
-			unsigned __int64 res;
+			DWORD_PTR res;
 			ap->isNoRes = (::SendMessageTimeout(hWnd, WM_NULL, 0, 0, SMTO_ABORTIFHUNG, 50, &res)==0);
 			if (last_nores != ap->isNoRes) changed = true;
 

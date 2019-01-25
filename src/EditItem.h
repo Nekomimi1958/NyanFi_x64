@@ -53,8 +53,7 @@ public:		// ÉÜÅ[ÉUÅ[êÈåæ
 	UnicodeString RetStr;
 
 	void __fastcall MakeList(UnicodeString s, UnicodeString delimiter, TStringList *lst);
-	void __fastcall AssignItems(TCustomEdit *ep);
-	void __fastcall AssignItems(TComboBox *cp);
+	void __fastcall AssignItems(TControl *cp);
 
 	__fastcall TEditItemDlg(TComponent* Owner);
 };

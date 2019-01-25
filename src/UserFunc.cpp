@@ -22,7 +22,11 @@
 #include "usr_shell.h"
 #include "UserFunc.h"
 
+#if defined(_WIN64)
 #pragma link "win64\\release\\psdk\\wininet.a"
+#else
+#pragma link "win32\\release\\psdk\\wininet.lib"
+#endif
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -1090,7 +1094,7 @@ void ListBoxScrollUp(TListBox *lp, UnicodeString prm)
 //---------------------------------------------------------------------------
 void ListBoxSelectAll(TListBox *lp, bool sw)
 {
-	if (lp) lp->Perform(LB_SETSEL, (BOOL)sw, (LPARAM)-1);
+	if (lp) lp->Perform(LB_SETSEL, (BOOL)sw, (NativeInt)-1);
 }
 
 //---------------------------------------------------------------------------
@@ -1273,7 +1277,6 @@ bool InternetConnected()
 int get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel, TProgressBar *prg_bar)
 {
 	int f_size = -1;
-
 	if (cancel) *cancel = false;
 
 	if (!url.IsEmpty() && InternetConnected()) {

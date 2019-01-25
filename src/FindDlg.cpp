@@ -411,7 +411,7 @@ void __fastcall TFindFileDlg::MaskComboBoxChange(TObject *Sender)
 	hasRate   = test_FileExt(fext, _T(".mp3.wma"));
 	hasFrame  = test_FileExt(fext, FEXT_VIDEO);
 	hasFormat = test_FileExt(fext, _T(".wav.flac"));
-	hasImage  = test_FileExt(fext, FEXT_IMAGE + WicFextStr) || test_PspExt(fext);;
+	hasImage  = test_FileExt(fext, FEXT_IMAGE + get_img_fext() + FEXT_PSP);
 	hasExif   = test_ExifExt(fext);
 	hasText   = is_text || xd2tx_TestExt(fext);
 	hasCode   = is_text;

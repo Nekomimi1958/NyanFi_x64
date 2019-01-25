@@ -422,7 +422,7 @@ void __fastcall TUserModule::FileDlgClose(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TUserModule::ComboBoxContextPopup(TObject *Sender, TPoint MousePos, bool &Handled)
+void __fastcall TUserModule::ComboBoxContextPopup(TObject *Sender, const TPoint &MousePos, bool &Handled)
 {
 	TComboBox *bp = dynamic_cast<TComboBox *>(Sender);
 	if (bp && !bp->Focused()) {
@@ -505,7 +505,7 @@ TCustomEdit * __fastcall TUserModule::GetActiveCustomEdit()
 void __fastcall TUserModule::CutComboActionExecute(TObject *Sender)
 {
 	TComboBox *cp = GetActiveComboBox();
-	if (cp) cp->Perform(WM_CUT, 0, (LPARAM)0);
+	if (cp) cp->Perform(WM_CUT, 0, (NativeInt)0);
 }
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::EditComboActionUpdate(TObject *Sender)
@@ -519,7 +519,7 @@ void __fastcall TUserModule::EditComboActionUpdate(TObject *Sender)
 void __fastcall TUserModule::CopyComboActionExecute(TObject *Sender)
 {
 	TComboBox *cp = GetActiveComboBox();
-	if (cp) cp->Perform(WM_COPY, 0, (LPARAM)0);
+	if (cp) cp->Perform(WM_COPY, 0, (NativeInt)0);
 }
 //---------------------------------------------------------------------------
 //“\‚è•t‚¯

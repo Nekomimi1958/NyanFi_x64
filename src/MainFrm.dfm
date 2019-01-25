@@ -577,7 +577,6 @@ object NyanFiForm: TNyanFiForm
               AutoSnap = False
               Beveled = True
               MinSize = 8
-              ExplicitLeft = 710
             end
             object RepT1Panel: TPanel
               Left = 0
@@ -1261,7 +1260,6 @@ object NyanFiForm: TNyanFiForm
             OnMouseMove = TextPaintBoxMouseMove
             OnMouseUp = TextPaintBoxMouseUp
             OnPaint = TextPaintBoxPaint
-            ExplicitWidth = 707
           end
           object TextRulerBox: TPaintBox
             Left = 0
@@ -1277,7 +1275,6 @@ object NyanFiForm: TNyanFiForm
             Height = 425
             Align = alRight
             OnPaint = TextMarginBoxPaint
-            ExplicitLeft = 684
           end
           object TextScrollBar: TScrollBar
             Left = 705

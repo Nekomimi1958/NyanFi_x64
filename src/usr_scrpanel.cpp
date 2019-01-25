@@ -618,12 +618,12 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseDown(TObject *Sender, TMouseButt
 				//水平スクロールバー
 				else {
 					if (X<rc.Left) {
-						lp->Perform(WM_HSCROLL, MAKEWPARAM(SB_PAGELEFT,  0), (LPARAM)0);
-						lp->Perform(WM_HSCROLL, MAKEWPARAM(SB_ENDSCROLL, 0), (LPARAM)0);
+						lp->Perform(WM_HSCROLL, MAKEWPARAM(SB_PAGELEFT,  0), (NativeInt)0);
+						lp->Perform(WM_HSCROLL, MAKEWPARAM(SB_ENDSCROLL, 0), (NativeInt)0);
 					}
 					else if (X>rc.Right) {
-						lp->Perform(WM_HSCROLL, MAKEWPARAM(SB_PAGERIGHT, 0), (LPARAM)0);
-						lp->Perform(WM_HSCROLL, MAKEWPARAM(SB_ENDSCROLL, 0), (LPARAM)0);
+						lp->Perform(WM_HSCROLL, MAKEWPARAM(SB_PAGERIGHT, 0), (NativeInt)0);
+						lp->Perform(WM_HSCROLL, MAKEWPARAM(SB_ENDSCROLL, 0), (NativeInt)0);
 					}
 				}
 			}
@@ -651,12 +651,12 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseDown(TObject *Sender, TMouseButt
 				//水平スクロールバー
 				else {
 					if (X<rc.Left) {
-						gp->Perform(WM_HSCROLL, MAKEWPARAM(SB_PAGELEFT,  0), (LPARAM)0);
-						gp->Perform(WM_HSCROLL, MAKEWPARAM(SB_ENDSCROLL, 0), (LPARAM)0);
+						gp->Perform(WM_HSCROLL, MAKEWPARAM(SB_PAGELEFT,  0), (NativeInt)0);
+						gp->Perform(WM_HSCROLL, MAKEWPARAM(SB_ENDSCROLL, 0), (NativeInt)0);
 					}
 					else if (X>rc.Right) {
-						gp->Perform(WM_HSCROLL, MAKEWPARAM(SB_PAGERIGHT, 0), (LPARAM)0);
-						gp->Perform(WM_HSCROLL, MAKEWPARAM(SB_ENDSCROLL, 0), (LPARAM)0);
+						gp->Perform(WM_HSCROLL, MAKEWPARAM(SB_PAGERIGHT, 0), (NativeInt)0);
+						gp->Perform(WM_HSCROLL, MAKEWPARAM(SB_ENDSCROLL, 0), (NativeInt)0);
 					}
 				}
 			}
@@ -689,7 +689,7 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseMove(TObject *Sender, TShiftStat
 				else
 					AssoListBox->TopIndex = 1.0 * yp / AssoListBox->ClientHeight * AssoListBox->Count;
 
-				if (Flag & (USCRPNL_FLAG_FL|USCRPNL_FLAG_GL)) AssoListBox->Perform(WM_NYANFI_USCROLL, 0, (LPARAM)0);
+				if (Flag & (USCRPNL_FLAG_FL|USCRPNL_FLAG_GL)) AssoListBox->Perform(WM_NYANFI_USCROLL, 0, (NativeInt)0);
 
 				//カーソルを常に可視領域に
 				if (ListCsrVisible) {
@@ -708,7 +708,7 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseMove(TObject *Sender, TShiftStat
 				else
 					AssoChkListBox->TopIndex = 1.0 * yp / AssoChkListBox->ClientHeight * AssoChkListBox->Count;
 
-				if (Flag & (USCRPNL_FLAG_FL|USCRPNL_FLAG_GL)) AssoChkListBox->Perform(WM_NYANFI_USCROLL, 0, (LPARAM)0);
+				if (Flag & (USCRPNL_FLAG_FL|USCRPNL_FLAG_GL)) AssoChkListBox->Perform(WM_NYANFI_USCROLL, 0, (NativeInt)0);
 
 				//カーソルを常に可視領域に
 				if (ListCsrVisible) {
@@ -744,8 +744,8 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseMove(TObject *Sender, TShiftStat
 					//リストボックス
 					if (AssoListBox) {
 						int scr_p = (int)(1.0 * xp / hscr_wd * AssoListBox->ScrollWidth);
-						AssoListBox->Perform(WM_HSCROLL, MAKEWPARAM(SB_THUMBPOSITION, scr_p), (LPARAM)0);
-						AssoListBox->Perform(WM_HSCROLL, MAKEWPARAM(SB_ENDSCROLL, 0), (LPARAM)0);
+						AssoListBox->Perform(WM_HSCROLL, MAKEWPARAM(SB_THUMBPOSITION, scr_p), (NativeInt)0);
+						AssoListBox->Perform(WM_HSCROLL, MAKEWPARAM(SB_ENDSCROLL, 0), (NativeInt)0);
 					}
 					//グリッド
 					else if (AssoStrGrid && AssoStrGrid->ColCount>0) {

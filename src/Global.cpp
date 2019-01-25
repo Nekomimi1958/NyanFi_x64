@@ -1135,8 +1135,8 @@ void InitializeGlobal()
 	mute_Volume("GET");	//ミュート状態を取得
 
 	//廃止セクション、キーの削除、修正
-	IniFile->DeleteKey(SCT_Option,	"SpiDir");			//v13.00
-	IniFile->DeleteKey(SCT_Option,	"UseSpiFirst");		//v13.00
+	IniFile->DeleteKey(SCT_Option,	"SpiDir");			//v12.96
+	IniFile->DeleteKey(SCT_Option,	"UseSpiFirst");
 
 	CurStt = &ListStt[CurListTag];
 	OppStt = &ListStt[OppListTag];
@@ -3578,7 +3578,7 @@ UnicodeString make_ResponseFile(TStringList *lst,
 			if ((arc_t!=UARCTYP_RAR && starts_AT(fnam)) || (arc_t==UARCTYP_CAB && StartsStr('-', fnam)))
 				r_lst->Add(add_quot_if_spc(fnam));
 			else {
-				//※unrar32.dll のバグ? 対策
+				//※unrarXX.dll のバグ? 対策
 				if (starts_AT(fnam)) fnam = "?" + exclude_top(fnam);
 				f_lst->Add(add_quot_if_spc(fnam));
 			}
@@ -4200,7 +4200,7 @@ void add_PackItem(file_rec *fp, int arc_t, UnicodeString src_dir, TStringList *l
 	UnicodeString fnam = fp->n_name;
 	if (fp->is_dir) {
 		if (arc_t==UARCTYP_CAB) {
-			//cab32.dll の -r の代替策
+			//cabXX.dll の -r の代替策
 			std::unique_ptr<TStringList> fbuf(new TStringList());
 			get_files(fp->f_name, _T("*.*"), fbuf.get(), true);
 			for (int i=0; i<fbuf->Count; i++) {
@@ -8250,6 +8250,8 @@ int get_FileCodePage(
 	UnicodeString *line_brk,	//[o] 改行		(default = NULL)
 	bool *has_bom)				//[o] BOM有り	(default = NULL)
 {
+	if (!file_exists(fnam)) return 0;
+
 	int code_page = 0;
 
 	//XML
@@ -8449,7 +8451,7 @@ bool is_AudioVideo(UnicodeString fnam)
 bool is_ViewableFext(UnicodeString fext)
 {
 	if (test_FileExt(fext, FEXT_ICONVIEW)) return false;
-	if (test_FileExt(fext, FEXT_META FEXT_WICSTD + WicFextStr)) return true;
+	if (test_FileExt(fext, FEXT_META + get_img_fext())) return true;
 	return false;
 }
 //---------------------------------------------------------------------------
@@ -8474,6 +8476,14 @@ bool is_ExtractIcon(file_rec *fp)
 bool test_ArcExt(UnicodeString fext)
 {
 	return test_FileExt(fext, FEXT_ARCHIVE) || (usr_ARC->Use7zDll && test_FileExt(fext, FExt7zDll));
+}
+
+//---------------------------------------------------------------------------
+//画像の拡張子を取得
+//---------------------------------------------------------------------------
+UnicodeString get_img_fext()
+{
+	return FEXT_WICSTD + WicFextStr;
 }
 
 //---------------------------------------------------------------------------
@@ -11745,7 +11755,7 @@ void set_RedrawOff(TWinControl *cp)
 	int idx = RedrawList->IndexOfObject((TObject*)cp);
 	if (idx==-1) {
 		RedrawList->AddObject("1", (TObject*)cp);
-		cp->Perform(WM_SETREDRAW, 0, (LPARAM)0);
+		cp->Perform(WM_SETREDRAW, 0, (NativeInt)0);
 	}
 	else {
 		int n = RedrawList->Strings[idx].ToIntDef(0);
@@ -11776,7 +11786,7 @@ void set_RedrawOn(TWinControl *cp)
 
 	//描画再開
 	if (flag) {
-		cp->Perform(WM_SETREDRAW, 1, (LPARAM)0);
+		cp->Perform(WM_SETREDRAW, 1, (NativeInt)0);
 		::InvalidateRect(cp->Handle, NULL, TRUE);
 	}
 }
@@ -12155,9 +12165,9 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 					cb_buf->Add(lbuf);
 				}
 			}
-			lp->Perform(WM_SETREDRAW, 0, (LPARAM)0);
+			lp->Perform(WM_SETREDRAW, 0, (NativeInt)0);
 			lp->ClearSelection();
-			lp->Perform(WM_SETREDRAW, 1, (LPARAM)0);
+			lp->Perform(WM_SETREDRAW, 1, (NativeInt)0);
 			::InvalidateRect(lp->Handle, NULL, TRUE);
 			if (USAME_TI(prm, "AD")) cb_buf->Text.Insert(Clipboard()->AsText, 1);	//追加
 			cursor_Default();
@@ -12253,7 +12263,7 @@ HWND get_PrimNyanWnd()
 	get_NyanFiList(lst.get());
 	for (int i=0; i<lst->Count; i++) {
 		if (!equal_1(get_csv_item(lst->Strings[i], 0))) continue;
-		hWnd = (HWND)StrToInt64Def(get_csv_item(lst->Strings[i], 1), 0);
+		hWnd = (HWND)str_to_NativeInt(get_csv_item(lst->Strings[i], 1));
 	}
 	return hWnd;
 }
@@ -12433,13 +12443,13 @@ HWND get_NyanFiWnd(
 
 	int idx = -1;
 	for (int i=0; i<lst->Count && idx==-1; i++)
-		if ((HWND)StrToInt64Def(get_csv_item(lst->Strings[i], 1), 0)==MainHandle) idx = i;
+		if ((HWND)str_to_NativeInt(get_csv_item(lst->Strings[i], 1))==MainHandle) idx = i;
 
 	if (idx!=-1) {
 		idx += rel_idx;
 		while (idx<0) idx += lst->Count;
 		idx %= lst->Count;
-		hWnd = (HWND)StrToInt64Def(get_csv_item(lst->Strings[idx], 1), 0);
+		hWnd = (HWND)str_to_NativeInt(get_csv_item(lst->Strings[idx], 1));
 	}
 
 	return hWnd;
@@ -12462,7 +12472,7 @@ bool activate_NyanFi(
 		UnicodeString n_str = idx;
 		for (int i=0; i<lst->Count && !hWnd; i++) {
 			if (SameStr(get_csv_item(lst->Strings[i], 0), n_str))
-				hWnd = (HWND)StrToInt64Def(get_csv_item(lst->Strings[i], 1), 0);
+				hWnd = (HWND)str_to_NativeInt(get_csv_item(lst->Strings[i], 1));
 		}
 	}
 	if (!hWnd) return false;
