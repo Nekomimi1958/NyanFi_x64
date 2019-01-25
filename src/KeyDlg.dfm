@@ -27,7 +27,7 @@ object KeyListDlg: TKeyListDlg
     Height = 60
     Align = alBottom
     OwnerDraw = True
-    TabOrder = 2
+    TabOrder = 1
     TabPosition = tpBottom
     Tabs.Strings = (
       #12501#12449#12452#12521#12540
@@ -138,7 +138,7 @@ object KeyListDlg: TKeyListDlg
     Height = 361
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 1
+    TabOrder = 0
     DesignSize = (
       613
       361)
@@ -195,6 +195,9 @@ object KeyListDlg: TKeyListDlg
       Caption = #12467#12510#12531#12489#12434#12467#12500#12540'(&B)'
       OnClick = CopyCmdItemClick
     end
+    object HelpCmdItem: TMenuItem
+      Action = HelpCmdAction
+    end
     object Sep_1: TMenuItem
       Caption = '-'
     end
@@ -234,6 +237,11 @@ object KeyListDlg: TKeyListDlg
       Caption = #12477#12540#12488': '#12467#12510#12531#12489'(&M)'
       OnExecute = SortKeyActionExecute
       OnUpdate = SortKeyActionUpdate
+    end
+    object HelpCmdAction: TAction
+      Caption = #12467#12510#12531#12489#12398#12504#12523#12503'(&H)'
+      OnExecute = HelpCmdActionExecute
+      OnUpdate = HelpCmdActionUpdate
     end
   end
 end

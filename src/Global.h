@@ -62,18 +62,18 @@ void HtmlHelpContext(int idx);
 void HtmlHelpKeyword(UnicodeString fnam, UnicodeString kwd);
 void HtmlHelpClose();
 
-#define HELPTOPIC_TOP	"hid00001.htm"
-#define HELPTOPIC_FL	"hid00005.htm"
-#define HELPTOPIC_TV	"hid00006.htm"
-#define HELPTOPIC_IV	"hid00007.htm"
-#define HELPTOPIC_IS	"hid00050.htm"
-#define HELPTOPIC_CI	"hid00100.htm"
-#define HELPTOPIC_CILW	"hid00100.htm#LW"
-#define HELPTOPIC_FI	"hid00101.htm"
-#define HELPTOPIC_XC	"hid00063.htm"
-#define HELPTOPIC_GR	"hid00056.htm"
-#define HELPTOPIC_RP	"hid00061.htm"
-#define HELPTOPIC_CH	"hid00109.htm"
+#define HELPTOPIC_TOP	"hid00001.htm"		//表紙
+#define HELPTOPIC_FL	"hid00005.htm"		//ファイラー - コマンド
+#define HELPTOPIC_TV	"hid00006.htm"		//テキストビュアー
+#define HELPTOPIC_IV	"hid00007.htm"		//イメージビュアー
+#define HELPTOPIC_IS	"hid00050.htm"		//インクリメンタルサーチ
+#define HELPTOPIC_CI	"hid00100.htm"		//コマンドの索引
+#define HELPTOPIC_CILW	"hid00100.htm#LW"	//コマンドの索引(ログウィンドウ)
+#define HELPTOPIC_FI	"hid00101.htm"		//コマンドの索引(機能別)
+#define HELPTOPIC_XC	"hid00063.htm"		//ExeCommands コマンド
+#define HELPTOPIC_GR	"hid00056.htm"		//文字列検索(GREP)
+#define HELPTOPIC_RP	"hid00061.htm"		//文字列置換
+#define HELPTOPIC_CH	"hid00109.htm"		//変更履歴
 
 //---------------------------------------------------------------------------
 //非公開API

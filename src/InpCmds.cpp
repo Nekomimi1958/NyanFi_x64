@@ -257,7 +257,7 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 			else
 				topic.UCAT_T(HELPTOPIC_FL);		//ファイラー
 
-			if (!contains_s(topic, _T('#')) && !kwd.IsEmpty()) topic.cat_sprintf(_T("#%s"), kwd.c_str());
+			if (topic.Pos('#')==0 && !kwd.IsEmpty()) topic.cat_sprintf(_T("#%s"), kwd.c_str());
 		}
 		HtmlHelpTopic(topic.c_str());
 	}

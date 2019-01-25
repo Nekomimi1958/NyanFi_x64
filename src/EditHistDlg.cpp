@@ -1218,7 +1218,7 @@ void __fastcall TEditHistoryDlg::ShowPropertyActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if (SpecialKeyProc(this, Key, Shift)) return;
+	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

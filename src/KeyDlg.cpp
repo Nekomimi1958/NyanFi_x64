@@ -476,6 +476,39 @@ void __fastcall TKeyListDlg::CopyCmdItemClick(TObject *Sender)
 	if (idx>=0 && idx<CurList->Count)
 		copy_to_Clipboard(del_CmdDesc(CurList->ValueFromIndex[idx]));
 }
+//---------------------------------------------------------------------------
+//コマンドのヘルプ
+//---------------------------------------------------------------------------
+void __fastcall TKeyListDlg::HelpCmdActionExecute(TObject *Sender)
+{
+	int idx = KeyListGrid->Row;
+	if (idx>=0 && idx<CurList->Count) {
+		UnicodeString kwd = get_CmdStr(CurList->ValueFromIndex[idx]);
+		UnicodeString topic;
+		switch (KeyTabControl->TabIndex) {
+		case  1: topic.UCAT_T(HELPTOPIC_IS);	break;	//テキストビュアー
+		case  2: topic.UCAT_T(HELPTOPIC_TV);	break;	//テキストビュアー
+		case  3: topic.UCAT_T(HELPTOPIC_IV);	break;	//イメージビュアー
+		case  4: topic.UCAT_T(HELPTOPIC_CILW);	break;	//ログ
+		default: topic.UCAT_T(HELPTOPIC_FL);	break;	//ファイラー
+		}
+
+		if (topic.Pos('#')==0 && !kwd.IsEmpty()) topic.cat_sprintf(_T("#%s"), kwd.c_str());
+		HtmlHelpTopic(topic.c_str());
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TKeyListDlg::HelpCmdActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	int idx = KeyListGrid->Row;
+	if (idx>=0 && idx<CurList->Count) {
+		UnicodeString kwd = CurList->ValueFromIndex[idx];
+		ap->Enabled = (!kwd.IsEmpty() && !starts_AT(kwd) && !starts_Dollar(kwd));
+	}
+	else
+		ap->Enabled = false;
+}
 
 //---------------------------------------------------------------------------
 //オプション設定へ

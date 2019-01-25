@@ -23,6 +23,7 @@
 class TKeyListDlg : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *HelpCmdAction;
 	TAction *SortCmdAction;
 	TAction *SortKeyAction;
 	TActionList *ActionList1;
@@ -35,6 +36,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *CopyCmdItem;
 	TMenuItem *CopyListItem;
 	TMenuItem *FitSizePosItem;
+	TMenuItem *HelpCmdItem;
 	TMenuItem *OptionItem;
 	TMenuItem *SaveAsListItem;
 	TMenuItem *Sep_1;
@@ -75,6 +77,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall KeyTabControlDrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 	void __fastcall KeyListHeaderResize(TObject *Sender);
 	void __fastcall CopyCmdItemClick(TObject *Sender);
+	void __fastcall HelpCmdActionExecute(TObject *Sender);
+	void __fastcall HelpCmdActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TStringList *CurList;

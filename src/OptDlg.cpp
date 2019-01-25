@@ -384,15 +384,17 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	LayoutChanged  = false;
 	inh_KeySet	   = 0;
 
-	UnicodeString hntstr   = LoadUsrMsg(USTR_HintMltSepSC);
-	NoWatchPathEdit->Hint  = hntstr;
-	NoInfPathEdit->Hint    = hntstr;
-	NoImgPrvPathEdit->Hint = hntstr;
-	InsHrClsEdit->Hint	   = hntstr;
-	DelBlkClsEdit->Hint    = hntstr;
-	DelBlkIdEdit->Hint	   = hntstr;
-	NoDirHistPathEdit->Hint= hntstr;
-	MarkPathEdit->Hint	   = hntstr;
+	UnicodeString hntstr	= LoadUsrMsg(USTR_HintMltSepSC);
+	NoWatchPathEdit->Hint	= hntstr;
+	NoInfPathEdit->Hint 	= hntstr;
+	NoImgPrvPathEdit->Hint	= hntstr;
+	InsHrClsEdit->Hint		= hntstr;
+	DelBlkClsEdit->Hint 	= hntstr;
+	DelBlkIdEdit->Hint		= hntstr;
+	NoDirHistPathEdit->Hint = hntstr;
+	MarkPathEdit->Hint		= hntstr;
+	L_IniMaskComboBox->Hint = hntstr;
+	R_IniMaskComboBox->Hint = hntstr;
 
 	hntstr = LoadUsrMsg(USTR_HintMltFExt);
 	ExtColorEdit->Hint	   = hntstr;
@@ -4587,7 +4589,7 @@ bool __fastcall TOptionDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHel
 			}
 
 			UnicodeString kwd = get_tkn(CmdComboBox->Text, ' ');
-			if (!contains_s(topic, _T('#')) && !kwd.IsEmpty() && !starts_Dollar(kwd))
+			if (topic.Pos('#')==0 && !kwd.IsEmpty() && !starts_Dollar(kwd))
 				topic.cat_sprintf(_T("#%s"), kwd.c_str());
 
 			HtmlHelpTopic(topic.c_str());
