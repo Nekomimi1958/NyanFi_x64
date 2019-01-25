@@ -1991,6 +1991,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall SetupFont();
 	void __fastcall SetSubLayout(bool initial = false);
 	void __fastcall SetupThumbnail(int idx = -1);
+	void __fastcall ResetIndColor(int tag);
 	void __fastcall SetupDesign(bool chg_layout = true, bool initial = false);
 	void __fastcall SetupToolBarColor(bool act_sw = true, bool bg_only = false);
 	void __fastcall SetFileListFontSize(int sz = 0, bool r_sw = false, bool x_sw = false);

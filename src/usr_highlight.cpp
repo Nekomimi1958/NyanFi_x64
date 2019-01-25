@@ -110,7 +110,7 @@ bool HighlightFile::GetSection(
 				bool ok = false;
 				for (int i=0; i<path_lst.Length && !ok; i++) {
 					if (path_lst[i].IsEmpty()) continue;
-					if (StartsText(path_lst[i], fnam)) ok = true;
+					if (StartsText(cv_env_str(path_lst[i]), fnam)) ok = true;
 				}
 				if (!ok) CurSection = EmptyStr;
 			}
@@ -121,7 +121,7 @@ bool HighlightFile::GetSection(
 					bool ok = true;
 					for (int i=0; i<path_lst.Length && ok; i++) {
 						if (path_lst[i].IsEmpty()) continue;
-						if (StartsText(path_lst[i], fnam)) ok = false;
+						if (StartsText(cv_env_str(path_lst[i]), fnam)) ok = false;
 					}
 					if (!ok) CurSection = EmptyStr;
 				}

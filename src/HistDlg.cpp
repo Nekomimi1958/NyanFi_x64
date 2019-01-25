@@ -317,7 +317,7 @@ void __fastcall TDirHistoryDlg::DirHistListBoxDblClick(TObject *Sender)
 void __fastcall TDirHistoryDlg::AddDirsCore(
 	UnicodeString pnam,
 	TStrings *lst,
-	TStringDynArray ex_lst)	//除外リスト
+	TStringDynArray ex_lst)	//除外リスト	(環境変数、%ExePath% 対応)
 {
 	if (pnam.IsEmpty() || !dir_exists(pnam)) return;
 
@@ -331,7 +331,7 @@ void __fastcall TDirHistoryDlg::AddDirsCore(
 			//除外
 			for (int i=0; i<ex_lst.Length && !snam.IsEmpty(); i++) {
 				if (ex_lst[i].IsEmpty()) continue;
-				if (ContainsText(snam, ex_lst[i])) snam = EmptyStr;
+				if (ContainsText(snam, cv_env_str(ex_lst[i]))) snam = EmptyStr;
 			}
 			if (snam.IsEmpty()) continue;
 

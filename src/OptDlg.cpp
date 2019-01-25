@@ -2737,7 +2737,8 @@ void __fastcall TOptionDlg::CmdComboBoxChange(TObject *Sender)
 		_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|ScrollCursorUp|")
 		_T("ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|ScrollUpText|SetColor|SetDirTime|SetFontSize|")
 		_T("SetMargin|SetPathMask|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SortDlg|SubDirList|")
-		_T("TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToTab|ViewTail|WatchTail|WidenCurList|WinPos"), cmd))
+		_T("TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToTab|ViewTail|ToOppSameHash|WatchTail|WidenCurList|WinPos"),
+		cmd))
 	{
 		PrmComboBox->Enabled = true;
 		PrmComboBox->Style = USAME_TI(cmd, "ImageViewer")? csDropDownList : csDropDown;
@@ -2964,6 +2965,9 @@ void __fastcall TOptionDlg::CmdComboBoxChange(TObject *Sender)
 	else if (USAME_TI(cmd, "ExtractIcon")) {
 		PrmComboBox->Style = csDropDown;
 		params.USET_T("\nSI : スモールアイコンを抽出\n");
+	}
+	else if (USAME_TI(cmd, "FileEdit") && tab_idx==0) {
+		params.USET_T("\nOS : 反対側で選択中のファイルも開く\n");
 	}
 	else if (USAME_TI(cmd, "FileExtList")) {
 		params.USET_T("\nCP : カーソル位置のディレクトリが対象\n");

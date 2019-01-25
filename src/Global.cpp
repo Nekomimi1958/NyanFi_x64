@@ -345,7 +345,7 @@ UnicodeString NoWatchPath;		//ディレクトリ監視から除外するパス
 
 UnicodeString FExtGetInf;		//ファイル情報を取得する拡張子
 UnicodeString FExtNoInf;		//ファイル情報を取得しない拡張子
-UnicodeString NoInfPath;		//ファイル情報を取得しないパスリスト
+UnicodeString NoInfPath;		//ファイル情報を取得しないパス
 UnicodeString EmpInfItems;		//強調表示するファイル情報項目(|区切り)
 
 UnicodeString FExtImgPrv;		//イメージプレビューを行う拡張子
@@ -4111,7 +4111,7 @@ bool SetTmpFile(
 				tmp_path = lst_stt->arc_TmpList->Strings[0];
 			}
 			//多重アーカイブ
-			else if (test_ArcExt(fp->f_ext)) {
+			else if (test_ArcExt2(fp->f_ext)) {
 				tmp_path = UpdateTempArcList();
 				if (tmp_path.IsEmpty()) Abort();
 			}
@@ -4531,7 +4531,7 @@ void GetSelList(
 }
 
 //---------------------------------------------------------------------------
-//カレントの選択状態を解除
+//選択状態を解除
 //---------------------------------------------------------------------------
 void ClrSelect(TStringList *lst)
 {
@@ -8149,7 +8149,9 @@ bool is_Processing(
 //---------------------------------------------------------------------------
 //取得が抑止されているパスか？
 //---------------------------------------------------------------------------
-bool is_NoInfPath(file_rec *fp, UnicodeString no_path)
+bool is_NoInfPath(
+	file_rec *fp,
+	UnicodeString no_path)	//パスリスト (環境変数、%ExePath% 対応)
 {
 	TStringDynArray path_lst = split_strings_semicolon(no_path);
 	for (int i=0; i<path_lst.Length; i++) {
@@ -8180,7 +8182,7 @@ bool is_NoInfPath(file_rec *fp, UnicodeString no_path)
 		else {
 			pnam = IncludeTrailingPathDelimiter(pnam);
 			if (pnam.IsEmpty()) continue;
-			if (StartsText(pnam, fp->p_name)) return true;
+			if (StartsText(cv_env_str(pnam), fp->p_name)) return true;
 		}
 	}
 	return false;
@@ -8471,11 +8473,25 @@ bool is_ExtractIcon(file_rec *fp)
 }
 
 //---------------------------------------------------------------------------
-//アーカイブの拡張子か?
+//統合アーカイバの対応拡張子か?
 //---------------------------------------------------------------------------
 bool test_ArcExt(UnicodeString fext)
 {
 	return test_FileExt(fext, FEXT_ARCHIVE) || (usr_ARC->Use7zDll && test_FileExt(fext, FExt7zDll));
+}
+//---------------------------------------------------------------------------
+//対応アーカイブの拡張子か?
+//---------------------------------------------------------------------------
+bool test_ArcExt2(UnicodeString fext)
+{
+	return test_ArcExt(fext);
+}
+//---------------------------------------------------------------------------
+//利用可能なアーカイブか?
+//---------------------------------------------------------------------------
+bool is_AvailableArc(UnicodeString fnam)
+{
+	return usr_ARC->IsAvailable(fnam);
 }
 
 //---------------------------------------------------------------------------
@@ -8949,18 +8965,12 @@ void set_col_from_ColorList()
 //---------------------------------------------------------------------------
 //編集履歴を追加
 //---------------------------------------------------------------------------
-void add_TextEditHistory(UnicodeString fnam)
+void add_TextEditHistory(
+	UnicodeString fnam)		//ファイル名(引用符可)
 {
 	fnam = exclude_quot(fnam);
 	if (StartsText(TempPathA, fnam)) return;
-
-	if (!NoEditHistPath.IsEmpty()) {
-		TStringDynArray path_lst = split_strings_semicolon(NoEditHistPath);
-		for (int i=0; i<path_lst.Length; i++) {
-			if (path_lst[i].IsEmpty()) continue;
-			if (ContainsText(fnam, path_lst[i])) return;
-		}
-	}
+	if (match_path_list(fnam, NoEditHistPath)) return;
 
 	int i=0;
 	while (i < TextEditHistory->Count)
@@ -12773,7 +12783,8 @@ UnicodeString uncipher(UnicodeString cipstr)
 //---------------------------------------------------------------------------
 //最近使った項目に追加
 //---------------------------------------------------------------------------
-void AddToRecentFile(UnicodeString fnam)
+void AddToRecentFile(
+	UnicodeString fnam)	//ファイル名(引用符可)
 {
 	if (!AddToRecent) return;
 

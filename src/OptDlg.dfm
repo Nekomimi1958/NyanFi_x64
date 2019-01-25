@@ -237,9 +237,9 @@ object OptionDlg: TOptionDlg
           Width = 413
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 95
+          EditLabel.Width = 151
           EditLabel.Height = 13
-          EditLabel.Caption = #23653#27508#12395#20837#12428#12394#12356#12497#12473
+          EditLabel.Caption = #23653#27508#12395#20837#12428#12394#12356#12497#12473'('#37096#20998#19968#33268')'
           TabOrder = 5
         end
       end
@@ -416,9 +416,9 @@ object OptionDlg: TOptionDlg
           Width = 413
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 104
+          EditLabel.Width = 160
           EditLabel.Height = 13
-          EditLabel.Caption = #30435#35222#12363#12425#38500#22806#12377#12427#12497#12473
+          EditLabel.Caption = #30435#35222#12363#12425#38500#22806#12377#12427#12497#12473'('#21069#26041#19968#33268')'
           TabOrder = 4
         end
         object CheckUncCheckBox: TCheckBox
@@ -654,9 +654,9 @@ object OptionDlg: TOptionDlg
           Width = 413
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 105
+          EditLabel.Width = 161
           EditLabel.Height = 13
-          EditLabel.Caption = #24773#22577#12434#21462#24471#12375#12394#12356#12497#12473
+          EditLabel.Caption = #24773#22577#12434#21462#24471#12375#12394#12356#12497#12473'('#21069#26041#19968#33268')'
           TabOrder = 0
         end
         object ShowAdsInfCheckBox: TCheckBox
@@ -1013,9 +1013,9 @@ object OptionDlg: TOptionDlg
           Width = 413
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 114
+          EditLabel.Width = 170
           EditLabel.Height = 13
-          EditLabel.Caption = #12503#12524#12499#12517#12540#12434#34892#12431#12394#12356#12497#12473
+          EditLabel.Caption = #12503#12524#12499#12517#12540#12434#34892#12431#12394#12356#12497#12473'('#21069#26041#19968#33268')'
           TabOrder = 0
         end
         object FExtNoImgPrvEdit: TLabeledEdit
@@ -3964,9 +3964,9 @@ object OptionDlg: TOptionDlg
           Width = 414
           Height = 21
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 92
+          EditLabel.Width = 148
           EditLabel.Height = 13
-          EditLabel.Caption = #36969#29992#12377#12427#12487#12451#12524#12463#12488#12522
+          EditLabel.Caption = #36969#29992#12377#12427#12487#12451#12524#12463#12488#12522'('#21069#26041#19968#33268')'
           TabOrder = 1
         end
       end

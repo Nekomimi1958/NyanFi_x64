@@ -1724,6 +1724,8 @@ bool is_Viewable(file_rec *fp);
 bool is_ExtractIcon(file_rec *fp);
 
 bool test_ArcExt(UnicodeString fext);
+bool test_ArcExt2(UnicodeString fext);
+bool is_AvailableArc(UnicodeString fnam);
 bool test_TxtFile(UnicodeString fnam);
 bool test_NonTxtExt(UnicodeString fext);
 

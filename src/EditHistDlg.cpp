@@ -1095,7 +1095,7 @@ void __fastcall TEditHistoryDlg::ClearAllItemClick(TObject *Sender)
 void __fastcall TEditHistoryDlg::NoHistItemClick(TObject *Sender)
 {
 	UnicodeString *p = isView? &NoViewHistPath : &NoEditHistPath;
-	if (input_query_ex(_T("履歴に入れないパスの設定"), null_TCHAR, p, 0, false, LoadUsrMsg(USTR_HintMltSepSC))) {
+	if (input_query_ex(_T("履歴に入れないパスの設定 (部分一致)"), null_TCHAR, p, 0, false, LoadUsrMsg(USTR_HintMltSepSC))) {
 		if (!(*p).IsEmpty()) {
 			TStringDynArray path_lst = split_strings_semicolon(*p);
 			int idx = 0;
@@ -1103,7 +1103,7 @@ void __fastcall TEditHistoryDlg::NoHistItemClick(TObject *Sender)
 				UnicodeString pnam = ExtractFilePath(get_csv_item(HistoryList->Strings[idx], 0));
 				for (int i=0; i<path_lst.Length && !pnam.IsEmpty(); i++) {
 					if (path_lst[i].IsEmpty()) continue;
-					if (ContainsText(pnam, path_lst[i])) pnam = EmptyStr;
+					if (ContainsText(pnam, cv_env_str(path_lst[i]))) pnam = EmptyStr;
 				}
 
 				if (pnam.IsEmpty()) HistoryList->Delete(idx); else idx++;

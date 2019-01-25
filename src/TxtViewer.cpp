@@ -3881,14 +3881,7 @@ bool __fastcall TTxtViewer::IsMarked(
 void __fastcall TTxtViewer::add_ViewHistory()
 {
 	if (FileName.IsEmpty() || ContainsText(FileName, TempPathA)) return;
-
-	if (!NoViewHistPath.IsEmpty()) {
-		TStringDynArray path_lst = split_strings_semicolon(NoViewHistPath);
-		for (int i=0; i<path_lst.Length; i++) {
-			if (path_lst[i].IsEmpty()) continue;
-			if (ContainsText(FileName, path_lst[i])) return;
-		}
-	}
+	if (match_path_list(FileName, NoViewHistPath)) return;
 
 	for (;;) {
 		int idx = indexof_csv_list(TextViewHistory, FileName, 0);

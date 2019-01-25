@@ -176,6 +176,24 @@ UnicodeString extract_file_path(UnicodeString fnam)
 }
 
 //---------------------------------------------------------------------------
+//パスリストにマッチするか?
+//---------------------------------------------------------------------------
+bool match_path_list(
+	UnicodeString dnam,		//チェック対象
+	UnicodeString plist,	//パスリスト(環境変数、%ExePath% 対応)
+	bool start_sw)			//true : 前方一致	(default = false : 部分一致)
+{
+	bool ret = false;
+	TStringDynArray path_lst = split_strings_semicolon(plist);
+	for (int i=0; i<path_lst.Length && !ret; i++) {
+		UnicodeString pnam = cv_env_str(IncludeTrailingPathDelimiter(path_lst[i]));
+		if (pnam.IsEmpty()) continue;
+		ret = (start_sw? StartsText(pnam, dnam) : ContainsText(dnam, pnam));
+	}
+	return ret;
+}
+
+//---------------------------------------------------------------------------
 //同一ファイルか?
 //---------------------------------------------------------------------------
 bool is_same_file(UnicodeString fnam1, UnicodeString fnam2,

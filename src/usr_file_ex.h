@@ -23,6 +23,7 @@ UnicodeString to_relative_name(UnicodeString fnam);
 UnicodeString rel_to_absdir(UnicodeString fnam, UnicodeString rnam = EmptyStr);
 UnicodeString extract_file_path(UnicodeString fnam);
 bool is_same_file(UnicodeString fnam1, UnicodeString fnam2, UnicodeString rnam = EmptyStr);
+bool match_path_list(UnicodeString dnam, UnicodeString plist, bool start_sw = false);
 
 UnicodeString get_root_name(UnicodeString pnam);
 UnicodeString get_case_name(UnicodeString fnam);

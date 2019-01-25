@@ -72,7 +72,7 @@
 <dt class="no_bg">TargetPath
 <dd>特定のパスでのみ定義を適用したい場合に指定します。<br>
 無指定の場合は、すべてのパスが対象となります。<br>
-パスは、<b>;</b> (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。<br>
+パスは、<b>;</b> (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。また環境変数や<a href="hid00063.htm#PreDefVar">定義済み変数</a>の <b>%ExePath%</b> も使えます。<br>
 
 <pre class="example_box">
 TargetPath=D:\Projects\Source;E:\Backup\Source
@@ -80,7 +80,7 @@ TargetPath=D:\Projects\Source;E:\Backup\Source
 
 <dt class="no_bg">ExcludePath
 <dd>定義を適用したくないパスを指定します。<br>
-パスは、<b>;</b> (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。<br>
+パスは、<b>;</b> (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。また環境変数や<a href="hid00063.htm#PreDefVar">定義済み変数</a>の <b>%ExePath%</b> も使えます。<br>
 
 <pre class="example_box">
 TargetPath=D:\Prog\NyanFi\tasklog
@@ -302,6 +302,7 @@ Strings="'
 
 [.hoge]
 TargetPath=D:\foo
+ExcludePath=%ExePath%
 Comment1=;
 CommentBgn1=/*
 CommentEnd1=*/
