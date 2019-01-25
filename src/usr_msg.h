@@ -94,6 +94,7 @@ void SysErrAbort(unsigned id);
 void LastErrAbort();
 void TextAbort(const _TCHAR *msg);
 void SkipAbort();
+void EmptyAbort();
 
 //---------------------------------------------------------------------------
 void msgbox_ERR(UnicodeString msg);

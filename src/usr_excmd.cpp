@@ -363,6 +363,7 @@ bool ExeCmdsList::proc_IfElseEnd(UnicodeString cmd)
 //---------------------------------------------------------------------------
 //補助コマンドリスト
 const UnicodeString XCMD_SubCmds =
+	"ActivateWnd\n"
 	"Add\n"
 	"AppendBuffer\n"
 	"CallCommands\n"
@@ -679,7 +680,7 @@ file_rec *XCMD_set_cfp(UnicodeString fnam, UnicodeString cnam, file_rec *cfp)
 	XCMD_cur_path = (ScrMode==SCMD_FLIST)? cnam : ExtractFilePath(XCMD_cur_f_name);
 	if (!SameText(XCMD_cur_path, XCMD_VarList->Values["CurPath"])) {
 		XCMD_set_Var(_T("CurPath"), XCMD_cur_path);
-		XCMD_set_Var(_T("VolumeLabel"), CurStt->is_FTP? EmptyStr : get_volume_info(XCMD_cur_path));
+		XCMD_set_Var(_T("VolumeLabel"), CurStt->is_FTP? EmptyStr : get_VolumeInfo(XCMD_cur_path));
 	}
 
 	//ファイル名などを更新
@@ -1810,6 +1811,45 @@ bool XCMD_ShellExe(UnicodeString cmd, UnicodeString prm, UnicodeString wdir,
 		}
 	}
 
+	return true;
+}
+
+//---------------------------------------------------------------------------
+//指定クラス/テキストにマッチするウィンドウをアクティブ化
+//---------------------------------------------------------------------------
+bool XCMD_ActivateWnd(
+	UnicodeString prm)	//[クラス名][;テキスト|/正規表現/]
+{
+	HWND hWnd = NULL;
+	std::unique_ptr<TStringList> w_lst(new TStringList());
+	get_GenWndList(w_lst.get());
+
+	UnicodeString cls = get_tkn(prm, ';');
+	UnicodeString txt = get_tkn_r(prm, ';');
+	UnicodeString ptn = is_regex_slash(txt)? exclude_top_end(txt) : EmptyStr;
+	if (cls.IsEmpty() && txt.IsEmpty() && ptn.IsEmpty()) return false;
+
+	try {
+		TRegExOptions opt; opt << roIgnoreCase;
+		for (int i=0; i<w_lst->Count && !hWnd; i++) {
+			UnicodeString lbuf = w_lst->Strings[i];
+			if (!cls.IsEmpty() && !SameText(get_pre_tab(lbuf), cls)) continue;
+			if (!ptn.IsEmpty()) {
+				if (!TRegEx::IsMatch(get_post_tab(lbuf), ptn, opt)) continue;
+			}
+			else {
+				if (!txt.IsEmpty() && !ContainsText(get_post_tab(lbuf), txt)) continue;
+			}
+			hWnd = (HWND)w_lst->Objects[i];
+		}
+	}
+	catch (...) {
+		return false;
+	}
+	if (!hWnd) return false;
+
+	if (::IsIconic(hWnd)) ::SendMessage(hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+	::SetForegroundWindow(hWnd);
 	return true;
 }
 

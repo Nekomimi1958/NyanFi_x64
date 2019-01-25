@@ -134,7 +134,10 @@ void __fastcall TSelDriveDlg::UpdateDriveList()
 	cursor_HourGlass();
 
 	//ボリューム名を更新
-	update_DriveVolume();
+	for (int i=0; i<DriveInfoList->Count; i++) {
+		drive_info *dp = (drive_info *)DriveInfoList->Objects[i];
+		if (dp->accessible) dp->volume = get_VolumeInfo(dp->drive_str);
+	}
 
 	TStringGrid *gp = DriveGrid;
 	int icon_md = ShowIconCheckBox->Checked? (LargeIconCheckBox->Checked? 2 : 1) : 0;
@@ -439,7 +442,7 @@ void __fastcall TSelDriveDlg::ShowDriveMenu()
 		else if (USAME_TI(m_buf[1], "ReloadList"))		UpdateDriveList();
 		else if (USAME_TI(m_buf[1], "DriveGraph"))		ShowDriveGraph();
 		else if (USAME_TI(m_buf[1], "Rename")) {
-			UnicodeString new_name = get_volume_info(drvnam);
+			UnicodeString new_name = get_VolumeInfo(drvnam);
 			if (input_query_ex(USTR_Rename, _T("名前"), &new_name)) {
 				if (::SetVolumeLabel(drvnam.c_str(), new_name.c_str())) UpdateDriveList();
 			}

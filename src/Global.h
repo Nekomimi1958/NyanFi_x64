@@ -28,7 +28,6 @@
 //---------------------------------------------------------------------------
 #define SUPPORT_URL		"http://nekomimi.la.coocan.jp/"
 #define DOWNLOAD_URL	"http://nekomimi.la.coocan.jp/freesoft/"
-#define COPYRIGHT_INF	"2013-2019 by Nekomimi"
 
 //---------------------------------------------------------------------------
 #define WM_FORM_SHOWED		(WM_APP + 1)
@@ -1607,7 +1606,7 @@ UnicodeString get_FontInf(UnicodeString fnam, TStringList *lst = NULL);
 
 drive_info *get_DriveInfoList();
 drive_info *get_DriveInfo(UnicodeString dstr);
-void update_DriveVolume();
+UnicodeString get_VolumeInfo(UnicodeString dnam, UnicodeString *fsys = NULL);
 
 void get_DriveLogList(UnicodeString dstr, TStringList *lst, double &r_min, double &r_max);
 void update_DriveLog(bool save = false);
@@ -1952,6 +1951,8 @@ void copy_to_Clipboard(UnicodeString s);
 void copy_to_Clipboard(TPicture *pic);
 void copy_to_Clipboard(TMetafile *mf);
 void copy_to_Clipboard(Graphics::TBitmap *bmp);
+
+int  get_GenWndList(TStringList *lst);
 
 bool CloseOtherNyanFi();
 int  get_NyanFiList(TStringList *lst);

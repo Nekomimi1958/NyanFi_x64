@@ -149,9 +149,9 @@ void get_HtmlInf(UnicodeString fnam, TStringList *lst);
 //---------------------------------------------------------------------------
 #define HASH_ID_STR	_T("MD5|SHA1|SHA256|SHA384|SHA512|CRC32")
 
-UnicodeString get_CRC32_str(UnicodeString fnam, bool only_1blk = false);
-UnicodeString get_HashStr(UnicodeString fnam, ALG_ID algid, bool only_1blk = false);
-UnicodeString get_HashStr(UnicodeString fnam, UnicodeString idstr, bool only_1blk = false);
+UnicodeString get_CRC32_str(UnicodeString fnam, bool only_1blk = false, bool prc_msg = false);
+UnicodeString get_HashStr(UnicodeString fnam, ALG_ID algid, bool only_1blk = false, bool prc_msg = false);
+UnicodeString get_HashStr(UnicodeString fnam, UnicodeString idstr, bool only_1blk = false, bool prc_msg = false);
 
 //---------------------------------------------------------------------------
 int  get_duration(UnicodeString fnam);

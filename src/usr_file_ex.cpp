@@ -307,26 +307,6 @@ UINT get_drive_type(UnicodeString dnam)
 }
 
 //---------------------------------------------------------------------------
-//ボリューム情報を取得
-//戻り値: ボリューム名
-//---------------------------------------------------------------------------
-UnicodeString get_volume_info(UnicodeString dnam,
-	UnicodeString *fsys)	//[o] ファイルシステム
-{
-	UnicodeString ret_str;
-	_TCHAR vol_nam[MAX_PATH];
-	_TCHAR fil_sys[MAX_PATH];
-	DWORD VolSerialNo, MaxCompLen, Flags;
-	if (::GetVolumeInformation(get_drive_str(dnam).c_str(),
-		vol_nam, sizeof(vol_nam), &VolSerialNo, &MaxCompLen, &Flags, fil_sys, sizeof(fil_sys)))
-	{
-		ret_str = vol_nam;
-		if (fsys) *fsys = fil_sys;
-	}
-	return ret_str;
-}
-
-//---------------------------------------------------------------------------
 //クラスタサイズを取得
 //---------------------------------------------------------------------------
 int get_ClusterSize(UnicodeString dnam)

@@ -13,6 +13,7 @@
 #include <RestartManager.h>
 #include <System.StrUtils.hpp>
 #include "usr_str.h"
+#include "usr_key.h"
 #include "usr_file_ex.h"
 #include "usr_file_inf.h"
 #include "usr_shell.h"
@@ -2032,7 +2033,8 @@ void get_HtmlInf(
 //---------------------------------------------------------------------------
 UnicodeString get_CRC32_str(
 	UnicodeString fnam,		//ファイル名
-	bool only_1blk)			//先頭の１ブロック(32KB)のみ	(default = false)
+	bool only_1blk,			//先頭の１ブロック(32KB)のみ	(default = false)
+	bool prc_msg)			//メッセージを処理				(default = false)
 {
 	static uint32_t table[256];
 	static bool has_tbl = false;
@@ -2054,6 +2056,7 @@ UnicodeString get_CRC32_str(
 		has_tbl = true;
 	}
 
+	SetLastError(NO_ERROR);
 	HANDLE hFile = ::CreateFile(fnam.c_str(), GENERIC_READ,
 				FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 	if (INVALID_HANDLE_VALUE==hFile) return EmptyStr;
@@ -2064,13 +2067,18 @@ UnicodeString get_CRC32_str(
 			std::unique_ptr<BYTE[]> fbuf(new BYTE[FILE_RBUF_SIZE]);
 			uint32_t crc32 = 0xFFFFFFFF;
 			DWORD dwSize;
-			for (;;) {
+			for (int i=0;;i++) {
 				if (!::ReadFile(hFile, fbuf.get(), FILE_RBUF_SIZE, &dwSize, NULL)) Abort();
 				if (dwSize==0) break;
 				char *bp = (char*)fbuf.get();
 				for (DWORD i=0; i<dwSize; i++,bp++)
 					crc32 = (crc32 >> 8) ^ table[(crc32 & 0xff) ^ (uint8_t)(*bp)];
 				if (only_1blk) break;
+				if (prc_msg && i%64==0 && is_KeyPress_ESC()) {	//***
+					ClearKeyBuff(true);
+					SetLastError(E_ABORT);
+					Abort();
+				}
 			}
 			crc32 ^= 0xFFFFFFFF;
 			ret_str.sprintf(_T("%08x"), crc32);
@@ -2092,11 +2100,13 @@ UnicodeString get_CRC32_str(
 UnicodeString get_HashStr(
 	UnicodeString fnam,		//ファイル名
 	ALG_ID algid,			//アルゴリズム CALG_MD5/ CALG_SHA1/ CALG_SHA_256/384/512
-	bool only_1blk)			//先頭の１ブロック(32KB)のみ	(default = false)
+	bool only_1blk,			//先頭の１ブロック(32KB)のみ	(default = false)
+	bool prc_msg)			//メッセージを処理				(default = false)
 {
 	HCRYPTPROV hProv;
 	HCRYPTHASH hHash;
 
+	SetLastError(NO_ERROR);
 	HANDLE hFile = ::CreateFile(fnam.c_str(), GENERIC_READ,
 				FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 	if (INVALID_HANDLE_VALUE==hFile) return EmptyStr;
@@ -2115,11 +2125,16 @@ UnicodeString get_HashStr(
 		try {
 			std::unique_ptr<BYTE[]> fbuf(new BYTE[FILE_RBUF_SIZE]);
 			DWORD dwSize;
-			for (;;) {
+			for (int i=0;;i++) {
 				if (!::ReadFile(hFile, fbuf.get(), FILE_RBUF_SIZE, &dwSize, NULL)) Abort();
 				if (dwSize==0) break;
 				if (!::CryptHashData(hHash, fbuf.get(), dwSize, 0)) Abort();
 				if (only_1blk) break;
+				if (prc_msg && i%64==0 && is_KeyPress_ESC()) {	//***
+					ClearKeyBuff(true);
+					SetLastError(E_ABORT);
+					Abort();
+				}
 			}
 			DWORD dwHashLen;
 			if (!::CryptGetHashParam(hHash, HP_HASHVAL, NULL, &dwHashLen, 0)) Abort();
@@ -2143,15 +2158,16 @@ UnicodeString get_HashStr(
 UnicodeString get_HashStr(
 	UnicodeString fnam,
 	UnicodeString idstr,	//アルゴリズム識別名
-	bool only_1blk)			//先頭の１ブロックのみ	(default = false)
+	bool only_1blk,			//先頭の１ブロックのみ	(default = false)
+	bool prc_msg)			//メッセージを処理		(default = false)
 {
 	switch (idx_of_word_i(HASH_ID_STR, idstr)) {
-	case  0: return get_HashStr(fnam, CALG_MD5,		only_1blk);
-	case  1: return get_HashStr(fnam, CALG_SHA1,	only_1blk);
-	case  2: return get_HashStr(fnam, CALG_SHA_256,	only_1blk);
-	case  3: return get_HashStr(fnam, CALG_SHA_384,	only_1blk);
-	case  4: return get_HashStr(fnam, CALG_SHA_512,	only_1blk);
-	case  5: return get_CRC32_str(fnam, 			only_1blk);
+	case  0: return get_HashStr(fnam, CALG_MD5,		only_1blk, prc_msg);
+	case  1: return get_HashStr(fnam, CALG_SHA1,	only_1blk, prc_msg);
+	case  2: return get_HashStr(fnam, CALG_SHA_256,	only_1blk, prc_msg);
+	case  3: return get_HashStr(fnam, CALG_SHA_384,	only_1blk, prc_msg);
+	case  4: return get_HashStr(fnam, CALG_SHA_512,	only_1blk, prc_msg);
+	case  5: return get_CRC32_str(fnam, 			only_1blk, prc_msg);
 	default: return EmptyStr;
 	}
 }

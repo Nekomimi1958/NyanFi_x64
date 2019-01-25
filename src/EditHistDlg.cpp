@@ -445,7 +445,8 @@ void __fastcall TEditHistoryDlg::UpdateList()
 				TStringDynArray sbuf = split_strings_tab(klist->Strings[k]);
 				if (sbuf.Length==0) continue;
 				UnicodeString fnam = sbuf[0];
-				UnicodeString memo = (sbuf.Length>1)? sbuf[1] : EmptyStr;
+				UnicodeString memo = (sbuf.Length>1)? sbuf[1] : EmptyStr;	//ƒƒ‚
+				UnicodeString stim = (sbuf.Length>2)? sbuf[2] : EmptyStr;	//Ý’è“úŽž
 
 				//i‚èž‚Ý
 				if (!ptn.IsEmpty()) {
@@ -485,7 +486,7 @@ void __fastcall TEditHistoryDlg::UpdateList()
 				}
 
 				if (fp) {
-					fp->memo = memo;
+					fp->memo = memo.cat_sprintf(_T("\t%s"), stim.c_str());	//ƒƒ‚ \t Ý’è“úŽž
 					HistBufList->AddObject(fp->f_name, (TObject*)fp);
 				}
 			}
@@ -587,6 +588,7 @@ void __fastcall TEditHistoryDlg::UpdateGrid()
 			//ƒƒ‚
 			if (isMark) {
 				gp->Cells[col++][i] = get_pre_tab(fp->memo);
+				//Ý’è“úŽž
 				TDateTime dt;
 				if (!str_to_DateTime(get_post_tab(fp->memo), &dt)) dt = fp->f_time;
 				gp->Cells[col][i] = FormatDateTime(TimeStampFmt, dt);

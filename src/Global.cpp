@@ -5350,7 +5350,7 @@ drive_info *get_DriveInfoList()
 
 		//ボリューム名、ファイルシステム
 		if (dp->accessible)
-			dp->volume = get_volume_info(dstr, &dp->f_system);
+			dp->volume = get_VolumeInfo(dstr, &dp->f_system);
 		else
 			dp->volume = dp->f_system = EmptyStr;
 		dp->is_NTFS = USAME_TI(dp->f_system, "NTFS");
@@ -5475,14 +5475,24 @@ drive_info *get_DriveInfo(
 	return dp;
 }
 //---------------------------------------------------------------------------
-//ボリューム名を更新
+//ボリューム情報を取得
+//戻り値: ボリューム名
 //---------------------------------------------------------------------------
-void update_DriveVolume()
+UnicodeString get_VolumeInfo(
+	UnicodeString dnam,		//ドライブ名(ファイル名も可)
+	UnicodeString *fsys)	//[o] ファイルシステム (default = NULL)
 {
-	for (int i=0; i<DriveInfoList->Count; i++) {
-		drive_info *dp = (drive_info *)DriveInfoList->Objects[i];
-		if (dp->accessible) dp->volume = get_volume_info(dp->drive_str);
+	UnicodeString ret_str;
+	_TCHAR vol_nam[MAX_PATH];
+	_TCHAR fil_sys[MAX_PATH];
+	DWORD VolSerialNo, MaxCompLen, Flags;
+	if (::GetVolumeInformation(get_drive_str(dnam).c_str(),
+		vol_nam, sizeof(vol_nam), &VolSerialNo, &MaxCompLen, &Flags, fil_sys, sizeof(fil_sys)))
+	{
+		ret_str = vol_nam;
+		if (fsys) *fsys = fil_sys;
 	}
+	return ret_str;
 }
 
 //---------------------------------------------------------------------------
@@ -12391,7 +12401,25 @@ bool CloseOtherNyanFi()
 }
 
 //---------------------------------------------------------------------------
-//NyanFiの一覧を取得
+//表示中のウィンドウ一覧を取得
+// クラス名 \t テキスト/ Object = ハンドル
+//---------------------------------------------------------------------------
+BOOL CALLBACK EnumGenWndProc(HWND hWnd, LPARAM lst)
+{
+	if (::IsWindowVisible(hWnd)) {
+		((TStringList*)lst)->AddObject(get_WndClassName(hWnd) + "\t" + get_WndText(hWnd), (TObject *)hWnd);
+	}
+	return TRUE;
+}
+//---------------------------------------------------------------------------
+int get_GenWndList(TStringList *lst)
+{
+	::EnumWindows(EnumGenWndProc, (LPARAM)lst);
+	return lst->Count;
+}
+
+//---------------------------------------------------------------------------
+//NyanFi 一覧を取得
 // 連番(1～),ハンドル,タイトル
 //---------------------------------------------------------------------------
 BOOL CALLBACK EnumNyanWndProc(HWND hWnd, LPARAM lst)

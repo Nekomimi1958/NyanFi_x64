@@ -36,8 +36,6 @@ UnicodeString get_drive_str(UnicodeString dnam);
 bool drive_exists(UnicodeString drv);
 UINT get_drive_type(UnicodeString dnam);
 
-UnicodeString get_volume_info(UnicodeString dnam, UnicodeString *fsys = NULL);
-
 int get_ClusterSize(UnicodeString dnam);
 
 UnicodeString get_base_name(UnicodeString fnam);

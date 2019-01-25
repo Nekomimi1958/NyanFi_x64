@@ -174,10 +174,35 @@ MsgBox_%..N%回目です
 <h3 id="AuxCommand">補助コマンド</h3>
 <b>ExeCommands</b> コマンドのパラメータまたはコマンドファイル内でのみ使える補助コマンドとして、以下のものがあります。<br>
 <p class="link_box">
-<a href="#Add">A</a> <a href="#CallCommands">C</a> <a href="#Debug">D</a> <a href="#Echo">E</a> <a href="#FileExists">F</a> <a href="#GrepSetMask">G</a> <a href="#Ins">I</a> <a href="#JumpCommands">J</a> <a href="#ListBuffer">L</a> <a href="#MatchBuffer">M</a> <a href="#PlaySound">P</a> <a href="#Random">R</a> <a href="#SaveBuffer">S</a> <a href="#Test">T</a> <a href="#WaitForTask2">W</a>
+<a href="#ActivateWnd">A</a> <a href="#CallCommands">C</a> <a href="#Debug">D</a> <a href="#Echo">E</a> <a href="#FileExists">F</a> <a href="#GrepSetMask">G</a> <a href="#Ins">I</a> <a href="#JumpCommands">J</a> <a href="#ListBuffer">L</a> <a href="#MatchBuffer">M</a> <a href="#PlaySound">P</a> <a href="#Random">R</a> <a href="#SaveBuffer">S</a> <a href="#Test">T</a> <a href="#WaitForTask2">W</a>
 </p>
+
 <div class="indent1">
 <dl class="sub_item">
+<dt id="ActivateWnd" class="no_bg">ActivateWnd<span class="pram_text">_[クラス名][;タイトル文字列|/正規表現パターン/]</span>
+<dd>指定したクラス名やタイトル文字列がマッチするウィンドウをアクティブにします。<br>
+クラス名は完全一致、タイトル文字列(/ で囲むと正規表現)は部分一致になります。大文字・小文字は区別されません。<br>
+クラス名とタイトル文字列を両方指定したい場合は ; (セミコロン)で区切ってください。タイトル文字列のみを指定したい場合はパラメータを ; で始めます。<br>
+マッチ結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
+
+<div class="spc_box">
+<b>例</b>: コマンドプロンプト画面をアクティブに、なければ起動
+<pre class="example_box">
+ActivateClass_ConsoleWindowClass
+IfFalse
+  CommandPrompt
+EndIf
+</pre>
+
+<b>例</b>: 前方一致で &quot;hoge&quot; がマッチする HogeClass クラスのウィンドウをアクティブに、なければ起動
+<pre class="example_box">
+ActivateTitle_HogeClass;/^hoge/
+IfFalse
+  FileRun_hoge
+EndIf
+</pre>
+</div>
+
 <dt id="Add" class="no_bg">Add<span class="pram_text">_変数名&lt;&lt;文字列</span>
 <dd>
 変数の末尾に、文字列を行として追加します。<br>
@@ -840,8 +865,8 @@ Timer<span class="pram_text">_&quot;hh:mm[:ss]&quot;</span>
 <tr><th>Yes</th><td>直前の <a href="#MsgBoxYN">MsgBoxYN</a>、<a href="#MsgBoxYNC">MsgBoxYNC</a> で「はい」、<a href="#Input">Input</a> で「OK」が押された</td></tr>
 <tr><th>No</th><td>直前の <a href="#MsgBoxYN">MsgBoxYN</a>、<a href="#MsgBoxYNC">MsgBoxYNC</a> で「いいえ」が押された</td></tr>
 <tr><th>Cancel</th><td>直前の <a href="#MsgBoxYNC">MsgBoxYNC</a> または <a href="#Input">Input</a> で「キャンセル」が押された</td></tr>
-<tr><th>True</th><td>直前の <a href="#MatchBuffer">MatchBuffer</a>、<a href="#MatchDir">MatchDir</a>、<a href="#MatchExt">MatchExt</a>、<a href="#MatchName">MatchName</a> でマッチ、または <a href="#Test">Test</a>、<a href="#FileExists">FileExists</a> の結果が真</td></tr>
-<tr><th>False</th><td>直前の <a href="#MatchBuffer">MatchBuffer</a>、<a href="#MatchDir">MatchDir</a>、<a href="#MatchExt">MatchExt</a>、<a href="#MatchName">MatchName</a> でマッチしなかった、または <a href="#Test">Test</a>、<a href="#FileExists">FileExists</a> の結果が偽</td></tr>
+<tr><th>True</th><td>直前の <a href="#MatchBuffer">MatchBuffer</a>、<a href="#MatchDir">MatchDir</a>、<a href="#MatchExt">MatchExt</a>、<a href="#MatchName">MatchName</a>、<a href="ActivateClass">ActivateClass</a>、<a href="ActivateTitle">ActivateTitle</a> でマッチ、<a href="#Test">Test</a>、<a href="#FileExists">FileExists</a> の結果が真</td></tr>
+<tr><th>False</th><td>直前の <a href="#MatchBuffer">MatchBuffer</a>、<a href="#MatchDir">MatchDir</a>、<a href="#MatchExt">MatchExt</a>、<a href="#MatchName">MatchName</a>、<a href="ActivateClass">ActivateClass</a>、<a href="ActivateTitle">ActivateTitle</a> でマッチしなかった、または <a href="#Test">Test</a>、<a href="#FileExists">FileExists</a> の結果が偽</td></tr>
 <tr><th>TimeOut</th><td><a href="#Timer">Timer</a> で設定した時間が経過するか、設定時刻を過ぎた</td></tr>
 <tr><th>Shift</th><td><span class="btn_frame">Shift</span>キーが押されている</td></tr>
 <tr><th>Ctrl</th><td><span class="btn_frame">Ctrl</span>キーが押されている</td></tr>

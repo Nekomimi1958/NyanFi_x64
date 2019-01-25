@@ -509,7 +509,7 @@ void __fastcall TTaskThread::CPY_core(
 	//コピー先がなければ作成
 	if (!dir_exists(dst_path)) {
 		msg = make_LogHdr(_T("CREATE"), dst_path, true);
-		GetLastError();
+		SetLastError(NO_ERROR);
 		if (create_ForceDirs(dst_path)) dir_CopyAttr(ExtractFileDir(fnam), dst_path, remove_ro); else set_LogErrMsg(msg);
 		AddLog(msg);
 	}
@@ -617,7 +617,7 @@ void __fastcall TTaskThread::CPY_core(
 	if (w_flag) {
 		bool failed = false;
 		try {
-			GetLastError();
+			SetLastError(NO_ERROR);
 			if (!EX_set_writable(dst_fnam))		throw Exception(EmptyStr);
 
 			LastTransferred.QuadPart = 0;
@@ -747,7 +747,7 @@ void __fastcall TTaskThread::Task_CPY(
 		if (mov_sw && is_same_drv && !dir_exists(dst_nam)) {
 			msg = make_LogHdr(_T("MOVE"), src_nam);
 			try {
-				GetLastError();
+				SetLastError(NO_ERROR);
 				if (!move_FileT(src_nam, dst_nam)) throw Exception(EmptyStr);
 				OkCount++;
 			}
@@ -789,7 +789,7 @@ void __fastcall TTaskThread::Task_CPY(
 			//空ディレクトリ
 			else if (!dir_exists(dst_nam)) {
 				msg = make_LogHdr(_T("CREATE"), dst_nam, true);
-				GetLastError();
+				SetLastError(NO_ERROR);
 				if (create_ForceDirs(dst_nam)) dir_CopyAttr(src_prm, dst_nam, remove_ro); else set_LogErrMsg(msg);
 				AddLog(msg);
 			}
@@ -844,7 +844,7 @@ void __fastcall TTaskThread::DEL_dirs(
 			if (LogHideSkip) msg = EmptyStr; else msg[1] = 'S';
 		}
 		else {
-			GetLastError();
+			SetLastError(NO_ERROR);
 			if (!EX_set_writable(pnam))	Abort();
 			if (!EX_delete_Dir(pnam))	Abort();
 			DirDeleted = true;
@@ -871,7 +871,7 @@ void __fastcall TTaskThread::DEL_core(
 	UnicodeString msg = make_LogHdr(_T("DELETE"), fnam);
 
 	try {
-		GetLastError();
+		SetLastError(NO_ERROR);
 		if (!EX_file_exists(fnam))				throw Exception(EmptyStr);
 		if (!EX_wait_file_ready(fnam))			throw Exception(EmptyStr);
 		if (TaskCancel)	 						Abort();
@@ -909,7 +909,7 @@ void __fastcall TTaskThread::DEL_dir_trash(UnicodeString dnam)
 {
 	UnicodeString msg = make_LogHdr(_T("DELETE"), dnam, true);
 	try {
-		GetLastError();
+		SetLastError(NO_ERROR);
 		if (!EX_set_writable(dnam))		Abort();
 		if (!EX_delete_File(ExcludeTrailingPathDelimiter(dnam), true))	Abort();
 		OkCount++;
@@ -979,7 +979,7 @@ void __fastcall TTaskThread::CMPDEL_core(UnicodeString fnam)
 
 	UnicodeString msg = make_LogHdr(_T("CMPDEL"), fnam);
 	try {
-		GetLastError();
+		SetLastError(NO_ERROR);
 		if (!EX_file_exists(fnam))		throw Exception(EmptyStr);
 		if (!EX_wait_file_ready(fnam))	throw Exception(EmptyStr);
 		if (TaskCancel)					Abort();
@@ -1117,7 +1117,7 @@ void __fastcall TTaskThread::Task_CPYDIR(UnicodeString prm)
 		UnicodeString dst_nam = dst_path + sub_path;
 		UnicodeString msg = make_LogHdr(_T("CREATE"), dst_nam, true);
 		if (!dir_exists(dst_nam)) {
-			GetLastError();
+			SetLastError(NO_ERROR);
 			if (create_ForceDirs(dst_nam)) {
 				//属性
 				dir_CopyAttr(dnam, dst_nam, remove_ro);
@@ -1540,7 +1540,7 @@ TDateTime __fastcall TTaskThread::SetDirTime(UnicodeString dnam)
 		if (!WithinPastMilliSeconds(o_dt, dt, TimeTolerance) && i_cnt>0) {
 			UnicodeString msg = make_LogHdr(_T("TIME"), dnam, true, 14);	//***
 			msg.cat_sprintf(_T("  %s ---> %s"), format_DateTime(o_dt).c_str(), format_DateTime(dt).c_str());
-			GetLastError();
+			SetLastError(NO_ERROR);
 			AddDebugLog("Call SetFileTime");
 			if (set_file_age(dnam, dt, ForceDel))
 				OkCount++;
