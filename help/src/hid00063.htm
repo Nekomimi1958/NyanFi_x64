@@ -4,7 +4,26 @@
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
 <title>ExeCommands コマンド</title>
 <link rel="stylesheet" type="text/css" href="help.css">
-
+<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+	<param name="Keyword" value="#noreload">
+	<param name="Keyword" value="CmdFileList">
+	<param name="Keyword" value="ExeCommands">
+	<param name="Keyword" value="xdoc2txt">
+	<param name="Keyword" value="イメージビュアー">
+	<param name="Keyword" value="エイリアス">
+	<param name="Keyword" value="コマンドファイル">
+	<param name="Keyword" value="コマンドファイル一覧">
+	<param name="Keyword" value="ツールバー">
+	<param name="Keyword" value="テキストビュアー">
+	<param name="Keyword" value="デバッグウィンドウ">
+	<param name="Keyword" value="デバッグモード">
+	<param name="Keyword" value="ファイラー">
+	<param name="Keyword" value="ユーザ定義変数">
+	<param name="Keyword" value="環境変数">
+	<param name="Keyword" value="制御文">
+	<param name="Keyword" value="定義済み変数">
+	<param name="Keyword" value="補助コマンド">
+</object>
 
 <style TYPE="text/css">
 <!--
@@ -281,7 +300,7 @@ ListText_D:\hoge\nyan.txt
 <dt id="Edit" class="no_bg">Edit<span class="pram_text">_変数名</span><br>
 Edit<span class="pram_text">_&quot;:タイトル:変数名&quot;</span>
 <dd>複数行入力可能なテキストボックスによって、変数の内容を編集します。<br>
-バラメータでタイトルを指定できます。その場合、パラメータ全体をダブルクォーテーションで囲んでください。<br>
+バラメータでタイトルを指定できます。その場合、パラメータ全体をダブルクォーテーションで囲んでください。タイトル内では <b>:\</b> を表示文字として使えます。<br>
 フォントや文字色/背景色はテキストビュアーのものが用いられますが、文字色/背景色については右クリックメニューで変更可能です。<br>
 <div class="spc_box">
 ボックスにフォーカスがある場合、<span class="btn_frame">ENTER</span>キーは改行になります。<span class="btn_frame">OK</span>は、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">ENTER</span>で行ってください。<br>
@@ -390,7 +409,7 @@ MsgBox_%Buffer%
 <dt id="Input" class="no_bg">Input<span class="pram_text">_変数名</span><br>
 Input<span class="pram_text">_&quot;:タイトル:[プロンプト:]変数名&quot;</span>
 <dd>入力ボックスによって、変数に文字列を設定します。<br>
-バラメータでタイトルおよびプロンプトを指定することも可能です。その場合、パラメータ全体をダブルクォーテーションで囲んでください。<br>
+バラメータでタイトルおよびプロンプトを指定することも可能です。その場合、パラメータ全体をダブルクォーテーションで囲んでください。タイトルやプロンプト内では <b>:\</b> を表示文字として使えます。<br>
 既存のユーザ定義変数の場合、その内容がデフォルトとして入力ボックスに表示されます。<br>
 キャンセルすると後続 <a href="#IfStatement">If 文</a>の <b>Cancel</b> が真になります(OK なら <b>Yes</b> が真)。<br>
 <div class="spc_box">
@@ -484,7 +503,7 @@ EndRepeat
 <dt id="MsgBox" class="no_bg">MsgBox<span class="pram_text">_メッセージ</span><br>
 MsgBox<span class="pram_text">_&quot;:タイトル:メッセージ&quot;</span>
 <dd>指定したメッセージを表示します。<br>
-タイトルを指定することも可能です。その場合、パラメータ全体をダブルクォーテーションで囲んでください。<br>
+タイトルを指定することも可能です。その場合、パラメータ全体をダブルクォーテーションで囲んでください。タイトル内では <b>:\</b> を表示文字として使えます。<br>
 メッセージ内で <b>\n</b> は改行になります。<b>\</b>そのものを文字として指定したい場合は <b>\\</b> と記述してください。<br>
 <div class="spc_box">
 <b>例</b>: MsgBox_&quot;:エラー:失敗しました\n設定を確認してください&quot;
@@ -582,6 +601,14 @@ EndIf
 <dd>定義済み変数 <b>Buffer</b> の内容に対して文字列置換を行います。<br>
 対象文字列を / で囲むと正規表現パターンとみなされます。置換の際に大文字・小文字は区別されません。<br>
 対象文字列やパターンに = が含まれている場合は、ダブルクォーテーションで囲んでください。<br>
+
+<div class="spc_box">
+<b>例</b>: カレントのパス無しディレクトリ名を取得
+<pre class="example_box">
+Format_Buffer=$P
+ReplaceBuffer_/.*\\/=""
+</pre>
+</div>
 
 <div class="spc_box">
 <b>例</b>: カーソル位置ファイルの日付を yy-mm-dd 形式で取得

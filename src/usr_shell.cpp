@@ -1337,9 +1337,7 @@ UnicodeString UserShell::msRead_strdat(TMemoryStream *ms, int &ptr, bool is_uc)
 //---------------------------------------------------------------------------
 //ファイルの種類を取得
 //---------------------------------------------------------------------------
-UnicodeString UserShell::get_FileTypeStr(
-	UnicodeString fnam,		//ファイル名
-	bool lnk_sw)			//リンク数を取得	(default = false)
+UnicodeString UserShell::get_FileTypeStr(UnicodeString fnam)
 {
 	std::unique_ptr<TStringList> typ_lst(new TStringList());
 	typ_lst->Text =
@@ -1372,12 +1370,6 @@ UnicodeString UserShell::get_FileTypeStr(
 		typ_str.USET_T(".nyanfi ファイル");
 	else
 		typ_str = ExtractFileName(fnam).UCAT_T(" ファイル");
-
-	//リンク数
-	if (lnk_sw) {
-		int cnt = get_HardLinkCount(fnam);
-		if (cnt>1) typ_str.cat_sprintf(_T(" (Link Count=%u)"), cnt);
-	}
 
 	return typ_str;
 }

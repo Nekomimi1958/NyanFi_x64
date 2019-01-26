@@ -200,7 +200,7 @@ public:
 	bool get_LnkInf(UnicodeString fnam, TStringList *lst, UnicodeString *nam = NULL,
 		UnicodeString *prm = NULL, UnicodeString *fld = NULL, int *shw = NULL, UnicodeString *rem = NULL);
 
-	UnicodeString get_FileTypeStr(UnicodeString fnam, bool lnk_sw = false);
+	UnicodeString get_FileTypeStr(UnicodeString fnam);
 	UnicodeString get_LnkName(UnicodeString fnam);
 
 	HICON get_Icon(UnicodeString fnam, int &size, bool chk_sz = true);

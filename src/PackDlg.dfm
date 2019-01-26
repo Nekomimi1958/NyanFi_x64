@@ -147,16 +147,16 @@ object PackArcDlg: TPackArcDlg
   object PerDirCheckBox: TCheckBox
     Left = 21
     Top = 41
-    Width = 193
+    Width = 200
     Height = 17
-    Caption = #12487#12451#12524#12463#12488#12522#27598#12395#20491#21029#20316#25104'(&I)'
+    Caption = #12487#12451#12524#12463#12488#12522#12372#12392#12395#20491#21029#20316#25104'(&I)'
     TabOrder = 1
     OnClick = PerDirCheckBoxClick
   end
   object IncDirCheckBox: TCheckBox
-    Left = 218
+    Left = 225
     Top = 41
-    Width = 189
+    Width = 200
     Height = 17
     Caption = #23550#35937#12487#12451#12524#12463#12488#12522#12418#21547#12417#12427'(&D)'
     TabOrder = 2

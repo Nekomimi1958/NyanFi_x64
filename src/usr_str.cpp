@@ -999,6 +999,18 @@ int idx_of_word_i(const _TCHAR *lst, UnicodeString wd)
 	for (int i=0; i<w_lst.Length && idx==-1; i++) if (SameText(w_lst[i], wd)) idx = i;
 	return idx;
 }
+//---------------------------------------------------------------------------
+// | 区切りリストにある項目か?
+//---------------------------------------------------------------------------
+bool test_word_i(UnicodeString w, UnicodeString list)
+{
+	if (list.IsEmpty() || w.IsEmpty()) return false;
+	if (!StartsStr('|', w))		w.Insert("|", 1);
+	if (!EndsStr('|', w)) 		w.UCAT_T("|");
+	if (!StartsStr('|', list))	list.Insert("|", 1);
+	if (!EndsStr('|', list)) 	list.UCAT_T("|");
+	return ContainsText(list, w);
+}
 
 //---------------------------------------------------------------------------
 //ワイルドカードを含むパターンによる文字列一致

@@ -5185,6 +5185,12 @@ object NyanFiForm: TNyanFiForm
       OnExecute = Inf_EmpItemActionExecute
       OnUpdate = Inf_EmpItemActionUpdate
     end
+    object Inf_HideItemAction: TAction
+      Category = 'Menu'
+      Caption = #12371#12398#38917#30446#12434#38560#12377'(&H)'
+      OnExecute = Inf_HideItemActionExecute
+      OnUpdate = Inf_HideItemActionUpdate
+    end
     object Txt_EditCopy: TAction
       Category = 'Menu'
       Caption = #12467#12500#12540'(&C)'
@@ -5595,6 +5601,7 @@ object NyanFiForm: TNyanFiForm
     end
   end
   object InfPopupMenu: TPopupMenu
+    OnPopup = InfPopupMenuPopup
     Left = 176
     Top = 406
     object PopCopyFileInfoItm: TMenuItem
@@ -5612,14 +5619,21 @@ object NyanFiForm: TNyanFiForm
     object Sep_i_2: TMenuItem
       Caption = '-'
     end
-    object InfOpenUrlItem: TMenuItem
-      Action = Inf_OpenUrlAction
-    end
-    object InfEmpItemAction: TMenuItem
+    object InfEmpItemItem: TMenuItem
       Action = Inf_EmpItemAction
+    end
+    object InfHideItemItem: TMenuItem
+      Action = Inf_HideItemAction
+    end
+    object InfShowItemItem: TMenuItem
+      AutoHotkeys = maManual
+      Caption = #38560#12375#12383#38917#30446#12434#25147#12377'(&V)'
     end
     object Sep_i_3: TMenuItem
       Caption = '-'
+    end
+    object InfOpenUrlItem: TMenuItem
+      Action = Inf_OpenUrlAction
     end
     object PopPropertyItem: TMenuItem
       Action = PropertyDlgAction

@@ -259,6 +259,9 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 
 			if (topic.Pos('#')==0 && !kwd.IsEmpty()) topic.cat_sprintf(_T("#%s"), kwd.c_str());
 		}
+
+		CmdsComboBox->DroppedDown = false;
+		SubComboBox->DroppedDown  = false;
 		HtmlHelpTopic(topic.c_str());
 	}
 	else handled = false;

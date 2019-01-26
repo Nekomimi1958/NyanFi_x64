@@ -1274,10 +1274,11 @@ void XCMD_Input(UnicodeString prm)
 {
 	UnicodeString tit, msg, vnam;
 	if (remove_top_s(prm, ':')) {
+		prm = REPLACE_TS(prm, ":\\", "\f");	//‹æØ‚è‚Æ‚Ì¬“¯‚ğ”ğ‚¯‚é‚½‚ßˆê’uŠ·
 		TStringDynArray prmlst = SplitString(prm, ":");
 		if (prmlst.Length>0) vnam = prmlst[prmlst.Length - 1];
-		if (prmlst.Length>1) tit  = prmlst[0];
-		if (prmlst.Length>2) msg  = prmlst[1];
+		if (prmlst.Length>1) tit  = REPLACE_TS(prmlst[0], "\f", ":\\");
+		if (prmlst.Length>2) msg  = REPLACE_TS(prmlst[1], "\f", ":\\");
 	}
 	else
 		vnam = prm;
@@ -1301,9 +1302,10 @@ void XCMD_Edit(UnicodeString prm)
 {
 	UnicodeString tit, msg, vnam;
 	if (remove_top_s(prm, ':')) {
+		prm = REPLACE_TS(prm, ":\\", "\f");	//‹æØ‚è‚Æ‚Ì¬“¯‚ğ”ğ‚¯‚é‚½‚ßˆê’uŠ·
 		TStringDynArray prmlst = SplitString(prm, ":");
 		if (prmlst.Length>0) vnam = prmlst[prmlst.Length - 1];
-		if (prmlst.Length>1) tit  = prmlst[0];
+		if (prmlst.Length>1) tit  = REPLACE_TS(prmlst[0], "\f", ":\\");
 	}
 	else
 		vnam = prm;
@@ -1526,7 +1528,9 @@ int XCMD_MsgBox(UnicodeString cmd, UnicodeString prm)
 	UnicodeString opt = cmd.SubString(7, 16);
 
 	UnicodeString tit;
-	if (remove_top_s(prm, ':')) tit = split_tkn(prm, ':');
+	prm = REPLACE_TS(prm, ":\\",  "\f");	//‹æØ‚è‚Æ‚Ì¬“¯‚ğ”ğ‚¯‚é‚½‚ßˆê’uŠ·
+	if (remove_top_s(prm, ':')) tit = REPLACE_TS(split_tkn(prm, ':'), "\f", ":\\");
+	prm = REPLACE_TS(prm, "\f", ":\\");
 
 	UnicodeString lbuf;
 	while (!prm.IsEmpty()) {

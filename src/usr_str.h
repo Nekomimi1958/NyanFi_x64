@@ -155,6 +155,7 @@ bool contains_wd_i(UnicodeString s, const _TCHAR *lst);
 
 UnicodeString get_word_i_idx(const _TCHAR *lst, int idx);
 int idx_of_word_i(const _TCHAR *lst, UnicodeString wd);
+bool test_word_i(UnicodeString w, UnicodeString list);
 
 bool str_match(UnicodeString ptn, UnicodeString s);
 

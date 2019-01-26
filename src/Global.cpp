@@ -112,6 +112,10 @@ UnicodeString MigemoPath;
 bool LastMigemoMode;
 bool LastMigemoModeF;
 
+SpiUnit *SPI = NULL;			//Susieプラグイン
+UnicodeString SpiDir;			//Susieプラグインのディレクトリ
+bool UseSpiFirst;				//Susieプラグインを優先的に使う
+
 int  WicScaleOpt;				//WIC の縮小・拡大アルゴリズム
 UnicodeString WicFextStr;		//WIC が対応している拡張子
 
@@ -347,6 +351,7 @@ UnicodeString FExtGetInf;		//ファイル情報を取得する拡張子
 UnicodeString FExtNoInf;		//ファイル情報を取得しない拡張子
 UnicodeString NoInfPath;		//ファイル情報を取得しないパス
 UnicodeString EmpInfItems;		//強調表示するファイル情報項目(|区切り)
+TStringList  *HideInfItems;		//隠すファイル情報項目(拡張子=|区切り形式のリスト)
 
 UnicodeString FExtImgPrv;		//イメージプレビューを行う拡張子
 UnicodeString FExtNoImgPrv;		//イメージプレビューを行わない拡張子
@@ -1135,8 +1140,13 @@ void InitializeGlobal()
 	mute_Volume("GET");	//ミュート状態を取得
 
 	//廃止セクション、キーの削除、修正
-	IniFile->DeleteKey(SCT_Option,	"SpiDir");			//v12.96
-	IniFile->DeleteKey(SCT_Option,	"UseSpiFirst");
+	IniFile->DeleteKey(SCT_General, "FindKeyTwoStr");		//v12.87
+	IniFile->DeleteKey(SCT_Option,	"OneStepInDblPg");		//v12.80
+	IniFile->DeleteKey(SCT_Option,	"SkipInfIfKey");		//v12.72
+	if (IniFile->KeyExists(SCT_Option,	"NoClsTabBtn")) {	//v12.56
+		IniFile->WriteBool(SCT_Option,	"ShowClsTabBtn", !IniFile->ReadBool(SCT_Option, "NoClsTabBtn"));
+		IniFile->DeleteKey(SCT_Option,	"NoClsTabBtn");
+	}
 
 	CurStt = &ListStt[CurListTag];
 	OppStt = &ListStt[OppListTag];
@@ -1281,6 +1291,7 @@ void InitializeGlobal()
 	ToolBtnListI	  = CreStringList();
 	CnvCharList 	  = CreStringList();
 	LogBufList		  = CreStringList();
+	HideInfItems	  = CreStringList();
 
 	//コマンドリストを作成
 	CommandList = CreStringList();
@@ -1811,8 +1822,14 @@ void InitializeGlobal()
 		{_T("MarkImgPath=\"\""),					(TObject*)&MarkImgPath},
 		{_T("MarkImgFExt=\".jpg\""),				(TObject*)&MarkImgFExt},
 		{_T("MarkImgMemo=\"しおり\""),				(TObject*)&MarkImgMemo},
+
+#if defined(_WIN64)
 		{_T("FExt7zDll=\".lzh.cab.iso.arj.chm.msi.wim\""),
 													(TObject*)&FExt7zDll},
+#else
+		{_T("FExt7zDll=\".arj.chm.msi.wim\""),		(TObject*)&FExt7zDll},
+#endif
+
 		{_T("SttBarFmt=\"$F\""),					(TObject*)&SttBarFmt},
 		{_T("SttClockFmt=\"\""),					(TObject*)&SttClockFmt},
 		{_T("DrvInfFmtR=\"$VN    $US Use    $FS Free($FR) \""),
@@ -1850,6 +1867,7 @@ void InitializeGlobal()
 		{_T("X1BtnCmdI=\"\""),						(TObject*)&X1BtnCmdI},
 		{_T("X2BtnCmdI=\"\""),						(TObject*)&X2BtnCmdI},
 		{_T("MigemoPath=\"\""),						(TObject*)&MigemoPath},
+		{_T("SpiDir=\"\""),							(TObject*)&SpiDir},
 		{_T("BgImgName=\"\""),						(TObject*)&BgImgName[0]},
 		{_T("BgImgName2=\"\""),						(TObject*)&BgImgName[1]},
 		{_T("SpImgName=\"\""),						(TObject*)&BgImgName[2]},
@@ -1950,6 +1968,7 @@ void InitializeGlobal()
 		{_T("KeyboardMode=0"),				(TObject*)&KeyboardMode},
 
 		//Bool (デフォルト値を true または false で指定)
+		{_T("UseSpiFirst=false"),			(TObject*)&UseSpiFirst},
 		{_T("LastMigemoMode=false"),		(TObject*)&LastMigemoMode},
 		{_T("LastMigemoModeF=false"),		(TObject*)&LastMigemoModeF},
 		{_T("DivFileListUD=false"),			(TObject*)&DivFileListUD},
@@ -2248,6 +2267,7 @@ void InitializeGlobal()
 		{_T("S:BakSetupList="),				(TObject*)BakSetupList},
 		{_T("S:CustomColors="),				(TObject*)UserModule->ColorDlg->CustomColors},
 		{_T("S:TagColList="),				(TObject*)usr_TAG->TagColList},
+		{_T("S:HideInfItems="),				(TObject*)HideInfItems},
 
 		//リスト	(prefix = L:)	最大項目数,引用符を外す
 		{_T("L:DirStack=30,false"),			(TObject*)DirStack},
@@ -2374,6 +2394,8 @@ void InitializeGlobal()
 	usr_ARC->FExt7zDll = FExt7zDll;
 	usr_ARC->fpAddDebugLog = AddDebugLog;
 
+	SPI = new SpiUnit();
+
 	usr_Migemo = new MigemoUnit(rel_to_absdir(MigemoPath));
 	usr_Migemo->MinLength = IncSeaMigemoMin;
 
@@ -2454,6 +2476,7 @@ void EndGlobal()
 	for (int i=0; i<MAX_BGIMAGE; i++) delete BgImgBuff[i];
 
 	delete usr_Migemo;
+	delete SPI;
 	delete usr_ARC;
 	delete usr_TAG;
 	delete usr_SH;
@@ -3569,33 +3592,40 @@ UnicodeString make_ResponseFile(TStringList *lst,
 	std::unique_ptr<TStringList> r_lst(new TStringList());
 	std::unique_ptr<TStringList> f_lst(new TStringList());
 
-	if (arc_t==UARCTYP_CAB && lst->Count>250) {
-		for (int i=0; i<lst->Count; i++) r_lst->Add(add_quot_if_spc(lst->Strings[i]));
+	//統合アーカイバ以外 (エラー)
+	if (arc_t==0) {
+		return RESPONSE_ERR;
 	}
+	//統合アーカイバ
 	else {
-		for (int i=0; i<lst->Count; i++) {
-			UnicodeString fnam = lst->Strings[i];
-			if ((arc_t!=UARCTYP_RAR && starts_AT(fnam)) || (arc_t==UARCTYP_CAB && StartsStr('-', fnam)))
-				r_lst->Add(add_quot_if_spc(fnam));
-			else {
-				//※unrarXX.dll のバグ? 対策
-				if (starts_AT(fnam)) fnam = "?" + exclude_top(fnam);
-				f_lst->Add(add_quot_if_spc(fnam));
+		if (arc_t==UARCTYP_CAB && lst->Count>250) {
+			for (int i=0; i<lst->Count; i++) r_lst->Add(add_quot_if_spc(lst->Strings[i]));
+		}
+		else {
+			for (int i=0; i<lst->Count; i++) {
+				UnicodeString fnam = lst->Strings[i];
+				if ((arc_t!=UARCTYP_RAR && starts_AT(fnam)) || (arc_t==UARCTYP_CAB && StartsStr('-', fnam)))
+					r_lst->Add(add_quot_if_spc(fnam));
+				else {
+					//※unrarXX.dll のバグ? 対策
+					if (starts_AT(fnam)) fnam = "?" + exclude_top(fnam);
+					f_lst->Add(add_quot_if_spc(fnam));
+				}
 			}
 		}
-	}
 
-	//レスポンスファイルのみ
-	if ((excl || !files) && r_lst->Count>0 && f_lst->Count>0) {
-		r_lst->Clear();
-		f_lst->Clear();
-		for (int i=0; i<lst->Count; i++) r_lst->Add(add_quot_if_spc(lst->Strings[i]));
-	}
-	//リスト
-	if (files && f_lst->Count>0) {
-		for (int i=0; i<f_lst->Count; i++) {
-			if (i>0) *files += " ";
-			*files += f_lst->Strings[i];
+		//レスポンスファイルのみ
+		if ((excl || !files) && r_lst->Count>0 && f_lst->Count>0) {
+			r_lst->Clear();
+			f_lst->Clear();
+			for (int i=0; i<lst->Count; i++) r_lst->Add(add_quot_if_spc(lst->Strings[i]));
+		}
+		//リスト
+		if (files && f_lst->Count>0) {
+			for (int i=0; i<f_lst->Count; i++) {
+				if (i>0) *files += " ";
+				*files += f_lst->Strings[i];
+			}
 		}
 	}
 
@@ -4124,20 +4154,25 @@ bool SetTmpFile(
 
 			if (!not_unpk && !file_exists(tmp_name)) {
 				fp->tmp_name = EmptyStr;
-				UnicodeString fnam = fp->f_name;
-				if (contains_Slash(fnam)) fnam = get_tkn_r(fnam, '/');
-				UnicodeString res_file = make_ResponseFile(fnam, usr_ARC->GetArcType(fp->arc_name));
-				if (res_file==RESPONSE_ERR) Abort();
-				if (!res_file.IsEmpty()) fnam = "@" + res_file;
-				bool ok = usr_ARC->UnPack(fp->arc_name, tmp_path, add_quot_if_spc(fnam), false, !show_prg);
-				delete_FileIf(res_file);
-				if (!ok) {
-					UnicodeString msg = make_LogHdr(_T("UNPACK"), fnam);
-					msg[1] = 'E';
-					set_LogErrMsg(msg, LoadUsrMsg(USTR_FaildTmpUnpack));
-					msg += usr_ARC->ErrMsg;
-					AddLog(msg);
-					Abort();
+				if (!is_X64() && SPI->TestFExt(get_extension(fp->arc_name), true)) {
+					if (!SPI->UnPack(fp->arc_name, fp->f_name, tmp_path)) Abort();
+				}
+				else {
+					UnicodeString fnam = fp->f_name;
+					if (contains_Slash(fnam)) fnam = get_tkn_r(fnam, '/');
+					UnicodeString res_file = make_ResponseFile(fnam, usr_ARC->GetArcType(fp->arc_name));
+					if (res_file==RESPONSE_ERR) Abort();
+					if (!res_file.IsEmpty()) fnam = "@" + res_file;
+					bool ok = usr_ARC->UnPack(fp->arc_name, tmp_path, add_quot_if_spc(fnam), false, !show_prg);
+					delete_FileIf(res_file);
+					if (!ok) {
+						UnicodeString msg = make_LogHdr(_T("UNPACK"), fnam);
+						msg[1] = 'E';
+						set_LogErrMsg(msg, LoadUsrMsg(USTR_FaildTmpUnpack));
+						msg += usr_ARC->ErrMsg;
+						AddLog(msg);
+						Abort();
+					}
 				}
 			}
 			fp->tmp_name = tmp_name;
@@ -5128,7 +5163,7 @@ bool check_file_ex(UnicodeString fnam, flist_stt *lst_stt)
 	if (!lst_stt->find_PrpKwd.IsEmpty()) {
 		std::unique_ptr<TStringList> lst(new TStringList());	//ファイル情報用
 		TStringList *i_lst = lst.get();
-		add_PropLine(_T("種類"), usr_SH->get_FileTypeStr(fnam, true), i_lst);
+		add_PropLine(_T("種類"), usr_SH->get_FileTypeStr(fnam), i_lst);
 
 		if (use_Proc) 						get_ProcessingInf(fnam, i_lst);
 
@@ -7103,6 +7138,34 @@ UnicodeString NetDriveName_to_UNC(UnicodeString pnam)
 }
 
 //---------------------------------------------------------------------------
+// *._sf ファイルからパスを取得
+//---------------------------------------------------------------------------
+UnicodeString get_PathFrom_SF(file_rec *fp)
+{
+	UnicodeString dnam;
+	if (fp->is_virtual && !fp->is_ftp) {
+		if (SPI->TestFExt(fp->f_ext, true)) {
+			std::unique_ptr<TMemoryStream> ms(new TMemoryStream());
+			if (SPI->UnPack(fp->arc_name, fp->f_name, ms.get())) {
+				std::unique_ptr<TStringList> o_lst(new TStringList());
+				int code_page = get_MemoryCodePage(ms.get());
+				if (code_page>0) {
+					std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(code_page));
+					ms->Seek(0, soFromBeginning);
+					o_lst->LoadFromStream(ms.get(), enc.get());
+					if (o_lst->Count>0) dnam = o_lst->Strings[0];
+				}
+			}
+		}
+	}
+	else
+		dnam = get_top_line(fp->f_name);
+	dnam = get_tkn_r(dnam, _T("_SF:"));
+
+	return dnam;
+}
+
+//---------------------------------------------------------------------------
 //登録ディレクトリのパス項目を取得
 //---------------------------------------------------------------------------
 UnicodeString get_RegDirItem(int idx)
@@ -7461,6 +7524,19 @@ void GetFileInfList(
 	//ファイル情報を取得
 	//--------------------------
 	std::unique_ptr<TStringList> i_buf(new TStringList());
+	//._SF
+	if (test_FileExt(fp->f_ext, _T("._sf"))) {
+		//種類
+		add_PropLine(_T("種類"), "_SF ファイル", i_list);
+		//パス
+		add_PropLine_if(_T("パス"), get_PathFrom_SF(fp), i_list);
+
+		if (is_X64())
+			i_list->Add(EmptyStr);
+		else
+			return;
+	}
+
 	if (get_FileInfList(fp, i_buf.get())) i_list->AddStrings(i_buf.get());
 }
 
@@ -7564,8 +7640,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 	xp += get_TextWidth(cv, namstr, is_irreg);
 
 	//内容
-	cv->Font->Color = use_fgsel? col_fgSelItem :
-					  contains_wd_i(iname, EmpInfItems.c_str())? col_fgInfEmp : col_fgInf;
+	cv->Font->Color = use_fgsel? col_fgSelItem : test_word_i(iname, EmpInfItems)? col_fgInfEmp : col_fgInf;
 
 	if		(flag & LBFLG_PATH_FIF)	PathNameOut(lbuf, cv, xp, yp);
 	else if (flag & LBFLG_FILE_FIF)	Emphasis_RLO_info(lbuf, cv, xp, yp);
@@ -7739,7 +7814,7 @@ bool get_FileInfList(
 		//項目の種類
 		//----------------------
 		UnicodeString tnam = (!fp->is_dir && fp->is_sym)? UnicodeString("シンボリックリンク")
-														: usr_SH->get_FileTypeStr(fnam, true);
+														: usr_SH->get_FileTypeStr(fnam);
 		//NyanFi 固有のファイル
 		UnicodeString typ_str = get_IniTypeStr(fp);
 		if		(!typ_str.IsEmpty())							tnam.cat_sprintf(_T(" [%s]"), typ_str.c_str());
@@ -7758,6 +7833,10 @@ bool get_FileInfList(
 		}
 
 		add_PropLine(_T("種類"), tnam, lst, LBFLG_TYPE_FIF);
+
+		//ハードリンク数
+		int lnk_cnt = get_HardLinkCount(fnam);
+		if (lnk_cnt>1) add_PropLine(_T("ハードリンク数"), lnk_cnt, lst);
 
 		bool fp_created = false;
 		file_rec *org_fp = fp;

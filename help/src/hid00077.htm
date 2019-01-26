@@ -4,7 +4,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
 <title>振り分けダイアログ</title>
 <link rel="stylesheet" type="text/css" href="help.css">
-
+<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+	<param name="Keyword" value="Distribute.INI">
+	<param name="Keyword" value="DistributionDlg">
+	<param name="Keyword" value="リストファイル">
+	<param name="Keyword" value="振り分け">
+	<param name="Keyword" value="正規表現">
+</object>
 </head>
 
 <body>
@@ -68,7 +74,7 @@ yyyy 年(4桁)、yy 年(2桁)、mm 月(01～12)、dd 日(01～31)、hh 時(00～23)、nn 分(00�
 　hogehoge.jpg → D:\img2016<br>
 <br>
 
-<b>例</b>: 名前の末尾が3桁数字のテキストファイルを100番毎に振り分け(相対指定)<br>
+<b>例</b>: 名前の末尾が3桁数字のテキストファイルを100番ごとに振り分け(相対指定)<br>
 　<span class="inp_box">/(\d)\d{2}\.txt/</span> → <span class="inp_box">\E\100-\199</span><br>
 　hoge012.txt → txt000-099<br>
 　hoge345.txt → txt300-399<br>

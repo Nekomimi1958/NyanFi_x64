@@ -351,9 +351,9 @@ bool test_FileExt(UnicodeString fext, UnicodeString list)
 {
 	if (list.IsEmpty() || fext.IsEmpty() || USAME_TS(fext, ".")) return false;
 	if (USAME_TS(list, "*") || USAME_TS(list, ".*")) return true;
-	if (!StartsStr(".", fext)) fext.Insert(".", 1);
+	if (!StartsStr('.', fext)) fext.Insert(".", 1);
 	if (!EndsStr('.', fext))   fext.UCAT_T(".");
-	if (!StartsStr(".", list)) list.Insert(".", 1);
+	if (!StartsStr('.', list)) list.Insert(".", 1);
 	if (!EndsStr('.', list))   list.UCAT_T(".");
 	return ContainsText(list, fext);
 }

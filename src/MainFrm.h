@@ -252,6 +252,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *Inf_EditCopy;
 	TAction *Inf_EditSelectAll;
 	TAction *Inf_EmpItemAction;
+	TAction *Inf_HideItemAction;
 	TAction *Inf_OpenUrlAction;
 	TAction *InputCommandsAction;
 	TAction *InputDirAction;
@@ -669,8 +670,10 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *HtmlToTextItem;
 	TMenuItem *InfEditCopyItem;
 	TMenuItem *InfEditSelectAllItem;
-	TMenuItem *InfEmpItemAction;
+	TMenuItem *InfEmpItemItem;
+	TMenuItem *InfHideItemItem;
 	TMenuItem *InfOpenUrlItem;
+	TMenuItem *InfShowItemItem;
 	TMenuItem *InspectorItem;
 	TMenuItem *InsSeparatorItem;
 	TMenuItem *InvSelItem;
@@ -1387,9 +1390,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CopyPreImgActionExecute(TObject *Sender);
 	void __fastcall ShowPreviewActionExecute(TObject *Sender);
 	void __fastcall ShowIconActionExecute(TObject *Sender);
-	void __fastcall Inf_EditCopyExecute(TObject *Sender);
-	void __fastcall Inf_EditCopyUpdate(TObject *Sender);
-	void __fastcall Inf_EditSelectAllExecute(TObject *Sender);
 	void __fastcall ShowHideAtrActionExecute(TObject *Sender);
 	void __fastcall ShowSystemAtrActionExecute(TObject *Sender);
 	void __fastcall ExeCommandsActionExecute(TObject *Sender);
@@ -1557,8 +1557,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall PopEjectItemClick(TObject *Sender);
 	void __fastcall ShowByteSizeActionExecute(TObject *Sender);
 	void __fastcall ShowByteSizeActionUpdate(TObject *Sender);
-	void __fastcall Inf_OpenUrlActionExecute(TObject *Sender);
-	void __fastcall Inf_OpenUrlActionUpdate(TObject *Sender);
 	void __fastcall FilterComboBoxChange(TObject *Sender);
 	void __fastcall FilterComboBoxExit(TObject *Sender);
 	void __fastcall FilterComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
@@ -1649,7 +1647,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TrayPopupMenuPopup(TObject *Sender);
 	void __fastcall ShowNyanFiClick(TObject *Sender);
 	void __fastcall TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
-	void __fastcall Inf_EditSelectAllUpdate(TObject *Sender);
 	void __fastcall Log_EditSelectAllUpdate(TObject *Sender);
 	void __fastcall LibraryActionExecute(TObject *Sender);
 	void __fastcall LibraryItemClick(TObject *Sender);
@@ -1786,8 +1783,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SaveAsResultListActionExecute(TObject *Sender);
 	void __fastcall LoadResultListActionExecute(TObject *Sender);
 	void __fastcall SaveAsResultListActionUpdate(TObject *Sender);
-	void __fastcall Inf_EmpItemActionExecute(TObject *Sender);
-	void __fastcall Inf_EmpItemActionUpdate(TObject *Sender);
 	void __fastcall SaveAsTabGroupActionExecute(TObject *Sender);
 	void __fastcall LoadTabGroupActionExecute(TObject *Sender);
 	void __fastcall TabGroupActionUpdate(TObject *Sender);
@@ -1796,6 +1791,18 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ListTreeActionExecute(TObject *Sender);
 	void __fastcall GrepRepComboBoxEnter(TObject *Sender);
 	void __fastcall TextMarginBoxPaint(TObject *Sender);
+	void __fastcall InfPopupMenuPopup(TObject *Sender);
+	void __fastcall ShowInfItemClick(TObject *Sender);
+	void __fastcall Inf_EditCopyExecute(TObject *Sender);
+	void __fastcall Inf_EditCopyUpdate(TObject *Sender);
+	void __fastcall Inf_EditSelectAllExecute(TObject *Sender);
+	void __fastcall Inf_EditSelectAllUpdate(TObject *Sender);
+	void __fastcall Inf_EmpItemActionExecute(TObject *Sender);
+	void __fastcall Inf_EmpItemActionUpdate(TObject *Sender);
+	void __fastcall Inf_HideItemActionExecute(TObject *Sender);
+	void __fastcall Inf_HideItemActionUpdate(TObject *Sender);
+	void __fastcall Inf_OpenUrlActionExecute(TObject *Sender);
+	void __fastcall Inf_OpenUrlActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -1819,7 +1826,8 @@ private:	// ユーザー宣言
 	bool HideBgImg[MAX_FILELIST];
 	int  DrawOppCsr;					//反対側カーソルの描画
 	int  KeepCurCsr;					//カレント側カーソル表示を維持
-	bool KeepModal;						//モーダル表示効果を維持
+	bool KeepModalScr;					//モーダル表示効果を維持
+	bool InhModalScr;					//モーダル表示効果を抑止
 	bool ApplyDotNyan;					//.nyanfi を適用
 	bool ChkHardLink;					//ReloadList でハードリンク更新
 
@@ -2024,6 +2032,11 @@ private:	// ユーザー宣言
 	bool __fastcall EqualDirLR();
 	bool __fastcall IsDiffList();
 
+	TListBox * __fastcall GetCurInfListBox()
+	{
+		return ((ScrMode==SCMD_IVIEW)? ImgInfListBox : InfListBox);
+	}
+
 	void __fastcall SetIncSeaCaret(UnicodeString s = EmptyStr);
 	void __fastcall ResetIncSeaFilter(int tag, bool set_listbox = false);
 	void __fastcall SaveToTmpBufList();
@@ -2115,6 +2128,11 @@ private:	// ユーザー宣言
 		UnicodeString last_nam = EmptyStr, int last_idx = -1, int last_top = -1);
 
 	bool __fastcall ChangeArcFileList(UnicodeString anam, UnicodeString dnam, int tag, UnicodeString last_nam = EmptyStr);
+
+#if !defined(_WIN64)
+	bool __fastcall ChangeSpiArcList(UnicodeString anam, UnicodeString dnam, int tag, UnicodeString last_nam = EmptyStr);
+#endif
+
 	bool __fastcall ChangeArcFileListEx(UnicodeString anam, UnicodeString dnam, int tag, UnicodeString last_nam = EmptyStr);
 	bool __fastcall ChangeAdsList(UnicodeString fnam, int tag);
 	bool __fastcall ChangeFtpFileList(int tag = CurListTag, UnicodeString dnam = EmptyStr, UnicodeString last_nam = EmptyStr);
@@ -2341,6 +2359,5 @@ public:		// ユーザー宣言
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TNyanFiForm *NyanFiForm;
-
 //---------------------------------------------------------------------------
 #endif

@@ -4,7 +4,25 @@
 <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
 <title>オプション設定 - 一般2</title>
 <link rel="stylesheet" type="text/css" href="help.css">
-
+<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+	<param name="Keyword" value=".nyanfi">
+	<param name="Keyword" value="7z.dll">
+	<param name="Keyword" value="7-zip64.dll">
+	<param name="Keyword" value="NTFS">
+	<param name="Keyword" value="OpenStandard">
+	<param name="Keyword" value="ShowFileInfo">
+	<param name="Keyword" value="ShowPreview">
+	<param name="Keyword" value="Zone.Identifier">
+	<param name="Keyword" value="イメージプレビュー">
+	<param name="Keyword" value="タスク">
+	<param name="Keyword" value="タスクトレイ">
+	<param name="Keyword" value="テキストプレビュー">
+	<param name="Keyword" value="ファイル情報">
+	<param name="Keyword" value="ログ">
+	<param name="Keyword" value="一般2">
+	<param name="Keyword" value="呼び出しホットキー">
+	<param name="Keyword" value="代替データストリーム">
+</object>
 </head>
 
 <body>
@@ -15,6 +33,9 @@
 <dd>
 ファイル情報の取得・表示に関する設定です。情報取得に時間がかかってファイラー操作がもたつく場合などに設定してみてください。<br>
 ファイル情報が非表示で、かつステータスバーが非表示あるいは表示されていても書式に <b>$PR</b>(プロパティ)が用いられていない場合には、ファイル情報を取得しません。また、コピー・移動などで処理中のファイルは取得が抑止されます。<br>
+<div class="spc_box">
+なお、ファイル情報の右クリックメニューで「<b>この項目を隠す</b>」/「<b>隠した項目を戻す</b>」を用いると、拡張子ごとに非表示にしたい項目を設定できます。<br>
+</div>
 
 <dt class="no_bg_indent1">情報を取得しないパス <img src="edit.png" alt="" border=0>
 <dd>
@@ -22,12 +43,12 @@
 ドライブ名から始まるフルパスで指定します。<b>;</b> (セミコロン)で区切って複数指定可能です。前方一致なので、完全なパスの形式になっていなくてもかまいません。例えば &quot;<b>\\</b>&quot; を指定すると、すべてのUNCパスにマッチします。<br>
 また、通常のパス指定以外に以下の書式文字列によるドライブ指定も可能です。カレント(UNCの場合を除く)のドライブが該当する場合、ファイル情報を取得しません。<br>
 <div class="indent1">
-<b>$H</b>　HDD(SSD、RAMディスク以外、SSD は Windows 7 以降でのみ判別可能)<br>
+<b>$H</b>　HDD(SSD、RAMディスク以外)<br>
 <b>$C</b>　CD-ROMドライブ<br>
 <b>$R</b>　リムーバブル・メディア<br>
 <b>$N</b>　ネットワーク・ドライブ<br>
 <b>$U</b>　USB接続のすべてのドライブ<br>
-<b>$UH</b>　USB接続のHDD(SSD以外、Windows 7 以降でのみ判別可能)<br>
+<b>$UH</b>　USB接続のHDD(SSD以外)<br>
 <b>$UC</b>　USB接続のCD-ROMドライブ<br>
 <b>$UR</b>　USB接続のリムーバブル・メディア<br>
 </div>

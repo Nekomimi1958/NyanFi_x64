@@ -19,6 +19,7 @@
 #include "usr_tag.h"
 #include "UIniFile.h"
 #include "UserFunc.h"
+#include "spiunit.h"
 #include "htmconv.h"
 #include "task_thread.h"
 #include "imgv_thread.h"
@@ -165,6 +166,7 @@ extern FUNC_GetFontResourceInfo lpGetFontResourceInfo;
 //load_ImageFile の戻り値
 #define LOADED_BY_STD	1		//WIC標準
 #define LOADED_BY_WIC	2		//WICその他
+#define LOADED_BY_SPI	3		//Susie
 
 //---------------------------------------------------------------------------
 //二重起動終了時の画面情報
@@ -243,6 +245,10 @@ extern MigemoUnit  *usr_Migemo;
 extern UnicodeString MigemoPath;
 extern bool LastMigemoMode;
 extern bool LastMigemoModeF;
+
+extern SpiUnit *SPI;
+extern UnicodeString SpiDir;
+extern bool UseSpiFirst;
 
 extern int  WicScaleOpt;
 extern UnicodeString WicFextStr;
@@ -482,6 +488,7 @@ extern UnicodeString FExtGetInf;
 extern UnicodeString FExtNoInf;
 extern UnicodeString NoInfPath;
 extern UnicodeString EmpInfItems;
+extern TStringList  *HideInfItems;
 
 extern UnicodeString FExtImgPrv;
 extern UnicodeString FExtNoImgPrv;
@@ -1680,6 +1687,7 @@ UnicodeString get_DispName(file_rec *fp);
 UnicodeString get_RegDirName(UnicodeString pnam);
 UnicodeString UNC_to_NetDriveName(UnicodeString pnam);
 UnicodeString NetDriveName_to_UNC(UnicodeString pnam);
+UnicodeString get_PathFrom_SF(file_rec *fp);
 UnicodeString get_RegDirItem(int idx);
 UnicodeString get_RegDirItem(WideChar key);
 void move_top_RegDirItem(int idx);
