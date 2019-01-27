@@ -457,7 +457,7 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	else if (Node->Level>0) {
 		cv->Pen->Color = col_HR;
 		int xl = XmlTreeView->Indent * Node->Level + l_ofs - scr_p;
-		int x2 = xl + ScaledInt(8);
+		int x2 = xl + Scaled8;
 		if (x2>=0) {
 			if (Node->getNextSibling()) {
 				cv->MoveTo(xl, rc_s.Top);

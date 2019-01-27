@@ -44,6 +44,7 @@ private:	// ユーザー宣言
 	TStringList *ItemList;		//候補リスト
 	TStringList *SubCmdList;	//補助コマンドリスト
 	TStringList *HistoryList;
+	UnicodeString IdChar;
 	bool InhFilter;
 	bool IsRef;
 

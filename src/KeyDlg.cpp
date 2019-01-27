@@ -138,11 +138,13 @@ void __fastcall TKeyListDlg::KeyTabControlChange(TObject *Sender)
 			int i=0;
 			while (i<CurList->Count) {
 				UnicodeString lbuf = get_tkn_r(CurList->Strings[i], ':');
-				lbuf.cat_sprintf(_T(" %s"), CommandList->Values[get_CmdStr(get_tkn_r(lbuf, '='))].c_str());
+				UnicodeString desc = get_CmdDesc(get_CmdStr(get_tkn_r(lbuf, '=')), true, NULL,NULL, USAME_TI(id_str, "V:"));
+				lbuf.cat_sprintf(_T(" %s"), desc.c_str());
 				if (!TRegEx::IsMatch(lbuf, ptn, opt)) CurList->Delete(i); else i++;
 			}
 		}
-		else beep_Warn();
+		else if (!MigemoCheckBox->Checked)
+			beep_Warn();
 	}
 
 	//É\Å[Ég

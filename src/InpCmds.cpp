@@ -94,23 +94,22 @@ void __fastcall TInpCmdsDlg::SetList()
 	if (HistoryList) HistoryList->Assign(CmdsComboBox->Items);
 	HistoryList = NULL;
 
-	UnicodeString idxStr;
 	bool is_TV = false;
 	if ((IsRef && ModeTabControl->TabIndex==1) || (!IsRef && ScrMode==SCMD_TVIEW)) {
 		if (!IsRef) HistoryList = InputCmdsHistory;
-		idxStr.USET_T("V");
+		IdChar.USET_T("V");
 		is_TV = true;
 	}
 	else if ((IsRef && ModeTabControl->TabIndex==2) || (!IsRef && ScrMode==SCMD_IVIEW)) {
 		if (!IsRef) HistoryList = InputCmdsHistoryV;
-		idxStr.USET_T("I");
+		IdChar.USET_T("I");
 	}
 	else if (IsRef && ModeTabControl->TabIndex==3) {
-		idxStr.USET_T("L");
+		IdChar.USET_T("L");
 	}
 	else {
 		if (!IsRef) HistoryList = InputCmdsHistoryI;
-		idxStr.USET_T("F");
+		IdChar.USET_T("F");
 	}
 	if (HistoryList) CmdsComboBox->Items->Assign(HistoryList); else CmdsComboBox->Clear();
 
@@ -118,7 +117,7 @@ void __fastcall TInpCmdsDlg::SetList()
 	ItemList->Clear();
 	for (int i=0; i<CmdSetList->Count; i++) {
 		UnicodeString lbuf = CmdSetList->Strings[i];
-		if (StartsStr(idxStr, lbuf))
+		if (StartsStr(IdChar, lbuf))
 			ItemList->Add(get_CmdDesc(get_tkn_r(lbuf, ':'), false,NULL,NULL, is_TV));
 	}
 
@@ -179,8 +178,16 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 			UnicodeString wd = get_tkn(SubComboBox->Text, ' ');
 			SubComboBox->DroppedDown = false;
 			UnicodeString lbuf = cp_inp->Text;
-			int p = pos_r_q_colon(lbuf); 
-			lbuf = (p>0)? lbuf.SubString(1, p).UCAT_T(" ") : EmptyStr;
+			//コマンド
+			if (SubComboBox->Tag==0) {
+				int p = pos_r_q_colon(lbuf);
+				lbuf = (p>0)? lbuf.SubString(1, p).UCAT_T(" ") : EmptyStr;
+			}
+			//パラメータ
+			else {
+				int p= pos_r_q("_", lbuf);
+				lbuf = (p>0)? lbuf.SubString(1, p) : EmptyStr;
+			}
 			lbuf += wd;
 			cp_inp->SetFocus();
 			cp_inp->Text	  = lbuf;
@@ -236,9 +243,17 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	//状況依存ヘルプ
 	else if (equal_F1(KeyStr)) {
 		UnicodeString kwd;
-		if (SubComboBox->DroppedDown && SubComboBox->ItemIndex!=-1)
-			kwd = get_tkn(SubComboBox->Items->Strings[SubComboBox->ItemIndex], ' ');
-		if (kwd.IsEmpty()) kwd = get_tkn(get_CmdStr(CmdsComboBox->Text), ':');
+		if (SubComboBox->Tag==0) {
+			if (SubComboBox->DroppedDown && SubComboBox->ItemIndex!=-1)
+				kwd = get_tkn(SubComboBox->Items->Strings[SubComboBox->ItemIndex], ' ');
+		}
+		else {
+			kwd = CmdsComboBox->Text;
+			int p = pos_r_q_colon(kwd);
+			kwd = (p>0)? get_CmdStr(kwd.SubString(p + 1, kwd.Length() - p)) : EmptyStr;
+		}
+
+		if (kwd.IsEmpty()) kwd = get_CmdStr(get_tkn(CmdsComboBox->Text, ':'));
 
 		UnicodeString topic;
 		if (kwd.IsEmpty() || starts_AT(kwd) || starts_Dollar(kwd)) {
@@ -299,9 +314,8 @@ void __fastcall TInpCmdsDlg::SubComboBoxDrawItem(TWinControl *Control, int Index
 	int x = Rect.Left + 2;
 	int y = Rect.Top + get_TopMargin(cv);
 	UnicodeString lbuf = SubComboBox->Items->Strings[Index];
-
 	cv->TextOut(x, y, split_tkn(lbuf, ' '));
-	x += abs(cv->Font->Height) * 16;	//***
+	x += abs(cv->Font->Height) * ((SubComboBox->Tag==1)? 6 : 16);
 	cv->TextOut(x, y, Trim(lbuf));
 }
 
@@ -343,34 +357,50 @@ void __fastcall TInpCmdsDlg::Filter()
 
 	int p = pos_r_q_colon(kwd); 
 	if (p>0) kwd = Trim(kwd.Delete(1, p));
-	if (contains_s(kwd, _T('_'))) kwd = EmptyStr;
 
 	std::unique_ptr<TStringList> lst(new TStringList());
-	if (!kwd.IsEmpty()) {
-		lst->Assign(ItemList);
-		if (!contained_wd_i(_T("*|?| "), kwd)) {
-			UnicodeString ptn = usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, kwd);
-			if (!ptn.IsEmpty()) {
-				TRegExOptions opt; opt << roIgnoreCase;
-				int i=0;
-				while (i<lst->Count) if (!TRegEx::IsMatch(lst->Strings[i], ptn, opt)) lst->Delete(i); else i++;
-			}
+	//パラメータ
+	if (contains_s(kwd, _T('_'))) {
+		get_PrmList(get_CmdStr(kwd), ScrModeIdStr.Pos(IdChar) - 1, lst.get());
+		kwd = get_tkn_r(kwd, '_');
+		SubComboBox->Tag = 1;
+	}
+	//コマンド
+	else {
+		SubComboBox->Tag = 0;
+		if (!kwd.IsEmpty()) lst->Assign(ItemList);
+	}
+
+	//絞り込み
+	if (lst->Count>0 && !contained_wd_i(_T("*|?| "), kwd)) {
+		UnicodeString ptn = usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, kwd);
+		if (!ptn.IsEmpty()) {
+			TRegExOptions opt; opt << roIgnoreCase;
+			int i=0;
+			while (i<lst->Count) if (!TRegEx::IsMatch(lst->Strings[i], ptn, opt)) lst->Delete(i); else i++;
 		}
 	}
 
 	if (lst->Count>0) {
-		//裏コンボボックスに割り当て
-		cursor_Default();
-		set_RedrawOff(SubComboBox);
-		{
-			SubComboBox->DroppedDown = false;
-			SubComboBox->Items->Assign(lst.get());
-			SubComboBox->DroppedDown = true;
-			SubComboBox->ItemIndex	 = 0;
-			SubComboBox->Enabled	 = true;
+		bool changed = (SubComboBox->Items->Count!=lst->Count);
+		if (!changed) {
+			for (int i=0; i<lst->Count && !changed; i++)
+				changed = !SameStr(SubComboBox->Items->Strings[i], lst->Strings[i]);
 		}
-		set_RedrawOn(SubComboBox);
-		Screen->Cursor = crArrow;	//※ドロップダウン時にカーソルが消える現象への対策
+		if (changed) {
+			//裏コンボボックスに割り当て
+			cursor_Default();
+			set_RedrawOff(SubComboBox);
+			{
+				SubComboBox->DroppedDown = false;
+				SubComboBox->Items->Assign(lst.get());
+				SubComboBox->DroppedDown = true;
+				SubComboBox->ItemIndex	 = 0;
+				SubComboBox->Enabled	 = true;
+			}
+			set_RedrawOn(SubComboBox);
+			Screen->Cursor = crArrow;	//※ドロップダウン時にカーソルが消える現象への対策
+		}
 	}
 	else {
 		SubComboBox->DroppedDown = false;

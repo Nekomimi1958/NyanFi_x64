@@ -167,6 +167,9 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	TWndMethod org_GenListWndProc;
 	void __fastcall GenListWndProc(TMessage &msg);
 
+	TWndMethod org_SttBar1WndProc;
+	void __fastcall SttBar1WndProc(TMessage &msg);
+
 	bool __fastcall UpdateList(bool reload = false);
 	UnicodeString __fastcall GetBuffText();
 

@@ -24,6 +24,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
     Top = 492
     Width = 470
     Height = 20
+    DoubleBuffered = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -47,8 +48,9 @@ object GeneralInfoDlg: TGeneralInfoDlg
         Style = psOwnerDraw
         Width = 50
       end>
+    ParentDoubleBuffered = False
     UseSystemFont = False
-    StyleElements = []
+    StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
   end
   object MianPanel: TPanel

@@ -14,6 +14,7 @@
 #include "usr_file_ex.h"
 #include "usr_arc.h"
 #include "usr_migemo.h"
+#include "usr_cmdlist.h"
 #include "usr_scrpanel.h"
 #include "usr_highlight.h"
 #include "usr_tag.h"
@@ -209,7 +210,6 @@ extern UnicodeString KeysStr_Popup;
 extern UnicodeString TabPinMark;
 
 extern UnicodeString SortIdStr;
-extern UnicodeString ScrModeIdStr;
 
 //---------------------------------------------------------------------------
 extern HWND   MainHandle;
@@ -219,8 +219,15 @@ extern bool   IsPrimary;
 extern int    StartedCount;
 extern int    NyanFiIdNo;
 extern int    ScrMode;
+
 extern double ScrScale;
 extern int    SIcoSize;
+extern int    Scaled1;
+extern int    Scaled2;
+extern int    Scaled3;
+extern int    Scaled4;
+extern int    Scaled8;
+
 extern TRect  FileListRect;
 extern bool   IsMuted;
 
@@ -1743,8 +1750,6 @@ void add_FExtInfList(TStringList *f_lst, TStringList *lst);
 bool get_img_size(UnicodeString fnam, unsigned int *wd, unsigned int *hi);
 int  load_ImageFile(UnicodeString fnam, Graphics::TBitmap *o_bmp, int img_type = WICIMG_PREVIEW, TColor trans_bg = Graphics::clNone);
 
-int  ScaledInt(int n);
-
 void InitializeGlobal();
 void EndGlobal();
 
@@ -1769,16 +1774,11 @@ void change_ComboBoxHistory(TComboBox *cp, const _TCHAR *nrm_sct, const _TCHAR *
 void filter_List(TStringList *i_lst, TStringList *o_lst, UnicodeString kwd,
 	bool migemo_sw, bool and_or_sw = false, bool csv_sw = false, bool tsv_sw = false, bool tree_sw = false);
 
-UnicodeString get_CmdStr(UnicodeString s);
-UnicodeString get_PrmStr(UnicodeString s);
-
 UnicodeString Key_to_CmdF(UnicodeString key);
 UnicodeString Key_to_CmdV(UnicodeString key);
 
 UnicodeString get_CmdDesc(UnicodeString cmd, bool only_inf = false,
 	TStrings *menu_list = NULL, TStrings *tool_list = NULL, bool is_TV = false);
-
-UnicodeString del_CmdDesc(UnicodeString cmd);
 
 TColor read_ColorList(UnicodeString key, TColor def, TStringList *lst = NULL);
 TColor read_ColorList(const _TCHAR *key, TColor def, TStringList *lst = NULL);
@@ -1944,8 +1944,6 @@ UnicodeString inputbox_dir(const _TCHAR *tit, const _TCHAR *cmd);
 bool is_IniSeaKey(UnicodeString &keystr);
 
 bool update_IncSeaWord(UnicodeString &kwd, UnicodeString keystr, bool fl_sw = false);
-
-UnicodeString get_CsrKeyCmd(UnicodeString KeyStr);
 
 bool is_OneNrmCmd(UnicodeString cmds, bool no_prm = false);
 

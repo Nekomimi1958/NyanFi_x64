@@ -120,8 +120,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ShowFileInfoActionExecute(TObject *Sender);
 	void __fastcall ShowFileInfoActionUpdate(TObject *Sender);
 	void __fastcall ClrBrkRecentActionExecute(TObject *Sender);
-	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-          const TRect &Rect);
+	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall ShowStatusBarActionExecute(TObject *Sender);
 	void __fastcall EditHistGridClick(TObject *Sender);
 
@@ -133,10 +132,10 @@ private:	// ユーザー宣言
 	int MarkSortMode;		//マーク一覧のソートモード
 	int MarkSortOdr[6];		//マーク一覧のソート方向
 
+	void __fastcall WmNyanFiFlIcon(TMessage &msg);
+
 	TWndMethod org_SttBar1WndProc;
 	void __fastcall SttBar1WndProc(TMessage &msg);
-
-	void __fastcall WmNyanFiFlIcon(TMessage &msg);
 
 	UnicodeString __fastcall get_CurFileName();
 	file_rec *    __fastcall get_CurFileRec();

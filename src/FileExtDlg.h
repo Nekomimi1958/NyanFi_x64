@@ -94,6 +94,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InfoListBoxKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall InfoListBoxClick(TObject *Sender);
 	void __fastcall FextInfBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
+	void __fastcall FileInfBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall FileListHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
 	void __fastcall FileListHeaderSectionClick(THeaderControl *HeaderControl, THeaderSection *Section);
 	void __fastcall FileListBoxData(TWinControl *Control, int Index, UnicodeString &Data);
@@ -132,6 +133,13 @@ private:	// ユーザー宣言
 	UnicodeString ErrMesage;
 
 	void __fastcall WmFormShowed(TMessage &msg);
+
+	TWndMethod org_FextInfBarWndProc;
+	void __fastcall FextInfBarWndProc(TMessage &msg);
+
+	TWndMethod org_FileInfBarWndProc;
+	void __fastcall FileInfBarWndProc(TMessage &msg);
+
 	bool __fastcall GetInfo(UnicodeString pnam);
 	void __fastcall GetResult(TStringList *lst, int mode = 0);
 	void __fastcall SortListX(int mode = -1);

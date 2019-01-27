@@ -58,7 +58,7 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 	InputEdit->Visible	   = false;
 	InputComboBox->Visible = false;
 	NameLabel->Visible	   = false;
-	int r_mgn = ScaledInt(8);
+	int r_mgn = Scaled8;
 
 	//ComboBox
 	if (IpuntExMode==INPEX_CRE_DIR || IpuntExMode==INPEX_NEW_TEXTFILE

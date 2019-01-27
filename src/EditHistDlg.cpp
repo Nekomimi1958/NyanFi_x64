@@ -309,8 +309,8 @@ void __fastcall TEditHistoryDlg::EditHistHeaderSectionResize(THeaderControl *Hea
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect)
 {
-	TCanvas *cv = StatusBar1->Canvas;
-	cv->Font->Assign(StatusBar1->Font);
+	TCanvas *cv = StatusBar->Canvas;
+	cv->Font->Assign(StatusBar->Font);
 	cv->Brush->Color = col_bgSttBar;
 	TRect rc = Rect;
 	cv->FillRect(rc);

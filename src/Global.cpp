@@ -74,8 +74,7 @@ UnicodeString KeysStr_Popup   = "APP|Shift+F10";
 UnicodeString TabPinMark = u"\U0001F4CD";
 
 //---------------------------------------------------------------------------
-UnicodeString SortIdStr    = "FEDSAU";
-UnicodeString ScrModeIdStr = "FSVIL";
+UnicodeString SortIdStr = "FEDSAU";
 
 //---------------------------------------------------------------------------
 HWND  MainHandle = NULL;		//メインウィンドウのハンドル
@@ -89,6 +88,11 @@ win_dat Win2Data;				//二重起動終了時の画面情報
 int    ScrMode  = SCMD_FLIST;	//画面モード
 double ScrScale = 1.0;			//画面スケーリング
 int    SIcoSize = 16;			//スモールアイコンの表示サイズ
+int    Scaled1  = 1;
+int    Scaled2  = 2;
+int    Scaled3  = 3;
+int    Scaled4  = 4;
+int    Scaled8  = 8;
 
 bool  IsMuted	= false;		//音量ミュート
 
@@ -1116,6 +1120,11 @@ void InitializeGlobal()
 
 	ScrScale = Screen->PixelsPerInch / 96.0;	//スケーリングを設定
 	SIcoSize = ScaledInt(16);
+	Scaled1  = ScaledInt(1);
+	Scaled2  = ScaledInt(2);
+	Scaled3  = ScaledInt(3);
+	Scaled4  = ScaledInt(4);
+	Scaled8  = ScaledInt(8);
 
 	//ユーザ名
 	_TCHAR szName[256];
@@ -1295,461 +1304,8 @@ void InitializeGlobal()
 
 	//コマンドリストを作成
 	CommandList = CreStringList();
-	CommandList->Text =
-		"F:AboutNyanFi=バージョン情報\n"
-		"F:AddTab=タブを追加\n"
-		"F:BackDirHist=ディレクトリ履歴を戻る\n"
-		"F:Backup=反対パスにバックアップ\n"
-		"F:BgImgMode=背景画像の表示モード設定\n"
-		"F:BorderLeft=ファイルリストの境界を左に移動\n"
-		"F:BorderRight=ファイルリストの境界を右に移動\n"
-		"F:CalcDirSize=ディレクトリ容量を計算\n"
-		"F:CalcDirSizeAll=全ディレクトリの容量を計算\n"
-		"F:ChangeDir=ディレクトリを変更\n"
-		"F:ChangeDrive=ドライブの変更\n"
-		"F:ChangeOppDir=反対側のディレクトリを変更\n"
-		"F:ChangeOppRegDir=反対側で登録ディレクトリを開く\n"
-		"F:ChangeRegDir=登録ディレクトリを開く\n"
-		"F:CheckUpdate=更新の確認\n"
-		"F:ClearMask=選択マスク/パスマスクを解除\n"
-		"F:Clone=反対パスにクローン作成\n"
-		"F:CloneToCurr=カレントにクローン作成\n"
-		"F:CommandPrompt=コマンドプロンプト\n"
-		"F:CompareDlg=同名ファイルの比較ダイアログ\n"
-		"F:CompareHash=ハッシュ値の比較\n"
-		"F:CompleteDelete=完全削除\n"
-		"F:CompressDir=ディレクトリのNTFS圧縮\n"
-		"F:ContextMenu=コンテキストメニューを表示\n"
-		"F:ConvertDoc2Txt=バイナリ文書→テキスト変換\n"
-		"F:ConvertHtm2Txt=HTML→テキスト変換\n"
-		"F:ConvertImage=画像ファイルの変換\n"
-		"F:ConvertTextEnc=文字コードの変換\n"
-		"F:Copy=コピー\n"
-		"F:CopyCmdName=コマンド名をクリップボードにコピー\n"
-		"F:CopyDir=ディレクトリ構造のコピー\n"
-		"F:CopyFileName=ファイル名をクリップボードにコピー\n"
-		"F:CopyTo=指定ディレクトリにコピー\n"
-		"F:CopyToClip=クリップボードにコピー\n"
-		"F:CountLines=テキストファイルの行数をカウント\n"
-		"F:CreateDir=ディレクトリの作成\n"
-		"F:CreateDirsDlg=ディレクトリ一括作成ダイアログ\n"
-		"F:CreateHardLink=ハードリンクの作成\n" 
-		"F:CreateJunction=ジャンクションの作成\n" 
-		"F:CreateShortcut=ショートカットの作成\n"
-		"F:CreateSymLink=シンボリックリンクの作成\n" 
-		"F:CreateTestFile=テストファイルの作成\n"
-		"F:CsrDirToOpp=カーソル位置のディレクトリを反対側に開く\n"
-		"F:CurrFromOpp=カレントパスを反対パスに\n"
-		"F:CurrToOpp=反対パスをカレントパスに\n"
-		"F:CursorEnd=カーソルを最下行に移動\n"
-		"F:CursorEndSel=選択しながらカーソルを最下行に移動\n"
-		"F:CursorTop=カーソルを最上行に移動\n"
-		"F:CursorTopSel=選択しながらカーソルを最上行に移動\n"
-		"F:CutToClip=クリップボードに切り取り\n"
-		"F:DateSelect=指定した日付条件に合うファイルを選択\n"
-		"F:DeleteADS=ファイルの代替データストリームを削除\n"
-		"F:DelJpgExif=Exif情報の削除\n"
-		"F:DelSelMask=選択マスクから項目を削除\n"
-		"F:DelTab=タブを削除\n"
-		"F:DiffDir=ディレクトリの比較\n"
-		"F:DirHistory=ディレクトリ履歴\n"
-		"F:DirStack=ディレクトリ・スタック\n"
-		"F:DistributionDlg=振り分けダイアログ\n"
-		"F:DotNyanDlg=.nyanfi ファイルの設定\n"
-		"F:DriveList=ドライブ一覧\n"
-		"F:DriveGraph=ドライブ使用率推移\n"
-		"F:EditIniFile=INIファイルの編集\n"
-		"F:Eject=CD/DVDドライブのトレイを開く\n"
-		"F:EjectDrive=ドライブの取り外し\n"
-		"F:EmptyTrash=ごみ箱を空にする\n"
-		"F:EqualListWidth=左右のリスト幅を均等に\n"
-		"F:ExeCommandLine=コマンドラインの実行\n"
-		"F:ExeExtMenu=追加メニューの実行\n"
-		"F:ExeExtTool=外部ツールの実行\n"
-		"F:Exit=NyanFiの終了\n"
-		"F:ExitDupl=二重起動されたNyanFiを終了\n"
-		"F:ExPopupMenu=拡張ポップアップメニュー\n"
-		"F:ExtractChmSrc=CHMからソースを抽出\n"
-		"F:ExtractGifBmp=アニメGIFからビットマップを抽出\n"
-		"F:ExtractIcon=アイコンを抽出\n"
-		"F:ExtractImage=埋め込み画像を抽出\n"
-		"F:ExtractMp3Img=MP3の埋め込み画像を抽出\n"
-		"F:FileExtList=拡張子別一覧\n"
-		"F:FileListOnly=ファイルリストのみを表示\n"
-		"F:FileRun=ファイル名を指定して実行\n"
-		"F:Filter=ファイルリストの絞り込み\n"
-		"F:FindDuplDlg=重複ファイルの検索ダイアログ\n"
-		"F:FindDirDlg=ディレクトリ名検索ダイアログ\n"
-		"F:FindFileDirDlg=ファイル/ディレクトリ名検索ダイアログ\n"
-		"F:FindFileDlg=ファイル名検索ダイアログ\n"
-		"F:FindHardLink=ハードリンクを列挙\n"
-		"F:FindMark=栞マーク項目を検索\n"
-		"F:FindTag=タグ検索\n"
-		"F:FixTabPath=タブ変更に対してカレントパスを一時固定/解除\n"
-		"F:FTPChmod=パーミッションの設定\n"
-		"F:FTPConnect=FTPホストに接続\n"
-		"F:FTPDisconnect=FTPホストから切断\n"
-		"F:ForwardDirHist=ディレクトリ履歴を進む\n"
-		"F:GetHash=ファイルのハッシュ値を取得\n"
-		"F:HideSizeTime=サイズと更新日時を隠す\n"
-		"F:ImageViewer=イメージビュアーで開く\n"
-		"F:InputDir=入力したディレクトリに変更\n"
-		"F:InputPathMask=パスマスクを入力\n"
-		"F:InsSeparator=ワークリストにセパレータを挿入\n"
-		"F:ItemTmpDown=項目を一時的に1つ下に移動\n"
-		"F:ItemTmpMove=選択項目を一時的にカーソル位置に移動\n"
-		"F:ItemTmpUp=項目を一時的に1つ上に移動\n"
-		"F:JoinText=テキストファイルの結合\n"
-		"F:JumpTo=指定したファイル位置へ\n"
-		"F:Library=ライブラリへ\n"
-		"F:LinkToOpp=リンク先を反対側に開く\n"
-		"F:ListArchive=アーカイブの内容一覧\n"
-		"F:ListClipboard=クリップボードを一覧で表示\n"
-		"F:ListDuration=ファイル再生時間の一覧\n"
-		"F:ListExpFunc=エクスポート関数一覧\n"
-		"F:ListFileName=ファイル名を一覧で表示\n"
-		"F:ListNyanFi=NyanFi についての情報をログに表示\n"
-		"F:ListText=テキストファイルを一覧で表示\n"
-		"F:ListTail=テキストファイルの末尾を一覧で表示\n"
-		"F:ListTree=ディレクトリ構造のツリー表示\n"
-		"F:LoadResultList=結果リストをファイルから読み込む\n"
-		"F:LoadTabGroup=タブグループをファイルから読み込む\n"
-		"F:LockTextPreview=テキストプレビューのロック/解除\n"
-		"F:LogFileInfo=ファイル情報をログに出力\n"
-		"F:MarkMask=栞マーク項目だけを残して他を隠す\n"
-		"F:MaskFind=指定マスクにマッチする項目を検索\n"
-		"F:MatchSelect=指定文字列を含むファイルを選択\n"
-		"F:MonitorOff=ディスプレイの電源を切る\n"
-		"F:Move=移動\n"
-		"F:MoveTab=タブの位置を移動\n"
-		"F:MoveTo=指定ディレクトリへ移動\n"
-		"F:MuteVolume=音量ミュート\n"
-		"F:NameFromClip=ファイル名をクリップボードの内容に\n"
-		"F:NameToLower=ファイル名の小文字化\n"
-		"F:NameToUpper=ファイル名の大文字化\n"
-		"F:NetConnect=ネットワークドライブの割り当て\n"
-		"F:NetDisconnect=ネットワークドライブの切断\n"
-		"F:NewFile=新規ファイルの作成\n"
-		"F:NewTextFile=新規テキストファイルの作成\n"
-		"F:NextDrive=次のドライブへ\n"
-		"F:NextTab=次のタブへ\n"
-		"F:OpenADS=代替データストリームを仮想リストとして開く\n"
-		"F:OpenByExp=エクスプローラで開く\n"
-		"F:OpenCtrlPanel=コントロールパネルを開く\n"
-		"F:OpenStandard=標準の Enter キー動作\n"
-		"F:OpenTrash=ごみ箱を開く\n"
-		"F:Pack=反対パスにアーカイブ作成\n"
-		"F:PackToCurr=カレントパスにアーカイブ作成\n"
-		"F:Paste=貼り付け\n"
-		"F:PathMaskDlg=パスマスクダイアログ\n"
-		"F:PlayList=プレイリストを作って再生\n"
-		"F:PopDir=ディレクトリをポップ\n"
-		"F:PopupTab=タブ選択メニューを表示\n"
-		"F:PowerOff=Windowsを終了\n"
-		"F:PowerShell=PowerShell を起動\n"
-		"F:PrevDrive=前のドライブへ\n"
-		"F:PrevTab=前のタブへ\n"
-		"F:PushDir=ディレクトリをプッシュ\n"
-		"F:Reboot=Windowsを再起動\n"
-		"F:RecentList=最近使ったファイル一覧\n"
-		"F:RegDirDlg=登録ディレクトリダイアログ\n"
-		"F:RegDirPopup=登録ディレクトリ・ポップアップメニュー\n"
-		"F:RegSyncDlg=同期コピーの設定\n"
-		"F:ReloadList=ファイルリストを最新の情報に更新\n"
-		"F:RenameDlg=名前等の変更\n"
-		"F:Restart=NyanFiの再起動\n"
-		"F:ReturnList=ファイルリスト表示に戻る\n"
-		"F:SaveAsResultList=結果リストに名前を付けて保存\n"
-		"F:SaveAsTabGroup=タブグループに名前を付けて保存\n"
-		"F:SaveTabGroup=タブグループを上書き保存\n"
-		"F:ScrollDownLog=ログを下にスクロール\n"
-		"F:ScrollDownText=テキストプレビューを下にスクロール\n"
-		"F:ScrollUpLog=ログを上にスクロール\n"
-		"F:ScrollUpText=テキストプレビューを上にスクロール\n"
-		"F:SelAllItem=すべての項目を選択/解除\n"
-		"F:SelectUp=選択/解除後、カーソルを上に移動\n"
-		"F:SelEmptyDir=空のディレクトリだけを選択\n"
-		"F:SelMask=選択中の項目だけを残して他を隠す\n"
-		"F:SelOnlyCur=カレント側だけにあるファイルを選択\n"
-		"F:SelReverseAll=すべての項目の選択状態を反転\n"
-		"F:SetAlias=ワークリストの項目にエイリアスを設定\n"
-		"F:SetArcTime=アーカイブのタイムスタンプを最新に合わせる\n"
-		"F:SetDirTime=ディレクトリのタイムスタンプを最新に合わせる\n"
-		"F:SetExifTime=タイムスタンプをExif撮影日時に設定\n"
-		"F:SetPathMask=パスマスクを設定\n"
-		"F:SetSttBarFmt=ステータスバー書式を設定\n"
-		"F:SetSubSize=サブウィンドウのサイズを設定\n"
-		"F:ShareList=共有フォルダ一覧\n"
-		"F:ShowByteSize=ファイルサイズをバイト単位で表示\n"
-		"F:ShowHideAtr=隠しファイルを表示\n"
-		"F:ShowIcon=アイコンの表示/非表示\n"
-		"F:ShowLogWin=ログウィンドウーの表示/非表示\n"
-		"F:ShowPreview=イメージプレビューの表示/非表示\n"
-		"F:ShowProperty=ファイル情報の表示/非表示\n"
-		"F:ShowSystemAtr=システムファイルを表示\n"
-		"F:ShowTabBar=タブバーの表示/非表示\n"
-		"F:SoloTab=他のタブをすべて削除\n"
-		"F:SpecialDirList=特殊フォルダ一覧\n"
-		"F:SubDirList=サブディレクトリ一覧\n"
-		"F:SwapLR=左右のファイルリストを入れ替える\n"
-		"F:SwapName=名前を入れ替える\n"
-		"F:SyncLR=左右ディレクトリの同期変更を有効/解除\n"
-		"F:TabDlg=タブの設定ダイアログ\n"
-		"F:TabHome=タブのホームへ\n"
-		"F:TestArchive=アーカイブの正当性を検査\n"
-		"F:TextViewer=テキストビュアーで開く\n"
-		"F:ToExViewer=別ウィンドウのテキストビュアーへ\n"
-		"F:ToLog=ログウィンドウへ\n"
-		"F:ToNextOnRight=右ファイルリストで次のNyanFiへ\n"
-		"F:ToOpposite=反対側のファイルリストへ\n"
-		"F:ToOppSameItem=カーソル位置と同名の反対側項目へ\n"
-		"F:ToOppSameHash=カーソル位置と同ハッシュ値の反対側項目へ\n"
-		"F:ToParent=親ディレクトリへ\n"
-		"F:ToParentOnLeft=左ファイルリストで親ディレクトリへ\n"
-		"F:ToParentOnRight=右ファイルリストで親ディレクトリへ\n"
-		"F:ToPrevOnLeft=左ファイルリストで前のNyanFiへ\n"
-		"F:ToRoot=ルートディレクトリへ\n"
-		"F:ToTab=指定番号/キャプションのタブへ\n"
-		"F:ToText=テキストプレビューへ\n"
-		"F:TrimTagData=タグデータの整理\n"
-		"F:UndoRename=直前の改名を元に戻す\n"
-		"F:UnPack=反対パスに解凍\n"
-		"F:UnPackToCurr=カレントパスに解凍\n"
-		"F:UpdateFromArc=アーカイブから更新\n"
-		"F:ViewIniFile=INIファイルの閲覧\n"
-		"F:ViewTail=テキストファイルの末尾を閲覧\n"
-		"F:WatchTail=テキストファイルの追加更新を監視\n"
-		"F:WidenCurList=カレント側リストの幅を広げる\n"
-		"F:WinMaximize=ウィンドウの最大化\n"
-		"F:WinMinimize=ウィンドウの最小化\n"
-		"F:WinNormal=ウィンドウを元のサイズに戻す\n"
-		"F:WorkItemDown=ワークリストの項目を1つ下に移動\n"
-		"F:WorkItemMove=選択ワークリスト項目をカーソル位置に移動\n"
-		"F:WorkItemUP=ワークリストの項目を1つ上に移動\n"
-		"F:XmlViewer=XMLビュアー\n"
-		"FI:AddTag=項目にタグを追加\n"
-		"FI:DelTag=項目のタグを削除\n"
-		"FI:HomeWorkList=ホームワークリストを開く\n"
-		"FI:LoadBgImage=背景画像を読み込む\n"
-		"FI:LoadWorkList=ワークリストをファイルから読み込む\n"
-		"FI:MaskSelect=指定マスクにマッチするファイルを選択\n"
-		"FI:NewWorkList=新規ワークリストの作成\n"
-		"FI:NextMark=次の栞マーク項目へ\n"
-		"FI:PrevMark=前の栞マーク項目へ\n"
-		"FI:NextSameName=ファイル名主部が同じ次ファイルへ\n"
-		"FI:OpenByApp=独自の関連付けで開く\n"
-		"FI:OpenByWin=Windowsの関連付けで開く\n"
-		"FI:SaveAsWorkList=ワークリストに名前を付けて保存\n"
-		"FI:SaveWorkList=ワークリストを上書き保存\n"
-		"FI:SelAllFile=すべてのファイルを選択/解除\n"
-		"FI:SelMark=栞マーク項目を選択\n"
-		"FI:SelReverse=ファイルの選択状態を反転\n"
-		"FI:SelSameExt=拡張子が同じファイルを選択\n"
-		"FI:SelSameName=ファイル名主部が同じファイルを選択\n"
-		"FI:SelWorkItem=ワークリストの登録項目を選択\n"
-		"FI:SetTag=項目にタグを設定\n"
-		"FI:SortDlg=ソートダイアログ\n"
-		"FI:SubViewer=サブビュアーの表示/非表示\n"
-		"FI:TagSelect=指定タグを含む項目を選択\n"
-		"FI:UseTrash=削除にごみ箱を使う/使わない\n"
-		"FI:WorkList=ワークリスト\n"
-		"FL:CancelAllTask=すべてのタスクを中断\n"
-		"FL:ClearLog=ログをクリア\n"
-		"FL:PauseAllTask=すべてのタスクを一旦停止/再開\n"
-		"FL:Suspend=タスク予約項目の実行を保留/解除\n"
-		"FL:TaskMan=タスクマネージャ\n"
-		"FL:ToLeft=左ファイルリストへ\n"
-		"FL:ToRight=右ファイルリストへ\n"
-		"FL:ViewLog=ログをテキストビュアーで表示\n"
-		"FS:ClearAll=すべての選択状態を解除\n"
-		"FSI:Select=選択/解除\n"
-		"FSVIL:HelpContents=ヘルプの目次/索引を表示\n"
-		"FSVIL:KeyList=キー割り当て一覧\n"
-		"FSVIL:OptionDlg=オプション設定\n"
-		"FV:BinaryEdit=ファイルのバイナリ編集\n"
-		"FV:CursorDownSel=選択しながらカーソルを下に移動\n"
-		"FV:CursorUpSel=選択しながらカーソルを上に移動\n"
-		"FV:EditHighlight=構文強調表示定義ファイルの編集\n"
-		"FV:EditHistory=最近編集したファイル一覧\n"
-		"FV:Grep=文字列検索(GREP)\n"
-		"FV:HtmlToText=テキストビュアーでHTML→テキスト変換表示\n"
-		"FV:IncSearch=インクリメンタルサーチ\n"
-		"FV:FindTagName=tags からタグ名検索\n"
-		"FV:FixedLen=テキストビュアーでCSV/TSVを固定長表示\n"
-		"FV:PageDownSel=選択しながら1ページ下に移動\n"
-		"FV:PageUpSel=選択しながら1ページ上に移動\n"
-		"FV:RegExChecker=正規表現チェッカー\n"
-		"FV:SetColor=テキストビュアーの配色\n"
-		"FV:SetFontSize=フォントサイズを変更\n"
-		"FV:SetMargin=テキストビュアーの左側余白を設定\n"
-		"FV:SetTab=テキストビュアーのタブストップ幅を設定\n"
-		"FV:SetWidth=テキストビュアーの折り返し幅を設定\n"
-		"FV:ShowCR=テキストビュアーで改行を表示/非表示\n"
-		"FV:ShowLineNo=テキストビュアーの行番号を表示/非表示\n"
-		"FV:ShowRuby=テキストビュアーでルビを表示/非表示\n"
-		"FV:ShowRuler=テキストビュアーのルーラを表示/非表示\n"
-		"FV:ShowTAB=テキストビュアーでタブを表示/非表示\n"
-		"FV:ViewHistory=最近閲覧したファイル一覧\n"
-		"FV:WebSearch=Webで検索\n"
-		"FV:ZoomReset=ズームを解除\n"
-		"FVL:CursorDown=カーソルを下に移動\n"
-		"FVL:CursorUp=カーソルを上に移動\n"
-		"FVI:AlphaBlend=メインウィンドウを透過表示\n"
-		"FVI:AppList=アプリケーション一覧\n"
-		"FVI:Calculator=電卓\n"
-		"FVI:ClearMark=すべての栞マークを解除\n"
-		"FVI:Close=閉じる\n"
-		"FVI:CopyFileInfo=ファイル情報をクリップボードにコピー\n"
-		"FVI:CmdFileList=コマンドファイル一覧\n"
-		"FVI:DebugCmdFile=コマンドファイルのデバッグ実行\n"
-		"FVI:Delete=削除\n"
-		"FVI:Duplicate=NyanFiの二重起動\n"
-		"FVI:ExeCommands=指定したコマンドを実行\n"
-		"FVI:ExeMenuFile=メニューファイルの実行\n"
-		"FVI:ExeToolBtn=ツールボタンの実行\n"
-		"FVI:FileEdit=ファイルの編集\n"
-		"FVI:InputCommands=入力したコマンドを実行\n"
-		"FVI:ListFileInfo=ファイル情報をダイアログ表示\n"
-		"FVI:ListLog=ログを一覧で表示\n"
-		"FVI:Mark=栞マーク/解除\n"
-		"FVI:MarkList=栞マーク一覧\n"
-		"FVI:MenuBar=メニューバーの表示/非表示\n"
-		"FVI:NextNyanFi=次のNyanFiをアクティブに\n"
-		"FVI:PopupMainMenu=メインメニューをポップアップ表示\n"
-		"FVI:PrevNyanFi=前のNyanFiをアクティブに\n"
-		"FVI:PropertyDlg=プロパティダイアログを表示\n"
-		"FVI:ScrollDown=下にスクロール\n"
-		"FVI:ScrollUp=上にスクロール\n"
-		"FVI:ShowFileInfo=ファイル情報を強制的に表示\n"
-		"FVI:ShowFKeyBar=ファンクションキーバーの表示/非表示\n"
-		"FVI:ShowStatusBar=ステータスバーの表示/非表示\n"
-		"FVI:ShowToolBar=ツールバーを表示\n"
-		"FVI:ToolBarDlg=ツールバーの設定\n"
-		"FVI:WebMap=画像のGPS情報や指定地点の地図を開く\n"
-		"FVI:WinPos=ウィンドウの四辺を設定\n"
-		"FVIL:PageDown=1ページ下に移動\n"
-		"FVIL:PageUp=1ページ上に移動\n"
-		"FVI:ZoomIn=ズームイン\n"
-		"FVI:ZoomOut=ズームアウト\n"
-		"I:ColorPicker=カラーピッカー\n"
-		"I:DoublePage=見開き表示\n"
-		"I:EndFile=最後のファイルに移動\n"
-		"I:EqualSize=等倍表示\n"
-		"I:FittedSize=画面フィット表示\n"
-		"I:FlipHorz=左右反転\n"
-		"I:FlipVert=上下反転\n"
-		"I:FullScreen=全画面表示\n"
-		"I:GifViewer=GIFビュアーの表示/非表示\n"
-		"I:GrayScale=グレースケール表示\n"
-		"I:Histogram=ヒストグラムの表示/非表示\n"
-		"I:JumpIndex=指定したインデックスに移動\n"
-		"I:Loupe=ルーペの表示/非表示\n"
-		"I:NextPage=サムネイルの次ページに移動\n"
-		"I:PageBind=見開き表示の綴じ方向を設定\n"
-		"I:PrevPage=サムネイルの前ページに移動\n"
-		"I:Print=画像の印刷\n"
-		"I:RotateLeft=左に90度回転\n"
-		"I:RotateRight=右に90度回転\n"
-		"I:ScrollLeft=左にスクロール\n"
-		"I:ScrollRight=右にスクロール\n"
-		"I:SendToWorkList=ワークリストに送る\n"
-		"I:ShowGrid=画像分割グリッドの表示/非表示\n"
-		"I:ShowSeekBar=シークバーの表示/非表示\n"
-		"I:Sidebar=サイドバーの表示/非表示\n"
-		"I:Thumbnail=サムネイルの表示/非表示\n"
-		"I:ThumbnailEx=サムネイルの全面表示/通常表示\n"
-		"I:TopFile=先頭ファイルに移動\n"
-		"I:WarnHighlight=白飛び警告\n"
-		"S:ClearIncKeyword=キーワードをクリア\n"
-		"S:IncMatchSelect=マッチする項目をすべて選択\n"
-		"S:IncSearchDown=マッチする項目を下方向検索\n"
-		"S:IncSearchExit=インクリメンタルサーチから抜ける\n"
-		"S:IncSearchUp=マッチする項目を上方向検索\n"
-		"S:KeywordHistory=キーワード履歴を参照\n"
-		"S:MigemoMode=Migomoモードの切り換え\n"
-		"S:NormalMode=通常のサーチモードに戻る\n"
-		"S:SelectDown=選択/解除後、下方向に検索\n"
-		"V:BackViewHist=テキストビュアーの履歴を戻る\n"
-		"V:BitmapView=ビットマップビューの表示/非表示\n"
-		"V:BoxSelMode=箱形選択モードの開始/解除\n"
-		"V:ChangeCodePage=文字コード変更\n"
-		"V:ChangeViewMode=テキスト/バイナリ表示の切り換え\n"
-		"V:CharInfo=文字情報の表示/非表示\n"
-		"V:CsvCalc=CSV/TSV項目の集計\n"
-		"V:CsvGraph=CSV/TSV項目のグラフ\n"
-		"V:CsvRecord=CSV/TSVレコードの表示/非表示\n"
-		"V:CursorLeft=カーソルを左に移動\n"
-		"V:CursorLeftSel=選択しながらカーソルを左に移動\n"
-		"V:CursorRight=カーソルを右に移動\n"
-		"V:CursorRightSel=選択しながらカーソルを右に移動\n"
-		"V:ExportCsv=CSV/TSVエクスポート\n"
-		"V:FindDown=下方向に再検索\n"
-		"V:FindLinkDown=リンク先を下方向に検索\n"
-		"V:FindLinkUp=リンク先を上方向に検索\n"
-		"V:FindMarkDown=マーク行を下方向に検索\n"
-		"V:FindMarkUp=マーク行を上方向に検索\n"
-		"V:FindSelDown=選択文字列を下方向に検索\n"
-		"V:FindSelUp=選択文字列を上方向に検索\n"
-		"V:FindText=文字列検索\n"
-		"V:FindUp=上方向に再検索\n"
-		"V:FunctionList=関数一覧\n"
-		"V:HelpCurWord=カーソル位置の単語を指定ヘルプで検索\n"
-		"V:Highlight=マッチ語を強調表示\n"
-		"V:Inspector=インスペクタの表示/非表示\n"
-		"V:ImgPreview=イメージプレビュー\n"
-		"V:JumpLine=指定行番号に移動\n"
-		"V:LineEnd=行末に移動\n"
-		"V:LineEndSel=選択しながら行末に移動\n"
-		"V:LineTop=行頭に移動\n"
-		"V:LineTopSel=選択しながら行頭に移動\n"
-		"V:OpenURL=URLを開く\n"
-		"V:ReloadFile=ファイルの再読み込み\n"
-		"V:SaveDump=ダンプリストをファイルに保存\n"
-		"V:ScrollCursorDown=スクロールしながら下に移動\n"
-		"V:ScrollCursorUp=スクロールしながら上に移動\n"
-		"V:SearchPair=対応する括弧を検索\n"
-		"V:SelCurWord=カーソル位置の単語を選択\n"
-		"V:SelLine=カーソル行を選択\n"
-		"V:SelLineCR=カーソル行全体を改行単位で選択\n"
-		"V:SelectAll=すべて選択\n"
-		"V:SelectFile=表示中ファイルを選択/解除\n"
-		"V:SelectMode=選択モードの開始/解除\n"
-		"V:SetTopAddr=先頭アドレスを設定\n"
-		"V:SetUserDefStr=ユーザ定義文字列を設定\n"
-		"V:Sort=テキスト全体を改行単位でソート\n"
-		"V:SwitchSameName=ファイル名主部が同じ次のファイルに切り換え\n"
-		"V:SwitchSrcHdr=ヘッダ/ソースファイルの切り換え\n"
-		"V:TagJump=エディタでタグジャンプ\n"
-		"V:TagJumpDirect=エディタでダイレクトタグジャンプ\n"
-		"V:TagView=ビュアーでタグジャンプ\n"
-		"V:TagViewDirect=ビュアーでダイレクトタグジャンプ\n"
-		"V:TextEnd=最後尾に移動\n"
-		"V:TextEndSel=選択しながら最後尾に移動\n"
-		"V:TextTop=先頭に移動\n"
-		"V:TextTopSel=選択しながら先頭に移動\n"
-		"V:UserDefList=ユーザ定義文字列一覧\n"
-		"V:WordLeft=前の単語に移動\n"
-		"V:WordRight=次の単語に移動\n"
-		"VIL:ClipCopy=クリップボードにコピー\n"
-		"VI:NextFile=次のファイルを表示\n"
-		"VI:PrevFile=前のファイルを表示\n"
-		"VL:NextErr=次のエラー位置へ\n"
-		"VL:PrevErr=前のエラー位置へ\n"
-		"InitialSearch=頭文字サーチ\n";
-
-	//コマンド一覧リストを設定
-	CmdSetList = CreStringList();
-	UnicodeString cmd, tmp;
-	for (int i=0; i<CommandList->Count; i++) {
-		UnicodeString lbuf = CommandList->Strings[i];
-		if (!contains_s(lbuf, _T(':'))) continue;
-		UnicodeString ct = split_tkn(lbuf, ':');
-		CommandList->Strings[i] = lbuf;
-		cmd = get_tkn(lbuf, '=');
-		for (int j=1; j<=ct.Length(); j++)
-			CmdSetList->Add(tmp.sprintf(_T("%s:%s"), ct.SubString(j, 1).c_str(), cmd.c_str()));
-	}
-	CmdSetList->Sort();
+	CmdSetList	= CreStringList();
+	set_CmdList(CommandList, CmdSetList);
 
 	//ズーム倍率リスト
 	ZoomRatioList = CreStringList();
@@ -7531,10 +7087,11 @@ void GetFileInfList(
 		//パス
 		add_PropLine_if(_T("パス"), get_PathFrom_SF(fp), i_list);
 
-		if (is_X64())
-			i_list->Add(EmptyStr);
-		else
-			return;
+#if defined(_WIN64)
+		i_list->Add(EmptyStr);
+#else
+		return;
+#endif
 	}
 
 	if (get_FileInfList(fp, i_buf.get())) i_list->AddStrings(i_buf.get());
@@ -7727,7 +7284,7 @@ void draw_InputPaintBox(TPaintBox *pp, UnicodeString s)
 	cv->Brush->Color = col_bgList;
 	cv->FillRect(pp->ClientRect);
 
-	int xp = ScaledInt(2);
+	int xp = Scaled2;
 	int yp = get_TopMargin(cv);
 	cv->Font->Color = col_fgList;
 	cv->TextOut(xp, yp, s);
@@ -8573,14 +8130,14 @@ bool test_ArcExt(UnicodeString fext)
 //---------------------------------------------------------------------------
 bool test_ArcExt2(UnicodeString fext)
 {
-	return test_ArcExt(fext);
+	return (test_ArcExt(fext) || SPI->TestFExt(fext, true));
 }
 //---------------------------------------------------------------------------
 //利用可能なアーカイブか?
 //---------------------------------------------------------------------------
 bool is_AvailableArc(UnicodeString fnam)
 {
-	return usr_ARC->IsAvailable(fnam);
+	return (usr_ARC->IsAvailable(fnam) || SPI->TestFExt(get_extension(fnam), true));
 }
 
 //---------------------------------------------------------------------------
@@ -8588,7 +8145,7 @@ bool is_AvailableArc(UnicodeString fnam)
 //---------------------------------------------------------------------------
 UnicodeString get_img_fext()
 {
-	return FEXT_WICSTD + WicFextStr;
+	return FEXT_WICSTD + WicFextStr + SPI->GetImgFExt();
 }
 
 //---------------------------------------------------------------------------
@@ -8663,7 +8220,7 @@ bool get_img_size(UnicodeString fnam, unsigned int *wd, unsigned int *hi)
 
 	if (test_PspExt(fext) && get_PspInf(fnam, NULL, wd, hi)) return true;
 
-	bool size_ok = WIC_get_img_size(fnam, wd, hi);
+	bool size_ok = WIC_get_img_size(fnam, wd, hi) || SPI->GetImgSize(fnam, wd, hi);
 
 	if (!size_ok && test_ExifExt(fext)) {
 		std::unique_ptr<TStringList> i_lst(new TStringList());	//ファイル情報用
@@ -8687,7 +8244,7 @@ bool get_img_size(UnicodeString fnam, unsigned int *wd, unsigned int *hi)
 
 //---------------------------------------------------------------------------
 //画像ファイルを読み込む
-//戻り値 失敗 = 0/  成功 = LOADED_BY_STD、LOADED_BY_WIC
+//戻り値 失敗 = 0/  成功 = LOADED_BY_STD、LOADED_BY_WIC、LOADED_BY_SPI
 //---------------------------------------------------------------------------
 int load_ImageFile(
 	UnicodeString fnam,
@@ -8778,21 +8335,6 @@ void delete_FileIf(UnicodeString fnam)
 }
 
 //---------------------------------------------------------------------------
-//コマンド部分を取得
-//---------------------------------------------------------------------------
-UnicodeString get_CmdStr(UnicodeString s)
-{
-	return starts_AT(s)? s : get_tkn(s, '_');
-}
-//---------------------------------------------------------------------------
-//パラメータ部分を取得
-//---------------------------------------------------------------------------
-UnicodeString get_PrmStr(UnicodeString s)
-{
-	return get_tkn_r(s, '_');
-}
-
-//---------------------------------------------------------------------------
 //キーに割り当てられているコマンドを取得
 //---------------------------------------------------------------------------
 UnicodeString Key_to_CmdF(UnicodeString key)
@@ -8873,18 +8415,6 @@ UnicodeString get_CmdDesc(
 		if (!prm.IsEmpty()) cmd.cat_sprintf(_T("_%s"), prm.c_str());
 		return UnicodeString().sprintf((cmd.Length()<20)? _T("%-20s%s") : _T("%s  %s"), cmd.c_str(), dsc.c_str());
 	}
-}
-
-//---------------------------------------------------------------------------
-//コマンドパラメータから説明文字列を削除
-//---------------------------------------------------------------------------
-UnicodeString del_CmdDesc(UnicodeString cmd)
-{
-	UnicodeString prm = get_PrmStr(cmd);
-	cmd = get_CmdStr(cmd);
-	split_dsc(prm);
-	if (!prm.IsEmpty()) cmd.cat_sprintf(_T("_%s"), prm.c_str());
-	return cmd;
 }
 
 //---------------------------------------------------------------------------
@@ -9775,7 +9305,7 @@ void PrvTextOut(
 void LineNoOut(TCanvas *cv, TRect &rc, UnicodeString l_str)
 {
 	//背景
-	int w_ln = get_CharWidth(cv, 6, ScaledInt(4));
+	int w_ln = get_CharWidth(cv, 6, Scaled4);
 	TRect l_rc = rc;
 	cv->Brush->Color = col_bgLineNo;
 	l_rc.Right = l_rc.Left + w_ln;
@@ -10015,9 +9545,9 @@ void SpaceTextOut(
 	UnicodeString zs_ch = "<";
 	if (ShowSpace && (s.Pos(hs_ch) || s.Pos(zs_ch))) {
 		bool is_irreg = IsIrregularFont(cv->Font);
-		int w1 = ScaledInt(1);
-		int w2 = ScaledInt(2);
-		int w3 = ScaledInt(3);
+		int w1 = Scaled1;
+		int w2 = Scaled2;
+		int w3 = Scaled3;
 		int hs_wd = get_TextWidth(cv, hs_ch, is_irreg);
 		int zs_wd = std::min(abs(cv->Font->Height), hs_wd * 2);
 		cv->Pen->Width = w1;
@@ -11285,12 +10815,12 @@ void set_LogErrMsg(
 //---------------------------------------------------------------------------
 int get_TopMargin(TCanvas *cv)
 {
-	return has_Leading(cv)? 0 : ScaledInt(2);
+	return has_Leading(cv)? 0 : Scaled2;
 }
 //---------------------------------------------------------------------------
 int get_TopMargin2(TCanvas *cv)
 {
-	return has_Leading(cv)? 1 : std::max(ListInterLn/2, ScaledInt(2));
+	return has_Leading(cv)? 1 : std::max(ListInterLn/2, Scaled2);
 }
 
 //---------------------------------------------------------------------------
@@ -12137,20 +11667,6 @@ bool update_IncSeaWord(
 	}
 
 	return false;
-}
-
-//---------------------------------------------------------------------------
-//カーソルキーをコマンドに変換
-//---------------------------------------------------------------------------
-UnicodeString get_CsrKeyCmd(UnicodeString KeyStr)
-{
-	switch (idx_of_word_i(_T("DOWN|UP|LEFT|RIGHT"), KeyStr)) {
-	case  0: return "CursorDown";
-	case  1: return "CursorUp";
-	case  2: return "ToLeft";
-	case  3: return "ToRight";
-	default: return EmptyStr;
-	}
 }
 
 //---------------------------------------------------------------------------

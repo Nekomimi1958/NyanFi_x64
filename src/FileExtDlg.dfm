@@ -76,7 +76,7 @@ object FileExtensionDlg: TFileExtensionDlg
       Top = 280
       Width = 590
       Height = 19
-      DoubleBuffered = True
+      DoubleBuffered = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -85,33 +85,30 @@ object FileExtensionDlg: TFileExtensionDlg
       Font.Style = []
       Panels = <
         item
-          Bevel = pbNone
+          Style = psOwnerDraw
+          Width = 50
+        end
+        item
+          Style = psOwnerDraw
+          Width = 100
+        end
+        item
+          Style = psOwnerDraw
+          Width = 100
+        end
+        item
           Style = psOwnerDraw
           Width = 50
         end
         item
           Bevel = pbNone
           Style = psOwnerDraw
-          Width = 100
-        end
-        item
-          Bevel = pbNone
-          Style = psOwnerDraw
-          Width = 100
-        end
-        item
-          Bevel = pbNone
-          Style = psOwnerDraw
-          Width = 50
-        end
-        item
-          Bevel = pbNone
           Width = 50
         end>
       ParentDoubleBuffered = False
       SizeGrip = False
       UseSystemFont = False
-      StyleElements = []
+      StyleElements = [seBorder]
       OnDrawPanel = FextInfBarDrawPanel
     end
     object ListPanel: TPanel
@@ -177,6 +174,7 @@ object FileExtensionDlg: TFileExtensionDlg
       Top = 125
       Width = 590
       Height = 20
+      DoubleBuffered = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -186,10 +184,13 @@ object FileExtensionDlg: TFileExtensionDlg
       Panels = <
         item
           Bevel = pbNone
+          Style = psOwnerDraw
           Width = 600
         end>
+      ParentDoubleBuffered = False
       UseSystemFont = False
-      StyleElements = []
+      StyleElements = [seBorder]
+      OnDrawPanel = FileInfBarDrawPanel
     end
     object FileListBox: TListBox
       Tag = 1

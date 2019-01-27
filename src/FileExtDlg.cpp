@@ -103,6 +103,12 @@ void __fastcall TFileExtensionDlg::FormCreate(TObject *Sender)
 
 	FextInfoList = new TStringList();
 	FileItemList = new TStringList();
+
+	org_FextInfBarWndProc  = FextInfBar->WindowProc;
+	FextInfBar->WindowProc = FextInfBarWndProc;
+
+	org_FileInfBarWndProc  = FileInfBar->WindowProc;
+	FileInfBar->WindowProc = FileInfBarWndProc;
 }
 //---------------------------------------------------------------------------
 void __fastcall TFileExtensionDlg::FormShow(TObject *Sender)
@@ -269,6 +275,21 @@ void __fastcall TFileExtensionDlg::ListSplitterMoved(TObject *Sender)
 {
 	InfoScrPanel->UpdateKnob();
 	FileScrPanel->UpdateKnob();
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TFileExtensionDlg::FextInfBarWndProc(TMessage &msg)
+{
+	if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(FextInfBar, msg)) return;
+
+	org_FextInfBarWndProc(msg);
+}
+//---------------------------------------------------------------------------
+void __fastcall TFileExtensionDlg::FileInfBarWndProc(TMessage &msg)
+{
+	if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(FileInfBar, msg)) return;
+
+	org_FileInfBarWndProc(msg);
 }
 
 //---------------------------------------------------------------------------
@@ -491,13 +512,26 @@ void __fastcall TFileExtensionDlg::FextInfBarDrawPanel(TStatusBar *StatusBar, TS
 		const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
-	cv->Brush->Color = scl_BtnFace;
+	cv->Font->Assign(StatusBar->Font);
+	cv->Brush->Color = col_bgSttBar;
 	cv->FillRect(Rect) ;
 
 	UnicodeString lbuf = Panel->Text;
-	int xp = ((Panel->Index==2)? Rect.Left + SizeSctWd - 4 : Rect.Right) - cv->TextWidth(lbuf) - 4;
-	cv->Font->Color = scl_WindowText;
+	int xp = ((Panel->Index==2)? Rect.Left + SizeSctWd - ScaledInt(4) : Rect.Right) - cv->TextWidth(lbuf) - ScaledInt(4);
+	cv->Font->Color = col_fgSttBar;
 	cv->TextOut(xp, Rect.Top, lbuf);
+}
+//---------------------------------------------------------------------------
+void __fastcall TFileExtensionDlg::FileInfBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
+		const TRect &Rect)
+{
+	TCanvas *cv = StatusBar->Canvas;
+	cv->Font->Assign(StatusBar->Font);
+	cv->Brush->Color = col_bgSttBar;
+	cv->FillRect(Rect) ;
+
+	cv->Font->Color = col_fgSttBar;
+	cv->TextOut(Rect.Left + Scaled4, Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -550,7 +584,7 @@ void __fastcall TFileExtensionDlg::InfoListBoxDrawItem(TWinControl *Control, int
 	cv->Brush->Color = bgcol;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4);
+	int xp = Rect.Left + Scaled4;
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	UnicodeString fext = FextInfoList->Strings[Index];

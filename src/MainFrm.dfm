@@ -1222,6 +1222,7 @@ object NyanFiForm: TNyanFiForm
               Width = 50
             end
             item
+              Bevel = pbNone
               Style = psOwnerDraw
               Width = 50
             end>

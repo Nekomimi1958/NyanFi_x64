@@ -39,7 +39,7 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 {
 	Initialized = false;
 
-	Constraints->MinWidth  = 0;
+	Constraints->MinWidth = 0;
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 
@@ -50,7 +50,7 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 	RevColCheckBox->Checked = RevTagCololr;
 
 	set_StdListBox(TagCheckListBox);
-	if (RevTagCololr) TagCheckListBox->ItemHeight = TagCheckListBox->ItemHeight + ScaledInt(2);
+	if (RevTagCololr) TagCheckListBox->ItemHeight = TagCheckListBox->ItemHeight + Scaled2;
 	MaxTagWidth = usr_TAG->IniCheckList(TagCheckListBox) + ScaledInt(32);
 
 	set_UsrScrPanel(ListScrPanel);
@@ -362,7 +362,7 @@ void __fastcall TTagManDlg::TagCheckListBoxDrawItem(TWinControl *Control, int In
 
 	int xp = Rect.Left + 4;
 	int yp = Rect.Top + get_TopMargin(cv);
-	if (RevTagCololr) yp += ScaledInt(2);
+	if (RevTagCololr) yp += Scaled2;
 
 	usr_TAG->DrawTags(lp->Items->Strings[Index], cv, xp, yp,
 		(RevTagCololr? col_bgList : clNone), UserModule->SpuitEnabled());

@@ -1238,7 +1238,7 @@ void __fastcall TAppListDlg::LaunchListBoxDrawItem(TWinControl *Control, int Ind
 	file_rec *fp = (file_rec*)LaunchList->Objects[Index];
 	//アイコン
 	draw_SmallIcon(fp, cv, xp, Rect.Top + (Rect.Height() - SIcoSize)/2, true);
-	xp += SIcoSize + ScaledInt(2);
+	xp += SIcoSize + Scaled2;
 
 	//名前
 	cv->Font->Color = (lp->Focused() && is_SelFgCol(State))? col_fgSelItem :

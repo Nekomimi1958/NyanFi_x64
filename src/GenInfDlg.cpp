@@ -33,6 +33,9 @@ void __fastcall TGeneralInfoDlg::FormCreate(TObject *Sender)
 	org_GenListWndProc	   = GenListBox->WindowProc;
 	GenListBox->WindowProc = GenListWndProc;
 
+	org_SttBar1WndProc	   = StatusBar1->WindowProc;
+	StatusBar1->WindowProc = SttBar1WndProc;
+
 	GenInfoList = new TStringList();
 	GenInfoBuff = new TStringList();
 	GenSelList	= new TStringList();
@@ -282,6 +285,14 @@ void __fastcall TGeneralInfoDlg::GenListWndProc(TMessage &msg)
 	}
 
 	org_GenListWndProc(msg);
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::SttBar1WndProc(TMessage &msg)
+{
+	if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
+
+	org_SttBar1WndProc(msg);
 }
 
 //---------------------------------------------------------------------------
@@ -562,14 +573,15 @@ void __fastcall TGeneralInfoDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TSta
 		const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
-	cv->Brush->Color = scl_BtnFace;
+	cv->Font->Assign(StatusBar->Font);
+	cv->Brush->Color = col_bgSttBar;
 	cv->FillRect(Rect) ;
 
 	UnicodeString lbuf = Panel->Text;
 	int yp = (Rect.Height() - abs(cv->Font->Height)) / 2;
-	cv->Font->Color = scl_WindowText;
-	cv->TextOut(Rect.Left + 2, yp, split_pre_tab(lbuf));
-	if (!lbuf.IsEmpty()) cv->TextOut(Rect.Right - cv->TextWidth(lbuf) - 4, yp, lbuf);
+	cv->Font->Color = col_fgSttBar;
+	cv->TextOut(Rect.Left + Scaled2, yp, split_pre_tab(lbuf));
+	if (!lbuf.IsEmpty()) cv->TextOut(Rect.Right - cv->TextWidth(lbuf) - Scaled4, yp, lbuf);
 }
 
 //---------------------------------------------------------------------------
