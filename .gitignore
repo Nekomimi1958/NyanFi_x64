@@ -42,10 +42,16 @@
 *.map
 *.stat
 *.tds
+*.cgl
 
+Debug/
+Release/
 Win32/
 Win64/
 __*/
+temp/
 
 .nyanfi*
 tags
+*.ini
+*.wav
