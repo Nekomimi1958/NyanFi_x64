@@ -67,13 +67,6 @@ void __fastcall TAskRepDlg::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TAskRepDlg::SttBar1WndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_InfHdrBg(StatusBar1, msg)) return;
-
-	org_SttBar1WndProc(msg);
-}
-//---------------------------------------------------------------------------
 void __fastcall TAskRepDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
           const TRect &Rect)
 {

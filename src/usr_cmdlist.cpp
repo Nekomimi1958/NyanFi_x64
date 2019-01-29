@@ -160,6 +160,7 @@ void set_CmdList(
 		"F:OpenADS=代替データストリームを仮想リストとして開く\n"
 		"F:OpenByExp=エクスプローラで開く\n"
 		"F:OpenCtrlPanel=コントロールパネルを開く\n"
+		"F:OpenGitURL=リモートリポジトリURLを開く\n"
 		"F:OpenStandard=標準の Enter キー動作\n"
 		"F:OpenTrash=ごみ箱を開く\n"
 		"F:Pack=反対パスにアーカイブ作成\n"
@@ -191,6 +192,7 @@ void set_CmdList(
 		"F:ScrollUpLog=ログを上にスクロール\n"
 		"F:ScrollUpText=テキストプレビューを上にスクロール\n"
 		"F:SelAllItem=すべての項目を選択/解除\n"
+		"F:SelByList=リストによって項目を選択\n"
 		"F:SelectUp=選択/解除後、カーソルを上に移動\n"
 		"F:SelEmptyDir=空のディレクトリだけを選択\n"
 		"F:SelMask=選択中の項目だけを残して他を隠す\n"
@@ -499,9 +501,10 @@ void get_PrmList(
 			_T("ListDuration|ListExpFunc|ListTail|ListText|ListTree|LoadBgImage|LoadTabGroup|LoadResultList|LoadWorkList|")
 			_T("MaskFind|MaskSelect|MatchSelect|MoveTo|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
 			_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|ScrollCursorUp|")
-			_T("ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|ScrollUpText|SetColor|SetDirTime|SetFontSize|")
-			_T("SetMargin|SetPathMask|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SortDlg|SubDirList|")
-			_T("TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToTab|ViewTail|ToOppSameHash|WatchTail|WidenCurList|WinPos"),
+			_T("ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|ScrollUpText|SelByList|SetColor|SetDirTime|")
+			_T("SetFontSize|SetMargin|SetPathMask|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SortDlg|")
+			_T("SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToTab|ViewTail|ToOppSameHash|WatchTail|")
+			_T("WidenCurList|WinPos"),
 			cmd))
 		{
 			cp->Enabled = true;
@@ -842,6 +845,12 @@ void get_PrmList(
 		params.USET_T("\nHP : 半ページ分\nFP : 1ページ分\n");
 		params.cat_sprintf(_T("%s\n"), contains_i(cmd, _T("Down"))? _T("ED : 最後へ") : _T("TP : 先頭へ"));
 	}
+	else if (USAME_TI(cmd, "SelByList")) {
+		params.sprintf(_T("%s"),
+			_T("\n")
+			_T("CP : カーソル位置のファイルでカレント側を選択\n")
+			_T("OP : カーソル位置のファイルで反対側を選択\n"));
+	}
 	else if (USAME_TI(cmd, "Select") && (id_idx==0 || id_idx==3)) {
 		if (cp) cp->Style = csDropDown;
 		params.USET_T("\n");
@@ -1023,7 +1032,7 @@ bool need_RefDirFile(UnicodeString cmd)
 		_T("CalcDirSize|CalcDirSizeAll|ChangeDir|ChangeOppDir|ContextMenu|CopyTo|DebugCmdFile|DistributionDlg|")
 		_T("ExeCommands|ExeMenuFile|FileEdit|FileRun|JumpTo|ListArchive|ListDuration|ListExpFunc|ListTail|")
 		_T("ListText|ListTree|LoadBgImage|LoadTabGroup|LoadResultList|LoadWorkList|MoveTo|OpenByApp|OpenByExp|")
-		_T("OpenByWin|OpenStandard|PropertyDlg|PlayList|TextViewer|SetColor|SubDirList|HelpCurWord|Restart"),
+		_T("OpenByWin|OpenStandard|PropertyDlg|PlayList|TextViewer|SelByList|SetColor|SubDirList|HelpCurWord|Restart"),
 		cmd);
 }
 

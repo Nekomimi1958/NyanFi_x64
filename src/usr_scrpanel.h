@@ -45,22 +45,49 @@ private:
 	int   ScrPage;
 
 	TWndMethod org_ParentPanelWndProc;
-	void __fastcall ParentPanelWndProc(TMessage &msg);
+	void __fastcall ParentPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_ParentPanelWndProc(msg);
+		if (msg.Msg==WM_SIZE) UpdateKnob();
+	}
 
 	TWndMethod org_AssoListWndProc;
-	void __fastcall AssoListWndProc(TMessage &msg);
+	void __fastcall AssoListWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_PAINT && !ScrCatchKnob) Repaint();
+		org_AssoListWndProc(msg);
+	}
 
 	TWndMethod org_AssoChkListWndProc;
-	void __fastcall AssoChkListWndProc(TMessage &msg);
+	void __fastcall AssoChkListWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_PAINT && !ScrCatchKnob) Repaint();
+		org_AssoChkListWndProc(msg);
+	}
 
 	TWndMethod org_AssoGridWndProc;
-	void __fastcall AssoGridWndProc(TMessage &msg);
+	void __fastcall AssoGridWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_PAINT && !ScrCatchKnob) Repaint();
+		org_AssoGridWndProc(msg);
+	}
 
 	TWndMethod org_ScrPanelVWndProc;
-	void __fastcall ScrPanelVWndProc(TMessage &msg);
+	void __fastcall ScrPanelVWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_ScrPanelVWndProc(msg);
+		if (org_ParentPanelWndProc==NULL && msg.Msg==WM_SIZE) UpdateKnob();
+	}
 
 	TWndMethod org_ScrPanelHWndProc;
-	void __fastcall ScrPanelHWndProc(TMessage &msg);
+	void __fastcall ScrPanelHWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_ScrPanelHWndProc(msg);
+		if (org_ParentPanelWndProc==NULL && msg.Msg==WM_SIZE) UpdateKnob();
+	}
 
 	void __fastcall ScrPaintBoxPaint(TObject *Sender);
 	int  __fastcall GetKnobPosH();

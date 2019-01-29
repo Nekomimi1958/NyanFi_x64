@@ -278,21 +278,6 @@ void __fastcall TFileExtensionDlg::ListSplitterMoved(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TFileExtensionDlg::FextInfBarWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(FextInfBar, msg)) return;
-
-	org_FextInfBarWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall TFileExtensionDlg::FileInfBarWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(FileInfBar, msg)) return;
-
-	org_FileInfBarWndProc(msg);
-}
-
-//---------------------------------------------------------------------------
 //拡張子一覧を取得
 //  戻り値: false=キャンセルされた
 //---------------------------------------------------------------------------

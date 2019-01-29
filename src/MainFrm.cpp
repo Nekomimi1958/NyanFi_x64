@@ -1953,8 +1953,22 @@ void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, 
 			}
 			//その他
 			else {
-				lw = get_TabTextWidth(lbuf, cv, lp->TabWidth);
-				if (lp->Tag & LBTAG_OPT_LNNO) lw += get_CharWidth(cv, 6, 4);	//行番号有り " 99999"
+				TStringDynArray path_lst = split_strings_semicolon(lbuf);
+				//名前=値1;値2;…
+				if (path_lst.Length>1 && path_lst[0].Pos('=')>1 && lbuf.Pos(',')==0) {
+					for (int i=0; i<path_lst.Length; i++) {
+						if (i==0)
+							lbuf = ReplaceStr(path_lst[0], "=", "=\n") + "\n";
+						else
+							lbuf.cat_sprintf(_T("%s\n"), path_lst[i].c_str());
+					}
+					lw	 = lp->ClientWidth + 4;	//必ず表示
+				}
+				//通常
+				else {
+					lw = get_TabTextWidth(lbuf, cv, lp->TabWidth);
+					if (lp->Tag & LBTAG_OPT_LNNO) lw += get_CharWidth(cv, 6, 4);	//行番号有り " 99999"
+				}
 			}
 			HintInfo.HintStr	   = Trim(lbuf);
  			HintInfo.CursorRect    = lp->ItemRect(idx);
@@ -2878,85 +2892,6 @@ void __fastcall TNyanFiForm::ListWndProc(TMessage &msg, int tag)
 	default:
 		org_FileListWindowProc[tag](msg);
 	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::L_ListWindowProc(TMessage &msg)
-{
-	ListWndProc(msg, 0);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::R_ListWindowProc(TMessage &msg)
-{
-	ListWndProc(msg, 1);
-}
-
-//---------------------------------------------------------------------------
-//パネルのちらつき防止
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TvViewPanelWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_TvViewPanelWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TvScrlPanelWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_TvScrlPanelWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::LogPanelWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_LogPanelWndProc(msg);
-}
-
-//---------------------------------------------------------------------------
-//ステータスバー/情報ヘッダの背景
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::SttBar1WndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
-
-	org_SttBar1WndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ClockBarWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(ClockBar, msg)) return;
-
-	org_ClockBarWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ClockBarIWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(ClockBarI, msg)) return;
-
-	org_ClockBarIWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TxtSttHdrWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_InfHdrBg(TxtSttHeader, msg)) return;
-
-	org_TxtSttHdrWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ImgSttHdrWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_InfHdrBg(ImgSttHeader, msg)) return;
-
-	org_ImgSttHdrWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ImgInfBarWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_InfHdrBg(ImgInfBar, msg)) return;
-
-	org_ImgInfBarWndProc(msg);
 }
 
 //---------------------------------------------------------------------------
@@ -4470,7 +4405,7 @@ void __fastcall TNyanFiForm::UpdateToolBtn(int scr_mode)
 			if (is_separator(itm_buf[0])) {
 				bp->Style	 = tbsSeparator;
 				bp->AutoSize = false;
-				bp->Width	 = extract_int_def(itm_buf[1], ScaledInt(4));
+				bp->Width	 = extract_int_def(itm_buf[1], Scaled4);
 			}
 			//ボタン
 			else {
@@ -6420,20 +6355,6 @@ void __fastcall TNyanFiForm::RelPaintBoxPaint(TObject *Sender)
 		yp = rc.Bottom - 2;
 		cv->MoveTo(rc.Left + 4, yp);	cv->LineTo(rc.Right - 4, yp);
 	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::RelPanelWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_RelPanelWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::RelPanel2WndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_RelPanel2WndProc(msg);
 }
 
 //---------------------------------------------------------------------------
@@ -9766,7 +9687,7 @@ void __fastcall TNyanFiForm::FileListBoxMouseDown(TObject *Sender, TMouseButton 
 				b_wd = lp->Canvas->TextWidth(cfp->b_name);
 				if		(ShowIcon)							  b_wd += get_IcoWidth();
 				else if (cfp->is_dir && !DirBraStr.IsEmpty()) b_wd += lp->Canvas->TextWidth(DirBraStr) + 4;
-				else										  b_wd += ScaledInt(8);
+				else										  b_wd += Scaled8;
 			}
 
 			//アイコン部分で個別に選択
@@ -9867,7 +9788,7 @@ void __fastcall TNyanFiForm::FileListBoxDblClick(TObject *Sender)
 			int b_wd = lp->Canvas->TextWidth(cfp->b_name);
 			if		(ShowIcon)							  b_wd += get_IcoWidth();
 			else if (cfp->is_dir && !DirBraStr.IsEmpty()) b_wd += lp->Canvas->TextWidth(DirBraStr) + 4;
-			else										  b_wd += ScaledInt(8);
+			else										  b_wd += Scaled8;
 			on_body = (p.x < b_wd);
 		}
 	}
@@ -16710,7 +16631,7 @@ void __fastcall TNyanFiForm::IncSearchActionExecute(TObject *Sender)
 
 	//疑似キャレット
 	CaretPaintBox->Parent  = (CurListTag==0)? L_StatPanel : R_StatPanel;
-	CaretPaintBox->Width   = ScaledInt(1);
+	CaretPaintBox->Width   = Scaled1;
 	CaretPaintBox->Height  = CaretPaintBox->Parent->ClientHeight - 4;
 	CaretPaintBox->Top	   = 2;
 	CaretPaintBox->Visible = true;
@@ -19289,6 +19210,24 @@ void __fastcall TNyanFiForm::OpenByWinActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//リモートリポジトリURLを開く
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::OpenGitURLActionExecute(TObject *Sender)
+{
+	try {
+		if (CurStt->is_Arc || CurStt->is_FTP) UserAbort(USTR_CantOperate);
+		file_rec *cfp = GetCurFrecPtr();
+		if (!cfp || cfp->is_dummy || cfp->f_attr==faInvalid) Abort();
+		UnicodeString url = get_GitUrl(cfp);
+		if (url.IsEmpty()) Abort();
+		Execute_ex(url);
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+}
+
+//---------------------------------------------------------------------------
 //標準の Enter キーで開く動作
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
@@ -21147,6 +21086,48 @@ void __fastcall TNyanFiForm::SelAllItemActionExecute(TObject *Sender)
 	RepaintList(CurListTag);
 }
 
+//---------------------------------------------------------------------------
+//リストによって項目を選択
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
+{
+	try {
+		if (TEST_ActParam("OP")) {
+			if (OppStt->is_Arc || OppStt->is_FTP) UserAbort(USTR_OpeNotSuported);
+		}
+		else {
+			if (CurStt->is_Arc || CurStt->is_FTP) UserAbort(USTR_OpeNotSuported);
+		}
+
+		UnicodeString lnam = (TEST_ActParam("CP") || TEST_ActParam("OP"))?
+								GetCurFileName() : rel_to_absdir(exclude_quot(ActionParam), CurPath[CurListTag]);
+		if (lnam.IsEmpty()) UserAbort(USTR_NoParameter);
+		if (!file_exists(lnam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("ファイル")));
+
+		std::unique_ptr<TStringList> f_lst(new TStringList());
+		load_text_ex(lnam, f_lst.get());
+
+		bool s_tag = TEST_ActParam("OP")? OppListTag : CurListTag;
+		TStringList *lst = GetFileList(s_tag);
+		ClearAllAction->Execute();
+		int top_s_idx = -1;
+		for (int i=0; i<f_lst->Count; i++) {
+			UnicodeString lbuf = f_lst->Strings[i];
+			if (lbuf.IsEmpty() || StartsStr(';', lbuf)) continue;
+			UnicodeString fnam = ExcludeTrailingPathDelimiter(split_pre_tab(lbuf));
+			int idx = lst->IndexOf(fnam);
+			if (idx!=-1) {
+				((file_rec*)lst->Objects[idx])->selected = true;
+				if (top_s_idx==-1) top_s_idx = idx;
+			}
+		}
+		RepaintList(s_tag);
+		if (top_s_idx!=-1) FileListBox[s_tag]->ItemIndex = top_s_idx;
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+}
 //---------------------------------------------------------------------------
 //選択/解除
 //---------------------------------------------------------------------------
@@ -26532,7 +26513,7 @@ void __fastcall TNyanFiForm::ResultListBoxDrawItem(TWinControl *Control, int Ind
 
 	int yp	 = tmp_rc.Top;
 	int dx	 = 0;
-	int x_mg = ScaledInt(2);
+	int x_mg = Scaled2;
 
 	//項目番号
 	if (GrepShowItemNo) {
@@ -28423,9 +28404,11 @@ void __fastcall TNyanFiForm::Inf_EmpItemActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::Inf_EmpItemActionUpdate(TObject *Sender)
 {
-	TAction *ap = (TAction *)Sender;
+	TAction *ap  = (TAction *)Sender;
 	TListBox *lp = GetCurInfListBox();
-	UnicodeString inam = (lp->ItemIndex>2)? Trim(get_tkn(lp->Items->Strings[lp->ItemIndex], ':')) : EmptyStr;
+	int flag = (lp->ItemIndex!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0;
+	UnicodeString inam = (lp->ItemIndex>2 && (flag & LBFLG_STD_FINF)==0)?
+							Trim(get_tkn(lp->Items->Strings[lp->ItemIndex], ':')) : EmptyStr;
 	ap->Enabled = !inam.IsEmpty();
 	ap->Checked = contains_wd_i(inam, EmpInfItems.c_str());
 }
@@ -28451,10 +28434,11 @@ void __fastcall TNyanFiForm::Inf_HideItemActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::Inf_HideItemActionUpdate(TObject *Sender)
 {
-	TAction *ap   = (TAction *)Sender;
-	TListBox *lp  = GetCurInfListBox();
+	TAction *ap  = (TAction *)Sender;
+	TListBox *lp = GetCurInfListBox();
+	int flag = (lp->ItemIndex!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0;
 	file_rec *cfp = GetCurFrecPtr(true);
-	UnicodeString inam = (cfp && !cfp->is_dir && lp->ItemIndex>2)?
+	UnicodeString inam = (cfp && !cfp->is_dir && lp->ItemIndex>2 && (flag & LBFLG_STD_FINF)==0)?
 							Trim(get_tkn(lp->Items->Strings[lp->ItemIndex], ':')) : EmptyStr;
 	ap->Enabled = !inam.IsEmpty();
 }
@@ -32290,13 +32274,6 @@ void __fastcall TNyanFiForm::TabControl1Enter(TObject *Sender)
 //---------------------------------------------------------------------------
 //タブの描画
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TabPanelWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_TabPanelWndProc(msg);
-}
-//---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 {
 	if (msg.Msg==WM_PAINT) {
@@ -32911,7 +32888,7 @@ void __fastcall TNyanFiForm::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatu
 	//疑似キャレット
 	if (inc_flag) {
 		xp += cv->TextWidth(Panel->Text);
-		draw_Line(cv, xp, Rect.Top+2, xp, Rect.Bottom-2, ScaledInt(1), col_Cursor);
+		draw_Line(cv, xp, Rect.Top + 2, xp, Rect.Bottom-2, ScaledInt(1), col_Cursor);
 	}
 
 	//選択ファイル数
@@ -33580,7 +33557,7 @@ void __fastcall TNyanFiForm::TaskPaintBoxPaint(TObject *Sender)
 	cv->Brush->Color = col_bgTask;
 	cv->FillRect(pp->ClientRect);
 
-	int h  = get_FontHeight(cv->Font) * 5/4 + ScaledInt(4);
+	int h  = get_FontHeight(cv->Font) * 5/4 + Scaled4;
 	int xp = 4;
 	int yp = 2;
 

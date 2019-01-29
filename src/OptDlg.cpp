@@ -2226,13 +2226,15 @@ void __fastcall TOptionDlg::RefCmdsBtnClick(TObject *Sender)
 	else if (PageControl1->ActivePage==EventSheet)	 cmd = get_CmdStr(EventCmdsEdit->Text);
 
 	//通常ファイルの選択
-	if (contained_wd_i(_T("ContextMenu|ExeMenuFile|FileEdit|LoadWorkList|OpenByApp|OpenByWin|OpenStandard|TextViewer"), cmd)) {
+	if (contained_wd_i(
+		_T("ContextMenu|ExeMenuFile|FileEdit|LoadWorkList|OpenByApp|OpenByWin|OpenStandard|SelByList|TextViewer"), cmd))
+	{
 		UnicodeString tit = "パラメータの指定" + subtit;
 		UserModule->PrepareOpenDlg(tit.c_str(), F_FILTER_ALL, NULL, RefParamPath);
 		UnicodeString fnam;
 		if (UserModule->OpenDlgToStr(fnam)) {
 			RefParamPath = ExtractFilePath(fnam);
-			if (contained_wd_i(_T("ContextMenu|ExeMenuFile|LoadWorkList"), cmd))
+			if (contained_wd_i(_T("ContextMenu|ExeMenuFile|LoadWorkList|SelByList"), cmd))
 				fnam = to_relative_name(fnam);
 			else if (remove_top_text(fnam, ExePath))
 				fnam.Insert("%ExePath%", 1);

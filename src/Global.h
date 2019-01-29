@@ -231,6 +231,8 @@ extern int    Scaled8;
 extern TRect  FileListRect;
 extern bool   IsMuted;
 
+extern bool   GitExists;
+
 extern TRichEdit *TempRichEdit;
 
 extern TTaskThread *TaskThread[MAX_TASK_THREAD];
@@ -675,6 +677,8 @@ extern TStringList *WatchTailList;
 extern UnicodeString LastWatchLog;
 
 extern TStringList *InvalidUncList;
+
+extern TStringList *GitCfgUrlList;
 
 extern TStringList *TabList;
 extern TStringList *TabBuff;
@@ -1522,6 +1526,8 @@ UnicodeString get_MiniPathName(UnicodeString pnam, int wd, TFont *font, bool rep
 
 UnicodeString get_dotNaynfi(UnicodeString dnam = EmptyStr);
 UnicodeString get_dotNaynfi(UnicodeString dnam, bool inherit, bool force = false);
+UnicodeString get_GitConfig(UnicodeString dnam);
+UnicodeString get_GitUrl(file_rec *fp);
 
 UnicodeString get_WebSeaCaption(UnicodeString kwd = EmptyStr);
 

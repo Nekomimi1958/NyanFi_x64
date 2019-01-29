@@ -321,13 +321,6 @@ void __fastcall TEditHistoryDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TSta
 	if (!lbuf.IsEmpty()) cv->TextOut(rc.Right - cv->TextWidth(lbuf) - ScaledInt(20), rc.Top, lbuf);
 }
 //---------------------------------------------------------------------------
-void __fastcall TEditHistoryDlg::SttBar1WndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
-
-	org_SttBar1WndProc(msg);
-}
-//---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::SetSttBar()
 {
 	if (!StatusBar1->Visible) return;

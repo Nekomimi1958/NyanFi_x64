@@ -168,7 +168,11 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall GenListWndProc(TMessage &msg);
 
 	TWndMethod org_SttBar1WndProc;
-	void __fastcall SttBar1WndProc(TMessage &msg);
+	void __fastcall SttBar1WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
+		org_SttBar1WndProc(msg);
+	}
 
 	bool __fastcall UpdateList(bool reload = false);
 	UnicodeString __fastcall GetBuffText();

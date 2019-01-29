@@ -237,13 +237,6 @@ void __fastcall TAppListDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusP
 	cv->Font->Color = col_fgSttBar;
 	cv->TextOut(Rect.Left + 2, Rect.Top, Panel->Text);
 }
-//---------------------------------------------------------------------------
-void __fastcall TAppListDlg::SttBar1WndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
-
-	org_SttBar1WndProc(msg);
-}
 
 //---------------------------------------------------------------------------
 //ランチャーアイコンの処理

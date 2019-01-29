@@ -56,7 +56,11 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall WmExitSizeMove(TMessage &msg);
 
 	TWndMethod org_ImgPanelWndProc;
-	void __fastcall ImgPanelWndProc(TMessage &msg);
+	void __fastcall ImgPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_ImgPanelWndProc(msg);
+	}
 
 	double __fastcall GetZoomRatio();
 

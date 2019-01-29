@@ -135,10 +135,18 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall WmFormShowed(TMessage &msg);
 
 	TWndMethod org_FextInfBarWndProc;
-	void __fastcall FextInfBarWndProc(TMessage &msg);
+	void __fastcall FextInfBarWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(FextInfBar, msg)) return;
+		org_FextInfBarWndProc(msg);
+	}
 
 	TWndMethod org_FileInfBarWndProc;
-	void __fastcall FileInfBarWndProc(TMessage &msg);
+	void __fastcall FileInfBarWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(FileInfBar, msg)) return;
+		org_FileInfBarWndProc(msg);
+	}
 
 	bool __fastcall GetInfo(UnicodeString pnam);
 	void __fastcall GetResult(TStringList *lst, int mode = 0);

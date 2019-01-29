@@ -55,7 +55,7 @@ ExeCmdsList::ExeCmdsList(UnicodeString cmds)
 		//Šù“Ç
 		if (idx!=-1) {
 			CmdRec = (cmdf_rec*)CmdFileList->Objects[idx];
-			if (CmdRec->noreload || CmdRec->f_time==get_file_age(FileName)) {
+			if (CmdRec->noreload || WithinPastMilliSeconds(CmdRec->f_time, get_file_age(FileName), TimeTolerance)) {
 				CmdList->Assign(CmdRec->cmd_list);
 				loaded = true;
 			}

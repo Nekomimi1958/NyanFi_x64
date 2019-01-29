@@ -27,7 +27,7 @@ __fastcall TGifViewer::TGifViewer(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TGifViewer::FormCreate(TObject *Sender)
 {
-	org_ImgPanelWndProc = ImgPanel->WindowProc;
+	org_ImgPanelWndProc  = ImgPanel->WindowProc;
 	ImgPanel->WindowProc = ImgPanelWndProc;
 
 	hasBitmap = false;
@@ -74,16 +74,6 @@ void __fastcall TGifViewer::FormResize(TObject *Sender)
 		ZoomInf.sprintf(_T("  (%4.1f%%)"), GetZoomRatio());
 		Caption = TitleInf + ZoomInf;
 	}
-}
-
-//---------------------------------------------------------------------------
-//ロック切り替え時のパネルのちらつき防止
-//---------------------------------------------------------------------------
-void __fastcall TGifViewer::ImgPanelWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_ImgPanelWndProc(msg);
 }
 
 //---------------------------------------------------------------------------

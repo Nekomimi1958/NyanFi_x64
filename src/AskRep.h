@@ -44,7 +44,11 @@ __published:
 
 private:
 	TWndMethod org_SttBar1WndProc;
-	void __fastcall SttBar1WndProc(TMessage &msg);
+	void __fastcall SttBar1WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_InfHdrBg(StatusBar1, msg)) return;
+		org_SttBar1WndProc(msg);
+	}
 
 public:
 	UsrScrollPanel *ListScrPanel;	//シンプルスクロールバー

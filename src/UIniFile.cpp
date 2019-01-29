@@ -80,12 +80,13 @@ void UsrIniFile::Clear()
 //---------------------------------------------------------------------------
 void UsrIniFile::LoadValues()
 {
-	if (FileExists(FileName)) {
+	try {
+		if (!FileExists(FileName)) Abort();
 		std::unique_ptr<TStringList> fbuf(new TStringList());
 		fbuf->LoadFromFile(FileName);
 		TStringList *klist = NULL;
 		for (int i=0; i<fbuf->Count; i++) {
-			UnicodeString s = fbuf->Strings[i];
+			UnicodeString s = TrimLeft(fbuf->Strings[i]);
 			if (s.IsEmpty() || s[1]==';') continue;	//空行やコメント行は無視
 			if (StartsStr('[', s) && EndsStr(']', s))
 				klist = AddSection(exclude_top_end(s));
@@ -97,7 +98,9 @@ void UsrIniFile::LoadValues()
 		UpdateMarkIdxList();
 		CheckMarkItems();
 	}
-	else Clear();
+	catch (...) {
+		Clear();
+	}
 
 	Modified = false;
 }

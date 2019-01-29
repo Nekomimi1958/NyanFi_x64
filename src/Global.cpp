@@ -86,6 +86,7 @@ bool  IsPrimary  = true;		//最初に起動された
 win_dat Win2Data;				//二重起動終了時の画面情報
 
 int    ScrMode  = SCMD_FLIST;	//画面モード
+
 double ScrScale = 1.0;			//画面スケーリング
 int    SIcoSize = 16;			//スモールアイコンの表示サイズ
 int    Scaled1  = 1;
@@ -95,6 +96,8 @@ int    Scaled4  = 4;
 int    Scaled8  = 8;
 
 bool  IsMuted	= false;		//音量ミュート
+
+bool  GitExists = false;		//Git がインストールされている
 
 TRichEdit *TempRichEdit = NULL;
 
@@ -533,6 +536,8 @@ TStringList *WatchTailList;				//末尾監視リスト
 UnicodeString LastWatchLog;				//直前の監視ログ
 
 TStringList *InvalidUncList;			//無効なUNCリスト
+
+TStringList *GitCfgUrlList;				//.Git\config - URL 対応リスト (ファイル名=URL \t yyyy/mm/dd hh:nn:ss)
 
 //ファイル固有アイコンのキャッシュ (必ず IconRWLock で保護すること)
 TStringList *CachedIcoList;
@@ -1113,6 +1118,8 @@ void InitializeGlobal()
 
 	LibraryPath = cv_env_str("%APPDATA%\\Microsoft\\Windows\\Libraries\\");
 
+	GitExists	= FileExists(IncludeTrailingPathDelimiter(cv_env_var("%USERPROFILE%")) + ".gitconfig");
+
 	//バージョン
 	unsigned mj, mi, bl;
 	VersionNo = GetProductVersion(Application->ExeName, mj, mi, bl)? mj*100 + mi*10 + bl : 0;
@@ -1251,6 +1258,7 @@ void InitializeGlobal()
 	DriveLogList	  = CreStringList();
 	WatchTailList	  = CreStringList();
 	InvalidUncList	  = CreStringList();
+	GitCfgUrlList	  = CreStringList();
 	PlayList		  = CreStringList();
 	XCMD_VarList	  = CreStringList();
 	BakSetupList	  = CreStringList();
@@ -3051,6 +3059,92 @@ UnicodeString get_dotNaynfi(UnicodeString dnam,
 		fnam = get_dotNaynfi(dnam);
 	}
 	return fnam;
+}
+
+//---------------------------------------------------------------------------
+//.git\config ファイルを取得
+//---------------------------------------------------------------------------
+UnicodeString get_GitConfig(UnicodeString dnam)
+{
+	UnicodeString gnam = IncludeTrailingPathDelimiter(dnam).UCAT_T(".git");
+	while (!file_exists(gnam)) {
+		if (is_root_dir(dnam)) break;
+		dnam = IncludeTrailingPathDelimiter(get_parent_path(dnam));
+		gnam = dnam + ".git";
+	}
+
+	UnicodeString cfg_nam;
+	if (!gnam.IsEmpty()) {
+		cfg_nam = gnam + "\\config";
+		if (!file_exists(cfg_nam)) cfg_nam = EmptyStr;
+	}
+
+	return cfg_nam;
+}
+//---------------------------------------------------------------------------
+UnicodeString get_GitUrl(file_rec *fp)
+{
+	if (!GitExists || !fp || fp->is_virtual || fp->is_ftp) return EmptyStr;
+
+	UnicodeString url;
+	UnicodeString cfg_nam = get_GitConfig((fp->is_dir && !fp->is_up)? fp->f_name : fp->p_name);
+	if (!cfg_nam.IsEmpty()) {
+		int idx = GitCfgUrlList->IndexOfName(cfg_nam);
+		if (idx!=-1) {
+			//キャッシュ情報あり
+			UnicodeString lbuf = GitCfgUrlList->ValueFromIndex[idx];
+			try {
+				if (!WithinPastMilliSeconds(get_file_age(cfg_nam), TDateTime(get_post_tab(lbuf)), TimeTolerance)) Abort();
+				url = get_pre_tab(lbuf);
+			}
+			catch (...) {
+				GitCfgUrlList->Delete(idx);
+				idx = -1;
+			}
+		}
+
+		if (url.IsEmpty()) {
+			std::unique_ptr<TStringList> cfg_lst(new TStringList());
+			load_text_ex(cfg_nam, cfg_lst.get());
+			int cnt = 0;
+			for (int i=0; i<cfg_lst->Count; i++) {
+				UnicodeString lbuf = Trim(cfg_lst->Strings[i]);
+				if (cnt==0 && USAME_TI(lbuf, "[remote \"origin\"]")) {
+					cnt = 1;
+				}
+				else if (cnt==1) {
+					if (StartsStr("[", lbuf)) break;
+					UnicodeString key = Trim(split_tkn(lbuf, "="));
+					if (USAME_TI(key, "url")) {
+						url = Trim(lbuf);  break;
+					}
+				}
+			}
+		}
+
+		if (!url.IsEmpty()) {
+			if (idx==-1) {
+				//URL対応情報をキャッシュ
+				GitCfgUrlList->Add(UnicodeString().sprintf(_T("%s=%s\t%s"), cfg_nam.c_str(), url.c_str(),
+									FormatDateTime("yyyy/mm/dd hh:nn:ss", get_file_age(cfg_nam)).c_str()));
+			}
+
+			UnicodeString snam = IncludeTrailingPathDelimiter(fp->is_up? fp->p_name : fp->f_name);
+			UnicodeString gnam = IncludeTrailingPathDelimiter(get_tkn(cfg_nam, "\\.git\\config"));
+			if (StartsText(gnam, snam)) {
+				snam.Delete(1, gnam.Length());
+				snam = yen_to_slash(ExcludeTrailingPathDelimiter(snam));
+				if (!snam.IsEmpty()) {
+					if (fp->is_dir || snam.Pos('/'))
+						url.cat_sprintf(_T("/tree/master/%s"), snam.c_str());
+					else
+						url.cat_sprintf(_T("/blob/master/%s"), snam.c_str());
+				}
+			}
+		}
+	}
+
+	return url;
 }
 
 //---------------------------------------------------------------------------
@@ -7006,6 +7100,9 @@ void GetFileInfList(
 					}
 				}
 
+				//Git URL
+				add_PropLine_if(_T("Git URL"), get_GitUrl(fp), i_list);
+
 				//不用なセパレータを削除
 				if (i_list->Count>0 && i_list->Strings[i_list->Count - 1].IsEmpty()) i_list->Delete(i_list->Count - 1);
 			}
@@ -7394,6 +7491,9 @@ bool get_FileInfList(
 		//ハードリンク数
 		int lnk_cnt = get_HardLinkCount(fnam);
 		if (lnk_cnt>1) add_PropLine(_T("ハードリンク数"), lnk_cnt, lst);
+
+		//Git URL
+		add_PropLine_if(_T("Git URL"), get_GitUrl(fp), lst);
 
 		bool fp_created = false;
 		file_rec *org_fp = fp;

@@ -90,8 +90,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TextPaintBoxMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
           int X, int Y);
 	void __fastcall TextPaintBoxDblClick(TObject *Sender);
-	void __fastcall TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-          const TRect &Rect);
+	void __fastcall TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FormResize(TObject *Sender);
 	void __fastcall FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
@@ -115,8 +114,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormDeactivate(TObject *Sender);
 	void __fastcall FormActivate(TObject *Sender);
 	void __fastcall AddCopyActionExecute(TObject *Sender);
-	void __fastcall PopWebSearchItemMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width,
-          int &Height);
+	void __fastcall PopWebSearchItemMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width, int &Height);
 	void __fastcall ExportCsvActionUpdate(TObject *Sender);
 	void __fastcall ExportCsvActionExecute(TObject *Sender);
 
@@ -142,11 +140,25 @@ private:	// ユーザー宣言
 	void __fastcall WmDropped(TMessage &msg);
 
 	TWndMethod org_TvViewPanelWndProc;
+	void __fastcall TvViewPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_TvViewPanelWndProc(msg);
+	}
+
 	TWndMethod org_TvScrlPanelWndProc;
+	void __fastcall TvScrlPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_TvScrlPanelWndProc(msg);
+	}
+
 	TWndMethod org_TxtSttHdrWndProc;
-	void __fastcall TvViewPanelWndProc(TMessage &msg);
-	void __fastcall TvScrlPanelWndProc(TMessage &msg);
-	void __fastcall TxtSttHdrWndProc(TMessage &msg);
+	void __fastcall TxtSttHdrWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_InfHdrBg(TxtSttHeader, msg)) return;
+		org_TxtSttHdrWndProc(msg);
+	}
 
 	void __fastcall AdjustHdrWidth();
 

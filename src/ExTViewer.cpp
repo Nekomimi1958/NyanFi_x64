@@ -174,30 +174,6 @@ void __fastcall TExTxtViewer::WmExitSizeMove(TMessage &msg)
 }
 
 //---------------------------------------------------------------------------
-//パネルのちらつき防止
-//---------------------------------------------------------------------------
-void __fastcall TExTxtViewer::TvViewPanelWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_TvViewPanelWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall TExTxtViewer::TvScrlPanelWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_TvScrlPanelWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall TExTxtViewer::TxtSttHdrWndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_InfHdrBg(TxtSttHeader, msg)) return;
-
-	org_TxtSttHdrWndProc(msg);
-}
-
-//---------------------------------------------------------------------------
 //情報ヘッダのパネル幅調整
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::AdjustHdrWidth()

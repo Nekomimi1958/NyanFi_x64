@@ -205,7 +205,11 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	TStringList *LaunchFileList;
 
 	TWndMethod org_SttBar1WndProc;
-	void __fastcall SttBar1WndProc(TMessage &msg);
+	void __fastcall SttBar1WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
+		org_SttBar1WndProc(msg);
+	}
 
 	file_rec* __fastcall GetLaunchFrecPtr();
 	UnicodeString __fastcall get_size_str_K(SIZE_T sz);

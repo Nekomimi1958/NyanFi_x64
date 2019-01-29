@@ -288,14 +288,6 @@ void __fastcall TGeneralInfoDlg::GenListWndProc(TMessage &msg)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TGeneralInfoDlg::SttBar1WndProc(TMessage &msg)
-{
-	if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
-
-	org_SttBar1WndProc(msg);
-}
-
-//---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::WmFormShowed(TMessage &msg)
 {
 	Application->ProcessMessages();

@@ -410,61 +410,6 @@ void __fastcall UsrScrollPanel::UpdateKnob()
 }
 
 //---------------------------------------------------------------------------
-void __fastcall UsrScrollPanel::ParentPanelWndProc(TMessage &msg)
-{
-	//”wŒi‚Ì‚¿‚ç‚Â‚«–hŽ~
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_ParentPanelWndProc(msg);
-
-	if (msg.Msg==WM_SIZE) UpdateKnob();
-}
-//---------------------------------------------------------------------------
-void __fastcall UsrScrollPanel::AssoListWndProc(TMessage &msg)
-{
-	//ƒmƒu•\Ž¦‚ð“¯Šú
-	if (msg.Msg==WM_PAINT && !ScrCatchKnob) Repaint();
-
-	org_AssoListWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall UsrScrollPanel::AssoChkListWndProc(TMessage &msg)
-{
-	//ƒmƒu•\Ž¦‚ð“¯Šú
-	if (msg.Msg==WM_PAINT && !ScrCatchKnob) Repaint();
-
-	org_AssoChkListWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall UsrScrollPanel::AssoGridWndProc(TMessage &msg)
-{
-	//ƒmƒu•\Ž¦‚ð“¯Šú
-	if (msg.Msg==WM_PAINT && !ScrCatchKnob) Repaint();
-
-	org_AssoGridWndProc(msg);
-}
-//---------------------------------------------------------------------------
-void __fastcall UsrScrollPanel::ScrPanelVWndProc(TMessage &msg)
-{
-	//”wŒi‚Ì‚¿‚ç‚Â‚«–hŽ~
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_ScrPanelVWndProc(msg);
-
-	if (org_ParentPanelWndProc==NULL && msg.Msg==WM_SIZE) UpdateKnob();
-}
-//---------------------------------------------------------------------------
-void __fastcall UsrScrollPanel::ScrPanelHWndProc(TMessage &msg)
-{
-	//”wŒi‚Ì‚¿‚ç‚Â‚«–hŽ~
-	if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-
-	org_ScrPanelHWndProc(msg);
-
-	if (org_ParentPanelWndProc==NULL && msg.Msg==WM_SIZE) UpdateKnob();
-}
-
-//---------------------------------------------------------------------------
 //•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall UsrScrollPanel::ScrPaintBoxPaint(TObject *Sender)

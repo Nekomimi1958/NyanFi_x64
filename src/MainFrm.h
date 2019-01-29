@@ -320,6 +320,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *OpenByAppAction;
 	TAction *OpenByExpAction;
 	TAction *OpenByWinAction;
+	TAction *OpenGitURLAction;
 	TAction *OpenStandardAction;
 	TAction *OpenTrashAction;
 	TAction *OptionDlgAction;
@@ -383,6 +384,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ScrollUpTextAction;
 	TAction *SelAllFileAction;
 	TAction *SelAllItemAction;
+	TAction *SelByListAction;
 	TAction *SelectAction;
 	TAction *SelectUpAction;
 	TAction *SelEmptyDirAction;
@@ -1803,6 +1805,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall Inf_HideItemActionUpdate(TObject *Sender);
 	void __fastcall Inf_OpenUrlActionExecute(TObject *Sender);
 	void __fastcall Inf_OpenUrlActionUpdate(TObject *Sender);
+	void __fastcall OpenGitURLActionExecute(TObject *Sender);
+	void __fastcall SelByListActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -1958,40 +1962,103 @@ private:	// ユーザー宣言
 
 	void __fastcall ActiveFormChange(TObject *Sender);
 
-	TWndMethod org_TabPanelWndProc;
-	void __fastcall TabPanelWndProc(TMessage &msg);
 	TWndMethod org_TabCtrlWindowProc;
 	void __fastcall TabCtrlWindowProc(TMessage &msg);
 
+	TWndMethod org_TabPanelWndProc;
+	void __fastcall TabPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_TabPanelWndProc(msg);
+	}
+
 	TWndMethod org_RelPanelWndProc;
-	void __fastcall RelPanelWndProc(TMessage &msg);
+	void __fastcall RelPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_RelPanelWndProc(msg);
+	}
+
 	TWndMethod org_RelPanel2WndProc;
-	void __fastcall RelPanel2WndProc(TMessage &msg);
+	void __fastcall RelPanel2WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_RelPanel2WndProc(msg);
+	}
+
+	TWndMethod org_TvViewPanelWndProc;
+	void __fastcall TvViewPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_TvViewPanelWndProc(msg);
+	}
+
+	TWndMethod org_TvScrlPanelWndProc;
+	void __fastcall TvScrlPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_TvScrlPanelWndProc(msg);
+	}
+
+	TWndMethod org_LogPanelWndProc;
+	void __fastcall LogPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_LogPanelWndProc(msg);
+	}
+
+	TWndMethod org_SttBar1WndProc;
+	void __fastcall SttBar1WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
+		org_SttBar1WndProc(msg);
+	}
+
+	TWndMethod org_ClockBarWndProc;
+	void __fastcall ClockBarWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(ClockBar, msg)) return;
+		org_ClockBarWndProc(msg);
+	}
+
+	TWndMethod org_ClockBarIWndProc;
+	void __fastcall ClockBarIWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(ClockBarI, msg)) return;
+		org_ClockBarIWndProc(msg);
+	}
+
+	TWndMethod org_TxtSttHdrWndProc;
+	void __fastcall TxtSttHdrWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_InfHdrBg(TxtSttHeader, msg)) return;
+		org_TxtSttHdrWndProc(msg);
+	}
+
+	TWndMethod org_ImgSttHdrWndProc;
+	void __fastcall ImgSttHdrWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_InfHdrBg(ImgSttHeader, msg)) return;
+		org_ImgSttHdrWndProc(msg);
+	}
+
+	TWndMethod org_ImgInfBarWndProc;
+	void __fastcall ImgInfBarWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_InfHdrBg(ImgInfBar, msg)) return;
+		org_ImgInfBarWndProc(msg);
+	}
 
 	TWndMethod org_FileListWindowProc[MAX_FILELIST];
 	void __fastcall ListWndProc(TMessage &msg, int tag);
-	void __fastcall L_ListWindowProc(TMessage &msg);
-	void __fastcall R_ListWindowProc(TMessage &msg);
-
-	TWndMethod org_TvViewPanelWndProc;
-	TWndMethod org_TvScrlPanelWndProc;
-	TWndMethod org_LogPanelWndProc;
-	void __fastcall TvViewPanelWndProc(TMessage &msg);
-	void __fastcall TvScrlPanelWndProc(TMessage &msg);
-	void __fastcall LogPanelWndProc(TMessage &msg);
-
-	TWndMethod org_SttBar1WndProc;
-	TWndMethod org_ClockBarWndProc;
-	TWndMethod org_ClockBarIWndProc;
-	TWndMethod org_TxtSttHdrWndProc;
-	TWndMethod org_ImgSttHdrWndProc;
-	TWndMethod org_ImgInfBarWndProc;
-	void __fastcall SttBar1WndProc(TMessage &msg);
-	void __fastcall ClockBarWndProc(TMessage &msg);
-	void __fastcall ClockBarIWndProc(TMessage &msg);
-	void __fastcall TxtSttHdrWndProc(TMessage &msg);
-	void __fastcall ImgSttHdrWndProc(TMessage &msg);
-	void __fastcall ImgInfBarWndProc(TMessage &msg);
+	void __fastcall L_ListWindowProc(TMessage &msg)
+	{
+		ListWndProc(msg, 0);
+	}
+	void __fastcall R_ListWindowProc(TMessage &msg)
+	{
+		ListWndProc(msg, 1);
+	}
 
 	bool __fastcall UpdateBgImage(bool repaint_sw = false, bool reload_sw = false);
 	void __fastcall RestoreBgImg();

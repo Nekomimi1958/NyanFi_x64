@@ -4233,6 +4233,11 @@ object NyanFiForm: TNyanFiForm
       OnExecute = OpenByWinActionExecute
       OnUpdate = MenuFIGActionUpdate
     end
+    object OpenGitURLAction: TAction
+      Category = 'Command'
+      OnExecute = OpenGitURLActionExecute
+      OnUpdate = MenuFActionUpdate
+    end
     object OpenStandardAction: TAction
       Category = 'Command'
       OnExecute = OpenStandardActionExecute
@@ -4485,6 +4490,11 @@ object NyanFiForm: TNyanFiForm
       Category = 'Command'
       Caption = #12377#12409#12390#12398#12501#12449#12452#12523#12392#12487#12451#12524#12463#12488#12522#12434#36984#25246
       OnExecute = SelAllItemActionExecute
+      OnUpdate = MenuFActionUpdate
+    end
+    object SelByListAction: TAction
+      Category = 'Command'
+      OnExecute = SelByListActionExecute
       OnUpdate = MenuFActionUpdate
     end
     object SelectAction: TAction

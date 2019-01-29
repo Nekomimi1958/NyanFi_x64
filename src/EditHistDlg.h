@@ -135,7 +135,11 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall WmNyanFiFlIcon(TMessage &msg);
 
 	TWndMethod org_SttBar1WndProc;
-	void __fastcall SttBar1WndProc(TMessage &msg);
+	void __fastcall SttBar1WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
+		org_SttBar1WndProc(msg);
+	}
 
 	UnicodeString __fastcall get_CurFileName();
 	file_rec *    __fastcall get_CurFileRec();

@@ -436,7 +436,10 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 		CnvCharListBox->ItemIndex = -1;
 		CnvCharListBoxClick(NULL);
 	}
-	else UpdatePreview();
+	else {
+		CnvCharList->Assign(CnvCharListBox->Items);
+		UpdatePreview();
+	}
 }
 
 //---------------------------------------------------------------------------
