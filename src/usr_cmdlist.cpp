@@ -610,6 +610,7 @@ void get_PrmList(
 			_T("SHA512\n")
 			_T("CRC32\n"));
 		if (USAME_TI(cmd, "ToOppSameHash")) params.UCAT_T("NO : 反対側へ移動しない\n");
+		if (USAME_TI(cmd, "CompareHash"))   params.UCAT_T("OS : 不一致ファイルを反対側で選択\n");
 	}
 	else if (USAME_TI(cmd, "CompressDir")) {
 		params.sprintf(_T("%s"),

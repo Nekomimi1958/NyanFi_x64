@@ -726,11 +726,12 @@ SendCommands_"ChangeOppDir_%OppPath%"
 </div>
 <a href="#Add">→ Add</a>　<a href="#Input">→ Input</a>　<a href="#Random">→ Random</a>　<a href="#Test">→ Test</a>
 
-<dt id="SetCopyMode" class="no_bg">SetCopyMode<span class="pram_text">_O|_N|_S|_R</span>
+<dt id="SetCopyMode" class="no_bg">SetCopyMode<span class="pram_text">_{O|N|S|R}</span>
 <dd>
-後続の <a href="hid00005.htm#Copy">Copy</a>、<a href="hid00005.htm#CopyTo">CopyTo</a>、<a href="hid00005.htm#Move">Move</a>、<a href="hid00005.htm#MoveTo">MoveTo</a> コマンドで同名ファイルがあった場合、「<b>同名ファイルの処理</b>」ダイアログを出さずに、指定したモードを強制適用します。ただし、アーカイブ内へのコピーやFTP接続時には適用されません。<br>
+後続の <a href="hid00005.htm#Copy">Copy</a>、<a href="hid00005.htm#CopyTo">CopyTo</a>、<a href="hid00005.htm#Move">Move</a>、<a href="hid00005.htm#MoveTo">MoveTo</a> コマンドで同名ファイルがあった場合、「<b>同名ファイルの処理</b>」ダイアログを出さずに、指定したモードをすべてに強制適用します。ただし、アーカイブ内へのコピーやFTP接続時には適用されません。<br>
+また後続の <a href="hid00005.htm#CreateHardLink">CreateHardLink</a> コマンドで同名ファイルがあった場合も、削除して置き換えの確認を出さずに強制適用できます。<br>
+パラメータは、<b>O</b>「強制上書き」、<b>N</b>「最新なら上書き」、<b>S</b>「スキップ」、<b>R</b>「自動的に名前を変更」のいずれかを指定してください(<b>CreateHardLink</b> コマンドでは <b>O</b> または <b>S</b> のみ有効)。<br>
 この設定は、後続の一つのコマンドに対してのみ有効で、コピー/移動コマンドが実行されるとその都度リセットされます。<br>
-パラメータは、<b>O</b>「強制上書き」、<b>N</b>「最新なら上書き」、<b>S</b>「スキップ」、<b>R</b>「自動的に名前を変更」のいずれかを指定してください。<br>
 
 <dt id="SetClipboard" class="no_bg">SetClipboard<span class="pram_text">_文字列</span>
 <dd>クリップボードに文字列を設定します。内容は定義済み変数 <b>Clipboard</b> で参照できます。<br>

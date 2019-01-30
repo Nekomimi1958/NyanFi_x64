@@ -724,25 +724,30 @@ void __fastcall TNyanFiForm::WmFormShowed(TMessage &msg)
 	//アーカイバDLL情報
 	for (int i=0; i<MAX_ARC_DLL; i++) {
 		arc_func *fp = &usr_ARC->ArcFunc[i];
-		if (fp->Available) {
+		if (fp->hDll) {
 			tmp = make_LogHdr(_T("LOAD"), fp->DllName, false, 13) + fp->VerStr;
-
-			if (fp->use7zdll) {
-				if (fp->err7zdll) {
-					tmp[1] = 'E';
-					tmp.UCAT_T(" 7z.dll not found");
+			if (fp->Available) {
+				if (fp->use7zdll) {
+					if (fp->err7zdll) {
+						tmp[1] = 'E';
+						tmp.UCAT_T(" 7z.dll not found");
+					}
+					else {
+						tmp.UCAT_T(" using 7z.dll");
+					}
 				}
-				else
-					tmp.UCAT_T(" using 7z.dll");
-			}
-			else if (usr_ARC->Use7zDll) {
-				if ((USAME_TI(fp->Prefix, "Unrar") && test_FileExt(".rar", FExt7zDll)) ||
-					(USAME_TI(fp->Prefix, "UnIso") && test_FileExt(".iso", FExt7zDll)))
-				{
-					tmp.UCAT_T("  NOT USED");
+				else if (usr_ARC->Use7zDll) {
+					if ((USAME_TI(fp->Prefix, "Unrar") && test_FileExt(".rar", FExt7zDll)) ||
+						(USAME_TI(fp->Prefix, "UnIso") && test_FileExt(".iso", FExt7zDll)))
+					{
+						tmp.UCAT_T("  NOT USED");
+					}
 				}
 			}
-
+			else {
+				tmp[1] = 'E';
+				tmp.UCAT_T("not available");
+			}
 			AddLog(tmp);
 		}
 	}
@@ -12374,6 +12379,7 @@ void __fastcall TNyanFiForm::CompareHashActionExecute(TObject *Sender)
 		if (TestCurIncDir()) UserAbort(USTR_IncludeDir);
 		if (TestCurIncFindVirtual()) UserAbort(USTR_OpeNotSuported);
 
+		bool is_OS = TEST_DEL_ActParam("OS");
 		UnicodeString idstr = def_if_empty(ActionParam, "MD5");
 
 		TStringList *lst0 = GetCurList(true);
@@ -12492,10 +12498,25 @@ void __fastcall TNyanFiForm::CompareHashActionExecute(TObject *Sender)
 			}
 
 			//結果表示
-			if		(fnam1.IsEmpty()) 					 er_cnt++, msg.USET_T("E        同名ファイルがありません");
-			else if (hash0.IsEmpty() || hash1.IsEmpty()) er_cnt++, msg.USET_T("E        取得に失敗しました");
-			else if (SameStr(hash0, hash1))				 ok_cnt++, msg.USET_T("         一致しました");
-			else 										 ng_cnt++, msg.USET_T("W        一致しません");
+			if (fnam1.IsEmpty()) {
+				er_cnt++; msg.USET_T("E        同名ファイルがありません");
+			}
+			else if (hash0.IsEmpty() || hash1.IsEmpty()) {
+				er_cnt++; msg.USET_T("E        取得に失敗しました");
+			}
+			else if (SameStr(hash0, hash1)) {
+				ok_cnt++; msg.USET_T("         一致しました");
+			}
+			else {
+				ng_cnt++; msg.USET_T("W        一致しません");
+				//反対側で選択
+				if (is_OS) {
+					fp1->selected = true;
+					if (ng_cnt==1) IndexOfFileList(o_lst->Strings[i], OppListTag);
+					FileListBox[OppListTag]->Invalidate();
+					SetDriveInfo(OppListTag);
+				}
+			}
 			AddLog(msg);
 		}
 
@@ -13244,7 +13265,10 @@ void __fastcall TNyanFiForm::CreateHardLinkActionExecute(TObject *Sender)
 		UnicodeString msg;
 		StartLog(msg.sprintf(_T("ハードリンク作成開始  %s\t%s"), GetSrcPathStr().c_str(), dst_dir.c_str()));
 
-		bool ow_all = false, sk_all = false;
+		bool ow_all = (xCopyMode==0);	//すべて上書き
+		bool sk_all = (xCopyMode==2);	//すべてスキップ
+		xCopyMode	= -1;
+
 		int ok_cnt = 0, er_cnt = 0, sk_cnt = 0;
 		int cur_idx = FileListBox[CurListTag]->ItemIndex;
 		for (int i=0; i<lst->Count; i++) {
@@ -17872,28 +17896,32 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 		i_lst->Add("[アーカイバDLL] " + hr_str);
 		for (int i=0; i<MAX_ARC_DLL; i++) {
 			arc_func *fp = &usr_ARC->ArcFunc[i];
-			if (fp->Available) {
+			if (fp->hDll) {
 				get_FileNamePathInf(fp->FileName, i_lst, true);
-				//7z.dll版のエラー
-				if (fp->use7zdll) {
-					if (!FExt7zDll.IsEmpty()) add_PropLine(_T("追加拡張子"), FExt7zDll, i_lst);
-					if (fp->err7zdll) add_PropLine(_T("エラー"), "7z.dll not found", i_lst, LBFLG_ERR_FIF);
-				}
-				else if (usr_ARC->Use7zDll) {
-					if ((USAME_TI(fp->Prefix, "Unrar") && test_FileExt(".rar", FExt7zDll)) ||
-						(USAME_TI(fp->Prefix, "UnIso") && test_FileExt(".iso", FExt7zDll)))
-					{
-						add_PropLine(_T("備考"), "使用されません。", i_lst);
+				if (fp->Available) {
+					//7z.dll版のエラー
+					if (fp->use7zdll) {
+						if (!FExt7zDll.IsEmpty()) add_PropLine(_T("追加拡張子"), FExt7zDll, i_lst);
+						if (fp->err7zdll) add_PropLine(_T("エラー"), "7z.dll not found", i_lst, LBFLG_ERR_FIF);
+					}
+					else if (usr_ARC->Use7zDll) {
+						if ((USAME_TI(fp->Prefix, "Unrar") && test_FileExt(".rar", FExt7zDll)) ||
+							(USAME_TI(fp->Prefix, "UnIso") && test_FileExt(".iso", FExt7zDll)))
+						{
+							add_PropLine(_T("備考"), "使用されません。", i_lst);
+						}
 					}
 				}
-
+				else {
+					add_PropLine(_T("エラー"), "利用できません", i_lst, LBFLG_ERR_FIF);
+				}
 				i_lst->Add(EmptyStr);
 
 				//unrar
 				if (USAME_TI(fp->Prefix, "Unrar")) {
 					UnicodeString fnam = ExtractFilePath(fp->FileName) + (is_X64()? "unrar64.dll" : "unrar.dll");
 					i_lst->Add(ExtractFileName(fnam));
-					i_lst->Add(ExtractFilePath(fnam));
+					if (fnam.Pos('\\')) i_lst->Add(ExtractFilePath(fnam));
 					if (file_exists(fnam)) {
 						i_lst->Add(get_FileInfStr(fnam));
 						get_AppInf(fnam, i_lst, false);
@@ -17901,8 +17929,9 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 							add_PropLine(_T("備考"), "使用されません。", i_lst);
 						}
 					}
-					else
-						i_lst->Add(LoadUsrMsg(USTR_NotFound));
+					else {
+						add_PropLine(_T("エラー"), LoadUsrMsg(USTR_NotFound), i_lst, LBFLG_ERR_FIF);
+					}
 					i_lst->Add(EmptyStr);
 				}
 			}

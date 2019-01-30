@@ -50,6 +50,9 @@ UserArcUnit::UserArcUnit(HWND hWnd)
 #endif
 		fp->hDll = ::LoadLibrary(fp->DllName.c_str());
 		if (fp->hDll) {
+			_TCHAR szFname[MAX_PATH];
+			if (::GetModuleFileName(fp->hDll, szFname, MAX_PATH)>0) fp->FileName = szFname;
+
 			fp->Command 	 = (FUNC_Arc)GetProcAdr(fp, EmptyStr);
 			fp->GetVersion	 = (FUNC_ArcGetVersion)GetProcAdr(fp,	"GetVersion");
 			fp->GetRunning	 = (FUNC_ArcGetRunning)GetProcAdr(fp,	"GetRunning");
@@ -104,9 +107,6 @@ UserArcUnit::UserArcUnit(HWND hWnd)
 			}
 
 			if (fp->Available) {
-				_TCHAR szFname[MAX_PATH];
-				if (::GetModuleFileName(fp->hDll, szFname, MAX_PATH)>0) fp->FileName = szFname;
-
 				int v = fp->GetVersion();
 				fp->VerStr.sprintf(_T("v%u.%02u"), v/100, v%100);
 

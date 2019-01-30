@@ -317,10 +317,13 @@ NyanFi.exe -XCalculator_CB
 なお、タイムスタンプを比較する場合、<a href="hid00009.htm#Tolerance">→ オプション設定 - 一般 - タイムスタンプの許容誤差</a> で設定されている範囲内なら同じとみなされます。<br>
 <a href="#SelOnlyCur">→ SelOnlyCur</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#FindDuplDlg">→ FindDuplDlg</a>　<a href="#DiffDir">→ DiffDir</a>　<a href="#SelMask">→ SelMask</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>　<a href="#ToOppSameItem">→ ToOppSameItem</a>
 
-<dt id="CompareHash">CompareHash<span class="pram_text">[_MD5|_SHA1|_SHA256|_SHA384|_SHA512|_CRC32]</span>
+<dt id="CompareHash">CompareHash<span class="pram_text">[_MD5|_SHA1|_SHA256|_SHA384|_SHA512|_CRC32][;OS]</span>
 <dd>カレント側で選択中(無ければカーソル位置)のファイルと、反対側で選択中(無ければカレント側の対象と同名)のファイルとを、パラメータで指定したハッシュやCRCで比較し、結果をログに表示します。カレント/反対側とも選択する場合は、同数のファイルを選択してください。両側で選択されている場合、ファイル名にかかわらず順番に比較します。<br>
 パラメータを省略した場合は MD5 とみなします。<br>
+追加パラメータとして <b>OS</b> を指定すると、ハッシュ値が一致しないファイルを反対側で選択します。<br>
+<div class="spc_box">
 なお同名ファイルの同一性チェックだけなら、<a href="#CompareDlg">CompareDlg</a> コマンドでも可能です。<br>
+</div>
 <a href="#CompareDlg">→ CompareDlg</a>　<a href="#GetHash">→ GetHash</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>　<a href="#CopyFileName">→ CopyFileName</a>
 
 <dt id="CompleteDelete">CompleteDelete<span class="pram_text">[_SO]</span>

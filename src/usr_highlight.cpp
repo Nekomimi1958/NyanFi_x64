@@ -85,22 +85,18 @@ bool HighlightFile::GetSection(
 	bool is_h2t)			//HTMLÅ®TEXTïœä∑ÉÇÅ[Éh	(default = false)
 {
 	CurSection = EmptyStr;
-
 	UnicodeString fext = get_extension(fnam);
+
 	for (int i=0; i<SectionList->Count; i++) {
 		UnicodeString sct = SectionList->Strings[i];
-		if (is_clip) {
-			if (USAME_TI(sct, "CLIPBOARD")) CurSection = sct;
-		}
-		else if (is_log) {
-			if (USAME_TI(sct, "TASKLOG"))   CurSection = sct;
-		}
-		else if (is_h2t && test_FileExt(fext, FEXT_HTML)) {
-			if (USAME_TI(sct, "HTML2TEXT")) CurSection = sct;
-		}
-		else if (test_FileExt(fext, get_tkn(sct, ':')))
+		if (   (is_clip && USAME_TI(sct, "CLIPBOARD"))
+			|| (is_log  && USAME_TI(sct, "TASKLOG"))
+			|| (is_h2t  && test_FileExt(fext, FEXT_HTML) && USAME_TI(sct, "HTML2TEXT"))
+			|| (fext.IsEmpty() && get_tkn(sct, ':')=='.')
+			|| (test_FileExt(fext, get_tkn(sct, ':'))))
+		{
 			CurSection = sct;
-	
+		}
 		if (CurSection.IsEmpty()) continue;
 
 		if (!is_clip && !is_log) {
@@ -122,6 +118,19 @@ bool HighlightFile::GetSection(
 					for (int i=0; i<path_lst.Length && ok; i++) {
 						if (path_lst[i].IsEmpty()) continue;
 						if (StartsText(cv_env_str(path_lst[i]), fnam)) ok = false;
+					}
+					if (!ok) CurSection = EmptyStr;
+				}
+			}
+			//ëŒè€ñº
+			if (!CurSection.IsEmpty()) {
+				TStringDynArray name_lst = split_strings_semicolon(ReadKeyStr(_T("TargetName")));
+				if (name_lst.Length>0) {
+					bool ok = false;
+					UnicodeString bnam = get_base_name(fnam);
+					for (int i=0; i<name_lst.Length && !ok; i++) {
+						if (name_lst[i].IsEmpty()) continue;
+						if (StartsText(name_lst[i], bnam)) ok = true;
 					}
 					if (!ok) CurSection = EmptyStr;
 				}

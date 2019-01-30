@@ -48,14 +48,10 @@ int SWATCH_ColBuff[MAX_SWATCH_COLOR];
 //---------------------------------------------------------------------------
 bool IsSwatchbook(UnicodeString fnam)
 {
-	try {
-		if (!test_FileExt(get_extension(fnam), _T(".ini"))) Abort();
-		if (!StartsText("Swatchbook", ExtractFileName(fnam))) Abort();
-		return SameText(get_top_line(fnam), "[Swatchbook]");
-	}
-	catch (...) {
-		return false;
-	}
+	return (
+		test_FileExt(get_extension(fnam), _T(".ini"))
+		&& StartsText("Swatchbook", ExtractFileName(fnam))
+		&& SameText(get_top_line(fnam), "[Swatchbook]"));
 }
 
 //---------------------------------------------------------------------------

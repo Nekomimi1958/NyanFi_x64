@@ -30,6 +30,7 @@
 定義ファイルの書式は一般的なINIファイルと同様です。<br>
 ファイルの種類ごとにセクションを作り、その中に定義を記述してください。<br>
 セクション名は、定義したいファイルの拡張子とします。拡張子は . (ピリオド)で区切って複数指定できます。<br>
+. のみを指定すると、拡張子なしのファイル(ドットファイルを含む)にマッチします。<br>
 なお <b>xd2txlib.dll</b> でバイナリ文書をテキスト表示している場合も、その拡張子に対して定義可能です。<br>
 </p>
 
@@ -77,7 +78,7 @@
 <dt class="no_bg">TargetPath
 <dd>特定のパスでのみ定義を適用したい場合に指定します。<br>
 無指定の場合は、すべてのパスが対象となります。<br>
-パスは、<b>;</b> (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。また環境変数や<a href="hid00063.htm#PreDefVar">定義済み変数</a>の <b>%ExePath%</b> も使えます。<br>
+パスは <b>;</b> (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。また環境変数や<a href="hid00063.htm#PreDefVar">定義済み変数</a>の <b>%ExePath%</b> も使えます。<br>
 
 <pre class="example_box">
 TargetPath=D:\Projects\Source;E:\Backup\Source
@@ -90,22 +91,37 @@ TargetPath=D:\Projects\Source;E:\Backup\Source
 <pre class="example_box">
 TargetPath=D:\Prog\NyanFi\tasklog
 </pre>
+
+<dt class="no_bg">TargetName
+<dd>特定のファイル名主部を持つファイルに対してのみ定義を適用したい場合に指定します。<br>
+完全一致ですが、大小文字は区別されません。<br>
+名前は <b>;</b> (セミコロン)で区切って複数指定できます。<br>
+[.] セクションで指定すると、特定のドットファイルなどに適用できます。<br>
+<b>NyanFi</b> では、先頭のドット以降部分は拡張子ではなくファイル名主部とみなしています。<br>
+
 </dl>
 
 <p>
-同一拡張子に対して異なるパス条件で別の定義を適用したい場合は、拡張子の末尾に <b>:</b> (コロン)で区切って任意の文字列を付加し、セクション名が一意的になるようにしてください。<br>
+同一拡張子に対して異なる条件で別の定義を適用したい場合は、拡張子の末尾に <b>:</b> (コロン)で区切って任意の文字列を付加し、セクション名が一意的になるようにしてください。<br>
 </p>
 <div class="indent2">
 <pre class="example_box">
 [.txt:D1]
 TargetPath=D:\hoge\data1
 …
-…
 
 [.txt:D2]
 TargetPath=D:\hoge\data2
 …
+
+[.:bash]
+TargetName=.bash_history
 …
+
+[.:etc]
+TargetName=hogehoge
+…
+
 </pre>
 </div>
 
@@ -121,8 +137,8 @@ TargetPath=D:\hoge\data2
 <dd>通常とは異なるフォントサイズで表示したい場合に設定してください。<br>
 
 <pre class="example_box">
-FontName=Ricty Diminished
-FontSize=15
+FontName="Source Code Pro Medium"
+FontSize=14
 </pre>
 <br>
 
