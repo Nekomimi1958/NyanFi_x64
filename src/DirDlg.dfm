@@ -78,7 +78,7 @@ object RegDirDlg: TRegDirDlg
       Top = 37
       Width = 60
       Height = 26
-      Action = UserModule.DelListItemAction
+      Action = DelItemAction
       TabOrder = 6
     end
     object DescEdit: TEdit
@@ -246,6 +246,11 @@ object RegDirDlg: TRegDirDlg
       Caption = #36861#21152
       OnExecute = AddItemActionExecute
       OnUpdate = AddItemActionUpdate
+    end
+    object DelItemAction: TAction
+      Caption = #21066#38500
+      OnExecute = DelItemActionExecute
+      OnUpdate = DelItemActionUpdate
     end
     object PropertyAction: TAction
       Caption = #12503#12525#12497#12486#12451'(&R)'

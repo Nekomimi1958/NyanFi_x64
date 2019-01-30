@@ -2013,12 +2013,17 @@ PlayList<span class="pram_text">[_NX|_PR|_PS|_RS|_FI|_LS]</span><br>
 また <b>BC</b> を指定すると、最近使った項目のうちリンク先のファイルやディレクトリが存在しなくなっているものが削除されます(一覧の右クリックメニューからも可能)。<br>
 <a href="#EditHistory">→ EditHistory</a>　<a href="#ViewHistory">→ ViewHistory</a>
 
-<dt id="RegDirDlg">RegDirDlg<span class="pram_text">[_ND]</span>
+<dt id="RegDirDlg">RegDirDlg<span class="pram_text">[_ND|_AD]</span>
 <dd>「<a href="hid00054.htm">登録ディレクトリ</a>」ダイアログを開きます。<br>
 割り当てられているキーを押すと、そのディレクトリに移動します。<br>
 また、登録ディレクトリの編集・追加・削除もこのダイアログで行えます。<br>
 ここで割り当てたキーを、<a href="#ChangeRegDir">ChangeRegDir</a> コマンドのパラメータに設定すれば、そのディレクトリを開くこともできます。<br>
 パラメータに <b>ND</b> を指定すると、ダイアログの代わりに、ディレクトリを選択するポップアップメニューを表示します(<a href="#RegDirPopup">RegDirPopup</a> と同じ)。<br>
+<div class="spc_box">
+パラメータに <b>AD</b> を指定して未登録のディレクトリで実行すると、追加モードでダイアログが開きます。<br>
+この場合、一覧でカーソルを移動しても、その内容が設定欄に入りません。また<span class="btn_frame">変更</span>ボタンが<span class="btn_frame">挿入</span>に代わり、カーソル位置に新しい項目を挿入できます。一度、追加または挿入を行うと通常モードに戻ります。<br>
+登録済みのディレクトリで実行した場合は、このパラメータが無視され通常モードで開きます。<br>
+</div>
 <a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#RegDirPopup">→ RegDirPopup</a>　<a href="#SpecialDirList">→ SpecialDirList</a>　<a href="#SubDirList">→ SubDirList</a>
 
 <dt id="RegDirPopup">RegDirPopup<span class="pram_text">[_OP]</span>

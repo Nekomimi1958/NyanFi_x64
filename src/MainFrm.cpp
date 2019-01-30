@@ -20543,6 +20543,7 @@ void __fastcall TNyanFiForm::RegDirDlgActionExecute(TObject *Sender)
 		PopupRegDirMenu(_T("RegDir"));
 	else {
 		if (!RegDirDlg) RegDirDlg = new TRegDirDlg(this);	//‰‰ñ‚É“®“Iì¬
+		RegDirDlg->IsAddMode = TEST_ActParam("AD");
 		if (RegDirDlg->ShowModal()==mrOk && !RegDirDlg->CmdStr.IsEmpty()) {
 			ExeCommandAction(RegDirDlg->CmdStr);
 		}

@@ -829,6 +829,7 @@ void get_PrmList(
 	}
 	else if (contained_wd_i(_T("RegDirDlg|PathMaskDlg"), cmd)) {
 		params.USET_T("\nND : ポップアップメニューで選択\n");
+		if (USAME_TI(cmd, "RegDirDlg")) params.UCAT_T("AD : 追加モード\n");
 	}
 	else if (contained_wd_i(_T("RegDirPopup|PushDir|PopDir"), cmd)) {
 		params.USET_T("\nOP : 反対側で実行\n");

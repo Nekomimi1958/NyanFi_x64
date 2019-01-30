@@ -24,6 +24,7 @@ class TRegDirDlg : public TForm
 __published:	// IDE で管理されるコンポーネント
 	TAction *AddItemAction;
 	TAction *CopyPathAction;
+	TAction *DelItemAction;
 	TAction *EditItemAction;
 	TAction *OpenByExpAction;
 	TAction *PropertyAction;
@@ -89,6 +90,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall UseEnvVarActionUpdate(TObject *Sender);
 	void __fastcall OpenByExpActionExecute(TObject *Sender);
 	void __fastcall OpenByExpActionUpdate(TObject *Sender);
+	void __fastcall DelItemActionExecute(TObject *Sender);
+	void __fastcall DelItemActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	int  SelIndex;
@@ -96,13 +99,14 @@ private:	// ユーザー宣言
 
 	void __fastcall SetOptBtn();
 	int  __fastcall IndexOfDir(UnicodeString dnam);
-	void __fastcall ChangeItemActionExecute(bool add);
+	void __fastcall ChangeItemActionExecute(int chg_mod);
 	UnicodeString __fastcall GetCurDirItem(bool dsp_sw = false, bool id_sw = false);
 
 public:		// ユーザー宣言
 	UsrScrollPanel *ListScrPanel;	//シンプルスクロールバー
 
 	bool IsSpecial;		//特殊フォルダ一覧
+	bool IsAddMode;		//追加モード
 	UnicodeString CmdStr;
 
 	__fastcall TRegDirDlg(TComponent* Owner);
