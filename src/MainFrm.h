@@ -1955,6 +1955,7 @@ private:	// ユーザー宣言
 	void __fastcall WmMenuChar(TMessage &msg);
 	void __fastcall WmContextMnueProc(TMessage &msg);
 	void __fastcall MmMciNotify(TMessage &msg);
+	void __fastcall WmNyanfiAppearance(TMessage &msg);
 	void __fastcall WmNyanFiFlIcon(TMessage &msg);
 	void __fastcall WmNyanFiThumbnail(TMessage &msg);
 	void __fastcall WmNyanFiClpCopied(TMessage &msg);
@@ -2419,6 +2420,7 @@ public:		// ユーザー宣言
 		VCL_MESSAGE_HANDLER(WM_DRAWITEM,		TMessage,			WmContextMnueProc)
 		VCL_MESSAGE_HANDLER(WM_MEASUREITEM,		TMessage,			WmContextMnueProc)
 		VCL_MESSAGE_HANDLER(MM_MCINOTIFY,		TMessage,			MmMciNotify)
+		VCL_MESSAGE_HANDLER(WM_NYANFI_APPEAR,	TMessage,			WmNyanfiAppearance)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_FLICON,	TMessage,			WmNyanFiFlIcon)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_THUMBNAIL,TMessage,			WmNyanFiThumbnail)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_CLPCOPIED,TMessage,			WmNyanFiClpCopied)

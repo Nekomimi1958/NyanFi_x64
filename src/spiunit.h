@@ -43,7 +43,7 @@ public:
 	TSpiList *PlgList;
 	UnicodeString ErrMsg;
 
-	SpiUnit();
+	SpiUnit(UnicodeString spidir);
 	~SpiUnit();
 
 	bool TestFExt(UnicodeString fext, bool is_arc = false);

@@ -19683,11 +19683,10 @@ void __fastcall TNyanFiForm::OptionDlgActionExecute(TObject *Sender)
 			SetBounds(IniWinLeft, IniWinTop, IniWinWidth, IniWinHeight);
 		}
 
-		TxtViewer->SetColor();
-		SetupFont();
-		SetupDesign(OptionDlg->LayoutChanged);
-		Repaint();
+		//デザイン、フォント、配色
+		Perform(WM_NYANFI_APPEAR, (OptionDlg->LayoutChanged? 1 : 0), (NativeInt)0);
 
+		//ツールボタン
 		if (OptionDlg->TlBarColChanged) {
 			UpdateToolBtn(SCMD_FLIST);
 			UpdateToolBtn(SCMD_TVIEW);
@@ -19706,26 +19705,6 @@ void __fastcall TNyanFiForm::OptionDlgActionExecute(TObject *Sender)
 		if (WatchDirTimer->Interval==0) {
 			SetDirWatch(EmptyStr, 0);
 			SetDirWatch(EmptyStr, 1);
-		}
-
-		switch (ScrMode) {
-		case SCMD_FLIST:
-			SetCurStt(CurListTag);
-			ReloadList();
-			TxtPrvScrPanel->Repaint();
-			InfScrPanel->Repaint();
-			LogScrPanel->Repaint();
-			break;
-		case SCMD_TVIEW:
-			TxtViewer->UpdateScr();
-			break;
-		}
-
-		std::unique_ptr<TStringList> lst(new TStringList());
-		get_ExViewerList(lst.get());
-		for (int i=0; i<lst->Count; i++) {
-			TExTxtViewer *ex_tv = dynamic_cast<TExTxtViewer *>(lst->Objects[i]);
-			if (ex_tv) ex_tv->ExViewer->UpdateScr();
 		}
 
 		if (IsPrimary) {
@@ -31537,6 +31516,41 @@ void __fastcall TNyanFiForm::SetViewFileList(
 				ThumbnailThread->MakeIndex = idx;
 				ThumbnailThread->ReqMake   = true;
 			}
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
+//デザイン/フォント・配色の適用
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::WmNyanfiAppearance(TMessage &msg)
+{
+	SetupFont();
+	SetupDesign((bool)msg.WParam);
+	Repaint();
+
+	TxtViewer->SetColor();
+
+	switch (ScrMode) {
+	case SCMD_FLIST:
+		SetCurStt(CurListTag);
+		ReloadList();
+		TxtPrvScrPanel->Repaint();
+		InfScrPanel->Repaint();
+		LogScrPanel->Repaint();
+		break;
+	case SCMD_TVIEW:
+		TxtViewer->UpdateScr();
+		break;
+	}
+
+	std::unique_ptr<TStringList> lst(new TStringList());
+	get_ExViewerList(lst.get());
+	for (int i=0; i<lst->Count; i++) {
+		TExTxtViewer *ex_tv = dynamic_cast<TExTxtViewer *>(lst->Objects[i]);
+		if (ex_tv) {
+			ex_tv->ExViewer->SetColor();
+			ex_tv->ExViewer->UpdateScr();
 		}
 	}
 }

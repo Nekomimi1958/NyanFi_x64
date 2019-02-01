@@ -1958,7 +1958,7 @@ void InitializeGlobal()
 	usr_ARC->FExt7zDll = FExt7zDll;
 	usr_ARC->fpAddDebugLog = AddDebugLog;
 
-	SPI = new SpiUnit();
+	SPI = new SpiUnit(rel_to_absdir(SpiDir));
 
 	usr_Migemo = new MigemoUnit(rel_to_absdir(MigemoPath));
 	usr_Migemo->MinLength = IncSeaMigemoMin;
@@ -2415,31 +2415,50 @@ int GetOptionIntDef(int tag)
 //---------------------------------------------------------------------------
 //タグに設定されている変数ポインタを用いてコントロールの変更を反映
 //---------------------------------------------------------------------------
+void ApplyOptionByTag(TComponent *cp)
+{
+	if (cp->Tag==0) return;
+	if (class_is_CheckBox(cp))
+		*(bool*)cp->Tag = ((TCheckBox*)cp)->Checked;
+	else if (class_is_Edit(cp)) {
+		if (((TEdit*)cp)->NumbersOnly)
+			*(int*)cp->Tag = ((TEdit*)cp)->Text.ToIntDef(GetOptionIntDef(cp->Tag));
+		else
+			*(UnicodeString*)cp->Tag = ((TEdit*)cp)->Text;
+	}
+	else if (class_is_LabeledEdit(cp)) {
+		if (((TLabeledEdit*)cp)->NumbersOnly)
+			*(int*)cp->Tag = ((TLabeledEdit*)cp)->Text.ToIntDef(GetOptionIntDef(cp->Tag));
+		else
+			*(UnicodeString*)cp->Tag = ((TLabeledEdit*)cp)->Text;
+	}
+	else if (class_is_RadioGroup(cp))
+		*(int*)cp->Tag = ((TRadioGroup*)cp)->ItemIndex;
+	else if (class_is_ComboBox(cp)) {
+		if (((TComboBox*)cp)->Style==csDropDown)
+			*(UnicodeString*)cp->Tag = ((TComboBox*)cp)->Text;
+		else
+			*(int*)cp->Tag = ((TComboBox*)cp)->ItemIndex;
+	}
+}
+//---------------------------------------------------------------------------
 void ApplyOptionByTag(TForm *fp)
 {
-	for (int i=0; i<fp->ComponentCount; i++) {
-		TComponent *cp = fp->Components[i];  if (cp->Tag==0) continue;
-		if (class_is_CheckBox(cp))
-			*(bool*)cp->Tag = ((TCheckBox*)cp)->Checked;
-		else if (class_is_Edit(cp)) {
-			if (((TEdit*)cp)->NumbersOnly)
-				*(int*)cp->Tag = ((TEdit*)cp)->Text.ToIntDef(GetOptionIntDef(cp->Tag));
-			else
-				*(UnicodeString*)cp->Tag = ((TEdit*)cp)->Text;
+	for (int i=0; i<fp->ComponentCount; i++) ApplyOptionByTag(fp->Components[i]);
+}
+//---------------------------------------------------------------------------
+void ApplyOptionByTag(TTabSheet *sp)
+{
+	for (int i=0; i<sp->ControlCount; i++) {
+		TControl *cp = sp->Controls[i];
+		if (cp->ClassNameIs("TGroupBox")) {
+			TGroupBox *gp = (TGroupBox *)cp;
+			for (int j=0; j<gp->ControlCount; j++) {
+				ApplyOptionByTag((TComponent *)gp->Controls[j]);
+			}
 		}
-		else if (class_is_LabeledEdit(cp)) {
-			if (((TLabeledEdit*)cp)->NumbersOnly)
-				*(int*)cp->Tag = ((TLabeledEdit*)cp)->Text.ToIntDef(GetOptionIntDef(cp->Tag));
-			else
-				*(UnicodeString*)cp->Tag = ((TLabeledEdit*)cp)->Text;
-		}
-		else if (class_is_RadioGroup(cp))
-			*(int*)cp->Tag = ((TRadioGroup*)cp)->ItemIndex;
-		else if (class_is_ComboBox(cp)) {
-			if (((TComboBox*)cp)->Style==csDropDown)
-				*(UnicodeString*)cp->Tag = ((TComboBox*)cp)->Text;
-			else
-				*(int*)cp->Tag = ((TComboBox*)cp)->ItemIndex;
+		else {
+			ApplyOptionByTag((TComponent *)cp);
 		}
 	}
 }
@@ -3116,7 +3135,12 @@ UnicodeString get_GitUrl(file_rec *fp)
 					if (StartsStr("[", lbuf)) break;
 					UnicodeString key = Trim(split_tkn(lbuf, "="));
 					if (USAME_TI(key, "url")) {
-						url = Trim(lbuf);  break;
+						url = Trim(lbuf);
+						if (url.Pos('@')) {
+							url = TRegEx::Replace(url, 
+									"(https?://)(\\w+@)([\\w/:%#$&?()~.=+-]+)", "\\1\\3");
+						}
+						break;
 					}
 				}
 			}
@@ -3135,10 +3159,25 @@ UnicodeString get_GitUrl(file_rec *fp)
 				snam.Delete(1, gnam.Length());
 				snam = yen_to_slash(ExcludeTrailingPathDelimiter(snam));
 				if (!snam.IsEmpty()) {
-					if (fp->is_dir || snam.Pos('/'))
-						url.cat_sprintf(_T("/tree/master/%s"), snam.c_str());
-					else
-						url.cat_sprintf(_T("/blob/master/%s"), snam.c_str());
+					remove_end_text(url, ".git");	//Gitlab
+					//Bitbucket
+					if (contains_s(url, _T("/bitbucket.org/"))) {
+						url.cat_sprintf(_T("/src/master/%s"), snam.c_str());
+					}
+					//Github
+					else {
+						if (fp->is_dir || snam.Pos('/'))
+							url.cat_sprintf(_T("/tree/master/%s"), snam.c_str());
+						else
+							url.cat_sprintf(_T("/blob/master/%s"), snam.c_str());
+					}
+				}
+				else {
+					//Bitbucket
+					if (contains_s(url, _T("/bitbucket.org/"))) {
+						remove_end_text(url, ".git");
+						url.UCAT_T("/src/master/");
+					}
 				}
 			}
 		}
@@ -12127,7 +12166,13 @@ BOOL CALLBACK EnumNyanWndProc(HWND hWnd, LPARAM lst)
 		int p = pos_r(_T(" - "), tbuf);
 		UnicodeString lbuf = (p>0)? tbuf.SubString(p + 3, 16) : tbuf;
 		if (lbuf.Pos('-')) lbuf = get_tkn_r(lbuf, '-'); else lbuf.USET_T("1");
+
+#if defined(_WIN64)
 		lbuf.cat_sprintf(_T(",%llu,%s"), hWnd, tbuf.c_str());
+#else
+		lbuf.cat_sprintf(_T(",%u,%s"), hWnd, tbuf.c_str());
+#endif
+
 		((TStringList*)lst)->Add(lbuf);
 	}
 	return TRUE;

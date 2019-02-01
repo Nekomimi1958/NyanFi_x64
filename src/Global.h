@@ -32,11 +32,12 @@
 #define DOWNLOAD_URL	"http://nekomimi.la.coocan.jp/freesoft/"
 
 //---------------------------------------------------------------------------
-#define WM_FORM_SHOWED		(WM_APP + 1)
-#define WM_NYANFI_FLICON	(WM_APP + 100)
-#define WM_NYANFI_THUMBNAIL	(WM_APP + 101)
-#define WM_NYANFI_CLPCOPIED	(WM_APP + 102)
-#define WM_NYANFI_PLAYLIST	(WM_APP + 103)
+#define WM_FORM_SHOWED		(WM_APP + 1)	//フォームが表示された
+#define WM_NYANFI_APPEAR	(WM_APP + 100)	//デザイン、フォント、配色が変更された
+#define WM_NYANFI_FLICON	(WM_APP + 101)	//アイコンを取得した
+#define WM_NYANFI_THUMBNAIL	(WM_APP + 102)	//サムネイルを取得した
+#define WM_NYANFI_CLPCOPIED	(WM_APP + 103)	//クリップボードにコピーした
+#define WM_NYANFI_PLAYLIST	(WM_APP + 104)	//プレイリスト通知
 
 //---------------------------------------------------------------------------
 //WM_COPYDATA メッセージの識別番号
@@ -1768,7 +1769,9 @@ void UpdateIniFile();
 
 void BringOptionByTag(TForm *fp);
 int  GetOptionIntDef(int tag);
+void ApplyOptionByTag(TComponent *cp);
 void ApplyOptionByTag(TForm *fp);
+void ApplyOptionByTag(TTabSheet *sp);
 
 void InitializeListGrid(TStringGrid *gp, TFont *fnt = NULL);
 void InitializeListHeader(THeaderControl *hp, const _TCHAR *hdr, TFont *fnt = NULL);

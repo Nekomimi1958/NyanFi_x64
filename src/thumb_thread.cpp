@@ -178,7 +178,7 @@ void __fastcall TThumbnailThread::MakeThumbnail(int idx)
 		}
 
 		//ÉÅÉCÉìÇ…í ím
-		if (CallbackWnd) ::SendMessage(CallbackWnd, WM_NYANFI_THUMBNAIL,(WPARAM)0, (LPARAM)idx);
+		if (CallbackWnd) ::SendMessage(CallbackWnd, WM_NYANFI_THUMBNAIL, (WPARAM)0, (LPARAM)idx);
 	}
 }
 

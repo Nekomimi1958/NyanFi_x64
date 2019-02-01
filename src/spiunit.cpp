@@ -16,7 +16,7 @@ __fastcall TSpiList::TSpiList(): TList()
 }
 
 //---------------------------------------------------------------------------
-SpiUnit::SpiUnit()
+SpiUnit::SpiUnit(UnicodeString spidir)
 {
 	PlgList = new TSpiList();
 }

@@ -195,7 +195,7 @@ void __fastcall TGrepExOptDlg::RefLogBtnClick(TObject *Sender)
 void __fastcall TGrepExOptDlg::OkButtonClick(TObject *Sender)
 {
 	//コントロールのタグにしたがって変更を適用
-	ApplyOptionByTag(this);
+	ApplyOptionByTag((TForm *)this);
 }
 
 //---------------------------------------------------------------------------

@@ -1732,6 +1732,14 @@ object OptionDlg: TOptionDlg
         Alignment = taRightJustify
         Caption = #12473#12463#12525#12540#12523#12496#12540
       end
+      object TLabel
+        Left = 752
+        Top = 551
+        Width = 48
+        Height = 13
+        Alignment = taRightJustify
+        Caption = #12487#12470#12452#12531#12398
+      end
       object ShowImgPrvCheckBox: TCheckBox
         Left = 470
         Top = 398
@@ -2555,18 +2563,35 @@ object OptionDlg: TOptionDlg
         TabOrder = 12
         Visible = False
       end
+      object AppDesignBtn: TButton
+        Left = 804
+        Top = 547
+        Width = 80
+        Height = 24
+        Caption = #36969#24540
+        TabOrder = 15
+        OnClick = AppDesignBtnClick
+      end
     end
     object FontColSheet: TTabSheet
       HelpContext = 23
       Caption = #12501#12457#12531#12488#12539#37197#33394
       ImageIndex = 14
       object TLabel
-        Left = 660
+        Left = 473
         Top = 551
         Width = 34
         Height = 13
         Alignment = taRightJustify
         Caption = #37197#33394#12398
+      end
+      object TLabel
+        Left = 727
+        Top = 551
+        Width = 73
+        Height = 13
+        Alignment = taRightJustify
+        Caption = #12501#12457#12531#12488#12539#37197#33394#12398
       end
       object FontGroupBox: TGroupBox
         Left = 10
@@ -2775,7 +2800,7 @@ object OptionDlg: TOptionDlg
         end
       end
       object InpColBtn: TButton
-        Left = 698
+        Left = 511
         Top = 547
         Width = 90
         Height = 24
@@ -2784,7 +2809,7 @@ object OptionDlg: TOptionDlg
         OnClick = InpColBtnClick
       end
       object ExpColBtn: TButton
-        Left = 794
+        Left = 604
         Top = 547
         Width = 90
         Height = 24
@@ -3040,6 +3065,15 @@ object OptionDlg: TOptionDlg
           TabOrder = 4
           OnClick = RevTagColCheckBoxClick
         end
+      end
+      object AppColorBtn: TButton
+        Left = 804
+        Top = 547
+        Width = 80
+        Height = 24
+        Caption = #36969#24540
+        TabOrder = 7
+        OnClick = AppColorBtnClick
       end
     end
     object TxtViewerSheet: TTabSheet

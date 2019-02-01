@@ -91,7 +91,13 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	set_ComboBoxText(ScrBarStyleComboBox,
 		_T("標準\nシンプル\nシンプル(3/4幅)\nシンプル(1/2幅)\nシンプル(画像)\n"));
 
-	for (int i=0; i<FontList->Count-1; i++) FontComboBox->Items->Add(FontList->ValueFromIndex[i]);
+
+	FontBufList = new TStringList();
+	for (int i=0; i<FontList->Count-1; i++) {
+		TFont *f = new TFont();
+		FontBufList->AddObject(FontList->Strings[i], (TObject *)f);
+		FontComboBox->Items->Add(FontList->ValueFromIndex[i]);
+	}
 
 	set_ComboBoxText(SizeDecDgtComboBox, _T("0\n1\n2\n3\n"));
 	set_ComboBoxText(MaxTasksComboBox,   _T("1\n2\n3\n4\n"));
@@ -844,6 +850,11 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	MaxTasksComboBox->ItemIndex = MaxTasks - 1;
 	AppPrmComboBox->ItemIndex	= idx_of_word_i(_T("|FA|FL|FI|AO|LO|LI"), AppListHotPrm);
 
+	for (int i=0; i<FontBufList->Count; i++) {
+		TFont *f = (TFont *)FontBufList->Objects[i];
+		f->Assign((TFont *)FontList->Objects[i]);
+	}
+
 	ColBufList->Assign(ColorList);
 	ModalColorBox->Selected = (TColor)get_ListIntVal(ColBufList, _T("ModalScr"), clBlack);
 
@@ -988,6 +999,10 @@ void __fastcall TOptionDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TOptionDlg::FormDestroy(TObject *Sender)
 {
 	delete FindMarkList;
+
+	for (int i=0; i<FontBufList->Count; i++) delete (TFont*)FontBufList->Objects[i];
+	delete FontBufList;
+
 	delete ColBufList;
 
 	for (int i=0; i<MAX_KEYTABS; i++) delete KeyListBuf[i];
@@ -1309,8 +1324,8 @@ void __fastcall TOptionDlg::FontComboBoxDrawItem(TWinControl *Control, int Index
 	cv->TextOut(xp, yp, cp->Items->Strings[Index]);
 	xp += fh*10;
 
-	if (Index<FontList->Count) {
-		TFont *f = (TFont*)FontList->Objects[Index];
+	if (Index<FontBufList->Count) {
+		TFont *f = (TFont*)FontBufList->Objects[Index];
 		//サイズ
 		UnicodeString szstr = f->Size;
 		cv->TextOut(xp + get_CharWidth(cv, 2) - cv->TextWidth(szstr), yp, szstr);
@@ -1327,21 +1342,17 @@ void __fastcall TOptionDlg::FontComboBoxDrawItem(TWinControl *Control, int Index
 void __fastcall TOptionDlg::RefFontBtnClick(TObject *Sender)
 {
 	int idx = FontComboBox->ItemIndex;
-	if (idx>=0 && idx<FontComboBox->Items->Count && idx<FontList->Count) {
-		TFont *f = (TFont*)FontList->Objects[idx];
+	if (idx>=0 && idx<FontComboBox->Items->Count && idx<FontBufList->Count) {
+		TFont *f = (TFont*)FontBufList->Objects[idx];
 		UserModule->FontDlg->Options.Clear();
-		if (USAME_TI(FontList->ValueFromIndex[idx], "テキストビュアー"))
+		if (USAME_TI(FontBufList->ValueFromIndex[idx], "テキストビュアー"))
 			UserModule->FontDlg->Options << fdFixedPitchOnly;	//テキストビュアーは等幅
 
 		if (UserModule->FontDlgToFont(f)) {
-			//ダイアログ
-			if (USAME_TI(FontList->ValueFromIndex[idx], "ダイアログ")) {
+			if (USAME_TI(FontBufList->ValueFromIndex[idx], "ダイアログ")) {
 				if (f->Size>10) f->Size = 10;
-				Application->DefaultFont->Assign(f);
-				UpdateMaxItemWidth();
 			}
-			//その他
-			else FontComboBox->Repaint();
+			FontComboBox->Repaint();
 		}
 	}
 }
@@ -3418,9 +3429,9 @@ void __fastcall TOptionDlg::InpColBtnClick(TObject *Sender)
 			if (ext_lst->Count>0) ExtColListBox->Items->Assign(ext_lst.get());
 			if (tag_lst->Count>0) TagColListBox->Items->Assign(tag_lst.get());
 			//表示を更新
-			ExtColListBox->Repaint();
 			OptColListBox->Repaint();
 			TimColListBox->Repaint();
+			ExtColListBox->Repaint();
 			TagColListBox->Repaint();
 		}
 	}
@@ -3799,6 +3810,48 @@ void __fastcall TOptionDlg::AddPrtDirActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//デザインの適用
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::AppDesignBtnClick(TObject *Sender)
+{
+	ApplyOptionByTag(DesignSheet);
+
+	//メイン画面に通知
+	::SendMessage(MainHandle, WM_NYANFI_APPEAR, (LayoutChanged? 1 : 0), 0);
+}
+//---------------------------------------------------------------------------
+//フォント・配色の適用
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::AppColorBtnClick(TObject *Sender)
+{
+	ApplyOptionByTag(FontColSheet);
+
+	//フォント
+	for (int i=0; i<FontBufList->Count; i++) {
+		TFont *f = (TFont *)FontList->Objects[i];
+		f->Assign((TFont *)FontBufList->Objects[i]);
+
+		if (USAME_TI(FontBufList->ValueFromIndex[i], "ダイアログ")) {
+			Application->DefaultFont->Assign(f);
+			UpdateMaxItemWidth();
+		}
+	}
+
+	//配色
+	ColorList->Assign(ColBufList);
+	set_col_from_ColorList();
+
+	ExtColList->Assign(ExtColListBox->Items);
+	usr_TAG->TagColList->Assign(TagColListBox->Items);
+
+	ExtColListBox->Repaint();
+	TagColListBox->Repaint();
+
+	//メイン画面に通知
+	::SendMessage(MainHandle, WM_NYANFI_APPEAR, 0, 0);
+}
+
+//---------------------------------------------------------------------------
 //確定
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
@@ -3843,7 +3896,7 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 	}
 
 	//コントロールのタグにしたがって変更を適用
-	ApplyOptionByTag(this);
+	ApplyOptionByTag((TForm *)this);
 
 	//タグを用いない設定
 	TempPath = to_path_name(TempDirEdit->Text);
@@ -3869,9 +3922,15 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 
 	EtcEditorList->Assign(EtcEditorListBox->Items);
 
+	//フォント
+	for (int i=0; i<FontBufList->Count; i++) {
+		TFont *f = (TFont *)FontList->Objects[i];
+		f->Assign((TFont *)FontBufList->Objects[i]);
+	}
+
+	//配色
 	ColorList->Assign(ColBufList);
 	set_col_from_ColorList();
-
 	ExtColList->Assign(ExtColListBox->Items);
 	usr_TAG->TagColList->Assign(TagColListBox->Items);
 
