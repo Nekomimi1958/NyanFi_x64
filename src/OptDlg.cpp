@@ -464,6 +464,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	MarkFextEdit->Tag			= (int)&MarkImgFExt;
 	MarkMemoEdit->Tag			= (int)&MarkImgMemo;
 	FExt7zDllEdit->Tag			= (int)&FExt7zDll;
+	CmdGitExeEdit->Tag			= (int)&CmdGitExe;
 	AutoRenFmtEdit->Tag			= (int)&AutoRenFmt;
 	NoDirHistPathEdit->Tag		= (int)&NoDirHistPath;
 	FExtExeFileEdit->Tag		= (int)&FExtExeFile;
@@ -1161,6 +1162,16 @@ void __fastcall TOptionDlg::RefMigemoBtnClick(TObject *Sender)
 {
 	UnicodeString dnam = ExePath;
 	if (UserModule->SelectDirEx(_T("Migemo ディレクトリ"), dnam, true)) MigemoDirEdit->Text = dnam;
+}
+
+//---------------------------------------------------------------------------
+//git.ext 参照
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::RefCmdGitExeBtnClick(TObject *Sender)
+{
+	UserModule->PrepareOpenDlg(_T("git.exe の指定"), F_FILTER_EXE, _T("git.exe"), cv_env_var("%PROGRAMFILES%"));
+	UnicodeString fnam;
+	if (UserModule->OpenDlgToStr(fnam)) CmdGitExeEdit->Text = fnam;
 }
 
 //---------------------------------------------------------------------------

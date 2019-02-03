@@ -40,18 +40,18 @@ void __fastcall TGeneralInfoDlg::FormCreate(TObject *Sender)
 	GenInfoBuff = new TStringList();
 	GenSelList	= new TStringList();
 
-	isVarList	 = isLog = isDirs = isTree = isFTP = isFileList = isPlayList = false;
+	isVarList	 = isLog = isGit = isDirs = isTree = isFTP = isFileList = isPlayList = false;
 	isTail		 = isReverse = false;
-	ToFilter	 = false;
-	ToEnd		 = false;
-	isFiltered	 = false;
+	ToFilter	 = ToEnd = false;
 	ErrOnly 	 = false;
+	isFiltered	 = false;
+
 	CodePage	 = 0;
 	HasBOM		 = false;
-	TailLine	 = 100;
 	MaxNameWidth = 0;
 	LastIndex	 = 0;
 	LastTopIndex = 0;
+	TailLine	 = 100;
 }
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
@@ -119,10 +119,14 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	//ログファイルか?
 	if (!FileName.IsEmpty()) isLog = str_match(UAPP_T(ExePath, "tasklog*.txt"), FileName);
 
+	//Git?
+	isGit = (GenInfoList->Count>0 && StartsStr("$ git ", GenInfoList->Strings[0]));
+
 	//「名前=値」形式か?
 	if (!isVarList && !isLog) {
 		bool all_n_v = (GenInfoList->Count>0);
 		for (int i=0; i<GenInfoList->Count && all_n_v; i++) {
+			if (i==0 && isGit) continue;
 			if (!GenInfoList->Strings[i].IsEmpty()) {
 				UnicodeString nbuf = GenInfoList->Names[i];
 				all_n_v = !nbuf.IsEmpty() && !contains_s(nbuf, _T(' ')) && !contains_s(nbuf, _T('\t'));
@@ -253,13 +257,16 @@ void __fastcall TGeneralInfoDlg::FormClose(TObject *Sender, TCloseAction &Action
 	GenInfoList->Clear();
 	GenInfoBuff->Clear();
 
-	isVarList = isLog = isDirs = isTree = isFTP = isFileList = isPlayList = false;
-	isTail	  = isReverse = false;
-	ToFilter  = ToEnd = ErrOnly = false;
+	isVarList	 = isLog = isGit = isDirs = isTree = isFTP = isFileList = isPlayList = false;
+	isTail		 = isReverse = false;
+	ToFilter	 = ToEnd = false;
+	ErrOnly 	 = false;
+	isFiltered	 = false;
 
 	FileName	 = EmptyStr;
 	Caption 	 = EmptyStr;
 	ErrMsg		 = EmptyStr;
+
 	CodePage	 = 0;
 	HasBOM		 = false;
 	LineBreakStr = EmptyStr;
@@ -775,18 +782,22 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 		else
 			PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get());
 	}
-	//その他
+	//Git
+	else if (isGit) {
+		TColor fg = use_fgsel? col_fgSelItem :
+			 		StartsStr("$ git ", lbuf)? col_Headline :
+		 	 		StartsStr("-", lbuf)? clRed : StartsStr("+", lbuf)? clGreen : col_fgList;
+		PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get(), FileName, (SortMode==0 && !isFiltered));
+	}
+	//見出し行
+	else if (!ptn_match_str(HdrLnStr, lbuf).IsEmpty()) {
+		TColor fg = use_fgsel? col_fgSelItem : col_Headline;
+		PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get());
+	}
+	//コメント or 通常行
 	else {
-		//見出し行
-		if (!ptn_match_str(HdrLnStr, lbuf).IsEmpty()) {
-			TColor fg = use_fgsel? col_fgSelItem : col_Headline;
-			PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get());
-		}
-		//コメント or 通常行
-		else {
-			TColor fg = use_fgsel? col_fgSelItem : col_fgList;
-			PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get(), FileName, (SortMode==0 && !isFiltered));
-		}
+		TColor fg = use_fgsel? col_fgSelItem : col_fgList;
+		PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get(), FileName, (SortMode==0 && !isFiltered));
 	}
 
 	//スクロール幅を設定

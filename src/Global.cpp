@@ -890,6 +890,8 @@ int  ViewTabWidthX;				//任意タブ幅
 
 UnicodeString BinaryEditor;		//バイナリエディタ
 
+UnicodeString CmdGitExe;		//git.exe
+
 //サウンド
 UnicodeString SoundTaskFin;		//タスク終了時の通知音
 UnicodeString SoundFindFin;		//検索終了時の通知音
@@ -1355,6 +1357,7 @@ void InitializeGlobal()
 		{_T("ImageEditor=\"\""),					(TObject*)&ImageEditor},
 		{_T("FExtImgEidt=\".jpg.gif.png.bmp\""),	(TObject*)&FExtImgEidt},
 		{_T("BinaryEditor=\"\""),					(TObject*)&BinaryEditor},
+		{_T("CmdGitExer=\"\""),						(TObject*)&CmdGitExe},
 		{_T("FExtViewTab4=\".cpp.cxx.c.h\""),		(TObject*)&FExtViewTab4},
 		{_T("FExtViewTabX=\"\""),					(TObject*)&FExtViewTabX},
 		{_T("SoundTaskFin=\"\""),					(TObject*)&SoundTaskFin},
@@ -1446,6 +1449,7 @@ void InitializeGlobal()
 		{_T("FTPSndConnect=\"\""),					(TObject*)&FTPSndConnect},
 		{_T("FTPSndDiscon=\"\""),					(TObject*)&FTPSndDiscon},
 		{_T("FTPSndTransfer=\"\""),					(TObject*)&FTPSndTransfer},
+
 		// default = ExePath
 		{_T("DownloadPath=\"%ExePath%\""),			(TObject*)&DownloadPath},
 		{_T("WorkListPath=\"%ExePath%\""),			(TObject*)&WorkListPath},
@@ -1866,11 +1870,27 @@ void InitializeGlobal()
 	//読み込み
 	LoadOptions();
 
-	//OpenByCmdPrompt(V12.29で廃止)を関連付けに変換
-	if (IniFile->KeyExists(SCT_Option, "OpenByCmdPrompt")) {
-		if (IniFile->ReadBool(SCT_Option, "OpenByCmdPrompt"))
-			AssociateList->Insert(0, "..=\"ExeCommands_:コマンドプロンプト:CommandPrompt\"");
-		IniFile->DeleteKey(SCT_Option, "OpenByCmdPrompt");
+	//git.exe のチェック
+	if (CmdGitExe.IsEmpty()) {
+		std::unique_ptr<TStringList> plst(new TStringList());
+		TStringDynArray elst = split_strings_semicolon(GetEnvironmentVariable("PATH"));
+		for (int i=0; i<elst.Length; i++) {
+			if (contains_i(elst[i], _T("\\Git\\"))) plst->Add(elst[i]);
+		}
+#if defined(_WIN64)
+		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git\\bin"));
+		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git\\cmd"));
+#else
+		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git\\bin"));
+		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git\\cmd"));
+#endif
+		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")).UCAT_T("Git\\bin"));
+		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")).UCAT_T("Git\\cmd"));
+
+		for (int i=0; i<plst->Count; i++) {
+			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]).UCAT_T("git.exe");
+			if (file_exists(xnam)) { CmdGitExe = xnam;  break; }
+		}
 	}
 
 	//ツールチップの表示
@@ -3281,9 +3301,13 @@ UnicodeString make_ResponseFile(TStringList *lst,
 	std::unique_ptr<TStringList> r_lst(new TStringList());
 	std::unique_ptr<TStringList> f_lst(new TStringList());
 
-	//統合アーカイバ以外 (エラー)
+	//統合アーカイバ以外
 	if (arc_t==0) {
+#if defined(_WIN64)
 		return RESPONSE_ERR;
+#else
+		for (int i=0; i<lst->Count; i++) r_lst->Add(add_quot_if_spc(lst->Strings[i]));
+#endif
 	}
 	//統合アーカイバ
 	else {
@@ -7056,7 +7080,11 @@ void GetFileInfList(
 				}
 				else {
 					UnicodeString tmp = "ディレクトリ";
-					if (!fp->is_virtual && is_ProtectDir(fp->is_up? fp->p_name : fp->f_name)) tmp.UCAT_T(" (削除制限)");
+					if (!fp->is_virtual) {
+						UnicodeString pnam = IncludeTrailingPathDelimiter(fp->is_up? fp->p_name : fp->f_name);
+						if (dir_exists(pnam + "\\.git")) tmp.UCAT_T(" (リポジトリ)");
+						if (is_ProtectDir(pnam)) tmp.UCAT_T(" (削除制限)");
+					}
 					add_PropLine(_T("種類"), tmp, i_list);
 				}
 
@@ -7139,8 +7167,12 @@ void GetFileInfList(
 					}
 				}
 
-				//Git URL
-				add_PropLine_if(_T("Git URL"), get_GitUrl(fp), i_list);
+				//Git Remote URL
+				add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), i_list);
+				//Git COMMIT_EDITMSG
+				UnicodeString mnam =
+					IncludeTrailingPathDelimiter(!fp->is_up? fp->f_name : fp->p_name).UCAT_T(".git\\COMMIT_EDITMSG");
+				add_PropLine_if(_T("COMMIT_EDITMSG"), get_top_line(mnam), i_list);
 
 				//不用なセパレータを削除
 				if (i_list->Count>0 && i_list->Strings[i_list->Count - 1].IsEmpty()) i_list->Delete(i_list->Count - 1);
@@ -7533,7 +7565,7 @@ bool get_FileInfList(
 		if (lnk_cnt>1) add_PropLine(_T("ハードリンク数"), lnk_cnt, lst);
 
 		//Git URL
-		add_PropLine_if(_T("Git URL"), get_GitUrl(fp), lst);
+		add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), lst);
 
 		bool fp_created = false;
 		file_rec *org_fp = fp;
@@ -8414,9 +8446,22 @@ int load_ImageFile(
 				o_bmp->Canvas->Draw(0, 0, wic_img.get());
 				res = LOADED_BY_STD;
 			}
-			//他はWICで
-			else if (WIC_load_image(fnam, o_bmp, wic_type))
-				res = test_FileExt(fext, FEXT_WICSTD)? LOADED_BY_STD : LOADED_BY_WIC;
+			else {
+#if defined(_WIN64)
+				if (WIC_load_image(fnam, o_bmp, wic_type))
+					res = test_FileExt(fext, FEXT_WICSTD)? LOADED_BY_STD : LOADED_BY_WIC;
+#else
+				//SPI優先ならSPIで
+				if (UseSpiFirst && SPI->LoadImage(fnam, o_bmp))
+					res = LOADED_BY_SPI;
+				//WICで
+				else if (WIC_load_image(fnam, o_bmp, wic_type))
+					res = test_FileExt(fext, FEXT_WICSTD)? LOADED_BY_STD : LOADED_BY_WIC;
+				//SPI優先でないならSPIで
+				else if (!UseSpiFirst && SPI->LoadImage(fnam, o_bmp))
+					res = LOADED_BY_SPI;
+#endif
+			}
 		}
 		catch (...) {
 			res = 0;
@@ -10697,7 +10742,23 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 				//コンソール出力の取り込み
 				if (::WaitForInputIdle(pi.hProcess, 0)==0xffffffff && hRead && hWrite) {
 					bool l_sw = contains_s(opt, _T('L'));
-					if (l_sw) AddLogCr();
+					if (l_sw) {
+						AddLogCr();
+						//コマンドライン
+						UnicodeString lbuf = cmdln;
+						UnicodeString nnam;
+						if (remove_top_s(lbuf, '\"')) {
+							nnam = ExtractFileName(get_tkn(lbuf, '\"'));
+							lbuf = Trim(get_tkn_r(lbuf, '\"'));
+						}
+						else {
+							nnam = ExtractFileName(get_tkn(lbuf, ' '));
+							lbuf = Trim(get_tkn_r(lbuf, ' '));
+						}
+						if (!lbuf.IsEmpty()) lbuf.Insert(' ', 1);
+						lbuf.Insert(StartsText("git.exe", nnam)? ("$ " + get_base_name(nnam)) : nnam, 1);
+						AddLog(lbuf, false, true);
+					}
 
 					std::unique_ptr<TMemoryStream> ms(new TMemoryStream());
 					UnicodeString log_buf;

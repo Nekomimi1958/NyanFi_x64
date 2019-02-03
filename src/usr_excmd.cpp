@@ -381,6 +381,7 @@ const UnicodeString XCMD_SubCmds =
 	"FormatDI\n"
 	"FormatDT\n"
 	"FormatFN\n"
+	"Git\n"
 	"GrepSetMask\n"
 	"GrepStart\n"
 	"Hint\n"
@@ -1807,11 +1808,17 @@ bool XCMD_ShellExe(UnicodeString cmd, UnicodeString prm, UnicodeString wdir,
 	std::unique_ptr<TStringList> o_lst(new TStringList());
 	if (!Execute_ex(cmd, prm, wdir, opt, &exit_code, o_lst.get())) return false;
 
-	if (contains_wd_i(opt, _T("W|O"))) {
+	if (contains_wd_i(opt, _T("W|O|L"))) {
 		XCMD_set_Var(_T("ExitCode"), (int)exit_code);
-		if (contains_s(opt, _T('O')) && o_lst->Count>0) {
-			XCMD_SetBuffer(o_lst->Text);
-			XCMD_BufChanged = true;
+		if (contains_s(opt, _T('O'))) {
+			if (USAME_TI(ExtractFileName(cmd), "git.exe")) {
+				UnicodeString lbuf;
+				o_lst->Insert(0, lbuf.sprintf(_T("$ git %s"), prm.c_str()));
+			}
+			if (o_lst->Count>0) {
+				XCMD_SetBuffer(o_lst->Text);
+				XCMD_BufChanged = true;
+			}
 		}
 	}
 

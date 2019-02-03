@@ -11082,6 +11082,19 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 					}
 					break;
 
+				//Git
+				case XCMDID_Git:
+					{
+						if (CmdGitExe.IsEmpty()) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("git.exe")));
+						if (USAME_TS(XCMD_prm, "#")) XCMD_prm = "--version";
+						msg.sprintf(_T("　git.exe %s 実行中...\r\n　しばらくお持ちください\r\n"), XCMD_prm.c_str());
+						ShowMessageHint(msg, col_bgHint, false, true);
+						bool res = XCMD_ShellExe(CmdGitExe, XCMD_prm, XCMD_cur_path, "OLH");
+						MsgHint->ReleaseHandle();
+						if (!res) GlobalAbort();
+					}
+					break;
+
 				//タスクの終了待ち
 				case XCMDID_WaitForTask: case XCMDID_WaitForTask2:
 					ShowMessageHint(_T("タスクの終了待ち..."), col_bgHint, false, true, true);
@@ -21109,7 +21122,7 @@ void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
 		}
 
 		UnicodeString lnam = (TEST_ActParam("CP") || TEST_ActParam("OP"))?
-								GetCurFileName() : rel_to_absdir(exclude_quot(ActionParam), CurPath[CurListTag]);
+								GetCurFileName() : rel_to_absdir(cv_env_str(exclude_quot(ActionParam)), CurPath[CurListTag]);
 		if (lnam.IsEmpty()) UserAbort(USTR_NoParameter);
 		if (!file_exists(lnam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("ファイル")));
 

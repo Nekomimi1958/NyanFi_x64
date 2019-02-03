@@ -1097,7 +1097,7 @@ object OptionDlg: TOptionDlg
         Left = 460
         Top = 360
         Width = 434
-        Height = 169
+        Height = 211
         Caption = #12381#12398#20182
         TabOrder = 9
         object PermitCmdsCheckBox: TCheckBox
@@ -1141,6 +1141,26 @@ object OptionDlg: TOptionDlg
           EditLabel.Height = 13
           EditLabel.Caption = '7-zip32.dll(7z.dll'#23550#24540#29256')'#12398#23550#24540#25313#24373#23376
           TabOrder = 4
+        end
+        object CmdGitExeEdit: TLabeledEdit
+          Left = 10
+          Top = 175
+          Width = 374
+          Height = 21
+          EditLabel.Width = 121
+          EditLabel.Height = 13
+          EditLabel.Caption = 'git.exe (Git for Windows)'
+          TabOrder = 5
+        end
+        object RefCmdGitExeBtn: TButton
+          Tag = 4
+          Left = 387
+          Top = 175
+          Width = 36
+          Height = 22
+          Caption = '...'
+          TabOrder = 6
+          OnClick = RefCmdGitExeBtnClick
         end
       end
       object ViewArcInfCheckBox: TCheckBox

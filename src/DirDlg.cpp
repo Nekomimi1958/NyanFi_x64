@@ -63,7 +63,7 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%WINDIR%")) + "\t%WINDIR%");
 		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")) + "\t%PROGRAMFILES(X86)%");
 		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")) + "\t%PROGRAMFILES%");
-		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")) + "\t%PROGRAMW6432S%");
+		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")) + "\t%PROGRAMW6432%");
 
 		OptPanel->Visible	= false;
 		BlankPanel->Visible = false;

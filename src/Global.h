@@ -604,6 +604,7 @@ extern UnicodeString ResultListPath;
 extern UnicodeString RefParamPath;
 extern UnicodeString IconFilePath;
 extern UnicodeString CmdFilePath;
+extern UnicodeString CmdGitExe;
 
 extern int VersionNo;
 extern UnicodeString VersionStr;

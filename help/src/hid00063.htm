@@ -8,6 +8,8 @@
 	<param name="Keyword" value="#noreload">
 	<param name="Keyword" value="CmdFileList">
 	<param name="Keyword" value="ExeCommands">
+	<param name="Keyword" value="Git for Windows">
+	<param name="Keyword" value="git.exe">
 	<param name="Keyword" value="xdoc2txt">
 	<param name="Keyword" value="イメージビュアー">
 	<param name="Keyword" value="エイリアス">
@@ -193,7 +195,7 @@ MsgBox_%..N%回目です
 <h3 id="AuxCommand">補助コマンド</h3>
 <b>ExeCommands</b> コマンドのパラメータまたはコマンドファイル内でのみ使える補助コマンドとして、以下のものがあります。<br>
 <p class="link_box">
-<a href="#ActivateWnd">A</a> <a href="#CallCommands">C</a> <a href="#Debug">D</a> <a href="#Echo">E</a> <a href="#FileExists">F</a> <a href="#GrepSetMask">G</a> <a href="#Ins">I</a> <a href="#JumpCommands">J</a> <a href="#ListBuffer">L</a> <a href="#MatchBuffer">M</a> <a href="#PlaySound">P</a> <a href="#Random">R</a> <a href="#SaveBuffer">S</a> <a href="#Test">T</a> <a href="#WaitForTask2">W</a>
+<a href="#ActivateWnd">A</a> <a href="#CallCommands">C</a> <a href="#Debug">D</a> <a href="#Echo">E</a> <a href="#FileExists">F</a> <a href="#Git">G</a> <a href="#Ins">I</a> <a href="#JumpCommands">J</a> <a href="#ListBuffer">L</a> <a href="#MatchBuffer">M</a> <a href="#PlaySound">P</a> <a href="#Random">R</a> <a href="#SaveBuffer">S</a> <a href="#Test">T</a> <a href="#WaitForTask2">W</a>
 </p>
 
 <div class="indent1">
@@ -386,8 +388,21 @@ MsgBox_%Buffer%
 <dd>カーソル位置(または閲覧中)の項目について、ファイル名などの情報を書式にしたがって変数に設定します。<br>
 使用できる書式文字列は、<a href="hid00005.htm#CopyFileName">CopyFileName</a> コマンドのものと同じです。クリップボードには入りません。<br>
 <div class="spc_box">
-<b>例</b>: FormatFN_MD5ハッシュ=$G(MD5)
+<b>例</b>: FormatFN_MD5ハッシュ=$G(MD5)<br>
 <b>例</b>: FormatFN_タグ=$R(タグ)
+</div>
+
+<dt id="Git" class="no_bg">Git<span class="pram_text">_コマンド [パラメータ]</span><br>
+<dd>
+カレントを作業ディレクトリとして、指定したコマンド/パラメータで <b>git.exe</b> (Git for Windows)を実行します。<br>
+結果は、ログと定義済み変数 <b>Buffer</b> に出力されます。<br>
+<div class="spc_box">
+<b>git.exe</b> の場所が自動的に見つけられなかった場合は、<a href="hid00024.htm#Other">オプション設定 - 一般2 - その他</a> の <b>git.exe (Git for Windows)</b> で設定してください。<br>
+</div>
+<div class="spc_box">
+<b>例</b>: Git_&quot;clone https://github.com/Nekomimi1958/NyanFi_x64.git&quot;<br>
+<b>例</b>: Git_&quot;config --global -l&quot;: ListBuffer_Git<br>
+<b>例</b>: Git_&quot;log --oneline&quot;: ListBuffer_&quot;Git - %CurPath%&quot;
 </div>
 
 <dt id="GrepSetMask" class="no_bg">GrepSetMask<span class="pram_text">_マスク</span>
@@ -430,7 +445,7 @@ Input<span class="pram_text">_&quot;:タイトル:[プロンプト:]変数名&quot;</span>
 また見出し開始パターン(正規表現、先頭の ^ は不要)を指定すると、そのパターンで始まる行内容が「見出しの文字色」で表示されます。<br>
 なお、すべての行が「名前=値」形式の場合、<b>ListVar</b> コマンドと同様に = 位置を揃えて表示します。<br>
 <div class="spc_box">
-<b>例</b>: ListBuffer_結果一覧;/^[●◆■]/<br>
+<b>例</b>: ListBuffer_結果一覧;/[●◆■]/<br>
 </div>
 <a href="#Debug">→ Debug</a>
 

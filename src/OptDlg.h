@@ -120,6 +120,7 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *RefBgImg1Btn;
 	TButton *RefBgImg2Btn;
 	TButton *RefBinEdtBtn;
+	TButton *RefCmdGitExeBtn;
 	TButton *RefCmdPrmBtn;
 	TButton *RefCmdsBtn;
 	TButton *RefCmdsT1Btn;
@@ -525,6 +526,7 @@ __published:	// IDE で管理されるコンポーネント
 	TLabeledEdit *BgImg2Edit;
 	TLabeledEdit *CellAlphaEdit;
 	TLabeledEdit *ClockFmtEdit;
+	TLabeledEdit *CmdGitExeEdit;
 	TLabeledEdit *CmpDelOwCntEdit;
 	TLabeledEdit *CursorAlphaEdit;
 	TLabeledEdit *CursorWidthEdit;
@@ -864,6 +866,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall KeybdRadioGroupClick(TObject *Sender);
 	void __fastcall AppDesignBtnClick(TObject *Sender);
 	void __fastcall AppColorBtnClick(TObject *Sender);
+	void __fastcall RefCmdGitExeBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	MarkList *FindMarkList;

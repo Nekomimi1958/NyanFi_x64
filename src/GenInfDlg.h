@@ -187,6 +187,7 @@ public:		// ユーザー宣言
 
 	bool isVarList;		//「名前=値」形式
 	bool isLog;			//ログ
+	bool isGit;			//git の出力 (先頭行が "$ git ")
 	bool isFileList;	//ファイル名一覧
 	bool isPlayList;	//プレイリスト
 	bool isDirs;		//ディレクトリ一覧
