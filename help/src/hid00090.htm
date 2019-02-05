@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<title>Git の利用について</title>
+<link rel="stylesheet" type="text/css" href="help.css">
+<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+	<param name="Keyword" value="Git">
+	<param name="Keyword" value="Git for Windows">
+	<param name="Keyword" value="git.exe">
+	<param name="Keyword" value="ファイル情報">
+	<param name="Keyword" value="一覧ダイアログ">
+</object>
+</head>
+
+<body>
+
+<h1>Git の利用について</h1>
+<p>
+<b>git.exe</b> (Git for Windows) がインストールされてると、後述の Git 関連機能を利用できます。<br>
+標準的な場所(%PROGRAMFILES%\Git\cmd など)にインストールされている場合は自動的に検出されますが、そうでない場合は <a href="hid00024.htm#Other">オプション設定 - 一般2 - その他</a> で設定してください。<br>
+</p>
+<br>
+
+<h3>ファイル情報の表示</h3>
+<p>直下に .git があるディレクトリ、またはその中の [..] 位置では、ファイル情報に以下の項目が表示されます。</p>
+
+<dl>
+<dt class="no_bg">Remote URL
+<dd>リモートリポジトリのURL(https://～)です。<br>
+.git/config 内の [remote &quot;origin&quot;] の内容から想定されるURLを表示しています。<br>
+GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
+<a href="hid00005.htm#OpenGitURL">OpenGitURL</a> コマンドを実行すると、カーソル位置項目に対応するページをブラウザで開けます(ファイル情報の右クリックメニューからも可能)。<br>
+
+<dt class="no_bg">HEAD
+<dd>現在作業中のブランチに対するシンボリック参照です(.git/HEAD の内容)。
+
+<dt class="no_bg">COMMIT_EDITMSG
+<dd>直前のコミットメッセージです(.git/COMMIT_EDITMSG の内容)。
+
+<dt class="no_bg">STATUS
+<dd>git status --porcelain コマンドの取得結果から、フラグごとのファイル数(インデックス/ワーキングツリー)を表示します。<br>
+例えば、ワーキングツリーに2個の変更されたファイルがある場合、&quot;M:_/2&quot; と表示されます。
+</dl>
+
+<p>なおリポジトリ内で、トップの [..] 以外の項目については、<b>Remote URL</b> のみが表示されます。</p>
+
+<p>ファイル情報の右クリックメニュー「<b>この項目を隠す</b>」で非表示になっている項目は取得を試みません。<b>STATUS</b> などで取得に時間がかかって操作が滞るような場合には非表示にしてみてください。</p>
+
+<div class="indent1">
+<b>表示例</b><br>
+<pre class="example_box">
+     Remote URL: https://github.com/Nekomimi1958/NyanFi_x64
+           HEAD: ref: refs/heads/master
+ COMMIT_EDITMSG: v13.08 Add Git command
+         STATUS: M:_/2
+</pre>
+</div>
+<br>
+
+
+<h3>Git 補助コマンドの利用</h3>
+<p>
+<a href="hid00063.htm#Git">ExeCommands コマンドの Git 補助コマンド</a> を実行すると、カレントを作業ディレクトリとして、指定したコマンド/パラメータで git.exe が実行されます。<br>
+これによって、コンソールを開かなくても <b>NyanFi</b> から直接 Git コマンドを利用できます。<br>
+結果は、ログおよび定義済み変数 <b>Buffer</b> に出力されます。<br>
+</p>
+
+<div class="indent1">
+<b>使用例</b><br>
+指定したリポジトリのクローンをカレントに作成<br>
+<pre class="example_box">
+Git_"clone https://github.com/Nekomimi1958/NyanFi_x64.git"
+</pre>
+
+リポジトリの状態とコミット履歴をまとめて<a href="hid00073.htm">一覧ダイアログ</a>で表示<br>
+<pre class="example_box">
+Git_status --porcelain --branch
+Add_RES<<%Buffer%
+Add_RES<<""
+
+Git_log --graph --decorate --oneline
+ReplaceBuffer_\=&#x2216;
+Add_RES<<%Buffer%
+Add_RES<<""
+
+Set_Buffer=%RES%
+ListBuffer_"Git Status/Log"
+</pre>
+
+すべての変更内容をインデックスに追加し、入力したメッセージでコミット<br>
+<pre class="example_box">
+Format_Buffer=$P
+ReplaceBuffer_/.*\\/=""
+Input_":%Buffer%:コミットメッセージ:MSG"
+Test_MSG==""
+IfTrue_Exit
+
+Git_add -A
+SET_RES=">%CurPath%"
+Add_RES<<%Buffer%
+Add_RES<<""
+
+Git_commit -a -m "%MSG%"
+Add_RES<<%Buffer%
+
+Set_Buffer=%RES%
+ListBuffer_"Git Add/Commit"
+</pre>
+</div>
+<br><br>
+
+</body>
+</html>

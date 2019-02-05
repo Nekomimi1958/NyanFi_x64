@@ -8948,23 +8948,29 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 		//なければ取得
 		else if (need_inf) {
 			if (has_KeyDownMsg()) {
-				FinfSkipped = true;		//未処理のキー入力がある場合スキップ
+				FinfSkipped = true;	//未処理のキー入力がある場合スキップ
 			}
 			else {
-				GetFileInfList(fp, force);
+				if (fp->is_up) {	//git status に対するの抑止
+					SetDirWatch(false);
+					GetFileInfList(fp, force);
+					SetDirWatch(true);
+				}
+				else {
+					GetFileInfList(fp, force);
+				}
 				i_lst->Assign(fp->inf_list);
 			}
 		}
 
 		//隠す項目を削除
-		if (!fp->is_dir) {
-			UnicodeString hlst = HideInfItems->Values[def_if_empty(fp->f_ext, ".")];
-			if (!hlst.IsEmpty()) {
-				int i = 3;
-				while (i<i_lst->Count) {
-					UnicodeString inam = Trim(get_tkn(i_lst->Strings[i], _T(": ")));
-					if (test_word_i(inam, hlst)) i_lst->Delete(i); else i++;
-				}
+		UnicodeString fext = fp->is_dir? UnicodeString("\\") : def_if_empty(fp->f_ext, ".");
+		UnicodeString hlst = HideInfItems->Values[fext];
+		if (!hlst.IsEmpty()) {
+			int i = 3;
+			while (i<i_lst->Count) {
+				UnicodeString inam = Trim(get_tkn(i_lst->Strings[i], _T(": ")));
+				if (test_word_i(inam, hlst)) i_lst->Delete(i); else i++;
 			}
 		}
 
@@ -17608,12 +17614,33 @@ void __fastcall TNyanFiForm::LinkToOppActionExecute(TObject *Sender)
 
 		UnicodeString fnam;
 		//シンボリックリンク、ジャンクション
-		if (cfp->is_sym)
+		if (cfp->is_sym) {
 			fnam = cfp->l_name;
+		}
 		//ショートカット
-		else if (test_LnkExt(cfp->f_ext))
+		else if (test_LnkExt(cfp->f_ext)) {
 			fnam = usr_SH->get_LnkName(cfp->f_name);
-		else Abort();
+		}
+		//ハードリンク
+		else {
+			if (cfp->is_dir || CurStt->is_ADS || StartsStr("\\\\", CurPath[CurListTag])) Abort();
+			if (get_HardLinkCount(cfp->f_name)<2) Abort();
+			std::unique_ptr<TStringList> hlst(new TStringList());
+			if (get_HardLinkList(cfp->f_name, hlst.get())>0) {
+				UnicodeString onam = CurPath[OppListTag];
+				UnicodeString fnam2;
+				for (int i=0; i<hlst->Count; i++) {
+					UnicodeString hnam = hlst->Strings[i];
+					if (SameText(cfp->f_name, hnam)) continue;
+					if (fnam.IsEmpty() && IndexOfFileList(hnam, OppListTag)!=-1)
+						fnam  = hnam;
+					else if (fnam2.IsEmpty())
+						fnam2 = hnam;
+					else if (!fnam.IsEmpty() && !fnam2.IsEmpty()) break;
+				}
+				if (fnam.IsEmpty()) fnam = fnam2;
+			}
+		}
 
 		if (fnam.IsEmpty()) Abort();
 		if (!file_exists(fnam)) UserAbort(USTR_NotFound);
@@ -19257,7 +19284,7 @@ void __fastcall TNyanFiForm::OpenByWinActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::OpenGitURLActionExecute(TObject *Sender)
 {
 	try {
-		if (CurStt->is_Arc || CurStt->is_FTP) UserAbort(USTR_CantOperate);
+		if (!GitExists || CurStt->is_Arc || CurStt->is_FTP) UserAbort(USTR_CantOperate);
 		file_rec *cfp = GetCurFrecPtr();
 		if (!cfp || cfp->is_dummy || cfp->f_attr==faInvalid) Abort();
 		UnicodeString url = get_GitUrl(cfp);
@@ -28443,7 +28470,7 @@ void __fastcall TNyanFiForm::Inf_HideItemActionExecute(TObject *Sender)
 	TListBox *lp = GetCurInfListBox();
 	UnicodeString inam = (lp->ItemIndex>2)? Trim(get_tkn(lp->Items->Strings[lp->ItemIndex], ':')) : EmptyStr;
 	if (!inam.IsEmpty()) {
-		UnicodeString fext = def_if_empty(get_extension(lp->Items->Strings[0]), ".");
+		UnicodeString fext = GetCurInfFext(lp->Items->Strings[0]);
 		UnicodeString hlst = HideInfItems->Values[fext];
 		if (!hlst.IsEmpty()) hlst.UCAT_T("|");
 		hlst += inam;
@@ -28459,8 +28486,8 @@ void __fastcall TNyanFiForm::Inf_HideItemActionUpdate(TObject *Sender)
 	TAction *ap  = (TAction *)Sender;
 	TListBox *lp = GetCurInfListBox();
 	int flag = (lp->ItemIndex!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0;
-	file_rec *cfp = GetCurFrecPtr(true);
-	UnicodeString inam = (cfp && !cfp->is_dir && lp->ItemIndex>2 && (flag & LBFLG_STD_FINF)==0)?
+	file_rec *cfp = GetCurFrecPtr(true, true);
+	UnicodeString inam = (cfp && lp->ItemIndex>2 && (flag & LBFLG_STD_FINF)==0)?
 							Trim(get_tkn(lp->Items->Strings[lp->ItemIndex], ':')) : EmptyStr;
 	ap->Enabled = !inam.IsEmpty();
 }
@@ -28474,9 +28501,8 @@ void __fastcall TNyanFiForm::InfPopupMenuPopup(TObject *Sender)
 	InfShowItemItem->Enabled = false;
 
 	TListBox *lp  = GetCurInfListBox();
-	file_rec *cfp = GetCurFrecPtr(true);
-	if (cfp && !cfp->is_dir && lp->Count>0) {
-		UnicodeString fext = def_if_empty(get_extension(lp->Items->Strings[0]), ".");
+	if (lp->Count>0) {
+		UnicodeString fext = GetCurInfFext(lp->Items->Strings[0]);
 		TStringDynArray ilst = SplitString(HideInfItems->Values[fext], "|");
 		for (int i=0; i<ilst.Length; i++) {
 			TMenuItem *mp = new TMenuItem(InfShowItemItem);
@@ -28493,7 +28519,7 @@ void __fastcall TNyanFiForm::ShowInfItemClick(TObject *Sender)
 	UnicodeString inam = ((TMenuItem*)Sender)->Caption;
 	TListBox *lp = GetCurInfListBox();
 	if (lp->Count>0) {
-		UnicodeString fext = def_if_empty(get_extension(lp->Items->Strings[0]), ".");
+		UnicodeString fext = GetCurInfFext(lp->Items->Strings[0]);
 		TStringDynArray ilst = SplitString(HideInfItems->Values[fext], "|");
 		UnicodeString lbuf;
 		for (int i=0; i<ilst.Length; i++) {

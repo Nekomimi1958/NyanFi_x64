@@ -183,6 +183,10 @@
 			<param name="Local" value="hid00063.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Git の利用について">
+			<param name="Local" value="hid00090.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value=".nyanfi ファイルによるファイラー設定">
 			<param name="Local" value="hid00075.htm">
 			</OBJECT>

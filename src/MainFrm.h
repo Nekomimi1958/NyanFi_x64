@@ -2105,6 +2105,12 @@ private:	// ƒ†[ƒU[éŒ¾
 		return ((ScrMode==SCMD_IVIEW)? ImgInfListBox : InfListBox);
 	}
 
+	UnicodeString __fastcall GetCurInfFext(UnicodeString fnam)
+	{
+		return (dir_exists(fnam) || StartsStr('<', fnam)) ? UnicodeString("\\") 
+														  : def_if_empty(get_extension(fnam), ".");
+	}
+
 	void __fastcall SetIncSeaCaret(UnicodeString s = EmptyStr);
 	void __fastcall ResetIncSeaFilter(int tag, bool set_listbox = false);
 	void __fastcall SaveToTmpBufList();

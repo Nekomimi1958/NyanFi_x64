@@ -1120,8 +1120,6 @@ void InitializeGlobal()
 
 	LibraryPath = cv_env_str("%APPDATA%\\Microsoft\\Windows\\Libraries\\");
 
-	GitExists	= FileExists(IncludeTrailingPathDelimiter(cv_env_var("%USERPROFILE%")) + ".gitconfig");
-
 	//バージョン
 	unsigned mj, mi, bl;
 	VersionNo = GetProductVersion(Application->ExeName, mj, mi, bl)? mj*100 + mi*10 + bl : 0;
@@ -1892,6 +1890,7 @@ void InitializeGlobal()
 			if (file_exists(xnam)) { CmdGitExe = xnam;  break; }
 		}
 	}
+	GitExists = file_exists(CmdGitExe);
 
 	//ツールチップの表示
 	Application->ShowHint = ShowTooltip;
@@ -2932,6 +2931,20 @@ int __fastcall SortComp_MarkTime(TStringList *List, int Index1, int Index2)
 	return !OldOrder? ((dt0<dt1)? 1 : -1) : ((dt0>dt1)? 1 : -1);
 }
 
+//---------------------------------------------------------------------------
+//ディレクトリ名(ツリー用)
+int __fastcall Comp_PathTree(TStringList *List, int Index1, int Index2)
+{
+	TStringDynArray plst1 = split_path(List->Strings[Index1]);
+	TStringDynArray plst2 = split_path(List->Strings[Index2]);
+
+	for (int i=0; i<plst1.Length && i<plst2.Length; i++) {
+		if (SameText(plst1[i], plst2[i])) continue;
+		return StrCmpLogicalW(plst1[i].c_str(), plst2[i].c_str());
+	}
+
+	return (plst1.Length - plst2.Length);
+}
 
 //---------------------------------------------------------------------------
 //キー一覧ソート用比較関数
@@ -3121,9 +3134,11 @@ UnicodeString get_GitConfig(UnicodeString dnam)
 	return cfg_nam;
 }
 //---------------------------------------------------------------------------
+//リモートリポジトリのURLを取得
+//---------------------------------------------------------------------------
 UnicodeString get_GitUrl(file_rec *fp)
 {
-	if (!GitExists || !fp || fp->is_virtual || fp->is_ftp) return EmptyStr;
+	if (!fp || fp->is_virtual || fp->is_ftp) return EmptyStr;
 
 	UnicodeString url;
 	UnicodeString cfg_nam = get_GitConfig((fp->is_dir && !fp->is_up)? fp->f_name : fp->p_name);
@@ -5897,6 +5912,21 @@ void get_SubDirs(
 }
 
 //---------------------------------------------------------------------------
+//指定ファイルとハードリンクされているファイルのリストを取得
+//---------------------------------------------------------------------------
+int get_HardLinkList(UnicodeString fnam, TStringList *o_lst)
+{
+	UnicodeString drvstr = ExtractFileDrive(fnam);
+	UnicodeString prm;
+	prm.sprintf(_T("hardlink list \"%s\""), fnam.c_str());
+	DWORD exit_code;
+	if (Execute_ex("fsutil", prm, ExtractFileDir(fnam), "OH", &exit_code, o_lst) && exit_code==0) {
+		for (int i=0; i<o_lst->Count; i++) o_lst->Strings[i] = drvstr + o_lst->Strings[i];
+	}
+	return o_lst->Count;
+}
+
+//---------------------------------------------------------------------------
 //ディレクトリ容量の計算
 //  戻り値: ディレクトリ容量
 //---------------------------------------------------------------------------
@@ -7071,6 +7101,9 @@ void GetFileInfList(
 			}
 			//その他
 			else if (fp->tag!=-1) {
+				bool is_git_top = false;
+				UnicodeString rpnam = IncludeTrailingPathDelimiter(!fp->is_up? fp->f_name : fp->p_name);
+
 				//種類
 				if (is_ads) {
 					add_PropLine(_T("種類"), "代替データストリーム", i_list);
@@ -7081,9 +7114,9 @@ void GetFileInfList(
 				else {
 					UnicodeString tmp = "ディレクトリ";
 					if (!fp->is_virtual) {
-						UnicodeString pnam = IncludeTrailingPathDelimiter(fp->is_up? fp->p_name : fp->f_name);
-						if (dir_exists(pnam + "\\.git")) tmp.UCAT_T(" (リポジトリ)");
-						if (is_ProtectDir(pnam)) tmp.UCAT_T(" (削除制限)");
+						is_git_top = dir_exists(rpnam + "\\.git");
+						if (is_git_top) tmp.UCAT_T(" (リポジトリ)");
+						if (is_ProtectDir(rpnam)) tmp.UCAT_T(" (削除制限)");
 					}
 					add_PropLine(_T("種類"), tmp, i_list);
 				}
@@ -7092,7 +7125,7 @@ void GetFileInfList(
 				if (!fp->l_name.IsEmpty()) {
 					add_PropLine(_T("リンク先"), fp->l_name, i_list, LBFLG_PATH_FIF);
 					if (file_exists(fp->l_name)) {
-						i_list->Add(EmptyStr);	//セパレータ
+						i_list->Add(EmptyStr);
 						i_list->AddObject(get_FileInfStr(fp->l_name), (TObject*)LBFLG_STD_FINF);
 					}
 					else if (fp->is_sym) {
@@ -7135,7 +7168,7 @@ void GetFileInfList(
 							i_list->Add(get_PropTitle(_T("ドライブ占有率")).cat_sprintf(_T("%6.2f%%"), 100.0 * o_size/drv_size));
 						//圧縮
 						if (c_size>=0 && c_size<f_size) {
-							i_list->Add(EmptyStr);	//セパレータ
+							i_list->Add(EmptyStr);
 							i_list->Add(get_PropTitle(_T("圧縮サイズ")).cat_sprintf(_T("%s (%s)"),
 								get_size_str_G(c_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(c_size, 0).c_str()));
 							i_list->Add(get_PropTitle(_T("圧縮率")).cat_sprintf(_T("%5.1f %"), 100.0 * c_size/f_size));
@@ -7159,7 +7192,7 @@ void GetFileInfList(
 					std::unique_ptr<TStringList> syn_lst(new TStringList());
 					get_SyncDstList(fp->is_up? fp->p_name : fp->f_name, syn_lst.get());
 					if (syn_lst->Count>1) {
-						i_list->Add(EmptyStr);	//セパレータ
+						i_list->Add(EmptyStr);
 						for (int i=1; i<syn_lst->Count; i++) {
 							add_PropLine(UnicodeString().sprintf(_T("同期先%u"), i),
 								syn_lst->Strings[i], i_list, LBFLG_PATH_FIF);
@@ -7167,12 +7200,57 @@ void GetFileInfList(
 					}
 				}
 
-				//Git Remote URL
-				add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), i_list);
-				//Git COMMIT_EDITMSG
-				UnicodeString mnam =
-					IncludeTrailingPathDelimiter(!fp->is_up? fp->f_name : fp->p_name).UCAT_T(".git\\COMMIT_EDITMSG");
-				add_PropLine_if(_T("COMMIT_EDITMSG"), get_top_line(mnam), i_list);
+				//Git 情報
+				if (GitExists) {
+					i_list->Add(EmptyStr);
+
+					//Remote URL
+					add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), i_list);
+
+					//リポジトリのトップの場合
+					if (is_git_top) {
+						//Git HEAD
+						if (!test_word_i("HEAD", HideInfItems->Values["\\"])) {
+							add_PropLine_if(_T("HEAD"),			  get_top_line(rpnam + ".git\\HEAD"), i_list);
+						}
+						//COMMIT_EDITMSG
+						if (!test_word_i("COMMIT_EDITMSG", HideInfItems->Values["\\"])) {
+							add_PropLine_if(_T("COMMIT_EDITMSG"), get_top_line(rpnam + ".git\\COMMIT_EDITMSG"), i_list);
+						}
+						//STATUS
+						if (!test_word_i("STATUS", HideInfItems->Values["\\"])) {
+							std::unique_ptr<TStringList> o_buf(new TStringList());
+							if (GitShellExe("status --porcelain", rpnam, o_buf.get(), false)) {
+								UnicodeString stt_str;
+								if (o_buf->Count==0) {
+									stt_str = "Clean";
+								}
+								else if (StartsStr("ERROR", o_buf->Strings[0])) {
+									stt_str = o_buf->Strings[0];
+								}
+								else {
+									//フラグ文字毎のファイル数を取得
+									int flag[8][2] = {};
+									UnicodeString flag_str = "MADRCU?";
+									for (int i=0; i<o_buf->Count; i++) {
+										UnicodeString lbuf = o_buf->Strings[i];
+										if (lbuf.Length()<2) continue;
+										int p0 = flag_str.Pos(lbuf[1]);
+										int p1 = flag_str.Pos(lbuf[2]);
+										if (p0>0) flag[p0][0]++;
+										if (p1>0) flag[p1][1]++;
+									}
+									for (int i=1; i<8; i++) {
+										if (flag[i][0]>0 || flag[i][1]>0)
+											stt_str.cat_sprintf(_T(" %c:%u/%u"), flag_str[i], flag[i][0], flag[i][1]);
+									}
+									stt_str = Trim(ReplaceStr(stt_str, "0" , "_"));
+								}
+								add_PropLine_if(_T("STATUS"), stt_str, i_list);
+							}
+						}
+					}
+				}
 
 				//不用なセパレータを削除
 				if (i_list->Count>0 && i_list->Strings[i_list->Count - 1].IsEmpty()) i_list->Delete(i_list->Count - 1);
@@ -7565,7 +7643,7 @@ bool get_FileInfList(
 		if (lnk_cnt>1) add_PropLine(_T("ハードリンク数"), lnk_cnt, lst);
 
 		//Git URL
-		add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), lst);
+		if (GitExists) add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), lst);
 
 		bool fp_created = false;
 		file_rec *org_fp = fp;
@@ -10833,6 +10911,25 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 }
 
 //---------------------------------------------------------------------------
+//git.exe を実行
+//---------------------------------------------------------------------------
+bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst,
+	bool ins_cmdln)	//先頭にコマンドラインを挿入	(default = true)
+{
+	if (!file_exists(CmdGitExe)) return false;
+
+	wdir = ExcludeTrailingPathDelimiter(wdir);
+	UnicodeString cmdln = add_quot_if_spc(CmdGitExe);
+	if (!prm.IsEmpty()) cmdln.cat_sprintf(_T(" %s"), prm.c_str());
+	DWORD exit_code = 0;
+	if (!Execute_cmdln(cmdln, wdir, "HWO", &exit_code, o_lst)) return false;
+	UnicodeString tmp;
+ 	if (exit_code!=0) o_lst->Text = tmp.sprintf(_T("ERROR %u"), exit_code);
+	if (ins_cmdln)	  o_lst->Insert(0, tmp.sprintf(_T("$ git %s"), prm.c_str()));
+	return true;
+}
+
+//---------------------------------------------------------------------------
 //実行/待機中のタスク数を取得
 //---------------------------------------------------------------------------
 int get_BusyTaskCount()
@@ -12663,7 +12760,7 @@ void MakeTreeList(
 		for (int i=0; i<lst->Count; i++) lst->Strings[i] = get_post_tab(lst->Strings[i]);
 		if (SameText(IncludeTrailingPathDelimiter(lst->Strings[0]), pnam)) lst->Delete(0);
 	}
-	lst->Sort();
+	lst->CustomSort(Comp_PathTree);
 
 	//抜けている階層を補う
 	if (chk_sw) {

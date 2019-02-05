@@ -395,7 +395,7 @@ MsgBox_%Buffer%
 <dt id="Git" class="no_bg">Git<span class="pram_text">_コマンド [パラメータ]</span><br>
 <dd>
 カレントを作業ディレクトリとして、指定したコマンド/パラメータで <b>git.exe</b> (Git for Windows)を実行します。<br>
-結果は、ログと定義済み変数 <b>Buffer</b> に出力されます。<br>
+結果は、ログおよび定義済み変数 <b>Buffer</b> に出力されます。<br>
 <div class="spc_box">
 <b>git.exe</b> の場所が自動的に見つけられなかった場合は、<a href="hid00024.htm#Other">オプション設定 - 一般2 - その他</a> の <b>git.exe (Git for Windows)</b> で設定してください。<br>
 </div>
@@ -404,6 +404,7 @@ MsgBox_%Buffer%
 <b>例</b>: Git_&quot;config --global -l&quot;: ListBuffer_Git<br>
 <b>例</b>: Git_&quot;log --oneline&quot;: ListBuffer_&quot;Git - %CurPath%&quot;
 </div>
+<a href="hid00090.htm">→ Git の利用について</a>
 
 <dt id="GrepSetMask" class="no_bg">GrepSetMask<span class="pram_text">_マスク</span>
 <dd><a href="hid00056.htm">文字列検索(GREP)</a>のマスクを設定します。<a href="hid00005.htm#Grep">Grep</a> コマンドとあわせて用います。<br>

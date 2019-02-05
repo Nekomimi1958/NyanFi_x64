@@ -1518,6 +1518,8 @@ int __fastcall SortComp_Tags(TStringList *List, int Index1, int Index2);
 int __fastcall SortComp_Memo(TStringList *List, int Index1, int Index2);
 int __fastcall SortComp_MarkTime(TStringList *List, int Index1, int Index2);
 
+int __fastcall Comp_PathTree(TStringList *List, int Index1, int Index2);
+
 int __fastcall KeyComp_Key(TStringList *List, int Index1, int Index2);
 int __fastcall KeyComp_Cmd(TStringList *List, int Index1, int Index2);
 int __fastcall KeyComp_Dsc(TStringList *List, int Index1, int Index2);
@@ -1652,6 +1654,8 @@ bool get_NameList_objSize(TStringList *lst, TStringList *o_lst, bool sub_sw, boo
 void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int tag);
 void get_FindListD(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int tag);
 void get_SubDirs(UnicodeString pnam, TStrings *lst, TStatusBar *stt_bar = NULL, int stt_idx = 0, bool proc_msg = false);
+
+int  get_HardLinkList(UnicodeString fnam, TStringList *o_lst);
 
 __int64 get_DirSize(UnicodeString dnam, int *f_cnt, int *d_cnt, __int64 *o_size, __int64 *c_size);
 __int64 get_ArcDirSize(UnicodeString anam, UnicodeString dnam, int *f_cnt, int *d_cnt);
@@ -1889,6 +1893,7 @@ bool Execute_ex(UnicodeString cmd, UnicodeString prm = EmptyStr, UnicodeString w
 		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL);
 bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir = EmptyStr,
 		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL);
+bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, bool ins_cmdln = false);
 
 int  get_BusyTaskCount();
 int  get_MaxTaskCount();

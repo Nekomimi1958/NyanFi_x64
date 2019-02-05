@@ -1,3 +1,6 @@
 help/* linguist-documentation
 *.h linguist-language=C++
 *.dfm linguist-language=C++
+
+*.cpp diff=cp932
+*.h diff=cp932
