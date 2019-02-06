@@ -30,8 +30,12 @@ void __fastcall UsrHintWindow::Paint(void)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall UsrHintWindow::ActivateHintEx(UnicodeString msg, int max_w, int min_w,
-	TControl *cp, TColor bg_col)
+void __fastcall UsrHintWindow::ActivateHintEx(
+	UnicodeString msg,	//メッセージ
+	int max_w, 			//最大幅
+	int min_w,			//最小幅
+	TControl *cp,		//基準コントロール
+	TColor bg_col)		//背景色
 {
 	if (!cp) return;
 

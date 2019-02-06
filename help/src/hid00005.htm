@@ -1781,6 +1781,7 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 <div class="spc_box">
 基準となるURLは、カレントから上位階層へと検索して見つかった <b>.git\config</b> ファイルから取得します。一度取得した情報は、ファイルのタイムスタンプが変化しない限り再利用します。<br>
 </div>
+<a href="hid00090.htm">→ Git の利用について</a>
 
 <dt id="OpenStandard">OpenStandard<span class="pram_text">[_ファイル名|_ディレクトリ名]</span>
 <dd>カーソル位置の項目に対し、<span class="btn_frame">Enter</span>キーによる標準の動作を行います。<br>
@@ -2178,6 +2179,10 @@ NyanFi.exe -XRegExChecker
 <dt id="SelEmptyDir">SelEmptyDir<span class="pram_text">[_NF]</span>
 <dd>カレントで、空のディレクトリだけを選択します。<br>
 パラメータに <b>NF</b> を指定すると、ディレクトリ内にサブディレクトリがあってもファイルが含まれていなければ(サイズ=0)、空とみなして選択します。<br>
+
+<dt id="SelGitChanged">SelGitChanged
+<dd>Gitリポジトリ内にいる場合、カレントで変更されているファイル(状態フラグが &quot;?&quot; 以外)を選択します。<br>
+<a href="hid00090.htm">→ Git の利用について</a>
 
 <dt id="SelMark">SelMark
 <dd>栞マーク項目を選択します。<br>

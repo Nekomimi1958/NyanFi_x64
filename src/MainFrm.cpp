@@ -11093,10 +11093,11 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 					{
 						if (CmdGitExe.IsEmpty()) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("git.exe")));
 						if (USAME_TS(XCMD_prm, "#")) XCMD_prm = "--version";
-						msg.sprintf(_T("　git.exe %s 実行中...\r\n　しばらくお持ちください\r\n"), XCMD_prm.c_str());
-						ShowMessageHint(msg, col_bgHint, false, true);
+						cursor_HourGlass();
+						SetDirWatch(false);
 						bool res = XCMD_ShellExe(CmdGitExe, XCMD_prm, XCMD_cur_path, "OLH");
-						MsgHint->ReleaseHandle();
+						SetDirWatch(true);
+						cursor_Default();
 						if (!res) GlobalAbort();
 					}
 					break;
@@ -33864,6 +33865,45 @@ void __fastcall TNyanFiForm::PreviewImageMouseUp(TObject *Sender, TMouseButton B
 void __fastcall TNyanFiForm::GrepRepComboBoxEnter(TObject *Sender)
 {
 	UpdateActions();
+}
+
+//---------------------------------------------------------------------------
+//リポジトリ内の変更ファイルを選択
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SelGitChangedActionExecute(TObject *Sender)
+{
+	try {
+		if (!IsCurFList()) UserAbort(USTR_CantOperate);
+		if (get_GitTopPath(CurPath[CurListTag]).IsEmpty())
+			TextAbort(_T("gitリポジトリではありません。"));
+
+		std::unique_ptr<TStringList> glst(new TStringList());
+		SetDirWatch(false);
+		int cnt = get_GitChangedList(CurPath[CurListTag], glst.get());
+		SetDirWatch(true);
+		if (cnt==-1) UserAbort(USTR_FaildProc);
+		if (cnt==0)  Abort();
+
+		TStringList *lst = GetCurList(true);
+		int top_idx = -1;
+		for (int i=0; i<lst->Count; i++) {
+			file_rec *fp = (file_rec*)lst->Objects[i];
+			fp->selected = (glst->IndexOf(fp->f_name)!=-1);
+			if (fp->selected && top_idx==-1) top_idx = i;
+		}
+		FileListBox[CurListTag]->ItemIndex = top_idx;
+		RepaintList(CurListTag);
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SelGitChangedActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = ScrMode==SCMD_FLIST;
+	ap->Enabled = ap->Visible && GitExists;
 }
 //---------------------------------------------------------------------------
 

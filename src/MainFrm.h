@@ -1027,6 +1027,7 @@ __published:	// IDE で管理されるコンポーネント
 	TToolBar *ToolBarV;
 	TTrackBar *SeekBar;
 	TTrayIcon *TrayIcon1;
+	TAction *SelGitChangedAction;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -1807,6 +1808,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall Inf_OpenUrlActionUpdate(TObject *Sender);
 	void __fastcall OpenGitURLActionExecute(TObject *Sender);
 	void __fastcall SelByListActionExecute(TObject *Sender);
+	void __fastcall SelGitChangedActionExecute(TObject *Sender);
+	void __fastcall SelGitChangedActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

@@ -4512,6 +4512,11 @@ object NyanFiForm: TNyanFiForm
       OnExecute = SelEmptyDirActionExecute
       OnUpdate = MenuFActionUpdate
     end
+    object SelGitChangedAction: TAction
+      Category = 'Command'
+      OnExecute = SelGitChangedActionExecute
+      OnUpdate = SelGitChangedActionUpdate
+    end
     object SelMarkAction: TAction
       Category = 'Command'
       OnExecute = SelMarkActionExecute

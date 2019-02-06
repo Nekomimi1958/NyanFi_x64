@@ -40,7 +40,8 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 
 <dt class="no_bg">STATUS
 <dd>git status --porcelain コマンドの取得結果から、フラグごとのファイル数(インデックス/ワーキングツリー)を表示します。<br>
-例えば、ワーキングツリーに2個の変更されたファイルがある場合、&quot;M:_/2&quot; と表示されます。
+例えば、ワーキングツリーに2個の変更されたファイルがある場合、&quot;M:_/2&quot; と表示されます。<br>
+<a href="hid00005.htm#SelGitChanged">SelGitChanged</a> を実行すると、カレントで変更されているファイル(フラグが &quot;?&quot; 以外)が選択されます。<br>
 </dl>
 
 <p>なおリポジトリ内で、トップの [..] 以外の項目については、<b>Remote URL</b> のみが表示されます。</p>
@@ -75,6 +76,11 @@ Git_"clone https://github.com/Nekomimi1958/NyanFi_x64.git"
 
 リポジトリの状態とコミット履歴をまとめて<a href="hid00073.htm">一覧ダイアログ</a>で表示<br>
 <pre class="example_box">
+IfNotGit
+  Warn_"Gitリポジトリではありません。"
+  Exit
+Endif
+
 Git_status --porcelain --branch
 Add_RES<<%Buffer%
 Add_RES<<""

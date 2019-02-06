@@ -209,7 +209,7 @@ MsgBox_%..N%回目です
 <div class="spc_box">
 <b>例</b>: コマンドプロンプト画面をアクティブに、なければ起動
 <pre class="example_box">
-ActivateClass_ConsoleWindowClass
+ActivateWnd_ConsoleWindowClass
 IfFalse
   CommandPrompt
 EndIf
@@ -217,7 +217,7 @@ EndIf
 
 <b>例</b>: 前方一致で &quot;hoge&quot; がマッチする HogeClass クラスのウィンドウをアクティブに、なければ起動
 <pre class="example_box">
-ActivateTitle_HogeClass;/^hoge/
+ActivateWnd_HogeClass;/^hoge/
 IfFalse
   FileRun_hoge
 EndIf
@@ -829,7 +829,9 @@ Timer<span class="pram_text">_&quot;hh:mm[:ss]&quot;</span>
 <div class="spc_box">
 <b>例</b>: Timer_90M<br>
 <b>例</b>: Timer_&quot;12:00:00&quot;<br>
-時刻は : を含むため必ずダブルクォーテーションで囲んでください。
+<div class="note_text">
+※時刻は : を含むため必ずダブルクォーテーションで囲んでください。
+</div>
 </div>
 <a href="#Sleep">→ Sleep</a>
 
@@ -893,6 +895,7 @@ Timer<span class="pram_text">_&quot;hh:mm[:ss]&quot;</span>
 <tr><th>Work</th><td>ファイラーでカレントが<a href="hid00060.htm">ワークリスト</a></td></tr>
 <tr><th>FTP</th><td>ファイラーでカレントがFTPのリモート側</td></tr>
 <tr><th>ADS</th><td>ファイラーでカレントが代替データストリーム一覧</td></tr>
+<tr><th>Git</th><td>ファイラーでカレントがGitリポジトリ</td></tr>
 <tr><th>Selected</th><td>カーソル位置が選択中</td></tr>
 <tr><th>Marked</th><td>カーソル位置が栞マーク項目/ テキストビュアーでカーソル行がマークされている</td></tr>
 <tr><th>Dir</th><td>カーソル位置がディレクトリ</td></tr>
@@ -909,8 +912,8 @@ Timer<span class="pram_text">_&quot;hh:mm[:ss]&quot;</span>
 <tr><th>Yes</th><td>直前の <a href="#MsgBoxYN">MsgBoxYN</a>、<a href="#MsgBoxYNC">MsgBoxYNC</a> で「はい」、<a href="#Input">Input</a> で「OK」が押された</td></tr>
 <tr><th>No</th><td>直前の <a href="#MsgBoxYN">MsgBoxYN</a>、<a href="#MsgBoxYNC">MsgBoxYNC</a> で「いいえ」が押された</td></tr>
 <tr><th>Cancel</th><td>直前の <a href="#MsgBoxYNC">MsgBoxYNC</a> または <a href="#Input">Input</a> で「キャンセル」が押された</td></tr>
-<tr><th>True</th><td>直前の <a href="#MatchBuffer">MatchBuffer</a>、<a href="#MatchDir">MatchDir</a>、<a href="#MatchExt">MatchExt</a>、<a href="#MatchName">MatchName</a>、<a href="ActivateClass">ActivateClass</a>、<a href="ActivateTitle">ActivateTitle</a> でマッチ、<a href="#Test">Test</a>、<a href="#FileExists">FileExists</a> の結果が真</td></tr>
-<tr><th>False</th><td>直前の <a href="#MatchBuffer">MatchBuffer</a>、<a href="#MatchDir">MatchDir</a>、<a href="#MatchExt">MatchExt</a>、<a href="#MatchName">MatchName</a>、<a href="ActivateClass">ActivateClass</a>、<a href="ActivateTitle">ActivateTitle</a> でマッチしなかった、または <a href="#Test">Test</a>、<a href="#FileExists">FileExists</a> の結果が偽</td></tr>
+<tr><th>True</th><td>直前の <a href="#MatchBuffer">MatchBuffer</a>、<a href="#MatchDir">MatchDir</a>、<a href="#MatchExt">MatchExt</a>、<a href="#MatchName">MatchName</a>、<a href="#ActivateWnd">ActivateWnd</a> でマッチ、<a href="#Test">Test</a>、<a href="#FileExists">FileExists</a> の結果が真</td></tr>
+<tr><th>False</th><td>直前の <a href="#MatchBuffer">MatchBuffer</a>、<a href="#MatchDir">MatchDir</a>、<a href="#MatchExt">MatchExt</a>、<a href="#MatchName">MatchName</a>、<a href="#ActivateWnd">ActivateWnd</a> でマッチしなかった、または <a href="#Test">Test</a>、<a href="#FileExists">FileExists</a> の結果が偽</td></tr>
 <tr><th>TimeOut</th><td><a href="#Timer">Timer</a> で設定した時間が経過するか、設定時刻を過ぎた</td></tr>
 <tr><th>Shift</th><td><span class="btn_frame">Shift</span>キーが押されている</td></tr>
 <tr><th>Ctrl</th><td><span class="btn_frame">Ctrl</span>キーが押されている</td></tr>

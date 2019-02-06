@@ -1530,8 +1530,6 @@ UnicodeString get_MiniPathName(UnicodeString pnam, int wd, TFont *font, bool rep
 
 UnicodeString get_dotNaynfi(UnicodeString dnam = EmptyStr);
 UnicodeString get_dotNaynfi(UnicodeString dnam, bool inherit, bool force = false);
-UnicodeString get_GitConfig(UnicodeString dnam);
-UnicodeString get_GitUrl(file_rec *fp);
 
 UnicodeString get_WebSeaCaption(UnicodeString kwd = EmptyStr);
 
@@ -2008,5 +2006,12 @@ int get_ViewTabWidth(UnicodeString fext);
 
 void MakeTreeList(TStringList *lst, UnicodeString pnam, bool chk_sw = false);
 bool AddPathToTreeList(TStringList *lst);
+
+//Git ä÷òAÇÃä÷êî
+UnicodeString get_GitTopPath(UnicodeString dnam);
+UnicodeString get_GitConfig(UnicodeString dnam);
+UnicodeString get_GitUrl(file_rec *fp);
+int get_GitChangedList(UnicodeString pnam, TStringList *lst);
+UnicodeString get_GitSttStr(UnicodeString dnam);
 //---------------------------------------------------------------------------
 #endif

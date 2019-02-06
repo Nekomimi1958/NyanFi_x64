@@ -979,7 +979,8 @@ bool XCMD_Control()
 				_T("True|False|Selected|Dir|File|Arc|Sel|Top|End|Left|")					//0`9
 				_T("Right|Empty|Root|Remote|Removable|Virtual|Work|Found|Yes|No|")			//10`19
 				_T("Cancel|SelMask|PathMask|Task|Suspend|Binary|Log|HtmTxt|Marked|Image|")	//20`29
-				_T("Shift|Ctrl|Alt|Grep|Connected|Primary|Duplicated|FTP|ADS|TimeOut"),		//30`39
+				_T("Shift|Ctrl|Alt|Grep|Connected|Primary|Duplicated|FTP|ADS|Git|")			//30`39
+				_T("TimeOut"),																//40`
 				cnd))
 			{
 			case  0: cnd_res = XCMD_matched;							break;
@@ -1021,7 +1022,8 @@ bool XCMD_Control()
 			case 36: cnd_res = IsDuplicated();							break;
 			case 37: cnd_res = CurStt->is_FTP;							break;
 			case 38: cnd_res = CurStt->is_ADS;							break;
-			case 39:
+			case 39: cnd_res = !get_GitTopPath(XCMD_cur_path).IsEmpty();	break;
+			case 40:
 				if (XCMD_tim_cnt>0)
 					cnd_res = ((int)(GetTickCount()-XCMD_start_cnt) > XCMD_tim_cnt);
 				else if (XCMD_tim_t>TDateTime(0))
@@ -1812,8 +1814,7 @@ bool XCMD_ShellExe(UnicodeString cmd, UnicodeString prm, UnicodeString wdir,
 		XCMD_set_Var(_T("ExitCode"), (int)exit_code);
 		if (contains_s(opt, _T('O'))) {
 			if (USAME_TI(ExtractFileName(cmd), "git.exe")) {
-				UnicodeString lbuf;
-				o_lst->Insert(0, lbuf.sprintf(_T("$ git %s"), prm.c_str()));
+				o_lst->Insert(0, UnicodeString().sprintf(_T("$ git %s"), prm.c_str()));
 			}
 			if (o_lst->Count>0) {
 				XCMD_SetBuffer(o_lst->Text);

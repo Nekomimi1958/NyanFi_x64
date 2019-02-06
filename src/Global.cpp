@@ -3114,114 +3114,6 @@ UnicodeString get_dotNaynfi(UnicodeString dnam,
 }
 
 //---------------------------------------------------------------------------
-//.git\config ファイルを取得
-//---------------------------------------------------------------------------
-UnicodeString get_GitConfig(UnicodeString dnam)
-{
-	UnicodeString gnam = IncludeTrailingPathDelimiter(dnam).UCAT_T(".git");
-	while (!file_exists(gnam)) {
-		if (is_root_dir(dnam)) break;
-		dnam = IncludeTrailingPathDelimiter(get_parent_path(dnam));
-		gnam = dnam + ".git";
-	}
-
-	UnicodeString cfg_nam;
-	if (!gnam.IsEmpty()) {
-		cfg_nam = gnam + "\\config";
-		if (!file_exists(cfg_nam)) cfg_nam = EmptyStr;
-	}
-
-	return cfg_nam;
-}
-//---------------------------------------------------------------------------
-//リモートリポジトリのURLを取得
-//---------------------------------------------------------------------------
-UnicodeString get_GitUrl(file_rec *fp)
-{
-	if (!fp || fp->is_virtual || fp->is_ftp) return EmptyStr;
-
-	UnicodeString url;
-	UnicodeString cfg_nam = get_GitConfig((fp->is_dir && !fp->is_up)? fp->f_name : fp->p_name);
-	if (!cfg_nam.IsEmpty()) {
-		int idx = GitCfgUrlList->IndexOfName(cfg_nam);
-		if (idx!=-1) {
-			//キャッシュ情報あり
-			UnicodeString lbuf = GitCfgUrlList->ValueFromIndex[idx];
-			try {
-				if (!WithinPastMilliSeconds(get_file_age(cfg_nam), TDateTime(get_post_tab(lbuf)), TimeTolerance)) Abort();
-				url = get_pre_tab(lbuf);
-			}
-			catch (...) {
-				GitCfgUrlList->Delete(idx);
-				idx = -1;
-			}
-		}
-
-		if (url.IsEmpty()) {
-			std::unique_ptr<TStringList> cfg_lst(new TStringList());
-			load_text_ex(cfg_nam, cfg_lst.get());
-			int cnt = 0;
-			for (int i=0; i<cfg_lst->Count; i++) {
-				UnicodeString lbuf = Trim(cfg_lst->Strings[i]);
-				if (cnt==0 && USAME_TI(lbuf, "[remote \"origin\"]")) {
-					cnt = 1;
-				}
-				else if (cnt==1) {
-					if (StartsStr("[", lbuf)) break;
-					UnicodeString key = Trim(split_tkn(lbuf, "="));
-					if (USAME_TI(key, "url")) {
-						url = Trim(lbuf);
-						if (url.Pos('@')) {
-							url = TRegEx::Replace(url, 
-									"(https?://)(\\w+@)([\\w/:%#$&?()~.=+-]+)", "\\1\\3");
-						}
-						break;
-					}
-				}
-			}
-		}
-
-		if (!url.IsEmpty()) {
-			if (idx==-1) {
-				//URL対応情報をキャッシュ
-				GitCfgUrlList->Add(UnicodeString().sprintf(_T("%s=%s\t%s"), cfg_nam.c_str(), url.c_str(),
-									FormatDateTime("yyyy/mm/dd hh:nn:ss", get_file_age(cfg_nam)).c_str()));
-			}
-
-			UnicodeString snam = IncludeTrailingPathDelimiter(fp->is_up? fp->p_name : fp->f_name);
-			UnicodeString gnam = IncludeTrailingPathDelimiter(get_tkn(cfg_nam, "\\.git\\config"));
-			if (StartsText(gnam, snam)) {
-				snam.Delete(1, gnam.Length());
-				snam = yen_to_slash(ExcludeTrailingPathDelimiter(snam));
-				if (!snam.IsEmpty()) {
-					remove_end_text(url, ".git");	//Gitlab
-					//Bitbucket
-					if (contains_s(url, _T("/bitbucket.org/"))) {
-						url.cat_sprintf(_T("/src/master/%s"), snam.c_str());
-					}
-					//Github
-					else {
-						if (fp->is_dir || snam.Pos('/'))
-							url.cat_sprintf(_T("/tree/master/%s"), snam.c_str());
-						else
-							url.cat_sprintf(_T("/blob/master/%s"), snam.c_str());
-					}
-				}
-				else {
-					//Bitbucket
-					if (contains_s(url, _T("/bitbucket.org/"))) {
-						remove_end_text(url, ".git");
-						url.UCAT_T("/src/master/");
-					}
-				}
-			}
-		}
-	}
-
-	return url;
-}
-
-//---------------------------------------------------------------------------
 //Web検索表示文字列を取得
 //---------------------------------------------------------------------------
 UnicodeString get_WebSeaCaption(UnicodeString kwd)
@@ -7210,45 +7102,14 @@ void GetFileInfList(
 					//リポジトリのトップの場合
 					if (is_git_top) {
 						//Git HEAD
-						if (!test_word_i("HEAD", HideInfItems->Values["\\"])) {
-							add_PropLine_if(_T("HEAD"),			  get_top_line(rpnam + ".git\\HEAD"), i_list);
-						}
+						if (!test_word_i("HEAD", HideInfItems->Values["\\"]))
+							add_PropLine_if(_T("HEAD"), get_top_line(rpnam + ".git\\HEAD"), i_list);
 						//COMMIT_EDITMSG
-						if (!test_word_i("COMMIT_EDITMSG", HideInfItems->Values["\\"])) {
+						if (!test_word_i("COMMIT_EDITMSG", HideInfItems->Values["\\"]))
 							add_PropLine_if(_T("COMMIT_EDITMSG"), get_top_line(rpnam + ".git\\COMMIT_EDITMSG"), i_list);
-						}
 						//STATUS
-						if (!test_word_i("STATUS", HideInfItems->Values["\\"])) {
-							std::unique_ptr<TStringList> o_buf(new TStringList());
-							if (GitShellExe("status --porcelain", rpnam, o_buf.get(), false)) {
-								UnicodeString stt_str;
-								if (o_buf->Count==0) {
-									stt_str = "Clean";
-								}
-								else if (StartsStr("ERROR", o_buf->Strings[0])) {
-									stt_str = o_buf->Strings[0];
-								}
-								else {
-									//フラグ文字毎のファイル数を取得
-									int flag[8][2] = {};
-									UnicodeString flag_str = "MADRCU?";
-									for (int i=0; i<o_buf->Count; i++) {
-										UnicodeString lbuf = o_buf->Strings[i];
-										if (lbuf.Length()<2) continue;
-										int p0 = flag_str.Pos(lbuf[1]);
-										int p1 = flag_str.Pos(lbuf[2]);
-										if (p0>0) flag[p0][0]++;
-										if (p1>0) flag[p1][1]++;
-									}
-									for (int i=1; i<8; i++) {
-										if (flag[i][0]>0 || flag[i][1]>0)
-											stt_str.cat_sprintf(_T(" %c:%u/%u"), flag_str[i], flag[i][0], flag[i][1]);
-									}
-									stt_str = Trim(ReplaceStr(stt_str, "0" , "_"));
-								}
-								add_PropLine_if(_T("STATUS"), stt_str, i_list);
-							}
-						}
+						if (!test_word_i("STATUS", HideInfItems->Values["\\"]))
+							add_PropLine_if(_T("STATUS"), get_GitSttStr(rpnam), i_list);
 					}
 				}
 
@@ -12900,6 +12761,192 @@ bool AddPathToTreeList(TStringList *lst)
 	catch (...) {
 		return false;
 	}
+}
+
+//---------------------------------------------------------------------------
+//リポジトリのトップパスを取得
+//---------------------------------------------------------------------------
+UnicodeString get_GitTopPath(UnicodeString dnam)
+{
+	UnicodeString gnam = IncludeTrailingPathDelimiter(dnam).UCAT_T(".git");
+	while (!file_exists(gnam)) {
+		if (is_root_dir(dnam)) break;
+		dnam = IncludeTrailingPathDelimiter(get_parent_path(dnam));
+		gnam = dnam + ".git";
+	}
+
+	return file_exists(gnam)? ExtractFilePath(gnam) : EmptyStr;
+}
+
+//---------------------------------------------------------------------------
+//.git\config ファイルを取得
+//---------------------------------------------------------------------------
+UnicodeString get_GitConfig(UnicodeString dnam)
+{
+	UnicodeString cfg_nam;
+	UnicodeString gnam = get_GitTopPath(dnam);
+	if (!gnam.IsEmpty()) {
+		cfg_nam = gnam + "\\config";
+		if (!file_exists(cfg_nam)) cfg_nam = EmptyStr;
+	}
+	return cfg_nam;
+}
+//---------------------------------------------------------------------------
+//リモートリポジトリのURLを取得
+//---------------------------------------------------------------------------
+UnicodeString get_GitUrl(file_rec *fp)
+{
+	if (!fp || fp->is_virtual || fp->is_ftp) return EmptyStr;
+
+	UnicodeString url;
+	UnicodeString cfg_nam = get_GitConfig((fp->is_dir && !fp->is_up)? fp->f_name : fp->p_name);
+	if (!cfg_nam.IsEmpty()) {
+		int idx = GitCfgUrlList->IndexOfName(cfg_nam);
+		if (idx!=-1) {
+			//キャッシュ情報あり
+			UnicodeString lbuf = GitCfgUrlList->ValueFromIndex[idx];
+			try {
+				if (!WithinPastMilliSeconds(get_file_age(cfg_nam), TDateTime(get_post_tab(lbuf)), TimeTolerance)) Abort();
+				url = get_pre_tab(lbuf);
+			}
+			catch (...) {
+				GitCfgUrlList->Delete(idx);
+				idx = -1;
+			}
+		}
+
+		if (url.IsEmpty()) {
+			std::unique_ptr<TStringList> cfg_lst(new TStringList());
+			load_text_ex(cfg_nam, cfg_lst.get());
+			int cnt = 0;
+			for (int i=0; i<cfg_lst->Count; i++) {
+				UnicodeString lbuf = Trim(cfg_lst->Strings[i]);
+				if (cnt==0 && USAME_TI(lbuf, "[remote \"origin\"]")) {
+					cnt = 1;
+				}
+				else if (cnt==1) {
+					if (StartsStr("[", lbuf)) break;
+					UnicodeString key = Trim(split_tkn(lbuf, "="));
+					if (USAME_TI(key, "url")) {
+						url = Trim(lbuf);
+						if (url.Pos('@')) {
+							url = TRegEx::Replace(url, 
+									"(https?://)(\\w+@)([\\w/:%#$&?()~.=+-]+)", "\\1\\3");
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		if (!url.IsEmpty()) {
+			if (idx==-1) {
+				//URL対応情報をキャッシュ
+				GitCfgUrlList->Add(UnicodeString().sprintf(_T("%s=%s\t%s"), cfg_nam.c_str(), url.c_str(),
+									FormatDateTime("yyyy/mm/dd hh:nn:ss", get_file_age(cfg_nam)).c_str()));
+			}
+
+			UnicodeString snam = IncludeTrailingPathDelimiter(fp->is_up? fp->p_name : fp->f_name);
+			UnicodeString gnam = IncludeTrailingPathDelimiter(get_tkn(cfg_nam, "\\.git\\config"));
+			if (StartsText(gnam, snam)) {
+				snam.Delete(1, gnam.Length());
+				snam = yen_to_slash(ExcludeTrailingPathDelimiter(snam));
+				if (!snam.IsEmpty()) {
+					remove_end_text(url, ".git");	//Gitlab
+					//Bitbucket
+					if (contains_s(url, _T("/bitbucket.org/"))) {
+						url.cat_sprintf(_T("/src/master/%s"), snam.c_str());
+					}
+					//Github
+					else {
+						if (fp->is_dir || snam.Pos('/'))
+							url.cat_sprintf(_T("/tree/master/%s"), snam.c_str());
+						else
+							url.cat_sprintf(_T("/blob/master/%s"), snam.c_str());
+					}
+				}
+				else {
+					//Bitbucket
+					if (contains_s(url, _T("/bitbucket.org/"))) {
+						remove_end_text(url, ".git");
+						url.UCAT_T("/src/master/");
+					}
+				}
+			}
+		}
+	}
+
+	return url;
+}
+
+//---------------------------------------------------------------------------
+//リポジトリ内で変更のあったファイルリストを取得
+//---------------------------------------------------------------------------
+int get_GitChangedList(UnicodeString pnam, TStringList *lst)
+{
+	try {
+		if (!GitExists) Abort();
+
+		pnam = IncludeTrailingPathDelimiter(pnam);
+		UnicodeString tnam = get_GitTopPath(IncludeTrailingPathDelimiter(pnam));
+		if (tnam.IsEmpty()) Abort();
+
+		std::unique_ptr<TStringList> o_buf(new TStringList());
+		if (!GitShellExe("status --porcelain", pnam, o_buf.get(), false)) Abort();
+		if (o_buf->Count>0) {
+			if (StartsStr("ERROR", o_buf->Strings[0])) Abort();
+			for (int i=0; i<o_buf->Count; i++) {
+				UnicodeString lbuf = o_buf->Strings[i];
+				if (lbuf.Length()<2) continue;
+				if (lbuf[1]!='?' && lbuf[2]!='?') {
+					lbuf.Delete(1, 2);
+					lbuf = slash_to_yen(Trim(lbuf));
+					lbuf = rel_to_absdir(lbuf, tnam);
+					lst->Add(lbuf);
+				}
+			}
+		}
+		return lst->Count;
+	}
+	catch (...) {
+		return -1;
+	}
+}
+//---------------------------------------------------------------------------
+//リポジトリの状態文字列を取得
+//  フラグ文字:ファイル数(インデックス/ワーキングツリー)
+//---------------------------------------------------------------------------
+UnicodeString get_GitSttStr(UnicodeString dnam)
+{
+	UnicodeString stt_str;
+	std::unique_ptr<TStringList> o_buf(new TStringList());
+	if (GitShellExe("status --porcelain", dnam, o_buf.get(), false)) {
+		if (o_buf->Count==0) {
+			stt_str = "Clean";
+		}
+		else if (StartsStr("ERROR", o_buf->Strings[0])) {
+			stt_str = o_buf->Strings[0];
+		}
+		else {
+			//フラグ文字毎のファイル数を取得
+			int flag[8][2] = {};
+			UnicodeString flag_str = "MADRCU?";
+			for (int i=0; i<o_buf->Count; i++) {
+				UnicodeString lbuf = o_buf->Strings[i];
+				if (lbuf.Length()<2) continue;
+				int p0 = flag_str.Pos(lbuf[1]);
+				int p1 = flag_str.Pos(lbuf[2]);
+				if (p0>0) flag[p0][0]++;
+				if (p1>0) flag[p1][1]++;
+			}
+			for (int i=1; i<8; i++) {
+				if (flag[i][0]>0 || flag[i][1]>0)
+					stt_str.cat_sprintf(_T(" %c:%u/%u"), flag_str[i], flag[i][0], flag[i][1]);
+			}
+			stt_str = Trim(ReplaceStr(stt_str, "0" , "_"));
+		}
+	}
+	return stt_str;
 }
 //---------------------------------------------------------------------------
 

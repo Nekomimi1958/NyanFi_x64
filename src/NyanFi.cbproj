@@ -79,9 +79,9 @@
         <SanitizedProjectName>NyanFi</SanitizedProjectName>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1041</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=13.0.9.0;InternalName=NyanFi;LegalCopyright=2019 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=13.0.9.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=13.1.0.0;InternalName=NyanFi;LegalCopyright=2019 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=13.1.0.0;Comments=</VerInfo_Keys>
         <VerInfo_MajorVer>13</VerInfo_MajorVer>
-        <VerInfo_Release>9</VerInfo_Release>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <PackageImports>adortl;appanalytics;bcbie;bcbsmp;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CodeSiteExpressPkg;CustomIPTransport;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXMySQLDriver;DBXSqliteDriver;dsnap;dsnapcon;dsnapxml;FireDACADSDriver;FireDACCommonODBC;FireDACMSAccDriver;FireDACMySQLDriver;FireDACPgDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inetdb;inetdbxpress;rtl;svn;Tee;TeeDB;TeeUI;tethering;vcl;vclactnband;vcldb;vcldsnap;vclFireDAC;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
