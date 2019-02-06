@@ -12784,9 +12784,9 @@ UnicodeString get_GitTopPath(UnicodeString dnam)
 UnicodeString get_GitConfig(UnicodeString dnam)
 {
 	UnicodeString cfg_nam;
-	UnicodeString gnam = get_GitTopPath(dnam);
-	if (!gnam.IsEmpty()) {
-		cfg_nam = gnam + "\\config";
+	dnam = get_GitTopPath(dnam);
+	if (!dnam.IsEmpty()) {
+		cfg_nam = dnam + ".git\\config";
 		if (!file_exists(cfg_nam)) cfg_nam = EmptyStr;
 	}
 	return cfg_nam;
