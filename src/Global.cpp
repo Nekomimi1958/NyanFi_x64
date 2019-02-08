@@ -10716,11 +10716,11 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 									if (p>0) {
 										AddLog(log_buf.SubString(1, p + 1), false, true);
 										log_buf.Delete(1, p + 1);
-										Application->ProcessMessages();
 									}
 								}
 							}
 						}
+						Application->ProcessMessages();
 					}
 					if (::PeekNamedPipe(hRead, NULL, 0, NULL, &len, NULL) && len>0) {
 						std::unique_ptr<char[]> buf(new char[len + 4]);
@@ -10732,9 +10732,9 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 								mbuf->Write(buf.get(), len);
 								log_buf += get_MemoryStrins(mbuf.get());
 								AddLog(log_buf, false, true);
-								Application->ProcessMessages();
 							}
 						}
+						Application->ProcessMessages();
 					}
 
 					//o—Í“à—e‚ðÝ’è
@@ -10743,7 +10743,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 				}
 				//I—¹‘Ò‚¿
 				else if (contains_s(opt, _T('W'))) {
-					while (::WaitForSingleObject(pi.hProcess, 50)==WAIT_TIMEOUT) Sleep(MIN_INTERVAL);
+					while (::WaitForSingleObject(pi.hProcess, 50)==WAIT_TIMEOUT) Application->ProcessMessages();;
 					exited = true;
 				}
 
