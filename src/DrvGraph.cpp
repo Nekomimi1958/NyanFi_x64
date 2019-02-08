@@ -106,7 +106,7 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 		int x_max = GraphTopX + xw * MaxUsed;
 
 		TColor col_grid = AdjustColor(col_bgPrgBar, 32);
-		cv->Pen->Width = 1;
+		cv->Pen->Width = Scaled1;
 		cv->Font->Assign(Font);
 
 		int yt	= 0;

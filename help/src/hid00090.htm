@@ -75,6 +75,7 @@ Git_"clone https://github.com/Nekomimi1958/NyanFi_x64.git"
 </pre>
 
 リポジトリの状態とコミット履歴をまとめて<a href="hid00073.htm">一覧ダイアログ</a>で表示<br>
+行頭部にある *、|、/、\、_ はグラフィック表示になります(* は「見出しの文字色」の●印に、線は「罫線の色」で描画)。<br>
 <pre class="example_box">
 IfNotGit
   Warn_"Gitリポジトリではありません。"
@@ -86,7 +87,6 @@ Add_RES<<%Buffer%
 Add_RES<<""
 
 Git_log --graph --decorate --oneline
-ReplaceBuffer_\=&#x2216;
 Add_RES<<%Buffer%
 Add_RES<<""
 

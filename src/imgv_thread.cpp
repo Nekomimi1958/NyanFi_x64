@@ -497,7 +497,7 @@ void __fastcall TImgViewThread::Execute()
 										y_lst[3] = y_lst[2] + tm.tmDescent;			//‰º’[
 
 										cv->Pen->Style = psSolid;
-										cv->Pen->Width = 1;
+										cv->Pen->Width = Scaled1;
 										cv->Pen->Color = FontSampleGridCol;
 										for (int i=0; i<y_lst.Length; i++) {
 											cv->MoveTo(0, y_lst[i]);  cv->LineTo(rc.Right, y_lst[i]);

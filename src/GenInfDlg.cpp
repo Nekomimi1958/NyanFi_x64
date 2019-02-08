@@ -787,7 +787,13 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 		TColor fg = use_fgsel? col_fgSelItem :
 			 		StartsStr("$ git ", lbuf)? col_Headline :
 		 	 		StartsStr("-", lbuf)? clRed : StartsStr("+", lbuf)? clGreen : col_fgList;
-		PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get(), FileName, (SortMode==0 && !isFiltered));
+		UnicodeString s = split_GitGraphStr(lbuf);
+		if (!s.IsEmpty()) {
+			UnicodeString s1 = (Index>1)? get_GitGraphStr(lp->Items->Strings[Index - 1]) : EmptyStr;
+			UnicodeString s2 = (Index<(lp->Count - 1))? get_GitGraphStr(lp->Items->Strings[Index + 1]) : EmptyStr;
+			draw_GitGraph(s, s1, s2, cv, rc, fg);
+		}
+		if (!lbuf.IsEmpty()) RuledLnTextOut(lbuf, cv, rc, fg, tw, wlist.get());
 	}
 	//å©èoÇµçs
 	else if (!ptn_match_str(HdrLnStr, lbuf).IsEmpty()) {

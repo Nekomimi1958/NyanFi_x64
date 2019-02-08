@@ -388,6 +388,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *SelectAction;
 	TAction *SelectUpAction;
 	TAction *SelEmptyDirAction;
+	TAction *SelGitChangedAction;
 	TAction *SelMarkAction;
 	TAction *SelMaskAction;
 	TAction *SelOnlyCurAction;
@@ -1027,7 +1028,6 @@ __published:	// IDE で管理されるコンポーネント
 	TToolBar *ToolBarV;
 	TTrackBar *SeekBar;
 	TTrayIcon *TrayIcon1;
-	TAction *SelGitChangedAction;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

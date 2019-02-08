@@ -2013,5 +2013,8 @@ UnicodeString get_GitConfig(UnicodeString dnam);
 UnicodeString get_GitUrl(file_rec *fp);
 int get_GitChangedList(UnicodeString pnam, TStringList *lst);
 UnicodeString get_GitSttStr(UnicodeString dnam);
+UnicodeString get_GitGraphStr(UnicodeString lbuf);
+UnicodeString split_GitGraphStr(UnicodeString &lbuf);
+void draw_GitGraph(UnicodeString s, UnicodeString s1, UnicodeString s2, TCanvas *cv, TRect &rc, TColor fg);
 //---------------------------------------------------------------------------
 #endif

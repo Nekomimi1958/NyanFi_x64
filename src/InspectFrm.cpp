@@ -306,7 +306,7 @@ void __fastcall TInspectForm::InspectGridDrawCell(TObject *Sender, int ACol, int
 	}
 
 	//‹æØ‚èü
-	cv->Pen->Width = 1;
+	cv->Pen->Width = Scaled1;
 	cv->Pen->Color = SelectWorB(cv->Brush->Color, 0.3);
 	cv->MoveTo(Rect.Right, Rect.Top);  cv->LineTo(Rect.Right, Rect.Bottom);
 }

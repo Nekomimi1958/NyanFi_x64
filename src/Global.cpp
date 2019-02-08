@@ -9217,7 +9217,7 @@ void draw_TAB(TCanvas *cv, int x, int y, int w, int h)
 {
 	cv->TextOut(x, y, " ");
 	cv->Pen->Style = psSolid;
-	cv->Pen->Width = 1;
+	cv->Pen->Width = Scaled1;
 	cv->Pen->Color = col_TAB;
 	int w1 = w - 1;
 	int wa = w1/2;
@@ -9233,7 +9233,7 @@ void draw_CR(TCanvas *cv, int x, int y, int w, int h)
 {
 	cv->TextOut(x, y, " ");
 	cv->Pen->Style = psSolid;
-	cv->Pen->Width = 1;
+	cv->Pen->Width = Scaled1;
 	cv->Pen->Color = col_CR;
 	int w1 = w - 2;
 	int wa = w1/2;
@@ -9334,7 +9334,7 @@ void RuledLnTextOut(
 		//罫線
 		sbuf = s.SubString(p1, 1);
 		cv->Pen->Style = psSolid;
-		cv->Pen->Width = 1;
+		cv->Pen->Width = Scaled1;
 		cv->Pen->Color = col_HR;
 		int w  = get_TextWidth(cv, sbuf, is_irreg);
 		int xc = xp + w/2;
@@ -9448,7 +9448,7 @@ void LineNoOut(TCanvas *cv, TRect &rc, UnicodeString l_str)
 
 	//境界線
 	cv->Pen->Style = psSolid;
-	cv->Pen->Width = 1;
+	cv->Pen->Width = Scaled1;
 	cv->Pen->Color = col_bdrLine;
 	cv->MoveTo(l_rc.Right - 1, l_rc.Top);
 	cv->LineTo(l_rc.Right - 1, l_rc.Bottom);
@@ -9789,7 +9789,7 @@ bool draw_SttBarBg(TStatusBar *sp, TMessage &msg)
 	cv->FillRect(sp->ClientRect);
 	//上端境界
 	cv->Pen->Color = SelectWorB(col_bgSttBar, 0.25);
-	cv->Pen->Width = 1;
+	cv->Pen->Width = Scaled1;
 	cv->Pen->Style = psSolid;
 	cv->MoveTo(0, 0);
 	cv->LineTo(sp->ClientWidth, 0);
@@ -9838,7 +9838,7 @@ void draw_SortHeader(
 	//区切り線
 	if (sp->Index < hp->Sections->Count-1) {
 		cv->Pen->Style = psSolid;
-		cv->Pen->Width = 1;
+		cv->Pen->Width = Scaled1;
 		cv->Pen->Color = SelectWorB(cv->Brush->Color, 0.25);
 		cv->MoveTo(rc.Right - 2, rc.Top);  cv->LineTo(rc.Right - 2, rc.Bottom);
 	}
@@ -9894,7 +9894,7 @@ void draw_ImgGrid(TCanvas *cv, Graphics::TBitmap *bmp)
 {
 	//分割グリッド
 	cv->Pen->Style = psSolid;
-	cv->Pen->Width = 1;
+	cv->Pen->Width = Scaled1;
 	cv->Pen->Color = col_ImgGrid;
 	//横
 	for (int i=1; i<ImgGridHorzN; i++) {
@@ -12948,5 +12948,114 @@ UnicodeString get_GitSttStr(UnicodeString dnam)
 	}
 	return stt_str;
 }
-//---------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------
+//行頭のGitグラフ部分を取得
+//---------------------------------------------------------------------------
+UnicodeString get_GitGraphStr(UnicodeString lbuf)
+{
+	int p = 0;
+	for (int i=1; i<=lbuf.Length(); i++) {
+		if (!lbuf.IsDelimiter("*|\\/_ ", i)) break;
+		p = i;
+	}
+
+	return (p>0)? lbuf.SubString(1, p) : EmptyStr;
+}
+//---------------------------------------------------------------------------
+//行頭のGitグラフ部分を分離
+//---------------------------------------------------------------------------
+UnicodeString split_GitGraphStr(UnicodeString &lbuf)
+{
+	int p = 0;
+	for (int i=1; i<=lbuf.Length(); i++) {
+		if (!lbuf.IsDelimiter("*|\\/_ ", i)) break;
+		p = i;
+	}
+
+	UnicodeString ret_str;
+	if (p>0 && lbuf[p]==' ') {
+		ret_str = lbuf.SubString(1, p);
+		lbuf.Delete(1, p);
+	}
+
+	return ret_str;
+}
+
+//---------------------------------------------------------------------------
+//Gitグラフの描画
+//---------------------------------------------------------------------------
+void draw_GitGraph(
+	UnicodeString s,
+	UnicodeString s1,	//前行
+	UnicodeString s2,	//次行
+	TCanvas *cv,
+	TRect &rc,			//表示位置 (rc.Left 更新)
+	TColor fg)			//文字色
+{
+	if (s.IsEmpty()) return;
+
+	int xp = rc.Left + 2;
+	int w  = rc.Height()/3;
+	int w2 = w/2;
+	int r  = rc.Height()/5;
+
+	int y0 = rc.Top;
+	int y1 = rc.Bottom;
+	int hi = rc.Height();
+	int yc = y0 + hi/2;
+
+	int slen = s.Length();
+	if (s1.Length()<(slen + 1)) s1 += StringOfChar(_T(' '), slen - s1.Length() + 1);
+	if (s2.Length()<(slen + 1)) s2 += StringOfChar(_T(' '), slen - s2.Length() + 1);
+
+	cv->Pen->Style	 = psSolid;
+	cv->Pen->Width	 = Scaled1;
+
+	TColor org_bg = cv->Brush->Color;
+	cv->Brush->Color = col_Headline;
+	cv->Brush->Style = bsSolid;
+
+	for (int i=1; i<=slen; i++) {
+		int x1 = xp;
+		int x2 = x1 + w;
+		int xc = x1 + w2;
+		WideChar c1l = (i>1)? s1[i - 1] : ' ';
+		WideChar c1r = s1[i + 1];
+		WideChar c2l = (i>1)? s2[i - 1] : ' ';
+		WideChar c2r = s2[i + 1];
+		cv->Pen->Color = col_HR;
+
+		switch (s[i]) {
+		case '*':
+			if (s1[i]!=' ' || c1l=='\\') { cv->MoveTo(xc, y0); cv->LineTo(xc, yc); }
+			if (s2[i]!=' ' || c2l=='/')  { cv->MoveTo(xc, yc); cv->LineTo(xc, y1); }
+			cv->Pen->Color = col_Headline;
+			cv->Ellipse(xc - r, yc - r, xc + r, yc + r);
+			break;
+		case '|':
+			cv->MoveTo(xc, y0); cv->LineTo(xc, y1);
+			break;
+		case '/':
+			if (c1r=='|' || c1r=='*') x2 += w2;
+			if (c2l=='|' || c2l=='*') x1 -= w2;
+			cv->MoveTo(x2, y0); cv->LineTo(x1 - 1, y1 + 1);
+			break;
+		case '\\':
+			if (c1l=='|' || c1l=='*') x1 -= w2;
+			if (c2r=='|' || c2r=='*') x2 += w2;
+			cv->MoveTo(x1, y0); cv->LineTo(x2, y1);
+			break;
+		case '_':
+			cv->MoveTo(x1 - w2, y1 - 1); cv->LineTo(x2 + w2, y1 - 1);
+			break;
+		}
+
+		xp += w;
+		if (xp>=rc.Right) break;
+	}
+
+	rc.Left = std::min(xp, (int)rc.Right);
+	cv->Brush->Color = org_bg;
+}
+//---------------------------------------------------------------------------

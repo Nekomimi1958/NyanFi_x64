@@ -6341,7 +6341,7 @@ void __fastcall TNyanFiForm::RelPaintBoxPaint(TObject *Sender)
 	}
 
 	//横線表示
-	cv->Pen->Width = 1;
+	cv->Pen->Width = Scaled1;
 	cv->Pen->Style = psSolid;
 	cv->Pen->Color = AdjustColor(col_fgDirRel, 72);
 
@@ -31753,7 +31753,7 @@ void __fastcall TNyanFiForm::ThumbnailGridDrawCell(TObject *Sender, int ACol, in
 	//カーソル枠
 	cv->Brush->Style = bsClear;
 	if ((gp->Col==ACol && gp->Row==ARow) || (DoublePage && !ThumbExtended && !vfnam.IsEmpty() && SameText(vfnam, ViewFileName2))) {
-		cv->Pen->Width = 2;
+		cv->Pen->Width = Scaled2;
 		cv->Pen->Style = psSolid;
 		cv->Pen->Color = col_Cursor;
 		cv->Rectangle(Rect.Left + 1, Rect.Top + 1, Rect.Right, Rect.Bottom);
@@ -32510,7 +32510,7 @@ void __fastcall TNyanFiForm::TabBottomPaintBoxPaint(TObject *Sender)
 	if (col_frmTab!=clNone && (FlTabStyle==0 || FlTabStyle==1)) {
 		TPaintBox *pp = (TPaintBox*)Sender;
 		TCanvas *cv = pp->Canvas;
-		cv->Pen->Width = 1;
+		cv->Pen->Width = Scaled1;
 		cv->Pen->Style = psSolid;
 		cv->Pen->Color = col_frmTab;
 		cv->MoveTo(0, 0);
@@ -33838,7 +33838,7 @@ void __fastcall TNyanFiForm::PreviewImageMouseDown(TObject *Sender, TMouseButton
 		cv->FillRect(rc);
 		//十字線
 		int p = HotPosImage->ClientWidth/2;
-		cv->Pen->Width = 1;
+		cv->Pen->Width = Scaled1;
 		cv->Pen->Style = psSolid;
 		cv->Pen->Color = clRed;
 		cv->MoveTo(0, p);	cv->LineTo(rc.Right, p);
