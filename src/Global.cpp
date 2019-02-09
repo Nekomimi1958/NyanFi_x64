@@ -767,6 +767,8 @@ TColor col_bgTask;		//タスク状態表示の背景色
 TColor col_fgPrgBar;	//タスク進捗バー色
 TColor col_bgPrgBar;	//タスク進捗背景色
 TColor col_Error;		//エラー/注意の文字色
+TColor col_bgOptTab;	//アクティブな設定タブの背景色
+TColor col_fgOptTab;	//アクティブな設定タブの文字色
 
 TColor col_bgView;		//テキストビュアーの背景色
 TColor col_fgView;		//テキストビュアーの文字色
@@ -8626,6 +8628,8 @@ void set_col_from_ColorList()
 		{&col_fgPrgBar,	_T("fgPrgBar"),		clLime},
 		{&col_bgPrgBar,	_T("bgPrgBar"),		clGray},
 		{&col_Error,	_T("Error"),		clRed},
+		{&col_bgOptTab,	_T("bgOptTab"),		clHighlight},
+		{&col_fgOptTab,	_T("fgOptTab"),		clHighlightText},
 		{&col_bgView,	_T("bgView"),		clNavy},
 		{&col_fgView,	_T("fgView"),		clWhite},
 		{&col_Margin,	_T("Margin"),		clNavy},
@@ -9961,11 +9965,12 @@ void draw_BottomTab(TCustomTabControl *Control, int idx, const TRect rc, bool ac
 	TTabControl *tp = (TTabControl*)Control;
 	TCanvas *cv = tp->Canvas;
 	//背景
-	cv->Brush->Color = scl_BtnFace;
+	cv->Brush->Color = active? col_bgOptTab : scl_BtnFace;
 	cv->FillRect(rc);
 	//文字
 	UnicodeString titstr = tp->Tabs->Strings[idx];
-	cv->Font->Color = scl_BtnText;
+	cv->Font->Color = active? col_fgOptTab : scl_BtnText;
+	cv->Font->Style = active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
 	cv->TextOut(
 		rc.Left + (rc.Width() - cv->TextWidth(titstr))/2,
 		rc.Bottom - cv->TextHeight(titstr) - 4,

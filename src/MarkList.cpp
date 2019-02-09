@@ -82,7 +82,7 @@ void __fastcall MarkList::ShowMark()
 {
 	for (int i=0; i<Count; i++) {
 		TShape *sp	= Items[i];
-		sp->Parent	= (TWinControl*)(sp->Tag); 
+		sp->Parent	= (TWinControl*)(sp->Tag);
 		sp->Visible = true;
 	}
 }

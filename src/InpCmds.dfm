@@ -46,6 +46,7 @@ object InpCmdsDlg: TInpCmdsDlg
       Width = 420
       Height = 24
       Align = alBottom
+      OwnerDraw = True
       Style = tsButtons
       TabOrder = 0
       Tabs.Strings = (
@@ -55,6 +56,7 @@ object InpCmdsDlg: TInpCmdsDlg
         #12525#12464#12454#12451#12531#12489#12454)
       TabIndex = 0
       OnChange = ModeTabControlChange
+      OnDrawTab = ModeTabControlDrawTab
     end
   end
   object MainPanel: TPanel

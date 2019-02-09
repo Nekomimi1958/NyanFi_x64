@@ -39,6 +39,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SubComboBoxCloseUp(TObject *Sender);
 	void __fastcall CmdsComboBoxSelect(TObject *Sender);
 	void __fastcall ModeTabControlChange(TObject *Sender);
+	void __fastcall ModeTabControlDrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 
 private:	// ユーザー宣言
 	TStringList *ItemList;		//候補リスト

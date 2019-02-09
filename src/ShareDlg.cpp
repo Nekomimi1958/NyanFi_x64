@@ -240,8 +240,8 @@ void __fastcall TNetShareDlg::PathTabControlDrawTab(TCustomTabControl *Control, 
 {
 	TTabControl *tp = (TTabControl*)Control;
 	TCanvas *cv = tp->Canvas;
-	cv->Brush->Color = Active? scl_Highlight : scl_BtnFace;
-	cv->Font->Color  = Active? scl_HighlightText : scl_WindowText;
+	cv->Brush->Color = Active? col_bgOptTab : scl_BtnFace;
+	cv->Font->Color  = Active? col_fgOptTab : scl_BtnText;
 	cv->FillRect(Rect);
 	int yp = (Rect.Height() - cv->TextHeight("Q")) /2;
 	cv->TextOut(Rect.Left + 2, yp, yen_to_delimiter(PathTabControl->Tabs->Strings[TabIndex]));

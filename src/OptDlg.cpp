@@ -210,6 +210,8 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"bgWarn=警告表示の背景色\n"
 		"Invalid=無効な項目の背景色\n"
 		"Illegal=不正な入力項目の背景色\n"
+		"bgOptTab=|アクティブな設定タブの背景色\n"
+		"fgOptTab=アクティブな設定タブの文字色\n"
 		"OptFind=オプション設定の検索結果\n";
 
 	TimColListBox->Items->Text =
@@ -3385,12 +3387,13 @@ void __fastcall TOptionDlg::PageControl1DrawTab(TCustomTabControl *Control, int 
 	TTabControl *tp = (TTabControl*)Control;
 	//背景
 	TCanvas *cv = tp->Canvas;
-	cv->Brush->Color = (PageControl1->Pages[TabIndex]->Tag==0)? Color : col_OptFind;
+	cv->Brush->Color = (PageControl1->Pages[TabIndex]->Tag==0)? (Active? col_bgOptTab : Color) : col_OptFind;
 	cv->FillRect(Rect);
 	//タイトル
-	cv->Font->Color = scl_WindowText;
+	cv->Font->Color = Active? col_fgOptTab : scl_BtnText;
+	cv->Font->Style = Active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
 	UnicodeString tstr = tp->Tabs->Strings[TabIndex];
-	cv->TextOut(Rect.Left + (Rect.Width() - cv->TextWidth(tstr))/2, Rect.Top + 4, tstr);
+	cv->TextOut(Rect.Left + (Rect.Width() - cv->TextWidth(tstr))/2, Rect.Top + (Active? 4 : 2), tstr);
 }
 
 //---------------------------------------------------------------------------
@@ -3855,6 +3858,7 @@ void __fastcall TOptionDlg::AppColorBtnClick(TObject *Sender)
 	ExtColList->Assign(ExtColListBox->Items);
 	usr_TAG->TagColList->Assign(TagColListBox->Items);
 
+	PageControl1->Repaint();
 	ExtColListBox->Repaint();
 	TagColListBox->Repaint();
 

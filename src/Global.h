@@ -986,6 +986,8 @@ extern TColor col_bgTask;
 extern TColor col_fgPrgBar;
 extern TColor col_bgPrgBar;
 extern TColor col_Error;
+extern TColor col_bgOptTab;
+extern TColor col_fgOptTab;
 
 extern TColor col_bgView;
 extern TColor col_fgView;

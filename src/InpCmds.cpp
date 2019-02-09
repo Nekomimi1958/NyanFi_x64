@@ -37,7 +37,7 @@ void __fastcall TInpCmdsDlg::FormShow(TObject *Sender)
 	Constraints->MaxHeight = 0;
 
 	if (toCopy || toRefer) {
-		set_FormTitle(this, toCopy? _T("コマンド名をコピー") : _T("コマンド名の参照"));
+		set_FormTitle(this, toCopy? _T("コマンド名のコピー") : _T("コマンド名の参照"));
 		ModePanel->Visible = true;
 		ClientHeight = MainPanel->Height + ModePanel->Height;
 		CmdsComboBox->Tag = 0;
@@ -154,6 +154,12 @@ void __fastcall TInpCmdsDlg::SetList()
 void __fastcall TInpCmdsDlg::ModeTabControlChange(TObject *Sender)
 {
 	SetList();
+}
+//---------------------------------------------------------------------------
+void __fastcall TInpCmdsDlg::ModeTabControlDrawTab(TCustomTabControl *Control, int TabIndex,
+	const TRect &Rect, bool Active)
+{
+	draw_BottomTab(Control, TabIndex, Rect, Active);
 }
 
 //---------------------------------------------------------------------------
