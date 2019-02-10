@@ -650,6 +650,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	TvCsrVisiCheckBox->Tag		= (int)&TvCursorVisible;
 	LimitBinCsrCheckBox->Tag	= (int)&LimitBinCsr;
 	ColorHintCheckBox->Tag		= (int)&TxtColorHint;
+	AltBackSlashCheckBox->Tag	= (int)&AltBackSlash;
 	BinMemMapedCheckBox->Tag	= (int)&BinMemMaped;
 	EmRemCheckBox->Tag			= (int)&EmpComment;
 	EmStrCheckBox->Tag			= (int)&EmpStrings;
@@ -689,6 +690,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	SureOtherCheckBox->Tag		= (int)&SureOther;
 	SureExitCheckBox->Tag		= (int)&SureExit;
 	SureCmpDelCheckBox->Tag 	= (int)&SureCmpDel;
+	SureWorkListCheckBox->Tag 	= (int)&SureWorkList;
 	SureCancelCheckBox->Tag 	= (int)&SureCancel;
 	SureDefNoCheckBox->Tag		= (int)&SureDefNo;
 	SureAdjPosCheckBox->Tag 	= (int)&SureAdjPos;

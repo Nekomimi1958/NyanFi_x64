@@ -44,7 +44,7 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 <a href="hid00005.htm#SelGitChanged">SelGitChanged</a> を実行すると、カレントで変更されているファイル(フラグが &quot;?&quot; 以外)が選択されます。<br>
 </dl>
 
-<p>なおリポジトリ内で、トップの [..] 以外の項目については、<b>Remote URL</b> のみが表示されます。</p>
+<p>なおリポジトリの作業ディレクトリ下で、トップの [..] 以外の項目については、<b>Remote URL</b> のみが表示されます。</p>
 
 <p>ファイル情報の右クリックメニュー「<b>この項目を隠す</b>」で非表示になっている項目は取得を試みません。<b>STATUS</b> などで取得に時間がかかって操作が滞るような場合には非表示にしてみてください。</p>
 
@@ -65,6 +65,7 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 <a href="hid00063.htm#Git">ExeCommands コマンドの Git 補助コマンド</a> を実行すると、カレントを作業ディレクトリとして、指定したコマンド/パラメータで git.exe が実行されます。<br>
 これによって、コンソールを開かなくても <b>NyanFi</b> から直接 Git コマンドを利用できます。<br>
 結果は、ログおよび定義済み変数 <b>Buffer</b> に出力されます。<br>
+なお Git 補助コマンドの結果(1行目が &quot;$ git ～&quot;)を<a href="hid00073.htm">一覧ダイアログ</a>で表示した場合、行頭部の &quot;<b>*</b>&quot;、&quot;<b>|</b>&quot;、&quot;<b>/</b>&quot;、&quot;<b>\</b>&quot;、&quot;<b>_</b>&quot; からなる部分はグラフィック表示になります(* は「見出しの文字色」の●印に、線は「罫線の色」で描画)。また &quot;<b>-</b>&quot; で始まる行は赤で、&quot;<b>+</b>&quot; で始まる行は緑で表示されます。
 </p>
 
 <div class="indent1">
@@ -74,11 +75,10 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 Git_"clone https://github.com/Nekomimi1958/NyanFi_x64.git"
 </pre>
 
-リポジトリの状態とコミット履歴をまとめて<a href="hid00073.htm">一覧ダイアログ</a>で表示<br>
-行頭部にある *、|、/、\、_ はグラフィック表示になります(* は「見出しの文字色」の●印に、線は「罫線の色」で描画)。<br>
+リポジトリの状態とコミット履歴をまとめて一覧ダイアログで表示<br>
 <pre class="example_box">
 IfNotGit
-  Warn_"Gitリポジトリではありません。"
+  Warn_"Gitの作業ディレクトリではありません。"
   Exit
 Endif
 

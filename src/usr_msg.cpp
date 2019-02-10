@@ -198,17 +198,18 @@ int msgbox_Y_N_C(UnicodeString msg, UnicodeString tit)
 //---------------------------------------------------------------------------
 //確認メッセージ
 //---------------------------------------------------------------------------
-bool SureCopy;					//確認 - コピー
-bool SureMove;					//確認 - 移動
-bool SureDelete;				//確認 - 削除
-bool SureUnPack;				//確認 - 解凍
-bool SureExec;					//確認 - 実行
-bool SureOther;					//確認 - その他
-bool SureExit;					//確認 - 終了
-bool SureCmpDel;				//確認 - 完全削除は2度確認
-bool SureCancel;				//確認 - キャンセルボタンを表示
-bool SureDefNo;					//確認 - 「いいえ」がデフォルト
-bool SureAdjPos;				//確認 - 表示位置を状況に合わせて調整
+bool SureCopy;					//コピー
+bool SureMove;					//移動
+bool SureDelete;				//削除
+bool SureUnPack;				//解凍
+bool SureExec;					//実行
+bool SureOther;					//その他
+bool SureExit;					//終了
+bool SureCmpDel;				//完全削除は2度確認
+bool SureWorkList;				//ワークリストの再読み込み
+bool SureCancel;				//キャンセルボタンを表示
+bool SureDefNo;					//「いいえ」がデフォルト
+bool SureAdjPos;				//表示位置を状況に合わせて調整
 
 bool MsgPosCenter = false;		//メイン画面の中央に表示
 

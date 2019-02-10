@@ -1124,6 +1124,7 @@ extern bool ViewFoldFitWin;
 extern bool TvCursorVisible;
 extern bool LimitBinCsr;
 extern bool TxtColorHint;
+extern bool AltBackSlash;
 extern bool BinMemMaped;
 extern int  ViewFixedLimit;
 extern int  ViewTxtLimitSize;
@@ -1528,6 +1529,8 @@ int __fastcall KeyComp_Dsc(TStringList *List, int Index1, int Index2);
 
 //---------------------------------------------------------------------------
 UnicodeString yen_to_delimiter(UnicodeString s);
+UnicodeString alt_yen_to(UnicodeString s);
+
 UnicodeString get_MiniPathName(UnicodeString pnam, int wd, TFont *font, bool rep_delimiter = false);;
 
 UnicodeString get_dotNaynfi(UnicodeString dnam = EmptyStr);

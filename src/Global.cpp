@@ -268,6 +268,7 @@ bool RestoreViewLine;			//ビュアーでカーソルの行位置を復元
 bool TvCursorVisible;			//ビュアーでカーソルを常に可視領域に
 bool LimitBinCsr;				//バイナリ表示でカーソル移動を制限
 bool TxtColorHint;				//カーソル位置数値のカラーをヒント表示
+bool AltBackSlash;				//\ を ＼(U+2216)で表示
 bool BinMemMaped;				//バイナリではメモリマップドファイルとして開く
 bool EmpComment;				//コメントを強調表示
 bool EmpStrings;				//文字列を強調表示
@@ -1373,7 +1374,7 @@ void InitializeGlobal()
 		{_T("HtmDelBlkId=\"\""),					(TObject*)&HtmDelBlkId},
 		{_T("IniSeaShift=\"F:Ctrl+\""),				(TObject*)&IniSeaShift},
 		{_T("AutoRenFmt=\"\\N_\\SN(1)\""),			(TObject*)&AutoRenFmt},
-		{_T("FExtExeFile=\".com.exe.bat.cmd\""),	(TObject*)&FExtExeFile},
+		{_T("FExtExeFile=\".exe.bat\""),			(TObject*)&FExtExeFile},
 		{_T("CallHotKey=\"\""),						(TObject*)&CallHotKey},
 		{_T("AppListHotKey=\"\""),					(TObject*)&AppListHotKey},
 		{_T("AppListHotPrm=\"\""),					(TObject*)&AppListHotPrm},
@@ -1545,6 +1546,7 @@ void InitializeGlobal()
 		{_T("TvCursorVisible=false"),		(TObject*)&TvCursorVisible},
 		{_T("LimitBinCsr=true"),			(TObject*)&LimitBinCsr},
 		{_T("TxtColorHint=true"),			(TObject*)&TxtColorHint},
+		{_T("AltBackSlash=false"),			(TObject*)&AltBackSlash},
 		{_T("BinMemMaped=false"),			(TObject*)&BinMemMaped},
 		{_T("MultiInstance=false"),			(TObject*)&MultiInstance},
 		{_T("CloseOthers=false"),			(TObject*)&CloseOthers},
@@ -1692,6 +1694,7 @@ void InitializeGlobal()
 		{_T("SureOther=true"),				(TObject*)&SureOther},
 		{_T("SureExit=false"),				(TObject*)&SureExit},
 		{_T("SureCmpDel=true"),				(TObject*)&SureCmpDel},
+		{_T("SureWorkList=true"),			(TObject*)&SureWorkList},
 		{_T("SureCancel=false"),			(TObject*)&SureCancel},
 		{_T("SureDefNo=false"),				(TObject*)&SureDefNo},
 		{_T("SureAdjPos=false"),			(TObject*)&SureAdjPos},
@@ -3021,11 +3024,14 @@ int __fastcall KeyComp_Dsc(TStringList *List, int Index1, int Index2)
 }
 
 //---------------------------------------------------------------------------
-// \ → ディレクトリ区切り表示
-//---------------------------------------------------------------------------
 UnicodeString yen_to_delimiter(UnicodeString s)
 {
 	return ReplaceStr(s, "\\", DirDelimiter);
+}
+//---------------------------------------------------------------------------
+UnicodeString alt_yen_to(UnicodeString s)
+{
+	return AltBackSlash? ReplaceStr(s, "\\", _T("\u2216")) : s;
 }
 
 //---------------------------------------------------------------------------
@@ -6224,7 +6230,6 @@ bool load_WorkList(UnicodeString wnam)
 
 	try {
 		clear_FileList(WorkList);
-
 		std::unique_ptr<TStringList> f_lst(new TStringList());
 		f_lst->LoadFromFile(wnam);
 		WorkListName	 = wnam;
@@ -9276,7 +9281,7 @@ void TabCrTextOut(
 			sbuf = s.SubString(p0, p1 - p0);
 			cv->Font->Color = fg;
 			int w = get_TextWidth(cv, sbuf, is_irreg);
-			cv->TextRect(Rect(x, y, x + w, yh), x, y, sbuf);
+			cv->TextRect(Rect(x, y, x + w, yh), x, y, alt_yen_to(sbuf));
 			x += w;
 		}
 		else {
@@ -9297,7 +9302,7 @@ void TabCrTextOut(
 		sbuf = s.SubString(p0, slen - p0 + 1);
 		cv->Font->Color = fg;
 		int w = get_TextWidth(cv, sbuf, is_irreg);
-		cv->TextRect(Rect(x, y, x + w, yh), x, y, sbuf);
+		cv->TextRect(Rect(x, y, x + w, yh), x, y, alt_yen_to(sbuf));
 		x += w;
 	}
 }

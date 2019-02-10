@@ -67,10 +67,16 @@
 <dd>ファイル操作を行おうとした際の、確認メッセージの有無を設定します。<br>
 <img src="chkbox.png" alt="" border=0> <b>その他</b> は、<a href="hid00005.htm#ConvertHtm2Txt">ConvertHtm2Txt</a>、<a href="hid00005.htm#DelJpgExif">DelJpgExif</a>、<a href="hid00005.htm#ExtractChmSrc">ExtractChmSrc</a>、<a href="hid00005.htm#ExtractGifBmp">ExtractGifBmp</a>、<a href="hid00005.htm#ExtractIcon">ExtractIcon</a>、<a href="hid00005.htm#ExtractImage">ExtractImage</a>(<a href="hid00005.htm#ExtractMp3Img">ExtractMp3Img</a>) コマンドの確認です。<br>
 なお完全削除(<a href="hid00005.htm#CompleteDelete">CompleteDelete</a>)の際は必ず確認メッセージが出ますが、<img src="chkbox.png" alt="" border=0> <b>完全削除は2度確認</b> をチェックしていると2回確認メッセージが出ます。<br>
+<div class="spc_box">
+<img src="chkbox.png" alt="" border=0> <b>ワークリスト更新時の再読み込み</b> をチェックしていると、使用中の<a href="hid00060.htm">ワークリスト</a>・ファイルを外部で更新した場合、<b>NyanFi</b> がアクティブになったときや、ワークリストを開いたときに、再読み込みを促す確認メッセージが出ます。チェックを外すと、未保存の変更がない場合は確認なしで再読み込みを行います。<br>
+</div>
+
+<div class="spc_box">
 <img src="chkbox.png" alt="" border=0> <b>キャンセルボタンを表示</b> をチェックしていると、<span class="btn_frame">はい</span><span class="btn_frame">いいえ</span>の他に<span class="btn_frame">キャンセル</span>ボタンも表示され、<span class="btn_frame">ESC</span>キーでのキャンセルが可能になります。<br>
 <img src="chkbox.png" alt="" border=0> <b>「いいえ」がデフォルトボタン</b> をチェックしていると、<span class="btn_frame">Enter</span>キー押したときに「いいえ」が選択されます。なお「<a href="#ProtectDir">ディレクトリの削除制限</a>」の確認メッセージについては、この設定にかかわらず「いいえ」がデフォルトボタンになります。
 <br>
 <img src="chkbox.png" alt="" border=0> <b>状況に応じて表示位置を調整</b> をチェックしていると、状況に応じて、カレント側ファイルリスト/メイン画面/ダイアログのいずれかの中央に確認メッセージが表示されます。チェックを外すと従来通りモニタ画面中央に表示されます。<br>
+</div>
 <div class="info_text">
 コマンドファイル内などで確認メッセージを抑止したい場合は、<a href="hid00063.htm#MsgOff">MsgOff</a> 補助コマンドを用いてください。
 </div>

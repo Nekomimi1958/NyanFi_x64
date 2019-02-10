@@ -103,6 +103,8 @@ private:
 	TBytes FindByte0, FindByte1;	//バイナリ検索語
 	TBytes FindMask;				//バイナリ検索用マスク
 
+	bool alt_BackSlash;				//\ を ＼(U+2216)で表示
+
 	line_rec BinLineRec;
 	line_rec* __fastcall AddDispLine(UnicodeString s, int lno, int lidx = 0);
 	void __fastcall ClearDispLine();

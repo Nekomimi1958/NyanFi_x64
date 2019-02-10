@@ -1880,10 +1880,12 @@ void __fastcall TNyanFiForm::ApplicationEvents1Activate(TObject *Sender)
 				msg.cat_sprintf(_T("%s → %s\r\n読み込み直しますか?"),
 					FormatDateTime(TimeStampFmt, WorkListTime).c_str(),
 					FormatDateTime(TimeStampFmt, dt).c_str());
-				if (msgbox_Sure(msg, true, true)) {
+
+				if (msgbox_Sure(msg, SureWorkList || WorkListChanged, true)) {
 					if (!SetWorkList(EmptyStr, !CurStt->is_Work && !OppStt->is_Work))
 						SetActionAbort(USTR_WlistCantOpen);
 				}
+
 				WorkListTime = dt;
 			}
 		}
@@ -8388,7 +8390,7 @@ void __fastcall TNyanFiForm::CheckChangeWorkList(int tag)
 			msg.cat_sprintf(_T("%s → %s\r\n読み込み直しますか?"),
 				FormatDateTime(TimeStampFmt, WorkListTime).c_str(),
 				FormatDateTime(TimeStampFmt, dt).c_str());
-			if (msgbox_Sure(msg, true, true)) {
+			if (msgbox_Sure(msg, SureWorkList || WorkListChanged, true)) {
 				if (!load_WorkList(WorkListName)) SetActionAbort(USTR_WlistCantOpen);
 			}
 			WorkListTime = dt;
@@ -23652,8 +23654,9 @@ void __fastcall TNyanFiForm::WorkListActionExecute(TObject *Sender)
 				if (TEST_ActParam("RL")) {
 					if (!SetWorkList()) UserAbort(USTR_WlistCantOpen);
 				}
-				else
+				else {
 					CheckChangeWorkList(CurListTag);
+				}
 				//履歴に追加
 				if (WorkToDirHist && !WorkListName.IsEmpty()) AddDirHistory(WorkListName, CurListTag);
 			}
@@ -33875,7 +33878,7 @@ void __fastcall TNyanFiForm::SelGitChangedActionExecute(TObject *Sender)
 	try {
 		if (!IsCurFList()) UserAbort(USTR_CantOperate);
 		if (get_GitTopPath(CurPath[CurListTag]).IsEmpty())
-			TextAbort(_T("gitリポジトリではありません。"));
+			TextAbort(_T("Gitの作業ディレクトリではありません。"));
 
 		std::unique_ptr<TStringList> glst(new TStringList());
 		SetDirWatch(false);

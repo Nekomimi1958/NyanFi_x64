@@ -3112,14 +3112,14 @@ object OptionDlg: TOptionDlg
       end
       object TLabel
         Left = 651
-        Top = 352
+        Top = 379
         Width = 12
         Height = 13
         Caption = 'KB'
       end
       object TLabel
         Left = 651
-        Top = 385
+        Top = 412
         Width = 14
         Height = 13
         Caption = 'MB'
@@ -3146,7 +3146,7 @@ object OptionDlg: TOptionDlg
       end
       object AozoraCheckBox: TCheckBox
         Left = 684
-        Top = 313
+        Top = 315
         Width = 203
         Height = 17
         Caption = #38738#31354#25991#24235#24418#24335#12395#23550#24540#12377#12427
@@ -3313,7 +3313,7 @@ object OptionDlg: TOptionDlg
       end
       object LimitTxtEdit: TLabeledEdit
         Left = 589
-        Top = 349
+        Top = 376
         Width = 60
         Height = 21
         Alignment = taRightJustify
@@ -3322,7 +3322,7 @@ object OptionDlg: TOptionDlg
         EditLabel.Caption = #12486#12461#12473#12488#26368#22823#35501#36796#12469#12452#12474
         LabelPosition = lpLeft
         NumbersOnly = True
-        TabOrder = 24
+        TabOrder = 25
       end
       object ViewTab4Edit: TLabeledEdit
         Left = 16
@@ -3345,7 +3345,7 @@ object OptionDlg: TOptionDlg
       end
       object LimitBinEdit: TLabeledEdit
         Left = 589
-        Top = 382
+        Top = 409
         Width = 60
         Height = 21
         Alignment = taRightJustify
@@ -3354,7 +3354,7 @@ object OptionDlg: TOptionDlg
         EditLabel.Caption = #12496#12452#12490#12522#26368#22823#35501#36796#12469#12452#12474
         LabelPosition = lpLeft
         NumbersOnly = True
-        TabOrder = 25
+        TabOrder = 26
       end
       object ExtTxViewerGroupBox: TGroupBox
         Left = 460
@@ -3363,7 +3363,7 @@ object OptionDlg: TOptionDlg
         Height = 76
         Anchors = [akLeft, akTop, akRight]
         Caption = #22806#37096#12499#12517#12450#12540
-        TabOrder = 27
+        TabOrder = 28
         object ExtTxViewerEdit: TEdit
           Left = 10
           Top = 18
@@ -3416,11 +3416,11 @@ object OptionDlg: TOptionDlg
       end
       object BinMemMapedCheckBox: TCheckBox
         Left = 684
-        Top = 384
+        Top = 411
         Width = 203
         Height = 17
         Caption = #12513#12514#12522#12510#12483#12503#12489#12501#12449#12452#12523#12392#12375#12390#38283#12367
-        TabOrder = 26
+        TabOrder = 27
       end
       object ShowRulerCheckBox: TCheckBox
         Left = 20
@@ -3589,7 +3589,7 @@ object OptionDlg: TOptionDlg
       end
       object UseXd2txCheckBox: TCheckBox
         Left = 470
-        Top = 313
+        Top = 315
         Width = 199
         Height = 17
         Caption = 'xd2txlib.dll '#12391#12486#12461#12473#12488#34920#31034
@@ -3640,6 +3640,14 @@ object OptionDlg: TOptionDlg
         Height = 17
         Caption = #12473#12463#12525#12540#12523#12496#12540#12434#25240#12426#36820#12375#20301#32622#12395#34920#31034
         TabOrder = 6
+      end
+      object AltBackSlashCheckBox: TCheckBox
+        Left = 470
+        Top = 340
+        Width = 199
+        Height = 17
+        Caption = '"\" '#12434' "'#8726'"(U+2216)'#12391#34920#31034
+        TabOrder = 24
       end
     end
     object ImgViewerSheet: TTabSheet
@@ -5702,7 +5710,7 @@ object OptionDlg: TOptionDlg
         Left = 10
         Top = 318
         Width = 434
-        Height = 131
+        Height = 161
         Caption = #30906#35469#12513#12483#12475#12540#12472
         TabOrder = 4
         object SureCopyCheckBox: TCheckBox
@@ -5771,27 +5779,35 @@ object OptionDlg: TOptionDlg
         end
         object SureCancelCheckBox: TCheckBox
           Left = 10
-          Top = 74
+          Top = 101
           Width = 164
           Height = 17
           Caption = #12461#12515#12531#12475#12523#12508#12479#12531#12434#34920#31034
-          TabOrder = 8
+          TabOrder = 9
         end
         object SureDefNoCheckBox: TCheckBox
           Left = 180
-          Top = 74
+          Top = 101
           Width = 186
           Height = 17
           Caption = #12300#12356#12356#12360#12301#12364#12487#12501#12457#12523#12488#12508#12479#12531
-          TabOrder = 9
+          TabOrder = 10
         end
         object SureAdjPosCheckBox: TCheckBox
           Left = 10
-          Top = 101
+          Top = 128
           Width = 231
           Height = 17
           Caption = #29366#27841#12395#24540#12376#12390#34920#31034#20301#32622#12434#35519#25972
-          TabOrder = 10
+          TabOrder = 11
+        end
+        object SureWorkListCheckBox: TCheckBox
+          Left = 10
+          Top = 74
+          Width = 261
+          Height = 17
+          Caption = #12527#12540#12463#12522#12473#12488#26356#26032#26178#12398#20877#35501#12415#36796#12415
+          TabOrder = 8
         end
       end
       object ShowMsgHintCheckBox: TCheckBox
@@ -5889,7 +5905,7 @@ object OptionDlg: TOptionDlg
       end
       object EtcWarnGroupBox: TGroupBox
         Left = 10
-        Top = 465
+        Top = 497
         Width = 434
         Height = 76
         Caption = #12381#12398#20182#12398#35686#21578

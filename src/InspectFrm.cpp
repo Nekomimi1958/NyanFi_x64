@@ -168,7 +168,7 @@ void __fastcall TInspectForm::UpdateValue()
 			}
 			else hstr.UCAT_T("   ");
 		}
-		hstr.cat_sprintf(_T("  %s"), astr.c_str());
+		hstr.cat_sprintf(_T("  %s"), alt_yen_to(astr).c_str());
 	}
 	InsStatusBar->Panels->Items[0]->Text = hstr;
 

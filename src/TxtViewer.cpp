@@ -660,6 +660,7 @@ void __fastcall TTxtViewer::UpdateScr(
 	UsrKeywdCase2 = true;
 	UsrKeywdCol   = color_fgView;
 	UsrKeywdCol2  = color_fgView;
+	alt_BackSlash = AltBackSlash;
 
 	//ユーザ定義の取得
 	bool usr_hl = UserHighlight->GetSection(FileName, isClip, isLog, isHtm2Txt);
@@ -692,15 +693,15 @@ void __fastcall TTxtViewer::UpdateScr(
 			}
 
 			ReservedPtn   = UserHighlight->ReadRegExPtn(_T("ReservedPtn"));
-			ReservedCase  = UserHighlight->ReadKeyBool( _T("ReservedCase"), true);
+			ReservedCase  = UserHighlight->ReadKeyBool( _T("ReservedCase"),	true);
 			NumericPtn	  = UserHighlight->ReadRegExPtn(_T("NumericPtn"));
 			SymbolChs	  = UserHighlight->ReadKeyStr(  _T("Symbol"));
 			QuotStr 	  = UserHighlight->ReadKeyStr(  _T("Strings"));
-			useEsc		  = UserHighlight->ReadKeyBool( _T("UseEsc"), true);
+			useEsc		  = UserHighlight->ReadKeyBool( _T("UseEsc"),		true);
 			UsrKeyword	  = UserHighlight->ReadRegExPtn(_T("KeywordPtn"));
-			UsrKeywdCase  = UserHighlight->ReadKeyBool( _T("KeywordCase"), true);
+			UsrKeywdCase  = UserHighlight->ReadKeyBool( _T("KeywordCase"),	true);
 			UsrKeyword2   = UserHighlight->ReadRegExPtn(_T("KeywordPtn2"));
-			UsrKeywdCase2 = UserHighlight->ReadKeyBool( _T("KeywordCase2"), true);
+			UsrKeywdCase2 = UserHighlight->ReadKeyBool( _T("KeywordCase2"),	true);
 
 			//見出し行
 			UnicodeString lbuf = UserHighlight->ReadRegExPtn(_T("HeadlinePtn"));
@@ -717,6 +718,10 @@ void __fastcall TTxtViewer::UpdateScr(
 			color_Headline = UserHighlight->ReadColorRGB6H(_T("HeadlineCol"),	color_Headline);
 			UsrKeywdCol    = UserHighlight->ReadColorRGB6H(_T("KeywordCol"),	color_fgView);
 			UsrKeywdCol2   = UserHighlight->ReadColorRGB6H(_T("KeywordCol2"),	color_fgView);
+
+			//その他
+			if (UserHighlight->KeyExists(UserHighlight->CurSection, _T("AltBackSlash")))
+				alt_BackSlash = UserHighlight->ReadKeyBool(_T("AltBackSlash"));
 		}
 		//デフォルト
 		else {
@@ -1508,8 +1513,9 @@ void __fastcall TTxtViewer::TabTextOut(
 					draw_Line(cv, rc.Left, rc.Top + rc.Height()/2, rc.Right, rc.Top + rc.Height()/2, hr_w, color_HR);
 				}
 				//文字
-				else
-					cv->TextRect(rc, x, y, sbuf);
+				else {
+					cv->TextRect(rc, x, y, alt_BackSlash? ReplaceStr(s, "\\", _T("\u2216")) : s);
+				}
 				x += rc.Width();
 			}
 			//タブ文字
@@ -1548,8 +1554,9 @@ void __fastcall TTxtViewer::TabTextOut(
 				draw_Line(cv, rc.Left, rc.Top + rc.Height()/2, rc.Right, rc.Top + rc.Height()/2, hr_w, color_HR);
 			}
 			//文字
-			else
-				cv->TextRect(rc, x, y, s);
+			else {
+				cv->TextRect(rc, x, y, alt_BackSlash? ReplaceStr(s, "\\", _T("\u2216")) : s);
+			}
 			x += rc.Width();
 
 			//改行

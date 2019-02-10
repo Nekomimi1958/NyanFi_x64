@@ -195,7 +195,7 @@ void set_CmdList(
 		"F:SelByList=リストによって項目を選択\n"
 		"F:SelectUp=選択/解除後、カーソルを上に移動\n"
 		"F:SelEmptyDir=空のディレクトリだけを選択\n"
-		"F:SelGitChanged=リポジトリ内の変更ファイルを選択\n"
+		"F:SelGitChanged=Git作業ディレクトリで変更ファイルを選択\n"
 		"F:SelMask=選択中の項目だけを残して他を隠す\n"
 		"F:SelOnlyCur=カレント側だけにあるファイルを選択\n"
 		"F:SelReverseAll=すべての項目の選択状態を反転\n"
