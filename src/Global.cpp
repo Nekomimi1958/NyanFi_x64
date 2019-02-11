@@ -9484,6 +9484,8 @@ void PathNameOut(
 {
 	if (s.IsEmpty()) return;
 
+	s = ReplaceStr(s, DirDelimiter, "\\");	//‹æØ‚è‚ª•ÏŠ·‚³‚ê‚Ä‚¢‚½‚çˆê’U \ ‚É–ß‚·
+
 	int s_len = s.Length();
 	std::unique_ptr<TColor[]> FgCol(new TColor[s_len + 1]);
 	std::unique_ptr<TColor[]> BgCol(new TColor[s_len + 1]);

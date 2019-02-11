@@ -70,9 +70,13 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 
 <div class="indent1">
 <b>使用例</b><br>
-指定したリポジトリのクローンをカレントに作成<br>
+入力したURLのリポジトリをカレントにクローン化<br>
 <pre class="example_box">
-Git_"clone https://github.com/Nekomimi1958/NyanFi_x64.git"
+Input_":クローン:URL:URL"
+Test_URL!=""
+IfTrue
+  Git_"clone %URL%"
+EndIf
 </pre>
 
 リポジトリの状態とコミット履歴をまとめて一覧ダイアログで表示<br>
@@ -83,35 +87,31 @@ IfNotGit
 Endif
 
 Git_status --porcelain --branch
-Add_RES<<%Buffer%
+Set_RES=%Buffer%
 Add_RES<<""
 
 Git_log --graph --decorate --oneline
 Add_RES<<%Buffer%
-Add_RES<<""
 
 Set_Buffer=%RES%
-ListBuffer_"Git Status/Log"
+ListBuffer_"Git Status/Log - %CurPath%"
 </pre>
 
 すべての変更内容をインデックスに追加し、入力したメッセージでコミット<br>
 <pre class="example_box">
-Format_Buffer=$P
-ReplaceBuffer_/.*\\/=""
-Input_":%Buffer%:コミットメッセージ:MSG"
+Input_":%CurPath%:コミットメッセージ:MSG"
 Test_MSG==""
 IfTrue_Exit
 
 Git_add -A
-SET_RES=">%CurPath%"
-Add_RES<<%Buffer%
+Set_RES=%Buffer%
 Add_RES<<""
 
-Git_commit -a -m "%MSG%"
+Git_commit -m "%MSG%"
 Add_RES<<%Buffer%
 
 Set_Buffer=%RES%
-ListBuffer_"Git Add/Commit"
+ListBuffer_"Git Add/Commit - %CurPath%"
 </pre>
 </div>
 <br><br>

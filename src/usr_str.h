@@ -231,7 +231,7 @@ bool IsIrregularFont(TFont *fnt);
 int get_TextWidth(TCanvas *cv, UnicodeString s, bool is_irreg);
 int get_CharWidth(TCanvas *cv, int n, int mgn = 0);
 
-int get_WidthInPanel(UnicodeString s, TPanel *pp);
+int get_WidthInPanel(UnicodeString s, TPanel *pp, bool d2d_sw = false);
 UnicodeString fit_StrToPanel(UnicodeString s, int p, TPanel *pp);
 
 int str_len_half(UnicodeString s);

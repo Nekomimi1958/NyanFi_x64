@@ -768,17 +768,23 @@ TColor AdjustColor(
 	TColor col,		//Œ³‚ÌF
 	int adj)		//‰ÁŒ¸’l	0`255
 {
-	if (GetLuminance(col)>0.5) adj = -adj;
-
 	int cref = ColorToRGB(col);
 	int r = GetRValue(cref);
 	int g = GetGValue(cref);
 	int b = GetBValue(cref);
 
-	r += adj;  if (r>255) r = 255; else if (r<0) r = 0;
-	g += adj;  if (g>255) g = 255; else if (g<0) g = 0;
-	b += adj;  if (b>255) b = 255; else if (b<0) b = 0;
-
+	//–¾¨ˆÃ
+	if (GetLuminance(col)>0.5) {
+		r -= (adj * r / 255);  if (r<0) r = 0;
+		g -= (adj * g / 255);  if (g<0) g = 0;
+		b -= (adj * b / 255);  if (b<0) b = 0;
+	}
+	//ˆÃ¨–¾
+	else {
+		r += (adj * (255 - r) / 255);  if (r>255) r = 255;
+		g += (adj * (255 - g) / 255);  if (g>255) g = 255;
+		b += (adj * (255 - b) / 255);  if (b>255) b = 255;
+	}
 	return TColor(RGB(r, g, b));
 }
 

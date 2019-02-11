@@ -17,6 +17,7 @@
 #include <System.Zip.hpp>
 #include <Vcl.Imaging.GIFImg.hpp>
 #include <Vcl.Clipbrd.hpp>
+#include <Vcl.Direct2D.hpp>
 #include <RegularExpressions.hpp>
 #include "UserMdl.h"
 #include "usr_file_ex.h"
@@ -275,6 +276,15 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 	org_RelPanel2WndProc	   = RelPanel2->WindowProc;
 	RelPanel2->WindowProc	   = RelPanel2WndProc;
 
+	org_L_DirPanelWndProc	   = L_DirPanel->WindowProc;
+	L_DirPanel->WindowProc	   = L_DirPanelWndProc;
+	org_L_DirPanel2WndProc	   = L_DirPanel2->WindowProc;
+	L_DirPanel2->WindowProc	   = L_DirPanel2WndProc;
+	org_R_DirPanelWndProc	   = R_DirPanel->WindowProc;
+	R_DirPanel->WindowProc	   = R_DirPanelWndProc;
+	org_R_DirPanel2WndProc	   = R_DirPanel2->WindowProc;
+	R_DirPanel2->WindowProc	   = R_DirPanel2WndProc;
+
 	org_FileListWindowProc[0]  = L_ListBox->WindowProc;
 	org_FileListWindowProc[1]  = R_ListBox->WindowProc;
 	L_ListBox->WindowProc	   = L_ListWindowProc;
@@ -299,6 +309,9 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 	ImgSttHeader->WindowProc   = ImgSttHdrWndProc;
 	org_ImgInfBarWndProc	   = ImgInfBar->WindowProc;
 	ImgInfBar->WindowProc	   = ImgInfBarWndProc;
+
+	TabPinMark	= u"\U0001F4CD";	//ピンマーク
+	TabPinWidth = 0;
 
 	FileListBox[0]	 = L_FileListBox = L_ListBox;
 	FileListBox[1]	 = R_FileListBox = R_ListBox;
@@ -2498,13 +2511,12 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 				if (IsCurFList()) {
 					TPanel *pp = dynamic_cast<TPanel *>(pCtrl);
 					if (pp) {
-						UnicodeString pnam = Trim(pp->Caption);
-						bool is_fix = remove_top_s(pnam, TabPinMark);	//ピンマーク
+						UnicodeString pnam = pp->Caption;
+						remove_top_s(pnam, TabPinMark);
 						//クリック位置のディレクトリを取得
 						int px = LOWORD(Msg.lParam);
 						int idx_r = -1;
-						UnicodeString s = " ";  if (is_fix) s += TabPinMark;
-						int w = get_WidthInPanel(s, pp);
+						int w = Scaled4 + TabPinWidth;
 						TStringDynArray plst = split_path(pnam, DirDelimiter);
 						for (int i=0; i<plst.Length && idx_r==-1; i++) {
 							w += get_WidthInPanel(plst[i] + DirDelimiter, pp);
@@ -2611,6 +2623,48 @@ bool __fastcall TNyanFiForm::ApplicationEvents1Help(WORD Command, NativeInt Data
 		CallHelp = false;
 	}
 	return true;
+}
+
+//---------------------------------------------------------------------------
+//ディレクトリ情報の描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::DrawDirPanel(TPanel *pp)
+{
+	HDC hDc = ::GetDC(pp->Handle);
+	if (hDc) {
+		std::unique_ptr<TCanvas> cv(new TCanvas());
+		cv->Lock();
+		{
+			TRect rc = pp->ClientRect;
+			InflateRect(rc, -1, -1);
+			cv->Handle = hDc;
+			cv->Font->Assign(pp->Font);
+			cv->Brush->Color = pp->Color;
+			cv->FillRect(rc);
+			UnicodeString lbuf = pp->Caption;
+			int x = rc.Left + Scaled2;
+			int y = rc.Top + (rc.Height() - abs(pp->Font->Height))/2;
+			//固定ピン
+			if (remove_top_s(lbuf, TabPinMark)) {
+				if (TDirect2DCanvas::Supported()) {
+					std::unique_ptr<TDirect2DCanvas> dcv(new TDirect2DCanvas(hDc, rc));
+					dcv->BeginDraw();
+					dcv->Font->Assign(pp->Font);
+					dcv->Brush->Style = bsClear;
+					dcv->TextOut(x, rc.Top + (rc.Height() - dcv->TextHeight(TabPinMark))/2, TabPinMark);
+					dcv->EndDraw();
+				}
+				else {
+					cv->TextOut(x, y, TabPinMark);
+				}
+				x += TabPinWidth;
+			}
+			//パス名
+			PathNameOut(lbuf, NULL, cv.get(), x, y, false);
+		}
+		cv->Unlock();
+		::ReleaseDC(pp->Handle, hDc);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -4031,6 +4085,9 @@ void __fastcall TNyanFiForm::SetupDesign(
 		pp->Color 	    = col_bgDirInf;
 		pp->Font->Color = col_fgDirInf;
 	}
+
+	//ピンマークの幅を取得
+	TabPinWidth = get_WidthInPanel(TabPinMark, L_DirPanel, true) + Scaled4;
 
 	L_TopPanel->Color = col_bgDirInf;
 	R_TopPanel->Color = col_bgDirInf;
@@ -6441,13 +6498,13 @@ void __fastcall TNyanFiForm::SetDirCaption(int tag)
 		 if (WorkListChanged) pnam.Insert("*", 1); else if (WorkListFiltered) pnam.Insert("!", 1);
 	}
 
-	UnicodeString s = " ";
+	UnicodeString s;
 	if (lst_stt->is_TabFixed) s += TabPinMark;
 	pnam = get_MiniPathName(pnam, pp->ClientWidth - get_WidthInPanel(s, pp), pp->Font, !lst_stt->is_FTP);
 	if (lst_stt->is_FTP) pnam = yen_to_slash(pnam);
 	pnam = REPLACE_TS(pnam, "&", "&&");
 	if (lst_stt->is_TabFixed) pnam.Insert(TabPinMark, 1);	//固定マーク
-	pp->Caption = " " + pnam;
+	pp->Caption = pnam;
 	pp->Hint	= !SameText(pnam, hnam)? hnam : EmptyStr;
 
 	//関係表示
@@ -11096,9 +11153,7 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 						if (CmdGitExe.IsEmpty()) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("git.exe")));
 						if (USAME_TS(XCMD_prm, "#")) XCMD_prm = "--version";
 						cursor_HourGlass();
-						SetDirWatch(false);
 						bool res = XCMD_ShellExe(CmdGitExe, XCMD_prm, XCMD_cur_path, "OLH");
-						SetDirWatch(true);
 						cursor_Default();
 						if (!res) GlobalAbort();
 					}
@@ -32371,7 +32426,6 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 		cv->Lock();
 		{
 			cv->Font->Assign(tp->Font);
-			cv->Font->Color = col_fgTab;
 
 			if (TabControl1->Style==tsTabs) {
 				cv->Brush->Color = col_bgTabBar;
@@ -32385,13 +32439,16 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 			int h  = y1 - y0;
 			int edge = EDGE_RAISED;	//BDR_RAISEDOUTER;
 
+			std::unique_ptr<TStringList> slst(new TStringList());
+			UnicodeString sbuf;
+
 			for (int i=tp->Tabs->Count-1; i>=-1; i--) {
 				if (i==act_idx) continue;
 				int idx = (i==-1)? act_idx : i;
 				bool is_act = (idx==act_idx);
 
 				TRect rc = ((tab_info*)TabList->Objects[idx])->rc;
-				int xp = rc.Left + 4;
+				WORD xp = rc.Left + 4;
 
 				TColor col = (HotTabIndex==idx && HotTabIndex!=DragTabIndex)? SelectWorB(col_bgInAcTab, 0.33) :
 																	  is_act? col_bgActTab : col_bgInAcTab;
@@ -32458,7 +32515,7 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 					wW -= iw;  xp += iw;
 				}
 
-				//キャプション
+				//キャプションの準備
 				UnicodeString tit = get_tkn(tp->Tabs->Strings[idx], '|');
 				if (tp->TabWidth>0) {
 					if (!itm_buf[2].IsEmpty())
@@ -32468,11 +32525,11 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 					tit = minimize_str(tit, cv, wW, true);
 				}
 
-				int yp = rc.Top + ScaledInt(!has_Leading(cv)? 4 : 2);
+				WORD yp = rc.Top + ScaledInt(!has_Leading(cv)? 4 : 2);
 				//左|右
 				if (contains_s(tit, _T('|'))) {
 					UnicodeString tmp = split_tkn(tit, '|');
-					cv->TextOut(xp, yp, tmp);
+					slst->AddObject(tmp, (TObject*)((NativeInt)MAKELONG(xp, yp)));
 					int wL = cv->TextWidth(tmp);
 					int wR = cv->TextWidth(tit);
 					int wH = wW/2;
@@ -32480,10 +32537,34 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 					xp += ((wL<wH && wR<wH)? wH : (mgn>0)? wL + mgn : wL);
 					draw_Line(cv, xp, rc.Top + 2, xp, rc.Top + rc.Height() - 2, 1, SelectWorB(cv->Brush->Color, 0.33));
 					xp += 2;
-					cv->TextOut(xp, yp, tit);
+					slst->AddObject(tit, (TObject*)((NativeInt)MAKELONG(xp, yp)));
 				}
 				//左のみ
-				else cv->TextOut(xp, yp, tit);
+				else {
+					slst->AddObject(tit, (TObject*)((NativeInt)MAKELONG(xp, yp)));
+				}
+			}
+
+			//キャプションの描画(カラー絵文字対応)
+			if (TDirect2DCanvas::Supported()) {
+				std::unique_ptr<TDirect2DCanvas> dcv(new TDirect2DCanvas(cv, tp->ClientRect));
+				dcv->BeginDraw();
+				dcv->Font->Assign(tp->Font);
+				dcv->Font->Color  = col_fgTab;
+				dcv->Brush->Style = bsClear;
+				for (int i=0; i<slst->Count; i++) {
+					DWORD p = (DWORD)slst->Objects[i];
+					dcv->TextOut(LOWORD(p), HIWORD(p), slst->Strings[i]);
+				}
+				dcv->EndDraw();
+			}
+			else {
+				cv->Font->Color  = col_fgTab;
+				cv->Brush->Style = bsClear;
+				for (int i=0; i<slst->Count; i++) {
+					DWORD p = (DWORD)slst->Objects[i];
+					cv->TextOut(LOWORD(p), HIWORD(p), slst->Strings[i]);
+				}
 			}
 
 			//閉じるボタンを描画(本来のボタンが隠れてしまうため)

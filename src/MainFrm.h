@@ -1914,6 +1914,9 @@ private:	// ユーザー宣言
 	UsrHintWindow *MsgHint;				//メッセージ、警告のヒント表示ウィンドウ
 	UsrHintWindow *KeyHint;				//2ストローク操作のヒント表示ウィンドウ
 
+	UnicodeString TabPinMark;
+	int TabPinWidth;
+
 	int PopMenuIndex;
 
 	int PrevListIdx;
@@ -1966,6 +1969,7 @@ private:	// ユーザー宣言
 
 	void __fastcall ActiveFormChange(TObject *Sender);
 
+	//タブ
 	TWndMethod org_TabCtrlWindowProc;
 	void __fastcall TabCtrlWindowProc(TMessage &msg);
 
@@ -1976,6 +1980,7 @@ private:	// ユーザー宣言
 		org_TabPanelWndProc(msg);
 	}
 
+	//ディレクトリ関係
 	TWndMethod org_RelPanelWndProc;
 	void __fastcall RelPanelWndProc(TMessage &msg)
 	{
@@ -1988,6 +1993,37 @@ private:	// ユーザー宣言
 	{
 		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
 		org_RelPanel2WndProc(msg);
+	}
+
+	//ディレクトリ情報
+	void __fastcall DrawDirPanel(TPanel *pp);
+	TWndMethod org_L_DirPanelWndProc;
+	void __fastcall L_DirPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_L_DirPanelWndProc(msg);
+		if (msg.Msg==WM_PAINT) DrawDirPanel(L_DirPanel);
+	}
+	TWndMethod org_L_DirPanel2WndProc;
+	void __fastcall L_DirPanel2WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_L_DirPanel2WndProc(msg);
+		if (msg.Msg==WM_PAINT) DrawDirPanel(L_DirPanel2);
+	}
+	TWndMethod org_R_DirPanelWndProc;
+	void __fastcall R_DirPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_R_DirPanelWndProc(msg);
+		if (msg.Msg==WM_PAINT) DrawDirPanel(R_DirPanel);
+	}
+	TWndMethod org_R_DirPanel2WndProc;
+	void __fastcall R_DirPanel2WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_R_DirPanel2WndProc(msg);
+		if (msg.Msg==WM_PAINT) DrawDirPanel(R_DirPanel2);
 	}
 
 	TWndMethod org_TvViewPanelWndProc;

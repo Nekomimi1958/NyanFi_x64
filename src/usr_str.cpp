@@ -10,6 +10,7 @@
 #include <System.StrUtils.hpp>
 #include <System.Masks.hpp>
 #include <RegularExpressions.hpp>
+#include <Vcl.Direct2D.hpp>
 #include "usr_str.h"
 
 //---------------------------------------------------------------------------
@@ -1664,15 +1665,25 @@ int get_CharWidth(
 //---------------------------------------------------------------------------
 //TPanel “à‚Å‚Ì•¶Žš—ñ•‚ðŽæ“¾
 //---------------------------------------------------------------------------
-int get_WidthInPanel(UnicodeString s, TPanel *pp)
+int get_WidthInPanel(
+	UnicodeString s,
+	TPanel *pp,
+	bool d2d_sw)	//Direct2D ‚ÅŽæ“¾	(default = false)
 {
 	int wd = 0;
 	HDC hDc = ::GetDC(pp->Handle);
 	if (hDc) {
-		std::unique_ptr<TCanvas> cv(new TCanvas());
-		cv->Handle = hDc;
-		cv->Font->Assign(pp->Font);
-		wd = cv->TextWidth(s);
+		if (d2d_sw && TDirect2DCanvas::Supported()) {
+			std::unique_ptr<TDirect2DCanvas> dcv(new TDirect2DCanvas(hDc, pp->ClientRect));
+			dcv->Font->Assign(pp->Font);
+			wd = dcv->TextWidth(s);
+		}
+		else {
+			std::unique_ptr<TCanvas> cv(new TCanvas());
+			cv->Handle = hDc;
+			cv->Font->Assign(pp->Font);
+			wd = cv->TextWidth(s);
+		}
 		::ReleaseDC(pp->Handle, hDc);
 	}
 	return wd;

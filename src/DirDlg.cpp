@@ -450,12 +450,12 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 						else dnam = ExcludeTrailingPathDelimiter(replace_str_by_list(dnam, EnvVarList));
 						if (remove_top_s(dnam, '%')) {
 							UnicodeString envstr = "%" + split_tkn(dnam, '%') + "%";
-							cv->Font->Color = AdjustColor(col_Folder, 64);
+							cv->Font->Color = AdjustColor(col_Folder, 72);
 							cv->TextOut(xp, yp, envstr);
 							xp += get_TextWidth(cv, envstr, is_irreg) + 2;
 						}
 					}
-					cv->Font->Color = (StartsStr("shell:", dnam))? AdjustColor(col_Folder, 64) : col_Folder;
+					cv->Font->Color = (StartsStr("shell:", dnam))? AdjustColor(col_Folder, 72) : col_Folder;
 					PathNameOut(dnam, cv, xp, yp, sp->Items[2]->Width);
 					//‹æØ‚èü
 					if (brk) draw_separateLine(cv, Rect);
@@ -488,17 +488,17 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 				//êŠ
 				UnicodeString dnam = itm_buf[2];
 				if (StartsStr("#:", dnam)) {
-					cv->Font->Color = AdjustColor(col_Folder, 64);
+					cv->Font->Color = AdjustColor(col_Folder, 72);
 					usr_TAG->DrawTags(dnam, cv, xp, yp, RevTagCololr? col_bgList : clNone);
 				}
 				else {
 					if (remove_top_s(dnam, '%')) {
 						UnicodeString envstr = "%" + split_tkn(dnam, '%') + "%";
-						cv->Font->Color = AdjustColor(col_Folder, 64);
+						cv->Font->Color = AdjustColor(col_Folder, 72);
 						cv->TextOut(xp, yp, envstr);
 						xp += get_TextWidth(cv, envstr, is_irreg) + 2;
 					}
-					cv->Font->Color = (StartsStr("shell:", dnam))? AdjustColor(col_Folder, 64) : col_Folder;
+					cv->Font->Color = (StartsStr("shell:", dnam))? AdjustColor(col_Folder, 72) : col_Folder;
 					PathNameOut(dnam, cv, xp, yp, sp->Items[2]->Width);
 				}
 			}

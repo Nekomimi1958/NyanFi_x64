@@ -86,7 +86,6 @@ object TabSetDlg: TTabSetDlg
       Top = 18
       Width = 365
       Height = 21
-      Hint = '- '#12399#12475#12497#12524#12540#12479
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 52
       EditLabel.Height = 13
