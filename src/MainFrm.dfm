@@ -2909,6 +2909,12 @@ object NyanFiForm: TNyanFiForm
         Caption = #12501#12457#12531#12488#12469#12531#12503#12523#23450#32681#12501#12449#12452#12523#12398#32232#38598
         OnClick = EditFontSmplItemClick
       end
+      object Sep_o_5: TMenuItem
+        Caption = '-'
+      end
+      object SetFolderIconItem: TMenuItem
+        Action = SetFolderIconAction
+      end
     end
     object HelpMenu: TMenuItem
       AutoHotkeys = maAutomatic
@@ -4511,6 +4517,12 @@ object NyanFiForm: TNyanFiForm
       Category = 'Command'
       OnExecute = SelEmptyDirActionExecute
       OnUpdate = MenuFActionUpdate
+    end
+    object SetFolderIconAction: TAction
+      Category = 'Command'
+      Caption = #12501#12457#12523#12480#12540#12450#12452#12467#12531#12398#35373#23450
+      OnExecute = SetFolderIconActionExecute
+      OnUpdate = SetFolderIconActionUpdate
     end
     object SelGitChangedAction: TAction
       Category = 'Command'

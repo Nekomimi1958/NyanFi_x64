@@ -612,7 +612,6 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	ColOnlyFExtCheckBox->Tag	= (int)&ColorOnlyFExt;
 	SymColToCheckBox->Tag		= (int)&SymColorToName;
 	RevTagColCheckBox->Tag		= (int)&RevTagCololr;
-	ShowIconCheckBox->Tag		= (int)&ShowIcon;
 	ShowDirTypeCheckBox->Tag	= (int)&ShowDirType;
 	ShowSpaceCheckBox->Tag		= (int)&ShowSpace;
 	ShowByteSizeCheckBox->Tag	= (int)&ShowByteSize;
@@ -854,6 +853,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	LimitBinEdit->Text	= ViewBinLimitSize/1048576;
 	MaxTasksComboBox->ItemIndex = MaxTasks - 1;
 	AppPrmComboBox->ItemIndex	= idx_of_word_i(_T("|FA|FL|FI|AO|LO|LI"), AppListHotPrm);
+	ShowIconCheckBox->Checked	= IconMode>0;
 
 	for (int i=0; i<FontBufList->Count; i++) {
 		TFont *f = (TFont *)FontBufList->Objects[i];
@@ -3832,6 +3832,9 @@ void __fastcall TOptionDlg::AppDesignBtnClick(TObject *Sender)
 {
 	ApplyOptionByTag(DesignSheet);
 
+	if (IconMode==0 && ShowIconCheckBox->Checked) IconMode = 1;
+	else if (!ShowIconCheckBox->Checked) IconMode = 0;
+
 	//ƒƒCƒ“‰æ–Ê‚É’Ê’m
 	::SendMessage(MainHandle, WM_NYANFI_APPEAR, (LayoutChanged? 1 : 0), 0);
 }
@@ -3923,6 +3926,9 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 	ViewTxtLimitSize = EditToInt(LimitTxtEdit) * 1024;
 	ViewBinLimitSize = std::max(StrToInt64Def(LimitBinEdit->Text, 0) * 1048576, 1048576LL);
 	DirDelimiter	 = DirDelimiter.IsEmpty()? UnicodeString("/") : DirDelimiter.SubString(1, 1);
+
+	if (IconMode==0 && ShowIconCheckBox->Checked) IconMode = 1;
+	else if (!ShowIconCheckBox->Checked) IconMode = 0;
 
 	UnicodeString tmp;
 	//Migemo Ä‰Šú‰»

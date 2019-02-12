@@ -155,7 +155,7 @@ void __fastcall TDotNyanDlg::SetOderOption(TStringList *lst)
 	n = get_ListIntVal(lst, _T("ShowHideAtr"),   -1);	HideRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
 	n = get_ListIntVal(lst, _T("ShowSystemAtr"), -1);	SysRadioGroup->ItemIndex  = (n==1)? 1 : (n==0)? 2 : 0;
 	n = get_ListIntVal(lst, _T("ShowByteSize"),  -1);	SizeRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
-	n = get_ListIntVal(lst, _T("ShowIcon"),		 -1);	IconRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
+	n = get_ListIntVal(lst, _T("ShowIcon"),		 -1);	IconRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : (n==2)? 3 : 0;
 	n = get_ListIntVal(lst, _T("SyncLR"),		 -1);	SyncRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
 
 	PathMaskComboBox->Text = lst->Values["PathMask"];
@@ -355,7 +355,8 @@ void __fastcall TDotNyanDlg::CreNyanActionExecute(TObject *Sender)
 	if (HideRadioGroup->ItemIndex>0) lbuf.cat_sprintf(_T("ShowHideAtr=%u\r\n"),   (HideRadioGroup->ItemIndex==1)? 1 : 0);
 	if (SysRadioGroup->ItemIndex>0)  lbuf.cat_sprintf(_T("ShowSystemAtr=%u\r\n"), (SysRadioGroup->ItemIndex==1) ? 1 : 0);
 	if (SizeRadioGroup->ItemIndex>0) lbuf.cat_sprintf(_T("ShowByteSize=%u\r\n"),  (SizeRadioGroup->ItemIndex==1)? 1 : 0);
-	if (IconRadioGroup->ItemIndex>0) lbuf.cat_sprintf(_T("ShowIcon=%u\r\n"),	  (IconRadioGroup->ItemIndex==1)? 1 : 0);
+	if (IconRadioGroup->ItemIndex>0) lbuf.cat_sprintf(_T("ShowIcon=%u\r\n"),	  (IconRadioGroup->ItemIndex==1)? 1 :
+																				  (IconRadioGroup->ItemIndex==2)? 0 : 2);
 	if (SyncRadioGroup->ItemIndex>0) lbuf.cat_sprintf(_T("SyncLR=%u\r\n"),		  (SyncRadioGroup->ItemIndex==1)? 1 : 0);
 
 	if (!PathMaskComboBox->Text.IsEmpty())	{

@@ -257,6 +257,7 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 
 	LogRWLock  = new TMultiReadExclusiveWriteSynchronizer();
 	IconRWLock = new TMultiReadExclusiveWriteSynchronizer();
+	FldIcoRWLock = new TMultiReadExclusiveWriteSynchronizer();
 
 	UserModule->SetUsrPopupMenu(this);
 
@@ -1026,7 +1027,10 @@ void __fastcall TNyanFiForm::FormClose(TObject *Sender, TCloseAction &Action)
 		CheckDirHistory(0);
 		CheckDirHistory(1);
 
-		if (!NotSaveINI) UpdateIniFile();
+		if (!NotSaveINI) {
+			UpdateIniFile(IniFile);
+			UpdateIniFile(FolderIconFile);
+		}
 
 		//ドライブ容量ログの更新
 		if (!DriveLogName.IsEmpty()) update_DriveLog(true);
@@ -1127,6 +1131,7 @@ void __fastcall TNyanFiForm::FormDestroy(TObject *Sender)
 
 	delete LogRWLock;
 	delete IconRWLock;
+	delete FldIcoRWLock;
 
 	delete SttPrgBar;
 	delete MsgHint;
@@ -1406,7 +1411,7 @@ void __fastcall TNyanFiForm::WmCopyData(TMessage& msg)
 
 		IniFile->WriteIntGen(_T("TailHeight2"),	dp->TailHeight);
 
-		if (Initialized && !Closing && !UnInitializing) UpdateIniFile();
+		if (Initialized && !Closing && !UnInitializing) UpdateIniFile(IniFile);
 	}
 	//通知メッセージ
 	else if (cd->dwData==CPYDTID_DPL_MSG) {
@@ -4073,7 +4078,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	InitializeListHeader(R_HeaderControl, _T("名前|種類|サイズ|更新日時|場所"));
 	L_HeaderControl->Visible = ShowHeader;
 	R_HeaderControl->Visible = ShowHeader;
-	int fnam_wd = get_CharWidth(Canvas, 8, ScaledInt(ShowIcon? 20 : 8));
+	int fnam_wd = get_CharWidth(Canvas, 8, ScaledInt((IconMode>0)? 20 : 8));
 	L_HeaderControl->Sections->Items[0]->MinWidth = fnam_wd;
 	R_HeaderControl->Sections->Items[0]->MinWidth = fnam_wd;
 
@@ -4944,7 +4949,7 @@ void __fastcall TNyanFiForm::SetFlItemWidth(TStringList *lst, int tag)
 	}
 
 	int w_file = lst_stt->lwd_half * 8;
-	int x_base = ScaledInt(ShowIcon? 20 : 8);
+	int x_base = ScaledInt((IconMode>0)? 20 : 8);
 	int x_path = x_right - ((lst_stt->is_Find && FindPathColumn)? lst_stt->lwd_path + lst_stt->lwd_half : 0);
 	int x_time = x_path - lst_stt->lwd_time - lst_stt->lwd_half;
 	int x_size = x_time - lst_stt->lwd_size;
@@ -5269,7 +5274,8 @@ bool __fastcall TNyanFiForm::IncProtectItem()
 //---------------------------------------------------------------------------
 //現在の対象にディレクトリが含まれていないかチェック
 //---------------------------------------------------------------------------
-bool __fastcall TNyanFiForm::TestCurIncDir(bool only_cur)
+bool __fastcall TNyanFiForm::TestCurIncDir(
+	bool only_cur)		//カーソル位置のみ	(default = false)
 {
 	bool ret = false;
 	TStringList *lst = GetCurList();
@@ -6968,7 +6974,7 @@ void __fastcall TNyanFiForm::SetListHeader(int tag)
 	THeaderControl *hp = (tag==1)? R_HeaderControl : L_HeaderControl;
 	if (hp->Visible) {
 		THeaderSections *sp = hp->Sections;
-		sp->Items[0]->MinWidth = get_CharWidth(Canvas, 8, ScaledInt(ShowIcon? 20 : 8));
+		sp->Items[0]->MinWidth = get_CharWidth(Canvas, 8, ScaledInt((IconMode>0)? 20 : 8));
 		sp->Items[0]->MaxWidth = ClientWidth;
 
 		for (int i=1; i<sp->Count; i++) {
@@ -7467,7 +7473,7 @@ void __fastcall TNyanFiForm::SetCurPath(
 									case 0: ShowHideAtr   = flag;					break;
 									case 1: ShowSystemAtr = flag;					break;
 									case 2: ShowByteSize  = flag;					break;
-									case 3: ShowIcon	  = flag;					break;
+									case 3: IconMode = std::min(std::max(lbuf.ToIntDef(0), 0), 2);	break;
 									case 4: SyncLR		  = flag;					break;
 									case 5: GrepMaskComboBox->Text = lbuf;			break;
 									case 6: ExeCommandAction("WidenCurList", lbuf);	break;
@@ -9090,25 +9096,36 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 			PreviewSttLabel->Visible = false;
 
 			UnicodeString fnam, fext;
-			bool is_dir;
+			bool is_dir, is_video;
 			//ショートカット
 			if (test_LnkExt(fp->f_ext)) {
 				fnam   = fp->r_name;
 				is_dir = dir_exists(fnam);
 				fext   = is_dir? EmptyStr : get_extension(fp->r_name);
+				is_video = fp->is_video;
 				//fp->img_ori, fp->is_video は反映されている
 			}
 			//通常
 			else {
-				is_dir = fp->is_dir;
-				fnam   = (fp->is_virtual || fp->is_ftp)? fp->tmp_name :
-						 fp->is_up? ExcludeTrailingPathDelimiter(fp->p_name) : fp->f_name;
-				fext   = fp->f_ext;
+				//フォルダアイコン
+				if (fp->is_dir && !ShowDirJumboIco && !fp->is_virtual && !fp->is_ftp) {
+					fnam = get_FolderIconName(fp->f_name);
+					is_dir = false;
+					is_video = false;
+				}
+				//その他
+				if (fnam.IsEmpty()) {
+					is_dir = fp->is_dir;
+					fnam   = (fp->is_virtual || fp->is_ftp)? fp->tmp_name :
+							 fp->is_up? ExcludeTrailingPathDelimiter(fp->p_name) : fp->f_name;
+					is_video = fp->is_video;
+				}
+				fext = get_extension(fnam);
 			}
 
-			if (file_exists(fnam) && (is_dir || !is_Processing(fnam, fp->is_video))) {
+			if (file_exists(fnam) && (is_dir || !is_Processing(fnam, is_video))) {
 				//動画
-				if (fp->is_video) {
+				if (is_video) {
 					ImgViewThread->AddRequest(_T("VIDEO"), fnam);
 				}
 				//GIF
@@ -9374,9 +9391,10 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 		bool use_fgSel = (fp->selected && col_fgSelItem!=clNone);
 
 		//表示位置
+		bool use_ico = (IconMode==1) || (fp->is_dir && IconMode==2);
 		int w_half = lst_stt->lwd_half;
 		int w_file = w_half * 8;
-		int x_base = ScaledInt(ShowIcon? 20 : ((fp->is_dir && !DirBraStr.IsEmpty())? 4 : 8));
+		int x_base = ScaledInt(use_ico? 20 : ((fp->is_dir && !DirBraStr.IsEmpty())? 4 : 8));
 		int w_date = std::max(lst_stt->lxp_time - lst_stt->lwd_size - x_base - w_half, w_file + lst_stt->lwd_fext);
 
 		int yp = tmp_rc.Top;
@@ -9452,7 +9470,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 		}
 
 		dsp_name = ReplaceStr(dsp_name, L"\u202e", "|");	//RLO --> | (警告表示)
-		if (fp->is_dir && !ShowIcon) dsp_name = DirBraStr + dsp_name + DirKetStr;
+		if (fp->is_dir && !use_ico) dsp_name = DirBraStr + dsp_name + DirKetStr;
 
 		int w_name;
 		if (HideSizeTime) {
@@ -9589,7 +9607,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 		}
 
 		//アイコン
-		if (ShowIcon) draw_SmallIcon(fp, tmp_cv, 2, std::max(yp + (int)(tmp_cv->TextHeight("I") - SIcoSize)/2, 0));
+		if (use_ico) draw_SmallIcon(fp, tmp_cv, 2, std::max(yp + (int)(tmp_cv->TextHeight("I") - SIcoSize)/2, 0));
 	}
 
 	//カーソル
@@ -9755,13 +9773,13 @@ void __fastcall TNyanFiForm::FileListBoxMouseDown(TObject *Sender, TMouseButton 
 				b_wd = get_CharWidth(lp->Canvas, 12);		//***
 			else {
 				b_wd = lp->Canvas->TextWidth(cfp->b_name);
-				if		(ShowIcon)							  b_wd += get_IcoWidth();
+				if		(IconMode>0)							  b_wd += get_IcoWidth();
 				else if (cfp->is_dir && !DirBraStr.IsEmpty()) b_wd += lp->Canvas->TextWidth(DirBraStr) + 4;
 				else										  b_wd += Scaled8;
 			}
 
 			//アイコン部分で個別に選択
-			if (SelectIconSngl && ShowIcon && X<get_IcoWidth()) {
+			if (SelectIconSngl && IconMode>0 && X<get_IcoWidth()) {
 				set_select(cfp, !cfp->selected);
 			}
 			//通常選択
@@ -9856,7 +9874,7 @@ void __fastcall TNyanFiForm::FileListBoxDblClick(TObject *Sender)
 		file_rec *cfp = (idx<lst->Count)? (file_rec*)lst->Objects[idx] : NULL;
 		if (cfp && !cfp->is_dummy) {
 			int b_wd = lp->Canvas->TextWidth(cfp->b_name);
-			if		(ShowIcon)							  b_wd += get_IcoWidth();
+			if		(IconMode>0)						  b_wd += get_IcoWidth();
 			else if (cfp->is_dir && !DirBraStr.IsEmpty()) b_wd += lp->Canvas->TextWidth(DirBraStr) + 4;
 			else										  b_wd += Scaled8;
 			on_body = (p.x < b_wd);
@@ -19807,7 +19825,7 @@ void __fastcall TNyanFiForm::OptionDlgActionExecute(TObject *Sender)
 
 		if (IsPrimary) {
 			SaveOptions();
-			UpdateIniFile();
+			UpdateIniFile(IniFile);
 			TrayIcon1->Visible = StoreTaskTray;
 		}
 	}
@@ -21315,6 +21333,45 @@ void __fastcall TNyanFiForm::SelEmptyDirActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//リポジトリ内の変更ファイルを選択
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SelGitChangedActionExecute(TObject *Sender)
+{
+	try {
+		if (!IsCurFList()) UserAbort(USTR_CantOperate);
+		if (get_GitTopPath(CurPath[CurListTag]).IsEmpty())
+			TextAbort(_T("Gitの作業ディレクトリではありません。"));
+
+		std::unique_ptr<TStringList> glst(new TStringList());
+		SetDirWatch(false);
+		int cnt = get_GitChangedList(CurPath[CurListTag], glst.get());
+		SetDirWatch(true);
+		if (cnt==-1) UserAbort(USTR_FaildProc);
+		if (cnt==0)  Abort();
+
+		TStringList *lst = GetCurList(true);
+		int top_idx = -1;
+		for (int i=0; i<lst->Count; i++) {
+			file_rec *fp = (file_rec*)lst->Objects[i];
+			fp->selected = (glst->IndexOf(fp->f_name)!=-1);
+			if (fp->selected && top_idx==-1) top_idx = i;
+		}
+		FileListBox[CurListTag]->ItemIndex = top_idx;
+		RepaintList(CurListTag);
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SelGitChangedActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = ScrMode==SCMD_FLIST;
+	ap->Enabled = ap->Visible && GitExists;
+}
+
+//---------------------------------------------------------------------------
 //マーク項目を選択
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SelMarkActionExecute(TObject *Sender)
@@ -21768,6 +21825,115 @@ void __fastcall TNyanFiForm::SetExifTimeActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//フォルダーアイコンの設定
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SetFolderIconActionExecute(TObject *Sender)
+{
+	try {
+		if (TEST_ActParam("ND")) {
+			std::unique_ptr<TStringList> lst(new TStringList());
+			get_FolderIconList(lst.get());
+			std::unique_ptr<TStringList> m_buf(new TStringList());
+			UnicodeString tmp;
+			for (int i=0; i<lst->Count; i++) {
+				if (i<10) {
+					m_buf->Add(tmp.sprintf(_T("&%u: %s\t\t%s"),
+							(i + 1)%10, get_base_name(lst->Strings[i]).c_str(), lst->Strings[i].c_str()));
+				}
+				else {
+					m_buf->Add(tmp.sprintf(_T("%s\t\t%s"),
+							get_base_name(lst->Strings[i]).c_str(), lst->Strings[i].c_str()));
+				}
+			}
+			m_buf->Add("-");
+			m_buf->Add("(&S) アイコンファイルを選択");
+			m_buf->Add(tmp.sprintf(_T("(&R) デフォルトアイコンに戻す\t\t%s"), DefFldIcoName.c_str()));
+			m_buf->Add("-");
+			m_buf->Add("(&D) デフォルトアイコンを選択");
+			m_buf->Add("(&Z) デフォルトアイコンを標準に戻す");
+			ExePopMenuList(m_buf.get(), true);
+			Application->ProcessMessages();
+			int idx = PopMenuIndex;	if (idx==-1) SkipAbort();
+			if		(idx<lst->Count) 			ActionParam = lst->Strings[idx];
+			else if (idx==(m_buf->Count - 1))	ActionParam = "RD";
+			else if (idx==(m_buf->Count - 2))	ActionParam = "SD";
+			else if (idx==(m_buf->Count - 4))	ActionParam = "RS";
+			else if (idx==(m_buf->Count - 5))	ActionParam = EmptyStr;
+			else SkipAbort();
+		}
+
+		if (TEST_ActParam("RD")) {
+			DefFldIcoName = EmptyStr;
+		}
+		else if (TEST_ActParam("SD")) {
+			UserModule->PrepareOpenDlg(_T("デフォルトのフォルダアイコンを選択"), F_FILTER_ICO, NULL, IconFilePath);
+			if (!UserModule->OpenDlg->Execute()) SkipAbort();
+			UnicodeString inam = UserModule->OpenDlg->FileName;
+			IconFilePath = ExtractFilePath(inam);
+			inam = to_relative_name(inam);
+			DefFldIcoName = inam;
+		}
+		else {
+			if (!IsCurFList())		UserAbort(USTR_CantOperate);
+			if (!TestCurIncDir())	UserAbort(USTR_NoObject);
+
+			TStringList *lst = GetCurList(true);
+			int sel_cnt = GetSelCount(lst);
+			int cur_idx = FileListBox[CurListTag]->ItemIndex;
+			//デフォルトに戻す
+			if (TEST_ActParam("RS")) {
+				for (int i=0; i<lst->Count; i++) {
+					file_rec *fp = (file_rec*)lst->Objects[i];
+					if (fp->is_up || !fp->is_dir) continue;
+					if (fp->selected || (sel_cnt==0 && i==cur_idx)) {
+						set_FolderIcon(fp->f_name);
+						fp->selected = false;
+					}
+				}
+			}
+			//アイコンを設定
+			else {
+				UnicodeString inam;
+				if (!ActionParam.IsEmpty()) {
+					inam = rel_to_absdir(get_actual_name(ActionParam));
+					if (!file_exists(inam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("アイコンファイル")));
+				}
+				else {
+					UserModule->PrepareOpenDlg(_T("フォルダアイコンの指定"), F_FILTER_ICO, NULL, IconFilePath);
+					if (!UserModule->OpenDlg->Execute()) SkipAbort();
+					inam = UserModule->OpenDlg->FileName;
+					IconFilePath = ExtractFilePath(inam);
+				}
+
+				if (inam.IsEmpty()) SkipAbort();
+
+				for (int i=0; i<lst->Count; i++) {
+					file_rec *fp = (file_rec*)lst->Objects[i];
+					if (fp->is_up || !fp->is_dir) continue;
+					if (fp->selected || (sel_cnt==0 && i==cur_idx)) {
+						set_FolderIcon(fp->f_name, inam);
+						fp->selected = false;
+					}
+				}
+			}
+		}
+		::PostMessage(Handle, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SetFolderIconActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = ScrMode==SCMD_FLIST;
+	ap->Enabled = ap->Visible && IsPrimary;
+}
+
+//---------------------------------------------------------------------------
+//フォントサイズを変更
+//---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetFontSizeActionExecute(TObject *Sender)
 {
 	bool x_sw = remove_top_s(ActionParam, '^');
@@ -22072,7 +22238,14 @@ void __fastcall TNyanFiForm::ShowHideAtrActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ShowIconActionExecute(TObject *Sender)
 {
-	SetToggleAction(ShowIcon);
+	if (TEST_ActParam("FD")) {
+		IconMode = (IconMode==0)? 1 : (IconMode==1)? 2 : 1;
+	}
+	else {
+		bool sw = (IconMode>0);
+		SetToggleAction(sw);
+		IconMode = sw? 1 : 0;
+	}
 
 	for (int i=0; i<MAX_FILELIST; i++) {
 		SetFlItemWidth(GetFileList(i), i);
@@ -22084,7 +22257,7 @@ void __fastcall TNyanFiForm::ShowIconActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::ShowIconActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Visible = ScrMode==SCMD_FLIST;
-	((TAction*)Sender)->Checked = ShowIcon;
+	((TAction*)Sender)->Checked = (IconMode>0);
 }
 
 //---------------------------------------------------------------------------
@@ -33949,45 +34122,6 @@ void __fastcall TNyanFiForm::PreviewImageMouseUp(TObject *Sender, TMouseButton B
 void __fastcall TNyanFiForm::GrepRepComboBoxEnter(TObject *Sender)
 {
 	UpdateActions();
-}
-
-//---------------------------------------------------------------------------
-//リポジトリ内の変更ファイルを選択
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::SelGitChangedActionExecute(TObject *Sender)
-{
-	try {
-		if (!IsCurFList()) UserAbort(USTR_CantOperate);
-		if (get_GitTopPath(CurPath[CurListTag]).IsEmpty())
-			TextAbort(_T("Gitの作業ディレクトリではありません。"));
-
-		std::unique_ptr<TStringList> glst(new TStringList());
-		SetDirWatch(false);
-		int cnt = get_GitChangedList(CurPath[CurListTag], glst.get());
-		SetDirWatch(true);
-		if (cnt==-1) UserAbort(USTR_FaildProc);
-		if (cnt==0)  Abort();
-
-		TStringList *lst = GetCurList(true);
-		int top_idx = -1;
-		for (int i=0; i<lst->Count; i++) {
-			file_rec *fp = (file_rec*)lst->Objects[i];
-			fp->selected = (glst->IndexOf(fp->f_name)!=-1);
-			if (fp->selected && top_idx==-1) top_idx = i;
-		}
-		FileListBox[CurListTag]->ItemIndex = top_idx;
-		RepaintList(CurListTag);
-	}
-	catch (EAbort &e) {
-		SetActionAbort(e.Message);
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::SelGitChangedActionUpdate(TObject *Sender)
-{
-	TAction *ap = (TAction*)Sender;
-	ap->Visible = ScrMode==SCMD_FLIST;
-	ap->Enabled = ap->Visible && GitExists;
 }
 //---------------------------------------------------------------------------
 

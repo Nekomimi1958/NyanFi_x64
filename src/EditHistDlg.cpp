@@ -712,7 +712,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 		//ファイル名の共通処理
 		if (ACol==1) {
 			//アイコン
-			if (ShowIcon) {
+			if (IconMode>0) {
 				draw_SmallIcon(fp, cv, xp, std::max(yp + (cv->TextHeight("Q") - SIcoSize)/2, 0));
 				xp += get_IcoWidth();
 			}
@@ -727,7 +727,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 				//ディレクトリ
 				UnicodeString bnam;
 				if (fp->is_dir) {
-					bnam = (fp->is_dir && !ShowIcon)? (DirBraStr + fp->b_name + DirKetStr) : fp->b_name;
+					bnam = (fp->is_dir && IconMode==0)? (DirBraStr + fp->b_name + DirKetStr) : fp->b_name;
 					bnam = minimize_str(bnam, cv, Rect.Right - xp - mgn, OmitEndOfName);
 					cv->TextOut(xp, yp, bnam);
 				}
@@ -759,7 +759,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 				cv->Font->Color = col_f;
 				UnicodeString bnam;
 				if (NoSpaceFExt || fp->is_dir) {
-					bnam = (fp->is_dir && !ShowIcon)? (DirBraStr + fp->b_name + DirKetStr) : fp->b_name;
+					bnam = (fp->is_dir && IconMode==0)? (DirBraStr + fp->b_name + DirKetStr) : fp->b_name;
 					bnam = minimize_str(bnam, cv, Rect.Right - xp - get_TextWidth(cv, fp->f_ext, is_irreg) - mgn, OmitEndOfName);
 					cv->TextOut(xp, yp, bnam);
 					xp += get_TextWidth(cv, bnam, is_irreg);

@@ -137,7 +137,7 @@ void __fastcall TFileExtensionDlg::FormShow(TObject *Sender)
 
 	//ヘッダを初期化
 	InitializeListHeader(FextInfHeader, _T("拡張子|ファイル数|合計サイズ|平均サイズ"));
-	FExtSctWd = get_CharWidth(cv, 14, ScaledInt(ShowIcon? 20 : 0));	//" .XXXXXXXXXXXX" 
+	FExtSctWd = get_CharWidth(cv, 14, ScaledInt((IconMode>0)? 20 : 0));	//" .XXXXXXXXXXXX" 
 	FCntSctWd = get_CharWidth(cv, 10);	//" 9,999,999"
 	SizeSctWd = get_CharWidth(cv, 13);	//" 1999.999 MB "
 	PercSctWd = get_CharWidth(cv,  8);	//" 100.0% "
@@ -574,14 +574,14 @@ void __fastcall TFileExtensionDlg::InfoListBoxDrawItem(TWinControl *Control, int
 
 	UnicodeString fext = FextInfoList->Strings[Index];
 	//アイコン
-	if (ShowIcon) {
+	if (IconMode>0) {
 		HICON hIcon = get_fext_icon(fext);
 		if (hIcon) ::DrawIconEx(cv->Handle, xp, yp, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
 	}
 
 	//拡張子
 	cv->Font->Color = get_ExtColor(fext);
-	int i_w = ScaledInt(ShowIcon? 20 : 0);
+	int i_w = ScaledInt(IconMode>0? 20 : 0);
 	cv->TextOut(xp + i_w, yp, minimize_str(fext, cv, FExtSctWd - i_w, true));
 	xp += FExtSctWd - 8;
 

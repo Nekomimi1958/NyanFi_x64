@@ -114,6 +114,7 @@ extern FUNC_GetFontResourceInfo lpGetFontResourceInfo;
 #define TMP_ARC_P	"ARC~????"			//アーカイブ用一時ディレクトリの検索パターン
 #define TMP_FTP_D	"FTP~0000"			//FTP用一時ディレクトリ
 
+#define FICO_INI_FILE "FolderIcon.INI"	//フォルダアイコン定義
 #define HILT_INI_FILE "Highlight.INI"	//構文強調表示定義
 #define DIR_HIST_FILE "DirHistory.INI"	//ディレクトリ全体履歴
 #define CALC_INI_FILE "Calculator.INI"	//電卓の定義
@@ -308,7 +309,6 @@ extern int  CalcTag;
 extern bool MultiInstance;
 extern bool CloseOthers;
 extern bool StoreTaskTray;
-extern bool ShowIcon;
 extern bool ShowDirType;
 extern bool ShowSpace;
 extern bool UseIndIcon;
@@ -453,6 +453,7 @@ extern UnicodeString MarkImgPath;
 extern UnicodeString MarkImgFExt;
 extern UnicodeString MarkImgMemo;
 
+extern int  IconMode;
 extern int  ScrBarStyle;
 
 extern bool ModalScreen;
@@ -690,7 +691,13 @@ extern UnicodeString TabGroupName;
 
 extern TStringList *CachedIcoList;
 extern TMultiReadExclusiveWriteSynchronizer *IconRWLock;
-extern int  IconCache;
+extern int IconCache;
+
+extern UsrIniFile  *FolderIconFile;
+extern TStringList *FolderIconList;
+extern TMultiReadExclusiveWriteSynchronizer *FldIcoRWLock;
+extern UnicodeString DefFldIcoName;
+extern TIcon *DefFolderIcoon;
 
 extern TStringList *GeneralIconList;
 extern TStringList *MenuBtnIcoList;
@@ -1665,7 +1672,9 @@ __int64 get_ArcDirSize(UnicodeString anam, UnicodeString dnam, int *f_cnt, int *
 
 void del_CachedIcon(UnicodeString fnam);
 HICON get_fext_icon(UnicodeString fext = EmptyStr);
-bool draw_SmallIcon(file_rec *fp,       TCanvas *cv, int x, int y, bool force_cache = false);
+HICON get_folder_icon(UnicodeString dnam = EmptyStr);
+
+bool draw_SmallIcon(file_rec *fp, TCanvas *cv, int x, int y, bool force_cache = false);
 bool draw_SmallIcon2(UnicodeString fnam, TCanvas *cv, int x, int y);
 int  add_IconImage(UnicodeString fnam, TImageList *lst);
 
@@ -1692,6 +1701,15 @@ int  get_ViewCount();
 
 bool delete_File(UnicodeString fnam, bool use_trash = false);
 void delete_FileIf(UnicodeString fnam);
+
+bool move_FileT(UnicodeString old_nam, UnicodeString new_nam);
+
+void move_FolderIcon(UnicodeString old_dnam, UnicodeString new_dnam);
+void copy_FolderIcon(UnicodeString src_dnam, UnicodeString dst_dnam);
+UnicodeString get_FolderIconName(UnicodeString dnam);
+void set_FolderIcon(UnicodeString dnam, UnicodeString inam = EmptyStr);
+void get_FolderIconList(TStringList *lst);
+void chk_FolderIcon();
 
 TStringDynArray get_AssociatedApps(UnicodeString fext);
 void make_AssoMenuList(TStringDynArray app_lst, TStringList *lst);
@@ -1773,7 +1791,7 @@ void ClearNopStt();
 
 void LoadOptions();
 void SaveOptions();
-void UpdateIniFile();
+void UpdateIniFile(UsrIniFile *ini_file);
 
 void BringOptionByTag(TForm *fp);
 int  GetOptionIntDef(int tag);

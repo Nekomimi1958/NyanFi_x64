@@ -162,7 +162,6 @@ int  CalcTag;
 bool MultiInstance;				//二重起動を許す
 bool CloseOthers;				//他のNyanFiを終了
 bool StoreTaskTray;				//最小化時にタスクトレイに格納
-bool ShowIcon;					//アイコンを表示
 bool ShowDirType;				//DIR種別を表示
 bool ShowSpace;					//空白を表示
 bool UseIndIcon;				//ファイル固有のアイコンを使用
@@ -307,6 +306,7 @@ bool InheritDotNyan;			//上位ディレクトリから .nyanfi を継承
 bool DotNyanPerUser;			//ユーザ名別に .nyanfi を作成
 
 int  ScrBarStyle;				//スクロールバー・スタイル
+int  IconMode;					//アイコンの表示モード	0:非表示/ 1:表示/ 2:ディレクトリのみ表示
 
 bool ModalScreen;				//モーダル表示効果
 int  ModalScrAlpha;
@@ -545,8 +545,15 @@ TStringList *CachedIcoList;
 TMultiReadExclusiveWriteSynchronizer *IconRWLock;
 int IconCache;							//アイコンキャシュ数
 
+//フォルダアイコン
+UsrIniFile  *FolderIconFile;			//フォルダアイコン設定ファイル
+TStringList *FolderIconList;			//フォルダアイコンリスト
+TMultiReadExclusiveWriteSynchronizer *FldIcoRWLock;
+UnicodeString DefFldIcoName;			//デフォルトのフォルダアイコン
+TIcon *DefFolderIcoon;
+
 TStringList *GeneralIconList;			//ファイルリスト表示用の一般アイコン
-TStringList *MenuBtnIcoList;			//
+TStringList *MenuBtnIcoList;
 
 TStringList *UsrIcoList;				//メニュー、ツールボタン用アイコン
 TStringList *DrvIcoList;				//ドライブのアイコンリスト
@@ -1159,6 +1166,11 @@ void InitializeGlobal()
 	mute_Volume("GET");	//ミュート状態を取得
 
 	//廃止セクション、キーの削除、修正
+	if (IniFile->KeyExists(SCT_Option,	"ShowIcon")) {		//v13.17
+		IniFile->WriteBool(SCT_Option,	"IconMode", IniFile->ReadBool(SCT_Option, "ShowIcon")? 1 : 0);
+		IniFile->DeleteKey(SCT_Option,	"ShowIcon");
+	}
+
 	IniFile->DeleteKey(SCT_General, "FindKeyTwoStr");		//v12.87
 	IniFile->DeleteKey(SCT_Option,	"OneStepInDblPg");		//v12.80
 	IniFile->DeleteKey(SCT_Option,	"SkipInfIfKey");		//v12.72
@@ -1248,11 +1260,13 @@ void InitializeGlobal()
 	ViewFileList	  = CreStringList(GENLST_FILELIST);
 	WorkList		  = CreStringList(GENLST_FILELIST);
 	LaunchList		  = CreStringList(GENLST_FILELIST);
+
 	GeneralIconList	  = CreStringList(GENLST_ICON);
 	CachedIcoList	  = CreStringList(GENLST_ICON);
 	MenuBtnIcoList	  = CreStringList(GENLST_ICON);
 	UsrIcoList		  = CreStringList(GENLST_ICON);
 	DrvIcoList		  = CreStringList(GENLST_ICON);
+
 	FontList		  = CreStringList(GENLST_FONT);
 	CmdFileList 	  = CreStringList(GENLST_CMDSLIST);
 	TabList 		  = CreStringList(GENLST_TABLIST);
@@ -1312,6 +1326,13 @@ void InitializeGlobal()
 	CnvCharList 	  = CreStringList();
 	LogBufList		  = CreStringList();
 	HideInfItems	  = CreStringList();
+
+	//フォルダアイコン定義
+	FolderIconFile = new UsrIniFile(ExePath + FICO_INI_FILE);
+	FolderIconList = CreStringList();
+	DefFolderIcoon = new TIcon();
+	FolderIconFile->ReadSection("FolderIcon", FolderIconList);
+	DefFldIcoName  = FolderIconFile->ReadString(SCT_Option, "DefFldIcoName");
 
 	//コマンドリストを作成
 	CommandList = CreStringList();
@@ -1519,6 +1540,7 @@ void InitializeGlobal()
 		{_T("MaxLogFiles=5"),				(TObject*)&MaxLogFiles},
 		{_T("BatLowerLimit=50"),			(TObject*)&BatLowerLimit},
 		{_T("ScrBarStyle=0"),				(TObject*)&ScrBarStyle},
+		{_T("IconMode=0"),					(TObject*)&IconMode},
 		{_T("ModalScrAlpha=64"),			(TObject*)&ModalScrAlpha},
 		{_T("BgImgMode=0"),					(TObject*)&BgImgMode},
 		{_T("BgImgSubMode=0"),				(TObject*)&BgImgSubMode},
@@ -1551,7 +1573,6 @@ void InitializeGlobal()
 		{_T("MultiInstance=false"),			(TObject*)&MultiInstance},
 		{_T("CloseOthers=false"),			(TObject*)&CloseOthers},
 		{_T("StoreTaskTray=false"),			(TObject*)&StoreTaskTray},
-		{_T("ShowIcon=false"),		 		(TObject*)&ShowIcon},
 		{_T("ShowDirType=false"),	 		(TObject*)&ShowDirType},
 		{_T("ShowSpace=false"),		 		(TObject*)&ShowSpace},
 		{_T("UseIndIcon=true"),		 		(TObject*)&UseIndIcon},
@@ -2061,6 +2082,9 @@ void EndGlobal()
 	}
 	delete GeneralList;
 
+	delete DefFolderIcoon;
+	delete FolderIconFile;
+
 	for (int i=0; i<MAX_BGIMAGE; i++) delete BgImgBuff[i];
 
 	delete usr_Migemo;
@@ -2373,19 +2397,27 @@ void SaveOptions()
 		IniFile->WriteString(sct, key.sprintf(_T("Condition%u"), i + 1),	Timer_Condition[i]);
 		IniFile->WriteString(sct, key.sprintf(_T("OnTimer%u"), i + 1),		OnTimerEvent[i]);
 	}
+
+	//フォルダアイコン
+	FldIcoRWLock->BeginWrite();
+	FolderIconList->Sort();
+	FolderIconFile->AssignSection("FolderIcon", FolderIconList);
+	FldIcoRWLock->EndWrite();
+
+	FolderIconFile->WriteString(SCT_Option, "DefFldIcoName",	DefFldIcoName);
 }
 
 //---------------------------------------------------------------------------
 //INIファイルを更新
 //---------------------------------------------------------------------------
-void UpdateIniFile()
+void UpdateIniFile(UsrIniFile *ini_file)
 {
-	if (IniFile->Modified) {
-		UnicodeString msg = make_LogHdr(_T("SAVE"), IniFile->FileName);
-		if (!IniFile->UpdateFile()) {
-			UnicodeString errmsg = LoadUsrMsg(USTR_FaildSave, _T("INIファイル"));
+	if (ini_file->Modified) {
+		UnicodeString msg = make_LogHdr(_T("SAVE"), ini_file->FileName);
+		if (!ini_file->UpdateFile()) {
+			UnicodeString errmsg = LoadUsrMsg(USTR_FaildSave, ExtractFileName(ini_file->FileName));
 			msgbox_ERR(errmsg);
-			set_LogErrMsg(msg, errmsg, IniFile->FileName);
+			set_LogErrMsg(msg, errmsg, ini_file->FileName);
 		}
 		AddLog(msg);
 	}
@@ -5395,7 +5427,7 @@ void set_FextWidth(file_rec *fp, int tag)
 	TCanvas *cv = FileListBox[tag]->Canvas;
 	flist_stt *lst_stt = &ListStt[tag];
 
-	int x_base = ScaledInt(ShowIcon? 20 : 8);
+	int x_base = ScaledInt((IconMode>0)? 20 : 8);
 	int w_mx_f = std::min(lst_stt->lxp_size - x_base - lst_stt->lwd_half * 9, lst_stt->lwd_fext_max);
 
 	lst_stt->lwd_fext = std::max(lst_stt->lwd_fext, get_TextWidth(cv, fp->f_ext, IsIrregularFont(cv->Font)));
@@ -5979,6 +6011,39 @@ HICON get_fext_icon(
 }
 
 //---------------------------------------------------------------------------
+//フォルダアイコンを取得
+//---------------------------------------------------------------------------
+HICON get_folder_icon(UnicodeString dnam)
+{
+	HICON hIcon = NULL;
+
+	UnicodeString fnam = rel_to_absdir(get_actual_name(DefFldIcoName));
+
+	FldIcoRWLock->BeginWrite();
+	int idx = FolderIconList->IndexOfName(ExcludeTrailingPathDelimiter(dnam));
+	if (idx!=-1) fnam = rel_to_absdir(get_actual_name(FolderIconList->ValueFromIndex[idx]));
+	FldIcoRWLock->EndWrite();
+
+	if (!fnam.IsEmpty()) {
+		IconRWLock->BeginWrite();
+		{
+			int idx = CachedIcoList->IndexOf(fnam);
+			if (idx!=-1) {
+				TIcon *icon = (TIcon*)CachedIcoList->Objects[idx];
+				if (icon) hIcon = icon->Handle;
+			}
+			else
+				CachedIcoList->Add(fnam);	//スレッドに取得を要求
+		}
+		IconRWLock->EndWrite();
+	}
+
+	if (!hIcon) hIcon = get_fext_icon();
+
+	return hIcon;
+}
+
+//---------------------------------------------------------------------------
 //スモールアイコンを描画 (スレッドで取得)
 //  CachedIcoList を使用
 //  ジャンクション/シンボリックリンクにも対応
@@ -5994,8 +6059,9 @@ bool draw_SmallIcon(
 	bool handled = false;
 
 	//通常ディレクトリ
-	if (fp->is_dir && !fp->is_sym)
-		hIcon = get_fext_icon();
+	if (fp->is_dir && !fp->is_sym) {
+		hIcon = get_folder_icon(fp->f_name);
+	}
 	else {
 		UnicodeString fext = LowerCase(fp->f_ext);
 		//実ファイル依存
@@ -6049,8 +6115,9 @@ bool draw_SmallIcon2(
 	if (fnam.Pos('*')==1) fnam = EmptyStr;
 
 	//ディレクトリ
-	if (ends_PathDlmtr(fnam))
-		hIcon = get_fext_icon();
+	if (ends_PathDlmtr(fnam)) {
+		hIcon = get_folder_icon(fnam);
+	}
 	//実ファイル依存
 	else if (test_FileExt(fext, FEXT_INDIVICO)) {
 		if (!fnam.IsEmpty()) {
@@ -6149,6 +6216,9 @@ UnicodeString get_file_from_cmd(UnicodeString s)
 		 || remove_top_text(cmd, _T("FileRun_")) || remove_top_text(cmd, _T("FileEdit_")))
 	{
 		fnam = get_actual_name(exclude_quot(cmd));
+	}
+	else if (remove_top_text(cmd, _T("SetFolderIcon_"))) {
+		fnam = rel_to_absdir(get_actual_name(exclude_quot(cmd)));
 	}
 	else if (USAME_TI(cmd, "CommandPrompt")) fnam.USET_T("%ComSpec%");
 	else if (USAME_TI(cmd, "OpenByExp"))	 fnam.USET_T("%windir%\\explorer.exe");
@@ -8465,6 +8535,148 @@ bool delete_File(
 void delete_FileIf(UnicodeString fnam)
 {
 	if (file_exists(fnam)) delete_File(fnam);
+}
+
+//---------------------------------------------------------------------------
+//ファイルの移動(タグ/フォルダアイコンを考慮)
+//---------------------------------------------------------------------------
+bool move_FileT(UnicodeString old_nam, UnicodeString new_nam)
+{
+	bool res = ::MoveFileEx(cv_ex_filename(old_nam).c_str(), cv_ex_filename(new_nam).c_str(),
+				MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED | MOVEFILE_WRITE_THROUGH);
+
+	if (res) {
+		if (usr_TAG) usr_TAG->Rename(old_nam, new_nam);
+		move_FolderIcon(old_nam, new_nam);
+	}
+
+	return res;
+}
+
+//---------------------------------------------------------------------------
+//フォルダアイコンの移動
+//---------------------------------------------------------------------------
+void move_FolderIcon(UnicodeString old_dnam, UnicodeString new_dnam)
+{
+	old_dnam = ExcludeTrailingPathDelimiter(old_dnam);
+	new_dnam = ExcludeTrailingPathDelimiter(new_dnam);
+
+	FldIcoRWLock->BeginWrite();
+	int idx = FolderIconList->IndexOfName(old_dnam);
+	if (idx!=-1) {
+		FolderIconList->Strings[idx] = new_dnam + "=" + FolderIconList->ValueFromIndex[idx];
+	}
+	FldIcoRWLock->EndWrite();
+}
+//---------------------------------------------------------------------------
+//フォルダアイコンのコピー
+//---------------------------------------------------------------------------
+void copy_FolderIcon(UnicodeString src_dnam, UnicodeString dst_dnam)
+{
+	src_dnam = ExcludeTrailingPathDelimiter(src_dnam);
+	dst_dnam = ExcludeTrailingPathDelimiter(dst_dnam);
+
+	FldIcoRWLock->BeginWrite();
+	int idx = FolderIconList->IndexOfName(src_dnam);
+	if (idx!=-1) {
+		FolderIconList->Add(dst_dnam + "=" + FolderIconList->ValueFromIndex[idx]);
+	}
+	FldIcoRWLock->EndWrite();
+}
+
+//---------------------------------------------------------------------------
+//フォルダアイコンファイルの取得
+//---------------------------------------------------------------------------
+UnicodeString get_FolderIconName(UnicodeString dnam)
+{
+	UnicodeString inam;
+	FldIcoRWLock->BeginWrite();
+	int idx = FolderIconList->IndexOfName(ExcludeTrailingPathDelimiter(dnam));
+	if (idx!=-1) {
+		inam = rel_to_absdir(get_actual_name(FolderIconList->ValueFromIndex[idx]));
+	}
+	FldIcoRWLock->EndWrite();
+	return inam;
+}
+
+//---------------------------------------------------------------------------
+//フォルダアイコンの設定
+//---------------------------------------------------------------------------
+void set_FolderIcon(
+	UnicodeString dnam,		//ディレクトリ名
+	UnicodeString inam)		//アイコンファイル名	(default = EmptyStr : 解除)
+{
+	dnam = ExcludeTrailingPathDelimiter(dnam);
+
+	//解除
+	if (inam.IsEmpty()) {
+		FldIcoRWLock->BeginWrite();
+		int idx = FolderIconList->IndexOfName(dnam);
+		if (idx!=-1) FolderIconList->Delete(idx);
+		FldIcoRWLock->EndWrite();
+	}
+	//設定
+	else {
+		UnicodeString lbuf = dnam + "=" + to_relative_name(inam);
+		FldIcoRWLock->BeginWrite();
+		int idx = FolderIconList->IndexOfName(dnam);
+		if (idx==-1)
+			FolderIconList->Add(lbuf);
+		else
+			FolderIconList->Strings[idx] = lbuf;
+		FldIcoRWLock->EndWrite();
+	}
+}
+
+//---------------------------------------------------------------------------
+//フォルダアイコン一覧を取得
+//---------------------------------------------------------------------------
+void get_FolderIconList(TStringList *lst)
+{
+	lst->Clear();
+	FldIcoRWLock->BeginWrite();
+	for (int i=0; i<FolderIconList->Count; i++) {
+		UnicodeString inam = FolderIconList->ValueFromIndex[i];
+		if (lst->IndexOf(inam)==-1) lst->Add(inam);
+	}
+	FldIcoRWLock->EndWrite();
+
+	for (int i=0; i<lst->Count; i++) {
+		lst->Strings[i] = rel_to_absdir(get_actual_name(lst->Strings[i]));
+	}
+
+	if (lst->Count>1) {
+		lst->Sort();
+		UnicodeString laststr = lst->Strings[0];
+		int i = 1;
+		while (i<lst->Count) {
+			UnicodeString lbuf = lst->Strings[i];
+			if (SameStr(laststr, lbuf)) {
+				lst->Delete(i);
+			}
+			else {
+				laststr = lbuf;
+				i++;
+			}
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
+//存在しないフォルダアイコン設定を整理
+//---------------------------------------------------------------------------
+void chk_FolderIcon()
+{
+	FldIcoRWLock->BeginWrite();
+	int i = 0;
+	while (i<FolderIconList->Count) {
+		UnicodeString dnam = FolderIconList->Names[i];
+		if (!StartsStr("\\\\", dnam) && !is_dir_accessible(dnam))
+			FolderIconList->Delete(i);
+		else i++;
+	}
+	FolderIconList->Sort();
+	FldIcoRWLock->EndWrite();
 }
 
 //---------------------------------------------------------------------------
@@ -11849,6 +12061,7 @@ bool is_OneNrmCmd(
 	UnicodeString cmds,
 	bool no_prm)			//パラメータ無し (default = false)
 {
+	if (cmds.IsEmpty())									return false;
 	if (starts_AT(cmds))	 							return false;
 	if (pos_r_q_colon(cmds)!=0)							return false;
 	if (CommandList->IndexOfName(get_CmdStr(cmds))==-1)	return false;

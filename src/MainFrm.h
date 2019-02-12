@@ -403,6 +403,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *SetColorAction;
 	TAction *SetDirTimeAction;
 	TAction *SetExifTimeAction;
+	TAction *SetFolderIconAction;
 	TAction *SetFontSizeAction;
 	TAction *SetMarginAction;
 	TAction *SetPathMaskAction;
@@ -799,6 +800,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_o_2;
 	TMenuItem *Sep_o_3;
 	TMenuItem *Sep_o_4;
+	TMenuItem *Sep_o_5;
 	TMenuItem *Sep_pt_1;
 	TMenuItem *Sep_pt_2;
 	TMenuItem *Sep_r_1;
@@ -825,6 +827,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *SetAliasItem;
 	TMenuItem *SetColorItem;
 	TMenuItem *SetExifTimeItem;
+	TMenuItem *SetFolderIconItem;
 	TMenuItem *SetTagItem;
 	TMenuItem *SetToolBtnItem;
 	TMenuItem *ShareListItem;
@@ -1810,6 +1813,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SelByListActionExecute(TObject *Sender);
 	void __fastcall SelGitChangedActionExecute(TObject *Sender);
 	void __fastcall SelGitChangedActionUpdate(TObject *Sender);
+	void __fastcall SetFolderIconActionExecute(TObject *Sender);
+	void __fastcall SetFolderIconActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

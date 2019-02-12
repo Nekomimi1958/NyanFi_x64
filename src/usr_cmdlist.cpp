@@ -203,6 +203,7 @@ void set_CmdList(
 		"F:SetArcTime=アーカイブのタイムスタンプを最新に合わせる\n"
 		"F:SetDirTime=ディレクトリのタイムスタンプを最新に合わせる\n"
 		"F:SetExifTime=タイムスタンプをExif撮影日時に設定\n"
+		"F:SetFolderIcon=フォルダアイコンの設定\n"
 		"F:SetPathMask=パスマスクを設定\n"
 		"F:SetSttBarFmt=ステータスバー書式を設定\n"
 		"F:SetSubSize=サブウィンドウのサイズを設定\n"
@@ -872,6 +873,12 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "SetColor")) {
 		params.USET_T("\nRS : 配色をリセット\n");
 	}
+	else if (USAME_TI(cmd, "SetFolderIcon")) {
+		params.sprintf(_T("%s"),
+			_T("\n")
+			_T("ND : ポップアップメニューで選択\n")
+			_T("RS : デフォルトアイコンに戻す\n"));
+	}
 	else if (USAME_TI(cmd, "SetPathMask")) {
 		params.USET_T("\nEX : カーソル位置の拡張子でマスク\n");
 	}
@@ -999,6 +1006,8 @@ void get_PrmList(
 		params.USET_T("\nON : 表示/有効\nOFF : 非表示/無効/解除\n");
 		if (USAME_TI(cmd, "SubViewer"))
 			params.UCAT_T("LK : ロック/解除\nRL : 左に90度回転\nRR : 右に90度回転\nFH : 左右反転\nFV : 上下反転\n");
+		if (USAME_TI(cmd, "ShowIcon"))
+			params.UCAT_T("FD : 全表示/フォルダアイコンのみ表示\n");
 	}
 	//オプション設定
 	else if (USAME_TI(cmd, "OptionDlg")) {
@@ -1035,7 +1044,8 @@ bool need_RefDirFile(UnicodeString cmd)
 		_T("CalcDirSize|CalcDirSizeAll|ChangeDir|ChangeOppDir|ContextMenu|CopyTo|DebugCmdFile|DistributionDlg|")
 		_T("ExeCommands|ExeMenuFile|FileEdit|FileRun|JumpTo|ListArchive|ListDuration|ListExpFunc|ListTail|")
 		_T("ListText|ListTree|LoadBgImage|LoadTabGroup|LoadResultList|LoadWorkList|MoveTo|OpenByApp|OpenByExp|")
-		_T("OpenByWin|OpenStandard|PropertyDlg|PlayList|TextViewer|SelByList|SetColor|SubDirList|HelpCurWord|Restart"),
+		_T("OpenByWin|OpenStandard|PropertyDlg|PlayList|TextViewer|SelByList|SetColor|SetFolderIcon|SubDirList|")
+		_T("HelpCurWord|Restart"),
 		cmd);
 }
 

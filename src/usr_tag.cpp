@@ -657,17 +657,4 @@ void TagManager::DrawTags(
 
 	if (!tag_opt.IsEmpty()) cv->TextOut(x, y, tag_opt);
 }
-
-//---------------------------------------------------------------------------
-//ファイルの移動(タグを考慮)
-//---------------------------------------------------------------------------
-bool move_FileT(UnicodeString old_nam, UnicodeString new_nam)
-{
-	bool res = ::MoveFileEx(cv_ex_filename(old_nam).c_str(), cv_ex_filename(new_nam).c_str(),
-				MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED | MOVEFILE_WRITE_THROUGH);
-
-	if (res && usr_TAG) usr_TAG->Rename(old_nam, new_nam);
-
-	return res;
-}
 //---------------------------------------------------------------------------

@@ -510,7 +510,12 @@ void __fastcall TTaskThread::CPY_core(
 	if (!dir_exists(dst_path)) {
 		msg = make_LogHdr(_T("CREATE"), dst_path, true);
 		SetLastError(NO_ERROR);
-		if (create_ForceDirs(dst_path)) dir_CopyAttr(ExtractFileDir(fnam), dst_path, remove_ro); else set_LogErrMsg(msg);
+		if (create_ForceDirs(dst_path)) {
+			UnicodeString src_dnam = ExtractFileDir(fnam);
+			dir_CopyAttr(src_dnam, dst_path, remove_ro);
+			if (mov_sw) move_FolderIcon(src_dnam, dst_path); else copy_FolderIcon(src_dnam, dst_path);
+		}
+		else set_LogErrMsg(msg);
 		AddLog(msg);
 	}
 
@@ -790,7 +795,11 @@ void __fastcall TTaskThread::Task_CPY(
 			else if (!dir_exists(dst_nam)) {
 				msg = make_LogHdr(_T("CREATE"), dst_nam, true);
 				SetLastError(NO_ERROR);
-				if (create_ForceDirs(dst_nam)) dir_CopyAttr(src_prm, dst_nam, remove_ro); else set_LogErrMsg(msg);
+				if (create_ForceDirs(dst_nam)) {
+					dir_CopyAttr(src_prm, dst_nam, remove_ro);
+					if (mov_sw) move_FolderIcon(src_prm, dst_nam); else copy_FolderIcon(src_prm, dst_nam);
+				}
+				else set_LogErrMsg(msg);
 				AddLog(msg);
 			}
 
@@ -847,6 +856,7 @@ void __fastcall TTaskThread::DEL_dirs(
 			SetLastError(NO_ERROR);
 			if (!EX_set_writable(pnam))	Abort();
 			if (!EX_delete_Dir(pnam))	Abort();
+			set_FolderIcon(pnam);
 			DirDeleted = true;
 		}
 	}

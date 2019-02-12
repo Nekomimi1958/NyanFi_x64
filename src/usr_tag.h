@@ -79,7 +79,4 @@ public:
 extern TagManager *usr_TAG;
 
 //---------------------------------------------------------------------------
-bool move_FileT(UnicodeString old_nam, UnicodeString new_nam);
-
-//---------------------------------------------------------------------------
 #endif

@@ -35,8 +35,8 @@ object DotNyanDlg: TDotNyanDlg
     Caption = 'GREP'#12510#12473#12463
   end
   object TLabel
-    Left = 636
-    Top = 132
+    Left = 346
+    Top = 177
     Width = 11
     Height = 13
     Caption = '%'
@@ -138,20 +138,21 @@ object DotNyanDlg: TDotNyanDlg
   object IconRadioGroup: TRadioGroup
     Left = 207
     Top = 114
-    Width = 224
+    Width = 368
     Height = 41
     Caption = #12450#12452#12467#12531
-    Columns = 3
+    Columns = 5
     Items.Strings = (
       #12381#12398#12414#12414
       #34920#31034
-      #38750#34920#31034)
+      #38750#34920#31034
+      #12501#12457#12523#12480#12398#12415)
     TabOrder = 10
   end
   object HandledCheckBox: TCheckBox
-    Left = 215
-    Top = 177
-    Width = 301
+    Left = 393
+    Top = 176
+    Width = 276
     Height = 17
     Caption = #12300#12459#12524#12531#12488#12398#12487#12451#12524#12463#12488#12522#22793#26356#12301#12452#12505#12531#12488#12434#25233#27490
     TabOrder = 12
@@ -243,9 +244,9 @@ object DotNyanDlg: TDotNyanDlg
     end
   end
   object ListWdEdit: TLabeledEdit
-    Left = 582
-    Top = 129
-    Width = 50
+    Left = 302
+    Top = 174
+    Width = 40
     Height = 21
     Alignment = taRightJustify
     EditLabel.Width = 80

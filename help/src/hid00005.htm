@@ -2030,7 +2030,7 @@ PlayList<span class="pram_text">[_NX|_PR|_PS|_RS|_FI|_LS]</span><br>
 
 <dt id="RegDirPopup">RegDirPopup<span class="pram_text">[_OP]</span>
 <dd><a href="hid00054.htm">登録ディレクトリ</a>を選択するポップアップメニューを表示します。<br>
-パラメータに <b>OP</b> を指定すると、反対側で登録ディレクトリを開きます。無指定の場合、<a href="#RegDirDlg">RegDirDlg</a>_<b>ND</b> と同じです。<br>
+パラメータに <b>OP</b> を指定すると、反対側で登録ディレクトリを開きます。無指定の場合、<a href="#RegDirDlg">RegDirDlg</a>_ND と同じです。<br>
 なお、「<a href="hid00054.htm">登録ディレクトリ</a>」ダイアログの「<b>呼出項目を先頭へ</b>」をチェックしていると、呼び出したディレクトリ項目が先頭に移動します(セパレータがある場合はそのブロックの先頭)。<br>
 <a href="#RegDirDlg">→ RegDirDlg</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>
 
@@ -2238,6 +2238,20 @@ NyanFi.exe -XRegExChecker
 Jpeg だけでなく、HEIF(.heic)や各種RAWファイルにも対応しています(.CRW ではCIFF情報から取得)。<br>
 <a href="#DelJpgExif">→ DelJpgExif</a>
 
+<dt id="SetFolderIcon">SetFolderIcon<span class="pram_text">[_ND|_RS|_ファイル名]</span>
+<dd>選択中(無ければカーソル位置)のディレクトリに対して、表示用のフォルダアイコンを設定します。<br>
+パラメータを指定しない場合、アイコンファイルを選択するダイアログが出ます。<br>
+パラメータでファイル名を直接指定することもできます。ドライブ名がない場合、NyanFi ディレクトリからの相対指定とみなされます。<br>
+パラメータに <b>ND</b> を指定すると、ダイアログの代わりに、すでに用いられているアイコンから選択するポップアップメニューが表示されます(設定解除やデフォルトアイコンの設定も可能)。<br>
+<b>RS</b> を指定すると、デフォルトアイコンに戻ります。<br>
+<div class="spc_box">
+フォルダアイコンについての設定は、実行ディレクトリの <a href="hid00102.htm#FolderIcon">FolderIcon.INI</a> に保存されます。
+</div>
+<div class="spc_box">
+<span class="tips">Tips</span><a href="#ShowIcon">ShowIcon</a>_FD コマンドを用いると、ディレクトリだけにアイコンを表示できます。ファイルの種類を<a href="hid00023.htm#ExtColor">拡張子別配色</a>で区別していれば、この方がすっきりします。<br>
+</div>
+<a href="#ShowIcon">→ ShowIcon</a>
+
 <dt id="SetFontSize">SetFontSize<span class="pram_text">_[^]サイズ</span>
 <dd>フォントサイズをパラメータで指定した値にします。値はポイント単位で 2～72 を指定できます。<br>
 値の先頭に <b>^</b> を付けると、すでにそのサイズなら通常サイズに戻し、そうでなければ指定値に設定します。<br>
@@ -2319,11 +2333,12 @@ SetTag<span class="pram_text">_;</span>
 <a href="hid00009.htm#Show">→ オプション設定 - 一般 - 表示 - 「隠しファイルを表示」</a><br>
 <a href="#ShowSystemAtr">→ ShowSystemAtr</a>
 
-<dt id="ShowIcon">ShowIcon<span class="pram_text">[_ON|_OFF]</span>
+<dt id="ShowIcon">ShowIcon<span class="pram_text">[_ON|_OFF|_FD]</span>
 <dd>パラメータを指定しない場合、アイコンの表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+パラメータに <b>FD</b> を指定すると、全表示/フォルダアイコンのみ表示をトグルで切り替えられます(非表示だった場合は一旦全表示)。<br>
 なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
-<a href="hid00010.htm#ShowIcon">→ オプション設定 - デザイン - 「アイコンを表示」</a><br>
+<a href="hid00010.htm#ShowIcon">→ オプション設定 - デザイン - 「アイコン表示」</a><br>
 
 <dt id="ShowLogWin">ShowLogWin<span class="pram_text">[_ON|_OFF]</span>
 <dd>パラメータを指定しない場合、ログウィンドウの表示/非表示をトグルで切り替えます。<br>
@@ -2512,7 +2527,7 @@ TagSelect<span class="pram_text">_;</span>
 <dd>カーソル位置のアーカイブの正当性を検査してログに結果を表示します。<br>
 アーカイバDLLの t コマンドで得られた結果出力をそのまま表示しています。<br>
 取得用のバッファは1MBにしていますが、ファイル数があまりに多い場合、途中で途切れる可能性があります。<br>
-なお、<b>TAR</b> (tar642.dll)では正当性検査ではなく、<a href="#ListArchive">ListArchive</a> コマンドと同じ一覧が表示されます。また <b>RAR</b> (unrar64j.dll)では現在未実装のようです。<br>
+なお、<b>TAR</b> (tar64.dll)では正当性検査ではなく、<a href="#ListArchive">ListArchive</a> コマンドと同じ一覧が表示されます。また <b>RAR</b> (unrar64j.dll)では現在未実装のようです。<br>
 <a href="#ListArchive">→ ListArchive</a>
 
 <dt id="TextViewer">TextViewer<span class="pram_text">[_ファイル名|_URL|_CB|_XW|_NN]</span><br>

@@ -181,7 +181,7 @@ void __fastcall TDistributionDlg::FormClose(TObject *Sender, TCloseAction &Actio
 	//登録ファイルがない場合、メイン側ではINIファイルに保存
 	else if (IsPrimary) {
 		SaveOptions();
-		UpdateIniFile();
+		UpdateIniFile(IniFile);
 	}
 }
 //---------------------------------------------------------------------------
