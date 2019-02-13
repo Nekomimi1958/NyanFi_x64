@@ -643,6 +643,7 @@ void __fastcall TTaskThread::CPY_core(
 				AddDebugLog("Return");
 				if (res) {
 					usr_TAG->Rename(fnam, dst_fnam);	//タグの移動
+					rename_FolderIcon(fnam, dst_fnam);	//フォルダアイコンの移動
 				}
 				else {
 					if (TaskCancel) Abort(); else throw Exception(EmptyStr);

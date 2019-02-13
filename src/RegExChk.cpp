@@ -81,7 +81,7 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 	ObjMemo->Clear();
 	bool ok = false;
 	FileEdit->Text = IniFile->ReadStrGen(_T("RegExChkFile"));
-	UnicodeString fnam = rel_to_absdir(FileEdit->Text);
+	UnicodeString fnam = to_absolute_name(FileEdit->Text);
 	if (file_exists(fnam)) {
 		std::unique_ptr<TStringList> fbuf(new TStringList());
 		if (load_text_ex(fnam, fbuf.get())) {
@@ -132,7 +132,7 @@ void __fastcall TRegExChecker::FormClose(TObject *Sender, TCloseAction &Action)
 	//検索対象ファイルの更新
 	IniFile->WriteStrGen( _T("RegExChkFile"),	FileEdit->Text);
 	if (!FileEdit->Text.IsEmpty() && UpdtCheckBox->Checked && ObjMemo->Modified) {
-		UnicodeString fnam = rel_to_absdir(FileEdit->Text);
+		UnicodeString fnam = to_absolute_name(FileEdit->Text);
 		if (!saveto_TextFile(fnam, ObjMemo->Lines)) msgbox_ERR(USTR_FaildSave);
 	}
 
@@ -340,7 +340,7 @@ void __fastcall TRegExChecker::RefFileBtnClick(TObject *Sender)
 {
 	UserModule->PrepareOpenDlg(_T("検索対象の指定"), F_FILTER_TXT, _T("*.txt"));
 	if (UserModule->OpenDlgToEdit(FileEdit, true)) {
-		UnicodeString fnam = rel_to_absdir(FileEdit->Text);
+		UnicodeString fnam = to_absolute_name(FileEdit->Text);
 		if (file_exists(fnam)) {
 			std::unique_ptr<TStringList> fbuf(new TStringList());
 			if (load_text_ex(fnam, fbuf.get()))

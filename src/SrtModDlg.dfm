@@ -5,7 +5,7 @@ object SortModeDlg: TSortModeDlg
   BorderStyle = bsDialog
   Caption = #12477#12540#12488
   ClientHeight = 342
-  ClientWidth = 234
+  ClientWidth = 254
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
@@ -21,18 +21,18 @@ object SortModeDlg: TSortModeDlg
   object ModePanel: TPanel
     Left = 0
     Top = 0
-    Width = 234
+    Width = 254
     Height = 208
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     DesignSize = (
-      234
+      254
       208)
     object SortModeRadioGroup: TRadioGroup
       Left = 8
       Top = 8
-      Width = 218
+      Width = 238
       Height = 192
       Anchors = [akLeft, akTop, akRight]
       Caption = #12477#12540#12488#26041#27861
@@ -51,7 +51,7 @@ object SortModeDlg: TSortModeDlg
     object GroupBox1: TGroupBox
       Left = 118
       Top = 25
-      Width = 95
+      Width = 108
       Height = 52
       TabOrder = 1
       object DscNameCheckBox: TCheckBox
@@ -104,30 +104,29 @@ object SortModeDlg: TSortModeDlg
   object DirOptPanel: TPanel
     Left = 0
     Top = 208
-    Width = 234
+    Width = 254
     Height = 91
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 180
     object DirSortModeGroupBox: TGroupBox
       Left = 8
       Top = 4
-      Width = 218
+      Width = 238
       Height = 50
       Caption = #12487#12451#12524#12463#12488#12522#12398#12477#12540#12488#26041#27861
       TabOrder = 0
       object DirSortModeComboBox: TComboBox
         Left = 10
         Top = 18
-        Width = 197
+        Width = 218
         Height = 21
         Style = csDropDownList
         TabOrder = 0
       end
     end
     object SortBothCheckBox: TCheckBox
-      Left = 30
+      Left = 40
       Top = 66
       Width = 139
       Height = 17
@@ -139,14 +138,13 @@ object SortModeDlg: TSortModeDlg
   object BtnPanel: TPanel
     Left = 0
     Top = 300
-    Width = 234
+    Width = 254
     Height = 42
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 275
     object OkButton: TButton
-      Left = 30
+      Left = 40
       Top = 9
       Width = 80
       Height = 26
@@ -156,7 +154,7 @@ object SortModeDlg: TSortModeDlg
       TabOrder = 0
     end
     object CanButton: TButton
-      Left = 123
+      Left = 133
       Top = 9
       Width = 80
       Height = 26

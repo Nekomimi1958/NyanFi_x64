@@ -20,7 +20,7 @@ UnicodeString get_actual_path(UnicodeString pnam);
 UnicodeString get_actual_name(UnicodeString fnam);
 UnicodeString exclude_env_path(UnicodeString fnam);
 UnicodeString to_relative_name(UnicodeString fnam);
-UnicodeString rel_to_absdir(UnicodeString fnam, UnicodeString rnam = EmptyStr);
+UnicodeString to_absolute_name(UnicodeString fnam, UnicodeString rnam = EmptyStr);
 UnicodeString extract_file_path(UnicodeString fnam);
 bool is_same_file(UnicodeString fnam1, UnicodeString fnam2, UnicodeString rnam = EmptyStr);
 bool match_path_list(UnicodeString dnam, UnicodeString plist, bool start_sw = false);

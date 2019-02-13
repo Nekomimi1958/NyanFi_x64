@@ -66,7 +66,7 @@ void __fastcall TFindTagForm::FormShow(TObject *Sender)
 		for (int i=0; i<fbuf->Count; i++) {
 			UnicodeString lbuf = fbuf->Strings[i];
 			if (StartsStr("!", lbuf)) continue;
-			if (!FileName.IsEmpty() && !SameText(FileName, rel_to_absdir(get_tkn(get_tkn_r(lbuf, '\t'), '\t'), rnam))) continue;
+			if (!FileName.IsEmpty() && !SameText(FileName, to_absolute_name(get_tkn(get_tkn_r(lbuf, '\t'), '\t'), rnam))) continue;
 
 			UnicodeString tnam = get_pre_tab(lbuf);
 			if (!SameStr(lst_tag, tnam)) {

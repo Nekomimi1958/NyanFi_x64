@@ -311,7 +311,7 @@ void __fastcall TTxtViewer::SetColor(UnicodeString prm)
 	ColBufList->Clear();
 
 	if (!USAME_TI(prm, "RS")) {
-		UnicodeString fnam = rel_to_absdir(prm);
+		UnicodeString fnam = to_absolute_name(prm);
 		if (file_exists(fnam)) {
 			std::unique_ptr<UsrIniFile> inp_file(new UsrIniFile(fnam));
 			inp_file->ReadSection("Color", ColBufList);
@@ -3327,7 +3327,7 @@ UnicodeString __fastcall TTxtViewer::GetCurImgFile()
 	UnicodeString fnam = GetCurWord(false, "[^\"(=*?<>|i ]+\\.\\w+\\b");
 	remove_top_text(fnam, _T("file:///"));
 	fnam = slash_to_yen(fnam);
-	fnam = rel_to_absdir(fnam, ExtractFilePath(FileName));
+	fnam = to_absolute_name(fnam, ExtractFilePath(FileName));
 	UnicodeString fext = get_extension(fnam);
 	if (test_FileExt(fext, get_img_fext())) return fnam;
 	return EmptyStr;
@@ -4126,7 +4126,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 			SetColor(prm); 
 		else {
 			if (!ColorDlg) ColorDlg = new TColorDlg(Application->MainForm);	//‰‰ñ‚É“®“Iì¬
-			UnicodeString col_fnam = rel_to_absdir(UserHighlight->ReadKeyStr(_T("ColorIniFile")));
+			UnicodeString col_fnam = to_absolute_name(UserHighlight->ReadKeyStr(_T("ColorIniFile")));
 			if (isExtWnd) {
 				TExTxtViewer *xtv = dynamic_cast<TExTxtViewer *>(OwnerForm);
 				if (xtv) {

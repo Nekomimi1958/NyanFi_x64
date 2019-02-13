@@ -1240,7 +1240,7 @@ void __fastcall TOptionDlg::RefSoundBtnClick(TObject *Sender)
 {
 	int tag = ((TComponent*)Sender)->Tag;
 
-	UnicodeString inidir = def_if_empty(ExtractFileDir(rel_to_absdir((tag==0)? SndWarnEdit->Text : SndTaskFinEdit->Text)), ExePath);
+	UnicodeString inidir = def_if_empty(ExtractFileDir(to_absolute_name((tag==0)? SndWarnEdit->Text : SndTaskFinEdit->Text)), ExePath);
 	UserModule->PrepareOpenDlg(_T("サウンドファイルの指定"), F_FILTER_WAV, NULL, inidir);
 
 	UnicodeString fnam;
@@ -1298,7 +1298,7 @@ void __fastcall TOptionDlg::RefBgImgBtnClick(TObject *Sender)
 	TLabeledEdit *ep = (tag==0)? BgImg1Edit : (tag==1)? BgImg2Edit : (tag==2)? SpImgEdit : SpImg2Edit;
 	UserModule->OpenImgDlg->Title = "背景画像の指定";
 	UserModule->SetOpenImgFilter(ep->Text);
-	UserModule->OpenImgDlg->InitialDir = rel_to_absdir(ExtractFilePath(ep->Text));
+	UserModule->OpenImgDlg->InitialDir = to_absolute_name(ExtractFilePath(ep->Text));
 	UserModule->OpenImgDlg->FileName   = EmptyStr;
 	UserModule->OpenImgDlgToEdit(ep, true);
 }
@@ -1310,7 +1310,7 @@ void __fastcall TOptionDlg::ScrBarStyleComboBoxClick(TObject *Sender)
 	if (ScrBarStyleComboBox->ItemIndex==4) {
 		UserModule->OpenImgDlg->Title = "ノブ画像の指定";
 		UserModule->SetOpenImgFilter(KnobImgEdit->Text);
-		UserModule->OpenImgDlg->InitialDir = rel_to_absdir(ExtractFilePath(KnobImgEdit->Text));
+		UserModule->OpenImgDlg->InitialDir = to_absolute_name(ExtractFilePath(KnobImgEdit->Text));
 		UserModule->OpenImgDlg->FileName   = EmptyStr;
 		if (!UserModule->OpenImgDlgToEdit(KnobImgEdit, true)) {
 			ScrBarStyleComboBox->ItemIndex = 0;
@@ -1620,6 +1620,7 @@ void __fastcall TOptionDlg::AddExtColActionExecute(TObject *Sender)
 		UnicodeString s;
 		s.sprintf(_T("0x%06x,%s"), (int)RefExtColPanel->Color, ExtColorEdit->Text.c_str());
 		ExtColListBox->Items->Add(s);
+		ExtColListBox->ItemIndex = ExtColListBox->Count - 1;
 	}
 }
 //---------------------------------------------------------------------------
@@ -2253,14 +2254,15 @@ void __fastcall TOptionDlg::RefCmdsBtnClick(TObject *Sender)
 
 	//通常ファイルの選択
 	if (contained_wd_i(
-		_T("ContextMenu|ExeMenuFile|FileEdit|LoadWorkList|OpenByApp|OpenByWin|OpenStandard|SelByList|TextViewer"), cmd))
+		_T("ContextMenu|ExeMenuFile|FileEdit|LoadWorkList|OpenByApp|OpenByWin|OpenStandard|SelByList|SetFolderIcon|TextViewer"),
+			cmd))
 	{
 		UnicodeString tit = "パラメータの指定" + subtit;
 		UserModule->PrepareOpenDlg(tit.c_str(), F_FILTER_ALL, NULL, RefParamPath);
 		UnicodeString fnam;
 		if (UserModule->OpenDlgToStr(fnam)) {
 			RefParamPath = ExtractFilePath(fnam);
-			if (contained_wd_i(_T("ContextMenu|ExeMenuFile|LoadWorkList|SelByList"), cmd))
+			if (contained_wd_i(_T("ContextMenu|ExeMenuFile|LoadWorkList|SelByList|SetFolderIcon"), cmd))
 				fnam = to_relative_name(fnam);
 			else if (remove_top_text(fnam, ExePath))
 				fnam.Insert("%ExePath%", 1);
@@ -2302,7 +2304,7 @@ void __fastcall TOptionDlg::RefCmdsBtnClick(TObject *Sender)
 void __fastcall TOptionDlg::RefMenuIconBtnClick(TObject *Sender)
 {
 	UserModule->PrepareOpenDlg(_T("アイコンの指定"), F_FILTER_ICO, NULL, IconFilePath);
-	if (UserModule->OpenDlgToEdit(MenuIconEdit, true)) IconFilePath = ExtractFilePath(rel_to_absdir(MenuIconEdit->Text));
+	if (UserModule->OpenDlgToEdit(MenuIconEdit, true)) IconFilePath = ExtractFilePath(to_absolute_name(MenuIconEdit->Text));
 }
 
 //---------------------------------------------------------------------------
@@ -2568,7 +2570,7 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 	//項目
 	else {
 		//アイコン
-		usr_SH->draw_SmallIcon(rel_to_absdir(cv_env_str(itm_buf[is_tool? 1 : 5])), cv, Rect.Left + 2, yp);
+		usr_SH->draw_SmallIcon(to_absolute_name(cv_env_str(itm_buf[is_tool? 1 : 5])), cv, Rect.Left + 2, yp);
 		//キャプション
 		UnicodeString lbuf = minimize_str(itm_buf[0], cv, sp->Items[0]->Width - xp, true);
 		cv->TextOut(xp, yp, lbuf);
@@ -3935,7 +3937,7 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 	if (!SameText(MigemoPath, MigemoDirEdit->Text)) {
 		MigemoPath = to_path_name(MigemoDirEdit->Text);
 		delete usr_Migemo;
-		usr_Migemo = new MigemoUnit(rel_to_absdir(MigemoPath));
+		usr_Migemo = new MigemoUnit(to_absolute_name(MigemoPath));
 		AddLog(tmp.sprintf(_T("  LOAD migemo.dll   %s"), usr_Migemo->DictReady? _T("OK") : _T("NONE")));
 	}
 	usr_Migemo->MinLength = IncSeaMigemoMin;

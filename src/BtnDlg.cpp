@@ -178,12 +178,13 @@ void __fastcall TToolBtnDlg::RefCmdsBtnClick(TObject *Sender)
 void __fastcall TToolBtnDlg::RefIconBtnClick(TObject *Sender)
 {
 	UserModule->PrepareOpenDlg(_T("アイコンの指定"), F_FILTER_ICO, NULL, IconFilePath);
-	if (UserModule->OpenDlgToEdit(IconEdit, true)) IconFilePath = ExtractFilePath(rel_to_absdir(IconEdit->Text));
+	if (UserModule->OpenDlgToEdit(IconEdit, true)) IconFilePath = ExtractFilePath(to_absolute_name(IconEdit->Text));
 }
 //---------------------------------------------------------------------------
 void __fastcall TToolBtnDlg::IconEditChange(TObject *Sender)
 {
-	usr_SH->draw_SmallIcon(rel_to_absdir(get_actual_name(IconEdit->Text)), IcoImage, scl_BtnFace);
+	usr_SH->draw_SmallIcon(to_absolute_name(get_actual_name(IconEdit->Text)), 
+		IcoImage, Mix2Colors(col_bgTlBar1, col_bgTlBar2));
 }
 
 //---------------------------------------------------------------------------
@@ -209,9 +210,11 @@ void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index,
 	TCanvas *cv  = lp->Canvas;
 	cv->Font->Assign(lp->Font);
 	SetHighlight(cv, State.Contains(odSelected));
+	TColor org_bg = cv->Brush->Color;
+	TColor org_fg = cv->Font->Color;
 	cv->FillRect(Rect);
 
-	int x = Rect.Left + 4;
+	int x = Rect.Left + ScaledInt(6);
 	int y = Rect.Top + get_TopMargin(cv);
 
 	TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[Index], 3, true);
@@ -223,9 +226,18 @@ void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index,
 	}
 	//ボタン
 	else {
-		x += 4;
-		if (usr_SH->draw_SmallIcon(rel_to_absdir(get_actual_name(itm_buf[2])), cv, x, y)) x += ScaledInt(18);
+		TRect rc = Rect;
+		rc.Left  = x;
+		rc.Right = BtnCmdsComboBox->Left - ScaledInt(6);
+		cv->Brush->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
+		cv->FillRect(rc);
+		x += Scaled4;
+		if (usr_SH->draw_SmallIcon(to_absolute_name(get_actual_name(itm_buf[2])), cv, x, y)) x += ScaledInt(18);
+		cv->Font->Color = col_fgTlBar;
 		cv->TextOut(x, y, itm_buf[0]);
+
+		cv->Brush->Color = org_bg;
+		cv->Font->Color  = org_fg;
 		x = BtnCmdsComboBox->Left;
 		cv->TextOut(x, y, itm_buf[1]);
 	}

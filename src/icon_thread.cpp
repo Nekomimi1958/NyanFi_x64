@@ -58,7 +58,7 @@ void __fastcall TGetIconThread::Execute()
 		bool quit = false;
 
 		while (!quit) {
-			UnicodeString fnam = EmptyStr;
+			UnicodeString fnam;
 			IconRWLock->BeginRead();
 				if (i<CachedIcoList->Count) {
 					if (!CachedIcoList->Objects[i]) fnam = CachedIcoList->Strings[i];
@@ -66,33 +66,32 @@ void __fastcall TGetIconThread::Execute()
 				}
 				else quit = true;
 			IconRWLock->EndRead();
+			if (fnam.IsEmpty()) continue;
 
-			if (!fnam.IsEmpty()) {
-				//アイコンを取得
-				HICON hIcon;
-				SHFILEINFO sif;
-				if (::SHGetFileInfo(fnam.c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON))
-					hIcon = sif.hIcon;
-				else
-					hIcon = get_fext_icon(get_extension(fnam));
+			//アイコンを取得
+			HICON hIcon;
+			SHFILEINFO sif;
+			if (::SHGetFileInfo(fnam.c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON))
+				hIcon = sif.hIcon;
+			else
+				hIcon = get_fext_icon(get_extension(fnam));
 
-				//キャッシュに設定
-				IconRWLock->BeginWrite();
-					int idx = CachedIcoList->IndexOf(fnam);
-					if (idx!=-1) {
-						TIcon *icon  = new TIcon();
-						icon->Handle = hIcon;
-						CachedIcoList->Objects[idx] = (TObject*)icon;
-						cnt ++;
-					}
-				IconRWLock->EndWrite();
-
-				//200ms毎に通知
-				if (((int)GetTickCount() - last_cnt)>200 && cnt>0) {	//***
-					IconNotify();
-					last_cnt = GetTickCount();
-					cnt = 0;
+			//キャッシュに設定
+			IconRWLock->BeginWrite();
+				int idx = CachedIcoList->IndexOf(fnam);
+				if (idx!=-1) {
+					TIcon *icon  = new TIcon();
+					icon->Handle = hIcon;
+					CachedIcoList->Objects[idx] = (TObject*)icon;
+					cnt++;
 				}
+			IconRWLock->EndWrite();
+
+			//200ms毎に通知
+			if (((int)GetTickCount() - last_cnt)>200 && cnt>0) {	//***
+				IconNotify();
+				last_cnt = GetTickCount();
+				cnt = 0;
 			}
 		}
 

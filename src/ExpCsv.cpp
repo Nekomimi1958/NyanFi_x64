@@ -113,7 +113,7 @@ void __fastcall TExpCsvDlg::ExportActionExecute(TObject *Sender)
 {
 	if (!Viewer) return;
 
-	UnicodeString fnam = rel_to_absdir(OutNameEdit->Text, ExtractFilePath(Viewer->FileName));
+	UnicodeString fnam = to_absolute_name(OutNameEdit->Text, ExtractFilePath(Viewer->FileName));
 	if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) return;
 
 	//ì¬

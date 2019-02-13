@@ -94,7 +94,7 @@ void __fastcall TNewFileDlg::RefTplBtnClick(TObject *Sender)
 	UnicodeString fnam;
 	if (UserModule->OpenDlgToStr(fnam, true)) {
 		add_ComboBox_history(TplComboBox, fnam);
-		TplRefDir = ExtractFilePath(rel_to_absdir(fnam));
+		TplRefDir = ExtractFilePath(to_absolute_name(fnam));
 		TplComboBox->ItemIndex = 0;
 		TplComboBoxClick(NULL);
 	}

@@ -59,12 +59,12 @@ void __fastcall TTabSetDlg::FormShow(TObject *Sender)
 void __fastcall TTabSetDlg::RefIconBtnClick(TObject *Sender)
 {
 	UserModule->PrepareOpenDlg(_T("タブのアイコン"), F_FILTER_ICO, NULL, IconFilePath);
-	if (UserModule->OpenDlgToEdit(IconEdit, true)) IconFilePath = ExtractFilePath(rel_to_absdir(IconEdit->Text));
+	if (UserModule->OpenDlgToEdit(IconEdit, true)) IconFilePath = ExtractFilePath(to_absolute_name(IconEdit->Text));
 }
 //---------------------------------------------------------------------------
 void __fastcall TTabSetDlg::IconEditChange(TObject *Sender)
 {
-	usr_SH->draw_SmallIcon(rel_to_absdir(IconEdit->Text), IcoImage, scl_BtnFace);
+	usr_SH->draw_SmallIcon(to_absolute_name(IconEdit->Text), IcoImage, col_bgActTab);
 }
 //---------------------------------------------------------------------------
 //ホームを参照

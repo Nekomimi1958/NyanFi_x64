@@ -78,7 +78,7 @@ void __fastcall TInpDirDlg::FormCloseQuery(TObject *Sender, bool &CanClose)
 		if (USAME_TI(CommandStr, "WebSearch"))
 			add_ComboBox_history(InpDirComboBox, InpDirComboBox->Text);
 		else {
-			UnicodeString dnam = rel_to_absdir(cv_env_str(InpDirComboBox->Text), InitialPath);
+			UnicodeString dnam = to_absolute_name(cv_env_str(InpDirComboBox->Text), InitialPath);
 			if (file_exists(dnam)) add_ComboBox_history(InpDirComboBox, dnam);
 		}
 	}
@@ -116,7 +116,7 @@ void __fastcall TInpDirDlg::RefDirBtnClick(TObject *Sender)
 UnicodeString __fastcall TInpDirDlg::GetInpWord(bool path_sw)
 {
 	UnicodeString wd = InpDirComboBox->Text;
-	wd = rel_to_absdir(cv_env_str(slash_to_yen(wd)), InitialPath);
+	wd = to_absolute_name(cv_env_str(slash_to_yen(wd)), InitialPath);
 	if (wd.IsEmpty()) wd = InitialPath;
 
 	if (ExtractFileDrive(wd).IsEmpty() || USAME_TS(wd, "\\\\")) wd = EmptyStr;

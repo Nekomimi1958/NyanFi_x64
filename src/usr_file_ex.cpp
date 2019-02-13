@@ -139,9 +139,9 @@ UnicodeString to_relative_name(UnicodeString fnam)
 }
 
 //---------------------------------------------------------------------------
-//相対パスから絶対パスへの変換 (ドライブ名を含む場合は正規化)
+//絶対パスに変換 (ドライブ名を含む場合は正規化)
 //---------------------------------------------------------------------------
-UnicodeString rel_to_absdir(
+UnicodeString to_absolute_name(
 	UnicodeString fnam,		//変換対象ファイル名
 	UnicodeString rnam)		//基準ディレクトリ名 (default = EmptyStr/ ExePath);
 {
@@ -199,8 +199,8 @@ bool match_path_list(
 bool is_same_file(UnicodeString fnam1, UnicodeString fnam2,
 	UnicodeString rnam)		//基準ファイル名 (default = EmptyStr/ ExePath);
 {
-	fnam1 = rel_to_absdir(exclude_quot(fnam1), rnam);
-	fnam2 = rel_to_absdir(exclude_quot(fnam2), rnam);
+	fnam1 = to_absolute_name(exclude_quot(fnam1), rnam);
+	fnam2 = to_absolute_name(exclude_quot(fnam2), rnam);
 	return SameText(fnam1, fnam2);
 }
 

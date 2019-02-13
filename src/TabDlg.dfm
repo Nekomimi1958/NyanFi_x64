@@ -53,9 +53,9 @@ object TabSetDlg: TTabSetDlg
       81)
     object IcoImage: TImage
       Left = 12
-      Top = 50
-      Width = 18
-      Height = 16
+      Top = 47
+      Width = 22
+      Height = 22
     end
     object RefIconBtn: TButton
       Tag = 100
@@ -69,9 +69,9 @@ object TabSetDlg: TTabSetDlg
       OnClick = RefIconBtnClick
     end
     object IconEdit: TLabeledEdit
-      Left = 80
+      Left = 82
       Top = 47
-      Width = 365
+      Width = 363
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 35
@@ -82,9 +82,9 @@ object TabSetDlg: TTabSetDlg
       OnChange = IconEditChange
     end
     object CaptionEdit: TLabeledEdit
-      Left = 80
+      Left = 82
       Top = 18
-      Width = 365
+      Width = 363
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 52

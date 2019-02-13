@@ -241,7 +241,7 @@ void __fastcall TFtpConnectDlg::RefSoundBtnClick(TObject *Sender)
 	int tag = ((TComponent*)Sender)->Tag;
 
 	UnicodeString inidir = def_if_empty(
-		ExtractFileDir(rel_to_absdir((tag==0)? SndConnectEdit->Text : (tag==1)? SndDisconEdit->Text : SndTransferEdit->Text)), ExePath);
+		ExtractFileDir(to_absolute_name((tag==0)? SndConnectEdit->Text : (tag==1)? SndDisconEdit->Text : SndTransferEdit->Text)), ExePath);
 	UserModule->PrepareOpenDlg(_T("サウンドファイルの指定"), F_FILTER_WAV, NULL, inidir);
 	UnicodeString fnam;
 	if (UserModule->OpenDlgToStr(fnam, true)) {

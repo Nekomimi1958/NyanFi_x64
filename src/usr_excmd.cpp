@@ -45,7 +45,7 @@ ExeCmdsList::ExeCmdsList(UnicodeString cmds)
 	//ÉtÉ@ÉCÉãÇ©ÇÁì«Ç›çûÇﬁ
 	bool loaded  = false;
 	if (remove_top_AT(cmds)) {
-		FileName = rel_to_absdir(exclude_quot(cmds));
+		FileName = to_absolute_name(exclude_quot(cmds));
 		if (!file_exists(FileName)) {
 			ErrMsg = SysErrorMessage(ERROR_FILE_NOT_FOUND);
 			return;
@@ -1563,7 +1563,7 @@ void XCMD_PlaySound(UnicodeString prm)
 	if (prm.IsEmpty())
 		::mciSendString(_T("close TPLYSND"), NULL, 0, NULL);
 	else {
-		UnicodeString fnam = rel_to_absdir(prm);
+		UnicodeString fnam = to_absolute_name(prm);
 		if (!file_exists(fnam)) SysErrAbort(ERROR_FILE_NOT_FOUND);
 		play_sound_ex(fnam, false);
 	}

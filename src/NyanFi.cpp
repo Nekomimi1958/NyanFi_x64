@@ -103,7 +103,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 	for (int i=0; i<opt_lst->Count; i++) {
 		UnicodeString lbuf = opt_lst->Strings[i];
 		if (remove_top_s(lbuf, "-I"))
-			inam = rel_to_absdir(exclude_quot(lbuf));
+			inam = to_absolute_name(exclude_quot(lbuf));
 		if (StartsText("-XCalculator_CB", lbuf))
 			not_act = true;
 	}

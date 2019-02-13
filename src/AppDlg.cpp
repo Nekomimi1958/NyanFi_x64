@@ -1366,7 +1366,7 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 		InputExDlg->InputComboBox->Text = EmptyStr;
 		UnicodeString inpstr = (InputExDlg->ShowModal()==mrOk)? InputExDlg->InputComboBox->Text : EmptyStr;
 		if (!inpstr.IsEmpty()) {
-			UnicodeString dnam = rel_to_absdir(inpstr, CurLaunchPath);
+			UnicodeString dnam = to_absolute_name(inpstr, CurLaunchPath);
 			if (!dir_exists(dnam) && !create_ForceDirs(dnam))
 				msgbox_ERR(LoadUsrMsg(USTR_CantCreDir, dnam));
 			else

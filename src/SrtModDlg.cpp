@@ -23,7 +23,7 @@ __fastcall TSortModeDlg::TSortModeDlg(TComponent* Owner)
 void __fastcall TSortModeDlg::FormCreate(TObject *Sender)
 {
 	set_ComboBoxText(DirSortModeComboBox,
-		_T("ファイルと同じ\n名前\n更新日時\nサイズ\n属性\nディレクトリを区別しない\n"));
+		_T("ファイルと同じ\n名前\n更新日時\nサイズ\n属性\nディレクトリを区別しない\nアイコン(ファイル:名前/拡張子)\n"));
 }
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::FormShow(TObject *Sender)

@@ -550,7 +550,6 @@ UsrIniFile  *FolderIconFile;			//フォルダアイコン設定ファイル
 TStringList *FolderIconList;			//フォルダアイコンリスト
 TMultiReadExclusiveWriteSynchronizer *FldIcoRWLock;
 UnicodeString DefFldIcoName;			//デフォルトのフォルダアイコン
-TIcon *DefFolderIcoon;
 
 TStringList *GeneralIconList;			//ファイルリスト表示用の一般アイコン
 TStringList *MenuBtnIcoList;
@@ -626,7 +625,8 @@ bool ShowSplash;						//スプラッシュを表示
 
 //ファイルリストのソートモード
 int  SortMode[MAX_FILELIST];			//0:名前/ 1:拡張子/ 2:更新日時/ 3:サイズ/ 4:属性/ 5:なし
-int  DirSortMode[MAX_FILELIST];			//0:ファイルと同じ/ 1:名前/ 2:更新日時/ 3:サイズ/ 4:属性/ 5:ディレクトリを区別しない
+int  DirSortMode[MAX_FILELIST];			//0:ファイルと同じ/ 1:名前/ 2:更新日時/ 3:サイズ/ 4:属性/
+										//	5:ディレクトリを区別しない/ 6:フォルダアイコン
 
 //ファイルリストのソート順
 bool FlOdrNatural[MAX_FILELIST];		//自然順
@@ -1330,7 +1330,6 @@ void InitializeGlobal()
 	//フォルダアイコン定義
 	FolderIconFile = new UsrIniFile(ExePath + FICO_INI_FILE);
 	FolderIconList = CreStringList();
-	DefFolderIcoon = new TIcon();
 	FolderIconFile->ReadSection("FolderIcon", FolderIconList);
 	DefFldIcoName  = FolderIconFile->ReadString(SCT_Option, "DefFldIcoName");
 
@@ -2003,9 +2002,9 @@ void InitializeGlobal()
 	usr_ARC->FExt7zDll = FExt7zDll;
 	usr_ARC->fpAddDebugLog = AddDebugLog;
 
-	SPI = new SpiUnit(rel_to_absdir(SpiDir));
+	SPI = new SpiUnit(to_absolute_name(SpiDir));
 
-	usr_Migemo = new MigemoUnit(rel_to_absdir(MigemoPath));
+	usr_Migemo = new MigemoUnit(to_absolute_name(MigemoPath));
 	usr_Migemo->MinLength = IncSeaMigemoMin;
 
 	TaskReserveList = new TaskConfigList();
@@ -2082,7 +2081,6 @@ void EndGlobal()
 	}
 	delete GeneralList;
 
-	delete DefFolderIcoon;
 	delete FolderIconFile;
 
 	for (int i=0; i<MAX_BGIMAGE; i++) delete BgImgBuff[i];
@@ -2696,6 +2694,18 @@ int __fastcall CompDirAttr(file_rec *fp0, file_rec *fp1)
 }
 
 //---------------------------------------------------------------------------
+int __fastcall CompDirIcon(file_rec *fp0, file_rec *fp1)
+{
+	UnicodeString inam0 = get_FolderIconName(fp0->f_name);
+	UnicodeString inam1 = get_FolderIconName(fp1->f_name);
+
+	if (SameText(inam0, inam1)) return CompDirName(fp0, fp1);
+	if (inam0.IsEmpty()) return 1;
+	if (inam1.IsEmpty()) return -1;
+	return CompTextN(inam0, inam1);
+}
+
+//---------------------------------------------------------------------------
 //名前
 int __fastcall SortComp_Name(TStringList *List, int Index1, int Index2)
 {
@@ -2713,6 +2723,7 @@ int __fastcall SortComp_Name(TStringList *List, int Index1, int Index2)
 			case 2:  return CompDirTime(fp0, fp1);
 			case 3:  return CompDirSize(fp0, fp1);
 			case 4:  return CompDirAttr(fp0, fp1);
+			case 6:  return CompDirIcon(fp0, fp1);
 			default: return CompDirName(fp0, fp1);
 			}
 		}
@@ -2745,6 +2756,7 @@ int __fastcall SortComp_Ext(TStringList *List, int Index1, int Index2)
 			case 2:  return CompDirTime(fp0, fp1);
 			case 3:  return CompDirSize(fp0, fp1);
 			case 4:  return CompDirAttr(fp0, fp1);
+			case 6:  return CompDirIcon(fp0, fp1);
 			default: return CompDirName(fp0, fp1);
 			}
 		}
@@ -2860,6 +2872,7 @@ int __fastcall SortComp_DirOnly(TStringList *List, int Index1, int Index2)
 	case  2: return CompDirTime(fp0, fp1);
 	case  3: return CompDirSize(fp0, fp1);
 	case  4: return CompDirAttr(fp0, fp1);
+	case  6: return CompDirIcon(fp0, fp1);
 	default: return (Index1 - Index2);
 	}
 }
@@ -3220,7 +3233,7 @@ bool check_if_unc(UnicodeString pnam)
 UnicodeString get_cmdfile(UnicodeString s)
 {
 	if (!remove_top_AT(s) && !test_NbtExt(get_extension(s))) return EmptyStr; 
-	return rel_to_absdir(s);
+	return to_absolute_name(s);
 }
 
 //---------------------------------------------------------------------------
@@ -3228,9 +3241,9 @@ UnicodeString get_cmdfile(UnicodeString s)
 //---------------------------------------------------------------------------
 UnicodeString get_cmds_prm_file(UnicodeString prm)
 {
-	if (remove_top_AT(prm))	return rel_to_absdir(prm);
+	if (remove_top_AT(prm))	return to_absolute_name(prm);
 	if (remove_top_text(prm, _T("ExeMenuFile_")))
-							return rel_to_absdir(exclude_quot(prm));
+							return to_absolute_name(exclude_quot(prm));
 	return EmptyStr;
 }
 
@@ -3692,7 +3705,7 @@ UnicodeString is_SyncDir(UnicodeString dnam1, UnicodeString dnam2)
 //---------------------------------------------------------------------------
 void SetTempPathA(UnicodeString dnam)
 {
-	dnam = ExcludeTrailingPathDelimiter(rel_to_absdir(dnam));
+	dnam = ExcludeTrailingPathDelimiter(to_absolute_name(dnam));
 	if (!IsPrimary) dnam.cat_sprintf(_T("_%d\\"), NyanFiIdNo);
 	TempPathA = IncludeTrailingPathDelimiter(dnam);
 	TempPathFTP.sprintf(_T("%s" TMP_FTP_D), TempPathA.c_str());
@@ -4491,7 +4504,7 @@ UnicodeString get_TabWorkList(int tab_idx)
 	if (tab_idx>=0 && tab_idx<TabList->Count) {
 		TStringDynArray itm_buf = get_csv_array(TabList->Strings[tab_idx], TABLIST_CSVITMCNT, true);
 		int w_mod = itm_buf[6].ToIntDef(0);
-		return rel_to_absdir((w_mod==1)? HomeWorkList : (w_mod==2)? itm_buf[7] : EmptyStr);
+		return to_absolute_name((w_mod==1)? HomeWorkList : (w_mod==2)? itm_buf[7] : EmptyStr);
 	}
 	else
 		return EmptyStr;
@@ -5993,8 +6006,9 @@ HICON get_fext_icon(
 	if (fext.IsEmpty()) fext = "$DIR$";
 	int idx = GeneralIconList->IndexOf(fext);
 
-	if (idx!=-1)
+	if (idx!=-1) {
 		hIcon = ((TIcon*)GeneralIconList->Objects[idx])->Handle;
+	}
 	else {
 		SHFILEINFO sif;
 		if (::SHGetFileInfo(fext.c_str(), (StartsStr('.', fext)? faArchive : faDirectory),
@@ -6017,14 +6031,14 @@ HICON get_folder_icon(UnicodeString dnam)
 {
 	HICON hIcon = NULL;
 
-	UnicodeString fnam = rel_to_absdir(get_actual_name(DefFldIcoName));
+	UnicodeString fnam = to_absolute_name(get_actual_name(DefFldIcoName));
 
 	FldIcoRWLock->BeginWrite();
 	int idx = FolderIconList->IndexOfName(ExcludeTrailingPathDelimiter(dnam));
-	if (idx!=-1) fnam = rel_to_absdir(get_actual_name(FolderIconList->ValueFromIndex[idx]));
+	if (idx!=-1) fnam = to_absolute_name(get_actual_name(FolderIconList->ValueFromIndex[idx]));
 	FldIcoRWLock->EndWrite();
 
-	if (!fnam.IsEmpty()) {
+	if (file_exists(fnam)) {
 		IconRWLock->BeginWrite();
 		{
 			int idx = CachedIcoList->IndexOf(fnam);
@@ -6036,6 +6050,9 @@ HICON get_folder_icon(UnicodeString dnam)
 				CachedIcoList->Add(fnam);	//スレッドに取得を要求
 		}
 		IconRWLock->EndWrite();
+	}
+	else {
+		set_FolderIcon(dnam);	//解除
 	}
 
 	if (!hIcon) hIcon = get_fext_icon();
@@ -6160,7 +6177,7 @@ int add_IconImage(
 	int idx = -1;
 	TIcon *icon = NULL;
 
-	fnam = rel_to_absdir(get_actual_name(fnam));
+	fnam = to_absolute_name(get_actual_name(fnam));
 	if (file_exists(fnam)) {
 		int idx = UsrIcoList->IndexOf(fnam);
 		if (idx==-1) {
@@ -6218,7 +6235,7 @@ UnicodeString get_file_from_cmd(UnicodeString s)
 		fnam = get_actual_name(exclude_quot(cmd));
 	}
 	else if (remove_top_text(cmd, _T("SetFolderIcon_"))) {
-		fnam = rel_to_absdir(get_actual_name(exclude_quot(cmd)));
+		fnam = to_absolute_name(get_actual_name(exclude_quot(cmd)));
 	}
 	else if (USAME_TI(cmd, "CommandPrompt")) fnam.USET_T("%ComSpec%");
 	else if (USAME_TI(cmd, "OpenByExp"))	 fnam.USET_T("%windir%\\explorer.exe");
@@ -6261,7 +6278,7 @@ void SetExtNameToCtrl(UnicodeString fnam, TWinControl *cp,
 //---------------------------------------------------------------------------
 bool load_MenuFile(UnicodeString fnam, TStringList *lst)
 {
-	fnam = rel_to_absdir(cv_env_str(fnam));
+	fnam = to_absolute_name(cv_env_str(fnam));
 
 	if (load_text_ex(fnam, lst)!=0) {
 		for (int i=0; i<lst->Count; i++) {
@@ -6273,7 +6290,7 @@ bool load_MenuFile(UnicodeString fnam, TStringList *lst)
 			//アイコンファイル (環境パスに対応)
 			UnicodeString inum = (m_buf.Length==3)? m_buf[2] : (m_buf.Length==2)? get_file_from_cmd(m_buf[1]) : EmptyStr;
 			if (!inum.IsEmpty()) {
-				inum = rel_to_absdir(get_actual_name(inum));
+				inum = to_absolute_name(get_actual_name(inum));
 				inum = file_exists(inum)? inum : EmptyStr;
 				lbuf.sprintf(_T("%s\t%s"), m_buf[0].c_str(), m_buf[1].c_str());
 				if (!inum.IsEmpty()) lbuf.cat_sprintf(_T("\t%s"), inum.c_str());
@@ -6295,7 +6312,7 @@ bool load_MenuFile(UnicodeString fnam, TStringList *lst)
 //---------------------------------------------------------------------------
 bool load_WorkList(UnicodeString wnam)
 {
-	wnam = rel_to_absdir(wnam);
+	wnam = to_absolute_name(wnam);
 	if (!file_exists(wnam)) return false;
 
 	try {
@@ -7560,8 +7577,8 @@ bool get_FileInfList(
 		//NyanFi 固有のファイル
 		UnicodeString typ_str = get_IniTypeStr(fp);
 		if		(!typ_str.IsEmpty())							tnam.cat_sprintf(_T(" [%s]"), typ_str.c_str());
-		else if (SameText(fnam, rel_to_absdir(ReplaceLogName)))	tnam.UCAT_T(" [文字列置換ログ]");
-		else if (SameText(fnam, rel_to_absdir(GrepFileName)))	tnam.UCAT_T(" [GREPログ]");
+		else if (SameText(fnam, to_absolute_name(ReplaceLogName)))	tnam.UCAT_T(" [文字列置換ログ]");
+		else if (SameText(fnam, to_absolute_name(GrepFileName)))	tnam.UCAT_T(" [GREPログ]");
 		else if (is_MenuFile(fp))								tnam.UCAT_T(" [メニュー定義]");
 		else if (is_ResultList(fp))								tnam.UCAT_T(" [結果リスト]");
 		else if (SameText(ExtractFilePath(fnam), ExePath)) {
@@ -8226,7 +8243,7 @@ UnicodeString get_IniTypeStr(file_rec *fp)
 	UnicodeString fnam = fp->f_name;
 	if (SameText(fnam, IniFile->FileName))	return "使用中の設定";
 	if (SameText(fnam, TabGroupName))		return "使用中のタブグループ";
-	if (SameText(fnam, rel_to_absdir(IniFile->ReadStrGen(_T("DistrDlgFileName"), DISTR_FILE))))
+	if (SameText(fnam, to_absolute_name(IniFile->ReadStrGen(_T("DistrDlgFileName"), DISTR_FILE))))
 											return "振り分け登録";
 
 	if (SameText(ExtractFilePath(fnam), ExePath)) {
@@ -8593,7 +8610,7 @@ UnicodeString get_FolderIconName(UnicodeString dnam)
 	FldIcoRWLock->BeginWrite();
 	int idx = FolderIconList->IndexOfName(ExcludeTrailingPathDelimiter(dnam));
 	if (idx!=-1) {
-		inam = rel_to_absdir(get_actual_name(FolderIconList->ValueFromIndex[idx]));
+		inam = to_absolute_name(FolderIconList->ValueFromIndex[idx]);
 	}
 	FldIcoRWLock->EndWrite();
 	return inam;
@@ -8641,10 +8658,10 @@ void get_FolderIconList(TStringList *lst)
 	}
 	FldIcoRWLock->EndWrite();
 
-	for (int i=0; i<lst->Count; i++) {
-		lst->Strings[i] = rel_to_absdir(get_actual_name(lst->Strings[i]));
-	}
+	//絶対パスに変換
+	for (int i=0; i<lst->Count; i++) lst->Strings[i] = to_absolute_name(lst->Strings[i]);
 
+	//重複を削除
 	if (lst->Count>1) {
 		lst->Sort();
 		UnicodeString laststr = lst->Strings[0];
@@ -8660,6 +8677,28 @@ void get_FolderIconList(TStringList *lst)
 			}
 		}
 	}
+}
+
+//---------------------------------------------------------------------------
+//フォルダアイコンの改名
+//---------------------------------------------------------------------------
+void rename_FolderIcon(UnicodeString old_nam, UnicodeString new_nam)
+{
+	if (!test_FileExt(get_extension(old_nam), FEXT_INDIVICO)) return;
+
+	std::unique_ptr<TStringList> lst(new TStringList());
+	get_FolderIconList(lst.get());
+	if (lst->IndexOf(ExcludeTrailingPathDelimiter(old_nam))==-1) return;
+
+	new_nam = to_relative_name(new_nam);
+	FldIcoRWLock->BeginWrite();
+	for (int i=0; i<FolderIconList->Count; i++) {
+		UnicodeString inam = to_absolute_name(FolderIconList->ValueFromIndex[i]);
+		if (SameText(inam, old_nam)) {
+			FolderIconList->Strings[i] = get_tkn(FolderIconList->Strings[i], '=') + "=" + new_nam;
+		}
+	}
+	FldIcoRWLock->EndWrite();
 }
 
 //---------------------------------------------------------------------------
@@ -9086,7 +9125,7 @@ bool mute_Volume(
 //---------------------------------------------------------------------------
 bool play_sound(UnicodeString fnam)
 {
-	fnam = rel_to_absdir(fnam);
+	fnam = to_absolute_name(fnam);
 	if (!file_exists(fnam)) return false;
 
 	::sndPlaySound(fnam.c_str(), SND_ASYNC);
@@ -9103,7 +9142,7 @@ bool play_sound_ex(
 {
 	::mciSendString(_T("close TPLYSND"), NULL, 0, NULL);
 
-	fnam = rel_to_absdir(fnam);
+	fnam = to_absolute_name(fnam);
 	if (!file_exists(fnam)) return false;
 	if (limit && PlaySndLimitTime==0) return true;
 
@@ -9149,7 +9188,7 @@ bool add_PlayList(UnicodeString lnam)
 {
 	PlayListFile = EmptyStr;
 
-	lnam = rel_to_absdir(lnam);
+	lnam = to_absolute_name(lnam);
 	int last_cnt = PlayList->Count;
 
 	//ディレクトリ
@@ -10629,7 +10668,7 @@ bool divide_FileName_LineNo(
 				fnam = get_in_paren(mts.Item[i].Value);
 				fnam = get_tkn(fnam, '#');
 				fnam = slash_to_yen(fnam);
-				fnam = rel_to_absdir(fnam, rnam);
+				fnam = to_absolute_name(fnam, rnam);
 				lno = 1; found = true;
 			}
 		}
@@ -10676,7 +10715,7 @@ bool divide_FileName_LineNo(
 				if (p_top) nptn.Insert("^", 1);
 				if (p_end) nptn.UCAT_T("$");
 				if (chk_RegExPtn(nptn)) {
-					fnam = rel_to_absdir(fnam, rnam);
+					fnam = to_absolute_name(fnam, rnam);
 					if (file_exists(fnam)) {
 						std::unique_ptr<TStringList> fbuf(new TStringList());
 						if (load_text_ex(fnam, fbuf.get())!=0) {
@@ -10728,7 +10767,7 @@ bool divide_FileName_LineNo(
 		lno = lstr.ToIntDef(1);
 	} while (0);
 
-	fnam = rel_to_absdir(fnam, rnam);
+	fnam = to_absolute_name(fnam, rnam);
 
 	if (fnam.IsEmpty())
 		GlobalErrMsg.USET_T("ジャンプ先が取得できません");
@@ -10785,7 +10824,7 @@ int get_FileNameByTag(
 		for (int i=0; i<f_buf->Count; i++) {
 			UnicodeString lbuf = f_buf->Strings[i];
 			if (!StartsText(tnam, lbuf)) continue;
-			if (!onam.IsEmpty() && !SameText(onam, rel_to_absdir(get_pre_tab(get_post_tab(lbuf)), rnam))) continue;
+			if (!onam.IsEmpty() && !SameText(onam, to_absolute_name(get_pre_tab(get_post_tab(lbuf)), rnam))) continue;
 			lst->Add(lbuf);
 		}
 		if (lst->Count==0) UserAbort(USTR_NotFound);
@@ -11322,7 +11361,7 @@ void RenameOptCmdFile()
 		if (!org_nam.IsEmpty() && !new_rel.IsEmpty()) {
 			//イベント
 			for (int i=0; i<MAX_EVENT_CMD; i++) {
-				if (SameText(org_nam, rel_to_absdir(get_tkn_r(*(EventCmdList[i].sp), '@'))))
+				if (SameText(org_nam, to_absolute_name(get_tkn_r(*(EventCmdList[i].sp), '@'))))
 					*(EventCmdList[i].sp) = "@" + new_rel;
 			}
 			//リスト
@@ -13126,7 +13165,7 @@ int get_GitChangedList(UnicodeString pnam, TStringList *lst)
 				if (lbuf[1]!='?' && lbuf[2]!='?') {
 					lbuf.Delete(1, 2);
 					lbuf = slash_to_yen(Trim(lbuf));
-					lbuf = rel_to_absdir(lbuf, tnam);
+					lbuf = to_absolute_name(lbuf, tnam);
 					lst->Add(lbuf);
 				}
 			}

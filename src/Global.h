@@ -697,7 +697,6 @@ extern UsrIniFile  *FolderIconFile;
 extern TStringList *FolderIconList;
 extern TMultiReadExclusiveWriteSynchronizer *FldIcoRWLock;
 extern UnicodeString DefFldIcoName;
-extern TIcon *DefFolderIcoon;
 
 extern TStringList *GeneralIconList;
 extern TStringList *MenuBtnIcoList;
@@ -1516,6 +1515,7 @@ int __fastcall CompDirName(file_rec *fp0, file_rec *fp1);
 int __fastcall CompDirTime(file_rec *fp0, file_rec *fp1);
 int __fastcall CompDirSize(file_rec *fp0, file_rec *fp1);
 int __fastcall CompDirAttr(file_rec *fp0, file_rec *fp1);
+int __fastcall CompDirIcon(file_rec *fp0, file_rec *fp1);
 
 int __fastcall SortComp_Name(TStringList *List, int Index1, int Index2);
 int __fastcall SortComp_Ext( TStringList *List, int Index1, int Index2);
@@ -1670,7 +1670,7 @@ int  get_HardLinkList(UnicodeString fnam, TStringList *o_lst);
 __int64 get_DirSize(UnicodeString dnam, int *f_cnt, int *d_cnt, __int64 *o_size, __int64 *c_size);
 __int64 get_ArcDirSize(UnicodeString anam, UnicodeString dnam, int *f_cnt, int *d_cnt);
 
-void del_CachedIcon(UnicodeString fnam);
+void  del_CachedIcon(UnicodeString fnam);
 HICON get_fext_icon(UnicodeString fext = EmptyStr);
 HICON get_folder_icon(UnicodeString dnam = EmptyStr);
 
@@ -1709,6 +1709,7 @@ void copy_FolderIcon(UnicodeString src_dnam, UnicodeString dst_dnam);
 UnicodeString get_FolderIconName(UnicodeString dnam);
 void set_FolderIcon(UnicodeString dnam, UnicodeString inam = EmptyStr);
 void get_FolderIconList(TStringList *lst);
+void rename_FolderIcon(UnicodeString old_nam, UnicodeString new_nam);
 void chk_FolderIcon();
 
 TStringDynArray get_AssociatedApps(UnicodeString fext);

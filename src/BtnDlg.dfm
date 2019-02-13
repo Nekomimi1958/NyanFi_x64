@@ -22,11 +22,12 @@ object ToolBtnDlg: TToolBtnDlg
   PixelsPerInch = 96
   TextHeight = 13
   object IcoImage: TImage
-    Left = 10
-    Top = 520
-    Width = 18
-    Height = 18
+    Left = 8
+    Top = 518
+    Width = 22
+    Height = 22
     Anchors = [akLeft, akBottom]
+    Center = True
   end
   object CmdLabel: TLabel
     Left = 185
@@ -37,9 +38,9 @@ object ToolBtnDlg: TToolBtnDlg
     Caption = '  '
   end
   object CaptionEdit: TLabeledEdit
-    Left = 32
+    Left = 34
     Top = 518
-    Width = 150
+    Width = 148
     Height = 21
     Hint = '- '#12399#12475#12497#12524#12540#12479
     Anchors = [akLeft, akBottom]

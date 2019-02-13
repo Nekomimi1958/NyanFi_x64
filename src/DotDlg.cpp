@@ -198,7 +198,7 @@ void __fastcall TDotNyanDlg::NoOderCheckBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TDotNyanDlg::RefSndBtnClick(TObject *Sender)
 {
-	UnicodeString inidir = def_if_empty(ExtractFileDir(rel_to_absdir(SoundEdit->Text)), ExePath);
+	UnicodeString inidir = def_if_empty(ExtractFileDir(to_absolute_name(SoundEdit->Text)), ExePath);
 	UserModule->PrepareOpenDlg(_T("サウンドファイルの指定"), F_FILTER_WAV, NULL, inidir);
 	if (UserModule->OpenDlgToEdit(SoundEdit, true)) play_sound(SoundEdit->Text);
 }
@@ -215,7 +215,7 @@ void __fastcall TDotNyanDlg::RefImgBtnClick(TObject *Sender)
 {
 	UserModule->OpenImgDlg->Title = "背景画像の指定";
 	UserModule->SetOpenImgFilter(BgImgEdit->Text);
-	UserModule->OpenImgDlg->InitialDir = rel_to_absdir(ExtractFilePath(BgImgEdit->Text), ExePath);
+	UserModule->OpenImgDlg->InitialDir = to_absolute_name(ExtractFilePath(BgImgEdit->Text), ExePath);
 	UserModule->OpenImgDlg->FileName   = EmptyStr;
 	UserModule->OpenImgDlgToEdit(BgImgEdit, true);
 }

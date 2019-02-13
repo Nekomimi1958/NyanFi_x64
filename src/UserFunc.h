@@ -112,6 +112,7 @@ void RgbToHsl(TColor col, int *h, int *s, int *l);
 void RgbToHsv(TColor col, int *h, int *s, int *v);
 TColor SelectWorB(TColor col, float rt = 1.0);
 TColor AdjustColor(TColor col, int adj);
+TColor Mix2Colors(TColor col1, TColor col2);
 void str_to_Color(TColor &col, UnicodeString s);
 
 void SetHighlight(TCanvas *cv, bool hl);

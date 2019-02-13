@@ -1707,11 +1707,13 @@ bool UserShell::draw_SmallIcon(UnicodeString fnam, TCanvas *cv, int x, int y)
 //---------------------------------------------------------------------------
 bool UserShell::draw_SmallIcon(UnicodeString fnam, TImage *ip, TColor bg)
 {
-	ip->Picture->Bitmap->SetSize(16 * ScrScale, 16 * ScrScale);
+	ip->Picture->Bitmap->SetSize(ip->ClientWidth, ip->ClientHeight);
 	TCanvas *cv = ip->Picture->Bitmap->Canvas;
 	cv->Brush->Color = bg;
 	cv->FillRect(ip->ClientRect);
-	return draw_SmallIcon(fnam, cv, 0, 0);
+
+	int size = 16 * ScrScale;
+	return draw_SmallIcon(fnam, cv, (ip->ClientWidth - size) / 2, (ip->ClientHeight - size) / 2);
 }
 
 //---------------------------------------------------------------------------

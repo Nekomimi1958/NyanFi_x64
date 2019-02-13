@@ -72,7 +72,7 @@ void __fastcall TJoinTextDlg::SrcFileListBoxKeyDown(TObject *Sender, WORD &Key, 
 //---------------------------------------------------------------------------
 void __fastcall TJoinTextDlg::RefTpltBtnClick(TObject *Sender)
 {
-	UnicodeString inidir = def_if_empty(ExtractFileDir(rel_to_absdir(TemplateEdit->Text)), ExePath);
+	UnicodeString inidir = def_if_empty(ExtractFileDir(to_absolute_name(TemplateEdit->Text)), ExePath);
 	UserModule->PrepareOpenDlg(_T("出力テンプレートの選択"), F_FILTER_TXT, NULL, inidir);
 	UserModule->OpenDlgToEdit(TemplateEdit, true);
 }
@@ -81,7 +81,7 @@ void __fastcall TJoinTextDlg::RefTpltBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TJoinTextDlg::EditTmpltActionExecute(TObject *Sender)
 {
-	open_by_TextEditor(rel_to_absdir(TemplateEdit->Text));
+	open_by_TextEditor(to_absolute_name(TemplateEdit->Text));
 }
 //---------------------------------------------------------------------------
 void __fastcall TJoinTextDlg::EditTmpltActionUpdate(TObject *Sender)

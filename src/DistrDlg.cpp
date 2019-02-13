@@ -76,7 +76,7 @@ void __fastcall TDistributionDlg::FormShow(TObject *Sender)
 	UnicodeString tit = "振り分け - ";
 
 	//登録ファイルがあればそれを読み込む
-	DistrFile = rel_to_absdir(IniFile->ReadStrGen(_T("DistrDlgFileName"),	DISTR_FILE));
+	DistrFile = to_absolute_name(IniFile->ReadStrGen(_T("DistrDlgFileName"),	DISTR_FILE));
 	if (file_exists(DistrFile)) {
 		LoadDistrFile();
 		tit += ExtractFileName(DistrFile);
@@ -305,7 +305,7 @@ void __fastcall TDistributionDlg::UpdatePreview(bool upd)
 		//リストファイル
 		if (remove_top_AT(mask)) {
 			std::unique_ptr<TStringList> fbuf(new TStringList());
-			if (load_text_ex(rel_to_absdir(mask), fbuf.get())==0) continue;
+			if (load_text_ex(to_absolute_name(mask), fbuf.get())==0) continue;
 			for (int j=0; j<fbuf->Count; j++) {
 				TStringDynArray l_buf = split_strings_tab(fbuf->Strings[j]);
 				if (l_buf.Length!=2) continue;
@@ -378,7 +378,7 @@ void __fastcall TDistributionDlg::UpdatePreview(bool upd)
 			lst->Add(tmp.sprintf(_T("%s\t%s"), fnam.c_str(), dnam.c_str()));
 
 			m_cnt++;
-			if (!CreDistrDirCheckBox->Checked && !dir_exists(dnam.IsEmpty()? OppPath : rel_to_absdir(dnam, OppPath)))
+			if (!CreDistrDirCheckBox->Checked && !dir_exists(dnam.IsEmpty()? OppPath : to_absolute_name(dnam, OppPath)))
 				SkipCount++;
 			else if (ends_PathDlmtr(fnam))
 				d_cnt++;
@@ -478,7 +478,7 @@ void __fastcall TDistributionDlg::RegListBoxClick(TObject *Sender)
 			UnicodeString lnam = DistrMaskEdit->Text;
 			if (remove_top_AT(lnam)) {
 				try {
-					lnam = rel_to_absdir(lnam);
+					lnam = to_absolute_name(lnam);
 					if (file_exists(lnam)) {
 						std::unique_ptr<TStringList> fbuf(new TStringList());
 						if (load_text_ex(lnam, fbuf.get())!=0) {
@@ -577,7 +577,7 @@ void __fastcall TDistributionDlg::PrvListBoxDrawItem(TWinControl *Control, int I
 	UnicodeString fnam = split_pre_tab(lbuf);
 	fnam = ends_PathDlmtr(fnam)? UAPP_T(ExtractFileName(ExcludeTrailingPathDelimiter(fnam)), "\\") : ExtractFileName(fnam);
 	UnicodeString dnam = lbuf;
-	UnicodeString anam = dnam.IsEmpty()? OppPath : rel_to_absdir(dnam, OppPath);
+	UnicodeString anam = dnam.IsEmpty()? OppPath : to_absolute_name(dnam, OppPath);
 
 	THeaderSections *sp = PrvListHeader->Sections;
 	int wd = sp->Items[0]->Width;
@@ -606,7 +606,7 @@ void __fastcall TDistributionDlg::PrvListBoxDblClick(TObject *Sender)
 			UnicodeString mask = get_csv_item(cp->Items->Strings[i], 2);
 			//リストファイル
 			if (remove_top_AT(mask)) {
-				UnicodeString lnam = rel_to_absdir(mask);
+				UnicodeString lnam = to_absolute_name(mask);
 				std::unique_ptr<TStringList> fbuf(new TStringList());
 				if (load_text_ex(lnam, fbuf.get())!=0) {
 					for (int j=0; j<fbuf->Count; j++) {
@@ -705,7 +705,7 @@ void __fastcall TDistributionDlg::AddRegActionUpdate(TObject *Sender)
 	UnicodeString mask = DistrMaskEdit->Text;
 	bool regex_ng = (is_regex_slash(mask) && !chk_RegExPtn(exclude_top_end(mask)));
 	bool is_lstfl = starts_AT(mask);
-	bool lstfl_ng = is_lstfl? !file_exists(rel_to_absdir(get_tkn_r(mask, '@'))) : false;
+	bool lstfl_ng = is_lstfl? !file_exists(to_absolute_name(get_tkn_r(mask, '@'))) : false;
 
 	DistrMaskEdit->Color  = (regex_ng || lstfl_ng)? col_Illegal : scl_Window;
 	DistrMaskEdit->Tag	  = EDTAG_RGEX_V|EDTAG_RGEX_E;
@@ -758,7 +758,7 @@ void __fastcall TDistributionDlg::EditListActionExecute(TObject *Sender)
 		TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[idx], DISTRLS_CSVITMCNT, true);
 		UnicodeString lnam = itm_buf[2];
 		if (remove_top_AT(lnam)) {
-			lnam = rel_to_absdir(lnam);
+			lnam = to_absolute_name(lnam);
 			if (file_exists(lnam)) {
 				open_by_TextEditor(lnam, ListListBox->Focused()? ListListBox->ItemIndex + 1 : 1);
 			}
@@ -775,7 +775,7 @@ void __fastcall TDistributionDlg::EditListActionUpdate(TObject *Sender)
 	if (ap->Enabled) {
 		TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[idx], DISTRLS_CSVITMCNT, true);
 		UnicodeString lnam = itm_buf[2];
-		ap->Enabled = remove_top_AT(lnam)? file_exists(rel_to_absdir(lnam)) : false;
+		ap->Enabled = remove_top_AT(lnam)? file_exists(to_absolute_name(lnam)) : false;
 	}
 }
 //---------------------------------------------------------------------------

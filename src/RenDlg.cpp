@@ -1665,6 +1665,8 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 							if (test_ArcExt(org_fext) && (file_GetAttr(new_name) & faDirectory)==0) {
 								RenArcFileList->Add(log_str);
 							}
+							//フォルダアイコンの改名
+							rename_FolderIcon(org_name, new_name);
 							//反対パスに反映されるかをチェック
 							if (!checked && (file_GetAttr(new_name) & faDirectory)) {
 								UnicodeString org_pnam = IncludeTrailingPathDelimiter(org_lst->Strings[i]);

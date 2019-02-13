@@ -532,7 +532,7 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 	TxtPrvKeepIndex  = IniFile->ReadBoolGen(_T("TxtPrvKeepIndex"),	false);
 
 	//ワークリスト
-	WorkListName = rel_to_absdir(
+	WorkListName = to_absolute_name(
 			(IniWorkMode==1)? HomeWorkList : IniFile->ReadStrGen(_T("WorkListName"), "WORKLIST.nwl"));
 	WorkListTime = get_file_age(WorkListName);
 
@@ -2686,7 +2686,7 @@ bool __fastcall TNyanFiForm::UpdateBgImage(
 		int err_cnt = 0;
 		for (int i=0; i<2; i++) {
 			if ((BgImgMode==1 || BgImgMode==2) && !BgImgName[i].IsEmpty()) {
-				UnicodeString fnam = rel_to_absdir(BgImgName[i]);
+				UnicodeString fnam = to_absolute_name(BgImgName[i]);
 				if		(!file_exists(fnam))												err_cnt++;
 				else if (!load_ImageFile(fnam, BgImgBuff[i], WICIMG_PREVIEW, col_bgList))	err_cnt++;
 			}
@@ -3978,7 +3978,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	//境界線/ノブ画像
 	BgImgName[BGIMGID_KNOB_H] = BgImgName[BGIMGID_KNOB_V];
 	for (int i=2; i<MAX_BGIMAGE; i++) {
-		UnicodeString fnam = rel_to_absdir(BgImgName[i]);
+		UnicodeString fnam = to_absolute_name(BgImgName[i]);
 		if (file_exists(fnam)) {
 			TColor bgcol = (i==BGIMGID_KNOB_V || i==BGIMGID_KNOB_H)? col_bgScrKnob : col_Splitter;
 			load_ImageFile(fnam, BgImgBuff[i], WICIMG_THUMBNAIL, bgcol);
@@ -5788,7 +5788,7 @@ void __fastcall TNyanFiForm::RefDirBtnClick(TObject *Sender)
 {
 	UnicodeString dnam = CurPath[CurListTag];
 	if (UserModule->SelectDirEx(("ディレクトリを開く - " + get_LRUD_str()).c_str(), dnam)) {
-		InpDirComboBox->Text = rel_to_absdir(dnam, CurPath[CurListTag]);
+		InpDirComboBox->Text = to_absolute_name(dnam, CurPath[CurListTag]);
 		ApplyInpDir();
 	}
 }
@@ -5797,7 +5797,7 @@ void __fastcall TNyanFiForm::RefDirBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ApplyInpDir()
 {
-	UnicodeString dnam = rel_to_absdir(cv_env_str(InpDirComboBox->Text), CurPath[CurListTag]);
+	UnicodeString dnam = to_absolute_name(cv_env_str(InpDirComboBox->Text), CurPath[CurListTag]);
 	int atr = file_GetAttr(dnam);
 	if (atr==faInvalid)
 		SttBarWarn(SysErrorMessage(ERROR_PATH_NOT_FOUND));
@@ -6071,7 +6071,7 @@ void __fastcall TNyanFiForm::PopSelectItemDrawItem(TObject *Sender, TCanvas *ACa
 		else if (mp->Tag>=FL_TAB_BASE) {
 			int idx = mp->Tag - FL_TAB_BASE;
 			if (idx>=0 && idx<TabList->Count) {
-				UnicodeString inam = rel_to_absdir(get_csv_item(TabList->Strings[idx], 3));
+				UnicodeString inam = to_absolute_name(get_csv_item(TabList->Strings[idx], 3));
 				if (file_exists(inam)) draw_SmallIcon2(inam, ACanvas, xp, yp + 1);
 			}
 			xp += ScaledInt(24);
@@ -7479,7 +7479,7 @@ void __fastcall TNyanFiForm::SetCurPath(
 									case 6: ExeCommandAction("WidenCurList", lbuf);	break;
 									case 7:
 										if (BgImgMode==1 || BgImgMode==2) {
-											fnam = rel_to_absdir(lbuf);
+											fnam = to_absolute_name(lbuf);
 											msg  = make_LogHdr(_T("BGIMG"), fnam);
 											int tag  = (BgImgMode==2)? CurListTag : 0;
 											if (load_ImageFile(fnam, BgImgBuff[tag])) {
@@ -7492,7 +7492,7 @@ void __fastcall TNyanFiForm::SetCurPath(
 										}
 										break;
 									case 8:
-										fnam = rel_to_absdir(lbuf);
+										fnam = to_absolute_name(lbuf);
 										if (file_exists(fnam)) play_sound_ex(fnam, false);
 										break;
 									case 9:
@@ -8431,7 +8431,7 @@ bool __fastcall TNyanFiForm::SetWorkList(
 			if (isViewWork)
 				SetViewFileList(true, true);
 			else {
-				if (SameText(WorkListName, rel_to_absdir(HomeWorkList)))
+				if (SameText(WorkListName, to_absolute_name(HomeWorkList)))
 					ShowHintAndStatus("ホームワークリストを開きました。");
 				else
 					ShowHintAndStatus(
@@ -10767,7 +10767,7 @@ void __fastcall TNyanFiForm::ClipSaveList(TStringList *lst, const _TCHAR *tit)
 	}
 	else {
 		//ファイル出力
-		UnicodeString fnam = rel_to_absdir(FormatParam(ActionParam), CurPath[CurListTag]);
+		UnicodeString fnam = to_absolute_name(FormatParam(ActionParam), CurPath[CurListTag]);
 		if (!fnam.IsEmpty()) {
 			if (!saveto_TextUTF8(fnam, lst)) UserAbort(USTR_FaildSave);
 			AddLog("  SAVE " + fnam);
@@ -10792,7 +10792,7 @@ void __fastcall TNyanFiForm::ClipSaveList(
 
 	//ファイル出力
 	if (!fnam.IsEmpty()) {
-		UnicodeString fnam = rel_to_absdir(FormatParam(ActionParam), CurPath[CurListTag]);
+		UnicodeString fnam = to_absolute_name(FormatParam(ActionParam), CurPath[CurListTag]);
 		if (!fnam.IsEmpty()) {
 			if (!saveto_TextUTF8(fnam, lst)) UserAbort(USTR_FaildSave);
 			AddLog("  SAVE " + fnam);
@@ -11029,7 +11029,7 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 				case XCMDID_Input:			XCMD_Input(XCMD_prm);							break;
 				case XCMDID_Edit:			XCMD_Edit(XCMD_prm);							break;
 				case XCMDID_ListVar:		XCMD_ListVar();									break;
-				case XCMDID_AppendBuffer:	XCMD_AppendBuffer(rel_to_absdir(XCMD_prm, XCMD_cur_path));	break;
+				case XCMDID_AppendBuffer:	XCMD_AppendBuffer(to_absolute_name(XCMD_prm, XCMD_cur_path));	break;
 				case XCMDID_FilterBuffer:	XCMD_FilterBuffer(XCMD_prm);					break;
 				case XCMDID_ReplaceBuffer:	XCMD_ReplaceBuffer(XCMD_prm);					break;
 				case XCMDID_SetClipboard: 	Clipboard()->AsText = XCMD_prm;					break;
@@ -11044,7 +11044,7 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 				case XCMDID_SearchUp:		XCMD_SearchUp(XCMD_prm, lp, lst);				break;
 				case XCMDID_SearchUpF:		XCMD_SearchUp(XCMD_prm, lp, lst, true, false);	break;
 				case XCMDID_SearchUpD:		XCMD_SearchUp(XCMD_prm, lp, lst, false, true);	break;
-				case XCMDID_FileExists:		XCMD_matched = file_exists(rel_to_absdir(XCMD_prm, XCMD_cur_path));	break;
+				case XCMDID_FileExists:		XCMD_matched = file_exists(to_absolute_name(XCMD_prm, XCMD_cur_path));	break;
 				case XCMDID_PushIndex:		XCMD_PushIndex(lp);								break;
 				case XCMDID_PopIndex:		XCMD_PopIndex(lp);								break;
 				case XCMDID_PushTopIndex:	XCMD_PushTopIndex(lp);							break;
@@ -11091,7 +11091,7 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 							UserModule->PrepareOpenDlg(_T("Buffer に読み込む"), fltr.c_str(), NULL, dnam);
 							UserModule->OpenDlgToStr(XCMD_prm);
 						}
-						XCMD_LoadBuffer(rel_to_absdir(XCMD_prm, dnam));
+						XCMD_LoadBuffer(to_absolute_name(XCMD_prm, dnam));
 					}
 					break;
 
@@ -11111,7 +11111,7 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 							XCMD_prm = UserModule->SaveTxtDlg->FileName;
 						}
 					}
-					XCMD_SaveBuffer(rel_to_absdir(XCMD_prm, XCMD_cur_path));
+					XCMD_SaveBuffer(to_absolute_name(XCMD_prm, XCMD_cur_path));
 					break;
 
 				//Buffer をリスト表示
@@ -11231,7 +11231,7 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 								cursor_Default();
 								//保存
 								UnicodeString tnam = !XCMD_prm.IsEmpty()?
-												rel_to_absdir(exclude_quot(XCMD_prm), XCMD_cur_path) :
+												to_absolute_name(exclude_quot(XCMD_prm), XCMD_cur_path) :
 												ChangeFileExt(fnam, ".txt");
 								std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(codepage));
 								if (!saveto_TextFile(tnam, htmcnv->TxtBuf, enc.get())) UserAbort(USTR_FaildSave);
@@ -11997,7 +11997,7 @@ void __fastcall TNyanFiForm::ChangeDirActionExecute(TObject *Sender)
 {
 	try {
 		if (ActionParam.IsEmpty()) UserAbort(USTR_NoParameter);
-		UnicodeString dnam = rel_to_absdir(cv_env_str(ActionParam), CurPath[CurListTag]);
+		UnicodeString dnam = to_absolute_name(cv_env_str(ActionParam), CurPath[CurListTag]);
 		int atr = file_GetAttr(dnam);
 		if (atr==faInvalid) SysErrAbort(ERROR_PATH_NOT_FOUND);
 
@@ -12019,7 +12019,7 @@ void __fastcall TNyanFiForm::ChangeOppDirActionExecute(TObject *Sender)
 {
 	try {
 		if (ActionParam.IsEmpty()) UserAbort(USTR_NoParameter);
-		UnicodeString dnam = rel_to_absdir(cv_env_str(ActionParam), CurPath[OppListTag]);
+		UnicodeString dnam = to_absolute_name(cv_env_str(ActionParam), CurPath[OppListTag]);
 		if (!dir_exists(dnam)) SysErrAbort(ERROR_PATH_NOT_FOUND);
 		UpdateOppPath(dnam);
 		if (!GlobalErrMsg.IsEmpty()) GlobalAbort();
@@ -13274,7 +13274,7 @@ void __fastcall TNyanFiForm::CreateDirActionExecute(TObject *Sender)
 			//その他
 			else {
 				bool has_drv = !ExtractFileDrive(inpstr).IsEmpty();
-				UnicodeString dnam = rel_to_absdir(inpstr, CurPath[CurListTag]);
+				UnicodeString dnam = to_absolute_name(inpstr, CurPath[CurListTag]);
 				if (has_drv) {
 					StartLog(_T("作成開始"));
 					msg = make_CreateLog(dnam);
@@ -13321,7 +13321,7 @@ void __fastcall TNyanFiForm::CreateDirsDlgActionExecute(TObject *Sender)
 			UnicodeString dnam = lst->Strings[i];
 			if (ExtractFileName(dnam).IsEmpty()) continue;
 			bool has_drv = !ExtractFileDrive(dnam).IsEmpty();
-			dnam = rel_to_absdir(dnam, CurPath[CurListTag]);
+			dnam = to_absolute_name(dnam, CurPath[CurListTag]);
 			UnicodeString msg = make_CreateLog(dnam);
 			if (has_drv || IsCurFList()) {
 				SetLastError(NO_ERROR);
@@ -13916,7 +13916,7 @@ void __fastcall TNyanFiForm::DebugCmdFileActionExecute(TObject *Sender)
 		UnicodeString fnam;
 		if (!ActionParam.IsEmpty()) {
 			remove_top_AT(ActionParam);
-			fnam = rel_to_absdir(exclude_quot(ActionParam));
+			fnam = to_absolute_name(exclude_quot(ActionParam));
 		}
 		else if (ScrMode==SCMD_FLIST) {
 			file_rec *fp = GetCurFrecPtr(true);
@@ -14035,7 +14035,7 @@ void __fastcall TNyanFiForm::DistributionDlgActionExecute(TObject *Sender)
 			for (int i=0; i<dstr_lst->Count; i++) {
 				UnicodeString lbuf = dstr_lst->Strings[i];
 				UnicodeString fnam = split_pre_tab(lbuf);
-				UnicodeString dnam = IncludeTrailingPathDelimiter(lbuf.IsEmpty()? dst_dir : rel_to_absdir(lbuf, dst_dir));
+				UnicodeString dnam = IncludeTrailingPathDelimiter(lbuf.IsEmpty()? dst_dir : to_absolute_name(lbuf, dst_dir));
 				if (!DistributionDlg->CreDistrDirCheckBox->Checked && !dir_exists(dnam)) {
 					msg = make_LogHdr(DistributionDlg->IsMove? _T("MOVE") : _T("COPY"), fnam);
 					msg[1] = 'W';
@@ -14642,7 +14642,7 @@ void __fastcall TNyanFiForm::ExeCommandLineActionExecute(TObject *Sender)
 						if (ExeCmdDlg->CopyStdOutCheckBox->Checked) copy_to_Clipboard(o_lst->Text);
 						//ファイルに保存
 						if (ExeCmdDlg->SaveStdOutCheckBox->Checked) {
-							if (!saveto_TextFile(rel_to_absdir(ExeCmdDlg->SaveNameEdit->Text), o_lst.get()))
+							if (!saveto_TextFile(to_absolute_name(ExeCmdDlg->SaveNameEdit->Text), o_lst.get()))
 								UserAbort(USTR_FaildSave);
 						}
 						//一覧で表示
@@ -15073,7 +15073,7 @@ void __fastcall TNyanFiForm::FileEditActionExecute(TObject *Sender)
 		}
 		else {
 			if (!ActionParam.IsEmpty()) {
-				fnam = rel_to_absdir(exclude_quot(ActionParam), CurPath[CurListTag]);
+				fnam = to_absolute_name(exclude_quot(ActionParam), CurPath[CurListTag]);
 				if (!file_exists(fnam)) SysErrAbort(ERROR_FILE_NOT_FOUND);
 				fext = get_extension(fnam);
 				fnam = add_quot_if_spc(fnam);
@@ -17001,7 +17001,7 @@ void __fastcall TNyanFiForm::InputDirActionExecute(TObject *Sender)
 	else {
 		UnicodeString dnam = inputbox_dir(tit.c_str(), _T("InputDir"));
 		if (!dnam.IsEmpty()) {
-			dnam = rel_to_absdir(cv_env_str(dnam), CurPath[CurListTag]);
+			dnam = to_absolute_name(cv_env_str(dnam), CurPath[CurListTag]);
 
 			if (StartsStr("\\\\", dnam)) {
 				UnicodeString rnam;
@@ -17273,7 +17273,7 @@ void __fastcall TNyanFiForm::JoinTextActionExecute(TObject *Sender)
 			std::unique_ptr<TStringList> tmplt(new TStringList());
 			UnicodeString tnam = JoinTextDlg->TemplateEdit->Text;
 			if (!tnam.IsEmpty()) {
-				tnam = rel_to_absdir(tnam);
+				tnam = to_absolute_name(tnam);
 				if (!file_exists(tnam)) throw EAbort(LoadUsrMsg(USTR_NotFound, tnam));
 				AddLog(make_LogHdr(_T("LOAD"), tnam));
 				if (load_text_ex(tnam, tmplt.get())==0) UserAbort(USTR_FileNotOpen);
@@ -17504,7 +17504,7 @@ void __fastcall TNyanFiForm::JumpToActionExecute(TObject *Sender)
 			if (!JumpToArcR(CurListTag, fnam)) GlobalAbort();
 		}
 		else {
-			fnam = rel_to_absdir(fnam, CurPath[CurListTag]);
+			fnam = to_absolute_name(fnam, CurPath[CurListTag]);
 			if (!JumpToList(CurListTag, fnam)) GlobalAbort();
 		}
 	}
@@ -18139,7 +18139,7 @@ void __fastcall TNyanFiForm::ListTextCore(bool is_tail)
 		UnicodeString fnam, rnam;
 		bool is_ftp = false;
 		if (!ActionParam.IsEmpty())
-			fnam = rnam = rel_to_absdir(ActionParam, CurPath[CurListTag]);
+			fnam = rnam = to_absolute_name(ActionParam, CurPath[CurListTag]);
 		else {
 			file_rec *cfp = GetCurFrecPtr(true);
 			if (!cfp || cfp->is_dummy || cfp->is_dir) Abort();
@@ -18238,7 +18238,7 @@ void __fastcall TNyanFiForm::ListTreeActionExecute(TObject *Sender)
 
 		UnicodeString cnam;
 		if (!ActionParam.IsEmpty())
-			cnam = rel_to_absdir(cv_env_str(ActionParam), CurPath[CurListTag]);
+			cnam = to_absolute_name(cv_env_str(ActionParam), CurPath[CurListTag]);
 		else
 			cnam = CurPath[CurListTag];
 		if (!dir_exists(cnam)) SysErrAbort(ERROR_PATH_NOT_FOUND);
@@ -18314,7 +18314,7 @@ void __fastcall TNyanFiForm::LoadBgImageActionExecute(TObject *Sender)
 			UnicodeString fnam, msg;
 			//指定
 			if (!ActionParam.IsEmpty())
-				fnam = rel_to_absdir(ActionParam);
+				fnam = to_absolute_name(ActionParam);
 			//カーソル位置
 			else {
 				if (CurStt->is_Arc) UserAbort(USTR_CantOperate);
@@ -18341,7 +18341,7 @@ void __fastcall TNyanFiForm::LoadResultListActionExecute(TObject *Sender)
 	try {
 		UnicodeString fnam;
 		if (!ActionParam.IsEmpty()) {
-			fnam = rel_to_absdir(ActionParam);
+			fnam = to_absolute_name(ActionParam);
 		}
 		else {
 			UserModule->PrepareOpenDlg(_T("結果ストを読み込む"), F_FILTER_TXT, _T("*.txt"), ResultListPath);
@@ -18438,7 +18438,7 @@ void __fastcall TNyanFiForm::LoadTabGroupActionExecute(TObject *Sender)
 	try {
 		UnicodeString fnam;
 		if (!ActionParam.IsEmpty()) {
-			fnam = rel_to_absdir(ActionParam);
+			fnam = to_absolute_name(ActionParam);
 		}
 		else {
 			UserModule->PrepareOpenDlg(_T("タブグループを読み込む"), F_FILTER_INI, _T("*.INI"));
@@ -18491,7 +18491,7 @@ void __fastcall TNyanFiForm::LoadWorkListActionExecute(TObject *Sender)
 
 		//パラメータ指定
 		if (!wnam.IsEmpty()) {
-			if (!SetWorkList(rel_to_absdir(wnam))) UserAbort(USTR_WlistCantOpen);
+			if (!SetWorkList(to_absolute_name(wnam))) UserAbort(USTR_WlistCantOpen);
 		}
 		//通常動作
 		else {
@@ -19003,7 +19003,7 @@ void __fastcall TNyanFiForm::NewFileActionExecute(TObject *Sender)
 		UnicodeString fnam = NewFileDlg->NewNameEdit->Text;
 		if (fnam.IsEmpty()) SkipAbort();
 
-		UnicodeString tnam = rel_to_absdir(NewFileDlg->TplComboBox->Text);
+		UnicodeString tnam = to_absolute_name(NewFileDlg->TplComboBox->Text);
 		if (!file_exists(tnam)) TextAbort(_T("テンプレートが見つかりません。"));
 
 		fnam = CurStt->is_ADS? CurStt->ads_Name + ":" + fnam : CurPath[CurListTag] + fnam;
@@ -19159,7 +19159,7 @@ void __fastcall TNyanFiForm::OpenByAppActionExecute(TObject *Sender)
 	try {
 		//パラメータ指定
 		if (!ActionParam.IsEmpty()) {
-			UnicodeString fnam = rel_to_absdir(ActionParam, CurPath[CurListTag]);
+			UnicodeString fnam = to_absolute_name(ActionParam, CurPath[CurListTag]);
 			if (!file_exists(fnam)) SysErrAbort(ERROR_FILE_NOT_FOUND);
 			UnicodeString app = get_MenuItemStr(get_AssociatedApps(get_extension(fnam)));
 			if (app.IsEmpty()) TextAbort(_T("関連付けられていません。"));
@@ -19261,7 +19261,7 @@ void __fastcall TNyanFiForm::OpenByExpActionExecute(TObject *Sender)
 			if (StartsStr("::{", ActionParam) || StartsStr("shell:", ActionParam) || StartsStr('/', ActionParam))
 				prm = ActionParam;
 			else {
-				prm = rel_to_absdir(cv_env_str(ActionParam), CurPath[CurListTag]);
+				prm = to_absolute_name(cv_env_str(ActionParam), CurPath[CurListTag]);
 				if (!dir_exists(prm)) SysErrAbort(ERROR_PATH_NOT_FOUND);
 				prm.Insert("/e,", 1);
 			}
@@ -19300,7 +19300,7 @@ void __fastcall TNyanFiForm::OpenByWinActionExecute(TObject *Sender)
 		if (!ActionParam.IsEmpty()) {
 			UnicodeString fnam = ActionParam;
 			if (!is_match_regex(fnam, _T("^") URL_MATCH_PTN) && !StartsText("mailto:", fnam)) {
-				fnam = rel_to_absdir(fnam, CurPath[CurListTag]);
+				fnam = to_absolute_name(fnam, CurPath[CurListTag]);
 				if (!file_exists(fnam)) SysErrAbort(ERROR_FILE_NOT_FOUND);
 			}
 			Execute_ex(fnam, EmptyStr, ExtractFilePath(fnam));
@@ -19381,7 +19381,7 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 	if (!ActionParam.IsEmpty()) {
 		if (FindBusy) { SetActionAbort(USTR_CantOperate); return; }
 
-		UnicodeString fnam = rel_to_absdir(ActionParam, CurPath[CurListTag]);
+		UnicodeString fnam = to_absolute_name(ActionParam, CurPath[CurListTag]);
 		if (file_exists(fnam)) {
 			if (dir_exists(fnam)) fnam = IncludeTrailingPathDelimiter(fnam);
 			cfp = cre_new_file_rec(fnam, CurListTag);
@@ -20247,7 +20247,7 @@ void __fastcall TNyanFiForm::PlayListActionExecute(TObject *Sender)
 		ActionParam = exclude_quot(ActionParam);
 		//対象指定
 		if (!ActionParam.IsEmpty()) {
-			if (!add_PlayList(rel_to_absdir(ActionParam)))
+			if (!add_PlayList(to_absolute_name(ActionParam)))
 				throw EAbort(LoadUsrMsg(USTR_NotFound, _T("対象")));
 		}
 		//選択指定
@@ -20970,7 +20970,7 @@ void __fastcall TNyanFiForm::SaveAsTabGroupActionExecute(TObject *Sender)
 	try {
 		UnicodeString fnam;
 		if (!ActionParam.IsEmpty()) {
-			fnam = rel_to_absdir(ActionParam);
+			fnam = to_absolute_name(ActionParam);
 		}
 		else {
 			UserModule->PrepareSaveDlg(_T("タブグループの保存"), F_FILTER_INI);
@@ -21225,7 +21225,7 @@ void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
 		}
 
 		UnicodeString lnam = (TEST_ActParam("CP") || TEST_ActParam("OP"))?
-								GetCurFileName() : rel_to_absdir(cv_env_str(exclude_quot(ActionParam)), CurPath[CurListTag]);
+								GetCurFileName() : to_absolute_name(cv_env_str(exclude_quot(ActionParam)), CurPath[CurListTag]);
 		if (lnam.IsEmpty()) UserAbort(USTR_NoParameter);
 		if (!file_exists(lnam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("ファイル")));
 
@@ -21735,7 +21735,7 @@ void __fastcall TNyanFiForm::SetDirTimeActionExecute(TObject *Sender)
 		std::unique_ptr<TStringList> tsk_lst(new TStringList());
 		UnicodeString cmd = "DTIME";
 		if (!ActionParam.IsEmpty()) {
-			UnicodeString dnam = rel_to_absdir(ActionParam, CurPath[CurListTag]);
+			UnicodeString dnam = to_absolute_name(ActionParam, CurPath[CurListTag]);
 			if (!dir_exists(dnam)) SysErrAbort(ERROR_PATH_NOT_FOUND);
 			tsk_lst->Add(cmd + "\t" + ExcludeTrailingPathDelimiter(dnam));
 		}
@@ -21874,8 +21874,8 @@ void __fastcall TNyanFiForm::SetFolderIconActionExecute(TObject *Sender)
 			DefFldIcoName = inam;
 		}
 		else {
-			if (!IsCurFList())		UserAbort(USTR_CantOperate);
-			if (!TestCurIncDir())	UserAbort(USTR_NoObject);
+			if (CurStt->is_Arc || CurStt->is_ADS || CurStt->is_FTP) UserAbort(USTR_CantOperate);
+			if (!TestCurIncDir()) UserAbort(USTR_NoObject);
 
 			TStringList *lst = GetCurList(true);
 			int sel_cnt = GetSelCount(lst);
@@ -21895,7 +21895,7 @@ void __fastcall TNyanFiForm::SetFolderIconActionExecute(TObject *Sender)
 			else {
 				UnicodeString inam;
 				if (!ActionParam.IsEmpty()) {
-					inam = rel_to_absdir(get_actual_name(ActionParam));
+					inam = to_absolute_name(get_actual_name(ActionParam));
 					if (!file_exists(inam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("アイコンファイル")));
 				}
 				else {
@@ -21916,7 +21916,10 @@ void __fastcall TNyanFiForm::SetFolderIconActionExecute(TObject *Sender)
 					}
 				}
 			}
+
+			if (DirSortMode[CurListTag]!=5) ReloadList(CurListTag, GetCurFileName());
 		}
+
 		::PostMessage(Handle, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
 	}
 	catch (EAbort &e) {
@@ -22461,8 +22464,8 @@ void __fastcall TNyanFiForm::SortDlgActionExecute(TObject *Sender)
 		}
 		//ソートモードを変更
 		else {
-			if (TEST_ActParam("XNX")) {
-				int idx = (DirSortMode[CurListTag]==0)? 5 : 0;
+			if (TEST_ActParam("XNX") || TEST_ActParam("XNI")) {
+				int idx = (DirSortMode[CurListTag]==0)? (TEST_ActParam("XNX")? 5 : 6) : 0;
 				DirSortMode[CurListTag] = idx;
 				chg_cur = true;
 				if (SortBoth && DirSortMode[OppListTag]!=idx) {
@@ -22473,7 +22476,7 @@ void __fastcall TNyanFiForm::SortDlgActionExecute(TObject *Sender)
 			else if (ActionParam.Length()==2) {
 				//ディレクトリのソート方法
 				if (StartsText("X", ActionParam)) {
-					int idx = UnicodeString("NFDSAX").Pos(ActionParam[2]);
+					int idx = UnicodeString("NFDSAXI").Pos(ActionParam[2]);
 					if (idx>0) {
 						idx--;
 						if (DirSortMode[CurListTag]!=idx) {
@@ -22593,7 +22596,7 @@ void __fastcall TNyanFiForm::SubDirListActionExecute(TObject *Sender)
 
 		pnam = to_path_name(pnam);
 		if (is_root_dir(CurPath[CurListTag]) && StartsStr("..", pnam)) SkipAbort();
-		pnam = rel_to_absdir(pnam, CurPath[CurListTag]);
+		pnam = to_absolute_name(pnam, CurPath[CurListTag]);
 		if (pnam.IsEmpty()) SkipAbort();
 
 		if (is_computer_name(pnam)) {
@@ -22991,7 +22994,7 @@ void __fastcall TNyanFiForm::TextViewerActionExecute(TObject *Sender)
 				}
 				//ファイル
 				else {
-					fnam = rel_to_absdir(cv_env_str(fnam), CurPath[CurListTag]);
+					fnam = to_absolute_name(cv_env_str(fnam), CurPath[CurListTag]);
 					xtv = new TExTxtViewer(this);
 					xtv->FileName = xtv->OrgName = fnam;
 				}
@@ -23059,7 +23062,7 @@ void __fastcall TNyanFiForm::TextViewerActionExecute(TObject *Sender)
 			}
 			//ファイル
 			else {
-				fnam = rel_to_absdir(cv_env_str(fnam), CurPath[CurListTag]);
+				fnam = to_absolute_name(cv_env_str(fnam), CurPath[CurListTag]);
 				if (!SetAndOpenTxtViewer(fnam)) UserAbort(USTR_FileNotOpen);
 			}
 		}
@@ -23987,7 +23990,7 @@ UnicodeString __fastcall TNyanFiForm::GetDistDir(bool is_move, bool *to_flag)
 	if (TEST_DEL_ActParam("TO")) {
 		UnicodeString dnam = inputbox_dir(tit.c_str(), (is_move? _T("Move") : _T("Copy")));
 		if (dnam.IsEmpty()) SkipAbort();
-		dnam = rel_to_absdir(dnam, CurPath[CurListTag]);
+		dnam = to_absolute_name(dnam, CurPath[CurListTag]);
 		int atr = file_GetAttr(dnam);
 		if (atr!=faInvalid && !(atr & faDirectory)) dnam = ExtractFilePath(dnam);
 		if (!dir_exists(dnam)) {
@@ -24546,7 +24549,7 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::CopyToActionExecute(TObject *Sender)
 {
-	ActionDstDir = rel_to_absdir(cv_env_str(ActionParam), CurPath[CurListTag]);
+	ActionDstDir = to_absolute_name(cv_env_str(ActionParam), CurPath[CurListTag]);
 	ActionParam  = EmptyStr;
 	if (!ActionDstDir.IsEmpty()) CopyAction->Execute(); else SetActionAbort();
 	ActionDstDir = EmptyStr;
@@ -24643,7 +24646,7 @@ void __fastcall TNyanFiForm::MoveActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::MoveToActionExecute(TObject *Sender)
 {
-	ActionDstDir = rel_to_absdir(cv_env_str(ActionParam), CurPath[CurListTag]);
+	ActionDstDir = to_absolute_name(cv_env_str(ActionParam), CurPath[CurListTag]);
 	ActionParam  = EmptyStr;
 	if (!ActionDstDir.IsEmpty()) MoveAction->Execute(); else SetActionAbort();
 	ActionDstDir = EmptyStr;
@@ -27157,7 +27160,7 @@ void __fastcall TNyanFiForm::GrepStartActionExecute(TObject *Sender)
 				std::unique_ptr<TStringList> rbuf(new TStringList());
 				MakeGrepOutList(rbuf.get());
 
-				UnicodeString fnam = rel_to_absdir(GrepFileName);
+				UnicodeString fnam = to_absolute_name(GrepFileName);
 				int top = 1;
 				//ファイル
 				if (GrepOutMode==1) {
@@ -27724,7 +27727,7 @@ void __fastcall TNyanFiForm::ReplaceStartActionExecute(TObject *Sender)
 					if (bext[1]!='.') bext.Insert(".", 1);
 					UnicodeString bak_nam = ChangeFileExt(fnam, bext);
 					if (!RepBackupDir.IsEmpty()) {
-						UnicodeString pnam = ExcludeTrailingPathDelimiter(rel_to_absdir(RepBackupDir, ExtractFilePath(fnam)));
+						UnicodeString pnam = ExcludeTrailingPathDelimiter(to_absolute_name(RepBackupDir, ExtractFilePath(fnam)));
 						if (chk_cre_dir(pnam).IsEmpty()) Abort();
 						bak_nam = IncludeTrailingPathDelimiter(pnam) + ExtractFileName(bak_nam);
 					}
@@ -32680,7 +32683,7 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 
 				//アイコン
 				TStringDynArray itm_buf = get_csv_array(TabList->Strings[idx], TABLIST_CSVITMCNT, true);
-				UnicodeString inam = rel_to_absdir(itm_buf[3]);
+				UnicodeString inam = to_absolute_name(itm_buf[3]);
 				if (file_exists(inam)) {
 					if (FlTabStyle==1) xp -= 6;
 					draw_SmallIcon2(inam, cv, xp, std::max(y0 + (int)(h - SIcoSize)/2, 0));

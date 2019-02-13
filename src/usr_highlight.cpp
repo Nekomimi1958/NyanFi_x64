@@ -46,7 +46,7 @@ void HighlightFile::CheckValues()
 			bool err = false;
 			if		(EndsText("Ptn", key)) err = !chk_RegExPtn(vstr);
 			else if (EndsText("Col", key)) err = !is_match_regex(vstr, _T("^[0-9a-fA-F]{6}"));
-			else if (EndsText("File",key)) err = !file_exists(rel_to_absdir(vstr));
+			else if (EndsText("File",key)) err = !file_exists(to_absolute_name(vstr));
 
 			if (err)
 				ErrorList->Add(UnicodeString().sprintf(_T("    [%s] %s=%s"),
