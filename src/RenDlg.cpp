@@ -1262,11 +1262,12 @@ void __fastcall TRenameDlg::CnvCharListBoxDrawItem(TWinControl *Control, int Ind
 
 	if (!State.Contains(odSelected)) cv->Brush->Color = (Index<9)? scl_BtnFace : scl_Window;
 	UnicodeString tmp;
-	cv->TextOut(x, y, tmp.sprintf(_T("[%s]"), lp->Items->Names[Index].c_str()));
-	x += cv->TextWidth(tmp);
-
+	tmp.sprintf(_T("[%s]"), lp->Items->Names[Index].c_str());
+	SpaceTextOut(tmp, cv, x, y, cv->Font->Color, true);
 	SetHighlight(cv, State.Contains(odSelected));
-	cv->TextOut(x, y, tmp.sprintf(_T(" ¨ [%s]"), lp->Items->ValueFromIndex[Index].c_str()));
+	out_TextEx(cv, x, y, " ¨ ");
+	tmp.sprintf(_T("[%s]"), lp->Items->ValueFromIndex[Index].c_str());
+	SpaceTextOut(tmp, cv, x, y, cv->Font->Color, true);
 
 	if (Index==8) draw_separateLine(cv, Rect, 2);
 	if (State.Contains(odFocused)) cv->DrawFocusRect(Rect);

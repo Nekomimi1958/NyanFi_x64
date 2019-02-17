@@ -267,14 +267,14 @@ void __fastcall TDirHistoryDlg::DirHistListBoxKeyDown(TObject *Sender, WORD &Key
 			UpdateListBox(lp->ItemIndex);
 		}
 		//”½‘Î‘¤‚Ì—š—ğ‚ğQÆ
-		else if (!IsFindDirHist && (equal_RIGHT(KeyStr) || contained_wd_i(_T("ToRight|ToParentOnRight"), cmd_F))) {
+		else if (!IsFindDirHist && is_ToRightOpe(KeyStr, cmd_F)) {
 			if (h_ptr && RefListTag==0) {
 				RefListTag = 1;
 				int *h_p = get_DirHistPtr(CurTabIndex, RefListTag);
 				if (h_p) UpdateListBox(*h_p);
 			}
 		}
-		else if (!IsFindDirHist && (equal_LEFT(KeyStr) || contained_wd_i(_T("ToLeft|ToParentOnLeft"), cmd_F))) {
+		else if (!IsFindDirHist && is_ToLeftOpe(KeyStr, cmd_F)) {
 			if (h_ptr && RefListTag==1) {
 				RefListTag = 0;
 				int *h_p = get_DirHistPtr(CurTabIndex, RefListTag);

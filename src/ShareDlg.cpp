@@ -423,18 +423,14 @@ void __fastcall TNetShareDlg::ShareListBoxKeyDown(TObject *Sender, WORD &Key, TS
 		}
 	}
 	//ƒpƒXØ‚è‘Ö‚¦
-	else if (PathTabControl->Visible &&
-		(equal_RIGHT(KeyStr) || contained_wd_i(_T("ToRight|ToParentOnRight|NextTab"), cmd_F)))
-	{
+	else if (PathTabControl->Visible && is_ToRightOpe(KeyStr, cmd_F)) {
 		int idx = PathTabControl->TabIndex;
 		if (idx<PathTabControl->Tabs->Count-1) {
 			PathTabControl->TabIndex = idx + 1;
 			PathTabControlChange(PathTabControl);
 		}
 	}
-	else if (PathTabControl->Visible &&
-		(equal_LEFT(KeyStr) || contained_wd_i(_T("ToLeft|ToParentOnLeft|PrevTab"), cmd_F)))
-	{
+	else if (PathTabControl->Visible && is_ToLeftOpe(KeyStr, cmd_F)) {
 		int idx = PathTabControl->TabIndex;
 		if (idx>0) {
 			PathTabControl->TabIndex = idx -1;

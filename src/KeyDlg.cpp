@@ -386,11 +386,11 @@ void __fastcall TKeyListDlg::KeyListGridKeyDown(TObject *Sender, WORD &Key, TShi
 	//•Â‚¶‚é
 	else if (USAME_TI(cmd_F, "ReturnList"))	ModalResult = mrCancel;
 	//ƒ^ƒuØ‚èŠ·‚¦
-	else if (equal_RIGHT(KeyStr) || contained_wd_i(_T("ToRight|ToParentOnRight"), cmd_F)) {
+	else if (is_ToRightOpe(KeyStr, cmd_F)) {
 		KeyTabControl->TabIndex = (KeyTabControl->TabIndex + 1) % KeyTabControl->Tabs->Count;
 		KeyTabControlChange(NULL);
 	}
-	else if (equal_LEFT(KeyStr) || contained_wd_i(_T("ToLeft|ToParentOnLeft"), cmd_F)) {
+	else if (is_ToLeftOpe(KeyStr, cmd_F)) {
 		KeyTabControl->TabIndex = (KeyTabControl->TabIndex>0) ? KeyTabControl->TabIndex - 1
 															  : KeyTabControl->Tabs->Count - 1;
 		KeyTabControlChange(NULL);

@@ -454,7 +454,6 @@ void TagManager::CountTags(TCheckListBox *lp,
 	for (int i=0; i<lp->Count; i++) lp->Items->Objects[i] = (TObject*)0;
 
 	if (!clr_sw) {
-		Screen->Cursor = crHourGlass;
 		TagRWLock->BeginRead();
 		for (int i=0; i<TagDataList->Count; i++) {
 			UnicodeString tags = GetDataTags(i);
@@ -464,7 +463,6 @@ void TagManager::CountTags(TCheckListBox *lp,
 			}
 		}
 		TagRWLock->EndRead();
-		Screen->Cursor = crDefault;
 	}
 
 	lp->Repaint();

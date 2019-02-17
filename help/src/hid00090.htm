@@ -8,6 +8,10 @@
 	<param name="Keyword" value="Git">
 	<param name="Keyword" value="Git for Windows">
 	<param name="Keyword" value="git.exe">
+	<param name="Keyword" value="GitViewer">
+	<param name="Keyword" value="Gitビュアー">
+	<param name="Keyword" value="OpenGitURL">
+	<param name="Keyword" value="SelGitChanged">
 	<param name="Keyword" value="ファイル情報">
 	<param name="Keyword" value="一覧ダイアログ">
 </object>
@@ -41,7 +45,7 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 <dt class="no_bg">STATUS
 <dd>git status --porcelain コマンドの取得結果から、フラグごとのファイル数(インデックス/ワーキングツリー)を表示します。<br>
 例えば、ワーキングツリーに2個の変更されたファイルがある場合、&quot;M:_/2&quot; と表示されます。<br>
-<a href="hid00005.htm#SelGitChanged">SelGitChanged</a> を実行すると、カレントで変更されているファイル(フラグが &quot;?&quot; 以外)が選択されます。<br>
+<a href="hid00005.htm#SelGitChanged">SelGitChanged</a> コマンドを実行すると、カレントで変更されているファイル(フラグが &quot;?&quot; 以外)が選択されます。<br>
 </dl>
 
 <p>なおリポジトリの作業ディレクトリ下で、トップの [..] 以外の項目については、<b>Remote URL</b> のみが表示されます。</p>
@@ -59,6 +63,35 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 </div>
 <br>
 
+<h3 id="GitViewer">Gitビュアー</h3>
+<div class="spc_box_p">
+Gitの作業ディレクトリ内で <a href="hid00005.htm#GitViewer">GitViewer</a> コマンドを実行すると、<b>Gitビュアー</b>が表示されます。<br>
+画面の左側にはブランチ一覧があります。<br>
+右クリックメニューから、チェックアウト(ダブルクリックや<span class="btn_frame">ENTER</span>キーでも可能)、ブランチの作成/削除/改名、マージ、タグ付け、リセットを行えます。<br>
+</div>
+
+<div class="spc_box_p">
+画面右側の上部にはHEAD位置のコミット履歴が表示されます。<br>
+デフォルトでは、表示されるコミット履歴数が30に制限されています。これを変更したい場合は、<b>GitViewer</b> コマンドの <b>N</b>～ パラメータで指定してください。<br>
+コミットを選択すると、下部にその差分の概略が表示されます。<br>
+</div>
+<div class="spc_box_p">
+下部の差分ファイル一覧では、右クリックメニューから diffツールを起動できます。<br>
+カーソル位置のファイルと、直前のコミットの同名ファイルとの差分を、git に設定されている外部ツールで表示します。<br>
+ファイル名が変更されていたりするとエラーになるので注意してください。<br>
+</div>
+
+<div class="spc_box_p">
+カーソル移動などは、ファイラーやテキストビュアーで割り当てられているのと同じキー操作でできます。<br>
+ブランチ一覧/コミット履歴間のフォーカス移動は、<a href="hid00005.htm#ToLeft">ToLeft</a> / <a href="hid00005.htm#ToRight">ToRight</a>、<a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a> / <a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a> コマンドが割り当てられているキーや、<span class="btn_frame">←</span> / <span class="btn_frame">→</span>キーで行えます。<br>
+また、コミット履歴/差分ファイル一覧間は、<a href="hid00005.htm#ToRight">ToRight</a> / <a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a> コマンドが割り当てられているキーや <span class="btn_frame">→</span>キーで移動できます。<br>
+</div>
+
+<div class="spc_box_p">
+ブランチ一覧、コミット履歴にはリストの、差分概略にはテキストプレビューのフォント・配色が用いられます。<br>
+その他 Git 固有の配色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> で指定してください。<br>
+</div>
+<br>
 
 <h3>Git 補助コマンドの利用</h3>
 <p>
@@ -113,6 +146,24 @@ Add_RES<<%Buffer%
 Set_Buffer=%RES%
 ListBuffer_"Git Add/Commit - %CurPath%"
 </pre>
+
+ポップアップメニューでブランチを選んでチェックアウト
+<pre class="example_box">
+Git_branch
+ReplaceBuffer_/^\$ git .*\r\n/=""
+PopupMenu_Buffer
+Test_MenuIndex!=0
+IfTrue
+  Set_Buffer=%MenuStr%
+  MatchBuffer_/^\*/
+  IfFalse
+    Hint_"checkout %MenuStr%"
+    Git_"checkout %MenuStr%"
+  EndIf
+EndIf
+Exit
+</pre>
+
 </div>
 <br><br>
 

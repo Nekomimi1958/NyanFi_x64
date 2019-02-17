@@ -519,7 +519,7 @@ void __fastcall TDistributionDlg::RegListBoxKeyDown(TObject *Sender, WORD &Key, 
 	if		(USAME_TI(CmdStr, "FileEdit"))			EditListAction->Execute();
 	else if (equal_DEL(KeyStr)) 					DelRegAction->Execute();
 	else if (UserModule->ListBoxOpeItem(KeyStr))	;
-	else if (ListListBox->Visible && contained_wd_i(_T("ToRight|ToParentOnRight"), CmdStr))
+	else if (ListListBox->Visible && is_ToRightOpe(KeyStr, CmdStr))
 													ListListBox->SetFocus();
 	else handled = false;
 
@@ -552,7 +552,7 @@ void __fastcall TDistributionDlg::ListListBoxKeyDown(TObject *Sender, WORD &Key,
 
 	bool handled = true;
 	if		(USAME_TI(CmdStr, "FileEdit")) EditListAction->Execute();
-	else if (contained_wd_i(_T("ToLeft|ToParentOnLeft"), CmdStr)) RegListBox->SetFocus();
+	else if (is_ToLeftOpe(KeyStr, CmdStr)) RegListBox->SetFocus();
 	else handled = false;
 
 	if (!is_DialogKey(Key) || handled) Key = 0;

@@ -86,8 +86,9 @@ void UsrIniFile::LoadValues()
 		fbuf->LoadFromFile(FileName);
 		TStringList *klist = NULL;
 		for (int i=0; i<fbuf->Count; i++) {
-			UnicodeString s = TrimLeft(fbuf->Strings[i]);
-			if (s.IsEmpty() || s[1]==';') continue;	//空行やコメント行は無視
+			UnicodeString s  = fbuf->Strings[i];
+			UnicodeString s2 = Trim(s);
+			if (s2.IsEmpty() || s2[1]==';') continue;	//空行やコメント行は無視
 			if (StartsStr('[', s) && EndsStr(']', s))
 				klist = AddSection(exclude_top_end(s));
 			else

@@ -9,4 +9,4 @@ Supported language is Japanese only.
 http://nekomimi.la.coocan.jp/freesoft/nyanfi.htm  
 
 ## Development Environment
-C++Builder 10.3 (BCC64)
+C++Builder 10.3.1 (BCC64)

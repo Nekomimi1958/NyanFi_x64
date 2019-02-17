@@ -843,6 +843,12 @@ TColor col_GrLine;		//グラフのライン
 TColor col_GrGrid;		//グラフのグリッド
 TColor col_GrText;		//グラフの文字色
 
+TColor col_GitHEAD;		//Gitビュアー : ヘッド
+TColor col_GitBra;		//  ブランチ
+TColor col_GitBraR;		//  リモートブランチ
+TColor col_GitTag;		//  タグ
+TColor col_GitHash;		//  ハッシュ
+
 TColor col_bgTlBar1;	//ツールバーのグラデーション開始色
 TColor col_bgTlBar2;	//ツールバーのグラデーション終了色
 TColor col_fgTlBar;		//ツールバーの文字色
@@ -8732,6 +8738,17 @@ UnicodeString Key_to_CmdV(UnicodeString key)
 }
 
 //---------------------------------------------------------------------------
+bool is_ToLeftOpe(UnicodeString keystr, UnicodeString cmdstr)
+{
+	return (equal_LEFT(keystr) || contained_wd_i(_T("ToLeft|ToParentOnLeft"), cmdstr));
+}
+//---------------------------------------------------------------------------
+bool is_ToRightOpe(UnicodeString keystr, UnicodeString cmdstr)
+{
+	return (equal_RIGHT(keystr) || contained_wd_i(_T("ToRight|ToParentOnRight"), cmdstr));
+}
+
+//---------------------------------------------------------------------------
 //コマンドに対する説明文字列を取得
 //---------------------------------------------------------------------------
 UnicodeString get_CmdDesc(
@@ -8948,6 +8965,11 @@ void set_col_from_ColorList()
 		{&col_GrLine,	_T("GrLine"),		clLime},
 		{&col_GrGrid,	_T("GrGrid"),		clGray},
 		{&col_GrText,	_T("GrText"),		clLtGray},
+		{&col_GitHEAD,	_T("GitHEAD"),		clFuchsia},
+		{&col_GitBra,	_T("GitBra"),		clGreen},
+		{&col_GitBraR,	_T("GitBraR"),		clOlive},
+		{&col_GitTag,	_T("GitTag"),		clYellow},
+		{&col_GitHash,	_T("GitHash"),		clGray},
 		{&col_bgTlBar1,	_T("bgTlBar1"),		clWhite},
 		{&col_bgTlBar2,	_T("bgTlBar2"),		clWebGainsboro},
 		{&col_fgTlBar,	_T("fgTlBar"),		clBlack},
@@ -9323,6 +9345,21 @@ void out_Text(TCanvas *cv, int x, int y, const _TCHAR *s, TColor fg)
 {
 	cv->Font->Color = fg;
 	cv->TextOut(x, y, s);
+}
+//---------------------------------------------------------------------------
+void out_TextEx(TCanvas *cv, int &x, int y, UnicodeString s, TColor fg, TColor bg, int mgn)
+{
+	TColor org_fg = cv->Font->Color;
+	TColor org_bg = cv->Brush->Color;
+
+	if (fg!=Graphics::clNone) cv->Font->Color  = fg;
+	if (bg!=Graphics::clNone) cv->Brush->Color = bg;
+
+	cv->TextOut(x, y, s);
+
+	x += (cv->TextWidth(s) + mgn);
+	cv->Font->Color  = org_fg;
+	cv->Brush->Color = org_bg;
 }
 
 //---------------------------------------------------------------------------
@@ -9917,21 +9954,21 @@ void RloPipeTextOut(
 
 //---------------------------------------------------------------------------
 //空白記号を含む文字列の描画
-// ">" : 半角空白の代替文字
-// "<" : 全角空白の代替文字
-// "|" : RLO 警告の代替文字
+// デフォルトでは ">"=半角空白)、"<"=全角空白 "|"= RLO と見なして描画
+// force_nrm=true では、" "、"　" を加減した文字色で強制描画
 //---------------------------------------------------------------------------
 void SpaceTextOut(
 	UnicodeString s,	//表示文字列
 	TCanvas *cv,
 	int &x, int y,		//表示位置 (x は更新)
-	TColor fg)			//文字色
+	TColor fg,			//文字色
+	bool force_nrm)		//" " を "　" を強制描画	(default = false)
 {
 	if (s.IsEmpty()) return;
 
-	UnicodeString hs_ch = ">";
-	UnicodeString zs_ch = "<";
-	if (ShowSpace && (s.Pos(hs_ch) || s.Pos(zs_ch))) {
+	UnicodeString hs_ch = force_nrm? " " : ">";
+	UnicodeString zs_ch = force_nrm? "　" : "<";
+	if ((ShowSpace || force_nrm) && (s.Pos(hs_ch) || s.Pos(zs_ch))) {
 		bool is_irreg = IsIrregularFont(cv->Font);
 		int w1 = Scaled1;
 		int w2 = Scaled2;
@@ -9940,8 +9977,7 @@ void SpaceTextOut(
 		int zs_wd = std::min(abs(cv->Font->Height), hs_wd * 2);
 		cv->Pen->Width = w1;
 		cv->Pen->Style = psSolid;
-		cv->Pen->Color = col_fgSpace;
-
+		cv->Pen->Color = force_nrm? AdjustColor(fg, 96) : col_fgSpace;
 		for (;;) {
 			int p_z = s.Pos(zs_ch);
 			int p_h = s.Pos(hs_ch);
@@ -9952,7 +9988,7 @@ void SpaceTextOut(
 			bool is_zs = SameStr(s.SubString(p, 1), zs_ch);
 			s.Delete(1, p);
 			//文字
-			RloPipeTextOut(tmp, cv, x, y, fg);
+			if (force_nrm) out_TextEx(cv, x, y, tmp, fg); else RloPipeTextOut(tmp, cv, x, y, fg);
 
 			//全角空白
 			if (is_zs) {
@@ -9976,10 +10012,10 @@ void SpaceTextOut(
 			}
 		}
 
-		RloPipeTextOut(s, cv, x, y, fg);
+		if (force_nrm) out_TextEx(cv, x, y, s, fg); else RloPipeTextOut(s, cv, x, y, fg);
 	}
 	else {
-		RloPipeTextOut(s, cv, x, y, fg);
+		if (force_nrm) out_TextEx(cv, x, y, s, fg); else RloPipeTextOut(s, cv, x, y, fg);
 	}
 }
 
@@ -11037,20 +11073,19 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 //---------------------------------------------------------------------------
 //git.exe を実行
 //---------------------------------------------------------------------------
-bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst,
-	bool ins_cmdln)	//先頭にコマンドラインを挿入	(default = true)
+bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, DWORD *exit_cd)
 {
 	if (!file_exists(CmdGitExe)) return false;
 
 	wdir = ExcludeTrailingPathDelimiter(wdir);
 	UnicodeString cmdln = add_quot_if_spc(CmdGitExe);
 	if (!prm.IsEmpty()) cmdln.cat_sprintf(_T(" %s"), prm.c_str());
+
 	DWORD exit_code = 0;
-	if (!Execute_cmdln(cmdln, wdir, "HWO", &exit_code, o_lst)) return false;
-	UnicodeString tmp;
- 	if (exit_code!=0) o_lst->Text = tmp.sprintf(_T("ERROR %u"), exit_code);
-	if (ins_cmdln)	  o_lst->Insert(0, tmp.sprintf(_T("$ git %s"), prm.c_str()));
-	return true;
+	bool res = Execute_cmdln(cmdln, wdir, "HWO", &exit_code, o_lst);
+	if (exit_cd) *exit_cd = exit_code;
+
+	return res;
 }
 
 //---------------------------------------------------------------------------
@@ -13156,9 +13191,10 @@ int get_GitChangedList(UnicodeString pnam, TStringList *lst)
 		if (tnam.IsEmpty()) Abort();
 
 		std::unique_ptr<TStringList> o_buf(new TStringList());
-		if (!GitShellExe("status --porcelain", pnam, o_buf.get(), false)) Abort();
+		DWORD exit_code = 0;
+		if (!GitShellExe("status --porcelain", pnam, o_buf.get(), &exit_code)) Abort();
+		if (exit_code!=0) Abort();
 		if (o_buf->Count>0) {
-			if (StartsStr("ERROR", o_buf->Strings[0])) Abort();
 			for (int i=0; i<o_buf->Count; i++) {
 				UnicodeString lbuf = o_buf->Strings[i];
 				if (lbuf.Length()<2) continue;
@@ -13184,12 +13220,13 @@ UnicodeString get_GitSttStr(UnicodeString dnam)
 {
 	UnicodeString stt_str;
 	std::unique_ptr<TStringList> o_buf(new TStringList());
-	if (GitShellExe("status --porcelain", dnam, o_buf.get(), false)) {
+	DWORD exit_code = 0;
+	if (GitShellExe("status --porcelain", dnam, o_buf.get(), &exit_code)) {
 		if (o_buf->Count==0) {
 			stt_str = "Clean";
 		}
-		else if (StartsStr("ERROR", o_buf->Strings[0])) {
-			stt_str = o_buf->Strings[0];
+		else if (exit_code!=0) {
+			stt_str.cat_sprintf(_T("Error: %u"), exit_code);
 		}
 		else {
 			//フラグ文字毎のファイル数を取得
@@ -13255,7 +13292,7 @@ void draw_GitGraph(
 	UnicodeString s2,	//次行
 	TCanvas *cv,
 	TRect &rc,			//表示位置 (rc.Left 更新)
-	TColor fg)			//文字色
+	bool is_head)		//HEAD (default = false)
 {
 	if (s.IsEmpty()) return;
 
@@ -13277,7 +13314,7 @@ void draw_GitGraph(
 	cv->Pen->Width	 = Scaled1;
 
 	TColor org_bg = cv->Brush->Color;
-	cv->Brush->Color = col_Headline;
+	cv->Brush->Color = is_head? col_GitHEAD : col_Headline;
 	cv->Brush->Style = bsSolid;
 
 	for (int i=1; i<=slen; i++) {
@@ -13294,7 +13331,7 @@ void draw_GitGraph(
 		case '*':
 			if (s1[i]!=' ' || c1l=='\\') { cv->MoveTo(xc, y0); cv->LineTo(xc, yc); }
 			if (s2[i]!=' ' || c2l=='/')  { cv->MoveTo(xc, yc); cv->LineTo(xc, y1); }
-			cv->Pen->Color = col_Headline;
+			cv->Pen->Color = is_head? col_GitHEAD : col_Headline;
 			cv->Ellipse(xc - r, yc - r, xc + r, yc + r);
 			break;
 		case '|':

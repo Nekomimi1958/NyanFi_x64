@@ -7,30 +7,30 @@
 #include <memory>
 
 //---------------------------------------------------------------------------
-USEFORM("SameDlg.cpp", SameNameDlg);
 USEFORM("ShareDlg.cpp", NetShareDlg);
-USEFORM("PrnImgDlg.cpp", PrintImgDlg);
+USEFORM("Splash.cpp", SplashForm);
 USEFORM("RegExChk.cpp", RegExChecker);
 USEFORM("RenDlg.cpp", RenameDlg);
-USEFORM("Splash.cpp", SplashForm);
-USEFORM("TabDlg.cpp", TabSetDlg);
+USEFORM("SameDlg.cpp", SameNameDlg);
 USEFORM("TagDlg.cpp", TagManDlg);
 USEFORM("TaskDlg.cpp", TaskManDlg);
 USEFORM("SrtModDlg.cpp", SortModeDlg);
 USEFORM("SyncDlg.cpp", RegSyncDlg);
-USEFORM("PackDlg.cpp", PackArcDlg);
-USEFORM("MainFrm.cpp", NyanFiForm);
+USEFORM("TabDlg.cpp", TabSetDlg);
+USEFORM("PrnImgDlg.cpp", PrintImgDlg);
 USEFORM("MaskDlg.cpp", PathMaskDlg);
-USEFORM("JoinDlg.cpp", JoinTextDlg);
+USEFORM("MaskSelDlg.cpp", MaskSelectDlg);
 USEFORM("KeyDlg.cpp", KeyListDlg);
 USEFORM("LoupeFrm.cpp", LoupeForm);
-USEFORM("MaskSelDlg.cpp", MaskSelectDlg);
-USEFORM("OptDlg.cpp", OptionDlg);
+USEFORM("MainFrm.cpp", NyanFiForm);
 USEFORM("MemoFrm.cpp", MemoForm);
+USEFORM("OptDlg.cpp", OptionDlg);
+USEFORM("PackDlg.cpp", PackArcDlg);
 USEFORM("ModalScr.cpp", ModalScrForm);
 USEFORM("NewDlg.cpp", NewFileDlg);
 USEFORM("XmlView.cpp", XmlViewer);
 USEFORM("UserMdl.cpp", UserModule); /* TDataModule: File Type */
+USEFORM("JoinDlg.cpp", JoinTextDlg);
 USEFORM("CvImgDlg.cpp", CvImageDlg);
 USEFORM("DebugFrm.cpp", DebugForm);
 USEFORM("DiffDlg.cpp", DiffDirDlg);
@@ -79,6 +79,7 @@ USEFORM("GenInfDlg.cpp", GeneralInfoDlg);
 USEFORM("FindKey.cpp", FindKeyDlg);
 USEFORM("FindTag.cpp", FindTagForm);
 USEFORM("FindTxtDlg.cpp", FindTextDlg);
+USEFORM("GitView.cpp", GitViewer);
 //---------------------------------------------------------------------------
 #include "Global.h"
 #include "Splash.h"
@@ -211,6 +212,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		Application->CreateForm(__classid(TSameNameDlg), &SameNameDlg);
 		Application->CreateForm(__classid(TInpDirDlg), &InpDirDlg);
 		Application->CreateForm(__classid(TGraphForm), &GraphForm);
+		Application->CreateForm(__classid(TGitViewer), &GitViewer);
 		cursor_Default();
 		Application->Run();
 	}

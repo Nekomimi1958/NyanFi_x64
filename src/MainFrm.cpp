@@ -87,6 +87,7 @@
 #include "FtpDlg.h"
 #include "ChmodDlg.h"
 #include "XmlView.h"
+#include "GitView.h"
 #include "ShareDlg.h"
 #include "FindTag.h"
 #include "RegExChk.h"
@@ -6201,8 +6202,8 @@ void __fastcall TNyanFiForm::InfListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 	bool handled = true;
 	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))
 		;
-	else if (equal_RIGHT(KeyStr) || contained_wd_i(_T("ToRight|ToParentOnRight"), cmd_F))	ExeCmdAction(ToRightAction);
-	else if (equal_LEFT(KeyStr)  || contained_wd_i(_T("ToLeft|ToParentOnLeft"),   cmd_F))	ExeCmdAction(ToLeftAction);
+	else if (is_ToRightOpe(KeyStr, cmd_F))	ExeCmdAction(ToRightAction);
+	else if (is_ToLeftOpe(KeyStr, cmd_F))	ExeCmdAction(ToLeftAction);
 	else if (SameText(KeyStr, KeyStr_Copy)) ExeCmdListBox(lp, _T("ClipCopy"));
 	//右クリックメニュー
 	else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(lp);
@@ -11003,6 +11004,7 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 			//ポップアップメニュー
 			else if (cmd_id==XCMDID_PopupMenu) {
 				XCMD_set_Var(_T("MenuIndex"), 0);
+				XCMD_set_Var(_T("MenuStr"),   EmptyStr);
 				std::unique_ptr<TStringList> m_buf(new TStringList());
 				m_buf->Text = XCMD_VarList->Values[XCMD_prm];
 				if (m_buf->Count==0) TextAbort(_T("メニュー項目がありません。"));
@@ -11342,8 +11344,17 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ExeCmdsMenuClick(TObject *Sender)
 {
-	PopMenuIndex = ((TMenuItem*)Sender)->Tag;
-	if (ExeCmdsBusy) XCMD_set_Var(_T("MenuIndex"), PopMenuIndex + 1);
+	TMenuItem *mp = (TMenuItem*)Sender;
+	PopMenuIndex  = mp->Tag;
+	if (ExeCmdsBusy) {
+		UnicodeString s = mp->Caption;
+		s = ReplaceStr(s, "&&", "\f");
+		s = replace_regex(s, _T("\\s*\\(&\\w\\)\\s*"), null_TCHAR);
+		s = replace_regex(s, _T("([^&]?)&([^& ])"), _T("\\1\\2"));
+		s = ReplaceStr(s, "\f", "&");
+		XCMD_set_Var(_T("MenuStr"),   Trim(s));
+		XCMD_set_Var(_T("MenuIndex"), PopMenuIndex + 1);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -11402,8 +11413,8 @@ void __fastcall TNyanFiForm::LogListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
 
 	if		(!cmd_L.IsEmpty()) ExeCommandL(cmd_L);
-	else if	(equal_RIGHT(KeyStr) || contained_wd_i(_T("ToRight|ToParentOnRight"), cmd_F))	ExeCmdAction(ToRightAction);
-	else if (equal_LEFT(KeyStr)  || contained_wd_i(_T("ToLeft|ToParentOnLeft"),   cmd_F))	ExeCmdAction(ToLeftAction);
+	else if	(is_ToRightOpe(KeyStr, cmd_F))	ExeCmdAction(ToRightAction);
+	else if (is_ToLeftOpe(KeyStr, cmd_F))	ExeCmdAction(ToLeftAction);
 	else if (SameText(KeyStr, KeyStr_Copy)) Log_EditCopy->Execute();
 	//右クリックメニュー
 	else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(lp);
@@ -16516,6 +16527,33 @@ void __fastcall TNyanFiForm::FixTabPathActionExecute(TObject *Sender)
 
 	SetDirCaption(0);
 	SetDirCaption(1);
+}
+
+//---------------------------------------------------------------------------
+//Gitビュアー
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GitViewerActionExecute(TObject *Sender)
+{
+	try {
+		if (!IsCurFList()) UserAbort(USTR_CantOperate);
+		if (get_GitTopPath(CurPath[CurListTag]).IsEmpty()) TextAbort(_T("Gitの作業ディレクトリではありません。"));
+		if (!GitViewer) GitViewer = new TGitViewer(this);	//初回に動的作成
+		GitViewer->HistoryLimit = StartsText('N', ActionParam)? extract_int_def(ActionParam) : GIT_DEF_HISTLIMIT;
+		SetDirWatch(false);
+		GitViewer->ShowModal();
+		SetDirWatch(true);
+		ReloadList(CurListTag);
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GitViewerActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = ScrMode==SCMD_FLIST;
+	ap->Enabled = ap->Visible && GitExists;
 }
 
 //---------------------------------------------------------------------------

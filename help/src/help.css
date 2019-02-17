@@ -257,3 +257,10 @@ PRE {
 .spc_box {
   margin: 0.6em 0px;
 }
+
+.spc_box_p {
+  margin: 0.6em 0px;
+  padding-left: 0.5em;
+  line-height: 150%;
+}
+

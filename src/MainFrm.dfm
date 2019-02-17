@@ -3885,6 +3885,12 @@ object NyanFiForm: TNyanFiForm
       OnExecute = GetHashActionExecute
       OnUpdate = MenuFActionUpdate
     end
+    object GitViewerAction: TAction
+      Category = 'Command'
+      Caption = 'Git'#12499#12517#12450#12540'...'
+      OnExecute = GitViewerActionExecute
+      OnUpdate = GitViewerActionUpdate
+    end
     object GrepAction: TAction
       Category = 'Command'
       Caption = #25991#23383#21015#26908#32034'(&Grep)...'

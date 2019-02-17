@@ -5,9 +5,9 @@ object KeyListDlg: TKeyListDlg
   BorderIcons = [biSystemMenu]
   Caption = #12461#12540#21106#12426#24403#12390#19968#35239
   ClientHeight = 441
-  ClientWidth = 613
+  ClientWidth = 470
   Color = clBtnFace
-  Constraints.MinWidth = 400
+  Constraints.MinWidth = 480
   ParentFont = True
   KeyPreview = True
   OldCreateOrder = False
@@ -23,7 +23,7 @@ object KeyListDlg: TKeyListDlg
   object KeyTabControl: TTabControl
     Left = 0
     Top = 381
-    Width = 613
+    Width = 470
     Height = 60
     Align = alBottom
     OwnerDraw = True
@@ -40,12 +40,12 @@ object KeyListDlg: TKeyListDlg
     OnChange = KeyTabControlChange
     OnDrawTab = KeyTabControlDrawTab
     DesignSize = (
-      613
+      470
       60)
     object FilterEdit: TLabeledEdit
       Left = 72
       Top = 6
-      Width = 197
+      Width = 54
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 33
@@ -61,7 +61,7 @@ object KeyListDlg: TKeyListDlg
       OnKeyPress = FilterEditKeyPress
     end
     object ShowAllCmdCheckBox: TCheckBox
-      Left = 353
+      Left = 210
       Top = 8
       Width = 158
       Height = 17
@@ -71,7 +71,7 @@ object KeyListDlg: TKeyListDlg
       OnClick = ShowAllCmdCheckBoxClick
     end
     object MigemoCheckBox: TCheckBox
-      Left = 277
+      Left = 134
       Top = 8
       Width = 74
       Height = 17
@@ -81,7 +81,7 @@ object KeyListDlg: TKeyListDlg
       OnClick = MigemoCheckBoxClick
     end
     object CnfExeCheckBox: TCheckBox
-      Left = 515
+      Left = 372
       Top = 8
       Width = 88
       Height = 17
@@ -93,7 +93,7 @@ object KeyListDlg: TKeyListDlg
   object HiddenCanBtn: TButton
     Left = 0
     Top = 381
-    Width = 613
+    Width = 470
     Height = 0
     Align = alBottom
     Cancel = True
@@ -103,7 +103,7 @@ object KeyListDlg: TKeyListDlg
   object KeyListHeader: THeaderControl
     Left = 0
     Top = 0
-    Width = 613
+    Width = 470
     Height = 20
     Sections = <
       item
@@ -134,18 +134,18 @@ object KeyListDlg: TKeyListDlg
   object GridPanel: TPanel
     Left = 0
     Top = 20
-    Width = 613
+    Width = 470
     Height = 361
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     DesignSize = (
-      613
+      470
       361)
     object KeyListGrid: TStringGrid
       Left = 0
       Top = 0
-      Width = 613
+      Width = 470
       Height = 363
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone

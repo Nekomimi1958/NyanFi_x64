@@ -75,6 +75,7 @@ void HtmlHelpClose();
 #define HELPTOPIC_XC	"hid00063.htm"		//ExeCommands コマンド
 #define HELPTOPIC_GR	"hid00056.htm"		//文字列検索(GREP)
 #define HELPTOPIC_RP	"hid00061.htm"		//文字列置換
+#define HELPTOPIC_GIT	"hid00090.htm"		//Gitの利用
 #define HELPTOPIC_CH	"hid00109.htm"		//変更履歴
 
 //---------------------------------------------------------------------------
@@ -1060,6 +1061,12 @@ extern TColor col_GrLine;
 extern TColor col_GrGrid;
 extern TColor col_GrText;
 
+extern TColor col_GitHEAD;
+extern TColor col_GitBra;
+extern TColor col_GitBraR;
+extern TColor col_GitTag;
+extern TColor col_GitHash;
+
 extern TColor col_bgTlBar1;
 extern TColor col_bgTlBar2;
 extern TColor col_fgTlBar;
@@ -1813,6 +1820,9 @@ void filter_List(TStringList *i_lst, TStringList *o_lst, UnicodeString kwd,
 UnicodeString Key_to_CmdF(UnicodeString key);
 UnicodeString Key_to_CmdV(UnicodeString key);
 
+bool is_ToLeftOpe(UnicodeString keystr, UnicodeString cmdstr);
+bool is_ToRightOpe(UnicodeString keystr, UnicodeString cmdstr);
+
 UnicodeString get_CmdDesc(UnicodeString cmd, bool only_inf = false,
 	TStrings *menu_list = NULL, TStrings *tool_list = NULL, bool is_TV = false);
 
@@ -1844,7 +1854,11 @@ int  get_TabTextWidth(UnicodeString s, TCanvas *cv, int tab_wd);
 void out_Text(TCanvas *cv, int x, int y, const _TCHAR *s);
 void out_Text(TCanvas *cv, int x, int y, const _TCHAR *s, TColor fg);
 
-int  get_MatchWordList(UnicodeString lbuf, UnicodeString kwd, bool migemo_sw, bool regex_sw, bool and_or_sw, TStringList *lst);
+void out_TextEx(TCanvas *cv, int &x, int y, UnicodeString s,
+	TColor fg = Graphics::clNone, TColor bg = Graphics::clNone, int mgn = 0);
+
+int  get_MatchWordList(UnicodeString lbuf, UnicodeString kwd,
+	bool migemo_sw, bool regex_sw, bool and_or_sw, TStringList *lst);
 
 void EmphasisTextOut(UnicodeString s, TStringList *kw_lst, TCanvas *cv, int &x, int y,
 	bool case_sns = false, bool only_top = false, TColor fg = col_fgEmp, TColor bg = col_bgEmp);
@@ -1868,7 +1882,7 @@ void FileNameOut(TCanvas *cv, TRect &rc, UnicodeString fnam, bool use_fgsel,
 	bool to_slash = false, TStringList *kw_lst = NULL);
 
 void RloPipeTextOut(UnicodeString s, TCanvas *cv, int &x, int y, TColor fg);
-void SpaceTextOut(UnicodeString s, TCanvas *cv, int &x, int y, TColor fg);
+void SpaceTextOut(UnicodeString s, TCanvas *cv, int &x, int y, TColor fg, bool force_nrm = false);
 
 void Emphasis_RLO_info(UnicodeString fnam, TCanvas *cv, int xp, int yp);
 
@@ -1915,7 +1929,7 @@ bool Execute_ex(UnicodeString cmd, UnicodeString prm = EmptyStr, UnicodeString w
 		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL);
 bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir = EmptyStr,
 		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL);
-bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, bool ins_cmdln = false);
+bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, DWORD *exit_cd = NULL);
 
 int  get_BusyTaskCount();
 int  get_MaxTaskCount();
@@ -2039,6 +2053,6 @@ int get_GitChangedList(UnicodeString pnam, TStringList *lst);
 UnicodeString get_GitSttStr(UnicodeString dnam);
 UnicodeString get_GitGraphStr(UnicodeString lbuf);
 UnicodeString split_GitGraphStr(UnicodeString &lbuf);
-void draw_GitGraph(UnicodeString s, UnicodeString s1, UnicodeString s2, TCanvas *cv, TRect &rc, TColor fg);
+void draw_GitGraph(UnicodeString s, UnicodeString s1, UnicodeString s2, TCanvas *cv, TRect &rc, bool is_head = false);
 //---------------------------------------------------------------------------
 #endif

@@ -165,6 +165,7 @@ MsgBox_%..N%回目です
 <tr><th>CodePage</th><td>コードページ(Buffer の読み込み/保存に使用)<br>
 テキストビュアーでは表示中テキストのコードページ(変更するとその値が優先)</td></tr>
 <tr><th>MenuIndex</th><td><a href="#PopupMenu">PopupMenu</a> で選択された項目番号(1～、キャンセル時は0)</td></tr>
+<tr><th>MenuStr</th><td><a href="#PopupMenu">PopupMenu</a> で選択された項目文字列(アクセラレータ部分や前後の空白は削除、キャンセル時は &quot;&quot;)</td></tr>
 <tr><th>ModalResult</th><td>直前に閉じられたモーダルダイアログの戻り値<br>
 (1 = OK、2 = キャンセル、6 = はい、7 = いいえ、8 = 閉じる)</td></tr>
 <tr><th>ExitCode</th><td><a href="#ShellExecute">ShellExecute</a> (SetExeOpt で W、O を指定)実行後の終了コード</td></tr>
@@ -195,7 +196,7 @@ MsgBox_%..N%回目です
 <h3 id="AuxCommand">補助コマンド</h3>
 <b>ExeCommands</b> コマンドのパラメータまたはコマンドファイル内でのみ使える補助コマンドとして、以下のものがあります。<br>
 <p class="link_box">
-<a href="#ActivateWnd">A</a> <a href="#CallCommands">C</a> <a href="#Debug">D</a> <a href="#Echo">E</a> <a href="#FileExists">F</a> <a href="#Git">G</a> <a href="#Ins">I</a> <a href="#JumpCommands">J</a> <a href="#ListBuffer">L</a> <a href="#MatchBuffer">M</a> <a href="#PlaySound">P</a> <a href="#Random">R</a> <a href="#SaveBuffer">S</a> <a href="#Test">T</a> <a href="#WaitForTask2">W</a>
+<a href="#ActivateWnd">A</a> <a href="#CallCommands">C</a> <a href="#Debug">D</a> <a href="#Echo">E</a> <a href="#FileExists">F</a> <a href="#Git">G</a> <a href="#Hint">H</a> <a href="#Ins">I</a> <a href="#JumpCommands">J</a> <a href="#ListBuffer">L</a> <a href="#MatchBuffer">M</a> <a href="#PlaySound">P</a> <a href="#Random">R</a> <a href="#SaveBuffer">S</a> <a href="#Test">T</a> <a href="#WaitForTask2">W</a>
 </p>
 
 <div class="indent1">
@@ -573,15 +574,15 @@ MsgBox<span class="pram_text">_&quot;:タイトル:メッセージ&quot;</span>
 
 <dt id="PopupMenu" class="no_bg">PopupMenu<span class="pram_text">_変数名</span>
 <dd>変数に設定された項目をポップアップメニューで表示します。<br>
-メニュー項目が選択されると、定義済み変数 <b>MenuIndex</b> に項目番号(1～、キャンセル時は0)が設定されます。<br>
+メニュー項目が選択されると、定義済み変数 <b>MenuIndex</b> に項目番号(1～、キャンセル時は0)が、<b>MenuStr</b> には項目の文字列(アクセラレータ部分や前後の空白は削除、キャンセル時は &quot;&quot;)が設定されます。<br>
 <div class="spc_box">
 <b>例</b>:
 <pre class="example_box">
-Add_メニュー<<項目1
-Add_メニュー<<項目2
-Add_メニュー<<項目3
+Add_メニュー<<ねこ(&C)
+Add_メニュー<<いぬ(&D)
+Add_メニュー<<とり(&B)
 PopupMenu_メニュー
-MsgBox_項目%MenuIndex%が選択されました
+MsgBox_項目%MenuIndex%の「%MenuStr%」が選択されました
 </pre>
 </div>
 

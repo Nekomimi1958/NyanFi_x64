@@ -192,7 +192,7 @@ bool class_is_CheckListBox(TObject *op);
 bool class_is_RadioGroup(TObject *op);
 
 void cursor_HourGlass();
-void cursor_Default();;
+void cursor_Default();
 
 void reduction_MenuLine(TMenuItem *mp);
 

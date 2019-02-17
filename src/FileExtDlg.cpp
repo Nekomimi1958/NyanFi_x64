@@ -656,15 +656,15 @@ void __fastcall TFileExtensionDlg::InfoListBoxKeyDown(TObject *Sender, WORD &Key
 		TShiftState Shift)
 {
 	TListBox *lp = (TListBox*)Sender;
-	UnicodeString KeyStr  = get_KeyStr(Key, Shift);
-	UnicodeString CmdStrF = Key_to_CmdF(KeyStr);
-	UnicodeString CmdStrV = Key_to_CmdV(KeyStr);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+	UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
 
-	if (ExeCmdListBox(lp, CmdStrF) || ExeCmdListBox(lp, CmdStrV))
+	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))
 		InfoListBoxClick(NULL);
-	else if (USAME_TI(CmdStrF, "ReturnList"))
+	else if (USAME_TI(cmd_F, "ReturnList"))
 		ModalResult = mrCancel;
-	else if (USAME_TI(CmdStrF, "ToRight") || equal_RIGHT(KeyStr) || equal_ENTER(KeyStr))
+	else if (is_ToRightOpe(KeyStr, cmd_F) || equal_ENTER(KeyStr))
 		FileListBox->SetFocus();
 	//頭文字サーチ
 	else if (is_IniSeaKey(KeyStr))	//KeyStr に正規表現パターンが返る
@@ -767,25 +767,25 @@ void __fastcall TFileExtensionDlg::FileListBoxExit(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFileExtensionDlg::FileListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	UnicodeString KeyStr  = get_KeyStr(Key, Shift);
-	UnicodeString CmdStrF = Key_to_CmdF(KeyStr);
-	UnicodeString CmdStrV = Key_to_CmdV(KeyStr);
-	UnicodeString fnam	  = GetCurFileItem();
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+	UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
+	UnicodeString fnam	 = GetCurFileItem();
 
 	TListBox *lp = (TListBox*)Sender;
-	if (ExeCmdListBox(lp, CmdStrF) || ExeCmdListBox(lp, CmdStrV))
+	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))
 		FileListBoxClick(NULL);
-	else if (contained_wd_i(_T("Mark|Mark_ND"), CmdStrF)) {
+	else if (contained_wd_i(_T("Mark|Mark_ND"), cmd_F)) {
 		if (!fnam.IsEmpty()) {
 			IniFile->FileMark(fnam, -1);
-			if (USAME_TI(CmdStrF, "Mark")) ListBoxCursorDown(lp);
+			if (USAME_TI(cmd_F, "Mark")) ListBoxCursorDown(lp);
 			lp->Invalidate();
 		}
 		else beep_Warn();
 	}
-	else if (USAME_TI(CmdStrF, "ReturnList"))
+	else if (USAME_TI(cmd_F, "ReturnList"))
 		ModalResult = mrCancel;
-	else if (equal_LEFT(KeyStr) || contained_wd_i(_T("ToLeft|ToParentOnLeft"), CmdStrF))
+	else if (is_ToLeftOpe(KeyStr, cmd_F))
 		InfoListBox->SetFocus();
 	else if (equal_ENTER(KeyStr)) {
 		if (!fnam.IsEmpty()) {
@@ -798,9 +798,9 @@ void __fastcall TFileExtensionDlg::FileListBoxKeyDown(TObject *Sender, WORD &Key
 		IniSearchList(lp, KeyStr);
 	}
 	//ファイル情報
-	else if (StartsText("ShowFileInfo", CmdStrF))	ShowFileInfoAction->Execute();
+	else if (StartsText("ShowFileInfo", cmd_F))	ShowFileInfoAction->Execute();
 	//プロパティ
-	else if (USAME_TI(CmdStrF, "PropertyDlg"))		PropertyAction->Execute();
+	else if (USAME_TI(cmd_F, "PropertyDlg"))		PropertyAction->Execute();
 	//右クリックメニュー
 	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
 	else return;

@@ -853,9 +853,9 @@ void __fastcall TAppListDlg::AppListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 		}
 	}
 	//ランチャーへ
-	else if (LaunchPanel->Visible && LaunchPanel->Align==alRight && contained_wd_i(_T("ToRight|ToParentOnRight"), CmdStr))
+	else if (LaunchPanel->Visible && LaunchPanel->Align==alRight && is_ToRightOpe(KeyStr, CmdStr))
 		LaunchListBox->SetFocus();
-	else if (LaunchPanel->Visible && LaunchPanel->Align==alLeft  && contained_wd_i(_T("ToLeft|ToParentOnLeft"), CmdStr))
+	else if (LaunchPanel->Visible && LaunchPanel->Align==alLeft  && is_ToLeftOpe(KeyStr, CmdStr))
 		LaunchListBox->SetFocus();
 	//ウィンドウ操作
 	else if (USAME_TI(CmdStr, "WinMinimize"))	MinimizeAction->Execute();
@@ -1387,9 +1387,9 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 		else beep_Warn();
 	}
 	//一覧へ
-	else if (AppPanel->Visible && LaunchPanel->Align==alRight && contained_wd_i(_T("ToLeft|ToParentOnLeft"), CmdStr))
+	else if (AppPanel->Visible && LaunchPanel->Align==alRight && is_ToLeftOpe(KeyStr, CmdStr))
 		AppListBox->SetFocus();
-	else if (AppPanel->Visible && LaunchPanel->Align==alLeft  && contained_wd_i(_T("ToRight|ToParentOnRight"), CmdStr))
+	else if (AppPanel->Visible && LaunchPanel->Align==alLeft  && is_ToRightOpe(KeyStr, CmdStr))
 		AppListBox->SetFocus();
 
 	//一般コマンド
