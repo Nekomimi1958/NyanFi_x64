@@ -1,7 +1,6 @@
 object AboutBox: TAboutBox
   Left = 0
   Top = 0
-  BorderIcons = [biSystemMenu, biMinimize, biMaximize, biHelp]
   BorderStyle = bsToolWindow
   Caption = #12496#12540#12472#12519#12531#24773#22577
   ClientHeight = 222

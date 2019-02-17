@@ -229,7 +229,7 @@ object GitViewer: TGitViewer
       OnUpdate = ActTagActionUpdate
     end
     object DelTagAction: TAction
-      Caption = #12479#12464#12398#21066#38500
+      Caption = #12479#12464#12398#21066#38500'(&D)'
       OnExecute = DelTagActionExecute
       OnUpdate = DelTagActionUpdate
     end
@@ -252,10 +252,15 @@ object GitViewer: TGitViewer
       OnExecute = DiffToolActionExecute
       OnUpdate = DiffToolActionUpdate
     end
+    object ArchiveAction: TAction
+      Caption = 'ZIP'#12450#12540#12459#12452#12502#12434#20316#25104'(&P)...'
+      OnExecute = ArchiveActionExecute
+      OnUpdate = ArchiveActionUpdate
+    end
   end
   object CmPopupMenu: TPopupMenu
-    Left = 289
-    Top = 120
+    Left = 297
+    Top = 88
     object N2: TMenuItem
       Action = DelTagAction
     end
@@ -269,6 +274,12 @@ object GitViewer: TGitViewer
       Action = CopyCommitIDAction
     end
     object Sep_c_2: TMenuItem
+      Caption = '-'
+    end
+    object ArchiveItem: TMenuItem
+      Action = ArchiveAction
+    end
+    object Sep_c_3: TMenuItem
       Caption = '-'
     end
     object ShowBranchesItem: TMenuItem

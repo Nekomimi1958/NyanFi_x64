@@ -2,6 +2,7 @@ object DriveGraph: TDriveGraph
   Left = 0
   Top = 0
   HelpContext = 86
+  BorderIcons = [biSystemMenu]
   Caption = #12489#12521#12452#12502#20351#29992#29575#25512#31227
   ClientHeight = 289
   ClientWidth = 392

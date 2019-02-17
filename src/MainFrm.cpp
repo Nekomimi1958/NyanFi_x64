@@ -9768,19 +9768,20 @@ void __fastcall TNyanFiForm::FileListBoxMouseDown(TObject *Sender, TMouseButton 
 	file_rec *cfp = GetFrecPtr(lp, lst);
 	if (cfp) {
 		if (SelectByMouse && Shift.Contains(ssLeft) && !Shift.Contains(ssAlt)) {
+			bool has_icon = (IconMode==1 || (IconMode==2 && cfp->is_dir));
 			//ファイル名主部までの範囲
 			int b_wd;
 			if (cfp->is_dummy && is_separator(cfp->alias))	//ワークリストのセパレータ
 				b_wd = get_CharWidth(lp->Canvas, 12);		//***
 			else {
 				b_wd = lp->Canvas->TextWidth(cfp->b_name);
-				if		(IconMode>0)							  b_wd += get_IcoWidth();
+				if 		(has_icon)							  b_wd += get_IcoWidth();
 				else if (cfp->is_dir && !DirBraStr.IsEmpty()) b_wd += lp->Canvas->TextWidth(DirBraStr) + 4;
 				else										  b_wd += Scaled8;
 			}
 
 			//アイコン部分で個別に選択
-			if (SelectIconSngl && IconMode>0 && X<get_IcoWidth()) {
+			if (SelectIconSngl && has_icon && X<get_IcoWidth()) {
 				set_select(cfp, !cfp->selected);
 			}
 			//通常選択
@@ -9875,9 +9876,9 @@ void __fastcall TNyanFiForm::FileListBoxDblClick(TObject *Sender)
 		file_rec *cfp = (idx<lst->Count)? (file_rec*)lst->Objects[idx] : NULL;
 		if (cfp && !cfp->is_dummy) {
 			int b_wd = lp->Canvas->TextWidth(cfp->b_name);
-			if		(IconMode>0)						  b_wd += get_IcoWidth();
-			else if (cfp->is_dir && !DirBraStr.IsEmpty()) b_wd += lp->Canvas->TextWidth(DirBraStr) + 4;
-			else										  b_wd += Scaled8;
+			if (IconMode==1 || (IconMode==2 && cfp->is_dir)) b_wd += get_IcoWidth();
+			else if (cfp->is_dir && !DirBraStr.IsEmpty()) 	 b_wd += lp->Canvas->TextWidth(DirBraStr) + 4;
+			else										  	 b_wd += Scaled8;
 			on_body = (p.x < b_wd);
 		}
 	}

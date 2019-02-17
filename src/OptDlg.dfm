@@ -1444,7 +1444,7 @@ object OptionDlg: TOptionDlg
           TabOrder = 15
         end
         object SelIconCheckBox: TCheckBox
-          Left = 276
+          Left = 275
           Top = 131
           Width = 147
           Height = 17

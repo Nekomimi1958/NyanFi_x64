@@ -74,6 +74,9 @@ __published:	// IDE で管理されるコンポーネント
 	TPopupMenu *DiffPopupMenu;
 	TAction *DiffToolAction;
 	TMenuItem *DiffToolItem;
+	TAction *ArchiveAction;
+	TMenuItem *Sep_c_3;
+	TMenuItem *ArchiveItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -111,6 +114,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall DiffToolActionExecute(TObject *Sender);
 	void __fastcall DiffToolActionUpdate(TObject *Sender);
 	void __fastcall DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall ArchiveActionExecute(TObject *Sender);
+	void __fastcall ArchiveActionUpdate(TObject *Sender);
 
 
 private:	// ユーザー宣言

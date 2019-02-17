@@ -5446,7 +5446,7 @@ void set_FextWidth(file_rec *fp, int tag)
 	TCanvas *cv = FileListBox[tag]->Canvas;
 	flist_stt *lst_stt = &ListStt[tag];
 
-	int x_base = ScaledInt((IconMode>0)? 20 : 8);
+	int x_base = ScaledInt((IconMode==1 || (IconMode==2 && fp->is_dir))? 20 : 8);
 	int w_mx_f = std::min(lst_stt->lxp_size - x_base - lst_stt->lwd_half * 9, lst_stt->lwd_fext_max);
 
 	lst_stt->lwd_fext = std::max(lst_stt->lwd_fext, get_TextWidth(cv, fp->f_ext, IsIrregularFont(cv->Font)));

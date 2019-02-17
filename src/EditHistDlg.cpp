@@ -712,7 +712,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 		//ファイル名の共通処理
 		if (ACol==1) {
 			//アイコン
-			if (IconMode>0) {
+			if (IconMode==1) {
 				draw_SmallIcon(fp, cv, xp, std::max(yp + (cv->TextHeight("Q") - SIcoSize)/2, 0));
 				xp += get_IcoWidth();
 			}

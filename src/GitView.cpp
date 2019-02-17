@@ -125,7 +125,7 @@ UnicodeString __fastcall TGitViewer::GitExeStr(UnicodeString prm)
 		}
 		else {
 			ret_str = o_lst->Text;
-			GetCommitList();
+			if (!StartsText("archive", prm)) GetCommitList();
 		}
 	}
 	return ret_str;
@@ -396,6 +396,7 @@ void __fastcall TGitViewer::CommitListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	else if (is_ToLeftOpe(KeyStr, cmd_F))			BranchListBox->SetFocus();
 	else if (is_ToRightOpe(KeyStr, cmd_F))			DiffListBox->SetFocus();
 	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
+	else if (USAME_TI(get_CmdStr(cmd_F), "Pack"))	ArchiveAction->Execute();
 	else return;
 
 	if (!is_DialogKey(Key)) Key = 0;
@@ -648,6 +649,29 @@ void __fastcall TGitViewer::DiffToolActionUpdate(TObject *Sender)
 void __fastcall TGitViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_GIT) _T("#GitViewer"));
+}
+
+//---------------------------------------------------------------------------
+//アーカイブ作成
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::ArchiveActionExecute(TObject *Sender)
+{
+	git_rec *gp = GetCurCommitPtr();
+	if (gp && !gp->hash.IsEmpty()) {
+		UserModule->PrepareSaveDlg(_T("アーカイブの作成"), _T("アーカイブ (*.zip)|*.zip"), _T("archive.zip"), RepoDir);
+		if (UserModule->SaveDlg->Execute()) {
+			UnicodeString arc_name = UserModule->SaveDlg->FileName;
+			UnicodeString prm;
+			prm.sprintf(_T("archive --format=zip %s --output=\"%s\""), gp->hash.c_str(), yen_to_slash(arc_name).c_str());
+			GitExeStr(prm);
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::ArchiveActionUpdate(TObject *Sender)
+{
+	git_rec *gp = GetCurCommitPtr();
+	((TAction *)Sender)->Visible = (gp && !gp->hash.IsEmpty());
 }
 //---------------------------------------------------------------------------
 

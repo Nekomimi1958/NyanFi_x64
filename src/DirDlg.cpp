@@ -35,6 +35,7 @@ void __fastcall TRegDirDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 {
+	Caption = IsSpecial? "特殊フォルダ一覧" : "登録ディレクトリ";
 	CmdStr	= EmptyStr;
 
 	IniFile->LoadPosInfo(this, DialogCenter, (IsSpecial? _T("SpecialDirList") : null_TCHAR));
@@ -578,9 +579,7 @@ void __fastcall TRegDirDlg::AddItemActionExecute(TObject *Sender)
 void __fastcall TRegDirDlg::AddItemActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = (!IsSpecial && !DescEdit->Text.IsEmpty());
-
-	Caption = IsSpecial? "特殊フォルダ一覧" :
-			  IsAddMode? "登録ディレクトリ(追加)" : "登録ディレクトリ";
+	if (!IsSpecial) Caption = IsAddMode? "登録ディレクトリ(追加)" : "登録ディレクトリ";
 }
 //---------------------------------------------------------------------------
 //変更/挿入
