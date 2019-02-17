@@ -77,6 +77,9 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ArchiveAction;
 	TMenuItem *Sep_c_3;
 	TMenuItem *ArchiveItem;
+	TAction *AppFextColorAction;
+	TMenuItem *Sep_d_1;
+	TMenuItem *AppFextColItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -116,6 +119,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall ArchiveActionExecute(TObject *Sender);
 	void __fastcall ArchiveActionUpdate(TObject *Sender);
+	void __fastcall AppFextColorActionExecute(TObject *Sender);
 
 
 private:	// ユーザー宣言

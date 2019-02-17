@@ -257,6 +257,10 @@ object GitViewer: TGitViewer
       OnExecute = ArchiveActionExecute
       OnUpdate = ArchiveActionUpdate
     end
+    object AppFextColorAction: TAction
+      Caption = #25313#24373#23376#21029#37197#33394#12434#36969#29992'(&X)'
+      OnExecute = AppFextColorActionExecute
+    end
   end
   object CmPopupMenu: TPopupMenu
     Left = 297
@@ -291,6 +295,12 @@ object GitViewer: TGitViewer
     Top = 311
     object DiffToolItem: TMenuItem
       Action = DiffToolAction
+    end
+    object Sep_d_1: TMenuItem
+      Caption = '-'
+    end
+    object AppFextColItem: TMenuItem
+      Action = AppFextColorAction
     end
   end
 end

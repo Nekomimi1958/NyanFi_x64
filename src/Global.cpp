@@ -5326,13 +5326,19 @@ void get_ArcList(
 //---------------------------------------------------------------------------
 void set_ListBoxItemHi(TListBox *lp, TFont *font)
 {
-	if (font) lp->Font->Assign(font);
+	if (font) {
+		lp->Font->Assign(font);
+		lp->Canvas->Font->Assign(font);
+	}
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), min_ItemHeight(lp->Tag));
 }
 //---------------------------------------------------------------------------
 void set_ListBoxItemHi(TCheckListBox *lp, TFont *font)
 {
-	if (font) lp->Font->Assign(font);
+	if (font) {
+		lp->Font->Assign(font);
+		lp->Canvas->Font->Assign(font);
+	}
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), min_ItemHeight(lp->Tag));
 }
 
