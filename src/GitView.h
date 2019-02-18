@@ -34,52 +34,56 @@ struct git_rec {
 class TGitViewer : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *AppFextColorAction;
+	TAction *ArchiveAction;
 	TAction *ChckoutAction;
 	TAction *CopyBranchNameAction;
 	TAction *CopyCommitIDAction;
 	TAction *DelTagAction;
+	TAction *DiffToolAction;
 	TAction *MergeAction;
 	TAction *RenBranchAction;
 	TAction *SetTagAction;
 	TAction *ShowBranchesAction;
+	TAction *ShowRemoteAction;
 	TActionList *ActionList1;
 	TButton *HiddenCanBtn;
 	TListBox *BranchListBox;
 	TListBox *CommitListBox;
 	TListBox *DiffListBox;
+	TMenuItem *AppFextColItem;
+	TMenuItem *ArchiveItem;
 	TMenuItem *CheckoutItem;
 	TMenuItem *CopyBranchNameItem;
 	TMenuItem *CopyCommitIDItem;
 	TMenuItem *CreBranchItem;
 	TMenuItem *DelBranchItem;
+	TMenuItem *DiffToolItem;
+	TMenuItem *HardResetItem;
 	TMenuItem *MergeItem;
+	TMenuItem *MixedResetItem;
+	TMenuItem *N1;
 	TMenuItem *N2;
 	TMenuItem *RenBranchItem;
+	TMenuItem *ResetItem;
 	TMenuItem *Sep_c_1;
 	TMenuItem *Sep_c_2;
+	TMenuItem *Sep_c_3;
+	TMenuItem *Sep_c_4;
+	TMenuItem *Sep_d_1;
 	TMenuItem *SetTagItem;
 	TMenuItem *ShowBranchesItem;
+	TMenuItem *ShowRemoteItem;
+	TMenuItem *SoftResetItem;
 	TPanel *BranchPanel;
 	TPanel *CommitPanel;
 	TPanel *DiffPanel;
 	TPanel *RightPanel;
 	TPopupMenu *BrPopupMenu;
 	TPopupMenu *CmPopupMenu;
+	TPopupMenu *DiffPopupMenu;
 	TSplitter *CommitSplitter;
 	TSplitter *DiffSplitter;
-	TMenuItem *ResetItem;
-	TMenuItem *SoftResetItem;
-	TMenuItem *MixedResetItem;
-	TMenuItem *HardResetItem;
-	TPopupMenu *DiffPopupMenu;
-	TAction *DiffToolAction;
-	TMenuItem *DiffToolItem;
-	TAction *ArchiveAction;
-	TMenuItem *Sep_c_3;
-	TMenuItem *ArchiveItem;
-	TAction *AppFextColorAction;
-	TMenuItem *Sep_d_1;
-	TMenuItem *AppFextColItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -120,6 +124,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ArchiveActionExecute(TObject *Sender);
 	void __fastcall ArchiveActionUpdate(TObject *Sender);
 	void __fastcall AppFextColorActionExecute(TObject *Sender);
+	void __fastcall ShowRemoteActionExecute(TObject *Sender);
 
 
 private:	// ユーザー宣言

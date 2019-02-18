@@ -197,7 +197,6 @@ private:	// ƒ†[ƒU[éŒ¾
 	TRect LiveRect;
 
 	int  LaunchPos;
-	bool SortByRem;
 
 	bool IsIncSea;
 	bool IsMigemo;

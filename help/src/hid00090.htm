@@ -36,29 +36,25 @@
 GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 <a href="hid00005.htm#OpenGitURL">OpenGitURL</a> コマンドを実行すると、カーソル位置項目に対応するページをブラウザで開けます(ファイル情報の右クリックメニューからも可能)。<br>
 
-<dt class="no_bg">HEAD
-<dd>現在作業中のブランチに対するシンボリック参照です(.git/HEAD の内容)。
+<dt class="no_bg">Git-Commit
+<dd>直前のコミット情報です。括弧内はローカル参照、&#x25b6 は &quot;HEAD -&gt;&quot; を表しています。<br>
 
-<dt class="no_bg">COMMIT_EDITMSG
-<dd>直前のコミットメッセージです(.git/COMMIT_EDITMSG の内容)。
-
-<dt class="no_bg">STATUS
+<dt class="no_bg">Git-Status
 <dd>git status --porcelain コマンドの取得結果から、フラグごとのファイル数(インデックス/ワーキングツリー)を表示します。<br>
 例えば、ワーキングツリーに2個の変更されたファイルがある場合、&quot;M:_/2&quot; と表示されます。<br>
 <a href="hid00005.htm#SelGitChanged">SelGitChanged</a> コマンドを実行すると、カレントで変更されているファイル(フラグが &quot;?&quot; 以外)が選択されます。<br>
 </dl>
 
-<p>なおリポジトリの作業ディレクトリ下で、トップの [..] 以外の項目については、<b>Remote URL</b> のみが表示されます。</p>
+<p>なお作業ディレクトリ下で、トップの [..] 以外の項目については、<b>Remote URL</b> のみが表示されます。</p>
 
-<p>ファイル情報の右クリックメニュー「<b>この項目を隠す</b>」で非表示になっている項目は取得を試みません。<b>STATUS</b> などで取得に時間がかかって操作が滞るような場合には非表示にしてみてください。</p>
+<p>ファイル情報の右クリックメニュー「<b>この項目を隠す</b>」で非表示になっている項目は取得を試みません。取得に時間がかかって操作が滞るような場合には非表示にしてみてください。</p>
 
 <div class="indent1">
 <b>表示例</b><br>
 <pre class="example_box">
      Remote URL: https://github.com/Nekomimi1958/NyanFi_x64
-           HEAD: ref: refs/heads/master
- COMMIT_EDITMSG: v13.08 Add Git command
-         STATUS: M:_/2
+     Git-Commit: (&#x25b6master) v13.08 Add Git command
+     Git-STATUS: M:_/2
 </pre>
 </div>
 <br>
@@ -66,26 +62,26 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 <h3 id="GitViewer">Gitビュアー</h3>
 <div class="spc_box_p">
 Gitの作業ディレクトリ内で <a href="hid00005.htm#GitViewer">GitViewer</a> コマンドを実行すると、<b>Gitビュアー</b>が表示されます。<br>
-画面の左側にはブランチ一覧があります。<br>
+画面の左側には<b>ブランチ一覧</b>があります。<br>
 右クリックメニューから、チェックアウト(ダブルクリックや<span class="btn_frame">ENTER</span>キーでも可能)、ブランチの作成/削除/改名、マージ、タグ付け、リセットを行えます。<br>
 </div>
 
 <div class="spc_box_p">
-画面右側の上部にはHEAD位置のコミット履歴が表示されます。<br>
+画面右側の上部にはHEAD位置の<b>コミット履歴</b>が表示されます。<br>
 デフォルトでは、表示されるコミット履歴数が30に制限されています。これを変更したい場合は、<b>GitViewer</b> コマンドの <b>N</b>～ パラメータで指定してください。<br>
 コミットを選択すると、下部にその差分の概略が表示されます。<br>
 右クリックメニューからは、ブランチ名/コミットIDのコピー、ZIPアーカイブの作成(<a href="hid00005.htm#Pack">Pack</a> コマンドのキーでも可能)などを行えます。<br>
 </div>
 <div class="spc_box_p">
-下部の差分ファイル一覧では、右クリックメニューから diffツールを起動できます。<br>
+下部の<b>差分概略</b>では、右クリックメニューから diffツールを起動できます。<br>
 カーソル位置のファイルと、直前のコミットの同名ファイルとの差分を、git に設定されている外部ツールで表示します。<br>
-ファイル名が変更されていたりするとエラーになるので注意してください。<br>
+パスが省略表示になっているとエラーになるので注意してください。<br>
 </div>
 
 <div class="spc_box_p">
 カーソル移動などは、ファイラーやテキストビュアーで割り当てられているのと同じキー操作でできます。<br>
 ブランチ一覧/コミット履歴間のフォーカス移動は、<a href="hid00005.htm#ToLeft">ToLeft</a> / <a href="hid00005.htm#ToRight">ToRight</a>、<a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a> / <a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a> コマンドが割り当てられているキーや、<span class="btn_frame">←</span> / <span class="btn_frame">→</span>キーで行えます。<br>
-また、コミット履歴/差分ファイル一覧間は、<a href="hid00005.htm#ToRight">ToRight</a> / <a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a> コマンドのキーや <span class="btn_frame">→</span>キーで移動できます。<br>
+また、コミット履歴/差分概略間は、<a href="hid00005.htm#ToRight">ToRight</a> / <a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a> コマンドのキーや <span class="btn_frame">→</span>キーで移動できます。<br>
 </div>
 
 <div class="spc_box_p">

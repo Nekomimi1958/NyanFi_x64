@@ -317,7 +317,6 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object ShowLineNoAction: TAction
       Caption = #34892#30058#21495#12434#34920#31034'(&N)'
       OnExecute = ShowLineNoActionExecute
-      OnUpdate = ShowLineNoActionUpdate
     end
     object FileName1stAction: TAction
       Caption = #12501#12449#12452#12523#21517#12434#20808#12395#34920#31034'(&F)'

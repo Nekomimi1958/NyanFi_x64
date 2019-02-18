@@ -144,7 +144,7 @@ void __fastcall TRegDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	UserModule->UninitializeListBox();
 
 	if (IsSpecial) {
-		IniFile->WriteBoolGen(_T("SpecialDirUseEnv"),	UseEnvVarAction->Checked);
+		IniFile->WriteBoolGen(_T("SpecialDirUseEnv"),	UseEnvVarAction);
 	}
 	else {
 		TListBox *lp = RegDirListBox;

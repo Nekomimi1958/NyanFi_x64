@@ -256,8 +256,8 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 
 	hDlgHook = ::SetWindowsHookEx(WH_CALLWNDPROC, DlgHookProc, NULL, ::GetCurrentThreadId());
 
-	LogRWLock  = new TMultiReadExclusiveWriteSynchronizer();
-	IconRWLock = new TMultiReadExclusiveWriteSynchronizer();
+	LogRWLock	 = new TMultiReadExclusiveWriteSynchronizer();
+	IconRWLock	 = new TMultiReadExclusiveWriteSynchronizer();
 	FldIcoRWLock = new TMultiReadExclusiveWriteSynchronizer();
 
 	UserModule->SetUsrPopupMenu(this);
@@ -22205,12 +22205,12 @@ void __fastcall TNyanFiForm::ShowByteSizeActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::ShowFileInfoActionExecute(TObject *Sender)
 {
 	file_rec *cfp = GetCurFrecPtr(false, true);
-	if (!cfp || cfp->is_up || cfp->is_dummy || cfp->f_attr==faInvalid) {
+	if (!cfp || cfp->is_dummy || cfp->f_attr==faInvalid) {
 		SetActionAbort();  return;
 	}
 
 	//ディレクトリの容量計算
-	if (ScrMode==SCMD_FLIST && cfp->is_dir && !cfp->is_ftp) {
+	if (ScrMode==SCMD_FLIST && cfp->is_dir && !cfp->is_up && !cfp->is_ftp) {
 		CalcBusy = true;
 		ShowMessageHint(USTR_CalculatingESC, col_bgHint, false, true);
 		CalcDirSizeCore(cfp);
@@ -28733,7 +28733,7 @@ void __fastcall TNyanFiForm::Inf_EmpItemActionUpdate(TObject *Sender)
 	UnicodeString inam = (lp->ItemIndex>2 && (flag & LBFLG_STD_FINF)==0)?
 							Trim(get_tkn(lp->Items->Strings[lp->ItemIndex], ':')) : EmptyStr;
 	ap->Enabled = !inam.IsEmpty();
-	ap->Checked = contains_wd_i(inam, EmpInfItems.c_str());
+	ap->Checked = test_word_i(inam, EmpInfItems);
 }
 
 //---------------------------------------------------------------------------

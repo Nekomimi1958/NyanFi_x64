@@ -237,6 +237,10 @@ object GitViewer: TGitViewer
       Caption = #20182#12398#12502#12521#12531#12481#12418#34920#31034
       OnExecute = ShowBranchesActionExecute
     end
+    object ShowRemoteAction: TAction
+      Caption = #12522#12514#12540#12488#21442#29031#12434#34920#31034
+      OnExecute = ShowRemoteActionExecute
+    end
     object CopyCommitIDAction: TAction
       Caption = #12467#12511#12483#12488'ID'#12434#12467#12500#12540
       OnExecute = CopyCommitIDActionExecute
@@ -288,6 +292,15 @@ object GitViewer: TGitViewer
     end
     object ShowBranchesItem: TMenuItem
       Action = ShowBranchesAction
+    end
+    object ShowRemoteItem: TMenuItem
+      Action = ShowRemoteAction
+    end
+    object Sep_c_4: TMenuItem
+      Caption = '-'
+    end
+    object N1: TMenuItem
+      Action = UserModule.SizePosToFlieListAction
     end
   end
   object DiffPopupMenu: TPopupMenu

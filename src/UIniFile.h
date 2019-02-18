@@ -78,6 +78,7 @@ public:
 	void WriteBool(UnicodeString sct, UnicodeString key, TCheckBox *cp);
 	void WriteBoolGen(const _TCHAR *key, bool v);
 	void WriteBoolGen(const _TCHAR *key, TCheckBox *cp);
+	void WriteBoolGen(const _TCHAR *key, TAction *ap);
 
 	void WriteFontInf(UnicodeString sct, TFont *f);
 

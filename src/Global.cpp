@@ -1899,6 +1899,28 @@ void InitializeGlobal()
 	//読み込み
 	LoadOptions();
 
+	//廃止項目の削除 (v13.22)
+	//EmpInfItems
+	TStringDynArray ibuf = SplitString(EmpInfItems, "|");
+	EmpInfItems = EmptyStr;
+	for (int i=0; i<ibuf.Length; i++) {
+		if (!test_word_i(ibuf[i], "HEAD|COMMIT_EDITMSG|STATUS")) {
+			if (!EmpInfItems.IsEmpty()) EmpInfItems.UCAT_T("|");
+			EmpInfItems += ibuf[i];
+		}
+	}
+	//HideInfItems
+	UnicodeString hide_items = HideInfItems->Values["\\"];
+	TStringDynArray hbuf = SplitString(hide_items, "|");
+	hide_items = EmptyStr;
+	for (int i=0; i<hbuf.Length; i++) {
+		if (!test_word_i(hbuf[i], "HEAD|COMMIT_EDITMSG|STATUS")) {
+			if (!hide_items.IsEmpty()) hide_items.UCAT_T("|");
+			hide_items += hbuf[i];
+		}
+	}
+	HideInfItems->Values["\\"] = hide_items;
+
 	//git.exe のチェック
 	if (CmdGitExe.IsEmpty()) {
 		std::unique_ptr<TStringList> plst(new TStringList());
@@ -6714,9 +6736,12 @@ TColor get_FileColor(file_rec *fp, TColor col_x)
 //---------------------------------------------------------------------------
 //拡張子別カラーを取得
 //---------------------------------------------------------------------------
-TColor get_ExtColor(UnicodeString fext)
+TColor get_ExtColor(
+	UnicodeString fext,	//拡張子
+	TColor col)			//デフォルト文字色	(default = col_fgList)
 {
 	TColor col_f = col_fgList;
+	if (USAME_TS(fext, ".")) fext = EmptyStr;
 	if (!fext.IsEmpty()) {
 		for (int i=0; i<ExtColList->Count; i++) {
 			UnicodeString ibuf = ExtColList->Strings[i];
@@ -7198,25 +7223,12 @@ void GetFileInfList(
 					}
 				}
 
-				//Git 情報
-				if (GitExists) {
+				//Git情報
+				if (GitExists && is_git_top) {
 					i_list->Add(EmptyStr);
-
-					//Remote URL
-					add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), i_list);
-
-					//リポジトリのトップの場合
-					if (is_git_top) {
-						//Git HEAD
-						if (!test_word_i("HEAD", HideInfItems->Values["\\"]))
-							add_PropLine_if(_T("HEAD"), get_top_line(rpnam + ".git\\HEAD"), i_list);
-						//COMMIT_EDITMSG
-						if (!test_word_i("COMMIT_EDITMSG", HideInfItems->Values["\\"]))
-							add_PropLine_if(_T("COMMIT_EDITMSG"), get_top_line(rpnam + ".git\\COMMIT_EDITMSG"), i_list);
-						//STATUS
-						if (!test_word_i("STATUS", HideInfItems->Values["\\"]))
-							add_PropLine_if(_T("STATUS"), get_GitSttStr(rpnam), i_list);
-					}
+					if (!test_word_i("Remote URL", HideInfItems->Values["\\"]))
+						add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), i_list);
+					get_GitInf(rpnam, i_list);
 				}
 
 				//不用なセパレータを削除
@@ -7610,7 +7622,8 @@ bool get_FileInfList(
 		if (lnk_cnt>1) add_PropLine(_T("ハードリンク数"), lnk_cnt, lst);
 
 		//Git URL
-		if (GitExists) add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), lst);
+		if (GitExists && !test_word_i("Remote URL", HideInfItems->Values["\\"]))
+			add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), lst);
 
 		bool fp_created = false;
 		file_rec *org_fp = fp;
@@ -13219,44 +13232,6 @@ int get_GitChangedList(UnicodeString pnam, TStringList *lst)
 	}
 }
 //---------------------------------------------------------------------------
-//リポジトリの状態文字列を取得
-//  フラグ文字:ファイル数(インデックス/ワーキングツリー)
-//---------------------------------------------------------------------------
-UnicodeString get_GitSttStr(UnicodeString dnam)
-{
-	UnicodeString stt_str;
-	std::unique_ptr<TStringList> o_buf(new TStringList());
-	DWORD exit_code = 0;
-	if (GitShellExe("status --porcelain", dnam, o_buf.get(), &exit_code)) {
-		if (o_buf->Count==0) {
-			stt_str = "Clean";
-		}
-		else if (exit_code!=0) {
-			stt_str.cat_sprintf(_T("Error: %u"), exit_code);
-		}
-		else {
-			//フラグ文字毎のファイル数を取得
-			int flag[8][2] = {};
-			UnicodeString flag_str = "MADRCU?";
-			for (int i=0; i<o_buf->Count; i++) {
-				UnicodeString lbuf = o_buf->Strings[i];
-				if (lbuf.Length()<2) continue;
-				int p0 = flag_str.Pos(lbuf[1]);
-				int p1 = flag_str.Pos(lbuf[2]);
-				if (p0>0) flag[p0][0]++;
-				if (p1>0) flag[p1][1]++;
-			}
-			for (int i=1; i<8; i++) {
-				if (flag[i][0]>0 || flag[i][1]>0)
-					stt_str.cat_sprintf(_T(" %c:%u/%u"), flag_str[i], flag[i][0], flag[i][1]);
-			}
-			stt_str = Trim(ReplaceStr(stt_str, "0" , "_"));
-		}
-	}
-	return stt_str;
-}
-
-//---------------------------------------------------------------------------
 //行頭のGitグラフ部分を取得
 //---------------------------------------------------------------------------
 UnicodeString get_GitGraphStr(UnicodeString lbuf)
@@ -13364,5 +13339,71 @@ void draw_GitGraph(
 
 	rc.Left = std::min(xp, (int)rc.Right);
 	cv->Brush->Color = org_bg;
+}
+
+//---------------------------------------------------------------------------
+//Gitリポジトリ情報を取得
+//---------------------------------------------------------------------------
+void get_GitInf(UnicodeString dnam, TStringList *lst)
+{
+	std::unique_ptr<TStringList> o_buf(new TStringList());
+	DWORD exit_code;
+
+	//コミット情報
+	UnicodeString hide_items = HideInfItems->Values["\\"];
+	if (!test_word_i("Git-Commit", hide_items)
+		&& GitShellExe("log -1 --pretty=format:\"%d\t%s\"", dnam, o_buf.get(), &exit_code)
+			&& exit_code==0 && o_buf->Count>0)
+	{
+		UnicodeString lbuf = o_buf->Strings[0];
+		UnicodeString cmt_str;
+		TStringDynArray b_buf = SplitString(get_in_paren(get_pre_tab(lbuf)), ",");
+		for (int i=0; i<b_buf.Length; i++) {
+			UnicodeString s = Trim(b_buf[i]);
+			if (remove_top_text(s, "tag: ") || s.Pos("/")==0) {
+				if (!cmt_str.IsEmpty()) cmt_str.UCAT_T(" ");
+				cmt_str += s;
+			}
+		}
+		if (!cmt_str.IsEmpty()) {
+			cmt_str = ReplaceStr(cmt_str, "HEAD -> ", _T("\u25b6"));
+			cmt_str = "(" + cmt_str + ") ";
+		}
+		cmt_str += get_post_tab(lbuf);
+		add_PropLine_if(_T("Git-Commit"), cmt_str, lst);
+	}
+
+	//ワーキング・ツリーの状態
+	o_buf->Clear();
+	if (!test_word_i("Git-Status", hide_items)
+		&& GitShellExe("status --porcelain", dnam, o_buf.get(), &exit_code))
+	{
+		UnicodeString stt_str;
+		if (o_buf->Count==0) {
+			stt_str = "Clean";
+		}
+		else if (exit_code!=0) {
+			stt_str.cat_sprintf(_T("Error: %u"), exit_code);
+		}
+		else {
+			//フラグ文字毎のファイル数を取得
+			int flag[8][2] = {};
+			UnicodeString flag_str = "MADRCU?";
+			for (int i=0; i<o_buf->Count; i++) {
+				UnicodeString lbuf = o_buf->Strings[i];
+				if (lbuf.Length()<2) continue;
+				int p0 = flag_str.Pos(lbuf[1]);
+				int p1 = flag_str.Pos(lbuf[2]);
+				if (p0>0) flag[p0][0]++;
+				if (p1>0) flag[p1][1]++;
+			}
+			for (int i=1; i<8; i++) {
+				if (flag[i][0]>0 || flag[i][1]>0)
+					stt_str.cat_sprintf(_T(" %c:%u/%u"), flag_str[i], flag[i][0], flag[i][1]);
+			}
+			stt_str = Trim(ReplaceStr(stt_str, "0" , "_"));
+		}
+		add_PropLine_if(_T("Git-Status"), stt_str, lst);
+	}
 }
 //---------------------------------------------------------------------------

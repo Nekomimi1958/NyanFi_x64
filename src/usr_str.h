@@ -66,6 +66,7 @@ UnicodeString get_norm_str(UnicodeString s);
 UnicodeString split_tkn(UnicodeString &s, UnicodeString sp);
 UnicodeString split_tkn(UnicodeString &s, const _TCHAR *sp);
 UnicodeString split_tkn(UnicodeString &s, WideChar sp);
+UnicodeString split_tkn_spc(UnicodeString &s);
 
 UnicodeString split_pre_tab(UnicodeString &s);
 UnicodeString split_dsc(UnicodeString &s);

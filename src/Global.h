@@ -1726,7 +1726,7 @@ void InvColIfEmpty(TLabeledEdit *ep);
 void InvColIfEmpty(TEdit *ep);
 
 TColor get_FileColor(file_rec *fp, TColor col_x);
-TColor get_ExtColor(UnicodeString fext);
+TColor get_ExtColor(UnicodeString fext, TColor col = col_fgList);
 TColor get_TimeColor(TDateTime dt, TColor col_def);
 TColor get_SizeColor(__int64 size, TColor col_def);
 
@@ -2050,9 +2050,9 @@ UnicodeString get_GitTopPath(UnicodeString dnam);
 UnicodeString get_GitConfig(UnicodeString dnam);
 UnicodeString get_GitUrl(file_rec *fp);
 int get_GitChangedList(UnicodeString pnam, TStringList *lst);
-UnicodeString get_GitSttStr(UnicodeString dnam);
 UnicodeString get_GitGraphStr(UnicodeString lbuf);
 UnicodeString split_GitGraphStr(UnicodeString &lbuf);
 void draw_GitGraph(UnicodeString s, UnicodeString s1, UnicodeString s2, TCanvas *cv, TRect &rc, bool is_head = false);
+void get_GitInf(UnicodeString dnam, TStringList *lst);
 //---------------------------------------------------------------------------
 #endif

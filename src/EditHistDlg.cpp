@@ -229,8 +229,8 @@ void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action
 		IniFile->WriteIntGen(_T("RecentListSortOdr1"),	MarkSortOdr[1]);
 		IniFile->WriteIntGen(_T("RecentListSortOdr2"),	MarkSortOdr[2]);
 		IniFile->WriteIntGen(_T("RecentListSortOdr3"),	MarkSortOdr[3]);
-		IniFile->WriteBoolGen(_T("RecentListUsedTime"),	ShowUsedTimeAction->Checked);
-		IniFile->WriteBoolGen(_T("RecentListSttBar"),	ShowStatusBarAction->Checked);
+		IniFile->WriteBoolGen(_T("RecentListUsedTime"),	ShowUsedTimeAction);
+		IniFile->WriteBoolGen(_T("RecentListSttBar"),	ShowStatusBarAction);
 	}
 	else if (isMark) {
 		IniFile->WriteIntGen(_T("MarkListSortMode"),	MarkSortMode);
@@ -240,10 +240,10 @@ void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action
 		IniFile->WriteIntGen(_T("MarkListSortOdr3"),	MarkSortOdr[3]);
 		IniFile->WriteIntGen(_T("MarkListSortOdr4"),	MarkSortOdr[4]);
 		IniFile->WriteIntGen(_T("MarkListSortOdr5"),	MarkSortOdr[5]);
-		IniFile->WriteBoolGen(_T("MarkListSttBar"),		ShowStatusBarAction->Checked);
+		IniFile->WriteBoolGen(_T("MarkListSttBar"),		ShowStatusBarAction);
 	}
 	else if (!isTags) {
-		IniFile->WriteBoolGen(_T("EditHistSttBar"),	ShowStatusBarAction->Checked);
+		IniFile->WriteBoolGen(_T("EditHistSttBar"),	ShowStatusBarAction);
 	}
 
 	clear_FileList(HistBufList);

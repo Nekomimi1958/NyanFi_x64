@@ -207,7 +207,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"GrText=グラフの文字色\n"
 		"GitHEAD=|Git: HEADマーク\n"
 		"GitBra=Git: ブランチ\n"
-		"GitBraR=Git: リモートブランチ\n"
+		"GitBraR=Git: リモート参照\n"
 		"GitTag=Git: タグ\n"
 		"GitHash=Git: ハッシュ\n"
 		"bgHint=|ヒント表示の背景色\n"
