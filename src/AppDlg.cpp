@@ -152,7 +152,7 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 
 	//ランチャーの初期化
 	if (!OnlyAppList) {
-		SortByRemItem->Checked = IniFile->ReadBoolGen(_T("AppListLaunchRemSort"));
+		SortByRem = IniFile->ReadBoolGen(_T("AppListLaunchRemSort"));
 		lp = LaunchListBox;
 		set_StdListBox(lp, LBTAG_OPT_LOOP|LBTAG_HAS_SICO);
 		set_UsrScrPanel(LaunchScrPanel);
@@ -206,7 +206,7 @@ void __fastcall TAppListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 
 	if (!OnlyAppList) {
 		IniFile->WriteIntGen( _T("AppListLaunchWd"),		LaunchPanel->Width);
-		IniFile->WriteBoolGen(_T("AppListLaunchRemSort"),	SortByRemItem->Checked);
+		IniFile->WriteBoolGen(_T("AppListLaunchRemSort"),	SortByRem);
 		IniFile->WriteStrGen( _T("AppListLaunchPath"),		LaunchPath);
 		IniFile->WriteBoolGen(_T("AppListLaunchMigemo"),	IsMigemo);
 	}
@@ -586,11 +586,11 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 				if (!USAME_TS(fnam, "..")) fnam = CurLaunchPath + fnam;
 				file_rec *fp = cre_new_file_rec(fnam);  if (!fp) continue;
 				//fp->l_name = リンク先, fp->alias = コメント
-				if (SortByRemItem->Checked && test_LnkExt(fp->f_ext)) {
+				if (SortByRem && test_LnkExt(fp->f_ext)) {
 					usr_SH->get_LnkInf(fp->f_name, NULL, &fp->l_name, NULL, NULL, NULL, &fp->alias);
 				}
 				//URL
-				else if (SortByRemItem->Checked && USAME_TI(fp->f_ext, ".url")) {
+				else if (SortByRem && USAME_TI(fp->f_ext, ".url")) {
 					std::unique_ptr<UsrIniFile> url_file(new UsrIniFile(fnam));
 					fp->l_name = url_file->ReadString("InternetShortcut", "URL");
 				}
@@ -918,6 +918,7 @@ void __fastcall TAppListDlg::PopupMenu2Popup(TObject *Sender)
 		LaunchRightItem->Checked = (LaunchPanel->Align==alRight);
 		LaunchLeftItem->Checked  = (LaunchPanel->Align==alLeft);
 	}
+	SortByRemItem->Checked = SortByRem;
 }
 
 //---------------------------------------------------------------------------
@@ -1468,7 +1469,7 @@ void __fastcall TAppListDlg::LaunchPosItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::SortByRemItemClick(TObject *Sender)
 {
-	SortByRemItem->Checked = !SortByRemItem->Checked;
+	SortByRem = !SortByRem;
 	UpdateLaunchList();
 }
 

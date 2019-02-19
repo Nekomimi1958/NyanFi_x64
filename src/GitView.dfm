@@ -181,17 +181,17 @@ object GitViewer: TGitViewer
       Caption = #12467#12511#12483#12488#12434#19968#12388#25147#12377
       object SoftResetItem: TMenuItem
         Caption = '&Soft - '#12467#12511#12483#12488#12434#21066#38500
-        OnClick = RestItemClick
+        OnClick = ResetItemClick
       end
       object MixedResetItem: TMenuItem
         Tag = 1
         Caption = '&Mixed - '#12467#12511#12483#12488#12392#12452#12531#12487#12483#12463#12473#12434#21066#38500
-        OnClick = RestItemClick
+        OnClick = ResetItemClick
       end
       object HardResetItem: TMenuItem
         Tag = 2
         Caption = '&Hard - '#12377#12409#12390#22793#26356#12434#21066#38500
-        OnClick = RestItemClick
+        OnClick = ResetItemClick
       end
     end
   end
@@ -254,7 +254,12 @@ object GitViewer: TGitViewer
     object DiffToolAction: TAction
       Caption = 'diff'#12484#12540#12523#12434#36215#21205'(&T)'
       OnExecute = DiffToolActionExecute
-      OnUpdate = DiffToolActionUpdate
+      OnUpdate = DiffActionUpdate
+    end
+    object BlameAction: TAction
+      Caption = 'git gui blame (&B)'
+      OnExecute = BlameActionExecute
+      OnUpdate = DiffActionUpdate
     end
     object ArchiveAction: TAction
       Caption = 'ZIP'#12450#12540#12459#12452#12502#12434#20316#25104'(&P)...'
@@ -267,6 +272,7 @@ object GitViewer: TGitViewer
     end
   end
   object CmPopupMenu: TPopupMenu
+    OnPopup = GitPopupMenuPopup
     Left = 297
     Top = 88
     object N2: TMenuItem
@@ -296,18 +302,19 @@ object GitViewer: TGitViewer
     object ShowRemoteItem: TMenuItem
       Action = ShowRemoteAction
     end
-    object Sep_c_4: TMenuItem
-      Caption = '-'
-    end
-    object N1: TMenuItem
+    object FitSizePosItem: TMenuItem
       Action = UserModule.SizePosToFlieListAction
     end
   end
   object DiffPopupMenu: TPopupMenu
+    OnPopup = GitPopupMenuPopup
     Left = 293
     Top = 311
     object DiffToolItem: TMenuItem
       Action = DiffToolAction
+    end
+    object BlameItem: TMenuItem
+      Action = BlameAction
     end
     object Sep_d_1: TMenuItem
       Caption = '-'

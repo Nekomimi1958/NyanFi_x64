@@ -136,27 +136,27 @@ void __fastcall TTagManDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->SavePosInfo(this);
 
 	if (SameText(CmdStr, "FindTag")) {
-		IniFile->WriteBoolGen(_T("FindTagDlgHide"),	HideCheckBox);
-		IniFile->WriteBoolGen(_T("FindTagDlgAnd"),	AndCheckBox);
-		IniFile->WriteBoolGen(_T("FindTagResLink"),	ResLinkCheckBox);
-		IniFile->WriteBoolGen(_T("FindTagShowOpt"),	OptPanel->Visible);
+		IniFile->WriteBoolGen(_T("FindTagDlgHide"),		HideCheckBox);
+		IniFile->WriteBoolGen(_T("FindTagDlgAnd"),		AndCheckBox);
+		IniFile->WriteBoolGen(_T("FindTagResLink"),		ResLinkCheckBox);
+		IniFile->WriteBoolGen(_T("FindTagShowOpt"),		OptPanel->Visible);
 	}
 	else if (SameText(CmdStr, "SetTag")) {
-		IniFile->WriteBoolGen(_T("SetTagDlgHide"),	HideCheckBox);
-		IniFile->WriteBoolGen(_T("SetTagShowOpt"),	OptPanel->Visible);
+		IniFile->WriteBoolGen(_T("SetTagDlgHide"),		HideCheckBox);
+		IniFile->WriteBoolGen(_T("SetTagShowOpt"),		OptPanel->Visible);
 	}
 	else if (SameText(CmdStr, "AddTag")) {
-		IniFile->WriteBoolGen(_T("AddTagDlgHide"),	HideCheckBox);
-		IniFile->WriteBoolGen(_T("AddTagShowOpt"),	OptPanel->Visible);
+		IniFile->WriteBoolGen(_T("AddTagDlgHide"),		HideCheckBox);
+		IniFile->WriteBoolGen(_T("AddTagShowOpt"),		OptPanel->Visible);
 	}
 	else if (SameText(CmdStr, "TagSelect")) {
-		IniFile->WriteBoolGen(_T("TagSelDlgHide"),	HideCheckBox);
-		IniFile->WriteBoolGen(_T("TagSelDlgAnd"),	AndCheckBox);
-		IniFile->WriteBoolGen(_T("TagSelSelMask"),	SelMaskCheckBox);
-		IniFile->WriteBoolGen(_T("TagSelShowOpt"),	OptPanel->Visible);
+		IniFile->WriteBoolGen(_T("TagSelDlgHide"),		HideCheckBox);
+		IniFile->WriteBoolGen(_T("TagSelDlgAnd"),		AndCheckBox);
+		IniFile->WriteBoolGen(_T("TagSelSelMask"),		SelMaskCheckBox);
+		IniFile->WriteBoolGen(_T("TagSelShowOpt"),		OptPanel->Visible);
 	}
 
-	IniFile->WriteBoolGen(_T("TagDlgShowCount"),	ShowTagCountAction);
+	IniFile->WriteBoolGen(_T("TagDlgShowCount"),	ShowTagCountAction->Checked);
 
 	Initialized = false;
 	CmdStr = EmptyStr;

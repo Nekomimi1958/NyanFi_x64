@@ -18,14 +18,17 @@
 
 //---------------------------------------------------------------------------
 struct git_rec {
-	UnicodeString graph;
-	UnicodeString msg;
-	UnicodeString hash;
-	UnicodeString branch;
-	UnicodeString branch_r;
-	UnicodeString tag;
+	UnicodeString graph;	//グラフ文字
+	UnicodeString msg;		//メッセージ
+	UnicodeString hash;		//コミットのハッシュ
+	UnicodeString parent;	//親コミットのハッシュ
+	UnicodeString branch;	//ブランチ
+	UnicodeString branch_r;	//リモート部ラッチ
+	UnicodeString tag;		//タグ
 	TDateTime f_time;
 	bool is_head;
+	bool is_work;
+	bool is_index;
 };
 
 #define GIT_DEF_HISTLIMIT	30
@@ -36,6 +39,7 @@ class TGitViewer : public TForm
 __published:	// IDE で管理されるコンポーネント
 	TAction *AppFextColorAction;
 	TAction *ArchiveAction;
+	TAction *BlameAction;
 	TAction *ChckoutAction;
 	TAction *CopyBranchNameAction;
 	TAction *CopyCommitIDAction;
@@ -53,23 +57,23 @@ __published:	// IDE で管理されるコンポーネント
 	TListBox *DiffListBox;
 	TMenuItem *AppFextColItem;
 	TMenuItem *ArchiveItem;
+	TMenuItem *BlameItem;
 	TMenuItem *CheckoutItem;
 	TMenuItem *CopyBranchNameItem;
 	TMenuItem *CopyCommitIDItem;
 	TMenuItem *CreBranchItem;
 	TMenuItem *DelBranchItem;
 	TMenuItem *DiffToolItem;
+	TMenuItem *FitSizePosItem;
 	TMenuItem *HardResetItem;
 	TMenuItem *MergeItem;
 	TMenuItem *MixedResetItem;
-	TMenuItem *N1;
 	TMenuItem *N2;
 	TMenuItem *RenBranchItem;
 	TMenuItem *ResetItem;
 	TMenuItem *Sep_c_1;
 	TMenuItem *Sep_c_2;
 	TMenuItem *Sep_c_3;
-	TMenuItem *Sep_c_4;
 	TMenuItem *Sep_d_1;
 	TMenuItem *SetTagItem;
 	TMenuItem *ShowBranchesItem;
@@ -89,11 +93,19 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall BranchPanelResize(TObject *Sender);
+	void __fastcall CommitPanelResize(TObject *Sender);
+	void __fastcall DiffPanelResize(TObject *Sender);
 	void __fastcall BranchListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall BranchListBoxDblClick(TObject *Sender);
+	void __fastcall BranchListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CommitListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall CommitListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall DiffListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CommitListBoxClick(TObject *Sender);
+	void __fastcall GitListBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall ChckoutActionExecute(TObject *Sender);
 	void __fastcall CreBranchActionExecute(TObject *Sender);
 	void __fastcall DelBranchActionExecute(TObject *Sender);
@@ -105,32 +117,26 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SetTagActionExecute(TObject *Sender);
 	void __fastcall ActTagActionUpdate(TObject *Sender);
 	void __fastcall InactBranchActionUpdate(TObject *Sender);
-	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall DiffPanelResize(TObject *Sender);
-	void __fastcall CommitPanelResize(TObject *Sender);
-	void __fastcall BranchPanelResize(TObject *Sender);
-	void __fastcall BranchListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall CommitListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CopyCommitIDActionExecute(TObject *Sender);
 	void __fastcall CopyCommitIDActionUpdate(TObject *Sender);
 	void __fastcall CopyBranchNameActionExecute(TObject *Sender);
 	void __fastcall CopyBranchNameActionUpdate(TObject *Sender);
-	void __fastcall GitListBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
-	void __fastcall BrPopupMenuPopup(TObject *Sender);
-	void __fastcall RestItemClick(TObject *Sender);
+	void __fastcall ResetItemClick(TObject *Sender);
 	void __fastcall DiffToolActionExecute(TObject *Sender);
-	void __fastcall DiffToolActionUpdate(TObject *Sender);
-	void __fastcall DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall DiffActionUpdate(TObject *Sender);
+	void __fastcall BlameActionExecute(TObject *Sender);
 	void __fastcall ArchiveActionExecute(TObject *Sender);
 	void __fastcall ArchiveActionUpdate(TObject *Sender);
 	void __fastcall AppFextColorActionExecute(TObject *Sender);
 	void __fastcall ShowRemoteActionExecute(TObject *Sender);
-
+	void __fastcall BrPopupMenuPopup(TObject *Sender);
+	void __fastcall GitPopupMenuPopup(TObject *Sender);
 
 private:	// ユーザー宣言
-	UnicodeString RepoDir;
 	UnicodeString RefHEAD;
-	UnicodeString DiffID;
+	UnicodeString CommitID;
+	UnicodeString ParentID;
+	UnicodeString DiffOpt;
 
 	TStringList *CommitList;
 
@@ -140,7 +146,7 @@ private:	// ユーザー宣言
 
 	UnicodeString __fastcall GitExeStr(UnicodeString prm);
 	void __fastcall ClearCommitList();
-	void __fastcall GetCommitList();
+	void __fastcall UpdateCommitList();
 
 	bool FGitBusy;
 	void __fastcall SetGitBusy(bool Value)
@@ -177,14 +183,14 @@ private:	// ユーザー宣言
 	UnicodeString __fastcall GetDiffFileName()
 	{
 		TListBox *lp = DiffListBox;
-		UnicodeString lbuf = (!DiffID.IsEmpty() && (lp->Focused() && lp->ItemIndex!=-1)?
-													 lp->Items->Strings[lp->ItemIndex] : EmptyStr);
+		UnicodeString lbuf = ((lp->Focused() && lp->ItemIndex!=-1)? lp->Items->Strings[lp->ItemIndex] : EmptyStr);
 		return lbuf.Pos(" | ")? Trim(split_tkn(lbuf, " | ")) : EmptyStr;
 	}
 
 	void __fastcall WmFormShowed(TMessage &msg);
 
 public:		// ユーザー宣言
+	UnicodeString WorkDir;
 	int HistoryLimit;
 
 	__fastcall TGitViewer(TComponent* Owner);

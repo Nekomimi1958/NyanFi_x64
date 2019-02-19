@@ -414,8 +414,18 @@ MsgBox_%Buffer%
 <dt id="GrepStart" class="no_bg">GrepStart
 <dd>可能なら<a href="hid00056.htm">文字列検索(GREP)</a>を開始します。<a href="hid00005.htm#Grep">Grep</a> コマンドとあわせて用います。
 
-<dt id="Hint" class="no_bg">Hint<span class="pram_text">_メッセージ</span>
+<dt id="Hint" class="no_bg">Hint<span class="pram_text">[_[!]メッセージ]</span>
 <dd>指定したメッセージをヒント表示します。<br>
+先頭に <b>!</b> を付けるとヒントが自動的に隠れません。表示されているヒントを消すには、メッセージなしで <b>Hint</b> を実行します。<br>
+<div class="spc_box">
+<b>例</b><br>
+<pre class="example_box">
+Hint_!処理中...
+　…
+Hint
+</pre>
+</div>
+
 <a href="#Warn">→ Warn</a>
 
 <dt id="Ins" class="no_bg">Ins<span class="pram_text">_変数名&lt;&lt;文字列</span>

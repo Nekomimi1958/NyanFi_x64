@@ -206,6 +206,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"GrGrid=グラフのグリッド\n"
 		"GrText=グラフの文字色\n"
 		"GitHEAD=|Git: HEADマーク\n"
+		"GitMark=Git: コミットマーク\n"
 		"GitBra=Git: ブランチ\n"
 		"GitBraR=Git: リモート参照\n"
 		"GitTag=Git: タグ\n"

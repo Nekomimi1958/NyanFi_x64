@@ -1062,6 +1062,7 @@ extern TColor col_GrGrid;
 extern TColor col_GrText;
 
 extern TColor col_GitHEAD;
+extern TColor col_GitMark;
 extern TColor col_GitBra;
 extern TColor col_GitBraR;
 extern TColor col_GitTag;
@@ -2052,7 +2053,8 @@ UnicodeString get_GitUrl(file_rec *fp);
 int get_GitChangedList(UnicodeString pnam, TStringList *lst);
 UnicodeString get_GitGraphStr(UnicodeString lbuf);
 UnicodeString split_GitGraphStr(UnicodeString &lbuf);
-void draw_GitGraph(UnicodeString s, UnicodeString s1, UnicodeString s2, TCanvas *cv, TRect &rc, bool is_head = false);
+void draw_GitGraph(UnicodeString s, UnicodeString s1, UnicodeString s2, TCanvas *cv, TRect &rc,
+	bool is_head = false, bool is_wip = false);
 void get_GitInf(UnicodeString dnam, TStringList *lst);
 //---------------------------------------------------------------------------
 #endif

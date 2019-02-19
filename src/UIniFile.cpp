@@ -405,11 +405,6 @@ void UsrIniFile::WriteBoolGen(const _TCHAR *key, TCheckBox *cp)
 {
 	WriteString(SCT_General, key, cp->Checked? "1" : "0");
 }
-//---------------------------------------------------------------------------
-void UsrIniFile::WriteBoolGen(const _TCHAR *key, TAction *ap)
-{
-	WriteString(SCT_General, key, ap->Checked? "1" : "0");
-}
 
 //---------------------------------------------------------------------------
 void UsrIniFile::WriteFontInf(UnicodeString sct, TFont *f)

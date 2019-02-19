@@ -111,6 +111,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall HighlightCheckBoxClick(TObject *Sender);
 	void __fastcall ViewListActionExecute(TObject *Sender);
 	void __fastcall ShowLineNoActionExecute(TObject *Sender);
+	void __fastcall ShowLineNoActionUpdate(TObject *Sender);
 	void __fastcall ViewFileActionExecute(TObject *Sender);
 	void __fastcall ViewListActionUpdate(TObject *Sender);
 	void __fastcall EditFileActionExecute(TObject *Sender);
@@ -144,6 +145,8 @@ private:	// ユーザー宣言
 	int  TabWidth;
 	UnicodeString SavePath;
 	bool isFiltered;
+	bool show_LineNo;
+	bool keep_Index;
 	int  LastIndex;
 	int  LastTopIndex;
 
@@ -196,6 +199,9 @@ public:		// ユーザー宣言
 	bool ToEnd;			//最後に移動
 	bool ToFilter;		//フィルタ欄にフォーカス
 
+	bool FileName1st;	//ファイル名を先に表示
+
+	bool OmitComPath;	//パスの共通部分を省略
 	UnicodeString ComPathName;
 
 	UnicodeString FileName;

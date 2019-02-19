@@ -11200,11 +11200,15 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 					MsgHint->ReleaseHandle();
 					break;
 
-				//メッセージ表示
+				//メッセージ/ヒント表示など
 				case XCMDID_MsgBox: case XCMDID_MsgBoxYN: case XCMDID_MsgBoxYNC:
 										XCMD_MsgBox(XCMD_cmd, XCMD_prm);				break;
+				case XCMDID_Hint: {
+						bool not_hide = remove_top_s(XCMD_prm, '!');
+						ShowMessageHint(XCMD_prm, col_bgHint, false, not_hide);
+					}
+					break;
 				case XCMDID_Warn:		SttBarWarn(XCMD_prm);							break;
-				case XCMDID_Hint:		ShowMessageHint(XCMD_prm, col_bgHint, false);	break;
 				case XCMDID_PlaySound:	XCMD_PlaySound(XCMD_prm);						break;
 				case XCMDID_FlashWin:	XCMD_FlashWin(XCMD_prm);						break;
 
@@ -16537,8 +16541,10 @@ void __fastcall TNyanFiForm::GitViewerActionExecute(TObject *Sender)
 {
 	try {
 		if (!IsCurFList()) UserAbort(USTR_CantOperate);
-		if (get_GitTopPath(CurPath[CurListTag]).IsEmpty()) TextAbort(_T("Gitの作業ディレクトリではありません。"));
+		UnicodeString wnam = get_GitTopPath(CurPath[CurListTag]);
+		if (wnam.IsEmpty()) TextAbort(_T("Gitの作業ディレクトリではありません。"));
 		if (!GitViewer) GitViewer = new TGitViewer(this);	//初回に動的作成
+		GitViewer->WorkDir = wnam;
 		GitViewer->HistoryLimit = StartsText('N', ActionParam)? extract_int_def(ActionParam) : GIT_DEF_HISTLIMIT;
 		SetDirWatch(false);
 		GitViewer->ShowModal();

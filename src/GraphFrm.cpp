@@ -104,9 +104,9 @@ void __fastcall TGraphForm::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	IniFile->SavePosInfo(this);
 
-	IniFile->WriteBoolGen(_T("GraphShowMax"),	ShowMaxAction);
-	IniFile->WriteBoolGen(_T("GraphShowAve"),	ShowAveAction);
-	IniFile->WriteBoolGen(_T("GraphShowMin"),	ShowMinAction);
+	IniFile->WriteBoolGen(_T("GraphShowMax"),	ShowMaxAction->Checked);
+	IniFile->WriteBoolGen(_T("GraphShowAve"),	ShowAveAction->Checked);
+	IniFile->WriteBoolGen(_T("GraphShowMin"),	ShowMinAction->Checked);
 
 	for (int i=0; i<ValueList->Count; i++) delete (long double*)ValueList->Objects[i];
 	ValueList->Clear();

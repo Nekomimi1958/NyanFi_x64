@@ -844,6 +844,7 @@ TColor col_GrGrid;		//グラフのグリッド
 TColor col_GrText;		//グラフの文字色
 
 TColor col_GitHEAD;		//Gitビュアー : ヘッド
+TColor col_GitMark;		//  グラフマーク
 TColor col_GitBra;		//  ブランチ
 TColor col_GitBraR;		//  リモートブランチ
 TColor col_GitTag;		//  タグ
@@ -8985,6 +8986,7 @@ void set_col_from_ColorList()
 		{&col_GrGrid,	_T("GrGrid"),		clGray},
 		{&col_GrText,	_T("GrText"),		clLtGray},
 		{&col_GitHEAD,	_T("GitHEAD"),		clFuchsia},
+		{&col_GitMark,	_T("GitMark"),		clAqua},
 		{&col_GitBra,	_T("GitBra"),		clGreen},
 		{&col_GitBraR,	_T("GitBraR"),		clOlive},
 		{&col_GitTag,	_T("GitTag"),		clYellow},
@@ -9366,7 +9368,11 @@ void out_Text(TCanvas *cv, int x, int y, const _TCHAR *s, TColor fg)
 	cv->TextOut(x, y, s);
 }
 //---------------------------------------------------------------------------
-void out_TextEx(TCanvas *cv, int &x, int y, UnicodeString s, TColor fg, TColor bg, int mgn)
+void out_TextEx(
+	TCanvas *cv, int &x, int y,
+	UnicodeString s,
+	TColor fg, TColor bg,	//	(default = clNone)
+	int mgn)				//  (default = 0)
 {
 	TColor org_fg = cv->Font->Color;
 	TColor org_bg = cv->Brush->Color;
@@ -13273,7 +13279,8 @@ void draw_GitGraph(
 	UnicodeString s2,	//次行
 	TCanvas *cv,
 	TRect &rc,			//表示位置 (rc.Left 更新)
-	bool is_head)		//HEAD (default = false)
+	bool is_head,		//HEAD (default = false)
+	bool is_wip)		//WIP  (default = false)
 {
 	if (s.IsEmpty()) return;
 
@@ -13295,7 +13302,7 @@ void draw_GitGraph(
 	cv->Pen->Width	 = Scaled1;
 
 	TColor org_bg = cv->Brush->Color;
-	cv->Brush->Color = is_head? col_GitHEAD : col_Headline;
+	cv->Brush->Color = is_head? col_GitHEAD : is_wip? org_bg : col_GitMark;
 	cv->Brush->Style = bsSolid;
 
 	for (int i=1; i<=slen; i++) {
@@ -13312,7 +13319,7 @@ void draw_GitGraph(
 		case '*':
 			if (s1[i]!=' ' || c1l=='\\') { cv->MoveTo(xc, y0); cv->LineTo(xc, yc); }
 			if (s2[i]!=' ' || c2l=='/')  { cv->MoveTo(xc, yc); cv->LineTo(xc, y1); }
-			cv->Pen->Color = is_head? col_GitHEAD : col_Headline;
+			cv->Pen->Color = is_head? col_GitHEAD : col_GitMark;
 			cv->Ellipse(xc - r, yc - r, xc + r, yc + r);
 			break;
 		case '|':

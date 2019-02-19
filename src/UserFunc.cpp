@@ -460,7 +460,9 @@ void draw_Line(
 //---------------------------------------------------------------------------
 //”wŒiF(Brush)‚Ì‹P“x‚ðl—¶‚µ‚ÄƒZƒpƒŒ[ƒ^‚ð•`‰æ
 //---------------------------------------------------------------------------
-void draw_Separator(TCanvas *cv, TRect rc, TColor bg)
+void draw_Separator(
+	TCanvas *cv, TRect rc,
+	TColor bg)	//”wŒiF	(default = clNone : cv->Brush->Color)
 {
 	int yp = rc.Top + rc.Height()/2;
 	int x0 = rc.Left  + 4;
