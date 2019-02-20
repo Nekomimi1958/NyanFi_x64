@@ -3980,8 +3980,8 @@ void __fastcall TTxtViewer::IncSearch(UnicodeString keystr)
 
 	if (isIncSea) {
 		if (!RegExPtn.IsEmpty()) {
-			bool csr_up   = (USAME_TI(CmdStr, "IncSearchUp")   || USAME_TI(keystr, "UP"));
-			bool csr_down = (USAME_TI(CmdStr, "IncSearchDown") || USAME_TI(keystr, "DOWN"));
+			bool csr_up   = (USAME_TI(CmdStr, "IncSearchUp")   || equal_UP(keystr));
+			bool csr_down = (USAME_TI(CmdStr, "IncSearchDown") || equal_DOWN(keystr));
 
 			//â∫ï˚ å¸Ç÷ÉTÅ[É`
 			if (chg_wd || csr_down) {

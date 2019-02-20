@@ -687,6 +687,9 @@ void get_PrmList(
 			_T("XM : 確認なしで直ちに移動\n")
 			_T("SN : ファイルリストからマスクと振分先を設定\n"));
 	}
+	else if (USAME_TI(cmd, "DotNyanDlg")) {
+		params.USET_T("\nRS : カレント側に .nyanfi を再適用\n");
+	}
 	else if (USAME_TI(cmd, "Duplicate")) {
 		params.USET_T("\nRA : 管理者として二重起動\n");
 	}

@@ -5,14 +5,11 @@ object GitViewer: TGitViewer
   ClientHeight = 448
   ClientWidth = 710
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
+  ParentFont = True
   KeyPreview = True
   OldCreateOrder = False
   Position = poDesigned
+  ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -46,7 +43,7 @@ object GitViewer: TGitViewer
       Left = 0
       Top = 0
       Width = 521
-      Height = 291
+      Height = 272
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
@@ -55,7 +52,7 @@ object GitViewer: TGitViewer
         Left = 0
         Top = 0
         Width = 521
-        Height = 291
+        Height = 272
         Style = lbOwnerDrawFixed
         Align = alLeft
         Anchors = [akLeft, akTop, akRight, akBottom]
@@ -74,6 +71,7 @@ object GitViewer: TGitViewer
         OnClick = CommitListBoxClick
         OnDrawItem = CommitListBoxDrawItem
         OnKeyDown = CommitListBoxKeyDown
+        OnKeyPress = GitListBoxKeyPress
         OnMouseDown = GitListBoxMouseDown
       end
     end
@@ -84,7 +82,7 @@ object GitViewer: TGitViewer
       Height = 153
       Align = alBottom
       BevelOuter = bvNone
-      TabOrder = 1
+      TabOrder = 2
       OnResize = DiffPanelResize
       object DiffListBox: TListBox
         Left = 0
@@ -106,7 +104,92 @@ object GitViewer: TGitViewer
         TabOrder = 0
         OnDrawItem = DiffListBoxDrawItem
         OnKeyDown = DiffListBoxKeyDown
+        OnKeyPress = GitListBoxKeyPress
         OnMouseDown = GitListBoxMouseDown
+      end
+    end
+    object FindBar: TToolBar
+      Left = 0
+      Top = 272
+      Width = 521
+      Height = 19
+      Align = alBottom
+      AutoSize = True
+      ButtonHeight = 19
+      ButtonWidth = 51
+      DrawingStyle = dsGradient
+      List = True
+      PopupMenu = ComOptPopupMenu
+      ShowCaptions = True
+      AllowTextButtons = True
+      TabOrder = 1
+      object FintBtn: TToolButton
+        Left = 0
+        Top = 0
+        Caption = #26908#32034'(&F)'
+        ImageIndex = 0
+        Style = tbsTextButton
+        OnClick = FintBtnClick
+      end
+      object FindCommitEdit: TEdit
+        Left = 54
+        Top = 0
+        Width = 101
+        Height = 19
+        Align = alLeft
+        Constraints.MinWidth = 60
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        OnChange = FindCommitEditChange
+        OnEnter = FindCommitEditEnter
+        OnExit = FindCommitEditExit
+        OnKeyDown = FindCommitEditKeyDown
+        OnKeyPress = FindCommitEditKeyPress
+      end
+      object FindSplitter: TSplitter
+        Left = 155
+        Top = 0
+        Width = 4
+        Height = 19
+      end
+      object ToolButton2: TToolButton
+        Left = 159
+        Top = 0
+        Action = FindUpAction
+        Style = tbsTextButton
+      end
+      object ToolButton3: TToolButton
+        Left = 181
+        Top = 0
+        Action = FindDownAction
+        Style = tbsTextButton
+      end
+      object ToolButton4: TToolButton
+        Left = 203
+        Top = 0
+        Width = 40
+        Caption = 'ToolButton4'
+        ImageIndex = 1
+        Style = tbsSeparator
+      end
+      object ToolButton1: TToolButton
+        Left = 243
+        Top = 0
+        Caption = #26356#26032'(&U)'
+        ImageIndex = 0
+        Style = tbsTextButton
+        OnClick = UpdateBtnClick
+      end
+      object ToolButton5: TToolButton
+        Left = 298
+        Top = 0
+        Action = ConsoleAction
+        Style = tbsTextButton
       end
     end
   end
@@ -152,6 +235,7 @@ object GitViewer: TGitViewer
       OnDblClick = BranchListBoxDblClick
       OnDrawItem = BranchListBoxDrawItem
       OnKeyDown = BranchListBoxKeyDown
+      OnKeyPress = GitListBoxKeyPress
       OnMouseDown = GitListBoxMouseDown
     end
   end
@@ -241,6 +325,10 @@ object GitViewer: TGitViewer
       Caption = #12522#12514#12540#12488#21442#29031#12434#34920#31034
       OnExecute = ShowRemoteActionExecute
     end
+    object ShowAuthorAction: TAction
+      Caption = 'Author '#12398#21517#21069#12434#34920#31034
+      OnExecute = ShowAuthorActionExecute
+    end
     object CopyCommitIDAction: TAction
       Caption = #12467#12511#12483#12488'ID'#12434#12467#12500#12540
       OnExecute = CopyCommitIDActionExecute
@@ -269,6 +357,23 @@ object GitViewer: TGitViewer
     object AppFextColorAction: TAction
       Caption = #25313#24373#23376#21029#37197#33394#12434#36969#29992'(&X)'
       OnExecute = AppFextColorActionExecute
+    end
+    object FindUpAction: TAction
+      Caption = #9650
+      Hint = #19978#26041#21521#12395#26908#32034
+      OnExecute = FindUpActionExecute
+      OnUpdate = FindUpActionUpdate
+    end
+    object FindDownAction: TAction
+      Caption = #9660
+      Hint = #19979#26041#21521#12395#26908#32034
+      OnExecute = FindDownActionExecute
+      OnUpdate = FindDownActionUpdate
+    end
+    object ConsoleAction: TAction
+      Caption = '&Console'
+      OnExecute = ConsoleActionExecute
+      OnUpdate = ConsoleActionUpdate
     end
   end
   object CmPopupMenu: TPopupMenu
@@ -302,6 +407,12 @@ object GitViewer: TGitViewer
     object ShowRemoteItem: TMenuItem
       Action = ShowRemoteAction
     end
+    object ShowAuthorAction1: TMenuItem
+      Action = ShowAuthorAction
+    end
+    object Sep_c_4: TMenuItem
+      Caption = '-'
+    end
     object FitSizePosItem: TMenuItem
       Action = UserModule.SizePosToFlieListAction
     end
@@ -321,6 +432,14 @@ object GitViewer: TGitViewer
     end
     object AppFextColItem: TMenuItem
       Action = AppFextColorAction
+    end
+  end
+  object ComOptPopupMenu: TPopupMenu
+    Left = 450
+    Top = 316
+    object Cosole1: TMenuItem
+      Caption = 'Cosole '#12398#36984#25246'(&S)...'
+      OnClick = Cosole1Click
     end
   end
 end

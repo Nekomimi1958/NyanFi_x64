@@ -144,7 +144,7 @@ void __fastcall TRegDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	UserModule->UninitializeListBox();
 
 	if (IsSpecial) {
-		IniFile->WriteBoolGen(_T("SpecialDirUseEnv"),	UseEnvVarAction->Checked);
+		IniFile->WriteBoolGen(_T("SpecialDirUseEnv"),	UseEnvVarAction);
 	}
 	else {
 		TListBox *lp = RegDirListBox;
@@ -293,9 +293,9 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	bool handled = true;
 	if (k_used)
 		handled = false;
-	else if (USAME_TI(KeyStr, "UP") && lp->ItemIndex==0)
+	else if (equal_UP(KeyStr) && lp->ItemIndex==0)
 		lp->ItemIndex = lp->Count - 1;
-	else if (USAME_TI(KeyStr, "DOWN") && lp->ItemIndex==lp->Count-1)
+	else if (equal_DOWN(KeyStr) && lp->ItemIndex==lp->Count-1)
 		lp->ItemIndex = 0;
 	else if (contained_wd_i(KeysStr_Popup, KeyStr))
 		show_PopupMenu(lp);

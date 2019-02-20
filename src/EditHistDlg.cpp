@@ -46,13 +46,10 @@ void __fastcall TEditHistoryDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 {
+	DlgInitialized = false;
+
 	TStringGrid *gp = EditHistGrid;
 	InitializeListGrid(gp);
-
-	set_ButtonMark(HideOptBtn,  UBMK_BDOWN);
-	set_ButtonMark(ShowOptBtn,  UBMK_BUP);
-	HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
-	ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 
 	if		(isRecent) this->Name = "RecentListDlg";
 	else if	(isMark)   this->Name = "MarkListDlg";
@@ -60,10 +57,32 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter);
 	this->Name = "EditHistoryDlg";
 
+	OpeToolBar->GradientStartColor = col_bgTlBar1;
+	OpeToolBar->GradientEndColor   = col_bgTlBar2;
+	OpeToolBar->Font->Color 	   = col_fgTlBar;
+	OpeToolBar->HotTrackColor	   = col_htTlBar;
+	FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
+
+	FilterEdit->Font->Assign(DialogFont);
+	FilterEdit->Width = IniFile->ReadIntGen(_T("EditHistFilterWidth"),	200);
+
 	StatusBar1->Font->Assign(SttBarFont);
 	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
 	StatusBar1->Panels->Items[0]->Width = StatusBar1->ClientWidth;
 	StatusBar1->Visible = false;
+
+	bool has_mode = (!isRecent && !isMark);
+	OptMode0Action->Enabled = has_mode;
+	OptMode0Action->Visible = has_mode;
+	OptMode1Action->Enabled = has_mode;
+	OptMode1Action->Visible = has_mode;
+	OptMode2Action->Enabled = has_mode;
+	OptMode2Action->Visible = has_mode;
+
+	OpenAction->Enabled = isMark;
+	OpenAction->Visible = isMark;
+	MemoAction->Enabled = isMark;
+	MemoAction->Visible = isMark;
 
 	if (isRecent) {
 		gp->Name = "RecentListGrid";
@@ -104,25 +123,21 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	gp->Name = "EditHistGrid";
 
 	StatusBar1->Visible = ShowStatusBarAction->Checked;
-
-	OptPanel->Visible = (isRecent || isTags)? false :
-							IniFile->ReadBoolGen(isMark? _T("MarkListShowOpt") : _T("EditHistShowOpt"), true);
-	if (ToFilter) OptPanel->Visible = true;
-	BlankPanel->Visible = !isRecent && !isTags && !OptPanel->Visible;
-
-	if (OptPanel->Visible && StatusBar1->Visible) {
-		OptPanel->Align = alNone;
-		OptPanel->Align = alBottom;
+	OpeToolBar->Visible = (!isRecent && !isTags);
+	if (OpeToolBar->Visible && StatusBar1->Visible) {
+		OpeToolBar->Align = alNone;
+		OpeToolBar->Align = alBottom;
 	}
 
 	HelpContext = isTags? 83 : isMark? 70 : 58;
 
-	EditHistHeader->Style	 = (isRecent || isMark)? hsButtons : hsFlat;
-	OpenCheckBox->Checked	 = IniFile->ReadBoolGen(_T("MarkListCnfOpen"));
+	EditHistHeader->Style = (isRecent || isMark)? hsButtons : hsFlat;
+	OpenAction->Checked   = IniFile->ReadBoolGen(_T("MarkListCnfOpen"));
 
-	OptRadioGroup->Enabled	 = false;
-	OptRadioGroup->ItemIndex = IniFile->ReadIntGen(_T("EditHistOptMode"));
-	OptRadioGroup->Enabled	 = true;
+	int opt_mode = IniFile->ReadIntGen(_T("EditHistOptMode"));
+	if		(opt_mode==2)	OptMode2Action->Checked = true;
+	else if (opt_mode==1)	OptMode1Action->Checked = true;
+	else					OptMode0Action->Checked = true;
 
 	UnicodeString tit;
 	EditHistHeader->Sections->Clear();
@@ -167,12 +182,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 
 	Caption = tit;
 
-	RadioPanel->Visible = (!isRecent && !isMark);
-	MarkPanel->Width = isMark? (OpenCheckBox->Width + MemoBtn->Width + 8) : 4;
-	OpenCheckBox->Visible = isMark;
-	MemoBtn->Visible	  = isMark;
-
-	set_MigemoCheckBox(MigemoCheckBox, _T("EditHistMigemo"));
+	set_MigemoAction(MigemoAction, _T("EditHistMigemo"));
 
 	HistoryList = (isRecent || isMark || isTags)? NULL : isView? TextViewHistory : TextEditHistory;
 	//存在しないファイルの履歴を削除
@@ -186,16 +196,19 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 		IniFile->CheckMarkItems();
 	}
 
+	DlgInitialized = true;
+	UpdateActions();
+
 	UpdateList();
 	gp->Row = isMark? std::min(IniFile->ReadIntGen(_T("MarkListLastIdx")), gp->RowCount - 1) : 0;
 	GridScrPanel->UpdateKnob();
-	SetOptBtn();
 
 	EditFileName = EmptyStr;
 	CmdStr		 = EmptyStr;
 	TagJumpInf	 = EmptyStr;
 
-	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();
+	((ToFilter && OpeToolBar->Visible)? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();
+
 	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
 	FilterEdit->Text  = EmptyStr;
 }
@@ -216,12 +229,15 @@ void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action
 	IniFile->SaveGridColWidth(gp);
 	gp->Name = "EditHistGrid";
 
-	IniFile->WriteBoolGen(isMark? _T("MarkListShowOpt") : _T("EditHistShowOpt"),	OptPanel->Visible);
 	if (isMark) IniFile->WriteIntGen(_T("MarkListLastIdx"),	gp->Row);
 
-	IniFile->WriteBoolGen(_T("EditHistMigemo"),		MigemoCheckBox);
-	IniFile->WriteBoolGen(_T("MarkListCnfOpen"),	OpenCheckBox);
-	IniFile->WriteIntGen(_T("EditHistOptMode"),		OptRadioGroup);
+	IniFile->WriteBoolGen(_T("EditHistMigemo"),		MigemoAction);
+	IniFile->WriteBoolGen(_T("MarkListCnfOpen"),	OpenAction);
+
+	IniFile->WriteIntGen(_T("EditHistOptMode"),
+							(OptMode2Action->Checked? 2 : OptMode1Action->Checked? 1 : 0));
+
+	IniFile->WriteIntGen(_T("EditHistFilterWidth"),	FilterEdit->Width);
 
 	if (isRecent) {
 		IniFile->WriteIntGen(_T("RecentListSortMode"),	MarkSortMode);
@@ -229,8 +245,8 @@ void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action
 		IniFile->WriteIntGen(_T("RecentListSortOdr1"),	MarkSortOdr[1]);
 		IniFile->WriteIntGen(_T("RecentListSortOdr2"),	MarkSortOdr[2]);
 		IniFile->WriteIntGen(_T("RecentListSortOdr3"),	MarkSortOdr[3]);
-		IniFile->WriteBoolGen(_T("RecentListUsedTime"),	ShowUsedTimeAction->Checked);
-		IniFile->WriteBoolGen(_T("RecentListSttBar"),	ShowStatusBarAction->Checked);
+		IniFile->WriteBoolGen(_T("RecentListUsedTime"),	ShowUsedTimeAction);
+		IniFile->WriteBoolGen(_T("RecentListSttBar"),	ShowStatusBarAction);
 	}
 	else if (isMark) {
 		IniFile->WriteIntGen(_T("MarkListSortMode"),	MarkSortMode);
@@ -240,10 +256,10 @@ void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action
 		IniFile->WriteIntGen(_T("MarkListSortOdr3"),	MarkSortOdr[3]);
 		IniFile->WriteIntGen(_T("MarkListSortOdr4"),	MarkSortOdr[4]);
 		IniFile->WriteIntGen(_T("MarkListSortOdr5"),	MarkSortOdr[5]);
-		IniFile->WriteBoolGen(_T("MarkListSttBar"),		ShowStatusBarAction->Checked);
+		IniFile->WriteBoolGen(_T("MarkListSttBar"),		ShowStatusBarAction);
 	}
 	else if (!isTags) {
-		IniFile->WriteBoolGen(_T("EditHistSttBar"),	ShowStatusBarAction->Checked);
+		IniFile->WriteBoolGen(_T("EditHistSttBar"),		ShowStatusBarAction);
 	}
 
 	clear_FileList(HistBufList);
@@ -266,8 +282,6 @@ void __fastcall TEditHistoryDlg::FormDestroy(TObject *Sender)
 void __fastcall TEditHistoryDlg::FormResize(TObject *Sender)
 {
 	StatusBar1->Panels->Items[0]->Width = StatusBar1->ClientWidth;
-
-	SetOptBtn();
 }
 
 //---------------------------------------------------------------------------
@@ -301,7 +315,6 @@ void __fastcall TEditHistoryDlg::EditHistHeaderSectionResize(THeaderControl *Hea
 {
 	set_GridFromHeader(EditHistHeader, EditHistGrid);
 	GridScrPanel->UpdateKnob();
-	SetOptBtn();
 }
 
 //---------------------------------------------------------------------------
@@ -339,10 +352,12 @@ void __fastcall TEditHistoryDlg::ShowStatusBarActionExecute(TObject *Sender)
 	TAction *ap = (TAction *)Sender;
 	ap->Checked = !ap->Checked;
 	StatusBar1->Visible = !StatusBar1->Visible;
-	if (OptPanel->Visible && StatusBar1->Visible) {
-		OptPanel->Align = alNone;
-		OptPanel->Align = alBottom;
+
+	if (OpeToolBar->Visible && StatusBar1->Visible) {
+		OpeToolBar->Align = alNone;
+		OpeToolBar->Align = alBottom;
 	}
+
 	ShowStatusBarAction->Checked = StatusBar1->Visible;
 }
 
@@ -366,13 +381,15 @@ file_rec * __fastcall TEditHistoryDlg::get_CurFileRec()
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::UpdateList()
 {
+	if (!DlgInitialized) return;
+
 	cursor_HourGlass();
 
 	UnicodeString cur_fnam = get_CurFileName();
 
 	clear_FileList(HistBufList);
 
-	UnicodeString ptn = usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, FilterEdit->Text);
+	UnicodeString ptn = usr_Migemo->GetRegExPtn(MigemoAction->Checked, FilterEdit->Text);
 	TRegExOptions opt; opt << roIgnoreCase;
 
 	//最近使ったファイル
@@ -509,9 +526,9 @@ void __fastcall TEditHistoryDlg::UpdateList()
 	else if (HistoryList) {
 		for (int i=0; i<HistoryList->Count; i++) {
 			UnicodeString fnam = get_csv_item(HistoryList->Strings[i], 0); 
-			if (OptRadioGroup->ItemIndex==0 ||
-			    (OptRadioGroup->ItemIndex==1 && StartsText(CurPathName, fnam)) ||
-				(OptRadioGroup->ItemIndex==2 && SameText(CurPathName, ExtractFilePath(fnam))))
+			if (OptMode0Action->Checked ||
+			   (OptMode1Action->Checked && StartsText(CurPathName, fnam)) ||
+			   (OptMode2Action->Checked && SameText(CurPathName, ExtractFilePath(fnam))))
 			{
 				if (!ptn.IsEmpty() && !TRegEx::IsMatch(ExtractFileName(fnam), ptn, opt)) continue;
 				file_rec *fp = cre_new_file_rec(fnam);
@@ -599,27 +616,6 @@ void __fastcall TEditHistoryDlg::UpdateGrid()
 		clear_GridRow(gp, 0);
 	}
 	gp->Invalidate();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TEditHistoryDlg::SetOptBtn()
-{
-	if (ScrBarStyle==0)
-		set_ControlRBCorner(EditHistGrid, BlankPanel);
-	else
-		GridScrPanel->SetRBCornerPanel(BlankPanel);
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TEditHistoryDlg::OptRadioGroupClick(TObject *Sender)
-{
-	if (!OptRadioGroup->Enabled) return;
-
-	UpdateList();
-
-	TStringGrid *gp = EditHistGrid;
-	gp->Row = 0;
-	gp->SetFocus();
 }
 
 //---------------------------------------------------------------------------
@@ -830,7 +826,7 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 			}
 			else {
 				if (isMark)
-					CmdStr.sprintf(_T("%s"), OpenCheckBox->Checked? _T("OpenStandard") : null_TCHAR);
+					CmdStr.sprintf(_T("%s"), OpenAction->Checked? _T("OpenStandard") : null_TCHAR);
 				else
 					CmdStr.sprintf(_T("%s"), isView? _T("TextViewer") : _T("FileEdit"));
 				ModalResult = mrOk;
@@ -838,11 +834,11 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 		}
 		else if (equal_ENTER(KeyStr)) {
 			if (!set_FileName(gp->Row)) Abort();
-			CmdStr.sprintf(_T("%s"), (isMark && OpenCheckBox->Checked)? _T("OpenStandard") : null_TCHAR);
+			CmdStr.sprintf(_T("%s"), (isMark && OpenAction->Checked)? _T("OpenStandard") : null_TCHAR);
 			ModalResult = mrClose;	//移動
 		}
 		//フィルタへ
-		else if (StartsText("IncSearch", CmdStr) && OptPanel->Visible) FilterEdit->SetFocus();
+		else if (StartsText("IncSearch", CmdStr) && OpeToolBar->Visible) FilterEdit->SetFocus();
 		//閉じる
 		else if (USAME_TI(CmdStr, "ReturnList")) ModalResult = mrCancel;
 		//カーソル移動
@@ -852,7 +848,7 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 			if (!del_HistItem()) Abort();
 		}
 		//メモ入力
-		else if (isMark && USAME_TI(CmdStr, "Mark_IM")) MemoItemClick(NULL);
+		else if (isMark && USAME_TI(CmdStr, "Mark_IM")) MemoAction->Execute();
 		//コマンド
 		else if (!isTags && contained_wd_i(_T("FileEdit|TextViewer|ImageViewer|OpenByApp|OpenByWin|OpenByExp"), CmdStr)) {
 			if (!set_FileName(gp->Row)) Abort();
@@ -900,12 +896,6 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 void __fastcall TEditHistoryDlg::EditHistGridClick(TObject *Sender)
 {
 	SetSttBar();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TEditHistoryDlg::OpenCheckBoxClick(TObject *Sender)
-{
-	EditHistGrid->SetFocus();
 }
 
 //---------------------------------------------------------------------------
@@ -969,34 +959,6 @@ void __fastcall TEditHistoryDlg::EditHistHeaderSectionClick(THeaderControl *Head
 }
 
 //---------------------------------------------------------------------------
-//オプションの開閉
-//---------------------------------------------------------------------------
-void __fastcall TEditHistoryDlg::ChgOptBtnClick(TObject *Sender)
-{
-	BlankPanel->Visible = !BlankPanel->Visible;
-	OptPanel->Visible	= !OptPanel->Visible;
-	SetOptBtn();
-}
-
-//---------------------------------------------------------------------------
-//メモの入力
-//---------------------------------------------------------------------------
-void __fastcall TEditHistoryDlg::MemoItemClick(TObject *Sender)
-{
-	int idx = EditHistGrid->Row;
-	if (idx<0 || idx>=HistBufList->Count) return;
-
-	file_rec *cfp = (file_rec*)HistBufList->Objects[idx];
-	UnicodeString mstr = get_pre_tab(cfp->memo);
-	UnicodeString fnam = HistBufList->Strings[idx];
-	if (input_query_ex(ExtractFileName(fnam).c_str(), _T("メモ"), &mstr, 480)) {
-		IniFile->FileMark(fnam, 1, mstr);
-		cfp->memo = IniFile->GetMarkMemo(fnam);
-		UpdateList();
-	}
-	CloseIME(Handle);
-}
-//---------------------------------------------------------------------------
 //メモの削除
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::ClrMemoItemClick(TObject *Sender)
@@ -1046,6 +1008,11 @@ void __fastcall TEditHistoryDlg::FilterEditExit(TObject *Sender)
 	CloseIME(Handle);
 	InvColIfEmpty(FilterEdit);
 }
+//---------------------------------------------------------------------------
+void __fastcall TEditHistoryDlg::FilterBtnClick(TObject *Sender)
+{
+	FilterEdit->SetFocus();
+}
 
 //---------------------------------------------------------------------------
 //フィルタ欄でのキー操作
@@ -1056,7 +1023,7 @@ void __fastcall TEditHistoryDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 
 	if		(contained_wd_i(KeysStr_ToList, KeyStr))	EditHistGrid->SetFocus();
 	else if (MovGridFromFilter(EditHistGrid, KeyStr))	;
-	else if (SameText(KeyStr, KeyStr_Migemo))			MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
+	else if (SameText(KeyStr, KeyStr_Migemo))			MigemoAction->Checked = !MigemoAction->Checked;
 	else return;
 
 	Key = 0;
@@ -1068,7 +1035,7 @@ void __fastcall TEditHistoryDlg::FilterEditKeyPress(TObject *Sender, System::Wid
 		Key = 0;
 	else if (Key==VK_RETURN) {
 		if (!set_FileName(EditHistGrid->Row)) Abort();
-		CmdStr.sprintf(_T("%s"), (isMark && OpenCheckBox->Checked)? _T("OpenStandard") : null_TCHAR);
+		CmdStr.sprintf(_T("%s"), (isMark && OpenAction->Checked)? _T("OpenStandard") : null_TCHAR);
 		ModalResult = mrClose;	//移動
 		Key = 0;
 	}
@@ -1208,6 +1175,45 @@ void __fastcall TEditHistoryDlg::ShowPropertyActionExecute(TObject *Sender)
 void __fastcall TEditHistoryDlg::ShowPropertyActionUpdate(TObject *Sender)
 {
 	((TAction *)Sender)->Enabled = !get_CurFileName().IsEmpty();
+}
+
+//---------------------------------------------------------------------------
+//メモ
+//---------------------------------------------------------------------------
+void __fastcall TEditHistoryDlg::MemoActionExecute(TObject *Sender)
+{
+	int idx = EditHistGrid->Row;
+	if (idx<0 || idx>=HistBufList->Count) return;
+
+	file_rec *cfp = (file_rec*)HistBufList->Objects[idx];
+	UnicodeString mstr = get_pre_tab(cfp->memo);
+	UnicodeString fnam = HistBufList->Strings[idx];
+	if (input_query_ex(ExtractFileName(fnam).c_str(), _T("メモ"), &mstr, 480)) {
+		IniFile->FileMark(fnam, 1, mstr);
+		cfp->memo = IniFile->GetMarkMemo(fnam);
+		UpdateList();
+	}
+	CloseIME(Handle);
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TEditHistoryDlg::OptModeActionExecute(TObject *Sender)
+{
+	((TAction *)Sender)->Checked = true;
+
+	UpdateList();
+
+	TStringGrid *gp = EditHistGrid;
+	gp->Row = 0;
+	gp->SetFocus();
+}
+//---------------------------------------------------------------------------
+void __fastcall TEditHistoryDlg::ToggleActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+
+	if (ap==OpenAction) EditHistGrid->SetFocus();
 }
 
 //---------------------------------------------------------------------------

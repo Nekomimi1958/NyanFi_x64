@@ -169,8 +169,8 @@ void __fastcall TDistributionDlg::FormClose(TObject *Sender, TCloseAction &Actio
 	IniFile->WriteIntGen( _T("DistrDlgPrvLstWidth"),	ListListBox->Width);
 	IniFile->WriteIntGen( _T("DistrDlgCopyMode"),		SameNameComboBox);
 	IniFile->WriteBoolGen(_T("DistrDlgCreDir"),			CreDistrDirCheckBox);
-	IniFile->WriteBoolGen(_T("DistrDlgGroupChek"),		GroupCheckAction->Checked);
-	IniFile->WriteBoolGen(_T("DistrDlgPrvLstFile"),		PrvListAction->Checked);
+	IniFile->WriteBoolGen(_T("DistrDlgGroupChek"),		GroupCheckAction);
+	IniFile->WriteBoolGen(_T("DistrDlgPrvLstFile"),		PrvListAction);
 	IniFile->WriteIntGen( _T("DistrDlgPrvHdrW0"),		PrvListHeader->Sections->Items[0]->Width);
 	IniFile->WriteIntGen( _T("DistrDlgSortMode"),		PrvSortMode);
 	IniFile->WriteStrGen( _T("DistrDlgLastDir"),		LastDistDir);

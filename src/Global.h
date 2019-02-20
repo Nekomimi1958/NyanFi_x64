@@ -607,6 +607,7 @@ extern UnicodeString RefParamPath;
 extern UnicodeString IconFilePath;
 extern UnicodeString CmdFilePath;
 extern UnicodeString CmdGitExe;
+extern UnicodeString GitBashExe;
 
 extern int VersionNo;
 extern UnicodeString VersionStr;
@@ -1813,6 +1814,7 @@ void InitializeListHeader(THeaderControl *hp, const _TCHAR *hdr, TFont *fnt = NU
 
 void set_ComboBox_AutoComp(TForm *frm);
 void set_MigemoCheckBox(TCheckBox *cp, const _TCHAR *key, UnicodeString sct = EmptyStr);
+void set_MigemoAction(TAction *ap, const _TCHAR *key, UnicodeString sct = EmptyStr);
 void change_ComboBoxHistory(TComboBox *cp, const _TCHAR *nrm_sct, const _TCHAR *reg_sct, bool reg_sw);
 
 void filter_List(TStringList *i_lst, TStringList *o_lst, UnicodeString kwd,

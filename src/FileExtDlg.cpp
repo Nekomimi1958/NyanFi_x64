@@ -674,7 +674,7 @@ void __fastcall TFileExtensionDlg::InfoListBoxKeyDown(TObject *Sender, WORD &Key
 		show_PopupMenu(lp);
 	else return;
 
-	if (!is_DialogKey(Key)) Key = 0;
+	Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TFileExtensionDlg::InfoListBoxKeyPress(TObject *Sender, System::WideChar &Key)
@@ -805,7 +805,7 @@ void __fastcall TFileExtensionDlg::FileListBoxKeyDown(TObject *Sender, WORD &Key
 	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
 	else return;
 
-	if (!is_DialogKey(Key)) Key = 0;
+	Key = 0;
 }
 
 //---------------------------------------------------------------------------

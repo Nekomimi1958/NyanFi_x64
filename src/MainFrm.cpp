@@ -2240,7 +2240,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 			else if (pCtrl==FuncListDlg->FilterEdit)
 				FuncListDlg->FuncListBox->SetFocus();
 			//最近編集/閲覧したファイル一覧/栞マーク一覧
-			else if (pCtrl==EditHistoryDlg->EditHistGrid && EditHistoryDlg->OptPanel->Visible)
+			else if (pCtrl==EditHistoryDlg->EditHistGrid && EditHistoryDlg->OpeToolBar->Visible)
 				EditHistoryDlg->FilterEdit->SetFocus();
 			else if (pCtrl==EditHistoryDlg->FilterEdit)
 				EditHistoryDlg->EditHistGrid->SetFocus();
@@ -10324,8 +10324,8 @@ void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 		set_IncSeaStt();
 	}
 
-	bool csr_up   = (USAME_TI(CmdStr, "IncSearchUp")   || USAME_TI(keystr, "UP"));
-	bool csr_down = (USAME_TI(CmdStr, "IncSearchDown") || USAME_TI(keystr, "DOWN"));
+	bool csr_up   = (USAME_TI(CmdStr, "IncSearchUp")   || equal_UP(keystr));
+	bool csr_down = (USAME_TI(CmdStr, "IncSearchDown") || equal_DOWN(keystr));
 
 	//フィルタマスクモード
 	if (CurStt->is_Filter) {
@@ -14381,11 +14381,19 @@ void __fastcall TNyanFiForm::DirStackActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::DotNyanDlgActionExecute(TObject *Sender)
 {
 	if (IsCurFList()) {
-		if (!DotNyanDlg) DotNyanDlg = new TDotNyanDlg(this);	//初回に動的作成
-		DotNyanDlg->DotNyanName = get_dotNaynfi(CurPath[CurListTag]);
-		if (DotNyanDlg->ShowModal()==mrOk) {
+		//再適用
+		if (TEST_ActParam("RS")) {
 			ApplyDotNyan = true;
 			CurPath[CurListTag] = CurPath[CurListTag];
+		}
+		//設定ダイアログ
+		else {
+			if (!DotNyanDlg) DotNyanDlg = new TDotNyanDlg(this);	//初回に動的作成
+			DotNyanDlg->DotNyanName = get_dotNaynfi(CurPath[CurListTag]);
+			if (DotNyanDlg->ShowModal()==mrOk) {
+				ApplyDotNyan = true;
+				CurPath[CurListTag] = CurPath[CurListTag];
+			}
 		}
 	}
 	else SetActionAbort();

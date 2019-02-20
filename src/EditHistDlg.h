@@ -20,6 +20,7 @@
 #include <Vcl.Graphics.hpp>
 #include <Vcl.Menus.hpp>
 #include "usr_scrpanel.h"
+#include <Vcl.ToolWin.hpp>
 
 //---------------------------------------------------------------------------
 class TEditHistoryDlg : public TForm
@@ -32,12 +33,8 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ShowStatusBarAction;
 	TAction *ShowUsedTimeAction;
 	TActionList *ActionList1;
-	TBevel *Bevel1;
 	TButton *HiddenCanBtn;
-	TCheckBox *MigemoCheckBox;
-	TCheckBox *OpenCheckBox;
 	THeaderControl *EditHistHeader;
-	TLabeledEdit *FilterEdit;
 	TMenuItem *CleAllRecentItem;
 	TMenuItem *ClearAllItem;
 	TMenuItem *ClearBrokenItem;
@@ -66,23 +63,29 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_r_1;
 	TMenuItem *Sep_r_2;
 	TMenuItem *ShowUsedTimeItem;
-	TPanel *BlankPanel;
-	TPanel *BtnPanel;
 	TPanel *GridPanel;
-	TPanel *MarkPanel;
-	TPanel *OptInPanel;
-	TPanel *OptPanel;
-	TPanel *OptSubPanel;
-	TPanel *RadioPanel;
 	TPopupMenu *HistPopupMenu;
 	TPopupMenu *MarkPopupMenu;
 	TPopupMenu *RecentPopupMenu;
-	TRadioGroup *OptRadioGroup;
-	TSpeedButton *HideOptBtn;
-	TSpeedButton *MemoBtn;
-	TSpeedButton *ShowOptBtn;
 	TStatusBar *StatusBar1;
 	TStringGrid *EditHistGrid;
+	TToolBar *OpeToolBar;
+	TToolButton *OptMode0Btn;
+	TToolButton *OptMode1Btn;
+	TToolButton *OptMode2Btn;
+	TToolButton *FilterBtn;
+	TEdit *FilterEdit;
+	TSplitter *FilterSplitter;
+	TToolButton *MigemoBtn;
+	TAction *MigemoAction;
+	TAction *OpenAction;
+	TToolButton *OpenBtn;
+	TToolButton *ToolButton5;
+	TToolButton *MemoBtn;
+	TAction *MemoAction;
+	TAction *OptMode0Action;
+	TAction *OptMode1Action;
+	TAction *OptMode2Action;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -94,11 +97,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall EditHistGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall EditHistGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall EditHistGridDblClick(TObject *Sender);
-	void __fastcall OptRadioGroupClick(TObject *Sender);
-	void __fastcall OpenCheckBoxClick(TObject *Sender);
-	void __fastcall ChgOptBtnClick(TObject *Sender);
 	void __fastcall EditHistHeaderSectionClick(THeaderControl *HeaderControl, THeaderSection *Section);
-	void __fastcall MemoItemClick(TObject *Sender);
 	void __fastcall ClrMemoItemClick(TObject *Sender);
 	void __fastcall DelMarkItemClick(TObject *Sender);
 	void __fastcall FilterEditChange(TObject *Sender);
@@ -123,8 +122,14 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall ShowStatusBarActionExecute(TObject *Sender);
 	void __fastcall EditHistGridClick(TObject *Sender);
+	void __fastcall FilterBtnClick(TObject *Sender);
+	void __fastcall ToggleActionExecute(TObject *Sender);
+	void __fastcall MemoActionExecute(TObject *Sender);
+	void __fastcall OptModeActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
+	bool DlgInitialized;
+
 	TStringList *HistoryList;
 	TStringList *HistBufList;
 
@@ -146,7 +151,6 @@ private:	// ユーザー宣言
 
 	void __fastcall UpdateList();
 	void __fastcall UpdateGrid();
-	void __fastcall SetOptBtn();
 	void __fastcall SetSttBar();
 	void __fastcall SortItemList();
 	bool __fastcall del_HistItem();

@@ -744,9 +744,9 @@ void __fastcall TXmlViewer::FindEditKeyDown(TObject *Sender, WORD &Key, TShiftSt
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 
-	if		(USAME_TI(KeyStr, "UP"))					FindUpAction->Execute();
-	else if (USAME_TI(KeyStr, "DOWN"))					FindDownAction->Execute();
-	else if (contained_wd_i(KeysStr_ToList, KeyStr))	XmlTreeView->SetFocus();
+	if		(equal_UP(KeyStr))	 FindUpAction->Execute();
+	else if (equal_DOWN(KeyStr)) FindDownAction->Execute();
+	else if (contained_wd_i(KeysStr_ToList, KeyStr)) XmlTreeView->SetFocus();
 	else return;
 
 	Key = 0;

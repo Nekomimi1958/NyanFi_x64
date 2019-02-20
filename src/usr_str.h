@@ -200,6 +200,8 @@ bool equal_TAB(UnicodeString s);
 bool equal_DEL(UnicodeString s);
 bool equal_LEFT(UnicodeString s);
 bool equal_RIGHT(UnicodeString s);
+bool equal_UP(UnicodeString s);
+bool equal_DOWN(UnicodeString s);
 bool equal_F1(UnicodeString s);
 
 bool is_separator(UnicodeString s);

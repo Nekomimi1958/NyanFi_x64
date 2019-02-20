@@ -194,8 +194,8 @@ void __fastcall TSameNameDlg::InfoListBoxDrawItem(TWinControl *Control, int Inde
 void __fastcall TSameNameDlg::RenameEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "UP"))	{ Mode3Btn->SetFocus();		Key = 0; }
-	else if (USAME_TI(KeyStr, "DOWN"))	{ AllCheckBox->SetFocus();	Key = 0; }
+	if		(equal_UP(KeyStr))	 { Mode3Btn->SetFocus();	Key = 0; }
+	else if (equal_DOWN(KeyStr)) { AllCheckBox->SetFocus();	Key = 0; }
 	else SpecialEditProc(Sender, Key, Shift);
 }
 //---------------------------------------------------------------------------

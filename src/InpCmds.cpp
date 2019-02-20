@@ -230,13 +230,13 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 			handled   = false;
 		}
 	}
-	else if (USAME_TI(KeyStr, "DOWN")) {
+	else if (equal_DOWN(KeyStr)) {
 		if (!cp_down)
 			 cp_inp->DroppedDown = (cp_inp->Items->Count>0);
 		else if (cp_down->ItemIndex<cp_down->Items->Count - 1)
 			cp_down->ItemIndex = cp_down->ItemIndex + 1;
 	}
-	else if (USAME_TI(KeyStr, "UP")) {
+	else if (equal_UP(KeyStr)) {
 		if (!cp_down) {
 			if (cp_inp->Items->Count>0) {
 				cp_inp->DroppedDown = true;

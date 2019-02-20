@@ -156,7 +156,7 @@ void __fastcall TTagManDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		IniFile->WriteBoolGen(_T("TagSelShowOpt"),		OptPanel->Visible);
 	}
 
-	IniFile->WriteBoolGen(_T("TagDlgShowCount"),	ShowTagCountAction->Checked);
+	IniFile->WriteBoolGen(_T("TagDlgShowCount"),	ShowTagCountAction);
 
 	Initialized = false;
 	CmdStr = EmptyStr;

@@ -20,17 +20,22 @@
 #include <Vcl.AppEvnts.hpp>
 #include "usr_scrpanel.h"
 #include "Global.h"
+#include <Vcl.ToolWin.hpp>
 
 //---------------------------------------------------------------------------
 class TGeneralInfoDlg : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *AndOrAction;
 	TAction *CopyAction;
 	TAction *DelDuplAction;
 	TAction *EditFileAction;
 	TAction *ErrOnlyAction;
 	TAction *FileName1stAction;
+	TAction *HighlightAction;
 	TAction *KeepIndexAction;
+	TAction *MigemoAction;
+	TAction *NotifyAction;
 	TAction *OmitComPathAction;
 	TAction *OrgOrderAction;
 	TAction *PropertyAction;
@@ -43,13 +48,9 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *SortDesAction;
 	TAction *ViewFileAction;
 	TAction *ViewListAction;
+	TAction *WatchAction;
 	TActionList *ActionList1;
-	TCheckBox *AndOrCheckBox;
-	TCheckBox *HighlightCheckBox;
-	TCheckBox *MigemoCheckBox;
-	TCheckBox *NotifyCheckBox;
-	TCheckBox *WatchCheckBox;
-	TLabeledEdit *FilterEdit;
+	TEdit *FilterEdit;
 	TListBox *GenListBox;
 	TMenuItem *DelDuplItem;
 	TMenuItem *EditFileItem;
@@ -77,14 +78,20 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *SortItem;
 	TMenuItem *ViewFileItem;
 	TMenuItem *ViewListItem;
-	TPanel *FilterPanel;
 	TPanel *ListPanel;
 	TPanel *MianPanel;
-	TPanel *OpePanel;
-	TPanel *TailPanel;
 	TPopupMenu *InfPopupMenu;
+	TSplitter *FilterSplitter;
 	TStatusBar *StatusBar1;
 	TTimer *Timer1;
+	TToolBar *OpeToolBar;
+	TToolButton *AndOrBtn;
+	TToolButton *HighlightBtn;
+	TToolButton *MigemoBtn;
+	TToolButton *NotifyBtn;
+	TToolButton *FilterBtn;
+	TToolButton *ToolButton5;
+	TToolButton *WatchBtn;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -111,7 +118,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall HighlightCheckBoxClick(TObject *Sender);
 	void __fastcall ViewListActionExecute(TObject *Sender);
 	void __fastcall ShowLineNoActionExecute(TObject *Sender);
-	void __fastcall ShowLineNoActionUpdate(TObject *Sender);
 	void __fastcall ViewFileActionExecute(TObject *Sender);
 	void __fastcall ViewListActionUpdate(TObject *Sender);
 	void __fastcall EditFileActionExecute(TObject *Sender);
@@ -121,7 +127,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall GenListBoxDblClick(TObject *Sender);
 	void __fastcall GenListBoxExit(TObject *Sender);
 	void __fastcall Timer1Timer(TObject *Sender);
-	void __fastcall WatchCheckBoxClick(TObject *Sender);
 	void __fastcall FindTextItemClick(TObject *Sender);
 	void __fastcall SortAscActionExecute(TObject *Sender);
 	void __fastcall ListActionUpdate(TObject *Sender);
@@ -139,14 +144,15 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall PropertyActionExecute(TObject *Sender);
 	void __fastcall PropertyActionUpdate(TObject *Sender);
 	void __fastcall InfPopupMenuPopup(TObject *Sender);
+	void __fastcall ToggleActionExecute(TObject *Sender);
+	void __fastcall TailActionUpdate(TObject *Sender);
+	void __fastcall FilterBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	int  MaxNameWidth;
 	int  TabWidth;
 	UnicodeString SavePath;
 	bool isFiltered;
-	bool show_LineNo;
-	bool keep_Index;
 	int  LastIndex;
 	int  LastTopIndex;
 
@@ -199,9 +205,6 @@ public:		// ユーザー宣言
 	bool ToEnd;			//最後に移動
 	bool ToFilter;		//フィルタ欄にフォーカス
 
-	bool FileName1st;	//ファイル名を先に表示
-
-	bool OmitComPath;	//パスの共通部分を省略
 	UnicodeString ComPathName;
 
 	UnicodeString FileName;

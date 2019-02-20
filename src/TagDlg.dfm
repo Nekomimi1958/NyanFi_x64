@@ -255,14 +255,14 @@ object TagManDlg: TTagManDlg
     object DisableTagBtn: TButton
       Left = 76
       Top = 5
-      Width = 60
+      Width = 70
       Height = 22
       Action = DefColorAction
       Caption = #12487#12501#12457#12523#12488
       TabOrder = 2
     end
     object RevColCheckBox: TCheckBox
-      Left = 150
+      Left = 154
       Top = 7
       Width = 58
       Height = 17

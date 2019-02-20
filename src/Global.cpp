@@ -908,6 +908,7 @@ int  ViewTabWidthX;				//任意タブ幅
 UnicodeString BinaryEditor;		//バイナリエディタ
 
 UnicodeString CmdGitExe;		//git.exe
+UnicodeString GitBashExe;		//git-bash.exe
 
 //サウンド
 UnicodeString SoundTaskFin;		//タスク終了時の通知音
@@ -1173,6 +1174,9 @@ void InitializeGlobal()
 	mute_Volume("GET");	//ミュート状態を取得
 
 	//廃止セクション、キーの削除、修正
+	IniFile->DeleteKey(SCT_General, "MarkListShowOpt");		//v13.24
+	IniFile->DeleteKey(SCT_General, "EditHistShowOpt");		//v13.24
+
 	if (IniFile->KeyExists(SCT_Option,	"ShowIcon")) {		//v13.17
 		IniFile->WriteBool(SCT_Option,	"IconMode", IniFile->ReadBool(SCT_Option, "ShowIcon")? 1 : 0);
 		IniFile->DeleteKey(SCT_Option,	"ShowIcon");
@@ -1386,6 +1390,7 @@ void InitializeGlobal()
 		{_T("FExtImgEidt=\".jpg.gif.png.bmp\""),	(TObject*)&FExtImgEidt},
 		{_T("BinaryEditor=\"\""),					(TObject*)&BinaryEditor},
 		{_T("CmdGitExer=\"\""),						(TObject*)&CmdGitExe},
+		{_T("GitBashExe=\"\""),						(TObject*)&GitBashExe},
 		{_T("FExtViewTab4=\".cpp.cxx.c.h\""),		(TObject*)&FExtViewTab4},
 		{_T("FExtViewTabX=\"\""),					(TObject*)&FExtViewTabX},
 		{_T("SoundTaskFin=\"\""),					(TObject*)&SoundTaskFin},
@@ -1923,25 +1928,32 @@ void InitializeGlobal()
 	HideInfItems->Values["\\"] = hide_items;
 
 	//git.exe のチェック
-	if (CmdGitExe.IsEmpty()) {
-		std::unique_ptr<TStringList> plst(new TStringList());
-		TStringDynArray elst = split_strings_semicolon(GetEnvironmentVariable("PATH"));
-		for (int i=0; i<elst.Length; i++) {
-			if (contains_i(elst[i], _T("\\Git\\"))) plst->Add(elst[i]);
-		}
+	std::unique_ptr<TStringList> plst(new TStringList());
+	TStringDynArray elst = split_strings_semicolon(GetEnvironmentVariable("PATH"));
+	for (int i=0; i<elst.Length; i++) {
+		if (contains_i(elst[i], _T("\\Git\\"))) plst->Add(elst[i]);
+	}
 #if defined(_WIN64)
-		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git\\bin"));
-		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git\\cmd"));
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git"));
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git\\bin"));
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git\\cmd"));
 #else
-		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git\\bin"));
-		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git\\cmd"));
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git"));
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git\\bin"));
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git\\cmd"));
 #endif
-		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")).UCAT_T("Git\\bin"));
-		plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")).UCAT_T("Git\\cmd"));
-
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")).UCAT_T("Git\\bin"));
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")).UCAT_T("Git\\cmd"));
+	if (CmdGitExe.IsEmpty()) {
 		for (int i=0; i<plst->Count; i++) {
 			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]).UCAT_T("git.exe");
 			if (file_exists(xnam)) { CmdGitExe = xnam;  break; }
+		}
+	}
+	if (GitBashExe.IsEmpty()) {
+		for (int i=0; i<plst->Count; i++) {
+			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]).UCAT_T("git-bash.exe");
+			if (file_exists(xnam)) { GitBashExe = xnam;  break; }
 		}
 	}
 	GitExists = file_exists(CmdGitExe);
@@ -2591,6 +2603,13 @@ void set_MigemoCheckBox(TCheckBox *cp, const _TCHAR *key,
 {
 	cp->Enabled = usr_Migemo->DictReady;
 	cp->Checked = cp->Enabled && (sct.IsEmpty()? IniFile->ReadBoolGen(key) : IniFile->ReadBool(sct, key));
+}
+//---------------------------------------------------------------------------
+void set_MigemoAction(TAction *ap, const _TCHAR *key,
+	UnicodeString sct)	//セクション名	(default = EmptyStr : General)
+{
+	ap->Enabled = usr_Migemo->DictReady;
+	ap->Checked = ap->Enabled && (sct.IsEmpty()? IniFile->ReadBoolGen(key) : IniFile->ReadBool(sct, key));
 }
 
 //---------------------------------------------------------------------------

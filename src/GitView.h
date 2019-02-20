@@ -15,6 +15,9 @@
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.ActnList.hpp>
 #include <Vcl.Menus.hpp>
+#include <Vcl.Buttons.hpp>
+#include <Vcl.ComCtrls.hpp>
+#include <Vcl.ToolWin.hpp>
 
 //---------------------------------------------------------------------------
 struct git_rec {
@@ -25,6 +28,7 @@ struct git_rec {
 	UnicodeString branch;	//ブランチ
 	UnicodeString branch_r;	//リモート部ラッチ
 	UnicodeString tag;		//タグ
+	UnicodeString author;	//Author名
 	TDateTime f_time;
 	bool is_head;
 	bool is_work;
@@ -41,17 +45,22 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ArchiveAction;
 	TAction *BlameAction;
 	TAction *ChckoutAction;
+	TAction *ConsoleAction;
 	TAction *CopyBranchNameAction;
 	TAction *CopyCommitIDAction;
 	TAction *DelTagAction;
 	TAction *DiffToolAction;
+	TAction *FindDownAction;
+	TAction *FindUpAction;
 	TAction *MergeAction;
 	TAction *RenBranchAction;
 	TAction *SetTagAction;
+	TAction *ShowAuthorAction;
 	TAction *ShowBranchesAction;
 	TAction *ShowRemoteAction;
 	TActionList *ActionList1;
 	TButton *HiddenCanBtn;
+	TEdit *FindCommitEdit;
 	TListBox *BranchListBox;
 	TListBox *CommitListBox;
 	TListBox *DiffListBox;
@@ -61,6 +70,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *CheckoutItem;
 	TMenuItem *CopyBranchNameItem;
 	TMenuItem *CopyCommitIDItem;
+	TMenuItem *Cosole1;
 	TMenuItem *CreBranchItem;
 	TMenuItem *DelBranchItem;
 	TMenuItem *DiffToolItem;
@@ -74,8 +84,10 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_c_1;
 	TMenuItem *Sep_c_2;
 	TMenuItem *Sep_c_3;
+	TMenuItem *Sep_c_4;
 	TMenuItem *Sep_d_1;
 	TMenuItem *SetTagItem;
+	TMenuItem *ShowAuthorAction1;
 	TMenuItem *ShowBranchesItem;
 	TMenuItem *ShowRemoteItem;
 	TMenuItem *SoftResetItem;
@@ -85,9 +97,18 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *RightPanel;
 	TPopupMenu *BrPopupMenu;
 	TPopupMenu *CmPopupMenu;
+	TPopupMenu *ComOptPopupMenu;
 	TPopupMenu *DiffPopupMenu;
 	TSplitter *CommitSplitter;
 	TSplitter *DiffSplitter;
+	TSplitter *FindSplitter;
+	TToolBar *FindBar;
+	TToolButton *ToolButton1;
+	TToolButton *ToolButton2;
+	TToolButton *ToolButton3;
+	TToolButton *ToolButton4;
+	TToolButton *ToolButton5;
+	TToolButton *FintBtn;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -131,6 +152,22 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ShowRemoteActionExecute(TObject *Sender);
 	void __fastcall BrPopupMenuPopup(TObject *Sender);
 	void __fastcall GitPopupMenuPopup(TObject *Sender);
+	void __fastcall FindCommitEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall FindCommitEditChange(TObject *Sender);
+	void __fastcall FindUpActionExecute(TObject *Sender);
+	void __fastcall FindUpActionUpdate(TObject *Sender);
+	void __fastcall FindDownActionExecute(TObject *Sender);
+	void __fastcall FindDownActionUpdate(TObject *Sender);
+	void __fastcall ShowAuthorActionExecute(TObject *Sender);
+	void __fastcall FindCommitEditKeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall ConsoleActionExecute(TObject *Sender);
+	void __fastcall ConsoleActionUpdate(TObject *Sender);
+	void __fastcall Cosole1Click(TObject *Sender);
+	void __fastcall UpdateBtnClick(TObject *Sender);
+	void __fastcall FintBtnClick(TObject *Sender);
+	void __fastcall FindCommitEditEnter(TObject *Sender);
+	void __fastcall FindCommitEditExit(TObject *Sender);
+	void __fastcall GitListBoxKeyPress(TObject *Sender, System::WideChar &Key);
 
 private:	// ユーザー宣言
 	UnicodeString RefHEAD;
@@ -143,6 +180,10 @@ private:	// ユーザー宣言
 	UsrScrollPanel *BranchScrPanel;
 	UsrScrollPanel *CommitScrPanel;
 	UsrScrollPanel *DiffScrPanel;
+
+	int MaxGrWidth;
+	int MaxAnWidth;
+	int MaxDfWidth;
 
 	UnicodeString __fastcall GitExeStr(UnicodeString prm);
 	void __fastcall ClearCommitList();
@@ -185,6 +226,14 @@ private:	// ユーザー宣言
 		TListBox *lp = DiffListBox;
 		UnicodeString lbuf = ((lp->Focused() && lp->ItemIndex!=-1)? lp->Items->Strings[lp->ItemIndex] : EmptyStr);
 		return lbuf.Pos(" | ")? Trim(split_tkn(lbuf, " | ")) : EmptyStr;
+	}
+
+	void __fastcall SetCommitListIndex(int idx)
+	{
+		if (idx!=-1) {
+			CommitListBox->ItemIndex = idx;
+			CommitListBoxClick(NULL);
+		}
 	}
 
 	void __fastcall WmFormShowed(TMessage &msg);

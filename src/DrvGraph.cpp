@@ -58,8 +58,9 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 		DriveComboBox->ItemIndex = d_idx;
 		get_DriveLogList(DriveName, DataList, MinUsed, MaxUsed);
 	}
-	else
+	else {
 		DriveComboBox->ItemIndex = -1;
+	}
 
 	DlgInitialized = true;
 

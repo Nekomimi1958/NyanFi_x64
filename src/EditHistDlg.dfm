@@ -4,7 +4,7 @@ object EditHistoryDlg: TEditHistoryDlg
   HelpContext = 58
   BorderIcons = [biSystemMenu]
   ClientHeight = 341
-  ClientWidth = 643
+  ClientWidth = 630
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
@@ -21,156 +21,18 @@ object EditHistoryDlg: TEditHistoryDlg
   TextHeight = 13
   object HiddenCanBtn: TButton
     Left = 0
-    Top = 288
-    Width = 643
+    Top = 303
+    Width = 630
     Height = 0
     Align = alBottom
     Cancel = True
     ModalResult = 2
     TabOrder = 0
   end
-  object OptPanel: TPanel
-    Left = 0
-    Top = 288
-    Width = 643
-    Height = 34
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 2
-    object BtnPanel: TPanel
-      Left = 625
-      Top = 0
-      Width = 18
-      Height = 34
-      Align = alRight
-      AutoSize = True
-      BevelOuter = bvNone
-      TabOrder = 0
-      DesignSize = (
-        18
-        34)
-      object HideOptBtn: TSpeedButton
-        Left = 0
-        Top = 16
-        Width = 18
-        Height = 16
-        Anchors = [akLeft, akBottom]
-        Flat = True
-        OnClick = ChgOptBtnClick
-      end
-    end
-    object OptInPanel: TPanel
-      Left = 0
-      Top = 0
-      Width = 625
-      Height = 34
-      Align = alClient
-      BevelOuter = bvNone
-      TabOrder = 1
-      object RadioPanel: TPanel
-        Left = 0
-        Top = 0
-        Width = 286
-        Height = 34
-        Align = alLeft
-        BevelOuter = bvNone
-        TabOrder = 0
-        object OptRadioGroup: TRadioGroup
-          Left = -1
-          Top = -5
-          Width = 290
-          Height = 40
-          Columns = 3
-          ItemIndex = 0
-          Items.Strings = (
-            #12377#12409#12390#34920#31034
-            #12459#12524#12531#12488#20197#19979
-            #12459#12524#12531#12488#12398#12415)
-          TabOrder = 0
-          OnClick = OptRadioGroupClick
-        end
-      end
-      object OptSubPanel: TPanel
-        Left = 286
-        Top = 0
-        Width = 204
-        Height = 34
-        Align = alClient
-        BevelOuter = bvNone
-        TabOrder = 1
-        DesignSize = (
-          204
-          34)
-        object Bevel1: TBevel
-          Left = 0
-          Top = 0
-          Width = 4
-          Height = 34
-          Align = alLeft
-          Shape = bsLeftLine
-        end
-        object FilterEdit: TLabeledEdit
-          Left = 55
-          Top = 6
-          Width = 70
-          Height = 21
-          Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 33
-          EditLabel.Height = 13
-          EditLabel.Caption = #12501#12451#12523#12479
-          LabelPosition = lpLeft
-          PopupMenu = UserModule.EditPopupMenuE
-          TabOrder = 0
-          OnChange = FilterEditChange
-          OnEnter = FilterEditEnter
-          OnExit = FilterEditExit
-          OnKeyDown = FilterEditKeyDown
-          OnKeyPress = FilterEditKeyPress
-        end
-        object MigemoCheckBox: TCheckBox
-          Left = 131
-          Top = 9
-          Width = 72
-          Height = 17
-          Anchors = [akTop, akRight]
-          Caption = 'Migemo'
-          TabOrder = 1
-        end
-      end
-      object MarkPanel: TPanel
-        Left = 490
-        Top = 0
-        Width = 135
-        Height = 34
-        Align = alRight
-        BevelOuter = bvNone
-        Constraints.MinWidth = 4
-        ParentBackground = False
-        TabOrder = 2
-        object MemoBtn: TSpeedButton
-          Left = 85
-          Top = 6
-          Width = 50
-          Height = 22
-          Caption = #12513#12514
-          OnClick = MemoItemClick
-        end
-        object OpenCheckBox: TCheckBox
-          Left = 0
-          Top = 9
-          Width = 81
-          Height = 17
-          Caption = #30906#23450#12391#38283#12367
-          TabOrder = 0
-          OnClick = OpenCheckBoxClick
-        end
-      end
-    end
-  end
   object EditHistHeader: THeaderControl
     Left = 0
     Top = 0
-    Width = 643
+    Width = 630
     Height = 17
     Sections = <>
     Style = hsFlat
@@ -182,19 +44,19 @@ object EditHistoryDlg: TEditHistoryDlg
   object GridPanel: TPanel
     Left = 0
     Top = 17
-    Width = 643
-    Height = 271
+    Width = 630
+    Height = 286
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 3
+    TabOrder = 2
     DesignSize = (
-      643
-      271)
+      630
+      286)
     object EditHistGrid: TStringGrid
       Left = 0
       Top = 0
-      Width = 643
-      Height = 288
+      Width = 630
+      Height = 303
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
       Color = clAppWorkSpace
@@ -228,33 +90,11 @@ object EditHistoryDlg: TEditHistoryDlg
         24
         24)
     end
-    object BlankPanel: TPanel
-      Left = 629
-      Top = 257
-      Width = 14
-      Height = 14
-      Anchors = [akRight, akBottom]
-      AutoSize = True
-      BevelOuter = bvNone
-      Color = clAppWorkSpace
-      ParentBackground = False
-      TabOrder = 1
-      Visible = False
-      StyleElements = [seBorder]
-      object ShowOptBtn: TSpeedButton
-        Left = 0
-        Top = 0
-        Width = 14
-        Height = 14
-        Flat = True
-        OnClick = ChgOptBtnClick
-      end
-    end
   end
   object StatusBar1: TStatusBar
     Left = 0
     Top = 322
-    Width = 643
+    Width = 630
     Height = 19
     Panels = <
       item
@@ -264,12 +104,109 @@ object EditHistoryDlg: TEditHistoryDlg
     StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
   end
+  object OpeToolBar: TToolBar
+    Left = 0
+    Top = 303
+    Width = 630
+    Height = 19
+    Align = alBottom
+    AutoSize = True
+    ButtonHeight = 19
+    ButtonWidth = 85
+    Caption = 'OpeToolBar'
+    DrawingStyle = dsGradient
+    List = True
+    ShowCaptions = True
+    AllowTextButtons = True
+    TabOrder = 3
+    object FilterBtn: TToolButton
+      Left = 0
+      Top = 0
+      Caption = #12501#12451#12523#12479'(&F)'
+      ImageIndex = 3
+      Style = tbsTextButton
+      OnClick = FilterBtnClick
+    end
+    object FilterEdit: TEdit
+      Left = 63
+      Top = 0
+      Width = 121
+      Height = 19
+      Align = alLeft
+      Constraints.MinWidth = 60
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      PopupMenu = UserModule.EditPopupMenuE
+      TabOrder = 0
+      OnChange = FilterEditChange
+      OnEnter = FilterEditEnter
+      OnExit = FilterEditExit
+      OnKeyDown = FilterEditKeyDown
+      OnKeyPress = FilterEditKeyPress
+    end
+    object FilterSplitter: TSplitter
+      Left = 184
+      Top = 0
+      Width = 4
+      Height = 19
+    end
+    object MigemoBtn: TToolButton
+      Left = 188
+      Top = 0
+      Action = MigemoAction
+      Style = tbsTextButton
+    end
+    object OpenBtn: TToolButton
+      Left = 235
+      Top = 0
+      Action = OpenAction
+      Style = tbsTextButton
+    end
+    object ToolButton5: TToolButton
+      Left = 298
+      Top = 0
+      Width = 20
+      Caption = 'ToolButton5'
+      ImageIndex = 0
+      Style = tbsSeparator
+    end
+    object MemoBtn: TToolButton
+      Left = 318
+      Top = 0
+      Action = MemoAction
+      Style = tbsTextButton
+    end
+    object OptMode0Btn: TToolButton
+      Left = 362
+      Top = 0
+      Action = OptMode0Action
+      Grouped = True
+      Style = tbsTextButton
+    end
+    object OptMode1Btn: TToolButton
+      Left = 441
+      Top = 0
+      Action = OptMode1Action
+      Grouped = True
+      Style = tbsTextButton
+    end
+    object OptMode2Btn: TToolButton
+      Left = 525
+      Top = 0
+      Action = OptMode2Action
+      Grouped = True
+      Style = tbsTextButton
+    end
+  end
   object MarkPopupMenu: TPopupMenu
     Left = 144
     Top = 64
     object MemoItem: TMenuItem
       Caption = #12513#12514#12434#20837#21147'(&M)'
-      OnClick = MemoItemClick
     end
     object ClrMemoItem: TMenuItem
       Caption = #12513#12514#12434#21066#38500'(&C)'
@@ -395,6 +332,35 @@ object EditHistoryDlg: TEditHistoryDlg
     object ShowStatusBarAction: TAction
       Caption = #12473#12486#12540#12479#12473#12496#12540'(&S)'
       OnExecute = ShowStatusBarActionExecute
+    end
+    object MigemoAction: TAction
+      Caption = '&Migemo'
+      OnExecute = ToggleActionExecute
+    end
+    object OpenAction: TAction
+      Caption = #30906#23450#12391#38283#12367
+      OnExecute = ToggleActionExecute
+    end
+    object MemoAction: TAction
+      Caption = #12513#12514'(&O)'
+      OnExecute = MemoActionExecute
+    end
+    object OptMode0Action: TAction
+      Caption = #12377#12409#12390#34920#31034'(&A)'
+      GroupIndex = 1
+      OnExecute = OptModeActionExecute
+    end
+    object OptMode1Action: TAction
+      Tag = 1
+      Caption = #12459#12524#12531#12488#20197#19979'(&B)'
+      GroupIndex = 1
+      OnExecute = OptModeActionExecute
+    end
+    object OptMode2Action: TAction
+      Tag = 2
+      Caption = #12459#12524#12531#12488#12398#12415'(&C)'
+      GroupIndex = 1
+      OnExecute = OptModeActionExecute
     end
   end
 end

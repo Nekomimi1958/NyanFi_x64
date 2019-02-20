@@ -39,6 +39,12 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 
 	IniFile->LoadPosInfo(this);
 
+	FindBar->GradientStartColor = col_bgTlBar1;
+	FindBar->GradientEndColor	= col_bgTlBar2;
+	FindBar->Font->Color		= col_fgTlBar;
+	FindBar->HotTrackColor		= col_htTlBar;
+	FindSplitter->Color 		= Mix2Colors(col_bgTlBar1, col_bgTlBar2);
+
 	set_ListBoxItemHi(BranchListBox, ListFont);
 	set_UsrScrPanel(BranchScrPanel);
 	set_ListBoxItemHi(CommitListBox, ListFont);
@@ -46,10 +52,15 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 	set_ListBoxItemHi(DiffListBox,	 TxtPrvFont);
 	set_UsrScrPanel(DiffScrPanel);
 
-	BranchPanel->Width = IniFile->ReadIntGen(_T("GitViewBranchWidth"),	200);
-	DiffPanel->Height  = IniFile->ReadIntGen(_T("GitViewDiffHeight"),	120);
+	BranchPanel->Width	  = IniFile->ReadIntGen(_T("GitViewBranchWidth"),	200);
+	DiffPanel->Height	  = IniFile->ReadIntGen(_T("GitViewDiffHeight"),	120);
+
+	FindCommitEdit->Font->Assign(DialogFont);
+	FindCommitEdit->Width = IniFile->ReadIntGen(_T("GitViewFindWidth"),		200);
+
 	ShowBranchesAction->Checked = IniFile->ReadBoolGen(_T("GitViewShowBranches"));
 	ShowRemoteAction->Checked	= IniFile->ReadBoolGen(_T("GitViewShowRemote"));
+	ShowAuthorAction->Checked	= IniFile->ReadBoolGen(_T("GitViewShowAuthor"));
 	AppFextColorAction->Checked = IniFile->ReadBoolGen(_T("GitViewFExtColor"), true);
 
 	CommitSplitter->Color = col_Splitter;
@@ -64,6 +75,7 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::WmFormShowed(TMessage &msg)
 {
+	FindCommitEdit->Color = col_Invalid;
 	Repaint();
 	UpdateCommitList();
 	CommitListBox->SetFocus();
@@ -81,9 +93,11 @@ void __fastcall TGitViewer::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->SavePosInfo(this);
 	IniFile->WriteIntGen(_T("GitViewBranchWidth"),		BranchPanel->Width);
 	IniFile->WriteIntGen(_T("GitViewDiffHeight"),		DiffPanel->Height);
-	IniFile->WriteBoolGen(_T("GitViewShowBranches"),	ShowBranchesAction->Checked);
-	IniFile->WriteBoolGen(_T("GitViewShowRemote"),		ShowRemoteAction->Checked);
-	IniFile->WriteBoolGen(_T("GitViewFExtColor"),		AppFextColorAction->Checked);
+	IniFile->WriteIntGen(_T("GitViewFindWidth"),		FindCommitEdit->Width);
+	IniFile->WriteBoolGen(_T("GitViewShowBranches"),	ShowBranchesAction);
+	IniFile->WriteBoolGen(_T("GitViewShowRemote"),		ShowRemoteAction);
+	IniFile->WriteBoolGen(_T("GitViewShowAuthor"),		ShowAuthorAction);
+	IniFile->WriteBoolGen(_T("GitViewFExtColor"),		AppFextColorAction);
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FormDestroy(TObject *Sender)
@@ -153,6 +167,7 @@ void __fastcall TGitViewer::UpdateCommitList()
 
 	GitBusy = true;
 	std::unique_ptr<TStringList> o_lst(new TStringList());
+	MaxGrWidth = MaxAnWidth = 0;
 
 	//----------------------------------
 	//ブランチ一覧
@@ -232,10 +247,11 @@ void __fastcall TGitViewer::UpdateCommitList()
 	UnicodeString prm = "log --graph";
 	if (ShowBranchesAction->Checked) prm += " --branches";
 	if (HistoryLimit>0) prm.cat_sprintf(_T(" -%u"), HistoryLimit);
-	prm += " --date=format:\"%Y-%m-%d %H:%M:%S\" --pretty=format:\"\t%H\t%P\t%ad\t%s\t%d\"";
+	prm += " --date=format:\"%Y-%m-%d %H:%M:%S\" --pretty=format:\"\t%H\t%P\t%ad\t%s\t%d\t%an\"";
+	//グラフ / コミットID / 親ID / 日時 / 件名 / ブランチ / タグ / Author名
 	int idx_h = -1;
 	if (GitShellExe(prm, WorkDir, o_lst.get())) {
-		int max_glen = 0;
+		int max_gr_len = 0, max_an_wd = 0;
 		for (int i=0; i<o_lst->Count; i++) {
 			UnicodeString lbuf = o_lst->Strings[i];
 			TStringDynArray ibuf = split_strings_tab(lbuf);
@@ -243,15 +259,18 @@ void __fastcall TGitViewer::UpdateCommitList()
 				git_rec *gp = new git_rec;
 				gp->is_work = gp->is_index = gp->is_head = false;
 				gp->graph	= ibuf[0];
-				max_glen	= std::max(max_glen, gp->graph.Length());
+				max_gr_len	= std::max(max_gr_len, gp->graph.Length());
 
-				if (ibuf.Length==6) {
+				UnicodeString br_str;
+				if (ibuf.Length==7) {
 					gp->hash   = ibuf[1];
 					gp->parent = ibuf[2];
 					gp->msg    = ibuf[4];
+					gp->author = ibuf[6];
+					max_an_wd = std::max(max_an_wd, lp->Canvas->TextWidth(gp->author));
 
-					UnicodeString s = get_in_paren(ibuf[5]);
-					TStringDynArray b_buf = SplitString(s, ",");
+					br_str = get_in_paren(ibuf[5]);
+					TStringDynArray b_buf = SplitString(br_str, ",");
 					for (int j=0; j<b_buf.Length; j++) {
 						UnicodeString ss = Trim(b_buf[j]);
 						if (remove_top_text(ss, "tag: ")) {
@@ -275,20 +294,21 @@ void __fastcall TGitViewer::UpdateCommitList()
 					}
 				}
 
-				int idx = CommitList->AddObject(gp->hash, (TObject *)gp);
+				lbuf = gp->hash.SubString(1, 7);
+				if (ShowAuthorAction->Checked) lbuf.sprintf(_T(" %s"), gp->author.c_str());
+				lbuf.sprintf(_T(" %s %s"), br_str.c_str(), gp->msg.c_str());
+				int idx = CommitList->AddObject(lbuf, (TObject *)gp);
 				if (gp->is_head) idx_h = idx;
 			}
 		}
 
-		lp->Tag = (max_glen + 1) * lp->ItemHeight / 3;
+		MaxGrWidth = (max_gr_len + 1) * lp->ItemHeight / 3;
+		MaxAnWidth = max_an_wd;
 	}
 
 	//リストボックスに割り当て
 	lp->Items->Assign(CommitList);
-	if (idx_h!=-1) {
-		lp->ItemIndex = idx_h;
-		CommitListBoxClick(NULL);
-	}
+	SetCommitListIndex(idx_h);
 	CommitScrPanel->UpdateKnob();
 
 	GitBusy = false;
@@ -338,7 +358,8 @@ void __fastcall TGitViewer::BranchListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	else if (equal_ENTER(KeyStr)) 					ChckoutAction->Execute();
 	else return;
 
-	if (!is_DialogKey(Key)) Key = 0;
+//	if (!is_DialogKey(Key)) 
+	Key = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -371,7 +392,7 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 			draw_GitGraph(gp->graph, s1, s2, cv, rc, gp->is_head, (gp->is_work || gp->is_index));
 		}
 
-		xp += lp->Tag;
+		xp += MaxGrWidth;
 		if (gp->is_work || gp->is_index) {
 			UnicodeString s1 = "作業ツリー ";
 			UnicodeString s2 = "インデックス ";
@@ -388,11 +409,18 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 			cv->TextOut(xp, yp, gp->hash.SubString(1, 7));
 			xp += cv->TextWidth("9999999 ");
 
+			//Author
+			if (ShowAuthorAction->Checked) {
+				cv->Font->Color = use_fgsel? col_fgSelItem : col_fgList;
+				cv->TextOut(xp, yp, gp->author);
+				xp += (MaxAnWidth + Scaled8);
+			}
+
 			//日時
 			UnicodeString tmp = FormatDateTime(TimeStampFmt, gp->f_time);
 			cv->Font->Color = use_fgsel? col_fgSelItem : get_TimeColor(gp->f_time, col_fgList);
 			cv->TextOut(xp, yp, tmp);
-			xp += cv->TextWidth(tmp) + Scaled8;
+			xp += (cv->TextWidth(tmp) + Scaled8);
 
 			//タグ
 			if (!gp->tag.IsEmpty()) {
@@ -433,6 +461,7 @@ void __fastcall TGitViewer::CommitListBoxClick(TObject *Sender)
 {
 	DiffListBox->Clear();
 	CommitID = ParentID = DiffOpt = EmptyStr;
+	MaxDfWidth = 0;
 
 	TListBox *lp = CommitListBox;
 	int idx = lp->ItemIndex;
@@ -465,7 +494,7 @@ void __fastcall TGitViewer::CommitListBoxClick(TObject *Sender)
 			if (lbuf.Pos(" | "))
 				max_fwd = std::max(max_fwd, lp->Canvas->TextWidth(get_tkn(lbuf, " | ") + " "));
 		}
-		lp->Tag = max_fwd;
+		MaxDfWidth = max_fwd;
 		lp->Items->Assign(o_lst.get());
 		lp->ItemIndex = 0;
 	}
@@ -482,6 +511,7 @@ void __fastcall TGitViewer::CommitListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 
 	if		(ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, Key_to_CmdV(KeyStr)))
 													CommitListBoxClick(NULL);
+	else if (StartsText("IncSearch", cmd_F))		FindCommitEdit->SetFocus();
 	else if (USAME_TI(cmd_F, "ReturnList"))			ModalResult = mrCancel;
 	else if (is_ToLeftOpe(KeyStr, cmd_F))			BranchListBox->SetFocus();
 	else if (is_ToRightOpe(KeyStr, cmd_F))			DiffListBox->SetFocus();
@@ -489,7 +519,7 @@ void __fastcall TGitViewer::CommitListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	else if (USAME_TI(get_CmdStr(cmd_F), "Pack"))	ArchiveAction->Execute();
 	else return;
 
-	if (!is_DialogKey(Key)) Key = 0;
+	Key = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -523,7 +553,7 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 			AppFextColorAction->Checked? get_ExtColor(get_extension(Trim(s)), col_fgTxtPrv) : col_fgTxtPrv);
 
 		//罫線
-		TRect rc = Rect; rc.Left = xp = lp->Tag;
+		TRect rc = Rect; rc.Left = xp = MaxDfWidth;
 		RuledLnTextOut("│", cv, rc, col_fgTxtPrv);
 		xp = rc.Left;
 		//統計
@@ -568,14 +598,14 @@ void __fastcall TGitViewer::DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
 
 	if		(ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, Key_to_CmdV(KeyStr)))
-		;
+													;
 	else if (USAME_TI(cmd_F, "ReturnList"))			ModalResult = mrCancel;
 	else if (is_ToLeftOpe(KeyStr, cmd_F))			BranchListBox->SetFocus();
 	else if (is_ToRightOpe(KeyStr, cmd_F))			CommitListBox->SetFocus();
 	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
 	else return;
 
-	if (!is_DialogKey(Key)) Key = 0;
+	Key = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -823,6 +853,14 @@ void __fastcall TGitViewer::ShowRemoteActionExecute(TObject *Sender)
 	UpdateCommitList();
 }
 //---------------------------------------------------------------------------
+//Author の名前を表示
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::ShowAuthorActionExecute(TObject *Sender)
+{
+	ShowAuthorAction->Checked = !ShowAuthorAction->Checked;
+	UpdateCommitList();
+}
+//---------------------------------------------------------------------------
 //拡張子別配色を適用
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::AppFextColorActionExecute(TObject *Sender)
@@ -838,9 +876,148 @@ void __fastcall TGitViewer::GitPopupMenuPopup(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TGitViewer::FindCommitEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(contained_wd_i(KeysStr_CsrUp, KeyStr))   KeyStr = "UP";
+	else if (contained_wd_i(KeysStr_CsrDown, KeyStr)) KeyStr = "DOWN";
+
+	if		(equal_UP(KeyStr))	 { FindUpAction->Execute();		Key = 0; }
+	else if (equal_DOWN(KeyStr)) { FindDownAction->Execute();	Key = 0; }
+	else if (contained_wd_i(KeysStr_ToList, KeyStr) || equal_ENTER(KeyStr)) CommitListBox->SetFocus();
+	else return;
+
+	Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::FindCommitEditChange(TObject *Sender)
+{
+	TListBox *lp = CommitListBox;
+	UnicodeString kwd = FindCommitEdit->Text;
+	if (!kwd.IsEmpty()) {
+		int idx = -1;
+		for (int i=0; i<lp->Count && idx==-1; i++)
+			if (ContainsText(lp->Items->Strings[i], kwd)) idx = i;
+		SetCommitListIndex(idx);
+	}
+	else lp->ItemIndex = -1;
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::FindCommitEditEnter(TObject *Sender)
+{
+	FindCommitEdit->Color = scl_Window;
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::FindCommitEditExit(TObject *Sender)
+{
+	CloseIME(Handle);
+	InvColIfEmpty(FindCommitEdit);
+}
+
+//---------------------------------------------------------------------------
+//コミット検索
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::FindUpActionExecute(TObject *Sender)
+{
+	TListBox *lp = CommitListBox;
+	UnicodeString kwd = FindCommitEdit->Text;
+	int idx = -1;
+	if (!kwd.IsEmpty() && lp->ItemIndex>0) {
+		for (int i=lp->ItemIndex-1; i>=0 && idx==-1; i--)
+			if (ContainsText(lp->Items->Strings[i], kwd)) idx = i;
+	}
+	SetCommitListIndex(idx);
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::FindUpActionUpdate(TObject *Sender)
+{
+	TListBox *lp = CommitListBox;
+	UnicodeString kwd = FindCommitEdit->Text;
+	bool found = false;
+	if (!kwd.IsEmpty() && lp->ItemIndex>0) {
+		for (int i=lp->ItemIndex-1; i>=0 && !found; i--)
+			found = ContainsText(lp->Items->Strings[i], kwd);
+	}
+	((TAction*)Sender)->Enabled = found;
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::FindDownActionExecute(TObject *Sender)
+{
+	TListBox *lp = CommitListBox;
+	UnicodeString kwd = FindCommitEdit->Text;
+	int idx = -1;
+	if (!kwd.IsEmpty() && lp->ItemIndex<lp->Count-1) {
+		for (int i=lp->ItemIndex+1; i<lp->Count && idx==-1; i++)
+			if (ContainsText(lp->Items->Strings[i], kwd)) idx = i;
+	}
+	SetCommitListIndex(idx);
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::FindDownActionUpdate(TObject *Sender)
+{
+	TListBox *lp = CommitListBox;
+	UnicodeString kwd = FindCommitEdit->Text;
+	bool found = false;
+	if (!kwd.IsEmpty() && lp->ItemIndex<lp->Count-1) {
+		for (int i=lp->ItemIndex+1; i<lp->Count && !found; i++)
+			found = ContainsText(lp->Items->Strings[i], kwd);
+	}
+	((TAction*)Sender)->Enabled = found;
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::FindCommitEditKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (is_KeyPress_CtrlNotCV(Key) || Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::FintBtnClick(TObject *Sender)
+{
+	FindCommitEdit->SetFocus();
+}
+
+//---------------------------------------------------------------------------
+//更新
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::UpdateBtnClick(TObject *Sender)
+{
+	UpdateCommitList();
+}
+//---------------------------------------------------------------------------
+//Console 起動
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::ConsoleActionExecute(TObject *Sender)
+{
+	UnicodeString prm = add_quot_if_spc(GitBashExe);
+	if (is_quot(prm)) prm.Insert("\"\" ", 1);
+	if (!Execute_ex("cmd", "/c start " + prm, WorkDir, "H")) msgbox_ERR(USTR_FaildExec);
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::ConsoleActionUpdate(TObject *Sender)
+{
+	((TAction*)Sender)->Enabled = !GitBashExe.IsEmpty();
+}
+//---------------------------------------------------------------------------
+//Console の選択
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::Cosole1Click(TObject *Sender)
+{
+	UserModule->PrepareOpenDlg(_T("Console の選択"), F_FILTER_EXE2,
+		ExtractFileName(GitBashExe).c_str(), ExtractFileDir(GitBashExe));
+	UnicodeString fnam;
+	if (UserModule->OpenDlgToStr(fnam)) GitBashExe = fnam;
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::GitListBoxKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	Key = 0;
+}
+//---------------------------------------------------------------------------
 void __fastcall TGitViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_GIT) _T("#GitViewer"));
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "F5")) UpdateCommitList();
+	else SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_GIT) _T("#GitViewer"));
 }
 //---------------------------------------------------------------------------
 

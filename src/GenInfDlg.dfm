@@ -61,120 +61,24 @@ object GeneralInfoDlg: TGeneralInfoDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    object OpePanel: TPanel
-      Left = 0
-      Top = 458
-      Width = 470
-      Height = 34
-      Align = alBottom
-      BevelOuter = bvNone
-      TabOrder = 0
-      object FilterPanel: TPanel
-        Left = 0
-        Top = 0
-        Width = 350
-        Height = 34
-        Align = alClient
-        BevelOuter = bvNone
-        TabOrder = 0
-        TabStop = True
-        DesignSize = (
-          350
-          34)
-        object MigemoCheckBox: TCheckBox
-          Left = 136
-          Top = 8
-          Width = 72
-          Height = 17
-          Anchors = [akTop, akRight]
-          Caption = '&Migemo'
-          TabOrder = 1
-          OnClick = FilterOptheckBoxClick
-        end
-        object FilterEdit: TLabeledEdit
-          Left = 66
-          Top = 6
-          Width = 64
-          Height = 21
-          Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 47
-          EditLabel.Height = 13
-          EditLabel.Caption = #12501#12451#12523#12479'(&F)'
-          LabelPosition = lpLeft
-          PopupMenu = UserModule.EditPopupMenuE
-          TabOrder = 0
-          OnChange = FilterEditChange
-          OnEnter = FilterEditEnter
-          OnExit = FilterEditExit
-          OnKeyDown = FilterEditKeyDown
-          OnKeyPress = FilterEditKeyPress
-        end
-        object HighlightCheckBox: TCheckBox
-          Left = 288
-          Top = 8
-          Width = 58
-          Height = 17
-          Anchors = [akTop, akRight]
-          Caption = #24375#35519
-          TabOrder = 3
-          OnClick = HighlightCheckBoxClick
-        end
-        object AndOrCheckBox: TCheckBox
-          Left = 210
-          Top = 8
-          Width = 76
-          Height = 17
-          Anchors = [akTop, akRight]
-          Caption = '&AND/OR'
-          TabOrder = 2
-          OnClick = FilterOptheckBoxClick
-        end
-      end
-      object TailPanel: TPanel
-        Left = 350
-        Top = 0
-        Width = 120
-        Height = 34
-        Align = alRight
-        BevelOuter = bvNone
-        TabOrder = 1
-        object WatchCheckBox: TCheckBox
-          Left = 0
-          Top = 8
-          Width = 56
-          Height = 17
-          Caption = #30435#35222
-          TabOrder = 0
-          OnClick = WatchCheckBoxClick
-        end
-        object NotifyCheckBox: TCheckBox
-          Left = 58
-          Top = 8
-          Width = 56
-          Height = 17
-          Caption = #36890#30693
-          TabOrder = 1
-        end
-      end
-    end
     object ListPanel: TPanel
       Left = 0
       Top = 0
       Width = 470
-      Height = 458
+      Height = 473
       Align = alClient
       BevelOuter = bvNone
       DoubleBuffered = False
       ParentDoubleBuffered = False
-      TabOrder = 1
+      TabOrder = 0
       DesignSize = (
         470
-        458)
+        473)
       object GenListBox: TListBox
         Left = 0
         Top = 0
         Width = 470
-        Height = 458
+        Height = 473
         Style = lbVirtualOwnerDraw
         Anchors = [akLeft, akTop, akRight, akBottom]
         BorderStyle = bsNone
@@ -195,6 +99,95 @@ object GeneralInfoDlg: TGeneralInfoDlg
         OnExit = GenListBoxExit
         OnKeyDown = GenListBoxKeyDown
         OnKeyPress = GenListBoxKeyPress
+      end
+    end
+    object OpeToolBar: TToolBar
+      Left = 0
+      Top = 473
+      Width = 470
+      Height = 19
+      Align = alBottom
+      AutoSize = True
+      ButtonHeight = 19
+      ButtonWidth = 59
+      DrawingStyle = dsGradient
+      List = True
+      ShowCaptions = True
+      AllowTextButtons = True
+      TabOrder = 1
+      object FilterBtn: TToolButton
+        Left = 0
+        Top = 0
+        Caption = #12501#12451#12523#12479'(&F)'
+        ImageIndex = 0
+        Style = tbsTextButton
+        OnClick = FilterBtnClick
+      end
+      object FilterEdit: TEdit
+        Left = 63
+        Top = 0
+        Width = 120
+        Height = 19
+        Align = alLeft
+        Constraints.MinWidth = 60
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        PopupMenu = UserModule.EditPopupMenuE
+        TabOrder = 0
+        OnChange = FilterEditChange
+        OnClick = FilterEditChange
+        OnEnter = FilterEditEnter
+        OnExit = FilterEditExit
+        OnKeyDown = FilterEditKeyDown
+        OnKeyPress = FilterEditKeyPress
+      end
+      object FilterSplitter: TSplitter
+        Left = 183
+        Top = 0
+        Width = 4
+        Height = 19
+      end
+      object MigemoBtn: TToolButton
+        Left = 187
+        Top = 0
+        Action = MigemoAction
+        Style = tbsTextButton
+      end
+      object AndOrBtn: TToolButton
+        Left = 234
+        Top = 0
+        Action = AndOrAction
+        Style = tbsTextButton
+      end
+      object HighlightBtn: TToolButton
+        Left = 285
+        Top = 0
+        Action = HighlightAction
+        Style = tbsTextButton
+      end
+      object ToolButton5: TToolButton
+        Left = 335
+        Top = 0
+        Width = 8
+        Caption = 'ToolButton5'
+        ImageIndex = 4
+        Style = tbsSeparator
+      end
+      object WatchBtn: TToolButton
+        Left = 343
+        Top = 0
+        Action = WatchAction
+        Style = tbsTextButton
+      end
+      object NotifyBtn: TToolButton
+        Left = 396
+        Top = 0
+        Action = NotifyAction
+        Style = tbsTextButton
       end
     end
   end
@@ -317,7 +310,6 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object ShowLineNoAction: TAction
       Caption = #34892#30058#21495#12434#34920#31034'(&N)'
       OnExecute = ShowLineNoActionExecute
-      OnUpdate = ShowLineNoActionUpdate
     end
     object FileName1stAction: TAction
       Caption = #12501#12449#12452#12523#21517#12434#20808#12395#34920#31034'(&F)'
@@ -373,6 +365,28 @@ object GeneralInfoDlg: TGeneralInfoDlg
       Caption = #12503#12525#12497#12486#12451'(&R)'
       OnExecute = PropertyActionExecute
       OnUpdate = PropertyActionUpdate
+    end
+    object MigemoAction: TAction
+      Caption = '&Migomo'
+      OnExecute = ToggleActionExecute
+    end
+    object AndOrAction: TAction
+      Caption = '&ADN/OR'
+      OnExecute = ToggleActionExecute
+    end
+    object HighlightAction: TAction
+      Caption = #24375#35519'(&H)'
+      OnExecute = ToggleActionExecute
+    end
+    object WatchAction: TAction
+      Caption = #30435#35222'(&W)'
+      OnExecute = ToggleActionExecute
+      OnUpdate = TailActionUpdate
+    end
+    object NotifyAction: TAction
+      Caption = #36890#30693'(&N)'
+      OnExecute = ToggleActionExecute
+      OnUpdate = TailActionUpdate
     end
   end
   object Timer1: TTimer

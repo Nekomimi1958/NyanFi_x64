@@ -39,8 +39,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall DriveComboBoxChange(TObject *Sender);
 	void __fastcall SizeComboBoxChange(TObject *Sender);
 	void __fastcall OptionChanged(TObject *Sender);
-	void __fastcall FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
-          TPoint &MousePos, bool &Handled);
+	void __fastcall FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta, TPoint &MousePos, bool &Handled);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

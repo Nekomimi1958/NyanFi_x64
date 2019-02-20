@@ -56,6 +56,14 @@ void __fastcall TGeneralInfoDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 {
+	OpeToolBar->GradientStartColor = col_bgTlBar1;
+	OpeToolBar->GradientEndColor   = col_bgTlBar2;
+	OpeToolBar->Font->Color 	   = col_fgTlBar;
+	OpeToolBar->HotTrackColor	   = col_htTlBar;
+	FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
+
+	FilterEdit->Font->Assign(DialogFont);
+	FilterEdit->Width = IniFile->ReadIntGen(_T("GenInfoFilterWidth"),	200);
 	FilterEdit->Text = EmptyStr;
 	RetStr = EmptyStr;
 	GenSelList->Clear();
@@ -93,27 +101,19 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 
-	show_LineNo = IniFile->ReadBoolGen(_T("GenInfoShowLnNo"),	false);
-	keep_Index  = IniFile->ReadBoolGen(_T("GenInfoKeepIndex"),	false);
-	FileName1st = IniFile->ReadBoolGen(_T("GenInfoFileName1st"),false);
-	OmitComPath = IniFile->ReadBoolGen(_T("GenInfoOmitComPath"),false);
+	ShowLineNoAction->Checked  = IniFile->ReadBoolGen(_T("GenInfoShowLnNo"));
+	KeepIndexAction->Checked   = IniFile->ReadBoolGen(_T("GenInfoKeepIndex"));
+	FileName1stAction->Checked = IniFile->ReadBoolGen(_T("GenInfoFileName1st"));
+	OmitComPathAction->Checked = IniFile->ReadBoolGen(_T("GenInfoOmitComPath"));
 
-	set_MigemoCheckBox(MigemoCheckBox, _T("GenInfoMigemo"));
-	AndOrCheckBox->Checked	   = IniFile->ReadBoolGen(_T("GenInfoFltAndOr"));
-	HighlightCheckBox->Checked = IniFile->ReadBoolGen(_T("GenInfoHighlight"));
+	set_MigemoAction(MigemoAction, _T("GenInfoMigemo"));
+
+	AndOrAction->Checked	 = IniFile->ReadBoolGen(_T("GenInfoFltAndOr"));
+	HighlightAction->Checked = IniFile->ReadBoolGen(_T("GenInfoHighlight"));
 
 	if (isTail) {
-		TailPanel->Width = 120;
-		WatchCheckBox->Visible	= true;
-		WatchCheckBox->Checked	= IniFile->ReadBoolGen(_T("GenInfoTailWatch"),	false);
-		NotifyCheckBox->Visible = true;
-		NotifyCheckBox->Enabled = WatchCheckBox->Checked;
-		NotifyCheckBox->Checked = IniFile->ReadBoolGen(_T("GenInfoTailNotify"),	false);
-	}
-	else {
-		TailPanel->Width = 2;
-		WatchCheckBox->Visible	= false;
-		NotifyCheckBox->Visible = false;
+		WatchAction->Checked  = IniFile->ReadBoolGen(_T("GenInfoTailWatch"),	false);
+		NotifyAction->Checked = IniFile->ReadBoolGen(_T("GenInfoTailNotify"),	false);
 	}
 
 	//ログファイルか?
@@ -138,7 +138,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	//リストボックスの初期化(仮想)
 	TListBox *lp = GenListBox;
 	lp->Tag = LBTAG_GEN_LIST | LBTAG_OPT_ZOOM
-				| (show_LineNo? LBTAG_OPT_LNNO : 0)
+				| (ShowLineNoAction->Checked? LBTAG_OPT_LNNO : 0)
 				| ((isFileList || isTree)? LBTAG_TAB_FNAM : 0)	//タブ以降に実ファイル名がある
 				| (isTree? LBTAG_OPT_TREE : 0);
 
@@ -155,7 +155,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	cv->Font->Assign(lp->Font);
 	bool is_irreg = IsIrregularFont(cv->Font);
 
-	if (isPlayList && FileName1st) {
+	if (isPlayList && FileName1stAction->Checked) {
 		for (int i=0; i<GenInfoList->Count; i++) {
 			MaxNameWidth = std::max(get_TextWidth(cv, ExtractFileName(GenInfoList->Strings[i]), is_irreg), MaxNameWidth);
 		}
@@ -195,7 +195,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	if (lp->Count>0) {
 		if (isLog || ToEnd)
 			idx = lp->Count - 1;
-		else if (keep_Index) {
+		else if (KeepIndexAction->Checked) {
 			idx = LastIndex;
 			top = LastTopIndex;
 			if		(idx==-1)		 idx = 0;
@@ -226,7 +226,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	}
 	else {
 		Timer1->Interval = 1000;	//***
-		Timer1->Enabled  = isTail && WatchCheckBox->Checked;
+		Timer1->Enabled  = isTail && WatchAction->Checked;
 	}
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
@@ -238,17 +238,17 @@ void __fastcall TGeneralInfoDlg::FormClose(TObject *Sender, TCloseAction &Action
 	Timer1->Enabled = false;
 
 	IniFile->SavePosInfo(this);
-
-	IniFile->WriteBoolGen(_T("GenInfoShowLnNo"),	show_LineNo);
-	IniFile->WriteBoolGen(_T("GenInfoKeepIndex"),	keep_Index);
-	IniFile->WriteBoolGen(_T("GenInfoFileName1st"),	FileName1st);
-	IniFile->WriteBoolGen(_T("GenInfoOmitComPath"),	OmitComPath);
-	IniFile->WriteBoolGen(_T("GenInfoMigemo"),		MigemoCheckBox);
-	IniFile->WriteBoolGen(_T("GenInfoFltAndOr"),	AndOrCheckBox);
-	IniFile->WriteBoolGen(_T("GenInfoHighlight"),	HighlightCheckBox);
+	IniFile->WriteIntGen( _T("GenInfoFilterWidth"),	FilterEdit->Width);
+	IniFile->WriteBoolGen(_T("GenInfoShowLnNo"),	ShowLineNoAction);
+	IniFile->WriteBoolGen(_T("GenInfoKeepIndex"),	KeepIndexAction);
+	IniFile->WriteBoolGen(_T("GenInfoFileName1st"),	FileName1stAction);
+	IniFile->WriteBoolGen(_T("GenInfoOmitComPath"),	OmitComPathAction);
+	IniFile->WriteBoolGen(_T("GenInfoMigemo"),		MigemoAction);
+	IniFile->WriteBoolGen(_T("GenInfoFltAndOr"),	AndOrAction);
+	IniFile->WriteBoolGen(_T("GenInfoHighlight"),	HighlightAction);
 	if (isTail) {
-		IniFile->WriteBoolGen(_T("GenInfoTailWatch"),	WatchCheckBox);
-		IniFile->WriteBoolGen(_T("GenInfoTailNotify"),	NotifyCheckBox);
+		IniFile->WriteBoolGen(_T("GenInfoTailWatch"),	WatchAction);
+		IniFile->WriteBoolGen(_T("GenInfoTailNotify"),	NotifyAction);
 	}
 
 	LastIndex	 = (ModalResult==mrRetry)? GenListBox->ItemIndex : 0;
@@ -333,7 +333,7 @@ void __fastcall TGeneralInfoDlg::Timer1Timer(TObject *Sender)
 		TDateTime fdt = get_file_age(FileName);
 		if (FileSize!=fsz || FileTime!=fdt) {
 			if (FileSize>0) {
-				if (UpdateList(true) && NotifyCheckBox->Checked) {
+				if (UpdateList(true) && NotifyAction->Checked) {
 					play_sound(SoundWatch);
 					NotifyPrimNyan("監視中のファイルが変化しました");
 				}
@@ -343,13 +343,6 @@ void __fastcall TGeneralInfoDlg::Timer1Timer(TObject *Sender)
 		}
 	}
 }
-//---------------------------------------------------------------------------
-void __fastcall TGeneralInfoDlg::WatchCheckBoxClick(TObject *Sender)
-{
-	Timer1->Enabled = WatchCheckBox->Checked;
-	NotifyCheckBox->Enabled = WatchCheckBox->Checked;
-}
-
 //---------------------------------------------------------------------------
 //一覧の更新
 // GenInfoBuff->Objects を行インデックス付けに利用
@@ -399,12 +392,12 @@ bool __fastcall TGeneralInfoDlg::UpdateList(bool reload)
 	}
 	//フィルタ
 	else if (!FilterEdit->Text.IsEmpty()
-		&& (!MigemoCheckBox->Checked || (MigemoCheckBox->Checked && FilterEdit->Text.Length()>=IncSeaMigemoMin)))
+		&& (!MigemoAction->Checked || (MigemoAction->Checked && FilterEdit->Text.Length()>=IncSeaMigemoMin)))
 	{
 		UnicodeString pnam = (isTree && GenInfoList->Count>0)? get_post_tab(GenInfoList->Strings[0]) : EmptyStr;
 
 		filter_List(GenInfoList, GenInfoBuff, FilterEdit->Text,
-					MigemoCheckBox->Checked, AndOrCheckBox->Checked, false, isFileList, isTree);
+					MigemoAction->Checked, AndOrAction->Checked, false, isFileList, isTree);
 
 		if (isTree) {
 			MakeTreeList(GenInfoBuff, pnam, true);
@@ -598,7 +591,7 @@ void __fastcall TGeneralInfoDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 
 	if		(contained_wd_i(KeysStr_ToList, KeyStr) || equal_ENTER(KeyStr)) lp->SetFocus();
 	else if (MovListBoxFromFilter(lp, KeyStr))		;
-	else if (SameText(KeyStr, KeyStr_Migemo))		MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
+	else if (SameText(KeyStr, KeyStr_Migemo))		MigemoAction->Checked = !MigemoAction->Checked;
 	else if	(equal_ESC(KeyStr))						ModalResult = mrCancel;
 	else return;
 
@@ -632,6 +625,11 @@ void __fastcall TGeneralInfoDlg::FilterEditExit(TObject *Sender)
 	CloseIME(Handle);
 	InvColIfEmpty(FilterEdit);
 }
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::FilterBtnClick(TObject *Sender)
+{
+	FilterEdit->SetFocus();
+}
 
 //---------------------------------------------------------------------------
 //一覧の描画 (仮想)
@@ -655,21 +653,21 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 
 	//フィルタ/検索のマッチ語
 	std::unique_ptr<TStringList> wlist(new TStringList());
-	if (HighlightCheckBox->Checked) {
+	if (HighlightAction->Checked) {
 		if (Found && Index==lp->ItemIndex) {
 			get_MatchWordList(lbuf, RegExPtn,
 				false, true,
-				AndOrCheckBox->Checked, wlist.get());
+				AndOrAction->Checked, wlist.get());
 		}
 		else if (!FilterEdit->Text.IsEmpty()) {
 			get_MatchWordList(lbuf, FilterEdit->Text,
-				MigemoCheckBox->Checked, false,
-				AndOrCheckBox->Checked, wlist.get());
+				MigemoAction->Checked, false,
+				AndOrAction->Checked, wlist.get());
 		}
 	}
 
 	//行番号
-	if (show_LineNo) LineNoOut(cv, rc, (int)lp->Items->Objects[Index] + 1);
+	if (ShowLineNoAction->Checked) LineNoOut(cv, rc, (int)lp->Items->Objects[Index] + 1);
 
 	//背景色
 	cv->Brush->Color = State.Contains(odSelected)? (lp->Focused()? col_selItem : col_oppItem) :
@@ -756,8 +754,8 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 		//再生中マーク
 		if (SameText(PlayFile, lbuf)) out_Text(cv, rc.Left + 2, yp, L"\u25b6", col_Cursor);
 		rc.Left += get_TextWidth(cv, L"\u25b6", is_irreg) + 4;
-		if (OmitComPath) remove_top_text(lbuf, ComPathName);	//パスの共通部分を省略
-		if (FileName1st) {
+		if (OmitComPathAction->Checked) remove_top_text(lbuf, ComPathName);	//パスの共通部分を省略
+		if (FileName1stAction->Checked) {
 			xp = rc.Left;
 			RuledLnTextOut(ExtractFileName(lbuf),
 				cv, rc, use_fgsel? col_fgSelItem : get_ExtColor(get_extension(lbuf)), tw, wlist.get());
@@ -1145,21 +1143,15 @@ void __fastcall TGeneralInfoDlg::PropertyActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::ShowLineNoActionExecute(TObject *Sender)
 {
-	show_LineNo = !show_LineNo;
+	ShowLineNoAction->Checked = !ShowLineNoAction->Checked;
 	GenListBox->Repaint();
 }
-//---------------------------------------------------------------------------
-void __fastcall TGeneralInfoDlg::ShowLineNoActionUpdate(TObject *Sender)
-{
-	((TAction*)Sender)->Checked = show_LineNo;
-}
-
 //---------------------------------------------------------------------------
 //ファイル名を先に表示
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FileName1stActionExecute(TObject *Sender)
 {
-	FileName1st = !FileName1st;
+	FileName1stAction->Checked = !FileName1stAction->Checked;
 	GenListBox->Repaint();
 }
 //---------------------------------------------------------------------------
@@ -1167,14 +1159,13 @@ void __fastcall TGeneralInfoDlg::FileName1stActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = isPlayList;
-	ap->Checked = FileName1st;
 }
 //---------------------------------------------------------------------------
 //パスの共通部分を省略
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::OmitComPathActionExecute(TObject *Sender)
 {
-	OmitComPath = !OmitComPath;
+	OmitComPathAction->Checked = !OmitComPathAction->Checked;
 	GenListBox->Repaint();
 }
 //---------------------------------------------------------------------------
@@ -1182,7 +1173,6 @@ void __fastcall TGeneralInfoDlg::OmitComPathActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = isPlayList;
-	ap->Checked = OmitComPath;
 }
 
 //---------------------------------------------------------------------------
@@ -1190,14 +1180,13 @@ void __fastcall TGeneralInfoDlg::OmitComPathActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::KeepIndexActionExecute(TObject *Sender)
 {
-	keep_Index = !keep_Index;
+	KeepIndexAction->Checked = !KeepIndexAction->Checked;
 }
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::KeepIndexActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = !FileName.IsEmpty() && !isFTP;	//前後切り替え可能時
-	ap->Checked = keep_Index;
 }
 
 //---------------------------------------------------------------------------
@@ -1310,6 +1299,25 @@ void __fastcall TGeneralInfoDlg::RestoreListActionExecute(TObject *Sender)
 void __fastcall TGeneralInfoDlg::ListActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = (GenListBox->Count>0 && !isTree);
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::ToggleActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+
+	Timer1->Enabled = WatchAction->Checked;
+	NotifyAction->Enabled = WatchAction->Checked;
+
+	if (ap==HighlightAction) GenListBox->Repaint();
+}
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::TailActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Enabled = isTail;
+	ap->Visible = isTail;
 }
 
 //---------------------------------------------------------------------------
