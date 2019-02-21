@@ -862,7 +862,8 @@ TColor col_fgInfHdr;	//情報ヘッダの文字色
 
 TColor col_ModalScr;	//モーダル表示効果色
 
-TColor col_Teal = clTeal;
+const TColor col_Teal = clTeal;
+const TColor col_None = Graphics::clNone;
 
 //背景画像
 Graphics::TBitmap *BgImgBuff[MAX_BGIMAGE];
@@ -884,11 +885,11 @@ int  AlphaValue;
 UnicodeString FontSampleTxt = "0123456789(!?)+-\r\nABCDEFGabcdefg\r\nあいうえおアイウエオ\r\n春夏秋冬花鳥風月黒猫";
 UnicodeString FontSampleSym = "!\"#$%&'()*+,-./\r\n0123456789:;<=>\r\n?@ABCDEFGHIJKLM\r\nNOPQRSTUVWXYZ[\\\r\n";
 
-int    FontSampleSize = 20;
-TColor FontSampleFgCol	  = Graphics::clNone;	//文字色
-TColor FontSampleBgCol	  = Graphics::clNone;	//背景色
-TColor FontSampleGridCol  = Graphics::clNone;	//基準線色
-bool   FontSampleShowGrid = false;				//基準線を表示
+int    FontSampleSize	  = 20;
+TColor FontSampleFgCol	  = col_None;	//文字色
+TColor FontSampleBgCol	  = col_None;	//背景色
+TColor FontSampleGridCol  = col_None;	//基準線色
+bool   FontSampleShowGrid = false;		//基準線を表示
 
 //外部ツール
 UnicodeString TextEditor;		//テキストエディタ
@@ -909,6 +910,7 @@ UnicodeString BinaryEditor;		//バイナリエディタ
 
 UnicodeString CmdGitExe;		//git.exe
 UnicodeString GitBashExe;		//git-bash.exe
+UnicodeString GitGuiExe;		//git-gui.exe
 
 //サウンド
 UnicodeString SoundTaskFin;		//タスク終了時の通知音
@@ -1239,10 +1241,10 @@ void InitializeGlobal()
 		sp->lxp_size	 = 0;
 		sp->lxp_time	 = 0;
 
-		sp->color_bgDirInf = Graphics::clNone;
-		sp->color_fgDirInf = Graphics::clNone;
-		sp->color_bgDrvInf = Graphics::clNone;
-		sp->color_fgDrvInf = Graphics::clNone;
+		sp->color_bgDirInf = col_None;
+		sp->color_fgDirInf = col_None;
+		sp->color_bgDrvInf = col_None;
+		sp->color_fgDrvInf = col_None;
 
 		sp->is_TabFixed	 = false;
 
@@ -1391,6 +1393,7 @@ void InitializeGlobal()
 		{_T("BinaryEditor=\"\""),					(TObject*)&BinaryEditor},
 		{_T("CmdGitExer=\"\""),						(TObject*)&CmdGitExe},
 		{_T("GitBashExe=\"\""),						(TObject*)&GitBashExe},
+		{_T("GitGuiExe=\"\""),						(TObject*)&GitGuiExe},
 		{_T("FExtViewTab4=\".cpp.cxx.c.h\""),		(TObject*)&FExtViewTab4},
 		{_T("FExtViewTabX=\"\""),					(TObject*)&FExtViewTabX},
 		{_T("SoundTaskFin=\"\""),					(TObject*)&SoundTaskFin},
@@ -1954,6 +1957,12 @@ void InitializeGlobal()
 		for (int i=0; i<plst->Count; i++) {
 			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]).UCAT_T("git-bash.exe");
 			if (file_exists(xnam)) { GitBashExe = xnam;  break; }
+		}
+	}
+	if (GitGuiExe.IsEmpty()) {
+		for (int i=0; i<plst->Count; i++) {
+			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]).UCAT_T("git-gui.exe");
+			if (file_exists(xnam)) { GitGuiExe = xnam;  break; }
 		}
 	}
 	GitExists = file_exists(CmdGitExe);
@@ -6516,9 +6525,9 @@ bool save_FontSample(UnicodeString fnam)
 	fbuf->Add("[FontSample]");
 	fbuf->Add(tmp.sprintf(_T("Size=%u"),		FontSampleSize));
 	fbuf->Add(tmp.sprintf(_T("BgColor=%s"),
-		col_to_xRRGGBB((FontSampleBgCol==Graphics::clNone)? col_bgImage : FontSampleBgCol).c_str()));
+		col_to_xRRGGBB((FontSampleBgCol==col_None)? col_bgImage : FontSampleBgCol).c_str()));
 	fbuf->Add(tmp.sprintf(_T("FgColor=%s"),
-		col_to_xRRGGBB((FontSampleFgCol==Graphics::clNone)? SelectWorB(col_bgImage) : FontSampleFgCol).c_str()));
+		col_to_xRRGGBB((FontSampleFgCol==col_None)? SelectWorB(col_bgImage) : FontSampleFgCol).c_str()));
 
 	std::unique_ptr<TStringList> lst(new TStringList());
 	lst->Text = FontSampleTxt;
@@ -6534,7 +6543,7 @@ bool save_FontSample(UnicodeString fnam)
 
 	fbuf->Add(tmp.sprintf(_T("ShowGrid=%u"),	FontSampleShowGrid? 1 : 0));
 	fbuf->Add(tmp.sprintf(_T("GridColor=%s"),
-		col_to_xRRGGBB((FontSampleGridCol==Graphics::clNone)? clMaroon : FontSampleGridCol).c_str()));
+		col_to_xRRGGBB((FontSampleGridCol==col_None)? clMaroon : FontSampleGridCol).c_str()));
 
 	return saveto_TextUTF8(fnam, fbuf.get());
 }
@@ -6741,11 +6750,11 @@ TColor get_FileColor(file_rec *fp, TColor col_x)
 	if (fp->f_attr & faSysFile) 	return col_System;
 	if (fp->f_attr & faHidden)		return col_Hidden;
 	if (fp->f_attr & faReadOnly)	return col_ReadOnly;
-	if (col_Compress!=Graphics::clNone && (fp->f_attr & faCompressed))
+	if (col_Compress!=col_None && (fp->f_attr & faCompressed))
 									return col_Compress;
 	if (fp->is_dir) {
 		if (fp->is_sym) 			return col_SymLink;
-		if (col_Protect!=Graphics::clNone && is_ProtectDir(fp->is_up? fp->p_name : fp->f_name))
+		if (col_Protect!=col_None && is_ProtectDir(fp->is_up? fp->p_name : fp->f_name))
 									return col_Protect;
 									return col_Folder;
 	}
@@ -6803,7 +6812,7 @@ TColor get_TimeColor(TDateTime dt, TColor col_def)
 			(dd <= (double)(dt0 - IncYear( dt0, -3))) ? col_Tim3Y :	//3年以内
 						     						    col_TimOld;
 
-	if (col_t==Graphics::clNone) col_t = col_def;
+	if (col_t==col_None) col_t = col_def;
 
 	return col_t;
 }
@@ -6822,7 +6831,7 @@ TColor get_SizeColor(__int64 size, TColor col_def)
 			     (size>=1024) ? col_Size1K :
 								col_SizeLT;
 
-	if (col_s==Graphics::clNone) col_s = col_def;
+	if (col_s==col_None) col_s = col_def;
 
 	return col_s;
 }
@@ -7446,7 +7455,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 
 	if		(flag & LBFLG_PATH_FIF)	PathNameOut(lbuf, cv, xp, yp);
 	else if (flag & LBFLG_FILE_FIF)	Emphasis_RLO_info(lbuf, cv, xp, yp);
-	else if (flag & LBFLG_TAGS_FIF)	usr_TAG->DrawTags(lbuf, cv, xp, yp, RevTagCololr? col_bgInf : Graphics::clNone);
+	else if (flag & LBFLG_TAGS_FIF)	usr_TAG->DrawTags(lbuf, cv, xp, yp, RevTagCololr? col_bgInf : col_None);
 	else if (flag & LBFLG_FEXT_FIF) {
 		xp = xp + (lbuf.Length() * cv->TextWidth("0")) - cv->TextWidth(lbuf);
 		cv->TextOut(xp, yp, lbuf);
@@ -7506,7 +7515,7 @@ void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState Sta
 	//カラー
 	TRect rc = Rect;  rc.Right = rc.Left + 30;
 	cv->Brush->Color = (TColor)col_lst->Values[col_nam].ToIntDef(clBlack);
-	if (cv->Brush->Color!=Graphics::clNone)
+	if (cv->Brush->Color!=col_None)
 		cv->FillRect(rc);
 	else {
 		cv->Brush->Color = scl_BtnFace;
@@ -8092,7 +8101,7 @@ UnicodeString get_StreamLineBreak(
 	int  code_page,
 	bool strict)	//完全チェック	(default = false);
 {
-	if (code_page==0) return EmptyStr;
+	if (code_page<=0) return EmptyStr;
 
 	bool is_BE = (code_page==1201);
 	int  ch_sz = (code_page==1200 || code_page==1201)? 2 : 1;
@@ -8517,7 +8526,7 @@ int load_ImageFile(
 				wic_img->Transparent = true;
 				o_bmp->SetSize(wic_img->Width, wic_img->Height);
 				TRect rc = Rect(0, 0, o_bmp->Width, o_bmp->Height);
-				if (trans_bg!=Graphics::clNone) {
+				if (trans_bg!=col_None) {
 					o_bmp->Canvas->Brush->Color = trans_bg;
 					o_bmp->Canvas->FillRect(rc);
 				}
@@ -8886,7 +8895,7 @@ void set_col_from_ColorList()
 		TColor def;
 	} col_def_list[] = {
 		{&col_bgList,	_T("bgList"),		clBlack},
-		{&col_bgList2,	_T("bgList2"),		Graphics::clNone},
+		{&col_bgList2,	_T("bgList2"),		col_None},
 		{&col_fgList,	_T("fgList"),		clWhite},
 		{&col_Splitter,	_T("Splitter"),		clBtnFace},
 		{&col_bgArc,	_T("bgArc"),		clNavy},
@@ -8896,7 +8905,7 @@ void set_col_from_ColorList()
 		{&col_bgADS,	_T("bgADS"),		clNavy},
 		{&col_selItem,	_T("selItem"),		clBlue},
 		{&col_oppItem,	_T("oppItem"),		clNavy},
-		{&col_fgSelItem,_T("fgSelItem"),	Graphics::clNone},
+		{&col_fgSelItem,_T("fgSelItem"),	col_None},
 		{&col_bgMark,	_T("bgMark"),		clWebIndigo},
 		{&col_matchItem,_T("matchItem"),	clNavy},
 		{&col_Differ,	_T("Differ"),		clWebSaddleBrown},
@@ -8907,9 +8916,9 @@ void set_col_from_ColorList()
 		{&col_lnScrHit,	_T("lnScrHit"),		clYellow},
 		{&col_Folder,	_T("Folder"),		clYellow},
 		{&col_SymLink,	_T("SymLink"),		clYellow},
-		{&col_Protect,	_T("Protect"),		Graphics::clNone},
+		{&col_Protect,	_T("Protect"),		col_None},
 		{&col_ReadOnly,	_T("ReadOnly"),		clDkGray},
-		{&col_Compress,	_T("Compress"),		Graphics::clNone},
+		{&col_Compress,	_T("Compress"),		col_None},
 		{&col_Hidden,	_T("Hidden"),		clTeal},
 		{&col_System,	_T("System"),		clPurple},
 		{&col_fgSpace,	_T("fgSpace"),		clMaroon},
@@ -8952,7 +8961,7 @@ void set_col_from_ColorList()
 		{&col_fgRuler,	_T("fgRuler"),		clWindowText},
 		{&col_bdrLine,	_T("bdrLine"),		clDkGray},
 		{&col_bdrFold,	_T("bdrFold"),		clBlue},
-		{&col_bdrFixed,	_T("bdrFixed"),		Graphics::clNone},
+		{&col_bdrFixed,	_T("bdrFixed"),		col_None},
 		{&col_Comment,	_T("Comment"),		clLime},
 		{&col_Strings,	_T("Strings"),		clAqua},
 		{&col_Reserved,	_T("Reserved"),		clSkyBlue},
@@ -8983,23 +8992,23 @@ void set_col_from_ColorList()
 		{&col_OptFind,	_T("OptFind"),		clRed},
 		{&col_Invalid,	_T("Invalid"),		clLtGray},
 		{&col_Illegal,	_T("Illegal"),		clWebPink},
-		{&col_Tim1H,	_T("Tim1H"),		Graphics::clNone},
-		{&col_Tim3H,	_T("Tim3H"),		Graphics::clNone},
-		{&col_Tim1D,	_T("Tim1D"),		Graphics::clNone},
-		{&col_Tim3D,	_T("Tim3D"),		Graphics::clNone},
-		{&col_Tim7D,	_T("Tim7D"),		Graphics::clNone},
-		{&col_Tim1M,	_T("Tim1M"),		Graphics::clNone},
-		{&col_Tim3M,	_T("Tim3M"),		Graphics::clNone},
-		{&col_Tim6M,	_T("Tim6M"),		Graphics::clNone},
-		{&col_Tim1Y,	_T("Tim1Y"),		Graphics::clNone},
-		{&col_Tim3Y,	_T("Tim3Y"),		Graphics::clNone},
-		{&col_TimOld,	_T("TimOld"),		Graphics::clNone},
-		{&col_Size4G,	_T("Size4G"),		Graphics::clNone},
-		{&col_Size1G,	_T("Size1G"),		Graphics::clNone},
-		{&col_Size1M,	_T("Size1M"),		Graphics::clNone},
-		{&col_Size1K,	_T("Size1K"),		Graphics::clNone},
-		{&col_SizeLT,	_T("SizeLT"),		Graphics::clNone},
-		{&col_Size0,	_T("Size0"),		Graphics::clNone},
+		{&col_Tim1H,	_T("Tim1H"),		col_None},
+		{&col_Tim3H,	_T("Tim3H"),		col_None},
+		{&col_Tim1D,	_T("Tim1D"),		col_None},
+		{&col_Tim3D,	_T("Tim3D"),		col_None},
+		{&col_Tim7D,	_T("Tim7D"),		col_None},
+		{&col_Tim1M,	_T("Tim1M"),		col_None},
+		{&col_Tim3M,	_T("Tim3M"),		col_None},
+		{&col_Tim6M,	_T("Tim6M"),		col_None},
+		{&col_Tim1Y,	_T("Tim1Y"),		col_None},
+		{&col_Tim3Y,	_T("Tim3Y"),		col_None},
+		{&col_TimOld,	_T("TimOld"),		col_None},
+		{&col_Size4G,	_T("Size4G"),		col_None},
+		{&col_Size1G,	_T("Size1G"),		col_None},
+		{&col_Size1M,	_T("Size1M"),		col_None},
+		{&col_Size1K,	_T("Size1K"),		col_None},
+		{&col_SizeLT,	_T("SizeLT"),		col_None},
+		{&col_Size0,	_T("Size0"),		col_None},
 		{&col_GrBack,	_T("GrBack"),		clBlack},
 		{&col_GrLine,	_T("GrLine"),		clLime},
 		{&col_GrGrid,	_T("GrGrid"),		clGray},
@@ -9396,8 +9405,8 @@ void out_TextEx(
 	TColor org_fg = cv->Font->Color;
 	TColor org_bg = cv->Brush->Color;
 
-	if (fg!=Graphics::clNone) cv->Font->Color  = fg;
-	if (bg!=Graphics::clNone) cv->Brush->Color = bg;
+	if (fg!=col_None) cv->Font->Color  = fg;
+	if (bg!=col_None) cv->Brush->Color = bg;
 
 	cv->TextOut(x, y, s);
 
@@ -10987,7 +10996,9 @@ bool Execute_ex(
 }
 //---------------------------------------------------------------------------
 bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
-	UnicodeString opt, DWORD *exit_code, TStringList *o_lst)
+	UnicodeString opt, DWORD *exit_code,
+	TStringList   *o_lst,	//出力リスト	(default = NULL)
+	TMemoryStream *o_ms)	//出力イメージ	(default = NULL)
 {
 	GlobalErrMsg  = EmptyStr;
 	if (cmdln.IsEmpty()) return false;
@@ -11043,13 +11054,14 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 					}
 
 					std::unique_ptr<TMemoryStream> ms(new TMemoryStream());
+					TMemoryStream *mp = o_ms? o_ms : ms.get();
 					UnicodeString log_buf;
 					DWORD len;
 					while (::WaitForSingleObject(pi.hProcess, WAIT_INTERVAL)==WAIT_TIMEOUT) {
 						if (::PeekNamedPipe(hRead, NULL, 0, NULL, &len, NULL) && len>0) {
 							std::unique_ptr<char[]> buf(new char[len + 4]);
 							if (::ReadFile(hRead, buf.get(), len, &len, NULL)) {
-								ms->Write(buf.get(), len);
+								mp->Write(buf.get(), len);
 								//ログに出力
 								if (l_sw) {
 									std::unique_ptr<TMemoryStream> mbuf(new TMemoryStream());
@@ -11068,7 +11080,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 					if (::PeekNamedPipe(hRead, NULL, 0, NULL, &len, NULL) && len>0) {
 						std::unique_ptr<char[]> buf(new char[len + 4]);
 						if (::ReadFile(hRead, buf.get(), len, &len, NULL)) {
-							ms->Write(buf.get(), len);
+							mp->Write(buf.get(), len);
 							//ログに出力
 							if (l_sw) {
 								std::unique_ptr<TMemoryStream> mbuf(new TMemoryStream());
@@ -11081,7 +11093,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 					}
 
 					//出力内容を設定
-					if (ms->Size>0 && o_lst) o_lst->Text = get_MemoryStrins(ms.get());
+					if (mp->Size>0 && o_lst) o_lst->Text = get_MemoryStrins(mp);
 					exited = true;
 				}
 				//終了待ち
@@ -11127,6 +11139,21 @@ bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, DWOR
 
 	DWORD exit_code = 0;
 	bool res = Execute_cmdln(cmdln, wdir, "HWO", &exit_code, o_lst);
+	if (exit_cd) *exit_cd = exit_code;
+
+	return res;
+}
+//---------------------------------------------------------------------------
+bool GitShellExe(UnicodeString prm, UnicodeString wdir, TMemoryStream *o_ms, DWORD *exit_cd)
+{
+	if (!file_exists(CmdGitExe)) return false;
+
+	wdir = ExcludeTrailingPathDelimiter(wdir);
+	UnicodeString cmdln = add_quot_if_spc(CmdGitExe);
+	if (!prm.IsEmpty()) cmdln.cat_sprintf(_T(" %s"), prm.c_str());
+
+	DWORD exit_code = 0;
+	bool res = Execute_cmdln(cmdln, wdir, "HWO", &exit_code, NULL, o_ms);
 	if (exit_cd) *exit_cd = exit_code;
 
 	return res;

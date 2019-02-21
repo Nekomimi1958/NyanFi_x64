@@ -4048,7 +4048,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 
 	TabPanel->ClientHeight = TabControl1->Height + TabControl1->Top;
 	TabPanel->Visible	   = ShowTabBar;
-	TabBottomPaintBox->Visible = (FlatInfPanel && col_frmTab!=clNone && (FlTabStyle==0 || FlTabStyle==1));
+	TabBottomPaintBox->Visible = (FlatInfPanel && col_frmTab!=col_None && (FlTabStyle==0 || FlTabStyle==1));
 	UpdateTabBar(TabControl1->TabIndex);
 
 	//ボタンマーク
@@ -5380,7 +5380,7 @@ void __fastcall TNyanFiForm::TxtPrvListBoxDrawItem(TWinControl *Control, int Ind
 	}
 	else {
 		PrvTextOut(lp, Index, cv, rc,
-			((is_sel && col_fgSelItem!=clNone)? col_fgSelItem : col_fgTxtPrv),
+			((is_sel && col_fgSelItem!=col_None)? col_fgSelItem : col_fgTxtPrv),
 			lp->TabWidth, NULL, TxtPrvFile);
 	}
 
@@ -5430,7 +5430,7 @@ void __fastcall TNyanFiForm::TxtTailListBoxDrawItem(TWinControl *Control, int In
 	cv->FillRect(rc);
 
 	PrvTextOut(lp, Index, cv, rc,
-		((is_sel && col_fgSelItem!=clNone)? col_fgSelItem : col_fgTxtPrv),
+		((is_sel && col_fgSelItem!=col_None)? col_fgSelItem : col_fgTxtPrv),
 		lp->TabWidth, NULL, TxtPrvFile);
 
 	//カーソル
@@ -6542,7 +6542,7 @@ void __fastcall TNyanFiForm::SetDrivePanel(int tag, UnicodeString msg)
 		}
 		else if (SelColDrvInf && (lst_stt->sel_d_cnt>0 || lst_stt->sel_f_cnt>0)) {
 			stt_panel->Color	   = lst_stt->color_selItem;
-			stt_panel->Font->Color = (col_fgSelItem!=clNone)? col_fgSelItem : col_fgList;
+			stt_panel->Font->Color = (col_fgSelItem!=col_None)? col_fgSelItem : col_fgList;
 		}
 		else {
 			stt_panel->Color	   = lst_stt->color_bgDrvInf;
@@ -9389,7 +9389,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 		//名前色
 		TColor col_f = fp->is_dummy? col_InvItem : (fp->is_sym && SymColorToName)? col_SymLink : get_FileColor(fp, col_x);
 
-		bool use_fgSel = (fp->selected && col_fgSelItem!=clNone);
+		bool use_fgSel = (fp->selected && col_fgSelItem!=col_None);
 
 		//表示位置
 		bool use_ico = (IconMode==1) || (fp->is_dir && IconMode==2);
@@ -9484,8 +9484,8 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 
 		TColor bg_name =
 			 (IsDiffList() && fp->is_dummy)? col_Differ :
-			  IniFile->IsMarked(fp->r_name)? col_bgMark : clNone;
-		if (bg_name!=clNone) {
+			  IniFile->IsMarked(fp->r_name)? col_bgMark : col_None;
+		if (bg_name!=col_None) {
 			TRect mrc  = tmp_rc;
 			mrc.Left   = x_base;
 			mrc.Right  = (HideSizeTime? lst_stt->lxp_right : lst_stt->lxp_size) - w_half;
@@ -9595,7 +9595,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 			int xp = lst_stt->lxp_path;
 			//タグ
 			if (lst_stt->find_TAG && FindTagsColumn) {
-				usr_TAG->DrawTags(fp->tags, tmp_cv, xp, yp, RevTagCololr? col_bgFind : clNone);
+				usr_TAG->DrawTags(fp->tags, tmp_cv, xp, yp, RevTagCololr? col_bgFind : col_None);
 			}
 			//場所
 			else if (FindPathColumn) {
@@ -16555,9 +16555,13 @@ void __fastcall TNyanFiForm::GitViewerActionExecute(TObject *Sender)
 		GitViewer->WorkDir = wnam;
 		GitViewer->HistoryLimit = StartsText('N', ActionParam)? extract_int_def(ActionParam) : GIT_DEF_HISTLIMIT;
 		SetDirWatch(false);
-		GitViewer->ShowModal();
+		TModalResult mr = GitViewer->ShowModal();
 		SetDirWatch(true);
 		ReloadList(CurListTag);
+		if (mr==mrOk && !GitViewer->RetArcFile.IsEmpty()) {
+			if (!JumpToList(OppListTag, GitViewer->RetArcFile + "/*")) GlobalAbort();
+			ToOppositeAction->Execute();
+		}
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);
@@ -31996,7 +32000,7 @@ void __fastcall TNyanFiForm::ThumbnailGridDrawCell(TObject *Sender, int ACol, in
 			if (vfp->tags.IsEmpty()) vfp->tags = usr_TAG->GetTags(vfnam);
 			if (!vfp->tags.IsEmpty())
 				usr_TAG->DrawTags(vfp->tags, cv, Rect.Left + 4, Rect.Bottom - s_14,
-					RevTagCololr? cv->Brush->Color : clNone);
+					RevTagCololr? cv->Brush->Color : col_None);
 		}
 
 		//サムネイル表示
@@ -32687,7 +32691,7 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 					rc.Bottom = y1;
 					cv->Brush->Color = col;
 					cv->FillRect(rc);
-					if (col_frmTab==clNone)
+					if (col_frmTab==col_None)
 						::DrawEdge(cv->Handle, &rc, edge, BF_LEFT|BF_TOP|BF_RIGHT);
 					else {
 						cv->Brush->Color = col_frmTab;
@@ -32703,10 +32707,10 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 						int x1 = rc.Right - h/2 + h;
 						TPoint shape[4] = {Point(rc.Left, y1), Point(rc.Left, y0), Point(x0, y0), Point(x1, y1)};
 						cv->Pen->Color	 = col_frmTab;
-						cv->Pen->Style	 = (col_frmTab==clNone)? psClear : psSolid;
+						cv->Pen->Style	 = (col_frmTab==col_None)? psClear : psSolid;
 						cv->Brush->Color = col;
 						cv->Polygon(shape, 3);
-						if (col_frmTab==clNone) {
+						if (col_frmTab==col_None) {
 							TRect rc1 = Rect(rc.Left, y0, rc.Right - h/2, y1);
 							TRect rc2 = Rect(x0, y0, x1, y1);
 							::DrawEdge(cv->Handle, &rc1, edge, BF_LEFT|BF_TOP);
@@ -32820,7 +32824,7 @@ void __fastcall TNyanFiForm::TabControl1DrawTab(TCustomTabControl *Control, int 
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TabBottomPaintBoxPaint(TObject *Sender)
 {
-	if (col_frmTab!=clNone && (FlTabStyle==0 || FlTabStyle==1)) {
+	if (col_frmTab!=col_None && (FlTabStyle==0 || FlTabStyle==1)) {
 		TPaintBox *pp = (TPaintBox*)Sender;
 		TCanvas *cv = pp->Canvas;
 		cv->Pen->Width = Scaled1;
@@ -33266,7 +33270,7 @@ void __fastcall TNyanFiForm::ShowNyanFiClick(TObject *Sender)
 //テキストビュアー情報ヘッダの描画
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-          const TRect &Rect)
+	const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Font->Assign(StatusBar->Font);
@@ -33278,7 +33282,7 @@ void __fastcall TNyanFiForm::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatu
 	cv->FillRect(Rect);
 
 	cv->Font->Color  = inc_flag? col_fgView :
-					   sel_flag? ((col_fgSelItem!=clNone)? col_fgSelItem : col_fgList) : col_fgInfHdr;
+					   sel_flag? ((col_fgSelItem!=col_None)? col_fgSelItem : col_fgList) : col_fgInfHdr;
 	int xp = Rect.Left + 2;
 	cv->TextOut(xp, Rect.Top, Panel->Text);
 

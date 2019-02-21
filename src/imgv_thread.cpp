@@ -460,11 +460,11 @@ void __fastcall TImgViewThread::Execute()
 							UnicodeString fnt_name = get_FontInf(Img_f_name);
 							if (!fnt_name.IsEmpty()) {
 								//ユーザ指定色
-								if (FontSampleBgCol!=Graphics::clNone) {
+								if (FontSampleBgCol!=col_None) {
 									cv->Brush->Color = FontSampleBgCol;
 									cv->FillRect(Rect(0, 0, bg_bmp->Width, bg_bmp->Height));
 								}
-								if (FontSampleFgCol!=Graphics::clNone) cv->Font->Color = FontSampleFgCol;
+								if (FontSampleFgCol!=col_None) cv->Font->Color = FontSampleFgCol;
 
 								//フォント名
 								cv->TextOut(2, 2, fnt_name);
@@ -488,7 +488,7 @@ void __fastcall TImgViewThread::Execute()
 									::DrawText(cv->Handle, lbuf.c_str(), -1, &rc, DT_LEFT);
 
 									//基準線の描画
-									if (FontSampleShowGrid && FontSampleGridCol!=Graphics::clNone) {
+									if (FontSampleShowGrid && FontSampleGridCol!=col_None) {
 										DynamicArray<int> y_lst;
 										y_lst.Length = 4;
 										y_lst[0] = rc.Top;							//上端

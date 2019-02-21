@@ -18,9 +18,9 @@
 #include <Vcl.ComCtrls.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.AppEvnts.hpp>
+#include <Vcl.ToolWin.hpp>
 #include "usr_scrpanel.h"
 #include "Global.h"
-#include <Vcl.ToolWin.hpp>
 
 //---------------------------------------------------------------------------
 class TGeneralInfoDlg : public TForm
@@ -86,10 +86,10 @@ __published:	// IDE で管理されるコンポーネント
 	TTimer *Timer1;
 	TToolBar *OpeToolBar;
 	TToolButton *AndOrBtn;
+	TToolButton *FilterBtn;
 	TToolButton *HighlightBtn;
 	TToolButton *MigemoBtn;
 	TToolButton *NotifyBtn;
-	TToolButton *FilterBtn;
 	TToolButton *ToolButton5;
 	TToolButton *WatchBtn;
 
@@ -114,6 +114,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FilterEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall FilterEditEnter(TObject *Sender);
 	void __fastcall FilterEditExit(TObject *Sender);
+	void __fastcall FilterBtnClick(TObject *Sender);
 	void __fastcall FilterOptheckBoxClick(TObject *Sender);
 	void __fastcall HighlightCheckBoxClick(TObject *Sender);
 	void __fastcall ViewListActionExecute(TObject *Sender);
@@ -146,7 +147,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InfPopupMenuPopup(TObject *Sender);
 	void __fastcall ToggleActionExecute(TObject *Sender);
 	void __fastcall TailActionUpdate(TObject *Sender);
-	void __fastcall FilterBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	int  MaxNameWidth;

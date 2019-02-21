@@ -77,6 +77,10 @@ void __fastcall TGitViewer::WmFormShowed(TMessage &msg)
 {
 	FindCommitEdit->Color = col_Invalid;
 	Repaint();
+
+	AutoCrlf   = SameText(Trim(GitExeStr("config --get core.autocrlf")), "true");
+	RetArcFile = EmptyStr;
+
 	UpdateCommitList();
 	CommitListBox->SetFocus();
 }
@@ -127,10 +131,14 @@ void __fastcall TGitViewer::DiffPanelResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//git の実行結果文字列を取得
+//---------------------------------------------------------------------------
 UnicodeString __fastcall TGitViewer::GitExeStr(UnicodeString prm)
 {
-	std::unique_ptr<TStringList> o_lst(new TStringList());
 	GitBusy  = true;
+	UnicodeString cmd = get_tkn(prm, " ");
+	if (SameText("archive", cmd)) CommitListBox->Invalidate();
+	std::unique_ptr<TStringList> o_lst(new TStringList());
 	DWORD exit_code;
 	bool res = GitShellExe(prm, WorkDir, o_lst.get(), &exit_code);
 	GitBusy  = false;
@@ -139,13 +147,62 @@ UnicodeString __fastcall TGitViewer::GitExeStr(UnicodeString prm)
 	if (res) {
 		if (exit_code!=0) {
 			msgbox_ERR(o_lst->Text);
+			ret_str = "ERROR";
 		}
 		else {
 			ret_str = o_lst->Text;
-			if (!StartsText("archive", prm) && !StartsText("difftool", prm)) UpdateCommitList();
+			if (!contained_wd_i(_T("archive|cat-file|config|difftool|gui"), cmd))
+				UpdateCommitList();
 		}
 	}
 	return ret_str;
+}
+
+//---------------------------------------------------------------------------
+//指定リビジョンのファイルを一時ディレクトリに保存
+//---------------------------------------------------------------------------
+UnicodeString __fastcall TGitViewer::SaveRevAsTemp(UnicodeString id, UnicodeString fnam)
+{
+	try {
+		//ファイルイメージの取得
+		UnicodeString src_nam = id + ":" + fnam;
+		UnicodeString prm;  prm.sprintf(_T("cat-file -p %s"), src_nam.c_str());
+		std::unique_ptr<TMemoryStream> o_ms(new TMemoryStream());
+		GitBusy  = true;	DiffListBox->Invalidate();
+		DWORD exit_code;
+		bool res = GitShellExe(prm, WorkDir, o_ms.get(), &exit_code);
+		GitBusy  = false;	DiffListBox->Invalidate();
+		if (!res || exit_code!=0) UserAbort(USTR_FaildProc);
+
+		//コードページのチェック
+		bool has_bom;
+		int code_page = get_MemoryCodePage(o_ms.get(), &has_bom);
+		if (code_page<=0) UserAbort(USTR_NotText);
+
+		//改行コードのチェック
+		std::unique_ptr<TStringList> o_lst(new TStringList());
+		std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(code_page));
+		UnicodeString line_brk = get_StreamLineBreak(o_ms.get(), code_page);
+		if		(SameStr(line_brk, "CR")) o_lst->LineBreak = "\r";
+		else if (SameStr(line_brk, "LF")) o_lst->LineBreak = "\n";
+		else o_lst->LineBreak = "\r\n";
+		//必要なら変換
+		if (!SameStr(o_lst->LineBreak, "\r\n") && AutoCrlf) o_lst->LineBreak = "\r\n";
+
+		//リストに読み込み
+		o_ms->Seek(0, soFromBeginning);
+		o_lst->LoadFromStream(o_ms.get(), enc.get());
+
+		//保存
+		o_lst->WriteBOM = has_bom;
+		UnicodeString tmp_nam = TempPathA + CommitID.SubString(1, 8) + "_" + ReplaceStr(fnam, "/", "_");
+		if (!saveto_TextFile(tmp_nam, o_lst.get(), enc.get())) UserAbort(USTR_FaildProc);
+		return tmp_nam;
+	}
+	catch (EAbort &e) {
+		msgbox_ERR(e.Message);
+		return EmptyStr;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -164,6 +221,8 @@ void __fastcall TGitViewer::UpdateCommitList()
 	lp->Clear();
 	lp->Items->Add("取得中...");
 	lp->Repaint();
+
+	CommitScrPanel->HitLines->Clear();
 
 	GitBusy = true;
 	std::unique_ptr<TStringList> o_lst(new TStringList());
@@ -358,7 +417,6 @@ void __fastcall TGitViewer::BranchListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	else if (equal_ENTER(KeyStr)) 					ChckoutAction->Execute();
 	else return;
 
-//	if (!is_DialogKey(Key)) 
 	Key = 0;
 }
 
@@ -369,8 +427,14 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 	TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
-	TCanvas  *cv = lp->Canvas;
-	cv->Brush->Color = State.Contains(odSelected)? (State.Contains(odFocused)? col_selItem : col_oppItem) : lp->Color;
+
+	UnicodeString kwd = FindCommitEdit->Text;
+	bool is_match = !kwd.IsEmpty() && ContainsText(lp->Items->Strings[Index], kwd);
+
+	TCanvas *cv = lp->Canvas;
+	cv->Brush->Color = State.Contains(odSelected)?
+						((!State.Contains(odFocused) || GitBusy)? col_oppItem : col_selItem) :
+						(is_match? col_matchItem : lp->Color);
 	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled4;
@@ -530,7 +594,8 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
-	cv->Brush->Color = State.Contains(odSelected)? (State.Contains(odFocused)? col_selItem : col_oppItem) : lp->Color;
+	cv->Brush->Color = State.Contains(odSelected)?
+						((!State.Contains(odFocused) || GitBusy)? col_oppItem : col_selItem) : lp->Color;
 	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled4;
@@ -574,8 +639,8 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 			g_rc.Left = xp; g_rc.SetWidth(g_w); g_rc.SetHeight(g_w); g_rc.Offset(0, g_w);
 			for (int i=1; i<=lbuf.Length(); i++) {
 				WideChar c = lbuf[i];
-				cv->Brush->Color = (c=='-')? clRed : (c=='+')? clGreen : clNone;
-				if (cv->Brush->Color!=clNone) {
+				cv->Brush->Color = (c=='-')? clRed : (c=='+')? clGreen : col_None;
+				if (cv->Brush->Color!=col_None) {
 					cv->FillRect(g_rc);
 					g_rc.Offset(g_w, 0);
 				}
@@ -598,16 +663,23 @@ void __fastcall TGitViewer::DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
 
 	if		(ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, Key_to_CmdV(KeyStr)))
-													;
-	else if (USAME_TI(cmd_F, "ReturnList"))			ModalResult = mrCancel;
-	else if (is_ToLeftOpe(KeyStr, cmd_F))			BranchListBox->SetFocus();
-	else if (is_ToRightOpe(KeyStr, cmd_F))			CommitListBox->SetFocus();
-	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
+											;
+	else if (USAME_TI(cmd_F, "ReturnList")) ModalResult = mrCancel;
+	else if (is_ToLeftOpe(KeyStr, cmd_F))	BranchListBox->SetFocus();
+	else if (is_ToRightOpe(KeyStr, cmd_F))	CommitListBox->SetFocus();
+	else if (USAME_TI(cmd_F, "FileEdit"))	EditFileAction->Execute();
+	else if (contained_wd_i(KeysStr_Popup, KeyStr))
+											show_PopupMenu(lp);
 	else return;
 
 	Key = 0;
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::GitListBoxKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	Key = 0;
+}
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::GitListBoxMouseDown(TObject *Sender, TMouseButton Button,
 	TShiftState Shift, int X, int Y)
@@ -786,6 +858,23 @@ void __fastcall TGitViewer::ArchiveActionExecute(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
+//一時アーカイブとして開く
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::OpenTmpArcActionExecute(TObject *Sender)
+{
+	git_rec *gp = GetCurCommitPtr();
+	if (gp && !gp->hash.IsEmpty()) {
+		UnicodeString tmp_name = TempPathA + gp->hash.SubString(1, 8) + "_"
+									+ ExtractFileName(ExcludeTrailingPathDelimiter(WorkDir)) + ".zip";
+		UnicodeString prm;
+		prm.sprintf(_T("archive --format=zip %s --output=\"%s\""), gp->hash.c_str(), yen_to_slash(tmp_name).c_str());
+		if (!SameText(GitExeStr(prm), "ERROR") && file_exists(tmp_name)) {
+			RetArcFile	= tmp_name;
+			ModalResult = mrOk;
+		}
+	}
+}
+//---------------------------------------------------------------------------
 void __fastcall TGitViewer::ArchiveActionUpdate(TObject *Sender)
 {
 	git_rec *gp = GetCurCommitPtr();
@@ -829,7 +918,7 @@ void __fastcall TGitViewer::BlameActionExecute(TObject *Sender)
 {
 	UnicodeString fnam = GetDiffFileName();
 	if (!fnam.IsEmpty()) {
-		if (fnam.Pos(" => ")) fnam =  get_tkn(fnam, " => ");
+		if (fnam.Pos(" => ")) fnam =  get_tkn_r(fnam, " => ");
 		UnicodeString prm;
 		prm.sprintf(_T("gui blame %s %s"), get_tkn(ParentID, " ").c_str(), fnam.c_str());
 		GitExeStr(prm);
@@ -899,8 +988,20 @@ void __fastcall TGitViewer::FindCommitEditChange(TObject *Sender)
 		for (int i=0; i<lp->Count && idx==-1; i++)
 			if (ContainsText(lp->Items->Strings[i], kwd)) idx = i;
 		SetCommitListIndex(idx);
+
+		if (CommitScrPanel->KeyWordChanged(kwd, lp->Count)) {
+			for (int i=0; i<lp->Count; i++) {
+				if (ContainsText(lp->Items->Strings[i], kwd)) CommitScrPanel->AddHitLine(i);
+			}
+			CommitScrPanel->Repaint();
+		}
 	}
-	else lp->ItemIndex = -1;
+	else {
+		lp->ItemIndex = -1;
+		CommitScrPanel->KeyWordChanged(EmptyStr, 0);
+	}
+
+	lp->Invalidate();
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FindCommitEditEnter(TObject *Sender)
@@ -970,7 +1071,7 @@ void __fastcall TGitViewer::FindCommitEditKeyPress(TObject *Sender, System::Wide
 	if (is_KeyPress_CtrlNotCV(Key) || Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
 }
 //---------------------------------------------------------------------------
-void __fastcall TGitViewer::FintBtnClick(TObject *Sender)
+void __fastcall TGitViewer::FindBtnClick(TObject *Sender)
 {
 	FindCommitEdit->SetFocus();
 }
@@ -982,6 +1083,22 @@ void __fastcall TGitViewer::UpdateBtnClick(TObject *Sender)
 {
 	UpdateCommitList();
 }
+
+//---------------------------------------------------------------------------
+//git-gui の起動
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::GuiActionExecute(TObject *Sender)
+{
+	UnicodeString prm = add_quot_if_spc(GitGuiExe);
+	if (is_quot(prm)) prm.Insert("\"\" ", 1);
+	if (!Execute_ex("cmd", "/c start " + prm, WorkDir, "H")) msgbox_ERR(USTR_FaildExec);
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::GuiActionUpdate(TObject *Sender)
+{
+	((TAction*)Sender)->Enabled = !GitGuiExe.IsEmpty();
+}
+
 //---------------------------------------------------------------------------
 //Console 起動
 //---------------------------------------------------------------------------
@@ -996,10 +1113,45 @@ void __fastcall TGitViewer::ConsoleActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = !GitBashExe.IsEmpty();
 }
+
+//---------------------------------------------------------------------------
+//テキストエディタで開く
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::EditFileActionExecute(TObject *Sender)
+{
+	UnicodeString fnam = GetDiffFileName();
+	if (!fnam.IsEmpty()) {
+		if (fnam.Pos(" => ")) fnam =  get_tkn_r(fnam, " => ");
+		fnam = CommitID.IsEmpty()? IncludeTrailingPathDelimiter(WorkDir) + slash_to_yen(fnam)
+								 : SaveRevAsTemp(CommitID, fnam);
+		if (!fnam.IsEmpty() && !open_by_TextEditor(fnam)) msgbox_ERR(GlobalErrMsg);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::EditFileActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Enabled = !GetDiffFileName().IsEmpty();
+
+	UnicodeString s = "テキストエディタで開く";
+	s += (CommitID.IsEmpty()? "(&E)" : " - Temp (&E)");
+	ap->Caption = s;
+}
+
+//---------------------------------------------------------------------------
+//GUIツールの選択
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::SelGuiItemClick(TObject *Sender)
+{
+	UserModule->PrepareOpenDlg(_T("GUIツールの選択"), F_FILTER_EXE2,
+		ExtractFileName(GitGuiExe).c_str(), ExtractFileDir(GitGuiExe));
+	UnicodeString fnam;
+	if (UserModule->OpenDlgToStr(fnam)) GitGuiExe = fnam;
+}
 //---------------------------------------------------------------------------
 //Console の選択
 //---------------------------------------------------------------------------
-void __fastcall TGitViewer::Cosole1Click(TObject *Sender)
+void __fastcall TGitViewer::SelConsoleItemClick(TObject *Sender)
 {
 	UserModule->PrepareOpenDlg(_T("Console の選択"), F_FILTER_EXE2,
 		ExtractFileName(GitBashExe).c_str(), ExtractFileDir(GitBashExe));
@@ -1007,11 +1159,6 @@ void __fastcall TGitViewer::Cosole1Click(TObject *Sender)
 	if (UserModule->OpenDlgToStr(fnam)) GitBashExe = fnam;
 }
 
-//---------------------------------------------------------------------------
-void __fastcall TGitViewer::GitListBoxKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	Key = 0;
-}
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {

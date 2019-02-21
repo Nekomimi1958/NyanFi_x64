@@ -59,11 +59,13 @@ object GitViewer: TGitViewer
         BevelOuter = bvNone
         BorderStyle = bsNone
         Color = clBlack
+        DoubleBuffered = False
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
         Font.Name = 'MeiryoKe_Gothic'
         Font.Style = []
+        ParentDoubleBuffered = False
         ParentFont = False
         PopupMenu = CmPopupMenu
         TabOrder = 0
@@ -123,13 +125,13 @@ object GitViewer: TGitViewer
       ShowCaptions = True
       AllowTextButtons = True
       TabOrder = 1
-      object FintBtn: TToolButton
+      object FindBtn: TToolButton
         Left = 0
         Top = 0
         Caption = #26908#32034'(&F)'
         ImageIndex = 0
         Style = tbsTextButton
-        OnClick = FintBtnClick
+        OnClick = FindBtnClick
       end
       object FindCommitEdit: TEdit
         Left = 54
@@ -189,6 +191,12 @@ object GitViewer: TGitViewer
         Left = 298
         Top = 0
         Action = ConsoleAction
+        Style = tbsTextButton
+      end
+      object ToolButton6: TToolButton
+        Left = 347
+        Top = 0
+        Action = GuiAction
         Style = tbsTextButton
       end
     end
@@ -318,15 +326,15 @@ object GitViewer: TGitViewer
       OnUpdate = DelTagActionUpdate
     end
     object ShowBranchesAction: TAction
-      Caption = #20182#12398#12502#12521#12531#12481#12418#34920#31034
+      Caption = #20182#12398#12502#12521#12531#12481#12418#34920#31034'(&B)'
       OnExecute = ShowBranchesActionExecute
     end
     object ShowRemoteAction: TAction
-      Caption = #12522#12514#12540#12488#21442#29031#12434#34920#31034
+      Caption = #12522#12514#12540#12488#21442#29031#12434#34920#31034'(&R)'
       OnExecute = ShowRemoteActionExecute
     end
     object ShowAuthorAction: TAction
-      Caption = 'Author '#12398#21517#21069#12434#34920#31034
+      Caption = 'Author '#12398#21517#21069#12434#34920#31034'(&A)'
       OnExecute = ShowAuthorActionExecute
     end
     object CopyCommitIDAction: TAction
@@ -354,6 +362,11 @@ object GitViewer: TGitViewer
       OnExecute = ArchiveActionExecute
       OnUpdate = ArchiveActionUpdate
     end
+    object OpenTmpArcAction: TAction
+      Caption = #19968#26178#12450#12540#12459#12452#12502#12392#12375#12390#38283#12367'(&T)'
+      OnExecute = OpenTmpArcActionExecute
+      OnUpdate = ArchiveActionUpdate
+    end
     object AppFextColorAction: TAction
       Caption = #25313#24373#23376#21029#37197#33394#12434#36969#29992'(&X)'
       OnExecute = AppFextColorActionExecute
@@ -370,10 +383,20 @@ object GitViewer: TGitViewer
       OnExecute = FindDownActionExecute
       OnUpdate = FindDownActionUpdate
     end
+    object GuiAction: TAction
+      Caption = '&GUI'
+      OnExecute = GuiActionExecute
+      OnUpdate = GuiActionUpdate
+    end
     object ConsoleAction: TAction
       Caption = '&Console'
       OnExecute = ConsoleActionExecute
       OnUpdate = ConsoleActionUpdate
+    end
+    object EditFileAction: TAction
+      Caption = #12486#12461#12473#12488#12456#12487#12451#12479#12391#38283#12367'(&E)'
+      OnExecute = EditFileActionExecute
+      OnUpdate = EditFileActionUpdate
     end
   end
   object CmPopupMenu: TPopupMenu
@@ -397,6 +420,9 @@ object GitViewer: TGitViewer
     end
     object ArchiveItem: TMenuItem
       Action = ArchiveAction
+    end
+    object OpenTmpArcItem: TMenuItem
+      Action = OpenTmpArcAction
     end
     object Sep_c_3: TMenuItem
       Caption = '-'
@@ -427,6 +453,9 @@ object GitViewer: TGitViewer
     object BlameItem: TMenuItem
       Action = BlameAction
     end
+    object EditFileItem: TMenuItem
+      Action = EditFileAction
+    end
     object Sep_d_1: TMenuItem
       Caption = '-'
     end
@@ -437,9 +466,13 @@ object GitViewer: TGitViewer
   object ComOptPopupMenu: TPopupMenu
     Left = 450
     Top = 316
-    object Cosole1: TMenuItem
-      Caption = 'Cosole '#12398#36984#25246'(&S)...'
-      OnClick = Cosole1Click
+    object SelConsoleItem: TMenuItem
+      Caption = 'Console '#12398#36984#25246'(&S)...'
+      OnClick = SelConsoleItemClick
+    end
+    object SelGuiItem: TMenuItem
+      Caption = 'GUI'#12484#12540#12523#12398#36984#25246'(&G)...'
+      OnClick = SelGuiItemClick
     end
   end
 end

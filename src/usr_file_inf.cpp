@@ -207,7 +207,7 @@ UnicodeString get_top_line(UnicodeString fnam)
 		bool has_bom;
 		ms->CopyFrom(fs.get(), std::min<__int64>(fs->Size, TXT_DETECT_SIZE));
 		int code_page = get_MemoryCodePage(ms.get(), &has_bom);
-		if (code_page==0) Abort();
+		if (code_page<=0) Abort();
 
 		//先頭行のサイズ取得
 		bool is_BE = (code_page==1201);

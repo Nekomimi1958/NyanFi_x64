@@ -608,6 +608,7 @@ extern UnicodeString IconFilePath;
 extern UnicodeString CmdFilePath;
 extern UnicodeString CmdGitExe;
 extern UnicodeString GitBashExe;
+extern UnicodeString GitGuiExe;
 
 extern int VersionNo;
 extern UnicodeString VersionStr;
@@ -1078,7 +1079,8 @@ extern TColor col_fgSttBar;
 extern TColor col_bgInfHdr;
 extern TColor col_fgInfHdr;
 
-extern TColor col_Teal;
+extern const TColor col_Teal;
+extern const TColor col_None;
 
 extern UnicodeString BgImgName[MAX_BGIMAGE];
 extern Graphics::TBitmap *BgImgBuff[MAX_BGIMAGE];
@@ -1452,20 +1454,20 @@ extern TStringList *XCMD_VarList;
 //---------------------------------------------------------------------------
 inline bool is_AltLnBgCol(int idx)
 {
-	return (col_bgList2!=Graphics::clNone && idx%2==1);
+	return (col_bgList2!=col_None && idx%2==1);
 }
 
 inline bool is_SelFgCol(TOwnerDrawState stt)
 {
-	return (stt.Contains(odSelected) && col_fgSelItem!=Graphics::clNone);
+	return (stt.Contains(odSelected) && col_fgSelItem!=col_None);
 }
 inline bool is_SelFgCol(TGridDrawState stt)
 {
-	return (stt.Contains(gdSelected) && col_fgSelItem!=Graphics::clNone);
+	return (stt.Contains(gdSelected) && col_fgSelItem!=col_None);
 }
 inline bool is_SelFgCol(bool sel)
 {
-	return (sel && col_fgSelItem!=Graphics::clNone);
+	return (sel && col_fgSelItem!=col_None);
 }
 
 inline bool is_X64()
@@ -1791,7 +1793,7 @@ UnicodeString get_img_fext();
 void add_FExtInfList(TStringList *f_lst, TStringList *lst);
 
 bool get_img_size(UnicodeString fnam, unsigned int *wd, unsigned int *hi);
-int  load_ImageFile(UnicodeString fnam, Graphics::TBitmap *o_bmp, int img_type = WICIMG_PREVIEW, TColor trans_bg = Graphics::clNone);
+int  load_ImageFile(UnicodeString fnam, Graphics::TBitmap *o_bmp, int img_type = WICIMG_PREVIEW, TColor trans_bg = col_None);
 
 void InitializeGlobal();
 void EndGlobal();
@@ -1858,7 +1860,7 @@ void out_Text(TCanvas *cv, int x, int y, const _TCHAR *s);
 void out_Text(TCanvas *cv, int x, int y, const _TCHAR *s, TColor fg);
 
 void out_TextEx(TCanvas *cv, int &x, int y, UnicodeString s,
-	TColor fg = Graphics::clNone, TColor bg = Graphics::clNone, int mgn = 0);
+	TColor fg = col_None, TColor bg = col_None, int mgn = 0);
 
 int  get_MatchWordList(UnicodeString lbuf, UnicodeString kwd,
 	bool migemo_sw, bool regex_sw, bool and_or_sw, TStringList *lst);
@@ -1931,8 +1933,9 @@ void ini_HtmConv_def(HtmConv *htmcnv, UnicodeString fnam = EmptyStr);
 bool Execute_ex(UnicodeString cmd, UnicodeString prm = EmptyStr, UnicodeString wdir = EmptyStr,
 		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL);
 bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir = EmptyStr,
-		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL);
+		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL, TMemoryStream *o_ms = NULL);
 bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, DWORD *exit_cd = NULL);
+bool GitShellExe(UnicodeString prm, UnicodeString wdir, TMemoryStream *o_ms, DWORD *exit_cd = NULL);
 
 int  get_BusyTaskCount();
 int  get_MaxTaskCount();

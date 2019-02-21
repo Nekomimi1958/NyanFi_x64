@@ -461,8 +461,9 @@ bool __fastcall TGeneralInfoDlg::FindText(
 		if (chk_RegExPtn(RegExPtn)) {
 			TRegExOptions opt;
 			if (!case_sw) opt << roIgnoreCase;
-			for (int i = (down? idx0 + 1 : idx0 - 1); i>=0 && i<lp->Count; i += (down? 1 : -1))
+			for (int i = (down? idx0 + 1 : idx0 - 1); i>=0 && i<lp->Count; i += (down? 1 : -1)) {
 				if (TRegEx::IsMatch(lp->Items->Strings[i], RegExPtn, opt)) { idx1 = i; break; }
+			}
 
 			if (ListScrPanel->KeyWordChanged(RegExPtn, lp->Count, case_sw)) {
 				for (int i=0; i<lp->Count; i++) {
@@ -478,14 +479,15 @@ bool __fastcall TGeneralInfoDlg::FindText(
 	}
 	//’Êí
 	else if (!FindWord.IsEmpty()) {
-		for (int i = (down? idx0 + 1 : idx0 - 1); i>=0 && i<lp->Count; i += (down? 1 : -1))
-			if (case_sw? lp->Items->Strings[i].Pos(FindWord) : pos_i(FindWord, lp->Items->Strings[i])) {
+		for (int i = (down? idx0 + 1 : idx0 - 1); i>=0 && i<lp->Count; i += (down? 1 : -1)) {
+			if (case_sw? ContainsStr(lp->Items->Strings[i], FindWord) : ContainsText(lp->Items->Strings[i], FindWord)) {
 				 idx1 = i; break;
 			}
+		}
 
 		if (ListScrPanel->KeyWordChanged(FindWord, lp->Count, case_sw)) {
 			for (int i=0; i<lp->Count; i++) {
-				if (case_sw? lp->Items->Strings[i].Pos(FindWord) : pos_i(FindWord, lp->Items->Strings[i]))
+				if (case_sw? ContainsStr(lp->Items->Strings[i], FindWord) : ContainsText(lp->Items->Strings[i], FindWord))
 					ListScrPanel->AddHitLine(i);
 			}
 			ListScrPanel->Repaint();

@@ -2133,6 +2133,7 @@ int get_MemoryCodePage(
 			if (b0 & 0x80)				 b7_cnt++;
 		}
 	}
+
 	if (z_max>3 || (src_size<3 && x00_cnt>0)) return -1;	//バイナリー
 
 	//BOMの有無をチェック
@@ -2280,6 +2281,7 @@ UnicodeString get_MemoryStrins(TMemoryStream *ms)
 	//コードページ取得
 	ms->Seek(0, soFromBeginning);
 	int code_page = get_MemoryCodePage(ms);
+	if (code_page<0)  return EmptyStr;
 	if (code_page==0) code_page = 932;
 
 	//バッファに読み込み

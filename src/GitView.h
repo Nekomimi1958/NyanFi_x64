@@ -50,8 +50,10 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *CopyCommitIDAction;
 	TAction *DelTagAction;
 	TAction *DiffToolAction;
+	TAction *EditFileAction;
 	TAction *FindDownAction;
 	TAction *FindUpAction;
+	TAction *GuiAction;
 	TAction *MergeAction;
 	TAction *RenBranchAction;
 	TAction *SetTagAction;
@@ -70,10 +72,10 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *CheckoutItem;
 	TMenuItem *CopyBranchNameItem;
 	TMenuItem *CopyCommitIDItem;
-	TMenuItem *Cosole1;
 	TMenuItem *CreBranchItem;
 	TMenuItem *DelBranchItem;
 	TMenuItem *DiffToolItem;
+	TMenuItem *EditFileItem;
 	TMenuItem *FitSizePosItem;
 	TMenuItem *HardResetItem;
 	TMenuItem *MergeItem;
@@ -81,6 +83,8 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *N2;
 	TMenuItem *RenBranchItem;
 	TMenuItem *ResetItem;
+	TMenuItem *SelConsoleItem;
+	TMenuItem *SelGuiItem;
 	TMenuItem *Sep_c_1;
 	TMenuItem *Sep_c_2;
 	TMenuItem *Sep_c_3;
@@ -103,12 +107,15 @@ __published:	// IDE で管理されるコンポーネント
 	TSplitter *DiffSplitter;
 	TSplitter *FindSplitter;
 	TToolBar *FindBar;
+	TToolButton *FindBtn;
 	TToolButton *ToolButton1;
 	TToolButton *ToolButton2;
 	TToolButton *ToolButton3;
 	TToolButton *ToolButton4;
 	TToolButton *ToolButton5;
-	TToolButton *FintBtn;
+	TToolButton *ToolButton6;
+	TAction *OpenTmpArcAction;
+	TMenuItem *OpenTmpArcItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -127,6 +134,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CommitListBoxClick(TObject *Sender);
 	void __fastcall GitListBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
+	void __fastcall GitListBoxKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall ChckoutActionExecute(TObject *Sender);
 	void __fastcall CreBranchActionExecute(TObject *Sender);
 	void __fastcall DelBranchActionExecute(TObject *Sender);
@@ -135,6 +143,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall DelTagActionUpdate(TObject *Sender);
 	void __fastcall MergeActionExecute(TObject *Sender);
 	void __fastcall ShowBranchesActionExecute(TObject *Sender);
+	void __fastcall ShowRemoteActionExecute(TObject *Sender);
+	void __fastcall ShowAuthorActionExecute(TObject *Sender);
+	void __fastcall BrPopupMenuPopup(TObject *Sender);
 	void __fastcall SetTagActionExecute(TObject *Sender);
 	void __fastcall ActTagActionUpdate(TObject *Sender);
 	void __fastcall InactBranchActionUpdate(TObject *Sender);
@@ -149,31 +160,34 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ArchiveActionExecute(TObject *Sender);
 	void __fastcall ArchiveActionUpdate(TObject *Sender);
 	void __fastcall AppFextColorActionExecute(TObject *Sender);
-	void __fastcall ShowRemoteActionExecute(TObject *Sender);
-	void __fastcall BrPopupMenuPopup(TObject *Sender);
 	void __fastcall GitPopupMenuPopup(TObject *Sender);
 	void __fastcall FindCommitEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FindCommitEditChange(TObject *Sender);
+	void __fastcall FindCommitEditEnter(TObject *Sender);
+	void __fastcall FindCommitEditExit(TObject *Sender);
+	void __fastcall FindBtnClick(TObject *Sender);
 	void __fastcall FindUpActionExecute(TObject *Sender);
 	void __fastcall FindUpActionUpdate(TObject *Sender);
 	void __fastcall FindDownActionExecute(TObject *Sender);
 	void __fastcall FindDownActionUpdate(TObject *Sender);
-	void __fastcall ShowAuthorActionExecute(TObject *Sender);
 	void __fastcall FindCommitEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall ConsoleActionExecute(TObject *Sender);
 	void __fastcall ConsoleActionUpdate(TObject *Sender);
-	void __fastcall Cosole1Click(TObject *Sender);
+	void __fastcall SelConsoleItemClick(TObject *Sender);
 	void __fastcall UpdateBtnClick(TObject *Sender);
-	void __fastcall FintBtnClick(TObject *Sender);
-	void __fastcall FindCommitEditEnter(TObject *Sender);
-	void __fastcall FindCommitEditExit(TObject *Sender);
-	void __fastcall GitListBoxKeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall GuiActionExecute(TObject *Sender);
+	void __fastcall GuiActionUpdate(TObject *Sender);
+	void __fastcall SelGuiItemClick(TObject *Sender);
+	void __fastcall EditFileActionExecute(TObject *Sender);
+	void __fastcall EditFileActionUpdate(TObject *Sender);
+	void __fastcall OpenTmpArcActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString RefHEAD;
 	UnicodeString CommitID;
 	UnicodeString ParentID;
 	UnicodeString DiffOpt;
+	bool AutoCrlf;
 
 	TStringList *CommitList;
 
@@ -186,6 +200,8 @@ private:	// ユーザー宣言
 	int MaxDfWidth;
 
 	UnicodeString __fastcall GitExeStr(UnicodeString prm);
+	UnicodeString __fastcall SaveRevAsTemp(UnicodeString id, UnicodeString fnam);
+
 	void __fastcall ClearCommitList();
 	void __fastcall UpdateCommitList();
 
@@ -193,14 +209,8 @@ private:	// ユーザー宣言
 	void __fastcall SetGitBusy(bool Value)
 	{
 		FGitBusy = Value;
-		if (Value) {
-			cursor_HourGlass();
-			Enabled = false;
-		}
-		else {
-			cursor_Default();
-			Enabled = true;
-		}
+		Enabled  = !Value;
+		if (Value) cursor_HourGlass(); else cursor_Default();
 	}
 	__property bool GitBusy = {read = FGitBusy,  write = SetGitBusy};
 
@@ -241,6 +251,8 @@ private:	// ユーザー宣言
 public:		// ユーザー宣言
 	UnicodeString WorkDir;
 	int HistoryLimit;
+
+	UnicodeString RetArcFile;
 
 	__fastcall TGitViewer(TComponent* Owner);
 
