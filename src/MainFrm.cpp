@@ -1975,7 +1975,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, 
 			}
 			//ファイル情報
 			else if ((lp->Tag & (LBTAG_OPT_FIF1|LBTAG_OPT_FIF2)) && (flag & LBFLG_STD_FINF)==0) {
-				lw = (lp->Tag & 0x0000ffff) + cv->TextWidth(get_tkn_r(lbuf, _T(": ")).UCAT_T(": "));
+				lw = LOWORD(lp->Tag) + cv->TextWidth(get_tkn_r(lbuf, _T(": ")).UCAT_T(": "));
 			}
 			//その他
 			else {
@@ -28698,6 +28698,17 @@ void __fastcall TNyanFiForm::TV_TopIsHdrActionUpdate(TObject *Sender)
 
 //---------------------------------------------------------------------------
 //ファイル情報のコピー
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::Inf_CopyValueActionExecute(TObject *Sender)
+{
+	TListBox *lp = GetCurInfListBox();
+	int idx = lp->ItemIndex;
+	if (idx!=-1) {
+		UnicodeString lbuf = lp->Items->Strings[idx];
+		if (idx>2) lbuf = Trim(get_tkn_r(lbuf, ": "));
+		copy_to_Clipboard(lbuf);
+	}
+}
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::Inf_EditCopyExecute(TObject *Sender)
 {

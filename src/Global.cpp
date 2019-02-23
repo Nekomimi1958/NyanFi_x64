@@ -7437,21 +7437,25 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 	}
 
 	//最大項目名幅を取得
-	int w_max = (lp->Tag & 0x0000ffff);
+	int w_max = LOWORD(lp->Tag);
 
-	//名前
+	//項目名
 	UnicodeString namstr = split_tkn(lbuf, _T(": "));
 	xp = Rect.Left + 2 + w_max - get_TextWidth(cv, namstr, is_irreg);
 	UnicodeString iname = Trim(namstr);
 	namstr.UCAT_T(": ");
-	cv->Font->Color = use_fgsel? col_fgSelItem :
-		(flag & LBFLG_FEXT_FIF)? get_ExtColor(iname) :
-		 (flag & LBFLG_ERR_FIF)? col_Error : col_fgInfNam;
-	cv->TextOut(xp, yp, namstr);
+	if (!iname.IsEmpty()) {
+		cv->Font->Color = use_fgsel? col_fgSelItem :
+			(flag & LBFLG_FEXT_FIF)? get_ExtColor(iname) :
+			 (flag & LBFLG_ERR_FIF)? col_Error : col_fgInfNam;
+		cv->TextOut(xp, yp, namstr);
+	}
 	xp += get_TextWidth(cv, namstr, is_irreg);
 
-	//内容
-	cv->Font->Color = use_fgsel? col_fgSelItem : test_word_i(iname, EmpInfItems)? col_fgInfEmp : col_fgInf;
+	//項目値
+	cv->Font->Color = use_fgsel? col_fgSelItem :
+					  test_word_i(iname, EmpInfItems)? col_fgInfEmp :
+					  (flag & LBFLG_GIT_HASH)? col_GitHash : col_fgInf;
 
 	if		(flag & LBFLG_PATH_FIF)	PathNameOut(lbuf, cv, xp, yp);
 	else if (flag & LBFLG_FILE_FIF)	Emphasis_RLO_info(lbuf, cv, xp, yp);
@@ -7460,39 +7464,39 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 		xp = xp + (lbuf.Length() * cv->TextWidth("0")) - cv->TextWidth(lbuf);
 		cv->TextOut(xp, yp, lbuf);
 	}
-	else {
-		if (flag & LBFLG_TIME_FIF) {
-			if (!use_fgsel) {
-				try {
-					cv->Font->Color = get_TimeColor(TDateTime(lbuf), col_fgInf);
-				}
-				catch (EConvertError &e) {
-					;
-				}
+	else if (flag & LBFLG_TIME_FIF) {
+		if (!use_fgsel) {
+			try {
+				cv->Font->Color = get_TimeColor(TDateTime(lbuf), col_fgInf);
+			}
+			catch (EConvertError &e) {
+				;
 			}
 		}
-		else if (flag & LBFLG_CRCD_FIF) {
-			if (!use_fgsel && USAME_TS(lbuf, "混在")) cv->Font->Color = col_Error;
-		}
-		else if (flag & LBFLG_DEBUG) {
-			if (!use_fgsel && contains_s(lbuf, _T("終了"))) cv->Font->Color = col_Error;
+		cv->TextOut(xp, yp, lbuf);
+	}
+	else if (flag & LBFLG_CRCD_FIF) {
+		if (!use_fgsel && USAME_TS(lbuf, "混在")) cv->Font->Color = col_Error;
+		cv->TextOut(xp, yp, lbuf);
+	}
+	else if (flag & LBFLG_DEBUG) {
+		if (!use_fgsel && contains_s(lbuf, _T("終了"))) cv->Font->Color = col_Error;
+		EmphasisTextOut(lbuf, EmptyStr, cv, xp, yp);
+	}
+	else if (flag & LBFLG_GIT_TAG) {
+		if (remove_top_s(lbuf, "tags/")) {
+			int p = 0;
+			for (int i=1; i<=lbuf.Length() && !p; i++) if (lbuf.IsDelimiter("~^", i)) p = i;
+			UnicodeString tag = (p>1)? lbuf.SubString(1, p - 1) : lbuf;
+			draw_GitTag(cv, xp, yp, tag, Scaled4);
+			if (p>1) out_TextEx(cv, xp, yp, lbuf.Delete(1, p - 1));
 		}
 		else {
-			if (!use_fgsel && lbuf.Pos("://")) {
-				TMatch mt = TRegEx::Match(lbuf, URL_MATCH_PTN);
-				if (mt.Success && mt.Index>1) {
-					cv->Font->Color = col_fgInf;
-					EmphasisTextOut(lbuf.SubString(1, mt.Index - 1), EmptyStr, cv, xp, yp);
-					lbuf.Delete(1, mt.Index - 1);
-				}
-				if (mt.Success) cv->Font->Color = col_URL;
-			}
+			draw_GitTag(cv, xp, yp, lbuf);
 		}
-
-		if (flag & LBFLG_PATH_FIF)
-			PathNameOut(lbuf, cv, xp, yp);
-		else
-			EmphasisTextOut(lbuf, EmptyStr, cv, xp, yp);
+	}
+	else {
+		EmphasisTextOut(lbuf, EmptyStr, cv, xp, yp);
 	}
 }
 
@@ -9402,6 +9406,8 @@ void out_TextEx(
 	TColor fg, TColor bg,	//	(default = clNone)
 	int mgn)				//  (default = 0)
 {
+	if (s.IsEmpty()) return;
+
 	TColor org_fg = cv->Font->Color;
 	TColor org_bg = cv->Brush->Color;
 
@@ -13363,8 +13369,8 @@ void draw_GitGraph(
 
 		switch (s[i]) {
 		case '*':
-			if (s1[i]!=' ' || c1l=='\\') { cv->MoveTo(xc, y0); cv->LineTo(xc, yc); }
-			if (s2[i]!=' ' || c2l=='/')  { cv->MoveTo(xc, yc); cv->LineTo(xc, y1); }
+			if (s1[i]!=' ' || c1l=='\\' || c1r=='/') { cv->MoveTo(xc, y0); cv->LineTo(xc, yc); }
+			if (s2[i]!=' ' || c2l=='/' || c2r=='\\') { cv->MoveTo(xc, yc); cv->LineTo(xc, y1); }
 			cv->Pen->Color = is_head? col_GitHEAD : col_GitMark;
 			cv->Ellipse(xc - r, yc - r, xc + r, yc + r);
 			break;
@@ -13392,6 +13398,27 @@ void draw_GitGraph(
 
 	rc.Left = std::min(xp, (int)rc.Right);
 	cv->Brush->Color = org_bg;
+}
+//---------------------------------------------------------------------------
+//Gitタグの描画
+//---------------------------------------------------------------------------
+void draw_GitTag(
+	TCanvas *cv, int &x, int y,
+	UnicodeString tag,
+	int mgn)			//  (default = 0)
+{
+	TColor org_bg = cv->Brush->Color;
+	int mk_h = cv->TextHeight("Q");
+	int mk_w = mk_h/4;
+	x += 2;
+	TPoint shape[3]  = {Point(x, y + mk_h/2), Point(x + mk_w, y), Point(x + mk_w, y + mk_h - 1)};
+	cv->Pen->Style	 = psSolid;
+	cv->Pen->Color	 = col_GitTag;
+	cv->Brush->Color = col_GitTag;
+	cv->Polygon(shape, 2);
+	x += (mk_w + 1);
+	cv->Brush->Color = org_bg;
+	out_TextEx(cv, x, y, tag, org_bg, col_GitTag, mgn);
 }
 
 //---------------------------------------------------------------------------

@@ -5192,6 +5192,12 @@ object NyanFiForm: TNyanFiForm
       OnExecute = BitmapViewActionExecute
       OnUpdate = BitmapViewActionUpdate
     end
+    object Inf_CopyValueAction: TAction
+      Category = 'Menu'
+      Caption = #12371#12398#38917#30446#12398#20516#12434#12467#12500#12540
+      OnExecute = Inf_CopyValueActionExecute
+      OnUpdate = Inf_EditCopyUpdate
+    end
     object Inf_EditCopy: TAction
       Category = 'Menu'
       Caption = #12467#12500#12540'(&C)'
@@ -5640,6 +5646,9 @@ object NyanFiForm: TNyanFiForm
     Top = 406
     object PopCopyFileInfoItm: TMenuItem
       Action = CopyFileInfoAction
+    end
+    object PopCopyValueItem: TMenuItem
+      Action = Inf_CopyValueAction
     end
     object Sep_i_1: TMenuItem
       Caption = '-'

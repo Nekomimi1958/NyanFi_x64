@@ -159,27 +159,27 @@ object GitViewer: TGitViewer
         Width = 4
         Height = 19
       end
-      object ToolButton2: TToolButton
+      object FindUpBtn: TToolButton
         Left = 159
         Top = 0
         Action = FindUpAction
         Style = tbsTextButton
       end
-      object ToolButton3: TToolButton
+      object FindDownBtn: TToolButton
         Left = 181
         Top = 0
         Action = FindDownAction
         Style = tbsTextButton
       end
-      object ToolButton4: TToolButton
+      object BarSpcBtn: TToolButton
         Left = 203
         Top = 0
         Width = 40
-        Caption = 'ToolButton4'
+        Caption = 'BarSpcBtn'
         ImageIndex = 1
         Style = tbsSeparator
       end
-      object ToolButton1: TToolButton
+      object UpdateBtn: TToolButton
         Left = 243
         Top = 0
         Caption = #26356#26032'(&U)'
@@ -187,13 +187,13 @@ object GitViewer: TGitViewer
         Style = tbsTextButton
         OnClick = UpdateBtnClick
       end
-      object ToolButton5: TToolButton
+      object ConsoleBtn: TToolButton
         Left = 298
         Top = 0
         Action = ConsoleAction
         Style = tbsTextButton
       end
-      object ToolButton6: TToolButton
+      object GuiBtn: TToolButton
         Left = 347
         Top = 0
         Action = GuiAction
@@ -240,6 +240,7 @@ object GitViewer: TGitViewer
       ParentFont = False
       PopupMenu = BrPopupMenu
       TabOrder = 0
+      OnClick = BranchListBoxClick
       OnDblClick = BranchListBoxDblClick
       OnDrawItem = BranchListBoxDrawItem
       OnKeyDown = BranchListBoxKeyDown
@@ -266,9 +267,6 @@ object GitViewer: TGitViewer
     object MergeItem: TMenuItem
       Action = MergeAction
     end
-    object SetTagItem: TMenuItem
-      Action = SetTagAction
-    end
     object ResetItem: TMenuItem
       Caption = #12467#12511#12483#12488#12434#19968#12388#25147#12377
       object SoftResetItem: TMenuItem
@@ -286,44 +284,92 @@ object GitViewer: TGitViewer
         OnClick = ResetItemClick
       end
     end
+    object BrSetTagItem: TMenuItem
+      Action = SetTagAction
+    end
+    object BrDelTagItem: TMenuItem
+      Action = DelTagAction
+    end
+    object Sep_b_1: TMenuItem
+      Caption = '-'
+    end
+    object ShowRemoteBrItem: TMenuItem
+      Action = ShowRBranchAction
+    end
+    object ShowTagItem: TMenuItem
+      Action = ShowTagAction
+    end
   end
   object ActionList1: TActionList
     Left = 64
-    Top = 32
+    Top = 16
     object ChckoutAction: TAction
       Caption = #12481#12455#12483#12463#12450#12454#12488'(&C)'
-      OnExecute = ChckoutActionExecute
-      OnUpdate = InactBranchActionUpdate
+      OnExecute = CheckoutActionExecute
+      OnUpdate = CheckoutActionUpdate
     end
     object CreBranchAction: TAction
       Caption = #12502#12521#12531#12481#12434#20316#25104
       OnExecute = CreBranchActionExecute
-      OnUpdate = ActTagActionUpdate
+      OnUpdate = CreBranchActionUpdate
     end
     object DelBranchAction: TAction
       Caption = #12502#12521#12531#12481#12398#21066#38500
       OnExecute = DelBranchActionExecute
-      OnUpdate = InactBranchActionUpdate
+      OnUpdate = DelBranchActionUpdate
     end
     object RenBranchAction: TAction
       Caption = #12502#12521#12531#12481#21517#12398#22793#26356'(&R)'
       OnExecute = RenBranchActionExecute
-      OnUpdate = ActTagActionUpdate
+      OnUpdate = RenBranchActionUpdate
     end
     object MergeAction: TAction
       Caption = #12510#12540#12472'(&M)'
       OnExecute = MergeActionExecute
-      OnUpdate = InactBranchActionUpdate
+      OnUpdate = MergeActionUpdate
     end
     object SetTagAction: TAction
       Caption = #12479#12464#12434#20184#12369#12427'(&T)'
       OnExecute = SetTagActionExecute
-      OnUpdate = ActTagActionUpdate
+      OnUpdate = SetTagActionUpdate
     end
     object DelTagAction: TAction
       Caption = #12479#12464#12398#21066#38500'(&D)'
       OnExecute = DelTagActionExecute
       OnUpdate = DelTagActionUpdate
+    end
+    object CommitInfoAction: TAction
+      Caption = #12467#12511#12483#12488#24773#22577#12434#34920#31034'(&I)'
+      OnExecute = CommitInfoActionExecute
+      OnUpdate = CommitInfoActionUpdate
+    end
+    object CopyCommitIDAction: TAction
+      Caption = #12467#12511#12483#12488'ID'#12434#12467#12500#12540
+      OnExecute = CopyCommitIDActionExecute
+      OnUpdate = CopyCommitIDActionUpdate
+    end
+    object CopyBranchNameAction: TAction
+      Caption = #12502#12521#12531#12481#21517#12434#12467#12500#12540
+      OnExecute = CopyBranchNameActionExecute
+      OnUpdate = CopyBranchNameActionUpdate
+    end
+    object ArchiveAction: TAction
+      Caption = 'ZIP'#12450#12540#12459#12452#12502#12434#20316#25104'(&P)...'
+      OnExecute = ArchiveActionExecute
+      OnUpdate = ArchiveActionUpdate
+    end
+    object OpenTmpArcAction: TAction
+      Caption = #19968#26178#12450#12540#12459#12452#12502#12392#12375#12390#38283#12367'(&O)'
+      OnExecute = OpenTmpArcActionExecute
+      OnUpdate = ArchiveActionUpdate
+    end
+    object ShowRBranchAction: TAction
+      Caption = #12522#12514#12540#12488#12502#12521#12531#12481#12434#34920#31034'(&R)'
+      OnExecute = ShowRBranchActionExecute
+    end
+    object ShowTagAction: TAction
+      Caption = #12479#12464#12434#34920#31034'(&T)'
+      OnExecute = ShowTagActionExecute
     end
     object ShowBranchesAction: TAction
       Caption = #20182#12398#12502#12521#12531#12481#12418#34920#31034'(&B)'
@@ -337,15 +383,9 @@ object GitViewer: TGitViewer
       Caption = 'Author '#12398#21517#21069#12434#34920#31034'(&A)'
       OnExecute = ShowAuthorActionExecute
     end
-    object CopyCommitIDAction: TAction
-      Caption = #12467#12511#12483#12488'ID'#12434#12467#12500#12540
-      OnExecute = CopyCommitIDActionExecute
-      OnUpdate = CopyCommitIDActionUpdate
-    end
-    object CopyBranchNameAction: TAction
-      Caption = #12502#12521#12531#12481#21517#12434#12467#12500#12540
-      OnExecute = CopyBranchNameActionExecute
-      OnUpdate = CopyBranchNameActionUpdate
+    object AppFextColorAction: TAction
+      Caption = #25313#24373#23376#21029#37197#33394#12434#36969#29992'(&X)'
+      OnExecute = AppFextColorActionExecute
     end
     object DiffToolAction: TAction
       Caption = 'diff'#12484#12540#12523#12434#36215#21205'(&T)'
@@ -357,31 +397,10 @@ object GitViewer: TGitViewer
       OnExecute = BlameActionExecute
       OnUpdate = DiffActionUpdate
     end
-    object ArchiveAction: TAction
-      Caption = 'ZIP'#12450#12540#12459#12452#12502#12434#20316#25104'(&P)...'
-      OnExecute = ArchiveActionExecute
-      OnUpdate = ArchiveActionUpdate
-    end
-    object OpenTmpArcAction: TAction
-      Caption = #19968#26178#12450#12540#12459#12452#12502#12392#12375#12390#38283#12367'(&T)'
-      OnExecute = OpenTmpArcActionExecute
-      OnUpdate = ArchiveActionUpdate
-    end
-    object AppFextColorAction: TAction
-      Caption = #25313#24373#23376#21029#37197#33394#12434#36969#29992'(&X)'
-      OnExecute = AppFextColorActionExecute
-    end
-    object FindUpAction: TAction
-      Caption = #9650
-      Hint = #19978#26041#21521#12395#26908#32034
-      OnExecute = FindUpActionExecute
-      OnUpdate = FindUpActionUpdate
-    end
-    object FindDownAction: TAction
-      Caption = #9660
-      Hint = #19979#26041#21521#12395#26908#32034
-      OnExecute = FindDownActionExecute
-      OnUpdate = FindDownActionUpdate
+    object EditFileAction: TAction
+      Caption = #12486#12461#12473#12488#12456#12487#12451#12479#12391#38283#12367'(&E)'
+      OnExecute = EditFileActionExecute
+      OnUpdate = EditFileActionUpdate
     end
     object GuiAction: TAction
       Caption = '&GUI'
@@ -393,29 +412,30 @@ object GitViewer: TGitViewer
       OnExecute = ConsoleActionExecute
       OnUpdate = ConsoleActionUpdate
     end
-    object EditFileAction: TAction
-      Caption = #12486#12461#12473#12488#12456#12487#12451#12479#12391#38283#12367'(&E)'
-      OnExecute = EditFileActionExecute
-      OnUpdate = EditFileActionUpdate
+    object FindDownAction: TAction
+      Caption = #9660
+      Hint = #19979#26041#21521#12395#26908#32034
+      OnExecute = FindDownActionExecute
+      OnUpdate = FindDownActionUpdate
+    end
+    object FindUpAction: TAction
+      Caption = #9650
+      Hint = #19978#26041#21521#12395#26908#32034
+      OnExecute = FindUpActionExecute
+      OnUpdate = FindUpActionUpdate
     end
   end
   object CmPopupMenu: TPopupMenu
     OnPopup = GitPopupMenuPopup
-    Left = 297
-    Top = 88
-    object N2: TMenuItem
+    Left = 289
+    Top = 120
+    object SetTagItem: TMenuItem
+      Action = SetTagAction
+    end
+    object DelTagItem: TMenuItem
       Action = DelTagAction
     end
     object Sep_c_1: TMenuItem
-      Caption = '-'
-    end
-    object CopyBranchNameItem: TMenuItem
-      Action = CopyBranchNameAction
-    end
-    object CopyCommitIDItem: TMenuItem
-      Action = CopyCommitIDAction
-    end
-    object Sep_c_2: TMenuItem
       Caption = '-'
     end
     object ArchiveItem: TMenuItem
@@ -427,6 +447,18 @@ object GitViewer: TGitViewer
     object Sep_c_3: TMenuItem
       Caption = '-'
     end
+    object CopyBranchNameItem: TMenuItem
+      Action = CopyBranchNameAction
+    end
+    object CopyCommitIDItem: TMenuItem
+      Action = CopyCommitIDAction
+    end
+    object CommitInfoItem: TMenuItem
+      Action = CommitInfoAction
+    end
+    object Sep_c_4: TMenuItem
+      Caption = '-'
+    end
     object ShowBranchesItem: TMenuItem
       Action = ShowBranchesAction
     end
@@ -436,9 +468,6 @@ object GitViewer: TGitViewer
     object ShowAuthorAction1: TMenuItem
       Action = ShowAuthorAction
     end
-    object Sep_c_4: TMenuItem
-      Caption = '-'
-    end
     object FitSizePosItem: TMenuItem
       Action = UserModule.SizePosToFlieListAction
     end
@@ -446,7 +475,7 @@ object GitViewer: TGitViewer
   object DiffPopupMenu: TPopupMenu
     OnPopup = GitPopupMenuPopup
     Left = 293
-    Top = 311
+    Top = 319
     object DiffToolItem: TMenuItem
       Action = DiffToolAction
     end

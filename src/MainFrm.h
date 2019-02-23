@@ -250,6 +250,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *HtmlToTextAction;
 	TAction *ImageViewerAction;
 	TAction *IncSearchAction;
+	TAction *Inf_CopyValueAction;
 	TAction *Inf_EditCopy;
 	TAction *Inf_EditSelectAll;
 	TAction *Inf_EmpItemAction;
@@ -720,6 +721,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *PopClrLogItem;
 	TMenuItem *PopCopyFileInfoItm;
 	TMenuItem *PopCopyItem;
+	TMenuItem *PopCopyValueItem;
 	TMenuItem *PopCsvCalcItem;
 	TMenuItem *PopCsvGraphItem;
 	TMenuItem *PopDebugInfItem;
@@ -1818,6 +1820,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SetFolderIconActionUpdate(TObject *Sender);
 	void __fastcall GitViewerActionExecute(TObject *Sender);
 	void __fastcall GitViewerActionUpdate(TObject *Sender);
+	void __fastcall Inf_CopyValueActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

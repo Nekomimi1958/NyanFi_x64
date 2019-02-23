@@ -7,30 +7,30 @@
 #include <memory>
 
 //---------------------------------------------------------------------------
+USEFORM("SameDlg.cpp", SameNameDlg);
 USEFORM("ShareDlg.cpp", NetShareDlg);
-USEFORM("Splash.cpp", SplashForm);
+USEFORM("PrnImgDlg.cpp", PrintImgDlg);
 USEFORM("RegExChk.cpp", RegExChecker);
 USEFORM("RenDlg.cpp", RenameDlg);
-USEFORM("SameDlg.cpp", SameNameDlg);
+USEFORM("Splash.cpp", SplashForm);
+USEFORM("TabDlg.cpp", TabSetDlg);
 USEFORM("TagDlg.cpp", TagManDlg);
 USEFORM("TaskDlg.cpp", TaskManDlg);
 USEFORM("SrtModDlg.cpp", SortModeDlg);
 USEFORM("SyncDlg.cpp", RegSyncDlg);
-USEFORM("TabDlg.cpp", TabSetDlg);
-USEFORM("PrnImgDlg.cpp", PrintImgDlg);
+USEFORM("PackDlg.cpp", PackArcDlg);
+USEFORM("MainFrm.cpp", NyanFiForm);
 USEFORM("MaskDlg.cpp", PathMaskDlg);
-USEFORM("MaskSelDlg.cpp", MaskSelectDlg);
+USEFORM("JoinDlg.cpp", JoinTextDlg);
 USEFORM("KeyDlg.cpp", KeyListDlg);
 USEFORM("LoupeFrm.cpp", LoupeForm);
-USEFORM("MainFrm.cpp", NyanFiForm);
-USEFORM("MemoFrm.cpp", MemoForm);
+USEFORM("MaskSelDlg.cpp", MaskSelectDlg);
 USEFORM("OptDlg.cpp", OptionDlg);
-USEFORM("PackDlg.cpp", PackArcDlg);
+USEFORM("MemoFrm.cpp", MemoForm);
 USEFORM("ModalScr.cpp", ModalScrForm);
 USEFORM("NewDlg.cpp", NewFileDlg);
 USEFORM("XmlView.cpp", XmlViewer);
 USEFORM("UserMdl.cpp", UserModule); /* TDataModule: File Type */
-USEFORM("JoinDlg.cpp", JoinTextDlg);
 USEFORM("CvImgDlg.cpp", CvImageDlg);
 USEFORM("DebugFrm.cpp", DebugForm);
 USEFORM("DiffDlg.cpp", DiffDirDlg);
@@ -57,6 +57,7 @@ USEFORM("ColDlg.cpp", ColorDlg);
 USEFORM("ColPicker.cpp", ColorPicker);
 USEFORM("ChInfFrm.cpp", CharInfoForm);
 USEFORM("ChmodDlg.cpp", FtpChmodDlg);
+USEFORM("EditItem.cpp", EditItemDlg);
 USEFORM("HistDlg.cpp", DirHistoryDlg);
 USEFORM("HistFrm.cpp", HistForm);
 USEFORM("GraphFrm.cpp", GraphForm);
@@ -65,21 +66,21 @@ USEFORM("InpDir.cpp", InpDirDlg);
 USEFORM("InpExDlg.cpp", InputExDlg);
 USEFORM("InspectFrm.cpp", InspectForm);
 USEFORM("InpCmds.cpp", InpCmdsDlg);
-USEFORM("GifView.cpp", GifViewer);
-USEFORM("ExTViewer.cpp", ExTxtViewer);
+USEFORM("GitView.cpp", GitViewer);
 USEFORM("FileExtDlg.cpp", FileExtensionDlg);
 USEFORM("FileInfDlg.cpp", FileInfoDlg);
-USEFORM("EditItem.cpp", EditItemDlg);
+USEFORM("FindDlg.cpp", FindFileDlg);
 USEFORM("ExeDlg.cpp", ExeCmdDlg);
 USEFORM("ExpCsv.cpp", ExpCsvDlg);
-USEFORM("FindDlg.cpp", FindFileDlg);
-USEFORM("FtpDlg.cpp", FtpConnectDlg);
+USEFORM("ExTViewer.cpp", ExTxtViewer);
+USEFORM("FindKey.cpp", FindKeyDlg);
 USEFORM("FuncDlg.cpp", FuncListDlg);
 USEFORM("GenInfDlg.cpp", GeneralInfoDlg);
-USEFORM("FindKey.cpp", FindKeyDlg);
+USEFORM("GifView.cpp", GifViewer);
 USEFORM("FindTag.cpp", FindTagForm);
 USEFORM("FindTxtDlg.cpp", FindTextDlg);
-USEFORM("GitView.cpp", GitViewer);
+USEFORM("FtpDlg.cpp", FtpConnectDlg);
+USEFORM("GitTag.cpp", SetGitTagDlg);
 //---------------------------------------------------------------------------
 #include "Global.h"
 #include "Splash.h"
@@ -212,7 +213,6 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		Application->CreateForm(__classid(TSameNameDlg), &SameNameDlg);
 		Application->CreateForm(__classid(TInpDirDlg), &InpDirDlg);
 		Application->CreateForm(__classid(TGraphForm), &GraphForm);
-		Application->CreateForm(__classid(TGitViewer), &GitViewer);
 		cursor_Default();
 		Application->Run();
 	}

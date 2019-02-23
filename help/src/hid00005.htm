@@ -1188,12 +1188,12 @@ FindTag<span class="pram_text">_;</span>
 複数ファイルのハッシュ値をコピーしたい場合は <a href="#CopyFileName">CopyFileName</a>_$G(～) コマンドを利用してください。<br>
 <a href="#CopyFileName">→ CopyFileName</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>
 
-<dt id="GitViewer">GitViewer<span class="pram_text">[_N履歴制限数(デフォルト=30)]</span>
-<dd>Gitの作業ディレクトリにいる場合、<a href="hid00090.htm#GitViewer">Gitビュアー</a>が表示され、ブランチ一覧、コミット履歴、差分の概略を確認できます。<br>
-ブランチ一覧の右クリックメニューから、チェックアウト、ブランチの作成/削除/改名、マージ、タグ付け、リセット、ZIPアーカイブ作成、diffツールの起動などを行えます。<br>
+<dt id="GitViewer">GitViewer<span class="pram_text">[_N履歴制限数(デフォルト=100)]</span>
+<dd>Gitの作業ディレクトリにいる場合、<a href="hid00090.htm#GitViewer">Gitビュアー</a>が表示されます。<br>
+ブランチ一覧、コミット履歴、差分の概略を確認でき、ブランチやコミットに対する操作、Console、GUI、diffツールの起動などを行えます。<br>
 パラメータに <b>N</b>～ を指定すると、表示するコミット履歴数を制限できます。<br>
-パラメータを指定しないと、デフォルトの <b>N</b>30 とみなされます。制限を外したい場合は、<b>N</b>0 を指定してください。<br>
-<b>例</b>: GitViewer_N20<br>
+パラメータを指定しないと、デフォルトの <b>N</b>100 とみなされます。制限を外したい場合は、<b>N</b>0 を指定してください。<br>
+<b>例</b>: GitViewer_N50<br>
 <a href="hid00090.htm#GitViewer">→ Git の利用について - GitViewer</a>
 
 <dt id="Grep">Grep<span class="pram_text">[_検索文字列]</span>

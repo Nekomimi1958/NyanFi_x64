@@ -65,7 +65,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InputEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall SelDefCheckBoxClick(TObject *Sender);
 
-
 private:	// ユーザー宣言
 	UnicodeString HelpTopic;
 

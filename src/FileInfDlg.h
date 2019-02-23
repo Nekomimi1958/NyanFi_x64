@@ -23,14 +23,18 @@ class TFileInfoDlg : public TForm
 __published:	// IDE で管理されるコンポーネント
 	TAction *CopyAction;
 	TAction *CopyInfoAction;
+	TAction *CopyValueAction;
+	TAction *EmpItemAction;
 	TAction *OpenUrlAction;
 	TAction *PropertyDlgAction;
 	TAction *SelAllAction;
 	TActionList *ActionList1;
 	TListBox *InfListBox;
+	TMenuItem *EmpItemItem;
 	TMenuItem *InfEditCopyItem;
 	TMenuItem *InfEditSelectAllItem;
 	TMenuItem *PopCopyFileInfoItm;
+	TMenuItem *PopCopyValueItem;
 	TMenuItem *PropertyDlgItem;
 	TMenuItem *Sep_i_1;
 	TMenuItem *Sep_i_2;
@@ -57,6 +61,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InfListBoxDblClick(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormResize(TObject *Sender);
+	void __fastcall CopyValueActionExecute(TObject *Sender);
+	void __fastcall EmpItemActionExecute(TObject *Sender);
+	void __fastcall EmpItemActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	int Max_freq;
@@ -73,6 +80,7 @@ public:		// ユーザー宣言
 	file_rec *FileRec;
 	UnicodeString CmdStr;
 	bool isAppInfo;
+	bool isGitInfo;
 	bool inhNxtPre;					//Next/PreFile 禁止
 
 	bool isCalcItem;

@@ -2060,6 +2060,7 @@ UnicodeString get_GitGraphStr(UnicodeString lbuf);
 UnicodeString split_GitGraphStr(UnicodeString &lbuf);
 void draw_GitGraph(UnicodeString s, UnicodeString s1, UnicodeString s2, TCanvas *cv, TRect &rc,
 	bool is_head = false, bool is_wip = false);
+void draw_GitTag(TCanvas *cv, int &x, int y, UnicodeString tag, int mgn = 0);
 void get_GitInf(UnicodeString dnam, TStringList *lst);
 //---------------------------------------------------------------------------
 #endif

@@ -58,6 +58,13 @@ object FileInfoDlg: TFileInfoDlg
     object PopCopyFileInfoItm: TMenuItem
       Action = CopyInfoAction
     end
+    object PopCopyValueItem: TMenuItem
+      Action = CopyValueAction
+      Caption = #38917#30446#12398#20516#12434#12467#12500#12540'(&V)'
+    end
+    object EmpItemItem: TMenuItem
+      Action = EmpItemAction
+    end
     object Sep_i_1: TMenuItem
       Caption = '-'
     end
@@ -85,8 +92,12 @@ object FileInfoDlg: TFileInfoDlg
     Left = 128
     Top = 40
     object CopyInfoAction: TAction
-      Caption = #24773#22577#12434#12467#12500#12540'(&I)'
+      Caption = #24773#22577#12434#12377#12409#12390#12467#12500#12540'(&I)'
       OnExecute = CopyInfoActionExecute
+    end
+    object CopyValueAction: TAction
+      Caption = #12371#12398#38917#30446#12398#20516#12434#12467#12500#12540'(&V)'
+      OnExecute = CopyValueActionExecute
     end
     object CopyAction: TAction
       Caption = #12467#12500#12540'(&C)'
@@ -108,6 +119,11 @@ object FileInfoDlg: TFileInfoDlg
       ShortCut = 13
       OnExecute = OpenUrlActionExecute
       OnUpdate = OpenUrlActionUpdate
+    end
+    object EmpItemAction: TAction
+      Caption = #12371#12398#38917#30446#20869#23481#12434#24375#35519#34920#31034'(&E)'
+      OnExecute = EmpItemActionExecute
+      OnUpdate = EmpItemActionUpdate
     end
   end
 end

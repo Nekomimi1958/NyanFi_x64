@@ -26,7 +26,7 @@ __fastcall TFileInfoDlg::TFileInfoDlg(TComponent* Owner)
 void __fastcall TFileInfoDlg::FormCreate(TObject *Sender)
 {
 	FileRec   = NULL;
-	isAppInfo = isCalcItem = inhNxtPre = false;
+	isAppInfo = isGitInfo = isCalcItem = inhNxtPre = false;
 
 	CsvCol	  = -1;
 	DataList  = NULL;
@@ -44,7 +44,7 @@ void __fastcall TFileInfoDlg::FormShow(TObject *Sender)
 	else
 		IniFile->LoadPosInfo(this, DialogCenter);
 
-	if (!isAppInfo) InfListBox->Clear();
+	if (!isAppInfo && !isGitInfo) InfListBox->Clear();
 
 	InfListBox->Color = col_bgInf;
 	InfListBox->Font->Assign(FileInfFont);
@@ -62,7 +62,7 @@ void __fastcall TFileInfoDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		IniFile->SavePosInfo(this);
 
 	FileRec   = NULL;
-	isAppInfo = isCalcItem = inhNxtPre = false;
+	isAppInfo = isGitInfo = isCalcItem = inhNxtPre = false;
 	CsvCol	  = -1;
 	DataList  = NULL;
 }
@@ -96,6 +96,12 @@ bool __fastcall TFileInfoDlg::UpdateInfo()
 {
 	if (isAppInfo) {
 		set_FormTitle(this, _T("アプリケーション情報"));
+		ListScrPanel->UpdateKnob();
+		return true;
+	}
+
+	if (isGitInfo) {
+		set_FormTitle(this, _T("コミット情報"));
 		ListScrPanel->UpdateKnob();
 		return true;
 	}
@@ -462,6 +468,47 @@ void __fastcall TFileInfoDlg::InfListBoxKeyPress(TObject *Sender, System::WideCh
 void __fastcall TFileInfoDlg::CopyInfoActionExecute(TObject *Sender)
 {
 	copy_to_Clipboard(InfListBox->Items->Text);
+}
+//---------------------------------------------------------------------------
+//項目の値をコピー
+//---------------------------------------------------------------------------
+void __fastcall TFileInfoDlg::CopyValueActionExecute(TObject *Sender)
+{
+	TListBox *lp = InfListBox;
+	if (lp->ItemIndex!=-1) {
+		copy_to_Clipboard(Trim(get_tkn_r(lp->Items->Strings[lp->ItemIndex], ": ")));
+	}
+}
+
+//---------------------------------------------------------------------------
+//この項目内容を強調表示
+//---------------------------------------------------------------------------
+void __fastcall TFileInfoDlg::EmpItemActionExecute(TObject *Sender)
+{
+	TListBox *lp = InfListBox;
+	UnicodeString inam = Trim(get_tkn(lp->Items->Strings[lp->ItemIndex], ':'));
+	if (!inam.IsEmpty()) {
+		std::unique_ptr<TStringList> n_lst(new TStringList());
+		n_lst->Delimiter = '|';
+		n_lst->QuoteChar = '\0';
+		n_lst->DelimitedText = EmpInfItems;
+		int idx = n_lst->IndexOf(inam);
+		if (idx!=-1) n_lst->Delete(idx); else n_lst->Add(inam);
+		EmpInfItems = n_lst->DelimitedText;
+		lp->Invalidate();
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TFileInfoDlg::EmpItemActionUpdate(TObject *Sender)
+{
+	TAction *ap  = (TAction *)Sender;
+	TListBox *lp = InfListBox;
+	int idx = lp->ItemIndex;
+	int flag = (idx!=-1)? (int)lp->Items->Objects[idx] : 0;
+	UnicodeString inam = (idx!=-1 && (flag & LBFLG_STD_FINF)==0)?
+							Trim(get_tkn(lp->Items->Strings[idx], ':')) : EmptyStr;
+	ap->Enabled = !inam.IsEmpty();
+	ap->Checked = test_word_i(inam, EmpInfItems);
 }
 
 //---------------------------------------------------------------------------

@@ -23,7 +23,7 @@ typedef HRESULT (WINAPI *FUNC_SHGetKnownFolderPath)(REFKNOWNFOLDERID, DWORD, HAN
 //---------------------------------------------------------------------------
 #define FPRP_NAM_WD		15				//項目名の最大表示幅(半角単位)
 
-//項目の種類フラグ
+//情報項目の種類フラグ
 #define LBFLG_STD_FINF	0x00010000		//基本ファイル情報
 #define LBFLG_PATH_FIF	0x00020000		//パス名
 #define LBFLG_FILE_FIF	0x00040000		//ファイル名
@@ -33,8 +33,10 @@ typedef HRESULT (WINAPI *FUNC_SHGetKnownFolderPath)(REFKNOWNFOLDERID, DWORD, HAN
 #define LBFLG_TYPE_FIF	0x00400000		//種類
 #define LBFLG_FEXT_FIF	0x01000000		//拡張子別ファイル数
 #define LBFLG_CRCD_FIF	0x02000000		//改行コード
-#define LBFLG_ERR_FIF	0x08000000		//エラー/警告
-#define LBFLG_DEBUG		0x10000000		//デバッグ状態
+#define LBFLG_ERR_FIF	0x04000000		//エラー/警告
+#define LBFLG_DEBUG		0x08000000		//デバッグ状態
+#define LBFLG_GIT_TAG	0x10000000		//Gitタグ
+#define LBFLG_GIT_HASH	0x20000000		//Gitハッシュ
 
 //---------------------------------------------------------------------------
 UnicodeString get_WndText(HWND hWnd);
