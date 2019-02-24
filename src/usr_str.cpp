@@ -1280,8 +1280,13 @@ int get_line_count(UnicodeString s)
 //---------------------------------------------------------------------------
 //TStringDynArray ‚É•¶š—ñ‚ğ’Ç‰Á
 //---------------------------------------------------------------------------
-void add_dyn_array(TStringDynArray &lst, UnicodeString s)
+void add_dyn_array(TStringDynArray &lst, UnicodeString s,
+	bool no_dupl)	//Šù‘¶‚Ìê‡‚Í’Ç‰Á‚µ‚È‚¢	(default = false)
 {
+	if (no_dupl) {
+		for (int i=0; i<lst.Length; i++) if (SameText(s, lst[i])) return;
+	}
+
 	int len    = lst.Length;
 	lst.Length = len + 1;
 	lst[len]   = s;

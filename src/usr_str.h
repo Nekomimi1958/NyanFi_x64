@@ -173,7 +173,7 @@ bool find_mlt_str(UnicodeString wd, UnicodeString s, TStringList *lst, bool case
 
 int get_line_count(UnicodeString s);
 
-void add_dyn_array(TStringDynArray &lst, UnicodeString s);
+void add_dyn_array(TStringDynArray &lst, UnicodeString s, bool no_dupl = false);
 
 TStringDynArray get_csv_array(UnicodeString src, int size, bool force_size = false);
 UnicodeString get_csv_item(UnicodeString src, int idx);

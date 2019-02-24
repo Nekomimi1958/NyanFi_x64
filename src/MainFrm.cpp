@@ -15127,8 +15127,8 @@ void __fastcall TNyanFiForm::FileEditActionExecute(TObject *Sender)
 		}
 
 		if (etc_lst.Length>0) {
-			if (test_FileExt(fext, FExtImgEidt)) add_dyn_array(etc_lst, get_actual_path(ImageEditor));
-			if (test_FileExt(fext, FEXT_TEXT))   add_dyn_array(etc_lst, get_actual_path(TextEditor));
+			if (test_FileExt(fext, FExtImgEidt)) add_dyn_array(etc_lst, get_actual_path(ImageEditor), true);
+			if (test_FileExt(fext, FEXT_TEXT))   add_dyn_array(etc_lst, get_actual_path(TextEditor),  true);
 		}
 		UnicodeString editor = get_MenuItemStr(etc_lst);
 
