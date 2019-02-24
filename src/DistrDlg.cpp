@@ -584,7 +584,7 @@ void __fastcall TDistributionDlg::PrvListBoxDrawItem(TWinControl *Control, int I
 	cv->TextOut(xp, yp, minimize_str(fnam, cv, wd, OmitEndOfName));	xp += wd + 4;
 	out_Text(cv, xp, yp, _T("¨"));	xp += cv->TextWidth("¨") + 4;
 	cv->Font->Color = (!CreDistrDirCheckBox->Checked && !dir_exists(anam))? col_Error : scl_WindowText;
-	cv->TextOut(xp, yp, dnam);
+	cv->TextOut(xp, yp, yen_to_delimiter(dnam));
 }
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::PrvListBoxData(TWinControl *Control, int Index, UnicodeString &Data)

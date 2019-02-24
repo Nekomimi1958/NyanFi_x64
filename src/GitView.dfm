@@ -182,19 +182,17 @@ object GitViewer: TGitViewer
       object UpdateBtn: TToolButton
         Left = 243
         Top = 0
-        Caption = #26356#26032'(&U)'
-        ImageIndex = 0
+        Action = UpdateLogAction
         Style = tbsTextButton
-        OnClick = UpdateBtnClick
       end
       object ConsoleBtn: TToolButton
-        Left = 298
+        Left = 293
         Top = 0
         Action = ConsoleAction
         Style = tbsTextButton
       end
       object GuiBtn: TToolButton
-        Left = 347
+        Left = 342
         Top = 0
         Action = GuiAction
         Style = tbsTextButton
@@ -363,6 +361,11 @@ object GitViewer: TGitViewer
       OnExecute = OpenTmpArcActionExecute
       OnUpdate = ArchiveActionUpdate
     end
+    object LogThisCommitAction: TAction
+      Caption = #12371#12398#12467#12511#12483#12488#12414#12391#12398#23653#27508#12434#34920#31034'(&H)'
+      OnExecute = LogThisCommitActionExecute
+      OnUpdate = LogThisCommitActionUpdate
+    end
     object ShowRBranchAction: TAction
       Caption = #12522#12514#12540#12488#12502#12521#12531#12481#12434#34920#31034'(&R)'
       OnExecute = ShowRBranchActionExecute
@@ -401,6 +404,15 @@ object GitViewer: TGitViewer
       Caption = #12486#12461#12473#12488#12456#12487#12451#12479#12391#38283#12367'(&E)'
       OnExecute = EditFileActionExecute
       OnUpdate = EditFileActionUpdate
+    end
+    object LogThisFileAction: TAction
+      Caption = #12371#12398#12501#12449#12452#12523#12398#12467#12511#12483#12488#23653#27508#12434#34920#31034'(&F)'
+      OnExecute = LogThisFileActionExecute
+      OnUpdate = DiffActionUpdate
+    end
+    object UpdateLogAction: TAction
+      Caption = #26356#26032'(&U)'
+      OnExecute = UpdateLogActionExecute
     end
     object GuiAction: TAction
       Caption = '&GUI'
@@ -456,6 +468,9 @@ object GitViewer: TGitViewer
     object CommitInfoItem: TMenuItem
       Action = CommitInfoAction
     end
+    object LogThisCommitItem: TMenuItem
+      Action = LogThisCommitAction
+    end
     object Sep_c_4: TMenuItem
       Caption = '-'
     end
@@ -475,7 +490,7 @@ object GitViewer: TGitViewer
   object DiffPopupMenu: TPopupMenu
     OnPopup = GitPopupMenuPopup
     Left = 293
-    Top = 319
+    Top = 343
     object DiffToolItem: TMenuItem
       Action = DiffToolAction
     end
@@ -488,13 +503,19 @@ object GitViewer: TGitViewer
     object Sep_d_1: TMenuItem
       Caption = '-'
     end
+    object LogThisFileItem: TMenuItem
+      Action = LogThisFileAction
+    end
+    object Sep_d_2: TMenuItem
+      Caption = '-'
+    end
     object AppFextColItem: TMenuItem
       Action = AppFextColorAction
     end
   end
   object ComOptPopupMenu: TPopupMenu
     Left = 450
-    Top = 316
+    Top = 308
     object SelConsoleItem: TMenuItem
       Caption = 'Console '#12398#36984#25246'(&S)...'
       OnClick = SelConsoleItemClick

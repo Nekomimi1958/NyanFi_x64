@@ -85,7 +85,6 @@ void __fastcall TGitViewer::WmFormShowed(TMessage &msg)
 	RetArcFile = EmptyStr;
 
 	UpdateCommitList();
-	UpdateBranchList();
 	CommitListBox->SetFocus();
 }
 
@@ -96,6 +95,7 @@ void __fastcall TGitViewer::FormClose(TObject *Sender, TCloseAction &Action)
 	DiffListBox->Clear();
 	ClearCommitList();
 
+	FilterName  = EmptyStr;
 	HistoryLimit = GIT_DEF_HISTLIMIT;
 
 	IniFile->SavePosInfo(this);
@@ -157,7 +157,6 @@ UnicodeString __fastcall TGitViewer::GitExeStr(UnicodeString prm)
 			ret_str = o_lst->Text;
 			if (!contained_wd_i(_T("archive|cat-file|config|difftool|gui|show"), cmd)) {
 				UpdateCommitList();
-				UpdateBranchList();
 			}
 		}
 	}
@@ -190,7 +189,8 @@ UnicodeString __fastcall TGitViewer::SaveRevAsTemp(UnicodeString id, UnicodeStri
 	try {
 		//ファイルイメージの取得
 		UnicodeString src_nam = id + ":" + fnam;
-		UnicodeString prm;  prm.sprintf(_T("cat-file -p %s"), src_nam.c_str());
+		UnicodeString prm;
+		prm.sprintf(_T("cat-file -p %s"), src_nam.c_str());
 		std::unique_ptr<TMemoryStream> o_ms(new TMemoryStream());
 		GitBusy  = true;	DiffListBox->Invalidate();
 		DWORD exit_code;
@@ -230,28 +230,45 @@ UnicodeString __fastcall TGitViewer::SaveRevAsTemp(UnicodeString id, UnicodeStri
 }
 
 //---------------------------------------------------------------------------
+git_rec * __fastcall TGitViewer::cre_GitRec(UnicodeString msg)
+{
+	git_rec *gp  = new git_rec;
+	gp->is_head  = false;
+	gp->is_work  = false;
+	gp->is_index = false;
+	gp->msg 	 = msg;
+	return gp;
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TGitViewer::ClearCommitList()
 {
 	TListBox *lp = CommitListBox;
 	for (int i=0; i<lp->Count; i++) delete (git_rec*)lp->Items->Objects[i];
 	lp->Clear();
+
+	LastBrListIdx = -1;
+
+	MaxGrWidth = lp->ItemHeight;
+	MaxAnWidth = 0;
 }
 
 //---------------------------------------------------------------------------
 //コミット一覧を更新
 //---------------------------------------------------------------------------
-void __fastcall TGitViewer::UpdateCommitList()
+void __fastcall TGitViewer::UpdateCommitList(
+	UnicodeString commit_id)	//対象コミットID	(default = EmptyStr : HEAD)
 {
-	GitBusy = true;
-
 	ClearCommitList();
 	CommitScrPanel->HitLines->Clear();
 
 	TListBox *c_lp = CommitListBox;
-	c_lp->Items->Add("取得中...");
+	git_rec *tmp_gp = cre_GitRec("取得中...");
+	tmp_gp->graph = "#";
+	c_lp->Items->AddObject(EmptyStr, (TObject *)tmp_gp);
 	c_lp->Repaint();
-	MaxGrWidth = MaxAnWidth = 0;
 
+	GitBusy = true;
 	std::unique_ptr<TStringList> c_lst(new TStringList());
 
 	//ワーキングツリー/インデックス
@@ -276,52 +293,48 @@ void __fastcall TGitViewer::UpdateCommitList()
 		stt_ix = def_if_empty(Trim(stt_ix), "Nothing to commit");
 
 		//ワーキングツリー
-		git_rec *gp  = new git_rec;
-		gp->is_head  = false;
+		git_rec *gp  = cre_GitRec(stt_wk);
 		gp->is_work  = true;
-		gp->is_index = false;
 		gp->graph	 = "*";
-		gp->msg		 = stt_wk;
 
 		c_lst->AddObject(EmptyStr, (TObject *)gp);
 		//インデックス
-		gp = new git_rec;
-		gp->is_head  = false;
-		gp->is_work  = false;
+		gp  = cre_GitRec(stt_ix);
 		gp->is_index = true;
 		gp->graph	 = "*";
-		gp->msg		 = stt_ix;
 		c_lst->AddObject(EmptyStr, (TObject *)gp);
 		//セパレータ
-		gp = new git_rec;
-		gp->is_work = gp->is_index = gp->is_head = false;
+		gp  = cre_GitRec();
 		gp->graph	= "-";
 		c_lst->AddObject(EmptyStr, (TObject *)gp);
 	}
 
-	//コミット
+	//コミット履歴
 	UnicodeString prm = "log --graph";
-	if (ShowBranchesAction->Checked) prm += " --branches";
+	if (ShowBranchesAction->Checked && commit_id.IsEmpty()) prm += " --branches";
 	if (HistoryLimit>0) prm.cat_sprintf(_T(" -%u"), HistoryLimit);
 	prm += " --date=format:\"%Y/%m/%d %H:%M:%S\" --pretty=format:\"\t%H\t%P\t%ad\t%s\t%d\t%an\"";
+	if (!commit_id.IsEmpty())  prm.cat_sprintf(_T(" %s"), commit_id.c_str());
+	if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" \"%s\""), FilterName.c_str());
+
 	//グラフ / コミットID / 親ID / 日時 / 件名 / ブランチ / タグ / Author名
 	int idx_h = -1;
 	o_lst->Clear();
-	if (GitShellExe(prm, WorkDir, o_lst.get())) {
+	UnicodeString last_parent;
+	if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0) {
 		int max_gr_len = 0, max_an_wd = 0;
 		for (int i=0; i<o_lst->Count; i++) {
 			UnicodeString lbuf = o_lst->Strings[i];
 			TStringDynArray ibuf = split_strings_tab(lbuf);
 			if (ibuf.Length>0) {
-				git_rec *gp = new git_rec;
-				gp->is_work = gp->is_index = gp->is_head = false;
+				git_rec *gp = cre_GitRec();
 				gp->graph	= ibuf[0];
 				max_gr_len	= std::max(max_gr_len, gp->graph.Length());
 
 				UnicodeString br_str;
 				if (ibuf.Length==7) {
 					gp->hash   = ibuf[1];
-					gp->parent = ibuf[2];
+					gp->parent = last_parent = ibuf[2];
 					gp->msg    = ibuf[4];
 					gp->author = ibuf[6];
 					max_an_wd = std::max(max_an_wd, c_lp->Canvas->TextWidth(gp->author));
@@ -361,14 +374,44 @@ void __fastcall TGitViewer::UpdateCommitList()
 
 		MaxGrWidth = (max_gr_len + 1) * c_lp->ItemHeight / 3;
 		MaxAnWidth = max_an_wd;
+
+		//残りのコミット数
+		if (!last_parent.IsEmpty()) {
+			prm.sprintf(_T("rev-list --count %s"), last_parent.c_str());
+			o_lst->Clear();
+			if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0) {
+				int cnt = o_lst->Strings[0].ToIntDef(0);
+				if (cnt>0) {
+					git_rec *gp = cre_GitRec(
+						UnicodeString().sprintf(_T("……… これ以前に %u 個のコミットがあります ………"), cnt));
+					gp->graph = "#";
+					c_lst->AddObject(EmptyStr, (TObject *)gp);
+				}
+			}
+		}
 	}
 
+	if (!CommitID.IsEmpty()) {
+		for (int i=0; i<c_lst->Count; i++) {
+			git_rec *gp = (git_rec *)c_lst->Objects[i];
+			if (SameStr(gp->hash, CommitID)) {
+				idx_h = i; break;
+			}
+		}
+	}
+
+	if (idx_h==-1) idx_h = 0;
+
 	//リストボックスに割り当て
+	c_lp->Clear();
+	delete tmp_gp;
 	c_lp->Items->Assign(c_lst.get());
 	SetCommitListIndex(idx_h);
 	CommitScrPanel->UpdateKnob();
 
 	GitBusy = false;
+
+	UpdateBranchList();
 }
 
 //---------------------------------------------------------------------------
@@ -537,9 +580,37 @@ void __fastcall TGitViewer::BranchListBoxClick(TObject *Sender)
 
 	if (!found) idx = LastBrListIdx;
 	lp->ItemIndex = LastBrListIdx = idx;
+	TagNames = EmptyStr;
 
-	int flag = (idx!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0;
-	TagNames = (flag & GIT_FLAG_TAG)? lp->Items->Strings[idx] : EmptyStr;
+	//コミット履歴のカーソル位置に反映
+	if (idx!=-1) {
+		int flag = (int)lp->Items->Objects[lp->ItemIndex];
+		UnicodeString lbuf	 = lp->Items->Strings[idx];
+		UnicodeString b_name = (flag & GIT_FLAG_LOCAL)? lbuf : EmptyStr;
+		if (flag & GIT_FLAG_TAG) TagNames = lbuf;
+
+		TListBox *c_lp = CommitListBox;
+		if (!b_name.IsEmpty()) {
+			for (int i=0; i<c_lp->Count; i++) {
+				git_rec *gp = (git_rec *)c_lp->Items->Objects[i];
+				if (SameText(b_name, gp->branch)) {
+					c_lp->ItemIndex = i;
+					c_lp->Invalidate();
+					break;
+				}
+			}
+		}
+		else if (!TagNames.IsEmpty()) {
+			for (int i=0; i<c_lp->Count; i++) {
+				git_rec *gp = (git_rec *)c_lp->Items->Objects[i];
+				if (contained_wd_i(ReplaceStr(gp->tags, "\t", "|"), TagNames)) {
+					c_lp->ItemIndex = i;
+					c_lp->Invalidate();
+					break;
+				}
+			}
+		}
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::BranchListBoxDblClick(TObject *Sender)
@@ -577,85 +648,83 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 	bool is_match = !kwd.IsEmpty() && ContainsText(lp->Items->Strings[Index], kwd);
 
 	TCanvas *cv = lp->Canvas;
-	cv->Brush->Color = State.Contains(odSelected)?
-						((!State.Contains(odFocused) || GitBusy)? col_oppItem : col_selItem) :
-						(is_match? col_matchItem : lp->Color);
+	cv->Brush->Color = is_match? col_matchItem : lp->Color;
 	cv->FillRect(Rect);
 
+	git_rec *gp = (git_rec *)lp->Items->Objects[Index];
 	int xp = Rect.Left + Scaled4;
 	int yp = Rect.Top + Scaled2;
-	bool use_fgsel = is_SelFgCol(State);
 
-	git_rec *gp = (git_rec *)lp->Items->Objects[Index];
-	if (gp) {
-		//グラフ
-		if (USAME_TS(gp->graph, "-")) {
-			draw_Separator(cv, Rect);
-		}
-		else if (!gp->graph.IsEmpty()) {
-			git_rec *gp1 = (Index>0)? (git_rec *)lp->Items->Objects[Index - 1] : NULL;
-			git_rec *gp2 = (Index<(lp->Count - 1))? (git_rec *)lp->Items->Objects[Index + 1] : NULL;
-			UnicodeString s1 = (gp1 && !USAME_TS(gp1->graph, "-"))? gp1->graph : EmptyStr;
-			UnicodeString s2 = (!gp->is_index && gp2)? gp2->graph : EmptyStr;
-			TRect rc = Rect; rc.Left = xp;
-			draw_GitGraph(gp->graph, s1, s2, cv, rc, gp->is_head, (gp->is_work || gp->is_index));
-		}
-
-		xp += MaxGrWidth;
-		if (gp->is_work || gp->is_index) {
-			UnicodeString s1 = "作業ツリー ";
-			UnicodeString s2 = "インデックス ";
-			UnicodeString s  = gp->is_work? s1 : s2;
-			xp += (std::max(cv->TextWidth(s1), cv->TextWidth(s2)) - cv->TextWidth(s));
-			cv->Font->Color = use_fgsel? col_fgSelItem : col_Folder;
-			out_TextEx(cv, xp, yp, s);
-			cv->Font->Color = use_fgsel? col_fgSelItem : col_fgList;
-			cv->TextOut(xp, yp, gp->msg);
-		}
-		else if (!gp->hash.IsEmpty()) {
-			//ハッシュ
-			cv->Font->Color = use_fgsel? col_fgSelItem : col_GitHash;
-			cv->TextOut(xp, yp, gp->hash.SubString(1, 7));
-			xp += cv->TextWidth("9999999 ");
-
-			//Author
-			if (ShowAuthorAction->Checked) {
-				cv->Font->Color = use_fgsel? col_fgSelItem : col_fgList;
-				cv->TextOut(xp, yp, gp->author);
-				xp += (MaxAnWidth + Scaled8);
-			}
-
-			//日時
-			UnicodeString tmp = FormatDateTime(TimeStampFmt, gp->f_time);
-			cv->Font->Color = use_fgsel? col_fgSelItem : get_TimeColor(gp->f_time, col_fgList);
-			cv->TextOut(xp, yp, tmp);
-			xp += (cv->TextWidth(tmp) + Scaled8);
-
-			//タグ
-			if (!gp->tags.IsEmpty()) {
-				TStringDynArray t_lst = split_strings_tab(gp->tags);
-				for (int i=0; i<t_lst.Length; i++) draw_GitTag(cv, xp, yp, t_lst[i], Scaled2);
-				xp += Scaled4;
-			}
-
-			//ブランチ名
-			if (!gp->branch.IsEmpty()) {
-				if (gp->is_head) out_TextEx(cv, xp, yp, _T("\u25b6"), col_GitHEAD);
-				out_TextEx(cv, xp, yp, gp->branch, col_bgList, col_GitBra, Scaled8);
-			}
-			if (ShowRemoteAction->Checked && !gp->branch_r.IsEmpty()) {
-				out_TextEx(cv, xp, yp, gp->branch_r, col_bgList, col_GitBraR, Scaled8);
-			}
-
-			//メッセージ
-			cv->Font->Color = use_fgsel? col_fgSelItem : col_fgList;
-			cv->TextOut(xp, yp, gp->msg);
-		}
+	if (USAME_TS(gp->graph, "#")) {
+		cv->Font->Color = col_LineNo;
+		out_TextEx(cv, xp, yp, gp->msg);
 	}
-	else {
-		cv->Font->Color = use_fgsel? col_fgSelItem : col_Teal;
-		cv->TextOut(xp, yp, lp->Items->Strings[Index]);
+	//セパレータ
+	else if (USAME_TS(gp->graph, "-")) {
+		draw_Separator(cv, Rect);
 	}
+	//グラフ
+	else if (!gp->graph.IsEmpty()) {
+		git_rec *gp1 = (Index>0)? (git_rec *)lp->Items->Objects[Index - 1] : NULL;
+		git_rec *gp2 = (Index<(lp->Count - 1))? (git_rec *)lp->Items->Objects[Index + 1] : NULL;
+		UnicodeString s1 = (gp1 && !USAME_TS(gp1->graph, "-"))? gp1->graph : EmptyStr;
+		UnicodeString s2 = (!gp->is_index && gp2)? gp2->graph : EmptyStr;
+		TRect rc = Rect; rc.Left = xp;
+		draw_GitGraph(gp->graph, s1, s2, cv, rc, gp->is_head, (gp->is_work || gp->is_index));
+	}
+
+	xp += MaxGrWidth;
+	if (gp->is_work || gp->is_index) {
+		UnicodeString s1 = "作業ツリー ";
+		UnicodeString s2 = "インデックス ";
+		UnicodeString s  = gp->is_work? s1 : s2;
+		xp += (std::max(cv->TextWidth(s1), cv->TextWidth(s2)) - cv->TextWidth(s));
+		cv->Font->Color = col_Folder;
+		out_TextEx(cv, xp, yp, s);
+		cv->Font->Color = col_fgList;
+		cv->TextOut(xp, yp, gp->msg);
+	}
+	else if (!gp->hash.IsEmpty()) {
+		//ハッシュ
+		cv->Font->Color = col_GitHash;
+		cv->TextOut(xp, yp, gp->hash.SubString(1, 7));
+		xp += cv->TextWidth("9999999 ");
+
+		//Author
+		if (ShowAuthorAction->Checked) {
+			cv->Font->Color = col_fgList;
+			cv->TextOut(xp, yp, gp->author);
+			xp += (MaxAnWidth + Scaled8);
+		}
+
+		//日時
+		UnicodeString tmp = FormatDateTime(TimeStampFmt, gp->f_time);
+		cv->Font->Color = get_TimeColor(gp->f_time, col_fgList);
+		cv->TextOut(xp, yp, tmp);
+		xp += (cv->TextWidth(tmp) + Scaled8);
+
+		//タグ
+		if (!gp->tags.IsEmpty()) {
+			TStringDynArray t_lst = split_strings_tab(gp->tags);
+			for (int i=0; i<t_lst.Length; i++) draw_GitTag(cv, xp, yp, t_lst[i], Scaled2);
+			xp += Scaled4;
+		}
+
+		//ブランチ名
+		if (!gp->branch.IsEmpty()) {
+			if (gp->is_head) out_TextEx(cv, xp, yp, _T("\u25b6"), col_GitHEAD);
+			out_TextEx(cv, xp, yp, gp->branch, col_bgList, col_GitBra, Scaled8);
+		}
+		if (ShowRemoteAction->Checked && !gp->branch_r.IsEmpty()) {
+			out_TextEx(cv, xp, yp, gp->branch_r, col_bgList, col_GitBraR, Scaled8);
+		}
+
+		//メッセージ
+		cv->Font->Color = col_fgList;
+		cv->TextOut(xp, yp, gp->msg);
+	}
+
+	draw_ListCursor2(lp, Rect, Index, State);
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::CommitListBoxClick(TObject *Sender)
@@ -670,7 +739,6 @@ void __fastcall TGitViewer::CommitListBoxClick(TObject *Sender)
 	if (idx==-1 || idx>=c_lp->Count) return;
 
 	git_rec *gp = (git_rec *)c_lp->Items->Objects[idx];
-	if (!gp) return;
 	if (!gp->is_work && !gp->is_index && gp->hash.IsEmpty()) return;
 
 	CommitID   = gp->hash;
@@ -682,10 +750,11 @@ void __fastcall TGitViewer::CommitListBoxClick(TObject *Sender)
 
 	std::unique_ptr<TStringList> o_lst(new TStringList());
 	if (gp->diff_inf.IsEmpty()) {
-		UnicodeString prm =
-			(gp->is_work || gp->is_index)? 
-					"diff --stat-width=120 " + DiffOpt :
-					"diff --stat-width=120 " + gp->hash + "^ " + gp->hash;
+		UnicodeString prm = "diff --stat-width=120 ";
+		if (gp->is_work || gp->is_index) prm += DiffOpt;
+		else if (ParentID.IsEmpty())	 prm += CommitID;
+		else 							 prm += (ParentID + " " + CommitID);
+		if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" -- \"%s\""), FilterName.c_str());
 		GitBusy = true;
 		if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0)
 			gp->diff_inf = o_lst->Text;
@@ -706,7 +775,6 @@ void __fastcall TGitViewer::CommitListBoxClick(TObject *Sender)
 	MaxDfWidth = max_fwd;
 	d_lp->Items->Assign(o_lst.get());
 	d_lp->ItemIndex = 0;
-
 	DiffScrPanel->UpdateKnob();
 }
 //---------------------------------------------------------------------------
@@ -738,13 +806,11 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
-	cv->Brush->Color = State.Contains(odSelected)?
-						((!State.Contains(odFocused) || GitBusy)? col_oppItem : col_selItem) : lp->Color;
+	cv->Brush->Color = lp->Color;
 	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled4;
 	int yp = Rect.Top + Scaled2;
-	bool use_fgsel = is_SelFgCol(State);
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	if (lbuf.Pos(" | ")) {
@@ -753,12 +819,10 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 		if (s.Pos(" => ")) {
 			UnicodeString s1 = split_tkn(s, " => ");
 			out_TextEx(cv, xp, yp, s1,
-				use_fgsel? col_fgSelItem :
 				AppFextColorAction->Checked? get_ExtColor(get_extension(s1), col_fgTxtPrv) : col_fgTxtPrv);
-			out_TextEx(cv, xp, yp, " => ", use_fgsel? col_fgSelItem : col_fgTxtPrv);
+			out_TextEx(cv, xp, yp, " => ", col_fgTxtPrv);
 		}
 		out_TextEx(cv, xp, yp, s,
-			use_fgsel? col_fgSelItem :
 			AppFextColorAction->Checked? get_ExtColor(get_extension(Trim(s)), col_fgTxtPrv) : col_fgTxtPrv);
 
 		//罫線
@@ -768,15 +832,15 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 		//統計
 		s = split_tkn_spc(lbuf) + " ";
 		if (StartsText("Bin", Trim(s))) {
-			out_TextEx(cv, xp, yp, s,	 use_fgsel? col_fgSelItem : AdjustColor(col_fgTxtPrv, 72));
+			out_TextEx(cv, xp, yp, s,	 AdjustColor(col_fgTxtPrv, 72));
 			lbuf = ReplaceStr(lbuf, "->", "→");
-			out_TextEx(cv, xp, yp, lbuf, use_fgsel? col_fgSelItem : col_fgTxtPrv);
+			out_TextEx(cv, xp, yp, lbuf, col_fgTxtPrv);
 		}
 		else {
 			//変更数
 			UnicodeString tmp = ReplaceStr(s, " ", "0");
 			xp += (cv->TextWidth(tmp) - cv->TextWidth(s));
-			out_TextEx(cv, xp, yp, s, use_fgsel? col_fgSelItem :col_fgTxtPrv);
+			out_TextEx(cv, xp, yp, s, col_fgTxtPrv);
 			//グラフ
 			int g_w = rc.Height() / 3;
 			TRect g_rc = rc;
@@ -794,10 +858,12 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 	else {
 		for (int i=1; i<=lbuf.Length(); i++) {
 			WideChar c = lbuf[i];
-			out_TextEx(cv, xp, yp, c,
-				use_fgsel? col_fgSelItem : (c=='-')? clRed : (c=='+')? clGreen : col_fgTxtPrv);
+			out_TextEx(cv, xp, yp, c, (c=='-')? clRed : (c=='+')? clGreen : col_fgTxtPrv);
 		}
 	}
+
+	cv->Brush->Color = lp->Color;
+	draw_ListCursor2(lp, Rect, Index, State);
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -837,7 +903,10 @@ void __fastcall TGitViewer::GitListBoxMouseDown(TObject *Sender, TMouseButton Bu
 void __fastcall TGitViewer::CheckoutActionExecute(TObject *Sender)
 {
 	UnicodeString bnam = GetCurBranchName();
-	if (!bnam.IsEmpty()) GitExeStr("checkout " + bnam);
+	if (!bnam.IsEmpty()) {
+		CommitID = EmptyStr;
+		GitExeStr("checkout " + bnam);
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::CheckoutActionUpdate(TObject *Sender)
@@ -1059,6 +1128,19 @@ void __fastcall TGitViewer::ArchiveActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//このコミットまでの履歴を表示
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::LogThisCommitActionExecute(TObject *Sender)
+{
+	UpdateCommitList(CommitID);
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::LogThisCommitActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Visible = !CommitID.IsEmpty();
+}
+
+//---------------------------------------------------------------------------
 //Diffツールを起動
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::DiffToolActionExecute(TObject *Sender)
@@ -1101,6 +1183,15 @@ void __fastcall TGitViewer::BlameActionExecute(TObject *Sender)
 		GitExeStr(prm);
 	}
 }
+//---------------------------------------------------------------------------
+//このファイルのコミット履歴を表示
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::LogThisFileActionExecute(TObject *Sender)
+{
+	FilterName = GetDiffFileName();
+	UpdateCommitList();
+}
+
 
 //---------------------------------------------------------------------------
 //コミット情報を表示
@@ -1247,7 +1338,6 @@ void __fastcall TGitViewer::ShowBranchesActionExecute(TObject *Sender)
 {
 	ShowBranchesAction->Checked = !ShowBranchesAction->Checked;
 	UpdateCommitList();
-	UpdateBranchList();
 }
 //---------------------------------------------------------------------------
 //リモート参照を表示
@@ -1256,7 +1346,6 @@ void __fastcall TGitViewer::ShowRemoteActionExecute(TObject *Sender)
 {
 	ShowRemoteAction->Checked = !ShowRemoteAction->Checked;
 	UpdateCommitList();
-	UpdateBranchList();
 }
 //---------------------------------------------------------------------------
 //Author の名前を表示
@@ -1265,7 +1354,6 @@ void __fastcall TGitViewer::ShowAuthorActionExecute(TObject *Sender)
 {
 	ShowAuthorAction->Checked = !ShowAuthorAction->Checked;
 	UpdateCommitList();
-	UpdateBranchList();
 }
 //---------------------------------------------------------------------------
 //拡張子別配色を適用
@@ -1397,11 +1485,11 @@ void __fastcall TGitViewer::FindBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //更新
 //---------------------------------------------------------------------------
-void __fastcall TGitViewer::UpdateBtnClick(TObject *Sender)
+void __fastcall TGitViewer::UpdateLogActionExecute(TObject *Sender)
 {
+	FilterName = EmptyStr;
 	UpdateCommitList();
 }
-
 //---------------------------------------------------------------------------
 //git-gui の起動
 //---------------------------------------------------------------------------
@@ -1481,10 +1569,8 @@ void __fastcall TGitViewer::SelConsoleItemClick(TObject *Sender)
 void __fastcall TGitViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "F5")) UpdateCommitList();
+	if (USAME_TI(KeyStr, "F5")) UpdateLogAction->Execute();
 	else SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_GIT) _T("#GitViewer"));
 }
 //---------------------------------------------------------------------------
-
-
 

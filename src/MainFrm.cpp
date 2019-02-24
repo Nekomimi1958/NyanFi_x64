@@ -16551,7 +16551,13 @@ void __fastcall TNyanFiForm::GitViewerActionExecute(TObject *Sender)
 		if (!IsCurFList()) UserAbort(USTR_CantOperate);
 		UnicodeString wnam = get_GitTopPath(CurPath[CurListTag]);
 		if (wnam.IsEmpty()) TextAbort(_T("Gitの作業ディレクトリではありません。"));
+
 		if (!GitViewer) GitViewer = new TGitViewer(this);	//初回に動的作成
+		if (TEST_DEL_ActParam("CP")) {
+			UnicodeString fnam = GetCurFileName();
+			remove_top_text(fnam, wnam);
+			GitViewer->FilterName = yen_to_slash(fnam);
+		}
 		GitViewer->WorkDir = wnam;
 		GitViewer->HistoryLimit = StartsText('N', ActionParam)? extract_int_def(ActionParam) : GIT_DEF_HISTLIMIT;
 		SetDirWatch(false);

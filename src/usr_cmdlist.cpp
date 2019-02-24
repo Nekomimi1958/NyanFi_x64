@@ -748,7 +748,11 @@ void get_PrmList(
 		params.USET_T("\nON : カレント側を固定\nOFF : 固定解除\n");
 	}
 	else if (USAME_TI(cmd, "GitViewer")) {
-		params.USET_T("\nN0 : コミット履歴数の制限を外す\nN30 : コミット履歴数を制限する\n");
+		params.sprintf(_T("%s"),
+			_T("\n")
+			_T("N0 : コミット履歴数の制限を外す\n")
+			_T("N30 : コミット履歴数を制限する\n")
+			_T("CP : カーソル位置項目のコミット履歴を表示\n"));
 	}
 	else if (USAME_TI(cmd, "HelpContents")) {
 		params.USET_T("\nCI : コマンドの索引\nFI : コマンドの機能別索引\nCH : 変更履歴\n");

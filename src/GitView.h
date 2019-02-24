@@ -65,6 +65,8 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *FindDownAction;
 	TAction *FindUpAction;
 	TAction *GuiAction;
+	TAction *LogThisCommitAction;
+	TAction *LogThisFileAction;
 	TAction *MergeAction;
 	TAction *OpenTmpArcAction;
 	TAction *RenBranchAction;
@@ -74,6 +76,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ShowRBranchAction;
 	TAction *ShowRemoteAction;
 	TAction *ShowTagAction;
+	TAction *UpdateLogAction;
 	TActionList *ActionList1;
 	TButton *HiddenCanBtn;
 	TEdit *FindCommitEdit;
@@ -96,6 +99,8 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *EditFileItem;
 	TMenuItem *FitSizePosItem;
 	TMenuItem *HardResetItem;
+	TMenuItem *LogThisCommitItem;
+	TMenuItem *LogThisFileItem;
 	TMenuItem *MergeItem;
 	TMenuItem *MixedResetItem;
 	TMenuItem *OpenTmpArcItem;
@@ -108,6 +113,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_c_3;
 	TMenuItem *Sep_c_4;
 	TMenuItem *Sep_d_1;
+	TMenuItem *Sep_d_2;
 	TMenuItem *SetTagItem;
 	TMenuItem *ShowAuthorAction1;
 	TMenuItem *ShowBranchesItem;
@@ -192,7 +198,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ConsoleActionExecute(TObject *Sender);
 	void __fastcall ConsoleActionUpdate(TObject *Sender);
 	void __fastcall SelConsoleItemClick(TObject *Sender);
-	void __fastcall UpdateBtnClick(TObject *Sender);
 	void __fastcall GuiActionExecute(TObject *Sender);
 	void __fastcall GuiActionUpdate(TObject *Sender);
 	void __fastcall SelGuiItemClick(TObject *Sender);
@@ -208,6 +213,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RenBranchActionUpdate(TObject *Sender);
 	void __fastcall CommitInfoActionUpdate(TObject *Sender);
 	void __fastcall CommitInfoActionExecute(TObject *Sender);
+	void __fastcall LogThisFileActionExecute(TObject *Sender);
+	void __fastcall UpdateLogActionExecute(TObject *Sender);
+	void __fastcall LogThisCommitActionExecute(TObject *Sender);
+	void __fastcall LogThisCommitActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString RefHEAD;
@@ -234,9 +243,10 @@ private:	// ユーザー宣言
 	TStringDynArray __fastcall GitExeStrArray(UnicodeString prm);
 	UnicodeString __fastcall SaveRevAsTemp(UnicodeString id, UnicodeString fnam);
 
+	git_rec * __fastcall cre_GitRec(UnicodeString msg = EmptyStr);
 	void __fastcall ClearCommitList();
 	void __fastcall UpdateBranchList();
-	void __fastcall UpdateCommitList();
+	void __fastcall UpdateCommitList(UnicodeString commit_id = EmptyStr);
 
 	bool FGitBusy;
 	void __fastcall SetGitBusy(bool Value)
@@ -280,10 +290,11 @@ private:	// ユーザー宣言
 	void __fastcall WmFormShowed(TMessage &msg);
 
 public:		// ユーザー宣言
-	UnicodeString WorkDir;
-	int HistoryLimit;
+	UnicodeString WorkDir;		//Gitトップディレクトリ
+	UnicodeString FilterName;	//履歴絞り込み時の対象名
+	int HistoryLimit;			//履歴の表示制限数
 
-	UnicodeString RetArcFile;
+	UnicodeString RetArcFile;	//[o] 一時アーカイブ名
 
 	__fastcall TGitViewer(TComponent* Owner);
 

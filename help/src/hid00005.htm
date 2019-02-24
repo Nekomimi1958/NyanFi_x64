@@ -1188,12 +1188,21 @@ FindTag<span class="pram_text">_;</span>
 複数ファイルのハッシュ値をコピーしたい場合は <a href="#CopyFileName">CopyFileName</a>_$G(～) コマンドを利用してください。<br>
 <a href="#CopyFileName">→ CopyFileName</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>
 
-<dt id="GitViewer">GitViewer<span class="pram_text">[_N履歴制限数(デフォルト=100)]</span>
+<dt id="GitViewer">GitViewer<span class="pram_text">[_N履歴制限数(デフォルト=100)[;CP]]</span>
 <dd>Gitの作業ディレクトリにいる場合、<a href="hid00090.htm#GitViewer">Gitビュアー</a>が表示されます。<br>
 ブランチ一覧、コミット履歴、差分の概略を確認でき、ブランチやコミットに対する操作、Console、GUI、diffツールの起動などを行えます。<br>
+<div class="spc_box">
 パラメータに <b>N</b>～ を指定すると、表示するコミット履歴数を制限できます。<br>
 パラメータを指定しないと、デフォルトの <b>N</b>100 とみなされます。制限を外したい場合は、<b>N</b>0 を指定してください。<br>
 <b>例</b>: GitViewer_N50<br>
+</div>
+<div class="spc_box">
+パラメータに <b>CP</b> を指定すると、カーソル位置の項目のみについてのコミット履歴を表示します。<br>
+ビュアーで<span class="btn_frame">更新</span>ボタンまたは<span class="btn_frame">F5</span>キーを押すと絞り込みが解除されます。<br>
+</div>
+<div class="spc_box">
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
 <a href="hid00090.htm#GitViewer">→ Git の利用について - GitViewer</a>
 
 <dt id="Grep">Grep<span class="pram_text">[_検索文字列]</span>
