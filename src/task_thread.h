@@ -28,6 +28,7 @@ public:
 
 	UnicodeString CmdStr;
 	UnicodeString InfStr;
+	UnicodeString DistPath;
 
 	UnicodeString CvImg_f_ext;
 	int  CvImg_quality;
@@ -48,6 +49,8 @@ public:
 	UnicodeString Bakup_skip_dir;
 	bool Bakup_sub_sw;
 	bool Bakup_mirror;
+
+	bool Distribute_sw;
 
 	bool DirComp_sw;
 	bool DirComp_ext_sw;

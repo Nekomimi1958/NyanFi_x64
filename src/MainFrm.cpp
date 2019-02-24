@@ -3179,9 +3179,8 @@ void __fastcall TNyanFiForm::WmDropped(TMessage &msg)
 					cp->CopyMode = gCopyMode;
 					cp->CopyAll  = false;
 					cp->CmdStr	 = TaskCmdList->Values[cmd];
+					cp->DistPath = dnam;
 					cp->InfStr.sprintf(_T("DROP ---> %s"), dnam.c_str());
-					cp->UpdDirList->Add(dnam);
-					if (DragStartTag!=-1) cp->UpdDirList->Add(CurPath[DragStartTag]);
 					ActivateTask(tp, cp);
 				}
 			}
@@ -8684,15 +8683,15 @@ void __fastcall TNyanFiForm::DeleteSelFiles(TStringList *lst)
 	}
 
 	if (tsk_lst->Count>0) {
-		UnicodeString cnam = GetCurPathStr();
+		UnicodeString dnam = GetCurPathStr();
 		std::unique_ptr<TStringList> dir_lst(new TStringList());
-		get_SyncDstList(cnam, dir_lst.get(), true);
+		get_SyncDstList(dnam, dir_lst.get(), true);
 		for (int i=0; i<dir_lst->Count; i++) {
 			std::unique_ptr<TStringList> t_buf(new TStringList());
 			t_buf->Assign(tsk_lst.get());
 			if (i>0) {
 				for (int j=0; j<t_buf->Count; j++) {
-					UnicodeString tprm = ReplaceText(t_buf->Strings[j], "\t" + cnam, "\t" + dir_lst->Strings[i]);
+					UnicodeString tprm = ReplaceText(t_buf->Strings[j], "\t" + dnam, "\t" + dir_lst->Strings[i]);
 					UnicodeString fnam = ExcludeTrailingPathDelimiter(get_post_tab(tprm));
 					t_buf->Strings[j]  = file_exists(fnam)? tprm : EmptyStr;
 				}
@@ -8704,9 +8703,9 @@ void __fastcall TNyanFiForm::DeleteSelFiles(TStringList *lst)
 			TTaskThread *tp = CreTaskThread(&cp);
 			if (cp) {
 				cp->TaskList->Assign(t_buf.get());
-				cp->CmdStr = TaskCmdList->Values[cmd];
-				cp->InfStr = cnam;
-				cp->UpdDirList->Add(CurPath[CurListTag]);
+				cp->CmdStr	 = TaskCmdList->Values[cmd];
+				cp->DistPath = dnam;
+				cp->InfStr	 = dnam;
 				ActivateTask(tp, cp);
 			}
 		}
@@ -8720,16 +8719,16 @@ void __fastcall TNyanFiForm::DeleteFileP(file_rec *fp)
 	if (!fp || fp->is_dummy || fp->f_name.IsEmpty()) return;
 
 	UnicodeString cmd  = "DEL";
-	UnicodeString cnam = GetCurPathStr();
+	UnicodeString dnam = GetCurPathStr();
 	std::unique_ptr<TStringList> dir_lst(new TStringList());
-	get_SyncDstList(cnam, dir_lst.get(), true);
+	get_SyncDstList(dnam, dir_lst.get(), true);
 	for (int i=0; i<dir_lst->Count; i++) {
 		UnicodeString tprm;
 		tprm.sprintf(_T("%s\t%s"),
 				cmd.c_str(), (fp->is_dir? IncludeTrailingPathDelimiter(fp->f_name) : fp->f_name).c_str());
 
 		if (i>0) {
-			tprm = ReplaceText(tprm, "\t" + cnam, "\t" + dir_lst->Strings[i]);
+			tprm = ReplaceText(tprm, "\t" + dnam, "\t" + dir_lst->Strings[i]);
 			if (!file_exists(ExcludeTrailingPathDelimiter(get_post_tab(tprm)))) continue;
 		}
 
@@ -8737,9 +8736,9 @@ void __fastcall TNyanFiForm::DeleteFileP(file_rec *fp)
 		TTaskThread *tp = CreTaskThread(&cp);
 		if (cp) {
 			cp->TaskList->Add(tprm);
-			cp->CmdStr = TaskCmdList->Values[cmd];
-			cp->InfStr = cnam;
-			cp->UpdDirList->Add(CurPath[CurListTag]);
+			cp->CmdStr	 = TaskCmdList->Values[cmd];
+			cp->DistPath = dnam;
+			cp->InfStr	 = dnam;
 			ActivateTask(tp, cp);
 		}
 	}
@@ -12691,9 +12690,9 @@ void __fastcall TNyanFiForm::CompressDirActionExecute(TObject *Sender)
 			cp->TaskList->Assign(tsk_lst.get());
 			cp->DirComp_sw	   = !TEST_ActParam("UN");
 			cp->DirComp_ext_sw = !TEST_ActParam("AL");
-			cp->CmdStr = TaskCmdList->Values[cmd];
-			cp->InfStr = GetCurPathStr();
-			cp->UpdDirList->Add(CurPath[CurListTag]);
+			cp->CmdStr	 = TaskCmdList->Values[cmd];
+			cp->DistPath = GetCurPathStr();
+			cp->InfStr	 = cp->DistPath;
 			ActivateTask(tp, cp);
 		}
 	}
@@ -12842,8 +12841,8 @@ void __fastcall TNyanFiForm::CopyDirActionExecute(TObject *Sender)
 			cp->TaskList->Assign(tsk_lst.get());
 			cp->KeepTime = TEST_ActParam("KT");
 			cp->CmdStr	 = TaskCmdList->Values[cmd];
+			cp->DistPath = dst_dir;
 			cp->InfStr.sprintf(_T("%s ---> %s"), GetCurPathStr().c_str(), dst_dir.c_str());
-			cp->UpdDirList->Add(dst_dir);
 			ActivateTask(tp, cp);
 		}
 	}
@@ -14068,12 +14067,13 @@ void __fastcall TNyanFiForm::DistributionDlgActionExecute(TObject *Sender)
 				TaskConfig  *cp = NULL;
 				TTaskThread *tp = CreTaskThread(&cp);	if (cp==NULL) Abort();
 				cp->TaskList->Assign(tsk_lst.get());
+				cp->Distribute_sw = true;
 				cp->CopyMode = DistributionDlg->SameNameComboBox->ItemIndex;
 				cp->CopyAll  = true;
 				cp->CopyFmt  = AutoRenFmt;
-				cp->CmdStr	 = TaskCmdList->Values[cmd];
+				cp->CmdStr	 = "振分" + TaskCmdList->Values[cmd];
+				cp->DistPath = dst_dir;
 				cp->InfStr.sprintf(_T("%s ---> %s"), src_dir.c_str(), dst_dir.c_str());
-				cp->UpdDirList->Add(dst_dir);
 				cp->DstPosMode = TEST_ActParam("OP")? 1 : 0;
 				ActivateTask(tp, cp);
 			}
@@ -14844,9 +14844,9 @@ void __fastcall TNyanFiForm::ExtractChmSrcActionExecute(TObject *Sender)
 			TaskConfig  *cp = NULL;
 			TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
 			cp->TaskList->Assign(tsk_lst.get());
-			cp->CmdStr = TaskCmdList->Values[cmd];
+			cp->CmdStr	 = TaskCmdList->Values[cmd];
+			cp->DistPath = o_dir;
 			cp->InfStr.sprintf(_T("%s ---> %s"), ExtractFileName(fnam).c_str(), o_dir.c_str());
-			cp->UpdDirList->Add(CurPath[OppListTag]);
 			ActivateTask(tp, cp);
 		}
 	}
@@ -21820,9 +21820,9 @@ void __fastcall TNyanFiForm::SetDirTimeActionExecute(TObject *Sender)
 			TaskConfig  *cp = NULL;
 			TTaskThread *tp = CreTaskThread(&cp);	if (cp==NULL) Abort();
 			cp->TaskList->Assign(tsk_lst.get());
-			cp->CmdStr = TaskCmdList->Values[cmd];
-			cp->InfStr = GetCurPathStr();
-			cp->UpdDirList->Add(CurPath[CurListTag]);
+			cp->CmdStr	 = TaskCmdList->Values[cmd];
+			cp->DistPath = GetCurPathStr();
+			cp->InfStr	 = cp->DistPath;
 			ActivateTask(tp, cp);
 		}
 	}
@@ -24572,11 +24572,11 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 						cp->CopyAll  = true;
 					}
 
-					cp->CopyFmt = AutoRenFmt;
-					cp->CmdStr	= TaskCmdList->Values[cmd];
-					cp->InfStr	= msg.sprintf(_T("%s ---> %s"),
+					cp->CopyFmt  = AutoRenFmt;
+					cp->CmdStr	 = TaskCmdList->Values[cmd];
+					cp->DistPath = dnam;
+					cp->InfStr	 = msg.sprintf(_T("%s ---> %s"),
 									(CurStt->is_Work? ExtractFileName(WorkListName) : src_dir).c_str(), dnam.c_str());
-
 					//日付条件
 					if (flt_cnd>0) {
 						cp->FilterMode = flt_cnd;
@@ -24585,7 +24585,6 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 							UnicodeString("<=>").SubString(flt_cnd, 1).c_str(), format_Date(flt_dt).c_str());
 					}
 
-					cp->UpdDirList->Add(dnam);
 					cp->DstPosMode = op_mode;
 					ActivateTask(tp, cp);
 				}
@@ -24685,9 +24684,9 @@ void __fastcall TNyanFiForm::MoveActionExecute(TObject *Sender)
 			xCopyMode	 = -1;
 			cp->CopyFmt	 = AutoRenFmt;
 			cp->CmdStr	 = TaskCmdList->Values[cmd];
+			cp->DistPath = dst_dir;
 			cp->InfStr.sprintf(_T("%s ---> %s"), src_dir.c_str(), dst_dir.c_str());
 			cp->UpdDirList->Add(src_dir);
-			cp->UpdDirList->Add(dst_dir);
 			cp->DstPosMode = TEST_DEL_ActParam("OP")? 1 : TEST_DEL_ActParam("OP2")? 2 : 0;
 			ActivateTask(tp, cp);
 		}
@@ -24834,8 +24833,8 @@ void __fastcall TNyanFiForm::PasteActionExecute(TObject *Sender)
 				}
 				cp->CopyFmt	 = AutoRenFmt;
 				cp->CmdStr	 = TaskCmdList->Values[cmd];
+				cp->DistPath = dnam;
 				cp->InfStr	 = "CLIPBOARD ---> " + dnam;
-				cp->UpdDirList->Add(dnam);
 				ActivateTask(tp, cp);
 			}
 		}
@@ -24980,9 +24979,9 @@ void __fastcall TNyanFiForm::CloneActionExecute(TObject *Sender)
 			cp->CopyAll  = true;
 			cp->CopyFmt	 = fmt;
 			cp->CmdStr.USET_T("クローン作成");
-			cp->InfStr.sprintf(_T("%s ---> %s"),
-							GetCurPathStr().c_str(), GetCurPathStr(to_cur? CurListTag : OppListTag).c_str());
-			cp->UpdDirList->Add(CurPath[OppListTag]);
+			UnicodeString dst_dir = GetCurPathStr(to_cur? CurListTag : OppListTag);
+			cp->DistPath = dst_dir;
+			cp->InfStr.sprintf(_T("%s ---> %s"), GetCurPathStr().c_str(), dst_dir.c_str());
 			ActivateTask(tp, cp);
 		}
 	}
@@ -25315,9 +25314,9 @@ void __fastcall TNyanFiForm::CompleteDeleteActionExecute(TObject *Sender)
 			TaskConfig  *cp = NULL;
 			TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
 			cp->TaskList->Assign(tsk_lst.get());
-			cp->CmdStr = TaskCmdList->Values[cmd];
-			cp->InfStr = GetCurPathStr();
-			cp->UpdDirList->Add(CurPath[CurListTag]);
+			cp->CmdStr	 = TaskCmdList->Values[cmd];
+			cp->DistPath = GetCurPathStr();
+			cp->InfStr	 = cp->DistPath;
 			ActivateTask(tp, cp);
 		}
 	}
@@ -25382,6 +25381,7 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 				cp->CopyAll  = true;
 				cp->CopyFmt	 = AutoRenFmt;
 				cp->CmdStr.USET_T("バックアップ");
+				cp->DistPath = dnam;
 				cp->InfStr	 = inf_str.Insert(UAPP_T(ActionParam, ": "), 1);
 
 				//日付条件
@@ -25397,7 +25397,6 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 				cp->Bakup_skip_dir = set_buf[2];
 				cp->Bakup_sub_sw   = equal_1(set_buf[3]);
 				cp->Bakup_mirror   = equal_1(set_buf[4]);
-				cp->UpdDirList->Add(dnam);
 				ActivateTask(tp, cp);
 			}
 		}
@@ -25419,6 +25418,7 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 				cp->CopyAll  = true;
 				cp->CopyFmt	 = AutoRenFmt;
 				cp->CmdStr.USET_T("バックアップ");
+				cp->DistPath = dnam;
 				cp->InfStr	 = inf_str;
 
 				//日付条件
@@ -25434,7 +25434,6 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 				cp->Bakup_skip_dir = BackupDlg->BakSkipDirEdit->Text;
 				cp->Bakup_sub_sw   = BackupDlg->SubDirCheckBox->Checked;
 				cp->Bakup_mirror   = BackupDlg->MirrorCheckBox->Checked;
-				cp->UpdDirList->Add(dnam);
 				ActivateTask(tp, cp);
 			}
 		}
@@ -25640,9 +25639,9 @@ void __fastcall TNyanFiForm::ConvertImageActionExecute(TObject *Sender)
 			else
 				cp->TaskList->Add(tprm.sprintf(_T("%s\t%s\t%s"), cmd.c_str(), cfp->f_name.c_str(), dst_dir.c_str()));
 
-			cp->CmdStr = TaskCmdList->Values[cmd];
+			cp->CmdStr	 = TaskCmdList->Values[cmd];
+			cp->DistPath = dst_dir;
 			cp->InfStr.sprintf(_T("%s ---> %s"), GetSrcPathStr().c_str(), dst_dir.c_str());
-			cp->UpdDirList->Add(dst_dir);
 			ActivateTask(tp, cp);
 		}
 	}
@@ -25822,8 +25821,8 @@ void __fastcall TNyanFiForm::DelJpgExifActionExecute(TObject *Sender)
 			cp->TaskList->Assign(tsk_lst.get());
 			cp->KeepTime = TEST_ActParam("KT");
 			cp->CmdStr	 = TaskCmdList->Values[cmd];
+			cp->DistPath = dst_dir;
 			cp->InfStr.sprintf(_T("%s ---> %s"), GetSrcPathStr().c_str(), dst_dir.c_str());
-			cp->UpdDirList->Add(dst_dir);
 			ActivateTask(tp, cp);
 		}
 	}

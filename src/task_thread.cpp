@@ -50,6 +50,8 @@ TaskConfig::TaskConfig()
 	Bakup_sub_sw   = false;
 	Bakup_mirror   = false;
 
+	Distribute_sw  = false;
+
 	DirComp_sw	   = false;
 	DirComp_ext_sw = true;
 }
@@ -522,6 +524,12 @@ void __fastcall TTaskThread::CPY_core(
 	if (ends_PathDlmtr(fnam)) return;
 
 	msg = make_LogHdr(mov_sw? _T("MOVE") : _T("COPY"), fnam);
+	if (Config->Distribute_sw) {
+		UnicodeString dnam = ExcludeTrailingPathDelimiter(dst_path);
+		if (!LogFullPath) remove_top_text(dnam, Config->DistPath);
+		msg.cat_sprintf(_T(" --> [%s]"), dnam.c_str());
+	}
+
 	CurFileName = fnam;
 	CopyName	= ExtractFileName(fnam);
 	CurProgress = -1;
@@ -753,6 +761,13 @@ void __fastcall TTaskThread::Task_CPY(
 		if (mov_sw && is_same_drv && !dir_exists(dst_nam)) {
 			msg = make_LogHdr(_T("MOVE"), src_nam);
 			try {
+				//ˆÚ“®æ‚ª‚È‚¯‚ê‚Îì¬
+				if (!dir_exists(dst_path)) {
+					msg = make_LogHdr(_T("CREATE"), dst_path, true);
+					SetLastError(NO_ERROR);
+					if (!create_ForceDirs(dst_path)) Abort();
+				}
+				//ˆÚ“®
 				SetLastError(NO_ERROR);
 				if (!move_FileT(src_nam, dst_nam)) throw Exception(EmptyStr);
 				OkCount++;
@@ -1739,6 +1754,10 @@ void __fastcall TTaskThread::Execute()
 			else if (TaskReady) {
 				if (Config->TaskList->Count>0) {
 					SubCount = 0;
+
+					if (!Config->DistPath.IsEmpty() && Config->UpdDirList->IndexOf(Config->DistPath)==-1)
+						Config->UpdDirList->Add(Config->DistPath);
+
 					UnicodeString lbuf = Config->TaskList->Strings[0];
 					CmdName = split_pre_tab(lbuf);
 					UnicodeString prmstr = lbuf;
