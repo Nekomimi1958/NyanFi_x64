@@ -59,7 +59,9 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ConsoleAction;
 	TAction *CopyBranchNameAction;
 	TAction *CopyCommitIDAction;
+	TAction *CopyFileHashAction;
 	TAction *DelTagAction;
+	TAction *DiffDetailAction;
 	TAction *DiffToolAction;
 	TAction *EditFileAction;
 	TAction *FindDownAction;
@@ -95,6 +97,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *CreBranchItem;
 	TMenuItem *DelBranchItem;
 	TMenuItem *DelTagItem;
+	TMenuItem *DiffDetailItem;
 	TMenuItem *DiffToolItem;
 	TMenuItem *EditFileItem;
 	TMenuItem *FitSizePosItem;
@@ -103,6 +106,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *LogThisFileItem;
 	TMenuItem *MergeItem;
 	TMenuItem *MixedResetItem;
+	TMenuItem *N1;
 	TMenuItem *OpenTmpArcItem;
 	TMenuItem *RenBranchItem;
 	TMenuItem *ResetItem;
@@ -217,6 +221,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall UpdateLogActionExecute(TObject *Sender);
 	void __fastcall LogThisCommitActionExecute(TObject *Sender);
 	void __fastcall LogThisCommitActionUpdate(TObject *Sender);
+	void __fastcall DiffDetailActionUpdate(TObject *Sender);
+	void __fastcall DiffDetailActionExecute(TObject *Sender);
+	void __fastcall CopyFileHashActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString RefHEAD;
@@ -224,7 +231,6 @@ private:	// ユーザー宣言
 	UnicodeString ParentID;
 	UnicodeString BranchName;
 	UnicodeString TagNames;
-	UnicodeString DiffOpt;
 	bool AutoCrlf;
 
 	TStringList *CommitList;
@@ -238,10 +244,11 @@ private:	// ユーザー宣言
 	int MaxDfWidth;
 
 	int LastBrListIdx;
+	int LastCmListIdx;
 
-	UnicodeString __fastcall GitExeStr(UnicodeString prm);
+	UnicodeString   __fastcall GitExeStr(UnicodeString prm);
 	TStringDynArray __fastcall GitExeStrArray(UnicodeString prm);
-	UnicodeString __fastcall SaveRevAsTemp(UnicodeString id, UnicodeString fnam);
+	UnicodeString   __fastcall SaveRevAsTemp(UnicodeString id, UnicodeString fnam);
 
 	git_rec * __fastcall cre_GitRec(UnicodeString msg = EmptyStr);
 	void __fastcall ClearCommitList();
@@ -280,7 +287,7 @@ private:	// ユーザー宣言
 	void __fastcall SetCommitListIndex(int idx)
 	{
 		if (idx!=-1) {
-			CommitListBox->ItemIndex = idx;
+			CommitListBox->ItemIndex = LastCmListIdx = idx;
 			CommitListBoxClick(NULL);
 		}
 	}

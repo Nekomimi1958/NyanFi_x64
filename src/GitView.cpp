@@ -12,6 +12,7 @@
 #include "Global.h"
 #include "FileInfDlg.h"
 #include "GitTag.h"
+#include "GenInfDlg.h"
 #include "GitView.h"
 
 //---------------------------------------------------------------------------
@@ -25,6 +26,7 @@ __fastcall TGitViewer::TGitViewer(TComponent* Owner)
 {
 	HistoryLimit  = GIT_DEF_HISTLIMIT;
 	LastBrListIdx = -1;
+	LastCmListIdx = -1;
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FormCreate(TObject *Sender)
@@ -151,11 +153,10 @@ UnicodeString __fastcall TGitViewer::GitExeStr(UnicodeString prm)
 	if (res) {
 		if (exit_code!=0) {
 			msgbox_ERR(o_lst->Text);
-			ret_str = "ERROR";
 		}
 		else {
 			ret_str = o_lst->Text;
-			if (!contained_wd_i(_T("archive|cat-file|config|difftool|gui|show"), cmd)) {
+			if (!contained_wd_i(_T("archive|cat-file|config|difftool|gui|rev-parse|show"), cmd)) {
 				UpdateCommitList();
 			}
 		}
@@ -248,6 +249,7 @@ void __fastcall TGitViewer::ClearCommitList()
 	lp->Clear();
 
 	LastBrListIdx = -1;
+	LastCmListIdx = -1;
 
 	MaxGrWidth = lp->ItemHeight;
 	MaxAnWidth = 0;
@@ -313,6 +315,7 @@ void __fastcall TGitViewer::UpdateCommitList(
 	UnicodeString prm = "log --graph";
 	if (ShowBranchesAction->Checked && commit_id.IsEmpty()) prm += " --branches";
 	if (HistoryLimit>0) prm.cat_sprintf(_T(" -%u"), HistoryLimit);
+	if (!FilterName.IsEmpty()) prm.UCAT_T(" --follow");
 	prm += " --date=format:\"%Y/%m/%d %H:%M:%S\" --pretty=format:\"\t%H\t%P\t%ad\t%s\t%d\t%an\"";
 	if (!commit_id.IsEmpty())  prm.cat_sprintf(_T(" %s"), commit_id.c_str());
 	if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" \"%s\""), FilterName.c_str());
@@ -321,7 +324,8 @@ void __fastcall TGitViewer::UpdateCommitList(
 	int idx_h = -1;
 	o_lst->Clear();
 	UnicodeString last_parent;
-	if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0) {
+	DWORD exit_code;
+	if (GitShellExe(prm, WorkDir, o_lst.get(), &exit_code) && exit_code==0 && o_lst->Count>0) {
 		int max_gr_len = 0, max_an_wd = 0;
 		for (int i=0; i<o_lst->Count; i++) {
 			UnicodeString lbuf = o_lst->Strings[i];
@@ -378,6 +382,7 @@ void __fastcall TGitViewer::UpdateCommitList(
 		//残りのコミット数
 		if (!last_parent.IsEmpty()) {
 			prm.sprintf(_T("rev-list --count %s"), last_parent.c_str());
+			if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" -- %s"), add_quot_if_spc(FilterName).c_str());
 			o_lst->Clear();
 			if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0) {
 				int cnt = o_lst->Strings[0].ToIntDef(0);
@@ -555,37 +560,28 @@ void __fastcall TGitViewer::BranchListBoxDrawItem(TWinControl *Control, int Inde
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::BranchListBoxClick(TObject *Sender)
 {
-	TListBox *lp = (TListBox*)Sender;
-	int idx = lp->ItemIndex;
-	if (idx==-1) return;
-
-	bool found = false;
-	if (idx==0) idx = 1;
-	if (idx>LastBrListIdx) {
-		for (int i=idx; i<lp->Count && !found; i++) {
-			int flag = (int)lp->Items->Objects[i];
+	TListBox *b_lp = (TListBox*)Sender;
+	int idx = b_lp->ItemIndex;	if (idx==-1) return;
+	if (idx!=LastBrListIdx) {
+		bool found = false;
+		if (idx==0) idx = 1;
+		bool is_dw = idx>LastBrListIdx;
+		for (int i=idx; (is_dw? i<b_lp->Count : i>0) && !found; i+=(is_dw? 1 : -1)) {
+			int flag = (int)b_lp->Items->Objects[i];
 			if ((flag & (GIT_FLAG_HDRLN|GIT_FLAG_BLANK))==0) {
 				idx = i;  found = true;
 			}
 		}
-	}
-	else if (idx<LastBrListIdx) {
-		for (int i=idx; i>0 && !found; i--) {
-			int flag = (int)lp->Items->Objects[i];
-			if ((flag & (GIT_FLAG_HDRLN|GIT_FLAG_BLANK))==0) {
-				idx = i;  found = true;
-			}
-		}
+		if (!found) idx = LastBrListIdx;
+		b_lp->ItemIndex = LastBrListIdx = idx;
 	}
 
-	if (!found) idx = LastBrListIdx;
-	lp->ItemIndex = LastBrListIdx = idx;
 	TagNames = EmptyStr;
 
 	//コミット履歴のカーソル位置に反映
 	if (idx!=-1) {
-		int flag = (int)lp->Items->Objects[lp->ItemIndex];
-		UnicodeString lbuf	 = lp->Items->Strings[idx];
+		int flag = (int)b_lp->Items->Objects[b_lp->ItemIndex];
+		UnicodeString lbuf	 = b_lp->Items->Strings[idx];
 		UnicodeString b_name = (flag & GIT_FLAG_LOCAL)? lbuf : EmptyStr;
 		if (flag & GIT_FLAG_TAG) TagNames = lbuf;
 
@@ -659,6 +655,10 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 		cv->Font->Color = col_LineNo;
 		out_TextEx(cv, xp, yp, gp->msg);
 	}
+	if (USAME_TS(gp->graph, "...")) {
+		cv->Font->Color = col_LineNo;
+		out_TextEx(cv, xp, yp, "……");
+	}
 	//セパレータ
 	else if (USAME_TS(gp->graph, "-")) {
 		draw_Separator(cv, Rect);
@@ -731,12 +731,22 @@ void __fastcall TGitViewer::CommitListBoxClick(TObject *Sender)
 {
 	DiffListBox->Clear();
 	CommitID = ParentID = BranchName = EmptyStr;
-	DiffOpt  = EmptyStr;
 	MaxDfWidth = 0;
 
 	TListBox *c_lp = CommitListBox;
-	int idx = c_lp->ItemIndex;
-	if (idx==-1 || idx>=c_lp->Count) return;
+	int idx = c_lp->ItemIndex;	if (idx==-1) return;
+	if (idx!=LastCmListIdx) {
+		bool found = false;
+		bool is_dw = idx>LastCmListIdx;
+		for (int i=idx; (is_dw? i<c_lp->Count : i>=0) && !found; i+=(is_dw? 1 : -1)) {
+			git_rec *gp = (git_rec *)c_lp->Items->Objects[i];
+			if (gp->is_work || gp->is_index || !gp->hash.IsEmpty()) {
+				idx = i;  found = true;
+			}
+		}
+		if (!found) idx = LastCmListIdx;
+		c_lp->ItemIndex = LastCmListIdx = idx;
+	}
 
 	git_rec *gp = (git_rec *)c_lp->Items->Objects[idx];
 	if (!gp->is_work && !gp->is_index && gp->hash.IsEmpty()) return;
@@ -746,14 +756,15 @@ void __fastcall TGitViewer::CommitListBoxClick(TObject *Sender)
 	BranchName = gp->branch;
 	TagNames   = gp->tags;
 
-	if (gp->is_index) DiffOpt = "--cached";
-
 	std::unique_ptr<TStringList> o_lst(new TStringList());
 	if (gp->diff_inf.IsEmpty()) {
 		UnicodeString prm = "diff --stat-width=120 ";
-		if (gp->is_work || gp->is_index) prm += DiffOpt;
-		else if (ParentID.IsEmpty())	 prm += CommitID;
-		else 							 prm += (ParentID + " " + CommitID);
+		UnicodeString parent = get_tkn(ParentID, ' ');
+		if		(gp->is_work)		;
+		else if (gp->is_index)		 prm += "--cached";
+		else if (ParentID.IsEmpty()) prm += CommitID;
+		else 						 prm += (parent + " " + CommitID);
+
 		if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" -- \"%s\""), FilterName.c_str());
 		GitBusy = true;
 		if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0)
@@ -789,8 +800,8 @@ void __fastcall TGitViewer::CommitListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	else if (is_ToRightOpe(KeyStr, cmd_F))			DiffListBox->SetFocus();
 	else if (is_ToLeftOpe(KeyStr, cmd_F))			BranchListBox->SetFocus();
 	else if (USAME_TI(cmd_F, "ReturnList"))			ModalResult = mrCancel;
-	else if (StartsText("IncSearch", cmd_F))		FindCommitEdit->SetFocus();
-	else if (StartsText("ShowFileInfo", cmd_F))		CommitInfoAction->Execute();
+	else if (USAME_TI(cmd_F, "IncSearch"))			FindCommitEdit->SetFocus();
+	else if (USAME_TI(cmd_F, "ShowFileInfo"))		CommitInfoAction->Execute();
 	else if (USAME_TI(get_CmdStr(cmd_F), "Pack"))	ArchiveAction->Execute();
 	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
 	else return;
@@ -847,7 +858,7 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 			g_rc.Left = xp; g_rc.SetWidth(g_w); g_rc.SetHeight(g_w); g_rc.Offset(0, g_w);
 			for (int i=1; i<=lbuf.Length(); i++) {
 				WideChar c = lbuf[i];
-				cv->Brush->Color = (c=='-')? clRed : (c=='+')? clGreen : col_None;
+				cv->Brush->Color = (c=='-')? col_GitDel : (c=='+')? col_GitIns : col_None;
 				if (cv->Brush->Color!=col_None) {
 					cv->FillRect(g_rc);
 					g_rc.Offset(g_w, 0);
@@ -858,7 +869,7 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 	else {
 		for (int i=1; i<=lbuf.Length(); i++) {
 			WideChar c = lbuf[i];
-			out_TextEx(cv, xp, yp, c, (c=='-')? clRed : (c=='+')? clGreen : col_fgTxtPrv);
+			out_TextEx(cv, xp, yp, c, (c=='-')? col_GitDel : (c=='+')? col_GitIns : col_fgTxtPrv);
 		}
 	}
 
@@ -873,11 +884,13 @@ void __fastcall TGitViewer::DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
 
 	if		(ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, Key_to_CmdV(KeyStr)))
-											;
-	else if (USAME_TI(cmd_F, "ReturnList")) ModalResult = mrCancel;
-	else if (is_ToLeftOpe(KeyStr, cmd_F))	BranchListBox->SetFocus();
-	else if (is_ToRightOpe(KeyStr, cmd_F))	CommitListBox->SetFocus();
-	else if (USAME_TI(cmd_F, "FileEdit"))	EditFileAction->Execute();
+												;
+	else if (USAME_TI(cmd_F, "ReturnList")) 	ModalResult = mrCancel;
+	else if (is_ToLeftOpe(KeyStr, cmd_F))		BranchListBox->SetFocus();
+	else if (is_ToRightOpe(KeyStr, cmd_F))		CommitListBox->SetFocus();
+	else if (USAME_TI(cmd_F, "FileEdit"))		EditFileAction->Execute();
+	else if (USAME_TI(cmd_F, "ShowFileInfo"))	DiffDetailAction->Execute();
+
 	else if (contained_wd_i(KeysStr_Popup, KeyStr))
 											show_PopupMenu(lp);
 	else return;
@@ -1115,7 +1128,8 @@ void __fastcall TGitViewer::OpenTmpArcActionExecute(TObject *Sender)
 									+ ExtractFileName(ExcludeTrailingPathDelimiter(WorkDir)) + ".zip";
 		UnicodeString prm;
 		prm.sprintf(_T("archive --format=zip %s --output=\"%s\""), CommitID.c_str(), yen_to_slash(tmp_name).c_str());
-		if (!SameText(GitExeStr(prm), "ERROR") && file_exists(tmp_name)) {
+
+		if (GitShellExe(prm, WorkDir) && file_exists(tmp_name)) {
 			RetArcFile	= tmp_name;
 			ModalResult = mrOk;
 		}
@@ -1141,36 +1155,6 @@ void __fastcall TGitViewer::LogThisCommitActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//Diffツールを起動
-//---------------------------------------------------------------------------
-void __fastcall TGitViewer::DiffToolActionExecute(TObject *Sender)
-{
-	UnicodeString fnam = GetDiffFileName();
-	if (!fnam.IsEmpty()) {
-		UnicodeString fnam2;
-		if (fnam.Pos(" => ")) {
-			fnam2 = get_tkn_r(fnam, " => ");
-			fnam =  get_tkn(fnam, " => ");
-		}
-		if (fnam2.IsEmpty()) fnam2 = fnam;
-
-		UnicodeString prm;
-		if (!CommitID.IsEmpty() && !ParentID.IsEmpty()) {
-			prm.sprintf(_T("difftool -y %s:%s %s:%s"),
-				get_tkn(ParentID, " ").c_str(), fnam.c_str(), CommitID.c_str(), fnam2.c_str());
-		}
-		else {
-			prm.sprintf(_T("difftool -y %s %s"), DiffOpt.c_str(), fnam.c_str());
-		}
-		GitExeStr(prm);
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TGitViewer::DiffActionUpdate(TObject *Sender)
-{
-	((TAction *)Sender)->Enabled = !GetDiffFileName().IsEmpty();
-}
-//---------------------------------------------------------------------------
 //親コミットをblame
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::BlameActionExecute(TObject *Sender)
@@ -1191,7 +1175,6 @@ void __fastcall TGitViewer::LogThisFileActionExecute(TObject *Sender)
 	FilterName = GetDiffFileName();
 	UpdateCommitList();
 }
-
 
 //---------------------------------------------------------------------------
 //コミット情報を表示
@@ -1315,6 +1298,69 @@ void __fastcall TGitViewer::CommitInfoActionUpdate(TObject *Sender)
 	ap->Enabled = ap->Visible;
 }
 
+
+//---------------------------------------------------------------------------
+//このファイルのハッシュをコピー
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::CopyFileHashActionExecute(TObject *Sender)
+{
+	UnicodeString prm;
+	prm.sprintf(_T("rev-parse %s:%s"), CommitID.c_str(), GetDiffFileName().c_str());
+	copy_to_Clipboard(GitExeStr(prm));
+}
+
+//---------------------------------------------------------------------------
+//このファイルの差分詳細を表示
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::DiffDetailActionExecute(TObject *Sender)
+{
+	TListBox *c_lp = CommitListBox;
+	int idx = c_lp->ItemIndex;	if (idx==-1) return;
+	git_rec *gp = (git_rec *)c_lp->Items->Objects[idx];
+
+	UnicodeString fnam = GetDiffFileName();
+	if (!fnam.IsEmpty()) {
+		UnicodeString prm = "diff";
+		UnicodeString fnam2;
+		UnicodeString fnam1  = get_GitDiffFiles(fnam, fnam2);
+
+		if		(gp->is_work)		 prm.cat_sprintf(_T(" -- %s"), fnam1.c_str());
+		else if (gp->is_index)		 prm.cat_sprintf(_T(" --cached -- %s"), fnam1.c_str());
+		else if (ParentID.IsEmpty()) prm.cat_sprintf(_T(" %s -- %s"), CommitID.c_str(), fnam1.c_str());
+		else {
+			UnicodeString parent = get_tkn(ParentID, ' ');
+			if (SameText(fnam1, fnam2)) {
+				prm.cat_sprintf(_T(" %s %s"),  parent.c_str(), CommitID.c_str());
+				prm.cat_sprintf(_T(" -- %s"), add_quot_if_spc(fnam1).c_str());
+			}
+			else {
+				prm.cat_sprintf(_T(" %s:%s %s:%s"),
+					parent.c_str(), fnam1.c_str(), CommitID.c_str(), fnam2.c_str());
+			}
+		}
+
+		GitBusy = true;
+		std::unique_ptr<TStringList> o_lst(new TStringList());
+		bool ok = (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0);
+		GitBusy = false;
+		if (ok) {
+			UnicodeString tit = "$ git " + sha1_to_short(prm);
+			o_lst->Insert(0, tit);
+			GeneralInfoDlg->Caption = tit.sprintf(_T("差分詳細 - %s"), fnam2.c_str());
+			GeneralInfoDlg->fromGitView = true;
+			if (gp->is_work || gp->is_index)
+				GeneralInfoDlg->FileName = IncludeTrailingPathDelimiter(WorkDir) + slash_to_yen(fnam1);
+			GeneralInfoDlg->GenInfoList->Assign(o_lst.get());
+			GeneralInfoDlg->ShowModal();
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::DiffDetailActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Enabled = !GetDiffFileName().IsEmpty();
+}
+
 //---------------------------------------------------------------------------
 //リモートブランチを表示
 //---------------------------------------------------------------------------
@@ -1373,15 +1419,19 @@ void __fastcall TGitViewer::GitPopupMenuPopup(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FindCommitEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
+	TListBox *lp = CommitListBox;
+	int c_idx = lp->ItemIndex;
+
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 	if		(contained_wd_i(KeysStr_CsrUp, KeyStr))   KeyStr = "UP";
 	else if (contained_wd_i(KeysStr_CsrDown, KeyStr)) KeyStr = "DOWN";
 
 	if		(equal_UP(KeyStr))	 { FindUpAction->Execute();		Key = 0; }
 	else if (equal_DOWN(KeyStr)) { FindDownAction->Execute();	Key = 0; }
-	else if (contained_wd_i(KeysStr_ToList, KeyStr) || equal_ENTER(KeyStr)) CommitListBox->SetFocus();
+	else if (contained_wd_i(KeysStr_ToList, KeyStr) || equal_ENTER(KeyStr)) lp->SetFocus();
 	else return;
 
+	if (c_idx!=lp->ItemIndex) lp->Invalidate();
 	Key = 0;
 }
 //---------------------------------------------------------------------------
@@ -1490,8 +1540,46 @@ void __fastcall TGitViewer::UpdateLogActionExecute(TObject *Sender)
 	FilterName = EmptyStr;
 	UpdateCommitList();
 }
+
 //---------------------------------------------------------------------------
-//git-gui の起動
+//Diffツールを起動
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::DiffToolActionExecute(TObject *Sender)
+{
+	TListBox *c_lp = CommitListBox;
+	int idx = c_lp->ItemIndex;	if (idx==-1) return;
+	git_rec *gp = (git_rec *)c_lp->Items->Objects[idx];
+
+	UnicodeString fnam = GetDiffFileName();
+	if (fnam.IsEmpty()) return;
+
+	UnicodeString prm = "difftool -y";
+	UnicodeString fnam2;
+	UnicodeString fnam1 = get_GitDiffFiles(fnam, fnam2);
+
+	if		(gp->is_work)	prm.cat_sprintf(_T(" %s"), fnam2.c_str());
+	else if (gp->is_index)	prm.cat_sprintf(_T(" --cached %s"), fnam2.c_str());
+	else if (!CommitID.IsEmpty()) {
+		if (!ParentID.IsEmpty()) {
+			prm.cat_sprintf(_T(" %s:%s %s:%s"),
+				get_tkn(ParentID, ' ').c_str(), fnam1.c_str(),
+				CommitID.c_str(), fnam2.c_str());
+		}
+		else {
+			prm.cat_sprintf(_T(" %s %s"), CommitID.c_str(), fnam2.c_str());
+		}
+	}
+
+	if (!GitShellExe(prm, WorkDir)) msgbox_ERR(USTR_FaildExec);
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::DiffActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Enabled = !GetDiffFileName().IsEmpty();
+}
+
+//---------------------------------------------------------------------------
+//git-guiを起動
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::GuiActionExecute(TObject *Sender)
 {
@@ -1506,7 +1594,7 @@ void __fastcall TGitViewer::GuiActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//Console 起動
+//Consoleを起動
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::ConsoleActionExecute(TObject *Sender)
 {

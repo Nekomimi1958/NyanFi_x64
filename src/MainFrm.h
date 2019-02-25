@@ -221,6 +221,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *FunctionListAction;
 	TAction *GetHashAction;
 	TAction *GifViewerAction;
+	TAction *GitDiffAction;
 	TAction *GitViewerAction;
 	TAction *GrayScaleAction;
 	TAction *GrepAbortAction;
@@ -1821,6 +1822,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall GitViewerActionExecute(TObject *Sender);
 	void __fastcall GitViewerActionUpdate(TObject *Sender);
 	void __fastcall Inf_CopyValueActionExecute(TObject *Sender);
+	void __fastcall GitDiffActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

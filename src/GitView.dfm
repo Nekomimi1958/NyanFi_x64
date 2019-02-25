@@ -405,10 +405,20 @@ object GitViewer: TGitViewer
       OnExecute = EditFileActionExecute
       OnUpdate = EditFileActionUpdate
     end
+    object CopyFileHashAction: TAction
+      Caption = #12371#12398#12501#12449#12452#12523#12398#12495#12483#12471#12517#12434#12467#12500#12540
+      OnExecute = CopyFileHashActionExecute
+      OnUpdate = DiffActionUpdate
+    end
     object LogThisFileAction: TAction
       Caption = #12371#12398#12501#12449#12452#12523#12398#12467#12511#12483#12488#23653#27508#12434#34920#31034'(&F)'
       OnExecute = LogThisFileActionExecute
       OnUpdate = DiffActionUpdate
+    end
+    object DiffDetailAction: TAction
+      Caption = #12371#12398#12501#12449#12452#12523#12398#24046#20998#35443#32048#12434#34920#31034'(&I)...'
+      OnExecute = DiffDetailActionExecute
+      OnUpdate = DiffDetailActionUpdate
     end
     object UpdateLogAction: TAction
       Caption = #26356#26032'(&U)'
@@ -503,8 +513,14 @@ object GitViewer: TGitViewer
     object Sep_d_1: TMenuItem
       Caption = '-'
     end
+    object N1: TMenuItem
+      Action = CopyFileHashAction
+    end
     object LogThisFileItem: TMenuItem
       Action = LogThisFileAction
+    end
+    object DiffDetailItem: TMenuItem
+      Action = DiffDetailAction
     end
     object Sep_d_2: TMenuItem
       Caption = '-'

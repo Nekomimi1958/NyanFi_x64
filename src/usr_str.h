@@ -188,6 +188,7 @@ UnicodeString conv_esc_char(UnicodeString s);
 
 UnicodeString yen_to_slash(UnicodeString s);
 UnicodeString slash_to_yen(UnicodeString s);
+UnicodeString sha1_to_short(UnicodeString s);
 
 bool same_ut_i(UnicodeString s, const _TCHAR *t);
 bool same_ut_s(UnicodeString s, const _TCHAR *t);

@@ -1069,6 +1069,8 @@ extern TColor col_GitBra;
 extern TColor col_GitBraR;
 extern TColor col_GitTag;
 extern TColor col_GitHash;
+extern TColor col_GitIns;
+extern TColor col_GitDel;
 
 extern TColor col_bgTlBar1;
 extern TColor col_bgTlBar2;
@@ -1936,6 +1938,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir = EmptyStr,
 		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL, TMemoryStream *o_ms = NULL);
 bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, DWORD *exit_cd = NULL);
 bool GitShellExe(UnicodeString prm, UnicodeString wdir, TMemoryStream *o_ms, DWORD *exit_cd = NULL);
+bool GitShellExe(UnicodeString prm, UnicodeString wdir);
 
 int  get_BusyTaskCount();
 int  get_MaxTaskCount();
@@ -2062,5 +2065,6 @@ void draw_GitGraph(UnicodeString s, UnicodeString s1, UnicodeString s2, TCanvas 
 	bool is_head = false, bool is_wip = false);
 void draw_GitTag(TCanvas *cv, int &x, int y, UnicodeString tag, int mgn = 0);
 void get_GitInf(UnicodeString dnam, TStringList *lst);
+UnicodeString get_GitDiffFiles(UnicodeString s, UnicodeString &fnam2);
 //---------------------------------------------------------------------------
 #endif

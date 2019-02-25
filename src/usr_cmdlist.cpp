@@ -115,6 +115,7 @@ void set_CmdList(
 		"F:FTPDisconnect=FTPホストから切断\n"
 		"F:ForwardDirHist=ディレクトリ履歴を進む\n"
 		"F:GetHash=ファイルのハッシュ値を取得\n"
+		"F:GitDiff=カーソル位置ファイルの差分を表示\n"
 		"F:GitViewer=Gitビュアー\n"
 		"F:HideSizeTime=サイズと更新日時を隠す\n"
 		"F:ImageViewer=イメージビュアーで開く\n"
@@ -507,7 +508,7 @@ void get_PrmList(
 			_T("ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|ScrollUpText|SelByList|SetColor|SetDirTime|")
 			_T("SetFontSize|SetMargin|SetPathMask|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SortDlg|")
 			_T("SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToTab|ViewTail|ToOppSameHash|WatchTail|")
-			_T("WidenCurList|WinPos|GitViewer"),
+			_T("WidenCurList|WinPos|GitDiff|GitViewer"),
 			cmd))
 		{
 			cp->Enabled = true;
@@ -747,12 +748,15 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "FixTabPath")) {
 		params.USET_T("\nON : カレント側を固定\nOFF : 固定解除\n");
 	}
+	else if (USAME_TI(cmd, "GitDiff")) {
+		params.USET_T("\nHD : HEAD から差分を表示\nXT : 外部diffツールで表示\n");
+	}
 	else if (USAME_TI(cmd, "GitViewer")) {
 		params.sprintf(_T("%s"),
 			_T("\n")
 			_T("N0 : コミット履歴数の制限を外す\n")
 			_T("N30 : コミット履歴数を制限する\n")
-			_T("CP : カーソル位置項目のコミット履歴を表示\n"));
+			_T("CP : カーソル位置ファイルのコミット履歴を表示\n"));
 	}
 	else if (USAME_TI(cmd, "HelpContents")) {
 		params.USET_T("\nCI : コマンドの索引\nFI : コマンドの機能別索引\nCH : 変更履歴\n");

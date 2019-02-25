@@ -211,6 +211,8 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"GitBraR=Git: リモート参照\n"
 		"GitTag=Git: タグ\n"
 		"GitHash=Git: ハッシュ\n"
+		"GitIns=Git: + 行\n"
+		"GitDel=Git: - 行\n"
 		"bgHint=|ヒント表示の背景色\n"
 		"fgHint=ヒント表示の文字色\n"
 		"bgWarn=警告表示の背景色\n"

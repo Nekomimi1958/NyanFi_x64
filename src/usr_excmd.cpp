@@ -444,9 +444,9 @@ const UnicodeString XCMD_SubCmds =
 
 //定義済み変数の名前リスト
 const UnicodeString XCMD_VarNames =
-	"UserName|ExePath|TmpPath|CurPath|OppPath|FileName|BaseName|DirName|DownloadName|FileSize|FileSizeF|FileTime|"
-	"FileTimeF|Date|Time|TabNo|FileCount|DirCount|SelCount|SelFileCount|SelDirCount|VolumeLabel|ScrMode|SortMode|"
-	"SelText|LineNo|LineText|CursorPosY|CursorPosX|PageSize|Battery|TaskCount|MatchedStr|CodePage|MenuIndex|"
+	"UserName|ExePath|TmpPath|CurPath|OppPath|FileName|NamePart|BaseName|DirName|DownloadName|FileSize|FileSizeF|"
+	"FileTime|FileTimeF|Date|Time|TabNo|FileCount|DirCount|SelCount|SelFileCount|SelDirCount|VolumeLabel|ScrMode|"
+	"SortMode|SelText|LineNo|LineText|CursorPosY|CursorPosX|PageSize|Battery|TaskCount|MatchedStr|CodePage|MenuIndex|"
 	"ExitCode|WinWidth|WinHeight|Clipboard|Buffer|BufferLength|BufferCount|BufferIndex|BufferLine|CurFiles|SelFiles|"
 	"ModalResult|ThisName";
 
@@ -690,6 +690,7 @@ file_rec *XCMD_set_cfp(UnicodeString fnam, UnicodeString cnam, file_rec *cfp)
 		XCMD_set_Var(_T("FileName"), XCMD_cur_f_name);
 		XCMD_set_Var(_T("BaseName"), XCMD_cur_bnam);
 		XCMD_set_Var(_T("DirName"),  ExtractFileDir(XCMD_cur_f_name));
+		XCMD_set_Var(_T("NamePart"), ExtractFileName(XCMD_cur_f_name));
 		XCMD_FileChanged = true;
 	}
 

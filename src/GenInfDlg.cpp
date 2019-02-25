@@ -42,6 +42,7 @@ void __fastcall TGeneralInfoDlg::FormCreate(TObject *Sender)
 
 	isVarList	 = isLog = isGit = isDirs = isTree = isFTP = isFileList = isPlayList = false;
 	isTail		 = isReverse = false;
+	fromGitView	 = false;
 	ToFilter	 = ToEnd = false;
 	ErrOnly 	 = false;
 	isFiltered	 = false;
@@ -259,6 +260,7 @@ void __fastcall TGeneralInfoDlg::FormClose(TObject *Sender, TCloseAction &Action
 
 	isVarList	 = isLog = isGit = isDirs = isTree = isFTP = isFileList = isPlayList = false;
 	isTail		 = isReverse = false;
+	fromGitView	 = false;
 	ToFilter	 = ToEnd = false;
 	ErrOnly 	 = false;
 	isFiltered	 = false;
@@ -406,6 +408,21 @@ bool __fastcall TGeneralInfoDlg::UpdateList(bool reload)
 
 		if (idx!=-1) idx = GenInfoBuff->IndexOfObject((TObject*)(NativeInt)idx);
 		isFiltered = true;
+	}
+	//Git(ファイル差分)
+	else if (isGit && (!FileName.IsEmpty() || fromGitView)) {
+		int lno = 0;
+		for (int i=0; i<GenInfoList->Count; i++) {
+			UnicodeString lbuf = GenInfoList->Strings[i];
+			if (StartsStr("@@ ", lbuf)) {
+				UnicodeString s = get_tkn(get_tkn_r(lbuf, "@@ "), " @@ ");
+				s = get_tkn(get_tkn_r(s, ' '), ',');
+				s.Delete(1, 1);
+				lno = s.ToIntDef(1);
+			}
+			GenInfoBuff->AddObject(lbuf, (TObject*)(NativeInt)lno);
+		}
+		isFiltered = false;
 	}
 	//通常表示
 	else {
@@ -669,7 +686,16 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	}
 
 	//行番号
-	if (ShowLineNoAction->Checked) LineNoOut(cv, rc, (int)lp->Items->Objects[Index] + 1);
+	if (ShowLineNoAction->Checked) {
+		if (isGit) {
+			int n  = (int)lp->Items->Objects[Index];
+			int n1 = (Index>1)? (int)lp->Items->Objects[Index - 1] : 0;
+			LineNoOut(cv, rc, (n!=n1)? n : 0);
+		}
+		else {
+			LineNoOut(cv, rc, (int)lp->Items->Objects[Index] + 1);
+		}
+	}
 
 	//背景色
 	cv->Brush->Color = State.Contains(odSelected)? (lp->Focused()? col_selItem : col_oppItem) :
@@ -785,8 +811,8 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	//Git
 	else if (isGit) {
 		TColor fg = use_fgsel? col_fgSelItem :
-			 		StartsStr("$ git ", lbuf)? col_Headline :
-		 	 		StartsStr("-", lbuf)? clRed : StartsStr("+", lbuf)? clGreen : col_fgList;
+			 		(StartsStr("$ git ", lbuf) || StartsStr("@@ ", lbuf))? col_Headline :
+		 	 		StartsStr("-", lbuf)? col_GitDel : StartsStr("+", lbuf)? col_GitIns : col_fgList;
 		UnicodeString s = split_GitGraphStr(lbuf);
 		if (!s.IsEmpty()) {
 			UnicodeString s1 = (Index>1)? get_GitGraphStr(lp->Items->Strings[Index - 1]) : EmptyStr;
@@ -1063,7 +1089,7 @@ void __fastcall TGeneralInfoDlg::ViewListActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = FileName.IsEmpty();
-	ap->Enabled = (GenListBox->Count>0);
+	ap->Enabled = (GenListBox->Count>0) && !fromGitView;
 }
 //---------------------------------------------------------------------------
 //ファイルをテキストビュアーで開く

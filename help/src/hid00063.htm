@@ -134,6 +134,7 @@ MsgBox_%..N%回目です
 <tr><th>CurPath</th><td>カレントのディレクトリ(末尾に \)</td></tr>
 <tr><th>OppPath</th><td>反対側のディレクトリ(末尾に \)</td></tr>
 <tr><th>FileName</th><td>カーソル位置(または閲覧中)のパス付きファイル名</td></tr>
+<tr><th>NamePart</th><td>カーソル位置(または閲覧中)のパス無しファイル名</td></tr>
 <tr><th>BaseName</th><td>カーソル位置(または閲覧中)のパス無しファイル名主部</td></tr>
 <tr><th>DirName</th><td>カーソル位置(または閲覧中)ファイルのディレクトリ名(末尾の \ は無し)</td></tr>
 <tr><th>FileSize</th><td>カーソル位置(または閲覧中)ファイルのサイズ(バイト単位、未定の場合 -1)</td></tr>
@@ -150,6 +151,7 @@ MsgBox_%..N%回目です
 <tr><th>SelFileCount</th><td>カレントの選択ファイル数</td></tr>
 <tr><th>SelDirCount</th><td>カレントの選択ディレクトリ数</td></tr>
 <tr><th>SelFiles</th><td>カレントで選択中のパス付きファイル名リスト(改行区切り、ディレクトリは末尾が <b>\</b>)</td></tr>
+
 <tr><th>VolumeLabel</th><td>カレントのボリュームラベル</td></tr>
 <tr><th id="ScrMode">ScrMode</th><td>画面モード (FL:ファイラー、TV:テキストビュアー、IV:イメージビュアー、GR:文字列検索(GREP))</td></tr>
 <tr><th>SortMode</th><td>カレントのソート方法 (F :名前、E :拡張子、D :更新日時、S :サイズ、A :属性、U :なし、L :場所)</td></tr>
@@ -402,6 +404,7 @@ MsgBox_%Buffer%
 </div>
 <div class="spc_box">
 <b>例</b>: Git_&quot;clone https://github.com/Nekomimi1958/NyanFi_x64.git&quot;<br>
+<b>例</b>: Git_&quot;add %NamePart%&quot;<br>
 <b>例</b>: Git_&quot;config --global -l&quot;: ListBuffer_Git<br>
 <b>例</b>: Git_&quot;log --oneline&quot;: ListBuffer_&quot;Git - %CurPath%&quot;
 </div>

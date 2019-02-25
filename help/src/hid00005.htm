@@ -1188,6 +1188,13 @@ FindTag<span class="pram_text">_;</span>
 複数ファイルのハッシュ値をコピーしたい場合は <a href="#CopyFileName">CopyFileName</a>_$G(～) コマンドを利用してください。<br>
 <a href="#CopyFileName">→ CopyFileName</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>
 
+<dt id="GitDiff">GitDiff<span class="pram_text">[_HD][;XT]</span>
+<dd>Gitの作業ディレクトリにいる場合、カーソル位置ファイルの差分詳細を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+パラメータを指定しない場合はインデックスからの、<b>HD</b> を指定した場合は <b>HEAD</b> から差分が表示されます。<br>
+パラメータに <b>XT</b> を指定すると、git に設定されている外部diffツールで表示します。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+<a href="hid00090.htm">→ Git の利用について</a>
+
 <dt id="GitViewer">GitViewer<span class="pram_text">[_N履歴制限数(デフォルト=100)[;CP]]</span>
 <dd>Gitの作業ディレクトリにいる場合、<a href="hid00090.htm#GitViewer">Gitビュアー</a>が表示されます。<br>
 ブランチ一覧、コミット履歴、差分の概略を確認でき、ブランチやコミットに対する操作、Console、GUI、diffツールの起動などを行えます。<br>
@@ -1197,7 +1204,7 @@ FindTag<span class="pram_text">_;</span>
 <b>例</b>: GitViewer_N50<br>
 </div>
 <div class="spc_box">
-パラメータに <b>CP</b> を指定すると、カーソル位置の項目のみについてのコミット履歴を表示します。<br>
+パラメータに <b>CP</b> を指定すると、カーソル位置ファイルのみについてのコミット履歴を表示します。<br>
 ビュアーで<span class="btn_frame">更新</span>ボタンまたは<span class="btn_frame">F5</span>キーを押すと絞り込みが解除されます。<br>
 </div>
 <div class="spc_box">

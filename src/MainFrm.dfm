@@ -5444,6 +5444,11 @@ object NyanFiForm: TNyanFiForm
       Caption = #34920#31034#21517#12398#22793#26356'(&R)...'
       OnExecute = FK_RenameActionExecute
     end
+    object GitDiffAction: TAction
+      Category = 'Command'
+      OnExecute = GitDiffActionExecute
+      OnUpdate = GitViewerActionUpdate
+    end
   end
   object TaskSttTimer: TTimer
     Enabled = False

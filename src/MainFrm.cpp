@@ -16543,22 +16543,69 @@ void __fastcall TNyanFiForm::FixTabPathActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//カーソル位置ファイルの差分を表示
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GitDiffActionExecute(TObject *Sender)
+{
+	try {
+		if (!IsCurFList()) UserAbort(USTR_CantOperate);
+
+		UnicodeString wdir = get_GitTopPath(CurPath[CurListTag]);
+		if (wdir.IsEmpty()) UserAbort(USTR_NotRepository);
+
+		file_rec *cfp = GetCurFrecPtr(true);
+		if (!cfp || cfp->is_dir) Abort();
+
+		UnicodeString fnam = cfp->f_name;
+		UnicodeString path = fnam;
+		remove_top_text(path, wdir);
+		path = yen_to_slash(path);
+
+		if (TEST_ActParam("XT")) {
+			UnicodeString prm = "difftool -y";
+			if (TEST_DEL_ActParam("HD")) prm.UCAT_T(" HEAD");
+			prm.cat_sprintf(_T(" -- %s"), path.c_str());
+			if (!GitShellExe(prm, wdir)) UserAbort(USTR_FaildExec);
+		}
+		else {
+			UnicodeString prm = "diff";
+			if (TEST_DEL_ActParam("HD")) prm.UCAT_T(" HEAD");
+			prm.cat_sprintf(_T(" -- %s"), path.c_str());
+			std::unique_ptr<TStringList> o_lst(new TStringList());
+			DWORD exit_code;
+			if (!GitShellExe(prm, wdir, o_lst.get(), &exit_code) || exit_code!=0) UserAbort(USTR_FaildProc);
+
+			UnicodeString tit = "$ git " + sha1_to_short(prm);
+			o_lst->Insert(0, tit);
+			GeneralInfoDlg->Caption = tit.sprintf(_T("差分詳細 - %s"), path.c_str());
+			GeneralInfoDlg->FileName = cfp->f_name;
+			GeneralInfoDlg->GenInfoList->Assign(o_lst.get());
+			GeneralInfoDlg->ShowModal();
+		}
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+}
+//---------------------------------------------------------------------------
 //Gitビュアー
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GitViewerActionExecute(TObject *Sender)
 {
 	try {
 		if (!IsCurFList()) UserAbort(USTR_CantOperate);
-		UnicodeString wnam = get_GitTopPath(CurPath[CurListTag]);
-		if (wnam.IsEmpty()) TextAbort(_T("Gitの作業ディレクトリではありません。"));
+		UnicodeString wdir = get_GitTopPath(CurPath[CurListTag]);
+		if (wdir.IsEmpty()) UserAbort(USTR_NotRepository);
 
 		if (!GitViewer) GitViewer = new TGitViewer(this);	//初回に動的作成
 		if (TEST_DEL_ActParam("CP")) {
-			UnicodeString fnam = GetCurFileName();
-			remove_top_text(fnam, wnam);
-			GitViewer->FilterName = yen_to_slash(fnam);
+			file_rec *cfp = GetCurFrecPtr(true);
+			if (!cfp || cfp->is_dir) Abort();
+			UnicodeString path = cfp->f_name;
+			remove_top_text(path, wdir);
+			GitViewer->FilterName = yen_to_slash(path);
 		}
-		GitViewer->WorkDir = wnam;
+		GitViewer->WorkDir = wdir;
 		GitViewer->HistoryLimit = StartsText('N', ActionParam)? extract_int_def(ActionParam) : GIT_DEF_HISTLIMIT;
 		SetDirWatch(false);
 		TModalResult mr = GitViewer->ShowModal();
@@ -21402,8 +21449,7 @@ void __fastcall TNyanFiForm::SelGitChangedActionExecute(TObject *Sender)
 {
 	try {
 		if (!IsCurFList()) UserAbort(USTR_CantOperate);
-		if (get_GitTopPath(CurPath[CurListTag]).IsEmpty())
-			TextAbort(_T("Gitの作業ディレクトリではありません。"));
+		if (get_GitTopPath(CurPath[CurListTag]).IsEmpty()) UserAbort(USTR_NotRepository);
 
 		std::unique_ptr<TStringList> glst(new TStringList());
 		SetDirWatch(false);

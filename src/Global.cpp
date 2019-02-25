@@ -849,6 +849,8 @@ TColor col_GitBra;		//  ブランチ
 TColor col_GitBraR;		//  リモートブランチ
 TColor col_GitTag;		//  タグ
 TColor col_GitHash;		//  ハッシュ
+TColor col_GitIns;		//  - 行
+TColor col_GitDel;		//  + 行
 
 TColor col_bgTlBar1;	//ツールバーのグラデーション開始色
 TColor col_bgTlBar2;	//ツールバーのグラデーション終了色
@@ -9023,6 +9025,8 @@ void set_col_from_ColorList()
 		{&col_GitBraR,	_T("GitBraR"),		clOlive},
 		{&col_GitTag,	_T("GitTag"),		clYellow},
 		{&col_GitHash,	_T("GitHash"),		clGray},
+		{&col_GitIns,	_T("GitIns"),		clGreen},
+		{&col_GitDel,	_T("GitDel"),		clRed},
 		{&col_bgTlBar1,	_T("bgTlBar1"),		clWhite},
 		{&col_bgTlBar2,	_T("bgTlBar2"),		clWebGainsboro},
 		{&col_fgTlBar,	_T("fgTlBar"),		clBlack},
@@ -11137,7 +11141,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 //---------------------------------------------------------------------------
 bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, DWORD *exit_cd)
 {
-	if (!file_exists(CmdGitExe)) return false;
+	if (!GitExists) return false;
 
 	wdir = ExcludeTrailingPathDelimiter(wdir);
 	UnicodeString cmdln = add_quot_if_spc(CmdGitExe);
@@ -11152,7 +11156,7 @@ bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, DWOR
 //---------------------------------------------------------------------------
 bool GitShellExe(UnicodeString prm, UnicodeString wdir, TMemoryStream *o_ms, DWORD *exit_cd)
 {
-	if (!file_exists(CmdGitExe)) return false;
+	if (!GitExists) return false;
 
 	wdir = ExcludeTrailingPathDelimiter(wdir);
 	UnicodeString cmdln = add_quot_if_spc(CmdGitExe);
@@ -11163,6 +11167,17 @@ bool GitShellExe(UnicodeString prm, UnicodeString wdir, TMemoryStream *o_ms, DWO
 	if (exit_cd) *exit_cd = exit_code;
 
 	return res;
+}
+//---------------------------------------------------------------------------
+bool GitShellExe(UnicodeString prm, UnicodeString wdir)
+{
+	if (!GitExists) return false;
+
+	UnicodeString cmdln = add_quot_if_spc(CmdGitExe);
+	if (!prm.IsEmpty()) cmdln.cat_sprintf(_T(" %s"), prm.c_str());
+
+	DWORD exit_code = 0;
+	return (Execute_cmdln(cmdln, ExcludeTrailingPathDelimiter(wdir), "H", &exit_code) && exit_code==0);
 }
 
 //---------------------------------------------------------------------------
@@ -13485,5 +13500,38 @@ void get_GitInf(UnicodeString dnam, TStringList *lst)
 		}
 		add_PropLine_if(_T("Git-Status"), stt_str, lst);
 	}
+}
+
+//---------------------------------------------------------------------------
+UnicodeString get_GitDiffFiles(UnicodeString s, UnicodeString &fnam2)
+{
+	UnicodeString s1, fnam1;
+	if (s.Pos('{')) {
+		if (remove_top_s(s, '{')) {
+			s1	  = split_tkn(s, '}');
+			fnam1 = get_tkn(s1, " => ") + s;
+			fnam2 = get_tkn_r(s1, " => ");
+			if (!fnam2.IsEmpty()) fnam2 += s;
+		}
+		else {
+			s1	  = split_tkn(s, '{');
+			s	  = get_tkn(s, '}');
+			fnam1 = s1 + get_tkn(s, " => ");
+			fnam2 = get_tkn_r(s, " => ");
+			if (!fnam2.IsEmpty()) fnam2 = s1 + fnam2;
+		}
+	}
+	else {
+		if (s.Pos(" => ")) {
+			fnam1 = get_tkn(s, " => ");
+			fnam2 = get_tkn_r(s, " => ");
+		}
+		else {
+			fnam1 = s;
+		}
+	}
+
+	if (fnam2.IsEmpty()) fnam2 = fnam1;
+	return fnam1;
 }
 //---------------------------------------------------------------------------

@@ -201,6 +201,7 @@ public:		// ユーザー宣言
 	bool isFTP;			//FTP
 	bool isTail;		//末尾表示
 	bool isReverse;		//逆順表示
+	bool fromGitView;	//GitViewerから表示
 	bool ErrOnly;		//エラー部分のみ(ログ)
 	bool ToEnd;			//最後に移動
 	bool ToFilter;		//フィルタ欄にフォーカス
