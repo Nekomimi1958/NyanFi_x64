@@ -5,8 +5,6 @@
 #include <vcl.h>
 #pragma hdrstop
 #include <memory>
-#include <stdlib.h>
-#include <math.h>
 #include <System.StrUtils.hpp>
 #include <RegularExpressions.hpp>
 #include <Vcl.Clipbrd.hpp>
@@ -245,9 +243,13 @@ long double __fastcall TCalculator::EvalNumStr(UnicodeString s)
 			bool is_fct = remove_end_s(s, '!');
 			wchar_t *topptr = s.c_str();
 			wchar_t *endptr;
+#if defined(_WIN64)
 			v = wcstold(topptr, &endptr);
+#else
+			v = _wcstold(topptr, &endptr);
+#endif
 			if ((topptr += s.Length()) != endptr) Abort();
-			if (v==HUGE_VALL) Abort();
+			if (is_IllegalVal(v)) Abort();
 
 			//階乗
 			if (is_fct) {
@@ -327,7 +329,7 @@ long double __fastcall TCalculator::EvalFunc(UnicodeString s)
 			if (!handled) {
 				ErrMsg = "不明な関数";  Abort();
 			}
-			else if (ans==HUGE_VALL || IsInfinite(ans) || IsNan(ans)) {
+			else if (is_IllegalVal(ans)) {
 				ErrMsg = "異常値またはオーバーフロー";  Abort();
 			}
 		}
@@ -437,7 +439,7 @@ void __fastcall TCalculator::EvalOpeItem(
 			}
 		}
 
-		if (ans==HUGE_VALL || IsInfinite(ans) || IsNan(ans)) {
+		if (is_IllegalVal(ans)) {
 			ErrMsg = "異常値またはオーバーフロー";  Abort();
 		}
 
@@ -871,9 +873,9 @@ void __fastcall TCalculator::HistComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	bool handled = true;
 	if (equal_ENTER(KeyStr))
 		CalcLine(Trim(get_tkn(HistComboBox->Text, '=')));
-	else if (USAME_TI(KeyStr, "UP") && !HistComboBox->DroppedDown)
+	else if (equal_UP(KeyStr) && !HistComboBox->DroppedDown)
 		LineEdit->SetFocus();
-	else if (USAME_TI(KeyStr, "DOWN") && !HistComboBox->DroppedDown)
+	else if (equal_DOWN(KeyStr) && !HistComboBox->DroppedDown)
 		HistComboBox->DroppedDown = true;
 	else if (USAME_TI(KeyStr, "BKSP")) {
 		UnicodeString lbuf = HistComboBox->Text;

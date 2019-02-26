@@ -5,13 +5,20 @@
 <title>Git ‚Ì—˜—p‚É‚Â‚¢‚Ä</title>
 <link rel="stylesheet" type="text/css" href="help.css">
 <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+	<param name="Keyword" value="blame">
+	<param name="Keyword" value="FileEdit">
 	<param name="Keyword" value="Git">
 	<param name="Keyword" value="Git for Windows">
 	<param name="Keyword" value="git.exe">
+	<param name="Keyword" value="git-bash.exe">
+	<param name="Keyword" value="git-gui.exe">
 	<param name="Keyword" value="GitViewer">
 	<param name="Keyword" value="Gitƒrƒ…ƒA[">
 	<param name="Keyword" value="OpenGitURL">
+	<param name="Keyword" value="Pack">
 	<param name="Keyword" value="SelGitChanged">
+	<param name="Keyword" value="ShowFileInfo">
+	<param name="Keyword" value="ƒRƒ~ƒbƒg—š—ð">
 	<param name="Keyword" value="ƒtƒ@ƒCƒ‹î•ñ">
 	<param name="Keyword" value="ˆê——ƒ_ƒCƒAƒƒO">
 </object>
@@ -24,9 +31,12 @@
 <b>git.exe</b> (Git for Windows) ‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚é‚ÆAŒãq‚Ì Git ŠÖ˜A‹@”\‚ð—˜—p‚Å‚«‚Ü‚·B<br>
 •W€“I‚ÈêŠ(%PROGRAMFILES%\Git\cmd ‚È‚Ç)‚ÉƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚éê‡‚ÍŽ©“®“I‚ÉŒŸo‚³‚ê‚Ü‚·‚ªA‚»‚¤‚Å‚È‚¢ê‡‚Í <a href="hid00024.htm#Other">ƒIƒvƒVƒ‡ƒ“Ý’è - ˆê”Ê2 - ‚»‚Ì‘¼</a> ‚ÅÝ’è‚µ‚Ä‚­‚¾‚³‚¢B<br>
 </p>
-<br>
 
-<h3>ƒtƒ@ƒCƒ‹î•ñ‚Ì•\Ž¦</h3>
+<p class="link_box">
+<a href="#FileInfo">ƒtƒ@ƒCƒ‹î•ñ‚Ì•\Ž¦</a> ^ <a href="#GitViewer">Gitƒrƒ…ƒA[</a> ^ <a href="#GitCommand">Git •â•ƒRƒ}ƒ“ƒh‚Ì—˜—p</a> 
+</P>
+
+<h3 id="FileInfo">ƒtƒ@ƒCƒ‹î•ñ‚Ì•\Ž¦</h3>
 <p>’¼‰º‚É .git ‚ª‚ ‚éƒfƒBƒŒƒNƒgƒŠA‚Ü‚½‚Í‚»‚Ì’†‚Ì [..] ˆÊ’u‚Å‚ÍAƒtƒ@ƒCƒ‹î•ñ‚ÉˆÈ‰º‚Ì€–Ú‚ª•\Ž¦‚³‚ê‚Ü‚·B</p>
 
 <dl>
@@ -40,7 +50,7 @@ GitHubAGitLabABitBucket ‚Å‚Í‘½•ª‘åä•v‚¾‚ÆŽv‚¢‚Ü‚·B<br>
 <dd>’¼‘O‚ÌƒRƒ~ƒbƒgî•ñ‚Å‚·BŠ‡ŒÊ“à‚Íƒ[ƒJƒ‹ŽQÆA&#x25b6 ‚Í &quot;HEAD -&gt;&quot; ‚ð•\‚µ‚Ä‚¢‚Ü‚·B<br>
 
 <dt class="no_bg">Git-Status
-<dd>git status --porcelain ƒRƒ}ƒ“ƒh‚ÌŽæ“¾Œ‹‰Ê‚©‚çAƒtƒ‰ƒO‚²‚Æ‚Ìƒtƒ@ƒCƒ‹”(ƒCƒ“ƒfƒbƒNƒX/ƒ[ƒLƒ“ƒOƒcƒŠ[)‚ð•\Ž¦‚µ‚Ü‚·B<br>
+<dd>&quot;git status --porcelain&quot; ‚ÌŽæ“¾Œ‹‰Ê‚©‚çAƒtƒ‰ƒO‚²‚Æ‚Ìƒtƒ@ƒCƒ‹”(ƒCƒ“ƒfƒbƒNƒX/ƒ[ƒLƒ“ƒOƒcƒŠ[)‚ð•\Ž¦‚µ‚Ü‚·B<br>
 —á‚¦‚ÎAƒ[ƒLƒ“ƒOƒcƒŠ[‚É2ŒÂ‚Ì•ÏX‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ª‚ ‚éê‡A&quot;M:_/2&quot; ‚Æ•\Ž¦‚³‚ê‚Ü‚·B<br>
 <a href="hid00005.htm#SelGitChanged">SelGitChanged</a> ƒRƒ}ƒ“ƒh‚ðŽÀs‚·‚é‚ÆAƒJƒŒƒ“ƒg‚Å•ÏX‚³‚ê‚Ä‚¢‚éƒtƒ@ƒCƒ‹(ƒtƒ‰ƒO‚ª &quot;?&quot; ˆÈŠO)‚ª‘I‘ð‚³‚ê‚Ü‚·B<br>
 </dl>
@@ -76,27 +86,53 @@ Git‚Ìì‹ÆƒfƒBƒŒƒNƒgƒŠ“à‚Å <a href="hid00005.htm#GitViewer">GitViewer</a> ƒRƒ}ƒ“ƒ
 <dt class="no_bg">ƒRƒ~ƒbƒg—š—ð
 <dd>
 ‰æ–Ê‰E‘¤‚Ìã•”‚É‚Í<b>ƒRƒ~ƒbƒg—š—ð</b>‚ª•\Ž¦‚³‚ê‚Ü‚·B<br>
+<div class="info_text">
 ƒfƒtƒHƒ‹ƒg‚Å‚ÍA•\Ž¦‚³‚ê‚éƒRƒ~ƒbƒg—š—ð”‚ª100‚É§ŒÀ‚³‚ê‚Ä‚¢‚Ü‚·B‚±‚ê‚ð•ÏX‚µ‚½‚¢ê‡‚ÍA<b>GitViewer</b> ƒRƒ}ƒ“ƒh‚Ì <b>N</b>` ƒpƒ‰ƒ[ƒ^‚ÅŽw’è‚µ‚Ä‚­‚¾‚³‚¢B<br>
-‰EƒNƒŠƒbƒNƒƒjƒ…[‚©‚ç‚ÍAƒ^ƒO•t‚¯Aƒuƒ‰ƒ“ƒ`–¼/ƒRƒ~ƒbƒgID‚ÌƒRƒs[AZIPƒA[ƒJƒCƒu‚Ìì¬(<a href="hid00005.htm#Pack">Pack</a> ƒRƒ}ƒ“ƒh‚ÌƒL[‚Å‚à‰Â”\)AƒRƒ~ƒbƒgî•ñ‚Ì•\Ž¦(<a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> ƒRƒ}ƒ“ƒh‚ÌƒL[‚Å‚à‰Â”\)‚È‚Ç‚ðs‚¦‚Ü‚·B<br>
-‚Ü‚½u<b>ˆêŽžƒA[ƒJƒCƒu‚Æ‚µ‚ÄŠJ‚­</b>v‚Å‚ÍAƒRƒ~ƒbƒg‚ðˆêŽžƒA[ƒJƒCƒu‚Æ‚µ‚Äo—Í‚µAƒtƒ@ƒCƒ‰[‚É–ß‚Á‚Ä”½‘Î‘¤ƒŠƒXƒg‚ÅŠJ‚«‚Ü‚·BƒŠƒrƒWƒ‡ƒ“‚Ìƒtƒ@ƒCƒ‹ƒcƒŠ[‚ð‰{——‚µ‚½‚¢ê‡‚È‚Ç‚É—˜—p‚µ‚Ä‚­‚¾‚³‚¢B<br>
-u<b>‚±‚ÌƒRƒ~ƒbƒg‚Ü‚Å‚Ì—š—ð‚ð•\Ž¦</b>v‚Å‚ÍA§ŒÀ”ˆÈ~‚ÌƒRƒ~ƒbƒg‚ð•\Ž¦‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B<span class="btn_frame">XV</span>ƒ{ƒ^ƒ“‚Ü‚½‚Í<span class="btn_frame">F5</span>ƒL[‚ð‰Ÿ‚·‚ÆÅ‰‚Ìó‘Ô‚É–ß‚è‚Ü‚·B<br>
+</div>
 
 <div class="spc_box">
 ƒRƒ~ƒbƒg—š—ð‚Ì‰º•”‚É‚Í<b>ŒŸõƒo[</b>‚ª‚ ‚èAŒŸõŒê‚ð“ü—Í‚·‚é‚±‚Æ‚ÅƒRƒ~ƒbƒg‚ðã‰º•ûŒü‚ÉŒŸõ‚Å‚«‚Ü‚·B“ü—Í—“‚Ì•‚Í<span class="btn_frame">£</span>ƒ{ƒ^ƒ“‚Æ‚Ì‹«ŠE‚ðƒhƒ‰ƒbƒO‚·‚é‚±‚Æ‚Å•Ï‚¦‚ç‚ê‚Ü‚·B<br>
-<span class="btn_frame">XV</span>ƒ{ƒ^ƒ“(or<span class="btn_frame">F5</span>)‚ð‰Ÿ‚·‚Æ•\Ž¦‚ªXV‚³‚ê‚Ü‚·B<br>
-<span class="btn_frame">Console</span>ƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚ÆA•W€“I‚ÈêŠ‚É‚ ‚é <b>git-bash.exe</b> ‚ª‹N“®‚µ‚Ü‚·BŒ©‚Â‚©‚ç‚È‚¢ê‡A‚Ü‚½‚Í•Ê‚Ì‚à‚Ì‚ðŽw’è‚µ‚½‚¢ê‡‚ÍAƒo[‚Ì‰EƒNƒŠƒbƒNƒƒjƒ…[‚©‚ç‘I‘ð‚µ‚Ä‚­‚¾‚³‚¢B<br>
-<span class="btn_frame">GUI</span>ƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚ÆAƒfƒtƒHƒ‹ƒg‚Å‚Í•W€“I‚ÈêŠ‚É‚ ‚é <b>git-gui.exe</b> ‚ª‹N“®‚µ‚Ü‚·Bƒo[‚Ì‰EƒNƒŠƒbƒNƒƒjƒ…[‚©‚ç•ÏX‰Â”\‚Å‚·B<br>
+ŒŸõƒo[‚É‚ÍˆÈ‰º‚Ì‚æ‚¤‚Èƒc[ƒ‹ƒ{ƒ^ƒ“‚à‚ ‚è‚Ü‚·B<br>
+</div>
+
+<dl>
+<dt class="no_bg"><span class="btn_frame">XV</span><span style="font-weight: normal;">(<span class="btn_frame">F5</span>‚Å‚à‰Â)</span>
+<dd>ˆê——‚Ì•\Ž¦‚ðÅV‚Ìó‘Ô‚ÉXV‚µ‚Ü‚·B<br>
+<dt class="no_bg"><span class="btn_frame">Console</span>
+<dd>•W€“I‚ÈêŠ‚É‚ ‚é <b>git-bash.exe</b> ‚ª‹N“®‚µ‚Ü‚·BŒ©‚Â‚©‚ç‚È‚¢ê‡A‚Ü‚½‚Í•Ê‚Ì‚à‚Ì‚ðŽw’è‚µ‚½‚¢ê‡‚ÍAƒo[‚Ì‰EƒNƒŠƒbƒNƒƒjƒ…[‚©‚ç‘I‘ð‚µ‚Ä‚­‚¾‚³‚¢B<br>
+<dt class="no_bg"><span class="btn_frame">GUI</span>
+<dd>ƒfƒtƒHƒ‹ƒg‚Å‚Í•W€“I‚ÈêŠ‚É‚ ‚é <b>git-gui.exe</b> ‚ª‹N“®‚µ‚Ü‚·Bƒo[‚Ì‰EƒNƒŠƒbƒNƒƒjƒ…[‚©‚ç•ÏX‰Â”\‚Å‚·B
+</dl>
+
+<div class="spc_box">
+‰EƒNƒŠƒbƒNƒƒjƒ…[‚©‚ç‚ÍAƒ^ƒO•t‚¯Aƒuƒ‰ƒ“ƒ`–¼/ƒRƒ~ƒbƒgID‚ÌƒRƒs[AZIPƒA[ƒJƒCƒu‚Ìì¬(<a href="hid00005.htm#Pack">Pack</a> ƒRƒ}ƒ“ƒh‚ÌƒL[‚Å‚à‰Â)AƒRƒ~ƒbƒgî•ñ‚Ì•\Ž¦(<span class="btn_frame">ENTER</span>‚Ü‚½‚Í <a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> ƒRƒ}ƒ“ƒh‚ÌƒL[‚Å‚à‰Â)‚È‚Ç‚ðs‚¦‚Ü‚·B<br>
+‚Ü‚½u<b>ˆêŽžƒA[ƒJƒCƒu‚Æ‚µ‚ÄŠJ‚­</b>v‚Å‚ÍAƒRƒ~ƒbƒg‚ðˆêŽžƒA[ƒJƒCƒu‚Æ‚µ‚Äo—Í‚µAƒtƒ@ƒCƒ‰[‚É–ß‚Á‚Ä”½‘Î‘¤ƒŠƒXƒg‚ÅŠJ‚«‚Ü‚·BƒŠƒrƒWƒ‡ƒ“‚Ìƒtƒ@ƒCƒ‹ƒcƒŠ[‚ð‰{——‚µ‚½‚¢ê‡‚È‚Ç‚É—˜—p‚µ‚Ä‚­‚¾‚³‚¢B<br>
+u<b>‚±‚ÌƒRƒ~ƒbƒg‚Ü‚Å‚Ì—š—ð‚ð•\Ž¦</b>v‚Å‚ÍA§ŒÀ”ˆÈ~‚ÌƒRƒ~ƒbƒg‚ð•\Ž¦‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B<span class="btn_frame">XV</span>ƒ{ƒ^ƒ“‚ð‰Ÿ‚·‚ÆÅ‰‚Ìó‘Ô‚É–ß‚è‚Ü‚·B<br>
 </div>
 
 <dt class="no_bg">·•ªŠT—ª
 <dd>
 —š—ð‚ÅƒRƒ~ƒbƒg‚ð‘I‘ð‚·‚é‚ÆA‰º•”‚É‚»‚Ì·•ª‚ÌŠT—ª‚ª•\Ž¦‚³‚ê‚Ü‚·B<br>
-‰EƒNƒŠƒbƒNƒƒjƒ…[‚Ìu<b>diffƒc[ƒ‹‚ð‹N“®</b>v‚ÅAƒJ[ƒ\ƒ‹ˆÊ’u‚Ìƒtƒ@ƒCƒ‹‚Æ’¼‘O‚ÌƒRƒ~ƒbƒg‚Æ‚Ì·•ª‚ð git ‚ÉÝ’è‚³‚ê‚Ä‚¢‚éŠO•”ƒc[ƒ‹‚Å•\Ž¦‚Å‚«‚Ü‚·B
-ƒpƒX‚ªÈ—ª•\Ž¦‚É‚È‚Á‚Ä‚¢‚é‚ÆƒGƒ‰[‚É‚È‚é‚Ì‚Å’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢B<br>
-u<b>git gui blame</b>v‚Å‚ÍAeƒRƒ~ƒbƒg‚É‘Î‚·‚é blame ‚ð <b>Git Gui</b> ‚Å•\Ž¦‚µ‚Ü‚·B<br>
-u<b>ƒeƒLƒXƒgƒGƒfƒBƒ^‚ÅŠJ‚­</b>v‚ÅƒJ[ƒ\ƒ‹ˆÊ’u‚Ìƒtƒ@ƒCƒ‹‚ðŠJ‚¯‚Ü‚·(<a href="hid00005.htm#ToParentOnLeft">FileEdit</a> ƒRƒ}ƒ“ƒh‚ÌƒL[‚Å‚à‰Â)BƒŠƒ|ƒWƒgƒŠ“à‚Ìƒtƒ@ƒCƒ‹‚Í <b>NyanFi</b> ‚ÌˆêŽžƒfƒBƒŒƒNƒgƒŠ‚Éo—Í‚µ‚ÄŠJ‚«‚Ü‚·(&quot;core.autocrlf=true&quot; ‚È‚ç‰üs‚ðCR/LF‚É•ÏŠ·)B<br>
-u<b>‚±‚Ìƒtƒ@ƒCƒ‹‚ÌƒRƒ~ƒbƒg—š—ð‚ð•\Ž¦</b>v‚Å‚ÍAƒJ[ƒ\ƒ‹ˆÊ’uƒtƒ@ƒCƒ‹‚Ì‚Ý‚É‚Â‚¢‚Ä‚ÌƒRƒ~ƒbƒg—š—ð‚ð•\Ž¦‚µ‚Ü‚·B<span class="btn_frame">XV</span>ƒ{ƒ^ƒ“‚Ü‚½‚Í<span class="btn_frame">F5</span>ƒL[‚ð‰Ÿ‚·‚Æi‚èž‚Ý‚ª‰ðœ‚³‚ê‚Ü‚·B<br>
-u<b>‚±‚Ìƒtƒ@ƒCƒ‹‚Ì·•ªÚ×‚ð•\Ž¦</b>v(<a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> ƒRƒ}ƒ“ƒh‚ÌƒL[‚Å‚à‰Â”\)‚Å‚ÍAƒJ[ƒ\ƒ‹ˆÊ’uƒtƒ@ƒCƒ‹‚ÌeƒRƒ~ƒbƒg‚©‚ç‚Ì·•ªÚ×‚ð<a href="hid00073.htm">ˆê——ƒ_ƒCƒAƒƒO</a>‚Å•\Ž¦‚µ‚Ü‚·B<br>
+‰º•”ƒo[‚Ìƒc[ƒ‹ƒ{ƒ^ƒ“‚ÅAƒJ[ƒ\ƒ‹ˆÊ’u‚Ìƒtƒ@ƒCƒ‹‚É‘Î‚µ‚ÄˆÈ‰º‚Ì‘€ì‚ðs‚¦‚Ü‚·B<br>
+<dl>
+<dt class="no_bg"><span class="btn_frame">’Ç‰Á</span><span style="font-weight: normal;">(ì‹ÆƒcƒŠ[‚Ì‚Ý)</span>
+<dd>ƒtƒ@ƒCƒ‹‚ðƒCƒ“ƒfƒbƒNƒX‚É’Ç‰Á‚µ‚Ü‚·B
+<dt class="no_bg"><span class="btn_frame">ŽæÁ</span><span style="font-weight: normal;">(ƒCƒ“ƒfƒbƒNƒX‚Ì‚Ý)</span>
+<dd>ƒXƒe[ƒWƒ“ƒO‚ðŽæ‚èÁ‚µ‚Ü‚·B’Êí‚Í &quot;git reset HEAD `&quot; ‚ðAHEAD ‚ª‚È‚¢ê‡‚Í &quot;git rm --cached `&quot; ‚ðŽÀs‚µ‚Ü‚·B
+<dt class="no_bg"><span class="btn_frame">ƒRƒ~ƒbƒg</span>
+<dd>ƒXƒe[ƒWƒ“ƒO‚³‚ê‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚ðƒRƒ~ƒbƒg‚µ‚Ü‚·BƒƒbƒZ[ƒW‚ð“ü—Í‚·‚é‚½‚ß‚Ìƒ_ƒCƒAƒƒO‚ª•\Ž¦‚³‚ê‚Ü‚·B<br>
+
+<dt class="no_bg"><span class="btn_frame">·•ªÚ×</span><span style="font-weight: normal;">(<span class="btn_frame">ENTER</span>‚Ü‚½‚Í <a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> ƒRƒ}ƒ“ƒh‚ÌƒL[‚Å‚à‰Â)</span>
+<dd>eƒRƒ~ƒbƒg‚©‚ç‚Ì·•ªÚ×‚ð<a href="hid00073.htm">ˆê——ƒ_ƒCƒAƒƒO</a>‚Å•\Ž¦‚µ‚Ü‚·B
+<dt class="no_bg"><span class="btn_frame">•ÒW</span><span style="font-weight: normal;">(<a href="hid00005.htm#ToParentOnLeft">FileEdit</a> ƒRƒ}ƒ“ƒh‚ÌƒL[‚Å‚à‰Â)</span>
+<dd>ƒtƒ@ƒCƒ‹‚ðƒeƒLƒXƒgƒGƒfƒBƒ^‚ÅŠJ‚«‚Ü‚·BƒŠƒ|ƒWƒgƒŠ“à‚Ìƒtƒ@ƒCƒ‹‚Í <b>NyanFi</b> ‚ÌˆêŽžƒfƒBƒŒƒNƒgƒŠ‚Éo—Í‚µ‚ÄŠJ‚«‚Ü‚·(&quot;core.autocrlf=true&quot; ‚È‚ç‰üs‚ðCR/LF‚É•ÏŠ·)B
+<dt class="no_bg"><span class="btn_frame">Diff Tool</span>
+<dd>eƒRƒ~ƒbƒg‚©‚ç‚Ì·•ª‚ðAgit ‚ÉÝ’è‚³‚ê‚Ä‚¢‚éŠO•”Diffƒc[ƒ‹‚Å•\Ž¦‚µ‚Ü‚·B
+<dt class="no_bg"><span class="btn_frame">Blame</span>
+<dd>eƒRƒ~ƒbƒg‚É‘Î‚·‚é blame ‚ð <b>Git Gui</b> ‚Å•\Ž¦‚µ‚Ü‚·B
+</dl>
+‰EƒNƒŠƒbƒNƒƒjƒ…[‚©‚ç‚ÍAu<b>‚·‚×‚Ä‚ÌV‹Kì¬E•ÏXEíœ‚ð’Ç‰Á</b> (git add -A)v/u<b>‚·‚×‚Ä‚Ì•ÏXEíœ‚ð’Ç‰Á</b> (git add -u)v(ì‹ÆƒcƒŠ[‚Ì‚Ý)<Au<b>‚·‚×‚Ä‚ÌƒXƒe[ƒWƒ“ƒO‚ðŽæ‚èÁ‚µ</b>v(ƒCƒ“ƒfƒbƒNƒX‚Ì‚Ý)‚È‚Ç‚ðs‚¦‚Ü‚·(ƒRƒ~ƒbƒg—š—ð‚Ì‰EƒNƒŠƒbƒNƒƒjƒ…[‚Å‚à‰Â)B<br>
+‚Ü‚½u<b>‚±‚Ìƒtƒ@ƒCƒ‹‚ÌƒRƒ~ƒbƒg—š—ð‚ð•\Ž¦</b>v‚Å‚ÍAƒJ[ƒ\ƒ‹ˆÊ’uƒtƒ@ƒCƒ‹‚Ì‚Ý‚É‚Â‚¢‚Ä‚ÌƒRƒ~ƒbƒg—š—ð‚ð•\Ž¦‚Å‚«‚Ü‚·B<span class="btn_frame">XV</span>ƒ{ƒ^ƒ“‚Ü‚½‚Í<span class="btn_frame">F5</span>ƒL[‚ð‰Ÿ‚·‚Æi‚èž‚Ý‚ª‰ðœ‚³‚ê‚Ü‚·B<br>
 </dl>
 
 <div class="spc_box_p">
@@ -112,7 +148,7 @@ Git‚Ìì‹ÆƒfƒBƒŒƒNƒgƒŠ“à‚Å <a href="hid00005.htm#GitViewer">GitViewer</a> ƒRƒ}ƒ“ƒ
 </div>
 <br>
 
-<h3>Git •â•ƒRƒ}ƒ“ƒh‚Ì—˜—p</h3>
+<h3 id="GitCommand">Git •â•ƒRƒ}ƒ“ƒh‚Ì—˜—p</h3>
 <p>
 <a href="hid00063.htm#Git">ExeCommands ƒRƒ}ƒ“ƒh‚Ì Git •â•ƒRƒ}ƒ“ƒh</a> ‚ðŽÀs‚·‚é‚ÆAƒJƒŒƒ“ƒg‚ðì‹ÆƒfƒBƒŒƒNƒgƒŠ‚Æ‚µ‚ÄAŽw’è‚µ‚½ƒRƒ}ƒ“ƒh/ƒpƒ‰ƒ[ƒ^‚Å git.exe ‚ªŽÀs‚³‚ê‚Ü‚·B<br>
 ‚±‚ê‚É‚æ‚Á‚ÄAƒRƒ“ƒ\[ƒ‹‚ðŠJ‚©‚È‚­‚Ä‚à <b>NyanFi</b> ‚©‚ç’¼Ú Git ƒRƒ}ƒ“ƒh‚ð—˜—p‚Å‚«‚Ü‚·B<br>

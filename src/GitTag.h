@@ -23,20 +23,27 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *CancelBtn;
 	TButton *OkBtn;
 	TCheckBox *AnnotateCheckBox;
+	TLabel *Label1;
 	TLabeledEdit *NameEdit;
 	TMemo *AnnotateMemo;
+	TPanel *CommitPanel;
+	TPanel *MsgPanel;
+	TPanel *TagPanel;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall OkActionExecute(TObject *Sender);
 	void __fastcall OkActionUpdate(TObject *Sender);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 
 private:	// ユーザー宣言
 
 public:		// ユーザー宣言
+	bool IsCommit;				//true=コミット / false=タグ
 	UnicodeString CommitID;
-	UnicodeString TagMsgFile;
-	UnicodeString GitParam;
+	UnicodeString EditMsgFile;	//メッセージ編集用ファイル
+	UnicodeString GitParam;		//[o] git実行用パラメータ
+
 
 	__fastcall TSetGitTagDlg(TComponent* Owner);
 };

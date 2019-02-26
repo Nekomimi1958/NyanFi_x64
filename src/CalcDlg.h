@@ -17,6 +17,7 @@
 #include <Vcl.ToolWin.hpp>
 #include <Vcl.ActnList.hpp>
 #include <Vcl.Menus.hpp>
+#include <math.h>
 
 //---------------------------------------------------------------------------
 class TCalculator : public TForm
@@ -62,7 +63,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall NotActionUpdate(TObject *Sender);
 	void __fastcall EditDefActionExecute(TObject *Sender);
 
-
 private:	// ユーザー宣言
 	TStringList *ConstList;
 	TStringList *FuncList;
@@ -93,6 +93,15 @@ private:	// ユーザー宣言
 	void __fastcall SetLineEdit(UnicodeString s);
 	void __fastcall ShowError(_TCHAR *msg = NULL);
 	void __fastcall AppendToLine(UnicodeString s);
+
+	bool __fastcall is_IllegalVal(long double v)
+	{
+#if defined(_WIN64)
+		return (v==HUGE_VALL || IsInfinite(v) || IsNan(v));
+#else
+		return (v==_LHUGE_VAL || IsInfinite(v) || IsNan(v));
+#endif
+	}
 
 public:		// ユーザー宣言
 	UnicodeString InitialLine;

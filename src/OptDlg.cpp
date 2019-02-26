@@ -689,6 +689,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	AnimateGifCheckBox->Tag 	= (int)&AnimateGif;
 	ThumbScrCheckBox->Tag		= (int)&ShowThumbScroll;
 	MarkImgCheckBox->Tag		= (int)&MarkImgClose;
+															//<<<<<<<X86_SPI
 	SureCopyCheckBox->Tag		= (int)&SureCopy;
 	SureMoveCheckBox->Tag		= (int)&SureMove;
 	SureDeleteCheckBox->Tag 	= (int)&SureDelete;
@@ -817,6 +818,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 
 	set_ListBoxItemHi(ExtColListBox);
 	set_ListBoxItemHi(TagColListBox);
+												//<<<<<<<X86_SPI
 	set_ListBoxItemHi(EtcEditorListBox);
 	set_ListBoxItemHi(AssociateListBox);
 	set_ListBoxItemHi(ExtMenuListBox);
@@ -857,6 +859,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	//タグを用いない設定
 	TempDirEdit->Text	= TempPath;
 	MigemoDirEdit->Text	= MigemoPath;
+														//<<<<<<<X86_SPI
 	LimitTxtEdit->Text	= ViewTxtLimitSize/1024;
 	LimitBinEdit->Text	= ViewBinLimitSize/1048576;
 	MaxTasksComboBox->ItemIndex = MaxTasks - 1;
@@ -964,6 +967,8 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	IniSeaShiftCheckBox->Checked  = ContainsText(IniSeaShift, KeyStr_Shift);
 	IniSeaCtrlCheckBox->Checked   = ContainsText(IniSeaShift, KeyStr_Ctrl);
 	IniSeaAltCheckBox->Checked	  = ContainsText(IniSeaShift, KeyStr_Alt);
+
+				//<<<<<<<X86_SPI
 
 	//イベント
 	EventListBox->Clear();
@@ -1863,6 +1868,56 @@ void __fastcall TOptionDlg::OptListBoxKeyDown(TObject *Sender, WORD &Key, TShift
 	Key = 0;
 }
 
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+
 //---------------------------------------------------------------------------
 //その他のエディタの追加
 //---------------------------------------------------------------------------
@@ -2527,8 +2582,21 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	bool brk = false;
 
-	//イベント
-	if (lp==EventListBox) {
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+													//<<<<<<<X86_SPI
+	//イベント										//<<<<<<<X86_SPI
+	if (lp==EventListBox) { 						//<<<<<<<X86_SPI
 		UnicodeString tmp = split_pre_tab(lbuf);
 		brk = remove_top_s(tmp, '|');
 		cv->TextOut(xp, yp, tmp);
@@ -3949,6 +4017,20 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 		AddLog(tmp.sprintf(_T("  LOAD migemo.dll   %s"), usr_Migemo->DictReady? _T("OK") : _T("NONE")));
 	}
 	usr_Migemo->MinLength = IncSeaMigemoMin;
+
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
 
 	//7z.dll対応拡張子
 	usr_ARC->FExt7zDll = FExt7zDll;

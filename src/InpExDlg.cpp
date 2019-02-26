@@ -64,7 +64,7 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 	if (IpuntExMode==INPEX_CRE_DIR || IpuntExMode==INPEX_NEW_TEXTFILE
 		|| IpuntExMode==INPEX_FIND_TAG || IpuntExMode==INPEX_ADD_TAG || IpuntExMode==INPEX_SET_TAG || IpuntExMode==INPEX_TAG_SELECT)
 	{
-		ClientWidth = 400;
+		ClientWidth = 480;
 		NameLabel->Visible	   = true;
 		NameLabel->Caption	   = (IpuntExMode==INPEX_FIND_TAG || IpuntExMode==INPEX_ADD_TAG || IpuntExMode==INPEX_SET_TAG)? "ƒ^ƒO" : "–¼‘O";
 		InputComboBox->Visible = true;
@@ -88,7 +88,7 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 	//Edit
 	else {
 		InputEdit->Visible = true;
-		int c_wd = ScaledInt((CustomWidth>0)? CustomWidth : InputEdit->NumbersOnly? 260 : 400);
+		int c_wd = ScaledInt((CustomWidth>0)? CustomWidth : InputEdit->NumbersOnly? 260 : 480);
 		int l_wd = Canvas->TextWidth(InputEdit->EditLabel->Caption);
 		ClientWidth = std::max(c_wd, l_wd + ScaledInt(70));
 		InputEdit->Left  = l_wd + ScaledInt(12);

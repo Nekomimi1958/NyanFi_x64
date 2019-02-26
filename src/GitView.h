@@ -51,10 +51,14 @@ struct git_rec {
 class TGitViewer : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *AddAAction;
+	TAction *AddAction;
+	TAction *AddUAction;
 	TAction *AppFextColorAction;
 	TAction *ArchiveAction;
 	TAction *BlameAction;
 	TAction *ChckoutAction;
+	TAction *CommitAction;
 	TAction *CommitInfoAction;
 	TAction *ConsoleAction;
 	TAction *CopyBranchNameAction;
@@ -72,6 +76,8 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *MergeAction;
 	TAction *OpenTmpArcAction;
 	TAction *RenBranchAction;
+	TAction *ResetAction;
+	TAction *ResetAllAction;
 	TAction *SetTagAction;
 	TAction *ShowAuthorAction;
 	TAction *ShowBranchesAction;
@@ -85,6 +91,10 @@ __published:	// IDE で管理されるコンポーネント
 	TListBox *BranchListBox;
 	TListBox *CommitListBox;
 	TListBox *DiffListBox;
+	TMenuItem *AddA2Item;
+	TMenuItem *AddAItem;
+	TMenuItem *AddU2Item;
+	TMenuItem *AddUItem;
 	TMenuItem *AppFextColItem;
 	TMenuItem *ArchiveItem;
 	TMenuItem *BlameItem;
@@ -94,6 +104,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *CommitInfoItem;
 	TMenuItem *CopyBranchNameItem;
 	TMenuItem *CopyCommitIDItem;
+	TMenuItem *CopyFileHashItem;
 	TMenuItem *CreBranchItem;
 	TMenuItem *DelBranchItem;
 	TMenuItem *DelTagItem;
@@ -106,18 +117,21 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *LogThisFileItem;
 	TMenuItem *MergeItem;
 	TMenuItem *MixedResetItem;
-	TMenuItem *N1;
 	TMenuItem *OpenTmpArcItem;
 	TMenuItem *RenBranchItem;
+	TMenuItem *ResetAll2Item;
+	TMenuItem *ResetAllItem;
 	TMenuItem *ResetItem;
 	TMenuItem *SelConsoleItem;
 	TMenuItem *SelGuiItem;
 	TMenuItem *Sep_b_1;
 	TMenuItem *Sep_c_1;
+	TMenuItem *Sep_c_2;
 	TMenuItem *Sep_c_3;
 	TMenuItem *Sep_c_4;
 	TMenuItem *Sep_d_1;
 	TMenuItem *Sep_d_2;
+	TMenuItem *Sep_d_3;
 	TMenuItem *SetTagItem;
 	TMenuItem *ShowAuthorAction1;
 	TMenuItem *ShowBranchesItem;
@@ -128,7 +142,9 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *BranchPanel;
 	TPanel *CommitPanel;
 	TPanel *DiffPanel;
-	TPanel *RightPanel;
+	TPanel *R_Panel;
+	TPanel *RL_Panel;
+	TPanel *RU_Panel;
 	TPopupMenu *BrPopupMenu;
 	TPopupMenu *CmPopupMenu;
 	TPopupMenu *ComOptPopupMenu;
@@ -136,13 +152,24 @@ __published:	// IDE で管理されるコンポーネント
 	TSplitter *CommitSplitter;
 	TSplitter *DiffSplitter;
 	TSplitter *FindSplitter;
+	TToolBar *DiffBar;
 	TToolBar *FindBar;
-	TToolButton *BarSpcBtn;
+	TToolButton *AddBtn;
+	TToolButton *BlameBtn;
 	TToolButton *ConsoleBtn;
+	TToolButton *DeffToolBtn;
+	TToolButton *DetailBtn;
+	TToolButton *DiffSpcBtn1;
+	TToolButton *DiffSpcBtn2;
+	TToolButton *DiffSpcBtn3;
+	TToolButton *EditBtn;
 	TToolButton *FindBtn;
 	TToolButton *FindDownBtn;
+	TToolButton *FindSpcBtn;
 	TToolButton *FindUpBtn;
 	TToolButton *GuiBtn;
+	TToolButton *ResetBtn;
+	TToolButton *ToolButton1;
 	TToolButton *UpdateBtn;
 
 	void __fastcall FormCreate(TObject *Sender);
@@ -224,6 +251,20 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall DiffDetailActionUpdate(TObject *Sender);
 	void __fastcall DiffDetailActionExecute(TObject *Sender);
 	void __fastcall CopyFileHashActionExecute(TObject *Sender);
+	void __fastcall AddActionExecute(TObject *Sender);
+	void __fastcall AddActionUpdate(TObject *Sender);
+	void __fastcall ResetActionExecute(TObject *Sender);
+	void __fastcall ResetActionUpdate(TObject *Sender);
+	void __fastcall DiffListBoxClick(TObject *Sender);
+	void __fastcall DiffListBoxEnter(TObject *Sender);
+	void __fastcall AddAActionExecute(TObject *Sender);
+	void __fastcall AddUActionExecute(TObject *Sender);
+	void __fastcall AddAllActionUpdate(TObject *Sender);
+	void __fastcall ResetAllActionExecute(TObject *Sender);
+	void __fastcall ResetAllActionUpdate(TObject *Sender);
+	void __fastcall CopyFileHashActionUpdate(TObject *Sender);
+	void __fastcall CommitActionExecute(TObject *Sender);
+	void __fastcall CommitActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString RefHEAD;
@@ -233,7 +274,8 @@ private:	// ユーザー宣言
 	UnicodeString TagNames;
 	bool AutoCrlf;
 
-	TStringList *CommitList;
+	TStringList *StatusList;
+	bool Staged;
 
 	UsrScrollPanel *BranchScrPanel;
 	UsrScrollPanel *CommitScrPanel;
@@ -245,6 +287,7 @@ private:	// ユーザー宣言
 
 	int LastBrListIdx;
 	int LastCmListIdx;
+	int LastDfListIdx;
 
 	UnicodeString   __fastcall GitExeStr(UnicodeString prm);
 	TStringDynArray __fastcall GitExeStrArray(UnicodeString prm);
@@ -253,6 +296,8 @@ private:	// ユーザー宣言
 	git_rec * __fastcall cre_GitRec(UnicodeString msg = EmptyStr);
 	void __fastcall ClearCommitList();
 	void __fastcall UpdateBranchList();
+	void __fastcall UpdateDiffList(bool keep_idx = false);
+	UnicodeString __fastcall UpdateStatusList();
 	void __fastcall UpdateCommitList(UnicodeString commit_id = EmptyStr);
 
 	bool FGitBusy;
@@ -267,21 +312,21 @@ private:	// ユーザー宣言
 	int __fastcall GetCurBranchFlag()
 	{
 		TListBox *lp = BranchListBox;
-		return ((lp->Focused() && lp->ItemIndex!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0);
+		return ((lp->ItemIndex!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0);
 	}
 
 	bool __fastcall CurIsHEAD()
 	{
 		TListBox *lp = BranchListBox;
-		int flag = (lp->Focused() && lp->ItemIndex!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0;
+		int flag = (lp->ItemIndex!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0;
 		return ((flag & GIT_FLAG_HEAD) && (flag & GIT_FLAG_LOCAL));
 	}
 
-	UnicodeString __fastcall GetDiffFileName()
+	UnicodeString __fastcall GetDiffFileName(bool inc_u = false)
 	{
 		TListBox *lp = DiffListBox;
-		UnicodeString lbuf = ((lp->Focused() && lp->ItemIndex!=-1)? lp->Items->Strings[lp->ItemIndex] : EmptyStr);
-		return lbuf.Pos(" | ")? Trim(split_tkn(lbuf, " | ")) : EmptyStr;
+		UnicodeString lbuf = ((lp->ItemIndex!=-1)? lp->Items->Strings[lp->ItemIndex] : EmptyStr);
+		return Trim(lbuf.Pos(" | ")? get_tkn(lbuf, " | ") : (inc_u && lbuf.Pos("? "))? get_tkn_r(lbuf, "? ") : EmptyStr);
 	}
 
 	void __fastcall SetCommitListIndex(int idx)

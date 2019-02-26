@@ -23,7 +23,7 @@ object GitViewer: TGitViewer
     Width = 4
     Height = 448
   end
-  object RightPanel: TPanel
+  object R_Panel: TPanel
     Left = 189
     Top = 0
     Width = 521
@@ -33,169 +33,277 @@ object GitViewer: TGitViewer
     TabOrder = 0
     object DiffSplitter: TSplitter
       Left = 0
-      Top = 291
+      Top = 251
       Width = 521
       Height = 4
       Cursor = crVSplit
       Align = alBottom
     end
-    object CommitPanel: TPanel
+    object RL_Panel: TPanel
+      Left = 0
+      Top = 255
+      Width = 521
+      Height = 193
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 1
+      object DiffPanel: TPanel
+        Left = 0
+        Top = 0
+        Width = 521
+        Height = 174
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 0
+        OnResize = DiffPanelResize
+        object DiffListBox: TListBox
+          Left = 0
+          Top = 0
+          Width = 521
+          Height = 174
+          Style = lbOwnerDrawFixed
+          Align = alLeft
+          Anchors = [akLeft, akTop, akRight, akBottom]
+          BorderStyle = bsNone
+          Color = clBlack
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'MeiryoKe_Gothic'
+          Font.Style = []
+          ParentFont = False
+          PopupMenu = DiffPopupMenu
+          TabOrder = 0
+          OnClick = DiffListBoxClick
+          OnDrawItem = DiffListBoxDrawItem
+          OnEnter = DiffListBoxEnter
+          OnKeyDown = DiffListBoxKeyDown
+          OnKeyPress = GitListBoxKeyPress
+          OnMouseDown = GitListBoxMouseDown
+        end
+      end
+      object DiffBar: TToolBar
+        Left = 0
+        Top = 174
+        Width = 521
+        Height = 19
+        Align = alBottom
+        AutoSize = True
+        ButtonHeight = 19
+        ButtonWidth = 58
+        Caption = 'DiffBar'
+        DrawingStyle = dsGradient
+        List = True
+        AllowTextButtons = True
+        TabOrder = 1
+        object AddBtn: TToolButton
+          Left = 0
+          Top = 0
+          Action = AddAction
+          Style = tbsTextButton
+        end
+        object ResetBtn: TToolButton
+          Left = 50
+          Top = 0
+          Action = ResetAction
+          Style = tbsTextButton
+        end
+        object DiffSpcBtn1: TToolButton
+          Left = 100
+          Top = 0
+          Width = 8
+          Caption = 'DiffSpcBtn1'
+          ImageIndex = 0
+          Style = tbsSeparator
+        end
+        object ToolButton1: TToolButton
+          Left = 108
+          Top = 0
+          Action = CommitAction
+          Style = tbsTextButton
+        end
+        object DiffSpcBtn2: TToolButton
+          Left = 165
+          Top = 0
+          Width = 20
+          Caption = 'DiffSpcBtn2'
+          ImageIndex = 0
+          Style = tbsSeparator
+        end
+        object EditBtn: TToolButton
+          Left = 185
+          Top = 0
+          Hint = #12486#12461#12473#12488#12456#12487#12451#12479#12391#38283#12367
+          Action = EditFileAction
+          Caption = #32232#38598'(&E)'
+          Style = tbsTextButton
+        end
+        object DetailBtn: TToolButton
+          Left = 234
+          Top = 0
+          Hint = #24046#20998#35443#32048#12434#34920#31034
+          Action = DiffDetailAction
+          Caption = #35443#32048'(&I)'
+          Style = tbsTextButton
+        end
+        object DiffSpcBtn3: TToolButton
+          Left = 281
+          Top = 0
+          Width = 16
+          Caption = 'DiffSpcBtn3'
+          ImageIndex = 0
+          Style = tbsSeparator
+        end
+        object DeffToolBtn: TToolButton
+          Left = 297
+          Top = 0
+          Hint = 'diff'#12484#12540#12523#12434#36215#21205
+          Action = DiffToolAction
+          Caption = '&Diff tool'
+          Style = tbsTextButton
+        end
+        object BlameBtn: TToolButton
+          Left = 346
+          Top = 0
+          Action = BlameAction
+          Caption = '&Blame'
+          Style = tbsTextButton
+        end
+      end
+    end
+    object RU_Panel: TPanel
       Left = 0
       Top = 0
       Width = 521
-      Height = 272
+      Height = 251
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      OnResize = CommitPanelResize
-      object CommitListBox: TListBox
+      object CommitPanel: TPanel
         Left = 0
         Top = 0
         Width = 521
-        Height = 272
-        Style = lbOwnerDrawFixed
-        Align = alLeft
-        Anchors = [akLeft, akTop, akRight, akBottom]
+        Height = 232
+        Align = alClient
         BevelOuter = bvNone
-        BorderStyle = bsNone
-        Color = clBlack
-        DoubleBuffered = False
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -16
-        Font.Name = 'MeiryoKe_Gothic'
-        Font.Style = []
-        ParentDoubleBuffered = False
-        ParentFont = False
-        PopupMenu = CmPopupMenu
         TabOrder = 0
-        TabWidth = 40
-        OnClick = CommitListBoxClick
-        OnDrawItem = CommitListBoxDrawItem
-        OnKeyDown = CommitListBoxKeyDown
-        OnKeyPress = GitListBoxKeyPress
-        OnMouseDown = GitListBoxMouseDown
+        OnResize = CommitPanelResize
+        object CommitListBox: TListBox
+          Left = 0
+          Top = 0
+          Width = 521
+          Height = 232
+          Style = lbOwnerDrawFixed
+          Align = alLeft
+          Anchors = [akLeft, akTop, akRight, akBottom]
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          Color = clBlack
+          DoubleBuffered = False
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'MeiryoKe_Gothic'
+          Font.Style = []
+          ParentDoubleBuffered = False
+          ParentFont = False
+          PopupMenu = CmPopupMenu
+          TabOrder = 0
+          TabWidth = 40
+          OnClick = CommitListBoxClick
+          OnDrawItem = CommitListBoxDrawItem
+          OnKeyDown = CommitListBoxKeyDown
+          OnKeyPress = GitListBoxKeyPress
+          OnMouseDown = GitListBoxMouseDown
+        end
       end
-    end
-    object DiffPanel: TPanel
-      Left = 0
-      Top = 295
-      Width = 521
-      Height = 153
-      Align = alBottom
-      BevelOuter = bvNone
-      TabOrder = 2
-      OnResize = DiffPanelResize
-      object DiffListBox: TListBox
+      object FindBar: TToolBar
         Left = 0
-        Top = 0
+        Top = 232
         Width = 521
-        Height = 153
-        Style = lbOwnerDrawFixed
-        Align = alLeft
-        Anchors = [akLeft, akTop, akRight, akBottom]
-        BorderStyle = bsNone
-        Color = clBlack
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -16
-        Font.Name = 'MeiryoKe_Gothic'
-        Font.Style = []
-        ParentFont = False
-        PopupMenu = DiffPopupMenu
-        TabOrder = 0
-        OnDrawItem = DiffListBoxDrawItem
-        OnKeyDown = DiffListBoxKeyDown
-        OnKeyPress = GitListBoxKeyPress
-        OnMouseDown = GitListBoxMouseDown
-      end
-    end
-    object FindBar: TToolBar
-      Left = 0
-      Top = 272
-      Width = 521
-      Height = 19
-      Align = alBottom
-      AutoSize = True
-      ButtonHeight = 19
-      ButtonWidth = 51
-      DrawingStyle = dsGradient
-      List = True
-      PopupMenu = ComOptPopupMenu
-      ShowCaptions = True
-      AllowTextButtons = True
-      TabOrder = 1
-      object FindBtn: TToolButton
-        Left = 0
-        Top = 0
-        Caption = #26908#32034'(&F)'
-        ImageIndex = 0
-        Style = tbsTextButton
-        OnClick = FindBtnClick
-      end
-      object FindCommitEdit: TEdit
-        Left = 54
-        Top = 0
-        Width = 101
         Height = 19
-        Align = alLeft
-        Constraints.MinWidth = 60
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 0
-        OnChange = FindCommitEditChange
-        OnEnter = FindCommitEditEnter
-        OnExit = FindCommitEditExit
-        OnKeyDown = FindCommitEditKeyDown
-        OnKeyPress = FindCommitEditKeyPress
-      end
-      object FindSplitter: TSplitter
-        Left = 155
-        Top = 0
-        Width = 4
-        Height = 19
-      end
-      object FindUpBtn: TToolButton
-        Left = 159
-        Top = 0
-        Action = FindUpAction
-        Style = tbsTextButton
-      end
-      object FindDownBtn: TToolButton
-        Left = 181
-        Top = 0
-        Action = FindDownAction
-        Style = tbsTextButton
-      end
-      object BarSpcBtn: TToolButton
-        Left = 203
-        Top = 0
-        Width = 40
-        Caption = 'BarSpcBtn'
-        ImageIndex = 1
-        Style = tbsSeparator
-      end
-      object UpdateBtn: TToolButton
-        Left = 243
-        Top = 0
-        Action = UpdateLogAction
-        Style = tbsTextButton
-      end
-      object ConsoleBtn: TToolButton
-        Left = 293
-        Top = 0
-        Action = ConsoleAction
-        Style = tbsTextButton
-      end
-      object GuiBtn: TToolButton
-        Left = 342
-        Top = 0
-        Action = GuiAction
-        Style = tbsTextButton
+        Align = alBottom
+        AutoSize = True
+        ButtonHeight = 19
+        ButtonWidth = 51
+        DrawingStyle = dsGradient
+        List = True
+        PopupMenu = ComOptPopupMenu
+        ShowCaptions = True
+        AllowTextButtons = True
+        TabOrder = 1
+        object FindBtn: TToolButton
+          Left = 0
+          Top = 0
+          Caption = #26908#32034'(&F)'
+          ImageIndex = 0
+          Style = tbsTextButton
+          OnClick = FindBtnClick
+        end
+        object FindCommitEdit: TEdit
+          Left = 54
+          Top = 0
+          Width = 101
+          Height = 19
+          Align = alLeft
+          Constraints.MinWidth = 60
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          OnChange = FindCommitEditChange
+          OnEnter = FindCommitEditEnter
+          OnExit = FindCommitEditExit
+          OnKeyDown = FindCommitEditKeyDown
+          OnKeyPress = FindCommitEditKeyPress
+        end
+        object FindSplitter: TSplitter
+          Left = 155
+          Top = 0
+          Width = 4
+          Height = 19
+        end
+        object FindUpBtn: TToolButton
+          Left = 159
+          Top = 0
+          Action = FindUpAction
+          Style = tbsTextButton
+        end
+        object FindDownBtn: TToolButton
+          Left = 181
+          Top = 0
+          Action = FindDownAction
+          Style = tbsTextButton
+        end
+        object FindSpcBtn: TToolButton
+          Left = 203
+          Top = 0
+          Width = 40
+          Caption = 'FindSpcBtn'
+          ImageIndex = 1
+          Style = tbsSeparator
+        end
+        object UpdateBtn: TToolButton
+          Left = 243
+          Top = 0
+          Action = UpdateLogAction
+          Style = tbsTextButton
+        end
+        object ConsoleBtn: TToolButton
+          Left = 293
+          Top = 0
+          Action = ConsoleAction
+          Style = tbsTextButton
+        end
+        object GuiBtn: TToolButton
+          Left = 342
+          Top = 0
+          Action = GuiAction
+          Style = tbsTextButton
+        end
       end
     end
   end
@@ -307,12 +415,12 @@ object GitViewer: TGitViewer
       OnUpdate = CheckoutActionUpdate
     end
     object CreBranchAction: TAction
-      Caption = #12502#12521#12531#12481#12434#20316#25104
+      Caption = #12502#12521#12531#12481#12434#20316#25104'(&B)'
       OnExecute = CreBranchActionExecute
       OnUpdate = CreBranchActionUpdate
     end
     object DelBranchAction: TAction
-      Caption = #12502#12521#12531#12481#12398#21066#38500
+      Caption = #12502#12521#12531#12481#12398#21066#38500'(&D)'
       OnExecute = DelBranchActionExecute
       OnUpdate = DelBranchActionUpdate
     end
@@ -408,7 +516,7 @@ object GitViewer: TGitViewer
     object CopyFileHashAction: TAction
       Caption = #12371#12398#12501#12449#12452#12523#12398#12495#12483#12471#12517#12434#12467#12500#12540
       OnExecute = CopyFileHashActionExecute
-      OnUpdate = DiffActionUpdate
+      OnUpdate = CopyFileHashActionUpdate
     end
     object LogThisFileAction: TAction
       Caption = #12371#12398#12501#12449#12452#12523#12398#12467#12511#12483#12488#23653#27508#12434#34920#31034'(&F)'
@@ -446,6 +554,38 @@ object GitViewer: TGitViewer
       OnExecute = FindUpActionExecute
       OnUpdate = FindUpActionUpdate
     end
+    object AddAction: TAction
+      Caption = #36861#21152'(&A)'
+      Hint = #12452#12531#12487#12483#12463#12473#12395#36861#21152
+      OnExecute = AddActionExecute
+      OnUpdate = AddActionUpdate
+    end
+    object AddAAction: TAction
+      Caption = #12377#12409#12390#12398#26032#35215#20316#25104#12539#22793#26356#12539#21066#38500#12434#36861#21152' (add -&A)'
+      OnExecute = AddAActionExecute
+      OnUpdate = AddAllActionUpdate
+    end
+    object AddUAction: TAction
+      Caption = #12377#12409#12390#12398#22793#26356#12539#21066#38500#12434#36861#21152' (add -&u)'
+      OnExecute = AddUActionExecute
+      OnUpdate = AddAllActionUpdate
+    end
+    object ResetAction: TAction
+      Caption = #21462#28040'(&R)'
+      Hint = #12473#12486#12540#12472#12398#21462#12426#28040#12375
+      OnExecute = ResetActionExecute
+      OnUpdate = ResetActionUpdate
+    end
+    object ResetAllAction: TAction
+      Caption = #12377#12409#12390#12398#12473#12486#12540#12472#12531#12464#12434#21462#12426#28040#12375
+      OnExecute = ResetAllActionExecute
+      OnUpdate = ResetAllActionUpdate
+    end
+    object CommitAction: TAction
+      Caption = #12467#12511#12483#12488'(&M)'
+      OnExecute = CommitActionExecute
+      OnUpdate = CommitActionUpdate
+    end
   end
   object CmPopupMenu: TPopupMenu
     OnPopup = GitPopupMenuPopup
@@ -466,7 +606,7 @@ object GitViewer: TGitViewer
     object OpenTmpArcItem: TMenuItem
       Action = OpenTmpArcAction
     end
-    object Sep_c_3: TMenuItem
+    object Sep_c_2: TMenuItem
       Caption = '-'
     end
     object CopyBranchNameItem: TMenuItem
@@ -480,6 +620,18 @@ object GitViewer: TGitViewer
     end
     object LogThisCommitItem: TMenuItem
       Action = LogThisCommitAction
+    end
+    object Sep_c_3: TMenuItem
+      Caption = '-'
+    end
+    object AddAItem: TMenuItem
+      Action = AddAAction
+    end
+    object AddUItem: TMenuItem
+      Action = AddUAction
+    end
+    object ResetAllItem: TMenuItem
+      Action = ResetAllAction
     end
     object Sep_c_4: TMenuItem
       Caption = '-'
@@ -499,8 +651,8 @@ object GitViewer: TGitViewer
   end
   object DiffPopupMenu: TPopupMenu
     OnPopup = GitPopupMenuPopup
-    Left = 293
-    Top = 343
+    Left = 289
+    Top = 335
     object DiffToolItem: TMenuItem
       Action = DiffToolAction
     end
@@ -513,7 +665,7 @@ object GitViewer: TGitViewer
     object Sep_d_1: TMenuItem
       Caption = '-'
     end
-    object N1: TMenuItem
+    object CopyFileHashItem: TMenuItem
       Action = CopyFileHashAction
     end
     object LogThisFileItem: TMenuItem
@@ -525,13 +677,25 @@ object GitViewer: TGitViewer
     object Sep_d_2: TMenuItem
       Caption = '-'
     end
+    object AddA2Item: TMenuItem
+      Action = AddAAction
+    end
+    object AddU2Item: TMenuItem
+      Action = AddUAction
+    end
+    object ResetAll2Item: TMenuItem
+      Action = ResetAllAction
+    end
+    object Sep_d_3: TMenuItem
+      Caption = '-'
+    end
     object AppFextColItem: TMenuItem
       Action = AppFextColorAction
     end
   end
   object ComOptPopupMenu: TPopupMenu
-    Left = 450
-    Top = 308
+    Left = 602
+    Top = 284
     object SelConsoleItem: TMenuItem
       Caption = 'Console '#12398#36984#25246'(&S)...'
       OnClick = SelConsoleItemClick
