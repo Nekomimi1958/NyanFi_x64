@@ -169,13 +169,21 @@ IfTrue
 EndIf
 </pre>
 
+ステータスをヒント表示
+<pre class="example_box">
+Git_status
+Hint_!%Buffer%
+WaitForKey
+Hint
+</pre>
+
 カーソル位置ファイルに対する変更履歴を一覧ダイアログで表示<br>
 <pre class="example_box">
 Git_"log --follow -p -- %NamePart%"
 ListBuffer_"Git Log - %NamePart%"
 </pre>
 
-リポジトリの状態とコミット履歴をまとめて一覧ダイアログで表示<br>
+ステータスとコミット履歴をまとめて一覧ダイアログで表示<br>
 <pre class="example_box">
 IfNotGit
   Warn_"Gitの作業ディレクトリではありません。"

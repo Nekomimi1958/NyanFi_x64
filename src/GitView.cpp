@@ -167,7 +167,7 @@ UnicodeString __fastcall TGitViewer::GitExeStr(UnicodeString prm)
 			//状態を更新
 			if (StartsText("reset HEAD", prm) || contained_wd_i(_T("add|rm"), cmd)) {
 				GitBusy = true;
-				UnicodeString stt_str = UpdateStatusList();
+				UnicodeString stt_str = get_post_tab(UpdateStatusList());
 				GitBusy = false;
 				if (!stt_str.IsEmpty()) {
 					UnicodeString stt_wk = get_pre_tab(stt_str);
@@ -296,38 +296,20 @@ void __fastcall TGitViewer::ClearCommitList()
 
 //---------------------------------------------------------------------------
 //状態リストの更新
-//  戻り値: ワーキングツリーの状態 [TAB] インデックスの状態
+//  戻り値: 全体の状態 [TAB ] ワーキングツリー [TAB] インデックス
 //---------------------------------------------------------------------------
 UnicodeString __fastcall TGitViewer::UpdateStatusList()
 {
-	UnicodeString stt_wk, stt_ix;
-
 	StatusList->Clear();
 	Staged = false;
 
 	std::unique_ptr<TStringList> o_lst(new TStringList());
-	if (GitShellExe("status --porcelain", WorkDir, o_lst.get())) {
-		int flag[8][2] = {};
-		UnicodeString flag_str = "MADRCU?";
-		for (int i=0; i<o_lst->Count; i++) {
-			UnicodeString lbuf = o_lst->Strings[i];
-			if (lbuf.Length()<2) continue;
-			int p0 = flag_str.Pos(lbuf[1]);
-			int p1 = flag_str.Pos(lbuf[2]);
-			if (p0>0) flag[p0][0]++;
-			if (p1>0) flag[p1][1]++;
-			if ((p0 + p1)>0) StatusList->Add(lbuf);
-			if (p0>=1 && p0<=6) Staged = true;
-		}
-		for (int i=1; i<8; i++) {
-			if (flag[i][1]>0) stt_wk.cat_sprintf(_T(" %c:%u"), flag_str[i], flag[i][1]);
-			if (flag[i][0]>0) stt_ix.cat_sprintf(_T(" %c:%u"), flag_str[i], flag[i][0]);
-		}
-		stt_wk = def_if_empty(Trim(stt_wk), "Clean");
-		stt_ix = def_if_empty(Trim(stt_ix), "Nothing to commit");
+	if (get_GitStatusList(WorkDir, o_lst.get())>=0) {
+		StatusList->Assign(o_lst.get());
+		return get_GitStatusStr(o_lst.get(), &Staged);
 	}
-
-	return (stt_wk + "\t" + stt_ix);
+	else
+		return EmptyStr;
 }
 
 //---------------------------------------------------------------------------
@@ -349,7 +331,7 @@ void __fastcall TGitViewer::UpdateCommitList(
 	std::unique_ptr<TStringList> c_lst(new TStringList());
 
 	//ワーキングツリー/インデックス
-	UnicodeString stt_str = UpdateStatusList();
+	UnicodeString stt_str = get_post_tab(UpdateStatusList());
 	if (!stt_str.IsEmpty()) {
 		UnicodeString stt_wk = get_pre_tab(stt_str);
 		UnicodeString stt_ix = get_post_tab(stt_str);

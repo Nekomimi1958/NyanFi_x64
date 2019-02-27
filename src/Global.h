@@ -2058,7 +2058,9 @@ bool AddPathToTreeList(TStringList *lst);
 UnicodeString get_GitTopPath(UnicodeString dnam);
 UnicodeString get_GitConfig(UnicodeString dnam);
 UnicodeString get_GitUrl(file_rec *fp);
+int get_GitStatusList(UnicodeString pnam, TStringList *lst, bool full_sw = false);
 int get_GitChangedList(UnicodeString pnam, TStringList *lst);
+UnicodeString get_GitStatusStr(TStringList *lst, bool *staged = NULL);
 UnicodeString get_GitGraphStr(UnicodeString lbuf);
 UnicodeString split_GitGraphStr(UnicodeString &lbuf);
 void draw_GitGraph(UnicodeString s, UnicodeString s1, UnicodeString s2, TCanvas *cv, TRect &rc,

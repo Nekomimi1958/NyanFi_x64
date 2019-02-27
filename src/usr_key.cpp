@@ -244,4 +244,21 @@ UnicodeString get_KeyStr(WORD Key, TShiftState Shift)
 	UnicodeString keystr = get_KeyStr(Key);
 	return !keystr.IsEmpty()? get_ShiftStr(Shift) + keystr : EmptyStr;
 }
+
+//---------------------------------------------------------------------------
+//ƒL[“ü—Í‘Ò‚¿
+//---------------------------------------------------------------------------
+UnicodeString WaitForKey()
+{
+	int Key = 0;
+
+	while (Key==0) {
+		if (Application->Active) Sleep(0); else Application->ProcessMessages();
+		MSG msg;
+		if (::PeekMessage(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) && msg.message==WM_KEYUP)
+			Key = msg.wParam;
+	}
+
+	return get_KeyStr(Key);
+}
 //---------------------------------------------------------------------------

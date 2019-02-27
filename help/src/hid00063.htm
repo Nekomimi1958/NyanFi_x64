@@ -198,7 +198,7 @@ MsgBox_%..N%回目です
 <h3 id="AuxCommand">補助コマンド</h3>
 <b>ExeCommands</b> コマンドのパラメータまたはコマンドファイル内でのみ使える補助コマンドとして、以下のものがあります。<br>
 <p class="link_box">
-<a href="#ActivateWnd">A</a> <a href="#CallCommands">C</a> <a href="#Debug">D</a> <a href="#Echo">E</a> <a href="#FileExists">F</a> <a href="#Git">G</a> <a href="#Hint">H</a> <a href="#Ins">I</a> <a href="#JumpCommands">J</a> <a href="#ListBuffer">L</a> <a href="#MatchBuffer">M</a> <a href="#PlaySound">P</a> <a href="#Random">R</a> <a href="#SaveBuffer">S</a> <a href="#Test">T</a> <a href="#WaitForTask2">W</a>
+<a href="#ActivateWnd">A</a> <a href="#CallCommands">C</a> <a href="#Debug">D</a> <a href="#Echo">E</a> <a href="#FileExists">F</a> <a href="#Git">G</a> <a href="#Hint">H</a> <a href="#Ins">I</a> <a href="#JumpCommands">J</a> <a href="#ListBuffer">L</a> <a href="#MatchBuffer">M</a> <a href="#PlaySound">P</a> <a href="#Random">R</a> <a href="#SaveBuffer">S</a> <a href="#Test">T</a> <a href="#WaitForKey">W</a>
 </p>
 
 <div class="indent1">
@@ -420,6 +420,10 @@ MsgBox_%Buffer%
 <dt id="Hint" class="no_bg">Hint<span class="pram_text">[_[!]メッセージ]</span>
 <dd>指定したメッセージをヒント表示します。<br>
 先頭に <b>!</b> を付けるとヒントが自動的に隠れません。表示されているヒントを消すには、メッセージなしで <b>Hint</b> を実行します。<br>
+<div class="note_text">
+※<b>!</b> を指定していても NyanFi が非アクティブになるとヒントが隠れてしまいますので注意してください。
+</div>
+
 <div class="spc_box">
 <b>例</b><br>
 <pre class="example_box">
@@ -851,6 +855,18 @@ Timer<span class="pram_text">_&quot;hh:mm[:ss]&quot;</span>
 
 <dt id="Trim" class="no_bg">Trim<span class="pram_text">_変数名</span>
 <dd>変数の左右端から空白および制御文字を取り除きます。<br>
+
+<dt id="WaitForKey" class="no_bg">WaitForKey<span class="pram_text">[_変数名]</span>
+<dd>何かキーが押されるまで待ちます。パラメータに変数名を指定すると、押されたキーの名前を取得できます。<br>
+
+<b>例</b><br>
+<pre class="example_box">
+Hint_!続けますか(Y/N)?
+WaitForKey_KEY
+Hint
+Test_KEY==Y
+IfFalse_Exit
+</pre>
 
 <dt id="WaitForTask" class="no_bg">WaitForTask
 <dd><b>ExeCommands</b> コマンドで開始されたタスクの終了を待ちます。それ以前に実行されていたタスクについては考慮しません。<br>

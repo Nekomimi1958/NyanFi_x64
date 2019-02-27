@@ -122,10 +122,11 @@ extern const UnicodeString XCMD_SubCmds;
 #define XCMDID_Test				71
 #define XCMDID_Timer			72
 #define XCMDID_Trim				73
-#define XCMDID_WaitForTask		74
-#define XCMDID_WaitForTask2		75
-#define XCMDID_Warn				76
-#define XCMDID_WriteINI			77
+#define XCMDID_WaitForKey		74
+#define XCMDID_WaitForTask		75
+#define XCMDID_WaitForTask2		76
+#define XCMDID_Warn				77
+#define XCMDID_WriteINI			78
 
 //---------------------------------------------------------------------------
 extern bool XCMD_IsBusy;

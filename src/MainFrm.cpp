@@ -5235,7 +5235,7 @@ file_rec * __fastcall TNyanFiForm::GetFrecPtrFromViewList(int idx, UnicodeString
 
 //---------------------------------------------------------------------------
 //現在の対象に削除制限項目が含まれていないかチェック
-//戻り値: true = 削除制限/ false = 削除許可
+//  戻り値: true = 削除制限/ false = 削除許可
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::IncProtectItem()
 {
@@ -11176,6 +11176,14 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 						bool res = XCMD_ShellExe(CmdGitExe, XCMD_prm, XCMD_cur_path, "OLH");
 						cursor_Default();
 						if (!res) GlobalAbort();
+					}
+					break;
+
+				//キー待ち
+				case XCMDID_WaitForKey:
+					{
+						UnicodeString kstr = WaitForKey();
+						if (!XCMD_prm.IsEmpty()) XCMD_VarList->Values[XCMD_prm] = kstr;
 					}
 					break;
 

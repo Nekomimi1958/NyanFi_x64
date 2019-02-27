@@ -6346,25 +6346,62 @@ bool load_MenuFile(UnicodeString fnam, TStringList *lst)
 	fnam = to_absolute_name(cv_env_str(fnam));
 
 	if (load_text_ex(fnam, lst)!=0) {
-		for (int i=0; i<lst->Count; i++) {
+		int i = 0;
+		while (i<lst->Count) {
 			UnicodeString lbuf = Trim(lst->Strings[i]);
-			if (lbuf.IsEmpty() || StartsStr(';', lbuf)) continue;
+			if (lbuf.IsEmpty() || StartsStr(';', lbuf)) {
+				i++;
+				continue;
+			}
+
 			TStringDynArray m_buf = split_strings_tab(lbuf);
-			//EditMenuFile コマンド
-			if (m_buf.Length>1 && USAME_TI(m_buf[1], "EditMenuFile")) m_buf[1].sprintf(_T("FileEdit_\"%s\""), fnam.c_str());
-			//アイコンファイル (環境パスに対応)
-			UnicodeString inum = (m_buf.Length==3)? m_buf[2] : (m_buf.Length==2)? get_file_from_cmd(m_buf[1]) : EmptyStr;
-			if (!inum.IsEmpty()) {
-				inum = to_absolute_name(get_actual_name(inum));
-				inum = file_exists(inum)? inum : EmptyStr;
-				lbuf.sprintf(_T("%s\t%s"), m_buf[0].c_str(), m_buf[1].c_str());
-				if (!inum.IsEmpty()) lbuf.cat_sprintf(_T("\t%s"), inum.c_str());
+			//複数行コマンド
+			if (m_buf.Length>1 && StartsStr('{', m_buf[1])) {
+				UnicodeString cmd_str = get_tkn_r(m_buf[1], '{');
+				UnicodeString inam;
+				int ix = i;
+				i++;
+				while (i<lst->Count) {
+					UnicodeString lbuf = Trim(lst->Strings[i]);
+					lst->Delete(i);
+					if (lbuf.IsEmpty() || StartsStr(';', lbuf)) continue;
+					if (StartsStr('}', lbuf)) {
+						//アイコンファイル
+						inam = get_post_tab(lbuf);
+						inam = to_absolute_name(get_actual_name(inam));
+						inam = file_exists(inam)? inam : EmptyStr;
+						break;
+					}
+					else {
+						if (!cmd_str.IsEmpty()) cmd_str.UCAT_T(":");
+						cmd_str += lbuf;
+					}
+				}
+
+				lbuf.sprintf(_T("%s\t%s"), m_buf[0].c_str(), cmd_str.c_str());
+				if (!inam.IsEmpty()) lbuf.cat_sprintf(_T("\t%s"), inam.c_str());
+				lst->Strings[ix] = lbuf;
 			}
+			//一行コマンド
 			else {
-				lbuf = m_buf[0];
-				if (m_buf.Length==2) lbuf.cat_sprintf(_T("\t%s"), m_buf[1].c_str());
+				//EditMenuFile コマンド
+				if (m_buf.Length>1 && USAME_TI(m_buf[1], "EditMenuFile")) m_buf[1].sprintf(_T("FileEdit_\"%s\""), fnam.c_str());
+
+				//アイコンファイル
+				UnicodeString inam = (m_buf.Length==3)? m_buf[2] : (m_buf.Length==2)? get_file_from_cmd(m_buf[1]) : EmptyStr;
+				if (!inam.IsEmpty()) {
+					inam = to_absolute_name(get_actual_name(inam));
+					inam = file_exists(inam)? inam : EmptyStr;
+					lbuf.sprintf(_T("%s\t%s"), m_buf[0].c_str(), m_buf[1].c_str());
+					if (!inam.IsEmpty()) lbuf.cat_sprintf(_T("\t%s"), inam.c_str());
+				}
+				else {
+					lbuf = m_buf[0];
+					if (m_buf.Length==2) lbuf.cat_sprintf(_T("\t%s"), m_buf[1].c_str());
+				}
+				lst->Strings[i] = lbuf;
+				i++;
 			}
-			lst->Strings[i] = lbuf;
 		}
 	}
 
@@ -13271,6 +13308,40 @@ UnicodeString get_GitUrl(file_rec *fp)
 }
 
 //---------------------------------------------------------------------------
+//Git ステータスリストを取得
+//  フラグ文字 [TAB] ファイルパス
+//---------------------------------------------------------------------------
+int get_GitStatusList(UnicodeString pnam, TStringList *lst,
+	bool full_sw)		//フルパスで取得	(default = false)
+{
+	try {
+		if (!GitExists) Abort();
+
+		pnam = get_GitTopPath(IncludeTrailingPathDelimiter(pnam));
+		if (pnam.IsEmpty()) Abort();
+
+		std::unique_ptr<TStringList> o_buf(new TStringList());
+		DWORD exit_code = 0;
+		if (!GitShellExe("status --porcelain", pnam, o_buf.get(), &exit_code) || exit_code!=0) Abort();
+
+		lst->Clear();
+		for (int i=0; i<o_buf->Count; i++) {
+			UnicodeString lbuf = o_buf->Strings[i];
+			UnicodeString flag = lbuf.SubString(1, 3);
+			if (flag.Length()<3 || flag[3]!=' ') continue;
+			lbuf.Delete(1, 3);
+			if (full_sw) lbuf = to_absolute_name(slash_to_yen(lbuf), pnam);
+			lst->Add(flag + lbuf);
+		}
+		return lst->Count;
+
+	}
+	catch (...) {
+		return -1;
+	}
+}
+
+//---------------------------------------------------------------------------
 //リポジトリ内で変更のあったファイルリストを取得
 //---------------------------------------------------------------------------
 int get_GitChangedList(UnicodeString pnam, TStringList *lst)
@@ -13279,23 +13350,18 @@ int get_GitChangedList(UnicodeString pnam, TStringList *lst)
 		if (!GitExists) Abort();
 
 		pnam = IncludeTrailingPathDelimiter(pnam);
-		UnicodeString tnam = get_GitTopPath(IncludeTrailingPathDelimiter(pnam));
+		UnicodeString tnam = get_GitTopPath(pnam);
 		if (tnam.IsEmpty()) Abort();
 
+		lst->Clear();
 		std::unique_ptr<TStringList> o_buf(new TStringList());
-		DWORD exit_code = 0;
-		if (!GitShellExe("status --porcelain", pnam, o_buf.get(), &exit_code)) Abort();
-		if (exit_code!=0) Abort();
-		if (o_buf->Count>0) {
+		if (get_GitStatusList(pnam, o_buf.get(), true)>0) {
 			for (int i=0; i<o_buf->Count; i++) {
 				UnicodeString lbuf = o_buf->Strings[i];
-				if (lbuf.Length()<2) continue;
-				if (lbuf[1]!='?' && lbuf[2]!='?') {
-					lbuf.Delete(1, 2);
-					lbuf = slash_to_yen(Trim(lbuf));
-					lbuf = to_absolute_name(lbuf, tnam);
-					lst->Add(lbuf);
-				}
+				UnicodeString flag = lbuf.SubString(1, 3);
+				if (flag.Length()<3 || flag[3]!=' ') continue;
+				lbuf.Delete(1, 3);
+				if (flag[1]!='?' && flag[2]!='?') lst->Add(lbuf);
 			}
 		}
 		return lst->Count;
@@ -13304,6 +13370,47 @@ int get_GitChangedList(UnicodeString pnam, TStringList *lst)
 		return -1;
 	}
 }
+
+//---------------------------------------------------------------------------
+//Gitステータス文字列を取得
+//  戻り値: 全体の状態 [TAB] ワーキングツリー [TAB] インデックス
+//---------------------------------------------------------------------------
+UnicodeString get_GitStatusStr(
+	TStringList *lst,
+	bool *staged)		//[o] ステージングされている
+{
+	UnicodeString stt_wk, stt_ix, stt_all;
+	if (staged) *staged = false;
+
+	if (lst->Count>=0) {
+		int flag[8][2] = {};
+		UnicodeString flag_str = "MADRCU?";
+		for (int i=0; i<lst->Count; i++) {
+			UnicodeString lbuf = lst->Strings[i];
+			int p0 = flag_str.Pos(lbuf[1]);
+			int p1 = flag_str.Pos(lbuf[2]);
+			if (p0>0) flag[p0][0]++;
+			if (p1>0) flag[p1][1]++;
+			if (staged && (p0>=1 && p0<=6)) *staged = true;
+		}
+
+		for (int i=1; i<8; i++) {
+			if (flag[i][1]>0) stt_wk.cat_sprintf(_T(" %c:%u"), flag_str[i], flag[i][1]);
+			if (flag[i][0]>0) stt_ix.cat_sprintf(_T(" %c:%u"), flag_str[i], flag[i][0]);
+			if (flag[i][0]>0 || flag[i][1]>0) {
+				stt_all.cat_sprintf(_T(" %c:%u/%u"), flag_str[i], flag[i][0], flag[i][1]);
+			}
+		}
+
+		stt_all = Trim(replace_regex(stt_all, _T("\\b0\\b"), _T("_")));
+		stt_all = def_if_empty(stt_all, "Clean");
+		stt_wk	= def_if_empty(Trim(stt_wk), "Clean");
+		stt_ix	= def_if_empty(Trim(stt_ix), "Nothing to commit");
+	}
+
+	return (stt_all + "\t" + stt_wk + "\t" + stt_ix );
+}
+
 //---------------------------------------------------------------------------
 //行頭のGitグラフ部分を取得
 //---------------------------------------------------------------------------
@@ -13470,35 +13577,8 @@ void get_GitInf(UnicodeString dnam, TStringList *lst)
 
 	//ワーキング・ツリーの状態
 	o_buf->Clear();
-	if (!test_word_i("Git-Status", hide_items)
-		&& GitShellExe("status --porcelain", dnam, o_buf.get(), &exit_code))
-	{
-		UnicodeString stt_str;
-		if (o_buf->Count==0) {
-			stt_str = "Clean";
-		}
-		else if (exit_code!=0) {
-			stt_str.cat_sprintf(_T("Error: %u"), exit_code);
-		}
-		else {
-			//フラグ文字毎のファイル数を取得
-			int flag[8][2] = {};
-			UnicodeString flag_str = "MADRCU?";
-			for (int i=0; i<o_buf->Count; i++) {
-				UnicodeString lbuf = o_buf->Strings[i];
-				if (lbuf.Length()<2) continue;
-				int p0 = flag_str.Pos(lbuf[1]);
-				int p1 = flag_str.Pos(lbuf[2]);
-				if (p0>0) flag[p0][0]++;
-				if (p1>0) flag[p1][1]++;
-			}
-			for (int i=1; i<8; i++) {
-				if (flag[i][0]>0 || flag[i][1]>0)
-					stt_str.cat_sprintf(_T(" %c:%u/%u"), flag_str[i], flag[i][0], flag[i][1]);
-			}
-			stt_str = Trim(ReplaceStr(stt_str, "0" , "_"));
-		}
-		add_PropLine_if(_T("Git-Status"), stt_str, lst);
+	if (!test_word_i("Git-Status", hide_items) && get_GitStatusList(dnam, o_buf.get())>=0) {
+		add_PropLine_if(_T("Git-Status"), get_pre_tab(get_GitStatusStr(o_buf.get())), lst);
 	}
 }
 

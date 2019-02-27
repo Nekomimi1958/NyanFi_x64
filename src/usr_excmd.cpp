@@ -437,6 +437,7 @@ const UnicodeString XCMD_SubCmds =
 	"Test\n"
 	"Timer\n"
 	"Trim\n"
+	"WaitForKey\n"
 	"WaitForTask\n"
 	"WaitForTask2\n"
 	"Warn\n"
