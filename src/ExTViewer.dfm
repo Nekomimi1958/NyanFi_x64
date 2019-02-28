@@ -140,6 +140,13 @@ object ExTxtViewer: TExTxtViewer
           Height = 16
           Align = alTop
         end
+        object TextMarginBox: TPaintBox
+          Left = 607
+          Top = 16
+          Width = 0
+          Height = 526
+          Align = alRight
+        end
         object TextScrollBar: TScrollBar
           Left = 607
           Top = 16

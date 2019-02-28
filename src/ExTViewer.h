@@ -76,6 +76,7 @@ __published:	// IDE で管理されるコンポーネント
 	TRichEdit *ViewMemo;
 	TScrollBar *TextScrollBar;
 	TStatusBar *TxtSttHeader;
+	TPaintBox *TextMarginBox;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -83,18 +84,14 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall TextPaintBoxPaint(TObject *Sender);
 	void __fastcall TextScrollBarChange(TObject *Sender);
-	void __fastcall TextPaintBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
-          int X, int Y);
-	void __fastcall TextPaintBoxMouseMove(TObject *Sender, TShiftState Shift, int X,
-          int Y);
-	void __fastcall TextPaintBoxMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
-          int X, int Y);
+	void __fastcall TextPaintBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
+	void __fastcall TextPaintBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
+	void __fastcall TextPaintBoxMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall TextPaintBoxDblClick(TObject *Sender);
 	void __fastcall TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FormResize(TObject *Sender);
-	void __fastcall FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
-          TPoint &MousePos, bool &Handled);
+	void __fastcall FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta, TPoint &MousePos, bool &Handled);
 	void __fastcall FindTextActionExecute(TObject *Sender);
 	void __fastcall CopyActionExecute(TObject *Sender);
 	void __fastcall CopyActionUpdate(TObject *Sender);
@@ -133,7 +130,7 @@ private:	// ユーザー宣言
 	bool isRichText;					//リッチテキスト表示
 	bool isXDoc2Txt;					//xdoc2txt を利用して表示
 
-	int LastWidth;
+	int  LastWidth;
 
 	void __fastcall WmFormShowed(TMessage &msg);
 	void __fastcall WmExitSizeMove(TMessage &msg);
@@ -172,8 +169,7 @@ public:		// ユーザー宣言
 
 	UnicodeString FileName;
 	UnicodeString OrgName;
-	int LineNo;
-
+	int  LineNo;
 	bool isClip;
 
 	__fastcall TExTxtViewer(TComponent* Owner);
@@ -193,7 +189,5 @@ public:		// ユーザー宣言
 		VCL_MESSAGE_HANDLER(WM_FORM_DROPPED,	TMessage,	WmDropped)
 	END_MESSAGE_MAP(TForm)
 };
-//---------------------------------------------------------------------------
-extern PACKAGE TExTxtViewer *ExTxtViewer;
 //---------------------------------------------------------------------------
 #endif

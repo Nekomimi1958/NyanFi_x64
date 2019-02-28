@@ -2,8 +2,8 @@
 // コントロールの検索＆マーク											//
 //																		//
 //----------------------------------------------------------------------//
+#include <vcl.h>
 #pragma hdrstop
-
 #include <System.StrUtils.hpp>
 #include "MarkList.h"
 

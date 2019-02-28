@@ -4,7 +4,6 @@
 //----------------------------------------------------------------------//
 #include <vcl.h>
 #pragma hdrstop
-
 #include "Global.h"
 #include "UserFunc.h"
 #include "SrtModDlg.h"

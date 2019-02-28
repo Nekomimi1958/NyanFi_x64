@@ -397,8 +397,9 @@ void __fastcall TGitViewer::UpdateCommitList(
 							if (!EndsStr("/HEAD", ss)) gp->branch_r = ss;
 						}
 						else {
-							gp->is_head = remove_top_text(ss, "HEAD -> ") || USAME_TS(ss, "HEAD");
-							gp->branch	= ss;
+							gp->is_head |= StartsStr("HEAD -> ", ss) || USAME_TS(ss, "HEAD");
+							if (!gp->branch.IsEmpty()) gp->branch.UCAT_T(",");
+							gp->branch += ss;
 						}
 					}
 
@@ -817,8 +818,14 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 
 		//ブランチ名
 		if (!gp->branch.IsEmpty()) {
-			if (gp->is_head) out_TextEx(cv, xp, yp, _T("\u25b6"), col_GitHEAD);
-			out_TextEx(cv, xp, yp, gp->branch, col_bgList, col_GitBra, Scaled8);
+			TStringDynArray b_buf = SplitString(gp->branch, ",");
+			for (int i=0; i<b_buf.Length; i++) {
+				UnicodeString ss = b_buf[i];
+				if (remove_top_s(ss, "HEAD -> ") || USAME_TS(ss, "HEAD"))
+					out_TextEx(cv, xp, yp, _T("\u25b6"), col_GitHEAD);
+				out_TextEx(cv, xp, yp, ss, col_bgList, col_GitBra, Scaled4);
+				xp += Scaled4;
+			}
 		}
 		if (ShowRemoteAction->Checked && !gp->branch_r.IsEmpty()) {
 			out_TextEx(cv, xp, yp, gp->branch_r, col_bgList, col_GitBraR, Scaled8);
@@ -1165,13 +1172,39 @@ void __fastcall TGitViewer::MergeActionUpdate(TObject *Sender)
 	int flag = GetCurBranchFlag();
 	((TAction *)Sender)->Visible = !(flag & GIT_FLAG_HEAD) && (flag & GIT_FLAG_LOCAL);
 }
+//---------------------------------------------------------------------------
+//チェリーピック
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::CherryPickActionExecute(TObject *Sender)
+{
+	git_rec *gp = GetCurCommitPtr();
+	if (!SameText(gp->branch, RefHEAD)) {
+		if (msgbox_Sure("このコミットをチェリーピックしますか?")) GitExeStr("cherry-pick " + gp->hash);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::CherryPickActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Visible = !CommitID.IsEmpty();
+}
 
 //---------------------------------------------------------------------------
 //ブランチ名をコピー
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::CopyBranchNameActionExecute(TObject *Sender)
 {
-	copy_to_Clipboard(BranchName);
+	TStringDynArray b_buf = SplitString(BranchName, ",");
+	UnicodeString bnam;
+	for (int i=0; i<b_buf.Length; i++) {
+		UnicodeString ss = b_buf[i];
+		remove_top_s(ss, "HEAD -> ");
+		remove_top_s(ss, "HEAD");
+		if (!ss.IsEmpty()) {
+			if (!bnam.IsEmpty()) bnam.UCAT_T(",");
+			bnam += ss;
+		}
+	}
+	copy_to_Clipboard(bnam);
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::CopyBranchNameActionUpdate(TObject *Sender)
@@ -1874,10 +1907,8 @@ void __fastcall TGitViewer::ResetAllActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::ResetAllActionUpdate(TObject *Sender)
 {
-	TListBox *lp = CommitListBox;
-	git_rec *gp = (lp->ItemIndex!=-1)? (git_rec *)lp->Items->Objects[lp->ItemIndex] : NULL;
-
 	TAction *ap = (TAction *)Sender;
+	git_rec *gp = GetCurCommitPtr();
 	ap->Visible = (gp && gp->is_index);
 	ap->Enabled = ap->Visible;
 }

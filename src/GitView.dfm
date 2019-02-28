@@ -434,6 +434,11 @@ object GitViewer: TGitViewer
       OnExecute = MergeActionExecute
       OnUpdate = MergeActionUpdate
     end
+    object CherryPickAction: TAction
+      Caption = #12371#12398#12467#12511#12483#12488#12434#12481#12455#12522#12540#12500#12483#12463'(&C)'
+      OnExecute = CherryPickActionExecute
+      OnUpdate = CherryPickActionUpdate
+    end
     object SetTagAction: TAction
       Caption = #12479#12464#12434#20184#12369#12427'(&T)'
       OnExecute = SetTagActionExecute
@@ -596,6 +601,9 @@ object GitViewer: TGitViewer
     end
     object DelTagItem: TMenuItem
       Action = DelTagAction
+    end
+    object N1: TMenuItem
+      Action = CherryPickAction
     end
     object Sep_c_1: TMenuItem
       Caption = '-'

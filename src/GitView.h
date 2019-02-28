@@ -171,6 +171,8 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *ResetBtn;
 	TToolButton *ToolButton1;
 	TToolButton *UpdateBtn;
+	TAction *CherryPickAction;
+	TMenuItem *N1;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -265,6 +267,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CopyFileHashActionUpdate(TObject *Sender);
 	void __fastcall CommitActionExecute(TObject *Sender);
 	void __fastcall CommitActionUpdate(TObject *Sender);
+	void __fastcall CherryPickActionUpdate(TObject *Sender);
+	void __fastcall CherryPickActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString RefHEAD;
@@ -335,6 +339,12 @@ private:	// ユーザー宣言
 			CommitListBox->ItemIndex = LastCmListIdx = idx;
 			CommitListBoxClick(NULL);
 		}
+	}
+
+	git_rec * __fastcall GetCurCommitPtr()
+	{
+		TListBox *lp = CommitListBox;
+		return (lp->ItemIndex!=-1)? (git_rec *)lp->Items->Objects[lp->ItemIndex] : NULL;
 	}
 
 	UnicodeString __fastcall GetCurBranchName(bool lc_only = false, bool br_only = false, bool av_only = true);

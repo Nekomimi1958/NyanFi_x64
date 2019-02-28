@@ -4,7 +4,6 @@
 //----------------------------------------------------------------------//
 #include <vcl.h>
 #pragma hdrstop
-
 #include "UserFunc.h"
 #include "Global.h"
 #include "DuplDlg.h"

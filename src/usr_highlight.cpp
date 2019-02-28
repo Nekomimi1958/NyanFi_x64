@@ -746,13 +746,13 @@ UnicodeString GetDefReservedPtn(
 	}
 	else if (USAME_TI(fext, ".nbt")) {
 		ret_str.sprintf(_T("%s"),
-			_T("\\b(Add|(Append|Filter|Load|Replace|Save)Buffer|Break|CallCommands|Close|Continue|")
+			_T("\\b(ActivateWnd|Add|(Append|Filter|Load|Replace|Save)Buffer|Break|CallCommands|Close|Continue|")
 			_T("Debug|Download|Echo(On|Off|T?)|Edit|Else|End(If|Repeat)|Exit|FileExists|FlashWin|Format(DT|DI|FN)?|")
-			_T("Goto|Grep(SetMask|Start)|Hint|If[^_]*(_(Break|Continue|Exit||Goto))?|Input|")
-			_T("Ins|JumpCommands|List(Buffer|Var)|Match(Buffer|Dir|Ext|Name)|MsgBox[YNC]*|Mid|MsgOff|")
-			_T("Nop|PlaySound|PopupMenu|(Push|Pop)(Index|TopIndex|Var)|Random|ReadINI|Redraw|Repeat|ReturnCommands|")
-			_T("Right|SearchDown[FD]?|SearchUp[FD]?|SendCommands|Set_|Set(Clipboard|CopyMode|FileTime|Index)|")
-			_T("SetExe(File|Param|Dir|Opt)|ShellExecute|Sleep|Test|Timer|Trim|WaitForTask2?|Warn|WriteINI)_?"));
+			_T("Git|Goto|Grep(SetMask|Start)|Hint|If[^_]*(_(Break|Continue|Exit||Goto))?|Input|Ins|JumpCommands|")
+			_T("List(Buffer|Var)|Match(Buffer|Dir|Ext|Name)|MsgBox[YNC]*|Mid|MsgOff|Nop|PlaySound|PopupMenu|")
+			_T("(Push|Pop)(Index|TopIndex|Var)|Random|ReadINI|Redraw|Repeat|ReturnCommands|Right|SearchDown[FD]?|")
+			_T("SearchUp[FD]?|SendCommands|Set_|Set(Clipboard|CopyMode|FileTime|Index)|SetExe(File|Param|Dir|Opt)|")
+			_T("ShellExecute|Sleep|Test|Timer|Trim|WaitForKey|WaitForTask2?|Warn|WriteINI)_?"));
 		sns_case = false;
 	}
 

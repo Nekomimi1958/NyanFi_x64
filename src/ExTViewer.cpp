@@ -19,12 +19,15 @@
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
-TExTxtViewer *ExTxtViewer;
 
 //---------------------------------------------------------------------------
 __fastcall TExTxtViewer::TExTxtViewer(TComponent* Owner)
 	: TForm(Owner)
 {
+	LastWidth  = 0;
+	LineNo	   = 0;
+	isClip	   = false;
+	isXDoc2Txt = isRichText = isViewText = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::FormCreate(TObject *Sender)
@@ -42,16 +45,13 @@ void __fastcall TExTxtViewer::FormCreate(TObject *Sender)
 
 	TxtViewScrPanel = new UsrScrollPanel(TxtScrollPanel, TextScrollBar, USCRPNL_FLAG_TV|USCRPNL_FLAG_L_WP);
 
-	ExViewer = new TTxtViewer(this, TextPaintBox, TextScrollBar, TxtViewScrPanel, TxtSttHeader, TextRulerBox, TextCurColPanel);
+	ExViewer = new TTxtViewer(this, TextPaintBox, TextScrollBar, TxtViewScrPanel,
+								TxtSttHeader, TextRulerBox, TextCurColPanel, TextMarginBox);
 	ExViewer->isHtm2Txt   = IniFile->ReadBoolGen(_T("Htm2Txt"));
 	ExViewer->isFixedLen  = IniFile->ReadBoolGen(_T("FixedLen"));
 	ExViewer->ShowRuby	  = IniFile->ReadBoolGen(_T("ShowRuby"),	true);
 	ExViewer->TopIsHeader = IniFile->ReadBoolGen(_T("TopIsHeader"));
 	ExViewer->isIncMigemo = IniFile->ReadBoolGen(_T("TvIncMigemo"));
-
-	LineNo = 0;
-	isClip = false;
-	isXDoc2Txt = isRichText = isViewText = false;
 
 	//ドロップターゲットを登録
 	IDropTarget *pDropTarget = NULL;
@@ -84,7 +84,11 @@ void __fastcall TExTxtViewer::FormShow(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::WmFormShowed(TMessage &msg)
 {
-	if (FileName.IsEmpty()) {
+	//ファイル
+	if (!FileName.IsEmpty()) {
+		if (!OpenViewer(false, 0, LineNo)) msgbox_ERR(USTR_FileNotOpen);
+	}
+	else {
 		cursor_HourGlass();
 		TxtMainPanel->Visible	= false;
 		TxtScrollPanel->Visible = false;
@@ -116,10 +120,6 @@ void __fastcall TExTxtViewer::WmFormShowed(TMessage &msg)
 		TxtScrollPanel->Visible = true;
 		TxtMainPanel->Visible	= true;
 		cursor_Default();
-	}
-	//ファイル
-	else if (!FileName.IsEmpty()) {
-		if (!OpenViewer(false, 0, LineNo)) msgbox_ERR(USTR_FileNotOpen);
 	}
 }
 
@@ -282,7 +282,7 @@ bool __fastcall TExTxtViewer::OpenViewer(
 		Caption = UnicodeString().sprintf(_T("%s - テキストビュアー"), yen_to_delimiter(OrgName).c_str());
 
 		int cpag = 0;
-		
+
 		isXDoc2Txt = bin_mode? false : (UseXd2tx && xd2tx_TestExt(fext));
 		isRichText = bin_mode? false : test_FileExt(fext, _T(".rtf.wri"));
 		isViewText = bin_mode? false : (force_txt? true : is_TextFile(FileName, &cpag, NULL, &ExViewer->HasBOM));

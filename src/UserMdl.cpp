@@ -3,7 +3,6 @@
 //																		//
 //----------------------------------------------------------------------//
 #pragma hdrstop
-
 #include <Vcl.Clipbrd.hpp>
 #include <Vcl.FileCtrl.hpp>
 #include <RegularExpressions.hpp>
