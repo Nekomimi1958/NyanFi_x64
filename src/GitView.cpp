@@ -13,6 +13,7 @@
 #include "FileInfDlg.h"
 #include "GitTag.h"
 #include "GenInfDlg.h"
+#include "InpExDlg.h"
 #include "GitView.h"
 
 //---------------------------------------------------------------------------
@@ -275,6 +276,7 @@ git_rec * __fastcall TGitViewer::cre_GitRec(UnicodeString msg)
 	gp->is_head  = false;
 	gp->is_work  = false;
 	gp->is_index = false;
+	gp->is_stash = false;
 	gp->msg 	 = msg;
 	return gp;
 }
@@ -329,6 +331,27 @@ void __fastcall TGitViewer::UpdateCommitList(
 
 	GitBusy = true;
 	std::unique_ptr<TStringList> c_lst(new TStringList());
+	std::unique_ptr<TStringList> o_lst(new TStringList());
+
+	//Stash
+	UnicodeString prm = "stash list";
+	if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0) {
+		git_rec *gp;
+		for (int i=0; i<o_lst->Count; i++) {
+			UnicodeString lbuf = o_lst->Strings[i];
+			gp  = cre_GitRec();
+			gp->graph	 = "*";
+			gp->is_stash = true;
+			gp->stash	 = split_tkn(lbuf, ": ");
+			gp->msg		 = lbuf;
+			c_lst->AddObject(EmptyStr, (TObject *)gp);
+		}
+
+		//セパレータ
+		gp = cre_GitRec();
+		gp->graph = "-";
+		c_lst->AddObject(EmptyStr, (TObject *)gp);
+	}
 
 	//ワーキングツリー/インデックス
 	UnicodeString stt_str = get_post_tab(UpdateStatusList());
@@ -354,7 +377,7 @@ void __fastcall TGitViewer::UpdateCommitList(
 	}
 
 	//コミット履歴
-	UnicodeString prm = "log --graph";
+	prm = "log --graph";
 	if (ShowBranchesAction->Checked && commit_id.IsEmpty()) prm += " --branches";
 	if (HistoryLimit>0) prm.cat_sprintf(_T(" -%u"), HistoryLimit);
 	if (!FilterName.IsEmpty()) prm.UCAT_T(" --follow");
@@ -365,8 +388,8 @@ void __fastcall TGitViewer::UpdateCommitList(
 	//グラフ / コミットID / 親ID / 日時 / 件名 / ブランチ / タグ / Author名
 	int idx_h = -1;
 	UnicodeString last_parent;
-	std::unique_ptr<TStringList> o_lst(new TStringList());
 	DWORD exit_code;
+	o_lst->Clear();
 	if (GitShellExe(prm, WorkDir, o_lst.get(), &exit_code) && exit_code==0 && o_lst->Count>0) {
 		int max_gr_len = 0, max_an_wd = 0;
 		for (int i=0; i<o_lst->Count; i++) {
@@ -547,35 +570,45 @@ void __fastcall TGitViewer::UpdateDiffList(
 {
 	int org_idx = DiffListBox->ItemIndex;
 	DiffListBox->Clear();
-	CommitID = ParentID = BranchName = EmptyStr;
+	CommitID = ParentID = BranchName = TagNames = StashName = EmptyStr;
 	MaxDfWidth = 0;
 
 	TListBox *c_lp = CommitListBox;
 	git_rec *gp = (git_rec *)c_lp->Items->Objects[c_lp->ItemIndex];
-	if (!gp->is_work && !gp->is_index && gp->hash.IsEmpty()) return;
-
-	CommitID   = gp->hash;
-	ParentID   = gp->parent;
-	BranchName = gp->branch;
-	TagNames   = gp->tags;
+	if (!gp->is_stash && !gp->is_work && !gp->is_index && gp->hash.IsEmpty()) return;
 
 	std::unique_ptr<TStringList> o_lst(new TStringList());
-	if (gp->diff_inf.IsEmpty()) {
-		UnicodeString prm = "diff --stat-width=120 ";
-		UnicodeString parent = get_tkn(ParentID, ' ');
-		if		(gp->is_work)		;
-		else if (gp->is_index)		 prm += "--cached";
-		else if (ParentID.IsEmpty()) prm += CommitID;
-		else 						 prm += (parent + " " + CommitID);
-
-		if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" -- \"%s\""), FilterName.c_str());
+	if (!gp->stash.IsEmpty()) {
+		StashName = gp->stash;
+		UnicodeString prm = "stash show " + gp->stash;
 		GitBusy = true;
 		if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0)
 			gp->diff_inf = o_lst->Text;
 		GitBusy = false;
 	}
 	else {
-		o_lst->Text = gp->diff_inf;
+		CommitID   = gp->hash;
+		ParentID   = gp->parent;
+		BranchName = gp->branch;
+		TagNames   = gp->tags;
+
+		if (gp->diff_inf.IsEmpty()) {
+			UnicodeString prm = "diff --stat-width=120 ";
+			UnicodeString parent = get_tkn(ParentID, ' ');
+			if		(gp->is_work)		;
+			else if (gp->is_index)		 prm += "--cached";
+			else if (ParentID.IsEmpty()) prm += CommitID;
+			else 						 prm += (parent + " " + CommitID);
+
+			if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" -- \"%s\""), FilterName.c_str());
+			GitBusy = true;
+			if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0)
+				gp->diff_inf = o_lst->Text;
+			GitBusy = false;
+		}
+		else {
+			o_lst->Text = gp->diff_inf;
+		}
 	}
 
 	//作業ツリーに ? ファイルを追加
@@ -773,13 +806,21 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 	else if (!gp->graph.IsEmpty()) {
 		git_rec *gp1 = (Index>0)? (git_rec *)lp->Items->Objects[Index - 1] : NULL;
 		git_rec *gp2 = (Index<(lp->Count - 1))? (git_rec *)lp->Items->Objects[Index + 1] : NULL;
-		UnicodeString s1 = (gp1 && !USAME_TS(gp1->graph, "-"))? gp1->graph : EmptyStr;
-		UnicodeString s2 = (!gp->is_index && gp2)? gp2->graph : EmptyStr;
+		UnicodeString s1 = (!gp->is_stash && gp1 && !USAME_TS(gp1->graph, "-"))? gp1->graph : EmptyStr;
+		UnicodeString s2 = (!gp->is_stash && !gp->is_index && gp2)? gp2->graph : EmptyStr;
 		TRect rc = Rect; rc.Left = xp;
-		draw_GitGraph(gp->graph, s1, s2, cv, rc, gp->is_head, (gp->is_work || gp->is_index));
+		draw_GitGraph(gp->graph, s1, s2, cv, rc, gp->is_head, (gp->is_stash || gp->is_work || gp->is_index));
 	}
 
 	xp += MaxGrWidth;
+	if (gp->is_stash) {
+		out_TextEx(cv, xp, yp, gp->stash, col_Folder, col_None, Scaled8);
+		UnicodeString s = gp->msg;
+		out_TextEx(cv, xp, yp, split_tkn(s, ": "), col_GitBra, col_None, Scaled8);
+		if (is_match_regex(s, _T("^[0-9a-f]{7}\\s")))
+			out_TextEx(cv, xp, yp, split_tkn(s, ' '), col_GitHash, col_None, Scaled8);
+		out_TextEx(cv, xp, yp, s, col_fgList);
+	}
 	if (gp->is_work || gp->is_index) {
 		UnicodeString s1 = "作業ツリー ";
 		UnicodeString s2 = "インデックス ";
@@ -787,8 +828,7 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 		xp += (std::max(cv->TextWidth(s1), cv->TextWidth(s2)) - cv->TextWidth(s));
 		cv->Font->Color = col_Folder;
 		out_TextEx(cv, xp, yp, s);
-		cv->Font->Color = col_fgList;
-		cv->TextOut(xp, yp, gp->msg);
+		out_TextEx(cv, xp, yp, gp->msg, col_fgList);
 	}
 	else if (!gp->hash.IsEmpty()) {
 		//ハッシュ
@@ -832,8 +872,7 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 		}
 
 		//メッセージ
-		cv->Font->Color = col_fgList;
-		cv->TextOut(xp, yp, gp->msg);
+		out_TextEx(cv, xp, yp, gp->msg, col_fgList);
 	}
 
 	draw_ListCursor2(lp, Rect, Index, State);
@@ -850,7 +889,7 @@ void __fastcall TGitViewer::CommitListBoxClick(TObject *Sender)
 		bool is_dw = idx>LastCmListIdx;
 		for (int i=idx; (is_dw? i<c_lp->Count : i>=0) && !found; i+=(is_dw? 1 : -1)) {
 			git_rec *gp = (git_rec *)c_lp->Items->Objects[i];
-			if (gp->is_work || gp->is_index || !gp->hash.IsEmpty()) {
+			if (gp->is_stash || gp->is_work || gp->is_index || !gp->hash.IsEmpty()) {
 				idx = i;  found = true;
 			}
 		}
@@ -1144,7 +1183,7 @@ void __fastcall TGitViewer::DelTagActionExecute(TObject *Sender)
 	UnicodeString tag = get_pre_tab(TagNames);
 	if (!tag.IsEmpty()) {
 		UnicodeString msg;
-		msg.sprintf(_T("タグ[%s]を削除してもよいですか?"), tag.c_str());
+		msg.sprintf(_T("タグ [%s] を削除してもよいですか?"), tag.c_str());
 		if (msgbox_Sure(msg)) GitExeStr("tag -d " + tag);
 	}
 }
@@ -1238,7 +1277,7 @@ void __fastcall TGitViewer::ResetItemClick(TObject *Sender)
 	int tag = ((TMenuItem *)Sender)->Tag;
 	UnicodeString prm = (tag==2)? "Hard" : (tag==0)? "Soft" : "Mixed";
 	UnicodeString msg;
-	msg.sprintf(_T("[%s]を直前のコミットに戻しますか(%s)?"), RefHEAD.c_str(), prm.c_str());
+	msg.sprintf(_T("[%s] を直前のコミットに戻しますか(%s)?"), RefHEAD.c_str(), prm.c_str());
 	if (msgbox_Sure(msg)) GitExeStr("reset --" + prm.LowerCase() + " HEAD^");
 }
 
@@ -1485,11 +1524,16 @@ void __fastcall TGitViewer::DiffDetailActionExecute(TObject *Sender)
 	if (!fnam.IsEmpty()) {
 		UnicodeString prm = "diff";
 		UnicodeString fnam2;
-		UnicodeString fnam1  = get_GitDiffFiles(fnam, fnam2);
+		UnicodeString fnam1 = get_GitDiffFiles(fnam, fnam2);
 
-		if		(gp->is_work)		 prm.cat_sprintf(_T(" -- %s"), fnam1.c_str());
-		else if (gp->is_index)		 prm.cat_sprintf(_T(" --cached -- %s"), fnam1.c_str());
-		else if (ParentID.IsEmpty()) prm.cat_sprintf(_T(" %s -- %s"), CommitID.c_str(), fnam1.c_str());
+		if (gp->is_stash)
+			prm.cat_sprintf(_T(" %s %s"), gp->stash.c_str(), fnam2.c_str());
+		else if (gp->is_work)
+			prm.cat_sprintf(_T(" -- %s"), fnam1.c_str());
+		else if (gp->is_index)
+			prm.cat_sprintf(_T(" --cached -- %s"), fnam1.c_str());
+		else if (ParentID.IsEmpty())
+			prm.cat_sprintf(_T(" %s -- %s"), CommitID.c_str(), fnam1.c_str());
 		else {
 			UnicodeString parent = get_tkn(ParentID, ' ');
 			if (SameText(fnam1, fnam2)) {
@@ -1720,8 +1764,12 @@ void __fastcall TGitViewer::DiffToolActionExecute(TObject *Sender)
 	UnicodeString fnam2;
 	UnicodeString fnam1 = get_GitDiffFiles(fnam, fnam2);
 
-	if		(gp->is_work)	prm.cat_sprintf(_T(" %s"), fnam2.c_str());
-	else if (gp->is_index)	prm.cat_sprintf(_T(" --cached %s"), fnam2.c_str());
+	if (gp->is_stash)
+		prm.cat_sprintf(_T(" %s %s"), gp->stash.c_str(), fnam2.c_str());
+	else if (gp->is_work)
+		prm.cat_sprintf(_T(" %s"), fnam2.c_str());
+	else if (gp->is_index)
+		prm.cat_sprintf(_T(" --cached %s"), fnam2.c_str());
 	else if (!CommitID.IsEmpty()) {
 		if (!ParentID.IsEmpty()) {
 			prm.cat_sprintf(_T(" %s:%s %s:%s"),
@@ -1910,6 +1958,65 @@ void __fastcall TGitViewer::ResetAllActionUpdate(TObject *Sender)
 	TAction *ap = (TAction *)Sender;
 	git_rec *gp = GetCurCommitPtr();
 	ap->Visible = (gp && gp->is_index);
+	ap->Enabled = ap->Visible;
+}
+
+//---------------------------------------------------------------------------
+//待避
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::StashActionExecute(TObject *Sender)
+{
+	UnicodeString msg;
+	if (input_query_ex(_T("待避 (stash)"), _T("メッセージ"), &msg)) {
+		UnicodeString prm;
+		prm.sprintf(_T("stash save \"%s\""), msg.c_str());
+		GitExeStr(prm);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::StashActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Enabled = (StatusList->Count>0);
+}
+
+//---------------------------------------------------------------------------
+//復帰/削除
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::StashPopActionExecute(TObject *Sender)
+{
+	if (!StashName.IsEmpty()) {
+		UnicodeString msg;
+		msg.sprintf(_T("[%s] を復帰/削除しますか?"), StashName.c_str());
+		if (msgbox_Sure(msg)) GitExeStr("stash pop " + StashName);
+	}
+}
+//---------------------------------------------------------------------------
+//復帰
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::StashApplyActionExecute(TObject *Sender)
+{
+	if (!StashName.IsEmpty()) {
+		UnicodeString msg;
+		msg.sprintf(_T("[%s] を復帰しますか?"), StashName.c_str());
+		if (msgbox_Sure(msg)) GitExeStr("stash apply " + StashName);
+	}
+}
+//---------------------------------------------------------------------------
+//削除
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::StashDropActionExecute(TObject *Sender)
+{
+	if (!StashName.IsEmpty()) {
+		UnicodeString msg;
+		msg.sprintf(_T("[%s] を削除しますか?"), StashName.c_str());
+		if (msgbox_Sure(msg)) GitExeStr("stash drop " + StashName);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::StashPopActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Visible = !StashName.IsEmpty();
 	ap->Enabled = ap->Visible;
 }
 

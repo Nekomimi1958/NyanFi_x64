@@ -13491,8 +13491,12 @@ void draw_GitGraph(
 
 		switch (s[i]) {
 		case '*':
-			if (s1[i]!=' ' || c1l=='\\' || c1r=='/') { cv->MoveTo(xc, y0); cv->LineTo(xc, yc); }
-			if (s2[i]!=' ' || c2l=='/' || c2r=='\\') { cv->MoveTo(xc, yc); cv->LineTo(xc, y1); }
+			if ((s1[i]!='-' && s1[i]!=' ') || c1l=='\\' || c1r=='/') {
+				cv->MoveTo(xc, y0); cv->LineTo(xc, yc);
+			}
+			if ((s1[i]!='-' && s2[i]!=' ') || c2l=='/' || c2r=='\\') {
+				cv->MoveTo(xc, yc); cv->LineTo(xc, y1);
+			}
 			cv->Pen->Color = is_head? col_GitHEAD : col_GitMark;
 			cv->Ellipse(xc - r, yc - r, xc + r, yc + r);
 			break;

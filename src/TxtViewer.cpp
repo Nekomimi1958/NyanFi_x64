@@ -49,12 +49,13 @@ __fastcall TTxtViewer::TTxtViewer(
 	TPanel *colref,			//カラー表示
 	TPaintBox *mgn_box)		//右余白パネル	(default = NULL)
 {
-	isReady   = false;
-	OwnerForm = frm;
-	isExtWnd  = OwnerForm->ClassNameIs("TExTxtViewer");
+	isReady    = false;
+	OwnerForm  = frm;
+	isExtWnd   = OwnerForm->ClassNameIs("TExTxtViewer");
 
 	ViewBox    = viewbox;
 	ViewCanvas = ViewBox->Canvas;
+
 	ScrBar	   = scrbar;
 	ScrPanel   = sp;
 	SttHeader  = stthdr;
@@ -117,9 +118,10 @@ __fastcall TTxtViewer::TTxtViewer(
 	isSelMode	= isBoxMode = false;
 	reqCurPos	= false;
 
-	LineHeight	= 0;
-	LineCount	= 0;
+	FontHeight	= abs(ViewBox->Font->Height);
+	LineHeight	= FontHeight + ViewTxtInterLn;
 	HchWidth	= 0;
+	LineCount	= 0;
 	TabLength	= 0;
 	TabWidth	= 0;
 	TopXpos 	= 0;
@@ -376,13 +378,12 @@ void __fastcall TTxtViewer::SetMetric(bool set_hi)
 	IsIrregFont = IsIrregularFont(ViewBox->Font);
 
 	//ズーム時の行間調整
-	int intrln = ViewTxtInterLn;
-	if (ViewBox->Font->Size != useFontSize) intrln *= (1.0 * ViewBox->Font->Size/useFontSize);
+	if (ViewBox->Font->Size != useFontSize) ViewTxtInterLn *= (1.0 * ViewBox->Font->Size/useFontSize);
 
 	ViewCanvas->Font->Assign(ViewBox->Font);
 	FontHeight = abs(ViewCanvas->Font->Height);
-	LineHeight = FontHeight + intrln;
-	LineCount  = ViewBox->ClientHeight/LineHeight - 1;
+	LineHeight = FontHeight + ViewTxtInterLn;
+	LineCount  = ViewBox->ClientHeight / LineHeight - 1;
 
 	if (TabLength==0) TabLength = get_ViewTabWidth(get_extension(FileName));
 	HchWidth   = get_TextWidth(ViewCanvas, "W", IsIrregFont);
@@ -2237,7 +2238,7 @@ void __fastcall TTxtViewer::SetPosFromPt(int x, int y)
 	if (y<0) y = 0;
 
 	//行
-	int n = y/LineHeight;
+	int n = y / LineHeight;
 	if (n>=MaxDispLine) n = MaxDispLine - 1;
 	CurPos.y = n;
 
@@ -2277,7 +2278,7 @@ bool __fastcall TTxtViewer::PtInSelected(int x, int y)
 	if (y<0 || x<0) return false;
 
 	//行
-	int py = y/LineHeight;
+	int py = y / LineHeight;
 	if (py<SelStart.y || py>SelEnd.y) return false;
 
 	//桁
@@ -2303,7 +2304,7 @@ void __fastcall TTxtViewer::UpdatePos(
 	bool up_pos,		// (default = false)
 	bool force)			// (default = false)
 {
-	LineCount = ViewBox->ClientHeight/LineHeight - 1;
+	LineCount = ViewBox->ClientHeight / LineHeight - 1;
 
 	if (up_pos) {
 		CurTop = CurPos.y - 5;

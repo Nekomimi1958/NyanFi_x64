@@ -215,7 +215,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall Opt2MainPanelResize(TObject *Sender);
 	void __fastcall AddCnvChActionUpdate(TObject *Sender);
 
-
 private:	// ユーザー宣言
 	bool DlgInitialized;
 	bool Previewing;

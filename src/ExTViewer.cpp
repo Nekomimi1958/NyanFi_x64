@@ -43,10 +43,11 @@ void __fastcall TExTxtViewer::FormCreate(TObject *Sender)
 	org_TxtSttHdrWndProc	   = TxtSttHeader->WindowProc;
 	TxtSttHeader->WindowProc   = TxtSttHdrWndProc;
 
+	TextRulerBox->Enabled = false;
+
 	TxtViewScrPanel = new UsrScrollPanel(TxtScrollPanel, TextScrollBar, USCRPNL_FLAG_TV|USCRPNL_FLAG_L_WP);
 
-	ExViewer = new TTxtViewer(this, TextPaintBox, TextScrollBar, TxtViewScrPanel,
-								TxtSttHeader, TextRulerBox, TextCurColPanel, TextMarginBox);
+	ExViewer = new TTxtViewer(this, TextPaintBox, TextScrollBar, TxtViewScrPanel, TxtSttHeader, TextRulerBox, TextCurColPanel);
 	ExViewer->isHtm2Txt   = IniFile->ReadBoolGen(_T("Htm2Txt"));
 	ExViewer->isFixedLen  = IniFile->ReadBoolGen(_T("FixedLen"));
 	ExViewer->ShowRuby	  = IniFile->ReadBoolGen(_T("ShowRuby"),	true);
@@ -65,6 +66,8 @@ void __fastcall TExTxtViewer::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::FormShow(TObject *Sender)
 {
+	DlgInitialized = false;
+
 	IniFile->LoadPosInfo(this);
 	LastWidth = Width;
 
@@ -121,6 +124,8 @@ void __fastcall TExTxtViewer::WmFormShowed(TMessage &msg)
 		TxtMainPanel->Visible	= true;
 		cursor_Default();
 	}
+
+	DlgInitialized = true;
 }
 
 //---------------------------------------------------------------------------
@@ -199,6 +204,8 @@ void __fastcall TExTxtViewer::AdjustHdrWidth()
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::FormResize(TObject *Sender)
 {
+	if (!DlgInitialized) return;
+
 	AdjustHdrWidth();
 
 	ExViewer->SetMetric(true);

@@ -37,7 +37,7 @@ void __fastcall TTagManDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::FormShow(TObject *Sender)
 {
-	Initialized = false;
+	DlgInitialized = false;
 
 	Constraints->MinWidth = 0;
 
@@ -126,7 +126,7 @@ void __fastcall TTagManDlg::WmFormShowed(TMessage &msg)
 	}
 
 	SetCtrlFocus();
-	Initialized = true;
+	DlgInitialized = true;
 }
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -158,7 +158,7 @@ void __fastcall TTagManDlg::FormClose(TObject *Sender, TCloseAction &Action)
 
 	IniFile->WriteBoolGen(_T("TagDlgShowCount"),	ShowTagCountAction);
 
-	Initialized = false;
+	DlgInitialized = false;
 	CmdStr = EmptyStr;
 }
 //---------------------------------------------------------------------------
@@ -236,7 +236,7 @@ void __fastcall TTagManDlg::ChgOptBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::TagEditChange(TObject *Sender)
 {
-	if (!Initialized || InhEdit) return;
+	if (!DlgInitialized || InhEdit) return;
 
 	TStringDynArray org_lst = split_strings_semicolon(TagEdit->Text);
 	std::unique_ptr<TStringList> lst(new TStringList());
@@ -283,7 +283,7 @@ void __fastcall TTagManDlg::TagEditKeyPress(TObject *Sender, System::WideChar &K
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::TagCheckListBoxClickCheck(TObject *Sender)
 {
-	if (!Initialized) return;
+	if (!DlgInitialized) return;
 
 	UnicodeString lbuf = usr_TAG->CheckToTags(TagCheckListBox, TagEdit->Text);
 	if (!SameStr(lbuf, TagEdit->Text)) {

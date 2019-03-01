@@ -76,7 +76,6 @@ __published:	// IDE で管理されるコンポーネント
 	TRichEdit *ViewMemo;
 	TScrollBar *TextScrollBar;
 	TStatusBar *TxtSttHeader;
-	TPaintBox *TextMarginBox;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -117,6 +116,8 @@ __published:	// IDE で管理されるコンポーネント
 
 private:	// ユーザー宣言
 	UsrScrollPanel *TxtViewScrPanel;	//独自スクロールバー
+
+	bool DlgInitialized;
 
 	UnicodeString FirstKey;				//2ストローク開始キー
 	bool Wait2ndKey;					//2ストローク目待ち状態

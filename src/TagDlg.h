@@ -109,7 +109,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ListPanelResize(TObject *Sender);
 
 private:	// ユーザー宣言
-	bool Initialized;
+	bool DlgInitialized;
 	int  MaxTagWidth;
 	bool InhEdit;
 

@@ -29,10 +29,12 @@ struct git_rec {
 	UnicodeString branch_r;	//リモート部ラッチ
 	UnicodeString tags;		//タグ(複数の場合 \t 区切り)
 	UnicodeString author;	//Author名
+	UnicodeString stash;	//Stash名
 	TDateTime f_time;
 	bool is_head;
 	bool is_work;
 	bool is_index;
+	bool is_stash;
 	UnicodeString diff_inf;	//差分情報
 };
 
@@ -58,6 +60,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ArchiveAction;
 	TAction *BlameAction;
 	TAction *ChckoutAction;
+	TAction *CherryPickAction;
 	TAction *CommitAction;
 	TAction *CommitInfoAction;
 	TAction *ConsoleAction;
@@ -117,6 +120,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *LogThisFileItem;
 	TMenuItem *MergeItem;
 	TMenuItem *MixedResetItem;
+	TMenuItem *N1;
 	TMenuItem *OpenTmpArcItem;
 	TMenuItem *RenBranchItem;
 	TMenuItem *ResetAll2Item;
@@ -169,10 +173,18 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *FindUpBtn;
 	TToolButton *GuiBtn;
 	TToolButton *ResetBtn;
-	TToolButton *ToolButton1;
+
+	TToolButton *ToolButton2;TToolButton *ToolButton1;
 	TToolButton *UpdateBtn;
-	TAction *CherryPickAction;
-	TMenuItem *N1;
+	TAction *StashAction;
+	TToolButton *FindSpcBtn2;
+	TAction *StashPopAction;
+	TAction *StashApplyAction;
+	TAction *StashDropAction;
+	TMenuItem *StashApplyItem;
+	TMenuItem *StashPopItem;
+	TMenuItem *StashDropItem;
+	TMenuItem *Sep_c_5;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -269,6 +281,12 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CommitActionUpdate(TObject *Sender);
 	void __fastcall CherryPickActionUpdate(TObject *Sender);
 	void __fastcall CherryPickActionExecute(TObject *Sender);
+	void __fastcall StashActionExecute(TObject *Sender);
+	void __fastcall StashActionUpdate(TObject *Sender);
+	void __fastcall StashPopActionExecute(TObject *Sender);
+	void __fastcall StashPopActionUpdate(TObject *Sender);
+	void __fastcall StashApplyActionExecute(TObject *Sender);
+	void __fastcall StashDropActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString RefHEAD;
@@ -276,6 +294,7 @@ private:	// ユーザー宣言
 	UnicodeString ParentID;
 	UnicodeString BranchName;
 	UnicodeString TagNames;
+	UnicodeString StashName;
 	bool AutoCrlf;
 
 	TStringList *StatusList;

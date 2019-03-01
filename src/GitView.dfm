@@ -292,14 +292,28 @@ object GitViewer: TGitViewer
           Action = UpdateLogAction
           Style = tbsTextButton
         end
-        object ConsoleBtn: TToolButton
+        object ToolButton2: TToolButton
           Left = 293
+          Top = 0
+          Action = StashAction
+          Style = tbsTextButton
+        end
+        object FindSpcBtn2: TToolButton
+          Left = 342
+          Top = 0
+          Width = 16
+          Caption = 'FindSpcBtn2'
+          ImageIndex = 0
+          Style = tbsSeparator
+        end
+        object ConsoleBtn: TToolButton
+          Left = 358
           Top = 0
           Action = ConsoleAction
           Style = tbsTextButton
         end
         object GuiBtn: TToolButton
-          Left = 342
+          Left = 407
           Top = 0
           Action = GuiAction
           Style = tbsTextButton
@@ -448,6 +462,26 @@ object GitViewer: TGitViewer
       Caption = #12479#12464#12398#21066#38500'(&D)'
       OnExecute = DelTagActionExecute
       OnUpdate = DelTagActionUpdate
+    end
+    object StashAction: TAction
+      Caption = #36864#36991'(&S)'
+      OnExecute = StashActionExecute
+      OnUpdate = StashActionUpdate
+    end
+    object StashPopAction: TAction
+      Caption = #24489#24112'/'#21066#38500' (stash pop)'
+      OnExecute = StashPopActionExecute
+      OnUpdate = StashPopActionUpdate
+    end
+    object StashApplyAction: TAction
+      Caption = #24489#24112' (stash apply)'
+      OnExecute = StashApplyActionExecute
+      OnUpdate = StashPopActionUpdate
+    end
+    object StashDropAction: TAction
+      Caption = #21066#38500' (stash drop)'
+      OnExecute = StashDropActionExecute
+      OnUpdate = StashPopActionUpdate
     end
     object CommitInfoAction: TAction
       Caption = #12467#12511#12483#12488#24773#22577#12434#34920#31034'(&I)'
@@ -608,13 +642,25 @@ object GitViewer: TGitViewer
     object Sep_c_1: TMenuItem
       Caption = '-'
     end
+    object StashPopItem: TMenuItem
+      Action = StashPopAction
+    end
+    object StashApplyItem: TMenuItem
+      Action = StashApplyAction
+    end
+    object StashDropItem: TMenuItem
+      Action = StashDropAction
+    end
+    object Sep_c_2: TMenuItem
+      Caption = '-'
+    end
     object ArchiveItem: TMenuItem
       Action = ArchiveAction
     end
     object OpenTmpArcItem: TMenuItem
       Action = OpenTmpArcAction
     end
-    object Sep_c_2: TMenuItem
+    object Sep_c_3: TMenuItem
       Caption = '-'
     end
     object CopyBranchNameItem: TMenuItem
@@ -629,7 +675,7 @@ object GitViewer: TGitViewer
     object LogThisCommitItem: TMenuItem
       Action = LogThisCommitAction
     end
-    object Sep_c_3: TMenuItem
+    object Sep_c_4: TMenuItem
       Caption = '-'
     end
     object AddAItem: TMenuItem
@@ -641,7 +687,7 @@ object GitViewer: TGitViewer
     object ResetAllItem: TMenuItem
       Action = ResetAllAction
     end
-    object Sep_c_4: TMenuItem
+    object Sep_c_5: TMenuItem
       Caption = '-'
     end
     object ShowBranchesItem: TMenuItem
@@ -703,7 +749,7 @@ object GitViewer: TGitViewer
   end
   object ComOptPopupMenu: TPopupMenu
     Left = 602
-    Top = 284
+    Top = 268
     object SelConsoleItem: TMenuItem
       Caption = 'Console '#12398#36984#25246'(&S)...'
       OnClick = SelConsoleItemClick
