@@ -511,17 +511,22 @@ void __fastcall TDistributionDlg::RegListBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::RegListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
+	TListBox *lp = (TListBox*)Sender;
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);	if (KeyStr.IsEmpty()) return;
-	UnicodeString CmdStr = Key_to_CmdF(KeyStr);
-	if (CmdStr.IsEmpty()) CmdStr = get_CsrKeyCmd(KeyStr);
+	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+	if (cmd_F.IsEmpty()) cmd_F = get_CsrKeyCmd(KeyStr);
 
+	int last_idx = lp->ItemIndex;
 	bool handled = true;
-	if		(USAME_TI(CmdStr, "FileEdit"))			EditListAction->Execute();
+	if		(ExeCmdListBox(lp, cmd_F))				;
+	else if (USAME_TI(cmd_F, "FileEdit"))			EditListAction->Execute();
 	else if (equal_DEL(KeyStr)) 					DelRegAction->Execute();
 	else if (UserModule->ListBoxOpeItem(KeyStr))	;
-	else if (ListListBox->Visible && is_ToRightOpe(KeyStr, CmdStr))
+	else if (ListListBox->Visible && is_ToRightOpe(KeyStr, cmd_F))
 													ListListBox->SetFocus();
 	else handled = false;
+
+	if (last_idx!=lp->ItemIndex) RegListBoxClick(NULL);
 
 	if (!is_DialogKey(Key) || handled) Key = 0;
 }
@@ -546,13 +551,15 @@ void __fastcall TDistributionDlg::ListListBoxDrawItem(TWinControl *Control, int 
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::ListListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
+	TListBox *lp = (TListBox*)Sender;
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);	if (KeyStr.IsEmpty()) return;
-	UnicodeString CmdStr = Key_to_CmdF(KeyStr);
-	if (CmdStr.IsEmpty()) CmdStr = get_CsrKeyCmd(KeyStr);
+	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+	if (cmd_F.IsEmpty()) cmd_F = get_CsrKeyCmd(KeyStr);
 
 	bool handled = true;
-	if		(USAME_TI(CmdStr, "FileEdit")) EditListAction->Execute();
-	else if (is_ToLeftOpe(KeyStr, CmdStr)) RegListBox->SetFocus();
+	if		(ExeCmdListBox(lp, cmd_F))		;
+	else if (USAME_TI(cmd_F, "FileEdit"))	EditListAction->Execute();
+	else if (is_ToLeftOpe(KeyStr, cmd_F))	RegListBox->SetFocus();
 	else handled = false;
 
 	if (!is_DialogKey(Key) || handled) Key = 0;

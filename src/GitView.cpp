@@ -35,6 +35,10 @@ void __fastcall TGitViewer::FormCreate(TObject *Sender)
 	CommitScrPanel = new UsrScrollPanel(CommitPanel, CommitListBox, USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
 	DiffScrPanel   = new UsrScrollPanel(DiffPanel,   DiffListBox,   USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
 
+	MsgHint = new UsrHintWindow(this);
+	MsgHint->Canvas->Font->Assign(HintFont);
+	MsgHint->Canvas->Font->Color = col_fgHint;
+
 	StatusList = new TStringList();
 	Staged = false;
 }
@@ -125,6 +129,7 @@ void __fastcall TGitViewer::FormDestroy(TObject *Sender)
 	delete BranchScrPanel;
 	delete CommitScrPanel;
 	delete DiffScrPanel;
+	delete MsgHint;
 	delete StatusList;
 }
 
@@ -756,21 +761,19 @@ void __fastcall TGitViewer::BranchListBoxDblClick(TObject *Sender)
 void __fastcall TGitViewer::BranchListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	TListBox *lp = (TListBox*)Sender;
-	UnicodeString KeyStr  = get_KeyStr(Key, Shift);
-	UnicodeString cmd_F = Key_to_CmdF(KeyStr);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
 
-	if		(ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, Key_to_CmdV(KeyStr)))
-													BranchListBoxClick(BranchListBox);
-	else if (is_ToRightOpe(KeyStr, cmd_F))			CommitListBox->SetFocus();
-	else if (USAME_TI(cmd_F, "ReturnList"))			ModalResult = mrCancel;
-	else if (USAME_TI(cmd_F, "RenameDlg")) 			RenBranchAction->Execute();
-	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
-	else if (equal_ENTER(KeyStr)) 					ChckoutAction->Execute();
+	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, Key_to_CmdV(KeyStr)))
+												BranchListBoxClick(BranchListBox);
+	else if (is_ToRightOpe(KeyStr, cmd_F))		CommitListBox->SetFocus();
+	else if (USAME_TI(cmd_F, "ReturnList"))		ModalResult = mrCancel;
+	else if (USAME_TI(cmd_F, "RenameDlg")) 		RenBranchAction->Execute();
+	else if (equal_ENTER(KeyStr)) 				ChckoutAction->Execute();
 	else return;
 
 	Key = 0;
 }
-
 //---------------------------------------------------------------------------
 // コミット履歴の描画
 //---------------------------------------------------------------------------
@@ -907,17 +910,15 @@ void __fastcall TGitViewer::CommitListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
 
 	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, Key_to_CmdV(KeyStr)))
-											CommitListBoxClick(NULL);
-	else if (is_ToRightOpe(KeyStr, cmd_F))	DiffListBox->SetFocus();
-	else if (is_ToLeftOpe(KeyStr, cmd_F))	BranchListBox->SetFocus();
-	else if (USAME_TI(cmd_F, "ReturnList"))	ModalResult = mrCancel;
-	else if (USAME_TI(cmd_F, "IncSearch"))	FindCommitEdit->SetFocus();
+												CommitListBoxClick(NULL);
+	else if (is_ToRightOpe(KeyStr, cmd_F))		DiffListBox->SetFocus();
+	else if (is_ToLeftOpe(KeyStr, cmd_F))		BranchListBox->SetFocus();
+	else if (USAME_TI(cmd_F, "ReturnList"))		ModalResult = mrCancel;
+	else if (USAME_TI(cmd_F, "IncSearch"))		FindCommitEdit->SetFocus();
 	else if (USAME_TI(cmd_F, "ShowFileInfo") || equal_ENTER(KeyStr))
-											CommitInfoAction->Execute();
+												CommitInfoAction->Execute();
 	else if (USAME_TI(get_CmdStr(cmd_F), "Pack"))
-											ArchiveAction->Execute();
-	else if (contained_wd_i(KeysStr_Popup, KeyStr))
-											show_PopupMenu(lp);
+												ArchiveAction->Execute();
 	else return;
 
 	Key = 0;
@@ -1035,16 +1036,14 @@ void __fastcall TGitViewer::DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
 
-	if		(ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, Key_to_CmdV(KeyStr)))
-											DiffListBoxClick(NULL);
-	else if (USAME_TI(cmd_F, "ReturnList")) ModalResult = mrCancel;
-	else if (is_ToLeftOpe(KeyStr, cmd_F))	BranchListBox->SetFocus();
-	else if (is_ToRightOpe(KeyStr, cmd_F))	CommitListBox->SetFocus();
-	else if (USAME_TI(cmd_F, "FileEdit"))	EditFileAction->Execute();
+	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, Key_to_CmdV(KeyStr)))
+												DiffListBoxClick(NULL);
+	else if (USAME_TI(cmd_F, "ReturnList")) 	ModalResult = mrCancel;
+	else if (is_ToLeftOpe(KeyStr, cmd_F))		BranchListBox->SetFocus();
+	else if (is_ToRightOpe(KeyStr, cmd_F))		CommitListBox->SetFocus();
+	else if (USAME_TI(cmd_F, "FileEdit"))		EditFileAction->Execute();
 	else if (USAME_TI(cmd_F, "ShowFileInfo") || equal_ENTER(KeyStr))
-											DiffDetailAction->Execute();
-	else if (contained_wd_i(KeysStr_Popup, KeyStr))
-											show_PopupMenu(lp);
+												DiffDetailAction->Execute();
 	else return;
 
 	Key = 0;
@@ -1307,7 +1306,14 @@ void __fastcall TGitViewer::OpenTmpArcActionExecute(TObject *Sender)
 		UnicodeString prm;
 		prm.sprintf(_T("archive --format=zip %s --output=\"%s\""), CommitID.c_str(), yen_to_slash(tmp_name).c_str());
 
-		if (GitShellExe(prm, WorkDir) && file_exists(tmp_name)) {
+		MsgHint->ActivateHintEx("\r\nアーカイブ作成中...\r\n", ScaledInt(480), ScaledInt(240), CommitListBox, col_bgHint);
+		GitBusy = true;
+		DWORD exit_code;
+		bool ok = (GitShellExe(prm, WorkDir, (TStringList *)NULL, &exit_code) && exit_code==0);
+		GitBusy = false;
+		MsgHint->ReleaseHandle();
+
+		if (ok && file_exists(tmp_name)) {
 			RetArcFile	= tmp_name;
 			ModalResult = mrOk;
 		}

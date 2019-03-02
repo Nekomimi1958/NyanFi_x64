@@ -573,10 +573,13 @@ void __fastcall TCmdFileListDlg::PreviewCheckBoxClick(TObject *Sender)
 //プレビュー/参照情報でのキー操作
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::PreviewListBoxKeyDown(TObject *Sender, WORD &Key,
-		TShiftState Shift)
+	TShiftState Shift)
 {
+	TListBox *lp = (TListBox*)Sender;
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(SameText(KeyStr, KeyStr_Copy))			 EditCopyAction->Execute();
+
+	if (ExeCmdListBox(lp, Key_to_CmdF(KeyStr)))		;
+	else if (SameText(KeyStr, KeyStr_Copy))			 EditCopyAction->Execute();
 	else if (contained_wd_i(KeysStr_ToList, KeyStr)) CmdFileGrid->SetFocus();
 }
 

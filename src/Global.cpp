@@ -8817,10 +8817,13 @@ void chk_FolderIcon()
 
 //---------------------------------------------------------------------------
 //キーに割り当てられているコマンドを取得
+//  APP/Shift+F10 は ContextMenu に変換
 //---------------------------------------------------------------------------
 UnicodeString Key_to_CmdF(UnicodeString key)
 {
-	return KeyFuncList->Values["F:" + key];
+	UnicodeString cmd = KeyFuncList->Values["F:" + key];
+	if (cmd.IsEmpty() && contained_wd_i(KeysStr_Popup, key)) cmd = "ContextMenu";
+	return cmd;
 }
 //---------------------------------------------------------------------------
 UnicodeString Key_to_CmdV(UnicodeString key)
@@ -12410,6 +12413,10 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 			lp->Font->Size = (x_sw && lp->Font->Size==f_sz)? l_font->Size : f_sz;
 			set_ListBoxItemHi(lp);
 		}
+	}
+	//右クリックメニュー
+	else if (StartsText("ContextMenu", cmd) && lp->PopupMenu) {
+		show_PopupMenu(lp);
 	}
 	else return false;
 

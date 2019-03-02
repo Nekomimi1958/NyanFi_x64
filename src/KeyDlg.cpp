@@ -415,7 +415,7 @@ void __fastcall TKeyListDlg::KeyListGridKeyDown(TObject *Sender, WORD &Key, TShi
 		if (rn>0) gp->Row = rn;
 	}
 	//右クリックメニュー
-	else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(gp);
+	else if (StartsText("ContextMenu", cmd_F)) show_PopupMenu(gp);
 
 	if (!is_DialogKey(Key)) Key = 0;
 }

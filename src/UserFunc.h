@@ -45,6 +45,7 @@ bool is_HighContrast();
 HWND get_window_from_pos();
 void show_PopupMenu(TPopupMenu *mp, TControl *cp);
 void show_PopupMenu(TListBox *cp);
+void show_PopupMenu(TCheckListBox *cp);
 void show_PopupMenu(TStringGrid *gp);
 
 void set_ListBoxText(TListBox *lp, const _TCHAR *s);

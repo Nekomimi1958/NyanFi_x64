@@ -11424,7 +11424,8 @@ void __fastcall TNyanFiForm::LogListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 	UnicodeString cmd_L  = KeyFuncList->Values["L:" + KeyStr];
 	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
 
-	if		(!cmd_L.IsEmpty()) ExeCommandL(cmd_L);
+	if		(!cmd_L.IsEmpty())				ExeCommandL(cmd_L);
+	else if (ExeCmdListBox(lp, cmd_F))		;
 	else if	(is_ToRightOpe(KeyStr, cmd_F))	ExeCmdAction(ToRightAction);
 	else if (is_ToLeftOpe(KeyStr, cmd_F))	ExeCmdAction(ToLeftAction);
 	else if (SameText(KeyStr, KeyStr_Copy)) Log_EditCopy->Execute();
@@ -12759,6 +12760,7 @@ void __fastcall TNyanFiForm::ContextMenuActionExecute(TObject *Sender)
 		R_Clicked = false;
 		SetCurrentDir(dnam);
 
+		ClearKeyBuff(true);
 		UnicodeString res_str = usr_SH->ShowContextMenu(Handle, dnam, flst.get(), ex_item.get());
 		TStringDynArray m_buf = split_strings_tab(res_str);
 		if (m_buf.Length>1 && !ExeCommandsCore(m_buf[1])) GlobalAbort();

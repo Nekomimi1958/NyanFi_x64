@@ -85,11 +85,17 @@ void show_PopupMenu(TPopupMenu *mp, TControl *cp)
 {
 	if (mp && cp) {
 		TPoint p = cp->ClientToScreen(Point(16, 16));
+		ClearKeyBuff(true);
 		mp->Popup(p.x, p.y);
 	}
 }
 //---------------------------------------------------------------------------
 void show_PopupMenu(TListBox *lp)
+{
+	show_PopupMenu(lp->PopupMenu, lp);
+}
+//---------------------------------------------------------------------------
+void show_PopupMenu(TCheckListBox *lp)
 {
 	show_PopupMenu(lp->PopupMenu, lp);
 }

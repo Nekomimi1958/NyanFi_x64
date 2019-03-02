@@ -18,6 +18,7 @@
 #include <Vcl.Buttons.hpp>
 #include <Vcl.ComCtrls.hpp>
 #include <Vcl.ToolWin.hpp>
+#include "usr_hintwin.h"
 
 //---------------------------------------------------------------------------
 struct git_rec {
@@ -288,6 +289,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall StashApplyActionExecute(TObject *Sender);
 	void __fastcall StashDropActionExecute(TObject *Sender);
 
+
 private:	// ユーザー宣言
 	UnicodeString RefHEAD;
 	UnicodeString CommitID;
@@ -296,6 +298,8 @@ private:	// ユーザー宣言
 	UnicodeString TagNames;
 	UnicodeString StashName;
 	bool AutoCrlf;
+
+	UsrHintWindow *MsgHint;
 
 	TStringList *StatusList;
 	bool Staged;

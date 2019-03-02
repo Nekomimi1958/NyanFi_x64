@@ -867,8 +867,9 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 			ShowStatusBarAction->Execute();
 		}
 		//右クリックメニュー
-		else if (contained_wd_i(KeysStr_Popup, KeyStr) && gp->PopupMenu)
+		else if (StartsText("ContextMenu", CmdStr)) {
 			show_PopupMenu(gp);
+		}
 		//頭文字サーチ
 		else if (is_IniSeaKey(KeyStr)) {	//KeyStr に正規表現パターンが返る
 			TRegExOptions opt; opt << roIgnoreCase;

@@ -338,6 +338,10 @@ void __fastcall TTagManDlg::TagCheckListBoxKeyDown(TObject *Sender, WORD &Key, T
 			lp->Invalidate();
 		}
 	}
+	//右クリックメニュー
+	else if (StartsText("ContextMenu", cmd_F)) {
+		show_PopupMenu(lp);
+	}
 
 	if (!is_DialogKey(Key)) Key = 0;
 }

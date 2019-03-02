@@ -316,6 +316,10 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		ClearKeyBuff(true);		//OnKeyPress を抑止
 		OpenByExpAction->Execute();
 	}
+	//右クリックメニュー
+	else if (StartsText("ContextMenu", cmd_F)) {
+		show_PopupMenu(lp);
+	}
 	else handled = false;
 
 	if (handled) Key = 0;

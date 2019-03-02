@@ -343,15 +343,16 @@ void __fastcall TSelDriveDlg::DriveGridKeyDown(TObject *Sender, WORD &Key, TShif
 {
 	TStringGrid *gp = (TStringGrid*)Sender;
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	UnicodeString CmdStr = get_CmdStr(Key_to_CmdF(KeyStr));
+	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
 
-	//右クリックメニュー
-	if (contained_wd_i(KeysStr_Popup, KeyStr)) {
+	//コンテキストメニュー
+	if (StartsText("ContextMenu", cmd_F)) {
 		Mouse->CursorPos = gp->ClientToScreen(Point(gp->ColWidths[0] + gp->ColWidths[1], 16));
+		ClearKeyBuff(true);
 		ShowDriveMenu();
 	}
 	//容量グラフ
-	else if (USAME_TI(CmdStr, "DriveGraph")) {
+	else if (StartsText("DriveGraph", cmd_F)) {
 		ShowDriveGraph();
 	}
 
