@@ -16,10 +16,12 @@
 	<param name="Keyword" value="Gitビュアー">
 	<param name="Keyword" value="OpenGitURL">
 	<param name="Keyword" value="Pack">
+	<param name="Keyword" value="RepositoryList">
 	<param name="Keyword" value="SelGitChanged">
 	<param name="Keyword" value="ShowFileInfo">
 	<param name="Keyword" value="コミット履歴">
 	<param name="Keyword" value="ファイル情報">
+	<param name="Keyword" value="リポジトリ一覧">
 	<param name="Keyword" value="一覧ダイアログ">
 </object>
 </head>
@@ -57,7 +59,10 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 
 <p>なおリポジトリの作業ディレクトリ下で、トップの [..] 以外の項目については、<b>Remote URL</b> のみが表示されます。</p>
 
-<p class="info_text">ファイル情報の右クリックメニュー「<b>この項目を隠す</b>」で非表示になっている項目は取得を試みません。取得に時間がかかって操作が滞るような場合には非表示にしてみてください。</p>
+<p>ファイル情報の右クリックメニュー「<b>この項目を隠す</b>」で非表示になっている項目は取得を試みません。<br>
+Git-Commit/Status の内容はキャッシュして再利用しますが(.git/index のタイムスタンプ変化やファイルリスト更新で再取得)、操作が滞るような場合には非表示にしてみてください。<br>
+なおキャッシュ情報は、INIファイルに保存され、次回起動時にも引き継がれます。また、<a href="hid00005.htm#RepositoryList">RepositoryList</a> コマンドによる「<b>リポジトリ一覧</b>」の表示にも用いられます。<br>
+</p>
 
 <div class="indent1">
 <b>表示例</b><br>

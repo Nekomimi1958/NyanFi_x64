@@ -690,12 +690,11 @@ void __fastcall TGitViewer::BranchListBoxDrawItem(TWinControl *Control, int Inde
 	//項目
 	else {
 		//HEADマーク
-		UnicodeString s = _T("\u25b6");
 		if (flag & GIT_FLAG_HEAD) {
 			cv->Font->Color = (flag & GIT_FLAG_REMOTE)? col_GitBraR : col_GitHEAD;
-			cv->TextOut(xp, yp, s);
+			cv->TextOut(xp, yp, HEAD_Mark);
 		}
-		xp += cv->TextWidth(s);
+		xp += cv->TextWidth(HEAD_Mark);
 		//ブランチ/タグ
 		cv->Font->Color = is_SelFgCol(State)? col_fgSelItem : (flag & GIT_FLAG_INVAL)? col_InvItem : col_fgList;
 		cv->TextOut(xp, yp, lbuf);
@@ -855,7 +854,7 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 		//タグ
 		if (!gp->tags.IsEmpty()) {
 			TStringDynArray t_lst = split_strings_tab(gp->tags);
-			for (int i=0; i<t_lst.Length; i++) draw_GitTag(cv, xp, yp, t_lst[i], Scaled2);
+			for (int i=0; i<t_lst.Length; i++) draw_GitTag(cv, xp, yp, t_lst[i], Scaled4);
 			xp += Scaled4;
 		}
 
@@ -865,7 +864,7 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 			for (int i=0; i<b_buf.Length; i++) {
 				UnicodeString ss = b_buf[i];
 				if (remove_top_s(ss, "HEAD -> ") || USAME_TS(ss, "HEAD"))
-					out_TextEx(cv, xp, yp, _T("\u25b6"), col_GitHEAD);
+					out_TextEx(cv, xp, yp, HEAD_Mark, col_GitHEAD);
 				out_TextEx(cv, xp, yp, ss, col_bgList, col_GitBra, Scaled4);
 				xp += Scaled4;
 			}

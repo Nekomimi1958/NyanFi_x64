@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
 //  最近編集/閲覧した/使ったファイル一覧								//
-//  栞マーク一覧/ ダイレクトタグジャンプ								//
+//  栞マーク一覧/ リポジトリ一覧/ ダイレクトタグジャンプ				//
 //----------------------------------------------------------------------//
 #ifndef EditHistDlgH
 #define EditHistDlgH
@@ -38,6 +38,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ShowPropertyAction;
 	TAction *ShowStatusBarAction;
 	TAction *ShowUsedTimeAction;
+	TAction *UpdateGitInfAction;
 	TActionList *ActionList1;
 	TButton *HiddenCanBtn;
 	TEdit *FilterEdit;
@@ -48,6 +49,10 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *ClrAllMarkItem;
 	TMenuItem *ClrMemoItem;
 	TMenuItem *DelMarkItem;
+	TMenuItem *gFileInfoItem;
+	TMenuItem *gFitSizePosItem;
+	TMenuItem *gPropertyItem;
+	TMenuItem *gStatusBarItem;
 	TMenuItem *hFileInfoItem;
 	TMenuItem *hFitSizePosItem;
 	TMenuItem *hPropertyItem;
@@ -57,11 +62,14 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *mFitSizePosItem;
 	TMenuItem *mPropertyItem;
 	TMenuItem *mStatusBarItem;
+	TMenuItem *N1;
 	TMenuItem *NoHistItem;
 	TMenuItem *rFileInfoItem;
 	TMenuItem *rFitSizePosItem;
 	TMenuItem *rPropertyItem;
 	TMenuItem *rStatusBarItem;
+	TMenuItem *Sep_g_1;
+	TMenuItem *Sep_g_2;
 	TMenuItem *Sep_h_1;
 	TMenuItem *Sep_h_2;
 	TMenuItem *Sep_m_1;
@@ -74,6 +82,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPopupMenu *HistPopupMenu;
 	TPopupMenu *MarkPopupMenu;
 	TPopupMenu *RecentPopupMenu;
+	TPopupMenu *RepoPopupMenu;
 	TSplitter *FilterSplitter;
 	TStatusBar *StatusBar1;
 	TStringGrid *EditHistGrid;
@@ -126,6 +135,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ToggleActionExecute(TObject *Sender);
 	void __fastcall MemoActionExecute(TObject *Sender);
 	void __fastcall OptModeActionExecute(TObject *Sender);
+	void __fastcall UpdateGitInfActionExecute(TObject *Sender);
+	void __fastcall UpdateGitInfActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;
@@ -134,8 +145,8 @@ private:	// ユーザー宣言
 	TStringList *HistBufList;
 
 	int MaxFextWd;
-	int MarkSortMode;		//マーク一覧のソートモード
-	int MarkSortOdr[6];		//マーク一覧のソート方向
+	int ListSortMode;		//マーク/リポジトリ一覧のソートモード
+	int ListSortOdr[6];		//マーク/リポジトリ一覧のソート方向
 
 	void __fastcall WmNyanFiFlIcon(TMessage &msg);
 
@@ -162,6 +173,7 @@ public:		// ユーザー宣言
 	bool isView;			//最近閲覧したファイル一覧(false = 編集した～)
 	bool isRecent;			//最近使ったファイル一覧
 	bool isMark;			//マーク一覧
+	bool isRepo;			//リポジトリ一覧
 	bool isTags;			//ダイレクトタグジャンプ
 	bool isTagPtn;
 	bool ToFilter;			//フィルタ欄にフォーカス

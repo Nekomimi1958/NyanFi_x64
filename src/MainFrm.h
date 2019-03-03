@@ -365,6 +365,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ReloadListAction;
 	TAction *RenameDlgAction;
 	TAction *ReplaceStartAction;
+	TAction *RepositoryListAction;
 	TAction *RestartAction;
 	TAction *ReturnListAction;
 	TAction *RotateLeftAction;
@@ -699,7 +700,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *MarkListItem;
 	TMenuItem *MarkListVItem;
 	TMenuItem *MaskSelItem;
-	TMenuItem *N1;
 	TMenuItem *NetConDlgItem;
 	TMenuItem *NetDisDlgItem;
 	TMenuItem *NewFileItem;
@@ -768,6 +768,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *RegExChkItem;
 	TMenuItem *RegSyncDlgItem;
 	TMenuItem *ReloadItem;
+	TMenuItem *RepositoryListItem;
 	TMenuItem *RestartItem;
 	TMenuItem *ReternListItem;
 	TMenuItem *SaveAsResultItem;
@@ -856,6 +857,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *SortAscItem;
 	TMenuItem *SortDesItem;
 	TMenuItem *SortItem;
+	TMenuItem *SpecialDirListItem;
 	TMenuItem *SubViewerItem;
 	TMenuItem *TaskManItem;
 	TMenuItem *TextEncItem;
@@ -1823,6 +1825,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall GitViewerActionUpdate(TObject *Sender);
 	void __fastcall Inf_CopyValueActionExecute(TObject *Sender);
 	void __fastcall GitDiffActionExecute(TObject *Sender);
+	void __fastcall RepositoryListActionUpdate(TObject *Sender);
+	void __fastcall RepositoryListActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

@@ -72,6 +72,7 @@ UnicodeString KeysStr_PgUp	  = "PGUP|Ctrl+R";
 UnicodeString KeysStr_Popup   = "APP|Shift+F10";
 
 UnicodeString TabPinMark = u"\U0001F4CD";
+UnicodeString HEAD_Mark  = _T("\u25b6");
 
 //---------------------------------------------------------------------------
 UnicodeString SortIdStr = "FEDSAU";
@@ -539,6 +540,7 @@ UnicodeString LastWatchLog;				//直前の監視ログ
 TStringList *InvalidUncList;			//無効なUNCリスト
 
 TStringList *GitCfgUrlList;				//.Git\config - URL 対応リスト (ファイル名=URL \t yyyy/mm/dd hh:nn:ss)
+TStringList *GitInfList;				//Git情報のキャッシュ
 
 //ファイル固有アイコンのキャッシュ (必ず IconRWLock で保護すること)
 TStringList *CachedIcoList;
@@ -1290,7 +1292,6 @@ void InitializeGlobal()
 	DriveLogList	  = CreStringList();
 	WatchTailList	  = CreStringList();
 	InvalidUncList	  = CreStringList();
-	GitCfgUrlList	  = CreStringList();
 	PlayList		  = CreStringList();
 	XCMD_VarList	  = CreStringList();
 	BakSetupList	  = CreStringList();
@@ -1341,6 +1342,9 @@ void InitializeGlobal()
 	CnvCharList 	  = CreStringList();
 	LogBufList		  = CreStringList();
 	HideInfItems	  = CreStringList();
+
+	GitCfgUrlList	  = CreStringList();
+	GitInfList		  = CreStringList();
 
 	//フォルダアイコン定義
 	FolderIconFile = new UsrIniFile(ExePath + FICO_INI_FILE);
@@ -1876,6 +1880,7 @@ void InitializeGlobal()
 		{_T("S:CustomColors="),				(TObject*)UserModule->ColorDlg->CustomColors},
 		{_T("S:TagColList="),				(TObject*)usr_TAG->TagColList},
 		{_T("S:HideInfItems="),				(TObject*)HideInfItems},
+		{_T("S:GitInfList="),				(TObject*)GitInfList},
 
 		//リスト	(prefix = L:)	最大項目数,引用符を外す
 		{_T("L:DirStack=30,false"),			(TObject*)DirStack},
@@ -2982,7 +2987,7 @@ int __fastcall SortComp_PathName(TStringList *List, int Index1, int Index2)
 	return CompTextN2(pnam0, pnam1);
 }
 //---------------------------------------------------------------------------
-//メモ内容
+//メモ内容	(fp->memo の \t 前)
 int __fastcall SortComp_Memo(TStringList *List, int Index1, int Index2)
 {
 	file_rec *fp0 = (file_rec*)List->Objects[Index1];
@@ -2991,6 +2996,28 @@ int __fastcall SortComp_Memo(TStringList *List, int Index1, int Index2)
 
 	UnicodeString memo0 = get_pre_tab(fp0->memo);
 	UnicodeString memo1 = get_pre_tab(fp1->memo);
+
+	if (memo0.IsEmpty() && !memo1.IsEmpty()) return  1;
+	if (!memo0.IsEmpty() && memo1.IsEmpty()) return -1;
+
+	if ((memo0.IsEmpty() && memo1.IsEmpty()) || SameText(memo0, memo1)) {
+		int res = SameText(fp0->b_name, fp1->b_name) ? CompTextN(fp0->f_ext, fp1->f_ext)
+												     : CompTextN(fp0->b_name, fp1->b_name);
+		return (res==0)? CompTextN(fp0->p_name, fp1->p_name) : res;
+	}
+
+	return CompTextN(memo0, memo1);
+}
+//---------------------------------------------------------------------------
+//Git状態	(fp->memo の \t 後)
+int __fastcall SortComp_GitStt(TStringList *List, int Index1, int Index2)
+{
+	file_rec *fp0 = (file_rec*)List->Objects[Index1];
+	file_rec *fp1 = (file_rec*)List->Objects[Index2];
+	if (!fp0 || !fp1) return 0;
+
+	UnicodeString memo0 = get_post_tab(fp0->memo);
+	UnicodeString memo1 = get_post_tab(fp1->memo);
 
 	if (memo0.IsEmpty() && !memo1.IsEmpty()) return  1;
 	if (!memo0.IsEmpty() && memo1.IsEmpty()) return -1;
@@ -3143,7 +3170,7 @@ UnicodeString alt_yen_to(UnicodeString s)
 //---------------------------------------------------------------------------
 UnicodeString get_MiniPathName(
 	UnicodeString pnam,		//パス名
-	int wd,					//制限幅
+	int max_w,				//制限幅
 	TFont *font,
 	bool rep_delimiter)		//ディレクトリ区切りを置換	(default = false)
 {
@@ -3159,10 +3186,10 @@ UnicodeString get_MiniPathName(
 		//ディレクトリ区切りの違いによる制限幅の補正
 		if (rep_delimiter) {
 			int w = get_TextWidth(cv.get(), yen_to_delimiter(pnam), is_irreg) - get_TextWidth(cv.get(), pnam, is_irreg);
-			if (w>0) wd -= w;
+			if (w>0) max_w -= w;
 		}
 
-		while (get_TextWidth(cv.get(), pnam, is_irreg)>wd) {
+		while (get_TextWidth(cv.get(), pnam, is_irreg)>max_w) {
 			TStringDynArray plst = split_path(pnam);
 			bool changed = false;
 			for (int i=0; i<plst.Length; i++) {
@@ -3798,7 +3825,7 @@ void ClearTempArc(
 	if (FindFirst(sea_str, faAnyFile, sr)==0) {
 		do {
 			if ((sr.Attr & faDirectory)==0) continue;
-			UnicodeString snam = TempPathA + UnicodeString(sr.Name);
+			UnicodeString snam = TempPathA + sr.Name;
 			std::unique_ptr<TStringList> fbuf(new TStringList());
 			get_files(snam, _T("*.*"), fbuf.get(), true);
 			for (int i=0; i<fbuf->Count; i++) {
@@ -9967,11 +9994,11 @@ void PathNameOut(
 	UnicodeString s,
 	TCanvas *cv,
 	int &x, int y,		//表示位置 (x は更新)
-	int w)				//制限幅 (default = 0 : 無制限)
+	int max_w)			//制限幅 (default = 0 : 無制限)
 {
 	if (s.IsEmpty()) return;
 
-	if (w>0) s = get_MiniPathName(s, w, cv->Font);
+	if (max_w>0) s = get_MiniPathName(s, max_w, cv->Font);
 	int s_len = s.Length();
 
 	bool is_irreg = IsIrregularFont(cv->Font);
@@ -13557,8 +13584,35 @@ void draw_GitTag(
 //---------------------------------------------------------------------------
 //Gitリポジトリ情報を取得
 //---------------------------------------------------------------------------
-void get_GitInf(UnicodeString dnam, TStringList *lst)
+void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw)
 {
+	//.git/index が変化していなく既存情報があれば利用
+	dnam = IncludeTrailingPathDelimiter(dnam);
+	UnicodeString xnam = dnam + ".git\\index";
+	int idx = GitInfList->IndexOfName(dnam);
+	if (idx!=-1) {
+		try {
+			if (upd_sw) Abort();
+			if (lst) {
+				TStringDynArray ibuf = get_csv_array(GitInfList->ValueFromIndex[idx], 3);
+				if (ibuf.Length==0) Abort();
+				if (!WithinPastMilliSeconds(get_file_age(xnam), VarToDateTime(ibuf[0]), TimeTolerance)) Abort();
+				//既存情報を設定
+				for (int i=1; i<ibuf.Length; i++) {
+					UnicodeString inam = get_tkn(ibuf[i], ": ");
+					if (!inam.IsEmpty()) add_PropLine(inam, get_tkn_r(ibuf[i], ": "), lst);
+				}
+				return;
+			}
+		}
+		catch (...) {
+			GitInfList->Delete(idx);
+		}
+	}
+
+	TStringDynArray ibuf;
+	add_dyn_array(ibuf, FormatDateTime("yyyy/mm/dd hh:nn:ss", get_file_age(xnam)));
+
 	std::unique_ptr<TStringList> o_buf(new TStringList());
 	DWORD exit_code;
 
@@ -13569,30 +13623,38 @@ void get_GitInf(UnicodeString dnam, TStringList *lst)
 			&& exit_code==0 && o_buf->Count>0)
 	{
 		UnicodeString lbuf = o_buf->Strings[0];
-		UnicodeString cmt_str;
+		UnicodeString cmt_s;
 		TStringDynArray b_buf = SplitString(get_in_paren(get_pre_tab(lbuf)), ",");
 		for (int i=0; i<b_buf.Length; i++) {
 			UnicodeString s = Trim(b_buf[i]);
-			if (remove_top_text(s, "tag: ") || s.Pos("/")==0) {
-				if (!cmt_str.IsEmpty()) cmt_str.UCAT_T(" ");
-				cmt_str += s;
+			if (s.Pos("/")==0) {
+				if (!cmt_s.IsEmpty()) cmt_s.UCAT_T(", ");
+				cmt_s += s;
 			}
 		}
-		if (!cmt_str.IsEmpty()) {
-			cmt_str = ReplaceStr(cmt_str, "HEAD -> ", _T("\u25b6"));
-			cmt_str = "(" + cmt_str + ") ";
+		if (!cmt_s.IsEmpty()) {
+			cmt_s = ReplaceStr(cmt_s, "HEAD -> ", HEAD_Mark);
+			cmt_s = "(" + cmt_s + ") ";
 		}
-		cmt_str += get_post_tab(lbuf);
-		add_PropLine_if(_T("Git-Commit"), cmt_str, lst);
+		cmt_s += get_post_tab(lbuf);
+		if (lst) add_PropLine_if(_T("Git-Commit"), cmt_s, lst);
+		add_dyn_array(ibuf, "Git-Commit: " + cmt_s);
 	}
 
 	//ワーキング・ツリーの状態
 	o_buf->Clear();
 	if (!test_word_i("Git-Status", hide_items) && get_GitStatusList(dnam, o_buf.get())>=0) {
-		add_PropLine_if(_T("Git-Status"), get_pre_tab(get_GitStatusStr(o_buf.get())), lst);
+		UnicodeString stt_s = get_pre_tab(get_GitStatusStr(o_buf.get()));
+		if (lst) add_PropLine_if(_T("Git-Status"), stt_s, lst);
+		add_dyn_array(ibuf, "Git-Status: " + stt_s);
 	}
+
+	//キャッシュに保存
+	if (ibuf.Length>1) GitInfList->Add(dnam + "=" + make_csv_rec_str(ibuf));
 }
 
+//---------------------------------------------------------------------------
+//差分用のファイル名を取得
 //---------------------------------------------------------------------------
 UnicodeString get_GitDiffFiles(UnicodeString s, UnicodeString &fnam2)
 {

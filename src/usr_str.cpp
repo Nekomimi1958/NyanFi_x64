@@ -1295,7 +1295,7 @@ void add_dyn_array(TStringDynArray &lst, UnicodeString s,
 //---------------------------------------------------------------------------
 //CSV項目内容取得
 //---------------------------------------------------------------------------
-TStringDynArray get_csv_array(UnicodeString src, int size, 
+TStringDynArray get_csv_array(UnicodeString src, int size,
 	bool force_size)	//サイズを強制的に設定  (default = false)
 {
 	TStringDynArray ret_array;

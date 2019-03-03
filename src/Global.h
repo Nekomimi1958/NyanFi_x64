@@ -211,6 +211,7 @@ extern UnicodeString KeysStr_PgUp;
 extern UnicodeString KeysStr_Popup;
 
 extern UnicodeString TabPinMark;
+extern UnicodeString HEAD_Mark;
 
 extern UnicodeString SortIdStr;
 
@@ -685,6 +686,7 @@ extern UnicodeString LastWatchLog;
 extern TStringList *InvalidUncList;
 
 extern TStringList *GitCfgUrlList;
+extern TStringList *GitInfList;
 
 extern TStringList *TabList;
 extern TStringList *TabBuff;
@@ -1199,7 +1201,8 @@ struct file_rec {
 	UnicodeString tmp_name;		//一時解凍名
 	UnicodeString r_name;		//表示名
 	UnicodeString l_name;		//リンク先
-	UnicodeString memo;			//栞マーク項目のメモ(内容 \t 設定日時)  栞マーク一覧で使用
+	UnicodeString memo;			//栞マーク項目: メモ(内容 \t 設定日時)  栞マーク一覧で使用
+								//リポジトリ: 情報(コミット \t 状態)    リポジトリ一覧で使用
 	UnicodeString tags;			//タグ
 	UnicodeString hash;			//ハッシュ
 
@@ -1540,6 +1543,7 @@ int __fastcall SortComp_PathName(TStringList *List, int Index1, int Index2);
 int __fastcall SortComp_Tags(TStringList *List, int Index1, int Index2);
 int __fastcall SortComp_Memo(TStringList *List, int Index1, int Index2);
 int __fastcall SortComp_MarkTime(TStringList *List, int Index1, int Index2);
+int __fastcall SortComp_GitStt(TStringList *List, int Index1, int Index2);
 
 int __fastcall Comp_PathTree(TStringList *List, int Index1, int Index2);
 
@@ -1551,7 +1555,7 @@ int __fastcall KeyComp_Dsc(TStringList *List, int Index1, int Index2);
 UnicodeString yen_to_delimiter(UnicodeString s);
 UnicodeString alt_yen_to(UnicodeString s);
 
-UnicodeString get_MiniPathName(UnicodeString pnam, int wd, TFont *font, bool rep_delimiter = false);;
+UnicodeString get_MiniPathName(UnicodeString pnam, int max_w, TFont *font, bool rep_delimiter = false);;
 
 UnicodeString get_dotNaynfi(UnicodeString dnam = EmptyStr);
 UnicodeString get_dotNaynfi(UnicodeString dnam, bool inherit, bool force = false);
@@ -1884,7 +1888,7 @@ void LineNoOut(TCanvas *cv, TRect &rc, UnicodeString l_str);
 void LineNoOut(TCanvas *cv, TRect &rc, int l_no);
 
 void PathNameOut(UnicodeString s, TStringList *kw_lst, TCanvas *cv, int &x, int y, bool mgn_sw = true);
-void PathNameOut(UnicodeString s, TCanvas *cv, int &x, int y, int w = 0);
+void PathNameOut(UnicodeString s, TCanvas *cv, int &x, int y, int max_w = 0);
 void FileNameOut(TCanvas *cv, TRect &rc, UnicodeString fnam, bool use_fgsel,
 	bool to_slash = false, TStringList *kw_lst = NULL);
 
@@ -2066,7 +2070,7 @@ UnicodeString split_GitGraphStr(UnicodeString &lbuf);
 void draw_GitGraph(UnicodeString s, UnicodeString s1, UnicodeString s2, TCanvas *cv, TRect &rc,
 	bool is_head = false, bool is_wip = false);
 void draw_GitTag(TCanvas *cv, int &x, int y, UnicodeString tag, int mgn = 0);
-void get_GitInf(UnicodeString dnam, TStringList *lst);
+void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw = false);
 UnicodeString get_GitDiffFiles(UnicodeString s, UnicodeString &fnam2);
 //---------------------------------------------------------------------------
 #endif

@@ -71,7 +71,6 @@ object EditHistoryDlg: TEditHistoryDlg
       Font.Style = []
       Options = [goFixedVertLine, goColSizing, goRowSelect, goThumbTracking]
       ParentFont = False
-      PopupMenu = MarkPopupMenu
       TabOrder = 0
       StyleElements = [seBorder]
       OnClick = EditHistGridClick
@@ -304,7 +303,7 @@ object EditHistoryDlg: TEditHistoryDlg
     end
   end
   object ActionList1: TActionList
-    Left = 448
+    Left = 496
     Top = 65
     object ShowPropertyAction: TAction
       Caption = #12503#12525#12497#12486#12451'(&R)'
@@ -361,6 +360,36 @@ object EditHistoryDlg: TEditHistoryDlg
       Caption = #12459#12524#12531#12488#12398#12415'(&C)'
       GroupIndex = 1
       OnExecute = OptModeActionExecute
+    end
+    object UpdateGitInfAction: TAction
+      Caption = #26368#26032#12398#24773#22577#12395#26356#26032
+      OnExecute = UpdateGitInfActionExecute
+      OnUpdate = UpdateGitInfActionUpdate
+    end
+  end
+  object RepoPopupMenu: TPopupMenu
+    Left = 360
+    Top = 65
+    object N1: TMenuItem
+      Action = UpdateGitInfAction
+    end
+    object Sep_g_1: TMenuItem
+      Caption = '-'
+    end
+    object gFileInfoItem: TMenuItem
+      Action = ShowFileInfoAction
+    end
+    object gPropertyItem: TMenuItem
+      Action = ShowPropertyAction
+    end
+    object Sep_g_2: TMenuItem
+      Caption = '-'
+    end
+    object gStatusBarItem: TMenuItem
+      Action = ShowStatusBarAction
+    end
+    object gFitSizePosItem: TMenuItem
+      Action = UserModule.SizePosToFlieListAction
     end
   end
 end

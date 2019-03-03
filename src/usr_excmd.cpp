@@ -1816,7 +1816,7 @@ bool XCMD_ShellExe(UnicodeString cmd, UnicodeString prm, UnicodeString wdir,
 		XCMD_set_Var(_T("ExitCode"), (int)exit_code);
 		if (contains_s(opt, _T('O'))) {
 			if (USAME_TI(ExtractFileName(cmd), "git.exe")) {
-				o_lst->Insert(0, UnicodeString().sprintf(_T("$ git %s"), prm.c_str()));
+				o_lst->Insert(0, "$ git " + prm);
 			}
 			if (o_lst->Count>0) {
 				XCMD_SetBuffer(o_lst->Text);

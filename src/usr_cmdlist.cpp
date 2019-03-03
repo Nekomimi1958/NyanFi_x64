@@ -184,6 +184,7 @@ void set_CmdList(
 		"F:RegSyncDlg=同期コピーの設定\n"
 		"F:ReloadList=ファイルリストを最新の情報に更新\n"
 		"F:RenameDlg=名前等の変更\n"
+		"F:RepositoryList=リポジトリ一覧\n"
 		"F:Restart=NyanFiの再起動\n"
 		"F:ReturnList=ファイルリスト表示に戻る\n"
 		"F:SaveAsResultList=結果リストに名前を付けて保存\n"

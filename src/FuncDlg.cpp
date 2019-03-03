@@ -641,7 +641,7 @@ void __fastcall TFuncListDlg::RegHeaderActionExecute(TObject *Sender)
 		int ix = HeadlineList->IndexOfName(xstr);
 		if (ix!=-1) HeadlineList->Delete(ix);
 		if (!h_ptn.IsEmpty()) {
-			HeadlineList->Add(UnicodeString().sprintf(_T("%s=%s"), xstr.c_str(), h_ptn.c_str()));
+			HeadlineList->Add(xstr + "=" + h_ptn);
 			TxtViewer->HeadlinePtn = h_ptn;
 		}
 

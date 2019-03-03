@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
 //  最近編集/閲覧した/使ったファイル一覧								//
-//  栞マーク一覧/ ダイレクトタグジャンプ								//
+//  栞マーク一覧/ リポジトリ一覧/ ダイレクトタグジャンプ				//
 //----------------------------------------------------------------------//
 #include <vcl.h>
 #pragma hdrstop
@@ -33,7 +33,7 @@ void __fastcall TEditHistoryDlg::FormCreate(TObject *Sender)
 {
 	GridScrPanel = new UsrScrollPanel(GridPanel, EditHistGrid, USCRPNL_FLAG_P_WP | USCRPNL_FLAG_G_WP | USCRPNL_FLAG_HS);
 
-	isView = isRecent = isMark = isTags = isTagPtn = false;
+	isView = isRecent = isMark = isRepo = isTags = isTagPtn = false;
 	ToFilter = false;
 
 	HistoryList = NULL;
@@ -53,6 +53,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 
 	if		(isRecent) this->Name = "RecentListDlg";
 	else if	(isMark)   this->Name = "MarkListDlg";
+	else if	(isRepo)   this->Name = "RepoListDlg";
 	else if (isTags)   this->Name = "TagJumpDlg";
 	IniFile->LoadPosInfo(this, DialogCenter);
 	this->Name = "EditHistoryDlg";
@@ -71,7 +72,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	StatusBar1->Panels->Items[0]->Width = StatusBar1->ClientWidth;
 	StatusBar1->Visible = false;
 
-	bool has_mode = (!isRecent && !isMark);
+	bool has_mode = (!isRecent && !isMark && !isRepo);
 	OptMode0Action->Enabled = has_mode;
 	OptMode0Action->Visible = has_mode;
 	OptMode1Action->Enabled = has_mode;
@@ -88,11 +89,11 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 		gp->Name = "RecentListGrid";
 		gp->ColCount = 5;
 		IniFile->LoadGridColWidth(gp, 5, 24,200,50,120,200);
-		MarkSortMode   = IniFile->ReadIntGen(_T("RecentListSortMode"));
-		MarkSortOdr[0] = IniFile->ReadIntGen(_T("RecentListSortOdr0"),  1);
-		MarkSortOdr[1] = IniFile->ReadIntGen(_T("RecentListSortOdr1"),  1);
-		MarkSortOdr[2] = IniFile->ReadIntGen(_T("RecentListSortOdr2"), -1);
-		MarkSortOdr[3] = IniFile->ReadIntGen(_T("RecentListSortOdr3"),  1);
+		ListSortMode   = IniFile->ReadIntGen(_T("RecentListSortMode"));
+		ListSortOdr[0] = IniFile->ReadIntGen(_T("RecentListSortOdr0"),  1);
+		ListSortOdr[1] = IniFile->ReadIntGen(_T("RecentListSortOdr1"),  1);
+		ListSortOdr[2] = IniFile->ReadIntGen(_T("RecentListSortOdr2"), -1);
+		ListSortOdr[3] = IniFile->ReadIntGen(_T("RecentListSortOdr3"),  1);
 		ShowUsedTimeAction->Checked  = IniFile->ReadBoolGen(_T("RecentListUsedTime"), true);
 		ShowStatusBarAction->Checked = IniFile->ReadBoolGen(_T("RecentListSttBar"),	  true);
 	}
@@ -100,15 +101,26 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 		gp->Name = "MarkListGrid";
 		gp->ColCount = 7;
 		IniFile->LoadGridColWidth(gp, 7, 24,200,50,120,200,100,100);
-
-		MarkSortMode   = IniFile->ReadIntGen(_T("MarkListSortMode"));
-		MarkSortOdr[0] = IniFile->ReadIntGen(_T("MarkListSortOdr0"),  1);
-		MarkSortOdr[1] = IniFile->ReadIntGen(_T("MarkListSortOdr1"),  1);
-		MarkSortOdr[2] = IniFile->ReadIntGen(_T("MarkListSortOdr2"), -1);
-		MarkSortOdr[3] = IniFile->ReadIntGen(_T("MarkListSortOdr3"),  1);
-		MarkSortOdr[4] = IniFile->ReadIntGen(_T("MarkListSortOdr4"),  1);
-		MarkSortOdr[5] = IniFile->ReadIntGen(_T("MarkListSortOdr5"), -1);
+		ListSortMode   = IniFile->ReadIntGen(_T("MarkListSortMode"));
+		ListSortOdr[0] = IniFile->ReadIntGen(_T("MarkListSortOdr0"),  1);
+		ListSortOdr[1] = IniFile->ReadIntGen(_T("MarkListSortOdr1"),  1);
+		ListSortOdr[2] = IniFile->ReadIntGen(_T("MarkListSortOdr2"), -1);
+		ListSortOdr[3] = IniFile->ReadIntGen(_T("MarkListSortOdr3"),  1);
+		ListSortOdr[4] = IniFile->ReadIntGen(_T("MarkListSortOdr4"),  1);
+		ListSortOdr[5] = IniFile->ReadIntGen(_T("MarkListSortOdr5"), -1);
 		ShowStatusBarAction->Checked = IniFile->ReadBoolGen(_T("MarkListSttBar"),	true);
+	}
+	else if (isRepo) {
+		gp->Name = "RepoListGrid";
+		gp->ColCount = 6;
+		IniFile->LoadGridColWidth(gp, 6, 24,100,120,200,100,80);
+		ListSortMode   = IniFile->ReadIntGen(_T("RepoListSortMode"));
+		ListSortOdr[0] = IniFile->ReadIntGen(_T("RepoListSortOdr0"),  1);
+		ListSortOdr[1] = IniFile->ReadIntGen(_T("RepoListSortOdr1"),  1);
+		ListSortOdr[2] = IniFile->ReadIntGen(_T("RepoListSortOdr2"), -1);
+		ListSortOdr[3] = IniFile->ReadIntGen(_T("RepoListSortOdr3"),  1);
+		ListSortOdr[4] = IniFile->ReadIntGen(_T("RepoListSortOdr4"),  1);
+		ShowStatusBarAction->Checked = IniFile->ReadBoolGen(_T("RepoListSttBar"),	true);
 	}
 	else if (isTags) {
 		gp->Name = "TagJumpGrid";
@@ -123,7 +135,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	gp->Name = "EditHistGrid";
 
 	StatusBar1->Visible = ShowStatusBarAction->Checked;
-	OpeToolBar->Visible = (!isRecent && !isTags);
+	OpeToolBar->Visible = (!isRecent && !isTags && !isRepo);
 	if (OpeToolBar->Visible && StatusBar1->Visible) {
 		OpeToolBar->Align = alNone;
 		OpeToolBar->Align = alBottom;
@@ -131,7 +143,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 
 	HelpContext = isTags? 83 : isMark? 70 : 58;
 
-	EditHistHeader->Style = (isRecent || isMark)? hsButtons : hsFlat;
+	EditHistHeader->Style = (isRecent || isMark || isRepo)? hsButtons : hsFlat;
 	OpenAction->Checked   = IniFile->ReadBoolGen(_T("MarkListCnfOpen"));
 
 	int opt_mode = IniFile->ReadIntGen(_T("EditHistOptMode"));
@@ -152,6 +164,12 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 		for (int i=0; i<gp->ColCount+1; i++) EditHistHeader->Sections->Add();
 		InitializeListHeader(EditHistHeader, _T(" |名前|種類|更新日時|場所|メモ|設定日時"));
 		EditHistGrid->PopupMenu = MarkPopupMenu;
+	}
+	else if (isRepo) {
+		tit.USET_T("リポジトリ一覧");
+		for (int i=0; i<gp->ColCount+1; i++) EditHistHeader->Sections->Add();
+		InitializeListHeader(EditHistHeader, _T(" |名前|.git/index 日時|場所|コミット|状態"));
+		EditHistGrid->PopupMenu = RepoPopupMenu;
 	}
 	else if (isTags) {
 		tit.sprintf(_T("ダイレクトタグジャンプ [%s] - %s"), TagName.c_str(), (isView? _T("閲覧") : _T("編集")));
@@ -184,7 +202,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 
 	set_MigemoAction(MigemoAction, _T("EditHistMigemo"));
 
-	HistoryList = (isRecent || isMark || isTags)? NULL : isView? TextViewHistory : TextEditHistory;
+	HistoryList = (isRecent || isMark || isRepo || isTags)? NULL : isView? TextViewHistory : TextEditHistory;
 	//存在しないファイルの履歴を削除
 	if (HistoryList) {
 		int i = 0;
@@ -219,12 +237,14 @@ void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action
 
 	if		(isRecent) this->Name = "RecentListDlg";
 	else if	(isMark)   this->Name = "MarkListDlg";
+	else if	(isRepo)   this->Name = "RepoListDlg";
 	else if (isTags)   this->Name = "TagJumpDlg";
 	IniFile->SavePosInfo(this);
 	this->Name = "EditHistoryDlg";
 
 	if		(isRecent) gp->Name = "RecentListGrid";
 	else if (isMark)   gp->Name = "MarkListGrid";
+	else if (isRepo)   gp->Name = "RepoListGrid";
 	else if (isTags)   gp->Name = "TagJumpGrid";
 	IniFile->SaveGridColWidth(gp);
 	gp->Name = "EditHistGrid";
@@ -240,23 +260,32 @@ void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action
 	IniFile->WriteIntGen(_T("EditHistFilterWidth"),	FilterEdit->Width);
 
 	if (isRecent) {
-		IniFile->WriteIntGen(_T("RecentListSortMode"),	MarkSortMode);
-		IniFile->WriteIntGen(_T("RecentListSortOdr0"),	MarkSortOdr[0]);
-		IniFile->WriteIntGen(_T("RecentListSortOdr1"),	MarkSortOdr[1]);
-		IniFile->WriteIntGen(_T("RecentListSortOdr2"),	MarkSortOdr[2]);
-		IniFile->WriteIntGen(_T("RecentListSortOdr3"),	MarkSortOdr[3]);
+		IniFile->WriteIntGen(_T("RecentListSortMode"),	ListSortMode);
+		IniFile->WriteIntGen(_T("RecentListSortOdr0"),	ListSortOdr[0]);
+		IniFile->WriteIntGen(_T("RecentListSortOdr1"),	ListSortOdr[1]);
+		IniFile->WriteIntGen(_T("RecentListSortOdr2"),	ListSortOdr[2]);
+		IniFile->WriteIntGen(_T("RecentListSortOdr3"),	ListSortOdr[3]);
 		IniFile->WriteBoolGen(_T("RecentListUsedTime"),	ShowUsedTimeAction);
 		IniFile->WriteBoolGen(_T("RecentListSttBar"),	ShowStatusBarAction);
 	}
 	else if (isMark) {
-		IniFile->WriteIntGen(_T("MarkListSortMode"),	MarkSortMode);
-		IniFile->WriteIntGen(_T("MarkListSortOdr0"),	MarkSortOdr[0]);
-		IniFile->WriteIntGen(_T("MarkListSortOdr1"),	MarkSortOdr[1]);
-		IniFile->WriteIntGen(_T("MarkListSortOdr2"),	MarkSortOdr[2]);
-		IniFile->WriteIntGen(_T("MarkListSortOdr3"),	MarkSortOdr[3]);
-		IniFile->WriteIntGen(_T("MarkListSortOdr4"),	MarkSortOdr[4]);
-		IniFile->WriteIntGen(_T("MarkListSortOdr5"),	MarkSortOdr[5]);
+		IniFile->WriteIntGen(_T("MarkListSortMode"),	ListSortMode);
+		IniFile->WriteIntGen(_T("MarkListSortOdr0"),	ListSortOdr[0]);
+		IniFile->WriteIntGen(_T("MarkListSortOdr1"),	ListSortOdr[1]);
+		IniFile->WriteIntGen(_T("MarkListSortOdr2"),	ListSortOdr[2]);
+		IniFile->WriteIntGen(_T("MarkListSortOdr3"),	ListSortOdr[3]);
+		IniFile->WriteIntGen(_T("MarkListSortOdr4"),	ListSortOdr[4]);
+		IniFile->WriteIntGen(_T("MarkListSortOdr5"),	ListSortOdr[5]);
 		IniFile->WriteBoolGen(_T("MarkListSttBar"),		ShowStatusBarAction);
+	}
+	else if (isRepo) {
+		IniFile->WriteIntGen(_T("RepoListSortMode"),	ListSortMode);
+		IniFile->WriteIntGen(_T("RepoListSortOdr0"),	ListSortOdr[0]);
+		IniFile->WriteIntGen(_T("RepoListSortOdr1"),	ListSortOdr[1]);
+		IniFile->WriteIntGen(_T("RepoListSortOdr2"),	ListSortOdr[2]);
+		IniFile->WriteIntGen(_T("RepoListSortOdr3"),	ListSortOdr[3]);
+		IniFile->WriteIntGen(_T("RepoListSortOdr4"),	ListSortOdr[4]);
+		IniFile->WriteBoolGen(_T("RepoListSttBar"),		ShowStatusBarAction);
 	}
 	else if (!isTags) {
 		IniFile->WriteBoolGen(_T("EditHistSttBar"),		ShowStatusBarAction);
@@ -264,7 +293,7 @@ void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action
 
 	clear_FileList(HistBufList);
 	TagJumpList->Clear();
-	isView = isRecent = isMark = isTags = isTagPtn = false;
+	isView = isRecent = isMark = isRepo = isTags = isTagPtn = false;
 	ToFilter = false;
 }
 //---------------------------------------------------------------------------
@@ -297,9 +326,9 @@ void __fastcall TEditHistoryDlg::EditHistHeaderDrawSection(THeaderControl *Heade
 		THeaderSection *Section, const TRect &Rect, bool Pressed)
 {
 	int mk_mode = 0;
-	if ((isRecent || isMark) && Section->Index>0) {
+	if ((isRecent || isMark || isRepo) && Section->Index>0) {
 		int idx = Section->Index - 1;
-		if (idx==MarkSortMode) mk_mode = MarkSortOdr[idx];
+		if (idx==ListSortMode) mk_mode = ListSortOdr[idx];
 	}
 
 	draw_SortHeader(HeaderControl, Section, Rect, mk_mode);
@@ -336,7 +365,7 @@ void __fastcall TEditHistoryDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TSta
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::SetSttBar()
 {
-	if (!StatusBar1->Visible) return;
+	if (!StatusBar1->Visible || !Enabled) return;
 
 	file_rec *cfp = get_CurFileRec();
 	if (cfp) {
@@ -507,6 +536,39 @@ void __fastcall TEditHistoryDlg::UpdateList()
 
 		SortItemList();
 	}
+	//リポジトリ一覧
+	else if (isRepo) {
+		int i = 0;
+		while (i<GitInfList->Count) {
+			UnicodeString dnam = IncludeTrailingPathDelimiter(GitInfList->Names[i]);
+			if ((!NoCheckRecentUnc || !StartsStr("\\\\", dnam))
+				&& (is_InvalidUnc(dnam) || !NyanFiForm->CheckUncPath(dnam) || !dir_exists(dnam + ".git")))
+			{
+				GitInfList->Delete(i);
+			}
+			else {
+				TStringDynArray ibuf = get_csv_array(GitInfList->ValueFromIndex[i], 3);
+				file_rec *fp = cre_new_file_rec(dnam);
+				UnicodeString cmt_s, stt_s;
+				for (int j=0; j<ibuf.Length; j++) {
+					if (j==0) {
+						TDateTime dt;
+						if (str_to_DateTime(ibuf[0], &dt)) fp->f_time = dt;
+					}
+					else {
+						UnicodeString inam = get_tkn(ibuf[j], ": ");
+						UnicodeString ival = get_tkn_r(ibuf[j], ": ");
+						if		(SameText(inam, "Git-Commit")) cmt_s = ival;
+						else if (SameText(inam, "Git-Status")) stt_s = ival;
+					}
+				}
+				fp->memo.sprintf(_T("%s\t%s"), cmt_s.c_str(), stt_s.c_str());
+				HistBufList->AddObject(fp->f_name, (TObject*)fp);
+				i++;
+			}
+		}
+		SortItemList();
+	}
 	//ダイレクトタグジャンプ
 	else if (isTags) {
 		for (int i=0; i<TagJumpList->Count; i++) {
@@ -578,6 +640,8 @@ void __fastcall TEditHistoryDlg::UpdateGrid()
 				gp->Cells[col++][i] = fp->b_name;
 				gp->Cells[col++][i] = fp->f_ext;
 			}
+			else if (isRepo)
+				gp->Cells[col++][i] = fp->b_name;
 			else
 				gp->Cells[col++][i] = fp->b_name + fp->f_ext;
 			//更新日時
@@ -595,13 +659,17 @@ void __fastcall TEditHistoryDlg::UpdateGrid()
 			}
 			gp->Cells[col++][i] = lbuf;
 
-			//メモ
+			//メモ,設定日時
 			if (isMark) {
 				gp->Cells[col++][i] = get_pre_tab(fp->memo);
-				//設定日時
 				TDateTime dt;
 				if (!str_to_DateTime(get_post_tab(fp->memo), &dt)) dt = fp->f_time;
 				gp->Cells[col][i] = FormatDateTime(TimeStampFmt, dt);
+			}
+			//コミット,状態
+			else if (isRepo) {
+				gp->Cells[col++][i] = get_pre_tab(fp->memo);
+				gp->Cells[col][i]	= get_post_tab(fp->memo);
 			}
 			//行番号/パターン, 備考
 			else if (isTags) {
@@ -699,7 +767,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 		}
 		cv->Font->Color = col_fg;
 
-		int xp = Rect.Left + ScaledInt(4);
+		int xp = Rect.Left + Scaled4;
 		int yp = Rect.Top + get_TopMargin2(cv);
 
 		TColor col_x = get_ExtColor(fp->f_ext);
@@ -708,7 +776,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 		//ファイル名の共通処理
 		if (ACol==1) {
 			//アイコン
-			if (IconMode==1) {
+			if (IconMode==1 || (isRepo && IconMode>0)) {
 				draw_SmallIcon(fp, cv, xp, std::max(yp + (cv->TextHeight("Q") - SIcoSize)/2, 0));
 				xp += get_IcoWidth();
 			}
@@ -719,7 +787,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 			//ファイル名
 			if (ACol==1) {
 				cv->Font->Color = col_f;
-				int mgn = ScaledInt(4);
+				int mgn = Scaled4;
 				//ディレクトリ
 				UnicodeString bnam;
 				if (fp->is_dir) {
@@ -740,7 +808,42 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 			}
 			//場所
 			else if (ACol==4) {
-				PathNameOut(lbuf, cv, xp, yp, gp->ColWidths[ACol]);
+				PathNameOut(lbuf, cv, xp, yp, gp->ColWidths[ACol] - Scaled8);
+			}
+			else {
+				cv->TextRect(Rect, xp, yp, lbuf);
+			}
+		}
+		//リポジトリ一覧
+		else if	(isRepo) {
+			if (ACol==1) {
+				cv->Font->Color = col_f;
+				UnicodeString bnam = minimize_str(fp->b_name, cv, Rect.Right - xp - Scaled4, OmitEndOfName);
+				cv->TextOut(xp, yp, bnam);
+			}
+			//場所
+			else if (ACol==3) {
+				PathNameOut(lbuf, cv, xp, yp, gp->ColWidths[ACol] - Scaled8);
+			}
+			//コミット
+			else if (ACol==4) {
+				UnicodeString s = get_in_paren(lbuf);
+				if (!s.IsEmpty()) {
+					lbuf = Trim(get_tkn_r(lbuf, ")"));
+					TStringDynArray b_buf = SplitString(s, ",");
+					for (int i=0; i<b_buf.Length; i++) {
+						UnicodeString ss = Trim(b_buf[i]);
+						if (remove_top_text(ss, "tag: ")) {
+							draw_GitTag(cv, xp, yp, ss, Scaled4);
+						}
+						else {
+							if (remove_top_text(ss, HEAD_Mark)) out_TextEx(cv, xp, yp, HEAD_Mark, col_GitHEAD);
+							out_TextEx(cv, xp, yp, ss, col_bgList, col_GitBra, Scaled8);
+						}
+					}
+				}
+				TRect rc = Rect; rc.Left = xp;
+				cv->TextRect(rc, xp, yp, minimize_str(lbuf, cv, rc.Width() - Scaled4, true));
 			}
 			else {
 				cv->TextRect(Rect, xp, yp, lbuf);
@@ -776,7 +879,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 			}
 			//場所
 			else if (ACol==3) {
-				PathNameOut(lbuf, cv, xp, yp, gp->ColWidths[ACol]);
+				PathNameOut(lbuf, cv, xp, yp, gp->ColWidths[ACol] - Scaled8);
 			}
 			else {
 				if (isTagPtn && ACol==4) lbuf = minimize_str(lbuf, cv, Rect.Width() - 8, true);
@@ -796,13 +899,14 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 //---------------------------------------------------------------------------
 bool __fastcall TEditHistoryDlg::set_FileName(int idx)
 {
-	file_rec *cfp = get_CurFileRec();
-	if (cfp) {
-		EditFileName = cfp->f_name;
-		if (isTags) TagJumpInf = cfp->alias;
+	if (idx>=0 && idx<HistBufList->Count) {
+		file_rec *fp = (file_rec*)HistBufList->Objects[idx];
+		EditFileName = fp->f_name;
+		if (isTags) TagJumpInf = fp->alias;
 	}
 	else
 		EditFileName = EmptyStr;
+
 	return !EditFileName.IsEmpty();
 }
 
@@ -820,7 +924,7 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 		//数字キーによるアクセス
 		if (is_Num0to9(KeyStr)) {
 			if (!set_FileName((KeyStr.ToIntDef(0) + 9)%10)) Abort(); 
-			if (isRecent) {
+			if (isRecent || isRepo) {
 				CmdStr = EmptyStr;
 				ModalResult = mrClose;	//移動
 			}
@@ -912,24 +1016,42 @@ void __fastcall TEditHistoryDlg::EditHistGridDblClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::SortItemList()
 {
-	if (!isRecent && !isMark) return;
+	if (isRecent || isMark) {
+		switch (ListSortMode) {
+		case 0: case 1: case 4:
+			DscNameOrder = (ListSortOdr[ListSortMode] == -1);	break;
+		case 3:
+			DscPathOrder = (ListSortOdr[ListSortMode] == -1);	break;
+		case 2: case 5:
+			OldOrder	 = (ListSortOdr[ListSortMode] == 1);	break;
+		}
 
-	switch (MarkSortMode) {
-	case 0: case 1: case 4:
-		DscNameOrder = (MarkSortOdr[MarkSortMode] == -1);	break;
-	case 3:
-		DscPathOrder = (MarkSortOdr[MarkSortMode] == -1);	break;
-	case 2: case 5:
-		OldOrder	 = (MarkSortOdr[MarkSortMode] == 1);	break;
+		switch (ListSortMode) {
+		case 0: HistBufList->CustomSort(SortComp_Name);		break;
+		case 1: HistBufList->CustomSort(SortComp_Ext);		break;
+		case 2: HistBufList->CustomSort(SortComp_Time);		break;
+		case 3: HistBufList->CustomSort(SortComp_PathName);	break;
+		case 4: HistBufList->CustomSort(SortComp_Memo);		break;
+		case 5: HistBufList->CustomSort(SortComp_MarkTime);	break;
+		}
 	}
+	else if (isRepo) {
+		switch (ListSortMode) {
+		case 0: case 3: case 4:
+			DscNameOrder = (ListSortOdr[ListSortMode] == -1);	break;
+		case 2:
+			DscPathOrder = (ListSortOdr[ListSortMode] == -1);	break;
+		case 1:
+			OldOrder	 = (ListSortOdr[ListSortMode] == 1);	break;
+		}
 
-	switch (MarkSortMode) {
-	case 0: HistBufList->CustomSort(SortComp_Name);		break;
-	case 1: HistBufList->CustomSort(SortComp_Ext);		break;
-	case 2: HistBufList->CustomSort(SortComp_Time);		break;
-	case 3: HistBufList->CustomSort(SortComp_PathName);	break;
-	case 4: HistBufList->CustomSort(SortComp_Memo);		break;
-	case 5: HistBufList->CustomSort(SortComp_MarkTime);	break;
+		switch (ListSortMode) {
+		case 0: HistBufList->CustomSort(SortComp_Name);		break;
+		case 1: HistBufList->CustomSort(SortComp_Time);		break;
+		case 2: HistBufList->CustomSort(SortComp_PathName);	break;
+		case 3: HistBufList->CustomSort(SortComp_Memo);		break;
+		case 4: HistBufList->CustomSort(SortComp_GitStt);	break;
+		}
 	}
 }
 
@@ -937,14 +1059,14 @@ void __fastcall TEditHistoryDlg::SortItemList()
 void __fastcall TEditHistoryDlg::EditHistHeaderSectionClick(THeaderControl *HeaderControl,
 		THeaderSection *Section)
 {
-	if ((!isRecent && !isMark) || Section->Index<1) return;
+	if ((!isRecent && !isMark && !isRepo) || Section->Index<1) return;
 
 	int idx = Section->Index - 1;
 
-	if (idx==MarkSortMode)
-		MarkSortOdr[idx] = -MarkSortOdr[idx];
+	if (idx==ListSortMode)
+		ListSortOdr[idx] = -ListSortOdr[idx];
 	else
-		MarkSortMode = idx;
+		ListSortMode = idx;
 
 	EditHistHeader->Invalidate();
 
@@ -1032,12 +1154,14 @@ void __fastcall TEditHistoryDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key))
+	if (is_KeyPress_CtrlNotCV(Key)) {
 		Key = 0;
+	}
 	else if (Key==VK_RETURN) {
-		if (!set_FileName(EditHistGrid->Row)) Abort();
-		CmdStr.sprintf(_T("%s"), (isMark && OpenAction->Checked)? _T("OpenStandard") : null_TCHAR);
-		ModalResult = mrClose;	//移動
+		if (set_FileName(EditHistGrid->Row)) {
+			CmdStr.sprintf(_T("%s"), (isMark && OpenAction->Checked)? _T("OpenStandard") : null_TCHAR);
+			ModalResult = mrClose;	//移動
+		}
 		Key = 0;
 	}
 }
@@ -1215,6 +1339,29 @@ void __fastcall TEditHistoryDlg::ToggleActionExecute(TObject *Sender)
 	ap->Checked = !ap->Checked;
 
 	if (ap==OpenAction) EditHistGrid->SetFocus();
+}
+
+//---------------------------------------------------------------------------
+//最新の情報に更新
+//---------------------------------------------------------------------------
+void __fastcall TEditHistoryDlg::UpdateGitInfActionExecute(TObject *Sender)
+{
+	StatusBar1->Panels->Items[0]->Text = "最新の情報に更新中...";
+	TStringGrid *gp = EditHistGrid;
+	gp->Row = 0;
+	Enabled = false;
+	for (int i=0; i<HistBufList->Count; i++) {
+		gp->Row = i;
+		get_GitInf(HistBufList->Strings[i], NULL, true);
+		gp->Invalidate();
+	}
+	Enabled = true;
+	gp->Row = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TEditHistoryDlg::UpdateGitInfActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Enabled = (HistBufList->Count>0);
 }
 
 //---------------------------------------------------------------------------

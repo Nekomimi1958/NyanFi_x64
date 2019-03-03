@@ -1289,7 +1289,7 @@ void __fastcall TNyanFiForm::WmCopyData(TMessage& msg)
 	if (cd->dwData==CPYDTID_OPTIONS) {
 		//オプションの解析
 		UnicodeString cmdln = (LPTSTR)cd->lpData;
-		StartLog(UnicodeString().sprintf(_T("RCVMSG %s"), cmdln.c_str()));
+		StartLog("RCVMSG " + cmdln);
 		std::unique_ptr<TStringList> opt_lst(new TStringList());
 		split_cmd_line(cmdln, opt_lst.get());
 
@@ -8518,6 +8518,14 @@ void __fastcall TNyanFiForm::ReloadList(
 				if (!StartsStr("\\\\", dnam)) {
 					if (!dir_exists(dnam)) dnam = get_parent_path(dnam);
 				}
+
+				//Git情報のキャッシュを削除
+				UnicodeString g_nam = get_GitTopPath(dnam);
+				if (!g_nam.IsEmpty()) {
+					int idx = GitInfList->IndexOfName(g_nam);
+					if (idx!=-1) GitInfList->Delete(idx);
+				}
+
 				CurPath[i] = dnam;
 			}
 
@@ -16634,8 +16642,8 @@ void __fastcall TNyanFiForm::GitViewerActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::GitViewerActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
-	ap->Visible = ScrMode==SCMD_FLIST;
-	ap->Enabled = ap->Visible && GitExists;
+	ap->Visible = ScrMode==SCMD_FLIST && GitExists;
+	ap->Enabled = ap->Visible;
 }
 
 //---------------------------------------------------------------------------
@@ -20965,6 +20973,25 @@ void __fastcall TNyanFiForm::RenameDlgActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//リポジトリ一覧
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::RepositoryListActionExecute(TObject *Sender)
+{
+	EditHistoryDlg->isRepo = true;
+	int res = EditHistoryDlg->ShowModal();
+	if (res==mrOk || res==mrClose) {
+		UpdateCurPath(IncludeTrailingPathDelimiter(EditHistoryDlg->EditFileName));
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::RepositoryListActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = ScrMode==SCMD_FLIST && GitExists;
+	ap->Enabled = ap->Visible;
+}
+
+//---------------------------------------------------------------------------
 //再起動
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::RestartActionExecute(TObject *Sender)
@@ -21486,8 +21513,8 @@ void __fastcall TNyanFiForm::SelGitChangedActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::SelGitChangedActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
-	ap->Visible = ScrMode==SCMD_FLIST;
-	ap->Enabled = ap->Visible && GitExists;
+	ap->Visible = ScrMode==SCMD_FLIST && GitExists;
+	ap->Enabled = ap->Visible;
 }
 
 //---------------------------------------------------------------------------
@@ -33521,10 +33548,9 @@ void __fastcall TNyanFiForm::FTPConnectActionExecute(TObject *Sender)
 		FTPTryModTime  = true;
 
 		//接続開始
-		UnicodeString msg;
-		StartLog(msg.sprintf(_T("FTP接続  %s"), itm_buf[1].c_str()));
+		StartLog("FTP接続  " + itm_buf[1]);
 		IdFTP1->Connect();
-		AddLog(msg.sprintf(_T("         %s"), IdFTP1->SystemDesc.c_str()));
+		AddLog("         " + IdFTP1->SystemDesc);
 		if (IdFTP1->UsingSFTP) AddLog(_T("         TLS接続が確立されました"));
 		InhFTPCheck = false;
 
@@ -34256,4 +34282,5 @@ void __fastcall TNyanFiForm::GrepRepComboBoxEnter(TObject *Sender)
 	UpdateActions();
 }
 //---------------------------------------------------------------------------
+
 

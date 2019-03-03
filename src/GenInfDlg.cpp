@@ -780,8 +780,8 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	//プレイリスト
 	else if (isPlayList) {
 		//再生中マーク
-		if (SameText(PlayFile, lbuf)) out_Text(cv, rc.Left + 2, yp, L"\u25b6", col_Cursor);
-		rc.Left += get_TextWidth(cv, L"\u25b6", is_irreg) + 4;
+		if (SameText(PlayFile, lbuf)) out_Text(cv, rc.Left + 2, yp, HEAD_Mark.c_str(), col_Cursor);
+		rc.Left += get_TextWidth(cv, HEAD_Mark, is_irreg) + 4;
 		if (OmitComPathAction->Checked) remove_top_text(lbuf, ComPathName);	//パスの共通部分を省略
 		if (FileName1stAction->Checked) {
 			xp = rc.Left;

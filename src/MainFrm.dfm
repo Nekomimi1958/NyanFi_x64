@@ -2708,7 +2708,7 @@ object NyanFiForm: TNyanFiForm
       object RegDirItem: TMenuItem
         Action = RegDirDlgAction
       end
-      object N1: TMenuItem
+      object SpecialDirListItem: TMenuItem
         Action = SpecialDirListAction
       end
       object DirHistItem: TMenuItem
@@ -2731,6 +2731,9 @@ object NyanFiForm: TNyanFiForm
       end
       object ShareListItem: TMenuItem
         Action = ShareListAction
+      end
+      object RepositoryListItem: TMenuItem
+        Action = RepositoryListAction
       end
       object Sep_l_1: TMenuItem
         Caption = '-'
@@ -3885,6 +3888,11 @@ object NyanFiForm: TNyanFiForm
       OnExecute = GetHashActionExecute
       OnUpdate = MenuFActionUpdate
     end
+    object GitDiffAction: TAction
+      Category = 'Command'
+      OnExecute = GitDiffActionExecute
+      OnUpdate = GitViewerActionUpdate
+    end
     object GitViewerAction: TAction
       Category = 'Command'
       Caption = 'Git'#12499#12517#12450#12540'...'
@@ -4419,6 +4427,12 @@ object NyanFiForm: TNyanFiForm
       HelpContext = 51
       OnExecute = RenameDlgActionExecute
       OnUpdate = MenuFActionUpdate
+    end
+    object RepositoryListAction: TAction
+      Category = 'Command'
+      Caption = #12522#12509#12472#12488#12522#19968#35239'(&G)...'
+      OnExecute = RepositoryListActionExecute
+      OnUpdate = RepositoryListActionUpdate
     end
     object RestartAction: TAction
       Category = 'Command'
@@ -5443,11 +5457,6 @@ object NyanFiForm: TNyanFiForm
       Category = 'Menu'
       Caption = #34920#31034#21517#12398#22793#26356'(&R)...'
       OnExecute = FK_RenameActionExecute
-    end
-    object GitDiffAction: TAction
-      Category = 'Command'
-      OnExecute = GitDiffActionExecute
-      OnUpdate = GitViewerActionUpdate
     end
   end
   object TaskSttTimer: TTimer

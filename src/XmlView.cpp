@@ -53,7 +53,7 @@ void __fastcall TXmlViewer::FormShow(TObject *Sender)
 	StatusBar1->Font->Assign(SttBarFont);
 	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
 
-	Caption = UnicodeString().sprintf(_T("%s - XMLビュアー"), yen_to_delimiter(FileName).c_str());
+	Caption = yen_to_delimiter(FileName) + " - XMLビュアー";
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
