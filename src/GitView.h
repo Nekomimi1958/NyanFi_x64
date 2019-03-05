@@ -289,7 +289,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall StashApplyActionExecute(TObject *Sender);
 	void __fastcall StashDropActionExecute(TObject *Sender);
 
-
 private:	// ユーザー宣言
 	UnicodeString RefHEAD;
 	UnicodeString CommitID;
@@ -318,6 +317,7 @@ private:	// ユーザー宣言
 
 	UnicodeString   __fastcall GitExeStr(UnicodeString prm);
 	TStringDynArray __fastcall GitExeStrArray(UnicodeString prm);
+	bool __fastcall GitExeList(UnicodeString prm, TStringList *o_lst = NULL, UnicodeString hint = EmptyStr);
 	UnicodeString   __fastcall SaveRevAsTemp(UnicodeString id, UnicodeString fnam);
 
 	git_rec * __fastcall cre_GitRec(UnicodeString msg = EmptyStr);
@@ -326,15 +326,6 @@ private:	// ユーザー宣言
 	void __fastcall UpdateDiffList(bool keep_idx = false);
 	UnicodeString __fastcall UpdateStatusList();
 	void __fastcall UpdateCommitList(UnicodeString commit_id = EmptyStr);
-
-	bool FGitBusy;
-	void __fastcall SetGitBusy(bool Value)
-	{
-		FGitBusy = Value;
-		Enabled  = !Value;
-		if (Value) cursor_HourGlass(); else cursor_Default();
-	}
-	__property bool GitBusy = {read = FGitBusy,  write = SetGitBusy};
 
 	int __fastcall GetCurBranchFlag()
 	{
@@ -378,8 +369,16 @@ public:		// ユーザー宣言
 	UnicodeString WorkDir;		//Gitトップディレクトリ
 	UnicodeString FilterName;	//履歴絞り込み時の対象名
 	int HistoryLimit;			//履歴の表示制限数
-
 	UnicodeString RetArcFile;	//[o] 一時アーカイブ名
+
+	bool FGitBusy;
+	void __fastcall SetGitBusy(bool Value)
+	{
+		FGitBusy = Value;
+		Enabled  = !Value;
+		if (Value) cursor_HourGlass(); else cursor_Default();
+	}
+	__property bool GitBusy = {read = FGitBusy,  write = SetGitBusy};
 
 	__fastcall TGitViewer(TComponent* Owner);
 

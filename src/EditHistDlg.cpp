@@ -763,6 +763,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 			case 0: cv->Font->Style = cv->Font->Style << fsUnderline;	break;
 			case 2: col_fg = get_TimeColor(fp->f_time, col_fgList);		break;
 			case 3: col_fg = col_Folder;								break;
+			case 5: if (isRepo && SameText(lbuf, "Clean")) col_fg = AdjustColor(col_fg, 64);	break;
 			}
 		}
 		cv->Font->Color = col_fg;
@@ -954,7 +955,14 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 		//メモ入力
 		else if (isMark && USAME_TI(CmdStr, "Mark_IM")) MemoAction->Execute();
 		//コマンド
-		else if (!isTags && contained_wd_i(_T("FileEdit|TextViewer|ImageViewer|OpenByApp|OpenByWin|OpenByExp"), CmdStr)) {
+		else if (isRepo && contained_wd_i(_T("GitViewer|TextViewer"), CmdStr)) {
+			if (!set_FileName(gp->Row)) Abort();
+			CmdStr = "GitViewer";
+			ModalResult = mrOk;
+		}
+		else if (!isTags && !isRepo
+			&& contained_wd_i(_T("FileEdit|TextViewer|ImageViewer|OpenByApp|OpenByWin|OpenByExp"), CmdStr))
+		{
 			if (!set_FileName(gp->Row)) Abort();
 			ModalResult = mrOk;
 		}
@@ -988,10 +996,12 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 			int f_idx = (idx1!=-1)? idx1 : idx0;
 			if (f_idx!=-1) gp->Row = f_idx;
 		}
+		else CmdStr = EmptyStr;
 
 		SetSttBar();
 	}
 	catch (EAbort &e) {
+		CmdStr = EmptyStr;
 		beep_Warn();
 	}
 
@@ -1271,14 +1281,12 @@ void __fastcall TEditHistoryDlg::ShowUsedTimeActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::ShowFileInfoActionExecute(TObject *Sender)
 {
-	UnicodeString fnam = get_CurFileName();
-	if (!fnam.IsEmpty()) {
-		file_rec *cfp = cre_new_file_rec(fnam);
-		FileInfoDlg->FileRec   = cfp;
-		FileInfoDlg->inhNxtPre = true;
-		FileInfoDlg->ShowModal();
-		del_file_rec(cfp);
-	}
+	file_rec *cfp = cre_new_file_rec(get_CurFileName());
+	cfp->inf_list->Clear();
+	FileInfoDlg->FileRec   = cfp;
+	FileInfoDlg->inhNxtPre = true;
+	FileInfoDlg->ShowModal();
+	del_file_rec(cfp);
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::ShowFileInfoActionUpdate(TObject *Sender)
@@ -1295,11 +1303,6 @@ void __fastcall TEditHistoryDlg::ShowPropertyActionExecute(TObject *Sender)
 	Mouse->CursorPos = gp->ClientToScreen(Point(rc.Left + rc.Width()/2, rc.Top + rc.Height()));
 
 	ShowPropertyDialog(get_CurFileName());
-}
-//---------------------------------------------------------------------------
-void __fastcall TEditHistoryDlg::ShowPropertyActionUpdate(TObject *Sender)
-{
-	((TAction *)Sender)->Enabled = !get_CurFileName().IsEmpty();
 }
 
 //---------------------------------------------------------------------------
@@ -1362,6 +1365,16 @@ void __fastcall TEditHistoryDlg::UpdateGitInfActionExecute(TObject *Sender)
 void __fastcall TEditHistoryDlg::UpdateGitInfActionUpdate(TObject *Sender)
 {
 	((TAction *)Sender)->Enabled = (HistBufList->Count>0);
+}
+//---------------------------------------------------------------------------
+//Gitビュアーを開く
+//---------------------------------------------------------------------------
+void __fastcall TEditHistoryDlg::GitViewerActionExecute(TObject *Sender)
+{
+	if (set_FileName(EditHistGrid->Row)) {
+		CmdStr = "GitViewer";
+		ModalResult = mrClose;
+	}
 }
 
 //---------------------------------------------------------------------------

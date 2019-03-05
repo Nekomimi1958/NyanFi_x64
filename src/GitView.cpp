@@ -227,6 +227,23 @@ TStringDynArray __fastcall TGitViewer::GitExeStrArray(UnicodeString prm)
 }
 
 //---------------------------------------------------------------------------
+//git実行結果をリストで取得 (ヒント表示可)
+//---------------------------------------------------------------------------
+bool __fastcall TGitViewer::GitExeList(UnicodeString prm, TStringList *o_lst, UnicodeString hint)
+{
+	if (!hint.IsEmpty())
+		MsgHint->ActivateHintEx("\r\n" + hint + "\r\n", ScaledInt(480), ScaledInt(240), CommitListBox, col_bgHint);
+
+	GitBusy = true;
+	DWORD exit_code;
+	bool res = (GitShellExe(prm, WorkDir, o_lst, &exit_code) && exit_code==0);
+	GitBusy = false;
+
+	if (!hint.IsEmpty()) MsgHint->ReleaseHandle();
+	return res;
+}
+
+//---------------------------------------------------------------------------
 //指定リビジョンのファイルを一時ディレクトリに保存
 //---------------------------------------------------------------------------
 UnicodeString __fastcall TGitViewer::SaveRevAsTemp(UnicodeString id, UnicodeString fnam)
@@ -1290,7 +1307,7 @@ void __fastcall TGitViewer::ArchiveActionExecute(TObject *Sender)
 			UnicodeString arc_name = UserModule->SaveDlg->FileName;
 			UnicodeString prm;
 			prm.sprintf(_T("archive --format=zip %s --output=\"%s\""), CommitID.c_str(), yen_to_slash(arc_name).c_str());
-			GitExeStr(prm);
+			GitExeList(prm, NULL, "アーカイブ作成中...");
 		}
 	}
 }
@@ -1304,15 +1321,7 @@ void __fastcall TGitViewer::OpenTmpArcActionExecute(TObject *Sender)
 									+ ExtractFileName(ExcludeTrailingPathDelimiter(WorkDir)) + ".zip";
 		UnicodeString prm;
 		prm.sprintf(_T("archive --format=zip %s --output=\"%s\""), CommitID.c_str(), yen_to_slash(tmp_name).c_str());
-
-		MsgHint->ActivateHintEx("\r\nアーカイブ作成中...\r\n", ScaledInt(480), ScaledInt(240), CommitListBox, col_bgHint);
-		GitBusy = true;
-		DWORD exit_code;
-		bool ok = (GitShellExe(prm, WorkDir, (TStringList *)NULL, &exit_code) && exit_code==0);
-		GitBusy = false;
-		MsgHint->ReleaseHandle();
-
-		if (ok && file_exists(tmp_name)) {
+		if (GitExeList(prm, NULL, "アーカイブ作成中...") && file_exists(tmp_name)) {
 			RetArcFile	= tmp_name;
 			ModalResult = mrOk;
 		}

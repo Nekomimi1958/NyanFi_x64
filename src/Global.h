@@ -2005,6 +2005,7 @@ bool __fastcall SpecialEditProc(TObject *Sender, WORD &Key, TShiftState Shift);
 
 UnicodeString inputbox_dir(const _TCHAR *tit, const _TCHAR *cmd);
 
+bool is_FirstKey(UnicodeString id, UnicodeString keystr);
 bool is_IniSeaKey(UnicodeString &keystr);
 
 bool update_IncSeaWord(UnicodeString &kwd, UnicodeString keystr, bool fl_sw = false);

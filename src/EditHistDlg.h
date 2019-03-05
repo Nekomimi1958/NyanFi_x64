@@ -95,6 +95,8 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *OptMode1Btn;
 	TToolButton *OptMode2Btn;
 	TToolButton *ToolButton5;
+	TAction *GitViewerAction;
+	TMenuItem *GitViewerItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -122,7 +124,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall EditHistHeaderResize(TObject *Sender);
 	void __fastcall ClrAllMarkItemClick(TObject *Sender);
 	void __fastcall ShowPropertyActionExecute(TObject *Sender);
-	void __fastcall ShowPropertyActionUpdate(TObject *Sender);
 	void __fastcall ClrAllRecentActionExecute(TObject *Sender);
 	void __fastcall ClrAllRecentActionUpdate(TObject *Sender);
 	void __fastcall ShowUsedTimeActionExecute(TObject *Sender);
@@ -137,6 +138,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall OptModeActionExecute(TObject *Sender);
 	void __fastcall UpdateGitInfActionExecute(TObject *Sender);
 	void __fastcall UpdateGitInfActionUpdate(TObject *Sender);
+	void __fastcall GitViewerActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

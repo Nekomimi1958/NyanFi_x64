@@ -305,11 +305,6 @@ object EditHistoryDlg: TEditHistoryDlg
   object ActionList1: TActionList
     Left = 496
     Top = 65
-    object ShowPropertyAction: TAction
-      Caption = #12503#12525#12497#12486#12451'(&R)'
-      OnExecute = ShowPropertyActionExecute
-      OnUpdate = ShowPropertyActionUpdate
-    end
     object ClrAllRecentAction: TAction
       Caption = #38917#30446#12434#12377#12409#12390#21066#38500'(&A)'
       OnExecute = ClrAllRecentActionExecute
@@ -318,6 +313,11 @@ object EditHistoryDlg: TEditHistoryDlg
     object ShowUsedTimeAction: TAction
       Caption = #20351#29992#26085#26178#12434#34920#31034'(&U)'
       OnExecute = ShowUsedTimeActionExecute
+    end
+    object ShowPropertyAction: TAction
+      Caption = #12503#12525#12497#12486#12451'(&R)'
+      OnExecute = ShowPropertyActionExecute
+      OnUpdate = ShowFileInfoActionUpdate
     end
     object ShowFileInfoAction: TAction
       Caption = #12501#12449#12452#12523#24773#22577'(&I)'
@@ -366,6 +366,11 @@ object EditHistoryDlg: TEditHistoryDlg
       OnExecute = UpdateGitInfActionExecute
       OnUpdate = UpdateGitInfActionUpdate
     end
+    object GitViewerAction: TAction
+      Caption = 'Git'#12499#12517#12450#12540#12434#38283#12367'(&V)'
+      OnExecute = GitViewerActionExecute
+      OnUpdate = ShowFileInfoActionUpdate
+    end
   end
   object RepoPopupMenu: TPopupMenu
     Left = 360
@@ -375,6 +380,9 @@ object EditHistoryDlg: TEditHistoryDlg
     end
     object Sep_g_1: TMenuItem
       Caption = '-'
+    end
+    object GitViewerItem: TMenuItem
+      Action = GitViewerAction
     end
     object gFileInfoItem: TMenuItem
       Action = ShowFileInfoAction

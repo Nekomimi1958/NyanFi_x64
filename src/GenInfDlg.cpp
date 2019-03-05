@@ -880,19 +880,11 @@ UnicodeString __fastcall TGeneralInfoDlg::TwoStrokeSeq(WORD &Key, TShiftState Sh
 		if (Key_to_CmdV(key_str).IsEmpty()) Key = 0;
 	}
 	//1ストローク目
-	else {
-		bool found = false;
-		for (int i=0; i<KeyFuncList->Count && !found; i++) {
-			UnicodeString kbuf = KeyFuncList->Strings[i];
-			if (!contains_s(kbuf, _T('~')))  continue;
-			found = SameText("V:" + key_str, get_tkn(kbuf, '~'));
-		}
-		if (found) {
-			FirstKey   = key_str;
-			Wait2ndKey = true;
-			SetStatusBar();
-			Key = 0;
-		}
+	else if (is_FirstKey("V", key_str)) {
+		FirstKey   = key_str;
+		Wait2ndKey = true;
+		SetStatusBar();
+		Key = 0;
 	}
 
 	return key_str;

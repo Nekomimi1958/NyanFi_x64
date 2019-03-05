@@ -1832,7 +1832,9 @@ void __fastcall TNyanFiForm::WmActivate(TMessage &msg)
 			}
 
 			//モーダルスクリーンの表示
-			if (ModalScreen && ModalScrAlpha>0 && !UnInitializing && ScrMode==SCMD_FLIST && !usr_ARC->RarUnpacking) {
+			if (ModalScreen && ModalScrAlpha>0 && !UnInitializing && ScrMode==SCMD_FLIST
+				&& !usr_ARC->RarUnpacking && !(GitViewer && GitViewer->GitBusy))
+			{
 				if (!contained_wd_i(
 					_T("HH Parent|User32_ReaderMode|TApplication|TModalScrForm|TAppListDlg|")
 					_T("TOptionDlg|TGrepExOptDlg|TDotNyanDlg|TExTxtViewer|TGifViewer|TDebugForm"),
@@ -8160,12 +8162,12 @@ bool __fastcall TNyanFiForm::ChangeAdsList(UnicodeString fnam, int tag)
 	if (hFS!=INVALID_HANDLE_VALUE) {
 		do {
 			UnicodeString snam = get_tkn(sd.cStreamName, ":$DATA");
-			if (!USAME_TS(snam, ":")) {
+			if (remove_top_s(snam, ":")) {
 				//項目を作成
 				file_rec *fp = cre_new_file_rec();
 				fp->tag 	 = tag;
 				fp->p_name	 = fnam;
-				fp->f_name	 = fp->r_name = fnam + snam;
+				fp->f_name	 = fp->r_name = fnam + ":" + snam;
 				fp->n_name	 = snam;
 				fp->is_ads	 = true;
 				fp->is_dir	 = false;
@@ -9261,25 +9263,15 @@ UnicodeString __fastcall TNyanFiForm::TwoStrokeSeq(WORD &Key, TShiftState Shift)
 		}
 	}
 	//1ストローク目
-	else {
-		UnicodeString key_n = id_str + key_str;
-		bool found = false;
-		for (int i=0; i<KeyFuncList->Count && !found; i++) {
-			UnicodeString kbuf = KeyFuncList->Strings[i];
-			if (!contains_s(kbuf, _T('~')))  continue;
-			found = SameText(key_n, get_tkn(kbuf, '~'));
+	else if (is_FirstKey(id_str, key_str)) {
+		FirstKey   = key_str;
+		Wait2ndKey = true;
+		StatusBar1->Panels->Items[0]->Text = "2ストロークキー: " + FirstKey + "~";
+		if (ShowKeyHint) {
+			KeyHintTimer->Interval = KeyHintTime;
+			KeyHintTimer->Enabled  = true;
 		}
-		//有効
-		if (found) {
-			FirstKey   = key_str;
-			Wait2ndKey = true;
-			StatusBar1->Panels->Items[0]->Text = "2ストロークキー: " + FirstKey + "~";
-			if (ShowKeyHint) {
-				KeyHintTimer->Interval = KeyHintTime;
-				KeyHintTimer->Enabled  = true;
-			}
-			Key = 0;
-		}
+		Key = 0;
 	}
 
 	return key_str;
@@ -20981,6 +20973,7 @@ void __fastcall TNyanFiForm::RepositoryListActionExecute(TObject *Sender)
 	int res = EditHistoryDlg->ShowModal();
 	if (res==mrOk || res==mrClose) {
 		UpdateCurPath(IncludeTrailingPathDelimiter(EditHistoryDlg->EditFileName));
+		ExeCommandAction(EditHistoryDlg->CmdStr);
 	}
 }
 //---------------------------------------------------------------------------
@@ -23292,8 +23285,9 @@ void __fastcall TNyanFiForm::ToOppItemCore(const _TCHAR *mode_str)
 		bool no_opp = TEST_DEL_ActParam("NO");
 
 		if (USAME_TI(mode_str, "HASH")) {
-			if (CurStt->is_Arc || CurStt->is_ADS || CurStt->is_FTP || IsDiffList() || !IsOppFList())
-				UserAbort(USTR_OpeNotSuported);
+			if (CurStt->is_Arc || CurStt->is_FTP || IsDiffList()
+				|| OppStt->is_Arc || OppStt->is_FTP || OppStt->is_Find || OppStt->is_Work)
+					UserAbort(USTR_OpeNotSuported);
 		}
 
 		UnicodeString idstr = def_if_empty(ActionParam, "MD5");

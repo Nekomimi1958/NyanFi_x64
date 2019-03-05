@@ -4014,7 +4014,7 @@ void add_PackItem(file_rec *fp, int arc_t, UnicodeString src_dir, TStringList *l
 //---------------------------------------------------------------------------
 //無効なUNCパスか?
 //---------------------------------------------------------------------------
-bool is_InvalidUnc(UnicodeString dnam, 
+bool is_InvalidUnc(UnicodeString dnam,
 	bool del_sw)	//見つかった項目を削除 (default = false);
 {
 	int idx = -1;
@@ -4095,6 +4095,8 @@ TStringList *GetCurBtnList(int scr_mode)
 //---------------------------------------------------------------------------
 TStringList* GetFileList(int tag)
 {
+	if (tag==-1) return NULL;
+
 	flist_stt *cur_stt = &ListStt[tag];
 	return cur_stt->is_Arc?  ArcFileList[tag] :
 		   cur_stt->is_ADS?  AdsFileList[tag] :
@@ -7205,12 +7207,12 @@ void GetFileInfList(
 
 	//ディレクトリ内情報
 	if (fp->is_dir) {
-		if (!is_inv_unc && lst_stt) {
+		if (!is_inv_unc) {
 			//FTPリモート
 			if (fp->is_ftp) {
 				add_PropLine(_T("種類"), (fp->is_sym? "シンボリックリンク" : "ディレクトリ"), i_list);
 				//ファイル数、ディレクトリ数
-				if (fp->is_up) {
+				if (fp->is_up && lst_stt) {
 					if (lst_stt->f_cnt!=-1)
 						add_PropLine(_T("ファイル数"), get_size_str_B(lst_stt->f_cnt, 0), i_list);
 					if (lst_stt->d_cnt!=-1)
@@ -7218,7 +7220,7 @@ void GetFileInfList(
 				}
 			}
 			//その他
-			else if (fp->tag!=-1) {
+			else {
 				bool is_git_top = false;
 				UnicodeString rpnam = IncludeTrailingPathDelimiter(!fp->is_up? fp->f_name : fp->p_name);
 
@@ -7252,46 +7254,51 @@ void GetFileInfList(
 				}
 
 				//ファイル、ディレクトリ数
-				int f_cnt  = fp->is_up? lst_stt->f_cnt : fp->f_count;
-				int d_cnt  = fp->is_up? lst_stt->d_cnt : fp->d_count;
-				__int64 f_size	 = fp->is_up? lst_stt->cur_total : fp->f_size;
-				__int64 o_size	 = fp->is_up? lst_stt->occ_total : fp->o_size;
-				__int64 c_size	 = fp->is_up? lst_stt->cmp_total : fp->c_size;
-				__int64 drv_size = lst_stt->drive_Total;
-				if (f_cnt!=-1) {
-					lbuf = make_PropLine(is_ads? _T("ストリーム数") : _T("ファイル数"), get_size_str_B(f_cnt, 0));
-					if (fp->is_up && lst_stt->sub_counted)
-						lbuf.cat_sprintf(_T(" / %s"), get_size_str_B(lst_stt->f_cnt_total, 0).c_str());
-					i_list->Add(lbuf);
-				}
-				if (!is_ads && d_cnt!=-1) {
-					lbuf = make_PropLine(_T("ディレクトリ数"), get_size_str_B(d_cnt, 0));
-					if (fp->is_up && lst_stt->sub_counted)
-						lbuf.cat_sprintf(_T(" / %s"), get_size_str_B(lst_stt->d_cnt_total, 0).c_str());
-					i_list->Add(lbuf);
-				}
+				if (lst_stt) {
+					int f_cnt  = fp->is_up? lst_stt->f_cnt : fp->f_count;
+					int d_cnt  = fp->is_up? lst_stt->d_cnt : fp->d_count;
+					__int64 f_size	 = fp->is_up? lst_stt->cur_total : fp->f_size;
+					__int64 o_size	 = fp->is_up? lst_stt->occ_total : fp->o_size;
+					__int64 c_size	 = fp->is_up? lst_stt->cmp_total : fp->c_size;
+					__int64 drv_size = lst_stt->drive_Total;
+					if (f_cnt!=-1) {
+						lbuf = make_PropLine(is_ads? _T("ストリーム数") : _T("ファイル数"), get_size_str_B(f_cnt, 0));
+						if (fp->is_up && lst_stt->sub_counted)
+							lbuf.cat_sprintf(_T(" / %s"), get_size_str_B(lst_stt->f_cnt_total, 0).c_str());
+						i_list->Add(lbuf);
+					}
+					if (!is_ads && d_cnt!=-1) {
+						lbuf = make_PropLine(_T("ディレクトリ数"), get_size_str_B(d_cnt, 0));
+						if (fp->is_up && lst_stt->sub_counted)
+							lbuf.cat_sprintf(_T(" / %s"), get_size_str_B(lst_stt->d_cnt_total, 0).c_str());
+						i_list->Add(lbuf);
+					}
 
-				//サイズ
-				if (f_size>0) {
-					i_list->Add(get_PropTitle(_T("合計サイズ")).cat_sprintf(_T("%s (%s)"),
-						get_size_str_G(f_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(f_size, 0).c_str()));
-					if (!fp->is_virtual && o_size>0) {
-						i_list->Add(get_PropTitle(_T("占有サイズ")).cat_sprintf(_T("%s (%s)"),
-							get_size_str_G(o_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(o_size, 0).c_str()));
-						__int64 g_size = o_size - f_size;
-						i_list->Add(get_PropTitle(_T("クラスタgap")).cat_sprintf(_T("%s (%s) %4.1f%%"),
-							get_size_str_G(g_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(g_size, 0).c_str(),
-							100.0 * g_size/o_size));
-						if (drv_size>0)
-							i_list->Add(get_PropTitle(_T("ドライブ占有率")).cat_sprintf(_T("%6.2f%%"), 100.0 * o_size/drv_size));
-						//圧縮
-						if (c_size>=0 && c_size<f_size) {
-							i_list->Add(EmptyStr);
-							i_list->Add(get_PropTitle(_T("圧縮サイズ")).cat_sprintf(_T("%s (%s)"),
-								get_size_str_G(c_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(c_size, 0).c_str()));
-							i_list->Add(get_PropTitle(_T("圧縮率")).cat_sprintf(_T("%5.1f %"), 100.0 * c_size/f_size));
-							if (fp->is_up && drv_size>0) {
-								i_list->Add(get_PropTitle(_T("対ドライブ比率")).cat_sprintf(_T("%6.2f%%"), 100.0 * c_size/drv_size));
+					//サイズ
+					if (f_size>0) {
+						i_list->Add(get_PropTitle(_T("合計サイズ")).cat_sprintf(_T("%s (%s)"),
+							get_size_str_G(f_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(f_size, 0).c_str()));
+						if (!fp->is_virtual && o_size>0) {
+							i_list->Add(get_PropTitle(_T("占有サイズ")).cat_sprintf(_T("%s (%s)"),
+								get_size_str_G(o_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(o_size, 0).c_str()));
+							__int64 g_size = o_size - f_size;
+							i_list->Add(get_PropTitle(_T("クラスタgap")).cat_sprintf(_T("%s (%s) %4.1f%%"),
+								get_size_str_G(g_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(g_size, 0).c_str(),
+								100.0 * g_size/o_size));
+							if (drv_size>0) {
+								i_list->Add(
+									get_PropTitle(_T("ドライブ占有率")).cat_sprintf(_T("%6.2f%%"), 100.0 * o_size/drv_size));
+							}
+							//圧縮
+							if (c_size>=0 && c_size<f_size) {
+								i_list->Add(EmptyStr);
+								i_list->Add(get_PropTitle(_T("圧縮サイズ")).cat_sprintf(_T("%s (%s)"),
+									get_size_str_G(c_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(c_size, 0).c_str()));
+								i_list->Add(get_PropTitle(_T("圧縮率")).cat_sprintf(_T("%5.1f %"), 100.0 * c_size/f_size));
+								if (fp->is_up && drv_size>0) {
+									i_list->Add(
+										get_PropTitle(_T("対ドライブ比率")).cat_sprintf(_T("%6.2f%%"), 100.0 * c_size/drv_size));
+								}
 							}
 						}
 					}
@@ -7332,7 +7339,7 @@ void GetFileInfList(
 		}
 
 		//拡張子別ファイル数
-		if (fp->is_up) {
+		if (fp->is_up && fp->tag!=-1) {
 			TStringList *lst = GetFileList(fp->tag);
 			add_FExtInfList(lst, i_list);
 		}
@@ -7345,7 +7352,7 @@ void GetFileInfList(
 		}
 
 		//代替データストリーム
-		if (ShowAdsInf && !fp->is_virtual) {
+		if (!is_inv_unc && ShowAdsInf && !fp->is_virtual) {
 			std::unique_ptr<TStringList> ads_lst(new TStringList());
 			get_ADS_Inf(fp->f_name, ads_lst.get());
 			if (ads_lst->Count>0) {
@@ -12167,6 +12174,22 @@ UnicodeString inputbox_dir(const _TCHAR *tit, const _TCHAR *cmd)
 }
 
 //---------------------------------------------------------------------------
+//2ストローク操作の1ストローク目か?
+//---------------------------------------------------------------------------
+bool is_FirstKey(UnicodeString id, UnicodeString keystr)
+{
+	if (!EndsStr(':', id))   id.UCAT_T(":");
+	UnicodeString key_n = id + keystr;
+	bool found = false;
+	for (int i=0; i<KeyFuncList->Count && !found; i++) {
+		UnicodeString kbuf = KeyFuncList->Strings[i];
+		if (!contains_s(kbuf, _T('~')))  continue;
+		found = SameText(key_n, get_tkn(kbuf, '~'));
+	}
+	return found;
+}
+
+//---------------------------------------------------------------------------
 //頭文字サーチキーか?
 //  keystr に正規表現パターンを返す
 //---------------------------------------------------------------------------
@@ -13589,6 +13612,10 @@ void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw)
 	//.git/index が変化していなく既存情報があれば利用
 	dnam = IncludeTrailingPathDelimiter(dnam);
 	UnicodeString xnam = dnam + ".git\\index";
+	TDateTime xdt = file_exists(xnam)? get_file_age(xnam) : 
+		   file_exists(dnam + ".git")? get_file_age(dnam + ".git")
+									 : get_file_age(dnam);
+
 	int idx = GitInfList->IndexOfName(dnam);
 	if (idx!=-1) {
 		try {
@@ -13596,7 +13623,7 @@ void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw)
 			if (lst) {
 				TStringDynArray ibuf = get_csv_array(GitInfList->ValueFromIndex[idx], 3);
 				if (ibuf.Length==0) Abort();
-				if (!WithinPastMilliSeconds(get_file_age(xnam), VarToDateTime(ibuf[0]), TimeTolerance)) Abort();
+				if (!WithinPastMilliSeconds(xdt, VarToDateTime(ibuf[0]), TimeTolerance)) Abort();
 				//既存情報を設定
 				for (int i=1; i<ibuf.Length; i++) {
 					UnicodeString inam = get_tkn(ibuf[i], ": ");
@@ -13611,7 +13638,7 @@ void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw)
 	}
 
 	TStringDynArray ibuf;
-	add_dyn_array(ibuf, FormatDateTime("yyyy/mm/dd hh:nn:ss", get_file_age(xnam)));
+	add_dyn_array(ibuf, FormatDateTime("yyyy/mm/dd hh:nn:ss", xdt));
 
 	std::unique_ptr<TStringList> o_buf(new TStringList());
 	DWORD exit_code;
