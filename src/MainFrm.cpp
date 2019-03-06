@@ -20969,7 +20969,8 @@ void __fastcall TNyanFiForm::RenameDlgActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::RepositoryListActionExecute(TObject *Sender)
 {
-	EditHistoryDlg->isRepo = true;
+	EditHistoryDlg->isRepo	 = true;
+	EditHistoryDlg->ToFilter = TEST_ActParam("FF");
 	int res = EditHistoryDlg->ShowModal();
 	if (res==mrOk || res==mrClose) {
 		UpdateCurPath(IncludeTrailingPathDelimiter(EditHistoryDlg->EditFileName));

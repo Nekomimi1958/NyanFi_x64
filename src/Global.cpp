@@ -13715,3 +13715,10 @@ UnicodeString get_GitDiffFiles(UnicodeString s, UnicodeString &fnam2)
 	return fnam1;
 }
 //---------------------------------------------------------------------------
+UnicodeString get_GitDiffFile2(UnicodeString s)
+{
+	UnicodeString fnam2;
+	UnicodeString fnam1 = get_GitDiffFiles(s, fnam2);
+	return !fnam2.IsEmpty()? fnam2 : fnam1;
+}
+//---------------------------------------------------------------------------

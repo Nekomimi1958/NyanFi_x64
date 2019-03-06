@@ -111,6 +111,7 @@ object SelDriveDlg: TSelDriveDlg
       Width = 25
       Height = 25
       Action = EjectTrayAction
+      Caption = #12489#12521#12452#12502#12398#12488#12524#12452#12434#38283#12367'(&J)'
       Glyph.Data = {
         F6000000424DF600000000000000760000002800000010000000100000000100
         04000000000080000000130B0000130B00001000000004000000FEFEFE000000
@@ -223,7 +224,6 @@ object SelDriveDlg: TSelDriveDlg
       OnDblClick = DriveGridDblClick
       OnDrawCell = DriveGridDrawCell
       OnKeyDown = DriveGridKeyDown
-      OnKeyPress = DriveGridKeyPress
       OnMouseUp = DriveGridMouseUp
       ColWidths = (
         60

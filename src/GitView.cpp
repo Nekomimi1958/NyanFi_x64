@@ -231,8 +231,7 @@ TStringDynArray __fastcall TGitViewer::GitExeStrArray(UnicodeString prm)
 //---------------------------------------------------------------------------
 bool __fastcall TGitViewer::GitExeList(UnicodeString prm, TStringList *o_lst, UnicodeString hint)
 {
-	if (!hint.IsEmpty())
-		MsgHint->ActivateHintEx("\r\n" + hint + "\r\n", ScaledInt(480), ScaledInt(240), CommitListBox, col_bgHint);
+	if (!hint.IsEmpty()) ShowMsgHint(hint);
 
 	GitBusy = true;
 	DWORD exit_code;
@@ -254,11 +253,13 @@ UnicodeString __fastcall TGitViewer::SaveRevAsTemp(UnicodeString id, UnicodeStri
 		UnicodeString prm;
 		prm.sprintf(_T("cat-file -p %s"), src_nam.c_str());
 		std::unique_ptr<TMemoryStream> o_ms(new TMemoryStream());
-		GitBusy  = true;	DiffListBox->Invalidate();
+		ShowMsgHint("ファイル抽出中...");
+		GitBusy  = true;
 		DWORD exit_code;
-		bool res = GitShellExe(prm, WorkDir, o_ms.get(), &exit_code);
-		GitBusy  = false;	DiffListBox->Invalidate();
-		if (!res || exit_code!=0) UserAbort(USTR_FaildProc);
+		bool res = (GitShellExe(prm, WorkDir, o_ms.get(), &exit_code) && exit_code==0);
+		GitBusy  = false;
+		MsgHint->ReleaseHandle();
+		if (!res) UserAbort(USTR_FaildProc);
 
 		//コードページのチェック
 		bool has_bom;
@@ -346,12 +347,9 @@ void __fastcall TGitViewer::UpdateCommitList(
 	CommitScrPanel->HitLines->Clear();
 
 	TListBox *c_lp = CommitListBox;
-	git_rec *tmp_gp = cre_GitRec("取得中...");
-	tmp_gp->graph = "#";
-	c_lp->Items->AddObject(EmptyStr, (TObject *)tmp_gp);
-	c_lp->Repaint();
-
+	ShowMsgHint("取得中...", c_lp);
 	GitBusy = true;
+
 	std::unique_ptr<TStringList> c_lst(new TStringList());
 	std::unique_ptr<TStringList> o_lst(new TStringList());
 
@@ -496,13 +494,12 @@ void __fastcall TGitViewer::UpdateCommitList(
 	if (idx_h==-1) idx_h = 0;
 
 	//リストボックスに割り当て
-	c_lp->Clear();
-	delete tmp_gp;
 	c_lp->Items->Assign(c_lst.get());
 	SetCommitListIndex(idx_h);
 	CommitScrPanel->UpdateKnob();
 
 	GitBusy = false;
+	MsgHint->ReleaseHandle();
 
 	UpdateBranchList();
 }
@@ -1058,6 +1055,7 @@ void __fastcall TGitViewer::DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 	else if (is_ToLeftOpe(KeyStr, cmd_F))		BranchListBox->SetFocus();
 	else if (is_ToRightOpe(KeyStr, cmd_F))		CommitListBox->SetFocus();
 	else if (USAME_TI(cmd_F, "FileEdit"))		EditFileAction->Execute();
+	else if (USAME_TI(cmd_F, "TextViewer"))		ViewFileAction->Execute();
 	else if (USAME_TI(cmd_F, "ShowFileInfo") || equal_ENTER(KeyStr))
 												DiffDetailAction->Execute();
 	else return;
@@ -1353,7 +1351,8 @@ void __fastcall TGitViewer::BlameActionExecute(TObject *Sender)
 {
 	UnicodeString fnam = GetDiffFileName();
 	if (!fnam.IsEmpty()) {
-		if (fnam.Pos(" => ")) fnam =  get_tkn_r(fnam, " => ");
+		fnam = get_GitDiffFile2(fnam);
+
 		UnicodeString prm;
 		prm.sprintf(_T("gui blame %s %s"), get_tkn(ParentID, " ").c_str(), fnam.c_str());
 		GitExeStr(prm);
@@ -1530,56 +1529,95 @@ void __fastcall TGitViewer::CopyFileHashActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::DiffDetailActionExecute(TObject *Sender)
 {
-	TListBox *c_lp = CommitListBox;
-	int idx = c_lp->ItemIndex;	if (idx==-1) return;
-	git_rec *gp = (git_rec *)c_lp->Items->Objects[idx];
+	git_rec *gp = GetCurCommitPtr();		if (!gp) return;
+	UnicodeString fnam = GetDiffFileName();	if (fnam.IsEmpty()) return;
 
-	UnicodeString fnam = GetDiffFileName();
-	if (!fnam.IsEmpty()) {
-		UnicodeString prm = "diff";
-		UnicodeString fnam2;
-		UnicodeString fnam1 = get_GitDiffFiles(fnam, fnam2);
+	UnicodeString fnam2;
+	UnicodeString fnam1 = get_GitDiffFiles(fnam, fnam2);
+	UnicodeString prm = "diff";
 
-		if (gp->is_stash)
-			prm.cat_sprintf(_T(" %s %s"), gp->stash.c_str(), fnam2.c_str());
-		else if (gp->is_work)
-			prm.cat_sprintf(_T(" -- %s"), fnam1.c_str());
-		else if (gp->is_index)
-			prm.cat_sprintf(_T(" --cached -- %s"), fnam1.c_str());
-		else if (ParentID.IsEmpty())
-			prm.cat_sprintf(_T(" %s -- %s"), CommitID.c_str(), fnam1.c_str());
+	if (gp->is_stash)
+		prm.cat_sprintf(_T(" %s %s"), gp->stash.c_str(), fnam2.c_str());
+	else if (gp->is_work)
+		prm.cat_sprintf(_T(" -- %s"), fnam1.c_str());
+	else if (gp->is_index)
+		prm.cat_sprintf(_T(" --cached -- %s"), fnam1.c_str());
+	else if (ParentID.IsEmpty())
+		prm.cat_sprintf(_T(" %s -- %s"), CommitID.c_str(), fnam1.c_str());
+	else {
+		UnicodeString parent = get_tkn(ParentID, ' ');
+		if (SameText(fnam1, fnam2)) {
+			prm.cat_sprintf(_T(" %s %s"),  parent.c_str(), CommitID.c_str());
+			prm.cat_sprintf(_T(" -- %s"), add_quot_if_spc(fnam1).c_str());
+		}
 		else {
-			UnicodeString parent = get_tkn(ParentID, ' ');
-			if (SameText(fnam1, fnam2)) {
-				prm.cat_sprintf(_T(" %s %s"),  parent.c_str(), CommitID.c_str());
-				prm.cat_sprintf(_T(" -- %s"), add_quot_if_spc(fnam1).c_str());
-			}
-			else {
-				prm.cat_sprintf(_T(" %s:%s %s:%s"),
-					parent.c_str(), fnam1.c_str(), CommitID.c_str(), fnam2.c_str());
-			}
+			prm.cat_sprintf(_T(" %s:%s %s:%s"),
+				parent.c_str(), fnam1.c_str(), CommitID.c_str(), fnam2.c_str());
 		}
+	}
 
-		GitBusy = true;
-		std::unique_ptr<TStringList> o_lst(new TStringList());
-		bool ok = (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0);
-		GitBusy = false;
-		if (ok) {
-			UnicodeString tit = "$ git " + sha1_to_short(prm);
-			o_lst->Insert(0, tit);
-			GeneralInfoDlg->Caption = tit.sprintf(_T("差分詳細 - %s"), fnam2.c_str());
-			GeneralInfoDlg->fromGitView = true;
-			if (gp->is_work || gp->is_index)
-				GeneralInfoDlg->FileName = IncludeTrailingPathDelimiter(WorkDir) + slash_to_yen(fnam1);
-			GeneralInfoDlg->GenInfoList->Assign(o_lst.get());
-			GeneralInfoDlg->ShowModal();
-		}
+	GitBusy = true;
+	std::unique_ptr<TStringList> o_lst(new TStringList());
+	bool ok = (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0);
+	GitBusy = false;
+	if (ok) {
+		UnicodeString tit = "$ git " + sha1_to_short(prm);
+		o_lst->Insert(0, tit);
+		GeneralInfoDlg->Caption = tit.sprintf(_T("差分詳細 - %s"), fnam2.c_str());
+		GeneralInfoDlg->fromGitView = true;
+		if (gp->is_work || gp->is_index)
+			GeneralInfoDlg->FileName = IncludeTrailingPathDelimiter(WorkDir) + slash_to_yen(fnam1);
+		GeneralInfoDlg->GenInfoList->Assign(o_lst.get());
+		GeneralInfoDlg->ShowModal();
 	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::DiffDetailActionUpdate(TObject *Sender)
 {
 	((TAction *)Sender)->Enabled = !GetDiffFileName().IsEmpty();
+}
+//---------------------------------------------------------------------------
+//このファイルの内容を表示
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::ViewFileActionExecute(TObject *Sender)
+{
+	git_rec *gp = GetCurCommitPtr();	if (!gp) return;
+
+	UnicodeString fnam = GetDiffTextName();
+	if (!fnam.IsEmpty()) {
+		fnam = get_GitDiffFile2(fnam);
+
+		bool ok;
+		std::unique_ptr<TStringList> o_lst(new TStringList());
+		if (gp->is_work) {
+			fnam = IncludeTrailingPathDelimiter(WorkDir) + slash_to_yen(fnam);
+			ok = load_text_ex(fnam, o_lst.get())!=0;
+		}
+		else {
+			UnicodeString prm = "cat-file -p";
+			if (gp->is_stash)
+				prm.cat_sprintf(_T(" %s:./%s"), gp->stash.c_str(), fnam.c_str());
+			else if (gp->is_index)
+				prm.cat_sprintf(_T(" :%s"), fnam.c_str());
+			else
+				prm.cat_sprintf(_T(" %s:%s"), CommitID.c_str(), fnam.c_str());
+
+			ok = GitExeList(prm, o_lst.get(), "ファイル抽出中...");
+		}
+
+		if (ok) {
+			GeneralInfoDlg->Caption = UnicodeString().sprintf(_T("ファイル内容 - %s"), fnam.c_str());
+			GeneralInfoDlg->fromGitView = true;
+			GeneralInfoDlg->FileName = ExtractFileName(fnam);
+			GeneralInfoDlg->GenInfoList->Assign(o_lst.get());
+			GeneralInfoDlg->ShowModal();
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::ViewFileActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Enabled = !GetDiffTextName().IsEmpty();
 }
 
 //---------------------------------------------------------------------------
@@ -1767,16 +1805,12 @@ void __fastcall TGitViewer::UpdateLogActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::DiffToolActionExecute(TObject *Sender)
 {
-	TListBox *c_lp = CommitListBox;
-	int idx = c_lp->ItemIndex;	if (idx==-1) return;
-	git_rec *gp = (git_rec *)c_lp->Items->Objects[idx];
+	git_rec *gp = GetCurCommitPtr();		if (!gp) return;
+	UnicodeString fnam = GetDiffFileName();	if (fnam.IsEmpty()) return;
 
-	UnicodeString fnam = GetDiffFileName();
-	if (fnam.IsEmpty()) return;
-
-	UnicodeString prm = "difftool -y";
 	UnicodeString fnam2;
 	UnicodeString fnam1 = get_GitDiffFiles(fnam, fnam2);
+	UnicodeString prm = "difftool -y";
 
 	if (gp->is_stash)
 		prm.cat_sprintf(_T(" %s %s"), gp->stash.c_str(), fnam2.c_str());
@@ -1838,13 +1872,18 @@ void __fastcall TGitViewer::ConsoleActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::EditFileActionExecute(TObject *Sender)
 {
-	UnicodeString fnam = GetDiffFileName(true);
-	if (!fnam.IsEmpty()) {
-		if (fnam.Pos(" => ")) fnam =  get_tkn_r(fnam, " => ");
-		fnam = CommitID.IsEmpty()? IncludeTrailingPathDelimiter(WorkDir) + slash_to_yen(fnam)
-								 : SaveRevAsTemp(CommitID, fnam);
-		if (!fnam.IsEmpty() && !open_by_TextEditor(fnam)) msgbox_ERR(GlobalErrMsg);
-	}
+	git_rec *gp = GetCurCommitPtr();		if (!gp) return;
+	UnicodeString fnam = GetDiffFileName();	if (fnam.IsEmpty()) return;
+
+	fnam = get_GitDiffFile2(fnam);
+	if (gp->is_work)
+		fnam = IncludeTrailingPathDelimiter(WorkDir) + slash_to_yen(fnam);
+	else if (gp->is_index)
+		fnam = SaveRevAsTemp(EmptyStr, fnam);
+	else
+		fnam = SaveRevAsTemp(CommitID, fnam);
+
+	if (!fnam.IsEmpty() && !open_by_TextEditor(fnam)) msgbox_ERR(GlobalErrMsg);
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::EditFileActionUpdate(TObject *Sender)
@@ -1853,7 +1892,7 @@ void __fastcall TGitViewer::EditFileActionUpdate(TObject *Sender)
 	UnicodeString s = "テキストエディタで開く";
 	s += (CommitID.IsEmpty()? "(&E)" : " - Temp (&E)");
 	ap->Caption = s;
-	ap->Enabled = !GetDiffFileName(true).IsEmpty();
+	ap->Enabled = !GetDiffTextName().IsEmpty();
 }
 
 //---------------------------------------------------------------------------
@@ -1898,9 +1937,8 @@ void __fastcall TGitViewer::AddActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::AddActionUpdate(TObject *Sender)
 {
-	TListBox *lp = CommitListBox;
-	git_rec *gp = (lp->ItemIndex!=-1)? (git_rec *)lp->Items->Objects[lp->ItemIndex] : NULL;
 	TAction *ap = (TAction *)Sender;
+	git_rec *gp = GetCurCommitPtr();
 	ap->Enabled = (gp && gp->is_work && !GetDiffFileName(true).IsEmpty());
 }
 
@@ -1919,10 +1957,8 @@ void __fastcall TGitViewer::AddUActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::AddAllActionUpdate(TObject *Sender)
 {
-	TListBox *lp = CommitListBox;
-	git_rec *gp = (lp->ItemIndex!=-1)? (git_rec *)lp->Items->Objects[lp->ItemIndex] : NULL;
-
 	TAction *ap = (TAction *)Sender;
+	git_rec *gp = GetCurCommitPtr();
 	ap->Visible = (gp && gp->is_work);
 	ap->Enabled = ap->Visible;
 }
@@ -1948,9 +1984,8 @@ void __fastcall TGitViewer::ResetActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::ResetActionUpdate(TObject *Sender)
 {
-	TListBox *lp = CommitListBox;
-	git_rec *gp = (lp->ItemIndex!=-1)? (git_rec *)lp->Items->Objects[lp->ItemIndex] : NULL;
 	TAction *ap = (TAction *)Sender;
+	git_rec *gp = GetCurCommitPtr();
 	ap->Enabled = (gp && gp->is_index && !GetDiffFileName(true).IsEmpty());
 }
 //---------------------------------------------------------------------------

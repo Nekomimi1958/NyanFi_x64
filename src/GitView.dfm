@@ -567,6 +567,11 @@ object GitViewer: TGitViewer
       OnExecute = DiffDetailActionExecute
       OnUpdate = DiffDetailActionUpdate
     end
+    object ViewFileAction: TAction
+      Caption = #12371#12398#12501#12449#12452#12523#12398#20869#23481#12434#34920#31034'(&V)...'
+      OnExecute = ViewFileActionExecute
+      OnUpdate = ViewFileActionUpdate
+    end
     object UpdateLogAction: TAction
       Caption = #26356#26032'(&U)'
       OnExecute = UpdateLogActionExecute
@@ -727,6 +732,9 @@ object GitViewer: TGitViewer
     end
     object DiffDetailItem: TMenuItem
       Action = DiffDetailAction
+    end
+    object ViewFileItem: TMenuItem
+      Action = ViewFileAction
     end
     object Sep_d_2: TMenuItem
       Caption = '-'

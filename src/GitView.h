@@ -186,6 +186,8 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *StashPopItem;
 	TMenuItem *StashDropItem;
 	TMenuItem *Sep_c_5;
+	TAction *ViewFileAction;
+	TMenuItem *ViewFileItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -288,6 +290,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall StashPopActionUpdate(TObject *Sender);
 	void __fastcall StashApplyActionExecute(TObject *Sender);
 	void __fastcall StashDropActionExecute(TObject *Sender);
+	void __fastcall ViewFileActionExecute(TObject *Sender);
+	void __fastcall ViewFileActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString RefHEAD;
@@ -340,13 +344,6 @@ private:	// ユーザー宣言
 		return ((flag & GIT_FLAG_HEAD) && (flag & GIT_FLAG_LOCAL));
 	}
 
-	UnicodeString __fastcall GetDiffFileName(bool inc_u = false)
-	{
-		TListBox *lp = DiffListBox;
-		UnicodeString lbuf = ((lp->ItemIndex!=-1)? lp->Items->Strings[lp->ItemIndex] : EmptyStr);
-		return Trim(lbuf.Pos(" | ")? get_tkn(lbuf, " | ") : (inc_u && lbuf.Pos("? "))? get_tkn_r(lbuf, "? ") : EmptyStr);
-	}
-
 	void __fastcall SetCommitListIndex(int idx)
 	{
 		if (idx!=-1) {
@@ -361,7 +358,29 @@ private:	// ユーザー宣言
 		return (lp->ItemIndex!=-1)? (git_rec *)lp->Items->Objects[lp->ItemIndex] : NULL;
 	}
 
+	UnicodeString __fastcall GetDiffFileName(bool inc_u = false)
+	{
+		TListBox *lp = DiffListBox;
+		UnicodeString lbuf = ((lp->ItemIndex!=-1)? lp->Items->Strings[lp->ItemIndex] : EmptyStr);
+		return Trim(lbuf.Pos(" | ")? get_tkn(lbuf, " | ") : (inc_u && lbuf.Pos("? "))? get_tkn_r(lbuf, "? ") : EmptyStr);
+	}
+	UnicodeString __fastcall GetDiffTextName()
+	{
+		TListBox *lp = DiffListBox;
+		UnicodeString lbuf = ((lp->ItemIndex!=-1)? lp->Items->Strings[lp->ItemIndex] : EmptyStr);
+		if (lbuf.IsEmpty() || lbuf.Pos(" Bin ")) return EmptyStr;
+		return Trim(lbuf.Pos(" | ")? get_tkn(lbuf, " | ") : lbuf.Pos("? ")? get_tkn_r(lbuf, "? ") : EmptyStr);
+	}
+
 	UnicodeString __fastcall GetCurBranchName(bool lc_only = false, bool br_only = false, bool av_only = true);
+
+	void __fastcall ShowMsgHint(UnicodeString msg, TWinControl *cp = NULL)
+	{
+		if (msg.IsEmpty()) return;
+		if (!cp) cp = Screen->ActiveControl;
+		if (!cp) cp = this;
+		MsgHint->ActivateHintEx("\r\n" + msg + "\r\n", ScaledInt(480), ScaledInt(240), cp, col_bgHint);
+	}
 
 	void __fastcall WmFormShowed(TMessage &msg);
 

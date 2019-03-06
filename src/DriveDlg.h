@@ -60,7 +60,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall DriveHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
-	void __fastcall DriveGridKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall DriveGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall DriveGridDblClick(TObject *Sender);
 	void __fastcall DrivePropBtnClick(TObject *Sender);

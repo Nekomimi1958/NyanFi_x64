@@ -135,7 +135,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	gp->Name = "EditHistGrid";
 
 	StatusBar1->Visible = ShowStatusBarAction->Checked;
-	OpeToolBar->Visible = (!isRecent && !isTags && !isRepo);
+	OpeToolBar->Visible = (!isRecent && !isTags);
 	if (OpeToolBar->Visible && StatusBar1->Visible) {
 		OpeToolBar->Align = alNone;
 		OpeToolBar->Align = alBottom;
@@ -418,7 +418,7 @@ void __fastcall TEditHistoryDlg::UpdateList()
 
 	clear_FileList(HistBufList);
 
-	UnicodeString ptn = usr_Migemo->GetRegExPtn(MigemoAction->Checked, FilterEdit->Text);
+	UnicodeString ptn = OpeToolBar->Visible? usr_Migemo->GetRegExPtn(MigemoAction->Checked, FilterEdit->Text) : EmptyStr;
 	TRegExOptions opt; opt << roIgnoreCase;
 
 	//最近使ったファイル
@@ -547,23 +547,33 @@ void __fastcall TEditHistoryDlg::UpdateList()
 				GitInfList->Delete(i);
 			}
 			else {
+				bool ok = true;
 				TStringDynArray ibuf = get_csv_array(GitInfList->ValueFromIndex[i], 3);
-				file_rec *fp = cre_new_file_rec(dnam);
-				UnicodeString cmt_s, stt_s;
-				for (int j=0; j<ibuf.Length; j++) {
-					if (j==0) {
-						TDateTime dt;
-						if (str_to_DateTime(ibuf[0], &dt)) fp->f_time = dt;
-					}
-					else {
-						UnicodeString inam = get_tkn(ibuf[j], ": ");
-						UnicodeString ival = get_tkn_r(ibuf[j], ": ");
-						if		(SameText(inam, "Git-Commit")) cmt_s = ival;
-						else if (SameText(inam, "Git-Status")) stt_s = ival;
-					}
+				if (!ptn.IsEmpty()) {
+					UnicodeString s = dnam;
+					for (int j=1; j<ibuf.Length; j++) s.cat_sprintf(_T(" %s"), ibuf[j].c_str());
+					ok = TRegEx::IsMatch(s, ptn, opt);
 				}
-				fp->memo.sprintf(_T("%s\t%s"), cmt_s.c_str(), stt_s.c_str());
-				HistBufList->AddObject(fp->f_name, (TObject*)fp);
+
+				if (ok) {
+					file_rec *fp = cre_new_file_rec(dnam);
+					UnicodeString cmt_s, stt_s;
+					for (int j=0; j<ibuf.Length; j++) {
+						if (j==0) {
+							TDateTime dt;
+							if (str_to_DateTime(ibuf[0], &dt)) fp->f_time = dt;
+						}
+						else {
+							UnicodeString inam = get_tkn(ibuf[j], ": ");
+							UnicodeString ival = get_tkn_r(ibuf[j], ": ");
+							if		(SameText(inam, "Git-Commit")) cmt_s = ival;
+							else if (SameText(inam, "Git-Status")) stt_s = ival;
+						}
+					}
+					fp->memo.sprintf(_T("%s\t%s"), cmt_s.c_str(), stt_s.c_str());
+					HistBufList->AddObject(fp->f_name, (TObject*)fp);
+				}
+
 				i++;
 			}
 		}

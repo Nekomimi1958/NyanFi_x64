@@ -341,40 +341,22 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 //---------------------------------------------------------------------------
 void __fastcall TSelDriveDlg::DriveGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	TStringGrid *gp = (TStringGrid*)Sender;
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);	if (KeyStr.IsEmpty()) return;
 
-	//コンテキストメニュー
-	if (StartsText("ContextMenu", cmd_F)) {
-		Mouse->CursorPos = gp->ClientToScreen(Point(gp->ColWidths[0] + gp->ColWidths[1], 16));
-		ClearKeyBuff(true);
-		ShowDriveMenu();
-	}
-	//容量グラフ
-	else if (StartsText("DriveGraph", cmd_F)) {
-		ShowDriveGraph();
-	}
-
-	if (!is_DialogKey(Key)) Key = 0;
-}
-//---------------------------------------------------------------------------
-void __fastcall TSelDriveDlg::DriveGridKeyPress(TObject *Sender, System::WideChar &Key)
-{
 	UnicodeString dstr;
-
-	if (Key == VK_RETURN)
+	if (equal_ENTER(KeyStr)) {
 		dstr = getCurDrvStr();
-	else {
-		UnicodeString k = Key;
+	}
+	else if (KeyStr.Length()==1) {
 		for (int i=0; i<DriveGrid->RowCount; i++) {
-			if (StartsText(k, DriveGrid->Cells[0][i])) {
+			if (StartsText(KeyStr, DriveGrid->Cells[0][i])) {
 				dstr = DriveGrid->Cells[0][i];
 				break;
 			}
 		}
 	}
 
+	bool handled = true;
 	if (!dstr.IsEmpty()) {
 		if (ToRootCheckBox->Checked) dstr.UCAT_T(":"); else dstr.UCAT_T(":\\");
 		if (is_drive_accessible(dstr)) {
@@ -384,6 +366,23 @@ void __fastcall TSelDriveDlg::DriveGridKeyPress(TObject *Sender, System::WideCha
 		}
 		else beep_Warn();
 	}
+	else {
+		UnicodeString cmd_F = Key_to_CmdF(KeyStr);
+		//コンテキストメニュー
+		if (StartsText("ContextMenu", cmd_F)) {
+			TStringGrid *gp = (TStringGrid*)Sender;
+			Mouse->CursorPos = gp->ClientToScreen(Point(gp->ColWidths[0] + gp->ColWidths[1], 16));
+			ClearKeyBuff(true);
+			ShowDriveMenu();
+		}
+		//容量グラフ
+		else if (StartsText("DriveGraph", cmd_F)) {
+			ShowDriveGraph();
+		}
+		else handled = false;
+	}
+
+	if (!is_DialogKey(Key) || handled) Key = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -398,8 +397,7 @@ void __fastcall TSelDriveDlg::DriveGridMouseUp(TObject *Sender, TMouseButton But
 //---------------------------------------------------------------------------
 void __fastcall TSelDriveDlg::DriveGridDblClick(TObject *Sender)
 {
-	WideChar key = VK_RETURN;
-	DriveGridKeyPress(Sender, key);
+	perform_Key_RETURN((TControl*)Sender);
 }
 
 //---------------------------------------------------------------------------

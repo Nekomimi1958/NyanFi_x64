@@ -782,7 +782,7 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "InputCommands")) {
 		params.USET_T("\nEL : エコー、コマンドファイルの行番号表示\n");
 	}
-	else if (contained_wd_i(_T("CmdFileList|ListClipboard|MarkList|KeyList|FunctionList|UserDefList"), cmd)) {
+	else if (contained_wd_i(_T("CmdFileList|ListClipboard|MarkList|KeyList|FunctionList|RepositoryList|UserDefList"), cmd)) {
 		params.USET_T("\nFF : フィルタ欄にフォーカス\n");
 	}
 	else if (contained_wd_i(_T("Exit|Close"), cmd)) {
