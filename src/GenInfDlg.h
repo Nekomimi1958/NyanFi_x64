@@ -92,6 +92,8 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *NotifyBtn;
 	TToolButton *ToolButton5;
 	TToolButton *WatchBtn;
+	TAction *CopyValAction;
+	TMenuItem *InfEditCopyValItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -147,6 +149,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InfPopupMenuPopup(TObject *Sender);
 	void __fastcall ToggleActionExecute(TObject *Sender);
 	void __fastcall TailActionUpdate(TObject *Sender);
+	void __fastcall CopyValActionExecute(TObject *Sender);
+	void __fastcall CopyValActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	int  MaxNameWidth;

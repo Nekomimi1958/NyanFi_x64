@@ -8121,7 +8121,7 @@ bool __fastcall TNyanFiForm::ChangeAdsList(UnicodeString fnam, int tag)
 	if (hFS!=INVALID_HANDLE_VALUE) {
 		do {
 			UnicodeString snam = get_tkn(sd.cStreamName, ":$DATA");
-			if (remove_top_s(snam, ":")) {
+			if (remove_top_s(snam, ":") && !snam.IsEmpty()) {
 				//€–Ú‚ğì¬
 				file_rec *fp = cre_new_file_rec();
 				fp->tag 	 = tag;

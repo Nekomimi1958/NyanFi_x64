@@ -198,6 +198,9 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object InfEditCopyItem: TMenuItem
       Action = CopyAction
     end
+    object InfEditCopyValItem: TMenuItem
+      Action = CopyValAction
+    end
     object InfEditSelectAllItem: TMenuItem
       Action = SelAllAction
     end
@@ -282,6 +285,11 @@ object GeneralInfoDlg: TGeneralInfoDlg
       Caption = #12467#12500#12540'(&C)'
       OnExecute = CopyActionExecute
       OnUpdate = CopyActionUpdate
+    end
+    object CopyValAction: TAction
+      Caption = #12459#12540#12477#12523#34892#12398#20516#12434#12467#12500#12540'(&X)'
+      OnExecute = CopyValActionExecute
+      OnUpdate = CopyValActionUpdate
     end
     object SelAllAction: TAction
       Caption = #12377#12409#12390#36984#25246'(&A)'

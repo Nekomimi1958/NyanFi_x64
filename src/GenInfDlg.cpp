@@ -1033,6 +1033,25 @@ void __fastcall TGeneralInfoDlg::CopyActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = (GenListBox->SelCount>0);
 }
+
+//---------------------------------------------------------------------------
+//値をコピー
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::CopyValActionExecute(TObject *Sender)
+{
+	TListBox *lp = GenListBox;
+	int idx = lp->ItemIndex;
+	if (idx!=-1) copy_to_Clipboard(get_tkn_r(lp->Items->Strings[idx], '='));
+}
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::CopyValActionUpdate(TObject *Sender)
+{
+	TAction *ap  = (TAction*)Sender;
+	ap->Visible  = isVarList;
+	TListBox *lp = GenListBox;
+	ap->Enabled  = ap->Visible && (lp->ItemIndex!=-1) && lp->Items->Strings[lp->ItemIndex].Pos('=');
+}
+
 //---------------------------------------------------------------------------
 //すべて選択
 //---------------------------------------------------------------------------
@@ -1220,8 +1239,9 @@ void __fastcall TGeneralInfoDlg::ErrOnlyActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::ErrOnlyActionUpdate(TObject *Sender)
 {
-	((TAction*)Sender)->Visible = isLog;
-	((TAction*)Sender)->Checked = ErrOnly;
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = isLog;
+	ap->Checked = ErrOnly;
 }
 
 //---------------------------------------------------------------------------
