@@ -229,7 +229,7 @@ void __fastcall TAppListDlg::FormDestroy(TObject *Sender)
 //ステータスバーの描画
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-          const TRect &Rect)
+	const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Brush->Color = col_bgSttBar;

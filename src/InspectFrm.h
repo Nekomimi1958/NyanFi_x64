@@ -47,10 +47,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InspectGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall CopyItemClick(TObject *Sender);
 	void __fastcall InspectHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-          const TRect &Rect, bool Pressed);
+		const TRect &Rect, bool Pressed);
 	void __fastcall InspectHeaderResize(TObject *Sender);
 	void __fastcall CodePageHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-          const TRect &Rect, bool Pressed);
+		const TRect &Rect, bool Pressed);
 	void __fastcall CodePageHeaderResize(TObject *Sender);
 
 private:	// ユーザー宣言

@@ -79,7 +79,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall RegDirHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-          const TRect &Rect, bool Pressed);
+		const TRect &Rect, bool Pressed);
 	void __fastcall PropertyActionExecute(TObject *Sender);
 	void __fastcall PropertyActionUpdate(TObject *Sender);
 	void __fastcall SaveAsWorkActionExecute(TObject *Sender);

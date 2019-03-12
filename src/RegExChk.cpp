@@ -355,7 +355,7 @@ void __fastcall TRegExChecker::RefFileBtnClick(TObject *Sender)
 //Œ‹‰Ê‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TRegExChecker::ResListBoxDrawItem(TWinControl *Control, int Index,
-          TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas *cv  = lp->Canvas;

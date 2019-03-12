@@ -228,7 +228,7 @@ void __fastcall TExTxtViewer::TextScrollBarChange(TObject *Sender)
 //マウス操作
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::TextPaintBoxMouseDown(TObject *Sender, TMouseButton Button,
-          TShiftState Shift, int X, int Y)
+	TShiftState Shift, int X, int Y)
 {
 	CancelKeySeq();
 
@@ -236,13 +236,13 @@ void __fastcall TExTxtViewer::TextPaintBoxMouseDown(TObject *Sender, TMouseButto
 }
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::TextPaintBoxMouseMove(TObject *Sender, TShiftState Shift,
-          int X, int Y)
+	int X, int Y)
 {
 	if (Shift.Contains(ssLeft)) ExViewer->onMouseMove(X, Y);
 }
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::TextPaintBoxMouseUp(TObject *Sender, TMouseButton Button,
-          TShiftState Shift, int X, int Y)
+	TShiftState Shift, int X, int Y)
 {
 	ExViewer->onMouseUp();
 }
@@ -256,7 +256,7 @@ void __fastcall TExTxtViewer::TextPaintBoxDblClick(TObject *Sender)
 //情報ヘッダの描画
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-          const TRect &Rect)
+	const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Font->Assign(ViewHdrFont);
@@ -677,7 +677,7 @@ bool __fastcall TExTxtViewer::ExeCommandV(const _TCHAR *cmd)
 
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
-          TPoint &MousePos, bool &Handled)
+	TPoint &MousePos, bool &Handled)
 {
 	ClearNopStt();
 

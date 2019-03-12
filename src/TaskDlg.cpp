@@ -74,7 +74,7 @@ void __fastcall TTaskManDlg::FormDestroy(TObject *Sender)
 //ƒwƒbƒ_‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TTaskManDlg::TaskHeaderDrawSection(THeaderControl *HeaderControl,
-          THeaderSection *Section, const TRect &Rect, bool Pressed)
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
 {
 	draw_SortHeader(HeaderControl, Section, Rect);
 }
@@ -85,7 +85,7 @@ void __fastcall TTaskManDlg::TaskHeaderResize(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 void __fastcall TTaskManDlg::TaskHeaderSectionResize(THeaderControl *HeaderControl,
-		THeaderSection *Section)
+	THeaderSection *Section)
 {
 	set_GridFromHeader(TaskHeader, TaskGrid);
 

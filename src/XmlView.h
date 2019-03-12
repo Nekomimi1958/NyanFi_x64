@@ -70,7 +70,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ExpandItemClick(TObject *Sender);
 	void __fastcall CollapseItemClick(TObject *Sender);
 	void __fastcall XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, TTreeNode *Node,
-          TCustomDrawState State, bool &DefaultDraw);
+		TCustomDrawState State, bool &DefaultDraw);
 	void __fastcall OpenUrlActionExecute(TObject *Sender);
 	void __fastcall OpenUrlActionUpdate(TObject *Sender);
 	void __fastcall FindDownActionExecute(TObject *Sender);

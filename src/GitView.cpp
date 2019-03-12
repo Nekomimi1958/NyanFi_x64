@@ -614,10 +614,11 @@ void __fastcall TGitViewer::UpdateDiffList(
 		if (gp->diff_inf.IsEmpty()) {
 			UnicodeString prm = "diff --stat-width=120 ";
 			UnicodeString parent = get_tkn(ParentID, ' ');
-			if		(gp->is_work)		;
-			else if (gp->is_index)		 prm += "--cached";
-			else if (ParentID.IsEmpty()) prm += CommitID;
-			else 						 prm += (parent + " " + CommitID);
+			if (parent.IsEmpty()) parent = GIT_NULL_ID;
+
+			if		(gp->is_work)	;
+			else if (gp->is_index)	prm += "--cached";
+			else					prm += (parent + " " + CommitID);
 
 			if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" -- \"%s\""), FilterName.c_str());
 			GitBusy = true;
@@ -1542,10 +1543,9 @@ void __fastcall TGitViewer::DiffDetailActionExecute(TObject *Sender)
 		prm.cat_sprintf(_T(" -- %s"), fnam1.c_str());
 	else if (gp->is_index)
 		prm.cat_sprintf(_T(" --cached -- %s"), fnam1.c_str());
-	else if (ParentID.IsEmpty())
-		prm.cat_sprintf(_T(" %s -- %s"), CommitID.c_str(), fnam1.c_str());
 	else {
 		UnicodeString parent = get_tkn(ParentID, ' ');
+		if (parent.IsEmpty()) parent = GIT_NULL_ID;
 		if (SameText(fnam1, fnam2)) {
 			prm.cat_sprintf(_T(" %s %s"),  parent.c_str(), CommitID.c_str());
 			prm.cat_sprintf(_T(" -- %s"), add_quot_if_spc(fnam1).c_str());
@@ -1818,15 +1818,8 @@ void __fastcall TGitViewer::DiffToolActionExecute(TObject *Sender)
 		prm.cat_sprintf(_T(" %s"), fnam2.c_str());
 	else if (gp->is_index)
 		prm.cat_sprintf(_T(" --cached %s"), fnam2.c_str());
-	else if (!CommitID.IsEmpty()) {
-		if (!ParentID.IsEmpty()) {
-			prm.cat_sprintf(_T(" %s:%s %s:%s"),
-				get_tkn(ParentID, ' ').c_str(), fnam1.c_str(),
-				CommitID.c_str(), fnam2.c_str());
-		}
-		else {
-			prm.cat_sprintf(_T(" %s %s"), CommitID.c_str(), fnam2.c_str());
-		}
+	else {
+		prm.cat_sprintf(_T(" %s:%s %s:%s"), get_tkn(ParentID, ' ').c_str(), fnam1.c_str(), CommitID.c_str(), fnam2.c_str());
 	}
 
 	if (!GitShellExe(prm, WorkDir)) msgbox_ERR(USTR_FaildExec);
@@ -1834,7 +1827,9 @@ void __fastcall TGitViewer::DiffToolActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::DiffActionUpdate(TObject *Sender)
 {
-	((TAction *)Sender)->Enabled = !GetDiffFileName().IsEmpty();
+	git_rec *gp = GetCurCommitPtr();
+	((TAction *)Sender)->Enabled = !GetDiffFileName().IsEmpty()
+			&& ((gp && (gp->is_stash || gp->is_work || gp->is_index)) || (!CommitID.IsEmpty() && !ParentID.IsEmpty()));
 }
 
 //---------------------------------------------------------------------------

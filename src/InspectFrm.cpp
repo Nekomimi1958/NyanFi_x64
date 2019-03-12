@@ -86,7 +86,7 @@ void __fastcall TInspectForm::FormDestroy(TObject *Sender)
 //インスペクタ・ヘッダの描画
 //---------------------------------------------------------------------------
 void __fastcall TInspectForm::InspectHeaderDrawSection(THeaderControl *HeaderControl,
-          THeaderSection *Section, const TRect &Rect, bool Pressed)
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
 {
 	draw_SortHeader(HeaderControl, Section, Rect);
 }
@@ -97,7 +97,7 @@ void __fastcall TInspectForm::InspectHeaderResize(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 void __fastcall TInspectForm::InspectHeaderSectionResize(THeaderControl *HeaderControl,
-		THeaderSection *Section)
+	THeaderSection *Section)
 {
 	set_GridFromHeader(InspectHeader, InspectGrid);
 	InspectScrPanel->UpdateKnob();
@@ -107,7 +107,7 @@ void __fastcall TInspectForm::InspectHeaderSectionResize(THeaderControl *HeaderC
 //コードページ・ヘッダの描画
 //---------------------------------------------------------------------------
 void __fastcall TInspectForm::CodePageHeaderDrawSection(THeaderControl *HeaderControl,
-          THeaderSection *Section, const TRect &Rect, bool Pressed)
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
 {
 	draw_SortHeader(HeaderControl, Section, Rect);
 }

@@ -176,7 +176,7 @@ void __fastcall TDriveGraph::SetStatus(int idx)
 
 //---------------------------------------------------------------------------
 void __fastcall TDriveGraph::PaintBox1MouseDown(TObject *Sender, TMouseButton Button,
-          TShiftState Shift, int X, int Y)
+	TShiftState Shift, int X, int Y)
 {
 	if (DataList->Count>0 && GraphTopX<X) {
 		int p = Y/BarSize;
@@ -222,7 +222,7 @@ void __fastcall TDriveGraph::OptionChanged(TObject *Sender)
 //ホイール操作
 //---------------------------------------------------------------------------
 void __fastcall TDriveGraph::FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
-          TPoint &MousePos, bool &Handled)
+	TPoint &MousePos, bool &Handled)
 {
 	//ズーム
 	if (SameText(get_ShiftStr(Shift), KeyStr_Ctrl)) {

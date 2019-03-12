@@ -147,7 +147,7 @@ void __fastcall TCmdFileListDlg::FormDestroy(TObject *Sender)
 //ƒwƒbƒ_‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::CmdFileHeaderDrawSection(THeaderControl *HeaderControl,
-          THeaderSection *Section, const TRect &Rect, bool Pressed)
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
 {
 	draw_SortHeader(HeaderControl, Section, Rect);
 }
@@ -158,7 +158,7 @@ void __fastcall TCmdFileListDlg::CmdFileHeaderResize(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::CmdFileHeaderSectionResize(THeaderControl *HeaderControl,
-		THeaderSection *Section)
+	THeaderSection *Section)
 {
 	set_GridFromHeader(CmdFileHeader, CmdFileGrid);
 	GridScrPanel->UpdateKnob();

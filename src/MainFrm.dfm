@@ -2448,6 +2448,9 @@ object NyanFiForm: TNyanFiForm
       object FindTagItem: TMenuItem
         Action = FindTagAction
       end
+      object FindFolderIconItem: TMenuItem
+        Action = FindFolderIconAction
+      end
       object OK1: TMenuItem
         Action = FindDuplDlgAction
       end
@@ -3831,6 +3834,12 @@ object NyanFiForm: TNyanFiForm
       Category = 'Command'
       OnExecute = FindFileDirDlgActionExecute
       OnUpdate = FindDlgActionUpdate
+    end
+    object FindFolderIconAction: TAction
+      Category = 'Command'
+      Caption = #12501#12457#12523#12480#12450#12452#12467#12531#26908#32034'(&I)...'
+      OnExecute = FindFolderIconActionExecute
+      OnUpdate = FindFolderIconActionUpdate
     end
     object FindMarkAction: TAction
       Category = 'Command'

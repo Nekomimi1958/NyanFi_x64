@@ -77,8 +77,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall HostListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-          TOwnerDrawState State);
+	void __fastcall HostListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall ConnectActionUpdate(TObject *Sender);
 	void __fastcall AnonyCheckBoxClick(TObject *Sender);
 	void __fastcall HostListBoxDblClick(TObject *Sender);
@@ -86,7 +85,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefDirBtnClick(TObject *Sender);
 	void __fastcall RefSoundBtnClick(TObject *Sender);
 	void __fastcall TestSoundBtnClick(TObject *Sender);
-
 
 private:	// ユーザー宣言
 	TStringList *HostList;

@@ -4654,6 +4654,7 @@ void clear_FindStt(flist_stt *lst_stt)
 	lst_stt->find_TAG_all = false;
 	lst_stt->find_DUPL	  = false;
 	lst_stt->find_HLINK   = false;
+	lst_stt->find_DICON   = false;
 
 	lst_stt->find_RegEx   = false;
 	lst_stt->find_And	  = false;
@@ -4674,6 +4675,7 @@ void clear_FindStt(flist_stt *lst_stt)
 	lst_stt->find_Mask	  = EmptyStr;
 	lst_stt->find_Keywd   = EmptyStr;
 	lst_stt->find_Tags	  = EmptyStr;
+	lst_stt->find_Icons   = EmptyStr;
 
 	lst_stt->find_DT_mode = 0;
 	lst_stt->find_SZ_mode = 0;
@@ -7106,6 +7108,8 @@ void GetFileInfList(
 
 	flist_stt *lst_stt = (fp->tag!=-1)? &ListStt[fp->tag] : NULL;
 	bool is_ads = lst_stt && lst_stt->is_ADS;
+	bool is_find_all = lst_stt && lst_stt->is_Find
+		&& (lst_stt->find_DICON || lst_stt->find_TAG || (lst_stt->find_MARK && lst_stt->find_SubList->Count==0));
 
 	TStringList *i_list = fp->inf_list;
 	i_list->Clear();
@@ -7120,6 +7124,7 @@ void GetFileInfList(
 		if (lst_stt) {
 			if (lst_stt->is_Find) {
 				lbuf.sprintf(_T("<結果リスト%s>"),
+					lst_stt->find_DICON? _T(" - フォルダアイコン") :
 					lst_stt->find_HLINK? _T(" - ハードリンク") :
 					lst_stt->find_MARK?  _T(" - マーク") :
 					lst_stt->find_TAG?   _T(" - タグ") :
@@ -7147,7 +7152,10 @@ void GetFileInfList(
 	//パス名
 	lbuf = fp->p_name;
 	if (fp->is_up && lst_stt && lst_stt->is_Find) {
-		if (lst_stt->find_MARK) {
+		if (is_find_all) {
+			lbuf = "<全体>";
+		}
+		else if (lst_stt->find_MARK) {
 			if (lst_stt->find_SubList->Count==0) lbuf.USET_T("*");
 		}
 		else {
@@ -7167,7 +7175,6 @@ void GetFileInfList(
 	i_list->AddObject(lbuf, (TObject*)(LBFLG_STD_FINF|LBFLG_PATH_FIF));
 
 	//属性、サイズ、タイムスタンプ
-	UnicodeString a_s_t_str;
 	if (!fp->is_virtual) {
 		if (is_inv_unc || is_root_unc(fp->f_name)) {
 			if (is_inv_unc) {
@@ -7206,122 +7213,122 @@ void GetFileInfList(
 		get_filename_warn(fp->f_name, i_list, fp->is_dir);
 
 	//ディレクトリ内情報
-	if (fp->is_dir) {
-		if (!is_inv_unc) {
-			//FTPリモート
-			if (fp->is_ftp) {
-				add_PropLine(_T("種類"), (fp->is_sym? "シンボリックリンク" : "ディレクトリ"), i_list);
-				//ファイル数、ディレクトリ数
-				if (fp->is_up && lst_stt) {
-					if (lst_stt->f_cnt!=-1)
-						add_PropLine(_T("ファイル数"), get_size_str_B(lst_stt->f_cnt, 0), i_list);
-					if (lst_stt->d_cnt!=-1)
-						add_PropLine(_T("ディレクトリ数"), get_size_str_B(lst_stt->d_cnt, 0), i_list);
-				}
-			}
-			//その他
-			else {
-				bool is_git_top = false;
-				UnicodeString rpnam = IncludeTrailingPathDelimiter(!fp->is_up? fp->f_name : fp->p_name);
+	if (is_inv_unc) return;
 
-				//種類
-				if (is_ads) {
-					add_PropLine(_T("種類"), "代替データストリーム", i_list);
+	if (fp->is_dir) {
+		//FTPリモート
+		if (fp->is_ftp) {
+			add_PropLine(_T("種類"), (fp->is_sym? "シンボリックリンク" : "ディレクトリ"), i_list);
+			//ファイル数、ディレクトリ数
+			if (fp->is_up && lst_stt) {
+				if (lst_stt->f_cnt!=-1)
+					add_PropLine(_T("ファイル数"), get_size_str_B(lst_stt->f_cnt, 0), i_list);
+				if (lst_stt->d_cnt!=-1)
+					add_PropLine(_T("ディレクトリ数"), get_size_str_B(lst_stt->d_cnt, 0), i_list);
+			}
+		}
+		//その他
+		else {
+			bool is_git_top = false;
+			UnicodeString rpnam = IncludeTrailingPathDelimiter(!fp->is_up? fp->f_name : fp->p_name);
+
+			//種類
+			if (is_ads) {
+				add_PropLine(_T("種類"), "代替データストリーム", i_list);
+			}
+			else if (fp->is_sym) {
+				add_PropLine(_T("種類"), fp->is_jct? "ジャンクション" : "シンボリックリンク", i_list);
+			}
+			else if (!is_find_all) {
+				UnicodeString tmp = "ディレクトリ";
+				if (!fp->is_virtual) {
+					is_git_top = dir_exists(rpnam + "\\.git");
+					if (is_git_top) tmp.UCAT_T(" (リポジトリ)");
+					if (is_ProtectDir(rpnam)) tmp.UCAT_T(" (削除制限)");
+				}
+				add_PropLine(_T("種類"), tmp, i_list);
+			}
+
+			//リンク先
+			if (!fp->l_name.IsEmpty()) {
+				add_PropLine(_T("リンク先"), fp->l_name, i_list, LBFLG_PATH_FIF);
+				if (file_exists(fp->l_name)) {
+					i_list->Add(EmptyStr);
+					i_list->AddObject(get_FileInfStr(fp->l_name), (TObject*)LBFLG_STD_FINF);
 				}
 				else if (fp->is_sym) {
-					add_PropLine(_T("種類"), fp->is_jct? "ジャンクション" : "シンボリックリンク", i_list);
+					add_WarnLine("存在しないオブジェクトへのリンク", i_list);
 				}
-				else {
-					UnicodeString tmp = "ディレクトリ";
-					if (!fp->is_virtual) {
-						is_git_top = dir_exists(rpnam + "\\.git");
-						if (is_git_top) tmp.UCAT_T(" (リポジトリ)");
-						if (is_ProtectDir(rpnam)) tmp.UCAT_T(" (削除制限)");
-					}
-					add_PropLine(_T("種類"), tmp, i_list);
+			}
+
+			//ファイル、ディレクトリ数
+			if (lst_stt) {
+				int f_cnt  = fp->is_up? lst_stt->f_cnt : fp->f_count;
+				int d_cnt  = fp->is_up? lst_stt->d_cnt : fp->d_count;
+				__int64 f_size	 = fp->is_up? lst_stt->cur_total : fp->f_size;
+				__int64 o_size	 = fp->is_up? lst_stt->occ_total : fp->o_size;
+				__int64 c_size	 = fp->is_up? lst_stt->cmp_total : fp->c_size;
+				__int64 drv_size = lst_stt->drive_Total;
+				if (f_cnt!=-1 && !is_find_all) {
+					lbuf = make_PropLine(is_ads? _T("ストリーム数") : _T("ファイル数"), get_size_str_B(f_cnt, 0));
+					if (fp->is_up && lst_stt->sub_counted)
+						lbuf.cat_sprintf(_T(" / %s"), get_size_str_B(lst_stt->f_cnt_total, 0).c_str());
+					i_list->Add(lbuf);
+				}
+				if (!is_ads && d_cnt!=-1) {
+					lbuf = make_PropLine(_T("ディレクトリ数"), get_size_str_B(d_cnt, 0));
+					if (fp->is_up && lst_stt->sub_counted)
+						lbuf.cat_sprintf(_T(" / %s"), get_size_str_B(lst_stt->d_cnt_total, 0).c_str());
+					i_list->Add(lbuf);
 				}
 
-				//リンク先
-				if (!fp->l_name.IsEmpty()) {
-					add_PropLine(_T("リンク先"), fp->l_name, i_list, LBFLG_PATH_FIF);
-					if (file_exists(fp->l_name)) {
-						i_list->Add(EmptyStr);
-						i_list->AddObject(get_FileInfStr(fp->l_name), (TObject*)LBFLG_STD_FINF);
-					}
-					else if (fp->is_sym) {
-						add_WarnLine("存在しないオブジェクトへのリンク", i_list);
-					}
-				}
-
-				//ファイル、ディレクトリ数
-				if (lst_stt) {
-					int f_cnt  = fp->is_up? lst_stt->f_cnt : fp->f_count;
-					int d_cnt  = fp->is_up? lst_stt->d_cnt : fp->d_count;
-					__int64 f_size	 = fp->is_up? lst_stt->cur_total : fp->f_size;
-					__int64 o_size	 = fp->is_up? lst_stt->occ_total : fp->o_size;
-					__int64 c_size	 = fp->is_up? lst_stt->cmp_total : fp->c_size;
-					__int64 drv_size = lst_stt->drive_Total;
-					if (f_cnt!=-1) {
-						lbuf = make_PropLine(is_ads? _T("ストリーム数") : _T("ファイル数"), get_size_str_B(f_cnt, 0));
-						if (fp->is_up && lst_stt->sub_counted)
-							lbuf.cat_sprintf(_T(" / %s"), get_size_str_B(lst_stt->f_cnt_total, 0).c_str());
-						i_list->Add(lbuf);
-					}
-					if (!is_ads && d_cnt!=-1) {
-						lbuf = make_PropLine(_T("ディレクトリ数"), get_size_str_B(d_cnt, 0));
-						if (fp->is_up && lst_stt->sub_counted)
-							lbuf.cat_sprintf(_T(" / %s"), get_size_str_B(lst_stt->d_cnt_total, 0).c_str());
-						i_list->Add(lbuf);
-					}
-
-					//サイズ
-					if (f_size>0) {
-						i_list->Add(get_PropTitle(_T("合計サイズ")).cat_sprintf(_T("%s (%s)"),
-							get_size_str_G(f_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(f_size, 0).c_str()));
-						if (!fp->is_virtual && o_size>0) {
-							i_list->Add(get_PropTitle(_T("占有サイズ")).cat_sprintf(_T("%s (%s)"),
-								get_size_str_G(o_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(o_size, 0).c_str()));
-							__int64 g_size = o_size - f_size;
-							i_list->Add(get_PropTitle(_T("クラスタgap")).cat_sprintf(_T("%s (%s) %4.1f%%"),
-								get_size_str_G(g_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(g_size, 0).c_str(),
-								100.0 * g_size/o_size));
-							if (drv_size>0) {
+				//サイズ
+				if (f_size>0) {
+					i_list->Add(get_PropTitle(_T("合計サイズ")).cat_sprintf(_T("%s (%s)"),
+						get_size_str_G(f_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(f_size, 0).c_str()));
+					if (!fp->is_virtual && o_size>0) {
+						i_list->Add(get_PropTitle(_T("占有サイズ")).cat_sprintf(_T("%s (%s)"),
+							get_size_str_G(o_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(o_size, 0).c_str()));
+						__int64 g_size = o_size - f_size;
+						i_list->Add(get_PropTitle(_T("クラスタgap")).cat_sprintf(_T("%s (%s) %4.1f%%"),
+							get_size_str_G(g_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(g_size, 0).c_str(),
+							100.0 * g_size/o_size));
+						if (drv_size>0) {
+							i_list->Add(
+								get_PropTitle(_T("ドライブ占有率")).cat_sprintf(_T("%6.2f%%"), 100.0 * o_size/drv_size));
+						}
+						//圧縮
+						if (c_size>=0 && c_size<f_size) {
+							i_list->Add(EmptyStr);
+							i_list->Add(get_PropTitle(_T("圧縮サイズ")).cat_sprintf(_T("%s (%s)"),
+								get_size_str_G(c_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(c_size, 0).c_str()));
+							i_list->Add(get_PropTitle(_T("圧縮率")).cat_sprintf(_T("%5.1f %"), 100.0 * c_size/f_size));
+							if (fp->is_up && drv_size>0) {
 								i_list->Add(
-									get_PropTitle(_T("ドライブ占有率")).cat_sprintf(_T("%6.2f%%"), 100.0 * o_size/drv_size));
-							}
-							//圧縮
-							if (c_size>=0 && c_size<f_size) {
-								i_list->Add(EmptyStr);
-								i_list->Add(get_PropTitle(_T("圧縮サイズ")).cat_sprintf(_T("%s (%s)"),
-									get_size_str_G(c_size, 10, SizeDecDigits, 1).c_str(), get_size_str_B(c_size, 0).c_str()));
-								i_list->Add(get_PropTitle(_T("圧縮率")).cat_sprintf(_T("%5.1f %"), 100.0 * c_size/f_size));
-								if (fp->is_up && drv_size>0) {
-									i_list->Add(
-										get_PropTitle(_T("対ドライブ比率")).cat_sprintf(_T("%6.2f%%"), 100.0 * c_size/drv_size));
-								}
+									get_PropTitle(_T("対ドライブ比率")).cat_sprintf(_T("%6.2f%%"), 100.0 * c_size/drv_size));
 							}
 						}
 					}
 				}
+			}
 
-				if (!fp->is_virtual) {
-					UnicodeString cfg_nam = get_dotNaynfi(fp->is_up? fp->p_name : fp->f_name);
-					//説明
-					if (file_exists(cfg_nam)) {
-						std::unique_ptr<TStringList> cfg_lst(new TStringList());
-						load_text_ex(cfg_nam, cfg_lst.get());
-						add_PropLine_if(_T("説明"), cfg_lst->Values["Description"], i_list);
-					}
+			if (!fp->is_virtual && !is_find_all) {
+				UnicodeString cfg_nam = get_dotNaynfi(fp->is_up? fp->p_name : fp->f_name);
+				//説明
+				if (file_exists(cfg_nam)) {
+					std::unique_ptr<TStringList> cfg_lst(new TStringList());
+					load_text_ex(cfg_nam, cfg_lst.get());
+					add_PropLine_if(_T("説明"), cfg_lst->Values["Description"], i_list);
+				}
 
-					//同期先
-					std::unique_ptr<TStringList> syn_lst(new TStringList());
-					get_SyncDstList(fp->is_up? fp->p_name : fp->f_name, syn_lst.get());
-					if (syn_lst->Count>1) {
-						i_list->Add(EmptyStr);
-						for (int i=1; i<syn_lst->Count; i++) {
-							add_PropLine(UnicodeString().sprintf(_T("同期先%u"), i),
-								syn_lst->Strings[i], i_list, LBFLG_PATH_FIF);
-						}
+				//同期先
+				std::unique_ptr<TStringList> syn_lst(new TStringList());
+				get_SyncDstList(fp->is_up? fp->p_name : fp->f_name, syn_lst.get());
+				if (syn_lst->Count>1) {
+					i_list->Add(EmptyStr);
+					for (int i=1; i<syn_lst->Count; i++) {
+						add_PropLine(UnicodeString().sprintf(_T("同期先%u"), i),
+							syn_lst->Strings[i], i_list, LBFLG_PATH_FIF);
 					}
 				}
 
@@ -7332,10 +7339,10 @@ void GetFileInfList(
 						add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), i_list);
 					get_GitInf(rpnam, i_list);
 				}
-
-				//不用なセパレータを削除
-				if (i_list->Count>0 && i_list->Strings[i_list->Count - 1].IsEmpty()) i_list->Delete(i_list->Count - 1);
 			}
+
+			//不用なセパレータを削除
+			if (i_list->Count>0 && i_list->Strings[i_list->Count - 1].IsEmpty()) i_list->Delete(i_list->Count - 1);
 		}
 
 		//拡張子別ファイル数
@@ -7372,7 +7379,7 @@ void GetFileInfList(
 		}
 	}
 
-	if (fp->is_dir || is_inv_unc) return;
+	if (fp->is_dir) return;
 
 	fp->is_video = test_FileExt(fp->f_ext, FEXT_VIDEO);
 
@@ -8784,30 +8791,15 @@ void get_FolderIconList(TStringList *lst)
 	lst->Clear();
 	FldIcoRWLock->BeginWrite();
 	for (int i=0; i<FolderIconList->Count; i++) {
-		UnicodeString inam = FolderIconList->ValueFromIndex[i];
-		if (lst->IndexOf(inam)==-1) lst->Add(inam);
+		UnicodeString inam = to_absolute_name(FolderIconList->ValueFromIndex[i]);
+		int idx = lst->IndexOf(inam);
+		if (idx!=-1)
+			lst->Objects[idx] = (TObject*)((NativeInt)lst->Objects[idx] + 1);
+		else
+			lst->AddObject(inam, (TObject*)(NativeInt)1);
 	}
 	FldIcoRWLock->EndWrite();
-
-	//絶対パスに変換
-	for (int i=0; i<lst->Count; i++) lst->Strings[i] = to_absolute_name(lst->Strings[i]);
-
-	//重複を削除
-	if (lst->Count>1) {
-		lst->Sort();
-		UnicodeString laststr = lst->Strings[0];
-		int i = 1;
-		while (i<lst->Count) {
-			UnicodeString lbuf = lst->Strings[i];
-			if (SameStr(laststr, lbuf)) {
-				lst->Delete(i);
-			}
-			else {
-				laststr = lbuf;
-				i++;
-			}
-		}
-	}
+	lst->Sort();
 }
 
 //---------------------------------------------------------------------------

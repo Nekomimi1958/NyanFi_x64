@@ -87,7 +87,7 @@ void __fastcall TSelDriveDlg::FormDestroy(TObject *Sender)
 //ƒwƒbƒ_‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TSelDriveDlg::DriveHeaderDrawSection(THeaderControl *HeaderControl,
-          THeaderSection *Section, const TRect &Rect, bool Pressed)
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
 {
 	draw_SortHeader(HeaderControl, Section, Rect);
 }

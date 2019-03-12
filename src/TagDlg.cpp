@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
 //  タグ設定/検索														//
+//  フォルダアイコン検索												//
 //----------------------------------------------------------------------//
 #include <vcl.h>
 #pragma hdrstop
@@ -22,13 +23,13 @@ TTagManDlg *TagManDlg = NULL;
 __fastcall TTagManDlg::TTagManDlg(TComponent* Owner)
 	: TForm(Owner)
 {
+	MaxTagWidth  = 0;
+	InhEdit 	 = false;
+	IsFolderIcon = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::FormCreate(TObject *Sender)
 {
-	MaxTagWidth = 0;
-	InhEdit = false;
-
 	ListScrPanel = new UsrScrollPanel(ListPanel, TagCheckListBox, USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
 
 	SwatchPanel = new UsrSwatchPanel(this);
@@ -38,10 +39,14 @@ void __fastcall TTagManDlg::FormCreate(TObject *Sender)
 void __fastcall TTagManDlg::FormShow(TObject *Sender)
 {
 	DlgInitialized = false;
+	IsFolderIcon   = SameText(CmdStr, "FindFolderIcon");
 
 	Constraints->MinWidth = 0;
 
-	IniFile->LoadPosInfo(this, DialogCenter);
+	if (IsFolderIcon)
+		IniFile->LoadPosInfo(this, DialogCenter, "FolderIconDlg");
+	else
+		IniFile->LoadPosInfo(this, DialogCenter);
 
 	SwatchPanel->SetPanelSize16x8(15);
 	SwatchPanel->Left = ClientWidth  - SwatchPanel->Width;
@@ -49,39 +54,69 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 
 	RevColCheckBox->Checked = RevTagCololr;
 
-	set_StdListBox(TagCheckListBox);
-	if (RevTagCololr) TagCheckListBox->ItemHeight = TagCheckListBox->ItemHeight + Scaled2;
-	MaxTagWidth = usr_TAG->IniCheckList(TagCheckListBox) + ScaledInt(32);
+	TCheckListBox *lp = TagCheckListBox;
+
+	set_StdListBox(lp);
+	if (!IsFolderIcon && RevTagCololr) lp->ItemHeight = lp->ItemHeight + Scaled2;
+
+	if (IsFolderIcon) {
+		std::unique_ptr<TStringList> lst(new TStringList());
+		get_FolderIconList(lst.get());
+		lp->Items->Assign(lst.get());
+		MaxTagWidth = 0;
+		for (int i=0; i<lst->Count; i++) {
+			MaxTagWidth = std::max(MaxTagWidth, lp->Canvas->TextWidth(get_base_name(lp->Items->Strings[i])));
+		}
+		MaxTagWidth += ScaledInt(32);
+	}
+	else {
+		MaxTagWidth = usr_TAG->IniCheckList(TagCheckListBox) + ScaledInt(32);
+	}
 
 	set_UsrScrPanel(ListScrPanel);
 	ListScrPanel->UpdateKnob();
 
-	set_ButtonMark(HideOptBtn,  UBMK_BDOWN);
-	set_ButtonMark(ShowOptBtn,  UBMK_BUP);
+	set_ButtonMark(HideOptBtn, UBMK_BDOWN);
+	set_ButtonMark(ShowOptBtn, UBMK_BUP);
 	HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
 	ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 	TagEdit->Hint	 = LoadUsrMsg(USTR_HintMltSepSC);
 
+	AndCheckBox->Visible	 = false;
+	SelMaskCheckBox->Visible = false;
+	ResLinkCheckBox->Visible = false;
+	HideCheckBox->Visible	 = false;
+
 	FindOptPanel->Visible = false;
 	OptPanel->Height	  = FindOptPanel->Height + InpOptPanel->Height;
 
-	if (SameText(CmdStr, "FindTag")) {
-		HideCheckBox->Checked	 = IniFile->ReadBoolGen(_T("FindTagDlgHide"));
+	if (IsFolderIcon) {
+		set_FormTitle(this, _T("フォルダアイコン検索"));
+		FindOptPanel->Visible	 = true;
+		ResLinkCheckBox->Checked = IniFile->ReadBoolGen(_T("FindIcoResLink"));
+		ResLinkCheckBox->Left	 = 10;
+		ResLinkCheckBox->Visible = true;
+		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("FindIcoShowOpt"),	true);
+		SetColPanel->Visible	 = false;
+	}
+	else if (SameText(CmdStr, "FindTag")) {
 		FindOptPanel->Visible	 = true;
 		AndCheckBox->Checked	 = IniFile->ReadBoolGen(_T("FindTagDlgAnd"),	true);
-		ResLinkCheckBox->Visible = true;
+		AndCheckBox->Visible	 = true;
 		ResLinkCheckBox->Checked = IniFile->ReadBoolGen(_T("FindTagResLink"));
-		SelMaskCheckBox->Visible = false;
+		ResLinkCheckBox->Left	 = AndCheckBox->Left + AndCheckBox->Width + Scaled8;
+		ResLinkCheckBox->Visible = true;
 		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("FindTagShowOpt"),	true);
-		SetColPanel->Visible	 = OptPanel->Visible;
+		HideCheckBox->Checked	 = IniFile->ReadBoolGen(_T("FindTagDlgHide"));
+		HideCheckBox->Visible	 = true;
 		Caption = UnicodeString().cat_sprintf(_T("タグ検索 (%s)"), AndCheckBox->Checked? _T("AND") : _T("OR"));
 	}
 	else if (SameText(CmdStr, "SetTag")) {
 		set_FormTitle(this, _T("タグの設定"));
-		HideCheckBox->Checked = IniFile->ReadBoolGen(_T("SetTagDlgHide"));
-		OptPanel->Height	  = InpOptPanel->Height;
-		OptPanel->Visible	  = IniFile->ReadBoolGen(_T("SetTagShowOpt"),	true);
-		SetColPanel->Visible  = OptPanel->Visible;
+		OptPanel->Height		 = InpOptPanel->Height;
+		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("SetTagShowOpt"),	true);
+		HideCheckBox->Checked	 = IniFile->ReadBoolGen(_T("SetTagDlgHide"));
+		HideCheckBox->Visible	 = true;
 
 		TStringDynArray org_lst = split_strings_semicolon(TagEdit->Text);
 		for (int i=0; i<org_lst.Length; i++) {
@@ -91,36 +126,39 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 	}
 	else if (SameText(CmdStr, "AddTag")) {
 		set_FormTitle(this, _T("タグの追加"));
-		HideCheckBox->Checked = IniFile->ReadBoolGen(_T("AddTagDlgHide"));
-		OptPanel->Height	  = InpOptPanel->Height;
-		OptPanel->Visible	  = IniFile->ReadBoolGen(_T("AddTagShowOpt"),	true);
-		SetColPanel->Visible  = OptPanel->Visible;
+		OptPanel->Height		 = InpOptPanel->Height;
+		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("AddTagShowOpt"),	true);
+		HideCheckBox->Checked	 = IniFile->ReadBoolGen(_T("AddTagDlgHide"));
+		HideCheckBox->Visible	 = true;
 	}
 	else if (SameText(CmdStr, "TagSelect")) {
 		set_FormTitle(this, _T("タグ選択"));
-		HideCheckBox->Checked	 = IniFile->ReadBoolGen(_T("TagSelDlgHide"));
 		FindOptPanel->Visible	 = true;
 		AndCheckBox->Checked	 = IniFile->ReadBoolGen(_T("TagSelDlgAnd"),	true);
+		AndCheckBox->Visible	 = true;
 		SelMaskCheckBox->Visible = (ScrMode==SCMD_FLIST);
 		SelMaskCheckBox->Checked = IniFile->ReadBoolGen(_T("TagSelSelMask"));
-		ResLinkCheckBox->Visible = false;
 		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("TagSelShowOpt"),	true);
-		SetColPanel->Visible	 = OptPanel->Visible;
+		HideCheckBox->Checked	 = IniFile->ReadBoolGen(_T("TagSelDlgHide"));
+		HideCheckBox->Visible	 = true;
 	}
-	BlankPanel->Visible = !OptPanel->Visible;
 
+	SetColPanel->Visible = !IsFolderIcon && OptPanel->Visible;
+	BlankPanel->Visible  = !OptPanel->Visible;
+
+	TagCheckListBox->PopupMenu	= IsFolderIcon? NULL : TagPopupMenu;
 	ShowTagCountAction->Checked = IniFile->ReadBoolGen(_T("TagDlgShowCount"));
 
 	SetOptBtn();
 
-	InpPanel->Visible = !HideCheckBox->Checked;
+	InpPanel->Visible = HideCheckBox->Visible && !HideCheckBox->Checked;
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::WmFormShowed(TMessage &msg)
 {
-	if (ShowTagCountAction->Checked) {
+	if (!IsFolderIcon && ShowTagCountAction->Checked) {
 		Repaint();
 		usr_TAG->CountTags(TagCheckListBox);
 	}
@@ -133,9 +171,16 @@ void __fastcall TTagManDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	CloseIME(Handle);
 
-	IniFile->SavePosInfo(this);
+	if (IsFolderIcon)
+		IniFile->SavePosInfo(this, "FolderIconDlg");
+	else
+		IniFile->SavePosInfo(this);
 
-	if (SameText(CmdStr, "FindTag")) {
+	if (IsFolderIcon) {
+		IniFile->WriteBoolGen(_T("FindIcoResLink"),		ResLinkCheckBox);
+		IniFile->WriteBoolGen(_T("FindIcoShowOpt"),		OptPanel->Visible);
+	}
+	else if (SameText(CmdStr, "FindTag")) {
 		IniFile->WriteBoolGen(_T("FindTagDlgHide"),		HideCheckBox);
 		IniFile->WriteBoolGen(_T("FindTagDlgAnd"),		AndCheckBox);
 		IniFile->WriteBoolGen(_T("FindTagResLink"),		ResLinkCheckBox);
@@ -192,7 +237,7 @@ void __fastcall TTagManDlg::SetCtrlFocus()
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::HideCheckBoxClick(TObject *Sender)
 {
-	InpPanel->Visible = !HideCheckBox->Checked;
+	InpPanel->Visible = !IsFolderIcon && !HideCheckBox->Checked;
 	SetCtrlFocus();
 }
 //---------------------------------------------------------------------------
@@ -221,10 +266,9 @@ void __fastcall TTagManDlg::SetOptBtn()
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::ChgOptBtnClick(TObject *Sender)
 {
-	OptPanel->Visible	  = !OptPanel->Visible;
-
-	BlankPanel->Visible   = !OptPanel->Visible;
-	SetColPanel->Visible  = OptPanel->Visible;
+	OptPanel->Visible	 = !OptPanel->Visible;
+	BlankPanel->Visible  = !OptPanel->Visible;
+	SetColPanel->Visible = !IsFolderIcon && OptPanel->Visible;
 
 	Constraints->MinWidth = OptPanel->Visible? 320 : 160;
 
@@ -356,7 +400,7 @@ void __fastcall TTagManDlg::TagCheckListBoxKeyPress(TObject *Sender, System::Wid
 //一覧の描画
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::TagCheckListBoxDrawItem(TWinControl *Control, int Index,
-          TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -366,10 +410,21 @@ void __fastcall TTagManDlg::TagCheckListBoxDrawItem(TWinControl *Control, int In
 
 	int xp = Rect.Left + 4;
 	int yp = Rect.Top + get_TopMargin(cv);
-	if (RevTagCololr) yp += Scaled2;
 
-	usr_TAG->DrawTags(lp->Items->Strings[Index], cv, xp, yp,
-		(RevTagCololr? col_bgList : clNone), UserModule->SpuitEnabled());
+	//フォルダアイコン
+	if (IsFolderIcon) {
+		UnicodeString inam = lp->Items->Strings[Index];
+		draw_SmallIcon2(inam, cv, xp, yp);
+		xp += ScaledInt(24);
+		cv->Font->Color = get_ExtColor(get_extension(inam));
+		cv->TextOut(xp, yp, get_base_name(inam));
+	}
+	//タグ
+	else {
+		if (RevTagCololr) yp += Scaled2;
+		usr_TAG->DrawTags(lp->Items->Strings[Index], cv, xp, yp,
+			(RevTagCololr? col_bgList : clNone), UserModule->SpuitEnabled());
+	}
 
 	//使用数
 	int n = (int)lp->Items->Objects[Index];
@@ -513,7 +568,7 @@ void __fastcall TTagManDlg::TrimDataActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 //検索動作をコマンドファイルとして保存
 //---------------------------------------------------------------------------
-void __fastcall TTagManDlg::PopupMenu1Popup(TObject *Sender)
+void __fastcall TTagManDlg::TagPopupMenuPopup(TObject *Sender)
 {
 	MakeNbtItem->Visible = SameText(CmdStr, "FindTag");
 }
@@ -562,7 +617,7 @@ void __fastcall TTagManDlg::SpuitImageMouseDown(TObject *Sender, TMouseButton Bu
 }
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::SpuitImageMouseUp(TObject *Sender, TMouseButton Button,
-          TShiftState Shift, int X, int Y)
+	TShiftState Shift, int X, int Y)
 {
 	SwatchPanel->Visible = false;
 

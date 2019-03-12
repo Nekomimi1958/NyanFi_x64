@@ -53,7 +53,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall PathMaskListBoxKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall PathMaskHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-          const TRect &Rect, bool Pressed);
+		const TRect &Rect, bool Pressed);
 	void __fastcall PathMaskHeaderResize(TObject *Sender);
 
 private:	// ユーザー宣言

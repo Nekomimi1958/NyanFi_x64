@@ -68,7 +68,7 @@ void __fastcall TAskRepDlg::FormResize(TObject *Sender)
 
 //---------------------------------------------------------------------------
 void __fastcall TAskRepDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-          const TRect &Rect)
+	const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Font->Assign(StatusBar->Font);

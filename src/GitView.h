@@ -50,6 +50,8 @@ struct git_rec {
 #define GIT_FLAG_HDRLN	0x1000	//å©èoÇµ
 #define GIT_FLAG_BLANK	0x2000	//ãÛçs
 
+#define GIT_NULL_ID	"4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+
 //---------------------------------------------------------------------------
 class TGitViewer : public TForm
 {

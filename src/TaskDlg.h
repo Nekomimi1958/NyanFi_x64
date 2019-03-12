@@ -66,7 +66,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall StartActionUpdate(TObject *Sender);
 	void __fastcall TaskHeaderResize(TObject *Sender);
 	void __fastcall TaskHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-          const TRect &Rect, bool Pressed);
+			const TRect &Rect, bool Pressed);
 	void __fastcall ExtStartActionExecute(TObject *Sender);
 	void __fastcall ExtStartActionUpdate(TObject *Sender);
 

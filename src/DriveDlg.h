@@ -74,10 +74,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormResize(TObject *Sender);
 	void __fastcall DriveGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall OpenExpItemClick(TObject *Sender);
-	void __fastcall DriveGridMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
-          int X, int Y);
+	void __fastcall DriveGridMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall DriveHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-          const TRect &Rect, bool Pressed);
+		const TRect &Rect, bool Pressed);
 	void __fastcall DriveHeaderResize(TObject *Sender);
 	void __fastcall ToRootCheckBoxClick(TObject *Sender);
 

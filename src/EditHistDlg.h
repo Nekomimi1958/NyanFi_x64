@@ -28,6 +28,7 @@ class TEditHistoryDlg : public TForm
 __published:	// IDE で管理されるコンポーネント
 	TAction *ClrAllRecentAction;
 	TAction *ClrBrkRecentAction;
+	TAction *GitViewerAction;
 	TAction *MemoAction;
 	TAction *MigemoAction;
 	TAction *OpenAction;
@@ -51,6 +52,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *DelMarkItem;
 	TMenuItem *gFileInfoItem;
 	TMenuItem *gFitSizePosItem;
+	TMenuItem *GitViewerItem;
 	TMenuItem *gPropertyItem;
 	TMenuItem *gStatusBarItem;
 	TMenuItem *hFileInfoItem;
@@ -95,8 +97,6 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *OptMode1Btn;
 	TToolButton *OptMode2Btn;
 	TToolButton *ToolButton5;
-	TAction *GitViewerAction;
-	TMenuItem *GitViewerItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

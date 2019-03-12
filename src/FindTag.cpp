@@ -149,7 +149,7 @@ void __fastcall TFindTagForm::InpPaintBoxPaint(TObject *Sender)
 //ˆê——‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TFindTagForm::TagsListBoxDrawItem(TWinControl *Control, int Index,
-          TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox *)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -276,7 +276,7 @@ void __fastcall TFindTagForm::TagsListBoxKeyPress(TObject *Sender, System::WideC
 //ƒtƒ@ƒCƒ‹–¼ƒŠƒXƒg‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TFindTagForm::InfoListBoxDrawItem(TWinControl *Control, int Index,
-          TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;

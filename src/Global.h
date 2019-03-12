@@ -1314,6 +1314,7 @@ struct flist_stt {
 	bool find_TAG_all;			//すべてのタグにマッチ
 	bool find_DUPL;				//重複ファイルの検索
 	bool find_HLINK;			//ハードリンク列挙
+	bool find_DICON;			//フォルダアイコン検索
 
 	bool find_RegEx;			//正規表現
 	bool find_And;				//AND検索
@@ -1332,6 +1333,7 @@ struct flist_stt {
 	UnicodeString find_Mask;	//マスク
 	UnicodeString find_Keywd;	//キーワード
 	UnicodeString find_Tags;	//タグ
+	UnicodeString find_Icons;	//フォルダアイコン(改行区切り)
 
 	TStringList  *find_SubList;	//選択サブディレクトリ
 	int  find_DT_mode;			//日付条件
@@ -1457,6 +1459,11 @@ extern TStringList *XCMD_VarList;
 //---------------------------------------------------------------------------
 //インライン関数
 //---------------------------------------------------------------------------
+inline void InvalidateFileList(int tag = CurListTag)
+{
+	FileListBox[tag]->Invalidate();
+}
+
 inline bool is_AltLnBgCol(int idx)
 {
 	return (col_bgList2!=col_None && idx%2==1);

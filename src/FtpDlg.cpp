@@ -106,7 +106,7 @@ void __fastcall TFtpConnectDlg::FormDestroy(TObject *Sender)
 //ˆê——‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TFtpConnectDlg::HostListBoxDrawItem(TWinControl *Control, int Index,
-          TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas *cv  = lp->Canvas;

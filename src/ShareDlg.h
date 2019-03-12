@@ -33,16 +33,14 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall ShareListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-          TOwnerDrawState State);
+	void __fastcall ShareListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall ShareListBoxDblClick(TObject *Sender);
 	void __fastcall ShareListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall ShareListBoxKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall CopyUncItemClick(TObject *Sender);
 	void __fastcall PopupMenu1Popup(TObject *Sender);
 	void __fastcall CopyUncAllItemClick(TObject *Sender);
-	void __fastcall PathTabControlDrawTab(TCustomTabControl *Control, int TabIndex,
-          const TRect &Rect, bool Active);
+	void __fastcall PathTabControlDrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 	void __fastcall PathTabControlChange(TObject *Sender);
 
 private:	// ユーザー宣言

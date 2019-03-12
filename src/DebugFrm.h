@@ -55,11 +55,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall PreviewListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-          TOwnerDrawState State);
+	void __fastcall PreviewListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall ReferListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall ReferListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-          TOwnerDrawState State);
+	void __fastcall ReferListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall EditCopyActionExecute(TObject *Sender);
 	void __fastcall EditCopyActionUpdate(TObject *Sender);
 	void __fastcall StepActionExecute(TObject *Sender);

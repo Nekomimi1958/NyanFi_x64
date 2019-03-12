@@ -56,8 +56,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InpPaintBoxPaint(TObject *Sender);
 	void __fastcall TagsListBoxDataObject(TWinControl *Control, int Index, TObject *&DataObject);
 	void __fastcall TagsListBoxClick(TObject *Sender);
-	void __fastcall InfoListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-          TOwnerDrawState State);
+	void __fastcall InfoListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall InfoListBoxDblClick(TObject *Sender);
 	void __fastcall InfoListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CopyActionUpdate(TObject *Sender);

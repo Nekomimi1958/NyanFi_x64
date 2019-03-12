@@ -43,7 +43,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CopyItemClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall RecordHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-          const TRect &Rect, bool Pressed);
+		const TRect &Rect, bool Pressed);
 	void __fastcall RecordHeaderResize(TObject *Sender);
 	void __fastcall CalcBtnClick(TObject *Sender);
 	void __fastcall RecordGridClick(TObject *Sender);

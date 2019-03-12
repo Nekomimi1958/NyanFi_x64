@@ -319,7 +319,7 @@ void __fastcall TRenameDlg::Opt2MainPanelResize(TObject *Sender)
 
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-          const TRect &Rect)
+	const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Brush->Color = StatusBar->Color;

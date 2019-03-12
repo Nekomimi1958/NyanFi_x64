@@ -3,7 +3,7 @@ object TagManDlg: TTagManDlg
   Top = 0
   BorderIcons = [biSystemMenu]
   ClientHeight = 289
-  ClientWidth = 312
+  ClientWidth = 310
   Color = clBtnFace
   Constraints.MinHeight = 320
   Constraints.MinWidth = 320
@@ -22,19 +22,19 @@ object TagManDlg: TTagManDlg
   object ListPanel: TPanel
     Left = 0
     Top = 23
-    Width = 312
+    Width = 310
     Height = 154
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     OnResize = ListPanelResize
     DesignSize = (
-      312
+      310
       154)
     object TagCheckListBox: TCheckListBox
       Left = 0
       Top = 0
-      Width = 312
+      Width = 310
       Height = 154
       OnClickCheck = TagCheckListBoxClickCheck
       Align = alLeft
@@ -43,7 +43,6 @@ object TagManDlg: TTagManDlg
       DoubleBuffered = True
       ItemHeight = 13
       ParentDoubleBuffered = False
-      PopupMenu = PopupMenu1
       Style = lbOwnerDrawFixed
       TabOrder = 0
       OnClick = TagCheckListBoxClick
@@ -52,7 +51,7 @@ object TagManDlg: TTagManDlg
       OnKeyPress = TagCheckListBoxKeyPress
     end
     object BlankPanel: TPanel
-      Left = 296
+      Left = 294
       Top = 140
       Width = 14
       Height = 14
@@ -77,7 +76,7 @@ object TagManDlg: TTagManDlg
   object OptPanel: TPanel
     Left = 0
     Top = 209
-    Width = 312
+    Width = 310
     Height = 80
     Align = alBottom
     BevelOuter = bvNone
@@ -85,16 +84,16 @@ object TagManDlg: TTagManDlg
     object InpOptPanel: TPanel
       Left = 0
       Top = 42
-      Width = 312
+      Width = 310
       Height = 38
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
       DesignSize = (
-        312
+        310
         38)
       object HideOptBtn: TSpeedButton
-        Left = 295
+        Left = 293
         Top = 23
         Width = 18
         Height = 16
@@ -103,7 +102,7 @@ object TagManDlg: TTagManDlg
         OnClick = ChgOptBtnClick
       end
       object CanButton: TButton
-        Left = 217
+        Left = 215
         Top = 4
         Width = 76
         Height = 26
@@ -115,7 +114,7 @@ object TagManDlg: TTagManDlg
         OnClick = CanButtonClick
       end
       object OkButton: TButton
-        Left = 133
+        Left = 131
         Top = 4
         Width = 76
         Height = 26
@@ -138,13 +137,13 @@ object TagManDlg: TTagManDlg
     object FindOptPanel: TPanel
       Left = 0
       Top = 10
-      Width = 312
+      Width = 310
       Height = 32
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 0
       object ResLinkCheckBox: TCheckBox
-        Left = 103
+        Left = 110
         Top = 8
         Width = 200
         Height = 17
@@ -155,16 +154,16 @@ object TagManDlg: TTagManDlg
       object AndCheckBox: TCheckBox
         Left = 10
         Top = 8
-        Width = 91
+        Width = 92
         Height = 17
         Caption = '&AND'#26908#32034
         TabOrder = 0
         OnClick = OptCheckBoxClick
       end
       object SelMaskCheckBox: TCheckBox
-        Left = 103
+        Left = 110
         Top = 8
-        Width = 168
+        Width = 200
         Height = 17
         Caption = #36984#25246#38917#30446#12384#12369#12434#27531#12377'(&M)'
         TabOrder = 2
@@ -174,7 +173,7 @@ object TagManDlg: TTagManDlg
   object InpPanel: TPanel
     Left = 0
     Top = 0
-    Width = 312
+    Width = 310
     Height = 23
     Align = alTop
     AutoSize = True
@@ -184,7 +183,7 @@ object TagManDlg: TTagManDlg
     object TagEdit: TEdit
       Left = 1
       Top = 1
-      Width = 310
+      Width = 308
       Height = 21
       Align = alTop
       PopupMenu = UserModule.EditPopupMenuE
@@ -197,7 +196,7 @@ object TagManDlg: TTagManDlg
   object SetColPanel: TPanel
     Left = 0
     Top = 177
-    Width = 312
+    Width = 310
     Height = 32
     Hint = #12479#12464#21029#37197#33394
     Align = alBottom
@@ -206,7 +205,7 @@ object TagManDlg: TTagManDlg
     object Bevel1: TBevel
       Left = 0
       Top = 28
-      Width = 312
+      Width = 310
       Height = 4
       Align = alBottom
       Shape = bsBottomLine
@@ -271,8 +270,8 @@ object TagManDlg: TTagManDlg
       OnClick = RevColCheckBoxClick
     end
   end
-  object PopupMenu1: TPopupMenu
-    OnPopup = PopupMenu1Popup
+  object TagPopupMenu: TPopupMenu
+    OnPopup = TagPopupMenuPopup
     Left = 24
     Top = 56
     object RenTagItem: TMenuItem

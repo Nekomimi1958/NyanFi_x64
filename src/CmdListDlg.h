@@ -74,7 +74,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ReqEditActionExecute(TObject *Sender);
 	void __fastcall ReqEditActionUpdate(TObject *Sender);
 	void __fastcall CmdFileHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-          const TRect &Rect, bool Pressed);
+		const TRect &Rect, bool Pressed);
 	void __fastcall CmdFileHeaderResize(TObject *Sender);
 
 private:	// ユーザー宣言

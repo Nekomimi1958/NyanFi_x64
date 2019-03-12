@@ -2667,13 +2667,13 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::ExtMenuHeaderSectionResize(THeaderControl *HeaderControl,
-          THeaderSection *Section)
+	THeaderSection *Section)
 {
 	ExtMenuListBox->Repaint();
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::ExtToolHeaderSectionResize(THeaderControl *HeaderControl,
-          THeaderSection *Section)
+	THeaderSection *Section)
 {
 	ExtToolListBox->Repaint();
 }
@@ -2682,7 +2682,7 @@ void __fastcall TOptionDlg::ExtToolHeaderSectionResize(THeaderControl *HeaderCon
 //キー設定
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::KeyTabControlDrawTab(TCustomTabControl *Control, int TabIndex,
-		const TRect &Rect, bool Active)
+	const TRect &Rect, bool Active)
 {
 	//※テーマ利用時に下部タブが正しく描画されない不具合の対策
 	draw_BottomTab(Control, TabIndex, Rect, Active);

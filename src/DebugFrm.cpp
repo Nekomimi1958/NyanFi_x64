@@ -127,7 +127,7 @@ void __fastcall TDebugForm::PreviewListBoxData(TWinControl *Control, int Index, 
 //プレビューの描画
 //---------------------------------------------------------------------------
 void __fastcall TDebugForm::PreviewListBoxDrawItem(TWinControl *Control, int Index,
-          TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -162,7 +162,7 @@ void __fastcall TDebugForm::ReferListBoxKeyDown(TObject *Sender, WORD &Key, TShi
 //参照情報の描画
 //---------------------------------------------------------------------------
 void __fastcall TDebugForm::ReferListBoxDrawItem(TWinControl *Control, int Index,
-          TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	draw_InfListBox((TListBox*)Control, Rect, Index, State);
 }

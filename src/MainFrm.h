@@ -202,6 +202,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *FindDuplDlgAction;
 	TAction *FindFileDirDlgAction;
 	TAction *FindFileDlgAction;
+	TAction *FindFolderIconAction;
 	TAction *FindHardLinkAction;
 	TAction *FindMarkAction;
 	TAction *FindTagAction;
@@ -642,6 +643,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *FileRunItem;
 	TMenuItem *FindDirItem;
 	TMenuItem *FindFileItem;
+	TMenuItem *FindFolderIconItem;
 	TMenuItem *FindMenu;
 	TMenuItem *FindTagItem;
 	TMenuItem *FisTabPathItem;
@@ -1827,6 +1829,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall GitDiffActionExecute(TObject *Sender);
 	void __fastcall RepositoryListActionUpdate(TObject *Sender);
 	void __fastcall RepositoryListActionExecute(TObject *Sender);
+	void __fastcall FindFolderIconActionExecute(TObject *Sender);
+	void __fastcall FindFolderIconActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -1965,12 +1969,26 @@ private:	// ユーザー宣言
 
 	void __fastcall WmFormShowed(TMessage &msg);
 	void __fastcall WmQueryEndSession(TMessage &msg);
-	void __fastcall WmSysCommand(TWMSysCommand & SysCom);
+
+	void __fastcall WmSysCommand(TWMSysCommand & SysCom)
+	{
+		if (SysCom.CmdType==SC_RESTORE && StoreTaskTray) Show();
+		TForm::Dispatch(&SysCom);
+	}
+
+	void __fastcall WmFormMoving(TMessage &msg)
+	{
+		if (IniWinMode==1 && FixWinPos) *((TRect*)msg.LParam) = BoundsRect;
+	}
+
+	void __fastcall WmEnterSizeMove(TMessage &msg)
+	{
+		WndSizing = true;
+	}
+
 	void __fastcall WmDropped(TMessage &msg);
 	void __fastcall WmSettingChange(TMessage &msg);
 	void __fastcall WmDeviceChange(TMessage &msg);
-	void __fastcall WmFormMoving(TMessage &msg);
-	void __fastcall WmEnterSizeMove(TMessage &msg);
 	void __fastcall WmExitSizeMove(TMessage &msg);
 	void __fastcall WmGetMinMaxInfo(TWMGetMinMaxInfo &msg);
 	void __fastcall WmCopyData(TMessage &msg);
@@ -2149,12 +2167,27 @@ private:	// ユーザー宣言
 	int  __fastcall GetCurIndex();
 	bool __fastcall SetCurIndex(int idx);
 
-	UnicodeString __fastcall GetModeIdStr();
+	UnicodeString __fastcall GetModeIdStr()
+	{
+		return (ScrMode==SCMD_FLIST)? "F" : (ScrMode==SCMD_TVIEW)? "V" : (ScrMode==SCMD_IVIEW)? "I" : "";
+	}
 
-	bool __fastcall IsCurFList();
-	bool __fastcall IsOppFList();
-	bool __fastcall EqualDirLR();
-	bool __fastcall IsDiffList();
+	bool __fastcall IsCurFList()
+	{
+		return (!CurStt->is_Arc && !CurStt->is_ADS && !CurStt->is_Find && !CurStt->is_Work && !CurStt->is_FTP);
+	}
+	bool __fastcall IsOppFList()
+	{
+		return (!OppStt->is_Arc && !OppStt->is_ADS && !OppStt->is_Find && !OppStt->is_Work && !OppStt->is_FTP);
+	}
+	bool __fastcall EqualDirLR()
+	{
+		return SameText(CurPath[CurListTag], CurPath[OppListTag]);
+	}
+	bool __fastcall IsDiffList()
+	{
+		return (CurStt->is_Find && OppStt->is_Find);
+	}
 
 	TListBox * __fastcall GetCurInfListBox()
 	{
@@ -2250,6 +2283,7 @@ private:	// ユーザー宣言
 	int  __fastcall FindHardLinkCore(UnicodeString fnam, int tag);
 	int  __fastcall FindMarkCore(int tag = -1);
 	int  __fastcall FindTagCore(int tag = -1);
+	int  __fastcall FindFolderIconCore(int tag);
 	int  __fastcall ChangeWorkList(int tag, bool check = true);
 	bool __fastcall SetWorkList(UnicodeString fnam = EmptyStr, bool load_only = false);
 	void __fastcall CheckChangeWorkList(int tag);
@@ -2422,6 +2456,7 @@ public:		// ユーザー宣言
 	__fastcall TNyanFiForm(TComponent* Owner);
 
 	bool __fastcall CheckUncPath(UnicodeString pnam);
+	bool __fastcall CheckPath(UnicodeString dnam);
 
 	void __fastcall SetScrMode(int scr_mode = SCMD_FLIST, int tag = -1);
 	void __fastcall SetCurPathMask(UnicodeString kstr = EmptyStr);

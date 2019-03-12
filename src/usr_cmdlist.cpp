@@ -106,6 +106,7 @@ void set_CmdList(
 		"F:FindDirDlg=ディレクトリ名検索ダイアログ\n"
 		"F:FindFileDirDlg=ファイル/ディレクトリ名検索ダイアログ\n"
 		"F:FindFileDlg=ファイル名検索ダイアログ\n"
+		"F:FindFolderIcon=フォルダアイコン検索\n"
 		"F:FindHardLink=ハードリンクを列挙\n"
 		"F:FindMark=栞マーク項目を検索\n"
 		"F:FindTag=タグ検索\n"

@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
 //  タグ設定/検索														//
+//  フォルダアイコン検索												//
 //----------------------------------------------------------------------//
 #ifndef TagDlgH
 #define TagDlgH
@@ -68,7 +69,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *OptPanel;
 	TPanel *SetColPanel;
 	TPanel *SpuitPanel;
-	TPopupMenu *PopupMenu1;
+	TPopupMenu *TagPopupMenu;
 	TSpeedButton *HideOptBtn;
 	TSpeedButton *ShowOptBtn;
 
@@ -99,7 +100,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall MakeNbtActionExecute(TObject *Sender);
 	void __fastcall MakeNbtActionUpdate(TObject *Sender);
 	void __fastcall DefColorActionExecute(TObject *Sender);
-	void __fastcall PopupMenu1Popup(TObject *Sender);
+	void __fastcall TagPopupMenuPopup(TObject *Sender);
 	void __fastcall RefTagColBtnClick(TObject *Sender);
 	void __fastcall SpuitImageMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall SpuitImageMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
@@ -112,6 +113,7 @@ private:	// ユーザー宣言
 	bool DlgInitialized;
 	int  MaxTagWidth;
 	bool InhEdit;
+	bool IsFolderIcon;
 
 	UsrSwatchPanel *SwatchPanel;
 

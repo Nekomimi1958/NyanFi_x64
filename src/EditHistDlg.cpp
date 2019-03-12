@@ -383,7 +383,7 @@ void __fastcall TEditHistoryDlg::ShowStatusBarActionExecute(TObject *Sender)
 	StatusBar1->Visible = !StatusBar1->Visible;
 
 	if (OpeToolBar->Visible && StatusBar1->Visible) {
-		OpeToolBar->Align = alNone;
+		OpeToolBar->Align = alTop;
 		OpeToolBar->Align = alBottom;
 	}
 
