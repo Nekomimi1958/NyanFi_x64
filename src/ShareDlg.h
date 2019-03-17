@@ -50,7 +50,12 @@ private:	// ƒ†[ƒU[éŒ¾
 	int  LibIdxBase;
 
 	void __fastcall WmFormShowed(TMessage &msg);
-	void __fastcall WmMenuChar(TMessage &msg);
+
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
+
 	void __fastcall UpdateShareList(UnicodeString cnam);
 	void __fastcall UpdatePathList(UnicodeString pnam);
 

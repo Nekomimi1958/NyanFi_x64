@@ -5410,7 +5410,7 @@ void __fastcall TNyanFiForm::LogListBoxDrawItem(TWinControl *Control, int Index,
 			cv->Font->Color = col_Error;
 		else if (StartsStr("         エラー: ", lbuf))
 			cv->Font->Color = col_Error;
-		else if (lbuf.Pos(':')==5 && contains_wd_i(lbuf, _T("開始|>>")))
+		else if ((lbuf.Pos(':')==5 && contains_wd_i(lbuf, _T("開始|>>"))) || StartsText("$ git ", lbuf))
 			cv->Font->Color = col_Headline;
 		else if (lbuf.Pos('!')==10)
 			cv->Font->Color = AdjustColor(col_fgLog, 96);

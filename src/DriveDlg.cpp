@@ -513,7 +513,7 @@ void __fastcall TSelDriveDlg::PropertyActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//オプションの開閉
+//設定パネルの開閉
 //---------------------------------------------------------------------------
 void __fastcall TSelDriveDlg::ChgOptBtnClick(TObject *Sender)
 {
@@ -525,7 +525,10 @@ void __fastcall TSelDriveDlg::ChgOptBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TSelDriveDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift);
+	if (USAME_TI(get_KeyStr(Key, Shift), "Alt+O"))
+		ChgOptBtnClick(NULL);
+	else
+		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

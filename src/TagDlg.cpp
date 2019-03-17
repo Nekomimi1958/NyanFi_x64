@@ -251,7 +251,7 @@ void __fastcall TTagManDlg::OptCheckBoxClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//オプションの開閉
+//設定パネルの開閉
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::SetOptBtn()
 {
@@ -307,8 +307,8 @@ void __fastcall TTagManDlg::TagEditKeyDown(TObject *Sender, WORD &Key, TShiftSta
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 	if (KeyStr.IsEmpty()) return;
 
-	TCheckListBox *lp = TagCheckListBox;
 	if (contained_wd_i(KeysStr_ToList, KeyStr)) {
+		TCheckListBox *lp = TagCheckListBox;
 		if (lp->Count>0) {
 			lp->SetFocus();
 			if (lp->ItemIndex==-1) lp->ItemIndex = 0;
@@ -636,6 +636,18 @@ void __fastcall TTagManDlg::RevColCheckBoxClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TTagManDlg::CanButtonClick(TObject *Sender)
+{
+	if (UserModule->SpuitEnabled()) {
+		SwatchPanel->Visible = false;
+		UserModule->EndSpuit();
+		TagCheckListBox->Repaint();
+		ModalResult = mrNone;
+	}
+	else
+		ModalResult = mrCancel;
+}
+//---------------------------------------------------------------------------
 void __fastcall TTagManDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
@@ -651,23 +663,14 @@ void __fastcall TTagManDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 		else
 			ModalResult = mrCancel;
 	}
+	else if (USAME_TI(KeyStr, "Alt+O")) {
+		ChgOptBtnClick(NULL);
+	}
 	else {
 		UnicodeString topic = HELPTOPIC_FL;
 		topic.cat_sprintf(_T("#%s"), CmdStr.c_str());
 		SpecialKeyProc(this, Key, Shift, topic.c_str());
 	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TTagManDlg::CanButtonClick(TObject *Sender)
-{
-	if (UserModule->SpuitEnabled()) {
-		SwatchPanel->Visible = false;
-		UserModule->EndSpuit();
-		TagCheckListBox->Repaint();
-		ModalResult = mrNone;
-	}
-	else
-		ModalResult = mrCancel;
 }
 //---------------------------------------------------------------------------
 

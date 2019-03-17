@@ -28,6 +28,7 @@ class TGeneralInfoDlg : public TForm
 __published:	// IDE で管理されるコンポーネント
 	TAction *AndOrAction;
 	TAction *CopyAction;
+	TAction *CopyValAction;
 	TAction *DelDuplAction;
 	TAction *EditFileAction;
 	TAction *ErrOnlyAction;
@@ -59,6 +60,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *FindTextItem;
 	TMenuItem *FitSizePosItem;
 	TMenuItem *InfEditCopyItem;
+	TMenuItem *InfEditCopyValItem;
 	TMenuItem *InfEditSelectAllItem;
 	TMenuItem *KeepIndexItem;
 	TMenuItem *OmitComPathItem;
@@ -92,8 +94,6 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *NotifyBtn;
 	TToolButton *ToolButton5;
 	TToolButton *WatchBtn;
-	TAction *CopyValAction;
-	TMenuItem *InfEditCopyValItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -171,8 +171,12 @@ private:	// ユーザー宣言
 	bool Found;					//検索結果
 
 	void __fastcall WmFormShowed(TMessage &msg);
-	void __fastcall WmMenuChar(TMessage &msg);
 	void __fastcall WmNyanFiPlayList(TMessage &msg);
+
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
 
 	TWndMethod org_GenListWndProc;
 	void __fastcall GenListWndProc(TMessage &msg);
@@ -234,8 +238,8 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,		TMessage,	WmFormShowed)
-		VCL_MESSAGE_HANDLER(WM_MENUCHAR,		TMessage,	WmMenuChar)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_PLAYLIST, TMessage,	WmNyanFiPlayList)
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,		TMessage,	WmMenuChar)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

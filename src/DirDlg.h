@@ -97,6 +97,11 @@ private:	// ユーザー宣言
 	int  SelIndex;
 	TStringList *EnvVarList;
 
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
+
 	void __fastcall SetOptBtn();
 	int  __fastcall IndexOfDir(UnicodeString dnam);
 	void __fastcall ChangeItemActionExecute(int chg_mod);
@@ -110,6 +115,10 @@ public:		// ユーザー宣言
 	UnicodeString CmdStr;
 
 	__fastcall TRegDirDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TRegDirDlg *RegDirDlg;

@@ -59,7 +59,6 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *AddAAction;
 	TAction *AddAction;
 	TAction *AddUAction;
-	TAction *AppFextColorAction;
 	TAction *ArchiveAction;
 	TAction *BlameAction;
 	TAction *ChckoutAction;
@@ -101,7 +100,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *AddAItem;
 	TMenuItem *AddU2Item;
 	TMenuItem *AddUItem;
-	TMenuItem *AppFextColItem;
 	TMenuItem *ArchiveItem;
 	TMenuItem *BlameItem;
 	TMenuItem *BrDelTagItem;
@@ -138,7 +136,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_c_4;
 	TMenuItem *Sep_d_1;
 	TMenuItem *Sep_d_2;
-	TMenuItem *Sep_d_3;
 	TMenuItem *SetTagItem;
 	TMenuItem *ShowAuthorAction1;
 	TMenuItem *ShowBranchesItem;
@@ -190,6 +187,9 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_c_5;
 	TAction *ViewFileAction;
 	TMenuItem *ViewFileItem;
+	TAction *CopyPathAction;
+	TMenuItem *CopyPathItem;
+	TMenuItem *Sep_d_3;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -233,7 +233,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall BlameActionExecute(TObject *Sender);
 	void __fastcall ArchiveActionExecute(TObject *Sender);
 	void __fastcall ArchiveActionUpdate(TObject *Sender);
-	void __fastcall AppFextColorActionExecute(TObject *Sender);
 	void __fastcall GitPopupMenuPopup(TObject *Sender);
 	void __fastcall FindCommitEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FindCommitEditChange(TObject *Sender);
@@ -281,7 +280,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall AddAllActionUpdate(TObject *Sender);
 	void __fastcall ResetAllActionExecute(TObject *Sender);
 	void __fastcall ResetAllActionUpdate(TObject *Sender);
-	void __fastcall CopyFileHashActionUpdate(TObject *Sender);
+	void __fastcall CopyFileInfActionUpdate(TObject *Sender);
 	void __fastcall CommitActionExecute(TObject *Sender);
 	void __fastcall CommitActionUpdate(TObject *Sender);
 	void __fastcall CherryPickActionUpdate(TObject *Sender);
@@ -294,6 +293,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall StashDropActionExecute(TObject *Sender);
 	void __fastcall ViewFileActionExecute(TObject *Sender);
 	void __fastcall ViewFileActionUpdate(TObject *Sender);
+	void __fastcall CopyPathActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString RefHEAD;
@@ -316,6 +316,7 @@ private:	// ユーザー宣言
 	int MaxGrWidth;
 	int MaxAnWidth;
 	int MaxDfWidth;
+	int HashChWidth;
 
 	int LastBrListIdx;
 	int LastCmListIdx;

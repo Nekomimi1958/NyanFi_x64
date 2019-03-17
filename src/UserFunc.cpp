@@ -538,7 +538,10 @@ void draw_SortMark(TCanvas *cv, int x, int y,
 //---------------------------------------------------------------------------
 //ボタンにマークを設定
 //---------------------------------------------------------------------------
-void set_ButtonMark(TSpeedButton *bp, int id, TColor fg)
+void set_ButtonMark(TSpeedButton *bp,
+	int id,		//識別子	(default = UBMK_DOWN)
+	TColor fg,	//前景色	(default = col_BtnText)
+	TColor bg)	//背景色	(default = col_BtnFace)
 {
 	int size;
 	switch (id) {
@@ -552,7 +555,7 @@ void set_ButtonMark(TSpeedButton *bp, int id, TColor fg)
 	TCanvas *cv = bmp->Canvas;
 	bmp->SetSize(size, size);
 	bmp->Transparent = true;
-	cv->Brush->Color = scl_BtnFace;
+	cv->Brush->Color = bg;
 	cv->FillRect(TRect(0, 0, size, size));
 	cv->Pen->Style = psSolid;
 	cv->Pen->Color = fg;

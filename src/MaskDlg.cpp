@@ -32,6 +32,14 @@ void __fastcall TPathMaskDlg::FormShow(TObject *Sender)
 
 	Caption = "パスマスク - " + get_LRUD_str();
 
+	set_ButtonMark(HideOptBtn, UBMK_BDOWN);
+	set_ButtonMark(ShowOptBtn, UBMK_BUP);
+	HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
+	ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
+
+	OptPanel->Visible	= IniFile->ReadBoolGen(_T("PathMaskDlgShowOpt"),  true);
+	BlankPanel->Visible = !OptPanel->Visible;
+
 	InitializeListHeader(PathMaskHeader, _T("キー|名前|マスク"));
 	PathMaskHeader->Sections->Items[0]->Width = IniFile->ReadInteger("PathMaskGrid", "ColWidth0",	40);
 	PathMaskHeader->Sections->Items[1]->Width = IniFile->ReadInteger("PathMaskGrid", "ColWidth1",	200);
@@ -46,6 +54,7 @@ void __fastcall TPathMaskDlg::FormShow(TObject *Sender)
 	UserModule->InitializeListBox(lp, ListScrPanel);
 
 	ListScrPanel->UpdateKnob();
+	SetOptBtn();
 }
 //---------------------------------------------------------------------------
 void __fastcall TPathMaskDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -55,6 +64,8 @@ void __fastcall TPathMaskDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	PathMaskList->Assign(PathMaskListBox->Items);
 
 	IniFile->SavePosInfo(this);
+	IniFile->WriteBoolGen(_T("PathMaskDlgShowOpt"),	OptPanel->Visible);
+
 	IniFile->WriteInteger("PathMaskGrid", "ColWidth0",	PathMaskHeader->Sections->Items[0]->Width);
 	IniFile->WriteInteger("PathMaskGrid", "ColWidth1",	PathMaskHeader->Sections->Items[1]->Width);
 }
@@ -62,6 +73,12 @@ void __fastcall TPathMaskDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TPathMaskDlg::FormDestroy(TObject *Sender)
 {
 	delete ListScrPanel;
+}
+//---------------------------------------------------------------------------
+void __fastcall TPathMaskDlg::FormResize(TObject *Sender)
+{
+	SetOptBtn();
+	PathMaskListBox->Invalidate();
 }
 
 //---------------------------------------------------------------------------
@@ -131,29 +148,35 @@ void __fastcall TPathMaskDlg::PathMaskListBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //キー操作
 //---------------------------------------------------------------------------
-void __fastcall TPathMaskDlg::PathMaskListBoxKeyPress(TObject *Sender, System::WideChar &Key)
+void __fastcall TPathMaskDlg::PathMaskListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	UnicodeString kstr;
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+
 	TListBox *lp = (TListBox*)Sender;
 
-	if (Key==VK_RETURN) {
-		if (lp->ItemIndex!=-1) kstr = get_csv_item(lp->Items->Strings[lp->ItemIndex], 0);
+	int idx = -1;
+	if (KeyStr.Length()==1) {
+		for (int i=0; i<lp->Count && idx==-1; i++) {
+			if (SameText(get_csv_item(lp->Items->Strings[i], 0), KeyStr)) idx = i;
+		}
 	}
-	else kstr = Key;
-
-	if (!kstr.IsEmpty()) {
-		NyanFiForm->SetCurPathMask(kstr);
-		Close();
+	if (idx==-1 && equal_ENTER(KeyStr)) idx = lp->ItemIndex;
+	if (idx!=-1) {
+		UnicodeString kstr = get_csv_item(lp->Items->Strings[idx], 0);
+		if (!kstr.IsEmpty()) {
+			NyanFiForm->SetCurPathMask(kstr);
+			Close();
+		}
+		else beep_Warn();
 	}
-	else beep_Warn();
 }
 //---------------------------------------------------------------------------
 //マウス操作
 //---------------------------------------------------------------------------
 void __fastcall TPathMaskDlg::PathMaskListBoxDblClick(TObject *Sender)
 {
-	WideChar key = VK_RETURN;
-	PathMaskListBoxKeyPress(Sender, key);
+	perform_Key_RETURN((TControl*)Sender);
 }
 //---------------------------------------------------------------------------
 //項目を変更
@@ -198,8 +221,32 @@ void __fastcall TPathMaskDlg::AddItemActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TPathMaskDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+//オプションの開閉
+//---------------------------------------------------------------------------
+void __fastcall TPathMaskDlg::SetOptBtn()
 {
-	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#PathMaskDlg"));
+	if (ScrBarStyle==0)
+		set_ControlRBCorner(PathMaskListBox, BlankPanel);
+	else
+		ListScrPanel->SetRBCornerPanel(BlankPanel);
 }
 //---------------------------------------------------------------------------
+void __fastcall TPathMaskDlg::ChgOptBtnClick(TObject *Sender)
+{
+	OptPanel->Visible	= !OptPanel->Visible;
+	BlankPanel->Visible = !OptPanel->Visible;
+	ListScrPanel->UpdateKnob();
+	SetOptBtn();
+	if (!OptPanel->Visible) PathMaskListBox->SetFocus();
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TPathMaskDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (USAME_TI(get_KeyStr(Key, Shift), "Alt+O"))
+		ChgOptBtnClick(NULL);
+	else
+		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#PathMaskDlg"));
+}
+//---------------------------------------------------------------------------
+

@@ -88,7 +88,10 @@ private:	// ƒ†[ƒU[éŒ¾
 
 	bool DlgInitialized;
 
-	void __fastcall WmMenuChar(TMessage &msg);
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
 
 	void __fastcall InitializeList(int mode = -1);
 	void __fastcall UpdateList(bool link = false);

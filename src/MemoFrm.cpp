@@ -115,7 +115,7 @@ void __fastcall TMemoForm::MemoBoxChange(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//オプションの開閉
+//下部パネルの開閉
 //---------------------------------------------------------------------------
 void __fastcall TMemoForm::ChgOptBtnClick(TObject *Sender)
 {

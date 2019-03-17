@@ -1418,30 +1418,34 @@ void __fastcall TTxtViewer::set_CurCsvCol()
 	}
 }
 //---------------------------------------------------------------------------
-//CSV列位置から桁を設定
+//CSV列位置から桁を設定 (レコードの1行目でのみ有効)
 //---------------------------------------------------------------------------
-void __fastcall TTxtViewer::set_PosFromCol(int col)
+bool __fastcall TTxtViewer::set_PosFromCol(int col)
 {
-	if (isFixedLen && FixWdList.Length>0) {
-		IniSelected();
+	if (get_LineRec(CurPos.y)->LineIdx!=0) return false;
+	if (!isFixedLen || FixWdList.Length==0 || col<0) return false;
 
-		int xw = 0;
-		for (int i=0; i<FixWdList.Length && i<col; i++) xw += (FixWdList[i] + 2);
-		CurHchX = xw;
+	int xw = 0;
+	for (int i=0; i<FixWdList.Length && i<col; i++) xw += (FixWdList[i] + 2);
 
-		UnicodeString lbuf = get_CurLine();
-		for (int i=1; i<=lbuf.Length(); i++) {
-			if (CurHchX<str_len_half(lbuf.SubString(1, i))) {
-				CurPos.x = i - 1;
-				if (lbuf.IsTrailSurrogate(i)) CurPos.x--;
-				break;
-			}
+	bool res = false;
+	UnicodeString lbuf = get_CurLine();
+	for (int i=1; i<=lbuf.Length() && !res; i++) {
+		if (xw < str_len_half(lbuf.SubString(1, i))) {
+			CurHchX  = xw;
+			CurPos.x = i - 1;
+			if (lbuf.IsTrailSurrogate(i)) CurPos.x--;
+			CsvCol = col;
+			res = true;
 		}
+	}
 
-		CsvCol = col;
+	if (res) {
 		Repaint();
 		SetSttInf();
 	}
+
+	return res;
 }
 
 //---------------------------------------------------------------------------
@@ -1566,6 +1570,35 @@ void __fastcall TTxtViewer::TabTextOut(
 			}
 			s = EmptyStr;
 		}
+	}
+}
+
+//---------------------------------------------------------------------------
+//固定長表示の列アルファブレンド
+//---------------------------------------------------------------------------
+void __fastcall TTxtViewer::AlphaBlendCsvCol(TCanvas *cv, int max_x, int y, int h)
+{
+	if (CsvCol<0 || CsvCol>=FixWdList.Length) return;
+
+	int x = TopXpos;
+	for (int j=0; j<CsvCol; j++) x += (FixWdList[j] + 2) * HchWidth;
+	int w = (FixWdList[CsvCol] + 2) * HchWidth;
+	if (CsvCol==0) x -= TopMargin; else x -= HchWidth;
+	x++; w--;
+
+	if (x<max_x) {
+		BLENDFUNCTION blend_f;
+		blend_f.BlendOp             = AC_SRC_OVER;
+		blend_f.BlendFlags          = 0;
+		blend_f.SourceConstantAlpha = CellAlpha;
+		blend_f.AlphaFormat         = 0;
+
+		std::unique_ptr<Graphics::TBitmap> bp_b(new Graphics::TBitmap());
+		bp_b->SetSize(8, 8);
+		bp_b->Canvas->Brush->Style = bsSolid;
+		bp_b->Canvas->Brush->Color = color_Cursor;
+		bp_b->Canvas->FillRect(TRect(0, 0, 8, 8));
+		::AlphaBlend(cv->Handle, x, y, w, h, bp_b->Canvas->Handle, 0, 0, 8, 8, blend_f);
 	}
 }
 
@@ -1994,37 +2027,14 @@ void __fastcall TTxtViewer::PaintText()
 	if (csr_yp>=0) {
 		int yp_l = csr_yp + csr_yl;
 		//行カーソル
-		if (ShowLineCursor)
-			draw_Line(ViewCanvas, LeftMargin + 1, yp_l, fld_xp - 2, yp_l, csr_lw, color_Cursor);
+		if (ShowLineCursor) draw_Line(ViewCanvas, LeftMargin + 1, yp_l, fld_xp - 2, yp_l, csr_lw, color_Cursor);
 		//桁カーソル
 		draw_Line(ViewCanvas, csr_xp, csr_yp, csr_xp, yp_l - 1, 2, color_Cursor);
 		//対応アドレスカーソル
-		if (isBinary)
-			draw_Line(ViewCanvas, csr_bp, yp_l - LineHeight/2, csr_bp, yp_l - 1, 1, color_Cursor);
-
+		if (isBinary) draw_Line(ViewCanvas, csr_bp, yp_l - LineHeight/2, csr_bp, yp_l - 1, 1, color_Cursor);
 		//固定長表示のセル背景アルファ
-		if (!csr_eof && isFixedLen && FixWdList.Length>0 && CellAlpha>0 &&
-			CsvCol>=0 && CsvCol<FixWdList.Length)
-		{
-			int a_xp = TopXpos;
-			for (int j=0; j<CsvCol; j++) a_xp += (FixWdList[j] + 2) * HchWidth;
-			int a_wd = (FixWdList[CsvCol] + 2) * HchWidth;
-			if (CsvCol==0) a_xp -= TopMargin; else a_xp -= HchWidth;
-			a_xp++; a_wd--;
-			if (a_xp<fld_xp) {
-				BLENDFUNCTION blend_f;
-				blend_f.BlendOp             = AC_SRC_OVER;
-				blend_f.BlendFlags          = 0;
-				blend_f.SourceConstantAlpha = CellAlpha;
-				blend_f.AlphaFormat         = 0;
-
-				std::unique_ptr<Graphics::TBitmap> bp_b(new Graphics::TBitmap());
-				bp_b->SetSize(8, 8);
-				bp_b->Canvas->Brush->Style = bsSolid;
-				bp_b->Canvas->Brush->Color = color_Cursor;
-				bp_b->Canvas->FillRect(TRect(0, 0, 8, 8));
-				::AlphaBlend(ViewCanvas->Handle, a_xp, csr_yp, a_wd, LineHeight, bp_b->Canvas->Handle, 0, 0, 8, 8, blend_f);
-			}
+		if (!csr_eof && isFixedLen && CellAlpha>0) {
+			if (get_LineRec(CurPos.y)->LineIdx==0) AlphaBlendCsvCol(ViewCanvas, fld_xp, csr_yp, LineHeight);
 		}
 	}
 
@@ -2056,6 +2066,7 @@ void __fastcall TTxtViewer::onRulerPaint(TObject *Sender)
 		cv->Font->Height = RulerBox->ClientHeight - 2;
 		for (int i=0; i<FixWdList.Length; i++) {
 			if (i==0) {
+				xp -= (HchWidth - 1);
 				cv->MoveTo(xp, rc.Top + 2);
 				cv->LineTo(xp, rc.Bottom - 1);
 			}
@@ -2066,11 +2077,13 @@ void __fastcall TTxtViewer::onRulerPaint(TObject *Sender)
 				c.sprintf(_T("%c%c"), 'A' + i/26 - 1, 'A' + i%26);
 			cv->TextOut(xp + 4, rc.Top, c);
 
-			if (i==0) xp -= (HchWidth - 1);
 			xp += ((FixWdList[i] + 2) * HchWidth);
 			cv->MoveTo(xp, rc.Top + 2);
 			cv->LineTo(xp, rc.Bottom - 1);
 		}
+
+		//固定長表示のセル背景アルファ
+		if (CellAlpha>0) AlphaBlendCsvCol(cv, rc.Right, rc.Top + 2, rc.Height() - 2);
 	}
 	//バイナリ
 	else if (isBinary) {
@@ -2118,8 +2131,10 @@ void __fastcall TTxtViewer::onRulerPaint(TObject *Sender)
 	}
 
 	//カーソル位置
-	xp = TopXpos + cv_PosX_to_HchX(CurPos.x) * HchWidth - 1;
-	draw_Line(cv, xp, rc.Top + 1, xp, rc.Bottom, 2, color_fgRuler);
+	if (!isCSV || !isFixedLen || CellAlpha==0) {
+		xp = TopXpos + cv_PosX_to_HchX(CurPos.x) * HchWidth - 1;
+		draw_Line(cv, xp, rc.Top + 1, xp, rc.Bottom, 2, color_fgRuler);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -2692,7 +2707,7 @@ void __fastcall TTxtViewer::CursorRight(bool sel)
 		else {
 			int n = CurPos.x + dx;
 			if (n>get_CurEndPos()) {
-				if (CurPos.y < MaxDispLine - (CsvRecForm->Visible? 2: 1)) {
+				if (CurPos.y < MaxDispLine - (CsvRecForm->Visible? 2 : 1)) {
 					//次行へ
 					CurPos.y++;
 					n = 0;
@@ -2767,7 +2782,7 @@ void __fastcall TTxtViewer::MovePage(bool is_down, bool sel)
 	int n = CurPos.y;
 	if (is_down) {
 	 	n += (LineCount + 1);
-		if (n>=MaxDispLine) n = MaxDispLine - ((CsvRecForm->Visible || isBinary)? 2: 1);
+		if (n>=MaxDispLine) n = MaxDispLine - ((CsvRecForm->Visible || isBinary)? 2 : 1);
 	}
 	else {
 		n -= (LineCount + 1);
@@ -2971,27 +2986,40 @@ void __fastcall TTxtViewer::WordRight(bool sel)
 	else {
 		IniSelected(sel);
 
-		UnicodeString lbuf = get_CurLine();
-		if (!has_CR(lbuf)) lbuf += get_DispLine(CurPos.y + 1);
+		bool moved = false;
+		if (isCSV && isFixedLen && get_LineRec(CurPos.y)->LineIdx==0
+			&& FixWdList.Length>0 && CsvCol<(FixWdList.Length - 1))
+		{
+			moved = set_PosFromCol(CsvCol + 1);
+			if (!moved && (CurPos.x < get_CurEndPos())) {
+				LineEnd(sel);
+				moved = true;
+			}
+		}
 
-		TMatchCollection mts = TRegEx::Matches(lbuf, WORD_MATCH_PTN);
-		bool found = false;
-		for (int i=0; i<mts.Count && !found; i++) {
-			int idx = mts.Item[i].Index - 1;
-			if (idx>CurPos.x) {
-				CurPos.x = idx;
-				CurPos	 = nrm_Pos(CurPos);
-				found	 = true;
+		if (!moved) {
+			UnicodeString lbuf = get_CurLine();
+			if (!has_CR(lbuf)) lbuf += get_DispLine(CurPos.y + 1);
+
+			TMatchCollection mts = TRegEx::Matches(lbuf, WORD_MATCH_PTN);
+			bool found = false;
+			for (int i=0; i<mts.Count && !found; i++) {
+				int idx = mts.Item[i].Index - 1;
+				if (idx>CurPos.x) {
+					CurPos.x = idx;
+					CurPos	 = nrm_Pos(CurPos);
+					found	 = true;
+				}
 			}
-		}
-		if (!found) {
-			if (CurPos.x < get_CurEndPos())
-				CurPos.x = get_CurEndPos();
-			else if (CurPos.y < MaxDispLine-1) {
-				CurPos.y++; CurPos.x = 0;
+			if (!found) {
+				if (CurPos.x < get_CurEndPos())
+					CurPos.x = get_CurEndPos();
+				else if (CurPos.y < MaxDispLine-1) {
+					CurPos.y++; CurPos.x = 0;
+				}
 			}
+			CurHchX = cv_PosX_to_HchX(CurPos.x);
 		}
-		CurHchX = cv_PosX_to_HchX(CurPos.x);
 
 		if (sel) set_SelEnd();
 		UpdatePos();
@@ -3009,33 +3037,40 @@ void __fastcall TTxtViewer::WordLeft(bool sel)
 	else {
 		IniSelected(sel);
 
-		UnicodeString lbuf = get_CurLine().SubString(1, CurPos.x);
-		int ofs = 0;
-		if (CurPos.y>0) {
-			UnicodeString sbuf = get_DispLine(CurPos.y - 1);
-			if (!has_CR(sbuf)) {
-				lbuf = sbuf + lbuf;
-				ofs += sbuf.Length();
-			}
+		line_rec *lp = get_LineRec(CurPos.y);
+		if (isCSV && isFixedLen && FixWdList.Length>0 && lp->LineIdx==0 && CsvCol>0) {
+			set_PosFromCol(CsvCol - 1);
 		}
-		bool found = false;
-		if (!lbuf.IsEmpty()) {
-			TMatchCollection mts = TRegEx::Matches(lbuf, WORD_MATCH_PTN);
-			if (mts.Count>0) {
-				CurPos.x = mts.Item[mts.Count - 1].Index - 1 - ofs;
-				CurPos	 = nrm_Pos(CurPos);
-				found	 = true;
-			}
-		}
-		if (!found) {
+		else {
+			UnicodeString lbuf = get_CurLine().SubString(1, CurPos.x);
+			int ofs = 0;
 			if (CurPos.y>0) {
-				CurPos.y--;
-				CurPos.x = get_CurEndPos();
+				UnicodeString sbuf = get_DispLine(CurPos.y - 1);
+				if (!has_CR(sbuf)) {
+					lbuf = sbuf + lbuf;
+					ofs += sbuf.Length();
+				}
 			}
-			else
-				CurPos.x = 0;
+
+			bool found = false;
+			if (!lbuf.IsEmpty()) {
+				TMatchCollection mts = TRegEx::Matches(lbuf, WORD_MATCH_PTN);
+				if (mts.Count>0) {
+					CurPos.x = mts.Item[mts.Count - 1].Index - 1 - ofs;
+					CurPos	 = nrm_Pos(CurPos);
+					found	 = true;
+				}
+			}
+			if (!found) {
+				if (CurPos.y>0) {
+					CurPos.y--;
+					CurPos.x = get_CurEndPos();
+				}
+				else
+					CurPos.x = 0;
+			}
+			CurHchX = cv_PosX_to_HchX(CurPos.x);
 		}
-		CurHchX = cv_PosX_to_HchX(CurPos.x);
 
 		if (sel) set_SelEnd();
 		UpdatePos();
@@ -3738,7 +3773,7 @@ bool __fastcall TTxtViewer::SearchPair()
 //---------------------------------------------------------------------------
 bool __fastcall TTxtViewer::ToLine(
 	int lno, 	//行番号
-	int col)	//列番号(固定長表示)
+	int col)	//列番号	(固定長表示	default = -1)
 {
 	if (lno<=0) return false;
 
@@ -3750,7 +3785,7 @@ bool __fastcall TTxtViewer::ToLine(
 		CurHchX = cv_PosX_to_HchX(CurPos.x);
 		if (isSelMode) SelEnd = CurPos;
 		UpdatePos(true);
-		if (col!=-1) set_PosFromCol(col);
+		set_PosFromCol(col);
 		jumped = true;
 	}
 
@@ -3838,8 +3873,8 @@ void __fastcall TTxtViewer::JumpLine(UnicodeString ln_str)
 			if (inp_n<=0 || inp_n>MaxLine) SysErrAbort(DISP_E_OVERFLOW);
 
 			for (int i=0; i<MaxDispLine && !jumped; i++) {
-				if (!SameText(ln_str, UnicodeString(get_LineRec(i)->LineNo))) continue;
-				CurPos	= Point(0, i);
+				if (inp_n != get_LineRec(i)->LineNo) continue;
+				CurPos	= Point(0, i);	set_PosFromCol(CsvCol);
 				CurHchX = cv_PosX_to_HchX(CurPos.x);
 				if (isSelMode) SelEnd = CurPos;
 				UpdatePos(true);

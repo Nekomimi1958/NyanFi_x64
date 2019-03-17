@@ -137,7 +137,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	StatusBar1->Visible = ShowStatusBarAction->Checked;
 	OpeToolBar->Visible = (!isRecent && !isTags);
 	if (OpeToolBar->Visible && StatusBar1->Visible) {
-		OpeToolBar->Align = alNone;
+		OpeToolBar->Align = alTop;
 		OpeToolBar->Align = alBottom;
 	}
 

@@ -43,15 +43,6 @@ void __fastcall TFindKeyDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TFindKeyDlg::WmMenuChar(TMessage &msg)
-{
-	if (msg.WParamHi==MF_POPUP)
-		TForm::Dispatch(&msg);
-	else
-		msg.Result = (MNC_CLOSE << 16);		//ビープ音が鳴らないようにする
-}
-
-//---------------------------------------------------------------------------
 //2ストローク開始キーか?
 //---------------------------------------------------------------------------
 bool __fastcall TFindKeyDlg::IsFirstCmdKey(UnicodeString keystr)

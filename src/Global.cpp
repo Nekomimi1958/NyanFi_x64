@@ -1180,6 +1180,7 @@ void InitializeGlobal()
 	mute_Volume("GET");	//ミュート状態を取得
 
 	//廃止セクション、キーの削除、修正
+	IniFile->DeleteKey(SCT_General, "GitViewFExtColor");	//v13.41
 	IniFile->DeleteKey(SCT_General, "MarkListShowOpt");		//v13.24
 	IniFile->DeleteKey(SCT_General, "EditHistShowOpt");		//v13.24
 
@@ -9474,7 +9475,8 @@ void out_TextEx(
 	TCanvas *cv, int &x, int y,
 	UnicodeString s,
 	TColor fg, TColor bg,	//	(default = clNone)
-	int mgn)				//  (default = 0)
+	int mgn,				//	(default = 0)
+	bool is_irreg)			//	(default = false)
 {
 	if (s.IsEmpty()) return;
 
@@ -9486,7 +9488,7 @@ void out_TextEx(
 
 	cv->TextOut(x, y, s);
 
-	x += (cv->TextWidth(s) + mgn);
+	x += (get_TextWidth(cv, s, is_irreg) + mgn);
 	cv->Font->Color  = org_fg;
 	cv->Brush->Color = org_bg;
 }

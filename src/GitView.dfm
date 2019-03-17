@@ -533,10 +533,6 @@ object GitViewer: TGitViewer
       Caption = 'Author '#12398#21517#21069#12434#34920#31034'(&A)'
       OnExecute = ShowAuthorActionExecute
     end
-    object AppFextColorAction: TAction
-      Caption = #25313#24373#23376#21029#37197#33394#12434#36969#29992'(&X)'
-      OnExecute = AppFextColorActionExecute
-    end
     object DiffToolAction: TAction
       Caption = 'diff'#12484#12540#12523#12434#36215#21205'(&T)'
       OnExecute = DiffToolActionExecute
@@ -555,7 +551,12 @@ object GitViewer: TGitViewer
     object CopyFileHashAction: TAction
       Caption = #12371#12398#12501#12449#12452#12523#12398#12495#12483#12471#12517#12434#12467#12500#12540
       OnExecute = CopyFileHashActionExecute
-      OnUpdate = CopyFileHashActionUpdate
+      OnUpdate = CopyFileInfActionUpdate
+    end
+    object CopyPathAction: TAction
+      Caption = #12371#12398#12501#12449#12452#12523#12398#12497#12473#12434#12467#12500#12540
+      OnExecute = CopyPathActionExecute
+      OnUpdate = CopyFileInfActionUpdate
     end
     object LogThisFileAction: TAction
       Caption = #12371#12398#12501#12449#12452#12523#12398#12467#12511#12483#12488#23653#27508#12434#34920#31034'(&F)'
@@ -727,6 +728,12 @@ object GitViewer: TGitViewer
     object CopyFileHashItem: TMenuItem
       Action = CopyFileHashAction
     end
+    object CopyPathItem: TMenuItem
+      Action = CopyPathAction
+    end
+    object Sep_d_2: TMenuItem
+      Caption = '-'
+    end
     object LogThisFileItem: TMenuItem
       Action = LogThisFileAction
     end
@@ -736,7 +743,7 @@ object GitViewer: TGitViewer
     object ViewFileItem: TMenuItem
       Action = ViewFileAction
     end
-    object Sep_d_2: TMenuItem
+    object Sep_d_3: TMenuItem
       Caption = '-'
     end
     object AddA2Item: TMenuItem
@@ -747,12 +754,6 @@ object GitViewer: TGitViewer
     end
     object ResetAll2Item: TMenuItem
       Action = ResetAllAction
-    end
-    object Sep_d_3: TMenuItem
-      Caption = '-'
-    end
-    object AppFextColItem: TMenuItem
-      Action = AppFextColorAction
     end
   end
   object ComOptPopupMenu: TPopupMenu

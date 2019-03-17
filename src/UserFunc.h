@@ -102,7 +102,7 @@ void draw_SortMark(TCanvas *cv, int x, int y, bool is_asc, TColor fg = Graphics:
 #define UBMK_LEFT	11
 #define UBMK_RIGHT	12
 
-void set_ButtonMark(TSpeedButton *bp, int id = UBMK_DOWN, TColor fg = clBtnText);
+void set_ButtonMark(TSpeedButton *bp, int id = UBMK_DOWN, TColor fg = scl_BtnText, TColor bg = scl_BtnFace);
 
 double get_ZoomRatio(int vw, int vh, int iw, int ih, int mgn = 0, double limit = 1.0);
 

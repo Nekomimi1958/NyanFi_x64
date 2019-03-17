@@ -15,6 +15,7 @@ object PathMaskDlg: TPathMaskDlg
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
+  OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -28,7 +29,7 @@ object PathMaskDlg: TPathMaskDlg
     ModalResult = 2
     TabOrder = 3
   end
-  object OpePanel: TPanel
+  object OptPanel: TPanel
     Left = 0
     Top = 271
     Width = 564
@@ -37,10 +38,19 @@ object PathMaskDlg: TPathMaskDlg
     BevelOuter = bvNone
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 2
+    TabOrder = 1
     DesignSize = (
       564
       70)
+    object HideOptBtn: TSpeedButton
+      Left = 546
+      Top = 54
+      Width = 18
+      Height = 16
+      Anchors = [akTop, akRight]
+      Flat = True
+      OnClick = ChgOptBtnClick
+    end
     object UpButton: TButton
       Left = 232
       Top = 39
@@ -145,7 +155,10 @@ object PathMaskDlg: TPathMaskDlg
     Height = 254
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 1
+    TabOrder = 0
+    DesignSize = (
+      564
+      254)
     object PathMaskListBox: TListBox
       Left = 0
       Top = 0
@@ -171,7 +184,29 @@ object PathMaskDlg: TPathMaskDlg
       OnClick = PathMaskListBoxClick
       OnDblClick = PathMaskListBoxDblClick
       OnDrawItem = PathMaskListBoxDrawItem
-      OnKeyPress = PathMaskListBoxKeyPress
+      OnKeyDown = PathMaskListBoxKeyDown
+    end
+    object BlankPanel: TPanel
+      Left = 546
+      Top = 235
+      Width = 18
+      Height = 16
+      Anchors = [akRight, akBottom]
+      AutoSize = True
+      BevelOuter = bvNone
+      Color = clAppWorkSpace
+      ParentBackground = False
+      TabOrder = 1
+      Visible = False
+      StyleElements = [seBorder]
+      object ShowOptBtn: TSpeedButton
+        Left = 0
+        Top = 0
+        Width = 18
+        Height = 16
+        Flat = True
+        OnClick = ChgOptBtnClick
+      end
     end
   end
   object ActionList1: TActionList

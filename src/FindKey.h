@@ -23,12 +23,16 @@ __published:	// IDE で管理されるコンポーネント
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall WmMenuChar(TMessage &msg);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall DummyBtnClick(TObject *Sender);
 	void __fastcall CancelBtnClick(TObject *Sender);
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
+
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
 
 private:	// ユーザー宣言
 	bool __fastcall IsFirstCmdKey(UnicodeString keystr);

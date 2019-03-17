@@ -302,14 +302,6 @@ void __fastcall TGeneralInfoDlg::WmFormShowed(TMessage &msg)
 	Application->ProcessMessages();
 	GenListBox->Repaint();
 }
-//---------------------------------------------------------------------------
-void __fastcall TGeneralInfoDlg::WmMenuChar(TMessage &msg)
-{
-	if (msg.WParamHi==MF_POPUP)
-		TForm::Dispatch(&msg);
-	else
-		msg.Result = (MNC_CLOSE << 16);		//ビープ音が鳴らないようにする
-}
 
 //---------------------------------------------------------------------------
 //プレイリストの更新
@@ -711,10 +703,10 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 
 	//ログ
 	if (isLog) {
-		TColor fg =
-			use_fgsel? col_fgSelItem :
+		TColor fg = use_fgsel? col_fgSelItem :
 			is_match_regex(lbuf, _T("^.>([ECW]|     [45]\\d{2})\\s"))? col_Error :
 			(lbuf.Pos(':')==5 && contains_wd_i(lbuf, _T("開始|>>"))) ? col_Headline :
+										  StartsText("$ git ", lbuf) ? col_Headline :
 												 (lbuf.Pos('!')==10) ? AdjustColor(col_fgLog, 96) : col_fgLog;
 		RuledLnTextOut(yen_to_delimiter(lbuf), cv, rc, fg, tw, wlist.get());
 	}

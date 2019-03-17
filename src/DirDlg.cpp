@@ -730,7 +730,7 @@ void __fastcall TRegDirDlg::SaveAsWorkActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//オプションの開閉
+//設定パネルの開閉
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::SetOptBtn()
 {
@@ -746,13 +746,17 @@ void __fastcall TRegDirDlg::ChgOptBtnClick(TObject *Sender)
 	BlankPanel->Visible = !OptPanel->Visible;
 	ListScrPanel->UpdateKnob();
 	SetOptBtn();
+	if (!OptPanel->Visible) RegDirListBox->SetFocus();
 }
 
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift,
-		IsSpecial? _T(HELPTOPIC_FL) _T("#SpecialDirList") : _T("hid00054.htm"));
+	if (!IsSpecial && USAME_TI(get_KeyStr(Key, Shift), "Alt+O"))
+		ChgOptBtnClick(NULL);
+	else
+		SpecialKeyProc(this, Key, Shift,
+			IsSpecial? _T(HELPTOPIC_FL) _T("#SpecialDirList") : _T("hid00054.htm"));
 }
 //---------------------------------------------------------------------------
 

@@ -100,15 +100,6 @@ void __fastcall TFuncListDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TFuncListDlg::WmMenuChar(TMessage &msg)
-{
-	if (msg.WParamHi==MF_POPUP)
-		TForm::Dispatch(&msg);
-	else
-		msg.Result = (MNC_CLOSE << 16);
-}
-
-//---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::ClearList()
 {
 	FunctionList->Clear();

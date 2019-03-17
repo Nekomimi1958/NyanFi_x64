@@ -1873,7 +1873,7 @@ void out_Text(TCanvas *cv, int x, int y, const _TCHAR *s);
 void out_Text(TCanvas *cv, int x, int y, const _TCHAR *s, TColor fg);
 
 void out_TextEx(TCanvas *cv, int &x, int y, UnicodeString s,
-	TColor fg = col_None, TColor bg = col_None, int mgn = 0);
+	TColor fg = col_None, TColor bg = col_None, int mgn = 0, bool is_irreg = false);
 
 int  get_MatchWordList(UnicodeString lbuf, UnicodeString kwd,
 	bool migemo_sw, bool regex_sw, bool and_or_sw, TStringList *lst);

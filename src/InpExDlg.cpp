@@ -173,7 +173,10 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 		else
 			HelpTopic.sprintf(_T("%s"), _T(HELPTOPIC_TV) _T("#SetTopAddr"));
 		break;
-	case INPEX_JUMP_LINE:	HelpTopic.sprintf(_T("%s"), _T(HELPTOPIC_TV) _T("#JumpLine"));	break;
+	case INPEX_JUMP_LINE:
+		InputEdit->Text = EmptyStr;
+		HelpTopic.sprintf(_T("%s"), _T(HELPTOPIC_TV) _T("#JumpLine"));
+		break;
 	case INPEX_FIND_TAG:	HelpTopic.sprintf(_T("%s"), _T(HELPTOPIC_FL) _T("#FindTag"));	break;
 	case INPEX_ADD_TAG:		HelpTopic.sprintf(_T("%s"), _T(HELPTOPIC_FL) _T("#AddTag"));	break;
 	case INPEX_SET_TAG:		HelpTopic.sprintf(_T("%s"), _T(HELPTOPIC_FL) _T("#SetTag"));	break;

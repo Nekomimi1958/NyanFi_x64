@@ -123,15 +123,6 @@ void __fastcall TNetShareDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TNetShareDlg::WmMenuChar(TMessage &msg)
-{
-	if (msg.WParamHi==MF_POPUP)
-		TForm::Dispatch(&msg);
-	else
-		msg.Result = (MNC_CLOSE << 16);
-}
-
-//---------------------------------------------------------------------------
 //共有フォルダ一覧の更新
 //---------------------------------------------------------------------------
 void __fastcall TNetShareDlg::UpdateShareList(UnicodeString cnam)

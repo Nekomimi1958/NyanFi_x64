@@ -70,7 +70,7 @@ private:
 	int  MaxHchX;					//X位置の最大値(半角単位)
 	bool IsIrregFont;				//取得幅と表示幅が不一致(Ricty Diminished 対策)
 	int  LeftMargin;
-	int  CurTop;					//表示先頭行(1 ベース)
+	int  CurTop;					//表示先頭行(1ベース)
 	int  CurBottom;					//表示最下行
 	int  TopXpos;					//行頭の表示開始位置
 	int  TopMargin;					//行頭の余白
@@ -109,8 +109,8 @@ private:
 	line_rec* __fastcall AddDispLine(UnicodeString s, int lno, int lidx = 0);
 	void __fastcall ClearDispLine();
 
+	void __fastcall AlphaBlendCsvCol(TCanvas *cv, int max_x, int y, int h);
 	void __fastcall onRulerPaint(TObject *Sender);
-
 	void __fastcall PaintText();
 	bool __fastcall SetToggleSw(bool &sw, UnicodeString prm);
 
@@ -299,7 +299,7 @@ public:
 	void __fastcall LineEnd(bool sel = false);
 	void __fastcall TextTop(bool sel = false);
 	void __fastcall TextEnd(bool sel = false);
-	void __fastcall set_PosFromCol(int col);
+	bool __fastcall set_PosFromCol(int col);
 
 	void __fastcall WordLeft(bool sel = false);
 	void __fastcall WordRight(bool sel = false);
