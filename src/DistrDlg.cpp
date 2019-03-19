@@ -278,9 +278,9 @@ void __fastcall TDistributionDlg::UpdatePreview(bool upd)
 {
 	SkipCount = 0;
 
-	int ck_cnt = 0;
-	for (int i=0; i<RegListBox->Count; i++) if (RegListBox->Checked[i]) ck_cnt++;
-	StatusBar1->Panels->Items[0]->Text = UnicodeString().sprintf(_T("“o˜^:%u/%u"), ck_cnt, RegListBox->Count);
+	StatusBar1->Panels->Items[0]->Text =
+		UnicodeString().sprintf(_T("“o˜^:%u/%u"), get_CheckListCount(RegListBox), RegListBox->Count);
+
 	if (!upd) return;
 
 	struct def_rec {
@@ -667,8 +667,7 @@ void __fastcall TDistributionDlg::UpdateListItem(int idx)
 void __fastcall TDistributionDlg::CheckBtnClick(TObject *Sender)
 {
 	TCheckListBox *lp = RegListBox;
-	int chk_cnt = 0;
-	for (int i=0; i<lp->Count; i++) if (lp->Checked[i]) chk_cnt++;
+	int chk_cnt = get_CheckListCount(lp);
 	for (int i=0; i<lp->Count; i++) {
 		lp->Checked[i] = (chk_cnt==0);
 		UpdateListItem(i);

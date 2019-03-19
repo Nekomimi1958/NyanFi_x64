@@ -2,7 +2,7 @@ object TagManDlg: TTagManDlg
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu]
-  ClientHeight = 289
+  ClientHeight = 291
   ClientWidth = 310
   Color = clBtnFace
   Constraints.MinHeight = 320
@@ -23,19 +23,19 @@ object TagManDlg: TTagManDlg
     Left = 0
     Top = 23
     Width = 310
-    Height = 154
+    Height = 156
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     OnResize = ListPanelResize
     DesignSize = (
       310
-      154)
+      156)
     object TagCheckListBox: TCheckListBox
       Left = 0
       Top = 0
       Width = 310
-      Height = 154
+      Height = 156
       OnClickCheck = TagCheckListBoxClickCheck
       Align = alLeft
       Anchors = [akLeft, akTop, akRight, akBottom]
@@ -46,6 +46,7 @@ object TagManDlg: TTagManDlg
       Style = lbOwnerDrawFixed
       TabOrder = 0
       OnClick = TagCheckListBoxClick
+      OnDblClick = TagCheckListBoxDblClick
       OnDrawItem = TagCheckListBoxDrawItem
       OnKeyDown = TagCheckListBoxKeyDown
       OnKeyPress = TagCheckListBoxKeyPress
@@ -75,7 +76,7 @@ object TagManDlg: TTagManDlg
   end
   object OptPanel: TPanel
     Left = 0
-    Top = 209
+    Top = 211
     Width = 310
     Height = 80
     Align = alBottom
@@ -195,7 +196,7 @@ object TagManDlg: TTagManDlg
   end
   object SetColPanel: TPanel
     Left = 0
-    Top = 177
+    Top = 179
     Width = 310
     Height = 32
     Hint = #12479#12464#21029#37197#33394
@@ -272,7 +273,7 @@ object TagManDlg: TTagManDlg
   end
   object TagPopupMenu: TPopupMenu
     OnPopup = TagPopupMenuPopup
-    Left = 24
+    Left = 32
     Top = 56
     object RenTagItem: TMenuItem
       Action = RenTagAction

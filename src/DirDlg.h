@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  登録ディレクトリ													//
+//  登録ディレクトリ/特殊フォルダ一覧/参照								//
 //----------------------------------------------------------------------//
 #ifndef DirDlgH
 #define DirDlgH
@@ -36,7 +36,8 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *DowButton;
 	TButton *EditButton;
 	TButton *HiddenCanBtn;
-	TButton *RefDirButton;
+	TButton *RefDirBtn;
+	TButton *RefSpBtn;
 	TButton *UpButton;
 	TCheckBox *MoveTopCheckBox;
 	TEdit *DescEdit;
@@ -72,7 +73,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall EditItemActionUpdate(TObject *Sender);
 	void __fastcall AddItemActionExecute(TObject *Sender);
 	void __fastcall AddItemActionUpdate(TObject *Sender);
-	void __fastcall RefDirButtonClick(TObject *Sender);
+	void __fastcall RefDirBtnClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall ChgOptBtnClick(TObject *Sender);
 	void __fastcall FormResize(TObject *Sender);
@@ -92,6 +93,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall OpenByExpActionUpdate(TObject *Sender);
 	void __fastcall DelItemActionExecute(TObject *Sender);
 	void __fastcall DelItemActionUpdate(TObject *Sender);
+	void __fastcall RefSpBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	int  SelIndex;
@@ -105,13 +107,14 @@ private:	// ユーザー宣言
 	void __fastcall SetOptBtn();
 	int  __fastcall IndexOfDir(UnicodeString dnam);
 	void __fastcall ChangeItemActionExecute(int chg_mod);
-	UnicodeString __fastcall GetCurDirItem(bool dsp_sw = false, bool id_sw = false);
+	UnicodeString __fastcall GetCurDirItem(bool dsp_sw = false, bool nam_sw = false);
 
 public:		// ユーザー宣言
 	UsrScrollPanel *ListScrPanel;	//シンプルスクロールバー
 
 	bool IsSpecial;		//特殊フォルダ一覧
 	bool IsAddMode;		//追加モード
+	bool IsSelect;		//選択モード
 	UnicodeString CmdStr;
 
 	__fastcall TRegDirDlg(TComponent* Owner);

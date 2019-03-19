@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  登録ディレクトリ/特殊フォルダ一覧									//
+//  登録ディレクトリ/特殊フォルダ一覧/参照								//
 //----------------------------------------------------------------------//
 #include <vcl.h>
 #pragma hdrstop
@@ -29,7 +29,7 @@ void __fastcall TRegDirDlg::FormCreate(TObject *Sender)
 	EnvVarList	 = new TStringList();
 
 	IsSpecial = false;
-	IsAddMode = false;
+	IsAddMode = IsSelect = false;
 }
 
 //---------------------------------------------------------------------------
@@ -38,7 +38,7 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 	Caption = IsSpecial? "特殊フォルダ一覧" : "登録ディレクトリ";
 	CmdStr	= EmptyStr;
 
-	IniFile->LoadPosInfo(this, DialogCenter, (IsSpecial? _T("SpecialDirList") : null_TCHAR));
+	IniFile->LoadPosInfo(this, DialogCenter, (IsSpecial? (IsSelect? "SelSpecialDir" : "SpecialDirList") : ""));
 
 	InitializeListHeader(RegDirHeader, _T("キー|名前|場所"));
 	THeaderSections *sp = RegDirHeader->Sections;
@@ -171,10 +171,12 @@ void __fastcall TRegDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		IniFile->WriteInteger("RegDirGrid", "ColWidth1",	sp->Items[1]->Width);
 	}
 
-	IniFile->SavePosInfo(this, (IsSpecial? _T("SpecialDirList"): null_TCHAR));
+	IniFile->SavePosInfo(this, (IsSpecial? (IsSelect? "SelSpecialDir" : "SpecialDirList") : ""));
+
+	if (IsSelect) Action = caFree;
 
 	IsSpecial = false;
-	IsAddMode = false;
+	IsAddMode = IsSelect = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FormDestroy(TObject *Sender)
@@ -248,7 +250,7 @@ int __fastcall TRegDirDlg::IndexOfDir(UnicodeString dnam)
 //---------------------------------------------------------------------------
 UnicodeString __fastcall TRegDirDlg::GetCurDirItem(
 	bool dsp_sw,	//true = 特殊フォルダの表示名を取得	(default = false)
-	bool id_sw)		//true = CSIDLを取得				(default = false)
+	bool nam_sw)	//true = 特殊フォルダ名を付加		(default = false)
 {
 	UnicodeString dnam;
 	TListBox *lp = RegDirListBox;
@@ -262,6 +264,7 @@ UnicodeString __fastcall TRegDirDlg::GetCurDirItem(
 					if (contained_wd_i(_T("TEMP|TMP"), itm_buf[1])) dnam = "%" + itm_buf[1] + "%";
 					else dnam = ExcludeTrailingPathDelimiter(replace_str_by_list(dnam, EnvVarList));
 				}
+				if (nam_sw) dnam += ("\t" + itm_buf[1]);
 			}
 		}
 		else {
@@ -335,7 +338,7 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 
 	TListBox *lp = (TListBox*)Sender;
 	if (Key==VK_RETURN) {
-		jdir = GetCurDirItem();
+		jdir = GetCurDirItem(false, IsSelect);
 		if (!jdir.IsEmpty()) {
 			SelIndex = lp->ItemIndex;
 			found = true;
@@ -360,26 +363,32 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 
 	//確定
 	if (found) {
-		//特殊フォルダ
-		if (StartsStr("shell:", jdir)) {
-			CmdStr.sprintf(_T("OpenByExp_\"%s\""), jdir.c_str());
+		if (IsSelect) {
+			CmdStr = jdir;
 			ModalResult = mrOk;
 		}
-		//タグ検索
-		else if (remove_top_s(jdir, "#:")) {
-			NyanFiForm->RecoverFileList2();
-			CmdStr.sprintf(_T("FindTag_%s"), jdir.c_str());
-			ModalResult = mrOk;
-		}
-		//通常ディレクトリ
 		else {
-			NyanFiForm->RecoverFileList2();
-			UnicodeString dnam = get_actual_path(jdir);
-			if (is_dir_accessible(dnam)) {
-				NyanFiForm->UpdateCurPath(dnam);
+			//特殊フォルダ
+			if (StartsStr("shell:", jdir)) {
+				CmdStr.sprintf(_T("OpenByExp_\"%s\""), jdir.c_str());
 				ModalResult = mrOk;
 			}
-			else msgbox_ERR(USTR_CantAccessDir);
+			//タグ検索
+			else if (remove_top_s(jdir, "#:")) {
+				NyanFiForm->RecoverFileList2();
+				CmdStr.sprintf(_T("FindTag_%s"), jdir.c_str());
+				ModalResult = mrOk;
+			}
+			//通常ディレクトリ
+			else {
+				NyanFiForm->RecoverFileList2();
+				UnicodeString dnam = get_actual_path(jdir);
+				if (is_dir_accessible(dnam)) {
+					NyanFiForm->UpdateCurPath(dnam);
+					ModalResult = mrOk;
+				}
+				else msgbox_ERR(USTR_CantAccessDir);
+			}
 		}
 	}
 
@@ -627,10 +636,24 @@ void __fastcall TRegDirDlg::DelItemActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 //ディレクトリの参照
 //---------------------------------------------------------------------------
-void __fastcall TRegDirDlg::RefDirButtonClick(TObject *Sender)
+void __fastcall TRegDirDlg::RefDirBtnClick(TObject *Sender)
 {
 	UnicodeString dnam = DirEdit->Text;
 	if (UserModule->SelectDirEx(_T("登録ディレクトリ"), dnam)) DirEdit->Text = to_path_name(dnam);
+}
+//---------------------------------------------------------------------------
+//特殊フォルダの参照
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::RefSpBtnClick(TObject *Sender)
+{
+	TRegDirDlg *SelSpDirDlg = new TRegDirDlg(this);		//閉じたときに破棄される
+	SelSpDirDlg->IsSpecial	= true;
+	SelSpDirDlg->IsSelect	= true;
+	if (SelSpDirDlg->ShowModal()==mrOk) {
+		DirEdit->Text  = get_pre_tab(SelSpDirDlg->CmdStr);
+		DescEdit->Text = get_post_tab(SelSpDirDlg->CmdStr);
+		KeyEdit->SetFocus();
+	}
 }
 
 //---------------------------------------------------------------------------

@@ -47,7 +47,7 @@ object RegDirDlg: TRegDirDlg
       Width = 30
       Height = 26
       Action = UserModule.UpListItemAction
-      TabOrder = 7
+      TabOrder = 8
     end
     object DowButton: TButton
       Left = 256
@@ -55,7 +55,7 @@ object RegDirDlg: TRegDirDlg
       Width = 30
       Height = 26
       Action = UserModule.DownListItemAction
-      TabOrder = 8
+      TabOrder = 9
     end
     object EditButton: TButton
       Left = 79
@@ -63,7 +63,7 @@ object RegDirDlg: TRegDirDlg
       Width = 60
       Height = 26
       Action = EditItemAction
-      TabOrder = 5
+      TabOrder = 6
     end
     object AddButton: TButton
       Left = 16
@@ -71,7 +71,7 @@ object RegDirDlg: TRegDirDlg
       Width = 60
       Height = 26
       Action = AddItemAction
-      TabOrder = 4
+      TabOrder = 5
     end
     object DelButton: TButton
       Left = 142
@@ -79,7 +79,7 @@ object RegDirDlg: TRegDirDlg
       Width = 60
       Height = 26
       Action = DelItemAction
-      TabOrder = 6
+      TabOrder = 7
     end
     object DescEdit: TEdit
       Left = 59
@@ -93,22 +93,22 @@ object RegDirDlg: TRegDirDlg
     object DirEdit: TEdit
       Left = 224
       Top = 8
-      Width = 327
+      Width = 270
       Height = 21
       Hint = #29872#22659#22793#25968#12418#20351#29992#21487#33021
       Anchors = [akLeft, akTop, akRight]
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 2
     end
-    object RefDirButton: TButton
-      Left = 553
+    object RefDirBtn: TButton
+      Left = 496
       Top = 8
       Width = 36
       Height = 22
       Anchors = [akTop, akRight]
       Caption = '...'
       TabOrder = 3
-      OnClick = RefDirButtonClick
+      OnClick = RefDirBtnClick
     end
     object KeyEdit: TEdit
       Left = 16
@@ -125,7 +125,17 @@ object RegDirDlg: TRegDirDlg
       Width = 171
       Height = 17
       Caption = #21628#20986#38917#30446#12434#20808#38957#12408
-      TabOrder = 9
+      TabOrder = 10
+    end
+    object RefSpBtn: TButton
+      Left = 533
+      Top = 8
+      Width = 55
+      Height = 22
+      Anchors = [akTop, akRight]
+      Caption = #29305#27530'...'
+      TabOrder = 4
+      OnClick = RefSpBtnClick
     end
   end
   object HiddenCanBtn: TButton

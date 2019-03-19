@@ -30391,18 +30391,21 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 			//通常
 			else {
 				UnicodeString KeyStr = TwoStrokeSeq(Key, Shift);	if (KeyStr.IsEmpty()) return;
-				UnicodeString CmdStr = Key_to_CmdV(KeyStr);
-				CancelHelp	= !CmdStr.IsEmpty() && EndsStr("F1", KeyStr);
+				UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
+				UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+				CancelHelp	= !cmd_V.IsEmpty() && EndsStr("F1", KeyStr);
 				ActionParam = EmptyStr;
 
 				//コマンド処理
-				if (ExeCommandV(CmdStr))
+				if (ExeCommandV(cmd_V))
 					ClearKeyBuff(true);
 				//標準のキー処理
 				else if (TxtScrollPanel->Visible && TxtViewer->StdKeyOperation(KeyStr))
 					ClearKeyBuff(true);
 				//右クリックメニュー
-				else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(ViewPopupMenu, TextPaintBox);
+				else if (contained_wd_i(KeysStr_Popup, KeyStr) || StartsText("ContextMenu", cmd_F)) {
+					show_PopupMenu(ViewPopupMenu, TextPaintBox);
+				}
 				//補助画面(なければビュアー)を閉じる
 				else if (equal_ESC(KeyStr)) {
 					if (ExeCmdsBusy) {

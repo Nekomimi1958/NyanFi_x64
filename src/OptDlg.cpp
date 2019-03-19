@@ -502,8 +502,6 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	FrmMgnEdit->Tag				= (int)&ImgFrameMargin;
 	FitMaxZoomEdit->Tag			= (int)&ImgFitMaxZoom;
 	MinShowTimeEdit->Tag		= (int)&MinShowTime;
-	IniWinLeftEdit->Tag			= (int)&IniWinLeft;
-	IniWinTopEdit->Tag			= (int)&IniWinTop;
 	MsgHintTimeEdit->Tag		= (int)&MsgHintTime;
 	KeyHintTimeEdit->Tag		= (int)&KeyHintTime;
 	ImgGridHEdit->Tag			= (int)&ImgGridHorzN;
@@ -857,11 +855,14 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	BringOptionByTag(this);
 
 	//ƒ^ƒO‚ð—p‚¢‚È‚¢Ý’è
-	TempDirEdit->Text	= TempPath;
-	MigemoDirEdit->Text	= MigemoPath;
+	TempDirEdit->Text	 = TempPath;
+	MigemoDirEdit->Text  = MigemoPath;
 														//<<<<<<<X86_SPI
-	LimitTxtEdit->Text	= ViewTxtLimitSize/1024;
-	LimitBinEdit->Text	= ViewBinLimitSize/1048576;
+	LimitTxtEdit->Text	 = ViewTxtLimitSize/1024;
+	LimitBinEdit->Text	 = ViewBinLimitSize/1048576;
+	IniWinLeftEdit->Text = IniWinLeft;
+	IniWinTopEdit->Text  = IniWinTop;
+
 	MaxTasksComboBox->ItemIndex = MaxTasks - 1;
 	AppPrmComboBox->ItemIndex	= idx_of_word_i(_T("|FA|FL|FI|AO|LO|LI"), AppListHotPrm);
 	ShowIconCheckBox->Checked	= IconMode>0;
@@ -4004,6 +4005,8 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 	ViewTxtLimitSize = EditToInt(LimitTxtEdit) * 1024;
 	ViewBinLimitSize = std::max(StrToInt64Def(LimitBinEdit->Text, 0) * 1048576, 1048576LL);
 	DirDelimiter	 = DirDelimiter.IsEmpty()? UnicodeString("/") : DirDelimiter.SubString(1, 1);
+	IniWinLeft		 = EditToInt(IniWinLeftEdit);
+	IniWinTop		 = EditToInt(IniWinTopEdit);
 
 	if (IconMode==0 && ShowIconCheckBox->Checked) IconMode = 1;
 	else if (!ShowIconCheckBox->Checked) IconMode = 0;

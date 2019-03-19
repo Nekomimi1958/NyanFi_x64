@@ -79,6 +79,23 @@ HWND get_window_from_pos()
 }
 
 //---------------------------------------------------------------------------
+//Vista以降の拡張フレームに対応したサイズ設定
+//---------------------------------------------------------------------------
+void set_window_pos_ex(HWND hWnd, TRect rc)
+{
+	TRect rc1, rc2;
+	::GetWindowRect(hWnd, &rc1);
+	if (::DwmGetWindowAttribute(hWnd, DWMWA_EXTENDED_FRAME_BOUNDS, &rc2, sizeof(rc2))!=S_OK) rc2 = rc1;
+	rc.Left   += (rc1.Left   - rc2.Left);
+	rc.Right  += (rc1.Right  - rc2.Right);
+	rc.Top	  += (rc1.Top    - rc2.Top);
+	rc.Bottom += (rc1.Bottom - rc2.Bottom);
+
+	if (::IsIconic(hWnd)) ::ShowWindow(hWnd, SW_RESTORE);
+	::SetWindowPos(hWnd, HWND_TOP, rc.Left, rc.Top, rc.Width(), rc.Height(), SWP_SHOWWINDOW);
+}
+
+//---------------------------------------------------------------------------
 //コントロールに右クリックメニューを表示
 //---------------------------------------------------------------------------
 void show_PopupMenu(TPopupMenu *mp, TControl *cp)
@@ -1179,6 +1196,16 @@ void set_ListBox_ItemNo(TListBox *lp)
 	}
 
 	lp->Invalidate();
+}
+
+//---------------------------------------------------------------------------
+//TCheckListBox でチェックされている項目数を取得
+//---------------------------------------------------------------------------
+int get_CheckListCount(TCheckListBox *lp)
+{
+	int cnt = 0;
+	for (int i=0; i<lp->Count; i++) if (lp->Checked[i]) cnt++;
+	return cnt;
 }
 
 //---------------------------------------------------------------------------

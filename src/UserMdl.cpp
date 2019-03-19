@@ -1059,10 +1059,7 @@ void __fastcall TUserModule::SizePosToFlieListActionExecute(TObject *Sender)
 {
 	TForm *frm = Screen->ActiveForm;
 	if (frm && (frm->BorderStyle==bsSizeable || frm->BorderStyle==bsSizeToolWin)) {
-		frm->Left   = FileListRect.Left;
-		frm->Top    = FileListRect.Top;
-		frm->Width  = FileListRect.Width();
-		frm->Height = FileListRect.Height();
+		set_window_pos_ex(frm->Handle, FileListRect);
 	}
 }
 

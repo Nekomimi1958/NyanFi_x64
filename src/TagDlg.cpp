@@ -179,6 +179,12 @@ void __fastcall TTagManDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	if (IsFolderIcon) {
 		IniFile->WriteBoolGen(_T("FindIcoResLink"),		ResLinkCheckBox);
 		IniFile->WriteBoolGen(_T("FindIcoShowOpt"),		OptPanel->Visible);
+
+		if (ModalResult==mrOk) {
+			TCheckListBox *lp = TagCheckListBox;
+			if (get_CheckListCount(lp)==0 && lp->ItemIndex!=-1)
+				lp->Checked[lp->ItemIndex] = true;
+		}
 	}
 	else if (SameText(CmdStr, "FindTag")) {
 		IniFile->WriteBoolGen(_T("FindTagDlgHide"),		HideCheckBox);
@@ -270,7 +276,7 @@ void __fastcall TTagManDlg::ChgOptBtnClick(TObject *Sender)
 	BlankPanel->Visible  = !OptPanel->Visible;
 	SetColPanel->Visible = !IsFolderIcon && OptPanel->Visible;
 
-	Constraints->MinWidth = OptPanel->Visible? 320 : 160;
+	Constraints->MinWidth = OptPanel->Visible? (IsFolderIcon? 240 : 320) : 160;
 
 	SetOptBtn();
 }
@@ -342,6 +348,11 @@ void __fastcall TTagManDlg::TagCheckListBoxClick(TObject *Sender)
 	TagCheckListBox->Invalidate();
 }
 //---------------------------------------------------------------------------
+void __fastcall TTagManDlg::TagCheckListBoxDblClick(TObject *Sender)
+{
+	if (IsFolderIcon) perform_Key_RETURN(TagCheckListBox);
+}
+//---------------------------------------------------------------------------
 void __fastcall TTagManDlg::TagCheckListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
@@ -361,9 +372,7 @@ void __fastcall TTagManDlg::TagCheckListBoxKeyDown(TObject *Sender, WORD &Key, T
 	}
 	//全チェック/解除
 	else if (lp->Count>0 && StartsText("SelAll", cmd_F)) {
-		int cnt = 0;
-		for (int i=0; i<lp->Count; i++) if (lp->Checked[i]) cnt++;
-		lp->CheckAll((cnt>0)? cbUnchecked : cbChecked);
+		lp->CheckAll((get_CheckListCount(lp)>0)? cbUnchecked : cbChecked);
 		lp->Invalidate();
 		TagCheckListBoxClickCheck(NULL);
 	}
@@ -374,7 +383,9 @@ void __fastcall TTagManDlg::TagCheckListBoxKeyDown(TObject *Sender, WORD &Key, T
 		TRegExOptions opt; opt << roIgnoreCase;
 		for (int i=0; i<lp->Count && idx1==-1; i++) {
 			if (i<=idx && idx0!=-1) continue;
-			if (TRegEx::IsMatch(lp->Items->Strings[i], KeyStr, opt)) ((i<=idx)? idx0 : idx1) = i;
+			UnicodeString lbuf = lp->Items->Strings[i];
+			if (IsFolderIcon) lbuf = get_base_name(lbuf);
+			if (TRegEx::IsMatch(lbuf, KeyStr, opt)) ((i<=idx)? idx0 : idx1) = i;
 		}
 		idx = (idx1!=-1)? idx1 : idx0;
 		if (idx!=-1) {
@@ -392,7 +403,6 @@ void __fastcall TTagManDlg::TagCheckListBoxKeyDown(TObject *Sender, WORD &Key, T
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::TagCheckListBoxKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	//インクリメンタルサーチを回避
 	Key = 0;
 }
 
@@ -647,13 +657,15 @@ void __fastcall TTagManDlg::CanButtonClick(TObject *Sender)
 	else
 		ModalResult = mrCancel;
 }
+
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 
-	if (equal_ENTER(KeyStr))
+	if (equal_ENTER(KeyStr)) {
 		ModalResult = mrOk;
+	}
 	else if (equal_ESC(KeyStr)) {
 		if (UserModule->SpuitEnabled()) {
 			SwatchPanel->Visible = false;

@@ -379,6 +379,9 @@ void __fastcall TAppListDlg::UpdateAppList()
 			UnicodeString cnam = get_WndClassName(hWnd);
 			if (!::IsWindowVisible(hWnd) && !Application->MainForm->ClassNameIs(cnam)) break;
 
+			BOOL cloaked;
+			if (::DwmGetWindowAttribute(hWnd, DWMWA_CLOAKED, &cloaked, sizeof(cloaked))==S_OK && cloaked) break;
+
 			//拡張ウィンドウスタイル
 			LONG w_style = ::GetWindowLong(hWnd, GWL_EXSTYLE);
 			if (w_style & WS_EX_TOOLWINDOW) break;
@@ -387,7 +390,9 @@ void __fastcall TAppListDlg::UpdateAppList()
 
 			//ウィンドウサイズ
 			TRect w_rect;
-			::GetWindowRect(hWnd, &w_rect);
+			if (::DwmGetWindowAttribute(hWnd, DWMWA_EXTENDED_FRAME_BOUNDS, &w_rect, sizeof(w_rect))!=S_OK) {
+				::GetWindowRect(hWnd, &w_rect);
+			}
 			if (w_rect.IsEmpty()) break;
 
 			//テキスト
@@ -1011,8 +1016,7 @@ void __fastcall TAppListDlg::FitToFileListActionExecute(TObject *Sender)
 	AppWinInf *ap = GetCurAppWinInf();
 	if (ap) {
 		if (::IsIconic(ap->WinHandle)) ::ShowWindow(ap->WinHandle, SW_RESTORE);
-		TRect rc = UserModule->FileListRect;
-		::SetWindowPos(ap->WinHandle, HWND_TOP, rc.Left, rc.Top, rc.Width(), rc.Height(), SWP_SHOWWINDOW);
+		set_window_pos_ex(ap->WinHandle, UserModule->FileListRect);
 	}
 }
 //---------------------------------------------------------------------------

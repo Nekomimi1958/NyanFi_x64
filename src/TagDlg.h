@@ -108,6 +108,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CanButtonClick(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall ListPanelResize(TObject *Sender);
+	void __fastcall TagCheckListBoxDblClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

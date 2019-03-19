@@ -51,12 +51,8 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	TStringGrid *gp = EditHistGrid;
 	InitializeListGrid(gp);
 
-	if		(isRecent) this->Name = "RecentListDlg";
-	else if	(isMark)   this->Name = "MarkListDlg";
-	else if	(isRepo)   this->Name = "RepoListDlg";
-	else if (isTags)   this->Name = "TagJumpDlg";
-	IniFile->LoadPosInfo(this, DialogCenter);
-	this->Name = "EditHistoryDlg";
+	IniFile->LoadPosInfo(this, DialogCenter,
+		isRecent? "RecentListDlg" : isMark? "MarkListDlg" : isRepo? "RepoListDlg" : isTags? "TagJumpDlg" : "");
 
 	OpeToolBar->GradientStartColor = col_bgTlBar1;
 	OpeToolBar->GradientEndColor   = col_bgTlBar2;
@@ -235,12 +231,8 @@ void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action
 {
 	TStringGrid *gp = EditHistGrid;
 
-	if		(isRecent) this->Name = "RecentListDlg";
-	else if	(isMark)   this->Name = "MarkListDlg";
-	else if	(isRepo)   this->Name = "RepoListDlg";
-	else if (isTags)   this->Name = "TagJumpDlg";
-	IniFile->SavePosInfo(this);
-	this->Name = "EditHistoryDlg";
+	IniFile->SavePosInfo(this,
+		isRecent? "RecentListDlg" : isMark? "MarkListDlg" : isRepo? "RepoListDlg" : isTags? "TagJumpDlg" : "");
 
 	if		(isRecent) gp->Name = "RecentListGrid";
 	else if (isMark)   gp->Name = "MarkListGrid";

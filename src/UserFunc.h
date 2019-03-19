@@ -43,6 +43,8 @@ void InitializeSysColor();
 bool is_HighContrast();
 
 HWND get_window_from_pos();
+void set_window_pos_ex(HWND hWnd, TRect rc);
+
 void show_PopupMenu(TPopupMenu *mp, TControl *cp);
 void show_PopupMenu(TListBox *cp);
 void show_PopupMenu(TCheckListBox *cp);
@@ -149,6 +151,7 @@ void ListBoxSelectAll(TListBox *lp, bool sw = true);
 int  ListBoxInitialSearch(TListBox *lp, UnicodeString kptn, bool fnam_sw = false);
 UnicodeString ListBoxGetURL(TListBox *lp);
 void set_ListBox_ItemNo(TListBox *lp);
+int get_CheckListCount(TCheckListBox *lp);
 
 void GridCursorLeft(TStringGrid *gp);
 void GridCursorRight(TStringGrid *gp);

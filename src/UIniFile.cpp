@@ -478,12 +478,11 @@ void UsrIniFile::LoadPosInfo(TForm *frm, int x, int y, int w, int h, UnicodeStri
 		frm->Height = wh;
 	}
 
+	//1画面の場合、半分以上が画面外だったら中央に戻す
 	if (Screen->MonitorCount==1) {
-		//1画面の場合、画面外は除外
-		if (frm->Left<0) frm->Left = 0;
-		if (frm->Top<0)  frm->Top  = 0;
-		if (frm->BoundsRect.Right>Screen->Width)   frm->Left = Screen->Width - frm->Width;
-		if (frm->BoundsRect.Bottom>Screen->Height) frm->Top  = Screen->Height - frm->Height;
+		TRect rc = TRect::Intersect(Rect(0,0,Screen->Width,Screen->Height), frm->BoundsRect);
+		if (rc.Width()  < frm->Width/2)  frm->Left = (Screen->Width - frm->Width) / 2;
+		if (rc.Height() < frm->Height/2) frm->Top  = (Screen->Height - frm->Height) / 2;
 	}
 }
 //---------------------------------------------------------------------------

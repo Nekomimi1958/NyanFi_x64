@@ -1881,6 +1881,7 @@ void UserShell::get_SpecialFolderList(TStringList *lst)
 	lst->Add("shell:::{20D04FE0-3AEA-1069-A2D8-08002B30309D}\tPC/コンピュータ");
 	lst->Add("shell:::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}\tネットワーク");
 	lst->Add("shell:::{208D2C60-3AEA-1069-A2D7-08002B30309D}\tネットワーク(ワークグループ)");
+	lst->Add("shell:::{ED7BA470-8E54-465E-825C-99712043E01C}\tGodMode");
 	lst->Add("shell:ControlPanelFolder\tコントロールパネル");
 	lst->Add("shell:ConnectionsFolder\tネットワーク接続");
 	lst->Add("shell:PrintersFolder\tプリンター");

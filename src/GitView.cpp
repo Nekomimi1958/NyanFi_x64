@@ -1030,12 +1030,14 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 	}
 	//Œv
 	else {
-		for (int i=1; i<=lbuf.Length(); i++) {
-			WideChar c = lbuf[i];
-			out_TextEx(cv, xp, yp, c,
-				(c=='-')? col_GitDel : (c=='+')? col_GitIns : col_fgList, col_None, 0, is_irreg);
+		TStringDynArray t_buf = get_csv_array(lbuf, 3, true);
+		for (int i=0; i<3; i++) {
+			UnicodeString s = t_buf[i];
+			if (i>0) out_TextEx(cv, xp, yp, ",", col_fgList);
+			out_TextEx(cv, xp, yp, s,
+				remove_end_text(s, "(-)")? col_GitDel : remove_end_text(s, "(+)")? col_GitIns : col_fgList,
+				col_None, 0, is_irreg);
 		}
-
 		draw_separateLine(cv, Rect);
 	}
 
