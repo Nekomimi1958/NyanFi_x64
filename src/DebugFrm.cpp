@@ -36,6 +36,8 @@ void __fastcall TDebugForm::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
 
+	SetToolWinBorder(this);
+
 	ReferSplitter->Color = col_Splitter;
 
 	PreviewListBox->Font->Assign(TxtPrvFont);
@@ -54,11 +56,7 @@ void __fastcall TDebugForm::FormShow(TObject *Sender)
 
 	ReferPanel->Height = IniFile->ReadIntGen(_T("DebugReferHeight"), 200);
 
-	ToolBar1->Font->Assign(ToolBarFont);
-	ToolBar1->Font->Color		  = col_fgTlBar;
-	ToolBar1->GradientStartColor  = col_bgTlBar1;
-	ToolBar1->GradientEndColor	  = col_bgTlBar2;
-	ToolBar1->HotTrackColor		  = col_htTlBar;
+	setup_ToolBar(ToolBar1);
 
 	XCMD_ShowDebugInf();
 }

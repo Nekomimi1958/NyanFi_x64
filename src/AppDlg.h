@@ -102,6 +102,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *CloseSameItem;
 	TMenuItem *CopyNameItem;
 	TMenuItem *DesktopItem;
+	TMenuItem *FitSizePosItem;
 	TMenuItem *FitToFileListItem;
 	TMenuItem *JumpExeItem;
 	TMenuItem *JumpLaunchDirItem;
@@ -111,7 +112,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *LaunchRightItem;
 	TMenuItem *MaxWinItem;
 	TMenuItem *MinWinItem;
-	TMenuItem *N1;
 	TMenuItem *PropertyItem;
 	TMenuItem *RstWinItem;
 	TMenuItem *SelLaunhDirItem;
@@ -121,6 +121,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_l_1;
 	TMenuItem *Sep_l_2;
 	TMenuItem *Sep_l_3;
+	TMenuItem *SortByIconItem;
 	TMenuItem *SortByRemItem;
 	TMenuItem *TerminateItem;
 	TMenuItem *TopMostItem;
@@ -189,6 +190,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InpPaintBoxPaint(TObject *Sender);
 	void __fastcall FitToFileListActionExecute(TObject *Sender);
 	void __fastcall FitToFileListActionUpdate(TObject *Sender);
+	void __fastcall SortByIconItemClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	TAppWinList *AppInfoList;

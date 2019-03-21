@@ -35,6 +35,9 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_2;
 	TPanel *ImgPanel;
 	TPopupMenu *PopupMenu1;
+	TShape *BorderShape1;
+	TShape *BorderShape2;
+	TShape *BorderShape3;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

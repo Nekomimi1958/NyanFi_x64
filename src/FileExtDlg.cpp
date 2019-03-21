@@ -372,7 +372,7 @@ void __fastcall TFileExtensionDlg::GetResult(TStringList *lst, int mode)
 		int max_fext = 6;
 		for (int i=0; i<FextInfoList->Count; i++) max_fext = std::max(max_fext, FextInfoList->Strings[i].Length());
 
-		UnicodeString hr_str = make_RuledLine(5,  max_fext - 1, 9, 11, 6, 13);
+		UnicodeString hr_str = make_RuledLine(5, max_fext - 1, 9, 11, 6, 13);
 		UnicodeString lbuf;
 
 		switch (mode) {

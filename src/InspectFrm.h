@@ -16,25 +16,35 @@
 #include <Vcl.Menus.hpp>
 #include <Vcl.Buttons.hpp>
 #include "usr_scrpanel.h"
+#include <System.Actions.hpp>
+#include <Vcl.ActnList.hpp>
+#include <Vcl.ToolWin.hpp>
 
 //-----------------------------------------------
 class TInspectForm : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
-	TCheckBox *BigCheckBox;
-	TCheckBox *UnsigCheckBox;
+	TAction *BigEndianAction;
+	TAction *UnsignedAction;
+	TActionList *ActionList1;
 	THeaderControl *CodePageHeader;
 	THeaderControl *InspectHeader;
 	TMenuItem *CopyItem;
+	TPanel *ClientPanel;
 	TPanel *CodePanel;
 	TPanel *GridPanel;
 	TPanel *InspectPanel;
-	TPanel *OptPanel;
 	TPopupMenu *PopupMenu1;
+	TShape *BorderShape1;
+	TShape *BorderShape2;
+	TShape *BorderShape3;
 	TSplitter *GridSplitter;
 	TStatusBar *InsStatusBar;
 	TStringGrid *CodePageGrid;
 	TStringGrid *InspectGrid;
+	TToolBar *OptToolBar;
+	TToolButton *BeButton;
+	TToolButton *UsButton;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -52,6 +62,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CodePageHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
 		const TRect &Rect, bool Pressed);
 	void __fastcall CodePageHeaderResize(TObject *Sender);
+	void __fastcall UnsignedActionExecute(TObject *Sender);
+	void __fastcall BigEndianActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TColor ColorRef;

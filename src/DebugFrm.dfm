@@ -20,160 +20,193 @@ object DebugForm: TDebugForm
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object DebugPanel: TPanel
+  object BorderShape1: TShape
     Left = 0
-    Top = 19
+    Top = 0
+    Width = 1
+    Height = 440
+    Align = alLeft
+    Pen.Color = clSilver
+  end
+  object BorderShape2: TShape
+    Left = 383
+    Top = 0
+    Width = 1
+    Height = 440
+    Align = alRight
+    Pen.Color = clSilver
+  end
+  object BorderShape3: TShape
+    Left = 0
+    Top = 440
     Width = 384
-    Height = 422
+    Height = 1
+    Align = alBottom
+    Pen.Color = clSilver
+  end
+  object ClientPanel: TPanel
+    Left = 1
+    Top = 0
+    Width = 382
+    Height = 440
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    object ReferSplitter: TSplitter
+    object DebugPanel: TPanel
       Left = 0
-      Top = 225
-      Width = 384
-      Height = 4
-      Cursor = crVSplit
-      Align = alBottom
-    end
-    object ReferPanel: TPanel
-      Left = 0
-      Top = 229
-      Width = 384
-      Height = 193
-      Align = alBottom
-      BevelOuter = bvNone
-      TabOrder = 0
-      object ReferListBox: TListBox
-        Left = 0
-        Top = 0
-        Width = 384
-        Height = 193
-        Style = lbOwnerDrawFixed
-        Align = alLeft
-        Anchors = [akLeft, akTop, akRight, akBottom]
-        BorderStyle = bsNone
-        ItemHeight = 13
-        MultiSelect = True
-        TabOrder = 0
-        StyleElements = [seBorder]
-        OnDrawItem = ReferListBoxDrawItem
-        OnKeyDown = ReferListBoxKeyDown
-      end
-    end
-    object PrevPanel: TPanel
-      Left = 0
-      Top = 0
-      Width = 384
-      Height = 225
+      Top = 19
+      Width = 382
+      Height = 421
       Align = alClient
       BevelOuter = bvNone
-      TabOrder = 1
-      object PreviewListBox: TListBox
+      TabOrder = 0
+      object ReferSplitter: TSplitter
+        Left = 0
+        Top = 224
+        Width = 382
+        Height = 4
+        Cursor = crVSplit
+        Align = alBottom
+      end
+      object ReferPanel: TPanel
+        Left = 0
+        Top = 228
+        Width = 382
+        Height = 193
+        Align = alBottom
+        BevelOuter = bvNone
+        TabOrder = 0
+        object ReferListBox: TListBox
+          Left = 0
+          Top = 0
+          Width = 382
+          Height = 193
+          Style = lbOwnerDrawFixed
+          Align = alLeft
+          Anchors = [akLeft, akTop, akRight, akBottom]
+          BorderStyle = bsNone
+          ItemHeight = 13
+          MultiSelect = True
+          TabOrder = 0
+          StyleElements = [seBorder]
+          OnDrawItem = ReferListBoxDrawItem
+          OnKeyDown = ReferListBoxKeyDown
+        end
+      end
+      object PrevPanel: TPanel
         Left = 0
         Top = 0
-        Width = 384
-        Height = 225
-        Style = lbVirtualOwnerDraw
-        Align = alLeft
-        Anchors = [akLeft, akTop, akRight, akBottom]
-        BorderStyle = bsNone
-        ItemHeight = 13
-        MultiSelect = True
-        TabOrder = 0
-        StyleElements = [seBorder]
-        OnData = PreviewListBoxData
-        OnDrawItem = PreviewListBoxDrawItem
-        OnEnter = PreviewListBoxEnter
+        Width = 382
+        Height = 224
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 1
+        object PreviewListBox: TListBox
+          Left = 0
+          Top = 0
+          Width = 382
+          Height = 224
+          Style = lbVirtualOwnerDraw
+          Align = alLeft
+          Anchors = [akLeft, akTop, akRight, akBottom]
+          BorderStyle = bsNone
+          ItemHeight = 13
+          MultiSelect = True
+          TabOrder = 0
+          StyleElements = [seBorder]
+          OnData = PreviewListBoxData
+          OnDrawItem = PreviewListBoxDrawItem
+          OnEnter = PreviewListBoxEnter
+        end
       end
     end
-  end
-  object OpPanel: TPanel
-    Left = 0
-    Top = 0
-    Width = 384
-    Height = 19
-    Align = alTop
-    AutoSize = True
-    BevelOuter = bvNone
-    TabOrder = 1
-    object ToolBar1: TToolBar
+    object OpPanel: TPanel
       Left = 0
       Top = 0
-      Width = 384
+      Width = 382
       Height = 19
+      Align = alTop
       AutoSize = True
-      ButtonHeight = 19
-      ButtonWidth = 20
-      Caption = 'ToolBar1'
-      DrawingStyle = dsGradient
-      List = True
-      ShowCaptions = True
-      TabOrder = 0
-      StyleElements = []
-      object ToolButton1: TToolButton
+      BevelOuter = bvNone
+      TabOrder = 1
+      object ToolBar1: TToolBar
         Left = 0
         Top = 0
-        Action = StepAction
-      end
-      object ToolButton2: TToolButton
-        Left = 20
-        Top = 0
-        Action = GoAction
-      end
-      object ToolButton3: TToolButton
-        Left = 40
-        Top = 0
-        Action = BreakAction
-      end
-      object SepBtn1: TToolButton
-        Left = 60
-        Top = 0
-        Width = 12
-        Caption = 'SepBtn1'
-        ImageIndex = 7
-        Style = tbsSeparator
-      end
-      object ToolButton4: TToolButton
-        Left = 72
-        Top = 0
-        Action = QuitAction
-      end
-      object ToolButton5: TToolButton
-        Left = 92
-        Top = 0
-        Action = ExitAction
-      end
-      object SepBtn2: TToolButton
-        Left = 112
-        Top = 0
-        Width = 12
-        Caption = 'SepBtn2'
-        ImageIndex = 0
-        Style = tbsSeparator
-      end
-      object ToolButton6: TToolButton
-        Left = 124
-        Top = 0
-        Action = VarListAction
-      end
-      object ToolButton7: TToolButton
-        Left = 144
-        Top = 0
-        Action = EditAction
-      end
-      object SepBtn3: TToolButton
-        Left = 164
-        Top = 0
-        Width = 12
-        Caption = 'SepBtn3'
-        ImageIndex = 6
-        Style = tbsSeparator
-      end
-      object ToolButton8: TToolButton
-        Left = 176
-        Top = 0
-        Action = HelpAction
+        Width = 382
+        Height = 19
+        AutoSize = True
+        ButtonHeight = 19
+        ButtonWidth = 20
+        Caption = 'ToolBar1'
+        DrawingStyle = dsGradient
+        List = True
+        ShowCaptions = True
+        TabOrder = 0
+        StyleElements = []
+        object ToolButton1: TToolButton
+          Left = 0
+          Top = 0
+          Action = StepAction
+        end
+        object ToolButton2: TToolButton
+          Left = 20
+          Top = 0
+          Action = GoAction
+        end
+        object ToolButton3: TToolButton
+          Left = 40
+          Top = 0
+          Action = BreakAction
+        end
+        object SepBtn1: TToolButton
+          Left = 60
+          Top = 0
+          Width = 12
+          Caption = 'SepBtn1'
+          ImageIndex = 7
+          Style = tbsSeparator
+        end
+        object ToolButton4: TToolButton
+          Left = 72
+          Top = 0
+          Action = QuitAction
+        end
+        object ToolButton5: TToolButton
+          Left = 92
+          Top = 0
+          Action = ExitAction
+        end
+        object SepBtn2: TToolButton
+          Left = 112
+          Top = 0
+          Width = 12
+          Caption = 'SepBtn2'
+          ImageIndex = 0
+          Style = tbsSeparator
+        end
+        object ToolButton6: TToolButton
+          Left = 124
+          Top = 0
+          Action = VarListAction
+        end
+        object ToolButton7: TToolButton
+          Left = 144
+          Top = 0
+          Action = EditAction
+        end
+        object SepBtn3: TToolButton
+          Left = 164
+          Top = 0
+          Width = 12
+          Caption = 'SepBtn3'
+          ImageIndex = 6
+          Style = tbsSeparator
+        end
+        object ToolButton8: TToolButton
+          Left = 176
+          Top = 0
+          Action = HelpAction
+        end
       end
     end
   end

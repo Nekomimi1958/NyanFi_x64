@@ -36,6 +36,9 @@ void __fastcall TGifViewer::FormCreate(TObject *Sender)
 void __fastcall TGifViewer::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this);
+
+	SetToolWinBorder(this);
+
 	ImgPanel->Color = IniFile->ReadColGen(_T("GifViewBgCol"),	col_bgImage);
 	Color = ImgPanel->Color;
 }

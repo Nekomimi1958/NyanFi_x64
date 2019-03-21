@@ -28,6 +28,8 @@ void __fastcall TCharInfoForm::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this);
 
+	SetToolWinBorder(this);
+
 	TListBox *lp = InfoListBox;
 	lp->Color = col_bgInf;
 	lp->Font->Assign(FileInfFont);
@@ -42,6 +44,7 @@ void __fastcall TCharInfoForm::FormHide(TObject *Sender)
 {
 	IniFile->SavePosInfo(this);
 }
+
 //---------------------------------------------------------------------------
 void __fastcall TCharInfoForm::SetCharFont()
 {

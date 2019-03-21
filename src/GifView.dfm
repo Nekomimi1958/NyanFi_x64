@@ -18,11 +18,35 @@ object GifViewer: TGifViewer
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object ImgPanel: TPanel
+  object BorderShape1: TShape
     Left = 0
     Top = 0
+    Width = 1
+    Height = 247
+    Align = alLeft
+    Pen.Color = clSilver
+  end
+  object BorderShape2: TShape
+    Left = 309
+    Top = 0
+    Width = 1
+    Height = 247
+    Align = alRight
+    Pen.Color = clSilver
+  end
+  object BorderShape3: TShape
+    Left = 0
+    Top = 247
     Width = 310
-    Height = 248
+    Height = 1
+    Align = alBottom
+    Pen.Color = clSilver
+  end
+  object ImgPanel: TPanel
+    Left = 1
+    Top = 0
+    Width = 308
+    Height = 247
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -30,8 +54,8 @@ object GifViewer: TGifViewer
     object Image1: TImage
       Left = 0
       Top = 0
-      Width = 310
-      Height = 248
+      Width = 308
+      Height = 247
       Align = alClient
       Center = True
       PopupMenu = PopupMenu1

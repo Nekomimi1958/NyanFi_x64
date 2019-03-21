@@ -28,9 +28,13 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *TopIsHeaderCheckBox;
 	THeaderControl *RecordHeader;
 	TMenuItem *CopyItem;
+	TPanel *ClientPanel;
 	TPanel *GridPanel;
 	TPanel *OptPanel;
 	TPopupMenu *PopupMenu1;
+	TShape *BorderShape1;
+	TShape *BorderShape2;
+	TShape *BorderShape3;
 	TStringGrid *RecordGrid;
 
 	void __fastcall FormCreate(TObject *Sender);

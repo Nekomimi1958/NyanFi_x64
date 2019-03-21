@@ -168,7 +168,7 @@ void __fastcall TFindFileDlg::FormShow(TObject *Sender)
 		TxtCaseCheckBox->Checked  = IniFile->ReadBoolGen(_T("FindTxtCase"));
 		TxtAndCheckBox->Checked	  = IniFile->ReadBoolGen(_T("FindTxtAnd"));
 		TxtRegExCheckBox->Checked = IniFile->ReadBoolGen(_T("FindTxtRegEx"));
-		IniFile->LoadComboBoxItems(TxtKwdComboBox,  TxtRegExCheckBox->Checked? _T("FindTxtPtnHistory") : _T("FindTxtKwdHistory"));
+		IniFile->LoadComboBoxItems(TxtKwdComboBox, TxtRegExCheckBox->Checked? _T("FindTxtPtnHistory") : _T("FindTxtKwdHistory"));
 		TxtKwdComboBox->Text	  = EmptyStr;
 
 		IconEdit->Text			  = IniFile->ReadStrGen(_T("FindIconText"),	"1");
@@ -330,7 +330,7 @@ void __fastcall TFindFileDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		IniFile->WriteBoolGen(_T("FindSubDir"),		SubDirCheckBox);
 		IniFile->WriteBoolGen(_T("FindArchive"),	ArcCheckBox);
 
-		if (ExtraCheckBox->Visible) IniFile->WriteBoolGen(_T("FindExtra"),  ExtraCheckBox);
+		if (ExtraCheckBox->Visible) IniFile->WriteBoolGen(_T("FindExtra"), ExtraCheckBox);
 
 		LatLngHistory->Assign(LatLngComboBox->Items);
 	}

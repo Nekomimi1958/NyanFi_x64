@@ -35,9 +35,12 @@ void __fastcall TInspectForm::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this);
 
-	GridPanel->Height	   = IniFile->ReadIntGen(_T("InspectGridHeight"),	200);
-	UnsigCheckBox->Checked = IniFile->ReadBoolGen(_T("InspectUnsigned"));
-	BigCheckBox->Checked   = IniFile->ReadBoolGen(_T("InspectBigEndian"));
+	SetToolWinBorder(this);
+	setup_ToolBar(OptToolBar);
+
+	GridPanel->Height		 = IniFile->ReadIntGen(_T("InspectGridHeight"),	200);
+	UnsignedAction->Checked  = IniFile->ReadBoolGen(_T("InspectUnsigned"));
+	BigEndianAction->Checked = IniFile->ReadBoolGen(_T("InspectBigEndian"));
 
 	InsStatusBar->Font->Assign(ViewerFont);
 	InsStatusBar->ClientHeight = get_FontHeight(ViewerFont, 4, 4);
@@ -72,8 +75,8 @@ void __fastcall TInspectForm::FormHide(TObject *Sender)
 	IniFile->SaveGridColWidth(CodePageGrid);
 
 	IniFile->WriteIntGen(_T("InspectGridHeight"),	GridPanel->Height);
-	IniFile->WriteBoolGen(_T("InspectUnsigned"), 	UnsigCheckBox);
-	IniFile->WriteBoolGen(_T("InspectBigEndian"),	BigCheckBox);
+	IniFile->WriteBoolGen(_T("InspectUnsigned"),	UnsignedAction);
+	IniFile->WriteBoolGen(_T("InspectBigEndian"),	BigEndianAction);
 }
 //---------------------------------------------------------------------------
 void __fastcall TInspectForm::FormDestroy(TObject *Sender)
@@ -127,13 +130,11 @@ void __fastcall TInspectForm::CodePageHeaderSectionResize(THeaderControl *Header
 //---------------------------------------------------------------------------
 void __fastcall TInspectForm::OptCheckBoxClick(TObject *Sender)
 {
-	bool u_sw = UnsigCheckBox->Checked;
-
 	const char *tit[8] = {
-		u_sw? "unsigned char"  : "char",
-		u_sw? "unsigned short" : "short",
-		u_sw? "unsigned int"   : "int",
-		u_sw? "unsigned int64" : "int64",
+		UnsignedAction->Checked? "unsigned char"  : "char",
+		UnsignedAction->Checked? "unsigned short" : "short",
+		UnsignedAction->Checked? "unsigned int"   : "int",
+		UnsignedAction->Checked? "unsigned int64" : "int64",
 		"float",
 		"double",
 		"synchsafe int BE",
@@ -176,7 +177,6 @@ void __fastcall TInspectForm::UpdateValue()
 	TStringGrid *gp = InspectGrid;
 	for (int i=0; i<gp->RowCount; i++) gp->Cells[1][i] = EmptyStr;
 
-	bool is_BE = BigCheckBox->Checked;
 	UnicodeString vstr;
 	ColorRef = clBlack;
 
@@ -184,7 +184,7 @@ void __fastcall TInspectForm::UpdateValue()
 	BYTE buf[8];
 	if (Bytes.Length>=1) {
 		BYTE n = Bytes[0];
-		if (UnsigCheckBox->Checked)
+		if (UnsignedAction->Checked)
 			vstr.sprintf(_T("%u"), (unsigned char)n);
 		else
 			vstr.sprintf(_T("%d"), (char)n);
@@ -199,15 +199,15 @@ void __fastcall TInspectForm::UpdateValue()
 	}
 	//2バイト
 	if (Bytes.Length>=2) {
-		for (int i=0; i<2; i++) buf[is_BE? 1 - i : i] = Bytes[i];
-		gp->Cells[1][1] = UnsigCheckBox->Checked ? FormatFloat(",0", *(unsigned short*)&buf[0])
-												 : FormatFloat(",0", *(short*)&buf[0]);
+		for (int i=0; i<2; i++) buf[BigEndianAction->Checked? 1 - i : i] = Bytes[i];
+		gp->Cells[1][1] = UnsignedAction->Checked ? FormatFloat(",0", *(unsigned short*)&buf[0])
+												  : FormatFloat(",0", *(short*)&buf[0]);
 	}
 	//4バイト
 	if (Bytes.Length>=4) {
-		for (int i=0; i<4; i++) buf[is_BE? 3 - i : i] = Bytes[i];
-		gp->Cells[1][2] = UnsigCheckBox->Checked ? FormatFloat(",0", *(unsigned int*)&buf[0])
-												 : FormatFloat(",0", *(int*)&buf[0]);
+		for (int i=0; i<4; i++) buf[BigEndianAction->Checked? 3 - i : i] = Bytes[i];
+		gp->Cells[1][2] = UnsignedAction->Checked ? FormatFloat(",0", *(unsigned int*)&buf[0])
+												  : FormatFloat(",0", *(int*)&buf[0]);
 		//float
 		float v = *(float*)&buf[0];
 		if (IsNan(v)) vstr.USET_T("NAN"); else vstr.sprintf(_T("%g"), v);
@@ -223,8 +223,8 @@ void __fastcall TInspectForm::UpdateValue()
 	}
 	//8バイト
 	if (Bytes.Length>=8) {
-		for (int i=0; i<8; i++) buf[is_BE? 7-i : i] = Bytes[i];
-		if (UnsigCheckBox->Checked)
+		for (int i=0; i<8; i++) buf[BigEndianAction->Checked? 7-i : i] = Bytes[i];
+		if (UnsignedAction->Checked)
 			vstr.sprintf(_T("%Lu"), *(unsigned __int64*)&buf[0]);
 		else
 			vstr.sprintf(_T("%Ld"), *(__int64*)&buf[0]);
@@ -336,6 +336,19 @@ void __fastcall TInspectForm::CopyItemClick(TObject *Sender)
 void __fastcall TInspectForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	if (Key==VK_ESCAPE) Close(); else Application->MainForm->SetFocus();
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TInspectForm::UnsignedActionExecute(TObject *Sender)
+{
+	UnsignedAction->Checked = !UnsignedAction->Checked;
+	OptCheckBoxClick(NULL);
+}
+//---------------------------------------------------------------------------
+void __fastcall TInspectForm::BigEndianActionExecute(TObject *Sender)
+{
+	BigEndianAction->Checked = !BigEndianAction->Checked;
+	OptCheckBoxClick(NULL);
 }
 //---------------------------------------------------------------------------
 

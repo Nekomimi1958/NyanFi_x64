@@ -36,10 +36,14 @@ __published:	// IDE で管理されるコンポーネント
 	TPaintBox *BitmapBox;
 	TPaintBox *FileMapBox;
 	TPanel *BorderPanel;
+	TPanel *ClientPanel;
 	TPanel *FileMapPanel;
 	TPopupMenu *PopupMenu1;
 	TPopupMenu *PopupMenu2;
 	TScrollBox *MapScrBox;
+	TShape *BorderShape1;
+	TShape *BorderShape2;
+	TShape *BorderShape3;
 	TSpeedButton *EndButton;
 	TSpeedButton *NxtButton;
 	TSpeedButton *PreButton;

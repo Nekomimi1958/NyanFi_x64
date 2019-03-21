@@ -5,7 +5,7 @@ object BitmapForm: TBitmapForm
   BorderStyle = bsSizeToolWin
   Caption = #12499#12483#12488#12510#12483#12503#12499#12517#12540
   ClientHeight = 266
-  ClientWidth = 156
+  ClientWidth = 150
   Color = clBtnFace
   Constraints.MaxWidth = 164
   Constraints.MinHeight = 200
@@ -23,123 +23,156 @@ object BitmapForm: TBitmapForm
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object BitmapSttBar: TStatusBar
+  object BorderShape1: TShape
     Left = 0
-    Top = 247
-    Width = 156
-    Height = 19
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBtnText
-    Font.Height = -13
-    Font.Name = 'Meiryo UI'
-    Font.Pitch = fpVariable
-    Font.Style = []
-    Panels = <
-      item
-        Width = 200
-      end>
-    UseSystemFont = False
-  end
-  object BorderPanel: TPanel
-    Left = 20
     Top = 0
-    Width = 136
-    Height = 247
+    Width = 1
+    Height = 265
+    Align = alLeft
+    Pen.Color = clSilver
+  end
+  object BorderShape2: TShape
+    Left = 149
+    Top = 0
+    Width = 1
+    Height = 265
+    Align = alRight
+    Pen.Color = clSilver
+  end
+  object BorderShape3: TShape
+    Left = 0
+    Top = 265
+    Width = 150
+    Height = 1
+    Align = alBottom
+    Pen.Color = clSilver
+  end
+  object ClientPanel: TPanel
+    Left = 1
+    Top = 0
+    Width = 148
+    Height = 265
     Align = alClient
     BevelOuter = bvNone
-    BorderWidth = 4
-    Color = clAppWorkSpace
-    ParentBackground = False
-    TabOrder = 1
-    object MapScrBox: TScrollBox
-      Left = 4
-      Top = 4
-      Width = 128
-      Height = 239
-      HorzScrollBar.Visible = False
-      VertScrollBar.Tracking = True
-      Align = alClient
-      BevelInner = bvNone
+    TabOrder = 0
+    object FileMapPanel: TPanel
+      Left = 0
+      Top = 0
+      Width = 20
+      Height = 246
+      Align = alLeft
       BevelOuter = bvNone
-      BorderStyle = bsNone
-      Color = clAppWorkSpace
-      ParentColor = False
-      PopupMenu = PopupMenu1
+      BorderWidth = 2
       TabOrder = 0
-      object BitmapBox: TPaintBox
-        Left = 0
-        Top = 0
-        Width = 128
-        Height = 105
-        OnMouseDown = BitmapBoxMouseDown
-        OnMouseMove = BitmapBoxMouseMove
-        OnPaint = BitmapBoxPaint
+      object FileMapBox: TPaintBox
+        Left = 2
+        Top = 30
+        Width = 16
+        Height = 186
+        Align = alClient
+        PopupMenu = PopupMenu2
+        OnMouseDown = FileMapBoxMouseDown
+        OnMouseMove = FileMapBoxMouseMove
+        OnPaint = FileMapBoxPaint
+      end
+      object TopButton: TSpeedButton
+        Left = 2
+        Top = 2
+        Width = 16
+        Height = 14
+        Action = SetTopAdrAction
+        Align = alTop
+        Flat = True
+        Layout = blGlyphTop
+        Margin = 1
+      end
+      object EndButton: TSpeedButton
+        Left = 2
+        Top = 230
+        Width = 16
+        Height = 14
+        Action = SetEndAdrAction
+        Align = alBottom
+        Flat = True
+        Layout = blGlyphTop
+        Margin = 1
+      end
+      object PreButton: TSpeedButton
+        Left = 2
+        Top = 16
+        Width = 16
+        Height = 14
+        Action = SetPreAdrAction
+        Align = alTop
+        Flat = True
+        Layout = blGlyphTop
+        Margin = 1
+      end
+      object NxtButton: TSpeedButton
+        Left = 2
+        Top = 216
+        Width = 16
+        Height = 14
+        Action = SetNextAdrAction
+        Align = alBottom
+        Flat = True
+        Layout = blGlyphBottom
+        Margin = 1
       end
     end
-  end
-  object FileMapPanel: TPanel
-    Left = 0
-    Top = 0
-    Width = 20
-    Height = 247
-    Align = alLeft
-    BevelOuter = bvNone
-    BorderWidth = 2
-    TabOrder = 2
-    object FileMapBox: TPaintBox
-      Left = 2
-      Top = 30
-      Width = 16
-      Height = 187
+    object BorderPanel: TPanel
+      Left = 20
+      Top = 0
+      Width = 128
+      Height = 246
       Align = alClient
-      PopupMenu = PopupMenu2
-      OnMouseDown = FileMapBoxMouseDown
-      OnMouseMove = FileMapBoxMouseMove
-      OnPaint = FileMapBoxPaint
+      BevelOuter = bvNone
+      BorderWidth = 4
+      Color = clAppWorkSpace
+      ParentBackground = False
+      TabOrder = 1
+      object MapScrBox: TScrollBox
+        Left = 4
+        Top = 4
+        Width = 120
+        Height = 238
+        HorzScrollBar.Visible = False
+        VertScrollBar.Tracking = True
+        Align = alClient
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        Color = clAppWorkSpace
+        ParentColor = False
+        PopupMenu = PopupMenu1
+        TabOrder = 0
+        object BitmapBox: TPaintBox
+          Left = 0
+          Top = 0
+          Width = 128
+          Height = 105
+          OnMouseDown = BitmapBoxMouseDown
+          OnMouseMove = BitmapBoxMouseMove
+          OnPaint = BitmapBoxPaint
+        end
+      end
     end
-    object TopButton: TSpeedButton
-      Left = 2
-      Top = 2
-      Width = 16
-      Height = 14
-      Action = SetTopAdrAction
-      Align = alTop
-      Flat = True
-      Layout = blGlyphTop
-      Margin = 1
-    end
-    object EndButton: TSpeedButton
-      Left = 2
-      Top = 231
-      Width = 16
-      Height = 14
-      Action = SetEndAdrAction
-      Align = alBottom
-      Flat = True
-      Layout = blGlyphTop
-      Margin = 1
-    end
-    object PreButton: TSpeedButton
-      Left = 2
-      Top = 16
-      Width = 16
-      Height = 14
-      Action = SetPreAdrAction
-      Align = alTop
-      Flat = True
-      Layout = blGlyphTop
-      Margin = 1
-    end
-    object NxtButton: TSpeedButton
-      Left = 2
-      Top = 217
-      Width = 16
-      Height = 14
-      Action = SetNextAdrAction
-      Align = alBottom
-      Flat = True
-      Layout = blGlyphBottom
-      Margin = 1
+    object BitmapSttBar: TStatusBar
+      Left = 0
+      Top = 246
+      Width = 148
+      Height = 19
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBtnText
+      Font.Height = -13
+      Font.Name = 'Meiryo UI'
+      Font.Pitch = fpVariable
+      Font.Style = []
+      Panels = <
+        item
+          Width = 200
+        end>
+      UseSystemFont = False
     end
   end
   object PopupMenu1: TPopupMenu

@@ -2415,27 +2415,27 @@ public:		// ユーザー宣言
 	UnicodeString FCurPath[MAX_FILELIST];
 	UnicodeString __fastcall GetCurPath(int Index) { return FCurPath[Index]; }
 	void __fastcall SetCurPath(int Index, UnicodeString Value);
-	__property UnicodeString CurPath[int Index] = {read = GetCurPath,  write = SetCurPath};
+	__property UnicodeString CurPath[int Index] = {read = GetCurPath, write = SetCurPath};
 
 	//FindBusy プロパティ		検索中(ファイル名、ディレクトリ名、GREP)
 	bool FFindBusy;
 	void __fastcall SetFindBusy(bool Value);
-	__property bool FindBusy = {read = FFindBusy,  write = SetFindBusy};
+	__property bool FindBusy = {read = FFindBusy, write = SetFindBusy};
 
 	//CalcBusy プロパティ		計算中(ディレクトリ容量、ファイル再生時間)
 	bool FCalcBusy;
 	void __fastcall SetCalcBusy(bool Value);
-	__property bool CalcBusy = {read = FCalcBusy,  write = SetCalcBusy};
+	__property bool CalcBusy = {read = FCalcBusy, write = SetCalcBusy};
 
 	//CurWorking プロパティ		カレントで処理中
 	bool FCurWorking;
 	void __fastcall SetCurWorking(bool Value);
-	__property bool CurWorking = {read = FCurWorking,  write = SetCurWorking};
+	__property bool CurWorking = {read = FCurWorking, write = SetCurWorking};
 
 	//ExeCmdsBusy プロパティ	ExeCommands 実行中
 	bool FExeCmdsBusy;
 	void __fastcall SetExeCmdsBusy(bool Value);
-	__property bool ExeCmdsBusy = {read = FExeCmdsBusy,  write = SetExeCmdsBusy};
+	__property bool ExeCmdsBusy = {read = FExeCmdsBusy, write = SetExeCmdsBusy};
 
 	Graphics::TBitmap *ImgBuff;					//イメージバッファ(元サイズ)
 	Graphics::TBitmap *BgBuff[MAX_FILELIST];	//背景表示バッファ

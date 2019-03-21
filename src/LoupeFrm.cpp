@@ -25,20 +25,19 @@ void __fastcall TLoupeForm::FormShow(TObject *Sender)
 {
 	if (Floating) IniFile->LoadPosInfo(this, 50, 100, 200, 200);
 
+	SetToolWinBorder(this, Floating);
+
 	DragKind = NyanFiForm->ImgSidePanel->Visible? dkDock : dkDrag;
 	DragMode = NyanFiForm->ImgSidePanel->Visible? dmAutomatic : dmManual;
 
 	OptPanel->Visible = IniFile->ReadBoolGen(_T("LoupeMagBtn"),	true);
-	MagToolBar->GradientStartColor = col_bgTlBar1;
-	MagToolBar->GradientEndColor   = col_bgTlBar2;
-	MagToolBar->Font->Color 	   = col_fgTlBar;
-	MagToolBar->HotTrackColor	   = col_htTlBar;
+
+	setup_ToolBar(MagToolBar);
 
 	int n = IniFile->ReadIntGen(_T("LoupeMag"),	1);
 	for (int i=0; i<MagToolBar->ButtonCount; i++)
 		MagToolBar->Buttons[i]->Down = (MagToolBar->Buttons[i]->Tag==n);
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TLoupeForm::FormHide(TObject *Sender)
 {
@@ -47,6 +46,12 @@ void __fastcall TLoupeForm::FormHide(TObject *Sender)
 
 	if (!Floating) ShowLoupe = false;
 }
+//---------------------------------------------------------------------------
+void __fastcall TLoupeForm::FormEndDock(TObject *Sender, TObject *Target, int X, int Y)
+{
+	SetToolWinBorder(this, Floating);
+}
+
 //---------------------------------------------------------------------------
 void __fastcall TLoupeForm::SaveOption()
 {
@@ -154,5 +159,6 @@ void __fastcall TLoupeForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 {
 	Application->MainForm->SetFocus();
 }
+
 //---------------------------------------------------------------------------
 

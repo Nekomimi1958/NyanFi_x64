@@ -32,10 +32,14 @@ __published:	// IDE で管理されるコンポーネント
 	TActionList *ActionList1;
 	TListBox *PreviewListBox;
 	TListBox *ReferListBox;
+	TPanel *ClientPanel;
 	TPanel *DebugPanel;
 	TPanel *OpPanel;
 	TPanel *PrevPanel;
 	TPanel *ReferPanel;
+	TShape *BorderShape1;
+	TShape *BorderShape2;
+	TShape *BorderShape3;
 	TSplitter *ReferSplitter;
 	TToolBar *ToolBar1;
 	TToolButton *SepBtn1;

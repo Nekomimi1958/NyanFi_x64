@@ -54,10 +54,8 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter,
 		isRecent? "RecentListDlg" : isMark? "MarkListDlg" : isRepo? "RepoListDlg" : isTags? "TagJumpDlg" : "");
 
-	OpeToolBar->GradientStartColor = col_bgTlBar1;
-	OpeToolBar->GradientEndColor   = col_bgTlBar2;
-	OpeToolBar->Font->Color 	   = col_fgTlBar;
-	OpeToolBar->HotTrackColor	   = col_htTlBar;
+	setup_ToolBar(OpeToolBar);
+
 	FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
 
 	FilterEdit->Font->Assign(DialogFont);

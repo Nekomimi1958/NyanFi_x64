@@ -49,16 +49,9 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 
 	IniFile->LoadPosInfo(this);
 
-	FindBar->GradientStartColor = col_bgTlBar1;
-	FindBar->GradientEndColor	= col_bgTlBar2;
-	FindBar->Font->Color		= col_fgTlBar;
-	FindBar->HotTrackColor		= col_htTlBar;
-	FindSplitter->Color 		= Mix2Colors(col_bgTlBar1, col_bgTlBar2);
-
-	DiffBar->GradientStartColor = col_bgTlBar1;
-	DiffBar->GradientEndColor	= col_bgTlBar2;
-	DiffBar->Font->Color		= col_fgTlBar;
-	DiffBar->HotTrackColor		= col_htTlBar;
+	setup_ToolBar(FindBar);
+	setup_ToolBar(DiffBar);
+	FindSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
 
 	set_ListBoxItemHi(BranchListBox, ListFont);
 	set_UsrScrPanel(BranchScrPanel);
@@ -1579,7 +1572,7 @@ void __fastcall TGitViewer::DiffDetailActionExecute(TObject *Sender)
 		UnicodeString parent = get_tkn(ParentID, ' ');
 		if (parent.IsEmpty()) parent = GIT_NULL_ID;
 		if (SameText(fnam1, fnam2)) {
-			prm.cat_sprintf(_T(" %s %s"),  parent.c_str(), CommitID.c_str());
+			prm.cat_sprintf(_T(" %s %s"), parent.c_str(), CommitID.c_str());
 			prm.cat_sprintf(_T(" -- %s"), add_quot_if_spc(fnam1).c_str());
 		}
 		else {

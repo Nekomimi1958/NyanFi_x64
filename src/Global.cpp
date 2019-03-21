@@ -312,6 +312,8 @@ int  IconMode;					//アイコンの表示モード	0:非表示/ 1:表示/ 2:ディレクトリのみ表
 bool ModalScreen;				//モーダル表示効果
 int  ModalScrAlpha;
 
+int  TlWinBorderWidth;			//ツールウインドウの境界線幅
+
 int  InitialModeI;				//イメージビュアーを開いた時の初期状態
 int  LastZoomRatio;				//前回のズーム
 
@@ -779,6 +781,7 @@ TColor col_bgPrgBar;	//タスク進捗背景色
 TColor col_Error;		//エラー/注意の文字色
 TColor col_bgOptTab;	//アクティブな設定タブの背景色
 TColor col_fgOptTab;	//アクティブな設定タブの文字色
+TColor col_TlBorder;	//ツールウインドウの境界線
 
 TColor col_bgView;		//テキストビュアーの背景色
 TColor col_fgView;		//テキストビュアーの文字色
@@ -1563,6 +1566,7 @@ void InitializeGlobal()
 		{_T("ScrBarStyle=0"),				(TObject*)&ScrBarStyle},
 		{_T("IconMode=0"),					(TObject*)&IconMode},
 		{_T("ModalScrAlpha=64"),			(TObject*)&ModalScrAlpha},
+		{_T("TlWinBorderWidth=1"),			(TObject*)&TlWinBorderWidth},
 		{_T("BgImgMode=0"),					(TObject*)&BgImgMode},
 		{_T("BgImgSubMode=0"),				(TObject*)&BgImgSubMode},
 		{_T("BgColAlpha=0"),				(TObject*)&BgColAlpha},
@@ -2571,6 +2575,29 @@ void ApplyOptionByTag(TTabSheet *sp)
 		}
 		else {
 			ApplyOptionByTag((TComponent *)cp);
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
+//ツールウインドウの境界線を設定
+//---------------------------------------------------------------------------
+void SetToolWinBorder(TForm *fp, bool sw)
+{
+	sw &= (col_TlBorder!=col_None && TlWinBorderWidth>0);
+	for (int i=0; i<fp->ControlCount; i++) {
+		TControl *cp = fp->Controls[i];
+		if (cp->ClassNameIs("TShape") && StartsStr("Border", cp->Name)) {
+			TShape *sp = (TShape *)cp;
+			if (sw) {
+				sp->Brush->Color = col_TlBorder;
+				sp->Pen->Color	 = col_TlBorder;
+				if (sp->Align==alLeft || sp->Align==alRight)
+					sp->Width = TlWinBorderWidth;
+				else
+					sp->Height = TlWinBorderWidth;
+			}
+			sp->Visible = sw;
 		}
 	}
 }
@@ -5451,6 +5478,18 @@ void set_StdListBox(TCheckListBox *lp,
 	lp->Font->Assign(font);
 	lp->Canvas->Font->Assign(font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), min_ItemHeight(tag));
+}
+
+//---------------------------------------------------------------------------
+//ツールバーの設定
+//---------------------------------------------------------------------------
+void setup_ToolBar(TToolBar *tb)
+{
+	tb->Font->Assign(ToolBarFont);
+	tb->Font->Color 	   = col_fgTlBar;
+	tb->GradientStartColor = col_bgTlBar1;
+	tb->GradientEndColor   = col_bgTlBar2;
+	tb->HotTrackColor	   = col_htTlBar;
 }
 
 //---------------------------------------------------------------------------
@@ -9024,6 +9063,7 @@ void set_col_from_ColorList()
 		{&col_Error,	_T("Error"),		clRed},
 		{&col_bgOptTab,	_T("bgOptTab"),		clHighlight},
 		{&col_fgOptTab,	_T("fgOptTab"),		clHighlightText},
+		{&col_TlBorder,	_T("TlBorder"),		col_None},
 		{&col_bgView,	_T("bgView"),		clNavy},
 		{&col_fgView,	_T("fgView"),		clWhite},
 		{&col_Margin,	_T("Margin"),		clNavy},
@@ -11056,9 +11096,20 @@ bool Execute_ex(
 		}
 		else if (!contains_s(opt, _T('W')) && !contains_s(opt, _T('O')) && !contains_s(opt, _T('L'))) {
 			AddDebugLog("Execute", cmd + " " + prm, wdir_str);
-			if (::ShellExecute(NULL, _T("open"), cmd.c_str(), prm.c_str(), wdir.c_str(),
-				contains_s(opt, _T('H'))? SW_HIDE : SW_SHOWNORMAL) <= (HINSTANCE)32)
-					Abort();
+			bool ok = false;
+			if (test_LnkExt(get_extension(cmd))) {
+				UnicodeString lnam, prm, fld;
+				int shw;
+				usr_SH->get_LnkInf(cmd, NULL, &lnam, &prm, &fld, &shw);
+				if (!lnam.IsEmpty()) {
+					ok = (::ShellExecute(NULL, _T("open"), lnam.c_str(), prm.c_str(), fld.c_str(), shw) > (HINSTANCE)32);
+				}
+			}
+			if (!ok) {
+				if (::ShellExecute(NULL, _T("open"), cmd.c_str(), prm.c_str(), wdir.c_str(),
+					contains_s(opt, _T('H'))? SW_HIDE : SW_SHOWNORMAL) <= (HINSTANCE)32)
+						Abort();
+			}
 		}
 		else {
 			UnicodeString cmdln = add_quot_if_spc(cmd);
@@ -12949,8 +13000,8 @@ bool OpenGoogleMaps(
 				"$FileRef$"
 				"</body></html>\r\n";
 
-			lbuf = ReplaceStr(lbuf, "$Title$",	   !fnam.IsEmpty()? "$FileName$の地図" : "指定地点の地図");
-			lbuf = ReplaceStr(lbuf, "$FileRef$",   !fnam.IsEmpty()? "<p><a href=\"file:///$PathName$\">$PathName$</a></p>\r\n" : "");
+			lbuf = ReplaceStr(lbuf, "$Title$",	 !fnam.IsEmpty()? "$FileName$の地図" : "指定地点の地図");
+			lbuf = ReplaceStr(lbuf, "$FileRef$", !fnam.IsEmpty()? "<p><a href=\"file:///$PathName$\">$PathName$</a></p>\r\n" : "");
 		}
 
 		lbuf = ReplaceStr(lbuf, "$Latitude$",  UnicodeString().sprintf(_T("%.8f") ,lat));

@@ -226,7 +226,7 @@ object AppListDlg: TAppListDlg
     object AppInfoItem: TMenuItem
       Action = AppInfoAction
     end
-    object N1: TMenuItem
+    object FitSizePosItem: TMenuItem
       Action = UserModule.SizePosToFlieListAction
     end
   end
@@ -274,6 +274,10 @@ object AppListDlg: TAppListDlg
     object UpdateIcoItem: TMenuItem
       Caption = #12450#12452#12467#12531#12434#26356#26032'(&I)'
       OnClick = UpdateIcoItemClick
+    end
+    object SortByIconItem: TMenuItem
+      Caption = #12501#12457#12523#12480#12450#12452#12467#12531#12391#12477#12540#12488'(&F)'
+      OnClick = SortByIconItemClick
     end
     object SortByRemItem: TMenuItem
       Caption = #12467#12513#12531#12488#12391#12477#12540#12488'(&S)'

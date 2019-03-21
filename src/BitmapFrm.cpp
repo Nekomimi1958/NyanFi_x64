@@ -42,6 +42,8 @@ void __fastcall TBitmapForm::FormCreate(TObject *Sender)
 void __fastcall TBitmapForm::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
+
+	SetToolWinBorder(this);
 	SetMapWidth(IniFile->ReadIntGen(_T("BitmapFormMapWidth"),	128));
 
 	BitmapSttBar->Font->Assign(ViewerFont);
@@ -145,7 +147,9 @@ void __fastcall TBitmapForm::SetMapWidth(int w)
 	MapWidth = w;
 
 	Constraints->MinWidth
-		= FileMapPanel->Width + MapWidth + (Width - ClientWidth) + ::GetSystemMetrics(SM_CXVSCROLL) + 12;
+		= FileMapPanel->Width + MapWidth + (Width - ClientWidth) + ::GetSystemMetrics(SM_CXVSCROLL)
+			+ (BorderShape1->Visible? TlWinBorderWidth * 2 : 0) + 12;
+
 	Constraints->MaxWidth = Constraints->MinWidth;
 
 	BitmapBox->ClientWidth  = MapWidth;

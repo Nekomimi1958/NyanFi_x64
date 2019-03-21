@@ -462,6 +462,8 @@ extern bool ModalScreen;
 extern int  ModalScrAlpha;
 extern TColor col_ModalScr;
 
+extern int  TlWinBorderWidth;
+
 extern UnicodeString DlgMoveShift;
 extern UnicodeString DlgSizeShift;
 extern int  DlgMovePrm;
@@ -999,6 +1001,7 @@ extern TColor col_bgPrgBar;
 extern TColor col_Error;
 extern TColor col_bgOptTab;
 extern TColor col_fgOptTab;
+extern TColor col_TlBorder;
 
 extern TColor col_bgView;
 extern TColor col_fgView;
@@ -1677,6 +1680,8 @@ void set_ListBoxItemHi(TCheckListBox *lp, TFont *font = NULL);
 void set_StdListBox(TListBox *lp, int tag = 0, TFont *font = NULL);
 void set_StdListBox(TCheckListBox *lp, int tag = 0, TFont *font = NULL);
 
+void setup_ToolBar(TToolBar *tb);
+
 void set_UsrScrPanel(UsrScrollPanel *sp);
 void set_FextWidth(file_rec *fp, int tag);
 
@@ -1823,6 +1828,8 @@ int  GetOptionIntDef(int tag);
 void ApplyOptionByTag(TComponent *cp);
 void ApplyOptionByTag(TForm *fp);
 void ApplyOptionByTag(TTabSheet *sp);
+
+void SetToolWinBorder(TForm *fp, bool sw = true);
 
 void InitializeListGrid(TStringGrid *gp, TFont *fnt = NULL);
 void InitializeListHeader(THeaderControl *hp, const _TCHAR *hdr, TFont *fnt = NULL);

@@ -57,10 +57,7 @@ void __fastcall TGeneralInfoDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 {
-	OpeToolBar->GradientStartColor = col_bgTlBar1;
-	OpeToolBar->GradientEndColor   = col_bgTlBar2;
-	OpeToolBar->Font->Color 	   = col_fgTlBar;
-	OpeToolBar->HotTrackColor	   = col_htTlBar;
+	setup_ToolBar(OpeToolBar);
 	FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
 
 	FilterEdit->Font->Assign(DialogFont);

@@ -94,7 +94,7 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 		ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 
 		MoveTopCheckBox->Checked = IniFile->ReadBoolGen(_T("RegDirDlgMoveTop"));
-		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("RegDirDlgShowOpt"),  true);
+		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("RegDirDlgShowOpt"),	true);
 		BlankPanel->Visible 	 = !OptPanel->Visible;
 
 		sp->Items[0]->Width = IniFile->ReadInteger("RegDirGrid", "ColWidth0",	40);

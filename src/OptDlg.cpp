@@ -220,7 +220,8 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"Illegal=不正な入力項目の背景色\n"
 		"bgOptTab=|アクティブな設定タブの背景色\n"
 		"fgOptTab=アクティブな設定タブの文字色\n"
-		"OptFind=オプション設定の検索結果\n";
+		"OptFind=オプション設定の検索結果\n"
+		"TlBorder=|ツールウインドウの境界線\n";
 
 	TimColListBox->Items->Text =
 		"Tim1H=1時間以内\n"
@@ -1433,7 +1434,8 @@ void __fastcall TOptionDlg::DisableColActionUpdate(TObject *Sender)
 	UnicodeString col_id = (lp->ItemIndex!=-1)? lp->Items->Names[lp->ItemIndex] : EmptyStr;
 
 	((TAction*)Sender)->Enabled
-		= contained_wd_i(_T("Compress|bgList2|fgSelItem|Protect|frScrKnob|lnScrHit|frmTab|bdrLine|bdrFold|bdrFixed"), col_id);
+		= contained_wd_i(
+			_T("bgList2|fgSelItem|Protect|Compress|frScrKnob|lnScrHit|frmTab|bdrLine|bdrFold|bdrFixed|TlBorder"), col_id);
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::DisableTimColActionExecute(TObject *Sender)

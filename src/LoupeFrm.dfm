@@ -18,96 +18,130 @@ object LoupeForm: TLoupeForm
   FormStyle = fsStayOnTop
   OldCreateOrder = False
   Position = poDesigned
+  OnEndDock = FormEndDock
   OnHide = FormHide
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object ImgPanel: TPanel
+  object BorderShape1: TShape
     Left = 0
     Top = 0
+    Width = 1
+    Height = 185
+    Align = alLeft
+    Pen.Color = clSilver
+  end
+  object BorderShape2: TShape
+    Left = 195
+    Top = 0
+    Width = 1
+    Height = 185
+    Align = alRight
+    Pen.Color = clSilver
+  end
+  object BorderShape3: TShape
+    Left = 0
+    Top = 185
     Width = 196
-    Height = 167
+    Height = 1
+    Align = alBottom
+    Pen.Color = clSilver
+  end
+  object ClientPanel: TPanel
+    Left = 1
+    Top = 0
+    Width = 194
+    Height = 185
     Align = alClient
     BevelOuter = bvNone
-    Color = clBlack
-    ParentBackground = False
     TabOrder = 0
-    object LoupeImage: TImage
+    object ImgPanel: TPanel
       Left = 0
       Top = 0
-      Width = 196
-      Height = 167
+      Width = 194
+      Height = 166
       Align = alClient
-      Center = True
-      PopupMenu = PopupMenu1
-      OnMouseMove = LoupeImageMouseMove
+      BevelOuter = bvNone
+      Color = clBlack
+      ParentBackground = False
+      TabOrder = 0
+      object LoupeImage: TImage
+        Left = 0
+        Top = 0
+        Width = 194
+        Height = 166
+        Align = alClient
+        Center = True
+        PopupMenu = PopupMenu1
+        OnMouseMove = LoupeImageMouseMove
+      end
     end
-  end
-  object OptPanel: TPanel
-    Left = 0
-    Top = 167
-    Width = 196
-    Height = 19
-    Align = alBottom
-    AutoSize = True
-    BevelOuter = bvNone
-    TabOrder = 1
-    OnMouseMove = LoupeImageMouseMove
-    object MagToolBar: TToolBar
+    object OptPanel: TPanel
       Left = 0
-      Top = 0
-      Width = 196
+      Top = 166
+      Width = 194
       Height = 19
       Align = alBottom
       AutoSize = True
-      ButtonHeight = 19
-      ButtonWidth = 26
-      DrawingStyle = dsGradient
-      List = True
-      PopupMenu = PopupMenu1
-      ShowCaptions = True
-      TabOrder = 0
-      StyleElements = []
-      object ToolButton1: TToolButton
-        Tag = 1
+      BevelOuter = bvNone
+      TabOrder = 1
+      OnMouseMove = LoupeImageMouseMove
+      object MagToolBar: TToolBar
         Left = 0
         Top = 0
-        Caption = #215'1'
-        Grouped = True
-        ImageIndex = 0
-        Style = tbsCheck
-        OnClick = ToolBtnClick
-      end
-      object ToolButton2: TToolButton
-        Tag = 2
-        Left = 26
-        Top = 0
-        Caption = #215'2'
-        Grouped = True
-        ImageIndex = 1
-        Style = tbsCheck
-        OnClick = ToolBtnClick
-      end
-      object ToolButton3: TToolButton
-        Tag = 4
-        Left = 52
-        Top = 0
-        Caption = #215'4'
-        Grouped = True
-        ImageIndex = 2
-        Style = tbsCheck
-        OnClick = ToolBtnClick
-      end
-      object ToolButton4: TToolButton
-        Tag = 8
-        Left = 78
-        Top = 0
-        Caption = #215'8'
-        Grouped = True
-        ImageIndex = 3
-        Style = tbsCheck
-        OnClick = ToolBtnClick
+        Width = 194
+        Height = 19
+        Align = alBottom
+        AutoSize = True
+        ButtonHeight = 19
+        ButtonWidth = 26
+        DrawingStyle = dsGradient
+        List = True
+        PopupMenu = PopupMenu1
+        ShowCaptions = True
+        TabOrder = 0
+        StyleElements = []
+        object ToolButton1: TToolButton
+          Tag = 1
+          Left = 0
+          Top = 0
+          Caption = #215'1'
+          Grouped = True
+          ImageIndex = 0
+          Style = tbsCheck
+          OnClick = ToolBtnClick
+        end
+        object ToolButton2: TToolButton
+          Tag = 2
+          Left = 26
+          Top = 0
+          Caption = #215'2'
+          Grouped = True
+          ImageIndex = 1
+          Style = tbsCheck
+          OnClick = ToolBtnClick
+        end
+        object ToolButton3: TToolButton
+          Tag = 4
+          Left = 52
+          Top = 0
+          Caption = #215'4'
+          Grouped = True
+          ImageIndex = 2
+          Style = tbsCheck
+          OnClick = ToolBtnClick
+        end
+        object ToolButton4: TToolButton
+          Tag = 8
+          Left = 78
+          Top = 0
+          Caption = #215'8'
+          Grouped = True
+          ImageIndex = 3
+          Style = tbsCheck
+          OnClick = ToolBtnClick
+        end
       end
     end
   end

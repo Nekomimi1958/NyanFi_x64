@@ -3992,10 +3992,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	LoupeDockPanel->Color		= col_bgImage;
 	HistDockPanel->Color		= col_bgImage;
 
-	LoupeForm->MagToolBar->GradientStartColor = col_bgTlBar1;
-	LoupeForm->MagToolBar->GradientEndColor   = col_bgTlBar2;
-	LoupeForm->MagToolBar->Font->Color		  = col_fgTlBar;
-	LoupeForm->MagToolBar->HotTrackColor	  = col_htTlBar;
+	setup_ToolBar(LoupeForm->MagToolBar);
 
 	LRSplitter->Color			= col_Splitter;
 	ListSubSplitter->Color		= col_Splitter;

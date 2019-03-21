@@ -33,6 +33,8 @@ void __fastcall TCsvRecForm::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TCsvRecForm::FormShow(TObject *Sender)
 {
+	SetToolWinBorder(this);
+
 	DataList  = NULL;
 	RecIndex  = DatIndex  = 0;
 	ItemIndex = TxtViewer->CsvCol;

@@ -37,9 +37,13 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Mag8Item;
 	TMenuItem *Sep_p_1;
 	TMenuItem *ShowBtnItem;
+	TPanel *ClientPanel;
 	TPanel *ImgPanel;
 	TPanel *OptPanel;
 	TPopupMenu *PopupMenu1;
+	TShape *BorderShape1;
+	TShape *BorderShape2;
+	TShape *BorderShape3;
 	TToolBar *MagToolBar;
 	TToolButton *ToolButton1;
 	TToolButton *ToolButton2;
@@ -55,6 +59,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ShowBtnActionUpdate(TObject *Sender);
 	void __fastcall MagActionExecute(TObject *Sender);
 	void __fastcall MagActionUpdate(TObject *Sender);
+	void __fastcall FormEndDock(TObject *Sender, TObject *Target, int X, int Y);
 
 private:	// ユーザー宣言
 	void __fastcall WmSysCommand(TWMSysCommand & SysCom);

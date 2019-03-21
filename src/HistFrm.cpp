@@ -23,6 +23,7 @@ __fastcall THistForm::THistForm(TComponent* Owner)
 void __fastcall THistForm::FormShow(TObject *Sender)
 {
 	if (Floating) IniFile->LoadPosInfo(this);
+
 	ClientWidth  = 256 + H_LR_MARGIN*2 + 2;
 	ClientHeight = CLHI_HISTOGRAM;
 
@@ -48,7 +49,6 @@ void __fastcall THistForm::FormHide(TObject *Sender)
 		ShowHistogram = false;
 	}
 }
-
 //---------------------------------------------------------------------------
 void __fastcall THistForm::WmSysCommand(TWMSysCommand &SysCom)
 {
@@ -125,11 +125,24 @@ void __fastcall THistForm::DrawHistogram(Graphics::TBitmap *i_bmp)
 	cv->Pen->Style = psSolid;
 	x = H_LR_MARGIN + 64;
 	for (int i=1; i<4; i++,x+=64) {
-		cv->MoveTo(x,  H_TOP_MARGIN);  cv->LineTo( x, y0);
+		cv->MoveTo(x, H_TOP_MARGIN);
+		cv->LineTo( x, y0);
 	}
 	int y = H_TOP_MARGIN + 64;
 	for (int i=1; i<3; i++,y+=64) {
-		cv->MoveTo(H_LR_MARGIN, y);  cv->LineTo(H_LR_MARGIN + 255, y);
+		cv->MoveTo(H_LR_MARGIN, y);
+		cv->LineTo(H_LR_MARGIN + 255, y);
+	}
+
+	//‹«ŠEü
+	if (Floating && col_TlBorder!=col_None) {
+		cv->Pen->Width = TlWinBorderWidth;
+		cv->Pen->Color = col_TlBorder;
+		cv->MoveTo(0, 0);
+		cv->LineTo(0, ClientHeight -1);
+		cv->LineTo(ClientWidth-1 , ClientHeight-1);
+		cv->LineTo(ClientWidth-1, -1);
 	}
 }
 //---------------------------------------------------------------------------
+

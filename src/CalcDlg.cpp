@@ -74,10 +74,7 @@ void __fastcall TCalculator::FormShow(TObject *Sender)
 	Constraints->MinHeight = hi + Height - ClientHeight;
 	Constraints->MaxHeight = hi + Height - ClientHeight;
 
-	ToolBar1->GradientStartColor = col_bgTlBar1;
-	ToolBar1->GradientEndColor	 = col_bgTlBar2;
-	ToolBar1->Font->Color		 = col_fgTlBar;
-	ToolBar1->HotTrackColor		 = col_htTlBar;
+	setup_ToolBar(ToolBar1);
 
 	IniFile->LoadComboBoxItems(HistComboBox, _T("CalculatorHistory"));
 

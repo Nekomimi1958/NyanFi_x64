@@ -27,6 +27,40 @@ FUNC_GetProcessMemoryInfo lpfGetProcessMemoryInfo = NULL;
 
 
 //---------------------------------------------------------------------------
+//ソート用比較関数
+//---------------------------------------------------------------------------
+bool SortByIcon = true;
+//---------------------------------------------------------------------------
+int __fastcall SortComp_Launch(TStringList *List, int Index1, int Index2)
+{
+	file_rec *fp0 = (file_rec*)List->Objects[Index1];
+	file_rec *fp1 = (file_rec*)List->Objects[Index2];
+	if (!fp0 || !fp1) return 0;
+
+	if (fp0->is_up) return -1;
+	if (fp1->is_up) return  1;
+
+	if (fp0->is_dir && fp1->is_dir) {
+		if (SortByIcon)
+			return CompDirIcon(fp0, fp1);
+		else
+			return CompDirName(fp0, fp1);
+	}
+
+	if (fp0->is_dir) return -1;
+	if (fp1->is_dir) return  1;
+
+	if (SameText(fp0->f_ext, fp1->f_ext)) {
+		UnicodeString nam0 = !fp0->alias.IsEmpty()? fp0->alias : fp0->b_name;
+		UnicodeString nam1 = !fp1->alias.IsEmpty()? fp1->alias : fp1->b_name;
+		int res = StrCmpLogicalW(nam0.c_str(), nam1.c_str());
+		return (res==0)? StrCmpLogicalW(fp0->p_name.c_str(), fp1->p_name.c_str()) : res;
+	}
+
+	return CompareText(fp0->f_ext, fp1->f_ext);
+}
+
+//---------------------------------------------------------------------------
 //アプリケーション情報クラス
 //---------------------------------------------------------------------------
 AppWinInf::AppWinInf()
@@ -152,7 +186,8 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 
 	//ランチャーの初期化
 	if (!OnlyAppList) {
-		SortByRem = IniFile->ReadBoolGen(_T("AppListLaunchRemSort"));
+		SortByRem  = IniFile->ReadBoolGen(_T("AppListLaunchRemSort"));
+		SortByIcon = IniFile->ReadBoolGen(_T("AppListLaunchIconSort"), true);
 		lp = LaunchListBox;
 		set_StdListBox(lp, LBTAG_OPT_LOOP|LBTAG_HAS_SICO);
 		set_UsrScrPanel(LaunchScrPanel);
@@ -207,6 +242,7 @@ void __fastcall TAppListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	if (!OnlyAppList) {
 		IniFile->WriteIntGen( _T("AppListLaunchWd"),		LaunchPanel->Width);
 		IniFile->WriteBoolGen(_T("AppListLaunchRemSort"),	SortByRem);
+		IniFile->WriteBoolGen(_T("AppListLaunchIconSort"),	SortByIcon);
 		IniFile->WriteStrGen( _T("AppListLaunchPath"),		LaunchPath);
 		IniFile->WriteBoolGen(_T("AppListLaunchMigemo"),	IsMigemo);
 	}
@@ -603,7 +639,7 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 			} while(FindNext(sr)==0);
 			FindClose(sr);
 		}
-		lst->CustomSort(SortComp_Ext);
+		lst->CustomSort(SortComp_Launch);
 	}
 
 	//リストボックスに割り当て(仮想)
@@ -752,7 +788,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	if (ap->isNoRes) {
 		TRect rc = Rect;
 		rc.Left	 = xp + 36;
-		rc.Right = xp + 44 + MaxWd_f + get_CharWidth(cv,  2);
+		rc.Right = xp + 44 + MaxWd_f + get_CharWidth(cv, 2);
 		InflateRect(rc, 0, -2);
 		TColor br_col	 = cv->Brush->Color;
 		cv->Brush->Color = col_Error;
@@ -810,7 +846,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 		cv->TextOut(xp, yp, UnicodeString().sprintf(_T("%u"), (Index + 1)%10));
 	}
 	cv->Font->Style = cv->Font->Style >> fsUnderline;
-	xp += get_CharWidth(cv,  2);
+	xp += get_CharWidth(cv, 2);
 	//名前
 	TColor col_x = get_ExtColor(ExtractFileExt(ap->FileName));
 	cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : col_x;
@@ -923,7 +959,9 @@ void __fastcall TAppListDlg::PopupMenu2Popup(TObject *Sender)
 		LaunchRightItem->Checked = (LaunchPanel->Align==alRight);
 		LaunchLeftItem->Checked  = (LaunchPanel->Align==alLeft);
 	}
-	SortByRemItem->Checked = SortByRem;
+
+	SortByIconItem->Checked = SortByIcon;
+	SortByRemItem->Checked	= SortByRem;
 }
 
 //---------------------------------------------------------------------------
@@ -1468,6 +1506,14 @@ void __fastcall TAppListDlg::LaunchPosItemClick(TObject *Sender)
 	set_PanelAlign(LaunchPanel, LRSplitter, ((TMenuItem*)Sender)->Tag, 5);
 }
 
+//---------------------------------------------------------------------------
+//フォルダアイコンでソート
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::SortByIconItemClick(TObject *Sender)
+{
+	SortByIcon = !SortByIcon;
+	UpdateLaunchList();
+}
 //---------------------------------------------------------------------------
 //コメントでソート
 //---------------------------------------------------------------------------

@@ -481,7 +481,7 @@ void __fastcall TCmdFileListDlg::CmdFileGridKeyDown(TObject *Sender, WORD &Key, 
 			//íœ
 			else if (cmd_id==3) {
 				UnicodeString msg;
-				if (msgbox_Sure(LoadUsrMsg(USTR_DeleteQ, cfp->n_name),  SureDelete)) {
+				if (msgbox_Sure(LoadUsrMsg(USTR_DeleteQ, cfp->n_name), SureDelete)) {
 					StartLog(LoadUsrMsg(USTR_BeginDelete, cfp->p_name));
 					msg = make_LogHdr(_T("DELETE"), cfp);
 					UnicodeString del_nam = cfp->f_name;
