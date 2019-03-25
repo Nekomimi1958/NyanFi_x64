@@ -2235,15 +2235,23 @@ NyanFi.exe -XRegExChecker
 <dd>すべてのファイルとディレクトリを選択します。すでに何かが選択されている場合は、すべての選択が解除されます。<br>
 <a href="#ClearAll">→ ClearAll</a>
 
-<dt id="SelByList">SelByList<span class="pram_text">_{CP|OP|ファイル名}</span>
-<dd>指定したファイルによって項目を選択します。<br>
-ドライブ名がない場合はカレントからの相対指定になります。<br>
-ファイルは、項目を一行ずつフルパス付ファイル名で記述されている必要があります。<b>;</b> (セミコロン)で始まる行や空行は無視されます。また行にタブ文字が含まれている場合、それ以降の内容は無視されます。したがってワークリストや検索結果リストを保存したものでもかまいません。<br>
+<dt id="SelByList">SelByList<span class="pram_text">_[LR;][SM;]{リストファイル名|CP|OP}</span><br>
+<dd>指定した<b>リストファイル</b>の内容に基づいて項目を選択します。<br>
+ファイル名にドライブ名がない場合はカレントからの相対指定になります。<br>
+リストファイルには、選択したいファイル名が一行ずつ記述されている必要があります。<b>;</b> (セミコロン)で始まる行や空行は無視されます。また行にタブ文字が含まれている場合、それ以降の内容は無視されます。したがってワークリストや検索結果リストを保存したものでもかまいません。<br>
+リストファイルがパス無しファイル名で記述されていると、ディレクトリに関係なく選択できます。この場合、ファイル名にはワイルドカードを使用できます。<br>
+パス付き/パス無しファイル名が混在していてもかまいません。<br>
 <div class="spc_box">
-パラメータに <b>CP</b> を指定すると、カーソル位置のファイルによってカレント側で選択を行います。<br>
-パラメータに <b>OP</b> を指定すると、カーソル位置のファイルによって反対側で選択を行います。<br>
+パラメータに <b>LR</b> を指定すると、カレントと反対側の両方で選択を行います。<br>
+パラメータに <b>SM</b> を指定すると、選択された項目だけを残して他を隠します(<b>選択マスク</b>)。<br>
 </div>
-<a href="#SaveAsResultList">→ SaveAsResultList</a><br>
+<div class="spc_box">
+パラメータに <b>CP</b> を指定すると、カーソル位置のファイルによってカレント側で選択を行います。<b>OP</b> を指定すると、カーソル位置のファイルによって反対側で選択を行います。<br>
+</div>
+<div class="spc_box">
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
+<a href="#SaveAsResultList">→ SaveAsResultList</a>　<a href="#SelMask">→ SelMask</a>
 
 <dt id="Select">Select<span class="pram_text">[_ND|_IN|_繰り返し回数]</span>
 <dd>カーソル位置の項目を選択します。すでに選択中の場合は解除します。実行後、カーソルは下に移動します。<br>
@@ -2268,11 +2276,11 @@ NyanFi.exe -XRegExChecker
 <a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
 
 <dt id="SelMask">SelMask<span class="pram_text">[_CA]</span>
-<dd>選択中の項目((ワークリストのセパレータは除く)だけを残して他を隠します(<b>選択マスク</b>)。<br>
+<dd>選択中の項目(ワークリストのセパレータは除く)だけを残して他を隠します(<b>選択マスク</b>)。<br>
 選択マスクを解除するには、パラメータに <b>CA</b> を指定するか、何も選択していない状態で再度コマンドを実行してください。<a href="#ClearMask">ClearMask</a> コマンドでも解除できます。また、別のディレクトリに移動した場合にも解除されます。<br>
 <a href="hid00050.htm">インクリメンタルサーチ</a>の<b>フィルタマスク・モード</b>や <a href="#Filter">Filter</a>、<a href="#MarkMask">MarkMask</a> コマンドによるマスクも選択マスクですので、同様に解除できます。<br>
 なお、選択マスクは、パスマスクとは独立して働きます。<br>
-<a href="#DelSelMask">→ DelSelMask</a>　<a href="#MarkMask">→ MarkMask</a>　<a href="#PathMaskDlg">→ PathMaskDlg</a>　<a href="#MaskSelect">→ MaskSelect</a>　<a href="#MatchSelect">→ MatchSelect</a>　<a href="#IncSearch">→ IncSearch</a>　<a href="#Filter">→ Filter</a>　<a href="#ClearMask">→ ClearMask</a>
+<a href="#DelSelMask">→ DelSelMask</a>　<a href="#MarkMask">→ MarkMask</a>　<a href="#PathMaskDlg">→ PathMaskDlg</a>　<a href="#MaskSelect">→ MaskSelect</a>　<a href="#MatchSelect">→ MatchSelect</a>　<a href="#IncSearch">→ IncSearch</a>　<a href="#Filter">→ Filter</a>　<a href="#ClearMask">→ ClearMask</a>　<a href="#SelByList">→ SelByList</a>
 
 <dt id="SelOnlyCur">SelOnlyCur
 <dd>カレント側だけにあって、反対側には存在しないファイルを選択します。<br>

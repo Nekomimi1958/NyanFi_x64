@@ -5605,25 +5605,28 @@ void assign_FileListBox(
 }
 
 //---------------------------------------------------------------------------
-//仮想ファイルリストボックスの更新(最小で250ms間隔)
+//ファイルリストボックス更新
 //---------------------------------------------------------------------------
-void update_VirtualFileListBox(
-	TStrings *lst, TListBox *lp,
-	int idx,				//インデックス、指定した場合強制更新 (default = -1)
-	UsrScrollPanel *sp)		//シンプルスクロールバー (default = NULL)
+void update_FileListBox(
+	TStrings *lst, int tag,
+	int idx)	//インデックス (default = -1 : ItemIndex)
+{
+	TListBox *lp = FileListBox[tag];
+	if (idx==-1) idx = lp->ItemIndex;
+	lp->Count = lst->Count;
+	lp->ItemIndex = std::min(idx, lp->Count - 1);
+	lp->Perform(WM_NYANFI_UPDKNOB, 0, (NativeInt)0);
+}
+//---------------------------------------------------------------------------
+//最小250ms間隔でファイルリストボックス更新
+//---------------------------------------------------------------------------
+void update_FileListBoxT(TStrings *lst, int tag)
 {
 	static unsigned int start_cnt = 0;
 
-	if ((GetTickCount() - start_cnt)>250 || idx!=-1) {	//***
+	if ((GetTickCount() - start_cnt)>250) {
 		start_cnt = GetTickCount();
-		set_RedrawOff(lp);
-		{
-			if (idx==-1) idx = lp->ItemIndex;
-			lp->Count = lst->Count;
-			lp->ItemIndex = std::min(idx, lp->Count - 1);
-		}
-		set_RedrawOn(lp);
-		if (sp) sp->UpdateKnob();
+		update_FileListBox(lst, tag, -1);
 	}
 }
 
@@ -5717,8 +5720,6 @@ void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 	FindPath  = pnam;
 	FindCount = (lst->Count>1)? lst->Count - 1 : 0;
 
-	TListBox *lp = FileListBox[tag];
-
 	if (lst_stt->find_Mask.IsEmpty()) lst_stt->find_Mask = "*.*";
 
 	//サブディレクトリを検索
@@ -5807,7 +5808,7 @@ void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 					usr_ARC->CloseArc();
 
 					//リストボックス更新(仮想)
-					if (add_cnt>0) update_VirtualFileListBox(lst, lp);
+					if (add_cnt>0) update_FileListBoxT(lst, tag);
 				}
 			}
 			else FindPath  = pnam;
@@ -5856,7 +5857,7 @@ void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 
 			lst->AddObject(fp->f_name, (TObject*)fp);
 			FindCount = (lst->Count>1)? lst->Count - 1 : 0;
-			update_VirtualFileListBox(lst, lp);
+			update_FileListBoxT(lst, tag);
 		} while(FindNext(sr)==0 && !FindAborted);
 		FindClose(sr);
 	}
@@ -5946,7 +5947,7 @@ void get_FindListD(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 					lst->AddObject(fp->f_name, (TObject*)fp);
 					FindCount = (lst->Count>1)? lst->Count - 1 : 0;
 					//リストボックス更新(仮想)
-					update_VirtualFileListBox(lst, FileListBox[tag]);
+					update_FileListBoxT(lst, tag);
 				}
 			}
 

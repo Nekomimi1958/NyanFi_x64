@@ -2909,6 +2909,11 @@ void __fastcall TNyanFiForm::ListWndProc(TMessage &msg, int tag)
 		if (msg.Msg==WM_VSCROLL) org_FileListWindowProc[tag](msg);
 		break;
 
+	case WM_NYANFI_UPDKNOB:
+		FlScrPanel[tag]->UpdateKnob();
+		msg.Result = 1;
+		break;
+
 	case WM_ERASEBKGND:
 		if (BgImgMode>0 && !HideBgImg[tag] && !BgBuff[tag]->Empty) {
 			//描画すべき領域がバッファになかったら更新
@@ -3327,8 +3332,7 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 						}
 					}
 					if (chg) {
-						TListBox *lp = FileListBox[i];
-						update_VirtualFileListBox(lst, lp, lp->ItemIndex, FlScrPanel[i]);
+						update_FileListBox(lst, i);
 						RepaintList(i);
 						SetFileInf();
 					}
@@ -7883,7 +7887,8 @@ void __fastcall TNyanFiForm::OppToParent()
 //ファイルリストをリストボックスに割り当て
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::AssignFileList(
-	TStringList *lst, int tag, UnicodeString last_nam, int last_idx, int last_top)
+	TStringList *lst, int tag,
+	UnicodeString last_nam, int last_idx, int last_top)	// (default = EmptyStr, -1, -1);
 {
 	ApplyPathMask(lst, tag);
 	SortList(lst, tag);
@@ -8350,7 +8355,7 @@ int __fastcall TNyanFiForm::ChangeWorkList(
 		TStringDynArray itm_buf = record_of_csv_list(WorkListHistory, WorkListName, 0, 2);
 		if (itm_buf.Length==2) idx = itm_buf[1].ToIntDef(0);
 	}
-	update_VirtualFileListBox(WorkList, lp, idx, FlScrPanel[tag]);
+	update_FileListBox(WorkList, tag, idx);
 	if (tag==CurListTag) lp->SetFocus();
 	RepaintList(tag);
 
@@ -8596,7 +8601,7 @@ void __fastcall TNyanFiForm::RecoverFileList(
 		UpdateList(FileList[tag], CurPath[tag], tag);
 
 		//リストボックスに割り当て
-		update_VirtualFileListBox(FileList[tag], lp, lp->ItemIndex, FlScrPanel[tag]);
+		update_FileListBox(FileList[tag], tag);
 
 		if (IndexOfFileList(last_fnam)==-1) {
 			//履歴からカーソル位置を復帰
@@ -14240,7 +14245,7 @@ void __fastcall TNyanFiForm::DiffDirActionExecute(TObject *Sender)
 
 					SortList(ResultList[i], i);
 					SetFlItemWidth(ResultList[i], i);
-					update_VirtualFileListBox(ResultList[i], lp, 0, FlScrPanel[i]);
+					update_FileListBox(ResultList[i], i, 0);
 					SetDirCaption(i);
 					SetDriveFileInfo(i);
 				}
@@ -15464,7 +15469,7 @@ int __fastcall TNyanFiForm::FindFileCore(
 				//拡張子の幅・位置調整
 				set_FextWidth(fp, FindTag);
 				//リストボックス更新(仮想)
-				update_VirtualFileListBox(r_lst, lp, lp->ItemIndex, FlScrPanel[FindTag]);
+				update_FileListBoxT(r_lst, FindTag);
 				lp->SetFocus();
 			}
 			clear_FileList(o_lst.get());
@@ -15492,7 +15497,7 @@ int __fastcall TNyanFiForm::FindFileCore(
 		cur_stt->find_PathSort = FindPathColumn;
 		SortList(r_lst, FindTag);
 		SetFlItemWidth(r_lst, FindTag);
-		update_VirtualFileListBox(r_lst, lp, (cfp? r_lst->IndexOfObject((TObject*)cfp) : 0), FlScrPanel[FindTag]);
+		update_FileListBox(r_lst, FindTag, (cfp? r_lst->IndexOfObject((TObject*)cfp) : 0));
 		if (tag==-1) lp->SetFocus();
 		SetDirCaption(FindTag);
 		SetDriveFileInfo(FindTag);
@@ -15617,7 +15622,7 @@ int __fastcall TNyanFiForm::FindFolderIconCore(int tag)
 		lp->Color = col_bgFind;
 		UpdateBgImage();
 		SetFlItemWidth(r_lst, tag);
-		update_VirtualFileListBox(r_lst, lp, 0, FlScrPanel[tag]);
+		update_FileListBox(r_lst, tag, 0);
 		ViewCurFileInf();
 		SetDirCaption(tag);
 		SetDriveFileInfo(tag);
@@ -15898,7 +15903,7 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 				lp->Color = col_bgFind;
 				UpdateBgImage();
 				SetFlItemWidth(r_lst, FindTag);
-				update_VirtualFileListBox(r_lst, lp, 0, FlScrPanel[FindTag]);
+				update_FileListBox(r_lst, FindTag, 0);
 				ViewCurFileInf();
 				SetDirCaption(FindTag);
 				SetDriveFileInfo(FindTag);
@@ -16310,7 +16315,7 @@ int __fastcall TNyanFiForm::FindMarkCore(int tag)
 		ApplySelMask(r_lst, FindTag);
 		SortList(r_lst, FindTag);
 		SetFlItemWidth(r_lst, FindTag);
-		update_VirtualFileListBox(r_lst, lp, (cfp? r_lst->IndexOfObject((TObject*)cfp) : 0), FlScrPanel[FindTag]);
+		update_FileListBox(r_lst, FindTag, (cfp? r_lst->IndexOfObject((TObject*)cfp) : 0));
 		SetDirCaption(FindTag);
 		SetDriveFileInfo(FindTag);
 	}
@@ -16426,7 +16431,7 @@ int __fastcall TNyanFiForm::FindTagCore(int tag)
 		cur_stt->find_PathSort = FindPathColumn;
 		SortList(r_lst, FindTag);
 		SetFlItemWidth(r_lst, FindTag);
-		update_VirtualFileListBox(r_lst, lp, lp->ItemIndex, FlScrPanel[FindTag]);
+		update_FileListBox(r_lst, FindTag);
 
 		SetFileInf();
 		SetDirCaption(FindTag);
@@ -18164,7 +18169,9 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 	get_AppInf(Application->ExeName, i_lst);
 	add_PropLine(_T("URL"),			 SUPPORT_URL, i_lst);
 	add_PropLine(_T("クラス名"),	 ClassName(), i_lst);
-	add_PropLine(_T("Windowサイズ"), get_wd_x_hi_str(Width, Height), i_lst);
+
+	TRect w_rc = get_window_rect(Handle);
+	add_PropLine(_T("Windowサイズ"), get_wd_x_hi_str(w_rc.Width(), w_rc.Height()), i_lst);
 	i_lst->Add(EmptyStr);
 
 	//アーカイバDLL情報
@@ -18580,11 +18587,10 @@ void __fastcall TNyanFiForm::LoadResultListActionExecute(TObject *Sender)
 		r_lst->InsertObject(0, fp->f_name, (TObject*)fp);
 
 		//リストボックス初期化(仮想)
-		TListBox *lp = FileListBox[FindTag];
-		lp->Color = col_bgFind;
+		FileListBox[FindTag]->Color = col_bgFind;
 		UpdateBgImage();
 		SetFlItemWidth(r_lst, FindTag);
-		update_VirtualFileListBox(r_lst, lp, 0, FlScrPanel[FindTag]);
+		update_FileListBox(r_lst, FindTag, 0);
 		ViewCurFileInf();
 		SetDirCaption(FindTag);
 		SetDriveFileInfo(FindTag);
@@ -21411,37 +21417,68 @@ void __fastcall TNyanFiForm::SelAllItemActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
 {
 	try {
-		if (TEST_ActParam("OP")) {
-			if (OppStt->is_Arc || OppStt->is_FTP) UserAbort(USTR_OpeNotSuported);
-		}
-		else {
-			if (CurStt->is_Arc || CurStt->is_FTP) UserAbort(USTR_OpeNotSuported);
-		}
+		bool is_lr = TEST_DEL_ActParam("LR");
+		bool is_sm = TEST_DEL_ActParam("SM");
+		bool is_cp = TEST_DEL_ActParam("CP");
+		bool is_op = TEST_DEL_ActParam("OP");
 
-		UnicodeString lnam = (TEST_ActParam("CP") || TEST_ActParam("OP"))?
-								GetCurFileName() : to_absolute_name(cv_env_str(exclude_quot(ActionParam)), CurPath[CurListTag]);
+		UnicodeString lnam = (is_cp || is_op)? GetCurFileName()
+											 : to_absolute_name(cv_env_str(exclude_quot(ActionParam)), CurPath[CurListTag]);
 		if (lnam.IsEmpty()) UserAbort(USTR_NoParameter);
 		if (!file_exists(lnam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("ファイル")));
 
 		std::unique_ptr<TStringList> f_lst(new TStringList());
 		load_text_ex(lnam, f_lst.get());
 
-		bool s_tag = TEST_ActParam("OP")? OppListTag : CurListTag;
-		TStringList *lst = GetFileList(s_tag);
-		ClearAllAction->Execute();
-		int top_s_idx = -1;
-		for (int i=0; i<f_lst->Count; i++) {
-			UnicodeString lbuf = f_lst->Strings[i];
-			if (lbuf.IsEmpty() || StartsStr(';', lbuf)) continue;
-			UnicodeString fnam = ExcludeTrailingPathDelimiter(split_pre_tab(lbuf));
-			int idx = lst->IndexOf(fnam);
-			if (idx!=-1) {
-				((file_rec*)lst->Objects[idx])->selected = true;
-				if (top_s_idx==-1) top_s_idx = idx;
+		CurWorking = true;
+		for (int i=0; i<MAX_FILELIST; i++) {
+			int s_tag = is_lr? ((i==0)? CurListTag : OppListTag) :
+					    is_op? ((i==0)? OppListTag : -1) : ((i==0)? CurListTag : -1);
+			if (s_tag==-1) continue;
+
+			TStringList *lst  = GetFileList(s_tag);
+			ClrSelect(lst);
+
+			TStringList *sm_lst = SelMaskList[s_tag];
+			if (is_sm) sm_lst->Clear();
+
+			UnicodeString top_fnam;
+			for (int j=0; j<f_lst->Count; j++) {
+				UnicodeString lbuf = f_lst->Strings[j];
+				if (lbuf.IsEmpty() || StartsStr(';', lbuf)) continue;
+				UnicodeString fnam = ExcludeTrailingPathDelimiter(split_pre_tab(lbuf));
+				//パス付き
+				if (!ExtractFilePath(fnam).IsEmpty()) {
+					int idx = lst->IndexOf(fnam);
+					if (idx!=-1) {
+						file_rec *fp = (file_rec*)lst->Objects[idx];
+						if (is_sm) sm_lst->Add(fp->f_name); else fp->selected = true;
+						if (top_fnam.IsEmpty()) top_fnam = fp->f_name;
+					}
+				}
+				//パス無し
+				else {
+					bool is_ptn = fnam.Pos('*') || fnam.Pos('?');
+					for (int k=0; k<lst->Count; k++) {
+						file_rec *fp = (file_rec*)lst->Objects[k];
+						if ((is_ptn && str_match(fnam, fp->n_name)) || SameText(fnam, fp->n_name)) {
+							if (is_sm) sm_lst->Add(fp->f_name); else fp->selected = true;
+							if (top_fnam.IsEmpty()) top_fnam = fp->f_name;
+						}
+					}
+				}
+			}
+
+			if (is_sm) {
+				ApplySelMask(lst, s_tag);
+				AssignFileList(lst, s_tag, top_fnam);
+			}
+			else {
+				RepaintList(s_tag);
+				IndexOfFileList(top_fnam, s_tag);
 			}
 		}
-		RepaintList(s_tag);
-		if (top_s_idx!=-1) FileListBox[s_tag]->ItemIndex = top_s_idx;
+		CurWorking = false;
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);

@@ -869,8 +869,10 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "SelByList")) {
 		params.sprintf(_T("%s"),
 			_T("\n")
-			_T("CP : カーソル位置のファイルでカレント側を選択\n")
-			_T("OP : カーソル位置のファイルで反対側を選択\n"));
+			_T("LR : カレント/反対側の両方で選択\n")
+			_T("SM : 選択された項目だけを残す(選択マスク)\n")
+			_T("CP : カーソル位置のリストファイルでカレント側を選択\n")
+			_T("OP : カーソル位置のリストファイルで反対側を選択\n"));
 	}
 	else if (USAME_TI(cmd, "Select") && (id_idx==0 || id_idx==3)) {
 		if (cp) cp->Style = csDropDown;

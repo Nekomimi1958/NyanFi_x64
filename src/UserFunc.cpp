@@ -79,6 +79,15 @@ HWND get_window_from_pos()
 }
 
 //---------------------------------------------------------------------------
+//Vista以降の拡張フレームに対応したウィンドウ長方形の取得
+//---------------------------------------------------------------------------
+TRect get_window_rect(HWND hWnd)
+{
+	TRect rc;
+	if (::DwmGetWindowAttribute(hWnd, DWMWA_EXTENDED_FRAME_BOUNDS, &rc, sizeof(rc))!=S_OK) ::GetWindowRect(hWnd, &rc);
+	return rc;
+}
+//---------------------------------------------------------------------------
 //Vista以降の拡張フレームに対応したサイズ設定
 //---------------------------------------------------------------------------
 void set_window_pos_ex(HWND hWnd, TRect rc)

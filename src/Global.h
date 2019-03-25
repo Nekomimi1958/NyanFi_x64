@@ -1686,7 +1686,8 @@ void set_UsrScrPanel(UsrScrollPanel *sp);
 void set_FextWidth(file_rec *fp, int tag);
 
 void assign_FileListBox(TListBox *lp, TStringList *lst, int idx = -1, UsrScrollPanel *sp = NULL);
-void update_VirtualFileListBox(TStrings *lst, TListBox *lp, int idx = -1, UsrScrollPanel *sp = NULL);
+void update_FileListBox(TStrings *lst, int tag, int idx = -1);
+void update_FileListBoxT(TStrings *lst, int tag);
 
 bool get_Files_objSize(UnicodeString pnam, TStrings *lst, bool exc_sym);
 bool get_NameList_objSize(TStringList *lst, TStringList *o_lst, bool sub_sw, bool exc_sym);

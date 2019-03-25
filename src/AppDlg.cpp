@@ -425,10 +425,7 @@ void __fastcall TAppListDlg::UpdateAppList()
 			if (::GetParent(hWnd) && !(w_style & WS_EX_APPWINDOW)) break;
 
 			//ウィンドウサイズ
-			TRect w_rect;
-			if (::DwmGetWindowAttribute(hWnd, DWMWA_EXTENDED_FRAME_BOUNDS, &w_rect, sizeof(w_rect))!=S_OK) {
-				::GetWindowRect(hWnd, &w_rect);
-			}
+			TRect w_rect = get_window_rect(hWnd);
 			if (w_rect.IsEmpty()) break;
 
 			//テキスト
