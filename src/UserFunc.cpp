@@ -151,17 +151,19 @@ void set_ComboBoxText(TComboBox *cp, const _TCHAR *s)
 //---------------------------------------------------------------------------
 void add_ComboBox_history(TComboBox *cp, UnicodeString kwd)
 {
-	if (cp) {
-		if (kwd.IsEmpty()) kwd = cp->Text;
-		if (!kwd.IsEmpty()) {
-			TStrings *lp = cp->Items;
-			int idx = lp->IndexOf(kwd);
-			if (idx!=0) {
-				if (idx>0) lp->Delete(idx);
-				lp->Insert(0, kwd);	//æ“ª‚É’Ç‰Á
-			}
+	if (!cp) return;
+
+	if (kwd.IsEmpty()) kwd = cp->Text;
+	if (!kwd.IsEmpty()) {
+		TStrings *lp = cp->Items;
+		int idx = lp->IndexOf(kwd);
+		if (idx!=-1) lp->Delete(idx);
+		lp->Insert(0, kwd);
+
+		if (cp->Style==csDropDownList)
+			cp->ItemIndex = 0;
+		else
 			cp->Text = kwd;
-		}
 	}
 }
 //---------------------------------------------------------------------------

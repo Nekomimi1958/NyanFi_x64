@@ -31,9 +31,10 @@ void __fastcall TRenameDlg::FormCreate(TObject *Sender)
 {
 	UserModule->SetUsrPopupMenu(this);
 
-	SrcStrComboBox->Tag = CBTAG_HISTORY;
-	RepStrComboBox->Tag = CBTAG_HISTORY;
-	Mp3FmtComboBox->Tag = CBTAG_HISTORY;
+	SrcStrComboBox->Tag  = CBTAG_HISTORY;
+	RepStrComboBox->Tag  = CBTAG_HISTORY;
+	Mp3FmtComboBox->Tag  = CBTAG_HISTORY;
+	RenListComboBox->Tag = CBTAG_HISTORY;
 
 	set_ComboBoxText(IniSttComboBox,
 		_T("ファイル名主部の末尾\n")
@@ -61,8 +62,10 @@ void __fastcall TRenameDlg::FormCreate(TObject *Sender)
 	NewNameList   = new TStringList();
 	SerFormatList = new TStringList();
 	CurNameList   = new TStringList();
+	RepRenList	  = new TStringList();
 
-	IsMulti = false;
+	EditedList = false;
+	IsMulti    = false;
 }
 
 //---------------------------------------------------------------------------
@@ -90,8 +93,10 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	SerNoEdit->Text 		   = IniFile->ReadStrGen(_T("RenameDlgSerNo"),		"01");
 	IncNoEdit->Text 		   = IniFile->ReadStrGen(_T("RenameDlgIncNo"),		"1");
 	CaseCheckBox->Checked	   = IniFile->ReadBoolGen(_T("RenameDlgCase"));
+	Case2CheckBox->Checked	   = CaseCheckBox->Checked;
 	RegExCheckBox->Checked	   = IniFile->ReadBoolGen(_T("RenameDlgRegEx"));
 	OnlyBaseCheckBox->Checked  = IniFile->ReadBoolGen(_T("RenameDlgOnlyBase"));
+	OnlyBase2CheckBox->Checked = OnlyBaseCheckBox->Checked;
 	CnvCharCheckBox->Checked   = IniFile->ReadBoolGen(_T("RenameDlgCnvChar"));
 	CnvKanaCheckBox->Checked   = IniFile->ReadBoolGen(_T("RenameDlgCnvKana"));
 	AutoPrvCheckBox->Checked   = IniFile->ReadBoolGen(_T("RenameDlgAutoPrv"),	true);
@@ -100,10 +105,22 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	UnicodeString lastSheet    = IniFile->ReadStrGen(_T("RenameDlgLastSheet"),	"Serial");
 	UnicodeString lastMp3Sheet = IniFile->ReadStrGen(_T("RenameDlgLastMp3Sheet"),	"Mp3");
 
-	IniFile->LoadComboBoxItems(SrcStrComboBox, RegExCheckBox->Checked? _T("RenSrcPtnHistory") : _T("RenSrcStrHistory"));
-	IniFile->LoadComboBoxItems(RepStrComboBox, _T("RenRepStrHistory"));
-	IniFile->LoadComboBoxItems(Mp3FmtComboBox, _T("RenMp3FmtHistory"));
+	IniFile->LoadComboBoxItems(SrcStrComboBox,	RegExCheckBox->Checked? _T("RenSrcPtnHistory") : _T("RenSrcStrHistory"));
+	IniFile->LoadComboBoxItems(RepStrComboBox,	_T("RenRepStrHistory"));
+
+	IniFile->LoadComboBoxItems(Mp3FmtComboBox,	_T("RenMp3FmtHistory"));
 	if (Mp3FmtComboBox->Items->Count==0) Mp3FmtComboBox->Items->Add("\\ID3(TT2)");
+
+	//リストファイル履歴
+	IniFile->LoadComboBoxItems(RenListComboBox,	_T("RenListHistory"));
+	int i = 0;
+	while (i<RenListComboBox->Items->Count) {
+		if (!file_exists(to_absolute_name(RenListComboBox->Items->Strings[i])))
+			RenListComboBox->Items->Delete(i);
+		else
+			i++;
+	}
+	RenListComboBox->Enabled = !EditedList;
 
 	IniFile->ReadSection("SerFormatList",	SerFormatList);
 
@@ -154,6 +171,13 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	TimeMaskEdit->Text = format_DateTime(get_file_age(ItemList->Strings[0]));
 	TimeMaskEdit->Font->Color = scl_WindowText;
 
+	//リスト
+	Case2CheckBox->Enabled	   = !EditedList;
+	OnlyBase2CheckBox->Enabled = !EditedList;
+	RefListBtn->Enabled		   = !EditedList;
+	ListErrLabel->Caption	   = EmptyStr;
+	ListErrLabel->Font->Color  = col_Error;
+
 	int f_cnt = 0;
 	//---------------------------
 	//単独
@@ -167,13 +191,14 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 		isFlac	= test_FlacExt(cmnFext);
 		if (!is_dir) f_cnt++;
 
-		NameSheet->TabVisible		= true;
+		NameSheet->TabVisible		= !EditedList;
 		SerialSheet->TabVisible 	= false;
-		ReplaceSheet->TabVisible	= true;
+		ReplaceSheet->TabVisible	= !EditedList;
+		RenListSheet->TabVisible	= true;
 		Mp3Sheet->Caption			= isFlac? "FLAC(&F)" : "MP3(&M)";
 		Mp3Sheet->TabVisible		= isMp3 || isFlac;
 		mp3fextLabel->Caption		= cmnFext;
-		NamePageControl->ActivePage = NameSheet;
+		NamePageControl->ActivePage = EditedList? RenListSheet : NameSheet;
 
 		ReadOnlyPanel->Color = scl_BtnFace;
 		HiddenPanel->Color	 = scl_BtnFace;
@@ -200,16 +225,22 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 		isFlac = test_FlacExt(cmnFext);
 
 		NameSheet->TabVisible	 = false;
-		SerialSheet->TabVisible  = true;
-		ReplaceSheet->TabVisible = true;
-		Mp3Sheet->Caption			= isFlac? "FLAC(&F)" : "MP3(&M)";
-		Mp3Sheet->TabVisible		= isMp3 || isFlac;
+		SerialSheet->TabVisible  = !EditedList;
+		ReplaceSheet->TabVisible = !EditedList;
+		RenListSheet->TabVisible = true;
+		Mp3Sheet->TabVisible	 = !EditedList && (isMp3 || isFlac);
+
+		Mp3Sheet->Caption		 = isFlac? "FLAC(&F)" : "MP3(&M)";
 		mp3fextLabel->Caption	 = cmnFext;
-		if (isMp3 || isFlac)
+		if (!EditedList && (isMp3 || isFlac)) {
 			NamePageControl->ActivePage =
 				USAME_TI(lastMp3Sheet, "Mp3")? Mp3Sheet : (USAME_TI(lastMp3Sheet, "Replace")? ReplaceSheet : SerialSheet);
-		else
-			NamePageControl->ActivePage = USAME_TI(lastSheet, "Replace")? ReplaceSheet : SerialSheet;
+		}
+		else {
+			NamePageControl->ActivePage =
+				(EditedList || USAME_TI(lastSheet, "RenList"))? RenListSheet :
+							   USAME_TI(lastSheet, "Replace") ? ReplaceSheet : SerialSheet;
+		}
 
 		ReadOnlyPanel->Color = col_Invalid;
 		HiddenPanel->Color	 = col_Invalid;
@@ -245,6 +276,21 @@ void __fastcall TRenameDlg::WmFormShowed(TMessage &msg)
 
 	//※起動後最初に開いたとき、名前欄が全選択になってしまう現象への対処
 	NamePageControlChange(NULL);
+
+	if (EditedList) {
+		RepRenList->Clear();
+		if (open_by_TextEditor(RenListFile)) {
+			if (msgbox_Sure(_T("リストファイルを読み込みますか?"))) LoadListFile();
+		}
+		else msgbox_ERR(GlobalErrMsg);
+	}
+	else if (IsRenListSheet()) {
+		if (RenListComboBox->Items->Count>0) {
+			RenListComboBox->ItemIndex = 0;
+			RenListFile = to_absolute_name(RenListComboBox->Text);
+			LoadListFile();
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -258,31 +304,37 @@ void __fastcall TRenameDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteIntGen(_T("RenameDlgSerLWidth"),	SerLeftPanel->Width);
 	IniFile->WriteStrGen(_T("RenameDlgSerNo"),		SerNoEdit);
 	IniFile->WriteStrGen(_T("RenameDlgIncNo"),		IncNoEdit);
-	IniFile->WriteBoolGen(_T("RenameDlgCase"),		CaseCheckBox);
+	IniFile->WriteBoolGen(_T("RenameDlgCase"),		IsRenListSheet()? Case2CheckBox : CaseCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgRegEx"),		RegExCheckBox);
-	IniFile->WriteBoolGen(_T("RenameDlgOnlyBase"),	OnlyBaseCheckBox);
+	IniFile->WriteBoolGen(_T("RenameDlgOnlyBase"),	IsRenListSheet()? OnlyBase2CheckBox : OnlyBaseCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgCnvChar"),	CnvCharCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgCnvKana"),	CnvKanaCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgAutoPrv"),	AutoPrvCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgEndMatch"),	EndMatchCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgNoRenLog"),	NoRenLogCheckBox);
 
-	if ((isMp3 || isFlac) && NamePageControl->ActivePage==Mp3Sheet)
-		IniFile->WriteStrGen(_T("RenameDlgLastMp3Sheet"),	"Mp3");
-	else if (NamePageControl->ActivePage==ReplaceSheet)
-		IniFile->WriteStrGen((isMp3 || isFlac)? _T( "RenameDlgLastMp3Sheet") : _T( "RenameDlgLastSheet"),	"Replace");
-	else if (NamePageControl->ActivePage==SerialSheet)
-		IniFile->WriteStrGen((isMp3 || isFlac)? _T( "RenameDlgLastMp3Sheet") : _T( "RenameDlgLastSheet"),	"Serial");
+	const _TCHAR *key = (isMp3 || isFlac)? _T("RenameDlgLastMp3Sheet") : _T("RenameDlgLastSheet");
+	if 		(IsMp3Sheet())		IniFile->WriteStrGen(key,	"Mp3");
+	else if (IsReplaceSheet())	IniFile->WriteStrGen(key,	"Replace");
+	else if (IsRenListSheet())	IniFile->WriteStrGen(key,	"RenList");
+	else if (IsSerialSheet())	IniFile->WriteStrGen(key,	"Serial");
 
-	IniFile->SaveComboBoxItems(SrcStrComboBox, RegExCheckBox->Checked? _T("RenSrcPtnHistory") : _T("RenSrcStrHistory"));
-	IniFile->SaveComboBoxItems(RepStrComboBox, _T("RenRepStrHistory"));
-	IniFile->SaveComboBoxItems(Mp3FmtComboBox, _T("RenMp3FmtHistory"));
+	IniFile->SaveComboBoxItems(SrcStrComboBox,	RegExCheckBox->Checked? _T("RenSrcPtnHistory") : _T("RenSrcStrHistory"));
+	IniFile->SaveComboBoxItems(RepStrComboBox,	_T("RenRepStrHistory"));
+	IniFile->SaveComboBoxItems(Mp3FmtComboBox,	_T("RenMp3FmtHistory"));
+	IniFile->SaveComboBoxItems(RenListComboBox,	_T("RenListHistory"));
 
 	CnvCharList->Assign(CnvCharListBox->Items);
 
 	IniFile->AssignSection("SerFormatList",	SerFormatList);
 
 	UserModule->RenInsNameAction->Visible = false;
+
+	RepRenList->Clear();
+
+	if (EditedList) delete_FileIf(RenListFile);
+	EditedList	= false;
+	RenListFile = EmptyStr;
 }
 
 //---------------------------------------------------------------------------
@@ -292,6 +344,7 @@ void __fastcall TRenameDlg::FormDestroy(TObject *Sender)
 	delete NewNameList;
 	delete SerFormatList;
 	delete CurNameList;
+	delete RepRenList;
 	delete SttPrgBar;
 }
 
@@ -335,12 +388,11 @@ void __fastcall TRenameDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPa
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 {
-	TTabSheet *act_pg = NamePageControl->ActivePage;
-	if (act_pg!=OptionSheet) {
+	if (!IsOptionSheet()) {
 		TStringGrid *gp = PreviewGrid;
 		gp->Color = col_Invalid;
 		gp->DefaultRowHeight   = get_FontHeight(gp->Font, 4);
-		NameComPanel->Parent   = act_pg;
+		NameComPanel->Parent   = NamePageControl->ActivePage;
 		PathInfMLabel->Caption = EmptyStr;
 		NameInfMLabel->Caption = EmptyStr;
 		SttInfLabel->Caption   = EmptyStr;
@@ -350,7 +402,7 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 	}
 
 	//名前
-	if (act_pg==NameSheet) {
+	if (IsNameSheet()) {
 		UnicodeString f_name = ItemList->Strings[0];
 		bool is_dir = ends_PathDlmtr(f_name);
 		f_name = ExcludeTrailingPathDelimiter(f_name);
@@ -401,7 +453,7 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 		}
 	}
 	//連番
-	else if (act_pg==SerialSheet) {
+	else if (IsSerialSheet()) {
 		PreNameEdit->Text	= EmptyStr;
 		PreNameEdit->Color	= col_Invalid;
 		SerNoEdit->Color	= col_Invalid;
@@ -415,12 +467,20 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 		SerFmtComboBox->Text = EmptyStr;
 	}
 	//置換
-	else if (act_pg==ReplaceSheet) {
+	else if (IsReplaceSheet()) {
 		ReplaceComboChange(NULL);
 		SrcStrComboBox->SetFocus();
 	}
+	//リスト
+	else if (IsRenListSheet()) {
+		if (!EditedList && RenListComboBox->Items->Count>0) {
+			if (RenListComboBox->ItemIndex==-1) RenListComboBox->ItemIndex = 0;
+			RenListFile = to_absolute_name(RenListComboBox->Text);
+			LoadListFile();
+		}
+	}
 	//MP3 / FLAC
-	else if (act_pg==Mp3Sheet) {
+	else if (IsMp3Sheet()) {
 		Mp3FmtComboBox->ItemIndex = -1;
 		Mp3FmtComboBoxChange(NULL);
 	}
@@ -432,7 +492,7 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 	gp->Color = col_Invalid;
 	set_RedrawOn(gp);
 
-	if (act_pg==OptionSheet) {
+	if (IsOptionSheet()) {
 		CnvCharListBox->ItemIndex = -1;
 		CnvCharListBoxClick(NULL);
 	}
@@ -474,6 +534,31 @@ void __fastcall TRenameDlg::SrcStrComboBoxExit(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//リストファイルの読み込み
+//---------------------------------------------------------------------------
+bool __fastcall TRenameDlg::LoadListFile()
+{
+	if (RenListFile.IsEmpty()) return false;
+
+	std::unique_ptr<TStringList> fbuf(new TStringList());
+	if (load_text_ex(RenListFile, fbuf.get())!=0) {
+		RepRenList->Clear();
+		for (int i=0; i<fbuf->Count; i++) {
+			UnicodeString lbuf = fbuf->Strings[i];
+			if (lbuf.IsEmpty()) break;
+			if (lbuf.Pos('\t')==0) continue;
+			RepRenList->Add(lbuf);
+		}
+		UpdatePreview();
+		return true;
+	}
+	else {
+		RenListFile = EmptyStr;
+		return false;
+	}
+}
+
+//---------------------------------------------------------------------------
 //新しい名前のリストを更新
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::UpdateNewNameList()
@@ -494,20 +579,27 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	SttPrgBar->PrgBar->Max = ItemList->Count;
 	SttPrgBar->Begin(_T("プレビュー..."));
 
-	TTabSheet *act_pg = NamePageControl->ActivePage;
-
 	//連番
 	int sn	 = EditToInt(SerNoEdit);
 	int dn	 = EditToInt(IncNoEdit, 1);
 	int n_wd = SerNoEdit->Text.Length();
 
 	//置換
-	UnicodeString swd = SrcStrComboBox->Text;
-	UnicodeString rwd = RepStrComboBox->Text;
-	RepStrComboBox->Color = swd.IsEmpty()? col_Invalid : scl_Window;
+	UnicodeString swd, rwd;
 	TRegExOptions opt;
-	if (!CaseCheckBox->Checked)  opt << roIgnoreCase;
-	if (!RegExCheckBox->Checked) swd = TRegEx::Escape(swd);
+	bool only_base;
+	if (IsReplaceSheet()) {
+		swd = SrcStrComboBox->Text;
+		rwd = RepStrComboBox->Text;
+		if (!RegExCheckBox->Checked) swd = TRegEx::Escape(swd);
+		RepStrComboBox->Color = swd.IsEmpty()? col_Invalid : scl_Window;
+		if (CaseCheckBox->Checked)  opt << roIgnoreCase;
+		only_base = OnlyBaseCheckBox->Checked;
+	}
+	else if (IsRenListSheet()) {
+		if (Case2CheckBox->Checked) opt << roIgnoreCase;
+		only_base = OnlyBase2CheckBox->Checked;
+	}
 
 	TStringGrid *gp = PreviewGrid;
 	set_RedrawOff(gp);
@@ -515,7 +607,10 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	int max_flen = 0;
 	int max_plen = 0;
 	int mat_cnt  = 0;
+	int top_idx  = 0;
+
 	bool illegal = false;
+	ListErrLabel->Caption = EmptyStr;
 
 	bool show_prg = (!AutoPrvCheckBox->Checked || ItemList->Count>1000);	//***
 
@@ -536,11 +631,11 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 		UnicodeString new_name = old_name;
 
 		//名前
-		if (act_pg==NameSheet) {
+		if (IsNameSheet()) {
 			new_name = RenameEdit->Text;
 		}
 		//連番
-		else if (act_pg==SerialSheet) {
+		else if (IsSerialSheet()) {
 			if (NameChanged) {
 				new_name  = format_FileName(PreNameEdit->Text, f_name);
 				if (n_wd>0) new_name.cat_sprintf(_T("%0*u"), n_wd, sn);
@@ -566,10 +661,10 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 			sn += dn;
 		}
 		//置換
-		else if (act_pg==ReplaceSheet) {
+		else if (IsReplaceSheet()) {
 			if (!illegal) {
 				try {
-					if (OnlyBaseCheckBox->Checked) {
+					if (only_base) {
 						if (TRegEx::IsMatch(b_name, swd, opt)) {
 							new_name = TRegEx::Replace(b_name, swd, rwd, opt) + f_ext;
 							mat_cnt++;
@@ -587,8 +682,53 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 				}
 			}
 		}
+		//リスト
+		else if (IsRenListSheet()) {
+			//編集
+			if (EditedList) {
+				for (int j=top_idx; j<RepRenList->Count; j++) {
+					UnicodeString lbuf = RepRenList->Strings[j];
+					int idx = get_pre_tab(lbuf).ToIntDef(0) - 1;
+					if (idx==i) {
+						new_name = get_post_tab(lbuf);
+						top_idx  = j + 1;
+						break;
+					}
+				}
+			}
+			//置換
+			else if (!illegal) {
+				UnicodeString r_name = only_base? b_name : old_name;
+				bool matched = false;
+				for (int j=0; j<RepRenList->Count; j++) {
+					UnicodeString lbuf = RepRenList->Strings[j];
+					swd = split_pre_tab(lbuf);	if (swd.IsEmpty()) continue;
+					rwd = lbuf;
+
+					try {
+						swd = !is_regex_slash(swd)? TRegEx::Escape(swd) : exclude_top_end(swd);
+						if (TRegEx::IsMatch(r_name, swd, opt)) {
+							r_name	= TRegEx::Replace(r_name, swd, rwd, opt);
+							matched = true;
+						}
+					}
+					catch (...) {
+						illegal = true;
+						ListErrLabel->Caption
+							= UnicodeString().sprintf(_T("リストファイルに不正な行があります(%u)"), j + 1); 
+						break;
+					}
+				}
+
+				if (matched) {
+					mat_cnt++;
+					new_name = r_name;
+					if (only_base) new_name += f_ext;
+				}
+			}
+		}
 		//MP3 / FLAC
-		else if (act_pg==Mp3Sheet && !Mp3FmtComboBox->Text.IsEmpty()) {
+		else if (IsMp3Sheet() && !Mp3FmtComboBox->Text.IsEmpty()) {
 			std::unique_ptr<TStringList> tlst(new TStringList());
 			UnicodeString s = Mp3FmtComboBox->Text;
 			new_name = EmptyStr;
@@ -790,7 +930,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 
 	//状態表示
 	msg.sprintf(_T("改名:%u /%u"), ChangeCount, ItemList->Count);
-	if (act_pg==ReplaceSheet) msg = UnicodeString().sprintf(_T("マッチ:%u %s"), mat_cnt, msg.c_str());
+	if (IsReplaceSheet()) msg = UnicodeString().sprintf(_T("マッチ:%u %s"), mat_cnt, msg.c_str());
 	SttInfLabel->Caption = msg;
 
 	Previewed  = true;
@@ -1137,19 +1277,20 @@ void __fastcall TRenameDlg::SerFmtComboBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::DelItemActionExecute(TObject *Sender)
 {
-	if (NamePageControl->ActivePage==SerialSheet) {
+	if (IsSerialSheet()) {
 		int idx = del_ComboBox_history(SerFmtComboBox);
 		if (idx!=-1) SerFormatList->Delete(idx);
 	}
-	else if (NamePageControl->ActivePage==Mp3Sheet)
+	else if (IsMp3Sheet()) {
 		del_ComboBox_history(Mp3FmtComboBox);
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::DelItemActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled =
-		(NamePageControl->ActivePage==SerialSheet)? !SerFmtComboBox->Text.IsEmpty() :
-		(NamePageControl->ActivePage==Mp3Sheet)? 	!Mp3FmtComboBox->Text.IsEmpty() : false;
+		IsSerialSheet()? !SerFmtComboBox->Text.IsEmpty() :
+		   IsMp3Sheet()? !Mp3FmtComboBox->Text.IsEmpty() : false;
 }
 
 //---------------------------------------------------------------------------
@@ -1701,13 +1842,18 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 
 			SttPrgBar->End();
 
-			if (NamePageControl->ActivePage==ReplaceSheet) {
+			if (IsReplaceSheet()) {
 				add_ComboBox_history(SrcStrComboBox);
-				IniFile->SaveComboBoxItems(SrcStrComboBox, RegExCheckBox->Checked? _T("RenSrcPtnHistory") : _T("RenSrcStrHistory"));
+				IniFile->SaveComboBoxItems(SrcStrComboBox,
+							RegExCheckBox->Checked? _T("RenSrcPtnHistory") : _T("RenSrcStrHistory"));
 				add_ComboBox_history(RepStrComboBox);
 			}
-			else if (NamePageControl->ActivePage==Mp3Sheet)
+			else if (IsRenListSheet()) {
+				add_ComboBox_history(RenListComboBox);
+			}
+			else if (IsMp3Sheet()) {
 				add_ComboBox_history(Mp3FmtComboBox);
+			}
 
 			AddLog(ModeStr + "終了" + get_res_cnt_str(ok_cnt, er_cnt, sk_cnt), true);
 			if (er_cnt>0) throw EAbort(msg.sprintf(_T("%u個のファイルで改名に失敗しました。"), er_cnt));
@@ -1812,9 +1958,10 @@ void __fastcall TRenameDlg::RenOkActionUpdate(TObject *Sender)
 
 	bool time_ng = (TimeChanged && TimeMaskEdit->EditText.Pos('_'));
 
-	if (NamePageControl->ActivePage==OptionSheet)
+	if (IsOptionSheet()) {
 		ap->Enabled = false;
-	else if (NamePageControl->ActivePage==ReplaceSheet) {
+	}
+	else if (IsReplaceSheet()) {
 		UnicodeString kwd = SrcStrComboBox->Text;
 		bool reg_ng = RegExCheckBox->Checked && !kwd.IsEmpty() && !chk_RegExPtn(kwd);
 		UnicodeString swd = SrcStrComboBox->Text;
@@ -1822,13 +1969,51 @@ void __fastcall TRenameDlg::RenOkActionUpdate(TObject *Sender)
 		RepStrComboBox->Color = swd.IsEmpty()? col_Invalid : scl_Window;
 		ap->Enabled = !ExistErr && !reg_ng && !time_ng;
 	}
-	else
+	else {
 		ap->Enabled = !ExistErr && !time_ng;
+	}
 
-	SrcStrComboBox->Tag
-		= CBTAG_HISTORY | (SrcStrComboBox->Focused()? CBTAG_RGEX_V : 0) | (RegExCheckBox->Checked? CBTAG_RGEX_E : 0);
+	SrcStrComboBox->Tag =
+		CBTAG_HISTORY | (SrcStrComboBox->Focused()? CBTAG_RGEX_V : 0) | (RegExCheckBox->Checked? CBTAG_RGEX_E : 0);
 
-	PreviewBtn->Enabled = (!Previewed && NamePageControl->ActivePage!=OptionSheet);
+	PreviewBtn->Enabled = (!Previewed && !IsOptionSheet());
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TRenameDlg::RenListComboBoxChange(TObject *Sender)
+{
+	if (EditedList) return;
+
+	RenListFile = to_absolute_name(RenListComboBox->Text);
+	if (!LoadListFile()) del_ComboBox_history(RenListComboBox);
+}
+//---------------------------------------------------------------------------
+//リストファイルの指定
+//---------------------------------------------------------------------------
+void __fastcall TRenameDlg::RefListBtnClick(TObject *Sender)
+{
+	UserModule->PrepareOpenDlg(_T("リストファイルの指定"), F_FILTER_TXT, NULL);
+	UnicodeString fnam;
+	if (UserModule->OpenDlgToStr(fnam, true)) {
+		RenListFile = to_absolute_name(fnam);
+		add_ComboBox_history(RenListComboBox, fnam);
+		LoadListFile();
+	}
+}
+//---------------------------------------------------------------------------
+//リストファイルの編集
+//---------------------------------------------------------------------------
+void __fastcall TRenameDlg::EditListActionExecute(TObject *Sender)
+{
+	if (open_by_TextEditor(RenListFile)) {
+		if (msgbox_Sure(_T("リストファイルを読み込みますか?"))) LoadListFile();
+	}
+	else msgbox_ERR(GlobalErrMsg);
+}
+//---------------------------------------------------------------------------
+void __fastcall TRenameDlg::EditListActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Enabled = IsRenListSheet() && !RenListFile.IsEmpty();
 }
 
 //---------------------------------------------------------------------------

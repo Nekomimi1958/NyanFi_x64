@@ -68,6 +68,8 @@ H3 {
 
 H4 {
   padding: 2px 4px;
+  margin-top: 0px;
+  margin-bottom: 0.25em;
   border-style: none none solid none;
   border-width: 1px;
   border-color: #666699;
@@ -212,6 +214,11 @@ PRE {
   font-weight: normal;
 }
 
+.format_text {
+  padding: 0px 0.25em;
+  background-color: #dddddd;
+}
+
 .rem_text {
   color: #080;
 }
@@ -249,7 +256,7 @@ PRE {
 .example_box {
   margin-top: 0.25em;
   padding: 4px;
-  background-color: #cccccc;
+  background-color: #dddddd;
   font-family: monospace;
   line-height: 120%;
 }

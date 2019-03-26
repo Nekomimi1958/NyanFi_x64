@@ -190,7 +190,7 @@ object RenameDlg: TRenameDlg
           EditMask = '!9999/99/99 !99:99:99;1;_'
           MaxLength = 19
           TabOrder = 0
-          Text = '    /  /     :  :  '
+          Text = ' :  /  /     :  :  '
           StyleElements = [seBorder]
           OnChange = TimeMaskEditChange
         end
@@ -240,7 +240,7 @@ object RenameDlg: TRenameDlg
         end
       end
       object OkButton: TButton
-        Left = 350
+        Left = 346
         Top = 118
         Width = 80
         Height = 26
@@ -250,7 +250,7 @@ object RenameDlg: TRenameDlg
         TabOrder = 4
       end
       object CanButton: TButton
-        Left = 438
+        Left = 434
         Top = 118
         Width = 80
         Height = 26
@@ -261,7 +261,7 @@ object RenameDlg: TRenameDlg
         TabOrder = 5
       end
       object AutoPrvCheckBox: TCheckBox
-        Left = 134
+        Left = 130
         Top = 122
         Width = 126
         Height = 17
@@ -271,7 +271,7 @@ object RenameDlg: TRenameDlg
         OnClick = AutoPrvCheckBoxClick
       end
       object PreviewBtn: TButton
-        Left = 262
+        Left = 258
         Top = 118
         Width = 80
         Height = 26
@@ -297,7 +297,7 @@ object RenameDlg: TRenameDlg
           Left = 0
           Top = 40
           Width = 532
-          Height = 190
+          Height = 192
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
@@ -306,7 +306,7 @@ object RenameDlg: TRenameDlg
             192)
           object NameInfMLabel: TLabel
             Left = 212
-            Top = 172
+            Top = 174
             Width = 160
             Height = 18
             Anchors = [akLeft, akBottom]
@@ -315,7 +315,7 @@ object RenameDlg: TRenameDlg
           end
           object PathInfMLabel: TLabel
             Left = 13
-            Top = 172
+            Top = 174
             Width = 195
             Height = 18
             Anchors = [akLeft, akBottom]
@@ -324,18 +324,19 @@ object RenameDlg: TRenameDlg
           end
           object SttInfLabel: TLabel
             Left = 378
-            Top = 172
+            Top = 174
             Width = 144
             Height = 18
             Alignment = taRightJustify
             Anchors = [akLeft, akRight, akBottom]
             AutoSize = False
+            ExplicitWidth = 140
           end
           object PreviewGrid: TStringGrid
             Left = 10
             Top = 74
             Width = 512
-            Height = 92
+            Height = 94
             Anchors = [akLeft, akTop, akRight, akBottom]
             ColCount = 3
             DefaultColWidth = 100
@@ -611,6 +612,7 @@ object RenameDlg: TRenameDlg
                 Height = 13
                 Anchors = [akTop, akRight]
                 Caption = '.'
+                ExplicitLeft = 155
               end
               object PostNameEdit: TEdit
                 Tag = 13
@@ -731,6 +733,85 @@ object RenameDlg: TRenameDlg
           end
         end
       end
+      object RenListSheet: TTabSheet
+        Caption = #12522#12473#12488'(&L)'
+        ImageIndex = 5
+        object ListTopPanel: TPanel
+          Left = 0
+          Top = 0
+          Width = 532
+          Height = 59
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 0
+          DesignSize = (
+            532
+            59)
+          object ListErrLabel: TLabel
+            Left = 264
+            Top = 36
+            Width = 264
+            Height = 13
+            AutoSize = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+          end
+          object RenListComboBox: TComboBox
+            Left = 10
+            Top = 8
+            Width = 417
+            Height = 21
+            Style = csDropDownList
+            Anchors = [akLeft, akTop, akRight]
+            DropDownCount = 20
+            TabOrder = 0
+            OnChange = RenListComboBoxChange
+            OnEnter = SrcStrComboBoxEnter
+            OnExit = SrcStrComboBoxExit
+          end
+          object RefListBtn: TButton
+            Left = 430
+            Top = 7
+            Width = 36
+            Height = 24
+            Anchors = [akTop, akRight]
+            Caption = '...'
+            TabOrder = 1
+            OnClick = RefListBtnClick
+          end
+          object EditListBtn: TButton
+            Left = 468
+            Top = 7
+            Width = 60
+            Height = 24
+            Action = EditListAction
+            Anchors = [akTop, akRight]
+            TabOrder = 2
+          end
+          object Case2CheckBox: TCheckBox
+            Left = 10
+            Top = 35
+            Width = 88
+            Height = 17
+            Caption = #22823#23567#21306#21029
+            TabOrder = 3
+            OnClick = ReplaceComboChange
+          end
+          object OnlyBase2CheckBox: TCheckBox
+            Left = 104
+            Top = 35
+            Width = 160
+            Height = 17
+            Caption = #25313#24373#23376#12399#32622#25563#12375#12394#12356
+            TabOrder = 4
+            OnClick = ReplaceComboChange
+          end
+        end
+      end
       object Mp3Sheet: TTabSheet
         Caption = 'MP3(&M)'
         ImageIndex = 4
@@ -776,6 +857,7 @@ object RenameDlg: TRenameDlg
             Font.Name = #65325#65331' '#12468#12471#12483#12463
             Font.Style = []
             ParentFont = False
+            ExplicitLeft = 482
           end
           object Id3Btn3: TSpeedButton
             Tag = 2
@@ -841,7 +923,7 @@ object RenameDlg: TRenameDlg
             Caption = #38306#36899#12501#12449#12452#12523#12398#21516#26178#25913#21517
             object Opt1BtmPanel: TPanel
               Left = 0
-              Top = 140
+              Top = 142
               Width = 524
               Height = 62
               Align = alBottom
@@ -953,7 +1035,7 @@ object RenameDlg: TRenameDlg
               Left = 0
               Top = 0
               Width = 524
-              Height = 202
+              Height = 204
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
@@ -965,7 +1047,7 @@ object RenameDlg: TRenameDlg
                 Left = 8
                 Top = 8
                 Width = 251
-                Height = 191
+                Height = 193
                 Anchors = [akLeft, akTop, akRight, akBottom]
                 Caption = #12501#12449#12452#12523#21517#20027#37096#12398#25991#23383#32622#25563
                 TabOrder = 0
@@ -973,18 +1055,18 @@ object RenameDlg: TRenameDlg
                   Left = 2
                   Top = 15
                   Width = 130
-                  Height = 172
+                  Height = 176
                   Align = alLeft
                   BevelOuter = bvNone
                   TabOrder = 0
                   DesignSize = (
                     130
-                    174)
+                    176)
                   object CnvCharListBox: TListBox
                     Left = 10
                     Top = 7
                     Width = 112
-                    Height = 158
+                    Height = 162
                     Style = lbOwnerDrawFixed
                     Anchors = [akLeft, akTop, akRight, akBottom]
                     Font.Charset = ANSI_CHARSET
@@ -1003,7 +1085,7 @@ object RenameDlg: TRenameDlg
                   Left = 132
                   Top = 15
                   Width = 117
-                  Height = 174
+                  Height = 176
                   Align = alClient
                   BevelOuter = bvNone
                   TabOrder = 1
@@ -1185,6 +1267,11 @@ object RenameDlg: TRenameDlg
       Caption = #26368#26032'(&L)'
       OnExecute = LatestTimeActionExecute
       OnUpdate = LatestTimeActionUpdate
+    end
+    object EditListAction: TAction
+      Caption = #32232#38598'(&E)'
+      OnExecute = EditListActionExecute
+      OnUpdate = EditListActionUpdate
     end
   end
   object FmtPopupMenu: TPopupMenu

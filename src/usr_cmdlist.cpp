@@ -856,6 +856,9 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "ReloadList")) {
 		params.USET_T("\nCO : カレントのみ更新\nHL : ハードリンクのタイムスタンプ更新\nOFF : 更新禁止\n");
 	}
+	else if (USAME_TI(cmd, "RenameDlg")) {
+		params.USET_T("\nED : リストの編集による改名\n");
+	}
 	else if (USAME_TI(cmd, "Restart")) {
 		params.USET_T("\nNS : INIファイルを保存しない\nRA : 管理者として再起動\nDM : 管理者から降格して再起動\n");
 	}

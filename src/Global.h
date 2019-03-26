@@ -122,6 +122,8 @@ extern FUNC_GetFontResourceInfo lpGetFontResourceInfo;
 #define TAGDATA_FILE  "TAGDATA.TXT"		//タグデータ
 #define DRVLOG_FILE   "DriveLog.csv"	//ドライブ容量ログ
 #define RENLOG_FILE   "renamelog.txt"	//改名ログ
+#define RENLIST_FILE  "renamelist.txt"	//改名リスト
+#define CLIP_BMP_FILE "CLIPBOARD.BMP"	//クリップボードの一時保存
 
 #define WEBMAP_FILE	  "$~WEBMAP.HTM"	//Googleマップ表示用ファイル
 #define WEBMAP_TPLT	  "WEBMAP.HTM"		//Googleマップ表示用テンプレート

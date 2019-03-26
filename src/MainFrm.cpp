@@ -15059,7 +15059,7 @@ void __fastcall TNyanFiForm::FileEditActionExecute(TObject *Sender)
 			//クリップボードを一時ファイルに保存
 			std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
 			bmp->Assign(ImgViewThread->ImgBuff);
-			fnam.sprintf(_T("%sCLIPBOARD.BMP"), TempPathA.c_str());
+			fnam = UAPP_T(TempPathA, CLIP_BMP_FILE);
 			fext = get_extension(fnam);
 			bmp->SaveToFile(fnam);
 		}
@@ -20959,6 +20959,27 @@ void __fastcall TNyanFiForm::RenameDlgActionExecute(TObject *Sender)
 		for (int i=0; i<lst->Count; i++) {
 			file_rec *fp = (file_rec*)lst->Objects[i];
 			if (is_selectable(fp)) RenameDlg->CurNameList->Add(fp->f_name);
+		}
+
+		//リスト編集による改名
+		if (TEST_ActParam("ED")) {
+			std::unique_ptr<TStringList> fbuf(new TStringList());
+			int w = std::max(UnicodeString(o_lst->Count).Length(), 3);
+			for (int i=0; i<o_lst->Count; i++) {
+				UnicodeString fnam = ExtractFileName(ExcludeTrailingPathDelimiter(o_lst->Strings[i]));
+				fbuf->Add(UnicodeString().sprintf(_T("%0*u\t%s"), w, i + 1, fnam.c_str()));
+			}
+			fbuf->Add(EmptyStr);
+			fbuf->Add("\"項目番号 [TAB] ファイル名\" という書式にしたがって改名を行います。");
+			fbuf->Add("ファイル名部分を自由に変更し、このリストを保存してください。");
+			fbuf->Add("不要な項目は削除してもかまいませんが、順番は入れ替えないでください。");
+			fbuf->Add("NyanFi の確認メッセージで「はい」を選ぶとリストが読み込まれ、改名を行えます。");
+			fbuf->Add("なおこの説明を含め、空行以降の内容は無視されます。");
+
+			UnicodeString ren_list = UAPP_T(TempPathA, RENLIST_FILE);
+			if (!saveto_TextUTF8(ren_list, fbuf.get())) throw EAbort(LoadUsrMsg(USTR_FaildSave, _T("リストファイル")));
+			RenameDlg->EditedList  = true;
+			RenameDlg->RenListFile = ren_list;
 		}
 
 		SetDirWatch(false);

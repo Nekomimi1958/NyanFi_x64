@@ -33,6 +33,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *DelAssRenAction;
 	TAction *DelCnvChAction;
 	TAction *DelItemAction;
+	TAction *EditListAction;
 	TAction *Inp1stNameAction;
 	TAction *LatestTimeAction;
 	TAction *RenOkAction;
@@ -46,8 +47,10 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *DelAssRenBtn;
 	TButton *DelKeyBtn;
 	TButton *DowColBtn;
+	TButton *EditListBtn;
 	TButton *OkButton;
 	TButton *PreviewBtn;
+	TButton *RefListBtn;
 	TButton *Time00Btn;
 	TButton *Time12Btn;
 	TButton *TimeLatestBtn;
@@ -56,6 +59,7 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *UpColBtn;
 	TCheckBox *ArcCheckBox;
 	TCheckBox *AutoPrvCheckBox;
+	TCheckBox *Case2CheckBox;
 	TCheckBox *CaseCheckBox;
 	TCheckBox *CmpCheckBox;
 	TCheckBox *CnvCharCheckBox;
@@ -63,6 +67,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *EndMatchCheckBox;
 	TCheckBox *HiddenCheckBox;
 	TCheckBox *NoRenLogCheckBox;
+	TCheckBox *OnlyBase2CheckBox;
 	TCheckBox *OnlyBaseCheckBox;
 	TCheckBox *PrtChgCheckBox;
 	TCheckBox *ReadOnlyCheckBox;
@@ -72,6 +77,7 @@ __published:	// IDE で管理されるコンポーネント
 	TComboBox *IniStt2ComboBox;
 	TComboBox *IniSttComboBox;
 	TComboBox *Mp3FmtComboBox;
+	TComboBox *RenListComboBox;
 	TComboBox *RepStrComboBox;
 	TComboBox *SerFmtComboBox;
 	TComboBox *SrcStrComboBox;
@@ -89,6 +95,7 @@ __published:	// IDE で管理されるコンポーネント
 	TGroupBox *TimeGroupBox;
 	TLabel *CnvChLabel;
 	TLabel *DotLabel;
+	TLabel *ListErrLabel;
 	TLabel *mp3fextLabel;
 	TLabel *NameInfMLabel;
 	TLabel *PathInfMLabel;
@@ -106,6 +113,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *CnvCharPanelR;
 	TPanel *CommonPanel;
 	TPanel *HiddenPanel;
+	TPanel *ListTopPanel;
 	TPanel *MainPanel;
 	TPanel *Mp3TopPanel;
 	TPanel *NameComPanel;
@@ -144,6 +152,7 @@ __published:	// IDE で管理されるコンポーネント
 	TTabSheet *NameSheet;
 	TTabSheet *OptionSheet;
 	TTabSheet *OtherSheet;
+	TTabSheet *RenListSheet;
 	TTabSheet *ReplaceSheet;
 	TTabSheet *SerialSheet;
 
@@ -214,6 +223,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RegExCheckBoxClick(TObject *Sender);
 	void __fastcall Opt2MainPanelResize(TObject *Sender);
 	void __fastcall AddCnvChActionUpdate(TObject *Sender);
+	void __fastcall EditListActionExecute(TObject *Sender);
+	void __fastcall EditListActionUpdate(TObject *Sender);
+	void __fastcall RefListBtnClick(TObject *Sender);
+	void __fastcall RenListComboBoxChange(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;
@@ -239,12 +252,26 @@ private:	// ユーザー宣言
 	void __fastcall set_FmtEdit(const _TCHAR *s);
 	void __fastcall set_FmtEdit(UnicodeString s);
 
+	bool __fastcall LoadListFile();
+
+	bool __fastcall IsNameSheet()	 { return (NamePageControl->ActivePage==NameSheet); }
+	bool __fastcall IsSerialSheet()	 { return (NamePageControl->ActivePage==SerialSheet); }
+	bool __fastcall IsRenListSheet() { return (NamePageControl->ActivePage==RenListSheet); }
+	bool __fastcall IsReplaceSheet() { return (NamePageControl->ActivePage==ReplaceSheet); }
+	bool __fastcall IsMp3Sheet()	 { return (NamePageControl->ActivePage==Mp3Sheet); }
+	bool __fastcall IsOptionSheet()	 { return (NamePageControl->ActivePage==OptionSheet); }
+
 public:		// ユーザー宣言
 	TStringList *CurNameList;	//カレントの全ファイルリスト
 	TStringList *ItemList;		//対象リスト
 	TStringList *NewNameList;	//新しい名前のリスト
+
 	UnicodeString OppPath;		//反対パス(カレント側改名による反映のチェック用)
 
+	TStringList *RepRenList;	//改名リスト
+	UnicodeString RenListFile;	//改名リストファイル名
+
+	bool EditedList;			//リスト編集による改名
 	bool IsMulti;				//複数の対象がある
 	bool NameChanged;			//連番改名で名前変更
 	bool FExtChanged;			//連番改名で拡張子変更
