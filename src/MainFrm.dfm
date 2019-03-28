@@ -1383,6 +1383,15 @@ object NyanFiForm: TNyanFiForm
               Visible = False
               OnPaint = CaretPaintBoxPaint
             end
+            object SttBorderPaintBox: TPaintBox
+              Left = 1
+              Top = 1
+              Width = 340
+              Height = 4
+              Align = alTop
+              Visible = False
+              OnPaint = SttBorderPaintBoxPaint
+            end
             object FilterComboBox: TComboBox
               Left = 74
               Top = 0

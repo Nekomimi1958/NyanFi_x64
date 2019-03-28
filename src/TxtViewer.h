@@ -93,11 +93,11 @@ private:
 	UnicodeString CharPtn;			//文字
 
 	UnicodeString UsrKeyword;		//ユーザ定義キーワード
-	bool UsrKeywdCase;				//ユーザ定義キーワードで大小文字を区別
+	bool   UsrKeywdCase;			//ユーザ定義キーワードで大小文字を区別
 	TColor UsrKeywdCol;				//ユーザ定義キーワードの文字色
 
 	UnicodeString UsrKeyword2;		//ユーザ定義キーワード
-	bool UsrKeywdCase2;				//ユーザ定義キーワードで大小文字を区別
+	bool   UsrKeywdCase2;			//ユーザ定義キーワードで大小文字を区別
 	TColor UsrKeywdCol2;			//ユーザ定義キーワードの文字色
 
 	TBytes FindByte0, FindByte1;	//バイナリ検索語
@@ -183,7 +183,6 @@ public:
 	bool ExtClicked;				//テキスト外をクリックされた
 	bool Selecting;					//マウスで選択中
 	bool PtInSelect;				//選択範囲内をクリックした
-	bool LastFound;					//直前の検索結果
 	bool reqCurPos;					//閉じたときにファイラーのカーソル位置を設定
 
 	int  TabLength;					//タブ数
@@ -218,6 +217,8 @@ public:
 	bool isBytes;					//バイト列検索
 	int  BinCodePage;				//コードページ
 	bool Highlight;					//マッチの強調表示
+	bool LastFound;					//直前の検索結果
+	TPoint FoundPos;				//直前のヒット位置
 
 	UnicodeString IncSeaWord;		//インクリメンタルサーチ入力語
 	bool isIncSea;					//インクリメンタルサーチ
@@ -280,6 +281,7 @@ public:
 	void __fastcall Clear();
 
 	void __fastcall SetSttInf(UnicodeString msg = EmptyStr);
+	void __fastcall SttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, TRect Rect);
 
 	void __fastcall onMouseDown(int x, int y);
 	void __fastcall onMouseMove(int x, int y);

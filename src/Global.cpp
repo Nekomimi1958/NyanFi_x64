@@ -4326,11 +4326,13 @@ bool ListSelected(TStringList *lst)
 //---------------------------------------------------------------------------
 int GetSelCount(TStringList *lst)
 {
-	int s_cnt = 0;
-	if (lst)
-		for (int i=0; i<lst->Count; i++) if (((file_rec*)lst->Objects[i])->selected) s_cnt++;
-	return s_cnt;
+	int cnt = 0;
+	if (lst) {
+		for (int i=0; i<lst->Count; i++) if (((file_rec*)lst->Objects[i])->selected) cnt++;
+	}
+	return cnt;
 }
+
 //---------------------------------------------------------------------------
 //選択中項目名リストを取得
 //---------------------------------------------------------------------------
@@ -4361,6 +4363,18 @@ void ClrSelect(TStringList *lst)
 {
 	if (!lst) lst = GetCurList();
 	for (int i=0; i<lst->Count; i++) ((file_rec*)lst->Objects[i])->selected = false;
+}
+
+//---------------------------------------------------------------------------
+//選択中の項目数
+//---------------------------------------------------------------------------
+int GetMatchCount(TStringList *lst)
+{
+	int cnt = 0;
+	if (lst) {
+		for (int i=0; i<lst->Count; i++) if (((file_rec*)lst->Objects[i])->matched) cnt++;
+	}
+	return cnt;
 }
 
 //---------------------------------------------------------------------------

@@ -28,10 +28,12 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *SelMaskCheckBox;
 	TCheckBox *SelOppCheckBox;
 	TPanel *HashPanel;
+	TPanel *IdPanel;
 	TPanel *SizePanel;
 	TPanel *TimePanel;
 	TRadioGroup *AlgRadioGroup;
 	TRadioGroup *HashRadioGroup;
+	TRadioGroup *IdRadioGroup;
 	TRadioGroup *SizeRadioGroup;
 	TRadioGroup *TimeRadioGroup;
 
@@ -40,6 +42,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall OkActionUpdate(TObject *Sender);
+	void __fastcall OptRadioGroupClick(TObject *Sender);
 
 private:	// ユーザー宣言
 

@@ -605,6 +605,30 @@ int get_HardLinkCount(UnicodeString fnam)
 
     return cnt;
 }
+//---------------------------------------------------------------------------
+//ファイルの同一性チェック
+//---------------------------------------------------------------------------
+bool is_IdenticalFile(UnicodeString fnam1, UnicodeString fnam2)
+{
+	bool res = false;
+	HANDLE hFile1 = ::CreateFile(cv_ex_filename(fnam1).c_str(),
+		0, FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE hFile2 = ::CreateFile(cv_ex_filename(fnam2).c_str(),
+		0, FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE, NULL, OPEN_EXISTING, 0, NULL);
+
+	if (hFile1!=INVALID_HANDLE_VALUE && hFile2!=INVALID_HANDLE_VALUE) {
+		BY_HANDLE_FILE_INFORMATION fi1, fi2;
+		if (::GetFileInformationByHandle(hFile1, &fi1) && ::GetFileInformationByHandle(hFile2, &fi2)) {
+			res = (fi1.dwVolumeSerialNumber==fi2.dwVolumeSerialNumber)
+					&& (fi1.nFileIndexHigh==fi2.nFileIndexHigh) && (fi1.nFileIndexLow==fi2.nFileIndexLow);
+		}
+	}
+
+	if (hFile1) ::CloseHandle(hFile1);
+	if (hFile2) ::CloseHandle(hFile2);
+
+	return res;
+}
 
 //---------------------------------------------------------------------------
 //ファイルの存在チェック

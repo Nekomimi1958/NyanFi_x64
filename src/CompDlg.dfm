@@ -3,7 +3,7 @@ object FileCompDlg: TFileCompDlg
   Top = 0
   BorderStyle = bsDialog
   Caption = #21516#21517#12501#12449#12452#12523#12398#27604#36611
-  ClientHeight = 331
+  ClientHeight = 386
   ClientWidth = 434
   Color = clBtnFace
   ParentFont = True
@@ -15,13 +15,17 @@ object FileCompDlg: TFileCompDlg
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
+  DesignSize = (
+    434
+    386)
   PixelsPerInch = 96
   TextHeight = 13
   object CanButton: TButton
     Left = 219
-    Top = 297
+    Top = 352
     Width = 80
     Height = 26
+    Anchors = [akLeft, akBottom]
     Cancel = True
     Caption = #12461#12515#12531#12475#12523
     Font.Charset = DEFAULT_CHARSET
@@ -31,14 +35,16 @@ object FileCompDlg: TFileCompDlg
     Font.Style = []
     ModalResult = 2
     ParentFont = False
-    TabOrder = 9
+    TabOrder = 10
+    ExplicitTop = 297
   end
   object OkButton: TButton
     Left = 114
-    Top = 297
+    Top = 352
     Width = 80
     Height = 26
     Action = OkAction
+    Anchors = [akLeft, akBottom]
     Default = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -47,15 +53,18 @@ object FileCompDlg: TFileCompDlg
     Font.Style = []
     ModalResult = 1
     ParentFont = False
-    TabOrder = 8
+    TabOrder = 9
+    ExplicitTop = 297
   end
   object CmpDirCheckBox: TCheckBox
     Left = 12
-    Top = 233
+    Top = 288
     Width = 152
     Height = 17
+    Anchors = [akLeft, akBottom]
     Caption = #12487#12451#12524#12463#12488#12522#12418#27604#36611'(&D)'
-    TabOrder = 3
+    TabOrder = 4
+    ExplicitTop = 233
   end
   object TimePanel: TPanel
     Left = 0
@@ -143,6 +152,7 @@ object FileCompDlg: TFileCompDlg
         #19981#19968#33268
         #19968#33268)
       TabOrder = 0
+      OnClick = OptRadioGroupClick
     end
     object AlgRadioGroup: TRadioGroup
       Left = 239
@@ -165,39 +175,78 @@ object FileCompDlg: TFileCompDlg
   end
   object SelOppCheckBox: TCheckBox
     Left = 12
-    Top = 258
+    Top = 313
     Width = 130
     Height = 17
+    Anchors = [akLeft, akBottom]
     Caption = #21453#23550#20596#12418#36984#25246'(&O)'
-    TabOrder = 5
+    TabOrder = 6
+    ExplicitTop = 258
   end
   object ReverseCheckBox: TCheckBox
     Left = 144
-    Top = 258
+    Top = 313
     Width = 117
     Height = 17
+    Anchors = [akLeft, akBottom]
     Caption = #32080#26524#12434#21453#36578'(&R)'
-    TabOrder = 6
+    TabOrder = 7
+    ExplicitTop = 258
   end
   object SelMaskCheckBox: TCheckBox
     Left = 263
-    Top = 258
+    Top = 313
     Width = 162
     Height = 17
+    Anchors = [akLeft, akBottom]
     Caption = #36984#25246#38917#30446#12384#12369#12434#27531#12377'(&M)'
-    TabOrder = 7
+    TabOrder = 8
+    ExplicitTop = 258
   end
   object CmpArcCheckBox: TCheckBox
     Left = 170
-    Top = 233
+    Top = 288
     Width = 207
     Height = 17
+    Anchors = [akLeft, akBottom]
     Caption = #12487#12451#12524#12463#12488#12522#12392#12450#12540#12459#12452#12502#12434#27604#36611'(&P)'
-    TabOrder = 4
+    TabOrder = 5
+    ExplicitTop = 233
+  end
+  object IdPanel: TPanel
+    Left = 0
+    Top = 222
+    Width = 434
+    Height = 55
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 3
+    StyleElements = []
+    ExplicitLeft = 8
+    ExplicitTop = 283
+    DesignSize = (
+      434
+      55)
+    object IdRadioGroup: TRadioGroup
+      Left = 8
+      Top = 6
+      Width = 418
+      Height = 41
+      Anchors = [akLeft, akTop, akRight]
+      Caption = #12508#12522#12517#12540#12512#12471#12522#12450#12523#30058#21495'/'#12501#12449#12452#12523'ID(&I)'
+      Columns = 5
+      ItemIndex = 0
+      Items.Strings = (
+        #28961#35222
+        #19981#19968#33268
+        #19968#33268)
+      TabOrder = 0
+      OnClick = OptRadioGroupClick
+    end
   end
   object ActionList1: TActionList
-    Left = 353
-    Top = 286
+    Left = 33
+    Top = 342
     object OkAction: TAction
       Caption = 'OK'
       OnUpdate = OkActionUpdate

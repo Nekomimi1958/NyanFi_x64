@@ -1409,7 +1409,6 @@ struct flist_stt {
 	bool filter_sens;			//ƒtƒBƒ‹ƒ^‚Å‘å¬•¶š‚ğ‹æ•Ê
 	UnicodeString incsea_Word;
 	UnicodeString incsea_Ptn;
-	int incsea_MatchCnt;
 };
 
 extern flist_stt ListStt[MAX_FILELIST];
@@ -1627,6 +1626,7 @@ bool ListSelected(TStringList *lst);
 int  GetSelCount(TStringList *lst);
 void GetSelList(TStringList *lst, TStringList *sel_lst, bool with_path = true, bool with_obj = false);
 void ClrSelect(TStringList *lst = NULL);
+int  GetMatchCount(TStringList *lst);
 void SortList(TStringList *lst, int tag = CurListTag);
 int  IndexOfFileList(UnicodeString fnam, int tag = CurListTag, int top_idx = -1);
 file_rec* ExistsInList(UnicodeString fnam, TStringList *lst);

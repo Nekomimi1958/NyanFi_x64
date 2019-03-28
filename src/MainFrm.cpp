@@ -4092,13 +4092,13 @@ void __fastcall TNyanFiForm::SetupDesign(
 
 	//ドライブ表示
 	for (int i=0; i<2; i++) {
-		TPanel *pp = (i==0)? L_StatPanel : R_StatPanel;
-		pp->Font->Assign(DrvInfFont);
-		pp->ClientHeight = get_FontHeight(DrvInfFont, 4);
-		pp->Color		 = col_bgDrvInf;
-		pp->Font->Color  = col_fgDrvInf;
-		pp->BevelKind	 = FlatInfPanel? bkNone : bkFlat;
-		pp->BevelOuter	 = FlatInfPanel? bvNone : bvLowered;
+		TPanel *stt_panel = (i==0)? L_StatPanel : R_StatPanel;
+		stt_panel->Font->Assign(DrvInfFont);
+		stt_panel->ClientHeight = get_FontHeight(DrvInfFont, 4);
+		stt_panel->Color		= col_bgDrvInf;
+		stt_panel->Font->Color  = col_fgDrvInf;
+		stt_panel->BevelKind	= FlatInfPanel? bkNone : bkFlat;
+		stt_panel->BevelOuter	= FlatInfPanel? bvNone : bvLowered;
 	}
 
 	//フィルタ
@@ -6476,8 +6476,8 @@ void __fastcall TNyanFiForm::SetDrivePanel(int tag, UnicodeString msg)
 		stt_panel->Alignment   = taLeftJustify;
 		stt_panel->Color	   = col_bgList;
 		stt_panel->Font->Color = col_fgList;
-		stt_panel->Caption	   = (CurStt->is_Migemo ? " Migemo: "
-													: (lst_stt->is_Filter? " フィルタ: " : " サーチ: "));
+		stt_panel->Caption	   = CurStt->is_Migemo ? " Migemo: "
+												   : (lst_stt->is_Filter? " フィルタ: " : " サーチ: ");
 		SetIncSeaCaret(stt_panel->Caption);
 	}
 	else {
@@ -10103,11 +10103,11 @@ void __fastcall TNyanFiForm::FileListBoxKeyUp(TObject *Sender, WORD &Key, TShift
 //---------------------------------------------------------------------------
 //インクリメンタルサーチのマッチ数を取得/リストの絞り込み
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::set_IncSeaStt(
+int __fastcall TNyanFiForm::set_IncSeaStt(
 	bool sel_sw, 		//マッチしたら選択				(default = false)
 	bool smsk_sw)		//選択マスクを設定して絞り込み	(default = false)
 {
-	CurStt->incsea_MatchCnt = 0;
+	int match_cnt = 0;
 	CurStt->incsea_Ptn = usr_Migemo->GetRegExPtn(CurStt->is_Migemo, CurStt->incsea_Word);
 
 	TStringList *sm_lst = SelMaskList[CurListTag];
@@ -10133,7 +10133,7 @@ void __fastcall TNyanFiForm::set_IncSeaStt(
 												: contains_word_and_or(lbuf, CurStt->incsea_Word, IncSeaCaseSens);
 				if (fp->matched) {
 					if (sel_sw) fp->selected = true;
-					CurStt->incsea_MatchCnt++;
+					match_cnt++;
 				}
 				else if (sel_sw) fp->selected = false;
 			}
@@ -10158,11 +10158,14 @@ void __fastcall TNyanFiForm::set_IncSeaStt(
 			lst->AddObject(fp->f_name, (TObject*)fp);
 		}
 	}
-	else
+	else {
 		for (int i=0; i<lst->Count; i++) ((file_rec*)lst->Objects[i])->matched = false;
+	}
 
 	//ディレクトリ比較結果を反対側に反映
 	if (IsDiffList()) CurToOppDiffList();
+
+	return match_cnt;
 }
 
 //---------------------------------------------------------------------------
@@ -10170,10 +10173,10 @@ void __fastcall TNyanFiForm::set_IncSeaStt(
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 {
-	TListBox      *lp = FileListBox[CurListTag];
-	TPanel *stt_panel = (CurListTag==0)? L_StatPanel : R_StatPanel;
-	TStringList  *lst = GetCurList();
-	file_rec     *cfp = GetCurFrecPtr();
+	TListBox     *lp = FileListBox[CurListTag];
+	TPanel   *stt_pp = (CurListTag==0)? L_StatPanel : R_StatPanel;
+	TStringList *lst = GetCurList();
+	file_rec    *cfp = GetCurFrecPtr();
 	UnicodeString cur_fnam = is_selectable(cfp)? cfp->f_name : EmptyStr;
 
 	UnicodeString CmdStr = KeyFuncList->Values["S:" + keystr];
@@ -10257,49 +10260,56 @@ void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 		}
 	}
 	//キーワード更新
-	else chg_wd = update_IncSeaWord(CurStt->incsea_Word, keystr, true);
+	else {
+		chg_wd = update_IncSeaWord(CurStt->incsea_Word, keystr, true);
+	}
 
 	//検索
+	int match_cnt;
 	if (CurStt->is_Filter) {
 		if (chg_wd) {
 			//絞り込み解除
 			ResetIncSeaFilter(CurListTag);
 			if (IsDiffList()) ResetIncSeaFilter(OppListTag);
-
 			//絞り込み
-			set_IncSeaStt(false, true);
-			WorkListFiltered = CurStt->is_Work? (CurStt->incsea_MatchCnt>0) : false;
+			match_cnt = set_IncSeaStt(false, true);
+			WorkListFiltered = CurStt->is_Work? (match_cnt>0) : false;
 
 			//リストボックスの更新
 			lp->Count = lst->Count;
 			if (IndexOfFileList(cur_fnam)==-1) lp->ItemIndex = 0;
 			FlScrPanel[CurListTag]->UpdateKnob();
 		}
+		else {
+			match_cnt = GetMatchCount(lst);
+		}
 	}
 	else {
-		set_IncSeaStt();
+		match_cnt = set_IncSeaStt();
 	}
 
 	bool csr_up   = (USAME_TI(CmdStr, "IncSearchUp")   || equal_UP(keystr));
 	bool csr_down = (USAME_TI(CmdStr, "IncSearchDown") || equal_DOWN(keystr));
+	bool csr_top  = USAME_TI(CmdStr,  "IncSearchTop");
 
 	//フィルタマスクモード
 	if (CurStt->is_Filter) {
 		//カーソル移動
-		if      (csr_up)	ListBoxCursorUp(lp);
+		if 		(csr_up)	ListBoxCursorUp(lp);
 		else if (csr_down)	ListBoxCursorDown(lp);
+		else if (csr_top)	ListBoxTop(lp);
 
-		if (chg_wd || csr_down || csr_up) {
+		if (chg_wd || csr_down || csr_up || csr_top) {
 			lp->Repaint();
 			SetFileInf();
 		}
 	}
 	//通常モード
 	else if (!CurStt->incsea_Word.IsEmpty()) {
-		int s_idx = lp->ItemIndex;  if (s_idx==-1) s_idx = 0;
+		int s_idx = csr_top? 0 : lp->ItemIndex;  if (s_idx==-1) s_idx = 0;
 
 		//マッチ数=1ならそこに移動
-		if (CurStt->incsea_MatchCnt==1) {
+		if (match_cnt==1) {
 			for (int i=0; i<lst->Count; i++) {
 				if (((file_rec*)lst->Objects[i])->matched) {
 					ListBoxSetIndex(lp, i);  break;
@@ -10307,9 +10317,9 @@ void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 			}
 		}
 		//マッチ数>1ならサーチ
-		else if (CurStt->incsea_MatchCnt>1) {
+		else if (match_cnt>1) {
 			//下方 向へサーチ
-			if (chg_wd || csr_down) {
+			if (chg_wd || csr_down || csr_top) {
 				if (chg_wd && s_idx>0) s_idx--;
 				int idx = find_NextFile(lst, s_idx, EmptyStr, 
 							CurStt->is_Migemo? CurStt->incsea_Ptn : CurStt->incsea_Word,
@@ -10330,14 +10340,15 @@ void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 		//結果
 		if (chg_wd || csr_down || csr_up) {
 			//見つかった
-			if (CurStt->incsea_MatchCnt>0)
+			if (match_cnt>0) {
 				SetFileInf();
+			}
 			//見つからなかった
 			else if (!CurStt->is_Migemo) {
-				stt_panel->Caption = " サーチ: " + REPLACE_TS(CurStt->incsea_Word, "&", "&&");
-				stt_panel->Color = col_bgWarn;  stt_panel->Repaint();
+				stt_pp->Caption = " サーチ: " + REPLACE_TS(CurStt->incsea_Word, "&", "&&");
+				stt_pp->Color = col_bgWarn;  stt_pp->Repaint();
 				beep_Warn();  Sleep(250);
-				stt_panel->Color = col_bgList;
+				stt_pp->Color = col_bgList;
 				delete_end(CurStt->incsea_Word);
 				set_IncSeaStt();
 			}
@@ -10355,10 +10366,22 @@ void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 
 	UnicodeString inf_str;
 	//マッチ数
-	if (CurStt->incsea_MatchCnt==1)
-		inf_str.UCAT_T("1 File Matched");
-	else if (CurStt->incsea_MatchCnt>1)
-		inf_str.cat_sprintf(_T("%u Files Matched"), CurStt->incsea_MatchCnt);
+	if (match_cnt==1) {
+		inf_str.UCAT_T("1/1");
+	}
+	else if (match_cnt>1) {
+		int cnt = 0, pos = 0;
+		for (int i=0; i<lst->Count; i++) {
+			if (((file_rec*)lst->Objects[i])->matched) {
+				cnt++;
+				if (i==lp->ItemIndex) {
+					pos = cnt;  break;
+				}
+			}
+		}
+		if (pos>0) inf_str.cat_sprintf(_T("%u"), pos); else inf_str.UCAT_T("_");
+		inf_str.cat_sprintf(_T("/%u"), match_cnt);
+	}
 
 	//選択数
 	int s_cnt = GetSelCount(lst);
@@ -10368,13 +10391,14 @@ void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 	}
 	if (!inf_str.IsEmpty()) {
 		stt_str.UCAT_T("  ");
-		stt_str = fit_StrToPanel(stt_str + inf_str, stt_str.Length(), stt_panel);
+		stt_str = fit_StrToPanel(stt_str + inf_str, stt_str.Length(), stt_pp);
 	}
 
-	stt_panel->Caption = stt_str;
+	stt_pp->Caption = stt_str;
+	stt_pp->Repaint();
 
 	//マッチ数1で抜ける
-	if (IncSeaMatch1Exit && CurStt->incsea_MatchCnt==1 && !CurStt->is_Filter && !CurStt->is_Migemo) ExitIncSearch();
+	if (IncSeaMatch1Exit && match_cnt==1 && !CurStt->is_Filter && !CurStt->is_Migemo) ExitIncSearch();
 }
 
 //---------------------------------------------------------------------------
@@ -12220,6 +12244,7 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 			int  t_mode  = FileCompDlg->TimeRadioGroup->ItemIndex;
 			int  s_mode  = FileCompDlg->SizeRadioGroup->Enabled? FileCompDlg->SizeRadioGroup->ItemIndex : 0;
 			int  h_mode  = FileCompDlg->HashRadioGroup->Enabled? FileCompDlg->HashRadioGroup->ItemIndex : 0;
+			int  i_mode  = FileCompDlg->IdRadioGroup->Enabled?   FileCompDlg->IdRadioGroup->ItemIndex   : 0;
 			bool cmp_dir = FileCompDlg->CmpDirCheckBox->Checked;
 			bool cmp_arc = FileCompDlg->CmpArcCheckBox->Checked;
 			bool sel_opp = FileCompDlg->SelOppCheckBox->Checked;
@@ -12260,6 +12285,14 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 					}
 					AddLog(msg);
 				}
+				if (i_mode>0) {
+					msg.USET_T("  同一性: ");
+					switch (i_mode) {
+					case 1: msg.UCAT_T("不一致");	break;
+					case 2: msg.UCAT_T("一致");		break;
+					}
+					AddLog(msg);
+				}
 
 				ClrSelect(c_lst);
 				RepaintList(CurListTag);
@@ -12274,6 +12307,7 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 					file_rec *cfp = (file_rec*)c_lst->Objects[c_i];
 					if (!is_selectable(cfp)) continue;
 					if (cfp->is_dir && !cmp_dir) continue;
+
 					bool c_is_arc = !cfp->is_dir && test_ArcExt(cfp->f_ext);
 					for (int o_i=0; o_i<o_lst->Count; o_i++) {
 						file_rec *ofp = (file_rec*)o_lst->Objects[o_i];
@@ -12293,19 +12327,18 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 						if (SameText(c_name, o_name)) {
 							msg = make_LogHdr("COMP", cfp->f_name);
 							//タイムスタンプ
-							bool t_flag = false;
+							bool t_flag;
 							if (t_mode==0) {
 								t_flag = true;
 							}
 							else {
 								bool same_t = WithinPastMilliSeconds(cfp->f_time, ofp->f_time, TimeTolerance);
-								switch (t_mode) {
-								case 1: t_flag = (!same_t); break;	//不一致
-								case 2: t_flag = (same_t);  break;	//一致
-								case 3: t_flag = (!same_t && cfp->f_time>ofp->f_time); break;	//新しい
-								case 4: t_flag = (!same_t && cfp->f_time<ofp->f_time); break;	//古い
-								}
+								t_flag = (t_mode==1)? !same_t :
+										 (t_mode==2)?  same_t :
+										 (t_mode==3)? (!same_t && cfp->f_time>ofp->f_time) :
+										 (t_mode==4)? (!same_t && cfp->f_time<ofp->f_time) : false;
 							}
+
 							//サイズ
 							__int64 c_size = cfp->f_size;
 							__int64 o_size = ofp->f_size;
@@ -12316,14 +12349,11 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 							if (o_is_arc && cfp->is_dir && usr_ARC->GetArcInfo(ofp->f_name, &f_cnt, &org_size))
 								o_size = org_size;
 
-							bool s_flag = false;
-							switch (s_mode) {
-							case 0: s_flag = true;				 break;	//無視
-							case 1: s_flag = (c_size != o_size); break;	//不一致
-							case 2: s_flag = (c_size == o_size); break;	//一致
-							case 3: s_flag = (c_size >  o_size); break;	//大きい
-							case 4: s_flag = (c_size <  o_size); break;	//小さい
-							}
+							bool s_flag = (s_mode==1)? (c_size != o_size) :
+										  (s_mode==2)? (c_size == o_size) :
+										  (s_mode==3)? (c_size >  o_size) :
+										  (s_mode==4)? (c_size <  o_size) : true;
+
 							//ハッシュ
 							bool h_flag = false;
 							if (h_mode>0) {
@@ -12388,7 +12418,12 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 							}
 							else h_flag = true;
 
-							cfp->selected = t_flag && s_flag && h_flag;
+							//同一性
+							bool i_flag = (i_mode==1)? !is_IdenticalFile(cfp->f_name, ofp->f_name) :
+										  (i_mode==2)? is_IdenticalFile(cfp->f_name, ofp->f_name) : true;
+
+							//結果
+							cfp->selected = t_flag && s_flag && h_flag && i_flag;
 							if (cfp->selected) {
 								hit_cnt++;
 								log_buf->Add(" >" + make_LogHdr("HIT", cfp->f_name));
@@ -12398,6 +12433,7 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 						}
 					}
 				}
+
 				CurWorking = false;
 				SttWorkMsg(EmptyStr, CurListTag);
 				AddLogStrings(log_buf.get());
@@ -15272,14 +15308,13 @@ void __fastcall TNyanFiForm::FilterActionExecute(TObject *Sender)
 
 	SetDrivePanel(CurListTag);
 
-	TPanel *stt_panel = (CurListTag==0)? L_StatPanel : R_StatPanel;
-
+	TPanel *stt_pp = (CurListTag==0)? L_StatPanel : R_StatPanel;
 	FilterComboBox->Left  = get_CharWidth_Font(FilterComboBox->Font, 10);	//" フィルタ "
-	FilterComboBox->Width = std::max(stt_panel->ClientWidth - get_CharWidth_Font(FilterComboBox->Font, 34), 60);
+	FilterComboBox->Width = std::max(stt_pp->ClientWidth - get_CharWidth_Font(FilterComboBox->Font, 34), 60);
 																	//" フィルタ   999999 Files Matched "
 	FilterComboBox->Font->Color = scl_WindowText;
 	FilterComboBox->Text	= EmptyStr;
-	FilterComboBox->Parent	= stt_panel;
+	FilterComboBox->Parent	= stt_pp;
 	FilterComboBox->Items->Assign(FilterHistory);
 	FilterComboBox->Visible = true;
 	FilterComboBox->SetFocus();
@@ -15304,7 +15339,6 @@ void __fastcall TNyanFiForm::FilterComboBoxChange(TObject *Sender)
 	TStringList    *lst = GetCurList();
 	TStringList *sm_lst = SelMaskList[CurListTag];
 	sm_lst->Clear();
-	CurStt->incsea_MatchCnt = 0;
 	UnicodeString kwd = FilterComboBox->Text;
 	if (!kwd.IsEmpty()) {
 		int i = 0;
@@ -15314,7 +15348,6 @@ void __fastcall TNyanFiForm::FilterComboBoxChange(TObject *Sender)
 				UnicodeString lbuf = (!fp->alias.IsEmpty())? (fp->alias + fp->f_ext) : fp->n_name;
 				if (CurStt->find_TAG && FindTagsColumn) lbuf.cat_sprintf(_T("\t%s"), fp->tags.c_str());
 				fp->matched = contains_word_and_or(lbuf, kwd, CurStt->filter_sens);
-				if (fp->matched) CurStt->incsea_MatchCnt++;
 			}
 			//選択マスクを設定して絞り込み
 			if (fp->matched) {
@@ -15324,10 +15357,12 @@ void __fastcall TNyanFiForm::FilterComboBoxChange(TObject *Sender)
 			else del_FileListItem(lst, i);
 		}
 	}
-	else
+	else {
 		for (int i=0; i<lst->Count; i++) ((file_rec*)lst->Objects[i])->matched = false;
+	}
 
-	WorkListFiltered = CurStt->is_Work? (CurStt->incsea_MatchCnt>0) : false;
+	int match_cnt = GetMatchCount(lst);
+	WorkListFiltered = CurStt->is_Work? (match_cnt>0) : false;
 
 	//リストボックスの更新
 	TListBox *lp = FileListBox[CurListTag];
@@ -15336,18 +15371,14 @@ void __fastcall TNyanFiForm::FilterComboBoxChange(TObject *Sender)
 	FlScrPanel[CurListTag]->UpdateKnob();
 
 	//結果表示
-	TPanel *stt_panel = (CurListTag==0)? L_StatPanel : R_StatPanel;
-	UnicodeString stt_str, tmp;
-	stt_str.UCAT_T(" フィルタ");
-	if (CurStt->incsea_MatchCnt>0) {
-		tmp.cat_sprintf(_T("  %u Files Matched"), CurStt->incsea_MatchCnt);
-		if (CurStt->incsea_MatchCnt==1) tmp = REPLACE_TS(tmp, "Files", "File");
+	TPanel *stt_pp = (CurListTag==0)? L_StatPanel : R_StatPanel;
+	UnicodeString stt_str = " フィルタ";
+	if (match_cnt>0) {
+		stt_str.cat_sprintf(_T(" %u/%u"), lp->ItemIndex + 1, match_cnt);
+		stt_str = fit_StrToPanel(stt_str, 6, stt_pp);
 	}
-	else
-		tmp.cat_sprintf(_T("       not matched"), CurStt->incsea_MatchCnt);
-	stt_str = fit_StrToPanel(stt_str + tmp, 6, stt_panel);
-
-	stt_panel->Caption = stt_str;
+	stt_pp->Caption = stt_str;
+	stt_pp->Repaint();
 
 	//ディレクトリ比較結果を反対側に反映
 	if (IsDiffList()) CurToOppDiffList();
@@ -15384,7 +15415,17 @@ void __fastcall TNyanFiForm::FilterComboBoxKeyDown(TObject *Sender, WORD &Key, T
 	else return;
 
 	if (csr_ud) {
-		lp->Repaint();
+		TPanel *stt_pp = (CurListTag==0)? L_StatPanel : R_StatPanel;
+		UnicodeString stt_str = " フィルタ";
+		int match_cnt = GetMatchCount(GetCurList());
+		if (match_cnt>0) {
+			stt_str.cat_sprintf(_T(" %u/%u"), lp->ItemIndex + 1, match_cnt);
+			stt_str = fit_StrToPanel(stt_str, 6, stt_pp);
+		}
+		stt_pp->Caption = stt_str;
+		stt_pp->Repaint();
+
+		lp->Invalidate();
 		SetFileInf();
 	}
 
@@ -16923,6 +16964,13 @@ void __fastcall TNyanFiForm::IncSearchActionExecute(TObject *Sender)
 	CaretPaintBox->Visible = true;
 	SetIncSeaCaret(EmptyStr);
 
+	//分割境界
+	if (FlatInfPanel) {
+		SttBorderPaintBox->Parent  = (CurListTag==0)? L_StatPanel : R_StatPanel;
+		SttBorderPaintBox->Height  = Scaled1;
+		SttBorderPaintBox->Visible = true;
+	}
+
 	SetDrivePanel(CurListTag);
 }
 
@@ -16949,6 +16997,14 @@ void __fastcall TNyanFiForm::CaretPaintBoxPaint(TObject *Sender)
 	TPaintBox *pp = (TPaintBox *)Sender;
 	TCanvas *cv = pp->Canvas;
 	cv->Brush->Color = col_Cursor;
+	cv->FillRect(pp->ClientRect);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SttBorderPaintBoxPaint(TObject *Sender)
+{
+	TPaintBox *pp = (TPaintBox *)Sender;
+	TCanvas *cv = pp->Canvas;
+	cv->Brush->Color = col_Splitter;
 	cv->FillRect(pp->ClientRect);
 }
 
@@ -17061,7 +17117,10 @@ void __fastcall TNyanFiForm::CurToOppDiffList()
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ExitIncSearch()
 {
-	CaretPaintBox->Visible = false;
+	int match_cnt = GetMatchCount(GetCurList());
+
+	CaretPaintBox->Visible	   = false;
+	SttBorderPaintBox->Visible = false;
 
 	bool is_filter = FilterComboBox->Visible;
 	if (is_filter) {
@@ -17070,13 +17129,12 @@ void __fastcall TNyanFiForm::ExitIncSearch()
 	}
 
 	FlScrPanel[CurListTag]->KeyWordChanged(EmptyStr, 0);
-
 	CurStt->is_IncSea = CurStt->is_Filter = false;
 
 	for (int i=0; i<(IsDiffList()? MAX_FILELIST : 1); i++) {
 		int tag_i = (i==0)? CurListTag : OppListTag;
 
-		if (CurStt->incsea_MatchCnt==0) {
+		if (match_cnt==0) {
 			SelMaskList[tag_i]->Clear();
 			if (IsDiffList() || (CurStt->is_Work && i==0))
 				ResetIncSeaFilter(tag_i, true);
@@ -23783,6 +23841,10 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 		UnicodeString msg;
 		bool sure_unpack = (ExeCmdsBusy && XCMD_MsgOff)? false : SureUnPack;
 
+		bool is_cd	= TEST_ActParam("CD");
+		bool is_cd2 = TEST_ActParam("CD2");
+		bool is_ow	= TEST_ActParam("OW");
+
 		TStringList *lst = GetCurList(true);
 		int sel_cnt = GetSelCount(lst);
 		//選択あり
@@ -23799,6 +23861,7 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 				msg.sprintf(_T("%s を解凍しますか?"), ExtractFileName(anam).c_str());
 			else
 				msg.USET_T("複数のアーカイブが選択されていますが解凍しますか?");
+
 			if (msgbox_Sure(msg, sure_unpack)) {
 				StartLog(msg.sprintf(_T("解凍開始  %s\t%s"), GetSrcPathStr().c_str(), dst_dir.c_str()));
 				CurWorking = true;
@@ -23807,7 +23870,7 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 					file_rec *fp = (file_rec*)lst->Objects[i];  if (!fp->selected) continue;
 					UnicodeString dnam = dst_dir;
 					//ディレクトリ作成
-					if (TEST_ActParam("CD") || (TEST_ActParam("CD2") && usr_ARC->GetRootCount(fp->f_name)>1)) {
+					if (is_cd || (is_cd2 && usr_ARC->GetRootCount(fp->f_name)>1)) {
 						dnam.cat_sprintf(_T("%s\\"), fp->b_name.c_str());
 						SetLastError(NO_ERROR);
 						if (!dir_exists(dnam) && !create_Dir(dnam)) {
@@ -23818,7 +23881,8 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 					}
 					msg = make_LogHdr(_T("UNPACK"), fp);
 					SetDirWatch(false);
-					if (!usr_ARC->UnPack(fp->f_name, dnam)) set_LogErrMsg(msg, usr_ARC->ErrMsg);
+					if (!usr_ARC->UnPack(fp->f_name, dnam, EmptyStr, true, false, is_ow))
+						set_LogErrMsg(msg, usr_ARC->ErrMsg);
 					SetDirWatch(true);
 					AddLog(msg);
 					if (msg[1]=='E') UserAbort(USTR_FaildProc);
@@ -23841,12 +23905,13 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 		else {
 			if (cfp->f_name.IsEmpty() || cfp->is_dummy)  Abort();
 			if (!test_ArcExt(cfp->f_ext)) UserAbort(USTR_FmtNotSuported);
+
 			if (msgbox_Sure(msg.sprintf(_T("%s を解凍しますか?"), cfp->n_name.c_str()), sure_unpack)) {
 				StartLog(msg.sprintf(_T("解凍開始  %s\t%s"), GetSrcPathStr().c_str(), CurPath[OppListTag].c_str()));
 				UnicodeString dnam = dst_dir;
 				UnicodeString opp_dnam;
 				//ディレクトリ作成
-				if (TEST_ActParam("CD") || (TEST_ActParam("CD2") && usr_ARC->GetRootCount(cfp->f_name)>1)) {
+				if (is_cd || (is_cd2 && usr_ARC->GetRootCount(cfp->f_name)>1)) {
 					dnam.cat_sprintf(_T("%s\\"), cfp->b_name.c_str());
 					SetLastError(NO_ERROR);
 					if (!dir_exists(dnam) && !create_Dir(dnam)) {
@@ -23858,7 +23923,9 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 				UnicodeString msg = make_LogHdr(_T("UNPACK"), cfp);
 				CurWorking = true;
 				SetDirWatch(false);
-				if (!usr_ARC->UnPack(cfp->f_name, dnam)) set_LogErrMsg(msg, usr_ARC->ErrMsg);
+				if (!usr_ARC->UnPack(cfp->f_name, dnam, EmptyStr, true, false, is_ow))
+					set_LogErrMsg(msg, usr_ARC->ErrMsg);
+
 				SetDirWatch(true);
 				CurWorking = false;
 				AddLog(msg);
@@ -33400,6 +33467,7 @@ void __fastcall TNyanFiForm::TabHomeActionExecute(TObject *Sender)
 			if (!TEST_ActParam("CO") && !ListStt[OppListTag].is_TabFixed) {
 				dnam = get_csv_item(TabList->Strings[idx], OppListTag);
 				if (ends_PathDlmtr(dnam)) {
+					ApplyDotNyan = true;
 					UpdateOppPath(dnam);
 					if (!GlobalErrMsg.IsEmpty()) GlobalAbort();
 				}
@@ -33414,6 +33482,7 @@ void __fastcall TNyanFiForm::TabHomeActionExecute(TObject *Sender)
 			if (!ListStt[CurListTag].is_TabFixed) {
 				dnam = get_csv_item(TabList->Strings[idx], CurListTag);
 				if (ends_PathDlmtr(dnam)) {
+					ApplyDotNyan = true;
 					UpdateCurPath(dnam);
 					if (!GlobalErrMsg.IsEmpty()) GlobalAbort();
 				}
@@ -33481,34 +33550,7 @@ void __fastcall TNyanFiForm::ShowNyanFiClick(TObject *Sender)
 void __fastcall TNyanFiForm::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
 	const TRect &Rect)
 {
-	TCanvas *cv = StatusBar->Canvas;
-	cv->Font->Assign(StatusBar->Font);
-	bool sel_flag = (Panel->Index==0 && TxtViewer->isSelected);
-	bool inc_flag = (Panel->Index==0 && TxtViewer->isIncSea);
-
-	cv->Brush->Color = inc_flag? ((StatusBar->Tag==SHOW_WARN_TAG)? col_bgWarn : col_bgView) :
-					   sel_flag? col_selItem : col_bgInfHdr;
-	cv->FillRect(Rect);
-
-	cv->Font->Color  = inc_flag? col_fgView :
-					   sel_flag? ((col_fgSelItem!=col_None)? col_fgSelItem : col_fgList) : col_fgInfHdr;
-	int xp = Rect.Left + 2;
-	cv->TextOut(xp, Rect.Top, Panel->Text);
-
-	//疑似キャレット
-	if (inc_flag) {
-		xp += cv->TextWidth(Panel->Text);
-		draw_Line(cv, xp, Rect.Top + 2, xp, Rect.Bottom-2, ScaledInt(1), col_Cursor);
-	}
-
-	//選択ファイル数
-	if (Panel->Index==0) {
-		int sel_cnt = GetSelCount(GetCurList(true));
-		if (sel_cnt>0) {
-			UnicodeString tmp; tmp.sprintf(_T("選択 %u"), sel_cnt);
-			cv->TextOut(Rect.Right - (cv->TextWidth(tmp) + 4), Rect.Top, tmp);
-		}
-	}
+	TxtViewer->SttHeaderDrawPanel(StatusBar, Panel, Rect);
 }
 
 //---------------------------------------------------------------------------

@@ -67,6 +67,7 @@ bool dir_CopyAttr(UnicodeString src_nam, UnicodeString dst_nam, bool remove_ro =
 bool set_FileWritable(UnicodeString fnam);
 bool is_SymLink(UnicodeString fnam);
 int  get_HardLinkCount(UnicodeString fnam);
+bool is_IdenticalFile(UnicodeString fnam1, UnicodeString fnam2);
 
 bool file_exists(UnicodeString fnam);
 bool file_exists_x(UnicodeString fnam);

@@ -31,10 +31,14 @@
 <p>
 それぞれの実行ファイル入力欄は、外部からのファイルドロップを受け付けます。ファイルのショートカット(.lnk)をドロップした場合は、リンク先の .exe ファイルが設定されます。
 </p>
+
+<p class="link_box">
+<a href="#TextEditor">テキストエディタ</a> ／ <a href="#ImageEditor">イメージエディタ</a> ／ <a href="#BinaryEditor">バイナリエディタ</a> ／ <a href="#EtcEditor">その他のエディタ</a>
+</p>
 <br>
 
 <dl>
-<dt><img src="grpbox.png" alt="" border=0> テキストエディタ
+<dt id="TextEditor"><img src="grpbox.png" alt="" border=0> テキストエディタ
 <dd>テキストファイルの編集に使用するテキストエディタです。<br>
 また、<a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからエディタで開くときや、<a href="hid00006.htm">テキストビュアー</a>からタグジャンプ(<a href="hid00006.htm#TagJump">TagJump</a>)や<a href="hid00083.htm">ダイレクトタグジャンプ</a>(<a href="hid00006.htm#TagJumpDirect">TagJumpDirect</a>)を行う際のパラメータを指定できます。<br>
 パラメータでは以下の書式文字列を使えます。<br>
@@ -45,7 +49,7 @@
 </div>
 <br>
 
-<dt><img src="grpbox.png" alt="" border=0> イメージエディタ
+<dt id="ImageEditor"><img src="grpbox.png" alt="" border=0> イメージエディタ
 <dd>画像ファイルの編集に使用するイメージエディタ(ペイントソフト等)です。<br>
 対応拡張子を指定してください。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
 <b>例</b> <span class="inp_box">.jpg.gif.bmp.png </span><br>
@@ -54,7 +58,7 @@
 </div>
 <br>
 
-<dt><img src="grpbox.png" alt="" border=0> バイナリエディタ
+<dt id="BinaryEditor"><img src="grpbox.png" alt="" border=0> バイナリエディタ
 <dd><a href="hid00005.htm#BinaryEdit">BinaryEdit</a> コマンドで使用するバイナリエディタを指定します。<br>
 <br>
 

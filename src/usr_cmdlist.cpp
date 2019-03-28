@@ -396,6 +396,7 @@ void set_CmdList(
 		"S:IncMatchSelect=マッチする項目をすべて選択\n"
 		"S:IncSearchDown=マッチする項目を下方向検索\n"
 		"S:IncSearchExit=インクリメンタルサーチから抜ける\n"
+		"S:IncSearchTop=マッチする項目を先頭から再検索\n"
 		"S:IncSearchUp=マッチする項目を上方向検索\n"
 		"S:KeywordHistory=キーワード履歴を参照\n"
 		"S:MigemoMode=Migomoモードの切り換え\n"
@@ -510,11 +511,11 @@ void get_PrmList(
 			_T("ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|ScrollUpText|SelByList|SetColor|SetDirTime|")
 			_T("SetFontSize|SetMargin|SetPathMask|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SortDlg|")
 			_T("SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToTab|ViewTail|ToOppSameHash|WatchTail|")
-			_T("WidenCurList|WinPos|GitDiff|GitViewer"),
+			_T("WidenCurList|WinPos|GitDiff|GitViewer|UnPack|UnPackToCurr"),
 			cmd))
 		{
 			cp->Enabled = true;
-			cp->Style = USAME_TI(cmd, "ImageViewer")? csDropDownList : csDropDown;
+			cp->Style	= USAME_TI(cmd, "ImageViewer")? csDropDownList : csDropDown;
 		}
 	}
 
@@ -975,7 +976,8 @@ void get_PrmList(
 		params.sprintf(_T("%s"),
 			_T("\n")
 			_T("CD : ディレクトリを作成してその中に\n")
-			_T("CD2 : ルートに複数の対象があったらディレクトリ作成\n"));
+			_T("CD2 : ルートに複数の対象があったらディレクトリ作成\n")
+			_T("OW : 確認無しで上書き\n"));
 	}
 	else if (USAME_TI(cmd, "UpdateFromArc")) {
 		params.USET_T("\nUN : 新しいアーカイブを探して更新\n");

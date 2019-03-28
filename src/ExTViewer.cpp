@@ -258,18 +258,7 @@ void __fastcall TExTxtViewer::TextPaintBoxDblClick(TObject *Sender)
 void __fastcall TExTxtViewer::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
 	const TRect &Rect)
 {
-	TCanvas *cv = StatusBar->Canvas;
-	cv->Font->Assign(ViewHdrFont);
-	bool sel_flag = (Panel->Index==0 && ExViewer->isSelected);
-	bool inc_flag = (Panel->Index==0 && ExViewer->isIncSea);
-
-	cv->Brush->Color = inc_flag? ((StatusBar->Tag==SHOW_WARN_TAG)? col_bgWarn : col_bgView) :
-					   sel_flag? col_selItem : col_bgInfHdr;
-	cv->FillRect(Rect);
-
-	cv->Font->Color  = inc_flag? col_fgView :
-					   sel_flag? ((col_fgSelItem!=clNone)? col_fgSelItem : col_fgList) : col_fgInfHdr;
-	cv->TextOut(Rect.Left + 2, Rect.Top, Panel->Text);
+	ExViewer->SttHeaderDrawPanel(StatusBar, Panel, Rect);
 }
 
 //---------------------------------------------------------------------------

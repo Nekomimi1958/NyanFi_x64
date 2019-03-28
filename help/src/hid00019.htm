@@ -16,6 +16,7 @@
 	<param name="Keyword" value="ExeMenuFile">
 	<param name="Keyword" value="FileEdit">
 	<param name="Keyword" value="IncSearch">
+	<param name="Keyword" value="IncSearchTop">
 	<param name="Keyword" value="InitialSearch">
 	<param name="Keyword" value="LoadResultList">
 	<param name="Keyword" value="LoadTabGroup">
@@ -37,6 +38,11 @@
 
 <h1>オプション設定 - コマンド</h1>
 <p>コマンドに固有の設定を行います。</p>
+
+<p class="link_box">
+<a href="#AppList">AppList</a> ／ <a href="#BorderLeftRight">BorderLeftRight</a> ／ <a href="#CompleteDelete">CompleteDelete</a> ／ <a href="#DelJpgExif">DelJpgExif</a> ／ <a href="#ExeCommandLine">ExeCommandLine</a> ／ <a href="#FileEdit">FileEdit</a> ／ <a href="#IncSearch">IncSearch</a> ／ <a href="#InitialSearch">InitialSearch</a> ／ <a href="#TaskMan">TaskMan</a> ／ <a href="#OpenStandard">OpenStandard</a> ／ <a href="#OpenByApp">OpenByApp</a> ／ <a href="#OpenByWin">OpenByWin</a> ／ <a href="#WebSearch">WebSearch</a>
+</p>
+<br>
 
 <dl>
 <dt id="AppList"><img src="grpbox.png" alt="" border=0> <a href="hid00005.htm#AppList">AppList</a>
@@ -105,7 +111,9 @@
 </div>
 <img src="chkbox.png" alt="" border=0> <b>上下端でループ</b>
 <div class="indent1">
-ファイラーで、下方向に検索して見つからなかった場合は先頭から、上方向で見つからなかった場合は最後から再検索します。なお、マッチ数が1だった場合は、設定にかかわらずその項目に移動します。
+ファイラーで、下方向に検索して見つからなかった場合は先頭から、上方向で見つからなかった場合は最後から再検索します。マッチ数が1だった場合は、設定にかかわらずその項目に移動します。<br>
+この設定は、フィルタマスク・モードおよびテキストビュアーでは無効です。<br>
+なおこれをチェックしていない場合でも、<a href="hid00050.htm#IncSearchTop">IncSearchTop</a> コマンドによって先頭から再検索できます。<br>
 </div>
 <img src="chkbox.png" alt="" border=0> <b>マッチ数1で抜ける</b>
 <div class="indent1">

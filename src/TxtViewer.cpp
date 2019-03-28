@@ -141,6 +141,7 @@ __fastcall TTxtViewer::TTxtViewer(
 
 	isRegEx 	= isCase = isMigemo = isBytes = false;
 	isIncSea	= false;
+	FoundPos	= Point(-1, -1);
 
 	Highlight	= IniFile->ReadBoolGen(_T("FindTxtDlgHighlight"));
 
@@ -1626,8 +1627,9 @@ void __fastcall TTxtViewer::PaintText()
 	WideChar strQch = '\0';
 
 	//強調表示情報
-	bool mt_Case[MAX_EM_PTN] = {ReservedCase, false, isCase, false, false, false, UsrKeywdCase2};
-	if (!isBinary && !isAozora && !isLog) mt_Case[5] = UsrKeywdCase;	//ユーザ定義キーワードの大小文字区別
+	bool mt_Case[MAX_EM_PTN] = {ReservedCase, false, false, false, false, false, UsrKeywdCase2};
+	mt_Case[2] = isIncSea? IncSeaCaseSens : isCase;
+	mt_Case[5] = (!isBinary && !isAozora && !isLog)? UsrKeywdCase : false;
 	int  mt_Len[MAX_EM_PTN]  = {0, 0, 0, 0, 0, 0, 0};
 	int  mt_Idx[MAX_EM_PTN]  = {0, 0, 0, 0, 0, 0, 0};
 
@@ -2382,16 +2384,31 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 
 	//ステータス
 	if (SttHeader) {
-		UnicodeString fext = get_extension(FileName);
-
 		//ファイル情報/インクリメンタルサーチ
-		SttHeader->Panels->Items[0]->Text
-			= !msg.IsEmpty()? msg : isIncSea? ((isIncMigemo? " Migemo: " : " サーチ: ") + IncSeaWord) : SttHdrInf;
+		if (msg.IsEmpty() && isIncSea) {
+			msg.sprintf(_T(" %s \t%s"), (isIncMigemo? _T(" Migemo ") : _T(" サーチ ")), IncSeaWord.c_str());
+			//位置/ヒット行数
+			int hit_cnt = ScrPanel->HitLines->Count;
+			if (hit_cnt>1) {
+				int cnt = 0, pos = 0;
+				for (int i=1; i<hit_cnt; i++) {
+					cnt++;
+					if (CurPos.y==(int)ScrPanel->HitLines->Objects[i]) {
+						pos = cnt;
+						break;
+					}
+				}
+				if (pos>0) msg.cat_sprintf(_T("\t%u/%u(行)"), pos, hit_cnt - 1);
+			}
+		}
+
+		SttHeader->Panels->Items[0]->Text = !msg.IsEmpty()? msg : SttHdrInf;
 
 		//文字コード
-		UnicodeString sttstr;
-		sttstr = (!isXDoc2Txt && !test_FileExt(fext, _T(".rtf")) && isText)?
-					get_NameOfCodePage(TxtBufList->Encoding->CodePage, false, HasBOM) : UnicodeString("----");
+		UnicodeString fext = get_extension(FileName);
+		UnicodeString sttstr =
+			(!isXDoc2Txt && !test_FileExt(fext, _T(".rtf")) && isText)?
+				get_NameOfCodePage(TxtBufList->Encoding->CodePage, false, HasBOM) : UnicodeString("----");
 		SttHeader->Panels->Items[1]->Text = sttstr;
 
 		//改行コード
@@ -2450,50 +2467,52 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 		}
 
 		SttHeader->Panels->Items[4]->Text = sttstr;
+		SttHeader->Repaint();
+	}
 
-		//カラー
-		if (isText && TxtColorHint && ColorPanel && SelStart==SelEnd) {
-			int xp;
-			UnicodeString colstr = GetCurWord(false,
-					"(#[0-9a-fA-F]{3}\\b)|(#[0-9a-fA-F]{6}\\b)|"
-					"(0x|\\$)[0-9a-fA-F]{6,8}|"
-					"(=[0-9a-fA-F]{6})", &xp);
+	//カラー
+	if (isText && TxtColorHint && ColorPanel && SelStart==SelEnd) {
+		int xp;
+		UnicodeString colstr = GetCurWord(false,
+				"(#[0-9a-fA-F]{3}\\b)|(#[0-9a-fA-F]{6}\\b)|"
+				"(0x|\\$)[0-9a-fA-F]{6,8}|"
+				"(=[0-9a-fA-F]{6})", &xp);
 
-			colstr = REPLACE_TS(colstr, "$", "0x");
-			int col = -1;
-			//HTML
-			if (remove_top_s(colstr, '#')) {
-				UnicodeString r_str, g_str, b_str;
-				if (colstr.Length()==6) {
-					r_str = colstr.SubString(1, 2);
-					g_str = colstr.SubString(3, 2);
-					b_str = colstr.SubString(5, 2);
-				}
-				else if (colstr.Length()==3) {
-					r_str = StringOfChar(colstr[1], 2);
-					g_str = StringOfChar(colstr[2], 2);
-					b_str = StringOfChar(colstr[3], 2);
-				}
-				colstr.sprintf(_T("0x00%s%s%s"), b_str.c_str(), g_str.c_str(), r_str.c_str());
-				col = colstr.ToIntDef(-1);
+		colstr = REPLACE_TS(colstr, "$", "0x");
+		int col = -1;
+		//HTML
+		if (remove_top_s(colstr, '#')) {
+			UnicodeString r_str, g_str, b_str;
+			if (colstr.Length()==6) {
+				r_str = colstr.SubString(1, 2);
+				g_str = colstr.SubString(3, 2);
+				b_str = colstr.SubString(5, 2);
 			}
-			//COLORREF
-			else if (StartsStr("0x", colstr)) {
-				col = colstr.ToIntDef(-1);
+			else if (colstr.Length()==3) {
+				r_str = StringOfChar(colstr[1], 2);
+				g_str = StringOfChar(colstr[2], 2);
+				b_str = StringOfChar(colstr[3], 2);
 			}
-			//Swatchbook.INI (RRBBGG)
-			else if (remove_top_s(colstr, '=') && SameText(ExtractFileName(FileName), SWATCH_FILE)) {
-				col = (int)xRRGGBB_to_col(colstr);
-			}
+			colstr.sprintf(_T("0x00%s%s%s"), b_str.c_str(), g_str.c_str(), r_str.c_str());
+			col = colstr.ToIntDef(-1);
+		}
+		//COLORREF
+		else if (StartsStr("0x", colstr)) {
+			col = colstr.ToIntDef(-1);
+		}
+		//Swatchbook.INI (RRBBGG)
+		else if (remove_top_s(colstr, '=') && SameText(ExtractFileName(FileName), SWATCH_FILE)) {
+			col = (int)xRRGGBB_to_col(colstr);
+		}
 
-			if (col!=-1) {
-				ColorPanel->Color	= TColor(col);
-				ColorPanel->Left	= TopXpos + cv_PosX_to_HchX(xp + 1) * HchWidth;
-				ColorPanel->Top 	= ViewBox->Top + (CurPos.y - CurTop + 1) * LineHeight;
-				ColorPanel->Visible = true;
-			}
-			else
-				ColorPanel->Visible = false;
+		if (col!=-1) {
+			ColorPanel->Color	= TColor(col);
+			ColorPanel->Left	= TopXpos + cv_PosX_to_HchX(xp + 1) * HchWidth;
+			ColorPanel->Top 	= ViewBox->Top + (CurPos.y - CurTop + 1) * LineHeight;
+			ColorPanel->Visible = true;
+		}
+		else {
+			ColorPanel->Visible = false;
 		}
 	}
 
@@ -2534,6 +2553,56 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 				InspectForm->Bytes.Length = 0;
 			}
 			InspectForm->UpdateValue();
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
+//情報ヘッダの描画
+//---------------------------------------------------------------------------
+void __fastcall TTxtViewer::SttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, TRect Rect)
+{
+	TCanvas *cv = StatusBar->Canvas;
+	cv->Font->Assign(StatusBar->Font);
+	bool sel_flag = (Panel->Index==0 && isSelected);
+	bool inc_flag = (Panel->Index==0 && isIncSea);
+
+	cv->Brush->Color = inc_flag? ((StatusBar->Tag==SHOW_WARN_TAG)? col_bgWarn : col_bgView) :
+					   sel_flag? col_selItem : col_bgInfHdr;
+	cv->FillRect(Rect);
+
+	int xp = Rect.Left;
+	const int yp = Rect.Top;
+	//インクリメンタルサーチ
+	if (inc_flag) {
+		UnicodeString s = Panel->Text;
+		out_TextEx(cv, xp, yp, split_pre_tab(s), color_fgEmp, color_bgEmp);
+		xp += Scaled4;
+		out_TextEx(cv, xp, yp, split_pre_tab(s), col_fgView);
+		//疑似キャレット
+		draw_Line(cv, xp, yp + 2, xp, Rect.Bottom - 2, ScaledInt(1), col_Cursor);
+
+		//行位置/ヒット行数
+		if (!s.IsEmpty()) {
+			int ws = cv->TextWidth(s);
+			int w8 = get_CharWidth_Font(cv->Font, 8);
+			int x1 = w8 * 4;
+			while (xp>=(x1 - ws - w8) && x1<Rect.Right) x1 += w8;
+			xp = x1 - ws;
+			out_TextEx(cv, xp, yp, s, col_Comment);
+		}
+	}
+	else {
+		cv->Font->Color = sel_flag? ((col_fgSelItem!=col_None)? col_fgSelItem : col_fgList) : col_fgInfHdr;
+		cv->TextOut(xp + 2, yp, Panel->Text);
+	}
+
+	//選択ファイル数
+	if (Panel->Index==0 && sel_flag) {
+		int sel_cnt = GetSelCount(GetCurList(true));
+		if (sel_cnt>0) {
+			UnicodeString tmp; tmp.sprintf(_T("選択 %u"), sel_cnt);
+			cv->TextOut(Rect.Right - (cv->TextWidth(tmp) + 4), Rect.Top, tmp);
 		}
 	}
 }
@@ -2689,7 +2758,9 @@ void __fastcall TTxtViewer::CursorRight(bool sel)
 			if (CurPos.x<50) {
 				int p = CurPos.x;  if (p>=24) p--;
 				p /= 3;
-				if (p==15) p = 50;
+				if (p==15) {
+					p = 50;
+				}
 				else {
 					p = (p + 1)*3;  if (p>=24) p++;
 				}
@@ -3991,7 +4062,8 @@ void __fastcall TTxtViewer::IncSearch(UnicodeString keystr)
 
 	//サーチモードから抜ける
 	if (USAME_TI(CmdStr, "IncSearchExit") || equal_ESC(keystr)) {
-		isIncSea = false;
+		isIncSea   = false;
+		IncSeaWord = EmptyStr;
 	}
 	//キーワードをクリア
 	else if (USAME_TI(CmdStr, "ClearIncKeyword")) {
@@ -4010,37 +4082,46 @@ void __fastcall TTxtViewer::IncSearch(UnicodeString keystr)
 		chg_wd = true;
 	}
 	//キーワード更新
-	else chg_wd = update_IncSeaWord(IncSeaWord, keystr);
+	else {
+		chg_wd = update_IncSeaWord(IncSeaWord, keystr);
+	}
 
 	RegExPtn = usr_Migemo->GetRegExPtn(isIncMigemo, IncSeaWord);
 
-	if (isIncSea) {
-		if (!RegExPtn.IsEmpty()) {
-			bool csr_up   = (USAME_TI(CmdStr, "IncSearchUp")   || equal_UP(keystr));
-			bool csr_down = (USAME_TI(CmdStr, "IncSearchDown") || equal_DOWN(keystr));
+	bool found = false;
+	if (isIncSea && !RegExPtn.IsEmpty()) {
+		bool csr_up   = (USAME_TI(CmdStr, "IncSearchUp")   || equal_UP(keystr));
+		bool csr_down = (contained_wd_i(_T("IncSearchDown|IncSearchTop"), CmdStr) || equal_DOWN(keystr));
+		if (USAME_TI(CmdStr, "IncSearchTop")) TextTop();
 
-			//下方 向へサーチ
-			if (chg_wd || csr_down) {
-				if (chg_wd) Repaint(true);
-				if (!SearchDown((isIncMigemo? RegExPtn : IncSeaWord), IncSeaCaseSens, isIncMigemo, false, chg_wd)
-					 && chg_wd && !isIncMigemo)
-				{
-					//通常モードで見つからない場合、警告して一文字後退
-					SttHeader->Tag = SHOW_WARN_TAG;
-					SetSttInf();  SttHeader->Repaint();
-					beep_Warn();  Sleep(250);
-					SttHeader->Tag = 0;
-					delete_end(IncSeaWord);
-				}
+		//下方向へサーチ
+		if (chg_wd || csr_down) {
+			if (chg_wd) Repaint(true);
+			found = SearchDown((isIncMigemo? RegExPtn : IncSeaWord), IncSeaCaseSens, isIncMigemo, false, chg_wd);
+			//通常モードで見つからない場合、警告して一文字後退
+			if (!found && chg_wd && !isIncMigemo) {
+				SttHeader->Tag = SHOW_WARN_TAG;
+				SetSttInf();
+				beep_Warn();  Sleep(250);
+				SttHeader->Tag = 0;
+				delete_end(IncSeaWord);
 			}
-			//上方向へサーチ
-			else if (csr_up)
-				SearchUp(RegExPtn, IncSeaCaseSens, isIncMigemo);
 		}
-		else {
-			IniSelected();
-			Repaint(true);
+		//上方向へサーチ
+		else if (csr_up) {
+			found = SearchUp((isIncMigemo? RegExPtn : IncSeaWord), IncSeaCaseSens, isIncMigemo);
 		}
+
+		if		(found)	  FoundPos = CurPos;
+		else if (!chg_wd) found    = (FoundPos==CurPos);
+	}
+
+	if (!found) {
+		IniSelected();
+		Repaint(true);
+		FoundPos = Point(-1, -1);
+		ScrPanel->HitLines->Clear();
+		ScrPanel->Repaint();
 	}
 
 	SetSttInf();

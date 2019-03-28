@@ -29,8 +29,13 @@
 
 <body>
 <h1>オプション設定 - 一般2</h1>
-<dl>
 
+<p class="link_box">
+<a href="#FileInfo">ファイル情報</a> ／ <a href="#ImagePreview">イメージプレビュー</a> ／ <a href="#TextPreview">テキストプレビュー</a> ／ <a href="#Log">ログ</a> ／ <a href="#NyanfiHotKey">NyanFi 呼び出しホットキー</a> ／ <a href="#DialogKey">キーによるダイアログの移動/サイズ変更</a> ／ <a href="#Keyboard">キーボードの種類</a> ／ <a href="#Sound">サウンド再生</a> ／ <a href="#Other">その他</a>
+</p>
+<br>
+
+<dl>
 <dt id="FileInfo"><img src="grpbox.png" alt="" border=0> ファイル情報
 <dd>
 ファイル情報の取得・表示に関する設定です。情報取得に時間がかかってファイラー操作がもたつく場合などに設定してみてください。<br>
@@ -91,7 +96,7 @@
 なお、ファイルリストがディレクトリの比較(<a href="hid00005.htm#DiffDir">DiffDir</a>)の結果の場合、反対側のカーソル描画処理などもスキップします。<br>
 <br><br>
 
-<dt><img src="grpbox.png" alt="" border=0> イメージプレビュー
+<dt id="ImagePreview"><img src="grpbox.png" alt="" border=0> イメージプレビュー
 <dd>
 <dt class="no_bg_indent1">プレビューを行わないパス <img src="edit.png" alt="" border=0>
 <dd>
@@ -201,13 +206,13 @@
 <dd>ログをファイルに保存する際の最大世代数を指定します。<br>
 <br><br>
 
-<dt><img src="grpbox.png" alt="" border=0> NyanFi 呼び出しホットキー
+<dt id="NyanfiHotKey"><img src="grpbox.png" alt="" border=0> NyanFi 呼び出しホットキー
 <dd><b>NyanFi</b> を呼び出すホットキーを設定します。ホットキーを押すと、ウィンドウがアクティブ(最小化されていたら元の大きさに戻す)になります。<br>
 ホットキーは、<span class="btn_frame">Shift</span><span class="btn_frame">Ctrl</span><span class="btn_frame">Alt</span><span class="btn_frame">Win</span>とキーとの組み合わせで指定してださい。それ以外の場合は、ホットキーの登録が解除されます。<br>
 なお、<b>NyanFi</b> を<a href="hid00017.htm#Duplicate">二重起動</a>している場合は、最初に起動した <b>NyanFi</b> が呼び出されます。<br>
 <br>
 
-<dt><img src="grpbox.png" alt="" border=0> キーによるダイアログの移動/サイズ変更
+<dt id="DialogKey"><img src="grpbox.png" alt="" border=0> キーによるダイアログの移動/サイズ変更
 <dd>指定した<span class="btn_frame">Shift</span><span class="btn_frame">Ctrl</span><span class="btn_frame">Alt</span>の組み合わせと<span class="btn_frame">↑</span><span class="btn_frame">↓</span><span class="btn_frame">←</span><span class="btn_frame">→</span>キーによって、各種ダイアログ(設定用は除く)を移動したり、サイズを変更(可能な場合)したりできます。また、移動、サイズ変更のそれぞれについて、一回の変化量も指定可能です。<br>
 修飾キーを何も指定しないと無効になります。<br>
 <br>
@@ -261,8 +266,9 @@
 
 <dt class="no_bg_indent1">git.exe (Git for Windows) <img src="edit.png" alt="" border=0>
 <dd>
-<a href="hid00063.htm#Git">Git</a> 補助コマンドで利用する <b>git.exe</b> の場所を指定します。<br>
+Git 関連の処理で利用する <b>git.exe</b> の場所を指定します。<br>
 標準的な場所にインストールされている場合は自動的に検出されますが、そうでない場合は手動で設定してください。<br>
+<a href="hid00090.htm">→ Git の利用について</a>
 </dl>
 <br><br>
 

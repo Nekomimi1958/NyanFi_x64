@@ -797,7 +797,7 @@ ShellExecute
 <b>例</b>: カレントのファイル名一覧をログウィンドウに出力<br>
 <pre class="example_box">
 SetExeFile_cmd
-SetExeParam_/u /c dir
+SetExeParam_"/u /c dir"
 SetExeOpt_LH
 ShellExecute
 </pre>
@@ -809,6 +809,17 @@ SetExeParam_$F
 SetExeOpt_OH
 ShellExecute
 ListBuffer_%FileName%
+</pre>
+
+<b>例</b>: 指定したディレクトリを仮想ドライブとしてマウント<br>
+<pre class="example_box">
+FileExists_"P:"
+IfFalse
+  SetExeFile_cmd
+  SetExeParam_"/c subst P: D:\Embarcadero\Studio\20.0\Projects"
+  SetExeOpt_WH
+  ShellExecute
+EndIf
 </pre>
 <br>
 

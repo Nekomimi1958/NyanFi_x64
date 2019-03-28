@@ -1302,9 +1302,11 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 	if (IsIncSea) {
 		CmdStr = REPLACE_TI(CmdStr, "IncSearchUp",   "CursorUp");
 		CmdStr = REPLACE_TI(CmdStr, "IncSearchDown", "CursorDown");
+		CmdStr = REPLACE_TI(CmdStr, "IncSearchTop",  "CursorTop");
 	}
-	else if (CmdStr.IsEmpty())
+	else if (CmdStr.IsEmpty()) {
 		CmdStr = get_CsrKeyCmd(KeyStr);
+	}
 
 	TListBox *lp = (TListBox*)Sender;
 	int idx = lp->ItemIndex;

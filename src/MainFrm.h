@@ -908,6 +908,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPaintBox *CaretPaintBox;
 	TPaintBox *RelPaintBox;
 	TPaintBox *RelPaintBox2;
+	TPaintBox *SttBorderPaintBox;
 	TPaintBox *TabBottomPaintBox;
 	TPaintBox *TaskPaintBox;
 	TPaintBox *TextMarginBox;
@@ -1831,6 +1832,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RepositoryListActionExecute(TObject *Sender);
 	void __fastcall FindFolderIconActionExecute(TObject *Sender);
 	void __fastcall FindFolderIconActionUpdate(TObject *Sender);
+	void __fastcall SttBorderPaintBoxPaint(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -2243,7 +2245,7 @@ private:	// ユーザー宣言
 	int  __fastcall GetCurObjList(TStringList *flst);
 	void __fastcall SplitMasksFD(UnicodeString masks, TStringList *f_msk, TStringList *d_msk, bool sel_sw = false);
 	int  __fastcall SelectMask(TStringList *lst, UnicodeString masks);
-	void __fastcall set_IncSeaStt(bool sel_sw = false, bool smsk_sw = false);
+	int  __fastcall set_IncSeaStt(bool sel_sw = false, bool smsk_sw = false);
 	void __fastcall FileListIncSearch(UnicodeString keystr);
 	void __fastcall SetFlItemWidth(TStringList *lst, int tag);
 
