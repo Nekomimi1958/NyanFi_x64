@@ -2017,6 +2017,9 @@ private:	// ユーザー宣言
 		org_TabPanelWndProc(msg);
 	}
 
+	int __fastcall get_TopTabIndex();
+	int __fastcall get_EndTabIndex();
+
 	//ディレクトリ関係
 	TWndMethod org_RelPanelWndProc;
 	void __fastcall RelPanelWndProc(TMessage &msg)

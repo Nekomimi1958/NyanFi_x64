@@ -300,7 +300,13 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyPress(TObject *Sender, System::WideC
 //---------------------------------------------------------------------------
 void __fastcall TInpCmdsDlg::CmdsComboBoxChange(TObject *Sender)
 {
-	Filter();
+	if (CmdsComboBox->SelStart==CmdsComboBox->Text.Length()) {
+		Filter();
+	}
+	else {
+		CmdsComboBox->DroppedDown = false;
+		SubComboBox->DroppedDown  = false;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TInpCmdsDlg::CmdsComboBoxSelect(TObject *Sender)

@@ -2467,7 +2467,7 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 		}
 
 		SttHeader->Panels->Items[4]->Text = sttstr;
-		SttHeader->Repaint();
+		if (isIncSea) SttHeader->Repaint();
 	}
 
 	//ƒJƒ‰[

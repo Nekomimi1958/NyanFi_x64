@@ -15283,8 +15283,32 @@ void __fastcall TNyanFiForm::FileListOnlyActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::FileRunActionExecute(TObject *Sender)
 {
 	if (!ActionParam.IsEmpty()) {
-		UnicodeString prm = add_quot_if_spc(ActionParam);
-		if (is_quot(prm)) prm.Insert("\"\" ", 1);
+		UnicodeString prm;
+		UnicodeString s = Trim(add_quot_if_spc(ActionParam));
+		if (remove_top_s(s, '\"')) {
+			prm = "\"\" ";
+			if (remove_end_s(s, '\"')) {
+				if (s.Pos(" /")>1) {
+					prm.cat_sprintf(_T("\"%s\" /%s"), get_tkn(s, " /").c_str(), get_tkn_r(s, " /").c_str());
+				}
+				else {
+					TRegExOptions opt; opt << roIgnoreCase;
+					TMatch mt = TRegEx::Match(s, "^((\\S+\\.\\w+)|control)\\s", opt);
+					if (mt.Success)
+						prm.cat_sprintf(_T("\"%s\" %s"), Trim(mt.Value).c_str(), get_tkn_r(s, mt.Value).c_str());
+					else
+						prm.cat_sprintf(_T("\"%s\""), s.c_str());
+				}
+			}
+			else {
+				prm.cat_sprintf(_T("\"%s\""), split_tkn(s, '\"').c_str());
+				prm.cat_sprintf(_T(" \"%s\""), s.c_str());
+			}
+		}
+		else {
+			prm = s;
+		}
+
 		if (!Execute_ex("cmd", "/c start " + prm, CurPath[CurListTag], "H"))
 			SetActionAbort(USTR_FaildExec);
 	}
@@ -19015,6 +19039,11 @@ void __fastcall TNyanFiForm::MatchSelectActionExecute(TObject *Sender)
 			if (MaskSelectDlg->ShowModal()==mrOk) ptn = MaskSelectDlg->MaskSelComboBox->Text;
 		}
 		if (ptn.IsEmpty()) SkipAbort();
+
+		if (ptn.Pos("\\N")) {
+			file_rec *cfp = GetCurFrecPtr();
+			ptn = ReplaceText(ptn, "\\N", (cfp && !cfp->is_up)? cfp->b_name : EmptyStr);
+		}
 
 		TStringList *lst = GetCurList(true);
 		int s_cnt = 0;
@@ -32923,6 +32952,45 @@ void __fastcall TNyanFiForm::TabControl1Enter(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//描画すべき最初/最後のタブを取得
+//---------------------------------------------------------------------------
+int __fastcall TNyanFiForm::get_TopTabIndex()
+{
+	int  top_idx = 0;
+	TRect top_rc = TRect::Empty();
+	for (int i=0; i<TabControl1->Tabs->Count; i++) {
+		TRect i_rc = ((tab_info*)TabList->Objects[i])->rc;
+		InflateRect(i_rc, -4, 0);
+		if (top_rc.IsEmpty()) {
+			top_rc = i_rc;
+		}
+		else if (top_rc.IntersectsWith(i_rc)) {
+			top_rc	= i_rc;
+			top_idx = i;
+		}
+	}
+	return top_idx;
+}
+//---------------------------------------------------------------------------
+int __fastcall TNyanFiForm::get_EndTabIndex()
+{
+	int  end_idx = TabControl1->Tabs->Count - 1;
+	TRect end_rc = TRect::Empty();
+	for (int i=end_idx; i>=0; i--) {
+		TRect i_rc = ((tab_info*)TabList->Objects[i])->rc;
+		InflateRect(i_rc, -4, 0);
+		if (end_rc.IsEmpty()) {
+			end_rc = i_rc;
+		}
+		else if (end_rc.IntersectsWith(i_rc)) {
+			end_rc	= i_rc;
+			end_idx = i;
+		}
+	}
+	return end_idx;
+}
+
+//---------------------------------------------------------------------------
 //タブの描画
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
@@ -32941,19 +33009,20 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 				cv->FillRect(tp->ClientRect);
 			}
 
+			int top_idx = get_TopTabIndex();
+			int end_idx = get_EndTabIndex();
 			int act_idx = tp->TabIndex;
 			TRect act_rc = ((tab_info*)TabList->Objects[act_idx])->rc;
 			int y0 = act_rc.Top;
 			int y1 = act_rc.Bottom;
 			int h  = y1 - y0;
 			int edge = EDGE_RAISED;	//BDR_RAISEDOUTER;
-
 			std::unique_ptr<TStringList> slst(new TStringList());
-			UnicodeString sbuf;
 
 			for (int i=tp->Tabs->Count-1; i>=-1; i--) {
 				if (i==act_idx) continue;
-				int idx = (i==-1)? act_idx : i;
+				int idx = (i==-1)? act_idx : i;		//アクティブタブは最後に描画
+				if (idx<top_idx || idx>end_idx) continue;	//表示範囲外
 				bool is_act = (idx==act_idx);
 
 				TRect rc = ((tab_info*)TabList->Objects[idx])->rc;
@@ -33087,7 +33156,7 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TabControl1DrawTab(TCustomTabControl *Control, int TabIndex,
-		const TRect &Rect, bool Active)
+	const TRect &Rect, bool Active)
 {
 	tab_info *tp = get_TabInfo(TabIndex);
 	if (tp) tp->rc = Rect;
@@ -33111,13 +33180,15 @@ void __fastcall TNyanFiForm::TabBottomPaintBoxPaint(TObject *Sender)
 
 		//アクティブなタブの底辺部分を消す
 		int act_idx = TabControl1->TabIndex;
-		TRect rc = ((tab_info*)TabList->Objects[act_idx])->rc;
-		rc.Offset(TabControl1->Left, 0);
-		int x0 = rc.Left + 1;
-		int x1 = rc.Right + ((FlTabStyle==1)? ((rc.Bottom - rc.Top)/2 - 2) : 1);
-		cv->Pen->Color = col_bgActTab;
-		cv->MoveTo(x0, 0);
-		cv->LineTo(x1, 0);
+		if (act_idx>=get_TopTabIndex() && act_idx<=get_EndTabIndex()) {
+			TRect rc = ((tab_info*)TabList->Objects[act_idx])->rc;
+			rc.Offset(TabControl1->Left, 0);
+			int x0 = rc.Left + 1;
+			int x1 = rc.Right + ((FlTabStyle==1)? ((rc.Bottom - rc.Top)/2 - 2) : 1);
+			cv->Pen->Color = col_bgActTab;
+			cv->MoveTo(x0, 0);
+			cv->LineTo(x1, 0);
+		}
 	}
 }
 

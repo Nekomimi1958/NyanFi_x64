@@ -1042,9 +1042,13 @@ CD/DVDƒhƒ‰ƒCƒu(OS‹@”\‚É‚æ‚Á‚Äƒ}ƒEƒ“ƒg‚³‚ê‚½ISOƒhƒ‰ƒCƒu‚ðŠÜ‚Þ)‚Ìê‡‚ÍAƒRƒ“ƒeƒLƒ
 <dd>Windows ‚Ìu<b>ƒtƒ@ƒCƒ‹–¼‚ðŽw’è‚µ‚ÄŽÀs</b>vƒ_ƒCƒAƒƒO‚ðŠJ‚«‚Ü‚·B<br>
 ƒpƒ‰ƒ[ƒ^‚É<b>ƒtƒ@ƒCƒ‹–¼</b>‚â<b>URIƒXƒL[ƒ€</b>‚ðŽw’è‚·‚é‚ÆAƒ_ƒCƒAƒƒO‚ðŠJ‚©‚¸‚É’¼ÚŽÀs‚µ‚Ü‚·(start ƒRƒ}ƒ“ƒh‚ð—˜—p)B<br>
 ƒpƒX‚ª’Ê‚Á‚Ä‚¢‚éê‡Aƒtƒ@ƒCƒ‹–¼‚ÌƒpƒX‚ÆŠg’£Žq‚ðÈ—ª‚Å‚«‚Ü‚·B<br>
-
-<b>—á</b>: Windows10 ‚ÌuÝ’èv‚ðŠJ‚­<br>
+<div class="spc_box">
+<b>—á</b>:<br>
+@FileRun_control<br>
 @FileRun_&quot;ms-settings:&quot;<br>
+@FileRun_&quot;perfmon /rel&quot;<br>
+</div>
+
 <a href="#CommandPrompt">¨ CommandPrompt</a>@<a href="#ExeCommandLine">¨ ExeCommandLine</a>@<a href="#PowerShell">¨ PowerShell</a>
 
 <dt id="Filter">Filter<span class="pram_text">[_CS[;CA]]</span>
@@ -1645,14 +1649,20 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"‚É‚á‚Ÿ":GrepSetMask_*.txt:GrepStart
 <a href="#MatchSelect">¨ MatchSelect</a>@<a href="#SelMask">¨ SelMask</a>@<a href="#DateSelect">¨ DateSelect</a>
 
 <dt id="MatchSelect">MatchSelect<span class="pram_text">_{•¶Žš—ñ|/³‹K•\Œ»ƒpƒ^[ƒ“/}[;•¶Žš—ñ...]]</span>
-<dd>–¼‘O‚ÉŽw’è•¶Žš—ñ‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é€–Ú‚ð‘I‘ð‚µ‚Ü‚·B•¶Žš—ñ‚Í ; (ƒZƒ~ƒRƒƒ“)‚Å‹æØ‚Á‚Ä•¡”Žw’è‚Å‚«‚Ü‚·B‘å•¶ŽšE¬•¶Žš‚Í‹æ•Ê‚³‚ê‚Ü‚¹‚ñBŽw’è•¶Žš—ñ‚ð / ‚ÅˆÍ‚Þ‚Æ³‹K•\Œ»‚Æ‚Ý‚È‚³‚ê‚Ü‚·B<br>
+<dd>–¼‘O‚ÉŽw’è•¶Žš—ñ‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é€–Ú‚ð‘I‘ð‚µ‚Ü‚·B<br>
+•¶Žš—ñ‚Í ; (ƒZƒ~ƒRƒƒ“)‚Å‹æØ‚Á‚Ä•¡”Žw’è‚Å‚«‚Ü‚·B‘å•¶ŽšE¬•¶Žš‚Í‹æ•Ê‚³‚ê‚Ü‚¹‚ñBŽw’è•¶Žš—ñ‚ð / ‚ÅˆÍ‚Þ‚Æ³‹K•\Œ»‚Æ‚Ý‚È‚³‚ê‚Ü‚·B<br>
+‚Ü‚½A•¶Žš—ñ‚â³‹K•\Œ»ƒpƒ^[ƒ“‚É <b>\N</b> ‚Æ‚¢‚¤‘Ž®•¶Žš—ñ‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é‚ÆAƒJ[ƒ\ƒ‹ˆÊ’u‚Ìƒtƒ@ƒCƒ‹–¼Žå•”‚Ü‚½‚ÍƒfƒBƒŒƒNƒgƒŠ–¼‚É’uŠ·‚µ‚Ä—p‚¢‚ç‚ê‚Ü‚·B<br>
+<div class="spc_box">
 ‚È‚¨ƒRƒ“ƒ{ƒ{ƒbƒNƒXã‚Ì‰EƒNƒŠƒbƒNƒƒjƒ…[‚ÅA“ü—Í—š—ð‚ðíœ‚µ‚½‚è³‹K•\Œ»‚ðŽQÆ‚µ‚½‚è‚Å‚«‚Ü‚·B<br>
-ƒpƒ‰ƒ[ƒ^‚ðŽw’è‚·‚é‚ÆAƒ_ƒCƒAƒƒO‚ðo‚³‚¸‚É‚»‚Ì•¶Žš—ñ‚Å’¼‚¿‚É‘I‘ð‚µ‚Ü‚·B<br>
+ƒpƒ‰ƒ[ƒ^‚ðŽw’è‚·‚é‚ÆAƒ_ƒCƒAƒƒO‚ðo‚³‚¸‚É’¼‚¿‚É‘I‘ð‚µ‚Ü‚·B<br>
+</div>
 <div class="spc_box">
 <b>—á</b>: 4Œ…‚Ì”Žš‚ðŠÜ‚Þ€–Ú‚ð‘I‘ð<br>
 @MatchSelect_/\d{4}/<br>
+<b>—á</b>: ƒJ[ƒ\ƒ‹ˆÊ’u‚Ìƒtƒ@ƒCƒ‹‚Æ–¼‘OŽå•”‚ª“¯‚¶ƒtƒ@ƒCƒ‹(˜A”Ô•t‚«‚ðŠÜ‚Þ)‚ð‘I‘ð<br>
+@MatchSelect_/^\N([ _\-([]*\d+[)\]]*)*\./
 </div>
-<a href="#MaskSelect">¨ MaskSelect</a>@<a href="#SelMask">¨ SelMask</a>@<a href="#DateSelect">¨ DateSelect</a>@<a href="#TagSelect">¨ TagSelect</a>
+<a href="#MaskSelect">¨ MaskSelect</a>@<a href="#SelMask">¨ SelMask</a>@<a href="#DateSelect">¨ DateSelect</a>@<a href="#TagSelect">¨ TagSelect</a>@<a href="#SelSameName">¨ SelSameName</a>
 
 <dt id="MenuBar">MenuBar<span class="pram_text">[_ON|_OFF]</span>
 <dd>ƒpƒ‰ƒ[ƒ^‚ðŽw’è‚µ‚È‚¢ê‡Aƒƒjƒ…[ƒo[‚Ì•\Ž¦/”ñ•\Ž¦‚ðƒgƒOƒ‹‚ÅØ‚è‘Ö‚¦‚Ü‚·B<br>
@@ -2309,7 +2319,8 @@ NyanFi.exe -XRegExChecker
 
 <dt id="SelSameName">SelSameName
 <dd>ƒJ[ƒ\ƒ‹ˆÊ’u‚Ìƒtƒ@ƒCƒ‹‚Æ–¼‘OŽå•”‚ª“¯‚¶‚·‚×‚Ä‚Ìƒtƒ@ƒCƒ‹‚ð‘I‘ð‚µ‚Ü‚·B<br>
-<a href="#NextSameName">¨ NextSameName</a>@<a href="#SelSameExt">¨ SelSameExt</a>
+˜A”Ô•t‚«ƒtƒ@ƒCƒ‹‚È‚Ç‚à‡‚í‚¹‚Ä‘I‘ð‚µ‚½‚¢ê‡‚ÍA<a href="#MatchSelect">MatchSelect</a> ƒRƒ}ƒ“ƒh‚ð—˜—p‚µ‚Ä‚­‚¾‚³‚¢B<br>
+<a href="#NextSameName">¨ NextSameName</a>@<a href="#SelSameExt">¨ SelSameExt</a>@<a href="#MatchSelect">¨ MatchSelect</a>
 
 <dt id="SelWorkItem">SelWorkItem
 <dd>Œ»Ý‚Ì<a href="hid00060.htm">ƒ[ƒNƒŠƒXƒg</a>‚É“o˜^‚³‚ê‚Ä‚¢‚é€–Ú‚ð‘I‘ð‚µ‚Ü‚·B<br>
