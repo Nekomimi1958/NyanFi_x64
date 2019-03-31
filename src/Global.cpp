@@ -3094,6 +3094,21 @@ int __fastcall SortComp_MarkTime(TStringList *List, int Index1, int Index2)
 
 	return !OldOrder? ((dt0<dt1)? 1 : -1) : ((dt0>dt1)? 1 : -1);
 }
+//---------------------------------------------------------------------------
+//編集距離
+int __fastcall SortComp_Distance(TStringList *List, int Index1, int Index2)
+{
+	file_rec *fp0 = (file_rec*)List->Objects[Index1];
+	file_rec *fp1 = (file_rec*)List->Objects[Index2];
+	if (!fp0 || !fp1) return 0;
+
+	if (fp0->is_up) return -1;
+	if (fp1->is_up) return  1;
+
+	if (fp0->distance==fp1->distance) return SortComp_Ext(List, Index1, Index2);
+
+	return (fp0->distance - fp1->distance);
+}
 
 //---------------------------------------------------------------------------
 //ディレクトリ名(ツリー用)
@@ -4421,6 +4436,7 @@ file_rec* cre_new_file_rec(file_rec *copy_fp)
 		fp->f_count    = copy_fp->f_count;
 		fp->d_count    = copy_fp->d_count;
 		fp->img_ori    = copy_fp->img_ori;
+		fp->distance   = copy_fp->distance;
 		fp->is_video   = copy_fp->is_video;
 		fp->inf_list->Assign(copy_fp->inf_list);
 		fp->prv_text   = copy_fp->prv_text;
@@ -4445,6 +4461,7 @@ file_rec* cre_new_file_rec(file_rec *copy_fp)
 		fp->f_count    = -1;
 		fp->d_count    = -1;
 		fp->img_ori    = 0;
+		fp->distance   = 0;
 		fp->is_video   = false;
 	}
 

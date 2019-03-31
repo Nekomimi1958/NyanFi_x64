@@ -4783,6 +4783,11 @@ object NyanFiForm: TNyanFiForm
       OnExecute = ShowToolBarActionExecute
       OnUpdate = ShowToolBarActionUpdate
     end
+    object SimilarSortAction: TAction
+      Category = 'Command'
+      OnExecute = SimilarSortActionExecute
+      OnUpdate = MenuFActionUpdate
+    end
     object SoloTabAction: TAction
       Category = 'Command'
       Caption = #20182#12398#12479#12502#12434#12377#12409#12390#21066#38500'(&S)'

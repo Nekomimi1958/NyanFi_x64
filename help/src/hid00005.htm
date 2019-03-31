@@ -1650,7 +1650,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
 
 <dt id="MatchSelect">MatchSelect<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]]</span>
 <dd>名前に指定文字列が含まれている項目を選択します。<br>
-文字列は ; (セミコロン)で区切って複数指定できます。大文字・小文字は区別されません。指定文字列を / で囲むと正規表現とみなされます。<br>
+文字列は ; (セミコロン)で区切って複数指定できます。大小文字は区別されません。指定文字列を / で囲むと正規表現とみなされます。<br>
 また、文字列や正規表現パターンに <b>\N</b> という書式文字列が含まれていると、カーソル位置のファイル名主部またはディレクトリ名に置換して用いられます。<br>
 <div class="spc_box">
 なおコンボボックス上の右クリックメニューで、入力履歴を削除したり正規表現を参照したりできます。<br>
@@ -2496,6 +2496,16 @@ SetTag<span class="pram_text">_;</span>
 <a href="hid00068.htm">「ツールバーの設定」ダイアログ</a>は、ツールバーをダブルクリックするか、<b>設定メニュー</b> - 「<b>ツールバーの設定</b>」あるいは <a href="#ToolBarDlg">ToolBarDlg</a> コマンドで表示されます。<br>
 <a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
 
+<dt id="SimilarSort">SimilarSort<span class="pram_text">[_[IX][;IC][;IN][;IF]]</span><br>
+SimilarSort<span class="pram_text">_IA</span>
+<dd>カーソル位置のファイル名との類似性(標準化されたレーベンシュタイン距離)に基づいてファイルリストをソートします。<br>
+ファイルとディレクトリは区別されません。<br>
+パラメータに <b>IX</b> を指定すると拡張子の違いを無視します。また <b>IC</b> では大小文字、<b>IN</b> では数字部分、<b>IF</b> では全角/半角の違いを無視します。<br>
+パラメータに <b>IA</b> を指定すると、<b>IX</b>、<b>IC</b>、<b>IN</b>、<b>IF</b> のすべてが適用されます。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+ファイルリストが更新されるとソートは解除されます。<br>
+<a href="#SortDlg">→ SortDlg</a>
+
 <dt id="SoloTab">SoloTab
 <dd>現在のタブだけを残して、他のタブをすべて削除します。<br>
 <a href="#DelTab">→ DelTab</a>
@@ -2531,7 +2541,7 @@ SortDlg<span class="pram_text">_L</span>
 <a href="hid00010.htm">オプション設定 - デザイン</a> - <b>ファイルリスト</b> の「<b>ヘッダを表示</b>」をチェックしていると、ヘッダをクリックすることでもソートを変更できます。この場合、ダイアログの「<b>左右とも変更</b>」の状態にかかわらず、カレント側だけが変更されます。<br>
 なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です(ディレクトリのソート方法は除く)。<br>
 </div>
-<a href="#SetFolderIcon">→ SetFolderIcon</a>
+<a href="#SetFolderIcon">→ SetFolderIcon</a>　<a href="#SimilarSort">→ SimilarSort</a>
 
 <dt id="SpecialDirList">SpecialDirList
 <dd>「<b>特殊フォルダ一覧</b>」ダイアログを開きます。<br>

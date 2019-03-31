@@ -9640,8 +9640,7 @@ void __fastcall TNyanFiForm::FileListHeaderSectionClick(THeaderControl *HeaderCo
 		THeaderSection *Section)
 {
 	if ((CurStt->is_Work && (NotSortWorkList || WorkListHasSep))
-		|| (CurStt->is_Find && CurStt->find_DUPL)
-		|| IsDiffList())
+		|| (CurStt->is_Find && CurStt->find_DUPL) || IsDiffList())
 	{
 		SetActionAbort();  return;
 	}
@@ -22736,6 +22735,52 @@ void __fastcall TNyanFiForm::ShowToolBarActionUpdate(TObject *Sender)
 	case SCMD_TVIEW: ap->Visible = true;  ap->Enabled = true;  ap->Checked = ShowToolBarV;	break;
 	case SCMD_IVIEW: ap->Visible = true;  ap->Enabled = true;  ap->Checked = ShowToolBarI;	break;
 	default:	     ap->Visible = false; ap->Enabled = false;
+	}
+}
+
+//---------------------------------------------------------------------------
+//€–Ú–¼‚Ì—ÞŽ—«ƒ\[ƒg
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SimilarSortActionExecute(TObject *Sender)
+{
+	try {
+		if ((CurStt->is_Work && (NotSortWorkList || WorkListHasSep))
+			|| (CurStt->is_Find && CurStt->find_DUPL) || IsDiffList())
+				UserAbort(USTR_CantOperate);
+
+		bool ig_a = TEST_ActParam("IA");
+		bool ig_x = ig_a || TEST_ActParam("IX");
+		bool ig_c = ig_a || TEST_ActParam("IC");
+		bool ig_n = ig_a || TEST_ActParam("IN");
+		bool ig_f = ig_a || TEST_ActParam("IF");
+
+		file_rec *cfp = GetCurFrecPtr();
+		if (!cfp || cfp->is_dummy) Abort();
+		UnicodeString rnam = ig_x? cfp->b_name : ExtractFileName(cfp->f_name);
+
+		CurWorking = true;
+		TStringList *lst = GetCurList(true);
+		int idx = FileListBox[CurListTag]->ItemIndex;
+		for (int i=0; i<lst->Count; i++) {
+			file_rec *fp = (file_rec*)lst->Objects[i];
+			if (i==idx) {
+				fp->distance = -1;
+			}
+			else if (fp->is_up || fp->is_dummy) {
+				fp->distance = 1000;
+			}
+			else {
+				UnicodeString fnam = ig_x? fp->b_name : ExtractFileName(fp->f_name);
+		 		fp->distance = get_NrmLevenshteinDistance(rnam, fnam, ig_c, ig_n, ig_f);
+			}
+		}
+
+		lst->CustomSort(SortComp_Distance);
+		update_FileListBox(lst, CurListTag, (cfp? lst->IndexOfObject((TObject*)cfp) : 0));
+		CurWorking = false;
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
 	}
 }
 

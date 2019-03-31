@@ -272,9 +272,11 @@ int  check_UTF8(BYTE *bp, int size);
 int  get_MemoryCodePage(TMemoryStream *ms, bool *has_bom = NULL);
 UnicodeString get_MemoryStrins(TMemoryStream *ms);
 
-//---------------------------------------------------------------------------
 UnicodeString check_Surrogates(UnicodeString s);
 UnicodeString check_EnvDepandChars(UnicodeString s);
+
+int get_NrmLevenshteinDistance(UnicodeString s1, UnicodeString s2,
+	bool ig_case = false, bool ig_num = false, bool ig_fh = false);
 
 //---------------------------------------------------------------------------
 #endif

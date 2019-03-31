@@ -1251,7 +1251,7 @@ void __fastcall TGeneralInfoDlg::SortGenList(int mode)
 	TListBox *lp = GenListBox;
 	int id = (lp->ItemIndex!=-1)? (int)GenInfoBuff->Objects[lp->ItemIndex] : -1;
 
-	GenInfoBuff->CustomSort((mode==1)? comp_AscendOrder : (mode==-1)? comp_DescendOrder: comp_ObjectsOrder);
+	GenInfoBuff->CustomSort((mode==1)? comp_AscendOrder : (mode==-1)? comp_DescendOrder : comp_ObjectsOrder);
 
 	assign_FileListBox(lp, GenInfoBuff, 0);
 	int idx = 0;

@@ -1233,6 +1233,7 @@ struct file_rec {
 	int  f_count;				//ファイル数
 	int  d_count;				//ディレクトリ数
 	int  img_ori;				//画像方向
+	int  distance;				//編集距離ソート値
 	bool is_video;				//動画
 
 	TStringList *inf_list;		//情報リスト
@@ -1554,6 +1555,7 @@ int __fastcall SortComp_PathName(TStringList *List, int Index1, int Index2);
 int __fastcall SortComp_Tags(TStringList *List, int Index1, int Index2);
 int __fastcall SortComp_Memo(TStringList *List, int Index1, int Index2);
 int __fastcall SortComp_MarkTime(TStringList *List, int Index1, int Index2);
+int __fastcall SortComp_Distance(TStringList *List, int Index1, int Index2);
 int __fastcall SortComp_GitStt(TStringList *List, int Index1, int Index2);
 
 int __fastcall Comp_PathTree(TStringList *List, int Index1, int Index2);

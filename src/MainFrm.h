@@ -440,6 +440,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ShowTabBarAction;
 	TAction *ShowToolBarAction;
 	TAction *SidebarAction;
+	TAction *SimilarSortAction;
 	TAction *SoloTabAction;
 	TAction *SortDlgAction;
 	TAction *SortDlgIAction;
@@ -1833,6 +1834,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FindFolderIconActionExecute(TObject *Sender);
 	void __fastcall FindFolderIconActionUpdate(TObject *Sender);
 	void __fastcall SttBorderPaintBoxPaint(TObject *Sender);
+	void __fastcall SimilarSortActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

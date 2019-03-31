@@ -220,6 +220,7 @@ void set_CmdList(
 		"F:ShowProperty=ファイル情報の表示/非表示\n"
 		"F:ShowSystemAtr=システムファイルを表示\n"
 		"F:ShowTabBar=タブバーの表示/非表示\n"
+		"F:SimilarSort=名前の類似性によるソート\n"
 		"F:SoloTab=他のタブをすべて削除\n"
 		"F:SpecialDirList=特殊フォルダ一覧\n"
 		"F:SubDirList=サブディレクトリ一覧\n"
@@ -510,8 +511,8 @@ void get_PrmList(
 			_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|ScrollCursorUp|")
 			_T("ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|ScrollUpText|SelByList|SetColor|SetDirTime|")
 			_T("SetFontSize|SetMargin|SetPathMask|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SortDlg|")
-			_T("SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToTab|ViewTail|ToOppSameHash|WatchTail|")
-			_T("WidenCurList|WinPos|GitDiff|GitViewer|UnPack|UnPackToCurr"),
+			_T("SimilarSort|SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToTab|ToOppSameHash|ViewTail|")
+			_T("WatchTail|WidenCurList|WinPos|GitDiff|GitViewer|UnPack|UnPackToCurr"),
 			cmd))
 		{
 			cp->Enabled = true;
@@ -915,6 +916,15 @@ void get_PrmList(
 	}
 	else if (USAME_TI(cmd, "ShowFileInfo") && id_idx!=2) {
 		params.USET_T("\nSD : ダイアログで表示\n");
+	}
+	else if (USAME_TI(cmd, "SimilarSort")) {
+		params.sprintf(_T("%s"),
+			_T("\n")
+			_T("IX : 拡張子を無視\n")
+			_T("IC : 大小文字を無視\n")
+			_T("IN : 数字部分を無視\n")
+			_T("IF : 全角/半角を無視\n")
+			_T("IA : IX、IC、IN、IFをすべて適用\n"));
 	}
 	else if (USAME_TI(cmd, "Sort")) {
 		params.USET_T("\nAO : 昇順\nDO : 降順\n");

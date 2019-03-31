@@ -5,6 +5,7 @@
 #include <vcl.h>
 #pragma hdrstop
 #include <algorithm>
+#include <vector>
 #include <memory>
 #include <math.h>
 #include <System.StrUtils.hpp>
@@ -2354,5 +2355,53 @@ UnicodeString check_EnvDepandChars(UnicodeString s)
 		}
 	}
 	return ret_str;
+}
+
+//---------------------------------------------------------------------------
+//標準化されたレーベンシュタイン距離を取得
+//  最大文字数=256
+//戻り値: 0～1000
+//---------------------------------------------------------------------------
+int get_NrmLevenshteinDistance(UnicodeString s1, UnicodeString s2,
+	bool ig_case,	//大小文字を無視	(default = false)
+	bool ig_num,	//数字部分を無視	(default = false)
+	bool ig_fh)		//全角/半角を無視	(default = false)
+{
+	if (s1.IsEmpty() || s2.IsEmpty()) return SameStr(s1, s2)? 0 : 1000;
+
+	if (ig_case) {
+		s1 = s1.UpperCase();
+		s2 = s2.UpperCase();
+	}
+
+	if (ig_num) {
+		s1 = replace_regex(s1, _T("\\d"), null_TCHAR);
+		s2 = replace_regex(s2, _T("\\d"), null_TCHAR);
+	}
+
+	if (ig_fh) {
+		s1 = to_FullWidth(s1);
+		s2 = to_FullWidth(s2);
+	}
+
+	int len1 = std::min(s1.Length(), 256);
+	int len2 = std::min(s2.Length(), 256);
+
+	std::vector< std::vector<int> > d(len1 + 1, std::vector<int>(len2 + 1));
+
+	for (int i=0; i<=len1; i++) d[i][0] = i;
+	for (int i=0; i<=len2; i++) d[0][i] = i;
+
+	for (int i=1; i<=len1; i++) {
+		for (int j=1; j<=len2; j++) {
+			int cost = (s1[i]==s2[j])? 0 : 1;
+			int a = d[i - 1][j] + 1;
+			int b = d[i][j - 1] + 1;
+			int c = d[i - 1][j - 1] + cost;
+			d[i][j] = (a>b)? std::min(b, c) : std::min(a, c);
+		}
+	}
+
+	return (int)(1000.0 * d[len1][len2] / (std::max(len1, len2)));
 }
 //---------------------------------------------------------------------------
