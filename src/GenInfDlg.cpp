@@ -115,7 +115,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	}
 
 	//ログファイルか?
-	if (!FileName.IsEmpty()) isLog = str_match(UAPP_T(ExePath, "tasklog*.txt"), FileName);
+	if (!FileName.IsEmpty()) isLog = str_match(UAPP_T(ExePath, "tasklog*.txt"), cv_VirToOrgName(FileName));
 
 	//Git?
 	isGit = (GenInfoList->Count>0 && StartsStr("$ git ", GenInfoList->Strings[0]));
@@ -688,8 +688,8 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 
 	//背景色
 	cv->Brush->Color = State.Contains(odSelected)? (lp->Focused()? col_selItem : col_oppItem) :
-												isLog? col_bgLog :
-			   (isPlayList && is_AltLnBgCol(Index))? col_bgList2 : col_bgList;
+											isLog? col_bgLog :
+			 (isPlayList && is_AltLnBgCol(Index))? col_bgList2 : col_bgList;
 	cv->FillRect(rc);
 
 	rc.Left += 4;
@@ -700,12 +700,8 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 
 	//ログ
 	if (isLog) {
-		TColor fg = use_fgsel? col_fgSelItem :
-			is_match_regex(lbuf, _T("^.>([ECW]|     [45]\\d{2})\\s"))? col_Error :
-			(lbuf.Pos(':')==5 && contains_wd_i(lbuf, _T("開始|>>"))) ? col_Headline :
-										  StartsText("$ git ", lbuf) ? col_Headline :
-												 (lbuf.Pos('!')==10) ? AdjustColor(col_fgLog, 96) : col_fgLog;
-		RuledLnTextOut(yen_to_delimiter(lbuf), cv, rc, fg, tw, wlist.get());
+		RuledLnTextOut(yen_to_delimiter(lbuf), cv, rc,
+			(use_fgsel? col_fgSelItem : get_LogColor(lbuf)), tw, wlist.get());
 	}
 	//変数一覧
 	else if (isVarList) {

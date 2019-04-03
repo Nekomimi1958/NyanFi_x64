@@ -568,7 +568,7 @@ void __fastcall TFindFileDlg::CondChangeUpdate(TObject *Sender)
 	double range = EditToInt(GpsRangeEdit, 0)/1000.0;
 	KmLabel->Caption = (range>=1.0)? UnicodeString().sprintf(_T("%.1f km"), range) : EmptyStr;
 
-	DateMaskEdit->EditMask = (DateRadioGroup->ItemIndex==1)? "!cccc/cc/cc;1;_": "!9999/99/99;1;_";
+	DateMaskEdit->EditMask = (DateRadioGroup->ItemIndex==1)? "!cccc/cc/cc;1;_" : "!9999/99/99;1;_";
 
 	UnicodeString tmp = CodePageComboBox->Text;
 	int cpag = tmp.IsEmpty()? -1 : get_tkn(tmp, ':').ToIntDef(0);

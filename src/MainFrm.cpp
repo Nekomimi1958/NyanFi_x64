@@ -356,6 +356,70 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 	InitializeSysColor();
 	InitializeGlobal();
 	ResetIndColor(-1);
+	get_DriveInfoList();
+
+	if (!SameText(IniFile->FileName, ChangeFileExt(Application->ExeName, ".INI")))
+		AddInitialLog(make_LogHdr(_T("LOAD"), ExtractFileName(IniFile->FileName)));
+
+	//仮想ドライブのマウント
+	if (VirDriveList->Count>0) {
+		int cnt = 0;
+		for (int i=0; i<VirDriveList->Count; i++) {
+			UnicodeString msg = mount_VirDriveList(i);
+			if (!msg.IsEmpty()) {
+				if (msg[1]!='E') cnt++;
+				AddInitialLog(msg);
+			}
+		}
+		if (cnt>0) get_DriveInfoList();
+	}
+
+	//アーカイバDLL情報
+	for (int i=0; i<MAX_ARC_DLL; i++) {
+		arc_func *fp = &usr_ARC->ArcFunc[i];
+		if (fp->hDll) {
+			UnicodeString tmp = make_LogHdr(_T("LOAD"), fp->DllName, false, 12);
+			tmp.cat_sprintf(_T(" %s"), fp->VerStr.c_str());
+
+			if (fp->Available) {
+				if (fp->use7zdll) {
+					if (fp->err7zdll) {
+						tmp[1] = 'E';
+						tmp.UCAT_T(" 7z.dll not found");
+					}
+					else {
+						tmp.UCAT_T(" using 7z.dll");
+					}
+				}
+				else if (usr_ARC->Use7zDll) {
+					if ((USAME_TI(fp->Prefix, "Unrar") && test_FileExt(".rar", FExt7zDll)) ||
+						(USAME_TI(fp->Prefix, "UnIso") && test_FileExt(".iso", FExt7zDll)))
+					{
+						tmp.UCAT_T("  NOT USED");
+					}
+				}
+			}
+			else {
+				tmp[1] = 'E';
+				tmp.UCAT_T("not available");
+			}
+			AddInitialLog(tmp);
+		}
+	}
+	//Susieプラグイン情報
+	if (SPI->PlgList->Count>0) {
+		for (int i=0; i<SPI->PlgList->Count; i++) {
+			spi_info *sp = SPI->PlgList->Items[i];
+			AddInitialLog(
+				make_LogHdr(_T("LOAD"), sp->FileName, false, 12).cat_sprintf(
+					_T(" (%s) %s"), sp->VerType.c_str(), sp->FileType.c_str()));
+		}
+	}
+	//Migemo
+	if (usr_Migemo->DictReady) {
+		AddInitialLog(make_LogHdr(_T("LOAD"),
+			usr_Migemo->FileName, false, 13).cat_sprintf(_T("v%s"), usr_SH->get_VerStr(usr_Migemo->FileName).c_str()));
+	}
 
 	//起動時オプションの解析
 	StartTag = LastCurTag;
@@ -388,8 +452,6 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 		start_pnam[StartTag] = dir_exists(StartFile) ? IncludeTrailingPathDelimiter(StartFile)
 													 : ExtractFilePath(StartFile);
 	}
-
-	get_DriveInfoList();
 
 	//フォント初期化
 	std::unique_ptr<TFont> defFont(new TFont());
@@ -715,6 +777,7 @@ void __fastcall TNyanFiForm::WmFormShowed(TMessage &msg)
 	if (!StartFile.IsEmpty()) IndexOfFileList(StartFile);
 	SetFileInf();
 
+	//起動時ログ
 	UnicodeString tmp;
 	tmp.sprintf(_T("NyanFi %s %s"), VersionStr.c_str(), is_X64()? _T("x64") : _T("x86"));
 	if (MultiInstance) {
@@ -723,63 +786,16 @@ void __fastcall TNyanFiForm::WmFormShowed(TMessage &msg)
 		else
 			tmp.cat_sprintf(_T(" (Duplicated-%u)"), NyanFiIdNo);
 	}
-
 #ifdef _DEBUG
 	tmp.UCAT_T("  ### DEBUG MODE ###");
 #endif
-
 	StartLog(tmp);
-
 	if (IsAdmin) AddLog(_T("  管理者として実行"));
 
-	//INIファイル
-	if (!SameText(IniFile->FileName, ChangeFileExt(Application->ExeName, ".INI")))
-		AddLog(make_LogHdr(_T("LOAD"), ExtractFileName(IniFile->FileName)));
-
-	//アーカイバDLL情報
-	for (int i=0; i<MAX_ARC_DLL; i++) {
-		arc_func *fp = &usr_ARC->ArcFunc[i];
-		if (fp->hDll) {
-			tmp = make_LogHdr(_T("LOAD"), fp->DllName, false, 13) + fp->VerStr;
-			if (fp->Available) {
-				if (fp->use7zdll) {
-					if (fp->err7zdll) {
-						tmp[1] = 'E';
-						tmp.UCAT_T(" 7z.dll not found");
-					}
-					else {
-						tmp.UCAT_T(" using 7z.dll");
-					}
-				}
-				else if (usr_ARC->Use7zDll) {
-					if ((USAME_TI(fp->Prefix, "Unrar") && test_FileExt(".rar", FExt7zDll)) ||
-						(USAME_TI(fp->Prefix, "UnIso") && test_FileExt(".iso", FExt7zDll)))
-					{
-						tmp.UCAT_T("  NOT USED");
-					}
-				}
-			}
-			else {
-				tmp[1] = 'E';
-				tmp.UCAT_T("not available");
-			}
-			AddLog(tmp);
-		}
-	}
-
-	//Susieプラグイン情報
-	if (SPI->PlgList->Count>0) {
-		for (int i=0; i<SPI->PlgList->Count; i++) {
-			spi_info *sp = SPI->PlgList->Items[i];
-			AddLog(make_LogHdr(_T("LOAD"), sp->FileName, false, 13).cat_sprintf(
-					_T("(%s) %s"), sp->VerType.c_str(), sp->FileType.c_str()));
-		}
-	}
-
-	//Migemo
-	if (usr_Migemo->DictReady) {
-		AddLog(make_LogHdr(_T("LOAD"),
-			usr_Migemo->FileName, false, 13).cat_sprintf(_T("v%s"), usr_SH->get_VerStr(usr_Migemo->FileName).c_str()));
+	if (!InitialLog.IsEmpty()) {
+		std::unique_ptr<TStringList> lst(new TStringList());
+		lst->Text = InitialLog;
+		for (int i=0; i<lst->Count; i++) AddLog(lst->Strings[i]);
 	}
 
 	//xdoc2txt
@@ -825,7 +841,7 @@ void __fastcall TNyanFiForm::WmFormShowed(TMessage &msg)
 	WatchTailTimer->Enabled = true;
 	MsgHintTimer->Interval	= MsgHintTime;
 
-	//起動時間表示(隠し機能)
+	//起動時間表示
 	if (LogDebugInf) AddLog(tmp.sprintf(_T("%8.3f秒"), (GetTickCount() - StartedCount)/1000.0));
 
 	AddLog(_T("All Task Ready"));
@@ -2583,8 +2599,9 @@ void __fastcall TNyanFiForm::ApplicationEvents1Idle(TObject *Sender, bool &Done)
 bool __fastcall TNyanFiForm::ApplicationEvents1Help(WORD Command, NativeInt Data, bool &CallHelp)
 {
 	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
-		if (CancelHelp)		//キーにF1が割り当てられていたら抑止
+		if (CancelHelp) {	//キーにF1が割り当てられていたら抑止
 			CancelHelp = false;
+		}
 		else {
 			int idx = Data;
 			if (Active) {
@@ -2622,14 +2639,16 @@ void __fastcall TNyanFiForm::DrawDirPanel(TPanel *pp)
 		cv->Lock();
 		{
 			TRect rc = pp->ClientRect;
-			InflateRect(rc, -1, -1);
+			if (!FlatInfPanel) InflateRect(rc, -1, -1);
 			cv->Handle = hDc;
 			cv->Font->Assign(pp->Font);
 			cv->Brush->Color = pp->Color;
 			cv->FillRect(rc);
 			UnicodeString lbuf = pp->Caption;
-			int x = rc.Left + Scaled2;
-			int y = rc.Top + (rc.Height() - abs(pp->Font->Height))/2;
+			int x = rc.Left + Scaled4;
+			int y = rc.Top + (rc.Height() - abs(cv->Font->Height))/2;
+			if (has_Leading(cv.get())) y--;
+
 			//固定ピン
 			if (remove_top_s(lbuf, TabPinMark)) {
 				if (TDirect2DCanvas::Supported()) {
@@ -5398,27 +5417,34 @@ void __fastcall TNyanFiForm::LogListBoxDrawItem(TWinControl *Control, int Index,
 	TCanvas *cv = lp->Canvas;
 	cv->Brush->Color = (State.Contains(odSelected) && lp->Focused())? col_selItem : col_bgLog;
 	cv->FillRect(Rect);
+
 	cv->Font->Assign(LogFont);
 	cv->Font->Color = (lp->Focused() && is_SelFgCol(State))? col_fgSelItem : col_fgLog;
+	bool is_irreg = IsIrregularFont(cv->Font);
+	int xp = Rect.Left + 2;
+	int yp = Rect.Top + 1;
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	if (!DirDelimiter.IsEmpty()) lbuf = ReplaceStr(lbuf, "\\", DirDelimiter);
 
 	if (cv->Font->Color!=col_fgSelItem) {
-		if (StartsStr(" >    LOAD ", lbuf) && EndsStr("  NOT USED", lbuf))
-			cv->Font->Color = AdjustColor(col_fgLog, 96);
-		if (is_match_regex(lbuf, _T("^.>([ECW]|     [45]\\d{2})\\s")))
-			cv->Font->Color = col_Error;
-		else if (StartsStr("         エラー: ", lbuf))
-			cv->Font->Color = col_Error;
-		else if ((lbuf.Pos(':')==5 && contains_wd_i(lbuf, _T("開始|>>"))) || StartsText("$ git ", lbuf))
-			cv->Font->Color = col_Headline;
-		else if (lbuf.Pos('!')==10)
-			cv->Font->Color = AdjustColor(col_fgLog, 96);
+		cv->Font->Color = get_LogColor(lbuf);
+		if (remove_top_s(lbuf, " >    LOAD ")) {
+			out_TextEx(cv, xp, yp, " >    LOAD ", col_None, col_None, 0, is_irreg);
+			if (EndsStr("  NOT USED", lbuf)) {
+				cv->Font->Color = AdjustColor(col_fgLog, 96);
+			}
+			else {
+				UnicodeString fnam = split_tkn(lbuf, ' ');
+				cv->Font->Color = get_ExtColor(get_extension(fnam), col_fgLog);
+				out_TextEx(cv, xp, yp, fnam, col_None, col_None, 0, is_irreg);
+				lbuf.Insert(" ", 1);
+				cv->Font->Color = col_fgLog;
+			}
+		}
 	}
 
-	int xp = Rect.Left + 2;
-	EmphasisTextOut(lbuf, EmptyStr, cv, xp, Rect.Top + 1);
+	EmphasisTextOut(lbuf, EmptyStr, cv, xp, yp);
 
 	//カーソル
 	draw_ListCursor(lp, Rect, Index, State);
@@ -5807,7 +5833,7 @@ bool __fastcall TNyanFiForm::PopupDriveMenu(
 			if (dp->drv_type!=DRIVE_CDROM) continue;
 			UnicodeString dstr = dp->drive_str;
 			TMenuItem *mp  = new TMenuItem(pPop);
-			mp->Caption    = tmp.sprintf(_T("&%s%s"), get_tkn(dstr, '\\').c_str(), dp->volume.c_str());
+			mp->Caption    = tmp.sprintf(_T("&%s%s"), get_tkn(dstr, '\\').c_str(), dp->label.c_str());
 			mp->OnDrawItem = PopSelectItemDrawItem;
 			mp->OnClick    = PopEjectItemClick;
 			mp->Tag 	   = i;
@@ -5835,7 +5861,7 @@ bool __fastcall TNyanFiForm::PopupDriveMenu(
 				}
 			}
 
-			tmp.sprintf(_T("&%s%s"), get_tkn(dstr, '\\').c_str(), dp->volume.c_str());
+			tmp.sprintf(_T("&%s%s"), get_tkn(dstr, '\\').c_str(), dp->label.c_str());
 			if (!sz_str.IsEmpty()) tmp.cat_sprintf(_T(" \t%s"), sz_str.c_str());
 			TMenuItem *mp  = new TMenuItem(pPop);
 			mp->Caption    = tmp;
@@ -6430,7 +6456,6 @@ void __fastcall TNyanFiForm::SetDirCaption(int tag)
 		}
 	}
 
-	UnicodeString hnam = pnam;
 	if (UncToNetDrive) pnam = UNC_to_NetDriveName(pnam);
 	if (!lst_stt->is_Work && !lst_stt->is_FTP && DispRegName) pnam = get_RegDirName(slash_to_yen(pnam));
 	if (lst_stt->is_Find) {
@@ -6451,14 +6476,16 @@ void __fastcall TNyanFiForm::SetDirCaption(int tag)
 		 if (WorkListChanged) pnam.Insert("*", 1); else if (WorkListFiltered) pnam.Insert("!", 1);
 	}
 
-	UnicodeString s;
-	if (lst_stt->is_TabFixed) s += TabPinMark;
-	pnam = get_MiniPathName(pnam, pp->ClientWidth - get_WidthInPanel(s, pp), pp->Font, !lst_stt->is_FTP);
+	int p_wd = pp->ClientWidth - Scaled4;
+	if (lst_stt->is_TabFixed) p_wd -= get_WidthInPanel(TabPinMark, pp, true);
+	UnicodeString pnam0 = pnam;
+	pnam = get_MiniPathName(pnam, p_wd, pp->Font, !lst_stt->is_FTP);
+	pp->Hint = (pnam.Length()<pnam0.Length())? (lst_stt->is_FTP? yen_to_slash(pnam0) : yen_to_delimiter(pnam0))
+											 : EmptyStr;
 	if (lst_stt->is_FTP) pnam = yen_to_slash(pnam);
 	pnam = REPLACE_TS(pnam, "&", "&&");
-	if (lst_stt->is_TabFixed) pnam.Insert(TabPinMark, 1);	//固定マーク
+	if (lst_stt->is_TabFixed) pnam.Insert(TabPinMark, 1);
 	pp->Caption = pnam;
-	pp->Hint	= !SameText(pnam, hnam)? hnam : EmptyStr;
 
 	//関係表示
 	SetDirRelation();
@@ -7624,8 +7651,9 @@ void __fastcall TNyanFiForm::ApplyPathMask(TStringList *lst, int tag)
 		int i = 0;
 		while (i<lst->Count) {
 			file_rec *fp = (file_rec*)lst->Objects[i];
-			if (fp->is_up || fp->is_dummy)
+			if (fp->is_up || fp->is_dummy) {
 				i++;
+			}
 			else {
 				bool match = false, excld = false;
 				TStringList *m_lst = fp->is_dir? d_msk.get() : f_msk.get();
@@ -7634,7 +7662,9 @@ void __fastcall TNyanFiForm::ApplyPathMask(TStringList *lst, int tag)
 					if (remove_top_s(mask, '!')) {
 						 if (str_match(mask, fp->n_name)) excld = true;
 					}
-					else if (USAME_TS(mask, "*") || str_match(mask, fp->n_name)) match = true;
+					else if (USAME_TS(mask, "*") || str_match(mask, fp->n_name)) {
+						match = true;
+					}
 				}
 				if (!match || excld) del_FileListItem(lst, i); else i++;
 			}
@@ -14576,7 +14606,9 @@ void __fastcall TNyanFiForm::EjectDriveActionExecute(TObject *Sender)
 		if (TEST_ActParam(".")) dstr = c_drv; else dstr.sprintf(_T("%s:\\"), ActionParam.c_str());
 
 		//取り外し可能かチェック
-		if (!EjectDrive(dstr, false)) TextAbort(_T("このドライブは取り外せません。"));
+		drive_info *dp = get_DriveInfo(dstr);
+		bool is_vd = (dp && dp->is_virtual);	//仮想ドライブ
+		if (!is_vd && !EjectDrive(dstr, false)) TextAbort(_T("このドライブは取り外せません。"));
 
 		//使用可能な前のドライブに移動
 		if (SameText(c_drv, dstr) || SameText(o_drv, dstr)) {
@@ -14591,7 +14623,14 @@ void __fastcall TNyanFiForm::EjectDriveActionExecute(TObject *Sender)
 		}
 
 		//取り外し
-		if (!EjectDrive(dstr, true)) UserAbort(USTR_FaildProc);
+		if (is_vd) {
+			if (!::DefineDosDevice(DDD_REMOVE_DEFINITION, ExcludeTrailingPathDelimiter(dstr).c_str(), NULL))
+				UserAbort(USTR_FaildProc);
+		}
+		else {
+			if (!EjectDrive(dstr, true)) UserAbort(USTR_FaildProc);
+		}
+
 		UnicodeString msg = ActionParam;
 		ShowHintAndStatus(msg.UCAT_T("ドライブを取り外しました。"));
 	}
@@ -16816,7 +16855,7 @@ void __fastcall TNyanFiForm::HelpContentsActionExecute(TObject *Sender)
 	if (TEST_ActParam("CI") || TEST_ActParam("FI")) {
 		topic = TEST_ActParam("FI")? HELPTOPIC_FI : HELPTOPIC_CI;
 		switch (ScrMode) {
-		case SCMD_FLIST: topic += CurStt->is_IncSea? "#IS": "#FL";	break;
+		case SCMD_FLIST: topic += CurStt->is_IncSea? "#IS" : "#FL";	break;
 		case SCMD_TVIEW: topic.UCAT_T("#TV");	break;
 		case SCMD_IVIEW: topic.UCAT_T("#IV");	break;
 		}

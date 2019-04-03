@@ -5136,15 +5136,15 @@ object OptionDlg: TOptionDlg
         Left = 10
         Top = 10
         Width = 434
-        Height = 224
+        Height = 186
         Caption = #21021#26399#12497#12473' - '#24038
         TabOrder = 0
         DesignSize = (
           434
-          224)
+          186)
         object TLabel
           Left = 22
-          Top = 193
+          Top = 154
           Width = 45
           Height = 13
           Alignment = taRightJustify
@@ -5161,33 +5161,33 @@ object OptionDlg: TOptionDlg
           TabStop = True
         end
         object L_IniPatMod1RadioBtn: TRadioButton
-          Left = 15
-          Top = 41
-          Width = 150
+          Left = 172
+          Top = 18
+          Width = 120
           Height = 17
           Caption = #12527#12540#12463#12522#12473#12488
           TabOrder = 1
           OnClick = L_IniPatMod1RadioBtnClick
         end
         object L_IniPatMod2RadioBtn: TRadioButton
-          Left = 15
-          Top = 64
-          Width = 150
+          Left = 300
+          Top = 18
+          Width = 86
           Height = 17
           Caption = #25351#23450#12497#12473
           TabOrder = 2
         end
         object L_IniPatEdit: TEdit
-          Left = 41
-          Top = 85
-          Width = 347
+          Left = 71
+          Top = 40
+          Width = 353
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 3
         end
         object L_RefIniPatBtn: TButton
-          Left = 389
-          Top = 84
+          Left = 388
+          Top = 16
           Width = 36
           Height = 22
           Anchors = [akTop, akRight]
@@ -5197,8 +5197,8 @@ object OptionDlg: TOptionDlg
         end
         object L_IniSortRadioGroup: TRadioGroup
           Left = 16
-          Top = 116
-          Width = 372
+          Top = 77
+          Width = 408
           Height = 60
           Caption = #12477#12540#12488#26041#27861
           Columns = 4
@@ -5215,8 +5215,8 @@ object OptionDlg: TOptionDlg
         end
         object L_IniMaskComboBox: TComboBox
           Left = 71
-          Top = 190
-          Width = 317
+          Top = 151
+          Width = 353
           Height = 21
           TabOrder = 6
         end
@@ -5225,15 +5225,15 @@ object OptionDlg: TOptionDlg
         Left = 460
         Top = 10
         Width = 434
-        Height = 224
+        Height = 186
         Caption = #21021#26399#12497#12473' - '#21491
         TabOrder = 1
         DesignSize = (
           434
-          224)
+          186)
         object TLabel
           Left = 22
-          Top = 193
+          Top = 154
           Width = 45
           Height = 13
           Alignment = taRightJustify
@@ -5250,34 +5250,34 @@ object OptionDlg: TOptionDlg
           TabStop = True
         end
         object R_IniPatMod1RadioBtn: TRadioButton
-          Left = 15
-          Top = 41
-          Width = 150
+          Left = 172
+          Top = 18
+          Width = 120
           Height = 17
           Caption = #12527#12540#12463#12522#12473#12488
           TabOrder = 1
           OnClick = R_IniPatMod1RadioBtnClick
         end
         object R_IniPatMod2RadioBtn: TRadioButton
-          Left = 15
-          Top = 64
-          Width = 150
+          Left = 300
+          Top = 18
+          Width = 86
           Height = 17
           Caption = #25351#23450#12497#12473
           TabOrder = 2
         end
         object R_IniPatEdit: TEdit
-          Left = 41
-          Top = 85
-          Width = 347
+          Left = 71
+          Top = 40
+          Width = 353
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 3
         end
         object R_RefIniPatBtn: TButton
           Tag = 1
-          Left = 389
-          Top = 84
+          Left = 388
+          Top = 16
           Width = 36
           Height = 22
           Anchors = [akTop, akRight]
@@ -5287,8 +5287,8 @@ object OptionDlg: TOptionDlg
         end
         object R_IniSortRadioGroup: TRadioGroup
           Left = 16
-          Top = 116
-          Width = 372
+          Top = 77
+          Width = 408
           Height = 60
           Caption = #12477#12540#12488#26041#27861
           Columns = 4
@@ -5305,22 +5305,22 @@ object OptionDlg: TOptionDlg
         end
         object R_IniMaskComboBox: TComboBox
           Left = 71
-          Top = 190
-          Width = 317
+          Top = 151
+          Width = 353
           Height = 21
           TabOrder = 6
         end
       end
       object IniWorkListGroupBox: TGroupBox
         Left = 10
-        Top = 376
-        Width = 886
+        Top = 330
+        Width = 884
         Height = 50
         Anchors = [akLeft, akTop, akRight]
         Caption = #36215#21205#26178#12395#35501#12415#36796#12416#12527#12540#12463#12522#12473#12488
         TabOrder = 5
         DesignSize = (
-          886
+          884
           50)
         object IniWork0RadioBtn: TRadioButton
           Left = 15
@@ -5343,13 +5343,13 @@ object OptionDlg: TOptionDlg
         object HomeWorkListEdit: TEdit
           Left = 375
           Top = 18
-          Width = 465
+          Width = 463
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
         end
         object RefHomeWorkBtn: TButton
-          Left = 841
+          Left = 839
           Top = 17
           Width = 36
           Height = 22
@@ -5361,8 +5361,8 @@ object OptionDlg: TOptionDlg
       end
       object IniWinSizeGroupBox: TGroupBox
         Left = 10
-        Top = 289
-        Width = 886
+        Top = 243
+        Width = 884
         Height = 75
         Anchors = [akLeft, akTop, akRight]
         Caption = #12454#12451#12531#12489#12454#12469#12452#12474
@@ -5476,15 +5476,15 @@ object OptionDlg: TOptionDlg
       end
       object IniPathToTab1CheckBox: TCheckBox
         Left = 26
-        Top = 250
+        Top = 208
         Width = 205
         Height = 17
         Caption = #21021#26399#12497#12473#12434#26368#21021#12398#12479#12502#12391#38283#12367
         TabOrder = 2
       end
       object GroupBox1: TGroupBox
-        Left = 11
-        Top = 438
+        Left = 10
+        Top = 392
         Width = 434
         Height = 50
         Caption = #20108#37325#36215#21205
@@ -5508,7 +5508,7 @@ object OptionDlg: TOptionDlg
       end
       object SplashCheckBox: TCheckBox
         Left = 480
-        Top = 458
+        Top = 412
         Width = 203
         Height = 17
         Caption = #12473#12503#12521#12483#12471#12517#30011#38754#12434#34920#31034
@@ -5516,11 +5516,95 @@ object OptionDlg: TOptionDlg
       end
       object IniTabHomeAllCheckBox: TCheckBox
         Left = 237
-        Top = 250
+        Top = 208
         Width = 250
         Height = 17
         Caption = #21021#26399#12497#12473#20197#22806#12398#12479#12502#12434#12507#12540#12512#12395#25147#12377
         TabOrder = 3
+      end
+      object GroupBox2: TGroupBox
+        Left = 10
+        Top = 454
+        Width = 884
+        Height = 119
+        Caption = #20206#24819#12489#12521#12452#12502#12398#12510#12454#12531#12488
+        TabOrder = 8
+        DesignSize = (
+          884
+          119)
+        object TLabel
+          Left = 454
+          Top = 27
+          Width = 35
+          Height = 13
+          Alignment = taRightJustify
+          Caption = #12489#12521#12452#12502
+        end
+        object VirDrvListBox: TListBox
+          Left = 10
+          Top = 18
+          Width = 424
+          Height = 91
+          Style = lbOwnerDrawFixed
+          Sorted = True
+          TabOrder = 0
+          OnClick = VirDrvListBoxClick
+          OnDrawItem = OptListBoxDrawItem
+          OnKeyDown = OptListBoxKeyDown
+        end
+        object DelDrvBtn: TButton
+          Left = 577
+          Top = 85
+          Width = 60
+          Height = 24
+          Action = DelDrvAction
+          Anchors = [akLeft, akBottom]
+          TabOrder = 6
+        end
+        object ChgDrvBtn: TButton
+          Left = 513
+          Top = 85
+          Width = 60
+          Height = 24
+          Action = ChgDrvAction
+          Anchors = [akLeft, akBottom]
+          TabOrder = 5
+        end
+        object AddDrvBtn: TButton
+          Left = 449
+          Top = 85
+          Width = 60
+          Height = 24
+          Action = AddDrvAction
+          Anchors = [akLeft, akBottom]
+          TabOrder = 4
+        end
+        object VirDriveEdit: TEdit
+          Left = 450
+          Top = 52
+          Width = 388
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 2
+        end
+        object RefVDrvBtn: TButton
+          Left = 839
+          Top = 51
+          Width = 36
+          Height = 22
+          Anchors = [akTop, akRight]
+          Caption = '...'
+          TabOrder = 3
+          OnClick = RefVDrvBtnClick
+        end
+        object VirDrvComboBox: TComboBox
+          Left = 493
+          Top = 24
+          Width = 80
+          Height = 21
+          Style = csDropDownList
+          TabOrder = 1
+        end
       end
     end
     object NotifySheet: TTabSheet
@@ -6933,6 +7017,21 @@ object OptionDlg: TOptionDlg
       OnExecute = DelKeyActionExecute
       OnUpdate = DelKeyActionUpdate
     end
+    object AddDrvAction: TAction
+      Caption = #36861#21152
+      OnExecute = AddDrvActionExecute
+      OnUpdate = AddDrvActionUpdate
+    end
+    object ChgDrvAction: TAction
+      Caption = #22793#26356
+      OnExecute = ChgDrvActionExecute
+      OnUpdate = ChgDrvActionUpdate
+    end
+    object DelDrvAction: TAction
+      Caption = #21066#38500
+      OnExecute = DelDrvActionExecute
+      OnUpdate = DelDrvActionUpdate
+    end
     object AddStdCmdAction: TAction
       Caption = #36861#21152
       OnExecute = AddStdCmdActionExecute
@@ -6975,11 +7074,6 @@ object OptionDlg: TOptionDlg
       OnExecute = DefTagColActionExecute
       OnUpdate = DefTagColActionUpdate
     end
-    object OkAction: TAction
-      Caption = 'OK'
-      OnExecute = OkActionExecute
-      OnUpdate = OkActionUpdate
-    end
     object FindKeyDownAction: TAction
       Hint = #19979#26041#21521#12395#26908#32034
       OnExecute = FindKeyDownActionExecute
@@ -7013,6 +7107,11 @@ object OptionDlg: TOptionDlg
       Hint = #19978#26041#21521#12395#26908#32034
       OnExecute = FindColUpActionExecute
       OnUpdate = FindColUpActionUpdate
+    end
+    object OkAction: TAction
+      Caption = 'OK'
+      OnExecute = OkActionExecute
+      OnUpdate = OkActionUpdate
     end
   end
   object ToolPopupMenu: TPopupMenu

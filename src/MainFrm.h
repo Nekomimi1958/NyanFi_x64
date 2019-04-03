@@ -1867,6 +1867,7 @@ private:	// ユーザー宣言
 	int  StartTag;						//起動時のカレントタグ
 	UnicodeString StartFile;			//起動時のカレントファイル
 	UnicodeString StartCmds;			//起動時の実行コマンド
+	UnicodeString InitialLog;			//起動時の追加ログ
 
 	HANDLE hWatchDir[MAX_FILELIST];
 	UnicodeString WatchPath[MAX_FILELIST];	//監視ディレクトリ
@@ -1982,7 +1983,7 @@ private:	// ユーザー宣言
 
 	void __fastcall WmFormMoving(TMessage &msg)
 	{
-		if (IniWinMode==1 && FixWinPos) *((TRect*)msg.LParam) = BoundsRect;
+		if (IsPrimary && IniWinMode==1 && FixWinPos) *((TRect*)msg.LParam) = BoundsRect;
 	}
 
 	void __fastcall WmEnterSizeMove(TMessage &msg)
@@ -2409,6 +2410,11 @@ private:	// ユーザー宣言
 	void __fastcall AssignToMenuItem(TMenuItem *m_item,  TMenuItem *src_m);
 
 	void __fastcall SetTags(UnicodeString tags, bool sw_add = false);
+
+	void __fastcall AddInitialLog(UnicodeString msg)
+	{
+		InitialLog.cat_sprintf(_T("%s\r\n"), msg.c_str());
+	}
 
 	void __fastcall RecycleFTP();
 	void __fastcall DisconnectFTP();

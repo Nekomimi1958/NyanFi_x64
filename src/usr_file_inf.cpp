@@ -1621,7 +1621,7 @@ void get_AppInf(
 					UnicodeString vstr =
 						(us_buf==IMAGE_FILE_MACHINE_I386)?  "x86" :
 						(us_buf==IMAGE_FILE_MACHINE_AMD64)? "x64" :
-						(us_buf==IMAGE_FILE_MACHINE_IA64)?  "Intel Itanium":
+						(us_buf==IMAGE_FILE_MACHINE_IA64)?  "Intel Itanium" :
 						(us_buf==0x01c0)? "arm" :
 						(us_buf==0x01c2)? "thumb" :
 						(us_buf==0x01c4)? "armnt" :

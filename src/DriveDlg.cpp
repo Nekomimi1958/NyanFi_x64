@@ -160,12 +160,12 @@ void __fastcall TSelDriveDlg::UpdateDriveList()
 		for (int i=0; i<lst->Count; i++) {
 			drive_info *dp = (drive_info *)lst->Objects[i];
 			UnicodeString drv_str = dp->drive_str;
-			UnicodeString typ_str = dp->type_str;
-			if (!dp->bus_type.IsEmpty()) typ_str.cat_sprintf(_T(" (%s)"), dp->bus_type.c_str());
+			UnicodeString typ_str = dp->is_virtual? UnicodeString("仮想ドライブ") : dp->type_str;
+			if (!dp->is_virtual && !dp->bus_type.IsEmpty()) typ_str.cat_sprintf(_T(" (%s)"), dp->bus_type.c_str());
 
 			int rn = i;
 			gp->Cells[0][rn] = get_tkn(drv_str, ':');	//ドライブ文字
-			gp->Cells[1][rn] = dp->volume;				//ボリューム名
+			gp->Cells[1][rn] = dp->label;				//ボリューム名/仮想ラベル
 			gp->Cells[2][rn] = typ_str;					//種類
 			gp->Cells[6][rn] = dp->f_system;			//ファイルシステム
 
@@ -179,10 +179,8 @@ void __fastcall TSelDriveDlg::UpdateDriveList()
 				__int64 sFree  = DiskFree(dn);
 				__int64 sUsed  = sTotal - sFree;
 				if (sTotal>0 && sFree>=0) {
-					gp->Cells[3][rn]
-						= get_size_str_T(sUsed, SizeDecDigits).cat_sprintf(_T(" (%4.1f%%)"), 100.0*sUsed/sTotal);
-					gp->Cells[4][rn]
-						= get_size_str_T(sFree, SizeDecDigits).cat_sprintf(_T(" (%4.1f%%)"), 100.0*sFree/sTotal);
+					gp->Cells[3][rn] = get_size_str_T(sUsed, SizeDecDigits).cat_sprintf(_T(" (%4.1f%%)"), 100.0*sUsed/sTotal);
+					gp->Cells[4][rn] = get_size_str_T(sFree, SizeDecDigits).cat_sprintf(_T(" (%4.1f%%)"), 100.0*sFree/sTotal);
 					gp->Cells[5][rn] = get_size_str_T(sTotal, SizeDecDigits);
 					ok = true;
 				}
@@ -287,7 +285,7 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 		int s_wd = get_TextWidth(cv, cellstr, is_irreg);
 
 		cv->Font->Color = gp->Cells[3][ARow].IsEmpty()? AdjustColor(col_fgList, 96) :
-								  is_SelFgCol(State)? col_fgSelItem : col_fgList;
+								    is_SelFgCol(State)? col_fgSelItem : col_fgList;
 		cv->Font->Style = (ACol==0)? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
 
 		switch (ACol) {
@@ -306,6 +304,10 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 					rc.Left += icon_sz + 4;
 					xp = rc.Left;
 				}
+				if (dp->is_virtual) {
+					cellstr = "[" + minimize_str(exclude_top_end(cellstr), cv, rc.Width() - cv->TextWidth("[]"), true) + "]";
+					if (!is_SelFgCol(State)) cv->Font->Color = col_Folder;
+				}
 			}
 			break;
 		case 3: case 4: case 5:
@@ -318,16 +320,18 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 
 		//使用率グラフ
 		if (ACol==5) {
-			try {
-				UnicodeString s = get_tkn_m(gp->Cells[4][ARow], '(', '%');
-				float r = 1.0 - StrToFloat(s)/100.0;
-				InflateRect(rc, -4, 0);
-				rc.Top	  = yp + cv->TextHeight("Q");
-				rc.Bottom = rc.Top + 4;
-				draw_BarGraph(cv, rc, r);
-			}
-			catch (...) {
-				;
+			UnicodeString s = get_tkn_m(gp->Cells[4][ARow], '(', '%');
+			if (!s.IsEmpty()) {
+				try {
+					float r = 1.0 - StrToFloat(s)/100.0;
+					InflateRect(rc, -4, 0);
+					rc.Top	  = yp + cv->TextHeight("Q");
+					rc.Bottom = rc.Top + 4;
+					draw_BarGraph(cv, rc, r);
+				}
+				catch (...) {
+					;
+				}
 			}
 		}
 	}
@@ -470,7 +474,7 @@ void __fastcall TSelDriveDlg::EjectDriveActionExecute(TObject *Sender)
 void __fastcall TSelDriveDlg::EjectDriveActionUpdate(TObject *Sender)
 {
 	drive_info *dp = (DriveGrid->Row!=1)? get_DriveInfo(getCurDrvStr()) : NULL;
-	((TAction*)Sender)->Enabled = (dp && dp->ejectable);
+	((TAction*)Sender)->Enabled = (dp && (dp->ejectable || dp->is_virtual));
 }
 
 //---------------------------------------------------------------------------

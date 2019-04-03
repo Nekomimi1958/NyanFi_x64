@@ -825,6 +825,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	set_ListBoxItemHi(KeyListBox);
 	set_ListBoxItemHi(EventListBox);
 	set_ListBoxItemHi(PrtDirListBox);
+	set_ListBoxItemHi(VirDrvListBox);
 
 	InitializeListHeader(ExtMenuHeader, _T("キャプション|エイリアス|設定"), Font);
 	THeaderSections *sp = ExtMenuHeader->Sections;
@@ -847,6 +848,9 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 		L_IniMaskComboBox->Items->Add(lbuf + itm_buf[2]);
 	}
 	R_IniMaskComboBox->Items->Assign(L_IniMaskComboBox->Items);
+
+	VirDrvComboBox->Clear();
+	for (int i=0; i<26; i++) VirDrvComboBox->Items->Add(UnicodeString().sprintf(_T("%c"), 'A' + i));
 
 	FindEdit->Text = EmptyStr;
 
@@ -881,6 +885,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	ExtColListBox->Items->Assign(ExtColList);
 	StdCmdListBox->Items->Assign(OpenStdCmdList);
 	PrtDirListBox->Items->Assign(ProtectDirList);
+	VirDrvListBox->Items->Assign(VirDriveList);
 
 	TagColListBox->Clear();
 	for (int i=0; i<usr_TAG->TagNameList->Count; i++) {
@@ -1042,6 +1047,47 @@ void __fastcall TOptionDlg::WmDropped(TMessage &msg)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TOptionDlg::PageControl1Change(TObject *Sender)
+{
+	HelpContext = PageControl1->ActivePage->HelpContext;
+
+	if (!Sender || PageControl1->ActivePage==KeySetSheet) {
+		KeyTabControl->TabIndex =
+			LogWndListBox->Focused()? 4 :
+			   (ScrMode==SCMD_FLIST)? (CurStt->is_IncSea? 1 : 0) :
+			   (ScrMode==SCMD_TVIEW)? 2 :
+			   (ScrMode==SCMD_IVIEW)? 3 : 0;
+
+		KeyTabControlChange(KeyTabControl);
+		KeyComboBox->ItemIndex = -1;
+	}
+
+	if (!Sender || PageControl1->ActivePage==AssoSheet) 	AssociateListBoxClick(NULL);
+	if (!Sender || PageControl1->ActivePage==ExtMenuSheet)	ExtMenuListBoxClick(NULL);
+	if (!Sender || PageControl1->ActivePage==ExtToolSheet)	ExtToolListBoxClick(NULL);
+
+	UserModule->InitializeListBox(GetCurListBox());
+}
+
+//---------------------------------------------------------------------------
+//タブの描画 (検索結果の強調表示)
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::PageControl1DrawTab(TCustomTabControl *Control, int TabIndex,
+		const TRect &Rect, bool Active)
+{
+	TTabControl *tp = (TTabControl*)Control;
+	//背景
+	TCanvas *cv = tp->Canvas;
+	cv->Brush->Color = (PageControl1->Pages[TabIndex]->Tag==0)? (Active? col_bgOptTab : Color) : col_OptFind;
+	cv->FillRect(Rect);
+	//タイトル
+	cv->Font->Color = Active? col_fgOptTab : scl_BtnText;
+	cv->Font->Style = Active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
+	UnicodeString tstr = tp->Tabs->Strings[TabIndex];
+	cv->TextOut(Rect.Left + (Rect.Width() - cv->TextWidth(tstr))/2, Rect.Top + (Active? 4 : 2), tstr);
+}
+
+//---------------------------------------------------------------------------
 //キー設定コンボボックスを設定
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::SetKeyComboBox()
@@ -1080,6 +1126,7 @@ TCustomListBox* __fastcall TOptionDlg::GetCurListBox()
 	if (PageControl1->ActivePage==EditorSheet)  return EtcEditorListBox;
 	if (PageControl1->ActivePage==AssoSheet)    return AssociateListBox;
 	if (PageControl1->ActivePage==CommadSheet)  return StdCmdListBox;
+	if (PageControl1->ActivePage==StartupSheet) return VirDrvListBox;
 	if (PageControl1->ActivePage==NotifySheet)  return PrtDirListBox;
 												return NULL;
 }
@@ -2605,6 +2652,12 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 		cv->TextOut(xp, yp, tmp);
 		cv->TextOut(xp + MaxWd_Ev, yp, lbuf);
 	}
+	//仮想ドライブ
+	else if (lp==VirDrvListBox) {
+		cv->TextOut(xp, yp, split_tkn(lbuf, '=') + ": => ");
+		xp += cv->TextWidth("W: => ");
+		cv->TextOut(xp, yp, lbuf);
+	}
 	//関連付け
 	else {
 		if (Index>0) brk = !SameText(lp->Items->Names[Index], lp->Items->Names[Index-1]);
@@ -3438,46 +3491,6 @@ void __fastcall TOptionDlg::FindEditChange(TObject *Sender)
 		if (!found) beep_Warn();
 	}
 }
-//---------------------------------------------------------------------------
-void __fastcall TOptionDlg::PageControl1Change(TObject *Sender)
-{
-	HelpContext = PageControl1->ActivePage->HelpContext;
-
-	if (!Sender || PageControl1->ActivePage==KeySetSheet) {
-		KeyTabControl->TabIndex =
-			LogWndListBox->Focused()? 4 :
-			   (ScrMode==SCMD_FLIST)? (CurStt->is_IncSea? 1 : 0) :
-			   (ScrMode==SCMD_TVIEW)? 2 :
-			   (ScrMode==SCMD_IVIEW)? 3 : 0;
-
-		KeyTabControlChange(KeyTabControl);
-		KeyComboBox->ItemIndex = -1;
-	}
-
-	if (!Sender || PageControl1->ActivePage==AssoSheet) 	AssociateListBoxClick(NULL);
-	if (!Sender || PageControl1->ActivePage==ExtMenuSheet)	ExtMenuListBoxClick(NULL);
-	if (!Sender || PageControl1->ActivePage==ExtToolSheet)	ExtToolListBoxClick(NULL);
-
-	UserModule->InitializeListBox(GetCurListBox());
-}
-
-//---------------------------------------------------------------------------
-//タブの描画 (検索結果の強調表示)
-//---------------------------------------------------------------------------
-void __fastcall TOptionDlg::PageControl1DrawTab(TCustomTabControl *Control, int TabIndex,
-		const TRect &Rect, bool Active)
-{
-	TTabControl *tp = (TTabControl*)Control;
-	//背景
-	TCanvas *cv = tp->Canvas;
-	cv->Brush->Color = (PageControl1->Pages[TabIndex]->Tag==0)? (Active? col_bgOptTab : Color) : col_OptFind;
-	cv->FillRect(Rect);
-	//タイトル
-	cv->Font->Color = Active? col_fgOptTab : scl_BtnText;
-	cv->Font->Style = Active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
-	UnicodeString tstr = tp->Tabs->Strings[TabIndex];
-	cv->TextOut(Rect.Left + (Rect.Width() - cv->TextWidth(tstr))/2, Rect.Top + (Active? 4 : 2), tstr);
-}
 
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::RefIniPatBtnClick(TObject *Sender)
@@ -3503,6 +3516,68 @@ void __fastcall TOptionDlg::RefHomeWorkBtnClick(TObject *Sender)
 {
 	UserModule->PrepareOpenDlg(_T("ホームワークリストの指定"), F_FILTER_NWL, _T("*.nwl"), WorkListPath);
 	UserModule->OpenDlgToEdit(HomeWorkListEdit, true);
+}
+
+//---------------------------------------------------------------------------
+//仮想ドライブにするディレクトリの参照
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::RefVDrvBtnClick(TObject *Sender)
+{
+	UnicodeString dnam = VirDriveEdit->Text;
+	if (UserModule->SelectDirEx(_T("マウントするディレクトリ"), dnam)) VirDriveEdit->Text = dnam;
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::VirDrvListBoxClick(TObject *Sender)
+{
+	int idx = VirDrvListBox->ItemIndex;
+	if (idx!=-1) {
+		VirDrvComboBox->ItemIndex = VirDrvComboBox->Items->IndexOf(VirDrvListBox->Items->Names[idx]);
+		VirDriveEdit->Text = VirDrvListBox->Items->ValueFromIndex[idx];
+	}
+}
+
+//---------------------------------------------------------------------------
+//追加
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::AddDrvActionExecute(TObject *Sender)
+{
+	UnicodeString lbuf = VirDrvComboBox->Text + "=" + VirDriveEdit->Text;
+	if (VirDrvListBox->Items->IndexOf(lbuf)==-1) {
+		VirDrvListBox->Items->Add(lbuf);
+	}
+	else msgbox_WARN(USTR_Registered);
+}
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::AddDrvActionUpdate(TObject *Sender)
+{
+	((TAction*)Sender)->Enabled = (VirDrvComboBox->ItemIndex!=-1) && !VirDriveEdit->Text.IsEmpty();
+}
+//---------------------------------------------------------------------------
+//変更
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::ChgDrvActionExecute(TObject *Sender)
+{
+	int idx = VirDrvListBox->ItemIndex;
+	if (idx!=-1) VirDrvListBox->Items->Strings[idx] = VirDrvComboBox->Text + "=" + VirDriveEdit->Text;
+}
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::ChgDrvActionUpdate(TObject *Sender)
+{
+	((TAction*)Sender)->Enabled
+		= (VirDrvListBox->ItemIndex!=-1) && (VirDrvComboBox->ItemIndex!=-1) && !VirDriveEdit->Text.IsEmpty();
+}
+//---------------------------------------------------------------------------
+//削除
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::DelDrvActionExecute(TObject *Sender)
+{
+	delete_ListItem(VirDrvListBox);
+}
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::DelDrvActionUpdate(TObject *Sender)
+{
+	((TAction*)Sender)->Enabled = (VirDrvListBox->ItemIndex!=-1);
 }
 
 //---------------------------------------------------------------------------
@@ -3959,6 +4034,20 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 {
 	ModalResult = mrNone;
 
+	//仮想ドライブ
+	VirDriveList->Assign(VirDrvListBox->Items);
+	if (VirDriveList->Count>0) {
+		int cnt = 0;
+		for (int i=0; i<VirDriveList->Count; i++) {
+			UnicodeString msg = mount_VirDriveList(i);
+			if (!msg.IsEmpty()) {
+				if (msg[1]!='E') cnt++;
+				AddLog(msg);
+			}
+		}
+		if (cnt>0) get_DriveInfoList();
+	}
+
 	//NyanFi ホットキー再登録
 	if (IsPrimary) {
 		UnicodeString kstr;
@@ -4215,6 +4304,9 @@ void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 	MarkMemoEdit->Color = !MarkImgCheckBox->Checked? col_Invalid : scl_Window;
 
 	ViewTabXEdit->Color = (EditToInt(TabXWdEdit)==0)? col_Invalid : scl_Window;
+
+	L_IniPatEdit->Color = L_IniPatMod2RadioBtn->Checked? scl_Window : col_Invalid;
+	R_IniPatEdit->Color = R_IniPatMod2RadioBtn->Checked? scl_Window : col_Invalid;
 }
 
 //---------------------------------------------------------------------------

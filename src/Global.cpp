@@ -658,6 +658,7 @@ TStringList *DirStack;			//ディレクトリスタック
 TStringList *PathMaskList;		//パスマスクリスト
 TStringList *RegDirList;		//登録ディレクトリ
 TStringList *ProtectDirList;	//削除制限ディレクトリ
+TStringList *VirDriveList;		//仮想ドライブリスト
 TStringList *ColorList;			//配色
 TStringList *ExtColList;		//拡張子別配色
 TStringList *AssociateList;		//関連付け
@@ -1312,6 +1313,7 @@ void InitializeGlobal()
 	DirStack		  = CreStringList();
 	RegDirList		  = CreStringList();
 	ProtectDirList	  = CreStringList();
+	VirDriveList	  = CreStringList();
 	PathMaskList	  = CreStringList();
 	ColorList		  = CreStringList();
 	ExtColList		  = CreStringList();
@@ -1886,6 +1888,7 @@ void InitializeGlobal()
 		{_T("S:TagColList="),				(TObject*)usr_TAG->TagColList},
 		{_T("S:HideInfItems="),				(TObject*)HideInfItems},
 		{_T("S:GitInfList="),				(TObject*)GitInfList},
+		{_T("S:VirDriveList="),				(TObject*)VirDriveList},
 
 		//リスト	(prefix = L:)	最大項目数,引用符を外す
 		{_T("L:DirStack=30,false"),			(TObject*)DirStack},
@@ -5193,6 +5196,7 @@ drive_info *get_DriveInfoList()
 		dp->drive_str  = dstr;
 		dp->accessible = is_drive_accessible(dstr);		//アクセス可能
 		dp->ejectable  = EjectDrive(dstr, false);		//取り外し可能
+		dp->is_virtual = false;
 
 		//種類
 		dp->drv_type = ::GetDriveType(dstr.c_str());
@@ -5210,6 +5214,8 @@ drive_info *get_DriveInfoList()
 			dp->volume = get_VolumeInfo(dstr, &dp->f_system);
 		else
 			dp->volume = dp->f_system = EmptyStr;
+		dp->label = dp->volume;
+
 		dp->is_NTFS = USAME_TI(dp->f_system, "NTFS");
 
 		dp->bus_type = EmptyStr;
@@ -5314,6 +5320,25 @@ drive_info *get_DriveInfoList()
 
 	DriveInfoList->Sort();
 
+	//仮想ドライブのチェック
+	std::unique_ptr<TStringList> o_lst(new TStringList());
+	if (Execute_cmdln("cmd /c subst", ExePath, "HO", NULL, o_lst.get())) {
+		for (int i=0; i<o_lst->Count; i++) {
+			UnicodeString lbuf = o_lst->Strings[i];
+			UnicodeString dstr = split_tkn(lbuf, ": => ");
+			if (!dstr.IsEmpty()) {
+				int idx = DriveInfoList->IndexOf(dstr);
+				if (idx!=-1) {
+					drive_info *dp = (drive_info *)DriveInfoList->Objects[idx];
+					dp->is_virtual = true;
+					dp->mnt_dir    = ExcludeTrailingPathDelimiter(lbuf);
+					dp->label.sprintf(_T("[%s]"),
+						(is_root_dir(dp->mnt_dir)? dp->mnt_dir : ExtractFileName(dp->mnt_dir)).c_str());
+				}
+			}
+		}
+	}
+
 	return new_drive;
 }
 //---------------------------------------------------------------------------
@@ -5350,6 +5375,57 @@ UnicodeString get_VolumeInfo(
 		if (fsys) *fsys = fil_sys;
 	}
 	return ret_str;
+}
+
+//---------------------------------------------------------------------------
+//VirDriveList の項目を仮想ドライブとしてマウント
+//戻り値: ログメッセージ
+//---------------------------------------------------------------------------
+UnicodeString mount_VirDriveList(int idx)
+{
+	UnicodeString res_msg;
+
+	if (idx>=0 && idx<VirDriveList->Count) {
+		UnicodeString drv  = VirDriveList->Names[idx];
+		UnicodeString dnam = VirDriveList->ValueFromIndex[idx];
+		if (StartsStr("\\\\", dnam)) dnam.Insert("?\\UNC\\", 3);
+
+		drive_info *dp = get_DriveInfo(drv);
+		if (!dp) {
+			drv += ":";
+			res_msg = make_LogHdr(_T("MOUNT")).cat_sprintf(_T("%s => %s"), drv.c_str(), dnam.c_str());
+			if (!dir_exists(dnam) || !::DefineDosDevice(0, drv.c_str(), dnam.c_str())) res_msg[1] = 'E';
+		}
+	}
+
+	return res_msg;
+}
+//---------------------------------------------------------------------------
+//仮想ドライブにマウントされているディレクトリ
+//---------------------------------------------------------------------------
+UnicodeString get_VirMountDir(UnicodeString drv)
+{
+	drive_info *dp = get_DriveInfo(drv);
+	return (dp && dp->is_virtual)? dp->mnt_dir : EmptyStr;
+}
+
+//---------------------------------------------------------------------------
+//仮想ドライブを含むパス名を元の名前に変換
+//---------------------------------------------------------------------------
+UnicodeString cv_VirToOrgName(UnicodeString fnam)
+{
+	UnicodeString vdir = get_VirMountDir(fnam);
+	if (vdir.IsEmpty()) return fnam;
+	return IncludeTrailingPathDelimiter(vdir) + get_tkn_r(fnam, ":\\");
+}
+
+//---------------------------------------------------------------------------
+//仮想ドライブを考慮した実行パス判定
+//---------------------------------------------------------------------------
+bool is_ExePath(UnicodeString pnam)
+{
+	if (SameText(pnam, ExePath)) return true;
+	return SameText(IncludeTrailingPathDelimiter(cv_VirToOrgName(pnam)), cv_VirToOrgName(ExePath));
 }
 
 //---------------------------------------------------------------------------
@@ -6979,6 +7055,23 @@ TColor get_SizeColor(__int64 size, TColor col_def)
 }
 
 //---------------------------------------------------------------------------
+//ログの表示色を取得
+//---------------------------------------------------------------------------
+TColor get_LogColor(UnicodeString s)
+{
+	bool has_tm = (s.Pos(':')==5);
+	bool is_err = StartsStr("         エラー: ", s)
+					|| (has_tm && s.Pos("終了  ") && (s.Pos("  NG:") || s.Pos("  ERR:")))
+					|| is_match_regex(s, _T("^.>([ECW]|     [45]\\d{2})\\s"));
+
+	return (					 			  is_err? col_Error :
+		 (has_tm && contains_wd_i(s, _T("開始|>>")))? col_Headline :
+							 StartsText("$ git ", s)? col_Headline :
+								    (s.Pos('!')==10)? AdjustColor(col_fgLog, 96) : col_fgLog
+		);
+}
+
+//---------------------------------------------------------------------------
 //ディレクトリ名またはワークリスト名を取得
 //---------------------------------------------------------------------------
 UnicodeString get_DirNwlName(UnicodeString pnam)
@@ -7223,6 +7316,12 @@ void GetFileInfList(
 
 	//パス名
 	lbuf = fp->p_name;
+	if (is_root_dir(lbuf)) {
+		//仮想ドライブかチェック
+		UnicodeString s = get_VirMountDir(lbuf);
+		if (!s.IsEmpty()) lbuf.cat_sprintf(_T(" => %s"), s.c_str());
+	}
+
 	if (fp->is_up && lst_stt && lst_stt->is_Find) {
 		if (is_find_all) {
 			lbuf = "<全体>";
@@ -7254,11 +7353,9 @@ void GetFileInfList(
 				if (fp->tag!=-1) FileListBox[fp->tag]->Invalidate();
 			}
 		}
-		else {
-			if (fp->f_time==(TDateTime)0) {
-				fp->f_time = get_file_age(fp->f_name);
-				fp->f_attr = file_GetAttr(fp->f_name);
-			}
+		else if (fp->f_time==(TDateTime)0) {
+			fp->f_time = get_file_age(fp->f_name);
+			fp->f_attr = file_GetAttr(fp->f_name);
 		}
 	}
 	i_list->AddObject(get_FileInfStr(fp), (TObject*)LBFLG_STD_FINF);
@@ -7579,12 +7676,9 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 
 	//基本情報/リンク先基本情報
 	if (flag & LBFLG_STD_FINF) {
-		if (flag & LBFLG_FILE_FIF)
-			Emphasis_RLO_info(lbuf, cv, xp, yp);
-		else if (flag & LBFLG_PATH_FIF)
-			PathNameOut(lbuf, cv, xp, yp);
-		else
-			cv->TextOut(xp, yp, lbuf);
+		if		(flag & LBFLG_FILE_FIF)	Emphasis_RLO_info(lbuf, cv, xp, yp);
+		else if (flag & LBFLG_PATH_FIF)	PathNameOut(lbuf, cv, xp, yp);
+		else							cv->TextOut(xp, yp, lbuf);
 		return;
 	}
 
@@ -7785,12 +7879,13 @@ bool get_FileInfList(
 														: usr_SH->get_FileTypeStr(fnam);
 		//NyanFi 固有のファイル
 		UnicodeString typ_str = get_IniTypeStr(fp);
+		UnicodeString pnam	  = ExtractFilePath(fnam);
 		if		(!typ_str.IsEmpty())							tnam.cat_sprintf(_T(" [%s]"), typ_str.c_str());
 		else if (SameText(fnam, to_absolute_name(ReplaceLogName)))	tnam.UCAT_T(" [文字列置換ログ]");
 		else if (SameText(fnam, to_absolute_name(GrepFileName)))	tnam.UCAT_T(" [GREPログ]");
 		else if (is_MenuFile(fp))								tnam.UCAT_T(" [メニュー定義]");
 		else if (is_ResultList(fp))								tnam.UCAT_T(" [結果リスト]");
-		else if (SameText(ExtractFilePath(fnam), ExePath)) {
+		else if (is_ExePath(pnam)) {
 			UnicodeString nnam = ExtractFileName(fnam);
 			if		(SameText(nnam, TAGDATA_FILE))	tnam.UCAT_T(" [タグデータ]");
 			else if (SameText(nnam, WEBMAP_TPLT))	tnam.UCAT_T(" [マップ表示テンプレート]");
@@ -8450,13 +8545,13 @@ UnicodeString get_IniTypeStr(file_rec *fp)
 {
 	if (!fp || fp->is_dummy || fp->is_ftp || fp->is_virtual || !test_FileExt(fp->f_ext, ".ini")) return EmptyStr;
 
-	UnicodeString fnam = fp->f_name;
+	UnicodeString fnam = cv_VirToOrgName(fp->f_name);
 	if (SameText(fnam, IniFile->FileName))	return "使用中の設定";
 	if (SameText(fnam, TabGroupName))		return "使用中のタブグループ";
 	if (SameText(fnam, to_absolute_name(IniFile->ReadStrGen(_T("DistrDlgFileName"), DISTR_FILE))))
 											return "振り分け登録";
 
-	if (SameText(ExtractFilePath(fnam), ExePath)) {
+	if (is_ExePath(ExtractFilePath(fnam))) {
 		UnicodeString nnam = ExtractFileName(fnam);
 		if (SameText(nnam, HILT_INI_FILE))	return "構文強調表示定義";
 		if (SameText(nnam, DIR_HIST_FILE))	return "全体ディレクトリ履歴";

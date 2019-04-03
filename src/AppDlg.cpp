@@ -1297,7 +1297,7 @@ void __fastcall TAppListDlg::LaunchListBoxData(TWinControl *Control, int Index, 
 void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);	if (KeyStr.IsEmpty()) return;
-	UnicodeString CmdStr = KeyFuncList->Values[(IsIncSea? "S:": "F:") + KeyStr];
+	UnicodeString CmdStr = KeyFuncList->Values[(IsIncSea? "S:" : "F:") + KeyStr];
 
 	if (IsIncSea) {
 		CmdStr = REPLACE_TI(CmdStr, "IncSearchUp",   "CursorUp");

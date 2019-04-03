@@ -33,6 +33,7 @@ class TOptionDlg : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
 	TAction *AddAssoAction;
+	TAction *AddDrvAction;
 	TAction *AddEtcEditorAction;
 	TAction *AddExtColAction;
 	TAction *AddKeyAction;
@@ -41,6 +42,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *AddStdCmdAction;
 	TAction *AddToolAction;
 	TAction *ChgAssoAction;
+	TAction *ChgDrvAction;
 	TAction *ChgEtcEditorAction;
 	TAction *ChgExtColAction;
 	TAction *ChgKeyAction;
@@ -49,6 +51,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ChgToolAction;
 											//<<<<<<<X86_SPI
 	TAction *DefTagColAction;
+	TAction *DelDrvAction;
 	TAction *DelKeyAction;
 	TAction *DisableColAction;
 	TAction *DisableTimColAction;
@@ -68,6 +71,7 @@ __published:	// IDE で管理されるコンポーネント
 	TBevel *Bevel3;
 	TButton *AddColBtn;
 	TButton *AddDirBtn;
+	TButton *AddDrvBtn;
 	TButton *AddEdtBtn;
 	TButton *AddExtBtn;
 	TButton *AddKeyBtn;
@@ -82,6 +86,7 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *Button18;
 	TButton *CanButton;
 	TButton *ChgColBtn;
+	TButton *ChgDrvBtn;
 	TButton *ChgEdtBtn;
 	TButton *ChgExtBtn;
 	TButton *ChgKeyBtn;
@@ -91,6 +96,7 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *CmdDelBtn;
 	TButton *DelColBtn;
 	TButton *DelDirBtn;
+	TButton *DelDrvBtn;
 	TButton *DelEdtBtn;
 	TButton *DelExtBtn;
 	TButton *DelKeyBtn;
@@ -150,7 +156,8 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *RefTimColBtn;
 	TButton *RefTmpDirBtn;
 	TButton *RefTxtEditBtn;
-											//<<<<<<<X86_SPI
+	TButton *RefVDrvBtn;
+												//<<<<<<<X86_SPI
 	TButton *TestSndFindFinBtn;
 	TButton *TestSndTaskFinBtn;
 	TButton *TestSndWatchBtn;
@@ -398,6 +405,7 @@ __published:	// IDE で管理されるコンポーネント
 	TComboBox *SizeFmtComboBox;
 	TComboBox *StdCmdComboBox;
 	TComboBox *TabStyleComboBox;
+	TComboBox *VirDrvComboBox;
 	TComboBox *WheelBtnF0ComboBox;
 	TComboBox *WheelBtnF1ComboBox;
 	TComboBox *WheelBtnF2ComboBox;
@@ -440,6 +448,7 @@ __published:	// IDE で管理されるコンポーネント
 	TEdit *TextEditorEdit;
 	TEdit *TimerCmd2Edit;
 	TEdit *TimerCnd2Edit;
+	TEdit *VirDriveEdit;
 	TGroupBox *AppListGroupBox;
 	TGroupBox *BgImageGroupBox;
 	TGroupBox *BinEditGroupBox;
@@ -464,6 +473,7 @@ __published:	// IDE で管理されるコンポーネント
 	TGroupBox *FoldGroupBox;
 	TGroupBox *FontGroupBox;
 	TGroupBox *GroupBox1;
+	TGroupBox *GroupBox2;
 	TGroupBox *H2TGroupBox;
 	TGroupBox *HotKeyGroupBox;
 	TGroupBox *ImgEditGroupBox;
@@ -661,6 +671,7 @@ __published:	// IDE で管理されるコンポーネント
 	TListBox *StdCmdListBox;
 	TListBox *TagColListBox;
 	TListBox *TimColListBox;
+	TListBox *VirDrvListBox;
 	TMenuItem *Frmt_B_Item;
 	TMenuItem *Frmt_D_Item;
 	TMenuItem *Frmt_F_Item;
@@ -879,6 +890,14 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall AppDesignBtnClick(TObject *Sender);
 	void __fastcall AppColorBtnClick(TObject *Sender);
 	void __fastcall RefCmdGitExeBtnClick(TObject *Sender);
+	void __fastcall VirDrvListBoxClick(TObject *Sender);
+	void __fastcall AddDrvActionExecute(TObject *Sender);
+	void __fastcall AddDrvActionUpdate(TObject *Sender);
+	void __fastcall ChgDrvActionExecute(TObject *Sender);
+	void __fastcall ChgDrvActionUpdate(TObject *Sender);
+	void __fastcall DelDrvActionExecute(TObject *Sender);
+	void __fastcall DelDrvActionUpdate(TObject *Sender);
+	void __fastcall RefVDrvBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	MarkList *FindMarkList;

@@ -178,6 +178,7 @@ object SelDriveDlg: TSelDriveDlg
         Width = 61
       end
       item
+        AllowClick = False
         ImageIndex = -1
         Style = hsOwnerDraw
         Width = 50

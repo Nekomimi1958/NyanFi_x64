@@ -884,6 +884,7 @@ extern TStringList *DirStack;
 extern TStringList *PathMaskList;
 extern TStringList *RegDirList;
 extern TStringList *ProtectDirList;
+extern TStringList *VirDriveList;
 extern TStringList *ColorList;
 extern TStringList *ExtColList;
 extern TStringList *AssociateList;
@@ -1425,10 +1426,13 @@ struct drive_info {
 	UnicodeString drive_str;
 	bool		  accessible;
 	bool		  ejectable;
+	bool		  is_virtual;
 	int			  drv_type;
 	UnicodeString type_str;
 	UnicodeString volume;
+	UnicodeString label;
 	UnicodeString unc;
+	UnicodeString mnt_dir;
 	UnicodeString f_system;
 	UnicodeString bus_type;
 	bool		  is_NTFS;
@@ -1673,6 +1677,11 @@ drive_info *get_DriveInfoList();
 drive_info *get_DriveInfo(UnicodeString dstr);
 UnicodeString get_VolumeInfo(UnicodeString dnam, UnicodeString *fsys = NULL);
 
+UnicodeString mount_VirDriveList(int idx);
+UnicodeString get_VirMountDir(UnicodeString drv);
+UnicodeString cv_VirToOrgName(UnicodeString fnam);
+bool is_ExePath(UnicodeString pnam);
+
 void get_DriveLogList(UnicodeString dstr, TStringList *lst, double &r_min, double &r_max);
 void update_DriveLog(bool save = false);
 
@@ -1756,6 +1765,7 @@ TColor get_FileColor(file_rec *fp, TColor col_x);
 TColor get_ExtColor(UnicodeString fext, TColor col = col_fgList);
 TColor get_TimeColor(TDateTime dt, TColor col_def);
 TColor get_SizeColor(__int64 size, TColor col_def);
+TColor get_LogColor(UnicodeString s);
 
 UnicodeString get_DirNwlName(UnicodeString pnam);
 UnicodeString get_DispName(file_rec *fp);
