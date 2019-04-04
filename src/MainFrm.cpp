@@ -1211,7 +1211,7 @@ void __fastcall TNyanFiForm::SetFindBusy(bool Value)
 	}
 
 	for (int i=0; i<MainMenu1->Items->Count; i++) MainMenu1->Items->Items[i]->Enabled = !Value;
-	ToolBar1->Enabled = !Value;
+	ToolBarF->Enabled = !Value;
 	set_CloseButton(!Value);
 }
 //---------------------------------------------------------------------------
@@ -1233,7 +1233,7 @@ void __fastcall TNyanFiForm::SetCalcBusy(bool Value)
 	}
 
 	for (int i=0; i<MainMenu1->Items->Count; i++) MainMenu1->Items->Items[i]->Enabled = !Value;
-	ToolBar1->Enabled = !Value;
+	ToolBarF->Enabled = !Value;
 	set_CloseButton(!Value);
 }
 //---------------------------------------------------------------------------
@@ -2498,7 +2498,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 		ClearNopStt();
 		Handled = true;
 		//ファイラーのツールバー
-		if (pCtrl==ToolBar1) ExeEventCommandMP(OnFlTbRClick);
+		if (pCtrl==ToolBarF) ExeEventCommandMP(OnFlTbRClick);
 		//タブバー
 		else if (pCtrl==TabControl1 || pCtrl==TabPanel) {
 			if (!OnTabRClick.IsEmpty())
@@ -2822,22 +2822,9 @@ bool __fastcall TNyanFiForm::UpdateBgImage(
 
 			//背景色ブレンド
 			if (BgColAlpha>0) {
-				BLENDFUNCTION blend_f;
-				blend_f.BlendOp 			= AC_SRC_OVER;
-				blend_f.BlendFlags			= 0;
-				blend_f.SourceConstantAlpha = BgColAlpha;
-				blend_f.AlphaFormat 		= 0;
-
-				std::unique_ptr<Graphics::TBitmap> bp_b(new Graphics::TBitmap());
-				bp_b->SetSize(8, 8);
-				TRect rc_b = Rect(0, 0, 8, 8);
 				for (int i=0; i<MAX_FILELIST; i++) {
-					flist_stt *lst_stt = &ListStt[i];
-					bp_b->Canvas->Brush->Style = bsSolid;
-					bp_b->Canvas->Brush->Color = get_FlBgColor(lst_stt);
-					bp_b->Canvas->FillRect(rc_b);
-					::AlphaBlend(BgBuff[i]->Canvas->Handle, 0, 0, BgBuff[i]->Width, BgBuff[i]->Height,
-									bp_b->Canvas->Handle, 0, 0, 8, 8, blend_f);
+					alpha_blend_Rect(BgBuff[i]->Canvas, 0, 0, BgBuff[i]->Width, BgBuff[i]->Height,
+										get_FlBgColor(&ListStt[i]), BgColAlpha);
 				}
 			}
 		}
@@ -3880,7 +3867,7 @@ void __fastcall TNyanFiForm::SetupFont()
 	GrepStatusBar->ClientHeight = get_FontHeight(SttBarFont, 4);
 
 	TabControl1->Font->Assign(TabBarFont);
-	ToolBar1->Font->Assign(ToolBarFont);
+	ToolBarF->Font->Assign(ToolBarFont);
 	ToolBarV->Font->Assign(ToolBarFont);
 	ToolBarI->Font->Assign(ToolBarFont);
 	ToolBarI2->Font->Assign(ToolBarFont);
@@ -4271,7 +4258,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	ExPopupMenu->AutoHotkeys = ak_flag;
 
 	//ツールバー
-	ToolBar1->Visible  = ShowToolBar;
+	ToolBarF->Visible  = ShowToolBar;
 	ToolBarV->Visible  = ShowToolBarV;
 	if (!IS_FullScr()) {
 		ToolBarI2->Visible = ShowToolBarI && ShowImgSidebar && ToolBarISide;
@@ -4380,8 +4367,8 @@ void __fastcall TNyanFiForm::SetupToolBarColor(bool act_sw, bool bg_only)
 {
 	TColor cl_gr1 = act_sw? col_bgTlBar1 : GrayCol(col_bgTlBar1);
 	TColor cl_gr2 = act_sw? col_bgTlBar2 : GrayCol(col_bgTlBar2);
-	ToolBar1->GradientStartColor  = cl_gr1;
-	ToolBar1->GradientEndColor	  = cl_gr2;
+	ToolBarF->GradientStartColor  = cl_gr1;
+	ToolBarF->GradientEndColor	  = cl_gr2;
 	ToolBarV->GradientStartColor  = cl_gr1;
 	ToolBarV->GradientEndColor	  = cl_gr2;
 	ToolBarI->GradientStartColor  = cl_gr1;
@@ -4392,8 +4379,8 @@ void __fastcall TNyanFiForm::SetupToolBarColor(bool act_sw, bool bg_only)
 	FKeyBar->GradientEndColor	  = cl_gr2;
 
 	if (!bg_only) {
-		ToolBar1->Font->Color	  = col_fgTlBar;
-		ToolBar1->HotTrackColor	  = col_htTlBar;
+		ToolBarF->Font->Color	  = col_fgTlBar;
+		ToolBarF->HotTrackColor	  = col_htTlBar;
 		ToolBarV->Font->Color	  = col_fgTlBar;
 		ToolBarV->HotTrackColor	  = col_htTlBar;
 		ToolBarI->Font->Color	  = col_fgTlBar;
@@ -4438,7 +4425,7 @@ void __fastcall TNyanFiForm::UpdateToolBtn(int scr_mode)
 
 	switch (scr_mode) {
 	case SCMD_FLIST:
-		tp = ToolBar1;
+		tp = ToolBarF;
 		i_lst = IconImgList;
 		break;
 	case SCMD_TVIEW:
@@ -4508,6 +4495,37 @@ void __fastcall TNyanFiForm::UpdateToolBtn(int scr_mode)
 }
 
 //---------------------------------------------------------------------------
+//ツールボタンの実行
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ToolBtnClick(TObject *Sender)
+{
+	TToolButton *bp = dynamic_cast<TToolButton *>(Sender);
+	if (bp==NULL) return;
+
+	//他の画面モードのアクセラレータキーによる誤動作防止
+	if (ScrMode==SCMD_FLIST && bp->Parent!=ToolBarF) return;
+	if (ScrMode==SCMD_TVIEW && bp->Parent!=ToolBarV) return;
+	if (ScrMode==SCMD_IVIEW && bp->Parent!=ToolBarI && bp->Parent!=ToolBarI2) return;
+
+	CancelKeySeq();
+
+	TStringList *lst = GetCurBtnList();
+	int tag = bp->Tag;
+	if (lst && tag>=0 && tag<lst->Count) {
+		UnicodeString cmd = get_csv_item(lst->Strings[tag], 1);
+		if (contains_wd_i(get_CmdStr(cmd), _T("ExPopupMenu|PopupMainMenu|PopupTab|RegDirPopup"))) {
+			ButtonPos = bp->ClientToScreen(Point(0, bp->Height));
+			ActionOptStr.USET_T("ButtonPos");
+		}
+		else {
+			ActionOptStr.USET_T("MousePos");
+		}
+
+		if (!ExeAliasOrCommands(cmd)) SetActionAbort(GlobalErrMsg);
+	}
+}
+
+//---------------------------------------------------------------------------
 //ファンクションキーボタンの初期化
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::InitFKeyBtn()
@@ -4545,6 +4563,31 @@ void __fastcall TNyanFiForm::InitFKeyBtn()
 	}
 	set_RedrawOn(tp);
 }
+//---------------------------------------------------------------------------
+//ファンクションキーボタンの実行
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::FKeyBtnClick(TObject *Sender)
+{
+	TToolButton *bp = (TToolButton *)Sender;
+	UnicodeString cmds = bp->Hint;
+
+	if (USAME_TS(cmds, "Help")) {
+		int idx = 4;
+		if (FileListBox[CurListTag]->Focused())
+			idx = (CurStt->is_Work? 60 : CurStt->is_IncSea? 50 : 4);
+		else if (ScrMode==SCMD_TVIEW)
+			idx = TxtViewer->isIncSea? 50 : 6;
+		else if (ScrMode==SCMD_IVIEW)
+			idx = 7;
+		HtmlHelpContext(idx);
+	}
+	else {
+		if (StartsText("ExeCommands_", cmds)) cmds = exclude_quot(get_PrmStr(cmds));
+		ActionOptStr.USET_T("MousePos");
+		if (!ExeAliasOrCommands(cmds)) SetActionAbort(GlobalErrMsg);
+	}
+}
+
 //---------------------------------------------------------------------------
 //ファンクションキーボタンの更新
 //---------------------------------------------------------------------------
@@ -4661,14 +4704,14 @@ void __fastcall TNyanFiForm::FKeyBtnMouseUp(TObject *Sender, TMouseButton Button
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::UpdateToolDriveBtn()
 {
-	if (ToolBar1->Visible) {
-		set_RedrawOff(ToolBar1);
+	if (ToolBarF->Visible) {
+		set_RedrawOff(ToolBarF);
 		{
-			for (int i=0; i<ToolBar1->ButtonCount; i++) {
+			for (int i=0; i<ToolBarF->ButtonCount; i++) {
 				TStringDynArray itm_buf = get_csv_array(ToolBtnList->Strings[i], 3, true);
 				UnicodeString dstr = itm_buf[1];
 				if (remove_top_text(dstr, _T("ChangeDrive_"))) {
-					TToolButton *bp = ToolBar1->Buttons[i];
+					TToolButton *bp = ToolBarF->Buttons[i];
 					bp->Visible = false;
 					bool found  = false;
 					for (int j=0; j<DriveInfoList->Count && !found; j++) {
@@ -4680,12 +4723,12 @@ void __fastcall TNyanFiForm::UpdateToolDriveBtn()
 				}
 			}
 		}
-		set_RedrawOn(ToolBar1);
+		set_RedrawOn(ToolBarF);
 	}
 }
 
 //---------------------------------------------------------------------------
-//画面モードの切り換え
+//画面モードの切換
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetScrMode(
 	int scr_mode,	//モード (default = SCMD_FLIST)
@@ -4701,26 +4744,32 @@ void __fastcall TNyanFiForm::SetScrMode(
 	if (ColorPicker->Visible) ColorPicker->Close();
 
 	ScrMode = scr_mode;
+	UserModule->ScrMode = ScrMode;
 	BlinkTimer->Enabled = false;
 
-	//メニュー表示の切り換え
+	//メニュー表示の切換
 	FindMenu->Visible = ScrMode==SCMD_FLIST || ScrMode==SCMD_TVIEW;
 	ToolMenu->Visible = ScrMode==SCMD_FLIST;
 
-	//ファンクションキーバーの切り換え
+	//ツールバーの切替
+	for (int i=0; i<ToolBarF->ButtonCount;  i++) ToolBarF->Buttons[i]->Enabled  = (ScrMode==SCMD_FLIST);
+	for (int i=0; i<ToolBarV->ButtonCount;  i++) ToolBarV->Buttons[i]->Enabled  = (ScrMode==SCMD_TVIEW);
+	for (int i=0; i<ToolBarI->ButtonCount;  i++) ToolBarI->Buttons[i]->Enabled  = (ScrMode==SCMD_IVIEW);
+	for (int i=0; i<ToolBarI2->ButtonCount; i++) ToolBarI2->Buttons[i]->Enabled = (ScrMode==SCMD_IVIEW);
+	if (ScrMode==SCMD_FLIST) UpdateToolDriveBtn();
+
+	//ファンクションキーバーの切換
 	UpdateFKeyBtn();
 
 	switch (ScrMode) {
-	case SCMD_TVIEW:
-		//テキストビュアー
+	case SCMD_TVIEW:	//テキストビュアー
 		TxtViewPanel->Visible = true;
 		MainPanel->Visible	  = false;
 		GrepPanel->Visible	  = false;
 		ImgViewPanel->Visible = false;
 		break;
 
-	case SCMD_IVIEW:
-		//イメージビュアー
+	case SCMD_IVIEW:	//イメージビュアー
 		ImgViewPanel->Visible = true;
 		MainPanel->Visible	  = false;
 		GrepPanel->Visible	  = false;
@@ -4730,8 +4779,7 @@ void __fastcall TNyanFiForm::SetScrMode(
 		BlinkTimer->Enabled   = WarnHighlight;
 		break;
 
-	case SCMD_GREP:
-		//文字列検索(GREP)
+	case SCMD_GREP:		//文字列検索(GREP)
 		GrepPanel->Visible	  = true;
 		MainPanel->Visible	  = false;
 		TxtViewPanel->Visible = false;
@@ -4739,8 +4787,7 @@ void __fastcall TNyanFiForm::SetScrMode(
 		GrepSttSplitterMoved(GrepSttSplitter);
 		break;
 
-	default:
-		//ファイルリスト
+	default:			//ファイルリスト
 		HotPosImage->Visible  = false;
 		MainPanel->Visible	  = true;
 		GrepPanel->Visible	  = false;
@@ -5895,7 +5942,8 @@ bool __fastcall TNyanFiForm::PopupDriveMenu(
 	else {
 		bool div_p = (DivFileListUD && DivDirInfUD);
 		TSpeedButton *bp = (tag==0)? (div_p? L_SelDrvBtn2 : L_SelDrvBtn) : (div_p? R_SelDrvBtn2 : R_SelDrvBtn);
-		p = ActionOptIsMousePos()? Mouse->CursorPos : bp->ClientToScreen(Point(0, bp->Height));
+		p = ActionOptIsMousePos()? Mouse->CursorPos :
+		   ActionOptIsButtonPos()? ButtonPos : bp->ClientToScreen(Point(0, bp->Height));
 	}
 	ActionOptStr = EmptyStr;
 	pPop->Popup(p.x, p.y);
@@ -5969,7 +6017,8 @@ void __fastcall TNyanFiForm::PopupRegDirMenu(const _TCHAR *id_str)
 	//メニュー表示
 	int tag = USAME_TI(id_str, "OppDir")? OppListTag : CurListTag;
 	TPanel *pp = (tag==0)? L_DirPanel : R_DirPanel;
-	TPoint p = ActionOptIsMousePos()? Mouse->CursorPos : pp->ClientToScreen(Point(0, pp->Height));
+	TPoint p = ActionOptIsMousePos()? Mouse->CursorPos :
+			  ActionOptIsButtonPos()? ButtonPos : pp->ClientToScreen(Point(0, pp->Height));
 	ActionOptStr = EmptyStr;
 	pPop->Popup(p.x, p.y);
 }
@@ -6008,7 +6057,8 @@ void __fastcall TNyanFiForm::PopupTabMenu()
 	if (pPop->Items->Count==0) return;
 
 	//メニュー表示
-	TPoint p = ActionOptIsMousePos()? Mouse->CursorPos : TabPanel->ClientToScreen(Point(2, TabPanel->Height));
+	TPoint p = ActionOptIsMousePos()? Mouse->CursorPos :
+			  ActionOptIsButtonPos()? ButtonPos : TabPanel->ClientToScreen(Point(2, TabPanel->Height));
 	ActionOptStr = EmptyStr;
 	pPop->Popup(p.x, p.y);
 }
@@ -6199,7 +6249,7 @@ void __fastcall TNyanFiForm::SubListBoxExit(TObject *Sender)
 //---------------------------------------------------------------------------
 //追加メニューを設定
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::SetExtMenuItem(TMenuItem *m_item, 
+void __fastcall TNyanFiForm::SetExtMenuItem(TMenuItem *m_item,
 	TStringList *lst,		//項目リスト
 	int tag_base,			//識別タグのベース
 	int s_idx)				//抽出サブメニューの親のインデックス
@@ -8999,8 +9049,12 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 	if (fp) {
 		//仮想ディレクトリ内のファイルを一時解凍
 		if (!fp->is_dir && fp->is_virtual && !fp->failed && fp->f_attr!=faInvalid) {
-			if (force || (need_inf && ViewArcInf && (test_FileExt(fp->f_ext, FEXT_ARCVIEW) || is_Viewable(fp))))
-				fp->failed = !SetTmpFile(fp);
+			if (force || (need_inf && ViewArcInf && (test_FileExt(fp->f_ext, FEXT_ARCVIEW) || is_Viewable(fp)))) {
+				if (usr_ARC->IsRunning(fp->arc_name))
+					FinfSkipped = true;	//アーカイバ動作中の場合スキップ
+				else
+					fp->failed = !SetTmpFile(fp);
+			}
 		}
 		//FTPで強制取得ならダウンロード
 		else if (fp->is_ftp) {
@@ -9013,7 +9067,7 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 			i_lst->Assign(fp->inf_list);
 		}
 		//なければ取得
-		else if (need_inf) {
+		else if (!FinfSkipped && need_inf) {
 			if (has_KeyDownMsg()) {
 				FinfSkipped = true;	//未処理のキー入力がある場合スキップ
 			}
@@ -9353,19 +9407,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 
 	//カーソル行背景
 	if (csr_style==psSolid && CursorAlpha>0) {
-		BLENDFUNCTION blend_f;
-		blend_f.BlendOp 			= AC_SRC_OVER;
-		blend_f.BlendFlags			= 0;
-		blend_f.SourceConstantAlpha = CursorAlpha;
-		blend_f.AlphaFormat 		= 0;
-
-		std::unique_ptr<Graphics::TBitmap> bp_b(new Graphics::TBitmap());
-		bp_b->SetSize(8, 8);
-		bp_b->Canvas->Brush->Style = bsSolid;
-		bp_b->Canvas->Brush->Color = lst_stt->color_Cursor;
-		bp_b->Canvas->FillRect(TRect(0, 0, 8, 8));
-		::AlphaBlend(tmp_cv->Handle, 0, 0, tmp_rc.Width(), tmp_rc.Height(),
-						bp_b->Canvas->Handle, 0, 0, 8, 8, blend_f);
+		alpha_blend_Rect(tmp_cv, 0, 0, tmp_rc.Width(), tmp_rc.Height(), lst_stt->color_Cursor, CursorAlpha);
 	}
 
 	if (fp->is_dummy && is_separator(fp->alias)) {
@@ -10635,7 +10677,8 @@ void __fastcall TNyanFiForm::ShowExPopupMenu(TPoint p)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ShowExPopupMenu()
 {
-	TPoint p = ActionOptIsMousePos()? Mouse->CursorPos : FileListBox[CurListTag]->ClientToScreen(Point(10, 10));
+	TPoint p = ActionOptIsMousePos()? Mouse->CursorPos : 
+			  ActionOptIsButtonPos()? ButtonPos : FileListBox[CurListTag]->ClientToScreen(Point(10, 10));
 	ActionOptStr = EmptyStr;
 	ShowExPopupMenu(p);
 }
@@ -10665,14 +10708,6 @@ bool __fastcall TNyanFiForm::TestDelActionParam(const _TCHAR *prm)
 	}
 
 	return (idx!=-1);
-}
-
-//---------------------------------------------------------------------------
-//ActionOptStr == "MousePos" ? 
-//---------------------------------------------------------------------------
-bool __fastcall TNyanFiForm::ActionOptIsMousePos()
-{
-	return USAME_TI(ActionOptStr, "MousePos");
 }
 
 //---------------------------------------------------------------------------
@@ -14440,10 +14475,10 @@ void __fastcall TNyanFiForm::DotNyanDlgActionUpdate(TObject *Sender)
 	ap->Checked = file_exists(get_dotNaynfi(CurPath[CurListTag]));
 
 	//※Checked がボタンに反映されない場合がある現象に対処(バグ?)
-	if (ToolBar1->Visible) {
-		for (int i=0; i<ToolBar1->ButtonCount; i++) {
+	if (ToolBarF->Visible) {
+		for (int i=0; i<ToolBarF->ButtonCount; i++) {
 			if (USAME_TI(get_csv_item(ToolBtnList->Strings[i], 1), "DotNyanDlg"))
-				ToolBar1->Buttons[i]->Down = ap->Checked;
+				ToolBarF->Buttons[i]->Down = ap->Checked;
 		}
 	}
 }
@@ -20596,7 +20631,7 @@ void __fastcall TNyanFiForm::PopDirActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 //メインメニューをポップアップ表示
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::AssignToMenuItem(TMenuItem *m_item,  TMenuItem *src_m)
+void __fastcall TNyanFiForm::AssignToMenuItem(TMenuItem *m_item, TMenuItem *src_m)
 {
 	TMenuItem *mp = new TMenuItem(m_item);
 	mp->Caption 	= src_m->Caption;
@@ -20621,6 +20656,8 @@ void __fastcall TNyanFiForm::AssignToMenuItem(TMenuItem *m_item,  TMenuItem *src
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::PopupMainMenuActionExecute(TObject *Sender)
 {
+	int idx = !ActionParam.IsEmpty()? pos_i(ActionParam[1], "FESVLTOH") - 1 : -1;
+
 	FileMenuClick(FileMenu);
 
 	IconImgListP->Clear();
@@ -20631,11 +20668,23 @@ void __fastcall TNyanFiForm::PopupMainMenuActionExecute(TObject *Sender)
 	IV_ThumbPosAction->Execute();
 
 	ExPopupMenu->Items->Clear();
-	for (int i=0; i<MainMenu1->Items->Count; i++)
-		AssignToMenuItem(ExPopupMenu->Items, MainMenu1->Items->Items[i]);
+	if (idx!=-1) {
+		TMenuItem *src_m = MainMenu1->Items->Items[idx];
+		for (int i=0; i<src_m->Count; i++) AssignToMenuItem(ExPopupMenu->Items, src_m->Items[i]);
+	}
+	else {
+		for (int i=0; i<MainMenu1->Items->Count; i++) {
+			if (idx==-1 || i==idx) AssignToMenuItem(ExPopupMenu->Items, MainMenu1->Items->Items[i]);
+		}
+	}
+	reduction_MenuLine(ExPopupMenu->Items);
 
 	//表示
-	TPoint p = ActionOptIsMousePos()? Mouse->CursorPos : this->ClientToScreen(Point(0, 0));
+	int yp = (ScrMode==SCMD_FLIST && ToolBarF->Visible)? yp = ToolBarF->Height :
+			 (ScrMode==SCMD_TVIEW && ToolBarV->Visible)? yp = ToolBarV->Height :
+			 (ScrMode==SCMD_IVIEW && ToolBarI->Visible)? yp = ToolBarI->Height : 0;
+	TPoint p = ActionOptIsMousePos()? Mouse->CursorPos :
+			  ActionOptIsButtonPos()? ButtonPos : this->ClientToScreen(Point(0, yp));
 	ActionOptStr = EmptyStr;
 	ShowExPopupMenu(p);
 }
@@ -20748,20 +20797,15 @@ void __fastcall TNyanFiForm::ExePopMenuList(
 	}
 
 	//メニュー表示
-	TPoint p;
 	TPoint mp = Point(16, 16);
-	if (cp)
-		p = cp->ClientToScreen(mp);
-	else if (ActionOptIsMousePos())
-		p = Mouse->CursorPos;
-	else if (USAME_TI(ActionOptStr, "ListItemPos") || (fromFileList && !is_execmd))
-		p = CurListItemPos();
-	else {
-		p = TxtViewPanel->Visible? TextPaintBox->ClientToScreen(mp) :
-			ImgViewPanel->Visible? ImgScrollPanel->ClientToScreen(mp) :
-			GrepPanel->Visible?    ResultListBox->ClientToScreen(mp) :
-								   FileListBox[CurListTag]->ClientToScreen(mp);
-	}
+	TPoint p  = cp ? cp->ClientToScreen(mp) :
+		 ActionOptIsMousePos()? Mouse->CursorPos :
+		ActionOptIsButtonPos()? ButtonPos :
+		(USAME_TI(ActionOptStr, "ListItemPos") || (fromFileList && !is_execmd))? CurListItemPos() :
+		 TxtViewPanel->Visible? TextPaintBox->ClientToScreen(mp) :
+		 ImgViewPanel->Visible? ImgScrollPanel->ClientToScreen(mp) :
+			GrepPanel->Visible? ResultListBox->ClientToScreen(mp) :
+								FileListBox[CurListTag]->ClientToScreen(mp);
 
 	if (!fromMenuFile) ActionOptStr = EmptyStr;
 
@@ -20815,7 +20859,7 @@ void __fastcall TNyanFiForm::ExeMenuFileActionExecute(TObject *Sender)
 	std::unique_ptr<TStringList> fbuf(new TStringList());
 	if (load_MenuFile(ActionParam, fbuf.get())) {
 		fromMenuFile = true;
-		if (!ActionOptIsMousePos()) ActionOptStr.USET_T("ListItemPos");
+		if (!ActionOptIsMousePos() && !ActionOptIsButtonPos()) ActionOptStr.USET_T("ListItemPos");
 		ExePopMenuList(fbuf.get());
 		fromMenuFile = false;
 	}
@@ -22752,7 +22796,7 @@ void __fastcall TNyanFiForm::ShowToolBarActionExecute(TObject *Sender)
 	switch (ScrMode) {
 	case SCMD_FLIST:
 		SetToggleAction(ShowToolBar);
-		ToolBar1->Visible = ShowToolBar;
+		ToolBarF->Visible = ShowToolBar;
 		break;
 	case SCMD_TVIEW:
 		SetToggleAction(ShowToolBarV);
@@ -32771,46 +32815,6 @@ bool __fastcall TNyanFiForm::IsDoubleStep()
 {
 	return (DoublePage && ImgScrollPanel->Visible
 			&& !test_FileExt(ExtractFileExt(ViewFileName), FEXT_META FEXT_ICONVIEW));
-}
-
-//---------------------------------------------------------------------------
-//ツールボタンの実行
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ToolBtnClick(TObject *Sender)
-{
-	CancelKeySeq();
-
-	TStringList *lst = GetCurBtnList();
-	int tag = ((TComponent*)Sender)->Tag;
-	if (lst && tag>=0 && tag<lst->Count) {
-		ActionOptStr.USET_T("MousePos");
-		if (!ExeAliasOrCommands(get_csv_item(lst->Strings[tag], 1))) SetActionAbort(GlobalErrMsg);
-	}
-}
-
-//---------------------------------------------------------------------------
-//ファンクションキーボタンの実行
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FKeyBtnClick(TObject *Sender)
-{
-	TToolButton *bp = (TToolButton *)Sender;
-	UnicodeString cmds = bp->Hint;
-
-	if (USAME_TS(cmds, "Help")) {
-		int idx = 4;
-		if (FileListBox[CurListTag]->Focused())
-			idx = (CurStt->is_Work? 60 : CurStt->is_IncSea? 50 : 4);
-		else if (ScrMode==SCMD_TVIEW)
-			idx = TxtViewer->isIncSea? 50 : 6;
-		else if (ScrMode==SCMD_IVIEW)
-			idx = 7;
-		HtmlHelpContext(idx);
-	}
-	else {
-		if (StartsText("ExeCommands_", cmds)) cmds = exclude_quot(get_PrmStr(cmds));
-		ActionOptStr.USET_T("MousePos");
-		if (!ExeAliasOrCommands(cmds)) SetActionAbort(GlobalErrMsg);
-	}
 }
 
 //---------------------------------------------------------------------------

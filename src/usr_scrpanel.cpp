@@ -479,8 +479,7 @@ void __fastcall UsrScrollPanel::ScrPaintBoxPaint(TObject *Sender)
 					double r = 1.0 * (int)HitLines->Objects[i]/max_n;
 					int y = (int)(pp->ClientHeight * r);
 					if (y>lst_y && y<pp->ClientHeight) {
-						::AlphaBlend(cv->Handle, 0, y, w, 1,
-							bp_l->Canvas->Handle, 0, 0, w, 1, blend_f);
+						::AlphaBlend(cv->Handle, 0, y, w, 1, bp_l->Canvas->Handle, 0, 0, w, 1, blend_f);
 						lst_y = y;
 					}
 				}
@@ -492,35 +491,30 @@ void __fastcall UsrScrollPanel::ScrPaintBoxPaint(TObject *Sender)
 void __fastcall UsrScrollPanel::Repaint()
 {
 	//垂直スクロールバー
-	if (ScrPanelV->Visible) {
+	if (ScrPanelV->Visible && ScrKnobRectV.Height()>0) {
+		int yp = -1;
 		//リストボックス
 		if (AssoListBox && AssoListBox->Count>0) {
-			if (ScrKnobRectV.Height()>0) {
-				int yp = std::min((int)(1.0 * AssoListBox->TopIndex / AssoListBox->Count * AssoListBox->ClientHeight), ScrKnobMaxY);
-				ScrKnobRectV.Location = Point(0, yp);
-			}
+			yp = (int)(1.0 * AssoListBox->TopIndex / AssoListBox->Count * AssoListBox->ClientHeight);
 		}
 		//チェックリストボックス
 		else if (AssoChkListBox && AssoChkListBox->Count>0) {
-			if (ScrKnobRectV.Height()>0) {
-				int yp = std::min((int)(1.0 * AssoChkListBox->TopIndex / AssoChkListBox->Count * AssoChkListBox->ClientHeight), ScrKnobMaxY);
-				ScrKnobRectV.Location = Point(0, yp);
-			}
+			yp = (int)(1.0 * AssoChkListBox->TopIndex / AssoChkListBox->Count * AssoChkListBox->ClientHeight);
 		}
 		//グリッド
 		else if (AssoStrGrid && AssoStrGrid->RowCount>0) {
-			if (ScrKnobRectV.Height()>0) {
-				int yp = std::min((int)(1.0 * AssoStrGrid->TopRow / AssoStrGrid->RowCount * AssoStrGrid->ClientHeight), ScrKnobMaxY);
-				ScrKnobRectV.Location = Point(0, yp);
-			}
+			yp = (int)(1.0 * AssoStrGrid->TopRow / AssoStrGrid->RowCount * AssoStrGrid->ClientHeight);
 		}
 		//スクロールバー
 		else if (AssoScrollBar && AssoScrollBar->Max>0) {
 			double r = 1.0 * (AssoScrollBar->Position - AssoScrollBar->Min) / AssoScrollBar->Max;
-			int yp = std::min((int)(r * ScrPanelV->ClientHeight), ScrKnobMaxY);
-			ScrKnobRectV.Location = Point(0, yp);
+			yp = (int)(r * ScrPanelV->ClientHeight);
 		}
-		ScrPaintBoxV->Repaint();
+	
+		if (yp>=0) {
+			ScrKnobRectV.Location = Point(0, std::min(yp, ScrKnobMaxY));
+			ScrPaintBoxV->Repaint();
+		}
 	}
 
 	//水平スクロールバー

@@ -634,8 +634,13 @@ void __fastcall TUserModule::RefCmdNameActionExecute(TObject *Sender)
 		int s_start = cp->SelStart;
 		int s_len	= cp->SelLength;
 		InpCmdsDlg->toRefer = true;
+
 		InpCmdsDlg->ModeTabControl->TabIndex
-			= contains_s(wp->Name, _T('V'))? 1 : contains_s(wp->Name, _T('I'))? 2 : 0;
+			= contains_s(wp->Name, _T('V'))? 1 :
+			  contains_s(wp->Name, _T('I'))? 2 :
+				   (UserModule->ScrMode==2)? 1 :
+				   (UserModule->ScrMode==4)? 2 : 0;
+
 		if (InpCmdsDlg->ShowModal()==mrOk) {
 			cp->SelStart  = s_start;
 			cp->SelLength = s_len;

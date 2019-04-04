@@ -9,6 +9,7 @@
 #include "UserMdl.h"
 #include "Global.h"
 #include "CmdListDlg.h"
+#include "MainFrm.h"
 #include "BtnDlg.h"
 
 //---------------------------------------------------------------------------
@@ -119,21 +120,27 @@ void __fastcall TToolBtnDlg::OkButtonClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TToolBtnDlg::BtnCmdsComboBoxChange(TObject *Sender)
 {
-	UnicodeString anam = BtnCmdsComboBox->Text;
-	if (remove_top_Dollar(anam)) {
+	UnicodeString s = BtnCmdsComboBox->Text;
+	if (remove_top_Dollar(s)) {
 		//アイコン取得
 		UnicodeString inam;
 		//外部ツール
-		TStringDynArray itm_buf = record_of_csv_list(ExtToolList, anam, 4, EXTTOOL_CSVITMCNT);
+		TStringDynArray itm_buf = record_of_csv_list(ExtToolList, s, 4, EXTTOOL_CSVITMCNT);
 		if (itm_buf.Length==EXTTOOL_CSVITMCNT)
 			inam = itm_buf[1];
 		//追加メニュー
 		else {
-			itm_buf = record_of_csv_list(ExtMenuList, anam, 3, EXTMENU_CSVITMCNT);
+			itm_buf = record_of_csv_list(ExtMenuList, s, 3, EXTMENU_CSVITMCNT);
 			if (itm_buf.Length==EXTMENU_CSVITMCNT) inam = itm_buf[5];
 		}
 
 		if (!inam.IsEmpty()) IconEdit->Text = inam;
+	}
+	else if (remove_top_text(s, _T("PopupMainMenu_")) && s.Length()==1 && CaptionEdit->Text.IsEmpty()) {
+		int idx = pos_i(s[1], "FESVLTOH") - 1;
+		if (idx>=0 && idx<NyanFiForm->MainMenu1->Items->Count) {
+			CaptionEdit->Text = NyanFiForm->MainMenu1->Items->Items[idx]->Caption;
+		}
 	}
 }
 
@@ -210,12 +217,11 @@ void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index,
 	TCanvas *cv  = lp->Canvas;
 	cv->Font->Assign(lp->Font);
 	SetHighlight(cv, State.Contains(odSelected));
-	TColor org_bg = cv->Brush->Color;
 	TColor org_fg = cv->Font->Color;
 	cv->FillRect(Rect);
 
 	int x = Rect.Left + ScaledInt(6);
-	int y = Rect.Top + get_TopMargin(cv);
+	int y = Rect.Top + get_TopMargin(cv) + Scaled1;
 
 	TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[Index], 3, true);
 	//セパレータ
@@ -231,12 +237,14 @@ void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index,
 		rc.Right = BtnCmdsComboBox->Left - ScaledInt(6);
 		cv->Brush->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
 		cv->FillRect(rc);
+		if (State.Contains(odSelected)) alpha_blend_Rect(cv, rc, scl_Highlight, 48);
+
 		x += Scaled4;
 		if (usr_SH->draw_SmallIcon(to_absolute_name(get_actual_name(itm_buf[2])), cv, x, y)) x += ScaledInt(18);
-		cv->Font->Color = col_fgTlBar;
+		cv->Brush->Style = bsClear;
+		cv->Font->Color  = col_fgTlBar;
 		cv->TextOut(x, y, itm_buf[0]);
 
-		cv->Brush->Color = org_bg;
 		cv->Font->Color  = org_fg;
 		x = BtnCmdsComboBox->Left;
 		cv->TextOut(x, y, itm_buf[1]);

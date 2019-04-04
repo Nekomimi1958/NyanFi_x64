@@ -202,8 +202,7 @@ public:
 	~UserArcUnit();
 
 	int  GetArcType(UnicodeString arc_file);
-
-	bool IsRunning(int typ);
+	bool IsRunning(UnicodeString arc_file);
 	bool IsUnicode(int typ);
 	bool IsAvailable(int typ);
 	bool IsAvailable(UnicodeString arc_file);

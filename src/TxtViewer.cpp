@@ -1587,20 +1587,7 @@ void __fastcall TTxtViewer::AlphaBlendCsvCol(TCanvas *cv, int max_x, int y, int 
 	if (CsvCol==0) x -= TopMargin; else x -= HchWidth;
 	x++; w--;
 
-	if (x<max_x) {
-		BLENDFUNCTION blend_f;
-		blend_f.BlendOp             = AC_SRC_OVER;
-		blend_f.BlendFlags          = 0;
-		blend_f.SourceConstantAlpha = CellAlpha;
-		blend_f.AlphaFormat         = 0;
-
-		std::unique_ptr<Graphics::TBitmap> bp_b(new Graphics::TBitmap());
-		bp_b->SetSize(8, 8);
-		bp_b->Canvas->Brush->Style = bsSolid;
-		bp_b->Canvas->Brush->Color = color_Cursor;
-		bp_b->Canvas->FillRect(TRect(0, 0, 8, 8));
-		::AlphaBlend(cv->Handle, x, y, w, h, bp_b->Canvas->Handle, 0, 0, 8, 8, blend_f);
-	}
+	if (x<max_x) alpha_blend_Rect(cv, x, y, w, h, color_Cursor, CellAlpha);
 }
 
 //---------------------------------------------------------------------------

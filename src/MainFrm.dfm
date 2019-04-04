@@ -2208,7 +2208,7 @@ object NyanFiForm: TNyanFiForm
           end
         end
       end
-      object ToolBar1: TToolBar
+      object ToolBarF: TToolBar
         Left = 0
         Top = 0
         Width = 724

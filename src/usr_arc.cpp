@@ -183,11 +183,10 @@ arc_func * UserArcUnit::GetArcFunc(int typ)
 //---------------------------------------------------------------------------
 //“®ì’†‚©H
 //---------------------------------------------------------------------------
-bool UserArcUnit::IsRunning(int typ)
+bool UserArcUnit::IsRunning(UnicodeString arc_file)
 {
-	arc_func *fp = GetArcFunc(typ);
-	if (fp && fp->Available) return fp->GetRunning();
-	return false;
+	arc_func *fp = GetArcFunc(GetArcType(arc_file));
+	return(!fp || !fp->Available || fp->GetRunning());
 }
 
 //---------------------------------------------------------------------------

@@ -1035,7 +1035,7 @@ __published:	// IDE で管理されるコンポーネント
 	TTimer *WatchDirTimer;
 	TTimer *WatchTailTimer;
 	TToolBar *FKeyBar;
-	TToolBar *ToolBar1;
+	TToolBar *ToolBarF;
 	TToolBar *ToolBarI;
 	TToolBar *ToolBarI2;
 	TToolBar *ToolBarV;
@@ -1887,6 +1887,7 @@ private:	// ユーザー宣言
 	bool FinfSkipped;					//ファイル情報取得がスキップされた
 	bool isLoopHint;
 	TPoint LastP;						//イメージ移動中の前回のマウス位置
+	TPoint ButtonPos;					//メニュー表示用ボタン位置
 	bool IsEvenPage;					//見開き表示は偶数ページから
 	int  InhSeekBar;					//シークバー処理の抑止
 
@@ -2322,7 +2323,8 @@ private:	// ユーザー宣言
 
 	bool __fastcall TestActionParam(const _TCHAR *prm);
 	bool __fastcall TestDelActionParam(const _TCHAR *prm);
-	bool __fastcall ActionOptIsMousePos();
+	bool __fastcall ActionOptIsMousePos()	{ return USAME_TI(ActionOptStr, "MousePos"); }
+	bool __fastcall ActionOptIsButtonPos()	{ return USAME_TI(ActionOptStr, "ButtonPos"); }
 	bool __fastcall SetToggleAction(bool &sw);
 	UnicodeString __fastcall FormatParam(UnicodeString fmt);
 	void __fastcall ClipSaveList(TStringList *lst, const _TCHAR *tit);
@@ -2407,7 +2409,7 @@ private:	// ユーザー宣言
 	void __fastcall PosWorkProgress(__int64 idx, __int64 cnt);
 	TModalResult __fastcall DownloadWorkProgress(UnicodeString url, UnicodeString fnam, TControl *cp = NULL);
 
-	void __fastcall AssignToMenuItem(TMenuItem *m_item,  TMenuItem *src_m);
+	void __fastcall AssignToMenuItem(TMenuItem *m_item, TMenuItem *src_m);
 
 	void __fastcall SetTags(UnicodeString tags, bool sw_add = false);
 

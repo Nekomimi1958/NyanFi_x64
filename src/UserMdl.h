@@ -232,7 +232,6 @@ public:		// ユーザー宣言
 	TCursor crHandGrabR;
 
 	UnicodeString ExePath;		//NyanFi起動パス
-
 	UnicodeString CurFileName;	//カーソル位置のファイル名
 	UnicodeString CurPathName;	//現在のカレントパス名
 	UnicodeString OppPathName;	//現在の反対パス名
@@ -241,6 +240,8 @@ public:		// ユーザー宣言
 	TStringList *CmdParamList;	//コマンドパラメータの参照リスト
 
 	TRect FileListRect;			//ファイルリスト部分のスクリーン座標Rect
+
+	int ScrMode;				//画面モード
 
 	__fastcall TUserModule(TComponent* Owner);
 

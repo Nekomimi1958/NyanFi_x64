@@ -11617,7 +11617,7 @@ int get_TopMargin(TCanvas *cv)
 //---------------------------------------------------------------------------
 int get_TopMargin2(TCanvas *cv)
 {
-	return has_Leading(cv)? 1 : std::max(ListInterLn/2, Scaled2);
+	return has_Leading(cv)? Scaled1 : std::max(ListInterLn/2, Scaled2);
 }
 
 //---------------------------------------------------------------------------

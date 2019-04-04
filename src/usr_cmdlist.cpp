@@ -845,6 +845,18 @@ void get_PrmList(
 			_T("FI : ファイル情報を表示\n")
 			_T("LS : プレイリストを表示\n"));
 	}
+	else if (USAME_TI(cmd, "PopupMainMenu")) {
+		params.sprintf(_T("%s"),
+			_T("\n")
+			_T("F : ファイル\n")
+			_T("E : 編集\n")
+			_T("S : 検索\n")
+			_T("V : 表示\n")
+			_T("L : 一覧\n")
+			_T("T : ツール\n")
+			_T("O : 設定\n")
+			_T("H : ヘルプ\n"));
+	}
 	else if (USAME_TI(cmd, "RecentList")) {
 		params.USET_T("\nAC : 最近使ったすべての項目を削除\nBC : リンク切れ項目を整理\n");
 	}

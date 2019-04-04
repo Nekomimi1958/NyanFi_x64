@@ -118,8 +118,10 @@ TColor SelectWorB(TColor col, float rt = 1.0);
 TColor AdjustColor(TColor col, int adj);
 TColor Mix2Colors(TColor col1, TColor col2);
 void str_to_Color(TColor &col, UnicodeString s);
-
 void SetHighlight(TCanvas *cv, bool hl);
+
+void alpha_blend_Rect(TCanvas *cv, int x, int y, int w, int h, TColor col, int alpha);
+void alpha_blend_Rect(TCanvas *cv, TRect rc, TColor col, int alpha);
 
 void init_UpDown(TUpDown *udp, int n);
 
