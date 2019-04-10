@@ -150,7 +150,7 @@ private:	// ユーザー宣言
 	int ListSortMode;		//マーク/リポジトリ一覧のソートモード
 	int ListSortOdr[6];		//マーク/リポジトリ一覧のソート方向
 
-	void __fastcall WmNyanFiFlIcon(TMessage &msg);
+	void __fastcall WmNyanFiFlIcon(TMessage &msg) { EditHistGrid->Invalidate(); }
 
 	TWndMethod org_SttBar1WndProc;
 	void __fastcall SttBar1WndProc(TMessage &msg)

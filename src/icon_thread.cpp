@@ -8,6 +8,7 @@
 #include "icon_thread.h"
 #include "AppDlg.h"
 #include "EditHistDlg.h"
+#include "DirDlg.h"
 
 #pragma package(smart_init)
 
@@ -38,6 +39,10 @@ void __fastcall TGetIconThread::IconNotify()
 	//最近編集/閲覧したファイル一覧/栞マーク一覧
 	if (EditHistoryDlg && EditHistoryDlg->Visible)
 		::SendMessage(EditHistoryDlg->Handle, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
+
+	//特殊フォルダ一覧
+	if (RegDirDlg && RegDirDlg->Visible && RegDirDlg->IsSpecial)
+		::SendMessage(RegDirDlg->Handle, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
 }
 
 //---------------------------------------------------------------------------

@@ -74,8 +74,8 @@ void __fastcall TNewFileDlg::TplComboBoxDrawItem(TWinControl *Control, int Index
 	TCanvas *cv = TplComboBox->Canvas;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + 2;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled2;
+	int yp = Rect.Top  + get_TopMargin(cv);
 	UnicodeString tnam = TplComboBox->Items->Strings[Index];
 
 	//ƒAƒCƒRƒ“

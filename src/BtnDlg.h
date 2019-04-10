@@ -62,7 +62,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormResize(TObject *Sender);
 	bool __fastcall FormHelp(WORD Command, NativeInt Data, bool &CallHelp);
 
-
 private:	// ユーザー宣言
 	void __fastcall WmDropped(TMessage &msg);
 	UnicodeString __fastcall MakeCsvItem();

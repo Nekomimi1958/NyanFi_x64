@@ -231,7 +231,7 @@ public:		// ユーザー宣言
 	TCursor crSpuitTool;
 	TCursor crHandGrabR;
 
-	UnicodeString ExePath;		//NyanFi起動パス
+	UnicodeString ExePath;		//NyanFi実行パス
 	UnicodeString CurFileName;	//カーソル位置のファイル名
 	UnicodeString CurPathName;	//現在のカレントパス名
 	UnicodeString OppPathName;	//現在の反対パス名

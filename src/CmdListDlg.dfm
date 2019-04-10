@@ -18,97 +18,27 @@ object CmdFileListDlg: TCmdFileListDlg
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object OpPanel: TPanel
-    Left = 0
-    Top = 334
-    Width = 581
-    Height = 38
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 1
-    TabStop = True
-    DesignSize = (
-      581
-      38)
-    object OkBtn: TButton
-      Left = 488
-      Top = 6
-      Width = 80
-      Height = 26
-      Anchors = [akTop, akRight]
-      Caption = 'OK'
-      Default = True
-      TabOrder = 4
-      OnClick = OkBtnClick
-    end
-    object FilterEdit: TLabeledEdit
-      Left = 72
-      Top = 8
-      Width = 235
-      Height = 21
-      Anchors = [akLeft, akTop, akRight]
-      EditLabel.Width = 47
-      EditLabel.Height = 13
-      EditLabel.Caption = #12501#12451#12523#12479'(&F)'
-      LabelPosition = lpLeft
-      PopupMenu = UserModule.EditPopupMenuE
-      TabOrder = 0
-      OnChange = FilterEditChange
-      OnEnter = FilterEditEnter
-      OnExit = FilterEditExit
-      OnKeyDown = FilterEditKeyDown
-      OnKeyPress = FilterEditKeyPress
-    end
-    object MigemoCheckBox: TCheckBox
-      Left = 314
-      Top = 10
-      Width = 80
-      Height = 17
-      Anchors = [akTop, akRight]
-      Caption = '&Migemo'
-      TabOrder = 1
-    end
-    object CnfExeCheckBox: TCheckBox
-      Left = 483
-      Top = 10
-      Width = 92
-      Height = 17
-      Anchors = [akTop, akRight]
-      Caption = #30906#23450#21363#23455#34892
-      TabOrder = 3
-    end
-    object PreviewCheckBox: TCheckBox
-      Left = 393
-      Top = 10
-      Width = 86
-      Height = 17
-      Anchors = [akTop, akRight]
-      Caption = #12503#12524#12499#12517#12540
-      TabOrder = 2
-      OnClick = PreviewCheckBoxClick
-    end
-  end
   object HiddenCanBtn: TButton
     Left = 0
-    Top = 334
+    Top = 350
     Width = 581
     Height = 0
     Align = alBottom
     Cancel = True
     ModalResult = 2
-    TabOrder = 2
+    TabOrder = 1
   end
   object MainPanel: TPanel
     Left = 0
     Top = 0
     Width = 581
-    Height = 334
+    Height = 350
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     object PreviewSplitter: TSplitter
       Left = 0
-      Top = 152
+      Top = 168
       Width = 581
       Height = 4
       Cursor = crVSplit
@@ -117,7 +47,7 @@ object CmdFileListDlg: TCmdFileListDlg
     end
     object PreviewPanel: TPanel
       Left = 0
-      Top = 156
+      Top = 172
       Width = 581
       Height = 178
       Align = alBottom
@@ -238,18 +168,18 @@ object CmdFileListDlg: TCmdFileListDlg
       Left = 0
       Top = 17
       Width = 581
-      Height = 135
+      Height = 151
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
       DesignSize = (
         581
-        135)
+        151)
       object CmdFileGrid: TStringGrid
         Left = 0
         Top = 0
         Width = 581
-        Height = 135
+        Height = 151
         Anchors = [akLeft, akTop, akRight, akBottom]
         BorderStyle = bsNone
         Color = clAppWorkSpace
@@ -290,6 +220,95 @@ object CmdFileListDlg: TCmdFileListDlg
       end
     end
   end
+  object OpePanel: TPanel
+    Left = 0
+    Top = 350
+    Width = 581
+    Height = 22
+    Align = alBottom
+    AutoSize = True
+    BevelOuter = bvNone
+    TabOrder = 2
+    object OpeToolBar: TToolBar
+      Left = 0
+      Top = 0
+      Width = 501
+      Height = 22
+      Align = alClient
+      AutoSize = True
+      ButtonHeight = 19
+      ButtonWidth = 86
+      DrawingStyle = dsGradient
+      List = True
+      ShowCaptions = True
+      AllowTextButtons = True
+      TabOrder = 0
+      object FilterBtn: TToolButton
+        Left = 0
+        Top = 0
+        Caption = #12501#12451#12523#12479'(&F)'
+        ImageIndex = 0
+        Style = tbsTextButton
+        OnClick = FilterBtnClick
+      end
+      object FilterEdit: TEdit
+        Left = 63
+        Top = 0
+        Width = 120
+        Height = 19
+        Align = alLeft
+        Constraints.MinWidth = 60
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        PopupMenu = UserModule.EditPopupMenuE
+        TabOrder = 0
+        OnChange = FilterEditChange
+        OnEnter = FilterEditEnter
+        OnExit = FilterEditExit
+        OnKeyDown = FilterEditKeyDown
+        OnKeyPress = FilterEditKeyPress
+      end
+      object FilterSplitter: TSplitter
+        Left = 183
+        Top = 0
+        Width = 4
+        Height = 19
+      end
+      object MigemoBtn: TToolButton
+        Left = 187
+        Top = 0
+        Action = MigemoAction
+        Style = tbsTextButton
+      end
+      object PreviewBtn: TToolButton
+        Left = 234
+        Top = 0
+        Action = PreviewAction
+        Style = tbsTextButton
+      end
+      object CnfExeBtn: TToolButton
+        Left = 303
+        Top = 0
+        Action = CnfExeAction
+        Style = tbsTextButton
+      end
+    end
+    object OkBtn: TButton
+      Left = 501
+      Top = 0
+      Width = 80
+      Height = 22
+      Align = alRight
+      Caption = 'OK'
+      Default = True
+      TabOrder = 1
+      OnClick = OkBtnClick
+    end
+  end
   object ListPopupMenu: TPopupMenu
     Left = 79
     Top = 221
@@ -298,6 +317,12 @@ object CmdFileListDlg: TCmdFileListDlg
     end
     object RefEditSelAllItem: TMenuItem
       Action = EditSelectAllAction
+    end
+    object Sep_1: TMenuItem
+      Caption = '-'
+    end
+    object FitSizePosItem: TMenuItem
+      Action = UserModule.SizePosToFlieListAction
     end
   end
   object ActionList1: TActionList
@@ -316,6 +341,18 @@ object CmdFileListDlg: TCmdFileListDlg
       ShortCut = 32837
       OnExecute = ReqEditActionExecute
       OnUpdate = ReqEditActionUpdate
+    end
+    object MigemoAction: TAction
+      Caption = '&Migomo'
+      OnExecute = MigemoActionExecute
+    end
+    object PreviewAction: TAction
+      Caption = #12503#12524#12499#12517#12540'(&V)'
+      OnExecute = PreviewActionExecute
+    end
+    object CnfExeAction: TAction
+      Caption = #30906#23450#21363#23455#34892'(&X)'
+      OnExecute = CnfExeActionExecute
     end
   end
 end

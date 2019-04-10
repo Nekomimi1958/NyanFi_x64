@@ -1395,8 +1395,8 @@ void __fastcall TRenameDlg::CnvCharListBoxDrawItem(TWinControl *Control, int Ind
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int x = Rect.Left + 4;
-	int y = Rect.Top + get_TopMargin(cv);
+	int x = Rect.Left + Scaled4;
+	int y = Rect.Top  + get_TopMargin(cv);
 
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
@@ -1489,8 +1489,8 @@ void __fastcall TRenameDlg::AssRenListBoxDrawItem(TWinControl *Control, int Inde
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + 2;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled2;
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	int w_x = 50;
 	for (int i=0; i<lp->Count; i++)

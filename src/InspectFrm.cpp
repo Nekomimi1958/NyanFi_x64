@@ -273,8 +273,8 @@ void __fastcall TInspectForm::InspectGridDrawCell(TObject *Sender, int ACol, int
 	TStringGrid *gp = (TStringGrid*)Sender;
 	TCanvas *cv = gp->Canvas;
 	cv->Font->Assign(gp->Font);
-	int xp = Rect.Left + 4;
-	int yp = Rect.Top + get_TopMargin2(cv);
+	int xp = Rect.Left + Scaled4;
+	int yp = Rect.Top  + get_TopMargin2(cv);
 	UnicodeString cellstr = gp->Cells[ACol][ARow];
 
 	//’l‰ğÍ

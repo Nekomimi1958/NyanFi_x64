@@ -315,7 +315,7 @@ object AppListDlg: TAppListDlg
       OnUpdate = TopMostActionUpdate
     end
     object AppInfoAction: TAction
-      Caption = #12450#12503#12522#12465#12540#12471#12519#12531#24773#22577#12434#34920#31034'(&A)'
+      Caption = #12450#12503#12522#12465#12540#12471#12519#12531#24773#22577'(&A)'
       OnExecute = AppInfoActionExecute
     end
     object JumpLinkedAction: TAction

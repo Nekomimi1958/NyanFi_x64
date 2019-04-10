@@ -1941,11 +1941,8 @@ private:	// ユーザー宣言
 	UsrHintWindow *MsgHint;				//メッセージ、警告のヒント表示ウィンドウ
 	UsrHintWindow *KeyHint;				//2ストローク操作のヒント表示ウィンドウ
 
-	UnicodeString TabPinMark;
 	int TabPinWidth;
-
 	int PopMenuIndex;
-
 	int PrevListIdx;
 
 	TWindowState LastWinState;
@@ -2003,8 +2000,17 @@ private:	// ユーザー宣言
 	void __fastcall WmContextMnueProc(TMessage &msg);
 	void __fastcall MmMciNotify(TMessage &msg);
 	void __fastcall WmNyanfiAppearance(TMessage &msg);
-	void __fastcall WmNyanFiFlIcon(TMessage &msg);
-	void __fastcall WmNyanFiThumbnail(TMessage &msg);
+
+	void __fastcall WmNyanFiFlIcon(TMessage &msg)
+	{
+		if (ScrMode==SCMD_FLIST) {
+			FileListBox[0]->Invalidate();
+			FileListBox[1]->Invalidate();
+		}
+	}
+
+	void __fastcall WmNyanFiThumbnail(TMessage &msg) { if (ThumbnailGrid->Visible) ThumbnailGrid->Repaint(); }
+
 	void __fastcall WmNyanFiClpCopied(TMessage &msg);
 	void __fastcall WmActivate(TMessage &msg);
 

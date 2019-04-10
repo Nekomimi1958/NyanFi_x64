@@ -10,6 +10,7 @@
 #include "UserMdl.h"
 #include "Global.h"
 #include "MainFrm.h"
+#include "FileInfDlg.h"
 #include "DirDlg.h"
 
 //---------------------------------------------------------------------------
@@ -27,8 +28,11 @@ void __fastcall TRegDirDlg::FormCreate(TObject *Sender)
 {
 	ListScrPanel = new UsrScrollPanel(ListPanel, RegDirListBox, USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
 	EnvVarList	 = new TStringList();
+	SpDirList	 = new TStringList();
+	SpDirBuff	 = new TStringList();
 
 	IsSpecial = false;
+	ToFilter  = false;
 	IsAddMode = IsSelect = false;
 }
 
@@ -38,11 +42,29 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 	Caption = IsSpecial? "特殊フォルダ一覧" : "登録ディレクトリ";
 	CmdStr	= EmptyStr;
 
+	OpeToolBar->Visible 	 = IsSpecial;
+	ShowIconAction->Visible  = IsSpecial;
+	AddNyanFiAction->Visible = IsSpecial;
+
+	if (IsSpecial) {
+		setup_ToolBar(OpeToolBar);
+		FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
+		FilterEdit->Font->Assign(ToolBarFont);
+		FilterEdit->Width = IniFile->ReadIntGen(_T("SpecialDirFilterWidth"),	200);
+		FilterEdit->Text  = EmptyStr;
+
+		set_MigemoAction(MigemoAction, _T("SpecialDirMigemo"));
+		AndOrAction->Checked	= IniFile->ReadBoolGen(_T("SpecialDirFltAndOr"));
+		ShowIconAction->Checked = IniFile->ReadBoolGen(_T("SpecialDirShowIcon"), true);
+	}
+
 	IniFile->LoadPosInfo(this, DialogCenter, (IsSpecial? (IsSelect? "SelSpecialDir" : "SpecialDirList") : ""));
 
+	//ヘッダ
 	InitializeListHeader(RegDirHeader, _T("キー|名前|場所"));
 	THeaderSections *sp = RegDirHeader->Sections;
-	sp->Items[0]->MaxWidth = IsSpecial? 0 : 1000;
+	sp->Items[0]->MaxWidth	 = IsSpecial? 0 : 1000;
+	sp->Items[1]->FixedWidth = IsSpecial;
 
 	TListBox *lp = RegDirListBox;
 	lp->Clear();
@@ -51,8 +73,10 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 
 	//特殊フォルダ
 	if (IsSpecial) {
+		UseEnvVarAction->Visible = true;
 		UseEnvVarAction->Checked = IniFile->ReadBoolGen(_T("SpecialDirUseEnv"));
 		if (UseEnvVarAction->Checked) lp->Tag |= LBTAG_OPT_SDIR;
+		AddNyanFiAction->Checked = IniFile->ReadBoolGen(_T("SpecialDirAddNyanFi"));
 
 		//環境変数変換リストを作成
 		EnvVarList->Clear();
@@ -69,25 +93,15 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 		OptPanel->Visible	= false;
 		BlankPanel->Visible = false;
 
-		//一覧を取得(ワークリスト形式)
-		std::unique_ptr<TStringList> lst(new TStringList());
-		usr_SH->get_SpecialFolderList(lst.get());
+		UpdateSpDirList(true);
 
-		//名前の最大幅を取得
-		int n_wd = 0;
-		for (int i=0; i<lst->Count; i++) {
-			TStringDynArray itm_buf = split_strings_tab(lst->Strings[i]);
-			if (itm_buf.Length==2) n_wd = std::max(n_wd, lp->Canvas->TextWidth(itm_buf[1]));
-		}
-		sp->Items[0]->Width = 0;
-		sp->Items[1]->Width = n_wd + ScaledInt(24);
-		adjust_HeaderSecWidth(RegDirHeader, 2);
-
-		lp->Items->Assign(lst.get());
-		lp->ItemIndex = IndexOfDir(CurPathName);
+		(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)lp)->SetFocus();
+		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
 	}
 	//登録ディレクトリ
 	else {
+		UseEnvVarAction->Visible = false;
+
 		set_ButtonMark(HideOptBtn, UBMK_BDOWN);
 		set_ButtonMark(ShowOptBtn, UBMK_BUP);
 		HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
@@ -130,11 +144,12 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 		}
 
 		SetOptBtn();
+		lp->SetFocus();
 	}
 
-	lp->SetFocus();
 	ListScrPanel->UpdateKnob();
 
+	lp->DragMode = IsSpecial? dmManual : dmAutomatic;
 	UserModule->InitializeListBox(lp, ListScrPanel);
 	SelIndex = -1;
 }
@@ -144,7 +159,15 @@ void __fastcall TRegDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	UserModule->UninitializeListBox();
 
 	if (IsSpecial) {
-		IniFile->WriteBoolGen(_T("SpecialDirUseEnv"),	UseEnvVarAction);
+		IniFile->WriteIntGen( _T("SpecialDirFilterWidth"),	FilterEdit->Width);
+		IniFile->WriteBoolGen(_T("SpecialDirMigemo"),		MigemoAction);
+		IniFile->WriteBoolGen(_T("SpecialDirFltAndOr"),		AndOrAction);
+		IniFile->WriteBoolGen(_T("SpecialDirShowIcon"),		ShowIconAction);
+		IniFile->WriteBoolGen(_T("SpecialDirUseEnv"),		UseEnvVarAction);
+		IniFile->WriteBoolGen(_T("SpecialDirAddNyanFi"),	AddNyanFiAction);
+
+		SpDirList->Clear();
+		SpDirBuff->Clear();
 	}
 	else {
 		TListBox *lp = RegDirListBox;
@@ -176,6 +199,7 @@ void __fastcall TRegDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	if (IsSelect) Action = caFree;
 
 	IsSpecial = false;
+	ToFilter  = false;
 	IsAddMode = IsSelect = false;
 }
 //---------------------------------------------------------------------------
@@ -183,6 +207,8 @@ void __fastcall TRegDirDlg::FormDestroy(TObject *Sender)
 {
 	delete ListScrPanel;
 	delete EnvVarList;
+	delete SpDirList;
+	delete SpDirBuff;
 }
 
 //---------------------------------------------------------------------------
@@ -191,6 +217,96 @@ void __fastcall TRegDirDlg::FormResize(TObject *Sender)
 	if (!IsSpecial) SetOptBtn();
 
 	RegDirListBox->Invalidate();
+}
+
+//---------------------------------------------------------------------------
+//特殊フォルダ一覧の更新
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
+{
+	if (!IsSpecial) return;
+
+	//一覧を取得(ワークリスト形式)
+	if (reload) {
+		SpDirList->Clear();
+		usr_SH->get_SpecialFolderList(SpDirList);
+
+		//NyanFi 固有
+		if (AddNyanFiAction->Checked) {
+			SpDirList->Add("\t-");		//セパレータ
+			SpDirList->Add(ExePath   + "\t実行パス");
+			SpDirList->Add(TempPathA + "\t一時ディレクトリ");
+			if (!DownloadPath.IsEmpty())	SpDirList->Add(DownloadPath + "\tダウンロード");
+			if (usr_Migemo->Available)		SpDirList->Add(to_absolute_name(MigemoPath) + "\tMigemo");
+			if (!SpiDir.IsEmpty())			SpDirList->Add(to_absolute_name(SpiDir) + "\tSusie プラグイン");
+			if (!CmdGitExe.IsEmpty())		SpDirList->AddObject(CmdGitExe + "\tgit.exe",	  		  (TObject*)1);
+
+			//エディタ
+			SpDirList->Add("\t-");
+			if (!TextEditor.IsEmpty())		SpDirList->AddObject(TextEditor + "\tテキストエディタ",  (TObject*)1);
+			if (!ImageEditor.IsEmpty())		SpDirList->AddObject(ImageEditor + "\tイメージエディタ",  (TObject*)1);
+			if (!BinaryEditor.IsEmpty())	SpDirList->AddObject(BinaryEditor + "\tバイナリエディタ", (TObject*)1);
+			//その他のエディタ
+			std::unique_ptr<TStringList> x_lst(new TStringList());
+			for (int i=0; i<EtcEditorList->Count; i++) {
+				UnicodeString xnam = exclude_quot(EtcEditorList->ValueFromIndex[i]);
+				if (!starts_Dollar(xnam) || contains_PathDlmtr(xnam)) {
+					xnam = get_actual_path(xnam);
+					if (x_lst->IndexOf(xnam)==-1) x_lst->Add(get_base_name(xnam) + "\t" + xnam);
+				}
+			}
+			x_lst->Sort();
+			for (int i=0; i<x_lst->Count; i++) {
+				UnicodeString lbuf = x_lst->Strings[i];
+				SpDirList->AddObject(get_post_tab(lbuf) + ((i==0)? "\t|" : "\t") + get_pre_tab(lbuf), (TObject*)1);
+			}
+
+			//外部ツール
+			SpDirList->Add("\t-");
+			x_lst->Clear();
+			for (int i=0; i<ExtToolList->Count; i++) {
+				TStringDynArray itm_buf = get_csv_array(ExtToolList->Strings[i], 2, true);
+				UnicodeString xnam = itm_buf[1];	if (xnam.IsEmpty()) continue;
+				xnam = get_actual_path(xnam);
+				if (ExtractFileDrive(xnam).IsEmpty()) xnam = get_actual_name(xnam);
+				if (x_lst->IndexOf(xnam)==-1) x_lst->Add(get_base_name(xnam) + "\t" + xnam);
+			}
+			x_lst->Sort();
+			for (int i=0; i<x_lst->Count; i++) {
+				UnicodeString lbuf = x_lst->Strings[i];
+				SpDirList->AddObject(get_post_tab(lbuf) + "\t" + get_pre_tab(lbuf), (TObject*)1);
+			}
+		}
+	}
+
+	if (!FilterEdit->Text.IsEmpty()
+		&& (!MigemoAction->Checked || (MigemoAction->Checked && FilterEdit->Text.Length()>=IncSeaMigemoMin)))
+	{
+		filter_List(SpDirList, SpDirBuff, FilterEdit->Text, MigemoAction->Checked, AndOrAction->Checked);
+	}
+	else {
+		SpDirBuff->Assign(SpDirList);
+	}
+
+	//名前の最大幅を取得
+	TListBox *lp = RegDirListBox;
+	int n_wd = 0;
+	for (int i=0; i<SpDirBuff->Count; i++) {
+		UnicodeString dnam = get_post_tab(SpDirBuff->Strings[i]);
+		if (!dnam.IsEmpty()) {
+			int wd = lp->Canvas->TextWidth(dnam);
+			if ((int)SpDirBuff->Objects[i]==1 && ShowIconAction->Checked) wd += get_IcoWidth();
+			n_wd = std::max(n_wd, wd);
+		}
+	}
+
+	THeaderSections *sp = RegDirHeader->Sections;
+	sp->Items[0]->Width = 0;
+	sp->Items[1]->Width = n_wd + ScaledInt(24);
+	adjust_HeaderSecWidth(RegDirHeader, 2);
+
+	lp->Items->Assign(SpDirBuff);
+	lp->ItemIndex = IndexOfDir(CurPathName);
 }
 
 //---------------------------------------------------------------------------
@@ -220,13 +336,16 @@ int __fastcall TRegDirDlg::IndexOfDir(UnicodeString dnam)
 
 	if (IsSpecial) {
 		for (int i=0; i<lp->Count && idx==-1; i++) {
-			if (SameText(get_pre_tab(lp->Items->Strings[i]), dnam)) idx = i;
+			UnicodeString pnam = get_pre_tab(lp->Items->Strings[i]);
+			if ((int)lp->Items->Objects[i]==1) pnam = ExtractFilePath(pnam);
+			if (SameText(pnam, dnam)) idx = i;
 		}
 		//一致するものがなければ、一番近い親を探す
 		if (idx==-1) {
 			UnicodeString max_nam;
 			for (int i=0; i<lp->Count; i++) {
 				UnicodeString pnam = get_pre_tab(lp->Items->Strings[i]);
+				if ((int)lp->Items->Objects[i]==1) pnam = ExtractFilePath(pnam);
 				if (StartsText(pnam, dnam)) {
 					if (pnam.Length()>max_nam.Length()) {
 						max_nam = pnam;
@@ -250,19 +369,26 @@ int __fastcall TRegDirDlg::IndexOfDir(UnicodeString dnam)
 //---------------------------------------------------------------------------
 UnicodeString __fastcall TRegDirDlg::GetCurDirItem(
 	bool dsp_sw,	//true = 特殊フォルダの表示名を取得	(default = false)
-	bool nam_sw)	//true = 特殊フォルダ名を付加		(default = false)
+	bool nam_sw,	//true = 特殊フォルダ名を付加		(default = false)
+	bool exe_sw)	//true = 実行ファイル名として取得	(default = false)
 {
 	UnicodeString dnam;
 	TListBox *lp = RegDirListBox;
-	if (lp->ItemIndex!=-1) {
-		UnicodeString lbuf = lp->Items->Strings[lp->ItemIndex];
+	int idx = lp->ItemIndex;
+	if (idx!=-1) {
+		UnicodeString lbuf = lp->Items->Strings[idx];
 		if (IsSpecial) {
 			TStringDynArray itm_buf = split_strings_tab(lbuf);
 			if (itm_buf.Length==2 && !itm_buf[0].IsEmpty()) {
 				dnam = itm_buf[0];
+				if ((int)lp->Items->Objects[idx]==1 && !exe_sw) {
+					dnam = ExtractFilePath(dnam);
+				}
 				if (dsp_sw && UseEnvVarAction->Checked) {
-					if (contained_wd_i(_T("TEMP|TMP"), itm_buf[1])) dnam = "%" + itm_buf[1] + "%";
-					else dnam = ExcludeTrailingPathDelimiter(replace_str_by_list(dnam, EnvVarList));
+					if (contained_wd_i(_T("TEMP|TMP"), itm_buf[1]))
+						dnam = "%" + itm_buf[1] + "%";
+					else
+						dnam = ExcludeTrailingPathDelimiter(replace_str_by_list(dnam, EnvVarList));
 				}
 				if (nam_sw) dnam += ("\t" + itm_buf[1]);
 			}
@@ -294,18 +420,14 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	}
 
 	bool handled = true;
-	if (k_used)
-		handled = false;
-	else if (equal_UP(KeyStr) && lp->ItemIndex==0)
-		lp->ItemIndex = lp->Count - 1;
-	else if (equal_DOWN(KeyStr) && lp->ItemIndex==lp->Count-1)
-		lp->ItemIndex = 0;
-	else if (contained_wd_i(KeysStr_Popup, KeyStr))
-		show_PopupMenu(lp);
-	else if (IsSpecial && ExeCmdListBox(lp, cmd_F))
-		;
-	else if (!IsSpecial && UserModule->ListBoxOpeItem(KeyStr))
-		;
+	if		(k_used)											handled = false;
+	else if (equal_UP(KeyStr) && lp->ItemIndex==0)				lp->ItemIndex = lp->Count - 1;
+	else if (equal_DOWN(KeyStr) && lp->ItemIndex==lp->Count-1)	lp->ItemIndex = 0;
+	else if (contained_wd_i(KeysStr_Popup, KeyStr))				show_PopupMenu(lp);
+	else if (IsSpecial && ExeCmdListBox(lp, cmd_F))				;
+	else if (!IsSpecial && UserModule->ListBoxOpeItem(KeyStr))	;
+	else if (StartsText("ContextMenu", cmd_F))					show_PopupMenu(lp);
+	else if (StartsText("IncSearch", cmd_F))					FilterEdit->SetFocus();
 	//プロパティ
 	else if (USAME_TI(cmd_F, "PropertyDlg")) {
 		UnicodeString dnam = GetCurDirItem();
@@ -318,10 +440,6 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	else if (USAME_TI(cmd_F, "OpenByExp")) {
 		ClearKeyBuff(true);		//OnKeyPress を抑止
 		OpenByExpAction->Execute();
-	}
-	//右クリックメニュー
-	else if (StartsText("ContextMenu", cmd_F)) {
-		show_PopupMenu(lp);
 	}
 	else handled = false;
 
@@ -338,7 +456,7 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 
 	TListBox *lp = (TListBox*)Sender;
 	if (Key==VK_RETURN) {
-		jdir = GetCurDirItem(false, IsSelect);
+		jdir = GetCurDirItem(false, IsSelect, true);
 		if (!jdir.IsEmpty()) {
 			SelIndex = lp->ItemIndex;
 			found = true;
@@ -368,9 +486,14 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 			ModalResult = mrOk;
 		}
 		else {
+			//実効ファイル
+			if (SelIndex!=-1 && (int)lp->Items->Objects[SelIndex]==1) {
+				CmdStr.sprintf(_T("JumpTo_\"%s\""), jdir.c_str());
+				ModalResult = mrOk;
+			}
 			//特殊フォルダ
-			if (StartsStr("shell:", jdir)) {
-				CmdStr.sprintf(_T("OpenByExp_\"%s\""), jdir.c_str());
+			else if (StartsStr("shell:", jdir)) {
+				CmdStr.sprintf(_T("FileRun_\"%s\""), jdir.c_str());
 				ModalResult = mrOk;
 			}
 			//タグ検索
@@ -423,7 +546,7 @@ void __fastcall TRegDirDlg::RegDirListBoxClick(TObject *Sender)
 //項目の描画
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -439,17 +562,29 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 		if (IsSpecial) {
 			TStringDynArray itm_buf = split_strings_tab(lbuf);
 			if (itm_buf.Length==2) {
-				int xp = Rect.Left + 4;
-				int yp = Rect.Top + get_TopMargin2(cv);
+				int xp = Rect.Left + Scaled4;
+				int yp = Rect.Top  + get_TopMargin2(cv);
 				//セパレータ
 				if (itm_buf[0].IsEmpty()) {
 					draw_Separator(cv, Rect);
 					cv->Font->Color = col_Folder;
-					int tag = (int)lp->Items->Objects[Index];
-					if (tag>0) cv->TextOut(xp, yp, (tag==2)? "<仮想フォルダ>" : "<All Users> ");
+					int s_cnt = 0;
+					for (int i=0; i<=Index; i++) if (StartsStr("\t", lp->Items->Strings[i])) s_cnt++;
+					UnicodeString snam =
+						(s_cnt==1)? "<All Users> " : (s_cnt==2)? "<仮想フォルダ>" :
+						(s_cnt==3)? "<NyanFi>"     : (s_cnt==4)? "<エディタ>" :
+						(s_cnt==5)? "<外部ツール>" : "";
+					if (!snam.IsEmpty()) cv->TextOut(xp, yp, snam);
 				}
 				//項目
 				else {
+					UnicodeString dnam = itm_buf[0];
+					bool is_exe = ((int)lp->Items->Objects[Index]==1);
+					//アイコン
+					if (is_exe && ShowIconAction->Checked) {
+						draw_SmallIconF(dnam, cv, xp, std::max(yp + (cv->TextHeight("Q") - SIcoSize)/2, 0));
+						xp += get_IcoWidth();
+					}
 					//名前
 					THeaderSections *sp = RegDirHeader->Sections;
 					cv->Font->Color = col_fgList;
@@ -458,10 +593,12 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 					cv->TextOut(xp, yp, inam);
 					xp = sp->Items[1]->Width + 1;
 					//場所
-					UnicodeString dnam = itm_buf[0];
+					if (is_exe) dnam = ExtractFilePath(dnam);
 					if (UseEnvVarAction->Checked) {
-						if (contained_wd_i(_T("TEMP|TMP"), itm_buf[1])) dnam = "%" + itm_buf[1] + "%";
-						else dnam = ExcludeTrailingPathDelimiter(replace_str_by_list(dnam, EnvVarList));
+						if (contained_wd_i(_T("TEMP|TMP"), itm_buf[1]))
+							dnam = "%" + itm_buf[1] + "%";
+						else
+							dnam = ExcludeTrailingPathDelimiter(replace_str_by_list(dnam, EnvVarList));
 						if (remove_top_s(dnam, '%')) {
 							UnicodeString envstr = "%" + split_tkn(dnam, '%') + "%";
 							cv->Font->Color = AdjustColor(col_Folder, 72);
@@ -490,8 +627,8 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 				cv->Font->Style = cv->Font->Style << fsBold;
 				int s_wd = cv->TextWidth(itm_buf[0]);
 				int c_wd = sp->Items[0]->Width - 4;
-				int xp = Rect.Left + 2;
-				int yp = Rect.Top + get_TopMargin2(cv);
+				int xp = Rect.Left + Scaled2;
+				int yp = Rect.Top  + get_TopMargin2(cv);
 				if (s_wd<c_wd) xp += (c_wd - s_wd)/2;	//センタリング
 				cv->TextOut(xp, yp, itm_buf[0]);
 				//名前
@@ -646,7 +783,7 @@ void __fastcall TRegDirDlg::RefDirBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::RefSpBtnClick(TObject *Sender)
 {
-	TRegDirDlg *SelSpDirDlg = new TRegDirDlg(this);		//閉じたときに破棄される
+	TRegDirDlg *SelSpDirDlg = new TRegDirDlg(this);		//閉じたときに破棄
 	SelSpDirDlg->IsSpecial	= true;
 	SelSpDirDlg->IsSelect	= true;
 	if (SelSpDirDlg->ShowModal()==mrOk) {
@@ -685,9 +822,18 @@ void __fastcall TRegDirDlg::UseEnvVarActionExecute(TObject *Sender)
 	RegDirListBox->Repaint();
 }
 //---------------------------------------------------------------------------
-void __fastcall TRegDirDlg::UseEnvVarActionUpdate(TObject *Sender)
+void __fastcall TRegDirDlg::ToggleActionExecute(TObject *Sender)
 {
-	((TAction *)Sender)->Visible = IsSpecial;
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+	UpdateSpDirList();
+}
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::AddNyanFiActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+	UpdateSpDirList(true);
 }
 
 //---------------------------------------------------------------------------
@@ -724,6 +870,26 @@ void __fastcall TRegDirDlg::PropertyActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//アプリケーション情報
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::AppInfoActionExecute(TObject *Sender)
+{
+	file_rec *cfp = cre_new_file_rec(GetCurDirItem(false, false, true));
+	FileInfoDlg->FileRec   = cfp;
+	FileInfoDlg->inhNxtPre = true;
+	FileInfoDlg->ShowModal();
+	del_file_rec(cfp);
+}
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::AppInfoActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	TListBox *lp = RegDirListBox;
+	ap->Visible = (lp->ItemIndex!=-1 && (int)lp->Items->Objects[lp->ItemIndex]==1);
+	ap->Enabled = ap->Visible && file_exists(GetCurDirItem(false, false, true));
+}
+
+//---------------------------------------------------------------------------
 //一覧をワークリストとして保存
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::SaveAsWorkActionExecute(TObject *Sender)
@@ -735,9 +901,11 @@ void __fastcall TRegDirDlg::SaveAsWorkActionExecute(TObject *Sender)
 	if (UserModule->SaveDlg->Execute()) {
 		TListBox *lp = RegDirListBox;
 		std::unique_ptr<TStringList> lst(new TStringList());
+		int s_cnt = 0;
 		for (int i=0; i<lp->Count; i++) {
-			if ((int)lp->Items->Objects[i]==2) break;
-			lst->Add(REPLACE_TS(lp->Items->Strings[i], "\t|", "\t"));
+			UnicodeString lbuf = REPLACE_TS(lp->Items->Strings[i], "\t|", "\t");
+			if (get_pre_tab(lbuf).IsEmpty()) s_cnt++;
+			if (s_cnt<2) lst->Add(lbuf);
 		}
 
 		if (!saveto_TextUTF8(UserModule->SaveDlg->FileName, lst.get()))
@@ -773,6 +941,58 @@ void __fastcall TRegDirDlg::ChgOptBtnClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//フィルタ
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::FilterBtnClick(TObject *Sender)
+{
+	FilterEdit->SetFocus();
+}
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::FilterEditEnter(TObject *Sender)
+{
+	FilterEdit->Color = scl_Window;
+}
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::FilterEditExit(TObject *Sender)
+{
+	CloseIME(Handle);
+	InvColIfEmpty(FilterEdit);
+}
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::FilterEditChange(TObject *Sender)
+{
+	UpdateSpDirList();
+}
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);	if (KeyStr.IsEmpty()) return;
+	TListBox *lp = RegDirListBox;
+
+	if (equal_ENTER(KeyStr)) {
+		lp->SetFocus();
+		if (lp->Count==1) {
+			WideChar key = VK_RETURN;
+			RegDirListBoxKeyPress(lp, key);
+			return;
+		}
+	}
+	else if (contained_wd_i(KeysStr_ToList, KeyStr)) lp->SetFocus();
+	else if (MovListBoxFromFilter(lp, KeyStr))	;
+	else if (SameText(KeyStr, KeyStr_Migemo))	MigemoAction->Checked = !MigemoAction->Checked;
+	else if (equal_ESC(KeyStr))					ModalResult = mrCancel;
+	else return;
+
+	lp->Invalidate();
+	Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (is_KeyPress_CtrlNotCV(Key) || Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	if (!IsSpecial && USAME_TI(get_KeyStr(Key, Shift), "Alt+O"))
@@ -781,5 +1001,6 @@ void __fastcall TRegDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 		SpecialKeyProc(this, Key, Shift,
 			IsSpecial? _T(HELPTOPIC_FL) _T("#SpecialDirList") : _T("hid00054.htm"));
 }
+
 //---------------------------------------------------------------------------
 

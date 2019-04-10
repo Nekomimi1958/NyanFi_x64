@@ -55,11 +55,11 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 		isRecent? "RecentListDlg" : isMark? "MarkListDlg" : isRepo? "RepoListDlg" : isTags? "TagJumpDlg" : "");
 
 	setup_ToolBar(OpeToolBar);
-
 	FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
-
-	FilterEdit->Font->Assign(DialogFont);
+	FilterEdit->Font->Assign(ToolBarFont);
 	FilterEdit->Width = IniFile->ReadIntGen(_T("EditHistFilterWidth"),	200);
+	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+	FilterEdit->Text  = EmptyStr;
 
 	StatusBar1->Font->Assign(SttBarFont);
 	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
@@ -220,9 +220,6 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	TagJumpInf	 = EmptyStr;
 
 	((ToFilter && OpeToolBar->Visible)? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();
-
-	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
-	FilterEdit->Text  = EmptyStr;
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -301,12 +298,6 @@ void __fastcall TEditHistoryDlg::FormDestroy(TObject *Sender)
 void __fastcall TEditHistoryDlg::FormResize(TObject *Sender)
 {
 	StatusBar1->Panels->Items[0]->Width = StatusBar1->ClientWidth;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TEditHistoryDlg::WmNyanFiFlIcon(TMessage &msg)
-{
-	EditHistGrid->Invalidate();
 }
 
 //---------------------------------------------------------------------------
@@ -1152,7 +1143,7 @@ void __fastcall TEditHistoryDlg::FilterBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);	if (KeyStr.IsEmpty()) return;
 
 	if		(contained_wd_i(KeysStr_ToList, KeyStr))	EditHistGrid->SetFocus();
 	else if (MovGridFromFilter(EditHistGrid, KeyStr))	;

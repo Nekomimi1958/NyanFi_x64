@@ -33,7 +33,14 @@ private:	// ユーザー宣言
 	int G_buf[256];
 	int B_buf[256];
 
-	void __fastcall WmSysCommand(TWMSysCommand & SysCom);
+	void __fastcall WmSysCommand(TWMSysCommand & SysCom)
+	{
+		if (SysCom.CmdType==SC_CLOSE) {	//[×]ボタンが押された
+			Close();
+			ShowHistogram = false;
+		}
+		else TForm::Dispatch(&SysCom);
+	}
 
 public:		// ユーザー宣言
 	__fastcall THistForm(TComponent* Owner);

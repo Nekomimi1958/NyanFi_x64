@@ -271,15 +271,7 @@ void __fastcall TAppListDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusP
 	cv->Brush->Color = col_bgSttBar;
 	cv->FillRect(Rect);
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + 2, Rect.Top, Panel->Text);
-}
-
-//---------------------------------------------------------------------------
-//ランチャーアイコンの処理
-//---------------------------------------------------------------------------
-void __fastcall TAppListDlg::WmNyanFiFlIcon(TMessage &msg)
-{
-	LaunchListBox->Invalidate();
+	cv->TextOut(Rect.Left + Scaled2, Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -779,7 +771,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 																: col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + 4;
+	int xp = Rect.Left + Scaled4;
 
 	//無応答表示
 	if (ap->isNoRes) {
@@ -1186,7 +1178,7 @@ void __fastcall TAppListDlg::JumpExeItemClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//アプリケーション情報を表示
+//アプリケーション情報
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 {
@@ -1264,8 +1256,8 @@ void __fastcall TAppListDlg::LaunchListBoxDrawItem(TWinControl *Control, int Ind
 	cv->Brush->Color = (lp->Focused() && State.Contains(odSelected))? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + 4;
-	int yp = Rect.Top + 2;
+	int xp = Rect.Left + Scaled4;
+	int yp = Rect.Top  + Scaled2;
 
 	file_rec *fp = (file_rec*)LaunchList->Objects[Index];
 	//アイコン

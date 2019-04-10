@@ -49,16 +49,6 @@ void __fastcall THistForm::FormHide(TObject *Sender)
 		ShowHistogram = false;
 	}
 }
-//---------------------------------------------------------------------------
-void __fastcall THistForm::WmSysCommand(TWMSysCommand &SysCom)
-{
-	//[×]ボタンが押された
-	if (SysCom.CmdType==SC_CLOSE) {
-		Close();
-		ShowHistogram = false;
-	}
-	else TForm::Dispatch(&SysCom);
-}
 
 //---------------------------------------------------------------------------
 //ヒストグラムの描画

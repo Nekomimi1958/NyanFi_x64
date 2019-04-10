@@ -59,10 +59,10 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 {
 	setup_ToolBar(OpeToolBar);
 	FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
-
-	FilterEdit->Font->Assign(DialogFont);
+	FilterEdit->Font->Assign(ToolBarFont);
 	FilterEdit->Width = IniFile->ReadIntGen(_T("GenInfoFilterWidth"),	200);
-	FilterEdit->Text = EmptyStr;
+	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+	FilterEdit->Text  = EmptyStr;
 	RetStr = EmptyStr;
 	GenSelList->Clear();
 
@@ -208,7 +208,6 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	ListScrPanel->UpdateKnob();
 
 	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)lp)->SetFocus();
-	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
 
 	//ステータスバー
 	StatusBar1->Font->Assign(SttBarFont);
@@ -594,7 +593,7 @@ void __fastcall TGeneralInfoDlg::FilterEditChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);	if (KeyStr.IsEmpty()) return;
 	TListBox *lp = GenListBox;
 
 	if		(contained_wd_i(KeysStr_ToList, KeyStr) || equal_ENTER(KeyStr)) lp->SetFocus();
@@ -611,16 +610,6 @@ void __fastcall TGeneralInfoDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 void __fastcall TGeneralInfoDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
 	if (is_KeyPress_CtrlNotCV(Key) || Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
-}
-//---------------------------------------------------------------------------
-void __fastcall TGeneralInfoDlg::FilterOptheckBoxClick(TObject *Sender)
-{
-	UpdateList();
-}
-//---------------------------------------------------------------------------
-void __fastcall TGeneralInfoDlg::HighlightCheckBoxClick(TObject *Sender)
-{
-	GenListBox->Repaint();
 }
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterEditEnter(TObject *Sender)
@@ -765,8 +754,9 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	//プレイリスト
 	else if (isPlayList) {
 		//再生中マーク
-		if (SameText(PlayFile, lbuf)) out_Text(cv, rc.Left + 2, yp, HEAD_Mark.c_str(), col_Cursor);
-		rc.Left += get_TextWidth(cv, HEAD_Mark, is_irreg) + 4;
+		if (SameText(PlayFile, lbuf)) out_Text(cv, rc.Left + 2, yp, PLAY_Mark.c_str(), col_Cursor);
+		rc.Left += get_TextWidth(cv, PLAY_Mark, is_irreg) + 4;
+
 		if (OmitComPathAction->Checked) remove_top_text(lbuf, ComPathName);	//パスの共通部分を省略
 		if (FileName1stAction->Checked) {
 			xp = rc.Left;
@@ -898,12 +888,8 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 	//コマンド
 	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))
 		;
-	//前後のファイルへ切り替え
-	else if (!FileName.IsEmpty() && !isFTP && contained_wd_i(_T("PrevFile|NextFile"), cmd_V)) {
-		RetStr = cmd_V;
-		this->Perform(WM_SETREDRAW, 0, (NativeInt)0);	//画面を消さずに残す
-		ModalResult = mrRetry;
-	}
+	//フィルタ欄へ
+	else if (StartsText("IncSearch", cmd_F))	FilterEdit->SetFocus();
 	//ソート
 	else if (USAME_TI(cmd_V, "Sort_AO"))	SortAscAction->Execute();
 	else if (USAME_TI(cmd_V, "Sort_DO"))	SortDesAction->Execute();
@@ -932,14 +918,18 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 			cursor_Default();
 		}
 	}
+	//前後のファイルへ切り替え
+	else if (!FileName.IsEmpty() && !isFTP && contained_wd_i(_T("PrevFile|NextFile"), cmd_V)) {
+		RetStr = cmd_V;
+		this->Perform(WM_SETREDRAW, 0, (NativeInt)0);	//画面を消さずに残す
+		ModalResult = mrRetry;
+	}
 	//閲覧
 	else if (USAME_TI(cmd_F, "TextViewer")) {
 		if (ViewFileAction->Enabled) ViewFileAction->Execute(); else ViewListAction->Execute();
 	}
 	//編集
 	else if (USAME_TI(cmd_F, "FileEdit"))	EditFileAction->Execute();
-	//フィルタ欄へ
-	else if (StartsText("IncSearch", cmd_F))	FilterEdit->SetFocus();
 	//ファイル情報
 	else if (USAME_TI(cmd_F, "ListFileInfo") || StartsText("ShowFileInfo", cmd_F))
 		ShowFileInfoAction->Execute();

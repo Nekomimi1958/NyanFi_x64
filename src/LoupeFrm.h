@@ -62,7 +62,14 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormEndDock(TObject *Sender, TObject *Target, int X, int Y);
 
 private:	// ユーザー宣言
-	void __fastcall WmSysCommand(TWMSysCommand & SysCom);
+	void __fastcall WmSysCommand(TWMSysCommand & SysCom)
+	{
+		if (SysCom.CmdType==SC_CLOSE) {	//[×]ボタンが押された
+			Close();
+			ShowLoupe = false;
+		}
+		else TForm::Dispatch(&SysCom);
+	}
 
 public:		// ユーザー宣言
 	__fastcall TLoupeForm(TComponent* Owner);

@@ -1812,8 +1812,9 @@ void UserShell::AddKnownPath(
 	TStringList *lst)		//[o] リスト
 {
 	UnicodeString dnam = KnownGuidToPath(id);
-	if (!dnam.IsEmpty())
+	if (!dnam.IsEmpty()) {
 		lst->Add(UnicodeString().sprintf(_T("%s\t%s"), IncludeTrailingPathDelimiter(dnam).c_str(), inam));
+	}
 }
 //---------------------------------------------------------------------------
 void UserShell::AddEnvPath(
@@ -1822,8 +1823,9 @@ void UserShell::AddEnvPath(
 	TStringList *lst)
 {
 	UnicodeString dnam = cv_env_str(enam);
-	if (!dnam.IsEmpty() && dnam.Pos('%')==0)
+	if (!dnam.IsEmpty() && dnam.Pos('%')==0) {
 		lst->Add(UnicodeString().sprintf(_T("%s\t%s"), IncludeTrailingPathDelimiter(dnam).c_str(), inam));
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -1839,6 +1841,7 @@ void UserShell::get_SpecialFolderList(TStringList *lst)
 	AddKnownPath(FOLDERID_Pictures,			_T("ピクチャ"),				lst);
 	AddKnownPath(FOLDERID_Videos,			_T("ビデオ"),				lst);
 	AddKnownPath(FOLDERID_Music,			_T("ミュージック"),			lst);
+	AddEnvPath(_T("%OneDrive%"),			_T("OneDrive"),				lst);
 	AddKnownPath(FOLDERID_RoamingAppData,	_T("|Application Data"),	lst);
 	AddEnvPath(_T("%APPDATA%\\Microsoft\\Windows\\Libraries"), _T("ライブラリ"), lst);
 	AddKnownPath(FOLDERID_StartMenu,		_T("スタートメニュー"),		lst);
@@ -1855,16 +1858,8 @@ void UserShell::get_SpecialFolderList(TStringList *lst)
 	AddKnownPath(FOLDERID_Cookies,			_T("Cookies"),				lst);
 	AddKnownPath(FOLDERID_History,			_T("履歴"),					lst);
 	AddKnownPath(FOLDERID_InternetCache,	_T("インターネット一時ファイル"),	lst);
-	AddEnvPath(_T("%ProgramW6432%"),		_T("|Program Files"),		lst);
-	AddKnownPath(FOLDERID_ProgramFilesX86,	_T("Program Files (x86)"),	lst);
-	AddKnownPath(FOLDERID_Windows,			_T("Windows"),				lst);
-	AddKnownPath(FOLDERID_System,			_T("Windows System"),		lst);
-	AddKnownPath(FOLDERID_SystemX86,		_T("Windows System32"),		lst);
-	AddKnownPath(FOLDERID_Fonts,			_T("フォント"),				lst);
-	AddEnvPath(_T("%TEMP%"),				_T("TEMP"),					lst);
-	AddEnvPath(_T("%TMP%"),					_T("TMP"),					lst);
 
-	lst->AddObject("\t-", (TObject*)1);		//セパレータ	1 = All Users
+	lst->Add("\t-");	//セパレータ
 	AddKnownPath(FOLDERID_PublicDesktop,	_T("デスクトップ"),			lst);
 	AddKnownPath(FOLDERID_PublicDocuments,	_T("ドキュメント"),			lst);
 	AddKnownPath(FOLDERID_PublicPictures,	_T("ピクチャ"),				lst);
@@ -1877,7 +1872,16 @@ void UserShell::get_SpecialFolderList(TStringList *lst)
 	AddKnownPath(FOLDERID_CommonAdminTools,	_T("管理ツール"),			lst);
 	AddKnownPath(FOLDERID_CommonTemplates,	_T("テンプレート"),			lst);
 
-	lst->AddObject("\t-", (TObject*)2);		//セパレータ	2 = 仮想フォルダ
+	AddEnvPath(_T("%ProgramW6432%"),		_T("|Program Files"),		lst);
+	AddKnownPath(FOLDERID_ProgramFilesX86,	_T("Program Files (x86)"),	lst);
+	AddKnownPath(FOLDERID_Windows,			_T("Windows"),				lst);
+	AddKnownPath(FOLDERID_System,			_T("Windows System"),		lst);
+	AddKnownPath(FOLDERID_SystemX86,		_T("Windows System32"),		lst);
+	AddKnownPath(FOLDERID_Fonts,			_T("フォント"),				lst);
+	AddEnvPath(_T("%TEMP%"),				_T("TEMP"),					lst);
+	AddEnvPath(_T("%TMP%"),					_T("TMP"),					lst);
+
+	lst->Add("\t-");	//セパレータ
 	lst->Add("shell:::{20D04FE0-3AEA-1069-A2D8-08002B30309D}\tPC/コンピュータ");
 	lst->Add("shell:::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}\tネットワーク");
 	lst->Add("shell:::{208D2C60-3AEA-1069-A2D7-08002B30309D}\tネットワーク(ワークグループ)");

@@ -117,8 +117,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FilterEditEnter(TObject *Sender);
 	void __fastcall FilterEditExit(TObject *Sender);
 	void __fastcall FilterBtnClick(TObject *Sender);
-	void __fastcall FilterOptheckBoxClick(TObject *Sender);
-	void __fastcall HighlightCheckBoxClick(TObject *Sender);
 	void __fastcall ViewListActionExecute(TObject *Sender);
 	void __fastcall ShowLineNoActionExecute(TObject *Sender);
 	void __fastcall ViewFileActionExecute(TObject *Sender);

@@ -216,8 +216,8 @@ void __fastcall TTaskManDlg::TaskGridDrawCell(TObject *Sender, int ACol, int ARo
 	cv->Brush->Color = State.Contains(gdSelected)? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + 4;
-	int yp = Rect.Top + get_TopMargin2(cv);
+	int xp = Rect.Left + Scaled4;
+	int yp = Rect.Top  + get_TopMargin2(cv);
 	int l_hi = get_FontHeight(gp->Font, ListInterLn);
 
 	TRect rc = Rect;
@@ -289,8 +289,9 @@ void __fastcall TTaskManDlg::CancelTaskActionExecute(TObject *Sender)
 void __fastcall TTaskManDlg::CancelTaskActionUpdate(TObject *Sender)
 {
 	TTaskThread *tp = get_CurTask();
-	if (tp)
+	if (tp) {
 		((TAction*)Sender)->Enabled = !tp->TaskCancel;
+	}
 	else {
 		int idx = TaskGrid->Row - get_MaxTaskCount();
 		((TAction*)Sender)->Enabled = (idx>=0 && idx<TaskReserveList->Count);

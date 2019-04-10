@@ -312,7 +312,6 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 	org_ImgInfBarWndProc	   = ImgInfBar->WindowProc;
 	ImgInfBar->WindowProc	   = ImgInfBarWndProc;
 
-	TabPinMark	= u"\U0001F4CD";	//ピンマーク
 	TabPinWidth = 0;
 
 	FileListBox[0]	 = L_FileListBox = L_ListBox;
@@ -2245,6 +2244,11 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 				GeneralInfoDlg->FilterEdit->SetFocus();
 			else if (pCtrl==GeneralInfoDlg->FilterEdit)
 				GeneralInfoDlg->GenListBox->SetFocus();
+			//特殊フォルダ一覧
+			else if (RegDirDlg && RegDirDlg->IsSpecial && pCtrl==RegDirDlg->RegDirListBox)
+				RegDirDlg->FilterEdit->SetFocus();
+			else if (RegDirDlg && RegDirDlg->IsSpecial && pCtrl==RegDirDlg->FilterEdit)
+				RegDirDlg->RegDirListBox->SetFocus();
 			else Handled = false;
 		}
 		//アプリケーションキーの処理(エディット/コンボボックスのメニュー表示)
@@ -5468,8 +5472,8 @@ void __fastcall TNyanFiForm::LogListBoxDrawItem(TWinControl *Control, int Index,
 	cv->Font->Assign(LogFont);
 	cv->Font->Color = (lp->Focused() && is_SelFgCol(State))? col_fgSelItem : col_fgLog;
 	bool is_irreg = IsIrregularFont(cv->Font);
-	int xp = Rect.Left + 2;
-	int yp = Rect.Top + 1;
+	int xp = Rect.Left + Scaled2;
+	int yp = Rect.Top  + Scaled1;
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	if (!DirDelimiter.IsEmpty()) lbuf = ReplaceStr(lbuf, "\\", DirDelimiter);
@@ -6074,8 +6078,8 @@ void __fastcall TNyanFiForm::PopSelectItemDrawItem(TObject *Sender, TCanvas *ACa
 	ACanvas->FillRect(ARect);
 
 	UnicodeString lbuf = mp->Caption;
-	int xp = ARect.Left + 4;
-	int yp = ARect.Top  + 1;
+	int xp = ARect.Left + Scaled4;
+	int yp = ARect.Top  + Scaled1;
 
 	//セパレータ
 	if (is_separator(lbuf))
@@ -18420,6 +18424,13 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 	i_lst->Add("拡張コーデック");
 	if (WIC_get_ex_list(i_lst)==0) i_lst->Add("  無し");
 
+	//Git
+	if (GitExists) {
+		i_lst->Add("[Git] ----------" + hr_str);
+		get_FileNamePathInf(CmdGitExe, i_lst, true);
+		i_lst->Add(EmptyStr);
+	}
+
 	//情報をログに表示
 	AddLogCr();
 	AddLogStrings(i_lst);
@@ -23039,10 +23050,9 @@ void __fastcall TNyanFiForm::SortDlgActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::SpecialDirListActionExecute(TObject *Sender)
 {
 	if (!RegDirDlg) RegDirDlg = new TRegDirDlg(this);	//初回に動的作成
+	RegDirDlg->ToFilter  = TEST_ActParam("FF");
 	RegDirDlg->IsSpecial = true;
-	if (RegDirDlg->ShowModal()==mrOk && !RegDirDlg->CmdStr.IsEmpty()) {
-		ExeCommandAction(RegDirDlg->CmdStr);
-	}
+	if (RegDirDlg->ShowModal()==mrOk && !RegDirDlg->CmdStr.IsEmpty()) ExeCommandAction(RegDirDlg->CmdStr);
 }
 
 //---------------------------------------------------------------------------
@@ -32320,25 +32330,6 @@ void __fastcall TNyanFiForm::WmNyanfiAppearance(TMessage &msg)
 }
 
 //---------------------------------------------------------------------------
-//アイコン取得の通知を処理
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmNyanFiFlIcon(TMessage &msg)
-{
-	//ファイルリスト
-	if (ScrMode==SCMD_FLIST) {
-		InvalidateFileList(0);
-		InvalidateFileList(1);
-	}
-}
-
-//---------------------------------------------------------------------------
-//サムネイル更新の通知を処理
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmNyanFiThumbnail(TMessage &msg)
-{
-	if (ThumbnailGrid->Visible) ThumbnailGrid->Repaint();
-}
-//---------------------------------------------------------------------------
 //サムネイルの描画
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ThumbnailGridDrawCell(TObject *Sender, int ACol, int ARow,
@@ -32791,7 +32782,7 @@ void __fastcall TNyanFiForm::ImgSttHeaderDrawPanel(TStatusBar *StatusBar, TStatu
 	cv->Brush->Color = (StatusBar->Tag==SHOW_WARN_TAG && Panel->Index==0)? col_bgWarn : col_bgInfHdr;
 	cv->FillRect(Rect);
 	cv->Font->Color = col_fgInfHdr;
-	cv->TextOut(Rect.Left + 2, Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + Scaled2, Rect.Top, Panel->Text);
 
 	if ((StatusBar==ImgSttHeader && Panel->Index==3) || (StatusBar==ImgInfBar && Panel->Index==1)) {
 		//グレースケール

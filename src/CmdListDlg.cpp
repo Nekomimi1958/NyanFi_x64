@@ -44,6 +44,19 @@ void __fastcall TCmdFileListDlg::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
 
+	setup_ToolBar(OpeToolBar);
+	OkBtn->Font->Assign(ToolBarFont);
+	FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
+	FilterEdit->Font->Assign(ToolBarFont);
+	FilterEdit->Width = IniFile->ReadIntGen(_T("CmdFileListFilterWidth"),	200);
+	FilterEdit->Text  = EmptyStr;
+
+	set_MigemoAction(MigemoAction, _T("CmdFileListMigemo"));
+
+	CnfExeAction->Checked = IniFile->ReadBoolGen(_T("CmdFileListCnfExe"));
+	CnfExeAction->Visible = !ToSelect;
+	OkBtn->Visible		  = ToSelect;
+
 	TStringGrid *gp = CmdFileGrid;
 	InitializeListGrid(gp);
 	InitializeListHeader(CmdFileHeader, _T("ファイル名|説明|サイズ|タイムスタンプ|ディレクトリ|参照元|実行回数"));
@@ -52,12 +65,6 @@ void __fastcall TCmdFileListDlg::FormShow(TObject *Sender)
 	set_UsrScrPanel(GridScrPanel);
 
 	set_FormTitle(this, ToSelect? _T("コマンドファイルの選択") : _T("コマンドファイル一覧"));
-
-	CnfExeCheckBox->Checked = IniFile->ReadBoolGen(_T("CmdFileListCnfExe"));
-	CnfExeCheckBox->Visible = !ToSelect;
-	OkBtn->Visible			= ToSelect;
-
-	set_MigemoCheckBox(MigemoCheckBox, _T("CmdFileListMigemo"));
 
 	//プレビューの初期化
 	PreviewPanel->Visible	 = false;
@@ -80,8 +87,14 @@ void __fastcall TCmdFileListDlg::FormShow(TObject *Sender)
 	PreviewPanel->Height = IniFile->ReadIntGen(_T("CmdFileListPrevHeight"), 200);
 	ReferPanel->Width	 = IniFile->ReadIntGen(_T("CmdFileListReferWidth"), 200);
 
-	PreviewCheckBox->Checked = IniFile->ReadBoolGen(_T("CmdFileListPreview"));
-	PreviewCheckBoxClick(NULL);
+	PreviewAction->Checked = IniFile->ReadBoolGen(_T("CmdFileListPreview"));
+	if (PreviewAction->Checked) {
+		PreviewSplitter->Align = alTop;
+		PreviewPanel->Align    = alBottom;
+		PreviewSplitter->Align = alBottom;
+	}
+	PreviewPanel->Visible	 = PreviewAction->Checked;
+	PreviewSplitter->Visible = PreviewAction->Checked;
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
@@ -124,11 +137,12 @@ void __fastcall TCmdFileListDlg::FormClose(TObject *Sender, TCloseAction &Action
 	IniFile->SavePosInfo(this);
 	IniFile->SaveGridColWidth(CmdFileGrid);
 
-	IniFile->WriteBoolGen(_T("CmdFileListMigemo"),		MigemoCheckBox);
-	IniFile->WriteBoolGen(_T("CmdFileListCnfExe"),		CnfExeCheckBox);
-	IniFile->WriteBoolGen(_T("CmdFileListPreview"),		PreviewCheckBox);
-	IniFile->WriteIntGen(_T("CmdFileListPrevHeight"),	PreviewPanel->Height);
-	IniFile->WriteIntGen(_T("CmdFileListReferWidth"),	ReferPanel->Width);
+	IniFile->WriteIntGen( _T("CmdFileListFilterWidth"),	FilterEdit->Width);
+	IniFile->WriteBoolGen(_T("CmdFileListMigemo"),		MigemoAction);
+	IniFile->WriteBoolGen(_T("CmdFileListCnfExe"),		CnfExeAction);
+	IniFile->WriteBoolGen(_T("CmdFileListPreview"),		PreviewAction);
+	IniFile->WriteIntGen( _T("CmdFileListPrevHeight"),	PreviewPanel->Height);
+	IniFile->WriteIntGen( _T("CmdFileListReferWidth"),	ReferPanel->Width);
 
 	ToSelect  = false;
 }
@@ -214,7 +228,7 @@ void __fastcall TCmdFileListDlg::UpdateGrid()
 	TStringGrid *gp = CmdFileGrid;
 
 	//フィルタによって抽出
-	UnicodeString ptn = usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, FilterEdit->Text);
+	UnicodeString ptn = usr_Migemo->GetRegExPtn(MigemoAction->Checked, FilterEdit->Text);
 	if (!ptn.IsEmpty()) {
 		GridItemList->Clear();
 		TRegExOptions opt; opt << roIgnoreCase;
@@ -317,8 +331,8 @@ void __fastcall TCmdFileListDlg::CmdFileGridDrawCell(TObject *Sender, int ACol, 
 	//背景
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + 4;
-	int yp = Rect.Top + get_TopMargin2(cv);
+	int xp = Rect.Left + Scaled4;
+	int yp = Rect.Top  + get_TopMargin2(cv);
 	int r_mgn = get_CharWidth(cv, 1);
 
 	//ファイル名
@@ -356,27 +370,12 @@ void __fastcall TCmdFileListDlg::CmdFileGridDrawCell(TObject *Sender, int ACol, 
 }
 
 //---------------------------------------------------------------------------
-//フィルタによる一覧の更新
+//フィルタ
 //---------------------------------------------------------------------------
-void __fastcall TCmdFileListDlg::FilterEditChange(TObject *Sender)
+void __fastcall TCmdFileListDlg::FilterBtnClick(TObject *Sender)
 {
-	UpdateGrid();
-
-	//確定即実行
-	int idx = GetGridIndex();
-	if (idx!=-1) {
-		TStringGrid *gp = CmdFileGrid;
-		if (!ToSelect && CnfExeCheckBox->Checked && FilterEdit->Focused() && !FilterEdit->Text.IsEmpty()
-			&& gp->RowCount==1)
-		{
-			Application->ProcessMessages();  Sleep(500);
-			CmdFileName = ((file_rec*)GridItemList->Objects[idx])->f_name;
-			CmdRequestList->Add(UnicodeString().sprintf(_T("ExeCommands_\"@%s\""), CmdFileName.c_str()));
-			ModalResult = mrOk;
-		}
-	}
+	FilterEdit->SetFocus();
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::FilterEditEnter(TObject *Sender)
 {
@@ -388,9 +387,25 @@ void __fastcall TCmdFileListDlg::FilterEditExit(TObject *Sender)
 	CloseIME(Handle);
 	InvColIfEmpty(FilterEdit);
 }
-
 //---------------------------------------------------------------------------
-//フィルタ欄でのキー操作
+void __fastcall TCmdFileListDlg::FilterEditChange(TObject *Sender)
+{
+	UpdateGrid();
+
+	//確定即実行
+	int idx = GetGridIndex();
+	if (idx!=-1) {
+		TStringGrid *gp = CmdFileGrid;
+		if (!ToSelect && CnfExeAction->Checked && FilterEdit->Focused() && !FilterEdit->Text.IsEmpty()
+			&& gp->RowCount==1)
+		{
+			Application->ProcessMessages();  Sleep(500);
+			CmdFileName = ((file_rec*)GridItemList->Objects[idx])->f_name;
+			CmdRequestList->Add(UnicodeString().sprintf(_T("ExeCommands_\"@%s\""), CmdFileName.c_str()));
+			ModalResult = mrOk;
+		}
+	}
+}
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
@@ -398,19 +413,18 @@ void __fastcall TCmdFileListDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 
 	if		(contained_wd_i(KeysStr_ToList, KeyStr))	CmdFileGrid->SetFocus();
 	else if (MovGridFromFilter(CmdFileGrid, KeyStr))	;
-	else if (SameText(KeyStr, KeyStr_Migemo))			MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
+	else if (SameText(KeyStr, KeyStr_Migemo))			MigemoAction->Checked = !MigemoAction->Checked;
 	else return;
 
 	CmdFileGrid->Invalidate();
 	Key = 0;
 }
 //---------------------------------------------------------------------------
-//フィルタからEnterキーで選択項目を実行
-//---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key))
+	if (is_KeyPress_CtrlNotCV(Key)) {
 		Key = 0;
+	}
 	else if (Key==VK_RETURN && !ToSelect) {
 		int idx = GetGridIndex();
 		if (idx!=-1) {
@@ -420,6 +434,19 @@ void __fastcall TCmdFileListDlg::FilterEditKeyPress(TObject *Sender, System::Wid
 		}
 		Key = 0;
 	}
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TCmdFileListDlg::MigemoActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+}
+//---------------------------------------------------------------------------
+void __fastcall TCmdFileListDlg::CnfExeActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
 }
 
 //---------------------------------------------------------------------------
@@ -558,17 +585,19 @@ void __fastcall TCmdFileListDlg::PreviewListBoxDrawItem(TWinControl *Control, in
 		4, NULL, "*.nbt");
 }
 //---------------------------------------------------------------------------
-void __fastcall TCmdFileListDlg::PreviewCheckBoxClick(TObject *Sender)
+void __fastcall TCmdFileListDlg::PreviewActionExecute(TObject *Sender)
 {
-	bool sw = PreviewCheckBox->Checked;
-	if (sw) {
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+	if (ap->Checked) {
 		PreviewSplitter->Align = alTop;
 		PreviewPanel->Align    = alBottom;
 		PreviewSplitter->Align = alBottom;
 	}
-	PreviewPanel->Visible	 = sw;
-	PreviewSplitter->Visible = sw;
+	PreviewPanel->Visible	 = ap->Checked;
+	PreviewSplitter->Visible = ap->Checked;
 }
+
 //---------------------------------------------------------------------------
 //プレビュー/参照情報でのキー操作
 //---------------------------------------------------------------------------
@@ -656,3 +685,4 @@ void __fastcall TCmdFileListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftS
 	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
+

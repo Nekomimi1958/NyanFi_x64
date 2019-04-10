@@ -55,22 +55,6 @@ void __fastcall TGifViewer::FormHide(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::WmSysCommand(TWMSysCommand &SysCom)
-{
-	//[~]ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½
-	if (SysCom.CmdType==SC_CLOSE) {
-		Close();
-		if (ScrMode==SCMD_IVIEW) ShowGifViewer = false;
-	}
-	else TForm::Dispatch(&SysCom);
-}
-//---------------------------------------------------------------------
-void __fastcall TGifViewer::WmExitSizeMove(TMessage &msg)
-{
-	Application->MainForm->SetFocus();
-}
-
-//---------------------------------------------------------------------------
 void __fastcall TGifViewer::FormResize(TObject *Sender)
 {
 	if (!TitleInf.IsEmpty() && Image1->Picture->Width>0 && Image1->Picture->Height>0) {

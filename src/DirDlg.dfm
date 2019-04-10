@@ -22,7 +22,7 @@ object RegDirDlg: TRegDirDlg
   TextHeight = 13
   object OptPanel: TPanel
     Left = 0
-    Top = 271
+    Top = 252
     Width = 592
     Height = 70
     Align = alBottom
@@ -140,7 +140,7 @@ object RegDirDlg: TRegDirDlg
   end
   object HiddenCanBtn: TButton
     Left = 0
-    Top = 271
+    Top = 252
     Width = 592
     Height = 0
     Align = alBottom
@@ -182,25 +182,24 @@ object RegDirDlg: TRegDirDlg
     Left = 0
     Top = 20
     Width = 592
-    Height = 251
+    Height = 232
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
     DesignSize = (
       592
-      251)
+      232)
     object RegDirListBox: TListBox
       Left = 0
       Top = 0
       Width = 592
-      Height = 251
+      Height = 232
       Style = lbOwnerDrawFixed
       AutoComplete = False
       Align = alLeft
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
       DoubleBuffered = False
-      DragMode = dmAutomatic
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -223,7 +222,7 @@ object RegDirDlg: TRegDirDlg
     end
     object BlankPanel: TPanel
       Left = 574
-      Top = 235
+      Top = 216
       Width = 18
       Height = 16
       Anchors = [akRight, akBottom]
@@ -242,6 +241,68 @@ object RegDirDlg: TRegDirDlg
         Flat = True
         OnClick = ChgOptBtnClick
       end
+    end
+  end
+  object OpeToolBar: TToolBar
+    Left = 0
+    Top = 322
+    Width = 592
+    Height = 19
+    Align = alBottom
+    AutoSize = True
+    ButtonHeight = 19
+    ButtonWidth = 59
+    DrawingStyle = dsGradient
+    List = True
+    ShowCaptions = True
+    AllowTextButtons = True
+    TabOrder = 4
+    object FilterBtn: TToolButton
+      Left = 0
+      Top = 0
+      Caption = #12501#12451#12523#12479'(&F)'
+      ImageIndex = 0
+      Style = tbsTextButton
+      OnClick = FilterBtnClick
+    end
+    object FilterEdit: TEdit
+      Left = 63
+      Top = 0
+      Width = 120
+      Height = 19
+      Align = alLeft
+      Constraints.MinWidth = 60
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      PopupMenu = UserModule.EditPopupMenuE
+      TabOrder = 0
+      OnChange = FilterEditChange
+      OnEnter = FilterEditEnter
+      OnExit = FilterEditExit
+      OnKeyDown = FilterEditKeyDown
+      OnKeyPress = FilterEditKeyPress
+    end
+    object FilterSplitter: TSplitter
+      Left = 183
+      Top = 0
+      Width = 4
+      Height = 19
+    end
+    object MigemoBtn: TToolButton
+      Left = 187
+      Top = 0
+      Action = MigemoAction
+      Style = tbsTextButton
+    end
+    object AndOrBtn: TToolButton
+      Left = 234
+      Top = 0
+      Action = AndOrAction
+      Style = tbsTextButton
     end
   end
   object ActionList1: TActionList
@@ -267,6 +328,11 @@ object RegDirDlg: TRegDirDlg
       OnExecute = PropertyActionExecute
       OnUpdate = PropertyActionUpdate
     end
+    object AppInfoAction: TAction
+      Caption = #12450#12503#12522#12465#12540#12471#12519#12531#24773#22577'(&A)'
+      OnExecute = AppInfoActionExecute
+      OnUpdate = AppInfoActionUpdate
+    end
     object SaveAsWorkAction: TAction
       Caption = #19968#35239#12434#12527#12540#12463#12522#12473#12488#12392#12375#12390#20445#23384'(&S)...'
       OnExecute = SaveAsWorkActionExecute
@@ -280,22 +346,37 @@ object RegDirDlg: TRegDirDlg
     object UseEnvVarAction: TAction
       Caption = #29872#22659#22793#25968#12434#29992#12356#12390#12497#12473#21517#12434#34920#31034'(&E)'
       OnExecute = UseEnvVarActionExecute
-      OnUpdate = UseEnvVarActionUpdate
     end
     object OpenByExpAction: TAction
       Caption = #12456#12463#12473#12503#12525#12540#12521#12391#38283#12367'(&X)'
       OnExecute = OpenByExpActionExecute
       OnUpdate = OpenByExpActionUpdate
     end
+    object MigemoAction: TAction
+      Caption = '&Migemo'
+      OnExecute = ToggleActionExecute
+    end
+    object AndOrAction: TAction
+      Caption = '&ADN/OR'
+      OnExecute = ToggleActionExecute
+    end
+    object AddNyanFiAction: TAction
+      Caption = 'NyanFi '#38306#36899#12398#12487#12451#12524#12463#12488#12522#12434#34920#31034'(&N)'
+      OnExecute = AddNyanFiActionExecute
+    end
+    object ShowIconAction: TAction
+      Caption = #23455#34892#12501#12449#12452#12523#12398#12450#12452#12467#12531#12434#34920#31034'(&I)'
+      OnExecute = ToggleActionExecute
+    end
   end
   object PopupMenu1: TPopupMenu
     Left = 128
     Top = 41
+    object OpenByExpItem: TMenuItem
+      Action = OpenByExpAction
+    end
     object C1: TMenuItem
       Action = CopyPathAction
-    end
-    object UseEnvVarItem: TMenuItem
-      Action = UseEnvVarAction
     end
     object S1: TMenuItem
       Action = SaveAsWorkAction
@@ -303,14 +384,23 @@ object RegDirDlg: TRegDirDlg
     object Sep_1: TMenuItem
       Caption = '-'
     end
-    object OpenByExpItem: TMenuItem
-      Action = OpenByExpAction
-    end
     object PropertyItem: TMenuItem
       Action = PropertyAction
     end
+    object AppInfoItem: TMenuItem
+      Action = AppInfoAction
+    end
     object Sep_2: TMenuItem
       Caption = '-'
+    end
+    object UseEnvVarItem: TMenuItem
+      Action = UseEnvVarAction
+    end
+    object AddNyanFiItem: TMenuItem
+      Action = AddNyanFiAction
+    end
+    object ShowIconItem: TMenuItem
+      Action = ShowIconAction
     end
     object FitSizePosItem: TMenuItem
       Action = UserModule.SizePosToFlieListAction

@@ -71,9 +71,6 @@ UnicodeString KeysStr_PgDown  = "PGDN|Ctrl+C";
 UnicodeString KeysStr_PgUp	  = "PGUP|Ctrl+R";
 UnicodeString KeysStr_Popup   = "APP|Shift+F10";
 
-UnicodeString TabPinMark = u"\U0001F4CD";
-UnicodeString HEAD_Mark  = _T("\u25b6");
-
 //---------------------------------------------------------------------------
 UnicodeString SortIdStr = "FEDSAU";
 
@@ -377,6 +374,10 @@ bool SelColDrvInf;				//選択時はファイルリストの配色に
 
 UnicodeString SttBarFmt;		//ステータスバーの書式
 UnicodeString SttClockFmt;		//時計の書式
+
+UnicodeString TabPinMark;		//タブ固定ピンマーク
+UnicodeString HEAD_Mark;		//git HEAD マーク
+UnicodeString PLAY_Mark;		//再生中マーク
 
 int  MaxLogFiles;				//ログファイルの保存世代数
 
@@ -1193,13 +1194,6 @@ void InitializeGlobal()
 		IniFile->DeleteKey(SCT_Option,	"ShowIcon");
 	}
 
-	IniFile->DeleteKey(SCT_General, "FindKeyTwoStr");		//v12.87
-	IniFile->DeleteKey(SCT_Option,	"OneStepInDblPg");		//v12.80
-	IniFile->DeleteKey(SCT_Option,	"SkipInfIfKey");		//v12.72
-	if (IniFile->KeyExists(SCT_Option,	"NoClsTabBtn")) {	//v12.56
-		IniFile->WriteBool(SCT_Option,	"ShowClsTabBtn", !IniFile->ReadBool(SCT_Option, "NoClsTabBtn"));
-		IniFile->DeleteKey(SCT_Option,	"NoClsTabBtn");
-	}
 
 	CurStt = &ListStt[CurListTag];
 	OppStt = &ListStt[OppListTag];
@@ -1497,6 +1491,10 @@ void InitializeGlobal()
 		{_T("FTPSndConnect=\"\""),					(TObject*)&FTPSndConnect},
 		{_T("FTPSndDiscon=\"\""),					(TObject*)&FTPSndDiscon},
 		{_T("FTPSndTransfer=\"\""),					(TObject*)&FTPSndTransfer},
+
+		{_T("TabPinMark=\"\""),						(TObject*)&TabPinMark},		//隠し設定
+		{_T("HEAD_Mark=\"\""),						(TObject*)&HEAD_Mark},		//隠し設定
+		{_T("PLAY_Mark=\"\""),						(TObject*)&PLAY_Mark},		//隠し設定
 
 		// default = ExePath
 		{_T("DownloadPath=\"%ExePath%\""),			(TObject*)&DownloadPath},
@@ -1923,34 +1921,13 @@ void InitializeGlobal()
 	//読み込み
 	LoadOptions();
 
-	//廃止項目の削除 (v13.22)
-	//EmpInfItems
-	TStringDynArray ibuf = SplitString(EmpInfItems, "|");
-	EmpInfItems = EmptyStr;
-	for (int i=0; i<ibuf.Length; i++) {
-		if (!test_word_i(ibuf[i], "HEAD|COMMIT_EDITMSG|STATUS")) {
-			if (!EmpInfItems.IsEmpty()) EmpInfItems.UCAT_T("|");
-			EmpInfItems += ibuf[i];
-		}
-	}
-	//HideInfItems
-	UnicodeString hide_items = HideInfItems->Values["\\"];
-	TStringDynArray hbuf = SplitString(hide_items, "|");
-	hide_items = EmptyStr;
-	for (int i=0; i<hbuf.Length; i++) {
-		if (!test_word_i(hbuf[i], "HEAD|COMMIT_EDITMSG|STATUS")) {
-			if (!hide_items.IsEmpty()) hide_items.UCAT_T("|");
-			hide_items += hbuf[i];
-		}
-	}
-	HideInfItems->Values["\\"] = hide_items;
-
 	//git.exe のチェック
 	std::unique_ptr<TStringList> plst(new TStringList());
 	TStringDynArray elst = split_strings_semicolon(GetEnvironmentVariable("PATH"));
 	for (int i=0; i<elst.Length; i++) {
 		if (contains_i(elst[i], _T("\\Git\\"))) plst->Add(elst[i]);
 	}
+
 #if defined(_WIN64)
 	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git"));
 	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git\\bin"));
@@ -1960,6 +1937,7 @@ void InitializeGlobal()
 	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git\\bin"));
 	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git\\cmd"));
 #endif
+
 	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")).UCAT_T("Git\\bin"));
 	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")).UCAT_T("Git\\cmd"));
 	if (CmdGitExe.IsEmpty()) {
@@ -1968,6 +1946,7 @@ void InitializeGlobal()
 			if (file_exists(xnam)) { CmdGitExe = xnam;  break; }
 		}
 	}
+
 	if (GitBashExe.IsEmpty()) {
 		for (int i=0; i<plst->Count; i++) {
 			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]).UCAT_T("git-bash.exe");
@@ -2251,8 +2230,9 @@ void LoadOptions()
 		UnicodeString key  = lp->Names[i];
 		UnicodeString vbuf = lp->ValueFromIndex[i];
 		//Section
-		if (remove_top_text(key, _T("S:")))
+		if (remove_top_text(key, _T("S:"))) {
 			IniFile->ReadSection(key, (TStringList*)lp->Objects[i]);
+		}
 		//List
 		else if (remove_top_text(key, _T("L:"))) {
 			int  n = split_tkn(vbuf, ',').ToIntDef(20);
@@ -2280,6 +2260,11 @@ void LoadOptions()
 			}
 		}
 	}
+
+	//マークのデフォルト設定
+	if (TabPinMark.IsEmpty()) TabPinMark = u"\U0001F4CD";
+	if (HEAD_Mark.IsEmpty())  HEAD_Mark  = _T("\u25b6");
+	if (PLAY_Mark.IsEmpty())  PLAY_Mark  = _T("\u25b6");
 
 	//タブリストの初期化
 	for (int i=0; i<TabList->Count; i++) {
@@ -6305,14 +6290,13 @@ HICON get_folder_icon(UnicodeString dnam)
 }
 
 //---------------------------------------------------------------------------
-//スモールアイコンを描画 (スレッドで取得)
-//  CachedIcoList を使用
+//スモールアイコンを描画 (スレッドで取得、CachedIcoList 使用)
 //  ジャンクション/シンボリックリンクにも対応
 //---------------------------------------------------------------------------
 bool draw_SmallIcon(
 	file_rec *fp,
 	TCanvas *cv, int x, int y,
-	bool force_cache)	//強制的にキャシュ
+	bool force_cache)	//強制的にキャシュ	(default = false)
 {
 	if (!is_selectable(fp)) return false;
 
@@ -6362,6 +6346,40 @@ bool draw_SmallIcon(
 	::DrawIconEx(cv->Handle, x, y, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
 	return true;
 }
+//---------------------------------------------------------------------------
+//スモールアイコンを描画 (スレッドで取得、CachedIcoList 使用)
+//  実ファイル依存専用
+//---------------------------------------------------------------------------
+bool draw_SmallIconF(
+	UnicodeString fnam,
+	TCanvas *cv, int x, int y)
+{
+	if (fnam.IsEmpty()) return false;
+
+	HICON hIcon  = NULL;
+	bool handled = false;
+	IconRWLock->BeginWrite();
+	{
+		int idx = CachedIcoList->IndexOf(fnam);
+		if (idx!=-1) {
+			if (CachedIcoList->Objects[idx]) {
+				hIcon = ((TIcon*)CachedIcoList->Objects[idx])->Handle;
+				::DrawIconEx(cv->Handle, x, y, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+				handled = true;
+			}
+		}
+		else
+			CachedIcoList->Add(fnam);	//スレッドに取得を要求
+	}
+	IconRWLock->EndWrite();
+
+	if (handled) return true;
+	if (!hIcon)  return false;
+
+	::DrawIconEx(cv->Handle, x, y, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+	return true;
+}
+
 //---------------------------------------------------------------------------
 //指定ファイルのスモールアイコンを描画
 //  MenuBtnIcoList を使用
@@ -7506,7 +7524,8 @@ void GetFileInfList(
 					i_list->Add(EmptyStr);
 					if (!test_word_i("Remote URL", HideInfItems->Values["\\"]))
 						add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), i_list);
-					get_GitInf(rpnam, i_list);
+
+					get_GitInf(rpnam, i_list, force, is_NoInfPath(fp, NoInfPath));
 				}
 			}
 
@@ -7660,8 +7679,8 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 	cv->Brush->Color = (State.Contains(odSelected) && lp->Focused())? col_selItem : col_bgInf;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + 2;
-	int yp = Rect.Top + 1;
+	int xp = Rect.Left + Scaled2;
+	int yp = Rect.Top  + Scaled1;
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	bool use_fgsel = lp->Focused() && is_SelFgCol(State);
 
@@ -7672,9 +7691,8 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 
 	cv->Font->Color = use_fgsel? col_fgSelItem : col_fgInf;
 
-	int flag = (int)lp->Items->Objects[Index];
-
 	//基本情報/リンク先基本情報
+	int flag = (int)lp->Items->Objects[Index];
 	if (flag & LBFLG_STD_FINF) {
 		if		(flag & LBFLG_FILE_FIF)	Emphasis_RLO_info(lbuf, cv, xp, yp);
 		else if (flag & LBFLG_PATH_FIF)	PathNameOut(lbuf, cv, xp, yp);
@@ -13540,7 +13558,9 @@ UnicodeString get_GitUrl(file_rec *fp)
 //Git ステータスリストを取得
 //  フラグ文字 [TAB] ファイルパス
 //---------------------------------------------------------------------------
-int get_GitStatusList(UnicodeString pnam, TStringList *lst,
+int get_GitStatusList(
+	UnicodeString pnam,
+	TStringList *lst,
 	bool full_sw)		//フルパスで取得	(default = false)
 {
 	try {
@@ -13777,9 +13797,13 @@ void draw_GitTag(
 }
 
 //---------------------------------------------------------------------------
-//Gitリポジトリ情報を取得
+//Gitリポジトリ情報(Git-Commit/Status)を取得
 //---------------------------------------------------------------------------
-void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw)
+void get_GitInf(
+	UnicodeString dnam,
+	TStringList *lst,	//[o] 情報リスト
+	bool upd_sw,		//最新の情報に更新	(default = false)
+	bool ext_sw)		//既存情報のみ利用	(default = false)
 {
 	//.git/index が変化していなく既存情報があれば利用
 	dnam = IncludeTrailingPathDelimiter(dnam);
@@ -13808,6 +13832,8 @@ void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw)
 			GitInfList->Delete(idx);
 		}
 	}
+
+	if (!upd_sw && ext_sw) return;
 
 	TStringDynArray ibuf;
 	add_dyn_array(ibuf, FormatDateTime("yyyy/mm/dd hh:nn:ss", xdt));

@@ -45,8 +45,8 @@ void __fastcall TRegSyncDlg::RegListBoxDrawItem(TWinControl *Control, int Index,
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + 2;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled2;
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	int w_x = 50;
 	for (int i=0; i<lp->Count; i++) w_x = std::max(cv->TextWidth(get_csv_item(lp->Items->Strings[i], 0)), w_x);
@@ -75,8 +75,8 @@ void __fastcall TRegSyncDlg::DirListBoxDrawItem(TWinControl *Control, int Index,
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + 2;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled2;
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);

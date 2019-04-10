@@ -426,8 +426,8 @@ void __fastcall TDistributionDlg::RegListBoxDrawItem(TWinControl *Control, int I
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + 4;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled4;
+	int yp = Rect.Top  + get_TopMargin(cv);
 	cv->TextOut(xp, yp, cur_buf[0]);	xp += w_tit + 8;
 	cv->TextOut(xp, yp, cur_buf[2]);	xp += w_msk + 4;
 	if (!starts_AT(cur_buf[2])) {
@@ -542,8 +542,8 @@ void __fastcall TDistributionDlg::ListListBoxDrawItem(TWinControl *Control, int 
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + 4;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled4;
+	int yp = Rect.Top  + get_TopMargin(cv);
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	if (!lbuf.IsEmpty() && (split_strings_tab(lbuf).Length!=2)) cv->Font->Color = col_Error;
 	TabCrTextOut(lbuf, cv, xp, yp, cv->Font->Color);
@@ -574,8 +574,8 @@ void __fastcall TDistributionDlg::PrvListBoxDrawItem(TWinControl *Control, int I
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + 4;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled4;
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);

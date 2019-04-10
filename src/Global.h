@@ -214,6 +214,7 @@ extern UnicodeString KeysStr_Popup;
 
 extern UnicodeString TabPinMark;
 extern UnicodeString HEAD_Mark;
+extern UnicodeString PLAY_Mark;
 
 extern UnicodeString SortIdStr;
 
@@ -1718,6 +1719,7 @@ HICON get_fext_icon(UnicodeString fext = EmptyStr);
 HICON get_folder_icon(UnicodeString dnam = EmptyStr);
 
 bool draw_SmallIcon(file_rec *fp, TCanvas *cv, int x, int y, bool force_cache = false);
+bool draw_SmallIconF(UnicodeString fnam, TCanvas *cv, int x, int y);
 bool draw_SmallIcon2(UnicodeString fnam, TCanvas *cv, int x, int y);
 int  add_IconImage(UnicodeString fnam, TImageList *lst);
 
@@ -2100,7 +2102,7 @@ UnicodeString split_GitGraphStr(UnicodeString &lbuf);
 void draw_GitGraph(UnicodeString s, UnicodeString s1, UnicodeString s2, TCanvas *cv, TRect &rc,
 	bool is_head = false, bool is_wip = false);
 void draw_GitTag(TCanvas *cv, int &x, int y, UnicodeString tag, int mgn = 0);
-void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw = false);
+void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw = false, bool ext_sw = false);
 UnicodeString get_GitDiffFiles(UnicodeString s, UnicodeString &fnam2);
 UnicodeString get_GitDiffFile2(UnicodeString s);
 //---------------------------------------------------------------------------

@@ -275,8 +275,8 @@ void __fastcall TNetShareDlg::ShareListBoxDrawItem(TWinControl *Control, int Ind
 		draw_Separator(cv, Rect, col_bgList);
 	}
 	else {
-		int xp = Rect.Left + 2;
-		int yp = Rect.Top + get_TopMargin2(cv);
+		int xp = Rect.Left + Scaled2;
+		int yp = Rect.Top  + get_TopMargin2(cv);
 
 		//アクセスキー
 		cv->Font->Color = col_fgList;

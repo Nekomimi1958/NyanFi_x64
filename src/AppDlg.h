@@ -218,7 +218,7 @@ private:	// ƒ†[ƒU[éŒ¾
 
 	void __fastcall WmFormShowed(TMessage &msg);
 	void __fastcall WMDropFiles(TWMDropFiles &msg);
-	void __fastcall WmNyanFiFlIcon(TMessage &msg);
+	void __fastcall WmNyanFiFlIcon(TMessage &msg) { LaunchListBox->Invalidate(); }
 
 	void __fastcall SetIncSeaMode(bool sw);
 	void __fastcall UpdateAppList();

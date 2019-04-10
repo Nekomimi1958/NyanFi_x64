@@ -75,16 +75,6 @@ void __fastcall TLoupeForm::SaveOption()
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TLoupeForm::WmSysCommand(TWMSysCommand &SysCom)
-{
-	//[Å~]É{É^ÉìÇ™âüÇ≥ÇÍÇΩ
-	if (SysCom.CmdType==SC_CLOSE) {
-		Close();
-		ShowLoupe = false;
-	}
-	else TForm::Dispatch(&SysCom);
-}
-//---------------------------------------------------------------------------
 void __fastcall TLoupeForm::ToolBtnClick(TObject *Sender)
 {
 	DrawImage();

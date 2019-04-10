@@ -29,12 +29,12 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 
+private:	// ユーザー宣言
 	void __fastcall WmMenuChar(TMessage &msg)
 	{
 		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
 	}
 
-private:	// ユーザー宣言
 	bool __fastcall IsFirstCmdKey(UnicodeString keystr);
 
 public:		// ユーザー宣言

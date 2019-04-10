@@ -91,8 +91,8 @@ void __fastcall TAskRepDlg::RepListBoxDrawItem(TWinControl *Control,
 	cv->FillRect(Rect);
 
 	UnicodeString itmstr = lp->Items->Strings[Index];
-	int xp = Rect.Left + 2;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled2;
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	//çsî‘çÜ
 	TRect rc = Rect;

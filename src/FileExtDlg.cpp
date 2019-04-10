@@ -697,8 +697,8 @@ void __fastcall TFileExtensionDlg::FileListBoxDrawItem(TWinControl *Control, int
 	cv->Brush->Color = is_AltLnBgCol(Index)? col_bgList2 : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + 4;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled4;
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	if (Index==MAX_FLIST_CNT) {
 		cv->Font->Color = col_Teal;

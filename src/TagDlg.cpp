@@ -418,8 +418,8 @@ void __fastcall TTagManDlg::TagCheckListBoxDrawItem(TWinControl *Control, int In
 	cv->Brush->Color = lp->Checked[Index]? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + 4;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled4;
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	//フォルダアイコン
 	if (IsFolderIcon) {

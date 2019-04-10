@@ -55,8 +55,16 @@ private:	// ユーザー宣言
 	bool hasBitmap;
 	UnicodeString TitleInf, ZoomInf;
 
-	void __fastcall WmSysCommand(TWMSysCommand & SysCom);
-	void __fastcall WmExitSizeMove(TMessage &msg);
+	void __fastcall WmSysCommand(TWMSysCommand & SysCom)
+	{
+		if (SysCom.CmdType==SC_CLOSE) {	//[×]ボタンが押された
+			Close();
+			if (ScrMode==SCMD_IVIEW) ShowGifViewer = false;
+		}
+		else TForm::Dispatch(&SysCom);
+	}
+
+	void __fastcall WmExitSizeMove(TMessage &msg) { Application->MainForm->SetFocus(); }
 
 	TWndMethod org_ImgPanelWndProc;
 	void __fastcall ImgPanelWndProc(TMessage &msg)

@@ -17,36 +17,45 @@
 #include <Vcl.Menus.hpp>
 #include <Vcl.ComCtrls.hpp>
 #include "usr_scrpanel.h"
+#include <Vcl.ToolWin.hpp>
 
 //---------------------------------------------------------------------------
 class TCmdFileListDlg : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *CnfExeAction;
 	TAction *EditCopyAction;
 	TAction *EditSelectAllAction;
+	TAction *MigemoAction;
+	TAction *PreviewAction;
 	TAction *ReqEditAction;
 	TActionList *ActionList1;
 	TButton *HiddenCanBtn;
 	TButton *OkBtn;
-	TCheckBox *CnfExeCheckBox;
-	TCheckBox *MigemoCheckBox;
-	TCheckBox *PreviewCheckBox;
+	TEdit *FilterEdit;
 	THeaderControl *CmdFileHeader;
-	TLabeledEdit *FilterEdit;
 	TListBox *PreviewListBox;
 	TListBox *ReferListBox;
+	TMenuItem *FitSizePosItem;
 	TMenuItem *RefEditCopyItem;
 	TMenuItem *RefEditSelAllItem;
+	TMenuItem *Sep_1;
 	TPanel *GridPanel;
 	TPanel *MainPanel;
-	TPanel *OpPanel;
+	TPanel *OpePanel;
 	TPanel *PreviewPanel;
 	TPanel *PrevPanel;
 	TPanel *ReferPanel;
 	TPopupMenu *ListPopupMenu;
+	TSplitter *FilterSplitter;
 	TSplitter *PreviewSplitter;
 	TSplitter *ReferSplitter;
 	TStringGrid *CmdFileGrid;
+	TToolBar *OpeToolBar;
+	TToolButton *CnfExeBtn;
+	TToolButton *FilterBtn;
+	TToolButton *MigemoBtn;
+	TToolButton *PreviewBtn;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -64,7 +73,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FilterEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall OkBtnClick(TObject *Sender);
 	void __fastcall CmdFileGridClick(TObject *Sender);
-	void __fastcall PreviewCheckBoxClick(TObject *Sender);
 	void __fastcall PreviewListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall ReferListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall EditCopyActionExecute(TObject *Sender);
@@ -76,6 +84,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CmdFileHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
 		const TRect &Rect, bool Pressed);
 	void __fastcall CmdFileHeaderResize(TObject *Sender);
+	void __fastcall MigemoActionExecute(TObject *Sender);
+	void __fastcall PreviewActionExecute(TObject *Sender);
+	void __fastcall CnfExeActionExecute(TObject *Sender);
+	void __fastcall FilterBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	TStringList *GridItemList;
