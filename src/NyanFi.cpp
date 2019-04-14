@@ -31,6 +31,7 @@ USEFORM("ModalScr.cpp", ModalScrForm);
 USEFORM("NewDlg.cpp", NewFileDlg);
 USEFORM("XmlView.cpp", XmlViewer);
 USEFORM("UserMdl.cpp", UserModule); /* TDataModule: File Type */
+USEFORM("InspectFrm.cpp", InspectForm);
 USEFORM("CvImgDlg.cpp", CvImageDlg);
 USEFORM("DebugFrm.cpp", DebugForm);
 USEFORM("DiffDlg.cpp", DiffDirDlg);
@@ -58,15 +59,15 @@ USEFORM("ColPicker.cpp", ColorPicker);
 USEFORM("ChInfFrm.cpp", CharInfoForm);
 USEFORM("ChmodDlg.cpp", FtpChmodDlg);
 USEFORM("EditItem.cpp", EditItemDlg);
+USEFORM("GrepOptDlg.cpp", GrepExOptDlg);
 USEFORM("HistDlg.cpp", DirHistoryDlg);
 USEFORM("HistFrm.cpp", HistForm);
+USEFORM("GitView.cpp", GitViewer);
 USEFORM("GraphFrm.cpp", GraphForm);
-USEFORM("GrepOptDlg.cpp", GrepExOptDlg);
+USEFORM("InpCmds.cpp", InpCmdsDlg);
 USEFORM("InpDir.cpp", InpDirDlg);
 USEFORM("InpExDlg.cpp", InputExDlg);
-USEFORM("InspectFrm.cpp", InspectForm);
-USEFORM("InpCmds.cpp", InpCmdsDlg);
-USEFORM("GitView.cpp", GitViewer);
+USEFORM("GitTag.cpp", SetGitTagDlg);
 USEFORM("FileExtDlg.cpp", FileExtensionDlg);
 USEFORM("FileInfDlg.cpp", FileInfoDlg);
 USEFORM("FindDlg.cpp", FindFileDlg);
@@ -76,11 +77,10 @@ USEFORM("ExTViewer.cpp", ExTxtViewer);
 USEFORM("FindKey.cpp", FindKeyDlg);
 USEFORM("FuncDlg.cpp", FuncListDlg);
 USEFORM("GenInfDlg.cpp", GeneralInfoDlg);
-USEFORM("GifView.cpp", GifViewer);
 USEFORM("FindTag.cpp", FindTagForm);
 USEFORM("FindTxtDlg.cpp", FindTextDlg);
 USEFORM("FtpDlg.cpp", FtpConnectDlg);
-USEFORM("GitTag.cpp", SetGitTagDlg);
+USEFORM("SubView.cpp", SubViewer);
 //---------------------------------------------------------------------------
 #include "Global.h"
 #include "Splash.h"
@@ -94,7 +94,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 
 	StartedCount = GetTickCount();
 
-	ExePath = REPLACE_TS(ExtractFilePath(Application->ExeName), "\\.\\", "\\");	//IDE実行時の対策
+	ExePath = ReplaceStr(ExtractFilePath(Application->ExeName), "\\.\\", "\\");	//IDE実行時の対策
 
 	//起動時オプションを取得
 	std::unique_ptr<TStringList> opt_lst(new TStringList());
@@ -202,7 +202,6 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		Application->CreateForm(__classid(TFindTextDlg), &FindTextDlg);
 		Application->CreateForm(__classid(TFuncListDlg), &FuncListDlg);
 		Application->CreateForm(__classid(TGeneralInfoDlg), &GeneralInfoDlg);
-		Application->CreateForm(__classid(TGifViewer), &GifViewer);
 		Application->CreateForm(__classid(THistForm), &HistForm);
 		Application->CreateForm(__classid(TInpCmdsDlg), &InpCmdsDlg);
 		Application->CreateForm(__classid(TInputExDlg), &InputExDlg);
@@ -213,6 +212,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		Application->CreateForm(__classid(TSameNameDlg), &SameNameDlg);
 		Application->CreateForm(__classid(TInpDirDlg), &InpDirDlg);
 		Application->CreateForm(__classid(TGraphForm), &GraphForm);
+		Application->CreateForm(__classid(TSubViewer), &SubViewer);
 		cursor_Default();
 		Application->Run();
 	}

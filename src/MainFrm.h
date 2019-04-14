@@ -221,7 +221,6 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *FullScreenAction;
 	TAction *FunctionListAction;
 	TAction *GetHashAction;
-	TAction *GifViewerAction;
 	TAction *GitDiffAction;
 	TAction *GitViewerAction;
 	TAction *GrayScaleAction;
@@ -1607,7 +1606,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SetArcTimeActionExecute(TObject *Sender);
 	void __fastcall SetDirTimeActionExecute(TObject *Sender);
 	void __fastcall PlayListActionExecute(TObject *Sender);
-	void __fastcall GifViewerActionExecute(TObject *Sender);
 	void __fastcall ExtractGifBmpActionExecute(TObject *Sender);
 	void __fastcall CreateDirsDlgActionExecute(TObject *Sender);
 	void __fastcall FixedLenActionExecute(TObject *Sender);

@@ -20,9 +20,6 @@ extern const _TCHAR *null_TCHAR;
 #define USAME_TI(s1,s2)	same_ut_i(s1, _T(s2))
 #define USAME_TS(s1,s2)	same_ut_s(s1, _T(s2))
 
-#define REPLACE_TI(s,o,r)	replace_i(s, _T(o), _T(r))
-#define REPLACE_TS(s,o,r)	replace_s(s, _T(o), _T(r))
-
 #define UAPP_T(s,t)		append_str(s, _T(t))
 
 //---------------------------------------------------------------------------
@@ -104,8 +101,6 @@ UnicodeString exclude_top_end(UnicodeString s);
 
 UnicodeString trim_ex(UnicodeString s);
 
-UnicodeString replace_i(UnicodeString s, const _TCHAR *o, const _TCHAR *r);
-UnicodeString replace_s(UnicodeString s, const _TCHAR *o, const _TCHAR *r);
 UnicodeString replace_regex(UnicodeString s, const _TCHAR *o, const _TCHAR *r);
 
 UnicodeString replace_str_by_list(UnicodeString s, TStringList *lst);
@@ -203,6 +198,8 @@ bool equal_LEFT(UnicodeString s);
 bool equal_RIGHT(UnicodeString s);
 bool equal_UP(UnicodeString s);
 bool equal_DOWN(UnicodeString s);
+bool equal_HOME(UnicodeString s);
+bool equal_END(UnicodeString s);
 bool equal_F1(UnicodeString s);
 
 bool is_separator(UnicodeString s);
@@ -217,6 +214,8 @@ bool ends_PathDlmtr(UnicodeString s);
 
 bool contains_PathDlmtr(UnicodeString s);
 bool contains_Slash(UnicodeString s);
+
+int  count_PathDlmtr(UnicodeString s);
 
 bool is_regex_slash(UnicodeString s);
 

@@ -539,7 +539,7 @@ void __fastcall TUserModule::EditPaste1Execute(TObject *Sender)
 	TWinControl *wp = Screen->ActiveControl;	if (!wp) return;
 
 	UnicodeString s = get_norm_str(Clipboard()->AsText);
-	if (USAME_TI(wp->Name, "DistrDirEdit") && dir_exists(s)) s = REPLACE_TS(s, "\\", "\\\\");
+	if (USAME_TI(wp->Name, "DistrDirEdit") && dir_exists(s)) s = ReplaceStr(s, "\\", "\\\\");
 
 	if (class_is_MaskEdit(wp)) {
 		TMaskEdit *ep = (TMaskEdit*)wp;
@@ -701,7 +701,7 @@ void __fastcall TUserModule::RefCurPathActionExecute(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;
 	if (class_is_LabeledEdit(wp))
-		((TLabeledEdit*)wp)->Text = REPLACE_TS(ExcludeTrailingPathDelimiter(CurPathName), "\\", "\\\\");
+		((TLabeledEdit*)wp)->Text = ReplaceStr(ExcludeTrailingPathDelimiter(CurPathName), "\\", "\\\\");
 }
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::RefCurPathActionUpdate(TObject *Sender)
@@ -716,7 +716,7 @@ void __fastcall TUserModule::RefOppPathActionExecute(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;
 	if (class_is_LabeledEdit(wp))
-		((TLabeledEdit*)wp)->Text = REPLACE_TS(ExcludeTrailingPathDelimiter(OppPathName), "\\", "\\\\");
+		((TLabeledEdit*)wp)->Text = ReplaceStr(ExcludeTrailingPathDelimiter(OppPathName), "\\", "\\\\");
 }
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::RefOppPathActionUpdate(TObject *Sender)

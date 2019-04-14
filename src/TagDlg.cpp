@@ -360,8 +360,8 @@ void __fastcall TTagManDlg::TagCheckListBoxKeyDown(TObject *Sender, WORD &Key, T
 
 	TCheckListBox *lp = TagCheckListBox;
 
-	if		(contained_wd_i(KeysStr_CsrDown, KeyStr))	Key = VK_DOWN;
-	else if (contained_wd_i(KeysStr_CsrUp, KeyStr))		Key = VK_UP;
+	if		(contained_wd_i(KeysStr_CsrDown, KeyStr)) Key = VK_DOWN;
+	else if (contained_wd_i(KeysStr_CsrUp,   KeyStr)) Key = VK_UP;
 	//ƒ^ƒO‚Ì‰ü–¼
 	else if (USAME_TI(cmd_F, "RenameDlg")) {
 		RenTagAction->Execute();

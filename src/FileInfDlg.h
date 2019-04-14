@@ -25,12 +25,14 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *CopyInfoAction;
 	TAction *CopyValueAction;
 	TAction *EmpItemAction;
+	TAction *ImgPreviewAction;
 	TAction *OpenUrlAction;
 	TAction *PropertyDlgAction;
 	TAction *SelAllAction;
 	TActionList *ActionList1;
 	TListBox *InfListBox;
 	TMenuItem *EmpItemItem;
+	TMenuItem *ImgPreviewItem;
 	TMenuItem *InfEditCopyItem;
 	TMenuItem *InfEditSelectAllItem;
 	TMenuItem *PopCopyFileInfoItm;
@@ -64,6 +66,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CopyValueActionExecute(TObject *Sender);
 	void __fastcall EmpItemActionExecute(TObject *Sender);
 	void __fastcall EmpItemActionUpdate(TObject *Sender);
+	void __fastcall ImgPreviewActionExecute(TObject *Sender);
+	void __fastcall ImgPreviewActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	int Max_freq;
@@ -82,6 +86,8 @@ public:		// ユーザー宣言
 	bool isAppInfo;
 	bool isGitInfo;
 	bool inhNxtPre;					//Next/PreFile 禁止
+	bool inhImgPrv;					//イメージプレビューの禁止
+	bool useImgPrv;
 
 	bool isCalcItem;
 	int  CsvCol;
@@ -89,6 +95,7 @@ public:		// ユーザー宣言
 	TStringList *DataList;
 
 	__fastcall TFileInfoDlg(TComponent* Owner);
+	int __fastcall ShowModalEx(UnicodeString fnam);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFileInfoDlg *FileInfoDlg;

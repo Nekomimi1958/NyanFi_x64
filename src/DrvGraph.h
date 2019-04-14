@@ -11,22 +11,32 @@
 #include <Vcl.Forms.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.ComCtrls.hpp>
+#include <System.Actions.hpp>
+#include <Vcl.ActnList.hpp>
+#include <Vcl.ToolWin.hpp>
+#include <Vcl.Menus.hpp>
 
 //---------------------------------------------------------------------------
 class TDriveGraph : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *MinMaxAction;
+	TAction *OldOdrAction;
+	TActionList *ActionList1;
 	TButton *HiddenCanBtn;
-	TCheckBox *MinMaxCheckBox;
-	TCheckBox *OldOdrCheckBox;
 	TComboBox *DriveComboBox;
 	TComboBox *SizeComboBox;
+	TEdit *HiddenEdit;			//キー取得用隠しコントロール
 	TPaintBox *PaintBox1;
-	TPanel *Panel1;
-	TPanel *Panel2;
-	TPanel *Panel3;
+	TPopupMenu *PopupMenu1;
 	TScrollBox *GraphScrollBox;
+	TSplitter *OptSplitter;
 	TStatusBar *StatusBar1;
+	TToolBar *OptToolBar;
+	TToolButton *SizeBtn;
+	TToolButton *ToolButton3;
+	TToolButton *ToolButton4;
+	TToolButton *ToolButton5;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -38,15 +48,28 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall PaintBox1MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall DriveComboBoxChange(TObject *Sender);
 	void __fastcall SizeComboBoxChange(TObject *Sender);
-	void __fastcall OptionChanged(TObject *Sender);
 	void __fastcall FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta, TPoint &MousePos, bool &Handled);
+	void __fastcall ToggleActionExecute(TObject *Sender);
+	void __fastcall SizeBtnClick(TObject *Sender);
+	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
+	void __fastcall HiddenEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall HiddenEditEnterExit(TObject *Sender);
+	void __fastcall OptComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;
 	TStringList *DataList;
 	int  GraphTopX;
 	int  BarSize;
+	int  SttIndex;
 	double MinUsed, MaxUsed;
+
+	TWndMethod org_SttBar1WndProc;
+	void __fastcall SttBar1WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
+		org_SttBar1WndProc(msg);
+	}
 
 	void __fastcall SetStatus(int idx);
 

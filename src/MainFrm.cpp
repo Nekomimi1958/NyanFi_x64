@@ -59,7 +59,7 @@
 #include "FindTxtDlg.h"
 #include "FuncDlg.h"
 #include "GenInfDlg.h"
-#include "GifView.h"
+#include "SubView.h"
 #include "GrepOptDlg.h"
 #include "HistDlg.h"
 #include "HistFrm.h"
@@ -1830,7 +1830,7 @@ void __fastcall TNyanFiForm::WmActivate(TMessage &msg)
 			{
 				if (!contained_wd_i(
 					_T("HH Parent|User32_ReaderMode|TApplication|TModalScrForm|TAppListDlg|")
-					_T("TOptionDlg|TGrepExOptDlg|TDotNyanDlg|TExTxtViewer|TGifViewer|TDebugForm"),
+					_T("TOptionDlg|TGrepExOptDlg|TDotNyanDlg|TExTxtViewer|TSubViewer|TDebugForm"),
 					get_WndClassName(hWnd)))
 				{
 					ModalScrForm->Visible = true;
@@ -2005,7 +2005,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, 
 		gp->MouseToCell(HintInfo.CursorPos.x, HintInfo.CursorPos.y, col, row);
 		if (col!=-1 && row!=-1) {
 			std::unique_ptr<TStringList> h_buf(new TStringList());
-			h_buf->Text = REPLACE_TS(gp->Cells[col][row], "\t", "\r\n");
+			h_buf->Text = ReplaceStr(gp->Cells[col][row], "\t", "\r\n");
 			UnicodeString max_str;
 			for (int i=0; i<h_buf->Count; i++) {
 				if (gp->Canvas->TextWidth(h_buf->Strings[i]) > gp->Canvas->TextWidth(max_str))
@@ -2181,8 +2181,8 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 					UnicodeString CmdStr = KeyFuncList->Values["I:" + KeyStr];
 					//右綴じでNext/PrevFile入替
 					if (SeekSwapNxtPrv && DoublePage && RightBind && ShowSeekBar) {
-						if		(StartsText("NextFile", CmdStr)) CmdStr = REPLACE_TI(CmdStr, "NextFile", "PrevFile");
-						else if (StartsText("PrevFile", CmdStr)) CmdStr = REPLACE_TI(CmdStr, "PrevFile", "NextFile");
+						if		(StartsText("NextFile", CmdStr)) CmdStr = ReplaceText(CmdStr, "NextFile", "PrevFile");
+						else if (StartsText("PrevFile", CmdStr)) CmdStr = ReplaceText(CmdStr, "PrevFile", "NextFile");
 					}
 
 					if (ExeCommandI(CmdStr)) Handled = true;
@@ -6337,7 +6337,8 @@ void __fastcall TNyanFiForm::SetDirRelation()
 	UnicodeString path1   = GetCurPathStr(1);
 	UnicodeString b_path0 = get_tkn_r(path0, ExtractFileDrive(path0)).LowerCase();
 	UnicodeString b_path1 = get_tkn_r(path1, ExtractFileDrive(path1)).LowerCase();
-	UnicodeString rel_str, rel_syn;
+	UnicodeString rel_str, syn_str;
+	UnicodeString msg;
 
 	if (!IsCurFList() || !IsOppFList()) {
 		rel_str.USET_T("　");
@@ -6355,57 +6356,81 @@ void __fastcall TNyanFiForm::SetDirRelation()
 								SameText(fp->f_name, ExcludeTrailingPathDelimiter(CurPath[OppListTag])) :
 								SameText(fp->p_name, CurPath[OppListTag]);
 				}
-				if (is_match) rel_str.USET_T("⇔");
+				if (is_match) {
+					rel_str.USET_T("⇔");
+					msg += "カーソル位置項目に対応\n";
+				}
 			}
 		}
-		if (IsCurFList()) rel_syn = (CurListTag==0)? is_SyncDir(path0, EmptyStr) : is_SyncDir(EmptyStr, path1);
-		if (IsOppFList()) rel_syn = (OppListTag==0)? is_SyncDir(path0, EmptyStr) : is_SyncDir(EmptyStr, path1);
+		if (IsCurFList()) syn_str = (CurListTag==0)? is_SyncDir(path0, EmptyStr) : is_SyncDir(EmptyStr, path1);
+		if (IsOppFList()) syn_str = (OppListTag==0)? is_SyncDir(path0, EmptyStr) : is_SyncDir(EmptyStr, path1);
 	}
 	//ファイルリスト同士
 	else {
-		rel_syn = is_SyncDir(path0, path1);
-		if (SameText(path0, path1))
-			//同一
+		msg += SameText(ExtractFileDrive(path0), ExtractFileDrive(path1))? "同ドライブ\n" : "別ドライブ\n";
+
+		if (SameText(path0, path1)) {			//同一
 			rel_str.USET_T("＝");
-		else if (remove_top_text(path0, path1)) {
-			//左の方が階層が上
-			path0	= ExcludeTrailingPathDelimiter(path0);
-			rel_str.sprintf(_T("%s"), contains_PathDlmtr(path0)? _T("≪") : _T("＜"));
+			msg += "同一パス\n";
 		}
-		else if (remove_top_text(path1, path0)) {
-			//左の方が階層が下
-			path1	= ExcludeTrailingPathDelimiter(path1);
-			rel_str.sprintf(_T("%s"), contains_PathDlmtr(path1)? _T("≫") : _T("＞"));
+		else if (StartsText(path1, path0)) {	//左の方が階層が下
+			int cnt = count_PathDlmtr(get_tkn_r(path0, path1));
+			rel_str.sprintf(_T("%s"), (cnt>1)? _T("≪") : _T("＜"));
+			msg.cat_sprintf(_T("%u階層%s\n"), cnt, (CurListTag==0)? _T("下") : _T("上")); 
 		}
-		else if (SameText(b_path0, b_path1))
+		else if (StartsText(path0, path1)) {	//左の方が階層が上
+			int cnt = count_PathDlmtr(get_tkn_r(path1, path0));
+			rel_str.sprintf(_T("%s"), (cnt>1)? _T("≫") : _T("＞"));
+			msg.cat_sprintf(_T("%u階層%s\n"), cnt, (CurListTag==0)? _T("上") : _T("下")); 
+		}
+		else if (SameText(b_path0, b_path1)) {
 			rel_str.USET_T("≒");
+			msg += "同名パス\n";
+		}
 		else {
 			TStringDynArray plst0 = split_path(b_path0);
 			TStringDynArray plst1 = split_path(b_path1);
-			if (plst0.Length>1 && plst1.Length>1)
-				//ディレクトリが同名
-				rel_str.sprintf(_T("%s"), SameText(plst0[plst0.Length - 1], plst1[plst1.Length - 1])? _T("∽") : _T("≠"));
-			else
+			if (plst0.Length>1 && plst1.Length>1) {
+				if (SameText(plst0[plst0.Length - 1], plst1[plst1.Length - 1])) {
+					rel_str.USET_T("∽");
+					msg += "同名ディレクトリ\n";
+				}
+				else {
+					rel_str.USET_T("≠");
+				}
+			}
+			else {
 				rel_str.USET_T("≠");
+			}
+		}
+
+		syn_str = is_SyncDir(path0, path1);
+	}
+
+	UnicodeString rch1 = " ";
+	UnicodeString rch2 = " ";
+	if (USAME_TS(syn_str, "S")) {
+		rch1 = rch2 = "*";
+		msg += "互いに同期関係\n";
+	}
+	else {
+		if (syn_str.Pos('1')) {
+			rch1[1] = '+';
+			if (CurListTag==0) msg += "同期コピー先あり\n";
+		}
+		if (syn_str.Pos('2')) {
+			rch2[1] = '+';
+			if (CurListTag==1) msg += "同期コピー先あり\n";
 		}
 	}
 
-	UnicodeString rch1, rch2;
-	bool div_p = (DivFileListUD && DivDirInfUD);
-	TPanel *pp = div_p? RelPanel2 : RelPanel;
-	if (USAME_TS(rel_syn, "S")) {
-		rch1 = rch2 = "*";
-		pp->Hint = "互いに同期関係";
-	}
-	else {
-		rch1.sprintf(_T("%s"), contains_s(rel_syn, _T('1'))? _T("+") : _T(" "));
-		rch2.sprintf(_T("%s"), contains_s(rel_syn, _T('2'))? _T("+") : _T(" "));
-		pp->Hint = EmptyStr;
-	}
+	if (SyncLR) msg += "階層同期 ON\n";
 
 	DirRelStr = rch1 + rel_str + rch2;
 
-	((TPaintBox*)(div_p? RelPaintBox2 : RelPaintBox))->Repaint();
+	bool div_p = (DivFileListUD && DivDirInfUD);
+	(div_p? RelPaintBox2 : RelPaintBox)->Repaint();
+	(div_p?  RelPanel2 : RelPanel)->Hint = Trim(msg);
 }
 //---------------------------------------------------------------------------
 //ディレクトリ関係の描画
@@ -6438,13 +6463,14 @@ void __fastcall TNyanFiForm::RelPaintBoxPaint(TObject *Sender)
 	cv->Pen->Color = AdjustColor(col_fgDirRel, 72);
 
 	//左右同ドライブ
-	if (SameText(ExtractFileDrive(CurPath[0]), ExtractFileDrive(CurPath[1]))) {
+	if (IsCurFList() && IsOppFList() && SameText(ExtractFileDrive(CurPath[0]), ExtractFileDrive(CurPath[1]))) {
 		int mgn = pp->Width/4;
 		int yp = rc.Top + 3;
 		cv->MoveTo(rc.Left + mgn, yp);	cv->LineTo(rc.Right - mgn, yp);
 		yp = rc.Bottom - 4;
 		cv->MoveTo(rc.Left + mgn, yp);	cv->LineTo(rc.Right - mgn, yp);
 	}
+
 	//左右同期
 	if (SyncLR) {
 		int yp = rc.Top + 1;
@@ -6537,7 +6563,7 @@ void __fastcall TNyanFiForm::SetDirCaption(int tag)
 	pp->Hint = (pnam.Length()<pnam0.Length())? (lst_stt->is_FTP? yen_to_slash(pnam0) : yen_to_delimiter(pnam0))
 											 : EmptyStr;
 	if (lst_stt->is_FTP) pnam = yen_to_slash(pnam);
-	pnam = REPLACE_TS(pnam, "&", "&&");
+	pnam = ReplaceStr(pnam, "&", "&&");
 	if (lst_stt->is_TabFixed) pnam.Insert(TabPinMark, 1);
 	pp->Caption = pnam;
 
@@ -6848,7 +6874,7 @@ void __fastcall TNyanFiForm::SetFileInf()
 		ViewFileInf(cfp);
 
 		//サブビュアー
-		if (GifViewer->Visible) {
+		if (SubViewer->Visible) {
 			UnicodeString fnam;
 			if (cfp && !cfp->is_ftp  && !cfp->is_dir) {
 				if (cfp->is_virtual) {
@@ -6858,7 +6884,7 @@ void __fastcall TNyanFiForm::SetFileInf()
 				else
 					fnam = cfp->f_name;
 			}
-			GifViewer->DrawImage(fnam);
+			SubViewer->DrawImage(fnam);
 		}
 
 		//結果リストのカーソル位置内容を反対パスに反映
@@ -10420,7 +10446,7 @@ void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 			}
 			//見つからなかった
 			else if (!CurStt->is_Migemo) {
-				stt_pp->Caption = " サーチ: " + REPLACE_TS(CurStt->incsea_Word, "&", "&&");
+				stt_pp->Caption = " サーチ: " + ReplaceStr(CurStt->incsea_Word, "&", "&&");
 				stt_pp->Color = col_bgWarn;  stt_pp->Repaint();
 				beep_Warn();  Sleep(250);
 				stt_pp->Color = col_bgList;
@@ -10437,7 +10463,7 @@ void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 	stt_str.sprintf(_T("%s"), CurStt->is_Migemo? _T(" Migemo: ") : CurStt->is_Filter? _T(" フィルタ: ") : _T(" サーチ: "));
 	stt_str += CurStt->incsea_Word;
 	SetIncSeaCaret(stt_str);	//疑似キャレット
-	stt_str = REPLACE_TS(stt_str, "&", "&&");
+	stt_str = ReplaceStr(stt_str, "&", "&&");
 
 	UnicodeString inf_str;
 	//マッチ数
@@ -13054,7 +13080,7 @@ UnicodeString __fastcall TNyanFiForm::GetCopyFileNames(
 					case 'M': s = UNC_to_NetDriveName(pnam); w_fmt = w_m; break;
 					case 'F': s = fnam;						 w_fmt = w_f; break;
 					}
-					if (is_esc) s = REPLACE_TS(s, "\\", "\\\\");
+					if (is_esc) s = ReplaceStr(s, "\\", "\\\\");
 					break;
 
 				case 'B':	//パス無ファイル名
@@ -13327,7 +13353,7 @@ void __fastcall TNyanFiForm::CreateDirActionExecute(TObject *Sender)
 		}
 		inpstr  = Trim(inpstr);
 		inpstr2 = Trim(inpstr2);
-		if (REPLACE_TS(inpstr + inpstr2, "\\", "").IsEmpty()) SkipAbort();
+		if (ReplaceStr(inpstr + inpstr2, "\\", "").IsEmpty()) SkipAbort();
 
 		if (!inpstr.IsEmpty() || !inpstr2.IsEmpty()) {
 			//禁止文字／ユーザ定義文字の変換
@@ -20240,7 +20266,7 @@ void __fastcall TNyanFiForm::PackActionExecute(TObject *Sender)
 			//デフォルトのアーカイブ名を設定
 			UnicodeString arc_name;
 			if (contains_s(ActionParam, _T('?'))) {
-				arc_name = FormatParam(REPLACE_TS(ActionParam, "?", ""));
+				arc_name = FormatParam(ReplaceStr(ActionParam, "?", ""));
 				if (!get_extension(arc_name).IsEmpty()) {
 					arc_t = usr_ARC->GetArcType(arc_name);
 					int idx = (arc_t==UARCTYP_ZIP)? 0 : (arc_t==UARCTYP_7Z) ? 1 :
@@ -20557,13 +20583,7 @@ void __fastcall TNyanFiForm::PlayListActionExecute(TObject *Sender)
 	}
 	//ファイル情報
 	if (TEST_ActParam("FI")) {
-		if (!PlayFile.IsEmpty()) {
-			file_rec *cfp = cre_new_file_rec(PlayFile);
-			FileInfoDlg->inhNxtPre = true;
-			FileInfoDlg->FileRec   = cfp;
-			FileInfoDlg->ShowModal();
-			del_file_rec(cfp);
-		}
+		if (!PlayFile.IsEmpty()) FileInfoDlg->ShowModalEx(PlayFile);
 		return;
 	}
 	//プレイリスト一覧
@@ -26807,7 +26827,7 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 				}
 				else {
 					if (contains_i(lbuf, _T("p>"))) break;
-					inf_str += REPLACE_TI(lbuf, "<br>", "").UCAT_T("\r\n");
+					inf_str += ReplaceText(lbuf, "<br>", "").UCAT_T("\r\n");
 				}
 			}
 		}
@@ -27474,7 +27494,7 @@ UnicodeString __fastcall TNyanFiForm::MakeGrepOutLine(
 	UnicodeString f_nam  = split_pre_tab(itmstr);	//ファイル名
 	UnicodeString f_lno  = split_pre_tab(itmstr);	//行番号
 	UnicodeString ln_str = itmstr;					//行内容
-	if (GrepReplaceTab) ln_str = REPLACE_TS(ln_str, "\t", " ");
+	if (GrepReplaceTab) ln_str = ReplaceStr(ln_str, "\t", " ");
 	if (GrepTrimLeft) {
 		TStringDynArray l_lst = SplitString(ln_str, "\n");
 		ln_str = EmptyStr;
@@ -30208,7 +30228,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 
 	if (ShowHistogram && !HistForm->Visible)  HistForm->Show();
 	if (ShowLoupe     && !LoupeForm->Visible) LoupeForm->Show();
-	if (ShowGifViewer && !GifViewer->Visible) GifViewer->Show();
+	if (ShowSubViewer && !SubViewer->Visible) SubViewer->Show();
 	SetFocus();
 
 	TCursor org_csr = Screen->Cursor;
@@ -30346,7 +30366,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 		if (HistForm->Visible) HistForm->DrawHistogram();
 		UpdateLoupe();
 
-		if (GifViewer->Visible) GifViewer->DrawImage(ViewFileName);
+		if (SubViewer->Visible) SubViewer->DrawImage(ViewFileName);
 
 		if (MinShowTime>0) ImgViewThread->AddRequest(_T("WAIT"));
 	}
@@ -30408,7 +30428,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 			}
 		}
 
-		if (GifViewer->Visible) GifViewer->DrawImage(ViewFileName);
+		if (SubViewer->Visible) SubViewer->DrawImage(ViewFileName);
 	}
 
 	//情報ヘッダ
@@ -30508,7 +30528,7 @@ bool __fastcall TNyanFiForm::ViewClipImage(bool fitted, int zoom)
 
 	if (ShowHistogram && !HistForm->Visible)  HistForm->Show();
 	if (ShowLoupe     && !LoupeForm->Visible) LoupeForm->Show();
-	if (ShowGifViewer && !GifViewer->Visible) GifViewer->Show();
+	if (ShowSubViewer && !SubViewer->Visible) SubViewer->Show();
 	SetFocus();
 
 	if (ImgSidePanel->Visible) {
@@ -30725,8 +30745,8 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 
 		//右綴じでNext/PrevFile入替
 		if (SeekSwapNxtPrv && DoublePage && RightBind && ShowSeekBar) {
-			if		(StartsText("NextFile", CmdStr)) CmdStr = REPLACE_TI(CmdStr, "NextFile", "PrevFile");
-			else if (StartsText("PrevFile", CmdStr)) CmdStr = REPLACE_TI(CmdStr, "PrevFile", "NextFile");
+			if		(StartsText("NextFile", CmdStr)) CmdStr = ReplaceText(CmdStr, "NextFile", "PrevFile");
+			else if (StartsText("PrevFile", CmdStr)) CmdStr = ReplaceText(CmdStr, "PrevFile", "NextFile");
 		}
 
 		ActionParam = EmptyStr;
@@ -30998,7 +31018,7 @@ void __fastcall TNyanFiForm::CloseIActionExecute(TObject *Sender)
 
 	if (LoupeForm->Visible && LoupeForm->Floating) LoupeForm->Close();
 	if (HistForm->Visible && HistForm->Floating)   HistForm->Close();
-	if (GifViewer->Visible) GifViewer->Close();
+	if (SubViewer->Visible) SubViewer->Close();
 
 	//選択状態を反映
 	for (int i=0; i<ViewFileList->Count; i++) {
@@ -31931,14 +31951,14 @@ void __fastcall TNyanFiForm::SidebarActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SubViewerActionExecute(TObject *Sender)
 {
-	if		(TEST_ActParam("LK"))	GifViewer->LockImage();
-	else if (TEST_ActParam("RL"))	GifViewer->RotateImage(3);
-	else if (TEST_ActParam("RR"))	GifViewer->RotateImage(1);
-	else if (TEST_ActParam("FH"))	GifViewer->RotateImage(4);
-	else if (TEST_ActParam("FV"))	GifViewer->RotateImage(5);
+	if		(TEST_ActParam("LK"))	SubViewer->LockImage();
+	else if (TEST_ActParam("RL"))	SubViewer->RotateImage(3);
+	else if (TEST_ActParam("RR"))	SubViewer->RotateImage(1);
+	else if (TEST_ActParam("FH"))	SubViewer->RotateImage(4);
+	else if (TEST_ActParam("FV"))	SubViewer->RotateImage(5);
 	else {
-		GifViewer->Visible = (ScrMode==SCMD_IVIEW)? SetToggleAction(ShowGifViewer) : !GifViewer->Visible;
-		if (GifViewer->Visible) {
+		SubViewer->Visible = (ScrMode==SCMD_IVIEW)? SetToggleAction(ShowSubViewer) : !SubViewer->Visible;
+		if (SubViewer->Visible) {
 			UnicodeString fnam;
 			if (ScrMode==SCMD_IVIEW)
 				fnam = ViewFileName;
@@ -31946,18 +31966,14 @@ void __fastcall TNyanFiForm::SubViewerActionExecute(TObject *Sender)
 				fnam = EmptyStr;
 				file_rec *cfp = GetCurFrecPtr(true);
 				if (cfp && !cfp->is_ftp  && !cfp->is_dir) {
-					if (!test_FileExt(cfp->f_ext, FExtNoIView) && is_Viewable(cfp)) fnam = cfp->f_name;
+					if (!test_FileExt(cfp->f_ext, FExtNoIView) && (is_Viewable(cfp) || test_Mp3Ext(cfp->f_ext)))
+						fnam = cfp->f_name;
 				}
 			}
-			GifViewer->DrawImage(fnam);
+			SubViewer->DrawImage(fnam);
 			SetFocus();
 		}
 	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GifViewerActionExecute(TObject *Sender)
-{
-	SubViewerAction->Execute();
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SubViewerActionUpdate(TObject *Sender)
@@ -31965,7 +31981,7 @@ void __fastcall TNyanFiForm::SubViewerActionUpdate(TObject *Sender)
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = (ScrMode==SCMD_FLIST || ScrMode==SCMD_IVIEW);
 	ap->Enabled = ap->Visible;
-	ap->Checked = GifViewer->Visible;
+	ap->Checked = SubViewer->Visible;
 }
 
 //---------------------------------------------------------------------------

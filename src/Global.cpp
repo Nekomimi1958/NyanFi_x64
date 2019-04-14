@@ -293,7 +293,7 @@ bool AnimateGif;				//イメージビュアーでアニメーションGIFを表示
 bool ShowThumbScroll;			//サムネイルのスクロールバーを表示
 bool ShowHistogram;				//ヒストグラムを表示
 bool ShowLoupe;					//ルーペを表示
-bool ShowGifViewer;				//GIFビュアーを表示
+bool ShowSubViewer;				//GIFビュアーを表示
 bool ShowSeekBar;				//シークバーを表示
 bool WarnHighlight;				//白飛び警告
 bool DoublePage;				//見開き表示
@@ -1185,6 +1185,13 @@ void InitializeGlobal()
 	mute_Volume("GET");	//ミュート状態を取得
 
 	//廃止セクション、キーの削除、修正
+	IniFile->ReplaceKey(SCT_General, "ShowGifViewer",	"ShowSubViewer");	//v13.52
+	IniFile->ReplaceKey(SCT_General, "GifViewerLeft",	"SubViewerLeft");
+	IniFile->ReplaceKey(SCT_General, "GifViewerTop",	"SubViewerTop");
+	IniFile->ReplaceKey(SCT_General, "GifViewerWidth",	"SubViewerWidth");
+	IniFile->ReplaceKey(SCT_General, "GifViewerHeight",	"SubViewerHeight");
+	IniFile->ReplaceKey(SCT_General, "GifViewBgCol",	"SubViewerBgCol");
+
 	IniFile->DeleteKey(SCT_General, "GitViewFExtColor");	//v13.41
 	IniFile->DeleteKey(SCT_General, "MarkListShowOpt");		//v13.24
 	IniFile->DeleteKey(SCT_General, "EditHistShowOpt");		//v13.24
@@ -1834,7 +1841,7 @@ void InitializeGlobal()
 		{_T("U:ThumbnailPos=1"),			(TObject*)&ThumbnailPos},
 		{_T("U:ShowHistogram=false"),		(TObject*)&ShowHistogram},
 		{_T("U:ShowLoupe=false"),			(TObject*)&ShowLoupe},
-		{_T("U:ShowGifViewer=false"),		(TObject*)&ShowGifViewer},
+		{_T("U:ShowSubViewer=false"),		(TObject*)&ShowSubViewer},
 		{_T("U:ShowSeekBar=false"),			(TObject*)&ShowSeekBar},
 		{_T("U:WarnHighlight=false"),		(TObject*)&WarnHighlight},
 		{_T("U:DoublePage=false"),			(TObject*)&DoublePage},
@@ -2368,17 +2375,20 @@ void SaveOptions()
 		UnicodeString key  = lp->Names[i];
 		UnicodeString vbuf = lp->ValueFromIndex[i];
 		//Section
-		if (remove_top_text(key, _T("S:")))
+		if (remove_top_text(key, _T("S:"))) {
 			IniFile->AssignSection(key, (TStringList*)lp->Objects[i]);
+		}
 		//List
-		else if (remove_top_text(key, _T("L:")))
+		else if (remove_top_text(key, _T("L:"))) {
 			IniFile->SaveListItems(key, (TStringList*)lp->Objects[i], get_tkn(vbuf, ',').ToIntDef(20));
+		}
 		else {
 			sct = remove_top_text(key, _T("U:"))? SCT_General :
 				  remove_top_text(key, _T("G:"))? UnicodeString("Grep") : SCT_Option;
-			if (is_quot(vbuf))
+			if (is_quot(vbuf)) {
 				//UnicodeString
 				IniFile->WriteString(sct, key,	*((UnicodeString*)lp->Objects[i]));
+			}
 			else {
 				//bool
 				if (contained_wd_i(_T("true|false"), vbuf))
@@ -2478,8 +2488,9 @@ void BringOptionByTag(TForm *fp)
 {
 	for (int i=0; i<fp->ComponentCount; i++) {
 		TComponent *cp = fp->Components[i];  if (cp->Tag==0) continue;
-		if (class_is_CheckBox(cp))
+		if (class_is_CheckBox(cp)) {
 			((TCheckBox*)cp)->Checked = *(bool*)cp->Tag;
+		}
 		else if (class_is_Edit(cp)) {
 			if (((TEdit*)cp)->NumbersOnly)
 				((TEdit*)cp)->Text = *(int*)cp->Tag;
@@ -2492,8 +2503,9 @@ void BringOptionByTag(TForm *fp)
 			else
 				((TLabeledEdit*)cp)->Text = *(UnicodeString*)cp->Tag;
 		}
-		else if (class_is_RadioGroup(cp))
+		else if (class_is_RadioGroup(cp)) {
 			((TRadioGroup*)cp)->ItemIndex = *(int*)cp->Tag;
+		}
 		else if (class_is_ComboBox(cp)) {
 			if (((TComboBox*)cp)->Style==csDropDown)
 				((TComboBox*)cp)->Text = *(UnicodeString*)cp->Tag;
@@ -2522,8 +2534,9 @@ int GetOptionIntDef(int tag)
 void ApplyOptionByTag(TComponent *cp)
 {
 	if (cp->Tag==0) return;
-	if (class_is_CheckBox(cp))
+	if (class_is_CheckBox(cp)) {
 		*(bool*)cp->Tag = ((TCheckBox*)cp)->Checked;
+	}
 	else if (class_is_Edit(cp)) {
 		if (((TEdit*)cp)->NumbersOnly)
 			*(int*)cp->Tag = ((TEdit*)cp)->Text.ToIntDef(GetOptionIntDef(cp->Tag));
@@ -2536,8 +2549,9 @@ void ApplyOptionByTag(TComponent *cp)
 		else
 			*(UnicodeString*)cp->Tag = ((TLabeledEdit*)cp)->Text;
 	}
-	else if (class_is_RadioGroup(cp))
+	else if (class_is_RadioGroup(cp)) {
 		*(int*)cp->Tag = ((TRadioGroup*)cp)->ItemIndex;
+	}
 	else if (class_is_ComboBox(cp)) {
 		if (((TComboBox*)cp)->Style==csDropDown)
 			*(UnicodeString*)cp->Tag = ((TComboBox*)cp)->Text;
@@ -3291,7 +3305,7 @@ UnicodeString get_WebSeaCaption(UnicodeString kwd)
 	UnicodeString ret_str;
 	if (!kwd.IsEmpty()) {
 		kwd = Trim(get_first_line(kwd));
-		kwd = REPLACE_TS(kwd, "&", "&&");
+		kwd = ReplaceStr(kwd, "&", "&&");
 		if (kwd.Length()>20) kwd = kwd.SubString(1, 20).UCAT_T("…");
 		if (!kwd.IsEmpty()) ret_str.sprintf(_T("「%s」を "), kwd.c_str());
 	}
@@ -3394,8 +3408,9 @@ UnicodeString make_ResponseFile(TStringList *lst,
 		else {
 			for (int i=0; i<lst->Count; i++) {
 				UnicodeString fnam = lst->Strings[i];
-				if ((arc_t!=UARCTYP_RAR && starts_AT(fnam)) || (arc_t==UARCTYP_CAB && StartsStr('-', fnam)))
+				if ((arc_t!=UARCTYP_RAR && starts_AT(fnam)) || (arc_t==UARCTYP_CAB && StartsStr('-', fnam))) {
 					r_lst->Add(add_quot_if_spc(fnam));
+				}
 				else {
 					//※unrarXX.dll のバグ? 対策
 					if (starts_AT(fnam)) fnam = "?" + exclude_top(fnam);
@@ -3466,7 +3481,7 @@ UnicodeString format_CloneName(
 	int sn = 0;
 	for (int i=0; ; i++) {
 		ret_str = dst_dir;
-		UnicodeString fmt_str = (i==0)? get_tkn(fmt, _T("\\-")) : REPLACE_TS(fmt, "\\-", "");
+		UnicodeString fmt_str = (i==0)? get_tkn(fmt, _T("\\-")) : ReplaceStr(fmt, "\\-", "");
 
 		UnicodeString tmp = fmt_str;
 		while (!tmp.IsEmpty()) {
@@ -3652,8 +3667,9 @@ void get_LibraryList(
 {
 	try {
 		std::unique_ptr<TStringList> l_lst(new TStringList());
-		if (ends_PathDlmtr(fnam))
+		if (ends_PathDlmtr(fnam)) {
 			get_files(fnam, _T("*.library-ms"), l_lst.get());
+		}
 		else {
 			if (!file_exists(fnam)) Abort();
 			l_lst->Text = fnam;
@@ -3902,8 +3918,9 @@ UnicodeString UpdateTempArcList(int tag)
 		}
 		return tmp_path;
 	}
-	else
+	else {
 		return EmptyStr;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -3936,8 +3953,9 @@ bool SetTmpFile(
 				if (tmp_path.IsEmpty()) Abort();
 			}
 			//その他
-			else
+			else {
 				tmp_path = lst_stt->arc_TmpList->Strings[0];
+			}
 
 			UnicodeString tmp_name;
 			tmp_name.sprintf(_T("%s%s%s"), tmp_path.c_str(), fp->b_name.c_str(), fp->f_ext.c_str());
@@ -4003,7 +4021,7 @@ UnicodeString ExtractInZipImg(
 
 		UnicodeString znam = !i_cover.IsEmpty()? i_cover : i_first;
 		if (!znam.IsEmpty()) {
-			i_fnam = TempPathA + ExtractFileName(REPLACE_TS(znam, "/", "\\"));
+			i_fnam = TempPathA + ExtractFileName(ReplaceStr(znam, "/", "\\"));
 			zp->Extract(znam, TempPathA, false);
 		}
 	}
@@ -4093,8 +4111,9 @@ UnicodeString CheckAvailablePath(UnicodeString dnam, int tag)
 
 	//履歴から探す
 	TStringList *h_lst = get_DirHistory(CurTabIndex, tag);
-	if (h_lst && h_lst->Count>0)
+	if (h_lst && h_lst->Count>0) {
 		dnam = get_csv_item(h_lst->Strings[0], 0);
+	}
 	//存在するドライブから探す
 	else {
 		dnam = EmptyStr;
@@ -4275,8 +4294,9 @@ UnicodeString GetSelFileStr(
 			if (!SetTmpFile(fp)) UserAbort(USTR_FaildTmpUnpack);
 			fnam = fp->tmp_name;
 		}
-		else
+		else {
 			fnam = fp->f_name;
+		}
 
 		if (!f_str.IsEmpty()) f_str.UCAT_T(" ");
 		f_str += add_quot_if_spc(fnam);
@@ -4466,8 +4486,9 @@ file_rec* cre_new_file_rec(
 	file_rec *fp = cre_new_file_rec();
 	fp->tag = tag;
 
-	if (fnam.IsEmpty())
+	if (fnam.IsEmpty()) {
 		fp->is_dummy = true;
+	}
 	else if (is_separator(fnam)) {
 		fp->alias.USET_T("-");
 		fp->is_dummy = true;
@@ -4641,8 +4662,9 @@ UnicodeString get_TabWorkList(int tab_idx)
 		int w_mod = itm_buf[6].ToIntDef(0);
 		return to_absolute_name((w_mod==1)? HomeWorkList : (w_mod==2)? itm_buf[7] : EmptyStr);
 	}
-	else
+	else {
 		return EmptyStr;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -4786,7 +4808,7 @@ bool check_file_std(
 		//ダブルクォーテーションで囲まれていたら空白を含む語として正規表現で
 		if (is_quot(kwd)) {
 			kwd = TRegEx::Escape(exclude_quot(kwd));
-			if (contains_s(kwd, _T(' '))) kwd = REPLACE_TS(kwd, " ", "\\s");
+			if (contains_s(kwd, _T(' '))) kwd = ReplaceStr(kwd, " ", "\\s");
 			is_regex = true;
 		}
 		//検索
@@ -4794,8 +4816,9 @@ bool check_file_std(
 			TRegExOptions opt;  if (!lst_stt->find_Case) opt << roIgnoreCase;
 			if (!TRegEx::IsMatch(fnam, kwd, opt)) return false;
 		}
-		else
+		else {
 			if (!find_mlt(kwd, fnam, lst_stt->find_And, false, lst_stt->find_Case)) return false;
+		}
 	}
 	//タイムスタンプ
 	if (lst_stt->find_DT_mode>0) {
@@ -5582,6 +5605,20 @@ void setup_ToolBar(TToolBar *tb)
 	tb->GradientStartColor = col_bgTlBar1;
 	tb->GradientEndColor   = col_bgTlBar2;
 	tb->HotTrackColor	   = col_htTlBar;
+
+	for (int i=0; i<tb->ControlCount; i++) {
+		TControl *cp = tb->Controls[i];
+		if (class_is_Edit(cp)) {
+			((TEdit*)cp)->Font->Assign(DialogFont);
+			((TEdit*)cp)->Text = EmptyStr;
+		}
+		else if (class_is_ComboBox(cp)) {
+			((TComboBox*)cp)->Font->Assign(DialogFont);
+		}
+		else if (cp->ClassNameIs("TSplitter")) {
+			((TSplitter*)cp)->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -5883,8 +5920,10 @@ void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 							fp->f_time	   = inf.f_time;
 							fp->f_attr	   = inf.f_attr;
 							fp->attr_str   = get_file_attr_str(fp->f_attr);
-							if (fp->is_dir)
+
+							if (fp->is_dir) {
 								fp->b_name = ExtractFileName(inf.f_name);
+							}
 							else {
 								fp->b_name = get_base_name(inf.f_name);
 								fp->f_ext  = get_extension(inf.f_name);
@@ -5892,6 +5931,7 @@ void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 								//拡張子の幅・位置調整
 								set_FextWidth(fp, tag);
 							}
+
 							lst->AddObject(fp->f_name, (TObject*)fp);
 							FindCount = (lst->Count>1)? lst->Count - 1 : 0;
 							add_cnt++;
@@ -6275,8 +6315,9 @@ HICON get_folder_icon(UnicodeString dnam)
 				TIcon *icon = (TIcon*)CachedIcoList->Objects[idx];
 				if (icon) hIcon = icon->Handle;
 			}
-			else
+			else {
 				CachedIcoList->Add(fnam);	//スレッドに取得を要求
+			}
 		}
 		IconRWLock->EndWrite();
 	}
@@ -6325,8 +6366,9 @@ bool draw_SmallIcon(
 							handled = true;
 						}
 					}
-					else
+					else {
 						CachedIcoList->Add(fnam);	//スレッドに取得を要求
+					}
 				}
 				IconRWLock->EndWrite();
 			}
@@ -6368,8 +6410,9 @@ bool draw_SmallIconF(
 				handled = true;
 			}
 		}
-		else
+		else {
 			CachedIcoList->Add(fnam);	//スレッドに取得を要求
+		}
 	}
 	IconRWLock->EndWrite();
 
@@ -6450,8 +6493,9 @@ int add_IconImage(
 				UsrIcoList->AddObject(fnam, (TObject*)icon);
 			}
 		}
-		else
+		else {
 			icon = (TIcon*)UsrIcoList->Objects[idx];
+		}
 	}
 
 	if (icon) idx = lst->AddIcon(icon);
@@ -6465,7 +6509,7 @@ int add_IconImage(
 UnicodeString get_file_from_cmd(UnicodeString s)
 {
 	//先頭コマンドを取得
-	s = REPLACE_TS(s, ":\\", "\f");
+	s = ReplaceStr(s, ":\\", "\f");
 
 	UnicodeString cmd;
 	int p = 1;
@@ -6486,7 +6530,7 @@ UnicodeString get_file_from_cmd(UnicodeString s)
 		p++;
 	}
 
-	cmd = Trim(REPLACE_TS(cmd, "\f", ":\\"));
+	cmd = Trim(ReplaceStr(cmd, "\f", ":\\"));
 
 	//ファイル名を取得
 	if (USAME_TI(cmd, "PowerShell")) cmd.USET_T("FileRun_powershell");
@@ -6517,8 +6561,9 @@ void SetExtNameToCtrl(UnicodeString fnam, TWinControl *cp,
 		UnicodeString xnam, prm, fld;
 		int shw;
 		usr_SH->get_LnkInf(fnam, NULL, &xnam, &prm, &fld, &shw);
-		if (test_ExeExt(get_extension(xnam)))
+		if (test_ExeExt(get_extension(xnam))) {
 			fnam = xnam;
+		}
 		else {
 			msgbox_WARN("リンク先が .exe ファイルではありません");
 			return;
@@ -6805,14 +6850,17 @@ int find_NextFile(
 			if (i<=idx && idx0!=-1) continue;
 			file_rec *fp = (file_rec*)lst->Objects[i];
 			if ((skip_dir && fp->is_dir) || fp->is_dummy) continue;
+
 			bool match;
 			if (!keywd.IsEmpty()) {
 				UnicodeString lbuf = (!fp->alias.IsEmpty())? (fp->alias + fp->f_ext) : fp->n_name;
 				if (with_tag) lbuf.cat_sprintf(_T("\t%s"), fp->tags.c_str());
 				match = regex? TRegEx::IsMatch(lbuf, keywd, opt) : contains_word_and_or(lbuf, keywd, case_sns);
 			}
-			else
+			else {
 				match = (fext.IsEmpty() || test_FileExt(fp->f_ext, fext));
+			}
+
 			if (match) {
 				if (i<=idx) idx0 = i; else idx1 = i;
 			}
@@ -6844,14 +6892,17 @@ int find_PrevFile(
 			if (i>=idx && idx0!=-1) continue;
 			file_rec *fp = (file_rec*)lst->Objects[i];
 			if ((skip_dir && fp->is_dir) || fp->is_dummy) continue;
+
 			bool match;
 			if (!keywd.IsEmpty()) {
 				UnicodeString lbuf = (!fp->alias.IsEmpty())? (fp->alias + fp->f_ext) : fp->n_name;
 				if (with_tag) lbuf.cat_sprintf(_T("\t%s"), fp->tags.c_str());
 				match = regex? TRegEx::IsMatch(lbuf, keywd, opt) : contains_word_and_or(lbuf, keywd, case_sns);
 			}
-			else
+			else {
 				match = (fext.IsEmpty() || test_FileExt(fp->f_ext, fext));
+			}
+
 			if (match) {
 				if (i>=idx) idx0 = i; else idx1 = i;
 			}
@@ -6927,8 +6978,9 @@ void make_AssoMenuList(TStringDynArray app_lst, TStringList *lst)
 			lbuf.cat_sprintf(_T("\t\t%s"), get_file_from_cmd(anam).c_str());
 		}
 		//コマンドファイル
-		else if (remove_top_AT(anam))
+		else if (remove_top_AT(anam)) {
 			lbuf = get_base_name(anam);
+		}
 		//エイリアス
 		else if (remove_top_Dollar(anam)) {
 			UnicodeString inam;	//アイコン
@@ -7146,8 +7198,10 @@ UnicodeString get_RegDirName(UnicodeString pnam)
 		ret_nam.sprintf(_T("<%s>\\"), rnam.c_str());
 		ret_nam += pnam.Delete(1, dlen);
 	}
-	else
+	else {
 		ret_nam = pnam;
+	}
+
 	return ret_nam;
 }
 //---------------------------------------------------------------------------
@@ -7206,8 +7260,10 @@ UnicodeString get_PathFrom_SF(file_rec *fp)
 			}
 		}
 	}
-	else
+	else {
 		dnam = get_top_line(fp->f_name);
+	}
+
 	dnam = get_tkn_r(dnam, _T("_SF:"));
 
 	return dnam;
@@ -7257,7 +7313,9 @@ void move_top_RegDirItem(int idx)
 //---------------------------------------------------------------------------
 //ファイルリストの上下左右を取得
 //---------------------------------------------------------------------------
-UnicodeString get_LRUD_str(int tag, bool both)
+UnicodeString get_LRUD_str(
+	int  tag,		//タグ	(default = CurListTag)
+	bool both)		//両方	(default = false)
 {
 	return both ? (DivFileListUD? "上下" : "左右")
 				: (DivFileListUD? ((tag==0)? "上" : "下") : ((tag==0)? "左" : "右"));
@@ -7313,8 +7371,9 @@ void GetFileInfList(
 					lst_stt->find_TAG?   _T(" - タグ") :
 					lst_stt->find_DUPL?  _T(" - 重複") : null_TCHAR);
 			}
-			else
+			else {
 				lbuf = "<カレント>";
+			}
 		}
 	}
 	else {
@@ -8451,7 +8510,7 @@ int get_FileCodePage(
 		if (p>0) {
 			lbuf = lbuf.SubString(p, lbuf.Length() - p + 1);
 			lbuf = get_tkn(get_tkn_m(lbuf, '=', '>'), '/');
-			enc  = Trim(REPLACE_TS(lbuf, "\"", ""));
+			enc  = Trim(ReplaceStr(lbuf, "\"", ""));
 		}
 	}
 
@@ -9083,7 +9142,7 @@ UnicodeString get_CmdDesc(
 				if (!contains_s(ibuf, _T('&'))) continue;
 				UnicodeString ak = get_tkn_r(ibuf, '&').SubString(1, 1);
 				if (!SameText(ak, prm)) continue;
-				dsc = REPLACE_TS(ibuf, "&", "");
+				dsc = ReplaceStr(ibuf, "&", "");
 				break;
 			}
 		}
@@ -9094,14 +9153,14 @@ UnicodeString get_CmdDesc(
 			for (int i=0; i<menu_list->Count && dsc.IsEmpty(); i++) {
 				TStringDynArray itm_buf = get_csv_array(menu_list->Strings[i], EXTMENU_CSVITMCNT, true);
 				if (!SameText(alias, itm_buf[3])) continue;
-				dsc = REPLACE_TS(itm_buf[0], "&", "");
+				dsc = ReplaceStr(itm_buf[0], "&", "");
 				break;
 			}
 			//外部ツール
 			for (int i=0; i<tool_list->Count && dsc.IsEmpty(); i++) {
 				TStringDynArray itm_buf = get_csv_array(tool_list->Strings[i], EXTTOOL_CSVITMCNT, true);
 				if (!SameText(alias, itm_buf[4])) continue;
-				dsc = REPLACE_TS(itm_buf[0], "&", "");
+				dsc = ReplaceStr(itm_buf[0], "&", "");
 				break;
 			}
 		}
@@ -9115,8 +9174,9 @@ UnicodeString get_CmdDesc(
 		}
 	}
 
-	if (only_inf)
+	if (only_inf) {
 		return dsc;
+	}
 	else {
 		if (!prm.IsEmpty()) cmd.cat_sprintf(_T("_%s"), prm.c_str());
 		return UnicodeString().sprintf((cmd.Length()<20)? _T("%-20s%s") : _T("%s  %s"), cmd.c_str(), dsc.c_str());
@@ -9496,8 +9556,9 @@ bool play_sound_ex(
 				}
 			}
 		}
-		else
+		else {
 			res = (::mciSendString(_T("play TPLYSND notify"), NULL, 0, MainHandle)==0);
+		}
 
 		if (!res) ::mciSendString(_T("close TPLYSND"), NULL, 0, NULL);
 	}
@@ -9597,8 +9658,9 @@ bool play_PlayList(bool prev, bool inh_shfl)
 					PlayFile = fnam;
 					AddLog(make_LogHdr(_T("PLAY"), fnam));
 				}
-				else 
+				else  {
 					::mciSendString(_T("close PLYLIST"), NULL, 0, NULL);
+				}
 			}
 		}
 		if (!res) ng_cnt++;
@@ -9636,8 +9698,9 @@ int get_TabTextWidth(
 			}
 		}
 	}
-	else
+	else {
 		wd = get_TextWidth(cv, s, is_irreg);
+	}
 
 	return wd;
 }
@@ -9791,8 +9854,9 @@ void EmphasisTextOut(
 	cv->Brush->Color = BgCol[1];
 	UnicodeString sbuf;
 	for (int j=1; j<=s_len; j++) {
-		if (FgCol[j]==cv->Font->Color && BgCol[j]==cv->Brush->Color)
+		if (FgCol[j]==cv->Font->Color && BgCol[j]==cv->Brush->Color) {
 			sbuf.cat_sprintf(_T("%c"), s[j]);
+		}
 		else {
 			TabCrTextOut(sbuf, cv, x, y, cv->Font->Color);
 			sbuf = s[j];
@@ -9869,7 +9933,7 @@ void TabCrTextOut(
 {
 	if (max_x>0 && x>=max_x) return;
 
-	s = REPLACE_TS(s, "\r", "");
+	s = ReplaceStr(s, "\r", "");
 	int slen  = s.Length();
 	int yh = y + cv->TextHeight(s);
 	bool is_irreg = IsIrregularFont(cv->Font);
@@ -10382,12 +10446,27 @@ void FileNameOut(
 			PathNameOut(dnam, kw_lst, cv, xp, yp);
 			rc.Left = xp;
 		}
-		else
+		else {
 			RuledLnTextOut(dnam, cv, rc, fg, 8, kw_lst);
+		}
 	}
 
 	//ファイル名
 	RuledLnTextOut(fnam, cv, rc, use_fgsel? col_fgSelItem : get_ExtColor(get_extension(fnam)), 8, kw_lst);
+}
+
+//---------------------------------------------------------------------------
+//ステータスバーのパネルを描画
+//---------------------------------------------------------------------------
+void draw_SttBarPanel(TStatusBar *sp, TStatusPanel *pp, TRect rc)
+{
+	TCanvas *cv = sp->Canvas;
+	cv->Font->Assign(sp->Font);
+	cv->Brush->Color = col_bgSttBar;
+	cv->FillRect(rc);
+
+	cv->Font->Color = col_fgSttBar;
+	cv->TextOut(rc.Left + Scaled4, rc.Top, pp->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -10411,6 +10490,7 @@ bool draw_SttBarBg(TStatusBar *sp, TMessage &msg)
 	msg.Result = 1;
 	return true;
 }
+
 //---------------------------------------------------------------------------
 //情報ヘッダの背景を描画
 //---------------------------------------------------------------------------
@@ -10704,8 +10784,9 @@ int load_text_ex(
 				std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(code_page));
 				f_buf->LoadFromStream(ms.get(), enc.get());
 			}
-			else
+			else {
 				f_buf->LoadFromStream(ms.get());
+			}
 
 			if (ms->Size<fs->Size) {
 				if (f_buf->Count>0) {
@@ -10731,8 +10812,9 @@ int load_text_ex(
 				std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(code_page));
 				f_buf->LoadFromFile(fnam, enc.get());
 			}
-			else
+			else {
 				f_buf->LoadFromFile(fnam);
+			}
 		}
 	}
 	catch (...) {
@@ -10873,7 +10955,7 @@ void get_xml_inf(
 		while (!lbuf.IsEmpty()) {
 			UnicodeString vstr = exclude_quot(get_tkn_m(lbuf, '=', ' '));
 			if (vstr.IsEmpty()) break;
-			UnicodeString nstr = REPLACE_TS(get_tkn(lbuf, '='), "version", "XML version");
+			UnicodeString nstr = ReplaceStr(get_tkn(lbuf, '='), "version", "XML version");
 			lst->Add(UnicodeString().sprintf(_T("%*s: %s"), FPRP_NAM_WD, nstr.c_str(), vstr.c_str()));
 			lbuf = get_tkn_r(lbuf, ' ');
 		}
@@ -10893,8 +10975,9 @@ UnicodeString get_autorun_ico(UnicodeString fnam)
 		bool s_flag = false;
 		for (int i=0; i<fbuf->Count; i++) {
 			UnicodeString lbuf = Trim(fbuf->Strings[i]);
-			if (USAME_TI(lbuf, "[autorun]"))
+			if (USAME_TI(lbuf, "[autorun]")) {
 				s_flag = true;
+			}
 			else if (s_flag && StartsText("icon=", lbuf)) {
 				ico_nam = ExtractFilePath(fnam) + get_tkn_r(lbuf, '=');  break;
 			}
@@ -10924,9 +11007,13 @@ bool open_by_TextEditor(UnicodeString fnam, int lno)
 				prmstr = ReplaceStr(prmstr, "$F", p_fnam);
 				prmstr = ReplaceStr(prmstr, "$L", IntToStr(lno));
 			}
-			else prmstr = p_fnam;
+			else {
+				prmstr = p_fnam;
+			}
 		}
-		else prmstr = p_fnam;
+		else {
+			prmstr = p_fnam;
+		}
 
 		if (!Execute_ex(editor, prmstr)) UserAbort(USTR_FaildExec);
 		if (AddToRecent) AddToRecentFile(fnam);
@@ -10962,9 +11049,13 @@ bool open_by_ExtTextViewer(UnicodeString fnam, int lno)
 				prmstr = ReplaceStr(prmstr, "$F", p_fnam);
 				prmstr = ReplaceStr(prmstr, "$L", IntToStr(lno));
 			}
-			else prmstr = p_fnam;
+			else {
+				prmstr = p_fnam;
+			}
 		}
-		else prmstr = p_fnam;
+		else {
+			prmstr = p_fnam;
+		}
 
 		if (!Execute_ex(viewer, prmstr)) UserAbort(USTR_FaildExec);
 
@@ -11059,7 +11150,7 @@ bool divide_FileName_LineNo(
 			{
 				lno = 1;
 				nptn = exclude_top_end(nptn);
-				nptn = REPLACE_TS(nptn, "\\/", "/");
+				nptn = ReplaceStr(nptn, "\\/", "/");
 				bool p_top = remove_top_s(nptn, '^');
 				bool p_end = remove_end_s(nptn, '$');
 				UnicodeString nkwd = nptn;
@@ -11084,8 +11175,9 @@ bool divide_FileName_LineNo(
 				}
 			}
 			//行番号
-			else
+			else {
 				lno = nptn.ToIntDef(1);
+			}
 			break;
 		}
 
@@ -11589,8 +11681,9 @@ UnicodeString get_LogErrMsg(
 	UnicodeString ret_str;
 
 	if (LogErrMsg) {
-		if (!msg.IsEmpty())
+		if (!msg.IsEmpty()) {
 			ret_str = msg;
+		}
 		else {
 			int msg_id = GetLastError();
 			if (msg_id!=NO_ERROR) {
@@ -12042,15 +12135,16 @@ void StartLog(
 	UnicodeString msg,	//メーセージ (\t は " ---> " に置換)
 	int task_no)		//タスク番号 (default = -1)
 {
-	if (msg.IsEmpty())
+	if (msg.IsEmpty()) {
 		LogBufList->Add(EmptyStr);
+	}
 	else {
 		//前が空行でなければ、空行を挿入
 		if (LogBufList->Count>0 && !LogBufList->Strings[LogBufList->Count - 1].IsEmpty()) LogBufList->Add(EmptyStr);
 		//開始表示
 		UnicodeString s;
 		if (task_no>=0) s.sprintf(_T("%u>"), task_no + 1); else s.USET_T(">>");
-		s += FormatDateTime("hh:nn:ss ", Now()) + REPLACE_TS(msg, "\t", " ---> ");
+		s += FormatDateTime("hh:nn:ss ", Now()) + ReplaceStr(msg, "\t", " ---> ");
 		LogBufList->Add(s);
 	}
 
@@ -12107,7 +12201,9 @@ void AddLog(
 		if (with_t) s += FormatDateTime("hh:nn:ss ", Now());
 		s += msg;
 	}
-	else s.USET_T("\r\n");
+	else {
+		s.USET_T("\r\n");
+	}
 
 	std::unique_ptr<TStringList> log_buf(new TStringList());
 	log_buf->Text = s;
@@ -12146,8 +12242,9 @@ void AddErr_Highlight()
 			AddLog(UserHighlight->ErrorList->Strings[i]);
 		UserHighlight->ErrorList->Clear();
 	}
-	else
+	else {
 		AddLog(msg);
+	}
 }
 //---------------------------------------------------------------------------
 void AddDebugLog(
@@ -12224,9 +12321,13 @@ void set_RedrawOn(TWinControl *cp)
 			RedrawList->Delete(idx);
 			flag = true;
 		}
-		else RedrawList->Strings[idx] = IntToStr(n);
+		else {
+			RedrawList->Strings[idx] = IntToStr(n);
+		}
 	}
-	else flag = true;
+	else {
+		flag = true;
+	}
 
 	//描画再開
 	if (flag) {
@@ -12391,7 +12492,7 @@ bool is_IniSeaKey(UnicodeString &keystr)
 	if (k.Length()!=1) return false;
 
 	if (_istalpha(k[1]) || USAME_TS(k, "＼") || ((IniSeaByNum || IniSeaBySign) && _istdigit(k[1]))) {
-		k = REPLACE_TS(k, "＼", "_");
+		k = ReplaceStr(k, "＼", "_");
 		if (IniSeaBySign) {
 			//Shift+数字キーの記号もサーチ
 			std::unique_ptr<TStringList> r_lst(new TStringList());
@@ -12403,8 +12504,9 @@ bool is_IniSeaKey(UnicodeString &keystr)
 		keystr.sprintf(_T("^%s"), k.c_str());
 		return chk_RegExPtn(keystr);
 	}
-	else
+	else {
 		return false;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -12420,7 +12522,7 @@ bool update_IncSeaWord(
 	bool is_cap  = false;
 
 	remove_text(keystr, _T("10Key_"));
-	keystr = REPLACE_TS(keystr, "＝", "=");
+	keystr = ReplaceStr(keystr, "＝", "=");
 
 	if (remove_top_text(keystr, KeyStr_Shift)) {
 		if (keystr.Length()==1) {
@@ -12468,8 +12570,9 @@ bool update_IncSeaWord(
 	}
 	else if (keystr.Length()==1) {
 		//英数字
-		if (_istalnum(keystr[1]))
+		if (_istalnum(keystr[1])) {
 			is_char = true;
+		}
 		//記号
 		else {
 			//ファイル名

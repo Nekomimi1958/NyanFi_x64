@@ -442,7 +442,7 @@ extern bool AnimateGif;
 extern bool ShowThumbScroll;
 extern bool ShowHistogram;
 extern bool ShowLoupe;
-extern bool ShowGifViewer;
+extern bool ShowSubViewer;
 extern bool ShowSeekBar;
 extern bool WarnHighlight;
 extern bool DoublePage;
@@ -1928,6 +1928,7 @@ void SpaceTextOut(UnicodeString s, TCanvas *cv, int &x, int y, TColor fg, bool f
 
 void Emphasis_RLO_info(UnicodeString fnam, TCanvas *cv, int xp, int yp);
 
+void draw_SttBarPanel(TStatusBar *sp, TStatusPanel *pp, TRect rc);
 bool draw_SttBarBg(TStatusBar *sp, TMessage &msg);
 bool draw_InfHdrBg(TStatusBar *sp, TMessage &msg);
 

@@ -1140,9 +1140,9 @@ UnicodeString UserShell::get_PropInf(
 					if (lst_sw)
 						lst->Add(tmp.sprintf(_T("%s=%s"), inam.c_str(), vstr.c_str()));
 					else {
-						tmp = REPLACE_TS(inam, " ", "");
-						tmp = REPLACE_TS(tmp,  "バージョン", "Ver.");
-						tmp = REPLACE_TS(tmp, "ファイルの説明", "説明");
+						tmp = ReplaceStr(inam, " ", "");
+						tmp = ReplaceStr(tmp,  "バージョン", "Ver.");
+						tmp = ReplaceStr(tmp, "ファイルの説明", "説明");
 						if (EndsStr("解像度", tmp) && extract_int(vstr)>0x10000) continue;	//*** 異常値
 						if (tmp.Length()>(PropNameWidth/2)) remove_text(tmp, "の");
 						add_PropLine(tmp, vstr, lst);
@@ -1264,8 +1264,8 @@ UnicodeString UserShell::get_PropStr(UnicodeString fnam, UnicodeString prp_nam)
 UnicodeString UserShell::get_VerStr(UnicodeString fnam)
 {
 	UnicodeString vstr = get_PropStr(fnam, "製品バージョン");
-	vstr = REPLACE_TS(vstr, ",", ".");
-	vstr = REPLACE_TS(vstr, " ", "");
+	vstr = ReplaceStr(vstr, ",", ".");
+	vstr = ReplaceStr(vstr, " ", "");
 	return vstr;
 }
 

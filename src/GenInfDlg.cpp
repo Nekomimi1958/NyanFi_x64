@@ -58,11 +58,8 @@ void __fastcall TGeneralInfoDlg::FormCreate(TObject *Sender)
 void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 {
 	setup_ToolBar(OpeToolBar);
-	FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
-	FilterEdit->Font->Assign(ToolBarFont);
 	FilterEdit->Width = IniFile->ReadIntGen(_T("GenInfoFilterWidth"),	200);
 	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
-	FilterEdit->Text  = EmptyStr;
 	RetStr = EmptyStr;
 	GenSelList->Clear();
 
@@ -191,16 +188,19 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	int idx = -1;
 	int top = -1;
 	if (lp->Count>0) {
-		if (isLog || ToEnd)
+		if (isLog || ToEnd) {
 			idx = lp->Count - 1;
+		}
+		else if (isPlayList) {
+			idx = GenInfoBuff->IndexOf(PlayFile);
+		}
 		else if (KeepIndexAction->Checked) {
 			idx = LastIndex;
 			top = LastTopIndex;
-			if		(idx==-1)		 idx = 0;
-			else if (idx>=lp->Count) idx = lp->Count - 1;
 		}
-		else
-			idx = 0;
+
+		if		(idx==-1)		 idx = 0;
+		else if (idx>=lp->Count) idx = lp->Count - 1;
 	}
 
 	if (top!=-1) lp->TopIndex = top;
@@ -919,7 +919,9 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 		}
 	}
 	//前後のファイルへ切り替え
-	else if (!FileName.IsEmpty() && !isFTP && contained_wd_i(_T("PrevFile|NextFile"), cmd_V)) {
+	else if (!isPlayList && !isFTP && !FileName.IsEmpty()
+		&& contained_wd_i(_T("PrevFile|NextFile"), cmd_V))
+	{
 		RetStr = cmd_V;
 		this->Perform(WM_SETREDRAW, 0, (NativeInt)0);	//画面を消さずに残す
 		ModalResult = mrRetry;
@@ -1119,13 +1121,7 @@ void __fastcall TGeneralInfoDlg::ShowFileInfoActionExecute(TObject *Sender)
 		UnicodeString fnam = lp->Items->Strings[lp->ItemIndex];
 		if (lp->Tag & LBTAG_TAB_FNAM) fnam = get_post_tab(fnam);
 		if (isPlayList && PlayList->IndexOf(fnam)==-1) fnam = EmptyStr;
-		if (!fnam.IsEmpty()) {
-			file_rec *cfp = cre_new_file_rec(fnam);
-			FileInfoDlg->inhNxtPre = true;
-			FileInfoDlg->FileRec   = cfp;
-			FileInfoDlg->ShowModal();
-			del_file_rec(cfp);
-		}
+		if (!fnam.IsEmpty()) FileInfoDlg->ShowModalEx(fnam);
 	}
 }
 //---------------------------------------------------------------------------
@@ -1225,6 +1221,8 @@ void __fastcall TGeneralInfoDlg::InfPopupMenuPopup(TObject *Sender)
 	SortItem->Enabled		  = !isTree;
 	DelDuplItem->Enabled	  = !isTree;
 	RestoreListItem->Enabled  = !isTree;
+
+	reduction_MenuLine(InfPopupMenu->Items);
 }
 
 //---------------------------------------------------------------------------

@@ -10,6 +10,7 @@
 #include "UserFunc.h"
 #include "Global.h"
 #include "MainFrm.h"
+#include "SubView.h"
 #include "FileInfDlg.h"
 
 //---------------------------------------------------------------------------
@@ -25,8 +26,9 @@ __fastcall TFileInfoDlg::TFileInfoDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TFileInfoDlg::FormCreate(TObject *Sender)
 {
-	FileRec   = NULL;
-	isAppInfo = isGitInfo = isCalcItem = inhNxtPre = false;
+	FileRec    = NULL;
+	isAppInfo  = isGitInfo = false;
+	isCalcItem = inhNxtPre = inhImgPrv = useImgPrv = false;
 
 	CsvCol	  = -1;
 	DataList  = NULL;
@@ -38,6 +40,7 @@ void __fastcall TFileInfoDlg::FormCreate(TObject *Sender)
 void __fastcall TFileInfoDlg::FormShow(TObject *Sender)
 {
 	CmdStr = EmptyStr;
+	useImgPrv = !inhImgPrv && !isCalcItem && !isAppInfo && !isGitInfo;
 
 	if (isCalcItem)
 		IniFile->LoadPosInfo(this, DialogCenter, "CalcItem");
@@ -52,19 +55,34 @@ void __fastcall TFileInfoDlg::FormShow(TObject *Sender)
 	set_UsrScrPanel(ListScrPanel);
 
 	if (!UpdateInfo()) ::PostMessage(Handle, WM_CLOSE, 0, 0);
+
+	ImgPreviewAction->Checked = useImgPrv? IniFile->ReadBoolGen(_T("FileInfoImgPrv")) : false;
+	if (ImgPreviewAction->Checked) {
+		if (!SubViewer->Visible) {
+			SubViewer->formFileInf = true;
+			SubViewer->Show();
+		}
+		if (FileRec) SubViewer->DrawImage(FileRec->f_name);
+		SetFocus();
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TFileInfoDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
-	if (isCalcItem)
+	if (isCalcItem) {
 		IniFile->SavePosInfo(this, "CalcItem");
-	else
+	}
+	else {
 		IniFile->SavePosInfo(this);
+		if (useImgPrv) IniFile->WriteBoolGen(_T("FileInfoImgPrv"), ImgPreviewAction);
+		if (SubViewer->Visible) SubViewer->Close();
+	}
 
-	FileRec   = NULL;
-	isAppInfo = isGitInfo = isCalcItem = inhNxtPre = false;
-	CsvCol	  = -1;
-	DataList  = NULL;
+	FileRec    = NULL;
+	isAppInfo  = isGitInfo = false;
+	isCalcItem = inhNxtPre = inhImgPrv = useImgPrv = false;
+	CsvCol	   = -1;
+	DataList   = NULL;
 }
 //---------------------------------------------------------------------------
 void __fastcall TFileInfoDlg::FormDestroy(TObject *Sender)
@@ -76,6 +94,24 @@ void __fastcall TFileInfoDlg::FormDestroy(TObject *Sender)
 void __fastcall TFileInfoDlg::FormResize(TObject *Sender)
 {
 	if (isCalcItem) InfListBox->Invalidate();
+}
+
+//---------------------------------------------------------------------------
+//指定ファイルの情報表示 (前後移動禁止)
+//---------------------------------------------------------------------------
+int __fastcall TFileInfoDlg::ShowModalEx(UnicodeString fnam)
+{
+	int res = mrNone;
+	if (file_exists(fnam)) {
+		file_rec *cfp = cre_new_file_rec(fnam);
+		FileRec   = cfp;
+		inhImgPrv = !test_FileExt(cfp->f_ext, FEXT_IMAGE + get_img_fext() + ".mp3.flac" + FEXT_INDIVICO);
+		inhNxtPre = true;
+		res = ShowModal();
+		del_file_rec(cfp);
+	}
+
+	return res;
 }
 
 //---------------------------------------------------------------------------
@@ -440,14 +476,16 @@ void __fastcall TFileInfoDlg::InfListBoxKeyDown(TObject *Sender, WORD &Key, TShi
 	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))
 		;
 	//前後のファイルへ切り替え
-	else if (FileRec && !FileRec->is_ftp && !inhNxtPre
-		&& contained_wd_i(_T("PrevFile|NextFile"), cmd_V))
-	{
+	else if (FileRec && !FileRec->is_ftp && !inhNxtPre && contained_wd_i(_T("PrevFile|NextFile"), cmd_V)) {
 		CmdStr = cmd_V;
-		this->Perform(WM_SETREDRAW, 0, (NativeInt)0);	//画面を消さずに残す
+		//画面を消さずに残す
+		this->Perform(WM_SETREDRAW, 0, (NativeInt)0);
+		if (SubViewer->Visible) SubViewer->Perform(WM_SETREDRAW, 0, (NativeInt)0);
 		ModalResult = mrRetry;
 	}
 	else if (USAME_TI(cmd_F, "PropertyDlg"))		PropertyDlgAction->Execute();
+	else if (USAME_TI(cmd_F, "ShowPreview") || USAME_TI(cmd_V, "ImgPreview"))
+													ImgPreviewAction->Execute();
 	else if (SameText(KeyStr, KeyStr_Copy))			CopyAction->Execute();
 	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
 	else if	(equal_ESC(KeyStr))						ModalResult = mrOk;
@@ -559,6 +597,35 @@ void __fastcall TFileInfoDlg::PropertyDlgActionExecute(TObject *Sender)
 void __fastcall TFileInfoDlg::PropertyDlgActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = (FileRec && !FileRec->is_virtual);
+}
+//---------------------------------------------------------------------------
+//イメージプレビュー
+//---------------------------------------------------------------------------
+void __fastcall TFileInfoDlg::ImgPreviewActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Checked = !ap->Checked;
+
+	if (ap->Checked) {
+		if (!SubViewer->Visible) {
+			SubViewer->formFileInf = true;
+			SubViewer->Show();
+		}
+		if (FileRec) SubViewer->DrawImage(FileRec->f_name);
+	}
+	else {
+		if (SubViewer->Visible) SubViewer->Close();
+	}
+
+	SetFocus();
+}
+//---------------------------------------------------------------------------
+void __fastcall TFileInfoDlg::ImgPreviewActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = useImgPrv;
+	ap->Enabled = ap->Visible && FileRec;
+	ap->Checked = ap->Enabled && SubViewer->Visible;
 }
 
 //---------------------------------------------------------------------------

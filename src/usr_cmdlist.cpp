@@ -372,7 +372,6 @@ void set_CmdList(
 		"I:FlipHorz=左右反転\n"
 		"I:FlipVert=上下反転\n"
 		"I:FullScreen=全画面表示\n"
-		"I:GifViewer=GIFビュアーの表示/非表示\n"
 		"I:GrayScale=グレースケール表示\n"
 		"I:Histogram=ヒストグラムの表示/非表示\n"
 		"I:JumpIndex=指定したインデックスに移動\n"
@@ -1049,7 +1048,7 @@ void get_PrmList(
 		_T("ShowByteSize|ShowFKeyBar|ShowHideAtr|ShowIcon|ShowPreview|ShowProperty|ShowStatusBar|ShowSystemAtr|ShowTabBar|")
 		_T("PauseAllTask|Suspend|SyncLR|UseTrash|")
 		_T("BitmapView|CharInfo|CsvRecord|Highlight|HtmlToText|Inspector|ShowCR|ShowLineNo|ShowRuby|ShowRuler|ShowTAB|FixedLen|")
-		_T("DoublePage|FullScreen|GifViewer|SubViewer|GrayScale|Histogram|Loupe|ShowGrid|ShowSeekBar|Sidebar|")
+		_T("DoublePage|FullScreen|SubViewer|GrayScale|Histogram|Loupe|ShowGrid|ShowSeekBar|Sidebar|")
 		_T("Thumbnail|ThumbnailEx|WarnHighlight"),
 		cmd))
 	{

@@ -1,4 +1,4 @@
-object GifViewer: TGifViewer
+object SubViewer: TSubViewer
   Left = 0
   Top = 0
   BorderStyle = bsSizeToolWin

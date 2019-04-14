@@ -1,7 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  サブビュアー(旧GIFビュアー)											//
-//  アニメーションGIF対応、GIF以外も表示								//
+//  サブビュアー														//
 //----------------------------------------------------------------------//
 #include <vcl.h>
 #pragma hdrstop
@@ -9,23 +8,25 @@
 #include <memory>
 #include <Vcl.Imaging.GIFImg.hpp>
 #include "usr_wic.h"
+#include "usr_id3.h"
 #include "Global.h"
 #include "UserMdl.h"
-#include "GifView.h"
+#include "SubView.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
-TGifViewer *GifViewer;
+TSubViewer *SubViewer;
 
 //---------------------------------------------------------------------------
-__fastcall TGifViewer::TGifViewer(TComponent* Owner)
+__fastcall TSubViewer::TSubViewer(TComponent* Owner)
 	: TForm(Owner)
 {
-	ImgLocked = false;
+	ImgLocked	= false;
+	formFileInf = false;
 }
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::FormCreate(TObject *Sender)
+void __fastcall TSubViewer::FormCreate(TObject *Sender)
 {
 	org_ImgPanelWndProc  = ImgPanel->WindowProc;
 	ImgPanel->WindowProc = ImgPanelWndProc;
@@ -33,29 +34,35 @@ void __fastcall TGifViewer::FormCreate(TObject *Sender)
 	hasBitmap = false;
 }
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::FormShow(TObject *Sender)
+void __fastcall TSubViewer::FormShow(TObject *Sender)
 {
-	IniFile->LoadPosInfo(this);
+	IniFile->LoadPosInfo(this, false,
+		(ScrMode==SCMD_TVIEW)? "SubViewerTV" : (ScrMode==SCMD_IVIEW)? "SubViewerIV" :
+		formFileInf? "SubViewerFI" : "SubViewer");
+
+	ImgPanel->Color = IniFile->ReadColGen(_T("SubViewerBgCol"),	col_bgImage);
+	Color = ImgPanel->Color;
 
 	SetToolWinBorder(this);
-
-	ImgPanel->Color = IniFile->ReadColGen(_T("GifViewBgCol"),	col_bgImage);
-	Color = ImgPanel->Color;
 }
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::FormHide(TObject *Sender)
+void __fastcall TSubViewer::FormHide(TObject *Sender)
 {
-	FileName  = EmptyStr;
-	ImgLocked = false;
-	hasBitmap = false;
-	Image1->Picture->Assign(NULL);
+	IniFile->SavePosInfo(this,
+		(ScrMode==SCMD_TVIEW)? "SubViewerTV" : (ScrMode==SCMD_IVIEW)? "SubViewerIV" :
+		formFileInf? "SubViewerFI" : "SubViewer");
 
-	IniFile->SavePosInfo(this);
-	IniFile->WriteIntGen(_T("GifViewBgCol"),	(int)ImgPanel->Color);
+	IniFile->WriteIntGen(_T("SubViewerBgCol"),	(int)ImgPanel->Color);
+
+	Image1->Picture->Assign(NULL);
+	FileName	= EmptyStr;
+	formFileInf = false;
+	ImgLocked	= false;
+	hasBitmap	= false;
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::FormResize(TObject *Sender)
+void __fastcall TSubViewer::FormResize(TObject *Sender)
 {
 	if (!TitleInf.IsEmpty() && Image1->Picture->Width>0 && Image1->Picture->Height>0) {
 		ZoomInf.sprintf(_T("  (%4.1f%%)"), GetZoomRatio());
@@ -66,7 +73,7 @@ void __fastcall TGifViewer::FormResize(TObject *Sender)
 //---------------------------------------------------------------------------
 //ズーム倍率(%)を取得
 //---------------------------------------------------------------------------
-double __fastcall TGifViewer::GetZoomRatio()
+double __fastcall TSubViewer::GetZoomRatio()
 {
 	int p_w = Image1->Picture->Width;
 	int p_h = Image1->Picture->Height;
@@ -78,7 +85,7 @@ double __fastcall TGifViewer::GetZoomRatio()
 //---------------------------------------------------------------------------
 //画像の描画
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::DrawImage(UnicodeString fnam)
+void __fastcall TSubViewer::DrawImage(UnicodeString fnam)
 {
 	if (ImgLocked) return;
 
@@ -102,28 +109,56 @@ void __fastcall TGifViewer::DrawImage(UnicodeString fnam)
 			Image1->Picture->Assign(meta_buf.get());
 			Image1->Transparent = true;
 		}
-		else if (test_FileExt(fext, get_img_fext())) {
+		else {
 			std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
-			int res = load_ImageFile(fnam, bmp.get(), WICIMG_PREVIEW, ImgPanel->Color);
-			if (res==0) Abort();
-
-			if (test_ExifExt(fext)) {
-				int ori = 0;
-				ex_str	= get_ExifInfStr(fnam, &ori);
-				//回転
-				int rot = (ori==6)? 1 : (ori==8)? 3 : 0;
-				if (RotViewImg && rot>0 && res!=LOADED_BY_WIC) WIC_rotate_image(bmp.get(), rot);
+			if (test_Mp3Ext(fext)) {
+				if (!ID3_GetImage(fnam, bmp.get())) Abort();
 			}
-			else if (test_PngExt(fext))
-				ex_str = get_PngInfStr(fnam);
-			else if (USAME_TI(fext, ".webp"))
-				ex_str = get_WebpInfStr(ViewFileName);
+			else if (test_FlacExt(fext)) {
+				if (!get_FlacImage(fnam, bmp.get())) Abort();
+			}
+			else if (test_FileExt(fext, get_img_fext())) {
+				int res = load_ImageFile(fnam, bmp.get(), WICIMG_PREVIEW, ImgPanel->Color);
+				if (res==0) Abort();
+
+				if (test_ExifExt(fext)) {
+					int ori = 0;
+					ex_str	= get_ExifInfStr(fnam, &ori);
+					//回転
+					int rot = (ori==6)? 1 : (ori==8)? 3 : 0;
+					if (RotViewImg && rot>0 && res!=LOADED_BY_WIC) WIC_rotate_image(bmp.get(), rot);
+				}
+				else if (test_PngExt(fext))
+					ex_str = get_PngInfStr(fnam);
+				else if (USAME_TI(fext, ".webp"))
+					ex_str = get_WebpInfStr(ViewFileName);
+
+			}
+			else if (test_FileExt(fext, FEXT_INDIVICO)) {
+				bmp->SetSize(256, 256);
+				TCanvas *cv = bmp->Canvas;
+				cv->Brush->Color = ImgPanel->Color;
+				cv->FillRect(Rect(0, 0, bmp->Width, bmp->Height));
+
+				int size_lst[6] = {256, 128, 64, 48, 32, 16};
+				for (int i=0; i<6; i++) {
+					int size = size_lst[i];
+					HICON hIcon = usr_SH->get_Icon(fnam, size);
+					if (hIcon && size==size_lst[i]) {
+						::DrawIconEx(cv->Handle,
+							(bmp->Width - size)/2, (bmp->Height - size)/2,
+							hIcon, size, size, 0, NULL, DI_NORMAL);
+						::DestroyIcon(hIcon);
+						break;
+					}
+				}
+			}
+			else Abort();
 
 			Image1->Picture->Assign(bmp.get());
 			Image1->Transparent = false;
 			hasBitmap = true;
 		}
-		else Abort();
 
 		FileName = fnam;
 
@@ -149,7 +184,7 @@ void __fastcall TGifViewer::DrawImage(UnicodeString fnam)
 //---------------------------------------------------------------------------
 //回転
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::RotateImage(int rn)
+void __fastcall TSubViewer::RotateImage(int rn)
 {
 	if (Visible && hasBitmap) {
 		std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
@@ -162,12 +197,12 @@ void __fastcall TGifViewer::RotateImage(int rn)
 //---------------------------------------------------------------------------
 //ロック
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::LockImage()
+void __fastcall TSubViewer::LockImage()
 {
 	if (Visible) ImgLocked = !ImgLocked;
 }
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::SetImgLocked(bool Value)
+void __fastcall TSubViewer::SetImgLocked(bool Value)
 {
 	FImgLocked = Value;
 
@@ -182,13 +217,13 @@ void __fastcall TGifViewer::SetImgLocked(bool Value)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::Image1Click(TObject *Sender)
+void __fastcall TSubViewer::Image1Click(TObject *Sender)
 {
 	Application->MainForm->SetFocus();
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::FormClick(TObject *Sender)
+void __fastcall TSubViewer::FormClick(TObject *Sender)
 {
 	Application->MainForm->SetFocus();
 }
@@ -196,14 +231,14 @@ void __fastcall TGifViewer::FormClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //ポップアップメニュー
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::PopupMenu1Popup(TObject *Sender)
+void __fastcall TSubViewer::PopupMenu1Popup(TObject *Sender)
 {
 	LockItem->Checked = ImgLocked;
 }
 //---------------------------------------------------------------------------
 //背景色を設定
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::BgColItemClick(TObject *Sender)
+void __fastcall TSubViewer::BgColItemClick(TObject *Sender)
 {
 	UserModule->ColorDlg->Color = Color;
 	if (UserModule->ColorDlg->Execute()) {
@@ -217,7 +252,7 @@ void __fastcall TGifViewer::BgColItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //ロック
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::LockItemClick(TObject *Sender)
+void __fastcall TSubViewer::LockItemClick(TObject *Sender)
 {
 	ImgLocked = !ImgLocked;
 	Repaint();
@@ -227,16 +262,14 @@ void __fastcall TGifViewer::LockItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //90度回転
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::RotateActionExecute(TObject *Sender)
+void __fastcall TSubViewer::RotateActionExecute(TObject *Sender)
 {
 	RotateImage(((TAction *)Sender)->Tag);
 }
 //---------------------------------------------------------------------------
-void __fastcall TGifViewer::RotateActionUpdate(TObject *Sender)
+void __fastcall TSubViewer::RotateActionUpdate(TObject *Sender)
 {
 	((TAction *)Sender)->Enabled = hasBitmap;
 }
 //---------------------------------------------------------------------------
-
-
 

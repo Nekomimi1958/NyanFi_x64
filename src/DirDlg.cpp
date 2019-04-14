@@ -48,10 +48,7 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 
 	if (IsSpecial) {
 		setup_ToolBar(OpeToolBar);
-		FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
-		FilterEdit->Font->Assign(ToolBarFont);
 		FilterEdit->Width = IniFile->ReadIntGen(_T("SpecialDirFilterWidth"),	200);
-		FilterEdit->Text  = EmptyStr;
 
 		set_MigemoAction(MigemoAction, _T("SpecialDirMigemo"));
 		AndOrAction->Checked	= IniFile->ReadBoolGen(_T("SpecialDirFltAndOr"));
@@ -874,11 +871,7 @@ void __fastcall TRegDirDlg::PropertyActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::AppInfoActionExecute(TObject *Sender)
 {
-	file_rec *cfp = cre_new_file_rec(GetCurDirItem(false, false, true));
-	FileInfoDlg->FileRec   = cfp;
-	FileInfoDlg->inhNxtPre = true;
-	FileInfoDlg->ShowModal();
-	del_file_rec(cfp);
+	FileInfoDlg->ShowModalEx(GetCurDirItem(false, false, true));
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::AppInfoActionUpdate(TObject *Sender)
@@ -903,7 +896,7 @@ void __fastcall TRegDirDlg::SaveAsWorkActionExecute(TObject *Sender)
 		std::unique_ptr<TStringList> lst(new TStringList());
 		int s_cnt = 0;
 		for (int i=0; i<lp->Count; i++) {
-			UnicodeString lbuf = REPLACE_TS(lp->Items->Strings[i], "\t|", "\t");
+			UnicodeString lbuf = ReplaceStr(lp->Items->Strings[i], "\t|", "\t");
 			if (get_pre_tab(lbuf).IsEmpty()) s_cnt++;
 			if (s_cnt<2) lst->Add(lbuf);
 		}

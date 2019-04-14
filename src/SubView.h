@@ -1,9 +1,9 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  サブビュアー(旧GIFビュアー)											//
+//  サブビュアー														//
 //----------------------------------------------------------------------//
-#ifndef GifViewH
-#define GifViewH
+#ifndef SubViewH
+#define SubViewH
 
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
@@ -16,7 +16,7 @@
 #include <Vcl.ActnList.hpp>
 
 //---------------------------------------------------------------------------
-class TGifViewer : public TForm
+class TSubViewer : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
 	TAction *FlipHorzAction;
@@ -59,7 +59,7 @@ private:	// ユーザー宣言
 	{
 		if (SysCom.CmdType==SC_CLOSE) {	//[×]ボタンが押された
 			Close();
-			if (ScrMode==SCMD_IVIEW) ShowGifViewer = false;
+			if (ScrMode==SCMD_IVIEW) ShowSubViewer = false;
 		}
 		else TForm::Dispatch(&SysCom);
 	}
@@ -77,6 +77,7 @@ private:	// ユーザー宣言
 
 public:		// ユーザー宣言
 	UnicodeString FileName;
+	bool formFileInf;
 
 	bool FImgLocked;
 	void __fastcall SetImgLocked(bool Value);
@@ -86,7 +87,7 @@ public:		// ユーザー宣言
 	void __fastcall RotateImage(int rn);
 	void __fastcall LockImage();
 
-	__fastcall TGifViewer(TComponent* Owner);
+	__fastcall TSubViewer(TComponent* Owner);
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_SYSCOMMAND,		TWMSysCommand,	WmSysCommand)
@@ -94,6 +95,6 @@ public:		// ユーザー宣言
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
-extern PACKAGE TGifViewer *GifViewer;
+extern PACKAGE TSubViewer *SubViewer;
 //---------------------------------------------------------------------------
 #endif

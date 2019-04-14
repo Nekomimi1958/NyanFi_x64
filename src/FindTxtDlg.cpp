@@ -211,7 +211,7 @@ void __fastcall TFindTextDlg::FindComboBoxChange(TObject *Sender)
 					try {
 						for (int i=0; i<b_lst.Length; i++) {
 							UnicodeString s = b_lst[i];
-							s = REPLACE_TS(s, "?", "0");
+							s = ReplaceStr(s, "?", "0");
 							if		(s.Length()==2) ("0x" + s).ToInt();
 							else if (s.Length()==8) s.ToInt();
 							else Abort();

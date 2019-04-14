@@ -45,11 +45,8 @@ void __fastcall TCmdFileListDlg::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter);
 
 	setup_ToolBar(OpeToolBar);
-	OkBtn->Font->Assign(ToolBarFont);
-	FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
-	FilterEdit->Font->Assign(ToolBarFont);
+	OkBtn->Font->Assign(DialogFont);
 	FilterEdit->Width = IniFile->ReadIntGen(_T("CmdFileListFilterWidth"),	200);
-	FilterEdit->Text  = EmptyStr;
 
 	set_MigemoAction(MigemoAction, _T("CmdFileListMigemo"));
 

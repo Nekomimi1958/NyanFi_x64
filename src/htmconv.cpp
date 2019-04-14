@@ -609,7 +609,7 @@ UnicodeString HtmConv::RefEntity(UnicodeString s)
 		}
 	}
 
-	s = REPLACE_TS(s, "&amp;", "&");
+	s = ReplaceStr(s, "&amp;", "&");
 
 	return s;
 }
@@ -753,7 +753,7 @@ void HtmConv::Convert()
 		else {
 			//連続した半角スペースを一つに
 			s = Trim(s);
-			while (contains_s(s, _T("  "))) s = REPLACE_TS(s, "  ", " ");
+			while (contains_s(s, _T("  "))) s = ReplaceStr(s, "  ", " ");
 			if (s.IsEmpty()) tmp_buf->Delete(i); else tmp_buf->Strings[i++] = s;
 		}
 	}

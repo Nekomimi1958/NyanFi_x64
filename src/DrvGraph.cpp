@@ -23,6 +23,9 @@ __fastcall TDriveGraph::TDriveGraph(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TDriveGraph::FormCreate(TObject *Sender)
 {
+	org_SttBar1WndProc	   = StatusBar1->WindowProc;
+	StatusBar1->WindowProc = SttBar1WndProc;
+
 	DataList = new TStringList();
 
 	for (int i=1; i<=16; i++) SizeComboBox->Items->Add(IntToStr(i));
@@ -31,11 +34,17 @@ void __fastcall TDriveGraph::FormCreate(TObject *Sender)
 void __fastcall TDriveGraph::FormShow(TObject *Sender)
 {
 	DlgInitialized = false;
+	SttIndex = -1;
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 
-	OldOdrCheckBox->Checked = IniFile->ReadBoolGen(_T("DrvGrpahOldOdr"));
-	MinMaxCheckBox->Checked = IniFile->ReadBoolGen(_T("DrvGrpahMinMax"));
+	setup_ToolBar(OptToolBar);
+	DriveComboBox->Width  = IniFile->ReadIntGen(_T("DrvGrpahSlctrWidth"),	200);
+	OldOdrAction->Checked = IniFile->ReadBoolGen(_T("DrvGrpahOldOdr"));
+	MinMaxAction->Checked = IniFile->ReadBoolGen(_T("DrvGrpahMinMax"));
+
+	StatusBar1->Font->Assign(SttBarFont);
+	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
 
 	BarSize = IniFile->ReadIntGen( _T("DrvGrpahBarSize"), 8);
 	if (BarSize<1 || BarSize>16) BarSize = 8;
@@ -71,8 +80,9 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 void __fastcall TDriveGraph::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	IniFile->SavePosInfo(this);
-	IniFile->WriteBoolGen(_T("DrvGrpahOldOdr"),		OldOdrCheckBox->Checked);
-	IniFile->WriteBoolGen(_T("DrvGrpahMinMax"),		MinMaxCheckBox->Checked);
+	IniFile->WriteIntGen( _T("DrvGrpahSlctrWidth"),	DriveComboBox->Width);
+	IniFile->WriteBoolGen(_T("DrvGrpahOldOdr"),		OldOdrAction);
+	IniFile->WriteBoolGen(_T("DrvGrpahMinMax"),		MinMaxAction);
 	IniFile->WriteIntGen( _T("DrvGrpahBarSize"),	BarSize);
 	DataList->Clear();
 }
@@ -112,10 +122,9 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 
 		int yt	= 0;
 		int ym	= cv->TextHeight("9") * 1.5;	//***
-		int idx = OldOdrCheckBox->Checked? 0 : DataList->Count - 1;
+		int idx = OldOdrAction->Checked? 0 : DataList->Count - 1;
 		for (int i=0,yp=0; i<DataList->Count; i++,yp+=BarSize) {
 			UnicodeString lbuf = DataList->Strings[idx];
-			idx += OldOdrCheckBox->Checked? 1 : -1;
 			//日付
 			if (yp>=yt) {
 				cv->Font->Color = col_fgList;
@@ -135,21 +144,43 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 			cv->MoveTo(x50, yp);  cv->LineTo(x50, yp + BarSize);
 			cv->MoveTo(x75, yp);  cv->LineTo(x75, yp + BarSize);
 			//Min/Max ライン
-			if (MinMaxCheckBox->Checked) {
+			if (MinMaxAction->Checked) {
 				cv->Pen->Color = clBlue;
 				cv->MoveTo(x_min, yp);  cv->LineTo(x_min, yp + BarSize);
 				cv->Pen->Color = clRed;
 				cv->MoveTo(x_max, yp);  cv->LineTo(x_max, yp + BarSize);
 			}
+
+			//ラインカーソル
+			if (HiddenEdit->Focused() && idx==SttIndex) {
+				alpha_blend_Rect(cv, Rect(0, yp, GraphScrollBox->ClientWidth, yp + BarSize), col_Cursor, 64);
+			}
+
+			idx += OldOdrAction->Checked? 1 : -1;
 		}
 	}
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TDriveGraph::PaintBox1MouseDown(TObject *Sender, TMouseButton Button,
+	TShiftState Shift, int X, int Y)
+{
+	if (DataList->Count>0 && GraphTopX<X) {
+		int p = Y/BarSize;
+		SetStatus(OldOdrAction->Checked? p : DataList->Count - 1 - p);
+		PaintBox1->Invalidate();
+		HiddenEdit->SetFocus();
+	}
+}
+
+//---------------------------------------------------------------------------
+//ステータスバー情報の設定
+//---------------------------------------------------------------------------
 void __fastcall TDriveGraph::SetStatus(int idx)
 {
 	UnicodeString msg;
 	if (idx>=0 && idx<DataList->Count) {
+		SttIndex = idx;
 		UnicodeString lbuf = DataList->Strings[idx];
 		msg = get_csv_item(lbuf, 0);
 
@@ -170,18 +201,22 @@ void __fastcall TDriveGraph::SetStatus(int idx)
 			//空き
 			msg.cat_sprintf(_T("/ %s Free"), get_size_str_T(free_sz, 1).c_str());
 		}
-	}
-	StatusBar1->SimpleText = msg;
-}
 
-//---------------------------------------------------------------------------
-void __fastcall TDriveGraph::PaintBox1MouseDown(TObject *Sender, TMouseButton Button,
-	TShiftState Shift, int X, int Y)
-{
-	if (DataList->Count>0 && GraphTopX<X) {
-		int p = Y/BarSize;
-		SetStatus(OldOdrCheckBox->Checked? p : DataList->Count - 1 - p);
+		//スクロール位置の調整
+		int yp = BarSize * (OldOdrAction->Checked? idx : DataList->Count - 1 - idx);
+		if (yp < GraphScrollBox->VertScrollBar->Position)
+			GraphScrollBox->VertScrollBar->Position = std::max(yp - BarSize, 0);
+		else if (yp > (GraphScrollBox->VertScrollBar->Position + GraphScrollBox->ClientHeight - BarSize))
+			GraphScrollBox->VertScrollBar->Position = (yp + BarSize - GraphScrollBox->ClientHeight);
 	}
+
+	StatusBar1->Panels->Items[0]->Text = msg;
+}
+//---------------------------------------------------------------------------
+void __fastcall TDriveGraph::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
+	const TRect &Rect)
+{
+	draw_SttBarPanel(StatusBar, Panel, Rect);
 }
 
 //---------------------------------------------------------------------------
@@ -196,10 +231,17 @@ void __fastcall TDriveGraph::DriveComboBoxChange(TObject *Sender)
 	if (idx!=-1) {
 		get_DriveLogList(get_tkn(DriveComboBox->Text, ':'), DataList, MinUsed, MaxUsed);
 		GraphScrollBox->VertScrollBar->Range = DataList->Count * BarSize + 20;
-		PaintBox1->Invalidate();
 		SetStatus(DataList->Count - 1);
+		PaintBox1->Invalidate();
 	}
 }
+//---------------------------------------------------------------------------
+void __fastcall TDriveGraph::OptComboBoxKeyDown(TObject *Sender, WORD &Key,
+	TShiftState Shift)
+{
+	if (contained_wd_i(KeysStr_ToList, get_KeyStr(Key, Shift))) HiddenEdit->SetFocus();
+}
+
 //---------------------------------------------------------------------------
 //棒幅
 //---------------------------------------------------------------------------
@@ -212,9 +254,52 @@ void __fastcall TDriveGraph::SizeComboBoxChange(TObject *Sender)
 	PaintBox1->Invalidate();
 }
 //---------------------------------------------------------------------------
-void __fastcall TDriveGraph::OptionChanged(TObject *Sender)
+void __fastcall TDriveGraph::SizeBtnClick(TObject *Sender)
 {
-	if (!DlgInitialized) return;
+	SizeComboBox->SetFocus();
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TDriveGraph::ToggleActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+
+	if (DlgInitialized) PaintBox1->Invalidate();
+}
+
+//---------------------------------------------------------------------------
+//キー操作
+//---------------------------------------------------------------------------
+void __fastcall TDriveGraph::HiddenEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	HiddenEdit->Text = EmptyStr;
+
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+
+	bool is_old  = OldOdrAction->Checked;
+	bool is_down = USAME_TI(cmd_F, "CursorDown") || contained_wd_i(KeysStr_CsrDown, KeyStr);
+	bool is_up	 = USAME_TI(cmd_F, "CursorUp")   || contained_wd_i(KeysStr_CsrUp,   KeyStr);
+	bool is_inc  =  is_old? is_down : is_up;
+	bool is_dec  = !is_old? is_down : is_up;
+	int  max_idx = DataList->Count - 1;
+
+	int idx = (is_dec && SttIndex>0)? SttIndex - 1 :
+		(is_inc && SttIndex<max_idx)? SttIndex + 1 :
+		(USAME_TI(cmd_F, "CursorTop") || equal_HOME(KeyStr))? ( is_old? 0 : max_idx) :
+		(USAME_TI(cmd_F, "CursorEnd") ||  equal_END(KeyStr))? (!is_old? 0 : max_idx) : -1;
+
+	if (idx!=-1) {
+		SetStatus(idx);
+		PaintBox1->Invalidate();
+		Key = 0;
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TDriveGraph::HiddenEditEnterExit(TObject *Sender)
+{
+	HiddenEdit->Text = EmptyStr;
 	PaintBox1->Invalidate();
 }
 
@@ -247,5 +332,6 @@ void __fastcall TDriveGraph::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 {
 	SpecialKeyProc(this, Key, Shift);
 }
+
 //---------------------------------------------------------------------------
 

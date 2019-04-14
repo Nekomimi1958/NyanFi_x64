@@ -51,7 +51,6 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 
 	setup_ToolBar(FindBar);
 	setup_ToolBar(DiffBar);
-	FindSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
 
 	set_ListBoxItemHi(BranchListBox, ListFont);
 	set_UsrScrPanel(BranchScrPanel);
@@ -1013,6 +1012,7 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 	else if (SameStr(lbuf, "-")) {
 		draw_Separator(cv, Rect);
 	}
+	//í«ê’Ç≥ÇÍÇƒÇ¢Ç»Ç¢Å`
 	else if (lbuf.Pos('*')) {
 		out_TextEx(cv, xp, yp, ReplaceStr(lbuf, "*", "?"), col_Headline);
 	}
@@ -1023,15 +1023,17 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 	}
 	//åv
 	else {
-		TStringDynArray t_buf = get_csv_array(lbuf, 3, true);
-		for (int i=0; i<3; i++) {
-			UnicodeString s = t_buf[i];
-			if (i>0) out_TextEx(cv, xp, yp, ",", col_fgList);
-			out_TextEx(cv, xp, yp, s,
-				remove_end_text(s, "(-)")? col_GitDel : remove_end_text(s, "(+)")? col_GitIns : col_fgList,
-				col_None, 0, is_irreg);
+		TStringDynArray t_buf = get_csv_array(lbuf, 3);
+		if (t_buf.Length==3) {
+			for (int i=0; i<3; i++) {
+				UnicodeString s = t_buf[i];
+				if (i>0) out_TextEx(cv, xp, yp, ",", col_fgList);
+				out_TextEx(cv, xp, yp, s,
+					remove_end_text(s, "(-)")? col_GitDel : remove_end_text(s, "(+)")? col_GitIns : col_fgList,
+					col_None, 0, is_irreg);
+			}
+			draw_separateLine(cv, Rect);
 		}
-		draw_separateLine(cv, Rect);
 	}
 
 	cv->Brush->Color = lp->Color;
@@ -1698,12 +1700,9 @@ void __fastcall TGitViewer::FindCommitEditKeyDown(TObject *Sender, WORD &Key, TS
 	int c_idx = lp->ItemIndex;
 
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(contained_wd_i(KeysStr_CsrUp, KeyStr))   KeyStr = "UP";
-	else if (contained_wd_i(KeysStr_CsrDown, KeyStr)) KeyStr = "DOWN";
-
-	if		(equal_UP(KeyStr))	 { FindUpAction->Execute();		Key = 0; }
-	else if (equal_DOWN(KeyStr)) { FindDownAction->Execute();	Key = 0; }
-	else if (contained_wd_i(KeysStr_ToList, KeyStr) || equal_ENTER(KeyStr)) lp->SetFocus();
+	if		(contained_wd_i(KeysStr_CsrUp,   KeyStr)) { FindUpAction->Execute();	Key = 0; }
+	else if (contained_wd_i(KeysStr_CsrDown, KeyStr)) { FindDownAction->Execute();	Key = 0; }
+	else if (contained_wd_i(KeysStr_ToList,  KeyStr) || equal_ENTER(KeyStr)) lp->SetFocus();
 	else return;
 
 	if (c_idx!=lp->ItemIndex) lp->Invalidate();

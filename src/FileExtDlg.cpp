@@ -508,15 +508,9 @@ void __fastcall TFileExtensionDlg::FextInfBarDrawPanel(TStatusBar *StatusBar, TS
 }
 //---------------------------------------------------------------------------
 void __fastcall TFileExtensionDlg::FileInfBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-		const TRect &Rect)
+	const TRect &Rect)
 {
-	TCanvas *cv = StatusBar->Canvas;
-	cv->Font->Assign(StatusBar->Font);
-	cv->Brush->Color = col_bgSttBar;
-	cv->FillRect(Rect) ;
-
-	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + Scaled4, Rect.Top, Panel->Text);
+	draw_SttBarPanel(StatusBar, Panel, Rect);
 }
 
 //---------------------------------------------------------------------------
@@ -963,14 +957,7 @@ void __fastcall TFileExtensionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShif
 //---------------------------------------------------------------------------
 void __fastcall TFileExtensionDlg::ShowFileInfoActionExecute(TObject *Sender)
 {
-	UnicodeString fnam = GetCurFileItem();
-	if (!fnam.IsEmpty()) {
-		file_rec *cfp = cre_new_file_rec(fnam);
-		FileInfoDlg->FileRec   = cfp;
-		FileInfoDlg->inhNxtPre = true;
-		FileInfoDlg->ShowModal();
-		del_file_rec(cfp);
-	}
+	FileInfoDlg->ShowModalEx(GetCurFileItem());
 }
 //---------------------------------------------------------------------------
 //ファイルのプロパティ

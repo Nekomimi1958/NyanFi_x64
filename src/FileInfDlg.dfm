@@ -84,6 +84,9 @@ object FileInfoDlg: TFileInfoDlg
     object Sep_i_3: TMenuItem
       Caption = '-'
     end
+    object ImgPreviewItem: TMenuItem
+      Action = ImgPreviewAction
+    end
     object PropertyDlgItem: TMenuItem
       Action = PropertyDlgAction
     end
@@ -113,6 +116,11 @@ object FileInfoDlg: TFileInfoDlg
       Caption = #12503#12525#12497#12486#12451'(&R)'
       OnExecute = PropertyDlgActionExecute
       OnUpdate = PropertyDlgActionUpdate
+    end
+    object ImgPreviewAction: TAction
+      Caption = #12452#12513#12540#12472#12503#12524#12499#12517#12540'(&P)'
+      OnExecute = ImgPreviewActionExecute
+      OnUpdate = ImgPreviewActionUpdate
     end
     object OpenUrlAction: TAction
       Caption = 'URL'#12434#38283#12367'(&W)'

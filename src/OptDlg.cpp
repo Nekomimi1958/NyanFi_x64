@@ -1249,8 +1249,8 @@ void __fastcall TOptionDlg::EtcEditorListBoxDrawItem(TWinControl *Control, int I
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + 4;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled4;
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	int w_x = 0;
 	for (int i=0; i<lp->Count; i++) w_x = std::max(cv->TextWidth(lp->Items->Names[i]), w_x);
@@ -1392,8 +1392,8 @@ void __fastcall TOptionDlg::FontComboBoxDrawItem(TWinControl *Control, int Index
 	TComboBox *cp = (TComboBox*)Control;
 	TCanvas   *cv = cp->Canvas;
 	cv->Font->Assign(cp->Font);
-	int xp = Rect.Left + 2;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled2;
+	int yp = Rect.Top  + get_TopMargin(cv);
 	int fh = abs(cv->Font->Height);
 
 	SetHighlight(cv, State.Contains(odSelected));
@@ -1595,13 +1595,13 @@ void __fastcall TOptionDlg::ExtColListBoxDrawItem(TWinControl *Control, int Inde
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + 4;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled4;
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	cv->Font->Color = (TColor)split_tkn(lbuf, ',').ToIntDef(clNone);
 	bool is_dot = USAME_TS(lbuf, ".");
-	UnicodeString ext = REPLACE_TS(lbuf, ".", " .");
+	UnicodeString ext = ReplaceStr(lbuf, ".", " .");
 	cv->Brush->Color = col_bgList;
 
 	UnicodeString smpl_str;
@@ -2627,8 +2627,8 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 		SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + 2;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled2;
+	int yp = Rect.Top  + get_TopMargin(cv);
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	bool brk = false;
 
@@ -2689,8 +2689,8 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 		else if (USAME_TS(itm, "<") && sub_lvl>0) sub_lvl--;
 	}
 
-	int xp = Rect.Left + 2 + ScaledInt(18) + (sub_lvl * cv->TextWidth("W"));
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled2 + ScaledInt(18) + (sub_lvl * cv->TextWidth("W"));
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	TStringDynArray itm_buf = get_csv_array(lbuf, (is_tool? EXTTOOL_CSVITMCNT : EXTMENU_CSVITMCNT), true);
@@ -2864,8 +2864,8 @@ void __fastcall TOptionDlg::CmdComboBoxDrawItem(TWinControl *Control, int Index,
 {
 	TComboBox *cp = (TComboBox*)Control;
 	TCanvas   *cv = cp->Canvas;
+	int xp = Rect.Left + Scaled4;
 	int yp = Rect.Top + get_TopMargin(cv);
-	int xp = Rect.Left + 4;
 
 	UnicodeString lbuf = cp->Items->Strings[Index];
 	UnicodeString cmd  = split_tkn(lbuf, ' ');
@@ -3247,8 +3247,8 @@ void __fastcall TOptionDlg::KeyListBoxDrawItem(TWinControl *Control, int Index, 
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + 2;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled2;
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	UnicodeString key = lp->Items->Names[Index];
 	UnicodeString cmd = lp->Items->ValueFromIndex[Index];
@@ -3776,8 +3776,8 @@ void __fastcall TOptionDlg::StdCmdListBoxDrawItem(TWinControl *Control, int Inde
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + 2;
-	int yp = Rect.Top + get_TopMargin(cv);
+	int xp = Rect.Left + Scaled2;
+	int yp = Rect.Top  + get_TopMargin(cv);
 
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);

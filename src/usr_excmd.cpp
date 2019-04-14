@@ -100,9 +100,9 @@ ExeCmdsList::ExeCmdsList(UnicodeString cmds)
 
 	//コマンドリストを作成
 	if (!loaded) {
-		cmds = REPLACE_TS(cmds, "\t",   " ");
-		cmds = REPLACE_TS(cmds, ":\\",  "\f");	//区切り文字との混同を避けるため一時置換
-		cmds = REPLACE_TS(cmds, "\r\n", ":");
+		cmds = ReplaceStr(cmds, "\t",   " ");
+		cmds = ReplaceStr(cmds, ":\\",  "\f");	//区切り文字との混同を避けるため一時置換
+		cmds = ReplaceStr(cmds, "\r\n", ":");
 
 		UnicodeString c_buf;
 		int p = 1;
@@ -112,7 +112,7 @@ ExeCmdsList::ExeCmdsList(UnicodeString cmds)
 			//引用符外
 			if (!in_qut) {
 				if (c==':') {
-					c_buf = Trim(REPLACE_TS(c_buf, "\f", ":\\"));
+					c_buf = Trim(ReplaceStr(c_buf, "\f", ":\\"));
 					if (!c_buf.IsEmpty()) CmdList->Add(c_buf);
 					c_buf = EmptyStr;
 				}
@@ -128,7 +128,7 @@ ExeCmdsList::ExeCmdsList(UnicodeString cmds)
 			}
 			p++;
 		}
-		c_buf = Trim(REPLACE_TS(c_buf, "\f", ":\\"));
+		c_buf = Trim(ReplaceStr(c_buf, "\f", ":\\"));
 		if (!c_buf.IsEmpty()) CmdList->Add(c_buf);
 
 		if (CmdRec) CmdRec->cmd_list->Assign(CmdList);
@@ -1279,11 +1279,11 @@ void XCMD_Input(UnicodeString prm)
 {
 	UnicodeString tit, msg, vnam;
 	if (remove_top_s(prm, ':')) {
-		prm = REPLACE_TS(prm, ":\\", "\f");	//区切りとの混同を避けるため一時置換
+		prm = ReplaceStr(prm, ":\\", "\f");	//区切りとの混同を避けるため一時置換
 		TStringDynArray prmlst = SplitString(prm, ":");
 		if (prmlst.Length>0) vnam = prmlst[prmlst.Length - 1];
-		if (prmlst.Length>1) tit  = REPLACE_TS(prmlst[0], "\f", ":\\");
-		if (prmlst.Length>2) msg  = REPLACE_TS(prmlst[1], "\f", ":\\");
+		if (prmlst.Length>1) tit  = ReplaceStr(prmlst[0], "\f", ":\\");
+		if (prmlst.Length>2) msg  = ReplaceStr(prmlst[1], "\f", ":\\");
 	}
 	else
 		vnam = prm;
@@ -1307,10 +1307,10 @@ void XCMD_Edit(UnicodeString prm)
 {
 	UnicodeString tit, msg, vnam;
 	if (remove_top_s(prm, ':')) {
-		prm = REPLACE_TS(prm, ":\\", "\f");	//区切りとの混同を避けるため一時置換
+		prm = ReplaceStr(prm, ":\\", "\f");	//区切りとの混同を避けるため一時置換
 		TStringDynArray prmlst = SplitString(prm, ":");
 		if (prmlst.Length>0) vnam = prmlst[prmlst.Length - 1];
-		if (prmlst.Length>1) tit  = REPLACE_TS(prmlst[0], "\f", ":\\");
+		if (prmlst.Length>1) tit  = ReplaceStr(prmlst[0], "\f", ":\\");
 	}
 	else
 		vnam = prm;
@@ -1457,15 +1457,15 @@ void XCMD_ReplaceBuffer(UnicodeString prm)
 	if (is_regex_slash(o_str)) {
 		try {
 			o_str = exclude_top_end(o_str);
-			r_str = REPLACE_TS(REPLACE_TS(r_str, "\\n", "\n"), "\\r", "\r");
+			r_str = ReplaceStr(ReplaceStr(r_str, "\\n", "\n"), "\\r", "\r");
 			TRegExOptions opt;
 			opt << roIgnoreCase << roMultiLine;	//大小文字無視、複数行モード
 			if (contained_wd_i(_T("^|$|^$"), o_str)) {
 				//※\r、\n の両方にマッチしてしまうため、一時的に \r\n → \n
-				buf_str = REPLACE_TS(buf_str, "\r\n", "\n");
-				r_str	= REPLACE_TS(r_str,   "\r\n", "\n");
+				buf_str = ReplaceStr(buf_str, "\r\n", "\n");
+				r_str	= ReplaceStr(r_str,   "\r\n", "\n");
 				buf_str = TRegEx::Replace(buf_str, o_str, r_str, opt);
-				buf_str = REPLACE_TS(buf_str, "\n", "\r\n");
+				buf_str = ReplaceStr(buf_str, "\n", "\r\n");
 			}
 			else {
 				buf_str = TRegEx::Replace(buf_str, o_str, r_str, opt);
@@ -1533,9 +1533,9 @@ int XCMD_MsgBox(UnicodeString cmd, UnicodeString prm)
 	UnicodeString opt = cmd.SubString(7, 16);
 
 	UnicodeString tit;
-	prm = REPLACE_TS(prm, ":\\",  "\f");	//区切りとの混同を避けるため一時置換
-	if (remove_top_s(prm, ':')) tit = REPLACE_TS(split_tkn(prm, ':'), "\f", ":\\");
-	prm = REPLACE_TS(prm, "\f", ":\\");
+	prm = ReplaceStr(prm, ":\\",  "\f");	//区切りとの混同を避けるため一時置換
+	if (remove_top_s(prm, ':')) tit = ReplaceStr(split_tkn(prm, ':'), "\f", ":\\");
+	prm = ReplaceStr(prm, "\f", ":\\");
 
 	UnicodeString lbuf;
 	while (!prm.IsEmpty()) {

@@ -126,7 +126,7 @@ void __fastcall TKeyListDlg::KeyTabControlChange(TObject *Sender)
 			int idx = cmd_lst->IndexOf(id_str + get_CmdStr(CurList->ValueFromIndex[i]));
 			if (idx!=-1) cmd_lst->Delete(idx);
 		}
-		for (int i=0; i<cmd_lst->Count; i++) cmd_lst->Strings[i] = REPLACE_TS(cmd_lst->Strings[i], ":", ":=");
+		for (int i=0; i<cmd_lst->Count; i++) cmd_lst->Strings[i] = ReplaceStr(cmd_lst->Strings[i], ":", ":=");
 		CurList->AddStrings(cmd_lst.get());
 	}
 

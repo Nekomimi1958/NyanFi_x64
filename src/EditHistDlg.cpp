@@ -31,6 +31,9 @@ __fastcall TEditHistoryDlg::TEditHistoryDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FormCreate(TObject *Sender)
 {
+	org_SttBar1WndProc	   = StatusBar1->WindowProc;
+	StatusBar1->WindowProc = SttBar1WndProc;
+
 	GridScrPanel = new UsrScrollPanel(GridPanel, EditHistGrid, USCRPNL_FLAG_P_WP | USCRPNL_FLAG_G_WP | USCRPNL_FLAG_HS);
 
 	isView = isRecent = isMark = isRepo = isTags = isTagPtn = false;
@@ -39,9 +42,6 @@ void __fastcall TEditHistoryDlg::FormCreate(TObject *Sender)
 	HistoryList = NULL;
 	HistBufList = new TStringList();
 	TagJumpList = new TStringList();
-
-	org_SttBar1WndProc	   = StatusBar1->WindowProc;
-	StatusBar1->WindowProc = SttBar1WndProc;
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
@@ -55,11 +55,8 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 		isRecent? "RecentListDlg" : isMark? "MarkListDlg" : isRepo? "RepoListDlg" : isTags? "TagJumpDlg" : "");
 
 	setup_ToolBar(OpeToolBar);
-	FilterSplitter->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
-	FilterEdit->Font->Assign(ToolBarFont);
 	FilterEdit->Width = IniFile->ReadIntGen(_T("EditHistFilterWidth"),	200);
 	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
-	FilterEdit->Text  = EmptyStr;
 
 	StatusBar1->Font->Assign(SttBarFont);
 	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
@@ -665,8 +662,8 @@ void __fastcall TEditHistoryDlg::UpdateGrid()
 			//行番号/パターン, 備考
 			else if (isTags) {
 				lbuf = get_post_tab(get_post_tab(fp->alias));
-				gp->Cells[col++][i] = REPLACE_TS(lbuf, "\t", " ");
-				gp->Cells[col][i]	= REPLACE_TS(fp->memo, "\t", " ");
+				gp->Cells[col++][i] = ReplaceStr(lbuf, "\t", " ");
+				gp->Cells[col][i]	= ReplaceStr(fp->memo, "\t", " ");
 			}
 		}
 	}
@@ -1272,12 +1269,7 @@ void __fastcall TEditHistoryDlg::ShowUsedTimeActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::ShowFileInfoActionExecute(TObject *Sender)
 {
-	file_rec *cfp = cre_new_file_rec(get_CurFileName());
-	cfp->inf_list->Clear();
-	FileInfoDlg->FileRec   = cfp;
-	FileInfoDlg->inhNxtPre = true;
-	FileInfoDlg->ShowModal();
-	del_file_rec(cfp);
+	FileInfoDlg->ShowModalEx(get_CurFileName());
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::ShowFileInfoActionUpdate(TObject *Sender)

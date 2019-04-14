@@ -176,7 +176,6 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 					    CmdsComboBox->DroppedDown? CmdsComboBox : NULL;
 
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (contained_wd_i(KeysStr_CsrUp, KeyStr)) KeyStr = "UP";
 
 	bool handled = true;
 	if (equal_ENTER(KeyStr)) {
@@ -236,7 +235,7 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		else if (cp_down->ItemIndex<cp_down->Items->Count - 1)
 			cp_down->ItemIndex = cp_down->ItemIndex + 1;
 	}
-	else if (equal_UP(KeyStr)) {
+	else if (contained_wd_i(KeysStr_CsrUp, KeyStr)) {
 		if (!cp_down) {
 			if (cp_inp->Items->Count>0) {
 				cp_inp->DroppedDown = true;

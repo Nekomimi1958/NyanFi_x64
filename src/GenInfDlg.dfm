@@ -173,7 +173,6 @@ object GeneralInfoDlg: TGeneralInfoDlg
         Left = 335
         Top = 0
         Width = 8
-        Caption = 'ToolButton5'
         ImageIndex = 4
         Style = tbsSeparator
       end

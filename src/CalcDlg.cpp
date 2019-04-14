@@ -222,7 +222,7 @@ long double __fastcall TCalculator::EvalNumStr(UnicodeString s)
 			s = get_pre_tab(c);
 			if (USAME_TI(s, "hh:nn:ss")) s = FormatDateTime("hh:nn:ss", Now());
 		}
-		s = REPLACE_TS(s, ",", "");
+		s = ReplaceStr(s, ",", "");
 
 		//16i”
 		if (IsHexStr(s)) {
@@ -684,15 +684,15 @@ void __fastcall TCalculator::CalcLine(
 	}
 
 	//‰‰ŽZŽq‚ð1•¶Žš‚É“à•”’uŠ·
-	exline = REPLACE_TI(exline, " AND ", "&");
-	exline = REPLACE_TI(exline, " XOR ", "O");
-	exline = REPLACE_TI(exline, " OR ", "|");
-	exline = REPLACE_TI(exline, " GCD ", "‚f");
-	exline = REPLACE_TI(exline, " LCM ", "‚k");
+	exline = ReplaceText(exline, " AND ", "&");
+	exline = ReplaceText(exline, " XOR ", "O");
+	exline = ReplaceText(exline, " OR ", "|");
+	exline = ReplaceText(exline, " GCD ", "‚f");
+	exline = ReplaceText(exline, " LCM ", "‚k");
 
 	//ƒJƒ“ƒ}‚Ìœ‹Ž
 	KommaFlag = (exline.Pos(',')>0);
-	exline = REPLACE_TS(exline, ",", "");
+	exline = ReplaceStr(exline, ",", "");
 
 	UnicodeString answer;
 
@@ -864,15 +864,13 @@ void __fastcall TCalculator::LineEditKeyDown(TObject *Sender, WORD &Key, TShiftS
 void __fastcall TCalculator::HistComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(contained_wd_i(KeysStr_CsrUp, KeyStr))   KeyStr = "UP";
-	else if (contained_wd_i(KeysStr_CsrDown, KeyStr)) KeyStr = "DOWN";
 
 	bool handled = true;
 	if (equal_ENTER(KeyStr))
 		CalcLine(Trim(get_tkn(HistComboBox->Text, '=')));
-	else if (equal_UP(KeyStr) && !HistComboBox->DroppedDown)
+	else if (contained_wd_i(KeysStr_CsrUp,   KeyStr) && !HistComboBox->DroppedDown)
 		LineEdit->SetFocus();
-	else if (equal_DOWN(KeyStr) && !HistComboBox->DroppedDown)
+	else if (contained_wd_i(KeysStr_CsrDown, KeyStr) && !HistComboBox->DroppedDown)
 		HistComboBox->DroppedDown = true;
 	else if (USAME_TI(KeyStr, "BKSP")) {
 		UnicodeString lbuf = HistComboBox->Text;
@@ -947,7 +945,7 @@ void __fastcall TCalculator::RefDefBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TCalculator::RefDefItemClick(TObject *Sender)
 {
-	AppendToLine(REPLACE_TS(get_tkn(((TMenuItem*)Sender)->Caption, '='), "&", ""));
+	AppendToLine(ReplaceStr(get_tkn(((TMenuItem*)Sender)->Caption, '='), "&", ""));
 }
 
 //---------------------------------------------------------------------------

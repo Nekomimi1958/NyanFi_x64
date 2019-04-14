@@ -3067,12 +3067,6 @@ object NyanFiForm: TNyanFiForm
       OnExecute = FullScreenActionExecute
       OnUpdate = FullScreenActionUpdate
     end
-    object GifViewerAction: TAction
-      Category = 'CommandI'
-      Caption = 'GIF'#12499#12517#12450#12540
-      OnExecute = GifViewerActionExecute
-      OnUpdate = SubViewerActionUpdate
-    end
     object GrayScaleAction: TAction
       Category = 'CommandI'
       Caption = #12464#12524#12540#12473#12465#12540#12523#34920#31034'(&G)'

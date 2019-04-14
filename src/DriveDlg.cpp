@@ -257,11 +257,11 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 				remove_text(cellstr, _T("ドライブ"));
 			}
 			if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) {
-				cellstr = REPLACE_TS(cellstr, "CD-ROM",				"CD");
-				cellstr = REPLACE_TS(cellstr, "ハードディスク",		"HDD");
-				cellstr = REPLACE_TS(cellstr, "ソリッドステート",	"SSD");
-				cellstr = REPLACE_TS(cellstr, "リムーバブル",		"RM");
-				cellstr = REPLACE_TS(cellstr, "ネットワーク",		"NET");
+				cellstr = ReplaceStr(cellstr, "CD-ROM",				"CD");
+				cellstr = ReplaceStr(cellstr, "ハードディスク",		"HDD");
+				cellstr = ReplaceStr(cellstr, "ソリッドステート",	"SSD");
+				cellstr = ReplaceStr(cellstr, "リムーバブル",		"RM");
+				cellstr = ReplaceStr(cellstr, "ネットワーク",		"NET");
 				remove_text(cellstr, _T("ディスク"));
 			}
 			if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) cellstr = get_tkn(cellstr, _T(" ("));

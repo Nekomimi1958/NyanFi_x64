@@ -62,10 +62,10 @@ UnicodeString get_actual_path(UnicodeString pnam)
 	pnam = cv_env_str(pnam);
 
 	if (contains_s(pnam, _T('$'))) {
-		pnam = REPLACE_TS(pnam, "$$", "\f");	//$$ ‚ðˆêŽž“I‚É \f ‚É•Ï‚¦‚Ä‚¨‚¢‚Ä
+		pnam = ReplaceStr(pnam, "$$", "\f");	//$$ ‚ðˆêŽž“I‚É \f ‚É•Ï‚¦‚Ä‚¨‚¢‚Ä
 		pnam = ReplaceStr(pnam, "$X", ExcludeTrailingPathDelimiter(ExePath));
 		pnam = ReplaceStr(pnam, "$D", ExtractFileDrive(ExePath));
-		pnam = REPLACE_TS(pnam, "\f", "$");		//$$(\f) ‚ð $ ‚É•ÏŠ·
+		pnam = ReplaceStr(pnam, "\f", "$");		//$$(\f) ‚ð $ ‚É•ÏŠ·
 	}
 	return pnam;
 }

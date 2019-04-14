@@ -579,19 +579,6 @@ UnicodeString trim_ex(UnicodeString s)
 }
 
 //---------------------------------------------------------------------------
-//文字列の置換
-//---------------------------------------------------------------------------
-UnicodeString replace_i(UnicodeString s, const _TCHAR *o, const _TCHAR *r)
-{
-	return ReplaceText(s, o, r);
-}
-//---------------------------------------------------------------------------
-UnicodeString replace_s(UnicodeString s, const _TCHAR *o, const _TCHAR *r)
-{
-	return ReplaceStr(s, o, r);
-}
-
-//---------------------------------------------------------------------------
 //正規表現による置換
 //---------------------------------------------------------------------------
 UnicodeString replace_regex(UnicodeString s, const _TCHAR *o, const _TCHAR *r)
@@ -914,7 +901,7 @@ int pos_r_q(
 //---------------------------------------------------------------------------
 int pos_r_q_colon(UnicodeString s)
 {
-	return pos_r_q(":", REPLACE_TS(s, ":\\", "\f\f"));
+	return pos_r_q(":", ReplaceStr(s, ":\\", "\f\f"));
 }
 
 //---------------------------------------------------------------------------
@@ -1333,7 +1320,7 @@ UnicodeString get_tsv_item(UnicodeString src, int idx)
 //---------------------------------------------------------------------------
 UnicodeString make_csv_str(UnicodeString s)
 {
-	return UnicodeString().sprintf(_T("\"%s\""), REPLACE_TS(s, "\"", "\"\"").c_str());
+	return UnicodeString().sprintf(_T("\"%s\""), ReplaceStr(s, "\"", "\"\"").c_str());
 }
 //---------------------------------------------------------------------------
 UnicodeString make_csv_str(bool sw)
@@ -1382,11 +1369,11 @@ UnicodeString conv_esc_char(UnicodeString s)
 {
 	if (s.IsEmpty()) return EmptyStr;
 
-	s = REPLACE_TS(s, "\\\\", "\f");	//\\ を一時的に \f に変えておいて
-	s = REPLACE_TS(s, "\\t",  "\t");	//タブ
-	s = REPLACE_TS(s, "\\n",  "\r\n");	//改行
-	s = REPLACE_TS(s, "\\s",  " ");		//NyanFi 固有
-	s = REPLACE_TS(s, "\f",   "\\");	//\\(\f) を \ に変換
+	s = ReplaceStr(s, "\\\\", "\f");	//\\ を一時的に \f に変えておいて
+	s = ReplaceStr(s, "\\t",  "\t");	//タブ
+	s = ReplaceStr(s, "\\n",  "\r\n");	//改行
+	s = ReplaceStr(s, "\\s",  " ");		//NyanFi 固有
+	s = ReplaceStr(s, "\f",   "\\");	//\\(\f) を \ に変換
 	return s;
 }
 
@@ -1395,14 +1382,14 @@ UnicodeString conv_esc_char(UnicodeString s)
 //---------------------------------------------------------------------------
 UnicodeString yen_to_slash(UnicodeString s)
 {
-	return REPLACE_TS(s, "\\", "/");
+	return ReplaceStr(s, "\\", "/");
 }
 //---------------------------------------------------------------------------
 //置換 / → \\
 //---------------------------------------------------------------------------
 UnicodeString slash_to_yen(UnicodeString s)
 {
-	return REPLACE_TS(s, "/", "\\");
+	return ReplaceStr(s, "/", "\\");
 }
 
 //---------------------------------------------------------------------------
@@ -1481,6 +1468,16 @@ bool equal_DOWN(UnicodeString s)
 	return (_tcsicmp(s.c_str(), _T("DOWN"))==0);
 }
 //---------------------------------------------------------------------------
+bool equal_HOME(UnicodeString s)
+{
+	return (_tcsicmp(s.c_str(), _T("HOME"))==0);
+}
+//---------------------------------------------------------------------------
+bool equal_END(UnicodeString s)
+{
+	return (_tcsicmp(s.c_str(), _T("END"))==0);
+}
+//---------------------------------------------------------------------------
 bool equal_F1(UnicodeString s)
 {
 	return (_tcsicmp(s.c_str(), _T("F1"))==0);
@@ -1540,6 +1537,16 @@ bool contains_PathDlmtr(UnicodeString s)
 bool contains_Slash(UnicodeString s)
 {
 	return contains_s(s, '/');
+}
+
+//---------------------------------------------------------------------------
+//含まれている \ の個数を取得
+//---------------------------------------------------------------------------
+int count_PathDlmtr(UnicodeString s)
+{
+	int cnt = 0;
+	for (int i=1; i<=s.Length(); i++) if (s[i]=='\\') cnt++;
+	return cnt;
 }
 
 //---------------------------------------------------------------------------

@@ -23,75 +23,6 @@ object DriveGraph: TDriveGraph
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Panel1: TPanel
-    Left = 0
-    Top = 0
-    Width = 392
-    Height = 25
-    Align = alTop
-    AutoSize = True
-    BevelOuter = bvNone
-    BorderWidth = 2
-    TabOrder = 0
-    object DriveComboBox: TComboBox
-      Left = 2
-      Top = 2
-      Width = 118
-      Height = 21
-      Align = alClient
-      Style = csDropDownList
-      TabOrder = 0
-      OnChange = DriveComboBoxChange
-    end
-    object SizeComboBox: TComboBox
-      Left = 180
-      Top = 2
-      Width = 50
-      Height = 21
-      Align = alRight
-      Style = csDropDownList
-      TabOrder = 1
-      OnChange = SizeComboBoxChange
-    end
-    object Panel3: TPanel
-      Left = 230
-      Top = 2
-      Width = 160
-      Height = 21
-      Align = alRight
-      BevelOuter = bvNone
-      TabOrder = 2
-      object OldOdrCheckBox: TCheckBox
-        Left = 6
-        Top = 2
-        Width = 72
-        Height = 17
-        Caption = #21476#12356#38918
-        TabOrder = 0
-        OnClick = OptionChanged
-      end
-      object MinMaxCheckBox: TCheckBox
-        Left = 80
-        Top = 2
-        Width = 80
-        Height = 17
-        Caption = 'Min/Max'
-        TabOrder = 1
-        OnClick = OptionChanged
-      end
-    end
-    object Panel2: TPanel
-      Left = 120
-      Top = 2
-      Width = 60
-      Height = 21
-      Align = alRight
-      Alignment = taRightJustify
-      BevelOuter = bvNone
-      Caption = #26834#24133' '
-      TabOrder = 3
-    end
-  end
   object HiddenCanBtn: TButton
     Left = 0
     Top = 270
@@ -100,14 +31,14 @@ object DriveGraph: TDriveGraph
     Align = alBottom
     Cancel = True
     ModalResult = 2
-    TabOrder = 1
+    TabOrder = 0
     TabStop = False
   end
   object GraphScrollBox: TScrollBox
     Left = 0
-    Top = 25
+    Top = 19
     Width = 392
-    Height = 245
+    Height = 251
     HorzScrollBar.Visible = False
     VertScrollBar.Tracking = True
     Align = alClient
@@ -119,10 +50,22 @@ object DriveGraph: TDriveGraph
       Left = 0
       Top = 0
       Width = 392
-      Height = 245
+      Height = 251
       Align = alClient
       OnMouseDown = PaintBox1MouseDown
       OnPaint = PaintBox1Paint
+    end
+    object HiddenEdit: TEdit
+      Left = 0
+      Top = 0
+      Width = 0
+      Height = 21
+      PopupMenu = PopupMenu1
+      ReadOnly = True
+      TabOrder = 0
+      OnEnter = HiddenEditEnterExit
+      OnExit = HiddenEditEnterExit
+      OnKeyDown = HiddenEditKeyDown
     end
   end
   object StatusBar1: TStatusBar
@@ -130,7 +73,97 @@ object DriveGraph: TDriveGraph
     Top = 270
     Width = 392
     Height = 19
-    Panels = <>
-    SimplePanel = True
+    Panels = <
+      item
+        Style = psOwnerDraw
+        Width = 600
+      end>
+    StyleElements = [seBorder]
+    OnDrawPanel = StatusBar1DrawPanel
+  end
+  object OptToolBar: TToolBar
+    Left = 0
+    Top = 0
+    Width = 392
+    Height = 19
+    AutoSize = True
+    ButtonHeight = 19
+    ButtonWidth = 52
+    Caption = 'OptToolBar'
+    DrawingStyle = dsGradient
+    List = True
+    AllowTextButtons = True
+    TabOrder = 1
+    object DriveComboBox: TComboBox
+      Left = 0
+      Top = 0
+      Width = 120
+      Height = 21
+      Align = alLeft
+      Style = csDropDownList
+      TabOrder = 0
+      OnChange = DriveComboBoxChange
+      OnKeyDown = OptComboBoxKeyDown
+    end
+    object OptSplitter: TSplitter
+      Left = 120
+      Top = 0
+      Width = 4
+      Height = 19
+    end
+    object SizeBtn: TToolButton
+      Left = 124
+      Top = 0
+      Caption = #26834#24133
+      ImageIndex = 1
+      Style = tbsTextButton
+      OnClick = SizeBtnClick
+    end
+    object SizeComboBox: TComboBox
+      Left = 164
+      Top = 0
+      Width = 50
+      Height = 21
+      Align = alRight
+      Style = csDropDownList
+      TabOrder = 1
+      OnChange = SizeComboBoxChange
+      OnKeyDown = OptComboBoxKeyDown
+    end
+    object ToolButton3: TToolButton
+      Left = 214
+      Top = 0
+      Width = 18
+      ImageIndex = 2
+      Style = tbsSeparator
+    end
+    object ToolButton4: TToolButton
+      Left = 232
+      Top = 0
+      Action = OldOdrAction
+      Style = tbsTextButton
+    end
+    object ToolButton5: TToolButton
+      Left = 277
+      Top = 0
+      Action = MinMaxAction
+      Style = tbsTextButton
+    end
+  end
+  object ActionList1: TActionList
+    Left = 48
+    Top = 36
+    object OldOdrAction: TAction
+      Caption = #21476#12356#38918
+      OnExecute = ToggleActionExecute
+    end
+    object MinMaxAction: TAction
+      Caption = 'Min/Max'
+      OnExecute = ToggleActionExecute
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 112
+    Top = 35
   end
 end

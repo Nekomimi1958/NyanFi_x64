@@ -135,8 +135,8 @@ void __fastcall TGrepExOptDlg::SampleChange(TObject *Sender)
 	UnicodeString f_inf = FileFmtEdit->Text;
 	if (f_inf.IsEmpty()) f_inf = "$F $L:";
 
-	f_inf = REPLACE_TS(f_inf, "$F", "D:\\hoge.txt");
-	f_inf = REPLACE_TS(f_inf, "$L", "123");
+	f_inf = ReplaceStr(f_inf, "$F", "D:\\hoge.txt");
+	f_inf = ReplaceStr(f_inf, "$L", "123");
 	f_inf = conv_esc_char(f_inf);
 
 	std::unique_ptr<TStringList> l_list(new TStringList());
@@ -152,7 +152,7 @@ void __fastcall TGrepExOptDlg::SampleChange(TObject *Sender)
 		ln_str.USET_T("これは置換結果のサンプルです。");
 	ln_str.UCAT_T("\nこれは2行目です。行頭にタブはありません。\n\tこれは3行目です。行頭にタブがあります。");
 
-	if (RepTabCheckBox->Checked) ln_str = REPLACE_TS(ln_str, "\t", " ");
+	if (RepTabCheckBox->Checked) ln_str = ReplaceStr(ln_str, "\t", " ");
 	if (TrimLeftCheckBox->Checked) {
 		TStringDynArray l_lst = SplitString(ln_str, "\n");
 		ln_str = EmptyStr;
@@ -165,7 +165,7 @@ void __fastcall TGrepExOptDlg::SampleChange(TObject *Sender)
 	if (RepCrCheckBox->Checked)
 		ln_str = ReplaceStr(ln_str, "\n", conv_esc_char(RepCrEdit->Text));
 	else
-		ln_str = REPLACE_TS(ln_str, "\n", "\r\n");
+		ln_str = ReplaceStr(ln_str, "\n", "\r\n");
 
 	SampleMemo->Text = f_inf + ln_str;
 }

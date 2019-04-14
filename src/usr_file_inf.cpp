@@ -1890,7 +1890,7 @@ void get_TagsInf(
 			if (remove_top_s(lbuf, "PROGRAM_") || remove_top_s(lbuf, "FILE_")) {
 				UnicodeString vnam = split_pre_tab(lbuf);
 				if (!USAME_TI(vnam, "ENCODING")) {
-					UnicodeString vstr = REPLACE_TS(REPLACE_TS(lbuf, "\t//", ""), "\t"," ");
+					UnicodeString vstr = ReplaceStr(ReplaceStr(lbuf, "\t//", ""), "\t"," ");
 					add_PropLine(vnam, vstr, lst);
 				}
 			}
@@ -1976,7 +1976,7 @@ void get_HtmlInf(
 		if (p>0) {
 			UnicodeString tmp = headstr.SubString(p, headstr.Length() - p + 1);
 			tmp = get_tkn(get_tkn_m(tmp, '=', '>'), '/');
-			charset = Trim(REPLACE_TS(tmp, "\"", ""));
+			charset = Trim(ReplaceStr(tmp, "\"", ""));
 			if (!charset.IsEmpty())
 				lst->Add(itmbuf.sprintf(_T("%*s: %s"), FPRP_NAM_WD, _T("charset"), charset.c_str()));
 		}

@@ -24,7 +24,7 @@
 #include "CsvRecFrm.h"
 #include "InspectFrm.h"
 #include "BitmapFrm.h"
-#include "GifView.h"
+#include "SubView.h"
 #include "ColDlg.h"
 #include "InpDir.h"
 #include "InpExDlg.h"
@@ -182,7 +182,7 @@ bool __fastcall TTxtViewer::CloseAuxForm()
 	if (CsvRecForm->Visible)   { CsvRecForm->Close();	closed = true; }
 	if (BitmapForm->Visible)   { BitmapForm->Close();	closed = true; }
 	if (InspectForm->Visible)  { InspectForm->Close();	closed = true; }
-	if (GifViewer->Visible)    { GifViewer->Close();	closed = true; }
+	if (SubViewer->Visible)    { SubViewer->Close();	closed = true; }
 	return closed;
 }
 
@@ -2343,9 +2343,9 @@ void __fastcall TTxtViewer::UpdatePos(
 	Repaint(force);
 
 	//イメージプレビュー
-	if (GifViewer->Visible) {
+	if (SubViewer->Visible) {
 		UnicodeString fnam = GetCurImgFile();
-		if (!fnam.IsEmpty() && !SameText(GifViewer->FileName, fnam)) GifViewer->DrawImage(fnam);
+		if (!fnam.IsEmpty() && !SameText(SubViewer->FileName, fnam)) SubViewer->DrawImage(fnam);
 	}
 }
 
@@ -2465,7 +2465,7 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 				"(0x|\\$)[0-9a-fA-F]{6,8}|"
 				"(=[0-9a-fA-F]{6})", &xp);
 
-		colstr = REPLACE_TS(colstr, "$", "0x");
+		colstr = ReplaceStr(colstr, "$", "0x");
 		int col = -1;
 		//HTML
 		if (remove_top_s(colstr, '#')) {
@@ -2628,9 +2628,9 @@ void __fastcall TTxtViewer::onMouseDown(int x, int y)
 		Selecting = true;
 
 		//イメージプレビュー
-		if (GifViewer->Visible) {
+		if (SubViewer->Visible) {
 			UnicodeString fnam = GetCurImgFile();
-			if (!fnam.IsEmpty() && !SameText(GifViewer->FileName, fnam)) GifViewer->DrawImage(fnam);
+			if (!fnam.IsEmpty() && !SameText(SubViewer->FileName, fnam)) SubViewer->DrawImage(fnam);
 		}
 	}
 }
@@ -3191,7 +3191,7 @@ UnicodeString __fastcall TTxtViewer::get_SelText(
 				if (i==sp1.y) {
 					if (sp1.x<lbuf.Length()) lbuf = lbuf.SubString(1, sp1.x);
 				}
-				sel_str += REPLACE_TS(lbuf, "\n", "\r\n");
+				sel_str += ReplaceStr(lbuf, "\n", "\r\n");
 				if (isBinary) sel_str.UCAT_T("\r\n");
 			}
 		}
@@ -3486,7 +3486,7 @@ int __fastcall TTxtViewer::to_Bytes(
 					if (s[1]=='?') m &= 0x0f;
 					if (s[2]=='?') m &= 0xf0;
 					FindMask[i] = m;
-					s = REPLACE_TS(s, "?", "0");
+					s = ReplaceStr(s, "?", "0");
 					//検索値を設定
 					FindByte0[i] = ("0x" + s).ToInt();
 				}
@@ -4476,16 +4476,16 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		//イメージプレビュー
 		else if (USAME_TI(cmd, "ImgPreview")) {
 			UnicodeString fnam = GetCurImgFile();
-			if (!GifViewer->Visible && !fnam.IsEmpty()) {
-				GifViewer->Show();
-				GifViewer->DrawImage(fnam);
+			if (!SubViewer->Visible && !fnam.IsEmpty()) {
+				SubViewer->Show();
+				SubViewer->DrawImage(fnam);
 				Application->MainForm->SetFocus();
 			}
 			else {
-				if (fnam.IsEmpty() || SameText(GifViewer->FileName, fnam))
-					GifViewer->Close();
+				if (fnam.IsEmpty() || SameText(SubViewer->FileName, fnam))
+					SubViewer->Close();
 				else
-					GifViewer->DrawImage(fnam);
+					SubViewer->DrawImage(fnam);
 			}
 		}
 		//エラー検索
