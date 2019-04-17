@@ -111,12 +111,15 @@ void __fastcall TDirHistoryDlg::UpdateListBox(
 
 	//タイトル
 	UnicodeString tit;
-	if (IsDirStack)
+	if (IsDirStack) {
 		tit.USET_T("ディレクトリ・スタック");
-	else if (IsFindDirHist)
+	}
+	else if (IsFindDirHist) {
 		tit.sprintf(_T("ディレクトリ履歴 - 全体検索 (%u/%u)"), ListBuff->Count, AllDirHistory->Count);
-	else if (IsAllDirHist)
+	}
+	else if (IsAllDirHist) {
 		tit.USET_T("ディレクトリ履歴 - 全体");
+	}
 	else {
 		tit.sprintf(_T("ディレクトリ履歴 - %s"), get_LRUD_str(RefListTag).c_str());
 		if (RefListTag!=CurListTag) tit.UCAT_T(" (反対側を参照)");

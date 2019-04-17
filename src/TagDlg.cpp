@@ -654,8 +654,9 @@ void __fastcall TTagManDlg::CanButtonClick(TObject *Sender)
 		TagCheckListBox->Repaint();
 		ModalResult = mrNone;
 	}
-	else
+	else {
 		ModalResult = mrCancel;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -672,8 +673,9 @@ void __fastcall TTagManDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 			UserModule->EndSpuit();
 			TagCheckListBox->Repaint();
 		}
-		else
+		else {
 			ModalResult = mrCancel;
+		}
 	}
 	else if (USAME_TI(KeyStr, "Alt+O")) {
 		ChgOptBtnClick(NULL);

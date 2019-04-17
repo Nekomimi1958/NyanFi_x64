@@ -117,6 +117,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"bgMark=栞マーク項目の背景色\n"
 		"matchItem=INC.サーチのマッチ項目背景色\n"
 		"Differ=結果リストの相違箇所背景色\n"
+		"DifferN=結果リストの注目箇所背景色\n"
 		"Folder=|ディレクトリの文字色\n"
 		"SymLink=シンボリックリンク/ジャンクションの文字色\n"
 		"Protect=ディレクトリ(削除制限)の文字色\n"
@@ -608,7 +609,6 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	AutoHotkeyCheckBox->Tag 	= (int)&MenuAutoHotkey;
 	EscHelpCheckBox->Tag		= (int)&EscapeHelp;
 	InhAltMenuCheckBox->Tag 	= (int)&InhbitAltMenu;
-	SelColDrvInfCheckBox->Tag	= (int)&SelColDrvInf;
 	PermitCmdsCheckBox->Tag 	= (int)&PermitDotCmds;
 	InheritDotCheckBox->Tag 	= (int)&InheritDotNyan;
 	DotPerUserCheckBox->Tag 	= (int)&DotNyanPerUser;
@@ -1183,11 +1183,11 @@ bool __fastcall TOptionDlg::IsFirstCmdKey()
 	bool res = false;
 
 	UnicodeString key = get_tkn_r(GetCmdKeyStr(), ':');
-	if (!contains_s(key, _T('~'))) {
+	if (!ContainsStr(key, "~")) {
 		TStrings *sp = KeyListBox->Items;
 		for (int i=0; i<sp->Count; i++) {
 			UnicodeString fkey = sp->Names[i];
-			if (contains_s(fkey, _T('~'))) {
+			if (ContainsStr(fkey, "~")) {
 				fkey = get_tkn_m(fkey, ':', '~');
 				if (SameText(key, fkey)) { res = true; break; }
 			}
@@ -1379,8 +1379,9 @@ void __fastcall TOptionDlg::ScrBarStyleComboBoxClick(TObject *Sender)
 			KnobImgEdit->Text = EmptyStr;
 		}
 	}
-	else
+	else {
 		KnobImgEdit->Text = EmptyStr;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -1547,8 +1548,9 @@ void __fastcall TOptionDlg::SpuitImageMouseUp(TObject *Sender, TMouseButton Butt
 
 	if (UserModule->SpuitEnabled()) {
 		TColor col = UserModule->EndSpuit();
-		if (SpuitTag==2)
+		if (SpuitTag==2) {
 			RefExtColPanel->Color = col;
+		}
 		else {
 			TListBox *lp = (SpuitTag==3)? TagColListBox : (SpuitTag==1)? TimColListBox : OptColListBox;
 			if (lp->ItemIndex!=-1) {
@@ -2381,8 +2383,9 @@ void __fastcall TOptionDlg::RefCmdsBtnClick(TObject *Sender)
 				fnam.Insert("%ExePath%", 1);
 			cmd.cat_sprintf(_T("_\"%s\""), fnam.c_str());
 
-			if (PageControl1->ActivePage==ExtMenuSheet)
+			if (PageControl1->ActivePage==ExtMenuSheet) {
 				MenuPrmEdit->Text = cmd;
+			}
 			else if (PageControl1->ActivePage==EventSheet) {
 				EventCmdsEdit->Text = cmd;
 				int idx = EventListBox->ItemIndex;
@@ -2395,8 +2398,9 @@ void __fastcall TOptionDlg::RefCmdsBtnClick(TObject *Sender)
 	else if (CmdFileListDlg->ShowToSelect()==mrOk) {
 		UnicodeString fnam = CmdFileListDlg->CmdFileName;
 		fnam = "@" + to_relative_name(fnam);
-		if (PageControl1->ActivePage==ExtMenuSheet)
+		if (PageControl1->ActivePage==ExtMenuSheet) {
 			MenuPrmEdit->Text = fnam;
+		}
 		else if (PageControl1->ActivePage==EventSheet) {
 			switch (((TComponent*)Sender)->Tag) {
 			case 100:
@@ -2491,8 +2495,9 @@ void __fastcall TOptionDlg::SortAssoListBox(UnicodeString item)
 			o_lst = new TStringList();
 			x_lst->AddObject(fext, (TObject*)o_lst);
 		}
-		else
+		else {
 			o_lst = (TStringList*)x_lst->Objects[idx];
+		}
 		o_lst->Add(lbuf);
 	}
 	x_lst->Sort();
@@ -2557,8 +2562,9 @@ void __fastcall TOptionDlg::AsoAppComboBoxDropDown(TObject *Sender)
 		int i = 1;
 		while (i<cmd_lst->Count) {
 			UnicodeString lbuf = cmd_lst->Strings[i];
-			if (SameStr(laststr, lbuf))
+			if (SameStr(laststr, lbuf)) {
 				cmd_lst->Delete(i);
+			}
 			else {
 				laststr = lbuf;
 				i++;
@@ -2623,8 +2629,9 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 		cv->Brush->Color = !OpenAddDrvCheckBox->Checked? col_Invalid : scl_Window;
 		cv->Font->Color  = scl_WindowText;
 	}
-	else
+	else {
 		SetHighlight(cv, State.Contains(odSelected));
+	}
 	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled2;
@@ -2906,7 +2913,7 @@ void __fastcall TOptionDlg::CmdComboBoxChange(TObject *Sender)
 		TStringList *lst = USAME_TI(cmd, "ExeExtMenu")? ExtMenuList : ExtToolList;
 		for (int i=0; i<lst->Count; i++) {
 			UnicodeString itm = get_csv_item(lst->Strings[i], 0);
-			if (!contains_s(itm, _T('&'))) continue;
+			if (!ContainsStr(itm, "&")) continue;
 			UnicodeString ak = get_tkn_r(itm, '&').SubString(1, 1);
 			if (ak.IsEmpty() || !_istalnum(ak[1])) continue;
 			p_list->Add(tmp.sprintf(_T("%s : %s"), ak.UpperCase().c_str(), itm.c_str()));
@@ -2974,7 +2981,7 @@ void __fastcall TOptionDlg::KeyListBoxClick(TObject *Sender)
 	AltCheckBox->Checked   = remove_text(kstr, KeyStr_Alt);
 	SelCheckBox->Checked   = remove_text(kstr, KeyStr_SELECT);
 
-	if (contains_s(kstr, _T('~'))) {
+	if (ContainsStr(kstr, "~")) {
 		//2ストローク
 		KeyComboBox->ItemIndex	= KeyComboBox->Items->IndexOf(get_tkn(kstr, '~'));
 		Key2ComboBox->ItemIndex = Key2ComboBox->Items->IndexOf(get_tkn_r(kstr, '~'));
@@ -3004,8 +3011,9 @@ void __fastcall TOptionDlg::KeyListBoxClick(TObject *Sender)
 	//パラメータ
 	cp = PrmComboBox;
 	if (cp->Enabled) {
-		if (cp->Style==csDropDown)
+		if (cp->Style==csDropDown) {
 			cp->Text = prm;
+		}
 		else {
 			for (int i=0; i<cp->Items->Count; i++) {
 				if (SameText(prm, get_tkn(cp->Items->Strings[i], ' '))) {
@@ -3120,7 +3128,7 @@ void __fastcall TOptionDlg::FindKeyBtnClick(TObject *Sender)
 		CtrlCheckBox->Checked  = remove_text(kstr, KeyStr_Ctrl);
 		AltCheckBox->Checked   = remove_text(kstr, KeyStr_Alt);
 
-		if (contains_s(kstr, _T('~'))) {
+		if (ContainsStr(kstr, "~")) {
 			//2ストローク
 			KeyComboBox->ItemIndex	= KeyComboBox->Items->IndexOf(get_tkn(kstr, '~'));
 			Key2ComboBox->ItemIndex = Key2ComboBox->Items->IndexOf(get_tkn_r(kstr, '~'));
@@ -3175,7 +3183,9 @@ void __fastcall TOptionDlg::FindKeyEditChange(TObject *Sender)
 		lp->ItemIndex = idx;
 		if (idx!=-1) KeyListBoxClick(lp);
 	}
-	else lp->ItemIndex = -1;
+	else {
+		lp->ItemIndex = -1;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::FindKeyEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -3386,8 +3396,9 @@ void __fastcall TOptionDlg::RefCmdPrmBtnClick(TObject *Sender)
 						}
 					}
 				}
-				else if (is_nwl || is_mnu || is_ini || is_rsl)
+				else if (is_nwl || is_mnu || is_ini || is_rsl) {
 					fnam = to_relative_name(fnam);
+				}
 				PrmComboBox->Text = fnam;
 			}
 		}
@@ -3594,8 +3605,9 @@ void __fastcall TOptionDlg::InpColBtnClick(TObject *Sender)
 		inp_file->ReadSection(  "Color",		col_lst.get());
 		inp_file->LoadListItems("ExtColList",	ext_lst.get());
 		inp_file->ReadSection(  "TagColList",	tag_lst.get());
-		if ((col_lst->Count + ext_lst->Count + tag_lst->Count)==0)
+		if ((col_lst->Count + ext_lst->Count + tag_lst->Count)==0) {
 			msgbox_WARN("配色設定がありません。");
+		}
 		else {
 			if (col_lst->Count>0) ColBufList->Assign(col_lst.get());
 			if (ext_lst->Count>0) ExtColListBox->Items->Assign(ext_lst.get());
@@ -3748,7 +3760,7 @@ void __fastcall TOptionDlg::StdCmdListBoxClick(TObject *Sender)
 	int idx = StdCmdListBox->ItemIndex;  if (idx==-1) return;
 	FExtStdEdit->Text = StdCmdListBox->Items->Names[idx];
 	UnicodeString cmd = StdCmdListBox->Items->ValueFromIndex[idx];
-	if (contains_s(cmd, _T('_'))) {
+	if (ContainsStr(cmd, "_")) {
 		StdCmdPrmEdit->Text = get_PrmStr(cmd);
 		cmd = get_CmdStr(cmd).UCAT_T("_");
 	}
@@ -3764,7 +3776,7 @@ void __fastcall TOptionDlg::StdCmdListBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::StdCmdComboBoxChange(TObject *Sender)
 {
-	bool has_prm = contains_s(StdCmdComboBox->Text, _T("ExeCommands_"));
+	bool has_prm = ContainsStr(StdCmdComboBox->Text, "ExeCommands_");
 	StdCmdPrmEdit->Enabled	 = has_prm;
 	RefStdCmdPrmBtn->Enabled = has_prm;
 	if (!has_prm) StdCmdPrmEdit->Text = EmptyStr;
@@ -3791,7 +3803,7 @@ void __fastcall TOptionDlg::StdCmdListBoxDrawItem(TWinControl *Control, int Inde
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::RefStdCmdPrmBtnClick(TObject *Sender)
 {
-	if (contains_i(StdCmdComboBox->Text, _T("ExeCommands_"))) {
+	if (ContainsText(StdCmdComboBox->Text, "ExeCommands_")) {
 		if (CmdFileListDlg->ShowToSelect()==mrOk)
 			StdCmdPrmEdit->Text = "@" + to_relative_name(CmdFileListDlg->CmdFileName);
 	}
@@ -3806,7 +3818,7 @@ void __fastcall TOptionDlg::ChangeStdCmdList(bool add)
 	UnicodeString fext = Trim(FExtStdEdit->Text.LowerCase());	if (fext.IsEmpty()) return;
 	if (fext[1]!='.') fext.Insert(".", 1);
 	UnicodeString cmd = get_in_paren(StdCmdComboBox->Text);
-	if (contains_s(cmd, _T('_'))) cmd += StdCmdPrmEdit->Text;
+	if (ContainsStr(cmd, "_")) cmd += StdCmdPrmEdit->Text;
 
 	//追加
 	if (add) {
@@ -4058,14 +4070,17 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 			if (HotWinCheckBox->Checked)   kstr.UCAT_T("Win+");
 			kstr += HotKeyComboBox->Text;
 		}
-		if (register_HotKey(ID_CALL_HOTKEY, kstr))
+
+		if (register_HotKey(ID_CALL_HOTKEY, kstr)) {
 			CallHotKey = kstr;
+		}
 		else {
 			FindEdit->Text = EmptyStr;
 			FindEdit->Text = "呼び出しホットキー";
 			msgbox_ERR(GlobalErrMsg);
 			return;
 		}
+
 		//AppList ホットキー再登録
 		kstr = EmptyStr;
 		if (!AppKeyComboBox->Text.IsEmpty()) {
@@ -4075,8 +4090,10 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 			if (AppWinCheckBox->Checked)   kstr.UCAT_T("Win+");
 			kstr += AppKeyComboBox->Text;
 		}
-		if (register_HotKey(ID_APP_HOTKEY, kstr))
+
+		if (register_HotKey(ID_APP_HOTKEY, kstr)) {
 			AppListHotKey = kstr;
+		}
 		else {
 			FindEdit->Text = EmptyStr;
 			FindEdit->Text = "AppList";
@@ -4099,8 +4116,10 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 	IniWinLeft		 = EditToInt(IniWinLeftEdit);
 	IniWinTop		 = EditToInt(IniWinTopEdit);
 
-	if (IconMode==0 && ShowIconCheckBox->Checked) IconMode = 1;
-	else if (!ShowIconCheckBox->Checked) IconMode = 0;
+	if (IconMode==0 && ShowIconCheckBox->Checked)
+		IconMode = 1;
+	else if (!ShowIconCheckBox->Checked)
+		IconMode = 0;
 
 	UnicodeString tmp;
 	//Migemo 再初期化

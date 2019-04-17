@@ -29,17 +29,21 @@ void __fastcall TCreateDirsDlg::FormShow(TObject *Sender)
 
 	StartEdit->Text = IniFile->ReadStrGen(_T("CreDirsDlgStart"));
 	IncEdit->Text	= IniFile->ReadStrGen(_T("CreDirsDlgInc"));
+
 	if (IniFile->ReadIntGen(_T("CreDirsDlgSerMod"), 1)>0)
 		PstSerRadioBtn->Checked = true;
 	else
 		PreSerRadioBtn->Checked = true;
+
 	StrEdit->Text	= IniFile->ReadStrGen(_T("CreDirsDlgStr"));
 	if (IniFile->ReadIntGen(_T("CreDirsDlgStrMod"), 1)>0)
 		PstStrRadioBtn->Checked = true;
 	else
 		PreStrRadioBtn->Checked = true;
+
 	DtFmtEdit->Text    = IniFile->ReadStrGen(_T("CreDirsDlgDtFmt"));
 	DateMaskEdit->Text = IniFile->ReadStrGen(_T("CreDirsDlgDate"), FormatDateTime("yyyy/01/01", Now()));
+
 	if (IniFile->ReadIntGen(_T("CreDirsDlgDateMod"), 1)>0)
 		PstDateRadioBtn->Checked = true;
 	else
@@ -129,7 +133,7 @@ void __fastcall TCreateDirsDlg::AddDateActionExecute(TObject *Sender)
 		std::unique_ptr<TStringList> lst(new TStringList());
 		lst->Assign(ListMemo->Lines);
 		UnicodeString fmt = DtFmtEdit->Text;
-		int inc_mod = contains_s(fmt, _T('d'))? 0 : contains_s(fmt, _T('m'))? 1 : 2;
+		int inc_mod = ContainsStr(fmt, "d")? 0 : ContainsStr(fmt, "m")? 1 : 2;
 		for (int i=0; i<lst->Count; i++) {
 			UnicodeString lbuf = lst->Strings[i];
 			UnicodeString dbuf = FormatDateTime(DtFmtEdit->Text, dt);

@@ -69,8 +69,9 @@ UnicodeString HtmConv::int_to_alpha(int n)
 {
 	UnicodeString ret_str;
 	n--;
-	if (n<0)
+	if (n<0) {
 		ret_str.USET_T("0");
+	}
 	else {
 		int n1 = n /26;
 		if (n1>0) ret_str.cat_sprintf(_T("%c"), (char)('a' + n1 - 1));
@@ -242,8 +243,9 @@ UnicodeString HtmConv::GetTagAtr(UnicodeString s,
 			}
 			break;
 		case 1:
-			if (c=='>')
+			if (c=='>') {
 				flag = 0;
+			}
 			else if (c==' ') {	//タグ確定
 				tag  = tag.Trim();
 				atr  = EmptyStr;
@@ -261,8 +263,9 @@ UnicodeString HtmConv::GetTagAtr(UnicodeString s,
 			else atr.cat_sprintf(_T("%c"), c);
 			break;
 		case 3:
-			if (c=='>')
+			if (c=='>') {
 				flag = 0;
+			}
 			else if (c!=' ') {	//属性値開始
 				qflag = (c=='\"');
 				if (qflag) vstr = EmptyStr; else vstr = c;
@@ -280,7 +283,9 @@ UnicodeString HtmConv::GetTagAtr(UnicodeString s,
 					if (c=='>') flag = 0; else flag = 2;
 				}
 			}
-			else vstr.cat_sprintf(_T("%c"), c);
+			else {
+				vstr.cat_sprintf(_T("%c"), c);
+			}
 			break;
 		}
 
@@ -295,7 +300,7 @@ UnicodeString HtmConv::GetTagAtr(UnicodeString s,
 //---------------------------------------------------------------------------
 UnicodeString HtmConv::RefEntity(UnicodeString s)
 {
-	if (!contains_s(s, _T('&'))) return s;
+	if (!ContainsStr(s, "&")) return s;
 
 	//文字実体参照から数値文字参照に一旦変換
 	std::unique_ptr<TStringList> ent_lst(new TStringList());
@@ -567,7 +572,7 @@ UnicodeString HtmConv::RefEntity(UnicodeString s)
 	}
 
 	//数値文字参照を解決
-	if (contains_s(s, _T('&'))) {
+	if (ContainsStr(s, "&")) {
 		int stt = 0;
 		int p = 1;
 		int p0;
@@ -583,8 +588,9 @@ UnicodeString HtmConv::RefEntity(UnicodeString s)
 						p0 = p + 1;
 						stt = 2;
 					}
-					else
+					else {
 						stt = 0;
+					}
 					p++;
 					break;
 				case 2:
@@ -599,8 +605,9 @@ UnicodeString HtmConv::RefEntity(UnicodeString s)
 						p = p0 + 1;
 						stt = 0;
 					}
-					else
+					else {
 						p++;
+					}
 					break;
 				default:
 					p++;
@@ -719,8 +726,9 @@ void HtmConv::Convert()
 			i++;
 		}
 		else {
-			if (USAME_TS(s, "</>"))
+			if (USAME_TS(s, "</>")) {
 				tmp_buf->Delete(i);
+			}
 			else {
 				if (EndsStr('>', s)) flag = false;
 				tmp_buf->Strings[i - 1] = tmp_buf->Strings[i - 1] + " " + tmp_buf->Strings[i];
@@ -753,7 +761,7 @@ void HtmConv::Convert()
 		else {
 			//連続した半角スペースを一つに
 			s = Trim(s);
-			while (contains_s(s, _T("  "))) s = ReplaceStr(s, "  ", " ");
+			while (ContainsStr(s, "  ")) s = ReplaceStr(s, "  ", " ");
 			if (s.IsEmpty()) tmp_buf->Delete(i); else tmp_buf->Strings[i++] = s;
 		}
 	}
@@ -793,8 +801,9 @@ void HtmConv::Convert()
 		UnicodeString tag  = GetTag(lbuf);
 		if (tag.IsEmpty()) {
 			pstHdr = false;
-			if (fTITLE)
+			if (fTITLE) {
 				Title += lbuf;
+			}
 			else if (fPRE || fXMP || fRUBY) {
 				if (fPRE) lbuf.Insert("    ", 1);
 				TxtLineBuf += lbuf;
@@ -958,9 +967,10 @@ void HtmConv::Convert()
 						TxtLineBuf += tmpstr;
 						LI_No[LI_level]++;
 					}
-					else
-						//順序無しリスト
+					//順序無しリスト
+					else {
 						TxtLineBuf += UlMarkStr;
+					}
 				}
 			}
 			else if (USAME_TS(tag, "DL")) {
@@ -1064,8 +1074,9 @@ void HtmConv::Convert()
 					TxtLineBuf.UCAT_T("[");
 				}
 				else {
-					if (StartsText("file://", HrefStr))
+					if (StartsText("file://", HrefStr)) {
 						HrefStr = "file:///" + slash_to_yen(get_tkn_m(HrefStr, _T("file:///"), _T("#")));
+					}
 					else if (!StartsText("http", HrefStr) && !StartsText("mailto:", HrefStr) && !StartsStr("//", HrefStr)) {
 						UnicodeString fnam = slash_to_yen(get_tkn(HrefStr, '#'));
 						fnam = rel_to_abs(fnam, FileName);
@@ -1083,16 +1094,19 @@ void HtmConv::Convert()
 				HrefStr = EmptyStr;
 			}
 
-			else if (USAME_TS(tag, "HEAD"))
+			else if (USAME_TS(tag, "HEAD")) {
 				Skip = true;
+			}
 			else if (contained_wd_i(_T("/HEAD|BODY"), tag)) {
 				Skip   = false;
 				fTITLE = 0;
 			}
-			else if (USAME_TS(tag, "TITLE"))
+			else if (USAME_TS(tag, "TITLE")) {
 				fTITLE ++;
-			else if (USAME_TS(tag, "/TITLE"))
+			}
+			else if (USAME_TS(tag, "/TITLE")) {
 				fTITLE = 0;
+			}
 			else if (USAME_TS(tag, "META")) {
 				UnicodeString mnam = GetTagAtr(lbuf, tag, _T("NAME"));
 				UnicodeString cont = GetTagAtr(lbuf, tag, _T("CONTENT"));

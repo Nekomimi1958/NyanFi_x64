@@ -250,7 +250,9 @@ void __fastcall TPrintImgDlg::DrawImage(TCanvas *cv)
 		if (FileExists(fnam)) {
 			if (!EXIF_GetExifTime(fnam, xt)) xt = get_file_age(fnam);
 		}
-		else xt = Now();
+		else {
+			xt = Now();
+		}
 
 		//‘Ž®•¶Žš—ñ‚Ì“WŠJ
 		UnicodeString s = StrFmtEdit->Text;
@@ -289,8 +291,9 @@ void __fastcall TPrintImgDlg::DrawImage(TCanvas *cv)
 		cv->TextOut(x, y, lbuf);
 		FormatStr = lbuf;
 	}
-	else
+	else {
 		FormatStr = EmptyStr;
+	}
 
 	UnicodeString tmp = minimize_str(FormatStr, Canvas, SizeLabel->Width - 4);
 	SizeLabel->Hint = FormatStr;

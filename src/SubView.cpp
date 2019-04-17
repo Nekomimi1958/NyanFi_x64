@@ -11,6 +11,7 @@
 #include "usr_id3.h"
 #include "Global.h"
 #include "UserMdl.h"
+#include "FileInfDlg.h"
 #include "SubView.h"
 
 //---------------------------------------------------------------------------
@@ -36,6 +37,13 @@ void __fastcall TSubViewer::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TSubViewer::FormShow(TObject *Sender)
 {
+	//ファイル情報ダイアログと重ならないらうに初期化
+	if (formFileInf && !IniFile->KeyExists(SCT_General, "SubViewerFILeft")) {
+		Top  = FileInfoDlg->Top;
+		Left = FileInfoDlg->Left + FileInfoDlg->Width;
+		IniFile->SavePosInfo(this, "SubViewerFI");
+	}
+
 	IniFile->LoadPosInfo(this, false,
 		(ScrMode==SCMD_TVIEW)? "SubViewerTV" : (ScrMode==SCMD_IVIEW)? "SubViewerIV" :
 		formFileInf? "SubViewerFI" : "SubViewer");

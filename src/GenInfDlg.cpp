@@ -124,7 +124,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 			if (i==0 && isGit) continue;
 			if (!GenInfoList->Strings[i].IsEmpty()) {
 				UnicodeString nbuf = GenInfoList->Names[i];
-				all_n_v = !nbuf.IsEmpty() && !contains_s(nbuf, _T(' ')) && !contains_s(nbuf, _T('\t'));
+				all_n_v = !nbuf.IsEmpty() && !ContainsStr(nbuf, " ") && !ContainsStr(nbuf, "\t");
 			}
 		}
 		isVarList = all_n_v;
@@ -309,7 +309,9 @@ void __fastcall TGeneralInfoDlg::WmNyanFiPlayList(TMessage &msg)
 			GenInfoList->Assign(PlayList);
 			UpdateList();
 		}
-		else GenListBox->Repaint();
+		else {
+			GenListBox->Repaint();
+		}
 	}
 }
 
@@ -702,8 +704,9 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 			lw = MaxNameWidth + get_TabTextWidth(lbuf, cv, tw);
 			RuledLnTextOut(lbuf, cv, rc, use_fgsel? col_fgSelItem : col_fgList, tw, wlist.get());
 		}
-		else
+		else {
 			RuledLnTextOut(lbuf, cv, rc, use_fgsel? col_fgSelItem : col_Headline, tw, wlist.get());
+		}
 	}
 	//ファイルリスト
 	else if (isFileList) {
@@ -748,8 +751,9 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 			cv->Font->Color = fg;
 			PathNameOut(lbuf, wlist.get(), cv, xp, yp);
 		}
-		else
+		else {
 			RuledLnTextOut(lbuf, cv, rc, fg, tw, wlist.get());
+		}
 	}
 	//プレイリスト
 	else if (isPlayList) {
@@ -765,8 +769,9 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 			rc.Left = xp + MaxNameWidth;
 			FileNameOut(cv, rc, ExtractFilePath(lbuf), use_fgsel, true, wlist.get());
 		}
-		else
+		else {
 			FileNameOut(cv, rc, lbuf, use_fgsel, true, wlist.get());
+		}
 	}
 	//NyanFi 情報
 	else if (USAME_TS(Caption, "NyanFi 情報")) {
@@ -780,8 +785,9 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 			cv->Font->Color = fg;
 			PathNameOut(lbuf, wlist.get(), cv, xp, yp);
 		}
-		else
+		else {
 			PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get());
+		}
 	}
 	//Git
 	else if (isGit) {

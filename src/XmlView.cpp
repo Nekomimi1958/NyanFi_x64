@@ -176,8 +176,9 @@ void __fastcall TXmlViewer::AssignView(TTreeNode *TreeNode, _di_IXMLNode XMLNode
 		}
 		//XMLモード
 		else {
-			if (!TreeNode)
+			if (!TreeNode) {
 				lbuf = XMLNode->NodeName;
+			}
 			else {
 				lbuf = get_tkn(XMLNode->XML, _T("\r\n"));
 				if (lbuf.Pos('>')) lbuf = get_tkn(lbuf, '>').UCAT_T(">");
@@ -213,8 +214,9 @@ UnicodeString __fastcall TXmlViewer::GetXPath(TTreeNode *Node)
 				remove_end_s(nnam, '>');
 				nnam = get_tkn(nnam, ' ');
 			}
-			else
+			else {
 				nnam = get_tkn(nnam, _T(" ["));
+			}
 			ret_str.Insert("/" + nnam, 1);
 			Node = Node->Parent;
 		}
@@ -252,33 +254,31 @@ UnicodeString __fastcall TXmlViewer::GetXmlStr()
 //---------------------------------------------------------------------------
 bool __fastcall TXmlViewer::MatchNode(TTreeNode *Node)
 {
-	if (Node) {
-		UnicodeString lbuf = Node->Text;
-		UnicodeString s;
-		//ノード
-		if ((int)Node->Data==1) {
-			if (NamCheckBox->Checked) {
-				if (ViewMode==2)
-					s = get_tkn(lbuf, ' ');
-				else
-					s = get_tkn(lbuf, _T(" ["));
-			}
-			if (AtrCheckBox->Checked) {
-				if (ViewMode==2)
-					s += get_tkn_r(lbuf, ' ');
-				else
-					s.cat_sprintf(_T(" %s"), get_tkn_r(lbuf, _T(" [")).c_str());
-			}
-		}
-		//値
-		else {
-			if (ValCheckBox->Checked) s += lbuf;
-		}
+	if (!Node) return false;
 
-		return ContainsText(s, FindEdit->Text);
+	UnicodeString lbuf = Node->Text;
+	UnicodeString s;
+	//ノード
+	if ((int)Node->Data==1) {
+		if (NamCheckBox->Checked) {
+			if (ViewMode==2)
+				s = get_tkn(lbuf, ' ');
+			else
+				s = get_tkn(lbuf, _T(" ["));
+		}
+		if (AtrCheckBox->Checked) {
+			if (ViewMode==2)
+				s += get_tkn_r(lbuf, ' ');
+			else
+				s.cat_sprintf(_T(" %s"), get_tkn_r(lbuf, _T(" [")).c_str());
+		}
 	}
-	else
-		return false;
+	//値
+	else {
+		if (ValCheckBox->Checked) s += lbuf;
+	}
+
+	return ContainsText(s, FindEdit->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -370,10 +370,13 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 					if (c=='\"') {
 						col = col_Strings;	in_qt = !in_qt;
 					}
-					else if (in_qt)
+					else if (in_qt) {
 						col = col_Strings;
-					else
+					}
+					else {
 						col = (c=='<' || c=='>' ||c=='/' || c=='=')? col_Symbol: col_Reserved;
+					}
+
 					if (fg!=col) {
 						tmp_cv->Font->Color = is_selfg? col_fgSelItem : fg;
 						tmp_cv->TextOut(xp, 0, s);
@@ -383,6 +386,7 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 					}
 					s.cat_sprintf(_T("%c"), c);
 				}
+	
 				if (!s.IsEmpty()) {
 					tmp_cv->Font->Color = is_selfg? col_fgSelItem : fg;
 					tmp_cv->TextOut(xp, 0, s);
@@ -699,8 +703,9 @@ void __fastcall TXmlViewer::XmlTreeViewKeyDown(TObject *Sender, WORD &Key, TShif
 	else if (equal_ENTER(KeyStr)) {
 		if (sp) {
 			if (sp->HasChildren) {
-				if (sp->Expanded)
+				if (sp->Expanded) {
 					sp->Expanded = false;
+				}
 				else {
 					TTreeNode *pp = sp->Parent;
 					if (pp && XmlTreeView->AutoExpand) {
@@ -713,7 +718,9 @@ void __fastcall TXmlViewer::XmlTreeViewKeyDown(TObject *Sender, WORD &Key, TShif
 						set_RedrawOn(XmlTreeView);
 						ViewBusy = false;
 					}
-					else sp->Expanded = true;
+					else {
+						sp->Expanded = true;
+					}
 				}
 			}
 			else OpenUrlAction->Execute();

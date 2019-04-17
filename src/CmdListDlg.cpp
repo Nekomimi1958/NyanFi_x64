@@ -236,11 +236,13 @@ void __fastcall TCmdFileListDlg::UpdateGrid()
 			if (TRegEx::IsMatch(lbuf, ptn, opt)) GridItemList->AddObject(fp->f_name, (TObject*)fp);
 		}
 	}
-	else
+	else {
 		GridItemList->Assign(cmdfile_List);
+	}
 
-	if (GridItemList->Count>0)
+	if (GridItemList->Count>0) {
 		gp->RowCount = GridItemList->Count;
+	}
 	else {
 		gp->RowCount = 1;
 		clear_GridRow(gp, 0);

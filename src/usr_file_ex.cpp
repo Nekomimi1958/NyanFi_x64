@@ -34,7 +34,7 @@ UnicodeString cv_ex_filename(UnicodeString fnam)
 UnicodeString cv_env_var(UnicodeString s)
 {
 	for (;;) {
-		if (!contains_s(s, _T('%'))) break;
+		if (!ContainsStr(s, "%")) break;
 		UnicodeString estr = get_tkn_m(s, '%', '%');
 		if (!ContainsText(s, "%" + estr + "%")) break;
 		UnicodeString eval = GetEnvironmentVariable(estr);  if (eval.IsEmpty()) break;
@@ -61,7 +61,7 @@ UnicodeString get_actual_path(UnicodeString pnam)
 {
 	pnam = cv_env_str(pnam);
 
-	if (contains_s(pnam, _T('$'))) {
+	if (ContainsStr(pnam, "$")) {
 		pnam = ReplaceStr(pnam, "$$", "\f");	//$$ ‚ðˆêŽž“I‚É \f ‚É•Ï‚¦‚Ä‚¨‚¢‚Ä
 		pnam = ReplaceStr(pnam, "$X", ExcludeTrailingPathDelimiter(ExePath));
 		pnam = ReplaceStr(pnam, "$D", ExtractFileDrive(ExePath));
@@ -90,8 +90,9 @@ UnicodeString get_actual_name(UnicodeString fnam)
 					if (file_exists(anam)) rnam = anam;
 				}
 			}
-			else if (file_exists(pnam + fnam))
+			else if (file_exists(pnam + fnam)) {
 				rnam = pnam + fnam;
+			}
 		}
 		if (!rnam.IsEmpty()) fnam = rnam;
 	}
@@ -458,8 +459,8 @@ bool is_dir_accessible(UnicodeString dnam)
 		FindClose(sr);
 		return true;
 	}
-	else
-		return false;
+
+	return false;
 }
 
 //---------------------------------------------------------------------------
@@ -1168,13 +1169,10 @@ bool cre_Junction(UnicodeString pnam, UnicodeString target)
 	DWORD size;
 	BOOL res = ::DeviceIoControl(hDir, FSCTL_SET_REPARSE_POINT, dat_buf.get(), data_len, NULL, 0, &size, NULL);
 	::CloseHandle(hDir);
+	if (res) return true;
 
-	if (res)
-		return true;
-	else {
-		::RemoveDirectory(pnam.c_str());
-		return false;
-	}
+	::RemoveDirectory(pnam.c_str());
+	return false;
 }
 
 //---------------------------------------------------------------------------

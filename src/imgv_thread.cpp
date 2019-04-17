@@ -192,8 +192,9 @@ void __fastcall TImgViewThread::DrawImage()
 			if (is_viewer) ZoomRatio = r * 100;
 		}
 		//ズーム
-		else if (is_viewer && ZoomRatio!=100)
+		else if (is_viewer && ZoomRatio!=100) {
 			r = ZoomRatio / 100.0;
+		}
 
 		ZoomRatioF = r;
 
@@ -227,8 +228,9 @@ void __fastcall TImgViewThread::DrawImage()
 		else {
 			if (r!=1.0) {
 				//拡大・縮小
-				if (WicScaleOpt>=0 && WicScaleOpt<=3)
+				if (WicScaleOpt>=0 && WicScaleOpt<=3) {
 					WIC_resize_image(ImgBuff, ViewBuff, r, 0, 0, WicScaleOpt);
+				}
 				else {
 					iw *= r;  ih *= r;
 					ViewBuff->SetSize(iw, ih);
@@ -236,9 +238,10 @@ void __fastcall TImgViewThread::DrawImage()
 					ViewBuff->Canvas->StretchDraw(Rect(0, 0, iw, ih), ImgBuff);
 				}
 			}
-			else
+			else {
 				//等倍
 				ViewBuff->Assign(ImgBuff);
+			}
 		}
 
 		//グレースケール化
@@ -344,7 +347,9 @@ void __fastcall TImgViewThread::DrawMessage()
 			NyanFiForm->StatusBar1->Repaint();
 			if (MsgIsErr) beep_Warn();
 		}
-		else if (ShowMsgHint && MsgIsErr) NyanFiForm->ShowMessageHint(MsgStr, col_bgWarn, true);
+		else if (ShowMsgHint && MsgIsErr) {
+			NyanFiForm->ShowMessageHint(MsgStr, col_bgWarn, true);
+		}
 	}
 	//プレビュー
 	else if (NyanFiForm->PreviewPanel->Visible) {
@@ -721,8 +726,9 @@ void __fastcall TImgViewThread::Execute()
 				}
 
 				//表示
-				if (is_prv_buf)
+				if (is_prv_buf) {
 					Synchronize(&DrawViewBuff);
+				}
 				else {
 					if (SameText(FileName, Img_f_name) && !ReqClear) Synchronize(&DrawImage);
 					Sleep(MinShowTime);

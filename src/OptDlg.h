@@ -309,7 +309,6 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *SelBaseOnlyCheckBox;
 	TCheckBox *SelByMouseCheckBox;
 	TCheckBox *SelCheckBox;
-	TCheckBox *SelColDrvInfCheckBox;
 	TCheckBox *SelIconCheckBox;
 	TCheckBox *SetCursorCheckBox;
 	TCheckBox *ShiftCheckBox;

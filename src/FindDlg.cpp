@@ -214,8 +214,9 @@ void __fastcall TFindFileDlg::FormShow(TObject *Sender)
 
 	CondChangeUpdate(NULL);
 
-	if (MaskPanel->Visible)
+	if (MaskPanel->Visible) {
 		(ToKeywd? KeywordComboBox : MaskComboBox)->SetFocus();
+	}
 	else {
 		MaskComboBox->Text = EmptyStr;
 		KeywordComboBox->SetFocus();
@@ -226,7 +227,7 @@ void __fastcall TFindFileDlg::FormCloseQuery(TObject *Sender, bool &CanClose)
 {
 	if (ModalResult==mrOk) {
 		try {
-			if (DateRadioGroup->ItemIndex==1 && contains_s(DateMaskEdit->Text, _T('?'))) {
+			if (DateRadioGroup->ItemIndex==1 && ContainsStr(DateMaskEdit->Text, "?")) {
 				FindDateStr = DateMaskEdit->Text;
 				FindDate	= 0;
 			}
@@ -505,8 +506,9 @@ void __fastcall TFindFileDlg::DateBtnClick(TObject *Sender)
 {
 	TButton *bp = (TButton*)Sender;
 
-	if (USAME_TS(bp->Caption, "本日"))
+	if (USAME_TS(bp->Caption, "本日")) {
 		FindDate = Date();
+	}
 	else {
 		try {
 			FindDate = TDate(DateMaskEdit->Text);
@@ -624,16 +626,16 @@ void __fastcall TFindFileDlg::FindOkActionUpdate(TObject *Sender)
 	//日付のチェック
 	UnicodeString dtstr = DateMaskEdit->Text;
 	bool date_ng = false;
-	bool use_wc  = (DateRadioGroup->ItemIndex==1 && contains_s(dtstr, _T('?')));
+	bool use_wc  = (DateRadioGroup->ItemIndex==1 && ContainsStr(dtstr, "?"));
 	try {
 		if (DateRadioGroup->ItemIndex>0) {
-			if (contains_s(dtstr, _T(' '))) Abort();
+			if (ContainsStr(dtstr, " ")) Abort();
 			if (use_wc) {
 				for (int i=1; i<dtstr.Length(); i++)
 					if (!iswdigit(dtstr[i]) && dtstr[i]!='/' && dtstr[i]!='?') Abort();
 			}
 			else {
-				if (contains_s(dtstr, _T('?'))) Abort();
+				if (ContainsStr(dtstr, "?")) Abort();
 				FindDate = TDate(dtstr);
 			}
 		}

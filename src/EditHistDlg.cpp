@@ -482,8 +482,9 @@ void __fastcall TEditHistoryDlg::UpdateList()
 						fp->arc_name   = dnam;
 						fp->f_name.sprintf(_T("%s/%s"), fp->arc_name.c_str(), fnam.c_str());
 						fp->is_dir	   = inf.is_dir;
-						if (fp->is_dir)
+						if (fp->is_dir) {
 							fp->b_name = ExtractFileName(fnam);
+						}
 						else {
 							fp->f_ext  = get_extension(fp->f_name);
 							fp->b_name = get_base_name(fnam);
@@ -628,10 +629,12 @@ void __fastcall TEditHistoryDlg::UpdateGrid()
 				gp->Cells[col++][i] = fp->b_name;
 				gp->Cells[col++][i] = fp->f_ext;
 			}
-			else if (isRepo)
+			else if (isRepo) {
 				gp->Cells[col++][i] = fp->b_name;
-			else
+			}
+			else {
 				gp->Cells[col++][i] = fp->b_name + fp->f_ext;
+			}
 			//XV“úŽž
 			gp->Cells[col++][i] = (isRecent && NoCheckRecentUnc && StartsStr("\\\\", fp->p_name))?
 									EmptyStr : FormatDateTime(TimeStampFmt, fp->f_time);
@@ -893,8 +896,9 @@ bool __fastcall TEditHistoryDlg::set_FileName(int idx)
 		EditFileName = fp->f_name;
 		if (isTags) TagJumpInf = fp->alias;
 	}
-	else
+	else {
 		EditFileName = EmptyStr;
+	}
 
 	return !EditFileName.IsEmpty();
 }

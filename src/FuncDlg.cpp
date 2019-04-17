@@ -132,8 +132,12 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 			UserDefList->Clear();
 			UpdateList();
 		}
-		else if (UserDefList->Count==0) UpdUserDefAction->Execute();
-		else UpdateList();
+		else if (UserDefList->Count==0) {
+			UpdUserDefAction->Execute();
+		}
+		else {
+			UpdateList();
+		}
 	}
 	//マーク行一覧
 	else if (ListMode==2) {
@@ -205,14 +209,14 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 
 		//一覧を作成
 		if (FunctionList->Count==0 && !fnc_ptn.IsEmpty()) {
-			bool has_par = (ListMode==0 && contains_s(fnc_ptn, _T("\\(")));
+			bool has_par = (ListMode==0 && ContainsStr(fnc_ptn, "\\("));
 			bool non_tab = StartsStr('^', fnc_ptn) && !StartsStr("^\\s*", fnc_ptn);
 			TRegExOptions opt; opt << roIgnoreCase;
 			for (int i=0; i<TxtViewer->MaxDispLine; i++) {
 				line_rec *rp = TxtViewer->get_LineRec(i);  if (rp->LineIdx>0) continue;
 				UnicodeString lbuf = TrimRight(TxtViewer->get_DispLine(i));
 				if (non_tab && (StartsStr('\t', lbuf) || StartsStr(' ', lbuf))) continue;
-				if (has_par && (!contains_s(lbuf, _T('(')) || contains_s(lbuf, _T('=')))) continue;
+				if (has_par && (!ContainsStr(lbuf, "(") || ContainsStr(lbuf, "="))) continue;
 				if (TRegEx::IsMatch(lbuf, fnc_ptn, opt)) {
 					if (TxtViewer->isAozora) lbuf = replace_regex(lbuf, _T("［＃「.*?」は((中|大)見出し)］"), null_TCHAR);
 					FunctionList->AddObject(lbuf, (TObject*)(NativeInt)rp->LineNo);
@@ -537,7 +541,9 @@ void __fastcall TFuncListDlg::UpdUserDefActionUpdate(TObject *Sender)
 		UserDefComboBox->Color = reg_ng? col_Illegal : scl_Window;
 		ap->Enabled = RegExCheckBox->Checked? (!uwd.IsEmpty() && !reg_ng) : !uwd.IsEmpty();
 	}
-	else ap->Enabled = false;
+	else {
+		ap->Enabled = false;
+	}
 
 	UserDefComboBox->Tag
 		= CBTAG_HISTORY | (UserDefComboBox->Focused()? CBTAG_RGEX_V : 0) | (RegExCheckBox->Checked? CBTAG_RGEX_E : 0);

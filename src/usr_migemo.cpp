@@ -43,7 +43,7 @@ MigemoUnit::MigemoUnit(UnicodeString dnam)
 			UnicodeString dic_name;
 			for (int i=0; i<f_list.Length; ++i) {
 				UnicodeString fnam = f_list[i].LowerCase();
-				if (!contains_i(fnam, _T("utf-8"))) {
+				if (!ContainsText(fnam, "utf-8")) {
 					dic_name = fnam; break;
 				}
 			}

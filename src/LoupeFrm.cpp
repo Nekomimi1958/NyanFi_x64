@@ -104,8 +104,9 @@ void __fastcall TLoupeForm::DrawImage(Graphics::TBitmap *bmp, int x, int y)
 		if (ImgViewThread->GrayScaled) WIC_grayscale_image(tmp_bmp.get());
 		LoupeImage->Picture->Bitmap->Assign(tmp_bmp.get());
 	}
-	else
+	else {
 		LoupeImage->Picture->Bitmap->Handle = NULL;
+	}
 }
 
 //---------------------------------------------------------------------------

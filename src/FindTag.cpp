@@ -314,10 +314,12 @@ void __fastcall TFindTagForm::InfoListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 
 	TListBox *lp = (TListBox*)Sender;
 	bool handled = true;
-	if (equal_ENTER(KeyStr))
+	if (equal_ENTER(KeyStr)) {
 		InfoListBoxDblClick(Sender);
-	else if (equal_ESC(KeyStr))
+	}
+	else if (equal_ESC(KeyStr)) {
 		ModalResult = mrCancel;
+	}
 	else if (USAME_TI(cmd_F, "TextViewer")) {
 		TagCmd.USET_T("VIEW");
 		InfoListBoxDblClick(Sender);

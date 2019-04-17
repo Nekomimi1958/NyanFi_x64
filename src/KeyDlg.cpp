@@ -143,8 +143,7 @@ void __fastcall TKeyListDlg::KeyTabControlChange(TObject *Sender)
 				if (!TRegEx::IsMatch(lbuf, ptn, opt)) CurList->Delete(i); else i++;
 			}
 		}
-		else if (!MigemoCheckBox->Checked)
-			beep_Warn();
+		else if (!MigemoCheckBox->Checked) beep_Warn();
 	}
 
 	//ソート
@@ -277,8 +276,9 @@ void __fastcall TKeyListDlg::KeyListGridDrawCell(TObject *Sender, int ACol, int 
 		}
 	}
 	//説明
-	else
+	else {
 		cv->TextRect(Rect, xp, yp, cellstr);
+	}
 
 	//カーソル
 	draw_GridCursor(gp, Rect, ARow, State);
@@ -345,8 +345,9 @@ void __fastcall TKeyListDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShif
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key))
+	if (is_KeyPress_CtrlNotCV(Key)) {
 		Key = 0;
+	}
 	else if (Key==VK_RETURN) {
 		if (KeyListGrid->Row!=-1) {
 			CommandStr	= KeyListGrid->Cells[1][KeyListGrid->Row];
@@ -508,8 +509,9 @@ void __fastcall TKeyListDlg::HelpCmdActionUpdate(TObject *Sender)
 		UnicodeString kwd = CurList->ValueFromIndex[idx];
 		ap->Enabled = (!kwd.IsEmpty() && !starts_AT(kwd) && !starts_Dollar(kwd));
 	}
-	else
+	else {
 		ap->Enabled = false;
+	}
 }
 
 //---------------------------------------------------------------------------

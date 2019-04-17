@@ -474,7 +474,7 @@ void set_CmdList(
 	UnicodeString cmd, tmp;
 	for (int i=0; i<c_list->Count; i++) {
 		UnicodeString lbuf = c_list->Strings[i];
-		if (!contains_s(lbuf, _T(':'))) continue;
+		if (!ContainsStr(lbuf, ":")) continue;
 		UnicodeString ct = split_tkn(lbuf, ':');
 		c_list->Strings[i] = lbuf;
 		cmd = get_tkn(lbuf, '=');
@@ -882,7 +882,7 @@ void get_PrmList(
 	}
 	else if (contained_wd_i(_T("ScrollUpLog|ScrollUpText|ScrollDownLog|ScrollDownText"), cmd)) {
 		params.USET_T("\nHP : 半ページ分\nFP : 1ページ分\n");
-		params.cat_sprintf(_T("%s\n"), contains_i(cmd, _T("Down"))? _T("ED : 最後へ") : _T("TP : 先頭へ"));
+		params.cat_sprintf(_T("%s\n"), ContainsText(cmd, "Down")? _T("ED : 最後へ") : _T("TP : 先頭へ"));
 	}
 	else if (USAME_TI(cmd, "SelByList")) {
 		params.sprintf(_T("%s"),

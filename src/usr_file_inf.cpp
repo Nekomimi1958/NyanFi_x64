@@ -360,10 +360,12 @@ void get_WavInf(
 			lst->Add(lbuf);
 			add_PropLine(_T("長さ"), mSecToTStr(length), lst);
 		}
-		else if (pwf.wf.wFormatTag==WAVE_FORMAT_MPEGLAYER3)
+		else if (pwf.wf.wFormatTag==WAVE_FORMAT_MPEGLAYER3) {
 			add_PropLine(_T("形式"), "MPEG 3 Layer 1", lst);
-		else
+		}
+		else {
 			lst->Add(get_PropTitle(_T("形式")).cat_sprintf(_T("その他(0x%04X)"), pwf.wf.wFormatTag));
+		}
 	}
 	catch (EAbort &e) {
 		add_list_errmsg(lst, e.Message);
@@ -1026,14 +1028,15 @@ UnicodeString get_PngInfStr(
 		*i_wd = iw;
 		*i_hi = ih;
 	}
-	else
+	else {
 		ret_str = get_wd_x_hi_str(iw, ih).UCAT_T(" ");
+	}
 
 	UnicodeString col_s, bit_s;
 	for (int i=0; i<i_lst->Count; i++) {
 		UnicodeString lbuf = i_lst->Strings[i];
-		if		(contains_s(lbuf, _T("カラータイプ: "))) col_s = Trim(get_tkn_r(lbuf, ':'));
-		else if (contains_s(lbuf, _T("ビット深度: ")))	 bit_s = "  深度:" + Trim(get_tkn_r(lbuf, ':'));
+		if		(ContainsStr(lbuf, "カラータイプ: ")) col_s = Trim(get_tkn_r(lbuf, ':'));
+		else if (ContainsStr(lbuf, "ビット深度: "))	  bit_s = "  深度:" + Trim(get_tkn_r(lbuf, ':'));
 	}
 
 	ret_str += (col_s + bit_s);
@@ -1300,13 +1303,14 @@ UnicodeString get_WebpInfStr(
 		*i_wd = iw;
 		*i_hi = ih;
 	}
-	else
+	else {
 		ret_str = get_wd_x_hi_str(iw, ih).UCAT_T(" ");
+	}
 
 	UnicodeString col_s, bit_s;
 	for (int i=0; i<i_lst->Count; i++) {
 		UnicodeString lbuf = i_lst->Strings[i];
-		if (contains_s(lbuf, _T("形式: "))) {
+		if (ContainsStr(lbuf, "形式: ")) {
 			ret_str += Trim(get_tkn_r(lbuf, ':'));
 			break;
 		}
@@ -1795,23 +1799,23 @@ void get_BorlandInf(
 		for (int i=0; i<fbuf->Count; i++) {
 			UnicodeString lbuf = Trim(fbuf->Strings[i]);
 			if (!flag) {
-				if (contains_i(lbuf, _T("<PropertyGroup>"))) flag = true;
+				if (ContainsText(lbuf, "<PropertyGroup>")) flag = true;
 			}
 			else {
-				if (contains_i(lbuf, _T("</PropertyGroup>"))) break;
+				if (ContainsText(lbuf, "</PropertyGroup>")) break;
 
 				UnicodeString vstr = get_tkn_m(lbuf, _T(">"), _T("</"));
-				if (contains_i(lbuf, _T("<FrameworkType>")))
+				if (ContainsText(lbuf, "<FrameworkType>"))
 					add_PropLine(_T("FrameworkType"),	vstr, lst);
-				else if (contains_i(lbuf, _T("<AppType>")))
+				else if (ContainsText(lbuf, "<AppType>"))
 					add_PropLine(_T("AppType"),			vstr, lst);
-				else if (contains_i(lbuf, _T("<MainSource>")))
+				else if (ContainsText(lbuf, "<MainSource>"))
 					add_PropLine(_T("MainSource"),		vstr, lst);
-				else if (contains_i(lbuf, _T("<Platform Condition=")))
+				else if (ContainsText(lbuf, "<Platform Condition="))
 					add_PropLine(_T("Platform"),		vstr, lst);
-				else if (contains_i(lbuf, _T("<Config Condition=")) || contains_i(lbuf, _T("Configuration Condition=")))
+				else if (ContainsText(lbuf, "<Config Condition=") || ContainsText(lbuf, "Configuration Condition="))
 					add_PropLine(_T("Config"),			vstr, lst);
-				else if (contains_i(lbuf, _T("<ProjectType>")))
+				else if (ContainsText(lbuf, "<ProjectType>"))
 					add_PropLine(_T("ProjectType"),		vstr, lst);
 			}
 		}
@@ -1838,8 +1842,9 @@ void get_BorlandInf(
 					if (USAME_TI(vnam, "Caption")) {
 						UnicodeString cap_str;
 						while (!vstr.IsEmpty()) {
-							if (remove_top_s(vstr, '\''))
+							if (remove_top_s(vstr, '\'')) {
 								cap_str += split_tkn(vstr, '\'');
+							}
 							else if (vstr[1]=='#') {
 								UnicodeString tmp = split_tkn(vstr, '\'');
 								if (!vstr.IsEmpty()) vstr.Insert("'", 1);
@@ -1934,8 +1939,9 @@ UnicodeString get_html_header(UnicodeString fnam, int code_page)
 			std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(code_page));
 			fbuf->LoadFromFile(fnam, enc.get());
 		}
-		else
+		else {
 			fbuf->LoadFromFile(fnam);
+		}
 
 		int p = pos_i(_T("</HEAD>"), fbuf->Text);
 		if (p>0) headstr = fbuf->Text.SubString(1, p + 6);
@@ -2048,8 +2054,9 @@ UnicodeString get_CRC32_str(
 					rem >>= 1;
 					rem ^= 0xedb88320;
 				}
-				else
+				else {
 					rem >>= 1;
+				}
 			}
 			table[i] = rem;
 		}
@@ -2233,7 +2240,7 @@ int get_filename_warn(
 	if (bnam.Length()>1) {
 		if (EndsStr(' ', bnam))			add_WarnLine("名前の末尾に空白があります。", 		wlst.get());
 		if (EndsStr("　", bnam))		add_WarnLine("名前の末尾に全角空白があります。", 	wlst.get());
-		if (contains_s(bnam, _T("  ")))	add_WarnLine("名前に連続した空白が含まれています。",wlst.get());
+		if (ContainsStr(bnam, "  "))	add_WarnLine("名前に連続した空白が含まれています。",wlst.get());
 	}
 
 	UnicodeString s = check_EnvDepandChars(bnam);
@@ -2251,7 +2258,7 @@ int get_filename_warn(
 		if (xnam.Length()>1) {
 			if (EndsStr(' ', xnam))		add_WarnLine("拡張子の末尾に空白があります。", 		wlst.get());
 			if (EndsStr("　", xnam))	add_WarnLine("拡張子の末尾に全角空白があります。",	wlst.get());
-			if (contains_s(xnam, _T("  ")))	add_WarnLine("拡張子に連続した空白が含まれています。", wlst.get());
+			if (ContainsStr(xnam, "  "))	add_WarnLine("拡張子に連続した空白が含まれています。", wlst.get());
 		}
 	}
 

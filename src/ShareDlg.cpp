@@ -187,8 +187,9 @@ void __fastcall TNetShareDlg::UpdatePathList(
 			LibIdxBase = d_lst->Count;
 			d_lst->AddStrings(l_lst.get());
 		}
-		else
+		else {
 			LibIdxBase = d_lst->Count;
+		}
 	}
 	//ディレクトリ
 	else {
@@ -282,8 +283,9 @@ void __fastcall TNetShareDlg::ShareListBoxDrawItem(TWinControl *Control, int Ind
 		cv->Font->Color = col_fgList;
 		cv->Font->Style = cv->Font->Style << fsUnderline;
 		if (isPC) {
-			if (Index<LibIdxBase)
+			if (Index<LibIdxBase) {
 				cv->TextOut(xp, yp, lbuf.SubString(1, 1));
+			}
 			else {
 				int idx = Index - LibIdxBase;
 				if (idx<10) cv->TextOut(xp, yp, UnicodeString().sprintf(_T("%u"), (idx + 1)%10));
@@ -394,8 +396,9 @@ void __fastcall TNetShareDlg::ShareListBoxKeyDown(TObject *Sender, WORD &Key, TS
 					pnam = lp->Items->Strings[idx];
 					if (USAME_TS(ExtractFileName(pnam), "..")) pnam = get_parent_path(ExtractFilePath(pnam));
 					pnam = IncludeTrailingPathDelimiter(pnam);
-					if (rqRetPath)
+					if (rqRetPath) {
 						PathName = pnam;
+					}
 					else if (isSelSub) {
 						cursor_HourGlass();
 						NyanFiForm->UpdateCurPath(IncludeTrailingPathDelimiter(pnam));

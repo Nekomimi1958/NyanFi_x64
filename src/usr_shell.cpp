@@ -206,10 +206,12 @@ DWORD get_DropMode(IDataObject *pDataObj, DWORD grfKeyState, POINTL pt)
 				else
 					d_mode = DROPEFFECT_COPY;	//コピー
 			}
-			else if (DefDropMode==2)
+			else if (DefDropMode==2) {
 				d_mode = DROPEFFECT_MOVE;	//移動
-			else
+			}
+			else {
 				d_mode = DROPEFFECT_COPY;	//コピー
+			}
 		}
 
 		if ((grfKeyState & (MK_LBUTTON|MK_RBUTTON)) == MK_RBUTTON)
@@ -250,8 +252,8 @@ HRESULT __stdcall TDropSource::QueryInterface(REFIID riid, void **ppv)
 		punk->AddRef();
 		return S_OK;
 	}
-	else
-		return E_NOINTERFACE;
+
+	return E_NOINTERFACE;
 }
 //---------------------------------------------------------------------------
 ULONG __stdcall TDropSource::AddRef()
@@ -293,12 +295,14 @@ TDropTargetBase::TDropTargetBase()
 //---------------------------------------------------------------------------
 HRESULT __stdcall TDropTargetBase::QueryInterface(const IID& iid, void **ppv)
 {
-	if (IsEqualIID(iid, IID_IUnknown) || IsEqualIID(iid, IID_IDropTarget))
+	if (IsEqualIID(iid, IID_IUnknown) || IsEqualIID(iid, IID_IDropTarget)) {
 		*ppv = static_cast<IDropTarget *>(this);
+	}
 	else {
 		*ppv = NULL;
 		return E_NOINTERFACE;
 	}
+
 	AddRef();
 	return S_OK;
 }
@@ -316,8 +320,8 @@ ULONG __stdcall TDropTargetBase::Release()
 		delete this;
 		return 0;
 	}
-	else
-		return refCount;
+
+	return refCount;
 }
 
 //---------------------------------------------------------------------------
@@ -1321,13 +1325,11 @@ UnicodeString UserShell::msRead_strdat(TMemoryStream *ms, int &ptr, bool is_uc)
 	if (ch_len>0) {
 		ptr += 2;
 		BYTE *bp = (BYTE*)ms->Memory + ptr;
-		if (is_uc)
-			for (int i=0; i<ch_len; i++, bp+=2) {
-				ret_str.cat_sprintf(_T("%c"), *(_TCHAR*)bp);
-			}
+		if (is_uc) {
+			for (int i=0; i<ch_len; i++, bp+=2) ret_str.cat_sprintf(_T("%c"), *(_TCHAR*)bp);
+		}
 		else {
-			for (int i=0; i<ch_len; i++,bp++)
-				ret_str.cat_sprintf(_T("%c"), *(char*)bp);
+			for (int i=0; i<ch_len; i++,bp++)   ret_str.cat_sprintf(_T("%c"), *(char*)bp);
 		}
 		ptr += ch_len * (is_uc? 2 : 1);
 	}
@@ -1366,10 +1368,12 @@ UnicodeString UserShell::get_FileTypeStr(UnicodeString fnam)
 			if (typ_str.IsEmpty() && remove_top_s(fext, '.')) typ_str.sprintf(_T("%s ファイル"), fext.UpperCase().c_str());
 		}
 	}
-	else if (USAME_TI(get_tkn(ExtractFileName(fnam), '_'), ".nyanfi"))
+	else if (USAME_TI(get_tkn(ExtractFileName(fnam), '_'), ".nyanfi")) {
 		typ_str.USET_T(".nyanfi ファイル");
-	else
+	}
+	else {
 		typ_str = ExtractFileName(fnam).UCAT_T(" ファイル");
+	}
 
 	return typ_str;
 }
@@ -1524,7 +1528,9 @@ bool UserShell::get_LnkInf(UnicodeString fnam, TStringList *lst,
 					l_nam = (_TCHAR*)bp;
 					break;
 				}
-				else p += (blk_size - 8);
+				else {
+					p += (blk_size - 8);
+				}
 			}
 		}
 
@@ -1701,8 +1707,8 @@ bool UserShell::draw_SmallIcon(UnicodeString fnam, TCanvas *cv, int x, int y)
 		::DestroyIcon(hIcon);
 		return true;
 	}
-	else
-		return false;
+
+	return false;
 }
 //---------------------------------------------------------------------------
 bool UserShell::draw_SmallIcon(UnicodeString fnam, TImage *ip, TColor bg)

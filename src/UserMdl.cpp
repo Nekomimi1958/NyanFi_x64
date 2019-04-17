@@ -561,8 +561,9 @@ void __fastcall TUserModule::EditPaste1Execute(TObject *Sender)
 				return;
 			}
 		}
-		else
+		else {
 			ep->SelText = s;
+		}
 	}
 	else if (class_is_CustomEdit(wp)) {
 		((TCustomEdit *)wp)->SelText = s;
@@ -636,10 +637,10 @@ void __fastcall TUserModule::RefCmdNameActionExecute(TObject *Sender)
 		InpCmdsDlg->toRefer = true;
 
 		InpCmdsDlg->ModeTabControl->TabIndex
-			= contains_s(wp->Name, _T('V'))? 1 :
-			  contains_s(wp->Name, _T('I'))? 2 :
-				   (UserModule->ScrMode==2)? 1 :
-				   (UserModule->ScrMode==4)? 2 : 0;
+			= ContainsStr(wp->Name, "V")? 1 :
+			  ContainsStr(wp->Name, "I")? 2 :
+				(UserModule->ScrMode==2)? 1 :
+				(UserModule->ScrMode==4)? 2 : 0;
 
 		if (InpCmdsDlg->ShowModal()==mrOk) {
 			cp->SelStart  = s_start;
@@ -665,10 +666,8 @@ void __fastcall TUserModule::RefCmdNameActionUpdate(TObject *Sender)
 void __fastcall TUserModule::RefCurFNameActionExecute(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;
-	if (class_is_CustomEdit(wp))
-		((TCustomEdit *)wp)->Text = ExtractFileName(CurFileName);
-	else if (class_is_ComboBox(wp))
-		((TComboBox*)wp)->SelText = ExtractFileName(CurFileName);
+	if	  (class_is_CustomEdit(wp)) ((TCustomEdit *)wp)->Text = ExtractFileName(CurFileName);
+	else if (class_is_ComboBox(wp)) ((TComboBox*)wp)->SelText = ExtractFileName(CurFileName);
 }
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::RefCurFNameActionUpdate(TObject *Sender)
@@ -682,10 +681,8 @@ void __fastcall TUserModule::RefCurFNameActionUpdate(TObject *Sender)
 void __fastcall TUserModule::RefCurPNameActionExecute(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;
-	if (class_is_CustomEdit(wp))
-		((TCustomEdit *)wp)->SelText = CurFileName;
-	else if (class_is_ComboBox(wp))
-		((TComboBox*)wp)->SelText	 = CurFileName;
+	if	  (class_is_CustomEdit(wp)) ((TCustomEdit *)wp)->SelText = CurFileName;
+	else if (class_is_ComboBox(wp)) ((TComboBox*)wp)->SelText	 = CurFileName;
 }
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::RefCurPNameActionUpdate(TObject *Sender)

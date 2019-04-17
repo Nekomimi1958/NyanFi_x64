@@ -517,7 +517,6 @@ extern UnicodeString FExtNoIView;
 extern UnicodeString DrvInfFmtR;
 extern UnicodeString DrvInfFmtS;
 extern UnicodeString DrvInfFmtN;
-extern bool SelColDrvInf;
 
 extern UnicodeString SttBarFmt;
 extern UnicodeString SttClockFmt;
@@ -964,6 +963,7 @@ extern TColor col_fgSelItem;
 extern TColor col_bgMark;
 extern TColor col_matchItem;
 extern TColor col_Differ;
+extern TColor col_DifferN;
 extern TColor col_Cursor;
 extern TColor col_bgScrBar;
 extern TColor col_bgScrKnob;

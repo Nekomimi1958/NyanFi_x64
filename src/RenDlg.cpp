@@ -1126,10 +1126,12 @@ void __fastcall TRenameDlg::set_FmtEdit(const _TCHAR *s)
 {
 	UnicodeString sbuf = UnicodeString(s);
 
-	if (PreNameEdit->Focused())
+	if (PreNameEdit->Focused()) {
 		PreNameEdit->SetSelTextBuf(sbuf.c_str());
-	else if (PostNameEdit->Focused())
+	}
+	else if (PostNameEdit->Focused()) {
 		PostNameEdit->SetSelTextBuf(sbuf.c_str());
+	}
 	else if (ExtEdit->Focused()) {
 		if (USAME_TS(sbuf, "\\E")) ExtEdit->SetSelTextBuf(sbuf.c_str()); else beep_Warn();
 	}
@@ -1224,8 +1226,9 @@ void __fastcall TRenameDlg::SaveSerFmtActionExecute(TObject *Sender)
 		lbuf.cat_sprintf(_T(",%s"), make_csv_str(ExtEdit->Text).c_str());
 
 	int idx = cp->Items->IndexOf(cp->Text);
-	if (idx!=-1)
+	if (idx!=-1) {
 		SerFormatList->Strings[idx] = lbuf;
+	}
 	else {
 		SerFormatList->Insert(0, lbuf);
 		cp->Items->Insert(0, cp->Text);
@@ -1500,7 +1503,7 @@ void __fastcall TRenameDlg::AssRenListBoxDrawItem(TWinControl *Control, int Inde
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, itm_lst[0]);	xp += (w_x + 16);
-	if (contains_s(itm_lst[2], _T('P'))) out_Text(cv, xp, yp, _T("•”•ªˆê’v"));
+	if (ContainsStr(itm_lst[2], "P")) out_Text(cv, xp, yp, _T("•”•ªˆê’v"));
 }
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::AssRenListBoxClick(TObject *Sender)
@@ -1512,7 +1515,7 @@ void __fastcall TRenameDlg::AssRenListBoxClick(TObject *Sender)
 	if (idx!=-1) {
 		TStringDynArray itm_lst = get_csv_array(lp->Items->Strings[idx], 3, true);
 		AssExtEdit->Text = itm_lst[0];
-		PrtChgCheckBox->Checked = contains_s(itm_lst[2], _T('P'));
+		PrtChgCheckBox->Checked = ContainsStr(itm_lst[2], "P");
 	}
 }
 //---------------------------------------------------------------------------
@@ -1702,7 +1705,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 						UnicodeString bnam0 = get_base_name(fnam0);
 						UnicodeString bnam1 = get_base_name(fnam1);
 						//•”•ªˆê’v
-						if (contains_s(opt, _T('P'))) {
+						if (ContainsStr(opt, "P")) {
 							nnam1 = ExtractFilePath(nnam0) + ReplaceText(bnam1, bnam0, get_base_name(nnam0)) + fext1;
 						}
 						//Š®‘Sˆê’v

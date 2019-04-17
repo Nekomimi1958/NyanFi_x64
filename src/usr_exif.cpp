@@ -115,8 +115,9 @@ void CIFF_parse(TFileStream *fs, TStringList *lst, int ofs, int length, bool bsw
 						int r = (int)(0.5 + 1/ss); if (r>50) r -= (r%10);
 						lst->Add(itmbuf.sprintf(_T("33434=1/%u"), r));
 					}
-					else
+					else {
 						lst->Add(itmbuf.sprintf(_T("33434=%.1f"), ss));
+					}
 					// 6:EV
 					float ev = CIFF_ev(e);
 					lst->Add(itmbuf.sprintf(_T("37380=%s%.1f"), (ev>0)? _T("+") : null_TCHAR, ev));
@@ -130,8 +131,9 @@ void CIFF_parse(TFileStream *fs, TStringList *lst, int ofs, int length, bool bsw
 					int v = fsRead_int2(fs, bsw);
 					UnicodeString vstr;
 					if (v!=0x7fff) {
-						if (v & 0x4000)
+						if (v & 0x4000) {
 						    vstr = v & 0x3fff;
+						}
 						else {
 							switch (v) {
 							//case  0: vstr = "n/a";       break;
@@ -269,8 +271,9 @@ void EXIF_get_idf_inf(
 					}
 					fs->Seek(p, soFromBeginning);
 				}
-				else
+				else {
 					val_str = v_ui;
+				}
 				break;
 			case  9:	//SLONG
 				if (count>1) {
@@ -281,13 +284,15 @@ void EXIF_get_idf_inf(
 					}
 					fs->Seek(p, soFromBeginning);
 				}
-				else
+				else {
 					val_str = v_si;
+				}
 				break;
 
 			case  2:	//ASCII
-				if (count<=4)
+				if (count<=4) {
 					val_str = (char*)vbuf;
+				}
 				else {
 					std::unique_ptr<char[]> sbuf(new char[count + 4]);
 					p = fs->Seek(0, soFromCurrent);
@@ -342,8 +347,9 @@ void EXIF_get_idf_inf(
 									n0/=nn; n1/=nn;
 								}
 							}
-							if (n0>=n1 && n0%n1==0)
+							if (n0>=n1 && n0%n1==0) {
 								val_str.cat_sprintf(_T("%u"), n0/n1);
+							}
 							else {
 								float r = 1.0*n0/n1;
 								if (r>0 && r<0.25001)
@@ -386,10 +392,12 @@ void EXIF_get_idf_inf(
 						else
 							val_str.cat_sprintf(_T("%+.1f"), 1.0*n0/n1);
 					}
-					else if (n0==0 || n1==0)
+					else if (n0==0 || n1==0) {
 						val_str.UCAT_T("0");
-					else if (abs(n0)>=abs(n1) && n0%n1==0)
+					}
+					else if (abs(n0)>=abs(n1) && n0%n1==0) {
 						val_str.cat_sprintf(_T("%d"), n0/n1);
+					}
 					else {
 						float r = 1.0*n0/n1;
 						if (r>0 && r<0.25001)
@@ -478,8 +486,9 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 		vstr = lst->ValueFromIndex[idx];
 		if (!vstr.IsEmpty()) {
 			int n = vstr.ToIntDef(0);
-			if (n==255)
+			if (n==255) {
 				vstr.USET_T("その他");
+			}
 			else {
 				vstr = get_word_i_idx(_T("不明|平均|中央重視|スポット|マルチスポット|分割測光|部分測光"), n);
 				if (vstr.IsEmpty()) vstr = "不明";

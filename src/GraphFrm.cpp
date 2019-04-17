@@ -49,7 +49,7 @@ void __fastcall TGraphForm::FormShow(TObject *Sender)
 		if (!DataList) Abort();
 
 		UnicodeString top_str = DataList->Strings[0];
-		bool IsCSV = !contains_s(top_str, _T('\t'));
+		bool IsCSV = !ContainsStr(top_str, "\t");
 		TStringDynArray top_buf = IsCSV? get_csv_array(top_str, 99) : split_strings_tab(top_str);
 		if (CsvCol==-1) CsvCol = 0;
 		if (CsvCol<0 || CsvCol>=top_buf.Length) Abort();

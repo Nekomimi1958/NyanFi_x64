@@ -767,8 +767,9 @@ void __fastcall TFileExtensionDlg::FileListBoxKeyDown(TObject *Sender, WORD &Key
 	UnicodeString fnam	 = GetCurFileItem();
 
 	TListBox *lp = (TListBox*)Sender;
-	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))
+	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V)) {
 		FileListBoxClick(NULL);
+	}
 	else if (contained_wd_i(_T("Mark|Mark_ND"), cmd_F)) {
 		if (!fnam.IsEmpty()) {
 			IniFile->FileMark(fnam, -1);
@@ -777,10 +778,12 @@ void __fastcall TFileExtensionDlg::FileListBoxKeyDown(TObject *Sender, WORD &Key
 		}
 		else beep_Warn();
 	}
-	else if (USAME_TI(cmd_F, "ReturnList"))
+	else if (USAME_TI(cmd_F, "ReturnList")) {
 		ModalResult = mrCancel;
-	else if (is_ToLeftOpe(KeyStr, cmd_F))
+	}
+	else if (is_ToLeftOpe(KeyStr, cmd_F)) {
 		InfoListBox->SetFocus();
+	}
 	else if (equal_ENTER(KeyStr)) {
 		if (!fnam.IsEmpty()) {
 			FileName = fnam;  ModalResult = mrOk;
@@ -792,11 +795,17 @@ void __fastcall TFileExtensionDlg::FileListBoxKeyDown(TObject *Sender, WORD &Key
 		IniSearchList(lp, KeyStr);
 	}
 	//ファイル情報
-	else if (StartsText("ShowFileInfo", cmd_F))	ShowFileInfoAction->Execute();
+	else if (StartsText("ShowFileInfo", cmd_F)) {
+		ShowFileInfoAction->Execute();
+	}
 	//プロパティ
-	else if (USAME_TI(cmd_F, "PropertyDlg"))		PropertyAction->Execute();
+	else if (USAME_TI(cmd_F, "PropertyDlg")) {
+		PropertyAction->Execute();
+	}
 	//右クリックメニュー
-	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
+	else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
+		show_PopupMenu(lp);
+	}
 	else return;
 
 	Key = 0;
@@ -823,7 +832,9 @@ void __fastcall TFileExtensionDlg::FileListBoxClick(TObject *Sender)
 		}
 		FileInfBar->Panels->Items[0]->Text = lbuf;
 	}
-	else FileInfBar->Panels->Items[0]->Text = EmptyStr;
+	else {
+		FileInfBar->Panels->Items[0]->Text = EmptyStr;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TFileExtensionDlg::FileListHeaderSectionResize(THeaderControl *HeaderControl,

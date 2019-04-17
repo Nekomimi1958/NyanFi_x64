@@ -185,10 +185,12 @@ UnicodeString __fastcall TCalculator::LongDoubleToStr(
 
 	long double ip;
 	if (DoubleIsInt(v, ip)) {
-		if (KommaFlag)
+		if (KommaFlag) {
 			ret_str = FormatFloat(",0", ip);
-		else if (is_x)
+		}
+		else if (is_x) {
 			ret_str.sprintf(_T("0x%llx"), (__int64)ip);
+		}
 		else if (is_t) {
 			int sig = (ip<0)? -1 : 1;
 			int ss = fabsl(ip);
@@ -197,8 +199,9 @@ UnicodeString __fastcall TCalculator::LongDoubleToStr(
 			hh *= sig;
 			ret_str.sprintf(_T("%d:%02u:%02u"), hh,mm,ss);
 		}
-		else
+		else {
 			ret_str.sprintf(_T("%lld"), (__int64)ip);
+		}
 	}
 	else {
 		ret_str.sprintf(_T("%.*LG"), OutDigit - (is_ans? 2 : 0), v);
@@ -589,8 +592,9 @@ UnicodeString __fastcall TCalculator::EvalLine(UnicodeString s)
 				ErrMsg  = "•s³‚ÈŠ‡ŒÊ";
 				isError = true;
 			}
-			else
+			else {
 				lbuf = EvalExpr(lbuf);
+			}
 			break;
 		}
 	}
@@ -637,8 +641,9 @@ void __fastcall TCalculator::CalcLine(
 				while (p1<=exline.Length()) {
 					WideChar c = exline[p1];
 					fstr.cat_sprintf(_T("%c"), c);
-					if (c=='(')
+					if (c=='(') {
 						lvl++;
+					}
 					else if (c==')') {
 						lvl--;
 						if (lvl==0) break;
@@ -735,8 +740,9 @@ void __fastcall TCalculator::CalcLine(
 
 	//Œ‹‰Ê•\Ž¦
 	if (!isError) {
-		if (use_cb)
+		if (use_cb) {
 			OutputLine = answer;
+		}
 		else {
 			add_ComboBox_history(HistComboBox,
 				Trim(get_tkn(s, '=')).cat_sprintf(_T(" = %s"), answer.c_str()));
@@ -749,8 +755,9 @@ void __fastcall TCalculator::CalcLine(
 			if (ErrMsg.IsEmpty()) ErrMsg = "“ü—Í“à—e‚ÌŒë‚è";
 			OutputLine.sprintf(_T("ERR: %s [%s]"), ErrMsg.c_str(), s.c_str());
 		}
-		else
+		else {
 			ShowError();
+		}
 	}
 }
 
@@ -866,12 +873,15 @@ void __fastcall TCalculator::HistComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 
 	bool handled = true;
-	if (equal_ENTER(KeyStr))
+	if (equal_ENTER(KeyStr)) {
 		CalcLine(Trim(get_tkn(HistComboBox->Text, '=')));
-	else if (contained_wd_i(KeysStr_CsrUp,   KeyStr) && !HistComboBox->DroppedDown)
+	}
+	else if (contained_wd_i(KeysStr_CsrUp,   KeyStr) && !HistComboBox->DroppedDown) {
 		LineEdit->SetFocus();
-	else if (contained_wd_i(KeysStr_CsrDown, KeyStr) && !HistComboBox->DroppedDown)
+	}
+	else if (contained_wd_i(KeysStr_CsrDown, KeyStr) && !HistComboBox->DroppedDown) {
 		HistComboBox->DroppedDown = true;
+	}
 	else if (USAME_TI(KeyStr, "BKSP")) {
 		UnicodeString lbuf = HistComboBox->Text;
 		if (lbuf.Pos('=')) {

@@ -905,10 +905,8 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *ZoomInItem;
 	TMenuItem *ZoomOutItem;
 	TPageControl *GrepPageControl;
-	TPaintBox *CaretPaintBox;
 	TPaintBox *RelPaintBox;
 	TPaintBox *RelPaintBox2;
-	TPaintBox *SttBorderPaintBox;
 	TPaintBox *TabBottomPaintBox;
 	TPaintBox *TaskPaintBox;
 	TPaintBox *TextMarginBox;
@@ -1754,7 +1752,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CalculatorActionExecute(TObject *Sender);
 	void __fastcall SubDirListActionExecute(TObject *Sender);
 	void __fastcall FindHardLinkActionExecute(TObject *Sender);
-	void __fastcall CaretPaintBoxPaint(TObject *Sender);
 	void __fastcall CreateTestFileActionExecute(TObject *Sender);
 	void __fastcall Log_DebugInfActionExecute(TObject *Sender);
 	void __fastcall Log_DebugInfActionUpdate(TObject *Sender);
@@ -1831,7 +1828,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RepositoryListActionExecute(TObject *Sender);
 	void __fastcall FindFolderIconActionExecute(TObject *Sender);
 	void __fastcall FindFolderIconActionUpdate(TObject *Sender);
-	void __fastcall SttBorderPaintBoxPaint(TObject *Sender);
 	void __fastcall SimilarSortActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
@@ -2074,6 +2070,23 @@ private:	// ユーザー宣言
 		if (msg.Msg==WM_PAINT) DrawDirPanel(R_DirPanel2);
 	}
 
+	//ドライブ情報
+	void __fastcall DrawStatPanel(TPanel *pp);
+	TWndMethod org_L_StatPanelWndProc;
+	void __fastcall L_StatPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_L_StatPanelWndProc(msg);
+		if (msg.Msg==WM_PAINT) DrawStatPanel(L_StatPanel);
+	}
+	TWndMethod org_R_StatPanelWndProc;
+	void __fastcall R_StatPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_R_StatPanelWndProc(msg);
+		if (msg.Msg==WM_PAINT) DrawStatPanel(R_StatPanel);
+	}
+
 	TWndMethod org_TvViewPanelWndProc;
 	void __fastcall TvViewPanelWndProc(TMessage &msg)
 	{
@@ -2213,7 +2226,6 @@ private:	// ユーザー宣言
 														  : def_if_empty(get_extension(fnam), ".");
 	}
 
-	void __fastcall SetIncSeaCaret(UnicodeString s = EmptyStr);
 	void __fastcall ResetIncSeaFilter(int tag, bool set_listbox = false);
 	void __fastcall SaveToTmpBufList();
 	void __fastcall CurToOppDiffList();

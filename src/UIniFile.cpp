@@ -25,12 +25,9 @@ int __fastcall SortComp_Sct(TStringList *List, int Index1, int Index2)
 	UnicodeString s0 = List->Strings[Index1];
 	UnicodeString s1 = List->Strings[Index2];
 
-	if (contains_PathDlmtr(s0) && !contains_PathDlmtr(s1))
-		return 1;
-	else if (contains_PathDlmtr(s1) && !contains_PathDlmtr(s0))
-		return -1;
-	else
-		return CompareText(s0, s1);
+	if (contains_PathDlmtr(s0) && !contains_PathDlmtr(s1)) return 1;
+	if (contains_PathDlmtr(s1) && !contains_PathDlmtr(s0)) return -1;
+	return CompareText(s0, s1);
 }
 
 //---------------------------------------------------------------------------
@@ -736,8 +733,9 @@ bool UsrIniFile::FileMark(
 		}
 	}
 
-	if (flag==0)
+	if (flag==0) {
 		res = false;
+	}
 	else if (!deleted) {
 		//ƒ}[ƒN
 		if (!klist) klist = AddSection(sct);
@@ -747,8 +745,9 @@ bool UsrIniFile::FileMark(
 			if (SameText(itm, get_pre_tab(klist->Strings[i]))) k_idx = i;
 
 		itm.cat_sprintf(_T("\t%s\t%s"), memo.c_str(), FormatDateTime("yyyy/mm/dd hh:nn:ss", Now()).c_str());
-		if (k_idx!=-1)
+		if (k_idx!=-1) {
 			klist->Strings[k_idx] = itm;
+		}
 		else {
 			klist->Add(itm);
 			Modified = true;

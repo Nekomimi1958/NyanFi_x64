@@ -121,8 +121,8 @@ bool TagManager::Recycle()
 		MakeTagNameList();
 		return true;
 	}
-	else
-		return false;
+
+	return false;
 }
 
 //---------------------------------------------------------------------------
@@ -177,8 +177,9 @@ UnicodeString TagManager::NormTags(
 			if (idx==-1) {
 				if (sw_add) TagNameList->Add(tnam);
 			}
-			else
+			else {
 				tnam = TagNameList->Strings[idx];
+			}
 			cat_str_semicolon(ret_str, tnam);
 		}
 		if (tags.IsEmpty()) break;
@@ -368,8 +369,9 @@ int TagManager::DelTagData(UnicodeString tag)
 			UnicodeString upd_tags;
 			for (int j=0; j<tlst->Count; j++) cat_str_semicolon(upd_tags, tlst->Strings[j]);
 
-			if (upd_tags.IsEmpty())
+			if (upd_tags.IsEmpty()) {
 				TagDataList->Delete(i);
+			}
 			else {
 				TagDataList->Strings[i] = fnam + "\t" + upd_tags;
 				i++;

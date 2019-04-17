@@ -137,11 +137,6 @@ int pos_r_i(UnicodeString wd, UnicodeString s);
 int pos_r_q(UnicodeString wd, UnicodeString s);
 int pos_r_q_colon(UnicodeString s);
 
-bool contains_i(UnicodeString s, const _TCHAR *w);
-bool contains_i(UnicodeString s, WideChar w);
-bool contains_s(UnicodeString s, const _TCHAR *w);
-bool contains_s(UnicodeString s, WideChar w);
-
 bool contains_word_and_or(UnicodeString s, UnicodeString kwd, bool case_sw = false);
 
 bool contained_wd_i(UnicodeString lst, UnicodeString wd);
@@ -235,7 +230,6 @@ int get_TextWidth(TCanvas *cv, UnicodeString s, bool is_irreg);
 int get_CharWidth(TCanvas *cv, int n, int mgn = 0);
 
 int get_WidthInPanel(UnicodeString s, TPanel *pp, bool d2d_sw = false);
-UnicodeString fit_StrToPanel(UnicodeString s, int p, TPanel *pp);
 
 int str_len_half(UnicodeString s);
 int str_len_unicode(UnicodeString s);

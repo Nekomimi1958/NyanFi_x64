@@ -571,8 +571,9 @@ void __fastcall TTaskThread::CPY_core(
 			break;
 
 		case CPYMD_NEW:	//最新なら
-			if (is_NewerTime(get_file_age(fnam), get_file_age(dst_fnam)))
+			if (is_NewerTime(get_file_age(fnam), get_file_age(dst_fnam))) {
 				msg[1] = 'N';
+			}
 			else {
 				w_flag = false;
 				SkipCount++;
@@ -607,8 +608,9 @@ void __fastcall TTaskThread::CPY_core(
 			break;
 
 		case CPYMD_NEW_BACKUP:	//最新ならバックアップ
-			if (is_NewerTime(get_file_age(fnam), get_file_age(dst_fnam)))
+			if (is_NewerTime(get_file_age(fnam), get_file_age(dst_fnam))) {
 				msg[1] = 'N';
+			}
 			else {
 				w_flag = false;
 				SkipCount++;
@@ -958,12 +960,14 @@ void __fastcall TTaskThread::Task_DEL(UnicodeString prm)
 	//ディレクトリ(末尾が \)
 	else if (EX_dir_exists(prm)) {
 		//ごみ箱
-		if (DelUseTrash)
+		if (DelUseTrash) {
 			DEL_dir_trash(prm);
+		}
 		else {
 			//シンボリックリンク、ジャンクション
-			if (is_SymLink(prm))
+			if (is_SymLink(prm)) {
 				DEL_dirs(prm);
+			}
 			//通常
 			else {
 				std::unique_ptr<TStringList> skip_lst(new TStringList());
@@ -980,8 +984,9 @@ void __fastcall TTaskThread::Task_DEL(UnicodeString prm)
 						ReqTaskSlow = false;
 						Sleep(SLOW_INTERVAL);
 					}
-					else if (i%32==0)
+					else if (i%32==0) {
 						Sleep(MIN_INTERVAL);
+					}
 				}
 
 				Sleep(MIN_INTERVAL);
@@ -1044,8 +1049,9 @@ void __fastcall TTaskThread::CMPDEL_core(UnicodeString fnam)
 						ReqTaskSlow = false;
 						Sleep(SLOW_INTERVAL);
 					}
-					else if (j%128==0)
+					else if (j%128==0) {
 						Sleep(MIN_INTERVAL);
+					}
 
 					if (TaskCancel) throw Exception(EmptyStr);	//中断
 					if (!WriteFile(hFile, wbuf.get(), CMPDEL_BUFF_SIZE, &wbyt, NULL)) throw Exception(EmptyStr);
@@ -1095,8 +1101,9 @@ void __fastcall TTaskThread::CMPDEL_core(UnicodeString fnam)
 //---------------------------------------------------------------------------
 void __fastcall TTaskThread::Task_CMPDEL(UnicodeString prm)
 {
-	if (!ExtractFileName(prm).IsEmpty())
+	if (!ExtractFileName(prm).IsEmpty()) {
 		CMPDEL_core(prm);
+	}
 	else if (EX_dir_exists(prm)) {
 		if (!is_SymLink(prm)) {
 			//ディレクトリ内の削除
@@ -1410,8 +1417,9 @@ void __fastcall TTaskThread::Task_DLEXIF(UnicodeString prm)
 			if (LogHideSkip) msg = EmptyStr; else msg[1] = 'S';
 			SkipCount++;
 		}
-		else
+		else {
 			OkCount++;
+		}
 	}
 	catch (...) {
 		ErrCount++;
@@ -1568,8 +1576,9 @@ TDateTime __fastcall TTaskThread::SetDirTime(UnicodeString dnam)
 			msg.cat_sprintf(_T("  %s ---> %s"), format_DateTime(o_dt).c_str(), format_DateTime(dt).c_str());
 			SetLastError(NO_ERROR);
 			AddDebugLog("Call SetFileTime");
-			if (set_file_age(dnam, dt, ForceDel))
+			if (set_file_age(dnam, dt, ForceDel)) {
 				OkCount++;
+			}
 			else {
 				ErrCount++;
 				set_LogErrMsg(msg);
@@ -1666,8 +1675,9 @@ void __fastcall TTaskThread::Task_DIRCOMP(UnicodeString prm)
 				ReqTaskSlow = false;
 				Sleep(SLOW_INTERVAL);
 			}
-			else if (i%32==0)
+			else if (i%32==0) {
 				Sleep(MIN_INTERVAL);
+			}
 
 			SubCount = TaskObjList->Count - i;
 			CurProgress = 1.0 * i/TaskObjList->Count;
@@ -1747,10 +1757,12 @@ void __fastcall TTaskThread::Execute()
 
 	while (!Terminated) {
 		try {
-			if (!TaskFinished && TaskCancel)
+			if (!TaskFinished && TaskCancel) {
 				FinishTask();
-			else if (TaskPause)
+			}
+			else if (TaskPause) {
 				WaitIfPause();
+			}
 			else if (TaskReady) {
 				if (Config->TaskList->Count>0) {
 					SubCount = 0;

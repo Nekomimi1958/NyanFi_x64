@@ -330,8 +330,8 @@ UnicodeString __fastcall TGitViewer::UpdateStatusList()
 		StatusList->Assign(o_lst.get());
 		return get_GitStatusStr(o_lst.get(), &Staged);
 	}
-	else
-		return EmptyStr;
+
+	return EmptyStr;
 }
 
 //---------------------------------------------------------------------------
@@ -1199,14 +1199,9 @@ void __fastcall TGitViewer::SetTagActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::SetTagActionUpdate(TObject *Sender)
 {
-	TAction *ap = (TAction *)Sender;
-	if (BranchListBox->Focused()) {
-		ap->Visible = !GetCurBranchName(true, true).IsEmpty();
-	}
-	else if (CommitListBox->Focused())
-		ap->Visible = !CommitID.IsEmpty();
-	else
-		ap->Visible = false;
+	((TAction *)Sender)->Visible =
+		BranchListBox->Focused()? !GetCurBranchName(true, true).IsEmpty() : 
+		CommitListBox->Focused()? !CommitID.IsEmpty() : false;
 }
 
 //---------------------------------------------------------------------------
@@ -1564,12 +1559,15 @@ void __fastcall TGitViewer::DiffDetailActionExecute(TObject *Sender)
 	UnicodeString fnam1 = get_GitDiffFiles(fnam, fnam2);
 	UnicodeString prm = "diff";
 
-	if (gp->is_stash)
+	if (gp->is_stash) {
 		prm.cat_sprintf(_T(" %s %s"), gp->stash.c_str(), fnam2.c_str());
-	else if (gp->is_work)
+	}
+	else if (gp->is_work) {
 		prm.cat_sprintf(_T(" -- %s"), fnam1.c_str());
-	else if (gp->is_index)
+	}
+	else if (gp->is_index) {
 		prm.cat_sprintf(_T(" --cached -- %s"), fnam1.c_str());
+	}
 	else {
 		UnicodeString parent = get_tkn(ParentID, ' ');
 		if (parent.IsEmpty()) parent = GIT_NULL_ID;
@@ -1827,12 +1825,15 @@ void __fastcall TGitViewer::DiffToolActionExecute(TObject *Sender)
 	UnicodeString fnam1 = get_GitDiffFiles(fnam, fnam2);
 	UnicodeString prm = "difftool -y";
 
-	if (gp->is_stash)
+	if (gp->is_stash) {
 		prm.cat_sprintf(_T(" %s %s"), gp->stash.c_str(), fnam2.c_str());
-	else if (gp->is_work)
+	}
+	else if (gp->is_work) {
 		prm.cat_sprintf(_T(" %s"), fnam2.c_str());
-	else if (gp->is_index)
+	}
+	else if (gp->is_index) {
 		prm.cat_sprintf(_T(" --cached %s"), fnam2.c_str());
+	}
 	else {
 		prm.cat_sprintf(_T(" %s:%s %s:%s"), get_tkn(ParentID, ' ').c_str(), fnam1.c_str(), CommitID.c_str(), fnam2.c_str());
 	}
@@ -1930,8 +1931,10 @@ void __fastcall TGitViewer::SelConsoleItemClick(TObject *Sender)
 void __fastcall TGitViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "F5")) UpdateLogAction->Execute();
-	else SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_GIT) _T("#GitViewer"));
+	if (USAME_TI(KeyStr, "F5"))
+		UpdateLogAction->Execute();
+	else
+		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_GIT) _T("#GitViewer"));
 }
 
 //---------------------------------------------------------------------------
@@ -1940,9 +1943,7 @@ void __fastcall TGitViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 void __fastcall TGitViewer::AddActionExecute(TObject *Sender)
 {
 	UnicodeString fnam = GetDiffFileName(true);
-	if (!fnam.IsEmpty()) {
-		GitExeStr("add " + add_quot_if_spc(fnam));
-	}
+	if (!fnam.IsEmpty()) GitExeStr("add " + add_quot_if_spc(fnam));
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::AddActionUpdate(TObject *Sender)

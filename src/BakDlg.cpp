@@ -116,8 +116,9 @@ void __fastcall TBackupDlg::SaveSetupActionExecute(TObject *Sender)
 		make_csv_str(BakDateCondEdit->Text).c_str());
 
 	int idx = cp->Items->IndexOf(cp->Text);
-	if (idx!=-1)
+	if (idx!=-1) {
 		BakSetupList->Strings[idx] = lbuf;
+	}
 	else {
 		BakSetupList->Insert(0, lbuf);
 		cp->Items->Insert(0, cp->Text);
@@ -173,7 +174,9 @@ void __fastcall TBackupDlg::OkButtonClick(TObject *Sender)
 		msg.cat_sprintf(_T("Ý’è: %s"), SetupComboBox->Text.c_str());
 		if (msgbox_Sure(msg)) ModalResult = mrOk;
 	}
-	else ModalResult = mrOk;
+	else {
+		ModalResult = mrOk;
+	}
 }
 
 //---------------------------------------------------------------------------

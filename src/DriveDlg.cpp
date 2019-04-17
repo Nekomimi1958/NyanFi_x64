@@ -431,7 +431,7 @@ void __fastcall TSelDriveDlg::ShowDriveMenu()
 		"ボリューム名の変更	Rename\n"
 		"最新の情報に更新	ReloadList\n"
 		"ドライブ使用率推移	DriveGraph\n";
-	if (contains_i(typstr, _T("CD-ROM"))) {
+	if (ContainsText(typstr, "CD-ROM")) {
 		ex_item->Add("-");
 		ex_item->Add("ドライブのトレイを開く(&T)	EjectTray");
 	}

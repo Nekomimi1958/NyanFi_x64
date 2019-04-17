@@ -71,8 +71,8 @@ bool HighlightFile::Recycle()
 		HighlightTime = ft;
 		return true;
 	}
-	else
-		return false;
+
+	return false;
 }
 
 //---------------------------------------------------------------------------
@@ -370,11 +370,13 @@ int HighlightFile::GetCommentPos(
 					}
 				}
 				//ブロックコメント開始行か?
-				else if (remove_top_s(lbuf, bg_str))
+				else if (remove_top_s(lbuf, bg_str)) {
 					flag = EndsStr(ed_str, lbuf) || !ContainsStr(lbuf, ed_str);
+				}
 				//ブロックコメント終了行か?
-				else if (remove_end_s(lbuf, ed_str))
+				else if (remove_end_s(lbuf, ed_str)) {
 					flag = StartsStr(bg_str, lbuf) || !ContainsStr(lbuf, bg_str);
+				}
 			}
 		}
 
@@ -399,7 +401,9 @@ int HighlightFile::GetCommentPos(
 					int p_u = s.Pos("://");
 					if (p_u>0 && p==p_u + 1) p = 0;
 				}
-				else if (test_FileExt(fext, _T(".ps1.psm1")) && p>0 && (s.Pos("<#") || s.Pos("#>"))) p = 0;
+				else if (test_FileExt(fext, _T(".ps1.psm1")) && p>0 && (s.Pos("<#") || s.Pos("#>"))) {
+					p = 0;
+				}
 			}
 
 			if (p==0) p = p_mlt;

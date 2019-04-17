@@ -370,7 +370,6 @@ UnicodeString FExtNoIView;		//イメージビュアーで閲覧しない拡張子
 UnicodeString DrvInfFmtR;		//ドライブ情報の書式 : ルート
 UnicodeString DrvInfFmtS;		//ドライブ情報の書式 : 選択時
 UnicodeString DrvInfFmtN;		//ドライブ情報の書式 : その他
-bool SelColDrvInf;				//選択時はファイルリストの配色に
 
 UnicodeString SttBarFmt;		//ステータスバーの書式
 UnicodeString SttClockFmt;		//時計の書式
@@ -741,6 +740,7 @@ TColor col_fgSelItem;	//選択項目の文字色
 TColor col_bgMark;		//栞マーク項目の背景色
 TColor col_matchItem;	//INC.サーチのマッチ項目背景色
 TColor col_Differ;		//結果リストの相違箇所背景色
+TColor col_DifferN;		//結果リストの注目箇所背景色
 TColor col_Cursor;		//ラインカーソルの色
 TColor col_bgScrBar;	//シンプルスクロールバーの背景色
 TColor col_bgScrKnob;	//シンプルスクロールノブの色
@@ -1185,6 +1185,7 @@ void InitializeGlobal()
 	mute_Volume("GET");	//ミュート状態を取得
 
 	//廃止セクション、キーの削除、修正
+	IniFile->DeleteKey( SCT_Option,  "SelColDrvInf");						//v13.53
 	IniFile->ReplaceKey(SCT_General, "ShowGifViewer",	"ShowSubViewer");	//v13.52
 	IniFile->ReplaceKey(SCT_General, "GifViewerLeft",	"SubViewerLeft");
 	IniFile->ReplaceKey(SCT_General, "GifViewerTop",	"SubViewerTop");
@@ -1738,7 +1739,6 @@ void InitializeGlobal()
 		{_T("MenuAutoHotkey=false"),		(TObject*)&MenuAutoHotkey},
 		{_T("EscapeHelp=false"),			(TObject*)&EscapeHelp},
 		{_T("InhbitAltMenu=false"),			(TObject*)&InhbitAltMenu},
-		{_T("SelColDrvInf=true"),			(TObject*)&SelColDrvInf},
 		{_T("SureCopy=false"),				(TObject*)&SureCopy},
 		{_T("SureMove=false"),				(TObject*)&SureMove},
 		{_T("SureDelete=true"),				(TObject*)&SureDelete},
@@ -1932,7 +1932,7 @@ void InitializeGlobal()
 	std::unique_ptr<TStringList> plst(new TStringList());
 	TStringDynArray elst = split_strings_semicolon(GetEnvironmentVariable("PATH"));
 	for (int i=0; i<elst.Length; i++) {
-		if (contains_i(elst[i], _T("\\Git\\"))) plst->Add(elst[i]);
+		if (ContainsText(elst[i], "\\Git\\")) plst->Add(elst[i]);
 	}
 
 #if defined(_WIN64)
@@ -2166,7 +2166,7 @@ void SetupTimer()
 		TStringDynArray prm_lst = get_csv_array(Timer_Condition[i], MAX_TIMER_ALARM);
 		if (prm_lst.Length==0) continue;
 		//時刻
-		if (contains_s(prm_lst[0], _T(':'))) {
+		if (ContainsStr(prm_lst[0], ":")) {
 			Timer_TimeCnt[i] = Timer_NopCnt[i] = 0;
 			Timer_AlarmList[i]->Clear();
 			for (int j=0; j<prm_lst.Length; j++) {
@@ -3139,16 +3139,16 @@ int __fastcall KeyComp_Key(TStringList *List, int Index1, int Index2)
 
 	//カテゴリー
 	UnicodeString c0, c1;
-	if (contains_s(k0, _T(':'))) c0 = split_tkn(k0, ':');
-	if (contains_s(k1, _T(':'))) c1 = split_tkn(k1, ':');
+	if (ContainsStr(k0, ":")) c0 = split_tkn(k0, ':');
+	if (ContainsStr(k1, ":")) c1 = split_tkn(k1, ':');
 	if (!SameText(c0, c1)) return ScrModeIdStr.Pos(c0) - ScrModeIdStr.Pos(c1);
 
 	if (k0.IsEmpty() && k1.IsEmpty())
 		return CompareText(List->ValueFromIndex[Index1], List->ValueFromIndex[Index2]);
 	if (k0.IsEmpty() && !k1.IsEmpty())	return 1;
 	if (!k0.IsEmpty() && k1.IsEmpty())	return -1;
-	if ( contains_s(k0, _T('~')) && !contains_s(k1, _T('~')))	return 1;
-	if (!contains_s(k0, _T('~')) &&  contains_s(k1, _T('~')))	return -1;
+	if ( ContainsStr(k0, "~") && !ContainsStr(k1, "~"))	return 1;
+	if (!ContainsStr(k0, "~") &&  ContainsStr(k1, "~"))	return -1;
 
 	//シフト
 	UnicodeString s0, s1;
@@ -3163,7 +3163,7 @@ int __fastcall KeyComp_Key(TStringList *List, int Index1, int Index2)
 	if (!SameText(s0, s1)) return CompareStr(s0, s1);
 
 	//2ストローク
-	if (contains_s(k0, _T('~')) && contains_s(k1, _T('~'))) {
+	if (ContainsStr(k0, "~") && ContainsStr(k1, "~")) {
 		UnicodeString f0 = split_tkn(k0, '~');
 		UnicodeString f1 = split_tkn(k1, '~');
 		if (!SameText(f0, f1)) return CompareText(f0, f1);
@@ -3516,7 +3516,7 @@ UnicodeString format_CloneName(
 		}
 
 		//重複により再試行
-		if (contains_s(fmt_str, _T("\\SN(")))
+		if (ContainsStr(fmt_str, "\\SN("))
 			sn++;
 		else if (SameText(last_str, ret_str))
 			fmt += SFX_AUTOREN;
@@ -3684,13 +3684,13 @@ void get_LibraryList(
 				UnicodeString lbuf = Trim(f_buf->Strings[i]);
 				switch (tag) {
 				case 0:
-					if (contains_i(lbuf, _T("<searchConnectorDescriptionList>"))) tag = 1;
+					if (ContainsText(lbuf, "<searchConnectorDescriptionList>")) tag = 1;
 					break;
 				case 1:
-					if (contains_i(lbuf, _T("<searchConnectorDescription"))) tag = 2;
+					if (ContainsText(lbuf, "<searchConnectorDescription")) tag = 2;
 					break;
 				case 2:
-					if (contains_i(lbuf, _T("<url>")) && contains_i(lbuf, _T("</url>"))) {
+					if (ContainsText(lbuf, "<url>") && ContainsText(lbuf, "</url>")) {
 						UnicodeString url = get_tkn_m(lbuf, _T("<url>"), _T("</url>"));
 						if (StartsText("knownfolder:", url))
 							url = usr_SH->KnownGuidStrToPath(get_tkn_r(url, ':'));
@@ -4014,7 +4014,7 @@ UnicodeString ExtractInZipImg(
 			if (test_FileExt(fext, img_fext)) {
 				if (i_first.IsEmpty()) i_first = fnam;
 				if (i_cover.IsEmpty()
-					&& (contains_i(fnam, _T("cover")) || contains_i(fnam, _T("title")) || contains_i(fnam, _T("page"))))
+					&& (ContainsText(fnam, "cover") || ContainsText(fnam, "title") || ContainsText(fnam, "page")))
 						i_cover = fnam;
 			}
 		}
@@ -4808,7 +4808,7 @@ bool check_file_std(
 		//ダブルクォーテーションで囲まれていたら空白を含む語として正規表現で
 		if (is_quot(kwd)) {
 			kwd = TRegEx::Escape(exclude_quot(kwd));
-			if (contains_s(kwd, _T(' '))) kwd = ReplaceStr(kwd, " ", "\\s");
+			if (ContainsStr(kwd, " ")) kwd = ReplaceStr(kwd, " ", "\\s");
 			is_regex = true;
 		}
 		//検索
@@ -4921,7 +4921,7 @@ bool check_file_ex(UnicodeString fnam, flist_stt *lst_stt)
 		try {
 			std::unique_ptr<TStringList> lst(new TStringList());
 			if (test_FlacExt(fext)) get_FlacInf(fnam, lst.get()); else get_WavInf(fnam, lst.get());
-			if (!contains_s(lst->Text, _T(" 形式: "))) Abort();
+			if (!ContainsStr(lst->Text, " 形式: ")) Abort();
 			UnicodeString frmt = get_tkn_m(lst->Text, _T("形式: "), _T("\r\n"));
 			//サンプリング
 			int sp = split_tkn(frmt, _T("Hz ")).ToInt();
@@ -7803,7 +7803,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 		cv->TextOut(xp, yp, lbuf);
 	}
 	else if (flag & LBFLG_DEBUG) {
-		if (!use_fgsel && contains_s(lbuf, _T("終了"))) cv->Font->Color = col_Error;
+		if (!use_fgsel && ContainsStr(lbuf, "終了")) cv->Font->Color = col_Error;
 		EmphasisTextOut(lbuf, EmptyStr, cv, xp, yp);
 	}
 	else if (flag & LBFLG_GIT_TAG) {
@@ -8061,7 +8061,7 @@ bool get_FileInfList(
 				if (!x_flag && test_GifExt(fext))	x_flag = get_GifInf(fnam, lst);
 				if (!x_flag) {
 					unsigned int i_wd, i_hi;
-					if (!contains_s(lst->Text, _T("画像サイズ: ")) && get_img_size(fnam, &i_wd, &i_hi))
+					if (!ContainsStr(lst->Text, "画像サイズ: ") && get_img_size(fnam, &i_wd, &i_hi))
 						lst->Add(get_img_size_str(i_wd, i_hi));
 					usr_SH->get_PropInf(fnam, lst);
 				}
@@ -8074,7 +8074,7 @@ bool get_FileInfList(
 		else if (USAME_TI(fext, ".wav")) {
 			get_WavInf(fnam, lst);
 			UnicodeString tmp = "ビット レート";
-			if (!contains_s(lst->Text, _T("長さ: "))) tmp.Insert("長さ,", 1);
+			if (!ContainsStr(lst->Text, "長さ: ")) tmp.Insert("長さ,", 1);
 			usr_SH->get_PropInf(fnam, lst, tmp);
 		}
 		//MP3
@@ -8217,8 +8217,8 @@ bool get_FileInfList(
 					//XML
 					if (ln_cnt>0) {
 						UnicodeString lbuf = f_buf->Strings[0];
-						if (contains_i(lbuf, _T("<?xml "))) {
-							if (!contains_i(lst->Text, _T("XML version:"))) get_xml_inf(lbuf, lst);
+						if (ContainsText(lbuf, "<?xml ")) {
+							if (!ContainsText(lst->Text, "XML version:")) get_xml_inf(lbuf, lst);
 						}
 					}
 
@@ -8250,7 +8250,7 @@ bool get_FileInfList(
 					//CSV/TSV項目数
 					if (test_FileExt(fext, FEXT_CSV) && ln_cnt>0) {
 						UnicodeString lbuf = f_buf->Strings[0];
-						TStringDynArray hdr_buf = (contains_s(lbuf, _T('\t')))? split_strings_tab(lbuf) : get_csv_array(lbuf, MAX_CSV_ITEM);
+						TStringDynArray hdr_buf = ContainsStr(lbuf, "\t")? split_strings_tab(lbuf) : get_csv_array(lbuf, MAX_CSV_ITEM);
 						if (hdr_buf.Length>0) add_PropLine(_T("項目数"), hdr_buf.Length, lst);
 					}
 
@@ -8494,7 +8494,7 @@ int get_FileCodePage(
 	UnicodeString fext = get_extension(fnam);
 	if (test_FileExt(fext, FEXT_XML _T(".xhtml"))) {
 		UnicodeString lbuf = get_top_line(fnam);
-		if (contains_i(lbuf, _T("<?xml "))) {
+		if (ContainsText(lbuf, "<?xml ")) {
 			int p = pos_i(_T("encoding="), lbuf);
 			if (p>0) {
 				lbuf = lbuf.SubString(p, lbuf.Length() - p + 1);
@@ -9139,7 +9139,7 @@ UnicodeString get_CmdDesc(
 			TStrings *lst= USAME_TI(cmd, "ExeExtMenu")? menu_list : tool_list;
 			for (int i=0; i<lst->Count && dsc.IsEmpty(); i++) {
 				UnicodeString ibuf = get_csv_item(lst->Strings[i], 0);
-				if (!contains_s(ibuf, _T('&'))) continue;
+				if (!ContainsStr(ibuf, "&")) continue;
 				UnicodeString ak = get_tkn_r(ibuf, '&').SubString(1, 1);
 				if (!SameText(ak, prm)) continue;
 				dsc = ReplaceStr(ibuf, "&", "");
@@ -9226,6 +9226,7 @@ void set_col_from_ColorList()
 		{&col_bgMark,	_T("bgMark"),		clWebIndigo},
 		{&col_matchItem,_T("matchItem"),	clNavy},
 		{&col_Differ,	_T("Differ"),		clWebSaddleBrown},
+		{&col_DifferN,	_T("DifferN"),		clWebFirebrick},
 		{&col_Cursor,	_T("Cursor"),		clFuchsia},
 		{&col_bgScrBar,	_T("bgScrBar"),		clAppWorkSpace},
 		{&col_bgScrKnob,_T("bgScrKnob"),	clBtnFace},
@@ -10949,8 +10950,8 @@ void get_xml_inf(
 	TStringList *lst)		//取得バッファ(名前=値 の形式で格納);
 {
 	UnicodeString lbuf = fnam;
-	if (!contains_i(lbuf, _T("<?xml "))) lbuf = get_top_line(fnam);
-	if (contains_i(lbuf, _T("<?xml ")) && contains_i(lbuf, _T("?>"))) {
+	if (!ContainsText(lbuf, "<?xml ")) lbuf = get_top_line(fnam);
+	if (ContainsText(lbuf, "<?xml ") && ContainsText(lbuf, "?>")) {
 		lbuf = Trim(get_tkn_m(lbuf, _T("<?xml "), _T("?>")));
 		while (!lbuf.IsEmpty()) {
 			UnicodeString vstr = exclude_quot(get_tkn_m(lbuf, '=', ' '));
@@ -11132,9 +11133,9 @@ bool divide_FileName_LineNo(
 		if (found) break;
 
 		//c インクルード
-		if (contains_s(fnam, _T("#include"))) {
+		if (ContainsStr(fnam, "#include")) {
 			fnam = exclude_quot(Trim(get_tkn_r(fnam, _T("#include"))));
-			if (contains_s(fnam, _T('<'))) fnam = get_tkn_m(fnam, '<', '>');
+			if (ContainsStr(fnam, "<")) fnam = get_tkn_m(fnam, '<', '>');
 			lno = 1;	break;
 		}
 
@@ -11205,7 +11206,7 @@ bool divide_FileName_LineNo(
 		if (p0==0) p = p1; else if (p1==0) p = p0; else p = std::min(p0, p1);
 		if (p>0) {
 			lstr = lstr.SubString(1, p - 1);
-			if (contains_s(lstr, _T('('))) lstr = get_tkn_r(lstr, '(');
+			if (ContainsStr(lstr, "(")) lstr = get_tkn_r(lstr, '(');
 			lstr = Trim(lstr);
 		}
 		lno = lstr.ToIntDef(1);
@@ -11325,13 +11326,13 @@ bool Execute_ex(
 			if (::ShellExecute(NULL, _T("explore"), cmd.c_str(), NULL, NULL, SW_SHOWNORMAL) <= (HINSTANCE)32)
 				Abort();
 		}
-		else if (contains_s(opt, _T('A'))) {
+		else if (ContainsStr(opt, "A")) {
 			AddDebugLog("RunAs", cmd + " " + prm, wdir_str);
 			if (::ShellExecute(NULL, _T("runas"), cmd.c_str(), prm.c_str(), wdir.c_str(),
-				contains_s(opt, _T('H'))? SW_HIDE : SW_SHOWNORMAL) <= (HINSTANCE)32)
+				ContainsStr(opt, "H")? SW_HIDE : SW_SHOWNORMAL) <= (HINSTANCE)32)
 					Abort();
 		}
-		else if (!contains_s(opt, _T('W')) && !contains_s(opt, _T('O')) && !contains_s(opt, _T('L'))) {
+		else if (!ContainsStr(opt, "W") && !ContainsStr(opt, "O") && !ContainsStr(opt, "L")) {
 			AddDebugLog("Execute", cmd + " " + prm, wdir_str);
 			bool ok = false;
 			if (test_LnkExt(get_extension(cmd))) {
@@ -11344,7 +11345,7 @@ bool Execute_ex(
 			}
 			if (!ok) {
 				if (::ShellExecute(NULL, _T("open"), cmd.c_str(), prm.c_str(), wdir.c_str(),
-					contains_s(opt, _T('H'))? SW_HIDE : SW_SHOWNORMAL) <= (HINSTANCE)32)
+					ContainsStr(opt, "H")? SW_HIDE : SW_SHOWNORMAL) <= (HINSTANCE)32)
 						Abort();
 			}
 		}
@@ -11385,7 +11386,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 		::ZeroMemory(&si, sizeof(si));
 		si.cb		   = sizeof(si);
 		si.dwFlags	   = STARTF_USESHOWWINDOW;
-		si.wShowWindow = contains_s(opt, _T('H'))? SW_HIDE : SW_SHOWNORMAL;
+		si.wShowWindow = ContainsStr(opt, "H")? SW_HIDE : SW_SHOWNORMAL;
 		if (hRead && hWrite) {
 			si.dwFlags |= STARTF_USESTDHANDLES;
 			si.hStdOutput = hWrite;
@@ -11400,7 +11401,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 
 				//コンソール出力の取り込み
 				if (::WaitForInputIdle(pi.hProcess, 0)==0xffffffff && hRead && hWrite) {
-					bool l_sw = contains_s(opt, _T('L'));
+					bool l_sw = ContainsStr(opt, "L");
 					if (l_sw) {
 						AddLogCr();
 						//コマンドライン
@@ -11463,7 +11464,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 					exited = true;
 				}
 				//終了待ち
-				else if (contains_s(opt, _T('W'))) {
+				else if (ContainsStr(opt, "W")) {
 					while (::WaitForSingleObject(pi.hProcess, 50)==WAIT_TIMEOUT) Application->ProcessMessages();;
 					exited = true;
 				}
@@ -11714,7 +11715,7 @@ void set_LogErrMsg(
 	UnicodeString fnam)	//対象ファイル名	(default = EmptyStr)
 {
 	if (StartsText("Abort", s)) s = EmptyStr;
-	if (!msg.IsEmpty()) msg[1] = contains_s(s, _T("中断しました"))? 'C' : 'E';
+	if (!msg.IsEmpty()) msg[1] = ContainsStr(s, "中断しました")? 'C' : 'E';
 	msg += get_LogErrMsg(s, true, fnam);
 }
 
@@ -11744,7 +11745,7 @@ UnicodeString GetClockStr()
 		ret_str = ReplaceStr(ret_str, "$BP", tmp.sprintf(_T("\"%s%\""), get_BatteryPercentStr().c_str()));
 		ret_str = ReplaceStr(ret_str, "$BT", tmp.sprintf(_T("\"%s\""),  get_BatteryTimeStr().c_str()));
 		//電源状態
-		if (contains_s(ret_str, _T("$PS("))) {
+		if (ContainsStr(ret_str, "$PS(")) {
 			lbuf = split_tkn(ret_str, _T("$PS(")).UCAT_T("\"");
 			s    = split_tkn(ret_str, ')');
 			SYSTEM_POWER_STATUS ps;
@@ -11753,7 +11754,7 @@ UnicodeString GetClockStr()
 			ret_str.Insert(lbuf, 1);
 		}
 		//接続状態
-		if (contains_s(ret_str, _T("$NS("))) {
+		if (ContainsStr(ret_str, "$NS(")) {
 			lbuf = split_tkn(ret_str, _T("$NS(")).UCAT_T("\"");
 			s    = split_tkn(ret_str, ')');
 			lbuf += (InternetConnected()? get_tkn(s, ':') : get_tkn_r(s, ':')).UCAT_T("\"");
@@ -11761,7 +11762,7 @@ UnicodeString GetClockStr()
 		}
 
 		//日付カウントダウン
-		while (contains_s(ret_str, _T("$CD("))) {
+		while (ContainsStr(ret_str, "$CD(")) {
 			lbuf = split_tkn(ret_str, _T("$CD("));
 			s    = split_tkn(ret_str, ')');
 
@@ -12474,7 +12475,7 @@ bool is_FirstKey(UnicodeString id, UnicodeString keystr)
 	bool found = false;
 	for (int i=0; i<KeyFuncList->Count && !found; i++) {
 		UnicodeString kbuf = KeyFuncList->Strings[i];
-		if (!contains_s(kbuf, _T('~')))  continue;
+		if (!ContainsStr(kbuf, "~"))  continue;
 		found = SameText(key_n, get_tkn(kbuf, '~'));
 	}
 	return found;
@@ -13632,7 +13633,7 @@ UnicodeString get_GitUrl(file_rec *fp)
 				if (!snam.IsEmpty()) {
 					remove_end_text(url, ".git");	//Gitlab
 					//Bitbucket
-					if (contains_s(url, _T("/bitbucket.org/"))) {
+					if (ContainsStr(url, "/bitbucket.org/")) {
 						url.cat_sprintf(_T("/src/master/%s"), snam.c_str());
 					}
 					//Github
@@ -13645,7 +13646,7 @@ UnicodeString get_GitUrl(file_rec *fp)
 				}
 				else {
 					//Bitbucket
-					if (contains_s(url, _T("/bitbucket.org/"))) {
+					if (ContainsStr(url, "/bitbucket.org/")) {
 						remove_end_text(url, ".git");
 						url.UCAT_T("/src/master/");
 					}

@@ -76,8 +76,8 @@ bool __fastcall TThumbnailThread::FitSize(int *wd, int *hi)
 		}
 		return true;
 	}
-	else
-		return false;
+
+	return false;
 }
 
 //---------------------------------------------------------------------------

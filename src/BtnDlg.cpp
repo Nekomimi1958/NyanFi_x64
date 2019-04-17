@@ -91,7 +91,7 @@ void __fastcall TToolBtnDlg::WmDropped(TMessage &msg)
 	if (cp==BtnCmdsComboBox) {
 		UnicodeString s;
 		if (DroppedMode==DROPEFFECT_LINK) {
-			if (contains_s(DroppedList->Strings[0], _T('\t')))
+			if (ContainsStr(DroppedList->Strings[0], "\t"))
 				BtnCmdsComboBox->Text = s.sprintf(_T("OpenByWin_\"%s\""), get_post_tab(DroppedList->Strings[0]).c_str());
 		}
 		else {
@@ -126,8 +126,9 @@ void __fastcall TToolBtnDlg::BtnCmdsComboBoxChange(TObject *Sender)
 		UnicodeString inam;
 		//外部ツール
 		TStringDynArray itm_buf = record_of_csv_list(ExtToolList, s, 4, EXTTOOL_CSVITMCNT);
-		if (itm_buf.Length==EXTTOOL_CSVITMCNT)
+		if (itm_buf.Length==EXTTOOL_CSVITMCNT) {
 			inam = itm_buf[1];
+		}
 		//追加メニュー
 		else {
 			itm_buf = record_of_csv_list(ExtMenuList, s, 3, EXTMENU_CSVITMCNT);
@@ -169,8 +170,9 @@ void __fastcall TToolBtnDlg::RefCmdsBtnClick(TObject *Sender)
 				if (test_LnkExt(get_extension(fnam))) fnam = usr_SH->get_LnkName(fnam);
 				if (test_ExeExt(get_extension(fnam))) IconEdit->Text = fnam = exclude_env_path(fnam);
 			}
-			else if (contained_wd_i(_T("ExeMenuFile|LoadTabGroup|LoadWorkList"), cmd))
+			else if (contained_wd_i(_T("ExeMenuFile|LoadTabGroup|LoadWorkList"), cmd)) {
 				fnam = to_relative_name(fnam);
+			}
 
 			BtnCmdsComboBox->Text = UnicodeString().sprintf(_T("%s_\"%s\""), cmd.c_str(), fnam.c_str());
 		}

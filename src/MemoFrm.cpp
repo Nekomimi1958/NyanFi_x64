@@ -229,9 +229,12 @@ void __fastcall TMemoForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState S
 		Key = 0;
 		ModalResult = mrOk;
 	}
-	else if (USAME_TI(KeyStr, "Alt+O"))
+	else if (USAME_TI(KeyStr, "Alt+O")) {
 		ChgOptBtnClick(NULL);
-	else SpecialKeyProc(this, Key, Shift);
+	}
+	else {
+		SpecialKeyProc(this, Key, Shift);
+	}
 }
 //---------------------------------------------------------------------------
 

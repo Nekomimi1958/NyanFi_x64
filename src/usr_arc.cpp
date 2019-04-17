@@ -290,8 +290,9 @@ bool UserArcUnit::Pack(
 	if (!src_dir.IsEmpty()) src_dir = IncludeTrailingPathDelimiter(src_dir);
 
 	UnicodeString cmd;
-	if (arc_t==UARCTYP_ZIP)
+	if (arc_t==UARCTYP_ZIP) {
 		cmd.USET_T("a -tzip -r-");
+	}
 	else if (arc_t==UARCTYP_7Z) {
 		cmd.USET_T("a -t7z");
 		if (ZipPrm_sfx) cmd.UCAT_T(" -sfx");
@@ -374,7 +375,7 @@ bool UserArcUnit::UnPack(
 
 	//7-zipXX.dll が解凍先ディレクトリ名内の連続空白を扱えない問題に対処
 	UnicodeString org_dir = dst_dir;
-	if ((arc_t==UARCTYP_ZIP || arc_t==UARCTYP_7Z) && contains_s(dst_dir, _T("  "))) {
+	if ((arc_t==UARCTYP_ZIP || arc_t==UARCTYP_7Z) && ContainsStr(dst_dir, "  ")) {
 		TStringDynArray o_plst = split_path(org_dir);
 		UnicodeString rep_str;
 		for (int i=_T('A'); i <= _T('Z'); i++) {
@@ -407,16 +408,19 @@ bool UserArcUnit::UnPack(
 	}
 
 	UnicodeString cmd;
-	if (arc_t==UARCTYP_CAB)
+	if (arc_t==UARCTYP_CAB) {
 		cmd.sprintf(_T("%s"), dir_sw? _T("-x") : _T("-x -j"));
+	}
 	else if (arc_t==UARCTYP_TAR) {
 		cmd.sprintf(_T("%s"), dir_sw? _T("-x") : _T("-x --use-directory=0"));
 		cmd.UCAT_T(" --confirm-overwrite=1");
 	}
-	else if (arc_t==UARCTYP_RAR)
+	else if (arc_t==UARCTYP_RAR) {
 		cmd.sprintf(_T("%s"), dir_sw? _T("-x") : _T("-e"));
-	else
+	}
+	else {
 		cmd.sprintf(_T("%s"), dir_sw? _T("x") : _T("e"));
+	}
 
 	//処理状況ダイアログ非表示
 	if (hide_sw) {
@@ -658,7 +662,7 @@ void UserArcUnit::SetFindInf(arc_find_inf *inf,
 	UnicodeString pnam = GetDispStr(FindInf.szFileName);
 	pnam = slash_to_yen(pnam);
 	UnicodeString atrstr = UnicodeString(FindInf.szAttribute).UpperCase();
-	if (contains_i(atrstr, _T('D'))) pnam = IncludeTrailingPathDelimiter(pnam);	//(dll による違いを吸収)
+	if (ContainsText(atrstr, "D")) pnam = IncludeTrailingPathDelimiter(pnam);	//(dll による違いを吸収)
 	if (!FindDir.IsEmpty() && !StartsText(FindDir, pnam)) return;
 
 	UnicodeString fnam = pnam;
@@ -669,8 +673,9 @@ void UserArcUnit::SetFindInf(arc_find_inf *inf,
 			inf->is_dir = true;
 		}
 	}
-	else
+	else {
 		inf->is_dir = (ends_PathDlmtr(fnam) || fnam.IsEmpty());
+	}
 	inf->f_name = ExcludeTrailingPathDelimiter(fnam);
 
 	//サイズの計算(4GB超に対応)
@@ -698,8 +703,9 @@ void UserArcUnit::SetFindInf(arc_find_inf *inf,
 					}
 				}
 			}
-			else
+			else {
 				org_size = FindInf.dwOriginalSize;
+			}
 		}
 		else {	//CAB
 			org_size = FindInf.dwOriginalSize;
@@ -717,14 +723,15 @@ void UserArcUnit::SetFindInf(arc_find_inf *inf,
 	}
 	//属性
 	inf->f_attr = 0;
-	if (inf->is_dir)
+	if (inf->is_dir) {
 		inf->f_attr |= faDirectory;
+	}
 	else {
 		//属性
-		if (contains_i(atrstr, _T('A'))) inf->f_attr |= faArchive;
-		if (contains_i(atrstr, _T('S'))) inf->f_attr |= faSysFile;
-		if (contains_i(atrstr, _T('H'))) inf->f_attr |= faHidden;
-		if (contains_i(atrstr, _T('R'))) inf->f_attr |= faReadOnly;
+		if (ContainsText(atrstr, "A")) inf->f_attr |= faArchive;
+		if (ContainsText(atrstr, "S")) inf->f_attr |= faSysFile;
+		if (ContainsText(atrstr, "H")) inf->f_attr |= faHidden;
+		if (ContainsText(atrstr, "R")) inf->f_attr |= faReadOnly;
 	}
 }
 
@@ -807,22 +814,21 @@ UnicodeString UserArcUnit::GetDispStr(
 //---------------------------------------------------------------------------
 int UserArcUnit::GetRootCount(UnicodeString arc_file)
 {
-	if (OpenArc(arc_file)) {
-		arc_find_inf inf;
-		std::unique_ptr<TStringList> lst(new TStringList());
-		int i_cnt = 0;
-		if (FindFirstEx(EmptyStr, &inf)) {
-			do {
-				UnicodeString fnam = inf.f_name;
-				if (fnam.IsEmpty() || (inf.is_dir && lst->IndexOf(fnam)!=-1)) continue;
-				lst->Add(fnam);
-				i_cnt++;
-			} while (FindNextEx(&inf));
-		}
-		CloseArc();
-		return i_cnt;
+	if (!OpenArc(arc_file)) return -1;
+
+	arc_find_inf inf;
+	std::unique_ptr<TStringList> lst(new TStringList());
+	int i_cnt = 0;
+	if (FindFirstEx(EmptyStr, &inf)) {
+		do {
+			UnicodeString fnam = inf.f_name;
+			if (fnam.IsEmpty() || (inf.is_dir && lst->IndexOf(fnam)!=-1)) continue;
+			lst->Add(fnam);
+			i_cnt++;
+		} while (FindNextEx(&inf));
 	}
-	else return -1;
+	CloseArc();
+	return i_cnt;
 }
 
 //---------------------------------------------------------------------------
@@ -833,23 +839,21 @@ bool UserArcUnit::GetFileInf(
 	UnicodeString fnam,			//対象項目名
 	arc_find_inf *inf)			//[0] ファイル情報
 {
-	if (OpenArc(arc_file)) {
-		bool flag = false;
-		if (!fnam.IsEmpty()) fnam = ExcludeTrailingPathDelimiter(fnam);
-		UnicodeString dnam = ExtractFilePath(fnam);
-		fnam = ExtractFileName(fnam);
-		if (FindFirstEx(dnam, inf)) {
-			do {
-				if (SameText(inf->f_name, fnam)) {
-					flag = true ; break;
-				}
-			} while (FindNextEx(inf));
-		}
-		CloseArc();
-		return flag;
-	}
-	else return false;
+	if (!OpenArc(arc_file)) return false;
 
+	bool flag = false;
+	if (!fnam.IsEmpty()) fnam = ExcludeTrailingPathDelimiter(fnam);
+	UnicodeString dnam = ExtractFilePath(fnam);
+	fnam = ExtractFileName(fnam);
+	if (FindFirstEx(dnam, inf)) {
+		do {
+			if (SameText(inf->f_name, fnam)) {
+				flag = true ; break;
+			}
+		} while (FindNextEx(inf));
+	}
+	CloseArc();
+	return flag;
 }
 
 //---------------------------------------------------------------------------
@@ -943,7 +947,7 @@ bool UserArcUnit::GetArcInfo(
 
 	if (!OpenArc(arc_file)) return false;
 	arc_func *fp = GetArcFunc(CurType);  if (!fp) return false;
-	bool is_rar_part = (CurType==UARCTYP_RAR)? contains_i(get_extension(get_base_name(arc_file)), _T("part")) : false;
+	bool is_rar_part = (CurType==UARCTYP_RAR)? ContainsText(get_extension(get_base_name(arc_file)), "part") : false;
 
 	bool ret = true;
 	__int64 o_size = 0;
@@ -1015,23 +1019,21 @@ bool UserArcUnit::GetArcList(
 bool UserArcUnit::SetArcTime(UnicodeString arc_file, bool force)
 {
 	ErrMsg = EmptyStr;
+	if (!OpenArc(arc_file)) return false;
 
-	if (OpenArc(arc_file)) {
-		TDateTime dt = 0.0;
-		arc_find_inf inf;
-		if (FindFirstEx(EmptyStr, &inf, true)) {
-			do {
-				dt = std::max(dt, inf.f_time);
-			} while (FindNextEx(&inf, true));
-		}
-		CloseArc();
-
-		//タイムスタンプ設定
-		if (set_file_age(arc_file, dt, force)) return true;
-
-		ErrMsg.USET_T("タイムスタンプ設定に失敗しました");
-		return false;
+	TDateTime dt = 0.0;
+	arc_find_inf inf;
+	if (FindFirstEx(EmptyStr, &inf, true)) {
+		do {
+			dt = std::max(dt, inf.f_time);
+		} while (FindNextEx(&inf, true));
 	}
-	else return false;
+	CloseArc();
+
+	//タイムスタンプ設定
+	if (set_file_age(arc_file, dt, force)) return true;
+
+	ErrMsg.USET_T("タイムスタンプ設定に失敗しました");
+	return false;
 }
 //---------------------------------------------------------------------------

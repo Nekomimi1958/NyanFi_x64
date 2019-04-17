@@ -50,7 +50,7 @@ bool __fastcall TFindKeyDlg::IsFirstCmdKey(UnicodeString keystr)
 	bool res = false;
 	for (int i=0; i<KeyList->Count; i++) {
 		UnicodeString fkey = KeyList->Names[i];
-		if (contains_s(fkey, _T('~'))) {
+		if (ContainsStr(fkey, "~")) {
 			fkey = get_tkn_m(fkey, ':', '~');
 			if (SameText(keystr, fkey)) { res = true; break; }
 		}

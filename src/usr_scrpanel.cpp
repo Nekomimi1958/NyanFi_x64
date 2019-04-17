@@ -651,8 +651,9 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseMove(TObject *Sender, TShiftStat
 
 				//ƒJ[ƒ\ƒ‹‚ðí‚É‰ÂŽ‹—Ìˆæ‚É
 				if (ListCsrVisible) {
-					if (AssoChkListBox->ItemIndex < AssoChkListBox->TopIndex)
+					if (AssoChkListBox->ItemIndex < AssoChkListBox->TopIndex) {
 						AssoChkListBox->ItemIndex = AssoChkListBox->TopIndex;
+					}
 					else {
 						int idx_btm = AssoChkListBox->TopIndex + AssoChkListBox->ClientHeight/AssoChkListBox->ItemHeight - 1;
 						if (AssoChkListBox->ItemIndex > idx_btm) AssoChkListBox->ItemIndex = idx_btm;

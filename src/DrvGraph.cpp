@@ -58,7 +58,7 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 		drive_info *dp = (drive_info *)DriveInfoList->Objects[i];
 		if (!dp->accessible || dp->drv_type==DRIVE_CDROM) continue;
 		int idx = DriveComboBox->Items->Add(
-			UnicodeString().sprintf(_T("%s %s"), get_tkn(dp->drive_str, '\\').c_str(), dp->volume.c_str()));
+			UnicodeString().sprintf(_T("%s %s"), get_tkn(dp->drive_str, '\\').c_str(), dp->label.c_str()));
 		if (StartsText(DriveName, dp->drive_str)) d_idx = idx;
 	}
 
@@ -332,6 +332,5 @@ void __fastcall TDriveGraph::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 {
 	SpecialKeyProc(this, Key, Shift);
 }
-
 //---------------------------------------------------------------------------
 

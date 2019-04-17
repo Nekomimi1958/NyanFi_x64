@@ -89,8 +89,9 @@ void __fastcall TDistributionDlg::FormShow(TObject *Sender)
 			tmp_ini_file->LoadListItems("DistrDefList", DistrDefList, 200, false);
 			RegEnabled = false;
 		}
-		else
+		else {
 			RegEnabled = true;
+		}
 		tit += ExtractFileName(IniFile->FileName);
 	}
 
@@ -176,8 +177,9 @@ void __fastcall TDistributionDlg::FormClose(TObject *Sender, TCloseAction &Actio
 	IniFile->WriteStrGen( _T("DistrDlgLastDir"),		LastDistDir);
 
 	//登録ファイルがあればそれを更新
-	if (file_exists(DistrFile))
+	if (file_exists(DistrFile)) {
 		SaveDistrFile();
+	}
 	//登録ファイルがない場合、メイン側ではINIファイルに保存
 	else if (IsPrimary) {
 		SaveOptions();
@@ -648,8 +650,8 @@ bool __fastcall TDistributionDlg::MatchRegMask(
 		TRegExOptions opt; opt << roIgnoreCase;
 		return TRegEx::Match(nnam, mask, opt).Success;
 	}
-	else
-		return str_match(mask, nnam);
+
+	return str_match(mask, nnam);
 }
 
 //---------------------------------------------------------------------------
@@ -702,8 +704,9 @@ void __fastcall TDistributionDlg::AddRegActionExecute(TObject *Sender)
 		lp->ItemIndex = lp->Items->Add(MakeRegItem());
 		UpdatePreview();
 	}
-	else
+	else {
 		msgbox_WARN(USTR_Registered);
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::AddRegActionUpdate(TObject *Sender)

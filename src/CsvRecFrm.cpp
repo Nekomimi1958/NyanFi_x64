@@ -184,7 +184,7 @@ void __fastcall TCsvRecForm::UpdateRecord(
 
 		HeaderStr = DataList->Strings[0];
 		RecordStr = DataList->Strings[DatIndex];
-		IsCSV	  = !contains_s(HeaderStr, _T('\t'));
+		IsCSV	  = !ContainsStr(HeaderStr, "\t");
 
 		int org_row = gp->Row;
 		int org_col = gp->Col;

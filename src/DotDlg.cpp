@@ -240,8 +240,9 @@ void __fastcall TDotNyanDlg::ColorComboBoxDrawItem(TWinControl *Control, int Ind
 	//ƒJƒ‰[
 	TRect rc = Rect;  rc.Right = rc.Left + 30;
 	cv->Brush->Color = (TColor)ColBufList->Values[col_nam].ToIntDef(clNone);
-	if (cv->Brush->Color!=clNone)
+	if (cv->Brush->Color!=clNone) {
 		cv->FillRect(rc);
+	}
 	else {
 		cv->Brush->Color = scl_BtnFace;
 		cv->FillRect(rc);

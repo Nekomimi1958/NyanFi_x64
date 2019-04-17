@@ -377,8 +377,9 @@ int split_cmd_line(UnicodeString s, TStringList *lst)
 		WideChar c = s[i];
 		//引用符外
 		if (!in_qut) {
-			if (c=='\"')
+			if (c=='\"') {
 				in_qut = true;
+			}
 			else if (c==' ') {
 				if (!lbuf.IsEmpty()) {
 					lst->Add(lbuf); 
@@ -411,8 +412,9 @@ UnicodeString split_file_param(UnicodeString &s)
 		ret_str = split_tkn(s, '\"');
 		s = Trim(s);
 	}
-	else
+	else {
 		ret_str = split_tkn(s, ' ');
+	}
 	return ret_str;
 }
 
@@ -439,8 +441,9 @@ bool remove_text(UnicodeString &s, UnicodeString w)
 		s = ReplaceText(s, w, EmptyStr);
 		return true;
 	}
-	else
+	else {
 		return false;
+	}
 }
 //---------------------------------------------------------------------------
 bool remove_text(UnicodeString &s, const _TCHAR *w)
@@ -905,27 +908,6 @@ int pos_r_q_colon(UnicodeString s)
 }
 
 //---------------------------------------------------------------------------
-bool contains_i(UnicodeString s, const _TCHAR *w)
-{
-	return ContainsText(s, w);
-}
-//---------------------------------------------------------------------------
-bool contains_i(UnicodeString s, WideChar w)
-{
-	return ContainsText(s, w);
-}
-//---------------------------------------------------------------------------
-bool contains_s(UnicodeString s, const _TCHAR *w)
-{
-	return ContainsStr(s, w);
-}
-//---------------------------------------------------------------------------
-bool contains_s(UnicodeString s, WideChar w)
-{
-	return ContainsStr(s, w);
-}
-
-//---------------------------------------------------------------------------
 //文字列に検索語が含まれているか?
 //  AND(' ') / OR('|') 検索対応
 //---------------------------------------------------------------------------
@@ -1024,15 +1006,11 @@ bool str_match(UnicodeString ptn, UnicodeString s)
 	UnicodeString next_str = s.SubString(2, s.Length() - 1);
 	UnicodeString next_ptn = ptn.SubString(2, ptn.Length() - 1);
 
-	if (c.IsEmpty())
-		return s.IsEmpty();
-	else if (SameStr(c, "*"))
-		return str_match(next_ptn, s) || (!s.IsEmpty() && str_match(ptn, next_str));
-	else if (SameStr(c, "?"))
-		return !s.IsEmpty() && str_match(next_ptn, next_str);
-	else {
-		return (CompareText(c, s.SubString(1, 1))==0) && str_match(next_ptn, next_str);
-	}
+	if (c.IsEmpty())		return s.IsEmpty();
+	if (SameStr(c, "*"))	return str_match(next_ptn, s) || (!s.IsEmpty() && str_match(ptn, next_str));
+	if (SameStr(c, "?"))	return !s.IsEmpty() && str_match(next_ptn, next_str);
+
+	return (CompareText(c, s.SubString(1, 1))==0) && str_match(next_ptn, next_str);
 }
 
 //---------------------------------------------------------------------------
@@ -1164,8 +1142,9 @@ void get_find_wd_list(UnicodeString wd, TStringList *lst)
 		int ph = wd.Pos(' ');
 		int pw = wd.Pos("　");
 		int p = (ph && !pw)? ph : (!ph && pw)? pw : (ph && pw)? std::min(ph, pw) : 0;
-		if (p==1)
+		if (p==1) {
 			wd.Delete(1, 1);
+		}
 		else if (p>1) {
 			lst->Add(wd.SubString(1, p - 1));
 			wd.Delete(1, p);
@@ -1529,14 +1508,14 @@ bool ends_PathDlmtr(UnicodeString s)
 //---------------------------------------------------------------------------
 bool contains_PathDlmtr(UnicodeString s)
 {
-	return contains_s(s, '\\');
+	return ContainsStr(s, "\\");
 }
 //---------------------------------------------------------------------------
 // / を含む ?
 //---------------------------------------------------------------------------
 bool contains_Slash(UnicodeString s)
 {
-	return contains_s(s, '/');
+	return ContainsStr(s, "/");
 }
 
 //---------------------------------------------------------------------------
@@ -1618,8 +1597,9 @@ UnicodeString __fastcall mSecToTStr(
 	int h = scnt / 60;
 
 	UnicodeString ret_str;
-	if (cs)
+	if (cs) {
 		ret_str.sprintf(_T("%02u:%02u:%02u.%02u"), h, m, s, c);
+	}
 	else {
 		if (c>50) s++;
 		ret_str.sprintf(_T("%02u:%02u:%02u"), h, m, s);
@@ -1674,8 +1654,8 @@ int get_TextWidth(
 		}
 		return wd;
 	}
-	else
-		return cv->TextWidth(s);
+
+	return cv->TextWidth(s);
 }
 
 //---------------------------------------------------------------------------
@@ -1716,22 +1696,6 @@ int get_WidthInPanel(
 		::ReleaseDC(pp->Handle, hDc);
 	}
 	return wd;
-}
-
-//---------------------------------------------------------------------------
-// 文字列が TPanel の幅いっぱいに収まるように、指定位置を空白を挿入
-//---------------------------------------------------------------------------
-UnicodeString fit_StrToPanel(UnicodeString s, int p, TPanel *pp)
-{
-	HDC hDc = ::GetDC(pp->Handle);
-	if (hDc) {
-		std::unique_ptr<TCanvas> cv(new TCanvas());
-		cv->Handle = hDc;
-		cv->Font->Assign(pp->Font);
-		while (cv->TextWidth(UAPP_T(s, "  "))<pp->ClientWidth) s.Insert(" ", p);
-		::ReleaseDC(pp->Handle, hDc);
-	}
-	return s;
 }
 
 //---------------------------------------------------------------------------
@@ -1841,8 +1805,9 @@ UnicodeString fit_str(
 	int  wd,			//制限幅
 	bool omit_end)		//末尾を省略 (default = false : 中間を省略)
 {
-	if (cv->TextWidth(s) > wd)
+	if (cv->TextWidth(s) > wd) {
 		s = minimize_str(s, cv, wd, omit_end);
+	}
 	else {
 		for (;;) {
 			if (cv->TextWidth(s + " ")>wd) break;
@@ -1924,8 +1889,9 @@ UnicodeString get_AddrStr(__int64 adr,
 		if (adr_h>0) ret_str = IntToHex(adr_h, 1) + ":" + ret_str;
 		ret_str = align_r_str(ret_str, w);
 	}
-	else
+	else {
 		ret_str.USET_T("____:____");
+	}
 	return ret_str;
 }
 
@@ -1948,8 +1914,9 @@ UnicodeString get_AspectStr(int w, int h)
 	h /= h1;
 
 	UnicodeString ret_str;
-	if (w<20)
+	if (w<20) {
 		ret_str.cat_sprintf(_T("%u : %u"), w, h);
+	}
 	else {
 		if (w>h)
 			ret_str.cat_sprintf(_T("%5.4g : 1"), 1.0 * w/h);
@@ -2091,8 +2058,9 @@ int check_UTF8(BYTE *bp, int size)
 	try {
 		int i = 0;
 		while (i<size) {
-			if (bp[i]<0x80)
+			if (bp[i]<0x80) {
 				i++;
+			}
 			else {
 				int bn;
 				if		(0xc2<=bp[i] && bp[i]<=0xdf) bn = 1;
@@ -2224,13 +2192,14 @@ int get_MemoryCodePage(
 			for (int i=0; i<src_size-1; i++) {
 				BYTE b0 = bp[i];
 				BYTE b1 = bp[i + 1];
-				if (((0xa1<=b0 && b0<=0xfe) && (0xa1<=b1 && b1<=0xfe))
-					|| (b0==0x8e && (0xa1<=b1 && b1<=0xdf)))
-						{ euc_cnt += 2;  i++; }
+				if (((0xa1<=b0 && b0<=0xfe) && (0xa1<=b1 && b1<=0xfe)) || (b0==0x8e && (0xa1<=b1 && b1<=0xdf))) {
+					euc_cnt += 2;  i++;
+				}
 				else if (i < src_size-2) {
 					BYTE b2 = bp[i + 2];
-					if (b0==0x8f && (0xa1<=b1 && b1<=0xfe) && (0xa1<=b2 && b2<=0xfe))
-						{ euc_cnt += 3;  i += 2; }
+					if (b0==0x8f && (0xa1<=b1 && b1<=0xfe) && (0xa1<=b2 && b2<=0xfe)) {
+						 euc_cnt += 3;  i += 2;
+					}
 				}
 			}
 			//UTF-7?
@@ -2253,7 +2222,9 @@ int get_MemoryCodePage(
 						else if (!isalnum(b0) && b0!='+' && b0!='/') {
 							utf7_cnt = 0; break;
 						}
-						else b64cnt++;
+						else {
+							b64cnt++;
+						}
 					}
 				}
 			}

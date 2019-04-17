@@ -61,8 +61,9 @@ int WIC_get_ex_list(
 			*fxstr = s;
 			int i = 1;
 			while (i < x_lst->Count) {
-				if (SameStr(s, x_lst->Strings[i]))
+				if (SameStr(s, x_lst->Strings[i])) {
 					x_lst->Delete(i);	//d•¡‚ðíœ
+				}
 				else {
 					s = x_lst->Strings[i++];
 					*fxstr += s;
@@ -393,12 +394,11 @@ bool WIC_fit_trim_image(Graphics::TBitmap *i_bmp, Graphics::TBitmap *o_bmp,
 	std::unique_ptr<Graphics::TBitmap> r_bmp(new Graphics::TBitmap());
 	r_bmp->SetSize(i_wd, i_hi);
 	if (WIC_resize_image(i_bmp, r_bmp.get(), 0.0, i_wd, i_hi, s_opt)) {
-		o_bmp->Canvas->CopyRect(
-			Rect(0, 0, s_wd, s_hi), r_bmp->Canvas, Rect(xp, yp, xp + s_wd, yp + s_hi));
+		o_bmp->Canvas->CopyRect(Rect(0, 0, s_wd, s_hi), r_bmp->Canvas, Rect(xp, yp, xp + s_wd, yp + s_hi));
 		return true;
 	}
-	else
-		return false;
+
+	return false;
 }
 
 //---------------------------------------------------------------------------

@@ -167,7 +167,9 @@ void __fastcall TInspectForm::UpdateValue()
 				else
 					astr.UCAT_T(".");
 			}
-			else hstr.UCAT_T("   ");
+			else {
+				hstr.UCAT_T("   ");
+			}
 		}
 		hstr.cat_sprintf(_T("  %s"), alt_yen_to(astr).c_str());
 	}

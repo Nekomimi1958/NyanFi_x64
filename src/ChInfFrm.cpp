@@ -120,14 +120,18 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 					else if (c1=='\a') tp_str.UCAT_T("  BEL");
 					else if (c1=='\f') tp_str.UCAT_T("  FF");
 				}
-				else if (c1==0x20)
+				else if (c1==0x20) {
 					tp_str.UCAT_T("”¼Šp‹ó”’");
-				else if (c1>=0x21 && c1<=0x7e)
+				}
+				else if (c1>=0x21 && c1<=0x7e) {
 					tp_str.cat_sprintf(_T("%s"), isalnum(c1)? _T("”¼Šp‰p”Žš") : _T("”¼Šp‹L†"));
+				}
 			}
 		}
 		//‰üs
-		else if (is_cr) tp_str.UCAT_T("‰üs");
+		else if (is_cr) {
+			tp_str.UCAT_T("‰üs");
+		}
 		//Unicode §Œä•¶Žš
 		else {
 			UnicodeString chx;
@@ -168,8 +172,9 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 			int uc	= plane * 0x10000 + ld2* 0x100 + ld2* 0x300 + tl2;
 			cd_str.cat_sprintf(_T("U+%05X (%04X %04X)"), uc, ld, tl);
 		}
-		else if (!is_cr)
+		else if (!is_cr) {
 			cd_str.cat_sprintf(_T("U+%04X"), (unsigned int)c[1]);
+		}
 		i_lst->Add(cd_str);
 
 		//UTF-8

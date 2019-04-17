@@ -39,7 +39,7 @@ void __fastcall TExpCsvDlg::FormShow(TObject *Sender)
 	if (Viewer) {
 		if (Viewer->TxtBufList->Count>0) {
 			UnicodeString lbuf = Viewer->TxtBufList->Strings[0];
-			isTSV = contains_s(lbuf, _T('\t'));
+			isTSV = ContainsStr(lbuf, "\t");
 			TStringDynArray hlst = isTSV? split_strings_tab(lbuf) : get_csv_array(lbuf, 99);
 			if (hlst.Length<2) Abort();
 			for (int i=0; i<hlst.Length; i++)

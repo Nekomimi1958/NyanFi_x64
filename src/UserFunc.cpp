@@ -1081,8 +1081,9 @@ void ListBoxSetIndex(TListBox *lp, int idx)
 {
 	if (lp->Count==0) return;
 
-	if (idx<0)
+	if (idx<0) {
 		lp->ItemIndex = 0;
+	}
 	else if (idx==lp->ItemIndex) {
 		//可視領域外だったらスクロール
 		int pn = lp->ClientHeight/lp->ItemHeight;
@@ -1344,8 +1345,9 @@ UnicodeString extract_URL(UnicodeString s)
 	}
 	else {
 		mt = TRegEx::Match(s, MAIL_MATCH_PTN);
-		if (mt.Success)
+		if (mt.Success) {
 			url = mt.Value;
+		}
 		else {
 			mt = TRegEx::Match(s, LOCAL_FILE_PTN);
 			if (mt.Success) url = mt.Value;
@@ -1497,8 +1499,9 @@ UnicodeString get_BatteryTimeStr()
 	SYSTEM_POWER_STATUS ps;
 	::GetSystemPowerStatus(&ps);
 	UnicodeString ret;
-	if (ps.ACLineStatus==1)
+	if (ps.ACLineStatus==1) {
 		ret.USET_T("ONLINE");
+	}
 	else {
 		int s = ps.BatteryLifeTime;
 		if (s==-1)

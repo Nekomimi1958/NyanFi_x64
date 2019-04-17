@@ -171,8 +171,9 @@ void __fastcall TRegDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		int i = 0;
 		while (i<lp->Count) {
 			UnicodeString lbuf = lp->Items->Strings[i];
-			if (lbuf.IsEmpty())
+			if (lbuf.IsEmpty()) {
 				lp->Items->Delete(i);
+			}
 			else {
 				if (is_separator(get_csv_item(lbuf, 1))) lp->Items->Strings[i] = ",-,";
 				i++;
@@ -673,8 +674,9 @@ void __fastcall TRegDirDlg::ChangeItemActionExecute(
 		|| dir_exists(get_actual_path(DirEdit->Text)))
 	{
 		UnicodeString lbuf;
-		if (is_separator(DescEdit->Text))
+		if (is_separator(DescEdit->Text)) {
 			lbuf.USET_T(",-,");
+		}
 		else {
 			UnicodeString dnam = DirEdit->Text;
 			if (!StartsText("shell:", dnam) && !StartsText("#:", dnam))

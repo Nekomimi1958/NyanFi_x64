@@ -101,7 +101,9 @@ void __fastcall TSortModeDlg::SortModeRadioGroupClick(TObject *Sender)
 		Changed = true;
 		if (SortModeRadioGroup->Enabled) ModalResult = mrOk;
 	}
-	else InhOk = false;
+	else {
+		InhOk = false;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::OptCheckBoxClick(TObject *Sender)

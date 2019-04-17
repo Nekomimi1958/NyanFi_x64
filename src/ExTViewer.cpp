@@ -422,8 +422,9 @@ void __fastcall TExTxtViewer::DirectTagJumpCore(
 	if (get_FileNameByTag(tnam, rnam, j_lst.get())==0) GlobalAbort();
 
 	UnicodeString fnam;
-	if (j_lst->Count==1)
+	if (j_lst->Count==1) {
 		fnam = j_lst->Strings[0];
+	}
 	else {
 		EditHistoryDlg->isTags  = true;
 		EditHistoryDlg->isView  = !is_edit;
@@ -445,8 +446,9 @@ void __fastcall TExTxtViewer::DirectTagJumpCore(
 		//閲覧
 		else {
 			//閲覧中ファイル内
-			if (SameText(ExViewer->FileName, fnam))
+			if (SameText(ExViewer->FileName, fnam)) {
 				ExViewer->ToLine(lno);
+			}
 			//その他のファイル
 			else {
 				ExViewer->add_ViewHistory();
@@ -555,7 +557,7 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 				pos  = ExViewer->CurPos.x;
 			}
 
-			bool is_edit = contains_i(cmd, _T("Jump"));
+			bool is_edit = ContainsText(cmd, "Jump");
 			if (divide_FileName_LineNo(fnam, lno, ExViewer->FileName, pos)) {
 				if (is_edit) {
 					if (!open_by_TextEditor(fnam, lno)) GlobalAbort();
@@ -566,13 +568,14 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 					if (!OpenViewer(fnam, false, 0, lno)) GlobalAbort();
 				}
 			}
-			else if (USAME_TI(ActionParam, "DJ"))
+			else if (USAME_TI(ActionParam, "DJ")) {
 				DirectTagJumpCore(is_edit);
+			}
 			else GlobalAbort();
 		}
 		//ダイレクトタグジャンプ
 		else if (contained_wd_i(_T("TagJumpDirect|TagViewDirect"), cmd)) {
-			DirectTagJumpCore(contains_i(cmd, _T("Jump")), ActionParam);
+			DirectTagJumpCore(ContainsText(cmd, "Jump"), ActionParam);
 		}
 		//ビュアーの履歴を戻る
 		else if (USAME_TI(cmd, "BackViewHist")) {
@@ -854,12 +857,17 @@ void __fastcall TExTxtViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftStat
 				ClearKeyBuff(true);
 			}
 			//標準のキー処理
-			else if (TxtScrollPanel->Visible && ExViewer->StdKeyOperation(KeyStr))
+			else if (TxtScrollPanel->Visible && ExViewer->StdKeyOperation(KeyStr)) {
 				ClearKeyBuff(true);
+			}
 			//右クリックメニュー
-			else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(ViewPopupMenu, TextPaintBox);
+			else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
+				show_PopupMenu(ViewPopupMenu, TextPaintBox);
+			}
 			//閉じる
-			else if (equal_ESC(KeyStr) || equal_ENTER(KeyStr)) ExeCommandV(_T("Close"));
+			else if (equal_ESC(KeyStr) || equal_ENTER(KeyStr)) {
+				ExeCommandV(_T("Close"));
+			}
 			//その他
 			else {
 				hadled = SpecialKeyProc(this, Key, Shift);

@@ -56,9 +56,9 @@ void __fastcall TRegSyncDlg::RegListBoxDrawItem(TWinControl *Control, int Index,
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, syn_lst[0]);	xp += w_x + 16;
 
-	if (contains_i(syn_lst[2], _T('O'))) out_Text(cv, xp, yp, _T("O"));
+	if (ContainsText(syn_lst[2], "O")) out_Text(cv, xp, yp, _T("O"));
 	xp += 18;
-	if (contains_i(syn_lst[2], _T('D'))) out_Text(cv, xp, yp, _T("D"));
+	if (ContainsText(syn_lst[2], "D")) out_Text(cv, xp, yp, _T("D"));
 	xp += 24;
 
 	UnicodeString lbuf;
@@ -95,8 +95,8 @@ void __fastcall TRegSyncDlg::RegListBoxClick(TObject *Sender)
 		TStringDynArray syn_lst = get_csv_array(lp->Items->Strings[idx], 50);
 		if (syn_lst.Length>2) {
 			NameEdit->Text = syn_lst[0];
-			SyncOwrCheckBox->Checked = contains_i(syn_lst[2], _T('O'));
-			SyncDelCheckBox->Checked = contains_i(syn_lst[2], _T('D'));
+			SyncOwrCheckBox->Checked = ContainsText(syn_lst[2], "O");
+			SyncDelCheckBox->Checked = ContainsText(syn_lst[2], "D");
 			for (int i=3; i<syn_lst.Length; i++) DirListBox->Items->Add(syn_lst[i]);
 		}
 	}
@@ -193,7 +193,8 @@ void __fastcall TRegSyncDlg::AddDirActionExecute(TObject *Sender)
 		InitDir = to_path_name(InitDir);
 		if (DirListBox->Items->IndexOf(InitDir)==-1)
 			DirListBox->ItemIndex = DirListBox->Items->Add(InitDir);
-		else msgbox_WARN(USTR_Registered);
+		else
+			msgbox_WARN(USTR_Registered);
 	}
 }
 //---------------------------------------------------------------------------
@@ -229,8 +230,9 @@ void __fastcall TRegSyncDlg::OkButtonClick(TObject *Sender)
 	while (i<SyncDirList->Count) {
 		TStringDynArray syn_lst = get_csv_array(SyncDirList->Strings[i], 50);	//***
 		//不正データをはねる
-		if (syn_lst.Length<5)
+		if (syn_lst.Length<5) {
 			SyncDirList->Delete(i);
+		}
 		//正規化
 		else {
 			//"タイトル","有効:1/無効:0","オプション","dir1","dir2",...

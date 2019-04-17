@@ -1746,7 +1746,7 @@ object OptionDlg: TOptionDlg
       ImageIndex = -1
       object TLabel
         Left = 681
-        Top = 447
+        Top = 425
         Width = 66
         Height = 13
         Alignment = taRightJustify
@@ -1762,7 +1762,7 @@ object OptionDlg: TOptionDlg
       end
       object ShowImgPrvCheckBox: TCheckBox
         Left = 470
-        Top = 398
+        Top = 376
         Width = 142
         Height = 17
         Caption = #12503#12524#12499#12517#12540#12434#34920#31034
@@ -1771,7 +1771,7 @@ object OptionDlg: TOptionDlg
       end
       object HideTitMenuCheckBox: TCheckBox
         Left = 623
-        Top = 421
+        Top = 399
         Width = 279
         Height = 17
         Caption = #26368#22823#21270#26178#12395#12479#12452#12488#12523#12496#12540#12392#12513#12491#12517#12540#12434#38560#12377
@@ -2131,12 +2131,12 @@ object OptionDlg: TOptionDlg
         Left = 460
         Top = 70
         Width = 434
-        Height = 131
+        Height = 106
         Caption = #12489#12521#12452#12502#24773#22577#12398#26360#24335
         TabOrder = 4
         DesignSize = (
           434
-          131)
+          106)
         object DrvInfFmtREdit: TLabeledEdit
           Left = 58
           Top = 18
@@ -2173,18 +2173,10 @@ object OptionDlg: TOptionDlg
           LabelPosition = lpLeft
           TabOrder = 2
         end
-        object SelColDrvInfCheckBox: TCheckBox
-          Left = 10
-          Top = 103
-          Width = 263
-          Height = 17
-          Caption = #36984#25246#26178#12399#12501#12449#12452#12523#12522#12473#12488#12398#37197#33394#12395
-          TabOrder = 3
-        end
       end
       object SttBarGroupBox: TGroupBox
         Left = 460
-        Top = 211
+        Top = 188
         Width = 434
         Height = 79
         Caption = #12473#12486#12540#12479#12473#12496#12540#12398#26360#24335
@@ -2215,7 +2207,7 @@ object OptionDlg: TOptionDlg
       end
       object ShowFilePropCheckBox: TCheckBox
         Left = 623
-        Top = 398
+        Top = 376
         Width = 162
         Height = 17
         Caption = #12501#12449#12452#12523#24773#22577#12434#34920#31034
@@ -2224,7 +2216,7 @@ object OptionDlg: TOptionDlg
       end
       object ShowMainMenuCheckBox: TCheckBox
         Left = 470
-        Top = 421
+        Top = 399
         Width = 142
         Height = 17
         Caption = #12513#12491#12517#12540#12496#12540#12434#34920#31034
@@ -2232,7 +2224,7 @@ object OptionDlg: TOptionDlg
       end
       object ModalEfctGroupBox: TGroupBox
         Left = 460
-        Top = 480
+        Top = 458
         Width = 434
         Height = 50
         Caption = #12514#12540#12480#12523#34920#31034#21177#26524
@@ -2414,7 +2406,7 @@ object OptionDlg: TOptionDlg
       end
       object SplitterGroupBox: TGroupBox
         Left = 460
-        Top = 300
+        Top = 279
         Width = 434
         Height = 82
         Caption = #20998#21106#22659#30028#32218
@@ -2560,7 +2552,7 @@ object OptionDlg: TOptionDlg
       end
       object FlatInfPanelCheckBox: TCheckBox
         Left = 470
-        Top = 446
+        Top = 424
         Width = 166
         Height = 17
         Caption = #24773#22577#12497#12493#12523#12434#12501#12521#12483#12488#34920#31034
@@ -2568,7 +2560,7 @@ object OptionDlg: TOptionDlg
       end
       object ScrBarStyleComboBox: TComboBox
         Left = 752
-        Top = 444
+        Top = 422
         Width = 132
         Height = 21
         Style = csDropDownList
@@ -2577,7 +2569,7 @@ object OptionDlg: TOptionDlg
       end
       object KnobImgEdit: TEdit
         Left = 752
-        Top = 444
+        Top = 422
         Width = 16
         Height = 21
         TabOrder = 12

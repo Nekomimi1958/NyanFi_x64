@@ -66,8 +66,9 @@ void __fastcall TFindTextDlg::FormShow(TObject *Sender)
 		FindComboBox->Text = Viewer->get_SelText();
 		if (FindComboBox->Text.IsEmpty()) FindComboBox->Text = Viewer->FindWord;
 	}
-	else
+	else {
 		FindComboBox->Text = GeneralInfoDlg->FindWord;
+	}
 
 	UpDownGroup->ItemIndex		= IniFile->ReadIntGen(_T("FindTxtDlgUpDown"),	1);
 

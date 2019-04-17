@@ -135,9 +135,9 @@ void __fastcall TFtpConnectDlg::HostListBoxClick(TObject *Sender)
 	HostDirEdit->Text  = itm_buf[4];
 	LocalDirEdit->Text = itm_buf[5];
 
-	SSLComboBox->ItemIndex  = contains_i(itm_buf[6], _T("EXPLICIT"))? 1 : contains_i(itm_buf[6], _T("IMPLICIT"))? 2 : 0;
-	SyncLRCheckBox->Checked = contains_i(itm_buf[6], _T("SyncLR"));
-	PasvCheckBox->Checked	= !contains_i(itm_buf[6], _T("PORT"));
+	SSLComboBox->ItemIndex  = ContainsText(itm_buf[6], "EXPLICIT")? 1 : ContainsText(itm_buf[6], "IMPLICIT")? 2 : 0;
+	SyncLRCheckBox->Checked = ContainsText(itm_buf[6], "SyncLR");
+	PasvCheckBox->Checked	= !ContainsText(itm_buf[6], "PORT");
 	AnonyCheckBox->Checked	= USAME_TI(UserIdEdit->Text, "anonymous");
 }
 //---------------------------------------------------------------------------

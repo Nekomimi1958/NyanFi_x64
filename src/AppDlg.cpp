@@ -210,8 +210,9 @@ void __fastcall TAppListDlg::WmFormShowed(TMessage &msg)
 {
 	Application->BringToFront();
 
-	if (ToAppList)
+	if (ToAppList) {
 		AppListBox->SetFocus();
+	}
 	else if (OnlyLauncher || ToLauncher || ToIncSea) {
 		LaunchListBox->SetFocus();
 		UpdateLaunchSttBar();
@@ -229,8 +230,9 @@ void __fastcall TAppListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	LaunchFileList->Clear();
 	clear_FileList(LaunchList);
 
-	if (OnlyLauncher)
+	if (OnlyLauncher) {
 		IniFile->SavePosInfo(this, "Launcher");
+	}
 	else {
 		IniFile->SavePosInfo(this);
 		IniFile->WriteIntGen(_T("AppListThumbHi"),		ViewPanel->Height);
@@ -332,7 +334,9 @@ UnicodeString __fastcall TAppListDlg::get_size_str_K(SIZE_T sz)
 		if (sz_k>=1000)    szstr.Insert(",", szstr.Length() - 5);
 		if (sz_k>=1000000) szstr.Insert(",", szstr.Length() - 9);
 	}
-	else szstr.USET_T("???? KB");
+	else {
+		szstr.USET_T("???? KB");
+	}
 	return szstr;
 }
 
@@ -553,6 +557,7 @@ void __fastcall TAppListDlg::UpdateAppList()
 		lp->Count = AppInfoList->Count;
 	else if (changed)
 		lp->Invalidate();
+
 	Application->ProcessMessages();
 	ListBoxSetIndex(lp, idx);
 	AppScrPanel->UpdateKnob();
@@ -941,8 +946,9 @@ void __fastcall TAppListDlg::PopupMenu1Popup(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::PopupMenu2Popup(TObject *Sender)
 {
-	if (OnlyLauncher) 
+	if (OnlyLauncher) {
 		LaunchPosItem->Visible	 = false;
+	}
 	else {
 		LaunchPosItem->Visible	 = !OnlyLauncher;
 		LaunchRightItem->Checked = (LaunchPanel->Align==alRight);
@@ -998,8 +1004,9 @@ void __fastcall TAppListDlg::MinimizeActionExecute(TObject *Sender)
 			}
 			SetFocus();
 		}
-		else
+		else {
 			::ShowWindow(ap->WinHandle, SW_MINIMIZE);
+		}
 		AppListBox->Invalidate();
 	}
 }
@@ -1095,8 +1102,9 @@ void __fastcall TAppListDlg::CloseItemClick(TObject *Sender)
 			SetFocus();
 		}
 		//ŠO•”
-		else
+		else {
 			::PostMessage(ap->WinHandle, WM_SYSCOMMAND, SC_CLOSE, 0);
+		}
 	}
 }
 //---------------------------------------------------------------------------

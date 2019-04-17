@@ -220,7 +220,9 @@ void __fastcall TColorDlg::CancelBtnClick(TObject *Sender)
 		SpuitImage->Visible = true;
 	}
 	//•Â‚¶‚é
-	else ModalResult = mrCancel;
+	else {
+		ModalResult = mrCancel;
+	}
 }
 
 //---------------------------------------------------------------------------

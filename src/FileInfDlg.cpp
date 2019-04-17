@@ -149,7 +149,7 @@ bool __fastcall TFileInfoDlg::UpdateInfo()
 		try {
 			if (!DataList) Abort();
 			UnicodeString top_str = DataList->Strings[0];
-			bool IsCSV = !contains_s(top_str, _T('\t'));
+			bool IsCSV = !ContainsStr(top_str, "\t");
 			set_FormTitle(this, IsCSV? _T("CSV項目の集計") : _T("TSV項目の集計"));
 			TStringDynArray top_buf = IsCSV? get_csv_array(top_str, 99) : split_strings_tab(top_str);
 			if (CsvCol==-1) CsvCol = 0;

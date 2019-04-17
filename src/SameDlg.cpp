@@ -47,8 +47,9 @@ void __fastcall TSameNameDlg::FormShow(TObject *Sender)
 		tmp.sprintf(_T("SameDlgCopyAll%u"), TaskNo + 1);
 		AllCheckBox->Checked = CopyAll = IniFile->ReadBoolGen(tmp.c_str(), true);
 	}
-	else
+	else {
 		AllCheckBox->Checked = CopyAll = false;
+	}
 	InhAllChk = false;
 
 	Mode0Btn->Enabled = !IsSamePath;
@@ -88,8 +89,9 @@ void __fastcall TSameNameDlg::FormShow(TObject *Sender)
 		tmp.UCAT_T("“¯‚¶");
 		if (CurSrcTime!=CurDstTime) tmp.UCAT_T(" (‹–—eŒë·“à)");
 	}
-	else
+	else {
 		tmp.cat_sprintf(_T("“]‘—æ‚Ì•û‚ª%s"), (CurSrcTime<CurDstTime)? _T("V‚µ‚¢") : _T("ŒÃ‚¢"));
+	}
 	InfoListBox->Items->Add(tmp);
 }
 //---------------------------------------------------------------------------

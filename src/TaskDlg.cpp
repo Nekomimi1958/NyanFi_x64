@@ -135,8 +135,9 @@ void __fastcall TTaskManDlg::Timer1Timer(TObject *Sender)
 						   tp->TaskCancel? "中断要求中" :
 						   (tp->PreCount>0)? "準備中" :
 						   tp->TaskIsFast?  "高速実行中" : "実行中";
-				if (tp->PreCount>0)
+				if (tp->PreCount>0) {
 					cell_str.cat_sprintf(_T("\t%u"), tp->PreCount);
+				}
 				else if (!tp->CurFileName.IsEmpty() && tp->CurProgress>=0) {
 					cell_str.cat_sprintf(_T("\t%3u%%"), (int)(tp->CurProgress*100));
 					if (tp->Speed>0) {
@@ -154,7 +155,9 @@ void __fastcall TTaskManDlg::Timer1Timer(TObject *Sender)
 				}
 				gp->Cells[5][i] = cell_str;
 			}
-			else clear_GridRow(gp, i, 1);
+			else {
+				clear_GridRow(gp, i, 1);
+			}
 		}
 		else {
 			//予約
@@ -167,7 +170,9 @@ void __fastcall TTaskManDlg::Timer1Timer(TObject *Sender)
 				gp->Cells[4][i] = RsvSuspended? "保留中" : "待機中";
 				gp->Cells[5][i] = EmptyStr;
 			}
-			else clear_GridRow(gp, i, 1);
+			else {
+				clear_GridRow(gp, i, 1);
+			}
 		}
 	}
 
@@ -209,8 +214,9 @@ void __fastcall TTaskManDlg::TaskGridDrawCell(TObject *Sender, int ACol, int ARo
 		else
 			fg = AdjustColor(col_fgList, 96);
 	}
-	else
+	else {
 		fg = AdjustColor(col_fgList, 72);
+	}
 
 	cv->Font->Color  = is_SelFgCol(State)? col_fgSelItem : fg;
 	cv->Brush->Color = State.Contains(gdSelected)? col_selItem : col_bgList;
@@ -231,7 +237,7 @@ void __fastcall TTaskManDlg::TaskGridDrawCell(TObject *Sender, int ACol, int ARo
 	for (int i=0; i<l_lst.Length; i++) {
 		if (ACol==3) xp = Rect.Right - get_TextWidth(cv, l_lst[i], is_irreg) - 4;
 		cv->TextRect(rc, xp, yp, l_lst[i]);
-		if (ACol==4 && i==1 && contains_s(l_lst[i], _T('%'))) {
+		if (ACol==4 && i==1 && ContainsStr(l_lst[i], "%")) {
 			//進捗バー
 			int prg = get_tkn(l_lst[i], '%').ToIntDef(-1);
 			if (prg>=0) {
@@ -275,8 +281,9 @@ void __fastcall TTaskManDlg::TaskGridKeyDown(TObject *Sender, WORD &Key, TShiftS
 void __fastcall TTaskManDlg::CancelTaskActionExecute(TObject *Sender)
 {
 	TTaskThread *tp = get_CurTask();
-	if (tp)
+	if (tp) {
 		tp->TaskCancel = true;
+	}
 	else {
 		int idx = TaskGrid->Row - get_MaxTaskCount();
 		if (idx>=0 && idx<TaskReserveList->Count) {

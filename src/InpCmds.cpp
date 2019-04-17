@@ -218,7 +218,7 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		int p = pos_r_q_colon(kwd); 
 		UnicodeString wd = (p>0)? kwd.SubString(p + 1, kwd.Length() - p) : kwd;
 		//パラメータなしならコマンドごと削除
-		if (!contains_s(wd, _T('_'))) {
+		if (!ContainsStr(wd, "_")) {
 			cp_inp->Text	  = (p>1)? kwd.SubString(1, p - 1) : EmptyStr;
 			cp_inp->SelLength = 0;
 			cp_inp->SelStart  = cp_inp->Text.Length();
@@ -371,7 +371,7 @@ void __fastcall TInpCmdsDlg::Filter()
 
 	std::unique_ptr<TStringList> lst(new TStringList());
 	//パラメータ
-	if (contains_s(kwd, _T('_'))) {
+	if (ContainsStr(kwd, "_")) {
 		get_PrmList(get_CmdStr(kwd), ScrModeIdStr.Pos(IdChar) - 1, lst.get());
 		kwd = get_tkn_r(kwd, '_');
 		SubComboBox->Tag = 1;
