@@ -380,7 +380,7 @@ HRESULT __stdcall TDropTarget::Drop(IDataObject *pDataObj, DWORD grfKeyState, PO
 			fnam.SetLength(MAX_PATH);
 			int len = ::DragQueryFile(dp, i, fnam.c_str(),fnam.Length());
 			fnam.SetLength(len);
-			if (faDirectory & FileGetAttr(fnam)) fnam.UCAT_T("\\");
+			if (faDirectory & FileGetAttr(fnam)) fnam = IncludeTrailingPathDelimiter(fnam);
 			DroppedList->Add(fnam);
 		}
 		::GlobalUnlock(medium.hGlobal);
@@ -800,7 +800,7 @@ UnicodeString UserShell::ShowContextMenu(
 					ici.hwnd		 = hWnd;
 					ici.lpVerb		 = (LPCSTR)MAKEINTRESOURCE(nId - 1);
 					ici.nShow		 = SW_SHOW;
-					if (FAILED(pCM->InvokeCommand(&ici))) ret_str.USET_T("ERROR");
+					if (FAILED(pCM->InvokeCommand(&ici))) ret_str = "ERROR";
 				}
 			}
 
@@ -810,7 +810,7 @@ UnicodeString UserShell::ShowContextMenu(
 			for (int i=0; i<m_lst->Count; i++) ::DestroyMenu((HMENU)m_lst->Items[i]);
 		}
 		catch (...) {
-			ret_str.USET_T("ERROR");
+			ret_str = "ERROR";
 		}
 	}
 	__finally {
@@ -922,7 +922,7 @@ UnicodeString UserShell::DriveContextMenu(
 					ici.hwnd		 = hWnd;
 					ici.lpVerb		 = (LPCSTR)MAKEINTRESOURCE(nId - 1);
 					ici.nShow		 = SW_SHOW;
-					if (FAILED(pCM->InvokeCommand(&ici))) ret_str.USET_T("ERROR");
+					if (FAILED(pCM->InvokeCommand(&ici))) ret_str = "ERROR";
 				}
 			}
 
@@ -932,7 +932,7 @@ UnicodeString UserShell::DriveContextMenu(
 			::DestroyMenu(hMenu);
 		}
 		catch (...) {
-			ret_str.USET_T("ERROR");
+			ret_str = "ERROR";
 		}
 	}
 	__finally {
@@ -1027,7 +1027,7 @@ bool UserShell::CreateShortCut(UnicodeString fnam, UnicodeString target, Unicode
 
 	try {
 		if (wdir.IsEmpty() && !::PathIsDirectory(target.c_str())) wdir = ExtractFilePath(target);
-		if (desc.IsEmpty()) desc = ExtractFileName(target).UCAT_T("へのショートカット");
+		if (desc.IsEmpty()) desc = ExtractFileName(target) + "へのショートカット";
 
 		TComInterface<IShellLink>   psl;
 		TComInterface<IPersistFile> ppf;
@@ -1093,7 +1093,7 @@ UnicodeString UserShell::get_PropInf(
 					StrRetToBuf(&details.str, NULL, szBuf, sizeof(szBuf)/sizeof(_TCHAR));
 					typ_str = szBuf;
 					if (USAME_TI(typ_str, "未指定")) {
-						if (USAME_TI(ExtractFileExt(fnam), ".ts")) typ_str.USET_T("ビデオ");
+						if (USAME_TI(ExtractFileExt(fnam), ".ts")) typ_str = "ビデオ";
 					}
 				}
 			}
@@ -1102,24 +1102,24 @@ UnicodeString UserShell::get_PropInf(
 				//「認識された種類」にしたがって取得項目を選択
 				switch (idx_of_word_i(_T("ビデオ|オーディオ|イメージ|アプリケーション|ドキュメント|未指定"), typ_str)) {
 				case 0:
-					idx_str.USET_T("タイトル,長さ,フレーム幅,フレーム高,$R,データ速度,総ビット レート,フレーム率,$A,著作権");
+					idx_str = "タイトル,長さ,フレーム幅,フレーム高,$R,データ速度,総ビット レート,フレーム率,$A,著作権";
 					break;
 				case 1:
-					idx_str.USET_T("長さ,ビット レート,著作権");
+					idx_str = "長さ,ビット レート,著作権";
 					break;
 				case 2:
-					idx_str.USET_T("ビットの深さ");
-					if (!USAME_TI(ExtractFileExt(fnam), ".png")) idx_str.UCAT_T(",水平方向の解像度,垂直方向の解像度");
-					idx_str.UCAT_T(",プログラム名");
+					idx_str = "ビットの深さ";
+					if (!USAME_TI(ExtractFileExt(fnam), ".png")) idx_str += ",水平方向の解像度,垂直方向の解像度";
+					idx_str += ",プログラム名";
 					break;
 				case 3:
-					idx_str.USET_T("ファイルの説明,ファイル バージョン,製品名,製品バージョン,著作権,ファイル名");
+					idx_str = "ファイルの説明,ファイル バージョン,製品名,製品バージョン,著作権,ファイル名";
 					break;
 				case 4:
-					idx_str.USET_T("タイトル,作成者,会社,プログラム名");
+					idx_str = "タイトル,作成者,会社,プログラム名";
 					break;
 				case 5:
-					idx_str.USET_T("タイトル,作成者,会社,著作権,商標,ファイル バージョン");
+					idx_str = "タイトル,作成者,会社,著作権,商標,ファイル バージョン";
 					break;
 				}
 			}
@@ -1172,9 +1172,9 @@ UnicodeString UserShell::get_PropInf(
 					if (FAILED(targetFolder->GetDetailsEx(object, &psid, &varValue))) Abort();
 					int v = varValue.lVal;
 					if (v>0) {
-						ustr.USET_T("bps");
+						ustr = "bps";
 						if (v>1000) { v /= 1000; ustr.Insert("k" ,1); }
-						if (!vstr.IsEmpty()) vstr.UCAT_T(" ");
+						if (!vstr.IsEmpty()) vstr += " ";
 						vstr.cat_sprintf(_T("%u%s"), v, ustr.c_str());
 					}
 					//サンプルレート
@@ -1182,7 +1182,7 @@ UnicodeString UserShell::get_PropInf(
 					if (FAILED(targetFolder->GetDetailsEx(object, &psid, &varValue))) Abort();
 					v = varValue.lVal;
 					if (v>0) {
-						ustr.USET_T("Hz");
+						ustr = "Hz";
 						if (v>1000) { v /= 1000; ustr.Insert("k" ,1); }
 						vstr.cat_sprintf(_T(" %u%s"), v, ustr.c_str());
 					}
@@ -1190,8 +1190,8 @@ UnicodeString UserShell::get_PropInf(
 					psid.pid = 7;
 					if (FAILED(targetFolder->GetDetailsEx(object, &psid, &varValue))) Abort();
 					switch (varValue.lVal) {
-					case 1:  vstr.UCAT_T(" モノ");		break;
-					case 2:  vstr.UCAT_T(" ステレオ");	break;
+					case 1:  vstr += " モノ";		break;
+					case 2:  vstr += " ステレオ";	break;
 					default: vstr.cat_sprintf(_T(" %uch"), varValue.lVal);
 					}
 
@@ -1369,10 +1369,10 @@ UnicodeString UserShell::get_FileTypeStr(UnicodeString fnam)
 		}
 	}
 	else if (USAME_TI(get_tkn(ExtractFileName(fnam), '_'), ".nyanfi")) {
-		typ_str.USET_T(".nyanfi ファイル");
+		typ_str = ".nyanfi ファイル";
 	}
 	else {
-		typ_str = ExtractFileName(fnam).UCAT_T(" ファイル");
+		typ_str = ExtractFileName(fnam) + " ファイル";
 	}
 
 	return typ_str;

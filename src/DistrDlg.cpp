@@ -399,7 +399,7 @@ void __fastcall TDistributionDlg::UpdatePreview(bool upd)
 	//状態表示
 	tmp.sprintf(_T("マッチ:%u/%u (%u Dirs/ %u Files"), m_cnt, ItemList->Count, d_cnt, f_cnt);
 	if (SkipCount>0) tmp.cat_sprintf(_T("  Skip:%u"), SkipCount);
-	tmp.UCAT_T(")");
+	tmp += ")";
 	SttPrgBar->End(tmp);
 
 	cursor_Default();
@@ -584,7 +584,8 @@ void __fastcall TDistributionDlg::PrvListBoxDrawItem(TWinControl *Control, int I
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	UnicodeString fnam = split_pre_tab(lbuf);
-	fnam = ends_PathDlmtr(fnam)? UAPP_T(ExtractFileName(ExcludeTrailingPathDelimiter(fnam)), "\\") : ExtractFileName(fnam);
+	fnam = ends_PathDlmtr(fnam)? IncludeTrailingPathDelimiter(ExtractFileName(ExcludeTrailingPathDelimiter(fnam)))
+							   : ExtractFileName(fnam);
 	UnicodeString dnam = lbuf;
 	UnicodeString anam = dnam.IsEmpty()? OppPath : to_absolute_name(dnam, OppPath);
 

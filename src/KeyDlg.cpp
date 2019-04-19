@@ -90,7 +90,7 @@ void __fastcall TKeyListDlg::KeyTabControlChange(TObject *Sender)
 {
 	//該当する設定を抽出
 	std::unique_ptr<TStringList> cmd_lst(new TStringList());
-	UnicodeString id_str = ScrModeIdStr.SubString(KeyTabControl->TabIndex + 1, 1).UCAT_T(":");
+	UnicodeString id_str = ScrModeIdStr.SubString(KeyTabControl->TabIndex + 1, 1) + ":";
 	for (int i=0; i<CmdSetList->Count; i++) {
 		UnicodeString lbuf = CmdSetList->Strings[i];
 		if (StartsText(id_str, lbuf)) cmd_lst->Add(lbuf);
@@ -116,8 +116,8 @@ void __fastcall TKeyListDlg::KeyTabControlChange(TObject *Sender)
 	}
 
 	if (KeyTabControl->TabIndex==0) {
-		CurList->Add(UAPP_T(IniSeaShift, "A～Z,＼=InitialSearch"));
-		if (IniSeaByNum || IniSeaBySign) CurList->Add(UAPP_T(IniSeaShift, "0～9=InitialSearch"));
+		CurList->Add(IniSeaShift + "A～Z,＼=InitialSearch");
+		if (IniSeaByNum || IniSeaBySign) CurList->Add(IniSeaShift + "0～9=InitialSearch");
 	}
 
 	//未登録コマンドを追加
@@ -489,11 +489,11 @@ void __fastcall TKeyListDlg::HelpCmdActionExecute(TObject *Sender)
 		UnicodeString kwd = get_CmdStr(CurList->ValueFromIndex[idx]);
 		UnicodeString topic;
 		switch (KeyTabControl->TabIndex) {
-		case  1: topic.UCAT_T(HELPTOPIC_IS);	break;	//テキストビュアー
-		case  2: topic.UCAT_T(HELPTOPIC_TV);	break;	//テキストビュアー
-		case  3: topic.UCAT_T(HELPTOPIC_IV);	break;	//イメージビュアー
-		case  4: topic.UCAT_T(HELPTOPIC_CILW);	break;	//ログ
-		default: topic.UCAT_T(HELPTOPIC_FL);	break;	//ファイラー
+		case  1: topic = HELPTOPIC_IS;		break;	//テキストビュアー
+		case  2: topic = HELPTOPIC_TV;		break;	//テキストビュアー
+		case  3: topic = HELPTOPIC_IV;		break;	//イメージビュアー
+		case  4: topic = HELPTOPIC_CILW;	break;	//ログ
+		default: topic = HELPTOPIC_FL;		break;	//ファイラー
 		}
 
 		if (topic.Pos('#')==0 && !kwd.IsEmpty()) topic.cat_sprintf(_T("#%s"), kwd.c_str());
@@ -519,7 +519,7 @@ void __fastcall TKeyListDlg::HelpCmdActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::OptionItemClick(TObject *Sender)
 {
-	CommandStr.USET_T("OptionDlg_KY");
+	CommandStr	= "OptionDlg_KY";
 	ModalResult = mrOk;
 }
 

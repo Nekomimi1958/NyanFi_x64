@@ -167,8 +167,7 @@ void __fastcall TBackupDlg::MakeNbtActionUpdate(TObject *Sender)
 void __fastcall TBackupDlg::OkButtonClick(TObject *Sender)
 {
 	if (SureCheckBox->Checked) {
-		UnicodeString msg;
-		msg.USET_T("バックアップを開始しますか?\r\n\r\n");
+		UnicodeString msg = "バックアップを開始しますか?\r\n\r\n";
 		msg.cat_sprintf(_T("バックアップ元: %s\r\n"), SrcDirEdit->Text.c_str());
 		msg.cat_sprintf(_T("バックアップ先: %s\r\n"), DstDirEdit->Text.c_str());
 		msg.cat_sprintf(_T("設定: %s"), SetupComboBox->Text.c_str());

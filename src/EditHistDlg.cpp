@@ -145,19 +145,19 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	UnicodeString tit;
 	EditHistHeader->Sections->Clear();
 	if (isRecent) {
-		tit.USET_T("最近使ったファイル一覧");
+		tit = "最近使ったファイル一覧";
 		for (int i=0; i<gp->ColCount+1; i++) EditHistHeader->Sections->Add();
 		InitializeListHeader(EditHistHeader, _T(" |名前|種類|更新日時|場所"));
 		EditHistGrid->PopupMenu = RecentPopupMenu;
 	}
 	else if (isMark) {
-		tit.USET_T("栞マーク一覧");
+		tit = "栞マーク一覧";
 		for (int i=0; i<gp->ColCount+1; i++) EditHistHeader->Sections->Add();
 		InitializeListHeader(EditHistHeader, _T(" |名前|種類|更新日時|場所|メモ|設定日時"));
 		EditHistGrid->PopupMenu = MarkPopupMenu;
 	}
 	else if (isRepo) {
-		tit.USET_T("リポジトリ一覧");
+		tit = "リポジトリ一覧";
 		for (int i=0; i<gp->ColCount+1; i++) EditHistHeader->Sections->Add();
 		InitializeListHeader(EditHistHeader, _T(" |名前|.git/index 日時|場所|コミット|状態"));
 		EditHistGrid->PopupMenu = RepoPopupMenu;

@@ -54,12 +54,12 @@ void __fastcall TGraphForm::FormShow(TObject *Sender)
 		if (CsvCol==-1) CsvCol = 0;
 		if (CsvCol<0 || CsvCol>=top_buf.Length) Abort();
 
-		UnicodeString tmp = UnicodeString(IsCSV? "CSV" : "TSV").UCAT_T("項目のグラフ - [");
+		UnicodeString tmp = UnicodeString(IsCSV? "CSV" : "TSV") + "項目のグラフ - [";
 		if (TopIsHeader)
 			tmp += IsCSV? get_csv_item(top_str, CsvCol) : get_tsv_item(top_str, CsvCol);
 		else
 			tmp.cat_sprintf(_T("項目%u"), CsvCol + 1);
-		Caption = tmp.UCAT_T("]");
+		Caption = tmp + "]";
 
 		long double total = 0.0;
 		f_Width = 0;

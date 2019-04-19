@@ -232,15 +232,15 @@ UnicodeString __fastcall TTxtViewer::get_DispLine(
 		if (adr<BinarySize) {
 			UnicodeString abuf = " ";	//ASCII表示
 			for (int i=0; i<16; i++,adr++) {
-				if (i==8) lbuf.UCAT_T(" ");
+				if (i==8) lbuf += " ";
 				if (i>=b0 && i<=b1 && adr<BinarySize) {
 					unsigned char c = MMF->Bytes[adr];
 					lbuf.cat_sprintf(_T("%02X "), c);
 					abuf.cat_sprintf(_T("%c"), isprint(c)? c : '.');
 				}
 				else {
-					lbuf.UCAT_T("   ");
-					abuf.UCAT_T(" ");
+					lbuf += "   ";
+					abuf += " ";
 				}
 			}
 			lbuf += abuf;
@@ -457,7 +457,7 @@ UnicodeString __fastcall TTxtViewer::ArrayToTsv(TStringDynArray lst)
 {
 	UnicodeString ret_str;
 	for (int i=0; i<lst.Length; i++) {
-		if (i>0) ret_str.UCAT_T("\t");
+		if (i>0) ret_str += "\t";
 		ret_str += lst[i];
 	}
 	return ret_str;
@@ -526,7 +526,7 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 		UnicodeString lbuf = txt_lst->Strings[i];
 		UnicodeString nbuf;
 		for (int j=0; j<c_cnt; j++) {
-			if (j>0) nbuf.UCAT_T("  ");
+			if (j>0) nbuf += "  ";
 			UnicodeString s = split_pre_tab(lbuf);
 			int dlen = FixWdList[j] - str_len_half(s);
 			//省略
@@ -534,7 +534,7 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 				int s_w = FixWdList[j] - 2;
 				for (int k=1; k<=s.Length(); k++) {
 					if (str_len_half(s.SubString(1, k)) > s_w) {
-						s = s.SubString(1, k - 1).UCAT_T("…");
+						s = s.SubString(1, k - 1) + "…";
 						break;
 					}
 				}
@@ -603,43 +603,43 @@ void __fastcall TTxtViewer::UpdateScr(
 	HeadlinePtn = EmptyStr;
 	if (EmpHeadline && !isBinary) {
 		if (test_FileExt(fext, _T(".bat.cmd.qbt")))
-			HeadlinePtn.USET_T("^:[^:]+");
+			HeadlinePtn = "^:[^:]+";
 		else if (test_FileExt(fext, _T(".eml")))
-			HeadlinePtn.USET_T("^Subject:");
+			HeadlinePtn = "^Subject:";
 		else if (test_FileExt(fext, _T(".hsp")))
-			HeadlinePtn.USET_T("^\\*\\w+");
+			HeadlinePtn = "^\\*\\w+";
 		else if (test_FileExt(fext, _T(".md")))
-			HeadlinePtn.USET_T("^#+");
+			HeadlinePtn = "^#+";
 		else if (isAozora)
-			HeadlinePtn.USET_T("［＃.*?(大|中)見出し］|^　*?([０-９]+|[一二三四五六七八九十壱弐参拾百〇]+)$");
+			HeadlinePtn = "［＃.*?(大|中)見出し］|^　*?([０-９]+|[一二三四五六七八九十壱弐参拾百〇]+)$";
 		else if (isAwstats)
-			HeadlinePtn.USET_T("^BEGIN_.+?");
+			HeadlinePtn = "^BEGIN_.+?";
 		else if (isLog)
-			HeadlinePtn.USET_T("^.>\\d{2}:\\d{2}:\\d{2}\\s(NyanFi|.+(開始|接続))");
+			HeadlinePtn = "^.>\\d{2}:\\d{2}:\\d{2}\\s(NyanFi|.+(開始|接続))";
 		else if (test_HtmlExt(fext)) {
 			if (isHtm2Txt) {
 				if (ToMarkdown) {
-					HeadlinePtn.USET_T("^#+\\s");
+					HeadlinePtn = "^#+\\s";
 				}
 				else if (!HtmHdrStr.IsEmpty()) {
-					HeadlinePtn.USET_T("^(");
+					HeadlinePtn = "^(";
 					UnicodeString hbuf = HtmHdrStr;
 					for (int i=0; i<6; i++) {
 						UnicodeString hc = split_tkn(hbuf, ';');
 						if (!hc.IsEmpty()) {
-							if (i>0) HeadlinePtn.UCAT_T("|");
+							if (i>0) HeadlinePtn += "|";
 							HeadlinePtn += hc;
 						}
 					}
-					HeadlinePtn.UCAT_T(").+");
+					HeadlinePtn += ").+";
 				}
 			}
 			else {
-				HeadlinePtn.USET_T("<[hH][1-6]");
+				HeadlinePtn = "<[hH][1-6]";
 			}
 		}
 		else if (isIniFmt)
-			HeadlinePtn.USET_T("^\\[.+?\\]");
+			HeadlinePtn = "^\\[.+?\\]";
 		else
 			HeadlinePtn = HeadlineList->Values[get_tkn_r(fext, '.').LowerCase()];
 
@@ -753,7 +753,7 @@ void __fastcall TTxtViewer::UpdateScr(
 			//引用符
 			if (EmpStrings) {
 				QuotStr = GetDefQuotChars(fext, useEsc, is_xml, isIniFmt, isHtm2Txt);
-				if (test_FileExt(fext, FEXT_C_SH _T(".idl.cs.hs.js.jsx.java.vhd"))) CharPtn.USET_T("'\\\\?.'");
+				if (test_FileExt(fext, FEXT_C_SH _T(".idl.cs.hs.js.jsx.java.vhd"))) CharPtn = "'\\\\?.'";
 			}
 
 			SetColor();
@@ -762,9 +762,9 @@ void __fastcall TTxtViewer::UpdateScr(
 		//ルビ
 		if (EmpRuby) {
 			if (isAozora)
-				RubyPtn.USET_T("《.*?》|｜");
+				RubyPtn = "《.*?》|｜";
 			else if (test_HtmlExt(fext) && isHtm2Txt)
-				RubyPtn.USET_T("(\\(|（)[ぁ-んァ-ヶ]+(\\)|）)");
+				RubyPtn = "(\\(|（)[ぁ-んァ-ヶ]+(\\)|）)";
 		}
 	}
 
@@ -776,7 +776,7 @@ void __fastcall TTxtViewer::UpdateScr(
 	EmBgC[0] = clNone;
 	EmFgC[0] = color_Reserved;
 	//1									URL
-	EmPtn[1].USET_T("(" URL_MATCH_PTN ")|(" MAIL_MATCH_PTN ")");
+	EmPtn[1] = "(" URL_MATCH_PTN ")|(" MAIL_MATCH_PTN ")";
 	EmBgC[1] = clNone;
 	EmFgC[1] = color_URL;
 	//2									検索強調語
@@ -786,7 +786,7 @@ void __fastcall TTxtViewer::UpdateScr(
 
 	//3
 	if (isLog && UserHighlight->CurSection.IsEmpty()) {	//ディレクトリ
-		EmPtn[3].USET_T("(([a-zA-Z]:|\\\\)\\\\([^/*?\"<>|]+\\\\)*)|(\\[.*?\\])");
+		EmPtn[3] = "(([a-zA-Z]:|\\\\)\\\\([^/*?\"<>|]+\\\\)*)|(\\[.*?\\])";
 		EmFgC[3] = color_Folder;
 	}
 	else if (!CharPtn.IsEmpty()) {		//文字
@@ -813,7 +813,7 @@ void __fastcall TTxtViewer::UpdateScr(
 		EmFgC[4] = color_Numeric;
 	}
 	else if (isLog) {					//ログのデバッグ情報
-		EmPtn[4].USET_T("^.>       !( .+)?");
+		EmPtn[4] = "^.>       !( .+)?";
 		EmFgC[4] = AdjustColor(color_fgView, 96);
 	}
 	else {								//ルビ
@@ -828,11 +828,11 @@ void __fastcall TTxtViewer::UpdateScr(
 		EmFgC[5] = color_fgEmpBin1;
 	}
 	else if (isLog && UserHighlight->CurSection.IsEmpty()) {	//ログのエラー等
-		EmPtn[5].USET_T("(^.>([ECW]|(     [45]\\d{2})) .*)|(\\b(ERR|NG):\\d+)");
+		EmPtn[5] = "(^.>([ECW]|(     [45]\\d{2})) .*)|(\\b(ERR|NG):\\d+)";
 		EmFgC[5] = color_Error;
 	}
 	else if (isAozora) {				//青空文庫
-		EmPtn[5].USET_T("※|［＃.*?］");
+		EmPtn[5] = "※|［＃.*?］";
 		EmFgC[5] = color_Comment;
 	}
 	else {								//ユーザ定義キーワード
@@ -1169,7 +1169,7 @@ void __fastcall TTxtViewer::UpdateScr(
 
 					UnicodeString sbuf = tmp_buf.SubString(1, n);	tmp_buf.Delete(1, n);
 					if (ind_n2>0 && !tmp_buf.IsEmpty()) tmp_buf.Insert(StringOfChar(_T('　'), ind_n2), 1);
-					if (tmp_buf.IsEmpty()) sbuf.UCAT_T("\n");
+					if (tmp_buf.IsEmpty()) sbuf += "\n";
 					line_rec *lp = AddDispLine(sbuf, org_lno, idx++);
 
 					//先頭が文字列かを設定
@@ -1216,7 +1216,7 @@ void __fastcall TTxtViewer::AssignText(
 	if (!ViewBox) return;
 
 	isText = true;
-	isLog  = !isClip && (FileName.IsEmpty() || str_match(UAPP_T(ExePath, "tasklog*.txt"), FileName));
+	isLog  = !isClip && (FileName.IsEmpty() || str_match(ExePath + "tasklog*.txt", FileName));
 	isXDoc2Txt = UseXd2tx && xd2tx_TestExt(get_extension(FileName));
 
 	if (lst) {
@@ -2416,18 +2416,18 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 		SttHeader->Panels->Items[2]->Text = !isXDoc2Txt? LineBreakStr : UnicodeString("--");
 
 		//種別
-		if		(isXDoc2Txt)							sttstr.USET_T("XD2TX");
-		else if (isBinary)								sttstr.USET_T("BINARY");
+		if		(isXDoc2Txt)							sttstr = "XD2TX";
+		else if (isBinary)								sttstr = "BINARY";
 		else if (test_HtmlExt(fext))					sttstr.sprintf(_T("%s"), isHtm2Txt?  _T("TEXT") : _T("SOURCE"));
 		else if (isCSV) {
 			sttstr.sprintf(_T("%s"), isTSV? _T("TSV") : _T("CSV"));
 			if (isFixedLen) sttstr.Insert("FIXED - ", 1);
 		}
-		else if (test_FileExt(fext, _T(".rtf.wri")))	sttstr.USET_T("PLAIN");
-		else if (isAozora)								sttstr.USET_T("青空文庫");
-		else if (isLog)									sttstr.USET_T("LOG");
-		else if (isTail)								sttstr.USET_T("TAIL");
-		else											sttstr.USET_T("TEXT");
+		else if (test_FileExt(fext, _T(".rtf.wri")))	sttstr = "PLAIN";
+		else if (isAozora)								sttstr = "青空文庫";
+		else if (isLog)									sttstr = "LOG";
+		else if (isTail)								sttstr = "TAIL";
+		else											sttstr = "TEXT";
 
 		//ユーザ書式セクション(デバッグ表示)
 		if (LogDebugInf) {
@@ -3190,7 +3190,7 @@ UnicodeString __fastcall TTxtViewer::get_SelText(
 					if (w>wp1) break;
 					if (w>wp0) sbuf.cat_sprintf(_T("%c"), c);
 				}
-				if (!has_CR(sbuf)) sbuf.UCAT_T("\r\n");
+				if (!has_CR(sbuf)) sbuf += "\r\n";
 				sel_str += sbuf;
 			}
 		}
@@ -3209,7 +3209,7 @@ UnicodeString __fastcall TTxtViewer::get_SelText(
 					if (sp1.x<lbuf.Length()) lbuf = lbuf.SubString(1, sp1.x);
 				}
 				sel_str += ReplaceStr(lbuf, "\n", "\r\n");
-				if (isBinary) sel_str.UCAT_T("\r\n");
+				if (isBinary) sel_str += "\r\n";
 			}
 		}
 	}
@@ -4059,14 +4059,14 @@ void __fastcall TTxtViewer::GetDumpList(TStringList *lst)
 	int adr_len  = get_AddrStr(TopAddress + sp1.y*16).Length();
 	UnicodeString hdstr;
 	hdstr.sprintf(_T("%-*s"), adr_len + 2, _T("ADDRESS"));
-	hdstr.UCAT_T("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F  0123456789ABCDEF");
+	hdstr += "+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F  0123456789ABCDEF";
 	lst->Add(hdstr);
 	lst->Add(StringOfChar(_T('-'), adr_len + 68));
 
 	for (int i=sp0.y; i<=sp1.y; i++) {
 		UnicodeString lbuf = get_DispLine(i, (i==sp0.y)? ofs0 : 0,  (i==sp1.y)? ofs1 : 15);
 		if (lbuf.IsEmpty()) break;
-		lbuf.Insert(get_AddrStr(TopAddress + i*16, adr_len).UCAT_T("  "), 1);
+		lbuf.Insert(get_AddrStr(TopAddress + i*16, adr_len) + "  ", 1);
 		lst->Add(lbuf);
 	}
 	cursor_Default();
@@ -4412,7 +4412,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 			int lmt = extract_int_def(prm);
 			if (lmt>0) {
 				ViewFixedLimit = std::max(lmt, 4);
-				prm.USET_T("ON");
+				prm = "ON";
 			}
 			SetToggleSw(isFixedLen, prm);
 			AssignText(NULL, cur_lno);

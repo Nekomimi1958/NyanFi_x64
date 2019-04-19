@@ -125,7 +125,7 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 
 	//ユーザ定義一覧
 	if (ListMode==1) {
-		cap_str.USET_T("ユーザ定義文字列一覧");
+		cap_str = "ユーザ定義文字列一覧";
 		UserDefPanel->Visible	  = true;
 		NameOnlyCheckBox->Visible = false;
 		if (UserDefComboBox->Text.IsEmpty()) {
@@ -141,7 +141,7 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 	}
 	//マーク行一覧
 	else if (ListMode==2) {
-		cap_str.USET_T("マーク行一覧");
+		cap_str = "マーク行一覧";
 		UserDefPanel->Visible	  = false;
 		NameOnlyCheckBox->Visible = false;
 
@@ -162,7 +162,7 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 	}
 	//関数一覧
 	else {
-		cap_str.USET_T("関数一覧");
+		cap_str = "関数一覧";
 		UserDefPanel->Visible	  = false;
 		NameOnlyCheckBox->Visible = true;
 
@@ -187,21 +187,16 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 		//関数以外
 		if (fnc_ptn.IsEmpty()) {
 			if (test_FileExt(fext, _T(".bat.cmd.qbt"))) {
-				fnc_ptn.USET_T("^:[^:]+");
-				cap_str.USET_T("ラベル一覧");
+				fnc_ptn = "^:[^:]+";
+				cap_str = "ラベル一覧";
 			}
 			else if (TxtViewer->isIniFmt) {
-				fnc_ptn.USET_T("^\\[.+\\]");
-				cap_str.USET_T("セクション一覧");
+				fnc_ptn = "^\\[.+\\]";
+				cap_str = "セクション一覧";
 			}
 			else if (!TxtViewer->HeadlinePtn.IsEmpty()) {
 				fnc_ptn = TxtViewer->HeadlinePtn;
-				if (test_FileExt(fext, _T(".eml")))
-					cap_str.USET_T("件名一覧");
-				else if (TxtViewer->isLog)
-					cap_str.USET_T("タスク一覧");
-				else
-					cap_str.USET_T("見出し一覧");
+				cap_str = test_FileExt(fext, _T(".eml"))? "件名一覧" : TxtViewer->isLog? "タスク一覧" : "見出し一覧";
 			}
 		}
 

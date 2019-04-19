@@ -26,7 +26,14 @@ __fastcall TCharInfoForm::TCharInfoForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TCharInfoForm::FormShow(TObject *Sender)
 {
+	FontNamePanel->Font->Assign(DialogFont);
+	FontNamePanel->Font->Size = 8;
+	FontNamePanel->Height = abs(FontNamePanel->Font->Height) + Scaled4;
+
+	Splitter1->MinSize = FontNamePanel->Height * 2;
+
 	IniFile->LoadPosInfo(this);
+	SamplePanel->Height = std::max(IniFile->ReadIntGen( _T("CharInfoCharHeight"), 180), Splitter1->MinSize);
 
 	SetToolWinBorder(this);
 
@@ -34,8 +41,9 @@ void __fastcall TCharInfoForm::FormShow(TObject *Sender)
 	lp->Color = col_bgInf;
 	lp->Font->Assign(FileInfFont);
 	set_ListBoxItemHi(lp);
-	ClientHeight = CharPanel->Height + FontNamePanel->Height + lp->ItemHeight * 8;
-	CharPanel->Color = scl_Window;
+	ClientHeight = SamplePanel->Height + lp->ItemHeight * 8;
+
+	Splitter1->Color = col_Splitter;
 
 	SetCharFont();
 }
@@ -43,15 +51,27 @@ void __fastcall TCharInfoForm::FormShow(TObject *Sender)
 void __fastcall TCharInfoForm::FormHide(TObject *Sender)
 {
 	IniFile->SavePosInfo(this);
+
+	IniFile->WriteIntGen(_T("CharInfoCharHeight"),	SamplePanel->Height);
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TCharInfoForm::Splitter1Moved(TObject *Sender)
+{
+	SetCharFont();
+	ClientHeight = SamplePanel->Height + InfoListBox->ItemHeight * 8;
+}
 //---------------------------------------------------------------------------
 void __fastcall TCharInfoForm::SetCharFont()
 {
 	CharPanel->Font->Assign(CharInfFont);
-	CharPanel->Font->Height = CharPanel->ClientHeight - 32;
-	CharPanel->Font->Color  = scl_WindowText;
-	FontNamePanel->Caption  = CharInfFont->Name;
+	CharPanel->Font->Height = CharPanel->ClientHeight * 4 / 5;
+	CharPanel->Font->Color	= col_fgChInf;
+	CharPanel->Color		= col_bgChInf;
+
+	FontNamePanel->Font->Color = col_fgChInf;
+	FontNamePanel->Color	   = col_bgChInf;
+	FontNamePanel->Caption	   = CharInfFont->Name;
 }
 
 //---------------------------------------------------------------------------
@@ -79,7 +99,7 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 
 		//ShiftJIS
 		UnicodeString cd_str, kt_str, tp_str;
-		cd_str.USET_T(" Shift_JIS: ");
+		cd_str = " Shift_JIS: ";
 		if (!nc && !is_cr) {
 			std::unique_ptr<TEncoding> enc_sjis(TEncoding::GetEncoding(932));
 			DynamicArray<System::Byte> buf_sj = enc_sjis->GetBytes(c);
@@ -88,9 +108,9 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 		i_lst->Add(cd_str);
 
 		//JIS
-		cd_str.USET_T("       JIS: ");
-		kt_str.USET_T("      区点: ");
-		tp_str.USET_T("      種類: ");
+		cd_str = "       JIS: ";
+		kt_str = "      区点: ";
+		tp_str = "      種類: ";
 
 		if (!nc && !is_cr) {
 			std::unique_ptr<TEncoding> enc_jis(TEncoding::GetEncoding(50220));
@@ -101,27 +121,27 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 				int k = byt_jis[3] - 32;	//区
 				int t = byt_jis[4] - 32;	//点
 				kt_str.cat_sprintf(_T("%02u-%02u "), k, t);
-				if		(k>=16 && k<=47) tp_str.UCAT_T("第一水準漢字");
-				else if (k>=48 && k<=84) tp_str.UCAT_T("第二水準漢字");
+				if		(k>=16 && k<=47) tp_str += "第一水準漢字";
+				else if (k>=48 && k<=84) tp_str += "第二水準漢字";
 				else tp_str += get_word_i_idx(
 						_T("|記号|記号|英数字|ひらがな|カタカナ|ギリシア文字|キリル文字|罫線素片"), k);
 			}
 			else if (byt_jis.Length==9 && byt_jis[3]=='D') {
 				cd_str.cat_sprintf(_T("%02X%02X (X0212)"), byt_jis[4], byt_jis[5]);
-				tp_str.UCAT_T("補助漢字");
+				tp_str += "補助漢字";
 			}
 			//半角
 			else if (byt_jis.Length==1) {
 				unsigned char c1 = byt_jis[0];
 				cd_str.cat_sprintf(_T("%02X"), c1);
 				if (c1<=0x1f) {
-					tp_str.UCAT_T("制御文字");
-					if		(c1=='\t') tp_str.UCAT_T("  TAB");
-					else if (c1=='\a') tp_str.UCAT_T("  BEL");
-					else if (c1=='\f') tp_str.UCAT_T("  FF");
+					tp_str += "制御文字";
+					if		(c1=='\t') tp_str += "  TAB";
+					else if (c1=='\a') tp_str += "  BEL";
+					else if (c1=='\f') tp_str += "  FF";
 				}
 				else if (c1==0x20) {
-					tp_str.UCAT_T("半角空白");
+					tp_str += "半角空白";
 				}
 				else if (c1>=0x21 && c1<=0x7e) {
 					tp_str.cat_sprintf(_T("%s"), isalnum(c1)? _T("半角英数字") : _T("半角記号"));
@@ -130,7 +150,7 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 		}
 		//改行
 		else if (is_cr) {
-			tp_str.UCAT_T("改行");
+			tp_str += "改行";
 		}
 		//Unicode 制御文字
 		else {
@@ -145,14 +165,14 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 			if (!s.IsEmpty()) tp_str.cat_sprintf(_T("制御文字 %s"), s.c_str());
 		}
 
-		if (c.Length()==2) tp_str.UCAT_T("サロゲートペア");
+		if (c.Length()==2) tp_str += "サロゲートペア";
 
 		i_lst->Add(cd_str);
 		i_lst->Add(kt_str);
 		i_lst->Add(tp_str);
 
 		//EUC-JP
-		cd_str.USET_T("    EUC-JP: ");
+		cd_str = "    EUC-JP: ";
 		if (!nc && !is_cr) {
 			std::unique_ptr<TEncoding> enc_euc(TEncoding::GetEncoding(20932));
 			DynamicArray<System::Byte> buf_euc = enc_euc->GetBytes(c);
@@ -161,7 +181,7 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 		i_lst->Add(cd_str);
 
 		//Unicode
-		cd_str.USET_T("   Unicode: ");
+		cd_str = "   Unicode: ";
 		if (c.Length()==2) {
 			//サロゲートペア
 			unsigned int ld = (unsigned int)c[1];
@@ -178,7 +198,7 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 		i_lst->Add(cd_str);
 
 		//UTF-8
-		cd_str.USET_T("     UTF-8: ");
+		cd_str = "     UTF-8: ";
 		if (!is_cr) {
 			std::unique_ptr<TEncoding> enc_u8(TEncoding::GetEncoding(CP_UTF8));
 			DynamicArray<System::Byte> buf_u8 = enc_u8->GetBytes(c);
@@ -200,7 +220,7 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 //情報の描画
 //---------------------------------------------------------------------------
 void __fastcall TCharInfoForm::InfoListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	draw_InfListBox((TListBox*)Control, Rect, Index, State);
 }
@@ -215,6 +235,7 @@ void __fastcall TCharInfoForm::CopyItemClick(TObject *Sender)
 	i_lst->AddStrings(InfoListBox->Items);
 	copy_to_Clipboard(i_lst->Text);
 }
+
 //---------------------------------------------------------------------------
 //フォントの変更
 //---------------------------------------------------------------------------
@@ -223,6 +244,20 @@ void __fastcall TCharInfoForm::ChgFontItemClick(TObject *Sender)
 	UserModule->FontDlg->Options.Clear();
 	UserModule->FontDlg->Options << fdTrueTypeOnly << fdAnsiOnly;
 	if (UserModule->FontDlgToFont(CharInfFont)) SetCharFont();
+}
+//---------------------------------------------------------------------------
+//サンプルの配所を設定
+//---------------------------------------------------------------------------
+void __fastcall TCharInfoForm::SetColItemClick(TObject *Sender)
+{
+	int tag = ((TComponent*)Sender)->Tag;
+	UserModule->ColorDlg->Color = (tag==0)? col_bgChInf : col_fgChInf;
+	if (UserModule->ColorDlg->Execute()) {
+		TColor col = UserModule->ColorDlg->Color;
+		((tag==0)? col_bgChInf : col_fgChInf) = col;
+		ColorList->Values[(tag==0)? "bgChInf" : "fgChInf"] = IntToStr((int)col);
+		SetCharFont();
+	}
 }
 //---------------------------------------------------------------------------
 

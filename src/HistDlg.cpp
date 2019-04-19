@@ -112,17 +112,17 @@ void __fastcall TDirHistoryDlg::UpdateListBox(
 	//タイトル
 	UnicodeString tit;
 	if (IsDirStack) {
-		tit.USET_T("ディレクトリ・スタック");
+		tit = "ディレクトリ・スタック";
 	}
 	else if (IsFindDirHist) {
 		tit.sprintf(_T("ディレクトリ履歴 - 全体検索 (%u/%u)"), ListBuff->Count, AllDirHistory->Count);
 	}
 	else if (IsAllDirHist) {
-		tit.USET_T("ディレクトリ履歴 - 全体");
+		tit = "ディレクトリ履歴 - 全体";
 	}
 	else {
 		tit.sprintf(_T("ディレクトリ履歴 - %s"), get_LRUD_str(RefListTag).c_str());
-		if (RefListTag!=CurListTag) tit.UCAT_T(" (反対側を参照)");
+		if (RefListTag!=CurListTag) tit += " (反対側を参照)";
 	}
 	Caption = tit;
 }
@@ -326,7 +326,7 @@ void __fastcall TDirHistoryDlg::AddDirsCore(
 
 	pnam = IncludeTrailingPathDelimiter(pnam);
 	TSearchRec sr;
-	if (FindFirst(cv_ex_filename(UAPP_T(pnam, "*")), faAnyFile, sr)==0) {
+	if (FindFirst(cv_ex_filename(pnam + "*"), faAnyFile, sr)==0) {
 		do {
 			if ((sr.Attr & faDirectory)==0 || ContainsStr("..", sr.Name)) continue;
 			UnicodeString snam = pnam + sr.Name;
@@ -418,7 +418,7 @@ void __fastcall TDirHistoryDlg::ClearAllActionExecute(TObject *Sender)
 			AllDirHistory->Clear();
 	}
 	else if (!IsDirStack) {
-		if (msgbox_Sure(LoadUsrMsg(USTR_DelHistoryQ, get_LRUD_str().UCAT_T("側"))))
+		if (msgbox_Sure(LoadUsrMsg(USTR_DelHistoryQ, get_LRUD_str() + "側")))
 			clear_DirHistory(CurTabIndex, CurListTag);
 	}
 	UpdateListBox();

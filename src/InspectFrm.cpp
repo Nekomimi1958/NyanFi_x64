@@ -165,10 +165,10 @@ void __fastcall TInspectForm::UpdateValue()
 				if (isprint(c))
 					astr.cat_sprintf(_T("%c"), c); 
 				else
-					astr.UCAT_T(".");
+					astr += ".";
 			}
 			else {
-				hstr.UCAT_T("   ");
+				hstr += "   ";
 			}
 		}
 		hstr.cat_sprintf(_T("  %s"), alt_yen_to(astr).c_str());
@@ -191,10 +191,10 @@ void __fastcall TInspectForm::UpdateValue()
 		else
 			vstr.sprintf(_T("%d"), (char)n);
 		//ビット表示
-		vstr.UCAT_T("\t(");
+		vstr += "\t(";
 		unsigned int b = 0x0080;
 		for (int i=0; i<8; i++,b>>=1) vstr.cat_sprintf(_T("%u"), (n & b)? 1 : 0);
-		vstr.UCAT_T(")");
+		vstr += ")";
 		//ASCII表示
 		if (isprint((char)n)) vstr.cat_sprintf(_T(" '%c'"), (char)n);
 		gp->Cells[1][0] = vstr;
@@ -212,7 +212,7 @@ void __fastcall TInspectForm::UpdateValue()
 												  : FormatFloat(",0", *(int*)&buf[0]);
 		//float
 		float v = *(float*)&buf[0];
-		if (IsNan(v)) vstr.USET_T("NAN"); else vstr.sprintf(_T("%g"), v);
+		if (IsNan(v)) vstr = "NAN"; else vstr.sprintf(_T("%g"), v);
 		gp->Cells[1][4] = vstr;
 		//COLORREF
 		gp->Cells[1][7] = UnicodeString().sprintf(_T("R:%u, G:%u, B:%u"),buf[0], buf[1], buf[2]);
@@ -237,7 +237,7 @@ void __fastcall TInspectForm::UpdateValue()
 
 		//double
 		double v = *(double*)&buf[0];
-		if (IsNan(v)) vstr.USET_T("NAN"); else vstr.sprintf(_T("%g"), v);
+		if (IsNan(v)) vstr = "NAN"; else vstr.sprintf(_T("%g"), v);
 		gp->Cells[1][5] = vstr;
 	}
 
@@ -317,7 +317,7 @@ void __fastcall TInspectForm::InspectGridDrawCell(TObject *Sender, int ACol, int
 //---------------------------------------------------------------------------
 void __fastcall TInspectForm::CopyItemClick(TObject *Sender)
 {
-	UnicodeString cpystr = UAPP_T(InsStatusBar->Panels->Items[0]->Text, "\r\n");
+	UnicodeString cpystr = InsStatusBar->Panels->Items[0]->Text + "\r\n";
 	TStringGrid *gp;
 	//値
 	if (InspectGrid->Focused()) {

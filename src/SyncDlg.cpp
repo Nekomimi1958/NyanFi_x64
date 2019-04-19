@@ -63,7 +63,7 @@ void __fastcall TRegSyncDlg::RegListBoxDrawItem(TWinControl *Control, int Index,
 
 	UnicodeString lbuf;
 	for (int i=3; i<syn_lst.Length && !syn_lst[i].IsEmpty(); i++) {
-		if (!lbuf.IsEmpty()) lbuf.UCAT_T(", ");
+		if (!lbuf.IsEmpty()) lbuf += ", ";
 		lbuf += syn_lst[i];
 	}
 	cv->TextOut(xp, yp, lbuf);
@@ -122,8 +122,8 @@ UnicodeString __fastcall TRegSyncDlg::MakeRegItem(int idx)
 	ret_str = make_csv_str(ret_str);
 	ret_str.cat_sprintf(_T("%s"), (idx!=-1 && RegListBox->Checked[idx])? _T(",\"1\"") : _T(",\"0\""));
 	UnicodeString opt;
-	if (SyncOwrCheckBox->Checked) opt.UCAT_T("O");
-	if (SyncDelCheckBox->Checked) opt.UCAT_T("D");
+	if (SyncOwrCheckBox->Checked) opt += "O";
+	if (SyncDelCheckBox->Checked) opt += "D";
 	ret_str.cat_sprintf(_T(",\"%s\""), opt.c_str());
 
 	for (int i=0; i<DirListBox->Count; i++)
@@ -238,7 +238,7 @@ void __fastcall TRegSyncDlg::OkButtonClick(TObject *Sender)
 			//"タイトル","有効:1/無効:0","オプション","dir1","dir2",...
 			UnicodeString lbuf;
 			for (int j=0; j<syn_lst.Length; j++) {
-				if (j>0)  lbuf.UCAT_T(",");
+				if (j>0)  lbuf += ",";
 				if (j>=3) syn_lst[j] = IncludeTrailingPathDelimiter(syn_lst[j]);
 				lbuf += make_csv_str(syn_lst[j]);
 			}

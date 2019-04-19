@@ -75,7 +75,7 @@ void __fastcall TSetGitTagDlg::OkActionExecute(TObject *Sender)
 	}
 	//ƒ^ƒO
 	else {
-		GitParam.USET_T("tag");
+		GitParam = "tag";
 		if (AnnotateCheckBox->Checked) {
 			GitParam.cat_sprintf(_T(" -a -F \"%s\""), yen_to_slash(EditMsgFile).c_str());
 		}

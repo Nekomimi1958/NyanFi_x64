@@ -139,7 +139,7 @@ void __fastcall TInpDirDlg::SetList()
 	if (!SameText(CurSeaPath, pnam)) {
 		cursor_HourGlass();
 		TSearchRec sr;
-		UnicodeString sea_str = UAPP_T(pnam, "*");
+		UnicodeString sea_str = pnam + "*";
 		if (sea_str.Length()>=MAX_PATH) sea_str.Insert("\\\\?\\", 1);
 		if (FindFirst(sea_str, faAnyFile, sr)==0) {
 			do {

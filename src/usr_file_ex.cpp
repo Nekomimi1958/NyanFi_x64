@@ -353,9 +353,9 @@ bool test_FileExt(UnicodeString fext, UnicodeString list)
 	if (list.IsEmpty() || fext.IsEmpty() || USAME_TS(fext, ".")) return false;
 	if (USAME_TS(list, "*") || USAME_TS(list, ".*")) return true;
 	if (!StartsStr('.', fext)) fext.Insert(".", 1);
-	if (!EndsStr('.', fext))   fext.UCAT_T(".");
+	if (!EndsStr('.', fext))   fext += ".";
 	if (!StartsStr('.', list)) list.Insert(".", 1);
-	if (!EndsStr('.', list))   list.UCAT_T(".");
+	if (!EndsStr('.', list))   list += ".";
 	return ContainsText(list, fext);
 }
 //---------------------------------------------------------------------------
@@ -455,7 +455,7 @@ bool is_dir_accessible(UnicodeString dnam)
 		if (StartsStr("\\\\", dnam)) dnam.Insert("?\\UNC\\", 3); else dnam.Insert("\\\\?\\", 1);
 	}
 	TSearchRec sr;
-	if (FindFirst(UAPP_T(dnam, "*.*"), faAnyFile, sr)==0) {
+	if (FindFirst(dnam + "*.*", faAnyFile, sr)==0) {
 		FindClose(sr);
 		return true;
 	}
@@ -821,7 +821,7 @@ bool is_EmptyDir(UnicodeString dnam,
 	bool e_flag = true;
 	dnam = IncludeTrailingPathDelimiter(dnam);
 	TSearchRec sr;
-	if (FindFirst(cv_ex_filename(UAPP_T(dnam, "*")), faAnyFile, sr)==0) {
+	if (FindFirst(cv_ex_filename(dnam + "*"), faAnyFile, sr)==0) {
 		do {
 			if (ContainsStr("..", sr.Name)) continue;
 			if (no_file && (sr.Attr & faDirectory))
@@ -886,7 +886,7 @@ void get_files(
 	//サブディレクトリを検索
 	TSearchRec sr;
 	if (subSW) {
-		if (FindFirst(cv_ex_filename(UAPP_T(pnam, "*")), faAnyFile, sr)==0) {
+		if (FindFirst(cv_ex_filename(pnam + "*"), faAnyFile, sr)==0) {
 			do {
 				if ((sr.Attr & faDirectory)==0) continue;
 				if (ContainsStr("..", sr.Name)) continue;
@@ -930,7 +930,7 @@ int get_all_files_ex(
 	TSearchRec sr;
 	if (sub_sw && sub_n>0) {
 		TStringDynArray skip_dir_lst = split_strings_semicolon(skip_dir);
-		if (FindFirst(cv_ex_filename(UAPP_T(pnam, "*")), faAnyFile, sr)==0) {
+		if (FindFirst(cv_ex_filename(pnam + "*"), faAnyFile, sr)==0) {
 			do {
 				if ((sr.Attr & faDirectory)==0) continue;
 				if (!inc_hide && (sr.Attr & faHidden))  continue;
@@ -1002,7 +1002,7 @@ bool create_ForceDirs(UnicodeString dnam)
 	UnicodeString rnam = get_root_name(dnam);
 	UnicodeString pnam;
 	for (int i=0; i<plst.Length; i++) {
-		pnam += UAPP_T(plst[i], "\\");
+		pnam += IncludeTrailingPathDelimiter(plst[i]);
 		if (USAME_TS(pnam, "\\") || USAME_TS(pnam, "\\\\") || SameStr(pnam, rnam)) continue;
 		if (dir_exists(pnam)) continue;
 		if (!create_Dir(pnam)) return false;
@@ -1027,7 +1027,7 @@ bool delete_Dirs(UnicodeString pnam)
 
 	//サブディレクトリを検索して削除
 	TSearchRec sr;
-	if (FindFirst(cv_ex_filename(UAPP_T(pnam, "*")), faAnyFile, sr)==0) {
+	if (FindFirst(cv_ex_filename(pnam + "*"), faAnyFile, sr)==0) {
 		bool ok = true;
 		do {
 			if ((sr.Attr & faDirectory)==0 || ContainsStr("..", sr.Name)) continue;
@@ -1081,8 +1081,8 @@ bool rename_Path(UnicodeString old_nam, UnicodeString new_nam)
 	bool ok = true;
 	UnicodeString o_pnam, n_pnam;
 	for (int i=0; i<o_plst.Length && ok; i++) {
-		o_pnam += UAPP_T(o_plst[i], "\\");
-		n_pnam += UAPP_T(n_plst[i], "\\");
+		o_pnam += IncludeTrailingPathDelimiter(o_plst[i]);
+		n_pnam += IncludeTrailingPathDelimiter(n_plst[i]);
 		if (USAME_TS(o_pnam, "\\") || USAME_TS(o_pnam, "\\\\") || USAME_TS(n_pnam, "\\") || USAME_TS(n_pnam, "\\\\")) continue;
 		if (!SameText(o_plst[i], n_plst[i])) {
 			SetCurrentDir(get_parent_path(o_pnam));

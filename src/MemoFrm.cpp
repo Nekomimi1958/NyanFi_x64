@@ -37,12 +37,9 @@ void __fastcall TMemoForm::FormShow(TObject *Sender)
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 
-	color_MemoBg = IniFile->ReadColGen(_T("MemoFormBgCol"),	clNone);
-	color_MemoFg = IniFile->ReadColGen(_T("MemoFormfgCol"),	clNone);
-
 	MemoBox->Font->Assign(ViewerFont);
-	MemoBox->Font->Color = (color_MemoFg!=clNone)? color_MemoFg : col_fgView;
-	MemoBox->Color		 = (color_MemoBg!=clNone)? color_MemoBg : col_bgView;
+	MemoBox->Font->Color = (col_fgEdBox!=clNone)? col_fgEdBox : col_fgView;
+	MemoBox->Color		 = (col_bgEdBox!=clNone)? col_bgEdBox : col_bgView;
 
 	//¦“ü—Í‚ÌÛ‚ÉƒtƒHƒ“ƒg‚ª•Ï‚í‚Á‚Ä‚µ‚Ü‚¤‚Ì‚ð—}§
 	DWORD lParam = ::SendMessage(MemoBox->Handle, EM_GETLANGOPTIONS, 0, 0);
@@ -94,8 +91,6 @@ void __fastcall TMemoForm::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->SavePosInfo(this);
 
 	IniFile->WriteIntGen(_T("MemoFormShowOpt"),		OptPanel->Visible);
-	IniFile->WriteIntGen(_T("MemoFormBgCol"),		(int)color_MemoBg);
-	IniFile->WriteIntGen(_T("MemoFormfgCol"),		(int)color_MemoFg);
 }
 //---------------------------------------------------------------------------
 void __fastcall TMemoForm::FormDestroy(TObject *Sender)
@@ -189,10 +184,10 @@ void __fastcall TMemoForm::WebSearchActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMemoForm::ColBgItemClick(TObject *Sender)
 {
-	UserModule->ColorDlg->Color = color_MemoBg;
+	UserModule->ColorDlg->Color = col_bgEdBox;
 	if (UserModule->ColorDlg->Execute()) {
-		MemoBox->Color = color_MemoBg = UserModule->ColorDlg->Color;
-		IniFile->WriteIntGen(_T("MemoFormBgCol"),	(int)color_MemoBg);
+		MemoBox->Color = col_bgEdBox = UserModule->ColorDlg->Color;
+		ColorList->Values["bgEdBox"] = IntToStr((int)col_bgEdBox);
 	}
 }
 //---------------------------------------------------------------------------
@@ -200,10 +195,10 @@ void __fastcall TMemoForm::ColBgItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMemoForm::ColFgItemClick(TObject *Sender)
 {
-	UserModule->ColorDlg->Color = color_MemoFg;
+	UserModule->ColorDlg->Color = col_fgEdBox;
 	if (UserModule->ColorDlg->Execute()) {
-		MemoBox->Font->Color = color_MemoFg = UserModule->ColorDlg->Color;
-		IniFile->WriteIntGen(_T("MemoFormfgCol"),	(int)color_MemoFg);
+		MemoBox->Font->Color = col_fgEdBox = UserModule->ColorDlg->Color;
+		ColorList->Values["fgEdBox"] = IntToStr((int)col_fgEdBox);
 	}
 }
 //---------------------------------------------------------------------------
@@ -213,8 +208,10 @@ void __fastcall TMemoForm::ColDefItemClick(TObject *Sender)
 {
 	MemoBox->Color		 = col_bgView;
 	MemoBox->Font->Color = col_fgView;
-	color_MemoBg = clNone;
-	color_MemoFg = clNone;
+
+	col_bgEdBox = col_fgEdBox = clNone;
+	ColorList->Values["bgEdBox"] = IntToStr((int)col_bgEdBox);
+	ColorList->Values["fgEdBox"] = IntToStr((int)col_fgEdBox);
 }
 
 //---------------------------------------------------------------------------

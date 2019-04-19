@@ -1090,6 +1090,11 @@ extern TColor col_fgSttBar;
 extern TColor col_bgInfHdr;
 extern TColor col_fgInfHdr;
 
+extern TColor col_bgChInf;
+extern TColor col_fgChInf;
+extern TColor col_bgEdBox;
+extern TColor col_fgEdBox;
+
 extern const TColor col_Teal;
 extern const TColor col_None;
 

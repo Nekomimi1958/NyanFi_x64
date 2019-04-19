@@ -267,7 +267,7 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 			if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) cellstr = get_tkn(cellstr, _T(" ("));
 			//接続I/F を右寄せ
 			int p = cellstr.Pos(" (");
-			if (p>0) while (get_TextWidth(cv, UAPP_T(cellstr, " "), is_irreg) < c_wd) cellstr.Insert(" ", p);
+			if (p>0) while (get_TextWidth(cv, cellstr + " ", is_irreg) < c_wd) cellstr.Insert(" ", p);
 		}
 		//使用容量
 		else if (ACol==3) {
@@ -362,7 +362,7 @@ void __fastcall TSelDriveDlg::DriveGridKeyDown(TObject *Sender, WORD &Key, TShif
 
 	bool handled = true;
 	if (!dstr.IsEmpty()) {
-		if (ToRootCheckBox->Checked) dstr.UCAT_T(":"); else dstr.UCAT_T(":\\");
+		if (ToRootCheckBox->Checked) dstr += ":"; else dstr += ":\\";
 		if (is_drive_accessible(dstr)) {
 			NyanFiForm->RecoverFileList2();
 			NyanFiForm->UpdateCurDrive(dstr);

@@ -181,7 +181,7 @@ void __fastcall TXmlViewer::AssignView(TTreeNode *TreeNode, _di_IXMLNode XMLNode
 			}
 			else {
 				lbuf = get_tkn(XMLNode->XML, _T("\r\n"));
-				if (lbuf.Pos('>')) lbuf = get_tkn(lbuf, '>').UCAT_T(">");
+				if (lbuf.Pos('>')) lbuf = get_tkn(lbuf, '>') + ">";
 				//•s—v‚È xmlns ‚ðíœ
 				if (XmlnsList->Count>0 && TreeNode && TreeNode->Level>0) {
 					for (int i=0; i<XmlnsList->Count; i++)

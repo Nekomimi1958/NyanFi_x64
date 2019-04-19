@@ -130,13 +130,13 @@ void __fastcall TCvImageDlg::ScaleModeComboBoxChange(TObject *Sender)
 	UnicodeString lbl1, lbl2;
 
 	switch (ScaleModeComboBox->ItemIndex) {
-	case 1: lbl1.USET_T("倍率％");		break;
-	case 2: lbl1.USET_T("サイズ");		break;
-	case 3: lbl1.USET_T("横サイズ");	break;
-	case 4: lbl1.USET_T("縦サイズ");	break;
+	case 1: lbl1 = "倍率％";	break;
+	case 2: lbl1 = "サイズ";	break;
+	case 3: lbl1 = "横サイズ";	break;
+	case 4: lbl1 = "縦サイズ";	break;
 	case 5: case 6: case 7: case 8:
-		lbl1.USET_T("横サイズ");
-		lbl2.USET_T("縦サイズ");
+		lbl1 = "横サイズ";
+		lbl2 = "縦サイズ";
 		break;
 	}
 

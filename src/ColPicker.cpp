@@ -248,7 +248,7 @@ void __fastcall TColorPicker::CopyColor()
 				}
 
 				RepCopyBuff += ColEdit->Text;
-				if (RepComboBox->ItemIndex==3) RepCopyBuff.UCAT_T("\n");
+				if (RepComboBox->ItemIndex==3) RepCopyBuff += "\n";
 				RepCount--;
 			}
 			if (RepCount>0) return;			//Œp‘±

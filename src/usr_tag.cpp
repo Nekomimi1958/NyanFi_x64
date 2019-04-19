@@ -442,7 +442,7 @@ UnicodeString TagManager::CheckToTags(TCheckListBox *lp, UnicodeString tags)
 
 	cat_str_semicolon(ret_str, tag1);
 
-	if (end_sc) ret_str.UCAT_T(";");
+	if (end_sc) ret_str += ";";
 
 	return ret_str;
 }

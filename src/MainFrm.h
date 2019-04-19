@@ -2071,20 +2071,20 @@ private:	// ユーザー宣言
 	}
 
 	//ドライブ情報
-	void __fastcall DrawStatPanel(TPanel *pp);
+	void __fastcall DrawDrivePanel(TPanel *pp);
 	TWndMethod org_L_StatPanelWndProc;
 	void __fastcall L_StatPanelWndProc(TMessage &msg)
 	{
 		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
 		org_L_StatPanelWndProc(msg);
-		if (msg.Msg==WM_PAINT) DrawStatPanel(L_StatPanel);
+		if (msg.Msg==WM_PAINT) DrawDrivePanel(L_StatPanel);
 	}
 	TWndMethod org_R_StatPanelWndProc;
 	void __fastcall R_StatPanelWndProc(TMessage &msg)
 	{
 		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
 		org_R_StatPanelWndProc(msg);
-		if (msg.Msg==WM_PAINT) DrawStatPanel(R_StatPanel);
+		if (msg.Msg==WM_PAINT) DrawDrivePanel(R_StatPanel);
 	}
 
 	TWndMethod org_TvViewPanelWndProc;

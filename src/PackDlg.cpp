@@ -150,7 +150,7 @@ void __fastcall TPackArcDlg::FormatRadioGroupClick(TObject *Sender)
 			SfxCheckBox->Enabled  = false;
 			PasswordEdit->Color   = scl_Window;
 			PasswordEdit->Enabled = true;
-			fext.USET_T(".zip");
+			fext = ".zip";
 			ExSwEdit->Text = usr_ARC->ExSw_Zip;
 		}
 		//7Z
@@ -166,7 +166,7 @@ void __fastcall TPackArcDlg::FormatRadioGroupClick(TObject *Sender)
 		break;
 
 	case 2:	//LHA
-		fext.USET_T(".lzh");
+		fext = ".lzh";
 		ExSwEdit->Text = usr_ARC->ExSw_Lha;
 		break;
 
@@ -182,7 +182,7 @@ void __fastcall TPackArcDlg::FormatRadioGroupClick(TObject *Sender)
 			_T("LZXŒ`Ž® ˆ³kƒŒƒxƒ‹21\n"));
 		ParamComboBox->Enabled	 = true;
 		ParamComboBox->ItemIndex = (usr_ARC->CabPrm_z>=15 && usr_ARC->CabPrm_z<=21)? usr_ARC->CabPrm_z - 14 : 0;
-		fext.USET_T(".cab");
+		fext = ".cab";
 		ExSwEdit->Text = usr_ARC->ExSw_Cab;
 		break;
 
@@ -200,7 +200,7 @@ void __fastcall TPackArcDlg::FormatRadioGroupClick(TObject *Sender)
 			_T("ˆ³kƒŒƒxƒ‹ gzip9\n"));
 		ParamComboBox->Enabled	 = true;
 		ParamComboBox->ItemIndex = usr_ARC->TarPrm_z;
-		fext.USET_T(".tar");
+		fext = ".tar";
 		ExSwEdit->Text = usr_ARC->ExSw_Tar;
 		break;
 	}

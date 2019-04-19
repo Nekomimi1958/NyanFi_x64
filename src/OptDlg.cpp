@@ -1160,7 +1160,7 @@ void __fastcall TOptionDlg::UpdateMaxItemWidth()
 UnicodeString __fastcall TOptionDlg::GetCmdModeStr(int idx)
 {
 	if (idx==0) idx = KeyTabControl->TabIndex + 1;
-	return (idx>=1 && idx<=MAX_KEYTABS)? ScrModeIdStr.SubString(idx, 1).UCAT_T(":") : EmptyStr;
+	return (idx>=1 && idx<=MAX_KEYTABS)? (ScrModeIdStr.SubString(idx, 1) + ":") : EmptyStr;
 }
 //---------------------------------------------------------------------------
 UnicodeString __fastcall TOptionDlg::GetCmdKeyStr()
@@ -1335,7 +1335,7 @@ void __fastcall TOptionDlg::ExtSavDirHistCheckBoxClick(TObject *Sender)
 	if (!DlgInitialized) return;
 
 	if (ExtSavDirHistCheckBox->Checked)	{
-		UnicodeString fnam = UAPP_T(ExePath, DIR_HIST_FILE);
+		UnicodeString fnam = ExePath + DIR_HIST_FILE;
 		if (file_exists(fnam) && msgbox_Sure(_T("既存の履歴ファイルを読み込みますか？"))) {
 			std::unique_ptr<UsrIniFile> hst_file(new UsrIniFile(fnam));
 			hst_file->LoadListItems("AllDirHistory", AllDirHistory, 0, false);
@@ -1662,14 +1662,14 @@ bool __fastcall TOptionDlg::CheckDuplExt(
 	if (dpl_lst->Count>0) {
 		UnicodeString msg = "[";
 		for (int i=0; i<dpl_lst->Count; i++) {
-			if (!msg.IsEmpty()) msg.UCAT_T(" ");
+			if (!msg.IsEmpty()) msg += " ";
 			UnicodeString fext = dpl_lst->Strings[i];
 			if (USAME_TS(fext, "."))
 				msg += fext;
 			else
 				msg.cat_sprintf(_T(".%s"), fext.c_str());
 		}
-		msgbox_WARN(msg.UCAT_T("]はすでに登録されています。"));
+		msgbox_WARN(msg + "]はすでに登録されています。");
 		return true;
 	}
 
@@ -1910,7 +1910,7 @@ void __fastcall TOptionDlg::OptListBoxKeyDown(TObject *Sender, WORD &Key, TShift
 			if (cp==EventListBox) {
 				TListBox *lp = (TListBox*)cp;
 				int idx = lp->ItemIndex;
-				if (idx!=-1) lp->Items->Strings[idx] = get_pre_tab(lp->Items->Strings[idx]).UCAT_T("\t");
+				if (idx!=-1) lp->Items->Strings[idx] = get_pre_tab(lp->Items->Strings[idx]) + "\t";
 			}
 			else UserModule->DelListItemAction->Execute();
 		}
@@ -2041,12 +2041,12 @@ UnicodeString __fastcall TOptionDlg::get_AliasInfo(UnicodeString alias)
 		UnicodeString vbuf = exclude_quot(lp->Items->ValueFromIndex[i]);
 		if (!remove_top_Dollar(vbuf)) continue;
 		if (!SameText(alias, vbuf))   continue;
-		if (USAME_TS(fext, "..")) a_inf.UCAT_T("[..]"); else a_inf.cat_sprintf(_T(".%s"), fext.c_str());
+		if (USAME_TS(fext, "..")) a_inf += "[..]"; else a_inf.cat_sprintf(_T(".%s"), fext.c_str());
 	}
 
 	UnicodeString ret_str = k_inf;
 	if (!a_inf.IsEmpty()) {
-		if (!ret_str.IsEmpty()) ret_str.UCAT_T(" / ");
+		if (!ret_str.IsEmpty()) ret_str += " / ";
 		ret_str += a_inf;
 	}
 	return ret_str;
@@ -2255,7 +2255,7 @@ void __fastcall TOptionDlg::ExtMenuListBoxClick(TObject *Sender)
 		else {
 			TComboBox *cp = MenuCmdComboBox;
 			for (int i=0; i<cp->Items->Count; i++) {
-				if (StartsText(UAPP_T(itm_buf[1], " "), cp->Items->Strings[i])) {
+				if (StartsText(itm_buf[1] + " ", cp->Items->Strings[i])) {
 					cp->ItemIndex = i;  break;
 				}
 			}
@@ -2721,7 +2721,7 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 		if (!starts_tchs(_T("-<>"), lbuf)) {
 			lbuf = EmptyStr;
 			for (int i=1; i<(is_tool? 4 : 3); i++) {
-				if (i>1) lbuf.UCAT_T(", ");
+				if (i>1) lbuf += ", ";
 				lbuf += itm_buf[i];
 			}
 			cv->TextOut(sp->Items[0]->Width + sp->Items[1]->Width, yp, lbuf);
@@ -3001,7 +3001,7 @@ void __fastcall TOptionDlg::KeyListBoxClick(TObject *Sender)
 
 	TComboBox *cp = CmdComboBox;
 	for (int i=0; i<cp->Items->Count; i++) {
-		if (StartsText(UAPP_T(cmd, " "), cp->Items->Strings[i])) {
+		if (StartsText(cmd + " ", cp->Items->Strings[i])) {
 			cp->ItemIndex = i;
 			CmdComboBoxChange(cp);
 			break;
@@ -3050,7 +3050,7 @@ void __fastcall TOptionDlg::KeySetClick(TObject *Sender)
 {
 	if (inh_KeySet>0) return;
 
-	UnicodeString kbuf = GetCmdKeyStr().UCAT_T("=");
+	UnicodeString kbuf = GetCmdKeyStr() + "=";
 
 	TListBox *lp = KeyListBox;
 	int idx = -1;
@@ -3709,7 +3709,7 @@ void __fastcall TOptionDlg::ExpKeyBtnClick(TObject *Sender)
 		if (DlgSizeCtrlCheckBox->Checked)  sstr += KeyStr_Ctrl;
 		if (DlgSizeAltCheckBox->Checked)   sstr += KeyStr_Alt;
 		exp_file->WriteString(SCT_Option, "DlgSizeShift", sstr);
-		sstr.USET_T("F:");
+		sstr = "F:";
 		if (IniSeaShiftCheckBox->Checked) sstr += KeyStr_Shift;
 		if (IniSeaCtrlCheckBox->Checked)  sstr += KeyStr_Ctrl;
 		if (IniSeaAltCheckBox->Checked)   sstr += KeyStr_Alt;
@@ -3762,7 +3762,7 @@ void __fastcall TOptionDlg::StdCmdListBoxClick(TObject *Sender)
 	UnicodeString cmd = StdCmdListBox->Items->ValueFromIndex[idx];
 	if (ContainsStr(cmd, "_")) {
 		StdCmdPrmEdit->Text = get_PrmStr(cmd);
-		cmd = get_CmdStr(cmd).UCAT_T("_");
+		cmd = get_CmdStr(cmd) + "_";
 	}
 
 	for (int i=0; i<StdCmdComboBox->Items->Count; i++) {
@@ -4067,7 +4067,7 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 			if (HotShiftCheckBox->Checked) kstr += KeyStr_Shift;
 			if (HotCtrlCheckBox->Checked)  kstr += KeyStr_Ctrl;
 			if (HotAltCheckBox->Checked)   kstr += KeyStr_Alt;
-			if (HotWinCheckBox->Checked)   kstr.UCAT_T("Win+");
+			if (HotWinCheckBox->Checked)   kstr += "Win+";
 			kstr += HotKeyComboBox->Text;
 		}
 
@@ -4087,7 +4087,7 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 			if (AppShiftCheckBox->Checked) kstr += KeyStr_Shift;
 			if (AppCtrlCheckBox->Checked)  kstr += KeyStr_Ctrl;
 			if (AppAltCheckBox->Checked)   kstr += KeyStr_Alt;
-			if (AppWinCheckBox->Checked)   kstr.UCAT_T("Win+");
+			if (AppWinCheckBox->Checked)   kstr += "Win+";
 			kstr += AppKeyComboBox->Text;
 		}
 
@@ -4212,7 +4212,7 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 	if (DlgSizeAltCheckBox->Checked)   DlgSizeShift += KeyStr_Alt;
 
 	//頭文字サーチ
-	IniSeaShift.USET_T("F:");
+	IniSeaShift = "F:";
 	if (IniSeaShiftCheckBox->Checked) IniSeaShift += KeyStr_Shift;
 	if (IniSeaCtrlCheckBox->Checked)  IniSeaShift += KeyStr_Ctrl;
 	if (IniSeaAltCheckBox->Checked)   IniSeaShift += KeyStr_Alt;
@@ -4350,13 +4350,12 @@ bool __fastcall TOptionDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHel
 	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
 		if (PageControl1->ActivePage==KeySetSheet && (CmdComboBox->Focused() || PrmComboBox->Focused())) {
 			UnicodeString topic;
-
 			switch (KeyTabControl->TabIndex) {
-			case 0: topic.UCAT_T(HELPTOPIC_FL);		break;	//ファイラー
-			case 1: topic.UCAT_T(HELPTOPIC_IS);		break;	//INC.サーチ
-			case 2: topic.UCAT_T(HELPTOPIC_TV);		break;	//テキストビュアー
-			case 3: topic.UCAT_T(HELPTOPIC_IV);		break;	//イメージビュアー
-			case 4: topic.UCAT_T(HELPTOPIC_CILW);	break;	//ログ
+			case 0: topic = HELPTOPIC_FL;	break;	//ファイラー
+			case 1: topic = HELPTOPIC_IS;	break;	//INC.サーチ
+			case 2: topic = HELPTOPIC_TV;	break;	//テキストビュアー
+			case 3: topic = HELPTOPIC_IV;	break;	//イメージビュアー
+			case 4: topic = HELPTOPIC_CILW;	break;	//ログ
 			}
 
 			UnicodeString kwd = get_tkn(CmdComboBox->Text, ' ');

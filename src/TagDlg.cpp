@@ -570,7 +570,7 @@ void __fastcall TTagManDlg::TrimDataActionExecute(TObject *Sender)
 		if (cnt>0)
 			msg.sprintf(_T("%u 個のデータを削除しました。"), cnt);
 		else
-			msg.USET_T("存在しない項目のデータはありませんでした。");
+			msg = "存在しない項目のデータはありませんでした。";
 		msgbox_OK(msg);
 	}
 }

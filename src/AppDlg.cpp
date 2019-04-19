@@ -335,7 +335,7 @@ UnicodeString __fastcall TAppListDlg::get_size_str_K(SIZE_T sz)
 		if (sz_k>=1000000) szstr.Insert(",", szstr.Length() - 9);
 	}
 	else {
-		szstr.USET_T("???? KB");
+		szstr = "???? KB";
 	}
 	return szstr;
 }
@@ -607,14 +607,16 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 		DirPanel->Caption = get_MiniPathName(ExtractFileName(ExcludeTrailingPathDelimiter(CurLaunchPath)),
 								DirPanel->ClientWidth, DirPanel->Font);
 		TSearchRec sr;
-		if (FindFirst(UAPP_T(CurLaunchPath, "*.*"), faAnyFile, sr)==0) {
+		if (FindFirst(CurLaunchPath + "*.*", faAnyFile, sr)==0) {
 			do {
 				UnicodeString fnam = sr.Name;	if (USAME_TS(fnam, ".")) continue;
 				if (sr.Attr & faDirectory) {
 					if (USAME_TS(fnam, "..")) {
 						if (SameText(CurLaunchPath, LaunchPath)) continue;
 					}
-					else fnam.UCAT_T("\\");
+					else {
+						fnam = IncludeTrailingPathDelimiter(fnam);
+					}
 				}
 				else if (!test_FileExt(get_extension(fnam), _T(".lnk.url"))) continue;
 
@@ -688,9 +690,9 @@ void __fastcall TAppListDlg::UpdateAppSttBar()
 			get_size_str_K(c_ap->mem_WS).c_str(), get_size_str_K(c_ap->mem_pWS).c_str(),
 			get_size_str_K(c_ap->mem_PF).c_str(), get_size_str_K(c_ap->mem_pPF).c_str(),
 			c_ap->win_wd, c_ap->win_hi);
-		if (::IsIconic(c_ap->WinHandle)) msg.UCAT_T(" (min)");
-		if (c_ap->isNoRes) msg.UCAT_T(" (無応答)");
-		msg.UCAT_T("  Started:");
+		if (::IsIconic(c_ap->WinHandle)) msg += " (min)";
+		if (c_ap->isNoRes) msg += " (無応答)";
+		msg += "  Started:";
 		msg += format_DateTime(c_ap->StartTime, true);
 		StatusBar1->Panels->Items[0]->Text = msg;
 		StatusBar1->Hint = msg;
@@ -1200,9 +1202,9 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 		const _TCHAR *fmt_08X   = _T("0x%08X");
 		const _TCHAR *fmt_08X_U = _T("0x%08X (%u)");
 		UnicodeString tmp;
-		add_PropLine(_T("キャプション"),	c_ap->WinText,									lst.get());
+		add_PropLine(_T("キャプション"),	c_ap->WinText,	lst.get());
 		tmp = ExtractFileName(c_ap->FileName);
-		if (c_ap->isWow64) tmp.UCAT_T("  (32-bit)"); else tmp.UCAT_T("  (64-bit)");
+		if (c_ap->isWow64) tmp += "  (32-bit)"; else tmp += "  (64-bit)";
 		add_PropLine(_T("実行ファイル"),tmp, lst.get(), LBFLG_PATH_FIF);
 		add_PropLine(_T("実行パス"),	yen_to_delimiter(ExtractFilePath(c_ap->FileName)), lst.get(), LBFLG_PATH_FIF);
 		lst->Add(get_img_size_str(c_ap->win_wd, 	c_ap->win_hi, "画面サイズ"));
@@ -1218,14 +1220,14 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 
 		tmp.sprintf(fmt_08X, c_ap->win_xstyle);
 		UnicodeString tmp2;
-		if (c_ap->win_xstyle & WS_EX_DLGMODALFRAME) tmp2.UCAT_T("DLGMODALFRAME");
-		if (c_ap->win_xstyle & WS_EX_TOPMOST) 		tmp2.UCAT_T(", TOPMOST");
-		if (c_ap->win_xstyle & WS_EX_TOOLWINDOW) 	tmp2.UCAT_T(", TOOLWINDOW");
-		if (c_ap->win_xstyle & WS_EX_WINDOWEDGE) 	tmp2.UCAT_T(", WINDOWEDGE");
-		if (c_ap->win_xstyle & WS_EX_CLIENTEDGE) 	tmp2.UCAT_T(", CLIENTEDGE");
-		if (c_ap->win_xstyle & WS_EX_STATICEDGE) 	tmp2.UCAT_T(", STATICEDGE");
-		if (c_ap->win_xstyle & WS_EX_APPWINDOW) 	tmp2.UCAT_T(", APPWINDOW");
-		if (c_ap->win_xstyle & WS_EX_LAYERED)		tmp2.UCAT_T(", LAYERED");
+		if (c_ap->win_xstyle & WS_EX_DLGMODALFRAME) tmp2 += "DLGMODALFRAME";
+		if (c_ap->win_xstyle & WS_EX_TOPMOST) 		tmp2 += ", TOPMOST";
+		if (c_ap->win_xstyle & WS_EX_TOOLWINDOW) 	tmp2 += ", TOOLWINDOW";
+		if (c_ap->win_xstyle & WS_EX_WINDOWEDGE) 	tmp2 += ", WINDOWEDGE";
+		if (c_ap->win_xstyle & WS_EX_CLIENTEDGE) 	tmp2 += ", CLIENTEDGE";
+		if (c_ap->win_xstyle & WS_EX_STATICEDGE) 	tmp2 += ", STATICEDGE";
+		if (c_ap->win_xstyle & WS_EX_APPWINDOW) 	tmp2 += ", APPWINDOW";
+		if (c_ap->win_xstyle & WS_EX_LAYERED)		tmp2 += ", LAYERED";
 		if (!tmp2.IsEmpty()) {
 			remove_top_s(tmp2, _T(", "));
 			tmp.cat_sprintf(_T(" (%s)"), tmp2.c_str());
@@ -1323,7 +1325,7 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 					CurLaunchPath = get_parent_path(CurLaunchPath);
 				}
 				else {
-					l_fnam.USET_T("..");
+					l_fnam = "..";
 					CurLaunchPath = IncludeTrailingPathDelimiter(cfp->f_name);
 				}
 				UpdateLaunchList(l_fnam);

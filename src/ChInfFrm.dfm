@@ -50,44 +50,39 @@ object CharInfoForm: TCharInfoForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    object CharPanel: TPanel
+    object Splitter1: TSplitter
       Left = 0
-      Top = 0
+      Top = 160
       Width = 252
-      Height = 160
+      Height = 4
+      Cursor = crVSplit
       Align = alTop
-      BevelOuter = bvNone
-      Color = clWindow
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -96
-      Font.Name = #65325#65331' '#26126#26397
-      Font.Style = []
-      ParentBackground = False
-      ParentFont = False
-      PopupMenu = PopupMenu1
-      TabOrder = 0
-      StyleElements = []
+      AutoSnap = False
+      MinSize = 44
+      OnMoved = Splitter1Moved
+      ExplicitLeft = -6
+      ExplicitTop = 192
     end
     object InfoPanel: TPanel
       Left = 0
-      Top = 182
+      Top = 164
       Width = 252
-      Height = 135
+      Height = 153
       Align = alClient
+      AutoSize = True
       BevelOuter = bvNone
       Enabled = False
       PopupMenu = PopupMenu1
-      TabOrder = 1
+      TabOrder = 0
       object InfoListBox: TListBox
         Left = 0
         Top = 0
         Width = 252
-        Height = 135
+        Height = 170
         TabStop = False
         Style = lbOwnerDrawFixed
         AutoComplete = False
-        Align = alClient
+        Align = alTop
         BevelInner = bvNone
         BorderStyle = bsNone
         DoubleBuffered = True
@@ -99,27 +94,69 @@ object CharInfoForm: TCharInfoForm
         OnDrawItem = InfoListBoxDrawItem
       end
     end
-    object FontNamePanel: TPanel
+    object SamplePanel: TPanel
       Left = 0
-      Top = 160
+      Top = 0
       Width = 252
-      Height = 22
+      Height = 160
       Align = alTop
       BevelOuter = bvNone
-      PopupMenu = PopupMenu1
-      TabOrder = 2
+      Constraints.MaxHeight = 260
+      TabOrder = 1
+      object CharPanel: TPanel
+        Left = 0
+        Top = 0
+        Width = 252
+        Height = 138
+        Align = alClient
+        BevelOuter = bvNone
+        Color = clWindow
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -96
+        Font.Name = #65325#65331' '#26126#26397
+        Font.Style = []
+        ParentBackground = False
+        ParentFont = False
+        PopupMenu = PopupMenu1
+        TabOrder = 0
+        StyleElements = []
+      end
+      object FontNamePanel: TPanel
+        Left = 0
+        Top = 138
+        Width = 252
+        Height = 22
+        Align = alBottom
+        BevelOuter = bvNone
+        PopupMenu = PopupMenu1
+        TabOrder = 1
+        StyleElements = []
+      end
     end
   end
   object PopupMenu1: TPopupMenu
-    Left = 152
-    Top = 88
+    Left = 112
+    Top = 40
     object CopyItem: TMenuItem
       Caption = #24773#22577#12434#12467#12500#12540'(&C)'
       OnClick = CopyItemClick
     end
+    object Sep_1: TMenuItem
+      Caption = '-'
+    end
     object ChgFontItem: TMenuItem
       Caption = #12501#12457#12531#12488#12398#36984#25246'(&F)...'
       OnClick = ChgFontItemClick
+    end
+    object SetBgColItem: TMenuItem
+      Caption = #25313#22823#34920#31034#12398#32972#26223#33394'(&B)...'
+      OnClick = SetColItemClick
+    end
+    object SetFgColItem: TMenuItem
+      Tag = 1
+      Caption = #25313#22823#34920#31034#12398#25991#23383#33394'(&T)...'
+      OnClick = SetColItemClick
     end
   end
 end

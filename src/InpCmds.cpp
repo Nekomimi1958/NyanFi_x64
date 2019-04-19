@@ -97,19 +97,19 @@ void __fastcall TInpCmdsDlg::SetList()
 	bool is_TV = false;
 	if ((IsRef && ModeTabControl->TabIndex==1) || (!IsRef && ScrMode==SCMD_TVIEW)) {
 		if (!IsRef) HistoryList = InputCmdsHistory;
-		IdChar.USET_T("V");
-		is_TV = true;
+		IdChar = "V";
+		is_TV  = true;
 	}
 	else if ((IsRef && ModeTabControl->TabIndex==2) || (!IsRef && ScrMode==SCMD_IVIEW)) {
 		if (!IsRef) HistoryList = InputCmdsHistoryV;
-		IdChar.USET_T("I");
+		IdChar = "I";
 	}
 	else if (IsRef && ModeTabControl->TabIndex==3) {
-		IdChar.USET_T("L");
+		IdChar = "L";
 	}
 	else {
 		if (!IsRef) HistoryList = InputCmdsHistoryI;
-		IdChar.USET_T("F");
+		IdChar = "F";
 	}
 	if (HistoryList) CmdsComboBox->Items->Assign(HistoryList); else CmdsComboBox->Clear();
 
@@ -186,7 +186,7 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 			//コマンド
 			if (SubComboBox->Tag==0) {
 				int p = pos_r_q_colon(lbuf);
-				lbuf = (p>0)? lbuf.SubString(1, p).UCAT_T(" ") : EmptyStr;
+				lbuf = (p>0)? (lbuf.SubString(1, p) + " ") : EmptyStr;
 			}
 			//パラメータ
 			else {
@@ -262,20 +262,19 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 
 		UnicodeString topic;
 		if (kwd.IsEmpty() || starts_AT(kwd) || starts_Dollar(kwd)) {
-			topic.UCAT_T(HELPTOPIC_FL);
+			topic = HELPTOPIC_FL;
 			topic.cat_sprintf(_T("#%s"), IsRef? _T("CopyCmdName") : _T("InputCommands"));
 		}
 		else {
-			if (SubCmdList->IndexOf(kwd)!=-1)
-				topic.UCAT_T(HELPTOPIC_XC);		//補助コマンド
-			else if ((IsRef && ModeTabControl->TabIndex==1) || (!IsRef && ScrMode==SCMD_TVIEW))
-				topic.UCAT_T(HELPTOPIC_TV);		//テキストビュアー
-			else if ((IsRef && ModeTabControl->TabIndex==2) || (!IsRef && ScrMode==SCMD_IVIEW))
-				topic.UCAT_T(HELPTOPIC_IV);		//イメージビュアー
-			else if (IsRef && ModeTabControl->TabIndex==3)
-				topic.UCAT_T(HELPTOPIC_CILW);	//ログ
-			else
-				topic.UCAT_T(HELPTOPIC_FL);		//ファイラー
+			topic = (SubCmdList->IndexOf(kwd)!=-1)?
+						HELPTOPIC_XC :		//補助コマンド
+					((IsRef && ModeTabControl->TabIndex==1) || (!IsRef && ScrMode==SCMD_TVIEW))?
+						HELPTOPIC_TV :		//テキストビュアー
+					((IsRef && ModeTabControl->TabIndex==2) || (!IsRef && ScrMode==SCMD_IVIEW))?
+						HELPTOPIC_IV :		//イメージビュアー
+					(IsRef && ModeTabControl->TabIndex==3)?
+						HELPTOPIC_CILW :	//ログ
+						HELPTOPIC_FL;		//ファイラー
 
 			if (topic.Pos('#')==0 && !kwd.IsEmpty()) topic.cat_sprintf(_T("#%s"), kwd.c_str());
 		}
@@ -336,7 +335,7 @@ void __fastcall TInpCmdsDlg::SubComboBoxClick(TObject *Sender)
 	UnicodeString wd = get_tkn(SubComboBox->Text, ' ');
 	UnicodeString lbuf = CmdsComboBox->Text;
 	int p = pos_r_q_colon(lbuf); 
-	lbuf = (p>0)? lbuf.SubString(1, p).UCAT_T(" ") : EmptyStr;
+	lbuf = (p>0)? (lbuf.SubString(1, p) + " ") : EmptyStr;
 	lbuf += wd;
 
 	CmdsComboBox->SetFocus();

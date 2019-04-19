@@ -332,9 +332,9 @@ bool __fastcall TToolBtnDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHe
 			UnicodeString kwd = get_tkn(get_CmdStr(BtnCmdsComboBox->Text), ':');
 			UnicodeString topic;
 			if (!kwd.IsEmpty() && !starts_AT(kwd) && !starts_Dollar(kwd)) {
-				if		(ScrMode==SCMD_TVIEW)	topic.UCAT_T(HELPTOPIC_TV);
-				else if (ScrMode==SCMD_IVIEW)	topic.UCAT_T(HELPTOPIC_IV);
-				else							topic.UCAT_T(HELPTOPIC_FL);
+				if		(ScrMode==SCMD_TVIEW)	topic += HELPTOPIC_TV;
+				else if (ScrMode==SCMD_IVIEW)	topic += HELPTOPIC_IV;
+				else							topic += HELPTOPIC_FL;
 				topic.cat_sprintf(_T("#%s"), kwd.c_str());
 				HtmlHelpTopic(topic.c_str());
 				handled = true;

@@ -738,7 +738,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 				while (p<=s.Length()) {
 					WideChar c = s[p];
 					if (c=='\\') {
-						UnicodeString fmt = get_tkn(s.SubString(p, 256), ')').UCAT_T(")");
+						UnicodeString fmt = get_tkn(s.SubString(p, 256), ')') + ")";
 						if (StartsStr("\\ID3(", fmt)) {
 							UnicodeString istr = get_in_paren(fmt);
 							UnicodeString vstr = tlst->Values[istr.SubString(1, 3)];
@@ -775,7 +775,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 				while (p<=s.Length()) {
 					WideChar c = s[p];
 					if (c=='\\') {
-						UnicodeString fmt = get_tkn(s.SubString(p, 256), ')').UCAT_T(")");
+						UnicodeString fmt = get_tkn(s.SubString(p, 256), ')') + ")";
 						if (StartsStr("\\ID3(", fmt)) {
 							UnicodeString istr = get_in_paren(fmt);
 							istr = replace_str_by_list(istr, id_lst.get());
@@ -1747,7 +1747,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 
 			//改名開始
 			int ok_cnt = 0, er_cnt = 0, sk_cnt = 0;
-			UnicodeString ModeStr = get_word_i_idx(_T("|連番|置換|MP3"), NamePageControl->ActivePageIndex).UCAT_T("改名");
+			UnicodeString ModeStr = get_word_i_idx(_T("|連番|置換|MP3"), NamePageControl->ActivePageIndex) + "改名";
 			StartLog(msg.sprintf(_T("%s開始  %s"), ModeStr.c_str(), CurPathName.c_str()));
 			Application->ProcessMessages();
 
@@ -1840,7 +1840,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 			}
 
 			//改名ログの保存
-			if (!NoRenLogCheckBox->Checked && !saveto_TextUTF8(UAPP_T(ExePath, RENLOG_FILE), r_lst.get()))
+			if (!NoRenLogCheckBox->Checked && !saveto_TextUTF8(ExePath + RENLOG_FILE, r_lst.get()))
 				throw EAbort(LoadUsrMsg(USTR_FaildSave, _T("改名ログ")));
 
 			SttPrgBar->End();

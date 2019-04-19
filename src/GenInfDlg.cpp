@@ -83,11 +83,11 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 		UnicodeString cap_str = def_if_empty(yen_to_delimiter(FileName), LoadUsrMsg(USTR_List));
 		if (isTail) {
 			cap_str.cat_sprintf(_T(" (末尾 %u行"), GenInfoList->Count);
-			if (isReverse) cap_str.UCAT_T(":逆順");
-			cap_str.UCAT_T(")");
+			if (isReverse) cap_str += ":逆順";
+			cap_str += ")";
 		}
 		else if (isTree) {
-			cap_str.UCAT_T(" (ツリー表示)");
+			cap_str += " (ツリー表示)";
 		}
 		Caption = cap_str;
 	}
@@ -112,7 +112,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	}
 
 	//ログファイルか?
-	if (!FileName.IsEmpty()) isLog = str_match(UAPP_T(ExePath, "tasklog*.txt"), cv_VirToOrgName(FileName));
+	if (!FileName.IsEmpty()) isLog = str_match(ExePath + "tasklog*.txt", cv_VirToOrgName(FileName));
 
 	//Git?
 	isGit = (GenInfoList->Count>0 && StartsStr("$ git ", GenInfoList->Strings[0]));
@@ -511,11 +511,11 @@ bool __fastcall TGeneralInfoDlg::FindText(
 	if (Found) {
 		lp->ItemIndex = idx1;
 		lp->Repaint();
-		msg.UCAT_T("発見");
+		msg += "発見";
 	}
 	else {
 		beep_Warn();
-		msg.UCAT_T("見つかりません");
+		msg += "見つかりません";
 	}
 	SetStatusBar(msg);
 	cursor_Default();
@@ -648,7 +648,7 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	UnicodeString lbuf = lp->Items->Strings[Index];
 
 	//文字数制限
-	if (lbuf.Length()>1024) lbuf = lbuf.SubString(1, 1024).UCAT_T("…");	//***
+	if (lbuf.Length()>1024) lbuf = lbuf.SubString(1, 1024) + "…";	//***
 
 	//フィルタ/検索のマッチ語
 	std::unique_ptr<TStringList> wlist(new TStringList());
@@ -697,7 +697,7 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	//変数一覧
 	else if (isVarList) {
 		if (lbuf.Pos('=')) {
-			UnicodeString namstr = split_tkn(lbuf, '=').UCAT_T(" = ");
+			UnicodeString namstr = split_tkn(lbuf, '=') + " = ";
 			rc.Left = xp + MaxNameWidth - get_TextWidth(cv, namstr, is_irreg);
 			RuledLnTextOut(namstr, cv, rc, use_fgsel? col_fgSelItem : col_fgInfNam, tw, wlist.get());
 			rc.Left = xp + MaxNameWidth;
@@ -1303,7 +1303,7 @@ void __fastcall TGeneralInfoDlg::DelDuplActionExecute(TObject *Sender)
 	if (cnt>0)
 		msg.sprintf(_T("%u行の重複行を削除"), cnt);
 	else
-		msg.UCAT_T("重複行はありません");
+		msg += "重複行はありません";
 	SetStatusBar(msg);
 }
 

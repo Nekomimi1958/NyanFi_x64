@@ -52,11 +52,6 @@ private:	// ユーザー宣言
 
 	TStringList *ValueList;
 
-	TColor col_GraphBack;
-	TColor col_GraphLine;
-	TColor col_GraphGrid;
-	TColor col_GraphText;
-
 public:		// ユーザー宣言
 	TStringList *DataList;
 	int  CsvCol;

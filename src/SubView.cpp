@@ -172,7 +172,7 @@ void __fastcall TSubViewer::DrawImage(UnicodeString fnam)
 
 		//ƒTƒCƒY
 		if (ex_str.IsEmpty() || ex_str.Pos(" ~ ")==0) {
-			if (!ex_str.IsEmpty()) ex_str.UCAT_T("  ");
+			if (!ex_str.IsEmpty()) ex_str += "  ";
 			ex_str += get_wd_x_hi_str(Image1->Picture->Width, Image1->Picture->Height);
 		}
 		TitleInf.sprintf(_T("%s  %s"), ExtractFileName(FileName).c_str(), ex_str.c_str());

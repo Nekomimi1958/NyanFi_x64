@@ -242,16 +242,16 @@ void __fastcall TFindTagForm::TagsListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		UpdateList();
 	}
 	else if (USAME_TI(cmd_F, "TextViewer")) {
-		TagCmd.USET_T("VIEW");
+		TagCmd = "VIEW";
 		TagsListBoxDblClick(Sender);
 	}
 	else if (USAME_TI(cmd_F, "FileEdit") || USAME_TI(cmd_V, "FileEdit")) {
-		TagCmd.USET_T("EDIT");
+		TagCmd = "EDIT";
 		TagsListBoxDblClick(Sender);
 	}
 	else if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V)) {
 		if (USAME_TI(cmd_V, "ClipCopy")) {
-			TagCmd.USET_T("COPY");
+			TagCmd = "COPY";
 			ModalResult = mrOk;
 		}
 	}
@@ -321,11 +321,11 @@ void __fastcall TFindTagForm::InfoListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		ModalResult = mrCancel;
 	}
 	else if (USAME_TI(cmd_F, "TextViewer")) {
-		TagCmd.USET_T("VIEW");
+		TagCmd = "VIEW";
 		InfoListBoxDblClick(Sender);
 	}
 	else if (USAME_TI(cmd_F, "FileEdit") || USAME_TI(cmd_V, "FileEdit")) {
-		TagCmd.USET_T("EDIT");
+		TagCmd = "EDIT";
 		InfoListBoxDblClick(Sender);
 	}
 	else if (MovListBoxFromFilter(lp, KeyStr))	;
@@ -339,7 +339,7 @@ void __fastcall TFindTagForm::InfoListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 //---------------------------------------------------------------------------
 void __fastcall TFindTagForm::TagViewActionExecute(TObject *Sender)
 {
-	TagCmd.USET_T("VIEW");
+	TagCmd = "VIEW";
 	if		(TagsListBox->Focused()) TagsListBoxDblClick(Sender);
 	else if (InfoListBox->Focused()) InfoListBoxDblClick(Sender);
 }
@@ -348,7 +348,7 @@ void __fastcall TFindTagForm::TagViewActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFindTagForm::TagJumpActionExecute(TObject *Sender)
 {
-	TagCmd.USET_T("EDIT");
+	TagCmd = "EDIT";
 	if		(TagsListBox->Focused()) TagsListBoxDblClick(Sender);
 	else if (InfoListBox->Focused()) InfoListBoxDblClick(Sender);
 }
@@ -365,7 +365,7 @@ void __fastcall TFindTagForm::CopyActionExecute(TObject *Sender)
 {
 	if (TagsListBox->Focused())  ExeCmdListBox(TagsListBox, _T("ClipCopy"));
 
-	TagCmd.USET_T("COPY");
+	TagCmd = "COPY";
 	ModalResult = mrOk;
 }
 //---------------------------------------------------------------------------

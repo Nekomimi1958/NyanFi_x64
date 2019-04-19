@@ -1498,14 +1498,15 @@ UnicodeString get_BatteryTimeStr()
 {
 	SYSTEM_POWER_STATUS ps;
 	::GetSystemPowerStatus(&ps);
+
 	UnicodeString ret;
 	if (ps.ACLineStatus==1) {
-		ret.USET_T("ONLINE");
+		ret = "ONLINE";
 	}
 	else {
 		int s = ps.BatteryLifeTime;
 		if (s==-1)
-			ret.USET_T("--:--");
+			ret = "--:--";
 		else
 			ret.sprintf(_T("%u:%02u"), s/3600, (s%3600)/60);
 	}

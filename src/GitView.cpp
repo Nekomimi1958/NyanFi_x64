@@ -397,7 +397,7 @@ void __fastcall TGitViewer::UpdateCommitList(
 	prm = "log --graph";
 	if (ShowBranchesAction->Checked && commit_id.IsEmpty()) prm += " --branches";
 	if (HistoryLimit>0) prm.cat_sprintf(_T(" -%u"), HistoryLimit);
-	if (!FilterName.IsEmpty()) prm.UCAT_T(" --follow");
+	if (!FilterName.IsEmpty()) prm += " --follow";
 	prm += " --date=format:\"%Y/%m/%d %H:%M:%S\" --pretty=format:\"\t%H\t%P\t%ad\t%s\t%d\t%an\"";
 	if (!commit_id.IsEmpty())  prm.cat_sprintf(_T(" %s"), commit_id.c_str());
 	if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" \"%s\""), FilterName.c_str());
@@ -430,7 +430,7 @@ void __fastcall TGitViewer::UpdateCommitList(
 					for (int j=0; j<b_buf.Length; j++) {
 						UnicodeString ss = Trim(b_buf[j]);
 						if (remove_top_text(ss, "tag: ")) {
-							if (!gp->tags.IsEmpty()) gp->tags.UCAT_T("\t");
+							if (!gp->tags.IsEmpty()) gp->tags += "\t";
 							gp->tags += ss;
 						}
 						else if (ss.Pos("/")) {
@@ -438,7 +438,7 @@ void __fastcall TGitViewer::UpdateCommitList(
 						}
 						else {
 							gp->is_head |= StartsStr("HEAD -> ", ss) || USAME_TS(ss, "HEAD");
-							if (!gp->branch.IsEmpty()) gp->branch.UCAT_T(",");
+							if (!gp->branch.IsEmpty()) gp->branch += ",";
 							gp->branch += ss;
 						}
 					}
@@ -1268,7 +1268,7 @@ void __fastcall TGitViewer::CopyBranchNameActionExecute(TObject *Sender)
 		remove_top_s(ss, "HEAD -> ");
 		remove_top_s(ss, "HEAD");
 		if (!ss.IsEmpty()) {
-			if (!bnam.IsEmpty()) bnam.UCAT_T(",");
+			if (!bnam.IsEmpty()) bnam += ",";
 			bnam += ss;
 		}
 	}

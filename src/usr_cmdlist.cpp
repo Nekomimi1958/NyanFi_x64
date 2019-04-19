@@ -522,11 +522,11 @@ void get_PrmList(
 	UnicodeString params;
 
 	if (USAME_TI(cmd, "AddTab")) {
-		params.USET_T("\nNX : 現タブの次に挿入\nPR : 現タブの前に挿入");
+		params = "\nNX : 現タブの次に挿入\nPR : 現タブの前に挿入";
 	}
 	else if (USAME_TI(cmd, "AlphaBlend")) {
 		if (cp) cp->Style = csDropDown;
-		params.USET_T("\r\nIN : 透明度を入力\r\n");
+		params = "\r\nIN : 透明度を入力\r\n";
 	}
 	else if (USAME_TI(cmd, "AppList")) {
 		params.sprintf(_T("%s"),
@@ -549,7 +549,7 @@ void get_PrmList(
 			_T("^3 : デスクトップ背景を表示/非表示\n"));
 	}
 	else if (contained_wd_i(_T("CursorUp|CursorDown|ScrollCursorDown|ScrollCursorUp|ScrollDown|ScrollUp"), cmd)) {
-		if (id_idx!=4) params.USET_T("\nHP : 半ページ分\nFP : 1ページ分\n");
+		if (id_idx!=4) params = "\nHP : 半ページ分\nFP : 1ページ分\n";
 	}
 	else if (contained_wd_i(_T("CalcDirSize|CalcDirSizeAll"), cmd)) {
 		params.sprintf(_T("%s"),
@@ -561,7 +561,7 @@ void get_PrmList(
 			_T("SA : 結果をサイズの小さい順にソート\n")
 			_T("SD : 結果をサイズの大きい順にソート\n"));
 		if (USAME_TI(cmd, "CalcDirSizeAll")) {
-			params.UCAT_T("SG : グラフ表示(対カレント)\nDG : グラフ表示(対ドライブ)\n");
+			params += "SG : グラフ表示(対カレント)\nDG : グラフ表示(対ドライブ)\n";
 		}
 	}
 	else if (USAME_TI(cmd, "Calculator")) {
@@ -581,31 +581,31 @@ void get_PrmList(
 	}
 	else if (contained_wd_i(_T("ChangeDrive|DriveGraph|EjectDrive"), cmd)) {
 		for (int i=0; i<26; i++) params.cat_sprintf(_T("%c\n"), 'A'+i);	//英字
-		if (USAME_TI(cmd, "EjectDrive")) params.UCAT_T(". : カレントドライブ\n");
+		if (USAME_TI(cmd, "EjectDrive")) params += ". : カレントドライブ\n";
 		if (USAME_TI(cmd, "DriveGraph")) params = "\n" + params;
 	}
 	else if (USAME_TI(cmd, "CheckUpdate")) {
-		params.USET_T("\nNC : 保存場所の選択、確認なし\n");
+		params = ("\nNC : 保存場所の選択、確認なし\n");
 	}
 	else if (USAME_TI(cmd, "ClearAll")) {
-		params.USET_T("\nAL : 左右すべての選択状態を解除\n");
+		params = "\nAL : 左右すべての選択状態を解除\n";
 	}
 	else if (USAME_TI(cmd, "ClearMark")) {
-		params.USET_T("\nAC : すべての場所のすべてのマークを解除\n");
+		params = "\nAC : すべての場所のすべてのマークを解除\n";
 	}
 	else if (USAME_TI(cmd, "ClipCopy")) {
 		if (id_idx==2) {
-			params.USET_T("\nAD : 現在の内容に追加\n");
+			params = "\nAD : 現在の内容に追加\n";
 		}
 		else if (id_idx==3) {
-			params.USET_T("\nVI : 表示されている状態でコピー\n");
+			params = "\nVI : 表示されている状態でコピー\n";
 		}
 	}
 	else if (USAME_TI(cmd, "Close") && id_idx==2) {
-		params.USET_T("\nAL : すべての別ウィンドウを閉じる\n");
+		params = "\nAL : すべての別ウィンドウを閉じる\n";
 	}
 	else if (USAME_TI(cmd, "CompareDlg")) {
-		params.USET_T("\nNC : ダイアログを出さず、名前のみ比較\n");
+		params = "\nNC : ダイアログを出さず、名前のみ比較\n";
 	}
 	else if (contained_wd_i(_T("CompareHash|GetHash|ToOppSameHash"), cmd)) {
 		params.sprintf(_T("%s"),
@@ -616,8 +616,8 @@ void get_PrmList(
 			_T("SHA384\n")
 			_T("SHA512\n")
 			_T("CRC32\n"));
-		if (USAME_TI(cmd, "ToOppSameHash")) params.UCAT_T("NO : 反対側へ移動しない\n");
-		if (USAME_TI(cmd, "CompareHash"))   params.UCAT_T("OS : 不一致ファイルを反対側で選択\n");
+		if (USAME_TI(cmd, "ToOppSameHash")) params += "NO : 反対側へ移動しない\n";
+		if (USAME_TI(cmd, "CompareHash"))   params += "OS : 不一致ファイルを反対側で選択\n";
 	}
 	else if (USAME_TI(cmd, "CompressDir")) {
 		params.sprintf(_T("%s"),
@@ -652,23 +652,23 @@ void get_PrmList(
 	}
 	else if (contained_wd_i(_T("CopyFileName|ListFileName"), cmd)) {
 		if (cp) cp->Style = csDropDown;
-		params.USET_T("\nFN : ファイル名部分のみ\n");
+		params = "\nFN : ファイル名部分のみ\n";
 	}
 	else if (USAME_TI(cmd, "CreateDir")) {
-		params.USET_T("\r\nIN : デフォルト名を指定して入力\r\n");
+		params = "\r\nIN : デフォルト名を指定して入力\r\n";
 	}
 	else if (contained_wd_i(_T("CsrDirToOpp|LinkToOpp|SwapLR"), cmd)) {
-		params.USET_T("\nTO : 反対側へ移動\n");
+		params = "\nTO : 反対側へ移動\n";
 	}
 	else if (contained_wd_i(_T("CurrFromOpp|CurrToOpp"), cmd)) {
-		params.USET_T("\nSL : 選択状態を反映\n");
-		if (USAME_TI(cmd, "CurrToOpp")) params.UCAT_T("TO : 反対側へ移動\n");
+		params = "\nSL : 選択状態を反映\n";
+		if (USAME_TI(cmd, "CurrToOpp")) params += "TO : 反対側へ移動\n";
 	}
 	else if (USAME_TI(cmd, "DeleteADS")) {
-		params.USET_T("\nZI : Zone.Identifier のみ維持\n");
+		params = "\nZI : Zone.Identifier のみ維持\n";
 	}
 	else if (USAME_TI(cmd, "DelJpgExif")) {
-		params.USET_T("\nKT : タイムスタンプを維持\n");
+		params = "\nKT : タイムスタンプを維持\n";
 	}
 	else if (USAME_TI(cmd, "DiffDir")) {
 		params.sprintf(_T("%s"),
@@ -692,29 +692,29 @@ void get_PrmList(
 			_T("SN : ファイルリストからマスクと振分先を設定\n"));
 	}
 	else if (USAME_TI(cmd, "DotNyanDlg")) {
-		params.USET_T("\nRS : カレント側に .nyanfi を再適用\n");
+		params = "\nRS : カレント側に .nyanfi を再適用\n";
 	}
 	else if (USAME_TI(cmd, "Duplicate")) {
-		params.USET_T("\nRA : 管理者として二重起動\n");
+		params = "\nRA : 管理者として二重起動\n";
 	}
 	else if (contained_wd_i(_T("EditHistory|ViewHistory"), cmd)) {
-		params.USET_T("\nFF : フィルタ欄にフォーカス\nAC : 履歴をすべて消去\n");
+		params = "\nFF : フィルタ欄にフォーカス\nAC : 履歴をすべて消去\n";
 	}
 	else if (USAME_TI(cmd, "ExeCommandLine")) {
-		params.USET_T("\nFN : カーソル位置のファイル名を入力\nLC : 前回のコマンドを初期表示\n");
+		params = "\nFN : カーソル位置のファイル名を入力\nLC : 前回のコマンドを初期表示\n";
 	}
 	else if (USAME_TI(cmd, "ExtractIcon")) {
 		if (cp) cp->Style = csDropDown;
-		params.USET_T("\nSI : スモールアイコンを抽出\n");
+		params = "\nSI : スモールアイコンを抽出\n";
 	}
 	else if (USAME_TI(cmd, "FileEdit") && id_idx==0) {
-		params.USET_T("\nOS : 反対側で選択中のファイルも開く\n");
+		params = "\nOS : 反対側で選択中のファイルも開く\n";
 	}
 	else if (USAME_TI(cmd, "FileExtList")) {
-		params.USET_T("\nCP : カーソル位置のディレクトリが対象\n");
+		params = "\nCP : カーソル位置のディレクトリが対象\n";
 	}
 	else if (USAME_TI(cmd, "Filter")) {
-		params.USET_T("\nCS : 大小文字を区別\nCA : 実行前に選択マスクを解除\n");
+		params = "\nCS : 大小文字を区別\nCA : 実行前に選択マスクを解除\n";
 	}
 	else if (contained_wd_i(_T("FindFileDlg|FindFileDirDlg"), cmd)) {
 		params.sprintf(_T("%s"),
@@ -732,27 +732,27 @@ void get_PrmList(
 		}
 	}
 	else if (USAME_TI(cmd, "FindHardLink")) {
-		params.USET_T("\nOP : 結果リストから反対側へ反映\n");
+		params = "\nOP : 結果リストから反対側へ反映\n";
 	}
 	else if (USAME_TI(cmd, "FindMark")) {
-		params.USET_T("\nAL : すべてのマーク項目を検索\n");
+		params = "\nAL : すべてのマーク項目を検索\n";
 	}
 	else if (contained_wd_i(_T("FindTag|AddTag|SetTag|TagSelect"), cmd)) {
-		params.USET_T("\n; : 入力ボックスでタグを指定\n");
+		params = "\n; : 入力ボックスでタグを指定\n";
 		params += usr_TAG->TagNameList->Text;
 	}
 	else if (USAME_TI(cmd, "FindTagName")) {
-		params.USET_T("\nEJ : テキストエディタでダイレクトタグジャンプ\n");
-		if (id_idx==2) params.UCAT_T("CO : 現在のファイルのみを検索\n");
+		params = "\nEJ : テキストエディタでダイレクトタグジャンプ\n";
+		if (id_idx==2) params += "CO : 現在のファイルのみを検索\n";
 	}
 	else if (contained_wd_i(_T("FindSelDown|FindSelUp"), cmd)) {
-		params.USET_T("\nEM : マッチ語を強調表示\n");
+		params = "\nEM : マッチ語を強調表示\n";
 	}
 	else if (USAME_TI(cmd, "FixTabPath")) {
-		params.USET_T("\nON : カレント側を固定\nOFF : 固定解除\n");
+		params = "\nON : カレント側を固定\nOFF : 固定解除\n";
 	}
 	else if (USAME_TI(cmd, "GitDiff")) {
-		params.USET_T("\nHD : HEAD から差分を表示\nXT : 外部diffツールで表示\n");
+		params = "\nHD : HEAD から差分を表示\nXT : 外部diffツールで表示\n";
 	}
 	else if (USAME_TI(cmd, "GitViewer")) {
 		params.sprintf(_T("%s"),
@@ -762,11 +762,11 @@ void get_PrmList(
 			_T("CP : カーソル位置ファイルのコミット履歴を表示\n"));
 	}
 	else if (USAME_TI(cmd, "HelpContents")) {
-		params.USET_T("\nCI : コマンドの索引\nFI : コマンドの機能別索引\nCH : 変更履歴\n");
+		params = "\nCI : コマンドの索引\nFI : コマンドの機能別索引\nCH : 変更履歴\n";
 	}
 	else if (USAME_TI(cmd, "IncSearch")) {
-		params.USET_T("\nMM : Migomoモード\nNM : 通常モード\n");
-		if (id_idx==0) params.UCAT_T("FM : フィルタマスク・モード\nCA : 実行前に選択マスクを解除\n");
+		params = "\nMM : Migomoモード\nNM : 通常モード\n";
+		if (id_idx==0) params += "FM : フィルタマスク・モード\nCA : 実行前に選択マスクを解除\n";
 	}
 	else if (USAME_TI(cmd, "InputDir")) {
 		params.sprintf(_T("%s"),
@@ -782,21 +782,21 @@ void get_PrmList(
 			_T("NS : ポップアップメニューで選択(空き容量非表示)\n"));
 	}
 	else if (USAME_TI(cmd, "InputCommands")) {
-		params.USET_T("\nEL : エコー、コマンドファイルの行番号表示\n");
+		params = "\nEL : エコー、コマンドファイルの行番号表示\n";
 	}
 	else if (contained_wd_i(
 		_T("CmdFileList|ListClipboard|MarkList|KeyList|FunctionList|RepositoryList|SpecialDirList|UserDefList"), cmd))
 	{
-		params.USET_T("\nFF : フィルタ欄にフォーカス\n");
+		params = "\nFF : フィルタ欄にフォーカス\n";
 	}
 	else if (contained_wd_i(_T("Exit|Close"), cmd)) {
-		params.USET_T("\nNS : INIファイルを保存しない\nNX : 他のNyanFiを終了させない\n");
+		params = "\nNS : INIファイルを保存しない\nNX : 他のNyanFiを終了させない\n";
 	}
 	else if (USAME_TI(cmd, "ExPopupMenu")) {
-		params.USET_T("\nMN : 追加メニューのみ表示\nTL : 外部ツールのみ表示\n");
+		params = "\nMN : 追加メニューのみ表示\nTL : 外部ツールのみ表示\n";
 	}
 	else if (USAME_TI(cmd, "Library")) {
-		params.USET_T("\nSD : 選択ダイアログを表示\n* : 選択メニューを表示\n");
+		params = "\nSD : 選択ダイアログを表示\n* : 選択メニューを表示\n";
 		UnicodeString pnam = cv_env_str("%APPDATA%\\Microsoft\\Windows\\Libraries\\");
 		std::unique_ptr<TStringList> lst(new TStringList());
 		get_files(pnam, _T("*.library-ms"), lst.get());
@@ -804,34 +804,34 @@ void get_PrmList(
 			params.cat_sprintf(_T("%s\n"), get_base_name(lst->Strings[i]).c_str());
 	}
 	else if (contained_wd_i(_T("CountLines|ListArchive|ListDuration|ListExpFunc|ListNyanFi"), cmd)) {
-		params.USET_T("\nCC : 結果をクリップボードにコピー\nLS : 結果を一覧表示\n");
+		params = "\nCC : 結果をクリップボードにコピー\nLS : 結果を一覧表示\n";
 	}
 	else if (USAME_TI(cmd, "ListLog")) {
-		params.USET_T("\nEO : エラー箇所の絞り込み表示\n");
+		params = "\nEO : エラー箇所の絞り込み表示\n";
 	}
 	else if (USAME_TI(cmd, "ListTail")) {
-		params.USET_T("\nTE : 最後尾に移動r\nFF : フィルタ欄にフォーカス\n");
+		params = "\nTE : 最後尾に移動r\nFF : フィルタ欄にフォーカス\n";
 	}
 	else if (USAME_TI(cmd, "ListText")) {
-		params.USET_T("\nFF : フィルタ欄にフォーカス\nEO : エラー箇所の絞り込み表示\n");
+		params = "\nFF : フィルタ欄にフォーカス\nEO : エラー箇所の絞り込み表示\n";
 	}
 	else if (USAME_TI(cmd, "Mark") && (id_idx==0 || id_idx==3)) {
-		params.USET_T("\nND : カーソルを移動しない\nIM : メモを入力\n");
+		params = "\nND : カーソルを移動しない\nIM : メモを入力\n";
 	}
 	else if (USAME_TI(cmd, "MoveTab")) {
-		params.USET_T("\nTP : 先頭に先頭\nED : 最後に移動\nPR : １つ前に移動\n");
+		params = "\nTP : 先頭に先頭\nED : 最後に移動\nPR : １つ前に移動\n";
 	}
 	else if (USAME_TI(cmd, "PageBind")) {
-		params.USET_T("\nR : 右綴じ\nL : 左綴じ\n");
+		params = "\nR : 右綴じ\nL : 左綴じ\n";
 	}
 	else if (USAME_TI(cmd, "Paste")) {
-		params.USET_T("\nCL : 同名時にクローン化\n");
+		params = "\nCL : 同名時にクローン化\n";
 	}
 	else if (contained_wd_i(_T("NextFile|PrevFile"), cmd)) {
-		if (id_idx==3) params.USET_T("\nF1 : 見開き表示でも1ファイルずつ移動\n");
+		if (id_idx==3) params = "\nF1 : 見開き表示でも1ファイルずつ移動\n";
 	}
 	else if (USAME_TI(cmd, "NextNyanFi")) {
-		params.USET_T("\nDN : なければ二重起動\n");
+		params = "\nDN : なければ二重起動\n";
 	}
 	else if (USAME_TI(cmd, "PlayList")) {
 		params.sprintf(_T("%s"),
@@ -859,29 +859,29 @@ void get_PrmList(
 			_T("H : ヘルプ\n"));
 	}
 	else if (USAME_TI(cmd, "RecentList")) {
-		params.USET_T("\nAC : 最近使ったすべての項目を削除\nBC : リンク切れ項目を整理\n");
+		params = "\nAC : 最近使ったすべての項目を削除\nBC : リンク切れ項目を整理\n";
 	}
 	else if (contained_wd_i(_T("RegDirDlg|PathMaskDlg"), cmd)) {
-		params.USET_T("\nND : ポップアップメニューで選択\n");
-		if (USAME_TI(cmd, "RegDirDlg")) params.UCAT_T("AD : 追加モード\n");
+		params = "\nND : ポップアップメニューで選択\n";
+		if (USAME_TI(cmd, "RegDirDlg")) params += "AD : 追加モード\n";
 	}
 	else if (contained_wd_i(_T("RegDirPopup|PushDir|PopDir"), cmd)) {
-		params.USET_T("\nOP : 反対側で実行\n");
+		params = "\nOP : 反対側で実行\n";
 	}
 	else if (USAME_TI(cmd, "ReloadList")) {
-		params.USET_T("\nCO : カレントのみ更新\nHL : ハードリンクのタイムスタンプ更新\nOFF : 更新禁止\n");
+		params = "\nCO : カレントのみ更新\nHL : ハードリンクのタイムスタンプ更新\nOFF : 更新禁止\n";
 	}
 	else if (USAME_TI(cmd, "RenameDlg")) {
-		params.USET_T("\nED : リストの編集による改名\n");
+		params = "\nED : リストの編集による改名\n";
 	}
 	else if (USAME_TI(cmd, "Restart")) {
-		params.USET_T("\nNS : INIファイルを保存しない\nRA : 管理者として再起動\nDM : 管理者から降格して再起動\n");
+		params = "\nNS : INIファイルを保存しない\nRA : 管理者として再起動\nDM : 管理者から降格して再起動\n";
 	}
 	else if (USAME_TI(cmd, "SaveAsWorkList")) {
-		params.USET_T("\nFL : カレントの内容をワークリストとして保存\n");
+		params = "\nFL : カレントの内容をワークリストとして保存\n";
 	}
 	else if (contained_wd_i(_T("ScrollUpLog|ScrollUpText|ScrollDownLog|ScrollDownText"), cmd)) {
-		params.USET_T("\nHP : 半ページ分\nFP : 1ページ分\n");
+		params = "\nHP : 半ページ分\nFP : 1ページ分\n";
 		params.cat_sprintf(_T("%s\n"), ContainsText(cmd, "Down")? _T("ED : 最後へ") : _T("TP : 先頭へ"));
 	}
 	else if (USAME_TI(cmd, "SelByList")) {
@@ -894,21 +894,21 @@ void get_PrmList(
 	}
 	else if (USAME_TI(cmd, "Select") && (id_idx==0 || id_idx==3)) {
 		if (cp) cp->Style = csDropDown;
-		params.USET_T("\n");
-		if (id_idx==0) params.UCAT_T("IN : 繰り返し回数を入力\n");
-		params.UCAT_T("ND : カーソルを移動しない\n");
+		params = "\n";
+		if (id_idx==0) params += "IN : 繰り返し回数を入力\n";
+		params += "ND : カーソルを移動しない\n";
 	}
 	else if (USAME_TI(cmd, "SelectFile")) {
-		params.USET_T("\nNX : 次のファイルを表示\n");
+		params = "\nNX : 次のファイルを表示\n";
 	}
 	else if (USAME_TI(cmd, "SelEmptyDir")) {
-		params.USET_T("\nNF : ファイルが含まれていなければ選択\n");
+		params = "\nNF : ファイルが含まれていなければ選択\n";
 	}
 	else if (contained_wd_i(_T("MarkMask|SelMask"), cmd)) {
-		params.USET_T("\nCA : マスクを解除\n");
+		params = "\nCA : マスクを解除\n";
 	}
 	else if (USAME_TI(cmd, "SetColor")) {
-		params.USET_T("\nRS : 配色をリセット\n");
+		params = "\nRS : 配色をリセット\n";
 	}
 	else if (USAME_TI(cmd, "SetFolderIcon")) {
 		params.sprintf(_T("%s"),
@@ -917,7 +917,7 @@ void get_PrmList(
 			_T("RS : デフォルトアイコンに戻す\n"));
 	}
 	else if (USAME_TI(cmd, "SetPathMask")) {
-		params.USET_T("\nEX : カーソル位置の拡張子でマスク\n");
+		params = "\nEX : カーソル位置の拡張子でマスク\n";
 	}
 	else if (USAME_TI(cmd, "SetTopAddr")) {
 		params.sprintf(_T("%s"),
@@ -928,7 +928,7 @@ void get_PrmList(
 			_T("ED : 終端アドレスを最後に\n"));
 	}
 	else if (USAME_TI(cmd, "ShowFileInfo") && id_idx!=2) {
-		params.USET_T("\nSD : ダイアログで表示\n");
+		params = "\nSD : ダイアログで表示\n";
 	}
 	else if (USAME_TI(cmd, "SimilarSort")) {
 		params.sprintf(_T("%s"),
@@ -940,7 +940,7 @@ void get_PrmList(
 			_T("IA : IX、IC、IN、IFをすべて適用\n"));
 	}
 	else if (USAME_TI(cmd, "Sort")) {
-		params.USET_T("\nAO : 昇順\nDO : 降順\n");
+		params = "\nAO : 昇順\nDO : 降順\n";
 	}
 	else if (USAME_TI(cmd, "SortDlg")) {
 		params.sprintf(_T("%s"),
@@ -971,23 +971,23 @@ void get_PrmList(
 			_T("XNI : ファイルと同じ/アイコン トグル切り替え\n"));
 	}
 	else if (USAME_TI(cmd, "SubDirList")) {
-		params.USET_T("\nND : ポップアップメニューで選択\n");
+		params = "\nND : ポップアップメニューで選択\n";
 	}
 	else if (USAME_TI(cmd, "SwapName")) {
-		params.USET_T("\nLR : 左右で入れ替え\n");
+		params = "\nLR : 左右で入れ替え\n";
 	}
 	else if (USAME_TI(cmd, "TabHome")) {
-		params.USET_T("\nAL : すべてのタブに適用\nCO : カレントのみに適用\n");
+		params = "\nAL : すべてのタブに適用\nCO : カレントのみに適用\n";
 	}
 	else if (contained_wd_i("TagJump|TagView", cmd)) {
-		params.USET_T("\nDJ : 見つからなければダイレクトタグジャンプ\n");
+		params = "\nDJ : 見つからなければダイレクトタグジャンプ\n";
 	}
 	else if (contained_wd_i(_T("TextViewer|ImageViewer"), cmd)) {
-		params.USET_T("\nCB : クリップボードの内容を表示\nNN : 次のNyanFiで表示\n");
-		if (USAME_TI(cmd, "TextViewer")) params.UCAT_T("XW : 別ウィンドウで表示\n");
+		params = "\nCB : クリップボードの内容を表示\nNN : 次のNyanFiで表示\n";
+		if (USAME_TI(cmd, "TextViewer")) params += "XW : 別ウィンドウで表示\n";
 	}
 	else if (USAME_TI(cmd, "ToOppSameItem")) {
-		params.USET_T("\nNO : 反対側へ移動しない\n");
+		params = "\nNO : 反対側へ移動しない\n";
 	}
 	else if (contained_wd_i(_T("ToParent|ToParentOnLeft|ToParentOnRight"), cmd)) {
 		params.sprintf(_T("%s"),
@@ -1003,10 +1003,10 @@ void get_PrmList(
 			_T("OW : 確認無しで上書き\n"));
 	}
 	else if (USAME_TI(cmd, "UpdateFromArc")) {
-		params.USET_T("\nUN : 新しいアーカイブを探して更新\n");
+		params = "\nUN : 新しいアーカイブを探して更新\n";
 	}
 	else if (contained_wd_i("ViewIniFile|ViewLog", cmd)) {
-		params.UCAT_T("\nXW : 別ウィンドウで表示\n");
+		params = "\nXW : 別ウィンドウで表示\n";
 	}
 	else if (USAME_TI(cmd, "WatchTail")) {
 		params.sprintf(_T("%s"),
@@ -1016,21 +1016,21 @@ void get_PrmList(
 			_T("AC : すべての監視を中止\n"));
 	}
 	if (USAME_TI(cmd, "WebMap")) {
-		params.USET_T("\nIN : 緯度,経度を入力\n");
+		params = "\nIN : 緯度,経度を入力\n";
 	}
 	else if (USAME_TI(cmd, "WebSearch")) {
-		params.USET_T("\nCB : クリップボードの内容を検索\n");
-		if (id_idx==0) params.UCAT_T("FN : カーソル位置のファイル名を検索\n");
+		params = "\nCB : クリップボードの内容を検索\n";
+		if (id_idx==0) params += "FN : カーソル位置のファイル名を検索\n";
 	}
 	else if (USAME_TI(cmd, "WorkList") && id_idx==0) {
-		params.USET_T("\nOP : 反対側で実行\nRL : 変更内容を破棄して読み込み直す\nDI : 無効な項目を一括削除\n");
+		params = "\nOP : 反対側で実行\nRL : 変更内容を破棄して読み込み直す\nDI : 無効な項目を一括削除\n";
 	}
 	else if (contained_wd_i(_T("ZoomIn|ZoomOut"), cmd)) {
-		params.USET_T("\n");
+		params = "\n";
 		for (int i=2; i<=12; i++) params.cat_sprintf(_T("%u\n"), i);
 	}
 	else if (contained_wd_i(_T("Copy|Move|Delete|CompleteDelete"), cmd)) {
-		params.USET_T("\nSO : 選択項目のみ処理\n");
+		params = "\nSO : 選択項目のみ処理\n";
 		if (USAME_TI(cmd, "Copy")) {
 			params.cat_sprintf(_T("%s"),
 				_T("OP : 反対側コピー先のカーソル位置を設定\nOP2 : コピー先のカーソル位置を逐次設定\n")
@@ -1052,11 +1052,11 @@ void get_PrmList(
 		_T("Thumbnail|ThumbnailEx|WarnHighlight"),
 		cmd))
 	{
-		params.USET_T("\nON : 表示/有効\nOFF : 非表示/無効/解除\n");
+		params = "\nON : 表示/有効\nOFF : 非表示/無効/解除\n";
 		if (USAME_TI(cmd, "SubViewer"))
-			params.UCAT_T("LK : ロック/解除\nRL : 左に90度回転\nRR : 右に90度回転\nFH : 左右反転\nFV : 上下反転\n");
+			params += "LK : ロック/解除\nRL : 左に90度回転\nRR : 右に90度回転\nFH : 左右反転\nFV : 上下反転\n";
 		if (USAME_TI(cmd, "ShowIcon"))
-			params.UCAT_T("FD : 全表示/フォルダアイコンのみ表示\n");
+			params += "FD : 全表示/フォルダアイコンのみ表示\n";
 	}
 	//オプション設定
 	else if (USAME_TI(cmd, "OptionDlg")) {

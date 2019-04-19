@@ -191,7 +191,7 @@ void __fastcall TExTxtViewer::AdjustHdrWidth()
 	TxtSttHeader->Panels->Items[2]->Width = cv->TextWidth(TxtSttHeader->Panels->Items[2]->Text) + 12;
 	TxtSttHeader->Panels->Items[3]->Width = cv->TextWidth(TxtSttHeader->Panels->Items[3]->Text) + 12;
 	UnicodeString tmp = "00000行 000桁 0000字選択 ";
-	if (ExViewer->CsvCol>=0) tmp.UCAT_T(" 00列");
+	if (ExViewer->CsvCol>=0) tmp += " 00列";
 	TxtSttHeader->Panels->Items[4]->Width = cv->TextWidth(tmp);
 
 	TxtSttHeader->Panels->Items[0]->Width = ClientWidth
@@ -327,14 +327,14 @@ bool __fastcall TExTxtViewer::OpenViewer(
 			inf_str.cat_sprintf(_T("  %s:%s"),
  				(test_HtmlExt(fext)? _T("ソース行数") : _T("行数")),
  				get_size_str_B(vbuf->Count, 0).c_str());
-			if (ExViewer->isLimited) inf_str.UCAT_T("(部分)");
+			if (ExViewer->isLimited) inf_str += "(部分)";
 		}
 		//------------------------------
 		//バイナリ・ダンプ表示
 		//------------------------------
 		else {
 			if (!ExViewer->AssignBin()) Abort();
-			if (ExViewer->isLimited) inf_str.UCAT_T("    (部分)");
+			if (ExViewer->isLimited) inf_str += "    (部分)";
 		}
 
 		AdjustHdrWidth();

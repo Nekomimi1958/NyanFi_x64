@@ -289,7 +289,7 @@ bool __fastcall TFileExtensionDlg::GetInfo(UnicodeString pnam)
 	UnicodeString snam = pnam;  split_tkn(snam, PathName);
 
 	TSearchRec sr;
-	int err = FindFirst(cv_ex_filename(UAPP_T(pnam, "*")), faAnyFile, sr);
+	int err = FindFirst(cv_ex_filename(pnam + "*"), faAnyFile, sr);
 	if (err==0) {
 		try {
 			do {

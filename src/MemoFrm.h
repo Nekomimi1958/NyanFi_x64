@@ -74,8 +74,6 @@ __published:	// IDE で管理されるコンポーネント
 
 private:	// ユーザー宣言
 	bool OptVisible;		//ボタンパネルの表示状態
-	TColor color_MemoBg;	//背景色
-	TColor color_MemoFg;	//文字色
 
 	void __fastcall WmMenuChar(TMessage &msg)
 	{

@@ -55,7 +55,7 @@ void __fastcall TExeCmdDlg::FormShow(TObject *Sender)
 		int p;
 		//実行可能ファイル
 		if (test_FileExt(FileRec->f_ext, FExtExeFile)) {
-			ExeComboBox->Text = fnam.UCAT_T(" ");
+			ExeComboBox->Text = fnam += " ";
 			p = ExeComboBox->Text.Length();
 		}
 		//その他のファイル

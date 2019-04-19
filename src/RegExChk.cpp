@@ -125,7 +125,7 @@ void __fastcall TRegExChecker::FormClose(TObject *Sender, TCloseAction &Action)
 	//åüçıëŒè€ÇÃï€ë∂
 	UnicodeString lbuf;
 	for (int i=0; i<ObjMemo->Lines->Count && i<20; i++) {
-		if (i>0) lbuf.UCAT_T(",");
+		if (i>0) lbuf += ",";
 		lbuf += make_csv_str(ObjMemo->Lines->Strings[i]);
 	}
 	IniFile->WriteStrGen( _T("RegExChkText"),	lbuf);
@@ -170,7 +170,7 @@ void __fastcall TRegExChecker::TestActionExecute(TObject *Sender)
 				UnicodeString mbuf;
 				for (int j=0; j<mts.Count; j++) {
 					if (mts.Item[j].Success) {
-						if (j>0) mbuf.UCAT_T("\t");
+						if (j>0) mbuf += "\t";
 						mbuf.cat_sprintf(_T("%u,%u"), mts.Item[j].Index, mts.Item[j].Length);
 						MatchCount++;
 					}
@@ -235,7 +235,7 @@ void __fastcall TRegExChecker::ReplaceActionExecute(TObject *Sender)
 				int ofs = 0;
 				for (int j=0; j<mts.Count; j++) {
 					if (mts.Item[j].Success) {
-						if (j>0) mbuf.UCAT_T("\t");
+						if (j>0) mbuf += "\t";
 						UnicodeString rwd = TRegEx::Replace(mts.Item[j].Value, ptnstr, ReplaceEdit->Text, opt);
 						int p = mts.Item[j].Index + ofs;
 						int n = rwd.Length();

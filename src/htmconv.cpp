@@ -70,7 +70,7 @@ UnicodeString HtmConv::int_to_alpha(int n)
 	UnicodeString ret_str;
 	n--;
 	if (n<0) {
-		ret_str.USET_T("0");
+		ret_str = "0";
 	}
 	else {
 		int n1 = n /26;
@@ -92,11 +92,11 @@ UnicodeString HtmConv::int_to_roman(int n)
 		switch (rn) {
 		case 1: case 2: case 3:
 			ret_str += StringOfChar(_T('c'), rn); break;
-		case 4: ret_str.UCAT_T("cd"); break;
-		case 5: ret_str.UCAT_T("d");  break;
+		case 4: ret_str += "cd"; break;
+		case 5: ret_str += "d";  break;
 		case 6: case 7: case 8:
 			ret_str.cat_sprintf(_T("d%s"), StringOfChar(_T('c'), rn - 5).c_str()); break;
-		case 9: ret_str.UCAT_T("cm"); break;
+		case 9: ret_str += "cm"; break;
 		}
 	}
 
@@ -106,11 +106,11 @@ UnicodeString HtmConv::int_to_roman(int n)
 		switch (rn) {
 		case 1: case 2: case 3:
 			ret_str += StringOfChar(_T('x'), rn); break;
-		case 4: ret_str.UCAT_T("xl"); break;
-		case 5: ret_str.UCAT_T("l");  break;
+		case 4: ret_str += "xl"; break;
+		case 5: ret_str += "l";  break;
 		case 6: case 7: case 8:
 			ret_str.cat_sprintf(_T("l%s"), StringOfChar(_T('x'), rn - 5).c_str()); break;
-		case 9: ret_str.UCAT_T("xc"); break;
+		case 9: ret_str += "xc"; break;
 		}
 	}
 
@@ -119,11 +119,11 @@ UnicodeString HtmConv::int_to_roman(int n)
 	switch (rn) {
 	case 1: case 2: case 3:
 		ret_str += StringOfChar(_T('i'), rn); break;
-	case 4: ret_str.UCAT_T("iv"); break;
-	case 5: ret_str.UCAT_T("v");  break;
+	case 4: ret_str += "iv"; break;
+	case 5: ret_str += "v";  break;
 	case 6: case 7: case 8:
 		ret_str.cat_sprintf(_T("v%s"), StringOfChar(_T('i'), rn - 5).c_str()); break;
-	case 9: ret_str.UCAT_T("ix"); break;
+	case 9: ret_str += "ix"; break;
 	}
 	return ret_str;
 }
@@ -663,11 +663,11 @@ void HtmConv::Convert()
 	Title = Description = Keywords = EmptyStr;
 
 	if (ToMarkdown) {
-		HeaderStr.USET_T("#;##;###;####;#####;######");
-		UlMarkStr.USET_T("- ");
+		HeaderStr = "#;##;###;####;#####;######";
+		UlMarkStr = "- ";
 	}
 	else {
-		UlMarkStr.USET_T("・");
+		UlMarkStr = "・";
 	}
 
 	std::unique_ptr<TStringList> lst(new TStringList());
@@ -815,11 +815,11 @@ void HtmConv::Convert()
 					if (ends_tchs(_T(" [*_"), TxtLineBuf)) break;
 					if (StartsStr(' ', lbuf)) break;
 					if (fRT) { fRT = false; break; }
-					TxtLineBuf.UCAT_T(" ");
+					TxtLineBuf += " ";
 				} while (0);
 
 				//引用
-				if (fBLKQ>0) lbuf.Insert(UAPP_T(StringOfChar(_T('>'), fBLKQ), " "), 1);
+				if (fBLKQ>0) lbuf.Insert(StringOfChar(_T('>'), fBLKQ) + " ", 1);
 				TxtLineBuf += lbuf;
 			}
 		}
@@ -837,7 +837,7 @@ void HtmConv::Convert()
 				n = ((LI_level>0)? LI_level - 1 : 0) + ((DL_level>0)? DL_level - 1 : 0);
 				n *= 4;
 				indent_str = StringOfChar(_T(' '), n);
-				if (USAME_TS(tag, "DD")) indent_str.UCAT_T(":   ");
+				if (USAME_TS(tag, "DD")) indent_str += ":   ";
 			}
 			else {
 				if (USAME_TS(tag, "DT"))
@@ -963,7 +963,7 @@ void HtmConv::Convert()
 						case 'i': tmpstr = int_to_roman(n); 			break;
 						case 'I': tmpstr = int_to_roman(n).UpperCase(); break;
 						}
-						tmpstr.UCAT_T(".");
+						tmpstr += ".";
 						TxtLineBuf += tmpstr;
 						LI_No[LI_level]++;
 					}
@@ -1018,7 +1018,7 @@ void HtmConv::Convert()
 						TStringDynArray td_lst = split_strings_tab(tr_list->Strings[j]);
 						UnicodeString trbuf;
 						for (int k=0; k<td_lst.Length; k++) {
-							if (k>0) trbuf.UCAT_T(" ");
+							if (k>0) trbuf += " ";
 							int wd = (k<wd_lst.Length)? wd_lst[k].ToIntDef(2) : str_len_half(td_lst[k]);
 							trbuf += align_l_str(Trim(td_lst[k]), wd + 2);	//***
 						}
@@ -1027,7 +1027,7 @@ void HtmConv::Convert()
 					//上下罫線を挿入
 					UnicodeString hrstr;
 					for (int j=0; j<wd_lst.Length; j++) {
-						if (j>0) hrstr.UCAT_T(" ");
+						if (j>0) hrstr += " ";
 						hrstr += StringOfChar(_T('-'), wd_lst[j].ToIntDef(2) + 2);	//***
 					}
 					tr_list->Insert(0, hrstr);
@@ -1040,7 +1040,7 @@ void HtmConv::Convert()
 				FlushText();
 			}
 			else if (contained_wd_i(_T("TD|TH"), tag)) {
-				if (fTR>0) fTR = 0; else TxtLineBuf.UCAT_T("\t");
+				if (fTR>0) fTR = 0; else TxtLineBuf += "\t";
 			}
 			else if (USAME_TS(tag, "TR")) {
 				if (!TxtLineBuf.IsEmpty()) {
@@ -1062,16 +1062,16 @@ void HtmConv::Convert()
 			}
 			else if (USAME_TS(tag, "RT")) {
 				fRT = true;
-				if (!fRP) TxtLineBuf.UCAT_T("(");
+				if (!fRP) TxtLineBuf += "(";
 			}
 			else if (USAME_TS(tag, "/RT")) {
-				if (!fRP) TxtLineBuf.UCAT_T(")");
+				if (!fRP) TxtLineBuf += ")";
 			}
 			//リンク
 			else if (USAME_TS(tag, "A")) {
 				HrefStr = GetTagAtr(lbuf, tag, _T("HREF"));
 				if (ToMarkdown && !HrefStr.IsEmpty()) {
-					TxtLineBuf.UCAT_T("[");
+					TxtLineBuf += "[";
 				}
 				else {
 					if (StartsText("file://", HrefStr)) {
@@ -1116,9 +1116,9 @@ void HtmConv::Convert()
 
 			//Markdown の場合のみ
 			else if (ToMarkdown) {
-				if		(contained_wd_i(_T("B|/B|EM|/EM|STRONG|/STRONG"), tag)) TxtLineBuf.UCAT_T("**");
-				else if (contained_wd_i(_T("I|/I"), tag)) TxtLineBuf.UCAT_T("*");
-				else if (contained_wd_i(_T("S|/S|DEL|/DEL"), tag)) TxtLineBuf.UCAT_T("~~");
+				if		(contained_wd_i(_T("B|/B|EM|/EM|STRONG|/STRONG"), tag)) TxtLineBuf += "**";
+				else if (contained_wd_i(_T("I|/I"), tag)) TxtLineBuf += "*";
+				else if (contained_wd_i(_T("S|/S|DEL|/DEL"), tag)) TxtLineBuf += "~~";
 				//画像
 				else if (USAME_TS(tag, "IMG")) {
 					UnicodeString alt_str = def_if_empty(GetTagAtr(lbuf, tag, _T("ALT")), _T("画像"));

@@ -869,6 +869,11 @@ TColor col_fgSttBar;	//ステータスバーの文字色
 TColor col_bgInfHdr;	//情報ヘッダの背景色
 TColor col_fgInfHdr;	//情報ヘッダの文字色
 
+TColor col_bgChInf;		//文字情報サンプルの背景色
+TColor col_fgChInf;		//文字情報サンプルの文字色
+TColor col_bgEdBox;		//Edit ボックスの背景色
+TColor col_fgEdBox;		//Edit ボックスの文字色
+
 TColor col_ModalScr;	//モーダル表示効果色
 
 const TColor col_Teal = clTeal;
@@ -1185,6 +1190,8 @@ void InitializeGlobal()
 	mute_Volume("GET");	//ミュート状態を取得
 
 	//廃止セクション、キーの削除、修正
+	IniFile->DeleteKey( SCT_General, "MemoFormBgCol");		//v13.54
+	IniFile->DeleteKey( SCT_General, "MemoFormfgCol");
 	IniFile->DeleteKey( SCT_Option,  "SelColDrvInf");						//v13.53
 	IniFile->ReplaceKey(SCT_General, "ShowGifViewer",	"ShowSubViewer");	//v13.52
 	IniFile->ReplaceKey(SCT_General, "GifViewerLeft",	"SubViewerLeft");
@@ -1385,7 +1392,7 @@ void InitializeGlobal()
 		"DCOMP=圧縮設定\n";
 
 	//タグ
-	usr_TAG = new TagManager(UAPP_T(ExePath, TAGDATA_FILE));
+	usr_TAG = new TagManager(ExePath + TAGDATA_FILE);
 
 	//----------------------------------------------
 	//オプションのキーと変数との対応を登録して読込
@@ -1936,33 +1943,33 @@ void InitializeGlobal()
 	}
 
 #if defined(_WIN64)
-	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git"));
-	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git\\bin"));
-	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")).UCAT_T("Git\\cmd"));
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")) + "Git");
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")) + "Git\\bin");
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")) + "Git\\cmd");
 #else
-	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git"));
-	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git\\bin"));
-	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")).UCAT_T("Git\\cmd"));
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")) + "Git");
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")) + "Git\\bin");
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")) + "Git\\cmd");
 #endif
 
-	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")).UCAT_T("Git\\bin"));
-	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")).UCAT_T("Git\\cmd"));
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")) + "Git\\bin");
+	plst->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")) + "Git\\cmd");
 	if (CmdGitExe.IsEmpty()) {
 		for (int i=0; i<plst->Count; i++) {
-			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]).UCAT_T("git.exe");
+			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]) + "git.exe";
 			if (file_exists(xnam)) { CmdGitExe = xnam;  break; }
 		}
 	}
 
 	if (GitBashExe.IsEmpty()) {
 		for (int i=0; i<plst->Count; i++) {
-			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]).UCAT_T("git-bash.exe");
+			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]) + "git-bash.exe";
 			if (file_exists(xnam)) { GitBashExe = xnam;  break; }
 		}
 	}
 	if (GitGuiExe.IsEmpty()) {
 		for (int i=0; i<plst->Count; i++) {
-			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]).UCAT_T("git-gui.exe");
+			UnicodeString xnam = IncludeTrailingPathDelimiter(plst->Strings[i]) + "git-gui.exe";
 			if (file_exists(xnam)) { GitGuiExe = xnam;  break; }
 		}
 	}
@@ -2062,7 +2069,7 @@ void InitializeGlobal()
 	ClearNopStt();
 
 	//ドライブ容量ログの初期化
-	DriveLogName = UAPP_T(ExePath, DRVLOG_FILE);
+	DriveLogName = ExePath + DRVLOG_FILE;
 	if (file_exists(DriveLogName) && load_text_ex(DriveLogName, DriveLogList)!=0)
 		update_DriveLog(false);
 	else
@@ -2342,7 +2349,7 @@ void LoadOptions()
 		*(EventCmdList[i].sp) = IniFile->ReadString("Event", EventCmdList[i].key);
 
 	//タイマーイベント
-	sct.USET_T("TimerEvent");
+	sct = "TimerEvent";
 	for (int i=0; i<MAX_TIMER_EVENT; i++) {
 		UnicodeString key;
 		Timer_Condition[i] = IniFile->ReadString(sct, key.sprintf(_T("Condition%u"), i + 1));
@@ -2421,7 +2428,7 @@ void SaveOptions()
 			fbuf->Add(s.sprintf(_T("Item%u=%s"), i + 1, AllDirHistory->Strings[i].c_str()));
 		}
 		//保存
-		UnicodeString fnam = UAPP_T(ExePath, DIR_HIST_FILE);
+		UnicodeString fnam = ExePath + DIR_HIST_FILE;
 		UnicodeString msg  = make_LogHdr(_T("SAVE"), fnam);
 		if (saveto_TextUTF8(fnam, fbuf.get())) {
 			IniFile->EraseSection("AllDirHistory");
@@ -2449,7 +2456,7 @@ void SaveOptions()
 	for (int i=0; i<MAX_EVENT_CMD; i++)
 		IniFile->WriteString("Event", EventCmdList[i].key,	*(EventCmdList[i].sp));
 
-	sct.USET_T("TimerEvent");
+	sct = "TimerEvent";
 	for (int i=0; i<MAX_TIMER_EVENT; i++) {
 		UnicodeString key;
 		IniFile->WriteString(sct, key.sprintf(_T("Condition%u"), i + 1),	Timer_Condition[i]);
@@ -3152,14 +3159,14 @@ int __fastcall KeyComp_Key(TStringList *List, int Index1, int Index2)
 
 	//シフト
 	UnicodeString s0, s1;
-	if (remove_text(k0, KeyStr_SELECT))	s0.UCAT_T("S0+");
-	if (remove_text(k0, KeyStr_Shift))	s0.UCAT_T("S1+");
-	if (remove_text(k0, KeyStr_Ctrl))	s0.UCAT_T("S2+");
-	if (remove_text(k0, KeyStr_Alt))	s0.UCAT_T("S3+");
-	if (remove_text(k1, KeyStr_SELECT))	s1.UCAT_T("S0+");
-	if (remove_text(k1, KeyStr_Shift))	s1.UCAT_T("S1+");
-	if (remove_text(k1, KeyStr_Ctrl))	s1.UCAT_T("S2+");
-	if (remove_text(k1, KeyStr_Alt))	s1.UCAT_T("S3+");
+	if (remove_text(k0, KeyStr_SELECT))	s0 += "S0+";
+	if (remove_text(k0, KeyStr_Shift))	s0 += "S1+";
+	if (remove_text(k0, KeyStr_Ctrl))	s0 += "S2+";
+	if (remove_text(k0, KeyStr_Alt))	s0 += "S3+";
+	if (remove_text(k1, KeyStr_SELECT))	s1 += "S0+";
+	if (remove_text(k1, KeyStr_Shift))	s1 += "S1+";
+	if (remove_text(k1, KeyStr_Ctrl))	s1 += "S2+";
+	if (remove_text(k1, KeyStr_Alt))	s1 += "S3+";
 	if (!SameText(s0, s1)) return CompareStr(s0, s1);
 
 	//2ストローク
@@ -3242,7 +3249,7 @@ UnicodeString get_MiniPathName(
 				if (i==0 && (StartsStr("\\\\", dnam) || StartsStr('<', dnam))) continue;
 				int dlen = dnam.Length();
 				if (!EndsStr("…", dnam) && dlen>4) {
-					plst[i] = dnam.SubString(1, (dlen>=32)? dlen/2 : dlen - 3).UCAT_T("…");
+					plst[i] = dnam.SubString(1, (dlen>=32)? dlen/2 : dlen - 3) + "…";
 					changed = true;
 					break;
 				}
@@ -3277,7 +3284,7 @@ UnicodeString get_dotNaynfi(UnicodeString dnam)
 {
 	UnicodeString fnam;
 	if (!dnam.IsEmpty()) fnam = IncludeTrailingPathDelimiter(dnam);
-	fnam.UCAT_T(".nyanfi");
+	fnam += ".nyanfi";
 	if (DotNyanPerUser && !UserName.IsEmpty()) fnam.cat_sprintf(_T("_%s"), UserName.c_str());
 	return fnam;
 }
@@ -3306,7 +3313,7 @@ UnicodeString get_WebSeaCaption(UnicodeString kwd)
 	if (!kwd.IsEmpty()) {
 		kwd = Trim(get_first_line(kwd));
 		kwd = ReplaceStr(kwd, "&", "&&");
-		if (kwd.Length()>20) kwd = kwd.SubString(1, 20).UCAT_T("…");
+		if (kwd.Length()>20) kwd = kwd.SubString(1, 20) + "…";
 		if (!kwd.IsEmpty()) ret_str.sprintf(_T("「%s」を "), kwd.c_str());
 	}
 
@@ -3549,7 +3556,7 @@ UnicodeString format_FileName(UnicodeString fmt, UnicodeString fnam)
 		WideChar c = fmt[i];
 		if (c=='\\') {
 			UnicodeString s = fmt.SubString(i, 512);
-			if (s.Pos(')')) s = get_tkn(s, ')').UCAT_T(")");
+			if (s.Pos(')')) s = get_tkn(s, ')') + ")";
 
 			if (StartsStr("\\L(", s)) {
 				int n = get_in_paren(s).ToIntDef(0);
@@ -3616,7 +3623,7 @@ UnicodeString get_NextSameName(
 	bool only_text)			//true = テキストのみ (default = false)
 {
 	std::unique_ptr<TStringList> l_lst(new TStringList());
-	get_files(ExtractFilePath(fnam), get_base_name(fnam).UCAT_T(".*").c_str(), l_lst.get());
+	get_files(ExtractFilePath(fnam), (get_base_name(fnam) + ".*").c_str(), l_lst.get());
 	if (l_lst->Count<2) return EmptyStr;
 
 	int idx = l_lst->IndexOf(fnam);
@@ -3822,10 +3829,10 @@ UnicodeString is_SyncDir(UnicodeString dnam1, UnicodeString dnam2)
 
 		if (flag1 || flag2) {
 			if (flag1 && flag2 && !SameText(dnam1, dnam2) && SameText(snam1, snam2)) {
-				ret_str.USET_T("S");  break;
+				ret_str = "S";  break;
 			}
-			if (flag1) ret_str.UCAT_T("1");
-			if (flag2) ret_str.UCAT_T("2");
+			if (flag1) ret_str += "1";
+			if (flag2) ret_str += "2";
 		}
 	}
 
@@ -4053,7 +4060,7 @@ void add_PackItem(file_rec *fp, int arc_t, UnicodeString src_dir, TStringList *l
 		}
 		else {
 			//カレントの空ディレクトリはマスクを付けない
-			if (!is_EmptyDir(fp->f_name)) fnam.UCAT_T("\\*");
+			if (!is_EmptyDir(fp->f_name)) fnam += "\\*";
 			lst->Add(fnam);
 		}
 	}
@@ -4298,7 +4305,7 @@ UnicodeString GetSelFileStr(
 			fnam = fp->f_name;
 		}
 
-		if (!f_str.IsEmpty()) f_str.UCAT_T(" ");
+		if (!f_str.IsEmpty()) f_str += " ";
 		f_str += add_quot_if_spc(fnam);
 
 		if (s_lst) s_lst->Add(add_quot_if_spc(fnam));
@@ -4490,15 +4497,15 @@ file_rec* cre_new_file_rec(
 		fp->is_dummy = true;
 	}
 	else if (is_separator(fnam)) {
-		fp->alias.USET_T("-");
+		fp->alias	 = "-";
 		fp->is_dummy = true;
 	}
 	else if (USAME_TS(fnam, "..")) {
-		fp->is_up	 = true;
-		fp->is_dir	 = true;
-		fp->f_name.USET_T("..");
-		fp->n_name.USET_T("..");
-		fp->b_name.USET_T("..");
+		fp->is_up  = true;
+		fp->is_dir = true;
+		fp->f_name = "..";
+		fp->n_name = "..";
+		fp->b_name = "..";
 	}
 	else {
 		bool is_dir = ends_PathDlmtr(fnam);
@@ -4543,9 +4550,9 @@ file_rec* cre_new_up_rec(int tag)
 	fp->tag 	 = tag;
 	fp->is_up	 = true;
 	fp->is_dir	 = true;
-	fp->f_name.USET_T("..");
-	fp->n_name.USET_T("..");
-	fp->b_name.USET_T("..");
+	fp->f_name	 = "..";
+	fp->n_name	 = "..";
+	fp->b_name	 = "..";
 	fp->attr_str = get_file_attr_str(fp->f_attr);
 	return fp;
 }
@@ -5098,7 +5105,7 @@ UnicodeString get_FontInf(
 					//フォント名
 					UnicodeString lbuf;
 					for (int i=0; i<n; i++) {
-						if (i>0) lbuf.UCAT_T("; ");
+						if (i>0) lbuf += "; ";
 						lbuf.cat_sprintf(_T("%s"), lfs[i].lfFaceName);
 					}
 					add_PropLine(_T("フォント名"), lbuf, tmp_lst.get());
@@ -5209,11 +5216,11 @@ drive_info *get_DriveInfoList()
 		//種類
 		dp->drv_type = ::GetDriveType(dstr.c_str());
 		switch (dp->drv_type) {
-		case DRIVE_REMOVABLE:	dp->type_str.USET_T("リムーバブル・メディア");	break;
-		case DRIVE_FIXED:		dp->type_str.USET_T("ハードディスク");			break;
-		case DRIVE_REMOTE:		dp->type_str.USET_T("ネットワーク・ドライブ");	break;
-		case DRIVE_CDROM:		dp->type_str.USET_T("CD-ROMドライブ");			break;
-		case DRIVE_RAMDISK:		dp->type_str.USET_T("RAMディスク");	dp->is_RAM = true;	break;
+		case DRIVE_REMOVABLE:	dp->type_str = "リムーバブル・メディア";	break;
+		case DRIVE_FIXED:		dp->type_str = "ハードディスク";			break;
+		case DRIVE_REMOTE:		dp->type_str = "ネットワーク・ドライブ";	break;
+		case DRIVE_CDROM:		dp->type_str = "CD-ROMドライブ";			break;
+		case DRIVE_RAMDISK:		dp->type_str = "RAMディスク";  dp->is_RAM = true;	break;
 		default: 				dp->type_str = EmptyStr;
 		}
 
@@ -5281,7 +5288,7 @@ drive_info *get_DriveInfoList()
 						{
 							DEVICE_SEEK_PENALTY_DESCRIPTOR *pDescriptor = (DEVICE_SEEK_PENALTY_DESCRIPTOR*)pcbData.get();
 							dp->is_SSD = !pDescriptor->IncursSeekPenalty && !USAME_TI(dp->bus_type, "SD");
-							if (dp->is_SSD) dp->type_str.USET_T("ソリッドステート");
+							if (dp->is_SSD) dp->type_str = "ソリッドステート";
 						}
 						else rq_chk_ram = true;
 					}
@@ -5297,7 +5304,7 @@ drive_info *get_DriveInfoList()
 						//サイズが物理メモリ使用容量より小さい
 						if (sTotal<=(__int64)(stt_ex.ullTotalPhys - stt_ex.ullAvailPhys)) {
 							dp->is_RAM	 = true;
-							dp->type_str.USET_T("RAMディスク");
+							dp->type_str = "RAMディスク";
 						}
 					}
 				}
@@ -5318,7 +5325,7 @@ drive_info *get_DriveInfoList()
 
 		//アイコン
 		UnicodeString inam = dp->accessible?
-								def_if_empty(get_autorun_ico(UAPP_T(dstr, "autorun.inf")), dstr) : dstr;
+								def_if_empty(get_autorun_ico(dstr + "autorun.inf"), dstr) : dstr;
 		SHFILEINFO sif;
 		if (::SHGetFileInfo(inam.c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON | SHGFI_SMALLICON))
 			dp->small_ico->Handle = sif.hIcon;
@@ -5512,7 +5519,7 @@ void update_DriveLog(bool save)
 	}
 
 	if (save) {
-		DriveLogName = UAPP_T(ExePath, DRVLOG_FILE);
+		DriveLogName = ExePath + DRVLOG_FILE;
 		if (!saveto_TextFile(DriveLogName, DriveLogList)) DriveLogName = EmptyStr;
 	}
 }
@@ -5777,7 +5784,7 @@ bool get_Files_objSize(
 	//サブディレクトリを検索
 	TSearchRec sr;
 	bool ok = true;
-	if (FindFirst(cv_ex_filename(UAPP_T(pnam, "*")), faAnyFile, sr)==0) {
+	if (FindFirst(cv_ex_filename(pnam + "*"), faAnyFile, sr)==0) {
 		do {
 			if ((sr.Attr & faDirectory)==0) continue;
 			if (!ShowHideAtr   && (sr.Attr & faHidden))  continue;
@@ -5855,7 +5862,7 @@ void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 	UnicodeString sea_str;
 	TSearchRec sr;
 	if (lst_stt->find_SubDir) {
-		sea_str = UAPP_T(pnam, "*");
+		sea_str = pnam + "*";
 		if (sea_str.Length()>=MAX_PATH) sea_str.Insert("\\\\?\\", 1);
 		if (FindFirst(sea_str, faAnyFile, sr)==0) {
 			do {
@@ -5872,7 +5879,7 @@ void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 	if (FindAborted) return;
 
 	//ファイルを検索
-	sea_str = lst_stt->find_Arc? UAPP_T(pnam, "*") : (pnam + lst_stt->find_Mask);
+	sea_str = lst_stt->find_Arc? (pnam + "*") : (pnam + lst_stt->find_Mask);
 
 	if (sea_str.Length()>=MAX_PATH) sea_str.Insert("\\\\?\\", 1);
 
@@ -6008,7 +6015,7 @@ void get_FindListD(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 	FindCount = (lst->Count>1)? lst->Count - 1 : 0;
 	if (lst_stt->find_Mask.IsEmpty()) lst_stt->find_Mask = "*";
 
-	UnicodeString sea_str = UAPP_T(pnam, "*");
+	UnicodeString sea_str = pnam + "*";
 	if (sea_str.Length()>=MAX_PATH) sea_str.Insert("\\\\?\\", 1);
 
 	TSearchRec sr;
@@ -6110,7 +6117,7 @@ void get_SubDirs(
 	//サブディレクトリを検索
 	UnicodeString sea_str;
 	TSearchRec sr;
-	sea_str = cv_ex_filename(UAPP_T(pnam, "*"));
+	sea_str = cv_ex_filename(pnam + "*");
 	if (FindFirst(sea_str, faAnyFile, sr)==0) {
 		do {
 			if (proc_msg) Application->ProcessMessages();
@@ -6158,7 +6165,7 @@ __int64 get_DirSize(
 	__int64 clu_n  = 0;						//クラスタ数
 
 	dnam = IncludeTrailingPathDelimiter(dnam);
-	UnicodeString sea_str = UAPP_T(dnam, "*");
+	UnicodeString sea_str = dnam + "*";
 	if (sea_str.Length()>=MAX_PATH) sea_str.Insert("\\\\?\\", 1);
 
 	TSearchRec sr;
@@ -6533,7 +6540,7 @@ UnicodeString get_file_from_cmd(UnicodeString s)
 	cmd = Trim(ReplaceStr(cmd, "\f", ":\\"));
 
 	//ファイル名を取得
-	if (USAME_TI(cmd, "PowerShell")) cmd.USET_T("FileRun_powershell");
+	if (USAME_TI(cmd, "PowerShell")) cmd = "FileRun_powershell";
 	UnicodeString fnam;
 	if (remove_top_text(cmd, _T("OpenByWin_")) || remove_top_text(cmd, _T("SetExeFile_"))
 		 || remove_top_text(cmd, _T("FileRun_")) || remove_top_text(cmd, _T("FileEdit_")))
@@ -6543,8 +6550,8 @@ UnicodeString get_file_from_cmd(UnicodeString s)
 	else if (remove_top_text(cmd, _T("SetFolderIcon_"))) {
 		fnam = to_absolute_name(get_actual_name(exclude_quot(cmd)));
 	}
-	else if (USAME_TI(cmd, "CommandPrompt")) fnam.USET_T("%ComSpec%");
-	else if (USAME_TI(cmd, "OpenByExp"))	 fnam.USET_T("%windir%\\explorer.exe");
+	else if (USAME_TI(cmd, "CommandPrompt")) fnam = "%ComSpec%";
+	else if (USAME_TI(cmd, "OpenByExp"))	 fnam = "%windir%\\explorer.exe";
 	else fnam = cmd;
 
 	return fnam;
@@ -6615,7 +6622,7 @@ bool load_MenuFile(UnicodeString fnam, TStringList *lst)
 						break;
 					}
 					else {
-						if (!cmd_str.IsEmpty()) cmd_str.UCAT_T(":");
+						if (!cmd_str.IsEmpty()) cmd_str += ":";
 						cmd_str += lbuf;
 					}
 				}
@@ -7160,10 +7167,12 @@ UnicodeString get_DispName(file_rec *fp)
 	UnicodeString ret_str;
 
 	if (fp) {
-		if (fp->is_dir)
+		if (fp->is_dir) {
 			ret_str.sprintf(_T("[%s]"), get_dir_name(fp->f_name).c_str());
-		else if (fp->is_dummy && is_separator(fp->alias))
-			ret_str.USET_T("< セパレータ >");
+		}
+		else if (fp->is_dummy && is_separator(fp->alias)) {
+			ret_str = "< セパレータ >";
+		}
 		else {
 			if (!fp->alias.IsEmpty())
 				ret_str.sprintf(_T("%s%s (%s)"), fp->alias.c_str(), fp->f_ext.c_str(), fp->n_name.c_str());
@@ -7383,7 +7392,7 @@ void GetFileInfList(
 		if (!fp->is_dir && !fp->is_virtual && !fp->is_ftp) {
 			for (int i=0; i<WatchTailList->Count; i++) {
 				if (SameText(get_pre_tab(WatchTailList->Strings[i]), fp->f_name)) {
-					lbuf.UCAT_T("  (監視中)");
+					lbuf += "  (監視中)";
 					break;
 				}
 			}
@@ -7404,7 +7413,7 @@ void GetFileInfList(
 			lbuf = "<全体>";
 		}
 		else if (lst_stt->find_MARK) {
-			if (lst_stt->find_SubList->Count==0) lbuf.USET_T("*");
+			if (lst_stt->find_SubList->Count==0) lbuf = "*";
 		}
 		else {
 			lbuf += lst_stt->find_Mask;
@@ -7489,8 +7498,8 @@ void GetFileInfList(
 				UnicodeString tmp = "ディレクトリ";
 				if (!fp->is_virtual) {
 					is_git_top = dir_exists(rpnam + "\\.git");
-					if (is_git_top) tmp.UCAT_T(" (リポジトリ)");
-					if (is_ProtectDir(rpnam)) tmp.UCAT_T(" (削除制限)");
+					if (is_git_top) tmp += " (リポジトリ)";
+					if (is_ProtectDir(rpnam)) tmp += " (削除制限)";
 				}
 				add_PropLine(_T("種類"), tmp, i_list);
 			}
@@ -7690,7 +7699,7 @@ UnicodeString get_FileInfValue(
 
 	for (int i=3; i<fp->inf_list->Count; i++) {
 		UnicodeString lbuf = fp->inf_list->Strings[i];
-		if (StartsText(UAPP_T(tit, ":"), Trim(lbuf))) {
+		if (StartsText(tit + ":", Trim(lbuf))) {
 			ret_str = get_tkn_r(lbuf, ':');
 			if (!dlmt.IsEmpty()) ret_str = get_tkn(ret_str, ';');
 			ret_str = Trim(ret_str);
@@ -7766,7 +7775,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 	UnicodeString namstr = split_tkn(lbuf, _T(": "));
 	xp = Rect.Left + 2 + w_max - get_TextWidth(cv, namstr, is_irreg);
 	UnicodeString iname = Trim(namstr);
-	namstr.UCAT_T(": ");
+	namstr += ": ";
 	if (!iname.IsEmpty()) {
 		cv->Font->Color = use_fgsel? col_fgSelItem :
 			(flag & LBFLG_FEXT_FIF)? get_ExtColor(iname) :
@@ -7899,7 +7908,7 @@ UnicodeString get_FileInfStr(file_rec *fp,
 	UnicodeString ret_str = with_atr? fp->attr_str : EmptyStr;
 
 	if (fp->f_attr!=faInvalid) {
-		if (!ret_str.IsEmpty()) ret_str.UCAT_T(" ");
+		if (!ret_str.IsEmpty()) ret_str += " ";
 		ret_str += get_FileSizeStr(fp->f_size);
 		if (!ShowByteSize && fp->f_size!=-1 && EndsStr('B', ret_str))
 			ret_str.cat_sprintf(_T(" (%s)"), get_size_str_B(fp->f_size, 0).c_str());
@@ -7957,19 +7966,21 @@ bool get_FileInfList(
 		//NyanFi 固有のファイル
 		UnicodeString typ_str = get_IniTypeStr(fp);
 		UnicodeString pnam	  = ExtractFilePath(fnam);
-		if		(!typ_str.IsEmpty())							tnam.cat_sprintf(_T(" [%s]"), typ_str.c_str());
-		else if (SameText(fnam, to_absolute_name(ReplaceLogName)))	tnam.UCAT_T(" [文字列置換ログ]");
-		else if (SameText(fnam, to_absolute_name(GrepFileName)))	tnam.UCAT_T(" [GREPログ]");
-		else if (is_MenuFile(fp))								tnam.UCAT_T(" [メニュー定義]");
-		else if (is_ResultList(fp))								tnam.UCAT_T(" [結果リスト]");
+		if		(!typ_str.IsEmpty())	tnam.cat_sprintf(_T(" [%s]"), typ_str.c_str());
+		else if (SameText(fnam, to_absolute_name(ReplaceLogName)))
+										tnam += " [文字列置換ログ]";
+		else if (SameText(fnam, to_absolute_name(GrepFileName)))
+										tnam += " [GREPログ]";
+		else if (is_MenuFile(fp))		tnam += " [メニュー定義]";
+		else if (is_ResultList(fp))		tnam += " [結果リスト]";
 		else if (is_ExePath(pnam)) {
 			UnicodeString nnam = ExtractFileName(fnam);
-			if		(SameText(nnam, TAGDATA_FILE))	tnam.UCAT_T(" [タグデータ]");
-			else if (SameText(nnam, WEBMAP_TPLT))	tnam.UCAT_T(" [マップ表示テンプレート]");
-			else if (SameText(nnam, DRVLOG_FILE))	tnam.UCAT_T(" [ドライブ容量ログ]");
-			else if (SameText(nnam, RENLOG_FILE))	tnam.UCAT_T(" [改名ログ]");
-			else if (SameText(nnam, "NyanFi.exe"))	tnam.UCAT_T(" [実行中]");
-			else if (is_match_regex_i(nnam, _T("^tasklog\\d?(~\\d)?\\.txt"))) tnam.UCAT_T(" [タスクログ]");
+			if		(SameText(nnam, TAGDATA_FILE))	tnam += " [タグデータ]";
+			else if (SameText(nnam, WEBMAP_TPLT))	tnam += " [マップ表示テンプレート]";
+			else if (SameText(nnam, DRVLOG_FILE))	tnam += " [ドライブ容量ログ]";
+			else if (SameText(nnam, RENLOG_FILE))	tnam += " [改名ログ]";
+			else if (SameText(nnam, "NyanFi.exe"))	tnam += " [実行中]";
+			else if (is_match_regex_i(nnam, _T("^tasklog\\d?(~\\d)?\\.txt"))) tnam += " [タスクログ]";
 		}
 
 		add_PropLine(_T("種類"), tnam, lst, LBFLG_TYPE_FIF);
@@ -9348,6 +9359,10 @@ void set_col_from_ColorList()
 		{&col_fgSttBar,	_T("fgSttBar"),		scl_BtnText},
 		{&col_bgInfHdr,	_T("bgInfHdr"),		scl_BtnFace},
 		{&col_fgInfHdr,	_T("fgInfHdr"),		scl_BtnText},
+		{&col_bgChInf,	_T("bgChInf"),		scl_Window},
+		{&col_fgChInf,	_T("fgChInf"),		scl_BtnText},
+		{&col_bgEdBox,	_T("bgEdBox"),		col_None},
+		{&col_fgEdBox,	_T("fgEdBox"),		col_None},
 		{&col_ModalScr,	_T("ModalScr"),		clBlack}
 	};
 
@@ -9412,8 +9427,8 @@ bool register_HotKey(int id, UnicodeString kstr)
 	catch (EAbort &e) {
 		GlobalErrMsg = SysErrorMessage(GetLastError());
 		switch (id) {
-		case ID_CALL_HOTKEY: GlobalErrMsg.UCAT_T("\r\n「NyanFi 呼び出し」の設定を確認してください。");	break;
-		case ID_APP_HOTKEY:  GlobalErrMsg.UCAT_T("\r\n「AppList コマンド」の設定を確認してください。");	break;
+		case ID_CALL_HOTKEY: GlobalErrMsg += "\r\n「NyanFi 呼び出し」の設定を確認してください。";	break;
+		case ID_APP_HOTKEY:  GlobalErrMsg += "\r\n「AppList コマンド」の設定を確認してください。";	break;
 		}
 		return false;
 	}
@@ -9543,8 +9558,8 @@ bool play_sound_ex(
 	cursor_HourGlass();
 	UnicodeString cmd;
 	cmd.sprintf(_T("open \"%s\""), fnam.c_str());
-	if (test_Mp3Ext(get_extension(fnam))) cmd.UCAT_T(" type MPEGVideo");
-	cmd.UCAT_T(" alias TPLYSND");
+	if (test_Mp3Ext(get_extension(fnam))) cmd += " type MPEGVideo";
+	cmd += " alias TPLYSND";
 	if (::mciSendString(cmd.c_str(), NULL, 0, NULL)==0) {
 		if (limit) {
 			::mciSendString(_T("set TPLYSND time format milliseconds"), NULL, 0, NULL);
@@ -9651,8 +9666,8 @@ bool play_PlayList(bool prev, bool inh_shfl)
 		if (file_exists(fnam)) {
 			UnicodeString cmd;
 			cmd.sprintf(_T("open \"%s\""), fnam.c_str());
-			if (test_Mp3Ext(get_extension(fnam))) cmd.UCAT_T(" type MPEGVideo");
-			cmd.UCAT_T(" alias PLYLIST");
+			if (test_Mp3Ext(get_extension(fnam))) cmd += " type MPEGVideo";
+			cmd += " alias PLYLIST";
 			if (::mciSendString(cmd.c_str(), NULL, 0, NULL)==0) {
 				res = (::mciSendString(_T("play PLYLIST notify"), NULL, 0, MainHandle)==0);
 				if (res) {
@@ -10080,7 +10095,7 @@ void PrvTextOut(
 	bool en_mlt)			//複数行コメントに対応		(default = true)
 {
 	UnicodeString s = lp->Items->Strings[idx];
-	if (s.Length()>1024) s = s.SubString(1, 1024).UCAT_T("…");	//*** 文字数制限
+	if (s.Length()>1024) s = s.SubString(1, 1024) + "…";	//*** 文字数制限
 
 	//コメントの判定
 	int p = 0;
@@ -11157,7 +11172,7 @@ bool divide_FileName_LineNo(
 				UnicodeString nkwd = nptn;
 				nptn = TRegEx::Escape(nptn);
 				if (p_top) nptn.Insert("^", 1);
-				if (p_end) nptn.UCAT_T("$");
+				if (p_end) nptn += "$";
 				if (chk_RegExPtn(nptn)) {
 					fnam = to_absolute_name(fnam, rnam);
 					if (file_exists(fnam)) {
@@ -11215,7 +11230,7 @@ bool divide_FileName_LineNo(
 	fnam = to_absolute_name(fnam, rnam);
 
 	if (fnam.IsEmpty())
-		GlobalErrMsg.USET_T("ジャンプ先が取得できません");
+		GlobalErrMsg = "ジャンプ先が取得できません";
 	else if (!file_exists(fnam))
 		GlobalErrMsg = SysErrorMessage(ERROR_FILE_NOT_FOUND);
 
@@ -11256,7 +11271,7 @@ int get_FileNameByTag(
 
 	try {
 		if (tnam.IsEmpty()) UserAbort(USTR_NoParameter);
-		tnam.UCAT_T("\t");
+		tnam += "\t";
 
 		UnicodeString tags = get_tags_file(rnam);
 		if (tags.IsEmpty()) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("tags ファイル")));
@@ -11746,18 +11761,18 @@ UnicodeString GetClockStr()
 		ret_str = ReplaceStr(ret_str, "$BT", tmp.sprintf(_T("\"%s\""),  get_BatteryTimeStr().c_str()));
 		//電源状態
 		if (ContainsStr(ret_str, "$PS(")) {
-			lbuf = split_tkn(ret_str, _T("$PS(")).UCAT_T("\"");
+			lbuf = split_tkn(ret_str, _T("$PS(")) + "\"";
 			s    = split_tkn(ret_str, ')');
 			SYSTEM_POWER_STATUS ps;
 			::GetSystemPowerStatus(&ps);
-			lbuf += ((ps.ACLineStatus==1)? get_tkn(s, ':') : get_tkn_r(s, ':')).UCAT_T("\"");
+			lbuf += (((ps.ACLineStatus==1)? get_tkn(s, ':') : get_tkn_r(s, ':')) + "\"");
 			ret_str.Insert(lbuf, 1);
 		}
 		//接続状態
 		if (ContainsStr(ret_str, "$NS(")) {
-			lbuf = split_tkn(ret_str, _T("$NS(")).UCAT_T("\"");
+			lbuf = split_tkn(ret_str, _T("$NS(")) + "\"";
 			s    = split_tkn(ret_str, ')');
-			lbuf += (InternetConnected()? get_tkn(s, ':') : get_tkn_r(s, ':')).UCAT_T("\"");
+			lbuf += ((InternetConnected()? get_tkn(s, ':') : get_tkn_r(s, ':')) + "\"");
 			ret_str.Insert(lbuf, 1);
 		}
 
@@ -11810,7 +11825,7 @@ UnicodeString GetClockStr()
 				if (s.IsEmpty()) s = format_Date(dt);
 				int n = dt - Today();
 				if (n==0) {
-					s.UCAT_T("当日");
+					s += "当日";
 				}
 				else {
 					if (n>0)
@@ -11868,7 +11883,7 @@ void RenameOptCmdFile()
 			for (int i=0; i<KeyFuncList->Count; i++) {
 				UnicodeString vbuf = KeyFuncList->ValueFromIndex[i];
 				if (!StartsText("ExeCommands_", vbuf)) continue;
-				UnicodeString vstr = split_tkn(vbuf, '_').UCAT_T("_");
+				UnicodeString vstr = split_tkn(vbuf, '_') + "_";
 				UnicodeString dsc  = split_dsc(vbuf);
 				if (!dsc.IsEmpty()) vstr.cat_sprintf(_T(":%s:"), dsc.c_str());
 				if (!remove_top_AT(vbuf)) continue;
@@ -11992,12 +12007,12 @@ UnicodeString get_ref_CmdFile(
 	}
 
 	UnicodeString ret_str;
-	if (K_cnt>0) ret_str.UCAT_T("K");
-	if (M_cnt>0) ret_str.UCAT_T("M");
-	if (B_cnt>0) ret_str.UCAT_T("B");
-	if (A_cnt>0) ret_str.UCAT_T("A");
-	if (S_cnt>0) ret_str.UCAT_T("S");
-	if (E_cnt>0) ret_str.UCAT_T("E");
+	if (K_cnt>0) ret_str += "K";
+	if (M_cnt>0) ret_str += "M";
+	if (B_cnt>0) ret_str += "B";
+	if (A_cnt>0) ret_str += "A";
+	if (S_cnt>0) ret_str += "S";
+	if (E_cnt>0) ret_str += "E";
 
 	//実行回数
 	if (lst) {
@@ -12022,7 +12037,7 @@ UnicodeString get_Alias_KeyStr(UnicodeString alias, TStringList *k_lst)
 		UnicodeString vbuf = k_lst->ValueFromIndex[j];
 		if (!remove_top_Dollar(vbuf)) continue;
 		if (SameText(alias, vbuf)) {
-			if (!ret_str.IsEmpty()) ret_str.UCAT_T(", ");
+			if (!ret_str.IsEmpty()) ret_str += ", ";
 			ret_str += k_lst->Names[j];
 		}
 	}
@@ -12144,7 +12159,7 @@ void StartLog(
 		if (LogBufList->Count>0 && !LogBufList->Strings[LogBufList->Count - 1].IsEmpty()) LogBufList->Add(EmptyStr);
 		//開始表示
 		UnicodeString s;
-		if (task_no>=0) s.sprintf(_T("%u>"), task_no + 1); else s.USET_T(">>");
+		if (task_no>=0) s.sprintf(_T("%u>"), task_no + 1); else s = ">>";
 		s += FormatDateTime("hh:nn:ss ", Now()) + ReplaceStr(msg, "\t", " ---> ");
 		LogBufList->Add(s);
 	}
@@ -12162,7 +12177,7 @@ void StartLog(const _TCHAR *msg, int task_no)
 //---------------------------------------------------------------------------
 void EndLog(UnicodeString msg, UnicodeString inf)
 {
-	if (contained_wd_i(_T("圧縮|解凍"), msg)) NotifyPrimNyan(UAPP_T(msg, "が終了しました"));
+	if (contained_wd_i(_T("圧縮|解凍"), msg)) NotifyPrimNyan(msg + "が終了しました");
 
 	AddLog(msg.cat_sprintf(_T("終了%s"), inf.c_str()), true);
 }
@@ -12198,12 +12213,12 @@ void AddLog(
 
 	UnicodeString s;
 	if (!msg.IsEmpty()) {
-		if (!raw)   s.USET_T(" >");
+		if (!raw)   s = " >";
 		if (with_t) s += FormatDateTime("hh:nn:ss ", Now());
 		s += msg;
 	}
 	else {
-		s.USET_T("\r\n");
+		s = "\r\n";
 	}
 
 	std::unique_ptr<TStringList> log_buf(new TStringList());
@@ -12470,7 +12485,7 @@ UnicodeString inputbox_dir(const _TCHAR *tit, const _TCHAR *cmd)
 //---------------------------------------------------------------------------
 bool is_FirstKey(UnicodeString id, UnicodeString keystr)
 {
-	if (!EndsStr(':', id))   id.UCAT_T(":");
+	if (!EndsStr(':', id)) id += ":";
 	UnicodeString key_n = id + keystr;
 	bool found = false;
 	for (int i=0; i<KeyFuncList->Count && !found; i++) {
@@ -12585,7 +12600,7 @@ bool update_IncSeaWord(
 		}
 	}
 	else if (USAME_TI(keystr, "SPACE")) {
-		keystr.USET_T(" ");
+		keystr	= " ";
 		is_char = true;
 	}
 
@@ -12963,7 +12978,7 @@ BOOL CALLBACK EnumNyanWndProc(HWND hWnd, LPARAM lst)
 		UnicodeString tbuf = get_WndText(hWnd);
 		int p = pos_r(_T(" - "), tbuf);
 		UnicodeString lbuf = (p>0)? tbuf.SubString(p + 3, 16) : tbuf;
-		if (lbuf.Pos('-')) lbuf = get_tkn_r(lbuf, '-'); else lbuf.USET_T("1");
+		if (lbuf.Pos('-')) lbuf = get_tkn_r(lbuf, '-'); else lbuf = "1";
 
 #if defined(_WIN64)
 		lbuf.cat_sprintf(_T(",%llu,%s"), hWnd, tbuf.c_str());
@@ -13004,7 +13019,7 @@ UnicodeString get_NewTitle(bool primary)
 
 	if (tnam.IsEmpty()) {
 		NyanFiIdNo = 1;
-		tnam.USET_T("NyanFi");
+		tnam = "NyanFi";
 	}
 
 	return tnam;
@@ -13525,7 +13540,7 @@ bool AddPathToTreeList(TStringList *lst)
 			if (lvl>=d_lst->Count) while (lvl>=d_lst->Count) d_lst->Add(EmptyStr);
 			d_lst->Strings[lvl] = dnam;
 
-			lbuf.UCAT_T("\t");
+			lbuf += "\t";
 			for (int j = 0; j<=lvl; j++) {
 				UnicodeString s = d_lst->Strings[j];
 				if (s.IsEmpty()) Abort();
@@ -13547,7 +13562,7 @@ bool AddPathToTreeList(TStringList *lst)
 //---------------------------------------------------------------------------
 UnicodeString get_GitTopPath(UnicodeString dnam)
 {
-	UnicodeString gnam = IncludeTrailingPathDelimiter(dnam).UCAT_T(".git");
+	UnicodeString gnam = IncludeTrailingPathDelimiter(dnam) + ".git";
 	while (!file_exists(gnam)) {
 		if (is_root_dir(dnam)) break;
 		dnam = IncludeTrailingPathDelimiter(get_parent_path(dnam));
@@ -13648,7 +13663,7 @@ UnicodeString get_GitUrl(file_rec *fp)
 					//Bitbucket
 					if (ContainsStr(url, "/bitbucket.org/")) {
 						remove_end_text(url, ".git");
-						url.UCAT_T("/src/master/");
+						url += "/src/master/";
 					}
 				}
 			}
@@ -13957,7 +13972,7 @@ void get_GitInf(
 		for (int i=0; i<b_buf.Length; i++) {
 			UnicodeString s = Trim(b_buf[i]);
 			if (s.Pos("/")==0) {
-				if (!cmt_s.IsEmpty()) cmt_s.UCAT_T(", ");
+				if (!cmt_s.IsEmpty()) cmt_s += ", ";
 				cmt_s += s;
 			}
 		}

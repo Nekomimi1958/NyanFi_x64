@@ -13,14 +13,8 @@
 extern const _TCHAR *null_TCHAR;
 
 //---------------------------------------------------------------------------
-#define UCAT_T(str)	cat_sprintf(_T("%s"), _T(str))
-#define USET_T(str)	sprintf(_T("%s"), _T(str))
-//s += "hoge" ÇÊÇË s.cat_sprintf(_T("%s"), _T("hoge")) ÇÃï˚Ç™è¨Ç≥Ç≠ÇƒçÇë¨
-
 #define USAME_TI(s1,s2)	same_ut_i(s1, _T(s2))
 #define USAME_TS(s1,s2)	same_ut_s(s1, _T(s2))
-
-#define UAPP_T(s,t)		append_str(s, _T(t))
 
 //---------------------------------------------------------------------------
 int __fastcall comp_NaturalOrder(TStringList *List, int Index1, int Index2);
@@ -105,7 +99,6 @@ UnicodeString replace_regex(UnicodeString s, const _TCHAR *o, const _TCHAR *r);
 
 UnicodeString replace_str_by_list(UnicodeString s, TStringList *lst);
 
-UnicodeString append_str(UnicodeString s, const _TCHAR *t);
 void cat_str_semicolon(UnicodeString &s, UnicodeString t);
 
 UnicodeString ins_spc_length(UnicodeString s, int len);

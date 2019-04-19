@@ -432,14 +432,10 @@ UnicodeString HighlightFile::GetHeadlinePtn(
 
 	//デフォルト
 	if (h_ptn.IsEmpty()) {
-		if (test_FileExt(fext, _T(".bat.cmd.qbt")))
-			h_ptn.USET_T("^:[^:]+");
-		else if (test_FileExt(fext, _T(".eml")))
-			h_ptn.USET_T("^Subject:");
-		else if (test_FileExt(fext, _T(".ini.inf.reg.url")))
-			h_ptn.USET_T("^\\[.+?\\]");
-		else if (test_FileExt(fext, FEXT_HTML))
-			h_ptn.USET_T("<[hH][1-6]");
+		if		(test_FileExt(fext, _T(".bat.cmd.qbt")))		h_ptn = "^:[^:]+";
+		else if (test_FileExt(fext, _T(".eml")))				h_ptn = "^Subject:";
+		else if (test_FileExt(fext, _T(".ini.inf.reg.url")))	h_ptn = "^\\[.+?\\]";
+		else if (test_FileExt(fext, FEXT_HTML))					h_ptn = "<[hH][1-6]";
 	}
 
 	return (chk_RegExPtn(h_ptn)? h_ptn : EmptyStr);
@@ -463,7 +459,7 @@ UnicodeString GetDefReservedPtn(
 	sns_case = true;
 
 	if (is_xml) {
-		ret_str.USET_T("<[^<>]+(>|\\s)");
+		ret_str  = "<[^<>]+(>|\\s)";
 		sns_case = false;
 	}
 	else if (is_log) {
@@ -497,7 +493,7 @@ UnicodeString GetDefReservedPtn(
 			_T("length|match|next|print|printf|return|split|sprintf|sub|substr|system|tolower|toupper|while)\\b"));
 	}
 	else if (test_FileExt(fext, _T(".bat.cmd.qbt"))) {
-		ret_str.USET_T("(@|\\b)(call|cls|cmd|echo|errorlevel|exit|for|goto|if|pause|rem|set|shift|start)\\b");
+		ret_str  = "(@|\\b)(call|cls|cmd|echo|errorlevel|exit|for|goto|if|pause|rem|set|shift|start)\\b";
 		sns_case = false;
 	}
 	else if (test_FileExt(fext, _T(".cs"))) {
@@ -528,10 +524,10 @@ UnicodeString GetDefReservedPtn(
 			_T("^\\s*#\\w+\\b"));
 	}
 	else if (test_FileExt(fext, _T(".dsp"))) {
-		ret_str.USET_T("^!\\w+\\b");
+		ret_str = "^!\\w+\\b";
 	}
 	else if (test_FileExt(fext, _T(".eml"))) {
-		ret_str.USET_T("^(Bcc|Cc|Date|From|Subject|To):");
+		ret_str  = "^(Bcc|Cc|Date|From|Subject|To):";
 		sns_case = false;
 	}
 	else if (test_FileExt(fext, _T(".fs"))) {
@@ -659,7 +655,7 @@ UnicodeString GetDefReservedPtn(
 			_T("true|undef|unless|until|when|while|yield)\\b"));
 	}
 	else if (test_FileExt(fext, _T(".rc.drc"))) {
-		ret_str.USET_T("^\\s*#\\w+\\b");
+		ret_str = "^\\s*#\\w+\\b";
 	}
 	else if (test_FileExt(fext, _T(".rs"))) {
 		ret_str.sprintf(_T("%s"),
@@ -675,7 +671,7 @@ UnicodeString GetDefReservedPtn(
 			_T("return|sealed|super|this|throw|trait|try|true|type|val|var|while|with|yield|_)\\b|=>|<:|<%|>:"));
 	}
 	else if (test_FileExt(fext, _T(".st"))) {
-		ret_str.USET_T("\\b(self|super|nil|true|false|thisContext)\\b");
+		ret_str = "\\b(self|super|nil|true|false|thisContext)\\b";
 	}
 	else if (test_FileExt(fext, _T(".swift"))) {
 		ret_str.sprintf(_T("%s"),
@@ -686,10 +682,10 @@ UnicodeString GetDefReservedPtn(
 			_T("unowned|var|weak|where|while|willSet|__COLUMN__|__FILE__|__FUNCTION__|__LINE__)\\b"));
 	}
 	else if (test_FileExt(fext, _T(".sh"))) {
-		ret_str.USET_T("\\b(case|in|esac|for|do|done|function|if|then|fi|elif|else|select|time|until|while)\\b");
+		ret_str = "\\b(case|in|esac|for|do|done|function|if|then|fi|elif|else|select|time|until|while)\\b";
 	}
 	else if (test_FileExt(fext, _T(".tex"))) {
-		ret_str.USET_T("\\\\\\w+\\b");
+		ret_str = "\\\\\\w+\\b";
 	}
 	else if (test_FileExt(fext, _T(".vb.bas"))) {
 		ret_str.sprintf(_T("%s"),
@@ -742,9 +738,9 @@ UnicodeString GetDefReservedPtn(
 	}
 	else if (test_FileExt(fext, FEXT_HTML)) {
 		if (is_h2t)
-			ret_str.USET_T("^(Description : |Title : )");
+			ret_str = "^(Description : |Title : )";
 		else {
-			ret_str.USET_T("<[^<>]+>");
+			ret_str  = "<[^<>]+>";
 			sns_case = false;
 		}
 	}
@@ -766,33 +762,21 @@ UnicodeString GetDefReservedPtn(
 //---------------------------------------------------------------------------
 //数値パターンを取得
 //---------------------------------------------------------------------------
-UnicodeString GetDefNumericPtn(
-	UnicodeString fext)		//拡張子
+UnicodeString GetDefNumericPtn(UnicodeString fext)
 {
-	UnicodeString ret_str;
-
-	if (test_FileExt(fext, _T(".css")))
-		ret_str.USET_T("([: ]+#[0-9a-f]+)|(\\b[0-9][0-9.]*)");
-	else if (test_FileExt(fext, _T(".dfm")))
-		ret_str.USET_T("\\s[0-9]+\\b");
-	else if (test_FileExt(fext, _T(".fs")))
-		ret_str.USET_T("\\b[0-9][box0-9a-f.]*\\b");
-	else if (test_FileExt(fext, _T(".json")))
-		ret_str.USET_T("\\b-?[0-9][0-9.]*\\b");
-	else if (test_FileExt(fext, _T(".swift")))
-		ret_str.USET_T("\\b([0-9][0-9._]*(e[\\+\\-]?[0-9]+)?|0x[0-9a-f.]+(p[\\+\\-]?[0-9]+)?|0b[01]+|0o[0-7]+)\\b");
-	else if (test_FileExt(fext, _T(".vb.vbs.bas.mac")))
-		ret_str.USET_T("(\\b[0-9][0-9.]*\\b)|(&h[0-9a-f]+&?)");
-	else if (test_FileExt(fext, _T(".v")))
-		ret_str.USET_T("\\b[0-9]+('(b[01_]+|o[0-7_]+|d[0-9_]+|h[0-9a-f_]+))?");
-	else if (test_FileExt(fext, FEXT_PASCAL))
-		ret_str.USET_T("((\\b[0-9][0-9.]*)|(\\$[0-9a-f]+))\\b");
-	else if (test_FileExt(fext, FEXT_PROGRAM))
-		ret_str.USET_T("\\b[0-9][x0-9a-f.]*[ul]*\\b");
-	else if (USAME_TI(fext, ".nbt"))
-		ret_str.USET_T("\\b[0-9]+\\b");
-
-	return ret_str;
+	return (
+		test_FileExt(fext, _T(".css")) ? "([: ]+#[0-9a-f]+)|(\\b[0-9][0-9.]*)" :
+		test_FileExt(fext, _T(".dfm")) ? "\\s[0-9]+\\b" :
+		test_FileExt(fext, _T(".fs"))  ? "\\b[0-9][box0-9a-f.]*\\b" :
+		test_FileExt(fext, _T(".json"))? "\\b-?[0-9][0-9.]*\\b" :
+		test_FileExt(fext, _T(".v"))   ? "\\b[0-9]+('(b[01_]+|o[0-7_]+|d[0-9_]+|h[0-9a-f_]+))?" :
+		test_FileExt(fext, _T(".swift"))?
+			"\\b([0-9][0-9._]*(e[\\+\\-]?[0-9]+)?|0x[0-9a-f.]+(p[\\+\\-]?[0-9]+)?|0b[01]+|0o[0-7]+)\\b" :
+		test_FileExt(fext, _T(".vb.vbs.bas.mac"))?
+			"(\\b[0-9][0-9.]*\\b)|(&h[0-9a-f]+&?)" :
+		test_FileExt(fext, FEXT_PASCAL) ? "((\\b[0-9][0-9.]*)|(\\$[0-9a-f]+))\\b" :
+		test_FileExt(fext, FEXT_PROGRAM)? "\\b[0-9][x0-9a-f.]*[ul]*\\b" :
+		USAME_TI(fext, ".nbt")? "\\b[0-9]+\\b" : "");
 }
 
 //---------------------------------------------------------------------------
@@ -803,22 +787,19 @@ UnicodeString GetDefSymbolChars(
 	bool is_xml,			//対象がXML
 	bool is_h2t)			//HTML→TEXT変換モード
 {
-	UnicodeString ret_str;
-
-	if		(is_xml)									ret_str.USET_T("{}/=<>:;?");
-	else if (test_FileExt(fext, _T(".au3")))			ret_str.USET_T("{}()[]+-*/%&!~=<>,.:");
-	else if (test_FileExt(fext, _T(".css")))			ret_str.USET_T("{}()*:;");
-	else if (test_FileExt(fext, _T(".dfm")))			ret_str.USET_T("()[]=");
-	else if (test_FileExt(fext, _T(".dsp.dsw")))		ret_str.USET_T("{}/=<>:?");
-	else if (test_FileExt(fext, _T(".json")))			ret_str.USET_T("{}[],:");
-	else if (test_FileExt(fext, _T(".ps1.psm1")))		ret_str.USET_T("{}()[]+-*/%|=,:@");
-	else if (test_FileExt(fext, _T(".vb.vbs.bas.mac")))	ret_str.USET_T("{}()[]+-*/%|^!~=<>,:;?");
-	else if (test_FileExt(fext, _T(".vhd")))			ret_str.USET_T("{}()[]+-*/%&!=<>,:;");
-	else if (test_FileExt(fext, FEXT_PROGRAM))			ret_str.USET_T("{}()[]+-*/%&|^!~=<>,:;?");
-	else if (USAME_TI(fext, ".nbt"))					ret_str.USET_T("+-*/%!=<>#_");
-	else if (test_FileExt(fext, FEXT_HTML) && !is_h2t)	ret_str.USET_T("{}</>=:;");
-
-	return ret_str;
+	return (
+		is_xml?										"{}/=<>:;?" :
+		test_FileExt(fext, _T(".au3"))?				"{}()[]+-*/%&!~=<>,.:" :
+		test_FileExt(fext, _T(".css"))?				"{}()*:;" :
+		test_FileExt(fext, _T(".dfm"))?				"()[]=" :
+		test_FileExt(fext, _T(".dsp.dsw"))?			"{}/=<>:?" :
+		test_FileExt(fext, _T(".json"))?			"{}[],:" :
+		test_FileExt(fext, _T(".ps1.psm1"))?		"{}()[]+-*/%|=,:@" :
+		test_FileExt(fext, _T(".vb.vbs.bas.mac"))?	"{}()[]+-*/%|^!~=<>,:;?" :
+		test_FileExt(fext, _T(".vhd"))?				"{}()[]+-*/%&!=<>,:;" :
+		test_FileExt(fext, FEXT_PROGRAM)?			"{}()[]+-*/%&|^!~=<>,:;?" :
+		USAME_TI(fext, ".nbt")?						"+-*/%!=<>#_" :
+		(test_FileExt(fext, FEXT_HTML) && !is_h2t)?	"{}</>=:;" : "");
 }
 
 //---------------------------------------------------------------------------
@@ -831,24 +812,23 @@ UnicodeString GetDefQuotChars(
 	bool is_ini,			//対象がINIファイル書式
 	bool is_h2t)			//HTML→TEXT変換モード
 {
-	UnicodeString ret_str;
-
-	if (test_FileExt(fext,
-		FEXT_C_SH _T(".ahk.awk.bas.bat.cbproj.cmd.cs.drc.dsp.dsw.fs.hs.hsp.idl.java.json.lisp.lsp.lua.mac.qbt.qml.rc.rs.scala.swift.vb.vbs.v.vhd")))
-															ret_str.USET_T("\"");
-	else if (test_FileExt(fext, FEXT_PASCAL _T(".dfm.st")))	ret_str.USET_T("\'");
-	else if (test_FileExt(fext, _T(".php")) && !is_h2t)		ret_str.USET_T("\"\'");
-	else if (test_FileExt(fext, _T(".as.au3.css.js.jsx.kt.kts.pl.ps1.psm1.rb.py.sql.PspScript")))
-															ret_str.USET_T("\"\'");
-	else if (test_FileExt(fext, _T(".go")))					ret_str.USET_T("\"`");
-	else if (test_FileExt(fext, _T(".sh")))					ret_str.USET_T("\"\'`");
-	else if (test_FileExt(fext, FEXT_HTML) && !is_h2t)		ret_str.USET_T("\"");
-	else if (is_xml || is_ini)								ret_str.USET_T("\"");
-	else if (USAME_TI(fext, ".nbt"))						ret_str.USET_T("\"%");
-
 	use_esc = (!test_FileExt(fext, _T(".vbs.bas.vb.mac.qbt")) && !is_ini);
 
-	return ret_str;
+	return (
+		test_FileExt(fext,
+			FEXT_C_SH
+			_T(".ahk.awk.bas.bat.cbproj.cmd.cs.drc.dsp.dsw.fs.hs.hsp.idl")
+			_T(".java.json.lisp.lsp.lua.mac.qbt.qml.rc.rs.scala.swift.vb.vbs.v.vhd"))?
+														"\"" :
+		test_FileExt(fext, FEXT_PASCAL _T(".dfm.st"))?	"\'" :
+		(test_FileExt(fext, _T(".php")) && !is_h2t)?	"\"\'" :
+		test_FileExt(fext, _T(".as.au3.css.js.jsx.kt.kts.pl.ps1.psm1.rb.py.sql.PspScript"))?
+														"\"\'" :
+		test_FileExt(fext, _T(".go"))?					"\"`" :
+		test_FileExt(fext, _T(".sh"))?					"\"\'`" :
+		(test_FileExt(fext, FEXT_HTML) && !is_h2t)?		"\"" :
+		(is_xml || is_ini)?								"\"" :
+		USAME_TI(fext, ".nbt")?							"\"%" : "");
 }
 
 //---------------------------------------------------------------------------
@@ -865,75 +845,75 @@ UnicodeString GetDefFunctionPtn(
 	UnicodeString std_ptn = "\\b[_a-zA-Z]\\w*\\(";
 
 	if (test_FileExt(fext, _T(".ahk"))) {
-		func_ptn.USET_T("^[_a-zA-Z]\\w*\\(\\w*\\)\\s*{");
-		name_ptn.USET_T("^[_a-zA-Z]\\w*\\(");
+		func_ptn = "^[_a-zA-Z]\\w*\\(\\w*\\)\\s*{";
+		name_ptn = "^[_a-zA-Z]\\w*\\(";
 	}
 	else if (test_FileExt(fext, _T(".au3"))) {
-		func_ptn.USET_T("^Func\\s+[_a-zA-Z]\\w*\\(");
+		func_ptn = "^Func\\s+[_a-zA-Z]\\w*\\(";
 		name_ptn = std_ptn;
 	}
 	else if (test_FileExt(fext, FEXT_C_SH)) {
-		func_ptn.USET_T("^([_a-zA-Z][^\\(=;:,]*[\\t ]+)*\\**([_a-zA-Z]\\w*::)?[~_a-zA-Z]\\w*\\([^;]*$");
-		name_ptn.USET_T("(\\b|~)[_a-zA-Z]\\w*\\(");
+		func_ptn = "^([_a-zA-Z][^\\(=;:,]*[\\t ]+)*\\**([_a-zA-Z]\\w*::)?[~_a-zA-Z]\\w*\\([^;]*$";
+		name_ptn = "(\\b|~)[_a-zA-Z]\\w*\\(";
 	}
 	else if (test_FileExt(fext, _T(".go"))) {
-		func_ptn.USET_T("^func(\\s\\(.+\\))?\\s+[_a-zA-Z]\\w*");
+		func_ptn = "^func(\\s\\(.+\\))?\\s+[_a-zA-Z]\\w*";
 		name_ptn = std_ptn;
 	}
 	else if (test_FileExt(fext, _T(".hsp"))) {
-		func_ptn.USET_T("^#(defcfunc|deffunc)\\s+\\w+");
-		name_ptn.USET_T("\\b\\w+\\b");
+		func_ptn = "^#(defcfunc|deffunc)\\s+\\w+";
+		name_ptn = "\\b\\w+\\b";
 	}
 	else if (test_FileExt(fext, _T(".js.jsx.as.awk"))) {
-		func_ptn.USET_T("^function\\s+[_a-zA-Z]\\w*\\(");
+		func_ptn = "^function\\s+[_a-zA-Z]\\w*\\(";
 		name_ptn = std_ptn;
 	}
 	else if (test_FileExt(fext, _T(".java"))) {
-		func_ptn.USET_T("^\\s*((public|private|protected)\\s+)?[_a-zA-Z][^\\(=;:]*\\s+[_a-zA-Z]\\w*\\([^;]*$");
+		func_ptn = "^\\s*((public|private|protected)\\s+)?[_a-zA-Z][^\\(=;:]*\\s+[_a-zA-Z]\\w*\\([^;]*$";
 		name_ptn = std_ptn;
 	}
 	else if (test_FileExt(fext, _T(".kt.kts"))) {
-		func_ptn.USET_T("^\\s*fun\\s+.+\\(.*\\)");
+		func_ptn = "^\\s*fun\\s+.+\\(.*\\)";
 		name_ptn = std_ptn;
 	}
 	else if (test_FileExt(fext, _T(".lua"))) {
-		func_ptn.USET_T("^(local\\s)?function\\s+[_a-zA-Z][\\w\\.:]*\\(");
+		func_ptn = "^(local\\s)?function\\s+[_a-zA-Z][\\w\\.:]*\\(";
 		name_ptn = std_ptn;
 	}
 	else if (test_FileExt(fext, _T(".mac"))) {
-		func_ptn.USET_T("^(sub|proc|function)\\s+[_a-zA-Z]\\w*");
+		func_ptn = "^(sub|proc|function)\\s+[_a-zA-Z]\\w*";
 	}
 	else if (test_FileExt(fext, _T(".pas.dpr.dpk.inc"))) {
-		func_ptn.USET_T("^(procedure|function)\\s+[_a-zA-Z]\\w*");
+		func_ptn = "^(procedure|function)\\s+[_a-zA-Z]\\w*";
 	}
 	else if (test_FileExt(fext, _T(".php")) && !is_h2t) {
-		func_ptn.USET_T("^(function)\\s+[_a-zA-Z]\\w*");
+		func_ptn = "^(function)\\s+[_a-zA-Z]\\w*";
 	}
 	else if (test_FileExt(fext, _T(".pl"))) {
-		func_ptn.USET_T("^sub\\s+[_a-zA-Z]\\w*");
+		func_ptn = "^sub\\s+[_a-zA-Z]\\w*";
 	}
 	else if (test_FileExt(fext, _T(".ps1.psm1"))) {
-		func_ptn.USET_T("^function\\s+[_a-zA-Z](\\w|-)*\\b");
-		name_ptn.USET_T("\\s[_a-zA-Z](\\w|-)*\\b");
+		func_ptn = "^function\\s+[_a-zA-Z](\\w|-)*\\b";
+		name_ptn = "\\s[_a-zA-Z](\\w|-)*\\b";
 	}
 	else if (test_FileExt(fext, _T(".rb.py")))
-		func_ptn.USET_T("^\\s*def\\s+[_a-zA-Z]\\w*");
+		func_ptn = "^\\s*def\\s+[_a-zA-Z]\\w*";
 	else if (test_FileExt(fext, _T(".rs")))
-		func_ptn.USET_T("^(pub\\s)?(fn)\\s+[_a-zA-Z]\\w*");
+		func_ptn = "^(pub\\s)?(fn)\\s+[_a-zA-Z]\\w*";
 	else if (test_FileExt(fext, _T(".scala"))) {
-		func_ptn.USET_T("^\\s*def\\s+[_a-zA-Z][^:]*:[^:]*");
-		name_ptn.USET_T("\\b[_a-zA-Z]\\w*[\\(\\[:]");
+		func_ptn = "^\\s*def\\s+[_a-zA-Z][^:]*:[^:]*";
+		name_ptn = "\\b[_a-zA-Z]\\w*[\\(\\[:]";
 	}
 	else if (test_FileExt(fext, _T(".sh"))) {
-		func_ptn.USET_T("^(function\\s)?[_a-zA-Z]\\w*\\(");
+		func_ptn = "^(function\\s)?[_a-zA-Z]\\w*\\(";
 		name_ptn = std_ptn;
 	}
 	else if (test_FileExt(fext, _T(".swift"))) {
-		func_ptn.USET_T("^\\s*func\\s+[_a-zA-Z]\\w*\\(");
+		func_ptn = "^\\s*func\\s+[_a-zA-Z]\\w*\\(";
 		name_ptn = std_ptn;
 	}
 	else if (test_FileExt(fext, _T(".vbs.vb"))) {
-		func_ptn.USET_T("^\\s*((public|private)\\s)?(shared\\s)?(sub|proc|function)\\s+[_a-zA-Z]\\w*");
+		func_ptn = "^\\s*((public|private)\\s)?(shared\\s)?(sub|proc|function)\\s+[_a-zA-Z]\\w*";
 	}
 
 	return func_ptn;

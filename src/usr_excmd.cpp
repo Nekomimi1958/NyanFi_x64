@@ -683,7 +683,7 @@ file_rec *XCMD_set_cfp(UnicodeString fnam, UnicodeString cnam, file_rec *cfp)
 		XCMD_selected	= XCMD_cfp->selected;
 		XCMD_is_virtual = XCMD_cfp->is_virtual;
 		XCMD_is_img 	= XCMD_is_file && is_Viewable(XCMD_cfp);
-		XCMD_is_log 	= str_match(UAPP_T(ExePath, "tasklog*.txt"), XCMD_cur_f_name);
+		XCMD_is_log 	= str_match(ExePath + "tasklog*.txt", XCMD_cur_f_name);
 		XCMD_f_size		= XCMD_cfp->f_size;
 		XCMD_f_time		= XCMD_cfp->f_time;
 	}
@@ -834,7 +834,7 @@ void XCMD_upd_Var()
 		file_rec *fp = (file_rec*)lst->Objects[i];
 		if (fp->is_dummy || fp->is_up) continue;
 		UnicodeString fnam = fp->f_name;
-		if (fp->is_dir) fnam.UCAT_T("\\");
+		if (fp->is_dir) fnam = IncludeTrailingPathDelimiter(fnam);
 		flst->Add(fnam);
 		if (fp->selected) slst->Add(fnam);
 	}
@@ -913,8 +913,8 @@ void XCMD_ShowDebugInf(
 					dbgstt = get_PropTitle("Repeat" + IntToStr(i + 1));
 					int r_cnt = XCMD_xlp->RepCnt[i];
 					switch (r_cnt) {
-					case -2: dbgstt.UCAT_T("–³ŒÀ");	break;
-					case -1: dbgstt.UCAT_T("Y/N");	break;
+					case -2: dbgstt += "–³ŒÀ";	break;
+					case -1: dbgstt += "Y/N";	break;
 					default: dbgstt.cat_sprintf(_T("%3u"), r_cnt);
 					}
 					i_lst->Add(dbgstt);
@@ -1312,7 +1312,7 @@ void XCMD_Input(UnicodeString prm)
 	}
 
 	if (vnam.IsEmpty()) UserAbort(USTR_SyntaxError);
-	if (msg.IsEmpty())  msg = UAPP_T(vnam, "=");
+	if (msg.IsEmpty())  msg = vnam + "=";
 
 	UnicodeString vstr = XCMD_VarList->Values[vnam];
 
@@ -1571,11 +1571,13 @@ int XCMD_MsgBox(UnicodeString cmd, UnicodeString prm)
 	while (!prm.IsEmpty()) {
 		WideChar c = split_top_wch(prm);
 		if (c=='\\') {
-			if		(remove_top_s(prm, 'n'))	lbuf.UCAT_T("\r\n");
-			else if (remove_top_s(prm, '\\'))	lbuf.UCAT_T("\\");
+			if		(remove_top_s(prm, 'n'))  lbuf += "\r\n";
+			else if (remove_top_s(prm, '\\')) lbuf += "\\";
 			else lbuf += split_top_ch(prm);
 		}
-		else lbuf.cat_sprintf(_T("%c"), c);
+		else {
+			lbuf.cat_sprintf(_T("%c"), c);
+		}
 	}
 	prm = lbuf;
 

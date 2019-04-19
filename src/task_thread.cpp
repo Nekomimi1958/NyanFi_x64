@@ -35,7 +35,7 @@ TaskConfig::TaskConfig()
 	KeepTime   = false;
 	FilterMode = 0;
 
-	CvImg_f_ext.USET_T(".jpg");
+	CvImg_f_ext 	   = ".jpg";
 	CvImg_quality	   = 80;
 	CvImg_ycrcb 	   = 0;
 	CvImg_cmp_mode	   = 0;
@@ -328,7 +328,7 @@ int __fastcall TTaskThread::GetFiles(
 	//サブディレクトリを検索
 	UnicodeString sea_str;
 	TSearchRec sr;
-	sea_str = cv_ex_filename(UAPP_T(pnam, "*"));
+	sea_str = cv_ex_filename(pnam + "*");
 	if (FindFirst(sea_str, faAnyFile, sr)==0) {
 		do {
 			WaitIfPause();
@@ -405,7 +405,7 @@ int __fastcall TTaskThread::GetFilesEx(
 	TStringDynArray exc_msk_lst = split_strings_semicolon(exc_mask);	//除外
 
 	TSearchRec sr;
-	if (FindFirst(cv_ex_filename(UAPP_T(pnam, "*")), faAnyFile, sr)==0) {
+	if (FindFirst(cv_ex_filename(pnam + "*"), faAnyFile, sr)==0) {
 		do {
 			WaitIfPause();
 			//サブディレクトリを検索
@@ -477,7 +477,7 @@ void __fastcall TTaskThread::GetDirs(UnicodeString pnam, TStrings *lst)
 	if (pnam.IsEmpty() || !dir_exists(pnam)) return;
 
 	pnam = IncludeTrailingPathDelimiter(pnam);
-	UnicodeString sea_str = cv_ex_filename(UAPP_T(pnam, "*"));
+	UnicodeString sea_str = cv_ex_filename(pnam + "*");
 	TSearchRec sr;
 	if (FindFirst(sea_str, faAnyFile, sr)==0) {
 		do {
@@ -843,7 +843,7 @@ void __fastcall TTaskThread::DEL_dirs(
 
 	//サブディレクトリを検索して削除
 	if (!is_sym) {
-		UnicodeString sea_str = cv_ex_filename(UAPP_T(pnam, "*"));
+		UnicodeString sea_str = cv_ex_filename(pnam + "*");
 		TSearchRec sr;
 		if (FindFirst(sea_str, faAnyFile, sr)==0) {
 			do {
@@ -1087,7 +1087,7 @@ void __fastcall TTaskThread::CMPDEL_core(UnicodeString fnam)
 	}
 	//中断
 	catch (EAbort &e) {
-		msg[1] = 'C';  msg.UCAT_T("\r\n    要求は中断されました。");
+		msg[1] = 'C';  msg += "\r\n    要求は中断されました。";
 	}
 	//エラー
 	catch (...) {
@@ -1536,7 +1536,7 @@ void __fastcall TTaskThread::Task_BACKUP(UnicodeString prm)
 TDateTime __fastcall TTaskThread::SetDirTime(UnicodeString dnam)
 {
 	dnam = IncludeTrailingPathDelimiter(dnam);
-	UnicodeString sea_str = UAPP_T(dnam, "*");
+	UnicodeString sea_str = dnam + "*";
 	if (sea_str.Length()>=MAX_PATH) sea_str.Insert("\\\\?\\", 1);
 
 	TDateTime dt = 0.0;
@@ -1608,7 +1608,7 @@ void TTaskThread::MakeCompList(UnicodeString dnam)
 {
 	dnam = IncludeTrailingPathDelimiter(dnam);
 
-	UnicodeString sea_str = UAPP_T(dnam, "*");
+	UnicodeString sea_str = dnam + "*";
 	if (sea_str.Length()>=MAX_PATH) sea_str.Insert("\\\\?\\", 1);
 	TSearchRec sr;
 	if (FindFirst(sea_str, faAnyFile, sr)==0) {

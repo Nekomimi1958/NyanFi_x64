@@ -37,8 +37,8 @@ UsrIniFile::UsrIniFile(UnicodeString fnam)
 
 	PosOffsetLeft = PosOffsetTop = 0;
 
-	SCT_General.USET_T("General");
-	SCT_Option.USET_T("Option");
+	SCT_General = "General";
+	SCT_Option	= "Option";
 
 	FileName	= fnam;
 	SectionList = new TStringList();
@@ -165,7 +165,7 @@ void UsrIniFile::RenameKey(UnicodeString sct, UnicodeString old_key, UnicodeStri
 	if (idx>=0) {
 		TStringList *klist = (TStringList*)SectionList->Objects[idx];
 		idx = klist->IndexOfName(old_key);
-		if (idx>=0) klist->Strings[idx] = new_key.UCAT_T("=") + klist->ValueFromIndex[idx];
+		if (idx>=0) klist->Strings[idx] = new_key + "=" + klist->ValueFromIndex[idx];
 	}
 }
 //---------------------------------------------------------------------------
@@ -178,7 +178,7 @@ void UsrIniFile::ReplaceKey(UnicodeString sct, UnicodeString s0, UnicodeString s
 		TStringList *klist = (TStringList*)SectionList->Objects[idx];
 		for (int i=0; i<klist->Count; i++) {
 			UnicodeString key = klist->Names[i];
-			if (ContainsText(key, s0)) klist->Strings[i] = ReplaceText(key, s0, s1).UCAT_T("=") + klist->ValueFromIndex[i];
+			if (ContainsText(key, s0)) klist->Strings[i] = ReplaceText(key, s0, s1) + "=" + klist->ValueFromIndex[i];
 		}
 	}
 }
@@ -426,10 +426,10 @@ void UsrIniFile::LoadFormPos(TForm *frm, int w, int h,
 {
 	if (prfx.IsEmpty()) prfx = "Win";
 
-	if (w>0) frm->Width  = ReadInteger(SCT_General, UAPP_T(prfx, "Width"),	w);
-	if (h>0) frm->Height = ReadInteger(SCT_General, UAPP_T(prfx, "Height"),	h);
-	frm->Left = ReadInteger(SCT_General, UAPP_T(prfx, "Left"), (Screen->Width - frm->Width)/2);
-	frm->Top  = ReadInteger(SCT_General, UAPP_T(prfx, "Top"),  (Screen->Height - frm->Height)/2);
+	if (w>0) frm->Width  = ReadInteger(SCT_General, prfx + "Width",		w);
+	if (h>0) frm->Height = ReadInteger(SCT_General, prfx + "Height",	h);
+	frm->Left = ReadInteger(SCT_General, prfx + "Left", (Screen->Width - frm->Width)/2);
+	frm->Top  = ReadInteger(SCT_General, prfx + "Top",  (Screen->Height - frm->Height)/2);
 
 	if (Screen->MonitorCount==1) {
 		//1画面の場合、画面外に出ないように
@@ -439,7 +439,7 @@ void UsrIniFile::LoadFormPos(TForm *frm, int w, int h,
 		if (frm->BoundsRect.Bottom>Screen->Height) frm->Top  = Screen->Height - frm->Height;
 	}
 
-	frm->WindowState = (TWindowState)ReadInteger(SCT_General, UAPP_T(prfx, "State"), (int)wsNormal);
+	frm->WindowState = (TWindowState)ReadInteger(SCT_General, prfx + "State", (int)wsNormal);
 }
 //---------------------------------------------------------------------------
 //メインフォームの位置・サイズを保存
@@ -463,13 +463,13 @@ void UsrIniFile::LoadPosInfo(TForm *frm, int x, int y, int w, int h, UnicodeStri
 {
 	if (key.IsEmpty()) key = frm->Name;
 
-	frm->Left = ReadInteger(SCT_General, UAPP_T(key, "Left"), x);
-	frm->Top  = ReadInteger(SCT_General, UAPP_T(key, "Top"),  y);
+	frm->Left = ReadInteger(SCT_General, key + "Left", x);
+	frm->Top  = ReadInteger(SCT_General, key + "Top",  y);
 
 	if ((frm->BorderStyle==bsSizeable || frm->BorderStyle==bsSizeToolWin) && w>0 && h>0) {
-		int ww = ReadInteger(SCT_General, UAPP_T(key, "Width"),  w);
+		int ww = ReadInteger(SCT_General, key + "Width",  w);
 		if (ww<=0) ww = w;
-		int wh = ReadInteger(SCT_General, UAPP_T(key, "Height"), h);
+		int wh = ReadInteger(SCT_General, key + "Height", h);
 		if (wh<=0) wh = h;
 		frm->Width	= ww;
 		frm->Height = wh;
@@ -510,12 +510,12 @@ void UsrIniFile::SavePosInfo(TForm *frm, UnicodeString key)
 	if (key.IsEmpty()) key = frm->Name;
 
 	bool ofs = (OfsDlgList->IndexOf(frm->Name)!=-1);
-	WriteInteger(SCT_General, UAPP_T(key, "Left"), frm->Left - (ofs? PosOffsetLeft : 0));
-	WriteInteger(SCT_General, UAPP_T(key, "Top"),  frm->Top  - (ofs? PosOffsetTop  : 0));
+	WriteInteger(SCT_General, key + "Left", frm->Left - (ofs? PosOffsetLeft : 0));
+	WriteInteger(SCT_General, key + "Top",  frm->Top  - (ofs? PosOffsetTop  : 0));
 
 	if (frm->BorderStyle!=bsDialog) {
-		WriteInteger(SCT_General, UAPP_T(key, "Width"),  frm->Width);
-		WriteInteger(SCT_General, UAPP_T(key, "Height"), frm->Height);
+		WriteInteger(SCT_General, key + "Width",  frm->Width);
+		WriteInteger(SCT_General, key + "Height", frm->Height);
 	}
 }
 

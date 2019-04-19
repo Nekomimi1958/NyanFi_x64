@@ -577,8 +577,8 @@ void __fastcall TFindFileDlg::CondChangeUpdate(TObject *Sender)
 	BomRadioGroup->Enabled = (cpag==1200 || cpag==1201 || cpag==65001);
 	if (!BomRadioGroup->Enabled) BomRadioGroup->ItemIndex = 0;
 
-	UnicodeString tit = get_tkn(PropGroupBox->Caption, "I)").UCAT_T("I)");
-	if (UseProcCheckBox->Checked) tit.UCAT_T(" /プロセス情報");
+	UnicodeString tit = get_tkn(PropGroupBox->Caption, "I)") + "I)";
+	if (UseProcCheckBox->Checked) tit += " /プロセス情報";
 	PropGroupBox->Caption = tit;
 }
 

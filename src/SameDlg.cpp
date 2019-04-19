@@ -77,17 +77,17 @@ void __fastcall TSameNameDlg::FormShow(TObject *Sender)
 	InfoListBox->Items->Add("先: " + ExtractFileDir(CurDstName));
 	InfoListBox->Items->Add(EmptyStr);
 
-	tmp.USET_T("サイズ: ");
+	tmp = "サイズ: ";
 	if (CurSrcSize == CurDstSize)
-		tmp.UCAT_T("同じ");
+		tmp += "同じ";
 	else
 		tmp.cat_sprintf(_T("転送先の方が%s"), (CurSrcSize<CurDstSize)? _T("大きい") : _T("小さい"));
 	InfoListBox->Items->Add(tmp);
 
-	tmp.USET_T("タイム: ");
+	tmp = "タイム: ";
 	if (WithinPastMilliSeconds(CurSrcTime, CurDstTime, TimeTolerance)) {
-		tmp.UCAT_T("同じ");
-		if (CurSrcTime!=CurDstTime) tmp.UCAT_T(" (許容誤差内)");
+		tmp += "同じ";
+		if (CurSrcTime!=CurDstTime) tmp += " (許容誤差内)";
 	}
 	else {
 		tmp.cat_sprintf(_T("転送先の方が%s"), (CurSrcTime<CurDstTime)? _T("新しい") : _T("古い"));

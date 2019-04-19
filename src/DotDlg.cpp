@@ -64,7 +64,7 @@ void __fastcall TDotNyanDlg::FormShow(TObject *Sender)
 		hFont = ::CreateFontIndirect(&nonclientmetrics.lfCaptionFont);
 	std::unique_ptr<TFont> titFont(new TFont());
 	if (hFont) titFont->Handle = hFont; else titFont->Assign(DialogFont);
-	Caption = get_MiniPathName(UAPP_T(DotNyanName, " ‚ÌÝ’è"), ClientWidth - ScaledInt(48), titFont.get(), true);
+	Caption = get_MiniPathName(DotNyanName + " ‚ÌÝ’è", ClientWidth - ScaledInt(48), titFont.get(), true);
 
 	IniFile->LoadComboBoxItems(PathMaskComboBox, _T("DotMaskHistory"));
 	IniFile->LoadComboBoxItems(GrepMaskComboBox, _T("GrepMaskHistory"));
@@ -372,7 +372,7 @@ void __fastcall TDotNyanDlg::CreNyanActionExecute(TObject *Sender)
 	if (!BgImgEdit->Text.IsEmpty())			lbuf.cat_sprintf(_T("BgImage=%s\r\n"),		BgImgEdit->Text.c_str());
 	if (!DescEdit->Text.IsEmpty())			lbuf.cat_sprintf(_T("Description=%s\r\n"),	DescEdit->Text.c_str());
 	if (!ExeCmdsEdit->Text.IsEmpty())		lbuf.cat_sprintf(_T("ExeCommands=@%s\r\n"),	ExeCmdsEdit->Text.c_str());
-	if (HandledCheckBox->Checked)			lbuf.UCAT_T("Handled=1\r\n");
+	if (HandledCheckBox->Checked)			lbuf += "Handled=1\r\n";
 
 	for (int i=0; i<ColBufList->Count; i++)
 		if ((TColor)ColBufList->ValueFromIndex[i].ToIntDef(clNone)!=clNone)

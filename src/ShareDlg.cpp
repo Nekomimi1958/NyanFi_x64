@@ -196,7 +196,7 @@ void __fastcall TNetShareDlg::UpdatePathList(
 		isPC = false;
 		pnam = IncludeTrailingPathDelimiter(pnam);
 		TSearchRec sr;
-		if (FindFirst(cv_ex_filename(UAPP_T(pnam, "*")), faAnyFile, sr)==0) {
+		if (FindFirst(cv_ex_filename(pnam + "*"), faAnyFile, sr)==0) {
 			do {
 				if ((sr.Attr & faDirectory)==0) continue;
 				if (!ShowHideAtr   && (sr.Attr & faHidden))  continue;
@@ -484,9 +484,9 @@ void __fastcall TNetShareDlg::PopupMenu1Popup(TObject *Sender)
 void __fastcall TNetShareDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString topic = HELPTOPIC_FL;
-	if		(isShare)				topic.UCAT_T("#ShareList");
-	else if (isSelDir && isSelSub)	topic.UCAT_T("#SubDirList");
-	else if (isLibrary)				topic.UCAT_T("#Library");
+	if		(isShare)				topic += "#ShareList";
+	else if (isSelDir && isSelSub)	topic += "#SubDirList";
+	else if (isLibrary)				topic += "#Library";
 	else							topic = EmptyStr;
 
 	if (!topic.IsEmpty())

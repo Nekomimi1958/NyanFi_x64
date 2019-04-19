@@ -302,7 +302,7 @@ void __fastcall TCmdFileListDlg::CmdFileGridDrawCell(TObject *Sender, int ACol, 
 			cv->Font->Color = get_TimeColor(fp->f_time, col_f);
 			break;
 		case 4:	//ディレクトリ
-			if (remove_top_text(pnam, ExePath) && pnam.IsEmpty()) pnam.USET_T(".");
+			if (remove_top_text(pnam, ExePath) && pnam.IsEmpty()) pnam = ".";
 			cellstr = get_MiniPathName(pnam, gp->ColWidths[4] - 8, cv->Font, true);
 			cv->Font->Color = col_Folder;
 			break;

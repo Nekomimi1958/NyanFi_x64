@@ -848,10 +848,10 @@ void __fastcall TUserModule::EditItemItemClick(TObject *Sender)
 void __fastcall TUserModule::SetOpenImgFilter(UnicodeString fnam)
 {
 	UnicodeString flt_str;
-	flt_str.USET_T("ビットマップ (*.bmp)|*.BMP");
-	flt_str.UCAT_T("|JPEGファイル(*.jpg)|*.JPG;*.JPE;*.JPEG");
-	flt_str.UCAT_T("|PNGファイル(*.png)|*.PNG");
-	flt_str.UCAT_T("|GIFファイル(*.gif)|*.GIF");
+	flt_str = "ビットマップ (*.bmp)|*.BMP";
+	flt_str += "|JPEGファイル(*.jpg)|*.JPG;*.JPE;*.JPEG";
+	flt_str += "|PNGファイル(*.png)|*.PNG";
+	flt_str += "|GIFファイル(*.gif)|*.GIF";
 	OpenImgDlg->Filter = flt_str;
 
 	UnicodeString ext = ExtractFileExt(fnam);

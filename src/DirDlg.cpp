@@ -675,7 +675,7 @@ void __fastcall TRegDirDlg::ChangeItemActionExecute(
 	{
 		UnicodeString lbuf;
 		if (is_separator(DescEdit->Text)) {
-			lbuf.USET_T(",-,");
+			lbuf = ",-,";
 		}
 		else {
 			UnicodeString dnam = DirEdit->Text;
@@ -990,11 +990,13 @@ void __fastcall TRegDirDlg::FilterEditKeyPress(TObject *Sender, System::WideChar
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if (!IsSpecial && USAME_TI(get_KeyStr(Key, Shift), "Alt+O"))
+	if (!IsSpecial && USAME_TI(get_KeyStr(Key, Shift), "Alt+O")) {
 		ChgOptBtnClick(NULL);
-	else
+	}
+	else {
 		SpecialKeyProc(this, Key, Shift,
 			IsSpecial? _T(HELPTOPIC_FL) _T("#SpecialDirList") : _T("hid00054.htm"));
+	}
 }
 
 //---------------------------------------------------------------------------

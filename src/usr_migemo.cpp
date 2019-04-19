@@ -27,7 +27,7 @@ MigemoUnit::MigemoUnit(UnicodeString dnam)
 	else
 		PathName = IncludeTrailingPathDelimiter(PathName);
 
-	FileName = UAPP_T(PathName, "migemo.dll");
+	FileName = PathName + "migemo.dll";
 	hMigemo  = ::LoadLibrary(FileName.c_str());
 	if (hMigemo) {
 		f_migemo_open	 = (FUNC_migemo_open)::GetProcAddress(hMigemo,		"migemo_open");

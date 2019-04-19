@@ -156,12 +156,12 @@ void __fastcall TFtpConnectDlg::AnonyCheckBoxClick(TObject *Sender)
 UnicodeString __fastcall TFtpConnectDlg::MakeHostItem()
 {
 	UnicodeString optstr;
-	if (!PasvCheckBox->Checked)	 optstr.UCAT_T("PORT;");
+	if (!PasvCheckBox->Checked)	 optstr += "PORT;";
 
-	if		(SSLComboBox->ItemIndex==1) optstr.UCAT_T("EXPLICIT;");
-	else if (SSLComboBox->ItemIndex==2) optstr.UCAT_T("IMPLICIT;");
+	if		(SSLComboBox->ItemIndex==1) optstr += "EXPLICIT;";
+	else if (SSLComboBox->ItemIndex==2) optstr += "IMPLICIT;";
 
-	if (SyncLRCheckBox->Checked) optstr.UCAT_T("SyncLR;");
+	if (SyncLRCheckBox->Checked) optstr += "SyncLR;";
 
 	return UnicodeString().sprintf(_T("%s,%s,%s,%s,%s,%s,%s"),
 			make_csv_str(HostNameEdit->Text).c_str(),

@@ -314,7 +314,7 @@ UnicodeString split_tkn_spc(UnicodeString &s)
 	UnicodeString r;
 	for (int i=1; i<=s.Length(); i++) {
 		if (s[i]!=' ') break;
-		r.UCAT_T(" ");
+		r += " ";
 	}
 	if (!r.IsEmpty()) s.Delete(1, r.Length());
 	return (r + split_tkn(s, ' '));
@@ -604,14 +604,6 @@ UnicodeString replace_str_by_list(UnicodeString s, TStringList *lst)
 }
 
 //---------------------------------------------------------------------------
-//文字列を末尾に追加したものを取得
-//---------------------------------------------------------------------------
-UnicodeString append_str(UnicodeString s, const _TCHAR *t)
-{
-	return s + UnicodeString(t);
-}
-
-//---------------------------------------------------------------------------
 //; 区切りで文字列を追加
 //---------------------------------------------------------------------------
 void cat_str_semicolon(UnicodeString &s, UnicodeString t)
@@ -619,7 +611,7 @@ void cat_str_semicolon(UnicodeString &s, UnicodeString t)
 	if (EndsStr(";", t)) t.Delete(t.Length(), 1);
 	if (t.IsEmpty()) return;
 
-	if (!s.IsEmpty() && !EndsStr(";", s)) s.UCAT_T(";");
+	if (!s.IsEmpty() && !EndsStr(";", s)) s += ";";
 	s += t;
 }
 
@@ -947,7 +939,7 @@ bool contained_wd_i(UnicodeString lst, UnicodeString wd)
 	if (wd.IsEmpty()) return false;
 
 	if (!StartsStr("|", lst)) lst.Insert("|" ,1);
-	if (!EndsStr("|", lst))   lst.UCAT_T("|");
+	if (!EndsStr("|", lst))   lst += "|";
 	return ContainsText(lst, "|" + wd + "|");
 }
 //---------------------------------------------------------------------------
@@ -991,9 +983,9 @@ bool test_word_i(UnicodeString w, UnicodeString list)
 {
 	if (list.IsEmpty() || w.IsEmpty()) return false;
 	if (!StartsStr('|', w))		w.Insert("|", 1);
-	if (!EndsStr('|', w)) 		w.UCAT_T("|");
+	if (!EndsStr('|', w)) 		w += "|";
 	if (!StartsStr('|', list))	list.Insert("|", 1);
-	if (!EndsStr('|', list)) 	list.UCAT_T("|");
+	if (!EndsStr('|', list)) 	list += "|";
 	return ContainsText(list, w);
 }
 
@@ -1063,7 +1055,7 @@ UnicodeString extract_prm_RegExPtn(UnicodeString &s)
 		UnicodeString lbuf;
 		for (int i=0; i<lst.Length; i++) {
 			if (i==idx) continue;
-			if (!lbuf.IsEmpty()) lbuf.UCAT_T(";");
+			if (!lbuf.IsEmpty()) lbuf += ";";
 			lbuf += lst[i];
 		}
 		s = lbuf;
@@ -1312,7 +1304,7 @@ UnicodeString make_csv_rec_str(TStringDynArray lst)
 {
 	UnicodeString lbuf;
 	for (int i=0; i<lst.Length; i++) {
-		if (i>0) lbuf.UCAT_T(",");
+		if (i>0) lbuf += ",";
 		lbuf += make_csv_str(lst[i]);
 	}
 	return lbuf;
@@ -1710,7 +1702,7 @@ int str_len_half(UnicodeString s)
 		for (int i=1; i<=s.Length(); i++) {
 			if (!s.IsTrailSurrogate(i)) {
 				if (s[i]!=s_u[i] && s_u[i]=='?')
-					r_u.UCAT_T("？");
+					r_u += "？";
 				else
 					r_u += s_u[i];
 			}
@@ -1773,7 +1765,7 @@ UnicodeString minimize_str(
 	int ww = get_TextWidth(cv, s, is_irreg);
 	if (ww > wd) {
 		if (omit_end) {
-			s.UCAT_T("…");
+			s += "…";
 			int p = s.Length() - 1;
 			while (p>0) {
 				s.Delete(p--, 1);
@@ -1811,7 +1803,7 @@ UnicodeString fit_str(
 	else {
 		for (;;) {
 			if (cv->TextWidth(s + " ")>wd) break;
-			s.UCAT_T(" ");
+			s += " ";
 		}
 	}
 	return s;
@@ -1865,7 +1857,7 @@ UnicodeString make_RuledLine(int cnt, ...)
 	for (int i=0; i<cnt; i++) {
 		int w = va_arg(ap, int);
 		if (w>0) {
-			if (!ret_str.IsEmpty()) ret_str.UCAT_T(" ");
+			if (!ret_str.IsEmpty()) ret_str += " ";
 			ret_str += StringOfChar(_T('-'), w);
 		}
 	}
@@ -1890,7 +1882,7 @@ UnicodeString get_AddrStr(__int64 adr,
 		ret_str = align_r_str(ret_str, w);
 	}
 	else {
-		ret_str.USET_T("____:____");
+		ret_str = "____:____";
 	}
 	return ret_str;
 }
@@ -2299,7 +2291,7 @@ UnicodeString check_Surrogates(UnicodeString s)
 	int i = 1;
 	while(i<=s_len) {
 		if (s.IsLeadSurrogate(i)) {
-			if (!ret_str.IsEmpty()) ret_str.UCAT_T(" ");
+			if (!ret_str.IsEmpty()) ret_str += " ";
 			ret_str.cat_sprintf(_T("%c"), s[i++]);
 			if (i<=s_len && s.IsTrailSurrogate(i)) ret_str.cat_sprintf(_T("%c"), s[i++]);
 		}
@@ -2328,7 +2320,7 @@ UnicodeString check_EnvDepandChars(UnicodeString s)
 			(c>=0x2150 && c<=0x218f) || (c>=0x2194 && c<=0x219f) || (c>=0x2460 && c<=0x24ef) ||
 			(c>=0x2600 && c<=0x266f) || (c>=0x3220 && c<=0x324f) || (c>=0x3280 && c<=0x33ff))
 		{
-			if (!ret_str.IsEmpty()) ret_str.UCAT_T(" ");
+			if (!ret_str.IsEmpty()) ret_str += " ";
 			ret_str.cat_sprintf(_T("%c"), s[i]);
 		}
 	}

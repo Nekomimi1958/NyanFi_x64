@@ -208,7 +208,7 @@ bool UserArcUnit::IsAvailable(int typ)
 		return fp->Available;
 	}
 	else {
-		ErrMsg.USET_T("対応していない形式です");
+		ErrMsg = "対応していない形式です";
 		return false;
 	}
 }
@@ -256,7 +256,7 @@ int UserArcUnit::ExeCommand(
 
 	if (res!=0) {
 		if (res==ERROR_USER_CANCEL)
-			ErrMsg.USET_T("処理を中断しました");
+			ErrMsg = "処理を中断しました";
 		else
 			ErrMsg = ResMsg;
 	}
@@ -284,23 +284,23 @@ bool UserArcUnit::Pack(
 	if (!fp || !fp->Available || fp->GetRunning()) return false;
 
 	if		(arc_file.Length()>=MAX_PATH)				ErrMsg = SysErrorMessage(ERROR_BUFFER_OVERFLOW);
-	else if (arc_t==UARCTYP_RAR || arc_t==UARCTYP_ISO)	ErrMsg.USET_T("圧縮には対応していません");
+	else if (arc_t==UARCTYP_RAR || arc_t==UARCTYP_ISO)	ErrMsg = "圧縮には対応していません";
 	if (!ErrMsg.IsEmpty()) return false;
 
 	if (!src_dir.IsEmpty()) src_dir = IncludeTrailingPathDelimiter(src_dir);
 
 	UnicodeString cmd;
 	if (arc_t==UARCTYP_ZIP) {
-		cmd.USET_T("a -tzip -r-");
+		cmd = "a -tzip -r-";
 	}
 	else if (arc_t==UARCTYP_7Z) {
-		cmd.USET_T("a -t7z");
-		if (ZipPrm_sfx) cmd.UCAT_T(" -sfx");
-		cmd.UCAT_T(" -r-");
+		cmd = "a -t7z";
+		if (ZipPrm_sfx) cmd += " -sfx";
+		cmd += " -r-";
 	}
-	else if (arc_t==UARCTYP_LHA) cmd.USET_T("a -d1");
-	else if (arc_t==UARCTYP_CAB) cmd.USET_T("-a");
-	else if (arc_t==UARCTYP_TAR) cmd.USET_T("-c");
+	else if (arc_t==UARCTYP_LHA) cmd = "a -d1";
+	else if (arc_t==UARCTYP_CAB) cmd = "-a";
+	else if (arc_t==UARCTYP_TAR) cmd = "-c";
 
 	//パスワード
 	if ((arc_t==UARCTYP_ZIP || arc_t==UARCTYP_7Z) && !password.IsEmpty())
@@ -317,7 +317,7 @@ bool UserArcUnit::Pack(
 		if (CabPrm_z>=15 && CabPrm_z<=21)
 			cmd.cat_sprintf(_T(" -ml:%u"), CabPrm_z);
 		else
-			cmd.UCAT_T(" -mz");
+			cmd += " -mz";
 	}
 	else if (arc_t==UARCTYP_TAR && TarPrm_z>0) {
 		cmd.cat_sprintf(_T(" -z%u"), TarPrm_z);
@@ -337,8 +337,8 @@ bool UserArcUnit::Pack(
 	else if (arc_t==UARCTYP_TAR && !ExSw_Tar.IsEmpty())	cmd.cat_sprintf(_T(" %s"), ExSw_Tar.c_str());
 
 	//これ以降、構文解析停止
-	if		(arc_t==UARCTYP_LHA) cmd.UCAT_T(" --3");
-	else if (arc_t!=UARCTYP_CAB) cmd.UCAT_T(" --");
+	if		(arc_t==UARCTYP_LHA) cmd += " --3";
+	else if (arc_t!=UARCTYP_CAB) cmd += " --";
 	cmd.cat_sprintf(_T(" %s"), add_quot_if_spc(arc_file).c_str());
 	if (!src_dir.IsEmpty())   cmd.cat_sprintf(_T(" %s"), add_quot_if_spc(src_dir).c_str());
 	if (!src_files.IsEmpty()) cmd.cat_sprintf(_T(" %s"), src_files.c_str());
@@ -363,7 +363,7 @@ bool UserArcUnit::UnPack(
 	ErrMsg = EmptyStr;
 
 	if		(arc_file.Length()>=MAX_PATH)	ErrMsg = SysErrorMessage(ERROR_BUFFER_OVERFLOW);
-	else if (dst_dir.Length()>=MAX_PATH)	ErrMsg.USET_T("解凍先のパス名が長すぎます");
+	else if (dst_dir.Length()>=MAX_PATH)	ErrMsg = "解凍先のパス名が長すぎます";
 	else if (!FileExists(arc_file))			ErrMsg = SysErrorMessage(ERROR_FILE_NOT_FOUND);
 	if (!ErrMsg.IsEmpty()) return false;
 
@@ -385,14 +385,14 @@ bool UserArcUnit::UnPack(
 			bool ok = true;
 			UnicodeString tmp_dir;
 			for (int j=0; j<o_plst.Length && j<t_plst.Length && ok; j++) {
-				tmp_dir += UAPP_T(t_plst[j], "\\");
+				tmp_dir += IncludeTrailingPathDelimiter(t_plst[j]);
 				ok = SameText(o_plst[j], t_plst[j]) || !DirectoryExists(tmp_dir);
 			}
 			if (ok) break;
 		}
 
 		if (!rename_Path(org_dir, dst_dir)) {
-			ErrMsg.USET_T("解凍先の一時改名に失敗");
+			ErrMsg = "解凍先の一時改名に失敗";
 			return false;
 		}
 
@@ -403,7 +403,7 @@ bool UserArcUnit::UnPack(
 			a_plst[i] = ReplaceStr(a_plst[i], "  ", rep_str);
 		}
 		UnicodeString a_pnam;
-		for (int i=0; i<a_plst.Length; i++) a_pnam += UAPP_T(a_plst[i], "\\");
+		for (int i=0; i<a_plst.Length; i++) a_pnam += IncludeTrailingPathDelimiter(a_plst[i]);
 		arc_file = a_pnam + ExtractFileName(arc_file);
 	}
 
@@ -413,7 +413,7 @@ bool UserArcUnit::UnPack(
 	}
 	else if (arc_t==UARCTYP_TAR) {
 		cmd.sprintf(_T("%s"), dir_sw? _T("-x") : _T("-x --use-directory=0"));
-		cmd.UCAT_T(" --confirm-overwrite=1");
+		cmd += " --confirm-overwrite=1";
 	}
 	else if (arc_t==UARCTYP_RAR) {
 		cmd.sprintf(_T("%s"), dir_sw? _T("-x") : _T("-e"));
@@ -425,26 +425,26 @@ bool UserArcUnit::UnPack(
 	//処理状況ダイアログ非表示
 	if (hide_sw) {
 		if		(arc_t==UARCTYP_ZIP || arc_t==UARCTYP_7Z || arc_t==UARCTYP_ISO)
-									 cmd.UCAT_T(" -hide");
-		else if (arc_t==UARCTYP_LHA) cmd.UCAT_T(" -n1");
-		else if (arc_t==UARCTYP_CAB) cmd.UCAT_T(" -i");
-		else if (arc_t==UARCTYP_TAR) cmd.UCAT_T(" --display-dialog=0");
-		else if (arc_t==UARCTYP_RAR) cmd.UCAT_T(" -q");
+									 cmd += " -hide";
+		else if (arc_t==UARCTYP_LHA) cmd += " -n1";
+		else if (arc_t==UARCTYP_CAB) cmd += " -i";
+		else if (arc_t==UARCTYP_TAR) cmd += " --display-dialog=0";
+		else if (arc_t==UARCTYP_RAR) cmd += " -q";
 	}
 
 	if (!fnam.IsEmpty()) {
 		//ファイル名をフルパスで比較
-		if		(arc_t==UARCTYP_RAR) cmd.UCAT_T(" -s");
-		else if (arc_t==UARCTYP_LHA) cmd.UCAT_T(" -p");
+		if		(arc_t==UARCTYP_RAR) cmd += " -s";
+		else if (arc_t==UARCTYP_LHA) cmd += " -p";
 	}
 
 	//確認無しで上書き
 	if (ow_sw) {
 		if		(arc_t==UARCTYP_ZIP || arc_t==UARCTYP_7Z || arc_t==UARCTYP_ISO)
-									 cmd.UCAT_T(" -aoa");
-		else if (arc_t==UARCTYP_LHA) cmd.UCAT_T(" -jyo");
+									 cmd += " -aoa";
+		else if (arc_t==UARCTYP_LHA) cmd += " -jyo";
 		else if (arc_t==UARCTYP_CAB || arc_t==UARCTYP_RAR) 
-									 cmd.UCAT_T(" -o");
+									 cmd += " -o";
 	}
 
 	//アーカイブ
@@ -461,15 +461,15 @@ bool UserArcUnit::UnPack(
 	//リストファイルの文字コード
 	if (fp->IsUnicode) {
 		if (arc_t==UARCTYP_ZIP || arc_t==UARCTYP_7Z || arc_t==UARCTYP_ISO)
-			cmd.UCAT_T(" -scsUTF-8");
+			cmd += " -scsUTF-8";
 	}
 
 	//ファイル名
 	if (!fnam.IsEmpty()) {
 		if (!starts_AT(exclude_quot(fnam))) {
 			//レスポンスファイルでない場合、これ以降、構文解析停止
-			if		(arc_t==UARCTYP_LHA) cmd.UCAT_T(" --3");
-			else if (arc_t!=UARCTYP_CAB) cmd.UCAT_T(" --");
+			if		(arc_t==UARCTYP_LHA) cmd += " --3";
+			else if (arc_t!=UARCTYP_CAB) cmd += " --";
 		}
 		cmd.cat_sprintf(_T(" %s"), fnam.c_str());
 	}
@@ -484,7 +484,7 @@ bool UserArcUnit::UnPack(
 
 	//解凍先を改名していたら元に戻す
 	if (!SameText(dst_dir, org_dir) && !rename_Path(dst_dir, org_dir))
-		ErrMsg.UCAT_T("\r\n解凍先ディレクトリ名の復帰に失敗");
+		ErrMsg += "\r\n解凍先ディレクトリ名の復帰に失敗";
 
 	return ErrMsg.IsEmpty();
 }
@@ -504,7 +504,7 @@ bool UserArcUnit::AddFile(
 	if		(arc_file.Length()>=MAX_PATH)	ErrMsg = SysErrorMessage(ERROR_BUFFER_OVERFLOW);
 	else if (!FileExists(arc_file))			ErrMsg = SysErrorMessage(ERROR_FILE_NOT_FOUND);
 	else if (arc_t==UARCTYP_CAB || arc_t==UARCTYP_TAR || arc_t==UARCTYP_RAR || arc_t==UARCTYP_ISO)
-											ErrMsg.USET_T("追加には対応していません");
+											ErrMsg = "追加には対応していません";
 	if (!ErrMsg.IsEmpty()) return false;
 
 	arc_func *fp = GetArcFunc(arc_t);
@@ -512,9 +512,9 @@ bool UserArcUnit::AddFile(
 
 	//コマンド
 	UnicodeString cmd = "a";
-	if		(arc_t==UARCTYP_ZIP) cmd.UCAT_T(" -tzip");
-	else if (arc_t==UARCTYP_7Z)  cmd.UCAT_T(" -t7z");
-	if		(arc_t==UARCTYP_7Z)  cmd.UCAT_T(" -ms=off");
+	if		(arc_t==UARCTYP_ZIP) cmd += " -tzip";
+	else if (arc_t==UARCTYP_7Z)  cmd += " -t7z";
+	if		(arc_t==UARCTYP_7Z)  cmd += " -ms=off";
 
 	//7z.dll対応版への対応
 	if (fp->use7zdll && starts_AT(fnam)) {
@@ -523,8 +523,8 @@ bool UserArcUnit::AddFile(
 	}
 
 	//これ以降、構文解析停止
-	if		(arc_t==UARCTYP_LHA) cmd.UCAT_T(" --3");
-	else if (arc_t!=UARCTYP_CAB) cmd.UCAT_T(" --");
+	if		(arc_t==UARCTYP_LHA) cmd += " --3";
+	else if (arc_t!=UARCTYP_CAB) cmd += " --";
 
 	cmd.cat_sprintf(_T(" %s"), add_quot_if_spc(arc_file).c_str());
 	if (!fnam.IsEmpty()) cmd += " " + add_quot_if_spc(fnam);
@@ -549,19 +549,19 @@ bool UserArcUnit::DelFile(
 	if 		(arc_file.Length()>=MAX_PATH)	ErrMsg = SysErrorMessage(ERROR_BUFFER_OVERFLOW);
 	else if (!FileExists(arc_file))			ErrMsg = SysErrorMessage(ERROR_FILE_NOT_FOUND);
 	else if (arc_t==UARCTYP_CAB || arc_t==UARCTYP_TAR || arc_t==UARCTYP_RAR || arc_t==UARCTYP_ISO)
-											ErrMsg.USET_T("削除には対応していません");
+											ErrMsg = "削除には対応していません";
 	if (!ErrMsg.IsEmpty()) return false;
 
 	//コマンド
 	UnicodeString cmd = "d";
-	if (arc_t==UARCTYP_7Z) cmd.UCAT_T(" -ms=off");
+	if (arc_t==UARCTYP_7Z) cmd += " -ms=off";
 
 	if (hide_sw) {
 		if (arc_t==UARCTYP_ZIP || arc_t==UARCTYP_7Z)
-									 cmd.UCAT_T(" -hide");
-		else if (arc_t==UARCTYP_LHA) cmd.UCAT_T(" -n1");
-		else if (arc_t==UARCTYP_CAB) cmd.UCAT_T(" -i");
-		else if (arc_t==UARCTYP_TAR) cmd.UCAT_T(" --display-dialog=0");
+									 cmd += " -hide";
+		else if (arc_t==UARCTYP_LHA) cmd += " -n1";
+		else if (arc_t==UARCTYP_CAB) cmd += " -i";
+		else if (arc_t==UARCTYP_TAR) cmd += " --display-dialog=0";
 	}
 
 	//7z.dll対応版への対応
@@ -571,8 +571,8 @@ bool UserArcUnit::DelFile(
 	}
 
 	//これ以降、構文解析停止
-	if		(arc_t==UARCTYP_LHA) cmd.UCAT_T(" --3");
-	else if (arc_t!=UARCTYP_CAB) cmd.UCAT_T(" --");
+	if		(arc_t==UARCTYP_LHA) cmd += " --3";
+	else if (arc_t!=UARCTYP_CAB) cmd += " --";
 
 	cmd.cat_sprintf(_T(" %s"), add_quot_if_spc(arc_file).c_str());
 	if (!fnam.IsEmpty()) cmd += " " + add_quot_if_spc(fnam);
@@ -757,7 +757,7 @@ bool UserArcUnit::FindFirstEx(
 	bool sub_dir)		//サブディレクトリも含む (default = false);
 {
 	FindDir = dnam;
-	if (!FindFirst(add_quot_if_spc(UAPP_T(dnam, "*")), &FindInf)) return false;
+	if (!FindFirst(add_quot_if_spc(dnam + "*"), &FindInf)) return false;
 	SetFindInf(inf, sub_dir);
 	return true;
 }
@@ -1033,7 +1033,7 @@ bool UserArcUnit::SetArcTime(UnicodeString arc_file, bool force)
 	//タイムスタンプ設定
 	if (set_file_age(arc_file, dt, force)) return true;
 
-	ErrMsg.USET_T("タイムスタンプ設定に失敗しました");
+	ErrMsg = "タイムスタンプ設定に失敗しました";
 	return false;
 }
 //---------------------------------------------------------------------------

@@ -717,9 +717,9 @@ void get_JpgExInf(
 					}
 
 					UnicodeString lbuf;
-					lbuf.UCAT_T(" (");
+					lbuf += " (";
 					for (int j=0; j<3; j++) lbuf.cat_sprintf(_T("%*ux%u"), ((j>0)? 2 : 1), hn[j], vn[j]);
-					lbuf.UCAT_T(")");
+					lbuf += ")";
 
 					//※CbCrが11でない場合に対応(ここはちょっと怪しい)
 					if (hn[0]%2==0 && hn[1]%2==0 && hn[2]%2==0) for (int j=0; j<3; j++) hn[j] /= 2;
@@ -957,11 +957,11 @@ bool get_PngInf(
 				fs->ReadBuffer(buf.get(), 1);
 				UnicodeString coltyp = get_PropTitle(_T("カラータイプ"));
 				switch (buf[0]) {
-				case 0: coltyp.UCAT_T("グレースケール");			break;
-				case 2: coltyp.UCAT_T("トゥルーカラー");			break;
-				case 3: coltyp.UCAT_T("インデックスカラー");		break;
-				case 4: coltyp.UCAT_T("グレースケール + アルファ");	break;
-				case 6: coltyp.UCAT_T("トゥルーカラー + アルファ");	break;
+				case 0: coltyp += "グレースケール";				break;
+				case 2: coltyp += "トゥルーカラー";				break;
+				case 3: coltyp += "インデックスカラー";			break;
+				case 4: coltyp += "グレースケール + アルファ";	break;
+				case 6: coltyp += "トゥルーカラー + アルファ";	break;
 				}
 				lst->Add(coltyp);
 				fs->Seek(3, soFromCurrent);
@@ -1029,7 +1029,7 @@ UnicodeString get_PngInfStr(
 		*i_hi = ih;
 	}
 	else {
-		ret_str = get_wd_x_hi_str(iw, ih).UCAT_T(" ");
+		ret_str = get_wd_x_hi_str(iw, ih) + " ";
 	}
 
 	UnicodeString col_s, bit_s;
@@ -1175,7 +1175,7 @@ bool get_WebpInf(
 			int p = fs->Seek(0, soFromCurrent);
 
 			if (USAME_TI(chunk, "VP8 ")) {
-				fmt.USET_T("ロッシー");
+				fmt = "ロッシー";
 				fs->Seek(6, soFromCurrent);
 				if (iw==0) {
 					fs->ReadBuffer(&ui_buf, 4);
@@ -1184,7 +1184,7 @@ bool get_WebpInf(
 				}
 			}
 			else if (USAME_TI(chunk, "VP8L")) {
-				fmt.USET_T("ロスレス");
+				fmt = "ロスレス";
 				fs->ReadBuffer(buf.get(), 1);
 				if (buf[0]!=0x2f) Abort();
 				if (iw==0) {
@@ -1202,7 +1202,7 @@ bool get_WebpInf(
 				}
 			}
 			else if (USAME_TI(chunk, "ICCP")) {
-				lst->Add(get_PropTitle(_T("ICCP")).UCAT_T("有り"));
+				lst->Add(get_PropTitle(_T("ICCP")) + "有り");
 			}
 			else if (USAME_TI(chunk, "ALPH")) {
 				has_alph = true;
@@ -1224,13 +1224,13 @@ bool get_WebpInf(
 				*/
 			}
 			else if (USAME_TI(chunk, "ANIM")) {
-				fmt.USET_T("アニメーション");
+				fmt = "アニメーション";
 				fs->ReadBuffer(buf.get(), 4);
 				lst->Add(get_PropTitle(_T("背景色")).cat_sprintf(_T("R%u G%u B%u A%u"), buf[2], buf[1], buf[0], buf[3]));
 				fs->ReadBuffer(&us_buf, 2);
 				tmp = get_PropTitle(_T("ループ回数"));
 				if (us_buf==0)
-					lst->Add(tmp.UCAT_T("無限"));
+					lst->Add(tmp + "無限");
 				else
 					lst->Add(tmp.cat_sprintf(_T("%u"), us_buf));
 			}
@@ -1241,12 +1241,12 @@ bool get_WebpInf(
 				i_cnt++;
 			}
 			else if (USAME_TI(chunk, "EXIF")) {
-				if (!meta.IsEmpty()) meta.UCAT_T(",");
-				meta.UCAT_T("EXIF");
+				if (!meta.IsEmpty()) meta += ",";
+				meta += "EXIF";
 			}
 			else if (USAME_TI(chunk, "XMP ")) {
-				if (!meta.IsEmpty()) meta.UCAT_T(",");
-				meta.UCAT_T("XMP");
+				if (!meta.IsEmpty()) meta += ",";
+				meta += "XMP";
 	 		}
 
 			fs->Seek(p, soFromBeginning);
@@ -1263,7 +1263,7 @@ bool get_WebpInf(
 		//形式
 		if (!fmt.IsEmpty()) {
 			tmp = make_PropLine(_T("形式"), fmt);
-			if (has_alph) tmp.UCAT_T(" + アルファ");
+			if (has_alph) tmp += " + アルファ";
 			if (lst_top==lst->Count) lst->Add(tmp); else lst->Insert(lst_top, tmp);
 		}
 		//フレーム数
@@ -1304,7 +1304,7 @@ UnicodeString get_WebpInfStr(
 		*i_hi = ih;
 	}
 	else {
-		ret_str = get_wd_x_hi_str(iw, ih).UCAT_T(" ");
+		ret_str = get_wd_x_hi_str(iw, ih) + " ";
 	}
 
 	UnicodeString col_s, bit_s;
@@ -1480,7 +1480,7 @@ void get_IconInf(
 					//色
 					fs->ReadBuffer(&b_buf, 1);
 					if (b_buf==0)
-				 		lbuf.UCAT_T("  256色以上");
+				 		lbuf += "  256色以上";
 					else
 				 		lbuf.cat_sprintf(_T("  %u色"), b_buf);
 					fs->Seek(13, soFromCurrent);
@@ -1633,7 +1633,7 @@ void get_AppInf(
 					//Characteristics
 					fs->Seek(16, soFromCurrent);
 					fs->ReadBuffer(&us_buf, 2);
-					if (USAME_TS(vstr, "x86") && (us_buf & 0x20)) vstr.UCAT_T(" (Large Address Aware)");
+					if (USAME_TS(vstr, "x86") && (us_buf & 0x20)) vstr += " (Large Address Aware)";
 					add_PropLine(_T("マシン"), vstr, lst);
 				}
 				break;
@@ -1748,7 +1748,7 @@ bool get_DllExpFunc(UnicodeString fnam, TStringList *lst)
 
 	if (pImgExpDir) {
 		UnicodeString tmp = fnam;
-		if (!loaded) tmp.UCAT_T("  (Linked)");
+		if (!loaded) tmp += "  (Linked)";
 		lst->Add(tmp);
 		lst->Add("Ordinal        Finction");
 		UnicodeString hr_str = make_RuledLine(2, 14, 25);

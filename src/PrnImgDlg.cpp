@@ -265,7 +265,7 @@ void __fastcall TPrintImgDlg::DrawImage(TCanvas *cv)
 		while (i<=s.Length()) {
 			WideChar c = s[i];
 			if (c=='$') {
-				UnicodeString fmt = get_tkn(s.SubString(i, 512), ')').UCAT_T(")");
+				UnicodeString fmt = get_tkn(s.SubString(i, 512), ')') + ")";
 				if (StartsStr("$XT(", fmt)) {
 					lbuf += FormatDateTime(get_in_paren(fmt), !fnam.IsEmpty()? xt : Now());
 				}

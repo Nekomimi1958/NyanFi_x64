@@ -142,22 +142,24 @@ void __fastcall TGrepExOptDlg::SampleChange(TObject *Sender)
 	std::unique_ptr<TStringList> l_list(new TStringList());
 	UnicodeString ln_str;
 	if (NyanFiForm->GrepPageControl->ActivePage==NyanFiForm->FindSheet) {
-		ln_str.USET_T("これは検索の");
+		ln_str = "これは検索の";
 		ln_str += conv_esc_char(InsStrWEdit->Text);
-		ln_str.UCAT_T("マッチ語");
+		ln_str += "マッチ語";
 		ln_str += conv_esc_char(InsStrW2Edit->Text);
-		ln_str.UCAT_T("です。");
+		ln_str += "です。";
 	}
-	else
-		ln_str.USET_T("これは置換結果のサンプルです。");
-	ln_str.UCAT_T("\nこれは2行目です。行頭にタブはありません。\n\tこれは3行目です。行頭にタブがあります。");
+	else {
+		ln_str = "これは置換結果のサンプルです。";
+	}
+
+	ln_str += "\nこれは2行目です。行頭にタブはありません。\n\tこれは3行目です。行頭にタブがあります。";
 
 	if (RepTabCheckBox->Checked) ln_str = ReplaceStr(ln_str, "\t", " ");
 	if (TrimLeftCheckBox->Checked) {
 		TStringDynArray l_lst = SplitString(ln_str, "\n");
 		ln_str = EmptyStr;
 		for (int j=0; j<l_lst.Length; j++) {
-			if (!ln_str.IsEmpty()) ln_str.UCAT_T("\n");
+			if (!ln_str.IsEmpty()) ln_str += "\n";
 			ln_str += TrimLeft(l_lst[j]);
 		}
 	}
@@ -205,7 +207,7 @@ bool __fastcall TGrepExOptDlg::FormHelp(WORD Command, NativeInt Data, bool &Call
 {
 	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
 		UnicodeString topic = (NyanFiForm->GrepPageControl->ActivePage==NyanFiForm->FindSheet)? HELPTOPIC_GR : HELPTOPIC_RP;
-		topic.UCAT_T("#Option");
+		topic += "#Option";
 		HtmlHelpTopic(topic.c_str());
 		CallHelp = false;
 	}

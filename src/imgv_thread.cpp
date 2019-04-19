@@ -580,7 +580,7 @@ void __fastcall TImgViewThread::Execute()
 					ImgBuff->Handle  = NULL;
 					ViewBuff->Handle = NULL;
 
-					MsgStr.USET_T("“Ç’†..."); MsgIsErr = false;
+					MsgStr = "“Ç’†..."; MsgIsErr = false;
 					Synchronize(&DrawMessage);
 
 					//“®‰æ

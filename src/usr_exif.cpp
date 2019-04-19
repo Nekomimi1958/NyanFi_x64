@@ -139,11 +139,11 @@ void CIFF_parse(TFileStream *fs, TStringList *lst, int ofs, int length, bool bsw
 							//case  0: vstr = "n/a";       break;
 							//case 14: vstr = "Auto High"; break;
 							//case 15: vstr = "Auto";      break;
-							case 16: vstr.USET_T("50");  break;
-							case 17: vstr.USET_T("100"); break;
-							case 18: vstr.USET_T("200"); break;
-							case 19: vstr.USET_T("400"); break;
-							case 20: vstr.USET_T("800"); break;
+							case 16: vstr = "50";  break;
+							case 17: vstr = "100"; break;
+							case 18: vstr = "200"; break;
+							case 19: vstr = "400"; break;
+							case 20: vstr = "800"; break;
 							}
 						}
 					}
@@ -244,7 +244,7 @@ void EXIF_get_idf_inf(
 			switch (dtype) {
 			case  1:	//BYTE
 				for (int i=0; i<count && i<4; i++) {
-					if (i>0) val_str.UCAT_T(",");
+					if (i>0) val_str += ",";
 					val_str.cat_sprintf(_T("%u"), vbuf[i]);
 				}
 				break;
@@ -252,7 +252,7 @@ void EXIF_get_idf_inf(
 				if (count>2) {
 					p = fs->Seek(0, soFromCurrent);  fs->Seek((int)(top + v_ui), soFromBeginning);
 					for (int i=0; i<count; i++) {
-						if (i>0) val_str.UCAT_T(",");
+						if (i>0) val_str += ",";
 						val_str.cat_sprintf(_T("%u"), fsRead_int2(fs, bsw));
 					}
 					fs->Seek(p, soFromBeginning);
@@ -266,7 +266,7 @@ void EXIF_get_idf_inf(
 				if (count>1) {
 					p = fs->Seek(0, soFromCurrent);  fs->Seek((int)(top + v_ui), soFromBeginning);
 					for (int i=0; i<count; i++) {
-						if (i>0) val_str.UCAT_T(",");
+						if (i>0) val_str += ",";
 						val_str.cat_sprintf(_T("%u"), fsRead_int4(fs, bsw));
 					}
 					fs->Seek(p, soFromBeginning);
@@ -279,7 +279,7 @@ void EXIF_get_idf_inf(
 				if (count>1) {
 					p = fs->Seek(0, soFromCurrent);  fs->Seek((int)(top + v_ui), soFromBeginning);
 					for (int i=0; i<count; i++) {
-						if (i>0) val_str.UCAT_T(",");
+						if (i>0) val_str += ",";
 						val_str.cat_sprintf(_T("%d"), fsRead_int4(fs, bsw));
 					}
 					fs->Seek(p, soFromBeginning);
@@ -309,7 +309,7 @@ void EXIF_get_idf_inf(
 			case  5:	//RATIONAL
 				p = fs->Seek(0, soFromCurrent);  fs->Seek((int)(top + v_ui), soFromBeginning);
 				for (int i=0; i<count; i++) {
-					if (i>0) val_str.UCAT_T(",");
+					if (i>0) val_str += ",";
 					unsigned int n0 = (unsigned int)fsRead_int4(fs, bsw);
 					unsigned int n1 = (unsigned int)fsRead_int4(fs, bsw);
 					if (USAME_TS(id, "GPS:"))	//GPS
@@ -328,7 +328,7 @@ void EXIF_get_idf_inf(
 						if (i==3) {
 							TStringDynArray ibuf = get_csv_array(val_str, 4, true);
 							val_str = (ibuf[0]==ibuf[1])? ibuf[0] : tmp.sprintf(_T("%s-%s"), ibuf[0].c_str(), ibuf[1].c_str());
-							val_str.UCAT_T("mm F/");
+							val_str += "mm F/";
 							val_str += (ibuf[2]==ibuf[3])? ibuf[2] : tmp.sprintf(_T("%s-%s"), ibuf[2].c_str(), ibuf[3].c_str());
 						}
 					}
@@ -358,7 +358,9 @@ void EXIF_get_idf_inf(
 									val_str.cat_sprintf(_T("%u/%u"), n0, n1);
 							}
 						}
-						else val_str.UCAT_T("0");
+						else {
+							val_str += "0";
+						}
 					}
 				}
 				fs->Seek(p, soFromBeginning);
@@ -367,7 +369,7 @@ void EXIF_get_idf_inf(
 			case 10:	//SRATIONAL
 				p = fs->Seek(0, soFromCurrent);  fs->Seek((int)(top + v_ui), soFromBeginning);
 				for (int i=0; i<count; i++) {
-					if (i>0) val_str.UCAT_T(",");
+					if (i>0) val_str += ",";
 
 					int n0 = fsRead_int4(fs, bsw);
 					int n1 = fsRead_int4(fs, bsw);
@@ -388,12 +390,12 @@ void EXIF_get_idf_inf(
 
 					if (tag==37380) {	//露光補正
 						if (n0==0 || n1==0)
-							val_str.UCAT_T("0.0");
+							val_str += "0.0";
 						else
 							val_str.cat_sprintf(_T("%+.1f"), 1.0*n0/n1);
 					}
 					else if (n0==0 || n1==0) {
-						val_str.UCAT_T("0");
+						val_str += "0";
 					}
 					else if (abs(n0)>=abs(n1) && n0%n1==0) {
 						val_str.cat_sprintf(_T("%d"), n0/n1);
@@ -438,7 +440,7 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 {
 	UnicodeString vnam, vstr, tmp;
 
-	vnam.USET_T("274");
+	vnam = "274";
 	int idx  = lst->IndexOfName(vnam);
 	if (idx!=-1) {
 		vstr = lst->Values[vnam];
@@ -449,9 +451,9 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 	}
 
 	//ISO
-	vnam.USET_T("34855");
+	vnam = "34855";
 	vstr = EmptyStr;
-	idx = lst->IndexOfName(vnam);
+	idx  = lst->IndexOfName(vnam);
 	if (test_FileExt(fext, _T(".rw2"))) vstr = lst->Values["23"];
 	if (vstr.IsEmpty()) vstr = lst->Values[vnam];
 	if (vstr.IsEmpty() || USAME_TS(vstr, "0")) vstr = get_tkn_r(lst->Values["NK:2"], ',');
@@ -461,13 +463,13 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 	}
 
 	//露出時間
-	vnam.USET_T("33434");
+	vnam = "33434";
 	vstr = lst->Values[vnam];
 	if (!vstr.IsEmpty()) lst->Add(tmp.sprintf(_T("%sU=%s秒"), vnam.c_str(), vstr.c_str()));
 
 	//露出プログラム
-	vnam.USET_T("34850");
-	idx = lst->IndexOfName(vnam);
+	vnam = "34850";
+	idx  = lst->IndexOfName(vnam);
 	if (idx!=-1) {
 		vstr = lst->Values[vnam];
 		if (!vstr.IsEmpty()) {
@@ -480,14 +482,14 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 	}
 
 	//測光方式
-	vnam.USET_T("37383");
+	vnam = "37383";
 	idx  = lst->IndexOfName(vnam);
 	if (idx!=-1) {
 		vstr = lst->ValueFromIndex[idx];
 		if (!vstr.IsEmpty()) {
 			int n = vstr.ToIntDef(0);
 			if (n==255) {
-				vstr.USET_T("その他");
+				vstr = "その他";
 			}
 			else {
 				vstr = get_word_i_idx(_T("不明|平均|中央重視|スポット|マルチスポット|分割測光|部分測光"), n);
@@ -498,7 +500,7 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 	}
 
 	//フラッシュ
-	vnam.USET_T("37385");
+	vnam = "37385";
 	idx  = lst->IndexOfName(vnam);
 	if (idx!=-1) {
 		vstr = lst->ValueFromIndex[idx];
@@ -509,8 +511,8 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 	}
 
 	//WB
-	vnam.USET_T("CN:4.7");
-	idx = lst->IndexOfName(vnam);
+	vnam = "CN:4.7";
+	idx  = lst->IndexOfName(vnam);
 	if (idx!=-1) {
 		vstr = lst->ValueFromIndex[idx];
 		if (!vstr.IsEmpty()) {
@@ -536,7 +538,7 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 					t /=u; w /= u;
 					vstr = w;
 					if (w!=t) vstr.cat_sprintf(_T("-%u"), t);
-					vstr.UCAT_T("mm");
+					vstr += "mm";
 				}
 			}
 		}
