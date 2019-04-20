@@ -3735,8 +3735,9 @@ UnicodeString get_LibFile_if_root()
 		CurStt->LibraryInfo = CurStt->LibSubPath = EmptyStr;
 		return lnam;
 	}
-	else
+	else {
 		return EmptyStr;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -5051,8 +5052,9 @@ bool check_file_ex(UnicodeString fnam, flist_stt *lst_stt)
 			opt<<roMultiLine;
 			if (!TRegEx::IsMatch(f_buf->Text, lst_stt->find_TxtKwd, opt)) return false;
 		}
-		else
+		else {
 			if (!find_mlt(lst_stt->find_TxtKwd, f_buf->Text, lst_stt->find_TxtAnd, false, lst_stt->find_TxtCase)) return false;
+		}
 	}
 
 	//Exifî•ñ•¶š—ñŒŸõ
@@ -8270,8 +8272,9 @@ bool get_FileInfList(
 						for (int i=0; i<PrvTxtInfLn; i++) fp->prv_text += f_buf->Strings[i] + "\r\n";
 						fp->prv_text += "\r\n";	//Å‘ås”+1‚É‚µ‚Ä’´‰ß”»’è
 					}
-					else
+					else {
 						fp->prv_text = f_buf->Text;
+					}
 
 					//––”ö“à—e‚ğİ’è
 					if (ShowTailPreview && PrvTxtTailLn>0) {
@@ -8937,8 +8940,9 @@ bool delete_File(
 		res = (::SHFileOperation(&lpFileOp) == 0);
 	}
 	//íœ
-	else
+	else {
 		res = ::DeleteFile(cv_ex_filename(fnam).c_str());
+	}
 	return res;
 }
 //---------------------------------------------------------------------------

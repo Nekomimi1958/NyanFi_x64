@@ -346,9 +346,13 @@ void __fastcall TFuncListDlg::FuncListBoxDrawItem(TWinControl *Control, int Inde
 			}
 			EmphasisTextOut(lbuf, elist.get(), cv, xp, yp, false, true, col_Headline, cv->Brush->Color);
 		}
-		else cv->TextOut(xp, yp, lbuf);
+		else {
+			cv->TextOut(xp, yp, lbuf);
+		}
 	}
-	else cv->TextOut(xp, yp, lbuf);
+	else {
+		cv->TextOut(xp, yp, lbuf);
+	}
 
 	//ÉJÅ[É\Éã
 	draw_ListCursor(lp, Rect, Index, State);

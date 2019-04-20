@@ -615,8 +615,9 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 		else {
 			TStringDynArray itm_buf = get_csv_array(lbuf, 3, true);
 			//セパレータ
-			if (is_separator(itm_buf[1]))
+			if (is_separator(itm_buf[1])) {
 				draw_Separator(cv, Rect);
+			}
 			//項目
 			else {
 				THeaderSections *sp = RegDirHeader->Sections;

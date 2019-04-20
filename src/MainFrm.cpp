@@ -19997,8 +19997,7 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 					if (!ExeCmdAction(CmdAct)) ActionAbort();
 				}
 				//多重アーカイブへ
-				else if (test_ArcExt2(cfp->f_ext)) {
-					if (!is_AvailableArc(cfp->tmp_name)) UserAbort(USTR_FmtNotSuported);
+				else if (test_ArcExt2(cfp->f_ext) && is_AvailableArc(cfp->tmp_name)) {
 					CurStt->arc_RetList->Insert(0,
 						UnicodeString().sprintf(_T("%s\t%s"), CurStt->arc_Name.c_str(), CurStt->arc_SubPath.c_str()));
 					CurStt->arc_Name    = cfp->tmp_name;
@@ -20144,10 +20143,9 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 					if (!ExeCmdAction(CmdAct)) ActionAbort();
 				}
 				//仮想ディレクトリへ
-				else if (test_ArcExt2(cfp->f_ext)) {
+				else if (test_ArcExt2(cfp->f_ext) && is_AvailableArc(cfp->f_name)) {
 					if (cfp->f_name.Length()>=MAX_PATH) SysErrAbort(ERROR_BUFFER_OVERFLOW);
 					if (CurStt->is_Find || CurStt->is_Work) RecoverFileList();	//結果リスト/ワークリストから抜ける
-					if (!is_AvailableArc(cfp->f_name)) UserAbort(USTR_FmtNotSuported);
 					CurStt->arc_Name	= cfp->f_name;
 					CurStt->arc_SubPath = EmptyStr;
 					CurStt->arc_DspPath = IncludeTrailingPathDelimiter(cfp->n_name);
@@ -20231,17 +20229,21 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 					}
 				}
 				//タブグループ
-				else if (OpenStdTabGroup && SameText(get_IniTypeStr(cfp), "タブグループ"))
+				else if (OpenStdTabGroup && SameText(get_IniTypeStr(cfp), "タブグループ")) {
 					ExeCommandAction("LoadTabGroup", cfp->f_name);
+				}
 				//メニューファイル
-				else if (OpenStdMenuFile && is_MenuFile(cfp))
+				else if (OpenStdMenuFile && is_MenuFile(cfp)) {
 					ExeCommandAction("ExeMenuFile", cfp->f_name);
+				}
 				//結果リスト
-				else if (OpenStdResultList && is_ResultList(cfp))
+				else if (OpenStdResultList && is_ResultList(cfp)) {
 					ExeCommandAction("LoadResultList", cfp->f_name);
+				}
 				//テキストビュアー
-				else if (!ExeCmdAction(TextViewerAction))
+				else if (!ExeCmdAction(TextViewerAction)) {
 					ActionAbort();
+				}
 
 				if (DownAfterOpenStd && !not_down) CursorDownAction->Execute();	//実行後、下に移動
 			}

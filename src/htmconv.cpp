@@ -646,8 +646,9 @@ void HtmConv::AddHR()
 		TxtBuf->Add(EmptyStr);
 		TxtLineBuf = StringOfChar(_T('-'), LineWidth);
 	}
-	else
+	else {
 		TxtLineBuf = StringOfChar(_T('„Ÿ'), LineWidth/2);
+	}
 
 	FlushText();
 
