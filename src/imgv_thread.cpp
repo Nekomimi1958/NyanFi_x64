@@ -7,7 +7,6 @@
 #include <memory>
 #include <algorithm>
 #include <RegularExpressions.hpp>
-#include <Vcl.Clipbrd.hpp>
 #include "usr_wic.h"
 #include "usr_exif.h"
 #include "usr_id3.h"
@@ -386,13 +385,6 @@ void __fastcall TImgViewThread::Execute()
 					if (r_buf.Length>1) FileName  = r_buf[1];
 					FileName2 = (r_buf.Length>2)? r_buf[2] : EmptyStr;
 				}
-				else if (USAME_TS(cmd, "CLIP")) {
-					if (!Clipboard()->HasFormat(CF_BITMAP)) {
-						ImgBuff->Assign(Clipboard());
-						ImgIsWmf = false;
-						FileName = FileName2 = EmptyStr;
-					}
-				}
 				else if (r_buf.Length>1) {
 					if		(USAME_TS(cmd, "FITTED"))	Fitted	   = USAME_TS(r_buf[1], "1");
 					else if (USAME_TS(cmd, "GRAY"))		GrayScaled = USAME_TS(r_buf[1], "1");
@@ -440,9 +432,9 @@ void __fastcall TImgViewThread::Execute()
 				//アイコン/フォントのプレビュー
 				if (UseViewBuff) {
 					UseViewBuff = false;
-					is_prv_buf 	= true;
-					Img_f_name = fnam; Img_f_size = f_size; Img_f_time = f_time;
-					ImgIsWmf  = false;
+					is_prv_buf	= true;
+					Img_f_name	= fnam; Img_f_size = f_size; Img_f_time = f_time;
+					ImgIsWmf	= false;
 					ImgBuff->Handle = NULL;
 					ChgPrvCur = false;
 

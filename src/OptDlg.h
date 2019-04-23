@@ -627,6 +627,7 @@ __published:	// IDE で管理されるコンポーネント
 	TLabeledEdit *NormalWaitTimeEdit;
 	TLabeledEdit *NotifyTaskTimeEdit;
 	TLabeledEdit *NoWatchPathEdit;
+	TLabeledEdit *PinMarkEdit;
 	TLabeledEdit *PrvActTailLnEdit;
 	TLabeledEdit *PrvTxtInfLnEdit;
 	TLabeledEdit *PrvTxtTailLnEdit;

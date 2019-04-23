@@ -18,6 +18,7 @@ TCvImageDlg *CvImageDlg = NULL;
 __fastcall TCvImageDlg::TCvImageDlg(TComponent* Owner)
 	: TForm(Owner)
 {
+	fromClip = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TCvImageDlg::FormCreate(TObject *Sender)
@@ -41,27 +42,51 @@ void __fastcall TCvImageDlg::FormCreate(TObject *Sender)
 		_T("ニアレストネイバー\nバイリニア\nバイキュービック\nファントリサンプリング\n補間しない\n"));
 	set_ComboBoxText(ChgNameComboBox,
 		_T("ファイル名の先頭に挿入\nファイル名主部の末尾に追加\n"));
+
+	ClipNameComboBox->Tag = CBTAG_HISTORY;
 }
 //---------------------------------------------------------------------------
 void __fastcall TCvImageDlg::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
 
-	CvFmtRadioGroup->ItemIndex	 = IniFile->ReadIntGen(_T("CvImgFormat"));
-	ImgQTrackBar->Position		 = IniFile->ReadIntGen(_T("CVImgJpgQuality"),	80);
-	YCrCbComboBox->ItemIndex	 = IniFile->ReadIntGen(_T("CVImgJpgYCrCb"),	1);
-	CmpModeComboBox->ItemIndex	 = IniFile->ReadIntGen(_T("CVImgTifCmpMode"));
-	GrayScaleCheckBox->Checked	 = IniFile->ReadBoolGen(_T("CVImgGrayScale"));
-	NotUsePrvCheckBox->Checked	 = IniFile->ReadBoolGen(_T("CvImgNotUsePreview"));
-	ScaleModeComboBox->ItemIndex = IniFile->ReadIntGen(_T("CvImgScaleMode"));
+	if (fromClip) {
+		Caption = "クリップボード画像の変換";
+		SubPanel->Visible  = false;
+		NamePanel->Visible = true;
+		ClientHeight = MainPanel->Height + NamePanel->Height + BtnPanel->Height;
+
+		IniFile->LoadComboBoxItems(ClipNameComboBox, _T("CvClpNameHistory"));
+		ClipNameComboBox->Text = IniFile->ReadStrGen(_T("CvClpFileName"));
+		ClipNameComboBox->SetFocus();
+		ClipNameComboBox->SelStart = ClipNameComboBox->Text.Length();
+		(IniFile->ReadBoolGen(_T("CvClpAutoRen"))? ClipAutoBtn : ClipOWBtn)->Checked = true;
+	}
+	else {
+		Caption = "画像ファイルの変換";
+		SubPanel->Visible  = true;
+		NamePanel->Visible = false;
+		ClientHeight = MainPanel->Height + SubPanel->Height + BtnPanel->Height;
+
+		NotUsePrvCheckBox->Checked = IniFile->ReadBoolGen(_T("CvImgNotUsePreview"));
+		ChgNameComboBox->ItemIndex = IniFile->ReadIntGen(_T("CvImgChgNameMode"),	1);
+		ChgNameEdit->Text		   = IniFile->ReadStrGen(_T("CvImgCngNameStr"));
+		KeepTimeCheckBox->Checked  = IniFile->ReadBoolGen(_T("CVImgKeepTime"));
+	}
+
+	UnicodeString pfx = fromClip? "CvClp" : "CvImg";
+	CvFmtRadioGroup->ItemIndex	 = IniFile->ReadIntGen( (pfx + "Format").c_str());
+	ImgQTrackBar->Position		 = IniFile->ReadIntGen( (pfx + "JpgQuality").c_str(),	80);
+	YCrCbComboBox->ItemIndex	 = IniFile->ReadIntGen( (pfx + "JpgYCrCb").c_str(),		1);
+	CmpModeComboBox->ItemIndex	 = IniFile->ReadIntGen( (pfx + "TifCmpMode").c_str());
+	GrayScaleCheckBox->Checked	 = IniFile->ReadBoolGen((pfx + "GrayScale").c_str());
+	ScaleModeComboBox->ItemIndex = IniFile->ReadIntGen( (pfx + "ScaleMode").c_str());
+	ScalePrm1Edit->Text 		 = IniFile->ReadIntGen( (pfx + "ScalePrm1").c_str(),	100);
+	ScalePrm2Edit->Text 		 = IniFile->ReadIntGen( (pfx + "ScalePrm2").c_str(),	100);
+	ScaleOptComboBox->ItemIndex  = IniFile->ReadIntGen( (pfx + "ScaleOpt").c_str());
+	MgnColPanel->Color	 = (TColor)IniFile->ReadIntGen( (pfx + "MgnColor").c_str(),		clBlack);
+
 	ScaleModeComboBoxChange(NULL);
-	ScalePrm1Edit->Text 		 = IniFile->ReadIntGen(_T("CvImgScalePrm1"),	100);
-	ScalePrm2Edit->Text 		 = IniFile->ReadIntGen(_T("CvImgScalePrm2"),	100);
-	ScaleOptComboBox->ItemIndex  = IniFile->ReadIntGen(_T("CvImgScaleOpt"));
-	MgnColPanel->Color	 = (TColor)IniFile->ReadIntGen(_T("CvImgMgnColor"), 	clBlack);
-	ChgNameComboBox->ItemIndex   = IniFile->ReadIntGen(_T("CvImgChgNameMode"),	1);
-	ChgNameEdit->Text			 = IniFile->ReadStrGen(_T("CvImgCngNameStr"));
-	KeepTimeCheckBox->Checked	 = IniFile->ReadBoolGen(_T("CVImgKeepTime"));
 	CvFmtRadioGroupClick(NULL);
 }
 //---------------------------------------------------------------------------
@@ -69,20 +94,32 @@ void __fastcall TCvImageDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	IniFile->SavePosInfo(this);
 
-	IniFile->WriteIntGen(_T("CvImgFormat"),			CvFmtRadioGroup);
-	IniFile->WriteIntGen(_T("CVImgJpgQuality"),		ImgQTrackBar->Position);
-	IniFile->WriteIntGen(_T("CVImgJpgYCrCb"),		YCrCbComboBox);
-	IniFile->WriteIntGen(_T("CVImgTifCmpMode"),		CmpModeComboBox);
-	IniFile->WriteBoolGen(_T("CVImgGrayScale"),		GrayScaleCheckBox);
-	IniFile->WriteBoolGen(_T("CvImgNotUsePreview"),	NotUsePrvCheckBox);
-	IniFile->WriteIntGen(_T("CvImgScaleMode"),		ScaleModeComboBox);
-	IniFile->WriteIntGen(_T("CvImgScalePrm1"),		EditToInt(ScalePrm1Edit, 100));
-	IniFile->WriteIntGen(_T("CvImgScalePrm2"),		EditToInt(ScalePrm2Edit, 100));
-	IniFile->WriteIntGen(_T("CvImgScaleOpt"),		ScaleOptComboBox);
-	IniFile->WriteIntGen(_T("CvImgMgnColor"),		MgnColPanel->Color);
-	IniFile->WriteIntGen(_T("CvImgChgNameMode"),	ChgNameComboBox);
-	IniFile->WriteStrGen(_T("CvImgCngNameStr"),		ChgNameEdit);
-	IniFile->WriteBoolGen(_T("CVImgKeepTime"),		KeepTimeCheckBox);
+	if (fromClip) {
+		if (ModalResult==mrOk) add_ComboBox_history(ClipNameComboBox);
+		IniFile->SaveComboBoxItems(ClipNameComboBox, _T("CvClpNameHistory"));
+		IniFile->WriteStrGen( _T("CvClpFileName"),	ClipNameComboBox->Text);
+		IniFile->WriteBoolGen(_T("CvClpAutoRen"),	ClipAutoBtn->Checked);
+	}
+	else {
+		IniFile->WriteBoolGen(_T("CvImgNotUsePreview"),	NotUsePrvCheckBox->Checked);
+		IniFile->WriteIntGen( _T("CvImgChgNameMode"),	ChgNameComboBox->ItemIndex);
+		IniFile->WriteStrGen( _T("CvImgCngNameStr"),	ChgNameEdit->Text);
+		IniFile->WriteBoolGen(_T("CVImgKeepTime"),		KeepTimeCheckBox->Checked);
+	}
+
+	UnicodeString pfx = fromClip? "CvClp" : "CvImg";
+	IniFile->WriteIntGen( (pfx + "Format").c_str(), 	CvFmtRadioGroup);
+	IniFile->WriteIntGen( (pfx + "JpgQuality").c_str(),	ImgQTrackBar->Position);
+	IniFile->WriteIntGen( (pfx + "JpgYCrCb").c_str(),	YCrCbComboBox);
+	IniFile->WriteIntGen( (pfx + "TifCmpMode").c_str(),	CmpModeComboBox);
+	IniFile->WriteBoolGen((pfx + "GrayScale").c_str(),	GrayScaleCheckBox);
+	IniFile->WriteIntGen( (pfx + "ScaleMode").c_str(),	ScaleModeComboBox);
+	IniFile->WriteIntGen( (pfx + "ScalePrm1").c_str(),	EditToInt(ScalePrm1Edit, 100));
+	IniFile->WriteIntGen( (pfx + "ScalePrm2").c_str(),	EditToInt(ScalePrm2Edit, 100));
+	IniFile->WriteIntGen( (pfx + "ScaleOpt").c_str(),	ScaleOptComboBox);
+	IniFile->WriteIntGen( (pfx + "MgnColor").c_str(),	MgnColPanel->Color);
+
+	fromClip = false;
 }
 
 //---------------------------------------------------------------------------
@@ -98,6 +135,8 @@ void __fastcall TCvImageDlg::CvFmtRadioGroupClick(TObject *Sender)
 	YCrCbComboBox->Enabled	 = !GrayScaleCheckBox->Checked;
 	CmpModeLabel->Visible	 = idx==4;
 	CmpModeComboBox->Visible = idx==4;
+
+	FextLabel->Caption = "." + ReplaceStr(CvFmtRadioGroup->Items->Strings[idx].LowerCase(), "&", EmptyStr);
 }
 //---------------------------------------------------------------------------
 void __fastcall TCvImageDlg::ImgQTrackBarChange(TObject *Sender)

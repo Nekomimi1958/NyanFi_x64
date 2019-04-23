@@ -2224,11 +2224,11 @@ object OptionDlg: TOptionDlg
       end
       object ModalEfctGroupBox: TGroupBox
         Left = 460
-        Top = 458
+        Top = 482
         Width = 434
         Height = 50
         Caption = #12514#12540#12480#12523#34920#31034#21177#26524
-        TabOrder = 14
+        TabOrder = 15
         object ModalScrCheckBox: TCheckBox
           Left = 10
           Top = 20
@@ -2581,8 +2581,19 @@ object OptionDlg: TOptionDlg
         Width = 80
         Height = 24
         Caption = #36969#24540
-        TabOrder = 15
+        TabOrder = 16
         OnClick = AppDesignBtnClick
+      end
+      object PinMarkEdit: TLabeledEdit
+        Left = 518
+        Top = 449
+        Width = 40
+        Height = 21
+        EditLabel.Width = 42
+        EditLabel.Height = 13
+        EditLabel.Caption = #22266#23450#12500#12531
+        LabelPosition = lpLeft
+        TabOrder = 14
       end
     end
     object FontColSheet: TTabSheet

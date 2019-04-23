@@ -76,7 +76,7 @@ void __fastcall TInpDirDlg::FormCloseQuery(TObject *Sender, bool &CanClose)
 {
 	if (ModalResult==mrOk) {
 		if (USAME_TI(CommandStr, "WebSearch"))
-			add_ComboBox_history(InpDirComboBox, InpDirComboBox->Text);
+			add_ComboBox_history(InpDirComboBox);
 		else {
 			UnicodeString dnam = to_absolute_name(cv_env_str(InpDirComboBox->Text), InitialPath);
 			if (file_exists(dnam)) add_ComboBox_history(InpDirComboBox, dnam);
@@ -227,7 +227,7 @@ void __fastcall TInpDirDlg::InpDirComboBoxKeyDown(TObject *Sender, WORD &Key, TS
 		}
 		else {
 			if (!cp_inp->Text.IsEmpty()) {
-				add_ComboBox_history(cp_inp, cp_inp->Text);
+				add_ComboBox_history(cp_inp);
 				ModalResult = mrOk;
 			}
 			else ModalResult = mrCancel;

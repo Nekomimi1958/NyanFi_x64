@@ -278,6 +278,18 @@ void __fastcall TDriveGraph::HiddenEditKeyDown(TObject *Sender, WORD &Key, TShif
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
 
+	if (contained_wd_i(_T("NextDrive|PrevDrive"), cmd_F) && DriveComboBox->Items->Count>1) {
+		int idx = DriveComboBox->ItemIndex;
+		if (USAME_TI(cmd_F, "NextDrive"))
+			idx = (idx<DriveComboBox->Items->Count-1)? idx + 1 : 0;
+		else
+			idx = (idx>0)? idx - 1 : DriveComboBox->Items->Count-1;
+		DriveComboBox->ItemIndex = idx;
+		DriveComboBoxChange(NULL);
+		Key = 0;
+		return;
+	}
+
 	bool is_old  = OldOdrAction->Checked;
 	bool is_down = USAME_TI(cmd_F, "CursorDown") || contained_wd_i(KeysStr_CsrDown, KeyStr);
 	bool is_up	 = USAME_TI(cmd_F, "CursorUp")   || contained_wd_i(KeysStr_CsrUp,   KeyStr);

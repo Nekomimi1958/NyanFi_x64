@@ -45,7 +45,7 @@ void __fastcall TMaskSelectDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	IniFile->SavePosInfo(this);
 
-	if (ModalResult==mrOk) add_ComboBox_history(MaskSelComboBox, MaskSelComboBox->Text);
+	if (ModalResult==mrOk) add_ComboBox_history(MaskSelComboBox);
 	IniFile->SaveComboBoxItems(MaskSelComboBox, IsMask? _T("MaskSelHistory") : _T("MatchSelHistory"));
 }
 

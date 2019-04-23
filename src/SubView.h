@@ -78,6 +78,7 @@ private:	// ユーザー宣言
 public:		// ユーザー宣言
 	UnicodeString FileName;
 	bool formFileInf;
+	bool isClip;				//クリップボード
 
 	bool FImgLocked;
 	void __fastcall SetImgLocked(bool Value);

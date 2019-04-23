@@ -112,7 +112,7 @@ void __fastcall TExeCmdDlg::ClrHistoryItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TExeCmdDlg::OkActionExecute(TObject *Sender)
 {
-	add_ComboBox_history(ExeComboBox, ExeComboBox->Text);
+	add_ComboBox_history(ExeComboBox);
 }
 //---------------------------------------------------------------------------
 void __fastcall TExeCmdDlg::OkActionUpdate(TObject *Sender)

@@ -201,7 +201,7 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		}
 		else {
 			if (!cp_inp->Text.IsEmpty()) {
-				add_ComboBox_history(cp_inp, cp_inp->Text);
+				add_ComboBox_history(cp_inp);
 				ModalResult = mrOk;
 			}
 			else ModalResult = mrCancel;

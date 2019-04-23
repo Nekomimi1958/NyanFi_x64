@@ -25,20 +25,29 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *KeepTimeCheckBox;
 	TCheckBox *NotUsePrvCheckBox;
 	TComboBox *ChgNameComboBox;
+	TComboBox *ClipNameComboBox;
 	TComboBox *CmpModeComboBox;
 	TComboBox *ScaleModeComboBox;
 	TComboBox *ScaleOptComboBox;
 	TComboBox *YCrCbComboBox;
 	TEdit *ChgNameEdit;
 	TGroupBox *NameGroupBox;
+	TGroupBox *RenGroupBox;
 	TGroupBox *ScaleGroupBox;
 	TGroupBox *SubOptGroupBox;
 	TLabel *CmpModeLabel;
+	TLabel *FextLabel;
 	TLabel *ImgQLabel;
 	TLabel *YCrCbLabel;
 	TLabeledEdit *ScalePrm1Edit;
 	TLabeledEdit *ScalePrm2Edit;
+	TPanel *BtnPanel;
+	TPanel *MainPanel;
 	TPanel *MgnColPanel;
+	TPanel *NamePanel;
+	TPanel *SubPanel;
+	TRadioButton *ClipAutoBtn;
+	TRadioButton *ClipOWBtn;
 	TRadioGroup *CvFmtRadioGroup;
 	TTrackBar *ImgQTrackBar;
 
@@ -55,6 +64,8 @@ __published:	// IDE で管理されるコンポーネント
 private:	// ユーザー宣言
 
 public:		// ユーザー宣言
+	bool fromClip;
+
 	__fastcall TCvImageDlg(TComponent* Owner);
 };
 //---------------------------------------------------------------------------

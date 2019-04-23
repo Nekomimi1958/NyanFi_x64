@@ -867,6 +867,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	LimitBinEdit->Text	 = ViewBinLimitSize/1048576;
 	IniWinLeftEdit->Text = IniWinLeft;
 	IniWinTopEdit->Text  = IniWinTop;
+	PinMarkEdit->Text	 = TabPinMark;
 
 	MaxTasksComboBox->ItemIndex = MaxTasks - 1;
 	AppPrmComboBox->ItemIndex	= idx_of_word_i(_T("|FA|FL|FI|AO|LO|LI"), AppListHotPrm);
@@ -2140,11 +2141,13 @@ void __fastcall TOptionDlg::SetExtToolExeName(UnicodeString fnam)
 			ToolDirEdit->Text = fld;
 			ToolAliasEdit->Text = EmptyStr;
 		}
-		else
+		else {
 			msgbox_WARN("リンク先が .exe ファイルではありません");
+		}
 	}
-	else
+	else {
 		ToolExeEdit->Text = fnam;
+	}
 }
 //---------------------------------------------------------------------------
 //外部ツールの追加・変更
@@ -4115,6 +4118,7 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 	DirDelimiter	 = DirDelimiter.IsEmpty()? UnicodeString("/") : DirDelimiter.SubString(1, 1);
 	IniWinLeft		 = EditToInt(IniWinLeftEdit);
 	IniWinTop		 = EditToInt(IniWinTopEdit);
+	TabPinMark		 = def_if_empty(PinMarkEdit->Text, u"\U0001F4CD");
 
 	if (IconMode==0 && ShowIconCheckBox->Checked)
 		IconMode = 1;

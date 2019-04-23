@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <memory>
 #include <Vcl.Imaging.GIFImg.hpp>
+#include <Vcl.Clipbrd.hpp>
 #include "usr_wic.h"
 #include "usr_id3.h"
 #include "Global.h"
@@ -23,8 +24,8 @@ TSubViewer *SubViewer;
 __fastcall TSubViewer::TSubViewer(TComponent* Owner)
 	: TForm(Owner)
 {
+	formFileInf = isClip = false;
 	ImgLocked	= false;
-	formFileInf = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TSubViewer::FormCreate(TObject *Sender)
@@ -37,7 +38,7 @@ void __fastcall TSubViewer::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TSubViewer::FormShow(TObject *Sender)
 {
-	//ファイル情報ダイアログと重ならないらうに初期化
+	//ファイル情報ダイアログと重ならないように初期化
 	if (formFileInf && !IniFile->KeyExists(SCT_General, "SubViewerFILeft")) {
 		Top  = FileInfoDlg->Top;
 		Left = FileInfoDlg->Left + FileInfoDlg->Width;
@@ -64,7 +65,7 @@ void __fastcall TSubViewer::FormHide(TObject *Sender)
 
 	Image1->Picture->Assign(NULL);
 	FileName	= EmptyStr;
-	formFileInf = false;
+	formFileInf = isClip = false;
 	ImgLocked	= false;
 	hasBitmap	= false;
 }
@@ -95,87 +96,99 @@ double __fastcall TSubViewer::GetZoomRatio()
 //---------------------------------------------------------------------------
 void __fastcall TSubViewer::DrawImage(UnicodeString fnam)
 {
-	if (ImgLocked) return;
-
 	try {
 		hasBitmap = false;
-		if (!file_exists(fnam)) Abort();
-
 		UnicodeString ex_str;
-		UnicodeString fext = ExtractFileExt(fnam);
-		if (test_GifExt(fext)) {
-			std::unique_ptr<TGIFImage> gif_buf(new TGIFImage());
-			gif_buf->LoadFromFile(fnam);
-			gif_buf->Animate	 = true;
-			gif_buf->Transparent = true;
-			Image1->Picture->Assign(gif_buf.get());
-			Image1->Transparent = true;
-		}
-		else if (test_MetaExt(fext)) {
-			std::unique_ptr<TMetafile> meta_buf(new TMetafile());
-			meta_buf->LoadFromFile(fnam);
-			Image1->Picture->Assign(meta_buf.get());
-			Image1->Transparent = true;
-		}
-		else {
-			std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
-			if (test_Mp3Ext(fext)) {
-				if (!ID3_GetImage(fnam, bmp.get())) Abort();
-			}
-			else if (test_FlacExt(fext)) {
-				if (!get_FlacImage(fnam, bmp.get())) Abort();
-			}
-			else if (test_FileExt(fext, get_img_fext())) {
-				int res = load_ImageFile(fnam, bmp.get(), WICIMG_PREVIEW, ImgPanel->Color);
-				if (res==0) Abort();
-
-				if (test_ExifExt(fext)) {
-					int ori = 0;
-					ex_str	= get_ExifInfStr(fnam, &ori);
-					//回転
-					int rot = (ori==6)? 1 : (ori==8)? 3 : 0;
-					if (RotViewImg && rot>0 && res!=LOADED_BY_WIC) WIC_rotate_image(bmp.get(), rot);
-				}
-				else if (test_PngExt(fext))
-					ex_str = get_PngInfStr(fnam);
-				else if (USAME_TI(fext, ".webp"))
-					ex_str = get_WebpInfStr(ViewFileName);
-
-			}
-			else if (test_FileExt(fext, FEXT_INDIVICO)) {
-				bmp->SetSize(256, 256);
-				TCanvas *cv = bmp->Canvas;
-				cv->Brush->Color = ImgPanel->Color;
-				cv->FillRect(Rect(0, 0, bmp->Width, bmp->Height));
-
-				int size_lst[6] = {256, 128, 64, 48, 32, 16};
-				for (int i=0; i<6; i++) {
-					int size = size_lst[i];
-					HICON hIcon = usr_SH->get_Icon(fnam, size);
-					if (hIcon && size==size_lst[i]) {
-						::DrawIconEx(cv->Handle,
-							(bmp->Width - size)/2, (bmp->Height - size)/2,
-							hIcon, size, size, 0, NULL, DI_NORMAL);
-						::DestroyIcon(hIcon);
-						break;
-					}
-				}
-			}
-			else Abort();
-
-			Image1->Picture->Assign(bmp.get());
+		if (isClip) {
+			if (!Clipboard()->HasFormat(CF_BITMAP)) Abort();
+			Image1->Picture->Assign(Clipboard());
 			Image1->Transparent = false;
 			hasBitmap = true;
+			FileName  = EmptyStr;
 		}
+		else {
+			if (ImgLocked) return;
+			if (!file_exists(fnam)) Abort();
 
-		FileName = fnam;
+			UnicodeString fext = ExtractFileExt(fnam);
+			if (test_GifExt(fext)) {
+				std::unique_ptr<TGIFImage> gif_buf(new TGIFImage());
+				gif_buf->LoadFromFile(fnam);
+				gif_buf->Animate	 = true;
+				gif_buf->Transparent = true;
+				Image1->Picture->Assign(gif_buf.get());
+				Image1->Transparent = true;
+			}
+			else if (test_MetaExt(fext)) {
+				std::unique_ptr<TMetafile> meta_buf(new TMetafile());
+				meta_buf->LoadFromFile(fnam);
+				Image1->Picture->Assign(meta_buf.get());
+				Image1->Transparent = true;
+			}
+			else {
+				std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
+				if (test_Mp3Ext(fext)) {
+					if (!ID3_GetImage(fnam, bmp.get())) Abort();
+				}
+				else if (test_FlacExt(fext)) {
+					if (!get_FlacImage(fnam, bmp.get())) Abort();
+				}
+				else if (test_FileExt(fext, get_img_fext())) {
+					int res = load_ImageFile(fnam, bmp.get(), WICIMG_PREVIEW, ImgPanel->Color);
+					if (res==0) Abort();
+
+					if (test_ExifExt(fext)) {
+						int ori = 0;
+						ex_str	= get_ExifInfStr(fnam, &ori);
+						//回転
+						int rot = (ori==6)? 1 : (ori==8)? 3 : 0;
+						if (RotViewImg && rot>0 && res!=LOADED_BY_WIC) WIC_rotate_image(bmp.get(), rot);
+					}
+					else if (test_PngExt(fext))
+						ex_str = get_PngInfStr(fnam);
+					else if (USAME_TI(fext, ".webp"))
+						ex_str = get_WebpInfStr(ViewFileName);
+
+				}
+				else if (test_FileExt(fext, FEXT_INDIVICO)) {
+					bmp->SetSize(256, 256);
+					TCanvas *cv = bmp->Canvas;
+					cv->Brush->Color = ImgPanel->Color;
+					cv->FillRect(Rect(0, 0, bmp->Width, bmp->Height));
+
+					int size_lst[6] = {256, 128, 64, 48, 32, 16};
+					for (int i=0; i<6; i++) {
+						int size = size_lst[i];
+						HICON hIcon = usr_SH->get_Icon(fnam, size);
+						if (hIcon && size==size_lst[i]) {
+							::DrawIconEx(cv->Handle,
+								(bmp->Width - size)/2, (bmp->Height - size)/2,
+								hIcon, size, size, 0, NULL, DI_NORMAL);
+							::DestroyIcon(hIcon);
+							break;
+						}
+					}
+				}
+				else Abort();
+
+				Image1->Picture->Assign(bmp.get());
+				Image1->Transparent = false;
+				hasBitmap = true;
+			}
+			FileName = fnam;
+		}
 
 		//サイズ
 		if (ex_str.IsEmpty() || ex_str.Pos(" × ")==0) {
 			if (!ex_str.IsEmpty()) ex_str += "  ";
 			ex_str += get_wd_x_hi_str(Image1->Picture->Width, Image1->Picture->Height);
 		}
-		TitleInf.sprintf(_T("%s  %s"), ExtractFileName(FileName).c_str(), ex_str.c_str());
+
+		if (isClip)
+			TitleInf.sprintf(_T("クリップボード  %s"), ex_str.c_str());
+		else
+			TitleInf.sprintf(_T("%s  %s"), ExtractFileName(FileName).c_str(), ex_str.c_str());
+
 		//表示倍率
 		ZoomInf.sprintf(_T("  (%4.1f%%)"), GetZoomRatio());
 

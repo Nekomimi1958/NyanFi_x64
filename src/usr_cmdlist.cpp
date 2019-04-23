@@ -642,6 +642,9 @@ void get_PrmList(
 			_T("MD : Markdown記法に変換\n")
 			_T("TX : 通常テキストに変換\n"));
 	}
+	else if (USAME_TI(cmd, "ConvertImage")) {
+		params = "\nCB : クリップボードの内容を変換・保存\n";
+	}
 	else if (USAME_TI(cmd, "CopyDir")) {
 		params.sprintf(_T("%s"),
 			_T("\n")
@@ -1053,10 +1056,13 @@ void get_PrmList(
 		cmd))
 	{
 		params = "\nON : 表示/有効\nOFF : 非表示/無効/解除\n";
-		if (USAME_TI(cmd, "SubViewer"))
+		if (USAME_TI(cmd, "SubViewer")) {
+			params += "CB : クリップボードの内容を表示\n";
 			params += "LK : ロック/解除\nRL : 左に90度回転\nRR : 右に90度回転\nFH : 左右反転\nFV : 上下反転\n";
-		if (USAME_TI(cmd, "ShowIcon"))
+		}
+		if (USAME_TI(cmd, "ShowIcon")) {
 			params += "FD : 全表示/フォルダアイコンのみ表示\n";
+		}
 	}
 	//オプション設定
 	else if (USAME_TI(cmd, "OptionDlg")) {

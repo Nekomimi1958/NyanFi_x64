@@ -38,11 +38,13 @@ public:
 	int  CvImg_scale_prm1;
 	int  CvImg_scale_prm2;
 	int  CvImg_scale_opt;
+	bool CvImg_from_clip;
 	bool CvImg_not_use_prvw;
 	bool CvImg_grayscale;
 	TColor CvImg_mgn_color;
 	int  CvImg_chg_name_mode;
 	UnicodeString CvImg_chg_name_str;
+	UnicodeString CvImg_clip_name;
 
 	UnicodeString Bakup_inc_mask;
 	UnicodeString Bakup_exc_mask;
@@ -265,8 +267,8 @@ public:
 	UnicodeString CurSrcName;	//コピー/移動元
 	UnicodeString CurDstName;	//コピー/移動先
 
-	UnicodeString FirstDstName;	//最初にコピー/移動先したファイル名
-	UnicodeString LastDstName;	//その時点で最後にコピー/移動先したファイル名
+	UnicodeString FirstDstName;	//最初にコピー/移動したファイル名
+	UnicodeString LastDstName;	//その時点で最後にコピー/移動したファイル名
 
 	TaskConfig *Config;
 

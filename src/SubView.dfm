@@ -67,13 +67,6 @@ object SubViewer: TSubViewer
     OnPopup = PopupMenu1Popup
     Left = 40
     Top = 24
-    object BgColItem: TMenuItem
-      Caption = #32972#26223#33394'(&C)'
-      OnClick = BgColItemClick
-    end
-    object Sep_1: TMenuItem
-      Caption = '-'
-    end
     object RotateLItem: TMenuItem
       Action = RotateLeftAction
     end
@@ -94,6 +87,13 @@ object SubViewer: TSubViewer
     object LockItem: TMenuItem
       Caption = #34920#31034#12434#12525#12483#12463'(&L)'
       OnClick = LockItemClick
+    end
+    object Sep_1: TMenuItem
+      Caption = '-'
+    end
+    object BgColItem: TMenuItem
+      Caption = #32972#26223#33394'(&C)'
+      OnClick = BgColItemClick
     end
   end
   object ActionList1: TActionList

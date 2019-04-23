@@ -403,11 +403,14 @@ NyanFi.exe -XCalculator_CB
 <a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー - 「HTML→テキスト変換」</a><br>
 <a href="#JoinText">→ JoinText</a>
 
-<dt id="ConvertImage">ConvertImage
+<dt id="ConvertImage">ConvertImage<span class="pram_text">[_CB]</span>
 <dd>「<a href="hid00059.htm">画像ファイルの変換</a>」ダイアログが開きます。<br>
 選択中(無ければカーソル位置)の画像ファイルを、別形式に変換したり、縮小・拡大たりして、反対パスに出力します。<br>
 変換処理はバックグラウンド・タスクで行われます。<br>
 反対側がカレントと同じで、出力ファイル名も同じ場合、確認なしで上書きされます。<br>
+<div class="spc_box">
+パラメータに <b>CB</b> を指定すると、クリップボードの画像を変換し、指定した名前でカレント側に保存します。<br>
+</div>
 
 <dt id="ConvertTextEnc">ConvertTextEnc
 <dd>「<b>文字コードの変換</b>」ダイアログが開きます。<br>
@@ -1197,7 +1200,7 @@ FindTag<span class="pram_text">_;</span>
 パラメータを指定しないと、カレント側の固定/解除がトグルで切り替わります。<br>
 パラメータに <b>ON</b> を指定すると、カレント側が固定されます。<b>OFF</b> を指定すると、どちらかの側が固定されていた場合、それが解除されます。<br>
 固定できるのはどちらか一方だけです。反対側のファイルリストが固定されていたら解除されます。<br>
-固定されている側のディレクトリ情報には、ピンマーク(<img src="char_Pin.png" alt="" height="18" width="19">)が表示されます。<br>
+固定されている側のディレクトリ情報には、ピンマークが表示されます。デフォルトでは絵文字の<img src="char_Pin.png" alt="" height="18" width="19">ですが、<a href="hid00010.htm#PinMark">オプション設定 - デザイン - 「固定ピン」</a> で変更可能です。<br>
 固定を解除すると、すべてのタブが固定前のパスに戻ります。
 </div>
 <a href="#NextTab">→ NextTab</a>　<a href="#PrevTab">→ PrevTab</a>　<a href="#ToTab">→ ToTab</a>
@@ -1298,7 +1301,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
 アーカイブファイルに対して実行した場合、内部に栞マークの付いた画像があればそれを、無ければ最初に見つかった画像を表示します。この場合、イメージビュアーを閉じると仮想ディレクトリから抜けます。<br>
 </div>
 <div class="spc_box">
-パラメータに <b>CB</b> を指定すると、クリップボードのビットマップを表示します。この場合、サムネイルは非表示になります。<br>
+パラメータに <b>CB</b> を指定すると、クリップボードのビットマップ内容を表示します。この場合、サムネイルは非表示になります。<br>
 パラメータに <b>NN</b> を指定すると、複数の <b>NyanFi</b> が起動している場合、次の <b>NyanFi</b> のイメージビュアーで表示します(アーカイブやFTPは除く)。二重起動されていない場合は、自身で表示します。<br>
 <a href="hid00080.htm">FTP接続</a>時にリモート側のファイルを開いた場合、サムネイルは非表示になります。<br>
 </div>
@@ -1870,7 +1873,7 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 ・実行可能なファイルは実行します(仮想ディレクトリ内は除く)。<br>
 ・画像ファイルやアイコンファイルはイメージビュアーで表示。<br>
 ・サウンドファイル(<b>.wav</b>、<b>.wma</b>、<b>.mp3</b>、<b>.mid</b>)は秒数制限で再生。<br>
-・アーカイブは仮想ディレクトリとして開きます(<b>.jar</b>、<b>.docx</b>、<b>.dotx</b>、<b>.pptx</b>、<b>.xlsx</b>、<b>.xltx</b>、<b>.odt</b>、<b>.ods</b>、<b>.odp</b>、<b>.odg</b>、<b>.odc</b>、<b>.odf</b>、<b>.odi</b>、<b>.odm</b>、<b>.odb</b>、<b>.epub</b>、<b>.mobi</b> はZIPとして認識。また <b>.cbz</b>、<b>.cb7</b>、<b>.cbt</b>、<b>.cbr</b> は、 それぞれ ZIP、7z、TAR、RAR として認識)。<br>
+・対応しているアーカイブは仮想ディレクトリとして開きます(<b>.jar</b>、<b>.docx</b>、<b>.dotx</b>、<b>.pptx</b>、<b>.xlsx</b>、<b>.xltx</b>、<b>.odt</b>、<b>.ods</b>、<b>.odp</b>、<b>.odg</b>、<b>.odc</b>、<b>.odf</b>、<b>.odi</b>、<b>.odm</b>、<b>.odb</b>、<b>.epub</b>、<b>.mobi</b> はZIPとして認識。また <b>.cbz</b>、<b>.cb7</b>、<b>.cbt</b>、<b>.cbr</b> は、 それぞれ ZIP、7z、TAR、RAR として認識)。<br>
 ・<b>.nwl</b> ファイルは<a href="hid00060.htm">ワークリスト</a>として開きます。<br>
 ・コマンドファイル(<b>.nbt</b>)へのショートカット(<b>.lnk</b>)は <a href="#ExeCommands">ExeCommands</a> コマンドで実行。<br>
 ・ディレクトリやディレクトリへのショートカット(<b>.lnk</b>)は、そこへ移動。<br>
@@ -1879,19 +1882,21 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 ・<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>メニュー定義</b>」をチェックしていると、メニュー定義ファイル(一行目が &quot;;[MenuFile]&quot;) を <a href="#ExeMenuFile">ExeMenuFile</a> コマンドで開きます。<br>
 ・<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>結果リスト</b>」をチェックしていると、結果リストファイル(一行目が &quot;;[ResultList]&quot;) を <a href="#LoadResultList">LoadResultList</a> コマンドで開きます。<br>
 ・それ以外のファイルはビュアーでテキストまたはバイナリ表示します。<br>
+・<a href="hid00080.htm">FTP接続</a>時のリモート側では、ディレクトリの変更のみ可能です。<br>
 </div>
 
 <div class="spc_box">
-オプション設定で、特定のファイル拡張子に対し、標準とは異なる動作(<a href="#OpenByWin">OpenByWin</a>、<a href="#OpenByApp">OpenByApp</a>、<a href="#TextViewer">TextViewer</a>、<a href="#FileEdit">FileEdit</a>、<a href="#BinaryEdit">BinaryEdit</a>、<a href="#ExeCommands">ExeCommands</a>)を指定することも可能です。<br>
-なお、<a href="hid00080.htm">FTP接続</a>時のリモート側では、ディレクトリの変更のみ可能です。<br>
-<div class="note_text">
-※<b>.mp3</b> の場合ID3タグの内容によっては再生できない場合がありますが、適切なコーデックを別途インストールすれば再生できるようになります(ADVANCED Codecs など)。<br>
-</div>
+<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で、特定のファイル拡張子に対し、標準とは異なる動作(<a href="#OpenByWin">OpenByWin</a>、<a href="#OpenByApp">OpenByApp</a>、<a href="#TextViewer">TextViewer</a>、<a href="#FileEdit">FileEdit</a>、<a href="#BinaryEdit">BinaryEdit</a>、<a href="#ExeCommands">ExeCommands</a>)を指定することも可能です。<br>
+<b>xd2txlib.dll</b> を利用して <b>.docx</b>、<b>.pptx</b>、<b>.xlsx</b> ファイルをテキスト表示したい場合は、これらの拡張子に対して「<b>テキストビュアーで開く(TextViewer)</b>」を設定してください。<br>
 </div>
 
 <div class="spc_box">
 パラメータで<b>ファイル名</b>または<b>ディレクトリ名</b>を指定して開くこともできます。ドライブ名がない場合はカレントからの相対指定になります。<br>
 カレントが通常のファイルリストではない場合、それを解除してからファイルを開きます。なお検索中は実行できません。<br>
+</div>
+
+<div class="spc_box note_text">
+※<b>.mp3</b> の場合ID3タグの内容によっては再生できない場合がありますが、適切なコーデックを別途インストールすれば再生できるようになります(ADVANCED Codecs など)。<br>
 </div>
 
 <a href="hid00019.htm#OpenStandard">→ オプション設定 - コマンド</a><br>
@@ -2596,16 +2601,22 @@ SortDlg<span class="pram_text">_L</span>
 
 <a href="#ChangeDir">→ ChangeDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#RegDirDlg">→ RegDirDlg</a>　<a href="#RegDirPopup">→ RegDirPopup</a>　<a href="#InputDir">→ InputDir</a>　<a href="#Library">→ Library</a>
 
-<dt id="SubViewer">SubViewer<span class="pram_text">[_ON|_OFF|_LK|_RL|_RR]</span>
+<dt id="SubViewer">SubViewer<span class="pram_text">[_ON|_OFF|_CB|_LK|_RL|_RR|_FH|_FV]</span><br>
 <dd>
 パラメータを指定しない場合、<b>サブビュアー</b>の表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
 サブビュアーには、ファイルリストのカーソル位置の画像がフィット表示されます(アニメーションGIF対応)。<br>
 縮小の際は単純な補間しか行われませんが、画面のリサイズにしたがってすぐにフィットします。<br>
 <div class="spc_box">
-パラメータに <b>LK</b> を指定すると、現在の画像で表示が固定され(赤枠表示)、別のファイルに移動しても変わらなくなります(右クリックメニューからも可能)。<br>
-パラメータに <b>RL</b> を指定すると表示中の画像(GIFやメタファイルは除く)を左に90度、<b>RR</b> を指定すると右に90度回転します(右クリックメニューからも可能)。<br>
+パラメータに <b>CB</b> を指定すると、クリップボードのビットマップ内容を表示します。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>LK</b> を指定すると、現在表示中の画像の固定/解除をトグルで切り替えます。固定状態(赤枠表示)では、別のファイルに移動しても表示が変わりません。<b>LK</b> を指定したコマンドによってサブビュアーが非表示から表示になった場合は、固定状態になります。<br>
+パラメータに <b>RL</b> を指定すると表示中の画像(GIFやメタファイルは除く)を左に90度、<b>RR</b> を指定すると右に90度回転します。また <b>FH</b> では左右反転、 <b>FV</b> では上下反転します。これらの操作は右クリックメニューからも可能です。<br>
 なお、右クリックメニューで背景色を変更できます。<br>
+</div>
+<div class="spc_box">
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
 </div>
 <a href="#ImageViewer">→ ImageViewer</a>
 

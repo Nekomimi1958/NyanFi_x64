@@ -60,9 +60,9 @@ void __fastcall TDiffDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 
 	if (ModalResult==mrOk) {
 		if (IncMaskComboBox->Text.IsEmpty()) IncMaskComboBox->Text = "*.*";
-		add_ComboBox_history(IncMaskComboBox,		IncMaskComboBox->Text);
-		add_ComboBox_history(ExcMaskComboBox,		ExcMaskComboBox->Text);
-		add_ComboBox_history(DiffExcDirComboBox,	DiffExcDirComboBox->Text);
+		add_ComboBox_history(IncMaskComboBox);
+		add_ComboBox_history(ExcMaskComboBox);
+		add_ComboBox_history(DiffExcDirComboBox);
 	}
 
 	IniFile->SaveComboBoxItems(IncMaskComboBox,		_T("DiffIncMaskHistory"));

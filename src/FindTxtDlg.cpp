@@ -282,7 +282,7 @@ void __fastcall TFindTextDlg::FindNextActionExecute(TObject *Sender)
 	else {
 		if (GeneralInfoDlg->FindText(UpDownGroup->ItemIndex==1)) {
 			if (!MigemoCheckBox->Enabled || !MigemoCheckBox->Checked) {
-				add_ComboBox_history(FindComboBox, FindComboBox->Text);
+				add_ComboBox_history(FindComboBox);
 				to_save = true;
 			}
 		}

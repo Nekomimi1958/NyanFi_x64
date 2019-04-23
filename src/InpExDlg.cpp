@@ -239,7 +239,7 @@ void __fastcall TInputExDlg::FormClose(TObject *Sender, TCloseAction &Action)
 
 	//—š—ð‚Ì•Û‘¶
 	if (ModalResult==mrOk && (IpuntExMode==INPEX_CRE_DIR || IpuntExMode==INPEX_NEW_TEXTFILE)) {
-		add_ComboBox_history(InputComboBox, InputComboBox->Text);
+		add_ComboBox_history(InputComboBox);
 		IniFile->SaveComboBoxItems(InputComboBox,
 					(IpuntExMode==INPEX_CRE_DIR)? _T("CreateDirHistory") : _T("NewTextHistory"));
 	}

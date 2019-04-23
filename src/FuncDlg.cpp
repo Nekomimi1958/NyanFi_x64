@@ -517,7 +517,7 @@ void __fastcall TFuncListDlg::UpdUserDefActionExecute(TObject *Sender)
 		}
 
 		if (UserDefList->Count>0) {
-			add_ComboBox_history(UserDefComboBox, UserDefComboBox->Text);
+			add_ComboBox_history(UserDefComboBox);
 			IniFile->SaveComboBoxItems(UserDefComboBox, RegExCheckBox->Checked? _T("UserPtnHistory") : _T("UserDefHistory"));
 		}
 	}

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <mmsystem.h>
 #include <System.DateUtils.hpp>
+#include <Vcl.Clipbrd.hpp>
 #include "usr_file_ex.h"
 #include "usr_file_inf.h"
 #include "usr_wic.h"
@@ -43,6 +44,7 @@ TaskConfig::TaskConfig()
 	CvImg_scale_prm1   = 100;
 	CvImg_scale_prm2   = 100;
 	CvImg_scale_opt    = 0;
+	CvImg_from_clip    = false;
 	CvImg_not_use_prvw = false;
 	CvImg_grayscale    = false;
 	CvImg_mgn_color    = clBlack;
@@ -83,6 +85,7 @@ void TaskConfig::Assign(TaskConfig *cp)
 	CvImg_scale_prm1   = cp->CvImg_scale_prm1;
 	CvImg_scale_prm2   = cp->CvImg_scale_prm2;
 	CvImg_scale_opt    = cp->CvImg_scale_opt;
+	CvImg_from_clip    = cp->CvImg_from_clip;
 	CvImg_not_use_prvw = cp->CvImg_not_use_prvw;
 	CvImg_grayscale    = cp->CvImg_grayscale;
 	CvImg_mgn_color    = cp->CvImg_mgn_color;
@@ -591,7 +594,7 @@ void __fastcall TTaskThread::CPY_core(
 
 		case CPYMD_AUT_REN:		//自動的に名前を変更
 		case CPYMD_REN_CLONE:	//単独クローン化で改名
-			dst_fnam = format_CloneName(Config->CopyFmt, fnam, dst_path, false);
+			dst_fnam = format_CloneName(Config->CopyFmt, fnam, dst_path);
 			set_RenameLog(msg, dst_fnam);
 			break;
 
@@ -1180,6 +1183,7 @@ void __fastcall TTaskThread::Task_CPYDIR(UnicodeString prm)
 //---------------------------------------------------------------------------
 void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 {
+	bool is_clip = Config->CvImg_from_clip;
 	UnicodeString fnam	   = split_pre_tab(prm);
 	UnicodeString dst_path = prm;
 
@@ -1190,18 +1194,25 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 
 	try {
 		WaitIfPause();
-		if (!EX_file_exists(fnam)) throw Exception(EmptyStr);
+		if (!is_clip && !EX_file_exists(fnam)) throw Exception(EmptyStr);
 
 		//処理前にタイムスタンプを取っておく
 		TDateTime ft;
-		if (Config->KeepTime) ft = get_file_age(fnam);
+		if (!is_clip && Config->KeepTime) ft = get_file_age(fnam);
 
 		//読み込み
 		std::unique_ptr<Graphics::TBitmap> i_img(new Graphics::TBitmap());
 		std::unique_ptr<TMetafile> mf(new TMetafile());
 		unsigned int i_wd, i_hi;
+		//クリップボード
+		if (is_clip) {
+			if (!Clipboard()->HasFormat(CF_BITMAP)) UserAbort(USTR_NoObject);
+			i_img->Assign(Clipboard());
+			i_wd = i_img->Width;
+			i_hi = i_img->Height;
+		}
 		//メタファイル
-		if (is_wmf) {
+		else if (is_wmf) {
 			mf->LoadFromFile(fnam);
 			i_wd = mf->Width;
 			i_hi = mf->Height;
@@ -1366,14 +1377,27 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 		if (Config->CvImg_grayscale) WIC_grayscale_image(i_img.get());
 
 		//ファイル名の変更
-		UnicodeString bnam = get_base_name(fnam);
-		if (!Config->CvImg_chg_name_str.IsEmpty()) {
-			switch (Config->CvImg_chg_name_mode) {
-			case 0: bnam  = Config->CvImg_chg_name_str + bnam;	break;
-			case 1: bnam += Config->CvImg_chg_name_str;			break;
+		UnicodeString bnam;
+		if (is_clip) {
+			bnam = Config->CvImg_clip_name;
+		}
+		else {
+			bnam = get_base_name(fnam);
+			if (!Config->CvImg_chg_name_str.IsEmpty()) {
+				switch (Config->CvImg_chg_name_mode) {
+				case 0: bnam  = Config->CvImg_chg_name_str + bnam;	break;
+				case 1: bnam += Config->CvImg_chg_name_str;			break;
+				}
 			}
 		}
+
 		UnicodeString cv_nam = dst_path + bnam + Config->CvImg_f_ext;
+		if (is_clip) {
+			if (file_exists(cv_nam) && Config->CopyMode==CPYMD_AUT_REN) {
+				cv_nam = format_CloneName(Config->CopyFmt, cv_nam, dst_path);
+			}
+			LastDstName = cv_nam;
+		}
 		msg.cat_sprintf(_T(" ---> %s"), ExtractFileName(cv_nam).c_str());
 
 		//形式変換して保存
@@ -1382,7 +1406,7 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 				UserAbort(USTR_FaildSave);
 
 		//タイムスタンプを設定
-		if (Config->KeepTime && (int)ft>0) set_file_age(cv_nam, ft);
+		if (!is_clip && Config->KeepTime && (int)ft>0) set_file_age(cv_nam, ft);
 
 		OkCount++;
 	}

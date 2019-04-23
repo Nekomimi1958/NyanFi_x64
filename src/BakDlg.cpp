@@ -65,8 +65,8 @@ void __fastcall TBackupDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->SavePosInfo(this);
 
 	if (ModalResult==mrOk) {
-		add_ComboBox_history(BakIncMaskComboBox, BakIncMaskComboBox->Text);
-		add_ComboBox_history(BakExcMaskComboBox, BakExcMaskComboBox->Text);
+		add_ComboBox_history(BakIncMaskComboBox);
+		add_ComboBox_history(BakExcMaskComboBox);
 	}
 
 	IniFile->SaveComboBoxItems(BakIncMaskComboBox, _T("BackupIncMaskHistory"));

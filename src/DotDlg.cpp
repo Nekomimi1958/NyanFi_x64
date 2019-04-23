@@ -362,7 +362,7 @@ void __fastcall TDotNyanDlg::CreNyanActionExecute(TObject *Sender)
 
 	if (!PathMaskComboBox->Text.IsEmpty())	{
 		lbuf.cat_sprintf(_T("PathMask=%s\r\n"), PathMaskComboBox->Text.c_str());
-		add_ComboBox_history(PathMaskComboBox, PathMaskComboBox->Text);
+		add_ComboBox_history(PathMaskComboBox);
 	}
 	IniFile->SaveComboBoxItems(PathMaskComboBox, _T("DotMaskHistory"));
 

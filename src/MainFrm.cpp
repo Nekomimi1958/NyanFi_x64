@@ -3364,8 +3364,10 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 			}
 			//カレント側がコピー/移動先
 			if (SameText(ExtractFilePath(tp->LastDstName), CurPath[CurListTag])) {
-				if (tp->Config->DstPosMode==2)
+				if (tp->Config->DstPosMode==2) {
 					IndexOfFileList(tp->LastDstName, CurListTag);
+					SetFileInf();
+				}
 			}
 
 			tp->Config->UpdDirList->Clear();
@@ -3376,8 +3378,9 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 				if (FlashCntTaskfin>0 && FlashTimeTaskfin>0) flash_win(FlashCntTaskfin, FlashTimeTaskfin);
 			}
 			//エラー通知
-			if (tp->ErrCount>0)
+			if (tp->ErrCount>0) {
 				SttBarWarn(tmp.sprintf(_T("タスク%uで%u個のエラーがありました"), i + 1, tp->ErrCount));
+			}
 
 			ready = true;
 
@@ -3438,7 +3441,9 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 			tp->Terminate();
 			TaskThread[i] = NULL;
 		}
-		else busy_cnt++;
+		else {
+			busy_cnt++;
+		}
 	}
 
 	//予約タスクを実行
@@ -13106,14 +13111,20 @@ void __fastcall TNyanFiForm::CopyDirActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::CopyFileInfoActionExecute(TObject *Sender)
 {
 	try {
-		file_rec *fp = GetCurFrecPtr(false, true);  if (!fp) Abort();
-		if (fp->inf_list->Count==0) {
-			ViewFileInf(fp, true);
-			GetFileInfList(fp, true);
-			if (fp->inf_list->Text.IsEmpty()) Abort();
+		if (isViewClip) {
+			if (!ImgSidePanel->Visible) Abort();
+			copy_to_Clipboard(ImgInfListBox->Items->Text);
 		}
-		copy_to_Clipboard(fp->inf_list->Text);
-		InfListBox->ClearSelection();
+		else {
+			file_rec *fp = GetCurFrecPtr(false, true);  if (!fp) Abort();
+			if (fp->inf_list->Count==0) {
+				ViewFileInf(fp, true);
+				GetFileInfList(fp, true);
+				if (fp->inf_list->Text.IsEmpty()) Abort();
+			}
+			copy_to_Clipboard(fp->inf_list->Text);
+			InfListBox->ClearSelection();
+		}
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);
@@ -15354,7 +15365,7 @@ void __fastcall TNyanFiForm::FileEditActionExecute(TObject *Sender)
 		bool is_os  = TEST_DEL_ActParam("OS") && !OpenOnlyCurEdit && !fromOpenStd;
 		GlobalErrMsg = EmptyStr;
 
-		if (ScrMode==SCMD_IVIEW && isViewClip) {
+		if (isViewClip) {
 			//クリップボードを一時ファイルに保存
 			std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
 			bmp->Assign(ImgViewThread->ImgBuff);
@@ -17168,7 +17179,7 @@ void __fastcall TNyanFiForm::ImageViewerActionExecute(TObject *Sender)
 		}
 
 		if (TEST_ActParam("CB")) {
-			if (!Clipboard()->HasFormat(CF_BITMAP)) Abort();
+			if (!Clipboard()->HasFormat(CF_BITMAP)) UserAbort(USTR_NoObject);
 
 			isViewWork = false;
 			if (!ViewClipImage((InitialModeI==0), (InitialModeI==1)? 100 : LastZoomRatio))
@@ -26193,14 +26204,18 @@ void __fastcall TNyanFiForm::ConvertImageActionExecute(TObject *Sender)
 	file_rec *cfp = cre_new_file_rec(GetCurFrecPtr(true));
 
 	try {
-		TStringList *lst	  = GetCurList(true);
-		int sel_cnt 		  = GetSelCount(lst);
-		UnicodeString dst_dir = GetCurPathStr(OppListTag);
-
+		bool is_clip = TEST_ActParam("CB");
+		if (is_clip && !Clipboard()->HasFormat(CF_BITMAP)) UserAbort(USTR_NoObject);
 		NotConvertAbort();
-		if (sel_cnt==0 && (cfp->f_name.IsEmpty() || cfp->is_dummy)) Abort();
+
+		TStringList *lst = GetCurList(true);
+		int sel_cnt 	 = GetSelCount(lst);
+		if (!is_clip && sel_cnt==0 && (cfp->f_name.IsEmpty() || cfp->is_dummy)) UserAbort(USTR_NoObject);
+
+		UnicodeString dst_dir = GetCurPathStr(is_clip? CurListTag : OppListTag);
 
 		if (!CvImageDlg) CvImageDlg = new TCvImageDlg(this);	//初回に動的作成
+		CvImageDlg->fromClip = is_clip;
 		if (CvImageDlg->ShowModal()==mrOk) {
 			TaskConfig  *cp = NULL;
 			TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
@@ -26208,6 +26223,7 @@ void __fastcall TNyanFiForm::ConvertImageActionExecute(TObject *Sender)
 			UnicodeString fext = (rp->ItemIndex!=-1)? rp->Items->Strings[rp->ItemIndex].LowerCase() : EmptyStr;
 			remove_top_s(fext, '&');
 			cp->CvImg_f_ext 		= "." + fext;
+			cp->CvImg_from_clip		= is_clip;
 			cp->CvImg_quality		= CvImageDlg->ImgQTrackBar->Position;
 			cp->CvImg_ycrcb 		= CvImageDlg->YCrCbComboBox->ItemIndex;
 			cp->CvImg_cmp_mode		= CvImageDlg->CmpModeComboBox->ItemIndex;
@@ -26224,8 +26240,16 @@ void __fastcall TNyanFiForm::ConvertImageActionExecute(TObject *Sender)
 
 			UnicodeString cmd = "CVIMG";
 			UnicodeString tprm;
+			//クリップボード
+			if (is_clip) {
+				cp->CvImg_clip_name = CvImageDlg->ClipNameComboBox->Text;
+				cp->CopyMode   = CvImageDlg->ClipOWBtn->Checked? CPYMD_OW : CPYMD_AUT_REN;
+				cp->CopyFmt    = AutoRenFmt;
+				cp->DstPosMode = 2;
+				cp->TaskList->Add(tprm.sprintf(_T("%s\tCLIPBOARD\t%s"), cmd.c_str(), dst_dir.c_str()));
+			}
 			//選択あり
-			if (sel_cnt>0) {
+			else if (sel_cnt>0) {
 				for (int i=0; i<lst->Count; i++) {
 					file_rec *fp = (file_rec*)lst->Objects[i];
 					if (!fp->selected) continue;
@@ -26241,7 +26265,7 @@ void __fastcall TNyanFiForm::ConvertImageActionExecute(TObject *Sender)
 
 			cp->CmdStr	 = TaskCmdList->Values[cmd];
 			cp->DistPath = dst_dir;
-			cp->InfStr.sprintf(_T("%s ---> %s"), GetSrcPathStr().c_str(), dst_dir.c_str());
+			cp->InfStr	 = (is_clip? UnicodeString("CLIPBOARD") : GetSrcPathStr()) + " ---> " + dst_dir;
 			ActivateTask(tp, cp);
 		}
 	}
@@ -27809,7 +27833,7 @@ void __fastcall TNyanFiForm::GrepStartActionExecute(TObject *Sender)
 		add_ComboBox_history(GrepFindComboBox, GrepKeyword);
 		IniFile->SaveComboBoxItems(GrepFindComboBox, RegExCheckBox->Checked? _T("GrepPtnHistory") : _T("GrepFindHistory"));
 		//マスクを履歴に追加
-		add_ComboBox_history(GrepMaskComboBox, GrepMaskComboBox->Text);
+		add_ComboBox_history(GrepMaskComboBox);
 		CloseIME(Handle);
 
 		ResultListBox->ItemIndex = 0;
@@ -28436,9 +28460,9 @@ void __fastcall TNyanFiForm::ReplaceStartActionExecute(TObject *Sender)
 
 	if (rep_cnt>0) {
 		//検索、置換文字列を履歴に追加
-		add_ComboBox_history(RepFindComboBox,	RepFindComboBox->Text);
+		add_ComboBox_history(RepFindComboBox);
 		IniFile->SaveComboBoxItems(RepFindComboBox,  RegExRCheckBox->Checked? _T("RepFindRxHisgory") : _T("RepFindHistory"));
-		add_ComboBox_history(RepStrComboBox,	RepStrComboBox->Text);
+		add_ComboBox_history(RepStrComboBox);
 
 		//結果表示
 		ResultListBox->ItemIndex = 0;
@@ -29373,12 +29397,17 @@ void __fastcall TNyanFiForm::Inf_EmpItemActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::Inf_EmpItemActionUpdate(TObject *Sender)
 {
 	TAction *ap  = (TAction *)Sender;
-	TListBox *lp = GetCurInfListBox();
-	int flag = (lp->ItemIndex!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0;
-	UnicodeString inam = (lp->ItemIndex>2 && (flag & LBFLG_STD_FINF)==0)?
-							Trim(get_tkn(lp->Items->Strings[lp->ItemIndex], ':')) : EmptyStr;
-	ap->Enabled = !inam.IsEmpty();
-	ap->Checked = test_word_i(inam, EmpInfItems);
+	if (isViewClip) {
+		ap->Enabled = false;
+	}
+	else {
+		TListBox *lp = GetCurInfListBox();
+		int flag = (lp->ItemIndex!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0;
+		UnicodeString inam = (lp->ItemIndex>2 && (flag & LBFLG_STD_FINF)==0)?
+								Trim(get_tkn(lp->Items->Strings[lp->ItemIndex], ':')) : EmptyStr;
+		ap->Enabled = !inam.IsEmpty();
+		ap->Checked = test_word_i(inam, EmpInfItems);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -29403,12 +29432,17 @@ void __fastcall TNyanFiForm::Inf_HideItemActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::Inf_HideItemActionUpdate(TObject *Sender)
 {
 	TAction *ap  = (TAction *)Sender;
-	TListBox *lp = GetCurInfListBox();
-	int flag = (lp->ItemIndex!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0;
-	file_rec *cfp = GetCurFrecPtr(true, true);
-	UnicodeString inam = (cfp && lp->ItemIndex>2 && (flag & LBFLG_STD_FINF)==0)?
-							Trim(get_tkn(lp->Items->Strings[lp->ItemIndex], ':')) : EmptyStr;
-	ap->Enabled = !inam.IsEmpty();
+	if (isViewClip) {
+		ap->Enabled = false;
+	}
+	else {
+		TListBox *lp = GetCurInfListBox();
+		int flag = (lp->ItemIndex!=-1)? (int)lp->Items->Objects[lp->ItemIndex] : 0;
+		file_rec *cfp = GetCurFrecPtr(true, true);
+		UnicodeString inam = (cfp && lp->ItemIndex>2 && (flag & LBFLG_STD_FINF)==0)?
+								Trim(get_tkn(lp->Items->Strings[lp->ItemIndex], ':')) : EmptyStr;
+		ap->Enabled = !inam.IsEmpty();
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -29419,17 +29453,19 @@ void __fastcall TNyanFiForm::InfPopupMenuPopup(TObject *Sender)
 	InfShowItemItem->Clear();
 	InfShowItemItem->Enabled = false;
 
-	TListBox *lp  = GetCurInfListBox();
-	if (lp->Count>0) {
-		UnicodeString fext = GetCurInfFext(lp->Items->Strings[0]);
-		TStringDynArray ilst = SplitString(HideInfItems->Values[fext], "|");
-		for (int i=0; i<ilst.Length; i++) {
-			TMenuItem *mp = new TMenuItem(InfShowItemItem);
-			mp->Caption   = ilst[i];
-			mp->OnClick   = ShowInfItemClick;
-			InfShowItemItem->Add(mp);
+	if (!isViewClip) {
+		TListBox *lp  = GetCurInfListBox();
+		if (lp->Count>0) {
+			UnicodeString fext = GetCurInfFext(lp->Items->Strings[0]);
+			TStringDynArray ilst = SplitString(HideInfItems->Values[fext], "|");
+			for (int i=0; i<ilst.Length; i++) {
+				TMenuItem *mp = new TMenuItem(InfShowItemItem);
+				mp->Caption   = ilst[i];
+				mp->OnClick   = ShowInfItemClick;
+				InfShowItemItem->Add(mp);
+			}
+			if (ilst.Length>0) InfShowItemItem->Enabled = true;
 		}
-		if (ilst.Length>0) InfShowItemItem->Enabled = true;
 	}
 }
 //---------------------------------------------------------------------------
@@ -30690,12 +30726,13 @@ bool __fastcall TNyanFiForm::OpenImgViewer(int idx)
 bool __fastcall TNyanFiForm::ViewClipImage(bool fitted, int zoom)
 {
 	if (!Clipboard()->HasFormat(CF_BITMAP)) return false;
-	ImgViewThread->AddRequest(_T("CLIP"));
 
-	std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
-	bmp->Assign(Clipboard());
-	int i_wd = bmp->Width;
-	int i_hi = bmp->Height;
+	ImgViewThread->ImgBuff->Assign(Clipboard());
+	ImgViewThread->ImgIsWmf  = false;
+	ImgViewThread->FileName  = EmptyStr;
+	ImgViewThread->FileName2 = EmptyStr;
+	int i_wd = ImgViewThread->ImgBuff->Width;
+	int i_hi = ImgViewThread->ImgBuff->Height;
 
 	cursor_HourGlass();
 	isViewClip = true;
@@ -30716,7 +30753,9 @@ bool __fastcall TNyanFiForm::ViewClipImage(bool fitted, int zoom)
 
 	if (ImgSidePanel->Visible) {
 		std::unique_ptr<TStringList> i_lst(new TStringList());
-		i_lst->Text = "クリップボード\r\n____\r\n____\r\n";
+		i_lst->AddObject("クリップボード", (TObject*)LBFLG_STD_FINF);
+		i_lst->AddObject("____", (TObject*)LBFLG_STD_FINF);
+		i_lst->AddObject("____", (TObject*)LBFLG_STD_FINF);
 		add_PropLine(_T("種類"), "ビットマップ イメージ", i_lst.get());
 		i_lst->Add(get_img_size_str(i_wd, i_hi));
 		assign_InfListBox(ImgInfListBox, i_lst.get(), ImgInfScrPanel);
@@ -32134,27 +32173,48 @@ void __fastcall TNyanFiForm::SidebarActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SubViewerActionExecute(TObject *Sender)
 {
-	if		(TEST_ActParam("LK"))	SubViewer->LockImage();
-	else if (TEST_ActParam("RL"))	SubViewer->RotateImage(3);
-	else if (TEST_ActParam("RR"))	SubViewer->RotateImage(1);
-	else if (TEST_ActParam("FH"))	SubViewer->RotateImage(4);
-	else if (TEST_ActParam("FV"))	SubViewer->RotateImage(5);
+	if (SubViewer->Visible) {
+		if (TEST_ActParam("OFF") || ActionParam.IsEmpty()) {
+			if (ScrMode==SCMD_IVIEW) ShowSubViewer = false;
+			SubViewer->Visible = false;
+		}
+		else {
+			if (TEST_ActParam("CB")) {
+				SubViewer->isClip = true;
+				SubViewer->DrawImage();
+			}
+
+			if (TEST_ActParam("RL")) SubViewer->RotateImage(3);
+			if (TEST_ActParam("RR")) SubViewer->RotateImage(1);
+			if (TEST_ActParam("FH")) SubViewer->RotateImage(4);
+			if (TEST_ActParam("FV")) SubViewer->RotateImage(5);
+			if (TEST_ActParam("LK")) SubViewer->LockImage();
+			SetFocus();
+		}
+	}
 	else {
 		SubViewer->Visible = (ScrMode==SCMD_IVIEW)? SetToggleAction(ShowSubViewer) : !SubViewer->Visible;
+		//非表示->表示
 		if (SubViewer->Visible) {
+			SubViewer->isClip	 = TEST_ActParam("CB");
+			SubViewer->ImgLocked = false;
 			UnicodeString fnam;
-			if (ScrMode==SCMD_IVIEW) {
-				fnam = ViewFileName;
-			}
-			else {
-				fnam = EmptyStr;
-				file_rec *cfp = GetCurFrecPtr(true);
-				if (cfp && !cfp->is_ftp  && !cfp->is_dir) {
-					if (!test_FileExt(cfp->f_ext, FExtNoIView) && (is_Viewable(cfp) || test_Mp3Ext(cfp->f_ext)))
-						fnam = cfp->f_name;
+			if (!SubViewer->isClip) {
+				if (ScrMode==SCMD_IVIEW) {
+					fnam = ViewFileName;
+				}
+				else {
+					fnam = EmptyStr;
+					file_rec *cfp = GetCurFrecPtr(true);
+					if (cfp && !cfp->is_ftp  && !cfp->is_dir) {
+						if (!test_FileExt(cfp->f_ext, FExtNoIView) && (is_Viewable(cfp) || test_Mp3Ext(cfp->f_ext)))
+							fnam = cfp->f_name;
+					}
 				}
 			}
 			SubViewer->DrawImage(fnam);
+
+			if (TEST_ActParam("LK")) SubViewer->ImgLocked = true;
 			SetFocus();
 		}
 	}
