@@ -27458,9 +27458,11 @@ void __fastcall TNyanFiForm::ResultListBoxDrawItem(TWinControl *Control, int Ind
 	UnicodeString f_nam  = ExtractFileName(p_nam);
 	UnicodeString f_ext  = get_extension(f_nam);
 	UnicodeString f_lno  = split_pre_tab(itmstr);
+
 	if (!f_lno.IsEmpty()) {
 		if (USAME_TS(f_lno, "-")) f_lno = "   "; else f_lno = UnicodeString().sprintf(_T("(%s)"), f_lno.c_str());
 	}
+
 	UnicodeString ln_str = itmstr;
 	if (GrepTrimTop) ln_str = TrimLeft(ln_str);
 
@@ -27540,16 +27542,17 @@ void __fastcall TNyanFiForm::ResultListBoxDrawItem(TWinControl *Control, int Ind
 				//フィルタ
 				if (GrepEmFilter && !GrepFilterEdit->Text.IsEmpty()) {
 					get_MatchWordList(ln_str, GrepFilterEdit->Text,
-						MigemoCheckBox->Checked, false, AndOrCheckBox->Checked, wlist.get());
+						MigemoCheckBox->Checked, false, AndOrCheckBox->Checked, GrepCaseSenstive, wlist.get());
 				}
 				//検索語
 				else {
 					get_MatchWordList(ln_str, GrepKeyword, 
-						false, RegExCheckBox->Checked, AndOrCheckBox->Checked, wlist.get());
+						false, RegExCheckBox->Checked, AndOrCheckBox->Checked, GrepCaseSenstive, wlist.get());
 				}
 			}
-			else
+			else {
 				wlist->Add(conv_esc_char(RepStrComboBox->Text));
+			}
 
 			UnicodeString s0 = get_tkn(ln_str, '\n');
 			UnicodeString s1 = get_tkn_r(ln_str, '\n');
@@ -28303,6 +28306,9 @@ void __fastcall TNyanFiForm::ReplaceStartActionExecute(TObject *Sender)
 	UnicodeString rwd = conv_esc_char(RepStrComboBox->Text);
 	UnicodeString tmp;
 
+	TRegExOptions opt;
+	if (!CaseRCheckBox->Checked) opt << roIgnoreCase;
+
 	std::unique_ptr<TStringList> f_buf(new TStringList());	//読込バッファ
 	std::unique_ptr<TStringList> o_buf(new TStringList());	//出力バッファ
 	bool ask_rep = AskRepCheckBox->Checked;
@@ -28319,26 +28325,39 @@ void __fastcall TNyanFiForm::ReplaceStartActionExecute(TObject *Sender)
 		int  f_rep_cnt = 0;
 		for (int lp=0; !FindAborted && lp<f_buf->Count; lp++) {
 			UnicodeString lbuf = f_buf->Strings[lp];
-			int start_p = 1;	//検索開始位置
+
+			int x_mt_cnt = 0;	//正規表現の行内マッチ数
+			if (RegExRCheckBox->Checked) {
+				TMatchCollection mts = TRegEx::Matches(lbuf, swd, opt);
+				for (int i=0; i<mts.Count; i++) if (mts.Item[i].Success) x_mt_cnt++;
+			}
+
+			int start_p  = 1;	//検索開始位置
+			int x_rp_cnt = 0;	//正規表現の置換処理数(^による連続削除回避)
 			do {
 				UnicodeString tmp_buf = lbuf.SubString(start_p, lbuf.Length() - start_p + 1);
 				int match_p, match_len;
 				if (RegExRCheckBox->Checked) {
-					TMatch mt = TRegEx::Match(tmp_buf, swd);	//大小文字を区別
+					if (x_rp_cnt>=x_mt_cnt) break;
+
+					TMatch mt = TRegEx::Match(tmp_buf, swd, opt);
 					if (mt.Success) {
 						match_p   = mt.Index;
 						match_len = mt.Length;
+						x_rp_cnt++;
 					}
-					else match_p = 0;
+					else {
+						match_p = 0;
+					}
 				}
 				else {
-					match_p = CaseRCheckBox->Checked? tmp_buf.Pos(swd) : pos_i(swd, tmp_buf);
+					match_p   = CaseRCheckBox->Checked? tmp_buf.Pos(swd) : pos_i(swd, tmp_buf);
 					match_len = swd.Length();
 				}
 				if (match_p==0) break;
 
 				//マッチ
-			  	fnd_cnt++;
+			 	fnd_cnt++;
 				int org_p = start_p + match_p - 1;	//元文字列での位置
 				bool ok = true;
 				if (ask_rep) {
@@ -28372,7 +28391,9 @@ void __fastcall TNyanFiForm::ReplaceStartActionExecute(TObject *Sender)
 						FindAborted = true;
 						changed = false;	f_rep_cnt = 0;
 					}
-					else if (res==mrAll) ask_rep = false;
+					else if (res==mrAll) {
+						ask_rep = false;
+					}
 				}
 
 				//置換
@@ -28380,7 +28401,7 @@ void __fastcall TNyanFiForm::ReplaceStartActionExecute(TObject *Sender)
 					int rep_len;
 					if (RegExRCheckBox->Checked) {
 						UnicodeString orgstr = tmp_buf.SubString(match_p, match_len);
-						UnicodeString repstr = TRegEx::Replace(orgstr, swd, rwd);
+						UnicodeString repstr = TRegEx::Replace(orgstr, swd, rwd, opt);
 						lbuf.Delete(org_p, match_len);	lbuf.Insert(repstr, org_p);
 						rep_len = repstr.Length();
 					}
@@ -28519,8 +28540,7 @@ void __fastcall TNyanFiForm::ReplaceStartActionUpdate(TObject *Sender)
 		RepFindComboBox->Color = reg_ng? col_Illegal : scl_Window;
 		ap->Enabled = !FindBusy && kwd_ok;
 
-		CaseRCheckBox->Enabled = !RegExRCheckBox->Checked;
-		StartRBtn->Default	   = !ResultListBox->Focused();
+		StartRBtn->Default = !ResultListBox->Focused();
 		RepFindComboBox->Tag
 			= CBTAG_HISTORY | (RepFindComboBox->Focused()? CBTAG_RGEX_V : 0) | (RegExRCheckBox->Checked? CBTAG_RGEX_E : 0);
 		RepStrComboBox->Tag = CBTAG_HISTORY;

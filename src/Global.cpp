@@ -9770,10 +9770,14 @@ int get_MatchWordList(
 	bool migemo_sw,		//Migemoを使用
 	bool regex_sw,		//kwd は正規表現
 	bool and_or_sw,		//AND(' ') / OR('|') 検索
+	bool case_sw,		//大小文字を区別
 	TStringList *lst)	//[o] マッチ語リスト
 {
 	lst->Clear();
-	TRegExOptions opt; opt << roIgnoreCase;
+
+	TRegExOptions opt;
+	if (!case_sw) opt << roIgnoreCase;
+
 	//AND/OR検索
 	if (and_or_sw) {
 		TStringDynArray or_lst = SplitString(Trim(kwd), "|");

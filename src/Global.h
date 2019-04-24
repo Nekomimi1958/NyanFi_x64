@@ -1905,7 +1905,7 @@ void out_TextEx(TCanvas *cv, int &x, int y, UnicodeString s,
 	TColor fg = col_None, TColor bg = col_None, int mgn = 0, bool is_irreg = false);
 
 int  get_MatchWordList(UnicodeString lbuf, UnicodeString kwd,
-	bool migemo_sw, bool regex_sw, bool and_or_sw, TStringList *lst);
+	bool migemo_sw, bool regex_sw, bool and_or_sw, bool case_sw, TStringList *lst);
 
 void EmphasisTextOut(UnicodeString s, TStringList *kw_lst, TCanvas *cv, int &x, int y,
 	bool case_sns = false, bool only_top = false, TColor fg = col_fgEmp, TColor bg = col_bgEmp);

@@ -10,7 +10,6 @@
 #include <math.h>
 #include <System.StrUtils.hpp>
 #include <System.Masks.hpp>
-#include <RegularExpressions.hpp>
 #include <Vcl.Direct2D.hpp>
 #include "usr_str.h"
 
@@ -587,6 +586,31 @@ UnicodeString trim_ex(UnicodeString s)
 UnicodeString replace_regex(UnicodeString s, const _TCHAR *o, const _TCHAR *r)
 {
 	return TRegEx::Replace(s, o, r);
+}
+//---------------------------------------------------------------------------
+//¦ ^ ‚É‚æ‚éæ“ª‚Ì˜A‘±íœ‚ð‰ñ”ð‚µ‚½’uŠ·
+//---------------------------------------------------------------------------
+UnicodeString replace_regex_2(UnicodeString s, UnicodeString ptn, UnicodeString rep, TRegExOptions opt)
+{
+	UnicodeString ret_str;
+
+	TMatchCollection mts = TRegEx::Matches(s, ptn, opt);
+	int p = 1;
+	if (mts.Count>0) {
+		std::unique_ptr<TStringList> lst(new TStringList());
+		for (int i=0; i<mts.Count; i++) {
+			if (mts.Item[i].Success) {
+				int idx = mts.Item[i].Index;
+				if (idx>p) ret_str += s.SubString(p, idx - p);
+				ret_str += TRegEx::Replace(mts.Item[i].Value, ptn, rep, opt);
+				p = idx + mts.Item[i].Length;
+			}
+		}
+	}
+
+	if ((p - 1)<s.Length()) ret_str += s.SubString(p, s.Length() - p + 1);
+
+	return ret_str;
 }
 
 //---------------------------------------------------------------------------

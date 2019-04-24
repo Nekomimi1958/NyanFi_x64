@@ -165,7 +165,7 @@ void __fastcall TFindTagForm::TagsListBoxDrawItem(TWinControl *Control, int Inde
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	if (!IncSeaWord.IsEmpty()) {
 		std::unique_ptr<TStringList> wlist(new TStringList());
-		get_MatchWordList(lbuf, IncSeaWord, IsMigemo, false, true, wlist.get());
+		get_MatchWordList(lbuf, IncSeaWord, IsMigemo, false, true, false, wlist.get());
 		EmphasisTextOut(lbuf, wlist.get(), cv, xp, yp);
 	}
 	else {

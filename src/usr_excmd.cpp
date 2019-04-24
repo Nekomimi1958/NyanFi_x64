@@ -1494,11 +1494,11 @@ void XCMD_ReplaceBuffer(UnicodeString prm)
 				//※\r、\n の両方にマッチしてしまうため、一時的に \r\n → \n
 				buf_str = ReplaceStr(buf_str, "\r\n", "\n");
 				r_str	= ReplaceStr(r_str,   "\r\n", "\n");
-				buf_str = TRegEx::Replace(buf_str, o_str, r_str, opt);
+				buf_str = replace_regex_2(buf_str, o_str, r_str, opt);
 				buf_str = ReplaceStr(buf_str, "\n", "\r\n");
 			}
 			else {
-				buf_str = TRegEx::Replace(buf_str, o_str, r_str, opt);
+				buf_str = replace_regex_2(buf_str, o_str, r_str, opt);
 			}
 		}
 		catch (...) {
@@ -1506,7 +1506,9 @@ void XCMD_ReplaceBuffer(UnicodeString prm)
 		}
 	}
 	//通常
-	else buf_str = ReplaceText(buf_str, o_str, r_str);
+	else {
+		buf_str = ReplaceText(buf_str, o_str, r_str);
+	}
 
 	XCMD_SetBuffer(buf_str);
 	XCMD_BufChanged = true;

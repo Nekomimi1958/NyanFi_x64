@@ -230,7 +230,7 @@ void __fastcall TRegExChecker::ReplaceActionExecute(TObject *Sender)
 			UnicodeString lbuf = ObjMemo->Lines->Strings[i];
 			TMatchCollection mts = TRegEx::Matches(lbuf, ptnstr, opt);
 			if (mts.Count>0) {
-				UnicodeString rbuf = TRegEx::Replace(lbuf, ptnstr, ReplaceEdit->Text, opt);
+				UnicodeString rbuf = replace_regex_2(lbuf, ptnstr, ReplaceEdit->Text, opt);
 				UnicodeString mbuf;
 				int ofs = 0;
 				for (int j=0; j<mts.Count; j++) {

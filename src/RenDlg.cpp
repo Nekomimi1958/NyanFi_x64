@@ -646,8 +646,9 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 						UnicodeString fext = f_ext;  remove_top_s(fext, '.');
 						new_name.cat_sprintf(_T(".%s"), ReplaceStr(ExtEdit->Text, "\\E", fext).c_str());
 					}
-					else
+					else {
 						new_name += f_ext;
+					}
 				}
 			}
 			else if (FExtChanged) {
@@ -666,13 +667,13 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 				try {
 					if (only_base) {
 						if (TRegEx::IsMatch(b_name, swd, opt)) {
-							new_name = TRegEx::Replace(b_name, swd, rwd, opt) + f_ext;
+							new_name = replace_regex_2(b_name, swd, rwd, opt) + f_ext;
 							mat_cnt++;
 						}
 					}
 					else {
 						if (TRegEx::IsMatch(old_name, swd, opt)) {
-							new_name = TRegEx::Replace(old_name, swd, rwd, opt);
+							new_name = replace_regex_2(old_name, swd, rwd, opt);
 							mat_cnt++;
 						}
 					}
@@ -708,7 +709,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 					try {
 						swd = !is_regex_slash(swd)? TRegEx::Escape(swd) : exclude_top_end(swd);
 						if (TRegEx::IsMatch(r_name, swd, opt)) {
-							r_name	= TRegEx::Replace(r_name, swd, rwd, opt);
+							r_name  = replace_regex_2(r_name, swd, rwd, opt);
 							matched = true;
 						}
 					}

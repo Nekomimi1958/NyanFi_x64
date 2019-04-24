@@ -165,7 +165,7 @@ void __fastcall TDirHistoryDlg::DirHistListBoxDrawItem(TWinControl *Control, int
 	cv->Font->Color = col_Folder;
 	if (IsFindDirHist && !IncSeaWord.IsEmpty()) {
 		std::unique_ptr<TStringList> wlist(new TStringList());
-		get_MatchWordList(lbuf, slash_to_yen(IncSeaWord), IsMigemo, false, true, wlist.get());
+		get_MatchWordList(lbuf, slash_to_yen(IncSeaWord), IsMigemo, false, true, false, wlist.get());
 		PathNameOut(lbuf, wlist.get(), cv, xp, yp);
 	}
 	else {

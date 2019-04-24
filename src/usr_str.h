@@ -8,6 +8,7 @@
 //---------------------------------------------------------------------------
 #include <vcl.h>
 #include <tchar.h>
+#include <RegularExpressions.hpp>
 
 //---------------------------------------------------------------------------
 extern const _TCHAR *null_TCHAR;
@@ -96,6 +97,7 @@ UnicodeString exclude_top_end(UnicodeString s);
 UnicodeString trim_ex(UnicodeString s);
 
 UnicodeString replace_regex(UnicodeString s, const _TCHAR *o, const _TCHAR *r);
+UnicodeString replace_regex_2(UnicodeString s, UnicodeString ptn, UnicodeString rep, TRegExOptions opt);
 
 UnicodeString replace_str_by_list(UnicodeString s, TStringList *lst);
 

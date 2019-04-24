@@ -655,12 +655,12 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	if (HighlightAction->Checked) {
 		if (Found && Index==lp->ItemIndex) {
 			get_MatchWordList(lbuf, RegExPtn,
-				false, true,
+				false, true, false,
 				AndOrAction->Checked, wlist.get());
 		}
 		else if (!FilterEdit->Text.IsEmpty()) {
 			get_MatchWordList(lbuf, FilterEdit->Text,
-				MigemoAction->Checked, false,
+				MigemoAction->Checked, false, false,
 				AndOrAction->Checked, wlist.get());
 		}
 	}
