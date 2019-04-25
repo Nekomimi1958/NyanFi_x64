@@ -71,6 +71,7 @@ object AboutBox: TAboutBox
       Top = 126
       Width = 263
       Height = 26
+      Cursor = crHandPoint
       Alignment = taCenter
       AutoSize = False
       Caption = 'http://'

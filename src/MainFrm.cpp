@@ -18998,7 +18998,21 @@ void __fastcall TNyanFiForm::LoadWorkListActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//テキストプレビューをロック
+//コンピュータのロック
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::LockComputerActionExecute(TObject *Sender)
+{
+	if (!::LockWorkStation()) {
+		SetActionAbort(USTR_FaildProc);
+	}
+	else if (TEST_ActParam("MO")) {
+		Sleep(1000);
+		::SendNotifyMessage(HWND_BROADCAST, WM_SYSCOMMAND, SC_MONITORPOWER, 2);
+	}
+}
+
+//---------------------------------------------------------------------------
+//テキストプレビューのロック/解除
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::LockTextPreviewActionExecute(TObject *Sender)
 {
@@ -19337,7 +19351,18 @@ void __fastcall TNyanFiForm::MenuBarActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::MonitorOffActionExecute(TObject *Sender)
 {
-	ShowMessageHint(_T("ディスプレイの電源を切ります"), col_bgWarn, false, false, true);
+	bool is_lock = TEST_ActParam("LK");
+
+	UnicodeString msg;
+	if (is_lock) msg = "コンピュータをロックして、";
+	msg += "ディスプレイの電源を切ります";
+	ShowMessageHint(msg, col_bgWarn, false, false, true);
+
+	if (is_lock && !::LockWorkStation()) {
+		SetActionAbort(USTR_FaildProc);
+		return;
+	}
+
 	Sleep(1000);
 	::SendNotifyMessage(HWND_BROADCAST, WM_SYSCOMMAND, SC_MONITORPOWER, 2);
 }
@@ -19365,8 +19390,10 @@ void __fastcall TNyanFiForm::NameFromClipActionExecute(TObject *Sender)
 		file_rec *cfp = GetCurFrecPtr();	if (!cfp) Abort();
 
 		UnicodeString clp_name;
-		if (Clipboard()->HasFormat(CF_TEXT))
+		if (Clipboard()->HasFormat(CF_TEXT)) {
 			clp_name = ExtractFileName(get_norm_str(exclude_quot(Clipboard()->AsText)));
+		}
+
 		if (ActionParam.IsEmpty() || ContainsText(ActionParam, "\\C")) {
 			if (clp_name.IsEmpty()) SysErrAbort(CLIPBRD_E_BAD_DATA);
 		}
@@ -19528,12 +19555,24 @@ void __fastcall TNyanFiForm::NewTextFileActionExecute(TObject *Sender)
 	try {
 		if (CurStt->is_Arc || CurStt->is_Find || CurStt->is_Work || CurStt->is_FTP) UserAbort(USTR_CantOperate);
 
-		UnicodeString fnam = FormatParam(ActionParam);
-		if (fnam.IsEmpty()) {
-			InputExDlg->IpuntExMode = INPEX_NEW_TEXTFILE;
+		bool is_clip = USAME_TI(ActionOptStr, "ClipPaste");
+		ActionOptStr = EmptyStr;
+
+		UnicodeString fnam;
+		if (is_clip) {
+			InputExDlg->IpuntExMode = INPEX_CLIP_PASTE;
 			InputExDlg->InputComboBox->Text = EmptyStr;
 			fnam = (InputExDlg->ShowModal()==mrOk)? InputExDlg->InputComboBox->Text : EmptyStr;
 		}
+		else {
+			fnam = FormatParam(ActionParam);
+			if (fnam.IsEmpty()) {
+				InputExDlg->IpuntExMode = INPEX_NEW_TEXTFILE;
+				InputExDlg->InputComboBox->Text = EmptyStr;
+				fnam = (InputExDlg->ShowModal()==mrOk)? InputExDlg->InputComboBox->Text : EmptyStr;
+			}
+		}
+
 		if (fnam.IsEmpty()) return;
 
 		if (!CurStt->is_ADS && get_extension(fnam).IsEmpty() && !StartsStr('.', fnam))
@@ -19545,7 +19584,7 @@ void __fastcall TNyanFiForm::NewTextFileActionExecute(TObject *Sender)
 		StartLog("テキスト作成開始  " + GetSrcPathStr());
 		UnicodeString msg = make_LogHdr(_T("CREATE"), fnam);
 		std::unique_ptr<TStringList> o_buf(new TStringList());
-		if (InputExDlg->ClipCheckBox->Checked) o_buf->Text = Clipboard()->AsText;
+		if (is_clip || InputExDlg->ClipCheckBox->Checked) o_buf->Text = Clipboard()->AsText;
 		if (!saveto_TextFile(fnam, o_buf.get(), InputExDlg->CodePageComboBox->ItemIndex)) set_LogErrMsg(msg);
 		AddLog(msg);
 		if (msg[1]=='E') UserAbort(USTR_FaildProc);
@@ -25445,7 +25484,19 @@ void __fastcall TNyanFiForm::PasteActionExecute(TObject *Sender)
 				ActivateTask(tp, cp);
 			}
 		}
-		else Abort();
+		//貼り付け保存
+		else if (TEST_ActParam("EX")) {
+			if (!IsCurFList()) UserAbort(USTR_CantOperate);
+			if (Clipboard()->HasFormat(CF_TEXT)) {
+				ActionOptStr = "ClipPaste";
+				ExeCommandAction("NewTextFile");
+			}
+			else if (Clipboard()->HasFormat(CF_BITMAP)) {
+				ExeCommandAction("ConvertImage", "CB");
+			}
+			else UserAbort(USTR_NoObject);
+		}
+		else UserAbort(USTR_NoObject);
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);
@@ -25457,7 +25508,8 @@ void __fastcall TNyanFiForm::PasteActionUpdate(TObject *Sender)
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = ScrMode==SCMD_FLIST;
 	ap->Enabled = ap->Visible && !CurWorking && !FindBusy && !CalcBusy
-					&& (Clipboard()->HasFormat(CF_HDROP) || Clipboard()->HasFormat(::RegisterClipboardFormat(CFSTR_INETURL)));
+					&& (Clipboard()->HasFormat(CF_HDROP) || Clipboard()->HasFormat(::RegisterClipboardFormat(CFSTR_INETURL))
+						|| Clipboard()->HasFormat(CF_TEXT) || Clipboard()->HasFormat(CF_BITMAP));
 }
 
 //---------------------------------------------------------------------------
@@ -26205,8 +26257,12 @@ void __fastcall TNyanFiForm::ConvertImageActionExecute(TObject *Sender)
 
 	try {
 		bool is_clip = TEST_ActParam("CB");
-		if (is_clip && !Clipboard()->HasFormat(CF_BITMAP)) UserAbort(USTR_NoObject);
-		NotConvertAbort();
+		if (is_clip) {
+			if (!Clipboard()->HasFormat(CF_BITMAP)) UserAbort(USTR_NoObject);
+		}
+		else {
+			NotConvertAbort();
+		}
 
 		TStringList *lst = GetCurList(true);
 		int sel_cnt 	 = GetSelCount(lst);
@@ -26216,13 +26272,11 @@ void __fastcall TNyanFiForm::ConvertImageActionExecute(TObject *Sender)
 
 		if (!CvImageDlg) CvImageDlg = new TCvImageDlg(this);	//初回に動的作成
 		CvImageDlg->fromClip = is_clip;
+		CvImageDlg->DistPath = dst_dir;
 		if (CvImageDlg->ShowModal()==mrOk) {
 			TaskConfig  *cp = NULL;
 			TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
-			TRadioGroup *rp = CvImageDlg->CvFmtRadioGroup;
-			UnicodeString fext = (rp->ItemIndex!=-1)? rp->Items->Strings[rp->ItemIndex].LowerCase() : EmptyStr;
-			remove_top_s(fext, '&');
-			cp->CvImg_f_ext 		= "." + fext;
+			cp->CvImg_f_ext 		= CvImageDlg->FextLabel->Caption;
 			cp->CvImg_from_clip		= is_clip;
 			cp->CvImg_quality		= CvImageDlg->ImgQTrackBar->Position;
 			cp->CvImg_ycrcb 		= CvImageDlg->YCrCbComboBox->ItemIndex;
@@ -30391,8 +30445,10 @@ void __fastcall TNyanFiForm::WebSearchActionExecute(TObject *Sender)
 		if (!kw.IsEmpty()) {
 			kw = System::Netencoding::TURLEncoding::URL->Encode(kw);
 			UnicodeString urlstr = ReplaceStr(WebSeaUrl, "\\S", kw);
-			if (urlstr.IsEmpty()) SetActionAbort(USTR_FaildProc);
-			Execute_ex(urlstr);
+			if (!urlstr.IsEmpty())
+				Execute_ex(urlstr);
+			else
+				SetActionAbort(USTR_FaildProc);
 		}
 	}
 	else if (ScrMode==SCMD_TVIEW) ExeCommandV(_T("WebSearch"));

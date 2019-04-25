@@ -50,6 +50,7 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 	case INPEX_ADD_TAG:		 Caption = "タグの追加";			break;
 	case INPEX_SET_TAG:		 Caption = "タグの設定";			break;
 	case INPEX_TAG_SELECT:	 Caption = "タグ選択";				break;
+	case INPEX_CLIP_PASTE:	 Caption = "クリップボードから新規テキスト作成";	break;
 	default:
 		//メイン側で設定
 		;
@@ -61,7 +62,7 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 	int r_mgn = Scaled8;
 
 	//ComboBox
-	if (IpuntExMode==INPEX_CRE_DIR || IpuntExMode==INPEX_NEW_TEXTFILE
+	if (IpuntExMode==INPEX_CRE_DIR || IpuntExMode==INPEX_NEW_TEXTFILE || IpuntExMode==INPEX_CLIP_PASTE
 		|| IpuntExMode==INPEX_FIND_TAG || IpuntExMode==INPEX_ADD_TAG || IpuntExMode==INPEX_SET_TAG || IpuntExMode==INPEX_TAG_SELECT)
 	{
 		ClientWidth = 480;
@@ -69,15 +70,16 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 		NameLabel->Caption	   = (IpuntExMode==INPEX_FIND_TAG || IpuntExMode==INPEX_ADD_TAG || IpuntExMode==INPEX_SET_TAG)? "タグ" : "名前";
 		InputComboBox->Visible = true;
 		UnicodeString def_str  = InputComboBox->Text;
+
+		//タグ名リスト
 		if (IpuntExMode==INPEX_FIND_TAG || IpuntExMode==INPEX_ADD_TAG || IpuntExMode==INPEX_SET_TAG || IpuntExMode==INPEX_TAG_SELECT) {
-			//タグ名リスト
 			InputComboBox->Items->Assign(usr_TAG->TagNameList);
 		}
+		//履歴
 		else {
-			//履歴
-			IniFile->LoadComboBoxItems(InputComboBox,
-						(IpuntExMode==INPEX_CRE_DIR)? _T("CreateDirHistory") : _T("NewTextHistory"));
+			IniFile->LoadComboBoxItems(InputComboBox, (IpuntExMode==INPEX_CRE_DIR)? _T("CreateDirHistory") : _T("NewTextHistory"));
 		}
+
 		InputComboBox->Text  = def_str;
 		InputComboBox->Width = ClientWidth - InputComboBox->Left - r_mgn;
 
@@ -139,9 +141,11 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 		HelpTopic.sprintf(_T("%s"), _T(HELPTOPIC_FL) _T("#CreateDir"));
 		break;
 	case INPEX_NEW_TEXTFILE:
+	case INPEX_CLIP_PASTE:
 		CodePageComboBox->ItemIndex = IniFile->ReadIntGen(_T("NewTextCodePage"));
 		CodePageComboBox->Width = ClientWidth - CodePageComboBox->Left - r_mgn;
 		ClipCheckBox->Checked = IniFile->ReadBoolGen(_T("NewTextClip"));
+		ClipCheckBox->Visible = (IpuntExMode!=INPEX_CLIP_PASTE);
 		EditCheckBox->Checked = EditNewText;
 		NewTextPanel->Visible = true;
 		hi += NewTextPanel->Height;

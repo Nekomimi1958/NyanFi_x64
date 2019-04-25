@@ -287,6 +287,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *LoadResultListAction;
 	TAction *LoadTabGroupAction;
 	TAction *LoadWorkListAction;
+	TAction *LockComputerAction;
 	TAction *LockTextPreviewAction;
 	TAction *Log_DebugInfAction;
 	TAction *LogFileInfoAction;
@@ -1829,6 +1830,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FindFolderIconActionExecute(TObject *Sender);
 	void __fastcall FindFolderIconActionUpdate(TObject *Sender);
 	void __fastcall SimilarSortActionExecute(TObject *Sender);
+	void __fastcall LockComputerActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

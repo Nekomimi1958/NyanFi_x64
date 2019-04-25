@@ -24,6 +24,8 @@ void __fastcall TAboutBox::FormCreate(TObject *Sender)
 	ico->Handle = (HICON)::LoadImage(HInstance, _T("NYANFI_ICO"), IMAGE_ICON, 48, 48, LR_SHARED);
 
 	ProgramIcon->Picture->Assign(ico.get());
+	ProductName->Font->Assign(Application->DefaultFont);
+	ProductName->Font->Size = 20;
 }
 //---------------------------------------------------------------------------
 void __fastcall TAboutBox::SupportURLClick(TObject *Sender)
@@ -31,3 +33,4 @@ void __fastcall TAboutBox::SupportURLClick(TObject *Sender)
 	Execute_ex(SupportURL->Caption);
 }
 //---------------------------------------------------------------------------
+

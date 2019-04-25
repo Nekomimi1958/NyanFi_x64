@@ -291,6 +291,7 @@ object CvImageDlg: TCvImageDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitTop = 507
     object CanButton: TButton
       Left = 210
       Top = 8
@@ -334,23 +335,33 @@ object CvImageDlg: TCvImageDlg
         Height = 13
         Caption = '.bmp'
       end
+      object SttLabel: TLabel
+        Left = 12
+        Top = 50
+        Width = 70
+        Height = 18
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = #21516#21517#12354#12426
+      end
       object ClipNameComboBox: TComboBox
         Left = 12
         Top = 20
         Width = 320
         Height = 21
         TabOrder = 0
+        OnChange = ClipNameComboBoxChange
       end
       object ClipOWBtn: TRadioButton
-        Left = 16
+        Left = 98
         Top = 49
-        Width = 88
+        Width = 70
         Height = 17
         Caption = #19978#26360#12365
         TabOrder = 1
       end
       object ClipAutoBtn: TRadioButton
-        Left = 108
+        Left = 172
         Top = 49
         Width = 114
         Height = 17

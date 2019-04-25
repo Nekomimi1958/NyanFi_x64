@@ -20,6 +20,12 @@ __fastcall TSplashForm::TSplashForm(TComponent* Owner)
 {
 }
 //---------------------------------------------------------------------------
+void __fastcall TSplashForm::FormCreate(TObject *Sender)
+{
+	TitleLabel->Font->Assign(Application->DefaultFont);
+	TitleLabel->Font->Size = 22;
+}
+//---------------------------------------------------------------------------
 void __fastcall TSplashForm::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	Action = caFree;

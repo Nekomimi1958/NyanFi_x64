@@ -27,6 +27,7 @@
 #define INPEX_ADD_TAG		11
 #define INPEX_SET_TAG		12
 #define INPEX_TAG_SELECT	13
+#define INPEX_CLIP_PASTE	14
 
 //---------------------------------------------------------------------------
 class TInputExDlg : public TForm

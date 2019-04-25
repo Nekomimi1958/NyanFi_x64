@@ -50,6 +50,7 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioButton *ClipOWBtn;
 	TRadioGroup *CvFmtRadioGroup;
 	TTrackBar *ImgQTrackBar;
+	TLabel *SttLabel;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -60,11 +61,13 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefMgnColBtnClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall GrayScaleCheckBoxClick(TObject *Sender);
+	void __fastcall ClipNameComboBoxChange(TObject *Sender);
 
 private:	// ユーザー宣言
 
 public:		// ユーザー宣言
 	bool fromClip;
+	UnicodeString DistPath;
 
 	__fastcall TCvImageDlg(TComponent* Owner);
 };

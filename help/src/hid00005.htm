@@ -410,7 +410,9 @@ NyanFi.exe -XCalculator_CB
 反対側がカレントと同じで、出力ファイル名も同じ場合、確認なしで上書きされます。<br>
 <div class="spc_box">
 パラメータに <b>CB</b> を指定すると、クリップボードの画像を変換し、指定した名前でカレント側に保存します。<br>
+この動作は、<a href="#Paste">Paste</a>_EX コマンドによっても可能です。<br>
 </div>
+<a href="#Paste">→ Paste</a>
 
 <dt id="ConvertTextEnc">ConvertTextEnc
 <dd>「<b>文字コードの変換</b>」ダイアログが開きます。<br>
@@ -1611,6 +1613,12 @@ JumpTo　　　　　　　　<span class="pram_text rem_text">(結果リスト、ワークリスト
 パラメータに<b>ファイル名</b>を指定すると直接開けます(ドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定)。<br>
 <a href="#SaveWorkList">→ SaveWorkList</a>　<a href="#SaveAsWorkList">→ SaveAsWorkList</a>　<a href="#NewWorkList">→ NewWorkList</a>
 
+<dt id="LockComputer">LockComputer<span class="pram_text">[_MO]</span>
+<dd>
+コンピュータをロックします。<br>
+パラメータに <b>MO</b> を指定すると、ロックの1秒後にディスプレイの電源を切ります。<br>
+<a href="#MonitorOff">→ MonitorOff</a>
+
 <dt id="LockTextPreview">LockTextPreview<span class="pram_text">[_ON|_OFF]</span>
 <dd>パラメータを指定しない場合、<a href="hid00082.htm">テキストプレビュー</a>のロック/解除をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定するとロック、<b>OFF</b> で解除になります。<br>
@@ -1681,9 +1689,11 @@ JumpTo　　　　　　　　<span class="pram_text rem_text">(結果リスト、ワークリスト
 <a href="hid00010.htm#MenuBar">→ オプション設定 - デザイン - 「メニューバーを表示」</a><br>
 <a href="#PopupMainMenu">→ PopupMainMenu</a>
 
-<dt id="MonitorOff">MonitorOff
+<dt id="MonitorOff">MonitorOff<span class="pram_text">[_LK]</span>
 <dd>ディスプレイの電源を切ります。<br>
-1秒後から処理を開始しますので、それまでにキーボードやマウスから手を放してください。その後はキーやマウス操作で復帰します。
+1秒後から処理を開始しますので、それまでにキーボードやマウスから手を放してください。その後はキーやマウス操作で復帰します。<br>
+パラメータに <b>LK</b> を指定すると、ディスプレイの電源を切る前にコンピュータをロックします。<br>
+<a href="#LockComputer">→ LockComputer</a>
 
 <dt id="Move">Move<span class="pram_text">[_SO|_OP|_TO|_SD|_SS]</span>
 <dd>選択中(無ければカーソル位置)の項目を反対パスに移動します。<br>
@@ -1763,9 +1773,9 @@ JumpTo　　　　　　　　<span class="pram_text rem_text">(結果リスト、ワークリスト
 <dt id="NewTextFile">NewTextFile<span class="pram_text">[_名前]</span> 
 <dd>カレントパスに新規テキストファイルを作成します。<br>
 ファイル名の拡張子を省略すると <b>.txt</b> が付加されます(代替データストリーム一覧の場合は除く)。<br>
-「<b>クリップボードから貼り付け</b>」をチェックしていると、クリップボードのテキスト内容をファイルに出力します。文字コードはコンボボックスで選択できます。<br>
+「<b>クリップボードから貼り付け</b>」をチェックしていると、クリップボードのテキスト内容をファイルに出力します(<a href="#Paste">Paste</a>_EX コマンドでも可能)。<br>
+文字コードはコンボボックスで選択できます。<br>
 「<b>エディタで開く</b>」チェックしていると、作成したファイルをテキストエディタで開きます。<br>
-<a href="#NewFile">→ NewFile</a>
 
 <div class="spc_box">
 パラメータを指定すると、入力ボックスを出さずにその名前で直ちにファイルを作成します。名前の指定には以下の書式文字列が使えます。<br>
@@ -1778,6 +1788,7 @@ JumpTo　　　　　　　　<span class="pram_text rem_text">(結果リスト、ワークリスト
 </div>
 <b>例</b>: NewTextFile_hoge\DT(yymmdd).txt　→　hoge180918.txt<br>
 </div>
+<a href="#NewFile">→ NewFile</a>　<a href="#Paste">→ Paste</a>
 
 <dt id="NewWorkList">NewWorkList
 <dd>新規に空の<a href="hid00060.htm">ワークリスト</a>を作成して表示します。<br>
@@ -1983,7 +1994,7 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 <dd>選択しながらカーソルを1ページ上に移動します。<br>
 <a href="#PageDownSel">→ PageDownSel</a>
 
-<dt id="Paste">Paste<span class="pram_text">[_CL]</span>
+<dt id="Paste">Paste<span class="pram_text">[_CL|_EX]</span>
 <dd><a href="#CopyToClip">CopyToClip</a>(<a href="#CutToClip">CutToClip</a>)コマンドを実行した対象や、エクスプローラなどでコピー(切り取り)した対象をカレントにコピー(移動)します。<br>
 コピー(移動)はバックグラウンド・タスクで行われます。<br>
 <div class="spc_box">
@@ -1991,7 +2002,13 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 対象がディレクトリの場合、<a href="#Clone">Clone</a> コマンドとは異なり同一パスの同名でなければ通常のコピーになります。<br>
 なお移動の場合は、このパラメータは無視されます。
 </div>
-<a href="#CopyToClip">→ CopyToClip</a>　<a href="#CutToClip">→ CutToClip</a>　<a href="#Clone">→ Clone</a>　<a href="#CloneToCurr">→ CloneToCurr</a>
+
+<div class="spc_box">
+パラメータに <b>EX</b> を指定すると、クリップボードの内容がテキストの場合は <a href="#NewTextFile"> NewTextFile</a> コマンド、画像の場合は <a href="#ConvertImage">ConvertImage</a>_CB コマンドを利用して新規ファイルを作成します。<br>
+それ以外の場合、このパラメータは無視され通常動作になります。<br>
+</div>
+
+<a href="#CopyToClip">→ CopyToClip</a>　<a href="#CutToClip">→ CutToClip</a>　<a href="#Clone">→ Clone</a>　<a href="#CloneToCurr">→ CloneToCurr</a>　<a href="#NewTextFile">→ NewTextFile</a>　<a href="#ConvertImage">→ ConvertImage</a>
 
 <dt id="PathMaskDlg">PathMaskDlg<span class="pram_text">[_ND]</span>
 <dd>「<b>パスマスク</b>」ダイアログを開きます。<br>

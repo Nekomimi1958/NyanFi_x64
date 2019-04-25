@@ -14,6 +14,7 @@ object SplashForm: TSplashForm
   Position = poScreenCenter
   Scaled = False
   OnClose = FormClose
+  OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnPaint = FormPaint
   PixelsPerInch = 96

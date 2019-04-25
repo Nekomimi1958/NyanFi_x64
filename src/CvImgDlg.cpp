@@ -51,9 +51,10 @@ void __fastcall TCvImageDlg::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter);
 
 	if (fromClip) {
-		Caption = "クリップボード画像の変換";
+		Caption = "クリップボード画像の変換/保存";
 		SubPanel->Visible  = false;
 		NamePanel->Visible = true;
+		SttLabel->Caption  = EmptyStr;
 		ClientHeight = MainPanel->Height + NamePanel->Height + BtnPanel->Height;
 
 		IniFile->LoadComboBoxItems(ClipNameComboBox, _T("CvClpNameHistory"));
@@ -88,6 +89,7 @@ void __fastcall TCvImageDlg::FormShow(TObject *Sender)
 
 	ScaleModeComboBoxChange(NULL);
 	CvFmtRadioGroupClick(NULL);
+	if (fromClip) ClipNameComboBoxChange(NULL);
 }
 //---------------------------------------------------------------------------
 void __fastcall TCvImageDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -187,8 +189,19 @@ void __fastcall TCvImageDlg::ScaleModeComboBoxChange(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TCvImageDlg::ClipNameComboBoxChange(TObject *Sender)
+{
+	if (fromClip) {
+		SttLabel->Caption =
+			file_exists(DistPath + ClipNameComboBox->Text + FextLabel->Caption)?
+				"同名あり" : "";
+	}
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TCvImageDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
+

@@ -141,6 +141,7 @@ void set_CmdList(
 		"F:ListTree=ディレクトリ構造のツリー表示\n"
 		"F:LoadResultList=結果リストをファイルから読み込む\n"
 		"F:LoadTabGroup=タブグループをファイルから読み込む\n"
+		"F:LockComputer=コンピュータのロック\n"
 		"F:LockTextPreview=テキストプレビューのロック/解除\n"
 		"F:LogFileInfo=ファイル情報をログに出力\n"
 		"F:MarkMask=栞マーク項目だけを残して他を隠す\n"
@@ -818,8 +819,14 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "ListText")) {
 		params = "\nFF : フィルタ欄にフォーカス\nEO : エラー箇所の絞り込み表示\n";
 	}
+	else if (USAME_TI(cmd, "LockComputer")) {
+		params = "\nMO : ディスプレイの電源を切る\n";
+	}
 	else if (USAME_TI(cmd, "Mark") && (id_idx==0 || id_idx==3)) {
 		params = "\nND : カーソルを移動しない\nIM : メモを入力\n";
+	}
+	else if (USAME_TI(cmd, "MonitorOff")) {
+		params = "\nLK : コンピュータをロックする\n";
 	}
 	else if (USAME_TI(cmd, "MoveTab")) {
 		params = "\nTP : 先頭に先頭\nED : 最後に移動\nPR : １つ前に移動\n";
@@ -828,7 +835,7 @@ void get_PrmList(
 		params = "\nR : 右綴じ\nL : 左綴じ\n";
 	}
 	else if (USAME_TI(cmd, "Paste")) {
-		params = "\nCL : 同名時にクローン化\n";
+		params = "\nCL : 同名時にクローン化\nEX : テキスト/画像なら新規保存\n";
 	}
 	else if (contained_wd_i(_T("NextFile|PrevFile"), cmd)) {
 		if (id_idx==3) params = "\nF1 : 見開き表示でも1ファイルずつ移動\n";
