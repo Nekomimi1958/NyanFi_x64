@@ -203,13 +203,13 @@ public:
 	UserArcUnit(HWND hWnd);
 	~UserArcUnit();
 
-	int  GetArcType(UnicodeString arc_file);
+	int  GetArcType(UnicodeString arc_file, bool ex_sw = false);
 	UnicodeString GetSubTypeStr(UnicodeString arc_file);
 
 	bool IsRunning(UnicodeString arc_file);
 	bool IsUnicode(int typ);
 	bool IsAvailable(int typ);
-	bool IsAvailable(UnicodeString arc_file);
+	bool IsAvailable(UnicodeString arc_file, bool ex_sw = false);
 	bool HasRename(UnicodeString arc_file);
 
 	int ExeCommand(int arc_t, arc_func *fp, UnicodeString cmd, bool large_buf = false);

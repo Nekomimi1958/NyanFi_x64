@@ -1824,7 +1824,7 @@ bool is_ExtractIcon(file_rec *fp);
 
 bool test_ArcExt(UnicodeString fext);
 bool test_ArcExt2(UnicodeString fext);
-bool is_AvailableArc(UnicodeString fnam);
+bool is_AvailableArc(UnicodeString fnam, bool ex_sw = false);
 bool test_TxtFile(UnicodeString fnam);
 bool test_NonTxtExt(UnicodeString fext);
 

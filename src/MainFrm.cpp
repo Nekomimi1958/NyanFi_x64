@@ -24427,7 +24427,7 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 			for (int i=0; i<lst->Count; i++) {
 				file_rec *fp = (file_rec*)lst->Objects[i];
 				if (!fp->selected) continue;
-				if (fp->is_dir || !is_AvailableArc(fp->f_name)) UserAbort(USTR_FmtNotSuported);
+				if (fp->is_dir || !is_AvailableArc(fp->f_name, true)) UserAbort(USTR_FmtNotSuported);
 				if (anam.IsEmpty()) anam = fp->f_name;
 			}
 
@@ -24478,7 +24478,7 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 		//カーソル位置
 		else {
 			if (cfp->f_name.IsEmpty() || cfp->is_dummy)  Abort();
-			if (!is_AvailableArc(cfp->f_name)) UserAbort(USTR_FmtNotSuported);
+			if (!is_AvailableArc(cfp->f_name, true)) UserAbort(USTR_FmtNotSuported);
 
 			if (msgbox_Sure(msg.sprintf(_T("%s を解凍しますか?"), cfp->n_name.c_str()), sure_unpack)) {
 				StartLog(msg.sprintf(_T("解凍開始  %s\t%s"), GetSrcPathStr().c_str(), CurPath[OppListTag].c_str()));

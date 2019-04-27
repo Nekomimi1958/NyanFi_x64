@@ -8781,9 +8781,10 @@ bool test_ArcExt2(UnicodeString fext)
 //---------------------------------------------------------------------------
 //利用可能なアーカイブか?
 //---------------------------------------------------------------------------
-bool is_AvailableArc(UnicodeString fnam)
+bool is_AvailableArc(UnicodeString fnam,
+	bool ex_sw)		//7z.dll対応版のものを含む	(default = false)
 {
-	return (usr_ARC->IsAvailable(fnam) || SPI->TestFExt(get_extension(fnam), true));
+	return (usr_ARC->IsAvailable(fnam, ex_sw) || SPI->TestFExt(get_extension(fnam), true));
 }
 
 //---------------------------------------------------------------------------

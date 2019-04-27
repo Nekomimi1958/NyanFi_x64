@@ -142,7 +142,8 @@ FARPROC UserArcUnit::GetProcAdr(arc_func *fp, UnicodeString pnam)
 //---------------------------------------------------------------------------
 //ファイル名から種別を判定
 //---------------------------------------------------------------------------
-int UserArcUnit::GetArcType(UnicodeString arc_file)
+int UserArcUnit::GetArcType(UnicodeString arc_file,
+	bool ex_sw)		//7z.dll対応のものを含む	(default = false)
 {
 	int arc_t = 0;
 	UnicodeString fext = get_extension(arc_file);
@@ -176,7 +177,9 @@ int UserArcUnit::GetArcType(UnicodeString arc_file)
 			int sub_t = fp->IsUnicode?
 						fp->GetArchiveType(UTF8String(arc_file).c_str()) :
 						fp->GetArchiveType(AnsiString(arc_file).c_str());
-			if (sub_t>0) arc_t = UARCTYP_ZIP;
+			if		(sub_t==1)			arc_t = UARCTYP_ZIP;
+			else if (sub_t==2)			arc_t = UARCTYP_7Z;
+			else if (ex_sw && sub_t>0)	arc_t = UARCTYP_ZIP;	//7z.dll対応
 		}
 	}
 	if (arc_t==0) {
@@ -185,7 +188,7 @@ int UserArcUnit::GetArcType(UnicodeString arc_file)
 			int sub_t = fp->IsUnicode?
 						fp->GetArchiveType(UTF8String(arc_file).c_str()) :
 						fp->GetArchiveType(AnsiString(arc_file).c_str());
-			if (sub_t>0) arc_t = UARCTYP_TAR;
+			if (sub_t>=1 && sub_t<=7) arc_t = UARCTYP_TAR;
 		}
 	}
 
@@ -252,7 +255,7 @@ arc_func * UserArcUnit::GetArcFunc(int typ)
 //---------------------------------------------------------------------------
 bool UserArcUnit::IsRunning(UnicodeString arc_file)
 {
-	arc_func *fp = GetArcFunc(GetArcType(arc_file));
+	arc_func *fp = GetArcFunc(GetArcType(arc_file, true));
 	return(!fp || !fp->Available || fp->GetRunning());
 }
 
@@ -281,9 +284,10 @@ bool UserArcUnit::IsAvailable(int typ)
 }
 
 //---------------------------------------------------------------------------
-bool UserArcUnit::IsAvailable(UnicodeString arc_file)
+bool UserArcUnit::IsAvailable(UnicodeString arc_file,
+	bool ex_sw)		//7z.dll対応のものを含む	(default = false)
 {
-	return IsAvailable(GetArcType(arc_file));
+	return IsAvailable(GetArcType(arc_file, ex_sw));
 }
 
 //---------------------------------------------------------------------------
@@ -434,7 +438,9 @@ bool UserArcUnit::UnPack(
 	else if (!FileExists(arc_file))			ErrMsg = SysErrorMessage(ERROR_FILE_NOT_FOUND);
 	if (!ErrMsg.IsEmpty()) return false;
 
-	int arc_t = GetArcType(arc_file);	if (arc_t==0) return false;
+	int arc_t = GetArcType(arc_file, true);
+	if (arc_t==0) return false;
+
 	arc_func *fp = GetArcFunc(arc_t);
 	if (!fp || !fp->Available || fp->GetRunning()) return false;
 
@@ -566,7 +572,8 @@ bool UserArcUnit::AddFile(
 {
 	ErrMsg = EmptyStr;
 
-	int arc_t = GetArcType(arc_file);	if (arc_t==0) return false;
+	int arc_t = GetArcType(arc_file);
+	if (arc_t==0) return false;
 
 	if		(arc_file.Length()>=MAX_PATH)	ErrMsg = SysErrorMessage(ERROR_BUFFER_OVERFLOW);
 	else if (!FileExists(arc_file))			ErrMsg = SysErrorMessage(ERROR_FILE_NOT_FOUND);
@@ -609,7 +616,9 @@ bool UserArcUnit::DelFile(
 {
 	ErrMsg = EmptyStr;
 
-	int arc_t = GetArcType(arc_file);	if (arc_t==0) return false;
+	int arc_t = GetArcType(arc_file);
+	if (arc_t==0) return false;
+
 	arc_func *fp = GetArcFunc(arc_t);
 	if (!fp || !fp->Available || fp->GetRunning()) return false;
 
@@ -652,7 +661,9 @@ bool UserArcUnit::DelFile(
 //---------------------------------------------------------------------------
 bool UserArcUnit::RenFile(UnicodeString arc_file, UnicodeString onam, UnicodeString nnam)
 {
-	int arc_t = GetArcType(arc_file);	if (arc_t==0) return false;
+	int arc_t = GetArcType(arc_file);
+	if (arc_t==0) return false;
+
 	arc_func *fp = GetArcFunc(arc_t);
 	if (!fp || !fp->Available || fp->GetRunning()) return false;
 	if (!fp->hasRename) return false;
@@ -675,7 +686,10 @@ bool UserArcUnit::OpenArc(UnicodeString arc_file)
 	try {
 		CurArcFile = arc_file;
 		if (arc_file.Length()>=MAX_PATH) Abort();		//MAX_PATH超のアーカイブはダメ
-		CurType = GetArcType(arc_file);		if (CurType==0) Abort();
+
+		CurType = GetArcType(arc_file, true);
+		if (CurType==0) Abort();
+
 		arc_func *fp = GetArcFunc(CurType);	if (!fp) Abort();
 
 		if (fp->Available) {
@@ -1061,9 +1075,13 @@ bool UserArcUnit::GetArcList(
 	UnicodeString cmd,	 		//コマンド (l または t)
 	TStringList *lst)
 {
-	int arc_t = GetArcType(arc_file);	if (arc_t==0) return false;
-	arc_func *fp = GetArcFunc(arc_t);	if (!fp) return false;
 	if (cmd.IsEmpty()) return false;
+
+	int arc_t = GetArcType(arc_file, true);
+	if (arc_t==0) return false;
+
+	arc_func *fp = GetArcFunc(arc_t);
+	if (!fp) return false;
 
 	if (arc_t==UARCTYP_CAB || arc_t==UARCTYP_TAR || arc_t==UARCTYP_RAR) cmd = "-" + cmd;
 	cmd += (" " + add_quot_if_spc(arc_file) + " *");
