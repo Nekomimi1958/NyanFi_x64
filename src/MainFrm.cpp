@@ -4754,8 +4754,8 @@ void __fastcall TNyanFiForm::UpdateFKeyBtn(TShiftState shift)
 	bool is_extv = Screen->ActiveForm->ClassNameIs("TExTxtViewer");
 	UnicodeString kid = (ScrMode==SCMD_TVIEW || is_extv)? "V:" :
 						(ScrMode==SCMD_IVIEW)? "I:" :
-						(ScrMode==SCMD_FLIST)? ((FileListBox[0]->Focused() || FileListBox[1]->Focused())? "F:" :
-																				   LogListBox->Focused()? "L:" : "")
+						(ScrMode==SCMD_FLIST)? ((ActiveControl==L_ListBox || ActiveControl==R_ListBox)? "F:" :
+																		   (ActiveControl==LogListBox)? "L:" : "")
 											 : "";
 	if (!kid.IsEmpty()) kid += get_ShiftStr(shift);
 	tp->Canvas->Font->Assign(ToolBarFont);
