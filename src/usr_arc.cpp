@@ -76,6 +76,7 @@ UserArcUnit::UserArcUnit(HWND hWnd)
 			fp->Available = fp->Command && fp->GetVersion && fp->GetRunning && fp->CheckArchive
 					&& fp->OpenArchive && fp->CloseArchive && fp->FindFirst && fp->FindNext;
 
+			//独自API
 			switch (i) {
 			case 0: case 5: //ZIP, ISO
 				fp->GetAttribute = (FUNC_ArcGetAttribute)GetProcAdr(fp, "GetAttribute");
@@ -86,6 +87,8 @@ UserArcUnit::UserArcUnit(HWND hWnd)
 						Use7zDll	 = fp->Exists7zdll();
 						fp->err7zdll = !Use7zDll;
 					}
+
+					fp->GetArchiveType = (FUNC_ArcGetArchiveType)GetProcAdr(fp, "GetArchiveType");
 				}
 				if (fp->Available) fp->Available = fp->GetAttribute;
 				if (fp->Available && fp->SetUnicodeMode) fp->Available = fp->SetUnicodeMode(TRUE);
@@ -95,6 +98,10 @@ UserArcUnit::UserArcUnit(HWND hWnd)
 				fp->GetLastError = (FUNC_ArcGetLastError)GetProcAdr(fp, "GetLastError");
 				if (fp->Available) fp->Available = fp->GetLastError;
 				if (fp->Available && fp->SetUnicodeMode) fp->Available = fp->SetUnicodeMode(TRUE);
+				break;
+
+			case 3:	//TAR
+				fp->GetArchiveType = (FUNC_ArcGetArchiveType)GetProcAdr(fp, "GetArchiveType");
 				break;
 
 			case 4:	//RAR
@@ -133,13 +140,14 @@ FARPROC UserArcUnit::GetProcAdr(arc_func *fp, UnicodeString pnam)
 }
 
 //---------------------------------------------------------------------------
-//ファイル名から種別を判断
+//ファイル名から種別を判定
 //---------------------------------------------------------------------------
 int UserArcUnit::GetArcType(UnicodeString arc_file)
 {
 	int arc_t = 0;
 	UnicodeString fext = get_extension(arc_file);
 
+	//拡張子による判定
 #if defined(_WIN64)
 	if      (test_FileExt(fext, FEXT_ZIP))	arc_t = UARCTYP_ZIP;
 	else if (test_FileExt(fext, FEXT_7Z) || (Use7zDll && test_FileExt(fext, FExt7zDll)))
@@ -161,7 +169,66 @@ int UserArcUnit::GetArcType(UnicodeString arc_file)
 	else if (test_FileExt(fext, FEXT_ISO))	arc_t = UARCTYP_ISO;
 #endif
 
+	//APIによる判定
+	if (arc_t==0) {
+		arc_func *fp = GetArcFunc(UARCTYP_ZIP);
+		if (fp && fp->Available && fp->GetArchiveType) {
+			int sub_t = fp->IsUnicode?
+						fp->GetArchiveType(UTF8String(arc_file).c_str()) :
+						fp->GetArchiveType(AnsiString(arc_file).c_str());
+			if (sub_t>0) arc_t = UARCTYP_ZIP;
+		}
+	}
+	if (arc_t==0) {
+		arc_func *fp = GetArcFunc(UARCTYP_TAR);
+		if (fp && fp->Available && fp->GetArchiveType) {
+			int sub_t = fp->IsUnicode?
+						fp->GetArchiveType(UTF8String(arc_file).c_str()) :
+						fp->GetArchiveType(AnsiString(arc_file).c_str());
+			if (sub_t>0) arc_t = UARCTYP_TAR;
+		}
+	}
+
 	return arc_t;
+}
+
+//---------------------------------------------------------------------------
+//ファイル名から形式を取得 (ZIP,7Z,TAR のみ)
+//---------------------------------------------------------------------------
+UnicodeString UserArcUnit::GetSubTypeStr(UnicodeString arc_file)
+{
+	UnicodeString ret_str;
+
+	arc_func *fp = GetArcFunc(UARCTYP_ZIP);
+	if (fp && fp->Available && fp->GetArchiveType) {
+		int sub_t = fp->IsUnicode?
+				fp->GetArchiveType(UTF8String(arc_file).c_str()) :
+				fp->GetArchiveType(AnsiString(arc_file).c_str());
+		switch (sub_t) {
+		case 1: ret_str = "ZIP";	break;
+		case 2: ret_str = "7Z";		break;
+		}
+	}
+
+	if (ret_str.IsEmpty()) {
+		arc_func *fp = GetArcFunc(UARCTYP_TAR);
+		if (fp && fp->Available && fp->GetArchiveType) {
+			int sub_t = fp->IsUnicode?
+					fp->GetArchiveType(UTF8String(arc_file).c_str()) :
+					fp->GetArchiveType(AnsiString(arc_file).c_str());
+			switch (sub_t) {
+			case 1: ret_str = "TAR";			break;
+			case 2: ret_str = "TAR.GZ(TGZ)";	break;
+			case 3: ret_str = "TAR.Z(TAZ)";		break;
+			case 4: ret_str = "GZ";				break;
+			case 5: ret_str = "Z";				break;
+			case 6: ret_str = "TAR.BZ2";		break;
+			case 7: ret_str = "BZ2";			break;
+			}
+		}
+	}
+
+	return ret_str;
 }
 
 //---------------------------------------------------------------------------

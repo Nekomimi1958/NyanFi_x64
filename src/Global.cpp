@@ -7066,6 +7066,8 @@ TColor get_ExtColor(
 	UnicodeString fext,	//拡張子
 	TColor col)			//デフォルト文字色	(default = col_fgList)
 {
+	if (fext.Pos("<DIR>")) return col_Folder;
+
 	TColor col_f = col_fgList;
 	if (USAME_TS(fext, ".")) fext = EmptyStr;
 	if (!fext.IsEmpty()) {
@@ -7085,6 +7087,7 @@ TColor get_ExtColor(
 			}
 		}
 	}
+
 	return col_f;
 }
 
@@ -8032,7 +8035,7 @@ bool get_FileInfList(
 		//------------------------------------------
 		//関連づけされているプログラム
 		//------------------------------------------
-		if (!test_FileExt(fext, FEXT_EXECUTE FEXT_APPINFO _T(".nbt"))) {
+		if (!test_FileExt(fext, FEXT_EXECUTE FEXT_APPINFO _T(".nbt.nwl"))) {
 			_TCHAR pszFile[MAX_PATH*2];
 			DWORD dwOut = MAX_PATH*2;
 			if (::AssocQueryString(ASSOCF_NOTRUNCATE, ASSOCSTR_EXECUTABLE,
@@ -8050,19 +8053,25 @@ bool get_FileInfList(
 		//------------------------------------------
 		std::unique_ptr<TStringList> ref_lst(new TStringList());	//コマンドファイルの参照情報
 
-		//PDFバージョン
-		if (test_FileExt(fext, _T(".pdf"))) get_PdfVer(fnam, lst);
-
 		//アプリケーション情報
-		if (test_AppInfExt(fext))			get_AppInf(fnam, lst);
+		if (test_AppInfExt(fext)) {
+			get_AppInf(fnam, lst);
+		}
 		//アイコン/カーソル
-		else if (test_IcoExt(fext) || test_CurExt(fext))
-											get_IconInf(fnam, lst);
-		else if (test_AniExt(fext))			get_AniInf(fnam,  lst);
+		else if (test_IcoExt(fext) || test_CurExt(fext)) {
+			get_IconInf(fnam, lst);
+		}
+		else if (test_AniExt(fext)) {
+			get_AniInf(fnam,  lst);
+		}
 		//WebP
-		else if (USAME_TI(fext, ".webp"))	get_WebpInf(fnam, lst);
+		else if (USAME_TI(fext, ".webp")) {
+			get_WebpInf(fnam, lst);
+		}
 		//PSP
-		else if (test_PspExt(fext))			get_PspInf(fnam,  lst);
+		else if (test_PspExt(fext)) {
+			get_PspInf(fnam,  lst);
+		}
 		//表示可能な画像
 		else if (is_ViewableFext(fext)) {
 			if (test_MetaExt(fext))
@@ -8082,7 +8091,9 @@ bool get_FileInfList(
 			}
 		}
 		//Exif
-		else if (test_ExifExt(fext)) get_ExifInf(fnam, lst, &fp->img_ori);
+		else if (test_ExifExt(fext)) {
+			get_ExifInf(fnam, lst, &fp->img_ori);
+		}
 		//WAV
 		else if (USAME_TI(fext, ".wav")) {
 			get_WavInf(fnam, lst);
@@ -8113,11 +8124,58 @@ bool get_FileInfList(
 			add_PropLine(_T("URL"), url_file->ReadString("InternetShortcut", "URL"), lst);
 			add_PropLine_if(_T("IconFile"), url_file->ReadString("InternetShortcut", "IconFile"), lst);
 		}
+		//PDFバージョン
+		else if (test_FileExt(fext, _T(".pdf"))) {
+			get_PdfVer(fnam, lst);
+		}
+		//XML
+		else if (test_FileExt(fext, FEXT_XML)) {
+			get_xml_inf(fnam, lst);
+			if (test_LibExt(fext)) get_LibraryList(fnam, lst, true);
+		}
+		//HTML文書
+		else if (test_HtmlExt(fext)) {
+			get_HtmlInf(fnam, lst);
+		}
+		//スタイルシート
+		else if (USAME_TI(fext, ".css")) {
+			UnicodeString lbuf = Trim(get_top_line(fnam));
+			if (StartsText("@charset", lbuf))
+				add_PropLine(_T("charset"), exclude_quot(Trim(get_tkn(lbuf.Delete(1, 8), ';'))), lst);
+		}
+		//C++Builder プロジェクト、ソース
+		else if (test_FileExt(fext, _T(".cbproj.dproj.cpp.pas.dfm.fmx.h"))) {
+			get_BorlandInf(fnam, lst);
+		}
+		//NyanFi コマンドファイル
+		else if (test_NbtExt(fext)) {
+			UnicodeString lbuf = Trim(get_top_line(fnam));
+			if (remove_top_s(lbuf, ';')) add_PropLine(_T("説明"), lbuf, lst);
+			get_ref_CmdFile(fnam, ref_lst.get());
+		}
+		//Nyanfi ワークリスト
+		else if (test_NwlExt(fext)) {
+			;
+		}
+		//フォント
+		else if (test_FontExt(fext)) {
+			get_FontInf(fnam, lst);
+		}
+		//xdoc2txt
+		else if (xd2tx_PropExt(fext)) {
+			xd2tx_GetInfo(fnam, lst);
+		}
+		//tags
+		else if (USAME_TI(fp->n_name, "tags")) {
+			get_TagsInf(fnam, lst);
+		}
 		//アーカイブ
-		else if (test_ArcExt(fext)) {
+		else if (is_AvailableArc(fnam)) {
 			if (xd2tx_PropExt(fext)) {
 				if (xd2tx_GetInfo(fnam, lst)) lst->Add(EmptyStr);
 			}
+
+			add_PropLine_if(_T("形式"), usr_ARC->GetSubTypeStr(fnam), lst);
 
 			int fcnt;
 			__int64 org_size;
@@ -8132,8 +8190,9 @@ bool get_FileInfList(
 				if (ratio>0)	lst->Add(get_PropTitle(_T("圧縮率")).cat_sprintf(_T("%5.1f %"), ratio));
 				if (is_enc)		lst->Add(make_PropLine(_T("パスワード保護"), "あり"));
 				UnicodeString mnam = IniFile->MarkedInArc(fnam);
-				if (!mnam.IsEmpty())
+				if (!mnam.IsEmpty()) {
 					lst->Add(make_PropLine(_T("マーク項目"), yen_to_delimiter(get_tkn_r(mnam, "/"))));
+				}
 				//拡張子別ファイル数
 				add_FExtInfList(r_lst.get(), lst);
 			}
@@ -8142,42 +8201,16 @@ bool get_FileInfList(
 				InhReload++;	//エラーの繰り返しを防ぐため
 			}
 		}
-		//XML
-		else if (test_FileExt(fext, FEXT_XML)) {
-			get_xml_inf(fnam, lst);
-			if (test_LibExt(fext)) get_LibraryList(fnam, lst, true);
-		}
-		//HTML文書
-		else if (test_HtmlExt(fext)) get_HtmlInf(fnam, lst);
-		//スタイルシート
-		else if (USAME_TI(fext, ".css")) {
-			UnicodeString lbuf = Trim(get_top_line(fnam));
-			if (StartsText("@charset", lbuf))
-				add_PropLine(_T("charset"), exclude_quot(Trim(get_tkn(lbuf.Delete(1, 8), ';'))), lst);
-		}
-		//C++Builder プロジェクト、ソース
-		else if (test_FileExt(fext, _T(".cbproj.dproj.cpp.pas.dfm.fmx.h")))
-			get_BorlandInf(fnam, lst);
-		//NyanFi コマンドファイル
-		else if (test_NbtExt(fext)) {
-			UnicodeString lbuf = Trim(get_top_line(fnam));
-			if (remove_top_s(lbuf, ';')) add_PropLine(_T("説明"), lbuf, lst);
-			get_ref_CmdFile(fnam, ref_lst.get());
-		}
-		//フォント
-		else if (test_FontExt(fext)) get_FontInf(fnam, lst);
-		//xdoc2txt
-		else if (xd2tx_PropExt(fext)) {
-			xd2tx_GetInfo(fnam, lst);
-		}
-		//tags
-		else if (USAME_TI(fp->n_name, "tags")) get_TagsInf(fnam, lst);
 		//その他
-		else if (!test_FileExt(fext, _T(".pdf.nwl"))) {
+		else {
 			//動画
-			if (USAME_TS(usr_SH->get_PropInf(fnam, lst), "ビデオ")) fp->is_video = true;
+			if (USAME_TS(usr_SH->get_PropInf(fnam, lst), "ビデオ")) {
+				fp->is_video = true;
+			}
 			//実行可能ファイル(チェック)
-			else get_AppInf(fnam, lst);
+			else {
+				get_AppInf(fnam, lst);
+			}
 		}
 
 		//代替データストリーム
@@ -8224,8 +8257,9 @@ bool get_FileInfList(
 				int ln_cnt = f_buf->Count;
 
 				//エラー
-				if (!GlobalErrMsg.IsEmpty())
+				if (!GlobalErrMsg.IsEmpty()) {
 					add_list_errmsg(lst, GlobalErrMsg);
+				}
 				else {
 					//XML
 					if (ln_cnt>0) {
@@ -8265,6 +8299,15 @@ bool get_FileInfList(
 						UnicodeString lbuf = f_buf->Strings[0];
 						TStringDynArray hdr_buf = ContainsStr(lbuf, "\t")? split_strings_tab(lbuf) : get_csv_array(lbuf, MAX_CSV_ITEM);
 						if (hdr_buf.Length>0) add_PropLine(_T("項目数"), hdr_buf.Length, lst);
+					}
+					//ワークリスト拡張子別項目数
+					else if (test_NwlExt(fext) && ln_cnt>0) {
+						std::unique_ptr<TStringList> f_lst(new TStringList());
+						for (int i=0; i<f_buf->Count; i++) {
+							UnicodeString lbuf = get_pre_tab(f_buf->Strings[i]);
+							if (!lbuf.IsEmpty() && !StartsStr(';', lbuf)) f_lst->Add(lbuf);
+						}
+						add_FExtInfList(f_lst.get(), lst);
 					}
 
 					//プレビュー内容を設定
@@ -8777,6 +8820,7 @@ bool test_NonTxtExt(UnicodeString fext)
 
 //---------------------------------------------------------------------------
 //拡張子別ファイル数情報を追加
+//  \ で終わる名前は " <DIR>"
 //---------------------------------------------------------------------------
 void add_FExtInfList(
 	TStringList *f_lst,	//[i] ファイル名リスト (file_rec 付にも対応)
@@ -8788,7 +8832,9 @@ void add_FExtInfList(
 			file_rec *fp = (file_rec*)f_lst->Objects[i];
 			if (fp && (fp->is_dir || fp->is_dummy)) continue;
 
-			UnicodeString xnam = def_if_empty(get_extension(f_lst->Strings[i]).LowerCase(), _T("."));
+			UnicodeString lbuf = f_lst->Strings[i];
+			UnicodeString xnam = ends_PathDlmtr(lbuf)? UnicodeString(" <DIR>")
+													 : def_if_empty(get_extension(lbuf).LowerCase(), _T("."));
 			int idx = x_lst->IndexOf(xnam);
 			if (idx!=-1)
 				x_lst->Objects[idx] = (TObject*)((NativeInt)x_lst->Objects[idx] + 1);

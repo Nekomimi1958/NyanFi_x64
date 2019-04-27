@@ -105,6 +105,7 @@ typedef BOOL  (WINAPI *FUNC_ArcSetBackGroundMode)(const BOOL bBackGroundMode);
 typedef BOOL  (WINAPI *FUNC_ArcCheckArchive)(LPCSTR szFileName, const int _iMode);
 typedef int   (WINAPI *FUNC_ArcGetLastError)(LPDWORD lpdwSystemError);
 typedef BOOL  (WINAPI *FUNC_SevenZipExists7zdll)(VOID);
+typedef int   (WINAPI *FUNC_ArcGetArchiveType)(LPCSTR szFileName);
 
 /*
 typedef DWORD (WINAPI *FUNC_ArcGetArcFileSize)(HARC harc);
@@ -129,7 +130,8 @@ struct arc_func {
 	FUNC_ArcSetBackGroundMode		SetBackGroundMode;
 	FUNC_ArcCheckArchive			CheckArchive;
 	FUNC_ArcGetLastError			GetLastError;
-	FUNC_SevenZipExists7zdll		Exists7zdll;	//7z.dllëŒâûî≈7-zip32.dllì∆é©API
+	FUNC_ArcGetArchiveType			GetArchiveType;		//7-zip32.dll/tar32.dll ì∆é©
+	FUNC_SevenZipExists7zdll		Exists7zdll;		//7z.dllëŒâûî≈7-zip32.dll ì∆é©
 
 /*	Å¶ämé¿Ç≈Ç»Ç¢èÍçáÇ™Ç†ÇÈÇΩÇﬂà»â∫ÇÕégópÇµÇ»Ç¢(TAR,CAB)
 	FUNC_ArcGetArcFileSize			GetArcFileSize;
@@ -202,6 +204,8 @@ public:
 	~UserArcUnit();
 
 	int  GetArcType(UnicodeString arc_file);
+	UnicodeString GetSubTypeStr(UnicodeString arc_file);
+
 	bool IsRunning(UnicodeString arc_file);
 	bool IsUnicode(int typ);
 	bool IsAvailable(int typ);
