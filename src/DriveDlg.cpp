@@ -165,7 +165,6 @@ void __fastcall TSelDriveDlg::UpdateDriveList()
 
 			int rn = i;
 			gp->Cells[0][rn] = get_tkn(drv_str, ':');	//ドライブ文字
-			gp->Cells[1][rn] = dp->label;				//ボリューム名/仮想ラベル
 			gp->Cells[2][rn] = typ_str;					//種類
 			gp->Cells[6][rn] = dp->f_system;			//ファイルシステム
 
@@ -236,7 +235,6 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 		else
 			yp += get_TopMargin2(cv);
 
-		UnicodeString cellstr = gp->Cells[ACol][ARow];
 		int c_wd = rc.Right - xp - 4;
 
 		//カーソル位置のドライブ情報を取得
@@ -249,88 +247,118 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 			idx++;
 		}
 
-		//種類
-		if (ACol==2) {
-			if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) {
-				remove_text(cellstr, _T("・メディア"));
-				remove_text(cellstr, _T("・ドライブ"));
-				remove_text(cellstr, _T("ドライブ"));
-			}
-			if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) {
-				cellstr = ReplaceStr(cellstr, "CD-ROM",				"CD");
-				cellstr = ReplaceStr(cellstr, "ハードディスク",		"HDD");
-				cellstr = ReplaceStr(cellstr, "ソリッドステート",	"SSD");
-				cellstr = ReplaceStr(cellstr, "リムーバブル",		"RM");
-				cellstr = ReplaceStr(cellstr, "ネットワーク",		"NET");
-				remove_text(cellstr, _T("ディスク"));
-			}
-			if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) cellstr = get_tkn(cellstr, _T(" ("));
-			//接続I/F を右寄せ
-			int p = cellstr.Pos(" (");
-			if (p>0) while (get_TextWidth(cv, cellstr + " ", is_irreg) < c_wd) cellstr.Insert(" ", p);
-		}
-		//使用容量
-		else if (ACol==3) {
-			int w = 0;
-			for (int i=1; i<gp->RowCount; i++) w = std::max(w, get_TextWidth(cv, gp->Cells[3][i], is_irreg));
-			if (w>c_wd) cellstr = get_tkn(cellstr, _T(" ("));
-		}
-		//空き容量
-		else if (ACol==4) {
-			int w = 0;
-			for (int i=1; i<gp->RowCount; i++) w = std::max(w, get_TextWidth(cv, gp->Cells[4][i], is_irreg));
-			if (w>c_wd) cellstr = get_tkn(cellstr, _T(" ("));
-		}
-
-		int s_wd = get_TextWidth(cv, cellstr, is_irreg);
-
-		cv->Font->Color = gp->Cells[3][ARow].IsEmpty()? AdjustColor(col_fgList, 96) :
-								    is_SelFgCol(State)? col_fgSelItem : col_fgList;
 		cv->Font->Style = (ACol==0)? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
+		TColor fcol = gp->Cells[3][ARow].IsEmpty()? AdjustColor(col_fgList, 96) :
+						       is_SelFgCol(State)? col_fgSelItem : col_None;
 
-		switch (ACol) {
-		case 0:
-			//ドライブ(キー)
-			if (s_wd<c_wd) xp += (c_wd - s_wd)/2;	//センタリング
-			break;
-		case 1:
-			//ボリューム
-			if (ShowIconCheckBox->Checked && dp) {
+		//ボリューム/パス
+		if (ACol==1) {
+			if (dp) {
 				//アイコン
-				int icon_sz = ScaledInt(ShowIconCheckBox->Checked? (LargeIconCheckBox->Checked? 32 : 16) : 0);
-				TIcon *ip = LargeIconCheckBox->Checked? dp->large_ico : dp->small_ico;
-				if (ip && ip->Handle) {
-					::DrawIconEx(cv->Handle, rc.Left + 2, rc.Top + 2, ip->Handle, icon_sz, icon_sz, 0, NULL, DI_NORMAL);
-					rc.Left += icon_sz + 4;
-					xp = rc.Left;
+				if (ShowIconCheckBox->Checked) {
+					int icon_sz = ScaledInt(ShowIconCheckBox->Checked? (LargeIconCheckBox->Checked? 32 : 16) : 0);
+					TIcon *ip = LargeIconCheckBox->Checked? dp->large_ico : dp->small_ico;
+					if (ip && ip->Handle) {
+						::DrawIconEx(cv->Handle, rc.Left + 2, rc.Top + 2, ip->Handle, icon_sz, icon_sz, 0, NULL, DI_NORMAL);
+						xp += icon_sz + 4;
+						rc.Left = xp;
+						c_wd = rc.Width() - 4;
+					}
 				}
-				if (dp->is_virtual) {
-					cellstr = "[" + minimize_str(exclude_top_end(cellstr), cv, rc.Width() - cv->TextWidth("[]"), true) + "]";
-					if (!is_SelFgCol(State)) cv->Font->Color = col_Folder;
+
+				UnicodeString vnam = dp->volume;
+				UnicodeString pnam = (dp->drv_type==DRIVE_REMOTE)? dp->unc : dp->mnt_dir;
+				//ボリューム
+				if (pnam.IsEmpty() || (get_TextWidth(cv, vnam + pnam.SubString(1, pnam.Length()/2), is_irreg) < c_wd)) {
+					cv->Font->Color = (fcol==col_None)? col_fgList : fcol;
+					cv->TextRect(rc, xp, yp, vnam);
+					xp += get_TextWidth(cv, vnam, is_irreg) + 16;
+					rc.Left = xp;
+					c_wd = rc.Width() - 4;
+				}
+
+				//パス
+				if (!pnam.IsEmpty()) {
+					if (dp->is_virtual) {
+						if (get_TextWidth(cv, pnam, is_irreg) > c_wd) {
+							UnicodeString dnam = ExtractFileName(pnam);
+							pnam = get_MiniPathName(pnam, c_wd, cv->Font, true);
+							if (!ContainsText(pnam, dnam)) {
+								pnam = "[" + minimize_str(dnam, cv, c_wd - cv->TextWidth("[]"), true) + "]";
+							}
+						}
+					}
+					else if (dp->drv_type==DRIVE_REMOTE) {
+						pnam = get_MiniPathName(pnam, c_wd, cv->Font, true);
+					}
+					cv->Font->Color = (fcol==col_None)? col_Folder : fcol;
+					cv->TextRect(rc, xp, yp, pnam);
 				}
 			}
-			break;
-		case 3: case 4: case 5:
-			//容量
-			if (s_wd<c_wd) xp += (c_wd - s_wd);	//右寄せ
-			break;
 		}
-
-		cv->TextRect(rc, xp, yp, cellstr);
-
-		//使用率グラフ
-		if (ACol==5) {
-			UnicodeString s = get_tkn_m(gp->Cells[4][ARow], '(', '%');
-			if (!s.IsEmpty()) {
-				try {
-					float r = 1.0 - StrToFloat(s)/100.0;
-					InflateRect(rc, -4, 0);
-					rc.Top	  = yp + cv->TextHeight("Q");
-					rc.Bottom = rc.Top + 4;
-					draw_BarGraph(cv, rc, r);
+		//種類
+		else {
+			UnicodeString cellstr = gp->Cells[ACol][ARow];
+			if (ACol==2) {
+				if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) {
+					remove_text(cellstr, _T("・メディア"));
+					remove_text(cellstr, _T("・ドライブ"));
+					remove_text(cellstr, _T("ドライブ"));
 				}
-				catch (...) {
-					;
+				if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) {
+					cellstr = ReplaceStr(cellstr, "CD-ROM",				"CD");
+					cellstr = ReplaceStr(cellstr, "ハードディスク",		"HDD");
+					cellstr = ReplaceStr(cellstr, "ソリッドステート",	"SSD");
+					cellstr = ReplaceStr(cellstr, "リムーバブル",		"RM");
+					cellstr = ReplaceStr(cellstr, "ネットワーク",		"NET");
+					remove_text(cellstr, _T("ディスク"));
+				}
+				if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) cellstr = get_tkn(cellstr, _T(" ("));
+				//接続I/F を右寄せ
+				int p = cellstr.Pos(" (");
+				if (p>0) while (get_TextWidth(cv, cellstr + " ", is_irreg) < c_wd) cellstr.Insert(" ", p);
+			}
+			//使用容量
+			else if (ACol==3) {
+				int w = 0;
+				for (int i=1; i<gp->RowCount; i++) w = std::max(w, get_TextWidth(cv, gp->Cells[3][i], is_irreg));
+				if (w>c_wd) cellstr = get_tkn(cellstr, _T(" ("));
+			}
+			//空き容量
+			else if (ACol==4) {
+				int w = 0;
+				for (int i=1; i<gp->RowCount; i++) w = std::max(w, get_TextWidth(cv, gp->Cells[4][i], is_irreg));
+				if (w>c_wd) cellstr = get_tkn(cellstr, _T(" ("));
+			}
+
+			int s_wd = get_TextWidth(cv, cellstr, is_irreg);
+
+			switch (ACol) {
+			case 0:	//ドライブ(キー)
+				if (s_wd<c_wd) xp += (c_wd - s_wd)/2;	//センタリング
+				break;
+			case 3: case 4: case 5:	//容量
+				if (s_wd<c_wd) xp += (c_wd - s_wd);	//右寄せ
+				break;
+			}
+
+			cv->Font->Color = (fcol==col_None)? col_fgList : fcol;
+			cv->TextRect(rc, xp, yp, cellstr);
+
+			//使用率グラフ
+			if (ACol==5) {
+				UnicodeString s = get_tkn_m(gp->Cells[4][ARow], '(', '%');
+				if (!s.IsEmpty()) {
+					try {
+						float r = 1.0 - StrToFloat(s)/100.0;
+						InflateRect(rc, -4, 0);
+						rc.Top	  = yp + cv->TextHeight("Q");
+						rc.Bottom = rc.Top + 4;
+						draw_BarGraph(cv, rc, r);
+					}
+					catch (...) {
+						;
+					}
 				}
 			}
 		}

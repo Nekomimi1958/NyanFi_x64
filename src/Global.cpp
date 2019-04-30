@@ -5231,7 +5231,6 @@ drive_info *get_DriveInfoList()
 			dp->volume = get_VolumeInfo(dstr, &dp->f_system);
 		else
 			dp->volume = dp->f_system = EmptyStr;
-		dp->label = dp->volume;
 
 		dp->is_NTFS = USAME_TI(dp->f_system, "NTFS");
 
@@ -5349,11 +5348,17 @@ drive_info *get_DriveInfoList()
 					drive_info *dp = (drive_info *)DriveInfoList->Objects[idx];
 					dp->is_virtual = true;
 					dp->mnt_dir    = ExcludeTrailingPathDelimiter(lbuf);
-					dp->label.sprintf(_T("[%s]"),
-						(is_root_dir(dp->mnt_dir)? dp->mnt_dir : ExtractFileName(dp->mnt_dir)).c_str());
 				}
 			}
 		}
+	}
+
+	//•\Ž¦—pƒ‰ƒxƒ‹
+	for (int i=0; i<DriveInfoList->Count; i++) {
+		drive_info *dp = (drive_info *)DriveInfoList->Objects[i];
+		dp->label =
+			dp->is_virtual? (is_root_dir(dp->mnt_dir)? dp->mnt_dir : "[" + ExtractFileName(dp->mnt_dir)) + "]" :
+			(dp->drv_type==DRIVE_REMOTE)? yen_to_delimiter(dp->unc) : dp->volume;
 	}
 
 	return new_drive;

@@ -1434,13 +1434,13 @@ struct drive_info {
 	bool		  ejectable;
 	bool		  is_virtual;
 	int			  drv_type;
-	UnicodeString type_str;
-	UnicodeString volume;
-	UnicodeString label;
-	UnicodeString unc;
-	UnicodeString mnt_dir;
-	UnicodeString f_system;
-	UnicodeString bus_type;
+	UnicodeString type_str;		//種類
+	UnicodeString volume;		//ボリューム名
+	UnicodeString unc;			//ネットワークドライブのUNCパス
+	UnicodeString mnt_dir;		//仮想ドライブのマウントパス
+	UnicodeString f_system;		//ファイルシステム
+	UnicodeString bus_type;		//接続I/F
+	UnicodeString label;		//表示用ラベル
 	bool		  is_NTFS;
 	bool		  is_SSD;
 	bool		  is_RAM;

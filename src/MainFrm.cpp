@@ -6075,6 +6075,7 @@ bool __fastcall TNyanFiForm::PopupDriveMenu(
 
 			tmp.sprintf(_T("&%s%s"), get_tkn(dstr, '\\').c_str(), dp->label.c_str());
 			if (!sz_str.IsEmpty()) tmp.cat_sprintf(_T(" \t%s"), sz_str.c_str());
+
 			TMenuItem *mp  = new TMenuItem(pPop);
 			mp->Caption    = tmp;
 			mp->OnDrawItem = PopSelectItemDrawItem;
