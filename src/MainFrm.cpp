@@ -652,6 +652,7 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 				tab_idx = i; break;
 			}
 		}
+		//なければ先頭に新規タブ挿入
 		if (tab_idx==-1) {
 			insert_TabList(0, make_csv_str(CurPath[0]) + "," + make_csv_str(CurPath[1]) + ",\"\",\"\"");
 			tab_idx = 0;
@@ -10782,7 +10783,10 @@ bool __fastcall TNyanFiForm::ExeCommandAction(
 	}
 	else if (USAME_TI(cmd, "OpenCtrlPanel")) {
 		cmd = "OpenByExp";
-		prm = "shell:ControlPanelFolder";
+		if (SameText(prm, "GM"))
+			prm = "shell:::{ED7BA470-8E54-465E-825C-99712043E01C}";
+		else
+			prm = "shell:ControlPanelFolder";
 	}
 
 	ActionParam = extract_ExeParam(prm, &ActionDesc);
@@ -14039,10 +14043,10 @@ void __fastcall TNyanFiForm::CsrDirToOppActionExecute(TObject *Sender)
 			UpdateOppPath(cfp->is_up? get_parent_path(CurPath[CurListTag]) : IncludeTrailingPathDelimiter(cfp->f_name));
 		}
 		//アーカイブ
-		else if (usr_ARC->GetArcType(cfp->f_name)>0) {
+		else if (usr_ARC->GetArcType(cfp->f_name, true)>0) {
 			if (cfp->f_name.Length()>=MAX_PATH) SysErrAbort(ERROR_BUFFER_OVERFLOW);
 			if (OppStt->is_Find || OppStt->is_Work) RecoverFileList();	//結果リスト/ワークリストから抜ける
-			if (!is_AvailableArc(cfp->f_name)) UserAbort(USTR_FmtNotSuported);
+			if (!is_AvailableArc(cfp->f_name, true)) UserAbort(USTR_FmtNotSuported);
 			OppStt->arc_Name	= cfp->f_name;
 			OppStt->arc_SubPath = EmptyStr;
 			OppStt->arc_DspPath = IncludeTrailingPathDelimiter(cfp->n_name);
@@ -19577,6 +19581,8 @@ void __fastcall TNyanFiForm::NameFromClipActionExecute(TObject *Sender)
 			if (clp_name.IsEmpty()) SysErrAbort(CLIPBRD_E_BAD_DATA);
 		}
 
+		bool rep_c = TEST_DEL_ActParam("RC");
+
 		UnicodeString new_name;
 		if (!ActionParam.IsEmpty()) {
 			new_name = ActionParam;
@@ -19590,6 +19596,18 @@ void __fastcall TNyanFiForm::NameFromClipActionExecute(TObject *Sender)
 		else {
 			new_name = clp_name;
 		}
+
+		//禁止文字／ユーザ定義文字の変換
+		if (rep_c) {
+			UnicodeString bnam = cfp->is_dir? new_name : get_base_name(new_name);
+			UnicodeString fext = cfp->is_dir? EmptyStr : get_extension(new_name);
+			for (int i=0; i<CnvCharList->Count; i++) {
+				UnicodeString sch = CnvCharList->Names[i];	if (sch.IsEmpty()) continue;
+				bnam = ReplaceStr(bnam, sch, CnvCharList->ValueFromIndex[i]);
+			}
+			new_name = bnam + fext;
+		}
+
 		new_name = CurPath[CurListTag] + new_name;
 
 		StartLog("改名開始  " + GetSrcPathStr());
@@ -19598,10 +19616,7 @@ void __fastcall TNyanFiForm::NameFromClipActionExecute(TObject *Sender)
 		SetDirWatch(false);
 		bool ok = rename_File(cfp->f_name, new_name);
 		SetDirWatch(true);
-		if (ok)
-			cfp->f_name = new_name;
-		else
-			set_LogErrMsg(msg);
+		if (ok) cfp->f_name = new_name; else set_LogErrMsg(msg);
 		AddLog(msg);
 		InvalidateFileList();
 		CurWorking = false;

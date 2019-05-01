@@ -280,12 +280,10 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 				//ƒpƒX
 				if (!pnam.IsEmpty()) {
 					if (dp->is_virtual) {
-						if (get_TextWidth(cv, pnam, is_irreg) > c_wd) {
-							UnicodeString dnam = ExtractFileName(pnam);
-							pnam = get_MiniPathName(pnam, c_wd, cv->Font, true);
-							if (!ContainsText(pnam, dnam)) {
-								pnam = "[" + minimize_str(dnam, cv, c_wd - cv->TextWidth("[]"), true) + "]";
-							}
+						UnicodeString dnam = ExtractFileName(pnam);
+						pnam = get_MiniPathName(pnam, c_wd, cv->Font, true);
+						if (!ContainsText(pnam, dnam)) {
+							pnam = "[" + minimize_str(dnam, cv, c_wd - cv->TextWidth("[]"), true) + "]";
 						}
 					}
 					else if (dp->drv_type==DRIVE_REMOTE) {

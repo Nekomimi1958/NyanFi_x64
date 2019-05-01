@@ -502,17 +502,20 @@ void get_PrmList(
 		cp->Enabled = false;
 
 		if (cp && contained_wd_i(
-			_T("AddTag|CalcDirSize|CalcDirSizeAll|Calculator|ChangeDir|ChangeOppDir|Clone|CloneToCurr|ContextMenu|")
-			_T("ConvertHtm2Txt|Copy|CopyTo|CountLines|CreateDir|CursorDown|CursorUp|DateSelect|DebugCmdFile|")
-			_T("DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|Filter|FindDown|FindFileDirDlg|FindFileDlg|")
-			_T("FindTag|FindUp|FTPChmod|Grep|HelpCurWord|ImageViewer|IncSearch|JumpIndex|JumpLine|JumpTo|ListArchive|")
-			_T("ListDuration|ListExpFunc|ListTail|ListText|ListTree|LoadBgImage|LoadTabGroup|LoadResultList|LoadWorkList|")
-			_T("MaskFind|MaskSelect|MatchSelect|MoveTo|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
-			_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|ScrollCursorUp|")
-			_T("ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|ScrollUpText|SelByList|SetColor|SetDirTime|")
-			_T("SetFontSize|SetMargin|SetPathMask|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SortDlg|")
-			_T("SimilarSort|SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToTab|ToOppSameHash|ViewTail|")
-			_T("WatchTail|WidenCurList|WinPos|GitDiff|GitViewer|UnPack|UnPackToCurr"),
+			_T("AddTag|CalcDirSize|CalcDirSizeAll|Calculator|ChangeDir|ChangeOppDir|Clone|CloneToCurr|")
+			_T("ContextMenu|ConvertHtm2Txt|Copy|CopyTo|CountLines|CreateDir|CursorDown|CursorUp|")
+			_T("DateSelect|DebugCmdFile|DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|")
+			_T("Filter|FindDown|FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|GitDiff|GitViewer|")
+			_T("Grep|HelpCurWord|ImageViewer|IncSearch|JumpIndex|JumpLine|JumpTo|ListArchive|")
+			_T("ListDuration|ListExpFunc|ListTail|ListText|ListTree|LoadBgImage|LoadResultList|")
+			_T("LoadTabGroup|LoadWorkList|MaskFind|MaskSelect|MatchSelect|MoveTo|NameFromClip|")
+			_T("NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|Pack|PackToCurr|")
+			_T("PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|")
+			_T("ScrollCursorUp|ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|")
+			_T("ScrollUpText|SelByList|SetColor|SetDirTime|SetFontSize|SetMargin|SetPathMask|")
+			_T("SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SimilarSort|SortDlg|")
+			_T("SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToOppSameHash|ToTab|")
+			_T("UnPack|UnPackToCurr,|ViewTail|WatchTail|WidenCurList|WinPos|"),
 			cmd))
 		{
 			cp->Enabled = true;
@@ -566,9 +569,7 @@ void get_PrmList(
 		}
 	}
 	else if (USAME_TI(cmd, "Calculator")) {
-		params.sprintf(_T("%s"),
-			_T("\n")
-			_T("CB : クリップボードを介して計算\n"));
+		params = "\nCB : クリップボードを介して計算\n";
 	}
 	else if (USAME_TI(cmd, "ChangeCodePage")) {
 		params.sprintf(_T("%s"),
@@ -675,9 +676,7 @@ void get_PrmList(
 		params = "\nKT : タイムスタンプを維持\n";
 	}
 	else if (USAME_TI(cmd, "DiffDir")) {
-		params.sprintf(_T("%s"),
-			_T("\n")
-			_T("AL : マスク *.*、サブディレクトリも対象として直ちに比較実行\n"));
+		params = "\nAL : マスク *.*、サブディレクトリも対象として直ちに比較実行\n";
 	}
 	else if (USAME_TI(cmd, "DirHistory")) {
 		params.sprintf(_T("%s"),
@@ -831,17 +830,23 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "MoveTab")) {
 		params = "\nTP : 先頭に先頭\nED : 最後に移動\nPR : １つ前に移動\n";
 	}
-	else if (USAME_TI(cmd, "PageBind")) {
-		params = "\nR : 右綴じ\nL : 左綴じ\n";
-	}
-	else if (USAME_TI(cmd, "Paste")) {
-		params = "\nCL : 同名時にクローン化\nEX : テキスト/画像なら新規保存\n";
+	else if (USAME_TI(cmd, "NameFromClip")) {
+		params = "\nRC : ファイル名主部の文字置換を適用\n";
 	}
 	else if (contained_wd_i(_T("NextFile|PrevFile"), cmd)) {
 		if (id_idx==3) params = "\nF1 : 見開き表示でも1ファイルずつ移動\n";
 	}
 	else if (USAME_TI(cmd, "NextNyanFi")) {
 		params = "\nDN : なければ二重起動\n";
+	}
+	else if (USAME_TI(cmd, "OpenCtrlPanel")) {
+		params = "\nGM : GodModeで開く\n";
+	}
+	else if (USAME_TI(cmd, "PageBind")) {
+		params = "\nR : 右綴じ\nL : 左綴じ\n";
+	}
+	else if (USAME_TI(cmd, "Paste")) {
+		params = "\nCL : 同名時にクローン化\nEX : テキスト/画像なら新規保存\n";
 	}
 	else if (USAME_TI(cmd, "PlayList")) {
 		params.sprintf(_T("%s"),
