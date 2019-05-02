@@ -246,6 +246,32 @@ UnicodeString get_KeyStr(WORD Key, TShiftState Shift)
 }
 
 //---------------------------------------------------------------------------
+//キーを英数文字列に変換 (テンキー対応)
+//  戻り値: 英数文字でない場合は EmptyStr
+//---------------------------------------------------------------------------
+UnicodeString get_AlNumChar(WORD Key)
+{
+	UnicodeString keystr;
+
+	switch (Key) {
+	case VK_NUMPAD0: keystr = "0";	break;
+	case VK_NUMPAD1: keystr = "1";	break;
+	case VK_NUMPAD2: keystr = "2";	break;
+	case VK_NUMPAD3: keystr = "3";	break;
+	case VK_NUMPAD4: keystr = "4";	break;
+	case VK_NUMPAD5: keystr = "5";	break;
+	case VK_NUMPAD6: keystr = "6";	break;
+	case VK_NUMPAD7: keystr = "7";	break;
+	case VK_NUMPAD8: keystr = "8";	break;
+	case VK_NUMPAD9: keystr = "9";	break;
+	default:
+		if (_istalnum(Key)) keystr = (char)Key; else keystr = EmptyStr;
+	}
+
+	return keystr;
+}
+
+//---------------------------------------------------------------------------
 //キー入力待ち
 //---------------------------------------------------------------------------
 UnicodeString WaitForKey()

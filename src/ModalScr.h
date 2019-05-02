@@ -17,11 +17,14 @@ class TModalScrForm : public TForm
 __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormActivate(TObject *Sender);
+	void __fastcall FormHide(TObject *Sender);
 
 private:	// ユーザー宣言
+	bool FullScr;
 
 public:		// ユーザー宣言
 	__fastcall TModalScrForm(TComponent* Owner);
+	void __fastcall CoverDesktop();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TModalScrForm *ModalScrForm;

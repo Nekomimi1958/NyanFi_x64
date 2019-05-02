@@ -38,6 +38,7 @@
 #define WM_NYANFI_THUMBNAIL	(WM_APP + 102)	//サムネイルを取得した
 #define WM_NYANFI_CLPCOPIED	(WM_APP + 103)	//クリップボードにコピーした
 #define WM_NYANFI_PLAYLIST	(WM_APP + 104)	//プレイリスト通知
+#define WM_NYANFI_LOCKKEY	(WM_APP + 105)	//LockKeyMouse 動作中のキー処理
 
 //---------------------------------------------------------------------------
 //WM_COPYDATA メッセージの識別番号

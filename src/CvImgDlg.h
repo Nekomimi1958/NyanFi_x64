@@ -38,6 +38,7 @@ __published:	// IDE で管理されるコンポーネント
 	TLabel *CmpModeLabel;
 	TLabel *FextLabel;
 	TLabel *ImgQLabel;
+	TLabel *SttLabel;
 	TLabel *YCrCbLabel;
 	TLabeledEdit *ScalePrm1Edit;
 	TLabeledEdit *ScalePrm2Edit;
@@ -50,7 +51,6 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioButton *ClipOWBtn;
 	TRadioGroup *CvFmtRadioGroup;
 	TTrackBar *ImgQTrackBar;
-	TLabel *SttLabel;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

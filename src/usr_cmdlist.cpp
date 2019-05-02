@@ -142,6 +142,7 @@ void set_CmdList(
 		"F:LoadResultList=結果リストをファイルから読み込む\n"
 		"F:LoadTabGroup=タブグループをファイルから読み込む\n"
 		"F:LockComputer=コンピュータのロック\n"
+		"F:LockKeyMouse=キーボード/マウスのロック\n"
 		"F:LockTextPreview=テキストプレビューのロック/解除\n"
 		"F:LogFileInfo=ファイル情報をログに出力\n"
 		"F:MarkMask=栞マーク項目だけを残して他を隠す\n"
@@ -508,9 +509,9 @@ void get_PrmList(
 			_T("Filter|FindDown|FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|GitDiff|GitViewer|")
 			_T("Grep|HelpCurWord|ImageViewer|IncSearch|JumpIndex|JumpLine|JumpTo|ListArchive|")
 			_T("ListDuration|ListExpFunc|ListTail|ListText|ListTree|LoadBgImage|LoadResultList|")
-			_T("LoadTabGroup|LoadWorkList|MaskFind|MaskSelect|MatchSelect|MoveTo|NameFromClip|")
-			_T("NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|Pack|PackToCurr|")
-			_T("PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|")
+			_T("LoadTabGroup|LoadWorkList|LockKeyMouse|MaskFind|MaskSelect|MatchSelect|MonitorOff|MoveTo|")
+			_T("NameFromClip|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
+			_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|")
 			_T("ScrollCursorUp|ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|")
 			_T("ScrollUpText|SelByList|SetColor|SetDirTime|SetFontSize|SetMargin|SetPathMask|")
 			_T("SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SimilarSort|SortDlg|")
@@ -825,7 +826,7 @@ void get_PrmList(
 		params = "\nND : カーソルを移動しない\nIM : メモを入力\n";
 	}
 	else if (USAME_TI(cmd, "MonitorOff")) {
-		params = "\nLK : コンピュータをロックする\n";
+		params = "\nLK : コンピュータをロックする\nKM : キーボード/マウスをロックする\n";
 	}
 	else if (USAME_TI(cmd, "MoveTab")) {
 		params = "\nTP : 先頭に先頭\nED : 最後に移動\nPR : １つ前に移動\n";

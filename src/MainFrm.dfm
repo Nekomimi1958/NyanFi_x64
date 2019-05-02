@@ -4087,6 +4087,11 @@ object NyanFiForm: TNyanFiForm
       OnExecute = LockComputerActionExecute
       OnUpdate = MenuFActionUpdate
     end
+    object LockKeyMouseAction: TAction
+      Category = 'Command'
+      OnExecute = LockKeyMouseActionExecute
+      OnUpdate = MenuFVIActionUpdate
+    end
     object LockTextPreviewAction: TAction
       Category = 'Command'
       Caption = #12486#12461#12473#12488#12503#12524#12499#12517#12540#12434#12525#12483#12463'(&L)'

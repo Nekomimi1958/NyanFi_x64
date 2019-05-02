@@ -12,6 +12,7 @@ object ModalScrForm: TModalScrForm
   OldCreateOrder = False
   Position = poDesigned
   OnActivate = FormActivate
+  OnHide = FormHide
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13

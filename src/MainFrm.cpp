@@ -175,6 +175,32 @@ LRESULT CALLBACK DlgHookProc(int code, WPARAM wParam, LPARAM lParam)
 	return ::CallNextHookEx(hDlgHook, code, wParam, lParam);
 }
 
+//---------------------------------------------------------------------------
+//低レベルのキー/マウスフック
+//---------------------------------------------------------------------------
+HHOOK hKeyHook;
+HHOOK hMouseHook;
+
+//---------------------------------------------------------------------------
+LRESULT CALLBACK KeyHookProc(int code, WPARAM wParam, LPARAM lParam)
+{
+	if (code==HC_ACTION) {
+		if (wParam==WM_KEYDOWN) {
+			PKBDLLHOOKSTRUCT p = (PKBDLLHOOKSTRUCT)lParam;
+			::PostMessage(MainHandle, WM_NYANFI_LOCKKEY, p->vkCode, 0);
+		}
+		return 1;
+	}
+
+	return CallNextHookEx(hKeyHook, code, wParam, lParam);
+}
+//---------------------------------------------------------------------------
+LRESULT CALLBACK MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
+{
+	if (code<0) return CallNextHookEx(hMouseHook, code, wParam, lParam);
+	return 1;
+}
+
 
 //---------------------------------------------------------------------------
 // TNfForm クラス
@@ -1286,6 +1312,39 @@ void __fastcall TNyanFiForm::SetExeCmdsBusy(bool Value)
 bool __fastcall TNyanFiForm::SureOtherActiv()
 {
 	return ((ExeCmdsBusy && XCMD_MsgOff)? false : SureOther);
+}
+
+//---------------------------------------------------------------------------
+// LockKeyMouse コマンド実行中のキー処理
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::WmNyanFiLockKey(TMessage &msg)
+{
+	int key = msg.WParam;
+	bool ok = false;
+
+	if (UnlockWord.IsEmpty()) {
+		ok = (key==VK_ESCAPE);
+	}
+	else {
+		UnicodeString KeyStr = get_AlNumChar(key);
+		if (!KeyStr.IsEmpty()) {
+			InputWord += KeyStr;
+			if (SameText(InputWord, UnlockWord))
+				ok = true;
+			else if (!StartsText(InputWord, UnlockWord))
+				InputWord = EmptyStr;
+		}
+		else {
+			InputWord = EmptyStr;
+		}
+	}
+
+	if (ok) {
+		::UnhookWindowsHookEx(hKeyHook);
+		::UnhookWindowsHookEx(hMouseHook);
+
+		ModalScrForm->Visible = false;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -19193,6 +19252,35 @@ void __fastcall TNyanFiForm::LockComputerActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//キーボード/マウスのロック
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::LockKeyMouseActionExecute(TObject *Sender)
+{
+	try {
+		if (!ActionParam.IsEmpty() && !is_alnum_str(ActionParam)) UserAbort(USTR_IllegalParam);
+		UnlockWord = ActionParam;
+		InputWord  = EmptyStr;
+
+		//キー/マウスフックを設定
+		HINSTANCE hInstance = (HINSTANCE)::GetModuleHandle(NULL);
+		hKeyHook   = ::SetWindowsHookEx(WH_KEYBOARD_LL, KeyHookProc,	hInstance, 0);
+		hMouseHook = ::SetWindowsHookEx(WH_MOUSE_LL, 	MouseHookProc,	hInstance, 0);
+
+		//モーダルスクリーンでデスクトップを覆う
+		ModalScrForm->CoverDesktop();
+
+		UnicodeString msg;
+		msg = " キーボード/マウスをロックしました。 \n";
+		msg += UnlockWord.IsEmpty()? " ESCキー" : " 解除ワード";
+		msg += "で解除されます。 ";
+		ShowMessageHint(msg, col_bgWarn, false, false, true);
+	}
+	catch (EAbort &e) {
+		msgbox_ERR(e.Message);
+	}
+}
+
+//---------------------------------------------------------------------------
 //テキストプレビューのロック/解除
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::LockTextPreviewActionExecute(TObject *Sender)
@@ -19534,20 +19622,46 @@ void __fastcall TNyanFiForm::MenuBarActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::MonitorOffActionExecute(TObject *Sender)
 {
-	bool is_lock = TEST_ActParam("LK");
+	try {
+		bool is_lk = TEST_DEL_ActParam("LK");
+		bool is_km = !is_lk && TEST_DEL_ActParam("KM");
+		if (is_km && !ActionParam.IsEmpty() && !is_alnum_str(ActionParam)) UserAbort(USTR_IllegalParam);
 
-	UnicodeString msg;
-	if (is_lock) msg = "コンピュータをロックして、";
-	msg += "ディスプレイの電源を切ります";
-	ShowMessageHint(msg, col_bgWarn, false, false, true);
+		UnicodeString msg;
+		if (is_lk) msg += " コンピュータをロックし \n";
+		if (is_km) msg += " キーボード/マウスをロックし \n";
+		msg += " ディスプレイの電源を切ります。 ";
+		if (is_km) {
+			msg += UnlockWord.IsEmpty()? "\n ESCキー" : "\n 解除ワード";
+			msg += "で解除されます。 ";
+		}
+		ShowMessageHint(msg, col_bgWarn, false, false, true);
 
-	if (is_lock && !::LockWorkStation()) {
-		SetActionAbort(USTR_FaildProc);
-		return;
+		//キーボード/マウスのロック
+		if (is_km) {
+			UnlockWord = ActionParam;
+			InputWord  = EmptyStr;
+
+			//キー/マウスフックを設定
+			HINSTANCE hInstance = (HINSTANCE)::GetModuleHandle(NULL);
+			hKeyHook   = ::SetWindowsHookEx(WH_KEYBOARD_LL, KeyHookProc,	hInstance, 0);
+			hMouseHook = ::SetWindowsHookEx(WH_MOUSE_LL, 	MouseHookProc,	hInstance, 0);
+
+			//モーダルスクリーンでデスクトップを覆う
+			ModalScrForm->CoverDesktop();
+		}
+		//コンピュータのロック
+		else if (is_lk && !::LockWorkStation()) {
+			UserAbort(USTR_FaildProc);
+		}
+
+		//ディスプレイの電源を切る
+		Sleep(1000);
+		::SendNotifyMessage(HWND_BROADCAST, WM_SYSCOMMAND, SC_MONITORPOWER, 2);
 	}
-
-	Sleep(1000);
-	::SendNotifyMessage(HWND_BROADCAST, WM_SYSCOMMAND, SC_MONITORPOWER, 2);
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -32897,7 +33011,7 @@ void __fastcall TNyanFiForm::SetViewFileList(
 //---------------------------------------------------------------------------
 //デザイン/フォント・配色の適用
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmNyanfiAppearance(TMessage &msg)
+void __fastcall TNyanFiForm::WmNyanFiAppearance(TMessage &msg)
 {
 	SetupFont();
 	SetupDesign((bool)msg.WParam);

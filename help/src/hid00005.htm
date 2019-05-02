@@ -1620,8 +1620,21 @@ JumpTo　　　　　　　　<span class="pram_text rem_text">(結果リスト、ワークリスト
 <dt id="LockComputer">LockComputer<span class="pram_text">[_MO]</span>
 <dd>
 コンピュータをロックします。<br>
-パラメータに <b>MO</b> を指定すると、ロックの1秒後にディスプレイの電源を切ります。<br>
-<a href="#MonitorOff">→ MonitorOff</a>
+パラメータに <b>MO</b> を指定すると、1秒後にディスプレイの電源を切ります。<br>
+<a href="#LockKeyMouse">→ LockKeyMouse</a>　<a href="#MonitorOff">→ MonitorOff</a>
+
+<dt id="LockKeyMouse">LockKeyMouse<span class="pram_text">[_解除ワード]</span>
+<dd>
+キーボードおよびマウスをロックします。<br>
+<a href="hid00010.htm#ModalEffect">オプション設定 - デザイン - モーダル表示効果</a> を有効にしていると、デスクトップ全体が半透明のスクリーンで覆われます。<br>
+<div class="spc_box">
+ロック解除は、パラメータで指定した解除ワードで行います。使用できるのは英数字のみで、大小文字は区別されません。文字数は任意です。<br>
+無指定の場合は<span class="btn_frame">ESC</span>キーで解除できます。<br>
+</div>
+<div class="note_text">
+※<span class="btn_frame">Ctrl</span>+<span class="btn_frame">Alt</span>+<span class="btn_frame">Del</span>キーは無効化されません。解除ワードを忘れたり、エラーで復帰できなくなったりした場合は、一旦サインアウトしてください。<br>
+</div>
+<a href="#LockComputer">→ LockComputer</a>　<a href="#MonitorOff">→ MonitorOff</a>
 
 <dt id="LockTextPreview">LockTextPreview<span class="pram_text">[_ON|_OFF]</span>
 <dd>パラメータを指定しない場合、<a href="hid00082.htm">テキストプレビュー</a>のロック/解除をトグルで切り替えます。<br>
@@ -1693,11 +1706,21 @@ JumpTo　　　　　　　　<span class="pram_text rem_text">(結果リスト、ワークリスト
 <a href="hid00010.htm#MenuBar">→ オプション設定 - デザイン - 「メニューバーを表示」</a><br>
 <a href="#PopupMainMenu">→ PopupMainMenu</a>
 
-<dt id="MonitorOff">MonitorOff<span class="pram_text">[_LK]</span>
+<dt id="MonitorOff">MonitorOff<span class="pram_text">[_LK]</span><br>
+MonitorOff<span class="pram_text">_KM[;解除ワード]</span>
 <dd>ディスプレイの電源を切ります。<br>
-1秒後から処理を開始しますので、それまでにキーボードやマウスから手を放してください。その後はキーやマウス操作で復帰します。<br>
+<div class="spc_box">
 パラメータに <b>LK</b> を指定すると、ディスプレイの電源を切る前にコンピュータをロックします。<br>
-<a href="#LockComputer">→ LockComputer</a>
+</div>
+<div class="spc_box">
+パラメータに <b>KM</b> を指定すると、ディスプレイの電源を切る前にキーボードおよびマウスをロックします。<br>
+<a href="hid00010.htm#ModalEffect">オプション設定 - デザイン - モーダル表示効果</a> を有効にしていると、デスクトップ全体が半透明のスクリーンで覆われます。<br>
+ロック解除は、パラメータで指定した解除ワードで行います。使用できるのは英数字のみで、大小文字は区別されません。文字数は任意です。<br>
+無指定の場合は<span class="btn_frame">ESC</span>キーで解除できます。<br>
+<b>例</b>: キーボード/マウスをロック、<span class="btn_frame">3</span><span class="btn_frame">3</span><span class="btn_frame">1</span>で解除<br>
+　MonitorOff_KM;321<br>
+</div>
+<a href="#LockComputer">→ LockComputer</a>　<a href="#LockKeyMouse">→ LockKeyMouse</a>
 
 <dt id="Move">Move<span class="pram_text">[_SO|_OP|_TO|_SD|_SS]</span>
 <dd>選択中(無ければカーソル位置)の項目を反対パスに移動します。<br>

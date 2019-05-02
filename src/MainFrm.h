@@ -288,6 +288,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *LoadTabGroupAction;
 	TAction *LoadWorkListAction;
 	TAction *LockComputerAction;
+	TAction *LockKeyMouseAction;
 	TAction *LockTextPreviewAction;
 	TAction *Log_DebugInfAction;
 	TAction *LogFileInfoAction;
@@ -1831,6 +1832,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FindFolderIconActionUpdate(TObject *Sender);
 	void __fastcall SimilarSortActionExecute(TObject *Sender);
 	void __fastcall LockComputerActionExecute(TObject *Sender);
+	void __fastcall LockKeyMouseActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -1957,6 +1959,9 @@ private:	// ユーザー宣言
 	bool TxtPrvKeepIndex;				//テキストプレビューでカーソル行を維持
 	bool LockTxtPrv;					//テキストプレビューをロック
 
+	UnicodeString UnlockWord;			//LockKeyMouse の解除ワード
+	UnicodeString InputWord;
+
 	UnicodeString FTPHostItem;			//ホスト設定項目
 	UnicodeString TopFTPPath;			//FTP開始ディレクトリ
 	UnicodeString CurFTPPath;			//FTP接続中のカレントパス
@@ -1967,6 +1972,7 @@ private:	// ユーザー宣言
 	void __fastcall ActivateMainForm();
 
 	void __fastcall WmFormShowed(TMessage &msg);
+	void __fastcall WmActivate(TMessage &msg);
 	void __fastcall WmQueryEndSession(TMessage &msg);
 
 	void __fastcall WmSysCommand(TWMSysCommand & SysCom)
@@ -1995,7 +2001,7 @@ private:	// ユーザー宣言
 	void __fastcall WmMenuChar(TMessage &msg);
 	void __fastcall WmContextMnueProc(TMessage &msg);
 	void __fastcall MmMciNotify(TMessage &msg);
-	void __fastcall WmNyanfiAppearance(TMessage &msg);
+	void __fastcall WmNyanFiAppearance(TMessage &msg);
 
 	void __fastcall WmNyanFiFlIcon(TMessage &msg)
 	{
@@ -2006,9 +2012,8 @@ private:	// ユーザー宣言
 	}
 
 	void __fastcall WmNyanFiThumbnail(TMessage &msg) { if (ThumbnailGrid->Visible) ThumbnailGrid->Repaint(); }
-
 	void __fastcall WmNyanFiClpCopied(TMessage &msg);
-	void __fastcall WmActivate(TMessage &msg);
+	void __fastcall WmNyanFiLockKey(TMessage &msg);
 
 	void __fastcall ActiveFormChange(TObject *Sender);
 
@@ -2550,10 +2555,11 @@ public:		// ユーザー宣言
 		VCL_MESSAGE_HANDLER(WM_DRAWITEM,		TMessage,			WmContextMnueProc)
 		VCL_MESSAGE_HANDLER(WM_MEASUREITEM,		TMessage,			WmContextMnueProc)
 		VCL_MESSAGE_HANDLER(MM_MCINOTIFY,		TMessage,			MmMciNotify)
-		VCL_MESSAGE_HANDLER(WM_NYANFI_APPEAR,	TMessage,			WmNyanfiAppearance)
+		VCL_MESSAGE_HANDLER(WM_NYANFI_APPEAR,	TMessage,			WmNyanFiAppearance)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_FLICON,	TMessage,			WmNyanFiFlIcon)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_THUMBNAIL,TMessage,			WmNyanFiThumbnail)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_CLPCOPIED,TMessage,			WmNyanFiClpCopied)
+		VCL_MESSAGE_HANDLER(WM_NYANFI_LOCKKEY,	TMessage,			WmNyanFiLockKey)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

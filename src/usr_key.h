@@ -37,6 +37,7 @@ TShiftState   get_Shift();
 UnicodeString get_ShiftStr(TShiftState Shift);
 UnicodeString get_KeyStr(WORD Key);
 UnicodeString get_KeyStr(WORD Key, TShiftState Shift);
+UnicodeString get_AlNumChar(WORD Key);
 
 UnicodeString WaitForKey();
 

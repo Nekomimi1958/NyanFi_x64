@@ -193,6 +193,7 @@ bool equal_END(UnicodeString s);
 bool equal_F1(UnicodeString s);
 
 bool is_separator(UnicodeString s);
+bool is_alnum_str(UnicodeString s);
 
 bool starts_tchs(const _TCHAR *lst, UnicodeString s);
 bool ends_tchs(const _TCHAR *lst, UnicodeString s);
