@@ -169,6 +169,8 @@ private:	// ユーザー宣言
 	void __fastcall ClearExtraCond();
 
 public:		// ユーザー宣言
+	UnicodeString SubTitle;
+
 	bool FindDir;
 	bool FindBoth;
 	bool Narrow;

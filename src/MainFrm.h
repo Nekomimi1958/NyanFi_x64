@@ -2311,7 +2311,7 @@ private:	// ユーザー宣言
 	void __fastcall ClearViewImage();
 	void __fastcall SetViewFileIdx();
 	int  __fastcall FindFileCore(bool dir_sw = false, int tag = -1);
-	void __fastcall FindFileDlgExecute(bool both = false);
+	void __fastcall FindFileDlgExecute(bool both = false, UnicodeString lst_name = EmptyStr);
 	int  __fastcall FindHardLinkCore(UnicodeString fnam, int tag);
 	int  __fastcall FindMarkCore(int tag = -1);
 	int  __fastcall FindTagCore(int tag = -1);
@@ -2346,6 +2346,8 @@ private:	// ユーザー宣言
 
 	bool __fastcall TestActionParam(const _TCHAR *prm);
 	bool __fastcall TestDelActionParam(const _TCHAR *prm);
+	UnicodeString __fastcall ExceptActionParam(UnicodeString ex_list);
+
 	bool __fastcall ActionOptIsMousePos()	{ return USAME_TI(ActionOptStr, "MousePos"); }
 	bool __fastcall ActionOptIsButtonPos()	{ return USAME_TI(ActionOptStr, "ButtonPos"); }
 	bool __fastcall SetToggleAction(bool &sw);

@@ -1343,6 +1343,7 @@ struct flist_stt {
 	bool find_PathSort;			//場所順でソート
 
 	UnicodeString find_Path;	//検索パス
+	UnicodeString find_DirList;	//検索ディレクトリリスト
 	UnicodeString find_Name;	//検索名(ハードリンク用)
 	UnicodeString find_Mask;	//マスク
 	UnicodeString find_Keywd;	//キーワード
@@ -1673,6 +1674,8 @@ UnicodeString get_TabWorkList(int tab_idx);
 bool save_TagGroup(UnicodeString fnam);
 
 void clear_FindStt(flist_stt *lst_stt);
+bool is_FindAll(flist_stt *lst_stt);
+
 bool check_int(int v0, int v1, int mode);
 bool check_prop(UnicodeString fnam, UnicodeString prop, int v, int mode);
 bool check_file_std(UnicodeString fnam, TDateTime f_tm, __int64 f_sz, int f_atr, flist_stt *lst_stt);

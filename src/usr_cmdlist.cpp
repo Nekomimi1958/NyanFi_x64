@@ -1110,10 +1110,10 @@ bool need_RefDirFile(UnicodeString cmd)
 {
 	return contained_wd_i(
 		_T("CalcDirSize|CalcDirSizeAll|ChangeDir|ChangeOppDir|ContextMenu|CopyTo|DebugCmdFile|DistributionDlg|")
-		_T("ExeCommands|ExeMenuFile|FileEdit|FileRun|JumpTo|ListArchive|ListDuration|ListExpFunc|ListTail|")
-		_T("ListText|ListTree|LoadBgImage|LoadTabGroup|LoadResultList|LoadWorkList|MoveTo|OpenByApp|OpenByExp|")
-		_T("OpenByWin|OpenStandard|PropertyDlg|PlayList|TextViewer|SelByList|SetColor|SetFolderIcon|SubDirList|")
-		_T("HelpCurWord|Restart"),
+		_T("ExeCommands|ExeMenuFile|FileEdit|FileRun|FindFileDlg|JumpTo|ListArchive|ListDuration|ListExpFunc|")
+		_T("ListTail|ListText|ListTree|LoadBgImage|LoadTabGroup|LoadResultList|LoadWorkList|MoveTo|OpenByApp|")
+		_T("OpenByExp|OpenByWin|OpenStandard|PropertyDlg|PlayList|TextViewer|SaveAsTabGroup|SelByList|SetColor|")
+		_T("SetFolderIcon|SubDirList|HelpCurWord|Restart"),
 		cmd);
 }
 

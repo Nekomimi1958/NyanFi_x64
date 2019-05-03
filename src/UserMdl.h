@@ -45,6 +45,7 @@
 #define F_FILTER_CSV	_T("CSVファイル (*.csv)|*.CSV")
 #define F_FILTER_TSV	_T("TSVファイル (*.txt,*.csv,*.tsv)|*.TXT;*.CSV;*.TSV")
 #define F_FILTER_NWL	_T("ワークリスト (*.nwl)|*.nwl")
+#define F_FILTER_LST	_T("テキストファイル (*.txt)|*.TXT|ワークリスト (*.nwl)|*.nwl")
 #define F_FILTER_ICO	_T("(*.ico,*.exe,*.dll,*.lnk)|*.ICO;*.EXE;*.DLL;*.LNK")
 #define F_FILTER_WAV	_T("WAVファイル|*.WAV|すべてのファイル(*.*)|*.*")
 #define F_FILTER_ALL	_T("すべてのファイル(*.*)|*.*")

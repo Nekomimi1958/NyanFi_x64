@@ -3378,20 +3378,22 @@ void __fastcall TOptionDlg::RefCmdPrmBtnClick(TObject *Sender)
 			}
 		}
 		else {
-			bool is_nwl = USAME_TI(cmd, "LoadWorkList");
-			bool is_mnu = contained_wd_i(_T("ExeMenuFile|ContextMenu"), cmd);
-			bool is_chm = USAME_TI(cmd, "HelpCurWord");
-			bool is_ini = contained_wd_i(_T("DistributionDlg|LoadTabGroup|Restart|SetColor"), cmd);
-			bool is_rsl = USAME_TI(cmd, "LoadResultList");
-			bool is_run = USAME_TI(cmd, "FileRun");
+			UnicodeString fmsk =
+				USAME_TI(cmd, "LoadWorkList")? "*.nwl" :
+				USAME_TI(cmd, "HelpCurWord") ? "*.chm" :
+				contained_wd_i(_T("DistributionDlg|LoadTabGroup|Restart|SetColor"), cmd)? "*.ini" :
+				contained_wd_i(_T("ContextMenu|ExeMenuFile|FindFileDlg|LoadResultList|PlayList|SelByList"), cmd)? "*.txt"
+											 : "*.*";
+			UnicodeString pnam =
+				contained_wd_i(_T("DistributionDlg|Restart|SetColor"), cmd)? ExePath : RefParamPath;
 
-			UserModule->PrepareOpenDlg(_T("パラメータ指定 : ファイル"), NULL,
-				(is_nwl? _T("*.nwl") : is_chm? _T("*.chm") : is_ini? _T("*.ini") : is_rsl? _T("*.txt") : _T("*.*")),
-				(is_ini? ExePath : RefParamPath));
+			UserModule->PrepareOpenDlg(_T("パラメータ指定 : ファイル"), NULL, fmsk.c_str(), pnam);
+
 			UnicodeString fnam;
 			if (UserModule->OpenDlgToStr(fnam)) {
 				RefParamPath = ExtractFilePath(fnam);
-				if (is_run) {
+				//実行ファイル
+				if (USAME_TI(cmd, "FileRun")) {
 					TStringDynArray plst = split_strings_semicolon(GetEnvironmentVariable("PATH"));
 					for (int i=0; i<plst.Length; i++) {
 						if (SameText(IncludeTrailingPathDelimiter(plst[i]), RefParamPath)) {
@@ -3399,7 +3401,11 @@ void __fastcall TOptionDlg::RefCmdPrmBtnClick(TObject *Sender)
 						}
 					}
 				}
-				else if (is_nwl || is_mnu || is_ini || is_rsl) {
+				//NyanFi 相対
+				else if (contained_wd_i(
+					_T("ContextMenu|DistributionDlg|ExeMenuFile|FindFileDlg|LoadBgImage|LoadResultList|")
+					_T("LoadTabGroup|LoadWorkList|PlayList|Restart|SaveAsTabGroup|SetColor"), cmd))
+				{
 					fnam = to_relative_name(fnam);
 				}
 				PrmComboBox->Text = fnam;

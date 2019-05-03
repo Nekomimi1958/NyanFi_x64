@@ -66,7 +66,8 @@ void __fastcall TFindFileDlg::FormShow(TObject *Sender)
 
 	DlgInitialized = false;
 
-	set_FormTitle(this, FindDir? _T("ディレクトリ名検索") : FindBoth? _T("ファイル/ディレクトリ名検索") : _T("ファイル名検索"));
+	Caption = ( FindDir? _T("ディレクトリ名検索") :
+			   FindBoth? _T("ファイル/ディレクトリ名検索") : _T("ファイル名検索")) + SubTitle;
 	HelpContext = FindDir? 53 : 52;
 
 	ClientHeight = BasicHeight = 500;	//*** 高さ未定で Top 位置が変わってしまうのを防ぐ
@@ -343,7 +344,8 @@ void __fastcall TFindFileDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteBoolGen(FindDir? _T("FindDirAttrA") : _T("FindAttrA"),		AttrACheckBox);
 	IniFile->WriteBoolGen(FindDir? _T("FindDirAttrC") : _T("FindAttrC"),		AttrCCheckBox);
 
-	FindDir   = false;
+	FindDir  = false;
+	SubTitle = EmptyStr;
 }
 
 //---------------------------------------------------------------------------

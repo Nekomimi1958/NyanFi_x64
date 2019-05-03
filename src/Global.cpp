@@ -3669,7 +3669,7 @@ UnicodeString get_NextSameName(
 //---------------------------------------------------------------------------
 void get_LibraryList(
 	UnicodeString fnam,		//ライブラリファイル名(末尾が \ ならライブラリパス)
-	TStringList *lst,
+	TStringList *lst,		//[o] ライブラリリスト
 	bool get_info)			//ファイル情報として取得 (default = false)
 {
 	try {
@@ -3699,8 +3699,9 @@ void get_LibraryList(
 				case 2:
 					if (ContainsText(lbuf, "<url>") && ContainsText(lbuf, "</url>")) {
 						UnicodeString url = get_tkn_m(lbuf, _T("<url>"), _T("</url>"));
-						if (StartsText("knownfolder:", url))
+						if (StartsText("knownfolder:", url)) {
 							url = usr_SH->KnownGuidStrToPath(get_tkn_r(url, ':'));
+						}
 						if (!url.IsEmpty()) {
 							if (l_cnt==0 && get_info) lst->Add(EmptyStr);	//セパレータ
 							l_cnt++;
@@ -4748,6 +4749,7 @@ void clear_FindStt(flist_stt *lst_stt)
 */
 
 	lst_stt->find_Path	  = EmptyStr;
+	lst_stt->find_DirList = EmptyStr;
 	lst_stt->find_Name	  = EmptyStr;
 	lst_stt->find_Mask	  = EmptyStr;
 	lst_stt->find_Keywd   = EmptyStr;
@@ -4783,6 +4785,17 @@ void clear_FindStt(flist_stt *lst_stt)
 	lst_stt->find_TxtKwd   = EmptyStr;
 	lst_stt->find_ExifKwd  = EmptyStr;
 	lst_stt->find_LatLng   = EmptyStr;
+}
+
+//---------------------------------------------------------------------------
+//検索対象が全体か?
+//---------------------------------------------------------------------------
+bool is_FindAll(flist_stt *lst_stt)
+{
+	if (!lst_stt) return false;
+
+	return (lst_stt->is_Find
+			 && (lst_stt->find_DICON || lst_stt->find_TAG || (lst_stt->find_MARK && lst_stt->find_SubList->Count==0)));
 }
 
 //---------------------------------------------------------------------------
@@ -7368,8 +7381,7 @@ void GetFileInfList(
 
 	flist_stt *lst_stt = (fp->tag!=-1)? &ListStt[fp->tag] : NULL;
 	bool is_ads = lst_stt && lst_stt->is_ADS;
-	bool is_find_all = lst_stt && lst_stt->is_Find
-		&& (lst_stt->find_DICON || lst_stt->find_TAG || (lst_stt->find_MARK && lst_stt->find_SubList->Count==0));
+	bool is_all = is_FindAll(lst_stt);
 
 	TStringList *i_list = fp->inf_list;
 	i_list->Clear();
@@ -7419,13 +7431,14 @@ void GetFileInfList(
 	}
 
 	if (fp->is_up && lst_stt && lst_stt->is_Find) {
-		if (is_find_all) {
+		if (is_all) {
 			lbuf = "<全体>";
 		}
 		else if (lst_stt->find_MARK) {
 			if (lst_stt->find_SubList->Count==0) lbuf = "*";
 		}
 		else {
+			if (!lst_stt->find_DirList.IsEmpty()) lbuf = ExtractFileName(lst_stt->find_DirList) + "/";
 			lbuf += lst_stt->find_Mask;
 			if (!lst_stt->find_Keywd.IsEmpty()) lbuf.cat_sprintf(_T(" : %s"), lst_stt->find_Keywd.c_str());
 		}
@@ -7504,7 +7517,7 @@ void GetFileInfList(
 			else if (fp->is_sym) {
 				add_PropLine(_T("種類"), fp->is_jct? "ジャンクション" : "シンボリックリンク", i_list);
 			}
-			else if (!is_find_all) {
+			else if (!is_all) {
 				UnicodeString tmp = "ディレクトリ";
 				if (!fp->is_virtual) {
 					is_git_top = dir_exists(rpnam + "\\.git");
@@ -7534,7 +7547,7 @@ void GetFileInfList(
 				__int64 o_size	 = fp->is_up? lst_stt->occ_total : fp->o_size;
 				__int64 c_size	 = fp->is_up? lst_stt->cmp_total : fp->c_size;
 				__int64 drv_size = lst_stt->drive_Total;
-				if (f_cnt!=-1 && !is_find_all) {
+				if (f_cnt!=-1 && !is_all) {
 					lbuf = make_PropLine(is_ads? _T("ストリーム数") : _T("ファイル数"), get_size_str_B(f_cnt, 0));
 					if (fp->is_up && lst_stt->sub_counted)
 						lbuf.cat_sprintf(_T(" / %s"), get_size_str_B(lst_stt->f_cnt_total, 0).c_str());
@@ -7577,7 +7590,7 @@ void GetFileInfList(
 				}
 			}
 
-			if (!fp->is_virtual && !is_find_all) {
+			if (!fp->is_virtual && !is_all) {
 				UnicodeString cfg_nam = get_dotNaynfi(fp->is_up? fp->p_name : fp->f_name);
 				//説明
 				if (file_exists(cfg_nam)) {
@@ -7612,10 +7625,7 @@ void GetFileInfList(
 		}
 
 		//拡張子別ファイル数
-		if (fp->is_up && fp->tag!=-1) {
-			TStringList *lst = GetFileList(fp->tag);
-			add_FExtInfList(lst, i_list);
-		}
+		if (fp->is_up && fp->tag!=-1) add_FExtInfList(GetFileList(fp->tag), i_list);
 
 		//メモ
 		UnicodeString memo = IniFile->GetMarkMemo(fp->r_name);
@@ -8079,8 +8089,9 @@ bool get_FileInfList(
 		}
 		//表示可能な画像
 		else if (is_ViewableFext(fext)) {
-			if (test_MetaExt(fext))
+			if (test_MetaExt(fext)) {
 				get_MetafileInf(fnam, lst);
+			}
 			else {
 				bool x_flag = false;
 				if (test_ExifExt(fext))			 	x_flag = get_ExifInf(fnam, lst, &fp->img_ori);

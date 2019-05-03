@@ -6743,7 +6743,22 @@ void __fastcall TNyanFiForm::SetDirCaption(int tag)
 	//検索結果
 	else if (lst_stt->is_Find) {
 		file_rec *fp = GetFrecPtr(FileListBox[tag], ResultList[tag]);
-		pnam = (fp && !fp->is_up)? fp->p_name : lst_stt->find_Path;
+		if (fp) {
+			if (fp->is_up) {
+				if (is_FindAll(lst_stt)) {
+					pnam = "<全体>";
+				}
+				else {
+					if (!lst_stt->find_DirList.IsEmpty())
+						pnam = ExtractFileName(lst_stt->find_DirList) + "/";
+					else
+						pnam = lst_stt->find_Path;
+				}
+			}
+			else {
+				pnam = fp->p_name;
+			}
+		}
 	}
 	//ワークリスト
 	else if (lst_stt->is_Work) {
@@ -11034,6 +11049,27 @@ bool __fastcall TNyanFiForm::TestDelActionParam(const _TCHAR *prm)
 	}
 
 	return (idx!=-1);
+}
+//---------------------------------------------------------------------------
+//アクションのパラメータから指定項目を除いた文字列を取得
+//---------------------------------------------------------------------------
+UnicodeString __fastcall TNyanFiForm::ExceptActionParam(UnicodeString ex_list)
+{
+	TStringDynArray x_lst = split_strings_semicolon(ex_list);
+	TStringDynArray p_lst = split_strings_semicolon(ActionParam);
+
+	for (int i=0; i<x_lst.Length; i++) {
+		for (int j=0; j<p_lst.Length; j++) {
+			 if (SameText(p_lst[j], x_lst[i])) p_lst[j] = EmptyStr;
+		}
+	}
+
+	UnicodeString ret_str;
+	for (int i=0; i<p_lst.Length; i++) {
+		if (!p_lst[i].IsEmpty()) cat_str_semicolon(ret_str, p_lst[i]);
+	}
+
+	return ret_str;
 }
 
 //---------------------------------------------------------------------------
@@ -16481,9 +16517,12 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 //ファイル(/ディレクトリ)名検索ダイアログ
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FindFileDlgExecute(
-	bool both)			//ファイル/ディレクトリの両方を検索
+	bool both,				//ファイル/ディレクトリ両方を検索	(default = false)
+	UnicodeString lst_name)	//ディレクトリリスト				(default = EmptyStr)
 {
 	if (!FindFileDlg) FindFileDlg = new TFindFileDlg(this);	//初回に動的作成
+	if (!lst_name.IsEmpty()) FindFileDlg->SubTitle = " - " + ExtractFileName(lst_name);
+
 	FindFileDlg->FindDir  = false;
 	FindFileDlg->FindBoth = both;
 	FindFileDlg->Narrow   = CurStt->is_narrow;
@@ -16510,6 +16549,7 @@ void __fastcall TNyanFiForm::FindFileDlgExecute(
 		Repaint();
 		clear_FindStt(CurStt);
 		CurStt->find_Path	 = CurPath[CurListTag];
+		CurStt->find_DirList = lst_name;
 		CurStt->find_Both	 = FindFileDlg->FindBoth;
 		CurStt->find_SubDir	 = FindFileDlg->SubDirCheckBox->Checked;
 		CurStt->find_Arc	 = FindFileDlg->ArcCheckBox->Checked;
@@ -16673,22 +16713,38 @@ void __fastcall TNyanFiForm::FindFileDlgExecute(
 		}
 
 		if (!CurStt->is_narrow) {
-			//選択中ディレクトリをリストアップ
 			CurStt->find_SubList->Clear();
-			TStringList *lst = GetCurList(true);
-			for (int i=0; i<lst->Count; i++) {
-				file_rec *fp = (file_rec*)lst->Objects[i];
-				if (fp->selected) {
-					if (fp->is_dir)
-						CurStt->find_SubList->Add(fp->f_name);
-					else if (test_LibExt(fp->f_ext))
-						get_LibraryList(fp->f_name, CurStt->find_SubList);
+			//ディレクトリリストが対象
+			if (!lst_name.IsEmpty()) {
+				std::unique_ptr<TStringList> fbuf(new TStringList());
+				load_text_ex(lst_name, fbuf.get());
+				for (int i=0; i<fbuf->Count; i++) {
+					UnicodeString lbuf = get_pre_tab(fbuf->Strings[i]);
+					if (lbuf.IsEmpty() || StartsStr(';', lbuf)) continue;
+					UnicodeString dnam = cv_env_str(lbuf);
+					if (dir_exists(dnam)) {
+						CurStt->find_SubList->Add(ExcludeTrailingPathDelimiter(dnam));
+					}
 				}
 			}
-			//選択していなければカレントを対象に
-			if (CurStt->find_SubList->Count==0) {
-				CurStt->find_SubList->Add(CurStt->find_Path);
-				if (CurStt->find_SubDir) get_LibraryList(CurStt->find_Path, CurStt->find_SubList);
+			//カレント下が対象
+			else {
+				//選択中ディレクトリをリストアップ
+				TStringList *lst = GetCurList(true);
+				for (int i=0; i<lst->Count; i++) {
+					file_rec *fp = (file_rec*)lst->Objects[i];
+					if (fp->selected) {
+						if (fp->is_dir)
+							CurStt->find_SubList->Add(fp->f_name);
+						else if (test_LibExt(fp->f_ext))
+							get_LibraryList(fp->f_name, CurStt->find_SubList);
+					}
+				}
+				//選択していなければカレントが対象
+				if (CurStt->find_SubList->Count==0) {
+					CurStt->find_SubList->Add(CurStt->find_Path);
+					if (CurStt->find_SubDir) get_LibraryList(CurStt->find_Path, CurStt->find_SubList);
+				}
 			}
 		}
 
@@ -16708,13 +16764,25 @@ void __fastcall TNyanFiForm::FindFileDlgExecute(
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FindFileDlgActionExecute(TObject *Sender)
 {
-	if (CurStt->is_Arc || CurStt->is_Work) {
-		SetActionAbort();
+	try {
+		UnicodeString lst_name = to_absolute_name(ExceptActionParam(_T("NM;FK;R0;R1;X0;X1;A0;A1")));
+		if (!lst_name.IsEmpty() && !file_exists(lst_name))
+			throw EAbort(LoadUsrMsg(USTR_NotFound, _T("リストファイル")));
+
+		if (!lst_name.IsEmpty()) {
+			if (OppStt->is_Find) RecoverFileList(OppListTag);
+			CurStt->is_narrow = false;
+			FindFileDlgExecute(false, lst_name);
+		}
+		else {
+			if (CurStt->is_Arc || CurStt->is_Work) Abort();
+			if (OppStt->is_Find) RecoverFileList(OppListTag);
+			CurStt->is_narrow = CurStt->is_Find;
+			FindFileDlgExecute(false);
+		}
 	}
-	else {
-		if (OppStt->is_Find) RecoverFileList(OppListTag);
-		CurStt->is_narrow = CurStt->is_Find;
-		FindFileDlgExecute(false);
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
 	}
 }
 //---------------------------------------------------------------------------
@@ -19121,6 +19189,7 @@ void __fastcall TNyanFiForm::LoadResultListActionExecute(TObject *Sender)
 		clear_FindStt(CurStt);
 		CurStt->is_Find 	  = true;
 		CurStt->find_Path	  = dnam;
+		CurStt->find_DirList  = stt_lst->Values["Find_DirList"];
 		CurStt->find_Keywd	  = stt_lst->Values["Find_Keywd"];
 		CurStt->find_Mask	  = stt_lst->Values["Find_Mask"];
 		CurStt->find_Icons	  = ReplaceStr(stt_lst->Values["Find_Icons"], "/", "\r\n");
@@ -21837,9 +21906,10 @@ void __fastcall TNyanFiForm::SaveAsResultListActionExecute(TObject *Sender)
 		UnicodeString fnam = UserModule->SaveDlg->FileName;
 		//検索情報
 		UnicodeString stt = ";[ResultList]\n";
-		stt.cat_sprintf(_T(";Find_Path=%s\n"),	CurStt->find_Path.c_str());
-		stt.cat_sprintf(_T(";Find_Mask=%s\n"),	CurStt->find_Mask.c_str());
-		stt.cat_sprintf(_T(";Find_Keywd=%s\n"),	CurStt->find_Keywd.c_str());
+		stt.cat_sprintf(_T(";Find_Path=%s\n"),		CurStt->find_Path.c_str());
+		stt.cat_sprintf(_T(";Find_DirList=%s\n"),	CurStt->find_DirList.c_str());
+		stt.cat_sprintf(_T(";Find_Mask=%s\n"),		CurStt->find_Mask.c_str());
+		stt.cat_sprintf(_T(";Find_Keywd=%s\n"),		CurStt->find_Keywd.c_str());
 
 		if (CurStt->find_DICON) {
 			stt.cat_sprintf(_T(";Find_Icons=%s\n"),	ReplaceStr(CurStt->find_Icons, "\r\n", "/").c_str());
@@ -22491,14 +22561,18 @@ void __fastcall TNyanFiForm::SelReverseActionExecute(TObject *Sender)
 	if (sel_d_cnt>0 && sel_f_cnt==0) {
 		for (int i=0; i<lst->Count; i++) {
 			file_rec *fp = (file_rec*)lst->Objects[i];
-			if (is_selectable(fp) && fp->is_dir) fp->selected = !fp->selected;
+			if (is_selectable(fp) && fp->is_dir) {
+				fp->selected = !fp->selected;
+			}
 		}
 	}
 	//ファイルの選択状態を反転
 	else {
 		for (int i=0; i<lst->Count; i++) {
 			file_rec *fp = (file_rec*)lst->Objects[i];
-			if (is_selectable(fp)) fp->selected = !fp->is_dir? !fp->selected : false;
+			if (is_selectable(fp) && !fp->is_dummy) {
+				fp->selected = !fp->is_dir? !fp->selected : false;
+			}
 		}
 	}
 
@@ -22513,7 +22587,10 @@ void __fastcall TNyanFiForm::SelReverseActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::SelReverseAllActionExecute(TObject *Sender)
 {
 	TStringList *lst = GetCurList();
-	for (int i=0; i<lst->Count; i++) set_select_r((file_rec*)lst->Objects[i]);
+	for (int i=0; i<lst->Count; i++) {
+		file_rec *fp = (file_rec*)lst->Objects[i];
+		if (is_selectable(fp) && !fp->is_dummy) fp->selected = !fp->selected;
+	}
 	RepaintList(CurListTag);
 }
 
