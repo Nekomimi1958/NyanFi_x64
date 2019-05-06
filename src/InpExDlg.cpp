@@ -85,7 +85,7 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 
 		InputExDlg->InputComboBox->Hint =
 			(IpuntExMode==INPEX_FIND_TAG || IpuntExMode==INPEX_TAG_SELECT)? "; 区切りでAND検索、｜区切りでOR検索" :
-			    (IpuntExMode==INPEX_ADD_TAG || IpuntExMode==INPEX_SET_TAG)? "; で区切って複数指定可能" : "";
+				(IpuntExMode==INPEX_ADD_TAG || IpuntExMode==INPEX_SET_TAG)? "; で区切って複数指定可能" : "";
 	}
 	//Edit
 	else {

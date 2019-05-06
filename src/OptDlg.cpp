@@ -259,54 +259,58 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 
 	//マウスホイール
 	set_ComboBoxText(WheelCmdF0ComboBox,
-		_T("ScrollUp/ScrollDown\n")
-		_T("PageUp/PageDown\n")
-		_T("CursorUp/CursorDown\n")
-		_T("PrevDrive/NextDrive\n")
-		_T("PrevTab/NextTab\n")
+		_T("AlphaBlend_+32/AlphaBlend_-32\n")
 		_T("BackDirHist/ForwardDirHist\n")
 		_T("BorderLeft/BorderRight\n")
+		_T("CursorUp/CursorDown\n")
+		_T("PageUp/PageDown\n")
+		_T("PrevDrive/NextDrive\n")
+		_T("PrevNyanFi/NextNyanFi\n")
+		_T("PrevTab/NextTab\n")
+		_T("ScrollUp/ScrollDown\n")
 		_T("ScrollUpLog/ScrollDownLog\n")
 		_T("ScrollUpText/ScrollDownText\n")
 		_T("SetSubSize_-16/SetSubSize_+16\n")
-		_T("ZoomIn/ZoomOut\n")
-		_T("PrevNyanFi/NextNyanFi\n"));
+		_T("ZoomIn/ZoomOut\n"));
 	WheelCmdF1ComboBox->Items->Assign(WheelCmdF0ComboBox->Items);
 	WheelCmdF2ComboBox->Items->Assign(WheelCmdF0ComboBox->Items);
 	WheelCmdF3ComboBox->Items->Assign(WheelCmdF0ComboBox->Items);
 
 	set_ComboBoxText(WheelCmdV0ComboBox,
-		_T("ScrollUp/ScrollDown\n")
-		_T("ScrollCursorUp/ScrollCursorDown\n")
+		_T("AlphaBlend_+32/AlphaBlend_-32\n")
 		_T("CursorUp/CursorDown\n")
 		_T("PageUp/PageDown\n")
-		_T("ZoomIn/ZoomOut\n")
 		_T("PrevFile/NextFile\n")
-		_T("PrevNyanFi/NextNyanFi\n"));
+		_T("PrevNyanFi/NextNyanFi\n")
+		_T("ScrollCursorUp/ScrollCursorDown\n")
+		_T("ScrollUp/ScrollDown\n")
+		_T("ZoomIn/ZoomOut\n"));
 	WheelCmdV1ComboBox->Items->Assign(WheelCmdV0ComboBox->Items);
 	WheelCmdV2ComboBox->Items->Assign(WheelCmdV0ComboBox->Items);
 	WheelCmdV3ComboBox->Items->Assign(WheelCmdV0ComboBox->Items);
 
 	set_ComboBoxText(WheelCmdI0ComboBox,
+		_T("AlphaBlend_+32/AlphaBlend_-32\n")
 		_T("PrevFile/NextFile\n")
+		_T("PrevNyanFi/NextNyanFi\n")
 		_T("PrevPage/NextPage\n")
-		_T("ScrollUp/ScrollDown\n")
-		_T("ScrollLeft/ScrollRight\n")
-		_T("ZoomIn/ZoomOut\n")
 		_T("RotateLeft/RotateRight\n")
-		_T("PrevNyanFi/NextNyanFi\n"));
+		_T("ScrollLeft/ScrollRight\n")
+		_T("ScrollUp/ScrollDown\n")
+		_T("ZoomIn/ZoomOut\n"));
 	WheelCmdI1ComboBox->Items->Assign(WheelCmdI0ComboBox->Items);
 	WheelCmdI2ComboBox->Items->Assign(WheelCmdI0ComboBox->Items);
 	WheelCmdI3ComboBox->Items->Assign(WheelCmdI0ComboBox->Items);
 
 	//マウスボタン
 	set_ComboBoxText(WheelBtnF0ComboBox,
-		_T("ToRoot\n")
-		_T("ToParent\n")
+		_T("AlphaBlend\n")
 		_T("BackDirHist\n")
-		_T("ForwardDirHist\n")
 		_T("EqualListWidth\n")
+		_T("ForwardDirHist\n")
 		_T("HomeWorkList\n")
+		_T("ToParent\n")
+		_T("ToRoot\n")
 		_T("ZoomReset\n"));
 	WheelBtnF1ComboBox->Items->Assign(WheelBtnF0ComboBox->Items);
 	WheelBtnF2ComboBox->Items->Assign(WheelBtnF0ComboBox->Items);
@@ -315,52 +319,54 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	set_ComboBoxText(X1BtnFComboBox,
 		_T("BackDirHist\n")
 		_T("ForwardDirHist\n")
-		_T("ToParent\n")
-		_T("PrevDrive\n")
 		_T("NextDrive\n")
-		_T("PrevTab\n")
-		_T("NextTab\n")
-		_T("PageUp\n")
-		_T("PageDown\n")
 		_T("NextNyanFi\n")
-		_T("PrevNyanFi\n"));
+		_T("NextTab\n")
+		_T("PageDown\n")
+		_T("PageUp\n")
+		_T("PrevDrive\n")
+		_T("PrevNyanFi\n")
+		_T("PrevTab\n")
+		_T("ToParent\n"));
 	X2BtnFComboBox->Items->Assign(X1BtnFComboBox->Items);
 
 	set_ComboBoxText(WheelBtnVComboBox,
-		_T("ZoomReset\n")
-		_T("TextTop\n")
+		_T("AlphaBlend\n")
+		_T("Close\n")
 		_T("TextEnd\n")
-		_T("Close\n"));
+		_T("TextTop\n")
+		_T("ZoomReset\n"));
 
 	set_ComboBoxText(X1BtnVComboBox,
 		_T("BackViewHist\n")
-		_T("PrevFile\n")
 		_T("NextFile\n")
-		_T("PageUp\n")
-		_T("PageDown\n")
 		_T("NextNyanFi\n")
+		_T("PageDown\n")
+		_T("PageUp\n")
+		_T("PrevFile\n")
 		_T("PrevNyanFi\n"));
 	X2BtnVComboBox->Items->Assign(X1BtnVComboBox->Items);
 
 	set_ComboBoxText(WheelBtnIComboBox,
+		_T("AlphaBlend\n")
+		_T("Close\n")
+		_T("EndFile\n")
 		_T("FittedSize\n")
 		_T("FullScreen\n")
-		_T("TopFile\n")
-		_T("EndFile\n")
-		_T("Close\n"));
+		_T("TopFile\n"));
 
 	set_ComboBoxText(X1BtnIComboBox,
-		_T("PrevFile\n")
-		_T("NextFile\n")
-		_T("PrevPage\n")
-		_T("NextPage\n")
 		_T("Histogram\n")
 		_T("Loupe\n")
-		_T("Thumbnail\n")
-		_T("ThumbnailEx\n")
-		_T("WarnHighlight\n")
+		_T("NextFile\n")
 		_T("NextNyanFi\n")
-		_T("PrevNyanFi\n"));
+		_T("NextPage\n")
+		_T("PrevFile\n")
+		_T("PrevNyanFi\n")
+		_T("PrevPage\n")
+		_T("ThumbnailEx\n")
+		_T("Thumbnail\n")
+		_T("WarnHighlight\n"));
 	X2BtnIComboBox->Items->Assign(X1BtnIComboBox->Items);
 
 	set_ComboBoxText(MenuCmdComboBox,
@@ -1204,8 +1210,9 @@ bool __fastcall TOptionDlg::IsFirstCmdKey()
 void __fastcall TOptionDlg::SetSheet(UnicodeString prm)
 {
 	int idx = idx_of_word_i(_T("GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV"), prm);
-	if (idx!=-1)
+	if (idx!=-1) {
 		PageControl1->ActivePageIndex = idx;
+	}
 	else {
 		if		(ScrMode==SCMD_TVIEW)	PageControl1->ActivePage = TxtViewerSheet;
 		else if (ScrMode==SCMD_IVIEW)	PageControl1->ActivePage = ImgViewerSheet;
@@ -1822,8 +1829,14 @@ void __fastcall TOptionDlg::FindColEditKeyDown(TObject *Sender, WORD &Key, TShif
 {
 	if (!Shift.Empty()) return;
 
-	if		(Key==VK_UP)	{ FindColUpAction->Execute();	Key = 0; }
-	else if (Key==VK_DOWN)	{ FindColDownAction->Execute();	Key = 0; }
+	if (Key==VK_UP) {
+		FindColUpAction->Execute();
+		Key = 0;
+	}
+	else if (Key==VK_DOWN) {
+		FindColDownAction->Execute();
+		Key = 0;
+	}
 }
 //---------------------------------------------------------------------------
 //配色を下方向に検索
@@ -1889,7 +1902,9 @@ void __fastcall TOptionDlg::FindColEditChange(TObject *Sender)
 			if (ContainsText(lp->Items->ValueFromIndex[i], kwd)) idx = i;
 		if (idx!=-1) lp->ItemIndex = idx;
 	}
-	else lp->ItemIndex = -1;
+	else {
+		lp->ItemIndex = -1;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -1913,9 +1928,13 @@ void __fastcall TOptionDlg::OptListBoxKeyDown(TObject *Sender, WORD &Key, TShift
 				int idx = lp->ItemIndex;
 				if (idx!=-1) lp->Items->Strings[idx] = get_pre_tab(lp->Items->Strings[idx]) + "\t";
 			}
-			else UserModule->DelListItemAction->Execute();
+			else {
+				UserModule->DelListItemAction->Execute();
+			}
 		}
-		else if (!UserModule->ListBoxOpeItem(KeyStr)) return;
+		else if (!UserModule->ListBoxOpeItem(KeyStr)) {
+			return;
+		}
 	}
 
 	Key = 0;
@@ -2695,8 +2714,10 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 	int sub_lvl = 0;
 	for (int i=0; i<=Index; i++) {
 		UnicodeString itm = get_csv_item(lp->Items->Strings[i], 0);
-		if (i<Index && StartsStr('>', itm)) sub_lvl++;
-		else if (USAME_TS(itm, "<") && sub_lvl>0) sub_lvl--;
+		if (i<Index && StartsStr('>', itm))
+			sub_lvl++;
+		else if (USAME_TS(itm, "<") && sub_lvl>0)
+			sub_lvl--;
 	}
 
 	int xp = Rect.Left + Scaled2 + ScaledInt(18) + (sub_lvl * cv->TextWidth("W"));
@@ -3103,10 +3124,12 @@ void __fastcall TOptionDlg::KeyFilterEdit_KeyDown(TObject *Sender, WORD &Key, TS
 			perform_Key_RETURN(CmdComboBox);
 		}
 	}
-	else if	(equal_ESC(KeyStr) && !KeyFilterEdit->Text.IsEmpty())
+	else if	(equal_ESC(KeyStr) && !KeyFilterEdit->Text.IsEmpty()) {
 		KeyFilterEdit->Text = EmptyStr;
-	else if (SameText(KeyStr, KeyStr_Migemo))
+	}
+	else if (SameText(KeyStr, KeyStr_Migemo)) {
 		MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
+	}
 	else return;
 
 	Key = 0;
@@ -3195,8 +3218,14 @@ void __fastcall TOptionDlg::FindKeyEditKeyDown(TObject *Sender, WORD &Key, TShif
 {
 	if (!Shift.Empty()) return;
 
-	if		(Key==VK_UP)	{ FindKeyUpAction->Execute();	Key = 0; }
-	else if (Key==VK_DOWN)	{ FindKeyDownAction->Execute();	Key = 0; }
+	if (Key==VK_UP) {
+		 FindKeyUpAction->Execute();
+		 Key = 0;
+	}
+	else if (Key==VK_DOWN) {
+		FindKeyDownAction->Execute();
+		Key = 0;
+	}
 }
 //---------------------------------------------------------------------------
 //下方向に検索
@@ -3896,15 +3925,23 @@ void __fastcall TOptionDlg::FindEvEditChange(TObject *Sender)
 			if (ContainsText(lp->Items->Strings[i], kwd)) idx = i;
 		if (idx!=-1) lp->ItemIndex = idx;
 	}
-	else lp->ItemIndex = -1;
+	else {
+		lp->ItemIndex = -1;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::FindEvEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	if (!Shift.Empty()) return;
 
-	if		(Key==VK_UP)	{ FindEvUpAction->Execute();	Key = 0; }
-	else if (Key==VK_DOWN)	{ FindEvDownAction->Execute();	Key = 0; }
+	if (Key==VK_UP) {
+		FindEvUpAction->Execute();
+		Key = 0;
+	}
+	else if (Key==VK_DOWN) {
+		FindEvDownAction->Execute();
+		Key = 0;
+	}
 }
 //---------------------------------------------------------------------------
 //イベントを下方向に検索
@@ -4009,8 +4046,10 @@ void __fastcall TOptionDlg::AppDesignBtnClick(TObject *Sender)
 {
 	ApplyOptionByTag(DesignSheet);
 
-	if (IconMode==0 && ShowIconCheckBox->Checked) IconMode = 1;
-	else if (!ShowIconCheckBox->Checked) IconMode = 0;
+	if (IconMode==0 && ShowIconCheckBox->Checked)
+		IconMode = 1;
+	else if (!ShowIconCheckBox->Checked)
+		IconMode = 0;
 
 	//メイン画面に通知
 	::SendMessage(MainHandle, WM_NYANFI_APPEAR, (LayoutChanged? 1 : 0), 0);
@@ -4349,7 +4388,9 @@ void __fastcall TOptionDlg::CanButtonClick(TObject *Sender)
 		UserModule->EndSpuit();
 	}
 	//閉じる
-	else ModalResult = mrCancel;
+	else {
+		ModalResult = mrCancel;
+	}
 }
 
 //---------------------------------------------------------------------------

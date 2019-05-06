@@ -653,7 +653,7 @@ void __fastcall TCmdFileListDlg::EditSelectAllActionExecute(TObject *Sender)
 void __fastcall TCmdFileListDlg::EditCopyActionUpdate(TObject *Sender)
 {
 	TListBox *lp = PreviewListBox->Focused() ? PreviewListBox :
-				     ReferListBox->Focused() ? ReferListBox : NULL;
+					 ReferListBox->Focused() ? ReferListBox : NULL;
 	((TAction*)Sender)->Enabled = lp && lp->SelCount>0;
 }
 

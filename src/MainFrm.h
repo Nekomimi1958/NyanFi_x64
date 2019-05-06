@@ -226,6 +226,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *GrayScaleAction;
 	TAction *GrepAbortAction;
 	TAction *GrepAction;
+	TAction *GrepAdjNextLnAction;
 	TAction *GrepClipCopyAction;
 	TAction *GrepConfirmAction;
 	TAction *GrepEmFilterAction;
@@ -733,6 +734,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *PopDelTabItem;
 	TMenuItem *PopEditFontSmplItem;
 	TMenuItem *PopFindItem;
+	TMenuItem *PopGrepAdjNextLnItem;
 	TMenuItem *PopGrepClipCopyItem;
 	TMenuItem *PopGrepConfirmItem;
 	TMenuItem *PopGrepEmFilterItem;
@@ -920,6 +922,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *GrepM3Panel;
 	TPanel *GrepMidPanel;
 	TPanel *GrepOpPanel;
+	TPanel *GrepOptPanel;
 	TPanel *GrepPanel;
 	TPanel *GrepSttPanel;
 	TPanel *GrepT1Panel;
@@ -1833,6 +1836,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SimilarSortActionExecute(TObject *Sender);
 	void __fastcall LockComputerActionExecute(TObject *Sender);
 	void __fastcall LockKeyMouseActionExecute(TObject *Sender);
+	void __fastcall NextLineCheckBoxClick(TObject *Sender);
+	void __fastcall GrepAdjNextLnActionExecute(TObject *Sender);
+	void __fastcall GrepAdjNextLnActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -1922,11 +1928,11 @@ private:	// ユーザー宣言
 	bool fromMenuFile;					//メニューファイルから実行された
 
 	UnicodeString GrepPath;				//GREP 対象パス
-	UnicodeString GrepKeyword;			//検索語
-	UnicodeString GrepResultMsg;		//検索結果メッセージ
-	UnicodeString GrepResultMsgBuf;		//  待避用バッファ
-	UnicodeString GrepResultPath;		//検索結果パス
-	UnicodeString GrepResultPathBuf;	//  待避用バッファ
+	UnicodeString GrepKeyword;			//  検索語
+	UnicodeString GrepResultMsg;		//  検索結果メッセージ
+	UnicodeString GrepResultMsgBuf;		//    待避用バッファ
+	UnicodeString GrepResultPath;		//  検索結果パス
+	UnicodeString GrepResultPathBuf;	//    待避用バッファ
 
 	bool GrepCaseSenstive;				//大小文字を区別
 	bool GrepFiltered;					//結果絞り込み中

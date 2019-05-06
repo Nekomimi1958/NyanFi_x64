@@ -441,11 +441,13 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 			RenameEdit->SelectAll();
 			break;
 		case 4:	//Žw’èŒê‚ÌŒã
-			p = wd_p;  if (p>0) p += (wd_len - 1);
+			p = wd_p;
+			if (p>0) p += (wd_len - 1);
 			RenameEdit->SelStart = p;
 			break;
 		case 5:	//Žw’èŒê‚Ì‘O
-			p = wd_p;  if (p>0) p--;
+			p = wd_p;
+			if (p>0) p--;
 			RenameEdit->SelStart = p;
 			break;
 		default:
@@ -746,7 +748,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 							if (istr.Length()>3 && StartsStr("TRK",istr)) {
 								int trkn = get_tkn(vstr, '/').ToIntDef(0);
 								UnicodeString nstr = istr.SubString(4, 1);
-								if      (USAME_TS(nstr, "1")) vstr.sprintf(_T("%1u"), trkn);
+								if		(USAME_TS(nstr, "1")) vstr.sprintf(_T("%1u"), trkn);
 								else if (USAME_TS(nstr, "2")) vstr.sprintf(_T("%02u"),trkn);
 								else if (USAME_TS(nstr, "3")) vstr.sprintf(_T("%03u"),trkn);
 							}
@@ -784,7 +786,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 							UnicodeString nstr = get_tkn_r(istr, '_');
 							if (!nstr.IsEmpty()) {
 								int trkn = get_tkn(vstr, '/').ToIntDef(0);
-								if      (USAME_TS(nstr, "1")) vstr.sprintf(_T("%1u"), trkn);
+								if		(USAME_TS(nstr, "1")) vstr.sprintf(_T("%1u"), trkn);
 								else if (USAME_TS(nstr, "2")) vstr.sprintf(_T("%02u"),trkn);
 								else if (USAME_TS(nstr, "3")) vstr.sprintf(_T("%03u"),trkn);
 							}

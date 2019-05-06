@@ -22,56 +22,6 @@ object NyanFiForm: TNyanFiForm
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object ProgressPanel: TPanel
-    Left = 196
-    Top = 226
-    Width = 320
-    Height = 140
-    TabOrder = 2
-    Visible = False
-    StyleElements = [seBorder]
-    DesignSize = (
-      320
-      140)
-    object ProgressLabel: TLabel
-      Left = 10
-      Top = 14
-      Width = 300
-      Height = 20
-      Alignment = taCenter
-      AutoSize = False
-      StyleElements = []
-    end
-    object ProgressSubLabel: TLabel
-      Left = 10
-      Top = 42
-      Width = 300
-      Height = 20
-      Alignment = taCenter
-      AutoSize = False
-      StyleElements = []
-    end
-    object WorkProgressBar: TProgressBar
-      Left = 40
-      Top = 70
-      Width = 240
-      Height = 17
-      Smooth = True
-      TabOrder = 0
-    end
-    object CanDlBtn: TButton
-      Left = 120
-      Top = 101
-      Width = 80
-      Height = 26
-      Anchors = [akLeft, akBottom]
-      Cancel = True
-      Caption = #12461#12515#12531#12475#12523
-      TabOrder = 1
-      Visible = False
-      OnClick = CanDlBtnClick
-    end
-  end
   object StatusBar1: TStatusBar
     Left = 0
     Top = 501
@@ -147,550 +97,6 @@ object NyanFiForm: TNyanFiForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    object GrepPanel: TPanel
-      Left = 0
-      Top = 0
-      Width = 724
-      Height = 479
-      HelpContext = 56
-      Align = alClient
-      BevelOuter = bvNone
-      ParentColor = True
-      ShowCaption = False
-      TabOrder = 0
-      Visible = False
-      object ResultListBox: TListBox
-        Left = 0
-        Top = 130
-        Width = 724
-        Height = 349
-        Style = lbOwnerDrawFixed
-        Align = alLeft
-        Anchors = [akLeft, akTop, akRight, akBottom]
-        BorderStyle = bsNone
-        DoubleBuffered = False
-        MultiSelect = True
-        ParentDoubleBuffered = False
-        PopupMenu = GrepPopupMenu
-        TabOrder = 1
-        StyleElements = [seBorder]
-        OnClick = ResultListBoxClick
-        OnDblClick = ResultListBoxDblClick
-        OnDrawItem = ResultListBoxDrawItem
-        OnExit = ResultListBoxExit
-        OnKeyDown = ResultListBoxKeyDown
-      end
-      object GrepOpPanel: TPanel
-        Left = 0
-        Top = 0
-        Width = 724
-        Height = 130
-        Align = alTop
-        AutoSize = True
-        TabOrder = 0
-        object GrepCanBtn: TButton
-          Left = 1
-          Top = 129
-          Width = 722
-          Height = 0
-          Align = alBottom
-          Cancel = True
-          TabOrder = 3
-          OnClick = GrepCanBtnClick
-        end
-        object GrepSttPanel: TPanel
-          Left = 1
-          Top = 99
-          Width = 722
-          Height = 30
-          Align = alTop
-          BevelOuter = bvNone
-          TabOrder = 2
-          object GrepSttSplitter: TSplitter
-            Left = 468
-            Top = 0
-            Width = 4
-            Height = 30
-            Align = alRight
-            Beveled = True
-            OnMoved = GrepSttSplitterMoved
-          end
-          object GrepStatusBar: TStatusBar
-            Left = 0
-            Top = 0
-            Width = 468
-            Height = 30
-            Align = alClient
-            Panels = <
-              item
-                Width = 240
-              end
-              item
-                Width = 150
-              end
-              item
-                Width = 50
-              end>
-            ParentFont = True
-            UseSystemFont = False
-          end
-          object GrepFilterPanel: TPanel
-            Left = 472
-            Top = 0
-            Width = 250
-            Height = 30
-            Align = alRight
-            BevelOuter = bvLowered
-            TabOrder = 1
-            DesignSize = (
-              250
-              30)
-            object GrepFilterEdit: TLabeledEdit
-              Left = 62
-              Top = 5
-              Width = 28
-              Height = 22
-              Anchors = [akLeft, akTop, akRight]
-              AutoSize = False
-              EditLabel.Width = 33
-              EditLabel.Height = 13
-              EditLabel.Caption = #12501#12451#12523#12479
-              LabelPosition = lpLeft
-              TabOrder = 0
-              OnChange = GrepFilterEditChange
-              OnEnter = GrepFilterEditEnter
-              OnExit = GrepFilterEditExit
-              OnKeyDown = GrepFilterEditKeyDown
-              OnKeyPress = GrepFilterEditKeyPress
-            end
-            object MigemoCheckBox: TCheckBox
-              Left = 96
-              Top = 7
-              Width = 72
-              Height = 17
-              Anchors = [akTop, akRight]
-              Caption = '&Migemo'
-              TabOrder = 1
-              OnClick = GrepFltOptCheckBoxClick
-            end
-            object AndOrCheckBox: TCheckBox
-              Left = 170
-              Top = 7
-              Width = 80
-              Height = 17
-              Anchors = [akTop, akRight]
-              Caption = '&AND/OR'
-              TabOrder = 2
-              OnClick = GrepFltOptCheckBoxClick
-            end
-          end
-        end
-        object GrepMidPanel: TPanel
-          Left = 1
-          Top = 65
-          Width = 722
-          Height = 34
-          Align = alTop
-          BevelOuter = bvNone
-          TabOrder = 1
-          object GrepMidSplitter: TSplitter
-            Left = 384
-            Top = 0
-            Width = 4
-            Height = 34
-            AutoSnap = False
-            Beveled = True
-          end
-          object GrepM1Panel: TPanel
-            Left = 0
-            Top = 0
-            Width = 384
-            Height = 34
-            Align = alLeft
-            BevelOuter = bvNone
-            TabOrder = 0
-            DesignSize = (
-              384
-              34)
-            object TLabel
-              Left = 294
-              Top = 9
-              Width = 20
-              Height = 13
-              Anchors = [akTop, akRight]
-              Caption = #28145#12373
-            end
-            object TLabel
-              Left = 11
-              Top = 8
-              Width = 26
-              Height = 13
-              Caption = #12510#12473#12463
-            end
-            object SubDirCheckBox: TCheckBox
-              Left = 185
-              Top = 7
-              Width = 103
-              Height = 17
-              Anchors = [akTop, akRight]
-              Caption = #12469#12502#12487#12451#12524#12463#12488#12522
-              TabOrder = 1
-            end
-            object SubDirNCombo: TComboBox
-              Left = 321
-              Top = 5
-              Width = 55
-              Height = 21
-              Style = csDropDownList
-              Anchors = [akTop, akRight]
-              TabOrder = 2
-            end
-            object GrepMaskComboBox: TComboBox
-              Left = 48
-              Top = 5
-              Width = 123
-              Height = 21
-              Anchors = [akLeft, akTop, akRight]
-              DropDownCount = 20
-              TabOrder = 0
-            end
-          end
-          object GrepM2Panel: TPanel
-            Left = 388
-            Top = 0
-            Width = 251
-            Height = 34
-            Align = alClient
-            BevelOuter = bvNone
-            TabOrder = 1
-            DesignSize = (
-              251
-              34)
-            object SkipDirEdit: TLabeledEdit
-              Left = 118
-              Top = 5
-              Width = 123
-              Height = 22
-              Anchors = [akLeft, akTop, akRight]
-              AutoSize = False
-              EditLabel.Width = 73
-              EditLabel.Height = 13
-              EditLabel.Caption = #38500#22806#12487#12451#12524#12463#12488#12522
-              LabelPosition = lpLeft
-              TabOrder = 0
-            end
-          end
-          object GrepM3Panel: TPanel
-            Left = 639
-            Top = 0
-            Width = 83
-            Height = 34
-            Align = alRight
-            BevelOuter = bvNone
-            TabOrder = 2
-            DesignSize = (
-              83
-              34)
-            object GrepExOptBtn: TButton
-              Left = 5
-              Top = 4
-              Width = 72
-              Height = 24
-              Action = GrepOptionAction
-              Anchors = [akTop, akRight]
-              TabOrder = 0
-            end
-          end
-        end
-        object GrepPageControl: TPageControl
-          Left = 1
-          Top = 1
-          Width = 722
-          Height = 64
-          ActivePage = FindSheet
-          Align = alTop
-          TabOrder = 0
-          TabWidth = 100
-          OnChange = GrepPageControlChange
-          OnChanging = GrepPageControlChanging
-          object FindSheet: TTabSheet
-            Caption = #26908#32034'(&S)'
-            object GrepTopSplitter: TSplitter
-              Left = 702
-              Top = 0
-              Width = 4
-              Height = 36
-              Align = alRight
-              AutoSnap = False
-              Beveled = True
-              MinSize = 8
-            end
-            object GrepT1Panel: TPanel
-              Left = 0
-              Top = 0
-              Width = 702
-              Height = 36
-              Align = alClient
-              BevelOuter = bvNone
-              TabOrder = 0
-              object GrepT11Panel: TPanel
-                Left = 0
-                Top = 0
-                Width = 150
-                Height = 36
-                Align = alClient
-                BevelOuter = bvNone
-                TabOrder = 0
-                OnResize = GrepT11PanelResize
-                DesignSize = (
-                  150
-                  36)
-                object GrepFindLabel: TLabel
-                  Left = 16
-                  Top = 11
-                  Width = 60
-                  Height = 13
-                  Alignment = taRightJustify
-                  Caption = #26908#32034#25991#23383#21015
-                end
-                object GrepFindComboBox: TComboBox
-                  Left = 80
-                  Top = 7
-                  Width = 57
-                  Height = 21
-                  Anchors = [akLeft, akTop, akRight]
-                  DropDownCount = 24
-                  TabOrder = 0
-                  OnEnter = GrepRepComboBoxEnter
-                  OnKeyDown = GrepFindComboBoxKeyDown
-                  OnKeyPress = GrepFindComboBoxKeyPress
-                end
-              end
-              object GrepT12Panel: TPanel
-                Left = 150
-                Top = 0
-                Width = 552
-                Height = 36
-                Align = alRight
-                BevelOuter = bvNone
-                TabOrder = 1
-                DesignSize = (
-                  552
-                  36)
-                object StartBtn: TButton
-                  Left = 445
-                  Top = 5
-                  Width = 50
-                  Height = 26
-                  Action = GrepStartAction
-                  Anchors = [akTop, akRight]
-                  Default = True
-                  TabOrder = 6
-                end
-                object AbortBtn: TButton
-                  Left = 497
-                  Top = 5
-                  Width = 50
-                  Height = 26
-                  Action = GrepAbortAction
-                  Anchors = [akTop, akRight]
-                  TabOrder = 7
-                end
-                object AndCheckBox: TCheckBox
-                  Left = 84
-                  Top = 7
-                  Width = 52
-                  Height = 21
-                  Anchors = [akTop, akRight]
-                  Caption = 'AND'
-                  TabOrder = 1
-                end
-                object CaseCheckBox: TCheckBox
-                  Left = 138
-                  Top = 7
-                  Width = 80
-                  Height = 21
-                  Anchors = [akTop, akRight]
-                  Caption = #22823#23567#21306#21029
-                  TabOrder = 2
-                end
-                object NextLineCheckBox: TCheckBox
-                  Left = 364
-                  Top = 7
-                  Width = 80
-                  Height = 21
-                  Anchors = [akTop, akRight]
-                  Caption = #27425#34892#34920#31034
-                  TabOrder = 5
-                end
-                object OneMatchCheckBox: TCheckBox
-                  Left = 220
-                  Top = 7
-                  Width = 64
-                  Height = 21
-                  Anchors = [akTop, akRight]
-                  Caption = '1'#12510#12483#12481
-                  TabOrder = 3
-                end
-                object RegExCheckBox: TCheckBox
-                  Left = 2
-                  Top = 7
-                  Width = 80
-                  Height = 21
-                  Anchors = [akTop, akRight]
-                  Caption = #27491#35215#34920#29694
-                  TabOrder = 0
-                  OnClick = RegExCheckBoxClick
-                end
-                object ExclTagCheckBox: TCheckBox
-                  Left = 286
-                  Top = 7
-                  Width = 76
-                  Height = 21
-                  Anchors = [akTop, akRight]
-                  Caption = #12479#12464#38500#22806
-                  TabOrder = 4
-                end
-              end
-            end
-            object GrepT2Panel: TPanel
-              Left = 706
-              Top = 0
-              Width = 8
-              Height = 36
-              Align = alRight
-              BevelOuter = bvNone
-              Constraints.MinWidth = 4
-              TabOrder = 1
-            end
-          end
-          object ReplaceSheet: TTabSheet
-            HelpContext = 61
-            Caption = #32622#25563'(&R)'
-            ImageIndex = 1
-            object RepTopSplitter: TSplitter
-              Left = 702
-              Top = 0
-              Width = 4
-              Height = 36
-              Align = alRight
-              AutoSnap = False
-              Beveled = True
-              MinSize = 8
-            end
-            object RepT1Panel: TPanel
-              Left = 0
-              Top = 0
-              Width = 702
-              Height = 36
-              Align = alClient
-              BevelOuter = bvNone
-              TabOrder = 0
-              OnResize = RepT1PanelResize
-              DesignSize = (
-                702
-                36)
-              object RepStrLabel: TLabel
-                Left = 209
-                Top = 11
-                Width = 74
-                Height = 13
-                Alignment = taRightJustify
-                Caption = #8594' '#32622#25563#25991#23383#21015
-              end
-              object RepFindLabel: TLabel
-                Left = 16
-                Top = 11
-                Width = 60
-                Height = 13
-                Alignment = taRightJustify
-                Caption = #26908#32034#25991#23383#21015
-              end
-              object AskRepCheckBox: TCheckBox
-                Left = 515
-                Top = 9
-                Width = 80
-                Height = 17
-                Anchors = [akTop, akRight]
-                Caption = #30906#35469#12354#12426
-                TabOrder = 4
-              end
-              object StartRBtn: TButton
-                Left = 595
-                Top = 5
-                Width = 50
-                Height = 26
-                Action = ReplaceStartAction
-                Anchors = [akTop, akRight]
-                Default = True
-                TabOrder = 5
-              end
-              object AbortRBtn: TButton
-                Left = 647
-                Top = 5
-                Width = 50
-                Height = 26
-                Action = GrepAbortAction
-                Anchors = [akTop, akRight]
-                TabOrder = 6
-              end
-              object RegExRCheckBox: TCheckBox
-                Left = 351
-                Top = 7
-                Width = 80
-                Height = 21
-                Anchors = [akTop, akRight]
-                Caption = #27491#35215#34920#29694
-                TabOrder = 2
-                OnClick = RegExRCheckBoxClick
-              end
-              object CaseRCheckBox: TCheckBox
-                Left = 433
-                Top = 9
-                Width = 80
-                Height = 17
-                Anchors = [akTop, akRight]
-                Caption = #22823#23567#21306#21029
-                TabOrder = 3
-              end
-              object RepFindComboBox: TComboBox
-                Left = 80
-                Top = 7
-                Width = 0
-                Height = 21
-                Anchors = [akLeft, akTop, akRight]
-                DropDownCount = 24
-                TabOrder = 0
-                OnEnter = GrepRepComboBoxEnter
-                OnKeyDown = GrepFindComboBoxKeyDown
-                OnKeyPress = GrepFindComboBoxKeyPress
-              end
-              object RepStrComboBox: TComboBox
-                Left = 290
-                Top = 7
-                Width = 0
-                Height = 21
-                Anchors = [akLeft, akTop, akRight]
-                DropDownCount = 24
-                TabOrder = 1
-                OnKeyDown = GrepFindComboBoxKeyDown
-                OnKeyPress = GrepFindComboBoxKeyPress
-              end
-            end
-            object RepT2Panel: TPanel
-              Left = 706
-              Top = 0
-              Width = 8
-              Height = 36
-              Align = alRight
-              BevelOuter = bvNone
-              Constraints.MinWidth = 4
-              TabOrder = 1
-            end
-          end
-        end
-      end
-    end
     object ImgViewPanel: TPanel
       Left = 0
       Top = 0
@@ -1299,6 +705,556 @@ object NyanFiForm: TNyanFiForm
             TabOrder = 1
             Visible = False
             StyleElements = [seBorder]
+          end
+        end
+      end
+    end
+    object GrepPanel: TPanel
+      Left = 0
+      Top = 0
+      Width = 724
+      Height = 479
+      HelpContext = 56
+      Align = alClient
+      BevelOuter = bvNone
+      ParentColor = True
+      ShowCaption = False
+      TabOrder = 0
+      Visible = False
+      object ResultListBox: TListBox
+        Left = 0
+        Top = 130
+        Width = 724
+        Height = 349
+        Style = lbOwnerDrawFixed
+        Align = alLeft
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        BorderStyle = bsNone
+        DoubleBuffered = False
+        MultiSelect = True
+        ParentDoubleBuffered = False
+        PopupMenu = GrepPopupMenu
+        TabOrder = 1
+        StyleElements = [seBorder]
+        OnClick = ResultListBoxClick
+        OnDblClick = ResultListBoxDblClick
+        OnDrawItem = ResultListBoxDrawItem
+        OnExit = ResultListBoxExit
+        OnKeyDown = ResultListBoxKeyDown
+      end
+      object GrepOpPanel: TPanel
+        Left = 0
+        Top = 0
+        Width = 724
+        Height = 130
+        Align = alTop
+        AutoSize = True
+        TabOrder = 0
+        object GrepCanBtn: TButton
+          Left = 1
+          Top = 129
+          Width = 722
+          Height = 0
+          Align = alBottom
+          Cancel = True
+          TabOrder = 3
+          OnClick = GrepCanBtnClick
+        end
+        object GrepSttPanel: TPanel
+          Left = 1
+          Top = 99
+          Width = 722
+          Height = 30
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 2
+          object GrepSttSplitter: TSplitter
+            Left = 468
+            Top = 0
+            Width = 4
+            Height = 30
+            Align = alRight
+            Beveled = True
+            OnMoved = GrepSttSplitterMoved
+          end
+          object GrepStatusBar: TStatusBar
+            Left = 0
+            Top = 0
+            Width = 468
+            Height = 30
+            Align = alClient
+            Panels = <
+              item
+                Width = 240
+              end
+              item
+                Width = 150
+              end
+              item
+                Width = 50
+              end>
+            ParentFont = True
+            UseSystemFont = False
+          end
+          object GrepFilterPanel: TPanel
+            Left = 472
+            Top = 0
+            Width = 250
+            Height = 30
+            Align = alRight
+            BevelOuter = bvLowered
+            TabOrder = 1
+            DesignSize = (
+              250
+              30)
+            object GrepFilterEdit: TLabeledEdit
+              Left = 62
+              Top = 5
+              Width = 28
+              Height = 22
+              Anchors = [akLeft, akTop, akRight]
+              AutoSize = False
+              EditLabel.Width = 33
+              EditLabel.Height = 13
+              EditLabel.Caption = #12501#12451#12523#12479
+              LabelPosition = lpLeft
+              TabOrder = 0
+              OnChange = GrepFilterEditChange
+              OnEnter = GrepFilterEditEnter
+              OnExit = GrepFilterEditExit
+              OnKeyDown = GrepFilterEditKeyDown
+              OnKeyPress = GrepFilterEditKeyPress
+            end
+            object MigemoCheckBox: TCheckBox
+              Left = 96
+              Top = 7
+              Width = 72
+              Height = 17
+              Anchors = [akTop, akRight]
+              Caption = '&Migemo'
+              TabOrder = 1
+              OnClick = GrepFltOptCheckBoxClick
+            end
+            object AndOrCheckBox: TCheckBox
+              Left = 170
+              Top = 7
+              Width = 80
+              Height = 17
+              Anchors = [akTop, akRight]
+              Caption = '&AND/OR'
+              TabOrder = 2
+              OnClick = GrepFltOptCheckBoxClick
+            end
+          end
+        end
+        object GrepMidPanel: TPanel
+          Left = 1
+          Top = 65
+          Width = 722
+          Height = 34
+          Align = alTop
+          BevelOuter = bvNone
+          TabOrder = 1
+          object GrepMidSplitter: TSplitter
+            Left = 384
+            Top = 0
+            Width = 4
+            Height = 34
+            AutoSnap = False
+            Beveled = True
+          end
+          object GrepM1Panel: TPanel
+            Left = 0
+            Top = 0
+            Width = 384
+            Height = 34
+            Align = alLeft
+            BevelOuter = bvNone
+            TabOrder = 0
+            DesignSize = (
+              384
+              34)
+            object TLabel
+              Left = 294
+              Top = 9
+              Width = 20
+              Height = 13
+              Anchors = [akTop, akRight]
+              Caption = #28145#12373
+            end
+            object TLabel
+              Left = 11
+              Top = 8
+              Width = 26
+              Height = 13
+              Caption = #12510#12473#12463
+            end
+            object SubDirCheckBox: TCheckBox
+              Left = 185
+              Top = 7
+              Width = 103
+              Height = 17
+              Anchors = [akTop, akRight]
+              Caption = #12469#12502#12487#12451#12524#12463#12488#12522
+              TabOrder = 1
+            end
+            object SubDirNCombo: TComboBox
+              Left = 321
+              Top = 5
+              Width = 55
+              Height = 21
+              Style = csDropDownList
+              Anchors = [akTop, akRight]
+              TabOrder = 2
+            end
+            object GrepMaskComboBox: TComboBox
+              Left = 48
+              Top = 5
+              Width = 123
+              Height = 21
+              Anchors = [akLeft, akTop, akRight]
+              DropDownCount = 20
+              TabOrder = 0
+            end
+          end
+          object GrepM2Panel: TPanel
+            Left = 388
+            Top = 0
+            Width = 251
+            Height = 34
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 1
+            DesignSize = (
+              251
+              34)
+            object SkipDirEdit: TLabeledEdit
+              Left = 118
+              Top = 5
+              Width = 123
+              Height = 22
+              Anchors = [akLeft, akTop, akRight]
+              AutoSize = False
+              EditLabel.Width = 71
+              EditLabel.Height = 13
+              EditLabel.Caption = #38500#22806#12487#12451#12524#12463#12488#12522
+              LabelPosition = lpLeft
+              TabOrder = 0
+            end
+          end
+          object GrepM3Panel: TPanel
+            Left = 639
+            Top = 0
+            Width = 83
+            Height = 34
+            Align = alRight
+            BevelOuter = bvNone
+            TabOrder = 2
+            DesignSize = (
+              83
+              34)
+            object GrepExOptBtn: TButton
+              Left = 5
+              Top = 4
+              Width = 72
+              Height = 24
+              Action = GrepOptionAction
+              Anchors = [akTop, akRight]
+              TabOrder = 0
+            end
+          end
+        end
+        object GrepPageControl: TPageControl
+          Left = 1
+          Top = 1
+          Width = 722
+          Height = 64
+          ActivePage = FindSheet
+          Align = alTop
+          TabOrder = 0
+          TabWidth = 100
+          OnChange = GrepPageControlChange
+          OnChanging = GrepPageControlChanging
+          object FindSheet: TTabSheet
+            Caption = #26908#32034'(&S)'
+            object GrepTopSplitter: TSplitter
+              Left = 702
+              Top = 0
+              Width = 4
+              Height = 36
+              Align = alRight
+              AutoSnap = False
+              Beveled = True
+              MinSize = 8
+            end
+            object GrepT1Panel: TPanel
+              Left = 0
+              Top = 0
+              Width = 702
+              Height = 36
+              Align = alClient
+              BevelOuter = bvNone
+              TabOrder = 0
+              object GrepT11Panel: TPanel
+                Left = 0
+                Top = 0
+                Width = 150
+                Height = 36
+                Align = alClient
+                BevelOuter = bvNone
+                TabOrder = 0
+                OnResize = GrepT11PanelResize
+                DesignSize = (
+                  150
+                  36)
+                object GrepFindLabel: TLabel
+                  Left = 16
+                  Top = 11
+                  Width = 60
+                  Height = 13
+                  Alignment = taRightJustify
+                  Caption = #26908#32034#25991#23383#21015
+                end
+                object GrepFindComboBox: TComboBox
+                  Left = 80
+                  Top = 7
+                  Width = 57
+                  Height = 21
+                  Anchors = [akLeft, akTop, akRight]
+                  DropDownCount = 24
+                  TabOrder = 0
+                  OnEnter = GrepRepComboBoxEnter
+                  OnKeyDown = GrepFindComboBoxKeyDown
+                  OnKeyPress = GrepFindComboBoxKeyPress
+                end
+              end
+              object GrepT12Panel: TPanel
+                Left = 150
+                Top = 0
+                Width = 552
+                Height = 36
+                Align = alRight
+                BevelOuter = bvNone
+                TabOrder = 1
+                ExplicitLeft = 148
+                ExplicitTop = -3
+                DesignSize = (
+                  552
+                  36)
+                object StartBtn: TButton
+                  Left = 445
+                  Top = 5
+                  Width = 50
+                  Height = 26
+                  Action = GrepStartAction
+                  Anchors = [akTop, akRight]
+                  Default = True
+                  TabOrder = 1
+                end
+                object AbortBtn: TButton
+                  Left = 497
+                  Top = 5
+                  Width = 50
+                  Height = 26
+                  Action = GrepAbortAction
+                  Anchors = [akTop, akRight]
+                  TabOrder = 2
+                end
+                object GrepOptPanel: TPanel
+                  Left = 0
+                  Top = 0
+                  Width = 443
+                  Height = 36
+                  Align = alLeft
+                  BevelOuter = bvNone
+                  TabOrder = 0
+                  object RegExCheckBox: TCheckBox
+                    Left = 2
+                    Top = 7
+                    Width = 80
+                    Height = 21
+                    Caption = #27491#35215#34920#29694
+                    TabOrder = 0
+                    OnClick = RegExCheckBoxClick
+                  end
+                  object NextLineCheckBox: TCheckBox
+                    Left = 364
+                    Top = 7
+                    Width = 80
+                    Height = 21
+                    Caption = #27425#34892#34920#31034
+                    TabOrder = 5
+                    OnClick = NextLineCheckBoxClick
+                  end
+                  object ExclTagCheckBox: TCheckBox
+                    Left = 286
+                    Top = 7
+                    Width = 76
+                    Height = 21
+                    Caption = #12479#12464#38500#22806
+                    TabOrder = 4
+                  end
+                  object CaseCheckBox: TCheckBox
+                    Left = 138
+                    Top = 7
+                    Width = 80
+                    Height = 21
+                    Caption = #22823#23567#21306#21029
+                    TabOrder = 2
+                  end
+                  object AndCheckBox: TCheckBox
+                    Left = 84
+                    Top = 7
+                    Width = 52
+                    Height = 21
+                    Caption = 'AND'
+                    TabOrder = 1
+                  end
+                  object OneMatchCheckBox: TCheckBox
+                    Left = 220
+                    Top = 7
+                    Width = 64
+                    Height = 21
+                    Caption = '1'#12510#12483#12481
+                    TabOrder = 3
+                  end
+                end
+              end
+            end
+            object GrepT2Panel: TPanel
+              Left = 706
+              Top = 0
+              Width = 8
+              Height = 36
+              Align = alRight
+              BevelOuter = bvNone
+              Constraints.MinWidth = 4
+              TabOrder = 1
+            end
+          end
+          object ReplaceSheet: TTabSheet
+            HelpContext = 61
+            Caption = #32622#25563'(&R)'
+            ImageIndex = 1
+            object RepTopSplitter: TSplitter
+              Left = 702
+              Top = 0
+              Width = 4
+              Height = 36
+              Align = alRight
+              AutoSnap = False
+              Beveled = True
+              MinSize = 8
+            end
+            object RepT1Panel: TPanel
+              Left = 0
+              Top = 0
+              Width = 702
+              Height = 36
+              Align = alClient
+              BevelOuter = bvNone
+              TabOrder = 0
+              OnResize = RepT1PanelResize
+              DesignSize = (
+                702
+                36)
+              object RepStrLabel: TLabel
+                Left = 209
+                Top = 11
+                Width = 74
+                Height = 13
+                Alignment = taRightJustify
+                Caption = #8594' '#32622#25563#25991#23383#21015
+              end
+              object RepFindLabel: TLabel
+                Left = 16
+                Top = 11
+                Width = 60
+                Height = 13
+                Alignment = taRightJustify
+                Caption = #26908#32034#25991#23383#21015
+              end
+              object AskRepCheckBox: TCheckBox
+                Left = 515
+                Top = 9
+                Width = 80
+                Height = 17
+                Anchors = [akTop, akRight]
+                Caption = #30906#35469#12354#12426
+                TabOrder = 4
+              end
+              object StartRBtn: TButton
+                Left = 595
+                Top = 5
+                Width = 50
+                Height = 26
+                Action = ReplaceStartAction
+                Anchors = [akTop, akRight]
+                Default = True
+                TabOrder = 5
+              end
+              object AbortRBtn: TButton
+                Left = 647
+                Top = 5
+                Width = 50
+                Height = 26
+                Action = GrepAbortAction
+                Anchors = [akTop, akRight]
+                TabOrder = 6
+              end
+              object RegExRCheckBox: TCheckBox
+                Left = 351
+                Top = 7
+                Width = 80
+                Height = 21
+                Anchors = [akTop, akRight]
+                Caption = #27491#35215#34920#29694
+                TabOrder = 2
+                OnClick = RegExRCheckBoxClick
+              end
+              object CaseRCheckBox: TCheckBox
+                Left = 433
+                Top = 9
+                Width = 80
+                Height = 17
+                Anchors = [akTop, akRight]
+                Caption = #22823#23567#21306#21029
+                TabOrder = 3
+              end
+              object RepFindComboBox: TComboBox
+                Left = 80
+                Top = 7
+                Width = 0
+                Height = 21
+                Anchors = [akLeft, akTop, akRight]
+                DropDownCount = 24
+                TabOrder = 0
+                OnEnter = GrepRepComboBoxEnter
+                OnKeyDown = GrepFindComboBoxKeyDown
+                OnKeyPress = GrepFindComboBoxKeyPress
+              end
+              object RepStrComboBox: TComboBox
+                Left = 290
+                Top = 7
+                Width = 0
+                Height = 21
+                Anchors = [akLeft, akTop, akRight]
+                DropDownCount = 24
+                TabOrder = 1
+                OnKeyDown = GrepFindComboBoxKeyDown
+                OnKeyPress = GrepFindComboBoxKeyPress
+              end
+            end
+            object RepT2Panel: TPanel
+              Left = 706
+              Top = 0
+              Width = 8
+              Height = 36
+              Align = alRight
+              BevelOuter = bvNone
+              Constraints.MinWidth = 4
+              TabOrder = 1
+            end
           end
         end
       end
@@ -2216,6 +2172,56 @@ object NyanFiForm: TNyanFiForm
         StyleElements = []
         OnDblClick = ToolBarDblClick
       end
+    end
+  end
+  object ProgressPanel: TPanel
+    Left = 196
+    Top = 226
+    Width = 320
+    Height = 140
+    TabOrder = 2
+    Visible = False
+    StyleElements = [seBorder]
+    DesignSize = (
+      320
+      140)
+    object ProgressLabel: TLabel
+      Left = 10
+      Top = 14
+      Width = 300
+      Height = 20
+      Alignment = taCenter
+      AutoSize = False
+      StyleElements = []
+    end
+    object ProgressSubLabel: TLabel
+      Left = 10
+      Top = 42
+      Width = 300
+      Height = 20
+      Alignment = taCenter
+      AutoSize = False
+      StyleElements = []
+    end
+    object WorkProgressBar: TProgressBar
+      Left = 40
+      Top = 70
+      Width = 240
+      Height = 17
+      Smooth = True
+      TabOrder = 0
+    end
+    object CanDlBtn: TButton
+      Left = 120
+      Top = 101
+      Width = 80
+      Height = 26
+      Anchors = [akLeft, akBottom]
+      Cancel = True
+      Caption = #12461#12515#12531#12475#12523
+      TabOrder = 1
+      Visible = False
+      OnClick = CanDlBtnClick
     end
   end
   object MainMenu1: TMainMenu
@@ -5385,7 +5391,7 @@ object NyanFiForm: TNyanFiForm
     end
     object GrepTrimTopAction: TAction
       Category = 'Grep'
-      Caption = #34892#38957#12398#12479#12502#12420#31354#30333#12434#38500#22806
+      Caption = #34892#38957#12398#12479#12502#12420#31354#30333#12434#38750#34920#31034
       OnExecute = GrepTrimTopActionExecute
       OnUpdate = GrepTrimTopActionUpdate
     end
@@ -5450,6 +5456,12 @@ object NyanFiForm: TNyanFiForm
       Caption = #12501#12451#12523#12479#12398#35486#12434#24375#35519#34920#31034
       OnExecute = GrepEmFilterActionExecute
       OnUpdate = GrepEmFilterActionUpdate
+    end
+    object GrepAdjNextLnAction: TAction
+      Category = 'Grep'
+      Caption = #27425#34892#34920#31034#37096#20998#12398#26126#24230#12434#21152#28187
+      OnExecute = GrepAdjNextLnActionExecute
+      OnUpdate = GrepAdjNextLnActionUpdate
     end
     object PushResultAction: TAction
       Category = 'Grep'
@@ -5841,6 +5853,9 @@ object NyanFiForm: TNyanFiForm
     end
     object PopGrepEmFilterItem: TMenuItem
       Action = GrepEmFilterAction
+    end
+    object PopGrepAdjNextLnItem: TMenuItem
+      Action = GrepAdjNextLnAction
     end
   end
   object TabPopupMenu: TPopupMenu

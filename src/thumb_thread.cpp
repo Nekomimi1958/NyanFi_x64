@@ -168,7 +168,7 @@ void __fastcall TThumbnailThread::MakeThumbnail(int idx)
 
 				//‰ñ“]
 				if (RotViewImg && img_ori>0) {
-					if      (img_ori==6) WIC_rotate_image(bp, 1);
+					if		(img_ori==6) WIC_rotate_image(bp, 1);
 					else if (img_ori==8) WIC_rotate_image(bp, 3);
 				}
 			}

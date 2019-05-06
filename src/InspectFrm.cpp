@@ -231,7 +231,8 @@ void __fastcall TInspectForm::UpdateValue()
 		else
 			vstr.sprintf(_T("%Ld"), *(__int64*)&buf[0]);
 		//int64 ‚ÉƒJƒ“ƒ}‘}“ü
-		int n = vstr.Length();  if (StartsStr('-', vstr)) n--;
+		int n = vstr.Length();
+		if (StartsStr('-', vstr)) n--;
 		for (int j=4,p=2; j<20 && j<=n; j+=3,p+=4) vstr.Insert(",", vstr.Length() - p); 
 		gp->Cells[1][3] = vstr;
 

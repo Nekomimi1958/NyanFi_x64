@@ -325,8 +325,8 @@ bool __fastcall TExTxtViewer::OpenViewer(
 			ExViewer->AssignText(vbuf.get(), lno);
 			//行数
 			inf_str.cat_sprintf(_T("  %s:%s"),
- 				(test_HtmlExt(fext)? _T("ソース行数") : _T("行数")),
- 				get_size_str_B(vbuf->Count, 0).c_str());
+				(test_HtmlExt(fext)? _T("ソース行数") : _T("行数")),
+				get_size_str_B(vbuf->Count, 0).c_str());
 			if (ExViewer->isLimited) inf_str += "(部分)";
 		}
 		//------------------------------

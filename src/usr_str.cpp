@@ -752,10 +752,11 @@ UnicodeString get_size_str_T(__int64 sz, int dg)
 	float sz_m = sz_k/1024.0;
 	float sz_g = sz_m/1024.0;
 
-	if      (sz_g>1024) szstr.sprintf(_T("%.*f TB"), dg, sz_g/1024.0);
+	if		(sz_g>1024) szstr.sprintf(_T("%.*f TB"), dg, sz_g/1024.0);
 	else if (sz_m>1024) szstr.sprintf(_T("%.*f GB"), dg, sz_m/1024.0);
 	else if (sz_k>1024) szstr.sprintf(_T("%.*f MB"), dg, sz_k/1024.0);
 	else				szstr.sprintf(_T("%.*f KB"), dg, sz_k);
+
 	return szstr;
 }
 //---------------------------------------------------------------------------
@@ -772,6 +773,7 @@ UnicodeString get_size_str_G(
 		else if (sz>=1048576ul)		szstr.sprintf(_T("%5.*f MB"), dg, 1.0*sz/1048576ul);
 		else						szstr = FormatFloat(",0", (double)sz);
 	}
+
 	return ins_spc_length(szstr, wd);
 }
 //---------------------------------------------------------------------------
@@ -788,6 +790,7 @@ UnicodeString get_size_str_G(__int64 sz, int wd, int dg, int fmt_mode)
 				szstr = FormatFloat(",0", (double)sz);
 		}
 	}
+
 	return ins_spc_length(szstr, wd);
 }
 

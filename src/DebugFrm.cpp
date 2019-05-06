@@ -129,7 +129,7 @@ void __fastcall TDebugForm::PreviewListBoxDrawItem(TWinControl *Control, int Ind
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
-	TRect     rc = Rect;
+	TRect	  rc = Rect;
 
 	//çsî‘çÜ
 	LineNoOut(cv, rc, Index);

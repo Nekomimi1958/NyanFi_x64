@@ -212,10 +212,10 @@ void __fastcall TTaskManDlg::TaskGridDrawCell(TObject *Sender, int ACol, int ARo
 		if (tp)
 			fg = (ACol==4 && tp->PreCount>0)? clGreen : (ACol==4 && tp->TaskPause) ? clRed : col_fgList;
 		else
-			fg = AdjustColor(col_fgList, 96);
+			fg = AdjustColor(col_fgList, ADJCOL_FGLIST);
 	}
 	else {
-		fg = AdjustColor(col_fgList, 72);
+		fg = AdjustColor(col_fgList, ADJCOL_LIGHT);
 	}
 
 	cv->Font->Color  = is_SelFgCol(State)? col_fgSelItem : fg;

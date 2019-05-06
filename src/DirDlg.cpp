@@ -529,7 +529,8 @@ void __fastcall TRegDirDlg::RegDirListBoxClick(TObject *Sender)
 {
 	if (IsSpecial || IsAddMode) return;
 
-	int idx = RegDirListBox->ItemIndex;  if (idx==-1) return;
+	int idx = RegDirListBox->ItemIndex;
+	if (idx==-1) return;
 	UnicodeString lbuf = RegDirListBox->Items->Strings[idx];
 	if (!lbuf.IsEmpty()) {
 		TStringDynArray itm_buf = get_csv_array(RegDirListBox->Items->Strings[idx], 3, true);
@@ -549,7 +550,8 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(ListFont);
-	bool is_irreg = IsIrregularFont(cv->Font);
+	bool is_irreg  = IsIrregularFont(cv->Font);
+	TColor adj_col = AdjustColor(col_Folder, ADJCOL_LIGHT);
 
 	cv->Brush->Color = col_bgList;
 	cv->FillRect(Rect);
@@ -599,12 +601,12 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 							dnam = ExcludeTrailingPathDelimiter(replace_str_by_list(dnam, EnvVarList));
 						if (remove_top_s(dnam, '%')) {
 							UnicodeString envstr = "%" + split_tkn(dnam, '%') + "%";
-							cv->Font->Color = AdjustColor(col_Folder, 72);
+							cv->Font->Color = adj_col;
 							cv->TextOut(xp, yp, envstr);
 							xp += get_TextWidth(cv, envstr, is_irreg) + 2;
 						}
 					}
-					cv->Font->Color = (StartsStr("shell:", dnam))? AdjustColor(col_Folder, 72) : col_Folder;
+					cv->Font->Color = (StartsStr("shell:", dnam))? adj_col : col_Folder;
 					PathNameOut(dnam, cv, xp, yp, sp->Items[2]->Width);
 					//‹æØ‚èü
 					if (brk) draw_separateLine(cv, Rect);
@@ -638,17 +640,17 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 				//êŠ
 				UnicodeString dnam = itm_buf[2];
 				if (StartsStr("#:", dnam)) {
-					cv->Font->Color = AdjustColor(col_Folder, 72);
+					cv->Font->Color = adj_col;
 					usr_TAG->DrawTags(dnam, cv, xp, yp, RevTagCololr? col_bgList : clNone);
 				}
 				else {
 					if (remove_top_s(dnam, '%')) {
 						UnicodeString envstr = "%" + split_tkn(dnam, '%') + "%";
-						cv->Font->Color = AdjustColor(col_Folder, 72);
+						cv->Font->Color = adj_col;
 						cv->TextOut(xp, yp, envstr);
 						xp += get_TextWidth(cv, envstr, is_irreg) + 2;
 					}
-					cv->Font->Color = (StartsStr("shell:", dnam))? AdjustColor(col_Folder, 72) : col_Folder;
+					cv->Font->Color = (StartsStr("shell:", dnam))? adj_col : col_Folder;
 					PathNameOut(dnam, cv, xp, yp, sp->Items[2]->Width);
 				}
 			}

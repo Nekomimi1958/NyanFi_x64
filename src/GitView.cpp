@@ -985,7 +985,7 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 		//ìùåv
 		s = split_tkn_spc(lbuf) + " ";
 		if (StartsText("Bin", Trim(s))) {
-			out_TextEx(cv, xp, yp, s,	 AdjustColor(col_fgList, 72));
+			out_TextEx(cv, xp, yp, s, AdjustColor(col_fgList, ADJCOL_FGLIST));
 			lbuf = ReplaceStr(lbuf, "->", "Å®");
 			out_TextEx(cv, xp, yp, lbuf, col_fgList);
 		}

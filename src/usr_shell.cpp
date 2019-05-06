@@ -145,7 +145,7 @@ DWORD get_DropMode(IDataObject *pDataObj, DWORD grfKeyState, POINTL pt)
 		formatetc.ptd	   = NULL;
 		formatetc.dwAspect = DVASPECT_CONTENT;
 		formatetc.lindex   = -1;
-		formatetc.tymed    = TYMED_HGLOBAL;
+		formatetc.tymed	   = TYMED_HGLOBAL;
 
 		try {
 			//ドラッグ元のドライブを取得
@@ -1448,8 +1448,8 @@ bool UserShell::get_LnkInf(UnicodeString fnam, TStringList *lst,
 				 	if (::UuidToString(ip, &ws)==RPC_S_OK) {
 				 		pnam = (WCHAR*)ws;
 						if (!pnam.IsEmpty()) pnam = "::{" + pnam.UpperCase() + "}";
-  						::RpcStringFree(&ws);
-  					}
+						::RpcStringFree(&ws);
+					}
 				}
 
 				if (!pnam.IsEmpty()) break;

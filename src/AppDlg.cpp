@@ -120,7 +120,7 @@ void __fastcall TAppListDlg::FormCreate(TObject *Sender)
 	org_SttBar1WndProc	   = StatusBar1->WindowProc;
 	StatusBar1->WindowProc = SttBar1WndProc;
 
-	AppScrPanel    = new UsrScrollPanel(AppListPanel, AppListBox,	 USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
+	AppScrPanel	   = new UsrScrollPanel(AppListPanel, AppListBox,	 USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
 	LaunchScrPanel = new UsrScrollPanel(LaunchPanel,  LaunchListBox, USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
 
 	AppInfoList = new TAppWinList();
@@ -450,15 +450,15 @@ void __fastcall TAppListDlg::UpdateAppList()
 			ap->TID 	   = tid;
 			ap->Exist	   = true;
 			ap->isNyan	   = (ProcessId==pid);
-			ap->WinText    = wtxt;
+			ap->WinText	   = wtxt;
 			ap->ClassName  = cnam;
-			ap->topMost    = (w_style & WS_EX_TOPMOST);
+			ap->topMost	   = (w_style & WS_EX_TOPMOST);
 			ap->win_wd	   = w_rect.Width();
 			ap->win_hi	   = w_rect.Height();
 			ap->win_left   = w_rect.Left;
-			ap->win_top    = w_rect.Top;
+			ap->win_top	   = w_rect.Top;
 			ap->win_xstyle = w_style;
-			ap->isWow64    = false;
+			ap->isWow64	   = false;
 			ap->isUWP	   = USAME_TI(cnam, "ApplicationFrameWindow");
 
 			//無応答チェック
@@ -473,8 +473,8 @@ void __fastcall TAppListDlg::UpdateAppList()
 				BOOL wow64;
 				if (::IsWow64Process(hProcess, &wow64)) ap->isWow64 = wow64;
 				//メモリ情報
-			    PROCESS_MEMORY_COUNTERS pmc = {0};
-			    if (lpfGetProcessMemoryInfo && lpfGetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc))) {
+				PROCESS_MEMORY_COUNTERS pmc = {0};
+				if (lpfGetProcessMemoryInfo && lpfGetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc))) {
 					ap->mem_WS	= pmc.WorkingSetSize;
 					ap->mem_pWS = pmc.PeakWorkingSetSize;
 					ap->mem_PF	= pmc.PagefileUsage;
@@ -643,8 +643,12 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 	int idx =lp->ItemIndex;
 	lp->Count = lst->Count;
 	Application->ProcessMessages();
-	if		(USAME_TS(lnam, ".."))	idx = 0;
-	else if (!lnam.IsEmpty())		idx = lst->IndexOf(lnam);
+
+	if (USAME_TS(lnam, ".."))
+		idx = 0;
+	else if (!lnam.IsEmpty())
+		idx = lst->IndexOf(lnam);
+
 	ListBoxSetIndex(lp, idx);
 	LaunchScrPanel->UpdateKnob();
 }
@@ -890,24 +894,43 @@ void __fastcall TAppListDlg::AppListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 		}
 	}
 	//ランチャーへ
-	else if (LaunchPanel->Visible && LaunchPanel->Align==alRight && is_ToRightOpe(KeyStr, CmdStr))
+	else if (LaunchPanel->Visible && LaunchPanel->Align==alRight && is_ToRightOpe(KeyStr, CmdStr)) {
 		LaunchListBox->SetFocus();
-	else if (LaunchPanel->Visible && LaunchPanel->Align==alLeft  && is_ToLeftOpe(KeyStr, CmdStr))
+	}
+	else if (LaunchPanel->Visible && LaunchPanel->Align==alLeft  && is_ToLeftOpe(KeyStr, CmdStr)) {
 		LaunchListBox->SetFocus();
+	}
 	//ウィンドウ操作
-	else if (USAME_TI(CmdStr, "WinMinimize"))	MinimizeAction->Execute();
-	else if (USAME_TI(CmdStr, "WinMaximize"))	MaximizeAction->Execute();
-	else if (USAME_TI(CmdStr, "WinNormal"))		RestoreAction->Execute();
-	else if (USAME_TI(CmdStr, "Delete"))		CloseItemClick(NULL);
-	else if (ExeCmdListBox(lp, CmdStr))			;
+	else if (USAME_TI(CmdStr, "WinMinimize")) {
+		MinimizeAction->Execute();
+	}
+	else if (USAME_TI(CmdStr, "WinMaximize")) {
+		MaximizeAction->Execute();
+	}
+	else if (USAME_TI(CmdStr, "WinNormal")) {
+		RestoreAction->Execute();
+	}
+	else if (USAME_TI(CmdStr, "Delete")) {
+		CloseItemClick(NULL);
+	}
+	else if (ExeCmdListBox(lp, CmdStr)) {
+		;
+	}
 	//右クリックメニュー
-	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
+	else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
+		show_PopupMenu(lp);
+	}
 	//頭文字サーチ
-	else if (is_IniSeaKey(KeyStr))	ListBoxInitialSearch(AppListBox, KeyStr);
-	else if (equal_ESC(KeyStr)) 	ModalResult = mrCancel;
+	else if (is_IniSeaKey(KeyStr)) {
+		ListBoxInitialSearch(AppListBox, KeyStr);
+	}
+	else if (equal_ESC(KeyStr)) {
+		ModalResult = mrCancel;
+	}
 	//アプリケーション情報
-	else if (StartsText("ShowFileInfo", CmdStr) || USAME_TI(CmdStr, "ListFileInfo"))
+	else if (StartsText("ShowFileInfo", CmdStr) || USAME_TI(CmdStr, "ListFileInfo")) {
 		AppInfoAction->Execute();
+	}
 	else handled = false;
 
 	if (!is_DialogKey(Key) || handled) Key = 0;
@@ -1430,17 +1453,24 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 		else beep_Warn();
 	}
 	//一覧へ
-	else if (AppPanel->Visible && LaunchPanel->Align==alRight && is_ToLeftOpe(KeyStr, CmdStr))
+	else if (AppPanel->Visible && LaunchPanel->Align==alRight && is_ToLeftOpe(KeyStr, CmdStr)) {
 		AppListBox->SetFocus();
-	else if (AppPanel->Visible && LaunchPanel->Align==alLeft  && is_ToRightOpe(KeyStr, CmdStr))
+	}
+	else if (AppPanel->Visible && LaunchPanel->Align==alLeft  && is_ToRightOpe(KeyStr, CmdStr)) {
 		AppListBox->SetFocus();
-
+	}
 	//一般コマンド
-	else if (ExeCmdListBox(lp, CmdStr))				;
+	else if (ExeCmdListBox(lp, CmdStr)) {
+		;
+	}
 	//右クリックメニュー
-	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
+	else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
+		show_PopupMenu(lp);
+	}
 	//頭文字サーチ
-	else if (!IsIncSea && is_IniSeaKey(KeyStr))		ListBoxInitialSearch(LaunchListBox, KeyStr);
+	else if (!IsIncSea && is_IniSeaKey(KeyStr)) {
+		ListBoxInitialSearch(LaunchListBox, KeyStr);
+	}
 	else handled = false;
 
 	UpdateLaunchSttBar();

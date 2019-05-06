@@ -537,7 +537,8 @@ void __fastcall TImgViewThread::Execute()
 							if (test_FileExt(fext, FEXT_ICONVIEW)) {
 								int ixn = (int)::ExtractIcon(HInstance, Img_f_name.c_str(), -1);
 								if (ixn>1) {
-									x = 2;  if (h>0) y = h + 12;
+									x = 2;
+									if (h>0) y = h + 12;
 									for (int i=0; i<ixn; i++) {
 										HICON hIcon = ::ExtractIcon(HInstance, fnam.c_str(), i);
 										if (!hIcon) continue;
@@ -708,7 +709,7 @@ void __fastcall TImgViewThread::Execute()
 						//’Êíƒ‚[ƒh
 						else {
 							if (RotViewImg && ExifOri>0 && res!=LOADED_BY_WIC) {
-								if      (ExifOri==6) Rotation = 1;
+								if		(ExifOri==6) Rotation = 1;
 								else if (ExifOri==8) Rotation = 3;
 							}
 						}

@@ -127,7 +127,9 @@ void __fastcall TAskRepDlg::RepListBoxDrawItem(TWinControl *Control,
 			//マッチ語強調表示
 			EmphasisTextOut(itmstr, KeyWord, cv, xp, yp, false, true);
 		}
-		else TabCrTextOut(itmstr, cv, xp, yp, col_fgList, Rect.Right);
+		else {
+			TabCrTextOut(itmstr, cv, xp, yp, col_fgList, Rect.Right);
+		}
 
 		//カーソル線
 		int lw = std::max(CursorWidth, 1);
@@ -135,7 +137,9 @@ void __fastcall TAskRepDlg::RepListBoxDrawItem(TWinControl *Control,
 		draw_Line(cv, Rect.Left, yp, Rect.Right, yp, lw, col_Cursor);
 	}
 	//前後行
-	else TabCrTextOut(itmstr, cv, xp, yp, col_fgList, Rect.Right);
+	else {
+		TabCrTextOut(itmstr, cv, xp, yp, col_fgList, Rect.Right);
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TAskRepDlg::RepListBoxEnter(TObject *Sender)

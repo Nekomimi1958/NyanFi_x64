@@ -579,6 +579,7 @@ extern bool GrepShowSubDir;
 extern bool GrepTrimTop;
 extern bool GrepOmitTop;
 extern bool GrepEmFilter;
+extern bool GrepAdjNextLn;
 extern int  GrepOutMode;
 extern UnicodeString GrepFileName;
 extern UnicodeString GrepAppName;
@@ -1585,7 +1586,7 @@ UnicodeString get_MiniPathName(UnicodeString pnam, int max_w, TFont *font, bool 
 UnicodeString get_dotNaynfi(UnicodeString dnam = EmptyStr);
 UnicodeString get_dotNaynfi(UnicodeString dnam, bool inherit, bool force = false);
 
-UnicodeString get_WebSeaCaption(UnicodeString kwd = EmptyStr);
+UnicodeString get_WebSeaCaption(UnicodeString kwd = EmptyStr, bool with_ak = true);
 
 bool is_NewerTime(TDateTime scr_t, TDateTime dst_t);
 

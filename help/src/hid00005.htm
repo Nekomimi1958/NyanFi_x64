@@ -53,15 +53,18 @@
 <dt id="AboutNyanFi">AboutNyanFi
 <dd><b>NyanFi</b> のバージョン情報を表示します。
 
-<dt id="AlphaBlend">AlphaBlend<span class="pram_text">[_IN|[^]透明度]</span>
+<dt id="AlphaBlend">AlphaBlend<span class="pram_text">[_IN|[[^|+|-]不透明度]</span>
 <dd>メインウィンドウを透過表示にします。<br>
-パラメータに <b>IN</b> を指定すると、入力ボックスで透明度(0:透明～255:不透明)を指定できます。<br>
-パラメータで<b>透明度</b>を指定する場合、先頭に <b>^</b> を付けると、すでに透過表示なら解除、そうでなければ指定値で透過表示になります。<br>
+パラメータに <b>IN</b> を指定すると、入力ボックスで不透明度(64:半透明～255:不透明)を指定できます。<br>
+パラメータで<b>不透明度</b>を指定する場合、先頭に <b>^</b> を付けると、すでに透過表示なら解除、そうでなければ指定値が適用されます。<br>
+先頭に <b>+</b> や <b>-</b> を付けると、現在の不透明度に対して指定値分だけ増減させます。値のみの場合は絶対指定になります。<br>
 パラメータが指定されていないと透過表示が解除されます。<br>
 
 <div class="spc_box">
-<b>例</b>: 透明度128の透過表示と通常表示とをトグル切り替え<br>
+<b>例</b>: 不透明度128の透過表示と通常表示とをトグル切り替え<br>
 　AlphaBlend_^128<br>
+<b>例</b>: 不透明度を32下げる<br>
+　AlphaBlend_-32<br>
 </div>
 
 <dt id="AddTab">AddTab<span class="pram_text">[_NX|_PR]</span>
@@ -128,12 +131,12 @@ AddTag<span class="pram_text">_;</span>
 
 <dt id="BorderLeft">BorderLeft
 <dd>ファイルリストの境界を左に移動します。<br>
-<a href="hid00019.htm#BorderLeftRight">→ オプション設定 - コマンド</a><br>
+移動幅は、<a href="hid00019.htm#BorderLeftRight">オプション設定 - コマンド</a> で指定できます。<br>
 <a href="#WidenCurList">→ WidenCurList</a>　<a href="#EqualListWidth">→ EqualListWidth</a>
 
 <dt id="BorderRight">BorderRight
 <dd>ファイルリストの境界を右に移動します。<br>
-<a href="hid00019.htm#BorderLeftRight">→ オプション設定 - コマンド</a><br>
+移動幅は、<a href="hid00019.htm#BorderLeftRight">オプション設定 - コマンド</a> で指定できます。<br>
 <a href="#WidenCurList">→ WidenCurList</a>　<a href="#EqualListWidth">→ EqualListWidth</a>
 
 <dt id="CalcDirSize">CalcDirSize<span class="pram_text">[_[FC][;LO][;CC][;LS][;SA|SD][;ファイル名]</span>

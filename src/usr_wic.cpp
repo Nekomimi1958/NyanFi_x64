@@ -432,7 +432,7 @@ bool WIC_rotate_image(Graphics::TBitmap *i_bmp,
 		case  4: opt = WICBitmapTransformFlipHorizontal;	break;
 		case  5: opt = WICBitmapTransformFlipVertical;		break;
 		default: opt = WICBitmapTransformRotate0;	break;
- 		}
+		}
 		if (FAILED(rotator->Initialize(bitmap, opt))) Abort();
 
 		//ƒTƒCƒY‚ğæ“¾

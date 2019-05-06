@@ -119,7 +119,7 @@ bool ID3_GetInf(
 					//表示名に変換
 					UnicodeString lbuf = id_str;
 					if (id_min) {
-						if      (contained_wd_i(_T("TPE1|TP1"), id_str)) lbuf = "TP1=";
+						if		(contained_wd_i(_T("TPE1|TP1"), id_str)) lbuf = "TP1=";
 						else if (contained_wd_i(_T("TALB|TAL"), id_str)) lbuf = "TAL=";
 						else if (contained_wd_i(_T("TIT2|TT2"), id_str)) lbuf = "TT2=";
 						else if (contained_wd_i(_T("TRCK|TRK"), id_str)) lbuf = "TRK=";
@@ -127,7 +127,7 @@ bool ID3_GetInf(
 						else										     lbuf = EmptyStr;
 					}
 					else {
-						if      (contained_wd_i(_T("TALB|TAL"), id_str)) lbuf = "アルバム名";
+						if		(contained_wd_i(_T("TALB|TAL"), id_str)) lbuf = "アルバム名";
 						else if (contained_wd_i(_T("TCOM|TCM"), id_str)) lbuf = "作曲者";
 						else if (contained_wd_i(_T("TCON|TCO"), id_str)) lbuf = "ジャンル";
 						else if (contained_wd_i(_T("TCOP|TCR"), id_str)) lbuf = "著作権情報";

@@ -16,10 +16,10 @@
 //---------------------------------------------------------------------------
 UsrScrollPanel::UsrScrollPanel(TPanel *pp, TListBox *lp, int flag)
 {
-	ParentPanel    = pp;
-	AssoListBox    = lp;
+	ParentPanel	   = pp;
+	AssoListBox	   = lp;
 	AssoChkListBox = NULL;
-	AssoStrGrid    = NULL;
+	AssoStrGrid	   = NULL;
 	AssoScrollBar  = NULL;
 	Flag		   = flag;
 
@@ -30,10 +30,10 @@ UsrScrollPanel::UsrScrollPanel(TPanel *pp, TListBox *lp, int flag)
 //---------------------------------------------------------------------------
 UsrScrollPanel::UsrScrollPanel(TPanel *pp, TCheckListBox *lp, int flag)
 {
-	ParentPanel    = pp;
+	ParentPanel	   = pp;
 	AssoChkListBox = lp;
-	AssoListBox    = NULL;
-	AssoStrGrid    = NULL;
+	AssoListBox	   = NULL;
+	AssoStrGrid	   = NULL;
 	AssoScrollBar  = NULL;
 	Flag		   = flag;
 
@@ -44,9 +44,9 @@ UsrScrollPanel::UsrScrollPanel(TPanel *pp, TCheckListBox *lp, int flag)
 //---------------------------------------------------------------------------
 UsrScrollPanel::UsrScrollPanel(TPanel *pp, TStringGrid *gp, int flag)
 {
-	ParentPanel    = pp;
-	AssoStrGrid    = gp;
-	AssoListBox    = NULL;
+	ParentPanel	   = pp;
+	AssoStrGrid	   = gp;
+	AssoListBox	   = NULL;
 	AssoChkListBox = NULL;
 	AssoScrollBar  = NULL;
 	Flag		   = flag;
@@ -462,10 +462,10 @@ void __fastcall UsrScrollPanel::ScrPaintBoxPaint(TObject *Sender)
 			int max_n = (int)HitLines->Objects[0];	//‘s”
 			if (max_n>0) {
 				BLENDFUNCTION blend_f;
-				blend_f.BlendOp             = AC_SRC_OVER;
-				blend_f.BlendFlags          = 0;
+				blend_f.BlendOp 			= AC_SRC_OVER;
+				blend_f.BlendFlags			= 0;
 				blend_f.SourceConstantAlpha = HitLineAlpha;
-				blend_f.AlphaFormat         = 0;
+				blend_f.AlphaFormat 		= 0;
 
 				std::unique_ptr<Graphics::TBitmap> bp_l(new Graphics::TBitmap());
 				int w = pp->ClientWidth;

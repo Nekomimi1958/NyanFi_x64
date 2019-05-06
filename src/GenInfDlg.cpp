@@ -559,9 +559,9 @@ void __fastcall TGeneralInfoDlg::SetStatusBar(UnicodeString msg)
 	for (int i=0; i<(StatusBar1->Panels->Count - 1); i++) w3 -= StatusBar1->Panels->Items[i]->Width;
 
 	StatusBar1->Panels->Items[3]->Text =
-		     !msg.IsEmpty()? msg :
+			 !msg.IsEmpty()? msg :
 		!FirstKey.IsEmpty()? "2ストロークキー: " + FirstKey :
-		    !fnam.IsEmpty()? get_MiniPathName(fnam, w3, StatusBar1->Font, true) :
+			!fnam.IsEmpty()? get_MiniPathName(fnam, w3, StatusBar1->Font, true) :
 		 !id3_str.IsEmpty()? id3_str :
 		!FileName.IsEmpty()? get_FileInfStr(FileName, false) : EmptyStr;
 
@@ -892,19 +892,30 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 	TListBox *lp = (TListBox*)Sender;
 
 	//コマンド
-	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))
+	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V)) {
 		;
+	}
 	//フィルタ欄へ
-	else if (StartsText("IncSearch", cmd_F))	FilterEdit->SetFocus();
+	else if (StartsText("IncSearch", cmd_F)) {
+		FilterEdit->SetFocus();
+	}
 	//ソート
-	else if (USAME_TI(cmd_V, "Sort_AO"))	SortAscAction->Execute();
-	else if (USAME_TI(cmd_V, "Sort_DO"))	SortDesAction->Execute();
-	else if (USAME_TI(cmd_V, "Sort"))		OrgOrderAction->Execute();
+	else if (USAME_TI(cmd_V, "Sort_AO")) {
+		SortAscAction->Execute();
+	}
+	else if (USAME_TI(cmd_V, "Sort_DO")) {
+		SortDesAction->Execute();
+	}
+	else if (USAME_TI(cmd_V, "Sort")) {
+		OrgOrderAction->Execute();
+	}
 	//検索
-	else if (USAME_TI(cmd_V, "FindText"))
+	else if (USAME_TI(cmd_V, "FindText")) {
 		FindTextDlg->ShowModal();
-	else if (contained_wd_i(_T("FindDown|FindUp"), cmd_V))
+	}
+	else if (contained_wd_i(_T("FindDown|FindUp"), cmd_V)) {
 		FindText(USAME_TI(cmd_V, "FindDown"));
+	}
 	//エラー検索
 	else if (contained_wd_i(_T("NextErr|PrevErr"), cmd_V)) {
 		if (isLog) {
@@ -937,13 +948,17 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 		if (ViewFileAction->Enabled) ViewFileAction->Execute(); else ViewListAction->Execute();
 	}
 	//編集
-	else if (USAME_TI(cmd_F, "FileEdit"))	EditFileAction->Execute();
+	else if (USAME_TI(cmd_F, "FileEdit")) {
+		EditFileAction->Execute();
+	}
 	//ファイル情報
-	else if (USAME_TI(cmd_F, "ListFileInfo") || StartsText("ShowFileInfo", cmd_F))
+	else if (USAME_TI(cmd_F, "ListFileInfo") || StartsText("ShowFileInfo", cmd_F)) {
 		ShowFileInfoAction->Execute();
+	}
 	//プロパティ
-	else if (USAME_TI(cmd_F, "PropertyDlg"))
+	else if (USAME_TI(cmd_F, "PropertyDlg")) {
 		PropertyAction->Execute();
+	}
 	//キー
 	else if (equal_ENTER(KeyStr)) {
 		TListBox *lp = GenListBox;
@@ -981,10 +996,16 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 			}
 		}
 	}
-	else if (SameText(KeyStr, KeyStr_Copy)) CopyAction->Execute();
-	else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(lp);
+	else if (SameText(KeyStr, KeyStr_Copy)) {
+		CopyAction->Execute();
+	}
+	else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
+		show_PopupMenu(lp);
+	}
 	//閉じる
-	else if (USAME_TI(cmd_V, "Close") || equal_ESC(KeyStr))  ModalResult = mrCancel;
+	else if (USAME_TI(cmd_V, "Close") || equal_ESC(KeyStr)) {
+		ModalResult = mrCancel;
+	}
 	else return;
 
 	if (!StartsText("Find", cmd_V)) SetStatusBar();

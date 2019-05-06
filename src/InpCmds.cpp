@@ -173,7 +173,7 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 {
 	TComboBox *cp_inp  = CmdsComboBox;
 	TComboBox *cp_down = SubComboBox->DroppedDown? SubComboBox :
-					    CmdsComboBox->DroppedDown? CmdsComboBox : NULL;
+						CmdsComboBox->DroppedDown? CmdsComboBox : NULL;
 
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 

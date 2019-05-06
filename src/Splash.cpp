@@ -16,7 +16,7 @@ TSplashForm *SplashForm = NULL;
 
 //---------------------------------------------------------------------------
 __fastcall TSplashForm::TSplashForm(TComponent* Owner)
-    : TForm(Owner)
+	: TForm(Owner)
 {
 }
 //---------------------------------------------------------------------------

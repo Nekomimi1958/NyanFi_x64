@@ -237,7 +237,7 @@ void __fastcall TTaskThread::AddDebugLog(UnicodeString msg, UnicodeString info)
 {
 	if (!LogDebugInf) return;
 
-    TFormatSettings fs = TFormatSettings::Create();
+	TFormatSettings fs = TFormatSettings::Create();
 	msg = "       ! " + FormatDateTime("hh:nn:ss.zzz ", Now(), fs) + msg;
 	if (!info.IsEmpty()) msg.cat_sprintf(_T(" %s"), info.c_str());
 	AddLog(msg);
@@ -1023,7 +1023,7 @@ void __fastcall TTaskThread::CMPDEL_core(UnicodeString fnam)
 		Randomize();
 		std::unique_ptr<char[]> wbuf(new char[CMPDEL_BUFF_SIZE]);
 
-		if      (CmpDelOwCnt<=0) CmpDelOwCnt = 3;
+		if		(CmpDelOwCnt<=0) CmpDelOwCnt = 3;
 		else if (CmpDelOwCnt>50) CmpDelOwCnt = 50;
 
 		__int64 f_size	   = get_file_size(fnam);
@@ -1756,7 +1756,7 @@ void __fastcall TTaskThread::FinishTask()
 {
 	//ƒƒO•\Ž¦
 	float tcnt = (GetTickCount() - StartCount)/1000.0;
-    TFormatSettings fs = TFormatSettings::Create();
+	TFormatSettings fs = TFormatSettings::Create();
 	UnicodeString msg = FormatDateTime("hh:nn:ss ", Now(), fs);
 	msg.cat_sprintf(_T("%sI—¹ %5.1f•b"), TaskCmdList->Values[CmdName].c_str(), tcnt);
 	msg += get_res_cnt_str(OkCount, ErrCount, SkipCount);

@@ -150,7 +150,7 @@ int UserArcUnit::GetArcType(UnicodeString arc_file,
 
 	//Šg’£Žq‚É‚æ‚é”»’è
 #if defined(_WIN64)
-	if      (test_FileExt(fext, FEXT_ZIP))	arc_t = UARCTYP_ZIP;
+	if		(test_FileExt(fext, FEXT_ZIP))	arc_t = UARCTYP_ZIP;
 	else if (test_FileExt(fext, FEXT_7Z) || (Use7zDll && test_FileExt(fext, FExt7zDll)))
 											arc_t = UARCTYP_7Z;
 	else if (test_FileExt(fext, FEXT_TAR))	arc_t = UARCTYP_TAR;
@@ -160,7 +160,7 @@ int UserArcUnit::GetArcType(UnicodeString arc_file,
 	else if (test_FileExt(fext, FEXT_CAB))	arc_t = UARCTYP_CAB;
 	else if (test_FileExt(fext, FEXT_ISO))	arc_t = UARCTYP_ISO;
 #else
-	if      (test_FileExt(fext, FEXT_ZIP))	arc_t = UARCTYP_ZIP;
+	if		(test_FileExt(fext, FEXT_ZIP))	arc_t = UARCTYP_ZIP;
 	else if (test_FileExt(fext, FEXT_LHA))	arc_t = UARCTYP_LHA;
 	else if (test_FileExt(fext, FEXT_CAB))	arc_t = UARCTYP_CAB;
 	else if (test_FileExt(fext, FEXT_TAR))	arc_t = UARCTYP_TAR;

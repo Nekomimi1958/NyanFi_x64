@@ -144,7 +144,9 @@ void HtmConv::del_tag_block(TStringList *lst,
 				flag = !ContainsText(s, end_wd);
 				lst->Delete(i);
 			}
-			else i++;
+			else {
+				i++;
+			}
 		}
 		else {
 			flag = !ContainsText(s, end_wd);
@@ -189,7 +191,9 @@ void HtmConv::DelAtrBlock(TStringList *lst, UnicodeString anam, UnicodeString av
 			lst->Delete(i);
 			if (t_level==0) del_sw = false;
 		}
-		else i++;
+		else {
+			i++;
+		}
 	}
 }
 
@@ -251,16 +255,24 @@ UnicodeString HtmConv::GetTagAtr(UnicodeString s,
 				atr  = EmptyStr;
 				flag = 2;
 			}
-			else tag.cat_sprintf(_T("%c"), c);
+			else {
+				tag.cat_sprintf(_T("%c"), c);
+			}
 			break;
 		case 2:
 			if (c=='=') {		//ëÆê´ñºämíË
 				atr  = atr.Trim();
 				flag = 3;
 			}
-			else if (c==' ') atr = EmptyStr;
-			else if (c=='>') flag = 0;
-			else atr.cat_sprintf(_T("%c"), c);
+			else if (c==' ') {
+				atr = EmptyStr;
+			}
+			else if (c=='>') {
+				flag = 0;
+			}
+			else {
+				atr.cat_sprintf(_T("%c"), c);
+			}
 			break;
 		case 3:
 			if (c=='>') {
@@ -631,7 +643,7 @@ void HtmConv::FlushText(UnicodeString s)
 
 	if (!Skip) {
 		if (!fXMP) s = RefEntity(s);
- 		TxtBuf->Add(s);
+		TxtBuf->Add(s);
 	}
 
 	TxtLineBuf = EmptyStr;
@@ -755,7 +767,7 @@ void HtmConv::Convert()
 			i++;
 		}
 		else if (!tag.IsEmpty()) {
-			if      (USAME_TS(tag, "PRE")) fPRE = true;
+			if		(USAME_TS(tag, "PRE")) fPRE = true;
 			else if (USAME_TS(tag, "XMP")) fXMP = true;
 			tmp_buf->Strings[i++] = Trim(s);
 		}
@@ -944,7 +956,6 @@ void HtmConv::Convert()
 				LI_No[++LI_level] = GetTagAtr(lbuf, tag, _T("START")).ToIntDef(1);
 				tmpstr = GetTagAtr(lbuf, tag, _T("TYPE"));
 				if (tmpstr.IsEmpty()) OL_type[LI_level] = '1'; else OL_type[LI_level] = tmpstr[1];
-
 			}
 			else if (contained_wd_i(_T("/UL|/OL"), tag)) {
 				FlushText();
@@ -1111,15 +1122,23 @@ void HtmConv::Convert()
 			else if (USAME_TS(tag, "META")) {
 				UnicodeString mnam = GetTagAtr(lbuf, tag, _T("NAME"));
 				UnicodeString cont = GetTagAtr(lbuf, tag, _T("CONTENT"));
-				if		(USAME_TI(mnam, "description"))	Description = cont;
-				else if (USAME_TI(mnam, "Keywords"))	Keywords	= cont;
+				if (USAME_TI(mnam, "description"))
+					Description = cont;
+				else if (USAME_TI(mnam, "Keywords"))
+					Keywords	= cont;
 			}
 
 			//Markdown ÇÃèÍçáÇÃÇ›
 			else if (ToMarkdown) {
-				if		(contained_wd_i(_T("B|/B|EM|/EM|STRONG|/STRONG"), tag)) TxtLineBuf += "**";
-				else if (contained_wd_i(_T("I|/I"), tag)) TxtLineBuf += "*";
-				else if (contained_wd_i(_T("S|/S|DEL|/DEL"), tag)) TxtLineBuf += "~~";
+				if (contained_wd_i(_T("B|/B|EM|/EM|STRONG|/STRONG"), tag)) {
+					TxtLineBuf += "**";
+				}
+				else if (contained_wd_i(_T("I|/I"), tag)) {
+					TxtLineBuf += "*";
+				}
+				else if (contained_wd_i(_T("S|/S|DEL|/DEL"), tag)) {
+					TxtLineBuf += "~~";
+				}
 				//âÊëú
 				else if (USAME_TS(tag, "IMG")) {
 					UnicodeString alt_str = def_if_empty(GetTagAtr(lbuf, tag, _T("ALT")), _T("âÊëú"));

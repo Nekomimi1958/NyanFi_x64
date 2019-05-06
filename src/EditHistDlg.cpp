@@ -754,7 +754,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 			case 0: cv->Font->Style = cv->Font->Style << fsUnderline;	break;
 			case 2: col_fg = get_TimeColor(fp->f_time, col_fgList);		break;
 			case 3: col_fg = col_Folder;								break;
-			case 5: if (isRepo && SameText(lbuf, "Clean")) col_fg = AdjustColor(col_fg, 64);	break;
+			case 5: if (isRepo && SameText(lbuf, "Clean")) col_fg = AdjustColor(col_fg, ADJCOL_FGLIST);	break;
 			}
 		}
 		cv->Font->Color = col_fg;

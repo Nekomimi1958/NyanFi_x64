@@ -313,7 +313,7 @@ UnicodeString format_Date(TDateTime dt)
 //---------------------------------------------------------------------------
 UnicodeString format_DateTimeEx(UnicodeString fmt, TDateTime dt)
 {
-    TFormatSettings fs = remove_text(fmt, _T("$EN"))? TFormatSettings::Create("en-US") : TFormatSettings::Create();
+	TFormatSettings fs = remove_text(fmt, _T("$EN"))? TFormatSettings::Create("en-US") : TFormatSettings::Create();
 	return FormatDateTime(fmt, dt, fs);
 }
 
@@ -864,10 +864,10 @@ void SetHighlight(TCanvas *cv, bool hl)
 void alpha_blend_Rect(TCanvas *cv, int x, int y, int w, int h, TColor col, int alpha)
 {
 	BLENDFUNCTION blend_f;
-	blend_f.BlendOp             = AC_SRC_OVER;
-	blend_f.BlendFlags          = 0;
+	blend_f.BlendOp				= AC_SRC_OVER;
+	blend_f.BlendFlags			= 0;
 	blend_f.SourceConstantAlpha = alpha;
-	blend_f.AlphaFormat         = 0;
+	blend_f.AlphaFormat			= 0;
 
 	std::unique_ptr<Graphics::TBitmap> bp_b(new Graphics::TBitmap());
 	bp_b->SetSize(8, 8);

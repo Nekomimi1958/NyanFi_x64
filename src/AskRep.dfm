@@ -2,6 +2,7 @@ object AskRepDlg: TAskRepDlg
   Left = 0
   Top = 0
   HelpContext = 61
+  BorderIcons = [biSystemMenu]
   Caption = #25991#23383#21015#12398#32622#25563
   ClientHeight = 144
   ClientWidth = 528

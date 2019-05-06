@@ -83,7 +83,7 @@ int   NyanFiIdNo = 0;			//多重 NyanFi 識別ID
 bool  IsPrimary  = true;		//最初に起動された
 win_dat Win2Data;				//二重起動終了時の画面情報
 
-int    ScrMode  = SCMD_FLIST;	//画面モード
+int ScrMode  = SCMD_FLIST;	//画面モード
 
 double ScrScale = 1.0;			//画面スケーリング
 int    SIcoSize = 16;			//スモールアイコンの表示サイズ
@@ -307,7 +307,7 @@ int  ScrBarStyle;				//スクロールバー・スタイル
 int  IconMode;					//アイコンの表示モード	0:非表示/ 1:表示/ 2:ディレクトリのみ表示
 
 bool ModalScreen;				//モーダル表示効果
-int  ModalScrAlpha;
+int  ModalScrAlpha;				//スクリーンの透明度
 
 int  TlWinBorderWidth;			//ツールウインドウの境界線幅
 
@@ -431,6 +431,7 @@ bool GrepShowSubDir;			//GREP結果にサブディレクトリ名を表示
 bool GrepTrimTop;				//GREP結果で行頭のタブや空白を削除
 bool GrepOmitTop;				//GREP結果でマッチ語が見えないとき前部分を省略
 bool GrepEmFilter;				//GREP結果でフィルタの語を強調表示
+bool GrepAdjNextLn;				//GREP結果で次行表示部分の明度を加減
 int  GrepOutMode;				//GREP 出力先	0:無し/ 1:ファイル/ 2:クリップボード
 UnicodeString GrepFileName;		//出力ファイル名
 UnicodeString GrepAppName;		//起動アプリ名
@@ -883,17 +884,17 @@ const TColor col_None = Graphics::clNone;
 Graphics::TBitmap *BgImgBuff[MAX_BGIMAGE];
 UnicodeString BgImgName[MAX_BGIMAGE];
 
-int  BgImgMode;					//モード
+int  BgImgMode;			//モード
 int  BgImgSubMode;
-int  BgColAlpha;				//背景色アルファ
-bool BgImgGray;					//グレースケール化
-bool BgImgHideScr;				//スクロール時に隠す
-int  BgHideTime;				//復帰時間
-bool BgImgTileIf;				//指定サイズ以下なら並べて表示
+int  BgColAlpha;		//背景色アルファ
+bool BgImgGray;			//グレースケール化
+bool BgImgHideScr;		//スクロール時に隠す
+int  BgHideTime;		//復帰時間
+bool BgImgTileIf;		//指定サイズ以下なら並べて表示
 int  BgTileSize;
 
-bool AlphaForm;
-int  AlphaValue;
+bool AlphaForm;			//メイン画面を透明に
+int  AlphaValue;		//メイン画面アルファ
 
 //フォントのサンプル表示
 UnicodeString FontSampleTxt = "0123456789(!?)+-\r\nABCDEFGabcdefg\r\nあいうえおアイウエオ\r\n春夏秋冬花鳥風月黒猫";
@@ -1885,6 +1886,7 @@ void InitializeGlobal()
 		{_T("G:TrimTop=false"),				(TObject*)&GrepTrimTop},
 		{_T("G:OmitTop=true"),				(TObject*)&GrepOmitTop},
 		{_T("G:EmFilter=false"),			(TObject*)&GrepEmFilter},
+		{_T("G:AdjNextLn=true"),			(TObject*)&GrepAdjNextLn},
 
 		//セクション (prefix = S:)
 		{_T("S:KeyFuncList="),				(TObject*)KeyFuncList},
@@ -2681,7 +2683,8 @@ void change_ComboBoxHistory(TComboBox *cp,
 
 //---------------------------------------------------------------------------
 //リストの絞り込み
-//Objects 内容も設定 (0 なら リストのインデックスを設定)
+//  Objects 内容も設定 (0 なら リストのインデックスを設定)
+//  大小文字は区別しない
 //---------------------------------------------------------------------------
 void filter_List(
 	TStringList *i_lst, //対象リスト
@@ -3039,7 +3042,7 @@ int __fastcall SortComp_Memo(TStringList *List, int Index1, int Index2)
 
 	if ((memo0.IsEmpty() && memo1.IsEmpty()) || SameText(memo0, memo1)) {
 		int res = SameText(fp0->b_name, fp1->b_name) ? CompTextN(fp0->f_ext, fp1->f_ext)
-												     : CompTextN(fp0->b_name, fp1->b_name);
+													 : CompTextN(fp0->b_name, fp1->b_name);
 		return (res==0)? CompTextN(fp0->p_name, fp1->p_name) : res;
 	}
 
@@ -3061,7 +3064,7 @@ int __fastcall SortComp_GitStt(TStringList *List, int Index1, int Index2)
 
 	if ((memo0.IsEmpty() && memo1.IsEmpty()) || SameText(memo0, memo1)) {
 		int res = SameText(fp0->b_name, fp1->b_name) ? CompTextN(fp0->f_ext, fp1->f_ext)
-												     : CompTextN(fp0->b_name, fp1->b_name);
+													 : CompTextN(fp0->b_name, fp1->b_name);
 		return (res==0)? CompTextN(fp0->p_name, fp1->p_name) : res;
 	}
 
@@ -3307,7 +3310,9 @@ UnicodeString get_dotNaynfi(UnicodeString dnam,
 //---------------------------------------------------------------------------
 //Web検索表示文字列を取得
 //---------------------------------------------------------------------------
-UnicodeString get_WebSeaCaption(UnicodeString kwd)
+UnicodeString get_WebSeaCaption(
+	UnicodeString kwd,	//検索語				(default = EmptyStr)
+	bool with_ak)		//アクセラレータを付加	(default = true)
 {
 	UnicodeString ret_str;
 	if (!kwd.IsEmpty()) {
@@ -3320,7 +3325,8 @@ UnicodeString get_WebSeaCaption(UnicodeString kwd)
 	UnicodeString url = get_tkn_m(WebSeaUrl, _T("//"), _T("/"));
 	remove_top_text(url, _T("www."));
 	if (url.IsEmpty()) url = "Web";
-	ret_str.cat_sprintf(_T("%s で検索(&S)"), url.c_str());
+	ret_str.cat_sprintf(_T("%s で検索"), url.c_str());
+	if (with_ak) ret_str += "(&S)";
 
 	return ret_str;
 }
@@ -3600,7 +3606,7 @@ UnicodeString format_FileName(UnicodeString fmt, UnicodeString fnam)
 UnicodeString get_SrcHdrName(UnicodeString fnam)
 {
 	UnicodeString fext = get_extension(fnam);
-	if      (test_FileExt(fext, FEXT_C_SRC)) fext = FEXT_C_HDR;
+	if		(test_FileExt(fext, FEXT_C_SRC)) fext = FEXT_C_HDR;
 	else if (test_FileExt(fext, FEXT_C_HDR)) fext = FEXT_C_SRC;
 	else return EmptyStr;
 
@@ -4844,7 +4850,7 @@ bool check_file_std(
 	//タイムスタンプ
 	if (lst_stt->find_DT_mode>0) {
 		if (!lst_stt->find_DT_str.IsEmpty() && lst_stt->find_DT_mode==1) {
-		    if (!str_match(lst_stt->find_DT_str, format_Date(f_tm))) return false;
+			if (!str_match(lst_stt->find_DT_str, format_Date(f_tm))) return false;
 		}
 		else {
 			TValueRelationship res = CompareDate(f_tm, lst_stt->find_DT_value);
@@ -5272,20 +5278,20 @@ drive_info *get_DriveInfoList()
 					STORAGE_DEVICE_DESCRIPTOR *pDescriptor = (STORAGE_DEVICE_DESCRIPTOR*)pcbData.get();
 					int ix = -1;
 					switch(pDescriptor->BusType) {
-					case BusTypeScsi:   ix = 0;		break;
-					case BusTypeAtapi:  ix = 1;		break;
-					case BusTypeAta:    ix = 2;		break;
-					case BusType1394:   ix = 3;		break;
-					case BusTypeSsa:    ix = 4;		break;
-					case BusTypeFibre:  ix = 5;		break;
-					case BusTypeUsb:    ix = 6;		break;
-					case BusTypeRAID:   ix = 7;		break;
-					case BusTypeiScsi:  ix = 8;		break;
-					case BusTypeSas:    ix = 9;		break;
-					case BusTypeSata:   ix = 10;	break;
-					case BusTypeSd:	    ix = 11;	break;
-					case BusTypeMmc:    ix = 12;	break;
-					case BusTypeSpaces: ix = 13;	break;
+					case BusTypeScsi:	ix = 0;		break;
+					case BusTypeAtapi:	ix = 1;		break;
+					case BusTypeAta:	ix = 2;		break;
+					case BusType1394:	ix = 3;		break;
+					case BusTypeSsa:	ix = 4;		break;
+					case BusTypeFibre:	ix = 5;		break;
+					case BusTypeUsb:	ix = 6;		break;
+					case BusTypeRAID:	ix = 7;		break;
+					case BusTypeiScsi:	ix = 8;		break;
+					case BusTypeSas:	ix = 9;		break;
+					case BusTypeSata:	ix = 10;	break;
+					case BusTypeSd:		ix = 11;	break;
+					case BusTypeMmc:	ix = 12;	break;
+					case BusTypeSpaces:	ix = 13;	break;
 					default:
 						;
 					}
@@ -7167,7 +7173,8 @@ TColor get_LogColor(UnicodeString s)
 	return (					 			  is_err? col_Error :
 		 (has_tm && contains_wd_i(s, _T("開始|>>")))? col_Headline :
 							 StartsText("$ git ", s)? col_Headline :
-								    (s.Pos('!')==10)? AdjustColor(col_fgLog, 96) : col_fgLog
+									(s.Pos('!')==10)? AdjustColor(col_fgLog, ADJCOL_FGLIST)
+													: col_fgLog
 		);
 }
 
@@ -8434,13 +8441,14 @@ bool is_Processing(
 bool is_Processing(
 	UnicodeString fnam,
 	bool is_video,			//動画(書込もチェック)	(default = false)
-	UnicodeString *err_msg)	//[0] エラーメッセージ	(default = NULL)
+	UnicodeString *err_msg)	//[o] エラーメッセージ	(default = NULL)
 {
 	bool flag = false;
 	if (err_msg) *err_msg = EmptyStr;
 
 	if (!fnam.IsEmpty()) {
-		DWORD acc_mod = GENERIC_READ;  if (is_video) acc_mod |= GENERIC_WRITE;
+		DWORD acc_mod = GENERIC_READ;
+		if (is_video) acc_mod |= GENERIC_WRITE;
 		HANDLE hFile = ::CreateFile(cv_ex_filename(fnam).c_str(),
 			acc_mod, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (hFile==INVALID_HANDLE_VALUE) {
@@ -8666,14 +8674,19 @@ int CountListLines(
 					}
 				}
 
-				if		(is_rem || in_mlt)	(*rem_cnt)++;
-				else if (is_blnk)			(*blk_cnt)++;
+				if (is_rem || in_mlt)
+					(*rem_cnt)++;
+				else if (is_blnk)
+					(*blk_cnt)++;
 			}
-			else if (in_mlt) (*rem_cnt)++;
+			else if (in_mlt) {
+				(*rem_cnt)++;
+			}
 
 			if (in_mlt) {
-				for (int j=0; j<ed_lst->Count && in_mlt; j++)
+				for (int j=0; j<ed_lst->Count && in_mlt; j++) {
 					if (ContainsStr(tbuf, ed_lst->Strings[j])) in_mlt = false;
+				}
 			}
 		}
 	}
@@ -8915,8 +8928,8 @@ bool get_img_size(UnicodeString fnam, unsigned int *wd, unsigned int *hi)
 int load_ImageFile(
 	UnicodeString fnam,
 	Graphics::TBitmap *o_bmp,
-	int wic_type,			//				(default = WICIMG_PREVIEW)
-	TColor trans_bg)		//透過Gの背景色	(default = clNone)
+	int wic_type,		//				(default = WICIMG_PREVIEW)
+	TColor trans_bg)	//透過Gの背景色	(default = clNone)
 {
 	int res = 0;
 	try {
@@ -9703,7 +9716,9 @@ bool add_PlayList(UnicodeString lnam)
 //---------------------------------------------------------------------------
 //プレイリストを再生
 //---------------------------------------------------------------------------
-bool play_PlayList(bool prev, bool inh_shfl)
+bool play_PlayList(
+	bool prev,			//前の曲へ			(default = false)
+	bool inh_shfl)		//シャッフル抑止	(default = false)
 {
 	PlayFile  = EmptyStr;
 	ListShuffled = false;
@@ -9711,7 +9726,7 @@ bool play_PlayList(bool prev, bool inh_shfl)
 	if (PlayList->Count==0) return false;
 
 	if (prev) {
-		if (PlayStbIdx>1) PlayStbIdx-=2; else PlayStbIdx = 0;
+		if (PlayStbIdx>1) PlayStbIdx -= 2; else PlayStbIdx = 0;
 	}
 	else {
 		//シャッフル
@@ -10039,15 +10054,13 @@ void TabCrTextOut(
 			cv->TextRect(Rect(x, y, x + w, yh), x, y, alt_yen_to(sbuf));
 			x += w;
 		}
-		else {
-			//タブ/改行
-			int w = get_TextWidth(cv, "W", is_irreg);
-			if (USAME_TS(s.SubString(p1, 1), "\t"))
-				draw_TAB(cv, x, y, w, cv->TextHeight("Q"));
-			else
-				draw_CR(cv, x, y, w, cv->TextHeight("Q"));
-			x += w;
-		}
+		//タブ/改行
+		int w = get_TextWidth(cv, "W", is_irreg);
+		if (USAME_TS(s.SubString(p1, 1), "\t"))
+			draw_TAB(cv, x, y, w, cv->TextHeight("Q"));
+		else
+			draw_CR(cv, x, y, w, cv->TextHeight("Q"));
+		x += w;
 		if (max_x>0 && x>=max_x) break;
 		p0 = p1 + 1;
 	}
@@ -10273,7 +10286,7 @@ void PathNameOut(
 
 	//文字列描画
 	bool is_irreg = IsIrregularFont(cv->Font);
-	TColor fg_sep = AdjustColor(cv->Font->Color, 96);
+	TColor fg_sep = AdjustColor(cv->Font->Color, ADJCOL_FGLIST);
 	int yh = y + cv->TextHeight("Q");
 	int s_wd = get_TextWidth(cv, DirDelimiter, is_irreg);
 	int s_mg = (s_wd>get_TextWidth(cv, "/", is_irreg))? 0 : s_wd/4;
@@ -10340,7 +10353,7 @@ void PathNameOut(
 
 	bool is_irreg = IsIrregularFont(cv->Font);
 	TColor fg_org = cv->Font->Color;
-	TColor fg_sep = AdjustColor(fg_org, 96);
+	TColor fg_sep = AdjustColor(fg_org, ADJCOL_FGLIST);
 
 	int yh = y + cv->TextHeight("Q");
 	int s_wd = get_TextWidth(cv, DirDelimiter, is_irreg);
@@ -10444,7 +10457,7 @@ void SpaceTextOut(
 		int zs_wd = std::min(abs(cv->Font->Height), hs_wd * 2);
 		cv->Pen->Width = w1;
 		cv->Pen->Style = psSolid;
-		cv->Pen->Color = force_nrm? AdjustColor(fg, 96) : col_fgSpace;
+		cv->Pen->Color = force_nrm? AdjustColor(fg, ADJCOL_FGLIST) : col_fgSpace;
 		for (;;) {
 			int p_z = s.Pos(zs_ch);
 			int p_h = s.Pos(hs_ch);
@@ -10500,7 +10513,7 @@ void Emphasis_RLO_info(
 
 		//実際の表示名
 		bool is_irreg	= IsIrregularFont(cv->Font);
-		cv->Font->Color = AdjustColor(cv->Font->Color, 96);
+		cv->Font->Color = AdjustColor(cv->Font->Color, ADJCOL_FGLIST);
 		cv->TextOut(xp, yp, "  (");
 		xp += get_TextWidth(cv, "  (", is_irreg);
 		cv->TextOut(xp, yp, fnam);
@@ -12478,10 +12491,12 @@ bool __fastcall SpecialKeyProc(
 		}
 	}
 	//閉じる
-	else if (USAME_TI(KeyStr, "Alt+F4"))
+	else if (USAME_TI(KeyStr, "Alt+F4")) {
 		frm->Close();
-	else
+	}
+	else {
 		handled = false;
+	}
 
 	if (handled) {
 		//コンボボックスがドロップダウンしていたら閉じる

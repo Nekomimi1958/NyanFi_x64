@@ -282,7 +282,7 @@ void __fastcall TFindFileDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		IniFile->WriteStrGen(_T("FindSizeText"),	SizeEdit);
 
 		int s_unit = 0;
-		if      (KBRadioButton->Checked) s_unit = 1;
+		if		(KBRadioButton->Checked) s_unit = 1;
 		else if (MBRadioButton->Checked) s_unit = 2;
 		else if (GBRadioButton->Checked) s_unit = 3;
 		IniFile->WriteIntGen(_T("FindSizeUnit"),	s_unit);

@@ -248,8 +248,8 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 		}
 
 		cv->Font->Style = (ACol==0)? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
-		TColor fcol = gp->Cells[3][ARow].IsEmpty()? AdjustColor(col_fgList, 96) :
-						       is_SelFgCol(State)? col_fgSelItem : col_None;
+		TColor fcol = gp->Cells[3][ARow].IsEmpty()? AdjustColor(col_fgList, ADJCOL_FGLIST) :
+								is_SelFgCol(State)? col_fgSelItem : col_None;
 
 		//ボリューム/パス
 		if (ACol==1) {

@@ -1051,7 +1051,7 @@ bool get_GifInf(
 	TStringList  *lst,		//[o] 情報リスト	(NULLでも可)
 	unsigned int *i_wd,		//[o] 幅			(default = NULL)
 	unsigned int *i_hi,		//[o] 高さ			(default = NULL)
-	int          *i_cnt)	//[o] フレーム数	(default = NULL)
+	int			 *i_cnt)	//[o] フレーム数	(default = NULL)
 {
 	bool ret = false;
 	try {
@@ -2044,7 +2044,7 @@ UnicodeString get_CRC32_str(
 {
 	static uint32_t table[256];
 	static bool has_tbl = false;
- 
+
 	//テーブルの初期化
 	if (!has_tbl) {
 		for (int i=0; i<256; i++) {

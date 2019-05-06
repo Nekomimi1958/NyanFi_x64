@@ -99,7 +99,7 @@ public:
 
 	TStringList *ThumbnailList;	//サムネイルリスト
 	UnicodeString __fastcall GetListItem(int idx);
-	void          __fastcall SetListItem(int idx, UnicodeString s);
+	void __fastcall SetListItem(int idx, UnicodeString s);
 	Graphics::TBitmap* __fastcall GetListBitmap(int idx);
 
 	__fastcall TThumbnailThread(bool CreateSuspended);

@@ -21,6 +21,9 @@ __fastcall TModalScrForm::TModalScrForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TModalScrForm::FormShow(TObject *Sender)
 {
+	Color			= col_ModalScr;
+	AlphaBlendValue = ModalScrAlpha;
+
 	if (FullScr) {
 		set_window_pos_ex(Handle, Screen->DesktopRect);
 	}

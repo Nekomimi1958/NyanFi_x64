@@ -604,7 +604,7 @@ int get_HardLinkCount(UnicodeString fnam)
 		::CloseHandle(hFile);
 	}
 
-    return cnt;
+	return cnt;
 }
 //---------------------------------------------------------------------------
 //ファイルの同一性チェック
