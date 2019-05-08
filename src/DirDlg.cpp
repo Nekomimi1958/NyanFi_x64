@@ -975,10 +975,18 @@ void __fastcall TRegDirDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShift
 			return;
 		}
 	}
-	else if (contained_wd_i(KeysStr_ToList, KeyStr)) lp->SetFocus();
-	else if (MovListBoxFromFilter(lp, KeyStr))	;
-	else if (SameText(KeyStr, KeyStr_Migemo))	MigemoAction->Checked = !MigemoAction->Checked;
-	else if (equal_ESC(KeyStr))					ModalResult = mrCancel;
+	else if (contained_wd_i(KeysStr_ToList, KeyStr)) {
+		lp->SetFocus();
+	}
+	else if (MovListBoxFromFilter(lp, KeyStr)) {
+		;
+	}
+	else if (SameText(KeyStr, KeyStr_Migemo)) {
+		MigemoAction->Checked = !MigemoAction->Checked;
+	}
+	else if (equal_ESC(KeyStr)) {
+		ModalResult = mrCancel;
+	}
 	else return;
 
 	lp->Invalidate();

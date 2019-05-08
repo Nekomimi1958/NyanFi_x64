@@ -1612,7 +1612,7 @@ void XCMD_PlaySound(UnicodeString prm)
 void XCMD_FlashWin(UnicodeString prm)
 {
 	if (!prm.IsEmpty()) {
-		int cnt = get_tkn(prm, '_').ToIntDef(0);  prm = get_tkn_r(prm, '_');
+		int cnt = split_tkn(prm, '_').ToIntDef(0);
 		int tm  = prm.ToIntDef(0);
 		flash_win(cnt, tm);
 	}
@@ -1626,9 +1626,10 @@ void XCMD_FlashWin(UnicodeString prm)
 //---------------------------------------------------------------------------
 void XCMD_get_UsrVarList(TStringList *lst)
 {
-	for (int i=0; i<XCMD_VarList->Count; i++)
+	for (int i=0; i<XCMD_VarList->Count; i++) {
 		if (!contained_wd_i(XCMD_VarNames, XCMD_VarList->Names[i]))
 			add_PropLine(XCMD_VarList->Names[i], XCMD_VarList->ValueFromIndex[i], lst);
+	}
 }
 //---------------------------------------------------------------------------
 void XCMD_ListVar()

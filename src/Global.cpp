@@ -1058,16 +1058,17 @@ UnicodeString OnIvSbRClick;
 UnicodeString OnDragStartI;
 UnicodeString OnDragEndI;
 UnicodeString OnClipText;
+UnicodeString OnUnlocked;
 
 const event_rec EventCmdList[MAX_EVENT_CMD] = {
 	{&OnAppStart,		_T("OnAppStart"),	_T("NyanFi 起動時")},
 	{&OnAppClose,		_T("OnAppClose"),	_T("NyanFi 終了時")},
-	{&OnMaximized,		_T("OnMaximized"),	_T("ウィンドウが最大化された時")},
-	{&OnMinimized,		_T("OnMinimized"),	_T("ウィンドウが最小化された時")},
-	{&OnRestored,		_T("OnRestored"),	_T("ウィンドウが元のサイズに戻った時")},
+	{&OnMaximized,		_T("OnMaximized"),	_T("ウィンドウが最大化された")},
+	{&OnMinimized,		_T("OnMinimized"),	_T("ウィンドウが最小化された")},
+	{&OnRestored,		_T("OnRestored"),	_T("ウィンドウが元のサイズに戻った")},
 	{&OnCurChange,		_T("OnCurChange"),	_T("|カレントのディレクトリ変更(FL)")},
-	{&OnTabChange,		_T("OnTabChange"),	_T("別のタブに移った時(FL)")},
-	{&OnNewDrive,		_T("OnNewDrive"),	_T("追加ドライブが開かれた時(FL)")},
+	{&OnTabChange,		_T("OnTabChange"),	_T("別のタブに移った(FL)")},
+	{&OnNewDrive,		_T("OnNewDrive"),	_T("追加ドライブが開かれた(FL)")},
 	{&OnArcOpend,		_T("OnArcOpend"),	_T("仮想ディレクトリを開いた直後(FL)")},
 	{&OnArcClosed,		_T("OnArcClosed"),	_T("仮想ディレクトリを閉じた直後(FL)")},
 	{&OnFindOpend,		_T("OnFindOpend"),	_T("検索結果リストが表示された直後(FL)")},
@@ -1112,8 +1113,8 @@ const event_rec EventCmdList[MAX_EVENT_CMD] = {
 	{&OnTvHRClick,		_T("OnTvHRClick"),	_T("テキストビュアーで情報ヘッダを右クリック(TV)")},
 	{&OnIvOpened,		_T("OnIvOpened"),	_T("|イメージビュアーを開いた直後(IV)")},
 	{&OnIvClosed,		_T("OnIvClosed"),	_T("イメージビュアーを閉じた直後(FL)")},
-	{&OnFullScr,		_T("OnFullScr"),	_T("イメージビュアーで全画面表示にした時(IV)")},
-	{&OnNormScr,		_T("OnNormScr"),	_T("イメージビュアーで通常表示に戻った時(IV)")},
+	{&OnFullScr,		_T("OnFullScr"),	_T("イメージビュアーで全画面表示にした(IV)")},
+	{&OnNormScr,		_T("OnNormScr"),	_T("イメージビュアーで通常表示に戻った(IV)")},
 	{&OnIvTbRClick,		_T("OnIvTbRClick"),	_T("イメージビュアーのツールバーを右クリック(IV)")},
 	{&OnIvImgDClick,	_T("OnIvImgDClick"),_T("イメージビュアーで画像部分をダブルクリック(IV)")},
 	{&OnIvImgRClick,	_T("OnIvImgRClick"),_T("イメージビュアーで画像表示部を右クリック(IV)")},
@@ -1124,7 +1125,8 @@ const event_rec EventCmdList[MAX_EVENT_CMD] = {
 	{&OnIvSbRClick,		_T("OnIvSbRClick"),	_T("イメージビュアーでシークバーを右クリック(IV)")},
 	{&OnDragStartI,		_T("OnDragStartI"),	_T("サムネイルからのドラッグ開始時(IV)")},
 	{&OnDragEndI,		_T("OnDragEndI"),	_T("サムネイルからのドラッグ完了時(IV)")},
-	{&OnClipText,		_T("OnClipText"),	_T("|クリップボードにテキストをコピー")}
+	{&OnClipText,		_T("OnClipText"),	_T("|クリップボードにテキストをコピー")},
+	{&OnUnlocked,		_T("OnUnlocked"),	_T("キーボード/マウスのロックが解除された(FL)")}
 };
 
 bool Timer_Enabled[MAX_TIMER_EVENT], Timer_NopAct[MAX_TIMER_EVENT];
@@ -1801,6 +1803,7 @@ void InitializeGlobal()
 
 		//[General] (prefix = U:)
 		{_T("U:LastCurTag=0"),				(TObject*)&LastCurTag},
+		{_T("U:TabGroupName=\"\""),			(TObject*)&TabGroupName},
 		{_T("U:SortMode1=1"),				(TObject*)&SortMode[0]},
 		{_T("U:SortMode2=1"),				(TObject*)&SortMode[1]},
 		{_T("U:DirSortMode1=0"),			(TObject*)&DirSortMode[0]},
@@ -2293,7 +2296,6 @@ void LoadOptions()
 		}
 		TabList->Objects[i] = (TObject*)tp;
 	}
-	TabGroupName = EmptyStr;
 
 	//全体ディレクトリ履歴
 	if (ExtSaveDirHist) {
@@ -3983,7 +3985,7 @@ bool SetTmpFile(
 				else {
 					UnicodeString fnam = fp->f_name;
 					if (contains_Slash(fnam)) fnam = get_tkn_r(fnam, '/');
-					UnicodeString res_file = make_ResponseFile(fnam, usr_ARC->GetArcType(fp->arc_name));
+					UnicodeString res_file = make_ResponseFile(fnam, usr_ARC->GetArcType(fp->arc_name, true));
 					if (res_file==RESPONSE_ERR) Abort();
 					if (!res_file.IsEmpty()) fnam = "@" + res_file;
 					bool ok = usr_ARC->UnPack(fp->arc_name, tmp_path, add_quot_if_spc(fnam), false, !show_prg);

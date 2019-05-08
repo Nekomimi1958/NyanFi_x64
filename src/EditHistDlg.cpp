@@ -935,17 +935,25 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 			ModalResult = mrClose;	//移動
 		}
 		//フィルタへ
-		else if (StartsText("IncSearch", CmdStr) && OpeToolBar->Visible) FilterEdit->SetFocus();
+		else if (StartsText("IncSearch", CmdStr) && OpeToolBar->Visible) {
+			FilterEdit->SetFocus();
+		}
 		//閉じる
-		else if (USAME_TI(CmdStr, "ReturnList")) ModalResult = mrCancel;
+		else if (USAME_TI(CmdStr, "ReturnList")) {
+			ModalResult = mrCancel;
+		}
 		//カーソル移動
-		else if (GridCursorMove(CmdStr, gp))	;
+		else if (GridCursorMove(CmdStr, gp)) {
+			;
+		}
 		//項目削除/マーク解除
 		else if (equal_DEL(KeyStr) || USAME_TI(CmdStr, "Delete")) {
 			if (!del_HistItem()) Abort();
 		}
 		//メモ入力
-		else if (isMark && USAME_TI(CmdStr, "Mark_IM")) MemoAction->Execute();
+		else if (isMark && USAME_TI(CmdStr, "Mark_IM")) {
+			MemoAction->Execute();
+		}
 		//コマンド
 		else if (isRepo && contained_wd_i(_T("GitViewer|TextViewer"), CmdStr)) {
 			if (!set_FileName(gp->Row)) Abort();
@@ -988,7 +996,9 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 			int f_idx = (idx1!=-1)? idx1 : idx0;
 			if (f_idx!=-1) gp->Row = f_idx;
 		}
-		else CmdStr = EmptyStr;
+		else {
+			CmdStr = EmptyStr;
+		}
 
 		SetSttBar();
 	}

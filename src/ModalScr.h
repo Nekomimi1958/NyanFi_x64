@@ -20,9 +20,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormHide(TObject *Sender);
 
 private:	// ユーザー宣言
-	bool FullScr;
 
 public:		// ユーザー宣言
+	bool FullScr;
+
 	__fastcall TModalScrForm(TComponent* Owner);
 	void __fastcall CoverDesktop();
 };

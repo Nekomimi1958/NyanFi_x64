@@ -774,7 +774,7 @@ extern bool IniTabHomeAll;
 extern bool ShowSplash;
 
 //---------------------------------------------------------------------------
-#define MAX_EVENT_CMD	65
+#define MAX_EVENT_CMD	66
 extern UnicodeString OnAppStart;
 extern UnicodeString OnAppClose;
 extern UnicodeString OnMaximized;
@@ -840,6 +840,7 @@ extern UnicodeString OnIvSbRClick;
 extern UnicodeString OnDragStartI;
 extern UnicodeString OnDragEndI;
 extern UnicodeString OnClipText;
+extern UnicodeString OnUnlocked;
 
 struct event_rec {
 	UnicodeString *sp;	//ïœêîÇÃÉ|ÉCÉìÉ^

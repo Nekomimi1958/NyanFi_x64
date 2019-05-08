@@ -253,6 +253,51 @@ UnicodeString __fastcall TTxtViewer::get_DispLine(
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TTxtViewer::Clear()
+{
+	isReady = false;
+
+	TxtBufList->Clear();
+	MaxLine = 0;
+	ClearDispLine();
+
+	ViewBox->Font->Assign(ViewerFont);
+	useFontName = ViewerFont->Name;
+	useFontSize = ViewerFont->Size;
+
+	isSelected = false;
+	isText	   = isBinary = isXDoc2Txt = false;
+	isCSV	   = isTSV    = false;
+	isClip	   = false;
+	isTail	   = false;
+	isAozora   = isLog = isIniFmt = isAwstats = false;
+
+	isIncSea   = false;
+	IncSeaWord = EmptyStr;
+
+	FindWord   = RegExPtn = EmptyStr;
+
+	HasBOM = false;
+	LineBreakStr = EmptyStr;
+
+	MMF->Close();
+
+	ImgBuff->Handle = NULL;
+
+	LastPos = Point(-1, -1);
+	LastTop = -1;
+	LastSel = false;
+
+	if (FileRec) {
+		del_file_rec(FileRec);
+		FileRec = NULL;
+	}
+
+	SetColor();
+	TabLength = 0;
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TTxtViewer::ClearDispLine()
 {
 	ScrPanel->HitLines->Clear();
@@ -1309,7 +1354,7 @@ bool __fastcall TTxtViewer::AssignBin(
 		isContinue	= (TopAddress + BinarySize) < BinFileSize;
 		MaxDispLine = BinarySize/16 + 1;
 		if (BinarySize%16) MaxDispLine++;
-		MaxLine = MaxDispLine -1;
+		MaxLine = MaxDispLine - 1;
 
 		//—š—ð‚©‚çƒ}[ƒN‚ð•œŒ³
 		if (!reload) {
@@ -2176,47 +2221,6 @@ void __fastcall TTxtViewer::Repaint(bool force)
 	PaintText();
 
 	if (RulerBox->Visible) RulerBox->Repaint();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TTxtViewer::Clear()
-{
-	ViewBox->Font->Assign(ViewerFont);
-	useFontName = ViewerFont->Name;
-	useFontSize = ViewerFont->Size;
-
-	isReady    = false;
-
-	isSelected = false;
-	isText	   = isBinary = isXDoc2Txt = false;
-	isCSV	   = isTSV    = false;
-	isClip	   = false;
-	isTail	   = false;
-	isAozora   = isLog = isIniFmt = isAwstats = false;
-
-	isIncSea   = false;
-	IncSeaWord = EmptyStr;
-
-	FindWord   = RegExPtn = EmptyStr;
-
-	HasBOM = false;
-	LineBreakStr = EmptyStr;
-
-	MMF->Close();
-
-	ImgBuff->Handle = NULL;
-
-	LastPos = Point(-1, -1);
-	LastTop = -1;
-	LastSel = false;
-
-	if (FileRec) {
-		del_file_rec(FileRec);
-		FileRec = NULL;
-	}
-
-	SetColor();
-	TabLength = 0;
 }
 
 //---------------------------------------------------------------------------

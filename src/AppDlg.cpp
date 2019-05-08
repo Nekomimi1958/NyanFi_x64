@@ -508,9 +508,9 @@ void __fastcall TAppListDlg::UpdateAppList()
 
 					hProcess = ::OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
 					if (hProcess) {
-						_TCHAR sbuf[1024];
 						//ƒtƒ@ƒCƒ‹–¼
-						DWORD sz = 1023;
+						_TCHAR sbuf[MAX_PATH];
+						DWORD sz = MAX_PATH;
 						UnicodeString fnam = ::QueryFullProcessImageName(hProcess, 0, sbuf, &sz)? sbuf : _T("");
 						::CloseHandle(hProcess);
 						ap->FileName = fnam;

@@ -410,9 +410,15 @@ void __fastcall TCmdFileListDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 
-	if		(contained_wd_i(KeysStr_ToList, KeyStr))	CmdFileGrid->SetFocus();
-	else if (MovGridFromFilter(CmdFileGrid, KeyStr))	;
-	else if (SameText(KeyStr, KeyStr_Migemo))			MigemoAction->Checked = !MigemoAction->Checked;
+	if (contained_wd_i(KeysStr_ToList, KeyStr)) {
+		CmdFileGrid->SetFocus();
+	}
+	else if (MovGridFromFilter(CmdFileGrid, KeyStr)) {
+		;
+	}
+	else if (SameText(KeyStr, KeyStr_Migemo)) {
+		MigemoAction->Checked = !MigemoAction->Checked;
+	}
 	else return;
 
 	CmdFileGrid->Invalidate();
@@ -463,11 +469,17 @@ void __fastcall TCmdFileListDlg::CmdFileGridKeyDown(TObject *Sender, WORD &Key, 
 
 	try {
 		//閉じる
-		if		(cmd_id==0) ModalResult = mrCancel;
+		if (cmd_id==0) {
+			ModalResult = mrCancel;
+		}
 		//フィルタへ
-		else if (cmd_id==1) FilterEdit->SetFocus();
+		else if (cmd_id==1) {
+			FilterEdit->SetFocus();
+		}
 		//カーソル移動
-		else if (GridCursorMove(CmdStr, gp))	;
+		else if (GridCursorMove(CmdStr, gp)) {
+			;
+		}
 		//頭文字サーチ
 		else if (is_IniSeaKey(KeyStr)) {	//KeyStr に正規表現パターンが返る
 			TRegExOptions opt; opt << roIgnoreCase;
@@ -501,7 +513,9 @@ void __fastcall TCmdFileListDlg::CmdFileGridKeyDown(TObject *Sender, WORD &Key, 
 						RenameOptCmdFile();
 						UpdateList();
 					}
-					else throw EAbort(tmp.sprintf(_T("改名に失敗しました\r\n%s"), get_LogErrMsg(EmptyStr, false).c_str()));
+					else {
+						throw EAbort(tmp.sprintf(_T("改名に失敗しました\r\n%s"), get_LogErrMsg(EmptyStr, false).c_str()));
+					}
 				}
 			}
 			//削除
@@ -606,9 +620,15 @@ void __fastcall TCmdFileListDlg::PreviewListBoxKeyDown(TObject *Sender, WORD &Ke
 	TListBox *lp = (TListBox*)Sender;
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 
-	if (ExeCmdListBox(lp, Key_to_CmdF(KeyStr)))		;
-	else if (SameText(KeyStr, KeyStr_Copy))			 EditCopyAction->Execute();
-	else if (contained_wd_i(KeysStr_ToList, KeyStr)) CmdFileGrid->SetFocus();
+	if (ExeCmdListBox(lp, Key_to_CmdF(KeyStr))) {
+		;
+	}
+	else if (SameText(KeyStr, KeyStr_Copy)) {
+		EditCopyAction->Execute();
+	}
+	else if (contained_wd_i(KeysStr_ToList, KeyStr)) {
+		CmdFileGrid->SetFocus();
+	}
 }
 
 //---------------------------------------------------------------------------

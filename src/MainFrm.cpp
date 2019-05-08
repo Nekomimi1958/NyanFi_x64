@@ -1344,6 +1344,9 @@ void __fastcall TNyanFiForm::WmNyanFiLockKey(TMessage &msg)
 		::UnhookWindowsHookEx(hMouseHook);
 
 		ModalScrForm->Visible = false;
+
+		//ロックが解除された
+		ExeEventCommand(OnUnlocked);
 	}
 }
 
@@ -5934,6 +5937,8 @@ void __fastcall TNyanFiForm::SttBarWarnUstr(unsigned id)
 //---------------------------------------------------------------------------
 TControl * __fastcall TNyanFiForm::GetCurControl(bool center)
 {
+	if (Screen->ActiveForm->Visible && ModalScrForm->FullScr)
+									return (TControl*)MainContainer;
 	if (Screen->ActiveForm!=this)	return (TControl*)Screen->ActiveForm;
 	if (TxtViewPanel->Visible)		return (TControl*)TxtViewPanel;
 	if (ImgViewPanel->Visible)		return (TControl*)ImgViewPanel;
@@ -10915,7 +10920,9 @@ bool __fastcall TNyanFiForm::ExeAliasOrCommands(UnicodeString cmds)
 			ExeAlias(cmds);
 			if (!ActionOk && !ActionErrMsg.IsEmpty()) ActionAbort();
 		}
-		else if (!ExeCommandsCore(cmds)) GlobalAbort();
+		else if (!ExeCommandsCore(cmds)) {
+			GlobalAbort();
+		}
 		return true;
 	}
 	catch (EAbort &e) {
@@ -29114,8 +29121,8 @@ void __fastcall TNyanFiForm::GrepCanBtnClick(TObject *Sender)
 bool __fastcall TNyanFiForm::OpenTxtViewer(
 	file_rec *fp,
 	bool bin_mode,		//バイナリ (default = false)
-	int code_page,		//コードページ (default = 0 : 判定)
-	int lno,			//行番号 (default = 0 : 履歴を参照)
+	int  code_page,		//コードページ (default = 0 : 判定)
+	int  lno,			//行番号 (default = 0 : 履歴を参照)
 	bool force_txt)		//強制的にテキストとして開く(bin_mode=false の場合 default = false)
 {
 	GlobalErrMsg = EmptyStr;
@@ -29159,8 +29166,10 @@ bool __fastcall TNyanFiForm::OpenTxtViewer(
 		TxtViewer->OrgName	  = cfp->f_name;
 		TxtViewer->isSelected = cfp->selected;
 		TxtViewer->FileRec	  = cre_new_file_rec(cfp);	//TxtViewer->Clear で破棄されるのでコピーを作成
+
 		TxtViewPanel->Font->Color = col_Teal;
-		TxtViewPanel->Caption = "読込中...";	TxtViewPanel->Repaint();
+		TxtViewPanel->Caption = "読込中...";
+		TxtViewPanel->Repaint();
 
 		UnicodeString inf_str;
 		inf_str.sprintf(_T("%s  %s"), warn_filename_RLO(fnam).c_str(), Trim(get_FileInfStr(cfp)).c_str());

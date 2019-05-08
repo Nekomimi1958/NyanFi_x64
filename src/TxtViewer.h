@@ -269,16 +269,15 @@ public:
 
 	bool __fastcall CloseAuxForm();
 
+	void __fastcall Clear();
 	void __fastcall SetColor(TStringList *lst);
 	void __fastcall SetColor(UnicodeString prm = EmptyStr);
 	void __fastcall SetOptColor();
 	void __fastcall SetMetric(bool set_hi = false);
-
 	void __fastcall UpdateScr(int lno = 1);
 	void __fastcall AssignText(TStrings *lst = NULL, int lno = 1, int sort_mode = 0);
 	bool __fastcall AssignBin(__int64 top_adr = 0, bool reload = false, unsigned int adr = 0);
 	void __fastcall Repaint(bool force = false);
-	void __fastcall Clear();
 
 	void __fastcall SetSttInf(UnicodeString msg = EmptyStr);
 	void __fastcall SttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, TRect Rect);

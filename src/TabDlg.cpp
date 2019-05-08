@@ -30,6 +30,10 @@ void __fastcall TTabSetDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TTabSetDlg::FormShow(TObject *Sender)
 {
+	UnicodeString tit = "É^ÉuÇÃê›íË";
+	if (!TabGroupName.IsEmpty()) tit.cat_sprintf(_T(" - %s"), ExtractFileName(TabGroupName).c_str()); 
+	Caption = tit;
+
 	if (TabIndex<TabList->Count) {
 		TStringDynArray itm_buf = get_csv_array(TabList->Strings[TabIndex], TABLIST_CSVITMCNT, true);
 		CaptionEdit->Text  = itm_buf[2];

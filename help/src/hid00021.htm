@@ -53,28 +53,28 @@
 <dt class="no_bg_indent1">NyanFi 終了時
 <dd><b>NyanFi</b> 終了時に実行されます。<br>
 
-<dt class="no_bg_indent1">ウィンドウが最大化された時
+<dt class="no_bg_indent1">ウィンドウが最大化された
 <dd><b>NyanFi</b> のウィンドウが最大化された時に実行されます。<br>
 
-<dt class="no_bg_indent1">ウィンドウが最小化された時
+<dt class="no_bg_indent1">ウィンドウが最小化された
 <dd><b>NyanFi</b> のウィンドウが最小化された時に実行されます。<br>
 
-<dt class="no_bg_indent1">ウィンドウが元のサイズに戻った時
+<dt class="no_bg_indent1">ウィンドウが元のサイズに戻った
 <dd><b>NyanFi</b> のウィンドウが元のサイズに戻った時に実行されます。<br>
 <br>
 
 <dt class="no_bg_indent1">カレントのディレクトリ変更(FL)
-<dd>ファイラーで、カレント側のディレクトリを変更した時に実行されます。<br>
+<dd>ファイラーで、カレント側のディレクトリを変更したときに実行されます。<br>
 なお、特定のディレクトリで表示設定などを変更したい場合は、「<a href="hid00075.htm">.nyanfi ファイルによるファイラー設定</a>」を利用すると便利です。その場合、<b>.nyanfi</b> で <b>Handled</b>=1 が設定されていると、このイベントのコマンドは実行されません。<br>
 
-<dt class="no_bg_indent1">別のタブに移った時(FL)
-<dd>ファイラーで、別のタブに移った時に実行されます。<br>
+<dt class="no_bg_indent1">別のタブに移った(FL)
+<dd>ファイラーで、別のタブに移ったときに実行されます。<br>
 左右のディレクトリが変化した後、「カレントのディレクトリ変更」イベントよりも後に発生します。<br>
 <b>例</b>: タブごとに背景画像を変更<br>
 <span class="inp_box">LoadBgImage_TabImg%TabNo%.jpg</span>
 
-<dt class="no_bg_indent1">追加ドライブがカレントで開かれた時(FL)
-<dd><a href="hid00009.htm#Watch">オプション設定 - 一般 - 監視/更新</a> の「<b>追加ドライブをカレントに表示</b>」がチェックされている場合、追加ドライブがカレントで開かれた時に実行されます。<br>
+<dt class="no_bg_indent1">追加ドライブが開かれた(FL)
+<dd><a href="hid00009.htm#Watch">オプション設定 - 一般 - 監視/更新</a> の「<b>追加ドライブをカレントに表示</b>」がチェックされている場合、追加ドライブがカレントで開かれたときに実行されます。<br>
 メモリカードを挿入した際の、データの自動転送などに便利かもしれません。<br>
 
 <dt class="no_bg_indent1">仮想ディレクトリを開いた直後(FL)
@@ -247,10 +247,10 @@ Echo_%Buffer%
 <dt class="no_bg_indent1">イメージビュアーを閉じた直後(FL)
 <dd>イメージプレビューを閉じてファイラー画面に戻ったときに実行されます。<br>
 
-<dt class="no_bg_indent1">イメージビュアーで全画面表示にした時(IV)
+<dt class="no_bg_indent1">イメージビュアーで全画面表示にした(IV)
 <dd>イメージプレビューで、全画面表示に切り替えたときに実行されます。<br>
 
-<dt class="no_bg_indent1">イメージビュアーで通常表示に戻った時(IV)
+<dt class="no_bg_indent1">イメージビュアーで通常表示に戻った(IV)
 <dd>イメージプレビューで、全画面表示から通常表示に戻ったときに実行されます。<br>
 
 <dt class="no_bg_indent1">イメージビュアーのツールバーを右クリック(IV)
@@ -297,6 +297,9 @@ Ins_Buffer&lt;&lt;""
 Set_CodePage=65001
 AppendBuffer_%ExePath%CLIPMEMO.TXT
 </pre>
+
+<dt class="no_bg_indent1">キーボード/マウスのロックが解除された(FL)
+<dd><a href="hid00005.htm#LockKeyMouse">LockKeyMouse</a> コマンドによるキーボード/マウスのロックが解除されたときに実行されます。<br>
 <br>
 
 <dt><img src="grpbox.png" alt="" border=0> タイマーイベント

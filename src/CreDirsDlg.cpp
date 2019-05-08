@@ -275,8 +275,10 @@ void __fastcall TCreateDirsDlg::ListMemoKeyDown(TObject *Sender, WORD &Key, TShi
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 
-	if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(PopupMenu1, ListMemo);
-	else if (equal_ESC(KeyStr)) ModalResult = mrCancel;
+	if (contained_wd_i(KeysStr_Popup, KeyStr))
+		show_PopupMenu(PopupMenu1, ListMemo);
+	else if (equal_ESC(KeyStr))
+		ModalResult = mrCancel;
 }
 
 //---------------------------------------------------------------------------
