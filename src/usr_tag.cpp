@@ -51,7 +51,7 @@ TagManager::~TagManager()
 //---------------------------------------------------------------------------
 int TagManager::GetIndex(UnicodeString fnam)
 {
-	UnicodeString f_str = fnam + "\t";
+	UnicodeString f_str = ExcludeTrailingPathDelimiter(fnam) + "\t";
 	int idx = -1;
 
 	for (int i=0; i<TagDataList->Count; i++) {
@@ -242,7 +242,10 @@ void TagManager::AddTags(
 
 	int idx = GetIndex(fnam);
 	if (idx!=-1) {
-		UnicodeString   tag_str = GetDataTags(idx);
+		TagRWLock->BeginRead();
+		UnicodeString tag_str = GetDataTags(idx);
+		TagRWLock->EndRead();
+
 		TStringDynArray tag_lst = SplitString(tag_str, ';');
 		TStringDynArray add_lst = SplitString(tags, ';');
 		for (int j=0; j<add_lst.Length; j++) {
@@ -274,22 +277,34 @@ void TagManager::Rename(UnicodeString old_nam, UnicodeString new_nam)
 {
 	old_nam = ExcludeTrailingPathDelimiter(old_nam);
 	new_nam = ExcludeTrailingPathDelimiter(new_nam);
-
-	if (::PathIsDirectory(cv_ex_filename(new_nam).c_str())) {
-		old_nam = IncludeTrailingPathDelimiter(old_nam);
-		new_nam = IncludeTrailingPathDelimiter(new_nam);
-	}
-	else {
-		old_nam += "\t";
-		new_nam += "\t";
-	}
+	bool is_dir = ::PathIsDirectory(cv_ex_filename(new_nam).c_str());
 
 	TagRWLock->BeginWrite();
 	for (int i=0; i<TagDataList->Count; i++) {
 		UnicodeString lbuf = TagDataList->Strings[i];
-		if (StartsText(old_nam, lbuf)) TagDataList->Strings[i] = new_nam + lbuf.Delete(1, old_nam.Length());
+		UnicodeString fnam = get_pre_tab(lbuf);
+		if (SameText(fnam, old_nam)) {
+			TagDataList->Strings[i] = new_nam + "\t" + get_post_tab(lbuf);
+		}
+		else if (is_dir) {
+			UnicodeString old_path = IncludeTrailingPathDelimiter(old_nam);
+			if (StartsText(old_path, fnam)) {
+				fnam.Delete(1, old_path.Length());
+				fnam.Insert(IncludeTrailingPathDelimiter(new_nam), 1);
+				TagDataList->Strings[i] = fnam + "\t" + get_post_tab(lbuf);
+			}
+		}
 	}
 	TagRWLock->EndWrite();
+}
+
+//---------------------------------------------------------------------------
+//タグのコピー
+//---------------------------------------------------------------------------
+void TagManager::Copy(UnicodeString from_nam, UnicodeString to_nam)
+{
+	UnicodeString tags = GetTags(from_nam);
+	if (!tags.IsEmpty()) AddTags(to_nam, tags);
 }
 
 //---------------------------------------------------------------------------

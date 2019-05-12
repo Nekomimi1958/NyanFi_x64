@@ -332,6 +332,7 @@ extern bool PreviewAniGif;
 extern bool SetPrvCursor;
 extern bool ForceDel;
 extern bool RemoveCdReadOnly;
+extern bool CopyTags;
 extern bool CopyNoBuffering;
 extern bool ShowArcCopyProg;
 extern bool DelUseTrash;
@@ -708,6 +709,7 @@ extern UsrIniFile  *FolderIconFile;
 extern TStringList *FolderIconList;
 extern TMultiReadExclusiveWriteSynchronizer *FldIcoRWLock;
 extern UnicodeString DefFldIcoName;
+extern HICON hLinkIcon;
 
 extern TStringList *GeneralIconList;
 extern TStringList *MenuBtnIcoList;

@@ -840,10 +840,6 @@ void __fastcall TNyanFiForm::WmFormShowed(TMessage &msg)
 		AddLog(make_LogHdr(_T("LOAD"), "xd2txlib.dll"));
 	}
 
-	//ワークリスト
-	if ((CurStt->is_Work || OppStt->is_Work)? SetWorkList(WorkListName) : load_WorkList(WorkListName))
-		AddLog(make_LogHdr(_T("LOAD"), WorkListName));
-
 	//構文強調定義エラー
 	AddErr_Highlight();
 
@@ -857,6 +853,9 @@ void __fastcall TNyanFiForm::WmFormShowed(TMessage &msg)
 
 	//フォントサンプル定義
 	load_FontSample(ExePath + FONTSMPL_FILE);
+
+	//ワークリスト
+	(CurStt->is_Work || OppStt->is_Work)? SetWorkList(WorkListName) : load_WorkList(WorkListName);
 
 	//使用済みバッチファイルを削除
 	delete_FileIf(ExePath + "update.bat");
@@ -912,8 +911,8 @@ void __fastcall TNyanFiForm::FormCloseQuery(TObject *Sender, bool &CanClose)
 			Abort();
 		}
 		if (SureExit && !msgbox_Sure(_T("NyanFi を終了しますか?"), true, true)) Abort();
-
 		if (get_BusyTaskCount()>0 && !msgbox_Sure(_T("タスクを中止して終了しますか?"), true, true)) Abort();
+
 		if (WorkListChanged && !WorkListFiltered) {
 			if (WorkListName.IsEmpty()) {
 				SaveAsWorkListAction->Execute();
@@ -5707,17 +5706,24 @@ void __fastcall TNyanFiForm::LogListBoxDrawItem(TWinControl *Control, int Index,
 
 	if (cv->Font->Color!=col_fgSelItem) {
 		cv->Font->Color = get_LogColor(lbuf);
-		if (remove_top_s(lbuf, " >    LOAD ")) {
-			out_TextEx(cv, xp, yp, " >    LOAD ", col_None, col_None, 0, is_irreg);
-			if (EndsStr("  NOT USED", lbuf)) {
+		UnicodeString cmd = Trim(lbuf.SubString(4, 8));
+		if (contains_wd_i(cmd, _T("LOAD|SAVE"))) {
+			out_TextEx(cv, xp, yp, lbuf.SubString(1, 11), col_None, col_None, 0, is_irreg);
+			lbuf.Delete(1, 11);
+			if (SameText(cmd, "LOAD") && EndsStr("  NOT USED", lbuf)) {
 				cv->Font->Color = AdjustColor(col_fgLog, ADJCOL_FGLIST);
 			}
 			else {
-				UnicodeString fnam = split_tkn(lbuf, ' ');
-				cv->Font->Color = get_ExtColor(get_extension(fnam), col_fgLog);
-				out_TextEx(cv, xp, yp, fnam, col_None, col_None, 0, is_irreg);
-				lbuf.Insert(" ", 1);
-				cv->Font->Color = col_fgLog;
+				UnicodeString fnam;
+				if (lbuf.Pos('.')>1) {
+					fnam = split_tkn(lbuf, '.');
+					fnam += ("." + split_tkn(lbuf, ' '));
+				}
+				else {
+					fnam = split_tkn(lbuf, ' ');
+				}
+				out_TextEx(cv, xp, yp, fnam, get_ExtColor(get_extension(fnam), col_fgLog), col_None, 0, is_irreg);
+				if (!lbuf.IsEmpty()) lbuf.Insert(" ", 1);
 			}
 		}
 	}
@@ -19275,6 +19281,9 @@ void __fastcall TNyanFiForm::LoadTabGroupActionExecute(TObject *Sender)
 
 		if (!file_exists(fnam)) SttBarWarnUstr(USTR_FileNotOpen);
 
+		//現在のタググループを保存
+		if (!TabGroupName.IsEmpty()) save_TagGroup(TabGroupName);
+
 		std::unique_ptr<UsrIniFile> tab_file(new UsrIniFile(fnam));
 		UnicodeString sct = "General";
 		int tab_idx = tab_file->ReadInteger(sct, "CurTabIndex", 0);
@@ -22073,8 +22082,6 @@ void __fastcall TNyanFiForm::SaveWorkListActionExecute(TObject *Sender)
 			UnicodeString msg;
 			if (save_WorkList(WorkListName)) {
 				WorkListTime = get_file_age(WorkListName);
-				ShowHintAndStatus(
-					msg.sprintf(_T("ワークリスト[%s]を保存しました。"), get_base_name(WorkListName).c_str()));
 				break;
 			}
 			//保存に失敗した場合、再試行 or 別名保存
@@ -22248,7 +22255,7 @@ void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
 		UnicodeString lnam = (is_cp || is_op)? GetCurFileName()
 											 : to_absolute_name(cv_env_str(exclude_quot(ActionParam)), CurPath[CurListTag]);
 		if (lnam.IsEmpty()) UserAbort(USTR_NoParameter);
-		if (!file_exists(lnam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("ファイル")));
+		if (!file_exists(lnam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("リストファイル")));
 
 		std::unique_ptr<TStringList> f_lst(new TStringList());
 		load_text_ex(lnam, f_lst.get());
@@ -22259,7 +22266,7 @@ void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
 					    is_op? ((i==0)? OppListTag : -1) : ((i==0)? CurListTag : -1);
 			if (s_tag==-1) continue;
 
-			TStringList *lst  = GetFileList(s_tag);
+			TStringList *lst = GetFileList(s_tag);
 			ClrSelect(lst);
 
 			TStringList *sm_lst = SelMaskList[s_tag];
@@ -22269,9 +22276,19 @@ void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
 			for (int j=0; j<f_lst->Count; j++) {
 				UnicodeString lbuf = f_lst->Strings[j];
 				if (lbuf.IsEmpty() || StartsStr(';', lbuf)) continue;
-				UnicodeString fnam = ExcludeTrailingPathDelimiter(split_pre_tab(lbuf));
+
+				UnicodeString fnam = split_pre_tab(lbuf);
+				bool is_reg = is_regex_slash(fnam);
+				if (is_reg) {
+					fnam = exclude_top_end(fnam);
+					if (!chk_RegExPtn(fnam)) UserAbort(USTR_IllegalRegEx);
+				}
+				else {
+					fnam = ExcludeTrailingPathDelimiter(fnam);
+				}
+
 				//パス付き
-				if (!ExtractFilePath(fnam).IsEmpty()) {
+				if (!is_reg && !ExtractFilePath(fnam).IsEmpty()) {
 					int idx = lst->IndexOf(fnam);
 					if (idx!=-1) {
 						file_rec *fp = (file_rec*)lst->Objects[idx];
@@ -22281,10 +22298,17 @@ void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
 				}
 				//パス無し
 				else {
-					bool is_ptn = fnam.Pos('*') || fnam.Pos('?');
+					bool is_ptn = !is_reg && (fnam.Pos('*') || fnam.Pos('?'));
+					if (is_reg) {
+						fnam = exclude_top_end(fnam);
+						if (!chk_RegExPtn(fnam)) UserAbort(USTR_IllegalRegEx);
+					}
+					TRegExOptions opt; opt << roIgnoreCase;
 					for (int k=0; k<lst->Count; k++) {
 						file_rec *fp = (file_rec*)lst->Objects[k];
-						if ((is_ptn && str_match(fnam, fp->n_name)) || SameText(fnam, fp->n_name)) {
+						if (is_reg? TRegEx::IsMatch(fp->n_name, fnam, opt) :
+							is_ptn? str_match(fnam, fp->n_name) : SameText(fnam, fp->n_name))
+						{
 							if (is_sm) sm_lst->Add(fp->f_name); else fp->selected = true;
 							if (top_fnam.IsEmpty()) top_fnam = fp->f_name;
 						}

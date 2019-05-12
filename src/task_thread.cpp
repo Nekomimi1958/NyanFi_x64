@@ -309,6 +309,7 @@ bool __fastcall TTaskThread::EX_delete_Dir(UnicodeString dnam)
 	AddDebugLog("Call RemoveDirectory");
 	bool res = ::RemoveDirectory(cv_ex_filename(dnam).c_str());
 	AddDebugLog("Return");
+	if (res) usr_TAG->DelItem(dnam);
 	return res;
 }
 
@@ -518,6 +519,7 @@ void __fastcall TTaskThread::CPY_core(
 		if (create_ForceDirs(dst_path)) {
 			UnicodeString src_dnam = ExtractFileDir(fnam);
 			dir_CopyAttr(src_dnam, dst_path, remove_ro);
+			if (CopyTags) usr_TAG->Copy(src_dnam, dst_path);
 			if (mov_sw) move_FolderIcon(src_dnam, dst_path); else copy_FolderIcon(src_dnam, dst_path);
 		}
 		else set_LogErrMsg(msg);
@@ -654,13 +656,12 @@ void __fastcall TTaskThread::CPY_core(
 								ProgressRoutine, (LPVOID)this,
 								MOVEFILE_REPLACE_EXISTING|MOVEFILE_COPY_ALLOWED|MOVEFILE_WRITE_THROUGH);
 				AddDebugLog("Return");
-				if (res) {
-					usr_TAG->Rename(fnam, dst_fnam);	//タグの移動
-					rename_FolderIcon(fnam, dst_fnam);	//フォルダアイコンの移動
-				}
-				else {
+				if (!res) {
 					if (TaskCancel) Abort(); else throw Exception(EmptyStr);
 				}
+
+				usr_TAG->Rename(fnam, dst_fnam);	//タグの移動
+				rename_FolderIcon(fnam, dst_fnam);	//フォルダアイコンの移動
 			}
 			//コピー
 			else {
@@ -677,6 +678,9 @@ void __fastcall TTaskThread::CPY_core(
 				if (!res) {
 					if (TaskCancel) Abort(); else throw Exception(EmptyStr);
 				}
+
+				//タグのコピー
+				if (CopyTags) usr_TAG->Copy(fnam, dst_fnam);
 
 				//CD-ROMからの場合、読込専用属性を解除
 				if (remove_ro) {
@@ -818,6 +822,7 @@ void __fastcall TTaskThread::Task_CPY(
 				SetLastError(NO_ERROR);
 				if (create_ForceDirs(dst_nam)) {
 					dir_CopyAttr(src_prm, dst_nam, remove_ro);
+					if (CopyTags) usr_TAG->Copy(src_prm, dst_nam);
 					if (mov_sw) move_FolderIcon(src_prm, dst_nam); else copy_FolderIcon(src_prm, dst_nam);
 				}
 				else set_LogErrMsg(msg);
@@ -903,13 +908,13 @@ void __fastcall TTaskThread::DEL_core(
 
 	try {
 		SetLastError(NO_ERROR);
-		if (!EX_file_exists(fnam))				throw Exception(EmptyStr);
-		if (!EX_wait_file_ready(fnam))			throw Exception(EmptyStr);
-		if (TaskCancel)	 						Abort();
-		if (!EX_set_writable(fnam))				throw Exception(EmptyStr);
+		if (!EX_file_exists(fnam))		throw Exception(EmptyStr);
+		if (!EX_wait_file_ready(fnam))	throw Exception(EmptyStr);
+		if (TaskCancel)	 				Abort();
+		if (!EX_set_writable(fnam))		throw Exception(EmptyStr);
 
 		bool del_lnk = (!LnkDeleted && !use_trash && get_HardLinkCount(fnam)>1);
-		if (!EX_delete_File(fnam, use_trash))	throw Exception(EmptyStr);
+		if (!EX_delete_File(fnam, use_trash)) throw Exception(EmptyStr);
 		if (del_lnk) LnkDeleted = true;
 
 		del_CachedIcon(fnam);
@@ -941,8 +946,8 @@ void __fastcall TTaskThread::DEL_dir_trash(UnicodeString dnam)
 	UnicodeString msg = make_LogHdr(_T("DELETE"), dnam, true);
 	try {
 		SetLastError(NO_ERROR);
-		if (!EX_set_writable(dnam))		Abort();
-		if (!EX_delete_File(ExcludeTrailingPathDelimiter(dnam), true))	Abort();
+		if (!EX_set_writable(dnam)) Abort();
+		if (!EX_delete_File(ExcludeTrailingPathDelimiter(dnam), true)) Abort();
 		OkCount++;
 	}
 	catch (EAbort &e) {
@@ -1572,6 +1577,8 @@ TDateTime __fastcall TTaskThread::SetDirTime(UnicodeString dnam)
 			WaitIfPause();
 			if ((sr.Attr & faDirectory)==0) continue;
 			if (ContainsStr("..", sr.Name)) continue;
+			if (!ShowHideAtr   && (sr.Attr & faHidden))  continue;
+			if (!ShowSystemAtr && (sr.Attr & faSysFile)) continue;
 			dt = std::max(dt, SetDirTime(dnam + sr.Name));
 			if (++cnt%32==0) Sleep(MIN_INTERVAL);
 		} while(FindNext(sr)==0 && !TaskCancel);
@@ -1585,6 +1592,8 @@ TDateTime __fastcall TTaskThread::SetDirTime(UnicodeString dnam)
 		do {
 			WaitIfPause();
 			if (sr.Attr & faDirectory) continue;
+			if (!ShowHideAtr   && (sr.Attr & faHidden))  continue;
+			if (!ShowSystemAtr && (sr.Attr & faSysFile)) continue;
 			dt = std::max(dt, sr.TimeStamp);
 			if (++cnt%128==0) Sleep(MIN_INTERVAL);
 		} while(FindNext(sr)==0 && !TaskCancel);

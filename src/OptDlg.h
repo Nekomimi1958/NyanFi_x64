@@ -191,6 +191,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *ColOnlyFExtCheckBox;
 	TCheckBox *ColorHintCheckBox;
 	TCheckBox *CopyNoBuffCheckBox;
+	TCheckBox *CopyTagsCheckBox;
 	TCheckBox *CtrlCheckBox;
 	TCheckBox *DelDplDirHistCheckBox;
 	TCheckBox *DelUseTrsCheckBox;

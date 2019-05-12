@@ -580,6 +580,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	CheckUncCheckBox->Tag		= (int)&CheckUnc;
 	ForceDelCheckBox->Tag		= (int)&ForceDel;
 	RemoveCdRoCheckBox->Tag 	= (int)&RemoveCdReadOnly;
+	CopyTagsCheckBox->Tag		= (int)&CopyTags;
 	CopyNoBuffCheckBox->Tag 	= (int)&CopyNoBuffering;
 	ShowArcCopyPrgCheckBox->Tag = (int)&ShowArcCopyProg;
 	DelUseTrsCheckBox->Tag		= (int)&DelUseTrash;

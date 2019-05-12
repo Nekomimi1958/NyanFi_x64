@@ -177,6 +177,7 @@ bool PreviewAniGif;				//アニメーションGIFのプレビュー
 bool SetPrvCursor;				//プレビュー内でマウスカーソルを設定
 bool ForceDel;					//読込専用ファイルも強制的に上書き・削除
 bool RemoveCdReadOnly;			//CD-ROMからのコピー時に読込専用属性を解除
+bool CopyTags;					//タグをコピー
 bool CopyNoBuffering;			//バッファーなしI/Oを使用してコピー
 bool ShowArcCopyProg;
 bool DelUseTrash;				//ファイルの削除にゴミ箱を使う
@@ -555,6 +556,7 @@ UsrIniFile  *FolderIconFile;			//フォルダアイコン設定ファイル
 TStringList *FolderIconList;			//フォルダアイコンリスト
 TMultiReadExclusiveWriteSynchronizer *FldIcoRWLock;
 UnicodeString DefFldIcoName;			//デフォルトのフォルダアイコン
+HICON hLinkIcon = NULL;					//リンクマーク(Shell32.dll,29)
 
 TStringList *GeneralIconList;			//ファイルリスト表示用の一般アイコン
 TStringList *MenuBtnIcoList;
@@ -1370,6 +1372,14 @@ void InitializeGlobal()
 	FolderIconFile->ReadSection("FolderIcon", FolderIconList);
 	DefFldIcoName  = FolderIconFile->ReadString(SCT_Option, "DefFldIcoName");
 
+	//リンクマークの取得
+	_TCHAR sdir[MAX_PATH] = {};
+	if (::GetSystemDirectory(sdir, MAX_PATH)>0) {
+		HICON icons[1];
+		UnicodeString fnam = IncludeTrailingPathDelimiter(sdir) + "Shell32.dll";
+		if (::ExtractIconEx(fnam.c_str(), 29, NULL, icons, 1)==1) hLinkIcon = icons[0];
+	}
+
 	//コマンドリストを作成
 	CommandList = CreStringList();
 	CmdSetList	= CreStringList();
@@ -1633,6 +1643,7 @@ void InitializeGlobal()
 		{_T("SetPrvCursor=true"),			(TObject*)&SetPrvCursor},
 		{_T("ForceDel=false"),				(TObject*)&ForceDel},
 		{_T("RemoveCdReadOnly=false"),		(TObject*)&RemoveCdReadOnly},
+		{_T("CopyTags=false"),				(TObject*)&CopyTags},
 		{_T("CopyNoBuffering=false"),		(TObject*)&CopyNoBuffering},
 		{_T("ShowArcCopyProg=false"),		(TObject*)&ShowArcCopyProg},
 		{_T("DelUseTrash=false"),			(TObject*)&DelUseTrash},
@@ -2145,6 +2156,7 @@ void EndGlobal()
 	delete GeneralList;
 
 	delete FolderIconFile;
+	if (hLinkIcon) ::DestroyIcon(hLinkIcon);
 
 	for (int i=0; i<MAX_BGIMAGE; i++) delete BgImgBuff[i];
 
@@ -6303,7 +6315,7 @@ void del_CachedIcon(UnicodeString fnam)
 //拡張子依存アイコンを取得 (キャッシュを利用)
 //---------------------------------------------------------------------------
 HICON get_fext_icon(
-	UnicodeString fext)		//拡張子 .xxx	(default = EmptyStr: フォルダアイコン)
+	UnicodeString fext)		//拡張子 .xxx	(default = EmptyStr: フォルダ)
 {
 	HICON hIcon = NULL;
 
@@ -6379,10 +6391,11 @@ bool draw_SmallIcon(
 	HICON hIcon  = NULL;
 	bool handled = false;
 
-	//通常ディレクトリ
-	if (fp->is_dir && !fp->is_sym) {
+	//ディレクトリ
+	if (fp->is_dir) {
 		hIcon = get_folder_icon(fp->f_name);
 	}
+	//ファイル
 	else {
 		UnicodeString fext = LowerCase(fp->f_ext);
 		//実ファイル依存
@@ -6407,7 +6420,9 @@ bool draw_SmallIcon(
 				}
 				IconRWLock->EndWrite();
 			}
-			else hIcon = get_fext_icon(fext);
+			else {
+				hIcon = get_fext_icon(fext);
+			}
 		}
 		//拡張子依存
 		else {
@@ -6421,6 +6436,12 @@ bool draw_SmallIcon(
 
 	//描画
 	::DrawIconEx(cv->Handle, x, y, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+
+	//ディレクトリに矢印マークをオーバーレイ表示
+	if (fp->is_dir && fp->is_sym && hLinkIcon) {
+		::DrawIconEx(cv->Handle, x, y, hLinkIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+	}
+
 	return true;
 }
 //---------------------------------------------------------------------------
@@ -6694,6 +6715,8 @@ bool load_WorkList(UnicodeString wnam)
 	wnam = to_absolute_name(wnam);
 	if (!file_exists(wnam)) return false;
 
+	UnicodeString msg = make_LogHdr(_T("LOAD"), wnam);
+
 	try {
 		clear_FileList(WorkList);
 		std::unique_ptr<TStringList> f_lst(new TStringList());
@@ -6759,10 +6782,15 @@ bool load_WorkList(UnicodeString wnam)
 				if (fp) WorkList->AddObject(fnam, (TObject*)fp);
 			}
 		}
+
+		AddLog(msg);
 		return true;
 	}
 	catch (...) {
 		clear_FileList(WorkList);
+
+		msg[1] = 'E';
+		AddLog(msg);
 		return false;
 	}
 }
@@ -6784,11 +6812,16 @@ bool save_WorkList(UnicodeString wnam, TStringList *lst)
 		fbuf->Add(lbuf);
 	}
 
+	UnicodeString msg = make_LogHdr(_T("SAVE"), WorkListName);
 	bool res = saveto_TextUTF8(wnam, fbuf.get());
 	if (res) {
 		WorkListChanged  = false;
 		rqWorkListDirInf = true;
 	}
+	else {
+		msg[1] = 'E';
+	}
+	AddLog(msg);
 
 	return res;
 }
@@ -6826,7 +6859,10 @@ bool load_FontSample(UnicodeString fnam)
 			}
 			if (!sbuf.IsEmpty()) FontSampleSym = sbuf;
 			ok = true;
-		} else msg[1] = 'E';
+		}
+		else {
+			msg[1] = 'E';
+		}
 		AddLog(msg);
 	}
 	return ok;
@@ -9021,6 +9057,10 @@ bool delete_File(
 	else {
 		res = ::DeleteFile(cv_ex_filename(fnam).c_str());
 	}
+
+	//タグの削除
+	if (res) usr_TAG->DelItem(fnam);
+
 	return res;
 }
 //---------------------------------------------------------------------------

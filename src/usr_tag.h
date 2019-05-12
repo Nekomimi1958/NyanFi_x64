@@ -59,6 +59,7 @@ public:
 	void SetTags(UnicodeString fnam, UnicodeString tags);
 	void AddTags(UnicodeString fnam, UnicodeString tags);
 	void Rename(UnicodeString old_nam, UnicodeString new_nam);
+	void Copy(UnicodeString from_nam, UnicodeString to_nam);
 	int  RenTag(UnicodeString old_tag, UnicodeString new_tag);
 	int  DelTagData(UnicodeString tag);
 
