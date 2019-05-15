@@ -7102,6 +7102,25 @@ void __fastcall TNyanFiForm::SetDriveInfo(
 	bool sel_upd)		//選択情報を更新		(default = true)
 {
 	GetDriveInfo(tag, drv_upd, sel_upd);
+	SetScrSelLines(tag);
+}
+
+//---------------------------------------------------------------------------
+//シンプルスクロールバーの選択位置を設定
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SetScrSelLines(int tag)
+{
+	UsrScrollPanel *sp = FlScrPanel[tag];
+	sp->SelLines->Clear();
+	if (sp->Visible && col_lnScrSel!=col_None) {
+		TStringList *lst = GetFileList(tag);
+		sp->SelLines->AddObject(EmptyStr, (TObject *)(NativeInt)lst->Count);
+		for (int i=0; i<lst->Count; i++) {
+			if (((file_rec*)lst->Objects[i])->selected)
+				sp->SelLines->AddObject(EmptyStr, (TObject *)(NativeInt)i);
+		}
+		sp->Repaint();
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -9464,7 +9483,6 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 	//イメージプレビュー表示
 	//--------------------------------------------------
 	if (ScrMode==SCMD_FLIST && ImgViewThread) {
-		
 		bool no_prv = (!fp || fp->failed || TxtPrvListPanel->Visible || !PreviewPanel->Visible);
 		if (!no_prv && !force) {
 			//イメージプレビューを表示しないパスのチェック
@@ -9480,6 +9498,7 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 		if (!no_prv) {
 			SetPrvImgCursor(false);
 			PreviewSttLabel->Visible = false;
+			PreviewImage->Enabled	 = true;
 
 			UnicodeString fnam, fext;
 			bool is_dir, is_video;
@@ -9589,6 +9608,7 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 			}
 		}
 		else {
+			PreviewImage->Enabled = false;
 			ImgViewThread->AddRequest(_T("CLEAR"));
 		}
 	}
@@ -10815,6 +10835,8 @@ void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 	stt_pp->Caption = stt_str;
 	stt_pp->Repaint();
 
+	SetScrSelLines(CurListTag);
+
 	//マッチ数1で抜ける
 	if (IncSeaMatch1Exit && match_cnt==1 && !CurStt->is_Filter && !CurStt->is_Migemo) ExitIncSearch();
 }
@@ -10874,6 +10896,14 @@ bool __fastcall TNyanFiForm::ExeCommandAction(
 	else if (USAME_TI(cmd, "ListFileInfo")) {
 		cmd = "ShowFileInfo";
 		prm = "SD";
+	}
+	else if (USAME_TI(cmd, "NextSelItem")) {
+		cmd = "CursorDown";
+		prm = "SL";
+	}
+	else if (USAME_TI(cmd, "PrevSelItem")) {
+		cmd = "CursorUp";
+		prm = "SL";
 	}
 	else if (USAME_TI(cmd, "OpenCtrlPanel")) {
 		cmd = "OpenByExp";
@@ -14316,14 +14346,21 @@ void __fastcall TNyanFiForm::CurrToOppActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::CursorDownActionExecute(TObject *Sender)
 {
-	TListBox *lp = FileListBox[CurListTag];		if (lp->Count<2) return;
-	if (LoopFilerCursor && lp->ItemIndex==lp->Count-1) {
-		CursorTopAction->Execute();
+	TListBox *lp = FileListBox[CurListTag];
+	if (TEST_ActParam("SL")) {
+		int idx = to_NextSelItem(GetCurList(true), lp->ItemIndex);
+		if (idx!=-1) ListBoxSetIndex(lp, idx);
 	}
 	else {
-		int last_idx = lp->ItemIndex;
-		ExeCmdListBox(lp, _T("CursorDown"), ActionParam);
-		if (lp->ItemIndex!=last_idx) SetDriveFileInfo(CurListTag, false, false);
+		if (lp->Count<2) return;
+		if (LoopFilerCursor && lp->ItemIndex==lp->Count-1) {
+			CursorTopAction->Execute();
+		}
+		else {
+			int last_idx = lp->ItemIndex;
+			ExeCmdListBox(lp, _T("CursorDown"), ActionParam);
+			if (lp->ItemIndex!=last_idx) SetDriveFileInfo(CurListTag, false, false);
+		}
 	}
 }
 //---------------------------------------------------------------------------
@@ -14344,13 +14381,19 @@ void __fastcall TNyanFiForm::CursorDownSelActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::CursorUpActionExecute(TObject *Sender)
 {
 	TListBox *lp = FileListBox[CurListTag];	if (lp->Count<2) return;
-	if (LoopFilerCursor && lp->ItemIndex==0) {
-		CursorEndAction->Execute();
+	if (TEST_ActParam("SL")) {
+		int idx = to_PrevSelItem(GetCurList(true), lp->ItemIndex);
+		if (idx!=-1) ListBoxSetIndex(lp, idx);
 	}
 	else {
-		int last_idx = lp->ItemIndex;
-		ExeCmdListBox(lp, _T("CursorUp"), ActionParam);
-		if (lp->ItemIndex!=last_idx) SetDriveFileInfo(CurListTag, false, false);
+		if (LoopFilerCursor && lp->ItemIndex==0) {
+			CursorEndAction->Execute();
+		}
+		else {
+			int last_idx = lp->ItemIndex;
+			ExeCmdListBox(lp, _T("CursorUp"), ActionParam);
+			if (lp->ItemIndex!=last_idx) SetDriveFileInfo(CurListTag, false, false);
+		}
 	}
 }
 //---------------------------------------------------------------------------
@@ -16845,7 +16888,9 @@ int __fastcall TNyanFiForm::FindHardLinkCore(UnicodeString fnam, int tag)
 	int hl_cnt = 0;
 
 	//fsutil で一覧を取得
-	UnicodeString drvstr = ExtractFileDrive(fnam);
+	UnicodeString org_drv = ExtractFileDrive(fnam);
+	fnam = VirtualDrive_to_Actual(fnam);	//実際の場所に変換して検索
+	UnicodeString drv_str = ExtractFileDrive(fnam);
 	UnicodeString prm;
 	prm.sprintf(_T("hardlink list \"%s\""), fnam.c_str());
 	std::unique_ptr<TStringList> o_lst(new TStringList());
@@ -16855,7 +16900,7 @@ int __fastcall TNyanFiForm::FindHardLinkCore(UnicodeString fnam, int tag)
 		flist_stt *cur_stt = &ListStt[tag];
 		cur_stt->is_Find	= true;
 		cur_stt->find_HLINK = true;
-		cur_stt->find_Path	= IncludeTrailingPathDelimiter(drvstr);
+		cur_stt->find_Path	= IncludeTrailingPathDelimiter(org_drv);
 		cur_stt->find_Name	= fnam;
 
 		TStringList *r_lst = ResultList[tag];
@@ -16867,7 +16912,7 @@ int __fastcall TNyanFiForm::FindHardLinkCore(UnicodeString fnam, int tag)
 		r_lst->AddObject(fp->f_name, (TObject*)fp);
 
 		for (int i=0; i<o_lst->Count; i++) {
-			file_rec *fp = cre_new_file_rec(drvstr + o_lst->Strings[i], tag);
+			file_rec *fp = cre_new_file_rec(drv_str + o_lst->Strings[i], tag);
 			if (fp) r_lst->AddObject(fp->f_name, (TObject*)fp);
 		}
 
@@ -22365,7 +22410,9 @@ void __fastcall TNyanFiForm::SelectActionExecute(TObject *Sender)
 				if (!TEST_ActParam("ND")) CursorDownAction->Execute();
 				if (lp->ItemIndex==idx0) InvalidateFileList();
 			}
-			else SetActionAbort(_T("SKIP"));
+			else {
+				SetActionAbort(_T("SKIP"));
+			}
 			//情報表示を更新
 			SetDriveInfo();
 			SetSttBarInf();

@@ -973,7 +973,9 @@ extern TColor col_Cursor;
 extern TColor col_bgScrBar;
 extern TColor col_bgScrKnob;
 extern TColor col_frScrKnob;
+extern TColor col_bgActKnob;
 extern TColor col_lnScrHit;
+extern TColor col_lnScrSel;
 extern TColor col_Folder;
 extern TColor col_SymLink;
 extern TColor col_Protect;
@@ -1754,6 +1756,8 @@ int  find_PrevFile(TStringList *lst, int idx, UnicodeString fext = EmptyStr, Uni
 
 int to_NextFile(TStringList *lst, int idx);
 int to_PrevFile(TStringList *lst, int idx);
+int to_NextSelItem(TStringList *lst, int idx);
+int to_PrevSelItem(TStringList *lst, int idx);
 
 int  get_ViewCount();
 
@@ -1787,6 +1791,7 @@ UnicodeString get_DispName(file_rec *fp);
 UnicodeString get_RegDirName(UnicodeString pnam);
 UnicodeString UNC_to_NetDriveName(UnicodeString pnam);
 UnicodeString NetDriveName_to_UNC(UnicodeString pnam);
+UnicodeString VirtualDrive_to_Actual(UnicodeString pnam);
 UnicodeString get_PathFrom_SF(file_rec *fp);
 UnicodeString get_RegDirItem(int idx);
 UnicodeString get_RegDirItem(WideChar key);

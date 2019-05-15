@@ -411,21 +411,37 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	TListBox *lp = RegDirListBox;
 
 	//呼び出しキーか？
-	bool k_used = false;
-	for (int i=0; i<lp->Count && !k_used; i++) {
+	bool to_call = false;
+	for (int i=0; i<lp->Count && !to_call; i++) {
 		TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[i], 3, true);
-		k_used = SameText(KeyStr, get_tkn(lp->Items->Strings[i], ','));
+		to_call = SameText(KeyStr, get_tkn(lp->Items->Strings[i], ','));
 	}
 
 	bool handled = true;
-	if		(k_used)											handled = false;
-	else if (equal_UP(KeyStr) && lp->ItemIndex==0)				lp->ItemIndex = lp->Count - 1;
-	else if (equal_DOWN(KeyStr) && lp->ItemIndex==lp->Count-1)	lp->ItemIndex = 0;
-	else if (contained_wd_i(KeysStr_Popup, KeyStr))				show_PopupMenu(lp);
-	else if (IsSpecial && ExeCmdListBox(lp, cmd_F))				;
-	else if (!IsSpecial && UserModule->ListBoxOpeItem(KeyStr))	;
-	else if (StartsText("ContextMenu", cmd_F))					show_PopupMenu(lp);
-	else if (StartsText("IncSearch", cmd_F))					FilterEdit->SetFocus();
+	if (to_call) {
+		handled = false;
+	}
+	else if (equal_UP(KeyStr) && lp->ItemIndex==0) {
+		lp->ItemIndex = lp->Count - 1;
+	}
+	else if (equal_DOWN(KeyStr) && lp->ItemIndex==lp->Count-1) {
+		lp->ItemIndex = 0;
+	}
+	else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
+		show_PopupMenu(lp);
+	}
+	else if (IsSpecial && ExeCmdListBox(lp, cmd_F)) {
+		;
+	}
+	else if (!IsSpecial && UserModule->ListBoxOpeItem(KeyStr)) {
+		;
+	}
+	else if (StartsText("ContextMenu", cmd_F)) {
+		show_PopupMenu(lp);
+	}
+	else if (IsSpecial && StartsText("IncSearch", cmd_F)) {
+		FilterEdit->SetFocus();
+	}
 	//プロパティ
 	else if (USAME_TI(cmd_F, "PropertyDlg")) {
 		UnicodeString dnam = GetCurDirItem();
@@ -439,7 +455,9 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		ClearKeyBuff(true);		//OnKeyPress を抑止
 		OpenByExpAction->Execute();
 	}
-	else handled = false;
+	else {
+		handled = false;
+	}
 
 	if (handled) Key = 0;
 

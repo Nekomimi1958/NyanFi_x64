@@ -75,7 +75,7 @@ typedef struct {
 #define FEXT_RAR	_T(".rar.cbr")
 #define FEXT_ISO	_T(".iso")
 
-#define FEXT_ZIPIMG	_T(".zip.cbz.epub")		//‰æ‘œ‚ğ‚Â‰Â”\«‚Ì‚ ‚éZIP
+#define FEXT_ZIPIMG	_T(".zip.cbz.epub.mobi.gdtf")	//‰æ‘œ‚ğ‚Â‰Â”\«‚Ì‚ ‚éZIP
 
 #define ARC_OUTBUF_SIZE_L	1048576	//1MB
 #define ARC_OUTBUF_SIZE_S	4096
@@ -235,6 +235,7 @@ public:
 	bool GetFileInf(UnicodeString arc_file, UnicodeString fnam, arc_find_inf *inf);
 
 	bool HasZipImg(UnicodeString arc_file, UnicodeString xlist);
+	bool GetFileList(UnicodeString arc_file, TStringList *lst);
 	UnicodeString GetFirstFile(UnicodeString arc_file, UnicodeString xlist);
 
 	bool GetArcInfo(UnicodeString arc_file, int *f_cnt, __int64 *org_size,

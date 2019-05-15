@@ -80,12 +80,14 @@ UsrScrollPanel::~UsrScrollPanel()
 	if (AssoStrGrid && org_AssoGridWndProc)			AssoStrGrid->WindowProc    = org_AssoGridWndProc;
 
 	delete HitLines;
+	delete SelLines;
 }
 
 //---------------------------------------------------------------------------
 void __fastcall UsrScrollPanel::InitializePanel()
 {
 	HitLines = new TStringList();
+	SelLines = new TStringList();
 
 	KnobImgBuffV = NULL;
 	KnobImgBuffH = NULL;
@@ -114,7 +116,7 @@ void __fastcall UsrScrollPanel::InitializePanel()
 	ScrPaintBoxV->OnMouseDown = ScrPaintBoxMouseDown;
 	ScrPaintBoxV->OnMouseMove = ScrPaintBoxMouseMove;
 	ScrPaintBoxV->OnMouseUp   = ScrPaintBoxMouseUp;
-	ScrPaintBoxV->Tag		  = 0;
+	ScrPaintBoxV->Tag		  = USCRPNL_SCRTYPE_V;
 
 	//水平スクロール
 	ScrPanelH	 = NULL;
@@ -143,7 +145,7 @@ void __fastcall UsrScrollPanel::InitializePanel()
 		ScrPaintBoxH->OnMouseDown = ScrPaintBoxMouseDown;
 		ScrPaintBoxH->OnMouseMove = ScrPaintBoxMouseMove;
 		ScrPaintBoxH->OnMouseUp   = ScrPaintBoxMouseUp;
-		ScrPaintBoxH->Tag		  = 1;
+		ScrPaintBoxH->Tag		  = USCRPNL_SCRTYPE_H;
 	}
 
 	ScrKnobRectV = Rect(0, 0, 0, 0);
@@ -161,8 +163,10 @@ void __fastcall UsrScrollPanel::InitializePanel()
 	Color		 = clAppWorkSpace;
 	KnobColor	 = clBtnFace;
 	KnobBdrColor = clBtnShadow;
+	KnobActColor = clNone;
 	HitLineColor = clYellow;
-	HitLineAlpha = 128;
+	PosLineAlpha = 128;			//***
+	SelLineColor = clNone;
 
 	Visible 	 = false;
 	VisibleV	 = VisibleH = false;
@@ -423,64 +427,90 @@ void __fastcall UsrScrollPanel::ScrPaintBoxPaint(TObject *Sender)
 		cv->FillRect(pp->ClientRect);
 
 		//つまみ
-		TRect rc = (pp->Tag==1)? ScrKnobRectH : ScrKnobRectV;
-		Graphics::TBitmap *bp = (pp->Tag==1)? KnobImgBuffH : KnobImgBuffV;
+		TRect rc = (pp->Tag==USCRPNL_SCRTYPE_H)? ScrKnobRectH : ScrKnobRectV;
+		Graphics::TBitmap *bp = (pp->Tag==USCRPNL_SCRTYPE_H)? KnobImgBuffH : KnobImgBuffV;
 		if (bp && !bp->Empty) {
 			InflateRect(rc, -1, -1);
-			if (pp->Tag==1) rc.Right += 1; else rc.Bottom += 1;
+			if (pp->Tag==USCRPNL_SCRTYPE_H) rc.Right += 1; else rc.Bottom += 1;
 			cv->StretchDraw(rc, bp);
 		}
-		else if (KnobBdrColor==clNone) {
-			InflateRect(rc, -1, -1);
-			if (pp->Tag==1) rc.Right += 1; else rc.Bottom += 1;
-			cv->Brush->Style = bsSolid;
-			cv->Brush->Color = KnobColor;
-			cv->FillRect(rc);
-		}
 		else {
-			if (pp->Tag==1) {
-				InflateRect(rc, 0, -2);  rc.Left += 1;
+			cv->Brush->Style = bsSolid;
+			cv->Brush->Color = (ScrCatchKnob && KnobActColor!=clNone)? KnobActColor : KnobColor;
+			if (KnobBdrColor==clNone) {
+				InflateRect(rc, -1, -1);
+				if (pp->Tag==USCRPNL_SCRTYPE_H) rc.Right += 1; else rc.Bottom += 1;
+				cv->FillRect(rc);
 			}
 			else {
-				InflateRect(rc, -2, 0);  rc.Top += 1;
+				if (pp->Tag==USCRPNL_SCRTYPE_H) {
+					InflateRect(rc, 0, -2);  rc.Left += 1;
+				}
+				else {
+					InflateRect(rc, -2, 0);  rc.Top += 1;
+				}
+				cv->FillRect(rc);
+
+				//輪郭
+				cv->Pen->Style = psSolid;
+				cv->Pen->Width = 1;
+				cv->Pen->Color = KnobBdrColor;
+				cv->MoveTo(rc.Left,		rc.Top - 1);	cv->LineTo(rc.Right, 	rc.Top - 1);
+				cv->MoveTo(rc.Left - 1, rc.Top);		cv->LineTo(rc.Left - 1,	rc.Bottom);
+				cv->MoveTo(rc.Left, 	rc.Bottom);		cv->LineTo(rc.Right,	rc.Bottom);
+				cv->MoveTo(rc.Right, 	rc.Top);		cv->LineTo(rc.Right,	rc.Bottom);
 			}
-			cv->Brush->Style = bsSolid;
-			cv->Brush->Color = KnobColor;
-			cv->FillRect(rc);
-			//輪郭
-			cv->Pen->Style = psSolid;
-			cv->Pen->Width = 1;
-			cv->Pen->Color = KnobBdrColor;
-			cv->MoveTo(rc.Left,		rc.Top - 1);	cv->LineTo(rc.Right, 	rc.Top - 1);
-			cv->MoveTo(rc.Left - 1, rc.Top);		cv->LineTo(rc.Left - 1,	rc.Bottom);
-			cv->MoveTo(rc.Left, 	rc.Bottom);		cv->LineTo(rc.Right,	rc.Bottom);
-			cv->MoveTo(rc.Right, 	rc.Top);		cv->LineTo(rc.Right,	rc.Bottom);
 		}
 
-		//ヒット行表示
-		if (pp->Tag==0 && HitLineColor!=Graphics::clNone && HitLines->Count>1) {
-			int max_n = (int)HitLines->Objects[0];	//総行数
-			if (max_n>0) {
-				BLENDFUNCTION blend_f;
-				blend_f.BlendOp 			= AC_SRC_OVER;
-				blend_f.BlendFlags			= 0;
-				blend_f.SourceConstantAlpha = HitLineAlpha;
-				blend_f.AlphaFormat 		= 0;
+		//位置表示
+		bool has_hit = (HitLineColor!=Graphics::clNone && HitLines->Count>1);
+		bool has_sel = (SelLineColor!=Graphics::clNone && SelLines->Count>1);
+		if (pp->Tag==USCRPNL_SCRTYPE_V && (has_hit || has_sel)) {
+			BLENDFUNCTION blend_f;
+			blend_f.BlendOp 			= AC_SRC_OVER;
+			blend_f.BlendFlags			= 0;
+			blend_f.AlphaFormat 		= 0;
+			blend_f.SourceConstantAlpha = PosLineAlpha;
 
-				std::unique_ptr<Graphics::TBitmap> bp_l(new Graphics::TBitmap());
-				int w = pp->ClientWidth;
-				bp_l->SetSize(w, 1);
-				bp_l->Canvas->Brush->Style = bsSolid;
-				bp_l->Canvas->Brush->Color = HitLineColor;
-				bp_l->Canvas->FillRect(TRect(0, 0, w, 1));
+			std::unique_ptr<Graphics::TBitmap> bp_l(new Graphics::TBitmap());
+			int w = pp->ClientWidth;
+			bp_l->SetSize(w, 1);
+			bp_l->Canvas->Brush->Style = bsSolid;
 
-				int lst_y = -1;
-				for (int i=1; i<HitLines->Count; i++) {
-					double r = 1.0 * (int)HitLines->Objects[i]/max_n;
-					int y = (int)(pp->ClientHeight * r);
-					if (y>lst_y && y<pp->ClientHeight) {
-						::AlphaBlend(cv->Handle, 0, y, w, 1, bp_l->Canvas->Handle, 0, 0, w, 1, blend_f);
-						lst_y = y;
+			//ヒット位置
+			if (has_hit) {
+				int max_n = (int)HitLines->Objects[0];	//総行数
+				if (max_n>0) {
+					bp_l->Canvas->Brush->Color = HitLineColor;
+					bp_l->Canvas->FillRect(TRect(0, 0, w, 1));
+
+					int lst_y = -1;
+					for (int i=1; i<HitLines->Count; i++) {
+						double r = 1.0 * (int)HitLines->Objects[i]/max_n;
+						int y = (int)(pp->ClientHeight * r);
+						if (y>lst_y && y<pp->ClientHeight) {
+							::AlphaBlend(cv->Handle, 0, y, w, 1, bp_l->Canvas->Handle, 0, 0, w, 1, blend_f);
+							lst_y = y;
+						}
+					}
+				}
+			}
+
+			//選択位置
+			if (has_sel) {
+				int max_n = (int)SelLines->Objects[0];	//総行数
+				if (max_n>0) {
+					bp_l->Canvas->Brush->Color = SelLineColor;
+					bp_l->Canvas->FillRect(TRect(0, 0, w, 1));
+
+					int lst_y = -1;
+					for (int i=1; i<SelLines->Count; i++) {
+						double r = 1.0 * (int)SelLines->Objects[i]/max_n;
+						int y = (int)(pp->ClientHeight * r);
+						if (y>lst_y && y<pp->ClientHeight) {
+							::AlphaBlend(cv->Handle, 0, y, w, 1, bp_l->Canvas->Handle, 0, 0, w, 1, blend_f);
+							lst_y = y;
+						}
 					}
 				}
 			}
@@ -533,11 +563,11 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseDown(TObject *Sender, TMouseButt
 {
 	if (Button==mbLeft) {
 		TPaintBox *pp = (TPaintBox *)Sender;
-		TRect rc = (pp->Tag==1)? ScrKnobRectH : ScrKnobRectV;
+		TRect rc = (pp->Tag==USCRPNL_SCRTYPE_H)? ScrKnobRectH : ScrKnobRectV;
 		ScrCatchKnob = rc.PtInRect(Point(X, Y));
 		//ノブ移動開始
 		if (ScrCatchKnob) {
-			if (pp->Tag==0)
+			if (pp->Tag==USCRPNL_SCRTYPE_V)
 				ScrCatchYp = Y - rc.Top;
 			else
 				ScrCatchXp = X - rc.Left;
@@ -548,7 +578,7 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseDown(TObject *Sender, TMouseButt
 			if (AssoListBox) {
 				TListBox *lp = AssoListBox;
 				//垂直スクロールバー
-				if (pp->Tag==0) {
+				if (pp->Tag==USCRPNL_SCRTYPE_V) {
 					if (Y<rc.Top)
 						lp->TopIndex = std::max(lp->TopIndex - ScrPage, 0);
 					else if (Y>rc.Bottom)
@@ -570,7 +600,7 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseDown(TObject *Sender, TMouseButt
 			else if (AssoChkListBox) {
 				TCheckListBox *lp = AssoChkListBox;
 				//垂直スクロールバー
-				if (pp->Tag==0) {
+				if (pp->Tag==USCRPNL_SCRTYPE_V) {
 					if (Y<rc.Top)
 						lp->TopIndex = std::max(lp->TopIndex - ScrPage, 0);
 					else if (Y>rc.Bottom)
@@ -581,7 +611,7 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseDown(TObject *Sender, TMouseButt
 			else if (AssoStrGrid) {
 				TStringGrid *gp = AssoStrGrid;
 				//垂直スクロールバー
-				if (pp->Tag==0) {
+				if (pp->Tag==USCRPNL_SCRTYPE_V) {
 					if (Y<rc.Top)
 						gp->TopRow = std::max(gp->TopRow - ScrPage, 0);
 					else if (Y>rc.Bottom)
@@ -606,8 +636,9 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseDown(TObject *Sender, TMouseButt
 				else if (Y>rc.Bottom)
 					AssoScrollBar->Position = AssoScrollBar->Position + ScrPage;
 			}
-			Repaint();
 		}
+
+		Repaint();
 	}
 }
 //---------------------------------------------------------------------------
@@ -616,7 +647,7 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseMove(TObject *Sender, TShiftStat
 	if (ScrCatchKnob) {
 		TPaintBox *pp = (TPaintBox *)Sender;
 		//垂直スクロールバー
-		if (pp->Tag==0) {
+		if (pp->Tag==USCRPNL_SCRTYPE_V) {
 			int yp = std::min(std::max(Y - ScrCatchYp, 0), ScrKnobMaxY);
 			ScrKnobRectV.Location = Point(0, yp);
 			pp->Repaint();
@@ -701,9 +732,10 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseUp(TObject *Sender, TMouseButton
 {
 	TPaintBox *pp = (TPaintBox *)Sender;
 	ScrCatchKnob = false;
+	Repaint();
 
 	//右クリックイベント
-	if (Button==mbRight && OnRButtonUp && pp->Tag==0) OnRButtonUp(Sender, Button, Shift, X, Y);
+	if (Button==mbRight && OnRButtonUp && pp->Tag==USCRPNL_SCRTYPE_V) OnRButtonUp(Sender, Button, Shift, X, Y);
 }
 
 //---------------------------------------------------------------------------

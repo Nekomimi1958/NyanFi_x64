@@ -22,6 +22,10 @@
 #define USCRPNL_FLAG_HS		0x0100	//水平スクロールバー付(ListBox or Grid)
 
 //---------------------------------------------------------------------------
+#define USCRPNL_SCRTYPE_V	0		//垂直スクロールバー
+#define USCRPNL_SCRTYPE_H	1		//水平スクロールバー
+
+//---------------------------------------------------------------------------
 #define WM_NYANFI_USCROLL	(WM_APP + 500)	//ファイルリストのノブ処理用
 #define WM_NYANFI_UPDKNOB	(WM_APP + 501)	//ファイルリストのノブ更新用
 
@@ -118,8 +122,10 @@ public:
 	TColor Color;						//背景色
 	TColor KnobColor;					//ノブ色
 	TColor KnobBdrColor;				//ノブ輪郭色
-	TColor HitLineColor;				//ヒット行色
-	int  HitLineAlpha;					//ヒット行アルファ
+	TColor KnobActColor;				//ドラッグ時のノブ色
+	TColor HitLineColor;				//ヒット位置色
+	TColor SelLineColor;				//選択位置色
+	int    PosLineAlpha;				//位置表示アルファ
 
 	bool ListCsrVisible;				//リストボックスのカーソルを常に可視領域に
 
@@ -139,6 +145,7 @@ public:
 	bool VisibleV, VisibleH;			//スクロールバーの表示状態
 
 	TStringList *HitLines;				//検索結果位置リスト
+	TStringList *SelLines;				//選択項目位置リスト
 
 	UsrScrollPanel(TPanel *pp, TListBox *lp,      int flag);
 	UsrScrollPanel(TPanel *pp, TCheckListBox *lp, int flag);

@@ -16,7 +16,6 @@
 #include <System.DateUtils.hpp>
 #include <System.Character.hpp>
 #include <System.IOUtils.hpp>
-#include <System.Zip.hpp>
 #include <RegularExpressions.hpp>
 #include <Vcl.Imaging.pngimage.hpp>
 #include <Vcl.Imaging.GIFImg.hpp>
@@ -304,8 +303,8 @@ bool PermitDotCmds;				//.nyanfi でコマンド実行を許可
 bool InheritDotNyan;			//上位ディレクトリから .nyanfi を継承
 bool DotNyanPerUser;			//ユーザ名別に .nyanfi を作成
 
-int  ScrBarStyle;				//スクロールバー・スタイル
-int  IconMode;					//アイコンの表示モード	0:非表示/ 1:表示/ 2:ディレクトリのみ表示
+int  ScrBarStyle;				//スクロールバー・スタイル	0:標準/ 1:シンプル/ 2:3/4幅/ 3:1/2幅/ 4:画像
+int  IconMode;					//アイコンの表示モード		0:非表示/ 1:表示/ 2:ディレクトリのみ表示
 
 bool ModalScreen;				//モーダル表示効果
 int  ModalScrAlpha;				//スクリーンの透明度
@@ -748,7 +747,9 @@ TColor col_Cursor;		//ラインカーソルの色
 TColor col_bgScrBar;	//シンプルスクロールバーの背景色
 TColor col_bgScrKnob;	//シンプルスクロールノブの色
 TColor col_frScrKnob;	//シンプルスクロールノブの輪郭色
+TColor col_bgActKnob;	//ドラッグ時のシンプルスクロールノブ色
 TColor col_lnScrHit;	//シンプルスクロールバーのヒット行色
+TColor col_lnScrSel;	//シンプルスクロールバーの選択行色
 TColor col_Folder;		//ディレクトリの文字色
 TColor col_SymLink;		//シンボリックリンク/ジャンクションの文字色
 TColor col_Protect;		//削除制限ディレクトリの文字色
@@ -4028,38 +4029,39 @@ UnicodeString ExtractInZipImg(
 	UnicodeString arc_file,		//アーカイブファイル名
 	UnicodeString img_fext)		//対応画像拡張子
 {
-	if (!test_FileExt(get_extension(arc_file), FEXT_ZIPIMG)) return EmptyStr;
-
 	UnicodeString i_fnam;
-	std::unique_ptr<TZipFile> zp(new TZipFile());
 
 	try {
-		zp->Open(arc_file, zmRead);
+		std::unique_ptr<TStringList> lst(new TStringList());
+		if (!usr_ARC->GetFileList(arc_file, lst.get())) Abort();
 
-		UnicodeString i_cover, i_first;
-		for (int i=0; i<zp->FileCount; i++) {
-			UnicodeString fnam = zp->FileName[i];
-			UnicodeString fext = get_extension(fnam);
-			if (test_FileExt(fext, img_fext)) {
+		UnicodeString i_thumb, i_cover, i_first;
+		for (int i=0; i<lst->Count; i++) {
+			UnicodeString fnam = lst->Strings[i];
+			if (starts_AT(fnam)) continue;
+			UnicodeString nnam = ExtractFileName(fnam);
+			if (test_FileExt(get_extension(nnam), img_fext)) {
 				if (i_first.IsEmpty()) i_first = fnam;
 				if (i_cover.IsEmpty()
-					&& (ContainsText(fnam, "cover") || ContainsText(fnam, "title") || ContainsText(fnam, "page")))
-						i_cover = fnam;
+					&& (ContainsText(nnam, "cover") || ContainsText(nnam, "title") || ContainsText(nnam, "page")))
+				{
+					i_cover = fnam;
+				}
+				if (i_thumb.IsEmpty() && ContainsText(nnam, "thumbnail")) {
+					i_thumb = fnam;
+				}
 			}
 		}
 
-		UnicodeString znam = !i_cover.IsEmpty()? i_cover : i_first;
-		if (!znam.IsEmpty()) {
-			i_fnam = TempPathA + ExtractFileName(ReplaceStr(znam, "/", "\\"));
-			zp->Extract(znam, TempPathA, false);
-		}
+		UnicodeString znam = !i_thumb.IsEmpty()? i_thumb : !i_cover.IsEmpty()? i_cover : i_first;
+		if (znam.IsEmpty()) Abort();
+		i_fnam = TempPathA + ExtractFileName(znam);
+		if (!usr_ARC->UnPack(arc_file, TempPathA, add_quot_if_spc(znam), false, true, true)) Abort();
 	}
 	catch (...) {
 		if (file_exists(i_fnam)) DeleteFile(i_fnam);
 		i_fnam = EmptyStr;
 	}
-
-	zp->Close();
 
 	return i_fnam;
 }
@@ -5680,11 +5682,11 @@ void set_UsrScrPanel(UsrScrollPanel *sp)
 	sp->KnobImgBuffH = NULL;
 
 	switch (ScrBarStyle) {
-	case 2:
+	case 2:	//3/4幅
 		knob_wd *= 0.75;	break;
-	case 3:
+	case 3:	//1/2幅
 		knob_wd /= 2;		break;
-	case 4:
+	case 4:	//画像
 		if (!BgImgBuff[BGIMGID_KNOB_V]->Empty) {
 			knob_wd = std::min(BgImgBuff[BGIMGID_KNOB_V]->Width + 2, knob_wd);
 			sp->KnobImgBuffV = BgImgBuff[BGIMGID_KNOB_V];
@@ -5700,10 +5702,13 @@ void set_UsrScrPanel(UsrScrollPanel *sp)
 	sp->Color		 = col_bgScrBar;
 	sp->KnobColor	 = col_bgScrKnob;
 	sp->KnobBdrColor = col_frScrKnob;
+	sp->KnobActColor = col_bgActKnob;
 	sp->HitLineColor = col_lnScrHit;
+	sp->SelLineColor = col_lnScrSel;
 
-	bool is_fl	= (sp->Flag & USCRPNL_FLAG_FL);
-	sp->Visible = is_fl? (!HideScrBar && ScrBarStyle>0) : (ScrBarStyle>0);
+	bool is_simple = (ScrBarStyle>0);
+	bool is_flist  = (sp->Flag & USCRPNL_FLAG_FL);
+	sp->Visible    = is_flist? (!HideScrBar && is_simple) : is_simple;
 
 	sp->ListCsrVisible = (sp->Flag & (USCRPNL_FLAG_TV|USCRPNL_FLAG_GL))? TvCursorVisible : FlCursorVisible;
 
@@ -5712,12 +5717,12 @@ void set_UsrScrPanel(UsrScrollPanel *sp)
 		if (sp->AssoListBox) {
 			//幅
 			int wd = sp->ParentPanel->ClientWidth;
-			if ((is_fl && HideScrBar) || ScrBarStyle>0) wd += (std_wd + 2);
+			if ((is_flist && HideScrBar) || is_simple) wd += (std_wd + 2);
 			sp->AssoListBox->Width = wd;
 			//高さ
 			if (sp->Flag & USCRPNL_FLAG_HS) {
 				int hi = sp->ParentPanel->ClientHeight;
-				if (ScrBarStyle>0) hi += (std_wd + 2);
+				if (is_simple) hi += (std_wd + 2);
 				sp->AssoListBox->Height = hi;
 			}
 		}
@@ -5725,19 +5730,19 @@ void set_UsrScrPanel(UsrScrollPanel *sp)
 		else if (sp->AssoChkListBox) {
 			//幅
 			int wd = sp->ParentPanel->ClientWidth;
-			if (ScrBarStyle>0) wd += (std_wd + 2);
+			if (is_simple) wd += (std_wd + 2);
 			sp->AssoChkListBox->Width  = wd;
 		}
 		//グリッドのサイズ調整
 		else if (sp->AssoStrGrid) {
 			//幅
 			int wd = sp->ParentPanel->ClientWidth;
-			if (ScrBarStyle>0) wd += (std_wd + 2);
+			if (is_simple) wd += (std_wd + 2);
 			sp->AssoStrGrid->Width = wd;
 			//高さ
 			if (sp->Flag & USCRPNL_FLAG_HS) {
 				int hi = sp->ParentPanel->ClientHeight;
-				if (ScrBarStyle>0) hi += (std_wd + 2);
+				if (is_simple) hi += (std_wd + 2);
 				sp->AssoStrGrid->Height = hi;
 			}
 		}
@@ -6988,36 +6993,55 @@ int find_PrevFile(
 //---------------------------------------------------------------------------
 int to_NextFile(TStringList *lst, int idx)
 {
-	try {
-		int idx0 = -1, idx1 = -1;
-		for (int i=0; i<lst->Count && idx1==-1; i++) {
-			if (i<=idx && idx0!=-1) continue;
-			file_rec *fp = (file_rec*)lst->Objects[i];
-			if (fp->is_dir || fp->is_dummy || fp->f_attr==faInvalid) continue;
-			if (i<=idx) idx0 = i; else idx1 = i;
-		}
-		return (idx1!=-1)? idx1 : (LoopFilerCursor? idx0 : -1);
+	int idx0 = -1, idx1 = -1;
+	for (int i=0; i<lst->Count && idx1==-1; i++) {
+		if (i<=idx && idx0!=-1) continue;
+		file_rec *fp = (file_rec*)lst->Objects[i];
+		if (fp->is_dir || fp->is_dummy || fp->f_attr==faInvalid) continue;
+		if (i<=idx) idx0 = i; else idx1 = i;
 	}
-	catch (...) {
-		return -1;
-	}
+
+	return (idx1!=-1)? idx1 : (LoopFilerCursor? idx0 : -1);
 }
 //---------------------------------------------------------------------------
 int to_PrevFile(TStringList *lst, int idx)
 {
-	try {
-		int idx0 = -1, idx1 = -1;
-		for (int i=lst->Count-1; i>=0 && idx1==-1; i--) {
-			if (i>=idx && idx0!=-1) continue;
-			file_rec *fp = (file_rec*)lst->Objects[i];
-			if (fp->is_dir || fp->is_dummy || fp->f_attr==faInvalid) continue;
-			if (i>=idx) idx0 = i; else idx1 = i;
-		}
-		return (idx1!=-1)? idx1 : (LoopFilerCursor? idx0 : -1);
+	int idx0 = -1, idx1 = -1;
+	for (int i=lst->Count-1; i>=0 && idx1==-1; i--) {
+		if (i>=idx && idx0!=-1) continue;
+		file_rec *fp = (file_rec*)lst->Objects[i];
+		if (fp->is_dir || fp->is_dummy || fp->f_attr==faInvalid) continue;
+		if (i>=idx) idx0 = i; else idx1 = i;
 	}
-	catch (...) {
-		return -1;
+
+	return (idx1!=-1)? idx1 : (LoopFilerCursor? idx0 : -1);
+}
+
+//---------------------------------------------------------------------------
+int to_NextSelItem(TStringList *lst, int idx)
+{
+	int idx0 = -1, idx1 = -1;
+	for (int i=0; i<lst->Count && idx1==-1; i++) {
+		if (i<=idx && idx0!=-1) continue;
+		file_rec *fp = (file_rec*)lst->Objects[i];
+		if (!fp->selected) continue;
+		if (i<=idx) idx0 = i; else idx1 = i;
 	}
+
+	return (idx1!=-1)? idx1 : (LoopFilerCursor? idx0 : -1);
+}
+//---------------------------------------------------------------------------
+int to_PrevSelItem(TStringList *lst, int idx)
+{
+	int idx0 = -1, idx1 = -1;
+	for (int i=lst->Count-1; i>=0 && idx1==-1; i--) {
+		if (i>=idx && idx0!=-1) continue;
+		file_rec *fp = (file_rec*)lst->Objects[i];
+		if (!fp->selected) continue;
+		if (i>=idx) idx0 = i; else idx1 = i;
+	}
+
+	return (idx1!=-1)? idx1 : (LoopFilerCursor? idx0 : -1);
 }
 
 //---------------------------------------------------------------------------
@@ -7309,6 +7333,23 @@ UnicodeString NetDriveName_to_UNC(UnicodeString pnam)
 			if (dp->unc.IsEmpty()) continue;
 			if (StartsText(dp->drive_str, pnam)) {
 				pnam = ReplaceText(pnam, dp->drive_str, dp->unc);
+				break;
+			}
+		}
+	}
+	return pnam;
+}
+
+//---------------------------------------------------------------------------
+//仮想ドライブ名パスを実際のパスに変換
+//---------------------------------------------------------------------------
+UnicodeString VirtualDrive_to_Actual(UnicodeString pnam)
+{
+	if (!StartsStr("\\\\", pnam)) {
+		for (int i=0; i<DriveInfoList->Count; i++) {
+			drive_info *dp = (drive_info *)DriveInfoList->Objects[i];
+			if (dp->is_virtual && StartsText(dp->drive_str, pnam)) {
+				pnam = ReplaceText(pnam, dp->drive_str, IncludeTrailingPathDelimiter(dp->mnt_dir));
 				break;
 			}
 		}
@@ -8113,6 +8154,7 @@ bool get_FileInfList(
 		//------------------------------------------
 		std::unique_ptr<TStringList> ref_lst(new TStringList());	//コマンドファイルの参照情報
 
+		int lst_cnt = lst->Count;
 		//アプリケーション情報
 		if (test_AppInfExt(fext)) {
 			get_AppInf(fnam, lst);
@@ -8230,11 +8272,21 @@ bool get_FileInfList(
 		else if (USAME_TI(fp->n_name, "tags")) {
 			get_TagsInf(fnam, lst);
 		}
-		//アーカイブ
-		else if (is_AvailableArc(fnam)) {
-			if (xd2tx_PropExt(fext)) {
-				if (xd2tx_GetInfo(fnam, lst)) lst->Add(EmptyStr);
+		//その他
+		else {
+			//動画
+			if (USAME_TS(usr_SH->get_PropInf(fnam, lst), "ビデオ")) {
+				fp->is_video = true;
 			}
+			//実行可能ファイル(チェック)
+			else {
+				get_AppInf(fnam, lst);
+			}
+		}
+
+		//アーカイブ情報
+		if (is_AvailableArc(fnam)) {
+			if (lst->Count>lst_cnt) lst->Add(EmptyStr);
 
 			add_PropLine_if(_T("形式"), usr_ARC->GetSubTypeStr(fnam), lst);
 
@@ -8260,17 +8312,6 @@ bool get_FileInfList(
 			else {
 				add_WarnLine("不正または対応していない形式です", lst);
 				InhReload++;	//エラーの繰り返しを防ぐため
-			}
-		}
-		//その他
-		else {
-			//動画
-			if (USAME_TS(usr_SH->get_PropInf(fnam, lst), "ビデオ")) {
-				fp->is_video = true;
-			}
-			//実行可能ファイル(チェック)
-			else {
-				get_AppInf(fnam, lst);
 			}
 		}
 
@@ -9364,7 +9405,9 @@ void set_col_from_ColorList()
 		{&col_bgScrBar,	_T("bgScrBar"),		clAppWorkSpace},
 		{&col_bgScrKnob,_T("bgScrKnob"),	clBtnFace},
 		{&col_frScrKnob,_T("frScrKnob"),	clBtnShadow},
+		{&col_bgActKnob,_T("bgActKnob"),	col_None},
 		{&col_lnScrHit,	_T("lnScrHit"),		clYellow},
+		{&col_lnScrSel,	_T("lnScrSel"),		col_None},
 		{&col_Folder,	_T("Folder"),		clYellow},
 		{&col_SymLink,	_T("SymLink"),		clYellow},
 		{&col_Protect,	_T("Protect"),		col_None},

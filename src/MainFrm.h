@@ -2269,6 +2269,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall SetDrivePanel(int tag, UnicodeString msg = EmptyStr);
 	UnicodeString __fastcall GetDriveInfo(int tag, bool drv_upd = true, bool sel_upd = true, UnicodeString get_str = EmptyStr);
 	void __fastcall SetDriveInfo(int tag = CurListTag, bool drv_upd = true, bool sel_upd = true);
+	void __fastcall SetScrSelLines(int tag);
 	void __fastcall SetFileInf();
 	void __fastcall SetDriveFileInfo(int tag, bool drv_upd = true, bool sel_upd = true);
 

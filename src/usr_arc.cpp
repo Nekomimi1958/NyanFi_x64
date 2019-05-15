@@ -320,9 +320,9 @@ int UserArcUnit::ExeCommand(
 	int res = (fp->IsUnicode)?
 		fp->Command(MainHandle, UTF8String(cmd).c_str(), buf.get(), buf_size) :
 		fp->Command(MainHandle, AnsiString(cmd).c_str(), buf.get(), buf_size);
-	Busy	= false;
+	Busy = false;
 
-	ResMsg	= GetDispStr(buf.get(), arc_t);
+	ResMsg = GetDispStr(buf.get(), arc_t);
 	if (fpAddDebugLog) fpAddDebugLog(EmptyStr, EmptyStr, ResMsg);
 
 	if (res!=0) {
@@ -938,6 +938,38 @@ bool UserArcUnit::GetFileInf(
 }
 
 //---------------------------------------------------------------------------
+//ファイル一覧の取得
+//---------------------------------------------------------------------------
+bool UserArcUnit::GetFileList(UnicodeString arc_file, TStringList *lst)
+{
+	if (arc_file.Length()>=MAX_PATH) return false;		//MAX_PATH超のアーカイブはダメ
+
+	if (!OpenArc(arc_file)) return false;
+	arc_func *fp = GetArcFunc(CurType);  if (!fp) return false;
+
+	bool ret = true;
+	try {
+		arc_find_inf inf;
+		if (FindFirstEx(EmptyStr, &inf, true)) {
+			do {
+				if (!inf.is_dir) lst->Add(inf.f_name);
+			} while (FindNextEx(&inf, true));
+
+			if (CurType==UARCTYP_LHA) {
+				DWORD dwError;
+				if (fp->GetLastError(&dwError)!=0) Abort();
+			}
+		}
+	}
+	catch (EAbort &e) {
+		ret = false;
+	}
+	CloseArc();
+
+	return ret;
+}
+
+//---------------------------------------------------------------------------
 //指定拡張子にマッチする最初のファイル名を取得
 //戻り値 : アーカイブ名/ファイル名
 //---------------------------------------------------------------------------
@@ -989,12 +1021,14 @@ bool UserArcUnit::HasZipImg(
 
 		UnicodeString i_cover, i_first;
 		do {
-			if (!inf.is_dir) {
+			if (!inf.is_dir && !starts_AT(inf.f_name)) {
 				UnicodeString fext = get_extension(inf.f_name);
 				if (test_FileExt(fext, _T(".exe.com.msi.msu.scr.dll.rll.cpl.ocx"))) {
 					ret = false;  break;
 				}
-				if (test_FileExt(fext, xlist)) ret = true;
+				if (test_FileExt(fext, xlist)) {
+					ret = true;   break;
+				}
 			}
 		} while (FindNextEx(&inf, true));
 	}

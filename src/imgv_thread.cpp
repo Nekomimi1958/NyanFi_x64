@@ -634,9 +634,8 @@ void __fastcall TImgViewThread::Execute()
 						cv->Unlock();
 						Rotation = 0;
 					}
-					//ZIP
+					//ZIP内画像
 					else if (test_FileExt(fext, FEXT_ZIPIMG)) {
-						//アーカイブ内の画像
 						int res = 0;
 						UnicodeString tmp_name = ExtractInZipImg(Img_f_name, get_img_fext());
 						if (!tmp_name.IsEmpty()) {
@@ -654,7 +653,9 @@ void __fastcall TImgViewThread::Execute()
 						if (DoublePage) {
 							if (!FileName2.IsEmpty()) {
 								std::unique_ptr<Graphics::TBitmap> i2buf(new Graphics::TBitmap());
-								if (load_ImageFile(FileName2, i2buf.get(), WICIMG_PREVIEW, col_bgImage)==0) UserAbort(USTR_FaildLoad);
+								if (load_ImageFile(FileName2, i2buf.get(), WICIMG_PREVIEW, col_bgImage)==0)
+									UserAbort(USTR_FaildLoad);
+
 								int i_h1 = ImgBuff->Height;
 								int i_h2 = i2buf->Height;
 								//見開き間隔の計算

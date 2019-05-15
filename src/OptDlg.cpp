@@ -132,8 +132,10 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"bgScrBar=|シンプルスクロールバーの背景色\n"
 		"bgScrKnob=シンプルスクロールノブの色\n"
 		"frScrKnob=シンプルスクロールノブの輪郭色\n"
-		"lnScrHit=シンプルスクロールバーのヒット行\n"
-		"Splitter=分割境界線\n"
+		"bgActKnob=ドラッグ時のシンプルスクロールノブ色\n"
+		"lnScrHit=シンプルスクロールバーのヒット位置\n"
+		"lnScrSel=シンプルスクロールバーの選択位置(FL)\n"
+		"Splitter=|分割境界線\n"
 		"bgTlBar1=ツールバーのグラデーション開始色\n"
 		"bgTlBar2=ツールバーのグラデーション終了色\n"
 		"fgTlBar=ツールバーの文字色\n"
@@ -1492,7 +1494,9 @@ void __fastcall TOptionDlg::DisableColActionUpdate(TObject *Sender)
 
 	((TAction*)Sender)->Enabled
 		= contained_wd_i(
-			_T("bgList2|fgSelItem|Protect|Compress|frScrKnob|lnScrHit|frmTab|bdrLine|bdrFold|bdrFixed|TlBorder"), col_id);
+			_T("bgList2|fgSelItem|Protect|Compress|frScrKnob|bgActKnob|")
+			_T("lnScrHit|lnScrSel|frmTab|bdrLine|bdrFold|bdrFixed|TlBorder"),
+			col_id);
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::DisableTimColActionExecute(TObject *Sender)

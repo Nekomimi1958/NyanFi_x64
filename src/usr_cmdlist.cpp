@@ -161,6 +161,7 @@ void set_CmdList(
 		"F:NewFile=新規ファイルの作成\n"
 		"F:NewTextFile=新規テキストファイルの作成\n"
 		"F:NextDrive=次のドライブへ\n"
+		"F:NextSelItem=次の選択項目にカーソル移動\n"
 		"F:NextTab=次のタブへ\n"
 		"F:OpenADS=代替データストリームを仮想リストとして開く\n"
 		"F:OpenByExp=エクスプローラで開く\n"
@@ -178,6 +179,7 @@ void set_CmdList(
 		"F:PowerOff=Windowsを終了\n"
 		"F:PowerShell=PowerShell を起動\n"
 		"F:PrevDrive=前のドライブへ\n"
+		"F:PrevSelItem=前の選択項目にカーソル移動\n"
 		"F:PrevTab=前のタブへ\n"
 		"F:PushDir=ディレクトリをプッシュ\n"
 		"F:Reboot=Windowsを再起動\n"
@@ -554,7 +556,12 @@ void get_PrmList(
 			_T("^3 : デスクトップ背景を表示/非表示\n"));
 	}
 	else if (contained_wd_i(_T("CursorUp|CursorDown|ScrollCursorDown|ScrollCursorUp|ScrollDown|ScrollUp"), cmd)) {
-		if (id_idx!=4) params = "\nHP : 半ページ分\nFP : 1ページ分\n";
+		if (id_idx!=4) {
+			params = "\nHP : 半ページ分\nFP : 1ページ分\n";
+			if (id_idx==0 && contained_wd_i(_T("CursorUp|CursorDown"), cmd)) {
+				params += "SL : 選択項目へ\n";
+			}
+		}
 	}
 	else if (contained_wd_i(_T("CalcDirSize|CalcDirSizeAll"), cmd)) {
 		params.sprintf(_T("%s"),

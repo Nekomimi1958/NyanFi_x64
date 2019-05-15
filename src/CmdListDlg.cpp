@@ -141,6 +141,7 @@ void __fastcall TCmdFileListDlg::FormClose(TObject *Sender, TCloseAction &Action
 	IniFile->WriteIntGen( _T("CmdFileListPrevHeight"),	PreviewPanel->Height);
 	IniFile->WriteIntGen( _T("CmdFileListReferWidth"),	ReferPanel->Width);
 
+	clear_FileList(cmdfile_List);
 	ToSelect  = false;
 }
 //---------------------------------------------------------------------------
@@ -275,6 +276,7 @@ void __fastcall TCmdFileListDlg::CmdFileGridDrawCell(TObject *Sender, int ACol, 
 	bool row_break = false;
 
 	cv->Brush->Color = is_AltLnBgCol(ARow)? col_bgList2 : col_bgList;
+	cv->FillRect(Rect);
 
 	if (ARow>=0 && ARow<GridItemList->Count) {
 		file_rec *fp0 = (ARow>0)? (file_rec*)GridItemList->Objects[ARow - 1] : NULL;
@@ -326,9 +328,6 @@ void __fastcall TCmdFileListDlg::CmdFileGridDrawCell(TObject *Sender, int ACol, 
 			break;
 		}
 	}
-
-	//”wŒi
-	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled4;
 	int yp = Rect.Top  + get_TopMargin2(cv);
@@ -569,7 +568,12 @@ void __fastcall TCmdFileListDlg::CmdFileGridClick(TObject *Sender)
 		file_rec *fp = (file_rec*)GridItemList->Objects[idx];
 		//ƒvƒŒƒrƒ…[
 		try {
-			PreviewListBox->Items->LoadFromFile(fp->f_name);
+			if (fp->prv_text.IsEmpty()) {
+				std::unique_ptr<TStringList> fbuf(new TStringList());
+				load_text_ex(fp->f_name, fbuf.get());
+				fp->prv_text = fbuf->Text;
+			}
+			PreviewListBox->Items->Text = fp->prv_text;
 			PrevScrPanel->UpdateKnob();
 		}
 		catch (...) {

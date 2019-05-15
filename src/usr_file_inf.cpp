@@ -978,7 +978,11 @@ bool get_PngInf(
 					vlst->Text = (char*)&sbuf[p];
 					int i = 0;
 					while (i<vlst->Count) if (Trim(vlst->Strings[i]).IsEmpty()) vlst->Delete(i); else i++;
-					add_PropLine((char*)&sbuf[0], Trim(vlst->Text), lst);
+					UnicodeString s = Trim(vlst->Text);
+					if (SameText((char*)&sbuf[0], "Creation Time")) {
+						s = replace_regex(get_tkn(s, '\n'), _T("[^\\d\\w\\s/:,+\\-]+"), null_TCHAR);
+					}
+					add_PropLine((char*)&sbuf[0], s, lst);
 				}
 			}
 			//イメージガンマ
@@ -992,7 +996,10 @@ bool get_PngInf(
 				fs->ReadBuffer(sbuf.get(), size);
 				add_PropLine(_T("ICCプロファイル"), (char*)&sbuf[0], lst);
 			}
-			else fs->Seek(size, soFromCurrent);
+			else {
+				fs->Seek(size, soFromCurrent);
+			}
+
 			//CRC をスキップ
 			fs->Seek(4, soFromCurrent);
 		}
