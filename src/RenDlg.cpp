@@ -812,12 +812,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 		if (FextRadioGroup->ItemIndex>0)  xnam = ConvCharType(xnam, FextRadioGroup->ItemIndex);
 
 		//禁止文字／ユーザ定義文字の変換
-		if (CnvCharCheckBox->Checked) {
-			for (int j=0; j<CnvCharList->Count; j++) {
-				UnicodeString sch = CnvCharList->Names[j];	if (sch.IsEmpty()) continue;
-				bnam = ReplaceStr(bnam, sch, CnvCharList->ValueFromIndex[j]);
-			}
-		}
+		if (CnvCharCheckBox->Checked) bnam = ApplyCnvCharList(bnam);
 
 		new_name = bnam;
 		if (!xnam.IsEmpty()) new_name.cat_sprintf(_T(".%s"), xnam.c_str());
@@ -1419,7 +1414,6 @@ void __fastcall TRenameDlg::CnvCharListBoxDrawItem(TWinControl *Control, int Ind
 	if (Index==8) draw_separateLine(cv, Rect, 2);
 	if (State.Contains(odFocused)) cv->DrawFocusRect(Rect);
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::CnvCharListBoxClick(TObject *Sender)
 {
@@ -1433,6 +1427,13 @@ void __fastcall TRenameDlg::CnvCharListBoxClick(TObject *Sender)
 		CnvChREdit->Text = EmptyStr;
 	}
 }
+//---------------------------------------------------------------------------
+void __fastcall TRenameDlg::CnvChSEditChange(TObject *Sender)
+{
+	TEdit *ep = (TEdit*)Sender;
+	ep->Color = (StartsStr("\\x{", ep->Text) && EndsStr("}", ep->Text) && !chk_RegExPtn(ep->Text))?
+					col_Illegal : scl_Window;
+}
 
 //---------------------------------------------------------------------------
 //ユーザ定義文字置換の追加
@@ -1444,8 +1445,12 @@ void __fastcall TRenameDlg::AddCnvChActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::AddCnvChActionUpdate(TObject *Sender)
 {
+	TAction *ap = (TAction *)Sender;
 	UnicodeString sch = CnvChSEdit->Text;
-	((TAction*)Sender)->Enabled = (!sch.IsEmpty() && UnicodeString("\\/:*?\"<>|").Pos(sch)==0);
+	if (StartsStr("\\x{", sch) && EndsStr("}", sch))
+		ap->Enabled = chk_RegExPtn(sch);
+	else
+		ap->Enabled = (!sch.IsEmpty() && UnicodeString("\\/:*?\"<>|").Pos(sch)==0);
 }
 
 //---------------------------------------------------------------------------
@@ -1461,16 +1466,19 @@ void __fastcall TRenameDlg::ChgCnvChActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
 	UnicodeString sch = CnvChSEdit->Text;
-	UnicodeString inh_ch = "\\/:*?\"<>|";
 	int idx = CnvCharListBox->ItemIndex;
-	if (idx==-1)
+	if (idx==-1) {
 		ap->Enabled = false;
-	else if (idx>=0 && idx<9 && CnvCharListBox->Items->Names[idx]!=sch)
-		ap->Enabled = false;
-	else if (idx>=9 && (sch.IsEmpty() || inh_ch.Pos(sch)))
-		ap->Enabled = false;
-	else
-		ap->Enabled = true;
+	}
+	else if (idx>=0 && idx<9) {
+		ap->Enabled = (CnvCharListBox->Items->Names[idx]==sch);
+	}
+	else if (idx>=9) {
+		if (StartsStr("\\x{", sch) && EndsStr("}", sch))
+			ap->Enabled = chk_RegExPtn(sch);
+		else 
+			ap->Enabled = (!sch.IsEmpty() && UnicodeString("\\/:*?\"<>|").Pos(sch)==0);
+	}
 }
 
 //---------------------------------------------------------------------------

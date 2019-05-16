@@ -13812,12 +13812,7 @@ void __fastcall TNyanFiForm::CreateDirActionExecute(TObject *Sender)
 
 		if (!inpstr.IsEmpty() || !inpstr2.IsEmpty()) {
 			//‹Ö~•¶š^ƒ†[ƒU’è‹`•¶š‚Ì•ÏŠ·
-			if (CreDirCnvChar && !inpstr.IsEmpty()) {
-				for (int i=0; i<CnvCharList->Count; i++) {
-					UnicodeString sch = CnvCharList->Names[i];	if (sch.IsEmpty()) continue;
-					inpstr = ReplaceStr(inpstr, sch, CnvCharList->ValueFromIndex[i]);
-				}
-			}
+			if (CreDirCnvChar && !inpstr.IsEmpty()) inpstr = ApplyCnvCharList(inpstr);
 			inpstr += inpstr2;
 
 			UnicodeString msg;
@@ -19868,11 +19863,7 @@ void __fastcall TNyanFiForm::NameFromClipActionExecute(TObject *Sender)
 		if (rep_c) {
 			UnicodeString bnam = cfp->is_dir? new_name : get_base_name(new_name);
 			UnicodeString fext = cfp->is_dir? EmptyStr : get_extension(new_name);
-			for (int i=0; i<CnvCharList->Count; i++) {
-				UnicodeString sch = CnvCharList->Names[i];	if (sch.IsEmpty()) continue;
-				bnam = ReplaceStr(bnam, sch, CnvCharList->ValueFromIndex[i]);
-			}
-			new_name = bnam + fext;
+			new_name = ApplyCnvCharList(bnam) + fext;
 		}
 
 		new_name = CurPath[CurListTag] + new_name;

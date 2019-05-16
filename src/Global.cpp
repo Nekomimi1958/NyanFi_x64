@@ -9358,6 +9358,24 @@ UnicodeString get_CmdDesc(
 }
 
 //---------------------------------------------------------------------------
+//ã÷é~ï∂éöÅ^ÉÜÅ[ÉUíËã`ï∂éöÇÃïœä∑
+//---------------------------------------------------------------------------
+UnicodeString ApplyCnvCharList(UnicodeString s)
+{
+	if (!s.IsEmpty()) {
+		for (int i=0; i<CnvCharList->Count; i++) {
+			UnicodeString sch = CnvCharList->Names[i];	if (sch.IsEmpty()) continue;
+			UnicodeString rch = CnvCharList->ValueFromIndex[i];
+			if (StartsStr("\\x{", sch) && EndsStr("}", sch) && chk_RegExPtn(sch))
+				s = TRegEx::Replace(s, sch, rch);
+			else
+				s = ReplaceStr(s, sch, rch);
+		}
+	}
+	return s;
+}
+
+//---------------------------------------------------------------------------
 TColor read_ColorList(UnicodeString key, TColor def, TStringList *lst)
 {
 	TColor col = def;

@@ -286,7 +286,7 @@ object RenameDlg: TRenameDlg
       Top = 0
       Width = 540
       Height = 260
-      ActivePage = NameSheet
+      ActivePage = SerialSheet
       Align = alClient
       TabOrder = 0
       TabWidth = 90
@@ -330,7 +330,6 @@ object RenameDlg: TRenameDlg
             Alignment = taRightJustify
             Anchors = [akLeft, akRight, akBottom]
             AutoSize = False
-            ExplicitWidth = 140
           end
           object PreviewGrid: TStringGrid
             Left = 10
@@ -612,7 +611,6 @@ object RenameDlg: TRenameDlg
                 Height = 13
                 Anchors = [akTop, akRight]
                 Caption = '.'
-                ExplicitLeft = 155
               end
               object PostNameEdit: TEdit
                 Tag = 13
@@ -857,7 +855,6 @@ object RenameDlg: TRenameDlg
             Font.Name = #65325#65331' '#12468#12471#12483#12463
             Font.Style = []
             ParentFont = False
-            ExplicitLeft = 482
           end
           object Id3Btn3: TSpeedButton
             Tag = 2
@@ -1133,6 +1130,7 @@ object RenameDlg: TRenameDlg
                     Width = 38
                     Height = 21
                     TabOrder = 1
+                    OnChange = CnvChSEditChange
                   end
                 end
               end

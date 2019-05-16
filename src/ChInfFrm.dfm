@@ -6,7 +6,7 @@ object CharInfoForm: TCharInfoForm
   BorderStyle = bsToolWindow
   Caption = #25991#23383#24773#22577
   ClientHeight = 318
-  ClientWidth = 254
+  ClientWidth = 274
   Color = clBtnFace
   DoubleBuffered = True
   ParentFont = True
@@ -27,7 +27,7 @@ object CharInfoForm: TCharInfoForm
     Pen.Color = clSilver
   end
   object BorderShape2: TShape
-    Left = 253
+    Left = 273
     Top = 0
     Width = 1
     Height = 317
@@ -37,7 +37,7 @@ object CharInfoForm: TCharInfoForm
   object BorderShape3: TShape
     Left = 0
     Top = 317
-    Width = 254
+    Width = 274
     Height = 1
     Align = alBottom
     Pen.Color = clSilver
@@ -45,7 +45,7 @@ object CharInfoForm: TCharInfoForm
   object ClientPanel: TPanel
     Left = 1
     Top = 0
-    Width = 252
+    Width = 272
     Height = 317
     Align = alClient
     BevelOuter = bvNone
@@ -53,20 +53,18 @@ object CharInfoForm: TCharInfoForm
     object Splitter1: TSplitter
       Left = 0
       Top = 160
-      Width = 252
+      Width = 272
       Height = 4
       Cursor = crVSplit
       Align = alTop
       AutoSnap = False
       MinSize = 44
       OnMoved = Splitter1Moved
-      ExplicitLeft = -6
-      ExplicitTop = 192
     end
     object InfoPanel: TPanel
       Left = 0
       Top = 164
-      Width = 252
+      Width = 272
       Height = 153
       Align = alClient
       AutoSize = True
@@ -77,12 +75,12 @@ object CharInfoForm: TCharInfoForm
       object InfoListBox: TListBox
         Left = 0
         Top = 0
-        Width = 252
-        Height = 170
+        Width = 272
+        Height = 153
         TabStop = False
         Style = lbOwnerDrawFixed
         AutoComplete = False
-        Align = alTop
+        Align = alClient
         BevelInner = bvNone
         BorderStyle = bsNone
         DoubleBuffered = True
@@ -92,21 +90,21 @@ object CharInfoForm: TCharInfoForm
         TabOrder = 0
         StyleElements = [seBorder]
         OnDrawItem = InfoListBoxDrawItem
+        ExplicitHeight = 170
       end
     end
     object SamplePanel: TPanel
       Left = 0
       Top = 0
-      Width = 252
+      Width = 272
       Height = 160
       Align = alTop
       BevelOuter = bvNone
-      Constraints.MaxHeight = 260
       TabOrder = 1
       object CharPanel: TPanel
         Left = 0
         Top = 0
-        Width = 252
+        Width = 272
         Height = 138
         Align = alClient
         BevelOuter = bvNone
@@ -125,7 +123,7 @@ object CharInfoForm: TCharInfoForm
       object FontNamePanel: TPanel
         Left = 0
         Top = 138
-        Width = 252
+        Width = 272
         Height = 22
         Align = alBottom
         BevelOuter = bvNone

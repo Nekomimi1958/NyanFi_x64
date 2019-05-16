@@ -1886,6 +1886,8 @@ bool is_ToRightOpe(UnicodeString keystr, UnicodeString cmdstr);
 UnicodeString get_CmdDesc(UnicodeString cmd, bool only_inf = false,
 	TStrings *menu_list = NULL, TStrings *tool_list = NULL, bool is_TV = false);
 
+UnicodeString ApplyCnvCharList(UnicodeString s);
+
 TColor read_ColorList(UnicodeString key, TColor def, TStringList *lst = NULL);
 TColor read_ColorList(const _TCHAR *key, TColor def, TStringList *lst = NULL);
 void set_col_from_ColorList();

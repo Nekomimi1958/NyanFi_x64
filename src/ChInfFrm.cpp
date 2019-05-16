@@ -33,15 +33,18 @@ void __fastcall TCharInfoForm::FormShow(TObject *Sender)
 	Splitter1->MinSize = FontNamePanel->Height * 2;
 
 	IniFile->LoadPosInfo(this);
-	SamplePanel->Height = std::max(IniFile->ReadIntGen( _T("CharInfoCharHeight"), 180), Splitter1->MinSize);
-
 	SetToolWinBorder(this);
+
+	SamplePanel->Height = std::max(IniFile->ReadIntGen( _T("CharInfoCharHeight"), 180), Splitter1->MinSize);
 
 	TListBox *lp = InfoListBox;
 	lp->Color = col_bgInf;
 	lp->Font->Assign(FileInfFont);
 	set_ListBoxItemHi(lp);
-	ClientHeight = SamplePanel->Height + lp->ItemHeight * 8;
+
+	ClientHeight = SamplePanel->Height + lp->ItemHeight * CHARINF_ITEMCOUNT;
+	ClientWidth  = get_CharWidth_Font(lp->Font, 41);	//***
+	SamplePanel->Constraints->MaxHeight = ClientWidth;
 
 	Splitter1->Color = col_Splitter;
 
@@ -59,7 +62,7 @@ void __fastcall TCharInfoForm::FormHide(TObject *Sender)
 void __fastcall TCharInfoForm::Splitter1Moved(TObject *Sender)
 {
 	SetCharFont();
-	ClientHeight = SamplePanel->Height + InfoListBox->ItemHeight * 8;
+	ClientHeight = SamplePanel->Height + InfoListBox->ItemHeight * CHARINF_ITEMCOUNT;
 }
 //---------------------------------------------------------------------------
 void __fastcall TCharInfoForm::SetCharFont()
@@ -182,6 +185,7 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 
 		//Unicode
 		cd_str = "   Unicode: ";
+		int uc;
 		if (c.Length()==2) {
 			//サロゲートペア
 			unsigned int ld = (unsigned int)c[1];
@@ -189,11 +193,12 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 			int plane = ((ld - 0xd800) / 0x0040) + 1;
 			int ld2 = ld - (0xd800 + 0x0040 * (plane - 1));
 			int tl2 = tl - 0xdc00;
-			int uc	= plane * 0x10000 + ld2* 0x100 + ld2* 0x300 + tl2;
+			uc = plane * 0x10000 + ld2* 0x100 + ld2* 0x300 + tl2;
 			cd_str.cat_sprintf(_T("U+%05X (%04X %04X)"), uc, ld, tl);
 		}
 		else if (!is_cr) {
-			cd_str.cat_sprintf(_T("U+%04X"), (unsigned int)c[1]);
+			uc = (unsigned int)c[1];
+			cd_str.cat_sprintf(_T("U+%04X"), uc);
 		}
 		i_lst->Add(cd_str);
 
@@ -206,6 +211,9 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 		}
 		i_lst->Add(cd_str);
 
+		//ブロック名
+		cd_str = "  ブロック: " + get_UnicodeBlockName(uc);
+		i_lst->Add(cd_str);
 	}
 	else {
 		CharPanel->Caption = EmptyStr;

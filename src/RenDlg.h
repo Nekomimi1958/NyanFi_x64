@@ -227,6 +227,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall EditListActionUpdate(TObject *Sender);
 	void __fastcall RefListBtnClick(TObject *Sender);
 	void __fastcall RenListComboBoxChange(TObject *Sender);
+	void __fastcall CnvChSEditChange(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

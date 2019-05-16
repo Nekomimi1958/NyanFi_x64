@@ -207,12 +207,7 @@ void __fastcall TCreateDirsDlg::RepCharItemClick(TObject *Sender)
 	std::unique_ptr<TStringList> lst(new TStringList());
 	lst->Assign(ListMemo->Lines);
 	for (int i=0; i<lst->Count; i++) {
-		UnicodeString lbuf = lst->Strings[i];
-		for (int j=0; j<CnvCharList->Count; j++) {
-			UnicodeString sch = CnvCharList->Names[j];	if (sch.IsEmpty()) continue;
-			lbuf = ReplaceStr(lbuf, sch, CnvCharList->ValueFromIndex[j]);
-		}
-		lst->Strings[i] = lbuf;
+		lst->Strings[i] = ApplyCnvCharList(lst->Strings[i]);
 	}
 	ListMemo->Lines->Assign(lst.get());
 	cursor_Default();
