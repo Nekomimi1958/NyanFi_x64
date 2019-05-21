@@ -466,7 +466,6 @@ UnicodeString LibraryPath;		//ライブラリ
 UnicodeString WorkListPath;		//ワークリスト参照パス
 UnicodeString ResultListPath;	//結果リスト参照パス
 UnicodeString RefParamPath;		//パラメータ参照パス
-UnicodeString IconFilePath;		//アイコン参照パス
 UnicodeString CmdFilePath;		//コマンドファイル参照パス
 
 int VersionNo;
@@ -1530,7 +1529,7 @@ void InitializeGlobal()
 		{_T("WorkListPath=\"%ExePath%\""),			(TObject*)&WorkListPath},
 		{_T("ResultListPath=\"%ExePath%\""),		(TObject*)&ResultListPath},
 		{_T("RefParamPath=\"%ExePath%\""),			(TObject*)&RefParamPath},
-		{_T("IconFilePath=\"%ExePath%\""),			(TObject*)&IconFilePath},
+		{_T("IconFilePath=\"%ExePath%\""),			(TObject*)&UserModule->IconFilePath},
 		{_T("SaveTxtPath=\"%ExePath%\""),			(TObject*)&SaveTxtPath},
 		{_T("CmdFilePath=\"%ExePath%\""),			(TObject*)&CmdFilePath},
 
@@ -5600,48 +5599,63 @@ void get_ArcList(
 //---------------------------------------------------------------------------
 //汎用リストの項目高を設定 (行間 = 1/3)
 //---------------------------------------------------------------------------
-void set_ListBoxItemHi(TListBox *lp, TFont *font)
+void set_ListBoxItemHi(
+	TListBox *lp,
+	TFont *font,	//フォント			(default = NULL);
+	bool with_ico)	//アイコンを表示	(default = false)
 {
 	if (font) {
 		lp->Font->Assign(font);
 		lp->Canvas->Font->Assign(font);
 	}
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), min_ItemHeight(lp->Tag));
+
+	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), 
+								with_ico? (int)(20 * ScrScale) : 0);
 }
 //---------------------------------------------------------------------------
-void set_ListBoxItemHi(TCheckListBox *lp, TFont *font)
+void set_ListBoxItemHi(
+	TCheckListBox *lp,
+	TFont *font,	//フォント			(default = NULL);
+	bool with_ico)	//アイコンを表示	(default = false)
 {
 	if (font) {
 		lp->Font->Assign(font);
 		lp->Canvas->Font->Assign(font);
 	}
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), min_ItemHeight(lp->Tag));
+
+	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1),
+								with_ico? (int)(20 * ScrScale) : 0);
 }
 
 //---------------------------------------------------------------------------
 //標準リストの設定 (行間 = ListInterLn)
 //---------------------------------------------------------------------------
-void set_StdListBox(TListBox *lp,
-	int tag,			//	(default = 0)
-	TFont *font)		//	(default = NULL)
+void set_StdListBox(
+	TListBox *lp,
+	int tag,		//	(default = 0)
+	TFont *font,	//	(default = NULL)
+	bool with_ico)	//アイコンを表示	(default = false)
 {
 	if (tag!=0) lp->Tag = tag;
 	lp->Color = col_bgList;
 	if (!font) font = ListFont;
 	lp->Font->Assign(font);
 	lp->Canvas->Font->Assign(font);
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), min_ItemHeight(tag));
+	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? (int)(20 * ScrScale) : 0);
 }
 //---------------------------------------------------------------------------
-void set_StdListBox(TCheckListBox *lp,
-	int tag, TFont *font)
+void set_StdListBox(
+	TCheckListBox *lp,
+	int tag,		//	(default = 0)
+	TFont *font,	//	(default = NULL)
+	bool with_ico)	//アイコンを表示	(default = false)
 {
 	if (tag!=0) lp->Tag = tag;
 	lp->Color = col_bgList;
 	if (!font) font = ListFont;
 	lp->Font->Assign(font);
 	lp->Canvas->Font->Assign(font);
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), min_ItemHeight(tag));
+	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? (int)(20 * ScrScale) : 0);
 }
 
 //---------------------------------------------------------------------------
@@ -6317,7 +6331,34 @@ void del_CachedIcon(UnicodeString fnam)
 }
 
 //---------------------------------------------------------------------------
-//拡張子依存アイコンを取得 (キャッシュを利用)
+//ファイルのスモールアイコンを取得
+//---------------------------------------------------------------------------
+HICON get_file_icon(
+	UnicodeString fnam)		//ファイル名[,インデックス]
+{
+	HICON hIcon = NULL;
+	int ico_idx = get_tkn_r(fnam, ",").ToIntDef(-1);
+
+	if (ico_idx!=-1) {
+		fnam = get_tkn(fnam, ",");
+		HICON icons[1];
+		if (::ExtractIconEx(fnam.c_str(), ico_idx, NULL, icons, 1)==1) {
+			hIcon = icons[0];
+		}
+	}
+	else {
+		SHFILEINFO sif;
+		if (::SHGetFileInfo(fnam.c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON))
+			hIcon = sif.hIcon;
+		else
+			hIcon = get_fext_icon(get_extension(fnam));
+	}
+
+	return hIcon;
+}
+
+//---------------------------------------------------------------------------
+//拡張子依存スモールアイコンを取得 (キャッシュを利用)
 //---------------------------------------------------------------------------
 HICON get_fext_icon(
 	UnicodeString fext)		//拡張子 .xxx	(default = EmptyStr: フォルダ)
@@ -6359,7 +6400,7 @@ HICON get_folder_icon(UnicodeString dnam)
 	if (idx!=-1) fnam = to_absolute_name(get_actual_name(FolderIconList->ValueFromIndex[idx]));
 	FldIcoRWLock->EndWrite();
 
-	if (file_exists(fnam)) {
+	if (file_exists_ico(fnam)) {
 		IconRWLock->BeginWrite();
 		{
 			int idx = CachedIcoList->IndexOf(fnam);
@@ -6457,7 +6498,7 @@ bool draw_SmallIconF(
 	UnicodeString fnam,
 	TCanvas *cv, int x, int y)
 {
-	if (fnam.IsEmpty()) return false;
+	if (fnam.IsEmpty() || (starts_Dollar(fnam) && !contains_PathDlmtr(fnam))) return false;
 
 	HICON hIcon  = NULL;
 	bool handled = false;
@@ -6494,34 +6535,45 @@ bool draw_SmallIcon2(
 {
 	HICON hIcon;
 
-	UnicodeString fext = LowerCase(get_extension(fnam));
-	if (fnam.Pos('*')==1) fnam = EmptyStr;
-
-	//ディレクトリ
-	if (ends_PathDlmtr(fnam)) {
-		hIcon = get_folder_icon(fnam);
+	//インデックス指定
+	int idx = get_tkn_r(fnam, ",").ToIntDef(-1);
+	if (idx!=-1) {
+		hIcon = usr_SH->get_SmallIcon(fnam);
 	}
-	//実ファイル依存
-	else if (test_FileExt(fext, FEXT_INDIVICO)) {
-		if (!fnam.IsEmpty()) {
-			int idx = MenuBtnIcoList->IndexOf(fnam);
-			if (idx!=-1) {
-				hIcon = (MenuBtnIcoList->Objects[idx])?
-					((TIcon*)MenuBtnIcoList->Objects[idx])->Handle : usr_SH->get_SmallIcon(fnam);
-			}
-			else {
-				hIcon = usr_SH->get_SmallIcon(fnam);
-				if (hIcon) {
-					TIcon *icon  = new TIcon();
-					icon->Handle = hIcon;
-					MenuBtnIcoList->AddObject(fnam, (TObject*)icon);
+	else {
+		UnicodeString fext = LowerCase(get_extension(fnam));
+		if (fnam.Pos('*')==1) fnam = EmptyStr;
+
+		//ディレクトリ
+		if (ends_PathDlmtr(fnam)) {
+			hIcon = get_folder_icon(fnam);
+		}
+		//実ファイル依存
+		else if (test_FileExt(fext, FEXT_INDIVICO)) {
+			if (!fnam.IsEmpty()) {
+				int idx = MenuBtnIcoList->IndexOf(fnam);
+				if (idx!=-1) {
+					hIcon = (MenuBtnIcoList->Objects[idx])?
+						((TIcon*)MenuBtnIcoList->Objects[idx])->Handle : usr_SH->get_SmallIcon(fnam);
+				}
+				else {
+					hIcon = usr_SH->get_SmallIcon(fnam);
+					if (hIcon) {
+						TIcon *icon  = new TIcon();
+						icon->Handle = hIcon;
+						MenuBtnIcoList->AddObject(fnam, (TObject*)icon);
+					}
 				}
 			}
+			else {
+				hIcon = get_fext_icon(fext);
+			}
 		}
-		else hIcon = get_fext_icon(fext);
+		//拡張子依存
+		else {
+			hIcon = get_fext_icon(fext);
+		}
 	}
-	//拡張子依存
-	else hIcon = get_fext_icon(fext);
 
 	if (!hIcon)  return false;
 
@@ -6535,32 +6587,29 @@ bool draw_SmallIcon2(
 //  UsrIcoList に登録して再利用
 //---------------------------------------------------------------------------
 int add_IconImage(
-	UnicodeString fnam,		//ファイル名 (環境パスに対応)
+	UnicodeString fnam,		//ファイル名[,インデックス]  (環境パスに対応)
 	TImageList *lst)
 {
 	if (fnam.IsEmpty()) return -1;
 
-	int idx = -1;
 	TIcon *icon = NULL;
-
 	fnam = to_absolute_name(get_actual_name(fnam));
-	if (file_exists(fnam)) {
-		int idx = UsrIcoList->IndexOf(fnam);
-		if (idx==-1) {
-			SHFILEINFO sif;
-			if (::SHGetFileInfo(fnam.c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON)) {
+	if (file_exists_ico(fnam)) {
+		int usr_idx = UsrIcoList->IndexOf(fnam);
+		if (usr_idx==-1) {
+			HICON hIcon = get_file_icon(fnam);
+			if (hIcon) {
 				icon = new TIcon();
-				icon->Handle = sif.hIcon;
+				icon->Handle = hIcon;
 				UsrIcoList->AddObject(fnam, (TObject*)icon);
 			}
 		}
 		else {
-			icon = (TIcon*)UsrIcoList->Objects[idx];
+			icon = (TIcon*)UsrIcoList->Objects[usr_idx];
 		}
 	}
 
-	if (icon) idx = lst->AddIcon(icon);
-	return idx;
+	return (icon? lst->AddIcon(icon) : -1);
 }
 
 //---------------------------------------------------------------------------
@@ -6672,7 +6721,7 @@ bool load_MenuFile(UnicodeString fnam, TStringList *lst)
 						//アイコンファイル
 						inam = get_post_tab(lbuf);
 						inam = to_absolute_name(get_actual_name(inam));
-						inam = file_exists(inam)? inam : EmptyStr;
+						inam = file_exists_ico(inam)? inam : EmptyStr;
 						break;
 					}
 					else {
@@ -6694,7 +6743,7 @@ bool load_MenuFile(UnicodeString fnam, TStringList *lst)
 				UnicodeString inam = (m_buf.Length==3)? m_buf[2] : (m_buf.Length==2)? get_file_from_cmd(m_buf[1]) : EmptyStr;
 				if (!inam.IsEmpty()) {
 					inam = to_absolute_name(get_actual_name(inam));
-					inam = file_exists(inam)? inam : EmptyStr;
+					inam = file_exists_ico(inam)? inam : EmptyStr;
 					lbuf.sprintf(_T("%s\t%s"), m_buf[0].c_str(), m_buf[1].c_str());
 					if (!inam.IsEmpty()) lbuf.cat_sprintf(_T("\t%s"), inam.c_str());
 				}
@@ -9253,7 +9302,8 @@ void chk_FolderIcon()
 		UnicodeString dnam = FolderIconList->Names[i];
 		if (!StartsStr("\\\\", dnam) && !is_dir_accessible(dnam))
 			FolderIconList->Delete(i);
-		else i++;
+		else
+			i++;
 	}
 	FolderIconList->Sort();
 	FldIcoRWLock->EndWrite();

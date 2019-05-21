@@ -77,15 +77,15 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 
 		//環境変数変換リストを作成
 		EnvVarList->Clear();
-		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%APPDATA%")) + "\t%APPDATA%");
-		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%LOCALAPPDATA%")) + "\t%LOCALAPPDATA%");
-		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%PUBLIC%")) + "\t%PUBLIC%");
-		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMDATA%")) + "\t%PROGRAMDATA%");
-		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%USERPROFILE%")) + "\t%USERPROFILE%");
-		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%WINDIR%")) + "\t%WINDIR%");
-		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES(X86)%")) + "\t%PROGRAMFILES(X86)%");
-		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMFILES%")) + "\t%PROGRAMFILES%");
-		EnvVarList->Add(IncludeTrailingPathDelimiter(cv_env_var("%PROGRAMW6432%")) + "\t%PROGRAMW6432%");
+		EnvVarList->Add(cv_env_var("%APPDATA%")		 	  + "\t%APPDATA%");
+		EnvVarList->Add(cv_env_var("%LOCALAPPDATA%")	  + "\t%LOCALAPPDATA%");
+		EnvVarList->Add(cv_env_var("%PUBLIC%")			  + "\t%PUBLIC%");
+		EnvVarList->Add(cv_env_var("%PROGRAMDATA%")		  + "\t%PROGRAMDATA%");
+		EnvVarList->Add(cv_env_var("%USERPROFILE%")		  + "\t%USERPROFILE%");
+		EnvVarList->Add(cv_env_var("%WINDIR%")			  + "\t%WINDIR%");
+		EnvVarList->Add(cv_env_var("%PROGRAMFILES(X86)%") + "\t%PROGRAMFILES(X86)%");
+		EnvVarList->Add(cv_env_var("%PROGRAMFILES%")	  + "\t%PROGRAMFILES%");
+		EnvVarList->Add(cv_env_var("%PROGRAMW6432%")	  + "\t%PROGRAMW6432%");
 
 		OptPanel->Visible	= false;
 		BlankPanel->Visible = false;
@@ -412,9 +412,10 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 
 	//呼び出しキーか？
 	bool to_call = false;
-	for (int i=0; i<lp->Count && !to_call; i++) {
-		TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[i], 3, true);
-		to_call = SameText(KeyStr, get_tkn(lp->Items->Strings[i], ','));
+	if (!IsSpecial) {
+		for (int i=0; i<lp->Count && !to_call; i++) {
+			to_call = SameText(KeyStr, get_tkn(lp->Items->Strings[i], ','));
+		}
 	}
 
 	bool handled = true;
@@ -455,6 +456,26 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		ClearKeyBuff(true);		//OnKeyPress を抑止
 		OpenByExpAction->Execute();
 	}
+	//アクセラレータで移動
+	else if (IsSpecial) {
+		int s_idx = USAME_TI(KeyStr, "Alt+U")? 1 :
+					USAME_TI(KeyStr, "Alt+V")? 2 :
+					USAME_TI(KeyStr, "Alt+N")? 3 :
+					USAME_TI(KeyStr, "Alt+E")? 4 :
+					USAME_TI(KeyStr, "Alt+X")? 5 : 0;
+		if (s_idx>0) {
+			int s_cnt = 0;
+			for (int i=0; i<lp->Count; i++) {
+				if (StartsStr("\t", lp->Items->Strings[i])) {
+					s_cnt++;
+					if (s_cnt==s_idx) ListBoxSetIndex(lp, i + 1, true);
+				}
+			}
+		}
+		else {
+			handled = false;
+		}
+	}
 	else {
 		handled = false;
 	}
@@ -491,8 +512,10 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 			}
 		}
 
-		if		(f_cnt==0) beep_Warn();
-		else if (f_cnt==1) found = true;
+		if (f_cnt==0)
+			beep_Warn();
+		else if (f_cnt==1)
+			found = true;
 	}
 
 	//確定
@@ -502,14 +525,14 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 			ModalResult = mrOk;
 		}
 		else {
-			//実効ファイル
+			//実行ファイル
 			if (SelIndex!=-1 && (int)lp->Items->Objects[SelIndex]==1) {
 				CmdStr.sprintf(_T("JumpTo_\"%s\""), jdir.c_str());
 				ModalResult = mrOk;
 			}
 			//特殊フォルダ
 			else if (StartsStr("shell:", jdir)) {
-				CmdStr.sprintf(_T("FileRun_\"%s\""), jdir.c_str());
+				CmdStr.sprintf(_T("OpenByExp_\"%s\""), jdir.c_str());
 				ModalResult = mrOk;
 			}
 			//タグ検索
@@ -588,11 +611,21 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 					cv->Font->Color = col_Folder;
 					int s_cnt = 0;
 					for (int i=0; i<=Index; i++) if (StartsStr("\t", lp->Items->Strings[i])) s_cnt++;
-					UnicodeString snam =
-						(s_cnt==1)? "<All Users> " : (s_cnt==2)? "<仮想フォルダ>" :
-						(s_cnt==3)? "<NyanFi>"     : (s_cnt==4)? "<エディタ>" :
-						(s_cnt==5)? "<外部ツール>" : "";
-					if (!snam.IsEmpty()) cv->TextOut(xp, yp, snam);
+					UnicodeString snam;
+					if (lp->Focused()) {
+						snam = (s_cnt==1)? "<All Users (&U)> " : (s_cnt==2)? "<仮想フォルダ (&V)>" :
+							   (s_cnt==3)? "<NyanFi (&N)> "    : (s_cnt==4)? "<エディタ (&E)>" :
+							   (s_cnt==5)? "<外部ツール (&X)>" : "";
+					}
+					else {
+						snam = (s_cnt==1)? "<All Users> " : (s_cnt==2)? "<仮想フォルダ>" :
+							   (s_cnt==3)? "<NyanFi>"     : (s_cnt==4)? "<エディタ>" :
+							   (s_cnt==5)? "<外部ツール>" : "";
+					}
+					if (!snam.IsEmpty()) {
+						TRect rc = Rect; rc.Left = xp; rc.Top  = yp;
+						::DrawText(cv->Handle, snam.c_str(), -1, &rc, DT_LEFT);
+					}
 				}
 				//項目
 				else {
@@ -1027,6 +1060,5 @@ void __fastcall TRegDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 			IsSpecial? _T(HELPTOPIC_FL) _T("#SpecialDirList") : _T("hid00054.htm"));
 	}
 }
-
 //---------------------------------------------------------------------------
 

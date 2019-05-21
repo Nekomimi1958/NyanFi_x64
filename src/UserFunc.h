@@ -148,7 +148,7 @@ void ListBoxPageDown(TListBox *lp);
 void ListBoxPageUp(TListBox *lp);
 void ListBoxTop(TListBox *lp);
 void ListBoxEnd(TListBox *lp);
-void ListBoxSetIndex(TListBox *lp, int idx);
+void ListBoxSetIndex(TListBox *lp, int idx, bool top_sw = false);
 bool ListBoxCsrToVisible(TListBox *lp);
 void ListBoxScrollDown(TListBox *lp, int n, bool move_csr = false);
 void ListBoxScrollDown(TListBox *lp, UnicodeString prm);

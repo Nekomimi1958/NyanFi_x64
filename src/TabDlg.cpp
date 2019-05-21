@@ -62,8 +62,8 @@ void __fastcall TTabSetDlg::FormShow(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TTabSetDlg::RefIconBtnClick(TObject *Sender)
 {
-	UserModule->PrepareOpenDlg(_T("タブのアイコン"), F_FILTER_ICO, NULL, IconFilePath);
-	if (UserModule->OpenDlgToEdit(IconEdit, true)) IconFilePath = ExtractFilePath(to_absolute_name(IconEdit->Text));
+	UserModule->PrepareOpenDlg(_T("タブのアイコン"), F_FILTER_ICO);
+	UserModule->OpenDlgToEdit(IconEdit, true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TTabSetDlg::IconEditChange(TObject *Sender)

@@ -949,6 +949,13 @@ private:	// ユーザー宣言
 
 	void __fastcall WmDropped(TMessage &msg);
 
+	void __fastcall WmNyanFiFlIcon(TMessage &msg)
+	{
+		EtcEditorListBox->Invalidate();
+		ExtMenuListBox->Invalidate();
+		ExtToolListBox->Invalidate();
+	}
+
 public:		// ユーザー宣言
 	bool LayoutChanged;
 	bool WinSizeChanged;
@@ -959,6 +966,7 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_DROPPED,	TMessage,	WmDropped)
+		VCL_MESSAGE_HANDLER(WM_NYANFI_FLICON,	TMessage,	WmNyanFiFlIcon)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

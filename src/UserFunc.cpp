@@ -1077,12 +1077,17 @@ void ListBoxEnd(TListBox *lp)
 }
 
 //---------------------------------------------------------------------------
-void ListBoxSetIndex(TListBox *lp, int idx)
+void ListBoxSetIndex(TListBox *lp, int idx,
+	bool top_sw)	//マージン付きでトップにスクロール	(default = false)
 {
 	if (lp->Count==0) return;
 
 	if (idx<0) {
 		lp->ItemIndex = 0;
+	}
+	else if (top_sw) {
+		lp->TopIndex  = std::max(idx - LISTBOX_SCRMGN, 0);
+		lp->ItemIndex = idx;
 	}
 	else if (idx==lp->ItemIndex) {
 		//可視領域外だったらスクロール
@@ -1102,7 +1107,7 @@ void ListBoxSetIndex(TListBox *lp, int idx)
 		//下へ
 		else {
 			int pn = lp->ClientHeight/lp->ItemHeight;
-			if (idx > (lp->TopIndex+pn - 1 - LISTBOX_SCRMGN))
+			if (idx > (lp->TopIndex + pn - 1 - LISTBOX_SCRMGN))
 				lp->TopIndex = std::max(idx - pn + 1 + LISTBOX_SCRMGN, 0);
 		}
 		lp->ItemIndex = idx;

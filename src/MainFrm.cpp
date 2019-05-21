@@ -128,7 +128,8 @@ LRESULT CALLBACK DlgHookProc(int code, WPARAM wParam, LPARAM lParam)
 			HWND hWnd = sp->hwnd;
 			UnicodeString tit = get_WndText(hWnd);
 			if (contained_wd_i(_T("#32770|TMessageForm"), get_WndClassName(hWnd))
-				&& (USAME_TS(tit, "フォルダーの参照") || (SureAdjPos && (USAME_TS(tit, "確認") || USAME_TS(tit, "エラー")))))
+				&& (USAME_TS(tit, "フォルダーの参照") || USAME_TS(tit, "アイコンの変更")
+					|| (SureAdjPos && (USAME_TS(tit, "確認") || USAME_TS(tit, "エラー")))))
 			{
 				TControl *cp = NULL;
 				bool is_fl = false;
@@ -22996,12 +22997,9 @@ void __fastcall TNyanFiForm::SetFolderIconActionExecute(TObject *Sender)
 			DefFldIcoName = EmptyStr;
 		}
 		else if (TEST_ActParam("SD")) {
-			UserModule->PrepareOpenDlg(_T("デフォルトのフォルダアイコンを選択"), F_FILTER_ICO, NULL, IconFilePath);
-			if (!UserModule->OpenDlg->Execute()) SkipAbort();
-			UnicodeString inam = UserModule->OpenDlg->FileName;
-			IconFilePath = ExtractFilePath(inam);
-			inam = to_relative_name(inam);
-			DefFldIcoName = inam;
+			UserModule->PrepareOpenDlg(_T("デフォルトのフォルダアイコンを選択"), F_FILTER_ICO);
+			UnicodeString inam = UserModule->OpenDlgIconIndex(true);
+			if (!inam.IsEmpty()) DefFldIcoName = inam;
 		}
 		else {
 			if (CurStt->is_Arc || CurStt->is_ADS || CurStt->is_FTP) UserAbort(USTR_CantOperate);
@@ -23026,13 +23024,11 @@ void __fastcall TNyanFiForm::SetFolderIconActionExecute(TObject *Sender)
 				UnicodeString inam;
 				if (!ActionParam.IsEmpty()) {
 					inam = to_absolute_name(get_actual_name(ActionParam));
-					if (!file_exists(inam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("アイコンファイル")));
+					if (!file_exists_ico(inam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("アイコンファイル")));
 				}
 				else {
-					UserModule->PrepareOpenDlg(_T("フォルダアイコンの指定"), F_FILTER_ICO, NULL, IconFilePath);
-					if (!UserModule->OpenDlg->Execute()) SkipAbort();
-					inam = UserModule->OpenDlg->FileName;
-					IconFilePath = ExtractFilePath(inam);
+					UserModule->PrepareOpenDlg(_T("フォルダアイコンの指定"), F_FILTER_ICO);
+					inam = UserModule->OpenDlgIconIndex();
 				}
 
 				if (inam.IsEmpty()) SkipAbort();
@@ -34103,7 +34099,7 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 				//アイコン
 				TStringDynArray itm_buf = get_csv_array(TabList->Strings[idx], TABLIST_CSVITMCNT, true);
 				UnicodeString inam = to_absolute_name(itm_buf[3]);
-				if (file_exists(inam)) {
+				if (file_exists_ico(inam)) {
 					if (FlTabStyle==1) xp -= 6;
 					draw_SmallIcon2(inam, cv, xp, std::max(y0 + (int)(h - SIcoSize)/2, 0));
 					int iw = get_IcoWidth();

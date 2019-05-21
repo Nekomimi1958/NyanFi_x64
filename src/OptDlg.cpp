@@ -19,8 +19,8 @@
 #include "Global.h"
 #include "InpExDlg.h"
 #include "CmdListDlg.h"
-#include "OptDlg.h"
 #include "FindKey.h"
+#include "OptDlg.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -827,10 +827,10 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	set_ListBoxItemHi(ExtColListBox);
 	set_ListBoxItemHi(TagColListBox);
 												//<<<<<<<X86_SPI
-	set_ListBoxItemHi(EtcEditorListBox);
+	set_ListBoxItemHi(EtcEditorListBox, NULL, true);
 	set_ListBoxItemHi(AssociateListBox);
-	set_ListBoxItemHi(ExtMenuListBox);
-	set_ListBoxItemHi(ExtToolListBox);
+	set_ListBoxItemHi(ExtMenuListBox, NULL, true);
+	set_ListBoxItemHi(ExtToolListBox, NULL, true);
 	set_ListBoxItemHi(KeyListBox);
 	set_ListBoxItemHi(EventListBox);
 	set_ListBoxItemHi(PrtDirListBox);
@@ -1272,7 +1272,11 @@ void __fastcall TOptionDlg::EtcEditorListBoxDrawItem(TWinControl *Control, int I
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, etc_fext);
-	cv->TextOut(xp + w_x + 20, yp, etc_edtr);
+	xp += (w_x + 20);
+
+	draw_SmallIconF(etc_edtr, cv, xp, Rect.Top + (Rect.Height() - SIcoSize)/2);
+	xp += get_IcoWidth();
+	cv->TextOut(xp, yp, etc_edtr);
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::EtcEditorListBoxClick(TObject *Sender)
@@ -2447,8 +2451,8 @@ void __fastcall TOptionDlg::RefCmdsBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::RefMenuIconBtnClick(TObject *Sender)
 {
-	UserModule->PrepareOpenDlg(_T("アイコンの指定"), F_FILTER_ICO, NULL, IconFilePath);
-	if (UserModule->OpenDlgToEdit(MenuIconEdit, true)) IconFilePath = ExtractFilePath(to_absolute_name(MenuIconEdit->Text));
+	UserModule->PrepareOpenDlg(_T("アイコンの指定"), F_FILTER_ICO);
+	UserModule->OpenDlgToEdit(MenuIconEdit, true);
 }
 
 //---------------------------------------------------------------------------
@@ -2738,7 +2742,8 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 	//項目
 	else {
 		//アイコン
-		usr_SH->draw_SmallIcon(to_absolute_name(cv_env_str(itm_buf[is_tool? 1 : 5])), cv, Rect.Left + 2, yp);
+		draw_SmallIconF(to_absolute_name(cv_env_str(itm_buf[is_tool? 1 : 5])),
+						 cv, Rect.Left + 2, Rect.Top + (Rect.Height() - SIcoSize)/2);
 		//キャプション
 		UnicodeString lbuf = minimize_str(itm_buf[0], cv, sp->Items[0]->Width - xp, true);
 		cv->TextOut(xp, yp, lbuf);
@@ -4080,7 +4085,6 @@ void __fastcall TOptionDlg::AppColorBtnClick(TObject *Sender)
 	//配色
 	ColorList->Assign(ColBufList);
 	set_col_from_ColorList();
-
 	ExtColList->Assign(ExtColListBox->Items);
 	usr_TAG->TagColList->Assign(TagColListBox->Items);
 
@@ -4208,6 +4212,10 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 	for (int i=0; i<FontBufList->Count; i++) {
 		TFont *f = (TFont *)FontList->Objects[i];
 		f->Assign((TFont *)FontBufList->Objects[i]);
+
+		if (USAME_TI(FontBufList->ValueFromIndex[i], "ダイアログ")) {
+			Application->DefaultFont->Assign(f);
+		}
 	}
 
 	//配色

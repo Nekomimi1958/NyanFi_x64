@@ -13,9 +13,6 @@
 #define WM_FORM_DROPPED  (WM_APP + 10)
 
 //---------------------------------------------------------------------------
-typedef HRESULT (WINAPI *FUNC_SHGetKnownFolderPath)(REFKNOWNFOLDERID, DWORD, HANDLE, PWSTR*);
-
-//---------------------------------------------------------------------------
 #define WICIMG_FRAME		0
 #define WICIMG_PREVIEW		1
 #define WICIMG_THUMBNAIL	2

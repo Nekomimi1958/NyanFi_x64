@@ -189,7 +189,7 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 		SortByRem  = IniFile->ReadBoolGen(_T("AppListLaunchRemSort"));
 		SortByIcon = IniFile->ReadBoolGen(_T("AppListLaunchIconSort"), true);
 		lp = LaunchListBox;
-		set_StdListBox(lp, LBTAG_OPT_LOOP|LBTAG_HAS_SICO);
+		set_StdListBox(lp, LBTAG_OPT_LOOP, NULL, true);
 		set_UsrScrPanel(LaunchScrPanel);
 		lp->Count = 0;
 		SetIncSeaMode(ToIncSea);

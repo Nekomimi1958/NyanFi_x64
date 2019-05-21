@@ -5,10 +5,12 @@
 #include <vcl.h>
 #pragma hdrstop
 #include "Global.h"
-#include "icon_thread.h"
 #include "AppDlg.h"
 #include "EditHistDlg.h"
 #include "DirDlg.h"
+#include "OptDlg.h"
+#include "BtnDlg.h"
+#include "icon_thread.h"
 
 #pragma package(smart_init)
 
@@ -19,7 +21,6 @@ __fastcall TGetIconThread::TGetIconThread(bool CreateSuspended) : TThread(Create
 {
 	Priority		= tpLower;
 	FreeOnTerminate = true;
-
 	CallbackWnd 	= NULL;
 }
 
@@ -28,21 +29,13 @@ __fastcall TGetIconThread::TGetIconThread(bool CreateSuspended) : TThread(Create
 //---------------------------------------------------------------------------
 void __fastcall TGetIconThread::IconNotify()
 {
-	//ファイラー
-	if (CallbackWnd)
-		::SendMessage(CallbackWnd, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
+	if (CallbackWnd) ::SendMessage(CallbackWnd, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
 
-	//ランチャー
-	if (AppListDlg && AppListDlg->Visible)
-		::SendMessage(AppListDlg->Handle, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
-
-	//最近編集/閲覧したファイル一覧/栞マーク一覧
-	if (EditHistoryDlg && EditHistoryDlg->Visible)
-		::SendMessage(EditHistoryDlg->Handle, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
-
-	//特殊フォルダ一覧
-	if (RegDirDlg && RegDirDlg->Visible && RegDirDlg->IsSpecial)
-		::SendMessage(RegDirDlg->Handle, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
+	TForm *forms[] = {AppListDlg, EditHistoryDlg, RegDirDlg, OptionDlg, ToolBtnDlg};
+	int cnt = sizeof(forms)/sizeof(forms[0]);
+	for (int i=0; i<cnt; i++) {
+		if (forms[i] && forms[i]->Visible) ::SendMessage(forms[i]->Handle, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -69,17 +62,14 @@ void __fastcall TGetIconThread::Execute()
 					if (!CachedIcoList->Objects[i]) fnam = CachedIcoList->Strings[i];
 					i++;
 				}
-				else quit = true;
+				else {
+					quit = true;
+				}
 			IconRWLock->EndRead();
 			if (fnam.IsEmpty()) continue;
 
 			//アイコンを取得
-			HICON hIcon;
-			SHFILEINFO sif;
-			if (::SHGetFileInfo(fnam.c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON))
-				hIcon = sif.hIcon;
-			else
-				hIcon = get_fext_icon(get_extension(fnam));
+			HICON hIcon = get_file_icon(fnam);
 
 			//キャッシュに設定
 			IconRWLock->BeginWrite();

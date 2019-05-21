@@ -58,8 +58,7 @@ void __fastcall TToolBtnDlg::FormShow(TObject *Sender)
 
 	ButtonList = GetCurBtnList();
 
-	BtnListBox->Tag = LBTAG_HAS_SICO;
-	set_ListBoxItemHi(BtnListBox);
+	set_ListBoxItemHi(BtnListBox, NULL, true);
 	UserModule->InitializeListBox(BtnListBox);
 
 	BtnListBox->Items->Assign(ButtonList);
@@ -186,8 +185,8 @@ void __fastcall TToolBtnDlg::RefCmdsBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TToolBtnDlg::RefIconBtnClick(TObject *Sender)
 {
-	UserModule->PrepareOpenDlg(_T("アイコンの指定"), F_FILTER_ICO, NULL, IconFilePath);
-	if (UserModule->OpenDlgToEdit(IconEdit, true)) IconFilePath = ExtractFilePath(to_absolute_name(IconEdit->Text));
+	UserModule->PrepareOpenDlg(_T("アイコンの指定"), F_FILTER_ICO);
+	UserModule->OpenDlgToEdit(IconEdit, true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TToolBtnDlg::IconEditChange(TObject *Sender)
@@ -242,7 +241,12 @@ void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index,
 		if (State.Contains(odSelected)) alpha_blend_Rect(cv, rc, scl_Highlight, 48);
 
 		x += Scaled4;
-		if (usr_SH->draw_SmallIcon(to_absolute_name(get_actual_name(itm_buf[2])), cv, x, y)) x += ScaledInt(18);
+//		if (usr_SH->draw_SmallIcon(to_absolute_name(get_actual_name(itm_buf[2])), cv, x, y)) x += ScaledInt(18);
+
+		if (draw_SmallIconF(to_absolute_name(get_actual_name(itm_buf[2])),
+				cv, x, Rect.Top + (Rect.Height() - SIcoSize)/2))
+					x += get_IcoWidth();
+
 		cv->Brush->Style = bsClear;
 		cv->Font->Color  = col_fgTlBar;
 		cv->TextOut(x, y, itm_buf[0]);

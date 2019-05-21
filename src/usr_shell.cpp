@@ -1598,6 +1598,19 @@ HICON UserShell::get_Icon(
 
 	HICON hIcon = NULL;
 
+	//インデックス指定
+	int idx = get_tkn_r(fnam, ",").ToIntDef(-1);
+	if (idx!=-1) {
+		HICON icons[1];
+		bool get_small = (size<=16);
+		if (::ExtractIconEx(get_tkn(fnam, ",").c_str(), idx,
+			(get_small? NULL : icons), (get_small? icons : NULL), 1)==1)
+		{
+			hIcon = icons[0];
+		}
+		return hIcon;
+	}
+
 	//マウスポインタ
 	if (USAME_TI(ExtractFileExt(fnam), ".cur")) {
 		if (size>32) return NULL;
@@ -1896,5 +1909,6 @@ void UserShell::get_SpecialFolderList(TStringList *lst)
 	lst->Add("shell:ConnectionsFolder\tネットワーク接続");
 	lst->Add("shell:PrintersFolder\tプリンター");
 	lst->Add("shell:RecycleBinFolder\tごみ箱");
+	lst->Add("shell:AppsFolder\tApplications");
 }
 //---------------------------------------------------------------------------

@@ -904,13 +904,16 @@ UnicodeString __fastcall TUserModule::get_DlgDefExt(UnicodeString filter)
 //開くダイアログの準備
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::PrepareOpenDlg(
-	const _TCHAR *tit, const _TCHAR *filter, const _TCHAR *fnam, UnicodeString inidir)
+	const _TCHAR *tit,
+	const _TCHAR *filter,	//フィルタ
+	const _TCHAR *fnam,		//ファイル名	(default = NULL)
+	UnicodeString inidir)	//初期パス		(default = EmptyStr)
 {
 	OpenDlg->Title		= tit;
 	OpenDlg->Filter 	= filter? filter : null_TCHAR;
 	OpenDlg->DefaultExt = get_DlgDefExt(OpenDlg->Filter);
 	OpenDlg->FileName	= fnam? fnam : null_TCHAR;
-	OpenDlg->InitialDir = def_if_empty(inidir, ExePath);
+	OpenDlg->InitialDir = (OpenDlg->Filter==F_FILTER_ICO)? IconFilePath : def_if_empty(inidir, ExePath);
 }
 //---------------------------------------------------------------------------
 //保存ダイアログの準備
@@ -935,11 +938,15 @@ bool __fastcall TUserModule::OpenDlgToEdit(
 	if (!OpenDlg->Execute()) return false;
 
 	UnicodeString fnam = OpenDlg->FileName;
+	if (OpenDlg->Filter==F_FILTER_ICO) {
+		SelectIconDlg(fnam);
+		IconFilePath = ExtractFilePath(fnam);
+	}
+
 	if (to_rel) remove_top_text(fnam, ExePath);
 
 	if (ep->InheritsFrom(__classid(TCustomEdit))) {
 		((TCustomEdit *)ep)->Text = fnam;
-		return true;
 	}
 
 	return true;
@@ -980,6 +987,41 @@ bool __fastcall TUserModule::FontDlgToFont(TFont *f)
 
 	f->Assign(FontDlg->Font);
 	return true;
+}
+
+//---------------------------------------------------------------------------
+//ファイルからアイコンを選択
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::SelectIconDlg(UnicodeString &fnam)
+{
+	if (test_FileExt(ExtractFileExt(fnam), _T(".exe.dll"))) {
+		int ixn = (int)::ExtractIcon(HInstance, fnam.c_str(), -1);
+		if (ixn>1) {
+			HMODULE hShell32 = ::LoadLibrary(_T("shell32.dll"));
+			if (hShell32) {
+				FUNC_PickIconDlg PickIconDlg = (FUNC_PickIconDlg)::GetProcAddress(hShell32, (LPCSTR)62);
+				DWORD ico_ix = 0;
+				if (PickIconDlg && PickIconDlg(Screen->ActiveForm->Handle, fnam.c_str(), MAX_PATH, &ico_ix)) {
+					fnam.cat_sprintf(_T(",%u"), ico_ix);
+				}
+				FreeLibrary(hShell32);
+			}
+		}
+	}
+}
+//---------------------------------------------------------------------------
+//開くダイアログの結果を取得(アイコンインデックス付)
+//---------------------------------------------------------------------------
+UnicodeString __fastcall TUserModule::OpenDlgIconIndex(
+	bool to_rel)	//実行ディレクトリからの相対指定に変換 (default = false);
+{
+	if (!OpenDlg->Execute()) return EmptyStr;
+
+	UnicodeString fnam = OpenDlg->FileName;
+	SelectIconDlg(fnam);
+	IconFilePath = ExtractFilePath(fnam);
+	if (to_rel) remove_top_text(fnam, ExePath);
+	return fnam;
 }
 
 //---------------------------------------------------------------------------

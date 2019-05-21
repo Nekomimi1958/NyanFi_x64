@@ -160,14 +160,13 @@ extern FUNC_GetFontResourceInfo lpGetFontResourceInfo;
 #define LBTAG_GEN_LIST	0x01000000		//一覧ダイアログ
 #define LBTAG_FIF_LIST	0x02000000		//ファイル情報ダイアログ
 #define LBTAG_TAB_FNAM	0x04000000		//タブ以降にファイル名を持つ
-#define LBTAG_HAS_SICO	0x08000000		//スモールアイコンを表示
 
 //---------------------------------------------------------------------------
 #define SHOW_WARN_TAG	-1
 
 //---------------------------------------------------------------------------
 //検索中に受け付けるコマンド
-#define ONFIND_CMD		"CursorUp|CursorDown|PageUp|PageDown|CurrToOpp|FileEdit|BinaryEdit|OpenByApp|OpenByWin|OpenStandard|Select"
+#define ONFIND_CMD	"CursorUp|CursorDown|PageUp|PageDown|CurrToOpp|FileEdit|BinaryEdit|OpenByApp|OpenByWin|OpenStandard|Select"
 
 //---------------------------------------------------------------------------
 //load_ImageFile の戻り値
@@ -612,7 +611,6 @@ extern UnicodeString LibraryPath;
 extern UnicodeString WorkListPath;
 extern UnicodeString ResultListPath;
 extern UnicodeString RefParamPath;
-extern UnicodeString IconFilePath;
 extern UnicodeString CmdFilePath;
 extern UnicodeString CmdGitExe;
 extern UnicodeString GitBashExe;
@@ -1526,11 +1524,6 @@ inline int get_IcoWidth()
 	return (int)(20 * ScrScale);
 }
 
-inline int min_ItemHeight(int tag)
-{
-	return (tag & LBTAG_HAS_SICO)? (int)(20 * ScrScale) : 0;
-}
-
 //---------------------------------------------------------------------------
 //ソートモード
 inline int CurSortMode()
@@ -1703,11 +1696,11 @@ void update_DriveLog(bool save = false);
 
 void get_ArcList(UnicodeString anam, UnicodeString dnam, TStrings *f_lst, TStrings *d_lst);
 
-void set_ListBoxItemHi(TListBox *lp, TFont *font = NULL);
-void set_ListBoxItemHi(TCheckListBox *lp, TFont *font = NULL);
+void set_ListBoxItemHi(TListBox      *lp, TFont *font = NULL, bool with_ico = false);
+void set_ListBoxItemHi(TCheckListBox *lp, TFont *font = NULL, bool with_ico = false);
 
-void set_StdListBox(TListBox *lp, int tag = 0, TFont *font = NULL);
-void set_StdListBox(TCheckListBox *lp, int tag = 0, TFont *font = NULL);
+void set_StdListBox(TListBox      *lp, int tag = 0, TFont *font = NULL, bool with_ico = false);
+void set_StdListBox(TCheckListBox *lp, int tag = 0, TFont *font = NULL, bool with_ico = false);
 
 void setup_ToolBar(TToolBar *tb);
 
@@ -1730,6 +1723,7 @@ __int64 get_DirSize(UnicodeString dnam, int *f_cnt, int *d_cnt, __int64 *o_size,
 __int64 get_ArcDirSize(UnicodeString anam, UnicodeString dnam, int *f_cnt, int *d_cnt);
 
 void  del_CachedIcon(UnicodeString fnam);
+HICON get_file_icon(UnicodeString fnam);
 HICON get_fext_icon(UnicodeString fext = EmptyStr);
 HICON get_folder_icon(UnicodeString dnam = EmptyStr);
 

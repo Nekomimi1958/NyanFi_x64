@@ -172,13 +172,13 @@ private:	// ユーザー宣言
 public:		// ユーザー宣言
 	UsrScrollPanel *GridScrPanel;	//シンプルスクロールバー
 
-	bool isView;			//最近閲覧したファイル一覧(false = 編集した～)
-	bool isRecent;			//最近使ったファイル一覧
-	bool isMark;			//マーク一覧
-	bool isRepo;			//リポジトリ一覧
-	bool isTags;			//ダイレクトタグジャンプ
+	bool isView;		//最近閲覧したファイル一覧(false = 編集した～)
+	bool isRecent;		//最近使ったファイル一覧
+	bool isMark;		//マーク一覧
+	bool isRepo;		//リポジトリ一覧
+	bool isTags;		//ダイレクトタグジャンプ
 	bool isTagPtn;
-	bool ToFilter;			//フィルタ欄にフォーカス
+	bool ToFilter;		//フィルタ欄にフォーカス
 
 	TStringList *TagJumpList;
 

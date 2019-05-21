@@ -60,6 +60,10 @@ struct code_page_inf {
 extern code_page_inf SaveCodePages[MAX_SAVE_CODEPAGES];
 
 //---------------------------------------------------------------------------
+typedef WINSHELLAPI BOOL (WINAPI *FUNC_PickIconDlg)(HWND, LPTSTR, UINT, LPDWORD);
+
+
+//---------------------------------------------------------------------------
 class TUserModule : public TDataModule
 {
 __published:	// IDE で管理されるコンポーネント
@@ -228,6 +232,8 @@ private:	// ユーザー宣言
 	TComboBox   * __fastcall GetActiveComboBox();
 	TCustomEdit * __fastcall GetActiveCustomEdit();
 
+	void __fastcall SelectIconDlg(UnicodeString &fnam);
+
 public:		// ユーザー宣言
 	TCursor crSpuitTool;
 	TCursor crHandGrabR;
@@ -236,6 +242,8 @@ public:		// ユーザー宣言
 	UnicodeString CurFileName;	//カーソル位置のファイル名
 	UnicodeString CurPathName;	//現在のカレントパス名
 	UnicodeString OppPathName;	//現在の反対パス名
+
+	UnicodeString IconFilePath;	//アイコン参照パス
 
 	TStringList *RefRegExList;	//正規表現の参照リスト
 	TStringList *CmdParamList;	//コマンドパラメータの参照リスト
@@ -269,6 +277,7 @@ public:		// ユーザー宣言
 	bool __fastcall OpenDlgToStr(UnicodeString &s, bool to_rel = false);
 	bool __fastcall OpenImgDlgToEdit(TWinControl *ep, bool to_rel = false);
 	bool __fastcall FontDlgToFont(TFont *f);
+	UnicodeString __fastcall OpenDlgIconIndex(bool to_rel = false);
 
 	void __fastcall SaveLastComboBox();
 	void __fastcall RestoreLastComboBox();

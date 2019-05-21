@@ -547,7 +547,9 @@ void __fastcall TImgViewThread::Execute()
 										if ((x + 2*32) > bg_bmp->Width) {
 											x = 2;  y += 34;
 										}
-										else x += 34;
+										else {
+											x += 34;
+										}
 									}
 								}
 							}

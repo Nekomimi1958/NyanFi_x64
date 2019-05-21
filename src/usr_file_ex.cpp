@@ -647,6 +647,16 @@ bool file_exists_x(UnicodeString fnam)
 
 	return (attr!=faInvalid && (attr & faDirectory)==0);
 }
+//---------------------------------------------------------------------------
+bool file_exists_ico(UnicodeString fnam)
+{
+	if (fnam.IsEmpty()) return false;
+
+	int ico_idx = get_tkn_r(fnam, ",").ToIntDef(-1);
+	if (ico_idx!=-1) fnam = get_tkn(fnam, ",");
+
+	return (file_GetAttr(fnam) != faInvalid);
+}
 
 //---------------------------------------------------------------------------
 //ディレクトリの存在チェック
