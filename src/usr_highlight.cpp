@@ -44,13 +44,17 @@ void HighlightFile::CheckValues()
 			UnicodeString vstr = klist->ValueFromIndex[j];
 
 			bool err = false;
-			if		(EndsText("Ptn", key)) err = !chk_RegExPtn(vstr);
-			else if (EndsText("Col", key)) err = !is_match_regex(vstr, _T("^[0-9a-fA-F]{6}"));
-			else if (EndsText("File",key)) err = !file_exists(to_absolute_name(vstr));
+			if (is_match_regex_i(key, _T("Ptn\\d*$")))
+				 err = !chk_RegExPtn(vstr);
+			else if (EndsText("Col", key))
+				err = !is_match_regex(vstr, _T("^[0-9a-fA-F]{6}"));
+			else if (EndsText("File",key))
+				err = !file_exists(to_absolute_name(vstr));
 
-			if (err)
+			if (err) {
 				ErrorList->Add(UnicodeString().sprintf(_T("    [%s] %s=%s"),
 					sct.c_str(), key.c_str(), vstr.c_str()));
+			}
 		}
 	}
 
@@ -435,12 +439,12 @@ UnicodeString HighlightFile::GetHeadlinePtn(
 		if		(test_FileExt(fext, _T(".bat.cmd.qbt")))		h_ptn = "^:[^:]+";
 		else if (test_FileExt(fext, _T(".eml")))				h_ptn = "^Subject:";
 		else if (test_FileExt(fext, _T(".ini.inf.reg.url")))	h_ptn = "^\\[.+?\\]";
+		else if (test_FileExt(fext, _T(".dfm")))				h_ptn = "^\\s*object\\s";
 		else if (test_FileExt(fext, FEXT_HTML))					h_ptn = "<[hH][1-6]";
 	}
 
 	return (chk_RegExPtn(h_ptn)? h_ptn : EmptyStr);
 }
-
 
 //---------------------------------------------------------------------------
 //以下はデフォルトの設定を取得
@@ -522,6 +526,9 @@ UnicodeString GetDefReservedPtn(
 			_T("template|this|thread_local|__thread|throw|(__)?try|typedef|typeid|typename|union|")
 			_T("unsigned|using|virtual|void|volatile|wchar_t|while)\\b|")
 			_T("^\\s*#\\w+\\b"));
+	}
+	else if (test_FileExt(fext, _T(".dfm"))) {
+		ret_str = "\\b(object|item|end)\\b";
 	}
 	else if (test_FileExt(fext, _T(".dsp"))) {
 		ret_str = "^!\\w+\\b";
@@ -766,7 +773,7 @@ UnicodeString GetDefNumericPtn(UnicodeString fext)
 {
 	return (
 		test_FileExt(fext, _T(".css")) ? "([: ]+#[0-9a-f]+)|(\\b[0-9][0-9.]*)" :
-		test_FileExt(fext, _T(".dfm")) ? "\\s[0-9]+\\b" :
+		test_FileExt(fext, _T(".dfm")) ? "\\s-?[0-9]+\\b" :
 		test_FileExt(fext, _T(".fs"))  ? "\\b[0-9][box0-9a-f.]*\\b" :
 		test_FileExt(fext, _T(".json"))? "\\b-?[0-9][0-9.]*\\b" :
 		test_FileExt(fext, _T(".v"))   ? "\\b[0-9]+('(b[01_]+|o[0-7_]+|d[0-9_]+|h[0-9a-f_]+))?" :
@@ -791,7 +798,7 @@ UnicodeString GetDefSymbolChars(
 		is_xml?										"{}/=<>:;?" :
 		test_FileExt(fext, _T(".au3"))?				"{}()[]+-*/%&!~=<>,.:" :
 		test_FileExt(fext, _T(".css"))?				"{}()*:;" :
-		test_FileExt(fext, _T(".dfm"))?				"()[]=" :
+		test_FileExt(fext, _T(".dfm"))?				"{}()[]<>=:" :
 		test_FileExt(fext, _T(".dsp.dsw"))?			"{}/=<>:?" :
 		test_FileExt(fext, _T(".json"))?			"{}[],:" :
 		test_FileExt(fext, _T(".ps1.psm1"))?		"{}()[]+-*/%|=,:@" :
@@ -920,6 +927,36 @@ UnicodeString GetDefFunctionPtn(
 }
 
 //---------------------------------------------------------------------------
+//SearchPair コマンド用検索パターンを取得
+//---------------------------------------------------------------------------
+bool GetSearchPairPtn(UnicodeString fext, TStringList *lst)
+{
+	UnicodeString tab = "\t";
+	if (test_FileExt(fext, _T(".dfm"))) {
+		lst->Add("^\\s*((object\\s)|item$)" + tab + "^\\s*end>?$");
+	}
+	else if (test_FileExt(fext, _T(".pas"))) {
+		lst->Add("(^\\s*(((else\\s)?begin)|case|try|record)\\b)|(\\w+\\s=\\s(class|interface|record)\\b)"
+					+ tab + "^\\s*end[;).]?\\b");
+	}
+	else if (test_FileExt(fext, FEXT_C_SH)) {
+		lst->Add("^\\s*#\\s*if\\w*" + tab + "^\\s*#\\s*endif");
+	}
+	else if (test_FileExt(fext, _T(".vbs.vb.mac"))) {
+		lst->Add("^\\s*sub\\s+\\w+\\b" + tab + "^\\s*end\\s+sub\\b");
+		lst->Add("^\\s*function\\s+\\w+\\b" + tab + "^\\s*end\\s+function\\b");
+		lst->Add("^\\s*proc\\s+\\w+\\b" + tab + "^\\s*end\\s+proc\\b");
+		lst->Add("^\\s*if\\s.+\\s+then\\b" + tab + "^\\s*end\\s+if\\b");
+		lst->Add("^\\s*for\\s+.+" + tab + "^\\s*next\\b");
+		lst->Add("^\\s*do(\\s+(until|while)\\s)?" + tab + "^\\s*loop\\b");
+		lst->Add("^\\s*select\\s+case\\s" + tab + "^\\s*end\\s+select\\b");
+		lst->Add("^\\s*class\\s+\\w+\\b" + tab + "^\\s*end\\s+class\\b");
+	}
+
+	return (lst->Count>0);
+}
+
+//---------------------------------------------------------------------------
 //指定拡張子に対するデフォルトの構文強調表示定義を取得
 //---------------------------------------------------------------------------
 bool GetDefaultHighlight(
@@ -990,7 +1027,18 @@ bool GetDefaultHighlight(
 	res_str = GetDefFunctionPtn(fext, name_ptn, false);
 	if (!res_str.IsEmpty()) {
 		lst->Add("FunctionPtn=" + res_str);
-		lst->Add("FuncNamePtn=" + name_ptn);
+		if (!name_ptn.IsEmpty()) lst->Add("FuncNamePtn=" + name_ptn);
+	}
+
+	//SearchPair 用パターン
+	std::unique_ptr<TStringList> ptn_lst(new TStringList());
+	if (GetSearchPairPtn(fext, ptn_lst.get())) {
+		for (int i=0; i<ptn_lst->Count; i++) {
+			UnicodeString ptn = ptn_lst->Strings[i];
+			UnicodeString tmp;
+			lst->Add(tmp.sprintf(_T("PairBeginPtn%u=%s"), i + 1, get_pre_tab(ptn).c_str()));
+			lst->Add(tmp.sprintf(_T("PairEndPtn%u=%s"),   i + 1, get_post_tab(ptn).c_str()));
+		}
 	}
 
 	return (lst->Count>0);

@@ -2738,4 +2738,44 @@ int get_NrmLevenshteinDistance(UnicodeString s1, UnicodeString s2,
 
 	return (int)(1000.0 * d[len1][len2] / (std::max(len1, len2)));
 }
+
+//---------------------------------------------------------------------------
+//#nnnn 形式の値を文字列にデコード
+//---------------------------------------------------------------------------
+UnicodeString decode_TxtVal(UnicodeString s,
+	bool with_q)	//文字列なら引用符で囲む	(default = false)
+{
+	UnicodeString sbuf;
+
+	bool is_str = false;
+	while (!s.IsEmpty()) {
+		if (remove_top_s(s, '\'')) {
+			sbuf += split_tkn(s, '\'');
+			is_str = true;
+		}
+		else if (remove_top_s(s, '#')) {
+			UnicodeString tmpstr = split_tkn(s, '\'');
+			if (!s.IsEmpty()) s.Insert("\'", 1);
+			TStringDynArray c_lst = SplitString(tmpstr, "#");
+			UnicodeString tstr;
+			for (int j=0; j<c_lst.Length; j++) {
+				int c = c_lst[j].ToIntDef(0);
+				switch (c) {
+				case 0x0d: tstr += "\\r"; break;
+				case 0x0a: tstr += "\\n"; break;
+				default:   tstr += wchar_t(c);
+				}
+			}
+			sbuf += tstr;
+			is_str = true;
+		}
+		else {
+			sbuf += s;
+			break;
+		}
+	}
+
+	if (is_str && with_q) sbuf = "\'" + sbuf + "\'";
+	return sbuf;
+}
 //---------------------------------------------------------------------------

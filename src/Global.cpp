@@ -266,6 +266,7 @@ bool TvCursorVisible;			//ビュアーでカーソルを常に可視領域に
 bool LimitBinCsr;				//バイナリ表示でカーソル移動を制限
 bool TxtColorHint;				//カーソル位置数値のカラーをヒント表示
 bool AltBackSlash;				//\ を ＼(U+2216)で表示
+bool DecodeDfmStr;				//.dfm ファイルの文字列をデコード
 bool BinMemMaped;				//バイナリではメモリマップドファイルとして開く
 bool EmpComment;				//コメントを強調表示
 bool EmpStrings;				//文字列を強調表示
@@ -1443,7 +1444,7 @@ void InitializeGlobal()
 		{_T("HtmDelBlkId=\"\""),					(TObject*)&HtmDelBlkId},
 		{_T("IniSeaShift=\"F:Ctrl+\""),				(TObject*)&IniSeaShift},
 		{_T("AutoRenFmt=\"\\N_\\SN(1)\""),			(TObject*)&AutoRenFmt},
-		{_T("FExtExeFile=\".exe.bat\""),			(TObject*)&FExtExeFile},
+		{_T("FExtExeFile=\".exe.bat.cmd\""),		(TObject*)&FExtExeFile},
 		{_T("CallHotKey=\"\""),						(TObject*)&CallHotKey},
 		{_T("AppListHotKey=\"\""),					(TObject*)&AppListHotKey},
 		{_T("AppListHotPrm=\"\""),					(TObject*)&AppListHotPrm},
@@ -1622,6 +1623,7 @@ void InitializeGlobal()
 		{_T("LimitBinCsr=true"),			(TObject*)&LimitBinCsr},
 		{_T("TxtColorHint=true"),			(TObject*)&TxtColorHint},
 		{_T("AltBackSlash=false"),			(TObject*)&AltBackSlash},
+		{_T("DecodeDfmStr=false"),			(TObject*)&DecodeDfmStr},
 		{_T("BinMemMaped=false"),			(TObject*)&BinMemMaped},
 		{_T("MultiInstance=false"),			(TObject*)&MultiInstance},
 		{_T("CloseOthers=false"),			(TObject*)&CloseOthers},
@@ -10351,6 +10353,25 @@ void PrvTextOut(
 	}
 	//コメント無し
 	else {
+		if (test_FileExt(get_extension(fnam), _T(".dfm"))) {
+			UnicodeString lbuf = s;
+			if (lbuf.Pos('=')) {
+				UnicodeString nbuf = split_tkn(lbuf, '=') + "= ";
+				lbuf = TrimLeft(lbuf);
+				if (starts_tchs(_T("\'#"), lbuf)) {
+					s = nbuf + decode_TxtVal(lbuf, true);
+				}
+			}
+			else {
+				lbuf = TrimLeft(lbuf);
+				if (starts_tchs(_T("\'#"), lbuf)) {
+					UnicodeString end_s = remove_end_s(lbuf, ')')? ")" : "";
+					s = StringOfChar(_T(' '), s.Length() - TrimLeft(s).Length())
+							+ decode_TxtVal(lbuf, true) + end_s;
+				}
+			}
+		}
+
 		RuledLnTextOut(s, cv, rc, fg, tab_wd, kw_lst);
 	}
 }

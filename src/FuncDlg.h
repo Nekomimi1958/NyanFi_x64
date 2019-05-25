@@ -108,6 +108,8 @@ public:		// ユーザー宣言
 	UnicodeString UserDefStr;
 	UnicodeString NamePtn;	//関数名の強調パターン
 
+	bool is_DFM;
+
 	__fastcall TFuncListDlg(TComponent* Owner);
 	void __fastcall ClearList();
 

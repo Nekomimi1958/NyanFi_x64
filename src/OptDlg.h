@@ -720,7 +720,7 @@ __published:	// IDE で管理されるコンポーネント
 	TSpeedButton *RefToolFmtBtn;
 	TTabControl *KeyTabControl;
 	TTabSheet *AssoSheet;
-	TTabSheet *CommadSheet;
+	TTabSheet *CommandSheet;
 	TTabSheet *DesignSheet;
 	TTabSheet *EditorSheet;
 	TTabSheet *EventSheet;
@@ -735,6 +735,7 @@ __published:	// IDE で管理されるコンポーネント
 	TTabSheet *NotifySheet;
 	TTabSheet *StartupSheet;
 	TTabSheet *TxtViewerSheet;
+	TCheckBox *DecDfmStrCheckBox;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

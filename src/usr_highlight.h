@@ -55,6 +55,7 @@ UnicodeString GetDefNumericPtn(UnicodeString fext);
 UnicodeString GetDefSymbolChars(UnicodeString fext, bool is_xml, bool is_h2t);
 UnicodeString GetDefQuotChars(UnicodeString fext, bool &use_esc, bool is_xml, bool is_ini, bool is_h2t);
 UnicodeString GetDefFunctionPtn(UnicodeString fext, UnicodeString &name_ptn, bool is_h2t);
+bool GetSearchPairPtn(UnicodeString fext, TStringList *lst);
 bool GetDefaultHighlight(UnicodeString fext, TStringList *lst, TStringList *hl_lst = NULL);
 //---------------------------------------------------------------------------
 #endif

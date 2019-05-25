@@ -83,6 +83,8 @@ __fastcall TTxtViewer::TTxtViewer(
 	RemBgnList	= new TStringList();
 	RemEndList	= new TStringList();
 
+	PairPtnList	= new TStringList();
+
 	MMF = new MemMapFile();
 
 	SetColor();
@@ -169,6 +171,7 @@ __fastcall TTxtViewer::~TTxtViewer()
 	delete RemLnList;
 	delete RemBgnList;
 	delete RemEndList;
+	delete PairPtnList;
 	delete MMF;
 }
 
@@ -601,6 +604,29 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 }
 
 //---------------------------------------------------------------------------
+//.dfm ファイル内の文字をデコード
+//---------------------------------------------------------------------------
+void __fastcall TTxtViewer::ConvDfmText(TStringList *txt_lst)
+{
+	for (int i=0; i<txt_lst->Count; i++) {
+		UnicodeString lbuf = txt_lst->Strings[i];
+		if (lbuf.Pos('=')) {
+			UnicodeString nbuf = split_tkn(lbuf, '=') + "= ";
+			UnicodeString s = TrimLeft(lbuf);
+			if (!starts_tchs(_T("\'#"), s)) continue;
+			txt_lst->Strings[i] = nbuf + decode_TxtVal(s, true);
+		}
+		else {
+			UnicodeString s =TrimLeft(lbuf);
+			if (!starts_tchs(_T("\'#"), s)) continue;
+			UnicodeString end_s = remove_end_s(s, ')')? ")" : "";
+			txt_lst->Strings[i] = StringOfChar(_T(' '), lbuf.Length() - TrimLeft(lbuf).Length())
+									+ decode_TxtVal(s, true) + end_s;
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
 //画面に合わせて行内容を設定
 //---------------------------------------------------------------------------
 void __fastcall TTxtViewer::UpdateScr(
@@ -721,6 +747,7 @@ void __fastcall TTxtViewer::UpdateScr(
 	UsrKeywdCol   = color_fgView;
 	UsrKeywdCol2  = color_fgView;
 	alt_BackSlash = AltBackSlash;
+	PairPtnList->Clear();
 
 	//ユーザ定義の取得
 	bool usr_hl = UserHighlight->GetSection(FileName, isClip, isLog, isHtm2Txt);
@@ -762,6 +789,17 @@ void __fastcall TTxtViewer::UpdateScr(
 			UsrKeywdCase  = UserHighlight->ReadKeyBool( _T("KeywordCase"),	true);
 			UsrKeyword2   = UserHighlight->ReadRegExPtn(_T("KeywordPtn2"));
 			UsrKeywdCase2 = UserHighlight->ReadKeyBool( _T("KeywordCase2"),	true);
+
+			//SearchPair 用パターン
+			UnicodeString bgn_ptn, end_ptn, tmp;
+			for (int i=1; ; i++) {
+				tmp.sprintf(_T("PairBeginPtn%u"), i);
+				bgn_ptn = UserHighlight->ReadRegExPtn(tmp.c_str());
+				tmp.sprintf(_T("PairEndPtn%u"), i);
+				end_ptn = UserHighlight->ReadRegExPtn(tmp.c_str());
+				if (bgn_ptn.IsEmpty() || end_ptn.IsEmpty()) break;
+				PairPtnList->Add(bgn_ptn + "\t" + end_ptn);
+			}
 
 			//見出し行
 			UnicodeString lbuf = UserHighlight->ReadRegExPtn(_T("HeadlinePtn"));
@@ -812,6 +850,9 @@ void __fastcall TTxtViewer::UpdateScr(
 				if (test_FileExt(fext, FEXT_C_SH _T(".idl.cs.hs.js.jsx.java.vhd"))) CharPtn = "'\\\\?.'";
 			}
 
+			//SearchPair 用パターン
+			GetSearchPairPtn(fext, PairPtnList);
+
 			SetColor();
 		}
 
@@ -828,7 +869,7 @@ void __fastcall TTxtViewer::UpdateScr(
 	//強調表示パターンを設定
 	//--------------------------
 	//0									予約語
-	EmPtn[0] = ReservedPtn;	
+	EmPtn[0] = ReservedPtn;
 	EmBgC[0] = clNone;
 	EmFgC[0] = color_Reserved;
 	//1									URL
@@ -945,6 +986,10 @@ void __fastcall TTxtViewer::UpdateScr(
 			for (int i=0; i<htmcnv->TxtBuf->Count; i++) htmcnv->TxtBuf->Objects[i] = (TObject*)(NativeInt)i;
 			TxtBufList2->Assign(htmcnv->TxtBuf);
 			txt_buf->Assign(htmcnv->TxtBuf);
+		}
+		//.dfm ファイル内の文字列をデコード
+		else if (test_FileExt(fext, _T(".dfm"))) {
+			if (DecodeDfmStr) ConvDfmText(txt_buf.get());
 		}
 		//CSV/TSV(固定長表示)
 		else if (test_FileExt(fext, FEXT_CSV)) {
@@ -3846,9 +3891,65 @@ bool __fastcall TTxtViewer::SearchSel(
 }
 
 //---------------------------------------------------------------------------
-//対応する括弧を検索
+//対応する行要素を検索
 //---------------------------------------------------------------------------
-bool __fastcall TTxtViewer::SearchPair()
+bool __fastcall TTxtViewer::SearchPairCore(UnicodeString bgn_ptn, UnicodeString end_ptn)
+{
+	if (!chk_RegExPtn(bgn_ptn) || !chk_RegExPtn(end_ptn)) {
+		GlobalErrMsg = LoadUsrMsg(USTR_IllegalRegEx);
+		return false;
+	}
+
+	bool found = false;
+	cursor_HourGlass();
+	UnicodeString s = get_CurLine();
+	//begin --> end
+	TRegExOptions opt; opt << roIgnoreCase;
+	if (TRegEx::IsMatch(s, bgn_ptn, opt)) {
+		int lvl = 0;
+		for (int i=CurPos.y + 1; !found && i<MaxDispLine; i++) {
+			s = get_DispLine(i);
+			if (TRegEx::IsMatch(s, end_ptn, opt)) {
+				if (lvl==0) {
+					CurPos = Point(s.Length() - TrimLeft(s).Length(), i);
+					found  = true;
+				}
+				else {
+					lvl--;
+				}
+			}
+			else if (TRegEx::IsMatch(s, bgn_ptn, opt)) {
+				lvl++;
+			}
+		}
+	}
+	//end --> begin
+	else if (TRegEx::IsMatch(s, end_ptn, opt)) {
+		int lvl = 0;
+		for (int i=CurPos.y - 1; !found && i>=0; i--) {
+			s = get_DispLine(i);
+			if (TRegEx::IsMatch(s, bgn_ptn, opt)) {
+				if (lvl==0) {
+					CurPos = Point(s.Length() - TrimLeft(s).Length(), i);
+					found  = true;
+				}
+				else {
+					lvl--;
+				}
+			}
+			else if (TRegEx::IsMatch(s, end_ptn, opt)) {
+				lvl++;
+			}
+		}
+	}
+
+	cursor_Default();
+	return found;
+}
+
+//---------------------------------------------------------------------------
+bool __fastcall TTxtViewer::SearchPair(
+	UnicodeString prm)	// "/開始正規表現/;/終了正規表現/"
 {
 	UnicodeString br_str = "（〔［｛〈《「『【({[｢";
 	UnicodeString kt_str = "）〕］｝〉》」』】)}]｣";
@@ -3904,6 +4005,31 @@ bool __fastcall TTxtViewer::SearchPair()
 					lvl++;
 				}
 			}
+		}
+	}
+
+	//行対応(パラメータ指定)
+	if (!found && !prm.IsEmpty()) {
+		int p = prm.Pos("/;/");
+		if (p>2) {
+			UnicodeString bgn_ptn = prm.SubString(1, p);
+			p += 2;
+			UnicodeString end_ptn = prm.SubString(p, prm.Length() - p + 1);
+			if (is_regex_slash(bgn_ptn) && is_regex_slash(end_ptn)) {
+				found = SearchPairCore(exclude_top_end(bgn_ptn), exclude_top_end(end_ptn));
+			}
+			else {
+				GlobalErrMsg = LoadUsrMsg(USTR_IllegalParam);
+				return false;
+			}
+		}
+	}
+
+	//行対応(デフォルト/ユーザ定義)
+	if (!found && PairPtnList->Count>0) {
+		for (int i=0; i<PairPtnList->Count && !found; i++) {
+			UnicodeString ptn = PairPtnList->Strings[i];
+			found = SearchPairCore(get_pre_tab(ptn), get_post_tab(ptn));
 		}
 	}
 
@@ -4313,7 +4439,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		case 23: MoveScroll(true,  prm);		break;
 		case 24: MoveScroll(false, prm, true);	break;
 		case 25: MoveScroll(true,  prm, true);	break;
-		case 26: SearchPair();					break;
+		case 26: SearchPair(prm);				break;
 		case 27: GetCurWord(true);				break;
 		case 28: SelLine();						break;
 		case 29: SelLine(true);					break;

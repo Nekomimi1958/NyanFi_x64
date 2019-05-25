@@ -119,9 +119,11 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 	cursor_HourGlass();
 
 	NamePtn = EmptyStr;
-	UnicodeString cap_str, tmpstr;
+	is_DFM	= false;
 
-	LineNo = LinkCheckBox->Checked? TxtViewer->get_CurLineNo() : -1;
+	LineNo	= LinkCheckBox->Checked? TxtViewer->get_CurLineNo() : -1;
+
+	UnicodeString cap_str;
 
 	//ユーザ定義一覧
 	if (ListMode==1) {
@@ -167,6 +169,8 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 		NameOnlyCheckBox->Visible = true;
 
 		UnicodeString fext = get_extension(TxtViewer->FileName);
+		is_DFM = test_FileExt(fext, _T(".dfm"));
+
 		UnicodeString fnc_ptn;
 
 		//ユーザ定義から取得
@@ -181,14 +185,16 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 			fnc_ptn = GetDefFunctionPtn(fext, NamePtn, TxtViewer->isHtm2Txt);
 		}
 
-		if (!chk_RegExPtn(fnc_ptn)) fnc_ptn = EmptyStr;
-		if (!chk_RegExPtn(NamePtn)) NamePtn = EmptyStr;
-
 		//関数以外
 		if (fnc_ptn.IsEmpty()) {
 			if (test_FileExt(fext, _T(".bat.cmd.qbt"))) {
 				fnc_ptn = "^:[^:]+";
 				cap_str = "ラベル一覧";
+			}
+			else if (is_DFM) {
+				fnc_ptn = "^\\s*object\\s";
+				NamePtn = "\\s\\w+:";
+				cap_str = "オブジェクト一覧";
 			}
 			else if (TxtViewer->isIniFmt) {
 				fnc_ptn = "^\\[.+\\]";
@@ -199,6 +205,9 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 				cap_str = test_FileExt(fext, _T(".eml"))? "件名一覧" : TxtViewer->isLog? "タスク一覧" : "見出し一覧";
 			}
 		}
+
+		if (!chk_RegExPtn(fnc_ptn)) fnc_ptn = EmptyStr;
+		if (!chk_RegExPtn(NamePtn)) NamePtn = EmptyStr;
 
 		Opt1Panel->Visible = (ListMode==0 && !NamePtn.IsEmpty());	//名前
 
@@ -248,6 +257,7 @@ void __fastcall TFuncListDlg::UpdateList(
 				if (mt.Success) {
 					lbuf = mt.Value;
 					remove_end_s(lbuf, '(');
+					remove_end_s(lbuf, ':');
 				}
 			}
 			if (!TRegEx::IsMatch(lbuf, ptn, opt)) flst->Delete(i); else i++;
@@ -334,6 +344,10 @@ void __fastcall TFuncListDlg::FuncListBoxDrawItem(TWinControl *Control, int Inde
 			cv->TextOut(xp, yp, lbuf);
 		}
 		else if (!NamePtn.IsEmpty()) {
+			//行頭の空白を取得
+			UnicodeString pre_str =
+				is_DFM? (StringOfChar(_T(' '), lbuf.Length() - TrimLeft(lbuf).Length())) : EmptyStr;
+
 			//関数名を強調
 			std::unique_ptr<TStringList> elist(new TStringList());
 			TRegExOptions opt; opt << roIgnoreCase;
@@ -343,7 +357,9 @@ void __fastcall TFuncListDlg::FuncListBoxDrawItem(TWinControl *Control, int Inde
 				if (ends_tchs(_T("{([:"), wd)) delete_end(wd);
 				elist->Add(wd);
 				if (NameOnlyCheckBox->Checked) lbuf = wd;
+				lbuf.Insert(pre_str, 1);
 			}
+
 			EmphasisTextOut(lbuf, elist.get(), cv, xp, yp, false, true, col_Headline, cv->Brush->Color);
 		}
 		else {
@@ -371,12 +387,24 @@ void __fastcall TFuncListDlg::FuncListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
 
 	try {
-		if		(equal_ENTER(KeyStr))				CloseListAction->Execute();
-		else if	(equal_ESC(KeyStr) || USAME_TI(cmd_F, "ReturnList"))			ModalResult = mrCancel;
-		else if (USAME_TI(cmd_F, "FileEdit") || USAME_TI(cmd_V, "FileEdit"))	ReqEditAction->Execute();
-		else if (USAME_TI(cmd_V, "FunctionList"))	InitializeList(0);	//関数一覧
-		else if (USAME_TI(cmd_V, "UserDefList"))	InitializeList(1);	//ユーザ定義文字列一覧
-		else if (USAME_TI(cmd_V, "MarkList"))		InitializeList(2);	//マーク行一覧
+		if (equal_ENTER(KeyStr)) {
+			CloseListAction->Execute();
+		}
+		else if	(equal_ESC(KeyStr) || USAME_TI(cmd_F, "ReturnList")) {
+			ModalResult = mrCancel;
+		}
+		else if (USAME_TI(cmd_F, "FileEdit") || USAME_TI(cmd_V, "FileEdit")) {
+			ReqEditAction->Execute();
+		}
+		else if (USAME_TI(cmd_V, "FunctionList")) {
+			InitializeList(0);	//関数一覧
+		}
+		else if (USAME_TI(cmd_V, "UserDefList")) {
+			InitializeList(1);	//ユーザ定義文字列一覧
+		}
+		else if (USAME_TI(cmd_V, "MarkList")) {
+			InitializeList(2);	//マーク行一覧
+		}
 		//マーク
 		else if (USAME_TI(cmd_V, "Mark")) {
 			if (ListMode!=2 && idx>=0 && idx<lp->Count) {
@@ -385,11 +413,21 @@ void __fastcall TFuncListDlg::FuncListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 			}
 		}
 		//その他の移動など
-		else if (StartsText("IncSearch", cmd_F))		FilterEdit->SetFocus();
-		else if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))	;
-		else if (contained_wd_i(_T("S|Ctrl+S"), KeyStr) && ListMode==1)	UserDefComboBox->SetFocus();
-		else if (contained_wd_i(KeyStr_Filter, KeyStr)) FilterEdit->SetFocus();
-		else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(lp);
+		else if (StartsText("IncSearch", cmd_F)) {
+			FilterEdit->SetFocus();
+		}
+		else if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V)) {
+			;
+		}
+		else if (contained_wd_i(_T("S|Ctrl+S"), KeyStr) && ListMode==1) {
+			UserDefComboBox->SetFocus();
+		}
+		else if (contained_wd_i(KeyStr_Filter, KeyStr)) {
+			FilterEdit->SetFocus();
+		}
+		else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
+			show_PopupMenu(lp);
+		}
 
 		//連動
 		if (LinkCheckBox->Checked && idx!=-1 && idx!=lp->ItemIndex) ToLine();

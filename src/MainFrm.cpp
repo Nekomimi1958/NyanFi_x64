@@ -10950,14 +10950,14 @@ bool __fastcall TNyanFiForm::ExeCommandAction(
 //---------------------------------------------------------------------------
 //エイリアスまたはコマンドを実行
 //---------------------------------------------------------------------------
-bool __fastcall TNyanFiForm::ExeAliasOrCommands(UnicodeString cmds)
+bool __fastcall TNyanFiForm::ExeAliasOrCommands(UnicodeString cmds, UnicodeString fnam)
 {
 	try {
 		if (starts_Dollar(cmds)) {
 			ExeAlias(cmds);
 			if (!ActionOk && !ActionErrMsg.IsEmpty()) ActionAbort();
 		}
-		else if (!ExeCommandsCore(cmds)) {
+		else if (!ExeCommandsCore(cmds, fnam)) {
 			GlobalAbort();
 		}
 		return true;
@@ -10975,7 +10975,7 @@ void __fastcall TNyanFiForm::ExeEventCommand(UnicodeString cmds, UnicodeString o
 	if (FindBusy || ExeCmdsBusy || cmds.IsEmpty() || StartsStr(';', cmds)) return;
 
 	ActionOptStr = opt;
-	if (!ExeAliasOrCommands(cmds)) SetActionAbort(GlobalErrMsg);
+	if (!ExeAliasOrCommands(cmds, fnam)) SetActionAbort(GlobalErrMsg);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ExeEventCommandMP(UnicodeString cmds)
@@ -15712,13 +15712,18 @@ void __fastcall TNyanFiForm::FileEditActionExecute(TObject *Sender)
 			add_dyn_array(etc_lst, edtr);
 		}
 
+		UnicodeString txt_editor = get_actual_path(TextEditor);
+		UnicodeString img_editor = get_actual_path(ImageEditor);
 		if (etc_lst.Length>0) {
-			if (test_FileExt(fext, FExtImgEidt)) add_dyn_array(etc_lst, get_actual_path(ImageEditor), true);
-			if (test_FileExt(fext, FEXT_TEXT))   add_dyn_array(etc_lst, get_actual_path(TextEditor),  true);
+			if (test_FileExt(fext, FExtImgEidt)) add_dyn_array(etc_lst, img_editor, true);
+			if (test_FileExt(fext, FEXT_TEXT))   add_dyn_array(etc_lst, txt_editor,  true);
 		}
-		UnicodeString editor = get_MenuItemStr(etc_lst);
 
-		if (!editor.IsEmpty()) {
+		UnicodeString editor = get_MenuItemStr(etc_lst);
+		//その他のエディタ
+		if (!editor.IsEmpty()
+			&& !SameText(editor, txt_editor) && !SameText(editor, img_editor))
+		{
 			if (USAME_TS(editor, "SKIP")) SkipAbort();
 			if (starts_Dollar(editor) && !contains_PathDlmtr(editor)) {
 				ExeAlias(editor);
@@ -15730,20 +15735,19 @@ void __fastcall TNyanFiForm::FileEditActionExecute(TObject *Sender)
 		}
 		//イメージエディタ
 		else if (test_FileExt(fext, FExtImgEidt)) {
-			editor = get_actual_path(ImageEditor);
-			if (!file_exists(editor)) UserAbort(USTR_AppNotFound);
+			if (!file_exists(img_editor)) UserAbort(USTR_AppNotFound);
 			if (ImageEditSgl && s_lst->Count>0) {
 				int ok_cnt = 0;
 				for (int i=0; i<s_lst->Count; i++) {
-					if (Execute_ex(editor, s_lst->Strings[i], dnam)) ok_cnt++;
+					if (Execute_ex(img_editor, s_lst->Strings[i], dnam)) ok_cnt++;
 				}
 				for (int i=0; i<o_lst->Count; i++) {
-					if (Execute_ex(editor, o_lst->Strings[i], dnam)) ok_cnt++;
+					if (Execute_ex(img_editor, o_lst->Strings[i], dnam)) ok_cnt++;
 				}
 				ActionOk = (ok_cnt==(s_lst->Count + o_lst->Count));
 			}
 			else {
-				ActionOk = Execute_ex(editor, fnam, dnam);
+				ActionOk = Execute_ex(img_editor, fnam, dnam);
 			}
 		}
 		//テキストエディタ
@@ -15756,17 +15760,18 @@ void __fastcall TNyanFiForm::FileEditActionExecute(TObject *Sender)
 
 			if (is_Processing(snam)) UserAbort(USTR_FileNotOpen);
 			if (!is_TextFile(snam))  UserAbort(USTR_NoEditor);
-			editor = get_actual_path(TextEditor);
-			if (!file_exists(editor)) UserAbort(USTR_AppNotFound);
+			if (!file_exists(txt_editor)) UserAbort(USTR_AppNotFound);
 
-			ActionOk = Execute_ex(editor, fnam, dnam);
+			ActionOk = Execute_ex(txt_editor, fnam, dnam);
 			if (ActionOk && !CurStt->is_Arc) {
 				//編集履歴を更新
 				if ((s_lst->Count + o_lst->Count)>0) {
 					for (int i=0; i<s_lst->Count; i++) add_TextEditHistory(s_lst->Strings[i]);
 					for (int i=0; i<o_lst->Count; i++) add_TextEditHistory(o_lst->Strings[i]);
 				}
-				else add_TextEditHistory(fnam);
+				else {
+					add_TextEditHistory(fnam);
+				}
 			}
 		}
 
@@ -29203,6 +29208,7 @@ bool __fastcall TNyanFiForm::OpenTxtViewer(
 		}
 
 		//イベント: テキストビュアーを開く直前
+		TxtViewer->FileName = fnam;
 		ExeEventCommand(OnTvOpen, EmptyStr, fnam);
 
 		int cpag = 0;
@@ -29220,7 +29226,6 @@ bool __fastcall TNyanFiForm::OpenTxtViewer(
 		cursor_HourGlass();
 		SetScrMode(SCMD_TVIEW);
 
-		TxtViewer->FileName   = fnam;
 		TxtViewer->OrgName	  = cfp->f_name;
 		TxtViewer->isSelected = cfp->selected;
 		TxtViewer->FileRec	  = cre_new_file_rec(cfp);	//TxtViewer->Clear で破棄されるのでコピーを作成

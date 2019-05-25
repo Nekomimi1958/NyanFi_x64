@@ -100,6 +100,8 @@ private:
 	bool   UsrKeywdCase2;			//ユーザ定義キーワードで大小文字を区別
 	TColor UsrKeywdCol2;			//ユーザ定義キーワードの文字色
 
+	TStringList *PairPtnList;		//SearchPair 用の開始/終了行パターンリスト
+
 	TBytes FindByte0, FindByte1;	//バイナリ検索語
 	TBytes FindMask;				//バイナリ検索用マスク
 
@@ -118,6 +120,7 @@ private:
 
 	UnicodeString __fastcall ArrayToTsv(TStringDynArray lst);
 	void __fastcall FormatFixed(TStringList *txt_lst);
+	void __fastcall ConvDfmText(TStringList *txt_lst);
 
 	TPoint __fastcall nrm_Pos(TPoint p);
 	bool __fastcall has_CR(UnicodeString s);
@@ -335,7 +338,9 @@ public:
 	bool __fastcall SearchDownBytes(UnicodeString kwd, bool case_sw, bool reg_sw);
 	bool __fastcall SearchUpBytes(UnicodeString kwd, bool case_sw, bool reg_sw);
 	bool __fastcall SearchSel(bool up_sw, bool em_sw);
-	bool __fastcall SearchPair();
+
+	bool __fastcall SearchPairCore(UnicodeString bgn_ptn, UnicodeString end_ptn);
+	bool __fastcall SearchPair(UnicodeString prm);
 
 	bool __fastcall ToLine(int lno, int col = -1);
 	bool __fastcall ToAddrR(unsigned int adr);

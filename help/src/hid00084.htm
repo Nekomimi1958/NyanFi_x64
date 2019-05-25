@@ -5,7 +5,11 @@
 <title>構文強調表示定義ファイル</title>
 <link rel="stylesheet" type="text/css" href="help.css">
 <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+	<param name="Keyword" value="FunctionList">
 	<param name="Keyword" value="Highlight.INI">
+	<param name="Keyword" value="SearchPair">
+	<param name="Keyword" value="SetColor">
+	<param name="Keyword" value="TextViewer">
 	<param name="Keyword" value="テキストビュアー">
 	<param name="Keyword" value="関数一覧">
 	<param name="Keyword" value="構文強調表示定義ファイル">
@@ -16,9 +20,9 @@
 <h1>構文強調表示定義ファイル</h1>
 
 <p>
-<a href="hid00006.htm">テキストビュアー</a>での構文強調表示を、ファイルによってユーザ定義できます。<br>
+<a href="hid00006.htm">テキストビュアー</a>での構文強調表示などを、ファイルによってユーザ定義できます。<br>
 定義ファイルは、<b>NyanFi</b> 実行ディレクトリに &quot;<b>Highlight.INI</b>&quot; という名前で作成してください。<br>
-<b>NyanFi</b> がデフォルトで対応している拡張子についても、ファイルで定義すると、それが優先的に適用されます。<br>
+<b>NyanFi</b> がデフォルトで対応している拡張子についても、ファイルで定義し直すと、それが優先的に適用されます。<br>
 一旦読み込まれた定義ファイルは、内容を保持して再利用します。タイムスタンプが変化していたら読み込み直します。<br>
 </p>
 
@@ -299,23 +303,31 @@ FunctionPtn=^function\s+[_a-zA-Z]\w*\(
 <pre class="example_box">
 FuncNamePtn=\b[_a-zA-Z]\w*\(
 </pre>
+<br>
+
+<dt class="no_bg">AltBackSlash
+<dd><a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>&quot;\&quot; を &quot;&#x2216&quot;(U+2216)で表示</b>」の設定内容を変更できます。<br>
+有効にする場合は <b>1</b> を、無効にする場合は <b>0</b> を指定してください。このキーがない場合は、オプション設定に従います。<br>
+<br>
+
+<dt class="no_bg" id="PairBeginPtn">PairBeginPtn1～、PairEndPtn1～
+<dd><a href="hid00006.htm#SearchPair">SearchPair</a> コマンドの検索で用いられる、開始行/終了行の正規表現パターンです。<br>
+キー名の末尾に連番を振ることで複数指定できます。必ず開始/終了を組にして指定してください。<br>
+<pre class="example_box">
+PairBeginPtn1=^#BEGIN$
+PairEndPtn1=^#END$
+PairBeginPtn2=^#HEAD$
+PairEndPtn2=^#FOOT$
+</pre>
 </dl>
 <br>
 
 <div class="indent1">
 <p class="note_text">
-不正な正規表現パターンが指定されていると無効になります。強調表示がうまく行われない場合は、設定を確認してください。<br>
+不正な正規表現パターンが指定されていると無効になります。うまく機能しない場合は設定を確認してください。<br>
 起動時や再読み込み時、構文強調表示定義ファイルに誤りがあったら、その内容がログに出力されます。<br>
 </p>
 </div>
-<br>
-
-<dl class="indent1">
-<dt class="no_bg">AltBackSlash
-<dd><a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>&quot;\&quot; を &quot;&#x2216&quot;(U+2216)で表示</b>」の設定内容を変更できます。<br>
-有効にする場合は <b>1</b> を、無効にする場合は <b>0</b> を指定してください。このキーがない場合は、オプション設定に従います。<br>
-
-</dl>
 <br>
 <hr>
 

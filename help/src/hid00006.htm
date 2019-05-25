@@ -366,7 +366,8 @@ HTML→テキスト変換表示で <a href="#TagView">TagView</a> コマンドで移動する場合な
 <a href="#CsvRecord">→ CsvRecord</a>　<a href="#CsvCalc">→ CsvCalc</a>　<a href="#CsvGraph">→ CsvGraph</a>　<a href="#Sort">→ Sort</a>　<a href="#ExportCsv">→ ExportCsv</a>
 
 <dt id="FunctionList">FunctionList<span class="pram_text">[_FF]</span>
-<dd><a href="hid00066.htm">関数一覧</a>を表示します。ファイルの種類によっては、「見出し一覧」、「セクション一覧」、ラベル一覧」などになる場合もあります。<br>
+<dd><a href="hid00066.htm">関数一覧</a>を表示します。<br>
+ファイルの種類によっては、「見出し一覧」、「セクション一覧」、「ラベル一覧」、「オブジェクト一覧」、「タスク一覧」になります。<br>
 パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
 <a href="#UserDefList">→ UserDefList</a>　<a href="#MarkList">→ MarkList</a>
 
@@ -573,9 +574,27 @@ unsigned/signed(整数)、Big/Little-Endian を切り替えられます(synchsafe int は Big
 <dd>画面をパラメータで指定した行数(無指定の場合はホイール設定)上にスクロールします。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上にスクロールします。なおカーソル位置は変わりません。<br>
 <a href="#ScrollCursorUp">→ ScrollCursorUp</a>　<a href="#CursorUp">→ CursorUp</a>
 
-<dt id="SearchPair">SearchPair
+<dt id="SearchPair">SearchPair<span class="pram_text">[_/開始行パターン/;/終了行パターン/]</span>
 <dd>カーソル位置の括弧と対応する括弧を検索します。<br>
-検索できるペアは（）〔〕［］｛｝〈〉《》「」『』【】(){}[] です。
+検索できるペアは（）〔〕［］｛｝〈〉《》「」『』【】(){}[] です。<br>
+<div class="spc_box">
+一部のプログラムソースなどでは、括弧以外に以下のような行単位の対応関係を検索できます。<br>
+<b>.cpp</b>、<b>.h</b> などでは、#if～/#endif を検索します。<br>
+<b>.pas</b> では、行単位で記述された begin/end などを検索します。<br>
+<b>.dfm</b> (Delphiフォームファイル)では、object/end や item/end を検索します。<br>
+<b>.vbs</b> では、各種制御文などに対応しています(例: sub/end sub、if/end if、for/next …)。<br>
+<div class="note_text">
+正規表現で処理しているため、正しく検索できない場合もあります。<br>
+</div>
+</div>
+<div class="spc_box">
+検索のための<b>開始行パターン</b>と<b>終了行パターン</b>は、パラメータで指定することもできます。<br>
+<b>例</b>: SearchPair_/^#BEGIN/;/^#END/<br>
+</div>
+<div class="spc_box">
+また<a href="hid00084.htm#PairBeginPtn">構文強調表示定義ファイル</a>を利用すると、複数の検索パターンを指定できます(PairBeginPtn1～、PairEndPtn1～)。<br>
+特定の拡張子に対するデフォルトの検索パターンは、<b>設定メニュー</b> - [<b>デフォルトの構文強調表示定義をコピー</b>] で確認できます。<br>
+</div>
 
 <dt id="SelCurWord">SelCurWord
 <dd>カーソル位置の単語またはURLを選択します。<br>

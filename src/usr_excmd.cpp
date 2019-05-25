@@ -1128,25 +1128,39 @@ void XCMD_Set(UnicodeString prm)
 	if (!USAME_TS(opstr, "=")) {
 		//元の変数の書式をチェック
 		int t_flag = -1;
-		if		(is_match_regex(vstr, _T("\\d{4}/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2}"))) t_flag = 0;
-		else if (is_match_regex(vstr, _T("\\d{4}/\\d{2}/\\d{2}"))) t_flag = 1;
-		else if (is_match_regex(vstr, _T("\\d{2}:\\d{2}:\\d{2}"))) t_flag = 2;
+		if (is_match_regex(vstr, _T("\\d{4}/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2}")))
+			t_flag = 0;
+		else if (is_match_regex(vstr, _T("\\d{4}/\\d{2}/\\d{2}")))
+			t_flag = 1;
+		else if (is_match_regex(vstr, _T("\\d{2}:\\d{2}:\\d{2}")))
+			t_flag = 2;
+
 		//時間演算
 		if (t_flag!=-1) {
 			try {
 				TDateTime vt;
-				if 		(t_flag==1) vt = TDate(vstr);
-				else if (t_flag==2) vt = TTime(vstr);
-				else 				vt = TDateTime(vstr);
+				if (t_flag==1)
+					vt = TDate(vstr);
+				else if (t_flag==2)
+					vt = TTime(vstr);
+				else
+					vt = TDateTime(vstr);
+
 				TDateTime nt;
-				if		(is_match_regex(nstr, _T("\\d{4}/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2}"))) nt = TDateTime(nstr);
-				else if (is_match_regex(nstr, _T("\\d{4}/\\d{2}/\\d{2}"))) nt = TDate(nstr);
-				else if (is_match_regex(nstr, _T("\\d{2}:\\d{2}:\\d{2}"))) nt = TTime(nstr);
-				else nt = TDate(nstr.ToIntDef(0));
+				if (is_match_regex(nstr, _T("\\d{4}/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2}")))
+					nt = TDateTime(nstr);
+				else if (is_match_regex(nstr, _T("\\d{4}/\\d{2}/\\d{2}")))
+					nt = TDate(nstr);
+				else if (is_match_regex(nstr, _T("\\d{2}:\\d{2}:\\d{2}")))
+					nt = TTime(nstr);
+				else
+					nt = TDate(nstr.ToIntDef(0));
+
 				//演算
 				if		(USAME_TS(opstr, "+=")) vt += nt;
 				else if (USAME_TS(opstr, "-=")) vt -= nt;
 				else UserAbort(USTR_SyntaxError);
+
 				//結果の設定
 				if		(t_flag==0) rstr = format_DateTime(vt);
 				else if (t_flag==1) rstr = format_Date(vt);
@@ -1180,8 +1194,10 @@ void XCMD_Set(UnicodeString prm)
 				}
 			}
 			catch (EConvertError &e) {
-				if (USAME_TS(opstr, "+=")) rstr = vstr + nstr;
-				else UserAbort(USTR_SyntaxError);
+				if (USAME_TS(opstr, "+="))
+					rstr = vstr + nstr;
+				else
+					UserAbort(USTR_SyntaxError);
 			}
 		}
 	}

@@ -2377,7 +2377,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	bool __fastcall ExeCommandI(UnicodeString cmd, UnicodeString prm = EmptyStr);
 	bool __fastcall ExeCommandL(UnicodeString cmd, UnicodeString prm = EmptyStr);
 	bool __fastcall ExeCommandsCore(UnicodeString cmds, UnicodeString f_name = EmptyStr, bool debug_sw = false);
-	bool __fastcall ExeAliasOrCommands(UnicodeString cmds);
+	bool __fastcall ExeAliasOrCommands(UnicodeString cmds, UnicodeString fnam = EmptyStr);
 	void __fastcall ExeEventCommand(UnicodeString cmds, UnicodeString opt = EmptyStr, UnicodeString fnam = EmptyStr);
 	void __fastcall ExeEventCommandMP(UnicodeString cmds);
 	UnicodeString __fastcall FormatExtTool(UnicodeString prm);

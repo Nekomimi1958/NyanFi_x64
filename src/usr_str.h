@@ -268,5 +268,7 @@ UnicodeString check_EnvDepandChars(UnicodeString s);
 int get_NrmLevenshteinDistance(UnicodeString s1, UnicodeString s2,
 	bool ig_case = false, bool ig_num = false, bool ig_fh = false);
 
+UnicodeString decode_TxtVal(UnicodeString s, bool with_q = false);
+
 //---------------------------------------------------------------------------
 #endif

@@ -666,6 +666,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	LimitBinCsrCheckBox->Tag	= (int)&LimitBinCsr;
 	ColorHintCheckBox->Tag		= (int)&TxtColorHint;
 	AltBackSlashCheckBox->Tag	= (int)&AltBackSlash;
+	DecDfmStrCheckBox->Tag		= (int)&DecodeDfmStr;
 	BinMemMapedCheckBox->Tag	= (int)&BinMemMaped;
 	EmRemCheckBox->Tag			= (int)&EmpComment;
 	EmStrCheckBox->Tag			= (int)&EmpStrings;
@@ -1135,7 +1136,7 @@ TCustomListBox* __fastcall TOptionDlg::GetCurListBox()
 	if (PageControl1->ActivePage==FontColSheet) return ExtColListBox;
 	if (PageControl1->ActivePage==EditorSheet)  return EtcEditorListBox;
 	if (PageControl1->ActivePage==AssoSheet)    return AssociateListBox;
-	if (PageControl1->ActivePage==CommadSheet)  return StdCmdListBox;
+	if (PageControl1->ActivePage==CommandSheet) return StdCmdListBox;
 	if (PageControl1->ActivePage==StartupSheet) return VirDrvListBox;
 	if (PageControl1->ActivePage==NotifySheet)  return PrtDirListBox;
 												return NULL;

@@ -27,6 +27,7 @@ object GrepExOptDlg: TGrepExOptDlg
     TabWidth = 100
     object OutModeSheet: TTabSheet
       Caption = #20986#21147#26041#27861
+      ImageIndex = -1
       object GrepOpt1Panel: TPanel
         Left = 0
         Top = 0
@@ -168,7 +169,7 @@ object GrepExOptDlg: TGrepExOptDlg
     end
     object ReplaceSheet: TTabSheet
       Caption = #32622#25563
-      ImageIndex = 2
+      ImageIndex = -1
       object GrepOpt2Panel: TPanel
         Left = 0
         Top = 0
@@ -293,7 +294,7 @@ object GrepExOptDlg: TGrepExOptDlg
     end
     object OutFormSheet: TTabSheet
       Caption = #20986#21147#24418#24335
-      ImageIndex = 1
+      ImageIndex = -1
       object GrepOpt3Panel: TPanel
         Left = 0
         Top = 0
