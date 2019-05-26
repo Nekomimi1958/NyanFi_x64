@@ -6,8 +6,9 @@
 #pragma hdrstop
 #include <memory>
 #include <algorithm>
-#include <Vcl.Clipbrd.hpp>
+#include <System.DateUtils.hpp>
 #include <RegularExpressions.hpp>
+#include <Vcl.Clipbrd.hpp>
 #include "usr_id3.h"
 #include "UserFunc.h"
 #include "UserMdl.h"
@@ -40,8 +41,8 @@ void __fastcall TGeneralInfoDlg::FormCreate(TObject *Sender)
 	GenInfoBuff = new TStringList();
 	GenSelList	= new TStringList();
 
-	isVarList	 = isLog = isGit = isDirs = isTree = isFTP = isFileList = isPlayList = false;
-	isTail		 = isReverse = false;
+	isVarList	 = isLog = isGit = isDirs = isTree = isCmdHistory = isFileList = isPlayList = false;
+	isTail		 = isReverse = isFTP = false;
 	fromGitView	 = false;
 	ToFilter	 = ToEnd = false;
 	ErrOnly 	 = false;
@@ -77,7 +78,10 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 		if (!HdrLnStr.IsEmpty()) HdrLnStr = "/" + HdrLnStr + "/";
 	}
 
-	if (isPlayList) GenInfoList->Assign(PlayList);
+	if (isCmdHistory)
+		GenInfoList->Assign(CommandHistory);
+	else if (isPlayList)
+		GenInfoList->Assign(PlayList);
 
 	if (Caption.IsEmpty()) {
 		UnicodeString cap_str = def_if_empty(yen_to_delimiter(FileName), LoadUsrMsg(USTR_List));
@@ -188,7 +192,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	int idx = -1;
 	int top = -1;
 	if (lp->Count>0) {
-		if (isLog || ToEnd) {
+		if (isLog || isCmdHistory || ToEnd) {
 			idx = lp->Count - 1;
 		}
 		else if (isPlayList) {
@@ -254,8 +258,8 @@ void __fastcall TGeneralInfoDlg::FormClose(TObject *Sender, TCloseAction &Action
 	GenInfoList->Clear();
 	GenInfoBuff->Clear();
 
-	isVarList	 = isLog = isGit = isDirs = isTree = isFTP = isFileList = isPlayList = false;
-	isTail		 = isReverse = false;
+	isVarList	 = isLog = isGit = isDirs = isTree = isCmdHistory = isFileList = isPlayList = false;
+	isTail		 = isReverse = isFTP = false;
 	fromGitView	 = false;
 	ToFilter	 = ToEnd = false;
 	ErrOnly 	 = false;
@@ -655,13 +659,11 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	if (HighlightAction->Checked) {
 		if (Found && Index==lp->ItemIndex) {
 			get_MatchWordList(lbuf, RegExPtn,
-				false, true, false,
-				AndOrAction->Checked, wlist.get());
+				false, true, AndOrAction->Checked, false, wlist.get());
 		}
 		else if (!FilterEdit->Text.IsEmpty()) {
 			get_MatchWordList(lbuf, FilterEdit->Text,
-				MigemoAction->Checked, false, false,
-				AndOrAction->Checked, wlist.get());
+				MigemoAction->Checked, false, AndOrAction->Checked, false, wlist.get());
 		}
 	}
 
@@ -706,6 +708,71 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 		}
 		else {
 			RuledLnTextOut(lbuf, cv, rc, use_fgsel? col_fgSelItem : col_Headline, tw, wlist.get());
+		}
+	}
+	//コマンド履歴
+	else if (isCmdHistory) {
+		UnicodeString cmd_inf = split_pre_tab(lbuf);
+		int x0  = rc.Left;
+		int y	= rc.Top + 1;
+		int mgn = cv->TextWidth("W");
+		//Time
+		UnicodeString s = split_tkn(cmd_inf, ' ');
+		bool is_brk = false;
+		if (Index>0) {
+			TDateTime idx_t, lst_t;
+			if (str_to_DateTime(get_tkn(s, '.'), &idx_t)
+				&& str_to_DateTime(get_tkn(lp->Items->Strings[Index - 1], '.'), &lst_t))
+			{
+				is_brk = (MilliSecondsBetween(idx_t, lst_t) > (30*1000));
+			}
+		}
+		TColor fg = use_fgsel? col_fgSelItem : AdjustColor(col_fgList, ADJCOL_FGLIST);
+		out_TextEx(cv, xp, y, s, fg, col_None, mgn, is_irreg);
+		//ID
+		UnicodeString id = split_tkn(cmd_inf, ' ');
+		fg = use_fgsel? col_fgSelItem : col_fgList;
+		out_TextEx(cv, xp, y, ReplaceStr(id, "-", " "), fg, col_None, mgn, is_irreg);
+		//L/R
+		s = split_tkn(cmd_inf, ' ');
+		for (int i=1; i<=s.Length(); i++) {
+			fg = use_fgsel? col_fgSelItem : (s[i]=='_')? AdjustColor(col_fgList, ADJCOL_FGLIST) : col_fgList;
+			out_TextEx(cv, xp, y, s[i], fg, col_None, 0, is_irreg);
+		}
+		xp += (mgn * 2);
+		//ScrMode 変更
+		if ((id=='-')) {
+			fg = use_fgsel? col_fgSelItem : col_Comment;
+			out_TextEx(cv, xp, y, cmd_inf, fg, col_None, mgn, is_irreg);
+			rc.Left = xp;
+			draw_Separator(cv, rc);
+		}
+		//コマンド
+		else {
+			//command
+			UnicodeString cmd = get_CmdStr(cmd_inf);
+			rc.Left = xp;
+			RuledLnTextOut(cmd, cv, rc, use_fgsel? col_fgSelItem : col_Headline, tw, wlist.get());
+			xp = rc.Left;
+			//param
+			UnicodeString prm = get_PrmStr(cmd_inf);
+			if (!prm.IsEmpty()) {
+				fg = use_fgsel? col_fgSelItem : col_Symbol;
+				out_TextEx(cv, xp, y, "_", fg, col_None, 0, is_irreg);
+				rc.Left = xp;
+				RuledLnTextOut(prm, cv, rc, use_fgsel? col_fgSelItem : col_fgList, tw, wlist.get());
+				xp = rc.Left + mgn * 2;
+			}
+			//カレントパス
+			if (!lbuf.IsEmpty()) {
+				int cmd_w = x0 + get_CharWidth(cv, 40);
+				int tab_w = get_CharWidth(cv, 8);
+				if (xp<cmd_w) xp = cmd_w; else xp += (tab_w - xp%tab_w);
+				cv->Font->Color = use_fgsel? col_fgSelItem : col_Folder;
+				PathNameOut(lbuf, wlist.get(), cv, xp, yp);
+			}
+			//30秒以上空いたら分割線
+			if (is_brk) draw_separateLine(cv, Rect);
 		}
 	}
 	//ファイルリスト
@@ -1054,6 +1121,79 @@ void __fastcall TGeneralInfoDlg::CopyValActionUpdate(TObject *Sender)
 	ap->Visible  = isVarList;
 	TListBox *lp = GenListBox;
 	ap->Enabled  = ap->Visible && (lp->ItemIndex!=-1) && lp->Items->Strings[lp->ItemIndex].Pos('=');
+}
+
+//---------------------------------------------------------------------------
+//コマンド履歴で選択行のコマンド内容を取得
+//---------------------------------------------------------------------------
+UnicodeString __fastcall TGeneralInfoDlg::GetSelcetedCmd(TStringList *lst)
+{
+	std::unique_ptr<TStringList> cpy_buf(new TStringList());
+	TListBox *lp = GenListBox;
+	for (int i=0; i<lp->Count; i++) {
+		if (lp->Selected[i]) {
+			UnicodeString lbuf = get_pre_tab(lp->Items->Strings[i]);
+			lbuf = get_tkn_r(lbuf, ' ');
+			UnicodeString id = split_tkn(lbuf, ' ');
+			if (!SameStr(id, "-")) {
+				lbuf = get_tkn_r(lbuf, ' ');
+				if (!lbuf.IsEmpty()) cpy_buf->Add(lbuf);
+			}
+			lp->Selected[i] = false;
+		}
+	}
+	if (lst) lst->Assign(cpy_buf.get());
+	return cpy_buf->Text;
+}
+
+//---------------------------------------------------------------------------
+//コマンドをコピー
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::CopyCmdActionExecute(TObject *Sender)
+{
+	copy_to_Clipboard(GetSelcetedCmd());
+}
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::CopyCmdActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = isCmdHistory;
+	ap->Enabled = ap->Visible && (GenListBox->SelCount>0);
+}
+
+//---------------------------------------------------------------------------
+//選択行をコマンドファイルとして保存
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::SaveAsNbtActionExecute(TObject *Sender)
+{
+	std::unique_ptr<TStringList> cb_buf(new TStringList());
+	if (!GetSelcetedCmd(cb_buf.get()).IsEmpty()) {
+		UserModule->PrepareSaveDlg(_T("コマンドファイルとして保存"), F_FILTER_NBT, NULL, CmdFilePath);
+		if (UserModule->SaveDlg->Execute()) {
+			CmdFilePath = ExtractFilePath(UserModule->SaveDlg->FileName);
+			if (!saveto_TextUTF8(UserModule->SaveDlg->FileName, cb_buf.get()))
+				msgbox_ERR(USTR_FaildSave);
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
+//コマンド履歴をクリア
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::ClrCmdHistoryActionExecute(TObject *Sender)
+{
+	if (msgbox_Sure(LoadUsrMsg(USTR_DelHistoryQ, _T("コマンド")))) {
+		CommandHistory->Clear();
+		GenInfoList->Assign(CommandHistory);
+		UpdateList();
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::ClrCmdHistoryActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = isCmdHistory;
+	ap->Enabled = ap->Visible && (GenListBox->Count>0);
 }
 
 //---------------------------------------------------------------------------

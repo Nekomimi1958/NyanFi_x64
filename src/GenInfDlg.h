@@ -27,7 +27,9 @@ class TGeneralInfoDlg : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
 	TAction *AndOrAction;
+	TAction *ClrCmdHistoryAction;
 	TAction *CopyAction;
+	TAction *CopyCmdAction;
 	TAction *CopyValAction;
 	TAction *DelDuplAction;
 	TAction *EditFileAction;
@@ -53,6 +55,8 @@ __published:	// IDE で管理されるコンポーネント
 	TActionList *ActionList1;
 	TEdit *FilterEdit;
 	TListBox *GenListBox;
+	TMenuItem *ClrCmdHistoryItem;
+	TMenuItem *CopyCmdItem;
 	TMenuItem *DelDuplItem;
 	TMenuItem *EditFileItem;
 	TMenuItem *ErrOnlyItem;
@@ -94,6 +98,9 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *NotifyBtn;
 	TToolButton *ToolButton5;
 	TToolButton *WatchBtn;
+	TMenuItem *Sep_6;
+	TAction *SaveAsNbtAction;
+	TMenuItem *N1;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -149,6 +156,11 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TailActionUpdate(TObject *Sender);
 	void __fastcall CopyValActionExecute(TObject *Sender);
 	void __fastcall CopyValActionUpdate(TObject *Sender);
+	void __fastcall CopyCmdActionExecute(TObject *Sender);
+	void __fastcall CopyCmdActionUpdate(TObject *Sender);
+	void __fastcall ClrCmdHistoryActionUpdate(TObject *Sender);
+	void __fastcall ClrCmdHistoryActionExecute(TObject *Sender);
+	void __fastcall SaveAsNbtActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	int  MaxNameWidth;
@@ -194,6 +206,8 @@ private:	// ユーザー宣言
 
 	void __fastcall SortGenList(int mode);
 
+	UnicodeString __fastcall GetSelcetedCmd(TStringList *lst = NULL);
+
 public:		// ユーザー宣言
 	UsrScrollPanel *ListScrPanel;	//シンプルスクロールバー
 
@@ -204,6 +218,7 @@ public:		// ユーザー宣言
 	bool isPlayList;	//プレイリスト
 	bool isDirs;		//ディレクトリ一覧
 	bool isTree;		//ディレクトリツリー表示
+	bool isCmdHistory;	//コマンド履歴
 	bool isFTP;			//FTP
 	bool isTail;		//末尾表示
 	bool isReverse;		//逆順表示

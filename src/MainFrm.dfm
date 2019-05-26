@@ -935,7 +935,7 @@ object NyanFiForm: TNyanFiForm
               Height = 22
               Anchors = [akLeft, akTop, akRight]
               AutoSize = False
-              EditLabel.Width = 71
+              EditLabel.Width = 73
               EditLabel.Height = 13
               EditLabel.Caption = #38500#22806#12487#12451#12524#12463#12488#12522
               LabelPosition = lpLeft
@@ -1036,8 +1036,6 @@ object NyanFiForm: TNyanFiForm
                 Align = alRight
                 BevelOuter = bvNone
                 TabOrder = 1
-                ExplicitLeft = 148
-                ExplicitTop = -3
                 DesignSize = (
                   552
                   36)
@@ -3378,6 +3376,11 @@ object NyanFiForm: TNyanFiForm
       Caption = #12467#12510#12531#12489#12501#12449#12452#12523#19968#35239
       HelpContext = 67
       OnExecute = CmdFileListActionExecute
+      OnUpdate = MenuFVIActionUpdate
+    end
+    object CmdHistoryAction: TAction
+      Category = 'Command'
+      OnExecute = CmdHistoryActionExecute
       OnUpdate = MenuFVIActionUpdate
     end
     object CommandPromptAction: TAction

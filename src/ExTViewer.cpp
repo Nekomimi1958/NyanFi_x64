@@ -470,10 +470,10 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 		prm = exclude_quot(get_PrmStr(cmd));
 		cmd = get_CmdStr(cmd);
 	}
+	AddCmdHistory(cmd, ActionParam, "V");
 
 	ActionParam = extract_ExeParam(prm, &ActionDesc);
 	ActionOk	= true;
-
 	Application->ProcessMessages();
 
 	try {

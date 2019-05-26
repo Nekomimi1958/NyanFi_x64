@@ -7,6 +7,7 @@
 <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
 	<param name="Keyword" value="2ストロークキー操作">
 	<param name="Keyword" value="CalcDirSize">
+	<param name="Keyword" value="CmdHistory">
 	<param name="Keyword" value="ExeCommandLine">
 	<param name="Keyword" value="FileEdit">
 	<param name="Keyword" value="ListArchive">
@@ -31,9 +32,15 @@
 <body>
 
 <h1>一覧ダイアログ</h1>
-<p>
-ファイラーで <a href="hid00005.htm#CalcDirSize">CalcDirSize</a>_LS、<a href="hid00005.htm#ListArchive">ListArchive</a>_LS、<a href="hid00005.htm#ListClipboard">ListClipboard</a>、<a href="hid00005.htm#ListDuration">ListDuration</a>_LS、<a href="hid00005.htm#ListExpFunc">ListExpFunc</a>_LS、<a href="hid00005.htm#ListFileName">ListFileName</a>、<a href="hid00005.htm#ListLog">ListLog</a>、<a href="hid00005.htm#ListTail">ListTail</a>、<a href="hid00005.htm#ListText">ListText</a>、<a href="hid00005.htm#PlayList">PlayList</a>_LS コマンドを実行した場合、「<a href="hid00062.htm">コマンドラインの実行</a>」ダイアログ(<a href="hid00005.htm#ExeCommandLine">ExeCommandLine</a>) でコンソールアプリの出力を「<b>一覧で表示</b>」にした場合、<a href="hid00005.htm#ExeCommands">ExeCommands</a> の補助コマンド <a href="hid00063.htm#ListBuffer">ListBuffer</a>、<a href="hid00063.htm#ListVar">ListVar</a> を実行した場合に用いられる、汎用の一覧ダイアログです。<br>
-</p>
+<div class="spc_box_p">
+一覧ダイアログは、以下の場合に用いられる汎用のダイアログです。<br>
+<ul>
+<li>ファイラーで <a href="hid00005.htm#CalcDirSize">CalcDirSize</a>_LS、<a href="hid00005.htm#ListArchive">ListArchive</a>_LS、<a href="hid00005.htm#ListClipboard">ListClipboard</a>、<a href="hid00005.htm#ListDuration">ListDuration</a>_LS、<a href="hid00005.htm#ListExpFunc">ListExpFunc</a>_LS、<a href="hid00005.htm#ListFileName">ListFileName</a>、<a href="hid00005.htm#ListLog">ListLog</a>、<a href="hid00005.htm#ListTail">ListTail</a>、<a href="hid00005.htm#ListText">ListText</a>、<a href="hid00005.htm#PlayList">PlayList</a>_LS コマンドを実行。<br>
+<li>ファイラー、テキストビュアー、イメージビュアーで <a href="hid00005.htm#CmdHistory">CmdHistory</a> コマンドを実行。<br>
+<li>「<a href="hid00062.htm">コマンドラインの実行</a>」ダイアログ(<a href="hid00005.htm#ExeCommandLine">ExeCommandLine</a>) でコンソールアプリの出力を「<b>一覧で表示</b>」にした場合。<br>
+<li><a href="hid00005.htm#ExeCommands">ExeCommands</a> の補助コマンド <a href="hid00063.htm#ListBuffer">ListBuffer</a>、<a href="hid00063.htm#ListVar">ListVar</a> を実行。<br>
+</ul>
+</div>
 
 <dl>
 <dt class="no_bg">一覧でのキー操作
@@ -88,14 +95,27 @@
 <dd>
 「<b>コピー</b>」、「<b>すべて選択</b>」、「<b>一覧をファイルに保存</b>」および「<b>一覧をテキストビュアーで開く</b>」が可能です。<br>
 また「<b>行番号を表示</b>」させることもできます。その場合、行番号の配色はテキストビュアーと同じになります。<br>
+
+<div class="spc_box">
 <a href="hid00005.htm#PlayList">PlayList</a>_LS コマンドでプレイリストを表示している場合、「<b>ファイル名を先に表示</b>」を選ぶと、パス名はファイル名の最大幅に合わせて整形表示されます。また「<b>パスの共通部分を省略</b>」も可能です。<br>
+</div>
+<div class="spc_box">
 一覧に何らかの内容が表示されている場合、「<b>一覧をソート</b>」(昇順/降順/解除: Sort(TV)コマンドでも可能)で、「<b>一覧の重複行を除外</b>」、「<b>一覧の内容を元に戻す</b>」(フィルタはそのまま)が可能です。なお、フィルタの内容を変更すると、ソートなどは解除され、元の内容から絞り込み直します。<br>
 テキストファイルを表示している場合は、「<b>一覧をテキストビュアーで開く</b>」の代わりに「<b>ファイルをテキストビュアーで開く</b>」と「<b>ファイルをテキストエディタで開く</b>」が可能です。<br>
+</div>
+<div class="spc_box">
 <a href="hid00005.htm#ListFileName">ListFileName</a>、<a href="hid00005.htm#PlayList">PlayList</a>_LS コマンドで一覧を表示している場合、「<b>ファイル情報</b>」や「<b>プロパティ</b>」を表示できます。<br>
+</div>
+<div class="spc_box">
 <a href="hid00005.htm#ListLog">ListLog</a>、<a href="hid00005.htm#ListText">ListText</a> コマンドでログを開いている場合、「<b>エラー箇所の絞り込み</b>」の切り替えが可能です。<br>
+</div>
+<div class="spc_box">
 <a href="hid00005.htm#ListText">ListText</a>、<a href="hid00005.htm#ListTail">ListTail</a> コマンドでテキストファイルを表示している場合、「<b>カーソル位置を維持</b>」をチェックしていると、<a href="hid00006.htm#NextFile">NextFile</a>、<a href="hid00006.htm#PrevFile">PrevFile</a> コマンドで前後のファイルに移ったときに、カーソル位置が可能な限り維持されます(ダイアログを閉じるとリセット)。<br>
+</div>
+<div class="spc_box">
 「<b>サイズと位置をファイルリストに合わせる</b>」では、メイン画面のファイルリスト全体を覆うように、ダイアログの位置とサイズを調整します。<br>
 なお右クリックメニューは、アプリケーションキーや<span class="btn_frame">Shift</span>+<span class="btn_frame">F10</span>キーの他に、ファイラーで <a href="hid00005.htm#ContextMenu">ContextMenu</a> コマンドが割り当てられているキーでも表示できます。<br>
+</div>
 
 <dt class="no_bg">表示
 <dd>

@@ -210,6 +210,18 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object Sep_1: TMenuItem
       Caption = '-'
     end
+    object ClrCmdHistoryItem: TMenuItem
+      Action = ClrCmdHistoryAction
+    end
+    object CopyCmdItem: TMenuItem
+      Action = CopyCmdAction
+    end
+    object N1: TMenuItem
+      Action = SaveAsNbtAction
+    end
+    object Sep_2: TMenuItem
+      Caption = '-'
+    end
     object SortItem: TMenuItem
       Caption = #19968#35239#12434#12477#12540#12488'(&O)'
       object SortAscItem: TMenuItem
@@ -228,7 +240,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object RestoreListItem: TMenuItem
       Action = RestoreListAction
     end
-    object Sep_2: TMenuItem
+    object Sep_3: TMenuItem
       Caption = '-'
     end
     object SaveAsItem: TMenuItem
@@ -237,7 +249,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object ViewListItem: TMenuItem
       Action = ViewListAction
     end
-    object Sep_3: TMenuItem
+    object Sep_4: TMenuItem
       Caption = '-'
     end
     object ViewFileItem: TMenuItem
@@ -246,7 +258,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object EditFileItem: TMenuItem
       Action = EditFileAction
     end
-    object Sep_4: TMenuItem
+    object Sep_5: TMenuItem
       Caption = '-'
     end
     object ShowFileInfoItem: TMenuItem
@@ -255,7 +267,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object R2: TMenuItem
       Action = PropertyAction
     end
-    object Sep_5: TMenuItem
+    object Sep_6: TMenuItem
       Caption = '-'
     end
     object ShowLineNoItem: TMenuItem
@@ -297,6 +309,21 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object SaveAsAction: TAction
       Caption = #19968#35239#12434#12501#12449#12452#12523#12395#20445#23384'(&S)...'
       OnExecute = SaveAsActionExecute
+    end
+    object ClrCmdHistoryAction: TAction
+      Caption = #12467#12510#12531#12489#23653#27508#12434#12463#12522#12450
+      OnExecute = ClrCmdHistoryActionExecute
+      OnUpdate = ClrCmdHistoryActionUpdate
+    end
+    object CopyCmdAction: TAction
+      Caption = #12467#12510#12531#12489#12434#12467#12500#12540'(&B)'
+      OnExecute = CopyCmdActionExecute
+      OnUpdate = CopyCmdActionUpdate
+    end
+    object SaveAsNbtAction: TAction
+      Caption = #36984#25246#34892#12434#12467#12510#12531#12489#12501#12449#12452#12523#12392#12375#12390#20445#23384'...'
+      OnExecute = SaveAsNbtActionExecute
+      OnUpdate = CopyCmdActionUpdate
     end
     object ViewListAction: TAction
       Caption = #19968#35239#12434#12486#12461#12473#12488#12499#12517#12450#12540#12391#38283#12367'(&V)'

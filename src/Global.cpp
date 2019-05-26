@@ -147,6 +147,8 @@ bool DisReload = false;			//Reload の無効化
 
 bool InhUpdate = false;			//UpdateList 抑止
 
+bool InhCmdHistory = false;		//コマンド履歴の抑止
+
 UnicodeString FindPath;
 bool FindAborted;				//検索中断要求
 bool FindDiff;					//DiffDir 実行中
@@ -692,6 +694,7 @@ TStringList *RenCmdFileList;	//改名したコマンドファイルのリスト
 TStringList *RenArcFileList;	//改名したアーカイブファイルのリスト
 TStringList *RedrawList;		//描画抑止用リスト
 TStringList *CmdRequestList;	//コマンド要求リスト
+TStringList *CommandHistory;	//コマンド履歴
 
 //タスクからのログ書込バッファ (必ず LogRWLock で保護すること)
 UnicodeString LogBufStr;
@@ -1356,6 +1359,7 @@ void InitializeGlobal()
 	RenArcFileList	  = CreStringList();
 	RedrawList		  = CreStringList();
 	CmdRequestList	  = CreStringList();
+	CommandHistory	  = CreStringList();
 	PopMenuList 	  = CreStringList();
 	ToolBtnList 	  = CreStringList();
 	ToolBtnListV	  = CreStringList();
@@ -13815,6 +13819,26 @@ bool AddPathToTreeList(TStringList *lst)
 	catch (...) {
 		return false;
 	}
+}
+
+//---------------------------------------------------------------------------
+//コマンド履歴の追加
+//---------------------------------------------------------------------------
+void AddCmdHistory(UnicodeString cmd, UnicodeString prm, UnicodeString id)
+{
+	if (SameText(cmd, "CmdHistory") || InhCmdHistory) return;
+
+	UnicodeString lbuf = FormatDateTime("hh:nn:ss.zzz", Now());
+	lbuf.cat_sprintf(_T(" %s %s %s"), id.c_str(), (CurListTag==1)? _T("_R") : _T("L_"), cmd.c_str());
+	if (!prm.IsEmpty()) lbuf.cat_sprintf(_T("_%s"), prm.c_str());
+
+	if (!SameStr(id, "-")) {
+		lbuf.cat_sprintf(_T("\t%s"), CurPathName.c_str());
+		if (CurStt->is_Arc) lbuf += CurStt->arc_DspPath;
+	}
+
+	CommandHistory->Add(lbuf);
+	while (CommandHistory->Count>MAX_CMD_HISTORY) CommandHistory->Delete(0);
 }
 
 //---------------------------------------------------------------------------

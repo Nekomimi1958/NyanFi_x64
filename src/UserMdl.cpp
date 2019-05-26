@@ -894,7 +894,7 @@ UnicodeString __fastcall TUserModule::get_DlgDefExt(UnicodeString filter)
 	TStringDynArray f_buf = SplitString(filter, "|");
 	if (f_buf.Length>=2) {
 		fext = ExtractFileExt(get_tkn(f_buf[1], ';')).LowerCase();
-		fext = test_FileExt(fext, _T(".txt.ini.csv.nwl.wav.zip"))? get_tkn_r(fext, '.') : EmptyStr;
+		fext = test_FileExt(fext, _T(".txt.ini.csv.nbt.nwl.wav.zip"))? get_tkn_r(fext, '.') : EmptyStr;
 	}
 
 	return fext;

@@ -300,6 +300,21 @@ NyanFi.exe -XCalculator_CB
 パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
 <a href="#ExeCommands">→ ExeCommands</a>　<a href="#FileEdit">→ FileEdit</a>　<a href="#TextViewer">→ TextViewer</a>
 
+<dt id="CmdHistory">CmdHistory<span class="pram_text">[_FF]</span>
+<dd><b>NyanFi</b> 起動後に実行されたコマンドの履歴を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+<div class="spc_box">
+最大表示項目数は1000で、超えた場合には古いものから順に削除されます。右クリックメニューで「<b>コマンド履歴をクリア</b>」も可能。<br>
+一覧には、実行時刻、種別(F:ファイラー、V:テキストビュアー、I:イメージビュアー、L:ログ)、カレント(L:左、R:右)、コマンド内容、カレントディレクトリが表示されます。<br>
+また画面モードが変化したらセパレータが、前回の実行から30秒以上経過していたら分割線が表示されます。<br>
+なお、<a href="#ExeCommands">ExeCommands</a> コマンド内で実行される個々のコマンドについては履歴に入りません。<br>
+</div>
+<div class="spc_box">
+右クリックメニューの「<b>コマンドをコピー</b>」を選ぶと、これらのうち選択行のコマンド部分だけがコピーされます。また「<b>選択行をコマンドファイルとして保存</b>」も可能です。<br>
+コマンドファイルを作成する場合などに役立つかもしれません。<br>
+</div>
+<a href="hid00063.htm">→ ExeCommands コマンド</a>
+
 <dt id="CommandPrompt">CommandPrompt
 <dd>コマンドプロンプトを起動します。作業ディレクトリはカレントパスになります。<br>
 <a href="#PowerShell">→ PowerShell</a>　<a href="#FileRun">→ FileRun</a>

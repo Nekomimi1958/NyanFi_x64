@@ -105,6 +105,7 @@ extern FUNC_GetFontResourceInfo lpGetFontResourceInfo;
 #define MIN_FNTZOOM_SZ	2				//最小フォントサイズ
 
 #define MAX_WORKHISTORY 50				//最大ワークリスト履歴数
+#define MAX_CMD_HISTORY 1000			//最大コマンド履歴数
 
 #define CMPDEL_BUFF_SIZE 2048			//完全削除のバッファサイズ
 #define CRLF_DETECT_LINE 1000			//改行コード判定の行数
@@ -300,6 +301,7 @@ extern int  InhReload;
 extern bool DisReload;
 
 extern bool InhUpdate;
+extern bool InhCmdHistory;
 
 extern UnicodeString FindPath;
 extern bool FindAborted;
@@ -919,6 +921,7 @@ extern TStringList *RenCmdFileList;
 extern TStringList *RenArcFileList;
 extern TStringList *RedrawList;
 extern TStringList *CmdRequestList;
+extern TStringList *CommandHistory;
 
 extern UnicodeString LogBufStr;
 extern TMultiReadExclusiveWriteSynchronizer *LogRWLock;
@@ -2105,6 +2108,8 @@ int get_ViewTabWidth(UnicodeString fext);
 
 void MakeTreeList(TStringList *lst, UnicodeString pnam, bool chk_sw = false);
 bool AddPathToTreeList(TStringList *lst);
+
+void AddCmdHistory(UnicodeString cmd, UnicodeString prm = EmptyStr, UnicodeString id = EmptyStr);
 
 //Git 関連の関数
 UnicodeString get_GitTopPath(UnicodeString dnam);

@@ -100,6 +100,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *CloneToCurrAction;
 	TAction *CloseIAction;
 	TAction *CmdFileListAction;
+	TAction *CmdHistoryAction;
 	TAction *ColorPickerAction;
 	TAction *CommandPromptAction;
 	TAction *CompareDlgAction;
@@ -1839,6 +1840,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall NextLineCheckBoxClick(TObject *Sender);
 	void __fastcall GrepAdjNextLnActionExecute(TObject *Sender);
 	void __fastcall GrepAdjNextLnActionUpdate(TObject *Sender);
+	void __fastcall CmdHistoryActionExecute(TObject *Sender);
+
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -2448,6 +2451,18 @@ private:	// ユーザー宣言
 	void __fastcall AddInitialLog(UnicodeString msg)
 	{
 		InitialLog.cat_sprintf(_T("%s\r\n"), msg.c_str());
+	}
+
+	UnicodeString  __fastcall get_ScrModeStr(UnicodeString sm)
+	{
+		if (sm==SCMD_GREP)  return "GR";
+		if (sm==SCMD_TVIEW) return "TV";
+		if (sm==SCMD_IVIEW) return "IV";
+		return "FL";
+/*
+		※F1001 コード ジェネレータの内部エラーになる
+		return ((sm==SCMD_GREP)? "GR" : (sm==SCMD_TVIEW)? "TV" : (sm==SCMD_IVIEW)? "IV" : "FL");
+*/
 	}
 
 	void __fastcall RecycleFTP();

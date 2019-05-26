@@ -338,6 +338,7 @@ void set_CmdList(
 		"FVI:Close=閉じる\n"
 		"FVI:CopyFileInfo=ファイル情報をクリップボードにコピー\n"
 		"FVI:CmdFileList=コマンドファイル一覧\n"
+		"FVI:CmdHistory=コマンド履歴\n"
 		"FVI:DebugCmdFile=コマンドファイルのデバッグ実行\n"
 		"FVI:Delete=削除\n"
 		"FVI:Duplicate=NyanFiの二重起動\n"
@@ -796,7 +797,8 @@ void get_PrmList(
 		params = "\nEL : エコー、コマンドファイルの行番号表示\n";
 	}
 	else if (contained_wd_i(
-		_T("CmdFileList|ListClipboard|MarkList|KeyList|FunctionList|RepositoryList|SpecialDirList|UserDefList"), cmd))
+		_T("CmdFileList|CmdHistory|ListClipboard|MarkList|KeyList|FunctionList|RepositoryList|SpecialDirList|UserDefList"),
+		cmd))
 	{
 		params = "\nFF : フィルタ欄にフォーカス\n";
 	}

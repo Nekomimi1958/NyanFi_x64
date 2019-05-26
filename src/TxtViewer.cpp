@@ -4400,10 +4400,9 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		cmd = get_CmdStr(cmd);
 	}
 	prm = extract_ExeParam(prm);
+	if (!IsCmdAvailable(cmd)) return false;
 
-	if (isExtWnd) {
-		if (contained_wd_i(_T("BitmapView|CharInfo|CsvCalc|CsvGraph|CsvRecord|Inspector|ImgPreview"), cmd)) return false;
-	}
+	AddCmdHistory(cmd, prm, "V");
 
 	int cur_lno = get_CurLineNo();
 
