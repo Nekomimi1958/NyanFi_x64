@@ -167,14 +167,8 @@ object CvImageDlg: TCvImageDlg
         EditLabel.Width = 50
         EditLabel.Height = 13
         EditLabel.Caption = #12497#12521#12513#12540#12479'1'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = #65325#65331' '#12468#12471#12483#12463
-        Font.Style = []
         LabelPosition = lpLeft
         NumbersOnly = True
-        ParentFont = False
         TabOrder = 1
       end
       object ScalePrm2Edit: TLabeledEdit
@@ -186,14 +180,8 @@ object CvImageDlg: TCvImageDlg
         EditLabel.Width = 50
         EditLabel.Height = 13
         EditLabel.Caption = #12497#12521#12513#12540#12479'2'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = #65325#65331' '#12468#12471#12483#12463
-        Font.Style = []
         LabelPosition = lpLeft
         NumbersOnly = True
-        ParentFont = False
         TabOrder = 2
       end
       object ScaleOptComboBox: TComboBox
@@ -272,12 +260,6 @@ object CvImageDlg: TCvImageDlg
         Top = 20
         Width = 89
         Height = 21
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = #65325#65331' '#12468#12471#12483#12463
-        Font.Style = []
-        ParentFont = False
         PopupMenu = UserModule.EditPopupMenuE
         TabOrder = 1
       end
@@ -291,7 +273,6 @@ object CvImageDlg: TCvImageDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 507
     object CanButton: TButton
       Left = 210
       Top = 8

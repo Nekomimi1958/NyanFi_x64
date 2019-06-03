@@ -13826,7 +13826,7 @@ bool AddPathToTreeList(TStringList *lst)
 //---------------------------------------------------------------------------
 void AddCmdHistory(UnicodeString cmd, UnicodeString prm, UnicodeString id)
 {
-	if (SameText(cmd, "CmdHistory") || InhCmdHistory) return;
+	if (SameText(cmd, "CmdHistory") || (InhCmdHistory && !SameStr(id, "-"))) return;
 
 	UnicodeString lbuf = FormatDateTime("hh:nn:ss.zzz", Now());
 	lbuf.cat_sprintf(_T(" %s %s %s"), id.c_str(), (CurListTag==1)? _T("_R") : _T("L_"), cmd.c_str());

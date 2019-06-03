@@ -426,10 +426,6 @@ void __fastcall TRegExChecker::ResListBoxDrawItem(TWinControl *Control, int Inde
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TRegExChecker::PtnComboBoxEnter(TObject *Sender)
-{
-}
-//---------------------------------------------------------------------------
 void __fastcall TRegExChecker::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	SpecialKeyProc(this, Key, Shift);

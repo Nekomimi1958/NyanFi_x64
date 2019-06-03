@@ -231,7 +231,7 @@ object XmlViewer: TXmlViewer
         OnClick = ViewModeItemClick
       end
     end
-    object N1: TMenuItem
+    object FitSizePosItem: TMenuItem
       Action = UserModule.SizePosToFlieListAction
     end
   end

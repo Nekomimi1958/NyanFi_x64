@@ -64,7 +64,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *mFitSizePosItem;
 	TMenuItem *mPropertyItem;
 	TMenuItem *mStatusBarItem;
-	TMenuItem *N1;
+	TMenuItem *UpdGitInfItem;
 	TMenuItem *NoHistItem;
 	TMenuItem *rFileInfoItem;
 	TMenuItem *rFitSizePosItem;

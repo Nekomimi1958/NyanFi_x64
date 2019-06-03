@@ -3379,13 +3379,7 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 18
           Width = 379
-          Height = 20
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -12
-          Font.Name = #65325#65331' '#12468#12471#12483#12463
-          Font.Style = []
-          ParentFont = False
+          Height = 21
           TabOrder = 0
         end
         object RefExtTxViewerBtn: TButton
@@ -3402,18 +3396,12 @@ object OptionDlg: TOptionDlg
           Left = 189
           Top = 44
           Width = 200
-          Height = 20
+          Height = 21
           Hint = '$F '#12501#12449#12452#12523#21517'/  $L '#34892#30058#21495
           EditLabel.Width = 44
           EditLabel.Height = 13
           EditLabel.Caption = #12497#12521#12513#12540#12479
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -12
-          Font.Name = #65325#65331' '#12468#12471#12483#12463
-          Font.Style = []
           LabelPosition = lpLeft
-          ParentFont = False
           TabOrder = 2
         end
       end

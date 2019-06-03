@@ -258,12 +258,6 @@ object CmdFileListDlg: TCmdFileListDlg
         Height = 19
         Align = alLeft
         Constraints.MinWidth = 60
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
         PopupMenu = UserModule.EditPopupMenuE
         TabOrder = 0
         OnChange = FilterEditChange

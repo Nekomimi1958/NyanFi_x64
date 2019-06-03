@@ -36,7 +36,6 @@ object FileCompDlg: TFileCompDlg
     ModalResult = 2
     ParentFont = False
     TabOrder = 10
-    ExplicitTop = 297
   end
   object OkButton: TButton
     Left = 114
@@ -54,7 +53,6 @@ object FileCompDlg: TFileCompDlg
     ModalResult = 1
     ParentFont = False
     TabOrder = 9
-    ExplicitTop = 297
   end
   object CmpDirCheckBox: TCheckBox
     Left = 12
@@ -64,7 +62,6 @@ object FileCompDlg: TFileCompDlg
     Anchors = [akLeft, akBottom]
     Caption = #12487#12451#12524#12463#12488#12522#12418#27604#36611'(&D)'
     TabOrder = 4
-    ExplicitTop = 233
   end
   object TimePanel: TPanel
     Left = 0
@@ -181,7 +178,6 @@ object FileCompDlg: TFileCompDlg
     Anchors = [akLeft, akBottom]
     Caption = #21453#23550#20596#12418#36984#25246'(&O)'
     TabOrder = 6
-    ExplicitTop = 258
   end
   object ReverseCheckBox: TCheckBox
     Left = 144
@@ -191,7 +187,6 @@ object FileCompDlg: TFileCompDlg
     Anchors = [akLeft, akBottom]
     Caption = #32080#26524#12434#21453#36578'(&R)'
     TabOrder = 7
-    ExplicitTop = 258
   end
   object SelMaskCheckBox: TCheckBox
     Left = 263
@@ -201,7 +196,6 @@ object FileCompDlg: TFileCompDlg
     Anchors = [akLeft, akBottom]
     Caption = #36984#25246#38917#30446#12384#12369#12434#27531#12377'(&M)'
     TabOrder = 8
-    ExplicitTop = 258
   end
   object CmpArcCheckBox: TCheckBox
     Left = 170
@@ -211,7 +205,6 @@ object FileCompDlg: TFileCompDlg
     Anchors = [akLeft, akBottom]
     Caption = #12487#12451#12524#12463#12488#12522#12392#12450#12540#12459#12452#12502#12434#27604#36611'(&P)'
     TabOrder = 5
-    ExplicitTop = 233
   end
   object IdPanel: TPanel
     Left = 0
@@ -222,8 +215,6 @@ object FileCompDlg: TFileCompDlg
     BevelOuter = bvNone
     TabOrder = 3
     StyleElements = []
-    ExplicitLeft = 8
-    ExplicitTop = 283
     DesignSize = (
       434
       55)

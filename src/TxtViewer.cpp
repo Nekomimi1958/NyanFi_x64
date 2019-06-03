@@ -675,54 +675,47 @@ void __fastcall TTxtViewer::UpdateScr(
 	//見出しパターンを設定
 	HeadlinePtn = EmptyStr;
 	if (EmpHeadline && !isBinary) {
-		if (test_FileExt(fext, _T(".bat.cmd.qbt"))) {
-			HeadlinePtn = "^:[^:]+";
-		}
-		else if (test_FileExt(fext, _T(".eml"))) {
-			HeadlinePtn = "^Subject:";
-		}
-		else if (test_FileExt(fext, _T(".hsp"))) {
-			HeadlinePtn = "^\\*\\w+";
-		}
-		else if (test_FileExt(fext, _T(".md"))) {
-			HeadlinePtn = "^#+";
-		}
-		else if (isAozora) {
-			HeadlinePtn = "［＃.*?(大|中)見出し］|^　*?([０-９]+|[一二三四五六七八九十壱弐参拾百〇]+)$";
-		}
-		else if (isAwstats) {
-			HeadlinePtn = "^BEGIN_.+?";
-		}
-		else if (isLog) {
-			HeadlinePtn = "^.>\\d{2}:\\d{2}:\\d{2}\\s(NyanFi|.+(開始|接続))";
-		}
-		else if (test_HtmlExt(fext)) {
-			if (isHtm2Txt) {
-				if (ToMarkdown) {
-					HeadlinePtn = "^#+\\s";
-				}
-				else if (!HtmHdrStr.IsEmpty()) {
-					HeadlinePtn = "^(";
-					UnicodeString hbuf = HtmHdrStr;
-					for (int i=0; i<6; i++) {
-						UnicodeString hc = split_tkn(hbuf, ';');
-						if (!hc.IsEmpty()) {
-							if (i>0) HeadlinePtn += "|";
-							HeadlinePtn += hc;
-						}
+		//拡張子依存
+		HeadlinePtn = UserHighlight->GetDefHeadlnPtn(fext);
+		//内容/モード依存
+		if (HeadlinePtn.IsEmpty()) {
+			if (isAozora) {
+				HeadlinePtn = "［＃.*?(大|中)見出し］|^　*?([０-９]+|[一二三四五六七八九十壱弐参拾百〇]+)$";
+			}
+			else if (isAwstats) {
+				HeadlinePtn = "^BEGIN_.+?";
+			}
+			else if (isLog) {
+				HeadlinePtn = "^.>\\d{2}:\\d{2}:\\d{2}\\s(NyanFi|.+(開始|接続))";
+			}
+			else if (test_HtmlExt(fext)) {
+				if (isHtm2Txt) {
+					if (ToMarkdown) {
+						HeadlinePtn = "^#+\\s";
 					}
-					HeadlinePtn += ").+";
+					else if (!HtmHdrStr.IsEmpty()) {
+						HeadlinePtn = "^(";
+						UnicodeString hbuf = HtmHdrStr;
+						for (int i=0; i<6; i++) {
+							UnicodeString hc = split_tkn(hbuf, ';');
+							if (!hc.IsEmpty()) {
+								if (i>0) HeadlinePtn += "|";
+								HeadlinePtn += hc;
+							}
+						}
+						HeadlinePtn += ").+";
+					}
 				}
+				else {
+					HeadlinePtn = "<[hH][1-6]";
+				}
+			}
+			else if (isIniFmt) {
+				HeadlinePtn = "^\\[.+?\\]";
 			}
 			else {
-				HeadlinePtn = "<[hH][1-6]";
+				HeadlinePtn = HeadlineList->Values[get_tkn_r(fext, '.').LowerCase()];
 			}
-		}
-		else if (isIniFmt) {
-			HeadlinePtn = "^\\[.+?\\]";
-		}
-		else {
-			HeadlinePtn = HeadlineList->Values[get_tkn_r(fext, '.').LowerCase()];
 		}
 
 		if (!chk_RegExPtn(HeadlinePtn)) HeadlinePtn = EmptyStr;
@@ -2398,7 +2391,7 @@ void __fastcall TTxtViewer::UpdatePos(
 	if (up_pos) {
 		CurTop = CurPos.y - 5;
 		if (CurTop<1) CurTop = 1;
-		CurTop = std::min(CurTop, ScrBar->Max - ScrBar->LargeChange - 1);
+		CurTop = std::min(CurTop, ScrBar->Max - ScrBar->LargeChange + 1);
 		ScrBar->Position = CurTop;
 	}
 	else {
@@ -4341,36 +4334,23 @@ void __fastcall TTxtViewer::IncSearch(UnicodeString keystr)
 }
 
 //---------------------------------------------------------------------------
-//標準のキー操作
+//標準キー操作に対応するコマンドを取得
 //---------------------------------------------------------------------------
-bool __fastcall TTxtViewer::StdKeyOperation(UnicodeString keystr)
+UnicodeString __fastcall TTxtViewer::GetStdKeyCommand(UnicodeString keystr)
 {
-	switch (idx_of_word_i(
-		_T("DOWN|UP|LEFT|RIGHT|PGDN|PGUP|HOME|END|")													//0～7
-		_T("Shift+DOWN|Shift+UP|Shift+LEFT|Shift+RIGHT|Shift+PGDN|Shift+PGUP|Shift+HOME|Shift+END"),	//0～15
-		keystr))
-	{
-	case  0: CursorDown();			break;
-	case  1: CursorUp();			break;
-	case  2: CursorLeft();			break;
-	case  3: CursorRight();			break;
-	case  4: MovePage(true);		break;
-	case  5: MovePage(false);		break;
-	case  6: TextTop();				break;
-	case  7: TextEnd();				break;
-	case  8: CursorDown(true);		break;
-	case  9: CursorUp(true);		break;
-	case 10: CursorLeft(true);		break;
-	case 11: CursorRight(true);		break;
-	case 12: MovePage(true,  true);	break;
-	case 13: MovePage(false, true);	break;
-	case 14: TextTop();				break;
-	case 15: TextEnd(true);			break;
-	default:						return false;
-	}
+	bool is_sel = remove_top_text(keystr, "Shift+");
+	UnicodeString ret_str =
+		SameText(keystr, "DOWN") ? "CursorDown" :
+		SameText(keystr, "UP")	 ? "CursorUp" :
+		SameText(keystr, "LEFT") ? "CursorLeft" :
+		SameText(keystr, "RIGHT")? "CursorRight" :
+		SameText(keystr, "PGDN") ? "PageDown" :
+		SameText(keystr, "PGUP") ? "PageUp" :
+		SameText(keystr, "HOME") ? "TextTop" :
+		SameText(keystr, "END")  ? "TextEnd" : "";
 
-	SetSttInf();
-	return true;
+	if (!ret_str.IsEmpty() && is_sel) ret_str += "Sel";
+	return ret_str;
 }
 
 //---------------------------------------------------------------------------

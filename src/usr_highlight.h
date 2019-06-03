@@ -44,6 +44,7 @@ public:
 
 	int  GetCommentPos(UnicodeString fnam, TListBox *lp, int idx, bool en_mlt = true);
 
+	UnicodeString GetDefHeadlnPtn(UnicodeString fext);
 	UnicodeString GetHeadlinePtn(UnicodeString fnam, TStringList *hl_lst = NULL, bool only_def = false);
 };
 //---------------------------------------------------------------------------

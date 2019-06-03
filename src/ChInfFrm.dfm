@@ -90,7 +90,6 @@ object CharInfoForm: TCharInfoForm
         TabOrder = 0
         StyleElements = [seBorder]
         OnDrawItem = InfoListBoxDrawItem
-        ExplicitHeight = 170
       end
     end
     object SamplePanel: TPanel

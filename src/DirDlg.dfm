@@ -272,12 +272,6 @@ object RegDirDlg: TRegDirDlg
       Height = 19
       Align = alLeft
       Constraints.MinWidth = 60
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 0
       OnChange = FilterEditChange
@@ -375,10 +369,10 @@ object RegDirDlg: TRegDirDlg
     object OpenByExpItem: TMenuItem
       Action = OpenByExpAction
     end
-    object C1: TMenuItem
+    object CopyPathItem: TMenuItem
       Action = CopyPathAction
     end
-    object S1: TMenuItem
+    object SaveAsWorkItem: TMenuItem
       Action = SaveAsWorkAction
     end
     object Sep_1: TMenuItem

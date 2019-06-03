@@ -356,7 +356,7 @@ public:
 
 	void __fastcall IncSearch(UnicodeString keystr);
 
-	bool __fastcall StdKeyOperation(UnicodeString keystr);
+	UnicodeString __fastcall GetStdKeyCommand(UnicodeString keystr);
 	bool __fastcall ExeCommand(const _TCHAR *cmd, UnicodeString prm = EmptyStr);
 	bool __fastcall IsCmdAvailable(UnicodeString cmd);
 	bool __fastcall IsCmdInhibited(UnicodeString cmd);

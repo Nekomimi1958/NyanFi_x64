@@ -54,11 +54,11 @@ __published:	// IDE で管理されるコンポーネント
 	TListBox *RegDirListBox;
 	TMenuItem *AddNyanFiItem;
 	TMenuItem *AppInfoItem;
-	TMenuItem *C1;
+	TMenuItem *CopyPathItem;
 	TMenuItem *FitSizePosItem;
 	TMenuItem *OpenByExpItem;
 	TMenuItem *PropertyItem;
-	TMenuItem *S1;
+	TMenuItem *SaveAsWorkItem;
 	TMenuItem *Sep_1;
 	TMenuItem *Sep_2;
 	TMenuItem *ShowIconItem;

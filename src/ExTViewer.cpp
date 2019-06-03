@@ -476,6 +476,8 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 	ActionOk	= true;
 	Application->ProcessMessages();
 
+	bool res;
+	InhCmdHistory = true;
 	try {
 		bool handled = ExViewer->ExeCommand(cmd.c_str(), ActionParam);
 		if (handled && !GlobalErrMsg.IsEmpty()) GlobalAbort();
@@ -651,15 +653,20 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 
 			Close();
 		}
-		return handled;
+		res = handled;
 	}
 	catch (EAbort &e) {
 		UnicodeString msg = e.Message;
-		if (contained_wd_i(_T("SKIP|HANDLED"), msg)) return true;
-		if (StartsText("Abort", msg)) msg = EmptyStr;
-		ActionOk = false;  ActionErrMsg = msg;
-		return true;
+		if (!contained_wd_i(_T("SKIP|HANDLED"), msg)) {
+			if (StartsText("Abort", msg)) msg = EmptyStr;
+			ActionErrMsg = msg;
+			ActionOk	 = false;
+		}
+		res = true;
 	}
+	InhCmdHistory = false;
+
+	return res;
 }
 //---------------------------------------------------------------------------
 bool __fastcall TExTxtViewer::ExeCommandV(const _TCHAR *cmd)
@@ -848,16 +855,13 @@ void __fastcall TExTxtViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftStat
 		else {
 			UnicodeString KeyStr = TwoStrokeSeq(Key, Shift);	if (KeyStr.IsEmpty()) return;
 			UnicodeString CmdStr = Key_to_CmdV(KeyStr);
+			if (CmdStr.IsEmpty()) CmdStr = ExViewer->GetStdKeyCommand(KeyStr);
 			CancelHelp	= !CmdStr.IsEmpty() && EndsStr("F1", KeyStr);
 			ActionParam = EmptyStr;
 
 			//コマンド処理
 			if (ExeCommandV(CmdStr)) {
 				if (!ActionOk) throw EAbort(ActionErrMsg);
-				ClearKeyBuff(true);
-			}
-			//標準のキー処理
-			else if (TxtScrollPanel->Visible && ExViewer->StdKeyOperation(KeyStr)) {
 				ClearKeyBuff(true);
 			}
 			//右クリックメニュー

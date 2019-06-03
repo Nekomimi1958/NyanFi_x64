@@ -121,7 +121,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *LogThisFileItem;
 	TMenuItem *MergeItem;
 	TMenuItem *MixedResetItem;
-	TMenuItem *N1;
+	TMenuItem *CherryPickItem;
 	TMenuItem *OpenTmpArcItem;
 	TMenuItem *RenBranchItem;
 	TMenuItem *ResetAll2Item;

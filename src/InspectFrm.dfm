@@ -60,7 +60,6 @@ object InspectForm: TInspectForm
       Height = 4
       Cursor = crVSplit
       Align = alTop
-      ExplicitTop = 239
     end
     object InsStatusBar: TStatusBar
       Left = 0
@@ -81,7 +80,6 @@ object InspectForm: TInspectForm
       PopupMenu = PopupMenu1
       SizeGrip = False
       UseSystemFont = False
-      ExplicitTop = 19
     end
     object InspectHeader: THeaderControl
       Left = 0
@@ -110,7 +108,6 @@ object InspectForm: TInspectForm
       OnDrawSection = InspectHeaderDrawSection
       OnSectionResize = InspectHeaderSectionResize
       OnResize = InspectHeaderResize
-      ExplicitTop = 38
     end
     object GridPanel: TPanel
       Left = 0
@@ -120,7 +117,6 @@ object InspectForm: TInspectForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitTop = 58
       object InspectPanel: TPanel
         Left = 0
         Top = 0
@@ -215,7 +211,6 @@ object InspectForm: TInspectForm
       OnDrawSection = CodePageHeaderDrawSection
       OnSectionResize = CodePageHeaderSectionResize
       OnResize = CodePageHeaderResize
-      ExplicitTop = 240
     end
     object CodePanel: TPanel
       Left = 0
@@ -225,8 +220,6 @@ object InspectForm: TInspectForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 4
-      ExplicitTop = 260
-      ExplicitHeight = 108
       DesignSize = (
         390
         127)
@@ -249,7 +242,6 @@ object InspectForm: TInspectForm
         TabOrder = 0
         StyleElements = [seBorder]
         OnDrawCell = InspectGridDrawCell
-        ExplicitHeight = 108
         ColWidths = (
           100
           100)

@@ -246,7 +246,7 @@ bool HighlightFile::GetCommentList(
 			bgn_lst->Add("#comments-start");	end_lst->Add("#comments-end");
 			bgn_lst->Add("#cs");	end_lst->Add("#ce");
 		}
-		else if (test_FileExt(fext, _T(".awk.pl.pm.sh"))) {
+		else if (test_FileExt(fext, _T(".awk.pl.pm.pod.sh"))) {
 			ln_lst->Add("#");
 		}
 		else if (test_FileExt(fext, _T(".bat.cmd"))) {
@@ -418,6 +418,19 @@ int HighlightFile::GetCommentPos(
 }
 
 //---------------------------------------------------------------------------
+//拡張子依存のデフォルト見出しパターンを取得
+//---------------------------------------------------------------------------
+UnicodeString HighlightFile::GetDefHeadlnPtn(UnicodeString fext)
+{
+	return (
+		test_FileExt(fext, _T(".bat.cmd.qbt")) ? "^:[^:]+" :
+		test_FileExt(fext, _T(".dfm"))		   ? "^\\s*object\\s" :
+		test_FileExt(fext, _T(".eml"))		   ? "^Subject:" :
+		test_FileExt(fext, _T(".hsp"))		   ? "^\\*\\w+" :
+		test_FileExt(fext, _T(".md"))		   ? "^#+" :
+		test_FileExt(fext, _T(".pod.pl.pm"))   ? "^=head\\d\\b" : "");
+}
+//---------------------------------------------------------------------------
 //見出しパターンを取得
 //---------------------------------------------------------------------------
 UnicodeString HighlightFile::GetHeadlinePtn(
@@ -435,16 +448,15 @@ UnicodeString HighlightFile::GetHeadlinePtn(
 		h_ptn = hl_lst->Values[get_tkn_r(fext, '.').LowerCase()];
 
 	//デフォルト
+	if (h_ptn.IsEmpty()) h_ptn = GetDefHeadlnPtn(fext);
 	if (h_ptn.IsEmpty()) {
-		if		(test_FileExt(fext, _T(".bat.cmd.qbt")))		h_ptn = "^:[^:]+";
-		else if (test_FileExt(fext, _T(".eml")))				h_ptn = "^Subject:";
-		else if (test_FileExt(fext, _T(".ini.inf.reg.url")))	h_ptn = "^\\[.+?\\]";
-		else if (test_FileExt(fext, _T(".dfm")))				h_ptn = "^\\s*object\\s";
-		else if (test_FileExt(fext, FEXT_HTML))					h_ptn = "<[hH][1-6]";
+		h_ptn = test_FileExt(fext, _T(".ini.inf.reg.url")) ? "^\\[.+?\\]" :
+				test_FileExt(fext, FEXT_HTML)			   ? "<[hH][1-6]" : "";
 	}
 
 	return (chk_RegExPtn(h_ptn)? h_ptn : EmptyStr);
 }
+//---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 //以下はデフォルトの設定を取得
@@ -641,7 +653,11 @@ UnicodeString GetDefReservedPtn(
 			_T("shmwrite|shutdown|sin|sleep|socket|socketpair|sort|splice|split|sprintf|sqrt|srand|")
 			_T("stat|study|sub|substr|symlink|syscall|sysread|system|syswrite|tell|telldir|tie|")
 			_T("time|times|truncate|uc|ucfirst|umask|undef|unless|unlink|unpack|unshift|untie|use|")
-			_T("utime|values|vec|wait|waitpid|wantarray|warn|while|write|xor)\\b"));
+			_T("utime|values|vec|wait|waitpid|wantarray|warn|while|write|xor|)\\b|")
+			_T("^=[a-zA-Z]+\\b"));
+	}
+	else if (test_FileExt(fext, _T(".pod"))) {
+		ret_str = "^=[a-zA-Z]+\\b";
 	}
 	else if (test_FileExt(fext, _T(".py"))) {
 		ret_str.sprintf(_T("%s"),
@@ -896,8 +912,8 @@ UnicodeString GetDefFunctionPtn(
 	else if (test_FileExt(fext, _T(".php")) && !is_h2t) {
 		func_ptn = "^(function)\\s+[_a-zA-Z]\\w*";
 	}
-	else if (test_FileExt(fext, _T(".pl"))) {
-		func_ptn = "^sub\\s+[_a-zA-Z]\\w*";
+	else if (test_FileExt(fext, _T(".pl.pm"))) {
+		func_ptn = "^(sub\\s+[_a-zA-Z]\\w*|=head\\d\\b)";
 	}
 	else if (test_FileExt(fext, _T(".ps1.psm1"))) {
 		func_ptn = "^function\\s+[_a-zA-Z](\\w|-)*\\b";
@@ -951,6 +967,10 @@ bool GetSearchPairPtn(UnicodeString fext, TStringList *lst)
 		lst->Add("^\\s*do(\\s+(until|while)\\s)?" + tab + "^\\s*loop\\b");
 		lst->Add("^\\s*select\\s+case\\s" + tab + "^\\s*end\\s+select\\b");
 		lst->Add("^\\s*class\\s+\\w+\\b" + tab + "^\\s*end\\s+class\\b");
+	}
+	else if (test_FileExt(fext, _T(".pod.pl.pm"))) {
+		lst->Add("^=pod\\b" + tab + "^=cut\\b");
+		lst->Add("^=over\\b" + tab + "^=back\\b");
 	}
 
 	return (lst->Count>0);

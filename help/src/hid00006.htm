@@ -181,7 +181,6 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 <dd><b>NyanFi</b> 起動後に実行されたコマンドの履歴を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
 パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
 詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#CmdHistory">→ ファイラー: CmdHistory</a>)。
-</div>
 
 <dt id="CopyFileInfo">CopyFileInfo
 <dd>ファイル情報をクリップボードにコピーします。
@@ -589,6 +588,7 @@ unsigned/signed(整数)、Big/Little-Endian を切り替えられます(synchsafe int は Big
 <b>.pas</b> では、行単位で記述された begin/end などを検索します。<br>
 <b>.dfm</b> (Delphiフォームファイル)では、object/end や item/end を検索します。<br>
 <b>.vbs</b> では、各種制御文などに対応しています(例: sub/end sub、if/end if、for/next …)。<br>
+<b>.pod</b> では、=pod/=cut および =over/=back を検索します(.pl、.pm 内でも可)。<br>
 <div class="note_text">
 正規表現で処理しているため、正しく検索できない場合もあります。<br>
 </div>

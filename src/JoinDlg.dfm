@@ -33,7 +33,6 @@ object JoinTextDlg: TJoinTextDlg
     ItemHeight = 13
     TabOrder = 0
     OnKeyDown = SrcFileListBoxKeyDown
-    ExplicitHeight = 226
   end
   object UpItemBtn: TButton
     Left = 311
@@ -43,7 +42,6 @@ object JoinTextDlg: TJoinTextDlg
     Action = UserModule.UpListItemAction
     Anchors = [akRight, akBottom]
     TabOrder = 1
-    ExplicitTop = 138
   end
   object DownItemBtn: TButton
     Left = 311
@@ -53,7 +51,6 @@ object JoinTextDlg: TJoinTextDlg
     Action = UserModule.DownListItemAction
     Anchors = [akRight, akBottom]
     TabOrder = 2
-    ExplicitTop = 169
   end
   object DelItemBtn: TButton
     Left = 311
@@ -63,7 +60,6 @@ object JoinTextDlg: TJoinTextDlg
     Action = UserModule.DelListItemAction
     Anchors = [akRight, akBottom]
     TabOrder = 3
-    ExplicitTop = 210
   end
   object OpPanel: TPanel
     Left = 0
@@ -98,7 +94,6 @@ object JoinTextDlg: TJoinTextDlg
       Caption = #25913#34892'(&R)'
       FocusControl = OutLnBrkComboBox
       WordWrap = True
-      ExplicitLeft = 248
     end
     object OutNameEdit: TLabeledEdit
       Left = 118
@@ -111,7 +106,6 @@ object JoinTextDlg: TJoinTextDlg
       EditLabel.Caption = #20986#21147#12501#12449#12452#12523#21517'(&O)'
       LabelPosition = lpLeft
       TabOrder = 0
-      ExplicitWidth = 257
     end
     object TemplateEdit: TLabeledEdit
       Left = 118
@@ -133,7 +127,6 @@ object JoinTextDlg: TJoinTextDlg
       Style = csDropDownList
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 1
-      ExplicitWidth = 125
     end
     object OutLnBrkComboBox: TComboBox
       Left = 289
@@ -143,7 +136,6 @@ object JoinTextDlg: TJoinTextDlg
       Style = csDropDownList
       Anchors = [akTop, akRight]
       TabOrder = 2
-      ExplicitLeft = 303
     end
     object EditTmpltBtn: TButton
       Tag = 1

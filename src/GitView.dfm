@@ -66,12 +66,6 @@ object GitViewer: TGitViewer
           Anchors = [akLeft, akTop, akRight, akBottom]
           BorderStyle = bsNone
           Color = clBlack
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'MeiryoKe_Gothic'
-          Font.Style = []
-          ParentFont = False
           PopupMenu = DiffPopupMenu
           TabOrder = 0
           OnClick = DiffListBoxClick
@@ -200,13 +194,7 @@ object GitViewer: TGitViewer
           BorderStyle = bsNone
           Color = clBlack
           DoubleBuffered = False
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -16
-          Font.Name = 'MeiryoKe_Gothic'
-          Font.Style = []
           ParentDoubleBuffered = False
-          ParentFont = False
           PopupMenu = CmPopupMenu
           TabOrder = 0
           TabWidth = 40
@@ -247,12 +235,6 @@ object GitViewer: TGitViewer
           Height = 19
           Align = alLeft
           Constraints.MinWidth = 60
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
           TabOrder = 0
           OnChange = FindCommitEditChange
           OnEnter = FindCommitEditEnter
@@ -351,13 +333,7 @@ object GitViewer: TGitViewer
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
       Color = clBlack
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWhite
-      Font.Height = -12
-      Font.Name = 'Meiryo UI'
-      Font.Style = []
       ItemHeight = 15
-      ParentFont = False
       PopupMenu = BrPopupMenu
       TabOrder = 0
       OnClick = BranchListBoxClick
@@ -642,7 +618,7 @@ object GitViewer: TGitViewer
     object DelTagItem: TMenuItem
       Action = DelTagAction
     end
-    object N1: TMenuItem
+    object CherryPickItem: TMenuItem
       Action = CherryPickAction
     end
     object Sep_c_1: TMenuItem

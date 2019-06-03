@@ -41,7 +41,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_i_1;
 	TMenuItem *Sep_i_2;
 	TMenuItem *Sep_i_3;
-	TMenuItem *URLW1;
+	TMenuItem *OpenUrlItem;
 	TPanel *ListPanel;
 	TPopupMenu *InfPopupMenu;
 

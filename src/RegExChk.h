@@ -65,7 +65,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ResListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall RefFileBtnClick(TObject *Sender);
-	void __fastcall PtnComboBoxEnter(TObject *Sender);
 
 private:	// ユーザー宣言
 	int PtnSelStart;

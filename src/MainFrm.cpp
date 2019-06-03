@@ -2614,7 +2614,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 			if (ThumbClicked)
 				ExeEventCommand(OnThmDClick);
 			else
-				CloseIAction->Execute();	//サムネイル外ならビュアーを閉じる
+				ExeCommandI("Close");	//サムネイル外ならビュアーを閉じる
 		}
 		//左右分割境界
 		else if (in_Splitter) {
@@ -4687,7 +4687,7 @@ void __fastcall TNyanFiForm::UpdateToolBtn(int scr_mode)
 			}
 			//ボタン
 			else {
-				//単独でパラメータ無コマンドだったらアクションへバインド(Checked 反映)
+				//パラメータなしの単独コマンドだったらアクションへバインド(Checked 反映)
 				UnicodeString cmd = Trim(itm_buf[1]);
 				if (is_OneNrmCmd(cmd, true)) {
 					for (int j=0; j<ActionList1->ActionCount; j++) {
@@ -31620,17 +31620,14 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 			//通常
 			else {
 				UnicodeString KeyStr = TwoStrokeSeq(Key, Shift);	if (KeyStr.IsEmpty()) return;
-				UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
 				UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+				UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
+				if (cmd_V.IsEmpty()) cmd_V = TxtViewer->GetStdKeyCommand(KeyStr);
 				CancelHelp	= !cmd_V.IsEmpty() && EndsStr("F1", KeyStr);
 				ActionParam = EmptyStr;
 
 				//コマンド処理
 				if (ExeCommandV(cmd_V)) {
-					ClearKeyBuff(true);
-				}
-				//標準のキー処理
-				else if (TxtScrollPanel->Visible && TxtViewer->StdKeyOperation(KeyStr)) {
 					ClearKeyBuff(true);
 				}
 				//右クリックメニュー
@@ -31665,6 +31662,14 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 	else if (ScrMode==SCMD_IVIEW && ImgViewPanel->Visible) {
 		UnicodeString KeyStr = TwoStrokeSeq(Key, Shift);	if (KeyStr.IsEmpty()) return;
 		UnicodeString CmdStr = KeyFuncList->Values["I:" + KeyStr];
+		if (CmdStr.IsEmpty() && !ThumbExtended) {
+			CmdStr = equal_UP(KeyStr)? "ScrollUp" : 
+					 equal_DOWN(KeyStr)? "ScrollDown" :
+					 equal_LEFT(KeyStr)? "ScrollLeft" :
+					 equal_RIGHT(KeyStr)? "ScrollRight" :
+					 SameText(KeyStr, "PGUP")? "PrevPage" :
+					 SameText(KeyStr, "PGDN")? "NextPage" : "";
+		}
 		CancelHelp	= !CmdStr.IsEmpty() && EndsStr("F1", KeyStr);
 
 		//右綴じでNext/PrevFile入替
@@ -31687,28 +31692,17 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 					if (msgbox_Sure(USTR_CancelCmdQ)) XCMD_Aborted = true;
 				}
 				else if (IS_FullScr()) {
-					SetFullScreen(false);
+					ExeCommandI("FullScreen", "OFF");
 				}
 				else if (ColorPicker->Visible) {
 					ColorPicker->Close();
 				}
 				else {
-					CloseIAction->Execute();
+					ExeCommandI("Close");
 				}
 			}
 			else if (equal_ENTER(KeyStr)) {
-				CloseIAction->Execute();
-			}
-			//スクロール
-			else if (!ThumbExtended && Shift.Empty()) {
-				switch (Key) {
-				case VK_UP:		ScrollUpIAction->Execute();		break;
-				case VK_DOWN:	ScrollDownIAction->Execute();	break;
-				case VK_LEFT:	ScrollLeftAction->Execute();	break;
-				case VK_RIGHT:	ScrollRightAction->Execute();	break;
-				case VK_PRIOR:	PrevPageAction->Execute();		break;
-				case VK_NEXT:	NextPageAction->Execute();		break;
-				}
+				ExeCommandI("Close");
 			}
 			//カーソル移動
 			else if (!usr_ARC->Busy && Shift.Empty()) {
@@ -31717,8 +31711,8 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 				case VK_DOWN:	GridCursorDown(ThumbnailGrid);	break;
 				case VK_LEFT:	GridCursorLeft(ThumbnailGrid);	break;
 				case VK_RIGHT:	GridCursorRight(ThumbnailGrid);	break;
-				case VK_PRIOR:	PageUpIAction->Execute();		break;
-				case VK_NEXT:	PageDownIAction->Execute();		break;
+				case VK_PRIOR:	ExeCommandI("PageUp");			break;
+				case VK_NEXT:	ExeCommandI("PageDown");		break;
 				}
 			}
 			else hadled = false;
@@ -31868,7 +31862,7 @@ void __fastcall TNyanFiForm::ViewerImageDblClick(TObject *Sender)
 		}
 	}
 
-	if (!handled) CloseIAction->Execute();
+	if (!handled) ExeCommandI("Close");
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ViewerImageMouseLeave(TObject *Sender)
@@ -31888,10 +31882,11 @@ bool __fastcall TNyanFiForm::ExeCommandI(UnicodeString cmd, UnicodeString prm)
 		cmd = get_CmdStr(cmd);
 	}
 	AddCmdHistory(cmd, prm, "I");
-	InhCmdHistory = true;
-	ActionParam   = extract_ExeParam(prm, &ActionDesc);
-	ActionOk	  = true;
+	ActionParam = extract_ExeParam(prm, &ActionDesc);
+	ActionOk	= true;
+
 	bool res;
+	InhCmdHistory = true;
 	try {
 		MsgHint->ReleaseHandle();
 		//イメージビュアー固有のコマンド
@@ -31922,7 +31917,6 @@ bool __fastcall TNyanFiForm::ExeCommandI(UnicodeString cmd, UnicodeString prm)
 		SetInternalException(cmd, ActionParam);
 		res = true;
 	}
-
 	InhCmdHistory = false;
 	return res;
 }

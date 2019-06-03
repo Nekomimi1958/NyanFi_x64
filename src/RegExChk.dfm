@@ -119,7 +119,6 @@ object RegExChecker: TRegExChecker
         Anchors = [akLeft, akTop, akRight]
         DropDownCount = 20
         TabOrder = 0
-        OnEnter = PtnComboBoxEnter
       end
       object ReplaceBtn: TButton
         Left = 292
@@ -253,13 +252,7 @@ object RegExChecker: TRegExChecker
       Height = 390
       Align = alClient
       BorderStyle = bsNone
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'MeiryoKe_Gothic'
-      Font.Style = []
-      ItemHeight = 15
-      ParentFont = False
+      ItemHeight = 13
       TabOrder = 0
       TabWidth = 36
       OnDblClick = ReferListBoxDblClick

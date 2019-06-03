@@ -693,7 +693,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *InvSelItem;
 	TMenuItem *IV_ClipCopyItem;
 	TMenuItem *JoinTextItem;
-	TMenuItem *K1;
+	TMenuItem *ShowFkeyBarItem;
 	TMenuItem *KeyListItem;
 	TMenuItem *LibraryItem;
 	TMenuItem *ListMenu;
@@ -711,7 +711,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *NewFileItem;
 	TMenuItem *NewTextItem;
 	TMenuItem *NewWorkListItem;
-	TMenuItem *OK1;
+	TMenuItem *FindDuplDlgItem;
 	TMenuItem *OpenAsRunItem;
 	TMenuItem *OpenExpItem;
 	TMenuItem *OpenTrashItem;

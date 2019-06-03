@@ -133,12 +133,6 @@ object EditHistoryDlg: TEditHistoryDlg
       Height = 19
       Align = alLeft
       Constraints.MinWidth = 60
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 0
       OnChange = FilterEditChange
@@ -375,7 +369,7 @@ object EditHistoryDlg: TEditHistoryDlg
   object RepoPopupMenu: TPopupMenu
     Left = 360
     Top = 65
-    object N1: TMenuItem
+    object UpdGitInfItem: TMenuItem
       Action = UpdateGitInfAction
     end
     object Sep_g_1: TMenuItem

@@ -76,12 +76,6 @@ object NyanFiForm: TNyanFiForm
       Height = 21
       Align = alClient
       DropDownCount = 20
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
       TabOrder = 0
       TabStop = False
       OnExit = InpDirEditExit
@@ -2447,7 +2441,7 @@ object NyanFiForm: TNyanFiForm
       object FindFolderIconItem: TMenuItem
         Action = FindFolderIconAction
       end
-      object OK1: TMenuItem
+      object FindDuplDlgItem: TMenuItem
         Action = FindDuplDlgAction
       end
       object TV_FindTextItem: TMenuItem
@@ -2500,7 +2494,7 @@ object NyanFiForm: TNyanFiForm
       object ShowTabBarItem: TMenuItem
         Action = ShowTabBarAction
       end
-      object K1: TMenuItem
+      object ShowFkeyBarItem: TMenuItem
         Action = ShowFKeyBarAction
       end
       object ShowSttBarItem: TMenuItem

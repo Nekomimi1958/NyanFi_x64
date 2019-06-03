@@ -43,7 +43,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *CopyItem;
 	TMenuItem *CopyXmlItem;
 	TMenuItem *ExpandItem;
-	TMenuItem *N1;
+	TMenuItem *FitSizePosItem;
 	TMenuItem *OpenUrlItem;
 	TMenuItem *Sep_1;
 	TMenuItem *Sep_2;

@@ -26,7 +26,6 @@ object FindFileDlg: TFindFileDlg
     Height = 1371
     Align = alLeft
     Shape = bsRightLine
-    ExplicitLeft = 360
   end
   object Bevel2: TBevel
     Left = 404
@@ -35,7 +34,6 @@ object FindFileDlg: TFindFileDlg
     Height = 1371
     Align = alLeft
     Shape = bsSpacer
-    ExplicitLeft = 364
   end
   object BasicPanel: TPanel
     Left = 0

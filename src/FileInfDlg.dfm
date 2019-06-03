@@ -78,7 +78,7 @@ object FileInfoDlg: TFileInfoDlg
     object Sep_i_2: TMenuItem
       Caption = '-'
     end
-    object URLW1: TMenuItem
+    object OpenUrlItem: TMenuItem
       Action = OpenUrlAction
     end
     object Sep_i_3: TMenuItem

@@ -69,7 +69,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *KeepIndexItem;
 	TMenuItem *OmitComPathItem;
 	TMenuItem *OrgOrderItem;
-	TMenuItem *R2;
+	TMenuItem *PropertyItem;
 	TMenuItem *RestoreListItem;
 	TMenuItem *SaveAsItem;
 	TMenuItem *Sep_1;
@@ -100,7 +100,7 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *WatchBtn;
 	TMenuItem *Sep_6;
 	TAction *SaveAsNbtAction;
-	TMenuItem *N1;
+	TMenuItem *SaveAsNbtItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

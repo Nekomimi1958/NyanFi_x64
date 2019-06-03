@@ -130,12 +130,6 @@ object GeneralInfoDlg: TGeneralInfoDlg
         Height = 19
         Align = alLeft
         Constraints.MinWidth = 60
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
         PopupMenu = UserModule.EditPopupMenuE
         TabOrder = 0
         OnChange = FilterEditChange
@@ -216,7 +210,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object CopyCmdItem: TMenuItem
       Action = CopyCmdAction
     end
-    object N1: TMenuItem
+    object SaveAsNbtItem: TMenuItem
       Action = SaveAsNbtAction
     end
     object Sep_2: TMenuItem
@@ -264,7 +258,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object ShowFileInfoItem: TMenuItem
       Action = ShowFileInfoAction
     end
-    object R2: TMenuItem
+    object PropertyItem: TMenuItem
       Action = PropertyAction
     end
     object Sep_6: TMenuItem
