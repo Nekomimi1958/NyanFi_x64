@@ -237,14 +237,13 @@ UnicodeString UserArcUnit::GetSubTypeStr(UnicodeString arc_file)
 //---------------------------------------------------------------------------
 arc_func * UserArcUnit::GetArcFunc(int typ)
 {
-	arc_func *fp = NULL;
-
-	if (typ==UARCTYP_ZIP || typ==UARCTYP_7Z) fp = &ArcFunc[0];
-	else if (typ==UARCTYP_LHA) fp = &ArcFunc[1];
-	else if (typ==UARCTYP_CAB) fp = &ArcFunc[2];
-	else if (typ==UARCTYP_TAR) fp = &ArcFunc[3];
-	else if (typ==UARCTYP_RAR) fp = &ArcFunc[4];
-	else if (typ==UARCTYP_ISO) fp = &ArcFunc[5];
+	arc_func *fp =
+		(typ==UARCTYP_ZIP || typ==UARCTYP_7Z)? &ArcFunc[0] :
+		(typ==UARCTYP_LHA)? &ArcFunc[1] :
+		(typ==UARCTYP_CAB)? &ArcFunc[2] :
+		(typ==UARCTYP_TAR)? &ArcFunc[3] :
+		(typ==UARCTYP_RAR)? &ArcFunc[4] :
+		(typ==UARCTYP_ISO)? &ArcFunc[5] : NULL;
 
 	if (fp && !fp->Available) fp = NULL;
 	return fp;
@@ -684,8 +683,10 @@ bool UserArcUnit::RenFile(UnicodeString arc_file, UnicodeString onam, UnicodeStr
 bool UserArcUnit::OpenArc(UnicodeString arc_file)
 {
 	try {
+		CloseArc();
+
 		CurArcFile = arc_file;
-		if (arc_file.Length()>=MAX_PATH) Abort();		//MAX_PATH超のアーカイブはダメ
+		if (arc_file.Length()>=MAX_PATH) Abort();
 
 		CurType = GetArcType(arc_file, true);
 		if (CurType==0) Abort();
@@ -717,10 +718,27 @@ bool UserArcUnit::OpenArc(UnicodeString arc_file)
 		}
 		return (hCurArc!=NULL);
 	}
-	catch (EAbort &e) {
+	catch (...) {
+		hCurArc	   = NULL;
+		CurType    = 0;
 		CurArcFile = EmptyStr;
 		return false;
 	}
+}
+
+//---------------------------------------------------------------------------
+//アーカイブを閉じる
+//---------------------------------------------------------------------------
+void UserArcUnit::CloseArc()
+{
+	if (hCurArc) {
+		arc_func *fp = GetArcFunc(CurType);
+		if (fp) fp->CloseArchive(hCurArc);
+	}
+
+	hCurArc    = NULL;
+	CurType    = 0;
+	CurArcFile = EmptyStr;
 }
 
 //---------------------------------------------------------------------------
@@ -862,17 +880,6 @@ bool UserArcUnit::FindNextEx(arc_find_inf *inf,
 }
 
 //---------------------------------------------------------------------------
-//アーカイブを閉じる
-//---------------------------------------------------------------------------
-void UserArcUnit::CloseArc()
-{
-	if (!hCurArc) return;
-	arc_func *fp = GetArcFunc(CurType);
-	if (fp) fp->CloseArchive(hCurArc);
-	hCurArc = NULL;
-}
-
-//---------------------------------------------------------------------------
 //表示用の文字列を取得
 // (dll による違いを吸収)
 //---------------------------------------------------------------------------
@@ -895,20 +902,21 @@ UnicodeString UserArcUnit::GetDispStr(
 //---------------------------------------------------------------------------
 int UserArcUnit::GetRootCount(UnicodeString arc_file)
 {
-	if (!OpenArc(arc_file)) return -1;
-
-	arc_find_inf inf;
-	std::unique_ptr<TStringList> lst(new TStringList());
-	int i_cnt = 0;
-	if (FindFirstEx(EmptyStr, &inf)) {
-		do {
-			UnicodeString fnam = inf.f_name;
-			if (fnam.IsEmpty() || (inf.is_dir && lst->IndexOf(fnam)!=-1)) continue;
-			lst->Add(fnam);
-			i_cnt++;
-		} while (FindNextEx(&inf));
+	int i_cnt = -1;
+	if (OpenArc(arc_file)) {
+		arc_find_inf inf;
+		std::unique_ptr<TStringList> lst(new TStringList());
+		if (FindFirstEx(EmptyStr, &inf)) {
+			i_cnt = 0;
+			do {
+				UnicodeString fnam = inf.f_name;
+				if (fnam.IsEmpty() || (inf.is_dir && lst->IndexOf(fnam)!=-1)) continue;
+				lst->Add(fnam);
+				i_cnt++;
+			} while (FindNextEx(&inf));
+		}
+		CloseArc();
 	}
-	CloseArc();
 	return i_cnt;
 }
 
@@ -920,21 +928,21 @@ bool UserArcUnit::GetFileInf(
 	UnicodeString fnam,			//対象項目名
 	arc_find_inf *inf)			//[0] ファイル情報
 {
-	if (!OpenArc(arc_file)) return false;
-
-	bool flag = false;
-	if (!fnam.IsEmpty()) fnam = ExcludeTrailingPathDelimiter(fnam);
-	UnicodeString dnam = ExtractFilePath(fnam);
-	fnam = ExtractFileName(fnam);
-	if (FindFirstEx(dnam, inf)) {
-		do {
-			if (SameText(inf->f_name, fnam)) {
-				flag = true ; break;
-			}
-		} while (FindNextEx(inf));
+	bool res = false;
+	if (OpenArc(arc_file)) {
+		if (!fnam.IsEmpty()) fnam = ExcludeTrailingPathDelimiter(fnam);
+		UnicodeString dnam = ExtractFilePath(fnam);
+		fnam = ExtractFileName(fnam);
+		if (FindFirstEx(dnam, inf)) {
+			do {
+				if (SameText(inf->f_name, fnam)) {
+					res = true ; break;
+				}
+			} while (FindNextEx(inf));
+		}
+		CloseArc();
 	}
-	CloseArc();
-	return flag;
+	return res;
 }
 
 //---------------------------------------------------------------------------
@@ -944,28 +952,27 @@ bool UserArcUnit::GetFileList(UnicodeString arc_file, TStringList *lst)
 {
 	if (arc_file.Length()>=MAX_PATH) return false;		//MAX_PATH超のアーカイブはダメ
 
-	if (!OpenArc(arc_file)) return false;
-	arc_func *fp = GetArcFunc(CurType);  if (!fp) return false;
-
 	bool ret = true;
-	try {
-		arc_find_inf inf;
-		if (FindFirstEx(EmptyStr, &inf, true)) {
-			do {
-				if (!inf.is_dir) lst->Add(inf.f_name);
-			} while (FindNextEx(&inf, true));
+	if (OpenArc(arc_file)) {
+		try {
+			arc_find_inf inf;
+			if (FindFirstEx(EmptyStr, &inf, true)) {
+				do {
+					if (!inf.is_dir) lst->Add(inf.f_name);
+				} while (FindNextEx(&inf, true));
 
-			if (CurType==UARCTYP_LHA) {
-				DWORD dwError;
-				if (fp->GetLastError(&dwError)!=0) Abort();
+				if (CurType==UARCTYP_LHA) {
+					DWORD dwError;
+					arc_func *fp = GetArcFunc(CurType);
+					if (!fp || fp->GetLastError(&dwError)!=0) Abort();
+				}
 			}
 		}
+		catch (...) {
+			ret = false;
+		}
+		CloseArc();
 	}
-	catch (EAbort &e) {
-		ret = false;
-	}
-	CloseArc();
-
 	return ret;
 }
 
@@ -975,29 +982,76 @@ bool UserArcUnit::GetFileList(UnicodeString arc_file, TStringList *lst)
 //---------------------------------------------------------------------------
 UnicodeString UserArcUnit::GetFirstFile(UnicodeString arc_file, UnicodeString xlist)
 {
-	if (!OpenArc(arc_file)) return EmptyStr;
-	arc_func *fp = GetArcFunc(CurType);  if (!fp) return EmptyStr;
-
 	UnicodeString ret_nam;
-	try {
+	if (OpenArc(arc_file)) {
 		arc_find_inf inf;
-		if (!FindFirstEx(EmptyStr, &inf, true)) Abort();
-		if (fp->GetAttribute && (fp->GetAttribute(hCurArc) & FA_ENCRYPTED)!=0) Abort();
-		do {
-			if (!inf.is_dir) {
-				if (test_FileExt(get_extension(inf.f_name), xlist)) {
-					ret_nam = arc_file + "/" + inf.f_name;
-					break;
-				}
+		if (FindFirstEx(EmptyStr, &inf, true)) {
+			arc_func *fp = GetArcFunc(CurType);
+			if (fp && (fp->GetAttribute && (fp->GetAttribute(hCurArc) & FA_ENCRYPTED)==0)) {
+				do {
+					if (!inf.is_dir) {
+						if (test_FileExt(get_extension(inf.f_name), xlist)) {
+							ret_nam = arc_file + "/" + inf.f_name;
+							break;
+						}
+					}
+				} while (FindNextEx(&inf, true));
 			}
-		} while (FindNextEx(&inf, true));
+		}
+		CloseArc();
 	}
-	catch (EAbort &e) {
-		;
-	}
-	CloseArc();
-
 	return ret_nam;
+}
+
+//---------------------------------------------------------------------------
+//アーカイブ内の全ディレクトリのリストを取得
+//---------------------------------------------------------------------------
+void UserArcUnit::GetDirList(
+	UnicodeString arc_file,		//アーカイブのファイル名
+	TStrings *d_lst)		//[o] (空)ディレクトリ名リスト
+{
+	if (OpenArc(arc_file)) {
+		arc_find_inf inf;
+		if (FindFirstEx(EmptyStr, &inf, true)) {
+			do {
+				UnicodeString dnam = ExtractFileDir(inf.f_name);
+				if (!dnam.IsEmpty() && d_lst->IndexOf(dnam)==-1) d_lst->Add(dnam);
+			} while (FindNextEx(&inf, true));
+		}
+		CloseArc();
+	}
+}
+//---------------------------------------------------------------------------
+//アーカイブから指定ディレクトリ以下の全項目のリストを取得
+//---------------------------------------------------------------------------
+void UserArcUnit::GetItemList(
+	UnicodeString arc_file,	//アーカイブファイル名
+	UnicodeString dnam,		//対象ディレクトリ名
+	TStrings *f_lst,		//[o] ファイル名リスト
+	TStrings *d_lst)		//[o] (空)ディレクトリ名リスト
+{
+	if (OpenArc(arc_file)) {
+		dnam = !dnam.IsEmpty()? IncludeTrailingPathDelimiter(dnam) : EmptyStr;
+		arc_find_inf inf;
+		if (FindFirstEx(EmptyStr, &inf, true)) {
+			do {
+				UnicodeString fnam = inf.f_name;
+				if (!dnam.IsEmpty()) {
+					if (!StartsText(dnam, fnam)) continue;
+					fnam.Delete(1, dnam.Length());
+				}
+				//ディレクトリ
+				if (inf.is_dir || fnam.IsEmpty()) {
+					if (d_lst && d_lst->IndexOf(inf.f_name)==-1) d_lst->Add(inf.f_name);
+				}
+				//ファイル
+				else if (f_lst) {
+					f_lst->Add(inf.f_name);
+				}
+			} while (FindNextEx(&inf, true));
+		}
+		CloseArc();
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -1010,33 +1064,27 @@ bool UserArcUnit::HasZipImg(
 {
 	if (!test_FileExt(get_extension(arc_file), FEXT_ZIPIMG)) return false;
 
-	if (!OpenArc(arc_file)) return false;
-	arc_func *fp = GetArcFunc(CurType);  if (!fp) return false;
-
 	bool ret = false;
-	try {
+	if (OpenArc(arc_file)) {
 		arc_find_inf inf;
-		if (!FindFirstEx(EmptyStr, &inf, true)) Abort();
-		if (fp->GetAttribute && (fp->GetAttribute(hCurArc) & FA_ENCRYPTED)!=0) Abort();
-
-		UnicodeString i_cover, i_first;
-		do {
-			if (!inf.is_dir && !starts_AT(inf.f_name)) {
-				UnicodeString fext = get_extension(inf.f_name);
-				if (test_FileExt(fext, _T(".exe.com.msi.msu.scr.dll.rll.cpl.ocx"))) {
-					ret = false;  break;
-				}
-				if (test_FileExt(fext, xlist)) {
-					ret = true;   break;
-				}
+		if (FindFirstEx(EmptyStr, &inf, true)) {
+			arc_func *fp = GetArcFunc(CurType);
+			if (fp && (fp->GetAttribute && (fp->GetAttribute(hCurArc) & FA_ENCRYPTED)==0)) {
+				do {
+					if (!inf.is_dir && !starts_AT(inf.f_name)) {
+						UnicodeString fext = get_extension(inf.f_name);
+						if (test_FileExt(fext, _T(".exe.com.msi.msu.scr.dll.rll.cpl.ocx"))) {
+							ret = false;  break;
+						}
+						if (test_FileExt(fext, xlist)) {
+							ret = true;   break;
+						}
+					}
+				} while (FindNextEx(&inf, true));
 			}
-		} while (FindNextEx(&inf, true));
+		}
+		CloseArc();
 	}
-	catch (EAbort &e) {
-		ret = false;
-	}
-	CloseArc();
-
 	return ret;
 }
 
@@ -1052,16 +1100,15 @@ bool UserArcUnit::GetArcInfo(
 	bool *is_enc,		//パスワード保護	(default = NULL)
 	TStringList *lst)	//ファイル名リスト	(default = NULL)
 {
-	if (arc_file.Length()>=MAX_PATH) return false;		//MAX_PATH超のアーカイブはダメ
-
 	*f_cnt	  = 0;
 	*org_size = 0;
-
 	if (ratio)  *ratio	= 0.0;
 	if (is_enc) *is_enc	= false;
 
+	if (arc_file.Length()>=MAX_PATH) return false;
 	if (!OpenArc(arc_file)) return false;
 	arc_func *fp = GetArcFunc(CurType);  if (!fp) return false;
+
 	bool is_rar_part = (CurType==UARCTYP_RAR)? ContainsText(get_extension(get_base_name(arc_file)), "part") : false;
 
 	bool ret = true;
@@ -1069,8 +1116,9 @@ bool UserArcUnit::GetArcInfo(
 	try {
 		arc_find_inf inf;
 		if (FindFirstEx(EmptyStr, &inf, true)) {
-			if (is_enc && (CurType==UARCTYP_ZIP || CurType==UARCTYP_7Z))
-				*is_enc = ((fp->GetAttribute(hCurArc) & FA_ENCRYPTED)!=0);
+			if (is_enc && (CurType==UARCTYP_ZIP || CurType==UARCTYP_7Z)) {
+				*is_enc = (fp->GetAttribute && (fp->GetAttribute(hCurArc) & FA_ENCRYPTED)!=0);
+			}
 
 			do {
 				if (!inf.is_dir) {
@@ -1086,7 +1134,7 @@ bool UserArcUnit::GetArcInfo(
 			}
 		}
 	}
-	catch (EAbort &e) {
+	catch (...) {
 		ret = false;
 	}
 	CloseArc();
@@ -1137,22 +1185,23 @@ bool UserArcUnit::GetArcList(
 //---------------------------------------------------------------------------
 bool UserArcUnit::SetArcTime(UnicodeString arc_file, bool force)
 {
-	ErrMsg = EmptyStr;
-	if (!OpenArc(arc_file)) return false;
+	bool ret = false;
 
-	TDateTime dt = 0.0;
-	arc_find_inf inf;
-	if (FindFirstEx(EmptyStr, &inf, true)) {
-		do {
-			dt = std::max(dt, inf.f_time);
-		} while (FindNextEx(&inf, true));
+	if (OpenArc(arc_file)) {
+		TDateTime dt = 0.0;
+		arc_find_inf inf;
+		if (FindFirstEx(EmptyStr, &inf, true)) {
+			do {
+				dt = std::max(dt, inf.f_time);
+			} while (FindNextEx(&inf, true));
+		}
+		CloseArc();
+
+		//タイムスタンプ設定
+		if (set_file_age(arc_file, dt, force)) ret = true;
 	}
-	CloseArc();
 
-	//タイムスタンプ設定
-	if (set_file_age(arc_file, dt, force)) return true;
-
-	ErrMsg = "タイムスタンプ設定に失敗しました";
-	return false;
+	ErrMsg = !ret? "タイムスタンプ設定に失敗しました" : "";
+	return ret;
 }
 //---------------------------------------------------------------------------

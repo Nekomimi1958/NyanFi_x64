@@ -1586,10 +1586,12 @@ void __fastcall TAppListDlg::FormMouseWheel(TObject *Sender, TShiftState Shift, 
 	if (AppListBox->Focused()) {
 		ExeCmdListBox(AppListBox, (WheelDelta<0)? _T("CursorDown") : _T("CursorUp"));
 		UpdateAppSttBar();
+		Handled = true;
 	}
 	else if (LaunchListBox->Focused()) {
 		ExeCmdListBox(LaunchListBox, (WheelDelta<0)? _T("CursorDown") : _T("CursorUp"));
 		UpdateLaunchSttBar();
+		Handled = true;
 	}
 }
 

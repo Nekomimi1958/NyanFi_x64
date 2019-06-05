@@ -1496,7 +1496,7 @@ JumpTo　　　　　　　　<span class="pram_text rem_text">(結果リスト、ワークリスト
 <b>例</b>:<br>
 　ListArchive_\N_\E.txt<br>
 　ListArchive_D:\\ArchiveList\\\C_\N_\E.txt<br>
-<a href="#TestArchive">→ TestArchive</a>
+<a href="#TestArchive">→ TestArchive</a>　<a href="#ListTree">→ ListTree</a>
 
 <dt id="ListClipboard">ListClipboard<span class="pram_text">[_FF]</span>
 <dd>クリップボードのテキスト内容を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
@@ -1609,7 +1609,8 @@ JumpTo　　　　　　　　<span class="pram_text rem_text">(結果リスト、ワークリスト
 
 <dt id="ListTree">ListTree<span class="pram_text">[_ディレクトリ名]</span>
 <dd>カレント以下のディレクトリ構造を<a href="hid00073.htm">一覧ダイアログ</a>でツリー表示します。<br>
-ディレクトリを選択している場合は、それらの階層下だけが対象となります。<br>
+ディレクトリを選択している場合、それらの階層下だけが対象となります。<br>
+またアーカイブファイルを選択している場合は、仮想ディレクトリとしてツリー表示します。<br>
 <div class="spc_box">
 基準となる<b>ディレクトリ名</b>をパラメータで指定することもできます。<br>
 <a href="#ExeCommands">ExeCommands</a> コマンドのパラメータ区切り文字との混同を避けるため、ルートディレクトリの場合は <b>:</b> の後に <b>\</b> を付けてください。&quot;%変数名%&quot; という書式で環境変数も使えます。なおドライブ名がない場合はカレントからの相対指定となります。<br>

@@ -1047,7 +1047,14 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 				ModalResult = mrOk;
 			}
 			else if (isTree) {
-				CmdRequestList->Add(cmd.sprintf(_T("ChangeDir_\"%s\""), get_post_tab(fnam).c_str()));
+				fnam = get_post_tab(fnam);
+				if (fnam.Pos("/")) {
+					if (EndsStr("/", fnam) || EndsStr("\\", fnam)) fnam += "*";
+					CmdRequestList->Add(cmd.sprintf(_T("JumpTo_\"%s\""), fnam.c_str()));
+				}
+				else {
+					CmdRequestList->Add(cmd.sprintf(_T("ChangeDir_\"%s\""), fnam.c_str()));
+				}
 				ModalResult = mrOk;
 			}
 			//カーソル位置を再生
@@ -1073,7 +1080,9 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 	else if (USAME_TI(cmd_V, "Close") || equal_ESC(KeyStr)) {
 		ModalResult = mrCancel;
 	}
-	else return;
+	else {
+		return;
+	}
 
 	if (!StartsText("Find", cmd_V)) SetStatusBar();
 	Key = 0;

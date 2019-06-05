@@ -16,6 +16,7 @@
 #include <System.DateUtils.hpp>
 #include <System.Character.hpp>
 #include <System.IOUtils.hpp>
+#include <System.Zip.hpp>
 #include <RegularExpressions.hpp>
 #include <Vcl.Imaging.pngimage.hpp>
 #include <Vcl.Imaging.GIFImg.hpp>
@@ -4034,39 +4035,38 @@ UnicodeString ExtractInZipImg(
 	UnicodeString arc_file,		//アーカイブファイル名
 	UnicodeString img_fext)		//対応画像拡張子
 {
+	if (!test_FileExt(get_extension(arc_file), FEXT_ZIPIMG)) return EmptyStr;
+
 	UnicodeString i_fnam;
+	std::unique_ptr<TZipFile> zp(new TZipFile());
 
 	try {
-		std::unique_ptr<TStringList> lst(new TStringList());
-		if (!usr_ARC->GetFileList(arc_file, lst.get())) Abort();
+		zp->Open(arc_file, zmRead);
 
-		UnicodeString i_thumb, i_cover, i_first;
-		for (int i=0; i<lst->Count; i++) {
-			UnicodeString fnam = lst->Strings[i];
-			if (starts_AT(fnam)) continue;
-			UnicodeString nnam = ExtractFileName(fnam);
-			if (test_FileExt(get_extension(nnam), img_fext)) {
+		UnicodeString i_cover, i_first;
+		for (int i=0; i<zp->FileCount; i++) {
+			UnicodeString fnam = zp->FileName[i];
+			UnicodeString fext = get_extension(fnam);
+			if (test_FileExt(fext, img_fext)) {
 				if (i_first.IsEmpty()) i_first = fnam;
 				if (i_cover.IsEmpty()
-					&& (ContainsText(nnam, "cover") || ContainsText(nnam, "title") || ContainsText(nnam, "page")))
-				{
-					i_cover = fnam;
-				}
-				if (i_thumb.IsEmpty() && ContainsText(nnam, "thumbnail")) {
-					i_thumb = fnam;
-				}
+					&& (ContainsText(fnam, "cover") || ContainsText(fnam, "title") || ContainsText(fnam, "page")))
+						i_cover = fnam;
 			}
 		}
 
-		UnicodeString znam = !i_thumb.IsEmpty()? i_thumb : !i_cover.IsEmpty()? i_cover : i_first;
-		if (znam.IsEmpty()) Abort();
-		i_fnam = TempPathA + ExtractFileName(znam);
-		if (!usr_ARC->UnPack(arc_file, TempPathA, add_quot_if_spc(znam), false, true, true)) Abort();
+		UnicodeString znam = !i_cover.IsEmpty()? i_cover : i_first;
+		if (!znam.IsEmpty()) {
+			i_fnam = TempPathA + ExtractFileName(ReplaceStr(znam, "/", "\\"));
+			zp->Extract(znam, TempPathA, false);
+		}
 	}
 	catch (...) {
 		if (file_exists(i_fnam)) DeleteFile(i_fnam);
 		i_fnam = EmptyStr;
 	}
+
+	zp->Close();
 
 	return i_fnam;
 }
@@ -5572,37 +5572,6 @@ void update_DriveLog(bool save)
 }
 
 //---------------------------------------------------------------------------
-//アーカイブから指定ディレクトリ以下の全項目のリストを取得
-//---------------------------------------------------------------------------
-void get_ArcList(
-	UnicodeString anam,		//アーカイブのファイル名
-	UnicodeString dnam,		//対象ディレクトリ名
-	TStrings *f_lst,		//[o] ファイル名リスト
-	TStrings *d_lst)		//[o] (空)ディレクトリ名リスト
-{
-	if (usr_ARC->OpenArc(anam)) {
-		dnam = IncludeTrailingPathDelimiter(dnam);
-		arc_find_inf inf;
-		if (usr_ARC->FindFirstEx(EmptyStr, &inf, true)) {
-			do {
-				UnicodeString fnam = inf.f_name;
-				if (!StartsText(dnam, fnam)) continue;
-				fnam.Delete(1, dnam.Length());
-				//ディレクトリ
-				if (inf.is_dir || fnam.IsEmpty()) {
-					if (d_lst->IndexOf(inf.f_name)==-1) d_lst->Add(inf.f_name);
-				}
-				//ファイル
-				else {
-					f_lst->Add(inf.f_name);
-				}
-			} while (usr_ARC->FindNextEx(&inf, true));
-		}
-		usr_ARC->CloseArc();
-	}
-}
-
-//---------------------------------------------------------------------------
 //汎用リストの項目高を設定 (行間 = 1/3)
 //---------------------------------------------------------------------------
 void set_ListBoxItemHi(
@@ -6015,7 +5984,9 @@ void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 					if (add_cnt>0) update_FileListBoxT(lst, tag);
 				}
 			}
-			else FindPath  = pnam;
+			else {
+				FindPath  = pnam;
+			}
 
 			//※FindFirst での誤マッチを除外
 			//  例: システム内で *.asp が *.aspx にマッチ (謎)
@@ -13685,8 +13656,8 @@ void MakeTreeList(
 	if (chk_sw) {
 		int i = 0;
 		while (i<lst->Count) {
-			TStringDynArray plst0 = split_path(get_tkn_r(lst->Strings[i], pnam));
-			TStringDynArray plst1 = split_path((i>0)? get_tkn_r(lst->Strings[i - 1], pnam) : EmptyStr);
+			TStringDynArray plst0 = split_path(ReplaceStr(get_tkn_r(lst->Strings[i], pnam), "/", "\\"));
+			TStringDynArray plst1 = split_path((i>0)? ReplaceStr(get_tkn_r(lst->Strings[i - 1], pnam), "/", "\\") : EmptyStr);
 
 			int n = 0;
 			for (int j=0; j<plst0.Length && j<plst1.Length; j++) {
@@ -13709,13 +13680,14 @@ void MakeTreeList(
 
 	//表示項目の準備
 	for (int i=0; i<lst->Count; i++) {
-		UnicodeString dnam	 = lst->Strings[i];
-		UnicodeString lbuf	 = get_tkn_r(dnam, pnam);
-		TStringDynArray plst = split_path(lbuf);
+		TStringDynArray plst = split_path(get_tkn_r(ReplaceStr(lst->Strings[i], "/", "\\"), pnam));
 		int n = plst.Length;
-		if (n>=1) lbuf = StringOfChar(_T('?'), n) + plst[n - 1];
-		lst->Strings[i] = lbuf + "\t" + IncludeTrailingPathDelimiter(dnam);
-		lst->Objects[i] = (TObject *)(NativeInt)n;
+		if (n>=1) {
+			UnicodeString lbuf = lst->Strings[i];
+			if (!EndsStr('/', lbuf)) lbuf = IncludeTrailingPathDelimiter(lbuf);
+			lst->Strings[i] = StringOfChar(_T('?'), n) + plst[n - 1] + "\t" + lbuf;
+			lst->Objects[i] = (TObject *)(NativeInt)n;
+		}
 	}
 
 	//罫線の設定
@@ -13782,6 +13754,7 @@ bool AddPathToTreeList(TStringList *lst)
 		o_buf->Add(lst->Strings[0] + "\t" + IncludeTrailingPathDelimiter(pnam));
 		d_lst->Add(ExcludeTrailingPathDelimiter(pnam));
 
+		UnicodeString arc_name;
 		for (int i=1; i<lst->Count; i++) {
 			UnicodeString lbuf = lst->Strings[i];
 			if (lbuf.IsEmpty()) continue;
@@ -13804,12 +13777,23 @@ bool AddPathToTreeList(TStringList *lst)
 			if (lvl>=d_lst->Count) while (lvl>=d_lst->Count) d_lst->Add(EmptyStr);
 			d_lst->Strings[lvl] = dnam;
 
-			lbuf += "\t";
+			UnicodeString sbuf;
 			for (int j = 0; j<=lvl; j++) {
 				UnicodeString s = d_lst->Strings[j];
 				if (s.IsEmpty()) Abort();
-				lbuf.cat_sprintf(_T("%s\\"), s.c_str());
+				sbuf.cat_sprintf(_T("%s\\"), s.c_str());
 			}
+
+			if (!dir_exists(sbuf) && file_exists(ExcludeTrailingPathDelimiter(sbuf))) {
+				arc_name = ExcludeTrailingPathDelimiter(sbuf);
+				sbuf = arc_name + "/";
+			}
+			else if (!arc_name.IsEmpty() && StartsText(arc_name, sbuf)) {
+				int p = (arc_name.Length()<sbuf.Length())? arc_name.Length() + 1 : 0;
+				if (p>0 && sbuf[p]=='\\') sbuf[p] = '/';
+			}
+
+			lbuf += ("\t" + sbuf);
 			o_buf->Add(lbuf);
 		}
 

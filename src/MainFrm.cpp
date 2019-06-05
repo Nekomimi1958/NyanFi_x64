@@ -3651,6 +3651,9 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 				UpdateCurPath(IncludeTrailingPathDelimiter(prm));
 				if (!GlobalErrMsg.IsEmpty()) GlobalAbort();
 			}
+			else if (USAME_TI(cmd, "JumpTo")) {
+				if (!JumpToList(CurListTag, prm)) GlobalAbort();
+			}
 			else if (USAME_TI(cmd, "TextViewer")) {
 				if (USAME_TI(prm, "CB")) {
 					if (!ViewClipText()) Abort();
@@ -9883,9 +9886,8 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 		}
 		dsp_name = minimize_str(dsp_name, tmp_cv, w_name, OmitEndOfName);
 
-
-		TColor bg_name = (d_fp && d_fp->is_dummy)? col_DifferN :
-					IniFile->IsMarked(fp->r_name)? col_bgMark : col_None;
+		TColor bg_name = IniFile->IsMarked(fp->r_name)? col_bgMark :
+							  (d_fp && d_fp->is_dummy)? col_DifferN : col_None;
 		if (bg_name!=col_None) {
 			TRect mrc  = tmp_rc;
 			mrc.Left   = x_base;
@@ -19163,9 +19165,19 @@ void __fastcall TNyanFiForm::ListTreeActionExecute(TObject *Sender)
 		if (ListSelected(lst)) {
 			for (int i=0; i<lst->Count; i++) {
 				file_rec *fp = (file_rec*)lst->Objects[i];
-				if (fp->selected && fp->is_dir) {
-					r_lst->Add(IncludeTrailingPathDelimiter(fp->f_name));
-					get_SubDirs(fp->f_name, r_lst.get(), NULL, 0, true);
+				if (fp->selected) {
+					//ディレクトリ
+					if (fp->is_dir) {
+						r_lst->Add(IncludeTrailingPathDelimiter(fp->f_name));
+						get_SubDirs(fp->f_name, r_lst.get(), NULL, 0, true);
+					}
+					//アーカイブ
+					else if (is_AvailableArc(fp->f_name)) {
+						r_lst->Add(fp->f_name + "/");
+						std::unique_ptr<TStringList> d_lst(new TStringList());
+						usr_ARC->GetDirList(fp->f_name, d_lst.get());
+						for (int j=0; j<d_lst->Count; j++) r_lst->Add(fp->f_name + "/" + d_lst->Strings[j]);
+					}
 				}
 			}
 		}
@@ -25442,7 +25454,7 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 					if (dst_nam.IsEmpty()) dst_nam = get_dir_name(fp->f_name);
 					if (fp->is_dir) {
 						std::unique_ptr<TStringList> a_lst(new TStringList());
-						get_ArcList(CurStt->arc_Name, fp->f_name, a_lst.get(), d_lst.get());
+						usr_ARC->GetItemList(CurStt->arc_Name, fp->f_name, a_lst.get(), d_lst.get());
 						f_lst->AddStrings(a_lst.get());
 					}
 					else {

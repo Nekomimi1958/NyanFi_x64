@@ -67,7 +67,7 @@ typedef struct {
 #define	UARCTYP_ISO	7
 
 //対応拡張子
-#define FEXT_ZIP	_T(".zip.apk.jar.ear.sar.war.cbz.epub.mobi.docx.dotx.pptx.xlsx.xltx.odt.ods.odp.odg.odc.odf.odi.odm.odb")
+#define FEXT_ZIP	_T(".zip.apk.jar.ear.sar.war.cbz.epub.gdtf.mobi.docx.dotx.pptx.xlsx.xltx.odt.ods.odp.odg.odc.odf.odi.odm.odb")
 #define FEXT_7Z		_T(".7z.cb7")
 #define FEXT_LHA	_T(".lzh")
 #define FEXT_CAB	_T(".cab")
@@ -75,7 +75,7 @@ typedef struct {
 #define FEXT_RAR	_T(".rar.cbr")
 #define FEXT_ISO	_T(".iso")
 
-#define FEXT_ZIPIMG	_T(".zip.cbz.epub.mobi.gdtf")	//画像を持つ可能性のあるZIP
+#define FEXT_ZIPIMG	_T(".zip.cbz.epub.gdtf")	//画像を持つ可能性のあるZIPファイル
 
 #define ARC_OUTBUF_SIZE_L	1048576	//1MB
 #define ARC_OUTBUF_SIZE_S	4096
@@ -233,6 +233,8 @@ public:
 	int  GetRootCount(UnicodeString arc_file);
 
 	bool GetFileInf(UnicodeString arc_file, UnicodeString fnam, arc_find_inf *inf);
+	void GetDirList(UnicodeString arc_file, TStrings *d_lst);
+	void GetItemList(UnicodeString arc_file, UnicodeString dnam, TStrings *f_lst, TStrings *d_lst);
 
 	bool HasZipImg(UnicodeString arc_file, UnicodeString xlist);
 	bool GetFileList(UnicodeString arc_file, TStringList *lst);

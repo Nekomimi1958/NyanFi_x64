@@ -688,7 +688,7 @@ void __fastcall TExTxtViewer::FormMouseWheel(TObject *Sender, TShiftState Shift,
 	cmd_V = Trim((WheelDelta>0)? get_tkn(cmd_V, '/') : get_tkn_r(cmd_V, '/'));
 
 	CancelKeySeq();
-	ExeCommandV(cmd_V);
+	Handled = ExeCommandV(cmd_V);
 }
 
 //---------------------------------------------------------------------------
