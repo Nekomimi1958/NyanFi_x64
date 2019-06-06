@@ -10588,8 +10588,11 @@ int __fastcall TNyanFiForm::set_IncSeaStt(
 			if (smsk_sw) {
 				//選択マスクを設定して絞り込み
 				if (fp->matched) {
-				 	sm_lst->Add(fp->f_name);
-				 	i++;
+					sm_lst->Add(fp->f_name);
+					i++;
+				}
+				else if (fp->is_up) {
+					i++;
 				}
 				else {
 					del_FileListItem(lst, i);
@@ -16006,14 +16009,16 @@ void __fastcall TNyanFiForm::FilterComboBoxChange(TObject *Sender)
 				UnicodeString lbuf = (!fp->alias.IsEmpty())? (fp->alias + fp->f_ext) : fp->n_name;
 				if (CurStt->find_TAG && FindTagsColumn) lbuf.cat_sprintf(_T("\t%s"), fp->tags.c_str());
 				fp->matched = contains_word_and_or(lbuf, kwd, CurStt->filter_sens);
-			}
-			//選択マスクを設定して絞り込み
-			if (fp->matched) {
-			 	sm_lst->Add(fp->f_name);
-			 	i++;
+				if (fp->matched) {
+					sm_lst->Add(fp->f_name);
+					i++;
+				}
+				else {
+					del_FileListItem(lst, i);
+				}
 			}
 			else {
-				del_FileListItem(lst, i);
+				i++;
 			}
 		}
 	}

@@ -796,10 +796,10 @@ UnicodeString UserShell::ShowContextMenu(
 				else if (nId!=0) {
 					CMINVOKECOMMANDINFO ici;
 					::ZeroMemory(&ici, sizeof(CMINVOKECOMMANDINFO));
-					ici.cbSize		 = sizeof(CMINVOKECOMMANDINFO);
-					ici.hwnd		 = hWnd;
-					ici.lpVerb		 = (LPCSTR)MAKEINTRESOURCE(nId - 1);
-					ici.nShow		 = SW_SHOW;
+					ici.cbSize = sizeof(CMINVOKECOMMANDINFO);
+					ici.hwnd   = hWnd;
+					ici.lpVerb = (LPCSTR)MAKEINTRESOURCE(nId - 1);
+					ici.nShow  = SW_SHOW;
 					if (FAILED(pCM->InvokeCommand(&ici))) ret_str = "ERROR";
 				}
 			}

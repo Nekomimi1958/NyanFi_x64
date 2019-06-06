@@ -39,7 +39,7 @@ void __fastcall TSameNameDlg::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter);
 
 	set_ListBoxItemHi(InfoListBox);
-	InfoListBox->Color = col_bgInf;
+	InfoListBox->Color = col_bgList;
 
 	UnicodeString tmp;
 	InhAllChk = true;
@@ -158,7 +158,7 @@ void __fastcall TSameNameDlg::InfoListBoxDrawItem(TWinControl *Control, int Inde
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
-	cv->Brush->Color = col_bgInf;
+	cv->Brush->Color = col_bgList;
 	cv->FillRect(Rect);
 	int xp = Rect.Left + Scaled4;
 	int yp = Rect.Top  + get_TopMargin(cv);
@@ -179,7 +179,7 @@ void __fastcall TSameNameDlg::InfoListBoxDrawItem(TWinControl *Control, int Inde
 
 		cv->Font->Color = (Index==0)? get_ExtColor(ExtractFileExt(lbuf)) :
 			  (Index==1 || Index==3)? col_Folder : col_fgList;
-	
+
 		if (Index==0 || Index==1 || Index==3)
 			lbuf = minimize_str(lbuf, cv, Rect.Width() - 8, OmitEndOfName);
 
