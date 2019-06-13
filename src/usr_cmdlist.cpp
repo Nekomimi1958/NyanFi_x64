@@ -512,8 +512,8 @@ void get_PrmList(
 			_T("Filter|FindDown|FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|GitDiff|GitViewer|")
 			_T("Grep|HelpCurWord|ImageViewer|IncSearch|JumpIndex|JumpLine|JumpTo|ListArchive|")
 			_T("ListDuration|ListExpFunc|ListTail|ListText|ListTree|LoadBgImage|LoadResultList|")
-			_T("LoadTabGroup|LoadWorkList|LockKeyMouse|MaskFind|MaskSelect|MatchSelect|MonitorOff|MoveTo|")
-			_T("NameFromClip|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
+			_T("LoadTabGroup|LoadWorkList|LockKeyMouse|Mark|MaskFind|MaskSelect|MatchSelect|MonitorOff|")
+			_T("MoveTo|NameFromClip|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
 			_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|")
 			_T("ScrollCursorUp|ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|")
 			_T("ScrollUpText|SelByList|SetColor|SetDirTime|SetFontSize|SetMargin|SetPathMask|")
@@ -832,7 +832,7 @@ void get_PrmList(
 		params = "\nMO : ディスプレイの電源を切る\n";
 	}
 	else if (USAME_TI(cmd, "Mark") && (id_idx==0 || id_idx==3)) {
-		params = "\nND : カーソルを移動しない\nIM : メモを入力\n";
+		params = "\nND : カーソルを移動しない\nIM : メモを入力\nSL : 選択項目に一括適用\n";
 	}
 	else if (USAME_TI(cmd, "MonitorOff")) {
 		params = "\nLK : コンピュータをロックする\nKM : キーボード/マウスをロックする\n";

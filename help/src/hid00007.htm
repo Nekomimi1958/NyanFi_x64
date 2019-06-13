@@ -268,10 +268,18 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 全画面表示では、サイドバーにドッキングされていない場合にのみ表示可能です。<br>
 <a href="#Sidebar">→ Sidebar</a>　<a href="#Histogram">→ Histogram</a>
 
-<dt id="Mark">Mark<span class="pram_text">[_IM|_ND|_メモ]</span>
-<dd>カーソル位置のファイルに栞マークを設定します。すでにマークされている場合は解除します。<br>
-パラメータに <b>IM</b> を指定すると、ファイルに栞マークを設定するとともに、入力ボックスでメモを設定します。パラメータでメモ内容を直接指定することも可能。なおメモ設定時は、実行後、次のファイルに移動しません。<br>
+<dt id="Mark">Mark<span class="pram_text">[_{IM|メモ}[;ND]]</span><br>
+Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
+<dd>カーソル位置のファイルに<b>栞マーク</b>を設定します。すでに設定されている場合は解除します。<br>
+パラメータに <b>IM</b> を指定すると、項目に栞マークを設定するとともに、入力ボックスでメモを設定できます。パラメータでメモ内容を直接指定することも可能。なおメモ設定時は、実行後、次のファイルに移動しません。<br>
 パラメータに <b>ND</b> を指定すると、実行後、次のファイルに移動しません。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>SL</b> を指定すると、選択されている項目の栞マーク状態を一括で反転させます。実行後、次のファイルに移動しません。<br>
+さらに <b>IM</b> またはメモ内容を指定した場合は、(反転ではなく)栞マークとともにメモを設定します。<br>
+選択項目がない場合は、カーソル位置の項目が対象になります(<b>SL</b> を指定しない場合と同じ)。<br>
+</div>
 <a href="#ClearMark">→ ClearMark</a>　<a href="#NextMark">→ NextMark</a>　<a href="#PrevMark">→ PrevMark</a>　<a href="#MarkList">→ MarkList</a>　<a href="#SelMark">→ SelMark</a>
 
 <dt id="MarkList">MarkList<span class="pram_text">[_FF]</span>

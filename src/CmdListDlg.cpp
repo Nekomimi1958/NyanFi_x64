@@ -563,6 +563,8 @@ void __fastcall TCmdFileListDlg::CmdFileGridDblClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::CmdFileGridClick(TObject *Sender)
 {
+	if (!PreviewPanel->Visible) return;
+
 	int idx = GetGridIndex();
 	if (idx!=-1) {
 		file_rec *fp = (file_rec*)GridItemList->Objects[idx];

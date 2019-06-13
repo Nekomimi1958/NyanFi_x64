@@ -2588,7 +2588,7 @@ object OptionDlg: TOptionDlg
         Top = 547
         Width = 80
         Height = 24
-        Caption = #36969#24540
+        Caption = #36969#29992
         TabOrder = 16
         OnClick = AppDesignBtnClick
       end
@@ -3102,7 +3102,7 @@ object OptionDlg: TOptionDlg
         Top = 547
         Width = 80
         Height = 24
-        Caption = #36969#24540
+        Caption = #36969#29992
         TabOrder = 7
         OnClick = AppColorBtnClick
       end

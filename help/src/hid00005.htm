@@ -1683,12 +1683,23 @@ JumpTo　　　　　　　　<span class="pram_text rem_text">(結果リスト、ワークリスト
 <a href="hid00024.htm#FileInfo">オプション設定 - 一般2 - ファイル情報</a> の「<b>アーカイブ内の情報を表示(一時解凍)</b>」、「<b>情報を取得しない拡張子</b>」、「<b>RARの情報取得をサイズで制限する</b>」の設定は無視されます。<br>
 <a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#ListFileInfo">→ ListFileInfo</a>　<a href="#ShowProperty">→ ShowProperty</a>
 
-<dt id="Mark">Mark<span class="pram_text">[_IM|_ND|_メモ]</span>
-<dd>カーソル位置の項目に<b>栞マーク</b>を設定ます。すでに栞マークが設定されている場合は解除します。<br>
+<dt id="Mark">Mark<span class="pram_text">[_{IM|メモ}[;ND]]</span><br>
+Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
+<dd>カーソル位置の項目に<b>栞マーク</b>を設定します。すでに設定されている場合は解除します。<br>
 栞マークは、<a href="hid00070.htm">栞マーク一覧</a>などで参照できます。<br>
 <div class="spc_box">
-パラメータに <b>IM</b> を指定すると、項目に栞マークを設定するとともに、入力ボックスでメモを設定できます。パラメータでメモ内容を直接指定することも可能。なおメモ設定時は、実行後にカーソルを下に移動しません。<br>
-パラメータに <b>ND</b> を指定すると、実行後にカーソルを下に移動しません。<br>
+パラメータに <b>IM</b> を指定すると、項目に栞マークを設定するとともに、入力ボックスでメモを設定できます。パラメータでメモ内容を直接指定することも可能。なおメモ設定時は、実行後にカーソルが下に移動しません。<br>
+パラメータに <b>ND</b> を指定すると、実行後にカーソルが下に移動しません。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>SL</b> を指定すると、選択されている項目の栞マーク状態を一括で反転させます。実行後、カーソルは下に移動しません。<br>
+さらに <b>IM</b> またはメモ内容を指定した場合は、(反転ではなく)栞マークとともにメモを設定します。<br>
+選択項目がない場合は、カーソル位置の項目が対象になります(<b>SL</b> を指定しない場合と同じ)。<br>
+</div>
+<div class="spc_box">
+<b>例</b>: 選択項目に栞マークとメモを一括設定<br>
+　Mark_SL;IM
 </div>
 <a href="#ClearMark">→ ClearMark</a>　<a href="#NextMark">→ NextMark</a>　<a href="#PrevMark">→ PrevMark</a>　<a href="#MarkList">→ MarkList</a>　<a href="#FindMark">→ FindMark</a>　<a href="#SelMark">→ SelMark</a>　<a href="#MarkMask">→ MarkMask</a>
 

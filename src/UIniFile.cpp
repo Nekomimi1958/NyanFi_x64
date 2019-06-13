@@ -816,6 +816,8 @@ UnicodeString UsrIniFile::MarkedInArc(
 //---------------------------------------------------------------------------
 UnicodeString UsrIniFile::GetMarkMemo(UnicodeString fnam)
 {
+	if (fnam.IsEmpty()) return EmptyStr;
+
 	UnicodeString sct, itm;
 	//アーカイブ
 	if (contains_Slash(fnam)) {

@@ -19574,52 +19574,81 @@ void __fastcall TNyanFiForm::LogFileInfoActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::MarkActionExecute(TObject *Sender)
 {
-	if (CurStt->is_ADS || CurStt->is_FTP) {
-		SetActionAbort(USTR_CantOperate);  return;
-	}
+	try {
+		if (CurStt->is_ADS || CurStt->is_FTP) UserAbort(USTR_CantOperate);
 
-	file_rec *cfp = GetCurFrecPtr();
-	if (!cfp || cfp->f_attr==faInvalid) { SetActionAbort(); return; }
+		TStringList *lst = GetCurList();
+		int sel_cnt = GetSelCount(lst);
+		bool is_sl = TEST_DEL_ActParam("SL") && (sel_cnt>0);
+		bool is_im = TEST_DEL_ActParam("IM");
+		bool is_nd = TEST_DEL_ActParam("ND");
 
-	bool rq_down;
-	//マーク&メモ(入力)
-	if (TEST_ActParam("IM")) {
-		UnicodeString memo = IniFile->GetMarkMemo(cfp->r_name);
-		if (input_query_ex(ExtractFileName(cfp->r_name).c_str(), _T("メモ"), &memo, 480)) {
-			IniFile->FileMark(cfp->r_name, 1, memo);
+		UnicodeString r_name;
+		if (!is_sl) {
+			file_rec *cfp = GetCurFrecPtr();
+			if (!cfp || cfp->f_attr==faInvalid) Abort();
+			r_name = cfp->r_name;
 		}
-		CloseIME(Handle);
-		rq_down = false;
-	}
-	//マーク&メモ(指定)
-	else if (!TEST_ActParam("ND") && !ActionParam.IsEmpty()) {
-		IniFile->FileMark(cfp->r_name, 1, ActionParam);
-		rq_down = false;
-	}
-	//マーク/解除
-	else {
-		IniFile->FileMark(cfp->r_name);
-		rq_down = !TEST_ActParam("ND");
-	}
 
-	ViewFileInf(cfp, true);
+		bool has_memo = false;
+		UnicodeString memo;
+		if (is_im) {
+			UnicodeString msg;
+			if (!r_name.IsEmpty()) {
+				msg  = ExtractFileName(r_name);
+				memo = IniFile->GetMarkMemo(r_name);
+			}
+			else if (is_sl) {
+				msg.sprintf(_T("%u個の選択項目"), sel_cnt);
+			}
+			has_memo = input_query_ex(msg.c_str(), _T("メモ"), &memo, 480);
+			CloseIME(Handle);
+			if (!has_memo) SkipAbort();
+			is_nd = true;
+		}
+		else if (!ActionParam.IsEmpty()) {
+			has_memo = true;
+			memo = ActionParam;
+			is_nd = true;
+		}
 
-	switch (ScrMode) {
-	case SCMD_FLIST:
-		{
-			TListBox *lp = FileListBox[CurListTag];
-			int idx0 = lp->ItemIndex;
-			if (rq_down) CursorDownAction->Execute();
-			if (lp->ItemIndex==idx0) InvalidateFileList();
-			if (SameText(CurPath[OppListTag], cfp->p_name)) InvalidateFileList(OppListTag);
+		if (is_sl) {
+			for (int i=0; i<lst->Count; i++) {
+				file_rec *fp = (file_rec*)lst->Objects[i];
+				if (fp->selected) {
+					if (has_memo)
+						IniFile->FileMark(fp->r_name, 1, memo);
+					else
+						IniFile->FileMark(fp->r_name);
+					fp->selected = false;
+				}
+			}
+			is_nd = true;
 		}
-		break;
-	case SCMD_IVIEW:
-		if (GetCurIndex()!=-1) {
-			if (rq_down) NextFileAction->Execute();
-			if (ThumbnailGrid->Visible) ThumbnailGrid->Repaint();
+		else {
+			if (has_memo)
+				IniFile->FileMark(r_name, 1, memo);
+			else
+				IniFile->FileMark(r_name);
+			ViewFileInf(GetCurFrecPtr(), true);
 		}
-		break;
+
+		switch (ScrMode) {
+		case SCMD_FLIST:
+			if (!is_nd) CursorDownAction->Execute();
+			if (is_sl) ReloadList(CurListTag); else InvalidateFileList();
+			if (EqualDirLR()) InvalidateFileList(OppListTag);
+			break;
+		case SCMD_IVIEW:
+			if (GetCurIndex()!=-1) {
+				if (!is_nd) NextFileAction->Execute();
+				if (ThumbnailGrid->Visible) ThumbnailGrid->Repaint();
+			}
+			break;
+		}
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
 	}
 }
 
@@ -22689,7 +22718,9 @@ void __fastcall TNyanFiForm::SelOnlyCurActionExecute(TObject *Sender)
 			file_rec *ofp = (file_rec*)o_lst->Objects[o_i];
 			if (ofp->is_dir) continue;
 			if (SameText(ofp->n_name, cfp->n_name)) {
-				cfp->selected = false;  break;
+				cfp->selected = (IsDiffList() && ofp->is_dummy);
+				//反対側が比較結果の不在項目なら選択/通常は解除
+				break;
 			}
 		}
 		if (cfp->selected && top_s_idx==-1) top_s_idx = c_i;

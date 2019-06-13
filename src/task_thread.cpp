@@ -918,6 +918,8 @@ void __fastcall TTaskThread::DEL_core(
 		if (del_lnk) LnkDeleted = true;
 
 		del_CachedIcon(fnam);
+		if (IniFile->IsMarked(fnam)) IniFile->FileMark(fnam, 0);
+
 		OkCount++;
 	}
 	//’†’f
@@ -1089,7 +1091,9 @@ void __fastcall TTaskThread::CMPDEL_core(UnicodeString fnam)
 
 		//íœ
 		if (!EX_delete_File(fnam)) throw Exception(EmptyStr);
+
 		del_CachedIcon(fnam);
+		if (IniFile->IsMarked(fnam)) IniFile->FileMark(fnam, 0);
 
 		OkCount++;
 	}
