@@ -193,6 +193,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *CopyNoBuffCheckBox;
 	TCheckBox *CopyTagsCheckBox;
 	TCheckBox *CtrlCheckBox;
+	TCheckBox *DecDfmStrCheckBox;
 	TCheckBox *DelDplDirHistCheckBox;
 	TCheckBox *DelUseTrsCheckBox;
 	TCheckBox *DirHistCsrPosCheckBox;
@@ -264,6 +265,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *KeepZoomCheckBox;
 	TCheckBox *LimitBinCsrCheckBox;
 	TCheckBox *LogDebugInfCheckBox;
+	TCheckBox *LogDestinationCheckBox;
 	TCheckBox *LogErrMsgCheckBox;
 	TCheckBox *LogErrOnlyCheckBox;
 	TCheckBox *LogFullPathCheckBox;
@@ -735,7 +737,6 @@ __published:	// IDE で管理されるコンポーネント
 	TTabSheet *NotifySheet;
 	TTabSheet *StartupSheet;
 	TTabSheet *TxtViewerSheet;
-	TCheckBox *DecDfmStrCheckBox;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

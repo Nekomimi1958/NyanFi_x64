@@ -43,7 +43,9 @@ __published:	// IDE で管理されるコンポーネント
 	TComboBox *CodePageComboBox;
 	TComboBox *InputComboBox;
 	TLabel *CodePageLabel;
+	TLabel *NameInfLabel;
 	TLabel *NameLabel;
+	TLabel *PathInfLabel;
 	TLabeledEdit *InputEdit;
 	TLabeledEdit *TestCntEdit;
 	TLabeledEdit *TestSizeEdit;
@@ -65,6 +67,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InputEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall InputEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall SelDefCheckBoxClick(TObject *Sender);
+	void __fastcall InputComboBoxChange(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString HelpTopic;
@@ -74,6 +77,8 @@ private:	// ユーザー宣言
 public:		// ユーザー宣言
 	int  IpuntExMode;	//拡張モード	(0 の場合は単純な入力ボックス)
 	int  CustomWidth;	//カスタム表示幅
+
+	UnicodeString PathName;
 
 	__fastcall TInputExDlg(TComponent* Owner);
 

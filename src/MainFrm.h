@@ -646,6 +646,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *FileMenu;
 	TMenuItem *FileRunItem;
 	TMenuItem *FindDirItem;
+	TMenuItem *FindDuplDlgItem;
 	TMenuItem *FindFileItem;
 	TMenuItem *FindFolderIconItem;
 	TMenuItem *FindMenu;
@@ -693,7 +694,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *InvSelItem;
 	TMenuItem *IV_ClipCopyItem;
 	TMenuItem *JoinTextItem;
-	TMenuItem *ShowFkeyBarItem;
 	TMenuItem *KeyListItem;
 	TMenuItem *LibraryItem;
 	TMenuItem *ListMenu;
@@ -711,7 +711,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *NewFileItem;
 	TMenuItem *NewTextItem;
 	TMenuItem *NewWorkListItem;
-	TMenuItem *FindDuplDlgItem;
 	TMenuItem *OpenAsRunItem;
 	TMenuItem *OpenExpItem;
 	TMenuItem *OpenTrashItem;
@@ -844,6 +843,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *SetToolBtnItem;
 	TMenuItem *ShareListItem;
 	TMenuItem *ShowCrItem;
+	TMenuItem *ShowFkeyBarItem;
 	TMenuItem *ShowGridItem;
 	TMenuItem *ShowIconItem;
 	TMenuItem *ShowLineNoItem;

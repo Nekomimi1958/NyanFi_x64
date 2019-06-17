@@ -35,13 +35,13 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *ImgPreviewItem;
 	TMenuItem *InfEditCopyItem;
 	TMenuItem *InfEditSelectAllItem;
+	TMenuItem *OpenUrlItem;
 	TMenuItem *PopCopyFileInfoItm;
 	TMenuItem *PopCopyValueItem;
 	TMenuItem *PropertyDlgItem;
 	TMenuItem *Sep_i_1;
 	TMenuItem *Sep_i_2;
 	TMenuItem *Sep_i_3;
-	TMenuItem *OpenUrlItem;
 	TPanel *ListPanel;
 	TPopupMenu *InfPopupMenu;
 

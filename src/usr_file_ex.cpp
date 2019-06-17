@@ -170,9 +170,8 @@ UnicodeString to_absolute_name(
 //---------------------------------------------------------------------------
 UnicodeString extract_file_path(UnicodeString fnam)
 {
-	int p = fnam.Length() - ExtractFileName(fnam).Length();
-	if (p>2 && fnam[p]==':') return ExtractFilePath(fnam.SubString(1, p - 1));
-
+	int p = pos_ADS_delimiter(fnam);
+	if (p>0) fnam = fnam.SubString(1, p - 1);
 	return ExtractFilePath(fnam);
 }
 
@@ -767,12 +766,19 @@ __int64 get_comp_size(UnicodeString fnam)
 }
 
 //---------------------------------------------------------------------------
+//代替データストリームの区切り位置を取得
+//---------------------------------------------------------------------------
+int pos_ADS_delimiter(UnicodeString fnam)
+{
+	int p = fnam.Length() - ExtractFileName(fnam).Length();
+	return (p>2 && fnam[p]==':')? p : 0;
+}
+//---------------------------------------------------------------------------
 //代替データストリーム付きパス名か?
 //---------------------------------------------------------------------------
 bool is_ADS_name(UnicodeString fnam)
 {
-	int p = fnam.Length() - ExtractFileName(fnam).Length();
-	return (p>2 && fnam[p]==':');
+	return (pos_ADS_delimiter(fnam)>0);
 }
 
 //---------------------------------------------------------------------------

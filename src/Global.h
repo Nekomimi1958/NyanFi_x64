@@ -353,6 +353,7 @@ extern bool LogErrMsg;
 extern bool LogDebugInf;
 extern bool LogHideSkip;
 extern bool LogFullPath;
+extern bool LogDestination;
 extern bool SaveLog;
 extern bool AppendLog;
 extern bool NotSortWorkList;
@@ -2024,6 +2025,8 @@ UnicodeString make_LogHdr(const _TCHAR *cmd, UnicodeString fnam = EmptyStr, bool
 UnicodeString make_LogHdr(const _TCHAR *cmd, file_rec *fp);
 UnicodeString make_CreateLog(UnicodeString dnam);
 UnicodeString make_RenameLog(UnicodeString o_nam, UnicodeString n_nam);
+void cat_DestDir(UnicodeString &msg, UnicodeString dnam);
+void cat_DestFile(UnicodeString &msg, UnicodeString fnam);
 void set_RenameLog(UnicodeString &msg, UnicodeString fnam);
 
 void UpdateLogListBox();

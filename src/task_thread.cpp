@@ -534,6 +534,9 @@ void __fastcall TTaskThread::CPY_core(
 		if (!LogFullPath) remove_top_text(dnam, Config->DistPath);
 		msg.cat_sprintf(_T(" --> [%s]"), dnam.c_str());
 	}
+	else {
+		cat_DestDir(msg, dst_path);
+	}
 
 	CurFileName = fnam;
 	CopyName	= ExtractFileName(fnam);
@@ -1407,7 +1410,7 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 			}
 			LastDstName = cv_nam;
 		}
-		msg.cat_sprintf(_T(" ---> %s"), ExtractFileName(cv_nam).c_str());
+		cat_DestFile(msg, cv_nam);
 
 		//Œ`Ž®•ÏŠ·‚µ‚Ä•Û‘¶
 		if (!WIC_save_image(cv_nam, i_img.get(),

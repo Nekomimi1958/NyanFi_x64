@@ -105,6 +105,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *BrDelTagItem;
 	TMenuItem *BrSetTagItem;
 	TMenuItem *CheckoutItem;
+	TMenuItem *CherryPickItem;
 	TMenuItem *CommitInfoItem;
 	TMenuItem *CopyBranchNameItem;
 	TMenuItem *CopyCommitIDItem;
@@ -121,7 +122,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *LogThisFileItem;
 	TMenuItem *MergeItem;
 	TMenuItem *MixedResetItem;
-	TMenuItem *CherryPickItem;
 	TMenuItem *OpenTmpArcItem;
 	TMenuItem *RenBranchItem;
 	TMenuItem *ResetAll2Item;

@@ -598,6 +598,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	LogDebugInfCheckBox->Tag	= (int)&LogDebugInf;
 	LogHideSkipCheckBox->Tag	= (int)&LogHideSkip;
 	LogFullPathCheckBox->Tag	= (int)&LogFullPath;
+	LogDestinationCheckBox->Tag	= (int)&LogDestination;
 	SaveLogCheckBox->Tag		= (int)&SaveLog;
 	AppendLogCheckBox->Tag		= (int)&AppendLog;
 	NotSortWLCheckBox->Tag		= (int)&NotSortWorkList;

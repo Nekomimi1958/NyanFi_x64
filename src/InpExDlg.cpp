@@ -39,7 +39,7 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 
 	//拡張モードのキャプション設定
 	switch (IpuntExMode) {
-	case INPEX_CRE_DIR:		 Caption = "ディレクトリの作成";	break;
+	case INPEX_CRE_DIR:		 Caption = "ディレクトリの作成 - " + yen_to_delimiter(PathName);	break;
 	case INPEX_NEW_TEXTFILE: Caption = "新規テキストの作成";	break;
 	case INPEX_CLONE:		 Caption = "クローン作成";			break;
 	case INPEX_CRE_TESTFILE: Caption = "テストファイルの作成";	break;
@@ -86,6 +86,8 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 		InputExDlg->InputComboBox->Hint =
 			(IpuntExMode==INPEX_FIND_TAG || IpuntExMode==INPEX_TAG_SELECT)? "; 区切りでAND検索、｜区切りでOR検索" :
 				(IpuntExMode==INPEX_ADD_TAG || IpuntExMode==INPEX_SET_TAG)? "; で区切って複数指定可能" : "";
+
+		InputComboBoxChange(NULL);
 	}
 	//Edit
 	else {
@@ -320,6 +322,19 @@ void __fastcall TInputExDlg::InputEditKeyDown(TObject *Sender, WORD &Key, TShift
 void __fastcall TInputExDlg::InputEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
 	if (is_KeyPress_CtrlNotCV(Key)) Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TInputExDlg::InputComboBoxChange(TObject *Sender)
+{
+	if (IpuntExMode==INPEX_CRE_DIR) {
+		int f_len = InputComboBox->Text.Length();
+		int p_len = PathName.Length() + f_len;
+		PathInfLabel->Font->Color = (p_len<248 || PathName.Pos('/'))? scl_WindowText : col_Error;
+		NameInfLabel->Font->Color = (f_len<256)? scl_WindowText : col_Error;
+		UnicodeString tmp;
+		PathInfLabel->Caption = tmp.sprintf(_T("フルパス名の文字数 = %u"), p_len);
+		NameInfLabel->Caption = tmp.sprintf(_T("名前の文字数 = %u"), f_len);
+	}
 }
 
 //---------------------------------------------------------------------------

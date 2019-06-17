@@ -2,9 +2,10 @@ object InputExDlg: TInputExDlg
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  ClientHeight = 210
+  ClientHeight = 232
   ClientWidth = 594
   Color = clBtnFace
+  DoubleBuffered = True
   ParentFont = True
   KeyPreview = True
   OldCreateOrder = False
@@ -53,6 +54,7 @@ object InputExDlg: TInputExDlg
       Height = 21
       PopupMenu = UserModule.EditPopupMenuC
       TabOrder = 1
+      OnChange = InputComboBoxChange
     end
   end
   object NewTextPanel: TPanel
@@ -105,13 +107,34 @@ object InputExDlg: TInputExDlg
     Left = 0
     Top = 95
     Width = 594
-    Height = 28
+    Height = 52
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
+    DesignSize = (
+      594
+      52)
+    object PathInfLabel: TLabel
+      Left = 45
+      Top = -2
+      Width = 170
+      Height = 18
+      Anchors = [akLeft, akBottom]
+      AutoSize = False
+      Caption = #12501#12523#12497#12473#21517#12398#25991#23383#25968' = '
+    end
+    object NameInfLabel: TLabel
+      Left = 219
+      Top = -2
+      Width = 160
+      Height = 18
+      Anchors = [akLeft, akBottom]
+      AutoSize = False
+      Caption = #21517#21069#12398#25991#23383#25968' = '
+    end
     object CnvChCheckBox: TCheckBox
       Left = 203
-      Top = 4
+      Top = 26
       Width = 180
       Height = 17
       Caption = #25991#23383#32622#25563#12434#36969#29992'(&R)'
@@ -120,7 +143,7 @@ object InputExDlg: TInputExDlg
     end
     object DirChgCheckBox: TCheckBox
       Left = 15
-      Top = 4
+      Top = 26
       Width = 180
       Height = 17
       Caption = #20316#25104#24460#12395#12459#12524#12531#12488#22793#26356'(&C)'
@@ -130,7 +153,7 @@ object InputExDlg: TInputExDlg
   end
   object BottomPanel: TPanel
     Left = 0
-    Top = 169
+    Top = 191
     Width = 594
     Height = 41
     Align = alBottom
@@ -211,7 +234,7 @@ object InputExDlg: TInputExDlg
   end
   object CreTestPanel: TPanel
     Left = 0
-    Top = 123
+    Top = 147
     Width = 594
     Height = 32
     Align = alTop

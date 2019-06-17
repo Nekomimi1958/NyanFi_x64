@@ -339,7 +339,9 @@ EndIf
 
 <dt id="Exit" class="no_bg">Exit
 <dd><b>ExeCommands</b> コマンドの実行を終了します。<br>
-※ファイラーの <a href="hid00005.htm#Exit">Exit</a> コマンドを実行したい場合は、エイリアスの <a href="hid00005.htm#Close">Close</a>  を使ってください。<br>
+<div class="note_text">
+ファイラーの <a href="hid00005.htm#Exit">Exit</a> コマンドを実行したい場合は、エイリアスの <a href="hid00005.htm#Close">Close</a>  を使ってください。<br>
+</div>
 <a href="#ReturnCommands">→ ReturnCommands</a>
 
 <dt id="FileExists" class="no_bg">FileExists<span class="pram_text">_ファイル名</span>
@@ -433,7 +435,7 @@ MsgBox_%Buffer%
 <dd>指定したメッセージをヒント表示します。<br>
 先頭に <b>!</b> を付けるとヒントが自動的に隠れません。表示されているヒントを消すには、メッセージなしで <b>Hint</b> を実行します。<br>
 <div class="note_text">
-※<b>!</b> を指定していても NyanFi が非アクティブになるとヒントが隠れてしまいますので注意してください。
+<b>!</b> を指定していても NyanFi が非アクティブになるとヒントが隠れてしまいますので注意してください。
 </div>
 
 <div class="spc_box">
@@ -573,7 +575,7 @@ MsgBox<span class="pram_text">_&quot;:タイトル:メッセージ&quot;</span>
 ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
 なお再生を中断したいときは、ファイル名を指定せずに <b>PlaySound</b> コマンドを実行してください。<br>
 <div class="note_text">
-※<b>.mp3</b> の場合ID3タグの内容によっては再生できない場合があります。適切なコーデックを別途インストールすれば再生できるようになります。<br>
+<b>.mp3</b> の場合ID3タグの内容によっては再生できない場合があります。適切なコーデックを別途インストールすれば再生できるようになります。<br>
 </div>
 <a href="#FlashWin">→ FlashWin</a>
 
@@ -857,7 +859,7 @@ EndIf
 変数の内容と文字列を、大文字・小文字を区別せずに比較します。<br>
 比較は自然順ですので、桁数の違う数字なども数値のように扱えます。また日時の比較も可能です。<br>
 <div class="note_text">
-※変数同士を比較する場合は、Test_変数A==%変数B% というようになりますので注意してください。<br>
+変数同士を比較する場合は、Test_変数A==%変数B% というようになりますので注意してください。<br>
 </div>
 結果は後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
 <a href="#Set">→ Set</a>　<a href="#Input">→ Input</a>
@@ -871,7 +873,7 @@ Timer<span class="pram_text">_&quot;hh:mm[:ss]&quot;</span>
 <b>例</b>: Timer_90M<br>
 <b>例</b>: Timer_&quot;12:00:00&quot;<br>
 <div class="note_text">
-※時刻は : を含むため必ずダブルクォーテーションで囲んでください。
+時刻は : を含むため必ずダブルクォーテーションで囲んでください。
 </div>
 </div>
 <a href="#Sleep">→ Sleep</a>
@@ -1336,7 +1338,7 @@ TextViewer_%URL%
 <br>
 
 <p class="info_text">
-※アーカイブの <b>sample_cmd</b> ディレクトリには、コマンドファイルのサンプルがあります。
+アーカイブの <b>sample_cmd</b> ディレクトリには、コマンドファイルのサンプルがあります。
 </p>
 <br><br>
 

@@ -199,6 +199,7 @@ bool LogErrMsg;					//ログにエラーメッセージを出力
 bool LogDebugInf;				//ログにデバッグ情報を出力
 bool LogHideSkip;				//ログにスキップ項目を出力しない
 bool LogFullPath;				//ログの処理内容をフルパスで表示
+bool LogDestination;			//ログに処理先を表示
 bool SaveLog;					//終了時にログを保存
 bool AppendLog;					//同日のログは追記保存
 bool NotSortWorkList;			//ワークリスト項目をソートしない
@@ -1673,6 +1674,7 @@ void InitializeGlobal()
 		{_T("LogDebugInf=false"),			(TObject*)&LogDebugInf},
 		{_T("LogHideSkip=false"),			(TObject*)&LogHideSkip},
 		{_T("LogFullPath=false"),			(TObject*)&LogFullPath},
+		{_T("LogDestination=false"),		(TObject*)&LogDestination},
 		{_T("SaveLog=true"),				(TObject*)&SaveLog},
 		{_T("AppendLog=false"),				(TObject*)&AppendLog},
 		{_T("NotSortWorkList=false"),	 	(TObject*)&NotSortWorkList},
@@ -4546,9 +4548,7 @@ file_rec* cre_new_file_rec(
 			fp->f_name = fp->r_name = fnam;
 			fp->p_name = ExtractFilePath(fnam);
 			fp->n_name = ExtractFileName(fnam);
-
-			int p = fnam.Length() - fp->n_name.Length();
-			fp->is_ads = (p>2 && fnam[p]==':');
+			fp->is_ads = is_ADS_name(fnam);
 
 			if (is_dir) {
 				fp->is_dir = true;
@@ -10328,6 +10328,14 @@ void PrvTextOut(
 	}
 	//コメント無し
 	else {
+		//見出し行
+		UnicodeString ptn = UserHighlight->GetHeadlinePtn(fnam, HeadlineList);
+		if (!ptn.IsEmpty() && fg!=col_fgSelItem) {
+			TRegExOptions opt; opt << roIgnoreCase;
+			if (TRegEx::IsMatch(s, ptn, opt)) fg = col_Headline;
+		}
+
+		//.dfm 文字列値デコード
 		if (test_FileExt(get_extension(fnam), _T(".dfm"))) {
 			UnicodeString lbuf = s;
 			if (lbuf.Pos('=')) {
@@ -12354,6 +12362,26 @@ UnicodeString make_RenameLog(UnicodeString o_nam, UnicodeString n_nam)
 }
 
 //---------------------------------------------------------------------------
+//デスティネーション・ディレクトリを追加
+//---------------------------------------------------------------------------
+void cat_DestDir(UnicodeString &msg, UnicodeString dnam)
+{
+	if (LogDestination) {
+		dnam = ExcludeTrailingPathDelimiter(dnam);
+		if (!LogFullPath) dnam = ExtractFileName(dnam);
+		msg.cat_sprintf(_T(" ---> [%s]"), dnam.c_str());
+	}
+}
+//---------------------------------------------------------------------------
+//デスティネーション・ファイルを追加
+//---------------------------------------------------------------------------
+void cat_DestFile(UnicodeString &msg, UnicodeString fnam)
+{
+	if (!LogFullPath) fnam = ExtractFileName(fnam);
+	msg.cat_sprintf(_T(" ---> %s"), fnam.c_str());
+}
+
+//---------------------------------------------------------------------------
 //ログに改名情報を付加
 //---------------------------------------------------------------------------
 void set_RenameLog(UnicodeString &msg, UnicodeString fnam)
@@ -12361,7 +12389,8 @@ void set_RenameLog(UnicodeString &msg, UnicodeString fnam)
 	if (msg.IsEmpty()) return;
 
 	msg[1] = 'R';
-	msg.cat_sprintf(_T(" ---> %s"), ExtractFileName(fnam).c_str());
+	if (msg.Pos(" ---> ")==0) msg += " --->";
+	msg.cat_sprintf(_T(" %s"), ExtractFileName(fnam).c_str());
 }
 
 //---------------------------------------------------------------------------

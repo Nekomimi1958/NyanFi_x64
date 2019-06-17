@@ -80,6 +80,7 @@ __int64 get_file_size(UnicodeString fnam);
 __int64 get_comp_size(UnicodeString fnam);
 
 bool is_ADS_name(UnicodeString fnam);
+int  pos_ADS_delimiter(UnicodeString fnam);
 int  delete_ADS(UnicodeString fnam, bool force = false, bool zi_only = false, TStringList *lst = NULL);
 
 UnicodeString chk_cre_dir(UnicodeString dnam);

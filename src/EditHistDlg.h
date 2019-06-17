@@ -64,7 +64,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *mFitSizePosItem;
 	TMenuItem *mPropertyItem;
 	TMenuItem *mStatusBarItem;
-	TMenuItem *UpdGitInfItem;
 	TMenuItem *NoHistItem;
 	TMenuItem *rFileInfoItem;
 	TMenuItem *rFitSizePosItem;
@@ -80,6 +79,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_r_1;
 	TMenuItem *Sep_r_2;
 	TMenuItem *ShowUsedTimeItem;
+	TMenuItem *UpdGitInfItem;
 	TPanel *GridPanel;
 	TPopupMenu *HistPopupMenu;
 	TPopupMenu *MarkPopupMenu;

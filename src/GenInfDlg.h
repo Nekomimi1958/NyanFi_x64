@@ -44,6 +44,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *PropertyAction;
 	TAction *RestoreListAction;
 	TAction *SaveAsAction;
+	TAction *SaveAsNbtAction;
 	TAction *SelAllAction;
 	TAction *ShowFileInfoAction;
 	TAction *ShowLineNoAction;
@@ -72,11 +73,13 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *PropertyItem;
 	TMenuItem *RestoreListItem;
 	TMenuItem *SaveAsItem;
+	TMenuItem *SaveAsNbtItem;
 	TMenuItem *Sep_1;
 	TMenuItem *Sep_2;
 	TMenuItem *Sep_3;
 	TMenuItem *Sep_4;
 	TMenuItem *Sep_5;
+	TMenuItem *Sep_6;
 	TMenuItem *ShowFileInfoItem;
 	TMenuItem *ShowLineNoItem;
 	TMenuItem *SortAscItem;
@@ -98,9 +101,6 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *NotifyBtn;
 	TToolButton *ToolButton5;
 	TToolButton *WatchBtn;
-	TMenuItem *Sep_6;
-	TAction *SaveAsNbtAction;
-	TMenuItem *SaveAsNbtItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

@@ -9234,6 +9234,8 @@ bool __fastcall TNyanFiForm::UnpackCopyCore(
 
 				UnicodeString src_fnam = anam + "\\" + dst_fnam;
 				UnicodeString msg = make_LogHdr(_T("COPY"), src_fnam);
+				cat_DestDir(msg, dst_dir);
+
 				if (!snam.IsEmpty()) remove_top_text(dst_fnam, snam);
 				dst_fnam = dst_dir + dst_fnam;
 				UnicodeString dst_snam = ExtractFilePath(dst_fnam);
@@ -13842,6 +13844,7 @@ void __fastcall TNyanFiForm::CreateDirActionExecute(TObject *Sender)
 		if (ActionParam.IsEmpty() || TEST_DEL_ActParam("IN")) {
 			InputExDlg->IpuntExMode = INPEX_CRE_DIR;
 			InputExDlg->InputComboBox->Text = FormatParam(ActionParam);
+			InputExDlg->PathName = CurStt->is_FTP? yen_to_slash(CurFTPPath) : CurPath[CurListTag];
 			XCMD_ModalResult = InputExDlg->ShowModal();
 			if (XCMD_ModalResult!=mrOk) SkipAbort();
 			inpstr = InputExDlg->InputComboBox->Text;
@@ -25353,6 +25356,10 @@ bool __fastcall TNyanFiForm::CopyAdsCore(
 	bool &sk_all)			//すべてスキップ
 {
 	UnicodeString msg = make_LogHdr(_T("COPY"), src_nam);
+	bool dst_is_ads   = is_ADS_name(dst_nam);
+	UnicodeString dnam =
+		dst_is_ads? dst_nam.SubString(1, dst_nam.Length() - ExtractFileName(dst_nam).Length()) : ExtractFilePath(dst_nam);
+	cat_DestDir(msg, dnam);
 
 	//同名処理
 	if (file_exists(dst_nam)) {
@@ -25400,13 +25407,10 @@ bool __fastcall TNyanFiForm::CopyAdsCore(
 			copied = !CancelWork;
 		}
 
-		if (copied) {
-			//ADSでなければタイムスタンプと属性をコピー
-			int p = dst_nam.Length() - ExtractFileName(dst_nam).Length();
-			if (p<=2 || dst_nam[p]!=':') {
-				if (!set_file_age(dst_nam, get_file_age(src_nam))) Abort();
-				if (!file_SetAttr(dst_nam, file_GetAttr(src_nam))) Abort();
-			}
+		//コピー先がADSでなければタイムスタンプと属性をコピー
+		if (copied && !dst_is_ads) {
+			if (!set_file_age(dst_nam, get_file_age(src_nam))) Abort();
+			if (!file_SetAttr(dst_nam, file_GetAttr(src_nam))) Abort();
 		}
 	}
 	catch (...) {
@@ -25531,6 +25535,7 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 				if (fp->selected || (sel_cnt==0 && i==cur_idx)) {
 					if (dst_nam.IsEmpty()) dst_nam = fp->n_name;
 					msg = make_LogHdr(_T("COPY"), fp);
+					cat_DestDir(msg, OppStt->arc_Name);
 					if (!usr_ARC->AddFile(OppStt->arc_Name, fp->f_name)) set_LogErrMsg(msg, usr_ARC->ErrMsg);
 					AddLog(msg);
 					if (msg[1]=='E') UserAbort(USTR_FaildCopy);
@@ -26747,9 +26752,10 @@ void __fastcall TNyanFiForm::ConvertDoc2TxtActionExecute(TObject *Sender)
 					TextAbort(_T("対応していないファイル形式です。"));
 				if (!xd2tx_Extract(fp->f_name, f_buf.get())) UserAbort(USTR_FaildProc);
 				//保存
+				UnicodeString fnam = dst_dir + get_base_name(fp->f_name) + ".txt";
+				cat_DestFile(msg, fnam);
 				std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(code_page));
-				if (!saveto_TextFile(dst_dir + get_base_name(fp->f_name) + ".txt", f_buf.get(), enc.get()))
-					UserAbort(USTR_FaildSave);
+				if (!saveto_TextFile(fnam, f_buf.get(), enc.get())) UserAbort(USTR_FaildSave);
 				fp->selected = false;
 				ok_cnt++;
 			}
@@ -26821,8 +26827,10 @@ void __fastcall TNyanFiForm::ConvertHtm2TxtActionExecute(TObject *Sender)
 				htmcnv->Convert();
 
 				//保存
+				UnicodeString fnam = dst_dir + get_base_name(fp->f_name) + ".txt";
+				cat_DestFile(msg, fnam);
 				std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(code_page));
-				if (!saveto_TextFile(dst_dir + get_base_name(fp->f_name) + ".txt", htmcnv->TxtBuf, enc.get()))
+				if (!saveto_TextFile(fnam, htmcnv->TxtBuf, enc.get()))
 					UserAbort(USTR_FaildSave);
 				fp->selected = false;
 				ok_cnt++;
@@ -26972,6 +26980,8 @@ void __fastcall TNyanFiForm::ConvertTextEncActionExecute(TObject *Sender)
 
 				try {
 					msg = make_LogHdr(_T("CVENC"), fp);
+					cat_DestDir(msg, dst_dir);
+
 					int i_cp;
 					if (!is_TextFile(fp->f_name, &i_cp)) UserAbort(USTR_NotText);
 					load_text_ex(fp->f_name, f_buf.get(), i_cp);
@@ -27026,11 +27036,10 @@ void __fastcall TNyanFiForm::ConvertTextEncActionExecute(TObject *Sender)
 					f_buf->WriteBOM = with_bom;
 
 					//保存
-					if (!saveto_TextFile(dst_dir + fp->n_name, f_buf.get(), enc.get()))
-						UserAbort(USTR_FaildSave);
+					UnicodeString fnam = dst_dir + fp->n_name;
+					if (!saveto_TextFile(fnam, f_buf.get(), enc.get())) UserAbort(USTR_FaildSave);
 					fp->selected = false;
-
-					if (SameText(fp->f_name, dst_dir + fp->n_name)) fp->inf_list->Clear();
+					if (SameText(fp->f_name, fnam)) fp->inf_list->Clear();
 				}
 				catch (EAbort &e) {
 					set_LogErrMsg(msg, e.Message);
@@ -27935,7 +27944,7 @@ void __fastcall TNyanFiForm::ResultListBoxKeyDown(TObject *Sender, WORD &Key, TS
 					int idx = GrepWorkList? WorkList->IndexOf(fnam) : -1;
 					bool ok = (idx!=-1)?
 								OpenTxtViewer((file_rec*)WorkList->Objects[idx], false, 0, lno) :
-							 	SetAndOpenTxtViewer(fnam, lno);
+								SetAndOpenTxtViewer(fnam, lno);
 					if (!ok) UserAbort(USTR_FileNotOpen);
 				}
 				break;
@@ -29419,8 +29428,8 @@ bool __fastcall TNyanFiForm::SetAndOpenTxtViewer(
 	}
 	if (pop_dir) ReloadList(CurListTag, fnam);
 
-	int p = fnam.Length() - ExtractFileName(fnam).Length();
-	if (p>2 && fnam[p]==':') {
+	int p = pos_ADS_delimiter(fnam);
+	if (p>0) {
 		if (IndexOfFileList(fnam.SubString(1, p - 1))==-1) return false;
 		file_rec *cfp = cre_new_file_rec(fnam, CurListTag);
 		bool res = OpenTxtViewer(cfp, false, 0, lno);

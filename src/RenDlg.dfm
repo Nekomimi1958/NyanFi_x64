@@ -286,7 +286,7 @@ object RenameDlg: TRenameDlg
       Top = 0
       Width = 540
       Height = 260
-      ActivePage = SerialSheet
+      ActivePage = NameSheet
       Align = alClient
       TabOrder = 0
       TabWidth = 90

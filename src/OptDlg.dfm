@@ -768,7 +768,7 @@ object OptionDlg: TOptionDlg
           Width = 97
           Height = 17
           Caption = #12525#12464#12434#20445#23384
-          TabOrder = 7
+          TabOrder = 8
         end
         object LogErrOnlyCheckBox: TCheckBox
           Left = 10
@@ -779,9 +779,9 @@ object OptionDlg: TOptionDlg
           TabOrder = 2
         end
         object LogErrMsgCheckBox: TCheckBox
-          Left = 167
+          Left = 165
           Top = 48
-          Width = 142
+          Width = 136
           Height = 17
           Caption = #12456#12521#12540#12513#12483#12475#12540#12472
           TabOrder = 3
@@ -792,7 +792,7 @@ object OptionDlg: TOptionDlg
           Width = 138
           Height = 17
           Caption = #21516#26085#12398#12525#12464#12399#36861#35352
-          TabOrder = 8
+          TabOrder = 9
         end
         object LogIntervalEdit: TLabeledEdit
           Left = 76
@@ -832,31 +832,39 @@ object OptionDlg: TOptionDlg
           EditLabel.Caption = #20445#23384#19990#20195#25968
           LabelPosition = lpLeft
           NumbersOnly = True
-          TabOrder = 9
+          TabOrder = 10
         end
         object LogFullPathCheckBox: TCheckBox
-          Left = 203
+          Left = 165
           Top = 73
-          Width = 200
+          Width = 136
           Height = 17
-          Caption = #20966#29702#23550#35937#12434#12501#12523#12497#12473#12391#34920#31034
+          Caption = #12501#12523#12497#12473#34920#31034
           TabOrder = 6
         end
         object LogHideSkipCheckBox: TCheckBox
           Left = 10
           Top = 73
-          Width = 171
+          Width = 151
           Height = 17
-          Caption = #12473#12461#12483#12503#38917#30446#12434#38750#34920#31034
+          Caption = #12473#12461#12483#12503#38917#30446#38750#34920#31034
           TabOrder = 5
         end
         object LogDebugInfCheckBox: TCheckBox
-          Left = 313
+          Left = 307
           Top = 48
           Width = 116
           Height = 17
           Caption = #12487#12496#12483#12464#24773#22577
           TabOrder = 4
+        end
+        object LogDestinationCheckBox: TCheckBox
+          Left = 307
+          Top = 73
+          Width = 116
+          Height = 17
+          Caption = #20966#29702#20808#12434#34920#31034
+          TabOrder = 7
         end
       end
       object HotKeyGroupBox: TGroupBox
@@ -1137,7 +1145,7 @@ object OptionDlg: TOptionDlg
           Top = 20
           Width = 353
           Height = 17
-          Caption = #26368#23567#21270#26178#12395#12479#12473#12463#12488#12524#12452#12395#26684#32013
+          Caption = #26368#23567#21270#26178#12395#12450#12452#12467#12531#12434#36890#30693#38936#22495#12395#26684#32013
           TabOrder = 0
         end
         object FExt7zDllEdit: TLabeledEdit
