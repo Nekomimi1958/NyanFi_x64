@@ -1841,6 +1841,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall GrepAdjNextLnActionExecute(TObject *Sender);
 	void __fastcall GrepAdjNextLnActionUpdate(TObject *Sender);
 	void __fastcall CmdHistoryActionExecute(TObject *Sender);
+	void __fastcall TextMarginBoxDblClick(TObject *Sender);
+	void __fastcall TabControl1Resize(TObject *Sender);
 
 
 private:	// ユーザー宣言
@@ -2193,6 +2195,7 @@ private:	// ユーザー宣言
 	void __fastcall SetExtMenuItem(TMenuItem *m_item, TStringList *lst, int tag_base, int s_idx = -1);
 	void __fastcall ExePopMenuList(TStringList *lst, bool is_execmd = false, TControl *cp = NULL);
 	UnicodeString __fastcall get_MenuItemStr(TStringDynArray menu_lst);
+	UnicodeString __fastcall get_MenuFileItem(TStringList *lst);
 	void __fastcall ExeCmdsMenuClick(TObject *Sender);
 
 	bool __fastcall SureOtherActiv();
@@ -2425,6 +2428,7 @@ private:	// ユーザー宣言
 	void __fastcall PopupTabMenu();
 
 	void __fastcall SetTabStr(int idx, bool add = false);
+	void __fastcall UpdateTabWidth();
 	void __fastcall UpdateTabBar(int idx = -1, bool force = false);
 	void __fastcall SetCurTab(bool redraw = false);
 

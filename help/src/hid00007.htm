@@ -57,6 +57,7 @@
 これらは、<a href="hid00016.htm">オプション設定 - キー設定</a>でキーに割り当てることができます(2ストロークキー操作可能)。<br>
 <a href="hid00055.htm">キー割り当て一覧</a>は、<b>一覧メニュー</b> - [<b>キー割り当て一覧</b>] や、<b>KeyList</b> コマンドで表示できます。<br>
 </p>
+<p>コマンド構文において、<b>[ ]</b> 内は任意、<b>{ }</b> 内は相互に排他的な選択肢です。</p>
 
 <p class="link_box">
 <a href="#AlphaBlend">A</a> <a href="#Calculator">C</a> <a href="#DebugCmdFile">D</a> <a href="#EndFile">E</a> <a href="#FileEdit">F</a> <a href="#GrayScale">G</a> <a href="#HelpContents">H</a> <a href="#InputCommands">I</a> <a href="#JumpIndex">J</a> <a href="#KeyList">K</a> <a href="#ListFileInfo">L</a> <a href="#Mark">M</a> <a href="#NewWorkList">N</a> <a href="#OpenByApp">O</a> <a href="#PageBind">P</a> <a href="#RotateLeft">R</a> <a href="#SaveAsWorkList">S</a> <a href="#TagSelect">T</a> <a href="#WarnHighlight">W</a> <a href="#ZoomIn">Z</a>　　　　<a href="hid00100.htm#IV">→ コマンド索引</a> ／ <a href="hid00101.htm#IV">→ 機能別索引</a>
@@ -75,7 +76,7 @@
 先頭に <b>+</b> や <b>-</b> を付けると、現在の不透明度に対して指定値分だけ増減させます。値のみの場合は絶対指定になります。<br>
 パラメータが指定されていないと透過表示が解除されます。<br>
 
-<dt id="AppList">AppList<span class="pram_text">_FA|_FL|_FI|_AO|_LO|_LI</span>
+<dt id="AppList">AppList<span class="pram_text">[_{FA|FL|FI|AO|LO|LI}]</span>
 <dd><a href="hid00076.htm">アプリケーション一覧</a>が開き、実行中のアプリケーションが表示されます。簡易ランチャーも備えています。<br>
 パラメータに <b>FA</b> を指定すると、開いたとき一覧側にフォーカスします。<br>
 また <b>FL</b> を指定するとランチャー側にフォーカス、 <b>FI</b> を指定するとランチャー側をインクリメンタルサーチモードにしてフォーカスします。<br>
@@ -139,7 +140,7 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 <dd>選択中(無ければ現在表示中)のファイルの<b>タグ</b>を削除します。<br>
 <a href="#AddTag">→ AddTag</a>　<a href="#SetTag">→ SetTag</a>
 
-<dt id="DoublePage">DoublePage<span class="pram_text">[_ON|_OFF]</span>
+<dt id="DoublePage">DoublePage<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、通常表示/見開き表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると見開き表示、<b>OFF</b> では通常表示になります。<br>
 見開き表示では、現在の画像と次の画像を2つ左右に並べて連結表示します。左右で高さが異なる場合は、縦方向に中央揃えします。綴じ方向は <a href="#PageBind">PageBind</a> コマンドや表示メニューで変更できます。なおメタファイルやアイコンの場合は見開き表示になりません。<br>
@@ -196,7 +197,7 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 なお、<a href="hid00020.htm">オプション設定 - イメージビュアー</a> で「<b>許容フィット倍率</b>」に100よりも大きな値を設定した場合、その倍率の範囲内でフィットできれば拡大表示します(そうでない場合は等倍表示)。<br>
 <a href="#EqualSize">→ EqualSize</a>　<a href="#ZoomIn">→ ZoomIn</a>　<a href="#ZoomOut">→ ZoomOut</a>
 
-<dt id="FullScreen">FullScreen<span class="pram_text">[_ON|_OFF]</span>
+<dt id="FullScreen">FullScreen<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、イメージビュアーの全画面表示/通常表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると全画面表示、<b>OFF</b> では通常表示になります。<br>
 全画面表示からは、<span class="btn_frame">ESC</span>キーでも通常表示に戻れます。<br>
@@ -204,15 +205,15 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で「<b>全画面表示でサムネイルを隠す</b>」をチェックしていると、サムネイルも非表示になります。全画面表示から抜けると、以前の表示状態に戻りますが、全画面表示時にに表示を切り替えた場合はそれが維持されます。<br>
 「<b>全画面表示でマウスポインタを隠す</b>」をチェックしていると、マウスポインタが隠れます。この場合、クリックで非表示状態が解除されます。<br>
 
-<dt id="GrayScale">GrayScale<span class="pram_text">[_ON|_OFF]</span>
+<dt id="GrayScale">GrayScale<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、画像のグレースケール表示/通常表示をトグルで切り替えます(アイコン表示の場合は無効)。<br>
 パラメータに <b>ON</b> を指定するとグレースケール表示、<b>OFF</b> では通常表示になります。<br>
 
-<dt id="HelpContents">HelpContents<span class="pram_text">[_CI|_FI]</span>
+<dt id="HelpContents">HelpContents<span class="pram_text">[_{CI|FI}]</span>
 <dd>ヘルプの目次を表示します。<br>
 パラメータに <b>CI</b> を指定すると「コマンドの索引(アルファベット順)」のページを、<b>FI</b> を指定すると「コマンドの索引(機能別)」のページを表示します。<br>
 
-<dt id="Histogram">Histogram<span class="pram_text">[_ON|_OFF]</span>
+<dt id="Histogram">Histogram<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、<b>ヒストグラム</b>の表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
 画像が表示されている場合は、元サイズのデータからヒストグラムを作成しますが、サムネイル全面表示の場合は、サムネイル画像から作成するのであまり正確ではありません。<br>
@@ -259,7 +260,7 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 パラメータに<b>ファイル名</b>を指定すると直接開けます(ドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定)。<br>
 <a href="#SaveWorkList">→ SaveWorkList</a>　<a href="#SaveAsWorkList">→ SaveAsWorkList</a>　<a href="#NewWorkList">→ NewWorkList</a>
 
-<dt id="Loupe">Loupe<span class="pram_text">[_ON|_OFF]</span>
+<dt id="Loupe">Loupe<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、ルーペの表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
 画像(メタファイルは除く)のマウス位置を拡大表示します。倍率は<span class="btn_frame">×1</span><span class="btn_frame">×2</span><span class="btn_frame">×4</span><span class="btn_frame">×8</span>ボタンか右クリックメニューで切り替えられます。拡大の際に補間は行われません。<br>
@@ -291,7 +292,7 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 <dd>サムネイルを表示している場合、指定マスクに一致するファイルを選択します。<br>
 <a href="#TagSelect">→ TagSelect</a>
 
-<dt id="MenuBar">MenuBar<span class="pram_text">[_ON|_OFF]</span>
+<dt id="MenuBar">MenuBar<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、メニューバーの表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
 <a href="#PopupMainMenu">→ PopupMainMenu</a>
@@ -336,12 +337,12 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
 パラメータで<b>ファイル名</b>を指定して開くこともできます。ドライブ名がない場合はカレントからの相対指定になります。<br>
 
-<dt id="OptionDlg">OptionDlg<span class="pram_text">[_GN|_G2|_MO|_DS|_FC|_TV|_IV|_ED|_KY|_AC|_XM|_XT|_ST|_NT|_CM|_EV]</span>
+<dt id="OptionDlg">OptionDlg<span class="pram_text">[_{GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV}]</span>
 <dd>「<a href="hid00008.htm">オプション設定</a>」ダイアログを開きます。このとき、ビュアーは安全のため一旦閉じます。<br>
 パラメータを指定すると特定のタブを開くことができます。パラメータとタブの対応は次の通りです。<b>GN</b>: 一般、<b>G2</b>: 一般2、<b>MO</b>: マウス操作、<b>DS</b>: デザイン、<b>FC</b>: フォント・配色、<b>TV</b>: テキストビュアー、<b>IV</b>: イメージビュアー、<b>ED</b>: エディタ、<b>KY</b>: キー設定、<b>AC</b>: 関連付け、<b>XM</b>: 追加メニュー、<b>XT</b>: 外部ツール、<b>ST</b>: 起動時、<b>NT</b>: 通知・確認、<b>CM</b>: コマンド、<b>EV</b>: イベント。<br>
 このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
 
-<dt id="PageBind">PageBind<span class="pram_text">[_R|_L]</span>
+<dt id="PageBind">PageBind<span class="pram_text">[_{R|L}]</span>
 <dd>見開き表示のときの綴じ方向を設定します。<br>
 パラメータを指定しない場合、現在と逆の方向に変更します。<br>
 パラメータに <b>R</b> を指定すると右綴じ、<b>L</b> では左綴じになります。<br>
@@ -388,7 +389,7 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 　　　　　書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒<br>
 なお、画面下部の移動ボタンによって、ダイアログを表示したまま前後の画像に移動できます。<br>
 
-<dt id="PropertyDlg">PropertyDlg<span class="pram_text">[_ファイル名|_ディレクトリ名]</span>
+<dt id="PropertyDlg">PropertyDlg<span class="pram_text">[_{ファイル名|ディレクトリ名}]</span>
 <dd>表示中画像についてのプロパティダイアログを表示します。<br>
 パラメータで、対象の<b>ファイル名</b>や<b>ディレクトリ名</b>を指定することもできます。<br>
 <a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#ListFileInfo">→ ListFileInfo</a>
@@ -465,35 +466,35 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 パラメータに <b>SD</b> を指定すると、サイドバーの表示状態にかかわらずダイアログを表示します。<br>
 <a href="#ListFileInfo">→ ListFileInfo</a>　<a href="#PropertyDlg">→ PropertyDlg</a>
 
-<dt id="ShowFKeyBar">ShowFKeyBar<span class="pram_text">[_ON|_OFF]</span>
+<dt id="ShowFKeyBar">ShowFKeyBar<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、ファンクションキーバーの表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
 ファンクションキーバーのボタンには、キーに割り当てられているコマンド名(パラメータ部分を除く)がデフォルトで表示されますが、変更も可能です。<br>
 ボタンを右クリックするか、<a href="hid00016.htm">オプション設定 - キー設定</a>の一覧で項目をダブルクリックすると、表示名変更のための入力ボックスが表示されます。<br>
 なおツールバーとは異なり、割り当てられているコマンドの有効/無効やチェック状態はボタンに反映されません。<br>
 
-<dt id="ShowGrid">ShowGrid<span class="pram_text">[_ON|_OFF]</span>
+<dt id="ShowGrid">ShowGrid<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、画像分割グリッドの表示/非表示をトグルで切り替えます(アイコン表示の場合は無効)。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
 グリッドの分割数は <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で設定できます。<br>
 
-<dt id="ShowSeekBar">ShowSeekBar<span class="pram_text">[_ON|_OFF]</span>
+<dt id="ShowSeekBar">ShowSeekBar<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、シークバーの表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
 <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で「<b>シークバーの始点を綴じ方向に合わす</b>」をチェックしていると、右綴じ見開き表示の場合にシークバーの始点も右端になります。さらに「<b>右綴じでNext/Prev入替</b>」をチェックしていると、キーによる前後移動(<a href="hid00007.htm#NextFile">NextFile</a>/<a href="hid00007.htm#PrevFile">PrevFile</a> コマンド)も入れ替わります。
 
-<dt id="ShowStatusBar">ShowStatusBar<span class="pram_text">[_ON|_OFF]</span>
+<dt id="ShowStatusBar">ShowStatusBar<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、ステータスバーの表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
 
-<dt id="ShowToolBar">ShowToolBar<span class="pram_text">[_ON|_OFF]</span>
+<dt id="ShowToolBar">ShowToolBar<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、<b>ツールバー</b>の表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
 <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で「<b>ツールバーをサイドバー上に表示</b>」をチェックしていると、画面上部ではなく、サイドバーの上端にツールバーが表示されます。<br>
 <a href="hid00068.htm">「ツールバーの設定」ダイアログ</a>は、ツールバーをダブルクリックするか、<b>設定メニュー</b> - 「<b>ツールバーの設定</b>」あるいは <a href="#ToolBarDlg">ToolBarDlg</a> コマンドで表示されます。<br>
 <a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
 
-<dt id="Sidebar">Sidebar<span class="pram_text">[_ON|_OFF]</span>
+<dt id="Sidebar">Sidebar<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、サイドバーの表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
 サイドバーには、表示中の画像のファイル情報が表示されます。<br>
@@ -501,11 +502,11 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 なおサイドバーが表示されている場合、情報ヘッダは非表示となり、一部の情報(インデックス、倍率など)がサイドバー上に表示されます。<br>
 <a href="#Loupe">→ Loupe</a>　<a href="#Histogram">→ Histogram</a>
 
-<dt id="SortDlg">SortDlg<span class="pram_text">[_F|_E|_D|_S]</span>
+<dt id="SortDlg">SortDlg<span class="pram_text">[_{F|E|D|S}]</span>
 <dd>「<b>ソート</b>」ダイアログを開きます。<b>名前</b>、<b>拡張子</b>、<b>更新日時</b>、<b>サイズ</b>によるソート方法を選べます。名前順の場合、「<b>自然順</b>」をチェックすると、数字を数値とみなすソートになります。<br>
 なお、<b>パラメータ</b> (<b>F</b> :名前順、<b>E</b> :拡張子順、<b>D</b> :更新日時順、<b>S</b> :サイズ順) を指定すると、ダイアログを出さずに変更することも可能です。
 
-<dt id="SubViewer">SubViewer<span class="pram_text">[_ON|_OFF|_CB|_LK|_RL|_RR|_FH|_FV]</span><br>
+<dt id="SubViewer">SubViewer<span class="pram_text">[_{ON|OFF|CB|LK|RL|RR|FH|FV}]</span><br>
 <dd>
 パラメータを指定しない場合、<b>サブビュアー</b>の表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
@@ -533,14 +534,14 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 <a href="hid00088.htm">→ タグによるファイル管理</a><br>
 <a href="#MaskSelect">→ MaskSelect</a>
 
-<dt id="Thumbnail">Thumbnail<span class="pram_text">[_ON|_OFF]</span>
+<dt id="Thumbnail">Thumbnail<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、サムネイルの表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定するとサムネイルを表示、<b>OFF</b> では非表示になります。<br>
 表示する位置は <b>表示メニュー</b> - [<b>サムネイルの位置</b>] で選べます。<br>
 それ以外の設定は <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で行ってください。<br>
 <a href="#ThumbnailEx">→ ThumbnailEx</a>
 
-<dt id="ThumbnailEx">ThumbnailEx<span class="pram_text">[_ON|_OFF]</span>
+<dt id="ThumbnailEx">ThumbnailEx<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、サムネイルの全面表示/通常表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると全面表示、<b>OFF</b> では通常表示になります。<br>
 <a href="#Thumbnail">→ Thumbnail</a>
@@ -554,7 +555,7 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 <dd>表示可能な先頭のファイルに移動します。<br>
 <a href="#EndFile">→ EndFile</a>
 
-<dt id="WarnHighlight">WarnHighlight<span class="pram_text">[_ON|_OFF]</span>
+<dt id="WarnHighlight">WarnHighlight<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、白飛び警告の有効/無効をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると有効、<b>OFF</b> では無効になります。<br>
 画像の白飛び部分をブリンク表示で警告します。<br>

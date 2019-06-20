@@ -68,6 +68,7 @@ object GitViewer: TGitViewer
           Color = clBlack
           PopupMenu = DiffPopupMenu
           TabOrder = 0
+          StyleElements = [seBorder]
           OnClick = DiffListBoxClick
           OnDrawItem = DiffListBoxDrawItem
           OnEnter = DiffListBoxEnter
@@ -198,6 +199,7 @@ object GitViewer: TGitViewer
           PopupMenu = CmPopupMenu
           TabOrder = 0
           TabWidth = 40
+          StyleElements = [seBorder]
           OnClick = CommitListBoxClick
           OnDrawItem = CommitListBoxDrawItem
           OnKeyDown = CommitListBoxKeyDown
@@ -336,6 +338,7 @@ object GitViewer: TGitViewer
       ItemHeight = 15
       PopupMenu = BrPopupMenu
       TabOrder = 0
+      StyleElements = [seBorder]
       OnClick = BranchListBoxClick
       OnDblClick = BranchListBoxDblClick
       OnDrawItem = BranchListBoxDrawItem

@@ -11,6 +11,7 @@ object ModalScrForm: TModalScrForm
   ParentFont = True
   OldCreateOrder = False
   Position = poDesigned
+  StyleElements = [seFont, seBorder]
   OnActivate = FormActivate
   OnHide = FormHide
   OnShow = FormShow

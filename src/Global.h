@@ -1467,6 +1467,7 @@ struct tab_info {
 	TStringList *sel_list[MAX_FILELIST];	//選択状態
 	TStringList *dir_hist[MAX_FILELIST];	//ディレクトリ履歴
 	int			 dir_hist_p[MAX_FILELIST];	//履歴位置
+	int			 sort_mode[MAX_FILELIST];	//ソートモード
 };
 
 //---------------------------------------------------------------------------

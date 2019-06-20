@@ -57,9 +57,11 @@ object NyanFiForm: TNyanFiForm
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
+    ParentColor = True
     ParentFont = False
     TabOrder = 1
     Visible = False
+    StyleElements = [seFont, seBorder]
     object RefDirBtn: TSpeedButton
       Left = 196
       Top = 0
@@ -675,6 +677,7 @@ object NyanFiForm: TNyanFiForm
             Width = 2
             Height = 425
             Align = alRight
+            OnDblClick = TextMarginBoxDblClick
             OnPaint = TextMarginBoxPaint
           end
           object TextScrollBar: TScrollBar
@@ -1658,6 +1661,7 @@ object NyanFiForm: TNyanFiForm
               OnMouseLeave = TabControl1MouseLeave
               OnMouseMove = TabControl1MouseMove
               OnMouseUp = TabControl1MouseUp
+              OnResize = TabControl1Resize
               object DelTabBtn: TSpeedButton
                 Left = 675
                 Top = 6

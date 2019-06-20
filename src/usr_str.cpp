@@ -954,7 +954,7 @@ bool contains_word_and_or(
 		} while (!or_ok && !wds.IsEmpty());
 		ok = or_ok;
 	}
-	
+
 	return ok;
 }
 
@@ -2777,5 +2777,22 @@ UnicodeString decode_TxtVal(UnicodeString s,
 
 	if (is_str && with_q) sbuf = "\'" + sbuf + "\'";
 	return sbuf;
+}
+
+//---------------------------------------------------------------------------
+//インデックスからメニュー用アクセラレータ文字列を作成
+//---------------------------------------------------------------------------
+UnicodeString make_MenuAccStr(
+	int idx, 		//インデックス番号
+	bool alp_sw)	//true = A～Zを使用	(default = false : 1～9,0 のみ)
+{
+	UnicodeString ret_str;
+	if (idx<10)
+		ret_str.sprintf(_T("&%u: "), (idx + 1)%10);
+	else if (alp_sw && idx<36)
+		ret_str.sprintf(_T("&%c: "), (char)('A' + (idx - 10)));
+	else
+		ret_str = "   ";
+	return ret_str;
 }
 //---------------------------------------------------------------------------

@@ -1608,7 +1608,7 @@ void InitializeGlobal()
 		{_T("BgHideTime=1000"),				(TObject*)&BgHideTime},
 		{_T("BgTileSize=100"),				(TObject*)&BgTileSize},
 		{_T("AlphaValue=255"),				(TObject*)&AlphaValue},
-		{_T("FlTabWidth=100"),				(TObject*)&FlTabWidth},
+		{_T("FlTabWidth=120"),				(TObject*)&FlTabWidth},
 		{_T("FlTabStyle=0"),				(TObject*)&FlTabStyle},
 		{_T("IconCache=500"),				(TObject*)&IconCache},
 		{_T("FTPRemoteSide=0"),				(TObject*)&FTPRemoteSide},
@@ -2308,11 +2308,8 @@ void LoadOptions()
 
 	//タブリストの初期化
 	for (int i=0; i<TabList->Count; i++) {
-		tab_info *tp = new tab_info;
+		tab_info *tp = cre_tab_info();
 		for (int j=0; j<MAX_FILELIST; j++) {
-			tp->sel_list[j]   = new TStringList();
-			tp->dir_hist[j]   = new TStringList();
-			tp->dir_hist_p[j] = 0;
 			IniFile->LoadListItems(sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j), tp->dir_hist[j], 30, false);
 		}
 		TabList->Objects[i] = (TObject*)tp;
@@ -4637,6 +4634,7 @@ tab_info* cre_tab_info()
 		tp->sel_list[i]   = new TStringList();
 		tp->dir_hist[i]   = new TStringList();
 		tp->dir_hist_p[i] = 0;
+		tp->sort_mode[i]  = SortMode[i];
 	}
 	return tp;
 }

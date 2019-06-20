@@ -72,8 +72,14 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 	//ƒtƒHƒ“ƒg‚Ìİ’è
 	std::unique_ptr<TFont> ttFont(new TFont());
 	ttFont->Assign(ViewerFont);
-	ttFont->Size = Font->Size;
+	ttFont->Size  = Font->Size;
+	ttFont->Color = col_fgList;
 	ObjMemo->Font->Assign(ttFont.get());
+	ObjMemo->Font->Color = col_fgView;
+	ObjMemo->Color		 = col_bgView;
+
+	ResListBox->Color	= col_bgView;
+	ReferListBox->Color = col_bgList;
 	set_ListBoxItemHi(ResListBox,	ttFont.get());
 	set_ListBoxItemHi(ReferListBox,	ttFont.get());
 
@@ -362,7 +368,7 @@ void __fastcall TRegExChecker::ResListBoxDrawItem(TWinControl *Control, int Inde
 	cv->Font->Assign(lp->Font);
 	bool is_irreg = IsIrregularFont(cv->Font);
 
-	cv->Brush->Color = scl_Window;
+	cv->Brush->Color = col_bgView;
 	TRect rc = Rect;
 	cv->FillRect(rc);
 

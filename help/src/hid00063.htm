@@ -262,7 +262,8 @@ AppendBuffer_"nyan.log"
 コマンドファイル名にドライブ指定がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
 <a href="#ReturnCommands">→ ReturnCommands</a>　<a href="#JumpCommands">→ JumpCommands</a>
 
-<dt id="Debug" class="no_bg">Debug<span class="pram_text">_ON|_OFF|_BP|_WL&lt;&lt;変数名</span>
+<dt id="Debug" class="no_bg">Debug<span class="pram_text">_{ON|OFF|BP}</span><br>
+Debug<span class="pram_text">_WL&lt;&lt;変数名</span>
 <dd>デバッグモードの有効/無効を切り替えます。<br>
 パラメータに <b>ON</b> を指定すると、そこからデバッグモードになり、<b>デバッグウィンドウ</b>が開きます。<br>
 
@@ -487,7 +488,7 @@ Input<span class="pram_text">_&quot;:タイトル:[プロンプト:]変数名&quot;</span>
 <a href="#PreDefVar">定義済み変数</a>および<a href="#UserVar">ユーザ定義変数</a>の内容を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
 コマンドファイルのデバッグなどで役立つかもしれません。<br>
 
-<dt id="LoadBuffer" class="no_bg">LoadBuffer<span class="pram_text">[_ファイル名|_ファイルマスク]</span>
+<dt id="LoadBuffer" class="no_bg">LoadBuffer<span class="pram_text">[_{ファイル名|ファイルマスク}]</span>
 <dd>指定したテキストファイルを、定義済み変数 <b>Buffer</b> に読み込みます。<br>
 パラメータにファイル名を指定しないとダイアログが表示されます。<br>
 またファイル名に <b>*</b> や <b>?</b> が含まれている場合、それをファイルマスクとしてダイアログが出ます。<br>
@@ -641,7 +642,8 @@ EndIf
 </div>
 <a href="#WriteINI">→ WriteINI</a>
 
-<dt id="Redraw" class="no_bg">Redraw<span class="pram_text">_[L|R]ON|_[L|R]OFF</span>
+<dt id="Redraw" class="no_bg">Redraw<span class="pram_text">_[L|R]ON</span><br>
+Redraw<span class="pram_text">_[L|R]OFF</span>
 <dd>パラメータに <b>OFF</b> を指定するとファイルリスト(ヘッダとドライブ情報も含む)の描画を停止します。<b>ON</b> を指定すると描画を再開します。先頭に <b>L</b> または <b>R</b> を付けることで左右個別に設定することもできます(無指定の場合は両画面)。<br>
 描画を停止したまま <b>ExeCommands</b> コマンドを終了すると、ファイラー操作は可能ですが、<b>Redraw</b>_ON が実行されるまでリスト表示は一切更新されません。<b>Redraw</b>_OFF を複数回実行した場合は、<b>Redraw</b>_ON を同じ回数実行してください。このコマンドは、ファイラー画面でのみ有効です。<br>
 
@@ -788,7 +790,7 @@ SendCommands_"ChangeOppDir_%OppPath%"
 <dt id="SetExeFile" class="no_bg">SetExeFile<span class="pram_text">_実行ファイル名</span>
 <dt id="SetExeParam" class="no_bg">SetExeParam<span class="pram_text">_パラメータ</span>
 <dt id="SetExeDir" class="no_bg">SetExeDir<span class="pram_text">_作業ディレクトリ</span>
-<dt id="SetExeOpt" class="no_bg">SetExeOpt<span class="pram_text">[_[W][O][L][H]]|[_[H][A]]</span>
+<dt id="SetExeOpt" class="no_bg">SetExeOpt<span class="pram_text">_{[W][O][L][H]|[A][H]}</span>
 <dt id="ShellExecute" class="no_bg">ShellExecute
 <dd>これらによって、<a href="hid00015.htm">オプション設定 - 外部ツール</a> と同等の機能を、メニューとして登録することなく直接記述できます。<br>
 実行ファイル、パラメータ、作業ディレクトリの書式は、外部ツールの場合と同じです。<br>

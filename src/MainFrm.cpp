@@ -1737,6 +1737,7 @@ void __fastcall TNyanFiForm::ListPanelResize(TObject *Sender)
 {
 	if (!Initialized || UnInitializing) return;
 
+	UpdateTabWidth();
 	UpdateFileListRect();
 
 	RequestSlowTask();
@@ -1746,6 +1747,11 @@ void __fastcall TNyanFiForm::ListPanelResize(TObject *Sender)
 		if (KeepCurListWidth && ListPercent!=50) ActionOptStr.sprintf(_T("%s"), (CurListTag==0)? _T("Left") : _T("Right"));
 		WidenCurListAction->Execute();
 	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TabControl1Resize(TObject *Sender)
+{
+	UpdateTabWidth();
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::LRSplitterCanResize(TObject *Sender, int &NewSize, bool &Accept)
@@ -5719,7 +5725,7 @@ void __fastcall TNyanFiForm::LogListBoxDrawItem(TWinControl *Control, int Index,
 	if (cv->Font->Color!=col_fgSelItem) {
 		cv->Font->Color = get_LogColor(lbuf);
 		UnicodeString cmd = Trim(lbuf.SubString(4, 8));
-		if (contains_wd_i(cmd, _T("LOAD|SAVE"))) {
+		if (contained_wd_i(_T("LOAD|SAVE"), cmd)) {
 			out_TextEx(cv, xp, yp, lbuf.SubString(1, 11), col_None, col_None, 0, is_irreg);
 			lbuf.Delete(1, 11);
 			if (SameText(cmd, "LOAD") && EndsStr("  NOT USED", lbuf)) {
@@ -6293,11 +6299,7 @@ void __fastcall TNyanFiForm::PopupTabMenu()
 
 	for (int i=0; i<TabList->Count; i++) {
 		TStringDynArray itm_buf = get_csv_array(TabList->Strings[i], TABLIST_CSVITMCNT, true);
-		UnicodeString lbuf;
-		if		(i<10) lbuf.sprintf(_T("&%u: "), (i + 1)%10);
-		else if (i<36) lbuf.sprintf(_T("&%c: "), (char)('A' + (i - 10)));
-		else lbuf = "   ";
-
+		UnicodeString lbuf = make_MenuAccStr(i);
 		if (!itm_buf[2].IsEmpty()) lbuf.cat_sprintf(_T("%s : "), itm_buf[2].c_str());
 		lbuf.cat_sprintf(_T("%s  |  %s"),
 			ExcludeTrailingPathDelimiter(itm_buf[0]).c_str(),
@@ -18218,8 +18220,9 @@ void __fastcall TNyanFiForm::JoinTextActionExecute(TObject *Sender)
 				}
 
 				//テンプレートによる連結
-				if (!tnam.IsEmpty())
+				if (!tnam.IsEmpty()) {
 					o_buf->Text = o_buf->Text + ApplyTemplate(tmplt->Text, fnam, f_buf.get(), i + 1, out_code_page);
+				}
 				//単純連結
 				else {
 					o_buf->AddStrings(f_buf.get());
@@ -18491,18 +18494,19 @@ bool __fastcall TNyanFiForm::PopSelLibrary(UnicodeString prm, int tag, TControl 
 				if (lib->Count==1) {
 					dnam = lib->Strings[0];
 					//タイトル,パス,ライブラリ(ico),ライブラリ	(4)
-					m_buf->Add(tmp.sprintf(_T("&%u: %s\t%s\t%s\t%s"), i + 1,
-									get_base_name(lnam).c_str(), dnam.c_str(), lnam.c_str(), lnam.c_str()));
+					m_buf->Add(make_MenuAccStr(i).cat_sprintf(_T("%s\t%s\t%s\t%s"),
+								get_base_name(lnam).c_str(), dnam.c_str(), lnam.c_str(), lnam.c_str()));
 				}
 				else if (lib->Count>1) {
 					//タイトル,,ライブラリ(ico)	(3)
-					m_buf->Add(tmp.sprintf(_T(">&%u: %s\t\t%s"), i + 1, get_base_name(lnam).c_str(), lnam.c_str()));
+					tmp = ">" + make_MenuAccStr(i);
+					m_buf->Add(tmp.cat_sprintf(_T("%s\t\t%s"), get_base_name(lnam).c_str(), lnam.c_str()));
 					for (int j=0; j<lib->Count; j++) {
 						dnam = lib->Strings[j];
 						rnam = yen_to_delimiter(ExcludeTrailingPathDelimiter(DispRegName? get_RegDirName(dnam) : dnam));
 						//タイトル,パス,,ライブラリ,サブ	(5)
-						m_buf->Add(tmp.sprintf(_T("&%u: %s\t%s\t\t%s\t%s"),
-									j + 1, rnam.c_str(), dnam.c_str(), lnam.c_str(), ExtractFileName(dnam).c_str()));
+						m_buf->Add(make_MenuAccStr(j).cat_sprintf(_T("%s\t%s\t\t%s\t%s"),
+									rnam.c_str(), dnam.c_str(), lnam.c_str(), ExtractFileName(dnam).c_str()));
 					}
 					m_buf->Add("<");
 				}
@@ -18538,7 +18542,7 @@ bool __fastcall TNyanFiForm::PopSelLibrary(UnicodeString prm, int tag, TControl 
 					UnicodeString lbuf = lib->Strings[i];
 					UnicodeString rnam = yen_to_slash(ExcludeTrailingPathDelimiter(DispRegName? get_RegDirName(lbuf) : lbuf));
 					//タイトル,パス	(2)
-					m_buf->Add(UnicodeString().sprintf(_T("&%u: %s\t%s"), i + 1, rnam.c_str(), lbuf.c_str()));
+					m_buf->Add(make_MenuAccStr(i).cat_sprintf(_T("%s\t%s"), rnam.c_str(), lbuf.c_str()));
 				}
 				ExePopMenuList(m_buf.get(), true, cp);
 				if (PopMenuIndex!=-1) {
@@ -19381,14 +19385,30 @@ void __fastcall TNyanFiForm::LoadTabGroupActionExecute(TObject *Sender)
 		UnicodeString fnam;
 		if (!ActionParam.IsEmpty()) {
 			fnam = to_absolute_name(ActionParam);
+
+			//ディレクトリならポップアップメニューで選択
+			if (dir_exists(fnam)) {
+				std::unique_ptr<TStringList> lst(new TStringList());
+				get_files(fnam, _T("*.ini"), lst.get());
+				int i = 0;
+				while (i<lst->Count) {
+					std::unique_ptr<UsrIniFile> tg(new UsrIniFile(lst->Strings[i]));
+					if (tg->KeyExists("TabList", "Item1") && !tg->RectionExists("KeyFuncList") && !tg->RectionExists("Color"))
+						i++;
+					else
+						lst->Delete(i);
+				}
+				if (lst->Count==0) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("タググループ")));
+				fnam = get_MenuFileItem(lst.get());
+				if (fnam.IsEmpty()) SkipAbort();
+			}
 		}
 		else {
 			UserModule->PrepareOpenDlg(_T("タブグループを読み込む"), F_FILTER_INI, _T("*.INI"));
 			if (UserModule->OpenDlg->Execute()) fnam = UserModule->OpenDlg->FileName;
 		}
 		if (fnam.IsEmpty()) SkipAbort();
-
-		if (!file_exists(fnam)) SttBarWarnUstr(USTR_FileNotOpen);
+		if (!file_exists(fnam)) UserAbort(USTR_NotFound);
 
 		//現在のタググループを保存
 		if (!TabGroupName.IsEmpty()) save_TagGroup(TabGroupName);
@@ -19405,11 +19425,8 @@ void __fastcall TNyanFiForm::LoadTabGroupActionExecute(TObject *Sender)
 		TabList->Assign(tab_lst.get());
 
 		for (int i=0; i<TabList->Count; i++) {
-			tab_info *tp = new tab_info;
+			tab_info *tp = cre_tab_info();
 			for (int j=0; j<MAX_FILELIST; j++) {
-				tp->sel_list[j]   = new TStringList();
-				tp->dir_hist[j]   = new TStringList();
-				tp->dir_hist_p[j] = 0;
 				tab_file->LoadListItems(sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j), tp->dir_hist[j], 30, false);
 			}
 			TabList->Objects[i] = (TObject*)tp;
@@ -19431,12 +19448,22 @@ void __fastcall TNyanFiForm::LoadWorkListActionExecute(TObject *Sender)
 {
 	try {
 		UnicodeString wnam = ActionParam;
-
 		SaveWorkListAction->Execute();
 
 		//パラメータ指定
 		if (!wnam.IsEmpty()) {
-			if (!SetWorkList(to_absolute_name(wnam))) UserAbort(USTR_WlistCantOpen);
+			wnam = to_absolute_name(wnam);
+
+			//ディレクトリならポップアップメニューで選択
+			if (dir_exists(wnam)) {
+				std::unique_ptr<TStringList> lst(new TStringList());
+				get_files(wnam, _T("*.nwl"), lst.get());
+				if (lst->Count==0) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("ワークリスト")));
+				wnam = get_MenuFileItem(lst.get());
+				if (wnam.IsEmpty()) SkipAbort();
+			}
+
+			if (!SetWorkList(wnam)) UserAbort(USTR_WlistCantOpen);
 		}
 		//通常動作
 		else {
@@ -21601,6 +21628,26 @@ UnicodeString __fastcall TNyanFiForm::get_MenuItemStr(TStringDynArray menu_lst)
 
 	return ret_str;
 }
+//---------------------------------------------------------------------------
+UnicodeString __fastcall TNyanFiForm::get_MenuFileItem(
+	TStringList *lst)	//ファイル名リスト
+{
+	UnicodeString fnam;
+	if (lst->Count>1) {
+		std::unique_ptr<TStringList> m_buf(new TStringList());
+		for (int i=0; i<lst->Count; i++) {
+			m_buf->Add(make_MenuAccStr(i, true).cat_sprintf(_T("%s\t\t%s"),
+						ExtractFileName(lst->Strings[i]).c_str(), lst->Strings[i].c_str()));
+		}
+		ExePopMenuList(m_buf.get(), true);
+		Application->ProcessMessages();
+		if (PopMenuIndex!=-1) fnam = lst->Strings[PopMenuIndex];
+	}
+	else {
+		fnam = lst->Strings[0];
+	}
+	return fnam;
+}
 
 //---------------------------------------------------------------------------
 //ユーザ定義メニューの項目を実行
@@ -23066,14 +23113,8 @@ void __fastcall TNyanFiForm::SetFolderIconActionExecute(TObject *Sender)
 			std::unique_ptr<TStringList> m_buf(new TStringList());
 			UnicodeString tmp;
 			for (int i=0; i<lst->Count; i++) {
-				if (i<10) {
-					m_buf->Add(tmp.sprintf(_T("&%u: %s\t\t%s"),
-							(i + 1)%10, get_base_name(lst->Strings[i]).c_str(), lst->Strings[i].c_str()));
-				}
-				else {
-					m_buf->Add(tmp.sprintf(_T("%s\t\t%s"),
+				m_buf->Add(make_MenuAccStr(i).cat_sprintf(_T("%s\t\t%s"),
 							get_base_name(lst->Strings[i]).c_str(), lst->Strings[i].c_str()));
-				}
 			}
 			m_buf->Add("-");
 			m_buf->Add("(&S) アイコンファイルを選択");
@@ -23888,12 +23929,8 @@ void __fastcall TNyanFiForm::SubDirListActionExecute(TObject *Sender)
 					if (!ShowSystemAtr && (sr.Attr & faSysFile)) continue;
 					if (ContainsStr("..", sr.Name)) continue;
 					int idx = mbuf->Count;
-					UnicodeString lbuf;
-					if		(idx<10) lbuf.sprintf(_T("&%u: "), (idx + 1)%10);
-					else if (idx<36) lbuf.sprintf(_T("&%c: "), (char)('A' + (idx - 10)));
-					else lbuf = "　 ";
-					lbuf.cat_sprintf(_T("%s\tChangeDir_\"%s\""), sr.Name.c_str(), (pnam + sr.Name).c_str());
-					mbuf->Add(lbuf);
+					mbuf->Add(make_MenuAccStr(idx, true).cat_sprintf(_T("%s\tChangeDir_\"%s\""),
+															sr.Name.c_str(), (pnam + sr.Name).c_str()));
 				} while(FindNext(sr)==0);
 				FindClose(sr);
 			}
@@ -24372,8 +24409,7 @@ void __fastcall TNyanFiForm::ToExViewerActionExecute(TObject *Sender)
 		//ポップアップメニューで選択
 		std::unique_ptr<TStringList> m_buf(new TStringList());
 		for (int i=0; i<lst->Count; i++) {
-			m_buf->Add(UnicodeString().sprintf(_T("&%u: %s"),
-				i + 1, get_tkn(((TForm *)lst->Objects[i])->Caption, " - テキストビュアー").c_str()));
+			m_buf->Add(make_MenuAccStr(i) + get_tkn(((TForm *)lst->Objects[i])->Caption, " - テキストビュアー"));
 		}
 		ExePopMenuList(m_buf.get(), true);
 		Application->ProcessMessages();
@@ -27200,7 +27236,7 @@ void __fastcall TNyanFiForm::FileMenuClick(TObject *Sender)
 			if (i>=lp->Count || lp->Strings[i].IsEmpty()) continue;
 			TStringDynArray itm_buf = get_csv_array(lp->Strings[i], 2);
 			if (itm_buf.Length>0) {
-				mp->Caption = ((i<10)? UnicodeString().sprintf(_T("&%u: "), (i + 1)%10) : UnicodeString("   ")) + itm_buf[0];
+				mp->Caption = make_MenuAccStr(i) + itm_buf[0];
 				mp->Visible = true;
 			}
 		}
@@ -29603,6 +29639,11 @@ void __fastcall TNyanFiForm::TextPaintBoxDblClick(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TextScrollBoxDblClick(TObject *Sender)
+{
+	ExeCommandV(_T("Close"));
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TextMarginBoxDblClick(TObject *Sender)
 {
 	ExeCommandV(_T("Close"));
 }
@@ -33922,6 +33963,16 @@ void __fastcall TNyanFiForm::SetTabStr(
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::UpdateTabWidth()
+{
+	if (!Initialized || UnInitializing) return;
+
+	int mgn = 8 + TabList->Count * ((FlTabStyle==3)? 10 : (FlTabStyle==2)? 4 : 2);
+	TabControl1->TabWidth = (TabList->Count>0)?
+		std::min(std::max((TabControl1->ClientWidth - mgn)/TabList->Count, FlTabWidth/2), FlTabWidth) : FlTabWidth;
+}
+
+//---------------------------------------------------------------------------
 //タブバーの更新
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::UpdateTabBar(
@@ -33932,6 +33983,7 @@ void __fastcall TNyanFiForm::UpdateTabBar(
 
 	set_RedrawOff(TabControl1);
 	{
+		UpdateTabWidth();
 		TabControl1->Tabs->Clear();
 		for (int i=0; i<TabList->Count; i++) SetTabStr(i, true);
 
@@ -33972,6 +34024,7 @@ void __fastcall TNyanFiForm::StoreTabStt(int idx)
 	tab_info *tp = get_TabInfo(idx);
 	if (tp) {
 		for (int i=0; i<MAX_FILELIST; i++) {
+			//選択状態
 			tp->sel_list[i]->Clear();
 			flist_stt *lst_stt = &ListStt[i];
 			if (lst_stt->is_TabFixed || lst_stt->is_Arc || lst_stt->is_Find) continue;
@@ -33980,6 +34033,8 @@ void __fastcall TNyanFiForm::StoreTabStt(int idx)
 				file_rec *fp = (file_rec*)lst->Objects[j];
 				if (fp->selected && !fp->is_dummy) tp->sel_list[i]->Add(fp->f_name);
 			}
+			//ソートモード
+			tp->sort_mode[i] = SortMode[i];
 		}
 	}
 }
@@ -33999,6 +34054,8 @@ void __fastcall TNyanFiForm::TabControl1Change(TObject *Sender)
 	try {
 		int idx = TabControl1->TabIndex;
 		tab_info *tp = get_TabInfo(idx);	if (!tp) Abort();
+		SortMode[0] = tp->sort_mode[0];
+		SortMode[1] = tp->sort_mode[1];
 
 		if (TabBottomPaintBox->Visible) TabBottomPaintBox->Repaint();
 

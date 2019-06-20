@@ -270,5 +270,6 @@ int get_NrmLevenshteinDistance(UnicodeString s1, UnicodeString s2,
 
 UnicodeString decode_TxtVal(UnicodeString s, bool with_q = false);
 
+UnicodeString make_MenuAccStr(int idx, bool alp_sw = false);
 //---------------------------------------------------------------------------
 #endif
