@@ -4193,6 +4193,8 @@ void __fastcall TNyanFiForm::SetupDesign(
 {
 	InhUpdBgImg++;
 
+	IsDarkMode = allow_DarkMode(Handle, AllowDarkMode);
+
 	//境界線/ノブ画像
 	BgImgName[BGIMGID_KNOB_H] = BgImgName[BGIMGID_KNOB_V];
 	for (int i=2; i<MAX_BGIMAGE; i++) {
@@ -9788,6 +9790,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 		TRect sp_rc = tmp_rc;
 		sp_rc.Right = lst_stt->lxp_right;
 		draw_Separator(tmp_cv, sp_rc, bg_nrm);
+		fp->base_end_x = get_CharWidth(tmp_cv, 12) + (IconMode? SIcoSize : 0);	//***
 	}
 	else {
 		//拡張子色
@@ -9798,10 +9801,10 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 		bool use_fgSel = (fp->selected && col_fgSelItem!=col_None);
 
 		//表示位置
-		bool use_ico = (IconMode==1) || (fp->is_dir && IconMode==2);
+		bool has_icon = (IconMode==1 || (IconMode==2 && fp->is_dir));
 		int w_half = lst_stt->lwd_half;
 		int w_file = w_half * 8;
-		int x_base = ScaledInt(use_ico? 20 : ((fp->is_dir && !DirBraStr.IsEmpty())? 4 : 8));
+		int x_base = ScaledInt(has_icon? 20 : ((fp->is_dir && !DirBraStr.IsEmpty())? 4 : 8));
 		int w_date = std::max(lst_stt->lxp_time - lst_stt->lwd_size - x_base - w_half, w_file + lst_stt->lwd_fext);
 
 		int yp = tmp_rc.Top;
@@ -9878,7 +9881,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 		}
 
 		dsp_name = ReplaceStr(dsp_name, L"\u202e", "|");	//RLO --> | (警告表示)
-		if (fp->is_dir && !use_ico) dsp_name = DirBraStr + dsp_name + DirKetStr;
+		if (fp->is_dir && !has_icon) dsp_name = DirBraStr + dsp_name + DirKetStr;
 
 		int w_name;
 		if (HideSizeTime) {
@@ -9902,9 +9905,9 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 			tmp_cv->Brush->Style = bsClear;
 		}
 
+		fp->base_end_x = x_base;
 		if (!dsp_name.IsEmpty()) {
-			int xp = x_base;
-			SpaceTextOut(dsp_name, tmp_cv, xp, yp, (use_fgSel? col_fgSelItem : col_f));
+			SpaceTextOut(dsp_name, tmp_cv, fp->base_end_x, yp, (use_fgSel? col_fgSelItem : col_f));
 		}
 
 		//拡張子
@@ -10012,7 +10015,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 		}
 
 		//アイコン
-		if (use_ico) draw_SmallIcon(fp, tmp_cv, 2, std::max(yp + (int)(tmp_cv->TextHeight("I") - SIcoSize)/2, 0));
+		if (has_icon) draw_SmallIcon(fp, tmp_cv, 2, std::max(yp + (int)(tmp_cv->TextHeight("I") - SIcoSize)/2, 0));
 	}
 
 	//カーソル
@@ -10168,24 +10171,12 @@ void __fastcall TNyanFiForm::FileListBoxMouseDown(TObject *Sender, TMouseButton 
 	file_rec *cfp = GetFrecPtr(lp, lst);
 	if (cfp) {
 		if (SelectByMouse && Shift.Contains(ssLeft) && !Shift.Contains(ssAlt)) {
-			bool has_icon = (IconMode==1 || (IconMode==2 && cfp->is_dir));
-			//ファイル名主部までの範囲
-			int b_wd;
-			if (cfp->is_dummy && is_separator(cfp->alias))	//ワークリストのセパレータ
-				b_wd = get_CharWidth(lp->Canvas, 12);		//***
-			else {
-				b_wd = lp->Canvas->TextWidth(cfp->b_name);
-				if 		(has_icon)							  b_wd += get_IcoWidth();
-				else if (cfp->is_dir && !DirBraStr.IsEmpty()) b_wd += lp->Canvas->TextWidth(DirBraStr) + 4;
-				else										  b_wd += Scaled8;
-			}
-
 			//アイコン部分で個別に選択
-			if (SelectIconSngl && has_icon && X<get_IcoWidth()) {
+			if (SelectIconSngl && (IconMode==1 || (IconMode==2 && cfp->is_dir)) && X<get_IcoWidth()) {
 				set_select(cfp, !cfp->selected);
 			}
 			//通常選択
-			else if (cfp->selected || !SelectBaseOnly || X<b_wd) {
+			else if (cfp->selected || !SelectBaseOnly || X<cfp->base_end_x) {
 				//Left
 				if (!Shift.Contains(ssShift) && !Shift.Contains(ssCtrl)) {
 					if (!cfp->selected) ClrSelect(lst);
@@ -19506,7 +19497,7 @@ void __fastcall TNyanFiForm::LockKeyMouseActionExecute(TObject *Sender)
 		InputWord  = EmptyStr;
 
 		//キー/マウスフックを設定
-		HINSTANCE hInstance = (HINSTANCE)::GetModuleHandle(NULL);
+		HINSTANCE hInstance = ::GetModuleHandle(NULL);
 		hKeyHook   = ::SetWindowsHookEx(WH_KEYBOARD_LL, KeyHookProc,	hInstance, 0);
 		hMouseHook = ::SetWindowsHookEx(WH_MOUSE_LL, 	MouseHookProc,	hInstance, 0);
 
@@ -19916,7 +19907,7 @@ void __fastcall TNyanFiForm::MonitorOffActionExecute(TObject *Sender)
 			InputWord  = EmptyStr;
 
 			//キー/マウスフックを設定
-			HINSTANCE hInstance = (HINSTANCE)::GetModuleHandle(NULL);
+			HINSTANCE hInstance = ::GetModuleHandle(NULL);
 			hKeyHook   = ::SetWindowsHookEx(WH_KEYBOARD_LL, KeyHookProc,	hInstance, 0);
 			hMouseHook = ::SetWindowsHookEx(WH_MOUSE_LL, 	MouseHookProc,	hInstance, 0);
 

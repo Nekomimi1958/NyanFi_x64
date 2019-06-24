@@ -56,9 +56,9 @@ extern UnicodeString RstBatName;
 //---------------------------------------------------------------------------
 //HTMLヘルプ
 typedef HWND (WINAPI *FUNC_HtmlHelp)(HWND, LPCWSTR, UINT, DWORD);
-extern  HINSTANCE	  hHHctrl;
+extern  HMODULE hHHctrl;
 extern  FUNC_HtmlHelp lpfHtmlHelp;
-extern  bool		  CancelHelp;
+extern  bool CancelHelp;
 
 void HtmlHelpTopic(const _TCHAR *topic);
 void HtmlHelpContext(int idx);
@@ -82,7 +82,7 @@ void HtmlHelpClose();
 //---------------------------------------------------------------------------
 //非公開API
 typedef BOOL (WINAPI *FUNC_GetFontResourceInfo)(LPCWSTR, DWORD*, LPVOID, DWORD);
-extern HINSTANCE	 hGdi32;
+extern HMODULE hGdi32;
 extern FUNC_GetFontResourceInfo lpGetFontResourceInfo;
 
 //---------------------------------------------------------------------------
@@ -224,6 +224,7 @@ extern HWND   MainHandle;
 extern DWORD  ProcessId;
 extern bool   IsAdmin;
 extern bool   IsPrimary;
+extern bool   IsDarkMode;
 extern int    StartedCount;
 extern int    NyanFiIdNo;
 extern int    ScrMode;
@@ -378,6 +379,7 @@ extern bool InhbitAltMenu;
 extern bool SelectByMouse;
 extern bool SelectBaseOnly;
 extern bool SelectIconSngl;
+extern bool AllowDarkMode;
 extern bool TimColEnabled;
 extern bool PriorFExtCol;
 extern bool ColorOnlyFExt;
@@ -1252,6 +1254,8 @@ struct file_rec {
 	int  img_ori;				//画像方向
 	int  distance;				//編集距離ソート値
 	bool is_video;				//動画
+
+	int  base_end_x;			//ファイル名主部の末尾位置(描画時に設定、マウス選択で利用)
 
 	TStringList *inf_list;		//情報リスト
 	UnicodeString prv_text;		//テキストプレビュー

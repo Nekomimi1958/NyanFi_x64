@@ -22,7 +22,7 @@
 TAppListDlg *AppListDlg = NULL;
 
 //---------------------------------------------------------------------------
-HINSTANCE hPsApi = NULL;
+HMODULE hPsApi = NULL;
 FUNC_GetProcessMemoryInfo lpfGetProcessMemoryInfo = NULL;
 
 
@@ -104,7 +104,7 @@ __fastcall TAppListDlg::TAppListDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::FormCreate(TObject *Sender)
 {
-	HINSTANCE hKernel32 = ::GetModuleHandle(_T("kernel32.dll"));
+	HMODULE hKernel32 = ::GetModuleHandle(_T("kernel32.dll"));
 	if (hKernel32) {
 		if (::GetProcAddress(hKernel32, "K32EnumProcessModules")) {
 			//Windows 7 Ç©ÇÁ psapi.dll ÇÃä÷êîÇ™ K32Å`ÇÃñºÇ≈ Kernel32 Ç…à⁄Ç¡ÇƒÇ¢ÇÈ

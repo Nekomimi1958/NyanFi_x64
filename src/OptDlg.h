@@ -168,6 +168,7 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *UpExtBtn;
 	TButton *UpMenuBtn;
 	TCheckBox *AddToRecentCheckBox;
+	TCheckBox *AllowDkMdCheckBox;
 	TCheckBox *AltBackSlashCheckBox;
 	TCheckBox *AltCheckBox;
 	TCheckBox *AniGifCheckBox;

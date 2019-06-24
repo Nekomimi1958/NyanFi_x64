@@ -45,14 +45,14 @@ UnicodeString RstBatName;	//再起動用バッチファイル名
 //---------------------------------------------------------------------------
 //HTMLヘルプ
 //！Vcl.HTMLHelpViewer は用いず、HtmlHelp API(動的リンク)で処理
-HINSTANCE	  hHHctrl	  = NULL;	//hhctrl.ocx
+HMODULE		  hHHctrl	  = NULL;	//hhctrl.ocx
 FUNC_HtmlHelp lpfHtmlHelp = NULL;
-DWORD		  Cookie	  = NULL;
+DWORD 		  Cookie	  = NULL;
 bool 		  CancelHelp  = false;
 
 //---------------------------------------------------------------------------
 //非公開API
-HINSTANCE hGdi32 = NULL;
+HMODULE hGdi32 = NULL;
 FUNC_GetFontResourceInfo lpGetFontResourceInfo = NULL;
 
 //---------------------------------------------------------------------------
@@ -81,6 +81,7 @@ bool  IsAdmin	 = false;		//管理者権限
 int   StartedCount;				//実行開始カウント(m秒)
 int   NyanFiIdNo = 0;			//多重 NyanFi 識別ID
 bool  IsPrimary  = true;		//最初に起動された
+bool  IsDarkMode = false;		//ダークモードが適用されている
 win_dat Win2Data;				//二重起動終了時の画面情報
 
 int ScrMode  = SCMD_FLIST;	//画面モード
@@ -224,6 +225,7 @@ bool InhbitAltMenu;				//ALTキーでメニューにフォーカスしない
 bool SelectByMouse;				//マウスでファイラーの項目を選択
 bool SelectBaseOnly;			//ファイル名主部でのみ選択
 bool SelectIconSngl;			//アイコン部分で個別に選択
+bool AllowDarkMode;				//ダークモードを一部適用
 bool TimColEnabled;				//タイムスタンプの配色を有効
 bool PriorFExtCol;				//拡張子部分は属性色より優先
 bool ColorOnlyFExt;				//拡張子別配色は拡張子部分のみに適用
@@ -1735,6 +1737,7 @@ void InitializeGlobal()
 		{_T("AnimateGif=false"),			(TObject*)&AnimateGif},
 		{_T("ShowThumbScroll=true"),		(TObject*)&ShowThumbScroll},
 		{_T("MarkImgClose=false"),			(TObject*)&MarkImgClose},
+		{_T("AllowDarkMode=false"),			(TObject*)&AllowDarkMode},
 		{_T("TimColEnabled=false"),			(TObject*)&TimColEnabled},
 		{_T("PriorFExtCol=false"),			(TObject*)&PriorFExtCol},
 		{_T("ColorOnlyFExt=false"),			(TObject*)&ColorOnlyFExt},
@@ -2111,7 +2114,7 @@ void InitializeGlobal()
 	}
 
 	//非公開API
-	HINSTANCE hGdi32 = ::LoadLibrary(_T("gdi32.dll"));
+	hGdi32 = ::LoadLibrary(_T("gdi32.dll"));
 	if (hGdi32) {
 		lpGetFontResourceInfo = (FUNC_GetFontResourceInfo)::GetProcAddress(hGdi32, "GetFontResourceInfoW");
 	}
@@ -4484,6 +4487,7 @@ file_rec* cre_new_file_rec(file_rec *copy_fp)
 		fp->inf_list->Assign(copy_fp->inf_list);
 		fp->prv_text   = copy_fp->prv_text;
 		fp->tail_text  = copy_fp->tail_text;
+		fp->base_end_x = copy_fp->base_end_x;
 	}
 	else {
 		fp->tag 	   = -1;
@@ -4506,6 +4510,7 @@ file_rec* cre_new_file_rec(file_rec *copy_fp)
 		fp->img_ori    = 0;
 		fp->distance   = 0;
 		fp->is_video   = false;
+		fp->base_end_x = 0;
 	}
 
 	return fp;

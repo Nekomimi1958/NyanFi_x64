@@ -26,12 +26,12 @@ bool xd2tx_Initialize()
 	xd2tx_Available = false;
 	xd2tx_FileName	= EmptyStr;
 
-	HINSTANCE hXdoc2txt = ::LoadLibrary(_T("xd2txlib.dll"));
+	HMODULE hXdoc2txt = ::LoadLibrary(_T("xd2txlib.dll"));
 	if (hXdoc2txt) {
 		xd2tx_Available = ((FUNC_ExtractText)::GetProcAddress(hXdoc2txt, "ExtractText")!=NULL);
 
 		_TCHAR szFname[MAX_PATH];
-		if (GetModuleFileName(hXdoc2txt, szFname, MAX_PATH)>0) xd2tx_FileName = szFname;
+		if (::GetModuleFileName(hXdoc2txt, szFname, MAX_PATH)>0) xd2tx_FileName = szFname;
 
 		::FreeLibrary(hXdoc2txt);
 	}

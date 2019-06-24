@@ -69,6 +69,40 @@ bool is_HighContrast()
 }
 
 //---------------------------------------------------------------------------
+//Windows 10 のダークモードを適用
+//---------------------------------------------------------------------------
+bool allow_DarkMode(HWND hWnd, bool allow)
+{
+	bool is_dark = false;
+	if (CheckWin32Version(10) && TOSVersion::Build >= 17763 && !is_HighContrast()) {
+		HMODULE hModule = ::LoadLibrary(_T("uxtheme.dll"));
+		if (hModule) {
+			FUNC_ShouldAppsUseDarkMode lpfShouldAppsUseDarkMode
+				 = (FUNC_ShouldAppsUseDarkMode)::GetProcAddress(hModule, MAKEINTRESOURCEA(132));
+			FUNC_AllowDarkModeForWindow lpfAllowDarkModeForWindow
+				= (FUNC_AllowDarkModeForWindow)::GetProcAddress(hModule, MAKEINTRESOURCEA(133));
+			FUNC_AllowDarkModeForApp lpfAllowDarkModeForApp
+				= (FUNC_AllowDarkModeForApp)::GetProcAddress(hModule, MAKEINTRESOURCEA(135));
+			FUNC_FlushMenuThemes lpfFlushMenuThemes
+				= (FUNC_FlushMenuThemes)::GetProcAddress(hModule, MAKEINTRESOURCEA(136));
+			if (lpfShouldAppsUseDarkMode && lpfAllowDarkModeForWindow
+				&& lpfAllowDarkModeForApp && lpfFlushMenuThemes)
+			{
+				if (lpfShouldAppsUseDarkMode()) {
+					lpfAllowDarkModeForApp(allow);
+				//	lpfAllowDarkModeForWindow(hWnd, allow);
+					lpfFlushMenuThemes();
+					is_dark = allow;
+				}
+			}
+			::FreeLibrary(hModule);
+		}
+	}
+
+	return is_dark;
+}
+
+//---------------------------------------------------------------------------
 //マウスカーソル位置のウィンドウを取得
 //---------------------------------------------------------------------------
 HWND get_window_from_pos()

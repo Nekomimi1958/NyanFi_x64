@@ -2668,17 +2668,17 @@ object OptionDlg: TOptionDlg
         Left = 460
         Top = 10
         Width = 434
-        Height = 314
+        Height = 302
         Caption = #25313#24373#23376#21029#37197#33394
         TabOrder = 3
         DesignSize = (
           434
-          314)
+          302)
         object ExtColListBox: TListBox
           Left = 10
           Top = 18
           Width = 413
-          Height = 171
+          Height = 159
           Style = lbOwnerDrawFixed
           Anchors = [akLeft, akTop, akRight, akBottom]
           DragMode = dmAutomatic
@@ -2690,7 +2690,7 @@ object OptionDlg: TOptionDlg
         end
         object RefExtColPanel: TPanel
           Left = 341
-          Top = 197
+          Top = 185
           Width = 22
           Height = 22
           Anchors = [akRight, akBottom]
@@ -2701,7 +2701,7 @@ object OptionDlg: TOptionDlg
         object RefExtColBtn: TButton
           Tag = 2
           Left = 388
-          Top = 198
+          Top = 186
           Width = 36
           Height = 22
           Anchors = [akRight, akBottom]
@@ -2711,7 +2711,7 @@ object OptionDlg: TOptionDlg
         end
         object ExtColorEdit: TLabeledEdit
           Left = 57
-          Top = 198
+          Top = 186
           Width = 280
           Height = 21
           Anchors = [akLeft, akRight, akBottom]
@@ -2723,7 +2723,7 @@ object OptionDlg: TOptionDlg
         end
         object AddColBtn: TButton
           Left = 10
-          Top = 227
+          Top = 215
           Width = 60
           Height = 24
           Action = AddExtColAction
@@ -2732,7 +2732,7 @@ object OptionDlg: TOptionDlg
         end
         object ChgColBtn: TButton
           Left = 74
-          Top = 227
+          Top = 215
           Width = 60
           Height = 24
           Action = ChgExtColAction
@@ -2741,7 +2741,7 @@ object OptionDlg: TOptionDlg
         end
         object DelColBtn: TButton
           Left = 138
-          Top = 227
+          Top = 215
           Width = 60
           Height = 24
           Action = UserModule.DelListItemAction
@@ -2750,7 +2750,7 @@ object OptionDlg: TOptionDlg
         end
         object UpColBtn: TButton
           Left = 210
-          Top = 227
+          Top = 215
           Width = 30
           Height = 24
           Action = UserModule.UpListItemAction
@@ -2759,7 +2759,7 @@ object OptionDlg: TOptionDlg
         end
         object DowColBtn: TButton
           Left = 244
-          Top = 227
+          Top = 215
           Width = 30
           Height = 24
           Action = UserModule.DownListItemAction
@@ -2768,7 +2768,7 @@ object OptionDlg: TOptionDlg
         end
         object PriFExtColCheckBox: TCheckBox
           Left = 196
-          Top = 262
+          Top = 250
           Width = 201
           Height = 17
           Anchors = [akLeft, akBottom]
@@ -2777,7 +2777,7 @@ object OptionDlg: TOptionDlg
         end
         object SpuitPanel3: TPanel
           Left = 365
-          Top = 197
+          Top = 185
           Width = 22
           Height = 22
           Anchors = [akLeft, akBottom]
@@ -2809,7 +2809,7 @@ object OptionDlg: TOptionDlg
         end
         object ColOnlyFExtCheckBox: TCheckBox
           Left = 10
-          Top = 262
+          Top = 250
           Width = 182
           Height = 17
           Anchors = [akLeft, akBottom]
@@ -2818,7 +2818,7 @@ object OptionDlg: TOptionDlg
         end
         object SymColToCheckBox: TCheckBox
           Left = 10
-          Top = 285
+          Top = 273
           Width = 263
           Height = 17
           Anchors = [akLeft, akBottom]
@@ -2827,9 +2827,10 @@ object OptionDlg: TOptionDlg
         end
         object FindXColEdit: TLabeledEdit
           Left = 341
-          Top = 228
+          Top = 216
           Width = 82
           Height = 21
+          Anchors = [akLeft, akBottom]
           EditLabel.Width = 24
           EditLabel.Height = 13
           EditLabel.Caption = #26908#32034
@@ -2844,7 +2845,7 @@ object OptionDlg: TOptionDlg
         Width = 90
         Height = 24
         Caption = #12452#12531#12509#12540#12488'...'
-        TabOrder = 5
+        TabOrder = 6
         OnClick = InpColBtnClick
       end
       object ExpColBtn: TButton
@@ -2853,7 +2854,7 @@ object OptionDlg: TOptionDlg
         Width = 90
         Height = 24
         Caption = #12456#12463#12473#12509#12540#12488'...'
-        TabOrder = 6
+        TabOrder = 7
         OnClick = ExpColBtnClick
       end
       object OptColGroupBox: TGroupBox
@@ -3025,19 +3026,19 @@ object OptionDlg: TOptionDlg
       end
       object TagColGroupBox: TGroupBox
         Left = 460
-        Top = 336
+        Top = 324
         Width = 434
-        Height = 203
+        Height = 183
         Caption = #12479#12464#21029#37197#33394
         TabOrder = 4
         DesignSize = (
           434
-          203)
+          183)
         object TagColListBox: TListBox
           Left = 10
           Top = 18
           Width = 348
-          Height = 175
+          Height = 155
           Style = lbOwnerDrawFixed
           Anchors = [akLeft, akTop, akBottom]
           DoubleBuffered = False
@@ -3111,8 +3112,16 @@ object OptionDlg: TOptionDlg
         Width = 80
         Height = 24
         Caption = #36969#29992
-        TabOrder = 7
+        TabOrder = 8
         OnClick = AppColorBtnClick
+      end
+      object AllowDkMdCheckBox: TCheckBox
+        Left = 470
+        Top = 518
+        Width = 263
+        Height = 17
+        Caption = 'Windows 10 '#12398#12480#12540#12463#12514#12540#12489#12434#19968#37096#12395#36969#29992
+        TabOrder = 5
       end
     end
     object TxtViewerSheet: TTabSheet

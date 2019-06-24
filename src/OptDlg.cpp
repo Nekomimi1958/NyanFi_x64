@@ -629,6 +629,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	ColOnlyFExtCheckBox->Tag	= (int)&ColorOnlyFExt;
 	SymColToCheckBox->Tag		= (int)&SymColorToName;
 	RevTagColCheckBox->Tag		= (int)&RevTagCololr;
+	AllowDkMdCheckBox->Tag		= (int)&AllowDarkMode;
 	ShowDirTypeCheckBox->Tag	= (int)&ShowDirType;
 	ShowSpaceCheckBox->Tag		= (int)&ShowSpace;
 	ShowByteSizeCheckBox->Tag	= (int)&ShowByteSize;
