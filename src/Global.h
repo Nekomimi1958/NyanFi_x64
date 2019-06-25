@@ -82,8 +82,20 @@ void HtmlHelpClose();
 //---------------------------------------------------------------------------
 //非公開API
 typedef BOOL (WINAPI *FUNC_GetFontResourceInfo)(LPCWSTR, DWORD*, LPVOID, DWORD);
-extern HMODULE hGdi32;
-extern FUNC_GetFontResourceInfo lpGetFontResourceInfo;
+extern  HMODULE hGdi32;
+extern  FUNC_GetFontResourceInfo	lpfGetFontResourceInfo;
+
+typedef WINAPI BOOL (WINAPI *FUNC_ShouldAppsUseDarkMode)();
+typedef WINAPI BOOL (WINAPI *FUNC_AllowDarkModeForWindow)(HWND, BOOL);
+typedef WINAPI BOOL (WINAPI *FUNC_AllowDarkModeForApp)(BOOL);
+typedef WINAPI VOID (WINAPI *FUNC_FlushMenuThemes)();
+extern  HMODULE hUxTheme;
+extern  FUNC_ShouldAppsUseDarkMode	lpfShouldAppsUseDarkMode;
+extern  FUNC_AllowDarkModeForWindow	lpfAllowDarkModeForWindow;
+extern  FUNC_AllowDarkModeForApp	lpfAllowDarkModeForApp;
+extern  FUNC_FlushMenuThemes		lpfFlushMenuThemes ;
+
+extern bool SupportDarkMode;			//Windows 10 ダークモードに対応
 
 //---------------------------------------------------------------------------
 //画面モード(ScrMode)
@@ -1867,6 +1879,8 @@ void ApplyOptionByTag(TForm *fp);
 void ApplyOptionByTag(TTabSheet *sp);
 
 void SetToolWinBorder(TForm *fp, bool sw = true);
+
+void SetDarkWinTheme(TWinControl *wp);
 
 void InitializeListGrid(TStringGrid *gp, TFont *fnt = NULL);
 void InitializeListHeader(THeaderControl *hp, const _TCHAR *hdr, TFont *fnt = NULL);

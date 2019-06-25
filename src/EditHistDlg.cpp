@@ -56,7 +56,10 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 
 	setup_ToolBar(OpeToolBar);
 	FilterEdit->Width = IniFile->ReadIntGen(_T("EditHistFilterWidth"),	200);
-	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+	if (IsDarkMode)
+		SetDarkWinTheme(FilterEdit);
+	else
+		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
 
 	StatusBar1->Font->Assign(SttBarFont);
 	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
@@ -1135,13 +1138,13 @@ void __fastcall TEditHistoryDlg::FilterEditChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FilterEditEnter(TObject *Sender)
 {
-	FilterEdit->Color = scl_Window;
+	if (!IsDarkMode) FilterEdit->Color = scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FilterEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	InvColIfEmpty(FilterEdit);
+	if (!IsDarkMode) InvColIfEmpty(FilterEdit);
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FilterBtnClick(TObject *Sender)

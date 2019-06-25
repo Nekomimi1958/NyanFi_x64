@@ -93,7 +93,11 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 		UpdateSpDirList(true);
 
 		(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)lp)->SetFocus();
-		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+
+		if (IsDarkMode)
+			SetDarkWinTheme(FilterEdit);
+		else
+			FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
 	}
 	//“o˜^ƒfƒBƒŒƒNƒgƒŠ
 	else {
@@ -999,13 +1003,13 @@ void __fastcall TRegDirDlg::FilterBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FilterEditEnter(TObject *Sender)
 {
-	FilterEdit->Color = scl_Window;
+	if (!IsDarkMode) FilterEdit->Color = scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FilterEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	InvColIfEmpty(FilterEdit);
+	if (!IsDarkMode) InvColIfEmpty(FilterEdit);
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FilterEditChange(TObject *Sender)

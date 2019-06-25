@@ -55,6 +55,8 @@ void __fastcall TXmlViewer::FormShow(TObject *Sender)
 
 	Caption = yen_to_delimiter(FileName) + " - XMLÉrÉÖÉAÅ[";
 
+	SetDarkWinTheme(XmlTreeView);
+
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
 //---------------------------------------------------------------------------

@@ -21,21 +21,21 @@ object TagManDlg: TTagManDlg
   TextHeight = 13
   object ListPanel: TPanel
     Left = 0
-    Top = 23
+    Top = 21
     Width = 310
-    Height = 156
+    Height = 158
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     OnResize = ListPanelResize
     DesignSize = (
       310
-      156)
+      158)
     object TagCheckListBox: TCheckListBox
       Left = 0
       Top = 0
       Width = 310
-      Height = 156
+      Height = 158
       OnClickCheck = TagCheckListBoxClickCheck
       Align = alLeft
       Anchors = [akLeft, akTop, akRight, akBottom]
@@ -53,7 +53,7 @@ object TagManDlg: TTagManDlg
     end
     object BlankPanel: TPanel
       Left = 294
-      Top = 140
+      Top = 142
       Width = 14
       Height = 14
       Anchors = [akRight, akBottom]
@@ -175,16 +175,15 @@ object TagManDlg: TTagManDlg
     Left = 0
     Top = 0
     Width = 310
-    Height = 23
+    Height = 21
     Align = alTop
     AutoSize = True
     BevelOuter = bvNone
-    BorderWidth = 1
     TabOrder = 3
     object TagEdit: TEdit
-      Left = 1
-      Top = 1
-      Width = 308
+      Left = 0
+      Top = 0
+      Width = 310
       Height = 21
       Align = alTop
       PopupMenu = UserModule.EditPopupMenuE

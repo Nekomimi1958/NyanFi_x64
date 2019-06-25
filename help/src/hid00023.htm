@@ -10,6 +10,7 @@
 	<param name="Keyword" value="インポート">
 	<param name="Keyword" value="エクスポート">
 	<param name="Keyword" value="スポイト">
+	<param name="Keyword" value="ダークモード">
 	<param name="Keyword" value="タイムスタンプの配色">
 	<param name="Keyword" value="フォント">
 	<param name="Keyword" value="フォント・配色">
@@ -102,8 +103,17 @@
 <br>
 
 <dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> Windows 10 のダークモードを一部に適用
-<dd><b>Windows 10</b> (1809以降)のダークモードを一部の配色に適用します。今のところ対応しているのは、メニュー項目(メニューバー部分は除く)のみです。<br>
+<dd><b>Windows 10</b> (1809以降)のダークモードを一部の配色に適用します。今のところ対応しているのは以下の部分です。
 なお、ハイコントラストテーマの場合には適用されません。<br>
+<ul>
+<li>メニュー項目(メニューバー部分は除く、オーナー描画のものは境界が太くなります)
+<li>主な標準スクロールバー(シンプルスクロールバー適用可能箇所、イメージビュアー、<a href="hid00081.htm">XMLビュアー</a>、<a href="hid00085.htm">正規表現チェッカー</a>)
+<li><a href="hid00005.htm#InputDir">InputDir</a>_ND コマンドのディレクトリ入力コンボボックス、<a href="hid00005.htm#Filter">Filter</a> コマンドのフィルタ入力コンボボックス
+<li>イメージビュアーのシークバー
+<li>各種一覧のフィルタ欄(フォーカスにかかわらず同色)、タグ設定/検索の入力欄
+<li><a href="hid00086.htm">ドライブ使用率推移</a>のコンボボックス
+<li>一部のダイアログの下部操作パネル(<a href="hid00069.htm">タスクマネージャ</a>、パスマスク(<a href="hid00005.htm#PathMaskDlg">PathMaskDlg</a>)、<a href="hid00061.htm">文字列置換</a>の確認)。
+</ul>
 <br>
 
 <dt class="no_bg_indent1">配色の

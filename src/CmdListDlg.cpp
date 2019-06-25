@@ -124,7 +124,10 @@ void __fastcall TCmdFileListDlg::WmFormShowed(TMessage &msg)
 	GridScrPanel->UpdateKnob();
 
 	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();
-	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+	if (IsDarkMode)
+		SetDarkWinTheme(FilterEdit);
+	else
+		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
 	FilterEdit->Text  = EmptyStr;
 }
 
@@ -377,13 +380,13 @@ void __fastcall TCmdFileListDlg::FilterBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::FilterEditEnter(TObject *Sender)
 {
-	FilterEdit->Color = scl_Window;
+	if (!IsDarkMode) FilterEdit->Color = scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::FilterEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	InvColIfEmpty(FilterEdit);
+	if (!IsDarkMode) InvColIfEmpty(FilterEdit);
 }
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::FilterEditChange(TObject *Sender)

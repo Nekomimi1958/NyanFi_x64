@@ -37,13 +37,14 @@ extern TColor scl_BtnText;
 extern TColor scl_Menu;
 extern TColor scl_MenuText;
 
-//---------------------------------------------------------------------------
-typedef WINSHELLAPI BOOL (WINAPI *FUNC_ShouldAppsUseDarkMode)();
-typedef WINSHELLAPI BOOL (WINAPI *FUNC_AllowDarkModeForWindow)(HWND, BOOL);
-typedef WINSHELLAPI BOOL (WINAPI *FUNC_AllowDarkModeForApp)(BOOL);
-typedef WINSHELLAPI VOID (WINAPI *FUNC_FlushMenuThemes)();
-
-bool allow_DarkMode(HWND hWnd, bool allow);
+extern TColor dcl_Window;
+extern TColor dcl_WindowText;
+extern TColor dcl_Highlight;
+extern TColor dcl_HighlightText;
+extern TColor dcl_BtnFace;
+extern TColor dcl_BtnText;
+extern TColor dcl_Menu;
+extern TColor dcl_MenuText;
 
 //---------------------------------------------------------------------------
 void InitializeSysColor();

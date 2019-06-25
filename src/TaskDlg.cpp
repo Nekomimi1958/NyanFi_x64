@@ -49,6 +49,8 @@ void __fastcall TTaskManDlg::FormShow(TObject *Sender)
 	gp->SetFocus();
 	GridScrPanel->UpdateKnob();
 
+	SetDarkWinTheme(OpePanel);
+
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
 //---------------------------------------------------------------------------

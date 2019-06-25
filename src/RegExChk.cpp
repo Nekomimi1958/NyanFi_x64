@@ -118,6 +118,10 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 	ResListBox->Clear();
 	MatchWdList->Clear();
 	MatchCount = 0;
+
+	SetDarkWinTheme(ReferListBox);
+	SetDarkWinTheme(ResListBox);
+	SetDarkWinTheme(ObjMemo);
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegExChecker::FormClose(TObject *Sender, TCloseAction &Action)

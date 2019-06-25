@@ -46,45 +46,6 @@ object NyanFiForm: TNyanFiForm
     StyleElements = [seBorder]
     OnDrawPanel = StatusBarDrawPanel
   end
-  object InpDirPanel: TPanel
-    Left = 32
-    Top = 52
-    Width = 219
-    Height = 21
-    BevelOuter = bvNone
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentColor = True
-    ParentFont = False
-    TabOrder = 1
-    Visible = False
-    StyleElements = [seFont, seBorder]
-    object RefDirBtn: TSpeedButton
-      Left = 196
-      Top = 0
-      Width = 23
-      Height = 21
-      Align = alRight
-      Caption = '...'
-      OnClick = RefDirBtnClick
-    end
-    object InpDirComboBox: TComboBox
-      Left = 0
-      Top = 0
-      Width = 196
-      Height = 21
-      Align = alClient
-      DropDownCount = 20
-      TabOrder = 0
-      TabStop = False
-      OnExit = InpDirEditExit
-      OnKeyDown = InpDirEditKeyDown
-      OnKeyPress = InpDirEditKeyPress
-    end
-  end
   object MainContainer: TPanel
     Left = 0
     Top = 0
@@ -2218,6 +2179,47 @@ object NyanFiForm: TNyanFiForm
       TabOrder = 1
       Visible = False
       OnClick = CanDlBtnClick
+    end
+  end
+  object InpDirPanel: TPanel
+    Left = 32
+    Top = 52
+    Width = 219
+    Height = 21
+    BevelOuter = bvNone
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = True
+    ParentFont = False
+    TabOrder = 1
+    Visible = False
+    StyleElements = [seFont, seBorder]
+    object InpDirComboBox: TComboBox
+      Left = 0
+      Top = 0
+      Width = 195
+      Height = 21
+      Align = alClient
+      DropDownCount = 20
+      TabOrder = 0
+      TabStop = False
+      OnExit = InpDirEditExit
+      OnKeyDown = InpDirEditKeyDown
+      OnKeyPress = InpDirEditKeyPress
+    end
+    object RefDirBtn: TButton
+      Left = 195
+      Top = 0
+      Width = 24
+      Height = 21
+      Align = alRight
+      Caption = '...'
+      TabOrder = 1
+      OnClick = RefDirBtnClick
+      OnKeyDown = RefDirBtnKeyDown
     end
   end
   object MainMenu1: TMainMenu

@@ -53,7 +53,15 @@ bool 		  CancelHelp  = false;
 //---------------------------------------------------------------------------
 //非公開API
 HMODULE hGdi32 = NULL;
-FUNC_GetFontResourceInfo lpGetFontResourceInfo = NULL;
+FUNC_GetFontResourceInfo	lpfGetFontResourceInfo = NULL;
+
+HMODULE hUxTheme = NULL;
+FUNC_ShouldAppsUseDarkMode	lpfShouldAppsUseDarkMode  = NULL;
+FUNC_AllowDarkModeForWindow	lpfAllowDarkModeForWindow = NULL;
+FUNC_AllowDarkModeForApp	lpfAllowDarkModeForApp	  = NULL;
+FUNC_FlushMenuThemes		lpfFlushMenuThemes		  = NULL;
+
+bool SupportDarkMode = false;
 
 //---------------------------------------------------------------------------
 TCursor crTmpPrev = (TCursor)10;	//カーソルのプレビュー用
@@ -2116,7 +2124,19 @@ void InitializeGlobal()
 	//非公開API
 	hGdi32 = ::LoadLibrary(_T("gdi32.dll"));
 	if (hGdi32) {
-		lpGetFontResourceInfo = (FUNC_GetFontResourceInfo)::GetProcAddress(hGdi32, "GetFontResourceInfoW");
+		lpfGetFontResourceInfo = (FUNC_GetFontResourceInfo)::GetProcAddress(hGdi32, "GetFontResourceInfoW");
+	}
+
+	if (CheckWin32Version(10) && TOSVersion::Build >= 17763 && !is_HighContrast()) {
+		hUxTheme = ::LoadLibrary(_T("uxtheme.dll"));
+		if (hUxTheme) {
+			lpfShouldAppsUseDarkMode  = (FUNC_ShouldAppsUseDarkMode)::GetProcAddress(hUxTheme, MAKEINTRESOURCEA(132));
+			lpfAllowDarkModeForWindow = (FUNC_AllowDarkModeForWindow)::GetProcAddress(hUxTheme, MAKEINTRESOURCEA(133));
+			lpfAllowDarkModeForApp	  = (FUNC_AllowDarkModeForApp)::GetProcAddress(hUxTheme, MAKEINTRESOURCEA(135));
+			lpfFlushMenuThemes		  = (FUNC_FlushMenuThemes)::GetProcAddress(hUxTheme, MAKEINTRESOURCEA(136));
+			SupportDarkMode = (lpfShouldAppsUseDarkMode && lpfAllowDarkModeForWindow
+								&& lpfAllowDarkModeForApp && lpfFlushMenuThemes);
+		}
 	}
 
 	WorkListChanged = WorkListFiltered = rqWorkListDirInf = false;
@@ -2188,7 +2208,8 @@ void EndGlobal()
 		::FreeLibrary(hHHctrl);
 	}
 
-	if (hGdi32) ::FreeLibrary(hGdi32);
+	if (hGdi32)   ::FreeLibrary(hGdi32);
+	if (hUxTheme) ::FreeLibrary(hUxTheme);
 }
 
 //---------------------------------------------------------------------------
@@ -2633,6 +2654,54 @@ void SetToolWinBorder(TForm *fp, bool sw)
 			}
 			sp->Visible = sw;
 		}
+	}
+}
+
+//---------------------------------------------------------------------------
+//コントロールにダークモードを適用
+//---------------------------------------------------------------------------
+void SetDarkWinTheme(TWinControl *wp)
+{
+	if (wp->ClassNameIs("TPanel")) {
+		TPanel *pp = (TPanel *)wp;
+		pp->StyleElements = pp->StyleElements >> seClient;
+		pp->Color		  = IsDarkMode? dcl_BtnFace : scl_BtnFace;
+		pp->Font->Color   = IsDarkMode? dcl_BtnText : scl_BtnText;
+		const wchar_t *subApp = IsDarkMode? _T("DarkMode_Explorer") : NULL;
+		for (int i=0; i<pp->ControlCount; i++) {
+			TControl *cp = pp->Controls[i];
+			if (cp->ClassNameIs("TButton")) {
+				SetWindowTheme(((TButton *)cp)->Handle, subApp, NULL);
+			}
+			else if (cp->ClassNameIs("TSpeedButton")) {
+				TSpeedButton *bp = (TSpeedButton *)cp;
+				bp->Font->Color = IsDarkMode? dcl_BtnText : scl_BtnText;
+			}
+			else if (cp->ClassNameIs("TLabel")) {
+				TLabel *lp = (TLabel *)cp;
+				lp->Color		= IsDarkMode? dcl_BtnFace : scl_BtnFace;
+				lp->Font->Color = IsDarkMode? dcl_BtnText : scl_BtnText;
+			}
+			else if (class_is_Edit(cp) || class_is_ComboBox(cp) || cp->ClassNameIs("TPanel")) {
+				SetDarkWinTheme((TWinControl *)cp);
+			}
+		}
+	}
+	else if (class_is_Edit(wp)) {
+		TEdit *ep = (TEdit *)wp;
+		ep->Color		= IsDarkMode? dcl_Window	 : scl_Window;
+		ep->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
+	}
+	else if (class_is_ComboBox(wp)) {
+		const wchar_t *subApp = IsDarkMode? _T("DarkMode_CFD") : NULL;
+		SetWindowTheme(wp->Handle, subApp, NULL);
+		TComboBox *cp = (TComboBox *)wp;
+		cp->Color		= IsDarkMode? dcl_Window	 : scl_Window;
+		cp->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
+	}
+	else {
+		const wchar_t *subApp = IsDarkMode? _T("DarkMode_Explorer") : NULL;
+		SetWindowTheme(wp->Handle, subApp, NULL);
 	}
 }
 
@@ -5142,11 +5211,11 @@ UnicodeString get_FontInf(
 	bool ok = false;
 	if (SameText(ExtractFileDir(fnam), usr_SH->KnownGuidToPath(FOLDERID_Fonts))) {
 		DWORD dwSize = 0;
-		if (lpGetFontResourceInfo && lpGetFontResourceInfo(fnam.c_str(), &dwSize, NULL, 2)) {
+		if (lpfGetFontResourceInfo && lpfGetFontResourceInfo(fnam.c_str(), &dwSize, NULL, 2)) {
 			int n = dwSize/sizeof(LOGFONT);
 			if (n>0) {
 				std::unique_ptr<LOGFONT[]> lfs(new LOGFONT[n]);
-				if (lpGetFontResourceInfo(fnam.c_str(), &dwSize, lfs.get(), 2)) {
+				if (lpfGetFontResourceInfo(fnam.c_str(), &dwSize, lfs.get(), 2)) {
 					//フォント名
 					UnicodeString lbuf;
 					for (int i=0; i<n; i++) {
@@ -5717,6 +5786,7 @@ void set_UsrScrPanel(UsrScrollPanel *sp)
 				if (is_simple) hi += (std_wd + 2);
 				sp->AssoListBox->Height = hi;
 			}
+			SetDarkWinTheme(sp->AssoListBox);
 		}
 		//チェックリストボックスのサイズ調整
 		else if (sp->AssoChkListBox) {
@@ -5724,6 +5794,7 @@ void set_UsrScrPanel(UsrScrollPanel *sp)
 			int wd = sp->ParentPanel->ClientWidth;
 			if (is_simple) wd += (std_wd + 2);
 			sp->AssoChkListBox->Width  = wd;
+			SetDarkWinTheme(sp->AssoChkListBox);
 		}
 		//グリッドのサイズ調整
 		else if (sp->AssoStrGrid) {
@@ -5737,6 +5808,10 @@ void set_UsrScrPanel(UsrScrollPanel *sp)
 				if (is_simple) hi += (std_wd + 2);
 				sp->AssoStrGrid->Height = hi;
 			}
+			SetDarkWinTheme(sp->AssoStrGrid);
+		}
+		else if (sp->AssoScrollBar) {
+			SetDarkWinTheme(sp->AssoScrollBar);
 		}
 	}
 }

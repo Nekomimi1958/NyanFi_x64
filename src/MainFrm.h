@@ -528,6 +528,7 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *CanDlBtn;
 	TButton *GrepCanBtn;
 	TButton *GrepExOptBtn;
+	TButton *RefDirBtn;
 	TButton *StartBtn;
 	TButton *StartRBtn;
 	TCheckBox *AndCheckBox;
@@ -1005,7 +1006,6 @@ __published:	// IDE で管理されるコンポーネント
 	TSpeedButton *PopTabBtn;
 	TSpeedButton *R_SelDrvBtn;
 	TSpeedButton *R_SelDrvBtn2;
-	TSpeedButton *RefDirBtn;
 	TSpeedButton *SeekLBtn;
 	TSpeedButton *SeekRBtn;
 	TSplitter *GrepMidSplitter;
@@ -1843,6 +1843,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CmdHistoryActionExecute(TObject *Sender);
 	void __fastcall TextMarginBoxDblClick(TObject *Sender);
 	void __fastcall TabControl1Resize(TObject *Sender);
+	void __fastcall RefDirBtnKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+
 
 
 private:	// ユーザー宣言

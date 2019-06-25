@@ -90,7 +90,10 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::WmFormShowed(TMessage &msg)
 {
-	FindCommitEdit->Color = col_Invalid;
+	if (IsDarkMode) 
+		SetDarkWinTheme(FindCommitEdit);
+	else
+		FindCommitEdit->Color = col_Invalid;
 	Repaint();
 
 	AutoCrlf   = SameText(Trim(GitExeStr("config --get core.autocrlf")), "true");
@@ -1734,13 +1737,13 @@ void __fastcall TGitViewer::FindCommitEditChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FindCommitEditEnter(TObject *Sender)
 {
-	FindCommitEdit->Color = scl_Window;
+	if (!IsDarkMode) FindCommitEdit->Color = scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FindCommitEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	InvColIfEmpty(FindCommitEdit);
+	if (!IsDarkMode) InvColIfEmpty(FindCommitEdit);
 }
 
 //---------------------------------------------------------------------------

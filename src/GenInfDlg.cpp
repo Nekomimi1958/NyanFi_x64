@@ -60,7 +60,11 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 {
 	setup_ToolBar(OpeToolBar);
 	FilterEdit->Width = IniFile->ReadIntGen(_T("GenInfoFilterWidth"),	200);
-	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+	if (IsDarkMode)
+		SetDarkWinTheme(FilterEdit);
+	else
+		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+
 	RetStr = EmptyStr;
 	GenSelList->Clear();
 
@@ -620,13 +624,13 @@ void __fastcall TGeneralInfoDlg::FilterEditKeyPress(TObject *Sender, System::Wid
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterEditEnter(TObject *Sender)
 {
-	FilterEdit->Color = scl_Window;
+	if (!IsDarkMode) FilterEdit->Color = scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	InvColIfEmpty(FilterEdit);
+	if (!IsDarkMode) InvColIfEmpty(FilterEdit);
 }
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterBtnClick(TObject *Sender)

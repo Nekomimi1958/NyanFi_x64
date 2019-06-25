@@ -46,6 +46,8 @@ void __fastcall TAskRepDlg::FormShow(TObject *Sender)
 	StatusBar1->Panels->Items[0]->Text = yen_to_delimiter(FileName).cat_sprintf(_T(" - %us %uŒ…"), FoundLine, FoundPos);
 	StatusBar1->Panels->Items[1]->Text = UnicodeString().sprintf(_T(" File %u/%u"), FileIndex + 1, FileCount);
 
+	SetDarkWinTheme(OpPanel);
+
 	OKBtn->SetFocus();
 }
 //---------------------------------------------------------------------------

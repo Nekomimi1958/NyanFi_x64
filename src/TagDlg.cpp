@@ -81,6 +81,7 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 	HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
 	ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 	TagEdit->Hint	 = LoadUsrMsg(USTR_HintMltSepSC);
+	SetDarkWinTheme(TagEdit);
 
 	AndCheckBox->Visible	 = false;
 	SelMaskCheckBox->Visible = false;

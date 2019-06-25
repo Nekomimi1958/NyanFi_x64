@@ -71,6 +71,9 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 		DriveComboBox->ItemIndex = -1;
 	}
 
+	SetDarkWinTheme(DriveComboBox);
+	SetDarkWinTheme(SizeComboBox);
+
 	DlgInitialized = true;
 
 	SizeComboBoxChange(NULL);

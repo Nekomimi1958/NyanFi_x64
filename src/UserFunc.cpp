@@ -42,6 +42,16 @@ TColor scl_BtnText;
 TColor scl_Menu;
 TColor scl_MenuText;
 
+//ダーク色
+TColor dcl_Window;
+TColor dcl_WindowText;
+TColor dcl_Highlight;
+TColor dcl_HighlightText;
+TColor dcl_BtnFace;
+TColor dcl_BtnText;
+TColor dcl_Menu;
+TColor dcl_MenuText;
+
 //---------------------------------------------------------------------------
 //システム色の初期化
 //---------------------------------------------------------------------------
@@ -55,6 +65,15 @@ void InitializeSysColor()
 	scl_BtnText		  = clBtnText;
 	scl_Menu		  = clMenu;
 	scl_MenuText	  = clMenuText;
+
+	dcl_Window		  = TColor(RGB(0x20, 0x20, 0x20));
+	dcl_WindowText	  = clWhite;
+	dcl_Highlight	  = TColor(RGB(0x41, 0x41, 0x41));
+	dcl_HighlightText = clWhite;
+	dcl_BtnFace 	  = TColor(RGB(0x38, 0x38, 0x38));
+	dcl_BtnText 	  = clWhite;
+	dcl_Menu		  = TColor(RGB(0x2b, 0x2b, 0x2b));
+	dcl_MenuText	  = clWhite;
 }
 
 //---------------------------------------------------------------------------
@@ -66,40 +85,6 @@ bool is_HighContrast()
 	hc.cbSize = sizeof(HIGHCONTRAST);
 	return (::SystemParametersInfo(SPI_GETHIGHCONTRAST, sizeof(HIGHCONTRAST), &hc, 0)
 				&& ((hc.dwFlags & HCF_HIGHCONTRASTON)!=0));
-}
-
-//---------------------------------------------------------------------------
-//Windows 10 のダークモードを適用
-//---------------------------------------------------------------------------
-bool allow_DarkMode(HWND hWnd, bool allow)
-{
-	bool is_dark = false;
-	if (CheckWin32Version(10) && TOSVersion::Build >= 17763 && !is_HighContrast()) {
-		HMODULE hModule = ::LoadLibrary(_T("uxtheme.dll"));
-		if (hModule) {
-			FUNC_ShouldAppsUseDarkMode lpfShouldAppsUseDarkMode
-				 = (FUNC_ShouldAppsUseDarkMode)::GetProcAddress(hModule, MAKEINTRESOURCEA(132));
-			FUNC_AllowDarkModeForWindow lpfAllowDarkModeForWindow
-				= (FUNC_AllowDarkModeForWindow)::GetProcAddress(hModule, MAKEINTRESOURCEA(133));
-			FUNC_AllowDarkModeForApp lpfAllowDarkModeForApp
-				= (FUNC_AllowDarkModeForApp)::GetProcAddress(hModule, MAKEINTRESOURCEA(135));
-			FUNC_FlushMenuThemes lpfFlushMenuThemes
-				= (FUNC_FlushMenuThemes)::GetProcAddress(hModule, MAKEINTRESOURCEA(136));
-			if (lpfShouldAppsUseDarkMode && lpfAllowDarkModeForWindow
-				&& lpfAllowDarkModeForApp && lpfFlushMenuThemes)
-			{
-				if (lpfShouldAppsUseDarkMode()) {
-					lpfAllowDarkModeForApp(allow);
-				//	lpfAllowDarkModeForWindow(hWnd, allow);
-					lpfFlushMenuThemes();
-					is_dark = allow;
-				}
-			}
-			::FreeLibrary(hModule);
-		}
-	}
-
-	return is_dark;
 }
 
 //---------------------------------------------------------------------------

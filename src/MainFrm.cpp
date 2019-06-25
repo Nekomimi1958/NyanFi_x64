@@ -4193,7 +4193,15 @@ void __fastcall TNyanFiForm::SetupDesign(
 {
 	InhUpdBgImg++;
 
-	IsDarkMode = allow_DarkMode(Handle, AllowDarkMode);
+	//ダークモードの適用
+	if (SupportDarkMode && lpfShouldAppsUseDarkMode()) {
+		lpfAllowDarkModeForApp(AllowDarkMode);
+		lpfFlushMenuThemes();
+		IsDarkMode = AllowDarkMode;
+
+		SetDarkWinTheme(ImgScrollBox);
+		SetDarkWinTheme(SeekPanel);
+	}
 
 	//境界線/ノブ画像
 	BgImgName[BGIMGID_KNOB_H] = BgImgName[BGIMGID_KNOB_V];
@@ -4273,8 +4281,10 @@ void __fastcall TNyanFiForm::SetupDesign(
 	set_ButtonMark(R_SelDrvBtn,  UBMK_DOWN, col_mk);
 	set_ButtonMark(R_SelDrvBtn2, UBMK_DOWN, col_mk);
 	set_ButtonMark(PopTabBtn,    UBMK_DOWN, is_HighContrast()? scl_BtnText : SelectWorB(col_bgTabBar));
-	set_ButtonMark(SeekLBtn, UBMK_HTOP);
-	set_ButtonMark(SeekRBtn, UBMK_HEND);
+
+	col_mk = SelectWorB(SeekPanel->Color);
+	set_ButtonMark(SeekLBtn, UBMK_HTOP, col_mk);
+	set_ButtonMark(SeekRBtn, UBMK_HEND, col_mk);
 
 	L_SelDrvBtn->Visible  = ShowPopDirBtn;
 	L_SelDrvBtn2->Visible = ShowPopDirBtn;
@@ -4543,6 +4553,11 @@ void __fastcall TNyanFiForm::SetupDesign(
 				LoupeDockPanel->Constraints->MinHeight = MINHI_LOUPE;
 				LoupeDockPanel->Constraints->MaxHeight = 0;
 				SideDockPanel->Height = HistDockPanel->Height + IniFile->ReadIntGen(_T("LoupeHeight"),	200);
+				if (initial) {
+					//※イメージビュアーを一旦表示状態にしないと倍率ボタンが表示されない
+					ImgViewPanel->Visible = true;
+					ImgViewPanel->Visible = false;
+				}
 			}
 			else {
 				LoupeDockPanel->Constraints->MinHeight = 1;
@@ -6049,10 +6064,12 @@ void __fastcall TNyanFiForm::ShowInpDirPanel(bool drop_sw)
 	InpDirPanel->Parent  = (CurListTag==0)? (div_p? L_DirPanel2 : L_DirPanel) : (div_p? R_DirPanel2 : R_DirPanel);
 	InpDirPanel->Align	 = alClient;
 	InpDirPanel->Visible = true;
+
 	InpDirComboBox->Font->Assign(DialogFont);
 	InpDirComboBox->Items->Assign(InputDirHistory);
 	InpDirComboBox->Text = GetCurPathStr();
 	InpDirComboBox->SetFocus();
+	SetDarkWinTheme(InpDirPanel);
 	if (drop_sw) InpDirComboBox->DroppedDown = true;
 }
 //---------------------------------------------------------------------------
@@ -6073,6 +6090,14 @@ void __fastcall TNyanFiForm::RefDirBtnClick(TObject *Sender)
 		InpDirComboBox->Text = to_absolute_name(dnam, CurPath[CurListTag]);
 		ApplyInpDir();
 	}
+	else {
+		InpDirComboBox->SetFocus();
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::RefDirBtnKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (Key==VK_ESCAPE) HideInpDirPanel();
 }
 //---------------------------------------------------------------------------
 //入力ディレクトリの適用
@@ -6101,8 +6126,8 @@ void __fastcall TNyanFiForm::ApplyInpDir()
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::InpDirEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if		(Key==VK_RETURN)	ApplyInpDir();
-	else if (Key==VK_ESCAPE)	HideInpDirPanel();
+	if		(Key==VK_RETURN) ApplyInpDir();
+	else if (Key==VK_ESCAPE) HideInpDirPanel();
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::InpDirEditKeyPress(TObject *Sender, System::WideChar &Key)
@@ -6112,7 +6137,7 @@ void __fastcall TNyanFiForm::InpDirEditKeyPress(TObject *Sender, System::WideCha
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::InpDirEditExit(TObject *Sender)
 {
-	HideInpDirPanel();
+	if (!RefDirBtn->Focused()) HideInpDirPanel();
 }
 
 //---------------------------------------------------------------------------
@@ -6332,7 +6357,8 @@ void __fastcall TNyanFiForm::PopSelectItemDrawItem(TObject *Sender, TCanvas *ACa
 		const TRect &ARect, bool Selected)
 {
 	TMenuItem *mp = (TMenuItem*)Sender;
-	ACanvas->Brush->Color = Selected? scl_Highlight : scl_Menu;
+	ACanvas->Brush->Color = Selected? (IsDarkMode? dcl_Highlight : scl_Highlight)
+									: (IsDarkMode? dcl_Menu : scl_Menu);
 	ACanvas->FillRect(ARect);
 
 	UnicodeString lbuf = mp->Caption;
@@ -6363,7 +6389,8 @@ void __fastcall TNyanFiForm::PopSelectItemDrawItem(TObject *Sender, TCanvas *ACa
 			xp += ScaledInt(24);
 		}
 
-		ACanvas->Font->Color = Selected? scl_HighlightText : scl_MenuText;
+		ACanvas->Font->Color = Selected? (IsDarkMode? dcl_HighlightText : scl_HighlightText)
+									   : (IsDarkMode? dcl_MenuText : scl_MenuText);
 		bool k_flag = remove_top_s(lbuf, '&');
 		UnicodeString sbuf = split_pre_tab(lbuf);
 		//呼び出しキー
@@ -7247,6 +7274,7 @@ bool __fastcall TNyanFiForm::SetTxtPreview(
 	TxtTailBuff->Text = tail;
 
 	if (force_sw) TxtPrvListPanel->Visible = true;
+
 	TxtPrvListBox->TabWidth = get_ViewTabWidth(get_extension(fnam));	//描画のために流用
 	TxtPrvListBox->Tag		= TxtPrvShowLineNo? LBTAG_OPT_LNNO : 0;
 	assign_FileListBox(TxtPrvListBox, TxtPrvBuff, idx, TxtPrvScrPanel);
@@ -9473,7 +9501,14 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 	}
 
 	//テキストプレビューの表示
-	TxtPrvListPanel->Visible = (TxtPrvListBox->Count>0);
+	if (TxtPrvListBox->Count>0) {
+		SetDarkWinTheme(TxtPrvListBox);
+		SetDarkWinTheme(TxtTailListBox);
+		TxtPrvListPanel->Visible = true;
+	}
+	else {
+		TxtPrvListPanel->Visible = false;
+	}
 
 	//末尾プレビューの表示
 	if (TxtTailListBox->Count>0) {
@@ -15969,12 +16004,12 @@ void __fastcall TNyanFiForm::FilterActionExecute(TObject *Sender)
 	FilterComboBox->Left  = get_CharWidth_Font(DrvInfFont, 10);
 	FilterComboBox->Width = std::max(stt_pp->ClientWidth - get_CharWidth_Font(FilterComboBox->Font, 34), 60);
 																	//" フィルタ   999999 Files Matched "
-	FilterComboBox->Font->Color = scl_WindowText;
 	FilterComboBox->Text	= EmptyStr;
 	FilterComboBox->Parent	= stt_pp;
 	FilterComboBox->Items->Assign(FilterHistory);
 	FilterComboBox->Visible = true;
 	FilterComboBox->SetFocus();
+	SetDarkWinTheme(FilterComboBox);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FilterComboBoxExit(TObject *Sender)
@@ -33247,6 +33282,7 @@ void __fastcall TNyanFiForm::SetViewFileList(
 		gp->ColCount = f_cnt;
 		gp->LeftCol  = l_col;
 	}
+	SetDarkWinTheme(gp);
 
 	//リスト作成
 	clear_FileList(ViewFileList);
@@ -33825,9 +33861,7 @@ void __fastcall TNyanFiForm::SidePanelUnDock(TObject *Sender, TControl *Client,
 	int dh;
 	if (Client==LoupeForm) {
 		dh = HistDockPanel->Height;
-		SideDockSplitter->Height	 = 0;
-		LoupeForm->OptPanel->Align	 = alBottom;
-		LoupeForm->MagToolBar->Align = alBottom;
+		SideDockSplitter->Height = 0;
 	}
 	else {
 		dh = SideDockPanel->Height - CLHI_HISTOGRAM;
