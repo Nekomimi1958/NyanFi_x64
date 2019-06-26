@@ -332,7 +332,6 @@ object CmdFileListDlg: TCmdFileListDlg
       OnExecute = EditSelectAllActionExecute
     end
     object ReqEditAction: TAction
-      ShortCut = 32837
       OnExecute = ReqEditActionExecute
       OnUpdate = ReqEditActionUpdate
     end

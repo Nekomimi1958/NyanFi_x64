@@ -38,6 +38,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *BorderPanel;
 	TPanel *ClientPanel;
 	TPanel *FileMapPanel;
+	TPanel *SttPanel;
 	TPopupMenu *PopupMenu1;
 	TPopupMenu *PopupMenu2;
 	TScrollBox *MapScrBox;
@@ -48,7 +49,6 @@ __published:	// IDE で管理されるコンポーネント
 	TSpeedButton *NxtButton;
 	TSpeedButton *PreButton;
 	TSpeedButton *TopButton;
-	TStatusBar *BitmapSttBar;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -73,6 +73,13 @@ __published:	// IDE で管理されるコンポーネント
 
 private:	// ユーザー宣言
 	TColor BitPallet[256];		//ビットマップビュー用パレット
+
+	TWndMethod org_SttPanelWndProc;
+	void __fastcall SttPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_SttPanelWndProc(msg);
+	}
 
 	void __fastcall SetMapWidth(int w);
 	__int64 __fastcall GetMapAddr(int X, int Y);

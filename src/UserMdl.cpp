@@ -359,12 +359,12 @@ void __fastcall TUserModule::BeginSpuit(
 	TImage *ip,			//スポイトイメージ
 	TColor col_def)		//デフォルト色
 {
-	SpuitPanel = pp;
-
 	SpuitImage = ip;
 	if (SpuitImage) SpuitImage->Visible = false;
 
-	SpuitDefColor = col_def;
+	SpuitPanel = pp;
+	SpuitPanelColor = pp->Color;
+	SpuitDefColor	= col_def;
 	if (col_def!=clNone) pp->Color = col_def;
 
 	Screen->Cursor = crSpuitTool;
@@ -379,7 +379,7 @@ TColor __fastcall TUserModule::EndSpuit()
 	SpuitTimer->Enabled = false;
 
 	TColor col = (SpuitPanel && FindControl(get_window_from_pos())!=SpuitPanel)? SpuitPanel->Color : SpuitDefColor;
-	SpuitPanel->Color = scl_BtnFace;
+	SpuitPanel->Color = SpuitPanelColor;
 	SpuitPanel = NULL;
 
 	if (SpuitImage) SpuitImage->Visible = true;

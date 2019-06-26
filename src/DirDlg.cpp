@@ -103,14 +103,16 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 	else {
 		UseEnvVarAction->Visible = false;
 
-		set_ButtonMark(HideOptBtn, UBMK_BDOWN);
-		set_ButtonMark(ShowOptBtn, UBMK_BUP);
+		set_BtnMarkDark(HideOptBtn, UBMK_BDOWN);
+		set_BtnMarkDark(ShowOptBtn, UBMK_BUP);
 		HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
 		ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 
 		MoveTopCheckBox->Checked = IniFile->ReadBoolGen(_T("RegDirDlgMoveTop"));
 		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("RegDirDlgShowOpt"),	true);
 		BlankPanel->Visible 	 = !OptPanel->Visible;
+		SetDarkWinTheme(OptPanel);
+		SetDarkWinTheme(BlankPanel);
 
 		sp->Items[0]->Width = IniFile->ReadInteger("RegDirGrid", "ColWidth0",	40);
 		sp->Items[1]->Width = IniFile->ReadInteger("RegDirGrid", "ColWidth1",	200);

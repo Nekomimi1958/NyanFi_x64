@@ -5831,6 +5831,8 @@ void __fastcall TNyanFiForm::BeginWorkProgress(UnicodeString tit, UnicodeString 
 	WorkProgressBar->Position = 0;
 
 	CanDlBtn->Visible = can_sw;
+	if (CanDlBtn->Visible && GetLuminance(col_bgHint)<0.5) SetDarkWinTheme(CanDlBtn);
+
 	ProgressPanel->Height  = ScaledInt(can_sw? 140 : 110);
 	ProgressPanel->Visible = true;
 	ProgressPanel->BringToFront();

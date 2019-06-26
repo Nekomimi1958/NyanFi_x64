@@ -1881,6 +1881,7 @@ void ApplyOptionByTag(TTabSheet *sp);
 void SetToolWinBorder(TForm *fp, bool sw = true);
 
 void SetDarkWinTheme(TWinControl *wp);
+void set_BtnMarkDark(TSpeedButton *bp, int id);
 
 void InitializeListGrid(TStringGrid *gp, TFont *fnt = NULL);
 void InitializeListHeader(THeaderControl *hp, const _TCHAR *hdr, TFont *fnt = NULL);
@@ -1976,7 +1977,7 @@ void draw_ImgGrid(TCanvas *cv, Graphics::TBitmap *bmp);
 void draw_BarGraph(TCanvas *cv, TRect rc, double r);
 void draw_ProgressBar(TCanvas *cv, TRect rc, double r);
 
-void draw_BottomTab(TCustomTabControl *Control, int idx, const TRect rc, bool active);
+void draw_BottomTab(TCustomTabControl *Control, int idx, const TRect rc, bool active, bool dark_sw = false);
 
 bool saveto_TextUTF8(UnicodeString fnam, TStrings *lst);
 bool saveto_TextFile(UnicodeString fnam, TStrings *lst, TEncoding *enc = NULL);

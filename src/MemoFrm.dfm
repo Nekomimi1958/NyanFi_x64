@@ -67,7 +67,7 @@ object MemoForm: TMemoForm
         41)
       object HideOptBtn: TSpeedButton
         Left = 0
-        Top = 16
+        Top = 22
         Width = 18
         Height = 16
         Anchors = [akLeft, akBottom]

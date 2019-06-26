@@ -221,6 +221,7 @@ private:	// ƒ†[ƒU[éŒ¾
 	TPanel *SpuitPanel;
 	TImage *SpuitImage;
 	TColor SpuitDefColor;
+	TColor SpuitPanelColor;
 
 	void __fastcall ListBoxStartDrag(TObject *Sender, TDragObject *&DragObject);
 	void __fastcall ListBoxDragOver(TObject *Sender, TObject *Source, int X, int Y,

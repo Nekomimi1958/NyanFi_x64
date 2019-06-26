@@ -25,6 +25,10 @@ class TFuncListDlg : public TForm
 __published:	// IDE で管理されるコンポーネント
 	TAction *CloseListAction;
 	TAction *CopyListAction;
+	TAction *LinkAction;
+	TAction *MigemoAction;
+	TAction *NameOnlyAction;
+	TAction *RegExAction;
 	TAction *RegHeaderAction;
 	TAction *ReqEditAction;
 	TAction *SaveListAction;
@@ -37,6 +41,10 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *NameOnlyCheckBox;
 	TCheckBox *RegExCheckBox;
 	TComboBox *UserDefComboBox;
+	TLabel *Label1;
+	TLabel *Label2;
+	TLabel *Label3;
+	TLabel *Label4;
 	TLabel *UsrStrLabel;
 	TLabeledEdit *FilterEdit;
 	TListBox *FuncListBox;
@@ -64,11 +72,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FilterEditExit(TObject *Sender);
 	void __fastcall FilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FilterEditKeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall MigemoCheckBoxClick(TObject *Sender);
 	void __fastcall UpdUserDefActionExecute(TObject *Sender);
 	void __fastcall UpdUserDefActionUpdate(TObject *Sender);
 	void __fastcall UserDefComboBoxClick(TObject *Sender);
-	void __fastcall NameOnlyCheckBoxClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall ReqEditActionExecute(TObject *Sender);
 	void __fastcall CloseListActionExecute(TObject *Sender);
@@ -77,9 +83,11 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ListActionUpdate(TObject *Sender);
 	void __fastcall RegHeaderActionExecute(TObject *Sender);
 	void __fastcall RegHeaderActionUpdate(TObject *Sender);
-	void __fastcall RegExCheckBoxClick(TObject *Sender);
 	void __fastcall UserDefComboBoxEnter(TObject *Sender);
-
+	void __fastcall MigemoActionExecute(TObject *Sender);
+	void __fastcall NameOnlyActionExecute(TObject *Sender);
+	void __fastcall LinkActionExecute(TObject *Sender);
+	void __fastcall RegExActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TStringList *FunctionList;

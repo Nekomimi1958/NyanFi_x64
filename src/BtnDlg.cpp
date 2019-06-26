@@ -241,8 +241,6 @@ void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index,
 		if (State.Contains(odSelected)) alpha_blend_Rect(cv, rc, scl_Highlight, 48);
 
 		x += Scaled4;
-//		if (usr_SH->draw_SmallIcon(to_absolute_name(get_actual_name(itm_buf[2])), cv, x, y)) x += ScaledInt(18);
-
 		if (draw_SmallIconF(to_absolute_name(get_actual_name(itm_buf[2])),
 				cv, x, Rect.Top + (Rect.Height() - SIcoSize)/2))
 					x += get_IcoWidth();

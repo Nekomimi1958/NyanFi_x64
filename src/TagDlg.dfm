@@ -102,6 +102,13 @@ object TagManDlg: TTagManDlg
         Flat = True
         OnClick = ChgOptBtnClick
       end
+      object Label4: TLabel
+        Left = 27
+        Top = 9
+        Width = 82
+        Height = 13
+        Caption = #20837#21147#27396#12434#38560#12377'(&H)'
+      end
       object CanButton: TButton
         Left = 215
         Top = 4
@@ -130,9 +137,8 @@ object TagManDlg: TTagManDlg
         Top = 8
         Width = 119
         Height = 17
-        Caption = #20837#21147#27396#12434#38560#12377'(&H)'
+        Action = HideAction
         TabOrder = 0
-        OnClick = HideCheckBoxClick
       end
     end
     object FindOptPanel: TPanel
@@ -143,30 +149,42 @@ object TagManDlg: TTagManDlg
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 0
+      object Label2: TLabel
+        Left = 27
+        Top = 9
+        Width = 45
+        Height = 13
+        Caption = '&AND'#26908#32034
+      end
+      object Label3: TLabel
+        Left = 127
+        Top = 9
+        Width = 114
+        Height = 13
+        Caption = #36984#25246#38917#30446#12384#12369#12434#27531#12377'(&M)'
+      end
       object ResLinkCheckBox: TCheckBox
         Left = 110
         Top = 8
         Width = 200
         Height = 17
-        Caption = #32080#26524#12522#12473#12488#12363#12425#21453#23550#20596#12408#21453#26144'(&R)'
+        Action = ResLinkAction
         TabOrder = 1
-        OnClick = OptCheckBoxClick
       end
       object AndCheckBox: TCheckBox
         Left = 10
         Top = 8
         Width = 92
         Height = 17
-        Caption = '&AND'#26908#32034
+        Action = AndAction
         TabOrder = 0
-        OnClick = OptCheckBoxClick
       end
       object SelMaskCheckBox: TCheckBox
         Left = 110
         Top = 8
         Width = 200
         Height = 17
-        Caption = #36984#25246#38917#30446#12384#12369#12434#27531#12377'(&M)'
+        Action = SelMaskAction
         TabOrder = 2
       end
     end
@@ -209,6 +227,13 @@ object TagManDlg: TTagManDlg
       Height = 4
       Align = alBottom
       Shape = bsBottomLine
+    end
+    object Label1: TLabel
+      Left = 171
+      Top = 8
+      Width = 24
+      Height = 13
+      Caption = #21453#36578
     end
     object RefTagColBtn: TButton
       Tag = 3
@@ -265,9 +290,8 @@ object TagManDlg: TTagManDlg
       Top = 7
       Width = 58
       Height = 17
-      Caption = #21453#36578
+      Action = RevColAction
       TabOrder = 3
-      OnClick = RevColCheckBoxClick
     end
   end
   object TagPopupMenu: TPopupMenu
@@ -361,6 +385,21 @@ object TagManDlg: TTagManDlg
       Caption = #21453#23550#20596#12391#26908#32034'(&O)...'
       OnExecute = MakeNbtActionExecute
       OnUpdate = MakeNbtActionUpdate
+    end
+    object AndAction: TAction
+      OnExecute = AndActionExecute
+    end
+    object SelMaskAction: TAction
+      OnExecute = SelMaskActionExecute
+    end
+    object HideAction: TAction
+      OnExecute = HideActionExecute
+    end
+    object RevColAction: TAction
+      OnExecute = RevColActionExecute
+    end
+    object ResLinkAction: TAction
+      OnExecute = ResLinkActionExecute
     end
   end
 end

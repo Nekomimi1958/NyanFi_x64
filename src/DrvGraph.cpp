@@ -78,6 +78,8 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 
 	SizeComboBoxChange(NULL);
 	SetStatus(DataList->Count - 1);
+
+	SetDarkWinTheme(GraphScrollBox);
 }
 //---------------------------------------------------------------------------
 void __fastcall TDriveGraph::FormClose(TObject *Sender, TCloseAction &Action)

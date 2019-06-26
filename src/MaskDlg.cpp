@@ -31,17 +31,15 @@ void __fastcall TPathMaskDlg::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter);
 
 	Caption = "パスマスク - " + get_LRUD_str();
-	TColor fgBtn = IsDarkMode? dcl_BtnText : scl_BtnText;
-	TColor bgBtn = IsDarkMode? dcl_BtnFace : scl_BtnFace;
-	set_ButtonMark(HideOptBtn, UBMK_BDOWN, fgBtn, bgBtn);
-	set_ButtonMark(ShowOptBtn, UBMK_BUP,   fgBtn, bgBtn);
+	set_BtnMarkDark(HideOptBtn, UBMK_BDOWN);
+	set_BtnMarkDark(ShowOptBtn, UBMK_BUP);
 	HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
 	ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 
 	OptPanel->Visible	= IniFile->ReadBoolGen(_T("PathMaskDlgShowOpt"),  true);
 	BlankPanel->Visible = !OptPanel->Visible;
-	SetDarkWinTheme(BlankPanel);
 	SetDarkWinTheme(OptPanel);
+	SetDarkWinTheme(BlankPanel);
 
 	InitializeListHeader(PathMaskHeader, _T("キー|名前|マスク"));
 	PathMaskHeader->Sections->Items[0]->Width = IniFile->ReadInteger("PathMaskGrid", "ColWidth0",	40);

@@ -195,7 +195,7 @@ bool __fastcall TFileInfoDlg::UpdateInfo()
 
 			int i_cnt = s_lst->Count;
 			if (i_cnt==0) Abort();
-	
+
 			//•½‹Ï’l
 			long double i_ave = total/i_cnt;
 			//’†‰›’l
@@ -559,7 +559,7 @@ void __fastcall TFileInfoDlg::CopyActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFileInfoDlg::CopyActionUpdate(TObject *Sender)
 {
-	((TAction*)Sender)->Enabled = (InfListBox->SelCount>0);
+	((TAction*)Sender)->Enabled = (Active && InfListBox->SelCount>0);
 }
 //---------------------------------------------------------------------------
 //‚·‚×‚Ä‘I‘ð
@@ -578,7 +578,7 @@ void __fastcall TFileInfoDlg::OpenUrlActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFileInfoDlg::OpenUrlActionUpdate(TObject *Sender)
 {
-	((TAction*)Sender)->Enabled = !ListBoxGetURL(InfListBox).IsEmpty();
+	((TAction*)Sender)->Enabled = (Active && !ListBoxGetURL(InfListBox).IsEmpty());
 }
 //---------------------------------------------------------------------------
 void __fastcall TFileInfoDlg::InfListBoxDblClick(TObject *Sender)

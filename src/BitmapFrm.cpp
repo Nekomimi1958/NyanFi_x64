@@ -24,6 +24,9 @@ __fastcall TBitmapForm::TBitmapForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TBitmapForm::FormCreate(TObject *Sender)
 {
+	org_SttPanelWndProc  = SttPanel->WindowProc;
+	SttPanel->WindowProc = SttPanelWndProc;
+
 	//ビットマップビュー用パレットの初期化
 	for (int i=0; i<256; i++) {
 		BitPallet[i] = (i==0)				? clBlack   :
@@ -32,11 +35,6 @@ void __fastcall TBitmapForm::FormCreate(TObject *Sender)
 	}
 
 	MapWidth = 128;
-
-	set_ButtonMark(TopButton, UBMK_VTOP);
-	set_ButtonMark(PreButton, UBMK_VUP);
-	set_ButtonMark(NxtButton, UBMK_VDOWN);
-	set_ButtonMark(EndButton, UBMK_VEND);
 }
 //---------------------------------------------------------------------------
 void __fastcall TBitmapForm::FormShow(TObject *Sender)
@@ -46,8 +44,20 @@ void __fastcall TBitmapForm::FormShow(TObject *Sender)
 	SetToolWinBorder(this);
 	SetMapWidth(IniFile->ReadIntGen(_T("BitmapFormMapWidth"),	128));
 
-	BitmapSttBar->Font->Assign(ViewerFont);
-	BitmapSttBar->ClientHeight = get_FontHeight(ViewerFont, 4);
+	set_BtnMarkDark(TopButton, UBMK_VTOP);
+	set_BtnMarkDark(PreButton, UBMK_VUP);
+	set_BtnMarkDark(NxtButton, UBMK_VDOWN);
+	set_BtnMarkDark(EndButton, UBMK_VEND);
+
+	BorderPanel->Color = IsDarkMode? dcl_Window : clAppWorkSpace;
+	MapScrBox->Color   = BorderPanel->Color;
+	SetDarkWinTheme(MapScrBox);
+	SetDarkWinTheme(FileMapPanel);
+
+	SttPanel->Color = col_bgSttBar;
+	SttPanel->Font->Assign(ViewerFont);
+	SttPanel->Font->Color  = col_fgSttBar;
+	SttPanel->ClientHeight = get_FontHeight(ViewerFont, 4);
 }
 //---------------------------------------------------------------------------
 void __fastcall TBitmapForm::FormHide(TObject *Sender)
@@ -239,7 +249,7 @@ void __fastcall TBitmapForm::FileMapBoxMouseDown(TObject *Sender, TMouseButton B
 void __fastcall TBitmapForm::FileMapBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
 {
 	__int64 adr = GetMapAddr(X, Y);
-	BitmapSttBar->Panels->Items[0]->Text = (adr!=-1)? get_AddrStr(adr) : EmptyStr;
+	SttPanel->Caption = (adr!=-1)? " " + get_AddrStr(adr) : EmptyStr;
 }
 
 //---------------------------------------------------------------------------
@@ -247,7 +257,7 @@ void __fastcall TBitmapForm::BitmapBoxMouseMove(TObject *Sender, TShiftState Shi
 {
 	__int64 adr = TxtViewer->TopAddress + Y*MapWidth + X;
 	if (adr>=TxtViewer->BinFileSize) adr = -1;
-	BitmapSttBar->Panels->Items[0]->Text = (adr!=-1)? get_AddrStr(adr) : EmptyStr;
+	SttPanel->Caption = (adr!=-1)? " " + get_AddrStr(adr) : EmptyStr;
 }
 //---------------------------------------------------------------------------
 void __fastcall TBitmapForm::BitmapBoxMouseDown(TObject *Sender, TMouseButton Button,

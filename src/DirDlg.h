@@ -51,6 +51,7 @@ __published:	// IDE で管理されるコンポーネント
 	TEdit *FilterEdit;
 	TEdit *KeyEdit;
 	THeaderControl *RegDirHeader;
+	TLabel *Label1;
 	TListBox *RegDirListBox;
 	TMenuItem *AddNyanFiItem;
 	TMenuItem *AppInfoItem;

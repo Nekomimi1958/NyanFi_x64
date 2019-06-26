@@ -1288,7 +1288,7 @@ void __fastcall TGeneralInfoDlg::OpenFileActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = !FileName.IsEmpty();
-	ap->Enabled = ap->Visible;
+	ap->Enabled = Active && ap->Visible;
 }
 
 //---------------------------------------------------------------------------

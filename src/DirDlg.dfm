@@ -41,6 +41,13 @@ object RegDirDlg: TRegDirDlg
       Flat = True
       OnClick = ChgOptBtnClick
     end
+    object Label1: TLabel
+      Left = 333
+      Top = 42
+      Width = 91
+      Height = 13
+      Caption = #21628#20986#38917#30446#12434#20808#38957#12408
+    end
     object UpButton: TButton
       Left = 224
       Top = 37
@@ -122,9 +129,8 @@ object RegDirDlg: TRegDirDlg
     object MoveTopCheckBox: TCheckBox
       Left = 316
       Top = 41
-      Width = 171
+      Width = 149
       Height = 17
-      Caption = #21628#20986#38917#30446#12434#20808#38957#12408
       TabOrder = 10
     end
     object RefSpBtn: TButton

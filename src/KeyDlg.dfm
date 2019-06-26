@@ -39,55 +39,85 @@ object KeyListDlg: TKeyListDlg
     TabWidth = 120
     OnChange = KeyTabControlChange
     OnDrawTab = KeyTabControlDrawTab
-    DesignSize = (
-      470
-      60)
-    object FilterEdit: TLabeledEdit
-      Left = 72
-      Top = 6
-      Width = 54
-      Height = 21
-      Anchors = [akLeft, akTop, akRight]
-      EditLabel.Width = 33
-      EditLabel.Height = 13
-      EditLabel.Caption = #12501#12451#12523#12479
-      LabelPosition = lpLeft
-      PopupMenu = UserModule.EditPopupMenuE
+    object OpePanel: TPanel
+      Left = 4
+      Top = 4
+      Width = 462
+      Height = 34
+      Align = alClient
+      BevelOuter = bvNone
       TabOrder = 0
-      OnChange = FilterEditChange
-      OnEnter = FilterEditEnter
-      OnExit = FilterEditExit
-      OnKeyDown = FilterEditKeyDown
-      OnKeyPress = FilterEditKeyPress
-    end
-    object ShowAllCmdCheckBox: TCheckBox
-      Left = 210
-      Top = 8
-      Width = 158
-      Height = 17
-      Anchors = [akTop, akRight]
-      Caption = #26410#30331#37682#12467#12510#12531#12489#12418#34920#31034
-      TabOrder = 2
-      OnClick = ShowAllCmdCheckBoxClick
-    end
-    object MigemoCheckBox: TCheckBox
-      Left = 134
-      Top = 8
-      Width = 74
-      Height = 17
-      Anchors = [akTop, akRight]
-      Caption = 'Migemo'
-      TabOrder = 1
-      OnClick = MigemoCheckBoxClick
-    end
-    object CnfExeCheckBox: TCheckBox
-      Left = 372
-      Top = 8
-      Width = 88
-      Height = 17
-      Anchors = [akTop, akRight]
-      Caption = #30906#23450#21363#23455#34892
-      TabOrder = 3
+      DesignSize = (
+        462
+        34)
+      object Label1: TLabel
+        Left = 154
+        Top = 9
+        Width = 36
+        Height = 13
+        Anchors = [akTop, akRight]
+        Caption = '&Migemo'
+      end
+      object Label2: TLabel
+        Left = 230
+        Top = 9
+        Width = 104
+        Height = 13
+        Anchors = [akTop, akRight]
+        Caption = #26410#30331#37682#12467#12510#12531#12489#12418#34920#31034
+      end
+      object Label3: TLabel
+        Left = 391
+        Top = 9
+        Width = 60
+        Height = 13
+        Anchors = [akTop, akRight]
+        Caption = #30906#23450#21363#23455#34892
+      end
+      object FilterEdit: TLabeledEdit
+        Left = 72
+        Top = 6
+        Width = 57
+        Height = 21
+        Anchors = [akLeft, akTop, akRight]
+        EditLabel.Width = 33
+        EditLabel.Height = 13
+        EditLabel.Caption = #12501#12451#12523#12479
+        LabelPosition = lpLeft
+        PopupMenu = UserModule.EditPopupMenuE
+        TabOrder = 0
+        OnChange = FilterEditChange
+        OnEnter = FilterEditEnter
+        OnExit = FilterEditExit
+        OnKeyDown = FilterEditKeyDown
+        OnKeyPress = FilterEditKeyPress
+      end
+      object MigemoCheckBox: TCheckBox
+        Left = 137
+        Top = 8
+        Width = 72
+        Height = 17
+        Action = MigemoAction
+        Anchors = [akTop, akRight]
+        TabOrder = 1
+      end
+      object CnfExeCheckBox: TCheckBox
+        Left = 374
+        Top = 8
+        Width = 86
+        Height = 17
+        Anchors = [akTop, akRight]
+        TabOrder = 2
+      end
+      object ShowAllCmdCheckBox: TCheckBox
+        Left = 213
+        Top = 8
+        Width = 150
+        Height = 17
+        Action = ShowAllCmdAction
+        Anchors = [akTop, akRight]
+        TabOrder = 3
+      end
     end
   end
   object HiddenCanBtn: TButton
@@ -242,6 +272,12 @@ object KeyListDlg: TKeyListDlg
       Caption = #12467#12510#12531#12489#12398#12504#12523#12503'(&H)'
       OnExecute = HelpCmdActionExecute
       OnUpdate = HelpCmdActionUpdate
+    end
+    object MigemoAction: TAction
+      OnExecute = MigemoActionExecute
+    end
+    object ShowAllCmdAction: TAction
+      OnExecute = ShowAllCmdActionExecute
     end
   end
 end

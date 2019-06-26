@@ -30,8 +30,8 @@ void __fastcall TMemoForm::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMemoForm::FormShow(TObject *Sender)
 {
-	set_ButtonMark(HideOptBtn,  UBMK_BDOWN);
-	set_ButtonMark(ShowOptBtn,  UBMK_BUP);
+	set_BtnMarkDark(HideOptBtn, UBMK_BDOWN);
+	set_BtnMarkDark(ShowOptBtn, UBMK_BUP);
 	HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
 	ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 
@@ -65,12 +65,15 @@ void __fastcall TMemoForm::FormShow(TObject *Sender)
 	pf2.bLineSpacingRule = 5;	//dyLineSpacing/20 行単位
 	pf2.dyLineSpacing	 = 20 * ViewTxtInterLn / f_hi;
 	MemoBox->Perform(EM_SETPARAFORMAT, 0, (LPARAM)&pf2);
+	SetDarkWinTheme(MemoBox);
 
 	//下部パネル
 	OptPanel->Visible = IniFile->ReadBoolGen(_T("MemoFormShowOpt"), true);
 	OptVisible = OptPanel->Visible;
 	BlankPanel->Visible = !OptVisible;
 	set_ControlRBCorner(MemoBox, BlankPanel);
+	SetDarkWinTheme(OptPanel);
+	SetDarkWinTheme(BlankPanel);
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }

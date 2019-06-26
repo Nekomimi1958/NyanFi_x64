@@ -2673,6 +2673,9 @@ void SetDarkWinTheme(TWinControl *wp)
 			if (cp->ClassNameIs("TButton")) {
 				SetWindowTheme(((TButton *)cp)->Handle, subApp, NULL);
 			}
+			else if (cp->ClassNameIs("TBitBtn")) {
+				SetWindowTheme(((TBitBtn *)cp)->Handle, subApp, NULL);
+			}
 			else if (cp->ClassNameIs("TSpeedButton")) {
 				TSpeedButton *bp = (TSpeedButton *)cp;
 				bp->Font->Color = IsDarkMode? dcl_BtnText : scl_BtnText;
@@ -2682,13 +2685,20 @@ void SetDarkWinTheme(TWinControl *wp)
 				lp->Color		= IsDarkMode? dcl_BtnFace : scl_BtnFace;
 				lp->Font->Color = IsDarkMode? dcl_BtnText : scl_BtnText;
 			}
-			else if (class_is_Edit(cp) || class_is_ComboBox(cp) || cp->ClassNameIs("TPanel")) {
+			else if (cp->ClassNameIs("TPanel")
+				|| class_is_Edit(cp) || class_is_LabeledEdit(wp) || class_is_ComboBox(cp))
+			{
 				SetDarkWinTheme((TWinControl *)cp);
 			}
 		}
 	}
 	else if (class_is_Edit(wp)) {
 		TEdit *ep = (TEdit *)wp;
+		ep->Color		= IsDarkMode? dcl_Window	 : scl_Window;
+		ep->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
+	}
+	else if (class_is_LabeledEdit(wp)) {
+		TLabeledEdit *ep = (TLabeledEdit *)wp;
 		ep->Color		= IsDarkMode? dcl_Window	 : scl_Window;
 		ep->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
 	}
@@ -2703,6 +2713,15 @@ void SetDarkWinTheme(TWinControl *wp)
 		const wchar_t *subApp = IsDarkMode? _T("DarkMode_Explorer") : NULL;
 		SetWindowTheme(wp->Handle, subApp, NULL);
 	}
+}
+//---------------------------------------------------------------------------
+//ボタンにマークを設定(ダークモード対応)
+//---------------------------------------------------------------------------
+void set_BtnMarkDark(TSpeedButton *bp, int id)
+{
+	set_ButtonMark(bp, id,
+		(IsDarkMode? dcl_BtnText : scl_BtnText),
+		(IsDarkMode? dcl_BtnFace : scl_BtnFace));
 }
 
 //---------------------------------------------------------------------------
@@ -10985,16 +11004,18 @@ void draw_ProgressBar(TCanvas *cv, TRect rc, double r)
 //下部タブの描画
 //※クラシック以外のテーマで下部タブが正しく描画されない不具合の対策
 //---------------------------------------------------------------------------
-void draw_BottomTab(TCustomTabControl *Control, int idx, const TRect rc, bool active)
+void draw_BottomTab(TCustomTabControl *Control, int idx, const TRect rc, 
+	bool active,
+	bool dark_sw)	//ダークモード適用	(default = false)
 {
 	TTabControl *tp = (TTabControl*)Control;
 	TCanvas *cv = tp->Canvas;
 	//背景
-	cv->Brush->Color = active? col_bgOptTab : scl_BtnFace;
+	cv->Brush->Color = active? col_bgOptTab : dark_sw? dcl_BtnFace : scl_BtnFace;
 	cv->FillRect(rc);
 	//文字
 	UnicodeString titstr = tp->Tabs->Strings[idx];
-	cv->Font->Color = active? col_fgOptTab : scl_BtnText;
+	cv->Font->Color = active? col_fgOptTab : dark_sw? dcl_BtnText : scl_BtnText;
 	cv->Font->Style = active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
 	cv->TextOut(
 		rc.Left + (rc.Width() - cv->TextWidth(titstr))/2,

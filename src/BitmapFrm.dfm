@@ -5,7 +5,7 @@ object BitmapForm: TBitmapForm
   BorderStyle = bsSizeToolWin
   Caption = #12499#12483#12488#12510#12483#12503#12499#12517#12540
   ClientHeight = 266
-  ClientWidth = 150
+  ClientWidth = 154
   Color = clBtnFace
   Constraints.MaxWidth = 164
   Constraints.MinHeight = 200
@@ -32,7 +32,7 @@ object BitmapForm: TBitmapForm
     Pen.Color = clSilver
   end
   object BorderShape2: TShape
-    Left = 149
+    Left = 153
     Top = 0
     Width = 1
     Height = 265
@@ -42,7 +42,7 @@ object BitmapForm: TBitmapForm
   object BorderShape3: TShape
     Left = 0
     Top = 265
-    Width = 150
+    Width = 154
     Height = 1
     Align = alBottom
     Pen.Color = clSilver
@@ -50,7 +50,7 @@ object BitmapForm: TBitmapForm
   object ClientPanel: TPanel
     Left = 1
     Top = 0
-    Width = 148
+    Width = 152
     Height = 265
     Align = alClient
     BevelOuter = bvNone
@@ -59,7 +59,7 @@ object BitmapForm: TBitmapForm
       Left = 0
       Top = 0
       Width = 20
-      Height = 246
+      Height = 243
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 2
@@ -68,7 +68,7 @@ object BitmapForm: TBitmapForm
         Left = 2
         Top = 30
         Width = 16
-        Height = 186
+        Height = 183
         Align = alClient
         PopupMenu = PopupMenu2
         OnMouseDown = FileMapBoxMouseDown
@@ -88,7 +88,7 @@ object BitmapForm: TBitmapForm
       end
       object EndButton: TSpeedButton
         Left = 2
-        Top = 230
+        Top = 227
         Width = 16
         Height = 14
         Action = SetEndAdrAction
@@ -110,7 +110,7 @@ object BitmapForm: TBitmapForm
       end
       object NxtButton: TSpeedButton
         Left = 2
-        Top = 216
+        Top = 213
         Width = 16
         Height = 14
         Action = SetNextAdrAction
@@ -123,8 +123,8 @@ object BitmapForm: TBitmapForm
     object BorderPanel: TPanel
       Left = 20
       Top = 0
-      Width = 128
-      Height = 246
+      Width = 132
+      Height = 243
       Align = alClient
       BevelOuter = bvNone
       BorderWidth = 4
@@ -134,8 +134,8 @@ object BitmapForm: TBitmapForm
       object MapScrBox: TScrollBox
         Left = 4
         Top = 4
-        Width = 120
-        Height = 238
+        Width = 124
+        Height = 235
         HorzScrollBar.Visible = False
         VertScrollBar.Tracking = True
         Align = alClient
@@ -157,22 +157,16 @@ object BitmapForm: TBitmapForm
         end
       end
     end
-    object BitmapSttBar: TStatusBar
+    object SttPanel: TPanel
       Left = 0
-      Top = 246
-      Width = 148
-      Height = 19
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBtnText
-      Font.Height = -13
-      Font.Name = 'Meiryo UI'
-      Font.Pitch = fpVariable
-      Font.Style = []
-      Panels = <
-        item
-          Width = 200
-        end>
-      UseSystemFont = False
+      Top = 243
+      Width = 152
+      Height = 22
+      Align = alBottom
+      Alignment = taLeftJustify
+      BevelOuter = bvNone
+      TabOrder = 2
+      StyleElements = [seBorder]
     end
   end
   object PopupMenu1: TPopupMenu

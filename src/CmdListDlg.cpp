@@ -123,11 +123,12 @@ void __fastcall TCmdFileListDlg::WmFormShowed(TMessage &msg)
 
 	GridScrPanel->UpdateKnob();
 
-	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();
 	if (IsDarkMode)
 		SetDarkWinTheme(FilterEdit);
 	else
 		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+
+	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();
 	FilterEdit->Text  = EmptyStr;
 }
 
@@ -710,7 +711,11 @@ void __fastcall TCmdFileListDlg::ReqEditActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Alt+E"))
+		ReqEditAction->Execute();
+	else
+		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

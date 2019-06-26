@@ -59,18 +59,25 @@ void __fastcall TFuncListDlg::FormShow(TObject *Sender)
 
 	IniFile->LoadComboBoxItems(UserDefComboBox, RegExCheckBox->Checked? _T("UserPtnHistory") : _T("UserDefHistory"));
 	UserDefComboBox->Text = !UserDefStr.IsEmpty()? UserDefStr : IniFile->ReadStrGen(_T("FuncListUserStr"));
+	SetDarkWinTheme(UserDefComboBox);
 
 	TListBox *lp = FuncListBox;
 	lp->Clear();
 	ListPanel->Color = lp->Color;
 	set_StdListBox(lp);
 	set_UsrScrPanel(ListScrPanel);
+	SetDarkWinTheme(BottomPanel);
+	SetDarkWinTheme(UserDefPanel);
 
 	if (!UnInitializing) InitializeList();
 
+	if (IsDarkMode) 
+		SetDarkWinTheme(FilterEdit);
+	else
+		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+
 	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)lp)->SetFocus();
-	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
-	FilterEdit->Text  = EmptyStr;
+	FilterEdit->Text = EmptyStr;
 
 	ReqEdit = false;
 	DlgInitialized = true;
@@ -466,13 +473,13 @@ void __fastcall TFuncListDlg::FilterEditChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::FilterEditEnter(TObject *Sender)
 {
-	FilterEdit->Color = scl_Window;
+	if (!IsDarkMode) FilterEdit->Color = scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::FilterEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	InvColIfEmpty(FilterEdit);
+	if (!IsDarkMode) InvColIfEmpty(FilterEdit);
 }
 
 //---------------------------------------------------------------------------
@@ -505,24 +512,15 @@ void __fastcall TFuncListDlg::FilterEditKeyPress(TObject *Sender, System::WideCh
 }
 
 //---------------------------------------------------------------------------
-//検索履歴の入れ換え
-//---------------------------------------------------------------------------
-void __fastcall TFuncListDlg::RegExCheckBoxClick(TObject *Sender)
+void __fastcall TFuncListDlg::RegExActionExecute(TObject *Sender)
 {
-	if (DlgInitialized)
-		change_ComboBoxHistory(UserDefComboBox, _T("UserDefHistory"), _T("UserPtnHistory"), RegExCheckBox->Checked);
-}
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
 
-//---------------------------------------------------------------------------
-void __fastcall TFuncListDlg::MigemoCheckBoxClick(TObject *Sender)
-{
-	UpdateList(LinkCheckBox->Checked);
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TFuncListDlg::NameOnlyCheckBoxClick(TObject *Sender)
-{
-	FuncListBox->Repaint();
+	//検索履歴の入れ換え
+	if (DlgInitialized) {
+		change_ComboBoxHistory(UserDefComboBox, _T("UserDefHistory"), _T("UserPtnHistory"), ap->Checked);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -575,7 +573,11 @@ void __fastcall TFuncListDlg::UpdUserDefActionUpdate(TObject *Sender)
 		//正規表現パターンのチェック
 		UnicodeString uwd = UserDefComboBox->Text;
 		bool reg_ng = RegExCheckBox->Checked && !uwd.IsEmpty() && !chk_RegExPtn(uwd);
-		UserDefComboBox->Color = reg_ng? col_Illegal : scl_Window;
+		if (IsDarkMode)
+			UserDefComboBox->Font->Color = reg_ng? col_Error : dcl_WindowText;
+		else
+			UserDefComboBox->Color = reg_ng? col_Illegal : scl_Window;
+
 		ap->Enabled = RegExCheckBox->Checked? (!uwd.IsEmpty() && !reg_ng) : !uwd.IsEmpty();
 	}
 	else {
@@ -693,10 +695,39 @@ void __fastcall TFuncListDlg::RegHeaderActionUpdate(TObject *Sender)
 
 	((TAction*)Sender)->Enabled = (ListMode==1 && fext_ok && (reg_ok || uwd.IsEmpty()));
 }
+
+//---------------------------------------------------------------------------
+void __fastcall TFuncListDlg::MigemoActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+	UpdateList(LinkCheckBox->Checked);
+}
+//---------------------------------------------------------------------------
+void __fastcall TFuncListDlg::NameOnlyActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+	FuncListBox->Repaint();
+}
+//---------------------------------------------------------------------------
+void __fastcall TFuncListDlg::LinkActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+}
+
 //---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift, HelpContext);
+	//チェックボックスの疑似アクセラレータ処理
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+L")) LinkAction->Execute();
+	else if (USAME_TI(KeyStr, "Alt+N")) NameOnlyAction->Execute();
+	else if (USAME_TI(KeyStr, "Alt+M")) MigemoAction->Execute();
+	else if (USAME_TI(KeyStr, "Alt+R")) RegExAction->Execute();
+	else if (USAME_TI(KeyStr, "Alt+E")) ReqEditAction->Execute();
+	else SpecialKeyProc(this, Key, Shift, HelpContext);
 }
 //---------------------------------------------------------------------------
 

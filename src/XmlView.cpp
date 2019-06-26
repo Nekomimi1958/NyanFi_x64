@@ -522,7 +522,7 @@ void __fastcall TXmlViewer::CopyActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TXmlViewer::CopyActionUpdate(TObject *Sender)
 {
-	((TAction*)Sender)->Enabled = XmlTreeView->Selected;
+	((TAction*)Sender)->Enabled = Active && XmlTreeView->Selected;
 }
 
 //---------------------------------------------------------------------------

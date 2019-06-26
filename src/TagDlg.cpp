@@ -76,8 +76,8 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 	set_UsrScrPanel(ListScrPanel);
 	ListScrPanel->UpdateKnob();
 
-	set_ButtonMark(HideOptBtn, UBMK_BDOWN);
-	set_ButtonMark(ShowOptBtn, UBMK_BUP);
+	set_BtnMarkDark(HideOptBtn, UBMK_BDOWN);
+	set_BtnMarkDark(ShowOptBtn, UBMK_BUP);
 	HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
 	ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 	TagEdit->Hint	 = LoadUsrMsg(USTR_HintMltSepSC);
@@ -144,8 +144,27 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 		HideCheckBox->Visible	 = true;
 	}
 
+	Label2->Visible = AndCheckBox->Visible;
+
+	if (ResLinkCheckBox->Visible) {
+		Label3->Caption = "結果リストから反対側へ反映(&R)";
+		Label3->Left = ResLinkCheckBox->Left + ResLinkCheckBox->Height;
+	}
+	else if (SelMaskCheckBox->Visible) {
+		Label3->Caption = "選択項目だけを残す(&M)";
+		Label3->Left = SelMaskCheckBox->Left + SelMaskCheckBox->Height;
+	}
+	else {
+		Label3->Caption = EmptyStr;
+	}
+
+	Label4->Visible = HideCheckBox->Visible;
+
 	SetColPanel->Visible = !IsFolderIcon && OptPanel->Visible;
 	BlankPanel->Visible  = !OptPanel->Visible;
+	SetDarkWinTheme(SetColPanel);
+	SetDarkWinTheme(OptPanel);
+	SetDarkWinTheme(BlankPanel);
 
 	TagCheckListBox->PopupMenu	= IsFolderIcon? NULL : TagPopupMenu;
 	ShowTagCountAction->Checked = IniFile->ReadBoolGen(_T("TagDlgShowCount"));
@@ -242,18 +261,37 @@ void __fastcall TTagManDlg::SetCtrlFocus()
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TTagManDlg::HideCheckBoxClick(TObject *Sender)
+void __fastcall TTagManDlg::HideActionExecute(TObject *Sender)
 {
-	InpPanel->Visible = !IsFolderIcon && !HideCheckBox->Checked;
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+
+	InpPanel->Visible = !IsFolderIcon && !ap->Checked;
 	SetCtrlFocus();
 }
 //---------------------------------------------------------------------------
-void __fastcall TTagManDlg::OptCheckBoxClick(TObject *Sender)
+void __fastcall TTagManDlg::AndActionExecute(TObject *Sender)
 {
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+
 	if (SameText(CmdStr, "FindTag")) {
 		Caption = UnicodeString().cat_sprintf(_T("タグ検索 (%s)"), AndCheckBox->Checked? _T("AND") : _T("OR"));
 	}
-
+	SetCtrlFocus();
+}
+//---------------------------------------------------------------------------
+void __fastcall TTagManDlg::ResLinkActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+	SetCtrlFocus();
+}
+//---------------------------------------------------------------------------
+void __fastcall TTagManDlg::SelMaskActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
 	SetCtrlFocus();
 }
 
@@ -644,12 +682,14 @@ void __fastcall TTagManDlg::SpuitImageMouseUp(TObject *Sender, TMouseButton Butt
 	}
 }
 //---------------------------------------------------------------------------
-void __fastcall TTagManDlg::RevColCheckBoxClick(TObject *Sender)
+void __fastcall TTagManDlg::RevColActionExecute(TObject *Sender)
 {
-	RevTagCololr = RevColCheckBox->Checked;
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+
+	RevTagCololr = ap->Checked;
 	TagCheckListBox->Invalidate();
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::CanButtonClick(TObject *Sender)
 {
@@ -681,6 +721,18 @@ void __fastcall TTagManDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 		else {
 			ModalResult = mrCancel;
 		}
+	}
+	else if (USAME_TI(KeyStr, "Alt+A")) {
+		AndAction->Execute();
+	}
+	else if (USAME_TI(KeyStr, "Alt+M")) {
+		SelMaskAction->Execute();
+	}
+	else if (USAME_TI(KeyStr, "Alt+H")) {
+		HideAction->Execute();
+	}
+	else if (USAME_TI(KeyStr, "Alt+R")) {
+		ResLinkAction->Execute();
 	}
 	else if (USAME_TI(KeyStr, "Alt+O")) {
 		ChgOptBtnClick(NULL);

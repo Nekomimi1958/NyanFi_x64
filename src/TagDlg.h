@@ -72,6 +72,15 @@ __published:	// IDE で管理されるコンポーネント
 	TPopupMenu *TagPopupMenu;
 	TSpeedButton *HideOptBtn;
 	TSpeedButton *ShowOptBtn;
+	TAction *AndAction;
+	TAction *SelMaskAction;
+	TAction *HideAction;
+	TAction *RevColAction;
+	TLabel *Label1;
+	TLabel *Label2;
+	TLabel *Label3;
+	TLabel *Label4;
+	TAction *ResLinkAction;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -85,8 +94,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TagCheckListBoxClickCheck(TObject *Sender);
 	void __fastcall TagCheckListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall TagCheckListBoxKeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall HideCheckBoxClick(TObject *Sender);
-	void __fastcall OptCheckBoxClick(TObject *Sender);
 	void __fastcall ChgOptBtnClick(TObject *Sender);
 	void __fastcall RenTagActionExecute(TObject *Sender);
 	void __fastcall DelTagActionExecute(TObject *Sender);
@@ -104,11 +111,15 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefTagColBtnClick(TObject *Sender);
 	void __fastcall SpuitImageMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall SpuitImageMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
-	void __fastcall RevColCheckBoxClick(TObject *Sender);
 	void __fastcall CanButtonClick(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall ListPanelResize(TObject *Sender);
 	void __fastcall TagCheckListBoxDblClick(TObject *Sender);
+	void __fastcall AndActionExecute(TObject *Sender);
+	void __fastcall SelMaskActionExecute(TObject *Sender);
+	void __fastcall HideActionExecute(TObject *Sender);
+	void __fastcall RevColActionExecute(TObject *Sender);
+	void __fastcall ResLinkActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

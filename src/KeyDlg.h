@@ -24,6 +24,8 @@ class TKeyListDlg : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
 	TAction *HelpCmdAction;
+	TAction *MigemoAction;
+	TAction *ShowAllCmdAction;
 	TAction *SortCmdAction;
 	TAction *SortKeyAction;
 	TActionList *ActionList1;
@@ -32,6 +34,9 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *MigemoCheckBox;
 	TCheckBox *ShowAllCmdCheckBox;
 	THeaderControl *KeyListHeader;
+	TLabel *Label1;
+	TLabel *Label2;
+	TLabel *Label3;
 	TLabeledEdit *FilterEdit;
 	TMenuItem *CopyCmdItem;
 	TMenuItem *CopyListItem;
@@ -45,6 +50,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *SortDscItem;
 	TMenuItem *SortKeyItem;
 	TPanel *GridPanel;
+	TPanel *OpePanel;
 	TPopupMenu *PopupMenu1;
 	TStringGrid *KeyListGrid;
 	TTabControl *KeyTabControl;
@@ -65,8 +71,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FilterEditChange(TObject *Sender);
 	void __fastcall FilterEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall FilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall ShowAllCmdCheckBoxClick(TObject *Sender);
-	void __fastcall MigemoCheckBoxClick(TObject *Sender);
 	void __fastcall SaveAsListItemClick(TObject *Sender);
 	void __fastcall CopyListItemClick(TObject *Sender);
 	void __fastcall OptionItemClick(TObject *Sender);
@@ -79,6 +83,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CopyCmdItemClick(TObject *Sender);
 	void __fastcall HelpCmdActionExecute(TObject *Sender);
 	void __fastcall HelpCmdActionUpdate(TObject *Sender);
+	void __fastcall MigemoActionExecute(TObject *Sender);
+	void __fastcall ShowAllCmdActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TStringList *CurList;

@@ -51,12 +51,39 @@ object SelDriveDlg: TSelDriveDlg
       Flat = True
       OnClick = ChgOptBtnClick
     end
+    object Label1: TLabel
+      Left = 203
+      Top = 9
+      Width = 105
+      Height = 13
+      Caption = #12450#12463#12475#12473#21487#33021#12398#12415#34920#31034
+    end
+    object Label2: TLabel
+      Left = 371
+      Top = 9
+      Width = 73
+      Height = 13
+      Caption = #12450#12452#12467#12531#12434#34920#31034
+    end
+    object Label3: TLabel
+      Left = 484
+      Top = 9
+      Width = 28
+      Height = 13
+      Caption = #12521#12540#12472
+    end
+    object Label4: TLabel
+      Left = 558
+      Top = 9
+      Width = 61
+      Height = 13
+      Caption = #12523#12540#12488#12395#31227#21205
+    end
     object OnlyAccCheckBox: TCheckBox
       Left = 186
       Top = 8
-      Width = 166
+      Width = 135
       Height = 17
-      Caption = #12450#12463#12475#12473#21487#33021#12398#12415#34920#31034
       TabOrder = 3
       OnClick = OptCheckBoxClick
     end
@@ -74,7 +101,6 @@ object SelDriveDlg: TSelDriveDlg
       Top = 8
       Width = 107
       Height = 17
-      Caption = #12450#12452#12467#12531#12434#34920#31034
       TabOrder = 4
       OnClick = OptCheckBoxClick
     end
@@ -83,7 +109,6 @@ object SelDriveDlg: TSelDriveDlg
       Top = 8
       Width = 72
       Height = 17
-      Caption = #12521#12540#12472
       TabOrder = 5
       OnClick = OptCheckBoxClick
     end
@@ -101,27 +126,16 @@ object SelDriveDlg: TSelDriveDlg
       Top = 8
       Width = 110
       Height = 17
-      Caption = #12523#12540#12488#12395#31227#21205
       TabOrder = 6
       OnClick = ToRootCheckBoxClick
     end
-    object EjectTrayBtn: TBitBtn
+    object EjectTrayBtn: TButton
       Left = 80
       Top = 4
       Width = 25
       Height = 25
       Action = EjectTrayAction
-      Caption = #12489#12521#12452#12502#12398#12488#12524#12452#12434#38283#12367'(&J)'
-      Glyph.Data = {
-        F6000000424DF600000000000000760000002800000010000000100000000100
-        04000000000080000000130B0000130B00001000000004000000FEFEFE000000
-        0000000000000000000000000000000000000000000000000000000000000000
-        0000000000000000000000000000000000000000000000000000000000000000
-        0000000000000000000000011111111110000001111111111000000111111111
-        1000000111111111100000000000000000000001111111111000000111111111
-        1000000011111111000000000111111000000000001111000000000000011000
-        0000000000000000000000000000000000000000000000000000}
-      Margin = 2
+      Caption = #9650
       TabOrder = 1
     end
   end

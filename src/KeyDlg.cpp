@@ -35,6 +35,8 @@ void __fastcall TKeyListDlg::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
 
+	Color = IsDarkMode? dcl_BtnFace : scl_BtnFace;
+
 	TStringGrid *gp = KeyListGrid;
 	InitializeListGrid(gp);
 	InitializeListHeader(KeyListHeader, _T("キー|コマンド|説明"));
@@ -50,9 +52,14 @@ void __fastcall TKeyListDlg::FormShow(TObject *Sender)
 
 	if (!UnInitializing) KeyTabControlChange(NULL);
 
-	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();
-	FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+	SetDarkWinTheme(OpePanel);
+	if (IsDarkMode)
+		SetDarkWinTheme(FilterEdit);
+	else
+		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+
 	FilterEdit->Text  = EmptyStr;
+	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();
 
 	CommandStr = EmptyStr;
 }
@@ -79,9 +86,9 @@ void __fastcall TKeyListDlg::FormDestroy(TObject *Sender)
 //※テーマ利用時に下部タブが正しく描画されない不具合の対策
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::KeyTabControlDrawTab(TCustomTabControl *Control, int TabIndex,
-		const TRect &Rect, bool Active)
+	const TRect &Rect, bool Active)
 {
-	draw_BottomTab(Control, TabIndex, Rect, Active);
+	draw_BottomTab(Control, TabIndex, Rect, Active, IsDarkMode);
 }
 //---------------------------------------------------------------------------
 //一覧の切り替え
@@ -291,8 +298,10 @@ void __fastcall TKeyListDlg::KeyListGridDrawCell(TObject *Sender, int ACol, int 
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TKeyListDlg::MigemoCheckBoxClick(TObject *Sender)
+void __fastcall TKeyListDlg::MigemoActionExecute(TObject *Sender)
 {
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
 	KeyTabControlChange(NULL);
 }
 
@@ -317,13 +326,13 @@ void __fastcall TKeyListDlg::FilterEditChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::FilterEditEnter(TObject *Sender)
 {
-	FilterEdit->Color = scl_Window;
+	if (!IsDarkMode) FilterEdit->Color = scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::FilterEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	InvColIfEmpty(FilterEdit);
+	if (!IsDarkMode) InvColIfEmpty(FilterEdit);
 }
 
 //---------------------------------------------------------------------------
@@ -360,8 +369,11 @@ void __fastcall TKeyListDlg::FilterEditKeyPress(TObject *Sender, System::WideCha
 //---------------------------------------------------------------------------
 //未登録コマンドも表示
 //---------------------------------------------------------------------------
-void __fastcall TKeyListDlg::ShowAllCmdCheckBoxClick(TObject *Sender)
+void __fastcall TKeyListDlg::ShowAllCmdActionExecute(TObject *Sender)
 {
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+
 	KeyTabControlChange(NULL);
 	KeyListGrid->SetFocus();
 }
@@ -382,10 +394,16 @@ void __fastcall TKeyListDlg::KeyListGridKeyDown(TObject *Sender, WORD &Key, TShi
 		ModalResult = mrOk;
 	}
 	//カーソル移動
-	else if (GridCursorMove(cmd_F, gp) || GridCursorMove(cmd_V, gp))	;
-	else if (StartsText("IncSearch", cmd_F))	FilterEdit->SetFocus();
+	else if (GridCursorMove(cmd_F, gp) || GridCursorMove(cmd_V, gp)) {
+		;
+	}
+	else if (StartsText("IncSearch", cmd_F)) {
+		FilterEdit->SetFocus();
+	}
 	//閉じる
-	else if (USAME_TI(cmd_F, "ReturnList"))	ModalResult = mrCancel;
+	else if (USAME_TI(cmd_F, "ReturnList")) {
+		ModalResult = mrCancel;
+	}
 	//タブ切り換え
 	else if (is_ToRightOpe(KeyStr, cmd_F)) {
 		KeyTabControl->TabIndex = (KeyTabControl->TabIndex + 1) % KeyTabControl->Tabs->Count;
@@ -416,7 +434,9 @@ void __fastcall TKeyListDlg::KeyListGridKeyDown(TObject *Sender, WORD &Key, TShi
 		if (rn>0) gp->Row = rn;
 	}
 	//右クリックメニュー
-	else if (StartsText("ContextMenu", cmd_F)) show_PopupMenu(gp);
+	else if (StartsText("ContextMenu", cmd_F)) {
+		show_PopupMenu(gp);
+	}
 
 	if (!is_DialogKey(Key)) Key = 0;
 }
@@ -526,7 +546,11 @@ void __fastcall TKeyListDlg::OptionItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Alt+M"))
+		MigemoAction->Execute();
+	else
+		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 
