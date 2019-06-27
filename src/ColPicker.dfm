@@ -27,6 +27,27 @@ object ColorPicker: TColorPicker
     Height = 13
     Anchors = [akLeft, akTop, akRight]
   end
+  object Label1: TLabel
+    Left = 25
+    Top = 61
+    Width = 42
+    Height = 13
+    Caption = '9px'#24179#22343
+  end
+  object Label2: TLabel
+    Left = 106
+    Top = 61
+    Width = 24
+    Height = 13
+    Caption = #35036#33394
+  end
+  object Label3: TLabel
+    Left = 167
+    Top = 61
+    Width = 55
+    Height = 13
+    Caption = #12475#12540#12501#12459#12521#12540
+  end
   object ColEdit: TEdit
     Left = 119
     Top = 84
@@ -76,25 +97,22 @@ object ColorPicker: TColorPicker
   object Ave9pxCheckBox: TCheckBox
     Left = 8
     Top = 59
-    Width = 80
+    Width = 78
     Height = 17
-    Caption = '9px'#24179#22343
     TabOrder = 1
   end
   object SafeColCheckBox: TCheckBox
     Left = 150
     Top = 59
-    Width = 105
+    Width = 103
     Height = 17
-    Caption = #12475#12540#12501#12459#12521#12540
     TabOrder = 2
   end
   object CmpColCheckBox: TCheckBox
     Left = 89
     Top = 59
-    Width = 60
+    Width = 58
     Height = 17
-    Caption = #35036#33394
     TabOrder = 4
   end
   object RepeatGroupBox: TGroupBox
@@ -102,7 +120,6 @@ object ColorPicker: TColorPicker
     Top = 122
     Width = 298
     Height = 71
-    Caption = #36899#32154#21462#24471
     TabOrder = 7
     object RepSttLabel: TLabel
       Left = 16
@@ -145,6 +162,23 @@ object ColorPicker: TColorPicker
       Height = 24
       Action = StartRepAction
       TabOrder = 2
+    end
+  end
+  object Panel1: TPanel
+    Left = 16
+    Top = 115
+    Width = 52
+    Height = 17
+    AutoSize = True
+    BevelOuter = bvNone
+    BorderWidth = 2
+    TabOrder = 8
+    object Label4: TLabel
+      Left = 2
+      Top = 2
+      Width = 48
+      Height = 13
+      Caption = #36899#32154#21462#24471
     end
   end
   object ActionList1: TActionList

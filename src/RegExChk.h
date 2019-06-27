@@ -36,6 +36,8 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *CaseCheckBox;
 	TCheckBox *UpdtCheckBox;
 	TComboBox *PtnComboBox;
+	TLabel *Label1;
+	TLabel *Label2;
 	TLabel *ResultLabel;
 	TLabeledEdit *FileEdit;
 	TLabeledEdit *ReplaceEdit;

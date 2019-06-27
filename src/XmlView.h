@@ -24,6 +24,7 @@
 class TXmlViewer : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *AutoAction;
 	TAction *CollapseAction;
 	TAction *CopyAction;
 	TAction *CopyXmlAction;
@@ -34,10 +35,18 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *OpenUrlAction;
 	TActionList *ActionList1;
 	TButton *Button1;
+	TButton *ColBtn;
+	TButton *ExpBtn;
+	TButton *FindDownBtn;
+	TButton *FindUpBtn;
 	TCheckBox *AtrCheckBox;
 	TCheckBox *AutoCheckBox;
 	TCheckBox *NamCheckBox;
 	TCheckBox *ValCheckBox;
+	TLabel *Label1;
+	TLabel *Label2;
+	TLabel *Label3;
+	TLabel *Label4;
 	TLabeledEdit *FindEdit;
 	TMenuItem *CollapseItem;
 	TMenuItem *CopyItem;
@@ -56,10 +65,6 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *OpePanel;
 	TPanel *ViewPanel;
 	TPopupMenu *PopupMenu1;
-	TSpeedButton *FindDownBtn;
-	TSpeedButton *FindUpBtn;
-	TSpeedButton *SpeedButton1;
-	TSpeedButton *SpeedButton2;
 	TStatusBar *StatusBar1;
 	TTreeView *XmlTreeView;
 	TXMLDocument *XMLDocument1;
@@ -80,7 +85,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ExpandActionExecute(TObject *Sender);
 	void __fastcall CollapseActionExecute(TObject *Sender);
 	void __fastcall FindEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall AutoCheckBoxClick(TObject *Sender);
 	void __fastcall XmlTreeViewKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CopyActionExecute(TObject *Sender);
 	void __fastcall CopyActionUpdate(TObject *Sender);
@@ -95,6 +99,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CopyXmlActionExecute(TObject *Sender);
 	void __fastcall CopyXmlActionUpdate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
+          const TRect &Rect);
+	void __fastcall AutoActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	//ViewBusy プロパティ  ツリービュー処理中
@@ -106,6 +113,18 @@ private:	// ユーザー宣言
 
 	TStringList *XmlnsList;		//名前空間リスト
 	UnicodeString ErrMsg;
+
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
+
+	TWndMethod org_SttBar1WndProc;
+	void __fastcall SttBar1WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
+		org_SttBar1WndProc(msg);
+	}
 
 	void __fastcall WmFormShowed(TMessage &msg);
 	void __fastcall AssignView(TTreeNode *TreeNode, _di_IXMLNode XMLNode);
@@ -120,6 +139,7 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

@@ -224,7 +224,8 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"bgOptTab=|アクティブな設定タブの背景色\n"
 		"fgOptTab=アクティブな設定タブの文字色\n"
 		"OptFind=オプション設定の検索結果\n"
-		"TlBorder=|ツールウインドウの境界線\n";
+		"TlBorder=|ツールウインドウの境界線\n"
+		"DkPanel=ダークモード: パネルの背景色\n";
 
 	TimColListBox->Items->Text =
 		"Tim1H=1時間以内\n"
@@ -1502,7 +1503,7 @@ void __fastcall TOptionDlg::DisableColActionUpdate(TObject *Sender)
 	((TAction*)Sender)->Enabled
 		= contained_wd_i(
 			_T("bgList2|fgSelItem|Protect|Compress|frScrKnob|bgActKnob|")
-			_T("lnScrHit|lnScrSel|frmTab|bdrLine|bdrFold|bdrFixed|TlBorder"),
+			_T("lnScrHit|lnScrSel|frmTab|bdrLine|bdrFold|bdrFixed|TlBorder|DkPanel"),
 			col_id);
 }
 //---------------------------------------------------------------------------

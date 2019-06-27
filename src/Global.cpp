@@ -895,6 +895,8 @@ TColor col_fgEdBox;		//Edit ボックスの文字色
 
 TColor col_ModalScr;	//モーダル表示効果色
 
+TColor col_DkPanel;		//ダークモード: パネルの背景色
+
 const TColor col_Teal = clTeal;
 const TColor col_None = Graphics::clNone;
 
@@ -2662,32 +2664,48 @@ void SetToolWinBorder(TForm *fp, bool sw)
 //---------------------------------------------------------------------------
 void SetDarkWinTheme(TWinControl *wp)
 {
-	if (wp->ClassNameIs("TPanel")) {
-		TPanel *pp = (TPanel *)wp;
-		pp->StyleElements = pp->StyleElements >> seClient;
-		pp->Color		  = IsDarkMode? dcl_BtnFace : scl_BtnFace;
-		pp->Font->Color   = IsDarkMode? dcl_BtnText : scl_BtnText;
-		const wchar_t *subApp = IsDarkMode? _T("DarkMode_Explorer") : NULL;
-		for (int i=0; i<pp->ControlCount; i++) {
-			TControl *cp = pp->Controls[i];
-			if (cp->ClassNameIs("TButton")) {
-				SetWindowTheme(((TButton *)cp)->Handle, subApp, NULL);
-			}
-			else if (cp->ClassNameIs("TBitBtn")) {
-				SetWindowTheme(((TBitBtn *)cp)->Handle, subApp, NULL);
-			}
-			else if (cp->ClassNameIs("TSpeedButton")) {
-				TSpeedButton *bp = (TSpeedButton *)cp;
-				bp->Font->Color = IsDarkMode? dcl_BtnText : scl_BtnText;
-			}
-			else if (cp->ClassNameIs("TLabel")) {
+	if (!wp) return;
+
+	if (wp->InheritsFrom(__classid(TForm))) {
+		TForm *fp = (TForm*)wp;
+		fp->Color = get_PanelColor();
+		for (int i=0; i<fp->ControlCount; i++) {
+			TControl *cp = wp->Controls[i];
+			if (cp->ClassNameIs("TLabel")) {
 				TLabel *lp = (TLabel *)cp;
-				lp->Color		= IsDarkMode? dcl_BtnFace : scl_BtnFace;
-				lp->Font->Color = IsDarkMode? dcl_BtnText : scl_BtnText;
+				lp->Color		= get_PanelColor();
+				lp->Font->Color = get_LabelColor();
 			}
-			else if (cp->ClassNameIs("TPanel")
-				|| class_is_Edit(cp) || class_is_LabeledEdit(wp) || class_is_ComboBox(cp))
-			{
+			else if (cp->InheritsFrom(__classid(TWinControl))) {
+				SetDarkWinTheme((TWinControl *)cp);
+			}
+		}
+	}
+	else if (wp->ClassNameIs("TPageControl")) {
+		TPageControl *pp = (TPageControl *)wp;
+		for (int i=0; i<pp->PageCount; i++) SetDarkWinTheme(pp->Pages[i]);
+	}
+	else if (wp->ClassNameIs("TPanel") || wp->ClassNameIs("TTabSheet") || wp->ClassNameIs("TGroupBox")) {
+		if (wp->ClassNameIs("TPanel")) {
+			TPanel *pp = (TPanel *)wp;
+			pp->StyleElements = pp->StyleElements >> seClient;
+			pp->Color		  = get_PanelColor();
+			pp->Font->Color   = get_LabelColor();
+		}
+		else if (wp->ClassNameIs("TGroupBox")) {
+			TGroupBox *gp = (TGroupBox *)wp;
+			gp->Color		= get_PanelColor();
+			gp->Font->Color = get_LabelColor();
+		}
+
+		for (int i=0; i<wp->ControlCount; i++) {
+			TControl *cp = wp->Controls[i];
+			if (cp->ClassNameIs("TLabel")) {
+				TLabel *lp = (TLabel *)cp;
+				lp->Color		= get_PanelColor();
+				lp->Font->Color = get_LabelColor();
+			}
+			else if (cp->InheritsFrom(__classid(TWinControl))) {
 				SetDarkWinTheme((TWinControl *)cp);
 			}
 		}
@@ -2701,6 +2719,10 @@ void SetDarkWinTheme(TWinControl *wp)
 		TLabeledEdit *ep = (TLabeledEdit *)wp;
 		ep->Color		= IsDarkMode? dcl_Window	 : scl_Window;
 		ep->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
+	}
+	else if (wp->ClassNameIs("TSpeedButton")) {
+		TSpeedButton *bp = (TSpeedButton *)wp;
+		bp->Font->Color = get_LabelColor();
 	}
 	else if (class_is_ComboBox(wp)) {
 		const wchar_t *subApp = IsDarkMode? _T("DarkMode_CFD") : NULL;
@@ -2719,9 +2741,7 @@ void SetDarkWinTheme(TWinControl *wp)
 //---------------------------------------------------------------------------
 void set_BtnMarkDark(TSpeedButton *bp, int id)
 {
-	set_ButtonMark(bp, id,
-		(IsDarkMode? dcl_BtnText : scl_BtnText),
-		(IsDarkMode? dcl_BtnFace : scl_BtnFace));
+	set_ButtonMark(bp, id, (IsDarkMode? dcl_BtnText : scl_BtnText), get_PanelColor());
 }
 
 //---------------------------------------------------------------------------
@@ -3662,7 +3682,10 @@ UnicodeString format_CloneName(
 //  \XT(…)  Exit撮影日時
 //  \\       \ そのもの
 //---------------------------------------------------------------------------
-UnicodeString format_FileName(UnicodeString fmt, UnicodeString fnam)
+UnicodeString format_FileName(
+	UnicodeString fmt,
+	UnicodeString fnam,
+	UnicodeString *al_str)	//英字連番文字列	(default = NULL)
 {
 	UnicodeString ret_str;
 	UnicodeString bnam = get_base_name(fnam);
@@ -3694,11 +3717,18 @@ UnicodeString format_FileName(UnicodeString fmt, UnicodeString fnam)
 			else if (StartsStr("\\XT(", s)) {
 				ret_str += EXIF_GetExifTimeStr(fnam, get_in_paren(s));
 			}
+			else if (StartsStr("\\Z(", s)) {
+				UnicodeString ini_str = get_in_paren(s);
+				if (al_str) {
+					*al_str = al_str->IsEmpty()? ini_str : get_NextAlStr(*al_str);
+					ret_str += *al_str;
+				}
+			}
 			else {
 				s = fmt.SubString(i, 2);
 				if		(StartsStr("\\A", s)) ret_str += bnam;
 				else if (StartsStr("\\E", s)) ret_str += fext;
-				else						   ret_str += s.SubString(2, 1);
+				else						  ret_str += s.SubString(2, 1);
 			}
 			i += s.Length();
 		}
@@ -7248,6 +7278,19 @@ void InvColIfEmpty(TEdit *ep)
 }
 
 //---------------------------------------------------------------------------
+//ダークモードを考慮した色の取得
+//---------------------------------------------------------------------------
+TColor get_PanelColor()
+{
+	return (IsDarkMode? ((col_DkPanel!=col_None)? col_DkPanel : dcl_BtnFace) : scl_BtnFace);
+}
+//---------------------------------------------------------------------------
+TColor get_LabelColor()
+{
+	return (IsDarkMode? dcl_BtnText : scl_BtnText);
+}
+
+//---------------------------------------------------------------------------
 //ファイル名の色を取得
 //---------------------------------------------------------------------------
 TColor get_FileColor(file_rec *fp, TColor col_x)
@@ -9670,6 +9713,7 @@ void set_col_from_ColorList()
 		{&col_fgChInf,	_T("fgChInf"),		scl_BtnText},
 		{&col_bgEdBox,	_T("bgEdBox"),		col_None},
 		{&col_fgEdBox,	_T("fgEdBox"),		col_None},
+		{&col_DkPanel,	_T("DkPanel"),		col_None},
 		{&col_ModalScr,	_T("ModalScr"),		clBlack}
 	};
 
@@ -10826,16 +10870,18 @@ void draw_SttBarPanel(TStatusBar *sp, TStatusPanel *pp, TRect rc)
 //---------------------------------------------------------------------------
 //ステータスバーの背景を描画
 //---------------------------------------------------------------------------
-bool draw_SttBarBg(TStatusBar *sp, TMessage &msg)
+bool draw_SttBarBg(
+	TStatusBar *sp, TMessage &msg,
+	TColor bg)	//背景色	(default = col_bgSttBar)
 {
-	if (col_bgSttBar==scl_BtnFace) return false;
+	if (bg==scl_BtnFace) return false;
 
 	std::unique_ptr<TCanvas> cv(new TCanvas());
 	cv->Handle = (HDC)msg.WParam;
-	cv->Brush->Color = col_bgSttBar;
+	cv->Brush->Color = bg;
 	cv->FillRect(sp->ClientRect);
 	//上端境界
-	cv->Pen->Color = SelectWorB(col_bgSttBar, 0.25);
+	cv->Pen->Color = SelectWorB(bg, 0.33);	//***
 	cv->Pen->Width = Scaled1;
 	cv->Pen->Style = psSolid;
 	cv->MoveTo(0, 0);
@@ -11011,7 +11057,9 @@ void draw_BottomTab(TCustomTabControl *Control, int idx, const TRect rc,
 	TTabControl *tp = (TTabControl*)Control;
 	TCanvas *cv = tp->Canvas;
 	//背景
-	cv->Brush->Color = active? col_bgOptTab : dark_sw? dcl_BtnFace : scl_BtnFace;
+	cv->Brush->Color = active? col_bgOptTab :
+					  dark_sw? ((col_DkPanel!=col_None)? col_DkPanel : dcl_BtnFace)
+							 : scl_BtnFace;
 	cv->FillRect(rc);
 	//文字
 	UnicodeString titstr = tp->Tabs->Strings[idx];

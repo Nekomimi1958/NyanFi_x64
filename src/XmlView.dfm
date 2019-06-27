@@ -32,10 +32,12 @@ object XmlViewer: TXmlViewer
     Panels = <
       item
         Bevel = pbNone
+        Style = psOwnerDraw
         Width = 600
       end>
     UseSystemFont = False
-    StyleElements = []
+    StyleElements = [seBorder]
+    OnDrawPanel = StatusBar1DrawPanel
   end
   object Button1: TButton
     Left = 0
@@ -99,35 +101,36 @@ object XmlViewer: TXmlViewer
       DesignSize = (
         592
         44)
-      object FindUpBtn: TSpeedButton
-        Left = 563
-        Top = 11
-        Width = 23
-        Height = 22
-        Action = FindUpAction
+      object Label1: TLabel
+        Left = 87
+        Top = 15
+        Width = 63
+        Height = 13
+        Caption = #33258#21205#38283#38281'(&A)'
+      end
+      object Label2: TLabel
+        Left = 426
+        Top = 15
+        Width = 12
+        Height = 13
         Anchors = [akTop, akRight]
+        Caption = #21517
       end
-      object FindDownBtn: TSpeedButton
-        Left = 538
-        Top = 11
-        Width = 23
-        Height = 22
-        Action = FindDownAction
+      object Label3: TLabel
+        Left = 469
+        Top = 15
+        Width = 12
+        Height = 13
         Anchors = [akTop, akRight]
+        Caption = #23646
       end
-      object SpeedButton1: TSpeedButton
-        Left = 35
-        Top = 11
-        Width = 23
-        Height = 22
-        Action = CollapseAction
-      end
-      object SpeedButton2: TSpeedButton
-        Left = 10
-        Top = 11
-        Width = 23
-        Height = 22
-        Action = ExpandAction
+      object Label4: TLabel
+        Left = 512
+        Top = 15
+        Width = 12
+        Height = 13
+        Anchors = [akTop, akRight]
+        Caption = #20516
       end
       object FindEdit: TLabeledEdit
         Left = 234
@@ -139,18 +142,17 @@ object XmlViewer: TXmlViewer
         EditLabel.Height = 13
         EditLabel.Caption = #26908#32034'(&F)'
         LabelPosition = lpLeft
-        TabOrder = 1
+        TabOrder = 3
         OnKeyDown = FindEditKeyDown
         OnKeyPress = FindEditKeyPress
       end
       object AutoCheckBox: TCheckBox
-        Left = 68
+        Left = 70
         Top = 14
         Width = 107
         Height = 17
-        Caption = #33258#21205#38283#38281'(&A)'
-        TabOrder = 0
-        OnClick = AutoCheckBoxClick
+        Action = AutoAction
+        TabOrder = 2
       end
       object NamCheckBox: TCheckBox
         Left = 409
@@ -158,8 +160,7 @@ object XmlViewer: TXmlViewer
         Width = 41
         Height = 17
         Anchors = [akTop, akRight]
-        Caption = #21517
-        TabOrder = 2
+        TabOrder = 4
       end
       object ValCheckBox: TCheckBox
         Left = 495
@@ -167,8 +168,7 @@ object XmlViewer: TXmlViewer
         Width = 41
         Height = 17
         Anchors = [akTop, akRight]
-        Caption = #20516
-        TabOrder = 4
+        TabOrder = 6
       end
       object AtrCheckBox: TCheckBox
         Left = 452
@@ -176,8 +176,41 @@ object XmlViewer: TXmlViewer
         Width = 41
         Height = 17
         Anchors = [akTop, akRight]
-        Caption = #23646
-        TabOrder = 3
+        TabOrder = 5
+      end
+      object ExpBtn: TButton
+        Left = 10
+        Top = 10
+        Width = 25
+        Height = 25
+        Action = ExpandAction
+        TabOrder = 0
+      end
+      object ColBtn: TButton
+        Left = 37
+        Top = 10
+        Width = 25
+        Height = 25
+        Action = CollapseAction
+        TabOrder = 1
+      end
+      object FindDownBtn: TButton
+        Left = 533
+        Top = 10
+        Width = 25
+        Height = 25
+        Action = FindDownAction
+        Anchors = [akTop, akRight]
+        TabOrder = 7
+      end
+      object FindUpBtn: TButton
+        Left = 560
+        Top = 10
+        Width = 25
+        Height = 25
+        Action = FindUpAction
+        Anchors = [akTop, akRight]
+        TabOrder = 8
       end
     end
   end
@@ -239,10 +272,12 @@ object XmlViewer: TXmlViewer
     Left = 64
     Top = 88
     object FindDownAction: TAction
+      Caption = #9660
       OnExecute = FindDownActionExecute
       OnUpdate = FindActionUpdate
     end
     object FindUpAction: TAction
+      Caption = #9650
       OnExecute = FindUpActionExecute
       OnUpdate = FindActionUpdate
     end
@@ -276,6 +311,9 @@ object XmlViewer: TXmlViewer
       Caption = 'URL'#12434#38283#12367'(&W)'
       OnExecute = OpenUrlActionExecute
       OnUpdate = OpenUrlActionUpdate
+    end
+    object AutoAction: TAction
+      OnExecute = AutoActionExecute
     end
   end
   object XMLDocument1: TXMLDocument

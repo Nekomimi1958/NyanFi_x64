@@ -35,7 +35,7 @@ void __fastcall TKeyListDlg::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
 
-	Color = IsDarkMode? dcl_BtnFace : scl_BtnFace;
+	Color = get_PanelColor();
 
 	TStringGrid *gp = KeyListGrid;
 	InitializeListGrid(gp);

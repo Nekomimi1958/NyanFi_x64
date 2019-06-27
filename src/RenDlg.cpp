@@ -617,6 +617,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	bool show_prg = (!AutoPrvCheckBox->Checked || ItemList->Count>1000);	//***
 
 	ChangeCount = 0;
+	UnicodeString pre_alstr, post_alstr;
 	for (int i=0; i<ItemList->Count; i++) {
 		if (show_prg) {
 			SttPrgBar->PrgBar->Position = i;
@@ -639,9 +640,9 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 		//˜A”Ô
 		else if (IsSerialSheet()) {
 			if (NameChanged) {
-				new_name  = format_FileName(PreNameEdit->Text, f_name);
+				new_name  = format_FileName(PreNameEdit->Text, f_name, &pre_alstr);
 				if (n_wd>0) new_name.cat_sprintf(_T("%0*u"), n_wd, sn);
-				new_name += format_FileName(PostNameEdit->Text, f_name);
+				new_name += format_FileName(PostNameEdit->Text, f_name, &post_alstr);
 
 				if (ExtEdit->Enabled) {
 					if (FExtChanged && !ExtEdit->Text.IsEmpty()) {

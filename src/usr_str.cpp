@@ -2795,4 +2795,32 @@ UnicodeString make_MenuAccStr(
 		ret_str = "   ";
 	return ret_str;
 }
+
+//---------------------------------------------------------------------------
+//次のアルファベット文字列を取得
+//---------------------------------------------------------------------------
+UnicodeString get_NextAlStr(UnicodeString s)
+{
+	if (s.IsEmpty()) return EmptyStr;
+
+	bool lo_sw = (s[s.Length()]>='a');
+	s = s.UpperCase();
+
+	bool c_flag = true;
+	for (int i=s.Length(); i>=1 && c_flag; i--) {
+		if (s[i]<'Z') {
+			s[i] += 1;
+			c_flag = false;
+		}
+		else {
+			s[i] = 'A';
+			c_flag = true;
+		}
+	}
+	if (c_flag) s.Insert("A", 1);
+
+	if (lo_sw) s = s.LowerCase();
+
+	return s;
+}
 //---------------------------------------------------------------------------

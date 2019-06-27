@@ -1844,6 +1844,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TextMarginBoxDblClick(TObject *Sender);
 	void __fastcall TabControl1Resize(TObject *Sender);
 	void __fastcall RefDirBtnKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall GrepPageControlDrawTab(TCustomTabControl *Control, int TabIndex,
+          const TRect &Rect, bool Active);
+	void __fastcall GrepStatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
+          const TRect &Rect);
 
 
 
@@ -2133,6 +2137,13 @@ private:	// ユーザー宣言
 	{
 		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
 		org_SttBar1WndProc(msg);
+	}
+
+	TWndMethod org_GrepSttBarWndProc;
+	void __fastcall GrepSttBarWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(GrepStatusBar, msg, get_PanelColor())) return;
+		org_GrepSttBarWndProc(msg);
 	}
 
 	TWndMethod org_ClockBarWndProc;

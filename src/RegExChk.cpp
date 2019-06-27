@@ -119,9 +119,12 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 	MatchWdList->Clear();
 	MatchCount = 0;
 
-	SetDarkWinTheme(ReferListBox);
-	SetDarkWinTheme(ResListBox);
+	SetDarkWinTheme(this);
+	SetDarkWinTheme(FileEdit);
+	SetDarkWinTheme(ReplaceEdit);
 	SetDarkWinTheme(ObjMemo);
+	SetDarkWinTheme(ResListBox);
+	SetDarkWinTheme(ReferListBox);
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegExChecker::FormClose(TObject *Sender, TCloseAction &Action)
@@ -195,7 +198,7 @@ void __fastcall TRegExChecker::TestActionExecute(TObject *Sender)
 		if (ResListBox->Count>0) {
 			add_ComboBox_history(PtnComboBox);
 			ResultLabel->Caption = UnicodeString().sprintf(_T("%u箇所でマッチしました"), MatchCount);
-			ResultLabel->Font->Color = scl_WindowText;;
+			ResultLabel->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
 		}
 		else {
 			ResultLabel->Caption = "マッチしません";
@@ -214,7 +217,12 @@ void __fastcall TRegExChecker::TestActionExecute(TObject *Sender)
 void __fastcall TRegExChecker::TestActionUpdate(TObject *Sender)
 {
 	bool reg_ok = chk_RegExPtn(PtnComboBox->Text);
-	PtnComboBox->Color = (PtnComboBox->Text.IsEmpty() || reg_ok)? scl_Window: col_Illegal;
+
+	if (IsDarkMode)
+		PtnComboBox->Font->Color = !reg_ok? col_Error : dcl_WindowText;
+	else
+		PtnComboBox->Color = (PtnComboBox->Text.IsEmpty() || reg_ok)? scl_Window: col_Illegal;
+
 	((TAction *)Sender)->Enabled = !ObjMemo->Lines->Text.IsEmpty() && reg_ok;
 
 	if (PtnComboBox->Focused()) {
@@ -263,7 +271,7 @@ void __fastcall TRegExChecker::ReplaceActionExecute(TObject *Sender)
 		//結果
 		if (ResListBox->Count>0) {
 			ResultLabel->Caption = UnicodeString().sprintf(_T("%u箇所を置換しました"), MatchCount);
-			ResultLabel->Font->Color = scl_WindowText;;
+			ResultLabel->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
 		}
 		else {
 			ResultLabel->Caption = "マッチしません";

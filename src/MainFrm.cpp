@@ -296,54 +296,56 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 
 	TempRichEdit = ViewMemo;
 
-	org_TabPanelWndProc 	   = TabPanel->WindowProc;
-	TabPanel->WindowProc	   = TabPanelWndProc;
-	org_TabCtrlWindowProc	   = TabControl1->WindowProc;
-	TabControl1->WindowProc    = TabCtrlWindowProc;
+	org_TabPanelWndProc 		= TabPanel->WindowProc;
+	TabPanel->WindowProc		= TabPanelWndProc;
+	org_TabCtrlWindowProc		= TabControl1->WindowProc;
+	TabControl1->WindowProc 	= TabCtrlWindowProc;
 
-	org_RelPanelWndProc 	   = RelPanel->WindowProc;
-	RelPanel->WindowProc	   = RelPanelWndProc;
-	org_RelPanel2WndProc	   = RelPanel2->WindowProc;
-	RelPanel2->WindowProc	   = RelPanel2WndProc;
+	org_RelPanelWndProc 		= RelPanel->WindowProc;
+	RelPanel->WindowProc		= RelPanelWndProc;
+	org_RelPanel2WndProc		= RelPanel2->WindowProc;
+	RelPanel2->WindowProc		= RelPanel2WndProc;
 
-	org_L_DirPanelWndProc	   = L_DirPanel->WindowProc;
-	L_DirPanel->WindowProc	   = L_DirPanelWndProc;
-	org_L_DirPanel2WndProc	   = L_DirPanel2->WindowProc;
-	L_DirPanel2->WindowProc	   = L_DirPanel2WndProc;
-	org_R_DirPanelWndProc	   = R_DirPanel->WindowProc;
-	R_DirPanel->WindowProc	   = R_DirPanelWndProc;
-	org_R_DirPanel2WndProc	   = R_DirPanel2->WindowProc;
-	R_DirPanel2->WindowProc	   = R_DirPanel2WndProc;
+	org_L_DirPanelWndProc		= L_DirPanel->WindowProc;
+	L_DirPanel->WindowProc		= L_DirPanelWndProc;
+	org_L_DirPanel2WndProc		= L_DirPanel2->WindowProc;
+	L_DirPanel2->WindowProc 	= L_DirPanel2WndProc;
+	org_R_DirPanelWndProc		= R_DirPanel->WindowProc;
+	R_DirPanel->WindowProc		= R_DirPanelWndProc;
+	org_R_DirPanel2WndProc		= R_DirPanel2->WindowProc;
+	R_DirPanel2->WindowProc 	= R_DirPanel2WndProc;
 
-	org_L_StatPanelWndProc	   = L_StatPanel->WindowProc;
-	L_StatPanel->WindowProc	   = L_StatPanelWndProc;
-	org_R_StatPanelWndProc	   = R_StatPanel->WindowProc;
-	R_StatPanel->WindowProc	   = R_StatPanelWndProc;
+	org_L_StatPanelWndProc		= L_StatPanel->WindowProc;
+	L_StatPanel->WindowProc 	= L_StatPanelWndProc;
+	org_R_StatPanelWndProc		= R_StatPanel->WindowProc;
+	R_StatPanel->WindowProc 	= R_StatPanelWndProc;
 
-	org_FileListWindowProc[0]  = L_ListBox->WindowProc;
-	org_FileListWindowProc[1]  = R_ListBox->WindowProc;
-	L_ListBox->WindowProc	   = L_ListWindowProc;
-	R_ListBox->WindowProc	   = R_ListWindowProc;
+	org_FileListWindowProc[0]	= L_ListBox->WindowProc;
+	org_FileListWindowProc[1]	= R_ListBox->WindowProc;
+	L_ListBox->WindowProc		= L_ListWindowProc;
+	R_ListBox->WindowProc		= R_ListWindowProc;
 
-	org_TvViewPanelWndProc	   = TxtViewPanel->WindowProc;
-	TxtViewPanel->WindowProc   = TvViewPanelWndProc;
-	org_TvScrlPanelWndProc	   = TxtScrollPanel->WindowProc;
-	TxtScrollPanel->WindowProc = TvScrlPanelWndProc;
-	org_LogPanelWndProc		   = LogPanel->WindowProc;
-	LogPanel->WindowProc	   = LogPanelWndProc;
+	org_TvViewPanelWndProc		= TxtViewPanel->WindowProc;
+	TxtViewPanel->WindowProc	= TvViewPanelWndProc;
+	org_TvScrlPanelWndProc		= TxtScrollPanel->WindowProc;
+	TxtScrollPanel->WindowProc	= TvScrlPanelWndProc;
+	org_LogPanelWndProc 		= LogPanel->WindowProc;
+	LogPanel->WindowProc		= LogPanelWndProc;
 
-	org_SttBar1WndProc		   = StatusBar1->WindowProc;
-	StatusBar1->WindowProc	   = SttBar1WndProc;
-	org_ClockBarWndProc 	   = ClockBar->WindowProc;
-	ClockBar->WindowProc	   = ClockBarWndProc;
-	org_ClockBarIWndProc	   = ClockBarI->WindowProc;
-	ClockBarI->WindowProc	   = ClockBarIWndProc;
-	org_TxtSttHdrWndProc	   = TxtSttHeader->WindowProc;
-	TxtSttHeader->WindowProc   = TxtSttHdrWndProc;
-	org_ImgSttHdrWndProc	   = ImgSttHeader->WindowProc;
-	ImgSttHeader->WindowProc   = ImgSttHdrWndProc;
-	org_ImgInfBarWndProc	   = ImgInfBar->WindowProc;
-	ImgInfBar->WindowProc	   = ImgInfBarWndProc;
+	org_SttBar1WndProc			= StatusBar1->WindowProc;
+	StatusBar1->WindowProc		= SttBar1WndProc;
+	org_GrepSttBarWndProc		= GrepStatusBar->WindowProc;
+	GrepStatusBar->WindowProc	= GrepSttBarWndProc;
+	org_ClockBarWndProc 		= ClockBar->WindowProc;
+	ClockBar->WindowProc		= ClockBarWndProc;
+	org_ClockBarIWndProc		= ClockBarI->WindowProc;
+	ClockBarI->WindowProc		= ClockBarIWndProc;
+	org_TxtSttHdrWndProc		= TxtSttHeader->WindowProc;
+	TxtSttHeader->WindowProc	= TxtSttHdrWndProc;
+	org_ImgSttHdrWndProc		= ImgSttHeader->WindowProc;
+	ImgSttHeader->WindowProc	= ImgSttHdrWndProc;
+	org_ImgInfBarWndProc		= ImgInfBar->WindowProc;
+	ImgInfBar->WindowProc		= ImgInfBarWndProc;
 
 	TabPinWidth = 0;
 
@@ -2877,6 +2879,38 @@ void __fastcall TNyanFiForm::DrawDrivePanel(TPanel *pp)
 		::ReleaseDC(pp->Handle, hDc);
 	}
 }
+//---------------------------------------------------------------------------
+//Grep/置換タブの描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepPageControlDrawTab(TCustomTabControl *Control, int TabIndex,
+	const TRect &Rect, bool Active)
+{
+	TTabControl *tp = (TTabControl*)Control;
+	//背景
+	TCanvas *cv = tp->Canvas;
+	cv->Brush->Color = Active? col_bgOptTab : get_PanelColor();
+	cv->FillRect(Rect);
+
+	//タイトル
+	UnicodeString tit = tp->Tabs->Strings[TabIndex];
+	cv->Font->Color = Active? col_fgOptTab :  IsDarkMode? dcl_BtnText : scl_BtnText;
+	cv->Font->Style = Active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
+	TRect rc = Rect;
+	rc.Left = Rect.Left + (Rect.Width() - cv->TextWidth(tit))/2;
+	rc.Top  += (Active? 4 : 2);
+	::DrawText(cv->Handle, tit.c_str(), -1, &rc, DT_LEFT);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepStatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
+	const TRect &Rect)
+{
+	TCanvas *cv = StatusBar->Canvas;
+	cv->Font->Assign(StatusBar->Font);
+	cv->Brush->Color = get_PanelColor();
+	cv->FillRect(Rect);
+	cv->Font->Color =  IsDarkMode? dcl_BtnText : scl_BtnText;
+	cv->TextOut(Rect.Left + 2, Rect.Top, Panel->Text);
+}
 
 //---------------------------------------------------------------------------
 //背景画像の更新 (リスト毎のバッファを更新)
@@ -4199,6 +4233,11 @@ void __fastcall TNyanFiForm::SetupDesign(
 		lpfFlushMenuThemes();
 		IsDarkMode = AllowDarkMode;
 
+		SetDarkWinTheme(GrepOpPanel);
+		SetDarkWinTheme(SkipDirEdit);
+		SetDarkWinTheme(GrepFilterEdit);
+
+		SetDarkWinTheme(TextScrollBar);
 		SetDarkWinTheme(ImgScrollBox);
 		SetDarkWinTheme(SeekPanel);
 	}
@@ -17490,6 +17529,8 @@ void __fastcall TNyanFiForm::GrepActionExecute(TObject *Sender)
 		ActionOptStr = EmptyStr;
 		fromViewer	 = (ScrMode==SCMD_TVIEW);
 		GrepWorkList = CurStt->is_Work;
+		SetDarkWinTheme(GrepFindComboBox);
+		SetDarkWinTheme(RepFindComboBox);
 
 		UnicodeString kwd;
 		if		(!ActionParam.IsEmpty()) kwd = ActionParam;
@@ -27900,7 +27941,7 @@ void __fastcall TNyanFiForm::PrepareGrep()
 	GrepResultList->Clear();
 	ResultListBox->Clear();
 	GrepFilterEdit->Text  = EmptyStr;
-	GrepFilterEdit->Color = col_Invalid;
+	if (!IsDarkMode) GrepFilterEdit->Color = col_Invalid;
 	UpdateActions();
 
 	//マスクのリストを作成
@@ -28149,14 +28190,17 @@ void __fastcall TNyanFiForm::GrepFilterEditKeyDown(TObject *Sender, WORD &Key, T
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 	//一覧へ
-	if (contained_wd_i(KeysStr_ToList, KeyStr))
+	if (contained_wd_i(KeysStr_ToList, KeyStr)) {
 		ResultListBox->SetFocus();
+	}
 	//検索語へ
-	else if (contained_wd_i(_T("Ctrl+F|Ctrl+S"), KeyStr))
+	else if (contained_wd_i(_T("Ctrl+F|Ctrl+S"), KeyStr)) {
 		((GrepPageControl->ActivePage==FindSheet)? GrepFindComboBox : RepFindComboBox)->SetFocus();
+	}
 	//Migemoモード切替
-	else if (SameText(KeyStr, KeyStr_Migemo))
+	else if (SameText(KeyStr, KeyStr_Migemo)) {
 		MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
+	}
 	else return;
 
 	Key = 0;
@@ -28169,12 +28213,12 @@ void __fastcall TNyanFiForm::GrepFilterEditKeyPress(TObject *Sender, System::Wid
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GrepFilterEditEnter(TObject *Sender)
 {
-	GrepFilterEdit->Color = scl_Window;
+	if (!IsDarkMode) GrepFilterEdit->Color = scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GrepFilterEditExit(TObject *Sender)
 {
-	InvColIfEmpty(GrepFilterEdit);
+	if (!IsDarkMode) InvColIfEmpty(GrepFilterEdit);
 }
 
 //---------------------------------------------------------------------------
@@ -28664,7 +28708,10 @@ void __fastcall TNyanFiForm::GrepStartActionUpdate(TObject *Sender)
 		UnicodeString kwd = Trim(GrepFindComboBox->Text);
 		bool reg_ng = RegExCheckBox->Checked && !kwd.IsEmpty() && !chk_RegExPtn(kwd);
 		bool kwd_ok = RegExCheckBox->Checked? (!kwd.IsEmpty() && !reg_ng) : !kwd.IsEmpty();
-		GrepFindComboBox->Color = reg_ng? col_Illegal : scl_Window;
+		if (IsDarkMode)
+			GrepFindComboBox->Font->Color = reg_ng? col_Error : dcl_WindowText;
+		else
+			GrepFindComboBox->Color = reg_ng? col_Illegal : scl_Window;
 		ap->Enabled = !FindBusy && kwd_ok && !(GrepMaskComboBox->Enabled && GrepMaskComboBox->Text.IsEmpty());
 
 		AndCheckBox->Enabled  = !RegExCheckBox->Checked;
@@ -29315,7 +29362,10 @@ void __fastcall TNyanFiForm::ReplaceStartActionUpdate(TObject *Sender)
 		UnicodeString kwd = RepFindComboBox->Text;
 		bool reg_ng = RegExRCheckBox->Checked && !kwd.IsEmpty() && !chk_RegExPtn(kwd);
 		bool kwd_ok = RegExRCheckBox->Checked? (!kwd.IsEmpty() && !reg_ng) : !kwd.IsEmpty();
-		RepFindComboBox->Color = reg_ng? col_Illegal : scl_Window;
+		if (IsDarkMode)
+			RepFindComboBox->Font->Color = reg_ng? col_Error : dcl_WindowText;
+		else
+			RepFindComboBox->Color = reg_ng? col_Illegal : scl_Window;
 		ap->Enabled = !FindBusy && kwd_ok;
 
 		StartRBtn->Default = !ResultListBox->Focused();

@@ -37,6 +37,7 @@ object AppListDlg: TAppListDlg
         Width = 600
       end>
     UseSystemFont = False
+    StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
   end
   object MainPanel: TPanel

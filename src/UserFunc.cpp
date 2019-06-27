@@ -70,7 +70,7 @@ void InitializeSysColor()
 	dcl_WindowText	  = clWhite;
 	dcl_Highlight	  = TColor(RGB(0x41, 0x41, 0x41));
 	dcl_HighlightText = clWhite;
-	dcl_BtnFace 	  = TColor(RGB(0x38, 0x38, 0x38));
+	dcl_BtnFace 	  = TColor(RGB(0x33, 0x33, 0x33));
 	dcl_BtnText 	  = clWhite;
 	dcl_Menu		  = TColor(RGB(0x2b, 0x2b, 0x2b));
 	dcl_MenuText	  = clWhite;

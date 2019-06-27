@@ -43,6 +43,8 @@ void __fastcall TColorPicker::FormCreate(TObject *Sender)
 		_T("BITMAP(32)\n")
 		_T("BITMAP(128)\n")
 		_T("BITMAP(256)\n"));
+
+	DefColCaption = "X___ Y___ (x___ y___)\nR___ G___ B___  #______\nH___ S___ V___ / H___ S___ L___";
 }
 //---------------------------------------------------------------------------
 void __fastcall TColorPicker::FormShow(TObject *Sender)
@@ -61,12 +63,18 @@ void __fastcall TColorPicker::FormShow(TObject *Sender)
 	RepSttLabel->Caption = EmptyStr;
 
 	ColLabel->Font->Size = 9;
+	ColLabel->Caption	 = DefColCaption;
+
 	ColImage->Picture->Bitmap->SetSize(ColImage->Width, ColImage->Width);
 	TCanvas *cv = ColImage->Canvas;
 	cv->Brush->Color = col_bgImage;
 	cv->FillRect(ColImage->ClientRect);
 
 	if (ViewImage) ViewImage->Cursor = UserModule->crSpuitTool;
+
+	SetDarkWinTheme(this);
+	SetDarkWinTheme(RepCntEdit);
+	SetDarkWinTheme(ColEdit);
 }
 //---------------------------------------------------------------------------
 void __fastcall TColorPicker::FormClose(TObject *Sender, TCloseAction &Action)
@@ -88,6 +96,9 @@ void __fastcall TColorPicker::FormClose(TObject *Sender, TCloseAction &Action)
 //---------------------------------------------------------------------------
 void __fastcall TColorPicker::UpdateStt(int x, int y, float ratio)
 {
+	ColLabel->Color		= get_PanelColor();
+	ColLabel->Font->Color = IsDarkMode? dcl_BtnText : scl_BtnText;
+
 	if (!ViewImage || isViewAGif) {
 		ColLabel->Caption = EmptyStr;
 		return;
@@ -104,11 +115,11 @@ void __fastcall TColorPicker::UpdateStt(int x, int y, float ratio)
 	int c_size = ColImage->Width/3;
 	TCanvas *cv = ColImage->Canvas;
 	if (x<0 || x>=bmp->Width || y<0 || y>=bmp->Height) {
-		ColLabel->Caption = "X___ Y___ (x___ y___)\nR___ G___ B___  #______\nH___ S___ V___ / H___ S___ L___";
+		ColLabel->Caption = DefColCaption;
 		cv->Brush->Color  = col_bgImage;
 		cv->FillRect(Rect(0, 0, c_size*3, c_size*3));
 		Col2Panel->Color  = col_bgImage;
-		ColEdit->Color	  = col_Invalid;
+		if (!IsDarkMode) ColEdit->Color = col_Invalid;
 		ColEdit->Text	  = EmptyStr;
 	}
 	else {
@@ -209,8 +220,8 @@ void __fastcall TColorPicker::UpdateStt(int x, int y, float ratio)
 			}
 		}
 
-		ColEdit->Color = is_bmp? col_Invalid : scl_Window;
-		ColEdit->Text  = colstr;
+		if (!IsDarkMode) ColEdit->Color = is_bmp? col_Invalid : scl_Window;
+		ColEdit->Text = colstr;
 	}
 }
 
@@ -278,7 +289,7 @@ void __fastcall TColorPicker::StartRepActionUpdate(TObject *Sender)
 	bool is_bmp = StartsStr("BITMAP(", FmtComboBox->Text);
 	((TAction *)Sender)->Enabled = !is_bmp && !Repeating && EditToInt(RepCntEdit)>0;
 
-	RepSttLabel->Font->Color = is_bmp? col_Invalid : scl_WindowText;
+	RepSttLabel->Font->Color = is_bmp? col_Error : IsDarkMode? dcl_WindowText : scl_WindowText;
 	UnicodeString stt_str;
 	if		(is_bmp)	stt_str = "ビットマップのコピーでは利用できません。";
 	else if (Repeating)	stt_str.sprintf(_T("連続取得中...　あと %u 回"), RepCount);

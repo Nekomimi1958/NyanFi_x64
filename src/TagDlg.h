@@ -25,12 +25,17 @@
 class TTagManDlg : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *AndAction;
 	TAction *CountTagAction;
 	TAction *DefColorAction;
 	TAction *DelTagAction;
+	TAction *HideAction;
 	TAction *MakeNbtCurAction;
 	TAction *MakeNbtOppAction;
 	TAction *RenTagAction;
+	TAction *ResLinkAction;
+	TAction *RevColAction;
+	TAction *SelMaskAction;
 	TAction *SetColorAction;
 	TAction *ShowTagCountAction;
 	TAction *TrimDataAction;
@@ -48,6 +53,10 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckListBox *TagCheckListBox;
 	TEdit *TagEdit;
 	TImage *SpuitImage;
+	TLabel *Label1;
+	TLabel *Label2;
+	TLabel *Label3;
+	TLabel *Label4;
 	TMenuItem *CountTagItem;
 	TMenuItem *DefColItem;
 	TMenuItem *DelTagItem;
@@ -72,15 +81,6 @@ __published:	// IDE で管理されるコンポーネント
 	TPopupMenu *TagPopupMenu;
 	TSpeedButton *HideOptBtn;
 	TSpeedButton *ShowOptBtn;
-	TAction *AndAction;
-	TAction *SelMaskAction;
-	TAction *HideAction;
-	TAction *RevColAction;
-	TLabel *Label1;
-	TLabel *Label2;
-	TLabel *Label3;
-	TLabel *Label4;
-	TAction *ResLinkAction;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

@@ -1118,6 +1118,8 @@ extern TColor col_fgChInf;
 extern TColor col_bgEdBox;
 extern TColor col_fgEdBox;
 
+extern TColor col_DkPanel;
+
 extern const TColor col_Teal;
 extern const TColor col_None;
 
@@ -1621,7 +1623,7 @@ UnicodeString make_ResponseFile(UnicodeString fnam, int arc_t);
 UnicodeString format_CloneName(UnicodeString fmt, UnicodeString fnam, UnicodeString dst_dir, bool is_dir = false,
 	TDateTime *ts = NULL, TStringList *lst = NULL);
 
-UnicodeString format_FileName(UnicodeString fmt, UnicodeString fnam);
+UnicodeString format_FileName(UnicodeString fmt, UnicodeString fnam, UnicodeString *al_str = NULL);
 
 TStringList *CreStringList(int obj_type = 0);
 
@@ -1793,7 +1795,8 @@ void make_AssoMenuList(TStringDynArray app_lst, TStringList *lst);
 
 void InvColIfEmpty(TLabeledEdit *ep);
 void InvColIfEmpty(TEdit *ep);
-
+TColor get_PanelColor();
+TColor get_LabelColor();
 TColor get_FileColor(file_rec *fp, TColor col_x);
 TColor get_ExtColor(UnicodeString fext, TColor col = col_fgList);
 TColor get_TimeColor(TDateTime dt, TColor col_def);
@@ -1966,7 +1969,7 @@ void SpaceTextOut(UnicodeString s, TCanvas *cv, int &x, int y, TColor fg, bool f
 void Emphasis_RLO_info(UnicodeString fnam, TCanvas *cv, int xp, int yp);
 
 void draw_SttBarPanel(TStatusBar *sp, TStatusPanel *pp, TRect rc);
-bool draw_SttBarBg(TStatusBar *sp, TMessage &msg);
+bool draw_SttBarBg(TStatusBar *sp, TMessage &msg, TColor bg = col_bgSttBar);
 bool draw_InfHdrBg(TStatusBar *sp, TMessage &msg);
 
 void draw_SortHeader(THeaderControl *hp, THeaderSection *sp, TRect rc, int mk_mode = 0, bool use_syscol = false);

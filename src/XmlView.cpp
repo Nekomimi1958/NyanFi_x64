@@ -26,12 +26,10 @@ __fastcall TXmlViewer::TXmlViewer(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TXmlViewer::FormCreate(TObject *Sender)
 {
+	org_SttBar1WndProc	   = StatusBar1->WindowProc;
+	StatusBar1->WindowProc = SttBar1WndProc;
+
 	ViewMode = 0;
-
-	XmlTreeView->Font->Assign(ListFont);
-
-	set_ButtonMark(FindDownBtn, UBMK_BDOWN);
-	set_ButtonMark(FindUpBtn,   UBMK_BUP);
 
 	XmlnsList = new TStringList();
 }
@@ -56,12 +54,16 @@ void __fastcall TXmlViewer::FormShow(TObject *Sender)
 	Caption = yen_to_delimiter(FileName) + " - XMLビュアー";
 
 	SetDarkWinTheme(XmlTreeView);
+	SetDarkWinTheme(OpePanel);
+	SetDarkWinTheme(FindEdit);
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
 //---------------------------------------------------------------------------
 void __fastcall TXmlViewer::WmFormShowed(TMessage &msg)
 {
+	StatusBar1->Font->Assign(SttBarFont);
+	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
 	Repaint();
 
 	ErrMsg = EmptyStr;
@@ -491,6 +493,19 @@ void __fastcall TXmlViewer::XmlTreeViewHint(TObject *Sender, TTreeNode * const N
 }
 
 //---------------------------------------------------------------------------
+//ステータスバーの描画
+//---------------------------------------------------------------------------
+void __fastcall TXmlViewer::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
+	const TRect &Rect)
+{
+	TCanvas *cv = StatusBar->Canvas;
+	cv->Brush->Color = col_bgSttBar;
+	cv->FillRect(Rect);
+	cv->Font->Color = col_fgSttBar;
+	cv->TextOut(Rect.Left + Scaled2, Rect.Top, Panel->Text);
+}
+
+//---------------------------------------------------------------------------
 //すべて展開
 //---------------------------------------------------------------------------
 void __fastcall TXmlViewer::ExpandItemClick(TObject *Sender)
@@ -675,8 +690,11 @@ void __fastcall TXmlViewer::CollapseActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 //自動開閉
 //---------------------------------------------------------------------------
-void __fastcall TXmlViewer::AutoCheckBoxClick(TObject *Sender)
+void __fastcall TXmlViewer::AutoActionExecute(TObject *Sender)
 {
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+
 	ViewBusy = true;
 	XmlTreeView->AutoExpand = AutoCheckBox->Checked;
 	XmlTreeView->SetFocus();
@@ -729,14 +747,19 @@ void __fastcall TXmlViewer::XmlTreeViewKeyDown(TObject *Sender, WORD &Key, TShif
 		}
 	}
 	//検索
-	else if (USAME_TI(cmd_F, "FindDown") || USAME_TI(KeyStr, "F3"))
+	else if (USAME_TI(cmd_F, "FindDown") || USAME_TI(KeyStr, "F3")) {
 		FindDownAction->Execute();
-	else if (USAME_TI(cmd_F, "FindUp"))
+	}
+	else if (USAME_TI(cmd_F, "FindUp")) {
 		FindUpAction->Execute();
-	else if (StartsText("IncSearch", cmd_F) || contained_wd_i(KeyStr_Filter, KeyStr))
+	}
+	else if (StartsText("IncSearch", cmd_F) || contained_wd_i(KeyStr_Filter, KeyStr)) {
 		FindEdit->SetFocus();
+	}
 	//閉じる
-	else if (USAME_TI(cmd_F, "ReturnList")) ModalResult = mrCancel;
+	else if (USAME_TI(cmd_F, "ReturnList")) {
+		ModalResult = mrCancel;
+	}
 	else return;
 
 	ClearKeyBuff(true);
@@ -769,6 +792,11 @@ void __fastcall TXmlViewer::FindEditKeyPress(TObject *Sender, System::WideChar &
 //---------------------------------------------------------------------------
 void __fastcall TXmlViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Alt+A"))
+		AutoAction->Execute();
+	else
+		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
+

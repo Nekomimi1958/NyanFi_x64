@@ -135,7 +135,7 @@ void __fastcall TColorDlg::SpuitImageMouseDown(TObject *Sender, TMouseButton But
 }
 //---------------------------------------------------------------------------
 void __fastcall TColorDlg::SpuitImageMouseUp(TObject *Sender, TMouseButton Button,
-		TShiftState Shift, int X, int Y)
+	TShiftState Shift, int X, int Y)
 {
 	SwatchPanel->Visible = false;
 

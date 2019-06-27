@@ -82,12 +82,25 @@ object RegExChecker: TRegExChecker
         Anchors = [akLeft, akTop, akRight]
         Shape = bsBottomLine
       end
+      object Label1: TLabel
+        Left = 97
+        Top = 66
+        Width = 81
+        Height = 13
+        Caption = #22823#23567#25991#23383#12434#21306#21029
+      end
+      object Label2: TLabel
+        Left = 312
+        Top = 133
+        Width = 48
+        Height = 13
+        Caption = #22793#26356#21453#26144
+      end
       object CaseCheckBox: TCheckBox
         Left = 80
         Top = 64
         Width = 135
         Height = 17
-        Caption = #22823#23567#25991#23383#12434#21306#21029
         TabOrder = 4
       end
       object CCopyBtn: TButton
@@ -201,7 +214,6 @@ object RegExChecker: TRegExChecker
         Width = 78
         Height = 17
         Anchors = [akTop, akRight]
-        Caption = #22793#26356#21453#26144
         TabOrder = 11
       end
     end
