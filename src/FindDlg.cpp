@@ -574,7 +574,8 @@ void __fastcall TFindFileDlg::CondChangeUpdate(TObject *Sender)
 	FrmtPanel->Color =
 		get_PanelColor(SmplRadioGroup->ItemIndex==0 && BitRadioGroup->ItemIndex==0 && ChnRadioGroup->ItemIndex==0);
 	ExifPanel->Color =
-		get_PanelColor(!ExifKwdEdit->Text.IsEmpty() || (!LatLngComboBox->Text.IsEmpty() && !GpsRangeEdit->Text.IsEmpty()));
+		get_PanelColor(ExifKwdEdit->Text.IsEmpty() && (LatLngComboBox->Text.IsEmpty() || GpsRangeEdit->Text.IsEmpty()));
+
 	PropPanel->Color = get_PanelColor(PrpKwdEdit->Text.IsEmpty());
 	TextPanel->Color = get_PanelColor(TxtKwdComboBox->Text.IsEmpty());
 
