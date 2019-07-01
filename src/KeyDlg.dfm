@@ -50,30 +50,6 @@ object KeyListDlg: TKeyListDlg
       DesignSize = (
         462
         34)
-      object Label1: TLabel
-        Left = 154
-        Top = 9
-        Width = 36
-        Height = 13
-        Anchors = [akTop, akRight]
-        Caption = '&Migemo'
-      end
-      object Label2: TLabel
-        Left = 230
-        Top = 9
-        Width = 104
-        Height = 13
-        Anchors = [akTop, akRight]
-        Caption = #26410#30331#37682#12467#12510#12531#12489#12418#34920#31034
-      end
-      object Label3: TLabel
-        Left = 391
-        Top = 9
-        Width = 60
-        Height = 13
-        Anchors = [akTop, akRight]
-        Caption = #30906#23450#21363#23455#34892
-      end
       object FilterEdit: TLabeledEdit
         Left = 72
         Top = 6
@@ -99,6 +75,7 @@ object KeyListDlg: TKeyListDlg
         Height = 17
         Action = MigemoAction
         Anchors = [akTop, akRight]
+        Caption = '&Migemo'
         TabOrder = 1
       end
       object CnfExeCheckBox: TCheckBox
@@ -107,6 +84,7 @@ object KeyListDlg: TKeyListDlg
         Width = 86
         Height = 17
         Anchors = [akTop, akRight]
+        Caption = #30906#23450#21363#23455#34892
         TabOrder = 2
       end
       object ShowAllCmdCheckBox: TCheckBox
@@ -116,6 +94,7 @@ object KeyListDlg: TKeyListDlg
         Height = 17
         Action = ShowAllCmdAction
         Anchors = [akTop, akRight]
+        Caption = #26410#30331#37682#12467#12510#12531#12489#12418#34920#31034
         TabOrder = 3
       end
     end

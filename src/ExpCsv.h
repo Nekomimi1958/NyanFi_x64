@@ -53,6 +53,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SrcListBoxDblClick(TObject *Sender);
 	void __fastcall DstListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall DstListBoxDblClick(TObject *Sender);
+	void __fastcall ItemListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
+          TOwnerDrawState State);
 
 private:	// ユーザー宣言
 	bool isTSV;

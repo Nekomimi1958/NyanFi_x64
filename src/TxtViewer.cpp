@@ -2171,19 +2171,15 @@ void __fastcall TTxtViewer::onRulerPaint(TObject *Sender)
 	//ŒÅ’è’·•\Ž¦
 	if (isCSV && isFixedLen && FixWdList.Length>0) {
 		cv->Font->Height = RulerBox->ClientHeight - 2;
+		UnicodeString al_str;
 		for (int i=0; i<FixWdList.Length; i++) {
 			if (i==0) {
 				xp -= (HchWidth - 1);
 				cv->MoveTo(xp, rc.Top + 2);
 				cv->LineTo(xp, rc.Bottom - 1);
 			}
-			UnicodeString c;
-			if (i<26)
-				c.sprintf(_T("%c"), 'A' + i);
-			else
-				c.sprintf(_T("%c%c"), 'A' + i/26 - 1, 'A' + i%26);
-			cv->TextOut(xp + 4, rc.Top, c);
-
+			al_str = al_str.IsEmpty()? UnicodeString("A") : get_NextAlStr(al_str);
+			cv->TextOut(xp + 4, rc.Top, al_str);
 			xp += ((FixWdList[i] + 2) * HchWidth);
 			cv->MoveTo(xp, rc.Top + 2);
 			cv->LineTo(xp, rc.Bottom - 1);

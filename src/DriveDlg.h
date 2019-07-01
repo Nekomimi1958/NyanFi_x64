@@ -39,10 +39,6 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *ShowIconCheckBox;
 	TCheckBox *ToRootCheckBox;
 	THeaderControl *DriveHeader;
-	TLabel *Label1;
-	TLabel *Label2;
-	TLabel *Label3;
-	TLabel *Label4;
 	TMenuItem *EjectDrvItem;
 	TMenuItem *EjectTryItem;
 	TMenuItem *NetConItem;

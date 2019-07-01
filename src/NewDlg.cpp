@@ -49,6 +49,7 @@ void __fastcall TNewFileDlg::FormShow(TObject *Sender)
 	NewExeCmdEdit->Text = IniFile->ReadStrGen(_T("NewFileExeCmd"),
 							!IniFile->KeyExists("General", "NewFileExeCmd")? "OpenByWin" : "");
 
+	SetDarkWinTheme(this);
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
 //---------------------------------------------------------------------------

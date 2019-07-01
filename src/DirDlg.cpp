@@ -94,10 +94,8 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 
 		(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)lp)->SetFocus();
 
-		if (IsDarkMode)
-			SetDarkWinTheme(FilterEdit);
-		else
-			FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+		SetDarkWinTheme(FilterEdit);
+		FilterEdit->Color = get_WinColor(!ToFilter);
 	}
 	//“o˜^ƒfƒBƒŒƒNƒgƒŠ
 	else {
@@ -151,7 +149,6 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 	}
 
 	ListScrPanel->UpdateKnob();
-
 	lp->DragMode = IsSpecial? dmManual : dmAutomatic;
 	UserModule->InitializeListBox(lp, ListScrPanel);
 	SelIndex = -1;
@@ -1005,13 +1002,13 @@ void __fastcall TRegDirDlg::FilterBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FilterEditEnter(TObject *Sender)
 {
-	if (!IsDarkMode) FilterEdit->Color = scl_Window;
+	FilterEdit->Color = get_WinColor();
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FilterEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	if (!IsDarkMode) InvColIfEmpty(FilterEdit);
+	InvColIfEmpty(FilterEdit);
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FilterEditChange(TObject *Sender)

@@ -55,14 +55,6 @@ bool 		  CancelHelp  = false;
 HMODULE hGdi32 = NULL;
 FUNC_GetFontResourceInfo	lpfGetFontResourceInfo = NULL;
 
-HMODULE hUxTheme = NULL;
-FUNC_ShouldAppsUseDarkMode	lpfShouldAppsUseDarkMode  = NULL;
-FUNC_AllowDarkModeForWindow	lpfAllowDarkModeForWindow = NULL;
-FUNC_AllowDarkModeForApp	lpfAllowDarkModeForApp	  = NULL;
-FUNC_FlushMenuThemes		lpfFlushMenuThemes		  = NULL;
-
-bool SupportDarkMode = false;
-
 //---------------------------------------------------------------------------
 TCursor crTmpPrev = (TCursor)10;	//カーソルのプレビュー用
 
@@ -89,7 +81,6 @@ bool  IsAdmin	 = false;		//管理者権限
 int   StartedCount;				//実行開始カウント(m秒)
 int   NyanFiIdNo = 0;			//多重 NyanFi 識別ID
 bool  IsPrimary  = true;		//最初に起動された
-bool  IsDarkMode = false;		//ダークモードが適用されている
 win_dat Win2Data;				//二重起動終了時の画面情報
 
 int ScrMode  = SCMD_FLIST;	//画面モード
@@ -233,7 +224,6 @@ bool InhbitAltMenu;				//ALTキーでメニューにフォーカスしない
 bool SelectByMouse;				//マウスでファイラーの項目を選択
 bool SelectBaseOnly;			//ファイル名主部でのみ選択
 bool SelectIconSngl;			//アイコン部分で個別に選択
-bool AllowDarkMode;				//ダークモードを一部適用
 bool TimColEnabled;				//タイムスタンプの配色を有効
 bool PriorFExtCol;				//拡張子部分は属性色より優先
 bool ColorOnlyFExt;				//拡張子別配色は拡張子部分のみに適用
@@ -844,8 +834,6 @@ TColor col_OptFind;		//オプション設定の検索結果
 TColor col_bgHint;		//ヒント表示の背景色
 TColor col_fgHint;		//ヒント表示の文字色
 TColor col_bgWarn;		//警告表示の背景色
-TColor col_Invalid;		//無効な項目の背景色
-TColor col_Illegal;		//不正な入力項目の背景色
 TColor col_Tim1H;		//1時間以内のタイムスタンプ色
 TColor col_Tim3H;		//3時間以内の～
 TColor col_Tim1D;		//1日以内の～
@@ -895,10 +883,7 @@ TColor col_fgEdBox;		//Edit ボックスの文字色
 
 TColor col_ModalScr;	//モーダル表示効果色
 
-TColor col_DkPanel;		//ダークモード: パネルの背景色
-
 const TColor col_Teal = clTeal;
-const TColor col_None = Graphics::clNone;
 
 //背景画像
 Graphics::TBitmap *BgImgBuff[MAX_BGIMAGE];
@@ -2129,17 +2114,7 @@ void InitializeGlobal()
 		lpfGetFontResourceInfo = (FUNC_GetFontResourceInfo)::GetProcAddress(hGdi32, "GetFontResourceInfoW");
 	}
 
-	if (CheckWin32Version(10) && TOSVersion::Build >= 17763 && !is_HighContrast()) {
-		hUxTheme = ::LoadLibrary(_T("uxtheme.dll"));
-		if (hUxTheme) {
-			lpfShouldAppsUseDarkMode  = (FUNC_ShouldAppsUseDarkMode)::GetProcAddress(hUxTheme, MAKEINTRESOURCEA(132));
-			lpfAllowDarkModeForWindow = (FUNC_AllowDarkModeForWindow)::GetProcAddress(hUxTheme, MAKEINTRESOURCEA(133));
-			lpfAllowDarkModeForApp	  = (FUNC_AllowDarkModeForApp)::GetProcAddress(hUxTheme, MAKEINTRESOURCEA(135));
-			lpfFlushMenuThemes		  = (FUNC_FlushMenuThemes)::GetProcAddress(hUxTheme, MAKEINTRESOURCEA(136));
-			SupportDarkMode = (lpfShouldAppsUseDarkMode && lpfAllowDarkModeForWindow
-								&& lpfAllowDarkModeForApp && lpfFlushMenuThemes);
-		}
-	}
+	InitializeDarkMode();
 
 	WorkListChanged = WorkListFiltered = rqWorkListDirInf = false;
 }
@@ -2210,8 +2185,9 @@ void EndGlobal()
 		::FreeLibrary(hHHctrl);
 	}
 
-	if (hGdi32)   ::FreeLibrary(hGdi32);
-	if (hUxTheme) ::FreeLibrary(hUxTheme);
+	if (hGdi32) ::FreeLibrary(hGdi32);
+
+	EndDarkMode();
 }
 
 //---------------------------------------------------------------------------
@@ -2630,6 +2606,25 @@ void ApplyOptionByTag(TTabSheet *sp)
 				ApplyOptionByTag((TComponent *)gp->Controls[j]);
 			}
 		}
+		else if (cp->ClassNameIs("TPanel")) {
+			ApplyOptionByTag((TPanel *)cp);
+		}
+		else {
+			ApplyOptionByTag((TComponent *)cp);
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void ApplyOptionByTag(TPanel *pp)
+{
+	for (int i=0; i<pp->ControlCount; i++) {
+		TControl *cp = pp->Controls[i];
+		if (cp->ClassNameIs("TGroupBox")) {
+			TGroupBox *gp = (TGroupBox *)cp;
+			for (int j=0; j<gp->ControlCount; j++) {
+				ApplyOptionByTag((TComponent *)gp->Controls[j]);
+			}
+		}
 		else {
 			ApplyOptionByTag((TComponent *)cp);
 		}
@@ -2659,83 +2654,6 @@ void SetToolWinBorder(TForm *fp, bool sw)
 	}
 }
 
-//---------------------------------------------------------------------------
-//コントロールにダークモードを適用
-//---------------------------------------------------------------------------
-void SetDarkWinTheme(TWinControl *wp)
-{
-	if (!wp) return;
-
-	if (wp->InheritsFrom(__classid(TForm))) {
-		TForm *fp = (TForm*)wp;
-		fp->Color = get_PanelColor();
-		for (int i=0; i<fp->ControlCount; i++) {
-			TControl *cp = wp->Controls[i];
-			if (cp->ClassNameIs("TLabel")) {
-				TLabel *lp = (TLabel *)cp;
-				lp->Color		= get_PanelColor();
-				lp->Font->Color = get_LabelColor();
-			}
-			else if (cp->InheritsFrom(__classid(TWinControl))) {
-				SetDarkWinTheme((TWinControl *)cp);
-			}
-		}
-	}
-	else if (wp->ClassNameIs("TPageControl")) {
-		TPageControl *pp = (TPageControl *)wp;
-		for (int i=0; i<pp->PageCount; i++) SetDarkWinTheme(pp->Pages[i]);
-	}
-	else if (wp->ClassNameIs("TPanel") || wp->ClassNameIs("TTabSheet") || wp->ClassNameIs("TGroupBox")) {
-		if (wp->ClassNameIs("TPanel")) {
-			TPanel *pp = (TPanel *)wp;
-			pp->StyleElements = pp->StyleElements >> seClient;
-			pp->Color		  = get_PanelColor();
-			pp->Font->Color   = get_LabelColor();
-		}
-		else if (wp->ClassNameIs("TGroupBox")) {
-			TGroupBox *gp = (TGroupBox *)wp;
-			gp->Color		= get_PanelColor();
-			gp->Font->Color = get_LabelColor();
-		}
-
-		for (int i=0; i<wp->ControlCount; i++) {
-			TControl *cp = wp->Controls[i];
-			if (cp->ClassNameIs("TLabel")) {
-				TLabel *lp = (TLabel *)cp;
-				lp->Color		= get_PanelColor();
-				lp->Font->Color = get_LabelColor();
-			}
-			else if (cp->InheritsFrom(__classid(TWinControl))) {
-				SetDarkWinTheme((TWinControl *)cp);
-			}
-		}
-	}
-	else if (class_is_Edit(wp)) {
-		TEdit *ep = (TEdit *)wp;
-		ep->Color		= IsDarkMode? dcl_Window	 : scl_Window;
-		ep->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
-	}
-	else if (class_is_LabeledEdit(wp)) {
-		TLabeledEdit *ep = (TLabeledEdit *)wp;
-		ep->Color		= IsDarkMode? dcl_Window	 : scl_Window;
-		ep->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
-	}
-	else if (wp->ClassNameIs("TSpeedButton")) {
-		TSpeedButton *bp = (TSpeedButton *)wp;
-		bp->Font->Color = get_LabelColor();
-	}
-	else if (class_is_ComboBox(wp)) {
-		const wchar_t *subApp = IsDarkMode? _T("DarkMode_CFD") : NULL;
-		SetWindowTheme(wp->Handle, subApp, NULL);
-		TComboBox *cp = (TComboBox *)wp;
-		cp->Color		= IsDarkMode? dcl_Window	 : scl_Window;
-		cp->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
-	}
-	else {
-		const wchar_t *subApp = IsDarkMode? _T("DarkMode_Explorer") : NULL;
-		SetWindowTheme(wp->Handle, subApp, NULL);
-	}
-}
 //---------------------------------------------------------------------------
 //ボタンにマークを設定(ダークモード対応)
 //---------------------------------------------------------------------------
@@ -7267,27 +7185,12 @@ void make_AssoMenuList(TStringDynArray app_lst, TStringList *lst)
 //---------------------------------------------------------------------------
 void InvColIfEmpty(TLabeledEdit *ep)
 {
-	bool flag = ep->NumbersOnly? (ep->Text.ToIntDef(0)==0) : ep->Text.IsEmpty();
-	ep->Color = flag? col_Invalid : scl_Window;
+	ep->Color = get_WinColor(ep->NumbersOnly? (ep->Text.ToIntDef(0)==0) : ep->Text.IsEmpty());
 }
 //---------------------------------------------------------------------------
 void InvColIfEmpty(TEdit *ep)
 {
-	bool flag = ep->NumbersOnly? (ep->Text.ToIntDef(0)==0) : ep->Text.IsEmpty();
-	ep->Color = flag? col_Invalid : scl_Window;
-}
-
-//---------------------------------------------------------------------------
-//ダークモードを考慮した色の取得
-//---------------------------------------------------------------------------
-TColor get_PanelColor()
-{
-	return (IsDarkMode? ((col_DkPanel!=col_None)? col_DkPanel : dcl_BtnFace) : scl_BtnFace);
-}
-//---------------------------------------------------------------------------
-TColor get_LabelColor()
-{
-	return (IsDarkMode? dcl_BtnText : scl_BtnText);
+	ep->Color = get_WinColor(ep->NumbersOnly? (ep->Text.ToIntDef(0)==0) : ep->Text.IsEmpty());
 }
 
 //---------------------------------------------------------------------------
@@ -7404,6 +7307,34 @@ TColor get_LogColor(UnicodeString s)
 									(s.Pos('!')==10)? AdjustColor(col_fgLog, ADJCOL_FGLIST)
 													: col_fgLog
 		);
+}
+
+//---------------------------------------------------------------------------
+//エラー色の設定
+//---------------------------------------------------------------------------
+void set_ErrColor(TEdit *ep, bool is_err)
+{
+	ep->Font->Color = get_TextColor();
+	ep->Color		= is_err? (IsDarkMode? col_DkIlleg : col_Illegal) : get_WinColor();
+}
+//---------------------------------------------------------------------------
+void set_ErrColor(TLabeledEdit *ep, bool is_err)
+{
+	ep->Font->Color = get_TextColor();
+	ep->Color		= is_err? (IsDarkMode? col_DkIlleg : col_Illegal) : get_WinColor();
+}
+//---------------------------------------------------------------------------
+void set_ErrColor(TMaskEdit *ep, bool is_err)
+{
+	ep->Font->Color = get_TextColor();
+	ep->Color		= is_err? (IsDarkMode? col_DkIlleg : col_Illegal) : get_WinColor();
+}
+
+//---------------------------------------------------------------------------
+void set_ErrColor(TComboBox *cp, bool is_err)
+{
+	cp->Font->Color = get_TextColor();
+	cp->Color		= is_err? (IsDarkMode? col_DkIlleg : col_Illegal) : get_WinColor();
 }
 
 //---------------------------------------------------------------------------
@@ -8107,7 +8038,9 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 //---------------------------------------------------------------------------
 //カラー設定リストの描画
 //---------------------------------------------------------------------------
-void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State, TStringList *col_lst)
+void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State,
+	TStringList *col_lst,
+	bool is_dark)	//ダークモード	(default = false)
 {
 	TCanvas  *cv = lp->Canvas;
 	int yp = Rect.Top + get_TopMargin(cv);
@@ -8116,7 +8049,7 @@ void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState Sta
 	UnicodeString vbuf	  = lp->Items->ValueFromIndex[Index];
 	bool brk = remove_top_s(vbuf, '|');
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), is_dark);
 	cv->FillRect(Rect);
 	cv->TextOut(Rect.Left + 34, yp, vbuf);
 
@@ -9714,6 +9647,8 @@ void set_col_from_ColorList()
 		{&col_bgEdBox,	_T("bgEdBox"),		col_None},
 		{&col_fgEdBox,	_T("fgEdBox"),		col_None},
 		{&col_DkPanel,	_T("DkPanel"),		col_None},
+		{&col_DkInval,	_T("DkInval"),		TColor(RGB(0x60, 0x60, 0x60))},
+		{&col_DkIlleg,	_T("DkIlleg"),		TColor(RGB(0x66, 0x00, 0x00))},
 		{&col_ModalScr,	_T("ModalScr"),		clBlack}
 	};
 
@@ -10319,10 +10254,10 @@ void TabCrTextOut(
 		//文字列
 		int p1 = mts.Item[i].Index;
 		if (p1>p0) {
-			sbuf = s.SubString(p0, p1 - p0);
+			sbuf = alt_yen_to(s.SubString(p0, p1 - p0));
 			cv->Font->Color = fg;
 			int w = get_TextWidth(cv, sbuf, is_irreg);
-			cv->TextRect(Rect(x, y, x + w, yh), x, y, alt_yen_to(sbuf));
+			cv->TextRect(Rect(x, y, x + w, yh), x, y, sbuf);
 			x += w;
 		}
 		//タブ/改行
@@ -10338,10 +10273,10 @@ void TabCrTextOut(
 
 	//文字列
 	if (p0<=slen && (max_x==0 || x<max_x)) {
-		sbuf = s.SubString(p0, slen - p0 + 1);
+		sbuf = alt_yen_to(s.SubString(p0, slen - p0 + 1));
 		cv->Font->Color = fg;
 		int w = get_TextWidth(cv, sbuf, is_irreg);
-		cv->TextRect(Rect(x, y, x + w, yh), x, y, alt_yen_to(sbuf));
+		cv->TextRect(Rect(x, y, x + w, yh), x, y, sbuf);
 		x += w;
 	}
 }
@@ -10914,15 +10849,16 @@ void draw_SortHeader(
 	THeaderControl *hp, THeaderSection *sp,
 	TRect rc,
 	int mk_mode, 		//0:無し/ 1:▲/ -1:▼
-	bool use_syscol)	//システム色を使用		(default = false : 設定色)
+	bool use_syscol,	//システム色を使用		(default = false : 設定色)
+	bool is_dark)		//ダークモード			(default = false)
 {
 	TCanvas *cv = hp->Canvas;
 	cv->Font->Assign(hp->Font);
 	int xp = rc.Left + 4;
 	int yp = rc.Top + get_TopMargin(cv) + 1;
 
-	cv->Brush->Color = use_syscol? scl_BtnFace : col_bgListHdr;
-	cv->Font->Color  = use_syscol? scl_BtnText : col_fgListHdr;
+	cv->Brush->Color = use_syscol? (is_dark? dcl_BtnFace : scl_BtnFace) : col_bgListHdr;
+	cv->Font->Color  = use_syscol? (is_dark? dcl_BtnText : scl_BtnText) : col_fgListHdr;
 
 	//背景
 	cv->FillRect(rc);
@@ -11047,28 +10983,26 @@ void draw_ProgressBar(TCanvas *cv, TRect rc, double r)
 }
 
 //---------------------------------------------------------------------------
-//下部タブの描画
-//※クラシック以外のテーマで下部タブが正しく描画されない不具合の対策
+//タブの描画
+//※下部タブが正しく描画されない現象の対策
 //---------------------------------------------------------------------------
-void draw_BottomTab(TCustomTabControl *Control, int idx, const TRect rc, 
+void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc,
 	bool active,
 	bool dark_sw)	//ダークモード適用	(default = false)
 {
 	TTabControl *tp = (TTabControl*)Control;
 	TCanvas *cv = tp->Canvas;
 	//背景
-	cv->Brush->Color = active? col_bgOptTab :
-					  dark_sw? ((col_DkPanel!=col_None)? col_DkPanel : dcl_BtnFace)
-							 : scl_BtnFace;
+	cv->Brush->Color = active? col_bgOptTab : get_PanelColor();
 	cv->FillRect(rc);
 	//文字
 	UnicodeString titstr = tp->Tabs->Strings[idx];
-	cv->Font->Color = active? col_fgOptTab : dark_sw? dcl_BtnText : scl_BtnText;
+	cv->Font->Color = active? col_fgOptTab : get_LabelColor();
 	cv->Font->Style = active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
-	cv->TextOut(
-		rc.Left + (rc.Width() - cv->TextWidth(titstr))/2,
-		rc.Bottom - cv->TextHeight(titstr) - 4,
-		titstr);
+	TRect tt_rc = rc;
+	tt_rc.Left	= rc.Left + (rc.Width() - cv->TextWidth(titstr))/2;
+	tt_rc.Top	= (tp->TabPosition==tpBottom)? rc.Bottom - cv->TextHeight(titstr) - 4 : rc.Top + (active? 4 : 2);
+	::DrawText(cv->Handle, titstr.c_str(), -1, &tt_rc, DT_LEFT);
 }
 
 //---------------------------------------------------------------------------
@@ -14482,4 +14416,5 @@ UnicodeString get_GitDiffFile2(UnicodeString s)
 	UnicodeString fnam1 = get_GitDiffFiles(s, fnam2);
 	return !fnam2.IsEmpty()? fnam2 : fnam1;
 }
+
 //---------------------------------------------------------------------------

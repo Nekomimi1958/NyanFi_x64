@@ -473,13 +473,13 @@ void __fastcall TFuncListDlg::FilterEditChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::FilterEditEnter(TObject *Sender)
 {
-	if (!IsDarkMode) FilterEdit->Color = scl_Window;
+	FilterEdit->Color = get_WinColor();
 }
 //---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::FilterEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	if (!IsDarkMode) InvColIfEmpty(FilterEdit);
+	InvColIfEmpty(FilterEdit);
 }
 
 //---------------------------------------------------------------------------
@@ -573,11 +573,7 @@ void __fastcall TFuncListDlg::UpdUserDefActionUpdate(TObject *Sender)
 		//正規表現パターンのチェック
 		UnicodeString uwd = UserDefComboBox->Text;
 		bool reg_ng = RegExCheckBox->Checked && !uwd.IsEmpty() && !chk_RegExPtn(uwd);
-		if (IsDarkMode)
-			UserDefComboBox->Font->Color = reg_ng? col_Error : dcl_WindowText;
-		else
-			UserDefComboBox->Color = reg_ng? col_Illegal : scl_Window;
-
+		set_ErrColor(UserDefComboBox, reg_ng);
 		ap->Enabled = RegExCheckBox->Checked? (!uwd.IsEmpty() && !reg_ng) : !uwd.IsEmpty();
 	}
 	else {

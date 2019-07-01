@@ -38,9 +38,20 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall StartActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
+
+	void __fastcall WmFormShowed(TMessage &msg);
 
 public:		// ユーザー宣言
 	__fastcall TDiffDirDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TDiffDirDlg *DiffDirDlg;

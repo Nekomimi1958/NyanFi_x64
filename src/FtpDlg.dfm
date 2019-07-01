@@ -26,8 +26,10 @@ object FtpConnectDlg: TFtpConnectDlg
     Height = 373
     ActivePage = HostSheet
     Align = alClient
+    OwnerDraw = True
     TabOrder = 0
     TabWidth = 100
+    OnDrawTab = PageControl1DrawTab
     object HostSheet: TTabSheet
       Caption = #12507#12473#12488
       object HostPanel: TPanel
@@ -200,7 +202,7 @@ object FtpConnectDlg: TFtpConnectDlg
         end
         object SyncLRCheckBox: TCheckBox
           Left = 264
-          Top = 266
+          Top = 268
           Width = 177
           Height = 17
           Caption = #24038#21491#12487#12451#12524#12463#12488#12522#12398#21516#26399#22793#26356
@@ -385,19 +387,6 @@ object FtpConnectDlg: TFtpConnectDlg
           EditLabel.Caption = #12486#12461#12473#12488#12514#12540#12489#12391#36578#36865#12377#12427#25313#24373#23376
           TabOrder = 2
         end
-        object RemoteRadioGroup: TRadioGroup
-          Left = 12
-          Top = 10
-          Width = 250
-          Height = 52
-          Caption = #12522#12514#12540#12488#20596
-          Columns = 3
-          Items.Strings = (
-            #12459#12524#12531#12488
-            #24038
-            #21491)
-          TabOrder = 0
-        end
         object UpKeepTimeCheckBox: TCheckBox
           Left = 302
           Top = 137
@@ -457,6 +446,38 @@ object FtpConnectDlg: TFtpConnectDlg
           Height = 17
           Caption = #12501#12449#12452#12523#21517#12434#23567#25991#23383#21270#12375#12390#12450#12483#12503#12525#12540#12489#12377#12427
           TabOrder = 5
+        end
+        object RemoteGroupBox: TGroupBox
+          Left = 12
+          Top = 10
+          Width = 250
+          Height = 52
+          Caption = #12522#12514#12540#12488#20596
+          TabOrder = 0
+          object RSide0Btn: TRadioButton
+            Left = 8
+            Top = 22
+            Width = 65
+            Height = 17
+            Caption = #12459#12524#12531#12488
+            TabOrder = 0
+          end
+          object RSide1Btn: TRadioButton
+            Left = 87
+            Top = 22
+            Width = 60
+            Height = 17
+            Caption = #24038
+            TabOrder = 1
+          end
+          object RSide2Btn: TRadioButton
+            Left = 168
+            Top = 22
+            Width = 60
+            Height = 17
+            Caption = #21491
+            TabOrder = 2
+          end
         end
       end
     end

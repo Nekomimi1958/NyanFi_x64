@@ -72,6 +72,9 @@ void __fastcall TToolBtnDlg::FormShow(TObject *Sender)
 		BtnListBoxClick(BtnListBox);
 		CaptionEdit->SetFocus();
 	}
+
+	SetDarkWinTheme(this);
+	BtnListBox->Color = IsDarkMode? dcl_Window : scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TToolBtnDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -212,12 +215,12 @@ void __fastcall TToolBtnDlg::EditFileActionUpdate(TObject *Sender)
 //ˆê——‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-		TOwnerDrawState State)
+	TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas *cv  = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	TColor org_fg = cv->Font->Color;
 	cv->FillRect(Rect);
 

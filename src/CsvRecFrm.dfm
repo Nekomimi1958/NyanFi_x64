@@ -63,18 +63,12 @@ object CsvRecForm: TCsvRecForm
       DesignSize = (
         308
         32)
-      object Label1: TLabel
-        Left = 29
-        Top = 9
-        Width = 82
-        Height = 13
-        Caption = #20808#38957#34892#12364#38917#30446#21517
-      end
       object TopIsHeaderCheckBox: TCheckBox
         Left = 12
         Top = 8
         Width = 130
         Height = 17
+        Caption = #20808#38957#34892#12364#38917#30446#21517
         TabOrder = 0
         OnClick = TopIsHeaderCheckBoxClick
       end

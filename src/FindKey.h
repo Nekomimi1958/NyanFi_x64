@@ -28,6 +28,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CancelBtnClick(TObject *Sender);
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall Shape1MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 
 private:	// ユーザー宣言
 	void __fastcall WmMenuChar(TMessage &msg)

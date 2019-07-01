@@ -24,18 +24,28 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *OppPathCheckBox;
 	TCheckBox *ResLinkCheckBox;
 	TCheckBox *SubDirCheckBox;
+	TComboBox *AlgComboBox;
 	TLabel *Label1;
+	TLabel *Label2;
 	TLabeledEdit *MaxSizeEdit;
-	TRadioGroup *AlgRadioGroup;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall FormCreate(TObject *Sender);
 
 private:	// ユーザー宣言
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
 
 public:		// ユーザー宣言
 	__fastcall TFindDuplDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFindDuplDlg *FindDuplDlg;

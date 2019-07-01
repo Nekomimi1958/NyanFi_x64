@@ -38,14 +38,6 @@ object FuncListDlg: TFuncListDlg
       Alignment = taRightJustify
       Caption = #25991#23383#21015
     end
-    object Label4: TLabel
-      Left = 221
-      Top = 13
-      Width = 63
-      Height = 13
-      Anchors = [akTop, akRight]
-      Caption = #27491#35215#34920#29694'(&R)'
-    end
     object UserDefComboBox: TComboBox
       Left = 66
       Top = 10
@@ -72,6 +64,7 @@ object FuncListDlg: TFuncListDlg
       Height = 17
       Action = RegExAction
       Anchors = [akTop, akRight]
+      Caption = #27491#35215#34920#29694'(&R)'
       TabOrder = 1
     end
     object RegHeaderBtn: TButton
@@ -101,19 +94,13 @@ object FuncListDlg: TFuncListDlg
       BevelOuter = bvNone
       TabOrder = 1
       TabStop = True
-      object Label2: TLabel
-        Left = 19
-        Top = 10
-        Width = 39
-        Height = 13
-        Caption = #21517#21069'(&N)'
-      end
       object NameOnlyCheckBox: TCheckBox
         Left = 2
         Top = 9
         Width = 71
         Height = 17
         Action = NameOnlyAction
+        Caption = #21517#21069'(&N)'
         TabOrder = 0
       end
     end
@@ -129,14 +116,6 @@ object FuncListDlg: TFuncListDlg
       DesignSize = (
         332
         35)
-      object Label1: TLabel
-        Left = 268
-        Top = 10
-        Width = 36
-        Height = 13
-        Anchors = [akTop, akRight]
-        Caption = '&Migemo'
-      end
       object MigemoCheckBox: TCheckBox
         Left = 251
         Top = 9
@@ -144,6 +123,7 @@ object FuncListDlg: TFuncListDlg
         Height = 17
         Action = MigemoAction
         Anchors = [akTop, akRight]
+        Caption = '&Migemo'
         TabOrder = 1
       end
       object FilterEdit: TLabeledEdit
@@ -174,19 +154,13 @@ object FuncListDlg: TFuncListDlg
       BevelOuter = bvNone
       TabOrder = 2
       TabStop = True
-      object Label3: TLabel
-        Left = 19
-        Top = 10
-        Width = 37
-        Height = 13
-        Caption = #36899#21205'(&L)'
-      end
       object LinkCheckBox: TCheckBox
         Left = 2
         Top = 9
         Width = 70
         Height = 17
         Action = LinkAction
+        Caption = #36899#21205'(&L)'
         TabOrder = 0
       end
     end

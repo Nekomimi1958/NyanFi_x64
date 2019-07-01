@@ -51,24 +51,6 @@ object DistributionDlg: TDistributionDlg
       DesignSize = (
         632
         118)
-      object FindDownBtn: TSpeedButton
-        Left = 578
-        Top = 90
-        Width = 23
-        Height = 22
-        Hint = #19979#26041#21521#12395#26908#32034
-        Action = FindDownAction
-        Anchors = [akRight, akBottom]
-      end
-      object FindUpBtn: TSpeedButton
-        Left = 603
-        Top = 90
-        Width = 23
-        Height = 22
-        Hint = #19978#26041#21521#12395#26908#32034
-        Action = FindUpAction
-        Anchors = [akRight, akBottom]
-      end
       object CheckBtn: TButton
         Left = 4
         Top = 4
@@ -176,8 +158,8 @@ object DistributionDlg: TDistributionDlg
       end
       object FindEdit: TLabeledEdit
         Left = 295
-        Top = 91
-        Width = 280
+        Top = 89
+        Width = 277
         Height = 21
         Anchors = [akLeft, akRight, akBottom]
         EditLabel.Width = 24
@@ -198,6 +180,24 @@ object DistributionDlg: TDistributionDlg
         Caption = '...'
         TabOrder = 3
         OnClick = RefListBtnClick
+      end
+      object Button1: TButton
+        Left = 574
+        Top = 88
+        Width = 25
+        Height = 24
+        Action = FindDownAction
+        Anchors = [akTop, akRight]
+        TabOrder = 12
+      end
+      object FindUpBtn: TButton
+        Left = 601
+        Top = 88
+        Width = 25
+        Height = 24
+        Action = FindUpAction
+        Anchors = [akTop, akRight]
+        TabOrder = 13
       end
     end
     object ExePanel: TPanel
@@ -375,17 +375,22 @@ object DistributionDlg: TDistributionDlg
     Height = 20
     Panels = <
       item
+        Style = psOwnerDraw
         Width = 120
       end
       item
+        Style = psOwnerDraw
         Width = 300
       end
       item
+        Style = psOwnerDraw
         Width = 120
       end
       item
+        Style = psOwnerDraw
         Width = 50
       end>
+    OnDrawPanel = StatusBar1DrawPanel
   end
   object HiddenCanBtn: TButton
     Left = 0
@@ -427,10 +432,12 @@ object DistributionDlg: TDistributionDlg
       OnUpdate = ChgRegActionUpdate
     end
     object FindDownAction: TAction
+      Caption = #9660
       OnExecute = FindDownActionExecute
       OnUpdate = FindDownActionUpdate
     end
     object FindUpAction: TAction
+      Caption = #9650
       OnExecute = FindUpActionExecute
       OnUpdate = FindUpActionUpdate
     end

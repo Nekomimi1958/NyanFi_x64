@@ -60,10 +60,6 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 {
 	setup_ToolBar(OpeToolBar);
 	FilterEdit->Width = IniFile->ReadIntGen(_T("GenInfoFilterWidth"),	200);
-	if (IsDarkMode)
-		SetDarkWinTheme(FilterEdit);
-	else
-		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
 
 	RetStr = EmptyStr;
 	GenSelList->Clear();
@@ -147,8 +143,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 
 	lp->Color = isLog? col_bgLog : col_bgList;
 	ListPanel->Color = lp->Color;
-	lp->Font->Assign(GenListFont);
-	set_ListBoxItemHi(lp);
+	set_ListBoxItemHi(lp, GenListFont);
 	lp->TabWidth = get_ViewTabWidth(get_extension(FileName));	//タブ幅(描画のために流用)
 	set_UsrScrPanel(ListScrPanel);
 
@@ -225,6 +220,9 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	set_SttBarPanelWidth(StatusBar1, 1, 17);	//"UTF-16(BE) BOM付 ";
 	set_SttBarPanelWidth(StatusBar1, 2,  5);	//"CR/LF";
 	SetStatusBar();
+
+	SetDarkWinTheme(FilterEdit);
+	FilterEdit->Color = get_WinColor(!ToFilter);
 
 	if (!ErrMsg.IsEmpty()) {
 		msgbox_ERR(ErrMsg);
@@ -624,13 +622,13 @@ void __fastcall TGeneralInfoDlg::FilterEditKeyPress(TObject *Sender, System::Wid
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterEditEnter(TObject *Sender)
 {
-	if (!IsDarkMode) FilterEdit->Color = scl_Window;
+	FilterEdit->Color = get_WinColor();
 }
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	if (!IsDarkMode) InvColIfEmpty(FilterEdit);
+	InvColIfEmpty(FilterEdit);
 }
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterBtnClick(TObject *Sender)

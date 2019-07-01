@@ -1,6 +1,7 @@
 object FindKeyDlg: TFindKeyDlg
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu]
   Caption = #12461#12540#26908#32034
   ClientHeight = 122
   ClientWidth = 270
@@ -25,7 +26,7 @@ object FindKeyDlg: TFindKeyDlg
   end
   object CancelBtn: TSpeedButton
     Left = 95
-    Top = 92
+    Top = 88
     Width = 80
     Height = 24
     Caption = #12461#12515#12531#12475#12523
@@ -35,7 +36,7 @@ object FindKeyDlg: TFindKeyDlg
     Left = 8
     Top = 41
     Width = 254
-    Height = 13
+    Height = 20
     Alignment = taCenter
     AutoSize = False
   end

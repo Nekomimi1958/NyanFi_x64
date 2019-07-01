@@ -49,10 +49,10 @@ void __fastcall TBitmapForm::FormShow(TObject *Sender)
 	set_BtnMarkDark(NxtButton, UBMK_VDOWN);
 	set_BtnMarkDark(EndButton, UBMK_VEND);
 
+	SetDarkWinTheme(this);
+
 	BorderPanel->Color = IsDarkMode? dcl_Window : clAppWorkSpace;
 	MapScrBox->Color   = BorderPanel->Color;
-	SetDarkWinTheme(MapScrBox);
-	SetDarkWinTheme(FileMapPanel);
 
 	SttPanel->Color = col_bgSttBar;
 	SttPanel->Font->Assign(ViewerFont);

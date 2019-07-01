@@ -3,7 +3,7 @@ object PackArcDlg: TPackArcDlg
   Top = 0
   BorderStyle = bsDialog
   Caption = #12450#12540#12459#12452#12502#12398#20316#25104
-  ClientHeight = 373
+  ClientHeight = 395
   ClientWidth = 444
   Color = clBtnFace
   ParentFont = True
@@ -16,7 +16,7 @@ object PackArcDlg: TPackArcDlg
   OnShow = FormShow
   DesignSize = (
     444
-    373)
+    395)
   PixelsPerInch = 96
   TextHeight = 13
   object FextLabel: TLabel
@@ -28,7 +28,7 @@ object PackArcDlg: TPackArcDlg
   end
   object OkButton: TButton
     Left = 134
-    Top = 340
+    Top = 359
     Width = 80
     Height = 26
     Caption = 'OK'
@@ -51,7 +51,7 @@ object PackArcDlg: TPackArcDlg
   end
   object CanButton: TButton
     Left = 230
-    Top = 340
+    Top = 359
     Width = 80
     Height = 26
     Cancel = True
@@ -63,7 +63,7 @@ object PackArcDlg: TPackArcDlg
     Left = 8
     Top = 74
     Width = 428
-    Height = 42
+    Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #12501#12457#12540#12510#12483#12488'(&F)'
     Columns = 5
@@ -77,9 +77,9 @@ object PackArcDlg: TPackArcDlg
     TabOrder = 3
     OnClick = FormatRadioGroupClick
   end
-  object GroupBox1: TGroupBox
+  object OptionGroupBox: TGroupBox
     Left = 8
-    Top = 128
+    Top = 134
     Width = 428
     Height = 143
     Anchors = [akLeft, akTop, akRight]
@@ -164,9 +164,9 @@ object PackArcDlg: TPackArcDlg
   end
   object SameRadioGroup: TRadioGroup
     Left = 8
-    Top = 283
+    Top = 289
     Width = 428
-    Height = 42
+    Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #21516#21517#12450#12540#12459#12452#12502#12364#12354#12427#22580#21512#12398#20966#29702
     Columns = 3
@@ -179,9 +179,9 @@ object PackArcDlg: TPackArcDlg
   end
   object SureSameCheckBox: TCheckBox
     Left = 346
-    Top = 300
+    Top = 307
     Width = 77
-    Height = 17
+    Height = 21
     Caption = #30906#35469
     TabOrder = 6
   end

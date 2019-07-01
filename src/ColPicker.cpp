@@ -73,8 +73,6 @@ void __fastcall TColorPicker::FormShow(TObject *Sender)
 	if (ViewImage) ViewImage->Cursor = UserModule->crSpuitTool;
 
 	SetDarkWinTheme(this);
-	SetDarkWinTheme(RepCntEdit);
-	SetDarkWinTheme(ColEdit);
 }
 //---------------------------------------------------------------------------
 void __fastcall TColorPicker::FormClose(TObject *Sender, TCloseAction &Action)
@@ -119,7 +117,7 @@ void __fastcall TColorPicker::UpdateStt(int x, int y, float ratio)
 		cv->Brush->Color  = col_bgImage;
 		cv->FillRect(Rect(0, 0, c_size*3, c_size*3));
 		Col2Panel->Color  = col_bgImage;
-		if (!IsDarkMode) ColEdit->Color = col_Invalid;
+		ColEdit->Color	  = IsDarkMode? col_DkInval : col_Invalid;
 		ColEdit->Text	  = EmptyStr;
 	}
 	else {
@@ -220,7 +218,7 @@ void __fastcall TColorPicker::UpdateStt(int x, int y, float ratio)
 			}
 		}
 
-		if (!IsDarkMode) ColEdit->Color = is_bmp? col_Invalid : scl_Window;
+		set_ErrColor(ColEdit, is_bmp);
 		ColEdit->Text = colstr;
 	}
 }

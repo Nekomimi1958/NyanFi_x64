@@ -32,51 +32,6 @@
 #pragma package(smart_init)
 
 //---------------------------------------------------------------------------
-//システム色
-TColor scl_Window;
-TColor scl_WindowText;
-TColor scl_Highlight;
-TColor scl_HighlightText;
-TColor scl_BtnFace;
-TColor scl_BtnText;
-TColor scl_Menu;
-TColor scl_MenuText;
-
-//ダーク色
-TColor dcl_Window;
-TColor dcl_WindowText;
-TColor dcl_Highlight;
-TColor dcl_HighlightText;
-TColor dcl_BtnFace;
-TColor dcl_BtnText;
-TColor dcl_Menu;
-TColor dcl_MenuText;
-
-//---------------------------------------------------------------------------
-//システム色の初期化
-//---------------------------------------------------------------------------
-void InitializeSysColor()
-{
-	scl_Window		  = clWindow;
-	scl_WindowText	  = clWindowText;
-	scl_Highlight	  = clHighlight;
-	scl_HighlightText = clHighlightText;
-	scl_BtnFace		  = clBtnFace;
-	scl_BtnText		  = clBtnText;
-	scl_Menu		  = clMenu;
-	scl_MenuText	  = clMenuText;
-
-	dcl_Window		  = TColor(RGB(0x20, 0x20, 0x20));
-	dcl_WindowText	  = clWhite;
-	dcl_Highlight	  = TColor(RGB(0x41, 0x41, 0x41));
-	dcl_HighlightText = clWhite;
-	dcl_BtnFace 	  = TColor(RGB(0x33, 0x33, 0x33));
-	dcl_BtnText 	  = clWhite;
-	dcl_Menu		  = TColor(RGB(0x2b, 0x2b, 0x2b));
-	dcl_MenuText	  = clWhite;
-}
-
-//---------------------------------------------------------------------------
 //ハイコントラストか?
 //---------------------------------------------------------------------------
 bool is_HighContrast()
@@ -583,103 +538,6 @@ void draw_SortMark(TCanvas *cv, int x, int y,
 }
 
 //---------------------------------------------------------------------------
-//ボタンにマークを設定
-//---------------------------------------------------------------------------
-void set_ButtonMark(TSpeedButton *bp,
-	int id,		//識別子	(default = UBMK_DOWN)
-	TColor fg,	//前景色	(default = col_BtnText)
-	TColor bg)	//背景色	(default = col_BtnFace)
-{
-	int size;
-	switch (id) {
-	case UBMK_HTOP: case UBMK_HEND: case UBMK_LEFT: case UBMK_RIGHT:
-		size = 16;	break;
-	default:
-		size = 9;
-	}
-
-	Graphics::TBitmap *bmp = bp->Glyph;
-	TCanvas *cv = bmp->Canvas;
-	bmp->SetSize(size, size);
-	bmp->Transparent = true;
-	cv->Brush->Color = bg;
-	cv->FillRect(TRect(0, 0, size, size));
-	cv->Pen->Style = psSolid;
-	cv->Pen->Color = fg;
-
-	switch (id) {
-	case UBMK_UP:
-		draw_SortMark(cv, 0, 2, true,  fg);	break;
-	case UBMK_DOWN:
-		draw_SortMark(cv, 0, 2, false, fg);	break;
-
-	case UBMK_BUP:
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 5);  cv->LineTo(4, 2);
-		cv->MoveTo(7, 5);  cv->LineTo(4, 2);
-		break;
-	case UBMK_BDOWN:
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 2);  cv->LineTo(4, 5);
-		cv->MoveTo(7, 2);  cv->LineTo(4, 5);
-		break;
-
-	case UBMK_VUP:
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 7);  cv->LineTo(4, 4);
-		cv->MoveTo(7, 7);  cv->LineTo(4, 4);
-		break;
-	case UBMK_VDOWN:
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 2);  cv->LineTo(4, 5);
-		cv->MoveTo(7, 2);  cv->LineTo(4, 5);
-		break;
-
-	case UBMK_VTOP:
-		cv->Pen->Width = 1;
-		cv->MoveTo(0, 2);  cv->LineTo(9, 2);
-		cv->MoveTo(0, 3);  cv->LineTo(9, 3);
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 7);  cv->LineTo(4, 4);
-		cv->MoveTo(7, 7);  cv->LineTo(4, 4);
-		break;
-	case UBMK_VEND:
-		cv->Pen->Width = 1;
-		cv->MoveTo(0, 7);  cv->LineTo(9, 7);
-		cv->MoveTo(0, 6);  cv->LineTo(9, 6);
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 2);  cv->LineTo(4, 5);
-		cv->MoveTo(7, 2);  cv->LineTo(4, 5);
-		break;
-
-	case UBMK_HTOP:
-		cv->Pen->Width = 1;
-		cv->MoveTo(4, 1);  cv->LineTo( 4, 14);
-		cv->Pen->Width = 2;
-		cv->MoveTo(6, 7);  cv->LineTo(11,  2);
-		cv->MoveTo(6, 7);  cv->LineTo(11, 12);
-		break;
-	case UBMK_HEND:
-		cv->Pen->Width = 1;
-		cv->MoveTo(11, 1);  cv->LineTo(11, 14);
-		cv->Pen->Width = 2;
-		cv->MoveTo(9, 7);  cv->LineTo(4,  2);
-		cv->MoveTo(9, 7);  cv->LineTo(4, 12);
-		break;
-	case UBMK_LEFT:
-		cv->Pen->Width = 2;
-		cv->MoveTo(6, 7);  cv->LineTo(11,  2);
-		cv->MoveTo(6, 7);  cv->LineTo(11, 12);
-		break;
-	case UBMK_RIGHT:
-		cv->Pen->Width = 2;
-		cv->MoveTo(9, 7);  cv->LineTo(4,  2);
-		cv->MoveTo(9, 7);  cv->LineTo(4, 12);
-		break;
-	}
-}
-
-//---------------------------------------------------------------------------
 //縮小比率を取得
 //---------------------------------------------------------------------------
 double get_ZoomRatio(int vw, int vh, int iw, int ih, int mgn, double limit)
@@ -866,15 +724,6 @@ void str_to_Color(TColor &col, UnicodeString s)
 {
 	TColor c = (TColor)s.ToIntDef((int)clNone);
 	if (c!=clNone) col = c;
-}
-
-//---------------------------------------------------------------------------
-//ハイライト色の設定
-//---------------------------------------------------------------------------
-void SetHighlight(TCanvas *cv, bool hl)
-{
-	cv->Brush->Color = hl? scl_Highlight : scl_Window;
-	cv->Font->Color  = hl? scl_HighlightText : scl_WindowText;
 }
 
 //---------------------------------------------------------------------------

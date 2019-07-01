@@ -39,6 +39,8 @@ void __fastcall TMaskSelectDlg::FormShow(TObject *Sender)
 	MaskSelComboBox->Tag  = CBTAG_HISTORY | (!IsMask? CBTAG_RGEX_V|CBTAG_RGEX_E : 0);
 	MaskSelComboBox->Hint = IsMask? "; で区切って複数指定可能" : "; で区切って複数指定可能、/～/ は正規表現";
 	MaskSelComboBox->SetFocus();
+
+	SetDarkWinTheme(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TMaskSelectDlg::FormClose(TObject *Sender, TCloseAction &Action)

@@ -41,10 +41,6 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *NameOnlyCheckBox;
 	TCheckBox *RegExCheckBox;
 	TComboBox *UserDefComboBox;
-	TLabel *Label1;
-	TLabel *Label2;
-	TLabel *Label3;
-	TLabel *Label4;
 	TLabel *UsrStrLabel;
 	TLabeledEdit *FilterEdit;
 	TListBox *FuncListBox;

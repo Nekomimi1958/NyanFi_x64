@@ -60,6 +60,8 @@ void __fastcall TInpCmdsDlg::FormShow(TObject *Sender)
 	IsRef		= toCopy || toRefer;
 	SetList();
 
+	SetDarkWinTheme(this);
+
 	CmdsComboBox->AutoComplete = false;
 	SubComboBox->AutoComplete  = false;
 	SubComboBox->Enabled	   = false;
@@ -159,7 +161,7 @@ void __fastcall TInpCmdsDlg::ModeTabControlChange(TObject *Sender)
 void __fastcall TInpCmdsDlg::ModeTabControlDrawTab(TCustomTabControl *Control, int TabIndex,
 	const TRect &Rect, bool Active)
 {
-	draw_BottomTab(Control, TabIndex, Rect, Active);
+	draw_OwnerTab(Control, TabIndex, Rect, Active, IsDarkMode);
 }
 
 //---------------------------------------------------------------------------
@@ -427,7 +429,11 @@ void __fastcall TInpCmdsDlg::Filter()
 //---------------------------------------------------------------------------
 void __fastcall TInpCmdsDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if (SpecialKeyProc(this, Key, Shift)) {
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Alt+M")) {
+		invert_CheckBox(MigemoCheckBox);
+	}
+	else if (SpecialKeyProc(this, Key, Shift)) {
 		CmdsComboBox->DroppedDown = false;
 		SubComboBox->DroppedDown  = false;
 	}

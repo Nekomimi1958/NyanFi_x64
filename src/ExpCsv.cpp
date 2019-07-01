@@ -28,6 +28,8 @@ void __fastcall TExpCsvDlg::FormShow(TObject *Sender)
 
 	QuotCheckBox->Checked = IniFile->ReadBoolGen(_T("ExpCsvDlgQuot"),	true);
 
+	set_ListBoxItemHi(SrcListBox);
+	set_ListBoxItemHi(DstListBox);
 	UserModule->InitializeListBox(DstListBox);
 
 	SrcListBox->Clear();
@@ -48,6 +50,10 @@ void __fastcall TExpCsvDlg::FormShow(TObject *Sender)
 	}
 
 	if (isTSV) TsvRadioBtn->Checked = true; else CsvRadioBtn->Checked = true;
+
+	SetDarkWinTheme(this);
+	SrcListBox->Color  = IsDarkMode? dcl_Window : scl_Window;
+	DstListBox->Color = IsDarkMode? dcl_Window : scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TExpCsvDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -66,6 +72,18 @@ void __fastcall TExpCsvDlg::FormResize(TObject *Sender)
 	SrcListBox->Width = (ClientWidth - MidPanel->Width) /2;
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TExpCsvDlg::ItemListBoxDrawItem(TWinControl *Control, int Index,
+	TRect &Rect, TOwnerDrawState State)
+{
+	TListBox *lp = (TListBox*)Control;
+	TCanvas  *cv = lp->Canvas;
+
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	cv->FillRect(Rect);
+	cv->Font->Color = get_TextColor(State.Contains(odSelected));
+	cv->TextOut(Rect.Left + Scaled4, Rect.Top  + get_TopMargin(cv), lp->Items->Strings[Index]);
+}
 //---------------------------------------------------------------------------
 //çÄñ⁄ÇÃí«â¡
 //---------------------------------------------------------------------------

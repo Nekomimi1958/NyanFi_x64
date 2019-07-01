@@ -23,6 +23,11 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *AllCheckBox;
 	TEdit *RenameEdit;
 	TGroupBox *ModeGroupBox;
+	TLabel *Mode0Label;
+	TLabel *Mode1Label;
+	TLabel *Mode2Label;
+	TLabel *Mode3Label;
+	TLabel *Mode4Label;
 	TListBox *InfoListBox;
 	TPanel *InfoPanel;
 	TRadioButton *Mode0Btn;
@@ -44,6 +49,13 @@ __published:	// IDE で管理されるコンポーネント
 private:	// ユーザー宣言
 	bool InhAllChk;
 
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
+
+	void __fastcall UpdateBtnLabel();
+
 public:		// ユーザー宣言
 	bool CopyAll;
 	int  CopyMode;
@@ -58,6 +70,10 @@ public:		// ユーザー宣言
 	TDateTime CurDstTime;
 
 	__fastcall TSameNameDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TSameNameDlg *SameNameDlg;

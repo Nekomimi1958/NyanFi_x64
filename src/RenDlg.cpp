@@ -29,6 +29,9 @@ __fastcall TRenameDlg::TRenameDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::FormCreate(TObject *Sender)
 {
+	org_SttBar1WndProc	   = StatusBar1->WindowProc;
+	StatusBar1->WindowProc = SttBar1WndProc;
+
 	UserModule->SetUsrPopupMenu(this);
 
 	SrcStrComboBox->Tag  = CBTAG_HISTORY;
@@ -64,8 +67,10 @@ void __fastcall TRenameDlg::FormCreate(TObject *Sender)
 	CurNameList   = new TStringList();
 	RepRenList	  = new TStringList();
 
-	EditedList = false;
-	IsMulti    = false;
+	EditedList	 = false;
+	IsMulti 	 = false;
+	LastEdit	 = NULL;
+	LastSelStart = LastSelLength = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -169,7 +174,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 
 	//タイムスタンプの初期化
 	TimeMaskEdit->Text = format_DateTime(get_file_age(ItemList->Strings[0]));
-	TimeMaskEdit->Font->Color = scl_WindowText;
+	TimeMaskEdit->Font->Color = get_TextColor();
 
 	//リスト
 	Case2CheckBox->Enabled	   = !EditedList;
@@ -195,17 +200,10 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 		SerialSheet->TabVisible 	= false;
 		ReplaceSheet->TabVisible	= !EditedList;
 		RenListSheet->TabVisible	= true;
-		Mp3Sheet->Caption			= isFlac? "FLAC(&F)" : "MP3(&M)";
+		Mp3Sheet->Caption			= isFlac? "&FLAC" : "MP&3";
 		Mp3Sheet->TabVisible		= isMp3 || isFlac;
 		mp3fextLabel->Caption		= cmnFext;
 		NamePageControl->ActivePage = EditedList? RenListSheet : NameSheet;
-
-		ReadOnlyPanel->Color = scl_BtnFace;
-		HiddenPanel->Color	 = scl_BtnFace;
-		SysPanel->Color 	 = scl_BtnFace;
-		ArcPanel->Color 	 = scl_BtnFace;
-		CmpPanel->Color 	 = scl_BtnFace;
-		TimeMaskEdit->Color  = scl_Window;
 	}
 	//---------------------------
 	//複数
@@ -241,13 +239,6 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 				(EditedList || USAME_TI(lastSheet, "RenList"))? RenListSheet :
 							   USAME_TI(lastSheet, "Replace") ? ReplaceSheet : SerialSheet;
 		}
-
-		ReadOnlyPanel->Color = col_Invalid;
-		HiddenPanel->Color	 = col_Invalid;
-		SysPanel->Color 	 = col_Invalid;
-		ArcPanel->Color 	 = col_Invalid;
-		CmpPanel->Color 	 = col_Invalid;
-		TimeMaskEdit->Color  = col_Invalid;
 	}
 
 	//ファイルを含む場合、拡張子の設定を有効に
@@ -265,6 +256,19 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	CommonPanel->Enabled	 = true;
 	OkButton->Enabled		 = true;
 	CanButton->Enabled		 = true;
+
+	SetDarkWinTheme(this);
+
+	TColor bg_p = IsMulti? get_WinColor(true) : get_PanelColor();
+	ReadOnlyPanel->Color = bg_p;
+	HiddenPanel->Color	 = bg_p;
+	SysPanel->Color 	 = bg_p;
+	ArcPanel->Color 	 = bg_p;
+	CmpPanel->Color 	 = bg_p;
+	TimeMaskEdit->Color  = get_WinColor(!IsMulti);
+
+	AssRenListBox->Color  = get_WinColor();
+	CnvCharListBox->Color = get_WinColor();
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
@@ -371,15 +375,19 @@ void __fastcall TRenameDlg::Opt2MainPanelResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TRenameDlg::RenPageControlDrawTab(TCustomTabControl *Control,
+	int TabIndex, const TRect &Rect, bool Active)
+{
+	draw_OwnerTab(Control, TabIndex, Rect, Active, IsDarkMode);
+}
+//---------------------------------------------------------------------------
 void __fastcall TRenameDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
 	const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
-	cv->Brush->Color = StatusBar->Color;
+	cv->Brush->Color = IsDarkMode? col_bgSttBar : scl_BtnFace;
 	cv->FillRect(Rect);
-
-	cv->Font->Assign(StatusBar->Font);
-	cv->Font->Color = (ExistErr && Panel->Index==0)? col_Error : scl_WindowText;
+	cv->Font->Color = (ExistErr && Panel->Index==0)? col_Error : IsDarkMode? col_fgSttBar : scl_BtnText;
 	cv->TextOut(Rect.Left + 2, Rect.Top, Panel->Text);
 }
 
@@ -388,9 +396,11 @@ void __fastcall TRenameDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPa
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 {
+	TColor bg_inv = get_WinColor(true);
+
 	if (!IsOptionSheet()) {
 		TStringGrid *gp = PreviewGrid;
-		gp->Color = col_Invalid;
+		gp->Color = bg_inv;
 		gp->DefaultRowHeight   = get_FontHeight(gp->Font, 4);
 		NameComPanel->Parent   = NamePageControl->ActivePage;
 		PathInfMLabel->Caption = EmptyStr;
@@ -457,12 +467,12 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 	//連番
 	else if (IsSerialSheet()) {
 		PreNameEdit->Text	= EmptyStr;
-		PreNameEdit->Color	= col_Invalid;
-		SerNoEdit->Color	= col_Invalid;
-		IncNoEdit->Color	= col_Invalid;
+		PreNameEdit->Color	= bg_inv;
+		SerNoEdit->Color	= bg_inv;
+		IncNoEdit->Color	= bg_inv;
 		PostNameEdit->Text  = EmptyStr;
-		PostNameEdit->Color = col_Invalid;
-		ExtEdit->Color		= col_Invalid;
+		PostNameEdit->Color = bg_inv;
+		ExtEdit->Color		= bg_inv;
 		NameChanged = FExtChanged = false;
 		PreNameEdit->SetFocus();
 		SerFmtComboBox->ItemIndex = -1;
@@ -491,7 +501,7 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 	TStringGrid *gp = PreviewGrid;
 	set_RedrawOff(gp);
 	for (int i=0; i<gp->RowCount; i++) clear_GridRow(gp, i);
-	gp->Color = col_Invalid;
+	gp->Color = bg_inv;
 	set_RedrawOn(gp);
 
 	if (IsOptionSheet()) {
@@ -512,27 +522,31 @@ void __fastcall TRenameDlg::RenameEditExit(TObject *Sender)
 	TEdit *ep = (TEdit*)Sender;
 	switch (ep->Tag) {
 	case 10: case 13:	//前後
-		ep->Color = NameChanged? scl_Window : col_Invalid;
+		ep->Color = get_WinColor(!NameChanged);
 		break;
 	case 11: case 12:	//連番
-		ep->Color = (NameChanged && !SerNoEdit->Text.IsEmpty())? scl_Window : col_Invalid;
+		ep->Color = get_WinColor(!NameChanged || SerNoEdit->Text.IsEmpty());
 		break;
 	case 14:			//拡張子
-		ep->Color = FExtChanged? scl_Window : col_Invalid;
+		ep->Color = get_WinColor(!FExtChanged);
 		break;
 	}
+
+	LastEdit	  = ep;
+	LastSelStart  = ep->SelStart;
+	LastSelLength = ep->SelLength;
 }
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::SrcStrComboBoxEnter(TObject *Sender)
 {
-	((TComboBox*)Sender)->Color = scl_Window;
+	((TComboBox*)Sender)->Color = get_WinColor();
 	UpdateActions();
 }
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::SrcStrComboBoxExit(TObject *Sender)
 {
 	TComboBox *bp = (TComboBox*)Sender;
-	bp->Color = bp->Text.IsEmpty()? col_Invalid : scl_Window;
+	bp->Color = get_WinColor(bp->Text.IsEmpty());
 }
 
 //---------------------------------------------------------------------------
@@ -594,7 +608,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 		swd = SrcStrComboBox->Text;
 		rwd = RepStrComboBox->Text;
 		if (!RegExCheckBox->Checked) swd = TRegEx::Escape(swd);
-		RepStrComboBox->Color = swd.IsEmpty()? col_Invalid : scl_Window;
+		RepStrComboBox->Color = get_WinColor(swd.IsEmpty());
 		if (CaseCheckBox->Checked)  opt << roIgnoreCase;
 		only_base = OnlyBaseCheckBox->Checked;
 	}
@@ -901,7 +915,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	}
 
 	ExistErr = (err_cnt>0);
-	RenameEdit->Font->Color = (!IsMulti && ExistErr)? col_Error : scl_WindowText;
+	RenameEdit->Font->Color = (!IsMulti && ExistErr)? col_Error : get_TextColor();
 	if (ExistErr) {
 		gp->Row = err_row;
 		StatusBar1->Panels->Items[0]->Text = "設定に問題があります。";
@@ -911,12 +925,13 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 		StatusBar1->Panels->Items[0]->Text = EmptyStr;
 	}
 
-	gp->Color = (ChangeCount>0)? scl_Window : col_Invalid;
+	gp->Color = get_WinColor(ChangeCount==0);
 	set_RedrawOn(gp);
 
 	//文字数情報の表示
-	PathInfMLabel->Font->Color = (max_plen<MAX_PATH)? scl_WindowText : col_Error;
-	NameInfMLabel->Font->Color = (max_flen<256)? scl_WindowText : col_Error;
+	PathInfMLabel->Font->Color = (max_plen>=MAX_PATH)? col_Error : get_TextColor();
+	NameInfMLabel->Font->Color =	  (max_flen>=256)? col_Error : get_TextColor();
+
 	UnicodeString msg;
 	if (ItemList->Count>1) {
 		PathInfMLabel->Caption = msg.sprintf(_T("フルパス名の最大文字数 = %u"), max_plen);
@@ -965,14 +980,14 @@ void __fastcall TRenameDlg::RenameEditChange(TObject *Sender)
 	switch (((TComponent*)Sender)->Tag) {
 	case 10: case 11: case 12: case 13:
 		NameChanged = true;
-		PreNameEdit->Color	= scl_Window;
+		PreNameEdit->Color	= get_WinColor();
 		InvColIfEmpty(SerNoEdit);
 		IncNoEdit->Color	= SerNoEdit->Color;
-		PostNameEdit->Color = scl_Window;
+		PostNameEdit->Color = get_WinColor();
 		break;
 	case 14:
 		FExtChanged    = true;
-		ExtEdit->Color = scl_Window;
+		ExtEdit->Color = get_WinColor();
 		break;
 	}
 
@@ -1013,7 +1028,7 @@ void __fastcall TRenameDlg::ReplaceComboChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::Mp3FmtComboBoxChange(TObject *Sender)
 {
-	Mp3FmtComboBox->Color = Mp3FmtComboBox->Text.IsEmpty()? col_Invalid : scl_Window;
+	Mp3FmtComboBox->Color = get_WinColor(Mp3FmtComboBox->Text.IsEmpty());
 	if (Sender) UpdatePreview();
 }
 //---------------------------------------------------------------------------
@@ -1044,7 +1059,7 @@ void __fastcall TRenameDlg::AttrCheckBoxClick(TObject *Sender)
 	AttrChanged = true;
 
 	TPanel *pp = dynamic_cast<TPanel *>(cp->Parent);
-	if (pp) pp->Color = scl_BtnFace;
+	if (pp) pp->Color = get_PanelColor();
 }
 
 //---------------------------------------------------------------------------
@@ -1055,7 +1070,7 @@ void __fastcall TRenameDlg::TimeMaskEditChange(TObject *Sender)
 	if (!DlgInitialized) return;
 
 	TMaskEdit *ep = (TMaskEdit*)Sender;
-	ep->Color = ep->EditText.Pos('_')? col_Illegal : scl_Window;
+	ep->Color = get_WinColor(ep->EditText.Pos('_'));
 	TimeChanged = true;
 }
 
@@ -1063,7 +1078,7 @@ void __fastcall TRenameDlg::TimeMaskEditChange(TObject *Sender)
 void __fastcall TRenameDlg::ChangeTime(TDateTime dt)
 {
 	TimeMaskEdit->Text	= format_DateTime(dt);
-	TimeMaskEdit->Color = scl_Window;
+	TimeMaskEdit->Color = get_WinColor();
 	TimeChanged = true;
 }
 
@@ -1125,6 +1140,12 @@ void __fastcall TRenameDlg::set_FmtEdit(const _TCHAR *s)
 {
 	UnicodeString sbuf = UnicodeString(s);
 
+	if (LastEdit) {
+		LastEdit->SetFocus();
+		LastEdit->SelStart	= LastSelStart;
+		LastEdit->SelLength = LastSelLength;
+	}
+
 	if (PreNameEdit->Focused()) {
 		PreNameEdit->SetSelTextBuf(sbuf.c_str());
 	}
@@ -1155,7 +1176,7 @@ void __fastcall TRenameDlg::Fmt_L_BtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //ファイル名のm番目からn文字
 //---------------------------------------------------------------------------
-void __fastcall TRenameDlg::Fmt_S_BtnClick(TObject *Sender)
+void __fastcall TRenameDlg::Fmt_S_Btn2Click(TObject *Sender)
 {
 	UnicodeString tmp;
 	if (input_query_ex(USTR_InputFmtStr, _T("ファイル名主部からの取得開始位置"), &tmp, 0, true)) {
@@ -1254,10 +1275,10 @@ void __fastcall TRenameDlg::SerFmtComboBoxClick(TObject *Sender)
 			IncNoEdit->Text    = itm_buf[2];
 			PostNameEdit->Text = itm_buf[3];
 			NameChanged = true;
-			PreNameEdit->Color	= scl_Window;
+			PreNameEdit->Color	= get_WinColor();
 			InvColIfEmpty(SerNoEdit);
 			IncNoEdit->Color	= SerNoEdit->Color;
-			PostNameEdit->Color = scl_Window;
+			PostNameEdit->Color = get_WinColor();
 			//拡張子
 			if (itm_buf.Length==5 && ExtEdit->Enabled) {
 				ExtEdit->Text = itm_buf[4];
@@ -1267,7 +1288,7 @@ void __fastcall TRenameDlg::SerFmtComboBoxClick(TObject *Sender)
 				ExtEdit->Text = get_tkn_r(get_extension_if_file(ItemList->Strings[0]), '.');
 				FExtChanged   = false;
 			}
-			ExtEdit->Color = FExtChanged? scl_Window : col_Invalid;
+			ExtEdit->Color = get_WinColor(!FExtChanged);
 
 			UpdatePreview();
 		}
@@ -1342,7 +1363,7 @@ void __fastcall TRenameDlg::PreviewGridDrawCell(TObject *Sender, int ACol, int A
 	TCanvas *cv = gp->Canvas;
 	cv->Font->Assign(gp->Font);
 	cv->Brush->Color = gp->Color;
-	cv->Font->Color  = scl_WindowText;
+	cv->Font->Color  = get_TextColor();
 
 	UnicodeString cell_str = gp->Cells[ACol][ARow];
 	UnicodeString rel_str  = gp->Cells[1][ARow];
@@ -1400,14 +1421,17 @@ void __fastcall TRenameDlg::CnvCharListBoxDrawItem(TWinControl *Control, int Ind
 	int x = Rect.Left + Scaled4;
 	int y = Rect.Top  + get_TopMargin(cv);
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 
-	if (!State.Contains(odSelected)) cv->Brush->Color = (Index<9)? scl_BtnFace : scl_Window;
+	if (!State.Contains(odSelected)) {
+		cv->Brush->Color = (Index<9)? get_PanelColor() : get_WinColor();
+	}
+
 	UnicodeString tmp;
 	tmp.sprintf(_T("[%s]"), lp->Items->Names[Index].c_str());
 	SpaceTextOut(tmp, cv, x, y, cv->Font->Color, true);
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	out_TextEx(cv, x, y, " → ");
 	tmp.sprintf(_T("[%s]"), lp->Items->ValueFromIndex[Index].c_str());
 	SpaceTextOut(tmp, cv, x, y, cv->Font->Color, true);
@@ -1432,8 +1456,7 @@ void __fastcall TRenameDlg::CnvCharListBoxClick(TObject *Sender)
 void __fastcall TRenameDlg::CnvChSEditChange(TObject *Sender)
 {
 	TEdit *ep = (TEdit*)Sender;
-	ep->Color = (StartsStr("\\x{", ep->Text) && EndsStr("}", ep->Text) && !chk_RegExPtn(ep->Text))?
-					col_Illegal : scl_Window;
+	set_ErrColor(ep, StartsStr("\\x{", ep->Text) && EndsStr("}", ep->Text) && !chk_RegExPtn(ep->Text));
 }
 
 //---------------------------------------------------------------------------
@@ -1499,7 +1522,7 @@ void __fastcall TRenameDlg::DelCnvChActionUpdate(TObject *Sender)
 //関連改名設定
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::AssRenListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -1512,7 +1535,7 @@ void __fastcall TRenameDlg::AssRenListBoxDrawItem(TWinControl *Control, int Inde
 		w_x = std::max(cv->TextWidth(get_csv_item(lp->Items->Strings[i], 0)), w_x);
 
 	TStringDynArray itm_lst = get_csv_array(lp->Items->Strings[Index], 3, true);
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, itm_lst[0]);	xp += (w_x + 16);
 	if (ContainsStr(itm_lst[2], "P")) out_Text(cv, xp, yp, _T("部分一致"));
@@ -1980,8 +2003,8 @@ void __fastcall TRenameDlg::RenOkActionUpdate(TObject *Sender)
 		UnicodeString kwd = SrcStrComboBox->Text;
 		bool reg_ng = RegExCheckBox->Checked && !kwd.IsEmpty() && !chk_RegExPtn(kwd);
 		UnicodeString swd = SrcStrComboBox->Text;
-		SrcStrComboBox->Color = reg_ng? col_Illegal : swd.IsEmpty()? col_Invalid : scl_Window;
-		RepStrComboBox->Color = swd.IsEmpty()? col_Invalid : scl_Window;
+		SrcStrComboBox->Color = reg_ng? (IsDarkMode? col_DkIlleg : col_Illegal) : get_WinColor(swd.IsEmpty());
+		RepStrComboBox->Color = get_WinColor(swd.IsEmpty());
 		ap->Enabled = !ExistErr && !reg_ng && !time_ng;
 	}
 	else {
@@ -2034,7 +2057,22 @@ void __fastcall TRenameDlg::EditListActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if (ActiveControl!=TimeMaskEdit) SpecialKeyProc(this, Key, Shift);
+	if (ActiveControl!=TimeMaskEdit && SpecialKeyProc(this, Key, Shift)) return;
+
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(ReadOnlyCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+H")) invert_CheckBox(HiddenCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+S")) invert_CheckBox(SysCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+A")) invert_CheckBox(ArcCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CmpCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(AutoPrvCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+T")) set_focus_GroupBox(TimeGroupBox);
+	else if (!IsOptionSheet()) {
+		if		(USAME_TI(KeyStr, "Alt+M")) set_focus_RadioGroup(FbaseRadioGroup);
+		else if (USAME_TI(KeyStr, "Alt+E")) set_focus_RadioGroup(FextRadioGroup);
+		else if (USAME_TI(KeyStr, "Alt+U")) invert_CheckBox(CnvCharCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+K")) invert_CheckBox(CnvKanaCheckBox);
+	}
 }
 //---------------------------------------------------------------------------
 

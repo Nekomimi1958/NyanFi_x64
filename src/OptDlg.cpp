@@ -54,11 +54,51 @@ int __fastcall KeyComp_FKey(TStringList *List, int Index1, int Index2)
 __fastcall TOptionDlg::TOptionDlg(TComponent* Owner)
 	: TForm(Owner)
 {
+	IsDark = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 {
+	SplashHint = new UsrHintWindow(this);
+	SplashHint->Canvas->Font->Assign(HintFont);
+	SplashHint->Canvas->Font->Color = col_fgHint;
+	SplashHint->ActivateHintEx(_T("\r\nオプション設定の準備中...\r\n"),
+		320, 240, Application->MainForm, col_bgHint);
+
 	cursor_HourGlass();
+
+	org_SheetPanelWndProc[0]  = SheetPanel1->WindowProc;
+	org_SheetPanelWndProc[1]  = SheetPanel2->WindowProc;
+	org_SheetPanelWndProc[2]  = SheetPanel3->WindowProc;
+	org_SheetPanelWndProc[3]  = SheetPanel4->WindowProc;
+	org_SheetPanelWndProc[4]  = SheetPanel5->WindowProc;
+	org_SheetPanelWndProc[5]  = SheetPanel6->WindowProc;
+	org_SheetPanelWndProc[6]  = SheetPanel7->WindowProc;
+	org_SheetPanelWndProc[7]  = SheetPanel8->WindowProc;
+	org_SheetPanelWndProc[8]  = SheetPanel9->WindowProc;
+	org_SheetPanelWndProc[9]  = AsoPanel->WindowProc;
+	org_SheetPanelWndProc[10] = ExtMenuPanel->WindowProc;
+	org_SheetPanelWndProc[11] = ExtToolPanel->WindowProc;
+	org_SheetPanelWndProc[12] = SheetPanel13->WindowProc;
+	org_SheetPanelWndProc[13] = SheetPanel14->WindowProc;
+	org_SheetPanelWndProc[14] = SheetPanel15->WindowProc;
+	org_SheetPanelWndProc[15] = SheetPanel16->WindowProc;
+	SheetPanel1->WindowProc   = SheetPanel1WndProc;
+	SheetPanel2->WindowProc   = SheetPanel2WndProc;
+	SheetPanel3->WindowProc   = SheetPanel3WndProc;
+	SheetPanel4->WindowProc   = SheetPanel4WndProc;
+	SheetPanel5->WindowProc   = SheetPanel5WndProc;
+	SheetPanel6->WindowProc   = SheetPanel6WndProc;
+	SheetPanel7->WindowProc   = SheetPanel7WndProc;
+	SheetPanel8->WindowProc   = SheetPanel8WndProc;
+	SheetPanel9->WindowProc   = SheetPanel9WndProc;
+	AsoPanel->WindowProc	  = SheetPanel10WndProc;
+	ExtMenuPanel->WindowProc  = SheetPanel11WndProc;
+	ExtToolPanel->WindowProc  = SheetPanel12WndProc;
+	SheetPanel13->WindowProc  = SheetPanel13WndProc;
+	SheetPanel14->WindowProc  = SheetPanel14WndProc;
+	SheetPanel15->WindowProc  = SheetPanel15WndProc;
+	SheetPanel16->WindowProc  = SheetPanel16WndProc;
 
 	//入力欄にポップアップメニューを設定
 	UserModule->SetUsrPopupMenu(this);
@@ -68,13 +108,6 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 
 	SwatchPanel = new UsrSwatchPanel(this);
 	SwatchPanel->Parent = this;
-
-	set_ButtonMark(FindDownBtn,		UBMK_BDOWN);
-	set_ButtonMark(FindUpBtn,		UBMK_BUP);
-	set_ButtonMark(FindDownColBtn,	UBMK_BDOWN);
-	set_ButtonMark(FindUpColBtn,	UBMK_BUP);
-	set_ButtonMark(FindDownEvBtn,	UBMK_BDOWN);
-	set_ButtonMark(FindUpEvBtn,		UBMK_BUP);
 
 	for (int i=0; i<MAX_KEYTABS; i++) KeyListBuf[i] = new TStringList();
 	FKeyLabelBuf = new TStringList();
@@ -224,8 +257,10 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"bgOptTab=|アクティブな設定タブの背景色\n"
 		"fgOptTab=アクティブな設定タブの文字色\n"
 		"OptFind=オプション設定の検索結果\n"
-		"TlBorder=|ツールウインドウの境界線\n"
-		"DkPanel=ダークモード: パネルの背景色\n";
+		"DkPanel=|ダークモード: パネルの背景色\n"
+		"DkInval=ダークモード: 無効な項目の背景色\n"
+		"DkIlleg=ダークモード: 不正な入力項目の背景色\n"
+		"TlBorder=|ツールウインドウの境界線\n";
 
 	TimColListBox->Items->Text =
 		"Tim1H=1時間以内\n"
@@ -817,7 +852,6 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	SwatchPanel->SetPanelSize16x8(15);
 
 	set_ComboBox_AutoComp(this);
-	SetKeyComboBox();
 
 	DlgInitialized = false;
 	cursor_HourGlass();
@@ -1007,10 +1041,20 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 
 	FExt7zDllEdit->Enabled = usr_ARC->Use7zDll;
 
+	if (!KeyKeyLabel) KeyKeyLabel = AttachLabelToGroup(KeyKeyGroupBox, "キー");
 	UpdateMaxItemWidth();
+	SetKeyComboBox();
 
-	cursor_Default();
+	SetWinTheme();
+
 	DlgInitialized = true;
+	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
+}
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::WmFormShowed(TMessage &msg)
+{
+	SplashHint->ReleaseHandle();
+	cursor_Default();
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -1038,6 +1082,7 @@ void __fastcall TOptionDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TOptionDlg::FormDestroy(TObject *Sender)
 {
 	delete FindMarkList;
+	delete SplashHint;
 
 	for (int i=0; i<FontBufList->Count; i++) delete (TFont*)FontBufList->Objects[i];
 	delete FontBufList;
@@ -1046,6 +1091,47 @@ void __fastcall TOptionDlg::FormDestroy(TObject *Sender)
 
 	for (int i=0; i<MAX_KEYTABS; i++) delete KeyListBuf[i];
 	delete FKeyLabelBuf;
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::SetWinTheme()
+{
+	if (IsDark==IsDarkMode && Color==col_DkPanel) return;
+
+	SetDarkWinTheme(this);
+
+	TColor bg = get_WinColor();
+	AssociateListBox->Color = bg;
+	AssociateListBox->Color = bg;
+	EtcEditorListBox->Color = bg;
+	EventListBox->Color 	= bg;
+	ExtColListBox->Color	= bg;
+	KeyListBox->Color		= bg;
+	OptColListBox->Color	= bg;
+	PrtDirListBox->Color	= bg;
+												//<<<<<<<X86_SPI
+	StdCmdListBox->Color	= bg;
+	TagColListBox->Color	= bg;
+	TimColListBox->Color	= bg;
+	VirDrvListBox->Color	= bg;
+	ExtMenuListBox->Color	= bg;
+	ExtToolListBox->Color	= bg;
+
+	IsDark = IsDarkMode;
+}
+
+//---------------------------------------------------------------------------
+//グループ内のコンボボックスの選択状態をすべて解除
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::DeselectComboBox(TGroupBox *gp)
+{
+	for (int i=0; i<gp->ControlCount; i++) {
+		TControl *cp = gp->Controls[i];
+		if (class_is_ComboBox(cp)) {
+			TComboBox *bp = (TComboBox *)cp;
+			bp->SelStart = bp->Text.Length();
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -1080,6 +1166,12 @@ void __fastcall TOptionDlg::PageControl1Change(TObject *Sender)
 	if (!Sender || PageControl1->ActivePage==ExtMenuSheet)	ExtMenuListBoxClick(NULL);
 	if (!Sender || PageControl1->ActivePage==ExtToolSheet)	ExtToolListBoxClick(NULL);
 
+	if (PageControl1->ActivePage==MouseSheet) {
+		DeselectComboBox(MouseFlGroupBox);
+		DeselectComboBox(MouseTvGroupBox);
+		DeselectComboBox(MouseIvGroupBox);
+	}
+
 	UserModule->InitializeListBox(GetCurListBox());
 }
 
@@ -1087,15 +1179,15 @@ void __fastcall TOptionDlg::PageControl1Change(TObject *Sender)
 //タブの描画 (検索結果の強調表示)
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::PageControl1DrawTab(TCustomTabControl *Control, int TabIndex,
-		const TRect &Rect, bool Active)
+	const TRect &Rect, bool Active)
 {
 	TTabControl *tp = (TTabControl*)Control;
 	//背景
 	TCanvas *cv = tp->Canvas;
-	cv->Brush->Color = (PageControl1->Pages[TabIndex]->Tag==0)? (Active? col_bgOptTab : Color) : col_OptFind;
+	cv->Brush->Color = (PageControl1->Pages[TabIndex]->Tag==0)? (Active? col_bgOptTab : get_PanelColor()) : col_OptFind;
 	cv->FillRect(Rect);
 	//タイトル
-	cv->Font->Color = Active? col_fgOptTab : scl_BtnText;
+	cv->Font->Color = Active? col_fgOptTab : get_LabelColor();
 	cv->Font->Style = Active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
 	UnicodeString tstr = tp->Tabs->Strings[TabIndex];
 	cv->TextOut(Rect.Left + (Rect.Width() - cv->TextWidth(tstr))/2, Rect.Top + (Active? 4 : 2), tstr);
@@ -1107,8 +1199,8 @@ void __fastcall TOptionDlg::PageControl1DrawTab(TCustomTabControl *Control, int 
 void __fastcall TOptionDlg::SetKeyComboBox()
 {
 	UnicodeString kmd;
-	KeyKeyGroupBox->Caption = kmd.sprintf(_T("キー (%s)"), is_JpKeybd()? _T("JP") : _T("US"));
-	KeybdRadioGroup->Items->Strings[0] = kmd.sprintf(_T("自動(%s)"), (::GetKeyboardType(0)==7)? _T("JP") : _T("US"));
+	if (KeyKeyLabel) KeyKeyLabel->Caption = kmd.sprintf(_T("キー (%s)"), is_JpKeybd()? _T("JP") : _T("US"));
+	KeyboardLabel->Caption	= kmd.sprintf(_T("(%s)"), (::GetKeyboardType(0)==7)? _T("JP") : _T("US"));
 
 	make_KeyList(KeyComboBox->Items);
 	make_KeyList(Key2ComboBox->Items);
@@ -1259,7 +1351,7 @@ void __fastcall TOptionDlg::RefCmdGitExeBtnClick(TObject *Sender)
 //その他のエディタ一覧の描画
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::EtcEditorListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -1273,7 +1365,7 @@ void __fastcall TOptionDlg::EtcEditorListBoxDrawItem(TWinControl *Control, int I
 	UnicodeString etc_fext = lp->Items->Names[Index];
 	UnicodeString etc_edtr = exclude_quot(lp->Items->ValueFromIndex[Index]);
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, etc_fext);
 	xp += (w_x + 20);
@@ -1416,7 +1508,7 @@ void __fastcall TOptionDlg::FontComboBoxDrawItem(TWinControl *Control, int Index
 	int yp = Rect.Top  + get_TopMargin(cv);
 	int fh = abs(cv->Font->Height);
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, cp->Items->Strings[Index]);
 	xp += fh*10;
@@ -1430,7 +1522,7 @@ void __fastcall TOptionDlg::FontComboBoxDrawItem(TWinControl *Control, int Index
 		//名前
 		cv->Font->Assign(f);
 		cv->Font->Size = cp->Font->Size;
-		SetHighlight(cv, State.Contains(odSelected));
+		SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 		yp = Rect.Top + get_TopMargin(cv);
 		cv->TextOut(xp, yp, f->Name);
 	}
@@ -1458,9 +1550,9 @@ void __fastcall TOptionDlg::RefFontBtnClick(TObject *Sender)
 //配色
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::OptColListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
-	draw_ColorListBox((TListBox*)Control, Rect, Index, State, ColBufList);
+	draw_ColorListBox((TListBox*)Control, Rect, Index, State, ColBufList, IsDarkMode);
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::RefColBtnClick(TObject *Sender)
@@ -1634,7 +1726,7 @@ void __fastcall TOptionDlg::ExtColListBoxDrawItem(TWinControl *Control, int Inde
 	cv->FillRect(rc);
 	cv->TextOut(xp, yp, smpl_str);
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	rc = Rect;  rc.Left += smpl_wd;
 	cv->FillRect(rc);
 	xp = rc.Left + 4;
@@ -1794,7 +1886,7 @@ void __fastcall TOptionDlg::TagColListBoxDrawItem(TWinControl *Control, int Inde
 	}
 	cv->TextOut(xp, yp, tag);
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	rc = Rect;
 	rc.Left += (blk_wd + MaxWd_Tag);
 	cv->FillRect(rc);
@@ -2661,11 +2753,11 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 	cv->Font->Assign(lp->Font);
 
 	if (lp==EventListBox && USAME_TI(EventCmdList[Index].key, "OnNewDrive") && !State.Contains(odSelected)) {
-		cv->Brush->Color = !OpenAddDrvCheckBox->Checked? col_Invalid : scl_Window;
-		cv->Font->Color  = scl_WindowText;
+		cv->Brush->Color = get_WinColor(!OpenAddDrvCheckBox->Checked);
+		cv->Font->Color  = get_TextColor();
 	}
 	else {
-		SetHighlight(cv, State.Contains(odSelected));
+		SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	}
 	cv->FillRect(Rect);
 
@@ -2720,7 +2812,7 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 
 	TCanvas *cv  = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 
 	//項目の階層を調べる
@@ -2785,8 +2877,7 @@ void __fastcall TOptionDlg::ExtToolHeaderSectionResize(THeaderControl *HeaderCon
 void __fastcall TOptionDlg::KeyTabControlDrawTab(TCustomTabControl *Control, int TabIndex,
 	const TRect &Rect, bool Active)
 {
-	//※テーマ利用時に下部タブが正しく描画されない不具合の対策
-	draw_BottomTab(Control, TabIndex, Rect, Active);
+	draw_OwnerTab(Control, TabIndex, Rect, Active, IsDarkMode);
 }
 //---------------------------------------------------------------------------
 //カテゴリー変更
@@ -2811,10 +2902,18 @@ void __fastcall TOptionDlg::KeyTabControlChange(TObject *Sender)
 
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::KeyHeaderControlDrawSection(THeaderControl *HeaderControl,
-		  THeaderSection *Section, const TRect &Rect, bool Pressed)
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
 {
-	draw_SortHeader(HeaderControl, Section, Rect, (Section->Index==KeySortMode)? 1 : 0, true);
+	draw_SortHeader(HeaderControl, Section, Rect, (Section->Index==KeySortMode)? 1 : 0, true, IsDarkMode);
 }
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::ExtHeaderDrawSection(THeaderControl *HeaderControl,
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
+
+{
+	draw_SortHeader(HeaderControl, Section, Rect, 0, true, IsDarkMode);
+}
+
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::KeyHeaderControlSectionClick(THeaderControl *HeaderControl,
 		  THeaderSection *Section)
@@ -2915,7 +3014,7 @@ void __fastcall TOptionDlg::CmdComboBoxDrawItem(TWinControl *Control, int Index,
 	UnicodeString lbuf = cp->Items->Strings[Index];
 	UnicodeString cmd  = split_tkn(lbuf, ' ');
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, cmd);
 	xp += cv->TextHeight("Q")*10;
@@ -3309,7 +3408,7 @@ void __fastcall TOptionDlg::KeyListBoxDrawItem(TWinControl *Control, int Index, 
 	UnicodeString key = lp->Items->Names[Index];
 	UnicodeString cmd = lp->Items->ValueFromIndex[Index];
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 
 	cv->TextOut(xp, yp, get_tkn_r(key, ":"));
@@ -3835,7 +3934,7 @@ void __fastcall TOptionDlg::StdCmdComboBoxChange(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::StdCmdListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-		TOwnerDrawState State)
+	TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -3843,7 +3942,7 @@ void __fastcall TOptionDlg::StdCmdListBoxDrawItem(TWinControl *Control, int Inde
 	int xp = Rect.Left + Scaled2;
 	int yp = Rect.Top  + get_TopMargin(cv);
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 
 	int w_x = 0;
@@ -4098,6 +4197,8 @@ void __fastcall TOptionDlg::AppColorBtnClick(TObject *Sender)
 
 	//メイン画面に通知
 	::SendMessage(MainHandle, WM_NYANFI_APPEAR, 0, 0);
+
+	SetWinTheme();
 }
 
 //---------------------------------------------------------------------------
@@ -4300,16 +4401,16 @@ void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 	HotKeyComboBox->Enabled =
 		(HotShiftCheckBox->Checked || HotCtrlCheckBox->Checked || HotAltCheckBox->Checked || HotWinCheckBox->Checked);
 
-	DirBraEdit->Color = ShowIconCheckBox->Checked? col_Invalid : scl_Window;
-	DirKetEdit->Color = ShowIconCheckBox->Checked? col_Invalid : scl_Window;
+	DirBraEdit->Color = get_WinColor(ShowIconCheckBox->Checked);
+	DirKetEdit->Color = get_WinColor(ShowIconCheckBox->Checked);
 
 	bool flag = (DlgMoveShiftCheckBox->Checked || DlgMoveCtrlCheckBox->Checked || DlgMoveAltCheckBox->Checked);
-	DlgMoveLabel->Font->Color = flag? scl_WindowText : col_Invalid;
-	DlgMoveEdit->Color		  = flag? scl_Window	 : col_Invalid;
+	DlgMoveLabel->Font->Color = !flag? (IsDarkMode? col_DkInval : col_Invalid) : get_LabelColor();
+	DlgMoveEdit->Color		  = get_WinColor(!flag);
 
 	flag = (DlgSizeShiftCheckBox->Checked ||DlgSizeCtrlCheckBox->Checked || DlgSizeAltCheckBox->Checked);
-	DlgSizeLabel->Font->Color = flag? scl_WindowText : col_Invalid;
-	DlgSizeEdit->Color		  = flag? scl_Window	 : col_Invalid;
+	DlgSizeLabel->Font->Color = !flag? (IsDarkMode? col_DkInval : col_Invalid) : get_LabelColor();
+	DlgSizeEdit->Color		  = get_WinColor(!flag);
 
 	InvColIfEmpty(NoWatchPathEdit);
 	InvColIfEmpty(NoInfPathEdit);
@@ -4321,16 +4422,16 @@ void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 	InvColIfEmpty(ExtTxViewerEdit);
 	ExtTxViewerFmtEdit->Color = ExtTxViewerEdit->Color;
 
-	HdrStrEdit->Color = MarkdownCheckBox->Checked? col_Invalid : scl_Window;
+	HdrStrEdit->Color = get_WinColor(MarkdownCheckBox->Checked);
 
 	SelBaseOnlyCheckBox->Enabled  = SelByMouseCheckBox->Checked;
 	SelIconCheckBox->Enabled	  = SelByMouseCheckBox->Checked;
 
-	PrvTxtInfLnEdit->Color		  = PrevTxtToInfCheckBox->Checked? scl_Window : col_Invalid;
+	PrvTxtInfLnEdit->Color		  = get_WinColor(!PrevTxtToInfCheckBox->Checked);
 	PrevTailCheckBox->Enabled	  = PrevTxtToInfCheckBox->Checked;
 	flag = (PrevTxtToInfCheckBox->Checked && PrevTailCheckBox->Checked);
-	PrvTxtTailLnEdit->Color		  = flag? scl_Window : col_Invalid;
-	PrvActTailLnEdit->Color		  = flag? scl_Window : col_Invalid;
+	PrvTxtTailLnEdit->Color		  = get_WinColor(!flag);
+	PrvActTailLnEdit->Color		  = get_WinColor(!flag);
 
 	AppendLogCheckBox->Enabled	  = SaveLogCheckBox->Checked;
 	MaxLogFilesEdit->Enabled	  = SaveLogCheckBox->Checked;
@@ -4338,12 +4439,12 @@ void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 	SeekSwapNPCheckBox->Enabled   = SeekBindDirCheckBox->Checked;
 
 	flag = (EditToInt(FwCntWarnEdit)==0 || EditToInt(FwTmWarnEdit)==0);
-	FwCntWarnEdit->Color = flag? col_Invalid : scl_Window;
-	FwTmWarnEdit->Color  = flag? col_Invalid : scl_Window;
+	FwCntWarnEdit->Color = get_WinColor(flag);
+	FwTmWarnEdit->Color  = get_WinColor(flag);
 
 	flag = (EditToInt(FwCntTaskFinEdit)==0 || EditToInt(FwTmTaskFinEdit)==0);
-	FwCntTaskFinEdit->Color = flag? col_Invalid : scl_Window;
-	FwTmTaskFinEdit->Color	= flag? col_Invalid : scl_Window;
+	FwCntTaskFinEdit->Color = get_WinColor(flag);
+	FwTmTaskFinEdit->Color	= get_WinColor(flag);
 
 	EventCmdsEdit->Enabled = (EventListBox->ItemIndex!=-1);
 	RefCmdsBtn->Enabled	   = (EventListBox->ItemIndex!=-1);
@@ -4352,12 +4453,12 @@ void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 	InvColIfEmpty(WatchIntervalEdit);
 	InvColIfEmpty(FixedLimitEdit);
 
-	ListPercentEdit->Color	 = !KeepOnResizeCheckBox->Checked? col_Invalid : scl_Window;
-	FindPathWdEdit->Color	 = !FindPathColCheckBox->Checked?  col_Invalid : scl_Window;
-	FindTagsWdEdit->Color	 = !FindTagsColCheckBox->Checked?  col_Invalid : scl_Window;
+	ListPercentEdit->Color	 = get_WinColor(!KeepOnResizeCheckBox->Checked);
+	FindPathWdEdit->Color	 = get_WinColor(!FindPathColCheckBox->Checked);
+	FindTagsWdEdit->Color	 = get_WinColor(!FindTagsColCheckBox->Checked);
 
-	ModalAlphaEdit->Color	 = !ModalScrCheckBox->Checked? col_Invalid : scl_Window;
-	ModalColorBox->Color 	 = !ModalScrCheckBox->Checked? col_Invalid : scl_Window;
+	ModalAlphaEdit->Color	 = get_WinColor(!ModalScrCheckBox->Checked);
+	ModalColorBox->Color 	 = get_WinColor(!ModalScrCheckBox->Checked);
 
 	RefFontBtn->Enabled		 = (FontComboBox->ItemIndex!=-1);
 	RefColBtn->Enabled		 = (OptColListBox->ItemIndex!=-1);
@@ -4374,24 +4475,26 @@ void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 
 	int bgmod = BgImgModeComboBox->ItemIndex;
 	BgImgSubModeComboBox->Enabled = (bgmod==1 || bgmod==2);
-	BgImg1Edit->Color	= (bgmod==0 || bgmod==3)?		col_Invalid : scl_Window;
-	BgImg2Edit->Color	= (bgmod!=2)?					col_Invalid : scl_Window;
-	HideTimeEdit->Color = !HideScrCheckBox->Checked?	col_Invalid : scl_Window;
-	TileIfSzEdit->Color = !TileIfCheckBox->Checked?		col_Invalid : scl_Window;
+	BgImg1Edit->Color	= get_WinColor(bgmod==0 || bgmod==3);
+	BgImg2Edit->Color	= get_WinColor(bgmod!=2);
+	HideTimeEdit->Color = get_WinColor(!HideScrCheckBox->Checked);
+	TileIfSzEdit->Color = get_WinColor(!TileIfCheckBox->Checked);
 	InvColIfEmpty(SpImgEdit);
 	InvColIfEmpty(SpImg2Edit);
 
 	CloseOtherCheckBox->Enabled = !TaskTrayCheckBox->Checked;
 	if (TaskTrayCheckBox->Checked) CloseOtherCheckBox->Checked = true;
 
-	MarkPathEdit->Color = !MarkImgCheckBox->Checked? col_Invalid : scl_Window;
-	MarkFextEdit->Color = !MarkImgCheckBox->Checked? col_Invalid : scl_Window;
-	MarkMemoEdit->Color = !MarkImgCheckBox->Checked? col_Invalid : scl_Window;
+	MarkPathEdit->Color = get_WinColor(!MarkImgCheckBox->Checked);
+	MarkFextEdit->Color = get_WinColor(!MarkImgCheckBox->Checked);
+	MarkMemoEdit->Color = get_WinColor(!MarkImgCheckBox->Checked);
 
-	ViewTabXEdit->Color = (EditToInt(TabXWdEdit)==0)? col_Invalid : scl_Window;
+	ViewTabXEdit->Color = get_WinColor(EditToInt(TabXWdEdit)==0);
 
-	L_IniPatEdit->Color = L_IniPatMod2RadioBtn->Checked? scl_Window : col_Invalid;
-	R_IniPatEdit->Color = R_IniPatMod2RadioBtn->Checked? scl_Window : col_Invalid;
+	L_IniPatEdit->Color = get_WinColor(!L_IniPatMod2RadioBtn->Checked);
+	R_IniPatEdit->Color = get_WinColor(!R_IniPatMod2RadioBtn->Checked);
+
+	AllowDkMdCheckBox->Enabled = SupportDarkMode;
 }
 
 //---------------------------------------------------------------------------
@@ -4450,4 +4553,5 @@ void __fastcall TOptionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 	}
 }
 //---------------------------------------------------------------------------
+
 

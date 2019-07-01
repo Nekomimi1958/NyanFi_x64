@@ -387,7 +387,6 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 	LastBatteryLife = 100;
 
 	//初期化、オプション読み込み
-	InitializeSysColor();
 	InitializeGlobal();
 	ResetIndColor(-1);
 	get_DriveInfoList();
@@ -880,8 +879,11 @@ void __fastcall TNyanFiForm::WmFormShowed(TMessage &msg)
 	WatchTailTimer->Enabled = true;
 	MsgHintTimer->Interval	= MsgHintTime;
 
-	//起動時間表示
-	if (LogDebugInf) AddLog(tmp.sprintf(_T("%8.3f秒"), (GetTickCount() - StartedCount)/1000.0));
+	//DarkMode/起動時間表示
+	if (LogDebugInf) {
+		if (SupportDarkMode) AddLog(tmp.sprintf(_T("DarkMode=%s"), IsDarkMode? _T("ON") : _T("OFF")));
+		AddLog(tmp.sprintf(_T("%8.3f秒"), (GetTickCount() - StartedCount)/1000.0));
+	}
 
 	AddLog(_T("All Task Ready"));
 
@@ -2893,7 +2895,7 @@ void __fastcall TNyanFiForm::GrepPageControlDrawTab(TCustomTabControl *Control, 
 
 	//タイトル
 	UnicodeString tit = tp->Tabs->Strings[TabIndex];
-	cv->Font->Color = Active? col_fgOptTab :  IsDarkMode? dcl_BtnText : scl_BtnText;
+	cv->Font->Color = Active? col_fgOptTab : IsDarkMode? dcl_BtnText : scl_BtnText;
 	cv->Font->Style = Active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
 	TRect rc = Rect;
 	rc.Left = Rect.Left + (Rect.Width() - cv->TextWidth(tit))/2;
@@ -4228,10 +4230,8 @@ void __fastcall TNyanFiForm::SetupDesign(
 	InhUpdBgImg++;
 
 	//ダークモードの適用
-	if (SupportDarkMode && lpfShouldAppsUseDarkMode()) {
-		lpfAllowDarkModeForApp(AllowDarkMode);
-		lpfFlushMenuThemes();
-		IsDarkMode = AllowDarkMode;
+	if (SupportDarkMode) {
+		ApplyDarkMode();
 
 		SetDarkWinTheme(GrepOpPanel);
 		SetDarkWinTheme(SkipDirEdit);
@@ -5577,8 +5577,7 @@ bool __fastcall TNyanFiForm::IncProtectItem()
 		UnicodeString msg = "対象に削除制限項目が含まれています。";
 		if (ProtectDirMode==1) {
 			msg += "\n制限を無視して削除しますか?";
-			unsigned int flag = (SureCancel? MB_YESNOCANCEL : MB_YESNO) | MB_ICONQUESTION | MB_DEFBUTTON2;
-			ret = (Application->MessageBox(msg.c_str(), _T("確認"), flag)!=IDYES);
+			ret = !msgbox_Sure(msg, true);
 		}
 		else {
 			msgbox_WARN(msg);
@@ -9543,8 +9542,8 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 
 	//テキストプレビューの表示
 	if (TxtPrvListBox->Count>0) {
-		SetDarkWinTheme(TxtPrvListBox);
-		SetDarkWinTheme(TxtTailListBox);
+		SetWindowTheme(TxtPrvListBox->Handle,  IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
+		SetWindowTheme(TxtTailListBox->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
 		TxtPrvListPanel->Visible = true;
 	}
 	else {
@@ -12884,7 +12883,7 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 			bool sel_opp = FileCompDlg->SelOppCheckBox->Checked;
 			bool sel_rev = FileCompDlg->ReverseCheckBox->Checked;
 			bool sel_msk = FileCompDlg->SelMaskCheckBox->Checked;
-			UnicodeString idstr = get_word_i_idx(HASH_ID_STR, FileCompDlg->AlgRadioGroup->ItemIndex);
+			UnicodeString idstr = get_word_i_idx(HASH_ID_STR, FileCompDlg->AlgComboBox->ItemIndex);
 
 			try {
 				CurWorking = true;
@@ -16487,7 +16486,7 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 		CurStt->find_ResLink = FindDuplDlg->ResLinkCheckBox->Checked;
 		CurStt->find_Path	 = CurPath[CurListTag];
 
-		UnicodeString idstr = get_word_i_idx(HASH_ID_STR, FindDuplDlg->AlgRadioGroup->ItemIndex);
+		UnicodeString idstr = get_word_i_idx(HASH_ID_STR, FindDuplDlg->AlgComboBox->ItemIndex);
 		AddLog(msg.sprintf(_T("  ハッシュ: %s"), idstr.c_str()));
 
 		bool sub_sw  = (FindDuplDlg->SubDirCheckBox->Enabled && FindDuplDlg->SubDirCheckBox->Checked);
@@ -21173,7 +21172,7 @@ void __fastcall TNyanFiForm::PackActionExecute(TObject *Sender)
 						if (sure_same) {
 							tmp.sprintf(_T("同名アーカイブ[%s]があります。\r\n"), ExtractFileName(arc_file).c_str());
 							tmp.cat_sprintf(_T("%sしますか?"), (same_mode==0)? _T("既存内容に追加") : _T("削除して新規作成"));
-							if (msgbox_Y_N_C(tmp)!=IDYES) {
+							if (msgbox_Y_N_C(tmp)!=mrYes) {
 								msg[1] = 'C';  UserAbort(USTR_Canceled);
 							}
 						}
@@ -21228,7 +21227,7 @@ void __fastcall TNyanFiForm::PackActionExecute(TObject *Sender)
 					if (sure_same) {
 						tmp.sprintf(_T("同名アーカイブ[%s]があります。\r\n"), ExtractFileName(arc_file).c_str());
 						tmp.cat_sprintf(_T("%sしますか?"), (same_mode==0)? _T("既存内容に追加") : _T("削除して新規作成"));
-						if (msgbox_Y_N_C(tmp)!=IDYES) {
+						if (msgbox_Y_N_C(tmp)!=mrYes) {
 							msg[1] = 'C';  UserAbort(USTR_Canceled);
 						}
 					}
@@ -27941,7 +27940,7 @@ void __fastcall TNyanFiForm::PrepareGrep()
 	GrepResultList->Clear();
 	ResultListBox->Clear();
 	GrepFilterEdit->Text  = EmptyStr;
-	if (!IsDarkMode) GrepFilterEdit->Color = col_Invalid;
+	GrepFilterEdit->Color = IsDarkMode? col_DkInval : col_Invalid;
 	UpdateActions();
 
 	//マスクのリストを作成
@@ -28213,12 +28212,12 @@ void __fastcall TNyanFiForm::GrepFilterEditKeyPress(TObject *Sender, System::Wid
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GrepFilterEditEnter(TObject *Sender)
 {
-	if (!IsDarkMode) GrepFilterEdit->Color = scl_Window;
+	GrepFilterEdit->Color = get_WinColor();
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GrepFilterEditExit(TObject *Sender)
 {
-	if (!IsDarkMode) InvColIfEmpty(GrepFilterEdit);
+	InvColIfEmpty(GrepFilterEdit);
 }
 
 //---------------------------------------------------------------------------
@@ -28708,10 +28707,7 @@ void __fastcall TNyanFiForm::GrepStartActionUpdate(TObject *Sender)
 		UnicodeString kwd = Trim(GrepFindComboBox->Text);
 		bool reg_ng = RegExCheckBox->Checked && !kwd.IsEmpty() && !chk_RegExPtn(kwd);
 		bool kwd_ok = RegExCheckBox->Checked? (!kwd.IsEmpty() && !reg_ng) : !kwd.IsEmpty();
-		if (IsDarkMode)
-			GrepFindComboBox->Font->Color = reg_ng? col_Error : dcl_WindowText;
-		else
-			GrepFindComboBox->Color = reg_ng? col_Illegal : scl_Window;
+		set_ErrColor(GrepFindComboBox, reg_ng);
 		ap->Enabled = !FindBusy && kwd_ok && !(GrepMaskComboBox->Enabled && GrepMaskComboBox->Text.IsEmpty());
 
 		AndCheckBox->Enabled  = !RegExCheckBox->Checked;

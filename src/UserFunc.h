@@ -28,27 +28,6 @@
 #define LISTBOX_SCRMGN	2
 
 //---------------------------------------------------------------------------
-extern TColor scl_Window;
-extern TColor scl_WindowText;
-extern TColor scl_Highlight;
-extern TColor scl_HighlightText;
-extern TColor scl_BtnFace;
-extern TColor scl_BtnText;
-extern TColor scl_Menu;
-extern TColor scl_MenuText;
-
-extern TColor dcl_Window;
-extern TColor dcl_WindowText;
-extern TColor dcl_Highlight;
-extern TColor dcl_HighlightText;
-extern TColor dcl_BtnFace;
-extern TColor dcl_BtnText;
-extern TColor dcl_Menu;
-extern TColor dcl_MenuText;
-
-//---------------------------------------------------------------------------
-void InitializeSysColor();
-
 bool is_HighContrast();
 
 HWND get_window_from_pos();
@@ -101,21 +80,6 @@ void draw_Separator(TCanvas *cv, TRect rc, TColor bg = Graphics::clNone);
 void draw_separateLine(TCanvas *cv, TRect rc, int pos = 0);
 void draw_SortMark(TCanvas *cv, int x, int y, bool is_asc, TColor fg = Graphics::clNone);
 
-#define UBMK_UP		1
-#define UBMK_DOWN	2
-#define UBMK_BUP	3
-#define UBMK_BDOWN	4
-#define UBMK_VUP	5
-#define UBMK_VDOWN	6
-#define UBMK_VTOP	7
-#define UBMK_VEND	8
-#define UBMK_HTOP	9
-#define UBMK_HEND	10
-#define UBMK_LEFT	11
-#define UBMK_RIGHT	12
-
-void set_ButtonMark(TSpeedButton *bp, int id = UBMK_DOWN, TColor fg = scl_BtnText, TColor bg = scl_BtnFace);
-
 double get_ZoomRatio(int vw, int vh, int iw, int ih, int mgn = 0, double limit = 1.0);
 
 double GetLuminance(TColor col);
@@ -131,7 +95,6 @@ TColor AdjustColor(TColor col, int adj);
 
 TColor Mix2Colors(TColor col1, TColor col2);
 void str_to_Color(TColor &col, UnicodeString s);
-void SetHighlight(TCanvas *cv, bool hl);
 
 void alpha_blend_Rect(TCanvas *cv, int x, int y, int w, int h, TColor col, int alpha);
 void alpha_blend_Rect(TCanvas *cv, TRect rc, TColor col, int alpha);

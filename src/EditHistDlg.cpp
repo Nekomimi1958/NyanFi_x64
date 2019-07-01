@@ -1138,13 +1138,13 @@ void __fastcall TEditHistoryDlg::FilterEditChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FilterEditEnter(TObject *Sender)
 {
-	if (!IsDarkMode) FilterEdit->Color = scl_Window;
+	FilterEdit->Color = get_WinColor();
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FilterEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	if (!IsDarkMode) InvColIfEmpty(FilterEdit);
+	InvColIfEmpty(FilterEdit);
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FilterBtnClick(TObject *Sender)

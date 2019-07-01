@@ -84,6 +84,7 @@ object SetGitTagDlg: TSetGitTagDlg
       Width = 458
       Height = 183
       Anchors = [akLeft, akTop, akRight, akBottom]
+      ScrollBars = ssVertical
       TabOrder = 2
     end
   end

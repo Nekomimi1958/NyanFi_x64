@@ -90,6 +90,8 @@ void __fastcall TCvImageDlg::FormShow(TObject *Sender)
 	ScaleModeComboBoxChange(NULL);
 	CvFmtRadioGroupClick(NULL);
 	if (fromClip) ClipNameComboBoxChange(NULL);
+
+	SetDarkWinTheme(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TCvImageDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -201,7 +203,16 @@ void __fastcall TCvImageDlg::ClipNameComboBoxChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TCvImageDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+B")) CvFmtRadioGroup->ItemIndex = 0;
+	else if (USAME_TI(KeyStr, "Alt+J")) CvFmtRadioGroup->ItemIndex = 1;
+	else if (USAME_TI(KeyStr, "Alt+P")) CvFmtRadioGroup->ItemIndex = 2;
+	else if (USAME_TI(KeyStr, "Alt+G")) CvFmtRadioGroup->ItemIndex = 3;
+	else if (USAME_TI(KeyStr, "Alt+T")) CvFmtRadioGroup->ItemIndex = 4;
+	else if (USAME_TI(KeyStr, "Alt+H")) CvFmtRadioGroup->ItemIndex = 5;
+	else if (USAME_TI(KeyStr, "Alt+S")) invert_CheckBox(GrayScaleCheckBox);
+	
+	else SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

@@ -495,8 +495,8 @@ void __fastcall TXmlViewer::XmlTreeViewHint(TObject *Sender, TTreeNode * const N
 //---------------------------------------------------------------------------
 //ステータスバーの描画
 //---------------------------------------------------------------------------
-void __fastcall TXmlViewer::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-	const TRect &Rect)
+void __fastcall TXmlViewer::StatusBar1DrawPanel(TStatusBar *StatusBar,
+	TStatusPanel *Panel, const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Brush->Color = col_bgSttBar;

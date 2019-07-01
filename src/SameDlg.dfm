@@ -50,12 +50,46 @@ object SameNameDlg: TSameNameDlg
     DesignSize = (
       378
       204)
+    object Mode0Label: TLabel
+      Left = 28
+      Top = 23
+      Width = 73
+      Height = 13
+      Caption = #24375#21046#19978#26360#12365'(&O)'
+    end
+    object Mode1Label: TLabel
+      Left = 28
+      Top = 47
+      Width = 90
+      Height = 13
+      Caption = #26368#26032#12394#12425#19978#26360#12365'(&N)'
+    end
+    object Mode2Label: TLabel
+      Left = 28
+      Top = 72
+      Width = 49
+      Height = 13
+      Caption = #12473#12461#12483#12503'(&S)'
+    end
+    object Mode3Label: TLabel
+      Left = 28
+      Top = 96
+      Width = 117
+      Height = 13
+      Caption = #33258#21205#30340#12395#21517#21069#12434#22793#26356'(&U)'
+    end
+    object Mode4Label: TLabel
+      Left = 28
+      Top = 120
+      Width = 72
+      Height = 13
+      Caption = #21517#21069#12434#22793#26356'(&R)'
+    end
     object Mode0Btn: TRadioButton
       Left = 11
       Top = 21
       Width = 169
       Height = 17
-      Caption = #24375#21046#19978#26360#12365'(&O)'
       TabOrder = 0
       OnClick = ModeBtnClick
     end
@@ -64,7 +98,6 @@ object SameNameDlg: TSameNameDlg
       Top = 45
       Width = 169
       Height = 17
-      Caption = #26368#26032#12394#12425#19978#26360#12365'(&N)'
       TabOrder = 1
       OnClick = ModeBtnClick
     end
@@ -73,7 +106,6 @@ object SameNameDlg: TSameNameDlg
       Top = 70
       Width = 169
       Height = 17
-      Caption = #12473#12461#12483#12503'(&S)'
       TabOrder = 2
       OnClick = ModeBtnClick
     end
@@ -82,7 +114,6 @@ object SameNameDlg: TSameNameDlg
       Top = 119
       Width = 169
       Height = 17
-      Caption = #21517#21069#12434#22793#26356'(&R)'
       TabOrder = 4
       OnClick = ModeBtnClick
     end
@@ -102,7 +133,6 @@ object SameNameDlg: TSameNameDlg
       Top = 94
       Width = 169
       Height = 17
-      Caption = #33258#21205#30340#12395#21517#21069#12434#22793#26356'(&U)'
       TabOrder = 3
       OnClick = ModeBtnClick
     end

@@ -33,9 +33,11 @@ object RenameDlg: TRenameDlg
         Width = 160
       end
       item
+        Style = psOwnerDraw
         Width = 200
       end
       item
+        Style = psOwnerDraw
         Width = 50
       end>
     StyleElements = [seClient, seBorder]
@@ -199,7 +201,7 @@ object RenameDlg: TRenameDlg
           Top = 19
           Width = 60
           Height = 24
-          Caption = #29694#22312'(&C)'
+          Caption = #29694#22312
           TabOrder = 1
           OnClick = TimeNowBtnClick
         end
@@ -236,6 +238,7 @@ object RenameDlg: TRenameDlg
           Width = 60
           Height = 24
           Action = LatestTimeAction
+          Caption = #26368#26032
           TabOrder = 2
         end
       end
@@ -288,9 +291,11 @@ object RenameDlg: TRenameDlg
       Height = 260
       ActivePage = NameSheet
       Align = alClient
+      OwnerDraw = True
       TabOrder = 0
       TabWidth = 90
       OnChange = NamePageControlChange
+      OnDrawTab = RenPageControlDrawTab
       object NameSheet: TTabSheet
         Caption = #21517#21069'(&N)'
         object NameComPanel: TPanel
@@ -393,7 +398,7 @@ object RenameDlg: TRenameDlg
             Top = 51
             Width = 308
             Height = 17
-            Caption = #20027#37096#12398#31105#27490#25991#23383#65295#12518#12540#12470#23450#32681#25991#23383#12434#32622#25563'(&C)'
+            Caption = #20027#37096#12398#31105#27490#25991#23383#65295#12518#12540#12470#23450#32681#25991#23383#12434#32622#25563'(&U)'
             TabOrder = 2
             OnClick = FModRadioGroupClick
           end
@@ -446,84 +451,6 @@ object RenameDlg: TRenameDlg
           DesignSize = (
             532
             66)
-          object Fmt_A_Btn: TSpeedButton
-            Tag = 3
-            Left = 170
-            Top = 38
-            Width = 50
-            Height = 22
-            Hint = #12501#12449#12452#12523#21517#20027#37096#12398#20840#20307
-            Caption = #20027#37096
-            OnClick = Fmt_A_BtnClick
-          end
-          object Fmt_E_Btn: TSpeedButton
-            Tag = 4
-            Left = 222
-            Top = 38
-            Width = 50
-            Height = 22
-            Hint = #25313#24373#23376'( . '#12399#38500#12367')'
-            Caption = #25313#24373#23376
-            OnClick = Fmt_E_BtnClick
-          end
-          object Fmt_L_Btn: TSpeedButton
-            Left = 8
-            Top = 38
-            Width = 50
-            Height = 22
-            Hint = #12501#12449#12452#12523#21517#20027#37096#12398#24038#12363#12425'n'#25991#23383
-            Caption = #24038'n'#23383
-            OnClick = Fmt_L_BtnClick
-          end
-          object Fmt_R_Btn: TSpeedButton
-            Tag = 2
-            Left = 112
-            Top = 38
-            Width = 50
-            Height = 22
-            Hint = #12501#12449#12452#12523#21517#20027#37096#12398#21491#12363#12425'n'#25991#23383
-            Caption = #21491'n'#23383
-            OnClick = Fmt_R_BtnClick
-          end
-          object Fmt_S_Btn: TSpeedButton
-            Tag = 1
-            Left = 60
-            Top = 38
-            Width = 50
-            Height = 22
-            Hint = #12501#12449#12452#12523#21517#20027#37096#12398'm'#30058#30446#12363#12425'n'#25991#23383
-            Caption = 'm..n'#23383
-            OnClick = Fmt_S_BtnClick
-          end
-          object Fmt_TS_Btn: TSpeedButton
-            Tag = 4
-            Left = 280
-            Top = 38
-            Width = 45
-            Height = 22
-            Hint = #12479#12452#12512#12473#12479#12531#12503
-            Caption = #26085#26178
-            OnClick = Fmt_TS_BtnClick
-          end
-          object Fmt_XT_Btn: TSpeedButton
-            Tag = 2
-            Left = 327
-            Top = 38
-            Width = 45
-            Height = 22
-            Hint = 'Exif '#24773#22577#12398#25774#24433#26085#26178
-            Caption = 'Exif'
-            OnClick = Fmt_XT_BtnClick
-          end
-          object SaveFmtBtn: TSpeedButton
-            Tag = 2
-            Left = 384
-            Top = 38
-            Width = 40
-            Height = 22
-            Hint = #29694#22312#12398#26360#24335#12434#20445#23384
-            Action = SaveSerFmtAction
-          end
           object SerEditPanel: TPanel
             Left = 0
             Top = 0
@@ -647,6 +574,78 @@ object RenameDlg: TRenameDlg
             PopupMenu = FmtPopupMenu
             TabOrder = 1
             OnClick = SerFmtComboBoxClick
+          end
+          object Fmt_A_Btn: TButton
+            Left = 170
+            Top = 38
+            Width = 50
+            Height = 22
+            Caption = #20027#37096
+            TabOrder = 2
+            OnClick = Fmt_A_BtnClick
+          end
+          object Fmt_E_Btn: TButton
+            Left = 222
+            Top = 38
+            Width = 50
+            Height = 22
+            Caption = #25313#24373#23376
+            TabOrder = 3
+            OnClick = Fmt_E_BtnClick
+          end
+          object Fmt_L_Btn: TButton
+            Left = 8
+            Top = 38
+            Width = 50
+            Height = 22
+            Caption = #24038'n'#23383
+            TabOrder = 4
+            OnClick = Fmt_L_BtnClick
+          end
+          object Fmt_R_Btn: TButton
+            Left = 112
+            Top = 38
+            Width = 50
+            Height = 22
+            Caption = #21491'n'#23383
+            TabOrder = 5
+            OnClick = Fmt_R_BtnClick
+          end
+          object Fmt_S_Btn: TButton
+            Left = 60
+            Top = 38
+            Width = 50
+            Height = 22
+            Hint = #12501#12449#12452#12523#21517#20027#37096#12398'm'#30058#30446#12363#12425'n'#25991#23383
+            Caption = 'm..n'#23383
+            TabOrder = 6
+            OnClick = Fmt_S_Btn2Click
+          end
+          object Fmt_TS_Btn: TButton
+            Left = 280
+            Top = 38
+            Width = 45
+            Height = 22
+            Caption = #26085#26178
+            TabOrder = 7
+            OnClick = Fmt_TS_BtnClick
+          end
+          object Fmt_XT_Btn: TButton
+            Left = 327
+            Top = 38
+            Width = 45
+            Height = 22
+            Caption = 'Exif'
+            TabOrder = 8
+            OnClick = Fmt_XT_BtnClick
+          end
+          object SaveFmtBtn: TButton
+            Left = 384
+            Top = 38
+            Width = 40
+            Height = 22
+            Action = SaveSerFmtAction
+            TabOrder = 9
           end
         end
       end
@@ -811,7 +810,7 @@ object RenameDlg: TRenameDlg
         end
       end
       object Mp3Sheet: TTabSheet
-        Caption = 'MP3(&M)'
+        Caption = 'MP&3'
         ImageIndex = 4
         object Mp3TopPanel: TPanel
           Left = 0
@@ -824,24 +823,6 @@ object RenameDlg: TRenameDlg
           DesignSize = (
             532
             65)
-          object Id3Btn5: TSpeedButton
-            Tag = 4
-            Left = 361
-            Top = 34
-            Width = 75
-            Height = 22
-            Caption = #12522#12522#12540#12473#24180
-            OnClick = RefFmtBtnClick
-          end
-          object Id3Btn4: TSpeedButton
-            Tag = 3
-            Left = 283
-            Top = 34
-            Width = 75
-            Height = 22
-            Caption = #12488#12521#12483#12463'No.'
-            OnClick = RefFmtBtnClick
-          end
           object mp3fextLabel: TLabel
             Left = 486
             Top = 11
@@ -856,38 +837,12 @@ object RenameDlg: TRenameDlg
             Font.Style = []
             ParentFont = False
           end
-          object Id3Btn3: TSpeedButton
-            Tag = 2
-            Left = 205
-            Top = 34
-            Width = 75
-            Height = 22
-            Caption = #12488#12521#12483#12463#21517
-            OnClick = RefFmtBtnClick
-          end
           object TLabel
             Left = 11
             Top = 12
             Width = 24
             Height = 13
             Caption = #26360#24335
-          end
-          object Id3Btn2: TSpeedButton
-            Tag = 1
-            Left = 127
-            Top = 34
-            Width = 75
-            Height = 22
-            Caption = #12450#12523#12496#12512#21517
-            OnClick = RefFmtBtnClick
-          end
-          object Id3Btn1: TSpeedButton
-            Left = 49
-            Top = 34
-            Width = 75
-            Height = 22
-            Caption = #12450#12540#12486#12451#12473#12488
-            OnClick = RefFmtBtnClick
           end
           object Mp3FmtComboBox: TComboBox
             Left = 42
@@ -902,10 +857,59 @@ object RenameDlg: TRenameDlg
             OnEnter = SrcStrComboBoxEnter
             OnExit = SrcStrComboBoxExit
           end
+          object Id3Btn2: TButton
+            Tag = 1
+            Left = 127
+            Top = 38
+            Width = 75
+            Height = 22
+            Caption = #12450#12523#12496#12512#21517
+            TabOrder = 2
+            OnClick = RefFmtBtnClick
+          end
+          object Id3Btn3: TButton
+            Tag = 2
+            Left = 205
+            Top = 38
+            Width = 75
+            Height = 22
+            Caption = #12488#12521#12483#12463#21517
+            TabOrder = 3
+            OnClick = RefFmtBtnClick
+          end
+          object Id3Btn4: TButton
+            Tag = 3
+            Left = 283
+            Top = 38
+            Width = 75
+            Height = 22
+            Caption = #12488#12521#12483#12463'No.'
+            TabOrder = 4
+            OnClick = RefFmtBtnClick
+          end
+          object Id3Btn5: TButton
+            Tag = 4
+            Left = 361
+            Top = 38
+            Width = 75
+            Height = 22
+            Caption = #12522#12522#12540#12473#24180
+            TabOrder = 5
+            OnClick = RefFmtBtnClick
+          end
+          object Id3Btn1: TButton
+            Left = 49
+            Top = 38
+            Width = 75
+            Height = 22
+            Caption = #12450#12540#12486#12451#12473#12488
+            TabOrder = 1
+            OnClick = RefFmtBtnClick
+          end
         end
       end
       object OptionSheet: TTabSheet
-        Caption = #35373#23450'(&O)'
+        Caption = #35373#23450
         ImageIndex = 3
         object PageControl1: TPageControl
           Left = 0
@@ -914,8 +918,10 @@ object RenameDlg: TRenameDlg
           Height = 232
           ActivePage = AssRenSheet
           Align = alClient
+          OwnerDraw = True
           TabOrder = 0
           TabWidth = 180
+          OnDrawTab = RenPageControlDrawTab
           object AssRenSheet: TTabSheet
             Caption = #38306#36899#12501#12449#12452#12523#12398#21516#26178#25913#21517
             object Opt1BtmPanel: TPanel
@@ -1267,7 +1273,7 @@ object RenameDlg: TRenameDlg
       OnUpdate = LatestTimeActionUpdate
     end
     object EditListAction: TAction
-      Caption = #32232#38598'(&E)'
+      Caption = #32232#38598
       OnExecute = EditListActionExecute
       OnUpdate = EditListActionUpdate
     end

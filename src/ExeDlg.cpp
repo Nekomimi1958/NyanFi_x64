@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  コマンドライン実行													//
+//  コマンドラインの実行												//
 //----------------------------------------------------------------------//
 #include <vcl.h>
 #pragma hdrstop
@@ -69,6 +69,8 @@ void __fastcall TExeCmdDlg::FormShow(TObject *Sender)
 	else if (inp_LastCmd) {
 		if (ExeComboBox->Items->Count>0) ExeComboBox->ItemIndex = 0;
 	}
+
+	SetDarkWinTheme(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TExeCmdDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -130,7 +132,14 @@ void __fastcall TExeCmdDlg::OkActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TExeCmdDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+L")) invert_CheckBox(LogStdOutCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CopyStdOutCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+D")) invert_CheckBox(ListStdOutCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+S")) invert_CheckBox(SaveStdOutCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+A")) invert_CheckBox(RunAsCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+E")) invert_CheckBox(UacDlgCheckBox);
+	else SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

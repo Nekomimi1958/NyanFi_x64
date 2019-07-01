@@ -1737,13 +1737,13 @@ void __fastcall TGitViewer::FindCommitEditChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FindCommitEditEnter(TObject *Sender)
 {
-	if (!IsDarkMode) FindCommitEdit->Color = scl_Window;
+	FindCommitEdit->Color = get_WinColor();
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FindCommitEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	if (!IsDarkMode) InvColIfEmpty(FindCommitEdit);
+	InvColIfEmpty(FindCommitEdit);
 }
 
 //---------------------------------------------------------------------------

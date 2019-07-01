@@ -52,6 +52,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *BottomPanel;
 	TPanel *CreDirPanel;
 	TPanel *CreTestPanel;
+	TPanel *DirSttPanel;
 	TPanel *IniSttPanel;
 	TPanel *InputPanel;
 	TPanel *NewTextPanel;
@@ -72,6 +73,11 @@ __published:	// IDE で管理されるコンポーネント
 private:	// ユーザー宣言
 	UnicodeString HelpTopic;
 
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
+
 	void __fastcall WmFormShowed(TMessage &msg);
 
 public:		// ユーザー宣言
@@ -83,6 +89,7 @@ public:		// ユーザー宣言
 	__fastcall TInputExDlg(TComponent* Owner);
 
 	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
 	END_MESSAGE_MAP(TForm)
 };

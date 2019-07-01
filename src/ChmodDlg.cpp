@@ -24,6 +24,8 @@ void __fastcall TFtpChmodDlg::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
 	InhChange = false;
+
+	SetDarkWinTheme(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TFtpChmodDlg::FormClose(TObject *Sender, TCloseAction &Action)

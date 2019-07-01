@@ -23,6 +23,7 @@ TFindFileDlg *FindFileDlg = NULL;
 __fastcall TFindFileDlg::TFindFileDlg(TComponent* Owner)
 	: TForm(Owner)
 {
+	IsDark = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TFindFileDlg::FormCreate(TObject *Sender)
@@ -199,9 +200,6 @@ void __fastcall TFindFileDlg::FormShow(TObject *Sender)
 		if (BasicPanel->Controls[i]->Visible) hi += BasicPanel->Controls[i]->Height;
 	ClientHeight = BasicHeight = hi;
 
-	ExtraCheckBoxClick(NULL);
-	ArcCheckBoxClick(NULL);
-
 	AttrRadioGroup->ItemIndex = IniFile->ReadIntGen( FindDir? _T("FindDirAttrMode") : _T("FindAttrMode"));
 	AttrRCheckBox->Checked	  = IniFile->ReadBoolGen(FindDir? _T("FindDirAttrR") : _T("FindAttrR"));
 	AttrHCheckBox->Checked	  = IniFile->ReadBoolGen(FindDir? _T("FindDirAttrH") : _T("FindAttrH"));
@@ -210,6 +208,17 @@ void __fastcall TFindFileDlg::FormShow(TObject *Sender)
 	AttrCCheckBox->Checked	  = IniFile->ReadBoolGen(FindDir? _T("FindDirAttrC") : _T("FindAttrC"));
 	AttrHCheckBox->Enabled	  = ShowHideAtr;
 	AttrSCheckBox->Enabled	  = ShowSystemAtr;
+
+	if (!PropLabel) PropLabel = AttachLabelToGroup(PropGroupBox, "情報(&I)");
+	if (!IconLabel) IconLabel = AttachLabelToGroup(IconGroupBox, "アイコン数(&N)");
+
+	if (IsDark!=IsDarkMode) {
+		SetDarkWinTheme(this);
+		IsDark = IsDarkMode;
+	}
+
+	ExtraCheckBoxClick(NULL);
+	ArcCheckBoxClick(NULL);
 
 	DlgInitialized = true;
 
@@ -481,19 +490,22 @@ void __fastcall TFindFileDlg::MaskComboBoxChange(TObject *Sender)
 		LineBrkComboBox->ItemIndex	= -1;
 		BomRadioGroup->ItemIndex	= 0;
 
-		PropGroupBox->Caption =
-			test_AppInfExt(fext)?	"アプリケーション情報(&I)" :
-			test_HtmlExt(fext)?		"ヘッダ情報(&I)" :
-			hasExif?				"Exif情報(&I)" :
-			test_Mp3Ext(fext)?		"ID3タグ情報(&I)" :
-			(test_FlacExt(fext) || USAME_TI(fext, ".opus"))?
-									"コメント情報(&I)" :
-			test_LnkExt(fext)?		"ショートカット情報(&I)" :
-			test_IcoExt(fext)?		"アイコン情報(&I)" :
-			(test_CurExt(fext) || test_AniExt(fext))?
-									"カーソル情報(&I)" : "ファイル情報(&I)";
-
-		IconGroupBox->Caption = test_CurExt(fext)? "画像数(&N)" : "アイコン数(&N)";
+		if (PropLabel) {
+			PropLabel->Caption =
+				test_AppInfExt(fext)?	"アプリケーション情報(&I)" :
+				test_HtmlExt(fext)?		"ヘッダ情報(&I)" :
+				hasExif?				"Exif情報(&I)" :
+				test_Mp3Ext(fext)?		"ID3タグ情報(&I)" :
+				(test_FlacExt(fext) || USAME_TI(fext, ".opus"))?
+										"コメント情報(&I)" :
+				test_LnkExt(fext)?		"ショートカット情報(&I)" :
+				test_IcoExt(fext)?		"アイコン情報(&I)" :
+				(test_CurExt(fext) || test_AniExt(fext))?
+										"カーソル情報(&I)" : "ファイル情報(&I)";
+		}
+		if (IconLabel) {
+			IconLabel->Caption = test_CurExt(fext)? "画像数(&N)" : "アイコン数(&N)";
+		}
 
 		ExtPanel->Caption = EmptyStr;
 
@@ -544,30 +556,27 @@ void __fastcall TFindFileDlg::AttrCheckBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFindFileDlg::CondChangeUpdate(TObject *Sender)
 {
-	CodePanel->Color = (CodePageComboBox->Text.IsEmpty() && LineBrkComboBox->Text.IsEmpty())? col_Invalid : scl_BtnFace;
-	DatePanel->Color = (DateRadioGroup->ItemIndex==0)? col_Invalid : scl_BtnFace;
-	SizePanel->Color = (SizeRadioGroup->ItemIndex==0)? col_Invalid : scl_BtnFace;
-	ContPanel->Color = (ContRadioGroup->ItemIndex==0 && !DirWarnCheckBox->Checked)? col_Invalid : scl_BtnFace;
-	AttrPanel->Color = (AttrRadioGroup->ItemIndex==0)? col_Invalid : scl_BtnFace;
-	TimePanel->Color = (TimeRadioGroup->ItemIndex==0)? col_Invalid : scl_BtnFace;
-	RatePanel->Color = (RateRadioGroup->ItemIndex==0)? col_Invalid : scl_BtnFace;
-	FpsPanel->Color  = (FpsRadioGroup->ItemIndex==0)?  col_Invalid : scl_BtnFace;
-	FrSzPanel->Color = (FrWdRadioGroup->ItemIndex==0  && FrHiRadioGroup->ItemIndex==0)?  col_Invalid : scl_BtnFace;
-	ImgSzPanel->Color= (ImgWdRadioGroup->ItemIndex==0 && ImgHiRadioGroup->ItemIndex==0)? col_Invalid : scl_BtnFace;
-	IconPanel->Color = (IconRadioGroup->ItemIndex==0)? col_Invalid : scl_BtnFace;
-	TagsPanel->Color = TagsComboBox->Text.IsEmpty()?   col_Invalid : scl_BtnFace;
-	LCntPanel->Color = (LCntRadioGroup->ItemIndex==0)? col_Invalid : scl_BtnFace;
+	CodePanel->Color = get_PanelColor(CodePageComboBox->Text.IsEmpty() && LineBrkComboBox->Text.IsEmpty());
+	DatePanel->Color = get_PanelColor(DateRadioGroup->ItemIndex==0);
+	SizePanel->Color = get_PanelColor(SizeRadioGroup->ItemIndex==0);
+	ContPanel->Color = get_PanelColor(ContRadioGroup->ItemIndex==0 && !DirWarnCheckBox->Checked);
+	AttrPanel->Color = get_PanelColor(AttrRadioGroup->ItemIndex==0);
+	TimePanel->Color = get_PanelColor(TimeRadioGroup->ItemIndex==0);
+	RatePanel->Color = get_PanelColor(RateRadioGroup->ItemIndex==0);
+	FpsPanel->Color  = get_PanelColor(FpsRadioGroup->ItemIndex==0);
+	FrSzPanel->Color = get_PanelColor(FrWdRadioGroup->ItemIndex==0  && FrHiRadioGroup->ItemIndex==0);
+	ImgSzPanel->Color= get_PanelColor(ImgWdRadioGroup->ItemIndex==0 && ImgHiRadioGroup->ItemIndex==0);
+	IconPanel->Color = get_PanelColor(IconRadioGroup->ItemIndex==0);
+	TagsPanel->Color = get_PanelColor(TagsComboBox->Text.IsEmpty());
+	LCntPanel->Color = get_PanelColor(LCntRadioGroup->ItemIndex==0);
 	OtherPanel->Color=
-		(!NameWarnCheckBox->Checked && !HasAdsCheckBox->Checked && !UseProcCheckBox->Checked)?
-			col_Invalid : scl_BtnFace;
+		get_PanelColor(!NameWarnCheckBox->Checked && !HasAdsCheckBox->Checked && !UseProcCheckBox->Checked);
 	FrmtPanel->Color =
-		(SmplRadioGroup->ItemIndex==0 && BitRadioGroup->ItemIndex==0 && ChnRadioGroup->ItemIndex==0)?
-			col_Invalid : scl_BtnFace;
+		get_PanelColor(SmplRadioGroup->ItemIndex==0 && BitRadioGroup->ItemIndex==0 && ChnRadioGroup->ItemIndex==0);
 	ExifPanel->Color =
-		(!ExifKwdEdit->Text.IsEmpty() || (!LatLngComboBox->Text.IsEmpty() && !GpsRangeEdit->Text.IsEmpty()))?
-			scl_BtnFace : col_Invalid;
-	PropPanel->Color = PrpKwdEdit->Text.IsEmpty()? col_Invalid : scl_BtnFace;
-	TextPanel->Color = TxtKwdComboBox->Text.IsEmpty()? col_Invalid : scl_BtnFace;
+		get_PanelColor(!ExifKwdEdit->Text.IsEmpty() || (!LatLngComboBox->Text.IsEmpty() && !GpsRangeEdit->Text.IsEmpty()));
+	PropPanel->Color = get_PanelColor(PrpKwdEdit->Text.IsEmpty());
+	TextPanel->Color = get_PanelColor(TxtKwdComboBox->Text.IsEmpty());
 
 	double range = EditToInt(GpsRangeEdit, 0)/1000.0;
 	KmLabel->Caption = (range>=1.0)? UnicodeString().sprintf(_T("%.1f km"), range) : EmptyStr;
@@ -579,9 +588,11 @@ void __fastcall TFindFileDlg::CondChangeUpdate(TObject *Sender)
 	BomRadioGroup->Enabled = (cpag==1200 || cpag==1201 || cpag==65001);
 	if (!BomRadioGroup->Enabled) BomRadioGroup->ItemIndex = 0;
 
-	UnicodeString tit = get_tkn(PropGroupBox->Caption, "I)") + "I)";
-	if (UseProcCheckBox->Checked) tit += " /プロセス情報";
-	PropGroupBox->Caption = tit;
+	if (PropLabel) {
+		UnicodeString tit = get_tkn(PropLabel->Caption, "I)") + "I)";
+		if (UseProcCheckBox->Checked) tit += " /プロセス情報";
+		PropLabel->Caption = tit;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -617,13 +628,13 @@ void __fastcall TFindFileDlg::FindOkActionUpdate(TObject *Sender)
 
 	//正規表現パターンのチェック
 	bool k_reg_ng = !FindDir && RegExCheckBox->Checked && !KeywordComboBox->Text.IsEmpty() && !chk_RegExPtn(KeywordComboBox->Text);
-	KeywordComboBox->Color = k_reg_ng? col_Illegal : scl_Window;
+	set_ErrColor(KeywordComboBox, k_reg_ng);
 
 	bool p_reg_ng = hasProp && PrpRegExCheckBox->Checked && !PrpKwdEdit->Text.IsEmpty() && !chk_RegExPtn(PrpKwdEdit->Text);
-	PrpKwdEdit->Color = p_reg_ng? col_Illegal : scl_Window;
+	set_ErrColor(PrpKwdEdit, p_reg_ng);
 
 	bool t_reg_ng = hasText && TxtRegExCheckBox->Checked && !TxtKwdComboBox->Text.IsEmpty() && !chk_RegExPtn(TxtKwdComboBox->Text);
-	TxtKwdComboBox->Color = t_reg_ng? col_Illegal : scl_Window;
+	set_ErrColor(TxtKwdComboBox, t_reg_ng);
 
 	//日付のチェック
 	UnicodeString dtstr = DateMaskEdit->Text;
@@ -645,7 +656,7 @@ void __fastcall TFindFileDlg::FindOkActionUpdate(TObject *Sender)
 	catch (...) {
 		date_ng = true;
 	}
-	DateMaskEdit->Color = date_ng? col_Illegal : scl_Window;
+	set_ErrColor(DateMaskEdit, date_ng);
 
 	DateBtn2->Enabled = !use_wc;
 	DateBtn3->Enabled = !use_wc;
@@ -661,7 +672,7 @@ void __fastcall TFindFileDlg::FindOkActionUpdate(TObject *Sender)
 		catch (EConvertError &e) {
 			time_ng = true;
 		}
-		TimeMaskEdit->Color = time_ng? col_Illegal : scl_Window;
+		set_ErrColor(TimeMaskEdit, time_ng);
 	}
 
 	ap->Enabled = (!k_reg_ng && !p_reg_ng && !t_reg_ng && !date_ng && !time_ng);
@@ -684,7 +695,33 @@ void __fastcall TFindFileDlg::FindOkActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFindFileDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift);
+	if (SpecialKeyProc(this, Key, Shift)) return;
+
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+D")) set_focus_GroupBox(DateGroupBox);
+	else if (USAME_TI(KeyStr, "Alt+S")) set_focus_GroupBox(SizeGroupBox);
+	else if (USAME_TI(KeyStr, "Alt+A")) set_focus_GroupBox(AttrGroupBox);
+	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(SubDirCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(ArcCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+X")) invert_CheckBox(ExtraCheckBox);
+	else if (ExtPanel->Visible) {
+		if		(USAME_TI(KeyStr, "Alt+B")) set_focus_GroupBox(RateGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+C")) set_focus_GroupBox(CodeGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+E")) set_focus_GroupBox(ExifGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+F")) set_focus_GroupBox(FrmtGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+G")) set_focus_GroupBox(TagGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+I")) set_focus_GroupBox(PropGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+L")) set_focus_GroupBox(LCntGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+N")) set_focus_GroupBox(IconGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+O")) set_focus_GroupBox(OtherGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+P")) set_focus_GroupBox(FpsGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+T")) {
+			if (!set_focus_GroupBox(TimeGroupBox)) set_focus_GroupBox(TextGroupBox);
+		}
+		else if (USAME_TI(KeyStr, "Alt+W")) {
+			if (!set_focus_GroupBox(FrSzGroupBox)) set_focus_GroupBox(ImgSzGroupBox);
+		}
+	}
 }
 //---------------------------------------------------------------------------
 

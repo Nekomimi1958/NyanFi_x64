@@ -48,6 +48,9 @@ __fastcall TDistributionDlg::TDistributionDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::FormCreate(TObject *Sender)
 {
+	org_SttBar1WndProc	   = StatusBar1->WindowProc;
+	StatusBar1->WindowProc = SttBar1WndProc;
+
 	UserModule->SetUsrPopupMenu(this);
 
 	DistrDirEdit->Tag = EDTAG_DST_FMT;
@@ -64,9 +67,6 @@ void __fastcall TDistributionDlg::FormCreate(TObject *Sender)
 	SttPrgBar = new SttProgressBar(StatusBar1, 2);
 	SttPrgBar->MsgIndex = 1;
 	ImmediateExe = false;
-
-	set_ButtonMark(FindDownBtn, UBMK_BDOWN);
-	set_ButtonMark(FindUpBtn,   UBMK_BUP);
 }
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::FormShow(TObject *Sender)
@@ -139,6 +139,12 @@ void __fastcall TDistributionDlg::FormShow(TObject *Sender)
 
 	SkipCount = 0;
 
+	SetDarkWinTheme(this);
+	TColor bg = get_WinColor();
+	RegListBox->Color  = bg;
+	ListListBox->Color = bg;
+	PrvListBox->Color  = bg;
+
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
 //---------------------------------------------------------------------------
@@ -203,6 +209,19 @@ void __fastcall TDistributionDlg::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//ステータスバーの描画
+//---------------------------------------------------------------------------
+void __fastcall TDistributionDlg::StatusBar1DrawPanel(TStatusBar *StatusBar,
+	TStatusPanel *Panel, const TRect &Rect)
+{
+	TCanvas *cv = StatusBar->Canvas;
+	cv->Brush->Color = IsDarkMode? col_bgSttBar : scl_BtnFace;
+	cv->FillRect(Rect);
+	cv->Font->Color = IsDarkMode? col_fgSttBar : scl_BtnText;
+	cv->TextOut(Rect.Left + 2, Rect.Top, Panel->Text);
+}
+
+//---------------------------------------------------------------------------
 //登録内容をリストボックスに割り当て
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::AssignRegListBox()
@@ -252,9 +271,9 @@ bool __fastcall TDistributionDlg::SaveDistrFile()
 //プレビューのヘッダ
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::PrvListHeaderDrawSection(THeaderControl *HeaderControl,
-		THeaderSection *Section, const TRect &Rect, bool Pressed)
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
 {
-	draw_SortHeader(HeaderControl, Section, Rect, (Section->Index==PrvSortMode)?  1 : 0, true);
+	draw_SortHeader(HeaderControl, Section, Rect, (Section->Index==PrvSortMode)?  1 : 0, true, IsDarkMode);
 }
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::PrvListHeaderSectionClick(THeaderControl *HeaderControl,
@@ -267,7 +286,7 @@ void __fastcall TDistributionDlg::PrvListHeaderSectionClick(THeaderControl *Head
 }
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::PrvListHeaderSectionResize(THeaderControl *HeaderControl,
-		THeaderSection *Section)
+	THeaderSection *Section)
 {
 	PrvListHeader->Sections->Items[1]->Width = ClientWidth - PrvListHeader->Sections->Items[0]->Width;
 	PrvListBox->Invalidate();
@@ -409,7 +428,7 @@ void __fastcall TDistributionDlg::UpdatePreview(bool upd)
 //振り分け定義リストの描画
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::RegListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -425,11 +444,12 @@ void __fastcall TDistributionDlg::RegListBoxDrawItem(TWinControl *Control, int I
 
 	TStringDynArray cur_buf = get_csv_array(lp->Items->Strings[Index], DISTRLS_CSVITMCNT, true);
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled4;
 	int yp = Rect.Top  + get_TopMargin(cv);
+	cv->Font->Color = get_TextColor(State.Contains(odSelected));
 	cv->TextOut(xp, yp, cur_buf[0]);	xp += w_tit + 8;
 	cv->TextOut(xp, yp, cur_buf[2]);	xp += w_msk + 4;
 	if (!starts_AT(cur_buf[2])) {
@@ -541,12 +561,14 @@ void __fastcall TDistributionDlg::ListListBoxDrawItem(TWinControl *Control, int 
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
-	SetHighlight(cv, State.Contains(odSelected));
+
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled4;
 	int yp = Rect.Top  + get_TopMargin(cv);
 	UnicodeString lbuf = lp->Items->Strings[Index];
+	cv->Font->Color = get_TextColor(State.Contains(odSelected));
 	if (!lbuf.IsEmpty() && (split_strings_tab(lbuf).Length!=2)) cv->Font->Color = col_Error;
 	TabCrTextOut(lbuf, cv, xp, yp, cv->Font->Color);
 }
@@ -571,7 +593,7 @@ void __fastcall TDistributionDlg::ListListBoxKeyDown(TObject *Sender, WORD &Key,
 //プレビューの描画
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::PrvListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -579,7 +601,7 @@ void __fastcall TDistributionDlg::PrvListBoxDrawItem(TWinControl *Control, int I
 	int xp = Rect.Left + Scaled4;
 	int yp = Rect.Top  + get_TopMargin(cv);
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
@@ -593,7 +615,8 @@ void __fastcall TDistributionDlg::PrvListBoxDrawItem(TWinControl *Control, int I
 	int wd = sp->Items[0]->Width;
 	cv->TextOut(xp, yp, minimize_str(fnam, cv, wd, OmitEndOfName));	xp += wd + 4;
 	out_Text(cv, xp, yp, _T("→"));	xp += cv->TextWidth("→") + 4;
-	cv->Font->Color = (!CreDistrDirCheckBox->Checked && !dir_exists(anam))? col_Error : scl_WindowText;
+
+	cv->Font->Color = (!CreDistrDirCheckBox->Checked && !dir_exists(anam))? col_Error : get_TextColor();
 	cv->TextOut(xp, yp, yen_to_delimiter(dnam));
 }
 //---------------------------------------------------------------------------
@@ -717,7 +740,8 @@ void __fastcall TDistributionDlg::AddRegActionUpdate(TObject *Sender)
 	bool is_lstfl = starts_AT(mask);
 	bool lstfl_ng = is_lstfl? !file_exists(to_absolute_name(get_tkn_r(mask, '@'))) : false;
 
-	DistrMaskEdit->Color  = (regex_ng || lstfl_ng)? col_Illegal : scl_Window;
+	set_ErrColor(DistrMaskEdit, regex_ng || lstfl_ng);
+
 	DistrMaskEdit->Tag	  = EDTAG_RGEX_V|EDTAG_RGEX_E;
 	DistrDirEdit->Enabled = !is_lstfl;
 	RefDirButton->Enabled = !is_lstfl;

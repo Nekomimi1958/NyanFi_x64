@@ -27,7 +27,6 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *GraphBtn;
 	TCheckBox *TopIsHeaderCheckBox;
 	THeaderControl *RecordHeader;
-	TLabel *Label1;
 	TMenuItem *CopyItem;
 	TPanel *ClientPanel;
 	TPanel *GridPanel;

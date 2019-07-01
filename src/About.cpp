@@ -28,6 +28,12 @@ void __fastcall TAboutBox::FormCreate(TObject *Sender)
 	ProductName->Font->Size = 20;
 }
 //---------------------------------------------------------------------------
+void __fastcall TAboutBox::FormShow(TObject *Sender)
+{
+	SetDarkWinTheme(this);
+	SupportURL->Font->Color = IsDarkMode? TColor(RGB(0x66, 0x99, 0xFF)) : clNavy;
+}
+//---------------------------------------------------------------------------
 void __fastcall TAboutBox::SupportURLClick(TObject *Sender)
 {
 	Execute_ex(SupportURL->Caption);

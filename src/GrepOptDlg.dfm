@@ -11,6 +11,7 @@ object GrepExOptDlg: TGrepExOptDlg
   OldCreateOrder = False
   Position = poMainFormCenter
   ShowHint = True
+  OnClose = FormClose
   OnCreate = FormCreate
   OnHelp = FormHelp
   OnShow = FormShow
@@ -23,8 +24,10 @@ object GrepExOptDlg: TGrepExOptDlg
     Height = 319
     ActivePage = OutModeSheet
     Align = alClient
+    OwnerDraw = True
     TabOrder = 0
     TabWidth = 100
+    OnDrawTab = PageControl1DrawTab
     object OutModeSheet: TTabSheet
       Caption = #20986#21147#26041#27861
       ImageIndex = -1
@@ -39,24 +42,9 @@ object GrepExOptDlg: TGrepExOptDlg
         DesignSize = (
           506
           291)
-        object OutModeRadioGroup: TRadioGroup
-          Left = 8
-          Top = 8
-          Width = 488
-          Height = 41
-          Anchors = [akLeft, akTop, akRight]
-          Caption = #20986#21147#20808
-          Columns = 4
-          Items.Strings = (
-            #28961#12375
-            #12501#12449#12452#12523
-            #12463#12522#12483#12503#12508#12540#12489)
-          TabOrder = 0
-          OnClick = OutModeRadioGroupClick
-        end
         object AppGroupBox: TGroupBox
           Left = 8
-          Top = 157
+          Top = 158
           Width = 488
           Height = 110
           Anchors = [akLeft, akTop, akRight]
@@ -125,7 +113,7 @@ object GrepExOptDlg: TGrepExOptDlg
         end
         object FileGroupBox: TGroupBox
           Left = 8
-          Top = 63
+          Top = 65
           Width = 488
           Height = 77
           Anchors = [akLeft, akTop, akRight]
@@ -162,6 +150,38 @@ object GrepExOptDlg: TGrepExOptDlg
             Width = 304
             Height = 17
             Caption = #26082#23384#12501#12449#12452#12523#12364#12354#12428#12400#36861#21152
+            TabOrder = 2
+          end
+        end
+        object OutModeGroup: TGroupBox
+          Left = 8
+          Top = 8
+          Width = 488
+          Height = 45
+          Caption = #20986#21147#20808
+          TabOrder = 0
+          object OutMode0Btn: TRadioButton
+            Left = 8
+            Top = 18
+            Width = 80
+            Height = 17
+            Caption = #28961#12375
+            TabOrder = 0
+          end
+          object OutMode1Btn: TRadioButton
+            Left = 117
+            Top = 18
+            Width = 80
+            Height = 17
+            Caption = #12501#12449#12452#12523
+            TabOrder = 1
+          end
+          object OutMode2Btn: TRadioButton
+            Left = 227
+            Top = 18
+            Width = 110
+            Height = 17
+            Caption = #12463#12522#12483#12503#12508#12540#12489
             TabOrder = 2
           end
         end

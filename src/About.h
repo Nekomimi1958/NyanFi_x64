@@ -24,6 +24,7 @@ __published:
 	TPanel *Panel1;
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall SupportURLClick(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
 
 private:
 

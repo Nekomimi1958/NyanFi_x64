@@ -10,6 +10,7 @@
 #include "usr_file_ex.h"
 #include "usr_swatch.h"
 #include "UserFunc.h"
+#include "GlobalDark.h"
 #include "InpCmds.h"
 #include "RegExChk.h"
 #include "CalcDlg.h"
@@ -606,7 +607,7 @@ void __fastcall TUserModule::DelHistComboActionUpdate(TObject *Sender)
 void __fastcall TUserModule::ClrHistComboActionExecute(TObject *Sender)
 {
 	TComboBox *cp = GetActiveComboBox();
-	if (cp && msgbox_Y_N_C(LoadUsrMsg(USTR_DelHistoryQ))==IDYES) cp->Clear();
+	if (cp && msgbox_Y_N_C(LoadUsrMsg(USTR_DelHistoryQ))==mrYes) cp->Clear();
 }
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::ClrHistComboActionUpdate(TObject *Sender)

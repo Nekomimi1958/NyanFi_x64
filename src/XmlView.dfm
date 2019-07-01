@@ -101,37 +101,6 @@ object XmlViewer: TXmlViewer
       DesignSize = (
         592
         44)
-      object Label1: TLabel
-        Left = 87
-        Top = 15
-        Width = 63
-        Height = 13
-        Caption = #33258#21205#38283#38281'(&A)'
-      end
-      object Label2: TLabel
-        Left = 426
-        Top = 15
-        Width = 12
-        Height = 13
-        Anchors = [akTop, akRight]
-        Caption = #21517
-      end
-      object Label3: TLabel
-        Left = 469
-        Top = 15
-        Width = 12
-        Height = 13
-        Anchors = [akTop, akRight]
-        Caption = #23646
-      end
-      object Label4: TLabel
-        Left = 512
-        Top = 15
-        Width = 12
-        Height = 13
-        Anchors = [akTop, akRight]
-        Caption = #20516
-      end
       object FindEdit: TLabeledEdit
         Left = 234
         Top = 12
@@ -152,6 +121,7 @@ object XmlViewer: TXmlViewer
         Width = 107
         Height = 17
         Action = AutoAction
+        Caption = #33258#21205#38283#38281'(&A)'
         TabOrder = 2
       end
       object NamCheckBox: TCheckBox
@@ -160,6 +130,7 @@ object XmlViewer: TXmlViewer
         Width = 41
         Height = 17
         Anchors = [akTop, akRight]
+        Caption = #21517
         TabOrder = 4
       end
       object ValCheckBox: TCheckBox
@@ -168,6 +139,7 @@ object XmlViewer: TXmlViewer
         Width = 41
         Height = 17
         Anchors = [akTop, akRight]
+        Caption = #20516
         TabOrder = 6
       end
       object AtrCheckBox: TCheckBox
@@ -176,6 +148,7 @@ object XmlViewer: TXmlViewer
         Width = 41
         Height = 17
         Anchors = [akTop, akRight]
+        Caption = #23646
         TabOrder = 5
       end
       object ExpBtn: TButton

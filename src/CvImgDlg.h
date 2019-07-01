@@ -64,12 +64,20 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ClipNameComboBoxChange(TObject *Sender);
 
 private:	// ユーザー宣言
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
 
 public:		// ユーザー宣言
 	bool fromClip;
 	UnicodeString DistPath;
 
 	__fastcall TCvImageDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TCvImageDlg *CvImageDlg;

@@ -53,11 +53,7 @@ void __fastcall TKeyListDlg::FormShow(TObject *Sender)
 	if (!UnInitializing) KeyTabControlChange(NULL);
 
 	SetDarkWinTheme(OpePanel);
-	if (IsDarkMode)
-		SetDarkWinTheme(FilterEdit);
-	else
-		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
-
+	FilterEdit->Color = get_WinColor(!ToFilter);
 	FilterEdit->Text  = EmptyStr;
 	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();
 
@@ -88,7 +84,7 @@ void __fastcall TKeyListDlg::FormDestroy(TObject *Sender)
 void __fastcall TKeyListDlg::KeyTabControlDrawTab(TCustomTabControl *Control, int TabIndex,
 	const TRect &Rect, bool Active)
 {
-	draw_BottomTab(Control, TabIndex, Rect, Active, IsDarkMode);
+	draw_OwnerTab(Control, TabIndex, Rect, Active, IsDarkMode);
 }
 //---------------------------------------------------------------------------
 //ˆê——‚ÌØ‚è‘Ö‚¦
@@ -326,13 +322,13 @@ void __fastcall TKeyListDlg::FilterEditChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::FilterEditEnter(TObject *Sender)
 {
-	if (!IsDarkMode) FilterEdit->Color = scl_Window;
+	FilterEdit->Color = get_WinColor();
 }
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::FilterEditExit(TObject *Sender)
 {
 	CloseIME(Handle);
-	if (!IsDarkMode) InvColIfEmpty(FilterEdit);
+	InvColIfEmpty(FilterEdit);
 }
 
 //---------------------------------------------------------------------------
@@ -405,11 +401,11 @@ void __fastcall TKeyListDlg::KeyListGridKeyDown(TObject *Sender, WORD &Key, TShi
 		ModalResult = mrCancel;
 	}
 	//ƒ^ƒuØ‚èŠ·‚¦
-	else if (is_ToRightOpe(KeyStr, cmd_F)) {
+	else if (is_ToRightOpe(KeyStr, cmd_F) || USAME_TI(cmd_F, "NextTab")) {
 		KeyTabControl->TabIndex = (KeyTabControl->TabIndex + 1) % KeyTabControl->Tabs->Count;
 		KeyTabControlChange(NULL);
 	}
-	else if (is_ToLeftOpe(KeyStr, cmd_F)) {
+	else if (is_ToLeftOpe(KeyStr, cmd_F) || USAME_TI(cmd_F, "PrevTab")) {
 		KeyTabControl->TabIndex = (KeyTabControl->TabIndex>0) ? KeyTabControl->TabIndex - 1
 															  : KeyTabControl->Tabs->Count - 1;
 		KeyTabControlChange(NULL);

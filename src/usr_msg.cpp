@@ -147,56 +147,6 @@ void EmptyAbort()
 }
 
 //---------------------------------------------------------------------------
-//エラーメッセージ
-//---------------------------------------------------------------------------
-void msgbox_ERR(UnicodeString msg)
-{
-	if (msg.IsEmpty()) return;
-	MessageDlg(msg, mtError, TMsgDlgButtons() << mbOK, 0);
-}
-//---------------------------------------------------------------------------
-void msgbox_ERR(unsigned id)
-{
-	msgbox_ERR(LoadUsrMsg(id));
-}
-
-//---------------------------------------------------------------------------
-//警告メッセージ
-//---------------------------------------------------------------------------
-void msgbox_WARN(UnicodeString msg)
-{
-	if (msg.IsEmpty()) return;
-	MessageDlg(msg, mtWarning, TMsgDlgButtons() << mbOK, 0);
-}
-//---------------------------------------------------------------------------
-void msgbox_WARN(unsigned id)
-{
-	msgbox_WARN(LoadUsrMsg(id));
-}
-
-//---------------------------------------------------------------------------
-//メッセージ
-//---------------------------------------------------------------------------
-void msgbox_OK(UnicodeString msg, UnicodeString tit)
-{
-	Application->MessageBox(msg.c_str(),
-		def_if_empty(tit, _T("確認")).c_str(), MB_OK);
-}
-//---------------------------------------------------------------------------
-bool msgbox_Y_N(UnicodeString msg, UnicodeString tit)
-{
-	int res = Application->MessageBox(msg.c_str(),
-				def_if_empty(tit, _T("確認")).c_str(), MB_YESNO|MB_ICONQUESTION);
-	return (res==IDYES);
-}
-//---------------------------------------------------------------------------
-int msgbox_Y_N_C(UnicodeString msg, UnicodeString tit)
-{
-	return Application->MessageBox(msg.c_str(),
-		def_if_empty(tit, _T("確認")).c_str(), MB_YESNOCANCEL|MB_ICONQUESTION);
-}
-
-//---------------------------------------------------------------------------
 //確認メッセージ
 //---------------------------------------------------------------------------
 bool SureCopy;					//コピー
@@ -214,56 +164,4 @@ bool SureAdjPos;				//表示位置を状況に合わせて調整
 
 bool MsgPosCenter = false;		//メイン画面の中央に表示
 
-//---------------------------------------------------------------------------
-bool msgbox_Sure(UnicodeString msg, bool ask, bool center)
-{
-	if (!ask) return true;
-	unsigned int flag = (SureCancel? MB_YESNOCANCEL : MB_YESNO) | MB_ICONQUESTION;
-	if (SureDefNo) flag |= MB_DEFBUTTON2;
-
-	MsgPosCenter = center;
-	bool res = (Application->MessageBox(msg.c_str(), _T("確認"), flag)==IDYES);
-	MsgPosCenter = false;
-
-	return res;
-}
-//---------------------------------------------------------------------------
-bool msgbox_Sure(const _TCHAR *msg, bool ask, bool center)
-{
-	return msgbox_Sure(UnicodeString(msg), ask, center);
-}
-//---------------------------------------------------------------------------
-bool msgbox_Sure(int id, bool ask, bool center)
-{
-	if (!ask) return true;
-	return msgbox_Sure(LoadUsrMsg(id), ask, center);
-}
-
-//---------------------------------------------------------------------------
-//「すべてに適用」チェックボックス付き
-//---------------------------------------------------------------------------
-int msgbox_SureAll(UnicodeString msg, bool &app_chk, bool center)
-{
-	TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation,
-						TMsgDlgButtons() << mbYes << mbNo << mbCancel, 
-						SureDefNo? mbNo : mbYes);
-
-	//「すべてに適用」チェックボックスを追加
-	TCheckBox *cp = new TCheckBox(MsgDlg);
-	MsgDlg->ClientHeight = MsgDlg->ClientHeight + cp->Height + 12;
-	cp->Caption = "すべてに適用(&A)";
-	cp->Parent	= MsgDlg;
-	cp->Left	= 20;
-	cp->Top		= MsgDlg->ClientHeight - cp->Height - 12;
-	cp->Width	= MsgDlg->ClientWidth - cp->Left;
-
-	MsgPosCenter = center;
-	int res = MsgDlg->ShowModal();
-	MsgPosCenter = false;
-
-	app_chk = cp->Checked;
-	delete MsgDlg;
-
-	return res;
-}
 //---------------------------------------------------------------------------

@@ -63,6 +63,11 @@ void __fastcall TPrintImgDlg::FormShow(TObject *Sender)
 	StrPosRadioGroup->ItemIndex = IniFile->ReadIntGen(_T("PrintImgStrPos"),	1);
 	StrAlRadioGroup->ItemIndex	= IniFile->ReadIntGen(_T("PrintImgStrAl"),	2);
 
+	SetDarkWinTheme(this);
+	PrviewPanel->Color		 = clAppWorkSpace;
+	SizeLabel->Color		 = clAppWorkSpace;
+	SizeLabel->Font->Color	 = scl_WindowText;
+
 	if (!UnInitializing) {
 		DlgInitialized = true;
 		UpdatePreview();
@@ -87,6 +92,13 @@ void __fastcall TPrintImgDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteFontInf("PrintImg", StrFont);
 	delete StrFont;
 }
+//---------------------------------------------------------------------------
+void __fastcall TPrintImgDlg::PageControl1DrawTab(TCustomTabControl *Control,
+	int TabIndex, const TRect &Rect, bool Active)
+{
+	draw_OwnerTab(Control, TabIndex, Rect, Active, IsDarkMode);
+}
+
 //---------------------------------------------------------------------------
 void __fastcall TPrintImgDlg::OptionChanged(TObject *Sender)
 {
@@ -317,6 +329,7 @@ void __fastcall TPrintImgDlg::UpdatePreview()
 
 	DrawImage();
 
+	StrFontEdit->Color		 = clSilver;
 	StrFontEdit->Font->Color = StrFont->Color;
 	StrFontEdit->Font->Style = StrFont->Style;
 	UnicodeString tmp;
@@ -389,3 +402,4 @@ void __fastcall TPrintImgDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftStat
 	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_IV) _T("#Print"));
 }
 //---------------------------------------------------------------------------
+

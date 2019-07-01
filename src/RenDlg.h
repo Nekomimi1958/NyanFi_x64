@@ -48,9 +48,22 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *DelKeyBtn;
 	TButton *DowColBtn;
 	TButton *EditListBtn;
+	TButton *Fmt_A_Btn;
+	TButton *Fmt_E_Btn;
+	TButton *Fmt_L_Btn;
+	TButton *Fmt_R_Btn;
+	TButton *Fmt_S_Btn;
+	TButton *Fmt_TS_Btn;
+	TButton *Fmt_XT_Btn;
+	TButton *Id3Btn1;
+	TButton *Id3Btn2;
+	TButton *Id3Btn3;
+	TButton *Id3Btn4;
+	TButton *Id3Btn5;
 	TButton *OkButton;
 	TButton *PreviewBtn;
 	TButton *RefListBtn;
+	TButton *SaveFmtBtn;
 	TButton *Time00Btn;
 	TButton *Time12Btn;
 	TButton *TimeLatestBtn;
@@ -131,19 +144,6 @@ __published:	// IDE で管理されるコンポーネント
 	TPopupMenu *FmtPopupMenu;
 	TRadioGroup *FbaseRadioGroup;
 	TRadioGroup *FextRadioGroup;
-	TSpeedButton *Fmt_A_Btn;
-	TSpeedButton *Fmt_E_Btn;
-	TSpeedButton *Fmt_L_Btn;
-	TSpeedButton *Fmt_R_Btn;
-	TSpeedButton *Fmt_S_Btn;
-	TSpeedButton *Fmt_TS_Btn;
-	TSpeedButton *Fmt_XT_Btn;
-	TSpeedButton *Id3Btn1;
-	TSpeedButton *Id3Btn2;
-	TSpeedButton *Id3Btn3;
-	TSpeedButton *Id3Btn4;
-	TSpeedButton *Id3Btn5;
-	TSpeedButton *SaveFmtBtn;
 	TSplitter *SerSplitter;
 	TStatusBar *StatusBar1;
 	TStringGrid *PreviewGrid;
@@ -189,7 +189,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefFmtBtnClick(TObject *Sender);
 	void __fastcall Fmt_L_BtnClick(TObject *Sender);
 	void __fastcall Fmt_R_BtnClick(TObject *Sender);
-	void __fastcall Fmt_S_BtnClick(TObject *Sender);
+	void __fastcall Fmt_S_Btn2Click(TObject *Sender);
 	void __fastcall Fmt_A_BtnClick(TObject *Sender);
 	void __fastcall Fmt_E_BtnClick(TObject *Sender);
 	void __fastcall Fmt_XT_BtnClick(TObject *Sender);
@@ -228,6 +228,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefListBtnClick(TObject *Sender);
 	void __fastcall RenListComboBoxChange(TObject *Sender);
 	void __fastcall CnvChSEditChange(TObject *Sender);
+	void __fastcall RenPageControlDrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;
@@ -240,9 +241,25 @@ private:	// ユーザー宣言
 	bool isMp3;					//すべての対象がMP3
 	bool isFlac;				//すべての対象がFLAC
 
+	TEdit *LastEdit;
+	int LastSelStart;
+	int LastSelLength;
+
 	TStringList *SerFormatList;	//連番改名書式設定リスト
 
 	SttProgressBar *SttPrgBar;	//プログレスバー
+
+	TWndMethod org_SttBar1WndProc;
+	void __fastcall SttBar1WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && IsDarkMode && draw_SttBarBg(StatusBar1, msg)) return;
+		org_SttBar1WndProc(msg);
+	}
+
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
 
 	void __fastcall WmFormShowed(TMessage &msg);
 	void __fastcall UpdateNewNameList();
@@ -284,6 +301,7 @@ public:		// ユーザー宣言
 	UnicodeString __fastcall MakeAssRenItem(int idx = -1);
 
 	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
 	END_MESSAGE_MAP(TForm)
 };

@@ -123,6 +123,8 @@ void __fastcall TDotNyanDlg::FormShow(TObject *Sender)
 		InheritLabel->Caption = UnicodeString().sprintf(_T("[%s] Ç©ÇÁåpè≥â¬î\"),
 									get_MiniPathName(ExtractFileDir(inam), 400, Font, true).c_str());
 	}
+
+	SetDarkWinTheme(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TDotNyanDlg::FormDestroy(TObject *Sender)

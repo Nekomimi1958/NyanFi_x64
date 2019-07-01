@@ -60,6 +60,8 @@ void __fastcall TSortModeDlg::FormShow(TObject *Sender)
 
 	this->Perform(WM_NEXTDLGCTL, 0, (NativeInt)0);
 	InhOk = false;
+
+	SetDarkWinTheme(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -110,29 +112,6 @@ void __fastcall TSortModeDlg::OptCheckBoxClick(TObject *Sender)
 {
 	Changed = true;
 }
-
-//---------------------------------------------------------------------------
-void __fastcall TSortModeDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#SortDlg"))) return;
-
-	if (Shift.Empty()) {
-		int idx = -1;
-		switch (Key) {
-		case 'F': idx = 0; break;
-		case 'E': idx = 1; break;
-		case 'D': idx = 2; break;
-		case 'S': idx = 3; break;
-		case 'A': idx = 4; break;
-		case 'U': idx = 5; break;
-		}
-		if (SortModeRadioGroup->Enabled && idx==SortModeRadioGroup->ItemIndex) {
-			SelByKey = true;	//現在のモードのキーが押された
-			Key = 0;
-		}
-	}
-}
-
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::SortModeRadioGroupEnter(TObject *Sender)
 {
@@ -143,6 +122,40 @@ void __fastcall TSortModeDlg::SortModeRadioGroupEnter(TObject *Sender)
 void __fastcall TSortModeDlg::SortModeRadioGroupExit(TObject *Sender)
 {
 	SelByKey = false;
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TSortModeDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	int idx = -1;
+	if		(contained_wd_i("F|Alt+F", KeyStr)) idx = 0;
+	else if (contained_wd_i("E|Alt+E", KeyStr)) idx = 1;
+	else if (contained_wd_i("D|Alt+D", KeyStr)) idx = 2;
+	else if (contained_wd_i("S|Alt+S", KeyStr)) idx = 3;
+	else if (contained_wd_i("A|Alt+A", KeyStr)) idx = 4;
+	else if (contained_wd_i("U|Alt+U", KeyStr)) idx = 5;
+
+	if (idx!=-1) {
+		if (SortModeRadioGroup->Enabled) {
+			if (idx==SortModeRadioGroup->ItemIndex) {
+				SelByKey = true;	//現在のモードのキーが押された
+				Key = 0;
+			}
+			else {
+				SortModeRadioGroup->ItemIndex = idx;
+			}
+		}
+	}
+	else {
+		if		(USAME_TI(KeyStr, "Alt+N")) invert_CheckBox(NaturalCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(DscNameCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+O")) invert_CheckBox(OldCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(SmallCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(DscAttrCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+B")) invert_CheckBox(SortBothCheckBox);
+		else SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#SortDlg"));
+	}
 }
 //---------------------------------------------------------------------------
 

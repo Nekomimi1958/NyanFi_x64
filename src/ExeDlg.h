@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  コマンドライン実行													//
+//  コマンドラインの実行												//
 //----------------------------------------------------------------------//
 #ifndef ExeDlgH
 #define ExeDlgH
@@ -48,6 +48,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormCreate(TObject *Sender);
 
 private:	// ユーザー宣言
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
 
 public:		// ユーザー宣言
 	file_rec *FileRec;
@@ -55,6 +59,10 @@ public:		// ユーザー宣言
 	bool inp_LastCmd;		//前回のコマンドを入力
 
 	__fastcall TExeCmdDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TExeCmdDlg *ExeCmdDlg;

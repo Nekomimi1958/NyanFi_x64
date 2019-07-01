@@ -22,6 +22,7 @@
 #include "UserFunc.h"
 #include "spiunit.h"
 #include "htmconv.h"
+#include "GlobalDark.h"
 #include "task_thread.h"
 #include "imgv_thread.h"
 #include "icon_thread.h"
@@ -84,18 +85,6 @@ void HtmlHelpClose();
 typedef BOOL (WINAPI *FUNC_GetFontResourceInfo)(LPCWSTR, DWORD*, LPVOID, DWORD);
 extern  HMODULE hGdi32;
 extern  FUNC_GetFontResourceInfo	lpfGetFontResourceInfo;
-
-typedef WINAPI BOOL (WINAPI *FUNC_ShouldAppsUseDarkMode)();
-typedef WINAPI BOOL (WINAPI *FUNC_AllowDarkModeForWindow)(HWND, BOOL);
-typedef WINAPI BOOL (WINAPI *FUNC_AllowDarkModeForApp)(BOOL);
-typedef WINAPI VOID (WINAPI *FUNC_FlushMenuThemes)();
-extern  HMODULE hUxTheme;
-extern  FUNC_ShouldAppsUseDarkMode	lpfShouldAppsUseDarkMode;
-extern  FUNC_AllowDarkModeForWindow	lpfAllowDarkModeForWindow;
-extern  FUNC_AllowDarkModeForApp	lpfAllowDarkModeForApp;
-extern  FUNC_FlushMenuThemes		lpfFlushMenuThemes ;
-
-extern bool SupportDarkMode;			//Windows 10 ダークモードに対応
 
 //---------------------------------------------------------------------------
 //画面モード(ScrMode)
@@ -236,7 +225,6 @@ extern HWND   MainHandle;
 extern DWORD  ProcessId;
 extern bool   IsAdmin;
 extern bool   IsPrimary;
-extern bool   IsDarkMode;
 extern int    StartedCount;
 extern int    NyanFiIdNo;
 extern int    ScrMode;
@@ -391,7 +379,6 @@ extern bool InhbitAltMenu;
 extern bool SelectByMouse;
 extern bool SelectBaseOnly;
 extern bool SelectIconSngl;
-extern bool AllowDarkMode;
 extern bool TimColEnabled;
 extern bool PriorFExtCol;
 extern bool ColorOnlyFExt;
@@ -1070,8 +1057,6 @@ extern TColor col_bdrThumb;
 extern TColor col_ThumbExif;
 extern TColor col_ImgGrid;
 extern TColor col_OptFind;
-extern TColor col_Invalid;
-extern TColor col_Illegal;
 extern TColor col_Tim1H;
 extern TColor col_Tim3H;
 extern TColor col_Tim1D;
@@ -1118,10 +1103,7 @@ extern TColor col_fgChInf;
 extern TColor col_bgEdBox;
 extern TColor col_fgEdBox;
 
-extern TColor col_DkPanel;
-
 extern const TColor col_Teal;
-extern const TColor col_None;
 
 extern UnicodeString BgImgName[MAX_BGIMAGE];
 extern Graphics::TBitmap *BgImgBuff[MAX_BGIMAGE];
@@ -1527,6 +1509,7 @@ inline bool is_SelFgCol(bool sel)
 	return (sel && col_fgSelItem!=col_None);
 }
 
+
 inline bool is_X64()
 {
 #if defined(_WIN64)
@@ -1795,13 +1778,17 @@ void make_AssoMenuList(TStringDynArray app_lst, TStringList *lst);
 
 void InvColIfEmpty(TLabeledEdit *ep);
 void InvColIfEmpty(TEdit *ep);
-TColor get_PanelColor();
-TColor get_LabelColor();
+
 TColor get_FileColor(file_rec *fp, TColor col_x);
 TColor get_ExtColor(UnicodeString fext, TColor col = col_fgList);
 TColor get_TimeColor(TDateTime dt, TColor col_def);
 TColor get_SizeColor(__int64 size, TColor col_def);
 TColor get_LogColor(UnicodeString s);
+
+void set_ErrColor(TEdit *ep, bool is_err = false);
+void set_ErrColor(TLabeledEdit *ep, bool is_err = false);
+void set_ErrColor(TMaskEdit *ep, bool is_err = false);
+void set_ErrColor(TComboBox *cp, bool is_err = false);
 
 UnicodeString get_DirNwlName(UnicodeString pnam);
 UnicodeString get_DispName(file_rec *fp);
@@ -1821,7 +1808,8 @@ UnicodeString get_FileInfValue(file_rec *fp, UnicodeString tit, UnicodeString dl
 
 void assign_InfListBox(TListBox *lp, TStringList *i_lst, UsrScrollPanel *sp = NULL);
 void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State);
-void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State, TStringList *col_lst);
+void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State,
+	TStringList *col_lst, bool is_dark = false);
 
 void draw_InputPaintBox(TPaintBox *pp, UnicodeString s);
 
@@ -1880,10 +1868,10 @@ int  GetOptionIntDef(int tag);
 void ApplyOptionByTag(TComponent *cp);
 void ApplyOptionByTag(TForm *fp);
 void ApplyOptionByTag(TTabSheet *sp);
+void ApplyOptionByTag(TPanel *pp);
 
 void SetToolWinBorder(TForm *fp, bool sw = true);
 
-void SetDarkWinTheme(TWinControl *wp);
 void set_BtnMarkDark(TSpeedButton *bp, int id);
 
 void InitializeListGrid(TStringGrid *gp, TFont *fnt = NULL);
@@ -1972,7 +1960,8 @@ void draw_SttBarPanel(TStatusBar *sp, TStatusPanel *pp, TRect rc);
 bool draw_SttBarBg(TStatusBar *sp, TMessage &msg, TColor bg = col_bgSttBar);
 bool draw_InfHdrBg(TStatusBar *sp, TMessage &msg);
 
-void draw_SortHeader(THeaderControl *hp, THeaderSection *sp, TRect rc, int mk_mode = 0, bool use_syscol = false);
+void draw_SortHeader(THeaderControl *hp, THeaderSection *sp, TRect rc,
+	int mk_mode = 0, bool use_syscol = false, bool is_dark = false);
 void draw_ListCursor(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State);
 void draw_ListCursor2(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State);
 void draw_GridCursor(TStringGrid *gp, TRect &Rect, int ARow, TGridDrawState State);
@@ -1980,7 +1969,7 @@ void draw_ImgGrid(TCanvas *cv, Graphics::TBitmap *bmp);
 void draw_BarGraph(TCanvas *cv, TRect rc, double r);
 void draw_ProgressBar(TCanvas *cv, TRect rc, double r);
 
-void draw_BottomTab(TCustomTabControl *Control, int idx, const TRect rc, bool active, bool dark_sw = false);
+void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool active, bool dark_sw = false);
 
 bool saveto_TextUTF8(UnicodeString fnam, TStrings *lst);
 bool saveto_TextFile(UnicodeString fnam, TStrings *lst, TEncoding *enc = NULL);
@@ -2150,5 +2139,6 @@ void draw_GitTag(TCanvas *cv, int &x, int y, UnicodeString tag, int mgn = 0);
 void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw = false, bool ext_sw = false);
 UnicodeString get_GitDiffFiles(UnicodeString s, UnicodeString &fnam2);
 UnicodeString get_GitDiffFile2(UnicodeString s);
+
 //---------------------------------------------------------------------------
 #endif

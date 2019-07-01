@@ -78,6 +78,9 @@ void __fastcall TColorDlg::FormShow(TObject *Sender)
 	set_ListBoxItemHi(ColorListBox);
 
 	ColBufList->Assign(ObjViewer->ColBufList);
+
+	SetDarkWinTheme(this);
+	ColorListBox->Color = IsDarkMode? dcl_Window : scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TColorDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -95,9 +98,9 @@ void __fastcall TColorDlg::FormDestroy(TObject *Sender)
 //ˆê——‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TColorDlg::ColorListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-		TOwnerDrawState State)
+	TOwnerDrawState State)
 {
-	draw_ColorListBox((TListBox*)Control, Rect, Index, State, ColBufList);
+	draw_ColorListBox((TListBox*)Control, Rect, Index, State, ColBufList, IsDarkMode);
 }
 
 //---------------------------------------------------------------------------

@@ -38,8 +38,6 @@ void __fastcall TMemoForm::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter);
 
 	MemoBox->Font->Assign(ViewerFont);
-	MemoBox->Font->Color = (col_fgEdBox!=clNone)? col_fgEdBox : col_fgView;
-	MemoBox->Color		 = (col_bgEdBox!=clNone)? col_bgEdBox : col_bgView;
 
 	//※入力の際にフォントが変わってしまうのを抑制
 	DWORD lParam = ::SendMessage(MemoBox->Handle, EM_GETLANGOPTIONS, 0, 0);
@@ -66,6 +64,8 @@ void __fastcall TMemoForm::FormShow(TObject *Sender)
 	pf2.dyLineSpacing	 = 20 * ViewTxtInterLn / f_hi;
 	MemoBox->Perform(EM_SETPARAFORMAT, 0, (LPARAM)&pf2);
 	SetDarkWinTheme(MemoBox);
+	MemoBox->Font->Color = (col_fgEdBox!=clNone)? col_fgEdBox : col_fgView;
+	MemoBox->Color		 = (col_bgEdBox!=clNone)? col_bgEdBox : col_bgView;
 
 	//下部パネル
 	OptPanel->Visible = IniFile->ReadBoolGen(_T("MemoFormShowOpt"), true);

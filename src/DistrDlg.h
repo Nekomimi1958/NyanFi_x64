@@ -39,11 +39,13 @@ __published:	// IDE で管理されるコンポーネント
 	TBevel *Bevel1;
 	TBevel *Bevel2;
 	TButton *AddItemBtn;
+	TButton *Button1;
 	TButton *CheckBtn;
 	TButton *ChgItemBtn;
 	TButton *CopyBtn;
 	TButton *DelItemBtn;
 	TButton *DowItemBtn;
+	TButton *FindUpBtn;
 	TButton *HiddenCanBtn;
 	TButton *MoveBtn;
 	TButton *RefDirButton;
@@ -77,8 +79,6 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *RegPanel;
 	TPopupMenu *PopupMenu1;
 	TPopupMenu *PopupMenu2;
-	TSpeedButton *FindDownBtn;
-	TSpeedButton *FindUpBtn;
 	TSplitter *ListSplitter;
 	TSplitter *PrvSplitter;
 	TStatusBar *StatusBar1;
@@ -126,6 +126,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall PrvListActionExecute(TObject *Sender);
 	void __fastcall EditListActionExecute(TObject *Sender);
 	void __fastcall EditListActionUpdate(TObject *Sender);
+	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 
 private:	// ユーザー宣言
 	SttProgressBar *SttPrgBar;		//プログレスバー
@@ -133,6 +134,13 @@ private:	// ユーザー宣言
 	UnicodeString LastDistDir;
 	UnicodeString DistrFile;
 	bool RegEnabled;				//登録内容の変更を許可
+
+	TWndMethod org_SttBar1WndProc;
+	void __fastcall SttBar1WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && IsDarkMode && draw_SttBarBg(StatusBar1, msg)) return;
+		org_SttBar1WndProc(msg);
+	}
 
 	void __fastcall WmFormShowed(TMessage &msg);
 	void __fastcall AssignRegListBox();

@@ -502,7 +502,7 @@ bool XCMD_is_bin, XCMD_is_htm;
 bool XCMD_matched, XCMD_found, XCMD_marked;
 bool XCMD_is_top, XCMD_is_end, XCMD_is_sel;
 bool XCMD_fromGrep;
-int  XCMD_box_res;
+TModalResult XCMD_box_res;
 
 bool XCMD_chg_CodePage;			//コードページが変更された(TVモードでの対策)
 
@@ -1021,9 +1021,9 @@ bool XCMD_Control()
 			case 15: cnd_res = CurStt->is_Arc;							break;
 			case 16: cnd_res = CurStt->is_Work;							break;
 			case 17: cnd_res = XCMD_found;								break;
-			case 18: cnd_res = (XCMD_box_res==IDYES);					break;
-			case 19: cnd_res = (XCMD_box_res==IDNO);					break;
-			case 20: cnd_res = (XCMD_box_res==IDCANCEL);				break;
+			case 18: cnd_res = (XCMD_box_res==mrYes);					break;
+			case 19: cnd_res = (XCMD_box_res==mrNo);					break;
+			case 20: cnd_res = (XCMD_box_res==mrCancel);				break;
 			case 21: cnd_res = (SelMaskList[CurListTag]->Count>0);		break;
 			case 22: cnd_res = !PathMask[CurListTag].IsEmpty();			break;
 			case 23: cnd_res = (get_BusyTaskCount()>0);					break;
@@ -1334,10 +1334,10 @@ void XCMD_Input(UnicodeString prm)
 
 	if (input_query_ex(def_if_empty(tit, _T("ユーザ定義変数の入力")).c_str(), msg.c_str(), &vstr)) {
 		XCMD_VarList->Values[vnam] = vstr;
-		XCMD_box_res = IDYES;
+		XCMD_box_res = mrYes;
 	}
 	else {
-		XCMD_box_res = IDCANCEL;
+		XCMD_box_res = mrCancel;
 	}
 
 	if (USAME_TI(vnam, "Buffer")) XCMD_BufChanged = true;
@@ -1365,10 +1365,10 @@ void XCMD_Edit(UnicodeString prm)
 	MemoForm->LinesBuff->Text = XCMD_VarList->Values[vnam];
 	if (MemoForm->ShowModal()==mrOk) {
 		XCMD_VarList->Values[vnam] = MemoForm->LinesBuff->Text;
-		XCMD_box_res = IDYES;
+		XCMD_box_res = mrYes;
 	}
 	else {
-		XCMD_box_res = IDCANCEL;
+		XCMD_box_res = mrCancel;
 	}
 
 	if (USAME_TI(vnam, "Buffer")) XCMD_BufChanged = true;
@@ -1577,7 +1577,7 @@ void XCMD_AppendBuffer(UnicodeString prm)
 //---------------------------------------------------------------------------
 int XCMD_MsgBox(UnicodeString cmd, UnicodeString prm)
 {
-	XCMD_box_res = 0;
+	XCMD_box_res = mrNone;
 	UnicodeString opt = cmd.SubString(7, 16);
 
 	UnicodeString tit;
@@ -1600,7 +1600,7 @@ int XCMD_MsgBox(UnicodeString cmd, UnicodeString prm)
 	prm = lbuf;
 
 	if		(opt.IsEmpty()) msgbox_OK(prm, tit);
-	else if (USAME_TI(opt, "YN"))  XCMD_box_res = msgbox_Y_N(prm, tit)? IDYES : IDNO;
+	else if (USAME_TI(opt, "YN"))  XCMD_box_res = msgbox_Y_N(prm, tit)? mrYes : mrNo;
 	else if (USAME_TI(opt, "YNC")) XCMD_box_res = msgbox_Y_N_C(prm, tit);
 	else UserAbort(USTR_SyntaxError);
 

@@ -194,6 +194,7 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 	hi += BottomPanel->Height;
 	ClientHeight = hi;
 
+	SetDarkWinTheme(this);
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
 
@@ -329,8 +330,9 @@ void __fastcall TInputExDlg::InputComboBoxChange(TObject *Sender)
 	if (IpuntExMode==INPEX_CRE_DIR) {
 		int f_len = InputComboBox->Text.Length();
 		int p_len = PathName.Length() + f_len;
-		PathInfLabel->Font->Color = (p_len<248 || PathName.Pos('/'))? scl_WindowText : col_Error;
-		NameInfLabel->Font->Color = (f_len<256)? scl_WindowText : col_Error;
+		TColor fg = IsDarkMode? dcl_WindowText : scl_WindowText;
+		PathInfLabel->Font->Color = (p_len<248 || PathName.Pos('/'))? fg : col_Error;
+		NameInfLabel->Font->Color = (f_len<256)? fg : col_Error;
 		UnicodeString tmp;
 		PathInfLabel->Caption = tmp.sprintf(_T("フルパス名の文字数 = %u"), p_len);
 		NameInfLabel->Caption = tmp.sprintf(_T("名前の文字数 = %u"), f_len);
@@ -340,9 +342,27 @@ void __fastcall TInputExDlg::InputComboBoxChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TInputExDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if (equal_F1(get_KeyStr(Key, Shift)) && !HelpTopic.IsEmpty()) {
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (equal_F1(KeyStr) && !HelpTopic.IsEmpty()) {
 		HtmlHelpTopic(HelpTopic.c_str());
 		Key = 0;
+	}
+	else {
+		if (CreDirPanel->Visible) {
+			if		(USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(DirChgCheckBox);
+			else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(CnvChCheckBox);
+		}
+		if (NewTextPanel->Visible) {
+			if		(USAME_TI(KeyStr, "Alt+P")) invert_CheckBox(ClipCheckBox);
+			else if (USAME_TI(KeyStr, "Alt+E")) invert_CheckBox(EditCheckBox);
+		}
+		if (IniSttPanel->Visible) {
+			if		(USAME_TI(KeyStr, "Alt+P")) invert_CheckBox(SelDefCheckBox);
+		}
+		if (NotationPanel) {
+			if		(USAME_TI(KeyStr, "Alt+H")) HexRadioBtn->Checked = true;
+			else if (USAME_TI(KeyStr, "Alt+D")) DecRadioBtn->Checked = true;
+		}
 	}
 }
 

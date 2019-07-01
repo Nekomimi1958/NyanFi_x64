@@ -76,10 +76,7 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 	ttFont->Color = col_fgList;
 	ObjMemo->Font->Assign(ttFont.get());
 	ObjMemo->Font->Color = col_fgView;
-	ObjMemo->Color		 = col_bgView;
 
-	ResListBox->Color	= col_bgView;
-	ReferListBox->Color = col_bgList;
 	set_ListBoxItemHi(ResListBox,	ttFont.get());
 	set_ListBoxItemHi(ReferListBox,	ttFont.get());
 
@@ -120,11 +117,9 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 	MatchCount = 0;
 
 	SetDarkWinTheme(this);
-	SetDarkWinTheme(FileEdit);
-	SetDarkWinTheme(ReplaceEdit);
-	SetDarkWinTheme(ObjMemo);
-	SetDarkWinTheme(ResListBox);
-	SetDarkWinTheme(ReferListBox);
+	ObjMemo->Color		= col_bgView;
+	ResListBox->Color	= col_bgView;
+	ReferListBox->Color = col_bgList;
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegExChecker::FormClose(TObject *Sender, TCloseAction &Action)
@@ -198,7 +193,7 @@ void __fastcall TRegExChecker::TestActionExecute(TObject *Sender)
 		if (ResListBox->Count>0) {
 			add_ComboBox_history(PtnComboBox);
 			ResultLabel->Caption = UnicodeString().sprintf(_T("%u箇所でマッチしました"), MatchCount);
-			ResultLabel->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
+			ResultLabel->Font->Color = get_TextColor();
 		}
 		else {
 			ResultLabel->Caption = "マッチしません";
@@ -217,11 +212,7 @@ void __fastcall TRegExChecker::TestActionExecute(TObject *Sender)
 void __fastcall TRegExChecker::TestActionUpdate(TObject *Sender)
 {
 	bool reg_ok = chk_RegExPtn(PtnComboBox->Text);
-
-	if (IsDarkMode)
-		PtnComboBox->Font->Color = !reg_ok? col_Error : dcl_WindowText;
-	else
-		PtnComboBox->Color = (PtnComboBox->Text.IsEmpty() || reg_ok)? scl_Window: col_Illegal;
+	set_ErrColor(PtnComboBox, !PtnComboBox->Text.IsEmpty() && !reg_ok);
 
 	((TAction *)Sender)->Enabled = !ObjMemo->Lines->Text.IsEmpty() && reg_ok;
 

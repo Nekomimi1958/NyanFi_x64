@@ -19,11 +19,13 @@ object EditItemDlg: TEditItemDlg
     Top = 0
     Width = 354
     Height = 275
+    Style = lbOwnerDrawFixed
     Align = alClient
     DragMode = dmAutomatic
     ItemHeight = 13
     TabOrder = 0
     OnClick = ItemListBoxClick
+    OnDrawItem = ItemListBoxDrawItem
     OnKeyDown = ItemListBoxKeyDown
   end
   object Panel1: TPanel

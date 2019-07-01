@@ -39,8 +39,7 @@ void __fastcall TCharInfoForm::FormShow(TObject *Sender)
 
 	TListBox *lp = InfoListBox;
 	lp->Color = col_bgInf;
-	lp->Font->Assign(FileInfFont);
-	set_ListBoxItemHi(lp);
+	set_ListBoxItemHi(lp, FileInfFont);
 
 	ClientHeight = SamplePanel->Height + lp->ItemHeight * CHARINF_ITEMCOUNT;
 	ClientWidth  = get_CharWidth_Font(lp->Font, 41);	//***

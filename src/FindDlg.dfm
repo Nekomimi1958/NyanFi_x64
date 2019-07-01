@@ -160,7 +160,7 @@ object FindFileDlg: TFindFileDlg
         Top = 52
         Width = 235
         Height = 17
-        Caption = #22909#12414#12375#12367#12394#12356#12487#12451#12524#12463#12488#12522#21517'(&N)'
+        Caption = #22909#12414#12375#12367#12394#12356#12487#12451#12524#12463#12488#12522#21517
         TabOrder = 1
         OnClick = CondChangeUpdate
       end
@@ -425,7 +425,7 @@ object FindFileDlg: TFindFileDlg
         Top = 12
         Width = 184
         Height = 17
-        Caption = #12450#12540#12459#12452#12502#20869#12418#26908#32034'(&A)'
+        Caption = #12450#12540#12459#12452#12502#20869#12418#26908#32034'(&V)'
         TabOrder = 1
         OnClick = ArcCheckBoxClick
       end
@@ -948,6 +948,7 @@ object FindFileDlg: TFindFileDlg
         Top = 6
         Width = 344
         Height = 74
+        Caption = ' '
         TabOrder = 0
         DesignSize = (
           344
@@ -1336,7 +1337,7 @@ object FindFileDlg: TFindFileDlg
       ShowCaption = False
       TabOrder = 11
       StyleElements = []
-      object GroupBox1: TGroupBox
+      object TagGroupBox: TGroupBox
         Left = 8
         Top = 6
         Width = 344
@@ -1396,6 +1397,7 @@ object FindFileDlg: TFindFileDlg
           Height = 17
           Caption = #20195#26367#12487#12540#12479#12473#12488#12522#12540#12512#12434#25345#12388
           TabOrder = 0
+          OnClick = CondChangeUpdate
         end
         object UseProcCheckBox: TCheckBox
           Left = 195

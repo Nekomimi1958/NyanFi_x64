@@ -44,6 +44,8 @@ __published:	// IDE で管理されるコンポーネント
 	TLabeledEdit *StrMgnEdit;
 	TPageControl *PageControl1;
 	TPanel *LeftPanel;
+	TPanel *Panel1;
+	TPanel *Panel2;
 	TPanel *PrviewPanel;
 	TPrinterSetupDialog *PrinterSetupDialog1;
 	TRadioButton *OriHBtn;
@@ -77,6 +79,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TopBtnClick(TObject *Sender);
 	void __fastcall EndBtnClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall PageControl1DrawTab(TCustomTabControl *Control, int TabIndex,
+          const TRect &Rect, bool Active);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

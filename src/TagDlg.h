@@ -54,9 +54,6 @@ __published:	// IDE で管理されるコンポーネント
 	TEdit *TagEdit;
 	TImage *SpuitImage;
 	TLabel *Label1;
-	TLabel *Label2;
-	TLabel *Label3;
-	TLabel *Label4;
 	TMenuItem *CountTagItem;
 	TMenuItem *DefColItem;
 	TMenuItem *DelTagItem;
@@ -70,12 +67,16 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *SetColItem;
 	TMenuItem *ShowCountItem;
 	TMenuItem *TrimDataItem;
+	TPanel *AndPanel;
 	TPanel *BlankPanel;
 	TPanel *FindOptPanel;
+	TPanel *HidePanel;
 	TPanel *InpOptPanel;
 	TPanel *InpPanel;
 	TPanel *ListPanel;
 	TPanel *OptPanel;
+	TPanel *ResLinkPanel;
+	TPanel *SelMaskPanel;
 	TPanel *SetColPanel;
 	TPanel *SpuitPanel;
 	TPopupMenu *TagPopupMenu;

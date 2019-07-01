@@ -23,6 +23,12 @@ __fastcall TCreateDirsDlg::TCreateDirsDlg(TComponent* Owner)
 {
 }
 //---------------------------------------------------------------------------
+void __fastcall TCreateDirsDlg::FormCreate(TObject *Sender)
+{
+	org_SttBar1WndProc	   = StatusBar1->WindowProc;
+	StatusBar1->WindowProc = SttBar1WndProc;
+}
+//---------------------------------------------------------------------------
 void __fastcall TCreateDirsDlg::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
@@ -51,6 +57,9 @@ void __fastcall TCreateDirsDlg::FormShow(TObject *Sender)
 
 	RefDir = IniFile->ReadStrGen(_T("CreDirsDlgRefDir"));
 
+	SetDarkWinTheme(this);
+	ListMemo->Color 	  = get_WinColor();
+	ListMemo->Font->Color = get_TextColor();
 	ListMemo->Lines->Clear();
 	ListMemo->SetFocus();
 }
@@ -68,6 +77,16 @@ void __fastcall TCreateDirsDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteStrGen(_T("CreDirsDlgDate"),		DateMaskEdit->Text);
 	IniFile->WriteIntGen(_T("CreDirsDlgDateMod"),	PstDateRadioBtn->Checked? 1 : 0);
 	IniFile->WriteStrGen(_T("CreDirsDlgRefDir"),	RefDir);
+}
+//---------------------------------------------------------------------------
+void __fastcall TCreateDirsDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
+	const TRect &Rect)
+{
+	TCanvas *cv = StatusBar->Canvas;
+	cv->Brush->Color = IsDarkMode? col_bgSttBar : scl_BtnFace;
+	cv->FillRect(Rect);
+	cv->Font->Color = IsDarkMode? col_fgSttBar : scl_BtnText;
+	cv->TextOut(Rect.Left + 2, Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -152,11 +171,12 @@ void __fastcall TCreateDirsDlg::AddDateActionUpdate(TObject *Sender)
 	try {
 		if (DtFmtEdit->Text.IsEmpty()) Abort();
 		TDateTime(DateMaskEdit->Text);
-		DateMaskEdit->Color = scl_Window;
+		DateMaskEdit->Color 	  = get_WinColor();
+		DateMaskEdit->Font->Color = get_TextColor();
 		((TAction*)Sender)->Enabled = true;
 	}
 	catch (...) {
-		DateMaskEdit->Color = col_Illegal;
+		set_ErrColor(DateMaskEdit, true);
 		((TAction*)Sender)->Enabled = false;
 	}
 }
@@ -312,3 +332,4 @@ void __fastcall TCreateDirsDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftSt
 	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
+

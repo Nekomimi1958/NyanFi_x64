@@ -70,13 +70,14 @@ void __fastcall TFindTextDlg::FormShow(TObject *Sender)
 		FindComboBox->Text = GeneralInfoDlg->FindWord;
 	}
 
-	UpDownGroup->ItemIndex		= IniFile->ReadIntGen(_T("FindTxtDlgUpDown"),	1);
+	((IniFile->ReadIntGen(_T("FindTxtDlgUpDown"), 1)==1)? DownRadioBtn : UpRadioBtn)->Checked = true; 
 
 	BytesCheckBox->Checked		= IniFile->ReadBoolGen(_T("FindTxtDlgBytes"));
 	HighlightCheckBox->Checked	= IniFile->ReadBoolGen(_T("FindTxtDlgHighlight"));
 	HighlightCheckBox->Visible	= (Viewer!=NULL);
 	CloseCheckBox->Checked		= IniFile->ReadBoolGen(_T("FindTxtDlgClose"));
 	CodePageComboBox->ItemIndex = IniFile->ReadIntGen(_T("FindTxtDlgCodePage"));
+	SetDarkWinTheme(this);
 
 	DlgInitialized = true;
 	FindOptChangedClick(NULL);
@@ -91,7 +92,7 @@ void __fastcall TFindTextDlg::FormClose(TObject *Sender, TCloseAction &Action)
 
 	IniFile->SaveComboBoxItems(FindComboBox, RegExCheckBox->Checked? _T("FindPtnHistory") : _T("FindTxtHistory"));
 
-	IniFile->WriteIntGen(_T("FindTxtDlgUpDown"),		UpDownGroup);
+	IniFile->WriteIntGen(_T("FindTxtDlgUpDown"),		DownRadioBtn->Checked? 1 : 0);
 	IniFile->WriteBoolGen(_T("FindTxtDlgCase"),			CaseCheckBox);
 	IniFile->WriteBoolGen(_T("FindTxtDlgRegEx"),		RegExCheckBox);
 	IniFile->WriteBoolGen(_T("FindTxtDlgMigemo"),		MigemoCheckBox);
@@ -111,10 +112,8 @@ void __fastcall TFindTextDlg::FindOptChangedClick(TObject *Sender)
 {
 	if (!DlgInitialized) return;
 
-	BytesCheckBox->Visible	   = Viewer && Viewer->isBinary;
-	CodePageComboBox->Visible  = Viewer && Viewer->isBinary;
-
-	bool not_bytes = !BytesCheckBox->Visible || !BytesCheckBox->Checked;
+	BinPanel->Visible = Viewer && Viewer->isBinary;
+	bool not_bytes = !BinPanel->Visible || !BytesCheckBox->Checked;
 	set_FormTitle(this, not_bytes? _T("文字列検索") : _T("バイト列検索"));
 	HighlightCheckBox->Enabled = not_bytes;
 	if (Viewer) Viewer->Highlight = not_bytes;
@@ -132,7 +131,7 @@ void __fastcall TFindTextDlg::MigemoCheckBoxClick(TObject *Sender)
 		RegExCheckBox->Enabled = false;
 	}
 	else {
-		RegExCheckBox->Enabled = !BytesCheckBox->Visible || !BytesCheckBox->Checked;
+		RegExCheckBox->Enabled = !BinPanel->Visible || !BytesCheckBox->Checked;
 	}
 
 	FindComboBox->SetFocus();
@@ -162,10 +161,12 @@ void __fastcall TFindTextDlg::FindComboBoxKeyDown(TObject *Sender, WORD &Key, TS
 {
 	switch (idx_of_word_i(_T("Ctrl+N|Ctrl+D|Ctrl+P|Ctrl+U|Ctrl+M|Ctrl+R|Ctrl+B"), get_KeyStr(Key, Shift))) {
 	case 0: case 1:
-		UpDownGroup->ItemIndex = 1;  Repaint();  FindNextAction->Execute();
+		DownRadioBtn->Checked = true;
+		Repaint();  FindNextAction->Execute();
 		break;
 	case 2: case 3:
-		UpDownGroup->ItemIndex = 0;  Repaint();  FindNextAction->Execute();
+		UpRadioBtn->Checked = true;
+		Repaint();  FindNextAction->Execute();
 		break;
 	case 4:
 		if (MigemoCheckBox->Enabled) MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
@@ -174,7 +175,7 @@ void __fastcall TFindTextDlg::FindComboBoxKeyDown(TObject *Sender, WORD &Key, TS
 		RegExCheckBox->Checked = !RegExCheckBox->Checked;
 		break;
 	case 6:
-		if (BytesCheckBox->Visible) BytesCheckBox->Checked = !BytesCheckBox->Checked;
+		if (BinPanel->Visible) BytesCheckBox->Checked = !BytesCheckBox->Checked;
 		break;
 	default:
 		return;
@@ -193,11 +194,13 @@ void __fastcall TFindTextDlg::FindComboBoxKeyPress(TObject *Sender, System::Wide
 //---------------------------------------------------------------------------
 void __fastcall TFindTextDlg::FindComboBoxChange(TObject *Sender)
 {
+	bool regex_ng = false;
+
 	if (Viewer) {
 		Viewer->isCase		= CaseCheckBox->Checked;
 		Viewer->isRegEx 	= RegExCheckBox->Checked;
 		Viewer->isMigemo	= MigemoCheckBox->Enabled && MigemoCheckBox->Checked;
-		Viewer->isBytes 	= BytesCheckBox->Visible && BytesCheckBox->Checked;
+		Viewer->isBytes 	= BinPanel->Visible && BytesCheckBox->Checked;
 		Viewer->FindWord	= FindComboBox->Text;
 		Viewer->BinCodePage = get_CodePageOfName(CodePageComboBox->Text);
 
@@ -232,14 +235,11 @@ void __fastcall TFindTextDlg::FindComboBoxChange(TObject *Sender)
 
 				//正規表現パターンのチェック
 				if (!chk_RegExPtn(ptn)) {
-					FindComboBox->Color = col_Illegal;
+					regex_ng = true;
 					ptn = EmptyStr;
 				}
-				else FindComboBox->Color = scl_Window;
 			}
 		}
-		else FindComboBox->Color = scl_Window;
-
 		Viewer->RegExPtn = RegExPtn = ptn;
 		Viewer->Repaint(true);
 	}
@@ -253,15 +253,14 @@ void __fastcall TFindTextDlg::FindComboBoxChange(TObject *Sender)
 				ptn = usr_Migemo->GetRegExPtn(MigemoCheckBox->Enabled && MigemoCheckBox->Checked, FindComboBox->Text, 1);
 			//正規表現パターンのチェック
 			if (!chk_RegExPtn(ptn)) {
-				FindComboBox->Color = col_Illegal;
+				regex_ng = true;
 				ptn = EmptyStr;
 			}
-			else FindComboBox->Color = scl_Window;
 		}
-		else FindComboBox->Color = scl_Window;
-
 		GeneralInfoDlg->RegExPtn = RegExPtn = ptn;
 	}
+
+	set_ErrColor(FindComboBox, regex_ng);
 }
 //---------------------------------------------------------------------------
 //検索
@@ -273,14 +272,14 @@ void __fastcall TFindTextDlg::FindNextActionExecute(TObject *Sender)
 	if (Viewer) {
 		if (fromTV && !NyanFiForm->TxtScrollPanel->Visible) return;
 
-		Viewer->ExeCommand((UpDownGroup->ItemIndex==1)? _T("FindDown") : _T("FindUp"));
+		Viewer->ExeCommand(DownRadioBtn->Checked? _T("FindDown") : _T("FindUp"));
 		if (Viewer->LastFound && !Viewer->isMigemo) {
 			add_ComboBox_history(FindComboBox, Viewer->FindWord);
 			to_save = true;
 		}
 	}
 	else {
-		if (GeneralInfoDlg->FindText(UpDownGroup->ItemIndex==1)) {
+		if (GeneralInfoDlg->FindText(DownRadioBtn->Checked)) {
 			if (!MigemoCheckBox->Enabled || !MigemoCheckBox->Checked) {
 				add_ComboBox_history(FindComboBox);
 				to_save = true;
@@ -304,7 +303,17 @@ void __fastcall TFindTextDlg::FindNextActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFindTextDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CaseCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(RegExCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(MigemoCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+U")) UpRadioBtn->Checked 	   = true;
+	else if (USAME_TI(KeyStr, "Alt+D")) DownRadioBtn->Checked	   = true;
+	else if (USAME_TI(KeyStr, "Alt+B") && BinPanel->Visible)
+										invert_CheckBox(BytesCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+H")) invert_CheckBox(HighlightCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+X")) invert_CheckBox(CloseCheckBox);
+	else SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

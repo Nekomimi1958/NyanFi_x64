@@ -45,6 +45,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *UpToLowerCheckBox;
 	TComboBox *SSLComboBox;
 	TGroupBox *AutoDisconGroupBox;
+	TGroupBox *RemoteGroupBox;
 	TGroupBox *SndFindGroupBox;
 	TLabel *Label1;
 	TLabel *Label2;
@@ -63,7 +64,9 @@ __published:	// IDE で管理されるコンポーネント
 	TPageControl *PageControl1;
 	TPanel *HostPanel;
 	TPanel *OptPanel;
-	TRadioGroup *RemoteRadioGroup;
+	TRadioButton *RSide0Btn;
+	TRadioButton *RSide1Btn;
+	TRadioButton *RSide2Btn;
 	TTabSheet *HostSheet;
 	TTabSheet *OptionSheet;
 
@@ -85,6 +88,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefDirBtnClick(TObject *Sender);
 	void __fastcall RefSoundBtnClick(TObject *Sender);
 	void __fastcall TestSoundBtnClick(TObject *Sender);
+	void __fastcall PageControl1DrawTab(TCustomTabControl *Control, int TabIndex,
+          const TRect &Rect, bool Active);
 
 private:	// ユーザー宣言
 	TStringList *HostList;

@@ -30,15 +30,10 @@ __published:	// IDE で管理されるコンポーネント
 	TGroupBox *RepeatGroupBox;
 	TImage *ColImage;
 	TLabel *ColLabel;
-	TLabel *Label1;
-	TLabel *Label2;
-	TLabel *Label3;
-	TLabel *Label4;
 	TLabel *RepSttLabel;
 	TLabeledEdit *RepCntEdit;
 	TPanel *Col2Panel;
 	TPanel *ColPanel;
-	TPanel *Panel1;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

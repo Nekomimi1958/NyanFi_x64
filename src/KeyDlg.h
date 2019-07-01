@@ -34,9 +34,6 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *MigemoCheckBox;
 	TCheckBox *ShowAllCmdCheckBox;
 	THeaderControl *KeyListHeader;
-	TLabel *Label1;
-	TLabel *Label2;
-	TLabel *Label3;
 	TLabeledEdit *FilterEdit;
 	TMenuItem *CopyCmdItem;
 	TMenuItem *CopyListItem;
@@ -90,6 +87,11 @@ private:	// ユーザー宣言
 	TStringList *CurList;
 	int KeySortMode;
 
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
+
 	void __fastcall GetStrList(TStringList *lst);
 
 public:		// ユーザー宣言
@@ -99,6 +101,10 @@ public:		// ユーザー宣言
 	bool ToFilter;
 
 	__fastcall TKeyListDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TKeyListDlg *KeyListDlg;

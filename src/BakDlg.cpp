@@ -58,6 +58,8 @@ void __fastcall TBackupDlg::FormShow(TObject *Sender)
 
 	BakIncMaskComboBox->SetFocus();
 	BakIncMaskComboBox->SelStart = BakIncMaskComboBox->Text.Length();
+
+	SetDarkWinTheme(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TBackupDlg::FormClose(TObject *Sender, TCloseAction &Action)

@@ -102,13 +102,6 @@ object TagManDlg: TTagManDlg
         Flat = True
         OnClick = ChgOptBtnClick
       end
-      object Label4: TLabel
-        Left = 27
-        Top = 9
-        Width = 82
-        Height = 13
-        Caption = #20837#21147#27396#12434#38560#12377'(&H)'
-      end
       object CanButton: TButton
         Left = 215
         Top = 4
@@ -132,13 +125,23 @@ object TagManDlg: TTagManDlg
         ModalResult = 1
         TabOrder = 1
       end
-      object HideCheckBox: TCheckBox
-        Left = 10
-        Top = 8
-        Width = 119
-        Height = 17
-        Action = HideAction
+      object HidePanel: TPanel
+        Left = 0
+        Top = 0
+        Width = 128
+        Height = 38
+        Align = alLeft
+        BevelOuter = bvNone
         TabOrder = 0
+        object HideCheckBox: TCheckBox
+          Left = 10
+          Top = 8
+          Width = 119
+          Height = 17
+          Action = HideAction
+          Caption = #20837#21147#27396#12434#38560#12377'(&H)'
+          TabOrder = 0
+        end
       end
     end
     object FindOptPanel: TPanel
@@ -149,43 +152,59 @@ object TagManDlg: TTagManDlg
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 0
-      object Label2: TLabel
-        Left = 27
-        Top = 9
-        Width = 45
-        Height = 13
-        Caption = '&AND'#26908#32034
-      end
-      object Label3: TLabel
-        Left = 127
-        Top = 9
-        Width = 114
-        Height = 13
-        Caption = #36984#25246#38917#30446#12384#12369#12434#27531#12377'(&M)'
-      end
-      object ResLinkCheckBox: TCheckBox
-        Left = 110
-        Top = 8
-        Width = 200
-        Height = 17
-        Action = ResLinkAction
-        TabOrder = 1
-      end
-      object AndCheckBox: TCheckBox
-        Left = 10
-        Top = 8
-        Width = 92
-        Height = 17
-        Action = AndAction
+      object AndPanel: TPanel
+        Left = 0
+        Top = 0
+        Width = 104
+        Height = 32
+        Align = alLeft
+        BevelOuter = bvNone
         TabOrder = 0
+        object AndCheckBox: TCheckBox
+          Left = 10
+          Top = 8
+          Width = 90
+          Height = 17
+          Action = AndAction
+          Caption = '&AND'#26908#32034
+          TabOrder = 0
+        end
       end
-      object SelMaskCheckBox: TCheckBox
-        Left = 110
-        Top = 8
-        Width = 200
-        Height = 17
-        Action = SelMaskAction
+      object SelMaskPanel: TPanel
+        Left = 104
+        Top = 0
+        Width = 206
+        Height = 32
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 1
+        object SelMaskCheckBox: TCheckBox
+          Left = 4
+          Top = 8
+          Width = 179
+          Height = 17
+          Action = SelMaskAction
+          Caption = #36984#25246#38917#30446#12384#12369#12434#27531#12377'(&M)'
+          TabOrder = 0
+        end
+      end
+      object ResLinkPanel: TPanel
+        Left = 104
+        Top = 0
+        Width = 206
+        Height = 32
+        Align = alClient
+        BevelOuter = bvNone
         TabOrder = 2
+        object ResLinkCheckBox: TCheckBox
+          Left = 4
+          Top = 8
+          Width = 200
+          Height = 17
+          Action = ResLinkAction
+          Caption = #32080#26524#12522#12473#12488#12363#12425#21453#23550#20596#12408#21453#26144'(&R)'
+          TabOrder = 0
+        end
       end
     end
   end

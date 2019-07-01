@@ -35,6 +35,8 @@ void __fastcall TCvTxtEncDlg::FormShow(TObject *Sender)
 	OutLnBrkComboBox->ItemIndex = IniFile->ReadIntGen(_T("CvTextEncLnBrk"));
 	BomCheckBox->Checked		= IniFile->ReadBoolGen(_T("CvTextEncBOM"), true);
 	OutCodeComboBoxClick(NULL);
+
+	SetDarkWinTheme(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TCvTxtEncDlg::FormClose(TObject *Sender, TCloseAction &Action)

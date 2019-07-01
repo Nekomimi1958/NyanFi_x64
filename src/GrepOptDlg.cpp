@@ -50,16 +50,24 @@ void __fastcall TGrepExOptDlg::FormCreate(TObject *Sender)
 	AppendLogCheckBox->Tag = (int)&ReplaceAppend;
 	OpenLogCheckBox->Tag   = (int)&OpenReplaceLog;
 
-	OutModeRadioGroup->Tag = (int)&GrepOutMode;
-
 	//ドロップターゲットを設定
 	usr_SH->AddTargetList(this, AppNameEdit);
+
+	SetDarkWinTheme(this);
+	SampleMemo->Color		= get_WinColor();
+	SampleMemo->Font->Color = get_TextColor();
 }
 //---------------------------------------------------------------------------
 void __fastcall TGrepExOptDlg::FormShow(TObject *Sender)
 {
 	//タグを用いてコントロールに値を設定
 	BringOptionByTag(this);
+
+	switch (GrepOutMode) {
+	case  1: OutMode1Btn->Checked = true; break;
+	case  2: OutMode2Btn->Checked = true; break;
+	default: OutMode0Btn->Checked = true;
+	}
 
 	//検索
 	if (NyanFiForm->GrepPageControl->ActivePage==NyanFiForm->FindSheet) {
@@ -79,6 +87,18 @@ void __fastcall TGrepExOptDlg::FormShow(TObject *Sender)
 	}
 	SampleChange(NULL);
 }
+//---------------------------------------------------------------------------
+void __fastcall TGrepExOptDlg::FormClose(TObject *Sender, TCloseAction &Action)
+{
+	GrepOutMode = OutMode1Btn->Checked? 1 : OutMode2Btn->Checked? 2: 0;
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TGrepExOptDlg::PageControl1DrawTab(TCustomTabControl *Control,
+	int TabIndex, const TRect &Rect, bool Active)
+{
+	draw_OwnerTab(Control, TabIndex, Rect, Active, IsDarkMode);
+}
 
 //---------------------------------------------------------------------------
 //ロップ受け入れ
@@ -86,14 +106,6 @@ void __fastcall TGrepExOptDlg::FormShow(TObject *Sender)
 void __fastcall TGrepExOptDlg::WmDropped(TMessage &msg)
 {
 	SetExtNameToCtrl(DroppedList->Strings[0], (TWinControl *)msg.WParam);
-}
-
-//---------------------------------------------------------------------------
-//出力先の変更
-//---------------------------------------------------------------------------
-void __fastcall TGrepExOptDlg::OutModeRadioGroupClick(TObject *Sender)
-{
-	FileGroupBox->Enabled = (OutModeRadioGroup->ItemIndex!=2);
 }
 
 //---------------------------------------------------------------------------
@@ -215,3 +227,4 @@ bool __fastcall TGrepExOptDlg::FormHelp(WORD Command, NativeInt Data, bool &Call
 	return true;
 }
 //---------------------------------------------------------------------------
+

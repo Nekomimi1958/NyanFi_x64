@@ -25,21 +25,25 @@ object ExpCsvDlg: TExpCsvDlg
     Top = 0
     Width = 193
     Height = 253
+    Style = lbOwnerDrawFixed
     Align = alLeft
     ItemHeight = 13
     TabOrder = 0
     OnDblClick = SrcListBoxDblClick
+    OnDrawItem = ItemListBoxDrawItem
   end
   object DstListBox: TListBox
     Left = 283
     Top = 0
     Width = 181
     Height = 253
+    Style = lbOwnerDrawFixed
     Align = alClient
     DragMode = dmAutomatic
     ItemHeight = 13
     TabOrder = 2
     OnDblClick = DstListBoxDblClick
+    OnDrawItem = ItemListBoxDrawItem
     OnKeyDown = DstListBoxKeyDown
   end
   object OpePanel: TPanel
@@ -55,7 +59,7 @@ object ExpCsvDlg: TExpCsvDlg
       108)
     object Label1: TLabel
       Left = 57
-      Top = 49
+      Top = 51
       Width = 48
       Height = 13
       Alignment = taRightJustify
@@ -95,27 +99,27 @@ object ExpCsvDlg: TExpCsvDlg
       TabOrder = 0
     end
     object QuotCheckBox: TCheckBox
-      Left = 241
-      Top = 48
+      Left = 249
+      Top = 50
       Width = 195
       Height = 17
-      Caption = #38917#30446#12434#24341#29992#31526#12391#22258#12416'(&Q)'
+      Caption = #38917#30446#12434#24341#29992#31526#12391#22258#12416
       TabOrder = 3
     end
     object CsvRadioBtn: TRadioButton
       Left = 110
-      Top = 48
+      Top = 50
       Width = 59
       Height = 17
-      Caption = '&CSV /'
+      Caption = 'CSV /'
       TabOrder = 1
     end
     object TsvRadioBtn: TRadioButton
-      Left = 171
-      Top = 48
+      Left = 173
+      Top = 50
       Width = 63
       Height = 17
-      Caption = '&TSV'
+      Caption = 'TSV'
       TabOrder = 2
     end
   end

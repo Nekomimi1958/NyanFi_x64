@@ -4,7 +4,7 @@ object BackupDlg: TBackupDlg
   HelpContext = 71
   BorderIcons = [biSystemMenu]
   Caption = #12496#12483#12463#12450#12483#12503
-  ClientHeight = 368
+  ClientHeight = 371
   ClientWidth = 492
   Color = clBtnFace
   Constraints.MaxHeight = 400
@@ -21,7 +21,7 @@ object BackupDlg: TBackupDlg
   OnShow = FormShow
   DesignSize = (
     492
-    368)
+    371)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -141,7 +141,7 @@ object BackupDlg: TBackupDlg
   end
   object BottomPanel: TPanel
     Left = 0
-    Top = 268
+    Top = 271
     Width = 492
     Height = 100
     Align = alBottom
@@ -150,14 +150,6 @@ object BackupDlg: TBackupDlg
     DesignSize = (
       492
       100)
-    object SaveFmtBtn: TSpeedButton
-      Tag = 2
-      Left = 240
-      Top = 17
-      Width = 50
-      Height = 24
-      Action = SaveSetupAction
-    end
     object TLabel
       Left = 28
       Top = 22
@@ -182,7 +174,7 @@ object BackupDlg: TBackupDlg
       Anchors = [akRight, akBottom]
       Caption = #38283#22987
       Default = True
-      TabOrder = 3
+      TabOrder = 4
       OnClick = OkButtonClick
     end
     object CanButton: TButton
@@ -194,7 +186,7 @@ object BackupDlg: TBackupDlg
       Cancel = True
       Caption = #12461#12515#12531#12475#12523
       ModalResult = 2
-      TabOrder = 4
+      TabOrder = 5
     end
     object SureCheckBox: TCheckBox
       Left = 195
@@ -203,7 +195,7 @@ object BackupDlg: TBackupDlg
       Height = 17
       Anchors = [akRight, akBottom]
       Caption = #38283#22987#30906#35469
-      TabOrder = 2
+      TabOrder = 3
     end
     object SetupComboBox: TComboBox
       Left = 58
@@ -213,12 +205,20 @@ object BackupDlg: TBackupDlg
       TabOrder = 0
       OnClick = SetupComboBoxClick
     end
-    object Button1: TButton
+    object SaveCmdBtn: TButton
       Left = 304
-      Top = 17
+      Top = 18
       Width = 172
       Height = 24
       Action = MakeNbtAction
+      TabOrder = 2
+    end
+    object SaveFmtBtn: TButton
+      Left = 240
+      Top = 18
+      Width = 50
+      Height = 24
+      Action = SaveSetupAction
       TabOrder = 1
     end
   end

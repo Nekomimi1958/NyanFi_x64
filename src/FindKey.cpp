@@ -29,6 +29,8 @@ void __fastcall TFindKeyDlg::FormShow(TObject *Sender)
 	KeyStr = EmptyStr;
 	KeyLabel->Caption = EmptyStr;
 	DummyBtn->SetFocus();
+
+	SetDarkWinTheme(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TFindKeyDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -104,6 +106,13 @@ void __fastcall TFindKeyDlg::DummyBtnClick(TObject *Sender)
 void __fastcall TFindKeyDlg::CancelBtnClick(TObject *Sender)
 {
 	ModalResult = mrCancel;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFindKeyDlg::Shape1MouseDown(TObject *Sender, TMouseButton Button,
+          TShiftState Shift, int X, int Y)
+{
+//
 }
 //---------------------------------------------------------------------------
 

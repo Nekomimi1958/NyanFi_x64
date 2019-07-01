@@ -67,9 +67,11 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioButton *PstStrRadioBtn;
 	TStatusBar *StatusBar1;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall CreateActionExecute(TObject *Sender);
 	void __fastcall CreateActionUpdate(TObject *Sender);
 	void __fastcall AddSerActionExecute(TObject *Sender);
@@ -92,6 +94,13 @@ __published:	// IDE で管理されるコンポーネント
 private:	// ユーザー宣言
 	UnicodeString UndoBuf;
 	UnicodeString RefDir;
+
+	TWndMethod org_SttBar1WndProc;
+	void __fastcall SttBar1WndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && IsDarkMode && draw_SttBarBg(StatusBar1, msg)) return;
+		org_SttBar1WndProc(msg);
+	}
 
 public:		// ユーザー宣言
 	__fastcall TCreateDirsDlg(TComponent* Owner);

@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  同期コピー先の設定													//
+//  同期コピーの設定													//
 //----------------------------------------------------------------------//
 #include <vcl.h>
 #pragma hdrstop
@@ -35,12 +35,16 @@ void __fastcall TRegSyncDlg::FormShow(TObject *Sender)
 	UserModule->InitializeListBox(lp);
 
 	InitDir = CurPathName;
+
+	SetDarkWinTheme(this);
+	RegListBox->Color = IsDarkMode? dcl_Window : scl_Window;
+	DirListBox->Color = IsDarkMode? dcl_Window : scl_Window;
 }
 //---------------------------------------------------------------------------
 //一覧の表示
 //---------------------------------------------------------------------------
 void __fastcall TRegSyncDlg::RegListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-		TOwnerDrawState State)
+	TOwnerDrawState State)
 {
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -52,7 +56,7 @@ void __fastcall TRegSyncDlg::RegListBoxDrawItem(TWinControl *Control, int Index,
 	for (int i=0; i<lp->Count; i++) w_x = std::max(cv->TextWidth(get_csv_item(lp->Items->Strings[i], 0)), w_x);
 	TStringDynArray syn_lst = get_csv_array(lp->Items->Strings[Index], 50, true);
 
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, syn_lst[0]);	xp += w_x + 16;
 
@@ -70,17 +74,15 @@ void __fastcall TRegSyncDlg::RegListBoxDrawItem(TWinControl *Control, int Index,
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegSyncDlg::DirListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-		TOwnerDrawState State)
+	TOwnerDrawState State)
 {
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + Scaled2;
-	int yp = Rect.Top  + get_TopMargin(cv);
-
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
-	cv->TextOut(xp, yp, get_MiniPathName(lp->Items->Strings[Index], lp->ClientWidth, lp->Font, true));
+	cv->TextOut(Rect.Left + Scaled2, Rect.Top + get_TopMargin(cv),
+		get_MiniPathName(lp->Items->Strings[Index], lp->ClientWidth, lp->Font, true));
 }
 
 //---------------------------------------------------------------------------

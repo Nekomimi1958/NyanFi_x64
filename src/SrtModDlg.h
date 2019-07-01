@@ -46,10 +46,19 @@ private:	// ユーザー宣言
 	bool Changed;
 	bool SelByKey;
 
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
+
 public:		// ユーザー宣言
 	bool InhOk;
 
 	__fastcall TSortModeDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TSortModeDlg *SortModeDlg;

@@ -4,7 +4,7 @@ object ColorPicker: TColorPicker
   BorderStyle = bsToolWindow
   Caption = #12459#12521#12540#12500#12483#12459#12540
   ClientHeight = 201
-  ClientWidth = 314
+  ClientWidth = 324
   Color = clBtnFace
   ParentFont = True
   FormStyle = fsStayOnTop
@@ -16,42 +16,21 @@ object ColorPicker: TColorPicker
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   DesignSize = (
-    314
+    324
     201)
   PixelsPerInch = 96
   TextHeight = 13
   object ColLabel: TLabel
     Left = 8
     Top = 4
-    Width = 3
+    Width = 13
     Height = 13
     Anchors = [akLeft, akTop, akRight]
-  end
-  object Label1: TLabel
-    Left = 25
-    Top = 61
-    Width = 42
-    Height = 13
-    Caption = '9px'#24179#22343
-  end
-  object Label2: TLabel
-    Left = 106
-    Top = 61
-    Width = 24
-    Height = 13
-    Caption = #35036#33394
-  end
-  object Label3: TLabel
-    Left = 167
-    Top = 61
-    Width = 55
-    Height = 13
-    Caption = #12475#12540#12501#12459#12521#12540
   end
   object ColEdit: TEdit
     Left = 119
     Top = 84
-    Width = 136
+    Width = 146
     Height = 21
     TabStop = False
     Anchors = [akLeft, akTop, akRight]
@@ -59,7 +38,7 @@ object ColorPicker: TColorPicker
     TabOrder = 6
   end
   object ColPanel: TPanel
-    Left = 260
+    Left = 270
     Top = 4
     Width = 50
     Height = 50
@@ -78,14 +57,14 @@ object ColorPicker: TColorPicker
   object FmtComboBox: TComboBox
     Left = 8
     Top = 84
-    Width = 110
+    Width = 109
     Height = 21
     Style = csDropDownList
     DropDownCount = 12
     TabOrder = 5
   end
   object Col2Panel: TPanel
-    Left = 260
+    Left = 270
     Top = 58
     Width = 50
     Height = 50
@@ -99,6 +78,7 @@ object ColorPicker: TColorPicker
     Top = 59
     Width = 78
     Height = 17
+    Caption = '9px'#24179#22343
     TabOrder = 1
   end
   object SafeColCheckBox: TCheckBox
@@ -106,6 +86,7 @@ object ColorPicker: TColorPicker
     Top = 59
     Width = 103
     Height = 17
+    Caption = #12475#12540#12501#12459#12521#12540
     TabOrder = 2
   end
   object CmpColCheckBox: TCheckBox
@@ -113,14 +94,20 @@ object ColorPicker: TColorPicker
     Top = 59
     Width = 58
     Height = 17
+    Caption = #35036#33394
     TabOrder = 4
   end
   object RepeatGroupBox: TGroupBox
     Left = 8
     Top = 122
-    Width = 298
+    Width = 308
     Height = 71
+    Anchors = [akLeft, akTop, akRight]
+    Caption = #36899#32154#21462#24471
     TabOrder = 7
+    DesignSize = (
+      308
+      71)
     object RepSttLabel: TLabel
       Left = 16
       Top = 47
@@ -132,7 +119,7 @@ object ColorPicker: TColorPicker
     object RepCntEdit: TLabeledEdit
       Left = 48
       Top = 20
-      Width = 45
+      Width = 61
       Height = 21
       Alignment = taRightJustify
       EditLabel.Width = 24
@@ -143,11 +130,12 @@ object ColorPicker: TColorPicker
       TabOrder = 0
     end
     object RepComboBox: TComboBox
-      Left = 99
+      Left = 111
       Top = 20
-      Width = 136
+      Width = 134
       Height = 21
       Style = csDropDownList
+      Anchors = [akTop, akRight]
       TabOrder = 1
       Items.Strings = (
         ', '#21306#20999#12426
@@ -156,29 +144,13 @@ object ColorPicker: TColorPicker
         #34892#36861#21152)
     end
     object ExeRepBtn: TButton
-      Left = 241
+      Left = 251
       Top = 19
       Width = 50
       Height = 24
       Action = StartRepAction
+      Anchors = [akTop, akRight]
       TabOrder = 2
-    end
-  end
-  object Panel1: TPanel
-    Left = 16
-    Top = 115
-    Width = 52
-    Height = 17
-    AutoSize = True
-    BevelOuter = bvNone
-    BorderWidth = 2
-    TabOrder = 8
-    object Label4: TLabel
-      Left = 2
-      Top = 2
-      Width = 48
-      Height = 13
-      Caption = #36899#32154#21462#24471
     end
   end
   object ActionList1: TActionList

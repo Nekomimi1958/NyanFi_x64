@@ -65,6 +65,8 @@ void __fastcall TPackArcDlg::FormShow(TObject *Sender)
 		ArcNameEdit->SetFocus();
 		ArcNameEdit->SelStart = ArcNameEdit->Text.Length();
 	}
+
+	SetDarkWinTheme(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TPackArcDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -230,6 +232,17 @@ void __fastcall TPackArcDlg::SfxCheckBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TPackArcDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#Pack"));
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Alt+F"))	{
+		FormatRadioGroup->SetFocus();
+		if (FormatRadioGroup->ItemIndex!=-1)
+			FormatRadioGroup->Buttons[FormatRadioGroup->ItemIndex]->SetFocus();
+	}
+	else if (USAME_TI(KeyStr, "Alt+O"))	{
+		ParamComboBox->SetFocus();
+	}
+	else {
+		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#Pack"));
+	}
 }
 //---------------------------------------------------------------------------

@@ -67,6 +67,8 @@ void __fastcall TInpDirDlg::FormShow(TObject *Sender)
 	InpDirComboBox->Text = EmptyStr;
 	InpDirComboBox->SetFocus();
 
+	SetDarkWinTheme(this);
+
 	SetList();
 	Filter();
 }

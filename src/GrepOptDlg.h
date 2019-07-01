@@ -38,6 +38,7 @@ __published:	// IDE で管理されるコンポーネント
 	TGroupBox *BakGroupBox;
 	TGroupBox *FileGroupBox;
 	TGroupBox *LogGroupBox;
+	TGroupBox *OutModeGroup;
 	TLabel *Label1;
 	TLabel *Label2;
 	TLabeledEdit *AppDirEdit;
@@ -56,7 +57,9 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *GrepOpt1Panel;
 	TPanel *GrepOpt2Panel;
 	TPanel *GrepOpt3Panel;
-	TRadioGroup *OutModeRadioGroup;
+	TRadioButton *OutMode0Btn;
+	TRadioButton *OutMode1Btn;
+	TRadioButton *OutMode2Btn;
 	TTabSheet *OutFormSheet;
 	TTabSheet *OutModeSheet;
 	TTabSheet *ReplaceSheet;
@@ -67,11 +70,13 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefAppBtnClick(TObject *Sender);
 	void __fastcall RefDirBtnClick(TObject *Sender);
 	void __fastcall RefOutBtnClick(TObject *Sender);
-	void __fastcall OutModeRadioGroupClick(TObject *Sender);
 	void __fastcall SampleChange(TObject *Sender);
 	void __fastcall RefLogBtnClick(TObject *Sender);
 	void __fastcall RefBakBtnClick(TObject *Sender);
 	bool __fastcall FormHelp(WORD Command, NativeInt Data, bool &CallHelp);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall PageControl1DrawTab(TCustomTabControl *Control, int TabIndex,
+          const TRect &Rect, bool Active);
 
 private:	// ユーザー宣言
 	void __fastcall WmDropped(TMessage &msg);

@@ -22,9 +22,10 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *SaveSetupAction;
 	TActionList *ActionList1;
 	TBevel *Bevel1;
-	TButton *Button1;
 	TButton *CanButton;
 	TButton *OkButton;
+	TButton *SaveCmdBtn;
+	TButton *SaveFmtBtn;
 	TCheckBox *MirrorCheckBox;
 	TCheckBox *SubDirCheckBox;
 	TCheckBox *SureCheckBox;
@@ -38,7 +39,6 @@ __published:	// IDE で管理されるコンポーネント
 	TLabeledEdit *DstDirEdit;
 	TLabeledEdit *SrcDirEdit;
 	TPanel *BottomPanel;
-	TSpeedButton *SaveFmtBtn;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

@@ -55,6 +55,8 @@ void __fastcall TTabSetDlg::FormShow(TObject *Sender)
 			WorkListEdit->Text = EmptyStr;
 		}
 	}
+
+	SetDarkWinTheme(this);
 }
 
 //---------------------------------------------------------------------------

@@ -83,10 +83,10 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 	TagEdit->Hint	 = LoadUsrMsg(USTR_HintMltSepSC);
 	SetDarkWinTheme(TagEdit);
 
-	AndCheckBox->Visible	 = false;
-	SelMaskCheckBox->Visible = false;
-	ResLinkCheckBox->Visible = false;
-	HideCheckBox->Visible	 = false;
+	AndPanel->Visible	  = false;
+	SelMaskPanel->Visible = false;
+	ResLinkPanel->Visible = false;
+	HidePanel->Visible	  = false;
 
 	FindOptPanel->Visible = false;
 	OptPanel->Height	  = FindOptPanel->Height + InpOptPanel->Height;
@@ -95,29 +95,27 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 		set_FormTitle(this, _T("フォルダアイコン検索"));
 		FindOptPanel->Visible	 = true;
 		ResLinkCheckBox->Checked = IniFile->ReadBoolGen(_T("FindIcoResLink"));
-		ResLinkCheckBox->Left	 = 10;
-		ResLinkCheckBox->Visible = true;
+		ResLinkPanel->Visible	 = true;
 		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("FindIcoShowOpt"),	true);
 		SetColPanel->Visible	 = false;
 	}
 	else if (SameText(CmdStr, "FindTag")) {
 		FindOptPanel->Visible	 = true;
 		AndCheckBox->Checked	 = IniFile->ReadBoolGen(_T("FindTagDlgAnd"),	true);
-		AndCheckBox->Visible	 = true;
+		AndPanel->Visible		 = true;
 		ResLinkCheckBox->Checked = IniFile->ReadBoolGen(_T("FindTagResLink"));
-		ResLinkCheckBox->Left	 = AndCheckBox->Left + AndCheckBox->Width + Scaled8;
-		ResLinkCheckBox->Visible = true;
+		ResLinkPanel->Visible	 = true;
 		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("FindTagShowOpt"),	true);
 		HideCheckBox->Checked	 = IniFile->ReadBoolGen(_T("FindTagDlgHide"));
-		HideCheckBox->Visible	 = true;
+		HidePanel->Visible		 = true;
 		Caption = UnicodeString().cat_sprintf(_T("タグ検索 (%s)"), AndCheckBox->Checked? _T("AND") : _T("OR"));
 	}
 	else if (SameText(CmdStr, "SetTag")) {
 		set_FormTitle(this, _T("タグの設定"));
-		OptPanel->Height		 = InpOptPanel->Height;
-		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("SetTagShowOpt"),	true);
-		HideCheckBox->Checked	 = IniFile->ReadBoolGen(_T("SetTagDlgHide"));
-		HideCheckBox->Visible	 = true;
+		OptPanel->Height	  = InpOptPanel->Height;
+		OptPanel->Visible	  = IniFile->ReadBoolGen(_T("SetTagShowOpt"),	true);
+		HideCheckBox->Checked = IniFile->ReadBoolGen(_T("SetTagDlgHide"));
+		HidePanel->Visible	  = true;
 
 		TStringDynArray org_lst = split_strings_semicolon(TagEdit->Text);
 		for (int i=0; i<org_lst.Length; i++) {
@@ -127,38 +125,22 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 	}
 	else if (SameText(CmdStr, "AddTag")) {
 		set_FormTitle(this, _T("タグの追加"));
-		OptPanel->Height		 = InpOptPanel->Height;
-		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("AddTagShowOpt"),	true);
-		HideCheckBox->Checked	 = IniFile->ReadBoolGen(_T("AddTagDlgHide"));
-		HideCheckBox->Visible	 = true;
+		OptPanel->Height	  = InpOptPanel->Height;
+		OptPanel->Visible	  = IniFile->ReadBoolGen(_T("AddTagShowOpt"),	true);
+		HideCheckBox->Checked = IniFile->ReadBoolGen(_T("AddTagDlgHide"));
+		HidePanel->Visible	  = true;
 	}
 	else if (SameText(CmdStr, "TagSelect")) {
 		set_FormTitle(this, _T("タグ選択"));
 		FindOptPanel->Visible	 = true;
 		AndCheckBox->Checked	 = IniFile->ReadBoolGen(_T("TagSelDlgAnd"),	true);
-		AndCheckBox->Visible	 = true;
-		SelMaskCheckBox->Visible = (ScrMode==SCMD_FLIST);
+		AndPanel->Visible		 = true;
+		SelMaskPanel->Visible	 = (ScrMode==SCMD_FLIST);
 		SelMaskCheckBox->Checked = IniFile->ReadBoolGen(_T("TagSelSelMask"));
 		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("TagSelShowOpt"),	true);
 		HideCheckBox->Checked	 = IniFile->ReadBoolGen(_T("TagSelDlgHide"));
-		HideCheckBox->Visible	 = true;
+		HidePanel->Visible		 = true;
 	}
-
-	Label2->Visible = AndCheckBox->Visible;
-
-	if (ResLinkCheckBox->Visible) {
-		Label3->Caption = "結果リストから反対側へ反映(&R)";
-		Label3->Left = ResLinkCheckBox->Left + ResLinkCheckBox->Height;
-	}
-	else if (SelMaskCheckBox->Visible) {
-		Label3->Caption = "選択項目だけを残す(&M)";
-		Label3->Left = SelMaskCheckBox->Left + SelMaskCheckBox->Height;
-	}
-	else {
-		Label3->Caption = EmptyStr;
-	}
-
-	Label4->Visible = HideCheckBox->Visible;
 
 	SetColPanel->Visible = !IsFolderIcon && OptPanel->Visible;
 	BlankPanel->Visible  = !OptPanel->Visible;
@@ -171,7 +153,7 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 
 	SetOptBtn();
 
-	InpPanel->Visible = HideCheckBox->Visible && !HideCheckBox->Checked;
+	InpPanel->Visible = HidePanel->Visible && !HideCheckBox->Checked;
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
@@ -263,6 +245,7 @@ void __fastcall TTagManDlg::SetCtrlFocus()
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::HideActionExecute(TObject *Sender)
 {
+	if (!HidePanel->Visible) return;
 	TAction *ap = (TAction *)Sender;
 	ap->Checked = !ap->Checked;
 
@@ -272,6 +255,7 @@ void __fastcall TTagManDlg::HideActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::AndActionExecute(TObject *Sender)
 {
+	if (!AndPanel->Visible) return;
 	TAction *ap = (TAction *)Sender;
 	ap->Checked = !ap->Checked;
 
@@ -283,6 +267,7 @@ void __fastcall TTagManDlg::AndActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::ResLinkActionExecute(TObject *Sender)
 {
+	if (!ResLinkPanel->Visible) return;
 	TAction *ap = (TAction *)Sender;
 	ap->Checked = !ap->Checked;
 	SetCtrlFocus();
@@ -290,6 +275,7 @@ void __fastcall TTagManDlg::ResLinkActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::SelMaskActionExecute(TObject *Sender)
 {
+	if (!SelMaskPanel->Visible) return;
 	TAction *ap = (TAction *)Sender;
 	ap->Checked = !ap->Checked;
 	SetCtrlFocus();

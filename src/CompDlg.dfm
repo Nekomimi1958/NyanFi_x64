@@ -3,7 +3,7 @@ object FileCompDlg: TFileCompDlg
   Top = 0
   BorderStyle = bsDialog
   Caption = #21516#21517#12501#12449#12452#12523#12398#27604#36611
-  ClientHeight = 386
+  ClientHeight = 344
   ClientWidth = 434
   Color = clBtnFace
   ParentFont = True
@@ -17,12 +17,12 @@ object FileCompDlg: TFileCompDlg
   OnShow = FormShow
   DesignSize = (
     434
-    386)
+    344)
   PixelsPerInch = 96
   TextHeight = 13
   object CanButton: TButton
     Left = 219
-    Top = 352
+    Top = 310
     Width = 80
     Height = 26
     Anchors = [akLeft, akBottom]
@@ -39,7 +39,7 @@ object FileCompDlg: TFileCompDlg
   end
   object OkButton: TButton
     Left = 114
-    Top = 352
+    Top = 310
     Width = 80
     Height = 26
     Action = OkAction
@@ -56,7 +56,7 @@ object FileCompDlg: TFileCompDlg
   end
   object CmpDirCheckBox: TCheckBox
     Left = 12
-    Top = 288
+    Top = 246
     Width = 152
     Height = 17
     Anchors = [akLeft, akBottom]
@@ -127,20 +127,20 @@ object FileCompDlg: TFileCompDlg
     Left = 0
     Top = 110
     Width = 434
-    Height = 112
+    Height = 67
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
     StyleElements = []
     DesignSize = (
       434
-      112)
+      67)
     object HashRadioGroup: TRadioGroup
       Left = 8
       Top = 6
       Width = 418
-      Height = 99
-      Anchors = [akLeft, akTop, akRight, akBottom]
+      Height = 52
+      Anchors = [akLeft, akTop, akRight]
       Caption = #12495#12483#12471#12517'(&H)'
       Columns = 5
       ItemIndex = 0
@@ -151,28 +151,18 @@ object FileCompDlg: TFileCompDlg
       TabOrder = 0
       OnClick = OptRadioGroupClick
     end
-    object AlgRadioGroup: TRadioGroup
-      Left = 239
-      Top = 18
-      Width = 180
-      Height = 80
-      Anchors = [akLeft, akTop, akRight]
-      Caption = #12450#12523#12468#12522#12474#12512'(&A)'
-      Columns = 2
-      ItemIndex = 0
-      Items.Strings = (
-        'MD5'
-        'SHA-1'
-        'SHA-256'
-        'SHA-384'
-        'SHA-512'
-        'CRC32')
+    object AlgComboBox: TComboBox
+      Left = 263
+      Top = 25
+      Width = 150
+      Height = 21
+      Style = csDropDownList
       TabOrder = 1
     end
   end
   object SelOppCheckBox: TCheckBox
     Left = 12
-    Top = 313
+    Top = 271
     Width = 130
     Height = 17
     Anchors = [akLeft, akBottom]
@@ -181,7 +171,7 @@ object FileCompDlg: TFileCompDlg
   end
   object ReverseCheckBox: TCheckBox
     Left = 144
-    Top = 313
+    Top = 271
     Width = 117
     Height = 17
     Anchors = [akLeft, akBottom]
@@ -190,7 +180,7 @@ object FileCompDlg: TFileCompDlg
   end
   object SelMaskCheckBox: TCheckBox
     Left = 263
-    Top = 313
+    Top = 271
     Width = 162
     Height = 17
     Anchors = [akLeft, akBottom]
@@ -199,7 +189,7 @@ object FileCompDlg: TFileCompDlg
   end
   object CmpArcCheckBox: TCheckBox
     Left = 170
-    Top = 288
+    Top = 246
     Width = 207
     Height = 17
     Anchors = [akLeft, akBottom]
@@ -208,7 +198,7 @@ object FileCompDlg: TFileCompDlg
   end
   object IdPanel: TPanel
     Left = 0
-    Top = 222
+    Top = 177
     Width = 434
     Height = 55
     Align = alTop
@@ -236,8 +226,8 @@ object FileCompDlg: TFileCompDlg
     end
   end
   object ActionList1: TActionList
-    Left = 33
-    Top = 342
+    Left = 361
+    Top = 294
     object OkAction: TAction
       Caption = 'OK'
       OnUpdate = OkActionUpdate

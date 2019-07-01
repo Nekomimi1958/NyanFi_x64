@@ -45,8 +45,12 @@ void __fastcall TJoinTextDlg::FormShow(TObject *Sender)
 	TemplateEdit->Text		   = IniFile->ReadStrGen(_T("JoinTextTemplate"));
 	BomCheckBox->Checked 	   = IniFile->ReadBoolGen(_T("JoinTextBOM"));
 
+	set_ListBoxItemHi(SrcFileListBox, DialogFont);
 	UserModule->InitializeListBox(SrcFileListBox);
 	OutNameEdit->SetFocus();
+
+	SetDarkWinTheme(this);
+	SrcFileListBox->Color = IsDarkMode? dcl_Window : scl_Window;
 }
 //---------------------------------------------------------------------------
 void __fastcall TJoinTextDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -57,6 +61,18 @@ void __fastcall TJoinTextDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteIntGen(_T("JoinTextOutCode"),		OutCodeComboBox);
 	IniFile->WriteStrGen(_T("JoinTextTemplate"),	TemplateEdit);
 	IniFile->WriteBoolGen(_T("JoinTextBOM"),		BomCheckBox);
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TJoinTextDlg::SrcFileListBoxDrawItem(TWinControl *Control, int Index,
+	TRect &Rect, TOwnerDrawState State)
+{
+	TListBox *lp = (TListBox*)Control;
+	TCanvas  *cv = lp->Canvas;
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	cv->FillRect(Rect);
+	cv->Font->Color = get_TextColor(State.Contains(odSelected));
+	cv->TextOut(Rect.Left + Scaled4, Rect.Top  + get_TopMargin(cv), lp->Items->Strings[Index]);
 }
 
 //---------------------------------------------------------------------------
@@ -97,7 +113,6 @@ void __fastcall TJoinTextDlg::JoinActionUpdate(TObject *Sender)
 	((TAction*)Sender)->Enabled = SrcFileListBox->Count>0 && !OutNameEdit->Text.IsEmpty();
 
 	InvColIfEmpty(TemplateEdit);
-
 	BomCheckBox->Enabled = StartsStr("UTF-", OutCodeComboBox->Text);
 }
 
@@ -107,3 +122,4 @@ void __fastcall TJoinTextDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftStat
 	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
+

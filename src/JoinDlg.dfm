@@ -28,10 +28,12 @@ object JoinTextDlg: TJoinTextDlg
     Top = 8
     Width = 295
     Height = 210
+    Style = lbOwnerDrawFixed
     Anchors = [akLeft, akTop, akRight, akBottom]
     DragMode = dmAutomatic
     ItemHeight = 13
     TabOrder = 0
+    OnDrawItem = SrcFileListBoxDrawItem
     OnKeyDown = SrcFileListBoxKeyDown
   end
   object UpItemBtn: TButton

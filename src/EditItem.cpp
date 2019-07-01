@@ -34,6 +34,9 @@ void __fastcall TEditItemDlg::FormShow(TObject *Sender)
 	set_ListBoxItemHi(lp);
 	UserModule->InitializeListBox(lp);
 
+	SetDarkWinTheme(this);
+	lp->Color = get_WinColor();
+
 	ItemEdit->Text = EmptyStr;
 }
 //---------------------------------------------------------------------------
@@ -55,6 +58,18 @@ void __fastcall TEditItemDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		}
 		if (USAME_TS(ItemDelimiter, ".")) RetStr.Insert(".", 1);
 	}
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TEditItemDlg::ItemListBoxDrawItem(TWinControl *Control, int Index,
+	TRect &Rect, TOwnerDrawState State)
+{
+	TCheckListBox *lp = (TCheckListBox*)Control;
+	TCanvas *cv = lp->Canvas;
+	cv->Font->Assign(lp->Font);
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	cv->FillRect(Rect);
+	cv->TextOut(Rect.Left + Scaled2, Rect.Top + get_TopMargin(cv), lp->Items->Strings[Index]);
 }
 
 //---------------------------------------------------------------------------

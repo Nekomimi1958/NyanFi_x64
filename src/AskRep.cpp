@@ -35,9 +35,8 @@ void __fastcall TAskRepDlg::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
 
-	RepListBox->Font->Assign(GrepResFont);
 	RepListBox->Color = col_bgList;
-	set_ListBoxItemHi(RepListBox);
+	set_ListBoxItemHi(RepListBox, GrepResFont);
 	set_UsrScrPanel(ListScrPanel);
 	ListScrPanel->UpdateKnob();
 

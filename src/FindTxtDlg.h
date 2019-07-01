@@ -33,8 +33,11 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *RegExCheckBox;
 	TComboBox *CodePageComboBox;
 	TComboBox *FindComboBox;
+	TGroupBox *FindDirGroupBox;
 	TLabel *KwdLabel;
-	TRadioGroup *UpDownGroup;
+	TPanel *BinPanel;
+	TRadioButton *DownRadioBtn;
+	TRadioButton *UpRadioBtn;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -54,6 +57,11 @@ private:	// ユーザー宣言
 	TTxtViewer *Viewer;
 	bool DlgInitialized;
 
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
+
 public:		// ユーザー宣言
 	bool fromTV;		//テキストビュアーから
 
@@ -62,6 +70,10 @@ public:		// ユーザー宣言
 	UnicodeString RegExPtn;
 
 	__fastcall TFindTextDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFindTextDlg *FindTextDlg;

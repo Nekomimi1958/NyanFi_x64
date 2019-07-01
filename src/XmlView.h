@@ -43,10 +43,6 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *AutoCheckBox;
 	TCheckBox *NamCheckBox;
 	TCheckBox *ValCheckBox;
-	TLabel *Label1;
-	TLabel *Label2;
-	TLabel *Label3;
-	TLabel *Label4;
 	TLabeledEdit *FindEdit;
 	TMenuItem *CollapseItem;
 	TMenuItem *CopyItem;

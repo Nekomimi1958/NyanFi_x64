@@ -74,7 +74,6 @@ __published:	// IDE で管理されるコンポーネント
 	TGroupBox *FrmtGroupBox;
 	TGroupBox *FrSzGroupBox;
 	TGroupBox *GpsGroupBox;
-	TGroupBox *GroupBox1;
 	TGroupBox *IconGroupBox;
 	TGroupBox *ImgSzGroupBox;
 	TGroupBox *LCntGroupBox;
@@ -82,6 +81,7 @@ __published:	// IDE で管理されるコンポーネント
 	TGroupBox *PropGroupBox;
 	TGroupBox *RateGroupBox;
 	TGroupBox *SizeGroupBox;
+	TGroupBox *TagGroupBox;
 	TGroupBox *TextGroupBox;
 	TGroupBox *TimeGroupBox;
 	TLabel *KmLabel;
@@ -164,12 +164,21 @@ __published:	// IDE で管理されるコンポーネント
 
 private:	// ユーザー宣言
 	bool DlgInitialized;
+	bool IsDark;
 	int  BasicHeight;
+
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
 
 	void __fastcall ClearExtraCond();
 
 public:		// ユーザー宣言
 	UnicodeString SubTitle;
+
+	TLabel *PropLabel;
+	TLabel *IconLabel;
 
 	bool FindDir;
 	bool FindBoth;
@@ -206,6 +215,10 @@ public:		// ユーザー宣言
 	bool hasOther;
 
 	__fastcall TFindFileDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFindFileDlg *FindFileDlg;

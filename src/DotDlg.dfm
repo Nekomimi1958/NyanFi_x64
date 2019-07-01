@@ -141,7 +141,7 @@ object DotNyanDlg: TDotNyanDlg
     Width = 368
     Height = 41
     Caption = #12450#12452#12467#12531
-    Columns = 5
+    Columns = 4
     Items.Strings = (
       #12381#12398#12414#12414
       #34920#31034

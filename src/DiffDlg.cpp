@@ -52,6 +52,14 @@ void __fastcall TDiffDirDlg::FormShow(TObject *Sender)
 
 	IncMaskComboBox->SetFocus();
 	IncMaskComboBox->SelStart = IncMaskComboBox->Text.Length();
+
+	SetDarkWinTheme(this);
+	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
+}
+//---------------------------------------------------------------------------
+void __fastcall TDiffDirDlg::WmFormShowed(TMessage &msg)
+{
+	DiffExcDirComboBox->SelStart = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TDiffDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -80,13 +88,17 @@ void __fastcall TDiffDirDlg::StartActionUpdate(TObject *Sender)
 {
 	((TAction *)Sender)->Enabled = true;
 
-	DiffExcDirComboBox->Color = SubDirCheckBox->Checked? scl_Window : col_Invalid;
+	DiffExcDirComboBox->Color = get_WinColor(!SubDirCheckBox->Checked);
 }
 
 //---------------------------------------------------------------------------
 void __fastcall TDiffDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#DiffDir"));
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Alt+S"))
+		invert_CheckBox(SubDirCheckBox);
+	else
+		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#DiffDir"));
 }
 //---------------------------------------------------------------------------
 

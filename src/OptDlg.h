@@ -24,6 +24,7 @@
 #include <Vcl.ImgList.hpp>
 #include "MarkList.h"
 #include "usr_swatch.h"
+#include "usr_hintwin.h"
 
 //---------------------------------------------------------------------------
 #define MAX_KEYTABS	5
@@ -116,7 +117,13 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *ExEditBtn;
 	TButton *ExpColBtn;
 	TButton *ExpKeyBtn;
+	TButton *FindDownBtn;
+	TButton *FindDownColBtn;
+	TButton *FindDownEvBtn;
 	TButton *FindKeyBtn;
+	TButton *FindUpBtn;
+	TButton *FindUpColBtn;
+	TButton *FindUpEvBtn;
 	TButton *InpColBtn;
 	TButton *InpKeyBtn;
 	TButton *L_RefIniPatBtn;
@@ -463,6 +470,7 @@ __published:	// IDE で管理されるコンポーネント
 	TGroupBox *DispGroupBox;
 	TGroupBox *DlgKeyGroupBox;
 	TGroupBox *DriveInfGroupBox;
+	TGroupBox *DuplGroupBox;
 	TGroupBox *EmpGroupBox;
 	TGroupBox *EtcEditGroupBox;
 	TGroupBox *EtcGroupBox;
@@ -475,8 +483,6 @@ __published:	// IDE で管理されるコンポーネント
 	TGroupBox *FileListGroupBox;
 	TGroupBox *FoldGroupBox;
 	TGroupBox *FontGroupBox;
-	TGroupBox *GroupBox1;
-	TGroupBox *GroupBox2;
 	TGroupBox *H2TGroupBox;
 	TGroupBox *HotKeyGroupBox;
 	TGroupBox *ImgEditGroupBox;
@@ -522,6 +528,7 @@ __published:	// IDE で管理されるコンポーネント
 	TGroupBox *TimerGroupBox;
 	TGroupBox *TxtEditGroupBox;
 	TGroupBox *TxtPrvGroupBox;
+	TGroupBox *VirDrvGroupBox;
 	TGroupBox *WatchGroupBox;
 	TGroupBox *WebSearchGroupBox;
 	TGroupBox *WorkListGroupBox;
@@ -535,6 +542,7 @@ __published:	// IDE で管理されるコンポーネント
 	TImageList *IconImgListP;
 	TLabel *DlgMoveLabel;
 	TLabel *DlgSizeLabel;
+	TLabel *KeyboardLabel;
 	TLabel *MenuAliasLabel;
 	TLabel *ToolAliasLabel;
 	TLabeledEdit *AsoExtEdit;
@@ -691,6 +699,19 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *ExtMenuPanel;
 	TPanel *ExtToolPanel;
 	TPanel *RefExtColPanel;
+	TPanel *SheetPanel1;
+	TPanel *SheetPanel2;
+	TPanel *SheetPanel3;
+	TPanel *SheetPanel4;
+	TPanel *SheetPanel5;
+	TPanel *SheetPanel6;
+	TPanel *SheetPanel7;
+	TPanel *SheetPanel8;
+	TPanel *SheetPanel9;
+	TPanel *SheetPanel13;
+	TPanel *SheetPanel14;
+	TPanel *SheetPanel15;
+	TPanel *SheetPanel16;
 	TPanel *SpuitPanel;
 	TPanel *SpuitPanel2;
 	TPanel *SpuitPanel3;
@@ -714,12 +735,6 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioGroup *L_IniSortRadioGroup;
 	TRadioGroup *PrtDirRadioGroup;
 	TRadioGroup *R_IniSortRadioGroup;
-	TSpeedButton *FindDownBtn;
-	TSpeedButton *FindDownColBtn;
-	TSpeedButton *FindDownEvBtn;
-	TSpeedButton *FindUpBtn;
-	TSpeedButton *FindUpColBtn;
-	TSpeedButton *FindUpEvBtn;
 	TSpeedButton *RefToolFmtBtn;
 	TTabControl *KeyTabControl;
 	TTabSheet *AssoSheet;
@@ -902,6 +917,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall DelDrvActionExecute(TObject *Sender);
 	void __fastcall DelDrvActionUpdate(TObject *Sender);
 	void __fastcall RefVDrvBtnClick(TObject *Sender);
+	void __fastcall ExtHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
+		const TRect &Rect, bool Pressed);
 
 private:	// ユーザー宣言
 	MarkList *FindMarkList;
@@ -920,9 +937,42 @@ private:	// ユーザー宣言
 	int MaxWd_Tag;
 
 	bool DlgInitialized;
+	bool IsDark;
 
 	UsrSwatchPanel *SwatchPanel;
 
+	TLabel *KeyKeyLabel;
+
+	TWndMethod org_SheetPanelWndProc[16];
+	void __fastcall SheetPanelWndProcCore(TMessage &msg, int idx)
+	{
+		if (msg.Msg==WM_ERASEBKGND && IsDarkMode)
+			msg.Result = 1;
+		else
+			org_SheetPanelWndProc[idx](msg);
+	}
+
+	void __fastcall SheetPanel1WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  0); }
+	void __fastcall SheetPanel2WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  1); }
+	void __fastcall SheetPanel3WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  2); }
+	void __fastcall SheetPanel4WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  3); }
+	void __fastcall SheetPanel5WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  4); }
+	void __fastcall SheetPanel6WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  5); }
+	void __fastcall SheetPanel7WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  6); }
+	void __fastcall SheetPanel8WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  7); }
+	void __fastcall SheetPanel9WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  8); }
+	void __fastcall SheetPanel10WndProc(TMessage &msg) { SheetPanelWndProcCore(msg,  9); }
+	void __fastcall SheetPanel11WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 10); }
+	void __fastcall SheetPanel12WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 11); }
+	void __fastcall SheetPanel13WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 12); }
+	void __fastcall SheetPanel14WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 13); }
+	void __fastcall SheetPanel15WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 14); }
+	void __fastcall SheetPanel16WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 15); }
+
+	void __fastcall WmFormShowed(TMessage &msg);
+
+	void __fastcall SetWinTheme();
+	void __fastcall DeselectComboBox(TGroupBox *gp);
 	void __fastcall UpdateMaxItemWidth();
 
 	UnicodeString __fastcall GetCmdModeStr(int idx = 0);
@@ -964,10 +1014,13 @@ public:		// ユーザー宣言
 	bool WinSizeChanged;
 	bool TlBarColChanged;
 
+	UsrHintWindow *SplashHint;
+
 	__fastcall TOptionDlg(TComponent* Owner);
 	void __fastcall SetSheet(UnicodeString prm);
 
 	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,		TMessage,	WmFormShowed)
 		VCL_MESSAGE_HANDLER(WM_FORM_DROPPED,	TMessage,	WmDropped)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_FLICON,	TMessage,	WmNyanFiFlIcon)
 	END_MESSAGE_MAP(TForm)

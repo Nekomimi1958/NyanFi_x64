@@ -93,6 +93,18 @@ void __fastcall TSameNameDlg::FormShow(TObject *Sender)
 		tmp.cat_sprintf(_T("“]‘—æ‚Ì•û‚ª%s"), (CurSrcTime<CurDstTime)? _T("V‚µ‚¢") : _T("ŒÃ‚¢"));
 	}
 	InfoListBox->Items->Add(tmp);
+
+	SetDarkWinTheme(this);
+
+	Mode0Label->Font->Color = Mode0Btn->Enabled? get_LabelColor() : clGrayText;
+	Mode1Label->Font->Color = Mode1Btn->Enabled? get_LabelColor() : clGrayText;
+	Mode2Label->Font->Color = Mode2Btn->Enabled? get_LabelColor() : clGrayText;
+
+	Mode0Label->Top = Mode0Btn->Top + (Mode0Btn->Height - Mode0Label->Height)/2;
+	Mode1Label->Top = Mode1Btn->Top + (Mode1Btn->Height - Mode1Label->Height)/2;
+	Mode2Label->Top = Mode2Btn->Top + (Mode2Btn->Height - Mode2Label->Height)/2;
+	Mode3Label->Top = Mode3Btn->Top + (Mode3Btn->Height - Mode3Label->Height)/2;
+	Mode4Label->Top = Mode4Btn->Top + (Mode4Btn->Height - Mode4Label->Height)/2;
 }
 //---------------------------------------------------------------------------
 void __fastcall TSameNameDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -146,6 +158,9 @@ void __fastcall TSameNameDlg::AllCheckBoxClick(TObject *Sender)
 
 	CopyAll = SameNameDlg->AllCheckBox->Checked;
 	Mode4Btn->Enabled = !CopyAll;
+	Mode4Label->Font->Color = Mode4Btn->Enabled? get_LabelColor() : clGrayText;
+	Mode4Label->Repaint();
+
 	if (CopyAll && Mode4Btn->Checked) Mode3Btn->Checked = true;
 	RenameEdit->Enabled = Mode4Btn->Checked;
 }
@@ -205,11 +220,27 @@ void __fastcall TSameNameDlg::RenameEditKeyPress(TObject *Sender, System::WideCh
 {
 	if (is_KeyPress_CtrlNotCV(Key)) Key = 0;
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TSameNameDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialKeyProc(this, Key, Shift);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+O") && Mode0Btn->Enabled) Mode0Btn->Checked = true;
+	else if (USAME_TI(KeyStr, "Alt+N") && Mode1Btn->Enabled) Mode1Btn->Checked = true;
+	else if (USAME_TI(KeyStr, "Alt+S") && Mode2Btn->Enabled) Mode2Btn->Checked = true;
+	else if (USAME_TI(KeyStr, "Alt+U") && Mode3Btn->Enabled) Mode3Btn->Checked = true;
+	else if (USAME_TI(KeyStr, "Alt+R") && Mode4Btn->Enabled) Mode4Btn->Checked = true;
+	else if (USAME_TI(KeyStr, "Alt+A")) invert_CheckBox(AllCheckBox);
+	else if (!RenameEdit->Focused()) {
+		if		(USAME_TI(KeyStr, "O") && Mode0Btn->Enabled) Mode0Btn->Checked = true;
+		else if (USAME_TI(KeyStr, "N") && Mode1Btn->Enabled) Mode1Btn->Checked = true;
+		else if (USAME_TI(KeyStr, "S") && Mode2Btn->Enabled) Mode2Btn->Checked = true;
+		else if (USAME_TI(KeyStr, "U") && Mode3Btn->Enabled) Mode3Btn->Checked = true;
+		else if (USAME_TI(KeyStr, "R") && Mode4Btn->Enabled) Mode4Btn->Checked = true;
+		else if (USAME_TI(KeyStr, "A")) invert_CheckBox(AllCheckBox);
+	}
+	else {
+		SpecialKeyProc(this, Key, Shift);
+	}
 }
 //---------------------------------------------------------------------------
 

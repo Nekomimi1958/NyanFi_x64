@@ -27,7 +27,6 @@ void __fastcall TSetGitTagDlg::FormShow(TObject *Sender)
 
 	NameEdit->Text = EmptyStr;
 	AnnotateMemo->Lines->Clear();
-	AnnotateMemo->Color = scl_Window;
 
 	if (IsCommit) {
 		Caption = "コミット";
@@ -45,6 +44,10 @@ void __fastcall TSetGitTagDlg::FormShow(TObject *Sender)
 	}
 
 	GitParam = EmptyStr;
+
+	SetDarkWinTheme(this);
+	AnnotateMemo->Color 	  = get_WinColor();
+	AnnotateMemo->Font->Color = get_TextColor();
 }
 //---------------------------------------------------------------------------
 void __fastcall TSetGitTagDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -94,7 +97,7 @@ void __fastcall TSetGitTagDlg::OkActionUpdate(TObject *Sender)
 	else {
 		ap->Enabled = !NameEdit->Text.IsEmpty()
 			&& (!AnnotateCheckBox->Checked || !AnnotateMemo->Lines->Text.IsEmpty());
-		AnnotateMemo->Color = AnnotateCheckBox->Checked? scl_Window : col_Invalid;
+		AnnotateMemo->Color = get_WinColor(!AnnotateCheckBox->Checked);
 	}
 }
 

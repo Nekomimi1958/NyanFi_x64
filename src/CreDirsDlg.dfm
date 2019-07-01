@@ -5,17 +5,17 @@ object CreateDirsDlg: TCreateDirsDlg
   BorderIcons = [biSystemMenu]
   Caption = #12487#12451#12524#12463#12488#12522#19968#25324#20316#25104
   ClientHeight = 371
-  ClientWidth = 392
+  ClientWidth = 410
   Color = clBtnFace
   Constraints.MinHeight = 400
-  Constraints.MinWidth = 400
-  DoubleBuffered = True
+  Constraints.MinWidth = 420
   ParentFont = True
   KeyPreview = True
   OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
+  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
@@ -23,20 +23,23 @@ object CreateDirsDlg: TCreateDirsDlg
   object StatusBar1: TStatusBar
     Left = 0
     Top = 351
-    Width = 392
+    Width = 410
     Height = 20
     Panels = <
       item
+        Style = psOwnerDraw
         Width = 100
       end
       item
+        Style = psOwnerDraw
         Width = 50
       end>
+    OnDrawPanel = StatusBar1DrawPanel
   end
   object MainPanel: TPanel
     Left = 0
     Top = 0
-    Width = 392
+    Width = 410
     Height = 351
     Align = alClient
     BevelOuter = bvNone
@@ -44,16 +47,16 @@ object CreateDirsDlg: TCreateDirsDlg
     object Panel1: TPanel
       Left = 0
       Top = 119
-      Width = 392
+      Width = 410
       Height = 232
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
       DesignSize = (
-        392
+        410
         232)
       object CreateBtn: TButton
-        Left = 212
+        Left = 230
         Top = 200
         Width = 80
         Height = 26
@@ -64,7 +67,7 @@ object CreateDirsDlg: TCreateDirsDlg
         TabOrder = 3
       end
       object CancelBtn: TButton
-        Left = 304
+        Left = 322
         Top = 200
         Width = 80
         Height = 26
@@ -77,12 +80,12 @@ object CreateDirsDlg: TCreateDirsDlg
       object SirealGroupBox: TGroupBox
         Left = 8
         Top = 6
-        Width = 376
+        Width = 394
         Height = 63
         Caption = #36899#30058
         TabOrder = 0
         DesignSize = (
-          376
+          394
           63)
         object StartEdit: TLabeledEdit
           Left = 8
@@ -99,7 +102,7 @@ object CreateDirsDlg: TCreateDirsDlg
         object IncEdit: TLabeledEdit
           Left = 112
           Top = 32
-          Width = 80
+          Width = 90
           Height = 21
           Alignment = taRightJustify
           EditLabel.Width = 24
@@ -109,7 +112,7 @@ object CreateDirsDlg: TCreateDirsDlg
           TabOrder = 1
         end
         object AddSerBtn: TButton
-          Left = 316
+          Left = 334
           Top = 31
           Width = 50
           Height = 24
@@ -118,22 +121,20 @@ object CreateDirsDlg: TCreateDirsDlg
           TabOrder = 4
         end
         object PreSerRadioBtn: TRadioButton
-          Left = 204
+          Left = 218
           Top = 34
           Width = 54
           Height = 17
-          Anchors = [akTop, akRight]
           Caption = #21069#32622
           Checked = True
           TabOrder = 2
           TabStop = True
         end
         object PstSerRadioBtn: TRadioButton
-          Left = 260
+          Left = 274
           Top = 34
           Width = 54
           Height = 17
-          Anchors = [akTop, akRight]
           Caption = #24460#32622
           TabOrder = 3
         end
@@ -141,15 +142,15 @@ object CreateDirsDlg: TCreateDirsDlg
       object StrGroupBox: TGroupBox
         Left = 8
         Top = 143
-        Width = 376
+        Width = 394
         Height = 50
         Caption = #25991#23383#21015
         TabOrder = 2
         DesignSize = (
-          376
+          394
           50)
         object AddStrBtn: TButton
-          Left = 316
+          Left = 334
           Top = 17
           Width = 50
           Height = 24
@@ -158,20 +159,18 @@ object CreateDirsDlg: TCreateDirsDlg
           TabOrder = 3
         end
         object PstStrRadioBtn: TRadioButton
-          Left = 260
+          Left = 274
           Top = 20
           Width = 54
           Height = 17
-          Anchors = [akTop, akRight]
           Caption = #24460#32622
           TabOrder = 2
         end
         object PreStrRadioBtn: TRadioButton
-          Left = 204
+          Left = 218
           Top = 20
           Width = 54
           Height = 17
-          Anchors = [akTop, akRight]
           Caption = #21069#32622
           Checked = True
           TabOrder = 1
@@ -180,20 +179,20 @@ object CreateDirsDlg: TCreateDirsDlg
         object StrEdit: TEdit
           Left = 8
           Top = 18
-          Width = 184
+          Width = 194
           Height = 21
           TabOrder = 0
         end
       end
       object DateGroupBox: TGroupBox
         Left = 8
-        Top = 73
-        Width = 376
+        Top = 71
+        Width = 394
         Height = 66
         Caption = #26085#20184
         TabOrder = 1
         DesignSize = (
-          376
+          394
           66)
         object Label1: TLabel
           Left = 112
@@ -203,7 +202,7 @@ object CreateDirsDlg: TCreateDirsDlg
           Caption = #38283#22987#26085
         end
         object AddDateBtn: TButton
-          Left = 316
+          Left = 334
           Top = 33
           Width = 50
           Height = 24
@@ -212,20 +211,18 @@ object CreateDirsDlg: TCreateDirsDlg
           TabOrder = 4
         end
         object PstDateRadioBtn: TRadioButton
-          Left = 260
+          Left = 274
           Top = 36
           Width = 54
           Height = 17
-          Anchors = [akTop, akRight]
           Caption = #24460#32622
           TabOrder = 3
         end
         object PreDateRadioBtn: TRadioButton
-          Left = 204
+          Left = 218
           Top = 36
           Width = 54
           Height = 17
-          Anchors = [akTop, akRight]
           Caption = #21069#32622
           Checked = True
           TabOrder = 2
@@ -244,7 +241,7 @@ object CreateDirsDlg: TCreateDirsDlg
         object DateMaskEdit: TMaskEdit
           Left = 112
           Top = 34
-          Width = 78
+          Width = 90
           Height = 21
           EditMask = '!9999/99/99;1;_'
           MaxLength = 10
@@ -257,7 +254,7 @@ object CreateDirsDlg: TCreateDirsDlg
     object ListMemo: TMemo
       Left = 0
       Top = 0
-      Width = 392
+      Width = 410
       Height = 119
       Align = alClient
       Lines.Strings = (

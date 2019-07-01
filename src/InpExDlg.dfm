@@ -5,7 +5,6 @@ object InputExDlg: TInputExDlg
   ClientHeight = 232
   ClientWidth = 594
   Color = clBtnFace
-  DoubleBuffered = True
   ParentFont = True
   KeyPreview = True
   OldCreateOrder = False
@@ -111,27 +110,6 @@ object InputExDlg: TInputExDlg
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    DesignSize = (
-      594
-      52)
-    object PathInfLabel: TLabel
-      Left = 45
-      Top = -2
-      Width = 170
-      Height = 18
-      Anchors = [akLeft, akBottom]
-      AutoSize = False
-      Caption = #12501#12523#12497#12473#21517#12398#25991#23383#25968' = '
-    end
-    object NameInfLabel: TLabel
-      Left = 219
-      Top = -2
-      Width = 160
-      Height = 18
-      Anchors = [akLeft, akBottom]
-      AutoSize = False
-      Caption = #21517#21069#12398#25991#23383#25968' = '
-    end
     object CnvChCheckBox: TCheckBox
       Left = 203
       Top = 26
@@ -149,6 +127,38 @@ object InputExDlg: TInputExDlg
       Caption = #20316#25104#24460#12395#12459#12524#12531#12488#22793#26356'(&C)'
       TabOrder = 0
       OnClick = OptionClick
+    end
+    object DirSttPanel: TPanel
+      Left = 0
+      Top = 0
+      Width = 594
+      Height = 20
+      Align = alTop
+      BevelOuter = bvNone
+      DoubleBuffered = True
+      ParentDoubleBuffered = False
+      TabOrder = 2
+      DesignSize = (
+        594
+        20)
+      object NameInfLabel: TLabel
+        Left = 219
+        Top = 0
+        Width = 160
+        Height = 18
+        Anchors = [akLeft, akBottom]
+        AutoSize = False
+        Caption = #21517#21069#12398#25991#23383#25968' = '
+      end
+      object PathInfLabel: TLabel
+        Left = 45
+        Top = 0
+        Width = 170
+        Height = 18
+        Anchors = [akLeft, akBottom]
+        AutoSize = False
+        Caption = #12501#12523#12497#12473#21517#12398#25991#23383#25968' = '
+      end
     end
   end
   object BottomPanel: TPanel

@@ -58,7 +58,12 @@ void __fastcall TFtpConnectDlg::FormShow(TObject *Sender)
 	SSLComboBox->ItemIndex = -1;
 	HostItem			   = EmptyStr;
 
-	RemoteRadioGroup->ItemIndex = FTPRemoteSide;
+	switch (FTPRemoteSide) {
+	case  1: RSide1Btn->Checked = true; break;
+	case  2: RSide2Btn->Checked = true; break;
+	default: RSide0Btn->Checked = true;
+	}
+
 	TextFExtEdit->Text			= FTPTextModeFExt;
 	DisconTimeEdit->Text		= FTPDisconTimeout;
 	DlKeepTimeCheckBox->Checked = FTPDlKeepTime;
@@ -72,6 +77,9 @@ void __fastcall TFtpConnectDlg::FormShow(TObject *Sender)
 	PageControl1->ActivePage = HostSheet;
 	HostListBox->SetFocus();
 	HostListBoxClick(HostListBox);
+
+	SetDarkWinTheme(this);
+	HostListBox->Color = IsDarkMode? dcl_Window : scl_Window;
 }
 
 //---------------------------------------------------------------------------
@@ -79,7 +87,7 @@ void __fastcall TFtpConnectDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	UserModule->UninitializeListBox();
 
-	FTPRemoteSide	 = RemoteRadioGroup->ItemIndex;
+	FTPRemoteSide	 = RSide1Btn->Checked? 1 : RSide2Btn->Checked? 2 : 0;
 	FTPTextModeFExt  = TextFExtEdit->Text;
 	FTPDisconTimeout = EditToInt(DisconTimeEdit, 300);
 	FTPDlKeepTime	 = DlKeepTimeCheckBox->Checked;
@@ -103,6 +111,13 @@ void __fastcall TFtpConnectDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TFtpConnectDlg::PageControl1DrawTab(TCustomTabControl *Control,
+	int TabIndex, const TRect &Rect, bool Active)
+{
+	draw_OwnerTab(Control, TabIndex, Rect, Active, IsDarkMode);
+}
+
+//---------------------------------------------------------------------------
 //ˆê——‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TFtpConnectDlg::HostListBoxDrawItem(TWinControl *Control, int Index,
@@ -111,7 +126,7 @@ void __fastcall TFtpConnectDlg::HostListBoxDrawItem(TWinControl *Control, int In
 	TListBox *lp = (TListBox*)Control;
 	TCanvas *cv  = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	SetHighlight(cv, State.Contains(odSelected));
+	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
 	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled2;
@@ -263,3 +278,4 @@ void __fastcall TFtpConnectDlg::TestSoundBtnClick(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
+
