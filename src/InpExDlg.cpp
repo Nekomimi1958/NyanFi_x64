@@ -147,8 +147,8 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 		CodePageComboBox->ItemIndex = IniFile->ReadIntGen(_T("NewTextCodePage"));
 		CodePageComboBox->Width = ClientWidth - CodePageComboBox->Left - r_mgn;
 		ClipCheckBox->Checked = IniFile->ReadBoolGen(_T("NewTextClip"));
-		ClipCheckBox->Visible = (IpuntExMode!=INPEX_CLIP_PASTE);
 		EditCheckBox->Checked = EditNewText;
+		ClipPanel->Visible	  = (IpuntExMode!=INPEX_CLIP_PASTE);
 		NewTextPanel->Visible = true;
 		hi += NewTextPanel->Height;
 		HelpTopic.sprintf(_T("%s"), _T(HELPTOPIC_FL) _T("#NewTextFile"));

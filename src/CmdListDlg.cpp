@@ -93,6 +93,7 @@ void __fastcall TCmdFileListDlg::FormShow(TObject *Sender)
 	PreviewPanel->Visible	 = PreviewAction->Checked;
 	PreviewSplitter->Visible = PreviewAction->Checked;
 
+	SetDarkWinTheme(this);
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
 
@@ -101,12 +102,10 @@ void __fastcall TCmdFileListDlg::WmFormShowed(TMessage &msg)
 {
 	CmdFileHeader->Repaint();
 
-	TStringGrid *gp = CmdFileGrid;
-	gp->Repaint();
-
 	if (!UnInitializing) UpdateList();
 
 	//指定ファイル位置に移動
+	TStringGrid *gp = CmdFileGrid;
 	gp->TopRow = 0;
 	gp->Row    = 0;
 	if (!CmdFileName.IsEmpty()) {
@@ -123,13 +122,9 @@ void __fastcall TCmdFileListDlg::WmFormShowed(TMessage &msg)
 
 	GridScrPanel->UpdateKnob();
 
-	if (IsDarkMode)
-		SetDarkWinTheme(FilterEdit);
-	else
-		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
-
 	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();
 	FilterEdit->Text  = EmptyStr;
+	SetDarkWinTheme(FilterEdit);
 }
 
 //---------------------------------------------------------------------------

@@ -74,10 +74,12 @@ void __fastcall TFindTextDlg::FormShow(TObject *Sender)
 
 	BytesCheckBox->Checked		= IniFile->ReadBoolGen(_T("FindTxtDlgBytes"));
 	HighlightCheckBox->Checked	= IniFile->ReadBoolGen(_T("FindTxtDlgHighlight"));
-	HighlightCheckBox->Visible	= (Viewer!=NULL);
 	CloseCheckBox->Checked		= IniFile->ReadBoolGen(_T("FindTxtDlgClose"));
 	CodePageComboBox->ItemIndex = IniFile->ReadIntGen(_T("FindTxtDlgCodePage"));
 	SetDarkWinTheme(this);
+
+	//チェックボックスとラベルの表示状態を同期
+	HighlightPanel->Visible = (Viewer!=NULL);
 
 	DlgInitialized = true;
 	FindOptChangedClick(NULL);

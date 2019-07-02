@@ -30,6 +30,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *InpPanel;
 	TPanel *RefBtnPanel;
 	TPanel *TopPanel;
+	TPanel *CmpByKeyPanel;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);

@@ -118,14 +118,23 @@ object InpDirDlg: TInpDirDlg
       ModalResult = 1
       TabOrder = 1
     end
-    object CmpByKeyCheckBox: TCheckBox
+    object CmpByKeyPanel: TPanel
       Left = 12
-      Top = 14
+      Top = 13
       Width = 85
       Height = 17
-      Hint = #8594#12461#12540#12391#12501#12523#12497#12473#35036#23436#12522#12473#12488#12434#12489#12525#12483#12503#12480#12454#12531
-      Caption = #8594#12391#35036#23436
+      AutoSize = True
+      BevelOuter = bvNone
       TabOrder = 0
+      object CmpByKeyCheckBox: TCheckBox
+        Left = 0
+        Top = 0
+        Width = 85
+        Height = 17
+        Hint = #8594#12461#12540#12391#12501#12523#12497#12473#35036#23436#12522#12473#12488#12434#12489#12525#12483#12503#12480#12454#12531
+        Caption = #8594#12391#35036#23436
+        TabOrder = 0
+      end
     end
   end
   object ActionList1: TActionList

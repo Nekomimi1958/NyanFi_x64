@@ -104,6 +104,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	UserModule->SetUsrPopupMenu(this);
 
 	FindMarkList = new MarkList(this);
+	FindMarkList->ScrScale = Scaled? ScrScale : 1.0;
 	ColBufList	 = new TStringList();
 
 	SwatchPanel = new UsrSwatchPanel(this);
@@ -249,14 +250,14 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"GitHash=Git: ハッシュ\n"
 		"GitIns=Git: + 行\n"
 		"GitDel=Git: - 行\n"
+		"bgOptTab=|アクティブな設定タブの背景色\n"
+		"fgOptTab=アクティブな設定タブの文字色\n"
+		"OptFind=オプション設定の検索結果\n"
 		"bgHint=|ヒント表示の背景色\n"
 		"fgHint=ヒント表示の文字色\n"
 		"bgWarn=警告表示の背景色\n"
 		"Invalid=無効な項目の背景色\n"
 		"Illegal=不正な入力項目の背景色\n"
-		"bgOptTab=|アクティブな設定タブの背景色\n"
-		"fgOptTab=アクティブな設定タブの文字色\n"
-		"OptFind=オプション設定の検索結果\n"
 		"DkPanel=|ダークモード: パネルの背景色\n"
 		"DkInval=ダークモード: 無効な項目の背景色\n"
 		"DkIlleg=ダークモード: 不正な入力項目の背景色\n"
@@ -3626,11 +3627,13 @@ void __fastcall TOptionDlg::DelKeyActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::FindEditChange(TObject *Sender)
 {
-	TPageControl *pp = PageControl1;
-	for (int i=0; i<pp->PageCount; i++) pp->Pages[i]->Tag = 0;
-	pp->Repaint();
 	FindMarkList->ClearAll();
 	FindMarkList->MarkColor = col_OptFind;
+
+	TPageControl *pp = PageControl1;
+	for (int i=0; i<pp->PageCount; i++) pp->Pages[i]->Tag = 0;
+
+	pp->Repaint();
 
 	UnicodeString wd = FindEdit->Text;
 	if (!wd.IsEmpty()) {
@@ -3641,7 +3644,8 @@ void __fastcall TOptionDlg::FindEditChange(TObject *Sender)
 			//見つかったら Tag=1 に
 		}
 		FindMarkList->ShowMark();
-		PageControl1->Repaint();
+		pp->Repaint();
+
 		//見つかった項目を含むタブをアクティブに
 		bool found = false;
 		for (int i=0; i<pp->PageCount && !found; i++) {

@@ -135,8 +135,7 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 	//ユーザ定義一覧
 	if (ListMode==1) {
 		cap_str = "ユーザ定義文字列一覧";
-		UserDefPanel->Visible	  = true;
-		NameOnlyCheckBox->Visible = false;
+		UserDefPanel->Visible = true;
 		if (UserDefComboBox->Text.IsEmpty()) {
 			UserDefList->Clear();
 			UpdateList();
@@ -151,8 +150,7 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 	//マーク行一覧
 	else if (ListMode==2) {
 		cap_str = "マーク行一覧";
-		UserDefPanel->Visible	  = false;
-		NameOnlyCheckBox->Visible = false;
+		UserDefPanel->Visible = false;
 
 		//一覧を作成
 		MarkLineList->Clear();
@@ -169,11 +167,10 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 		}
 		UpdateList();
 	}
-	//関数一覧
+	//関数一覧	(ListMode==0)
 	else {
 		cap_str = "関数一覧";
-		UserDefPanel->Visible	  = false;
-		NameOnlyCheckBox->Visible = true;
+		UserDefPanel->Visible = false;
 
 		UnicodeString fext = get_extension(TxtViewer->FileName);
 		is_DFM = test_FileExt(fext, _T(".dfm"));
@@ -216,8 +213,6 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 		if (!chk_RegExPtn(fnc_ptn)) fnc_ptn = EmptyStr;
 		if (!chk_RegExPtn(NamePtn)) NamePtn = EmptyStr;
 
-		Opt1Panel->Visible = (ListMode==0 && !NamePtn.IsEmpty());	//名前
-
 		//一覧を作成
 		if (FunctionList->Count==0 && !fnc_ptn.IsEmpty()) {
 			bool has_par = (ListMode==0 && ContainsStr(fnc_ptn, "\\("));
@@ -237,6 +232,7 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 		UpdateList();
 	}
 
+	Opt1Panel->Visible = (ListMode==0 && !NamePtn.IsEmpty());	//名前
 	Caption = cap_str;
 
 	cursor_Default();

@@ -18,6 +18,7 @@ __fastcall MarkList::MarkList(Classes::TComponent* AOwner): TList()
 	MarkOwner = (TForm*)AOwner;
 
 	MarkColor = clYellow;
+	ScrScale  = 1.0;
 }
 //---------------------------------------------------------------------------
 __fastcall MarkList::~MarkList()
@@ -59,7 +60,25 @@ int __fastcall MarkList::SearchControl(TWinControl *ctrl, UnicodeString wd)
 			sp->Parent = NULL;
 			sp->Tag = (int)ctrl;
 			TRect rc = cp->BoundsRect;
+			int w = LOWORD(cp->Tag);
+			int h = HIWORD(cp->Tag);
+			//ダークモードの CheckBox/RadioButton 用 代替ラベル
+			if (cp->ClassNameIs("TLabel") && w>0 && w<800 && h>0 && h<100) {
+				rc.SetWidth(w);
+				rc.SetHeight(h);
+				InflateRect(rc, 2, 0);
+				rc.Offset(-16, 0);
+			}
 			InflateRect(rc, 2, 2);
+
+			//※100%を超える場合の補正
+			if (ScrScale>1.0) {
+				rc.Left   /= ScrScale;
+				rc.Top	  /= ScrScale;
+				rc.Right  /= ScrScale;
+				rc.Bottom /= ScrScale;
+			}
+
 			sp->BoundsRect	 = rc;
 			sp->Pen->Color	 = MarkColor;
 			sp->Pen->Width	 = 2;
@@ -84,6 +103,7 @@ void __fastcall MarkList::ShowMark()
 		TShape *sp	= Items[i];
 		sp->Parent	= (TWinControl*)(sp->Tag);
 		sp->Visible = true;
+		sp->BringToFront();
 	}
 }
 //---------------------------------------------------------------------------

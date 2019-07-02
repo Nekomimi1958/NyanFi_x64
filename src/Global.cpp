@@ -1732,7 +1732,7 @@ void InitializeGlobal()
 		{_T("AnimateGif=false"),			(TObject*)&AnimateGif},
 		{_T("ShowThumbScroll=true"),		(TObject*)&ShowThumbScroll},
 		{_T("MarkImgClose=false"),			(TObject*)&MarkImgClose},
-		{_T("AllowDarkMode=false"),			(TObject*)&AllowDarkMode},
+		{_T("AllowDarkMode=false"),			(TObject*)&AllowDarkMode},		//GlobalDark.h
 		{_T("TimColEnabled=false"),			(TObject*)&TimColEnabled},
 		{_T("PriorFExtCol=false"),			(TObject*)&PriorFExtCol},
 		{_T("ColorOnlyFExt=false"),			(TObject*)&ColorOnlyFExt},
@@ -8059,13 +8059,13 @@ void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState Sta
 	if (cv->Brush->Color!=col_None)
 		cv->FillRect(rc);
 	else {
-		cv->Brush->Color = scl_BtnFace;
+		cv->Brush->Color = get_PanelColor();
 		cv->FillRect(rc);
-		out_Text(cv, rc.Left + 2, yp, _T("–³Œø"), scl_WindowText);
+		out_Text(cv, rc.Left + 2, yp, _T("–³Œø"), get_LabelColor());
 	}
 
 	//‹«ŠEü
-	cv->Brush->Color = scl_Window;
+	cv->Brush->Color = get_WinColor();
 	if (brk) draw_separateLine(cv, Rect);
 }
 
@@ -9603,8 +9603,6 @@ void set_col_from_ColorList()
 		{&col_fgHint,	_T("fgHint"),		clBlack},
 		{&col_bgWarn,	_T("bgWarn"),		clRed},
 		{&col_OptFind,	_T("OptFind"),		clRed},
-		{&col_Invalid,	_T("Invalid"),		clLtGray},
-		{&col_Illegal,	_T("Illegal"),		clWebPink},
 		{&col_Tim1H,	_T("Tim1H"),		col_None},
 		{&col_Tim3H,	_T("Tim3H"),		col_None},
 		{&col_Tim1D,	_T("Tim1D"),		col_None},
@@ -9646,10 +9644,13 @@ void set_col_from_ColorList()
 		{&col_fgChInf,	_T("fgChInf"),		scl_BtnText},
 		{&col_bgEdBox,	_T("bgEdBox"),		col_None},
 		{&col_fgEdBox,	_T("fgEdBox"),		col_None},
+		{&col_ModalScr,	_T("ModalScr"),		clBlack},
+		//ˆÈ‰º‚Í GlobalDark.h
+		{&col_Invalid,	_T("Invalid"),		clLtGray},
+		{&col_Illegal,	_T("Illegal"),		clWebPink},
 		{&col_DkPanel,	_T("DkPanel"),		col_None},
 		{&col_DkInval,	_T("DkInval"),		TColor(RGB(0x60, 0x60, 0x60))},
-		{&col_DkIlleg,	_T("DkIlleg"),		TColor(RGB(0x66, 0x00, 0x00))},
-		{&col_ModalScr,	_T("ModalScr"),		clBlack}
+		{&col_DkIlleg,	_T("DkIlleg"),		TColor(RGB(0x66, 0x00, 0x00))}
 	};
 
 	int cnt = sizeof(col_def_list)/sizeof(col_def_list[0]);

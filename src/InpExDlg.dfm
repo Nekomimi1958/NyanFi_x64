@@ -83,15 +83,6 @@ object InputExDlg: TInputExDlg
       Style = csDropDownList
       TabOrder = 2
     end
-    object ClipCheckBox: TCheckBox
-      Left = 15
-      Top = 4
-      Width = 186
-      Height = 17
-      Caption = #12463#12522#12483#12503#12508#12540#12489#12363#12425#36028#12426#20184#12369'(&P)'
-      TabOrder = 0
-      OnClick = OptionClick
-    end
     object EditCheckBox: TCheckBox
       Left = 15
       Top = 27
@@ -100,6 +91,24 @@ object InputExDlg: TInputExDlg
       Caption = #12456#12487#12451#12479#12391#38283#12367'(&E)'
       TabOrder = 1
       OnClick = OptionClick
+    end
+    object ClipPanel: TPanel
+      Left = 15
+      Top = 4
+      Width = 186
+      Height = 17
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 0
+      object ClipCheckBox: TCheckBox
+        Left = 0
+        Top = 0
+        Width = 186
+        Height = 17
+        Caption = #12463#12522#12483#12503#12508#12540#12489#12363#12425#36028#12426#20184#12369'(&P)'
+        TabOrder = 0
+        OnClick = OptionClick
+      end
     end
   end
   object CreDirPanel: TPanel

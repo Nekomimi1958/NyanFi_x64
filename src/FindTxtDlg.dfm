@@ -89,22 +89,13 @@ object FindTextDlg: TFindTextDlg
     TabOrder = 5
     OnClick = MigemoCheckBoxClick
   end
-  object HighlightCheckBox: TCheckBox
-    Left = 236
-    Top = 95
-    Width = 148
-    Height = 17
-    Caption = #24375#35519#34920#31034#12434#32173#25345'(&H)'
-    TabOrder = 7
-    OnClick = SubOptClick
-  end
   object CloseCheckBox: TCheckBox
     Left = 386
     Top = 95
     Width = 132
     Height = 17
     Caption = #26908#32034#24460#12395#38281#12376#12427'(&X)'
-    TabOrder = 8
+    TabOrder = 9
     OnClick = SubOptClick
   end
   object FindDirGroupBox: TGroupBox
@@ -138,7 +129,7 @@ object FindTextDlg: TFindTextDlg
     Height = 34
     Anchors = [akLeft, akBottom]
     BevelOuter = bvNone
-    TabOrder = 9
+    TabOrder = 7
     object BytesCheckBox: TCheckBox
       Left = 12
       Top = 4
@@ -157,6 +148,24 @@ object FindTextDlg: TFindTextDlg
       DropDownCount = 12
       TabOrder = 1
       OnChange = FindOptChangedClick
+    end
+  end
+  object HighlightPanel: TPanel
+    Left = 236
+    Top = 95
+    Width = 144
+    Height = 17
+    AutoSize = True
+    BevelOuter = bvNone
+    TabOrder = 8
+    object HighlightCheckBox: TCheckBox
+      Left = 0
+      Top = 0
+      Width = 144
+      Height = 17
+      Caption = #24375#35519#34920#31034#12434#32173#25345'(&H)'
+      TabOrder = 0
+      OnClick = SubOptClick
     end
   end
   object ActionList1: TActionList

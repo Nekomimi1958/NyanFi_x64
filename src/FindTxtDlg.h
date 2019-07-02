@@ -38,6 +38,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *BinPanel;
 	TRadioButton *DownRadioBtn;
 	TRadioButton *UpRadioBtn;
+	TPanel *HighlightPanel;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

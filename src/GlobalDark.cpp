@@ -212,6 +212,7 @@ void SetDarkWinTheme(TWinControl *wp)
 						//ボタンのキャプションをラベルに置き換える
 						TRadioButton *cp = gp->Buttons[i];
 						TLabel *lp = new TLabel(cp->Parent);
+						lp->Tag		= (18 << 16) + cp->Width - 8;	//検索マーク用 ***
 						lp->Parent	= cp->Parent;
 						lp->Font->Assign(cp->Font);
 						lp->Color		= bg_panel;
@@ -287,6 +288,7 @@ void SetDarkWinTheme(TWinControl *wp)
 			if (!cp->Caption.IsEmpty()) {
 				//キャプションをラベルに置き換える
 				TLabel *lp = new TLabel(cp->Parent);
+				lp->Tag		= (cp->Height << 16) + cp->Width;	//検索マーク用
 				lp->Parent	= cp->Parent;
 				lp->Font->Assign(cp->Font);
 				lp->Color		= bg_panel;
@@ -306,6 +308,7 @@ void SetDarkWinTheme(TWinControl *wp)
 			if (!cp->Caption.IsEmpty()) {
 				//キャプションをラベルに置き換える
 				TLabel *lp = new TLabel(cp->Parent);
+				lp->Tag		= (cp->Height << 16) + cp->Width;	//検索マーク用
 				lp->Parent	= cp->Parent;
 				lp->Font->Assign(cp->Font);
 				lp->Color		= bg_panel;

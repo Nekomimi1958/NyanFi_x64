@@ -41,8 +41,8 @@ void __fastcall TInpDirDlg::FormShow(TObject *Sender)
 	Constraints->MinWidth  = ScaledInt(360);
 
 	IniFile->LoadPosInfo(this, DialogCenter);
-	CmpByKeyCheckBox->Checked = IniFile->ReadBoolGen(_T("InpDirDlgCmpByKey"));	//¨ƒL[‚Å•âŠ®
-	CmpByKeyCheckBox->Visible = !isWebSea;
+	CmpByKeyCheckBox->Checked = IniFile->ReadBoolGen(_T("InpDirDlgCmpByKey"));
+	CmpByKeyPanel->Visible	  = !isWebSea;
 
 	InpDirComboBox->Text = EmptyStr;
 	if (isWebSea) {
@@ -77,7 +77,7 @@ void __fastcall TInpDirDlg::FormShow(TObject *Sender)
 void __fastcall TInpDirDlg::FormCloseQuery(TObject *Sender, bool &CanClose)
 {
 	if (ModalResult==mrOk) {
-		if (USAME_TI(CommandStr, "WebSearch"))
+		if (isWebSea)
 			add_ComboBox_history(InpDirComboBox);
 		else {
 			UnicodeString dnam = to_absolute_name(cv_env_str(InpDirComboBox->Text), InitialPath);
@@ -89,9 +89,8 @@ void __fastcall TInpDirDlg::FormCloseQuery(TObject *Sender, bool &CanClose)
 void __fastcall TInpDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	IniFile->SavePosInfo(this);
-	IniFile->WriteBoolGen(_T("InpDirDlgCmpByKey"),	CmpByKeyCheckBox);
-
-	(USAME_TI(CommandStr, "WebSearch")? WebSeaHistory : InputDirHistory)->Assign(InpDirComboBox->Items);
+	IniFile->WriteBoolGen(_T("InpDirDlgCmpByKey"), CmpByKeyCheckBox);
+	(isWebSea? WebSeaHistory : InputDirHistory)->Assign(InpDirComboBox->Items);
 
 	ItemList->Clear();
 	InitialPath = EmptyStr;

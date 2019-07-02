@@ -254,7 +254,7 @@ object OptionDlg: TOptionDlg
           object DelDplDirHistCheckBox: TCheckBox
             Left = 10
             Top = 45
-            Width = 180
+            Width = 178
             Height = 17
             Caption = #37325#35079#12377#12427#23653#27508#12434#21066#38500#12377#12427
             TabOrder = 2
@@ -262,7 +262,7 @@ object OptionDlg: TOptionDlg
           object DirHistCsrPosCheckBox: TCheckBox
             Left = 10
             Top = 20
-            Width = 180
+            Width = 178
             Height = 17
             Caption = #12459#12540#12477#12523#20301#32622#12434#35352#25014#12377#12427
             TabOrder = 0
@@ -270,7 +270,7 @@ object OptionDlg: TOptionDlg
           object NoChkDirHistCheckBox: TCheckBox
             Left = 194
             Top = 20
-            Width = 234
+            Width = 232
             Height = 17
             Caption = #23653#27508#12398#23384#22312#12481#12455#12483#12463#12434#34892#12431#12394#12356
             TabOrder = 1
@@ -278,7 +278,7 @@ object OptionDlg: TOptionDlg
           object WorkToDirHistCheckBox: TCheckBox
             Left = 194
             Top = 45
-            Width = 234
+            Width = 232
             Height = 17
             Caption = #12527#12540#12463#12522#12473#12488#12434#23653#27508#12395#21547#12417#12427
             TabOrder = 3
@@ -286,7 +286,7 @@ object OptionDlg: TOptionDlg
           object ExtSavDirHistCheckBox: TCheckBox
             Left = 10
             Top = 70
-            Width = 180
+            Width = 178
             Height = 17
             Caption = #20840#20307#23653#27508#12434#21029#12501#12449#12452#12523#12395#20445#23384
             TabOrder = 4
@@ -314,7 +314,7 @@ object OptionDlg: TOptionDlg
           object HideAtrCheckBox: TCheckBox
             Left = 10
             Top = 20
-            Width = 202
+            Width = 200
             Height = 17
             Caption = #38560#12375#12501#12449#12452#12523#12434#34920#31034
             TabOrder = 0
@@ -322,7 +322,7 @@ object OptionDlg: TOptionDlg
           object SysAtrCheckBox: TCheckBox
             Left = 220
             Top = 20
-            Width = 206
+            Width = 200
             Height = 17
             Caption = #12471#12473#12486#12512#12501#12449#12452#12523#12434#34920#31034
             TabOrder = 1
@@ -330,7 +330,7 @@ object OptionDlg: TOptionDlg
           object DispRegNameCheckBox: TCheckBox
             Left = 10
             Top = 45
-            Width = 202
+            Width = 200
             Height = 17
             Caption = #12497#12473#34920#31034#12395#30331#37682#21517#12434#20351#29992
             TabOrder = 2
@@ -338,7 +338,7 @@ object OptionDlg: TOptionDlg
           object UncToNetDriveCheckBox: TCheckBox
             Left = 220
             Top = 45
-            Width = 206
+            Width = 200
             Height = 17
             Caption = 'UNC'#12434#12493#12483#12488#12527#12540#12463#12489#12521#12452#12502#21517#12395
             TabOrder = 3
@@ -346,7 +346,7 @@ object OptionDlg: TOptionDlg
           object PathInTitleBarCheckBox: TCheckBox
             Left = 10
             Top = 70
-            Width = 202
+            Width = 200
             Height = 17
             Caption = #12479#12452#12488#12523#12496#12540#12395#12459#12524#12531#12488#12497#12473#12434#34920#31034
             TabOrder = 4
@@ -367,7 +367,7 @@ object OptionDlg: TOptionDlg
           object UseIndIconCheckBox: TCheckBox
             Left = 10
             Top = 95
-            Width = 202
+            Width = 200
             Height = 17
             Caption = #12501#12449#12452#12523#22266#26377#12398#12450#12452#12467#12531#12434#34920#31034
             TabOrder = 6
@@ -444,7 +444,7 @@ object OptionDlg: TOptionDlg
           object ReloadActCheckBox: TCheckBox
             Left = 10
             Top = 20
-            Width = 204
+            Width = 200
             Height = 17
             Caption = #12450#12463#12486#12451#12502#26178#12395#26368#26032#12398#24773#22577#12395
             TabOrder = 0
@@ -501,7 +501,7 @@ object OptionDlg: TOptionDlg
           object FlCsrVisiCheckBox: TCheckBox
             Left = 220
             Top = 20
-            Width = 206
+            Width = 200
             Height = 17
             Caption = #12459#12540#12477#12523#12434#24120#12395#21487#35222#38936#22495#12395
             TabOrder = 1
@@ -509,7 +509,7 @@ object OptionDlg: TOptionDlg
           object LoopFlCsrCheckBox: TCheckBox
             Left = 10
             Top = 20
-            Width = 202
+            Width = 200
             Height = 17
             Caption = #19978#19979#31471#12391#12523#12540#12503#31227#21205
             TabOrder = 0
@@ -517,7 +517,7 @@ object OptionDlg: TOptionDlg
           object AutoCompCheckBox: TCheckBox
             Left = 10
             Top = 95
-            Width = 173
+            Width = 169
             Height = 17
             Caption = #12467#12531#12508#12508#12483#12463#12473#12398#33258#21205#35036#23436
             TabOrder = 6
@@ -525,7 +525,7 @@ object OptionDlg: TOptionDlg
           object AutoHotkeyCheckBox: TCheckBox
             Left = 10
             Top = 70
-            Width = 202
+            Width = 200
             Height = 17
             Caption = #12450#12463#12475#12521#12524#12540#12479#12461#12540#33258#21205#35519#25972
             TabOrder = 4
@@ -533,7 +533,7 @@ object OptionDlg: TOptionDlg
           object DlgCenterCheckBox: TCheckBox
             Left = 220
             Top = 45
-            Width = 206
+            Width = 200
             Height = 17
             Caption = #12480#12452#12450#12525#12464#12434#30011#38754#20013#22830#12395#34920#31034
             TabOrder = 3
@@ -541,7 +541,7 @@ object OptionDlg: TOptionDlg
           object EscHelpCheckBox: TCheckBox
             Left = 10
             Top = 45
-            Width = 202
+            Width = 200
             Height = 17
             Caption = 'ESC'#12461#12540#12391#12504#12523#12503#12434#38281#12376#12427
             TabOrder = 2
@@ -549,15 +549,15 @@ object OptionDlg: TOptionDlg
           object InhAltMenuCheckBox: TCheckBox
             Left = 220
             Top = 68
-            Width = 206
+            Width = 200
             Height = 17
             Caption = 'Alt'#12461#12540#12391#12513#12491#12517#12540#12395#31227#12425#12394#12356
             TabOrder = 5
           end
           object RestoreComboCheckBox: TCheckBox
-            Left = 185
+            Left = 188
             Top = 95
-            Width = 246
+            Width = 238
             Height = 17
             Caption = #12450#12463#12486#12451#12502#26178#12395#12467#12531#12508#12508#12483#12463#12473#12398#29366#24907#12434#24489#20803
             TabOrder = 7
@@ -614,7 +614,7 @@ object OptionDlg: TOptionDlg
           object DelUseTrsCheckBox: TCheckBox
             Left = 10
             Top = 20
-            Width = 178
+            Width = 176
             Height = 17
             Caption = #21066#38500#12395#12372#12415#31665#12434#20351#12358
             TabOrder = 0
@@ -622,7 +622,7 @@ object OptionDlg: TOptionDlg
           object ForceDelCheckBox: TCheckBox
             Left = 194
             Top = 20
-            Width = 234
+            Width = 232
             Height = 17
             Caption = #35501#36796#23554#29992#12391#12418#24375#21046#30340#12395#19978#26360#12365#12539#21066#38500
             TabOrder = 1
@@ -646,9 +646,9 @@ object OptionDlg: TOptionDlg
           Caption = #26368#36817#20351#12387#12383#12501#12449#12452#12523
           TabOrder = 13
           object NoChkRUncCheckBox: TCheckBox
-            Left = 267
+            Left = 269
             Top = 20
-            Width = 159
+            Width = 157
             Height = 17
             Caption = 'UNC'#12497#12473#12434#12481#12455#12483#12463#12375#12394#12356
             TabOrder = 1
@@ -656,7 +656,7 @@ object OptionDlg: TOptionDlg
           object AddToRecentCheckBox: TCheckBox
             Left = 10
             Top = 20
-            Width = 255
+            Width = 253
             Height = 17
             Caption = #38283#12356#12383#12501#12449#12452#12523#12434#12300#26368#36817#20351#12387#12383#38917#30446#12301#12395#36861#21152
             TabOrder = 0
@@ -739,16 +739,16 @@ object OptionDlg: TOptionDlg
           object ShowAdsInfCheckBox: TCheckBox
             Left = 10
             Top = 157
-            Width = 223
+            Width = 215
             Height = 17
             Caption = #20195#26367#12487#12540#12479#12473#12488#12522#12540#12512#24773#22577#12434#34920#31034
             TabOrder = 3
           end
           object ShowProcInfCheckBox: TCheckBox
             Left = 237
-            Top = 156
+            Top = 157
             Width = 186
-            Height = 19
+            Height = 17
             Caption = #12503#12525#12475#12473#20351#29992#24773#22577#12434#34920#31034
             TabOrder = 4
           end
@@ -842,7 +842,7 @@ object OptionDlg: TOptionDlg
           object LogErrOnlyCheckBox: TCheckBox
             Left = 10
             Top = 48
-            Width = 151
+            Width = 147
             Height = 17
             Caption = #12456#12521#12540#31623#25152#12398#12415#34920#31034
             TabOrder = 2
@@ -850,7 +850,7 @@ object OptionDlg: TOptionDlg
           object LogErrMsgCheckBox: TCheckBox
             Left = 165
             Top = 48
-            Width = 136
+            Width = 132
             Height = 17
             Caption = #12456#12521#12540#12513#12483#12475#12540#12472
             TabOrder = 3
@@ -906,7 +906,7 @@ object OptionDlg: TOptionDlg
           object LogFullPathCheckBox: TCheckBox
             Left = 165
             Top = 73
-            Width = 136
+            Width = 132
             Height = 17
             Caption = #12501#12523#12497#12473#34920#31034
             TabOrder = 6
@@ -914,7 +914,7 @@ object OptionDlg: TOptionDlg
           object LogHideSkipCheckBox: TCheckBox
             Left = 10
             Top = 73
-            Width = 151
+            Width = 147
             Height = 17
             Caption = #12473#12461#12483#12503#38917#30446#38750#34920#31034
             TabOrder = 5
@@ -968,7 +968,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 0
           end
           object HotKeyComboBox: TComboBox
-            Left = 248
+            Left = 253
             Top = 18
             Width = 70
             Height = 21
@@ -1087,7 +1087,7 @@ object OptionDlg: TOptionDlg
           object DirJumboCheckBox: TCheckBox
             Left = 10
             Top = 157
-            Width = 223
+            Width = 215
             Height = 17
             Caption = #12487#12451#12524#12463#12488#12522#12399#29305#22823#12450#12452#12467#12531#12434#34920#31034
             TabOrder = 3
@@ -1188,7 +1188,7 @@ object OptionDlg: TOptionDlg
           object PermitCmdsCheckBox: TCheckBox
             Left = 10
             Top = 78
-            Width = 353
+            Width = 253
             Height = 17
             Caption = '.nyanfi '#12391#12398#12467#12510#12531#12489#12501#12449#12452#12523#23455#34892#12434#35377#21487
             TabOrder = 3
@@ -1196,15 +1196,15 @@ object OptionDlg: TOptionDlg
           object InheritDotCheckBox: TCheckBox
             Left = 10
             Top = 51
-            Width = 255
+            Width = 253
             Height = 17
             Caption = '.nyanfi '#12364#12394#12356#22580#21512#12289#19978#20301#12363#12425#32153#25215
             TabOrder = 1
           end
           object DotPerUserCheckBox: TCheckBox
-            Left = 270
+            Left = 272
             Top = 51
-            Width = 159
+            Width = 155
             Height = 17
             Caption = #12518#12540#12470#21517#21029#12395#20316#25104
             TabOrder = 2
@@ -1212,7 +1212,7 @@ object OptionDlg: TOptionDlg
           object TaskTrayCheckBox: TCheckBox
             Left = 10
             Top = 20
-            Width = 353
+            Width = 253
             Height = 17
             Caption = #26368#23567#21270#26178#12395#12450#12452#12467#12531#12434#36890#30693#38936#22495#12395#26684#32013
             TabOrder = 0
@@ -1914,15 +1914,15 @@ object OptionDlg: TOptionDlg
           object ShowClsTabBtnCheckBox: TCheckBox
             Left = 270
             Top = 20
-            Width = 86
+            Width = 84
             Height = 17
             Caption = #21066#38500#12508#12479#12531
             TabOrder = 2
           end
           object ShowPopTabBtnCheckBox: TCheckBox
-            Left = 358
+            Left = 360
             Top = 20
-            Width = 72
+            Width = 68
             Height = 17
             Caption = #9660#12508#12479#12531
             TabOrder = 3
@@ -2101,9 +2101,9 @@ object OptionDlg: TOptionDlg
             OnChange = ModalAlphaEditChange
           end
           object GrayScaleCheckBox: TCheckBox
-            Left = 190
+            Left = 188
             Top = 113
-            Width = 186
+            Width = 169
             Height = 17
             Caption = #12464#12524#12540#12473#12465#12540#12523#21270'(&S)'
             TabOrder = 7
@@ -2132,7 +2132,7 @@ object OptionDlg: TOptionDlg
           object TileIfCheckBox: TCheckBox
             Left = 10
             Top = 144
-            Width = 293
+            Width = 289
             Height = 17
             Caption = #30701#36794#12364#25351#23450#12469#12452#12474#20197#19979#12394#12425#24120#12395#20006#12409#12390#34920#31034
             TabOrder = 8
@@ -2247,7 +2247,7 @@ object OptionDlg: TOptionDlg
         object HideTitMenuCheckBox: TCheckBox
           Left = 623
           Top = 399
-          Width = 279
+          Width = 275
           Height = 17
           Caption = #26368#22823#21270#26178#12395#12479#12452#12488#12523#12496#12540#12392#12513#12491#12517#12540#12434#38560#12377
           TabOrder = 10
@@ -2516,7 +2516,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 5
           end
           object HideScrBarCheckBox: TCheckBox
-            Left = 190
+            Left = 188
             Top = 150
             Width = 144
             Height = 17
@@ -2532,7 +2532,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 15
           end
           object KeepCurListWdCheckBox: TCheckBox
-            Left = 190
+            Left = 188
             Top = 175
             Width = 144
             Height = 17
@@ -2540,7 +2540,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 17
           end
           object NoSpcFExtCheckBox: TCheckBox
-            Left = 190
+            Left = 188
             Top = 200
             Width = 144
             Height = 17
@@ -2863,7 +2863,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 9
           end
           object PriFExtColCheckBox: TCheckBox
-            Left = 196
+            Left = 200
             Top = 250
             Width = 201
             Height = 17
@@ -3301,7 +3301,7 @@ object OptionDlg: TOptionDlg
           object EmRemCheckBox: TCheckBox
             Left = 10
             Top = 20
-            Width = 74
+            Width = 72
             Height = 17
             Caption = #12467#12513#12531#12488
             TabOrder = 0
@@ -3396,7 +3396,7 @@ object OptionDlg: TOptionDlg
           end
         end
         object RstViewLnCheckBox: TCheckBox
-          Left = 277
+          Left = 281
           Top = 91
           Width = 112
           Height = 17
@@ -3439,7 +3439,7 @@ object OptionDlg: TOptionDlg
           end
         end
         object ShowLnCsrCheckBox: TCheckBox
-          Left = 137
+          Left = 141
           Top = 91
           Width = 124
           Height = 17
@@ -3473,7 +3473,7 @@ object OptionDlg: TOptionDlg
         object ShowLnNoCheckBox: TCheckBox
           Left = 20
           Top = 91
-          Width = 105
+          Width = 109
           Height = 17
           Caption = #34892#30058#21495#12434#34920#31034
           TabOrder = 3
@@ -3548,13 +3548,13 @@ object OptionDlg: TOptionDlg
         object ShowRulerCheckBox: TCheckBox
           Left = 20
           Top = 66
-          Width = 113
+          Width = 109
           Height = 17
           Caption = #12523#12540#12521#12434#34920#31034
           TabOrder = 1
         end
         object TxtSttIsBtmCheckBox: TCheckBox
-          Left = 137
+          Left = 141
           Top = 66
           Width = 167
           Height = 17
@@ -3681,7 +3681,7 @@ object OptionDlg: TOptionDlg
         object ColorHintCheckBox: TCheckBox
           Left = 20
           Top = 365
-          Width = 241
+          Width = 237
           Height = 17
           Caption = #12459#12540#12477#12523#20301#32622#25968#20516#12398#12459#12521#12540#34920#31034
           TabOrder = 18
@@ -3893,7 +3893,7 @@ object OptionDlg: TOptionDlg
           TabOrder = 10
         end
         object BeepTopEndCheckBox: TCheckBox
-          Left = 378
+          Left = 380
           Top = 177
           Width = 69
           Height = 17
@@ -3903,7 +3903,7 @@ object OptionDlg: TOptionDlg
         object AnimateGifCheckBox: TCheckBox
           Left = 12
           Top = 277
-          Width = 250
+          Width = 223
           Height = 17
           Caption = #12450#12491#12513#12540#12471#12519#12531'GIF'#12434#20877#29983#12377#12427
           TabOrder = 18
@@ -3911,7 +3911,7 @@ object OptionDlg: TOptionDlg
         object HideThumbCheckBox: TCheckBox
           Left = 12
           Top = 252
-          Width = 205
+          Width = 203
           Height = 17
           Caption = #20840#30011#38754#34920#31034#12391#12469#12512#12493#12452#12523#12434#38560#12377
           TabOrder = 16
@@ -3991,17 +3991,17 @@ object OptionDlg: TOptionDlg
           TabOrder = 2
         end
         object HideCsrFullCheckBox: TCheckBox
-          Left = 221
+          Left = 223
           Top = 252
-          Width = 234
+          Width = 228
           Height = 17
           Caption = #20840#30011#38754#34920#31034#12391#12510#12454#12473#12509#12452#12531#12479#12434#38560#12377
           TabOrder = 17
         end
         object SeekSwapNPCheckBox: TCheckBox
-          Left = 250
+          Left = 254
           Top = 227
-          Width = 205
+          Width = 197
           Height = 17
           Caption = #21491#32180#12376#12391'Next/Prev'#20837#26367
           TabOrder = 15
@@ -4029,7 +4029,7 @@ object OptionDlg: TOptionDlg
         end
         object KeepZoomCheckBox: TCheckBox
           Left = 207
-          Top = 152
+          Top = 154
           Width = 210
           Height = 17
           Caption = #12474#12540#12512#20493#29575#12434#32173#25345#12377#12427
@@ -4077,7 +4077,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 1
           end
           object ThumbFExtCheckBox: TCheckBox
-            Left = 288
+            Left = 290
             Top = 77
             Width = 108
             Height = 17
@@ -4085,17 +4085,17 @@ object OptionDlg: TOptionDlg
             TabOrder = 6
           end
           object ThumbExifCheckBox: TCheckBox
-            Left = 102
+            Left = 104
             Top = 77
-            Width = 89
+            Width = 85
             Height = 17
             Caption = 'Exif'#24773#22577
             TabOrder = 4
           end
           object ThumbNameCheckBox: TCheckBox
-            Left = 10
-            Top = 77
-            Width = 88
+            Left = 12
+            Top = 76
+            Width = 84
             Height = 17
             Caption = #12501#12449#12452#12523#21517
             TabOrder = 3
@@ -4109,9 +4109,9 @@ object OptionDlg: TOptionDlg
             TabOrder = 7
           end
           object ThumbTagCheckBox: TCheckBox
-            Left = 195
+            Left = 197
             Top = 77
-            Width = 89
+            Width = 85
             Height = 17
             Caption = #12479#12464
             TabOrder = 5
@@ -4566,7 +4566,7 @@ object OptionDlg: TOptionDlg
             OnClick = KeySetClick
           end
           object CtrlCheckBox: TCheckBox
-            Left = 63
+            Left = 65
             Top = 48
             Width = 49
             Height = 17
@@ -4584,7 +4584,7 @@ object OptionDlg: TOptionDlg
             OnClick = KeySetClick
           end
           object AltCheckBox: TCheckBox
-            Left = 116
+            Left = 120
             Top = 48
             Width = 49
             Height = 17
@@ -4607,7 +4607,7 @@ object OptionDlg: TOptionDlg
           object SelCheckBox: TCheckBox
             Left = 8
             Top = 79
-            Width = 113
+            Width = 111
             Height = 17
             Caption = #36984#25246#26178#12398#12415#23455#34892
             TabOrder = 5
@@ -4862,7 +4862,7 @@ object OptionDlg: TOptionDlg
         object AsoSortCheckBox: TCheckBox
           Left = 336
           Top = 43
-          Width = 81
+          Width = 77
           Height = 17
           Caption = #12477#12540#12488
           TabOrder = 8
@@ -5312,7 +5312,7 @@ object OptionDlg: TOptionDlg
         object IniPathToTab1CheckBox: TCheckBox
           Left = 26
           Top = 208
-          Width = 205
+          Width = 201
           Height = 17
           Caption = #21021#26399#12497#12473#12434#26368#21021#12398#12479#12502#12391#38283#12367
           TabOrder = 2
@@ -5338,7 +5338,7 @@ object OptionDlg: TOptionDlg
           object L_IniPatMod0RadioBtn: TRadioButton
             Left = 15
             Top = 18
-            Width = 150
+            Width = 148
             Height = 17
             Caption = #21069#22238#32066#20102#26178#12398#12497#12473
             Checked = True
@@ -5348,7 +5348,7 @@ object OptionDlg: TOptionDlg
           object L_IniPatMod1RadioBtn: TRadioButton
             Left = 172
             Top = 18
-            Width = 120
+            Width = 118
             Height = 17
             Caption = #12527#12540#12463#12522#12473#12488
             TabOrder = 1
@@ -5357,7 +5357,7 @@ object OptionDlg: TOptionDlg
           object L_IniPatMod2RadioBtn: TRadioButton
             Left = 300
             Top = 18
-            Width = 86
+            Width = 82
             Height = 17
             Caption = #25351#23450#12497#12473
             TabOrder = 2
@@ -5427,7 +5427,7 @@ object OptionDlg: TOptionDlg
           object R_IniPatMod0RadioBtn: TRadioButton
             Left = 15
             Top = 18
-            Width = 150
+            Width = 148
             Height = 17
             Caption = #21069#22238#32066#20102#26178#12398#12497#12473
             Checked = True
@@ -5437,7 +5437,7 @@ object OptionDlg: TOptionDlg
           object R_IniPatMod1RadioBtn: TRadioButton
             Left = 172
             Top = 18
-            Width = 120
+            Width = 118
             Height = 17
             Caption = #12527#12540#12463#12522#12473#12488
             TabOrder = 1
@@ -5446,7 +5446,7 @@ object OptionDlg: TOptionDlg
           object R_IniPatMod2RadioBtn: TRadioButton
             Left = 300
             Top = 18
-            Width = 86
+            Width = 82
             Height = 17
             Caption = #25351#23450#12497#12473
             TabOrder = 2
@@ -5675,7 +5675,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 0
           end
           object CloseOtherCheckBox: TCheckBox
-            Left = 85
+            Left = 95
             Top = 20
             Width = 279
             Height = 17
@@ -5798,14 +5798,14 @@ object OptionDlg: TOptionDlg
         BevelOuter = bvNone
         TabOrder = 0
         object TLabel
-          Left = 764
+          Left = 768
           Top = 53
           Width = 20
           Height = 13
           Caption = 'm'#31186
         end
         object TLabel
-          Left = 764
+          Left = 768
           Top = 21
           Width = 20
           Height = 13
@@ -5910,7 +5910,7 @@ object OptionDlg: TOptionDlg
         object ShowNoKeyHintCheckBox: TCheckBox
           Left = 475
           Top = 82
-          Width = 252
+          Width = 268
           Height = 17
           Caption = #28961#21177#12394'2'#12473#12488#12525#12540#12463#25805#20316#12395#35686#21578#12434#20986#12377' '
           TabOrder = 10
@@ -6037,7 +6037,7 @@ object OptionDlg: TOptionDlg
           TabOrder = 12
         end
         object KeyHintTimeEdit: TLabeledEdit
-          Left = 714
+          Left = 718
           Top = 49
           Width = 48
           Height = 21
@@ -6221,7 +6221,7 @@ object OptionDlg: TOptionDlg
           TabOrder = 8
         end
         object MsgHintTimeEdit: TLabeledEdit
-          Left = 714
+          Left = 718
           Top = 18
           Width = 48
           Height = 21
@@ -6257,7 +6257,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 0
           end
           object SureMoveCheckBox: TCheckBox
-            Left = 78
+            Left = 80
             Top = 20
             Width = 64
             Height = 17
@@ -6265,7 +6265,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 1
           end
           object SureDeleteCheckBox: TCheckBox
-            Left = 146
+            Left = 150
             Top = 20
             Width = 64
             Height = 17
@@ -6289,7 +6289,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 3
           end
           object SureExitCheckBox: TCheckBox
-            Left = 146
+            Left = 150
             Top = 47
             Width = 64
             Height = 17
@@ -6297,7 +6297,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 6
           end
           object SureOtherCheckBox: TCheckBox
-            Left = 214
+            Left = 220
             Top = 47
             Width = 74
             Height = 17
@@ -6305,7 +6305,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 7
           end
           object SureExecCheckBox: TCheckBox
-            Left = 78
+            Left = 80
             Top = 47
             Width = 64
             Height = 17
@@ -6321,7 +6321,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 9
           end
           object SureDefNoCheckBox: TCheckBox
-            Left = 180
+            Left = 184
             Top = 101
             Width = 186
             Height = 17
@@ -6390,7 +6390,7 @@ object OptionDlg: TOptionDlg
           object OpenOnlyCurAppCheckBox: TCheckBox
             Left = 10
             Top = 70
-            Width = 276
+            Width = 274
             Height = 17
             Caption = #36984#25246#29366#24907#12395#12363#12363#12431#12425#12378#12459#12540#12477#12523#20301#32622#12398#12415#38283#12367
             TabOrder = 2
@@ -6406,7 +6406,7 @@ object OptionDlg: TOptionDlg
           object DontClrSelAppCheckBox: TCheckBox
             Left = 290
             Top = 70
-            Width = 137
+            Width = 135
             Height = 17
             Caption = #36984#25246#12434#35299#38500#12375#12394#12356
             TabOrder = 3
@@ -6633,7 +6633,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 13
           end
           object OpnStdResCheckBox: TCheckBox
-            Left = 214
+            Left = 216
             Top = 348
             Width = 200
             Height = 17
@@ -6675,7 +6675,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 10
           end
           object StdResultListCheckBox: TCheckBox
-            Left = 238
+            Left = 242
             Top = 323
             Width = 100
             Height = 17
@@ -6684,7 +6684,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 12
           end
           object StdMenuFileCheckBox: TCheckBox
-            Left = 124
+            Left = 126
             Top = 323
             Width = 110
             Height = 17
@@ -6709,7 +6709,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 0
           end
           object IncSeaLoopCheckBox: TCheckBox
-            Left = 147
+            Left = 148
             Top = 20
             Width = 126
             Height = 17
@@ -6717,7 +6717,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 1
           end
           object IncSea1ExitCheckBox: TCheckBox
-            Left = 277
+            Left = 280
             Top = 20
             Width = 136
             Height = 17
@@ -6764,7 +6764,7 @@ object OptionDlg: TOptionDlg
           object OpenOnlyCurWinCheckBox: TCheckBox
             Left = 10
             Top = 20
-            Width = 276
+            Width = 274
             Height = 17
             Caption = #36984#25246#29366#24907#12395#12363#12363#12431#12425#12378#12459#12540#12477#12523#20301#32622#12398#12415#38283#12367
             TabOrder = 0
@@ -6772,7 +6772,7 @@ object OptionDlg: TOptionDlg
           object DontClrSelWinCheckBox: TCheckBox
             Left = 290
             Top = 20
-            Width = 137
+            Width = 135
             Height = 17
             Caption = #36984#25246#12434#35299#38500#12375#12394#12356
             TabOrder = 1
@@ -6844,7 +6844,7 @@ object OptionDlg: TOptionDlg
             Caption = #12497#12521#12513#12540#12479
           end
           object AppAltCheckBox: TCheckBox
-            Left = 214
+            Left = 211
             Top = 21
             Width = 47
             Height = 17
@@ -6852,7 +6852,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 2
           end
           object AppCtrlCheckBox: TCheckBox
-            Left = 159
+            Left = 156
             Top = 21
             Width = 47
             Height = 17
@@ -6878,7 +6878,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 4
           end
           object AppWinCheckBox: TCheckBox
-            Left = 267
+            Left = 266
             Top = 21
             Width = 71
             Height = 17
@@ -6912,7 +6912,7 @@ object OptionDlg: TOptionDlg
           object OpenOnlyCurEditCheckBox: TCheckBox
             Left = 10
             Top = 20
-            Width = 276
+            Width = 272
             Height = 17
             Caption = #36984#25246#29366#24907#12395#12363#12363#12431#12425#12378#12459#12540#12477#12523#20301#32622#12398#12415#38283#12367
             TabOrder = 0

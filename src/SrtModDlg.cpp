@@ -29,17 +29,9 @@ void __fastcall TSortModeDlg::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
 
+	DirOptPanel->Visible = (ScrMode==SCMD_FLIST);
 	int hi = ModePanel->Height + BtnPanel->Height;
-	if (ScrMode==SCMD_IVIEW) {
-		DirSortModeGroupBox->Visible = false;
-		SortBothCheckBox->Visible	 = false;
-
-	}
-	else {
-		DirSortModeGroupBox->Visible = true;
-		SortBothCheckBox->Visible	 = true;
-		hi += DirOptPanel->Height;
-	}
+	if (DirOptPanel->Visible) hi += DirOptPanel->Height;
 	ClientHeight = hi;
 
 	Changed  = false;

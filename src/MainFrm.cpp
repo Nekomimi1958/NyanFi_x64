@@ -19354,7 +19354,7 @@ void __fastcall TNyanFiForm::LoadResultListActionExecute(TObject *Sender)
 			fnam = to_absolute_name(ActionParam);
 		}
 		else {
-			UserModule->PrepareOpenDlg(_T("結果ストを読み込む"), F_FILTER_TXT, _T("*.txt"), ResultListPath);
+			UserModule->PrepareOpenDlg(_T("結果リストを読み込む"), F_FILTER_TXT, _T("*.txt"), ResultListPath);
 			if (!UserModule->OpenDlg->Execute()) SkipAbort();
 			fnam = UserModule->OpenDlg->FileName;
 		}

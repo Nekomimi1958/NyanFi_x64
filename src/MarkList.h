@@ -31,6 +31,8 @@ public:
 	int  __fastcall SearchControl(TWinControl *ctrl, UnicodeString wd);
 	void __fastcall ShowMark();
 
+	double ScrScale;			//画面スケーリング
+
 	TForm *MarkOwner;
 	TColor MarkColor;
 

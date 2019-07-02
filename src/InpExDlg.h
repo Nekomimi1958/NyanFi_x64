@@ -59,6 +59,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *NotationPanel;
 	TRadioButton *DecRadioBtn;
 	TRadioButton *HexRadioBtn;
+	TPanel *ClipPanel;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);

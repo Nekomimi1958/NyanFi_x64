@@ -212,9 +212,25 @@ void __fastcall TFindFileDlg::FormShow(TObject *Sender)
 	if (!PropLabel) PropLabel = AttachLabelToGroup(PropGroupBox, "情報(&I)");
 	if (!IconLabel) IconLabel = AttachLabelToGroup(IconGroupBox, "アイコン数(&N)");
 
-	if (IsDark!=IsDarkMode) {
+	if (IsDark!=IsDarkMode || Color!=col_DkPanel) {
 		SetDarkWinTheme(this);
 		IsDark = IsDarkMode;
+	}
+
+	//チェックボックスとラベルの表示状態を同期
+	for (int i=0; i<OkPanel->ControlCount; i++) {
+		TControl *cp = OkPanel->Controls[i];
+		if (cp->ClassNameIs("TLabel")) {
+			TLabel *lp = (TLabel *)cp;
+			if (ContainsText(lp->Caption, "サブディレクトリも検索"))
+				lp->Visible = SubDirCheckBox->Visible;
+			else if (ContainsText(lp->Caption, "アーカイブ内も検索"))
+				lp->Visible = ArcCheckBox->Visible;
+			else if (ContainsText(lp->Caption, "拡張検索"))
+				lp->Visible = ExtraCheckBox->Visible;
+			else if (ContainsText(lp->Caption, "ディレクトリ名を反映"))
+				lp->Visible = DirLinkCheckBox->Visible;
+		}
 	}
 
 	ExtraCheckBoxClick(NULL);
