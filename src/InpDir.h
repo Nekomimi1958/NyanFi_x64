@@ -27,10 +27,10 @@ __published:	// IDE で管理されるコンポーネント
 	TComboBox *InpDirComboBox;
 	TComboBox *SubComboBox;
 	TPanel *BottomPanel;
+	TPanel *CmpByKeyPanel;
 	TPanel *InpPanel;
 	TPanel *RefBtnPanel;
 	TPanel *TopPanel;
-	TPanel *CmpByKeyPanel;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);

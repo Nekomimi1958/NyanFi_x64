@@ -790,8 +790,6 @@ TColor col_bgTask;		//タスク状態表示の背景色
 TColor col_fgPrgBar;	//タスク進捗バー色
 TColor col_bgPrgBar;	//タスク進捗背景色
 TColor col_Error;		//エラー/注意の文字色
-TColor col_bgOptTab;	//アクティブな設定タブの背景色
-TColor col_fgOptTab;	//アクティブな設定タブの文字色
 TColor col_TlBorder;	//ツールウインドウの境界線
 
 TColor col_bgView;		//テキストビュアーの背景色
@@ -1776,9 +1774,9 @@ void InitializeGlobal()
 		{_T("SureExit=false"),				(TObject*)&SureExit},
 		{_T("SureCmpDel=true"),				(TObject*)&SureCmpDel},
 		{_T("SureWorkList=true"),			(TObject*)&SureWorkList},
-		{_T("SureCancel=false"),			(TObject*)&SureCancel},
-		{_T("SureDefNo=false"),				(TObject*)&SureDefNo},
-		{_T("SureAdjPos=false"),			(TObject*)&SureAdjPos},
+		{_T("SureCancel=false"),			(TObject*)&SureCancel},			//GlobalDark.h
+		{_T("SureDefNo=false"),				(TObject*)&SureDefNo},			//GlobalDark.h
+		{_T("SureAdjPos=false"),			(TObject*)&SureAdjPos},			//GlobalDark.h
 		{_T("WarnPowerFail=false"),			(TObject*)&WarnPowerFail},
 		{_T("WarnLowBattery=false"),		(TObject*)&WarnLowBattery},
 		{_T("WarnDisconnect=false"),		(TObject*)&WarnDisconnect},
@@ -2652,14 +2650,6 @@ void SetToolWinBorder(TForm *fp, bool sw)
 			sp->Visible = sw;
 		}
 	}
-}
-
-//---------------------------------------------------------------------------
-//ボタンにマークを設定(ダークモード対応)
-//---------------------------------------------------------------------------
-void set_BtnMarkDark(TSpeedButton *bp, int id)
-{
-	set_ButtonMark(bp, id, (IsDarkMode? dcl_BtnText : scl_BtnText), get_PanelColor());
 }
 
 //---------------------------------------------------------------------------
@@ -8038,9 +8028,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 //---------------------------------------------------------------------------
 //カラー設定リストの描画
 //---------------------------------------------------------------------------
-void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State,
-	TStringList *col_lst,
-	bool is_dark)	//ダークモード	(default = false)
+void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State, TStringList *col_lst)
 {
 	TCanvas  *cv = lp->Canvas;
 	int yp = Rect.Top + get_TopMargin(cv);
@@ -8049,7 +8037,7 @@ void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState Sta
 	UnicodeString vbuf	  = lp->Items->ValueFromIndex[Index];
 	bool brk = remove_top_s(vbuf, '|');
 
-	SetHighlight(cv, State.Contains(odSelected), is_dark);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->TextOut(Rect.Left + 34, yp, vbuf);
 
@@ -9561,8 +9549,8 @@ void set_col_from_ColorList()
 		{&col_fgPrgBar,	_T("fgPrgBar"),		clLime},
 		{&col_bgPrgBar,	_T("bgPrgBar"),		clGray},
 		{&col_Error,	_T("Error"),		clRed},
-		{&col_bgOptTab,	_T("bgOptTab"),		clHighlight},
-		{&col_fgOptTab,	_T("fgOptTab"),		clHighlightText},
+		{&col_bgOptTab,	_T("bgOptTab"),		clHighlight},			//GlobalDark.h
+		{&col_fgOptTab,	_T("fgOptTab"),		clHighlightText},		//GlobalDark.h
 		{&col_TlBorder,	_T("TlBorder"),		col_None},
 		{&col_bgView,	_T("bgView"),		clNavy},
 		{&col_fgView,	_T("fgView"),		clWhite},
@@ -10981,29 +10969,6 @@ void draw_ProgressBar(TCanvas *cv, TRect rc, double r)
 	cv->FillRect(rc_f);
 	cv->Brush->Color = col_bgPrgBar;
 	cv->FillRect(rc_b);
-}
-
-//---------------------------------------------------------------------------
-//タブの描画
-//※下部タブが正しく描画されない現象の対策
-//---------------------------------------------------------------------------
-void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc,
-	bool active,
-	bool dark_sw)	//ダークモード適用	(default = false)
-{
-	TTabControl *tp = (TTabControl*)Control;
-	TCanvas *cv = tp->Canvas;
-	//背景
-	cv->Brush->Color = active? col_bgOptTab : get_PanelColor();
-	cv->FillRect(rc);
-	//文字
-	UnicodeString titstr = tp->Tabs->Strings[idx];
-	cv->Font->Color = active? col_fgOptTab : get_LabelColor();
-	cv->Font->Style = active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
-	TRect tt_rc = rc;
-	tt_rc.Left	= rc.Left + (rc.Width() - cv->TextWidth(titstr))/2;
-	tt_rc.Top	= (tp->TabPosition==tpBottom)? rc.Bottom - cv->TextHeight(titstr) - 4 : rc.Top + (active? 4 : 2);
-	::DrawText(cv->Handle, titstr.c_str(), -1, &tt_rc, DT_LEFT);
 }
 
 //---------------------------------------------------------------------------

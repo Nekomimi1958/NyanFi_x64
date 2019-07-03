@@ -7,7 +7,6 @@
 #include <tchar.h>
 #include <algorithm>
 #include <memory>
-#include "UserFunc.h"
 #include "GlobalDark.h"
 
 //---------------------------------------------------------------------------
@@ -18,18 +17,28 @@ FUNC_AllowDarkModeForWindow	lpfAllowDarkModeForWindow = NULL;
 FUNC_AllowDarkModeForApp	lpfAllowDarkModeForApp	  = NULL;
 FUNC_FlushMenuThemes		lpfFlushMenuThemes		  = NULL;
 
+//---------------------------------------------------------------------------
 bool SupportDarkMode = false;		//ダークモード適用可能
 bool IsDarkMode 	 = false;		//ダークモードが適用されている
 bool AllowDarkMode   = false;		//ダークモードを適用(オプション設定)
 
-TColor col_Invalid;		//無効な項目の背景色
-TColor col_Illegal;		//不正な入力項目の背景色
+//---------------------------------------------------------------------------
+bool SureCancel;					//キャンセルボタンを表示
+bool SureDefNo;						//「いいえ」がデフォルト
+bool SureAdjPos;					//表示位置を状況に合わせて調整
+bool MsgPosCenter = false;			//メイン画面の中央に表示
 
-TColor col_DkPanel;		//ダークモード: パネルの背景色
-TColor col_DkInval;		//ダークモード: 無効な項目の背景色
-TColor col_DkIlleg;		//ダークモード: 不正な入力項目の背景色
-
+//---------------------------------------------------------------------------
 const TColor col_None = Graphics::clNone;
+
+TColor col_bgOptTab;			//アクティブな設定タブの背景色
+TColor col_fgOptTab;			//アクティブな設定タブの文字色
+TColor col_Invalid;				//無効な項目の背景色
+TColor col_Illegal;				//不正な入力項目の背景色
+
+TColor col_DkPanel = col_None;	//ダークモード: パネルの背景色
+TColor col_DkInval;				//ダークモード: 無効な項目の背景色
+TColor col_DkIlleg;				//ダークモード: 不正な入力項目の背景色
 
 //---------------------------------------------------------------------------
 //システム色
@@ -39,6 +48,8 @@ TColor scl_Highlight;
 TColor scl_HighlightText;
 TColor scl_BtnFace;
 TColor scl_BtnText;
+TColor scl_BtnShadow;
+TColor scl_BtnHighlight;
 TColor scl_Menu;
 TColor scl_MenuText;
 
@@ -49,8 +60,21 @@ TColor dcl_Highlight;
 TColor dcl_HighlightText;
 TColor dcl_BtnFace;
 TColor dcl_BtnText;
+TColor dcl_BtnShadow;
+TColor dcl_BtnHighlight;
 TColor dcl_Menu;
 TColor dcl_MenuText;
+
+//---------------------------------------------------------------------------
+//ハイコントラストか?
+//---------------------------------------------------------------------------
+bool is_HighContrast()
+{
+	HIGHCONTRAST hc;
+	hc.cbSize = sizeof(HIGHCONTRAST);
+	return (::SystemParametersInfo(SPI_GETHIGHCONTRAST, sizeof(HIGHCONTRAST), &hc, 0)
+				&& ((hc.dwFlags & HCF_HIGHCONTRASTON)!=0));
+}
 
 //---------------------------------------------------------------------------
 //システム色の初期化
@@ -63,6 +87,8 @@ void InitializeSysColor()
 	scl_HighlightText = clHighlightText;
 	scl_BtnFace		  = clBtnFace;
 	scl_BtnText		  = clBtnText;
+	scl_BtnShadow	  = clBtnShadow;
+	scl_BtnHighlight  = clBtnHighlight;
 	scl_Menu		  = clMenu;
 	scl_MenuText	  = clMenuText;
 
@@ -72,6 +98,8 @@ void InitializeSysColor()
 	dcl_HighlightText = clWhite;
 	dcl_BtnFace 	  = TColor(RGB(0x33, 0x33, 0x33));
 	dcl_BtnText 	  = clWhite;
+	dcl_BtnShadow	  = TColor(RGB(0x40, 0x40, 0x40));
+	dcl_BtnHighlight  = TColor(RGB(0x80, 0x80, 0x80));
 	dcl_Menu		  = TColor(RGB(0x2b, 0x2b, 0x2b));
 	dcl_MenuText	  = clWhite;
 }
@@ -144,10 +172,9 @@ TColor get_WinColor(
 //---------------------------------------------------------------------------
 //ハイライト色の設定
 //---------------------------------------------------------------------------
-void SetHighlight(TCanvas *cv, bool hl,
-	bool is_dark)	//ダークモード	(default = false);
+void SetHighlight(TCanvas *cv, bool hl)
 {
-	if (is_dark) {
+	if (IsDarkMode) {
 		cv->Brush->Color = hl? dcl_Highlight : dcl_Window;
 		cv->Font->Color  = hl? dcl_HighlightText : dcl_WindowText;
 	}
@@ -253,18 +280,18 @@ void SetDarkWinTheme(TWinControl *wp)
 		}
 	}
 	//以下は単独の子コントロール
-	else if (class_is_Edit(wp)) {
+	else if (wp->ClassNameIs("TEdit")) {
 		TEdit *ep = (TEdit *)wp;
 		ep->Color		= bg_win;
 		ep->Font->Color = fg_txt;
 	}
-	else if (class_is_LabeledEdit(wp)) {
+	else if (wp->ClassNameIs("TLabeledEdit")) {
 		TLabeledEdit *ep = (TLabeledEdit *)wp;
 		ep->Color		= bg_win;
 		ep->Font->Color = fg_txt;
 		ep->EditLabel->Font->Color = ep->Font->Color;
 	}
-	else if (class_is_MaskEdit(wp)) {
+	else if (wp->ClassNameIs("TMaskEdit")) {
 		TMaskEdit *ep = (TMaskEdit *)wp;
 		ep->Color		= bg_win;
 		ep->Font->Color = fg_txt;
@@ -276,13 +303,13 @@ void SetDarkWinTheme(TWinControl *wp)
 		TSpeedButton *bp = (TSpeedButton *)wp;
 		bp->Font->Color = fg_label;
 	}
-	else if (class_is_ComboBox(wp)) {
+	else if (wp->ClassNameIs("TComboBox")) {
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_CFD") : NULL, NULL);
 		TComboBox *cp = (TComboBox *)wp;
 		cp->Color		= bg_win;
 		cp->Font->Color = fg_txt;
 	}
-	else if (class_is_CheckBox(wp)) {
+	else if (wp->ClassNameIs("TCheckBox")) {
 		if (IsDarkMode) {
 			TCheckBox *cp = (TCheckBox *)wp;
 			if (!cp->Caption.IsEmpty()) {
@@ -401,11 +428,6 @@ void msgbox_ERR(UnicodeString msg)
 	MsgDlg->ShowModal();
 	delete MsgDlg;
 }
-//---------------------------------------------------------------------------
-void msgbox_ERR(unsigned id)
-{
-	msgbox_ERR(LoadUsrMsg(id));
-}
 
 //---------------------------------------------------------------------------
 //警告メッセージ
@@ -418,11 +440,6 @@ void msgbox_WARN(UnicodeString msg)
 	SetDarkWinTheme(MsgDlg);
 	MsgDlg->ShowModal();
 	delete MsgDlg;
-}
-//---------------------------------------------------------------------------
-void msgbox_WARN(unsigned id)
-{
-	msgbox_WARN(LoadUsrMsg(id));
 }
 
 //---------------------------------------------------------------------------
@@ -477,12 +494,6 @@ bool msgbox_Sure(UnicodeString msg, bool ask, bool center)
 bool msgbox_Sure(const _TCHAR *msg, bool ask, bool center)
 {
 	return msgbox_Sure(UnicodeString(msg), ask, center);
-}
-//---------------------------------------------------------------------------
-bool msgbox_Sure(int id, bool ask, bool center)
-{
-	if (!ask) return true;
-	return msgbox_Sure(LoadUsrMsg(id), ask, center);
 }
 
 //---------------------------------------------------------------------------
@@ -584,6 +595,33 @@ void invert_CheckBox(TCheckBox *cp)
 }
 
 //---------------------------------------------------------------------------
+//ソート方向マークを描画
+//---------------------------------------------------------------------------
+void draw_SortMark(TCanvas *cv, int x, int y,
+	bool is_asc,	//昇順
+	TColor fg)		//マーク色
+{
+	TPoint mrk[3];
+	//▲
+	if (is_asc) {
+		mrk[0] = Point(x,	  y + 3);
+		mrk[1] = Point(x + 6, y + 3);
+		mrk[2] = Point(x + 3, y);
+	}
+	//▼
+	else {
+		mrk[0] = Point(x,	  y);
+		mrk[1] = Point(x + 6, y);
+		mrk[2] = Point(x + 3, y + 3);
+	}
+	cv->Pen->Style   = psSolid;
+	cv->Pen->Color	 = fg;
+	cv->Brush->Style = bsSolid;
+	cv->Brush->Color = fg;
+	cv->Polygon(mrk, 2);
+}
+
+//---------------------------------------------------------------------------
 //ボタンにマークを設定
 //---------------------------------------------------------------------------
 void set_ButtonMark(TSpeedButton *bp,
@@ -678,5 +716,34 @@ void set_ButtonMark(TSpeedButton *bp,
 		cv->MoveTo(9, 7);  cv->LineTo(4, 12);
 		break;
 	}
+}
+//---------------------------------------------------------------------------
+//ボタンにマークを設定
+//---------------------------------------------------------------------------
+void set_BtnMarkDark(TSpeedButton *bp, int id)
+{
+	set_ButtonMark(bp, id, (IsDarkMode? dcl_BtnText : scl_BtnText), get_PanelColor());
+}
+
+//---------------------------------------------------------------------------
+//タブの描画
+//---------------------------------------------------------------------------
+void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc,
+	bool active,
+	bool dark_sw)	//ダークモード適用	(default = false)
+{
+	TTabControl *tp = (TTabControl*)Control;
+	TCanvas *cv = tp->Canvas;
+	//背景
+	cv->Brush->Color = active? col_bgOptTab : get_PanelColor();
+	cv->FillRect(rc);
+	//文字
+	UnicodeString titstr = tp->Tabs->Strings[idx];
+	cv->Font->Color = active? col_fgOptTab : get_LabelColor();
+	cv->Font->Style = active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
+	TRect tt_rc = rc;
+	tt_rc.Left	= rc.Left + (rc.Width() - cv->TextWidth(titstr))/2;
+	tt_rc.Top	= (tp->TabPosition==tpBottom)? rc.Bottom - cv->TextHeight(titstr) - 4 : rc.Top + (active? 4 : 2);
+	::DrawText(cv->Handle, titstr.c_str(), -1, &tt_rc, DT_LEFT);
 }
 //---------------------------------------------------------------------------

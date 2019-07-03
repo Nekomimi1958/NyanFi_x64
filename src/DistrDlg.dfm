@@ -220,14 +220,6 @@ object DistributionDlg: TDistributionDlg
         Anchors = [akTop, akRight]
         Caption = #21516#21517#26178#12398#20966#29702
       end
-      object Bevel1: TBevel
-        Left = 0
-        Top = 0
-        Width = 632
-        Height = 4
-        Align = alTop
-        Shape = bsTopLine
-      end
       object MoveBtn: TButton
         Left = 551
         Top = 9
@@ -265,6 +257,33 @@ object DistributionDlg: TDistributionDlg
         Caption = #25391#12426#20998#12369#20808#12434#33258#21205#20316#25104
         TabOrder = 0
         OnClick = CreDistrDirCheckBoxClick
+      end
+      object BevelPanel1: TPanel
+        Left = 0
+        Top = 0
+        Width = 632
+        Height = 2
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 4
+        object Shape1: TShape
+          Left = 0
+          Top = 0
+          Width = 632
+          Height = 1
+          Align = alTop
+          Brush.Style = bsClear
+          Pen.Color = clBtnShadow
+        end
+        object Shape2: TShape
+          Left = 0
+          Top = 1
+          Width = 632
+          Height = 1
+          Align = alTop
+          Brush.Style = bsClear
+          Pen.Color = clBtnHighlight
+        end
       end
     end
     object ListPanel: TPanel
@@ -324,14 +343,6 @@ object DistributionDlg: TDistributionDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    object Bevel2: TBevel
-      Left = 0
-      Top = 0
-      Width = 632
-      Height = 2
-      Align = alTop
-      Shape = bsBottomLine
-    end
     object PrvListBox: TListBox
       Left = 0
       Top = 19
@@ -366,6 +377,33 @@ object DistributionDlg: TDistributionDlg
       OnDrawSection = PrvListHeaderDrawSection
       OnSectionClick = PrvListHeaderSectionClick
       OnSectionResize = PrvListHeaderSectionResize
+    end
+    object BevelPanel2: TPanel
+      Left = 0
+      Top = 0
+      Width = 632
+      Height = 2
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 2
+      object Shape3: TShape
+        Left = 0
+        Top = 0
+        Width = 632
+        Height = 1
+        Align = alTop
+        Brush.Style = bsClear
+        Pen.Color = clBtnShadow
+      end
+      object Shape4: TShape
+        Left = 0
+        Top = 1
+        Width = 632
+        Height = 1
+        Align = alTop
+        Brush.Style = bsClear
+        Pen.Color = clBtnHighlight
+      end
     end
   end
   object StatusBar1: TStatusBar

@@ -226,7 +226,7 @@ void __fastcall TDotNyanDlg::RefImgBtnClick(TObject *Sender)
 //”zF
 //---------------------------------------------------------------------------
 void __fastcall TDotNyanDlg::ColorComboBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TComboBox *cp = (TComboBox*)Control;
 	TCanvas   *cv = cp->Canvas;
@@ -246,9 +246,9 @@ void __fastcall TDotNyanDlg::ColorComboBoxDrawItem(TWinControl *Control, int Ind
 		cv->FillRect(rc);
 	}
 	else {
-		cv->Brush->Color = scl_BtnFace;
+		cv->Brush->Color = get_PanelColor();
 		cv->FillRect(rc);
-		out_Text(cv, rc.Left + 2, yp, _T("–³Œø"), scl_WindowText);
+		out_Text(cv, rc.Left + 2, yp, _T("–³Œø"), get_LabelColor());
 	}
 }
 //---------------------------------------------------------------------------

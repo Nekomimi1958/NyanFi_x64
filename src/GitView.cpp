@@ -1320,8 +1320,8 @@ void __fastcall TGitViewer::ArchiveActionExecute(TObject *Sender)
 {
 	if (!CommitID.IsEmpty()) {
 		UserModule->PrepareSaveDlg(_T("アーカイブの作成"), _T("アーカイブ (*.zip)|*.zip"), _T("archive.zip"), WorkDir);
-		if (UserModule->SaveDlg->Execute()) {
-			UnicodeString arc_name = UserModule->SaveDlg->FileName;
+		UnicodeString arc_name = UserModule->SaveDlgExecute();
+		if (!arc_name.IsEmpty()) {
 			UnicodeString prm;
 			prm.sprintf(_T("archive --format=zip %s --output=\"%s\""), CommitID.c_str(), yen_to_slash(arc_name).c_str());
 			GitExeList(prm, NULL, "アーカイブ作成中...");

@@ -56,7 +56,7 @@ void __fastcall TRegSyncDlg::RegListBoxDrawItem(TWinControl *Control, int Index,
 	for (int i=0; i<lp->Count; i++) w_x = std::max(cv->TextWidth(get_csv_item(lp->Items->Strings[i], 0)), w_x);
 	TStringDynArray syn_lst = get_csv_array(lp->Items->Strings[Index], 50, true);
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, syn_lst[0]);	xp += w_x + 16;
 
@@ -79,7 +79,7 @@ void __fastcall TRegSyncDlg::DirListBoxDrawItem(TWinControl *Control, int Index,
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->TextOut(Rect.Left + Scaled2, Rect.Top + get_TopMargin(cv),
 		get_MiniPathName(lp->Items->Strings[Index], lp->ClientWidth, lp->Font, true));
@@ -196,7 +196,7 @@ void __fastcall TRegSyncDlg::AddDirActionExecute(TObject *Sender)
 		if (DirListBox->Items->IndexOf(InitDir)==-1)
 			DirListBox->ItemIndex = DirListBox->Items->Add(InitDir);
 		else
-			msgbox_WARN(USTR_Registered);
+			msgbox_WARN(LoadUsrMsg(USTR_Registered));
 	}
 }
 //---------------------------------------------------------------------------

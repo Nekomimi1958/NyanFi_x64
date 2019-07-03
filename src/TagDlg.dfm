@@ -23,19 +23,19 @@ object TagManDlg: TTagManDlg
     Left = 0
     Top = 21
     Width = 310
-    Height = 158
+    Height = 160
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     OnResize = ListPanelResize
     DesignSize = (
       310
-      158)
+      160)
     object TagCheckListBox: TCheckListBox
       Left = 0
       Top = 0
       Width = 310
-      Height = 158
+      Height = 160
       OnClickCheck = TagCheckListBoxClickCheck
       Align = alLeft
       Anchors = [akLeft, akTop, akRight, akBottom]
@@ -53,7 +53,7 @@ object TagManDlg: TTagManDlg
     end
     object BlankPanel: TPanel
       Left = 294
-      Top = 142
+      Top = 144
       Width = 14
       Height = 14
       Anchors = [akRight, akBottom]
@@ -76,15 +76,15 @@ object TagManDlg: TTagManDlg
   end
   object OptPanel: TPanel
     Left = 0
-    Top = 211
+    Top = 215
     Width = 310
-    Height = 80
+    Height = 76
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
     object InpOptPanel: TPanel
       Left = 0
-      Top = 42
+      Top = 38
       Width = 310
       Height = 38
       Align = alBottom
@@ -146,7 +146,7 @@ object TagManDlg: TTagManDlg
     end
     object FindOptPanel: TPanel
       Left = 0
-      Top = 10
+      Top = 6
       Width = 310
       Height = 32
       Align = alBottom
@@ -232,32 +232,17 @@ object TagManDlg: TTagManDlg
   end
   object SetColPanel: TPanel
     Left = 0
-    Top = 179
+    Top = 181
     Width = 310
-    Height = 32
+    Height = 34
     Hint = #12479#12464#21029#37197#33394
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    object Bevel1: TBevel
-      Left = 0
-      Top = 28
-      Width = 310
-      Height = 4
-      Align = alBottom
-      Shape = bsBottomLine
-    end
-    object Label1: TLabel
-      Left = 171
-      Top = 8
-      Width = 24
-      Height = 13
-      Caption = #21453#36578
-    end
     object RefTagColBtn: TButton
       Tag = 3
       Left = 36
-      Top = 5
+      Top = 6
       Width = 36
       Height = 22
       Action = SetColorAction
@@ -266,7 +251,7 @@ object TagManDlg: TTagManDlg
     end
     object SpuitPanel: TPanel
       Left = 10
-      Top = 5
+      Top = 6
       Width = 22
       Height = 22
       BevelOuter = bvLowered
@@ -297,7 +282,7 @@ object TagManDlg: TTagManDlg
     end
     object DisableTagBtn: TButton
       Left = 76
-      Top = 5
+      Top = 6
       Width = 70
       Height = 22
       Action = DefColorAction
@@ -306,11 +291,40 @@ object TagManDlg: TTagManDlg
     end
     object RevColCheckBox: TCheckBox
       Left = 154
-      Top = 7
+      Top = 8
       Width = 58
       Height = 17
       Action = RevColAction
+      Caption = #21453#36578
       TabOrder = 3
+    end
+    object BevelPanel1: TPanel
+      Left = 0
+      Top = 32
+      Width = 310
+      Height = 2
+      Align = alBottom
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 4
+      object Shape1: TShape
+        Left = 0
+        Top = 0
+        Width = 310
+        Height = 1
+        Align = alTop
+        Brush.Style = bsClear
+        Pen.Color = clBtnShadow
+      end
+      object Shape2: TShape
+        Left = 0
+        Top = 1
+        Width = 310
+        Height = 1
+        Align = alTop
+        Brush.Style = bsClear
+        Pen.Color = clBtnHighlight
+      end
     end
   end
   object TagPopupMenu: TPopupMenu

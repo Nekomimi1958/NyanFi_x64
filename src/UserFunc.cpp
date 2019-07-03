@@ -32,17 +32,6 @@
 #pragma package(smart_init)
 
 //---------------------------------------------------------------------------
-//ハイコントラストか?
-//---------------------------------------------------------------------------
-bool is_HighContrast()
-{
-	HIGHCONTRAST hc;
-	hc.cbSize = sizeof(HIGHCONTRAST);
-	return (::SystemParametersInfo(SPI_GETHIGHCONTRAST, sizeof(HIGHCONTRAST), &hc, 0)
-				&& ((hc.dwFlags & HCF_HIGHCONTRASTON)!=0));
-}
-
-//---------------------------------------------------------------------------
 //マウスカーソル位置のウィンドウを取得
 //---------------------------------------------------------------------------
 HWND get_window_from_pos()
@@ -508,33 +497,6 @@ void draw_separateLine(TCanvas *cv, TRect rc,
 		cv->MoveTo(rc.Left,      rc.Top);
 		cv->LineTo(rc.Right + 1, rc.Top);
 	}
-}
-
-//---------------------------------------------------------------------------
-//ソート方向マークを描画
-//---------------------------------------------------------------------------
-void draw_SortMark(TCanvas *cv, int x, int y,
-	bool is_asc,	//昇順
-	TColor fg)		//マーク色
-{
-	TPoint mrk[3];
-	//▲
-	if (is_asc) {
-		mrk[0] = Point(x,	  y + 3);
-		mrk[1] = Point(x + 6, y + 3);
-		mrk[2] = Point(x + 3, y);
-	}
-	//▼
-	else {
-		mrk[0] = Point(x,	  y);
-		mrk[1] = Point(x + 6, y);
-		mrk[2] = Point(x + 3, y + 3);
-	}
-	cv->Pen->Style   = psSolid;
-	cv->Pen->Color	 = fg;
-	cv->Brush->Style = bsSolid;
-	cv->Brush->Color = fg;
-	cv->Polygon(mrk, 2);
 }
 
 //---------------------------------------------------------------------------

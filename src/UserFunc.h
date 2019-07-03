@@ -28,8 +28,6 @@
 #define LISTBOX_SCRMGN	2
 
 //---------------------------------------------------------------------------
-bool is_HighContrast();
-
 HWND get_window_from_pos();
 TRect get_window_rect(HWND hWnd);
 void set_window_pos_ex(HWND hWnd, TRect rc);
@@ -78,7 +76,6 @@ void draw_ListItemLine(TCustomListBox *lp, int idx);
 void draw_Line(TCanvas *cv, int x0, int y0, int x1, int y1, int w, TColor col, TPenStyle = psSolid);
 void draw_Separator(TCanvas *cv, TRect rc, TColor bg = Graphics::clNone);
 void draw_separateLine(TCanvas *cv, TRect rc, int pos = 0);
-void draw_SortMark(TCanvas *cv, int x, int y, bool is_asc, TColor fg = Graphics::clNone);
 
 double get_ZoomRatio(int vw, int vh, int iw, int ih, int mgn = 0, double limit = 1.0);
 

@@ -67,7 +67,7 @@ void __fastcall TEditItemDlg::ItemListBoxDrawItem(TWinControl *Control, int Inde
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->TextOut(Rect.Left + Scaled2, Rect.Top + get_TopMargin(cv), lp->Items->Strings[Index]);
 }
@@ -132,7 +132,7 @@ void __fastcall TEditItemDlg::AddItemActionExecute(TObject *Sender)
 	for (int i=0; i<lst->Count; i++) {
 		UnicodeString lbuf = lst->Strings[i];
 		if (ItemListBox->Items->IndexOf(lbuf)!=-1) {
-			msgbox_WARN(USTR_Registered);
+			msgbox_WARN(LoadUsrMsg(USTR_Registered));
 			continue;
 		}
 		ItemListBox->Items->Add(lbuf);

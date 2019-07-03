@@ -294,6 +294,7 @@ object RenameDlg: TRenameDlg
       OwnerDraw = True
       TabOrder = 0
       TabWidth = 90
+      StyleElements = [seFont, seBorder]
       OnChange = NamePageControlChange
       OnDrawTab = RenPageControlDrawTab
       object NameSheet: TTabSheet
@@ -921,6 +922,7 @@ object RenameDlg: TRenameDlg
           OwnerDraw = True
           TabOrder = 0
           TabWidth = 180
+          StyleElements = [seFont, seBorder]
           OnDrawTab = RenPageControlDrawTab
           object AssRenSheet: TTabSheet
             Caption = #38306#36899#12501#12449#12452#12523#12398#21516#26178#25913#21517

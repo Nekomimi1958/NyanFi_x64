@@ -936,6 +936,7 @@ object NyanFiForm: TNyanFiForm
           OwnerDraw = True
           TabOrder = 0
           TabWidth = 100
+          StyleElements = [seFont, seBorder]
           OnChange = GrepPageControlChange
           OnChanging = GrepPageControlChanging
           OnDrawTab = GrepPageControlDrawTab

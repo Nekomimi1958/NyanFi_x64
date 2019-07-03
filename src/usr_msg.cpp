@@ -158,10 +158,5 @@ bool SureOther;					//その他
 bool SureExit;					//終了
 bool SureCmpDel;				//完全削除は2度確認
 bool SureWorkList;				//ワークリストの再読み込み
-bool SureCancel;				//キャンセルボタンを表示
-bool SureDefNo;					//「いいえ」がデフォルト
-bool SureAdjPos;				//表示位置を状況に合わせて調整
-
-bool MsgPosCenter = false;		//メイン画面の中央に表示
 
 //---------------------------------------------------------------------------

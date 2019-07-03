@@ -5,19 +5,16 @@ object UserModule: TUserModule
   Height = 220
   Width = 292
   object OpenDlg: TOpenDialog
-    OnClose = FileDlgClose
     Options = [ofHideReadOnly, ofNoDereferenceLinks, ofEnableSizing]
     Left = 16
     Top = 8
   end
   object SaveDlg: TSaveDialog
-    OnClose = FileDlgClose
     Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
     Left = 152
     Top = 8
   end
   object SaveTxtDlg: TSaveTextFileDialog
-    OnClose = FileDlgClose
     Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
     Left = 216
     Top = 8

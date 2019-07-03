@@ -147,6 +147,8 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 	SetDarkWinTheme(SetColPanel);
 	SetDarkWinTheme(OptPanel);
 	SetDarkWinTheme(BlankPanel);
+	Shape1->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
+	Shape2->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
 
 	TagCheckListBox->PopupMenu	= IsFolderIcon? NULL : TagPopupMenu;
 	ShowTagCountAction->Checked = IniFile->ReadBoolGen(_T("TagDlgShowCount"));
@@ -616,8 +618,9 @@ void __fastcall TTagManDlg::MakeNbtActionExecute(TObject *Sender)
 {
 	TAction *ap = (TAction *)Sender;
 	UserModule->PrepareSaveDlg(_T("コマンドファイルとして保存"), F_FILTER_NBT, NULL, CmdFilePath);
-	if (UserModule->SaveDlg->Execute()) {
-		CmdFilePath = ExtractFilePath(UserModule->SaveDlg->FileName);
+	UnicodeString fnam = UserModule->SaveDlgExecute();
+	if (!fnam.IsEmpty()) {
+		CmdFilePath = ExtractFilePath(fnam);
 		std::unique_ptr<TStringList> fbuf(new TStringList());
 		UnicodeString kwd = TagEdit->Text;
 		if (!AndCheckBox->Checked) kwd = ReplaceStr(kwd, ";", "|");
@@ -625,7 +628,7 @@ void __fastcall TTagManDlg::MakeNbtActionExecute(TObject *Sender)
 		fbuf->Add(tmp.sprintf(_T(";タグ検索 [%s]"), kwd.c_str()));
 		if (ap->Tag==1) fbuf->Add("ToOpposite");
 		fbuf->Add(tmp.sprintf(_T("FindTag_%s"), kwd.c_str()));
-		if (!saveto_TextUTF8(UserModule->SaveDlg->FileName, fbuf.get())) msgbox_ERR(USTR_FaildSave);
+		if (!saveto_TextUTF8(fnam, fbuf.get())) msgbox_ERR(USTR_FaildSave);
 	}
 }
 //---------------------------------------------------------------------------

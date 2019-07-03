@@ -1013,8 +1013,6 @@ extern TColor col_bgTask;
 extern TColor col_fgPrgBar;
 extern TColor col_bgPrgBar;
 extern TColor col_Error;
-extern TColor col_bgOptTab;
-extern TColor col_fgOptTab;
 extern TColor col_TlBorder;
 
 extern TColor col_bgView;
@@ -1808,8 +1806,7 @@ UnicodeString get_FileInfValue(file_rec *fp, UnicodeString tit, UnicodeString dl
 
 void assign_InfListBox(TListBox *lp, TStringList *i_lst, UsrScrollPanel *sp = NULL);
 void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State);
-void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State,
-	TStringList *col_lst, bool is_dark = false);
+void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State, TStringList *col_lst);
 
 void draw_InputPaintBox(TPaintBox *pp, UnicodeString s);
 
@@ -1871,8 +1868,6 @@ void ApplyOptionByTag(TTabSheet *sp);
 void ApplyOptionByTag(TPanel *pp);
 
 void SetToolWinBorder(TForm *fp, bool sw = true);
-
-void set_BtnMarkDark(TSpeedButton *bp, int id);
 
 void InitializeListGrid(TStringGrid *gp, TFont *fnt = NULL);
 void InitializeListHeader(THeaderControl *hp, const _TCHAR *hdr, TFont *fnt = NULL);
@@ -1968,8 +1963,6 @@ void draw_GridCursor(TStringGrid *gp, TRect &Rect, int ARow, TGridDrawState Stat
 void draw_ImgGrid(TCanvas *cv, Graphics::TBitmap *bmp);
 void draw_BarGraph(TCanvas *cv, TRect rc, double r);
 void draw_ProgressBar(TCanvas *cv, TRect rc, double r);
-
-void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool active, bool dark_sw = false);
 
 bool saveto_TextUTF8(UnicodeString fnam, TStrings *lst);
 bool saveto_TextFile(UnicodeString fnam, TStrings *lst, TEncoding *enc = NULL);

@@ -91,7 +91,9 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 			ObjMemo->Text = fbuf->Text;
 			ok = true;
 		}
-		else msgbox_ERR(USTR_FileNotOpen);
+		else {
+			msgbox_ERR(LoadUsrMsg(USTR_FileNotOpen));
+		}
 	}
 
 	if (!ok) {
@@ -117,6 +119,8 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 	MatchCount = 0;
 
 	SetDarkWinTheme(this);
+	Shape1->Pen->Color	= IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
+	Shape2->Pen->Color	= IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
 	ObjMemo->Color		= col_bgView;
 	ResListBox->Color	= col_bgView;
 	ReferListBox->Color = col_bgList;
@@ -141,7 +145,7 @@ void __fastcall TRegExChecker::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteStrGen( _T("RegExChkFile"),	FileEdit->Text);
 	if (!FileEdit->Text.IsEmpty() && UpdtCheckBox->Checked && ObjMemo->Modified) {
 		UnicodeString fnam = to_absolute_name(FileEdit->Text);
-		if (!saveto_TextFile(fnam, ObjMemo->Lines)) msgbox_ERR(USTR_FaildSave);
+		if (!saveto_TextFile(fnam, ObjMemo->Lines)) msgbox_ERR(LoadUsrMsg(USTR_FaildSave));
 	}
 
 	IniFile->WriteIntGen( _T("RegExMainWidth"),	MainPanel->Width);
@@ -355,7 +359,7 @@ void __fastcall TRegExChecker::RefFileBtnClick(TObject *Sender)
 			if (load_text_ex(fnam, fbuf.get()))
 				ObjMemo->Text = fbuf->Text;
 			else
-				msgbox_ERR(USTR_FileNotOpen);
+				msgbox_ERR(LoadUsrMsg(USTR_FileNotOpen));
 		}
 	}
 }

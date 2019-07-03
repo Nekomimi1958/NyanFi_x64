@@ -144,6 +144,10 @@ void __fastcall TDistributionDlg::FormShow(TObject *Sender)
 	RegListBox->Color  = bg;
 	ListListBox->Color = bg;
 	PrvListBox->Color  = bg;
+	Shape1->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
+	Shape3->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
+	Shape2->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
+	Shape4->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
@@ -444,7 +448,7 @@ void __fastcall TDistributionDlg::RegListBoxDrawItem(TWinControl *Control, int I
 
 	TStringDynArray cur_buf = get_csv_array(lp->Items->Strings[Index], DISTRLS_CSVITMCNT, true);
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled4;
@@ -562,7 +566,7 @@ void __fastcall TDistributionDlg::ListListBoxDrawItem(TWinControl *Control, int 
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled4;
@@ -601,7 +605,7 @@ void __fastcall TDistributionDlg::PrvListBoxDrawItem(TWinControl *Control, int I
 	int xp = Rect.Left + Scaled4;
 	int yp = Rect.Top  + get_TopMargin(cv);
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
@@ -729,7 +733,7 @@ void __fastcall TDistributionDlg::AddRegActionExecute(TObject *Sender)
 		UpdatePreview();
 	}
 	else {
-		msgbox_WARN(USTR_Registered);
+		msgbox_WARN(LoadUsrMsg(USTR_Registered));
 	}
 }
 //---------------------------------------------------------------------------
@@ -946,8 +950,9 @@ void __fastcall TDistributionDlg::ExeActionUpdate(TObject *Sender)
 void __fastcall TDistributionDlg::MakeFileActionExecute(TObject *Sender)
 {
 	UserModule->PrepareSaveDlg(_T("U‚è•ª‚¯“o˜^ƒtƒ@ƒCƒ‹‚Ìì¬"), F_FILTER_INI, _T(DISTR_FILE));
-	if (UserModule->SaveDlg->Execute()) {
-		DistrFile = UserModule->SaveDlg->FileName;
+	UnicodeString fnam = UserModule->SaveDlgExecute();
+	if (!fnam.IsEmpty()) {
+		DistrFile = fnam;
 		if (SaveDistrFile()) {
 			IniFile->WriteStrGen(_T("DistrDlgFileName"),	to_relative_name(DistrFile));
 			Caption = "U‚è•ª‚¯ - " + ExtractFileName(DistrFile);
@@ -962,8 +967,9 @@ void __fastcall TDistributionDlg::MakeFileActionExecute(TObject *Sender)
 void __fastcall TDistributionDlg::SelFileActionExecute(TObject *Sender)
 {
 	UserModule->PrepareOpenDlg(_T("U‚è•ª‚¯“o˜^ƒtƒ@ƒCƒ‹‚Ì‘I‘ğ"), F_FILTER_INI, _T("*.INI"));
-	if (UserModule->OpenDlg->Execute()) {
-		DistrFile = UserModule->OpenDlg->FileName;
+	UnicodeString fnam = UserModule->OpenDlgExecute();
+	if (!fnam.IsEmpty()) {
+		DistrFile = fnam;
 		if (LoadDistrFile()) {
 			Caption = "U‚è•ª‚¯ - " + ExtractFileName(DistrFile);
 			AssignRegListBox();

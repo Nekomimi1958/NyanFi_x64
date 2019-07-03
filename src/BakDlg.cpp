@@ -60,6 +60,8 @@ void __fastcall TBackupDlg::FormShow(TObject *Sender)
 	BakIncMaskComboBox->SelStart = BakIncMaskComboBox->Text.Length();
 
 	SetDarkWinTheme(this);
+	Shape1->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
+	Shape2->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
 }
 //---------------------------------------------------------------------------
 void __fastcall TBackupDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -140,8 +142,9 @@ void __fastcall TBackupDlg::SaveSetupActionUpdate(TObject *Sender)
 void __fastcall TBackupDlg::MakeNbtActionExecute(TObject *Sender)
 {
 	UserModule->PrepareSaveDlg(_T("コマンドファイルとして保存"), F_FILTER_NBT, NULL, CmdFilePath);
-	if (UserModule->SaveDlg->Execute()) {
-		CmdFilePath = ExtractFilePath(UserModule->SaveDlg->FileName);
+	UnicodeString fnam = UserModule->SaveDlgExecute();
+	if (!fnam.IsEmpty()) {
+		CmdFilePath = ExtractFilePath(fnam);
 
 		std::unique_ptr<TStringList> fbuf(new TStringList());
 		fbuf->Text =
@@ -154,7 +157,7 @@ void __fastcall TBackupDlg::MakeNbtActionExecute(TObject *Sender)
 			"PopDir_OP\r\n"
 			"PopDir\r\n";
 
-		if (!saveto_TextUTF8(UserModule->SaveDlg->FileName, fbuf.get())) msgbox_ERR(USTR_FaildSave);
+		if (!saveto_TextUTF8(fnam, fbuf.get())) msgbox_ERR(USTR_FaildSave);
 	}
 }
 //---------------------------------------------------------------------------

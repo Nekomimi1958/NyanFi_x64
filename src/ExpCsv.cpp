@@ -79,10 +79,10 @@ void __fastcall TExpCsvDlg::ItemListBoxDrawItem(TWinControl *Control, int Index,
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->Font->Color = get_TextColor(State.Contains(odSelected));
-	cv->TextOut(Rect.Left + Scaled4, Rect.Top  + get_TopMargin(cv), lp->Items->Strings[Index]);
+	cv->TextOut(Rect.Left + Scaled4, Rect.Top + get_TopMargin(cv), lp->Items->Strings[Index]);
 }
 //---------------------------------------------------------------------------
 //çÄñ⁄ÇÃí«â¡
@@ -132,7 +132,7 @@ void __fastcall TExpCsvDlg::ExportActionExecute(TObject *Sender)
 	if (!Viewer) return;
 
 	UnicodeString fnam = to_absolute_name(OutNameEdit->Text, ExtractFilePath(Viewer->FileName));
-	if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) return;
+	if (file_exists(fnam) && !msgbox_Sure(LoadUsrMsg(USTR_OverwriteQ))) return;
 
 	//çÏê¨
 	ExpBusy = true;

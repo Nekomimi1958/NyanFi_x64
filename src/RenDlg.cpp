@@ -1421,7 +1421,7 @@ void __fastcall TRenameDlg::CnvCharListBoxDrawItem(TWinControl *Control, int Ind
 	int x = Rect.Left + Scaled4;
 	int y = Rect.Top  + get_TopMargin(cv);
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
 	if (!State.Contains(odSelected)) {
@@ -1431,7 +1431,7 @@ void __fastcall TRenameDlg::CnvCharListBoxDrawItem(TWinControl *Control, int Ind
 	UnicodeString tmp;
 	tmp.sprintf(_T("[%s]"), lp->Items->Names[Index].c_str());
 	SpaceTextOut(tmp, cv, x, y, cv->Font->Color, true);
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	out_TextEx(cv, x, y, " ¨ ");
 	tmp.sprintf(_T("[%s]"), lp->Items->ValueFromIndex[Index].c_str());
 	SpaceTextOut(tmp, cv, x, y, cv->Font->Color, true);
@@ -1535,7 +1535,7 @@ void __fastcall TRenameDlg::AssRenListBoxDrawItem(TWinControl *Control, int Inde
 		w_x = std::max(cv->TextWidth(get_csv_item(lp->Items->Strings[i], 0)), w_x);
 
 	TStringDynArray itm_lst = get_csv_array(lp->Items->Strings[Index], 3, true);
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, itm_lst[0]);	xp += (w_x + 16);
 	if (ContainsStr(itm_lst[2], "P")) out_Text(cv, xp, yp, _T("•”•ªˆê’v"));

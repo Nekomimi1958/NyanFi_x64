@@ -21,7 +21,6 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *MakeNbtAction;
 	TAction *SaveSetupAction;
 	TActionList *ActionList1;
-	TBevel *Bevel1;
 	TButton *CanButton;
 	TButton *OkButton;
 	TButton *SaveCmdBtn;
@@ -38,7 +37,10 @@ __published:	// IDE で管理されるコンポーネント
 	TLabeledEdit *BakSkipDirEdit;
 	TLabeledEdit *DstDirEdit;
 	TLabeledEdit *SrcDirEdit;
+	TPanel *BevelPanel1;
 	TPanel *BottomPanel;
+	TShape *Shape1;
+	TShape *Shape2;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

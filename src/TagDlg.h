@@ -40,7 +40,6 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ShowTagCountAction;
 	TAction *TrimDataAction;
 	TActionList *ActionList1;
-	TBevel *Bevel1;
 	TButton *CanButton;
 	TButton *DisableTagBtn;
 	TButton *OkButton;
@@ -53,7 +52,6 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckListBox *TagCheckListBox;
 	TEdit *TagEdit;
 	TImage *SpuitImage;
-	TLabel *Label1;
 	TMenuItem *CountTagItem;
 	TMenuItem *DefColItem;
 	TMenuItem *DelTagItem;
@@ -68,6 +66,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *ShowCountItem;
 	TMenuItem *TrimDataItem;
 	TPanel *AndPanel;
+	TPanel *BevelPanel1;
 	TPanel *BlankPanel;
 	TPanel *FindOptPanel;
 	TPanel *HidePanel;
@@ -80,6 +79,8 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *SetColPanel;
 	TPanel *SpuitPanel;
 	TPopupMenu *TagPopupMenu;
+	TShape *Shape1;
+	TShape *Shape2;
 	TSpeedButton *HideOptBtn;
 	TSpeedButton *ShowOptBtn;
 

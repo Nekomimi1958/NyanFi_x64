@@ -21,7 +21,6 @@ class TFindFileDlg : public TForm
 __published:	// IDE で管理されるコンポーネント
 	TAction *FindOkAction;
 	TActionList *ActionList1;
-	TBevel *Bevel1;
 	TBevel *Bevel2;
 	TBevel *PanelSpacer;
 	TButton *CanButton;
@@ -103,6 +102,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMaskEdit *TimeMaskEdit;
 	TPanel *AttrPanel;
 	TPanel *BasicPanel;
+	TPanel *BevelPanel;
 	TPanel *CodePanel;
 	TPanel *ContPanel;
 	TPanel *DatePanel;
@@ -145,6 +145,8 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioGroup *SizeRadioGroup;
 	TRadioGroup *SmplRadioGroup;
 	TRadioGroup *TimeRadioGroup;
+	TShape *Shape1;
+	TShape *Shape2;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

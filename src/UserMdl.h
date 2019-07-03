@@ -272,13 +272,15 @@ public:		// ÉÜÅ[ÉUÅ[êÈåæ
 
 	UnicodeString __fastcall get_DlgDefExt(UnicodeString filter);
 	void __fastcall PrepareOpenDlg(const _TCHAR *tit, const _TCHAR *filter, const _TCHAR *fnam = NULL, UnicodeString inidir = EmptyStr);
-	void __fastcall PrepareSaveDlg(const _TCHAR *tit, const _TCHAR *filter, const _TCHAR *fnam = NULL, UnicodeString inidir = EmptyStr);
-
+	UnicodeString __fastcall OpenDlgExecute();
 	bool __fastcall OpenDlgToEdit(TWinControl *ep, bool to_rel = false);
 	bool __fastcall OpenDlgToStr(UnicodeString &s, bool to_rel = false);
 	bool __fastcall OpenImgDlgToEdit(TWinControl *ep, bool to_rel = false);
 	bool __fastcall FontDlgToFont(TFont *f);
 	UnicodeString __fastcall OpenDlgIconIndex(bool to_rel = false);
+
+	void __fastcall PrepareSaveDlg(const _TCHAR *tit, const _TCHAR *filter, const _TCHAR *fnam = NULL, UnicodeString inidir = EmptyStr);
+	UnicodeString __fastcall SaveDlgExecute();
 
 	void __fastcall SaveLastComboBox();
 	void __fastcall RestoreLastComboBox();

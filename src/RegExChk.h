@@ -25,7 +25,6 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ReplaceAction;
 	TAction *TestAction;
 	TActionList *ActionList1;
-	TBevel *Bevel1;
 	TButton *CCopyBtn;
 	TButton *CopyBtn;
 	TButton *HiddenCanBtn;
@@ -42,10 +41,13 @@ __published:	// IDE で管理されるコンポーネント
 	TListBox *ReferListBox;
 	TListBox *ResListBox;
 	TMemo *ObjMemo;
+	TPanel *BevelPanel1;
 	TPanel *MainPanel;
 	TPanel *OpePanel;
 	TPanel *ReferPanel;
 	TPanel *ResPanel;
+	TShape *Shape1;
+	TShape *Shape2;
 	TSplitter *Splitter1;
 	TSplitter *Splitter2;
 

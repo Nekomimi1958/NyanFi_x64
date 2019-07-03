@@ -4,7 +4,7 @@ object BackupDlg: TBackupDlg
   HelpContext = 71
   BorderIcons = [biSystemMenu]
   Caption = #12496#12483#12463#12450#12483#12503
-  ClientHeight = 371
+  ClientHeight = 367
   ClientWidth = 492
   Color = clBtnFace
   Constraints.MaxHeight = 400
@@ -21,7 +21,7 @@ object BackupDlg: TBackupDlg
   OnShow = FormShow
   DesignSize = (
     492
-    371)
+    367)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -141,7 +141,7 @@ object BackupDlg: TBackupDlg
   end
   object BottomPanel: TPanel
     Left = 0
-    Top = 271
+    Top = 267
     Width = 492
     Height = 100
     Align = alBottom
@@ -157,14 +157,6 @@ object BackupDlg: TBackupDlg
       Height = 13
       Alignment = taRightJustify
       Caption = #35373#23450
-    end
-    object Bevel1: TBevel
-      Left = 8
-      Top = 4
-      Width = 468
-      Height = 4
-      Anchors = [akLeft, akTop, akRight]
-      Shape = bsBottomLine
     end
     object OkButton: TButton
       Left = 304
@@ -220,6 +212,33 @@ object BackupDlg: TBackupDlg
       Height = 24
       Action = SaveSetupAction
       TabOrder = 1
+    end
+    object BevelPanel1: TPanel
+      Left = 8
+      Top = 4
+      Width = 476
+      Height = 2
+      Anchors = [akLeft, akTop, akRight]
+      BevelOuter = bvNone
+      TabOrder = 6
+      object Shape1: TShape
+        Left = 0
+        Top = 0
+        Width = 476
+        Height = 1
+        Align = alTop
+        Brush.Style = bsClear
+        Pen.Color = clBtnShadow
+      end
+      object Shape2: TShape
+        Left = 0
+        Top = 1
+        Width = 476
+        Height = 1
+        Align = alTop
+        Brush.Style = bsClear
+        Pen.Color = clBtnHighlight
+      end
     end
   end
   object ActionList1: TActionList

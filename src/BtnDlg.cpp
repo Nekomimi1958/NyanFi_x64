@@ -220,7 +220,7 @@ void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index,
 	TListBox *lp = (TListBox*)Control;
 	TCanvas *cv  = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	TColor org_fg = cv->Font->Color;
 	cv->FillRect(Rect);
 

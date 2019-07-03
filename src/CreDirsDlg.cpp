@@ -253,8 +253,8 @@ void __fastcall TCreateDirsDlg::UndoActionUpdate(TObject *Sender)
 void __fastcall TCreateDirsDlg::SaveListActionExecute(TObject *Sender)
 {
 	UserModule->PrepareSaveDlg(_T("リストの保存"), F_FILTER_TXT);
-	if (UserModule->SaveDlg->Execute() && !saveto_TextUTF8(UserModule->SaveDlg->FileName, ListMemo->Lines))
-		msgbox_ERR(USTR_FaildSave);
+	UnicodeString fnam = UserModule->SaveDlgExecute();
+	if (!fnam.IsEmpty() && !saveto_TextUTF8(fnam, ListMemo->Lines)) msgbox_ERR(USTR_FaildSave);
 }
 //---------------------------------------------------------------------------
 void __fastcall TCreateDirsDlg::SaveListActionUpdate(TObject *Sender)
@@ -267,9 +267,10 @@ void __fastcall TCreateDirsDlg::SaveListActionUpdate(TObject *Sender)
 void __fastcall TCreateDirsDlg::LoadListActionExecute(TObject *Sender)
 {
 	UserModule->PrepareOpenDlg(_T("リストの読み込み"), F_FILTER_TXT, NULL);
-	if (UserModule->OpenDlg->Execute()) {
+	UnicodeString fnam = UserModule->OpenDlgExecute();
+	if (!fnam.IsEmpty()) {
 		std::unique_ptr<TStringList> lst(new TStringList());
-		if (load_text_ex(UserModule->OpenDlg->FileName, lst.get())!=0) {
+		if (load_text_ex(fnam, lst.get())!=0) {
 			UndoBuf = ListMemo->Lines->Text;
 			ListMemo->Lines->Assign(lst.get());
 		}

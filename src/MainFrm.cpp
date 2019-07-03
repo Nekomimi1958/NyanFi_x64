@@ -579,7 +579,7 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 		TempPathA = chk_cre_dir(TempPathA);
 		if (TempPathA.IsEmpty()) {
 			TempPathFTP = EmptyStr;
-			msgbox_WARN(USTR_CantMakeTmpDir);
+			msgbox_WARN(LoadUsrMsg(USTR_CantMakeTmpDir));
 		}
 	}
 	else {
@@ -3375,7 +3375,7 @@ void __fastcall TNyanFiForm::WmDropped(TMessage &msg)
 					UnicodeString fext = get_extension(get_tkn(url, '?'));
 					//画像
 					if (!USAME_TI(get_extension(fnam), ".url")) {
-						if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) SkipAbort();
+						if (file_exists(fnam) && !msgbox_Sure(LoadUsrMsg(USTR_OverwriteQ))) SkipAbort();
 						TModalResult mr = DownloadWorkProgress(url, fnam, FileListBox[DroppedTag]);
 						if (mr==mrCancel) SkipAbort();
 						if (mr!=mrOk) Abort();
@@ -3453,7 +3453,6 @@ void __fastcall TNyanFiForm::DropMenuItemClick(TObject *Sender)
 void __fastcall TNyanFiForm::WmSettingChange(TMessage &msg)
 {
 	if (msg.WParam==SPI_SETHIGHCONTRAST) {
-		InitializeSysColor();
 		SetupDesign(false);
 	}
 }
@@ -10541,7 +10540,7 @@ void __fastcall TNyanFiForm::FileListKeyDown(TObject *Sender, WORD &Key, TShiftS
 		//ExeCommands実行中...
 		else if (ExeCmdsBusy) {
 			if (!XCMD_Debugging && equal_ESC(KeyStr)) {
-				if (msgbox_Sure(USTR_CancelCmdQ, true, true)) XCMD_Aborted = true;
+				if (msgbox_Sure(LoadUsrMsg(USTR_CancelCmdQ), true, true)) XCMD_Aborted = true;
 			}
 			else if (USAME_TI(CmdStr, "TaskMan")) {
 				MsgHint->ReleaseHandle();
@@ -12713,7 +12712,7 @@ void __fastcall TNyanFiForm::ClearAllActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::ClearMarkActionExecute(TObject *Sender)
 {
 	if (TEST_ActParam("AC")) {
-		if (msgbox_Sure(USTR_ClrAllMarkQ, !(ExeCmdsBusy && XCMD_MsgOff)))
+		if (msgbox_Sure(LoadUsrMsg(USTR_ClrAllMarkQ), !(ExeCmdsBusy && XCMD_MsgOff)))
 			IniFile->ClearAllMark();
 	}
 	else {
@@ -15194,7 +15193,7 @@ void __fastcall TNyanFiForm::EditHistoryActionExecute(TObject *Sender)
 	bool is_edit = USAME_TI(((TAction*)Sender)->Name, "EditHistoryAction");
 
 	if (TEST_ActParam("AC")) {
-		if (msgbox_Sure(USTR_DelHistoryQ, !(ExeCmdsBusy && XCMD_MsgOff), true))
+		if (msgbox_Sure(LoadUsrMsg(USTR_DelHistoryQ), !(ExeCmdsBusy && XCMD_MsgOff), true))
 			(is_edit? TextEditHistory : TextViewHistory)->Clear();
 		return;
 	}
@@ -18302,7 +18301,7 @@ void __fastcall TNyanFiForm::JoinTextActionExecute(TObject *Sender)
 			//一旦空のファイルを作っておく
 			UnicodeString onam = dst_dir + JoinTextDlg->OutNameEdit->Text;
 			if (file_exists(onam)) {
-				if (!msgbox_Sure(USTR_OverwriteQ)) Abort();
+				if (!msgbox_Sure(LoadUsrMsg(USTR_OverwriteQ))) Abort();
 				delete_File(onam);
 			}
 			if (!create_EmptyFile(onam)) UserAbort(USTR_FaildProc);
@@ -19355,10 +19354,10 @@ void __fastcall TNyanFiForm::LoadResultListActionExecute(TObject *Sender)
 		}
 		else {
 			UserModule->PrepareOpenDlg(_T("結果リストを読み込む"), F_FILTER_TXT, _T("*.txt"), ResultListPath);
-			if (!UserModule->OpenDlg->Execute()) SkipAbort();
-			fnam = UserModule->OpenDlg->FileName;
+			fnam = UserModule->OpenDlgExecute();
 		}
-	
+
+		if (fnam.IsEmpty()) SkipAbort();
 		if (!file_exists(fnam)) UserAbort(USTR_FileNotOpen);
 		ResultListPath = ExtractFilePath(fnam);
 
@@ -19468,13 +19467,13 @@ void __fastcall TNyanFiForm::LoadTabGroupActionExecute(TObject *Sender)
 				}
 				if (lst->Count==0) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("タググループ")));
 				fnam = get_MenuFileItem(lst.get());
-				if (fnam.IsEmpty()) SkipAbort();
 			}
 		}
 		else {
 			UserModule->PrepareOpenDlg(_T("タブグループを読み込む"), F_FILTER_INI, _T("*.INI"));
-			if (UserModule->OpenDlg->Execute()) fnam = UserModule->OpenDlg->FileName;
+			fnam = UserModule->OpenDlgExecute();
 		}
+
 		if (fnam.IsEmpty()) SkipAbort();
 		if (!file_exists(fnam)) UserAbort(USTR_NotFound);
 
@@ -19536,10 +19535,10 @@ void __fastcall TNyanFiForm::LoadWorkListActionExecute(TObject *Sender)
 		//通常動作
 		else {
 			UserModule->PrepareOpenDlg(_T("ワークリストを読み込む"), F_FILTER_NWL, _T("*.nwl"), WorkListPath);
-			if (UserModule->OpenDlg->Execute()) {
-				if (!SetWorkList(UserModule->OpenDlg->FileName)) UserAbort(USTR_WlistCantOpen);
-				WorkListPath = ExtractFilePath(UserModule->OpenDlg->FileName);
-			}
+			wnam = UserModule->OpenDlgExecute();
+			if (wnam.IsEmpty()) SkipAbort();
+			if (!SetWorkList(wnam)) UserAbort(USTR_WlistCantOpen);
+			WorkListPath = ExtractFilePath(wnam);
 		}
 		//履歴に追加
 		if (WorkToDirHist && CurStt->is_Work) AddDirHistory(WorkListName, CurListTag);
@@ -20174,7 +20173,7 @@ void __fastcall TNyanFiForm::NewFileActionExecute(TObject *Sender)
 		if (!file_exists(tnam)) TextAbort(_T("テンプレートが見つかりません。"));
 
 		fnam = CurStt->is_ADS? CurStt->ads_Name + ":" + fnam : CurPath[CurListTag] + fnam;
-		if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) SkipAbort();
+		if (file_exists(fnam) && !msgbox_Sure(LoadUsrMsg(USTR_OverwriteQ))) SkipAbort();
 
 		StartLog("ファイル作成開始  " + GetSrcPathStr());
 		UnicodeString msg = make_LogHdr(_T("CREATE"), fnam);
@@ -20224,7 +20223,7 @@ void __fastcall TNyanFiForm::NewTextFileActionExecute(TObject *Sender)
 			fnam = ChangeFileExt(fnam, ".txt");
 
 		fnam = CurStt->is_ADS? CurStt->ads_Name + ":" + fnam : CurPath[CurListTag] + fnam;
-		if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) SkipAbort();
+		if (file_exists(fnam) && !msgbox_Sure(LoadUsrMsg(USTR_OverwriteQ))) SkipAbort();
 
 		StartLog("テキスト作成開始  " + GetSrcPathStr());
 		UnicodeString msg = make_LogHdr(_T("CREATE"), fnam);
@@ -22190,8 +22189,8 @@ void __fastcall TNyanFiForm::ReturnListActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::SaveAsResultListActionExecute(TObject *Sender)
 {
 	UserModule->PrepareSaveDlg(LoadUsrMsg(USTR_SaveAs, _T("結果リスト")).c_str(), F_FILTER_TXT, NULL, ResultListPath);
-	if (UserModule->SaveDlg->Execute()) {
-		UnicodeString fnam = UserModule->SaveDlg->FileName;
+	UnicodeString fnam = UserModule->SaveDlgExecute();
+	if (!fnam.IsEmpty()) {
 		//検索情報
 		UnicodeString stt = ";[ResultList]\n";
 		stt.cat_sprintf(_T(";Find_Path=%s\n"),		CurStt->find_Path.c_str());
@@ -22253,8 +22252,7 @@ void __fastcall TNyanFiForm::SaveAsTabGroupActionExecute(TObject *Sender)
 		}
 		else {
 			UserModule->PrepareSaveDlg(_T("タブグループの保存"), F_FILTER_INI);
-			if (!UserModule->SaveDlg->Execute()) SkipAbort();
-			fnam = UserModule->SaveDlg->FileName;
+			fnam = UserModule->SaveDlgExecute();
 		}
 
 		if (fnam.IsEmpty()) SkipAbort();
@@ -22300,15 +22298,16 @@ void __fastcall TNyanFiForm::SaveAsWorkListActionExecute(TObject *Sender)
 
 	UnicodeString fnam = is_fl? EmptyStr : ExtractFileName(WorkListName);
 	UserModule->PrepareSaveDlg(LoadUsrMsg(USTR_SaveAs, _T("ワークリスト")).c_str(), F_FILTER_NWL, fnam.c_str(), WorkListPath);
-	if (UserModule->SaveDlg->Execute()) {
-		if (save_WorkList(UserModule->SaveDlg->FileName, is_fl? GetCurList() : WorkList)) {
-			WorkListName = UserModule->SaveDlg->FileName;
+	fnam = UserModule->SaveDlgExecute();
+	if (!fnam.IsEmpty()) {
+		if (save_WorkList(fnam, is_fl? GetCurList() : WorkList)) {
+			WorkListName = fnam;
 			WorkListPath = ExtractFilePath(WorkListName);
 			WorkListTime = get_file_age(WorkListName);
 			rqWorkListDirInf = true;
 		}
 		else {
-			SttBarWarn(LoadUsrMsg(USTR_FaildSave, ExtractFileName(UserModule->SaveDlg->FileName)));
+			SttBarWarn(LoadUsrMsg(USTR_FaildSave, ExtractFileName(fnam)));
 		}
 	}
 }
@@ -27803,10 +27802,8 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 				else {
 					UserModule->PrepareSaveDlg(_T("更新ファイルの保存"),
 						_T("アーカイブ (*.zip)|*.zip"), zip_nam.c_str(), DownloadPath);
-					if (UserModule->SaveDlg->Execute()) {
-						fnam = UserModule->SaveDlg->FileName;
-						DownloadPath = ExtractFilePath(fnam);
-					}
+					fnam = UserModule->SaveDlgExecute();
+					if (!fnam.IsEmpty()) DownloadPath = ExtractFilePath(fnam);
 				}
 				if (!fnam.IsEmpty()) {
 					//既存アーカイブから更新
@@ -27864,8 +27861,8 @@ void __fastcall TNyanFiForm::UpdateFromArcActionExecute(TObject *Sender)
 	//アーカイブを選択
 	else {
 		UserModule->PrepareOpenDlg(_T("更新用アーカイブの選択"), _T("アーカイブ (*.zip)|*.zip"), _T("nyanfi*.zip"), DownloadPath);
-		if (UserModule->OpenDlg->Execute() && msgbox_Sure(_T("更新しますか?"), true, true))
-			arc_name = UserModule->OpenDlg->FileName;
+		UnicodeString fnam = UserModule->OpenDlgExecute();
+		if (!fnam.IsEmpty() && msgbox_Sure(_T("更新しますか?"), true, true)) arc_name = fnam;
 	}
 
 	//更新
@@ -31809,7 +31806,7 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 				//補助画面(なければビュアー)を閉じる
 				else if (equal_ESC(KeyStr)) {
 					if (ExeCmdsBusy) {
-						if (msgbox_Sure(USTR_CancelCmdQ)) XCMD_Aborted = true;
+						if (msgbox_Sure(LoadUsrMsg(USTR_CancelCmdQ))) XCMD_Aborted = true;
 					}
 					else {
 						if (!TxtViewer->CloseAuxForm()) ExeCommandV(_T("Close"));
@@ -31861,7 +31858,7 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 			//閉じる
 			else if (equal_ESC(KeyStr)) {
 				if (ExeCmdsBusy) {
-					if (msgbox_Sure(USTR_CancelCmdQ)) XCMD_Aborted = true;
+					if (msgbox_Sure(LoadUsrMsg(USTR_CancelCmdQ))) XCMD_Aborted = true;
 				}
 				else if (IS_FullScr()) {
 					ExeCommandI("FullScreen", "OFF");

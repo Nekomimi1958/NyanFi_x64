@@ -216,6 +216,8 @@ void __fastcall TFindFileDlg::FormShow(TObject *Sender)
 		SetDarkWinTheme(this);
 		IsDark = IsDarkMode;
 	}
+	Shape1->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
+	Shape2->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
 
 	//チェックボックスとラベルの表示状態を同期
 	for (int i=0; i<OkPanel->ControlCount; i++) {

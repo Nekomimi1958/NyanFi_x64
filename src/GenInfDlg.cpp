@@ -1180,10 +1180,10 @@ void __fastcall TGeneralInfoDlg::SaveAsNbtActionExecute(TObject *Sender)
 	std::unique_ptr<TStringList> cb_buf(new TStringList());
 	if (!GetSelcetedCmd(cb_buf.get()).IsEmpty()) {
 		UserModule->PrepareSaveDlg(_T("コマンドファイルとして保存"), F_FILTER_NBT, NULL, CmdFilePath);
-		if (UserModule->SaveDlg->Execute()) {
-			CmdFilePath = ExtractFilePath(UserModule->SaveDlg->FileName);
-			if (!saveto_TextUTF8(UserModule->SaveDlg->FileName, cb_buf.get()))
-				msgbox_ERR(USTR_FaildSave);
+		UnicodeString fnam = UserModule->SaveDlgExecute();
+		if (!fnam.IsEmpty()) {
+			CmdFilePath = ExtractFilePath(fnam);
+			if (!saveto_TextUTF8(fnam, cb_buf.get())) msgbox_ERR(USTR_FaildSave);
 		}
 	}
 }

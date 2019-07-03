@@ -411,8 +411,6 @@ void __fastcall TUserModule::SpuitTimerTimer(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//ファイル保存/開くダイアログを閉じたときの処理
-//---------------------------------------------------------------------------
 void __fastcall TUserModule::FileDlgClose(TObject *Sender)
 {
 	CloseIME(Application->ActiveFormHandle);
@@ -558,7 +556,7 @@ void __fastcall TUserModule::EditPaste1Execute(TObject *Sender)
 				ep->SelLength = ep->Text.Length();
 			}
 			else {
-				msgbox_ERR(USTR_IllegalDate);
+				msgbox_ERR(LoadUsrMsg(USTR_IllegalDate));
 				return;
 			}
 		}
@@ -873,7 +871,7 @@ bool __fastcall TUserModule::SelectDirEx(const _TCHAR *tit, UnicodeString &dnam,
 {
 	if (!SelectDirectory(tit, EmptyStr, dnam, TSelectDirExtOpts() << sdNewUI << sdShowShares, Screen->ActiveForm)) return false;
 	if (!dir_exists(dnam)) {
-		msgbox_WARN(USTR_DirNotFound);
+		msgbox_WARN(LoadUsrMsg(USTR_DirNotFound));
 		return false;
 	}
 
@@ -917,6 +915,67 @@ void __fastcall TUserModule::PrepareOpenDlg(
 	OpenDlg->InitialDir = (OpenDlg->Filter==F_FILTER_ICO)? IconFilePath : def_if_empty(inidir, ExePath);
 }
 //---------------------------------------------------------------------------
+UnicodeString __fastcall TUserModule::OpenDlgExecute()
+{
+	UnicodeString fnam;
+	if (OpenDlg->Execute()) fnam = OpenDlg->FileName;
+	CloseIME(Application->ActiveFormHandle);
+	return fnam;
+}
+//---------------------------------------------------------------------------
+//開くダイアログの結果を設定
+//---------------------------------------------------------------------------
+bool __fastcall TUserModule::OpenDlgToEdit(
+	TWinControl *ep,
+	bool to_rel)	//実行ディレクトリからの相対指定に変換 (default = false);
+{
+	bool res = OpenDlg->Execute();
+	if (res) {
+		UnicodeString fnam = OpenDlg->FileName;
+		if (OpenDlg->Filter==F_FILTER_ICO) {
+			SelectIconDlg(fnam);
+			IconFilePath = ExtractFilePath(fnam);
+		}
+
+		if (to_rel) remove_top_text(fnam, ExePath);
+		if (ep->InheritsFrom(__classid(TCustomEdit)))
+			((TCustomEdit *)ep)->Text = fnam;
+		else
+			res = false;
+	}
+
+	CloseIME(Application->ActiveFormHandle);
+	return res;
+}
+//---------------------------------------------------------------------------
+bool __fastcall TUserModule::OpenImgDlgToEdit(TWinControl *ep, bool to_rel)
+{
+	bool res = OpenImgDlg->Execute();
+	if (res) {
+		UnicodeString fnam = OpenImgDlg->FileName;
+		if (to_rel) remove_top_text(fnam, ExePath);
+		if (ep->InheritsFrom(__classid(TCustomEdit)))
+			((TCustomEdit *)ep)->Text = fnam;
+		else
+			res = false;
+	}
+
+	CloseIME(Application->ActiveFormHandle);
+	return res;
+}
+
+//---------------------------------------------------------------------------
+bool __fastcall TUserModule::OpenDlgToStr(UnicodeString &s, bool to_rel)
+{
+	bool res = OpenDlg->Execute();
+	if (res) {
+		s = OpenDlg->FileName;
+		if (to_rel) remove_top_text(s, ExePath);
+	}
+	return res;
+}
+
+//---------------------------------------------------------------------------
 //保存ダイアログの準備
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::PrepareSaveDlg(
@@ -928,54 +987,13 @@ void __fastcall TUserModule::PrepareSaveDlg(
 	SaveDlg->FileName	= fnam? fnam : null_TCHAR;
 	SaveDlg->InitialDir = def_if_empty(inidir, ExePath);
 }
-
 //---------------------------------------------------------------------------
-//開くダイアログの結果を設定
-//---------------------------------------------------------------------------
-bool __fastcall TUserModule::OpenDlgToEdit(
-	TWinControl *ep,
-	bool to_rel)	//実行ディレクトリからの相対指定に変換 (default = false);
+UnicodeString __fastcall TUserModule::SaveDlgExecute()
 {
-	if (!OpenDlg->Execute()) return false;
-
-	UnicodeString fnam = OpenDlg->FileName;
-	if (OpenDlg->Filter==F_FILTER_ICO) {
-		SelectIconDlg(fnam);
-		IconFilePath = ExtractFilePath(fnam);
-	}
-
-	if (to_rel) remove_top_text(fnam, ExePath);
-
-	if (ep->InheritsFrom(__classid(TCustomEdit))) {
-		((TCustomEdit *)ep)->Text = fnam;
-	}
-
-	return true;
-}
-//---------------------------------------------------------------------------
-bool __fastcall TUserModule::OpenImgDlgToEdit(TWinControl *ep, bool to_rel)
-{
-	if (!OpenImgDlg->Execute()) return false;
-
-	UnicodeString fnam = OpenImgDlg->FileName;
-	if (to_rel) remove_top_text(fnam, ExePath);
-
-	if (ep->InheritsFrom(__classid(TCustomEdit))) {
-		((TCustomEdit *)ep)->Text = fnam;
-		return true;
-	}
-
-	return false;
-}
-
-//---------------------------------------------------------------------------
-bool __fastcall TUserModule::OpenDlgToStr(UnicodeString &s, bool to_rel)
-{
-	if (!OpenDlg->Execute()) return false;
-
-	s = OpenDlg->FileName;
-	if (to_rel) remove_top_text(s, ExePath);
-	return true;
+	UnicodeString fnam;
+	if (SaveDlg->Execute()) fnam = SaveDlg->FileName;
+	CloseIME(Application->ActiveFormHandle);
+	return fnam;
 }
 
 //---------------------------------------------------------------------------

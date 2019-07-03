@@ -107,10 +107,6 @@ extern bool SureOther;
 extern bool SureExit;
 extern bool SureCmpDel;
 extern bool SureWorkList;
-extern bool SureCancel;
-extern bool SureDefNo;
-extern bool SureAdjPos;
-extern bool MsgPosCenter;
 
 //---------------------------------------------------------------------------
 #endif

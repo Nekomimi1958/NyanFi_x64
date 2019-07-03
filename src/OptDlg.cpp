@@ -67,39 +67,6 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 
 	cursor_HourGlass();
 
-	org_SheetPanelWndProc[0]  = SheetPanel1->WindowProc;
-	org_SheetPanelWndProc[1]  = SheetPanel2->WindowProc;
-	org_SheetPanelWndProc[2]  = SheetPanel3->WindowProc;
-	org_SheetPanelWndProc[3]  = SheetPanel4->WindowProc;
-	org_SheetPanelWndProc[4]  = SheetPanel5->WindowProc;
-	org_SheetPanelWndProc[5]  = SheetPanel6->WindowProc;
-	org_SheetPanelWndProc[6]  = SheetPanel7->WindowProc;
-	org_SheetPanelWndProc[7]  = SheetPanel8->WindowProc;
-	org_SheetPanelWndProc[8]  = SheetPanel9->WindowProc;
-	org_SheetPanelWndProc[9]  = AsoPanel->WindowProc;
-	org_SheetPanelWndProc[10] = ExtMenuPanel->WindowProc;
-	org_SheetPanelWndProc[11] = ExtToolPanel->WindowProc;
-	org_SheetPanelWndProc[12] = SheetPanel13->WindowProc;
-	org_SheetPanelWndProc[13] = SheetPanel14->WindowProc;
-	org_SheetPanelWndProc[14] = SheetPanel15->WindowProc;
-	org_SheetPanelWndProc[15] = SheetPanel16->WindowProc;
-	SheetPanel1->WindowProc   = SheetPanel1WndProc;
-	SheetPanel2->WindowProc   = SheetPanel2WndProc;
-	SheetPanel3->WindowProc   = SheetPanel3WndProc;
-	SheetPanel4->WindowProc   = SheetPanel4WndProc;
-	SheetPanel5->WindowProc   = SheetPanel5WndProc;
-	SheetPanel6->WindowProc   = SheetPanel6WndProc;
-	SheetPanel7->WindowProc   = SheetPanel7WndProc;
-	SheetPanel8->WindowProc   = SheetPanel8WndProc;
-	SheetPanel9->WindowProc   = SheetPanel9WndProc;
-	AsoPanel->WindowProc	  = SheetPanel10WndProc;
-	ExtMenuPanel->WindowProc  = SheetPanel11WndProc;
-	ExtToolPanel->WindowProc  = SheetPanel12WndProc;
-	SheetPanel13->WindowProc  = SheetPanel13WndProc;
-	SheetPanel14->WindowProc  = SheetPanel14WndProc;
-	SheetPanel15->WindowProc  = SheetPanel15WndProc;
-	SheetPanel16->WindowProc  = SheetPanel16WndProc;
-
 	//入力欄にポップアップメニューを設定
 	UserModule->SetUsrPopupMenu(this);
 
@@ -1118,6 +1085,14 @@ void __fastcall TOptionDlg::SetWinTheme()
 	ExtMenuListBox->Color	= bg;
 	ExtToolListBox->Color	= bg;
 
+	//疑似Bevel
+	Shape1->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
+	Shape3->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
+	Shape5->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
+	Shape2->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
+	Shape4->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
+	Shape6->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
+
 	IsDark = IsDarkMode;
 }
 
@@ -1366,7 +1341,7 @@ void __fastcall TOptionDlg::EtcEditorListBoxDrawItem(TWinControl *Control, int I
 	UnicodeString etc_fext = lp->Items->Names[Index];
 	UnicodeString etc_edtr = exclude_quot(lp->Items->ValueFromIndex[Index]);
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, etc_fext);
 	xp += (w_x + 20);
@@ -1500,7 +1475,7 @@ void __fastcall TOptionDlg::ScrBarStyleComboBoxClick(TObject *Sender)
 //フォント
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::FontComboBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TComboBox *cp = (TComboBox*)Control;
 	TCanvas   *cv = cp->Canvas;
@@ -1509,7 +1484,7 @@ void __fastcall TOptionDlg::FontComboBoxDrawItem(TWinControl *Control, int Index
 	int yp = Rect.Top  + get_TopMargin(cv);
 	int fh = abs(cv->Font->Height);
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, cp->Items->Strings[Index]);
 	xp += fh*10;
@@ -1523,7 +1498,7 @@ void __fastcall TOptionDlg::FontComboBoxDrawItem(TWinControl *Control, int Index
 		//名前
 		cv->Font->Assign(f);
 		cv->Font->Size = cp->Font->Size;
-		SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+		SetHighlight(cv, State.Contains(odSelected));
 		yp = Rect.Top + get_TopMargin(cv);
 		cv->TextOut(xp, yp, f->Name);
 	}
@@ -1553,7 +1528,7 @@ void __fastcall TOptionDlg::RefFontBtnClick(TObject *Sender)
 void __fastcall TOptionDlg::OptColListBoxDrawItem(TWinControl *Control, int Index,
 	TRect &Rect, TOwnerDrawState State)
 {
-	draw_ColorListBox((TListBox*)Control, Rect, Index, State, ColBufList, IsDarkMode);
+	draw_ColorListBox((TListBox*)Control, Rect, Index, State, ColBufList);
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::RefColBtnClick(TObject *Sender)
@@ -1706,7 +1681,7 @@ void __fastcall TOptionDlg::ExtColListBoxClick(TObject *Sender)
 //拡張子別配色一覧の描画
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::ExtColListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -1727,7 +1702,7 @@ void __fastcall TOptionDlg::ExtColListBoxDrawItem(TWinControl *Control, int Inde
 	cv->FillRect(rc);
 	cv->TextOut(xp, yp, smpl_str);
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	rc = Rect;  rc.Left += smpl_wd;
 	cv->FillRect(rc);
 	xp = rc.Left + 4;
@@ -1887,7 +1862,7 @@ void __fastcall TOptionDlg::TagColListBoxDrawItem(TWinControl *Control, int Inde
 	}
 	cv->TextOut(xp, yp, tag);
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	rc = Rect;
 	rc.Left += (blk_wd + MaxWd_Tag);
 	cv->FillRect(rc);
@@ -2747,7 +2722,7 @@ void __fastcall TOptionDlg::AsoRefBtnClick(TObject *Sender)
 //一覧の描画
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -2758,7 +2733,7 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 		cv->Font->Color  = get_TextColor();
 	}
 	else {
-		SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+		SetHighlight(cv, State.Contains(odSelected));
 	}
 	cv->FillRect(Rect);
 
@@ -2805,7 +2780,7 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	bool is_tool = (lp==ExtToolListBox);
@@ -2813,7 +2788,7 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 
 	TCanvas *cv  = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
 	//項目の階層を調べる
@@ -3005,7 +2980,7 @@ void __fastcall TOptionDlg::SetCmdCombo(
 //コマンドコンボボックスの描画
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::CmdComboBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-		TOwnerDrawState State)
+	TOwnerDrawState State)
 {
 	TComboBox *cp = (TComboBox*)Control;
 	TCanvas   *cv = cp->Canvas;
@@ -3015,7 +2990,7 @@ void __fastcall TOptionDlg::CmdComboBoxDrawItem(TWinControl *Control, int Index,
 	UnicodeString lbuf = cp->Items->Strings[Index];
 	UnicodeString cmd  = split_tkn(lbuf, ' ');
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, cmd);
 	xp += cv->TextHeight("Q")*10;
@@ -3075,6 +3050,7 @@ void __fastcall TOptionDlg::CmdComboBoxChange(TObject *Sender)
 
 	PrmComboBox->Items->Assign(p_list.get());
 	PrmComboBox->PopupMenu = (PrmComboBox->Style==csDropDown)? UserModule->EditPopupMenuC : NULL;
+	SetDarkWinTheme(PrmComboBox);
 
 	UserModule->CmdParamList->Clear();
 	if (PrmComboBox->PopupMenu) {
@@ -3398,7 +3374,7 @@ void __fastcall TOptionDlg::FindKeyUpActionUpdate(TObject *Sender)
 //キー一覧の描画
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::KeyListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-		TOwnerDrawState State)
+	TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -3409,7 +3385,7 @@ void __fastcall TOptionDlg::KeyListBoxDrawItem(TWinControl *Control, int Index, 
 	UnicodeString key = lp->Items->Names[Index];
 	UnicodeString cmd = lp->Items->ValueFromIndex[Index];
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
 	cv->TextOut(xp, yp, get_tkn_r(key, ":"));
@@ -3712,7 +3688,7 @@ void __fastcall TOptionDlg::AddDrvActionExecute(TObject *Sender)
 	if (VirDrvListBox->Items->IndexOf(lbuf)==-1) {
 		VirDrvListBox->Items->Add(lbuf);
 	}
-	else msgbox_WARN(USTR_Registered);
+	else msgbox_WARN(LoadUsrMsg(USTR_Registered));
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::AddDrvActionUpdate(TObject *Sender)
@@ -3752,11 +3728,12 @@ void __fastcall TOptionDlg::DelDrvActionUpdate(TObject *Sender)
 void __fastcall TOptionDlg::InpColBtnClick(TObject *Sender)
 {
 	UserModule->PrepareOpenDlg(_T("配色のインポート"), F_FILTER_INI, _T("*.INI"));
-	if (UserModule->OpenDlg->Execute()) {
+	UnicodeString fnam = UserModule->OpenDlgExecute();
+	if (!fnam.IsEmpty()) {
 		std::unique_ptr<TStringList> col_lst(new TStringList());
 		std::unique_ptr<TStringList> ext_lst(new TStringList());
 		std::unique_ptr<TStringList> tag_lst(new TStringList());
-		std::unique_ptr<UsrIniFile> inp_file(new UsrIniFile(UserModule->OpenDlg->FileName));
+		std::unique_ptr<UsrIniFile> inp_file(new UsrIniFile(fnam));
 		inp_file->ReadSection(  "Color",		col_lst.get());
 		inp_file->LoadListItems("ExtColList",	ext_lst.get());
 		inp_file->ReadSection(  "TagColList",	tag_lst.get());
@@ -3781,8 +3758,9 @@ void __fastcall TOptionDlg::InpColBtnClick(TObject *Sender)
 void __fastcall TOptionDlg::ExpColBtnClick(TObject *Sender)
 {
 	UserModule->PrepareSaveDlg(_T("配色のエクスポート"), F_FILTER_INI, _T("Export_Col.INI"));
-	if (UserModule->SaveDlg->Execute()) {
-		std::unique_ptr<UsrIniFile> exp_file(new UsrIniFile(UserModule->SaveDlg->FileName));
+	UnicodeString fnam = UserModule->SaveDlgExecute();
+	if (!fnam.IsEmpty()) {
+		std::unique_ptr<UsrIniFile> exp_file(new UsrIniFile(fnam));
 		//配色
 		exp_file->AssignSection("Color", ColBufList);
 		//拡張子別配色
@@ -3805,8 +3783,9 @@ void __fastcall TOptionDlg::ExpColBtnClick(TObject *Sender)
 void __fastcall TOptionDlg::InpKeyBtnClick(TObject *Sender)
 {
 	UserModule->PrepareOpenDlg(_T("キー設定のインポート"), F_FILTER_INI, _T("*.INI"));
-	if (UserModule->OpenDlg->Execute()) {
-		std::unique_ptr<UsrIniFile> inp_file(new UsrIniFile(UserModule->OpenDlg->FileName));
+	UnicodeString fnam = UserModule->OpenDlgExecute();
+	if (!fnam.IsEmpty()) {
+		std::unique_ptr<UsrIniFile> inp_file(new UsrIniFile(fnam));
 		std::unique_ptr<TStringList> key_lst(new TStringList());
 		inp_file->ReadSection("KeyFuncList", key_lst.get());
 		if (key_lst->Count>0) {
@@ -3845,8 +3824,9 @@ void __fastcall TOptionDlg::InpKeyBtnClick(TObject *Sender)
 void __fastcall TOptionDlg::ExpKeyBtnClick(TObject *Sender)
 {
 	UserModule->PrepareSaveDlg(_T("キー設定のエクスポート"), F_FILTER_INI, _T("Export_Key.INI"));
-	if (UserModule->SaveDlg->Execute()) {
-		std::unique_ptr<UsrIniFile> exp_file(new UsrIniFile(UserModule->SaveDlg->FileName));
+	UnicodeString fnam = UserModule->SaveDlgExecute();
+	if (!fnam.IsEmpty()) {
+		std::unique_ptr<UsrIniFile> exp_file(new UsrIniFile(fnam));
 		std::unique_ptr<TStringList> key_lst(new TStringList());
 		KeyListBuf[KeyTabControl->TabIndex]->Assign(KeyListBox->Items);
 		for (int i=0; i<MAX_KEYTABS; i++) key_lst->AddStrings(KeyListBuf[i]);
@@ -3946,7 +3926,7 @@ void __fastcall TOptionDlg::StdCmdListBoxDrawItem(TWinControl *Control, int Inde
 	int xp = Rect.Left + Scaled2;
 	int yp = Rect.Top  + get_TopMargin(cv);
 
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
 	int w_x = 0;

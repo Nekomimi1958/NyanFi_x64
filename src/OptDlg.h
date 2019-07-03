@@ -67,9 +67,6 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *FindKeyUpAction;
 	TAction *OkAction;
 	TActionList *ActionList1;
-	TBevel *Bevel1;
-	TBevel *Bevel2;
-	TBevel *Bevel3;
 	TButton *AddColBtn;
 	TButton *AddDirBtn;
 	TButton *AddDrvBtn;
@@ -695,23 +692,13 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Frmt_X_Item;
 	TPageControl *PageControl1;
 	TPanel *AsoPanel;
+	TPanel *BevelPanel1;
+	TPanel *BevelPanel2;
+	TPanel *BevelPanel3;
 	TPanel *BottomPanel;
 	TPanel *ExtMenuPanel;
 	TPanel *ExtToolPanel;
 	TPanel *RefExtColPanel;
-	TPanel *SheetPanel1;
-	TPanel *SheetPanel2;
-	TPanel *SheetPanel3;
-	TPanel *SheetPanel4;
-	TPanel *SheetPanel5;
-	TPanel *SheetPanel6;
-	TPanel *SheetPanel7;
-	TPanel *SheetPanel8;
-	TPanel *SheetPanel9;
-	TPanel *SheetPanel13;
-	TPanel *SheetPanel14;
-	TPanel *SheetPanel15;
-	TPanel *SheetPanel16;
 	TPanel *SpuitPanel;
 	TPanel *SpuitPanel2;
 	TPanel *SpuitPanel3;
@@ -735,6 +722,12 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioGroup *L_IniSortRadioGroup;
 	TRadioGroup *PrtDirRadioGroup;
 	TRadioGroup *R_IniSortRadioGroup;
+	TShape *Shape1;
+	TShape *Shape2;
+	TShape *Shape3;
+	TShape *Shape4;
+	TShape *Shape5;
+	TShape *Shape6;
 	TSpeedButton *RefToolFmtBtn;
 	TTabControl *KeyTabControl;
 	TTabSheet *AssoSheet;
@@ -942,32 +935,6 @@ private:	// ユーザー宣言
 	UsrSwatchPanel *SwatchPanel;
 
 	TLabel *KeyKeyLabel;
-
-	TWndMethod org_SheetPanelWndProc[16];
-	void __fastcall SheetPanelWndProcCore(TMessage &msg, int idx)
-	{
-		if (msg.Msg==WM_ERASEBKGND && IsDarkMode)
-			msg.Result = 1;
-		else
-			org_SheetPanelWndProc[idx](msg);
-	}
-
-	void __fastcall SheetPanel1WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  0); }
-	void __fastcall SheetPanel2WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  1); }
-	void __fastcall SheetPanel3WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  2); }
-	void __fastcall SheetPanel4WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  3); }
-	void __fastcall SheetPanel5WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  4); }
-	void __fastcall SheetPanel6WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  5); }
-	void __fastcall SheetPanel7WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  6); }
-	void __fastcall SheetPanel8WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  7); }
-	void __fastcall SheetPanel9WndProc( TMessage &msg) { SheetPanelWndProcCore(msg,  8); }
-	void __fastcall SheetPanel10WndProc(TMessage &msg) { SheetPanelWndProcCore(msg,  9); }
-	void __fastcall SheetPanel11WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 10); }
-	void __fastcall SheetPanel12WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 11); }
-	void __fastcall SheetPanel13WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 12); }
-	void __fastcall SheetPanel14WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 13); }
-	void __fastcall SheetPanel15WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 14); }
-	void __fastcall SheetPanel16WndProc(TMessage &msg) { SheetPanelWndProcCore(msg, 15); }
 
 	void __fastcall WmFormShowed(TMessage &msg);
 

@@ -100,7 +100,7 @@ void __fastcall TColorDlg::FormDestroy(TObject *Sender)
 void __fastcall TColorDlg::ColorListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
 	TOwnerDrawState State)
 {
-	draw_ColorListBox((TListBox*)Control, Rect, Index, State, ColBufList, IsDarkMode);
+	draw_ColorListBox((TListBox*)Control, Rect, Index, State, ColBufList);
 }
 
 //---------------------------------------------------------------------------
@@ -158,8 +158,9 @@ void __fastcall TColorDlg::SpuitImageMouseUp(TObject *Sender, TMouseButton Butto
 void __fastcall TColorDlg::InportBtnClick(TObject *Sender)
 {
 	UserModule->PrepareOpenDlg(_T("配色のインポート"), F_FILTER_INI, _T("*.INI"));
-	if (UserModule->OpenDlg->Execute()) {
-		std::unique_ptr<UsrIniFile> inp_file(new UsrIniFile(UserModule->OpenDlg->FileName));
+	UnicodeString fnam = UserModule->OpenDlgExecute();
+	if (!fnam.IsEmpty()) {
+		std::unique_ptr<UsrIniFile> inp_file(new UsrIniFile(fnam));
 		inp_file->ReadSection("Color", ColBufList);
 		ColorListBox->Repaint();
 	}
@@ -171,8 +172,9 @@ void __fastcall TColorDlg::InportBtnClick(TObject *Sender)
 void __fastcall TColorDlg::ExportBtnClick(TObject *Sender)
 {
 	UserModule->PrepareSaveDlg(_T("配色のエクスポート"), F_FILTER_INI, FileName.c_str());
-	if (UserModule->SaveDlg->Execute()) {
-		std::unique_ptr<UsrIniFile> exp_file(new UsrIniFile(UserModule->SaveDlg->FileName));
+	UnicodeString fnam = UserModule->SaveDlgExecute();
+	if (!fnam.IsEmpty()) {
+		std::unique_ptr<UsrIniFile> exp_file(new UsrIniFile(fnam));
 		exp_file->AssignSection("Color", ColBufList);
 		if (!exp_file->UpdateFile(true)) msgbox_ERR(USTR_FaildSave);
 	}

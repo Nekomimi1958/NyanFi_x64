@@ -221,7 +221,7 @@ void __fastcall TDirHistoryDlg::DirHistListBoxKeyDown(TObject *Sender, WORD &Key
 					ModalResult = mrOk;
 				}
 				else {
-					msgbox_WARN(USTR_NotFound);
+					msgbox_WARN(LoadUsrMsg(USTR_NotFound));
 					//存在しないディレクトリを削除
 					if (h_lst) {
 						int i = 0;
@@ -395,7 +395,7 @@ void __fastcall TDirHistoryDlg::AddDirsActionExecute(TObject *Sender)
 		FindBusy = false;
 
 		if (FindAborted)
-			msgbox_WARN(USTR_Canceled);
+			msgbox_WARN(LoadUsrMsg(USTR_Canceled));
 		else
 			msgbox_OK(UnicodeString().sprintf(_T("%u個のディレクトリを追加しました。"), cnt));
 	}

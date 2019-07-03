@@ -69,7 +69,7 @@ void __fastcall TJoinTextDlg::SrcFileListBoxDrawItem(TWinControl *Control, int I
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->Font->Color = get_TextColor(State.Contains(odSelected));
 	cv->TextOut(Rect.Left + Scaled4, Rect.Top  + get_TopMargin(cv), lp->Items->Strings[Index]);

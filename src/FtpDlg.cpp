@@ -126,7 +126,7 @@ void __fastcall TFtpConnectDlg::HostListBoxDrawItem(TWinControl *Control, int In
 	TListBox *lp = (TListBox*)Control;
 	TCanvas *cv  = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	SetHighlight(cv, State.Contains(odSelected), IsDarkMode);
+	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled2;

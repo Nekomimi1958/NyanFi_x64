@@ -74,14 +74,6 @@ object RegExChecker: TRegExChecker
         Height = 13
         Caption = #26908#32034#23550#35937
       end
-      object Bevel1: TBevel
-        Left = 0
-        Top = 122
-        Width = 372
-        Height = 4
-        Anchors = [akLeft, akTop, akRight]
-        Shape = bsBottomLine
-      end
       object CaseCheckBox: TCheckBox
         Left = 80
         Top = 64
@@ -203,6 +195,36 @@ object RegExChecker: TRegExChecker
         Anchors = [akTop, akRight]
         Caption = #22793#26356#21453#26144
         TabOrder = 11
+      end
+      object BevelPanel1: TPanel
+        Left = 0
+        Top = 122
+        Width = 423
+        Height = 2
+        Anchors = [akLeft, akTop, akRight]
+        BevelOuter = bvNone
+        TabOrder = 12
+        DesignSize = (
+          423
+          2)
+        object Shape1: TShape
+          Left = 0
+          Top = 0
+          Width = 423
+          Height = 1
+          Anchors = [akLeft, akTop, akRight]
+          Brush.Style = bsClear
+          Pen.Color = clBtnShadow
+        end
+        object Shape2: TShape
+          Left = 0
+          Top = 1
+          Width = 423
+          Height = 1
+          Anchors = [akLeft, akTop, akRight]
+          Brush.Style = bsClear
+          Pen.Color = clBtnHighlight
+        end
       end
     end
     object ResPanel: TPanel

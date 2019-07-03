@@ -722,7 +722,7 @@ void __fastcall TRegDirDlg::ChangeItemActionExecute(
 	int chg_mod)	//変更モード 0:追加/ 1:変更/ 2:挿入
 {
 	if (chg_mod==0 && IndexOfDir(DirEdit->Text)!=-1) {
-		msgbox_WARN(USTR_Registered);
+		msgbox_WARN(LoadUsrMsg(USTR_Registered));
 		return;
 	}
 
@@ -771,7 +771,7 @@ void __fastcall TRegDirDlg::ChangeItemActionExecute(
 		ListScrPanel->UpdateKnob();
 		IsAddMode = false;
 	}
-	else msgbox_WARN(USTR_DirNotFound);
+	else msgbox_WARN(LoadUsrMsg(USTR_DirNotFound));
 }
 
 //---------------------------------------------------------------------------
@@ -946,11 +946,11 @@ void __fastcall TRegDirDlg::AppInfoActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::SaveAsWorkActionExecute(TObject *Sender)
 {
-	UnicodeString fnam;
 	UserModule->PrepareSaveDlg(LoadUsrMsg(USTR_SaveAs, _T("ワークリスト")).c_str(), 
 		F_FILTER_NWL, _T("SpecialDir.nwl"), WorkListPath);
 
-	if (UserModule->SaveDlg->Execute()) {
+	UnicodeString fnam = UserModule->SaveDlgExecute();
+	if (!fnam.IsEmpty()) {
 		TListBox *lp = RegDirListBox;
 		std::unique_ptr<TStringList> lst(new TStringList());
 		int s_cnt = 0;
@@ -960,8 +960,7 @@ void __fastcall TRegDirDlg::SaveAsWorkActionExecute(TObject *Sender)
 			if (s_cnt<2) lst->Add(lbuf);
 		}
 
-		if (!saveto_TextUTF8(UserModule->SaveDlg->FileName, lst.get()))
-			msgbox_ERR(LoadUsrMsg(USTR_FaildSave, ExtractFileName(UserModule->SaveDlg->FileName)));
+		if (!saveto_TextUTF8(fnam, lst.get())) msgbox_ERR(LoadUsrMsg(USTR_FaildSave, ExtractFileName(fnam)));
 	}
 }
 //---------------------------------------------------------------------------

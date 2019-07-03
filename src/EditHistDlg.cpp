@@ -1122,7 +1122,7 @@ void __fastcall TEditHistoryDlg::DelMarkItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::ClrAllMarkItemClick(TObject *Sender)
 {
-	if (msgbox_Sure(USTR_ClrAllMarkQ)) {
+	if (msgbox_Sure(LoadUsrMsg(USTR_ClrAllMarkQ))) {
 		IniFile->ClearAllMark();
 		UpdateList();
 	}
@@ -1186,7 +1186,7 @@ void __fastcall TEditHistoryDlg::FilterEditKeyPress(TObject *Sender, System::Wid
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::ClearAllItemClick(TObject *Sender)
 {
-	if (HistoryList && msgbox_Sure(USTR_DelHistoryQ)) {
+	if (HistoryList && msgbox_Sure(LoadUsrMsg(USTR_DelHistoryQ))) {
 		HistoryList->Clear();
 		UpdateList();
 	}
