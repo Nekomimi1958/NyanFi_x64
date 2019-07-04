@@ -42,7 +42,6 @@ __published:	// IDE で管理されるコンポーネント
 	TLabel *Label1;
 	TLabel *Label2;
 	TLabeledEdit *AppDirEdit;
-	TLabeledEdit *AppNameEdit;
 	TLabeledEdit *AppParamEdit;
 	TLabeledEdit *FExtBakEdit;
 	TLabeledEdit *FileFmtEdit;
@@ -63,6 +62,8 @@ __published:	// IDE で管理されるコンポーネント
 	TTabSheet *OutFormSheet;
 	TTabSheet *OutModeSheet;
 	TTabSheet *ReplaceSheet;
+	TCheckBox *AppEnabledCheckBox;
+	TEdit *AppNameEdit;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

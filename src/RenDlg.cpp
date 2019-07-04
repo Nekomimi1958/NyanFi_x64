@@ -227,8 +227,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 		ReplaceSheet->TabVisible = !EditedList;
 		RenListSheet->TabVisible = true;
 		Mp3Sheet->TabVisible	 = !EditedList && (isMp3 || isFlac);
-
-		Mp3Sheet->Caption		 = isFlac? "FLAC(&F)" : "MP3(&M)";
+		Mp3Sheet->Caption		 = isFlac? "&FLAC" : "MP&3";
 		mp3fextLabel->Caption	 = cmnFext;
 		if (!EditedList && (isMp3 || isFlac)) {
 			NamePageControl->ActivePage =

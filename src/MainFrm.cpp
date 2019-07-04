@@ -10157,7 +10157,7 @@ void __fastcall TNyanFiForm::FileListBoxExit(TObject *Sender)
 //ファイルリストヘッダのマウス操作
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FileListHeaderSectionClick(THeaderControl *HeaderControl,
-		THeaderSection *Section)
+	THeaderSection *Section)
 {
 	if ((CurStt->is_Work && (NotSortWorkList || WorkListHasSep))
 		|| (CurStt->is_Find && CurStt->find_DUPL) || IsDiffList())
@@ -28484,6 +28484,7 @@ UnicodeString __fastcall TNyanFiForm::MakeGrepOutLine(
 	UnicodeString f_inf = GrepFileFmt;
 	if (f_inf.IsEmpty()) f_inf = "$F $L:";
 	f_inf = conv_esc_char(f_inf);
+	f_inf = ReplaceStr(f_inf, "$B", add_quot_if_spc(ExtractFileName(f_nam)));
 	f_inf = ReplaceStr(f_inf, "$F", add_quot_if_spc(f_nam));
 	f_inf = ReplaceStr(f_inf, "$L", f_lno);
 	if (f_lno.IsEmpty()) ln_str.Insert("エラー: ", 1);
@@ -28667,7 +28668,7 @@ void __fastcall TNyanFiForm::GrepStartActionExecute(TObject *Sender)
 				}
 
 				//アプリ起動
-				if (!GrepAppName.IsEmpty()) {
+				if (!GrepAppName.IsEmpty() && GrepAppEnabled) {
 					UnicodeString app_nam = get_actual_path(GrepAppName);
 					UnicodeString prmstr  = GrepAppParam;
 					if (GrepOutMode==1) {

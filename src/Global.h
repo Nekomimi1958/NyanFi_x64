@@ -589,6 +589,7 @@ extern UnicodeString GrepFileName;
 extern UnicodeString GrepAppName;
 extern UnicodeString GrepAppParam;
 extern UnicodeString GrepAppDir;
+extern bool GrepAppEnabled;
 extern bool GrepAppend;
 extern UnicodeString GrepFileFmt;
 extern UnicodeString GrepInsStrW;

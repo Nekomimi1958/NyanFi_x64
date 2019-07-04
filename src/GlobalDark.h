@@ -90,11 +90,6 @@ bool msgbox_Sure(const _TCHAR *msg, bool ask, bool center = false);
 int  msgbox_SureAll(UnicodeString msg, bool &app_chk, bool center = false);
 
 //---------------------------------------------------------------------------
-bool set_focus_RadioGroup(TRadioGroup *gp);
-bool set_focus_GroupBox(TGroupBox *gp);
-void invert_CheckBox(TCheckBox *cp);
-
-//---------------------------------------------------------------------------
 #define UBMK_UP		1
 #define UBMK_DOWN	2
 #define UBMK_BUP	3
@@ -113,6 +108,11 @@ void set_ButtonMark(TSpeedButton *bp, int id = UBMK_DOWN, TColor fg = scl_BtnTex
 void set_BtnMarkDark(TSpeedButton *bp, int id);
 
 void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool active, bool dark_sw = false);
+
+//---------------------------------------------------------------------------
+bool set_focus_RadioGroup(TRadioGroup *gp);
+bool set_focus_GroupBox(TGroupBox *gp);
+void invert_CheckBox(TCheckBox *cp);
 
 //---------------------------------------------------------------------------
 #endif

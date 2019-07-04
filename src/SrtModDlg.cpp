@@ -27,6 +27,8 @@ void __fastcall TSortModeDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::FormShow(TObject *Sender)
 {
+	DlgInitialized = false;
+
 	IniFile->LoadPosInfo(this, DialogCenter);
 
 	DirOptPanel->Visible = (ScrMode==SCMD_FLIST);
@@ -36,10 +38,7 @@ void __fastcall TSortModeDlg::FormShow(TObject *Sender)
 
 	Changed  = false;
 	SelByKey = false;
-	InhOk	 = true;
-
 	Caption = "ソート - " + get_LRUD_str(CurListTag, SortBoth);
-
 	SortModeRadioGroup->ItemIndex  = SortMode[CurListTag];
 	DirSortModeComboBox->ItemIndex = DirSortMode[CurListTag];
 	NaturalCheckBox->Checked	   = FlOdrNatural[CurListTag];
@@ -49,9 +48,8 @@ void __fastcall TSortModeDlg::FormShow(TObject *Sender)
 	DscAttrCheckBox->Checked	   = FlOdrDscAttr[CurListTag];
 	SortBothCheckBox->Checked	   = SortBoth;
 	SortModeRadioGroup->SetFocus();
-
 	this->Perform(WM_NEXTDLGCTL, 0, (NativeInt)0);
-	InhOk = false;
+	DlgInitialized = true;
 
 	SetDarkWinTheme(this);
 }
@@ -91,13 +89,10 @@ void __fastcall TSortModeDlg::SortBothCheckBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::SortModeRadioGroupClick(TObject *Sender)
 {
-	if (!InhOk) {
-		Changed = true;
-		if (SortModeRadioGroup->Enabled) ModalResult = mrOk;
-	}
-	else {
-		InhOk = false;
-	}
+	if (!DlgInitialized) return;
+
+	Changed 	= true;
+	ModalResult = mrOk;
 }
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::OptCheckBoxClick(TObject *Sender)
@@ -107,8 +102,7 @@ void __fastcall TSortModeDlg::OptCheckBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::SortModeRadioGroupEnter(TObject *Sender)
 {
-	if (SortModeRadioGroup->Enabled && SelByKey)
-		ModalResult = Changed? mrOk : mrCancel;
+	if (SelByKey) ModalResult = Changed? mrOk : mrCancel;
 }
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::SortModeRadioGroupExit(TObject *Sender)
@@ -119,6 +113,8 @@ void __fastcall TSortModeDlg::SortModeRadioGroupExit(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
+	if (SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#SortDlg"))) return;
+
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 	int idx = -1;
 	if		(contained_wd_i("F|Alt+F", KeyStr)) idx = 0;
@@ -129,14 +125,13 @@ void __fastcall TSortModeDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftStat
 	else if (contained_wd_i("U|Alt+U", KeyStr)) idx = 5;
 
 	if (idx!=-1) {
-		if (SortModeRadioGroup->Enabled) {
-			if (idx==SortModeRadioGroup->ItemIndex) {
-				SelByKey = true;	//現在のモードのキーが押された
-				Key = 0;
-			}
-			else {
-				SortModeRadioGroup->ItemIndex = idx;
-			}
+		if (idx==SortModeRadioGroup->ItemIndex) {
+			SelByKey = true;	//現在のモードのキーが押された
+			Key = 0;
+		}
+		else {
+			SortModeRadioGroup->ItemIndex = idx;
+			Application->ProcessMessages();		//！これがないとフォーカスエラーになる
 		}
 	}
 	else {
@@ -146,7 +141,6 @@ void __fastcall TSortModeDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftStat
 		else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(SmallCheckBox);
 		else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(DscAttrCheckBox);
 		else if (USAME_TI(KeyStr, "Alt+B")) invert_CheckBox(SortBothCheckBox);
-		else SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#SortDlg"));
 	}
 }
 //---------------------------------------------------------------------------

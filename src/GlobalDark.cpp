@@ -546,55 +546,6 @@ int msgbox_SureAll(UnicodeString msg, bool &app_chk, bool center)
 }
 
 //---------------------------------------------------------------------------
-//以下は擬似的コントロールのアクセラレータ処理に利用
-//---------------------------------------------------------------------------
-bool set_focus_RadioGroup(TRadioGroup *gp)
-{
-	if (!gp->Parent->Visible || !gp->Parent->Enabled || !gp->Visible || !gp->Enabled) return false;
-
-	if (gp->ItemIndex==-1) gp->ItemIndex = 0;
-	gp->Buttons[gp->ItemIndex]->SetFocus();
-	return true;
-}
-//---------------------------------------------------------------------------
-bool set_focus_GroupBox(TGroupBox *gp)
-{
-	if (!gp->Parent->Visible || !gp->Parent->Enabled || !gp->Visible || !gp->Enabled) return false;
-
-	TWinControl *top_wp = NULL;
-	for (int i=0; i<gp->ControlCount; i++) {
-		TControl *cp = gp->Controls[i];
-		if (!cp->InheritsFrom(__classid(TWinControl))) continue;
-		TWinControl *wp = (TWinControl *)cp;
-		if (!top_wp)
-			top_wp = wp;
-		else if (wp->TabOrder < top_wp->TabOrder)
-			top_wp = wp;
-	}
-
-	if (!top_wp) return false;
-
-	if (top_wp->ClassNameIs("TRadioGroup")) {
-		set_focus_RadioGroup((TRadioGroup *)top_wp);
-	}
-	else {
-		top_wp->SetFocus();
-	}
-	return true;
-}
-
-//---------------------------------------------------------------------------
-void invert_CheckBox(TCheckBox *cp)
-{
-	if (!cp->Parent->Visible || !cp->Parent->Enabled || !cp->Visible || !cp->Enabled) return;
-
-	if (cp->Caption.IsEmpty()) {	//ダークモード
-		cp->SetFocus();
-		cp->Checked = !cp->Checked;
-	}
-}
-
-//---------------------------------------------------------------------------
 //ソート方向マークを描画
 //---------------------------------------------------------------------------
 void draw_SortMark(TCanvas *cv, int x, int y,
@@ -745,5 +696,58 @@ void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc,
 	tt_rc.Left	= rc.Left + (rc.Width() - cv->TextWidth(titstr))/2;
 	tt_rc.Top	= (tp->TabPosition==tpBottom)? rc.Bottom - cv->TextHeight(titstr) - 4 : rc.Top + (active? 4 : 2);
 	::DrawText(cv->Handle, titstr.c_str(), -1, &tt_rc, DT_LEFT);
+}
+
+
+//---------------------------------------------------------------------------
+//以下は擬似的コントロールのアクセラレータ処理に利用
+//---------------------------------------------------------------------------
+//TRadioGroup にフォーカス
+//---------------------------------------------------------------------------
+bool set_focus_RadioGroup(TRadioGroup *gp)
+{
+	if (!gp->Parent->Visible || !gp->Parent->Enabled || !gp->Visible || !gp->Enabled || gp->ItemIndex==-1) return false;
+	gp->Buttons[gp->ItemIndex]->SetFocus();
+	return true;
+}
+//---------------------------------------------------------------------------
+//TGroupBox にフォーカス
+//---------------------------------------------------------------------------
+bool set_focus_GroupBox(TGroupBox *gp)
+{
+	if (!gp->Parent->Visible || !gp->Parent->Enabled || !gp->Visible || !gp->Enabled) return false;
+
+	TWinControl *top_wp = NULL;
+	for (int i=0; i<gp->ControlCount; i++) {
+		TControl *cp = gp->Controls[i];
+		if (!cp->InheritsFrom(__classid(TWinControl))) continue;
+		TWinControl *wp = (TWinControl *)cp;
+		if (!top_wp)
+			top_wp = wp;
+		else if (wp->TabOrder < top_wp->TabOrder)
+			top_wp = wp;
+	}
+
+	if (!top_wp || !top_wp->Visible || !top_wp->Enabled) return false;
+
+	if (top_wp->ClassNameIs("TRadioGroup")) {
+		set_focus_RadioGroup((TRadioGroup *)top_wp);
+	}
+	else {
+		top_wp->SetFocus();
+	}
+	return true;
+}
+//---------------------------------------------------------------------------
+//チェックボックスの反転
+//---------------------------------------------------------------------------
+void invert_CheckBox(TCheckBox *cp)
+{
+	if (cp->Parent->Visible && cp->Parent->Enabled
+		&& cp->Visible && cp->Enabled && cp->Caption.IsEmpty())
+	{
+		cp->SetFocus();
+		cp->Checked = !cp->Checked;
+	}
 }
 //---------------------------------------------------------------------------

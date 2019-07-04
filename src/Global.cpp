@@ -442,6 +442,7 @@ UnicodeString GrepFileName;		//出力ファイル名
 UnicodeString GrepAppName;		//起動アプリ名
 UnicodeString GrepAppParam;		//アプリの起動パラメータ
 UnicodeString GrepAppDir;		//アプリの作業ディレクトリ
+bool GrepAppEnabled;			//アプリ有効
 bool GrepAppend;				//既存ファイルに追加
 
 UnicodeString GrepFileFmt;		//ファイル情報の書式
@@ -1884,7 +1885,8 @@ void InitializeGlobal()
 		{_T("G:OutAppName=\"\""),			(TObject*)&GrepAppName},
 		{_T("G:OutAppParam=\"\""),			(TObject*)&GrepAppParam},
 		{_T("G:OutAppDir=\"\""),			(TObject*)&GrepAppDir},
-		{_T("G:GrepAppend=false"),			(TObject*)&GrepAppend},
+		{_T("GrepAppEnabled=true"),			(TObject*)&GrepAppEnabled},
+		{_T("G:GrepAppend=true"),			(TObject*)&GrepAppend},
 		{_T("G:FileFmt=\"$F $L:\""),		(TObject*)&GrepFileFmt},
 		{_T("G:InsStrW=\"\""),				(TObject*)&GrepInsStrW},
 		{_T("G:InsStrW2=\"\""),				(TObject*)&GrepInsStrW2},
@@ -12728,8 +12730,7 @@ bool __fastcall SpecialKeyProc(
 		for (int i=0; i<frm->ComponentCount; i++) {
 			TComponent *cp = frm->Components[i];
 			if (class_is_ComboBox(cp)) {
-				if (((TComboBox*)cp)->DroppedDown)
-					((TComboBox*)cp)->DroppedDown = false;
+				if (((TComboBox*)cp)->DroppedDown) ((TComboBox*)cp)->DroppedDown = false;
 			}
 		}
 

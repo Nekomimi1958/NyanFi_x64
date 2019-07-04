@@ -52,6 +52,7 @@ private:	// ユーザー宣言
 	}
 
 public:		// ユーザー宣言
+	bool DlgInitialized;
 	bool InhOk;
 
 	__fastcall TSortModeDlg(TComponent* Owner);

@@ -53,18 +53,6 @@ object GrepExOptDlg: TGrepExOptDlg
           DesignSize = (
             488
             110)
-          object AppNameEdit: TLabeledEdit
-            Left = 101
-            Top = 20
-            Width = 339
-            Height = 21
-            Anchors = [akLeft, akTop, akRight]
-            EditLabel.Width = 58
-            EditLabel.Height = 13
-            EditLabel.Caption = #23455#34892#12501#12449#12452#12523
-            LabelPosition = lpLeft
-            TabOrder = 0
-          end
           object RefAppBtn: TButton
             Left = 444
             Top = 19
@@ -72,7 +60,7 @@ object GrepExOptDlg: TGrepExOptDlg
             Height = 22
             Anchors = [akTop, akRight]
             Caption = '...'
-            TabOrder = 1
+            TabOrder = 2
             OnClick = RefAppBtnClick
           end
           object AppParamEdit: TLabeledEdit
@@ -86,7 +74,7 @@ object GrepExOptDlg: TGrepExOptDlg
             EditLabel.Height = 13
             EditLabel.Caption = #12497#12521#12513#12540#12479
             LabelPosition = lpLeft
-            TabOrder = 2
+            TabOrder = 3
           end
           object AppDirEdit: TLabeledEdit
             Left = 101
@@ -98,7 +86,7 @@ object GrepExOptDlg: TGrepExOptDlg
             EditLabel.Height = 13
             EditLabel.Caption = #20316#26989#12487#12451#12524#12463#12488#12522
             LabelPosition = lpLeft
-            TabOrder = 3
+            TabOrder = 4
           end
           object RefDirBtn: TButton
             Left = 444
@@ -107,8 +95,23 @@ object GrepExOptDlg: TGrepExOptDlg
             Height = 22
             Anchors = [akTop, akRight]
             Caption = '...'
-            TabOrder = 4
+            TabOrder = 5
             OnClick = RefDirBtnClick
+          end
+          object AppEnabledCheckBox: TCheckBox
+            Left = 12
+            Top = 22
+            Width = 87
+            Height = 17
+            Caption = #23455#34892#12501#12449#12452#12523
+            TabOrder = 0
+          end
+          object AppNameEdit: TEdit
+            Left = 101
+            Top = 20
+            Width = 339
+            Height = 21
+            TabOrder = 1
           end
         end
         object FileGroupBox: TGroupBox
@@ -324,11 +327,12 @@ object GrepExOptDlg: TGrepExOptDlg
         BevelOuter = bvNone
         TabOrder = 0
         object Label1: TLabel
-          Left = 181
+          Left = 172
           Top = 33
-          Width = 210
+          Width = 321
           Height = 13
-          Caption = '$F '#12501#12449#12452#12523#21517'/  $L '#34892#30058#21495'/  \t '#12479#12502'/  \n '#25913#34892
+          Alignment = taRightJustify
+          Caption = '$F '#12501#12449#12452#12523#21517'/  $B '#12497#12473#28961#12375#12501#12449#12452#12523#21517'/  $L '#34892#30058#21495'/  \t '#12479#12502'/  \n '#25913#34892
         end
         object Label2: TLabel
           Left = 16
@@ -339,7 +343,7 @@ object GrepExOptDlg: TGrepExOptDlg
         end
         object InsStrWEdit: TLabeledEdit
           Left = 180
-          Top = 57
+          Top = 59
           Width = 120
           Height = 21
           EditLabel.Width = 131
@@ -351,7 +355,7 @@ object GrepExOptDlg: TGrepExOptDlg
         end
         object InsStrW2Edit: TLabeledEdit
           Left = 339
-          Top = 57
+          Top = 59
           Width = 120
           Height = 21
           EditLabel.Width = 20
@@ -362,9 +366,9 @@ object GrepExOptDlg: TGrepExOptDlg
           OnChange = SampleChange
         end
         object FileFmtEdit: TLabeledEdit
-          Left = 180
+          Left = 112
           Top = 8
-          Width = 313
+          Width = 381
           Height = 21
           EditLabel.Width = 92
           EditLabel.Height = 13
@@ -389,7 +393,7 @@ object GrepExOptDlg: TGrepExOptDlg
         end
         object TrimLeftCheckBox: TCheckBox
           Left = 16
-          Top = 93
+          Top = 95
           Width = 180
           Height = 17
           Caption = #34892#38957#12398#12479#12502#12420#31354#30333#12434#21066#38500
@@ -398,7 +402,7 @@ object GrepExOptDlg: TGrepExOptDlg
         end
         object RepTabCheckBox: TCheckBox
           Left = 200
-          Top = 93
+          Top = 95
           Width = 179
           Height = 18
           Caption = #12479#12502#12434#31354#30333'1'#25991#23383#12395#32622#25563
@@ -407,7 +411,7 @@ object GrepExOptDlg: TGrepExOptDlg
         end
         object RepCrCheckBox: TCheckBox
           Left = 16
-          Top = 124
+          Top = 126
           Width = 147
           Height = 17
           Caption = #25913#34892#12434#25991#23383#21015#12395#32622#25563
@@ -416,7 +420,7 @@ object GrepExOptDlg: TGrepExOptDlg
         end
         object RepCrEdit: TEdit
           Left = 180
-          Top = 121
+          Top = 123
           Width = 120
           Height = 21
           TabOrder = 6
