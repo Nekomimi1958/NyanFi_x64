@@ -21615,6 +21615,7 @@ void __fastcall TNyanFiForm::AssignToMenuItem(TMenuItem *m_item, TMenuItem *src_
 	else if (src_m->OnClick && src_m->OnClick!=ExtMenuClick)
 		mp->OnClick = src_m->OnClick;
 
+	mp->OnAdvancedDrawItem = PopMenuAdvancedDrawItem;
 	m_item->Add(mp);
 
 	if (src_m->Count>0) {
