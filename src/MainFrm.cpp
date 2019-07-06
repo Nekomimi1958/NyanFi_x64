@@ -1574,17 +1574,19 @@ void __fastcall TNyanFiForm::WmMenuChar(TMessage &msg)
 	}
 	else {
 		if (msg.WParamHi==MF_POPUP) {
-			TForm::Dispatch(&msg);				//通常処理(アイコン表示の場合に必要)
+			TForm::Dispatch(&msg);		//通常処理(アイコン表示の場合に必要)
 		}
 		else {
-			//メインメニューをオーナー描画しているのでアクセラレータの処理が必要
 			msg.Result = MAKELONG(0, MNC_CLOSE);
+			//メインメニューをオーナー描画しているためアクセラレータ処理が必要
 			if (Menu && MainMenu1->Handle==(HMENU)msg.LParam) {
+				int idx = -1;
 				for (int i=0; i<MainMenu1->Items->Count; i++) {
-					if (ContainsText(MainMenu1->Items->Items[i]->Caption,
-							UnicodeString().sprintf(_T("&%c"), msg.WParamLo)))
-					{
-						msg.Result = MAKELONG(i, MNC_EXECUTE);
+					TMenuItem *mp = MainMenu1->Items->Items[i];
+					if (!mp->Visible) continue;
+					idx++;
+					if (ContainsText(mp->Caption, UnicodeString().sprintf(_T("&%c"), msg.WParamLo))) {
+						msg.Result = MAKELONG(idx, MNC_EXECUTE);
 						break;
 					}
 				}
