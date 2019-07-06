@@ -356,6 +356,13 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 
 	LogWndListBox  = LogListBox;
 
+	//メインメニューの OnAdvancedDrawItem を設定
+	for (int i=0; i<MainMenu1->Items->Count; i++) {
+		SetManuOwnerDrawEvent(MainMenu1->Items->Items[i]);
+		MainMenu1->Items->Items[i]->OnAdvancedDrawItem = MainMenuAdvancedDrawItem;
+		MainMenu1->Items->Items[i]->OnMeasureItem	   = MainMenuMeasureItem;
+	}
+
 	FilterComboBox->Tag   = CBTAG_HISTORY;
 	GrepMaskComboBox->Tag = CBTAG_HISTORY;
 
@@ -1566,10 +1573,23 @@ void __fastcall TNyanFiForm::WmMenuChar(TMessage &msg)
 		ContextMenu3->HandleMenuMsg2(msg.Msg, msg.WParam, msg.LParam, (LRESULT*)&msg.Result);
 	}
 	else {
-		if (msg.WParamHi==MF_POPUP)
+		if (msg.WParamHi==MF_POPUP) {
 			TForm::Dispatch(&msg);				//通常処理(アイコン表示の場合に必要)
-		else
-			msg.Result = (MNC_CLOSE << 16);		//ビープ音が鳴らないようにする
+		}
+		else {
+			//メインメニューをオーナー描画しているのでアクセラレータの処理が必要
+			msg.Result = MAKELONG(0, MNC_CLOSE);
+			if (Menu && MainMenu1->Handle==(HMENU)msg.LParam) {
+				for (int i=0; i<MainMenu1->Items->Count; i++) {
+					if (ContainsText(MainMenu1->Items->Items[i]->Caption,
+							UnicodeString().sprintf(_T("&%c"), msg.WParamLo)))
+					{
+						msg.Result = MAKELONG(i, MNC_EXECUTE);
+						break;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -2782,6 +2802,82 @@ bool __fastcall TNyanFiForm::ApplicationEvents1Help(WORD Command, NativeInt Data
 		CallHelp = false;
 	}
 	return true;
+}
+
+//---------------------------------------------------------------------------
+//メインメニューの描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::MainMenuMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width, int &Height)
+{
+	TMenuItem *mp = (TMenuItem*)Sender;
+	Width = ACanvas->TextWidth(ReplaceStr(mp->Caption, "&", EmptyStr)) + Scaled8;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::MainMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
+	const TRect &ARect, TOwnerDrawState State)
+{
+	TMenuItem *mp = (TMenuItem*)Sender;
+	ACanvas->Brush->Color = (State.Contains(odSelected) || State.Contains(odHotLight))? col_htMenuBar : col_bgMenuBar;
+	ACanvas->Font->Color  = (State.Contains(odGrayed) || State.Contains(odDisabled))? clGray : col_fgMenuBar;
+	ACanvas->FillRect(ARect);
+
+	TRect rc = ARect;
+	rc.Top	+= (ARect.Height() - ACanvas->TextHeight("Q")) / 2;
+	rc.Left += (ARect.Width() - ACanvas->TextWidth(ReplaceStr(mp->Caption, "&", EmptyStr))) / 2;
+	UINT opt = DT_LEFT;  if (State.Contains(odNoAccel))  opt |= DT_HIDEPREFIX;
+	::DrawText(ACanvas->Handle, mp->Caption.c_str(), -1, &rc, opt);
+
+	if (SameText(mp->Name, "HelpMenu")) {
+		ACanvas->Brush->Color = col_bgMenuBar;
+		rc = ARect;
+		rc.Left  = rc.Right;
+		rc.Right = rc.Left + ClientWidth;
+		ACanvas->FillRect(rc);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::PopMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas, 
+	const TRect &ARect, TOwnerDrawState State)
+{
+	TMenuItem *mp = (TMenuItem*)Sender;
+	bool is_hl = (State.Contains(odSelected) || State.Contains(odHotLight));
+	ACanvas->Brush->Color = is_hl? (IsDarkMode? dcl_Highlight : scl_MenuSelect) : (IsDarkMode? dcl_Menu : scl_Menu);
+	ACanvas->Font->Color  = (State.Contains(odGrayed) || State.Contains(odDisabled))?
+								clGray : (IsDarkMode? dcl_MenuText : scl_MenuText);
+	ACanvas->FillRect(ARect);
+
+	//セパレータ
+	if (SameStr(mp->Caption, "-")) {
+		TRect rc = ARect;
+		rc.Left += ::GetSystemMetrics(SM_CYMENU);
+		draw_Separator(ACanvas, rc);
+	}
+	else {
+		//キャプション
+		TRect rc = ARect;
+		int hi = rc.Height();
+		rc.Left += (hi + Scaled8);
+		int yp = ARect.Top + (hi - ACanvas->TextHeight("Q")) / 2;
+		rc.Top = yp;
+		UINT opt = DT_LEFT;  if (State.Contains(odNoAccel))  opt |= DT_HIDEPREFIX;
+		::DrawText(ACanvas->Handle, mp->Caption.c_str(), -1, &rc, opt);
+
+		//アイコン
+		int idx = mp->ImageIndex;
+		if (idx>=0 && idx<IconImgListP->Count) {
+			IconImgListP->Draw(ACanvas, ARect.Left + Scaled4, yp, mp->ImageIndex);
+		}
+		//チェックボックス
+		else if (mp->Checked) {
+			ACanvas->Brush->Color = IsDarkMode? (is_hl? dcl_Highlight2 : dcl_Highlight)
+											  : (is_hl? scl_MenuSelect2 : scl_MenuSelect);
+			rc = ARect;
+			rc.Right = rc.Left + hi;
+			ACanvas->FillRect(rc);
+			UnicodeString chk = _T("\u2713");
+			ACanvas->TextOut(rc.Left + (hi - ACanvas->TextWidth(chk))/2, yp, chk);
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -6396,7 +6492,7 @@ void __fastcall TNyanFiForm::PopSelectItemDrawItem(TObject *Sender, TCanvas *ACa
 		const TRect &ARect, bool Selected)
 {
 	TMenuItem *mp = (TMenuItem*)Sender;
-	ACanvas->Brush->Color = Selected? (IsDarkMode? dcl_Highlight : scl_Highlight)
+	ACanvas->Brush->Color = Selected? (IsDarkMode? dcl_Highlight : scl_MenuSelect)
 									: (IsDarkMode? dcl_Menu : scl_Menu);
 	ACanvas->FillRect(ARect);
 
@@ -6428,8 +6524,7 @@ void __fastcall TNyanFiForm::PopSelectItemDrawItem(TObject *Sender, TCanvas *ACa
 			xp += ScaledInt(24);
 		}
 
-		ACanvas->Font->Color = Selected? (IsDarkMode? dcl_HighlightText : scl_HighlightText)
-									   : (IsDarkMode? dcl_MenuText : scl_MenuText);
+		ACanvas->Font->Color = IsDarkMode? dcl_MenuText : scl_MenuText;
 		bool k_flag = remove_top_s(lbuf, '&');
 		UnicodeString sbuf = split_pre_tab(lbuf);
 		//呼び出しキー
@@ -6578,6 +6673,16 @@ void __fastcall TNyanFiForm::SubListBoxExit(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SetManuOwnerDrawEvent(TMenuItem *mp)
+{
+	for (int i=0; i<mp->Count; i++) {
+		TMenuItem *ip = mp->Items[i];
+		ip->OnAdvancedDrawItem = PopMenuAdvancedDrawItem;
+		if (ip->Count>0) SetManuOwnerDrawEvent(ip);
+	}
+}
+
+//---------------------------------------------------------------------------
 //追加メニューを設定
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetExtMenuItem(TMenuItem *m_item,
@@ -6594,7 +6699,13 @@ void __fastcall TNyanFiForm::SetExtMenuItem(TMenuItem *m_item,
 	//追加項目を登録
 	if (lst->Count>0) {
 		TMenuItem *pp = m_item;
-		pp->NewBottomLine();
+
+		//セパレータ
+		TMenuItem *sp = new TMenuItem(m_item);
+		sp->Caption  = "-";
+		sp->OnAdvancedDrawItem = PopMenuAdvancedDrawItem;
+		pp->Add(sp);
+
 		for (int i=0; i<lst->Count; i++) {
 			if (s_idx!=-1 && i<=s_idx) continue;
 			TStringDynArray itm_buf = get_csv_array(lst->Strings[i], 6, true);
@@ -6613,6 +6724,7 @@ void __fastcall TNyanFiForm::SetExtMenuItem(TMenuItem *m_item,
 				mp->Caption    = tit;
 				mp->Tag 	   = tag_base + i;
 				mp->ImageIndex = add_IconImage(((tag_base==EXTMENU_BASE)? itm_buf[5] : EmptyStr), IconImgListP);
+				mp->OnAdvancedDrawItem = PopMenuAdvancedDrawItem;
 				pp->Add(mp);
 				pp = mp;
 			}
@@ -6630,6 +6742,7 @@ void __fastcall TNyanFiForm::SetExtMenuItem(TMenuItem *m_item,
 				UnicodeString fnam = (tag_base==EXTTOOL_BASE)? itm_buf[1] :
 									 (tag_base==EXTMENU_BASE)? itm_buf[5] : EmptyStr;
 				mp->ImageIndex = add_IconImage(fnam, IconImgListP);
+				mp->OnAdvancedDrawItem = PopMenuAdvancedDrawItem;
 				pp->Add(mp);
 			}
 		}
@@ -21619,6 +21732,7 @@ void __fastcall TNyanFiForm::ExePopMenuList(
 			TMenuItem *mp = new TMenuItem(ExPopupMenu);
 			mp->Caption    = tit;
 			mp->ImageIndex = (m_buf.Length>=3)? add_IconImage(m_buf[2], IconImgListP) : -1;
+			mp->OnAdvancedDrawItem = PopMenuAdvancedDrawItem;
 			pp->Add(mp);
 			pp = mp;
 		}
@@ -21649,6 +21763,7 @@ void __fastcall TNyanFiForm::ExePopMenuList(
 			mp->Caption    = Trim(m_buf[0]);
 			mp->Enabled    = !is_match_regex_i(tit, _T("^\\[.+\\]\\s不明なエイリアス"));
 			mp->ImageIndex = (m_buf.Length>=3)? add_IconImage(m_buf[2], IconImgListP) : -1;
+			mp->OnAdvancedDrawItem = PopMenuAdvancedDrawItem;
 			pp->Add(mp);
 		}
 	}

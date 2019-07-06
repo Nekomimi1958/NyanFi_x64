@@ -66,7 +66,7 @@ object FindTextDlg: TFindTextDlg
     Left = 12
     Top = 42
     Width = 211
-    Height = 18
+    Height = 17
     Caption = #22823#25991#23383#12539#23567#25991#23383#12434#21306#21029'(&C)'
     TabOrder = 3
     OnClick = FindOptChangedClick

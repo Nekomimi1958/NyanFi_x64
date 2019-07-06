@@ -404,7 +404,7 @@ object GrepExOptDlg: TGrepExOptDlg
           Left = 200
           Top = 95
           Width = 179
-          Height = 18
+          Height = 17
           Caption = #12479#12502#12434#31354#30333'1'#25991#23383#12395#32622#25563
           TabOrder = 4
           OnClick = SampleChange

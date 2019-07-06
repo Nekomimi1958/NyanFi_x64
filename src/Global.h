@@ -1088,6 +1088,9 @@ extern TColor col_GitHash;
 extern TColor col_GitIns;
 extern TColor col_GitDel;
 
+extern TColor col_bgMenuBar;
+extern TColor col_fgMenuBar;
+extern TColor col_htMenuBar;
 extern TColor col_bgTlBar1;
 extern TColor col_bgTlBar2;
 extern TColor col_fgTlBar;

@@ -2231,6 +2231,7 @@ object NyanFiForm: TNyanFiForm
   end
   object MainMenu1: TMainMenu
     AutoHotkeys = maManual
+    OwnerDraw = True
     Left = 32
     Top = 136
     object FileMenu: TMenuItem
@@ -5626,6 +5627,7 @@ object NyanFiForm: TNyanFiForm
   object ExPopupMenu: TPopupMenu
     AutoPopup = False
     Images = IconImgListP
+    OwnerDraw = True
     Left = 139
     Top = 137
   end

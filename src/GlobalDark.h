@@ -51,10 +51,13 @@ extern TColor scl_BtnShadow;
 extern TColor scl_BtnHighlight;
 extern TColor scl_Menu;
 extern TColor scl_MenuText;
+extern TColor scl_MenuSelect;
+extern TColor scl_MenuSelect2;
 
 extern TColor dcl_Window;
 extern TColor dcl_WindowText;
 extern TColor dcl_Highlight;
+extern TColor dcl_Highlight2;
 extern TColor dcl_HighlightText;
 extern TColor dcl_BtnFace;
 extern TColor dcl_BtnText;

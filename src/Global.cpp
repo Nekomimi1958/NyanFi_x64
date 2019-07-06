@@ -865,11 +865,13 @@ TColor col_GitHash;		//  ハッシュ
 TColor col_GitIns;		//  - 行
 TColor col_GitDel;		//  + 行
 
+TColor col_bgMenuBar;	//メニューバーの背景色
+TColor col_fgMenuBar;	//メニューバーの文字色
+TColor col_htMenuBar;	//メニューバーのホットトラッキング色
 TColor col_bgTlBar1;	//ツールバーのグラデーション開始色
 TColor col_bgTlBar2;	//ツールバーのグラデーション終了色
 TColor col_fgTlBar;		//ツールバーの文字色
-TColor col_htTlBar;		//ツールバーホットトラッキング色
-
+TColor col_htTlBar;		//ツールバーのホットトラッキング色
 TColor col_bgSttBar;	//ステータスバーの背景色
 TColor col_fgSttBar;	//ステータスバーの文字色
 TColor col_bgInfHdr;	//情報ヘッダの背景色
@@ -9622,16 +9624,19 @@ void set_col_from_ColorList()
 		{&col_GitHash,	_T("GitHash"),		clGray},
 		{&col_GitIns,	_T("GitIns"),		clGreen},
 		{&col_GitDel,	_T("GitDel"),		clRed},
+		{&col_bgMenuBar,_T("bgMenuBar"),	clMenu},
+		{&col_fgMenuBar,_T("fgMenuBar"),	clMenuText},
+		{&col_htMenuBar,_T("htMenuBar"),	TColor(RGB(0x91,0xc9,0xf7))},
 		{&col_bgTlBar1,	_T("bgTlBar1"),		clWhite},
 		{&col_bgTlBar2,	_T("bgTlBar2"),		clWebGainsboro},
 		{&col_fgTlBar,	_T("fgTlBar"),		clBlack},
 		{&col_htTlBar,	_T("htTlBar"),		TColor(0x00efd3c6)},
-		{&col_bgSttBar,	_T("bgSttBar"),		scl_BtnFace},
-		{&col_fgSttBar,	_T("fgSttBar"),		scl_BtnText},
-		{&col_bgInfHdr,	_T("bgInfHdr"),		scl_BtnFace},
-		{&col_fgInfHdr,	_T("fgInfHdr"),		scl_BtnText},
-		{&col_bgChInf,	_T("bgChInf"),		scl_Window},
-		{&col_fgChInf,	_T("fgChInf"),		scl_BtnText},
+		{&col_bgSttBar,	_T("bgSttBar"),		clBtnFace},
+		{&col_fgSttBar,	_T("fgSttBar"),		clBtnText},
+		{&col_bgInfHdr,	_T("bgInfHdr"),		clBtnFace},
+		{&col_fgInfHdr,	_T("fgInfHdr"),		clBtnText},
+		{&col_bgChInf,	_T("bgChInf"),		clWindow},
+		{&col_fgChInf,	_T("fgChInf"),		clBtnText},
 		{&col_bgEdBox,	_T("bgEdBox"),		col_None},
 		{&col_fgEdBox,	_T("fgEdBox"),		col_None},
 		{&col_ModalScr,	_T("ModalScr"),		clBlack},

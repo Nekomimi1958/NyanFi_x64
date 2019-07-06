@@ -52,11 +52,14 @@ TColor scl_BtnShadow;
 TColor scl_BtnHighlight;
 TColor scl_Menu;
 TColor scl_MenuText;
+TColor scl_MenuSelect;
+TColor scl_MenuSelect2;
 
 //ダーク色
 TColor dcl_Window;
 TColor dcl_WindowText;
 TColor dcl_Highlight;
+TColor dcl_Highlight2;
 TColor dcl_HighlightText;
 TColor dcl_BtnFace;
 TColor dcl_BtnText;
@@ -91,10 +94,13 @@ void InitializeSysColor()
 	scl_BtnHighlight  = clBtnHighlight;
 	scl_Menu		  = clMenu;
 	scl_MenuText	  = clMenuText;
+	scl_MenuSelect	  =	TColor(RGB(0x91,0xc9,0xf7));
+	scl_MenuSelect2	  =	TColor(RGB(0x56,0xb0,0xfa));
 
 	dcl_Window		  = TColor(RGB(0x20, 0x20, 0x20));
 	dcl_WindowText	  = clWhite;
 	dcl_Highlight	  = TColor(RGB(0x41, 0x41, 0x41));
+	dcl_Highlight2	  = TColor(RGB(0x77, 0x77, 0x77));
 	dcl_HighlightText = clWhite;
 	dcl_BtnFace 	  = TColor(RGB(0x33, 0x33, 0x33));
 	dcl_BtnText 	  = clWhite;

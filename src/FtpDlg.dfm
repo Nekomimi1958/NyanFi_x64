@@ -435,7 +435,7 @@ object FtpConnectDlg: TFtpConnectDlg
           Left = 302
           Top = 160
           Width = 280
-          Height = 18
+          Height = 17
           Caption = #12507#12473#12488#12363#12425#12398#24540#31572#12513#12483#12475#12540#12472#12434#12525#12464#12395#34920#31034
           TabOrder = 6
         end

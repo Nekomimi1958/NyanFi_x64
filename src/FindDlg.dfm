@@ -947,9 +947,9 @@ object FindFileDlg: TFindFileDlg
           74)
         object PrpRegExCheckBox: TCheckBox
           Left = 220
-          Top = 46
+          Top = 48
           Width = 84
-          Height = 21
+          Height = 17
           Anchors = [akTop, akRight]
           Caption = #27491#35215#34920#29694
           TabOrder = 3
@@ -1058,9 +1058,9 @@ object FindFileDlg: TFindFileDlg
           166)
         object ExifRegExCheckBox: TCheckBox
           Left = 220
-          Top = 48
+          Top = 50
           Width = 84
-          Height = 21
+          Height = 17
           Anchors = [akTop, akRight]
           Caption = #27491#35215#34920#29694
           TabOrder = 3
@@ -1231,9 +1231,9 @@ object FindFileDlg: TFindFileDlg
         end
         object TxtRegExCheckBox: TCheckBox
           Left = 220
-          Top = 46
+          Top = 48
           Width = 84
-          Height = 21
+          Height = 17
           Anchors = [akTop, akRight]
           Caption = #27491#35215#34920#29694
           TabOrder = 3
@@ -1395,7 +1395,7 @@ object FindFileDlg: TFindFileDlg
           Left = 195
           Top = 20
           Width = 142
-          Height = 18
+          Height = 17
           Caption = #12503#12525#12475#12473#12364#20351#29992#20013
           TabOrder = 1
           OnClick = CondChangeUpdate

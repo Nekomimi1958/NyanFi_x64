@@ -1845,11 +1845,14 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TabControl1Resize(TObject *Sender);
 	void __fastcall RefDirBtnKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall GrepPageControlDrawTab(TCustomTabControl *Control, int TabIndex,
-          const TRect &Rect, bool Active);
-	void __fastcall GrepStatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-          const TRect &Rect);
-
-
+		const TRect &Rect, bool Active);
+	void __fastcall GrepStatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
+	void __fastcall MainMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
+		const TRect &ARect, TOwnerDrawState State);
+	void __fastcall PopMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
+		const TRect &ARect, TOwnerDrawState State);
+	void __fastcall MainMenuMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width,
+          int &Height);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -2205,6 +2208,7 @@ private:	// ユーザー宣言
 
 	void __fastcall UpdateFileListRect();
 
+	void __fastcall SetManuOwnerDrawEvent(TMenuItem *mp);
 	void __fastcall SetExtMenuItem(TMenuItem *m_item, TStringList *lst, int tag_base, int s_idx = -1);
 	void __fastcall ExePopMenuList(TStringList *lst, bool is_execmd = false, TControl *cp = NULL);
 	UnicodeString __fastcall get_MenuItemStr(TStringDynArray menu_lst);

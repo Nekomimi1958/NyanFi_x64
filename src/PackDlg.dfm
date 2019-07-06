@@ -179,9 +179,9 @@ object PackArcDlg: TPackArcDlg
   end
   object SureSameCheckBox: TCheckBox
     Left = 346
-    Top = 307
+    Top = 309
     Width = 77
-    Height = 21
+    Height = 17
     Caption = #30906#35469
     TabOrder = 6
   end

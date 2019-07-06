@@ -25,6 +25,7 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *RefDirBtn;
 	TButton *RefLogBtn;
 	TButton *RefOutBtn;
+	TCheckBox *AppEnabledCheckBox;
 	TCheckBox *AppendCheckBox;
 	TCheckBox *AppendLogCheckBox;
 	TCheckBox *BakRepCheckBox;
@@ -33,6 +34,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *RepTabCheckBox;
 	TCheckBox *SaveLogCheckBox;
 	TCheckBox *TrimLeftCheckBox;
+	TEdit *AppNameEdit;
 	TEdit *RepCrEdit;
 	TGroupBox *AppGroupBox;
 	TGroupBox *BakGroupBox;
@@ -62,8 +64,6 @@ __published:	// IDE で管理されるコンポーネント
 	TTabSheet *OutFormSheet;
 	TTabSheet *OutModeSheet;
 	TTabSheet *ReplaceSheet;
-	TCheckBox *AppEnabledCheckBox;
-	TEdit *AppNameEdit;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
