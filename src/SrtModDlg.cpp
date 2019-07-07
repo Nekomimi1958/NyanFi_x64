@@ -28,6 +28,7 @@ void __fastcall TSortModeDlg::FormCreate(TObject *Sender)
 void __fastcall TSortModeDlg::FormShow(TObject *Sender)
 {
 	DlgInitialized = false;
+	InhOk = false;
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 
@@ -91,8 +92,13 @@ void __fastcall TSortModeDlg::SortModeRadioGroupClick(TObject *Sender)
 {
 	if (!DlgInitialized) return;
 
-	Changed 	= true;
-	ModalResult = mrOk;
+	if (!InhOk) {	//TNyanFiForm::ApplicationEvents1Message でカーソルキーを抑止
+		Changed = true;
+		ModalResult = mrOk;
+	}
+	else {
+		InhOk = false;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::OptCheckBoxClick(TObject *Sender)
