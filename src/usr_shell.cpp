@@ -763,8 +763,8 @@ UnicodeString UserShell::ShowContextMenu(
 									::ZeroMemory(&bmihdr, sizeof(BITMAPINFOHEADER));
 									BITMAPINFO bmi;
 									bmihdr.biSize	  = sizeof(BITMAPINFOHEADER);
-									bmihdr.biWidth	  = 16;
-									bmihdr.biHeight   = 16;
+									bmihdr.biWidth	  = 16 * ScrScale;
+									bmihdr.biHeight   = 16 * ScrScale;
 									bmihdr.biPlanes   = 1;
 									bmihdr.biBitCount = 32;
 									bmi.bmiHeader = bmihdr;
@@ -772,7 +772,7 @@ UnicodeString UserShell::ShowContextMenu(
 									HBITMAP hBmp = ::CreateDIBSection(NULL, (LPBITMAPINFO)&bmi, DIB_RGB_COLORS, &lpBits, NULL, 0);
 									HDC hdcMem = ::CreateCompatibleDC(NULL);
 									HBITMAP hBmpPrev = (HBITMAP)::SelectObject(hdcMem, hBmp);
-									::DrawIconEx(hdcMem, 0, 0, sif.hIcon, 16, 16, 0, NULL, DI_NORMAL);
+									::DrawIconEx(hdcMem, 0, 0, sif.hIcon, 16 * ScrScale, 16 * ScrScale, 0, NULL, DI_NORMAL);
 									::SelectObject(hdcMem, hBmpPrev);
 									::DeleteDC(hdcMem);
 									mii.fMask = MIIM_BITMAP;

@@ -111,6 +111,7 @@ object GrepExOptDlg: TGrepExOptDlg
             Top = 20
             Width = 339
             Height = 21
+            Anchors = [akLeft, akTop, akRight]
             TabOrder = 1
           end
         end

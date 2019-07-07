@@ -67,7 +67,7 @@ int __fastcall MarkList::SearchControl(TWinControl *ctrl, UnicodeString wd)
 				rc.SetWidth(w);
 				rc.SetHeight(h);
 				InflateRect(rc, 2, 0);
-				rc.Offset(-16, 0);
+				rc.Offset(-16 * ScrScale, 0);
 			}
 			InflateRect(rc, 2, 2);
 

@@ -823,6 +823,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	SwatchPanel->SetPanelSize16x8(15);
 
 	set_ComboBox_AutoComp(this);
+	SetKeyComboBox();
 
 	DlgInitialized = false;
 	cursor_HourGlass();
@@ -1014,7 +1015,6 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 
 	if (!KeyKeyLabel) KeyKeyLabel = AttachLabelToGroup(KeyKeyGroupBox, "ƒL[");
 	UpdateMaxItemWidth();
-	SetKeyComboBox();
 
 	SetWinTheme();
 
@@ -1186,10 +1186,15 @@ void __fastcall TOptionDlg::SetKeyComboBox()
 	Key2ComboBox->Items->Insert(0, EmptyStr);
 	Key2ComboBox->Enabled = false;
 
+	UnicodeString k = HotKeyComboBox->Text;
 	make_KeyList(HotKeyComboBox->Items);
 	HotKeyComboBox->Items->Insert(0, EmptyStr);
+	if (!k.IsEmpty()) HotKeyComboBox->ItemIndex = HotKeyComboBox->Items->IndexOf(k);
+
+	k = AppKeyComboBox->Text;
 	make_KeyList(AppKeyComboBox->Items);
 	AppKeyComboBox->Items->Insert(0, EmptyStr);
+	if (!k.IsEmpty()) AppKeyComboBox->ItemIndex = AppKeyComboBox->Items->IndexOf(k);
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::KeybdRadioGroupClick(TObject *Sender)

@@ -203,6 +203,8 @@ void SetDarkWinTheme(TWinControl *wp)
 	TColor bg_win	= get_WinColor();
 	TColor fg_txt   = get_TextColor();
 
+	double scale = Screen->PixelsPerInch / 96.0;
+
 	if (wp->InheritsFrom(__classid(TForm))) {
 		TForm *fp = (TForm*)wp;
 		fp->Color = bg_panel;
@@ -328,7 +330,7 @@ void SetDarkWinTheme(TWinControl *wp)
 				lp->Font->Color = fg_label;
 				lp->Caption = cp->Caption;
 				lp->Anchors = cp->Anchors;
-				lp->Left	= cp->Left + 16;
+				lp->Left	= cp->Left + 16 * scale;
 				lp->Top 	= cp->Top;
 				cp->Caption = EmptyStr;
 				lp->BringToFront();
@@ -347,7 +349,7 @@ void SetDarkWinTheme(TWinControl *wp)
 				lp->Color		= bg_panel;
 				lp->Font->Color = fg_label;
 				lp->Caption = cp->Caption;
-				lp->Left	= cp->Left + 16;
+				lp->Left	= cp->Left + 16 * scale;
 				lp->Top 	= cp->Top;
 				cp->Caption = EmptyStr;
 				lp->BringToFront();
@@ -369,14 +371,13 @@ TLabel* AttachLabelToGroup(TWinControl *wp,
 
 	UnicodeString cap_str;
 	TWinControl *parent;
-	TFont		*font;
 	int xp, yp;
-	int size8 = (int)(8 * Screen->PixelsPerInch / 96.0);
+	double scale = Screen->PixelsPerInch / 96.0;
+	int size8 = (int)(8 * scale);
 
 	if (wp->ClassNameIs("TGroupBox")) {
 		TGroupBox *gp = (TGroupBox *)wp;
 		parent = gp->Parent;
-		font = gp->Font;
 		xp = gp->Left + size8;
 		yp = gp->Top - 1;
 		gp->Color		= get_PanelColor();
@@ -387,7 +388,6 @@ TLabel* AttachLabelToGroup(TWinControl *wp,
 	else if (wp->ClassNameIs("TRadioGroup")) {
 		TRadioGroup *gp = (TRadioGroup *)wp;
 		parent = gp->Parent;
-		font = gp->Font;
 		xp = gp->Left + size8;
 		yp = gp->Top - 1;
 		gp->Color		= get_PanelColor();
@@ -403,9 +403,10 @@ TLabel* AttachLabelToGroup(TWinControl *wp,
 		ret_p		= new TLabel(parent);
 		TPanel *pp	= new TPanel(parent);
 		pp->Parent	= parent;
-		ret_p->Font->Assign(font);
-		ret_p->Color	   = get_PanelColor();
+		ret_p->Font->Assign(Application->DefaultFont);
+		if (scale>1.0) ret_p->Font->Size = (int)(ret_p->Font->Size/scale);	//※
 		ret_p->Font->Color = get_LabelColor();
+		ret_p->Color	   = get_PanelColor();
 		pp->Left		   = xp;
 		pp->Top 		   = yp;
 		pp->Color		   = get_PanelColor();
