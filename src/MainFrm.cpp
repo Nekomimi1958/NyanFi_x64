@@ -3008,7 +3008,7 @@ void __fastcall TNyanFiForm::GrepStatusBarDrawPanel(TStatusBar *StatusBar, TStat
 	cv->Font->Assign(StatusBar->Font);
 	cv->Brush->Color = get_PanelColor();
 	cv->FillRect(Rect);
-	cv->Font->Color =  IsDarkMode? dcl_BtnText : scl_BtnText;
+	cv->Font->Color  = get_LabelColor();
 	cv->TextOut(Rect.Left + 2, Rect.Top, Panel->Text);
 }
 

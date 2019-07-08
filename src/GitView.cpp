@@ -78,22 +78,19 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 	ShowRemoteAction->Checked	= IniFile->ReadBoolGen(_T("GitViewShowRemote"));
 	ShowAuthorAction->Checked	= IniFile->ReadBoolGen(_T("GitViewShowAuthor"));
 
+	SetDarkWinTheme(this);
 	CommitSplitter->Color = col_Splitter;
 	DiffSplitter->Color   = col_Splitter;
-
 	BranchListBox->Color  = col_bgList;
 	CommitListBox->Color  = col_bgList;
 	DiffListBox->Color	  = col_bgList;
+	FindCommitEdit->Color = get_WinColor(true);
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::WmFormShowed(TMessage &msg)
 {
-	if (IsDarkMode) 
-		SetDarkWinTheme(FindCommitEdit);
-	else
-		FindCommitEdit->Color = col_Invalid;
 	Repaint();
 
 	AutoCrlf   = SameText(Trim(GitExeStr("config --get core.autocrlf")), "true");

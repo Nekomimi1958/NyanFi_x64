@@ -1202,7 +1202,9 @@ void XCMD_Set(UnicodeString prm)
 		}
 	}
 	//‘ã“ü
-	else rstr = nstr;
+	else {
+		rstr = nstr;
+	}
 
 	//•Ï”XV
 	XCMD_VarList->Values[vnam] = rstr;

@@ -97,6 +97,8 @@ void __fastcall TGraphForm::FormShow(TObject *Sender)
 		msgbox_ERR("—LŒø‚È”’l€–Ú‚ª‚ ‚è‚Ü‚¹‚ñ");
 		::PostMessage(Handle, WM_CLOSE, 0, 0);
 	}
+
+	SetDarkWinTheme(this);
 }
 
 //---------------------------------------------------------------------------

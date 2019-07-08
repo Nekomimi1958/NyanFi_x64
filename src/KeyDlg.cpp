@@ -52,7 +52,7 @@ void __fastcall TKeyListDlg::FormShow(TObject *Sender)
 
 	if (!UnInitializing) KeyTabControlChange(NULL);
 
-	SetDarkWinTheme(OpePanel);
+	SetDarkWinTheme(this);
 	FilterEdit->Color = get_WinColor(!ToFilter);
 	FilterEdit->Text  = EmptyStr;
 	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();

@@ -59,22 +59,17 @@ void __fastcall TFuncListDlg::FormShow(TObject *Sender)
 
 	IniFile->LoadComboBoxItems(UserDefComboBox, RegExCheckBox->Checked? _T("UserPtnHistory") : _T("UserDefHistory"));
 	UserDefComboBox->Text = !UserDefStr.IsEmpty()? UserDefStr : IniFile->ReadStrGen(_T("FuncListUserStr"));
-	SetDarkWinTheme(UserDefComboBox);
 
 	TListBox *lp = FuncListBox;
 	lp->Clear();
 	ListPanel->Color = lp->Color;
 	set_StdListBox(lp);
 	set_UsrScrPanel(ListScrPanel);
-	SetDarkWinTheme(BottomPanel);
-	SetDarkWinTheme(UserDefPanel);
+
+	SetDarkWinTheme(this);
+	FilterEdit->Color = get_WinColor(!ToFilter);
 
 	if (!UnInitializing) InitializeList();
-
-	if (IsDarkMode) 
-		SetDarkWinTheme(FilterEdit);
-	else
-		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
 
 	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)lp)->SetFocus();
 	FilterEdit->Text = EmptyStr;

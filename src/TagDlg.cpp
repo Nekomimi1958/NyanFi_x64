@@ -81,7 +81,6 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 	HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
 	ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 	TagEdit->Hint	 = LoadUsrMsg(USTR_HintMltSepSC);
-	SetDarkWinTheme(TagEdit);
 
 	AndPanel->Visible	  = false;
 	SelMaskPanel->Visible = false;
@@ -144,9 +143,8 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 
 	SetColPanel->Visible = !IsFolderIcon && OptPanel->Visible;
 	BlankPanel->Visible  = !OptPanel->Visible;
-	SetDarkWinTheme(SetColPanel);
-	SetDarkWinTheme(OptPanel);
-	SetDarkWinTheme(BlankPanel);
+
+	SetDarkWinTheme(this);
 	Shape1->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
 	Shape2->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
 

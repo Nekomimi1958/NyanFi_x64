@@ -38,8 +38,7 @@ void __fastcall TPathMaskDlg::FormShow(TObject *Sender)
 
 	OptPanel->Visible	= IniFile->ReadBoolGen(_T("PathMaskDlgShowOpt"),  true);
 	BlankPanel->Visible = !OptPanel->Visible;
-	SetDarkWinTheme(OptPanel);
-	SetDarkWinTheme(BlankPanel);
+	SetDarkWinTheme(this);
 
 	InitializeListHeader(PathMaskHeader, _T("キー|名前|マスク"));
 	PathMaskHeader->Sections->Items[0]->Width = IniFile->ReadInteger("PathMaskGrid", "ColWidth0",	40);

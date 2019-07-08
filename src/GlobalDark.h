@@ -16,6 +16,8 @@ typedef WINAPI BOOL (WINAPI *FUNC_AllowDarkModeForWindow)(HWND, BOOL);
 typedef WINAPI BOOL (WINAPI *FUNC_AllowDarkModeForApp)(BOOL);
 typedef WINAPI VOID (WINAPI *FUNC_FlushMenuThemes)();
 
+#define DWMWA_USE_IMMERSIVE_DARK_MODE 19
+
 extern  HMODULE hUxTheme;
 extern  FUNC_ShouldAppsUseDarkMode	lpfShouldAppsUseDarkMode;
 extern  FUNC_AllowDarkModeForWindow	lpfAllowDarkModeForWindow;

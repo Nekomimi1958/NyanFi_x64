@@ -35,8 +35,7 @@ void __fastcall TSelDriveDlg::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter);
 	OptPanel->Visible	= IniFile->ReadBoolGen(_T("DriveDlgShowOpt"),	true);
 	BlankPanel->Visible = !OptPanel->Visible;
-	SetDarkWinTheme(OptPanel);
-	SetDarkWinTheme(BlankPanel);
+	SetDarkWinTheme(this);
 	SetOptBtn();
 
 	set_BtnMarkDark(HideOptBtn, UBMK_BDOWN);

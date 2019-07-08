@@ -93,9 +93,6 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 		UpdateSpDirList(true);
 
 		(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)lp)->SetFocus();
-
-		SetDarkWinTheme(FilterEdit);
-		FilterEdit->Color = get_WinColor(!ToFilter);
 	}
 	//“o˜^ƒfƒBƒŒƒNƒgƒŠ
 	else {
@@ -109,8 +106,6 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 		MoveTopCheckBox->Checked = IniFile->ReadBoolGen(_T("RegDirDlgMoveTop"));
 		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("RegDirDlgShowOpt"),	true);
 		BlankPanel->Visible 	 = !OptPanel->Visible;
-		SetDarkWinTheme(OptPanel);
-		SetDarkWinTheme(BlankPanel);
 
 		sp->Items[0]->Width = IniFile->ReadInteger("RegDirGrid", "ColWidth0",	40);
 		sp->Items[1]->Width = IniFile->ReadInteger("RegDirGrid", "ColWidth1",	200);
@@ -152,6 +147,9 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 	lp->DragMode = IsSpecial? dmManual : dmAutomatic;
 	UserModule->InitializeListBox(lp, ListScrPanel);
 	SelIndex = -1;
+
+	SetDarkWinTheme(this);
+	FilterEdit->Color = get_WinColor(!ToFilter);
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FormClose(TObject *Sender, TCloseAction &Action)

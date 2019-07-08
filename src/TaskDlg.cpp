@@ -43,13 +43,11 @@ void __fastcall TTaskManDlg::FormShow(TObject *Sender)
 	int maxn  = get_MaxTaskCount();
 	gp->DefaultRowHeight = RsrCellHi * 2 + 4;
 	gp->RowCount = maxn + TaskReserveList->Count;
-	for (int i=0; i<gp->RowCount; i++)
-		if (i>=maxn) gp->RowHeights[i] = RsrCellHi;
-
+	for (int i=0; i<gp->RowCount; i++) if (i>=maxn) gp->RowHeights[i] = RsrCellHi;
 	gp->SetFocus();
 	GridScrPanel->UpdateKnob();
 
-	SetDarkWinTheme(OpePanel);
+	SetDarkWinTheme(this);
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }

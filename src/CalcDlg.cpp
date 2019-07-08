@@ -69,8 +69,6 @@ void __fastcall TCalculator::FormShow(TObject *Sender)
 	LineEdit->Font->Assign(CalcFont);
 	HistComboBox->Font->Assign(CalcFont);
 	ToolBar1->Font->Assign(ToolBarFont);
-	SetDarkWinTheme(LineEdit);
-	SetDarkWinTheme(HistComboBox);
 
 	int hi = LineEdit->Height + HistComboBox->Height + ToolBar1->Height;
 	Constraints->MinHeight = hi + Height - ClientHeight;
@@ -85,6 +83,7 @@ void __fastcall TCalculator::FormShow(TObject *Sender)
 	InitUsrDef();
 
 	SetLineEdit(InitialLine);
+	SetDarkWinTheme(this);
 
 	KommaFlag = false;
 	isError   = false;

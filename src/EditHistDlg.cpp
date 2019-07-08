@@ -56,10 +56,9 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 
 	setup_ToolBar(OpeToolBar);
 	FilterEdit->Width = IniFile->ReadIntGen(_T("EditHistFilterWidth"),	200);
-	if (IsDarkMode)
-		SetDarkWinTheme(FilterEdit);
-	else
-		FilterEdit->Color = ToFilter? scl_Window : col_Invalid;
+
+	SetDarkWinTheme(this);
+	FilterEdit->Color = get_WinColor(!ToFilter);
 
 	StatusBar1->Font->Assign(SttBarFont);
 	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);

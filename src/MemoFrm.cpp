@@ -30,15 +30,16 @@ void __fastcall TMemoForm::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMemoForm::FormShow(TObject *Sender)
 {
+	SetDarkWinTheme(this);
 	set_BtnMarkDark(HideOptBtn, UBMK_BDOWN);
 	set_BtnMarkDark(ShowOptBtn, UBMK_BUP);
-	HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
-	ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 
-	MemoBox->Font->Assign(ViewerFont);
+	HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
+	ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 
+	MemoBox->Font->Assign(ViewerFont);
 	//※入力の際にフォントが変わってしまうのを抑制
 	DWORD lParam = ::SendMessage(MemoBox->Handle, EM_GETLANGOPTIONS, 0, 0);
 	lParam &= ~IMF_DUALFONT;
@@ -63,7 +64,6 @@ void __fastcall TMemoForm::FormShow(TObject *Sender)
 	pf2.bLineSpacingRule = 5;	//dyLineSpacing/20 行単位
 	pf2.dyLineSpacing	 = 20 * ViewTxtInterLn / f_hi;
 	MemoBox->Perform(EM_SETPARAFORMAT, 0, (LPARAM)&pf2);
-	SetDarkWinTheme(MemoBox);
 	MemoBox->Font->Color = (col_fgEdBox!=clNone)? col_fgEdBox : col_fgView;
 	MemoBox->Color		 = (col_bgEdBox!=clNone)? col_bgEdBox : col_bgView;
 
@@ -72,8 +72,6 @@ void __fastcall TMemoForm::FormShow(TObject *Sender)
 	OptVisible = OptPanel->Visible;
 	BlankPanel->Visible = !OptVisible;
 	set_ControlRBCorner(MemoBox, BlankPanel);
-	SetDarkWinTheme(OptPanel);
-	SetDarkWinTheme(BlankPanel);
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }

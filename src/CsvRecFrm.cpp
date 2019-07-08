@@ -49,7 +49,7 @@ void __fastcall TCsvRecForm::FormShow(TObject *Sender)
 	IniFile->LoadGridColWidth(gp, 2, 120,280);
 	set_HeaderFromGrid(gp, RecordHeader);
 	set_UsrScrPanel(GridScrPanel);
-	SetDarkWinTheme(OptPanel);
+	SetDarkWinTheme(this);
 
 	TopIsHeaderCheckBox->Checked = TxtViewer->TopIsHeader;
 

@@ -221,7 +221,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	set_SttBarPanelWidth(StatusBar1, 2,  5);	//"CR/LF";
 	SetStatusBar();
 
-	SetDarkWinTheme(FilterEdit);
+	SetDarkWinTheme(this);
 	FilterEdit->Color = get_WinColor(!ToFilter);
 
 	if (!ErrMsg.IsEmpty()) {

@@ -68,6 +68,8 @@ TColor dcl_BtnHighlight;
 TColor dcl_Menu;
 TColor dcl_MenuText;
 
+TBrush *MenuBrush = NULL;
+
 //---------------------------------------------------------------------------
 //ハイコントラストか?
 //---------------------------------------------------------------------------
@@ -127,11 +129,15 @@ void InitializeDarkMode()
 	}
 
 	InitializeSysColor();
+
+	MenuBrush = new TBrush();
 }
 //---------------------------------------------------------------------------
 void EndDarkMode()
 {
 	if (hUxTheme) ::FreeLibrary(hUxTheme);
+
+	delete MenuBrush;
 }
 
 //---------------------------------------------------------------------------
@@ -144,6 +150,11 @@ bool ApplyDarkMode()
 		lpfAllowDarkModeForApp(AllowDarkMode);
 		lpfFlushMenuThemes();
 		IsDarkMode = AllowDarkMode;
+
+		HWND hWnd = Application->MainForm->Handle;
+		::SetWindowTheme(hWnd, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
+		BOOL is_dk = IsDarkMode;
+		::DwmSetWindowAttribute(hWnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &is_dk, sizeof(is_dk));
 	}
 	return IsDarkMode;
 }
@@ -207,6 +218,10 @@ void SetDarkWinTheme(TWinControl *wp)
 
 	if (wp->InheritsFrom(__classid(TForm))) {
 		TForm *fp = (TForm*)wp;
+		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
+		BOOL is_dk = IsDarkMode;
+		::DwmSetWindowAttribute(wp->Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, &is_dk, sizeof(is_dk));
+
 		fp->Color = bg_panel;
 		for (int i=0; i<fp->ControlCount; i++) {
 			TControl *cp = wp->Controls[i];
