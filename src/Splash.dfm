@@ -12,7 +12,6 @@ object SplashForm: TSplashForm
   FormStyle = fsStayOnTop
   OldCreateOrder = False
   Position = poScreenCenter
-  Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy

@@ -9,7 +9,6 @@ object AboutBox: TAboutBox
   ParentFont = True
   OldCreateOrder = False
   Position = poMainFormCenter
-  Scaled = False
   OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96

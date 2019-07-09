@@ -156,6 +156,7 @@ bool ApplyDarkMode()
 		BOOL is_dk = IsDarkMode;
 		::DwmSetWindowAttribute(hWnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &is_dk, sizeof(is_dk));
 	}
+
 	return IsDarkMode;
 }
 
@@ -184,6 +185,18 @@ TColor get_WinColor(
 	bool is_inv)	//無効な項目	(default = false)
 {
 	return is_inv? (IsDarkMode? col_DkInval : col_Invalid) : (IsDarkMode? dcl_Window : scl_Window);
+}
+
+//---------------------------------------------------------------------------
+//メニュー背景の設定
+//---------------------------------------------------------------------------
+void SetMenuBgColor(HMENU hMenu)
+{
+	MenuBrush->Color = IsDarkMode? dcl_Menu : scl_Menu;
+	MENUINFO mi = {sizeof(MENUINFO)};
+	mi.fMask	= MIM_BACKGROUND|MIM_APPLYTOSUBMENUS;
+	mi.hbrBack	= MenuBrush->Handle;
+	::SetMenuInfo(hMenu, &mi);
 }
 
 //---------------------------------------------------------------------------
@@ -720,6 +733,21 @@ void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc,
 	::DrawText(cv->Handle, titstr.c_str(), -1, &tt_rc, DT_LEFT);
 }
 
+//---------------------------------------------------------------------------
+//メニューセパレータの描画
+//---------------------------------------------------------------------------
+void draw_MenuSeparator(TCanvas *cv, TRect rc)
+{
+	double scale = Screen->PixelsPerInch / 96.0;
+	int yp = rc.Top + rc.Height()/2;
+	int x0 = rc.Left + ::GetSystemMetrics(SM_CYMENU) + (int)(4 *scale);
+	int x1 = rc.Right;
+	cv->Pen->Style = psSolid;
+	cv->Pen->Mode  = pmCopy;
+	cv->Pen->Width = 1;
+	cv->Pen->Color = TColor(IsDarkMode? RGB(0x80, 0x80, 0x80) : RGB(0xd7, 0xd7, 0xd7));
+	cv->MoveTo(x0, yp);  cv->LineTo(x1, yp);
+}
 
 //---------------------------------------------------------------------------
 //以下は擬似的コントロールのアクセラレータ処理に利用

@@ -2580,6 +2580,7 @@ void __fastcall TOptionDlg::AssociateListBoxMouseUp(TObject *Sender, TMouseButto
 				TMenuItem *mp  = new TMenuItem(TestPopupMenu);
 				mp->Caption    = m_buf[0];
 				mp->ImageIndex = (m_buf.Length==3)? add_IconImage(m_buf[2], IconImgListP) : -1;
+				mp->OnAdvancedDrawItem = TestAdvancedDrawItem;
 				TestPopupMenu->Items->Add(mp);
 			}
 		}
@@ -4544,6 +4545,43 @@ void __fastcall TOptionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 		Key = 0;
 	}
 }
-//---------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::TestAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
+	const TRect &ARect, TOwnerDrawState State)
+{
+	TMenuItem *mp = (TMenuItem*)Sender;
+	bool is_hl = (State.Contains(odSelected) || State.Contains(odHotLight));
+	ACanvas->Brush->Color = is_hl? (IsDarkMode? dcl_Highlight : scl_MenuSelect) : (IsDarkMode? dcl_Menu : scl_Menu);
+	ACanvas->Font->Color  = (State.Contains(odGrayed) || State.Contains(odDisabled))?
+								clGray : (IsDarkMode? dcl_MenuText : scl_MenuText);
+	ACanvas->FillRect(ARect);
+
+	//セパレータ
+	if (SameStr(mp->Caption, "-")) {
+		draw_MenuSeparator(ACanvas, ARect);
+	}
+	else {
+		//キャプション
+		TRect rc = ARect;
+		int hi = rc.Height();
+		rc.Left += (hi + Scaled8);
+		int yp = ARect.Top + (hi - ACanvas->TextHeight("Q")) / 2;
+		rc.Top = yp;
+		UINT opt = DT_LEFT;  if (State.Contains(odNoAccel))  opt |= DT_HIDEPREFIX;
+		::DrawText(ACanvas->Handle, mp->Caption.c_str(), -1, &rc, opt);
+
+		//アイコン
+		int idx = mp->ImageIndex;
+		if (idx>=0 && idx<IconImgListP->Count) {
+			IconImgListP->Draw(ACanvas, ARect.Left + Scaled4, yp, mp->ImageIndex);
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::TestPopupMenuPopup(TObject *Sender)
+{
+	SetMenuBgColor(((TPopupMenu *)Sender)->Handle);
+}
+//---------------------------------------------------------------------------
 

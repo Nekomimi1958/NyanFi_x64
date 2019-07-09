@@ -370,9 +370,7 @@ void ShowPropertyDialog(UnicodeString fnam)
 {
 	if (fnam.IsEmpty()) return;
 
-	SHELLEXECUTEINFO sei;
-	::ZeroMemory(&sei, sizeof(sei));
-	sei.cbSize = sizeof(sei);
+	SHELLEXECUTEINFO sei = {sizeof(SHELLEXECUTEINFO)};
 	sei.lpFile = ExcludeTrailingPathDelimiter(fnam).c_str();
 	sei.lpVerb = _T("properties");
 	sei.fMask  = SEE_MASK_INVOKEIDLIST | SEE_MASK_NOCLOSEPROCESS | SEE_MASK_FLAG_NO_UI;

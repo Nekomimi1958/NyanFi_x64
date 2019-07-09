@@ -256,10 +256,7 @@ int __fastcall UsrScrollPanel::GetKnobPosH()
 {
 	int xp = 0;
 	if (AssoListBox && AssoListBox->ScrollWidth>0) {
-		SCROLLINFO si;
-		::ZeroMemory(&si, sizeof(SCROLLINFO));
-		si.cbSize = sizeof(SCROLLINFO);
-		si.fMask  = SIF_TRACKPOS;
+		SCROLLINFO si = {sizeof(SCROLLINFO), SIF_TRACKPOS};
 		if (::GetScrollInfo(AssoListBox->Handle, SB_HORZ, &si))
 			xp = (int)(1.0 * si.nTrackPos / AssoListBox->ScrollWidth * (ParentPanel->ClientWidth - KnobWidth));
 	}

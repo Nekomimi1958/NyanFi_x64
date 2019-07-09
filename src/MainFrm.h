@@ -1853,6 +1853,7 @@ __published:	// IDE で管理されるコンポーネント
 		const TRect &ARect, TOwnerDrawState State);
 	void __fastcall MainMenuMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width,
           int &Height);
+	void __fastcall OdPopupMenuPopup(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

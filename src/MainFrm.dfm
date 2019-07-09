@@ -707,11 +707,12 @@ object NyanFiForm: TNyanFiForm
         Height = 130
         Align = alTop
         AutoSize = True
+        BevelOuter = bvNone
         TabOrder = 0
         object GrepCanBtn: TButton
-          Left = 1
-          Top = 129
-          Width = 722
+          Left = 0
+          Top = 130
+          Width = 724
           Height = 0
           Align = alBottom
           Cancel = True
@@ -719,15 +720,15 @@ object NyanFiForm: TNyanFiForm
           OnClick = GrepCanBtnClick
         end
         object GrepSttPanel: TPanel
-          Left = 1
-          Top = 99
-          Width = 722
+          Left = 0
+          Top = 98
+          Width = 724
           Height = 30
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 2
           object GrepSttSplitter: TSplitter
-            Left = 468
+            Left = 470
             Top = 0
             Width = 4
             Height = 30
@@ -738,7 +739,7 @@ object NyanFiForm: TNyanFiForm
           object GrepStatusBar: TStatusBar
             Left = 0
             Top = 0
-            Width = 468
+            Width = 470
             Height = 30
             Align = alClient
             Panels = <
@@ -759,12 +760,12 @@ object NyanFiForm: TNyanFiForm
             OnDrawPanel = GrepStatusBarDrawPanel
           end
           object GrepFilterPanel: TPanel
-            Left = 472
+            Left = 474
             Top = 0
             Width = 250
             Height = 30
             Align = alRight
-            BevelOuter = bvLowered
+            BevelOuter = bvNone
             TabOrder = 1
             DesignSize = (
               250
@@ -810,9 +811,9 @@ object NyanFiForm: TNyanFiForm
           end
         end
         object GrepMidPanel: TPanel
-          Left = 1
-          Top = 65
-          Width = 722
+          Left = 0
+          Top = 64
+          Width = 724
           Height = 34
           Align = alTop
           BevelOuter = bvNone
@@ -882,18 +883,18 @@ object NyanFiForm: TNyanFiForm
           object GrepM2Panel: TPanel
             Left = 388
             Top = 0
-            Width = 251
+            Width = 253
             Height = 34
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
             DesignSize = (
-              251
+              253
               34)
             object SkipDirEdit: TLabeledEdit
               Left = 118
               Top = 5
-              Width = 123
+              Width = 125
               Height = 22
               Anchors = [akLeft, akTop, akRight]
               AutoSize = False
@@ -905,7 +906,7 @@ object NyanFiForm: TNyanFiForm
             end
           end
           object GrepM3Panel: TPanel
-            Left = 639
+            Left = 641
             Top = 0
             Width = 83
             Height = 34
@@ -927,9 +928,9 @@ object NyanFiForm: TNyanFiForm
           end
         end
         object GrepPageControl: TPageControl
-          Left = 1
-          Top = 1
-          Width = 722
+          Left = 0
+          Top = 0
+          Width = 724
           Height = 64
           ActivePage = FindSheet
           Align = alTop
@@ -943,7 +944,7 @@ object NyanFiForm: TNyanFiForm
           object FindSheet: TTabSheet
             Caption = #26908#32034'(&S)'
             object GrepTopSplitter: TSplitter
-              Left = 702
+              Left = 704
               Top = 0
               Width = 4
               Height = 36
@@ -955,7 +956,7 @@ object NyanFiForm: TNyanFiForm
             object GrepT1Panel: TPanel
               Left = 0
               Top = 0
-              Width = 702
+              Width = 704
               Height = 36
               Align = alClient
               BevelOuter = bvNone
@@ -963,14 +964,14 @@ object NyanFiForm: TNyanFiForm
               object GrepT11Panel: TPanel
                 Left = 0
                 Top = 0
-                Width = 150
+                Width = 152
                 Height = 36
                 Align = alClient
                 BevelOuter = bvNone
                 TabOrder = 0
                 OnResize = GrepT11PanelResize
                 DesignSize = (
-                  150
+                  152
                   36)
                 object GrepFindLabel: TLabel
                   Left = 16
@@ -983,7 +984,7 @@ object NyanFiForm: TNyanFiForm
                 object GrepFindComboBox: TComboBox
                   Left = 80
                   Top = 7
-                  Width = 57
+                  Width = 59
                   Height = 21
                   Anchors = [akLeft, akTop, akRight]
                   DropDownCount = 24
@@ -994,7 +995,7 @@ object NyanFiForm: TNyanFiForm
                 end
               end
               object GrepT12Panel: TPanel
-                Left = 150
+                Left = 152
                 Top = 0
                 Width = 552
                 Height = 36
@@ -1085,7 +1086,7 @@ object NyanFiForm: TNyanFiForm
               end
             end
             object GrepT2Panel: TPanel
-              Left = 706
+              Left = 708
               Top = 0
               Width = 8
               Height = 36
@@ -1100,7 +1101,7 @@ object NyanFiForm: TNyanFiForm
             Caption = #32622#25563'(&R)'
             ImageIndex = 1
             object RepTopSplitter: TSplitter
-              Left = 702
+              Left = 704
               Top = 0
               Width = 4
               Height = 36
@@ -1112,14 +1113,14 @@ object NyanFiForm: TNyanFiForm
             object RepT1Panel: TPanel
               Left = 0
               Top = 0
-              Width = 702
+              Width = 704
               Height = 36
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
               OnResize = RepT1PanelResize
               DesignSize = (
-                702
+                704
                 36)
               object RepStrLabel: TLabel
                 Left = 209
@@ -1138,7 +1139,7 @@ object NyanFiForm: TNyanFiForm
                 Caption = #26908#32034#25991#23383#21015
               end
               object AskRepCheckBox: TCheckBox
-                Left = 515
+                Left = 517
                 Top = 9
                 Width = 78
                 Height = 17
@@ -1147,7 +1148,7 @@ object NyanFiForm: TNyanFiForm
                 TabOrder = 4
               end
               object StartRBtn: TButton
-                Left = 595
+                Left = 597
                 Top = 5
                 Width = 50
                 Height = 26
@@ -1157,7 +1158,7 @@ object NyanFiForm: TNyanFiForm
                 TabOrder = 5
               end
               object AbortRBtn: TButton
-                Left = 647
+                Left = 649
                 Top = 5
                 Width = 50
                 Height = 26
@@ -1166,7 +1167,7 @@ object NyanFiForm: TNyanFiForm
                 TabOrder = 6
               end
               object RegExRCheckBox: TCheckBox
-                Left = 351
+                Left = 353
                 Top = 9
                 Width = 78
                 Height = 17
@@ -1176,7 +1177,7 @@ object NyanFiForm: TNyanFiForm
                 OnClick = RegExRCheckBoxClick
               end
               object CaseRCheckBox: TCheckBox
-                Left = 433
+                Left = 435
                 Top = 9
                 Width = 78
                 Height = 17
@@ -1187,7 +1188,7 @@ object NyanFiForm: TNyanFiForm
               object RepFindComboBox: TComboBox
                 Left = 80
                 Top = 7
-                Width = 0
+                Width = 2
                 Height = 21
                 Anchors = [akLeft, akTop, akRight]
                 DropDownCount = 24
@@ -1199,7 +1200,7 @@ object NyanFiForm: TNyanFiForm
               object RepStrComboBox: TComboBox
                 Left = 290
                 Top = 7
-                Width = 0
+                Width = 2
                 Height = 21
                 Anchors = [akLeft, akTop, akRight]
                 DropDownCount = 24
@@ -1209,7 +1210,7 @@ object NyanFiForm: TNyanFiForm
               end
             end
             object RepT2Panel: TPanel
-              Left = 706
+              Left = 708
               Top = 0
               Width = 8
               Height = 36
@@ -5628,6 +5629,7 @@ object NyanFiForm: TNyanFiForm
     AutoPopup = False
     Images = IconImgListP
     OwnerDraw = True
+    OnPopup = OdPopupMenuPopup
     Left = 139
     Top = 137
   end
@@ -5739,11 +5741,13 @@ object NyanFiForm: TNyanFiForm
   end
   object DrivePopupMenu: TPopupMenu
     OwnerDraw = True
+    OnPopup = OdPopupMenuPopup
     Left = 34
     Top = 190
   end
   object SelItemPopupMenu: TPopupMenu
     OwnerDraw = True
+    OnPopup = OdPopupMenuPopup
     Left = 136
     Top = 192
   end

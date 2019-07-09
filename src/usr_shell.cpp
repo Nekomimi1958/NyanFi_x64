@@ -690,10 +690,7 @@ UnicodeString UserShell::ShowContextMenu(
 						}
 					}
 
-					MENUITEMINFO mii;
-					::ZeroMemory(&mii, sizeof(MENUITEMINFO));
-					mii.cbSize = sizeof(mii);
-
+					MENUITEMINFO mii = {sizeof(MENUITEMINFO)};
 					HMENU hMP = hMenu;
 					bool ins_top = false;
 					int  pos_top = 0;
@@ -759,10 +756,8 @@ UnicodeString UserShell::ShowContextMenu(
 							if (m_buf.Length==3) {
 								SHFILEINFO sif;
 								if (::SHGetFileInfo(m_buf[2].c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON)) {
-									BITMAPINFOHEADER bmihdr;
-									::ZeroMemory(&bmihdr, sizeof(BITMAPINFOHEADER));
+									BITMAPINFOHEADER bmihdr = {sizeof(BITMAPINFOHEADER)};
 									BITMAPINFO bmi;
-									bmihdr.biSize	  = sizeof(BITMAPINFOHEADER);
 									bmihdr.biWidth	  = 16 * ScrScale;
 									bmihdr.biHeight   = 16 * ScrScale;
 									bmihdr.biPlanes   = 1;
@@ -794,9 +789,7 @@ UnicodeString UserShell::ShowContextMenu(
 				}
 				//通常項目
 				else if (nId!=0) {
-					CMINVOKECOMMANDINFO ici;
-					::ZeroMemory(&ici, sizeof(CMINVOKECOMMANDINFO));
-					ici.cbSize = sizeof(CMINVOKECOMMANDINFO);
+					CMINVOKECOMMANDINFO ici = {sizeof(CMINVOKECOMMANDINFO)};
 					ici.hwnd   = hWnd;
 					ici.lpVerb = (LPCSTR)MAKEINTRESOURCE(nId - 1);
 					ici.nShow  = SW_SHOW;
@@ -882,10 +875,7 @@ UnicodeString UserShell::DriveContextMenu(
 			if (SUCCEEDED(pCM->QueryContextMenu(hMenu, 0, 1, 0x7fff, CMF_EXPLORE))) {
 				//追加項目の挿入
 				if (ex_item && ex_item->Count>0) {
-					MENUITEMINFO mii;
-					::ZeroMemory(&mii, sizeof(MENUITEMINFO));
-					mii.cbSize = sizeof(mii);
-
+					MENUITEMINFO mii = {sizeof(MENUITEMINFO)};
 					for (int i=0; i<ex_item->Count; i++) {
 						UnicodeString lbuf = Trim(ex_item->Strings[i]);
 						if (lbuf.IsEmpty() || StartsStr(';', lbuf)) continue;
@@ -916,12 +906,10 @@ UnicodeString UserShell::DriveContextMenu(
 				}
 				//通常項目
 				else if (nId!=0) {
-					CMINVOKECOMMANDINFO ici;
-					::ZeroMemory(&ici, sizeof(CMINVOKECOMMANDINFO));
-					ici.cbSize		 = sizeof(CMINVOKECOMMANDINFO);
-					ici.hwnd		 = hWnd;
-					ici.lpVerb		 = (LPCSTR)MAKEINTRESOURCE(nId - 1);
-					ici.nShow		 = SW_SHOW;
+					CMINVOKECOMMANDINFO ici = {sizeof(CMINVOKECOMMANDINFO)};
+					ici.hwnd   = hWnd;
+					ici.lpVerb = (LPCSTR)MAKEINTRESOURCE(nId - 1);
+					ici.nShow  = SW_SHOW;
 					if (FAILED(pCM->InvokeCommand(&ici))) ret_str = "ERROR";
 				}
 			}
@@ -983,12 +971,10 @@ bool UserShell::InvokeMenuCmd(HWND hWnd, UnicodeString dnam, TStringList *flist,
 
 			HMENU hMenu = ::CreatePopupMenu();
 			if (SUCCEEDED(contextMenu->QueryContextMenu(hMenu, 0, 1, 0x7fff, CMF_EXPLORE))) {
-				CMINVOKECOMMANDINFO ici;
-				::ZeroMemory(&ici, sizeof(CMINVOKECOMMANDINFO));
-				ici.cbSize		 = sizeof(CMINVOKECOMMANDINFO);
-				ici.hwnd		 = hWnd;
-				ici.lpVerb		 = cmd;
-				ici.nShow		 = SW_SHOW;
+				CMINVOKECOMMANDINFO ici = {sizeof(CMINVOKECOMMANDINFO)};
+				ici.hwnd   = hWnd;
+				ici.lpVerb = cmd;
+				ici.nShow  = SW_SHOW;
 				ok = SUCCEEDED(contextMenu->InvokeCommand(&ici));
 			}
 			::DestroyMenu(hMenu);
@@ -1679,8 +1665,7 @@ HICON UserShell::get_Icon(
 	//サイズ確認
 	if (hIcon && chk_sz) {
 		bool ok = false;
-		ICONINFO ii;
-		::ZeroMemory(&ii, sizeof(ICONINFO));
+		ICONINFO ii = {};
 		::GetIconInfo(hIcon, &ii);
 		if (ii.hbmMask) ::DeleteObject(ii.hbmMask);
 		if (ii.hbmColor) {

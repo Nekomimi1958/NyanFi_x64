@@ -1480,9 +1480,7 @@ void __fastcall TTaskThread::Task_EXTCHM(UnicodeString prm)
 	UnicodeString cmdln;
 	cmdln.sprintf(_T("hh.exe -decompile %s %s"), o_dir.c_str(), fnam.c_str());
 	AddLog("  EXECUTE " + cmdln);
-	STARTUPINFO si;
-	::ZeroMemory(&si, sizeof(si) );
-	si.cb = sizeof(si);
+	STARTUPINFO si = {sizeof(STARTUPINFO)};
 	si.dwFlags	   = STARTF_USESHOWWINDOW;
 	si.wShowWindow = SW_SHOWNORMAL;
 	PROCESS_INFORMATION pi;

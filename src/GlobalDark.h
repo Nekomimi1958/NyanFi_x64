@@ -68,6 +68,8 @@ extern TColor dcl_BtnHighlight;
 extern TColor dcl_Menu;
 extern TColor dcl_MenuText;
 
+extern TBrush *MenuBrush;
+
 //---------------------------------------------------------------------------
 bool is_HighContrast();
 void InitializeSysColor();
@@ -83,6 +85,7 @@ TColor get_PanelColor(bool is_inv = false);
 TColor get_LabelColor();
 TColor get_WinColor(bool is_inv = false);
 
+void SetMenuBgColor(HMENU hMenu);
 void SetHighlight(TCanvas *cv, bool hl);
 
 void msgbox_ERR(UnicodeString msg);
@@ -113,6 +116,7 @@ void set_ButtonMark(TSpeedButton *bp, int id = UBMK_DOWN, TColor fg = scl_BtnTex
 void set_BtnMarkDark(TSpeedButton *bp, int id);
 
 void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool active, bool dark_sw = false);
+void draw_MenuSeparator(TCanvas *cv, TRect rc);
 
 //---------------------------------------------------------------------------
 bool set_focus_RadioGroup(TRadioGroup *gp);

@@ -548,6 +548,7 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 		TMenuItem *mp = new TMenuItem(WorkListHistoryItem);
 		mp->OnClick   = WorkListHstItemClick;
 		mp->Tag 	  = i;
+		mp->OnAdvancedDrawItem = PopMenuAdvancedDrawItem;
 		WorkListHistoryItem->Add(mp);
 	}
 
@@ -2812,7 +2813,7 @@ bool __fastcall TNyanFiForm::ApplicationEvents1Help(WORD Command, NativeInt Data
 void __fastcall TNyanFiForm::MainMenuMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width, int &Height)
 {
 	TMenuItem *mp = (TMenuItem*)Sender;
-	Width = ACanvas->TextWidth(ReplaceStr(mp->Caption, "&", EmptyStr)) + Scaled8;
+	Width = ACanvas->TextWidth(ReplaceStr(mp->Caption, "&", EmptyStr));
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::MainMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
@@ -2849,10 +2850,8 @@ void __fastcall TNyanFiForm::PopMenuAdvancedDrawItem(TObject *Sender, TCanvas *A
 	ACanvas->FillRect(ARect);
 
 	//セパレータ
-	if (SameStr(mp->Caption, "-")) {
-		TRect rc = ARect;
-		rc.Left += ::GetSystemMetrics(SM_CYMENU);
-		draw_Separator(ACanvas, rc);
+	if (is_separator(mp->Caption)) {
+		draw_MenuSeparator(ACanvas, ARect);
 	}
 	else {
 		//キャプション
@@ -2878,6 +2877,14 @@ void __fastcall TNyanFiForm::PopMenuAdvancedDrawItem(TObject *Sender, TCanvas *A
 			ACanvas->FillRect(rc);
 			UnicodeString chk = _T("\u2713");
 			ACanvas->TextOut(rc.Left + (hi - ACanvas->TextWidth(chk))/2, yp, chk);
+		}
+
+		//サブメニュー・マーク背景
+		if (IsDarkMode && !is_hl && mp->Count>0) {
+			rc = ARect;
+			rc.Left  = rc.Right - SIcoSize;
+			ACanvas->Brush->Color = dcl_Highlight;
+			ACanvas->FillRect(rc);
 		}
 	}
 }
@@ -6409,7 +6416,7 @@ void __fastcall TNyanFiForm::PopupRegDirMenu(const _TCHAR *id_str)
 			TStringDynArray itm_buf = get_csv_array(lst->Strings[i], 3);
 			if (itm_buf.Length<3) continue;
 
-			TMenuItem *mp = new TMenuItem(pPop);
+			TMenuItem *mp  = new TMenuItem(pPop);
 			mp->OnDrawItem = PopSelectItemDrawItem;
 			//セパレータ
 			if (is_separator(itm_buf[1])) {
@@ -6504,7 +6511,7 @@ void __fastcall TNyanFiForm::PopSelectItemDrawItem(TObject *Sender, TCanvas *ACa
 
 	//セパレータ
 	if (is_separator(lbuf)) {
-		draw_Separator(ACanvas, ARect);
+		draw_MenuSeparator(ACanvas, ARect);
 	}
 	//選択項目
 	else {
@@ -15626,6 +15633,13 @@ void __fastcall TNyanFiForm::ExPopupMenuActionExecute(TObject *Sender)
 	if (is_menu) SetExtMenuItem(ExPopupMenu->Items, ExtMenuList, EXTMENU_BASE);
 	if (is_tool) SetExtMenuItem(ExPopupMenu->Items, ExtToolList, EXTTOOL_BASE);
 	ShowExPopupMenu();
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::OdPopupMenuPopup(TObject *Sender)
+{
+	//オーナー描画メニューの背景を設定
+	SetMenuBgColor(((TPopupMenu *)Sender)->Handle);
 }
 
 //---------------------------------------------------------------------------
@@ -27404,6 +27418,7 @@ void __fastcall TNyanFiForm::MainMenuClick(TObject *Sender)
 	ActionOk	= true;
 
 	reduction_MenuLine((TMenuItem*)Sender);
+	SetMenuBgColor(MainMenu1->Handle);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FileMenuClick(TObject *Sender)
@@ -27437,6 +27452,7 @@ void __fastcall TNyanFiForm::FileMenuClick(TObject *Sender)
 	LibraryItem->Visible = (ScrMode==SCMD_FLIST);
 
 	reduction_MenuLine((TMenuItem*)Sender);
+	SetMenuBgColor(MainMenu1->Handle);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ExtMenuClick(TObject *Sender)
@@ -27456,6 +27472,7 @@ void __fastcall TNyanFiForm::ExtMenuClick(TObject *Sender)
 	}
 
 	reduction_MenuLine((TMenuItem*)Sender);
+	SetMenuBgColor(MainMenu1->Handle);
 }
 //---------------------------------------------------------------------------
 //ワークリスト履歴を開く
@@ -28551,7 +28568,8 @@ void __fastcall TNyanFiForm::SetSttBarGrepOpt()
 				msg += ExtractFileName(GrepFileName);
 			else
 				msg += "クリップボード";
-			if (!GrepAppName.IsEmpty()) msg.cat_sprintf(_T("  起動: %s"), ExtractFileName(GrepAppName).c_str());
+			if (!GrepAppName.IsEmpty() && GrepAppEnabled)
+				msg.cat_sprintf(_T("  起動: %s"), ExtractFileName(GrepAppName).c_str());
 		}
 		else {
 			msg = "出力設定: 無し";

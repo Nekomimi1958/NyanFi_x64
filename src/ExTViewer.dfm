@@ -167,7 +167,6 @@ object ExTxtViewer: TExTxtViewer
     end
   end
   object ViewPopupMenu: TPopupMenu
-    OwnerDraw = True
     Left = 56
     Top = 126
     object PopCopyItem: TMenuItem

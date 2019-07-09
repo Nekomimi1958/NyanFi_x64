@@ -11692,9 +11692,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 			if (!::CreatePipe(&hRead, &hWrite, &sa, 0)) UserAbort(USTR_FaildProc);
 		}
 
-		STARTUPINFO si;
-		::ZeroMemory(&si, sizeof(si));
-		si.cb		   = sizeof(si);
+		STARTUPINFO si = {sizeof(STARTUPINFO)};
 		si.dwFlags	   = STARTF_USESHOWWINDOW;
 		si.wShowWindow = ContainsStr(opt, "H")? SW_HIDE : SW_SHOWNORMAL;
 		if (hRead && hWrite) {
@@ -13507,9 +13505,7 @@ void HtmlHelpKeyword(
 	UnicodeString kwd)		//キーワード
 {
 	if (lpfHtmlHelp) {
-		HH_AKLINK ak;
-		::ZeroMemory(&ak, sizeof(HH_AKLINK));
-		ak.cbStruct 	= sizeof(HH_AKLINK);
+		HH_AKLINK ak = {sizeof(HH_AKLINK)};
 		ak.pszKeywords	= kwd.c_str();
 		ak.fIndexOnFail = TRUE;
 		if (lpfHtmlHelp) lpfHtmlHelp(Screen->ActiveForm->Handle, fnam.c_str(), HH_KEYWORD_LOOKUP, (DWORD)&ak);

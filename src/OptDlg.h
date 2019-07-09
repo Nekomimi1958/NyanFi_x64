@@ -912,6 +912,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefVDrvBtnClick(TObject *Sender);
 	void __fastcall ExtHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
 		const TRect &Rect, bool Pressed);
+	void __fastcall TestAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas, const TRect &ARect, TOwnerDrawState State);
+	void __fastcall TestPopupMenuPopup(TObject *Sender);
 
 private:	// ユーザー宣言
 	MarkList *FindMarkList;

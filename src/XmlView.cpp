@@ -414,10 +414,7 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 
 	//横スクロール位置を取得
 	int scr_p = 0;
-	SCROLLINFO si;
-	::ZeroMemory(&si, sizeof(SCROLLINFO));
-	si.cbSize = sizeof(SCROLLINFO);
-	si.fMask  = SIF_TRACKPOS;
+	SCROLLINFO si = {sizeof(SCROLLINFO), SIF_TRACKPOS};
 	if (::GetScrollInfo(Sender->Handle, SB_HORZ, &si)) scr_p = si.nTrackPos;
 
 	//親ライン
