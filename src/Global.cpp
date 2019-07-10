@@ -6669,9 +6669,15 @@ UnicodeString get_file_from_cmd(UnicodeString s)
 	else if (remove_top_text(cmd, _T("SetFolderIcon_"))) {
 		fnam = to_absolute_name(get_actual_name(exclude_quot(cmd)));
 	}
-	else if (USAME_TI(cmd, "CommandPrompt")) fnam = "%ComSpec%";
-	else if (USAME_TI(cmd, "OpenByExp"))	 fnam = "%windir%\\explorer.exe";
-	else fnam = cmd;
+	else if (USAME_TI(cmd, "CommandPrompt")) {
+		fnam = "%ComSpec%";
+	}
+	else if (USAME_TI(cmd, "OpenByExp")) {
+		fnam = "%windir%\\explorer.exe";
+	}
+	else {
+		fnam = cmd;
+	}
 
 	return fnam;
 }

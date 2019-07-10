@@ -356,12 +356,8 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 
 	LogWndListBox  = LogListBox;
 
-	//メインメニューの OnAdvancedDrawItem を設定
-	for (int i=0; i<MainMenu1->Items->Count; i++) {
-		SetManuOwnerDrawEvent(MainMenu1->Items->Items[i]);
-		MainMenu1->Items->Items[i]->OnAdvancedDrawItem = MainMenuAdvancedDrawItem;
-		MainMenu1->Items->Items[i]->OnMeasureItem	   = MainMenuMeasureItem;
-	}
+	//メインメニュー下の OnAdvancedDrawItem を設定
+	for (int i=0; i<MainMenu1->Items->Count; i++) SetManuOwnerDrawEvent(MainMenu1->Items->Items[i]);
 
 	FilterComboBox->Tag   = CBTAG_HISTORY;
 	GrepMaskComboBox->Tag = CBTAG_HISTORY;
@@ -3557,9 +3553,7 @@ void __fastcall TNyanFiForm::DropMenuItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::WmSettingChange(TMessage &msg)
 {
-	if (msg.WParam==SPI_SETHIGHCONTRAST) {
-		SetupDesign(false);
-	}
+	if (msg.WParam==SPI_SETHIGHCONTRAST) SetupDesign(false);
 }
 
 //---------------------------------------------------------------------------
@@ -4639,7 +4633,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	}
 
 	//メニュー
-	TMenuAutoFlag ak_flag = MenuAutoHotkey? maAutomatic : maManual;
+	TMenuAutoFlag ak_flag	 = MenuAutoHotkey? maAutomatic : maManual;
 	MainMenu1->AutoHotkeys	 = ak_flag;
 	ExPopupMenu->AutoHotkeys = ak_flag;
 
@@ -34556,7 +34550,7 @@ void __fastcall TNyanFiForm::TabBottomPaintBoxPaint(TObject *Sender)
 	if (col_frmTab!=col_None && (FlTabStyle==0 || FlTabStyle==1)) {
 		TPaintBox *pp = (TPaintBox*)Sender;
 		TCanvas *cv = pp->Canvas;
-		cv->Pen->Width = Scaled1;
+		cv->Pen->Width = pp->Height;
 		cv->Pen->Style = psSolid;
 		cv->Pen->Color = col_frmTab;
 		cv->MoveTo(0, 0);

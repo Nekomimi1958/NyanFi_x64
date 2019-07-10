@@ -838,7 +838,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	set_ListBoxItemHi(TagColListBox);
 												//<<<<<<<X86_SPI
 	set_ListBoxItemHi(EtcEditorListBox, NULL, true);
-	set_ListBoxItemHi(AssociateListBox);
+	set_ListBoxItemHi(AssociateListBox, NULL, true);
 	set_ListBoxItemHi(ExtMenuListBox, NULL, true);
 	set_ListBoxItemHi(ExtToolListBox, NULL, true);
 	set_ListBoxItemHi(KeyListBox);
@@ -2588,6 +2588,45 @@ void __fastcall TOptionDlg::AssociateListBoxMouseUp(TObject *Sender, TMouseButto
 		TestPopupMenu->Popup(Mouse->CursorPos.x, Mouse->CursorPos.y);
 	}
 }
+//---------------------------------------------------------------------------
+//テストメニューの描画
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::TestAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
+	const TRect &ARect, TOwnerDrawState State)
+{
+	TMenuItem *mp = (TMenuItem*)Sender;
+	bool is_hl = (State.Contains(odSelected) || State.Contains(odHotLight));
+	ACanvas->Brush->Color = is_hl? (IsDarkMode? dcl_Highlight : scl_MenuSelect) : (IsDarkMode? dcl_Menu : scl_Menu);
+	ACanvas->Font->Color  = (State.Contains(odGrayed) || State.Contains(odDisabled))?
+								clGray : (IsDarkMode? dcl_MenuText : scl_MenuText);
+	ACanvas->FillRect(ARect);
+
+	//セパレータ
+	if (SameStr(mp->Caption, "-")) {
+		draw_MenuSeparator(ACanvas, ARect);
+	}
+	else {
+		//キャプション
+		TRect rc = ARect;
+		int hi = rc.Height();
+		rc.Left += (hi + Scaled8);
+		int yp = ARect.Top + (hi - ACanvas->TextHeight("Q")) / 2;
+		rc.Top = yp;
+		UINT opt = DT_LEFT;  if (State.Contains(odNoAccel))  opt |= DT_HIDEPREFIX;
+		::DrawText(ACanvas->Handle, mp->Caption.c_str(), -1, &rc, opt);
+
+		//アイコン
+		int idx = mp->ImageIndex;
+		if (idx>=0 && idx<IconImgListP->Count) {
+			IconImgListP->Draw(ACanvas, ARect.Left + Scaled4, yp, mp->ImageIndex);
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::TestPopupMenuPopup(TObject *Sender)
+{
+	SetMenuBgColor(((TPopupMenu *)Sender)->Handle);
+}
 
 //---------------------------------------------------------------------------
 //関連付け一覧のソート (同じ拡張子内はそのまま)
@@ -2781,7 +2820,37 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 	else {
 		if (Index>0) brk = !SameText(lp->Items->Names[Index], lp->Items->Names[Index-1]);
 		cv->TextOut(xp, yp, split_tkn(lbuf, '='));
-		cv->TextOut(xp + MaxWd_AssExt, yp, exclude_quot(lbuf));
+		xp += MaxWd_AssExt;
+
+		lbuf = exclude_quot(lbuf);
+		//アイコンの取得
+		UnicodeString fnam;
+		UnicodeString tmp = lbuf;
+		if (remove_top_text(tmp, "ExeCommands_")) {
+			split_dsc(tmp);
+			fnam = get_actual_name(get_file_from_cmd(tmp));
+		}
+		else if (remove_top_Dollar(tmp)) {
+			UnicodeString inam;
+			TStringDynArray itm_buf = record_of_csv_list(ExtToolList, tmp, 4, EXTTOOL_CSVITMCNT);
+			if (itm_buf.Length==EXTTOOL_CSVITMCNT) {
+				inam = itm_buf[1];
+			}
+			else {
+				itm_buf = record_of_csv_list(ExtMenuList, tmp, 3, EXTMENU_CSVITMCNT);
+				if (itm_buf.Length==EXTMENU_CSVITMCNT) inam = itm_buf[5];
+			}
+			if (!inam.IsEmpty()) fnam = to_absolute_name(get_actual_path(inam));
+		}
+		else if (!starts_AT(tmp)) {
+			split_dsc(tmp);
+			fnam = get_actual_name(tmp);
+		}
+
+		if (file_exists(fnam)) draw_SmallIconF(fnam, cv, xp, Rect.Top + (Rect.Height() - SIcoSize)/2);
+		xp += get_IcoWidth();
+
+		cv->TextOut(xp, yp, exclude_quot(lbuf));
 	}
 
 	//境界線(上辺)
@@ -4544,44 +4613,6 @@ void __fastcall TOptionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 		FindEdit->SetFocus();
 		Key = 0;
 	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TOptionDlg::TestAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
-	const TRect &ARect, TOwnerDrawState State)
-{
-	TMenuItem *mp = (TMenuItem*)Sender;
-	bool is_hl = (State.Contains(odSelected) || State.Contains(odHotLight));
-	ACanvas->Brush->Color = is_hl? (IsDarkMode? dcl_Highlight : scl_MenuSelect) : (IsDarkMode? dcl_Menu : scl_Menu);
-	ACanvas->Font->Color  = (State.Contains(odGrayed) || State.Contains(odDisabled))?
-								clGray : (IsDarkMode? dcl_MenuText : scl_MenuText);
-	ACanvas->FillRect(ARect);
-
-	//セパレータ
-	if (SameStr(mp->Caption, "-")) {
-		draw_MenuSeparator(ACanvas, ARect);
-	}
-	else {
-		//キャプション
-		TRect rc = ARect;
-		int hi = rc.Height();
-		rc.Left += (hi + Scaled8);
-		int yp = ARect.Top + (hi - ACanvas->TextHeight("Q")) / 2;
-		rc.Top = yp;
-		UINT opt = DT_LEFT;  if (State.Contains(odNoAccel))  opt |= DT_HIDEPREFIX;
-		::DrawText(ACanvas->Handle, mp->Caption.c_str(), -1, &rc, opt);
-
-		//アイコン
-		int idx = mp->ImageIndex;
-		if (idx>=0 && idx<IconImgListP->Count) {
-			IconImgListP->Draw(ACanvas, ARect.Left + Scaled4, yp, mp->ImageIndex);
-		}
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TOptionDlg::TestPopupMenuPopup(TObject *Sender)
-{
-	SetMenuBgColor(((TPopupMenu *)Sender)->Handle);
 }
 //---------------------------------------------------------------------------
 

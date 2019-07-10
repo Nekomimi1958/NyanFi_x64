@@ -2239,6 +2239,8 @@ object NyanFiForm: TNyanFiForm
       AutoHotkeys = maAutomatic
       Caption = #12501#12449#12452#12523'(&F)'
       OnClick = FileMenuClick
+      OnAdvancedDrawItem = MainMenuAdvancedDrawItem
+      OnMeasureItem = MainMenuMeasureItem
       object NewWorkListItem: TMenuItem
         Action = NewWorkListAction
       end
@@ -2348,6 +2350,8 @@ object NyanFiForm: TNyanFiForm
       Caption = #32232#38598'(&E)'
       SubMenuImages = IconImgListP
       OnClick = ExtMenuClick
+      OnAdvancedDrawItem = MainMenuAdvancedDrawItem
+      OnMeasureItem = MainMenuMeasureItem
       object MaskSelItem: TMenuItem
         Action = MaskSelectAction
       end
@@ -2444,6 +2448,8 @@ object NyanFiForm: TNyanFiForm
       AutoHotkeys = maAutomatic
       Caption = #26908#32034'(&S)'
       OnClick = MainMenuClick
+      OnAdvancedDrawItem = MainMenuAdvancedDrawItem
+      OnMeasureItem = MainMenuMeasureItem
       object FindFileItem: TMenuItem
         Action = FindFileDlgAction
       end
@@ -2482,6 +2488,8 @@ object NyanFiForm: TNyanFiForm
       AutoHotkeys = maAutomatic
       Caption = #34920#31034'(&V)'
       OnClick = MainMenuClick
+      OnAdvancedDrawItem = MainMenuAdvancedDrawItem
+      OnMeasureItem = MainMenuMeasureItem
       object ReternListItem: TMenuItem
         Action = ReturnListAction
       end
@@ -2707,6 +2715,9 @@ object NyanFiForm: TNyanFiForm
     end
     object ListMenu: TMenuItem
       Caption = #19968#35239'(&L)'
+      OnClick = MainMenuClick
+      OnAdvancedDrawItem = MainMenuAdvancedDrawItem
+      OnMeasureItem = MainMenuMeasureItem
       object SelDriveItem: TMenuItem
         Action = DriveListAction
       end
@@ -2783,6 +2794,8 @@ object NyanFiForm: TNyanFiForm
       Caption = #12484#12540#12523'(&T)'
       SubMenuImages = IconImgListP
       OnClick = ExtMenuClick
+      OnAdvancedDrawItem = MainMenuAdvancedDrawItem
+      OnMeasureItem = MainMenuMeasureItem
       object OpenExpItem: TMenuItem
         Action = OpenByExpAction
       end
@@ -2869,6 +2882,8 @@ object NyanFiForm: TNyanFiForm
       AutoHotkeys = maAutomatic
       Caption = #35373#23450'(&O)'
       OnClick = MainMenuClick
+      OnAdvancedDrawItem = MainMenuAdvancedDrawItem
+      OnMeasureItem = MainMenuMeasureItem
       object OptionItem: TMenuItem
         Action = OptionDlgAction
       end
@@ -2931,6 +2946,8 @@ object NyanFiForm: TNyanFiForm
       AutoHotkeys = maAutomatic
       Caption = #12504#12523#12503'(&H)'
       OnClick = MainMenuClick
+      OnAdvancedDrawItem = MainMenuAdvancedDrawItem
+      OnMeasureItem = MainMenuMeasureItem
       object HelpContentsItem: TMenuItem
         Action = HelpContentsAction
       end

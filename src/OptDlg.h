@@ -973,9 +973,10 @@ private:	// ユーザー宣言
 
 	void __fastcall WmNyanFiFlIcon(TMessage &msg)
 	{
-		EtcEditorListBox->Invalidate();
+		AssociateListBox->Invalidate();
 		ExtMenuListBox->Invalidate();
 		ExtToolListBox->Invalidate();
+		EtcEditorListBox->Invalidate();
 	}
 
 public:		// ユーザー宣言
