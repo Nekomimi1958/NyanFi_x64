@@ -57,38 +57,6 @@ object PrintImgDlg: TPrintImgDlg
     DesignSize = (
       294
       372)
-    object PrevBtn: TSpeedButton
-      Left = 122
-      Top = 340
-      Width = 24
-      Height = 26
-      Anchors = [akLeft, akBottom]
-      OnClick = PrevBtn_Click
-    end
-    object NextBtn: TSpeedButton
-      Left = 148
-      Top = 340
-      Width = 24
-      Height = 26
-      Anchors = [akLeft, akBottom]
-      OnClick = NextBtnClick
-    end
-    object TopBtn: TSpeedButton
-      Left = 96
-      Top = 340
-      Width = 24
-      Height = 26
-      Anchors = [akLeft, akBottom]
-      OnClick = TopBtnClick
-    end
-    object EndBtn: TSpeedButton
-      Left = 174
-      Top = 340
-      Width = 24
-      Height = 26
-      Anchors = [akLeft, akBottom]
-      OnClick = EndBtnClick
-    end
     object OkButton: TButton
       Left = 209
       Top = 340
@@ -98,7 +66,7 @@ object PrintImgDlg: TPrintImgDlg
       Cancel = True
       Caption = #38281#12376#12427
       ModalResult = 1
-      TabOrder = 3
+      TabOrder = 7
     end
     object PageControl1: TPageControl
       Left = 8
@@ -406,6 +374,42 @@ object PrintImgDlg: TPrintImgDlg
         TabOrder = 4
         OnClick = OptionChanged
       end
+    end
+    object TopBtn: TButton
+      Left = 92
+      Top = 340
+      Width = 26
+      Height = 26
+      Caption = '|<'
+      TabOrder = 3
+      OnClick = TopBtnClick
+    end
+    object PrevBtn: TButton
+      Left = 120
+      Top = 340
+      Width = 26
+      Height = 26
+      Caption = '<'
+      TabOrder = 4
+      OnClick = PrevBtn_Click
+    end
+    object NextBtn: TButton
+      Left = 148
+      Top = 340
+      Width = 26
+      Height = 26
+      Caption = '>'
+      TabOrder = 5
+      OnClick = NextBtnClick
+    end
+    object EndBtn: TButton
+      Left = 176
+      Top = 340
+      Width = 26
+      Height = 26
+      Caption = '>|'
+      TabOrder = 6
+      OnClick = EndBtnClick
     end
   end
   object PrinterSetupDialog1: TPrinterSetupDialog

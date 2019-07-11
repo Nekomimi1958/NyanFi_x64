@@ -53,10 +53,6 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioGroup *OptRadioGroup;
 	TRadioGroup *StrAlRadioGroup;
 	TRadioGroup *StrPosRadioGroup;
-	TSpeedButton *EndBtn;
-	TSpeedButton *NextBtn;
-	TSpeedButton *PrevBtn;
-	TSpeedButton *TopBtn;
 	TTabSheet *TabSheet1;
 	TTabSheet *TabSheet2;
 	TUpDown *CpsUpDown;
@@ -64,6 +60,10 @@ __published:	// IDE で管理されるコンポーネント
 	TUpDown *OfsYUpDown;
 	TUpDown *ScaleUpDown;
 	TUpDown *StrMgnUpDown;
+	TButton *TopBtn;
+	TButton *PrevBtn;
+	TButton *NextBtn;
+	TButton *EndBtn;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

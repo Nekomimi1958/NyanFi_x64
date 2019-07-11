@@ -31,6 +31,17 @@ void __fastcall TFindKeyDlg::FormShow(TObject *Sender)
 	DummyBtn->SetFocus();
 
 	SetDarkWinTheme(this);
+	//TSpeedButton のダークモード対応
+	if (IsDarkMode) {
+		CancelBtn->Flat    = true;
+		CanOutPanel->Color = dcl_BtnHighlight;
+		CanInPanel->Color  = dcl_BtnFace;
+	}
+	else {
+		CancelBtn->Flat    = false;
+		CanOutPanel->Color = Color;
+		CanInPanel->Color  = Color;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TFindKeyDlg::FormClose(TObject *Sender, TCloseAction &Action)

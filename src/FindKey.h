@@ -11,6 +11,7 @@
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
 #include <Vcl.Buttons.hpp>
+#include <Vcl.ExtCtrls.hpp>
 
 //---------------------------------------------------------------------------
 class TFindKeyDlg : public TForm
@@ -20,6 +21,8 @@ __published:	// IDE で管理されるコンポーネント
 	TLabel *KeyLabel;
 	TLabel *Label1;
 	TSpeedButton *CancelBtn;
+	TPanel *CanInPanel;
+	TPanel *CanOutPanel;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);

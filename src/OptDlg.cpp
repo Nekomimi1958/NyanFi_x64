@@ -1341,7 +1341,7 @@ void __fastcall TOptionDlg::EtcEditorListBoxDrawItem(TWinControl *Control, int I
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
 	int xp = Rect.Left + Scaled4;
-	int yp = Rect.Top  + get_TopMargin(cv);
+	int yp = Rect.Top + (Rect.Height() - cv->TextHeight("Q"))/2;
 
 	int w_x = 0;
 	for (int i=0; i<lp->Count; i++) w_x = std::max(cv->TextWidth(lp->Items->Names[i]), w_x);
@@ -2786,7 +2786,7 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 	cv->FillRect(Rect);
 
 	int xp = Rect.Left + Scaled2;
-	int yp = Rect.Top  + get_TopMargin(cv);
+	int yp = Rect.Top + (Rect.Height() - cv->TextHeight("Q"))/2;
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	bool brk = false;
 
@@ -2880,7 +2880,7 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 	}
 
 	int xp = Rect.Left + Scaled2 + ScaledInt(18) + (sub_lvl * cv->TextWidth("W"));
-	int yp = Rect.Top  + get_TopMargin(cv);
+	int yp = Rect.Top + (Rect.Height() - cv->TextHeight("Q"))/2;
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	TStringDynArray itm_buf = get_csv_array(lbuf, (is_tool? EXTTOOL_CSVITMCNT : EXTMENU_CSVITMCNT), true);

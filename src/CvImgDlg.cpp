@@ -140,7 +140,14 @@ void __fastcall TCvImageDlg::CvFmtRadioGroupClick(TObject *Sender)
 	CmpModeLabel->Visible	 = idx==4;
 	CmpModeComboBox->Visible = idx==4;
 
-	FextLabel->Caption = "." + ReplaceStr(CvFmtRadioGroup->Items->Strings[idx].LowerCase(), "&", EmptyStr);
+	switch (CvFmtRadioGroup->ItemIndex) {
+	case 0: FextLabel->Caption = ".bmp";	break;
+	case 1: FextLabel->Caption = ".jpg";	break;
+	case 2: FextLabel->Caption = ".png";	break;
+	case 3: FextLabel->Caption = ".gif";	break;
+	case 4: FextLabel->Caption = ".tif";	break;
+	case 5: FextLabel->Caption = ".hdp";	break;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TCvImageDlg::ImgQTrackBarChange(TObject *Sender)

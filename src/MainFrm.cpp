@@ -9657,8 +9657,8 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 
 	//テキストプレビューの表示
 	if (TxtPrvListBox->Count>0) {
-		SetWindowTheme(TxtPrvListBox->Handle,  IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
-		SetWindowTheme(TxtTailListBox->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
+		::SetWindowTheme(TxtPrvListBox->Handle,  IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
+		::SetWindowTheme(TxtTailListBox->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
 		TxtPrvListPanel->Visible = true;
 	}
 	else {

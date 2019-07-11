@@ -24,14 +24,6 @@ object FindKeyDlg: TFindKeyDlg
     Height = 13
     Caption = #26908#32034#12377#12427#12461#12540#12434#25276#12375#12390#12367#12384#12373#12356#12290
   end
-  object CancelBtn: TSpeedButton
-    Left = 95
-    Top = 88
-    Width = 80
-    Height = 24
-    Caption = #12461#12515#12531#12475#12523
-    OnClick = CancelBtnClick
-  end
   object KeyLabel: TLabel
     Left = 8
     Top = 41
@@ -49,5 +41,35 @@ object FindKeyDlg: TFindKeyDlg
     Default = True
     TabOrder = 0
     OnClick = DummyBtnClick
+  end
+  object CanOutPanel: TPanel
+    Left = 94
+    Top = 80
+    Width = 82
+    Height = 26
+    AutoSize = True
+    BevelOuter = bvNone
+    BorderWidth = 1
+    ParentBackground = False
+    TabOrder = 1
+    StyleElements = [seFont, seBorder]
+    object CanInPanel: TPanel
+      Left = 1
+      Top = 1
+      Width = 80
+      Height = 24
+      AutoSize = True
+      BevelOuter = bvNone
+      TabOrder = 0
+      StyleElements = [seFont, seBorder]
+      object CancelBtn: TSpeedButton
+        Left = 0
+        Top = 0
+        Width = 80
+        Height = 24
+        Caption = #12461#12515#12531#12475#12523
+        OnClick = CancelBtnClick
+      end
+    end
   end
 end

@@ -37,11 +37,6 @@ void __fastcall TPrintImgDlg::FormShow(TObject *Sender)
 
 	DlgInitialized = false;
 
-	set_ButtonMark(PrevBtn, UBMK_LEFT);
-	set_ButtonMark(NextBtn, UBMK_RIGHT);
-	set_ButtonMark(TopBtn,  UBMK_HTOP);
-	set_ButtonMark(EndBtn,  UBMK_HEND);
-
 	StrFont = IniFile->ReadFontInf(_T("PrintImg"),	Font);
 
 	init_UpDown(CpsUpDown,		Printer()->Copies);
@@ -340,7 +335,7 @@ void __fastcall TPrintImgDlg::ClearPreview()
 {
 	TCanvas *cv = PrvImage->Picture->Bitmap->Canvas;
 	cv->Brush->Color = clWhite;
-	cv->FillRect(PrvImage->BoundsRect);
+	cv->FillRect(PrvImage->ClientRect);
 	SizeLabel->Hint    = EmptyStr;
 	SizeLabel->Caption = EmptyStr;
 }
@@ -360,7 +355,7 @@ void __fastcall TPrintImgDlg::PrintActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TPrintImgDlg::PrintActionUpdate(TObject *Sender)
 {
-	((TAction*)Sender)->Enabled = !Printer()->Printing && !isViewIcon;
+	((TAction*)Sender)->Enabled = !Printer()->Printing && !isViewIcon &&  !isViewAGif;
 }
 
 //---------------------------------------------------------------------------
@@ -369,7 +364,7 @@ void __fastcall TPrintImgDlg::PrintActionUpdate(TObject *Sender)
 void __fastcall TPrintImgDlg::PrevBtn_Click(TObject *Sender)
 {
 	NyanFiForm->PrevFileAction->Execute();
-	if (isViewIcon) ClearPreview();
+	if (isViewIcon || isViewAGif) ClearPreview();
 }
 //---------------------------------------------------------------------------
 //ŽŸ‚Ì‰æ‘œ
@@ -377,7 +372,7 @@ void __fastcall TPrintImgDlg::PrevBtn_Click(TObject *Sender)
 void __fastcall TPrintImgDlg::NextBtnClick(TObject *Sender)
 {
 	NyanFiForm->NextFileAction->Execute();
-	if (isViewIcon) ClearPreview();
+	if (isViewIcon || isViewAGif) ClearPreview();
 }
 //---------------------------------------------------------------------------
 //æ“ª‚Ì‰æ‘œ
@@ -385,7 +380,7 @@ void __fastcall TPrintImgDlg::NextBtnClick(TObject *Sender)
 void __fastcall TPrintImgDlg::TopBtnClick(TObject *Sender)
 {
 	NyanFiForm->TopFileAction->Execute();
-	if (isViewIcon) ClearPreview();
+	if (isViewIcon || isViewAGif) ClearPreview();
 }
 //---------------------------------------------------------------------------
 //ÅŒã‚Ì‰æ‘œ
@@ -393,7 +388,7 @@ void __fastcall TPrintImgDlg::TopBtnClick(TObject *Sender)
 void __fastcall TPrintImgDlg::EndBtnClick(TObject *Sender)
 {
 	NyanFiForm->EndFileAction->Execute();
-	if (isViewIcon) ClearPreview();
+	if (isViewIcon || isViewAGif) ClearPreview();
 }
 
 //---------------------------------------------------------------------------
