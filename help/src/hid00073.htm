@@ -62,20 +62,23 @@
 <div class="spc_box">
 <a href="hid00005.htm#ListFileName">ListFileName</a> コマンドでファイル名一覧を表示している場合、<span class="btn_frame">Enter</span>キーを押すと、ダイアログを閉じてそのファイル位置に移動します(選択項目があればファイルリストに反映)。<br>
 <a href="hid00005.htm#ListTree">ListTree</a> コマンドによるディレクトリのツリー表示や、<a href="hid00005.htm#CopyDir">CopyDir</a>_LS コマンドによるディレクトリ名一覧表示の場合、<span class="btn_frame">Enter</span>キーを押すとカーソル位置のディレクトリに移動します。<br>
-<a href="hid00005.htm#PlayList">PlayList</a>_LS コマンドでプレイリストを表示している場合、<span class="btn_frame">Enter</span>キーを押すと、カーソル位置の曲を再生できます。再生中の曲には先頭に&#x25b6;マークが表示されます。<br>
+</div>
+<div class="spc_box">
+<a href="hid00005.htm#PlayList">PlayList</a>_LS コマンドでプレイリストを表示している場合、<span class="btn_frame">Enter</span>キーを押すと、カーソル位置の曲を再生できます(再生中なら一時停止)。項目の先頭には&#x25b6;マークが表示されます(一時停止中なら「<b>無効な項目の文字色</b>」で表示)。<br>
+なお再生/一時停止や前/次曲再生は、ツールボタンでも可能です。<br>
 </div>
 
 <a href="hid00005.htm#ListFileName">ListFileName</a>、<a href="hid00005.htm#ListTree">ListTree</a>、<a href="hid00005.htm#CopyDir">CopyDir</a>_LS、<a href="hid00005.htm#PlayList">PlayList</a>_LS コマンドで一覧を表示している場合、<a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a>、<a href="hid00005.htm#ListFileInfo">ListFileInfo</a> コマンドが割り当てられているキーでファイル情報を、<a href="hid00005.htm#PropertyDlg">PropertyDlg</a> コマンドが割り当てられているキーでプロパティを表示できます。<br>
 
 <dt class="no_bg">ファイル監視
 <dd>
-<a href="hid00005.htm#ListTail">ListTail</a> コマンドでテキストファイルを表示している場合、<img src="chkbox.png" alt="" border=0> <b>監視</b> をチェックしていると、ファイルの変化を監視して表示を自動的に更新します(監視間隔=1秒)。またその場合、<img src="chkbox.png" alt="" border=0> <b>通知</b> をチェックしていると、ファイルが変化(フィルタ中なら表示内容が変化)したときに、<a href="hid00018.htm">オプション設定 - 通知・確認</a>で「<b>ファイル監視の通知音</b>」で設定されている通知音が鳴ります。<br>
+<a href="hid00005.htm#ListTail">ListTail</a> コマンドでテキストファイルを表示している場合、ツールボタンの<span class="btn_frame">監視</span>を有効にしていると、ファイルの変化を監視して表示を自動的に更新します(監視間隔=1秒)。また<span class="btn_frame">通知</span>を有効にしていると、ファイルが変化(フィルタ中なら表示内容が変化)したときに、<a href="hid00018.htm">オプション設定 - 通知・確認</a>で「<b>ファイル監視の通知音</b>」で設定されている通知音が鳴ります。<br>
 <br>
 
 <dt class="no_bg">フィルタ
 <dd>
 <b>フィルタ</b>覧に文字列を入力すると、それが含まれる行だけが絞り込み表示されます。<br>
-<span class="btn_frame">Migemo</span>を有効にすると <b>Migemo</b> モードで絞り込みを行えます。モード切り替えは、フィルタ欄で <span class="btn_frame">Ctrl</span>+<span class="btn_frame">M</span>キーでも可能です。<br>
+<span class="btn_frame">Migemo</span>ボタンを有効にすると <b>Migemo</b> モードで絞り込みを行えます。モード切り替えは、フィルタ欄で <span class="btn_frame">Ctrl</span>+<span class="btn_frame">M</span>キーでも可能です。<br>
 <div class="note_text">
 ※<b>Migemo</b> モードだと処理が重くなります。フィルタ欄には日本語も入力できるので、行数が多い場合は通常モードにした方がよいでしょう。<br>
 </div>

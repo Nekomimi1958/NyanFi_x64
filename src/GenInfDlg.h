@@ -41,6 +41,9 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *NotifyAction;
 	TAction *OmitComPathAction;
 	TAction *OrgOrderAction;
+	TAction *PlayNextAction;
+	TAction *PlayPauseAction;
+	TAction *PlayPrevAction;
 	TAction *PropertyAction;
 	TAction *RestoreListAction;
 	TAction *SaveAsAction;
@@ -99,6 +102,9 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *HighlightBtn;
 	TToolButton *MigemoBtn;
 	TToolButton *NotifyBtn;
+	TToolButton *PlayNextBtn;
+	TToolButton *PlayPauseBtn;
+	TToolButton *PlayPrevBtn;
 	TToolButton *ToolButton5;
 	TToolButton *WatchBtn;
 
@@ -161,6 +167,11 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ClrCmdHistoryActionUpdate(TObject *Sender);
 	void __fastcall ClrCmdHistoryActionExecute(TObject *Sender);
 	void __fastcall SaveAsNbtActionExecute(TObject *Sender);
+	void __fastcall PlayNextActionExecute(TObject *Sender);
+	void __fastcall PlayPrevActionExecute(TObject *Sender);
+	void __fastcall PlayPauseActionExecute(TObject *Sender);
+	void __fastcall PlayPauseActionUpdate(TObject *Sender);
+	void __fastcall PlayActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	int  MaxNameWidth;

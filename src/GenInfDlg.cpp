@@ -58,7 +58,8 @@ void __fastcall TGeneralInfoDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 {
-	setup_ToolBar(OpeToolBar);
+	setup_ToolBar(OpeToolBar, true);
+
 	FilterEdit->Width = IniFile->ReadIntGen(_T("GenInfoFilterWidth"),	200);
 
 	RetStr = EmptyStr;
@@ -217,8 +218,8 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
 	set_SttBarPanelWidth(StatusBar1, 0, 21 + IntToStr(GenInfoList->Count).Length() * 3);
 												//"項目: nnn  -  nnn    選択: nnn"
-	set_SttBarPanelWidth(StatusBar1, 1, 17);	//"UTF-16(BE) BOM付 ";
-	set_SttBarPanelWidth(StatusBar1, 2,  5);	//"CR/LF";
+	set_SttBarPanelWidth(StatusBar1, 1, "UTF-16(BE) BOM付");
+	set_SttBarPanelWidth(StatusBar1, 2, "CR/LF");
 	SetStatusBar();
 
 	SetDarkWinTheme(this);
@@ -301,8 +302,8 @@ void __fastcall TGeneralInfoDlg::GenListWndProc(TMessage &msg)
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::WmFormShowed(TMessage &msg)
 {
+	GenListBox->Invalidate();
 	Application->ProcessMessages();
-	GenListBox->Repaint();
 }
 
 //---------------------------------------------------------------------------
@@ -542,11 +543,7 @@ void __fastcall TGeneralInfoDlg::SetStatusBar(UnicodeString msg)
 	if (lp->ItemIndex!=-1)	stt_str.cat_sprintf(_T("  -  %u"),lp->ItemIndex + 1);
 	if (lp->SelCount>0)		stt_str.cat_sprintf(_T("    選択: %u"), lp->SelCount);
 	StatusBar1->Panels->Items[0]->Text = stt_str;
-
-	StatusBar1->Panels->Items[1]->Text =
-		 get_NameOfCodePage(CodePage)
-		 	+ ((CodePage==1200 || CodePage==1201 || CodePage==65001)? (HasBOM? " BOM付" : " BOM無") : "");
-
+	StatusBar1->Panels->Items[1]->Text = get_NameOfCodePage(CodePage, false, HasBOM);
 	StatusBar1->Panels->Items[2]->Text = LineBreakStr;
 
 	UnicodeString lbuf = (lp->ItemIndex!=-1)? lp->Items->Strings[lp->ItemIndex] : EmptyStr;
@@ -577,7 +574,7 @@ void __fastcall TGeneralInfoDlg::SetStatusBar(UnicodeString msg)
 //ステータスバーの描画
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-		const TRect &Rect)
+	const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Font->Assign(StatusBar->Font);
@@ -640,7 +637,7 @@ void __fastcall TGeneralInfoDlg::FilterBtnClick(TObject *Sender)
 //一覧の描画 (仮想)
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -827,7 +824,8 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	//プレイリスト
 	else if (isPlayList) {
 		//再生中マーク
-		if (SameText(PlayFile, lbuf)) out_Text(cv, rc.Left + 2, yp, PLAY_Mark.c_str(), col_Cursor);
+		if (SameText(PlayFile, lbuf))
+			out_Text(cv, rc.Left + 2, yp, PLAY_Mark.c_str(), is_ListPlaying()? col_Cursor : col_InvItem);
 		rc.Left += get_TextWidth(cv, PLAY_Mark, is_irreg) + 4;
 
 		if (OmitComPathAction->Checked) remove_top_text(lbuf, ComPathName);	//パスの共通部分を省略
@@ -1063,11 +1061,20 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 			else if (isPlayList) {
 				int idx = PlayList->IndexOf(fnam);
 				if (idx!=-1) {
-					cursor_HourGlass();
-					PlayStbIdx = idx;
-					play_PlayList(false, true);	//シャッフル抑止
-					lp->Repaint();
-					cursor_Default();
+					if (SameText(fnam, PlayFile)) {
+						if (is_ListPlaying())
+							mciSendString(_T("pause PLYLIST"), NULL, 0, NULL);
+						else
+							mciSendString(_T("resume PLYLIST"), NULL, 0, NULL);
+						GenListBox->Invalidate();
+					}
+					else {
+						cursor_HourGlass();
+						PlayStbIdx = idx;
+						play_PlayList(false, true);	//シャッフル抑止
+						lp->Repaint();
+						cursor_Default();
+					}
 				}
 			}
 		}
@@ -1507,8 +1514,55 @@ void __fastcall TGeneralInfoDlg::ToggleActionExecute(TObject *Sender)
 void __fastcall TGeneralInfoDlg::TailActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction *)Sender;
-	ap->Enabled = isTail;
 	ap->Visible = isTail;
+	ap->Enabled = isTail;
+}
+
+//---------------------------------------------------------------------------
+//再生/一時停止
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::PlayPauseActionExecute(TObject *Sender)
+{
+	if (is_ListPlaying())
+		mciSendString(_T("pause PLYLIST"), NULL, 0, NULL);
+	else
+		mciSendString(_T("resume PLYLIST"), NULL, 0, NULL);
+	GenListBox->Invalidate();
+}
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::PlayPauseActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Visible = isPlayList;
+	ap->Enabled = isPlayList;
+
+	if (isPlayList) {
+		ap->Checked = is_ListPlaying();
+		ap->Hint	= is_ListPlaying()? "一時停止" : "再生";
+	}
+}
+//---------------------------------------------------------------------------
+//次の曲を再生
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::PlayNextActionExecute(TObject *Sender)
+{
+	play_PlayList(false, true);
+	GenListBox->Invalidate();
+}
+//---------------------------------------------------------------------------
+//前の曲を再生
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::PlayPrevActionExecute(TObject *Sender)
+{
+	play_PlayList(true, true);
+	GenListBox->Invalidate();
+}
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::PlayActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Visible = isPlayList;
+	ap->Enabled = isPlayList;
 }
 
 //---------------------------------------------------------------------------

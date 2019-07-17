@@ -1709,7 +1709,7 @@ void set_ListBoxItemHi(TCheckListBox *lp, TFont *font = NULL, bool with_ico = fa
 void set_StdListBox(TListBox      *lp, int tag = 0, TFont *font = NULL, bool with_ico = false);
 void set_StdListBox(TCheckListBox *lp, int tag = 0, TFont *font = NULL, bool with_ico = false);
 
-void setup_ToolBar(TToolBar *tb);
+void setup_ToolBar(TToolBar *tb, bool upd_sw = false);
 
 void set_UsrScrPanel(UsrScrollPanel *sp);
 void set_FextWidth(file_rec *fp, int tag);
@@ -1915,6 +1915,7 @@ bool play_sound_ex(UnicodeString fnam, bool limit = true);
 bool add_PlayFile(UnicodeString fnam);
 bool add_PlayList(UnicodeString lnam);
 bool play_PlayList(bool prev = false, bool inh_shfl = false);
+bool is_ListPlaying();
 
 void set_CloseButton(bool enabled);
 

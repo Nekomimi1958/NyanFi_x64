@@ -4,7 +4,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
   HelpContext = 73
   BorderIcons = [biSystemMenu]
   ClientHeight = 512
-  ClientWidth = 470
+  ClientWidth = 530
   Color = clBtnFace
   Constraints.MinWidth = 320
   ParentFont = True
@@ -22,7 +22,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
   object StatusBar1: TStatusBar
     Left = 0
     Top = 492
-    Width = 470
+    Width = 530
     Height = 20
     DoubleBuffered = False
     Font.Charset = DEFAULT_CHARSET
@@ -56,7 +56,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
   object MianPanel: TPanel
     Left = 0
     Top = 0
-    Width = 470
+    Width = 530
     Height = 492
     Align = alClient
     BevelOuter = bvNone
@@ -64,7 +64,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object ListPanel: TPanel
       Left = 0
       Top = 0
-      Width = 470
+      Width = 530
       Height = 473
       Align = alClient
       BevelOuter = bvNone
@@ -72,12 +72,12 @@ object GeneralInfoDlg: TGeneralInfoDlg
       ParentDoubleBuffered = False
       TabOrder = 0
       DesignSize = (
-        470
+        530
         473)
       object GenListBox: TListBox
         Left = 0
         Top = 0
-        Width = 470
+        Width = 530
         Height = 473
         Style = lbVirtualOwnerDraw
         Anchors = [akLeft, akTop, akRight, akBottom]
@@ -104,7 +104,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
     object OpeToolBar: TToolBar
       Left = 0
       Top = 473
-      Width = 470
+      Width = 530
       Height = 19
       Align = alBottom
       AutoSize = True
@@ -180,6 +180,24 @@ object GeneralInfoDlg: TGeneralInfoDlg
         Left = 396
         Top = 0
         Action = NotifyAction
+        Style = tbsTextButton
+      end
+      object PlayPrevBtn: TToolButton
+        Left = 446
+        Top = 0
+        Action = PlayPrevAction
+        Style = tbsTextButton
+      end
+      object PlayPauseBtn: TToolButton
+        Left = 473
+        Top = 0
+        Action = PlayPauseAction
+        Style = tbsTextButton
+      end
+      object PlayNextBtn: TToolButton
+        Left = 501
+        Top = 0
+        Action = PlayNextAction
         Style = tbsTextButton
       end
     end
@@ -415,6 +433,23 @@ object GeneralInfoDlg: TGeneralInfoDlg
       Caption = #36890#30693'(&N)'
       OnExecute = ToggleActionExecute
       OnUpdate = TailActionUpdate
+    end
+    object PlayNextAction: TAction
+      Caption = '>>'
+      Hint = #27425#12398#26354#12434#20877#29983
+      OnExecute = PlayNextActionExecute
+      OnUpdate = PlayActionUpdate
+    end
+    object PlayPrevAction: TAction
+      Caption = '<<'
+      Hint = #21069#12398#26354#12434#20877#29983
+      OnExecute = PlayPrevActionExecute
+      OnUpdate = PlayActionUpdate
+    end
+    object PlayPauseAction: TAction
+      Caption = #9655'||'
+      OnExecute = PlayPauseActionExecute
+      OnUpdate = PlayPauseActionUpdate
     end
   end
   object Timer1: TTimer

@@ -80,10 +80,10 @@ bool ApplyDarkMode();
 void SetDarkWinTheme(TWinControl *wp);
 TLabel* AttachLabelToGroup(TWinControl *wp, UnicodeString s = EmptyStr);
 
+TColor get_WinColor(bool is_inv = false);
 TColor get_TextColor(bool hl = false);
 TColor get_PanelColor(bool is_inv = false);
 TColor get_LabelColor();
-TColor get_WinColor(bool is_inv = false);
 
 void SetMenuBgColor(HMENU hMenu);
 void SetHighlight(TCanvas *cv, bool hl);

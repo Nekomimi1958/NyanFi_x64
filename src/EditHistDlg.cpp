@@ -54,7 +54,6 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter,
 		isRecent? "RecentListDlg" : isMark? "MarkListDlg" : isRepo? "RepoListDlg" : isTags? "TagJumpDlg" : "");
 
-	setup_ToolBar(OpeToolBar);
 	FilterEdit->Width = IniFile->ReadIntGen(_T("EditHistFilterWidth"),	200);
 
 	SetDarkWinTheme(this);
@@ -129,9 +128,12 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 
 	StatusBar1->Visible = ShowStatusBarAction->Checked;
 	OpeToolBar->Visible = (!isRecent && !isTags);
-	if (OpeToolBar->Visible && StatusBar1->Visible) {
-		OpeToolBar->Align = alTop;
-		OpeToolBar->Align = alBottom;
+	if (OpeToolBar->Visible) {
+		setup_ToolBar(OpeToolBar);
+		if (StatusBar1->Visible) {
+			OpeToolBar->Align = alTop;
+			OpeToolBar->Align = alBottom;
+		}
 	}
 
 	HelpContext = isTags? 83 : isMark? 70 : 58;

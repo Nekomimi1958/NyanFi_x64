@@ -2048,7 +2048,10 @@ const UnicodeString CodePageListX =
 //---------------------------------------------------------------------------
 //コードページの名前を取得
 //---------------------------------------------------------------------------
-UnicodeString get_NameOfCodePage(int code_page, bool long_sw, bool has_bom)
+UnicodeString get_NameOfCodePage(
+	int code_page, 
+	bool long_sw,		//true = 長い表示	(default = false)
+	bool has_bom)		//true = BOM付き	(default = false)
 {
 	UnicodeString ret_str;
 	if (code_page>0) {

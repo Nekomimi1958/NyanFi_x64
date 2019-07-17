@@ -336,28 +336,32 @@ void __fastcall TImgViewThread::DrawMessage()
 			else
 				NyanFiForm->ShowMessageHint();
 		}
-		return;
-	}
-
-	//イメージビュアー
-	if (NyanFiForm->ImgViewPanel->Visible) {
-		if (ShowSttBar) {
-			NyanFiForm->StatusBar1->Panels->Items[0]->Text = MsgStr;
-			NyanFiForm->StatusBar1->Repaint();
-			if (MsgIsErr) beep_Warn();
-		}
-		else if (ShowMsgHint && MsgIsErr) {
-			NyanFiForm->ShowMessageHint(MsgStr, col_bgWarn, true);
+		else if (NyanFiForm->PreviewPanel->Visible) {
+			NyanFiForm->PreviewSttLabel->Visible = false;
+			NyanFiForm->PreviewSttLabel->Caption = EmptyStr;
 		}
 	}
-	//プレビュー
-	else if (NyanFiForm->PreviewPanel->Visible) {
-		TLabel *lp = NyanFiForm->PreviewSttLabel;
-		lp->Caption 	= MsgStr;
-		lp->Font->Color = MsgIsErr? col_Error : col_Teal;
-		lp->Top 		= NyanFiForm->PreviewPanel->ClientHeight - lp->Height - 4;
-		lp->Left		= 8;
-		lp->Visible 	= true;
+	else {
+		//イメージビュアー
+		if (NyanFiForm->ImgViewPanel->Visible) {
+			if (ShowSttBar) {
+				NyanFiForm->StatusBar1->Panels->Items[0]->Text = MsgStr;
+				NyanFiForm->StatusBar1->Repaint();
+				if (MsgIsErr) beep_Warn();
+			}
+			else if (ShowMsgHint && MsgIsErr) {
+				NyanFiForm->ShowMessageHint(MsgStr, col_bgWarn, true);
+			}
+		}
+		//プレビュー
+		else if (NyanFiForm->PreviewPanel->Visible) {
+			TLabel *lp = NyanFiForm->PreviewSttLabel;
+			lp->Caption 	= MsgStr;
+			lp->Font->Color = MsgIsErr? col_Error : col_Teal;
+			lp->Top 		= NyanFiForm->PreviewPanel->ClientHeight - lp->Height - 4;
+			lp->Left		= 8;
+			lp->Visible 	= true;
+		}
 	}
 }
 
@@ -575,7 +579,8 @@ void __fastcall TImgViewThread::Execute()
 					ImgBuff->Handle  = NULL;
 					ViewBuff->Handle = NULL;
 
-					MsgStr = "読込中..."; MsgIsErr = false;
+					MsgStr	 = "読込中...";
+					MsgIsErr = false;
 					Synchronize(&DrawMessage);
 
 					//動画
@@ -718,7 +723,8 @@ void __fastcall TImgViewThread::Execute()
 						}
 						ExifOri = 0;
 					}
-					MsgStr = EmptyStr; Synchronize(&DrawMessage);
+					MsgStr = EmptyStr;
+					Synchronize(&DrawMessage);
 				}
 
 				//表示

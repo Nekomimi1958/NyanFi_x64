@@ -104,6 +104,7 @@ void set_HeaderSecWidth(THeaderControl *hp, int cnt, ...);
 void adjust_HeaderSecWidth(THeaderControl *hp, int idx);
 
 int  set_SttBarPanelWidth(TStatusBar *sp, int idx, int n);
+int  set_SttBarPanelWidth(TStatusBar *sp, int idx, UnicodeString s);
 
 void clear_GridRow(TStringGrid *gp, int row, int col = 0);
 int  get_GridIndex(TStringGrid *gp, int max_count);

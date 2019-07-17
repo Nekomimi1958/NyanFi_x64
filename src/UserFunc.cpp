@@ -202,9 +202,10 @@ int get_FontHeight(TFont *font, int mgn, int min_mgn)
 	return fh;
 }
 //---------------------------------------------------------------------------
-//指定フォント n 文字(半角単位)の描画幅を取得
+//指定フォントによる描画幅を取得
 //---------------------------------------------------------------------------
-int get_CharWidth_Font(TFont *font, int n)
+int get_CharWidth_Font(TFont *font,
+	int n)	//半角単位の文字数
 {
 	std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
 	TCanvas *cv = bmp->Canvas;
@@ -798,14 +799,24 @@ void adjust_HeaderSecWidth(THeaderControl *hp, int idx)
 }
 
 //---------------------------------------------------------------------------
-//ステータスバーのパネル幅を文字数から設定
+//ステータスバーのパネル幅を設定
 //---------------------------------------------------------------------------
 int set_SttBarPanelWidth(TStatusBar *sp, int idx,
 	int n)	//文字数(半角単位)
 {
 	TCanvas *cv = sp->Canvas;
 	cv->Font->Assign(sp->Font);
-	int wd = (n>0)? get_CharWidth(cv, n, 16) : 0;
+	int wd = (n>0)? get_CharWidth(cv, n + 2, 16) : 0;
+	sp->Panels->Items[idx]->Width = wd;
+	return wd;
+}
+//---------------------------------------------------------------------------
+int set_SttBarPanelWidth(TStatusBar *sp, int idx,
+	UnicodeString s)	//文字列
+{
+	TCanvas *cv = sp->Canvas;
+	cv->Font->Assign(sp->Font);
+	int wd = cv->TextWidth(s + "__");
 	sp->Panels->Items[idx]->Width = wd;
 	return wd;
 }

@@ -20,9 +20,9 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *DummyBtn;
 	TLabel *KeyLabel;
 	TLabel *Label1;
-	TSpeedButton *CancelBtn;
 	TPanel *CanInPanel;
 	TPanel *CanOutPanel;
+	TSpeedButton *CancelBtn;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);

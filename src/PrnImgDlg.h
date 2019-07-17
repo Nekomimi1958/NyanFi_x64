@@ -25,10 +25,14 @@ class TPrintImgDlg : public TForm
 __published:	// IDE で管理されるコンポーネント
 	TAction *PrintAction;
 	TActionList *ActionList1;
+	TButton *EndBtn;
+	TButton *NextBtn;
 	TButton *OkButton;
+	TButton *PrevBtn;
 	TButton *PrnButton;
 	TButton *PrnPropBtn;
 	TButton *RefFontBtn;
+	TButton *TopBtn;
 	TCheckBox *GrayCheckBox;
 	TCheckBox *StrCheckBox;
 	TGroupBox *PrnGroupBox;
@@ -60,10 +64,6 @@ __published:	// IDE で管理されるコンポーネント
 	TUpDown *OfsYUpDown;
 	TUpDown *ScaleUpDown;
 	TUpDown *StrMgnUpDown;
-	TButton *TopBtn;
-	TButton *PrevBtn;
-	TButton *NextBtn;
-	TButton *EndBtn;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

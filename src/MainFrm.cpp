@@ -1724,10 +1724,10 @@ void __fastcall TNyanFiForm::FormResize(TObject *Sender)
 		//テキストビュアーヘッダ
 		TxtSttHeader->Font->Assign(ViewHdrFont);
 		TxtSttHeader->Panels->Items[0]->Width = ClientWidth
-			- set_SttBarPanelWidth(TxtSttHeader, 1, 17)		//"UTF-16(BE) BOM付 "
-			- set_SttBarPanelWidth(TxtSttHeader, 2,  5)		//"CR/LF"
-			- set_SttBarPanelWidth(TxtSttHeader, 3, 14)		//".TXT:CLIPBOARD"
-			- set_SttBarPanelWidth(TxtSttHeader, 4, 30);	//"00000行 0000桁 00列 0000字選択"
+			- set_SttBarPanelWidth(TxtSttHeader, 1, "UTF-16(BE) BOM付")
+			- set_SttBarPanelWidth(TxtSttHeader, 2, "CR/LF")
+			- set_SttBarPanelWidth(TxtSttHeader, 3, ".TXT:CLIPBOARD")
+			- set_SttBarPanelWidth(TxtSttHeader, 4, "00000行 0000桁 00列 0000字選択");
 
 		if (ScrMode==SCMD_TVIEW) {
 			TxtViewer->SetMetric(true);
@@ -4491,9 +4491,9 @@ void __fastcall TNyanFiForm::SetupDesign(
 	ImgSttHeader->Align = ImgSttIsBottom? alBottom : alTop;
 	ImgSttHeader->Font->Assign(ViewHdrFont);
 	ImgSttHeader->ClientHeight = get_FontHeight(ViewHdrFont, 4, 4);
-	set_SttBarPanelWidth(ImgSttHeader, 2, 12);	//"9999 × 9999"
-	set_SttBarPanelWidth(ImgSttHeader, 3,  9);	//"100%  G !"
-	set_SttBarPanelWidth(ImgSttHeader, 4, 18);	//"999/999 (選択 999)"
+	set_SttBarPanelWidth(ImgSttHeader, 2, "9999 × 9999");
+	set_SttBarPanelWidth(ImgSttHeader, 3, "100%  G !");
+	set_SttBarPanelWidth(ImgSttHeader, 4, "999/999 (選択 999)");
 
 	ImgInfBar->Align = ImgSttIsBottom? alBottom : alTop;
 	ImgInfBar->Font->Assign(ViewHdrFont);
@@ -21507,80 +21507,89 @@ void __fastcall TNyanFiForm::PlayListActionExecute(TObject *Sender)
 			::PostMessage(GeneralInfoDlg->Handle, WM_NYANFI_PLAYLIST, ListShuffled? 1 : 0, 0);
 		ListShuffled = false;
 		cursor_Default();
-		return;
 	}
 	//前
-	if (TEST_ActParam("PR")) {
+	else if (TEST_ActParam("PR")) {
 		cursor_HourGlass();
 		play_PlayList(true);
 		if (GeneralInfoDlg->Visible)
 			::PostMessage(GeneralInfoDlg->Handle, WM_NYANFI_PLAYLIST, 0, 0);
 		cursor_Default();
-		return;
 	}
 	//一時停止
-	if (TEST_ActParam("PS")) {
-		if (!PlayFile.IsEmpty()) mciSendString(_T("pause  PLYLIST"), NULL, 0, NULL);
-		return;
+	else if (TEST_ActParam("PS")) {
+		if (!PlayFile.IsEmpty()) mciSendString(_T("pause PLYLIST"), NULL, 0, NULL);
 	}
 	//再開
-	if (TEST_ActParam("RS")) {
-		if (!PlayFile.IsEmpty()) mciSendString(_T("resume  PLYLIST"), NULL, 0, NULL);
-		return;
+	else if (TEST_ActParam("RS")) {
+		if (!PlayFile.IsEmpty()) mciSendString(_T("resume PLYLIST"), NULL, 0, NULL);
+	}
+	//再生/一時停止
+	else if (TEST_ActParam("PP")) {
+		if (!PlayFile.IsEmpty()) {
+			if (is_ListPlaying())
+				mciSendString(_T("pause PLYLIST"), NULL, 0, NULL);
+			else
+				mciSendString(_T("resume PLYLIST"), NULL, 0, NULL);
+		}
 	}
 	//ファイル情報
-	if (TEST_ActParam("FI")) {
+	else if (TEST_ActParam("FI")) {
 		if (!PlayFile.IsEmpty()) FileInfoDlg->ShowModalEx(PlayFile);
-		return;
 	}
-	//プレイリスト一覧
-	if (TEST_ActParam("LS")) {
-		if (PlayList->Count>0) {
-			UnicodeString tit = "プレイリスト";
-			if (!PlayListFile.IsEmpty()) tit.cat_sprintf(_T(" - %s"), PlayListFile.c_str());
-			GeneralInfoDlg->Caption	   = tit;
-			GeneralInfoDlg->isPlayList = true;
-			GeneralInfoDlg->FileName   = PlayListFile;
-			GeneralInfoDlg->ShowModal();
-		}
-		return;
-	}
+	//プレイリスト設定
+	else {
+		try {
+			bool is_ls = TEST_DEL_ActParam("LS");
 
-	try {
-		cursor_HourGlass();
-		::mciSendString(_T("close PLYLIST"), NULL, 0, NULL);
-		PlayList->Clear();
-		PlayStbIdx = -1;
-		PlayRepeat = PlayShuffle = false;
-		if		(TEST_DEL_ActParam("RP")) PlayRepeat  = true;
-		else if (TEST_DEL_ActParam("SF")) PlayShuffle = true;
-		else if (TEST_DEL_ActParam("SR")) PlayShuffle = PlayRepeat = true;
-		ActionParam = exclude_quot(ActionParam);
-		//対象指定
-		if (!ActionParam.IsEmpty()) {
-			if (!add_PlayList(to_absolute_name(ActionParam)))
-				throw EAbort(LoadUsrMsg(USTR_NotFound, _T("対象")));
-		}
-		//選択指定
-		else {
-			TStringList *lst = GetCurList(true);
-			if (GetSelCount(lst)>0) {
-				for (int i=0; i<lst->Count; i++) {
-					file_rec *fp = (file_rec*)lst->Objects[i];
-					if (fp->selected) add_PlayList(fp->f_name);
+			if (!ActionParam.IsEmpty()) {
+				cursor_HourGlass();
+				::mciSendString(_T("close PLYLIST"), NULL, 0, NULL);
+				PlayList->Clear();
+				PlayStbIdx = -1;
+				PlayRepeat = PlayShuffle = false;
+				if		(TEST_DEL_ActParam("RP")) PlayRepeat  = true;
+				else if (TEST_DEL_ActParam("SF")) PlayShuffle = true;
+				else if (TEST_DEL_ActParam("SR")) PlayShuffle = PlayRepeat = true;
+				ActionParam = exclude_quot(ActionParam);
+
+				//対象指定
+				if (!ActionParam.IsEmpty()) {
+					if (!add_PlayList(to_absolute_name(ActionParam)))
+						throw EAbort(LoadUsrMsg(USTR_NotFound, _T("対象")));
 				}
-				ClearAllAction->Execute();
+				//選択指定
+				else {
+					TStringList *lst = GetCurList(true);
+					if (GetSelCount(lst)>0) {
+						for (int i=0; i<lst->Count; i++) {
+							file_rec *fp = (file_rec*)lst->Objects[i];
+							if (fp->selected) add_PlayList(fp->f_name);
+						}
+						ClearAllAction->Execute();
+					}
+				}
+
+				//再生開始
+				if (PlayList->Count>0) {
+					PlayStbIdx = 0;
+					play_PlayList();
+				}
+				cursor_Default();
+			}
+
+			if (PlayList->Count>0 && is_ls) {
+				UnicodeString tit = "プレイリスト";
+				if (!PlayListFile.IsEmpty()) tit.cat_sprintf(_T(" - %s"), PlayListFile.c_str());
+				GeneralInfoDlg->Caption	   = tit;
+				GeneralInfoDlg->isPlayList = true;
+				GeneralInfoDlg->FileName   = PlayListFile;
+				GeneralInfoDlg->ShowModal();
 			}
 		}
-		//再生開始
-		if (PlayList->Count>0) {
-			PlayStbIdx = 0;
-			play_PlayList();
+		catch (EAbort &e) {
+			SetActionAbort(e.Message);
 		}
-		cursor_Default();
-	}
-	catch (EAbort &e) {
-		SetActionAbort(e.Message);
 	}
 }
 

@@ -163,6 +163,12 @@ bool ApplyDarkMode()
 //---------------------------------------------------------------------------
 //ダークモードを考慮した色の取得
 //---------------------------------------------------------------------------
+TColor get_WinColor(
+	bool is_inv)	//無効な項目	(default = false)
+{
+	return is_inv? (IsDarkMode? col_DkInval : col_Invalid) : (IsDarkMode? dcl_Window : scl_Window);
+}
+//---------------------------------------------------------------------------
 TColor get_TextColor(
 	bool hl)	//ハイライト	(default = false)
 {
@@ -179,12 +185,6 @@ TColor get_PanelColor(
 TColor get_LabelColor()
 {
 	return (IsDarkMode? dcl_BtnText : scl_BtnText);
-}
-//---------------------------------------------------------------------------
-TColor get_WinColor(
-	bool is_inv)	//無効な項目	(default = false)
-{
-	return is_inv? (IsDarkMode? col_DkInval : col_Invalid) : (IsDarkMode? dcl_Window : scl_Window);
 }
 
 //---------------------------------------------------------------------------

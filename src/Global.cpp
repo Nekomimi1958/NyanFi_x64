@@ -1525,7 +1525,7 @@ void InitializeGlobal()
 		{_T("FTPSndDiscon=\"\""),					(TObject*)&FTPSndDiscon},
 		{_T("FTPSndTransfer=\"\""),					(TObject*)&FTPSndTransfer},
 
-		{_T("TabPinMark=\"\""),						(TObject*)&TabPinMark},		//隠し設定
+		{_T("TabPinMark=\"\""),						(TObject*)&TabPinMark},
 		{_T("HEAD_Mark=\"\""),						(TObject*)&HEAD_Mark},		//隠し設定
 		{_T("PLAY_Mark=\"\""),						(TObject*)&PLAY_Mark},		//隠し設定
 
@@ -5669,7 +5669,9 @@ void set_StdListBox(
 //---------------------------------------------------------------------------
 //ツールバーの設定
 //---------------------------------------------------------------------------
-void setup_ToolBar(TToolBar *tb)
+void setup_ToolBar(
+	TToolBar *tb,
+	bool upd_sw)	//true = ボタンアクションを更新	(default = false)
 {
 	tb->Font->Assign(ToolBarFont);
 	tb->Font->Color 	   = col_fgTlBar;
@@ -5688,6 +5690,9 @@ void setup_ToolBar(TToolBar *tb)
 		}
 		else if (cp->ClassNameIs("TSplitter")) {
 			((TSplitter*)cp)->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
+		}
+		else if (cp->ClassNameIs("TToolButton")) {
+			if (cp->Action) cp->Action->Update();
 		}
 	}
 }
@@ -9972,6 +9977,21 @@ bool play_PlayList(
 		if (!res) ng_cnt++;
 		PlayStbIdx++;
 		if (PlayRepeat && PlayStbIdx==PlayList->Count) PlayStbIdx = 0;
+	}
+	return res;
+}
+
+//---------------------------------------------------------------------------
+//プレイリストを再生中?
+//---------------------------------------------------------------------------
+bool is_ListPlaying()
+{
+	bool res = false;
+	if (!PlayFile.IsEmpty()) {
+		_TCHAR rbuf[256];
+		if (::mciSendString(_T("status PLYLIST mode"), rbuf, 255, NULL)==0) {
+			res = SameText(rbuf, "playing");
+		}
 	}
 	return res;
 }
