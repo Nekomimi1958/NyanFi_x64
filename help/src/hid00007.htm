@@ -280,6 +280,7 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 さらに <b>IM</b> またはメモ内容を指定した場合は、(反転ではなく)栞マークとともにメモを設定します。<br>
 選択項目がない場合は、カーソル位置の項目が対象になります(<b>SL</b> を指定しない場合と同じ)。<br>
 </div>
+
 <a href="#ClearMark">→ ClearMark</a>　<a href="#NextMark">→ NextMark</a>　<a href="#PrevMark">→ PrevMark</a>　<a href="#MarkList">→ MarkList</a>　<a href="#SelMark">→ SelMark</a>
 
 <dt id="MarkList">MarkList<span class="pram_text">[_FF]</span>
@@ -336,9 +337,14 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
 パラメータで<b>ファイル名</b>を指定して開くこともできます。ドライブ名がない場合はカレントからの相対指定になります。<br>
 
-<dt id="OptionDlg">OptionDlg<span class="pram_text">[_{GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV}]</span>
+<dt id="OptionDlg">OptionDlg<span class="pram_text">[_{GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV}]</span><br>
+OptionDlg<span class="pram_text">_KYO</span>
 <dd>「<a href="hid00008.htm">オプション設定</a>」ダイアログを開きます。このとき、ビュアーは安全のため一旦閉じます。<br>
 パラメータを指定すると特定のタブを開くことができます。パラメータとタブの対応は次の通りです。<b>GN</b>: 一般、<b>G2</b>: 一般2、<b>MO</b>: マウス操作、<b>DS</b>: デザイン、<b>FC</b>: フォント・配色、<b>TV</b>: テキストビュアー、<b>IV</b>: イメージビュアー、<b>ED</b>: エディタ、<b>KY</b>: キー設定、<b>AC</b>: 関連付け、<b>XM</b>: 追加メニュー、<b>XT</b>: 外部ツール、<b>ST</b>: 起動時、<b>NT</b>: 通知・確認、<b>CM</b>: コマンド、<b>EV</b>: イベント。<br>
+<div class="spc_box">
+パラメータに <b>KYO</b> を指定すると、「キー設定」のみのダイアログが開きます。<br>
+この場合、ビュアーは開いたままで設定を行えます。また通常のダイアログよりも若干速く開きます。<br>
+</div>
 このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
 
 <dt id="PageBind">PageBind<span class="pram_text">[_{R|L}]</span>

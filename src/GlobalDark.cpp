@@ -222,6 +222,11 @@ void SetDarkWinTheme(TWinControl *wp)
 	if (!wp) return;
 	if (wp->ClassNameIs("TStatusBar")) return;
 
+	if (wp->ClassNameIs("TTabSheet")) {
+		TTabSheet *tp = (TTabSheet *)wp;
+		if (!tp->TabVisible) return;
+	}
+
 	TColor bg_panel = get_PanelColor();
 	TColor fg_label = get_LabelColor();
 	TColor bg_win	= get_WinColor();
@@ -484,6 +489,7 @@ void msgbox_OK(UnicodeString msg, UnicodeString tit)
 {
 	TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation, TMsgDlgButtons() << mbOK, mbOK);
 	SetDarkWinTheme(MsgDlg);
+	if (!tit.IsEmpty()) MsgDlg->Caption = tit;
 	MsgDlg->ShowModal();
 	delete MsgDlg;
 }
@@ -493,6 +499,7 @@ bool msgbox_Y_N(UnicodeString msg, UnicodeString tit)
 	TMsgDlgButtons opt = TMsgDlgButtons() << mbYes << mbNo;
 	TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation, opt, SureDefNo? mbNo : mbYes);
 	SetDarkWinTheme(MsgDlg);
+	if (!tit.IsEmpty()) MsgDlg->Caption = tit;
 	int res = MsgDlg->ShowModal();
 	delete MsgDlg;
 	return (res==mrYes);
@@ -503,6 +510,7 @@ TModalResult msgbox_Y_N_C(UnicodeString msg, UnicodeString tit)
 	TMsgDlgButtons opt = TMsgDlgButtons() << mbYes << mbNo << mbCancel;
 	TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation, opt, SureDefNo? mbNo : mbYes);
 	SetDarkWinTheme(MsgDlg);
+	if (!tit.IsEmpty()) MsgDlg->Caption = tit;
 	TModalResult res = MsgDlg->ShowModal();
 	delete MsgDlg;
 	return res;

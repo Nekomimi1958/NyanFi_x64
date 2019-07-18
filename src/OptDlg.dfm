@@ -4386,265 +4386,14 @@ object OptionDlg: TOptionDlg
       HelpContext = 16
       Caption = #12461#12540#35373#23450
       ImageIndex = -1
-      DesignSize = (
-        906
-        584)
-      object TLabel
-        Left = 650
-        Top = 552
-        Width = 54
-        Height = 13
-        Alignment = taRightJustify
-        Caption = #12461#12540#35373#23450#12398
-      end
-      object AddKeyBtn: TButton
-        Left = 211
-        Top = 548
-        Width = 60
-        Height = 24
-        Action = AddKeyAction
-        TabOrder = 2
-      end
-      object ChgKeyBtn: TButton
-        Left = 275
-        Top = 548
-        Width = 60
-        Height = 24
-        Action = ChgKeyAction
-        TabOrder = 3
-      end
-      object DelKeyBtn: TButton
-        Left = 339
-        Top = 548
-        Width = 60
-        Height = 24
-        Action = DelKeyAction
-        TabOrder = 4
-      end
-      object ExpKeyBtn: TButton
-        Left = 802
-        Top = 548
-        Width = 90
-        Height = 24
-        Caption = #12456#12463#12473#12509#12540#12488'...'
-        TabOrder = 9
-        OnClick = ExpKeyBtnClick
-      end
-      object FindDownBtn: TButton
-        Left = 555
-        Top = 548
-        Width = 26
-        Height = 24
-        Action = FindKeyDownAction
-        TabOrder = 6
-      end
-      object FindKeyEdit: TLabeledEdit
-        Left = 448
-        Top = 550
-        Width = 105
-        Height = 21
-        EditLabel.Width = 24
-        EditLabel.Height = 13
-        EditLabel.Caption = #26908#32034
-        LabelPosition = lpLeft
-        TabOrder = 5
-        OnChange = FindKeyEditChange
-        OnKeyDown = FindKeyEditKeyDown
-      end
-      object FindUpBtn: TButton
-        Left = 583
-        Top = 548
-        Width = 26
-        Height = 24
-        Action = FindKeyUpAction
-        TabOrder = 7
-      end
-      object InpKeyBtn: TButton
-        Left = 708
-        Top = 548
-        Width = 90
-        Height = 24
-        Caption = #12452#12531#12509#12540#12488'...'
-        TabOrder = 8
-        OnClick = InpKeyBtnClick
-      end
-      object KeyCmdGroupBox: TGroupBox
-        Left = 211
-        Top = 463
-        Width = 691
-        Height = 79
-        Anchors = [akLeft, akTop, akRight]
-        Caption = #12467#12510#12531#12489
-        TabOrder = 1
-        DesignSize = (
-          691
-          79)
-        object TLabel
-          Left = 164
-          Top = 51
-          Width = 44
-          Height = 13
-          Alignment = taRightJustify
-          Anchors = [akTop, akRight]
-          Caption = #12497#12521#12513#12540#12479
-        end
-        object CmdComboBox: TComboBox
-          Left = 8
-          Top = 18
-          Width = 434
-          Height = 22
-          Style = csOwnerDrawFixed
-          DropDownCount = 30
-          TabOrder = 0
-          OnChange = CmdComboBoxChange
-          OnDrawItem = CmdComboBoxDrawItem
-        end
-        object UnRegCmdCheckBox: TCheckBox
-          Left = 9
-          Top = 50
-          Width = 136
-          Height = 17
-          Caption = #26410#30331#37682#12398#12415#34920#31034
-          TabOrder = 3
-          OnClick = UnRegCmdCheckBoxClick
-        end
-        object PrmComboBox: TComboBox
-          Left = 216
-          Top = 47
-          Width = 428
-          Height = 22
-          Hint = #12497#12521#12513#12540#12479
-          Style = csOwnerDrawFixed
-          Anchors = [akLeft, akTop, akRight]
-          DropDownCount = 16
-          TabOrder = 4
-        end
-        object RefCmdPrmBtn: TButton
-          Left = 647
-          Top = 47
-          Width = 36
-          Height = 22
-          Anchors = [akTop, akRight]
-          Caption = '...'
-          Enabled = False
-          TabOrder = 5
-          OnClick = RefCmdPrmBtnClick
-        end
-        object MigemoCheckBox: TCheckBox
-          Left = 618
-          Top = 20
-          Width = 70
-          Height = 17
-          Anchors = [akTop, akRight]
-          Caption = 'Migemo'
-          TabOrder = 2
-        end
-        object KeyFilterEdit: TLabeledEdit
-          Left = 499
-          Top = 18
-          Width = 118
-          Height = 21
-          EditLabel.Width = 33
-          EditLabel.Height = 13
-          EditLabel.Caption = #12501#12451#12523#12479
-          LabelPosition = lpLeft
-          TabOrder = 1
-          OnChange = KeyFilterEdit_Change
-          OnKeyDown = KeyFilterEdit_KeyDown
-          OnKeyPress = KeyFilterEdit_KeyPress
-        end
-      end
-      object KeyKeyGroupBox: TGroupBox
-        Left = 4
-        Top = 463
-        Width = 199
-        Height = 109
-        Caption = ' '
-        TabOrder = 0
-        object TLabel
-          Left = 96
-          Top = 22
-          Width = 8
-          Height = 13
-          Caption = '~'
-        end
-        object KeyComboBox: TComboBox
-          Left = 8
-          Top = 18
-          Width = 83
-          Height = 21
-          Style = csDropDownList
-          DropDownCount = 26
-          ImeMode = imClose
-          TabOrder = 0
-          OnClick = KeySetClick
-        end
-        object CtrlCheckBox: TCheckBox
-          Left = 65
-          Top = 48
-          Width = 49
-          Height = 17
-          Caption = 'Ctrl'
-          TabOrder = 3
-          OnClick = KeySetClick
-        end
-        object ShiftCheckBox: TCheckBox
-          Left = 8
-          Top = 48
-          Width = 51
-          Height = 17
-          Caption = 'Shift'
-          TabOrder = 2
-          OnClick = KeySetClick
-        end
-        object AltCheckBox: TCheckBox
-          Left = 120
-          Top = 48
-          Width = 49
-          Height = 17
-          Caption = 'Alt'
-          TabOrder = 4
-          OnClick = KeySetClick
-        end
-        object Key2ComboBox: TComboBox
-          Left = 109
-          Top = 18
-          Width = 83
-          Height = 21
-          Hint = '2'#12473#12488#12525#12540#12463#12461#12540
-          Style = csDropDownList
-          DropDownCount = 27
-          ImeMode = imClose
-          TabOrder = 1
-          OnClick = KeySetClick
-        end
-        object SelCheckBox: TCheckBox
-          Left = 8
-          Top = 79
-          Width = 111
-          Height = 17
-          Caption = #36984#25246#26178#12398#12415#23455#34892
-          TabOrder = 5
-          OnClick = KeySetClick
-        end
-        object FindKeyBtn: TButton
-          Left = 124
-          Top = 75
-          Width = 68
-          Height = 25
-          Caption = #26908#32034'(&F)...'
-          TabOrder = 6
-          OnClick = FindKeyBtnClick
-        end
-      end
       object KeyTabControl: TTabControl
         Left = 0
         Top = 0
         Width = 906
         Height = 454
-        Align = alTop
+        Align = alClient
         OwnerDraw = True
-        TabOrder = 10
+        TabOrder = 0
         TabPosition = tpBottom
         Tabs.Strings = (
           #12501#12449#12452#12521#12540
@@ -4701,6 +4450,266 @@ object OptionDlg: TOptionDlg
             end>
           OnDrawSection = KeyHeaderControlDrawSection
           OnSectionClick = KeyHeaderControlSectionClick
+        end
+      end
+      object KeySetPanel: TPanel
+        Left = 0
+        Top = 454
+        Width = 906
+        Height = 130
+        Align = alBottom
+        BevelOuter = bvNone
+        TabOrder = 1
+        DesignSize = (
+          906
+          130)
+        object TLabel
+          Left = 650
+          Top = 103
+          Width = 54
+          Height = 13
+          Alignment = taRightJustify
+          Caption = #12461#12540#35373#23450#12398
+        end
+        object InpKeyBtn: TButton
+          Left = 708
+          Top = 97
+          Width = 90
+          Height = 24
+          Caption = #12452#12531#12509#12540#12488'...'
+          TabOrder = 8
+          OnClick = InpKeyBtnClick
+        end
+        object FindUpBtn: TButton
+          Left = 583
+          Top = 97
+          Width = 26
+          Height = 24
+          Action = FindKeyUpAction
+          TabOrder = 7
+        end
+        object FindKeyEdit: TLabeledEdit
+          Left = 448
+          Top = 98
+          Width = 105
+          Height = 21
+          EditLabel.Width = 24
+          EditLabel.Height = 13
+          EditLabel.Caption = #26908#32034
+          LabelPosition = lpLeft
+          TabOrder = 5
+          OnChange = FindKeyEditChange
+          OnKeyDown = FindKeyEditKeyDown
+        end
+        object KeyKeyGroupBox: TGroupBox
+          Left = 4
+          Top = 12
+          Width = 199
+          Height = 109
+          Caption = ' '
+          TabOrder = 0
+          object TLabel
+            Left = 96
+            Top = 22
+            Width = 8
+            Height = 13
+            Caption = '~'
+          end
+          object KeyComboBox: TComboBox
+            Left = 8
+            Top = 18
+            Width = 83
+            Height = 21
+            Style = csDropDownList
+            DropDownCount = 26
+            ImeMode = imClose
+            TabOrder = 0
+            OnClick = KeySetClick
+          end
+          object CtrlCheckBox: TCheckBox
+            Left = 65
+            Top = 48
+            Width = 49
+            Height = 17
+            Caption = 'Ctrl'
+            TabOrder = 3
+            OnClick = KeySetClick
+          end
+          object ShiftCheckBox: TCheckBox
+            Left = 8
+            Top = 48
+            Width = 51
+            Height = 17
+            Caption = 'Shift'
+            TabOrder = 2
+            OnClick = KeySetClick
+          end
+          object AltCheckBox: TCheckBox
+            Left = 120
+            Top = 48
+            Width = 49
+            Height = 17
+            Caption = 'Alt'
+            TabOrder = 4
+            OnClick = KeySetClick
+          end
+          object Key2ComboBox: TComboBox
+            Left = 109
+            Top = 18
+            Width = 83
+            Height = 21
+            Hint = '2'#12473#12488#12525#12540#12463#12461#12540
+            Style = csDropDownList
+            DropDownCount = 27
+            ImeMode = imClose
+            TabOrder = 1
+            OnClick = KeySetClick
+          end
+          object SelCheckBox: TCheckBox
+            Left = 8
+            Top = 79
+            Width = 111
+            Height = 17
+            Caption = #36984#25246#26178#12398#12415#23455#34892
+            TabOrder = 5
+            OnClick = KeySetClick
+          end
+          object FindKeyBtn: TButton
+            Left = 124
+            Top = 75
+            Width = 68
+            Height = 25
+            Caption = #26908#32034'(&F)...'
+            TabOrder = 6
+            OnClick = FindKeyBtnClick
+          end
+        end
+        object KeyCmdGroupBox: TGroupBox
+          Left = 211
+          Top = 12
+          Width = 691
+          Height = 79
+          Anchors = [akLeft, akTop, akRight]
+          Caption = #12467#12510#12531#12489
+          TabOrder = 1
+          DesignSize = (
+            691
+            79)
+          object TLabel
+            Left = 164
+            Top = 51
+            Width = 44
+            Height = 13
+            Alignment = taRightJustify
+            Anchors = [akTop, akRight]
+            Caption = #12497#12521#12513#12540#12479
+          end
+          object CmdComboBox: TComboBox
+            Left = 8
+            Top = 18
+            Width = 434
+            Height = 22
+            Style = csOwnerDrawFixed
+            DropDownCount = 30
+            TabOrder = 0
+            OnChange = CmdComboBoxChange
+            OnDrawItem = CmdComboBoxDrawItem
+          end
+          object UnRegCmdCheckBox: TCheckBox
+            Left = 9
+            Top = 50
+            Width = 136
+            Height = 17
+            Caption = #26410#30331#37682#12398#12415#34920#31034
+            TabOrder = 3
+            OnClick = UnRegCmdCheckBoxClick
+          end
+          object PrmComboBox: TComboBox
+            Left = 216
+            Top = 47
+            Width = 428
+            Height = 22
+            Hint = #12497#12521#12513#12540#12479
+            Style = csOwnerDrawFixed
+            Anchors = [akLeft, akTop, akRight]
+            DropDownCount = 16
+            TabOrder = 4
+          end
+          object RefCmdPrmBtn: TButton
+            Left = 647
+            Top = 47
+            Width = 36
+            Height = 22
+            Anchors = [akTop, akRight]
+            Caption = '...'
+            Enabled = False
+            TabOrder = 5
+            OnClick = RefCmdPrmBtnClick
+          end
+          object MigemoCheckBox: TCheckBox
+            Left = 617
+            Top = 20
+            Width = 70
+            Height = 17
+            Anchors = [akTop, akRight]
+            Caption = 'Migemo'
+            TabOrder = 2
+          end
+          object KeyFilterEdit: TLabeledEdit
+            Left = 497
+            Top = 18
+            Width = 114
+            Height = 21
+            EditLabel.Width = 33
+            EditLabel.Height = 13
+            EditLabel.Caption = #12501#12451#12523#12479
+            LabelPosition = lpLeft
+            TabOrder = 1
+            OnChange = KeyFilterEdit_Change
+            OnKeyDown = KeyFilterEdit_KeyDown
+            OnKeyPress = KeyFilterEdit_KeyPress
+          end
+        end
+        object FindDownBtn: TButton
+          Left = 555
+          Top = 97
+          Width = 26
+          Height = 24
+          Action = FindKeyDownAction
+          TabOrder = 6
+        end
+        object AddKeyBtn: TButton
+          Left = 211
+          Top = 97
+          Width = 60
+          Height = 24
+          Action = AddKeyAction
+          TabOrder = 2
+        end
+        object ExpKeyBtn: TButton
+          Left = 802
+          Top = 97
+          Width = 90
+          Height = 24
+          Caption = #12456#12463#12473#12509#12540#12488'...'
+          TabOrder = 9
+          OnClick = ExpKeyBtnClick
+        end
+        object DelKeyBtn: TButton
+          Left = 339
+          Top = 97
+          Width = 60
+          Height = 24
+          Action = DelKeyAction
+          TabOrder = 4
+        end
+        object ChgKeyBtn: TButton
+          Left = 275
+          Top = 97
+          Width = 60
+          Height = 24
+          Action = ChgKeyAction
+          TabOrder = 3
         end
       end
     end

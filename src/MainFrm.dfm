@@ -2887,6 +2887,10 @@ object NyanFiForm: TNyanFiForm
       object OptionItem: TMenuItem
         Action = OptionDlgAction
       end
+      object OptKeyItem: TMenuItem
+        Caption = #12461#12540#35373#23450'(&K)...'
+        OnClick = OptKeyItemClick
+      end
       object SetToolBtnItem: TMenuItem
         Action = ToolBarDlgAction
       end

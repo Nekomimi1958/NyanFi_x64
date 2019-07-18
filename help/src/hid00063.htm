@@ -553,17 +553,23 @@ EndRepeat
 MsgBox<span class="pram_text">_&quot;:タイトル:メッセージ&quot;</span>
 <dd>指定したメッセージを表示します。<br>
 タイトルを指定することも可能です。その場合、パラメータ全体をダブルクォーテーションで囲んでください。タイトル内では <b>:\</b> を表示文字として使えます。<br>
-メッセージ内で <b>\n</b> は改行になります。<b>\</b>そのものを文字として指定したい場合は <b>\\</b> と記述してください。<br>
 <div class="spc_box">
-<b>例</b>: MsgBox_&quot;:エラー:失敗しました\n設定を確認してください&quot;
+メッセージ内で <b>\n</b> は改行になります。<b>\</b>そのものを文字として指定したい場合は <b>\\</b> と記述してください。それ以外の場合は <b>\</b> 直後の文字がそのまま表示されます。<br>
+なお <b>'</b> (シングルクォーテーション)で囲まれた内容については、<b>\</b> によるエスケープシーケンスを無視してそのまま表示されます。<b>'</b> を文字として表示したい場合は <b>\'</b> と記述してください。<br>
+</div>
+<div class="spc_box">
+<b>例</b>: MsgBox_&quot;:エラー:失敗しました\n設定を確認してください&quot;<br>
+<b>例</b>: MsgBox_&quot;:カレント:'%CurPath%'&quot;
 </div>
 
 <dt id="MsgBoxYN" class="no_bg">MsgBoxYN<span class="pram_text">_[:タイトル:]メッセージ</span>
 <dd>「はい、いいえ」ボタン付きで、指定したメッセージを表示します。<br>
 結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>Yes</b>、<b>No</b>)として利用できます。<br>
+タイトルやメッセージの指定については、<a href="#MsgBox">MsgBox</a> と同様です。<br>
 <dt id="MsgBoxYNC" class="no_bg">MsgBoxYNC<span class="pram_text">_[:タイトル:]メッセージ</span>
 <dd>「はい、いいえ、キャンセル」ボタン付きで、指定したメッセージを表示します。
 結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>Yes</b>、<b>No</b>、<b>Cancel</b>)として利用できます。<br>
+タイトルやメッセージの指定については、<a href="#MsgBox">MsgBox</a> と同様です。<br>
 
 <dt id="MsgOff" class="no_bg">MsgOff
 <dd>コピー、移動、削除、解凍や、<a href="hid00005.htm#Backup">Backup</a>_設定名、<a href="hid00005.htm#ConvertHtm2Txt">ConvertHtm2Txt</a>、<a href="hid00005.htm#DeleteADS">DeleteADS</a>、<a href="hid00005.htm#DelJpgExif">DelJpgExif</a>、<a href="hid00005.htm#ExtractChmSrc">ExtractChmSrc</a>、<a href="hid00005.htm#ExtractGifBmp">ExtractGifBmp</a>、<a href="hid00005.htm#ExtractIcon">ExtractIcon</a>、<a href="hid00005.htm#ExtractImage">ExtractImage</a>(<a href="hid00005.htm#ExtractMp3Img">ExtractMp3Img</a>)、<a href="hid00005.htm#ClearMark">ClearMark_AC</a>_AC、<a href="hid00005.htm#DirHistory">DirHistory</a>_AC、<a href="hid00005.htm#EditHistory">EditHistory</a>_AC、<a href="hid00005.htm#ViewHistory">ViewHistory</a>_AC、<a href="hid00005.htm#RecentList">RecentList</a>_AC|BC コマンドで確認メッセージを出さないようにします。<br>

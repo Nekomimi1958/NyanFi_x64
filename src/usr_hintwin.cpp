@@ -32,7 +32,7 @@ void __fastcall UsrHintWindow::Paint(void)
 //---------------------------------------------------------------------------
 void __fastcall UsrHintWindow::ActivateHintEx(
 	UnicodeString msg,	//メッセージ
-	int max_w, 			//最大幅
+	int max_w,			//最大幅
 	int min_w,			//最小幅
 	TControl *cp,		//基準コントロール
 	TColor bg_col)		//背景色

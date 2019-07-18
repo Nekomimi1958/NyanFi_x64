@@ -698,6 +698,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *BottomPanel;
 	TPanel *ExtMenuPanel;
 	TPanel *ExtToolPanel;
+	TPanel *KeySetPanel;
 	TPanel *RefExtColPanel;
 	TPanel *SpuitPanel;
 	TPanel *SpuitPanel2;
@@ -923,7 +924,6 @@ private:	// ユーザー宣言
 
 	int inh_KeySet;
 	int KeySortMode;
-	UnicodeString KeyWd;
 	int PrevListIdx;
 	int SpuitTag;
 
@@ -980,6 +980,8 @@ private:	// ユーザー宣言
 	}
 
 public:		// ユーザー宣言
+	bool KeySetOnly;		//キー設定のみ表示
+
 	bool LayoutChanged;
 	bool WinSizeChanged;
 	bool TlBarColChanged;

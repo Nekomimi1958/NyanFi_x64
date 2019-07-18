@@ -1587,16 +1587,29 @@ int XCMD_MsgBox(UnicodeString cmd, UnicodeString prm)
 	if (remove_top_s(prm, ':')) tit = ReplaceStr(split_tkn(prm, ':'), "\f", ":\\");
 	prm = ReplaceStr(prm, "\f", ":\\");
 
+	//エスケープシーケンス処理 ('～' 内は無視)
 	UnicodeString lbuf;
+	bool in_sq = false;
 	while (!prm.IsEmpty()) {
 		WideChar c = split_top_wch(prm);
-		if (c=='\\') {
-			if		(remove_top_s(prm, 'n'))  lbuf += "\r\n";
-			else if (remove_top_s(prm, '\\')) lbuf += "\\";
-			else lbuf += split_top_ch(prm);
+		if (in_sq) {
+			if (c=='\'')
+				in_sq = false;
+			else
+				lbuf.cat_sprintf(_T("%c"), c);
 		}
 		else {
-			lbuf.cat_sprintf(_T("%c"), c);
+			if (c=='\'') {
+				in_sq = true;
+			}
+			else if (c=='\\') {
+				if		(remove_top_s(prm, 'n'))  lbuf += "\r\n";
+				else if (remove_top_s(prm, '\\')) lbuf += "\\";
+				else							  lbuf += split_top_ch(prm);
+			}
+			else {
+				lbuf.cat_sprintf(_T("%c"), c);
+			}
 		}
 	}
 	prm = lbuf;

@@ -62,8 +62,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	SplashHint = new UsrHintWindow(this);
 	SplashHint->Canvas->Font->Assign(HintFont);
 	SplashHint->Canvas->Font->Color = col_fgHint;
-	SplashHint->ActivateHintEx(_T("\r\nオプション設定の準備中...\r\n"),
-		320, 240, Application->MainForm, col_bgHint);
+	SplashHint->ActivateHintEx(_T("\r\nオプション設定の準備中...\r\n"), 320, 240, Application->MainForm, col_bgHint);
 
 	cursor_HourGlass();
 
@@ -816,23 +815,86 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	usr_SH->AddTargetList(this, EtcEditorEdit);
 	usr_SH->AddTargetList(this, ExtTxViewerEdit);
 	usr_SH->AddTargetList(this, AsoAppComboBox);
+
+	KeySetOnly = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::FormShow(TObject *Sender)
 {
-	SwatchPanel->SetPanelSize16x8(15);
-
-	set_ComboBox_AutoComp(this);
-	SetKeyComboBox();
-
 	DlgInitialized = false;
 	cursor_HourGlass();
 
+	PageControl1->TabHeight = 0;
+	if (KeySetOnly) PageControl1->ActivePage = KeySetSheet;
+	HelpContext = PageControl1->ActivePage->HelpContext;
+
+	SwatchPanel->SetPanelSize16x8(15);
+
+	set_ComboBox_AutoComp(this);
+
+	FindEdit->Text	= EmptyStr;
+	LayoutChanged	= false;
+	WinSizeChanged	= false;
+	TlBarColChanged = false;
+
 	//INIファイルがデフォルトと異なる場合、ファイル名を表示
 	UnicodeString inam = IniFile->FileName;
-	UnicodeString tit = "オプション設定";
-	if (!SameText(inam, ChangeFileExt(Application->ExeName, ".INI"))) tit.cat_sprintf(_T(" - %s"), to_relative_name(inam).c_str());
+	UnicodeString tit = KeySetOnly? "キー設定" : "オプション設定";
+	if (!SameText(inam, ChangeFileExt(Application->ExeName, ".INI")))
+		 tit.cat_sprintf(_T(" - %s"), to_relative_name(inam).c_str());
 	Caption = tit;
+
+	//------------------------------------------------------------------
+	//キー設定
+	//------------------------------------------------------------------
+	set_ListBoxItemHi(KeyListBox);
+
+	InitializeListHeader(KeyHeaderControl, _T("キー|コマンド_パラメータ|説明|Fキー表示名"), Font);
+	TCanvas *cv = KeyListBox->Canvas;
+	cv->Font->Assign(KeyListBox->Font);
+	int w0 = cv->TextWidth("Shift+Ctrl+Alt+Space ");
+	int w1 = get_CharWidth(cv, 40);
+	int w2 = KeyHeaderControl->ClientWidth - w0 - w1 - get_CharWidth(cv, 16) - ::GetSystemMetrics(SM_CXVSCROLL) - 4;
+	set_HeaderSecWidth(KeyHeaderControl, 3, w0, w1, w2);
+
+	KeySortMode = IniFile->ReadIntGen(_T("OptKeySortMode"),	0);
+	KeyFuncList->CustomSort(KeyComp_Key);
+
+	for (int i=0; i<MAX_KEYTABS; i++) {
+		KeyListBuf[i]->Clear();
+		UnicodeString modstr = GetCmdModeStr(i + 1);
+		for (int j=0; j<KeyFuncList->Count; j++){
+			UnicodeString lbuf = KeyFuncList->Strings[j];
+			if (StartsText(modstr, lbuf)) KeyListBuf[i]->Add(lbuf);
+		}
+	}
+	FKeyLabelBuf->Assign(FKeyLabelList);
+
+	PageControl1Change(NULL);
+
+	if (!KeyKeyLabel) KeyKeyLabel = AttachLabelToGroup(KeyKeyGroupBox, "キー");
+	SetKeyComboBox();
+
+	set_MigemoCheckBox(MigemoCheckBox, _T("OptKeyMigemo"));
+
+	UnRegCmdCheckBox->Checked = IniFile->ReadBoolGen(_T("OptUnregCmd"));
+	SetCmdCombo();
+
+	if (KeySetOnly) {
+		for (int i=0; i<PageControl1->PageCount; i++) {
+			TTabSheet *pp = PageControl1->Pages[i];
+			pp->TabVisible = (pp==KeySetSheet);
+		}
+		PageControl1->TabHeight = 1;
+
+		SetWinTheme();
+
+		DlgInitialized = true;
+		::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
+		return;
+	}
+	//キー設定のみの場合はここまで
+	//--------------------------------------------------
 
 	set_ListBoxItemHi(ExtColListBox);
 	set_ListBoxItemHi(TagColListBox);
@@ -841,7 +903,6 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	set_ListBoxItemHi(AssociateListBox, NULL, true);
 	set_ListBoxItemHi(ExtMenuListBox, NULL, true);
 	set_ListBoxItemHi(ExtToolListBox, NULL, true);
-	set_ListBoxItemHi(KeyListBox);
 	set_ListBoxItemHi(EventListBox);
 	set_ListBoxItemHi(PrtDirListBox);
 	set_ListBoxItemHi(VirDrvListBox);
@@ -870,10 +931,6 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 
 	VirDrvComboBox->Clear();
 	for (int i=0; i<26; i++) VirDrvComboBox->Items->Add(UnicodeString().sprintf(_T("%c"), 'A' + i));
-
-	FindEdit->Text = EmptyStr;
-
-	HelpContext = PageControl1->ActivePage->HelpContext;
 
 	//タグを用いてコントロールに値を設定
 	BringOptionByTag(this);
@@ -922,28 +979,6 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	lp->Items->Assign(ExtToolList);
 	for (int i=0; i<lp->Count; i++) lp->Checked[i] = !equal_0(get_csv_item(lp->Items->Strings[i], 5));
 
-	//キー一覧のヘッダを設定
-	InitializeListHeader(KeyHeaderControl, _T("キー|コマンド_パラメータ|説明|Fキー表示名"), Font);
-	TCanvas *cv = KeyListBox->Canvas;
-	cv->Font->Assign(KeyListBox->Font);
-	int w0 = cv->TextWidth("Shift+Ctrl+Alt+Space ");
-	int w1 = get_CharWidth(cv, 40);
-	int w2 = KeyHeaderControl->ClientWidth - w0 - w1 - get_CharWidth(cv, 16) - ::GetSystemMetrics(SM_CXVSCROLL) - 4;
-	set_HeaderSecWidth(KeyHeaderControl, 3, w0, w1, w2);
-
-	KeySortMode = IniFile->ReadIntGen(_T("OptKeySortMode"),	0);
-	KeyFuncList->CustomSort(KeyComp_Key);
-
-	for (int i=0; i<MAX_KEYTABS; i++) {
-		KeyListBuf[i]->Clear();
-		UnicodeString modstr = GetCmdModeStr(i + 1);
-		for (int j=0; j<KeyFuncList->Count; j++){
-			UnicodeString lbuf = KeyFuncList->Strings[j];
-			if (StartsText(modstr, lbuf)) KeyListBuf[i]->Add(lbuf);
-		}
-	}
-	FKeyLabelBuf->Assign(FKeyLabelList);
-
 	PageControl1Change(NULL);
 
 	(ViewFoldFitWin? FitFoldRadioBtn : SetFoldRadioBtn)->Checked = true;
@@ -962,11 +997,6 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 
 	((IniWorkMode==1)? IniWork1RadioBtn : IniWork0RadioBtn)->Checked = true;
 	((IniWinMode==1)?  IniWin1RadioBtn  : IniWin0RadioBtn)->Checked  = true;
-
-	set_MigemoCheckBox(MigemoCheckBox, _T("OptKeyMigemo"));
-
-	UnRegCmdCheckBox->Checked = IniFile->ReadBoolGen(_T("OptUnregCmd"));
-	SetCmdCombo();
 
 	AsoSortCheckBox->Checked  = IniFile->ReadBoolGen(_T("OptAsoSort"));
 
@@ -1005,15 +1035,8 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	}
 	EventCmdsEdit->Text = EmptyStr;
 
-	LayoutChanged	= false;
-	WinSizeChanged	= false;
-	TlBarColChanged = false;
-
-	KeyWd = EmptyStr;
-
 	FExt7zDllEdit->Enabled = usr_ARC->Use7zDll;
 
-	if (!KeyKeyLabel) KeyKeyLabel = AttachLabelToGroup(KeyKeyGroupBox, "キー");
 	UpdateMaxItemWidth();
 
 	SetWinTheme();
@@ -1048,6 +1071,10 @@ void __fastcall TOptionDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteBoolGen(_T("OptKeyMigemo"),		MigemoCheckBox);
 	IniFile->WriteBoolGen(_T("OptUnregCmd"),		UnRegCmdCheckBox);
 	IniFile->WriteBoolGen(_T("OptAsoSort"),			AsoSortCheckBox);
+
+	KeySetOnly = false;
+
+	for (int i=0; i<PageControl1->PageCount; i++) PageControl1->Pages[i]->TabVisible = true;
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::FormDestroy(TObject *Sender)
@@ -1141,14 +1168,16 @@ void __fastcall TOptionDlg::PageControl1Change(TObject *Sender)
 		KeyComboBox->ItemIndex = -1;
 	}
 
-	if (!Sender || PageControl1->ActivePage==AssoSheet) 	AssociateListBoxClick(NULL);
-	if (!Sender || PageControl1->ActivePage==ExtMenuSheet)	ExtMenuListBoxClick(NULL);
-	if (!Sender || PageControl1->ActivePage==ExtToolSheet)	ExtToolListBoxClick(NULL);
+	if (!KeySetOnly) {
+		if (!Sender || PageControl1->ActivePage==AssoSheet) 	AssociateListBoxClick(NULL);
+		if (!Sender || PageControl1->ActivePage==ExtMenuSheet)	ExtMenuListBoxClick(NULL);
+		if (!Sender || PageControl1->ActivePage==ExtToolSheet)	ExtToolListBoxClick(NULL);
 
-	if (PageControl1->ActivePage==MouseSheet) {
-		DeselectComboBox(MouseFlGroupBox);
-		DeselectComboBox(MouseTvGroupBox);
-		DeselectComboBox(MouseIvGroupBox);
+		if (PageControl1->ActivePage==MouseSheet) {
+			DeselectComboBox(MouseFlGroupBox);
+			DeselectComboBox(MouseTvGroupBox);
+			DeselectComboBox(MouseIvGroupBox);
+		}
 	}
 
 	UserModule->InitializeListBox(GetCurListBox());
@@ -1161,15 +1190,21 @@ void __fastcall TOptionDlg::PageControl1DrawTab(TCustomTabControl *Control, int 
 	const TRect &Rect, bool Active)
 {
 	TTabControl *tp = (TTabControl*)Control;
-	//背景
 	TCanvas *cv = tp->Canvas;
-	cv->Brush->Color = (PageControl1->Pages[TabIndex]->Tag==0)? (Active? col_bgOptTab : get_PanelColor()) : col_OptFind;
-	cv->FillRect(Rect);
-	//タイトル
-	cv->Font->Color = Active? col_fgOptTab : get_LabelColor();
-	cv->Font->Style = Active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
-	UnicodeString tstr = tp->Tabs->Strings[TabIndex];
-	cv->TextOut(Rect.Left + (Rect.Width() - cv->TextWidth(tstr))/2, Rect.Top + (Active? 4 : 2), tstr);
+	if (tp->TabHeight>0 && tp->TabHeight<=4) {
+		cv->Brush->Color = get_PanelColor();
+		cv->FillRect(Rect);
+	}
+	else {
+		//背景
+		cv->Brush->Color = (PageControl1->Pages[TabIndex]->Tag==0)? (Active? col_bgOptTab : get_PanelColor()) : col_OptFind;
+		cv->FillRect(Rect);
+		//タイトル
+		cv->Font->Color = Active? col_fgOptTab : get_LabelColor();
+		cv->Font->Style = Active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
+		UnicodeString tstr = tp->Tabs->Strings[TabIndex];
+		cv->TextOut(Rect.Left + (Rect.Width() - cv->TextWidth(tstr))/2, Rect.Top + (Active? 4 : 2), tstr);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -1292,14 +1327,19 @@ bool __fastcall TOptionDlg::IsFirstCmdKey()
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::SetSheet(UnicodeString prm)
 {
-	int idx = idx_of_word_i(_T("GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV"), prm);
-	if (idx!=-1) {
-		PageControl1->ActivePageIndex = idx;
+	if (KeySetOnly) {
+		PageControl1->ActivePage = KeySetSheet;
 	}
 	else {
-		if		(ScrMode==SCMD_TVIEW)	PageControl1->ActivePage = TxtViewerSheet;
-		else if (ScrMode==SCMD_IVIEW)	PageControl1->ActivePage = ImgViewerSheet;
-		else 							PageControl1->ActivePageIndex = OptionPageIndex;
+		int idx = idx_of_word_i(_T("GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV"), prm);
+		if (idx!=-1) {
+			PageControl1->ActivePageIndex = idx;
+		}
+		else {
+			if		(ScrMode==SCMD_TVIEW)	PageControl1->ActivePage = TxtViewerSheet;
+			else if (ScrMode==SCMD_IVIEW)	PageControl1->ActivePage = ImgViewerSheet;
+			else 							PageControl1->ActivePageIndex = OptionPageIndex;
+		}
 	}
 }
 
@@ -3694,6 +3734,7 @@ void __fastcall TOptionDlg::FindEditChange(TObject *Sender)
 		//タブシート毎に検索
 		for (int i=0; i<pp->PageCount; i++) {
 			TTabSheet *sp = pp->Pages[i];
+			if (!sp->TabVisible) continue;
 			sp->Tag = (FindMarkList->SearchControl((TWinControl*)sp, wd)>0 || ContainsText(sp->Caption, wd))? 1 : 0;
 			//見つかったら Tag=1 に
 		}
@@ -4270,6 +4311,27 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 {
 	ModalResult = mrNone;
 
+	//キー設定
+	KeyListBuf[KeyTabControl->TabIndex]->Assign(KeyListBox->Items);
+	std::unique_ptr<TStringList> key_lst(new TStringList());
+	for (int i=0; i<MAX_KEYTABS; i++) key_lst->AddStrings(KeyListBuf[i]);
+	key_lst->CustomSort(KeyComp_Key);
+	KeyFuncList->Assign(key_lst.get());
+
+	//ファンクションキーの表示名
+	FKeyLabelList->Assign(FKeyLabelBuf);
+	int i = 0;
+	while (i<FKeyLabelList->Count) {
+		if (KeyFuncList->IndexOfName(FKeyLabelList->Names[i])==-1) FKeyLabelList->Delete(i); else i++;
+	}
+
+	if (KeySetOnly) {
+		ModalResult = mrOk;
+		return;
+	}
+	//キー設定のみの場合はここまで
+	//--------------------------------------------------
+
 	//仮想ドライブ
 	VirDriveList->Assign(VirDrvListBox->Items);
 	if (VirDriveList->Count>0) {
@@ -4413,19 +4475,6 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 
 	ViewFoldFitWin = FitFoldRadioBtn->Checked;
 
-	//キー設定
-	KeyListBuf[KeyTabControl->TabIndex]->Assign(KeyListBox->Items);
-	std::unique_ptr<TStringList> key_lst(new TStringList());
-	for (int i=0; i<MAX_KEYTABS; i++) key_lst->AddStrings(KeyListBuf[i]);
-	key_lst->CustomSort(KeyComp_Key);
-	KeyFuncList->Assign(key_lst.get());
-	//ファンクションキーの表示名
-	FKeyLabelList->Assign(FKeyLabelBuf);
-	int i = 0;
-	while (i<FKeyLabelList->Count) {
-		if (KeyFuncList->IndexOfName(FKeyLabelList->Names[i])==-1) FKeyLabelList->Delete(i); else i++;
-	}
-
 	IniPathMode[0] = L_IniPatMod1RadioBtn->Checked? 1 : L_IniPatMod2RadioBtn->Checked? 2 : 0;
 	IniPathMode[1] = R_IniPatMod1RadioBtn->Checked? 1 : R_IniPatMod2RadioBtn->Checked? 2 : 0;
 	IniWorkMode    = IniWork1RadioBtn->Checked? 1 : 0;
@@ -4460,6 +4509,9 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 {
+	if (KeySetOnly) return;
+
+
 	HotKeyComboBox->Enabled =
 		(HotShiftCheckBox->Checked || HotCtrlCheckBox->Checked || HotAltCheckBox->Checked || HotWinCheckBox->Checked);
 

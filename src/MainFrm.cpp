@@ -21096,46 +21096,58 @@ void __fastcall TNyanFiForm::OpenTrashActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::OptionDlgActionExecute(TObject *Sender)
 {
-	if (!OptionDlg) OptionDlg = new TOptionDlg(this);	//初回に動的作成
-	OptionDlg->SetSheet(ActionParam);
+	if (!OptionDlg)
+		OptionDlg = new TOptionDlg(this);	//初回に動的作成
+	else
+		OptionDlg->SplashHint->ActivateHintEx(_T("\r\nオプション設定の準備中...\r\n"), 320, 240, this, col_bgHint);
 
-	//安全のためビュアーを閉じる
-	if		(ScrMode==SCMD_IVIEW) CloseIAction->Execute();
-	else if (ScrMode==SCMD_TVIEW) ExeCommandV(_T("Close"));
+	bool is_kyo = SameText(ActionParam, "KYO");
+	if (is_kyo)
+		OptionDlg->KeySetOnly = true;
+	else
+		OptionDlg->SetSheet(ActionParam);
 
-	//通常のファイルリストに戻す
-	if (ScrMode==SCMD_FLIST) RecoverFileList2(-1);
-	Application->ProcessMessages();	
+	if (!is_kyo) {
+		//安全のためビュアーを閉じる
+		if		(ScrMode==SCMD_IVIEW) CloseIAction->Execute();
+		else if (ScrMode==SCMD_TVIEW) ExeCommandV(_T("Close"));
+
+		//通常のファイルリストに戻す
+		if (ScrMode==SCMD_FLIST) RecoverFileList2(-1);
+		Application->ProcessMessages();	
+	}
 
 	if (OptionDlg->ShowModal()==mrOk) {
-		if (OptionDlg->WinSizeChanged && IniWinMode==1) {
-			WindowState = wsNormal;
-			SetBounds(IniWinLeft, IniWinTop, IniWinWidth, IniWinHeight);
-		}
+		if (!is_kyo) {
+			if (OptionDlg->WinSizeChanged && IniWinMode==1) {
+				WindowState = wsNormal;
+				SetBounds(IniWinLeft, IniWinTop, IniWinWidth, IniWinHeight);
+			}
 
-		//デザイン、フォント、配色
-		Perform(WM_NYANFI_APPEAR, (OptionDlg->LayoutChanged? 1 : 0), (NativeInt)0);
+			//デザイン、フォント、配色
+			Perform(WM_NYANFI_APPEAR, (OptionDlg->LayoutChanged? 1 : 0), (NativeInt)0);
 
-		//ツールボタン
-		if (OptionDlg->TlBarColChanged) {
-			UpdateToolBtn(SCMD_FLIST);
-			UpdateToolBtn(SCMD_TVIEW);
-			UpdateToolBtn(SCMD_IVIEW);
-		}
-		else if ((!ToolBarISide && ToolBarI->ButtonCount==0) || (ToolBarISide && ToolBarI2->ButtonCount==0)) {
-			UpdateToolBtn(SCMD_IVIEW);
-		}
+			//ツールボタン
+			if (OptionDlg->TlBarColChanged) {
+				UpdateToolBtn(SCMD_FLIST);
+				UpdateToolBtn(SCMD_TVIEW);
+				UpdateToolBtn(SCMD_IVIEW);
+			}
+			else if ((!ToolBarISide && ToolBarI->ButtonCount==0) || (ToolBarISide && ToolBarI2->ButtonCount==0)) {
+				UpdateToolBtn(SCMD_IVIEW);
+			}
 
-		UpdLogTimer->Enabled	= false;
-		UpdLogTimer->Interval	= LogInterval;
-		UpdLogTimer->Enabled	= true;
+			UpdLogTimer->Enabled	= false;
+			UpdLogTimer->Interval	= LogInterval;
+			UpdLogTimer->Enabled	= true;
 
-		WatchDirTimer->Enabled	= false;
-		WatchDirTimer->Interval = WatchInterval;
-		WatchDirTimer->Enabled	= true;
-		if (WatchDirTimer->Interval==0) {
-			SetDirWatch(EmptyStr, 0);
-			SetDirWatch(EmptyStr, 1);
+			WatchDirTimer->Enabled	= false;
+			WatchDirTimer->Interval = WatchInterval;
+			WatchDirTimer->Enabled	= true;
+			if (WatchDirTimer->Interval==0) {
+				SetDirWatch(EmptyStr, 0);
+				SetDirWatch(EmptyStr, 1);
+			}
 		}
 
 		if (IsPrimary) {
@@ -21148,8 +21160,7 @@ void __fastcall TNyanFiForm::OptionDlgActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::OptionDlgActionUpdate(TObject *Sender)
 {
-	((TAction*)Sender)->Enabled =
-		IsPrimary && !CurWorking && !FindBusy && !CalcBusy && !CurStt->is_IncSea && !CurStt->is_Filter;
+	((TAction*)Sender)->Enabled = IsPrimary && !CurWorking && !FindBusy && !CalcBusy;
 }
 
 //---------------------------------------------------------------------------
@@ -35772,6 +35783,14 @@ void __fastcall TNyanFiForm::DefHighlightActionExecute(TObject *Sender)
 		}
 		else msgbox_WARN("定義されていません。");
 	}
+}
+
+//---------------------------------------------------------------------------
+//キー設定
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::OptKeyItemClick(TObject *Sender)
+{
+	ExeCommandAction("OptionDlg", "KYO");
 }
 
 //---------------------------------------------------------------------------

@@ -1148,6 +1148,7 @@ void __fastcall TGitViewer::DelBranchActionExecute(TObject *Sender)
 		cp->Left	= 20;
 		cp->Top		= MsgDlg->ClientHeight - cp->Height - 12;
 		cp->Width	= MsgDlg->ClientWidth - cp->Left;
+		SetDarkWinTheme(MsgDlg);
 
 		if (MsgDlg->ShowModal()==mrYes) {
 			UnicodeString prm;

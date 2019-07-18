@@ -717,6 +717,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *OpenTrashItem;
 	TMenuItem *OptionItem;
 	TMenuItem *OptionMenu;
+	TMenuItem *OptKeyItem;
 	TMenuItem *OrgOrderItem;
 	TMenuItem *PageBindItem;
 	TMenuItem *PathMaskItem;
@@ -1854,6 +1855,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall MainMenuMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width,
           int &Height);
 	void __fastcall OdPopupMenuPopup(TObject *Sender);
+	void __fastcall OptKeyItemClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
