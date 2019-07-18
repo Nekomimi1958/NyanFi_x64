@@ -4411,10 +4411,9 @@ object OptionDlg: TOptionDlg
           Left = 4
           Top = 21
           Width = 898
-          Height = 406
+          Height = 407
           Style = lbOwnerDrawFixed
-          Align = alTop
-          Anchors = [akLeft, akTop, akRight, akBottom]
+          Align = alClient
           ItemHeight = 13
           TabOrder = 1
           OnClick = KeyListBoxClick
@@ -4450,6 +4449,15 @@ object OptionDlg: TOptionDlg
             end>
           OnDrawSection = KeyHeaderControlDrawSection
           OnSectionClick = KeyHeaderControlSectionClick
+        end
+        object KeySpcPanel: TPanel
+          Left = 4
+          Top = 428
+          Width = 898
+          Height = 4
+          Align = alBottom
+          BevelOuter = bvNone
+          TabOrder = 2
         end
       end
       object KeySetPanel: TPanel

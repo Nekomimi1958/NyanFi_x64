@@ -54,7 +54,7 @@ int __fastcall KeyComp_FKey(TStringList *List, int Index1, int Index2)
 __fastcall TOptionDlg::TOptionDlg(TComponent* Owner)
 	: TForm(Owner)
 {
-	IsDark = false;
+	IsDkAll = IsDkKey = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::FormCreate(TObject *Sender)
@@ -1094,7 +1094,7 @@ void __fastcall TOptionDlg::FormDestroy(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::SetWinTheme()
 {
-	if (IsDark==IsDarkMode && Color==col_DkPanel) return;
+	if (Color==get_PanelColor() && (KeySetOnly? IsDkKey : IsDkAll)==IsDarkMode) return;
 
 	SetDarkWinTheme(this);
 
@@ -1123,7 +1123,7 @@ void __fastcall TOptionDlg::SetWinTheme()
 	Shape4->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
 	Shape6->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;
 
-	IsDark = IsDarkMode;
+	(KeySetOnly? IsDkKey : IsDkAll) = IsDarkMode;
 }
 
 //---------------------------------------------------------------------------

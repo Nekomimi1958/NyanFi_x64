@@ -699,6 +699,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *ExtMenuPanel;
 	TPanel *ExtToolPanel;
 	TPanel *KeySetPanel;
+	TPanel *KeySpcPanel;
 	TPanel *RefExtColPanel;
 	TPanel *SpuitPanel;
 	TPanel *SpuitPanel2;
@@ -932,7 +933,8 @@ private:	// ユーザー宣言
 	int MaxWd_Tag;
 
 	bool DlgInitialized;
-	bool IsDark;
+	bool IsDkAll;
+	bool IsDkKey;
 
 	UsrSwatchPanel *SwatchPanel;
 
