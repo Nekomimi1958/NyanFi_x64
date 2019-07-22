@@ -149,6 +149,7 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 	SelIndex = -1;
 
 	SetDarkWinTheme(this);
+	SetDarkWinTheme(FilterEdit);
 	FilterEdit->Color = get_WinColor(!ToFilter);
 }
 //---------------------------------------------------------------------------

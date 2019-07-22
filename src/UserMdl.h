@@ -60,8 +60,7 @@ struct code_page_inf {
 extern code_page_inf SaveCodePages[MAX_SAVE_CODEPAGES];
 
 //---------------------------------------------------------------------------
-typedef WINSHELLAPI BOOL (WINAPI *FUNC_PickIconDlg)(HWND, LPTSTR, UINT, LPDWORD);
-
+typedef BOOL (WINAPI *FUNC_PickIconDlg)(HWND, LPWSTR, DWORD, LPDWORD);
 
 //---------------------------------------------------------------------------
 class TUserModule : public TDataModule

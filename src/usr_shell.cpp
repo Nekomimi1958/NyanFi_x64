@@ -166,11 +166,11 @@ DWORD get_DropMode(IDataObject *pDataObj, DWORD grfKeyState, POINTL pt)
 		}
 		catch (...) {
 			DragDrive = EmptyStr;
-			//対応外の対象を拒否
-			formatetc.cfFormat = ::RegisterClipboardFormat(CFSTR_FILEDESCRIPTORW);
+			//リンク項目か？
+			formatetc.cfFormat = ::RegisterClipboardFormat(CFSTR_FILEDESCRIPTORW);	//タイトル用
 			DropRefused = FAILED(pDataObj->QueryGetData(&formatetc));
 			if (!DropRefused) {
-				formatetc.cfFormat = ::RegisterClipboardFormat(CFSTR_INETURL);
+				formatetc.cfFormat = ::RegisterClipboardFormat(CFSTR_INETURL);		//URL
 				DropRefused = FAILED(pDataObj->QueryGetData(&formatetc));
 				if (!DropRefused) {
 					STGMEDIUM medium;

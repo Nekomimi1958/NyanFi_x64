@@ -31480,29 +31480,31 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 
 		if (ThumbnailGrid->Visible) ThumbnailGrid->Repaint();
 
-		//背景をクリア
-		ViewerImage->Picture->Bitmap->SetSize(ViewerImage->ClientWidth, ViewerImage->ClientHeight);
-		TCanvas *cv = ViewerImage->Canvas;
-		cv->Brush->Color = col_bgImage;
-		cv->FillRect(ViewerImage->ClientRect);
-		//等倍フィット
-		ImgScrollBox->Color = col_bgImage;
-		ImgScrollBox->HorzScrollBar->Range = ImgScrollPanel->ClientWidth;
-		ImgScrollBox->VertScrollBar->Range = ImgScrollPanel->ClientHeight;
-		LastZoomRatio = 100;
-		ImgViewThread->AddRequest(_T("ZOOM"), 100);
-
-		//文字色設定 (背景から白or黒を選択)
+		std::unique_ptr<Graphics::TBitmap> bg_bmp(new Graphics::TBitmap());
+		TCanvas *cv = bg_bmp->Canvas;
 		cv->Font->Assign(FileInfFont);
 		cv->Font->Size	= 9;
 		cv->Font->Color = SelectWorB(col_bgImage);
-		int fh = get_FontHeight(cv->Font, 4);
+
+		//必要サイズを概算
+		int fh	 = get_FontHeight(cv->Font, 4);
+		int v_wd = std::max(600, ImgScrollPanel->ClientWidth - ::GetSystemMetrics(SM_CXVSCROLL));
+		int v_hi = 8 + 256 + fh + 20;
+		int ixn  = (int)::ExtractIcon(HInstance, ViewFileName.c_str(), -1);
+		if (ixn>1) {
+			int n = std::max((v_wd - 48)/40, 1);
+			v_hi += ceil(1.0 * ixn/n) * (38 + fh);
+		}
+		bg_bmp->SetSize(v_wd, v_hi);	//仮サイズを設定
+
+		//背景クリア
+		cv->Brush->Color = col_bgImage;
+		cv->FillRect(Rect(0, 0, v_wd, v_hi));
 
 		//アイコン
 		int x = 8, y = 8;
 		int x_max = 0;
 		if (to_draw) {
-			ViewerImage->Center = false;
 			int size_lst[6] = {256, 128, 64, 48, 32, 16};
 			int h = 0;
 			for (int i=0; i<6; i++) {
@@ -31521,7 +31523,6 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 		}
 
 		//抽出アイコン
-		int ixn = (int)::ExtractIcon(HInstance, ViewFileName.c_str(), -1);
 		if (ixn>1) {
 			sz_str.sprintf(_T(" %u Icons"), ixn);
 			if (to_draw) {
@@ -31533,7 +31534,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 					::DestroyIcon(hIcon);
 					UnicodeString nstr = i;
 					cv->TextOut(x + (32 - cv->TextWidth(nstr))/2, y + 34, nstr);
-					if ((x + 2*40)>ViewerImage->ClientWidth) {
+					if ((x + 40)>v_wd) {
 						x = 8; y += (38 + fh);
 						nx_flag = true;
 					}
@@ -31547,9 +31548,18 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 			}
 		}
 
-		ViewerImage->Picture->Bitmap->SetSize(x_max, y);
-		ViewerImage->Repaint();
+		ViewerImage->Center = false;
+		ViewerImage->Picture->Bitmap->SetSize(x_max, y);	//実サイズを設定
+		TRect v_rc = Rect(0, 0, x_max, y);
+		ViewerImage->Picture->Bitmap->Canvas->CopyRect(v_rc, cv, v_rc);
 		ImgBuff->Assign(ViewerImage->Picture);
+
+		//等倍
+		ImgScrollBox->Color = col_bgImage;
+		ImgScrollBox->HorzScrollBar->Range = x_max;
+		ImgScrollBox->VertScrollBar->Range = y;
+		LastZoomRatio = 100;
+		ImgViewThread->AddRequest(_T("ZOOM"), 100);
 
 		if (HistForm->Visible) HistForm->DrawHistogram();
 		UpdateLoupe();

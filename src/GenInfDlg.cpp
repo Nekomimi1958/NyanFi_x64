@@ -223,6 +223,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	SetStatusBar();
 
 	SetDarkWinTheme(this);
+	SetDarkWinTheme(FilterEdit);
 	FilterEdit->Color = get_WinColor(!ToFilter);
 
 	if (!ErrMsg.IsEmpty()) {

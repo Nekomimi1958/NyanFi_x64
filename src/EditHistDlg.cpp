@@ -56,9 +56,6 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 
 	FilterEdit->Width = IniFile->ReadIntGen(_T("EditHistFilterWidth"),	200);
 
-	SetDarkWinTheme(this);
-	FilterEdit->Color = get_WinColor(!ToFilter);
-
 	StatusBar1->Font->Assign(SttBarFont);
 	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
 	StatusBar1->Panels->Items[0]->Width = StatusBar1->ClientWidth;
@@ -221,6 +218,10 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	TagJumpInf	 = EmptyStr;
 
 	((ToFilter && OpeToolBar->Visible)? (TWinControl*)FilterEdit : (TWinControl*)gp)->SetFocus();
+
+	SetDarkWinTheme(this);
+	SetDarkWinTheme(FilterEdit);
+	FilterEdit->Color = get_WinColor(!ToFilter);
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action)

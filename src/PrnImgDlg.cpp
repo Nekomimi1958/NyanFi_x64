@@ -11,7 +11,7 @@
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"
-#include "Mainfrm.h"
+#include "MainFrm.h"
 #include "PrnImgDlg.h"
 
 //---------------------------------------------------------------------------
