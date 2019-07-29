@@ -5371,8 +5371,7 @@ drive_info *get_DriveInfoList()
 
 				//RAMディスクの推測
 				if (rq_chk_ram && dp->accessible && dp->drv_type==DRIVE_FIXED && dp->bus_type.IsEmpty()) {
-					MEMORYSTATUSEX stt_ex;
-					stt_ex.dwLength = sizeof(stt_ex);
+					MEMORYSTATUSEX stt_ex = {sizeof(MEMORYSTATUSEX)};
 					if (::GlobalMemoryStatusEx(&stt_ex)) {
 						__int64 sTotal = DiskSize((char)dstr[1] - 'A' + 1);
 						//サイズが物理メモリ使用容量より小さい
@@ -9758,12 +9757,11 @@ void flash_win(
 	if (cnt<=0) cnt = 3;
 	if (tm<=0)  tm  = 250;
 
-	FLASHWINFO fwi;
-	fwi.cbSize    = sizeof(FLASHWINFO);
-	fwi.hwnd      = Screen->ActiveForm->Handle;
-	fwi.dwFlags   = FLASHW_ALL;
-	fwi.uCount    = cnt;
-	fwi.dwTimeout = tm;
+	FLASHWINFO fwi = {sizeof(FLASHWINFO)};
+	fwi.hwnd	   = Screen->ActiveForm->Handle;
+	fwi.dwFlags    = FLASHW_ALL;
+	fwi.uCount	   = cnt;
+	fwi.dwTimeout  = tm;
 	::FlashWindowEx(&fwi);
 }
 
@@ -11711,8 +11709,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 		HANDLE hWrite = NULL;
 		//名前なしパイプを作成
 		if (contains_wd_i(opt, _T("O|L"))) {
-			SECURITY_ATTRIBUTES	sa;
-			sa.nLength				= sizeof(sa);
+			SECURITY_ATTRIBUTES sa  = {sizeof(SECURITY_ATTRIBUTES)};
 			sa.lpSecurityDescriptor = 0;
 			sa.bInheritHandle		= TRUE;
 			if (!::CreatePipe(&hRead, &hWrite, &sa, 0)) UserAbort(USTR_FaildProc);

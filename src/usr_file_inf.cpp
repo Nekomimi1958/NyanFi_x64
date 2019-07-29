@@ -772,6 +772,8 @@ bool get_ExifInf(
 	unsigned int *i_wd,		//[o] •	(default = NULL)
 	unsigned int *i_hi)		//[o] ‚‚³	(default = NULL)
 {
+	int lst_cnt = lst->Count;
+
 	std::unique_ptr<TStringList> i_lst(new TStringList());
 	if (!EXIF_GetInf(fnam, i_lst.get())) return false;
 
@@ -809,7 +811,8 @@ bool get_ExifInf(
 		add_PropLine_if(d_lst->ValueFromIndex[i].c_str(), i_lst->Values[d_lst->Names[i]], lst);
 
 	if (ori) *ori = get_ListIntVal(i_lst.get(), _T("274"));
-	return true;
+
+	return (lst->Count>lst_cnt);
 }
 
 //---------------------------------------------------------------------------

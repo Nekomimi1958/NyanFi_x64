@@ -58,10 +58,9 @@ void __fastcall TDotNyanDlg::FormShow(TObject *Sender)
 
 	//タイトルバーを設定
 	HFONT hFont = NULL;
-	NONCLIENTMETRICS nonclientmetrics;
-	nonclientmetrics.cbSize = sizeof(NONCLIENTMETRICS);
-	if (::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, nonclientmetrics.cbSize, &nonclientmetrics, 0))
-		hFont = ::CreateFontIndirect(&nonclientmetrics.lfCaptionFont);
+	NONCLIENTMETRICS nc_metrics = {sizeof(NONCLIENTMETRICS)};
+	if (::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, nc_metrics.cbSize, &nc_metrics, 0))
+		hFont = ::CreateFontIndirect(&nc_metrics.lfCaptionFont);
 	std::unique_ptr<TFont> titFont(new TFont());
 	if (hFont) titFont->Handle = hFont; else titFont->Assign(DialogFont);
 	Caption = get_MiniPathName(DotNyanName + " の設定", ClientWidth - ScaledInt(48), titFont.get(), true);

@@ -16,7 +16,7 @@ DL.sub_item {
 DT {
   font-weight: bold;
   padding: 1px 4px;
-  background-color: #ddddff;
+  background-color: #ddf;
 }
 
 DT.no_bg {
@@ -41,28 +41,28 @@ LI {
 
 H1 {
   padding: 4px 10px;
-  background-color: #ddddff;
+  background-color: #ddf;
   border-style: solid;
   border-width: 1px 2px 2px 1px;
-  border-color: #666699;
+  border-color: #669;
   font-size: large;
 }
 
 H2 {
   padding: 4px 6px;
-  background-color: #ddddff;
+  background-color: #ddf;
   border-style: solid;
   border-width: 1px 2px 2px 1px;
-  border-color: #666699;
+  border-color: #669;
   font-size: medium;
 }
 
 H3 {
   padding: 2px 4px;
-  background-color: #ddddff;
+  background-color: #ddf;
   border-style: none solid solid none;
   border-width: 1px;
-  border-color: #666699;
+  border-color: #669;
   font-size: small;
 }
 
@@ -72,13 +72,13 @@ H4 {
   margin-bottom: 0.25em;
   border-style: none none solid none;
   border-width: 1px;
-  border-color: #666699;
+  border-color: #669;
   font-size: small;
 }
 
 
 A:hover {
-  background-color: #ddddff;
+  background-color: #ddf;
 }
 
 A {
@@ -96,10 +96,10 @@ PRE {
 /* è¸ÇË */
 .title_box {
   padding: 20px 20px;
-  background-color: #ddddff;
+  background-color: #ddf;
   border-style: solid;
   border-width: 1px 2px 2px 1px;
-  border-color: #666699;
+  border-color: #669;
   letter-spacing: 0.25em;
   font-weight: bold;
 }
@@ -108,15 +108,15 @@ PRE {
   padding: 10px 20px;
   border-style: solid;
   border-width: 1px 2px 2px 1px;
-  border-color: #666699;
+  border-color: #669;
 }
 
 .inf_box_r {
   padding: 10px 20px;
-  background-color: #ffdddd;
+  background-color: #fdd;
   border-style: solid;
   border-width: 1px 2px 2px 1px;
-  border-color: #666699;
+  border-color: #669;
 }
 
 .small {
@@ -148,12 +148,12 @@ PRE {
 .note_text {
   margin-Top: 0.25em;
   padding-left: 0.5em;
-  background-color: #ffeeee;
+  background-color: #fee;
 }
 
 .info_text {
   margin-Top: 0.25em;
-  background-color: #eeffff;
+  background-color: #eff;
 }
 
 .tips {
@@ -168,10 +168,10 @@ PRE {
   margin-left: 0.25em;
   margin-right: 0.25em;
   padding: 0px 4px;
-  background-color: #dddddd;
+  background-color: #ddd;
   border-style: solid;
   border-width: 1px;
-  border-color: #aaaaaa #666666 #666666 #aaaaaa;
+  border-color: #aaa #666 #666 #aaa;
   font-weight: bold;
   font-size: 90%;
 }
@@ -180,10 +180,10 @@ PRE {
   margin-right: 0.25em;
   text-align: center;
   width: 4.5em;
-  background-color: #dddddd;
+  background-color: #ddd;
   border-style: solid;
   border-width: 1px;
-  border-color: #aaaaaa #666666 #666666 #aaaaaa;
+  border-color: #aaa #666 #666 #aaa;
   font-weight: bold;
   font-size: 90%;
 }
@@ -191,10 +191,10 @@ PRE {
   margin-left: 0.25em;
   margin-right: 0.25em;
   padding: 0px 8px;
-  background-color: #dddddd;
+  background-color: #ddd;
   border-style: solid solid none solid;
   border-width: 1px;
-  border-color: #aaaaaa #666666 #666666 #aaaaaa;
+  border-color: #aaa #666 #666 #aaa;
   font-weight: bold;
   font-size: 90%;
 }
@@ -216,7 +216,7 @@ PRE {
 
 .format_text {
   padding: 0px 0.25em;
-  background-color: #dddddd;
+  background-color: #ddd;
 }
 
 .rem_text {
@@ -240,14 +240,14 @@ PRE {
 
 .scr_box {
   padding: 1px 4px;
-  background-color: #aaaaaa;
+  background-color: #aaa;
   font-family: monospace;
 }
 
 .inp_box {
   padding: 0px 40px 0px 4px;
-  background-color: #ffffff;
-  border-color: #666666;
+  background-color: #fff;
+  border-color: #666;
   border-style: solid;
   border-width: 1px;
   font-size: 90%;
@@ -256,7 +256,7 @@ PRE {
 .example_box {
   margin-top: 0.25em;
   padding: 4px;
-  background-color: #dddddd;
+  background-color: #ddd;
   font-family: monospace;
   line-height: 120%;
 }

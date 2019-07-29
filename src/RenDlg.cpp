@@ -141,6 +141,9 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	FbaseRadioGroup->ItemIndex = 0;
 	FextRadioGroup->ItemIndex  = 0;
 
+	StatusBar1->Canvas->Font->Assign(SttBarFont);
+	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
+
 	if (UnInitializing) return;
 
 	//関連改名設定
@@ -156,7 +159,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	TStringGrid *gp = PreviewGrid;
 	gp->RowCount = ItemList->Count;
 	for (int i=0; i<gp->RowCount; i++) clear_GridRow(gp, i);
-	AutoPrvCheckBox->Enabled  = IsMulti;
+	AutoPrvCheckBox->Enabled = IsMulti;
 
 	//属性の初期化
 	int atr = file_GetAttr(ItemList->Strings[0]);
@@ -257,6 +260,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	CanButton->Enabled		 = true;
 
 	SetDarkWinTheme(this);
+	SetDarkWinTheme(NameComPanel);
 
 	TColor bg_p = IsMulti? get_WinColor(true) : get_PanelColor();
 	ReadOnlyPanel->Color = bg_p;
@@ -268,6 +272,9 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 
 	AssRenListBox->Color  = get_WinColor();
 	CnvCharListBox->Color = get_WinColor();
+
+	SttPrgBar->BgColor	  = col_bgPrgBar;
+	SttPrgBar->BarColor   = col_fgPrgBar;
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
@@ -407,6 +414,7 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 		SttInfLabel->Caption   = EmptyStr;
 		FbaseRadioGroup->ItemIndex = 0;
 		FextRadioGroup->ItemIndex  = 0;
+		SetDarkWinTheme(gp);
 		Repaint();
 	}
 
@@ -589,9 +597,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 
 	MainPanel->Enabled = false;
 	Previewing = true;
-
 	ExistErr   = false;
-	SttPrgBar->PrgBar->Max = ItemList->Count;
 	SttPrgBar->Begin(_T("プレビュー..."));
 
 	//連番
@@ -633,7 +639,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	UnicodeString pre_alstr, post_alstr;
 	for (int i=0; i<ItemList->Count; i++) {
 		if (show_prg) {
-			SttPrgBar->PrgBar->Position = i;
+			SttPrgBar->SetPosI(i, ItemList->Count);
 			if (i%100==0) Application->ProcessMessages();
 		}
 
@@ -855,7 +861,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 		SttPrgBar->Begin(_T("エラーチェック..."));
 		for (int i=0; i<NewNameList->Count; i++) {
 			if (show_prg) {
-				SttPrgBar->PrgBar->Position = i;
+				SttPrgBar->SetPosI(i, NewNameList->Count);
 				if (i%100==0) Application->ProcessMessages();
 			}
 			UnicodeString old_name = gp->Cells[0][i];
@@ -896,7 +902,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 			SttPrgBar->Begin(_T("重複チェック..."));
 			for (int i=0; i<NewNameList->Count-1; i++) {
 				if (show_prg) {
-					SttPrgBar->PrgBar->Position = i;
+					SttPrgBar->SetPosI(i, NewNameList->Count);
 					if (i%100==0) Application->ProcessMessages();
 				}
 
@@ -1690,8 +1696,6 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 	AssRenList->Assign(AssRenListBox->Items);
 
 	try {
-		SttPrgBar->PrgBar->Max = ItemList->Count;
-
 		//------------------------------------------
 		//名前の変更
 		//------------------------------------------
@@ -1701,7 +1705,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 			SttPrgBar->Begin(_T("関連改名チェック..."));
 			int i = 0;
 			while (i<ItemList->Count) {
-				SttPrgBar->PrgBar->Position = i;
+				SttPrgBar->SetPosI(i, ItemList->Count);
 				Application->ProcessMessages();
 
 				bool is_dir = ends_PathDlmtr(ItemList->Strings[i]);
@@ -1754,7 +1758,6 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 							i++;
 							ItemList->Insert(i, fnam1);
 							NewNameList->Insert(i, nnam1);
-							SttPrgBar->PrgBar->Max = ItemList->Count;
 						}
 					}
 				}
@@ -1767,7 +1770,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 			if (IsMulti) {
 				SttPrgBar->Begin(_T("重複チェック..."));
 				for (int i=0; !duplicated && i<ItemList->Count; i++) {
-					SttPrgBar->PrgBar->Position = i;
+					SttPrgBar->SetPosI(i, ItemList->Count);
 					Application->ProcessMessages();
 					if (SameStr(ItemList->Strings[i], NewNameList->Strings[i])) continue;
 					//改名中の重複チェック
@@ -1800,7 +1803,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 						for (int i=0; i<t_lst->Count; i++) DeleteFile(t_lst->Strings[i]);
 				//中間改名
 				for (int i=0; i<ItemList->Count; i++) {
-					SttPrgBar->PrgBar->Position = i;
+					SttPrgBar->SetPosI(i, ItemList->Count);
 					Application->ProcessMessages();
 					UnicodeString tmp_name = ExtractFilePath(ItemList->Strings[i]);
 					tmp_name.cat_sprintf(_T("$~NF%04u.~TMP"), i);
@@ -1815,7 +1818,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 			bool checked = OppPath.IsEmpty();
 			std::unique_ptr<TStringList> r_lst(new TStringList());
 			for (int i=0; i<ItemList->Count; i++) {
-				SttPrgBar->PrgBar->Position = i;
+				SttPrgBar->SetPosI(i, ItemList->Count);
 				Application->ProcessMessages();
 
 				UnicodeString f_name   = ItemList->Strings[i];
@@ -1835,6 +1838,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 							ItemList->Strings[i] = new_name;
 							UnicodeString log_str; log_str.sprintf(_T("%s\t%s"), org_name.c_str(), new_name.c_str());
 							r_lst->Add(log_str);
+
 							UnicodeString org_fext = get_extension(org_name);
 							//コマンドファイルの改名を登録
 							if (test_NbtExt(org_fext) && test_NbtExt(get_extension(new_name))) {
@@ -1905,7 +1909,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 			SttPrgBar->Begin(_T("タイム変更..."));
 			int er_cnt = 0;
 			for (int i=0; i<ItemList->Count; i++) {
-				SttPrgBar->PrgBar->Position = i;
+				SttPrgBar->SetPosI(i, ItemList->Count);
 				Application->ProcessMessages();
 
 				for (;;) {
@@ -1936,7 +1940,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 			int er_cnt = 0;
 			SttPrgBar->Begin(_T("属性変更..."));
 			for (int i=0; i<ItemList->Count; i++) {
-				SttPrgBar->PrgBar->Position = i;
+				SttPrgBar->SetPosI(i, ItemList->Count);
 				Application->ProcessMessages();
 
 				for (;;) {

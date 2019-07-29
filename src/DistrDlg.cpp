@@ -112,6 +112,9 @@ void __fastcall TDistributionDlg::FormShow(TObject *Sender)
 	PrvSplitter->Color	= col_Splitter;
 	ListSplitter->Color = col_Splitter;
 
+	SttPrgBar->BgColor  = col_bgPrgBar;
+	SttPrgBar->BarColor = col_fgPrgBar;
+
 	ListListBox->Visible  = false;
 	ListSplitter->Visible = false;
 	if (PrvListAction->Checked) {
@@ -375,7 +378,7 @@ void __fastcall TDistributionDlg::UpdatePreview(bool upd)
 	int f_cnt = 0;
 	int d_cnt = 0;
 	for (int i=0; i<ItemList->Count; i++) {
-		SttPrgBar->SetPosR(1.0*i/ItemList->Count);
+		SttPrgBar->SetPosI(i, ItemList->Count);
 
 		UnicodeString fnam = ItemList->Strings[i];
 		UnicodeString nnam = ExtractFileName(ExcludeTrailingPathDelimiter(fnam));

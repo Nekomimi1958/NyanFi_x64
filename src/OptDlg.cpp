@@ -167,8 +167,8 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"bgLog=ログの背景色\n"
 		"fgLog=ログの文字色\n"
 		"bgTask=タスク状態表示の背景色\n"
-		"fgPrgBar=タスク進捗バー色\n"
-		"bgPrgBar=タスク進捗背景色\n"
+		"fgPrgBar=進捗バー色\n"
+		"bgPrgBar=進捗背景色\n"
 		"Error=エラー/注意の文字色\n"
 		"bgInfHdr=|情報ヘッダの背景色\n"
 		"fgInfHdr=情報ヘッダの文字色\n"
@@ -870,10 +870,9 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	}
 	FKeyLabelBuf->Assign(FKeyLabelList);
 
-	PageControl1Change(NULL);
-
 	if (!KeyKeyLabel) KeyKeyLabel = AttachLabelToGroup(KeyKeyGroupBox, "キー");
 	SetKeyComboBox();
+	PageControl1Change(NULL);
 
 	set_MigemoCheckBox(MigemoCheckBox, _T("OptKeyMigemo"));
 
@@ -1214,7 +1213,7 @@ void __fastcall TOptionDlg::SetKeyComboBox()
 {
 	UnicodeString kmd;
 	if (KeyKeyLabel) KeyKeyLabel->Caption = kmd.sprintf(_T("キー (%s)"), is_JpKeybd()? _T("JP") : _T("US"));
-	KeyboardLabel->Caption	= kmd.sprintf(_T("(%s)"), (::GetKeyboardType(0)==7)? _T("JP") : _T("US"));
+	KeyboardLabel->Caption = kmd.sprintf(_T("(%s)"), (::GetKeyboardType(0)==7)? _T("JP") : _T("US"));
 
 	make_KeyList(KeyComboBox->Items);
 	make_KeyList(Key2ComboBox->Items);

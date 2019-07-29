@@ -7,6 +7,7 @@
 #include <tchar.h>
 #include <algorithm>
 #include <memory>
+#include <System.StrUtils.hpp>
 #include "GlobalDark.h"
 
 //---------------------------------------------------------------------------
@@ -75,8 +76,7 @@ TBrush *MenuBrush = NULL;
 //---------------------------------------------------------------------------
 bool is_HighContrast()
 {
-	HIGHCONTRAST hc;
-	hc.cbSize = sizeof(HIGHCONTRAST);
+	HIGHCONTRAST hc = {sizeof(HIGHCONTRAST)};
 	return (::SystemParametersInfo(SPI_GETHIGHCONTRAST, sizeof(HIGHCONTRAST), &hc, 0)
 				&& ((hc.dwFlags & HCF_HIGHCONTRASTON)!=0));
 }
@@ -736,7 +736,7 @@ void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc,
 	cv->Font->Color = active? col_fgOptTab : get_LabelColor();
 	cv->Font->Style = active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
 	TRect tt_rc = rc;
-	tt_rc.Left	= rc.Left + (rc.Width() - cv->TextWidth(titstr))/2;
+	tt_rc.Left	= rc.Left + (rc.Width() - cv->TextWidth(ReplaceStr(titstr, "&", EmptyStr)))/2;
 	tt_rc.Top	= (tp->TabPosition==tpBottom)? rc.Bottom - cv->TextHeight(titstr) - 4 : rc.Top + (active? 4 : 2);
 	::DrawText(cv->Handle, titstr.c_str(), -1, &tt_rc, DT_LEFT);
 }

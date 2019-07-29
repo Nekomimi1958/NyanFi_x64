@@ -658,7 +658,9 @@ void UsrIniFile::CheckMarkItems()
 						if (klist->Count==0) EraseSection(dnam);
 					}
 				}
-				else EraseSection(dnam);
+				else {
+					EraseSection(dnam);
+				}
 			}
 			//アーカイブ(内部はチェックしない)
 			else if (!file_exists(dnam)) {

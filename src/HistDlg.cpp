@@ -30,7 +30,7 @@ void __fastcall TDirHistoryDlg::FormCreate(TObject *Sender)
 
 	ListScrPanel = new UsrScrollPanel(ListPanel, DirHistListBox, USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
 
-	IsDirStack = IsAllDirHist = IsFindDirHist = false;
+	IsDirStack = IsAllDirHist = IsFindDirHist = IdRecentDir = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TDirHistoryDlg::FormShow(TObject *Sender)
@@ -61,7 +61,7 @@ void __fastcall TDirHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	if (FindBusy) FindAborted = true;
 
-	IsDirStack = IsAllDirHist = IsFindDirHist = false;
+	IsDirStack = IsAllDirHist = IsFindDirHist = IdRecentDir = false;
 
 	IniFile->SavePosInfo(this);
 	IniFile->WriteBoolGen(_T("DirHistoryMigemo"), IsMigemo);
@@ -94,6 +94,34 @@ void __fastcall TDirHistoryDlg::UpdateListBox(
 			ListBuff->Assign(AllDirHistory);
 		}
 	}
+	//最近使ったディレクトリ
+	else if (IdRecentDir) {
+		UnicodeString dnam = usr_SH->KnownGuidToPath(FOLDERID_Recent);
+		if (!dnam.IsEmpty()) {
+			std::unique_ptr<TStringList> i_lst(new TStringList());
+			std::unique_ptr<TStringList> lnk_lst(new TStringList());
+			get_files(dnam, _T("*.lnk"), lnk_lst.get());
+			for (int i=0; i<lnk_lst->Count; i++) {
+				UnicodeString fnam = lnk_lst->Strings[i];
+				UnicodeString lnam = usr_SH->get_LnkName(fnam);
+				if (lnam.IsEmpty() || StartsStr("::{", lnam)) continue;
+				UnicodeString pnam = ExtractFilePath(lnam);
+				if (!NoCheckRecentUnc || !StartsStr("\\\\", pnam)) {
+					if (!is_InvalidUnc(pnam) && NyanFiForm->CheckUncPath(pnam) && !dir_exists(lnam)) continue;
+				}
+				else {
+					if (!dir_exists(lnam)) continue;
+				}
+				//降順ソートのために使用日時を一時的に付加
+				i_lst->Add(FormatDateTime("yyyymmddhhnnss", get_file_age(fnam)) + "\t" + IncludeTrailingPathDelimiter(lnam));
+			}
+			i_lst->CustomSort(comp_DescendOrder);
+			for (int i=0; i<i_lst->Count; i++) {
+				UnicodeString lbuf = get_post_tab(i_lst->Strings[i]);
+				if (ListBuff->IndexOf(lbuf)==-1) ListBuff->Add(lbuf);
+			}
+		}
+	}
 	//通常モード
 	else {
 		TStringList *h_lst = IsDirStack? DirStack : IsAllDirHist? AllDirHistory : get_DirHistory(CurTabIndex, RefListTag);
@@ -119,6 +147,9 @@ void __fastcall TDirHistoryDlg::UpdateListBox(
 	}
 	else if (IsAllDirHist) {
 		tit = "ディレクトリ履歴 - 全体";
+	}
+	else if (IdRecentDir) {
+		tit = "最近使ったディレクトリ";
 	}
 	else {
 		tit.sprintf(_T("ディレクトリ履歴 - %s"), get_LRUD_str(RefListTag).c_str());
@@ -158,7 +189,8 @@ void __fastcall TDirHistoryDlg::DirHistListBoxDrawItem(TWinControl *Control, int
 		xp += get_CharWidth(cv, 2);
 	}
 
-	UnicodeString lbuf = get_csv_item(lp->Items->Strings[Index], 0);
+	UnicodeString lbuf = lp->Items->Strings[Index];
+	if (!IdRecentDir)  lbuf = get_csv_item(lbuf, 0);
 	if (UncToNetDrive) lbuf = UNC_to_NetDriveName(lbuf);
 	if (DispRegName)   lbuf = get_RegDirName(lbuf);
 

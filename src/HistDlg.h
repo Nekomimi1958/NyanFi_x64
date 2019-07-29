@@ -81,9 +81,10 @@ private:	// ユーザー宣言
 public:		// ユーザー宣言
 	UsrScrollPanel *ListScrPanel;	//シンプルスクロールバー
 
-	bool IsDirStack;
-	bool IsAllDirHist;
-	bool IsFindDirHist;
+	bool IsDirStack;		//ディレクトリ・スタック
+	bool IsAllDirHist;		//全体履歴
+	bool IsFindDirHist;		//全体履歴(インクリメンタルサーチ)
+	bool IdRecentDir;		//最近使ったディレクトリ
 
 	int  RefListTag;
 	UnicodeString WorkListName;

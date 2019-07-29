@@ -597,6 +597,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *CompDlgItem;
 	TMenuItem *ConvertImageItem;
 	TMenuItem *CopyAddItem;
+	TMenuItem *CopyEnvInfItem;
 	TMenuItem *CopyFielNameItem;
 	TMenuItem *CopyPreImgItem;
 	TMenuItem *CopyPrviewImgItem;
@@ -919,6 +920,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPaintBox *TextMarginBox;
 	TPaintBox *TextPaintBox;
 	TPaintBox *TextRulerBox;
+	TPaintBox *WorkProgressBox;
 	TPanel *GrepFilterPanel;
 	TPanel *GrepM1Panel;
 	TPanel *GrepM2Panel;
@@ -984,6 +986,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *TxtScrollPanel;
 	TPanel *TxtTailListPanel;
 	TPanel *TxtViewPanel;
+	TPanel *WorkPrgBarPanel;
 	TPopupMenu *DrivePopupMenu;
 	TPopupMenu *DropPopupMenu;
 	TPopupMenu *ExPopupMenu;
@@ -996,7 +999,6 @@ __published:	// IDE で管理されるコンポーネント
 	TPopupMenu *TrayPopupMenu;
 	TPopupMenu *TxtPrvPopupMenu;
 	TPopupMenu *ViewPopupMenu;
-	TProgressBar *WorkProgressBar;
 	TRichEdit *ViewMemo;
 	TScrollBar *TextScrollBar;
 	TScrollBox *ImgScrollBox;
@@ -1856,6 +1858,8 @@ __published:	// IDE で管理されるコンポーネント
           int &Height);
 	void __fastcall OdPopupMenuPopup(TObject *Sender);
 	void __fastcall OptKeyItemClick(TObject *Sender);
+	void __fastcall CopyEnvInfItemClick(TObject *Sender);
+	void __fastcall WorkProgressBoxPaint(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -1911,6 +1915,7 @@ private:	// ユーザー宣言
 	TPoint ButtonPos;					//メニュー表示用ボタン位置
 	bool IsEvenPage;					//見開き表示は偶数ページから
 	int  InhSeekBar;					//シークバー処理の抑止
+	double WorkBarRatio;
 
 	UnicodeString ActionParam;			//コマンドアクションのパラメータ
 	UnicodeString ActionDesc;			//コマンドアクションの説明
@@ -2136,6 +2141,13 @@ private:	// ユーザー宣言
 	{
 		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
 		org_LogPanelWndProc(msg);
+	}
+
+	TWndMethod org_WorkBarPanelWndProc;
+	void __fastcall WorkBarPanelWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_WorkBarPanelWndProc(msg);
 	}
 
 	TWndMethod org_SttBar1WndProc;
@@ -2464,8 +2476,8 @@ private:	// ユーザー宣言
 	void __fastcall BeginWorkProgress(UnicodeString tit, UnicodeString s = EmptyStr, TControl *cp = NULL, bool can_sw = false);
 	void __fastcall BeginWorkProgress(const _TCHAR *tit, UnicodeString s = EmptyStr, TControl *cp = NULL, bool can_sw = false);
 	void __fastcall EndWorkProgress(UnicodeString tit = EmptyStr, UnicodeString s = EmptyStr, int wait = 500);
-	void __fastcall PosWorkProgress(int idx, int cnt);
-	void __fastcall PosWorkProgress(__int64 idx, __int64 cnt);
+	void __fastcall PosWorkProgress(int idx, int cnt = 1);
+	void __fastcall PosWorkProgress(__int64 idx, __int64 cnt = 1);
 	TModalResult __fastcall DownloadWorkProgress(UnicodeString url, UnicodeString fnam, TControl *cp = NULL);
 
 	void __fastcall AssignToMenuItem(TMenuItem *m_item, TMenuItem *src_m);

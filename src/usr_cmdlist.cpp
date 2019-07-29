@@ -25,6 +25,7 @@ void set_CmdList(
 		"F:BackDirHist=ディレクトリ履歴を戻る\n"
 		"F:Backup=反対パスにバックアップ\n"
 		"F:BgImgMode=背景画像の表示モード設定\n"
+		"F:BorderCenter=ファイルリストの境界を中央に\n"
 		"F:BorderLeft=ファイルリストの境界を左に移動\n"
 		"F:BorderRight=ファイルリストの境界を右に移動\n"
 		"F:CalcDirSize=ディレクトリ容量を計算\n"
@@ -687,7 +688,8 @@ void get_PrmList(
 			_T("GS : 全体履歴を表示(ソート/重複削除)\n")
 			_T("FM : 全体履歴をフィルタ検索\n")
 			_T("AC : カレント側の履歴をすべて削除\n")
-			_T("GC : 全体履歴をすべて削除\n"));
+			_T("GC : 全体履歴をすべて削除\n")
+			_T("RD : 最近使ったディレクトリを表示\n"));
 	}
 	else if (USAME_TI(cmd, "DistributionDlg")) {
 		params.sprintf(_T("%s"),

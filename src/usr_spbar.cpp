@@ -4,6 +4,7 @@
 //----------------------------------------------------------------------//
 #include <vcl.h>
 #pragma hdrstop
+#include <algorithm>
 #include <math.h>
 #include "usr_str.h"
 #include "usr_spbar.h"
@@ -14,26 +15,21 @@
 //---------------------------------------------------------------------------
 SttProgressBar::SttProgressBar(TStatusBar *sp, int idx)
 {
-	PrgBar	 = NULL;
+	PrgBox	 = NULL;
 	PrgIndex = idx;
 	MsgIndex = -1;
 	SttBar	 = sp;
 
+	BarRatio = 0.0;
+	BgColor  = TColor(RGB(0xe6, 0xe6, 0xe6));
+	BarColor = TColor(RGB(0x25, 0xb0, 0x06));
+
 	if (SttBar && PrgIndex<SttBar->Panels->Count) {
-		//プログレスバーを作成
-		PrgBar = new TProgressBar(SttBar);
-		PrgBar->DoubleBuffered = true;
-		PrgBar->Parent  = SttBar;
-		PrgBar->Top     = 2;
-		int xp = 2;
-		for (int i=0; i<PrgIndex; i++) xp += SttBar->Panels->Items[i]->Width;
-		PrgBar->Left	= xp;
-		PrgBar->Height	= SttBar->ClientHeight -2;
-		PrgBar->Width	= SttBar->Panels->Items[PrgIndex]->Width -2;
-		PrgBar->Min 	= 0;
-		PrgBar->Max 	= 100;
-		PrgBar->Smooth  = true;
-		PrgBar->Visible = false;
+		PrgBox = new TPaintBox(SttBar);
+		PrgBox->Parent  = SttBar;
+		PrgBox->OnPaint = PrgBoxPaint;
+		PrgBox->Visible = false;
+		ResetPos();
 	}
 }
 //---------------------------------------------------------------------------
@@ -42,17 +38,31 @@ SttProgressBar::~SttProgressBar()
 }
 
 //---------------------------------------------------------------------------
+void __fastcall SttProgressBar::PrgBoxPaint(TObject *Sender)
+{
+	TPaintBox *pp = (TPaintBox*)Sender;
+	TCanvas *cv = pp->Canvas;
+	TRect    rc = pp->ClientRect;
+	cv->Brush->Color = BgColor;
+	cv->FillRect(rc);
+	InflateRect(rc, -1, -1);
+	rc.Right = rc.Left + (int)(rc.Width() * BarRatio);
+	cv->Brush->Color = BarColor;
+	cv->FillRect(rc);
+}
+
+//---------------------------------------------------------------------------
 //プログレスバー位置のリセット
 //---------------------------------------------------------------------------
 void __fastcall SttProgressBar::ResetPos()
 {
-	if (SttBar && PrgIndex<SttBar->Panels->Count) {
-		PrgBar->Top     = 2;
-		int xp = 2;
+	if (SttBar && PrgBox && PrgIndex<SttBar->Panels->Count) {
+		PrgBox->Top = 3;
+		int xp = 3;
 		for (int i=0; i<PrgIndex; i++) xp += SttBar->Panels->Items[i]->Width;
-		PrgBar->Left	= xp;
-		PrgBar->Height	= SttBar->ClientHeight -2;
-		PrgBar->Width	= SttBar->Panels->Items[PrgIndex]->Width -2;
+		PrgBox->Left   = xp;
+		PrgBox->Height = SttBar->ClientHeight - 4;
+		PrgBox->Width  = SttBar->Panels->Items[PrgIndex]->Width - 8;
 	}
 }
 
@@ -63,14 +73,15 @@ void __fastcall SttProgressBar::Begin(const _TCHAR *s)
 {
 	Screen->Cursor = crHourGlass;
 
-	if (PrgBar) {
+	if (PrgBox) {
+		ResetPos();
 		UnicodeString msg = s? s : null_TCHAR;
 		if (MsgIndex>=0 && MsgIndex<SttBar->Panels->Count) SttBar->Panels->Items[MsgIndex]->Text = msg;
 		SttBar->Panels->Items[PrgIndex]->Text = EmptyStr;
 		SttBar->Repaint();
-		PrgBar->Position = 0;
-		PrgBar->Visible  = true;
-		PrgBar->Repaint();
+		BarRatio = 0.0;
+		PrgBox->Visible = true;
+		PrgBox->Repaint();
 	}
 }
 
@@ -81,23 +92,23 @@ void __fastcall SttProgressBar::End(UnicodeString s, int wait)
 {
 	Screen->Cursor = crDefault;
 
-	if (PrgBar) {
-		PrgBar->Position = PrgBar->Max;
+	if (PrgBox) {
+		BarRatio = 1.0;
+		PrgBox->Repaint();
 		Sleep(wait);
-		PrgBar->Visible = false;
+		BarRatio = 0.0;
+		PrgBox->Visible = false;
 		if (MsgIndex>=0 && MsgIndex<SttBar->Panels->Count) SttBar->Panels->Items[MsgIndex]->Text = s;
 	}
 }
 //---------------------------------------------------------------------------
 //バー設定
-//  r = 0.0～1.0
 //---------------------------------------------------------------------------
-void __fastcall SttProgressBar::SetPosR(float r)
+void __fastcall SttProgressBar::SetPosI(int idx, int count)
 {
-	if (PrgBar) {
-		if (r>1.0) r = 1.0;
-		int p = floor(PrgBar->Max * r);
-		if (PrgBar->Position!=p) PrgBar->Position = p;
+	if (PrgBox) {
+		BarRatio = std::min(((count>0)? 1.0 * idx/count : 0.0), 1.0);
+		PrgBox->Repaint();
 	}
 }
 //---------------------------------------------------------------------------

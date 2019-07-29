@@ -489,8 +489,7 @@ void __fastcall TTxtViewer::SetScrBar()
 		ScrBar->Max = MaxDispLine + 1;
 		ScrBar->LargeChange = LineCount;
 
-		SCROLLINFO si;
-		si.cbSize = sizeof(SCROLLINFO);
+		SCROLLINFO si = {sizeof(SCROLLINFO)};
 		si.fMask = SIF_PAGE;
 		si.nPage = LineCount + 1;
 		::SetScrollInfo(ScrBar->Handle, SB_CTL, &si, TRUE);

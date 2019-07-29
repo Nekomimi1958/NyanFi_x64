@@ -2144,6 +2144,8 @@ object NyanFiForm: TNyanFiForm
     Top = 226
     Width = 320
     Height = 140
+    DoubleBuffered = False
+    ParentDoubleBuffered = False
     TabOrder = 2
     Visible = False
     StyleElements = [seBorder]
@@ -2168,14 +2170,6 @@ object NyanFiForm: TNyanFiForm
       AutoSize = False
       StyleElements = []
     end
-    object WorkProgressBar: TProgressBar
-      Left = 40
-      Top = 70
-      Width = 240
-      Height = 17
-      Smooth = True
-      TabOrder = 0
-    end
     object CanDlBtn: TButton
       Left = 120
       Top = 101
@@ -2184,9 +2178,27 @@ object NyanFiForm: TNyanFiForm
       Anchors = [akLeft, akBottom]
       Cancel = True
       Caption = #12461#12515#12531#12475#12523
-      TabOrder = 1
+      TabOrder = 0
       Visible = False
       OnClick = CanDlBtnClick
+    end
+    object WorkPrgBarPanel: TPanel
+      Left = 39
+      Top = 70
+      Width = 241
+      Height = 17
+      BevelOuter = bvNone
+      DoubleBuffered = True
+      ParentDoubleBuffered = False
+      TabOrder = 1
+      object WorkProgressBox: TPaintBox
+        Left = 0
+        Top = 0
+        Width = 241
+        Height = 17
+        Align = alClient
+        OnPaint = WorkProgressBoxPaint
+      end
     end
   end
   object InpDirPanel: TPanel
@@ -2966,6 +2978,10 @@ object NyanFiForm: TNyanFiForm
       end
       object AboutItem: TMenuItem
         Action = AboutNyanFiAction
+      end
+      object CopyEnvInfItem: TMenuItem
+        Caption = #21205#20316#29872#22659#24773#22577#12434#12467#12500#12540'(&E)'
+        OnClick = CopyEnvInfItemClick
       end
       object Sep_h_1: TMenuItem
         Caption = '-'

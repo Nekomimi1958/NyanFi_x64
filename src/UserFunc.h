@@ -146,7 +146,8 @@ int get_IndexFromAccKey(TStringList *lst, UnicodeString key);
 UnicodeString extract_URL(UnicodeString s);
 UnicodeString get_EncodedUrl(UnicodeString url);
 bool InternetConnected();
-int  get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel = NULL, TProgressBar *prg_bar = NULL);
+int  get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel = NULL,
+		TPaintBox *prg_box = NULL, double *prg_ratio = NULL);
 
 void set_SplitterWidht(TSplitter *sp, int sp_wd);
 void set_PanelAlign(TPanel *pp, TSplitter *sp, int mode,  int sp_wd);

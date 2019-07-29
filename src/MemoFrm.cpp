@@ -57,9 +57,7 @@ void __fastcall TMemoForm::FormShow(TObject *Sender)
 	//çsä‘ê›íË
 	MemoBox->SelectAll();
 	int f_hi = abs(MemoBox->Font->Height);
-	TParaFormat2 pf2;
-	::ZeroMemory(&pf2, sizeof(pf2));
-	pf2.cbSize = sizeof(pf2);
+	TParaFormat2 pf2 = {sizeof(TParaFormat2)};
 	pf2.dwMask = PFM_LINESPACING;
 	pf2.bLineSpacingRule = 5;	//dyLineSpacing/20 çsíPà 
 	pf2.dyLineSpacing	 = 20 * ViewTxtInterLn / f_hi;

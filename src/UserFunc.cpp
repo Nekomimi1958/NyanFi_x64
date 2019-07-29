@@ -1212,7 +1212,9 @@ bool InternetConnected()
 //---------------------------------------------------------------------------
 //オンライン上のファイルを取得
 //---------------------------------------------------------------------------
-int get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel, TProgressBar *prg_bar)
+int get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel, 
+	TPaintBox *prg_box,		//進捗バー	(default = NULL)
+	double *prg_ratio)		//進捗率	(default = NULL)
 {
 	int f_size = -1;
 	if (cancel) *cancel = false;
@@ -1240,7 +1242,11 @@ int get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel, TProgres
 						if (dwSize==0) break;
 						dfs->Write(ldbuf.get(), dwSize);
 						f_size += dwSize;
-						if (prg_bar && dwFsize>0) prg_bar->Position = floor(1.0 * prg_bar->Max * f_size / dwFsize);
+						//進捗バー
+						if (prg_box && prg_ratio && dwFsize>0) {
+							*prg_ratio = 1.0 * f_size / dwFsize;
+							prg_box->Repaint();
+						}
 						if (cancel) {
 							Application->ProcessMessages();
 							if (*cancel) break;
@@ -1248,9 +1254,9 @@ int get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel, TProgres
 					}
 				}
 				if (cancel && *cancel && file_exists(fnam)) DeleteFile(fnam);
-				if (prg_bar) {
-					prg_bar->Position = prg_bar->Max;
-					prg_bar->Repaint(); Sleep(500);
+				if (prg_box && prg_ratio) {
+					*prg_ratio = 1.0;
+					prg_box->Repaint(); Sleep(500);
 				}
 				InternetCloseHandle(hConnect);
 			}
@@ -1461,8 +1467,7 @@ bool EjectDrive2(UnicodeString drvnam, bool eject)
 	HDEVINFO hDevInfo = ::SetupDiGetClassDevs(NULL, 0, 0, DIGCF_PRESENT|DIGCF_ALLCLASSES);
 	if (hDevInfo!=INVALID_HANDLE_VALUE) {
 		bool found = false;
-		SP_DEVINFO_DATA DevInfoData;
-		DevInfoData.cbSize = sizeof(SP_DEVINFO_DATA);
+		SP_DEVINFO_DATA DevInfoData = {sizeof(SP_DEVINFO_DATA)};
 
 		for (DWORD i=0; !found && SetupDiEnumDeviceInfo(hDevInfo, i, &DevInfoData); i++) {
 			ULONG status  = 0;

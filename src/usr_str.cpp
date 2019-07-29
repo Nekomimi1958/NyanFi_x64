@@ -764,8 +764,8 @@ UnicodeString get_size_str_T(__int64 sz, int dg)
 //---------------------------------------------------------------------------
 UnicodeString get_size_str_G(
 	__int64 sz,
-	int wd,		//Œ…Žw’è default = 10
-	int dg)
+	int wd,		//Œ…Žw’è	(default = 10)
+	int dg)		//¬”Œ…	(default = 1)
 {
 	UnicodeString szstr;
 	if (sz>=0) {

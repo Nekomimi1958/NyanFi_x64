@@ -134,15 +134,20 @@ AddTag<span class="pram_text">_;</span>
 なおアーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
 <a href="#FileEdit">→ FileEdit</a>
 
+<dt id="BorderCenter">BorderCenter
+<dd><a href="#EqualListWidth">EqualListWidth</a> コマンドのエイリアス(別名)です。<br>
+ファイルリストの境界を中央に移動します(左右のリスト幅を均等に)。<br>
+<a href="#BorderLeft">→ BorderLeft</a>　<a href="#BorderRight">→ BorderRight</a>　<a href="#WidenCurList">→ WidenCurList</a>　<a href="#EqualListWidth">→ EqualListWidth</a>
+
 <dt id="BorderLeft">BorderLeft
 <dd>ファイルリストの境界を左に移動します。<br>
 移動幅は、<a href="hid00019.htm#BorderLeftRight">オプション設定 - コマンド</a> で指定できます。<br>
-<a href="#WidenCurList">→ WidenCurList</a>　<a href="#EqualListWidth">→ EqualListWidth</a>
+<a href="#BorderRight">→ BorderRight</a>　<a href="#BorderCenter">→ BorderCenter</a>　<a href="#WidenCurList">→ WidenCurList</a>　<a href="#EqualListWidth">→ EqualListWidth</a>
 
 <dt id="BorderRight">BorderRight
 <dd>ファイルリストの境界を右に移動します。<br>
 移動幅は、<a href="hid00019.htm#BorderLeftRight">オプション設定 - コマンド</a> で指定できます。<br>
-<a href="#WidenCurList">→ WidenCurList</a>　<a href="#EqualListWidth">→ EqualListWidth</a>
+<a href="#BorderLeft">→ BorderLeft</a>　<a href="#BorderCenter">→ BorderCenter</a>　<a href="#WidenCurList">→ WidenCurList</a>　<a href="#EqualListWidth">→ EqualListWidth</a>
 
 <dt id="CalcDirSize">CalcDirSize<span class="pram_text">[_[FC][;LO][;CC][;LS][;SA|SD][;ファイル名]</span>
 <dd>選択中(無ければカーソル位置)のディレクトリ容量を計算します。中断したい場合は<span class="btn_frame">ESC</span>キーを押してください。<br>
@@ -824,7 +829,8 @@ link
 </div>
 <a href="#CompareDlg">→ CompareDlg</a>　<a href="#FindDuplDlg">→ FindDuplDlg</a>
 
-<dt id="DirHistory">DirHistory<span class="pram_text">[_{GA|GS|FM|AC|GC}]</span>
+<dt id="DirHistory">DirHistory<span class="pram_text">[_{GA|GS|FM|AC|GC}]</span><br>
+DirHistory<span class="pram_text">_RD</span>
 <dd><a href="hid00057.htm">ディレクトリ履歴</a>を表示します。履歴は、タブごとに、左右のリストについて個別に管理されます。<br>
 <div class="spc_box">
 パラメータに <b>GA</b> を指定すると、全体としての履歴を表示します。<br>
@@ -832,6 +838,9 @@ link
 <b>FM</b> を指定すると、<b>GS</b> と同様に全体履歴をソートして表示しますが、それらに対してインクリメンタルサーチモードで項目を絞り込むことができます(AND/OR検索可能、Migemo 対応)。<br>
 <b>AC</b> を指定すると、カレント側の履歴をすべて削除できます。また <b>GC</b> を指定すると、全体としての履歴をすべて削除します。これらの削除は一覧の右クリックメニューからも可能です。<br>
 なお全体としての履歴は、タブ/左右の個別履歴とは別に管理されており、このコマンドでの表示にのみ用いられます。<b>GS</b>、<b>FM</b> で履歴をソートすると、以前の並びは失われますので注意してください。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>RD</b> を指定すると、最近使った項目(%APPDATA%\Microsoft\Windows\Recent)のうち、リンク先が通常ディレクトリのものが一覧表示されます。<br>
 </div>
 <a href="hid00009.htm#DirHistory">→オプション設定 - ディレクトリ履歴</a><br>
 <a href="#BackDirHist">→ BackDirHist</a>　<a href="#ForwardDirHist">→ ForwardDirHist</a>
@@ -2237,7 +2246,7 @@ PlayList<span class="pram_text">[_{NX|PR|PS|RS|PP|FI|LS}]</span><br>
 
 <dt id="RecentList">RecentList<span class="pram_text">[_{AC|BC}]</span>
 <dd><a href="hid00058.htm#RecentList">最近使ったファイル一覧</a> が開きます。<br>
-一覧には、Windows の特殊フォルダにある項目のうち、リンク先のファイルが取得できたものが表示されます。<br>
+一覧には、最近使った項目(%APPDATA%\Microsoft\Windows\Recent)のうち、リンク先のファイルが取得できたものが表示されます。<br>
 パラメータに <b>AC</b> を指定すると、最近使った項目(ファイル以外も含む)がすべて削除されます(一覧の右クリックメニューからも可能)。<br>
 また <b>BC</b> を指定すると、最近使った項目のうちリンク先のファイルやディレクトリが存在しなくなっているものが削除されます(一覧の右クリックメニューからも可能)。<br>
 <a href="#EditHistory">→ EditHistory</a>　<a href="#ViewHistory">→ ViewHistory</a>

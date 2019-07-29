@@ -10,6 +10,7 @@
 #include <math.h>
 #include <mmsystem.h>
 #include <shlobj.h>
+#include <VersionHelpers.h>
 #include <System.IOUtils.hpp>
 #include <System.DateUtils.hpp>
 #include <System.WideStrUtils.hpp>
@@ -331,6 +332,9 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 	TxtScrollPanel->WindowProc	= TvScrlPanelWndProc;
 	org_LogPanelWndProc 		= LogPanel->WindowProc;
 	LogPanel->WindowProc		= LogPanelWndProc;
+
+	org_WorkBarPanelWndProc		= WorkPrgBarPanel->WindowProc;
+	WorkPrgBarPanel->WindowProc = WorkBarPanelWndProc;
 
 	org_SttBar1WndProc			= StatusBar1->WindowProc;
 	StatusBar1->WindowProc		= SttBar1WndProc;
@@ -4381,6 +4385,9 @@ void __fastcall TNyanFiForm::SetupDesign(
 
 	setup_ToolBar(LoupeForm->MagToolBar);
 
+	SttPrgBar->BgColor			= col_bgPrgBar;
+	SttPrgBar->BarColor 		= col_fgPrgBar;
+
 	LRSplitter->Color			= col_Splitter;
 	ListSubSplitter->Color		= col_Splitter;
 	ImgInfSplitter->Color		= col_Splitter;
@@ -5964,7 +5971,8 @@ void __fastcall TNyanFiForm::BeginWorkProgress(UnicodeString tit, UnicodeString 
 
 	ProgressLabel->Caption	  = tit;
 	ProgressSubLabel->Caption = minimize_str(def_if_empty(s, _T("処理中...")), Canvas, ProgressSubLabel->Width);
-	WorkProgressBar->Position = 0;
+	WorkBarRatio = 0.0;
+	WorkProgressBox->Repaint();
 
 	CanDlBtn->Visible = can_sw;
 	if (CanDlBtn->Visible && GetLuminance(col_bgHint)<0.5) SetDarkWinTheme(CanDlBtn);
@@ -5981,7 +5989,6 @@ void __fastcall TNyanFiForm::BeginWorkProgress(const _TCHAR *tit, UnicodeString 
 {
 	BeginWorkProgress(UnicodeString(tit), s, cp, can_sw);
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::EndWorkProgress(UnicodeString tit, UnicodeString s, int wait)
 {
@@ -5990,26 +5997,45 @@ void __fastcall TNyanFiForm::EndWorkProgress(UnicodeString tit, UnicodeString s,
 
 	if (!tit.IsEmpty()) ProgressLabel->Caption = tit;
 	ProgressSubLabel->Caption = def_if_empty(s, _T("終了しました"));
-	WorkProgressBar->Position = WorkProgressBar->Max;
-	Application->ProcessMessages();
+	WorkBarRatio = 1.0;
+	WorkProgressBox->Repaint();
 	Sleep(wait);
 	ProgressPanel->Visible = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::PosWorkProgress(int idx, int cnt)
 {
-	if (ProgressPanel->Visible && cnt>0) {
-		WorkProgressBar->Position = WorkProgressBar->Max * (1.0*(idx + 1)/cnt);
+	if (ProgressPanel->Visible) {
+		WorkBarRatio = std::min(((cnt>0)? 1.0 * idx/cnt : 0.0), 1.0);
+		WorkProgressBox->Repaint();
 		Application->ProcessMessages();
 	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::PosWorkProgress(__int64 idx, __int64 cnt)
 {
-	if (ProgressPanel->Visible && cnt>0) {
-		WorkProgressBar->Position = WorkProgressBar->Max * (1.0*(idx + 1)/cnt);
+	if (ProgressPanel->Visible) {
+		WorkBarRatio = std::min(((cnt>0)? 1.0 * idx/cnt : 0.0), 1.0);
+		WorkProgressBox->Repaint();
 		Application->ProcessMessages();
 	}
+}
+//---------------------------------------------------------------------------
+//進捗バーの描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::WorkProgressBoxPaint(TObject *Sender)
+{
+	TPaintBox *pp = (TPaintBox*)Sender;
+	TCanvas *cv = pp->Canvas;
+	TRect    rc = pp->ClientRect;
+	cv->Brush->Color = col_bgPrgBar;
+	cv->FillRect(rc);
+	cv->Brush->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
+	cv->FrameRect(rc);
+	InflateRect(rc, -2, -2);
+	rc.Right = rc.Left + (int)(rc.Width() * WorkBarRatio);
+	cv->Brush->Color = col_fgPrgBar;
+	cv->FillRect(rc);
 }
 
 //---------------------------------------------------------------------------
@@ -6026,13 +6052,10 @@ TModalResult __fastcall TNyanFiForm::DownloadWorkProgress(
 
 	TModalResult mr;
 	CancelWork = false;
-	if (get_OnlineFile(url, fnam, &CancelWork, WorkProgressBar)<=0) {
-		WorkProgressBar->Position = WorkProgressBar->Max;
+	if (get_OnlineFile(url, fnam, &CancelWork, WorkProgressBox, &WorkBarRatio)<=0)
 		mr = mrNo;
-	}
-	else {
+	else
 		mr = CancelWork? mrCancel : mrOk;
-	}
 
 	ProgressPanel->Visible = false;
 	CurWorking = false;
@@ -11093,7 +11116,10 @@ bool __fastcall TNyanFiForm::ExeCommandAction(
 	}
 
 	//エイリアス
-	if (USAME_TI(cmd, "Close")) {
+	if (USAME_TI(cmd, "BorderCenter")) {
+		cmd = "EqualListWidth";
+	}
+	else if (USAME_TI(cmd, "Close")) {
 		cmd = "Exit";
 	}
 	else if (USAME_TI(cmd, "ExtractImage")) {
@@ -15135,6 +15161,7 @@ void __fastcall TNyanFiForm::DirHistoryActionExecute(TObject *Sender)
 		if (!DirHistoryDlg) DirHistoryDlg = new TDirHistoryDlg(this);	//初回に動的作成
 		DirHistoryDlg->IsAllDirHist  = TEST_ActParam("GA") || TEST_ActParam("GS");
 		DirHistoryDlg->IsFindDirHist = TEST_ActParam("FM");
+		DirHistoryDlg->IdRecentDir	 = TEST_ActParam("RD");
 
 		TStringList *h_lst;
 		if (DirHistoryDlg->IsAllDirHist || DirHistoryDlg->IsFindDirHist) {
@@ -17732,6 +17759,49 @@ void __fastcall TNyanFiForm::HelpHistoryItemClick(TObject *Sender)
 {
 	HtmlHelpContext(109);
 }
+//---------------------------------------------------------------------------
+//動作環境情報をコピー
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::CopyEnvInfItemClick(TObject *Sender)
+{
+	UnicodeString infstr;
+	infstr = "NyanFi " + VersionStr + (is_X64()? " x64" : " x86");
+	if (MultiInstance) infstr.cat_sprintf(_T(" -%u"), NyanFiIdNo);
+
+	if (IsWindowsVistaOrGreater()) {
+		HANDLE hToken;
+		if (::OpenProcessToken(::GetCurrentProcess(), TOKEN_READ, &hToken)) {
+			DWORD infoLen;
+			TOKEN_ELEVATION_TYPE el_type;
+			if (::GetTokenInformation(hToken, TokenElevationType, &el_type, sizeof(TOKEN_ELEVATION_TYPE), &infoLen)) {
+				switch (el_type) {
+				case TokenElevationTypeDefault:	infstr += " Default";	break;
+  				case TokenElevationTypeFull:	infstr += " Full";		break;
+  				case TokenElevationTypeLimited:	infstr += " Limited";	break;
+				}
+			}
+		}
+	}
+
+	if (SupportDarkMode && IsDarkMode) infstr += " Dark";
+
+	infstr += " ";
+	UnicodeString kb0 = is_JpKeybd()? "JP" : "US";
+	UnicodeString kb1 = (::GetKeyboardType(0)==7)? "JP" : "US";
+	infstr += kb0;
+	if (!SameStr(kb0, kb1)) infstr.cat_sprintf(_T("(%s)"), kb1.c_str());
+
+	TRect w_rc = get_window_rect(Handle);
+	infstr.cat_sprintf(_T(" %u×%u %u%%"), w_rc.Width(), w_rc.Height(), ScaledInt(100));
+	infstr.cat_sprintf(_T("  OS%u.%u.%u "), TOSVersion::Major, TOSVersion::Minor, TOSVersion::Build);
+
+	MEMORYSTATUSEX stt_ex = {sizeof(MEMORYSTATUSEX)};
+	if (::GlobalMemoryStatusEx(&stt_ex))
+		infstr += ReplaceStr(get_size_str_G(stt_ex.ullTotalPhys, 0, 0), " ",EmptyStr);
+	infstr += "\r\n";
+
+	copy_to_Clipboard(infstr);
+}
 
 //---------------------------------------------------------------------------
 //サイズと日付を隠す
@@ -19114,6 +19184,7 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 
 	TRect w_rc = get_window_rect(Handle);
 	add_PropLine(_T("Windowサイズ"), get_wd_x_hi_str(w_rc.Width(), w_rc.Height()), i_lst);
+	add_PropLine(_T("スケーリング"), tmp.sprintf(_T("%.2f%%"), ScrScale * 100), i_lst);
 	i_lst->Add(EmptyStr);
 
 	//アーカイバDLL情報
@@ -25015,7 +25086,7 @@ void __fastcall TNyanFiForm::UndoRenameActionExecute(TObject *Sender)
 
 		//改名
 		ProgressSubLabel->Caption = "改名中...";
-		WorkProgressBar->Position = 0;
+		PosWorkProgress(0);
 		int ok_cnt = 0, er_cnt = 0;
 		for (int i=0; i<new_lst->Count; i++) {
 			PosWorkProgress(i, new_lst->Count);
@@ -26923,7 +26994,7 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 			if (BackupDlg->SyncCheckBox->Checked) get_SyncDstList(opp_path, dst_lst.get()); else dst_lst->Add(opp_path);
 			for (int i=0; i<dst_lst->Count; i++) {
 				UnicodeString dnam = dst_lst->Strings[i];
-				if (i>0 &&SameText(cur_path, dnam)) continue;
+				if (i>0 && SameText(cur_path, dnam)) continue;
 				TaskConfig  *cp = NULL;
 				TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
 				cp->TaskList->Text = UnicodeString().sprintf(_T("BACKUP\t%s\t%s\r\n"), cur_path.c_str(), dnam.c_str());
@@ -28051,7 +28122,6 @@ void __fastcall TNyanFiForm::GrepSttSplitterMoved(TObject *Sender)
 	GrepStatusBar->Panels->Items[0]->Width = stt_wd * 0.45;	//***
 	GrepStatusBar->Panels->Items[1]->Width = stt_wd * 0.2;	//***
 	GrepFilterPanel->Repaint();
-	SttPrgBar->ResetPos();
 	SetSttBarGrepDir();
 }
 //---------------------------------------------------------------------------
@@ -28710,7 +28780,7 @@ void __fastcall TNyanFiForm::GrepStartActionExecute(TObject *Sender)
 	int idx_tag = 1;
 	for (int i=0; !FindAborted && i<GrepFileList->Count; i++) {
 		Application->ProcessMessages();
-		SttPrgBar->SetPosR(1.0*i/GrepFileList->Count);
+		SttPrgBar->SetPosI(i, GrepFileList->Count);
 
 		UnicodeString fnam = GrepFileList->Strings[i];	if (!file_exists(fnam)) continue;
 		UnicodeString fext = get_extension(fnam);
@@ -29283,7 +29353,7 @@ void __fastcall TNyanFiForm::ReplaceStartActionExecute(TObject *Sender)
 	bool ask_rep = AskRepCheckBox->Checked;
 	for (int i=0; !FindAborted && i<GrepFileList->Count; i++) {
 		Application->ProcessMessages();
-		SttPrgBar->SetPosR(1.0*i/GrepFileList->Count);
+		SttPrgBar->SetPosI(i, GrepFileList->Count);
 
 		UnicodeString fnam = GrepFileList->Strings[i];	if (!file_exists(fnam)) continue;
 		bool with_bom = true;
