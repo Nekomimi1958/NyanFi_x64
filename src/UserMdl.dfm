@@ -3,7 +3,7 @@ object UserModule: TUserModule
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Height = 220
-  Width = 292
+  Width = 342
   object OpenDlg: TOpenDialog
     Options = [ofHideReadOnly, ofNoDereferenceLinks, ofEnableSizing]
     Left = 16
@@ -399,6 +399,13 @@ object UserModule: TUserModule
     Enabled = False
     OnTimer = ScrollTimerTimer
     Left = 216
+    Top = 80
+  end
+  object BlinkTimer: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = BlinkTimerTimer
+    Left = 272
     Top = 80
   end
 end

@@ -25,6 +25,9 @@ __fastcall TInspectForm::TInspectForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TInspectForm::FormCreate(TObject *Sender)
 {
+	org_InsSttBarWndProc	 = InsStatusBar->WindowProc;
+	InsStatusBar->WindowProc = InsSttBarWndProc;
+
 	InspectScrPanel = new UsrScrollPanel(InspectPanel, InspectGrid,  USCRPNL_FLAG_P_WP | USCRPNL_FLAG_G_WP | USCRPNL_FLAG_HS);
 	CodeScrPanel	= new UsrScrollPanel(CodePanel,    CodePageGrid, USCRPNL_FLAG_P_WP | USCRPNL_FLAG_G_WP | USCRPNL_FLAG_HS);
 
@@ -86,7 +89,17 @@ void __fastcall TInspectForm::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//インスペクタ・ヘッダの描画
+//ヘッダの描画
+//---------------------------------------------------------------------------
+void __fastcall TInspectForm::InsStatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
+	const TRect &Rect)
+{
+	TCanvas *cv = StatusBar->Canvas;
+	cv->Brush->Color = col_bgInfHdr;
+	cv->FillRect(Rect);
+	cv->Font->Color = col_fgInfHdr;
+	cv->TextOut(Rect.Left + Scaled2, Rect.Top, Panel->Text);
+}
 //---------------------------------------------------------------------------
 void __fastcall TInspectForm::InspectHeaderDrawSection(THeaderControl *HeaderControl,
 	THeaderSection *Section, const TRect &Rect, bool Pressed)

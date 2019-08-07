@@ -162,6 +162,7 @@ extern  FUNC_GetFontResourceInfo	lpfGetFontResourceInfo;
 #define LBTAG_GEN_LIST	0x01000000		//一覧ダイアログ
 #define LBTAG_FIF_LIST	0x02000000		//ファイル情報ダイアログ
 #define LBTAG_TAB_FNAM	0x04000000		//タブ以降にファイル名を持つ
+#define LBTAG_VAR_LIST	0x08000000		//「名前=値」形式
 
 //---------------------------------------------------------------------------
 #define SHOW_WARN_TAG	-1
@@ -623,6 +624,7 @@ extern UnicodeString GitGuiExe;
 
 extern int VersionNo;
 extern UnicodeString VersionStr;
+extern UnicodeString OSVerInfStr;
 
 extern UnicodeString DirBraStr;
 extern UnicodeString DirKetStr;
@@ -1937,6 +1939,8 @@ void EmphasisTextOut(UnicodeString s, UnicodeString kwd, TCanvas *cv, int &x, in
 
 void draw_TAB(TCanvas *cv, int x, int y, int w, int h);
 void draw_CR(TCanvas *cv, int x, int y, int w, int h);
+void draw_Caret(TCanvas *cv, int x, int y);
+
 void TabCrTextOut(UnicodeString s, TCanvas *cv, int &x, int y, TColor fg = col_fgList, int max_x = 0);
 void RuledLnTextOut(UnicodeString s, TCanvas *cv, TRect &rc, TColor fg, int tab_wd = 8, TStringList *kw_lst = NULL);
 

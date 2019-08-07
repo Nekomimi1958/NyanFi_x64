@@ -154,6 +154,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPopupMenu *EditPopupMenuE;
 	TSaveDialog *SaveDlg;
 	TSaveTextFileDialog *SaveTxtDlg;
+	TTimer *BlinkTimer;
 	TTimer *ScrollTimer;
 	TTimer *SpuitTimer;
 
@@ -207,6 +208,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall PopDlmtItemClick(TObject *Sender);
 	void __fastcall PopEditItemItemClick(TObject *Sender);
 	void __fastcall EditItemItemClick(TObject *Sender);
+	void __fastcall BlinkTimerTimer(TObject *Sender);
 
 private:	// ユーザー宣言
 	TCustomListBox *ActiveListBox;		//操作対象リストボックス
@@ -221,6 +223,8 @@ private:	// ユーザー宣言
 	TImage *SpuitImage;
 	TColor SpuitDefColor;
 	TColor SpuitPanelColor;
+
+	TComponent *BlinkObj;
 
 	void __fastcall ListBoxStartDrag(TObject *Sender, TDragObject *&DragObject);
 	void __fastcall ListBoxDragOver(TObject *Sender, TObject *Source, int X, int Y,
@@ -283,6 +287,9 @@ public:		// ユーザー宣言
 
 	void __fastcall SaveLastComboBox();
 	void __fastcall RestoreLastComboBox();
+
+	void __fastcall SetBlinkTimer(TComponent *cp);
+	void __fastcall RepaintBlink(bool rst_sw = true);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TUserModule *UserModule;

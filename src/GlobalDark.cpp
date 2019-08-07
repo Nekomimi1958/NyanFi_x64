@@ -143,7 +143,7 @@ void EndDarkMode()
 //---------------------------------------------------------------------------
 //ダークモードを適用
 //---------------------------------------------------------------------------
-bool ApplyDarkMode()
+bool ApplyDarkMode(HWND hWnd)
 {
 	IsDarkMode = false;
 	if (SupportDarkMode && lpfShouldAppsUseDarkMode()) {
@@ -151,10 +151,12 @@ bool ApplyDarkMode()
 		lpfFlushMenuThemes();
 		IsDarkMode = AllowDarkMode;
 
-		HWND hWnd = Application->MainForm->Handle;
-		::SetWindowTheme(hWnd, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
-		BOOL is_dk = IsDarkMode;
-		::DwmSetWindowAttribute(hWnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &is_dk, sizeof(is_dk));
+		if (!hWnd) hWnd = Application->MainForm->Handle;
+		if (hWnd) {
+			::SetWindowTheme(hWnd, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
+			BOOL is_dk = IsDarkMode;
+			::DwmSetWindowAttribute(hWnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &is_dk, sizeof(is_dk));
+		}
 	}
 
 	return IsDarkMode;
@@ -255,6 +257,7 @@ void SetDarkWinTheme(TWinControl *wp)
 	}
 	else if (wp->ClassNameIs("TPageControl")) {
 		TPageControl *pp = (TPageControl *)wp;
+		pp->StyleElements >> seClient;
 		for (int i=0; i<pp->PageCount; i++) SetDarkWinTheme(pp->Pages[i]);
 	}
 	else if (wp->ClassNameIs("TPanel") || wp->ClassNameIs("TTabSheet")
@@ -330,7 +333,7 @@ void SetDarkWinTheme(TWinControl *wp)
 		TLabeledEdit *ep = (TLabeledEdit *)wp;
 		ep->Color		= bg_win;
 		ep->Font->Color = fg_txt;
-		ep->EditLabel->Font->Color = ep->Font->Color;
+		ep->EditLabel->Font->Color = fg_label;
 	}
 	else if (wp->ClassNameIs("TMaskEdit")) {
 		TMaskEdit *ep = (TMaskEdit *)wp;
@@ -722,9 +725,8 @@ void set_BtnMarkDark(TSpeedButton *bp, int id)
 //---------------------------------------------------------------------------
 //タブの描画
 //---------------------------------------------------------------------------
-void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc,
-	bool active,
-	bool dark_sw)	//ダークモード適用	(default = false)
+void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool active,
+	bool dark_sw)	//ダークモード適用		(default = false)
 {
 	TTabControl *tp = (TTabControl*)Control;
 	TCanvas *cv = tp->Canvas;

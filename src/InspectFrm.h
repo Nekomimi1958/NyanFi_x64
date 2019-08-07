@@ -7,6 +7,7 @@
 
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
+#include <System.Actions.hpp>
 #include <Vcl.Controls.hpp>
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
@@ -15,10 +16,9 @@
 #include <Vcl.ComCtrls.hpp>
 #include <Vcl.Menus.hpp>
 #include <Vcl.Buttons.hpp>
-#include "usr_scrpanel.h"
-#include <System.Actions.hpp>
 #include <Vcl.ActnList.hpp>
 #include <Vcl.ToolWin.hpp>
+#include "usr_scrpanel.h"
 
 //-----------------------------------------------
 class TInspectForm : public TForm
@@ -56,6 +56,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall OptCheckBoxClick(TObject *Sender);
 	void __fastcall InspectGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall CopyItemClick(TObject *Sender);
+	void __fastcall InsStatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall InspectHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
 		const TRect &Rect, bool Pressed);
 	void __fastcall InspectHeaderResize(TObject *Sender);
@@ -67,6 +68,13 @@ __published:	// IDE で管理されるコンポーネント
 
 private:	// ユーザー宣言
 	TColor ColorRef;
+
+	TWndMethod org_InsSttBarWndProc;
+	void __fastcall InsSttBarWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND && draw_InfHdrBg(InsStatusBar, msg)) return;
+		org_InsSttBarWndProc(msg);
+	}
 
 public:		// ユーザー宣言
 	UsrScrollPanel *InspectScrPanel;	//シンプルスクロールバー

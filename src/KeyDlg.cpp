@@ -401,11 +401,11 @@ void __fastcall TKeyListDlg::KeyListGridKeyDown(TObject *Sender, WORD &Key, TShi
 		ModalResult = mrCancel;
 	}
 	//ƒ^ƒuØ‚èŠ·‚¦
-	else if (is_ToRightOpe(KeyStr, cmd_F) || USAME_TI(cmd_F, "NextTab")) {
+	else if (is_ToRightOpe(KeyStr, cmd_F)) {
 		KeyTabControl->TabIndex = (KeyTabControl->TabIndex + 1) % KeyTabControl->Tabs->Count;
 		KeyTabControlChange(NULL);
 	}
-	else if (is_ToLeftOpe(KeyStr, cmd_F) || USAME_TI(cmd_F, "PrevTab")) {
+	else if (is_ToLeftOpe(KeyStr, cmd_F)) {
 		KeyTabControl->TabIndex = (KeyTabControl->TabIndex>0) ? KeyTabControl->TabIndex - 1
 															  : KeyTabControl->Tabs->Count - 1;
 		KeyTabControlChange(NULL);

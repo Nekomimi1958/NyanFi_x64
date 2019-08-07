@@ -55,8 +55,9 @@ void __fastcall TNetShareDlg::FormShow(TObject *Sender)
 	cp = (TControl *)NyanFiForm->ListPanel;
 	TPoint p0 = cp->ClientToScreen(Point(0, 0));
 	TPoint p1 = cp->ClientToScreen(Point(0, cp->Height));
-	if (Top < p0.y)			 	Top = p0.y;
-	if ((Top + Height) > p1.y)	Top = p1.y - Height;
+	if (Top < p0.y)			 	Top  = p0.y;
+	if ((Top + Height) > p1.y)	Top  = p1.y - Height;
+	if (Left < p0.x)			Left = p0.x;
 
 	set_StdListBox(ShareListBox);
 	set_UsrScrPanel(ListScrPanel);
@@ -66,6 +67,7 @@ void __fastcall TNetShareDlg::FormShow(TObject *Sender)
 	PathTabControl->Height = get_FontHeight(PathTabControl->Font, 8, 8) + 2;
 	if (isSelDir && isSelSub) {
 		PathTabControl->Tabs->Clear();
+		PathTabControl->Style = IsDarkMode? tsButtons : tsFlatButtons;
 		if (!StartsStr("\\\\", PathName)) PathTabControl->Tabs->Add("PC");
 		TStringDynArray plst = split_path(PathName);
 		for (int i=0; i<plst.Length; i++) PathTabControl->Tabs->Add(plst[i]);
@@ -73,6 +75,7 @@ void __fastcall TNetShareDlg::FormShow(TObject *Sender)
 		PathTabControl->TabIndex = PathTabControl->Tabs->Count - 1;
 	}
 
+	SetDarkWinTheme(this);
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
 //---------------------------------------------------------------------------
@@ -228,12 +231,12 @@ void __fastcall TNetShareDlg::UpdatePathList(
 //パンくずリストの処理
 //---------------------------------------------------------------------------
 void __fastcall TNetShareDlg::PathTabControlDrawTab(TCustomTabControl *Control, int TabIndex,
-		const TRect &Rect, bool Active)
+	const TRect &Rect, bool Active)
 {
 	TTabControl *tp = (TTabControl*)Control;
 	TCanvas *cv = tp->Canvas;
-	cv->Brush->Color = Active? col_bgOptTab : scl_BtnFace;
-	cv->Font->Color  = Active? col_fgOptTab : scl_BtnText;
+	cv->Brush->Color = Active? col_bgOptTab : get_PanelColor();
+	cv->Font->Color  = Active? col_fgOptTab : get_LabelColor();
 	cv->FillRect(Rect);
 	int yp = (Rect.Height() - cv->TextHeight("Q")) /2;
 	cv->TextOut(Rect.Left + 2, yp, yen_to_delimiter(PathTabControl->Tabs->Strings[TabIndex]));
@@ -263,7 +266,7 @@ void __fastcall TNetShareDlg::PathTabControlChange(TObject *Sender)
 //リスト項目の描画
 //---------------------------------------------------------------------------
 void __fastcall TNetShareDlg::ShareListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas *cv = lp->Canvas;
@@ -424,7 +427,7 @@ void __fastcall TNetShareDlg::ShareListBoxKeyDown(TObject *Sender, WORD &Key, TS
 			PathTabControlChange(PathTabControl);
 		}
 	}
-	else if (PathTabControl->Visible && is_ToLeftOpe(KeyStr, cmd_F)) {
+	else if (PathTabControl->Visible && (is_ToLeftOpe(KeyStr, cmd_F) || USAME_TI(get_CmdStr(cmd_F), "ToParent"))) {
 		int idx = PathTabControl->TabIndex;
 		if (idx>0) {
 			PathTabControl->TabIndex = idx -1;

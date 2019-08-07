@@ -89,11 +89,35 @@
 <span class="rem_text">;バックアップ</span>
 PushDir
 PushDir_OP
-ChangeDir_"バックアップ元"
-ChangeOppDir_"バックアップ先"
+ChangeDir_<i>"バックアップ元"</i>
+ChangeOppDir_<i>"バックアップ先"</i>
 BackUp_"設定名"
 PopDir_OP
 PopDir
+</pre>
+<br>
+
+<span class="tips">Tips</span>コマンドファイルで複数のバックアップ処理をまとめて行うことも可能です。<br>
+<pre class="example_box">
+<span class="rem_text">;一括バックアップ</span>
+PushDir
+PushDir_OP
+
+ChangeDir_<i>"バックアップ元1"</i>
+ChangeOppDir_<i>"バックアップ先1"</i>
+BackUp_"設定名1"
+WaitForTask
+
+ChangeDir_<i>"バックアップ元2"</i>
+ChangeOppDir_<i>"バックアップ先2"</i>
+BackUp_"設定名2"
+WaitForTask
+
+…
+
+PopDir_OP
+PopDir
+PlaySound_完了.wav
 </pre>
 
 </dl>

@@ -16,6 +16,7 @@
 #include <System.DateUtils.hpp>
 #include <System.Character.hpp>
 #include <System.IOUtils.hpp>
+#include <System.Win.Registry.hpp>
 #include <System.Zip.hpp>
 #include <RegularExpressions.hpp>
 #include <Vcl.Imaging.pngimage.hpp>
@@ -476,6 +477,7 @@ UnicodeString CmdFilePath;		//コマンドファイル参照パス
 
 int VersionNo;
 UnicodeString VersionStr;		//バージョン表示
+UnicodeString OSVerInfStr;		//OSバージョン情報
 
 UnicodeString DirBraStr;		//ディレクトリ括弧文字
 UnicodeString DirKetStr;
@@ -1168,6 +1170,18 @@ void InitializeGlobal()
 	VersionNo = GetProductVersion(Application->ExeName, mj, mi, bl)? mj*100 + mi*10 + bl : 0;
 	VersionStr.sprintf(_T("V%.2f"), VersionNo/100.0);
 
+	//OSバージョン情報
+	OSVerInfStr.cat_sprintf(_T("%u.%u.%u "), TOSVersion::Major, TOSVersion::Minor, TOSVersion::Build);
+	if (IsWindows10OrGreater()) {
+		std::unique_ptr<TRegistry> reg(new TRegistry());
+		reg->RootKey = HKEY_LOCAL_MACHINE;
+		if (reg->OpenKeyReadOnly("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion")) {
+			UnicodeString s = reg->ReadString("ReleaseId");
+			if (!s.IsEmpty()) OSVerInfStr.cat_sprintf(_T("(%s) "), s.c_str());
+		}
+	}
+	if (IsWindowsServer()) OSVerInfStr += "Server ";
+
 	ScrScale = Screen->PixelsPerInch / 96.0;	//スケーリングを設定
 	SIcoSize = ScaledInt(16);
 	Scaled1  = ScaledInt(1);
@@ -1208,16 +1222,6 @@ void InitializeGlobal()
 	IniFile->ReplaceKey(SCT_General, "GifViewerWidth",	"SubViewerWidth");
 	IniFile->ReplaceKey(SCT_General, "GifViewerHeight",	"SubViewerHeight");
 	IniFile->ReplaceKey(SCT_General, "GifViewBgCol",	"SubViewerBgCol");
-
-	IniFile->DeleteKey(SCT_General, "GitViewFExtColor");	//v13.41
-	IniFile->DeleteKey(SCT_General, "MarkListShowOpt");		//v13.24
-	IniFile->DeleteKey(SCT_General, "EditHistShowOpt");		//v13.24
-
-	if (IniFile->KeyExists(SCT_Option,	"ShowIcon")) {		//v13.17
-		IniFile->WriteBool(SCT_Option,	"IconMode", IniFile->ReadBool(SCT_Option, "ShowIcon")? 1 : 0);
-		IniFile->DeleteKey(SCT_Option,	"ShowIcon");
-	}
-
 
 	CurStt = &ListStt[CurListTag];
 	OppStt = &ListStt[OppListTag];
@@ -8063,7 +8067,7 @@ void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState Sta
 	else {
 		cv->Brush->Color = get_PanelColor();
 		cv->FillRect(rc);
-		out_Text(cv, rc.Left + 2, yp, _T("無効"), get_LabelColor());
+		out_Text(cv, rc.Left + 2, yp, _T("無効"), get_TextColor());
 	}
 
 	//境界線
@@ -8089,7 +8093,7 @@ void draw_InputPaintBox(TPaintBox *pp, UnicodeString s)
 	xp += get_TextWidth(cv, s, IsIrregularFont(cv->Font));
 
 	//キャレット
-	draw_Line(cv, xp, 2, xp, pp->ClientHeight-2, ScaledInt(1), col_Cursor);
+	if (UserModule->BlinkTimer->Tag>0) draw_Caret(cv, xp, yp + Scaled2);
 }
 
 //---------------------------------------------------------------------------
@@ -9380,12 +9384,13 @@ UnicodeString Key_to_CmdV(UnicodeString key)
 //---------------------------------------------------------------------------
 bool is_ToLeftOpe(UnicodeString keystr, UnicodeString cmdstr)
 {
-	return (equal_LEFT(keystr) || contained_wd_i(_T("ToLeft|ToParentOnLeft"), cmdstr));
+	return (equal_LEFT(keystr) || contained_wd_i(_T("ToLeft|ToParentOnLeft|PrevTab"), cmdstr));
 }
 //---------------------------------------------------------------------------
 bool is_ToRightOpe(UnicodeString keystr, UnicodeString cmdstr)
 {
-	return (equal_RIGHT(keystr) || contained_wd_i(_T("ToRight|ToParentOnRight"), cmdstr));
+	return (equal_RIGHT(keystr) || contained_wd_i(_T("ToRight|ToParentOnRight|NextTab"), cmdstr));
+
 }
 
 //---------------------------------------------------------------------------
@@ -10213,6 +10218,17 @@ void EmphasisTextOut(
 	std::unique_ptr<TStringList> kwd_lst(new TStringList());
 	kwd_lst->Text = kwd;
 	EmphasisTextOut(s, kwd_lst.get(), cv, x, y, case_sns, only_top, fg, bg);
+}
+
+//---------------------------------------------------------------------------
+//疑似キャレットの描画
+//---------------------------------------------------------------------------
+void draw_Caret(TCanvas *cv, int x, int y)
+{
+	TColor bg = cv->Brush->Color;
+	cv->Brush->Color = col_Cursor;
+	cv->FillRect(Rect(x, y, x + Scaled2, y + cv->TextHeight("Q") - 1));
+	cv->Brush->Color = bg;
 }
 
 //---------------------------------------------------------------------------

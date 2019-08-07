@@ -299,7 +299,7 @@ void __fastcall TColorPicker::StartRepActionUpdate(TObject *Sender)
 void __fastcall TColorPicker::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	if (Key==VK_ESCAPE)
-		Close(); 
+		Close();
 	else
 		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_IV) _T("#ColorPicker"));
 }

@@ -55,6 +55,7 @@ void __fastcall TFindTagForm::FormShow(TObject *Sender)
 	InpPanel->Font->Assign(ListFont);
 	InpPanel->ClientHeight = get_FontHeight(ListFont, 4, 4);
 	InpPanel->Color 	   = col_bgList;
+	UserModule->SetBlinkTimer(InpPaintBox);
 
 	ClearTagList();
 	std::unique_ptr<TStringList> fbuf(new TStringList());
@@ -87,6 +88,8 @@ void __fastcall TFindTagForm::FormShow(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFindTagForm::FormClose(TObject *Sender, TCloseAction &Action)
 {
+	UserModule->SetBlinkTimer(NULL);
+
 	ResListBuf->Clear();
 	TagsListBox->Count = 0;
 	ClearTagList();

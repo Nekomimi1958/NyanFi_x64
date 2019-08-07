@@ -277,6 +277,7 @@ void __fastcall TTxtViewer::Clear()
 
 	isIncSea   = false;
 	IncSeaWord = EmptyStr;
+	UserModule->SetBlinkTimer(NULL);
 
 	FindWord   = RegExPtn = EmptyStr;
 
@@ -2656,8 +2657,9 @@ void __fastcall TTxtViewer::SttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPan
 		out_TextEx(cv, xp, yp, split_pre_tab(s), color_fgEmp, color_bgEmp);
 		xp += Scaled4;
 		out_TextEx(cv, xp, yp, split_pre_tab(s), col_fgView);
+
 		//疑似キャレット
-		draw_Line(cv, xp, yp + 2, xp, Rect.Bottom - 2, ScaledInt(1), col_Cursor);
+		if (UserModule->BlinkTimer->Tag>0) draw_Caret(cv, xp, yp + Scaled2);
 
 		//行位置/ヒット行数
 		if (!s.IsEmpty()) {
@@ -4263,6 +4265,7 @@ void __fastcall TTxtViewer::IncSearch(UnicodeString keystr)
 	if (USAME_TI(CmdStr, "IncSearchExit") || equal_ESC(keystr)) {
 		isIncSea   = false;
 		IncSeaWord = EmptyStr;
+		UserModule->SetBlinkTimer(NULL);
 	}
 	//キーワードをクリア
 	else if (USAME_TI(CmdStr, "ClearIncKeyword")) {

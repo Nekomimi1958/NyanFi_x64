@@ -43,6 +43,8 @@ __fastcall TUserModule::TUserModule(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::DataModuleCreate(TObject *Sender)
 {
+	BlinkObj = NULL;
+
 	//マウスポインターを設定
 	crHandGrabR = (TCursor)6;	//イメージ移動
 	crSpuitTool = (TCursor)7;	//スポイト
@@ -1149,6 +1151,49 @@ void __fastcall TUserModule::RestoreLastComboBox()
 			LastComboBox->SelLength = LastComboBoxSL;
 		}
 		LastComboBox = NULL;
+	}
+}
+
+//---------------------------------------------------------------------------
+//疑似キャレット点滅用タイマー処理
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::SetBlinkTimer(TComponent *cp)
+{
+	BlinkObj = cp;
+	if (BlinkObj) {
+		RepaintBlink();
+		BlinkTimer->Interval = 400;		//***
+		BlinkTimer->Enabled  = true;
+	}
+	else {
+		BlinkTimer->Enabled = false;
+		BlinkTimer->Tag = 1;
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::RepaintBlink(
+	bool rst_sw)	//表示状態にリセットして描画	(defalut = true)
+{
+	if (BlinkObj) {
+		if (rst_sw) BlinkTimer->Tag = 1;
+		if (BlinkObj->InheritsFrom(__classid(TControl))) {
+			if (((TControl *)BlinkObj)->Visible) {
+				if		(BlinkObj->ClassNameIs("TPanel"))		((TPanel *)BlinkObj)->Repaint();
+				else if (BlinkObj->ClassNameIs("TPaintBox"))	((TPaintBox *)BlinkObj)->Repaint();
+				else if (BlinkObj->ClassNameIs("TStatusBar"))	((TStatusBar *)BlinkObj)->Repaint();
+			}
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::BlinkTimerTimer(TObject *Sender)
+{
+	if (BlinkObj) {
+		BlinkTimer->Tag = (BlinkTimer->Tag==0)? 1 : 0;	//点滅フラグ
+		RepaintBlink(false);
+	}
+	else {
+		BlinkTimer->Enabled = false;
 	}
 }
 //---------------------------------------------------------------------------

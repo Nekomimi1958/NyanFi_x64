@@ -218,7 +218,6 @@ __fastcall TNyanFiForm::TNyanFiForm(TComponent* Owner)
 	CancelHelp	 = false;
 	CancelWork	 = false;
 	CurListWidth = CurListHeight = -1;
-	WarnBlink	 = false;
 	KeepModalScr = InhModalScr = false;
 	ApplyDotNyan = false;
 	ChkHardLink  = false;
@@ -2099,10 +2098,9 @@ void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, 
 				{
 					lw = LOWORD(lp->Tag) + cv->TextWidth(get_tkn_r(lbuf, _T(": ")) + ": ");
 				}
-				//その他
-				else {
+				//名前=値1;値2;…
+				else if (lp->Tag & LBTAG_VAR_LIST) {
 					TStringDynArray path_lst = split_strings_semicolon(lbuf);
-					//名前=値1;値2;…
 					if (path_lst.Length>1 && path_lst[0].Pos('=')>1 && lbuf.Pos(',')==0) {
 						for (int i=0; i<path_lst.Length; i++) {
 							if (i==0)
@@ -2111,11 +2109,11 @@ void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, 
 								lbuf.cat_sprintf(_T("%s\n"), path_lst[i].c_str());
 						}
 					}
-					//通常
-					else {
-						lw = get_TabTextWidth(lbuf, cv, lp->TabWidth);
-						if (lp->Tag & LBTAG_OPT_LNNO) lw += get_CharWidth(cv, 6, 4);	//行番号有り " 99999"
-					}
+				}
+				//通常
+				else {
+					lw = get_TabTextWidth(lbuf, cv, lp->TabWidth);
+					if (lp->Tag & LBTAG_OPT_LNNO) lw += get_CharWidth(cv, 6, 4);	//行番号有り " 99999"
 				}
 
 				lbuf = Trim(lbuf);
@@ -2325,6 +2323,22 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 
 					if (ExeCommandI(CmdStr)) Handled = true;
 				}
+			}
+		}
+		//カラーピッカー
+		else if (ColorPicker->Visible) {
+			if (Shift.Empty() && get_window_from_pos()==ImgScrollBox->Handle) {
+				Handled = true;
+				TPoint p = Mouse->CursorPos;
+				switch (Key) {
+				case VK_LEFT:	p.x -= 1;	break;
+				case VK_RIGHT:	p.x += 1;	break;
+				case VK_UP:		p.y -= 1;	break;
+				case VK_DOWN:	p.y += 1;	break;
+				case VK_RETURN:	ColorPicker->CopyColor();	break;
+				default:		Handled = false;
+				}
+				if (p!=Mouse->CursorPos) Mouse->CursorPos = p;
 			}
 		}
 		//ソート
@@ -2971,10 +2985,8 @@ void __fastcall TNyanFiForm::DrawDrivePanel(TPanel *pp)
 			}
 
 			//疑似キャレット
-			if (lst_stt->is_IncSea && pp->Tag!=SHOW_WARN_TAG) {
-				cv->Pen->Color = col_Cursor;
-				cv->MoveTo(x, y + Scaled2);
-				cv->LineTo(x, rc.Bottom - Scaled2);
+			if (lst_stt->is_IncSea && pp->Tag!=SHOW_WARN_TAG && (UserModule->BlinkTimer->Tag>0)) {
+				draw_Caret(cv.get(), x, y + Scaled2);
 			}
 
 			if (!lbuf.IsEmpty()) {
@@ -4114,14 +4126,14 @@ void __fastcall TNyanFiForm::KeyHintTimerTimer(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::BlinkTimerTimer(TObject *Sender)
 {
-	if (!WarnHighlight || ScrMode!=SCMD_IVIEW || !ImgScrollPanel->Visible) return;
+	if (ScrMode!=SCMD_IVIEW || !WarnHighlight || !ImgScrollPanel->Visible) return;
 	if (!ImgViewThread->IsReady() || ImgViewThread->ViewBuff->Empty) return;
 	if (isViewAGif) return;
 
-	WarnBlink = !WarnBlink;
+	BlinkTimer->Tag = (BlinkTimer->Tag==0)? 1 : 0;	//点滅フラグ
 	ViewerImage->Picture->Bitmap->Assign(ImgViewThread->ViewBuff);
 	TCanvas *cv = ViewerImage->Picture->Bitmap->Canvas;
-	if (WarnBlink) {
+	if (BlinkTimer->Tag>0) {
 		std::unique_ptr<Graphics::TBitmap> mp(new Graphics::TBitmap());
 		mp->Assign(ImgViewThread->ViewBuff);
 		mp->PixelFormat = pf24bit;
@@ -4333,7 +4345,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 
 	//ダークモードの適用
 	if (SupportDarkMode) {
-		ApplyDarkMode();
+		ApplyDarkMode(Handle);
 
 		SetDarkWinTheme(GrepOpPanel);
 		SetDarkWinTheme(SkipDirEdit);
@@ -4483,7 +4495,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	for (int i=0; i<2; i++) {
 		TPanel *stt_panel = (i==0)? L_StatPanel : R_StatPanel;
 		stt_panel->Font->Assign(DrvInfFont);
-		stt_panel->ClientHeight = get_FontHeight(DrvInfFont, 4);
+		stt_panel->ClientHeight = get_FontHeight(DrvInfFont, 4) + 2;
 		stt_panel->Color		= col_bgDrvInf;
 		stt_panel->Font->Color  = col_fgDrvInf;
 		stt_panel->BevelKind	= FlatInfPanel? bkNone : bkFlat;
@@ -7081,6 +7093,7 @@ void __fastcall TNyanFiForm::SetDrivePanel(int tag, UnicodeString msg)
 	TPanel *stt_panel = (tag==0)? L_StatPanel : R_StatPanel;
 
 	if (lst_stt->is_IncSea || lst_stt->is_Filter) {
+		BlinkTimer->Tag = 1;
 		stt_panel->Alignment   = taLeftJustify;
 		stt_panel->Color	   = col_bgList;
 		stt_panel->Font->Color = col_fgList;
@@ -11055,7 +11068,7 @@ void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 	if (!inf_str.IsEmpty()) stt_str += ("\t" + inf_str);
 
 	stt_pp->Caption = stt_str;
-	stt_pp->Repaint();
+	UserModule->RepaintBlink();
 
 	SetScrSelLines(CurListTag);
 
@@ -17768,6 +17781,7 @@ void __fastcall TNyanFiForm::CopyEnvInfItemClick(TObject *Sender)
 	infstr = "NyanFi " + VersionStr + (is_X64()? " x64" : " x86");
 	if (MultiInstance) infstr.cat_sprintf(_T(" -%u"), NyanFiIdNo);
 
+	//昇格タイプ
 	if (IsWindowsVistaOrGreater()) {
 		HANDLE hToken;
 		if (::OpenProcessToken(::GetCurrentProcess(), TOKEN_READ, &hToken)) {
@@ -17785,19 +17799,21 @@ void __fastcall TNyanFiForm::CopyEnvInfItemClick(TObject *Sender)
 
 	if (SupportDarkMode && IsDarkMode) infstr += " Dark";
 
+	//キーボード
 	infstr += " ";
 	UnicodeString kb0 = is_JpKeybd()? "JP" : "US";
 	UnicodeString kb1 = (::GetKeyboardType(0)==7)? "JP" : "US";
 	infstr += kb0;
 	if (!SameStr(kb0, kb1)) infstr.cat_sprintf(_T("(%s)"), kb1.c_str());
-
+	//画面サイズ
 	TRect w_rc = get_window_rect(Handle);
 	infstr.cat_sprintf(_T(" %u×%u %u%%"), w_rc.Width(), w_rc.Height(), ScaledInt(100));
-	infstr.cat_sprintf(_T("  OS%u.%u.%u "), TOSVersion::Major, TOSVersion::Minor, TOSVersion::Build);
-
+	//OSバージョン情報
+	infstr += ("  OS" + OSVerInfStr);
+	//物理メモリ
 	MEMORYSTATUSEX stt_ex = {sizeof(MEMORYSTATUSEX)};
 	if (::GlobalMemoryStatusEx(&stt_ex))
-		infstr += ReplaceStr(get_size_str_G(stt_ex.ullTotalPhys, 0, 0), " ",EmptyStr);
+		infstr += (" " + ReplaceStr(get_size_str_G(stt_ex.ullTotalPhys, 0, 0), " ",EmptyStr));
 	infstr += "\r\n";
 
 	copy_to_Clipboard(infstr);
@@ -17945,6 +17961,7 @@ void __fastcall TNyanFiForm::IncSearchActionExecute(TObject *Sender)
 		CurStt->is_Migemo = (CurStt->is_Filter? LastMigemoModeF : LastMigemoMode);
 
 	SetDrivePanel(CurListTag);
+	UserModule->SetBlinkTimer((CurListTag==0)? L_StatPanel : R_StatPanel);
 }
 
 //---------------------------------------------------------------------------
@@ -18056,6 +18073,8 @@ void __fastcall TNyanFiForm::CurToOppDiffList()
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ExitIncSearch()
 {
+	UserModule->SetBlinkTimer(NULL);
+
 	int match_cnt = GetMatchCount(GetCurList());
 
 	bool is_filter = FilterComboBox->Visible;
@@ -19183,8 +19202,9 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 	add_PropLine(_T("クラス名"),	 ClassName(), i_lst);
 
 	TRect w_rc = get_window_rect(Handle);
-	add_PropLine(_T("Windowサイズ"), get_wd_x_hi_str(w_rc.Width(), w_rc.Height()), i_lst);
+	add_PropLine(_T("画面サイズ"), get_wd_x_hi_str(w_rc.Width(), w_rc.Height()), i_lst);
 	add_PropLine(_T("スケーリング"), tmp.sprintf(_T("%.2f%%"), ScrScale * 100), i_lst);
+	add_PropLine(_T("OSバージョン"), OSVerInfStr, i_lst);
 	i_lst->Add(EmptyStr);
 
 	//アーカイバDLL情報
@@ -26922,9 +26942,6 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 		UnicodeString cur_path = CurPath[CurListTag];
 		UnicodeString opp_path = CurPath[OppListTag];
 
-		if (!BackupDlg) BackupDlg = new TBackupDlg(this);	//初回に動的作成
-		BackupDlg->SrcDirEdit->Text = cur_path;
-		BackupDlg->DstDirEdit->Text = opp_path;
 		UnicodeString inf_str;
 		inf_str.cat_sprintf(_T("%s ---> %s"), cur_path.c_str(), opp_path.c_str());
 
@@ -26985,40 +27002,45 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 			}
 		}
 		//ダイアログで指定
-		else if (BackupDlg->ShowModal()==mrOk) {
-			TDateTime flt_dt;
-			int flt_cnd = get_DateCond(BackupDlg->BakDateCondEdit->Text, flt_dt);
-			if (flt_cnd==-1) UserAbort(USTR_IllegalDtCond);
+		else {
+			if (!BackupDlg) BackupDlg = new TBackupDlg(this);	//初回に動的作成
+			BackupDlg->SrcDirEdit->Text = cur_path;
+			BackupDlg->DstDirEdit->Text = opp_path;
+			if (BackupDlg->ShowModal()==mrOk) {
+				TDateTime flt_dt;
+				int flt_cnd = get_DateCond(BackupDlg->BakDateCondEdit->Text, flt_dt);
+				if (flt_cnd==-1) UserAbort(USTR_IllegalDtCond);
 
-			std::unique_ptr<TStringList> dst_lst(new TStringList());
-			if (BackupDlg->SyncCheckBox->Checked) get_SyncDstList(opp_path, dst_lst.get()); else dst_lst->Add(opp_path);
-			for (int i=0; i<dst_lst->Count; i++) {
-				UnicodeString dnam = dst_lst->Strings[i];
-				if (i>0 && SameText(cur_path, dnam)) continue;
-				TaskConfig  *cp = NULL;
-				TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
-				cp->TaskList->Text = UnicodeString().sprintf(_T("BACKUP\t%s\t%s\r\n"), cur_path.c_str(), dnam.c_str());
-				cp->CopyMode = CPYMD_NEW_BACKUP;	//最新ならバックアップ
-				cp->CopyAll  = true;
-				cp->CopyFmt  = AutoRenFmt;
-				cp->CmdStr	 = "バックアップ";
-				cp->DistPath = dnam;
-				cp->InfStr	 = inf_str;
+				std::unique_ptr<TStringList> dst_lst(new TStringList());
+				if (BackupDlg->SyncCheckBox->Checked) get_SyncDstList(opp_path, dst_lst.get()); else dst_lst->Add(opp_path);
+				for (int i=0; i<dst_lst->Count; i++) {
+					UnicodeString dnam = dst_lst->Strings[i];
+					if (i>0 && SameText(cur_path, dnam)) continue;
+					TaskConfig  *cp = NULL;
+					TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
+					cp->TaskList->Text = UnicodeString().sprintf(_T("BACKUP\t%s\t%s\r\n"), cur_path.c_str(), dnam.c_str());
+					cp->CopyMode = CPYMD_NEW_BACKUP;	//最新ならバックアップ
+					cp->CopyAll  = true;
+					cp->CopyFmt  = AutoRenFmt;
+					cp->CmdStr	 = "バックアップ";
+					cp->DistPath = dnam;
+					cp->InfStr	 = inf_str;
 
-				//日付条件
-				if (flt_cnd>0) {
-					cp->FilterMode = flt_cnd;
-					cp->FilterTime = flt_dt;
-					cp->InfStr.cat_sprintf(_T(" (%s%s)"),
-								UnicodeString("<=>").SubString(flt_cnd, 1).c_str(), format_Date(flt_dt).c_str());
+					//日付条件
+					if (flt_cnd>0) {
+						cp->FilterMode = flt_cnd;
+						cp->FilterTime = flt_dt;
+						cp->InfStr.cat_sprintf(_T(" (%s%s)"),
+									UnicodeString("<=>").SubString(flt_cnd, 1).c_str(), format_Date(flt_dt).c_str());
+					}
+
+					cp->Bakup_inc_mask = BackupDlg->BakIncMaskComboBox->Text;
+					cp->Bakup_exc_mask = BackupDlg->BakExcMaskComboBox->Text;
+					cp->Bakup_skip_dir = BackupDlg->BakSkipDirEdit->Text;
+					cp->Bakup_sub_sw   = BackupDlg->SubDirCheckBox->Checked;
+					cp->Bakup_mirror   = BackupDlg->MirrorCheckBox->Checked;
+					ActivateTask(tp, cp);
 				}
-
-				cp->Bakup_inc_mask = BackupDlg->BakIncMaskComboBox->Text;
-				cp->Bakup_exc_mask = BackupDlg->BakExcMaskComboBox->Text;
-				cp->Bakup_skip_dir = BackupDlg->BakSkipDirEdit->Text;
-				cp->Bakup_sub_sw   = BackupDlg->SubDirCheckBox->Checked;
-				cp->Bakup_mirror   = BackupDlg->MirrorCheckBox->Checked;
-				ActivateTask(tp, cp);
 			}
 		}
 	}
@@ -30198,6 +30220,7 @@ bool __fastcall TNyanFiForm::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 			TxtViewer->IncSeaWord = EmptyStr;
 			TxtViewer->isIncSea   = true;
 			TxtViewer->SetSttInf();
+			UserModule->SetBlinkTimer(TxtSttHeader);
 		}
 		//GREP
 		else if (USAME_TI(cmd, "Grep")) {
@@ -34170,8 +34193,8 @@ void __fastcall TNyanFiForm::ImgSttHeaderDrawPanel(TStatusBar *StatusBar, TStatu
 		xp += cv->TextWidth("G ");
 		//白飛び警告
 		if (WarnHighlight) {
-			cv->Brush->Color = WarnBlink? col_fgInfHdr : col_bgInfHdr;
-			out_Text(cv, xp, Rect.Top, _T("!"), WarnBlink? col_bgInfHdr : col_fgInfHdr);
+			cv->Brush->Color = (BlinkTimer->Tag>0)? col_fgInfHdr : col_bgInfHdr;
+			out_Text(cv, xp, Rect.Top, _T("!"), (BlinkTimer->Tag>0)? col_bgInfHdr : col_fgInfHdr);
 		}
 		else {
 			out_Text(cv, xp, Rect.Top, _T("  "));

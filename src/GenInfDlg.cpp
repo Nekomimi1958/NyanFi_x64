@@ -140,6 +140,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	lp->Tag = LBTAG_GEN_LIST | LBTAG_OPT_ZOOM
 				| (ShowLineNoAction->Checked? LBTAG_OPT_LNNO : 0)
 				| ((isFileList || isTree)? LBTAG_TAB_FNAM : 0)	//タブ以降に実ファイル名がある
+				| (isVarList? LBTAG_VAR_LIST : 0)
 				| (isTree? LBTAG_OPT_TREE : 0);
 
 	lp->Color = isLog? col_bgLog : col_bgList;

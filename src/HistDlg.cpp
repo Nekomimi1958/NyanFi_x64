@@ -49,6 +49,7 @@ void __fastcall TDirHistoryDlg::FormShow(TObject *Sender)
 	InpPanel->ClientHeight = get_FontHeight(ListFont, 4, 4);
 	InpPanel->Color 	   = col_bgList;
 	InpPanel->Visible	   = IsFindDirHist;
+	if (IsFindDirHist) UserModule->SetBlinkTimer(InpPaintBox);
 
 	set_StdListBox(DirHistListBox);
 	set_UsrScrPanel(ListScrPanel);
@@ -59,6 +60,8 @@ void __fastcall TDirHistoryDlg::FormShow(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TDirHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
+	UserModule->SetBlinkTimer(NULL);
+
 	if (FindBusy) FindAborted = true;
 
 	IsDirStack = IsAllDirHist = IsFindDirHist = IdRecentDir = false;
@@ -79,7 +82,7 @@ void __fastcall TDirHistoryDlg::FormDestroy(TObject *Sender)
 void __fastcall TDirHistoryDlg::UpdateListBox(
 	int idx)	//インデックス	(default = 0)
 {
-	if (IsFindDirHist) InpPaintBox->Repaint();
+	if (IsFindDirHist) UserModule->RepaintBlink();
 
 	ListBuff->Clear();
 

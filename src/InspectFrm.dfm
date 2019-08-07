@@ -75,11 +75,14 @@ object InspectForm: TInspectForm
       Font.Style = []
       Panels = <
         item
+          Style = psOwnerDraw
           Width = 200
         end>
       PopupMenu = PopupMenu1
       SizeGrip = False
       UseSystemFont = False
+      StyleElements = [seFont, seBorder]
+      OnDrawPanel = InsStatusBarDrawPanel
     end
     object InspectHeader: THeaderControl
       Left = 0

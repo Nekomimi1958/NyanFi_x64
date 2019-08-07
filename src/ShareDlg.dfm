@@ -59,7 +59,9 @@ object NetShareDlg: TNetShareDlg
     Width = 232
     Height = 29
     Align = alTop
+    DoubleBuffered = False
     OwnerDraw = True
+    ParentDoubleBuffered = False
     Style = tsFlatButtons
     TabOrder = 0
     TabStop = False

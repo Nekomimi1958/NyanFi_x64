@@ -1961,7 +1961,6 @@ private:	// ユーザー宣言
 	bool GrepWorkList;					//対象がワークリスト
 
 	bool fromViewer;					//テキストビュアーから
-	bool WarnBlink;						//白飛び警告の点滅フラグ
 
 	SttProgressBar *SttPrgBar;			//Grep用プログレスバー
 	UsrHintWindow *MsgHint;				//メッセージ、警告のヒント表示ウィンドウ

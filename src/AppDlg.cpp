@@ -224,6 +224,7 @@ void __fastcall TAppListDlg::WmFormShowed(TMessage &msg)
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
+	UserModule->SetBlinkTimer(NULL);
 	Timer1->Enabled = false;
 
 	AppInfoList->Clear();
@@ -357,6 +358,8 @@ void __fastcall TAppListDlg::LaunchListBoxEnter(TObject *Sender)
 void __fastcall TAppListDlg::SetIncSeaMode(bool sw)
 {
 	IsIncSea = sw;
+	UserModule->SetBlinkTimer(NULL);
+
 	//インクリメンタルサーチモード
 	if (IsIncSea) {
 		DirPanel->Font->Assign(ListFont);
@@ -365,6 +368,7 @@ void __fastcall TAppListDlg::SetIncSeaMode(bool sw)
 		DirPanel->BevelOuter   = bvLowered;
 		DirPanel->Caption	   = EmptyStr;
 		InpPaintBox->Visible   = true;
+		UserModule->SetBlinkTimer(InpPaintBox);
 
 		IncSeaWord = EmptyStr;
 		LaunchFileList->Clear();
@@ -583,7 +587,7 @@ AppWinInf* __fastcall TAppListDlg::GetCurAppWinInf()
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 {
-	if (IsIncSea) InpPaintBox->Repaint();
+	if (IsIncSea) UserModule->RepaintBlink();
 
 	TStringList *lst = LaunchList;
 	clear_FileList(lst);
@@ -1444,7 +1448,7 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 		PropertyItemClick(NULL);
 	}
 	//親ディレクトリへ
-	else if (USAME_TI(CmdStr, "ToParent")) {
+	else if (USAME_TI(get_CmdStr(CmdStr), "ToParent")) {
 		if (!SameText(CurLaunchPath, LaunchPath)) {
 			UnicodeString l_fnam = ExcludeTrailingPathDelimiter(CurLaunchPath);
 			CurLaunchPath = get_parent_path(CurLaunchPath);
@@ -1581,7 +1585,7 @@ void __fastcall TAppListDlg::PropertyItemClick(TObject *Sender)
 //ホイール操作
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
-		TPoint &MousePos, bool &Handled)
+	TPoint &MousePos, bool &Handled)
 {
 	if (AppListBox->Focused()) {
 		ExeCmdListBox(AppListBox, (WheelDelta<0)? _T("CursorDown") : _T("CursorUp"));

@@ -387,6 +387,11 @@ private:	// ユーザー宣言
 
 	void __fastcall WmFormShowed(TMessage &msg);
 
+	void __fastcall WmMenuChar(TMessage &msg)
+	{
+		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
+	}
+
 public:		// ユーザー宣言
 	UnicodeString WorkDir;		//Gitトップディレクトリ
 	UnicodeString FilterName;	//履歴絞り込み時の対象名
@@ -406,6 +411,7 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

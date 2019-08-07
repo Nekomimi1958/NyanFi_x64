@@ -75,7 +75,7 @@ bool is_HighContrast();
 void InitializeSysColor();
 void InitializeDarkMode();
 void EndDarkMode();
-bool ApplyDarkMode();
+bool ApplyDarkMode(HWND);
 
 void SetDarkWinTheme(TWinControl *wp);
 TLabel* AttachLabelToGroup(TWinControl *wp, UnicodeString s = EmptyStr);
