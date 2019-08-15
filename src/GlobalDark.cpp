@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <memory>
 #include <System.StrUtils.hpp>
+#include "usr_msg.h"
 #include "GlobalDark.h"
 
 //---------------------------------------------------------------------------
@@ -21,7 +22,7 @@ FUNC_FlushMenuThemes		lpfFlushMenuThemes		  = NULL;
 //---------------------------------------------------------------------------
 bool SupportDarkMode = false;		//ダークモード適用可能
 bool IsDarkMode 	 = false;		//ダークモードが適用されている
-bool AllowDarkMode   = false;		//ダークモードを適用(オプション設定)
+bool AllowDarkMode	 = false;		//ダークモードを適用(オプション設定)
 
 //---------------------------------------------------------------------------
 bool SureCancel;					//キャンセルボタンを表示
@@ -471,6 +472,11 @@ void msgbox_ERR(UnicodeString msg)
 	MsgDlg->ShowModal();
 	delete MsgDlg;
 }
+//---------------------------------------------------------------------------
+void msgbox_ERR(unsigned id)
+{
+	msgbox_ERR(LoadUsrMsg(id));
+}
 
 //---------------------------------------------------------------------------
 //警告メッセージ
@@ -483,6 +489,11 @@ void msgbox_WARN(UnicodeString msg)
 	SetDarkWinTheme(MsgDlg);
 	MsgDlg->ShowModal();
 	delete MsgDlg;
+}
+//---------------------------------------------------------------------------
+void msgbox_WARN(unsigned id)
+{
+	msgbox_WARN(LoadUsrMsg(id));
 }
 
 //---------------------------------------------------------------------------
@@ -518,6 +529,17 @@ TModalResult msgbox_Y_N_C(UnicodeString msg, UnicodeString tit)
 	delete MsgDlg;
 	return res;
 }
+//---------------------------------------------------------------------------
+TModalResult msgbox_Retry(UnicodeString msg, UnicodeString tit)
+{
+	TMsgDlgButtons opt = TMsgDlgButtons() << mbRetry  << mbCancel;
+	TForm *MsgDlg = CreateMessageDialog(msg, mtError, opt, mbRetry);
+	SetDarkWinTheme(MsgDlg);
+	if (!tit.IsEmpty()) MsgDlg->Caption = tit;
+	TModalResult res = MsgDlg->ShowModal();
+	delete MsgDlg;
+	return res;
+}
 
 //---------------------------------------------------------------------------
 bool msgbox_Sure(UnicodeString msg, bool ask, bool center)
@@ -540,6 +562,11 @@ bool msgbox_Sure(UnicodeString msg, bool ask, bool center)
 bool msgbox_Sure(const _TCHAR *msg, bool ask, bool center)
 {
 	return msgbox_Sure(UnicodeString(msg), ask, center);
+}
+//---------------------------------------------------------------------------
+bool msgbox_Sure(unsigned id, bool ask, bool center)
+{
+	return msgbox_Sure(LoadUsrMsg(id), ask, center);
 }
 
 //---------------------------------------------------------------------------

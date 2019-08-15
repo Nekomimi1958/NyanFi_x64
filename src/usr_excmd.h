@@ -22,7 +22,6 @@ private:
 public:
 	UnicodeString FileName;
 	cmdf_rec *CmdRec;
-	int ListCount;
 	int LineNo;
 	UnicodeString CmdStr;
 	bool EndOfCmds;

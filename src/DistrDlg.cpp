@@ -269,7 +269,7 @@ bool __fastcall TDistributionDlg::SaveDistrFile()
 	distr_file->SaveListItems("DistrDefList", DistrDefList, 200);
 	if (distr_file->UpdateFile()) return true;
 
-	msgbox_ERR(LoadUsrMsg(USTR_FaildSave));
+	msgbox_ERR(USTR_FaildSave);
 	return false;
 }
 

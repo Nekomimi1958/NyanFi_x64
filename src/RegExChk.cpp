@@ -92,7 +92,7 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 			ok = true;
 		}
 		else {
-			msgbox_ERR(LoadUsrMsg(USTR_FileNotOpen));
+			msgbox_ERR(USTR_FileNotOpen);
 		}
 	}
 
@@ -145,7 +145,7 @@ void __fastcall TRegExChecker::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteStrGen( _T("RegExChkFile"),	FileEdit->Text);
 	if (!FileEdit->Text.IsEmpty() && UpdtCheckBox->Checked && ObjMemo->Modified) {
 		UnicodeString fnam = to_absolute_name(FileEdit->Text);
-		if (!saveto_TextFile(fnam, ObjMemo->Lines)) msgbox_ERR(LoadUsrMsg(USTR_FaildSave));
+		if (!saveto_TextFile(fnam, ObjMemo->Lines)) msgbox_ERR(USTR_FaildSave);
 	}
 
 	IniFile->WriteIntGen( _T("RegExMainWidth"),	MainPanel->Width);
@@ -359,7 +359,7 @@ void __fastcall TRegExChecker::RefFileBtnClick(TObject *Sender)
 			if (load_text_ex(fnam, fbuf.get()))
 				ObjMemo->Text = fbuf->Text;
 			else
-				msgbox_ERR(LoadUsrMsg(USTR_FileNotOpen));
+				msgbox_ERR(USTR_FileNotOpen);
 		}
 	}
 }

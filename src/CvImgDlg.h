@@ -72,6 +72,7 @@ private:	// ユーザー宣言
 public:		// ユーザー宣言
 	bool fromClip;
 	UnicodeString DistPath;
+	UnicodeString TitleInf;
 
 	__fastcall TCvImageDlg(TComponent* Owner);
 

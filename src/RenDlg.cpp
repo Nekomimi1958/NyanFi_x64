@@ -1807,8 +1807,10 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 					Application->ProcessMessages();
 					UnicodeString tmp_name = ExtractFilePath(ItemList->Strings[i]);
 					tmp_name.cat_sprintf(_T("$~NF%04u.~TMP"), i);
-					if (move_FileT(ItemList->Strings[i], tmp_name)) ItemList->Strings[i] = tmp_name;
-						else TextAbort(_T("中間処理に失敗、中断しました。"));
+					if (move_FileT(ItemList->Strings[i], tmp_name))
+						ItemList->Strings[i] = tmp_name;
+					else
+						TextAbort(_T("中間処理に失敗、中断しました。"));
 				}
 				SttPrgBar->End();
 			}
@@ -1865,8 +1867,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 						//失敗、再試行
 						UnicodeString err_msg  = get_LogErrMsg(EmptyStr, false, f_name);
 						UnicodeString caption = "改名に失敗しました\r\n" + err_msg;
-						if (Application->MessageBox(caption.c_str(), _T("エラー"),
-							MB_RETRYCANCEL|MB_ICONERROR)==IDRETRY) continue;
+						if (msgbox_Retry(caption, "エラー")==IDRETRY) continue;
 						set_LogErrMsg(msg, err_msg);
 						er_cnt++;
 						break;
@@ -1919,8 +1920,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 					//失敗、再試行
 					UnicodeString err_msg  = get_LogErrMsg(EmptyStr, false, f_name);
 					UnicodeString caption = "タイムスタンプ設定に失敗しました\r\n" + err_msg;
-					if (Application->MessageBox(caption.c_str(), _T("エラー"),
-						MB_RETRYCANCEL|MB_ICONERROR)==IDRETRY) continue;
+					if (msgbox_Retry(caption, "エラー")==IDRETRY) continue;
 
 					msg = make_LogHdr(_T("TIME"), ItemList->Strings[i]);
 					set_LogErrMsg(msg, err_msg);
@@ -1969,8 +1969,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 					//失敗、再試行
 					UnicodeString err_msg  = get_LogErrMsg(EmptyStr, false, f_name);
 					UnicodeString caption = "属性設定に失敗しました\r\n" + err_msg;
-					if (Application->MessageBox(caption.c_str(), _T("エラー"),
-						MB_RETRYCANCEL|MB_ICONERROR)==IDRETRY) continue;
+					if (msgbox_Retry(caption, "エラー")==IDRETRY) continue;
 
 					msg = make_LogHdr(_T("ATTR"), f_name);
 					set_LogErrMsg(msg, err_msg);

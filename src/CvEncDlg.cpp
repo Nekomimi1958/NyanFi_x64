@@ -30,6 +30,8 @@ void __fastcall TCvTxtEncDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TCvTxtEncDlg::FormShow(TObject *Sender)
 {
+	Caption = "•¶ŽšƒR[ƒh‚Ì•ÏŠ·" + TitleInf;
+
 	IniFile->LoadPosInfo(this, DialogCenter);
 	OutCodeComboBox->ItemIndex	= IniFile->ReadIntGen(_T("CvTextEncCode"));
 	OutLnBrkComboBox->ItemIndex = IniFile->ReadIntGen(_T("CvTextEncLnBrk"));
@@ -45,6 +47,8 @@ void __fastcall TCvTxtEncDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteIntGen(_T("CvTextEncCode"),	OutCodeComboBox);
 	IniFile->WriteIntGen(_T("CvTextEncLnBrk"),	OutLnBrkComboBox);
 	IniFile->WriteBoolGen(_T("CvTextEncBOM"),	BomCheckBox);
+
+	TitleInf = EmptyStr;
 }
 //---------------------------------------------------------------------------
 void __fastcall TCvTxtEncDlg::OutCodeComboBoxClick(TObject *Sender)

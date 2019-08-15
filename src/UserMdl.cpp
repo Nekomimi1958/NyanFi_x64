@@ -558,7 +558,7 @@ void __fastcall TUserModule::EditPaste1Execute(TObject *Sender)
 				ep->SelLength = ep->Text.Length();
 			}
 			else {
-				msgbox_ERR(LoadUsrMsg(USTR_IllegalDate));
+				msgbox_ERR(USTR_IllegalDate);
 				return;
 			}
 		}

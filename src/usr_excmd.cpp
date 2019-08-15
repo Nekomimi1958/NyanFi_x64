@@ -29,7 +29,6 @@ ExeCmdsList::ExeCmdsList(UnicodeString cmds)
 	CmdRec  = NULL;
 	CmdList = new TStringList();
 
-	ListCount = 0;
 	LineNo = 0;
 	PC = 0;
 	EndOfCmds = false;
@@ -135,8 +134,7 @@ ExeCmdsList::ExeCmdsList(UnicodeString cmds)
 		if (CmdRec) CmdRec->cmd_list->Assign(CmdList);
 	}
 
-	ListCount = CmdList->Count;
-	if (ListCount==0) ErrMsg = "有効なコマンドがありません";
+	if (CmdList->Count==0) ErrMsg = "有効なコマンドがありません";
 }
 //---------------------------------------------------------------------------
 ExeCmdsList::~ExeCmdsList()
@@ -175,7 +173,7 @@ bool ExeCmdsList::Preproc(UnicodeString &cmd, UnicodeString &prm)
 //---------------------------------------------------------------------------
 bool ExeCmdsList::IncPC()
 {
-	if (PC < ListCount-1) {
+	if (PC < CmdList->Count-1) {
 		PC++;
 		return true;
 	}
@@ -217,8 +215,10 @@ bool ExeCmdsList::proc_Repeat(UnicodeString cmd, UnicodeString prm)
 			else if (RepCnt[RepLevel]==-1 && !msgbox_Sure(_T("繰り返しますか?"))) {
 				RepCnt[RepLevel] = 0;
 			}
-			if (RepCnt[RepLevel]!=0)
+
+			if (RepCnt[RepLevel]!=0) {
 				PC = RepTop[RepLevel];
+			}
 			else {
 				RepLevel--;  IncPC();
 			}
@@ -1072,7 +1072,9 @@ bool XCMD_Control()
 	else if (USAME_TI(XCMD_cmd, "Goto")) {
 		if (!XCMD_xlp->proc_Goto(XCMD_prm)) throw EAbort(XCMD_xlp->ErrMsg);
 	}
-	else return false;
+	else {
+		return false;
+	}
 
 	return true;
 }

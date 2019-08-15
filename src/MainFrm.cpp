@@ -2068,6 +2068,8 @@ void __fastcall TNyanFiForm::ApplicationEvents1ModalEnd(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, bool &CanShow, THintInfo &HintInfo)
 {
+	HintInfo.HintWindowClass = __classid(UsrTooltipWindow);
+
 	//リストボックス(ShowHint=true のみ)
 	if (class_is_ListBox(HintInfo.HintControl)) {
 		TListBox *lp = (TListBox*)HintInfo.HintControl;
@@ -3028,7 +3030,7 @@ void __fastcall TNyanFiForm::GrepStatusBarDrawPanel(TStatusBar *StatusBar, TStat
 	cv->Brush->Color = get_PanelColor();
 	cv->FillRect(Rect);
 	cv->Font->Color  = get_LabelColor();
-	cv->TextOut(Rect.Left + 2, Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + 2, Rect.Top + (Rect.Height() - cv->TextHeight("Q")) / 2, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -3492,7 +3494,7 @@ void __fastcall TNyanFiForm::WmDropped(TMessage &msg)
 					UnicodeString fext = get_extension(get_tkn(url, '?'));
 					//画像
 					if (!USAME_TI(get_extension(fnam), ".url")) {
-						if (file_exists(fnam) && !msgbox_Sure(LoadUsrMsg(USTR_OverwriteQ))) SkipAbort();
+						if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) SkipAbort();
 						TModalResult mr = DownloadWorkProgress(url, fnam, FileListBox[DroppedTag]);
 						if (mr==mrCancel) SkipAbort();
 						if (mr!=mrOk) Abort();
@@ -10692,7 +10694,7 @@ void __fastcall TNyanFiForm::FileListKeyDown(TObject *Sender, WORD &Key, TShiftS
 		//ExeCommands実行中...
 		else if (ExeCmdsBusy) {
 			if (!XCMD_Debugging && equal_ESC(KeyStr)) {
-				if (msgbox_Sure(LoadUsrMsg(USTR_CancelCmdQ), true, true)) XCMD_Aborted = true;
+				if (msgbox_Sure(USTR_CancelCmdQ, true, true)) XCMD_Aborted = true;
 			}
 			else if (USAME_TI(CmdStr, "TaskMan")) {
 				MsgHint->ReleaseHandle();
@@ -12867,7 +12869,7 @@ void __fastcall TNyanFiForm::ClearAllActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::ClearMarkActionExecute(TObject *Sender)
 {
 	if (TEST_ActParam("AC")) {
-		if (msgbox_Sure(LoadUsrMsg(USTR_ClrAllMarkQ), !(ExeCmdsBusy && XCMD_MsgOff)))
+		if (msgbox_Sure(USTR_ClrAllMarkQ, !(ExeCmdsBusy && XCMD_MsgOff)))
 			IniFile->ClearAllMark();
 	}
 	else {
@@ -13928,7 +13930,7 @@ void __fastcall TNyanFiForm::CopyFileNameActionExecute(TObject *Sender)
 				fbuf->Text = cpystr;
 
 				if (!saveto_TextFile(UserModule->SaveTxtDlg->FileName, fbuf.get(), SaveEncIndex))
-					msgbox_ERR(LoadUsrMsg(USTR_FaildSave));
+					msgbox_ERR(USTR_FaildSave);
 			}
 		}
 	}
@@ -15349,7 +15351,7 @@ void __fastcall TNyanFiForm::EditHistoryActionExecute(TObject *Sender)
 	bool is_edit = USAME_TI(((TAction*)Sender)->Name, "EditHistoryAction");
 
 	if (TEST_ActParam("AC")) {
-		if (msgbox_Sure(LoadUsrMsg(USTR_DelHistoryQ), !(ExeCmdsBusy && XCMD_MsgOff), true))
+		if (msgbox_Sure(USTR_DelHistoryQ, !(ExeCmdsBusy && XCMD_MsgOff), true))
 			(is_edit? TextEditHistory : TextViewHistory)->Clear();
 		return;
 	}
@@ -17790,8 +17792,8 @@ void __fastcall TNyanFiForm::CopyEnvInfItemClick(TObject *Sender)
 			if (::GetTokenInformation(hToken, TokenElevationType, &el_type, sizeof(TOKEN_ELEVATION_TYPE), &infoLen)) {
 				switch (el_type) {
 				case TokenElevationTypeDefault:	infstr += " Default";	break;
-  				case TokenElevationTypeFull:	infstr += " Full";		break;
-  				case TokenElevationTypeLimited:	infstr += " Limited";	break;
+				case TokenElevationTypeFull:	infstr += " Full";		break;
+				case TokenElevationTypeLimited:	infstr += " Limited";	break;
 				}
 			}
 		}
@@ -18513,7 +18515,7 @@ void __fastcall TNyanFiForm::JoinTextActionExecute(TObject *Sender)
 			//一旦空のファイルを作っておく
 			UnicodeString onam = dst_dir + JoinTextDlg->OutNameEdit->Text;
 			if (file_exists(onam)) {
-				if (!msgbox_Sure(LoadUsrMsg(USTR_OverwriteQ))) Abort();
+				if (!msgbox_Sure(USTR_OverwriteQ)) Abort();
 				delete_File(onam);
 			}
 			if (!create_EmptyFile(onam)) UserAbort(USTR_FaildProc);
@@ -20387,7 +20389,7 @@ void __fastcall TNyanFiForm::NewFileActionExecute(TObject *Sender)
 		if (!file_exists(tnam)) TextAbort(_T("テンプレートが見つかりません。"));
 
 		fnam = CurStt->is_ADS? CurStt->ads_Name + ":" + fnam : CurPath[CurListTag] + fnam;
-		if (file_exists(fnam) && !msgbox_Sure(LoadUsrMsg(USTR_OverwriteQ))) SkipAbort();
+		if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) SkipAbort();
 
 		StartLog("ファイル作成開始  " + GetSrcPathStr());
 		UnicodeString msg = make_LogHdr(_T("CREATE"), fnam);
@@ -20437,7 +20439,7 @@ void __fastcall TNyanFiForm::NewTextFileActionExecute(TObject *Sender)
 			fnam = ChangeFileExt(fnam, ".txt");
 
 		fnam = CurStt->is_ADS? CurStt->ads_Name + ":" + fnam : CurPath[CurListTag] + fnam;
-		if (file_exists(fnam) && !msgbox_Sure(LoadUsrMsg(USTR_OverwriteQ))) SkipAbort();
+		if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) SkipAbort();
 
 		StartLog("テキスト作成開始  " + GetSrcPathStr());
 		UnicodeString msg = make_LogHdr(_T("CREATE"), fnam);
@@ -22572,8 +22574,7 @@ void __fastcall TNyanFiForm::SaveWorkListActionExecute(TObject *Sender)
 			//保存に失敗した場合、再試行 or 別名保存
 			else {
 				msg.sprintf(_T("ワークリスト[%s]の保存に失敗。"), ExtractFileName(WorkListName).c_str());
-				if (Application->MessageBox(msg.c_str(), _T("エラー"), MB_RETRYCANCEL|MB_ICONERROR)==IDRETRY) continue;
-
+				if (msgbox_Retry(msg, "エラー")==IDRETRY) continue;
 				if (save_WorkList(WorkListName + ".$$$")) {
 					msg.cat_sprintf(_T("\r\n[%s.$$$]の名前で一時保存しました。"), ExtractFileName(WorkListName).c_str());
 					msgbox_WARN(msg);
@@ -27220,6 +27221,13 @@ void __fastcall TNyanFiForm::ConvertImageActionExecute(TObject *Sender)
 		if (!CvImageDlg) CvImageDlg = new TCvImageDlg(this);	//初回に動的作成
 		CvImageDlg->fromClip = is_clip;
 		CvImageDlg->DistPath = dst_dir;
+		if (!is_clip) {
+			if (sel_cnt>0)
+				CvImageDlg->TitleInf.sprintf(_T(" - 選択 %u"), sel_cnt);
+			else
+				CvImageDlg->TitleInf.sprintf(_T(" - %s"), cfp->n_name.c_str());
+		}
+
 		if (CvImageDlg->ShowModal()==mrOk) {
 			TaskConfig  *cp = NULL;
 			TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
@@ -27290,6 +27298,12 @@ void __fastcall TNyanFiForm::ConvertTextEncActionExecute(TObject *Sender)
 		NotConvertAbort();
 
 		if (!CvTxtEncDlg) CvTxtEncDlg = new TCvTxtEncDlg(this);	//初回に動的作成
+
+		if (sel_cnt>0)
+			CvTxtEncDlg->TitleInf.sprintf(_T(" - 選択 %u"), sel_cnt);
+		else
+			CvTxtEncDlg->TitleInf.sprintf(_T(" - %s"), ExtractFileName(GetCurFileName()).c_str());
+
 		if (CvTxtEncDlg->ShowModal()==mrOk) {
 			UnicodeString charset = CvTxtEncDlg->OutCodeComboBox->Text;
 			int o_cp = get_CodePageOfName(charset);
@@ -32060,7 +32074,7 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 				//補助画面(なければビュアー)を閉じる
 				else if (equal_ESC(KeyStr)) {
 					if (ExeCmdsBusy) {
-						if (msgbox_Sure(LoadUsrMsg(USTR_CancelCmdQ))) XCMD_Aborted = true;
+						if (msgbox_Sure(USTR_CancelCmdQ)) XCMD_Aborted = true;
 					}
 					else {
 						if (!TxtViewer->CloseAuxForm()) ExeCommandV(_T("Close"));
@@ -32112,7 +32126,7 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 			//閉じる
 			else if (equal_ESC(KeyStr)) {
 				if (ExeCmdsBusy) {
-					if (msgbox_Sure(LoadUsrMsg(USTR_CancelCmdQ))) XCMD_Aborted = true;
+					if (msgbox_Sure(USTR_CancelCmdQ)) XCMD_Aborted = true;
 				}
 				else if (IS_FullScr()) {
 					ExeCommandI("FullScreen", "OFF");

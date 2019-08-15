@@ -132,7 +132,7 @@ void __fastcall TExpCsvDlg::ExportActionExecute(TObject *Sender)
 	if (!Viewer) return;
 
 	UnicodeString fnam = to_absolute_name(OutNameEdit->Text, ExtractFilePath(Viewer->FileName));
-	if (file_exists(fnam) && !msgbox_Sure(LoadUsrMsg(USTR_OverwriteQ))) return;
+	if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) return;
 
 	//çÏê¨
 	ExpBusy = true;

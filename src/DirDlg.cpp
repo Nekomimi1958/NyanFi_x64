@@ -551,7 +551,9 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 					NyanFiForm->UpdateCurPath(dnam);
 					ModalResult = mrOk;
 				}
-				else msgbox_ERR(USTR_CantAccessDir);
+				else {
+					msgbox_ERR(USTR_CantAccessDir);
+				}
 			}
 		}
 	}

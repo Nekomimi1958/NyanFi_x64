@@ -832,6 +832,8 @@ TColor col_bdrThumb;	//サムネイルの境界線
 TColor col_ThumbExif;	//サムネイルのEixf情報
 TColor col_ImgGrid;		//画像分割グリッド
 TColor col_OptFind;		//オプション設定の検索結果
+TColor col_bgTips;		//ツールチップの背景色
+TColor col_fgTips;		//ツールチップの文字色
 TColor col_bgHint;		//ヒント表示の背景色
 TColor col_fgHint;		//ヒント表示の文字色
 TColor col_bgWarn;		//警告表示の背景色
@@ -9606,6 +9608,8 @@ void set_col_from_ColorList()
 		{&col_bdrThumb,	_T("bdrThumb"),		clBtnFace},
 		{&col_ThumbExif,_T("ThumbExif"),	clWhite},
 		{&col_ImgGrid,	_T("ImgGrid"),		clGray},
+		{&col_bgTips,	_T("bgTips"),		clWindow},
+		{&col_fgTips,	_T("fgTips"),		clWindowText},
 		{&col_bgHint,	_T("bgHint"),		Application->HintColor},
 		{&col_fgHint,	_T("fgHint"),		clBlack},
 		{&col_bgWarn,	_T("bgWarn"),		clRed},
@@ -14424,4 +14428,18 @@ UnicodeString get_GitDiffFile2(UnicodeString s)
 	return !fnam2.IsEmpty()? fnam2 : fnam1;
 }
 
+//---------------------------------------------------------------------------
+// ツールチップ	(配色変更のためにサブクラス化)
+//---------------------------------------------------------------------------
+void __fastcall UsrTooltipWindow::Paint(void)
+{
+	TRect rc = ClientRect;
+	Canvas->Brush->Color = col_bgTips;
+	Canvas->Font->Color  = col_fgTips;
+	Canvas->FillRect(rc);
+	int mgn = (int)(2 * (Screen->PixelsPerInch / 96.0));
+	rc.Top	+= mgn;
+	rc.Left += mgn;
+	::DrawText(Canvas->Handle, Caption.c_str(), -1, &rc, DT_WORDBREAK);
+}
 //---------------------------------------------------------------------------

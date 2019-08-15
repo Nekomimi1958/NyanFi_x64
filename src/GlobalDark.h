@@ -89,12 +89,17 @@ void SetMenuBgColor(HMENU hMenu);
 void SetHighlight(TCanvas *cv, bool hl);
 
 void msgbox_ERR(UnicodeString msg);
+void msgbox_ERR(unsigned id);
 void msgbox_WARN(UnicodeString msg);
+void msgbox_WARN(unsigned id);
 void msgbox_OK(UnicodeString msg, UnicodeString tit = EmptyStr);
 bool msgbox_Y_N(UnicodeString msg, UnicodeString tit = EmptyStr);
 TModalResult msgbox_Y_N_C(UnicodeString msg, UnicodeString tit = EmptyStr);
+TModalResult msgbox_Retry(UnicodeString msg, UnicodeString tit = EmptyStr);
+
 bool msgbox_Sure(UnicodeString msg, bool ask = true, bool cente = false);
 bool msgbox_Sure(const _TCHAR *msg, bool ask, bool center = false);
+bool msgbox_Sure(unsigned id, bool ask = true, bool center = false);
 int  msgbox_SureAll(UnicodeString msg, bool &app_chk, bool center = false);
 
 //---------------------------------------------------------------------------

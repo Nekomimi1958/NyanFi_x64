@@ -50,6 +50,7 @@ void __fastcall TCvImageDlg::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
 
+	UnicodeString tit;
 	if (fromClip) {
 		Caption = "クリップボード画像の変換/保存";
 		SubPanel->Visible  = false;
@@ -64,7 +65,7 @@ void __fastcall TCvImageDlg::FormShow(TObject *Sender)
 		(IniFile->ReadBoolGen(_T("CvClpAutoRen"))? ClipAutoBtn : ClipOWBtn)->Checked = true;
 	}
 	else {
-		Caption = "画像ファイルの変換";
+		Caption = "画像ファイルの変換" + TitleInf;
 		SubPanel->Visible  = true;
 		NamePanel->Visible = false;
 		ClientHeight = MainPanel->Height + SubPanel->Height + BtnPanel->Height;
@@ -124,6 +125,7 @@ void __fastcall TCvImageDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteIntGen( (pfx + "MgnColor").c_str(),	MgnColPanel->Color);
 
 	fromClip = false;
+	TitleInf = EmptyStr;
 }
 
 //---------------------------------------------------------------------------

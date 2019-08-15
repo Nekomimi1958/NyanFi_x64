@@ -34,6 +34,8 @@ __published:	// IDE で管理されるコンポーネント
 private:	// ユーザー宣言
 
 public:		// ユーザー宣言
+	UnicodeString TitleInf;
+
 	__fastcall TCvTxtEncDlg(TComponent* Owner);
 };
 //---------------------------------------------------------------------------

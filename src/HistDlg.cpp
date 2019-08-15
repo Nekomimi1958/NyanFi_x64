@@ -116,7 +116,8 @@ void __fastcall TDirHistoryDlg::UpdateListBox(
 					if (!dir_exists(lnam)) continue;
 				}
 				//降順ソートのために使用日時を一時的に付加
-				i_lst->Add(FormatDateTime("yyyymmddhhnnss", get_file_age(fnam)) + "\t" + IncludeTrailingPathDelimiter(lnam));
+				i_lst->Add(FormatDateTime("yyyymmddhhnnss", get_file_age(fnam))
+							+ "\t\"" + IncludeTrailingPathDelimiter(lnam) + "\",\"" + fnam + "\"");
 			}
 			i_lst->CustomSort(comp_DescendOrder);
 			for (int i=0; i<i_lst->Count; i++) {
@@ -192,8 +193,7 @@ void __fastcall TDirHistoryDlg::DirHistListBoxDrawItem(TWinControl *Control, int
 		xp += get_CharWidth(cv, 2);
 	}
 
-	UnicodeString lbuf = lp->Items->Strings[Index];
-	if (!IdRecentDir)  lbuf = get_csv_item(lbuf, 0);
+	UnicodeString lbuf = get_csv_item(lp->Items->Strings[Index], 0);
 	if (UncToNetDrive) lbuf = UNC_to_NetDriveName(lbuf);
 	if (DispRegName)   lbuf = get_RegDirName(lbuf);
 
@@ -222,8 +222,7 @@ void __fastcall TDirHistoryDlg::InpPaintBoxPaint(TObject *Sender)
 //---------------------------------------------------------------------------
 //キー操作
 //---------------------------------------------------------------------------
-void __fastcall TDirHistoryDlg::DirHistListBoxKeyDown(TObject *Sender, WORD &Key,
-		TShiftState Shift)
+void __fastcall TDirHistoryDlg::DirHistListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);	if (KeyStr.IsEmpty()) return;
 
@@ -298,6 +297,11 @@ void __fastcall TDirHistoryDlg::DirHistListBoxKeyDown(TObject *Sender, WORD &Key
 					int idx = indexof_csv_list(AllDirHistory, cur_dnam, 0);
 					if (idx!=-1) AllDirHistory->Delete(idx); else break;
 				}
+			}
+			else if (IdRecentDir) {
+				if (lp->ItemIndex==-1) SkipAbort();
+				UnicodeString fnam = get_csv_item(lp->Items->Strings[lp->ItemIndex], 1);
+				if (!file_exists(fnam) || !delete_File(fnam)) Abort();
 			}
 			else {
 				if (h_lst) h_lst->Delete(lp->ItemIndex);

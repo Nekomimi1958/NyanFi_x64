@@ -270,7 +270,7 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 				UnicodeString vnam = dp->volume;
 				UnicodeString pnam = (dp->drv_type==DRIVE_REMOTE)? dp->unc : dp->mnt_dir;
 				//ƒ{ƒŠƒ…[ƒ€
-				if (pnam.IsEmpty() || (get_TextWidth(cv, vnam + pnam.SubString(1, pnam.Length()/2), is_irreg) < c_wd)) {
+				if (pnam.IsEmpty() || (get_TextWidth(cv, vnam + pnam.SubString(1, pnam.Length()/2), is_irreg) + 16 < c_wd)) {
 					cv->Font->Color = (fcol==col_None)? col_fgList : fcol;
 					cv->TextRect(rc, xp, yp, vnam);
 					xp += get_TextWidth(cv, vnam, is_irreg) + 16;

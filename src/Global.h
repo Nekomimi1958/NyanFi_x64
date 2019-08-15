@@ -1043,6 +1043,8 @@ extern TColor col_LocalLink;
 extern TColor col_bgImage;
 extern TColor col_bgDblPg;
 extern TColor col_bgWMF;
+extern TColor col_bgTips;
+extern TColor col_fgTips;
 extern TColor col_bgHint;
 extern TColor col_fgHint;
 extern TColor col_bgWarn;
@@ -2142,5 +2144,16 @@ void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw = false, bool 
 UnicodeString get_GitDiffFiles(UnicodeString s, UnicodeString &fnam2);
 UnicodeString get_GitDiffFile2(UnicodeString s);
 
+//---------------------------------------------------------------------------
+// ツールチップ	(配色変更のためにサブクラス化)
+//---------------------------------------------------------------------------
+class UsrTooltipWindow : public THintWindow
+{
+private:
+	void __fastcall Paint(void);
+
+public:
+	__fastcall UsrTooltipWindow(TComponent* AOwner) : THintWindow(AOwner) {}
+};
 //---------------------------------------------------------------------------
 #endif
