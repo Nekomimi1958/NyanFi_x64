@@ -207,6 +207,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 		Mp3Sheet->TabVisible		= isMp3 || isFlac;
 		mp3fextLabel->Caption		= cmnFext;
 		NamePageControl->ActivePage = EditedList? RenListSheet : NameSheet;
+		if (IsNameSheet()) RenameEdit->Text = ExtractFileName(f_name);
 	}
 	//---------------------------
 	//•¡”
@@ -345,6 +346,7 @@ void __fastcall TRenameDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	if (EditedList) delete_FileIf(RenListFile);
 	EditedList	= false;
 	RenListFile = EmptyStr;
+	RenameEdit->Text = EmptyStr;
 }
 
 //---------------------------------------------------------------------------
@@ -423,8 +425,8 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 		UnicodeString f_name = ItemList->Strings[0];
 		bool is_dir = ends_PathDlmtr(f_name);
 		f_name = ExcludeTrailingPathDelimiter(f_name);
-		RenameEdit->SetFocus();
 		RenameEdit->Text = ExtractFileName(f_name);
+		RenameEdit->SetFocus();
 
 		//‰Šúó‘Ô‚ÌÝ’è
 		int p = !is_dir? (pos_r(_T("."), RenameEdit->Text) - 1) : -1;

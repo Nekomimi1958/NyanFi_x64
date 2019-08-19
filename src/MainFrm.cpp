@@ -126,7 +126,7 @@ LRESULT CALLBACK DlgHookProc(int code, WPARAM wParam, LPARAM lParam)
 	if (code==HC_ACTION) {
 		PCWPSTRUCT sp = (PCWPSTRUCT)lParam;
 		if (sp->message==WM_SHOWWINDOW && sp->wParam==1) {
-			HWND hWnd = sp->hwnd;
+			HWND  hWnd = sp->hwnd;
 			UnicodeString tit = get_WndText(hWnd);
 			if (contained_wd_i(_T("#32770|TMessageForm"), get_WndClassName(hWnd))
 				&& (USAME_TS(tit, "フォルダーの参照") || USAME_TS(tit, "アイコンの変更")
@@ -171,6 +171,27 @@ LRESULT CALLBACK DlgHookProc(int code, WPARAM wParam, LPARAM lParam)
 		}
 		else if (sp->message==WM_ACTIVATE && (LOWORD(sp->wParam)==WA_ACTIVE)) {
 			ReqActWnd = sp->hwnd;
+
+			//ポインターを自動的に規定のボタン上に移動
+			if (is_SnapToDefBtn()) {
+				TForm *frm = NULL;
+				for (int i=0; i<Screen->FormCount && !frm; i++) {
+					TForm *fp = Screen->Forms[i];
+					if (fp->Handle==ReqActWnd) frm = fp;
+				}
+				if (frm && frm!=Application->MainForm) {
+					for (int i=frm->ComponentCount - 1; i>=0;  i--) {
+						TComponent *cp = frm->Components[i];
+						if (cp->ClassNameIs("TButton")) {
+							TButton *bp = (TButton *)cp;
+							if (bp->Default) {
+								Mouse->CursorPos = Point(bp->ClientOrigin.x + bp->Width/2, bp->ClientOrigin.y + bp->Height/2);
+								break;
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 

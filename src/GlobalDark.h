@@ -72,6 +72,7 @@ extern TBrush *MenuBrush;
 
 //---------------------------------------------------------------------------
 bool is_HighContrast();
+
 void InitializeSysColor();
 void InitializeDarkMode();
 void EndDarkMode();

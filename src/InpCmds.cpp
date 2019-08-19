@@ -206,7 +206,9 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 				add_ComboBox_history(cp_inp);
 				ModalResult = mrOk;
 			}
-			else ModalResult = mrCancel;
+			else {
+				ModalResult = mrCancel;
+			}
 		}
 	}
 	else if (equal_ESC(KeyStr)) {

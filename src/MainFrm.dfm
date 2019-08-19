@@ -3688,7 +3688,7 @@ object NyanFiForm: TNyanFiForm
     end
     object DotNyanDlgAction: TAction
       Category = 'Command'
-      Caption = '.nyanfi '#12501#12449#12452#12523#12398#35373#23450'(&N)'
+      Caption = '.nyanfi '#12501#12449#12452#12523#12398#35373#23450'(&N)...'
       HelpContext = 75
       OnExecute = DotNyanDlgActionExecute
       OnUpdate = DotNyanDlgActionUpdate

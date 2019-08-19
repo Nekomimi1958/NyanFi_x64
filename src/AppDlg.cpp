@@ -667,8 +667,10 @@ void __fastcall TAppListDlg::UpdateLaunchSttBar()
 	if (cfp) {
 		msg = cfp->n_name;
 		if (!cfp->is_dir) {
-			if (!cfp->alias.IsEmpty())  msg.cat_sprintf(_T(" (%s)"),  cfp->alias.c_str());	//コメント
-			if (!cfp->l_name.IsEmpty()) msg.cat_sprintf(_T(" → %s"), cfp->l_name.c_str());	//リンク先
+			if (!cfp->alias.IsEmpty())
+				msg.cat_sprintf(_T(" (%s)"),  cfp->alias.c_str());	//コメント
+			if (!cfp->l_name.IsEmpty())
+				msg.cat_sprintf(_T(" → %s"), yen_to_delimiter(cfp->l_name).c_str());	//リンク先
 		}
 	}
 	StatusBar1->Panels->Items[0]->Text = msg;

@@ -28,6 +28,8 @@
 #define LISTBOX_SCRMGN	2
 
 //---------------------------------------------------------------------------
+bool is_SnapToDefBtn();
+
 HWND get_window_from_pos();
 TRect get_window_rect(HWND hWnd);
 void set_window_pos_ex(HWND hWnd, TRect rc);
