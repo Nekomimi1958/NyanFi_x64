@@ -248,6 +248,7 @@ void __fastcall TImgViewThread::DrawImage()
 
 		if (is_viewer) {
 			UnicodeString sttstr; sttstr.sprintf(_T("%3u%"), ZoomRatio);
+			if (ZoomRatio!=100) sttstr += (" " + UnicodeString("NLCFX").SubString(WicScaleOpt + 1, 1));
 			if (NyanFiForm->ImgSttHeader->Visible) NyanFiForm->ImgSttHeader->Panels->Items[3]->Text = sttstr;
 			if (NyanFiForm->ImgInfBar->Visible)    NyanFiForm->ImgInfBar->Panels->Items[1]->Text 	= sttstr;
 		}
@@ -255,6 +256,7 @@ void __fastcall TImgViewThread::DrawImage()
 
 	//描画
 	v_img->Center = true;
+
 	//イメージビュアー
 	if (is_viewer) {
 		TControlScrollBar *hbar = NyanFiForm->ImgScrollBox->HorzScrollBar;

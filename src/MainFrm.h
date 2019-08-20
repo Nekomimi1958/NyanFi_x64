@@ -413,6 +413,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *SetExifTimeAction;
 	TAction *SetFolderIconAction;
 	TAction *SetFontSizeAction;
+	TAction *SetInterpolationAction;
 	TAction *SetMarginAction;
 	TAction *SetPathMaskAction;
 	TAction *SetSttBarFmtAction;
@@ -1860,6 +1861,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall OptKeyItemClick(TObject *Sender);
 	void __fastcall CopyEnvInfItemClick(TObject *Sender);
 	void __fastcall WorkProgressBoxPaint(TObject *Sender);
+	void __fastcall SetInterpolationActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

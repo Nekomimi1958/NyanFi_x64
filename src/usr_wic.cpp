@@ -340,6 +340,7 @@ bool WIC_resize_image(
 			i_wd = s_wd;
 			i_hi = s_hi;
 		}
+
 		WICBitmapInterpolationMode opt;
 		switch (s_opt) {
 		case 1:  opt = WICBitmapInterpolationModeLinear; break;		//バイリニア
@@ -347,8 +348,8 @@ bool WIC_resize_image(
 		case 3:  opt = WICBitmapInterpolationModeFant;	 break;		//ファントリサンプリング
 		default: opt = WICBitmapInterpolationModeNearestNeighbor;	//最近傍法
 		}
-		if (FAILED(scaler->Initialize(bitmap, i_wd, i_hi, opt)))
-			Abort();
+
+		if (FAILED(scaler->Initialize(bitmap, i_wd, i_hi, opt))) Abort();
 
 		//イメージをメモリにコピー
 		UINT stride = i_wd * 3;

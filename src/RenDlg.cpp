@@ -982,7 +982,7 @@ void __fastcall TRenameDlg::UpdatePreview()
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::RenameEditChange(TObject *Sender)
 {
-	if (!DlgInitialized) return;
+	if (!DlgInitialized || is_IME_Open(Handle)) return;
 
 	switch (((TComponent*)Sender)->Tag) {
 	case 10: case 11: case 12: case 13:

@@ -285,6 +285,7 @@ void set_CmdList(
 		"FI:SelSameExt=拡張子が同じファイルを選択\n"
 		"FI:SelSameName=ファイル名主部が同じファイルを選択\n"
 		"FI:SelWorkItem=ワークリストの登録項目を選択\n"
+		"FI:SetInterpolation=縮小・拡大アルゴリズムを設定\n"
 		"FI:SetTag=項目にタグを設定\n"
 		"FI:SortDlg=ソートダイアログ\n"
 		"FI:SubViewer=サブビュアーの表示/非表示\n"
@@ -518,8 +519,8 @@ void get_PrmList(
 			_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|")
 			_T("ScrollCursorUp|ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|")
 			_T("ScrollUpText|SelByList|SetColor|SetDirTime|SetFontSize|SetMargin|SetPathMask|")
-			_T("SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SimilarSort|SortDlg|")
-			_T("SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToOppSameHash|ToTab|")
+			_T("SetInterpolation|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SimilarSort|")
+			_T("SortDlg|SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToOppSameHash|ToTab|")
 			_T("UnPack|UnPackToCurr,|ViewTail|WatchTail|WidenCurList|WinPos|"),
 			cmd))
 		{
@@ -936,6 +937,14 @@ void get_PrmList(
 			_T("\n")
 			_T("ND : ポップアップメニューで選択\n")
 			_T("RS : デフォルトアイコンに戻す\n"));
+	}
+	else if (USAME_TI(cmd, "SetInterpolation")) {
+		params.sprintf(_T("%s"),
+			_T("N : ニアレストネイバー\n")
+			_T("L : バイリニア\n")
+			_T("C : バイキュービック\n")
+			_T("F : ファントリサンプリング\n")
+			_T("X : 補間しない\n"));
 	}
 	else if (USAME_TI(cmd, "SetPathMask")) {
 		params = "\nEX : カーソル位置の拡張子でマスク\n";

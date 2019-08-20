@@ -157,6 +157,19 @@ int del_ComboBox_history(TComboBox *cp, UnicodeString kwd)
 }
 
 //---------------------------------------------------------------------------
+//IME‚ðŠJ‚¢‚Ä‚¢‚é‚©?
+//---------------------------------------------------------------------------
+bool is_IME_Open(HWND hWnd)
+{
+	bool ret  = false;
+	HIMC hIMC = ::ImmGetContext(hWnd);
+	if (hIMC) {
+		ret = ::ImmGetOpenStatus(hIMC);
+		::ImmReleaseContext(hWnd, hIMC);
+	}
+	return ret;
+}
+//---------------------------------------------------------------------------
 //IME‚ð•Â‚¶‚é
 //---------------------------------------------------------------------------
 void CloseIME(HWND hWnd)

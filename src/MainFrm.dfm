@@ -4598,12 +4598,6 @@ object NyanFiForm: TNyanFiForm
       OnExecute = SelEmptyDirActionExecute
       OnUpdate = MenuFActionUpdate
     end
-    object SetFolderIconAction: TAction
-      Category = 'Command'
-      Caption = #12501#12457#12523#12480#12540#12450#12452#12467#12531#12398#35373#23450
-      OnExecute = SetFolderIconActionExecute
-      OnUpdate = SetFolderIconActionUpdate
-    end
     object SelGitChangedAction: TAction
       Category = 'Command'
       OnExecute = SelGitChangedActionExecute
@@ -4679,10 +4673,22 @@ object NyanFiForm: TNyanFiForm
       OnExecute = SetExifTimeActionExecute
       OnUpdate = MenuFActionUpdate
     end
+    object SetFolderIconAction: TAction
+      Category = 'Command'
+      Caption = #12501#12457#12523#12480#12540#12450#12452#12467#12531#12398#35373#23450
+      OnExecute = SetFolderIconActionExecute
+      OnUpdate = SetFolderIconActionUpdate
+    end
     object SetFontSizeAction: TAction
       Category = 'Command'
       OnExecute = SetFontSizeActionExecute
       OnUpdate = MenuFActionUpdate
+    end
+    object SetInterpolationAction: TAction
+      Category = 'Command'
+      Caption = 'SetInterpolationAction'
+      OnExecute = SetInterpolationActionExecute
+      OnUpdate = MenuFIActionUpdate
     end
     object SetMarginAction: TAction
       Category = 'Command'

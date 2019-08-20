@@ -31834,7 +31834,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 	sp->Panels->Items[0]->Text	= get_MiniPathName(pnam, sp->Panels->Items[0]->Width - 4, sp->Font);
 	sp->Panels->Items[1]->Text	= inf_str;
 	sp->Panels->Items[2]->Text	= sz_str;
-	sp->Hint					= ViewFileName;
+	sp->Hint					= yen_to_delimiter(ViewFileName);
 
 	if (isViewIcon || isViewAGif) {
 		sp->Panels->Items[3]->Text = "100%";
@@ -33334,7 +33334,23 @@ void __fastcall TNyanFiForm::SidebarActionUpdate(TObject *Sender)
 	ap->Enabled = ap->Visible && !IS_FullScr();
 	ap->Checked = ImgSidePanel->Visible;
 }
-
+//---------------------------------------------------------------------------
+//縮小・拡大アルゴリズムの設定
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SetInterpolationActionExecute(TObject *Sender)
+{
+	try {
+		if (!is_match_regex(ActionParam, _T("^[NLCFX]{1,}$"))) UserAbort(USTR_IllegalParam);
+		UnicodeString idstr = "NLCFX";
+		int p = ActionParam.Pos(idstr.SubString(WicScaleOpt + 1, 1));
+		p = (p==0 || p==ActionParam.Length())? 1 : p + 1;
+		WicScaleOpt = idstr.Pos(ActionParam[p]) - 1;
+		ImgViewThread->AddRequest(_T("RELOAD"));
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+}
 //---------------------------------------------------------------------------
 //サブビュアーの表示
 //---------------------------------------------------------------------------

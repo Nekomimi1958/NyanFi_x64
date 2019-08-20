@@ -80,6 +80,7 @@
 #define USTR_NotRepository	1069
 #define USTR_HideOptPanel	1070
 #define USTR_ShowOptPanel	1071
+#define USTR_OptCmdHint		1072
 
 #define USTR_SelectedItem	1100
 #define USTR_List			1101

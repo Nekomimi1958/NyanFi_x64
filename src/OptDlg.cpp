@@ -446,6 +446,23 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	FExtExeFileEdit->Hint  = hntstr;
 	FExtStdEdit->Hint	   = hntstr;
 
+	HideAtrCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowHideAtr"));
+	SysAtrCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowSystemAtr"));
+	DelUseTrsCheckBox->Hint    = LoadUsrMsg(USTR_OptCmdHint, _T("UseTrash"));
+	ShowRulerCheckBox->Hint    = LoadUsrMsg(USTR_OptCmdHint, _T("ShowRuler"));
+	ShowLnNoCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowLineNo"));
+	LeftMarginEdit->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("SetMargin"));
+	ShowTabCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowTAB"));
+	ShowCrCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowCR"));
+	FoldGroupBox->Hint		   = LoadUsrMsg(USTR_OptCmdHint, _T("SetWidth"));
+	FixedLimitEdit->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("FixedLen"));
+	ShowIconCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowIcon"));
+	ShowByteSizeCheckBox->Hint = LoadUsrMsg(USTR_OptCmdHint, _T("ShowByteSize"));
+	ShowImgPrvCheckBox->Hint   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowPreview"));
+	ShowFilePropCheckBox->Hint = LoadUsrMsg(USTR_OptCmdHint, _T("ShowProperty"));
+	ShowMainMenuCheckBox->Hint = LoadUsrMsg(USTR_OptCmdHint, _T("MenuBar"));
+	ScaleOptComboBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("SetInterpolation"));
+
 	//コントロールのタグに、対応する変数のポインタを設定
 	//UnicodeString
 	L_IniPatEdit->Tag			= (int)&InitialPath[0];

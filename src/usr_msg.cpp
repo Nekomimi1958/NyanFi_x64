@@ -88,9 +88,10 @@ UnicodeString LoadUsrMsg(int id, UnicodeString s)
 		"1066=不正な日付条件です。\n"							//USTR_IllegalDtCond
 		"1067=選択マスク中のワークリストは変更できません。\n"	//USTR_WorkFiltered
 		"1068=左右が同一ディレクトリです。\n"					//USTR_SameDirLR
-		"1069=Gitの作業ディレクトリではありません。\n"			//USTR_NotRepository;
+		"1069=Gitの作業ディレクトリではありません。\n"			//USTR_NotRepository
 		"1070=設定パネルを隠す\n"								//USTR_HideOptPanel
 		"1071=設定パネルを表示\n"								//USTR_ShowOptPanel
+		"1072=%s コマンドで変更可能\n"							//USTR_OptCmdHint
 
 		"1100=選択項目\n"										//USTR_SelectedItem
 		"1101=一覧\n"											//USTR_List

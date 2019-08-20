@@ -464,6 +464,17 @@ OptionDlg<span class="pram_text">_KYO</span>
 <dd>選択中(無ければ現在表示中)のファイルを、現在の<a href="hid00060.htm">ワークリスト</a>に送ります。<br>
 <a href="#WorkList">→ WorkList</a>
 
+<dt id="SetInterpolation">SetInterpolation<span class="pram_text">_{N|L|C|F|X}[{N|L|C|F|X}...]</span>
+<dd><a href="hid00020.htm">オプション設定 - イメージビュアー</a> - 「<b>縮小・拡大アルゴリズム</b>」を変更します。<br>
+パラメータで <b>N</b> (ニアレストネイバー)、<b>L</b> (バイリニア)、<b>C</b> (バイキュービック)、<b>F</b> (ファントリサンプリング)、<b>X</b> (補間しない)のいずれかを指定してください。複数を組み合わせて指定すると、それらの間をトグルで切り替えられます。<br>
+縮小・拡大時には情報ヘッダに補間法(N、L、C、F、X)が表示されます。<br>
+
+<div class="spc_box">
+<b>例</b>: バイリニア/ファントリサンプリング/補間しない をトグル切り替え<br>
+　SetInterpolation_LFX
+</div>
+<a href="#ZoomIn">→ ZoomIn</a>　<a href="#ZoomOut">→ ZoomOut</a>
+
 <dt id="SetTag">SetTag
 <dd>選択中(無ければ現在表示中)のファイルに<b>タグ</b>を設定します。<br>
 詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#SetTag">→ ファイラー: SetTag</a>)。<br>
@@ -587,14 +598,15 @@ OptionDlg<span class="pram_text">_KYO</span>
 <dt id="ZoomIn">ZoomIn
 <dd>ズームインします(アイコン表示の場合は無効)。<br>
 ズーム倍率は、10、25、50、75、100、150、200、300、400%のいずれかになります。<br>
-縮小・拡大アルゴリズムは <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で選択できます。なおメタファイルは、ベクタイメージとして処理されます。<br>
-<a href="#ZoomOut">→ ZoomOut</a>　<a href="#FittedSize">→ FittedSize</a>　<a href="#EqualSize">→ EqualSize</a>
+縮小・拡大アルゴリズムは <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で選択できます(<a href="#SetInterpolation">SetInterpolation</a> コマンドでも変更可能)。<br>
+なおメタファイルは、ベクタイメージとして処理されます。<br>
+<a href="#ZoomOut">→ ZoomOut</a>　<a href="#FittedSize">→ FittedSize</a>　<a href="#EqualSize">→ EqualSize</a>　<a href="#SetInterpolation">→ SetInterpolation</a>
 
 <dt id="ZoomOut">ZoomOut
 <dd>ズームアウトします(アイコン表示の場合は無効)。<br>
 ズーム倍率は、10、25、50、75、100、150、200、300、400%のいずれかになります。<br>
 縮小・拡大アルゴリズムは <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で選択できます。なおメタファイルは、ベクタイメージとして処理されます。<br>
-<a href="#ZoomIn">→ ZoomIn</a>　<a href="#FittedSize">→ FittedSize</a>　<a href="#EqualSize">→ EqualSize</a>
+<a href="#ZoomIn">→ ZoomIn</a>　<a href="#FittedSize">→ FittedSize</a>　<a href="#EqualSize">→ EqualSize</a>　<a href="#SetInterpolation">→ SetInterpolation</a>
 
 </dl>
 <br><br><br><br>
