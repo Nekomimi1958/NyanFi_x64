@@ -46,6 +46,8 @@ void add_ComboBox_history(TComboBox *cp, UnicodeString kwd = EmptyStr);
 int  del_ComboBox_history(TComboBox *cp, UnicodeString kwd = EmptyStr);
 
 bool is_IME_Open(HWND hWnd);
+bool is_IME_Typing(HWND hWnd);
+bool is_IME_Empty(HWND hWnd);
 void CloseIME(HWND hWnd);
 
 TPoint get_ListItemPos(TListBox *lp, int xp = 0);

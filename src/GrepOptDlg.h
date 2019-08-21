@@ -76,8 +76,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefBakBtnClick(TObject *Sender);
 	bool __fastcall FormHelp(WORD Command, NativeInt Data, bool &CallHelp);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall PageControl1DrawTab(TCustomTabControl *Control, int TabIndex,
-          const TRect &Rect, bool Active);
+	void __fastcall PageControl1DrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 
 private:	// ユーザー宣言
 	void __fastcall WmDropped(TMessage &msg);

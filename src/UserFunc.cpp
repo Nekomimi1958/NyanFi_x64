@@ -170,6 +170,32 @@ bool is_IME_Open(HWND hWnd)
 	return ret;
 }
 //---------------------------------------------------------------------------
+//IME“ü—Í’†?
+//---------------------------------------------------------------------------
+bool is_IME_Typing(HWND hWnd)
+{
+	bool ret = false;
+	HIMC hIMC = ::ImmGetContext(hWnd);
+	if (hIMC) {
+		ret = ::ImmGetOpenStatus(hIMC) && ::ImmGetCompositionString(hIMC, GCS_COMPSTR, NULL, 0)>0;
+		::ImmReleaseContext(hWnd, hIMC);
+	}
+	return ret;
+}
+//---------------------------------------------------------------------------
+//IME“ü—Í‚È‚µ
+//---------------------------------------------------------------------------
+bool is_IME_Empty(HWND hWnd)
+{
+	bool ret = false;
+	HIMC hIMC = ::ImmGetContext(hWnd);
+	if (hIMC) {
+		ret = ::ImmGetOpenStatus(hIMC) && ::ImmGetCompositionString(hIMC, GCS_COMPSTR, NULL, 0)==0;
+		::ImmReleaseContext(hWnd, hIMC);
+	}
+	return ret;
+}
+//---------------------------------------------------------------------------
 //IME‚ð•Â‚¶‚é
 //---------------------------------------------------------------------------
 void CloseIME(HWND hWnd)

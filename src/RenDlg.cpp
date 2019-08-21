@@ -595,7 +595,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	TCustomEdit *last_ep = class_is_CustomEdit(last_cp)? (TCustomEdit *)last_cp : NULL;
 	TComboBox	*last_bp = class_is_ComboBox(last_cp)? (TComboBox *)last_cp : NULL;
 	int last_ss = last_ep? last_ep->SelStart :  last_bp? last_bp->SelStart : 0;
-	int last_sl = last_ep? last_ep->SelLength : last_bp? last_bp->SelLength :0;
+	int last_sl = last_ep? last_ep->SelLength : last_bp? last_bp->SelLength : 0;
 
 	MainPanel->Enabled = false;
 	Previewing = true;
@@ -978,37 +978,46 @@ void __fastcall TRenameDlg::UpdatePreview()
 }
 
 //---------------------------------------------------------------------------
-//連番改名の設定が変更された
+//名前/連番改名の内容が変更された
+//！IMEに入力文字列があるときはプレビュー不可
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::RenameEditChange(TObject *Sender)
 {
-	if (!DlgInitialized || is_IME_Open(Handle)) return;
+	if (!DlgInitialized) return;
 
 	switch (((TComponent*)Sender)->Tag) {
-	case 10: case 11: case 12: case 13:
+	case 10: case 11: case 12: case 13:	//連番ファイル名
 		NameChanged = true;
 		PreNameEdit->Color	= get_WinColor();
 		InvColIfEmpty(SerNoEdit);
 		IncNoEdit->Color	= SerNoEdit->Color;
 		PostNameEdit->Color = get_WinColor();
 		break;
-	case 14:
+	case 14:							//連番拡張子
 		FExtChanged    = true;
 		ExtEdit->Color = get_WinColor();
 		break;
 	}
 
-	UpdatePreview();
+	if (!is_IME_Typing(Handle)) UpdatePreview();
 }
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::RenameEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialEditProc(Sender, Key, Shift);
+	if (is_IME_Empty(Handle))
+		UpdatePreview();
+	else
+		SpecialEditProc(Sender, Key, Shift);
 }
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::RenameEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
 	if (is_KeyPress_CtrlNotCV(Key)) Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TRenameDlg::EtcNameEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (is_IME_Empty(Handle)) UpdatePreview();
 }
 
 //---------------------------------------------------------------------------
@@ -1027,7 +1036,7 @@ void __fastcall TRenameDlg::RegExCheckBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::ReplaceComboChange(TObject *Sender)
 {
-	if (Sender) UpdatePreview();
+	if (Sender && !is_IME_Typing(Handle)) UpdatePreview();
 }
 
 //---------------------------------------------------------------------------
@@ -1036,7 +1045,7 @@ void __fastcall TRenameDlg::ReplaceComboChange(TObject *Sender)
 void __fastcall TRenameDlg::Mp3FmtComboBoxChange(TObject *Sender)
 {
 	Mp3FmtComboBox->Color = get_WinColor(Mp3FmtComboBox->Text.IsEmpty());
-	if (Sender) UpdatePreview();
+	if (Sender && !is_IME_Typing(Handle)) UpdatePreview();
 }
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::RefFmtBtnClick(TObject *Sender)

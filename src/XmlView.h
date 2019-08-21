@@ -95,8 +95,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CopyXmlActionExecute(TObject *Sender);
 	void __fastcall CopyXmlActionUpdate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
-	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-          const TRect &Rect);
+	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall AutoActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言

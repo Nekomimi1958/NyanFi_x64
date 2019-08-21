@@ -47,8 +47,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefTpltBtnClick(TObject *Sender);
 	void __fastcall EditTmpltActionExecute(TObject *Sender);
 	void __fastcall EditTmpltActionUpdate(TObject *Sender);
-	void __fastcall SrcFileListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-          TOwnerDrawState State);
+	void __fastcall SrcFileListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 
 private:	// ユーザー宣言
 

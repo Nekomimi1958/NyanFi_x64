@@ -1855,8 +1855,7 @@ __published:	// IDE で管理されるコンポーネント
 		const TRect &ARect, TOwnerDrawState State);
 	void __fastcall PopMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
 		const TRect &ARect, TOwnerDrawState State);
-	void __fastcall MainMenuMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width,
-          int &Height);
+	void __fastcall MainMenuMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width, int &Height);
 	void __fastcall OdPopupMenuPopup(TObject *Sender);
 	void __fastcall OptKeyItemClick(TObject *Sender);
 	void __fastcall CopyEnvInfItemClick(TObject *Sender);
@@ -2265,6 +2264,11 @@ private:	// ユーザー宣言
 	bool __fastcall IsDiffList()
 	{
 		return (CurStt->is_Find && OppStt->is_Find);
+	}
+
+	TPanel * __fastcall GetCurSttPanel()
+	{
+		return (CurListTag==0)? L_StatPanel : R_StatPanel;
 	}
 
 	TListBox * __fastcall GetCurInfListBox()

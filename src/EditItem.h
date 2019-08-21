@@ -45,8 +45,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ItemListBoxClick(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall ItemListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-          TOwnerDrawState State);
+	void __fastcall ItemListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 
 private:	// ユーザー宣言
 	UnicodeString ItemDelimiter;

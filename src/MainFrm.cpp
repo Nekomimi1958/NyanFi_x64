@@ -3783,9 +3783,9 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 		}
 		else {
 			int plen = CurPath[FindTag].Length();
-			TPanel *stt_panel = (FindTag==0)? L_StatPanel : R_StatPanel;
-			stt_panel->Alignment = taLeftJustify;
-			stt_panel->Caption	 = tmp.cat_sprintf(_T(" (%u) %s"),
+			TPanel *pp = (FindTag==0)? L_StatPanel : R_StatPanel;
+			pp->Alignment = taLeftJustify;
+			pp->Caption	 = tmp.cat_sprintf(_T(" (%u) %s"),
 				FindCount, yen_to_delimiter(FindPath.SubString(plen, FindPath.Length() - plen + 1)).c_str());
 		}
 	}
@@ -4516,18 +4516,17 @@ void __fastcall TNyanFiForm::SetupDesign(
 
 	//ドライブ表示
 	for (int i=0; i<2; i++) {
-		TPanel *stt_panel = (i==0)? L_StatPanel : R_StatPanel;
-		stt_panel->Font->Assign(DrvInfFont);
-		stt_panel->ClientHeight = get_FontHeight(DrvInfFont, 4) + 2;
-		stt_panel->Color		= col_bgDrvInf;
-		stt_panel->Font->Color  = col_fgDrvInf;
-		stt_panel->BevelKind	= FlatInfPanel? bkNone : bkFlat;
-		stt_panel->BevelOuter	= FlatInfPanel? bvNone : bvLowered;
+		TPanel *pp = (i==0)? L_StatPanel : R_StatPanel;
+		pp->Font->Assign(DrvInfFont);
+		pp->ClientHeight = get_FontHeight(DrvInfFont, 4) + Scaled2;
+		pp->Color		 = col_bgDrvInf;
+		pp->Font->Color  = col_fgDrvInf;
+		pp->BevelKind	 = FlatInfPanel? bkNone : bkFlat;
+		pp->BevelOuter	 = FlatInfPanel? bvNone : bvLowered;
 	}
 
 	//フィルタ
 	FilterComboBox->Font->Assign(DrvInfFont);
-	FilterComboBox->Height = L_StatPanel->ClientHeight;
 
 	//イメージビュアー情報ヘッダ
 	ImgSttHeader->Align = ImgSttIsBottom? alBottom : alTop;
@@ -5959,17 +5958,17 @@ void __fastcall TNyanFiForm::SttWorkMsg(
 	UnicodeString msg,		//メッセージ (EmptyStr なら復帰)
 	int tag)
 {
-	TPanel *stt_panel = (tag==0)? L_StatPanel : R_StatPanel;
+	TPanel *pp = (tag==0)? L_StatPanel : R_StatPanel;
 	if (!msg.IsEmpty()) {
 		if (ShowSttBar) {
 			StatusBar1->Panels->Items[0]->Text = msg;
 			StatusBar1->Repaint();
 		}
 		else {
-			DriveInf[tag]		 = stt_panel->Caption;
-			stt_panel->Alignment = taLeftJustify;
-			stt_panel->Caption	 = msg;
-			stt_panel->Repaint();
+			DriveInf[tag] = pp->Caption;
+			pp->Alignment = taLeftJustify;
+			pp->Caption   = msg;
+			pp->Repaint();
 		}
 	}
 	else {
@@ -5977,8 +5976,8 @@ void __fastcall TNyanFiForm::SttWorkMsg(
 			SetSttBarInf();
 		}
 		else {
-			stt_panel->Alignment = taRightJustify;
-			stt_panel->Caption	 = DriveInf[tag];
+			pp->Alignment = taRightJustify;
+			pp->Caption   = DriveInf[tag];
 		}
 	}
 }
@@ -6143,9 +6142,9 @@ void __fastcall TNyanFiForm::SttBarWarn(UnicodeString msg)
 		}
 		//ドライブ情報部分に表示
 		else if (!ShowMsgHint) {
-			TPanel *stt_panel = (CurListTag==0)? L_StatPanel : R_StatPanel;
-			DriveInf[CurListTag] = stt_panel->Caption;
-			stt_panel->Tag		 = SHOW_WARN_TAG;
+			TPanel *pp = GetCurSttPanel();
+			DriveInf[CurListTag] = pp->Caption;
+			pp->Tag = SHOW_WARN_TAG;
 			SetDrivePanel(CurListTag, msg);
 			beep_Warn();
 			MsgHintTimer->Interval = MsgHintTime;
@@ -7113,35 +7112,35 @@ void __fastcall TNyanFiForm::SetDirCaption(int tag)
 void __fastcall TNyanFiForm::SetDrivePanel(int tag, UnicodeString msg)
 {
 	flist_stt *lst_stt = &ListStt[tag];
-	TPanel *stt_panel = (tag==0)? L_StatPanel : R_StatPanel;
+	TPanel *pp = (tag==0)? L_StatPanel : R_StatPanel;
 
 	if (lst_stt->is_IncSea || lst_stt->is_Filter) {
 		BlinkTimer->Tag = 1;
-		stt_panel->Alignment   = taLeftJustify;
-		stt_panel->Color	   = col_bgList;
-		stt_panel->Font->Color = col_fgList;
-		stt_panel->Caption	   = CurStt->is_Migemo ? " Migemo: "
-												   : (lst_stt->is_Filter? " フィルタ: " : " サーチ: ");
+		pp->Alignment	= taLeftJustify;
+		pp->Color		= col_bgList;
+		pp->Font->Color = col_fgList;
+		pp->Caption 	= CurStt->is_Migemo ? " Migemo: "
+										    : (lst_stt->is_Filter? " フィルタ: " : " サーチ: ");
 	}
 	else {
-		stt_panel->Alignment   = taRightJustify;
-		if (stt_panel->Tag==SHOW_WARN_TAG) {
-			stt_panel->Color	   = col_bgWarn;
-			stt_panel->Font->Color = col_fgDrvInf;
+		pp->Alignment   = taRightJustify;
+		if (pp->Tag==SHOW_WARN_TAG) {
+			pp->Color		= col_bgWarn;
+			pp->Font->Color = col_fgDrvInf;
 		}
 		else if (lst_stt->sel_d_cnt>0 || lst_stt->sel_f_cnt>0) {
-			stt_panel->Color	   = lst_stt->color_selItem;
-			stt_panel->Font->Color = (col_fgSelItem!=col_None)? col_fgSelItem : col_fgList;
+			pp->Color		= lst_stt->color_selItem;
+			pp->Font->Color = (col_fgSelItem!=col_None)? col_fgSelItem : col_fgList;
 		}
 		else {
-			stt_panel->Color	   = lst_stt->color_bgDrvInf;
-			stt_panel->Font->Color = lst_stt->color_fgDrvInf;
+			pp->Color		= lst_stt->color_bgDrvInf;
+			pp->Font->Color = lst_stt->color_fgDrvInf;
 		}
 	}
 
 	if (!msg.IsEmpty()) {
-		stt_panel->Caption = msg;
-		stt_panel->Repaint();
+		pp->Caption = msg;
+		pp->Repaint();
 	}
 }
 
@@ -10673,11 +10672,12 @@ void __fastcall TNyanFiForm::FileListKeyDown(TObject *Sender, WORD &Key, TShiftS
 	TStringList *lst = GetCurList(true);
 
 	//警告メッセージ/背景色をクリア
-	TPanel *stt_panel = (CurListTag==0)? L_StatPanel : R_StatPanel;
-	if (stt_panel->Tag==SHOW_WARN_TAG) {
+	TPanel *pp = GetCurSttPanel();
+	if (pp->Tag==SHOW_WARN_TAG) {
 		SetDrivePanel(CurListTag, DriveInf[CurListTag]);
-		stt_panel->Tag = 0;
+		pp->Tag = 0;
 	}
+
 	if (StatusBar1->Tag==SHOW_WARN_TAG) {
 		StatusBar1->Tag = 0;
 		StatusBar1->Repaint();
@@ -10870,7 +10870,7 @@ int __fastcall TNyanFiForm::set_IncSeaStt(
 void __fastcall TNyanFiForm::FileListIncSearch(UnicodeString keystr)
 {
 	TListBox     *lp = FileListBox[CurListTag];
-	TPanel   *stt_pp = (CurListTag==0)? L_StatPanel : R_StatPanel;
+	TPanel   *stt_pp = GetCurSttPanel();
 	TStringList *lst = GetCurList();
 	file_rec    *cfp = GetCurFrecPtr();
 	UnicodeString cur_fnam = is_selectable(cfp)? cfp->f_name : EmptyStr;
@@ -16225,16 +16225,18 @@ void __fastcall TNyanFiForm::FilterActionExecute(TObject *Sender)
 
 	SetDrivePanel(CurListTag);
 
-	TPanel *stt_pp = (CurListTag==0)? L_StatPanel : R_StatPanel;
-	FilterComboBox->Left  = get_CharWidth_Font(DrvInfFont, 10);
-	FilterComboBox->Width = std::max(stt_pp->ClientWidth - get_CharWidth_Font(FilterComboBox->Font, 34), 60);
-																	//" フィルタ   999999 Files Matched "
-	FilterComboBox->Text	= EmptyStr;
-	FilterComboBox->Parent	= stt_pp;
-	FilterComboBox->Items->Assign(FilterHistory);
-	FilterComboBox->Visible = true;
-	FilterComboBox->SetFocus();
-	SetDarkWinTheme(FilterComboBox);
+	TComboBox *cp = FilterComboBox;
+	TPanel    *pp = GetCurSttPanel();
+	cp->Width	= std::max(pp->ClientWidth - get_CharWidth_Font(cp->Font, 26), 60);
+	cp->Left	= get_CharWidth_Font(DrvInfFont, 10);
+	cp->Top		= 1;
+	cp->Text	= EmptyStr;
+	cp->Parent	= pp;
+	cp->Items->Assign(FilterHistory);
+	cp->Visible = true;
+	cp->SetFocus();
+	SetDarkWinTheme(cp);
+	pp->ClientHeight = std::max(get_FontHeight(DrvInfFont, 4) + Scaled2, cp->Height + 1);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FilterComboBoxExit(TObject *Sender)
@@ -16292,11 +16294,11 @@ void __fastcall TNyanFiForm::FilterComboBoxChange(TObject *Sender)
 	FlScrPanel[CurListTag]->UpdateKnob();
 
 	//結果表示
-	TPanel *stt_pp = (CurListTag==0)? L_StatPanel : R_StatPanel;
+	TPanel *pp = GetCurSttPanel();
 	UnicodeString stt_str = " フィルタ";
 	if (match_cnt>0) stt_str.cat_sprintf(_T("\t%u/%u"), lp->ItemIndex + 1, match_cnt);
-	stt_pp->Caption = stt_str;
-	stt_pp->Repaint();
+	pp->Caption = stt_str;
+	pp->Repaint();
 
 	//ディレクトリ比較結果を反対側に反映
 	if (IsDiffList()) CurToOppDiffList();
@@ -16333,12 +16335,12 @@ void __fastcall TNyanFiForm::FilterComboBoxKeyDown(TObject *Sender, WORD &Key, T
 	else return;
 
 	if (csr_ud) {
-		TPanel *stt_pp = (CurListTag==0)? L_StatPanel : R_StatPanel;
+		TPanel *pp = GetCurSttPanel();
 		UnicodeString stt_str = " フィルタ";
 		int match_cnt = GetMatchCount(GetCurList());
 		if (match_cnt>0) stt_str.cat_sprintf(_T("\t%u/%u"), lp->ItemIndex + 1, match_cnt);
-		stt_pp->Caption = stt_str;
-		stt_pp->Repaint();
+		pp->Caption = stt_str;
+		pp->Repaint();
 
 		lp->Invalidate();
 		SetFileInf();
@@ -17984,7 +17986,7 @@ void __fastcall TNyanFiForm::IncSearchActionExecute(TObject *Sender)
 		CurStt->is_Migemo = (CurStt->is_Filter? LastMigemoModeF : LastMigemoMode);
 
 	SetDrivePanel(CurListTag);
-	UserModule->SetBlinkTimer((CurListTag==0)? L_StatPanel : R_StatPanel);
+	UserModule->SetBlinkTimer(GetCurSttPanel());
 }
 
 //---------------------------------------------------------------------------
@@ -18104,6 +18106,7 @@ void __fastcall TNyanFiForm::ExitIncSearch()
 	if (is_filter) {
 		CloseIME(Handle);
 		FilterComboBox->Visible = false;
+		GetCurSttPanel()->ClientHeight = get_FontHeight(DrvInfFont, 4) + Scaled2;
 	}
 
 	FlScrPanel[CurListTag]->KeyWordChanged(EmptyStr, 0);

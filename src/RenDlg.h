@@ -229,6 +229,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RenListComboBoxChange(TObject *Sender);
 	void __fastcall CnvChSEditChange(TObject *Sender);
 	void __fastcall RenPageControlDrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
+	void __fastcall EtcNameEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

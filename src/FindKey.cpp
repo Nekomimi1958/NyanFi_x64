@@ -120,10 +120,4 @@ void __fastcall TFindKeyDlg::CancelBtnClick(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TFindKeyDlg::Shape1MouseDown(TObject *Sender, TMouseButton Button,
-          TShiftState Shift, int X, int Y)
-{
-//
-}
-//---------------------------------------------------------------------------
 

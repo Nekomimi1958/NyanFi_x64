@@ -491,6 +491,7 @@ object RenameDlg: TRenameDlg
                 TabOrder = 0
                 OnChange = RenameEditChange
                 OnExit = RenameEditExit
+                OnKeyDown = EtcNameEditKeyDown
               end
               object SerNoEdit: TEdit
                 Tag = 11
@@ -551,6 +552,7 @@ object RenameDlg: TRenameDlg
                 TabOrder = 0
                 OnChange = RenameEditChange
                 OnExit = RenameEditExit
+                OnKeyDown = EtcNameEditKeyDown
               end
               object ExtEdit: TEdit
                 Tag = 14
@@ -691,6 +693,7 @@ object RenameDlg: TRenameDlg
             OnChange = ReplaceComboChange
             OnEnter = SrcStrComboBoxEnter
             OnExit = SrcStrComboBoxExit
+            OnKeyDown = EtcNameEditKeyDown
           end
           object RepStrComboBox: TComboBox
             Left = 42
@@ -701,6 +704,7 @@ object RenameDlg: TRenameDlg
             DropDownCount = 20
             TabOrder = 1
             OnChange = ReplaceComboChange
+            OnKeyDown = EtcNameEditKeyDown
           end
           object OnlyBaseCheckBox: TCheckBox
             Left = 240
@@ -857,6 +861,7 @@ object RenameDlg: TRenameDlg
             OnChange = Mp3FmtComboBoxChange
             OnEnter = SrcStrComboBoxEnter
             OnExit = SrcStrComboBoxExit
+            OnKeyDown = EtcNameEditKeyDown
           end
           object Id3Btn2: TButton
             Tag = 1

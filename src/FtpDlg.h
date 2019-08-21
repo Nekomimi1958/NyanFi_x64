@@ -88,8 +88,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefDirBtnClick(TObject *Sender);
 	void __fastcall RefSoundBtnClick(TObject *Sender);
 	void __fastcall TestSoundBtnClick(TObject *Sender);
-	void __fastcall PageControl1DrawTab(TCustomTabControl *Control, int TabIndex,
-          const TRect &Rect, bool Active);
+	void __fastcall PageControl1DrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 
 private:	// ユーザー宣言
 	TStringList *HostList;
