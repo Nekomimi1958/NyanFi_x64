@@ -195,7 +195,8 @@ void add_list_errmsg(
 //---------------------------------------------------------------------------
 //テキストファイルの先頭行を取得
 //---------------------------------------------------------------------------
-UnicodeString get_top_line(UnicodeString fnam)
+UnicodeString get_top_line(UnicodeString fnam,
+	int code_page)	//コードページ	(default = 0 : 取得)
 {
 	UnicodeString ret_str;
 	try {
@@ -206,8 +207,10 @@ UnicodeString get_top_line(UnicodeString fnam)
 		std::unique_ptr<TMemoryStream> ms(new TMemoryStream());
 		bool has_bom;
 		ms->CopyFrom(fs.get(), std::min<__int64>(fs->Size, TXT_DETECT_SIZE));
-		int code_page = get_MemoryCodePage(ms.get(), &has_bom);
-		if (code_page<=0) Abort();
+		if (code_page==0) {
+			code_page = get_MemoryCodePage(ms.get(), &has_bom);
+			if (code_page<=0) Abort();
+		}
 
 		//先頭行のサイズ取得
 		bool is_BE = (code_page==1201);
@@ -2332,6 +2335,10 @@ void get_ADS_Inf(UnicodeString fnam, TStringList *lst)
 					catch (...) {
 						;
 					}
+				}
+				else if (USAME_TI(snam, "thumbnail.txt")) {
+					UnicodeString lbuf = get_top_line(fnam + ":" + snam, 65001);
+					if (!lbuf.IsEmpty()) add_PropLine(null_TCHAR, lbuf, lst);
 				}
 			}
 		} while (::FindNextStreamW(hFS, &sd));

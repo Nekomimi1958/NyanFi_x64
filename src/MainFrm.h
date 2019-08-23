@@ -2039,7 +2039,7 @@ private:	// ƒ†[ƒU[éŒ¾
 		}
 	}
 
-	void __fastcall WmNyanFiThumbnail(TMessage &msg) { if (ThumbnailGrid->Visible) ThumbnailGrid->Repaint(); }
+	void __fastcall WmNyanFiThumbnail(TMessage &msg);
 	void __fastcall WmNyanFiClpCopied(TMessage &msg);
 	void __fastcall WmNyanFiLockKey(TMessage &msg);
 

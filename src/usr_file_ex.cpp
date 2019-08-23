@@ -788,7 +788,7 @@ bool is_ADS_name(UnicodeString fnam)
 int delete_ADS(
 	UnicodeString fnam,	//[i] ファイル名
 	bool force, 		//読込専用でも強制的に変更		(default = false)
-	bool zi_only,		//Zone.Identifier のみを削除	(default = false)
+	UnicodeString mask,	//マスク						(default = "*")
 	TStringList *lst)	//[o] 削除したストリーム名		(default = NULL)
 {
 	int res = -1;
@@ -804,7 +804,7 @@ int delete_ADS(
 		do {
 			UnicodeString snam = get_tkn(sd.cStreamName, ":$DATA");
 			remove_top_s(snam, ':');
-			if (!snam.IsEmpty() && (!zi_only || USAME_TI(snam, "Zone.Identifier")) ) {
+			if (!snam.IsEmpty() && str_match(mask, snam)) {
 				if (lst) lst->Add(snam);
 				res = ::DeleteFile(cv_ex_filename(fnam + ":" + snam).c_str())? 1 : 0;
 				if (res==0) lst->Text = SysErrorMessage(GetLastError());

@@ -35,6 +35,9 @@
 この設定は、ファイラーのイメージプレビューやファイルリストの背景画像表示にも適用されます。<br>
 なおサブビュアーに対しては適用されません(<a href="hid00007.htm#SubViewer">→ SubViewer</a>)。<br>
 <a href="hid00007.htm#SetInterpolation">→ SetInterpolation</a><br>
+<div class="spc_box">
+サムネイルを作成する際の縮小アルゴリズムについては、後述の <a href="#Thumbnail">サムネイル</a> - 「<b>縮小</b>」で指定してください。<br>
+</div>
 
 <dt class="no_bg_indent1">フィット表示時の余白幅 <img src="edit.png" alt="" border=0>
 <dd>フィット表示している場合の余白幅をピクセル単位で指定します。
@@ -116,6 +119,9 @@
 <dd>サムネイルの大きさをピクセル単位で指定します。<br>
 90～160 くらいがよいでしょう。ファイルから取得されたサムネイルがこのサイズよりも小さい場合、拡大はされません。
 
+<dt class="no_bg_indent1">縮小 <img src="combobox.png" alt="" border=0>
+<dd>サムネイルを作成する際の縮小アルゴリズムを指定を選択します。<br>
+
 <dt class="no_bg_indent1">境界線幅 <img src="edit.png" alt="" border=0>
 <dd>サムネイル間の境界線の幅をピクセル単位で指定します。<br>
 境界線の色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。
@@ -141,6 +147,28 @@
 
 <dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> アーカイブ内では一括取得しない
 <dd>アーカイブ内の場合、サムネイルを一括取得しません。画像を表示させるごとに、そのサムネイルを追加表示していきます。<br>
+
+<dt class="no_bg_indent1" id="ThumbCache"><img src="chkbox.png" alt="" border=0> 代替データストリームにキャッシュ
+<dd>取得したサムネイルを、その画像ファイルの代替データストリームに保存します(<b>NTFS</b> の場合のみ)。<br>
+<b>thumbnail.jpg</b> にサムネイル画像、<b>thumbnail.txt</b> にサムネイル情報(表示文字列、タイムスタンプ、サムネイルサイズ、アルゴリズム)が保存されます。<br>
+画像のタイムスタンプやサムネイル設定が変更されていると、サムネイルを利用しようとしたときに自動的にキャッシュが作り直されます。<br>
+アーカイブ内画像については、一時解凍されたファイルの代替データストリームに保存されるため、アーカイブから抜けるとキャッシュも破棄されます。<br>
+なお、サムネイルサイズよりも小さな画像についてはキャッシュが作られません。<br>
+<div class="spc_box">
+キャッシュデータを削除したい場合は、画像ファイルに対して <a href="hid00005.htm#DeleteADS">DeleteADS</a>_TC コマンドを実行してください。<br>
+</div>
+
+<dt class="no_bg_indent1">キャッシュしないパス(前方一致) <img src="edit.png" alt="" border=0>
+<dd>
+ここで指定したパス以下では、キャッシュの保存を行いません。<br>
+ドライブ名から始まるフルパスで指定します。<b>;</b> (セミコロン)で区切って複数指定可能です。前方一致なので、完全なパスの形式になっていなくてもかまいません。例えば &quot;<b>\\</b>&quot; を指定すると、すべてのUNCパスにマッチします。<br>
+また、通常のパス指定以外に以下の書式文字列によるドライブ指定も可能です。<br>
+<div class="indent1">
+<b>$R</b>　リムーバブル・メディア<br>
+<b>$N</b>　ネットワーク・ドライブ<br>
+<b>$U</b>　USB接続のすべてのドライブ<br>
+<b>$UR</b>　USB接続のリムーバブル・メディア<br>
+</div>
 <br><br>
 
 <dt id="SetMark"><img src="grpbox.png" alt="" border=0> 閉じた時に栞マークを設定

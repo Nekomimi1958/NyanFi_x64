@@ -113,7 +113,7 @@ int  set_SttBarPanelWidth(TStatusBar *sp, int idx, UnicodeString s);
 
 void clear_GridRow(TStringGrid *gp, int row, int col = 0);
 int  get_GridIndex(TStringGrid *gp, int max_count);
-void set_GridIndex(TStringGrid *gp, int idx, int max_count);
+void set_GridIndex(TStringGrid *gp, int idx, int max_count, bool center = false);
 
 void ListBoxCursorDown(TListBox *lp);
 void ListBoxCursorDown(TListBox *lp, int n);

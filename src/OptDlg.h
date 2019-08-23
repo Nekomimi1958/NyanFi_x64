@@ -190,6 +190,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *AutoHotkeyCheckBox;
 	TCheckBox *BeepTopEndCheckBox;
 	TCheckBox *BinMemMapedCheckBox;
+	TCheckBox *CacheThumbADSCheckBox;
 	TCheckBox *CheckUncCheckBox;
 	TCheckBox *ClickableUrlCheckBox;
 	TCheckBox *CloseOtherCheckBox;
@@ -412,6 +413,7 @@ __published:	// IDE で管理されるコンポーネント
 	TComboBox *SizeFmtComboBox;
 	TComboBox *StdCmdComboBox;
 	TComboBox *TabStyleComboBox;
+	TComboBox *ThumbOptComboBox;
 	TComboBox *VirDrvComboBox;
 	TComboBox *WheelBtnF0ComboBox;
 	TComboBox *WheelBtnF1ComboBox;
@@ -629,6 +631,7 @@ __published:	// IDE で管理されるコンポーネント
 	TLabeledEdit *MinShowTimeEdit;
 	TLabeledEdit *ModalAlphaEdit;
 	TLabeledEdit *MsgHintTimeEdit;
+	TLabeledEdit *NoCachePathEdit;
 	TLabeledEdit *NoDirHistPathEdit;
 	TLabeledEdit *NoImgPrvPathEdit;
 	TLabeledEdit *NoInfPathEdit;

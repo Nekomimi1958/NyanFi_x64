@@ -674,7 +674,7 @@ void get_PrmList(
 		if (USAME_TI(cmd, "CurrToOpp")) params += "TO : 反対側へ移動\n";
 	}
 	else if (USAME_TI(cmd, "DeleteADS")) {
-		params = "\nZI : Zone.Identifier のみ維持\n";
+		params = "\nZI : Zone.Identifier のみ削除\nTC : サムネイルキャッシュのみ削除\n";
 	}
 	else if (USAME_TI(cmd, "DelJpgExif")) {
 		params = "\nKT : タイムスタンプを維持\n";
@@ -944,6 +944,7 @@ void get_PrmList(
 			_T("L : バイリニア\n")
 			_T("C : バイキュービック\n")
 			_T("F : ファントリサンプリング\n")
+			_T("H : 高品質バイキュービック\n")
 			_T("X : 補間しない\n"));
 	}
 	else if (USAME_TI(cmd, "SetPathMask")) {

@@ -264,9 +264,6 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		_T("表示サイズにストレッチ\n")
 		_T("表示サイズに合わせて切り出し\n"));
 
-	set_ComboBoxText(ScaleOptComboBox,
-		_T("ニアレストネイバー\nバイリニア\nバイキュービック\nファントリサンプリング\n補間しない\n"));
-
 	//マウスホイール
 	set_ComboBoxText(WheelCmdF0ComboBox,
 		_T("AlphaBlend_+32/AlphaBlend_-32\n")
@@ -422,6 +419,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	NoWatchPathEdit->Hint	= hntstr;
 	NoInfPathEdit->Hint 	= hntstr;
 	NoImgPrvPathEdit->Hint	= hntstr;
+	NoCachePathEdit->Hint	= hntstr;
 	InsHrClsEdit->Hint		= hntstr;
 	DelBlkClsEdit->Hint 	= hntstr;
 	DelBlkIdEdit->Hint		= hntstr;
@@ -505,6 +503,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	FExtImgPrvEdit->Tag 		= (int)&FExtImgPrv;
 	FExtNoImgPrvEdit->Tag		= (int)&FExtNoImgPrv;
 	FExtNoIViewEdit->Tag		= (int)&FExtNoIView;
+	NoCachePathEdit->Tag		= (int)&NoCachePath;
 	MarkPathEdit->Tag			= (int)&MarkImgPath;
 	MarkFextEdit->Tag			= (int)&MarkImgFExt;
 	MarkMemoEdit->Tag			= (int)&MarkImgMemo;
@@ -713,6 +712,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	ThumbTagCheckBox->Tag		= (int)&ShowThumbTags;
 	ThumbFExtCheckBox->Tag		= (int)&ShowThumbFExt;
 	NotThumbIfArcCheckBox->Tag	= (int)&NotThumbIfArc;
+	CacheThumbADSCheckBox->Tag	= (int)&CacheThumbADS;
 	LoopCurCheckBox->Tag		= (int)&LoopViewCursor;
 	HintTopEndCheckBox->Tag 	= (int)&HintTopEndImg;
 	BeepTopEndCheckBox->Tag 	= (int)&BeepTopEndImg;
@@ -811,6 +811,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	BgImgSubModeComboBox->Tag	= (int)&BgImgSubMode;
 
 	ScaleOptComboBox->Tag		= (int)&WicScaleOpt;
+	ThumbOptComboBox->Tag		= (int)&ThumbScaleOpt;
 	OpenByModeComboBox->Tag 	= (int)&OpenByMode;
 	DblClickFlComboBox->Tag 	= (int)&DblClickFlMode;
 	DefDropComboBox->Tag		= (int)&DefDropMode;
@@ -924,6 +925,9 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	set_ListBoxItemHi(EventListBox);
 	set_ListBoxItemHi(PrtDirListBox);
 	set_ListBoxItemHi(VirDrvListBox);
+
+	ScaleOptComboBox->Items->Assign(InterpolationList);
+	ThumbOptComboBox->Items->Assign(InterpolationList);
 
 	InitializeListHeader(ExtMenuHeader, _T("キャプション|エイリアス|設定"), Font);
 	THeaderSections *sp = ExtMenuHeader->Sections;
@@ -4551,6 +4555,7 @@ void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 	InvColIfEmpty(NoImgPrvPathEdit);
 	InvColIfEmpty(FExtImgPrvEdit);
 	InvColIfEmpty(FExtNoImgPrvEdit);
+	InvColIfEmpty(NoCachePathEdit);
 	InvColIfEmpty(ExtTxViewerEdit);
 	ExtTxViewerFmtEdit->Color = ExtTxViewerEdit->Color;
 

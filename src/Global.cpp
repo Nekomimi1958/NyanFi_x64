@@ -287,6 +287,7 @@ bool ShowThumbExif;				//サムネイルに簡易Exif情報を表示
 bool ShowThumbTags;				//サムネイルにタグを表示
 bool ShowThumbFExt;				//サムネイルに拡張子を強調表示
 bool NotThumbIfArc;				//アーカイブ内は一括取得しない
+bool CacheThumbADS;				//サムネイルをADSにキャッシュする
 bool LoopViewCursor;			//イメージビュアーでカーソルをループ移動
 bool HintTopEndImg;				//先頭・最後でヒント表示
 bool BeepTopEndImg;				//警告音
@@ -372,6 +373,7 @@ UnicodeString FExtNoImgPrv;		//イメージプレビューを行わない拡張子
 UnicodeString NoImgPrvPath;		//イメージプレビューを行わないパスリスト
 
 UnicodeString FExtNoIView;		//イメージビュアーで閲覧しない拡張子
+UnicodeString NoCachePath;		//サムネイルキャッシュしないパス
 
 UnicodeString DrvInfFmtR;		//ドライブ情報の書式 : ルート
 UnicodeString DrvInfFmtS;		//ドライブ情報の書式 : 選択時
@@ -694,6 +696,7 @@ TStringList *WebSeaHistory;		//Web検索語の履歴
 TStringList *LatLngHistory;		//緯度経度検索の履歴
 TStringList *HeadlineList;		//見出しリスト (拡張子=正規表現パターン)
 TStringList *ZoomRatioList;		//ズーム倍率リスト
+TStringList *InterpolationList;	//縮小・拡大アルゴリズムのリスト
 TStringList *CnvCharList;		//禁止文字／ユーザ定義文字変換リスト
 TStringList *RenCmdFileList;	//改名したコマンドファイルのリスト
 TStringList *RenArcFileList;	//改名したアーカイブファイルのリスト
@@ -991,6 +994,7 @@ int  ImgGridVertN;				//グリッドの縦分割数
 int  MinShowTime;				//最小表示タイム
 int  ThumbnailSize;				//サムネイルのサイズ
 int  ThumbBdrWidth;				//サムネイルの境界線幅
+int  ThumbScaleOpt;				//サムネイルの縮小アルゴリズム
 int  ThumbnailPos;				//サムネイルの表示位置
 int  ImgDblMargin;				//見開き間隔
 
@@ -1400,7 +1404,13 @@ void InitializeGlobal()
 	ZoomRatioList = CreStringList();
 	ZoomRatioList->Text = "10\n25\n50\n75\n100\n150\n200\n300\n400\n";
 
-	//タスクコマンド名リストを作成
+	//縮小・拡大アルゴリズムのリスト
+	InterpolationList = CreStringList();
+	InterpolationList->Text = IsWindows10OrGreater()?
+		"ニアレストネイバー\nバイリニア\nバイキュービック\nファント・リサンプリング\n高品質バイキュービック\n補間しない\n" :
+		"ニアレストネイバー\nバイリニア\nバイキュービック\nファント・リサンプリング\n補間しない\n";
+
+	//タスクコマンド名リスト
 	TaskCmdList = CreStringList();
 	TaskCmdList->Text =
 		"CPY=コピー\n"
@@ -1467,6 +1477,7 @@ void InitializeGlobal()
 		{_T("FExtNoImgPrv=\"\""),					(TObject*)&FExtNoImgPrv},
 		{_T("NoImgPrvPath=\"\""),					(TObject*)&NoImgPrvPath},
 		{_T("FExtNoIView=\"\""),					(TObject*)&FExtNoIView},
+		{_T("NoCachePath=\"\""),					(TObject*)&NoCachePath},
 		{_T("MarkImgPath=\"\""),					(TObject*)&MarkImgPath},
 		{_T("MarkImgFExt=\".jpg\""),				(TObject*)&MarkImgFExt},
 		{_T("MarkImgMemo=\"しおり\""),				(TObject*)&MarkImgMemo},
@@ -1598,8 +1609,9 @@ void InitializeGlobal()
 		{_T("MinShowTime=0"),				(TObject*)&MinShowTime},
 		{_T("ThumbnailSize=120"),			(TObject*)&ThumbnailSize},
 		{_T("ThumbBdrWidth=3"),				(TObject*)&ThumbBdrWidth},
+		{_T("ThumbScaleOpt=3"),				(TObject*)&ThumbScaleOpt},
 		{_T("ImgDblMargin=0"),				(TObject*)&ImgDblMargin},
-		{_T("WicScaleOpt=0"),				(TObject*)&WicScaleOpt},
+		{_T("WicScaleOpt=3"),				(TObject*)&WicScaleOpt},
 		{_T("MaxLogFiles=5"),				(TObject*)&MaxLogFiles},
 		{_T("BatLowerLimit=50"),			(TObject*)&BatLowerLimit},
 		{_T("ScrBarStyle=0"),				(TObject*)&ScrBarStyle},
@@ -1728,6 +1740,7 @@ void InitializeGlobal()
 		{_T("ShowThumbTags=false"),			(TObject*)&ShowThumbTags},
 		{_T("ShowThumbFExt=false"),			(TObject*)&ShowThumbFExt},
 		{_T("NotThumbIfArc=true"),			(TObject*)&NotThumbIfArc},
+		{_T("CacheThumbADS=false"),			(TObject*)&CacheThumbADS},
 		{_T("LoopViewCursor=false"),		(TObject*)&LoopViewCursor},
 		{_T("HintTopEndImg=false"),			(TObject*)&HintTopEndImg},
 		{_T("BeepTopEndImg=false"),			(TObject*)&BeepTopEndImg},
@@ -5457,6 +5470,15 @@ drive_info *get_DriveInfo(
 	return dp;
 }
 //---------------------------------------------------------------------------
+//NTFSドライブか?
+//---------------------------------------------------------------------------
+bool is_NTFS_Drive(UnicodeString dnam)
+{
+	drive_info *dp = get_DriveInfo(dnam);
+	return (dp && dp->is_NTFS);
+}
+
+//---------------------------------------------------------------------------
 //ボリューム情報を取得
 //戻り値: ボリューム名
 //---------------------------------------------------------------------------
@@ -7809,7 +7831,7 @@ void GetFileInfList(
 					if (!test_word_i("Remote URL", HideInfItems->Values["\\"]))
 						add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), i_list);
 
-					get_GitInf(rpnam, i_list, force, is_NoInfPath(fp, NoInfPath));
+					get_GitInf(rpnam, i_list, force, is_NoInfPath(fp->p_name, NoInfPath));
 				}
 			}
 
@@ -7855,7 +7877,7 @@ void GetFileInfList(
 	UnicodeString msg;
 	if (!force) {
 		//ファイル情報を取得しないパスのチェック
-		if (is_NoInfPath(fp, NoInfPath)) return;
+		if (is_NoInfPath(fp->p_name, NoInfPath)) return;
 		//ファイル情報を取得する拡張子のチェック
 		if (!FExtGetInf.IsEmpty() && !test_FileExt(fp->f_ext, FExtGetInf)) return;
 		//ファイル情報を取得しない拡張子のチェック
@@ -8650,28 +8672,28 @@ bool is_Processing(
 //取得が抑止されているパスか？
 //---------------------------------------------------------------------------
 bool is_NoInfPath(
-	file_rec *fp,
+	UnicodeString pnam,
 	UnicodeString no_path)	//パスリスト (環境変数、%ExePath% 対応)
 {
 	TStringDynArray path_lst = split_strings_semicolon(no_path);
 	for (int i=0; i<path_lst.Length; i++) {
-		UnicodeString pnam = path_lst[i];
-		if (remove_top_Dollar(pnam)) {
-			if (pnam.IsEmpty()) continue;
-			pnam = pnam.UpperCase();
-			UnicodeString dstr = get_drive_str(fp->p_name);
-			if (StartsStr("\\\\", pnam)) continue;
+		UnicodeString lnam = path_lst[i];
+		if (remove_top_Dollar(lnam)) {
+			if (lnam.IsEmpty()) continue;
+			lnam = lnam.UpperCase();
+			UnicodeString dstr = get_drive_str(pnam);
+			if (StartsStr("\\\\", lnam)) continue;
 			int idx = DriveInfoList->IndexOf(dstr);
 			if (idx==-1) continue;
 			drive_info *dp = (drive_info *)DriveInfoList->Objects[idx];
-			WideChar c0 = pnam[1];
+			WideChar c0 = lnam[1];
 			if (c0=='H' && dp->drv_type==DRIVE_FIXED && !dp->is_SSD && !dp->is_RAM) return true;
 			if (c0=='C' && dp->drv_type==DRIVE_CDROM)		return true;
 			if (c0=='N' && dp->drv_type==DRIVE_REMOTE)		return true;
 			if (c0=='R' && dp->drv_type==DRIVE_REMOVABLE)	return true;
 			if (c0=='U' && USAME_TI(dp->bus_type, "USB")) {
-				if (pnam.Length()>1) {
-					WideChar c1 = pnam[2];
+				if (lnam.Length()>1) {
+					WideChar c1 = lnam[2];
 					if (c0=='H' && dp->drv_type==DRIVE_FIXED && !dp->is_SSD) return true;
 					if (c1=='C' && dp->drv_type==DRIVE_CDROM)		return true;
 					if (c1=='R' && dp->drv_type==DRIVE_REMOVABLE)	return true;
@@ -8680,9 +8702,9 @@ bool is_NoInfPath(
 			}
 		}
 		else {
-			pnam = IncludeTrailingPathDelimiter(pnam);
-			if (pnam.IsEmpty()) continue;
-			if (StartsText(cv_env_str(pnam), fp->p_name)) return true;
+			lnam = IncludeTrailingPathDelimiter(lnam);
+			if (lnam.IsEmpty()) continue;
+			if (StartsText(cv_env_str(lnam), pnam)) return true;
 		}
 	}
 	return false;
@@ -9162,6 +9184,37 @@ int load_ImageFile(
 		o_bmp->Canvas->Unlock();
 	}
 	return res;
+}
+
+//---------------------------------------------------------------------------
+//サムネイルキャッシュを取得
+//戻り値: ファイル名 [TAB] 表示情報
+//---------------------------------------------------------------------------
+UnicodeString load_ImageThumbCache(UnicodeString fnam, Graphics::TBitmap *o_bmp)
+{
+	UnicodeString ibuf;
+	if (is_NTFS_Drive(fnam) && file_exists(fnam)) {
+		UnicodeString fnam_t = fnam + ":thumbnail.jpg";
+		UnicodeString fnam_x = fnam + ":thumbnail.txt";
+		if (file_exists(fnam_t) && file_exists(fnam_x)
+			&& load_ImageFile(fnam_t, o_bmp, WICIMG_THUMBNAIL, col_bgImage))
+		{
+			//表示情報 [TAB] タイムスタンプ [TAB] サムネイルサイズ [TAB] アルゴリズム
+			TStringDynArray itm_buf = split_strings_tab(get_top_line(fnam_x, 65001));
+			if (itm_buf.Length==4
+				&& SameStr(itm_buf[1], FormatDateTime("yyyymmddhhnnss", get_file_age(fnam)))
+				&& (itm_buf[2].ToIntDef(0)==ThumbnailSize)
+				&& (itm_buf[3].ToIntDef(0)==ThumbScaleOpt))
+			{
+				ibuf = fnam + "\t" + itm_buf[0];
+			}
+			else {
+				o_bmp->Handle = NULL;
+			}
+		}
+	}
+
+	return ibuf;
 }
 
 //---------------------------------------------------------------------------
@@ -11055,6 +11108,13 @@ bool saveto_TextFile(UnicodeString fnam, TStrings *lst, int enc_idx)
 bool saveto_TextUTF8(UnicodeString fnam, TStrings *lst)
 {
 	return saveto_TextFile(fnam, lst, TEncoding::UTF8);
+}
+//---------------------------------------------------------------------------
+bool saveto_TextUTF8(UnicodeString fnam, UnicodeString s)
+{
+	std::unique_ptr<TStringList> fbuf(new TStringList());
+	fbuf->Text = s;
+	return saveto_TextFile(fnam, fbuf.get(), TEncoding::UTF8);
 }
 
 //---------------------------------------------------------------------------

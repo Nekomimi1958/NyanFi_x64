@@ -3917,7 +3917,7 @@ object OptionDlg: TOptionDlg
       end
       object IniModeIRadioGroup: TRadioGroup
         Left = 10
-        Top = 323
+        Top = 312
         Width = 434
         Height = 46
         Caption = #38283#12356#12383#26178#12398#21021#26399#29366#24907
@@ -4054,18 +4054,29 @@ object OptionDlg: TOptionDlg
       end
       object ThumbGroupBox: TGroupBox
         Left = 10
-        Top = 390
+        Top = 370
         Width = 434
-        Height = 136
+        Height = 201
         Caption = #12469#12512#12493#12452#12523
         TabOrder = 20
+        DesignSize = (
+          434
+          201)
+        object TLabel
+          Left = 109
+          Top = 23
+          Width = 24
+          Height = 13
+          Alignment = taRightJustify
+          Caption = #32302#23567
+        end
         object ThumbScrCheckBox: TCheckBox
           Left = 10
-          Top = 53
+          Top = 51
           Width = 179
           Height = 17
           Caption = #12473#12463#12525#12540#12523#12496#12540#12434#34920#31034
-          TabOrder = 2
+          TabOrder = 3
         end
         object ThumbSizeEdit: TLabeledEdit
           Left = 48
@@ -4081,7 +4092,7 @@ object OptionDlg: TOptionDlg
           TabOrder = 0
         end
         object ThumbBdrEdit: TLabeledEdit
-          Left = 181
+          Left = 373
           Top = 20
           Width = 50
           Height = 21
@@ -4091,47 +4102,74 @@ object OptionDlg: TOptionDlg
           EditLabel.Caption = #22659#30028#32218#24133
           LabelPosition = lpLeft
           NumbersOnly = True
-          TabOrder = 1
+          TabOrder = 2
         end
         object ThumbFExtCheckBox: TCheckBox
           Left = 290
-          Top = 77
+          Top = 75
           Width = 108
           Height = 17
           Caption = #25313#24373#23376#24375#35519
-          TabOrder = 6
+          TabOrder = 7
         end
         object ThumbExifCheckBox: TCheckBox
           Left = 104
-          Top = 77
+          Top = 75
           Width = 85
           Height = 17
           Caption = 'Exif'#24773#22577
-          TabOrder = 4
+          TabOrder = 5
         end
         object ThumbNameCheckBox: TCheckBox
           Left = 10
-          Top = 77
+          Top = 75
           Width = 84
           Height = 17
           Caption = #12501#12449#12452#12523#21517
-          TabOrder = 3
+          TabOrder = 4
         end
         object NotThumbIfArcCheckBox: TCheckBox
           Left = 10
-          Top = 101
+          Top = 99
           Width = 223
           Height = 17
           Caption = #12450#12540#12459#12452#12502#20869#12391#12399#19968#25324#21462#24471#12375#12394#12356
-          TabOrder = 7
+          TabOrder = 8
         end
         object ThumbTagCheckBox: TCheckBox
           Left = 197
-          Top = 77
+          Top = 75
           Width = 85
           Height = 17
           Caption = #12479#12464
-          TabOrder = 5
+          TabOrder = 6
+        end
+        object CacheThumbADSCheckBox: TCheckBox
+          Left = 10
+          Top = 130
+          Width = 223
+          Height = 17
+          Caption = #20195#26367#12487#12540#12479#12473#12488#12522#12540#12512#12395#12461#12515#12483#12471#12517
+          TabOrder = 9
+        end
+        object NoCachePathEdit: TLabeledEdit
+          Left = 26
+          Top = 168
+          Width = 397
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          EditLabel.Width = 147
+          EditLabel.Height = 13
+          EditLabel.Caption = #12461#12515#12483#12471#12517#12375#12394#12356#12497#12473'('#21069#26041#19968#33268')'
+          TabOrder = 10
+        end
+        object ThumbOptComboBox: TComboBox
+          Left = 137
+          Top = 20
+          Width = 170
+          Height = 21
+          Style = csDropDownList
+          TabOrder = 1
         end
       end
       object ToolBarISideCheckBox: TCheckBox

@@ -436,6 +436,7 @@ extern bool ShowThumbExif;
 extern bool ShowThumbTags;
 extern bool ShowThumbFExt;
 extern bool NotThumbIfArc;
+extern bool CacheThumbADS;
 extern bool LoopViewCursor;
 extern bool HintTopEndImg;
 extern bool BeepTopEndImg;
@@ -519,6 +520,7 @@ extern UnicodeString FExtNoImgPrv;
 extern UnicodeString NoImgPrvPath;
 
 extern UnicodeString FExtNoIView;
+extern UnicodeString NoCachePath;
 
 extern UnicodeString DrvInfFmtR;
 extern UnicodeString DrvInfFmtS;
@@ -921,6 +923,7 @@ extern TStringList *WebSeaHistory;
 extern TStringList *LatLngHistory;
 extern TStringList *HeadlineList;
 extern TStringList *ZoomRatioList;
+extern TStringList *InterpolationList;
 extern TStringList *CnvCharList;
 extern TStringList *RenCmdFileList;
 extern TStringList *RenArcFileList;
@@ -1202,6 +1205,7 @@ extern int  ImgGridVertN;
 extern int  MinShowTime;
 extern int  ThumbnailSize;
 extern int  ThumbBdrWidth;
+extern int  ThumbScaleOpt;
 extern int  ThumbnailPos;
 extern int  ImgDblMargin;
 
@@ -1697,6 +1701,7 @@ UnicodeString get_FontInf(UnicodeString fnam, TStringList *lst = NULL);
 
 drive_info *get_DriveInfoList();
 drive_info *get_DriveInfo(UnicodeString dstr);
+bool is_NTFS_Drive(UnicodeString dnam);
 UnicodeString get_VolumeInfo(UnicodeString dnam, UnicodeString *fsys = NULL);
 
 UnicodeString mount_VirDriveList(int idx);
@@ -1826,9 +1831,9 @@ void get_FileNamePathInf(UnicodeString fnam, TStringList *lst, bool get_app = fa
 bool get_FileInfList(file_rec *fp, TStringList *lst);
 
 bool is_Processing(file_rec *fp, UnicodeString *err_msg = NULL);
-bool is_Processing(UnicodeString fna, bool is_video = false, UnicodeString *err_msg = NULL);
+bool is_Processing(UnicodeString fnam, bool is_video = false, UnicodeString *err_msg = NULL);
 
-bool is_NoInfPath(file_rec *fp, UnicodeString no_path);
+bool is_NoInfPath(UnicodeString pnam, UnicodeString no_path);
 
 UnicodeString get_StreamLineBreak(TStream *ms, int code_page, bool strict = false);
 int  get_FileCodePage(UnicodeString fnam, UnicodeString *line_brk = NULL, bool *has_bom = NULL);
@@ -1857,6 +1862,7 @@ void add_FExtInfList(TStringList *f_lst, TStringList *lst);
 
 bool get_img_size(UnicodeString fnam, unsigned int *wd, unsigned int *hi);
 int  load_ImageFile(UnicodeString fnam, Graphics::TBitmap *o_bmp, int img_type = WICIMG_PREVIEW, TColor trans_bg = col_None);
+UnicodeString load_ImageThumbCache(UnicodeString fnam, Graphics::TBitmap *o_bmp);
 
 void InitializeGlobal();
 void EndGlobal();
@@ -1976,6 +1982,7 @@ void draw_BarGraph(TCanvas *cv, TRect rc, double r);
 void draw_ProgressBar(TCanvas *cv, TRect rc, double r);
 
 bool saveto_TextUTF8(UnicodeString fnam, TStrings *lst);
+bool saveto_TextUTF8(UnicodeString fnam, UnicodeString s);
 bool saveto_TextFile(UnicodeString fnam, TStrings *lst, TEncoding *enc = NULL);
 bool saveto_TextFile(UnicodeString fnam, TStrings *lst, int enc_idx);
 

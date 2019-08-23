@@ -7,6 +7,7 @@
 #pragma hdrstop
 #include <memory>
 #include <utilcls.h>
+#include <VersionHelpers.h>
 #include <System.StrUtils.hpp>
 #include <System.Win.Registry.hpp>
 #include "usr_file_ex.h"
@@ -343,10 +344,11 @@ bool WIC_resize_image(
 
 		WICBitmapInterpolationMode opt;
 		switch (s_opt) {
-		case 1:  opt = WICBitmapInterpolationModeLinear; break;		//バイリニア
-		case 2:  opt = WICBitmapInterpolationModeCubic;	 break;		//バイキュービック
-		case 3:  opt = WICBitmapInterpolationModeFant;	 break;		//ファントリサンプリング
-		default: opt = WICBitmapInterpolationModeNearestNeighbor;	//最近傍法
+		case 1:  opt = WICBitmapInterpolationModeLinear; break;				//バイリニア
+		case 2:  opt = WICBitmapInterpolationModeCubic;	 break;				//バイキュービック
+		case 3:  opt = WICBitmapInterpolationModeFant;	 break;				//ファントリサンプリング
+		case 4:  opt = WICBitmapInterpolationModeHighQualityCubic; break;	//高品質バイキュービック
+		default: opt = WICBitmapInterpolationModeNearestNeighbor;			//最近傍法
 		}
 
 		if (FAILED(scaler->Initialize(bitmap, i_wd, i_hi, opt))) Abort();

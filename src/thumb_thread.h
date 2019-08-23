@@ -96,11 +96,13 @@ public:
 	__property int  Count    = {read = GetCount};							//リスト項目数
 
 	int MakeIndex;
+	int StartIndex;
 
 	TStringList *ThumbnailList;	//サムネイルリスト
 	UnicodeString __fastcall GetListItem(int idx);
 	void __fastcall SetListItem(int idx, UnicodeString s);
 	Graphics::TBitmap* __fastcall GetListBitmap(int idx);
+	Graphics::TBitmap* __fastcall GetListBitmap(UnicodeString fnam);
 
 	__fastcall TThumbnailThread(bool CreateSuspended);
 	bool __fastcall FitSize(int *wd, int *hi);

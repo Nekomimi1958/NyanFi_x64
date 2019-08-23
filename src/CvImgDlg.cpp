@@ -38,8 +38,6 @@ void __fastcall TCvImageDlg::FormCreate(TObject *Sender)
 		_T("デフォルト\n4:2:0\n4:2:2\n4:4:4\n"));
 	set_ComboBoxText(CmpModeComboBox,
 		_T("自動選択\n圧縮なし\nCCITT3圧縮\nCCITT4圧縮\nLZW圧縮\nRLE圧縮\nZIP圧縮\nLZWH差分圧縮\n"));
-	set_ComboBoxText(ScaleOptComboBox,
-		_T("ニアレストネイバー\nバイリニア\nバイキュービック\nファントリサンプリング\n補間しない\n"));
 	set_ComboBoxText(ChgNameComboBox,
 		_T("ファイル名の先頭に挿入\nファイル名主部の末尾に追加\n"));
 
@@ -75,6 +73,8 @@ void __fastcall TCvImageDlg::FormShow(TObject *Sender)
 		ChgNameEdit->Text		   = IniFile->ReadStrGen(_T("CvImgCngNameStr"));
 		KeepTimeCheckBox->Checked  = IniFile->ReadBoolGen(_T("CVImgKeepTime"));
 	}
+
+	ScaleOptComboBox->Items->Assign(InterpolationList);
 
 	UnicodeString pfx = fromClip? "CvClp" : "CvImg";
 	CvFmtRadioGroup->ItemIndex	 = IniFile->ReadIntGen( (pfx + "Format").c_str());

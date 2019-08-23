@@ -891,7 +891,8 @@ int get_GridIndex(TStringGrid *gp, int max_count)
 //---------------------------------------------------------------------------
 //インデックスによってグリッド位置を設定
 //---------------------------------------------------------------------------
-void set_GridIndex(TStringGrid *gp, int idx, int max_count)
+void set_GridIndex(TStringGrid *gp, int idx, int max_count,
+	bool center)		//1列/行なら中央へ	(default = false)
 {
 	if (gp->Visible) gp->SetFocus();
 
@@ -909,6 +910,19 @@ void set_GridIndex(TStringGrid *gp, int idx, int max_count)
 		else {
 			gp->Row = r1;
 			gp->Col = c1;
+		}
+
+		if (center) {
+			if (gp->RowCount==1) {
+				int c0  = std::max(max_count - gp->VisibleColCount, 0);
+				int mgn = gp->VisibleColCount/2 - ((gp->VisibleColCount%2==0)? 1 : 0);
+				gp->LeftCol = std::min(std::max(gp->Col - mgn, 0), c0);
+			}
+			else if (gp->ColCount==1) {
+				int r0  = std::max(max_count - gp->VisibleRowCount, 0);
+				int mgn = gp->VisibleRowCount/2 - ((gp->VisibleRowCount%2==0)? 1 : 0);
+				gp->TopRow = std::min(std::max(gp->Row - mgn, 0), r0);
+			}
 		}
 	}
 	catch (...) {

@@ -1631,6 +1631,21 @@ void __fastcall TNyanFiForm::WmContextMnueProc(TMessage &msg)
 }
 
 //---------------------------------------------------------------------------
+//サムネイルの更新
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::WmNyanFiThumbnail(TMessage &msg)
+{
+	TStringGrid *gp = ThumbnailGrid;
+	if (gp->Visible) {
+		int idx = msg.LParam;
+		TRect rc = ThumbExtended? gp->CellRect(idx%gp->ColCount, idx/gp->ColCount) :
+				(ThumbnailPos<2)? gp->CellRect(idx, 0)
+								: gp->CellRect(0, idx);
+		if (!rc.IsEmpty()) ::InvalidateRect(gp->Handle, &rc, TRUE);
+	}
+}
+
+//---------------------------------------------------------------------------
 //クリップボードへのコピー情報をヒント表示
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::WmNyanFiClpCopied(TMessage &msg)
@@ -4279,7 +4294,7 @@ void __fastcall TNyanFiForm::SetupFont()
 //サムネイルの設定
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetupThumbnail(
-	int idx)		//インデックス	(default = -1)
+	int idx)	//インデックス	(default = -1)
 {
 	TStringGrid *gp = ThumbnailGrid;
 	if (ThumbExtended) {
@@ -4325,18 +4340,20 @@ void __fastcall TNyanFiForm::SetupThumbnail(
 	}
 	//通常表示(横)
 	else if (ThumbnailPos<2) {
-		gp->RowCount	 = 1;
-		gp->ColCount	 = ViewFileList->Count;
-		gp->ClientHeight = gp->DefaultRowHeight + 1;
+		gp->RowCount = 1;
+		gp->ColCount = ViewFileList->Count;
+		gp->Height	 = gp->DefaultRowHeight + (ShowThumbScroll? ::GetSystemMetrics(SM_CXHSCROLL) : 0) + 2;
 	}
 	//通常表示(縦)
 	else {
-		gp->ColCount	= 1;
-		gp->RowCount	= ViewFileList->Count;
-		gp->ClientWidth = gp->DefaultColWidth + 1;
+		gp->ColCount = 1;
+		gp->RowCount = ViewFileList->Count;
+		gp->Width	 = gp->DefaultColWidth + (ShowThumbScroll? ::GetSystemMetrics(SM_CXVSCROLL) : 0) + 2;
 	}
 
-	if (idx!=-1) set_GridIndex(gp, idx, ViewFileList->Count);
+	SetDarkWinTheme(gp);
+
+	if (idx!=-1) set_GridIndex(gp, idx, ViewFileList->Count, true);
 }
 
 //---------------------------------------------------------------------------
@@ -9752,7 +9769,7 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 		bool no_prv = (!fp || fp->failed || TxtPrvListPanel->Visible || !PreviewPanel->Visible);
 		if (!no_prv && !force) {
 			//イメージプレビューを表示しないパスのチェック
-			no_prv = is_NoInfPath(fp, NoImgPrvPath);
+			no_prv = is_NoInfPath(fp->p_name, NoImgPrvPath);
 			if (!no_prv && !fp->is_dir) {
 				//表示する拡張子
 				if (!FExtImgPrv.IsEmpty()) no_prv = !test_FileExt(fp->f_ext, FExtImgPrv);
@@ -26833,9 +26850,10 @@ void __fastcall TNyanFiForm::DeleteADSActionExecute(TObject *Sender)
 		if (TestCurIncDir())					UserAbort(USTR_IncludeDir);
 		if (TestCurIncFindVirtual())			UserAbort(USTR_CantOperate);
 
-		bool only_zi = TEST_ActParam("ZI");
+		UnicodeString mask = TEST_ActParam("ZI")? "Zone.Identifier" :
+							 TEST_ActParam("TC")? "thumbnail.???" : "*";
 		if (!msgbox_Sure(
-			LoadUsrMsg(USTR_DeleteQ, only_zi? _T("Zone.Identifier") : _T("代替データストリーム")),
+			LoadUsrMsg(USTR_DeleteQ, !SameStr(mask, "*")? mask.c_str() : _T("代替データストリーム")),
 			(ExeCmdsBusy && XCMD_MsgOff)? false : SureDelete))
 				SkipAbort();
 
@@ -26852,7 +26870,7 @@ void __fastcall TNyanFiForm::DeleteADSActionExecute(TObject *Sender)
 			if (fp->selected || (sel_cnt==0 && i==cur_idx)) {
 				UnicodeString msg = make_LogHdr(_T("DELADS"), fp);
 				std::unique_ptr<TStringList> slst(new TStringList());
-				switch (delete_ADS(fp->f_name, ForceDel, only_zi, slst.get())) {
+				switch (delete_ADS(fp->f_name, ForceDel, mask, slst.get())) {
 				case 1:		//成功
 					ok_cnt++;
 					for (int i=0; i<slst->Count; i++) {
@@ -31609,7 +31627,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 	if (is_ExtractIcon(fp)) {
 		isViewIcon = true;
 
-		if (ThumbnailGrid->Visible) ThumbnailGrid->Repaint();
+		if (ThumbnailGrid->Visible) ThumbnailGrid->Invalidate();
 
 		std::unique_ptr<Graphics::TBitmap> bg_bmp(new Graphics::TBitmap());
 		TCanvas *cv = bg_bmp->Canvas;
@@ -31702,7 +31720,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 		isViewAGif = true;
 		ImgBuff->Handle = NULL;
 
-		if (ThumbnailGrid->Visible) ThumbnailGrid->Repaint();
+		if (ThumbnailGrid->Visible) ThumbnailGrid->Invalidate();
 
 		int i_wd = 0, i_hi = 0;
 		try {
@@ -31795,12 +31813,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 			ImgViewThread->AddRequest(_T("FILE"), ViewFileName, ViewFileName2);
 		}
 		else if (HistForm->Visible) {
-			for (int i=0; i<ThumbnailThread->Count; i++) {
-				if (!SameText(ViewFileName, get_pre_tab(ThumbnailThread->ThumbnailList->Strings[i]))) continue;
-				Graphics::TBitmap *bp = (Graphics::TBitmap*)ThumbnailThread->ThumbnailList->Objects[i];
-				HistForm->DrawHistogram(bp);
-				break;
-			}
+			HistForm->DrawHistogram(ThumbnailThread->GetListBitmap(ViewFileName));
 		}
 
 		if (SubViewer->Visible) SubViewer->DrawImage(ViewFileName);
@@ -32882,8 +32895,10 @@ void __fastcall TNyanFiForm::NextPrevFileICore(bool is_next)
 		}
 		else {
 			isLoopHint = false;
-			if 		(new_idx==-1) ImgViewThread->AddRequest(_T("REDRAW"));
-			else if (!OpenImgViewer(new_idx)) Abort();
+			if (new_idx==-1)
+				ImgViewThread->AddRequest(_T("REDRAW"));
+			else if (!OpenImgViewer(new_idx))
+				Abort();
 		}
 	}
 	catch (EAbort &e) {
@@ -32956,7 +32971,7 @@ void __fastcall TNyanFiForm::PageBindActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::PageUpIActionExecute(TObject *Sender)
 {
 	TStringGrid *gp = ThumbnailGrid;
-	gp->Row = std::max(gp->Row - gp->VisibleRowCount, 0);
+	set_GridIndex(gp, GetCurIndex() - gp->VisibleRowCount * gp->VisibleColCount, ViewFileList->Count);
 }
 //---------------------------------------------------------------------------
 //サムネイル全面表示で1ページ下に移動
@@ -32964,7 +32979,7 @@ void __fastcall TNyanFiForm::PageUpIActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::PageDownIActionExecute(TObject *Sender)
 {
 	TStringGrid *gp = ThumbnailGrid;
-	set_GridIndex(gp, GetCurIndex() + gp->VisibleRowCount * gp->RowCount, ViewFileList->Count);
+	set_GridIndex(gp, GetCurIndex() + gp->VisibleRowCount * gp->VisibleColCount, ViewFileList->Count);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::PageIxActionUpdate(TObject *Sender)
@@ -33343,8 +33358,8 @@ void __fastcall TNyanFiForm::SidebarActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::SetInterpolationActionExecute(TObject *Sender)
 {
 	try {
-		if (!is_match_regex(ActionParam, _T("^[NLCFX]{1,}$"))) UserAbort(USTR_IllegalParam);
-		UnicodeString idstr = "NLCFX";
+		if (!is_match_regex(ActionParam, _T("^[NLCFHX]{1,}$"))) UserAbort(USTR_IllegalParam);
+		UnicodeString idstr = "NLCFHX";
 		int p = ActionParam.Pos(idstr.SubString(WicScaleOpt + 1, 1));
 		p = (p==0 || p==ActionParam.Length())? 1 : p + 1;
 		WicScaleOpt = idstr.Pos(ActionParam[p]) - 1;
@@ -33721,28 +33736,33 @@ void __fastcall TNyanFiForm::SetViewFileList(
 	if (clr_thumb) ThumbnailThread->ReqClear = true;
 	if (!gp->Visible) return;
 
-	set_GridIndex(gp, idx, ViewFileList->Count);
+	set_GridIndex(gp, idx, ViewFileList->Count, true);
 
 	//---------------------------------------
 	//サムネイルリスト作成要求
 	//---------------------------------------
 	if (ThumbnailThread->IsEmpty && ViewFileList->Count>0) {
 		while (ThumbnailThread->ReqClear) { Application->ProcessMessages();  Sleep(1); }
+
 		//サムネイルリスト登録
-		for (int i=0; i<ViewFileList->Count; i++) {
-			Graphics::TBitmap *bp = new Graphics::TBitmap();
-			ThumbnailThread->ThumbnailList->AddObject(ViewFileList->Strings[i], (TObject*)bp);
+		if (clr_thumb) {
+			for (int i=0; i<ViewFileList->Count; i++) {
+				Graphics::TBitmap *bp = new Graphics::TBitmap();
+				ThumbnailThread->ThumbnailList->AddObject(ViewFileList->Strings[i], (TObject*)bp);
+			}
 		}
+
 		//サムネイル作成開始
 		if (ViewFileList->Count>0) {
+			gp->Invalidate();
 			if (idx==-1) idx = 0;
-			set_GridIndex(gp, idx, ViewFileList->Count);
 			if (!has_vir || !NotThumbIfArc) {
-				ThumbnailThread->ReqStart  = true;
+				ThumbnailThread->StartIndex = idx;
+				ThumbnailThread->ReqStart	= true;
 			}
 			else {
-				ThumbnailThread->MakeIndex = idx;
-				ThumbnailThread->ReqMake   = true;
+				ThumbnailThread->MakeIndex	= idx;
+				ThumbnailThread->ReqMake	= true;
 			}
 		}
 	}

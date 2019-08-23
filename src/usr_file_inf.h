@@ -95,7 +95,7 @@ bool test_AppInfExt(UnicodeString fext);
 //---------------------------------------------------------------------------
 void add_list_errmsg(TStringList *lst, UnicodeString msg);
 
-UnicodeString get_top_line(UnicodeString fnam);
+UnicodeString get_top_line(UnicodeString fnam, int code_page = 0);
 
 UnicodeString get_id_str4(TFileStream *fs);
 bool sea_chunk(TFileStream *fs, const char *s);
