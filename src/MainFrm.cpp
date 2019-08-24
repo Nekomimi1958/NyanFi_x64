@@ -9849,6 +9849,10 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 				else if (test_Mp3Ext(fext) || test_FlacExt(fext)) {
 					ImgViewThread->AddRequest(_T("FILE"), fnam);
 				}
+				//フォルダ/アーカイブ (ADSサムネイル)
+				else if ((is_dir || usr_ARC->GetArcType(fnam, true)) && file_exists(fnam + ":thumbnail.jpg")) {
+					ImgViewThread->AddRequest(_T("FILE"), fnam + ":thumbnail.jpg");
+				}
 				//フォルダ (特大アイコン、可能ならサムネイル)
 				else if (is_dir && ShowDirJumboIco) {
 					ImgViewThread->AddRequest(_T("FILE"), IncludeTrailingPathDelimiter(fnam));
@@ -22204,7 +22208,7 @@ void __fastcall TNyanFiForm::RenameDlgActionExecute(TObject *Sender)
 	}
 
 	try {
-		if (CurStt->is_ADS || IsDiffList()) UserAbort(USTR_CantOperate);
+		if (IsDiffList()) UserAbort(USTR_CantOperate);
 
 		//アーカイブ内の改名
 		if (CurStt->is_Arc) {
@@ -22233,6 +22237,21 @@ void __fastcall TNyanFiForm::RenameDlgActionExecute(TObject *Sender)
 			}
 
 			ChangeArcFileListEx(CurStt->arc_Name, CurStt->arc_SubPath, CurListTag);
+			return;
+		}
+
+		//代替データストリーム名の変更
+		if (CurStt->is_ADS) {
+			file_rec *cfp = GetCurFrecPtr();  if (!cfp) Abort();
+			UnicodeString new_snam = cfp->n_name;
+			if (!input_query_ex(_T("代替データストリーム名の変更"), _T("名前"), &new_snam)) SkipAbort();
+			StartLog("改名開始  " + CurStt->ads_Name);
+			UnicodeString msg = make_RenameLog(cfp->n_name, new_snam);
+			if (!rename_ADS(cfp->f_name, ":" + new_snam)) msg[1] = 'E';
+			AddLog(msg);
+			if (!ChangeAdsList(CurStt->ads_Name, CurListTag)) Abort();
+			IndexOfFileList(CurStt->ads_Name + ":" + new_snam);
+			EndLog(_T("改名"));
 			return;
 		}
 
@@ -25859,6 +25878,7 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 
 		//アーカイブ内からコピー
 		if (CurStt->is_Arc) {
+			if (OppStt->is_ADS) UserAbort(USTR_OpeNotSuported);
 			UnicodeString src_pnam = CurStt->arc_Name;
 			if (!CurStt->arc_SubPath.IsEmpty()) src_pnam += "/" + CurStt->arc_SubPath;
 			tmp = (sel_cnt>0)? LoadUsrMsg(USTR_SelectedItem) : get_DispName(cfp);
@@ -31604,7 +31624,11 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 		//イベント: イメージビュアーを開いた直後
 		ExeEventCommand(OnIvOpened);
 	}
-	if (isViewFTP) ThumbnailGrid->Visible = false;
+
+	if (isViewFTP) {
+		rqThumbnail = ThumbnailGrid->Visible;
+		ThumbnailGrid->Visible = false;
+	}
 
 	if (ShowHistogram && !HistForm->Visible)  HistForm->Show();
 	if (ShowLoupe     && !LoupeForm->Visible) LoupeForm->Show();
@@ -32404,13 +32428,15 @@ void __fastcall TNyanFiForm::CloseIActionExecute(TObject *Sender)
 	if (rqThumbnail) ThumbnailGrid->Visible = true;
 
 	//マーク
-	if (!isViewClip && MarkImgClose) {
+	if (!isViewClip && !isViewFTP && MarkImgClose) {
 		file_rec *cfp = GetCurFrecPtr();
-		bool ok = true;
-		if (!MarkImgPath.IsEmpty()) ok = match_path_list(cfp->r_name, MarkImgPath, true);
-		if (ok && test_FileExt(get_extension(cfp->r_name), MarkImgFExt)) {
-			ExeCommandAction("ClearMark");
-			ExeCommandAction("Mark", MarkImgMemo);
+		if (cfp) {
+			bool ok = true;
+			if (!MarkImgPath.IsEmpty()) ok = match_path_list(cfp->r_name, MarkImgPath, true);
+			if (ok && test_FileExt(get_extension(cfp->r_name), MarkImgFExt)) {
+				ExeCommandAction("ClearMark");
+				ExeCommandAction("Mark", MarkImgMemo);
+			}
 		}
 	}
 
@@ -33745,11 +33771,9 @@ void __fastcall TNyanFiForm::SetViewFileList(
 		while (ThumbnailThread->ReqClear) { Application->ProcessMessages();  Sleep(1); }
 
 		//サムネイルリスト登録
-		if (clr_thumb) {
-			for (int i=0; i<ViewFileList->Count; i++) {
-				Graphics::TBitmap *bp = new Graphics::TBitmap();
-				ThumbnailThread->ThumbnailList->AddObject(ViewFileList->Strings[i], (TObject*)bp);
-			}
+		for (int i=0; i<ViewFileList->Count; i++) {
+			Graphics::TBitmap *bp = new Graphics::TBitmap();
+			ThumbnailThread->ThumbnailList->AddObject(ViewFileList->Strings[i], (TObject*)bp);
 		}
 
 		//サムネイル作成開始

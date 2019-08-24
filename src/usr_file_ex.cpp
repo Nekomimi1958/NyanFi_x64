@@ -818,6 +818,39 @@ int delete_ADS(
 
 	return res;
 }
+//---------------------------------------------------------------------------
+//代替データストリーム名の変更
+//---------------------------------------------------------------------------
+bool rename_ADS(
+	UnicodeString fnam,			//"元ファイル名:ストリーム名"
+	UnicodeString new_name)		//":新ストリーム名"
+{
+	bool res = false;
+	HMODULE hNtDll = ::GetModuleHandle(L"ntdll.dll");
+	if (hNtDll) {
+		FUNC_NtSetInformationFile NtSetInformationFile = (FUNC_NtSetInformationFile)::GetProcAddress(hNtDll, "NtSetInformationFile");
+		if (NtSetInformationFile) {
+			HANDLE hFile = ::CreateFile(fnam.c_str(),
+				DELETE|SYNCHRONIZE|GENERIC_READ,
+				FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,
+				NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+			if (hFile!=INVALID_HANDLE_VALUE) {
+			    const size_t bufLen = sizeof(FILE_RENAME_INFORMATION) + sizeof(wchar_t) * new_name.Length();
+				std::unique_ptr<BYTE[]> ri(new BYTE[bufLen]);
+				PFILE_RENAME_INFORMATION p_ri = (PFILE_RENAME_INFORMATION) ri.get();
+				p_ri->ReplaceIfExists = TRUE;
+				p_ri->RootDirectory   = NULL;
+				p_ri->FileNameLength  = sizeof(wchar_t) * new_name.Length();
+				memcpy(p_ri->FileName, new_name.c_str(), sizeof(wchar_t) * new_name.Length());
+				IO_STATUS_BLOCK iosb;
+				res = (NtSetInformationFile(hFile, &iosb, p_ri, bufLen, FileRenameInformation)>=0);
+				::CloseHandle(hFile);
+			}
+		}
+	}
+	return res;
+}
 
 //---------------------------------------------------------------------------
 //指定ディレクトリが存在しない場合は作成

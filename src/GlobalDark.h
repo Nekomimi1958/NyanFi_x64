@@ -11,10 +11,10 @@
 #include <Vcl.ComCtrls.hpp>
 
 //---------------------------------------------------------------------------
-typedef WINAPI BOOL (WINAPI *FUNC_ShouldAppsUseDarkMode)();
-typedef WINAPI BOOL (WINAPI *FUNC_AllowDarkModeForWindow)(HWND, BOOL);
-typedef WINAPI BOOL (WINAPI *FUNC_AllowDarkModeForApp)(BOOL);
-typedef WINAPI VOID (WINAPI *FUNC_FlushMenuThemes)();
+typedef BOOL (WINAPI *FUNC_ShouldAppsUseDarkMode)();
+typedef BOOL (WINAPI *FUNC_AllowDarkModeForWindow)(HWND, BOOL);
+typedef BOOL (WINAPI *FUNC_AllowDarkModeForApp)(BOOL);
+typedef VOID (WINAPI *FUNC_FlushMenuThemes)();
 
 #define DWMWA_USE_IMMERSIVE_DARK_MODE 19
 

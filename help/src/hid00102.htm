@@ -28,6 +28,8 @@
 	<param name="Keyword" value="Swatchbook.INI">
 	<param name="Keyword" value="TAGDATA.TXT">
 	<param name="Keyword" value="tasklog.txt">
+	<param name="Keyword" value="thumbnail.jpg">
+	<param name="Keyword" value="thumbnail.txt">
 	<param name="Keyword" value="UndoRename">
 	<param name="Keyword" value="watchbook.INI">
 	<param name="Keyword" value="WebMap">
@@ -153,6 +155,18 @@
 [autorun]
 icon=SSD.ico
 </pre>
+
+<dt>thumbnail.jpg　<span class="small_nrm">(代替データストリーム)
+<dd>サムネイルキャッシュ画像です。<br>
+<a href="hid00020.htm#ThumbCache">オプション設定 - イメージビュアー - 「サムネイル」に「代替データストリームにキャッシュ」</a> が有効の場合、イメージビュアーで閲覧した画像ファイルに代替データストリームとして保存されます。<br>
+<div class="spc_box">
+なおディレクトリやアーカイブの代替データストリームに <b>thumbnail.jpg</b> という名前の画像を保存しておくと、それが優先的にイメージプレビューされます。<br>
+</div>
+
+<dt>thumbnail.txt　<span class="small_nrm">(代替データストリーム)
+<dd>サムネイルキャッシュ情報です。<br>
+<a href="hid00020.htm#ThumbCache">オプション設定 - イメージビュアー - 「サムネイル」に「代替データストリームにキャッシュ」</a> が有効の場合、イメージビュアーで閲覧した画像ファイルに代替データストリームとして保存されます。<br>
+内容は、&quot;表示文字列 <span class="ctrl_text">[TAB]</span> タイムスタンプ <span class="ctrl_text">[TAB]</span> サムネイルサイズ <span class="ctrl_text">[TAB]</span> 縮小アルゴリズム番号&quot; という一行です。<br>
 
 <dt>tasklog[n~m].txt
 <dd>タスクログです。終了時にログウィンドウの内容が保存されます。<br>

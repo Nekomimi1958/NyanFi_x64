@@ -10,6 +10,29 @@
 #include <System.StrUtils.hpp>
 
 //---------------------------------------------------------------------------
+typedef struct _IO_STATUS_BLOCK {
+	union {
+		LONG  Status;
+		PVOID Pointer;
+	} DUMMYUNIONNAME;
+	ULONG_PTR Information;
+} IO_STATUS_BLOCK, *PIO_STATUS_BLOCK;
+
+enum FILE_INFORMATION_CLASS {
+	FileRenameInformation = 10
+};
+
+typedef struct _FILE_RENAME_INFORMATION {
+	BOOLEAN ReplaceIfExists;
+	HANDLE	RootDirectory;
+	ULONG	FileNameLength;
+	WCHAR	FileName[1];
+} FILE_RENAME_INFORMATION, *PFILE_RENAME_INFORMATION;
+
+typedef LONG (WINAPI *FUNC_NtSetInformationFile)(HANDLE, PIO_STATUS_BLOCK, PVOID, ULONG, FILE_INFORMATION_CLASS);
+
+
+//---------------------------------------------------------------------------
 extern UnicodeString ExePath;
 
 //---------------------------------------------------------------------------
@@ -82,6 +105,7 @@ __int64 get_comp_size(UnicodeString fnam);
 bool is_ADS_name(UnicodeString fnam);
 int  pos_ADS_delimiter(UnicodeString fnam);
 int  delete_ADS(UnicodeString fnam, bool force = false, UnicodeString mask = "*", TStringList *lst = NULL);
+bool rename_ADS(UnicodeString fnam, UnicodeString new_name);
 
 UnicodeString chk_cre_dir(UnicodeString dnam);
 

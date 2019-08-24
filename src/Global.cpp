@@ -587,7 +587,7 @@ bool isViewIcon   = false;				//イメージビュアーでアイコンを表示中
 bool isViewAGif   = false;				//イメージビュアーでアニメーションGIFを表示中
 bool isViewClip   = false;				//イメージビュアーでクリップボードを表示中
 bool isViewFTP	  = false;				//イメージビュアーでFTPのファイルを表示中
-bool rqThumbnail  = false;				//クリップボード閲覧後のサムネイル復帰要求
+bool rqThumbnail  = false;				//クリップボード/FTP閲覧後のサムネイル復帰要求
 bool nrmThumbnail = false;				//通常画面時のサムネイル表示
 
 TStringList *LaunchList;				//ランチャーリスト(アプリケーション一覧)
@@ -8988,8 +8988,7 @@ bool is_ViewableFext(UnicodeString fext)
 //---------------------------------------------------------------------------
 bool is_Viewable(file_rec *fp)
 {
-	if (fp->is_dir || fp->is_dummy)	return false;
-	if (fp->f_name.IsEmpty())		return false;
+	if (!fp || fp->is_dir || fp->is_dummy || fp->f_name.IsEmpty()) return false;
 	return is_ViewableFext(fp->f_ext);
 }
 

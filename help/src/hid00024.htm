@@ -14,6 +14,7 @@
 	<param name="Keyword" value="OpenStandard">
 	<param name="Keyword" value="ShowFileInfo">
 	<param name="Keyword" value="ShowPreview">
+	<param name="Keyword" value="thumbnail.jpg">
 	<param name="Keyword" value="Zone.Identifier">
 	<param name="Keyword" value="イメージプレビュー">
 	<param name="Keyword" value="タスク">
@@ -124,11 +125,13 @@
 
 <dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ディレクトリは特大アイコンを表示
 <dd>ディレクトリに対するイメージプレビューに特大アイコン(可能ならサムネイル)を表示します。チェックを外すと、サイズ16～64のアイコン表示になります。<br>
+なおこの設定にかかわらず、ディレクトリに <b>thumbnail.jpg</b> という名前の代替データストリームがある場合、それが優先的に表示されます。<br>
 
 <dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ZIP内の画像を表示
 <dd>ZIPアーカイブ(<b>.zip</b>、<b>.cbz</b>、<b>.epub</b>、<b>.gdtf</b> に対応)内に適当な画像があれば、それを表示します。<br>
 複数の画像がある場合、ファイル名に &quot;thumbnail&quot;、&quot;cover&quot;、&quot;title&quot;、&quot;page&quot; が含まれるものを優先します。<br>
-なお、パスワードが設定されている場合や、実行ファイルなどが含まれているアーカイブでは表示されません。<br>
+パスワードが設定されている場合や、実行ファイルなどが含まれているアーカイブでは表示されません。<br>
+なおこの設定にかかわらず、すべての種類のアーカイブで、 <b>thumbnail.jpg</b> という名前の代替データストリームがある場合、それが優先的に表示されます。<br>
 
 <dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> アニメGIFに対応
 <dd>アニメーションGIFの表示に対応します。<br>
