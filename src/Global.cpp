@@ -428,6 +428,8 @@ int  IncSeaMigemoMin;			//IncSearch:  migemo の検索開始文字数
 bool NotShowNoTask;				//TaskMan:    タスクを実行していないときはマネージャを表示しない
 UnicodeString WebSeaUrl;		//WebSearch:  検索エンジンURL
 
+UnicodeString GetFaviconUrl;	//favicon 取得API
+
 bool FindPathColumn;			//結果リストに「場所」列を表示
 int  FindPathWidth;				//「場所」の最小列幅
 bool FindTagsColumn;			//結果リストに「タグ」列を表示
@@ -1499,6 +1501,8 @@ void InitializeGlobal()
 													(TObject*)&DrvInfFmtN},
 		{_T("WebSeaUrl=\"https://www.google.co.jp/search?q=\\S&ie=UTF-8\""),
 													(TObject*)&WebSeaUrl},
+		{_T("GetFaviconUrl=\"http://www.google.com/s2/favicons?domain=\\D\""),
+													(TObject*)&GetFaviconUrl},
 		{_T("DlgMoveShift=\"Alt+\""),				(TObject*)&DlgMoveShift},
 		{_T("DlgSizeShift=\"\""),					(TObject*)&DlgSizeShift},
 		{_T("WheelCmdF0=\"ScrollUp/ScrollDown\""),	(TObject*)&WheelCmdF[0]},
@@ -5639,11 +5643,9 @@ void set_ListBoxItemHi(
 	TFont *font,	//フォント			(default = NULL);
 	bool with_ico)	//アイコンを表示	(default = false)
 {
-	if (font) {
-		lp->Font->Assign(font);
-		lp->Canvas->Font->Assign(font);
-	}
-
+	if (!font) font = Application->DefaultFont;
+	lp->Font->Assign(font);
+	lp->Canvas->Font->Assign(font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), 
 								with_ico? (int)(20 * ScrScale) : 0);
 }
@@ -5653,11 +5655,9 @@ void set_ListBoxItemHi(
 	TFont *font,	//フォント			(default = NULL);
 	bool with_ico)	//アイコンを表示	(default = false)
 {
-	if (font) {
-		lp->Font->Assign(font);
-		lp->Canvas->Font->Assign(font);
-	}
-
+	if (!font) font = Application->DefaultFont;
+	lp->Font->Assign(font);
+	lp->Canvas->Font->Assign(font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1),
 								with_ico? (int)(20 * ScrScale) : 0);
 }
@@ -6381,12 +6381,13 @@ void del_CachedIcon(UnicodeString fnam)
 //---------------------------------------------------------------------------
 //ファイルのスモールアイコンを取得
 //---------------------------------------------------------------------------
-HICON get_file_icon(
+HICON get_file_SmallIcon(
 	UnicodeString fnam)		//ファイル名[,インデックス]
 {
 	HICON hIcon = NULL;
-	int ico_idx = get_tkn_r(fnam, ",").ToIntDef(-1);
 
+	//インデックス指定
+	int ico_idx = get_tkn_r(fnam, ",").ToIntDef(-1);
 	if (ico_idx!=-1) {
 		fnam = get_tkn(fnam, ",");
 		HICON icons[1];
@@ -6394,12 +6395,19 @@ HICON get_file_icon(
 			hIcon = icons[0];
 		}
 	}
+	//ファイル名指定
 	else {
-		SHFILEINFO sif;
-		if (::SHGetFileInfo(fnam.c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON))
-			hIcon = sif.hIcon;
-		else
-			hIcon = get_fext_icon(get_extension(fnam));
+		UnicodeString fext = get_extension(fnam);
+		if (test_FileExt(fext, ".url"))  hIcon = usr_SH->get_ico_f(fnam + ":favicon", 16, true);
+		if (!hIcon && is_ADS_name(fnam)) hIcon = usr_SH->get_ico_f(fnam, 16, true);
+
+		if (!hIcon) {
+			SHFILEINFO sif;
+			if (::SHGetFileInfo(fnam.c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON))
+				hIcon = sif.hIcon;
+			else
+				hIcon = get_fext_SmallIcon(fext);
+		}
 	}
 
 	return hIcon;
@@ -6408,7 +6416,7 @@ HICON get_file_icon(
 //---------------------------------------------------------------------------
 //拡張子依存スモールアイコンを取得 (キャッシュを利用)
 //---------------------------------------------------------------------------
-HICON get_fext_icon(
+HICON get_fext_SmallIcon(
 	UnicodeString fext)		//拡張子 .xxx	(default = EmptyStr: フォルダ)
 {
 	HICON hIcon = NULL;
@@ -6466,7 +6474,7 @@ HICON get_folder_icon(UnicodeString dnam)
 		set_FolderIcon(dnam);	//解除
 	}
 
-	if (!hIcon) hIcon = get_fext_icon();
+	if (!hIcon) hIcon = get_fext_SmallIcon();
 
 	return hIcon;
 }
@@ -6482,6 +6490,23 @@ bool draw_SmallIcon(
 {
 	if (!is_selectable(fp)) return false;
 
+	UnicodeString snam;
+	if		(fp->is_ads && SameText(fp->n_name, "favicon")) snam = fp->f_name;
+	else if (test_FileExt(fp->f_ext, ".url"))				snam = fp->f_name + ":favicon";
+	//PNG形式の favicon
+	if (file_exists(snam) && test_Png(snam)) {
+		try {
+			std::unique_ptr<TPngImage> png_buf(new TPngImage());
+			png_buf->LoadFromFile(snam);
+			png_buf->Transparent = true;
+			png_buf->Draw(cv, Rect(x, y, x + SIcoSize, y + SIcoSize));
+			return true;
+		}
+		catch (...) {
+			;
+		}
+	}
+
 	HICON hIcon  = NULL;
 	bool handled = false;
 
@@ -6493,11 +6518,12 @@ bool draw_SmallIcon(
 	else {
 		UnicodeString fext = LowerCase(fp->f_ext);
 		//実ファイル依存
-		if ((UseIndIcon || force_cache) && (test_FileExt(fext, FEXT_INDIVICO) || fp->is_sym)) {
+		if ((UseIndIcon || force_cache)
+			&& (test_FileExt(fext, FEXT_INDIVICO) || fp->is_sym || EndsText(":favicon", fp->f_name)))
+		{
 			UnicodeString fnam = (fp->is_virtual || fp->is_ftp)? fp->tmp_name : fp->f_name;
 			if (!fnam.IsEmpty()) {
 				if (fp->is_dir) fnam = IncludeTrailingPathDelimiter(fnam);
-
 				IconRWLock->BeginWrite();
 				{
 					int idx = CachedIcoList->IndexOf(fnam);
@@ -6515,13 +6541,13 @@ bool draw_SmallIcon(
 				IconRWLock->EndWrite();
 			}
 			else {
-				hIcon = get_fext_icon(fext);
+				hIcon = get_fext_SmallIcon(fext);
 			}
 		}
 		//拡張子依存
 		else {
 			if (fext.IsEmpty()) fext = ".nyanfi";
-			hIcon = get_fext_icon(fext);
+			hIcon = get_fext_SmallIcon(fext);
 		}
 	}
 
@@ -6614,12 +6640,12 @@ bool draw_SmallIcon2(
 				}
 			}
 			else {
-				hIcon = get_fext_icon(fext);
+				hIcon = get_fext_SmallIcon(fext);
 			}
 		}
 		//拡張子依存
 		else {
-			hIcon = get_fext_icon(fext);
+			hIcon = get_fext_SmallIcon(fext);
 		}
 	}
 
@@ -6645,7 +6671,7 @@ int add_IconImage(
 	if (file_exists_ico(fnam)) {
 		int usr_idx = UsrIcoList->IndexOf(fnam);
 		if (usr_idx==-1) {
-			HICON hIcon = get_file_icon(fnam);
+			HICON hIcon = get_file_SmallIcon(fnam);
 			if (hIcon) {
 				icon = new TIcon();
 				icon->Handle = hIcon;
@@ -8073,6 +8099,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State, TStringList *col_lst)
 {
 	TCanvas  *cv = lp->Canvas;
+	cv->Font->Assign(lp->Font);
 	int yp = Rect.Top + get_TopMargin(cv);
 
 	UnicodeString col_nam = lp->Items->Names[Index];
@@ -8283,13 +8310,21 @@ bool get_FileInfList(
 		//------------------------------------------
 		std::unique_ptr<TStringList> ref_lst(new TStringList());	//コマンドファイルの参照情報
 
+		bool is_fav_ico = false;
+		bool is_fav_png = false;
+		if (EndsText(":favicon", fnam)) {
+			if		(test_Icon(fnam)) is_fav_ico = true;
+			else if (test_Png(fnam))  is_fav_png = true;
+		}
+
 		int lst_cnt = lst->Count;
 		//アプリケーション情報
 		if (test_AppInfExt(fext)) {
 			get_AppInf(fnam, lst);
 		}
 		//アイコン/カーソル
-		else if (test_IcoExt(fext) || test_CurExt(fext)) {
+		else if (test_IcoExt(fext) || test_CurExt(fext) || is_fav_ico)
+		{
 			get_IconInf(fnam, lst);
 		}
 		else if (test_AniExt(fext)) {
@@ -8304,15 +8339,18 @@ bool get_FileInfList(
 			get_PspInf(fnam,  lst);
 		}
 		//表示可能な画像
-		else if (is_ViewableFext(fext)) {
+		else if (is_ViewableFext(fext) || is_fav_png) {
 			if (test_MetaExt(fext)) {
 				get_MetafileInf(fnam, lst);
 			}
 			else {
 				bool x_flag = false;
-				if (test_ExifExt(fext))			 	x_flag = get_ExifInf(fnam, lst, &fp->img_ori);
-				if (!x_flag && test_PngExt(fext))	x_flag = get_PngInf(fnam, lst);
-				if (!x_flag && test_GifExt(fext))	x_flag = get_GifInf(fnam, lst);
+				if (test_ExifExt(fext))
+					x_flag = get_ExifInf(fnam, lst, &fp->img_ori);
+				if (!x_flag && (test_PngExt(fext) || is_fav_png))
+					x_flag = get_PngInf(fnam, lst);
+				if (!x_flag && test_GifExt(fext))
+					x_flag = get_GifInf(fnam, lst);
 				if (!x_flag) {
 					unsigned int i_wd, i_hi;
 					if (!ContainsStr(lst->Text, "画像サイズ: ") && get_img_size(fnam, &i_wd, &i_hi))

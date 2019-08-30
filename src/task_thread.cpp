@@ -691,6 +691,8 @@ void __fastcall TTaskThread::CPY_core(
 					AddDebugLog("Set Attribute");
 					if (!file_SetAttr(dst_fnam, attr & ~faReadOnly)) throw Exception(EmptyStr);
 				}
+
+				if (test_FileExt(get_extension(dst_fnam), ".url")) del_CachedIcon(dst_fnam);
 			}
 			OkCount++;
 		}
@@ -922,6 +924,10 @@ void __fastcall TTaskThread::DEL_core(
 
 		del_CachedIcon(fnam);
 		if (IniFile->IsMarked(fnam)) IniFile->FileMark(fnam, 0);
+
+		UnicodeString snam = fnam;
+		UnicodeString lnam = split_ADS_name(snam);
+		if (USAME_TI(get_extension(lnam), ".url") && ContainsText(snam, ":favicon")) del_CachedIcon(lnam);
 
 		OkCount++;
 	}

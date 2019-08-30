@@ -3070,6 +3070,38 @@ void __fastcall TNyanFiForm::GrepStatusBarDrawPanel(TStatusBar *StatusBar, TStat
 }
 
 //---------------------------------------------------------------------------
+//インターネットショートカットの作成
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::MakeUrlFile(UnicodeString fnam, UnicodeString url)
+{
+	try {
+		if (fnam.IsEmpty() || url.IsEmpty()) Abort();
+		std::unique_ptr<TStringList> fbuf(new TStringList());
+		fbuf->Text = UnicodeString().sprintf(_T("[InternetShortcut]\r\nURL=%s\r\n"), url.c_str());
+		fbuf->SaveToFile(fnam, TEncoding::UTF8);
+
+		//ADSに favicon を保存
+		if (is_NTFS_Drive(fnam)) {
+			UnicodeString t_url = get_match_regex(url, _T("^https?://[^/]+/~[^/]+/"));	//~直下
+			if (t_url.IsEmpty()) t_url = get_match_regex(url, _T("^https?://[^/]+/"));	//ドメイン直下
+			if (t_url.IsEmpty()) Abort();
+			TModalResult mr = DownloadWorkProgress(t_url + "favicon.ico", fnam + ":favicon", FileListBox[DroppedTag]);
+			if (mr==mrCancel) SkipAbort();
+			if (mr!=mrOk && !GetFaviconUrl.IsEmpty() && ContainsStr(GetFaviconUrl, "\\D")) {
+				UnicodeString ggl_url = ReplaceStr(GetFaviconUrl, "\\D", t_url);
+				TModalResult mr = DownloadWorkProgress(ggl_url, fnam + ":favicon", FileListBox[DroppedTag]);
+				if (mr==mrCancel) SkipAbort();
+				if (mr!=mrOk) Abort();
+			}
+			del_CachedIcon(fnam);
+		}
+	}
+	catch (EAbort &e) {
+		if (!e.Message.IsEmpty() && !USAME_TI(e.Message, "SKIP")) SttBarWarn(e.Message);
+	}
+}
+
+//---------------------------------------------------------------------------
 //背景画像の更新 (リスト毎のバッファを更新)
 // 戻り値: ファイル再読み込みに失敗したら false
 //---------------------------------------------------------------------------
@@ -3526,18 +3558,22 @@ void __fastcall TNyanFiForm::WmDropped(TMessage &msg)
 				//.url
 				if (DroppedList->Count==1 && ContainsStr(DroppedList->Strings[0], "\t")) {
 					UnicodeString url  = DroppedList->Strings[0];
-					UnicodeString fnam = dnam + split_pre_tab(url);
-					UnicodeString fext = get_extension(get_tkn(url, '?'));
+					UnicodeString fnam = split_pre_tab(url);
+					UnicodeString bnam = get_base_name(fnam);
+					UnicodeString fext = get_extension(fnam);
+					bnam = replace_regex(bnam, _T("\\s{2,}"), _T(" "));		//連続空白の置換
+					bnam = ApplyCnvCharList(bnam);							//禁止文字の置換
+					fnam = dnam + bnam + fext;
+					if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) SkipAbort();
 					//画像
 					if (!USAME_TI(get_extension(fnam), ".url")) {
-						if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) SkipAbort();
 						TModalResult mr = DownloadWorkProgress(url, fnam, FileListBox[DroppedTag]);
 						if (mr==mrCancel) SkipAbort();
 						if (mr!=mrOk) Abort();
 					}
-					//ショートカット
+					//インターネットショートカット
 					else {
-						if (!make_url_file(fnam, url)) Abort();
+						MakeUrlFile(fnam, url);
 					}
 				}
 				//.lnk
@@ -4390,7 +4426,6 @@ void __fastcall TNyanFiForm::SetupDesign(
 		SetDarkWinTheme(GrepOpPanel);
 		SetDarkWinTheme(SkipDirEdit);
 		SetDarkWinTheme(GrepFilterEdit);
-
 		SetDarkWinTheme(TextScrollBar);
 		SetDarkWinTheme(ImgScrollBox);
 		SetDarkWinTheme(SeekPanel);
@@ -4551,7 +4586,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	ImgSttHeader->ClientHeight = get_FontHeight(ViewHdrFont, 4, 4);
 	set_SttBarPanelWidth(ImgSttHeader, 2, "9999 × 9999");
 	set_SttBarPanelWidth(ImgSttHeader, 3, "100%  G !");
-	set_SttBarPanelWidth(ImgSttHeader, 4, "999/999 (選択 999)");
+	set_SttBarPanelWidth(ImgSttHeader, 4, "9999/9999 (選択 9999)");
 
 	ImgInfBar->Align = ImgSttIsBottom? alBottom : alTop;
 	ImgInfBar->Font->Assign(ViewHdrFont);
@@ -6081,9 +6116,7 @@ void __fastcall TNyanFiForm::WorkProgressBoxPaint(TObject *Sender)
 	TRect    rc = pp->ClientRect;
 	cv->Brush->Color = col_bgPrgBar;
 	cv->FillRect(rc);
-	cv->Brush->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
-	cv->FrameRect(rc);
-	InflateRect(rc, -2, -2);
+	InflateRect(rc, -Scaled1, -Scaled1);
 	rc.Right = rc.Left + (int)(rc.Width() * WorkBarRatio);
 	cv->Brush->Color = col_fgPrgBar;
 	cv->FillRect(rc);
@@ -9836,7 +9869,7 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 					}
 				}
 				//画像
-				else if (is_ViewableFext(fext)) {
+				else if (is_ViewableFext(fext) || (EndsText(":favicon", fnam) && test_Png(fnam))) {
 					ImgViewThread->AddRequest(_T("ROTATION"), 0);
 					ImgViewThread->AddRequest(_T("EXIFORI"),  fp->img_ori);
 					ImgViewThread->AddRequest(_T("FILE"), fnam);
@@ -11988,7 +12021,9 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 						bool h2t = ContainsStr(XCMD_prm, ">>");
 						UnicodeString url = split_tkn(XCMD_prm, _T(">>"));
 						if (EndsStr('/', url)) url += "index.htm";
-						UnicodeString fnam = TempPathA + ExtractFileName(slash_to_yen(url));
+						UnicodeString fnam = ExtractFileName(slash_to_yen(url));
+						fnam = ReplaceStr(fnam, "?", "_");
+						fnam.Insert(TempPathA, 1);
 						if (DownloadWorkProgress(url, fnam)==mrOk) {
 							//HTML→テキスト変換
 							if (h2t && test_HtmlExt(get_extension(fnam))) {
@@ -18187,6 +18222,7 @@ void __fastcall TNyanFiForm::InputCommandsActionExecute(TObject *Sender)
 			UnicodeString cmds = InpCmdsDlg->CmdsComboBox->Text;
 			if (TEST_ActParam("EL")) ActionOptStr = ActionParam;
 			if (!ExeAliasOrCommands(cmds)) GlobalAbort();
+
 			//履歴に追加
 			TStringList *h_lst = (ScrMode==SCMD_TVIEW)? InputCmdsHistoryV :
 								 (ScrMode==SCMD_IVIEW)? InputCmdsHistoryI : InputCmdsHistory;
@@ -22245,9 +22281,20 @@ void __fastcall TNyanFiForm::RenameDlgActionExecute(TObject *Sender)
 			file_rec *cfp = GetCurFrecPtr();  if (!cfp) Abort();
 			UnicodeString new_snam = cfp->n_name;
 			if (!input_query_ex(_T("代替データストリーム名の変更"), _T("名前"), &new_snam)) SkipAbort();
-			StartLog("改名開始  " + CurStt->ads_Name);
-			UnicodeString msg = make_RenameLog(cfp->n_name, new_snam);
-			if (!rename_ADS(cfp->f_name, ":" + new_snam)) msg[1] = 'E';
+			StartLog("改名開始  " + CurStt->ads_Name + ":");
+			UnicodeString msg = make_RenameLog(cfp->f_name, new_snam);
+			if (rename_ADS(cfp->f_name, ":" + new_snam)) {
+				UnicodeString snam = cfp->f_name;
+				UnicodeString fnam = split_ADS_name(snam);
+				if (USAME_TI(get_extension(fnam), ".url")
+					&& (ContainsText(snam, "favicon") || ContainsText(new_snam, "favicon")))
+				{
+					del_CachedIcon(fnam);
+				}
+			}
+			else {
+				msg[1] = 'E';
+			}
 			AddLog(msg);
 			if (!ChangeAdsList(CurStt->ads_Name, CurListTag)) Abort();
 			IndexOfFileList(CurStt->ads_Name + ":" + new_snam);
@@ -25808,10 +25855,21 @@ bool __fastcall TNyanFiForm::CopyAdsCore(
 			copied = !CancelWork;
 		}
 
-		//コピー先がADSでなければタイムスタンプと属性をコピー
-		if (copied && !dst_is_ads) {
-			if (!set_file_age(dst_nam, get_file_age(src_nam))) Abort();
-			if (!file_SetAttr(dst_nam, file_GetAttr(src_nam))) Abort();
+		if (copied) {
+			//ADS に favicon をコピーならアイコンを更新
+			if (dst_is_ads) {
+				UnicodeString snam = dst_nam;
+				UnicodeString fnam = split_ADS_name(snam);
+				if (USAME_TI(get_extension(fnam), ".url") && ContainsText(snam, ":favicon")) {
+					del_CachedIcon(fnam);
+					del_CachedIcon(dst_nam);
+				}
+			}
+			//コピー先がADSでなければタイムスタンプと属性をコピー
+			else {
+				if (!set_file_age(dst_nam, get_file_age(src_nam))) Abort();
+				if (!file_SetAttr(dst_nam, file_GetAttr(src_nam))) Abort();
+			}
 		}
 	}
 	catch (...) {
@@ -26411,7 +26469,7 @@ void __fastcall TNyanFiForm::PasteActionExecute(TObject *Sender)
 			FILEGROUPDESCRIPTOR *fg = (FILEGROUPDESCRIPTOR*)Clipboard()->GetAsHandle(
 										::RegisterClipboardFormat(CFSTR_FILEDESCRIPTORW));
 			if (fg && fg->cItems>0) fnam = GetCurPathStr() + fg->fgd[0].cFileName;
-			if (!make_url_file(fnam, url)) Abort();
+			MakeUrlFile(fnam, url);
 		}
 		//ファイル
 		else if (Clipboard()->HasFormat(CF_HDROP)) {

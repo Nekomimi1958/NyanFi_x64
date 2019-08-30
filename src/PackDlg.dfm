@@ -20,7 +20,7 @@ object PackArcDlg: TPackArcDlg
   PixelsPerInch = 96
   TextHeight = 13
   object FextLabel: TLabel
-    Left = 354
+    Left = 404
     Top = 11
     Width = 17
     Height = 13
@@ -39,7 +39,7 @@ object PackArcDlg: TPackArcDlg
   object ArcNameEdit: TLabeledEdit
     Left = 106
     Top = 8
-    Width = 319
+    Width = 294
     Height = 21
     Anchors = [akLeft, akTop, akRight]
     EditLabel.Width = 73

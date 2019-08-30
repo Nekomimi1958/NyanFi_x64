@@ -66,8 +66,11 @@ void __fastcall TCalculator::FormShow(TObject *Sender)
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 
+	SetDarkWinTheme(this);
 	LineEdit->Font->Assign(CalcFont);
+	LineEdit->Font->Color	  = get_TextColor();
 	HistComboBox->Font->Assign(CalcFont);
+	HistComboBox->Font->Color = get_TextColor();
 	ToolBar1->Font->Assign(ToolBarFont);
 
 	int hi = LineEdit->Height + HistComboBox->Height + ToolBar1->Height;
@@ -77,13 +80,10 @@ void __fastcall TCalculator::FormShow(TObject *Sender)
 	setup_ToolBar(ToolBar1);
 
 	IniFile->LoadComboBoxItems(HistComboBox, _T("CalculatorHistory"));
-
 	AngleMode = IniFile->ReadIntGen(_T("CalculatorAngMode"), 0);
-
 	InitUsrDef();
 
 	SetLineEdit(InitialLine);
-	SetDarkWinTheme(this);
 
 	KommaFlag = false;
 	isError   = false;

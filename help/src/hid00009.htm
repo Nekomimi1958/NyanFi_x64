@@ -6,6 +6,8 @@
 <link rel="stylesheet" type="text/css" href="help.css">
 <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
 	<param name="Keyword" value=".nyanfi">
+	<param name="Keyword" value="favicon">
+	<param name="Keyword" value="favicon.ico">
 	<param name="Keyword" value="Migemo">
 	<param name="Keyword" value="タスク">
 	<param name="Keyword" value="ディレクトリ履歴">
@@ -25,14 +27,14 @@
 <br>
 
 <dl>
-<dt class="no_bg"><img src="grpbox.png" alt="" border=0> 一時ディレクトリ
+<dt class="no_bg">一時ディレクトリ <img src="edit.png" alt="" border=0>
 <dd>アーカイブ内のファイルを一時的に解凍する必用がある場合などに使用されるディレクトリです。<br>
 この中のファイルは、仮想ディレクトリから抜けるときや、<b>NyanFi</b> の起動時に、自動的に削除されます。したがって、他のソフトと共有せずに、<b>専用のディレクトリを指定してください。</b><br>
 デフォルトでは、<b>NyanFi</b> のあるディレクトリに &quot;<b>Temp</b>&quot; というサブディレクトリが作られます。<br>
 ドライブ指定がない場合 <b>NyanFi</b> ディレクトリ下の相対パスとみなされます。<br>
 なお二重起動した場合は、他の <b>NyanFi</b> と競合しないように、ディレクトリ名の末尾に _ で区切って連番が付加されます。<br>
 
-<dt class="no_bg"><img src="grpbox.png" alt="" border=0> Migemo ディレクトリ
+<dt class="no_bg">Migemo ディレクトリ <img src="edit.png" alt="" border=0>
 <dd><a href="hid00050.htm">インクリメンタルサーチ</a>やフィルタなどで <b>C/Migemo</b> を利用する場合、関係ファイルをインストールしてある場所を指定します。空欄の場合は、<b>NyanFi</b> のあるディレクトリとみなされます。またドライブ指定がない場合 <b>NyanFi</b> ディレクトリ下の相対パスとみなされます。<br>
 <br><br>
 
@@ -65,12 +67,22 @@
 
 <dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ファイル固有のアイコンを表示
 <dd>チェックすると、ファイルリストでアイコンを表示する場合に、ファイル固有のアイコンを使用します(.exe .ico .cur .ani .lnk .url .library-ms)。<br>
+インターネットショートカット(.url)の場合、代替データストリームに <b>favicon</b> (.ico/.png 形式)があるとそれが用いられます。<br>
+<div class="spc_box">
 チェックを外すと、ファイル固有のアイコンの代わりに、拡張子に対応するデフォルトのアイコンを表示します。<br>
 なお、ファイルリスト以外では、この設定にかかわらず固有のアイコンを表示します。<br>
+</div>
 
 <dt class="no_bg_indent1">アイコンキャッシュ数 <img src="edit.png" alt="" border=0>
 <dd>ファイルリストなどでスモールアイコンを表示する場合、ファイル固有のアイコンを指定した数までキャッシュして利用します。超過した場合は、古いものから一旦破棄していきます。<br>
-なお、拡張子にのみ依存するアイコンについては、この設定にかかわらず、すべてキャッシュされます。<br>
+拡張子にのみ依存するアイコンについては、この設定にかかわらず、すべてキャッシュされます。<br>
+なお、代替データストリームの .png 形式の  <b>favicon</b> はキャッシュされません。<br>
+<br>
+<dt id="FaviconApi" class="no_bg_indent1">favicon 取得API <img src="edit.png" alt="" border=0>
+<dd>ブラウザからリンク項目をドロップしてインターネットショートカットを作成する際にドメイン下で <b>favicon.ico</b> が取得できなかったときに利用する取得APIのURLを指定します。<br>
+URL中の書式文字列 <b>\D</b> がドメイン名に置き換えられます。<br>
+デフォルトでは Google の favicon 取得APIが設定されています。<br>
+<span class="inp_box">http://www.google.com/s2/favicons?domain=\D</span><br>
 <br>
 
 <dt id="Operation"><img src="grpbox.png" alt="" border=0> 操作

@@ -9,6 +9,7 @@
 #include <mmsystem.h>
 #include <utilcls.h>
 #include <System.StrUtils.hpp>
+#include <System.NetEncoding.hpp>
 #include "usr_str.h"
 #include "usr_key.h"
 #include "usr_file_ex.h"
@@ -407,6 +408,7 @@ HRESULT __stdcall TDropTarget::Drop(IDataObject *pDataObj, DWORD grfKeyState, PO
 		ReleaseStgMedium(&medium);
 
 		if (!fnam.IsEmpty() && !url.IsEmpty()) {
+			fnam = System::Netencoding::TURLEncoding::URL->Decode(fnam);	//パーセントデコード
 			//画像はそのまま、それ以外はインターネットショートカット
 			if (!test_FileExt(get_extension(get_tkn(url, '?')), FEXT_WEBIMG)) fnam = ChangeFileExt(fnam, ".url");
 			DroppedList->Add(UnicodeString().sprintf(_T("%s\t%s"), fnam.c_str(), url.c_str()));
@@ -1349,7 +1351,7 @@ UnicodeString UserShell::get_FileTypeStr(UnicodeString fnam)
 		typ_str = typ_lst->Values[fext];
 		if (typ_str.IsEmpty()) {
 			std::unique_ptr<TStringList> lst(new TStringList());
-			usr_SH->get_PropInf(fnam, lst.get(), "種類", true);
+			get_PropInf(fnam, lst.get(), "種類", true);
 			if (lst->Count>0) typ_str = lst->ValueFromIndex[0];
 			if (typ_str.IsEmpty() && remove_top_s(fext, '.')) typ_str.sprintf(_T("%s ファイル"), fext.UpperCase().c_str());
 		}
@@ -1358,7 +1360,12 @@ UnicodeString UserShell::get_FileTypeStr(UnicodeString fnam)
 		typ_str = ".nyanfi ファイル";
 	}
 	else {
-		typ_str = ExtractFileName(fnam) + " ファイル";
+		UnicodeString nnam = ExtractFileName(fnam);
+		typ_str = nnam + " ファイル";
+		if (is_ADS_name(fnam) && SameText(nnam, "favicon")) {
+			if 		(test_Icon(fnam)) typ_str += " (.ico)";
+			else if (test_Png(fnam))  typ_str += " (.png)";
+		}
 	}
 
 	return typ_str;
@@ -1568,8 +1575,40 @@ bool UserShell::get_LnkInf(UnicodeString fnam, TStringList *lst,
 UnicodeString UserShell::get_LnkName(UnicodeString fnam)
 {
 	UnicodeString lnam;
-	if (!usr_SH->get_LnkInf(fnam, NULL, &lnam)) return EmptyStr;
+	if (!get_LnkInf(fnam, NULL, &lnam)) return EmptyStr;
 	return lnam;
+}
+
+//---------------------------------------------------------------------------
+//.ico (:favicon も可)ファイルから指定サイズのアイコンを取得
+//---------------------------------------------------------------------------
+HICON UserShell::get_ico_f(
+	UnicodeString fnam,
+	int  size,			//確認サイズ
+	bool force)			//指定サイズで強制取得	(default = false)
+{
+	HICON hIcon = NULL;
+	try {
+		if (!file_exists(fnam)) Abort();
+		UnicodeString fext = get_extension(fnam);
+		if (!fext.IsEmpty()) {
+			if (!test_IcoExt(fext)) Abort();
+		}
+		else {
+			if (!EndsText(":favicon", fnam)) Abort();
+		}
+
+		if (!test_Icon(fnam, force? 0 : size)) Abort();
+
+		std::unique_ptr<TIcon> icon(new TIcon());
+		icon->SetSize(size, size);
+		icon->LoadFromFile(fnam);
+		if (icon->Handle) hIcon = icon->ReleaseHandle();
+	}
+	catch (...) {
+		hIcon = NULL;
+	}
+	return hIcon;
 }
 
 //---------------------------------------------------------------------------
@@ -1580,9 +1619,8 @@ HICON UserShell::get_Icon(
 	int &size,			//[i/o] 指定サイズ (取得サイズが返る)
 	bool chk_sz)		//サイズチェックを行う	(default = true)
 {
-	if (is_ADS_name(fnam)) return NULL;
-
 	HICON hIcon = NULL;
+	UnicodeString fext = get_extension(fnam);
 
 	//インデックス指定
 	int idx = get_tkn_r(fnam, ",").ToIntDef(-1);
@@ -1597,8 +1635,19 @@ HICON UserShell::get_Icon(
 		return hIcon;
 	}
 
+	//代替データストリーム(.ico/favicon のみ)
+	if (is_ADS_name(fnam)) {
+		return get_ico_f(fnam, size);
+	}
+
+	//インターネットショートカット(:favicon)
+	if (USAME_TI(fext, ".url")) {
+		hIcon = get_ico_f(fnam + ":favicon", 16);
+		if (hIcon) return hIcon;
+	}
+
 	//マウスポインタ
-	if (USAME_TI(ExtractFileExt(fnam), ".cur")) {
+	if (USAME_TI(fext, ".cur")) {
 		if (size>32) return NULL;
 		//ラージまたはスモールアイコンを取得
 		SHFILEINFO sif;
@@ -1616,7 +1665,7 @@ HICON UserShell::get_Icon(
 		try {
 			//デスクトップの IShellFolder インターフェイスを取得
 			TComInterface<IShellFolder> desktop;
-			if (FAILED(SHGetDesktopFolder(&desktop))) Abort();
+			if (FAILED(::SHGetDesktopFolder(&desktop))) Abort();
 
 			//対象フォルダのアイテムID
 			if (FAILED(desktop->ParseDisplayName(NULL, NULL,
@@ -1689,7 +1738,7 @@ HICON UserShell::get_Icon(
 //---------------------------------------------------------------------------
 HICON UserShell::get_SmallIcon(UnicodeString fnam)
 {
-	int size = 16 * ScrScale;
+	int size = 16;
 	return get_Icon(fnam, size, false);
 }
 //---------------------------------------------------------------------------
@@ -1699,7 +1748,7 @@ bool UserShell::draw_SmallIcon(UnicodeString fnam, TCanvas *cv, int x, int y)
 {
 	if (fnam.IsEmpty()) return false;
 
-	HICON hIcon = usr_SH->get_SmallIcon(fnam);
+	HICON hIcon = get_SmallIcon(fnam);
 	if (hIcon) {
 		::DrawIconEx(cv->Handle, x, y, hIcon, 16 * ScrScale, 16 * ScrScale, 0, NULL, DI_NORMAL);
 		::DestroyIcon(hIcon);

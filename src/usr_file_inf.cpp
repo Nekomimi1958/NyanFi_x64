@@ -926,6 +926,24 @@ void get_MetafileInf(
 }
 
 //---------------------------------------------------------------------------
+//PNGか?
+//---------------------------------------------------------------------------
+bool test_Png(UnicodeString fnam)
+{
+	try {
+		if (!file_exists(fnam)) Abort();
+		std::unique_ptr<TFileStream> fs(new TFileStream(fnam, fmOpenRead | fmShareDenyNone));
+		BYTE buf;
+		fs->ReadBuffer(&buf, 1);  if (buf!=0x89) Abort();
+		if (!fsRead_check_char(fs.get(), "PNG\r\n\x1a\n")) Abort();
+		return true;
+	}
+	catch (...) {
+		return false;
+	}
+}
+
+//---------------------------------------------------------------------------
 //PNGファイルの情報を取得
 //---------------------------------------------------------------------------
 bool get_PngInf(
@@ -1442,6 +1460,46 @@ bool get_PspThumbnail(
 	}
 }
 
+//---------------------------------------------------------------------------
+//アイコンか? (サイズ指定可能)
+//---------------------------------------------------------------------------
+bool test_Icon(UnicodeString fnam,
+	int size)	//サイズ	(default = 0 : 任意)
+{
+	try {
+		if (!file_exists(fnam)) Abort();
+		std::unique_ptr<TFileStream> fs(new TFileStream(fnam, fmOpenRead | fmShareDenyNone));
+
+		unsigned short us_buf;
+		fs->ReadBuffer(&us_buf, 2);  if (us_buf!=0) Abort();
+		fs->ReadBuffer(&us_buf, 2);  if (us_buf!=1) Abort();
+
+		unsigned short n;
+		fs->ReadBuffer(&n, 2);		 if (n==0) Abort();
+
+		bool ret = false;
+		if (size==0) {
+			ret = true;
+		}
+		else {
+			for (int i=0; i<n; i++) {
+				unsigned char b_buf;
+				fs->ReadBuffer(&b_buf, 1);
+				int wd = (b_buf==0)? 256 : b_buf;
+				fs->ReadBuffer(&b_buf, 1);
+				int hi = (b_buf==0)? 256 : b_buf;
+				if (wd==size && hi==size) {
+					ret = true; break;
+				}
+				fs->Seek(14, soFromCurrent);
+			}
+		}
+		return ret;
+	}
+	catch(...) {
+		return false;
+	}
+}
 //---------------------------------------------------------------------------
 //アイコンファイルの情報を取得
 //---------------------------------------------------------------------------

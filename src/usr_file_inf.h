@@ -120,6 +120,7 @@ UnicodeString get_ExifInfThumb(UnicodeString fnam, int *ori);
 bool get_GpsInf(UnicodeString fnam, double *lat, double *lng);
 
 void get_MetafileInf(UnicodeString fnam, TStringList *lst);
+bool test_Png(UnicodeString fnam);
 bool get_PngInf(UnicodeString fnam, TStringList *lst, unsigned int *i_wd = NULL, unsigned int *i_hi = NULL);
 UnicodeString get_PngInfStr(UnicodeString fnam, unsigned int *i_wd = NULL, unsigned int *i_hi = NULL);
 bool get_GifInf(UnicodeString fnam, TStringList *lst, unsigned int *i_wd = NULL, unsigned int *i_hi = NULL, int *i_cnt = NULL);
@@ -130,6 +131,7 @@ bool get_PspInf(UnicodeString fnam, TStringList *lst, unsigned int *i_wd = NULL,
 bool get_PspThumbnail(UnicodeString fnam, Graphics::TBitmap *bmpimg);
 
 //---------------------------------------------------------------------------
+bool test_Icon(UnicodeString fnam, int size = 0);
 void get_IconInf(UnicodeString fnam, TStringList* lst, int *ico_n = NULL);
 bool get_AniInf(UnicodeString fnam, TStringList *lst);
 

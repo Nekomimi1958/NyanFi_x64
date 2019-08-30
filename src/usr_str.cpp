@@ -1060,6 +1060,12 @@ bool is_match_regex_i(UnicodeString s, const _TCHAR *ptn)
 	TRegExOptions opt; opt << roIgnoreCase;
 	return TRegEx::IsMatch(s, ptn, opt);
 }
+//---------------------------------------------------------------------------
+UnicodeString get_match_regex(UnicodeString s, const _TCHAR *ptn)
+{
+	TMatch mt = TRegEx::Match(s, ptn);
+	return mt.Success? mt.Value : EmptyStr;
+}
 
 //---------------------------------------------------------------------------
 // ; 区切り文字列から正規表現パターン(/～/)を抽出

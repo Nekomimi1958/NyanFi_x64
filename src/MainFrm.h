@@ -2210,6 +2210,8 @@ private:	// ƒ†[ƒU[éŒ¾
 		ListWndProc(msg, 1);
 	}
 
+	void __fastcall MakeUrlFile(UnicodeString fnam, UnicodeString url);
+
 	bool __fastcall UpdateBgImage(bool repaint_sw = false, bool reload_sw = false);
 	void __fastcall RestoreBgImg();
 

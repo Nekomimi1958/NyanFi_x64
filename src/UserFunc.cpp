@@ -1282,11 +1282,9 @@ int get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel,
 	if (cancel) *cancel = false;
 
 	if (!url.IsEmpty() && InternetConnected()) {
-		HINTERNET hSession = InternetOpen(
-			_T("NyanFi"), INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+		HINTERNET hSession = InternetOpen(_T("NyanFi"), INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
 		if (hSession) {
-			HINTERNET hConnect = InternetOpenUrl(hSession,
-			    url.c_str(), NULL, 0, INTERNET_FLAG_RELOAD, 0);
+			HINTERNET hConnect = InternetOpenUrl(hSession, url.c_str(), NULL, 0, INTERNET_FLAG_RELOAD, 0);
 			if (hConnect) {
 				DWORD dwFsize = 0;
 				DWORD dwBufLen = sizeof(dwFsize);
@@ -1296,30 +1294,58 @@ int get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel,
 				std::unique_ptr<BYTE[]> ldbuf(new BYTE[FILE_RBUF_SIZE]);
 				DWORD dwSize;
 				f_size = 0;
-				chk_cre_dir(ExtractFileDir(fnam));
-				{
-					std::unique_ptr<TFileStream> dfs(new TFileStream(fnam, fmCreate));
-					for (;;) {
-						if (!InternetReadFile(hConnect, ldbuf.get(), FILE_RBUF_SIZE, &dwSize)) break;
-						if (dwSize==0) break;
-						dfs->Write(ldbuf.get(), dwSize);
-						f_size += dwSize;
-						//進捗バー
-						if (prg_box && prg_ratio && dwFsize>0) {
-							*prg_ratio = 1.0 * f_size / dwFsize;
-							prg_box->Repaint();
-						}
-						if (cancel) {
-							Application->ProcessMessages();
-							if (*cancel) break;
-						}
+
+				std::unique_ptr<TMemoryStream> ms(new TMemoryStream());
+				for (;;) {
+					if (!InternetReadFile(hConnect, ldbuf.get(), FILE_RBUF_SIZE, &dwSize)) break;
+					if (dwSize==0) break;
+					ms->Write(ldbuf.get(), dwSize);
+					f_size += dwSize;
+					//進捗バー
+					if (prg_box && prg_ratio && dwFsize>0) {
+						*prg_ratio = 1.0 * f_size / dwFsize;
+						prg_box->Repaint();
+					}
+					if (cancel) {
+						Application->ProcessMessages();
+						if (*cancel) break;
 					}
 				}
-				if (cancel && *cancel && file_exists(fnam)) DeleteFile(fnam);
+
 				if (prg_box && prg_ratio) {
 					*prg_ratio = 1.0;
 					prg_box->Repaint(); Sleep(500);
 				}
+
+				if (!cancel || !*cancel) {
+					//favicon なら形式チェック
+					if (EndsText(":favicon", fnam) && f_size>64) {
+						//.ico ?
+						int tag = 0;
+						unsigned short us_buf;
+						ms->Seek(0, soFromBeginning);
+						ms->ReadBuffer(&us_buf, 2);  if (us_buf==0) tag++;
+						ms->ReadBuffer(&us_buf, 2);  if (us_buf==1) tag++;
+						ms->ReadBuffer(&us_buf, 2);  if (us_buf>0)  tag++;
+						if (tag<3) {
+							//.png?
+							tag = 0;
+							BYTE b_buf;
+							ms->Seek(0, soFromBeginning);
+							ms->ReadBuffer(&b_buf, 1);  if (b_buf==0x89) tag++;
+							ms->ReadBuffer(&b_buf, 1);  if (b_buf==0x50) tag++;
+							ms->ReadBuffer(&b_buf, 1);  if (b_buf==0x4e) tag++;
+							ms->ReadBuffer(&b_buf, 1);  if (b_buf==0x47) tag++;
+							if (tag<4) f_size = -1;
+						}
+					}
+
+					if (f_size>=0) {
+						chk_cre_dir(ExtractFileDir(fnam));
+						ms->SaveToFile(fnam);
+					}
+				}
+
 				InternetCloseHandle(hConnect);
 			}
 		    InternetCloseHandle(hSession);
@@ -1423,25 +1449,6 @@ UnicodeString get_BatteryTimeStr()
 			ret.sprintf(_T("%u:%02u"), s/3600, (s%3600)/60);
 	}
 	return ret;
-}
-
-//---------------------------------------------------------------------------
-//インターネットショートカットの作成
-//---------------------------------------------------------------------------
-bool make_url_file(UnicodeString fnam, UnicodeString url)
-{
-	if (fnam.IsEmpty() || url.IsEmpty()) return false;
-
-	std::unique_ptr<TStringList> fbuf(new TStringList());
-	fbuf->Text = UnicodeString().sprintf(_T("[InternetShortcut]\r\nURL=%s\r\n"), url.c_str());
-
-	try {
-		fbuf->SaveToFile(fnam, TEncoding::UTF8);
-		return true;
-	}
-	catch (...) {
-		return false;
-	}
 }
 
 //---------------------------------------------------------------------------

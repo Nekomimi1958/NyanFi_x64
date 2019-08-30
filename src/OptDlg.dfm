@@ -330,9 +330,9 @@ object OptionDlg: TOptionDlg
       end
       object DispGroupBox: TGroupBox
         Left = 10
-        Top = 113
+        Top = 77
         Width = 434
-        Height = 124
+        Height = 156
         Caption = #34920#31034
         TabOrder = 4
         object HideAtrCheckBox: TCheckBox
@@ -407,20 +407,33 @@ object OptionDlg: TOptionDlg
           LabelPosition = lpLeft
           TabOrder = 5
         end
+        object GetFaviUrlEdit: TLabeledEdit
+          Left = 110
+          Top = 122
+          Width = 313
+          Height = 21
+          Hint = ' \D : '#12489#12513#12452#12531#21517
+          EditLabel.Width = 79
+          EditLabel.Height = 13
+          EditLabel.Caption = 'favicon '#21462#24471'API'
+          LabelPosition = lpLeft
+          TabOrder = 8
+        end
       end
       object MigemoDirEdit: TLabeledEdit
-        Left = 14
-        Top = 73
-        Width = 391
+        Left = 120
+        Top = 41
+        Width = 285
         Height = 21
         EditLabel.Width = 88
         EditLabel.Height = 13
         EditLabel.Caption = 'Migemo '#12487#12451#12524#12463#12488#12522
+        LabelPosition = lpLeft
         TabOrder = 2
       end
       object OpeGroupBox: TGroupBox
         Left = 10
-        Top = 248
+        Top = 245
         Width = 434
         Height = 124
         Caption = #25805#20316
@@ -516,7 +529,7 @@ object OptionDlg: TOptionDlg
       end
       object RefMigemoBtn: TButton
         Left = 408
-        Top = 73
+        Top = 41
         Width = 36
         Height = 22
         Anchors = [akTop, akRight]
@@ -526,7 +539,7 @@ object OptionDlg: TOptionDlg
       end
       object RefTmpDirBtn: TButton
         Left = 408
-        Top = 28
+        Top = 12
         Width = 36
         Height = 22
         Anchors = [akTop, akRight]
@@ -559,13 +572,14 @@ object OptionDlg: TOptionDlg
         end
       end
       object TempDirEdit: TLabeledEdit
-        Left = 14
-        Top = 28
-        Width = 391
+        Left = 120
+        Top = 12
+        Width = 285
         Height = 21
         EditLabel.Width = 73
         EditLabel.Height = 13
         EditLabel.Caption = #19968#26178#12487#12451#12524#12463#12488#12522
+        LabelPosition = lpLeft
         TabOrder = 0
       end
       object TimeGroupBox: TGroupBox
@@ -591,7 +605,7 @@ object OptionDlg: TOptionDlg
       end
       object WatchGroupBox: TGroupBox
         Left = 10
-        Top = 384
+        Top = 381
         Width = 434
         Height = 130
         Caption = #30435#35222'/'#26356#26032

@@ -596,6 +596,7 @@ __published:	// IDE で管理されるコンポーネント
 	TLabeledEdit *FwCntWarnEdit;
 	TLabeledEdit *FwTmTaskFinEdit;
 	TLabeledEdit *FwTmWarnEdit;
+	TLabeledEdit *GetFaviUrlEdit;
 	TLabeledEdit *HdrStrEdit;
 	TLabeledEdit *HideTimeEdit;
 	TLabeledEdit *IconCacheEdit;
@@ -945,7 +946,8 @@ private:	// ユーザー宣言
 
 	void __fastcall WmFormShowed(TMessage &msg);
 
-	void __fastcall SetWinTheme();
+	void __fastcall InitializeOptListBox();
+	void __fastcall SetWinTheme(bool force = false);
 	void __fastcall DeselectComboBox(TGroupBox *gp);
 	void __fastcall UpdateMaxItemWidth();
 
@@ -990,6 +992,7 @@ public:		// ユーザー宣言
 	bool LayoutChanged;
 	bool WinSizeChanged;
 	bool TlBarColChanged;
+	bool DlgFontChanged;
 
 	UsrHintWindow *SplashHint;
 

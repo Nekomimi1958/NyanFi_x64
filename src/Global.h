@@ -10,8 +10,8 @@
 #pragma hdrstop
 #include <htmlhelp.h>
 #include <mmsystem.h>
-#include "usr_shell.h"
 #include "usr_file_ex.h"
+#include "usr_shell.h"
 #include "usr_arc.h"
 #include "usr_migemo.h"
 #include "usr_cmdlist.h"
@@ -574,6 +574,7 @@ extern bool IncSeaMatch1Exit;
 extern int  IncSeaMigemoMin;
 extern bool NotShowNoTask;
 extern UnicodeString WebSeaUrl;
+extern UnicodeString GetFaviconUrl;
 
 extern bool FindPathColumn;
 extern int  FindPathWidth;
@@ -1739,8 +1740,8 @@ __int64 get_DirSize(UnicodeString dnam, int *f_cnt, int *d_cnt, __int64 *o_size,
 __int64 get_ArcDirSize(UnicodeString anam, UnicodeString dnam, int *f_cnt, int *d_cnt);
 
 void  del_CachedIcon(UnicodeString fnam);
-HICON get_file_icon(UnicodeString fnam);
-HICON get_fext_icon(UnicodeString fext = EmptyStr);
+HICON get_file_SmallIcon(UnicodeString fnam);
+HICON get_fext_SmallIcon(UnicodeString fext = EmptyStr);
 HICON get_folder_icon(UnicodeString dnam = EmptyStr);
 
 bool draw_SmallIcon(file_rec *fp, TCanvas *cv, int x, int y, bool force_cache = false);

@@ -98,7 +98,6 @@ UnicodeString trim_ex(UnicodeString s);
 
 UnicodeString replace_regex(UnicodeString s, const _TCHAR *o, const _TCHAR *r);
 UnicodeString replace_regex_2(UnicodeString s, UnicodeString ptn, UnicodeString rep, TRegExOptions opt);
-
 UnicodeString replace_str_by_list(UnicodeString s, TStringList *lst);
 
 void cat_str_semicolon(UnicodeString &s, UnicodeString t);
@@ -148,6 +147,7 @@ bool str_match(UnicodeString ptn, UnicodeString s);
 bool chk_RegExPtn(UnicodeString ptn);
 bool is_match_regex(UnicodeString s, const _TCHAR *ptn);
 bool is_match_regex_i(UnicodeString s, const _TCHAR *ptn);
+UnicodeString get_match_regex(UnicodeString s, const _TCHAR *ptn);
 UnicodeString extract_prm_RegExPtn(UnicodeString &s);
 UnicodeString ptn_match_str(UnicodeString ptn, UnicodeString s);
 bool starts_ptn(UnicodeString ptn, UnicodeString s);

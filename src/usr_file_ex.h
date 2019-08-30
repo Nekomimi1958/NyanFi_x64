@@ -104,6 +104,7 @@ __int64 get_comp_size(UnicodeString fnam);
 
 bool is_ADS_name(UnicodeString fnam);
 int  pos_ADS_delimiter(UnicodeString fnam);
+UnicodeString split_ADS_name(UnicodeString &fnam);
 int  delete_ADS(UnicodeString fnam, bool force = false, UnicodeString mask = "*", TStringList *lst = NULL);
 bool rename_ADS(UnicodeString fnam, UnicodeString new_name);
 

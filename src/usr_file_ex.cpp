@@ -780,6 +780,24 @@ bool is_ADS_name(UnicodeString fnam)
 {
 	return (pos_ADS_delimiter(fnam)>0);
 }
+//---------------------------------------------------------------------------
+//代替データストリーム付きパス名を分解
+//戻り値: ファイル名/ fnam = :ストリーム名
+//---------------------------------------------------------------------------
+UnicodeString split_ADS_name(UnicodeString &fnam)
+{
+	UnicodeString ret_str;
+	int p = pos_ADS_delimiter(fnam);
+	if (p>0) {
+		ret_str = fnam.SubString(1, p - 1);
+		fnam.Delete(1, p - 1);
+	}
+	else {
+		ret_str = fnam;
+		fnam	= EmptyStr;
+	}
+	return ret_str;
+}
 
 //---------------------------------------------------------------------------
 //代替データストリームの削除

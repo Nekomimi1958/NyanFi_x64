@@ -194,7 +194,7 @@ void __fastcall TToolBtnDlg::RefIconBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TToolBtnDlg::IconEditChange(TObject *Sender)
 {
-	usr_SH->draw_SmallIcon(to_absolute_name(get_actual_name(IconEdit->Text)), 
+	usr_SH->draw_SmallIcon(to_absolute_name(get_actual_name(IconEdit->Text)),
 		IcoImage, Mix2Colors(col_bgTlBar1, col_bgTlBar2));
 }
 

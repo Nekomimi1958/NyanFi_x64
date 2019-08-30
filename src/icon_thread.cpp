@@ -69,7 +69,7 @@ void __fastcall TGetIconThread::Execute()
 			if (fnam.IsEmpty()) continue;
 
 			//アイコンを取得
-			HICON hIcon = get_file_icon(fnam);
+			HICON hIcon = get_file_SmallIcon(fnam);
 
 			//キャッシュに設定
 			IconRWLock->BeginWrite();

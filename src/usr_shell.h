@@ -202,6 +202,7 @@ public:
 	UnicodeString get_FileTypeStr(UnicodeString fnam);
 	UnicodeString get_LnkName(UnicodeString fnam);
 
+	HICON get_ico_f(UnicodeString fnam, int size, bool force = false);
 	HICON get_Icon(UnicodeString fnam, int &size, bool chk_sz = true);
 	HICON get_SmallIcon(UnicodeString fnam);
 	bool  draw_SmallIcon(UnicodeString fnam, TCanvas *cv, int x, int y);

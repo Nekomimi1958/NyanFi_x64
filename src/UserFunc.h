@@ -149,7 +149,7 @@ int down_StrListItem(TStringList *lst, int idx);
 int get_IndexFromAccKey(TStringList *lst, UnicodeString key);
 
 UnicodeString extract_URL(UnicodeString s);
-UnicodeString get_EncodedUrl(UnicodeString url);
+
 bool InternetConnected();
 int  get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel = NULL,
 		TPaintBox *prg_box = NULL, double *prg_ratio = NULL);
@@ -162,8 +162,6 @@ void set_ControlRBCorner(TControl *cp0, TControl *cp1);
 
 UnicodeString get_BatteryPercentStr();
 UnicodeString get_BatteryTimeStr();
-
-bool make_url_file(UnicodeString fnam, UnicodeString url);
 
 bool EjectDrive(UnicodeString drvnam, bool eject);
 bool EjectDrive2(UnicodeString drvnam, bool eject);

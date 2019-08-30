@@ -59,8 +59,8 @@ void __fastcall TInpDirDlg::FormShow(TObject *Sender)
 	InhFilter  = false;
 	CurSeaPath = EmptyStr;
 
-	SubComboBox->AutoComplete	 = false;
-	SubComboBox->Enabled		 = false;
+	SubComboBox->AutoComplete = false;
+	SubComboBox->Enabled	  = false;
 	SubComboBox->Clear();
 
 	InpDirComboBox->AutoComplete = false;

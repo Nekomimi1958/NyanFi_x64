@@ -463,6 +463,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 
 	//コントロールのタグに、対応する変数のポインタを設定
 	//UnicodeString
+	GetFaviUrlEdit->Tag			= (int)&GetFaviconUrl;
 	L_IniPatEdit->Tag			= (int)&InitialPath[0];
 	R_IniPatEdit->Tag			= (int)&InitialPath[1];
 	TextEditorEdit->Tag 		= (int)&TextEditor;
@@ -856,6 +857,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	LayoutChanged	= false;
 	WinSizeChanged	= false;
 	TlBarColChanged = false;
+	DlgFontChanged  = false;
 
 	//INIファイルがデフォルトと異なる場合、ファイル名を表示
 	UnicodeString inam = IniFile->FileName;
@@ -915,16 +917,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	//キー設定のみの場合はここまで
 	//--------------------------------------------------
 
-	set_ListBoxItemHi(ExtColListBox);
-	set_ListBoxItemHi(TagColListBox);
-												//<<<<<<<X86_SPI
-	set_ListBoxItemHi(EtcEditorListBox, NULL, true);
-	set_ListBoxItemHi(AssociateListBox, NULL, true);
-	set_ListBoxItemHi(ExtMenuListBox, NULL, true);
-	set_ListBoxItemHi(ExtToolListBox, NULL, true);
-	set_ListBoxItemHi(EventListBox);
-	set_ListBoxItemHi(PrtDirListBox);
-	set_ListBoxItemHi(VirDrvListBox);
+	InitializeOptListBox();
 
 	ScaleOptComboBox->Items->Assign(InterpolationList);
 	ThumbOptComboBox->Items->Assign(InterpolationList);
@@ -1114,25 +1107,42 @@ void __fastcall TOptionDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TOptionDlg::SetWinTheme()
+void __fastcall TOptionDlg::InitializeOptListBox()
 {
-	if (Color==get_PanelColor() && (KeySetOnly? IsDkKey : IsDkAll)==IsDarkMode) return;
+	set_ListBoxItemHi(OptColListBox);
+	set_ListBoxItemHi(TimColListBox);
+	set_ListBoxItemHi(ExtColListBox);
+	set_ListBoxItemHi(TagColListBox);
+												//<<<<<<<X86_SPI
+	set_ListBoxItemHi(EtcEditorListBox, NULL, true);
+	set_ListBoxItemHi(AssociateListBox, NULL, true);
+	set_ListBoxItemHi(ExtMenuListBox, NULL, true);
+	set_ListBoxItemHi(ExtToolListBox, NULL, true);
+	set_ListBoxItemHi(EventListBox);
+	set_ListBoxItemHi(PrtDirListBox);
+	set_ListBoxItemHi(VirDrvListBox);
+}
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::SetWinTheme(
+	bool force)		//強制更新	(default = false)
+{
+	if (!force && Color==get_PanelColor() && (KeySetOnly? IsDkKey : IsDkAll)==IsDarkMode) return;
 
 	SetDarkWinTheme(this);
 
 	TColor bg = get_WinColor();
+	OptColListBox->Color	= bg;
+	TimColListBox->Color	= bg;
+	ExtColListBox->Color	= bg;
 	AssociateListBox->Color = bg;
 	AssociateListBox->Color = bg;
 	EtcEditorListBox->Color = bg;
 	EventListBox->Color 	= bg;
-	ExtColListBox->Color	= bg;
 	KeyListBox->Color		= bg;
-	OptColListBox->Color	= bg;
 	PrtDirListBox->Color	= bg;
 												//<<<<<<<X86_SPI
 	StdCmdListBox->Color	= bg;
 	TagColListBox->Color	= bg;
-	TimColListBox->Color	= bg;
 	VirDrvListBox->Color	= bg;
 	ExtMenuListBox->Color	= bg;
 	ExtToolListBox->Color	= bg;
@@ -1586,6 +1596,7 @@ void __fastcall TOptionDlg::RefFontBtnClick(TObject *Sender)
 		if (UserModule->FontDlgToFont(f)) {
 			if (USAME_TI(FontBufList->ValueFromIndex[idx], "ダイアログ")) {
 				if (f->Size>10) f->Size = 10;
+				DlgFontChanged = true;
 			}
 			FontComboBox->Repaint();
 		}
@@ -3032,7 +3043,7 @@ void __fastcall TOptionDlg::ExtHeaderDrawSection(THeaderControl *HeaderControl,
 
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::KeyHeaderControlSectionClick(THeaderControl *HeaderControl,
-		  THeaderSection *Section)
+	THeaderSection *Section)
 {
 	KeySortMode = Section->Index;
 	SortKeyListBox();
@@ -4323,7 +4334,20 @@ void __fastcall TOptionDlg::AppColorBtnClick(TObject *Sender)
 	//メイン画面に通知
 	::SendMessage(MainHandle, WM_NYANFI_APPEAR, 0, 0);
 
-	SetWinTheme();
+	set_ListBoxItemHi(KeyListBox);
+	InitializeOptListBox();
+
+	if (DlgFontChanged && IsDarkMode) {
+		IsDarkMode = false;
+		SetWinTheme(true);
+		IsDarkMode = true;
+		SetWinTheme(true);
+	}
+	else {
+		SetWinTheme();
+	}
+
+	DlgFontChanged = false;
 }
 
 //---------------------------------------------------------------------------
@@ -4478,6 +4502,8 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 	AssociateList->Assign(AssociateListBox->Items);
 	OpenStdCmdList->Assign(StdCmdListBox->Items);
 	ProtectDirList->Assign(PrtDirListBox->Items);
+
+	if (DlgFontChanged) SetWinTheme(true);
 
 	TCheckListBox *lp = ExtMenuListBox;
 	for (int i=0; i<lp->Count; i++) {

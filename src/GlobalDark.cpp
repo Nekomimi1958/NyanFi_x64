@@ -248,8 +248,9 @@ void SetDarkWinTheme(TWinControl *wp)
 			TControl *cp = wp->Controls[i];
 			if (cp->ClassNameIs("TLabel")) {
 				TLabel *lp = (TLabel *)cp;
-				lp->Color		= bg_panel;
+				lp->Font->Assign(Application->DefaultFont);
 				lp->Font->Color = fg_label;
+				lp->Color		= bg_panel;
 			}
 			else if (cp->InheritsFrom(__classid(TWinControl))) {
 				SetDarkWinTheme((TWinControl *)cp);
@@ -268,8 +269,9 @@ void SetDarkWinTheme(TWinControl *wp)
 		if (wp->ClassNameIs("TPanel")) {
 			TPanel *pp = (TPanel *)wp;
 			pp->StyleElements.Clear();
-			pp->Color		= bg_panel;
+			pp->Font->Assign(Application->DefaultFont);
 			pp->Font->Color = fg_label;
+			pp->Color		= bg_panel;
 		}
 		else if (wp->ClassNameIs("TGroupBox") || wp->ClassNameIs("TRadioGroup")) {
 			AttachLabelToGroup(wp);
@@ -286,7 +288,7 @@ void SetDarkWinTheme(TWinControl *wp)
 						TLabel *lp = new TLabel(cp->Parent);
 						lp->Tag		= (18 << 16) + cp->Width - 8;	//検索マーク用 ***
 						lp->Parent	= cp->Parent;
-						lp->Font->Assign(cp->Font);
+						lp->Font->Assign(Application->DefaultFont);
 						lp->Color		= bg_panel;
 						lp->Font->Color = fg_label;
 						lp->Caption = cp->Caption;
@@ -304,8 +306,9 @@ void SetDarkWinTheme(TWinControl *wp)
 				TControl *cp = wp->Controls[i];
 				if (cp->ClassNameIs("TLabel")) {
 					TLabel *lp = (TLabel *)cp;
-					lp->Color		= bg_panel;
+					lp->Font->Assign(Application->DefaultFont);
 					lp->Font->Color = fg_label;
+					lp->Color		= bg_panel;
 				}
 			}
 		}
@@ -315,8 +318,9 @@ void SetDarkWinTheme(TWinControl *wp)
 				TControl *cp = wp->Controls[i];
 				if (cp->ClassNameIs("TLabel")) {
 					TLabel *lp = (TLabel *)cp;
-					lp->Color		= bg_panel;
+					lp->Font->Assign(Application->DefaultFont);
 					lp->Font->Color = fg_label;
+					lp->Color		= bg_panel;
 				}
 				else if (cp->InheritsFrom(__classid(TWinControl))) {
 					SetDarkWinTheme((TWinControl *)cp);
@@ -327,32 +331,37 @@ void SetDarkWinTheme(TWinControl *wp)
 	//以下は単独の子コントロール
 	else if (wp->ClassNameIs("TEdit")) {
 		TEdit *ep = (TEdit *)wp;
-		ep->Color		= bg_win;
+		ep->Font->Assign(Application->DefaultFont);
 		ep->Font->Color = fg_txt;
+		ep->Color		= bg_win;
 	}
 	else if (wp->ClassNameIs("TLabeledEdit")) {
 		TLabeledEdit *ep = (TLabeledEdit *)wp;
-		ep->Color		= bg_win;
+		ep->Font->Assign(Application->DefaultFont);
 		ep->Font->Color = fg_txt;
+		ep->Color		= bg_win;
 		ep->EditLabel->Font->Color = fg_label;
 	}
 	else if (wp->ClassNameIs("TMaskEdit")) {
 		TMaskEdit *ep = (TMaskEdit *)wp;
-		ep->Color		= bg_win;
+		ep->Font->Assign(Application->DefaultFont);
 		ep->Font->Color = fg_txt;
+		ep->Color		= bg_win;
 	}
 	else if (wp->ClassNameIs("TMemo")) {
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
 	}
 	else if (wp->ClassNameIs("TSpeedButton")) {
 		TSpeedButton *bp = (TSpeedButton *)wp;
+		bp->Font->Assign(Application->DefaultFont);
 		bp->Font->Color = fg_label;
 	}
 	else if (wp->ClassNameIs("TComboBox")) {
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_CFD") : NULL, NULL);
 		TComboBox *cp = (TComboBox *)wp;
-		cp->Color		= bg_win;
+		cp->Font->Assign(Application->DefaultFont);
 		cp->Font->Color = fg_txt;
+		cp->Color		= bg_win;
 	}
 	else if (wp->ClassNameIs("TCheckBox")) {
 		if (IsDarkMode) {
@@ -362,9 +371,9 @@ void SetDarkWinTheme(TWinControl *wp)
 				TLabel *lp = new TLabel(cp->Parent);
 				lp->Tag		= (cp->Height << 16) + cp->Width;	//検索マーク用
 				lp->Parent	= cp->Parent;
-				lp->Font->Assign(cp->Font);
-				lp->Color		= bg_panel;
+				lp->Font->Assign(Application->DefaultFont);
 				lp->Font->Color = fg_label;
+				lp->Color		= bg_panel;
 				lp->Caption = cp->Caption;
 				lp->Anchors = cp->Anchors;
 				lp->Left	= cp->Left + 16 * scale;
@@ -382,9 +391,9 @@ void SetDarkWinTheme(TWinControl *wp)
 				TLabel *lp = new TLabel(cp->Parent);
 				lp->Tag		= (cp->Height << 16) + cp->Width;	//検索マーク用
 				lp->Parent	= cp->Parent;
-				lp->Font->Assign(cp->Font);
-				lp->Color		= bg_panel;
+				lp->Font->Assign(Application->DefaultFont);
 				lp->Font->Color = fg_label;
+				lp->Color		= bg_panel;
 				lp->Caption = cp->Caption;
 				lp->Left	= cp->Left + 16 * scale;
 				lp->Top 	= cp->Top;

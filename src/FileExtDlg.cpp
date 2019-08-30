@@ -569,7 +569,7 @@ void __fastcall TFileExtensionDlg::InfoListBoxDrawItem(TWinControl *Control, int
 	UnicodeString fext = FextInfoList->Strings[Index];
 	//ƒAƒCƒRƒ“
 	if (IconMode==1) {
-		HICON hIcon = get_fext_icon(fext);
+		HICON hIcon = get_fext_SmallIcon(fext);
 		if (hIcon) ::DrawIconEx(cv->Handle, xp, yp, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
 	}
 
