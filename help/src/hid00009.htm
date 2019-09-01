@@ -27,15 +27,15 @@
 <br>
 
 <dl>
-<dt class="no_bg">一時ディレクトリ <img src="edit.png" alt="" border=0>
+<dt class="no_bg">一時ディレクトリ <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: Temp\)</span>
 <dd>アーカイブ内のファイルを一時的に解凍する必用がある場合などに使用されるディレクトリです。<br>
 この中のファイルは、仮想ディレクトリから抜けるときや、<b>NyanFi</b> の起動時に、自動的に削除されます。したがって、他のソフトと共有せずに、<b>専用のディレクトリを指定してください。</b><br>
-デフォルトでは、<b>NyanFi</b> のあるディレクトリに &quot;<b>Temp</b>&quot; というサブディレクトリが作られます。<br>
 ドライブ指定がない場合 <b>NyanFi</b> ディレクトリ下の相対パスとみなされます。<br>
 なお二重起動した場合は、他の <b>NyanFi</b> と競合しないように、ディレクトリ名の末尾に _ で区切って連番が付加されます。<br>
 
 <dt class="no_bg">Migemo ディレクトリ <img src="edit.png" alt="" border=0>
-<dd><a href="hid00050.htm">インクリメンタルサーチ</a>やフィルタなどで <b>C/Migemo</b> を利用する場合、関係ファイルをインストールしてある場所を指定します。空欄の場合は、<b>NyanFi</b> のあるディレクトリとみなされます。またドライブ指定がない場合 <b>NyanFi</b> ディレクトリ下の相対パスとみなされます。<br>
+<dd><a href="hid00050.htm">インクリメンタルサーチ</a>やフィルタなどで <b>C/Migemo</b> を利用する場合、関係ファイルをインストールしてある場所を指定します。<br>
+空欄の場合は、<b>NyanFi</b> のあるディレクトリとみなされます。またドライブ指定がない場合 <b>NyanFi</b> ディレクトリ下の相対パスとみなされます。<br>
 <br><br>
 
 <dt id="Show"><img src="grpbox.png" alt="" border=0> 表示
@@ -60,7 +60,7 @@
 <dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> タイトルバーにカレントパスを表示
 <dd>タイトルバーに、カレント側のフルパス名を表示します。<br>
 
-<dt class="no_bg_indent1">ディレクトリ区切り文字 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">ディレクトリ区切り文字 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: /)</span>
 <dd>画面上でパスを表示する際のディレクトリ区切り文字を指定できます。ログウィンドウや、タスクログを表示している一覧ダイアログにも適用されます。<br>
 通常の日本語フォントでも、U+2216 などの代用文字を指定することでバックスラッシュを表示できます(右クリックメニューから参照可能)。<br>
 なお内容をコピーした場合は、元の &quot;<b>\</b>&quot; (U+005C) になります。<br>
@@ -73,16 +73,14 @@
 なお、ファイルリスト以外では、この設定にかかわらず固有のアイコンを表示します。<br>
 </div>
 
-<dt class="no_bg_indent1">アイコンキャッシュ数 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">アイコンキャッシュ数 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 500)</span>
 <dd>ファイルリストなどでスモールアイコンを表示する場合、ファイル固有のアイコンを指定した数までキャッシュして利用します。超過した場合は、古いものから一旦破棄していきます。<br>
 拡張子にのみ依存するアイコンについては、この設定にかかわらず、すべてキャッシュされます。<br>
 なお、代替データストリームの .png 形式の  <b>favicon</b> はキャッシュされません。<br>
 <br>
-<dt id="FaviconApi" class="no_bg_indent1">favicon 取得API <img src="edit.png" alt="" border=0>
+<dt id="FaviconApi" class="no_bg_indent1">favicon 取得API <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: http://www.google.com/s2/favicons?domain=\D)</span>
 <dd>ブラウザからリンク項目をドロップしてインターネットショートカットを作成する際にドメイン下で <b>favicon.ico</b> が取得できなかったときに利用する取得APIのURLを指定します。<br>
 URL中の書式文字列 <b>\D</b> がドメイン名に置き換えられます。<br>
-デフォルトでは Google の favicon 取得APIが設定されています。<br>
-<span class="inp_box">http://www.google.com/s2/favicons?domain=\D</span><br>
 <br>
 
 <dt id="Operation"><img src="grpbox.png" alt="" border=0> 操作
@@ -135,7 +133,7 @@ URL中の書式文字列 <b>\D</b> がドメイン名に置き換えられます。<br>
 <dd>ファイルリストでUNCパスを開いていて、そこへフォーカスを移したり、最新の情報に更新したりした場合、あるいは新たにUNCパスを開こうとした場合、そのUNCパスの存在チェックを行います。チェックは、その都度スレッドを生成して行い、タイムアウト前にESCキーで中断できます(チェック開始して約1秒後にヒント表示)。例えば開いているコンピュータがシャットダウンしてしまった場合などに役立ちます。<br>
 チェックを外すと、この機能が無効になります。環境によると思いますが、UNCパスを開いているファイルリストへフォーカス移動などが遅い場合、上述を踏まえた上でチェックを外してみてください。<br>
 
-<dt class="no_bg_indent1">ディレクトリ監視間隔 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">ディレクトリ監視間隔 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 1000m秒)</span>
 <dd>左右ファイルリストのディレクトリの変化を定期的に確認して表示に反映します。その時間間隔を m秒単位で指定します。0 を設定すると監視を行いません。<br>
 監視したいディレクトリをOSに設定しておくと、何らかの変化があった場合OSによって記録されるので、それを定期的に確認しています。<b>NynaFi</b> 側は、確認のたびに対象ディレクトリに直接アクセスしているわけではなく、OSによる記録内容をみているだけなので、この設定によってアクセス頻度が変わるようなことはないはずです。<br>
 
@@ -149,7 +147,7 @@ URL中の書式文字列 <b>\D</b> がドメイン名に置き換えられます。<br>
 
 <dt id="Task"><img src="grpbox.png" alt="" border=0> タスク
 <dd></dd>
-<dt class="no_bg_indent1">最大タスク数 <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">最大タスク数 <img src="combobox.png" alt="" border=0>　<span class="def_text">(デフォルト: 4)</span>
 <dd>
 バックグラウンドで同時に実行する最大タスク数(1～4)を指定します。<br>
 設定数以上のタスクを実行しようとした場合は、予約待機します。予約待機数に制限はありません。<br>
@@ -157,8 +155,10 @@ URL中の書式文字列 <b>\D</b> がドメイン名に置き換えられます。<br>
 
 <dt id="Tolerance"><img src="grpbox.png" alt="" border=0> タイムスタンプの許容誤差
 <dd>
+<img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 2000m秒)</span><br>
 同名ファイルの処理でタイムスタンプを比較する場合、ここで設定した範囲内なら同じとみなします。<br>
-値はm秒単位で指定していださい。FATではタイムスタンプの精度が2秒なので、デフォルトを2000m秒(=2秒)としています。<br>
+値はm秒単位で指定していださい。<br>
+デフォルトの2000m秒(=2秒)は、<b>FAT32</b> のタイムスタンプ精度に相当します。<br>
 <br>
 
 <dt id="Copy"><img src="grpbox.png" alt="" border=0> コピー動作
@@ -169,7 +169,7 @@ URL中の書式文字列 <b>\D</b> がドメイン名に置き換えられます。<br>
 <dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> タグをコピー
 <dd>ファイル/ディレクトリをコピーした際に、設定されているタグもコピーします。<br>
 
-<dt class="no_bg_indent1"><b>同名時の自動改名書式</b> <img src="edit.png" alt="" border=0><br>
+<dt class="no_bg_indent1"><b>同名時の自動改名書式</b> <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: \N_\SN(1))</span>
 <dd>
 同名ファイルの処理で「<b>自動的に名前を変更</b>」を選んだ場合の改名書式を指定できます(拡張子はそのまま)。指定には以下の書式文字列が使えます。
 <div class="indent1">
@@ -185,16 +185,16 @@ URL中の書式文字列 <b>\D</b> がドメイン名に置き換えられます。<br>
 　<span class="inp_box">\N_\DT(mmdd)\-_\SN(1)</span>　hoge.txt → hoge_0401.txt、hoge_0401_1.txt …<br>
 <hr>
 
-<dt class="no_bg_indent1"><b>ネットワーク待ち時間</b> <img src="edit.png" alt="" border=0><br>
+<dt class="no_bg_indent1"><b>ネットワーク待ち時間</b> <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 200m秒)</span>
 <dd>
 コピー/移動元・先がネットワークドライブの場合、バックグラウンド・タスクで一定サイズ転送されるたびに呼ばれるコールバック関数に待ち時間を入れタイムスライスを譲ることによって、ファイラー操作の滞りを改善します。コールバック関数は1MB転送されるごとに数十～数百m秒間隔で呼ばれるようです。待ち時間を大きくするほど効果がありますが、その分転送速度が遅くなります。逆に転送速度を優先したい場合は、値を小さくしてください。デフォルトでは、操作性を優先した設定になっています。
 
-<dt class="no_bg_indent1"><b>通常待ち時間</b> <img src="edit.png" alt="" border=0><br>
+<dt class="no_bg_indent1"><b>通常待ち時間</b> <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 2秒)</span>
 <dd>
 コピー/移動元・先がネットワーク以外の通常ドライブの場合の待ち時間を指定します。<br>
 アクセスの遅いドライブでは、ある程度の待ち時間を入れないと操作が重くなります。<br>
 
-<dt class="no_bg_indent1"><img src="edit.png" alt="" border=0> <b>秒以上無操作なら待ち時間を最小に</b><br>
+<dt class="no_bg_indent1"><img src="edit.png" alt="" border=0> <b>秒以上無操作なら待ち時間を最小に</b>　<span class="def_text">(デフォルト: 10秒)</span>
 <dd>
 指定した秒数以上、キーやマウス操作をしなかった場合、<b>ネットワーク待ち時間</b>と<b>通常待ち時間</b>を両方とも最小(転送速度が約64MB/秒以上なら 0 そうでなければ 1ms)にして高速実行になります。<br>
 その場合、<a href="hid00069.htm">タスクマネージャ</a>では「高速実行」と表示され、またファイラーのタスク表示部では、進捗バーの左に<span style="color:#ff0000;">■</span>マークが出ます。<br>

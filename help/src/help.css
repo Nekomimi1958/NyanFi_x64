@@ -205,6 +205,11 @@ PRE {
   font-weight: normal;
 }
 
+.def_text {
+  color: #060;
+  font-weight: normal;
+}
+
 .mono_text {
   font-family: monospace;
 }

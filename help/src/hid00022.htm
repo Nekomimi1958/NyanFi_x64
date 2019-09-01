@@ -26,13 +26,13 @@
 <dl>
 <dt><img src="grpbox.png" alt="" border=0> ファイラー
 
-<dt class="no_bg_indent1"><img src="grpbox.png" alt="" border=0> ファイルリストでのダブルクリック
+<dt class="no_bg_indent1"><img src="grpbox.png" alt="" border=0> ファイルリストでのダブルクリック　<span class="def_text">(デフォルト: 標準の Enter キー動作 (OpenStandard))</span>
 <dd>ファイルリストの項目をダブルクリックしたときの動作を指定します。<br>
 「標準の Enter キー動作 (<a href="hid00005.htm#OpenStandard">OpenStandard</a>)」、「Windowsの関連付けで開く (<a href="hid00005.htm#OpenByWin">OpenByWin</a>)」、「独自の関連付けで開く (<a href="hid00005.htm#OpenByApp">OpenByApp</a>)」のいずれかを選べます。<br>
 なお、<a href="hid00021.htm">オプション設定 - イベント</a> の「<b>ファイルリストでファイル名主部以外をダブルクリック(FL)</b>」にコマンドが設定されている場合、アイコン、ファイル名主部(拡張子は除く)、ディレクトリ名部分以外をダブルクリックすると、ここで指定された動作の代わりにイベントのコマンドが実行がされます。<br>
 <br>
 
-<dt class="no_bg_indent1"><img src="grpbox.png" alt="" border=0> ファイルリストへのデフォルトのドロップ動作
+<dt class="no_bg_indent1"><img src="grpbox.png" alt="" border=0> ファイルリストへのデフォルトのドロップ動作　<span class="def_text">(デフォルト: Windows 標準)</span>
 <dd>修飾キーなしの左ドラッグによって、ファイルリストへドロップした場合の動作を指定します。<br>
 「Windows 標準」、「常にコピー」、「常に移動」のいずれかを選べます。<br>
 
@@ -48,7 +48,7 @@
 <dd>「<b>マウスで選択</b>」が有効でアイコンが表示されている場合、アイコンをクリックすると個別に選択状態を反転できます。<br>
 <br>
 
-<dt class="no_bg_indent1">マウスホイール <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">マウスホイール <img src="combobox.png" alt="" border=0>　<span class="def_text">(デフォルト: ScrollUp/ScrollDown、Ctrl+ ZoomIn/ZoomOut)</span>
 <dd>マウスホイールを回転したときに実行するコマンドを設定します。<span class="btn_frame">Ctrl</span>、<span class="btn_frame">Shift</span>キーとの組み合わせにより、4通りの動作が可能です。<br>
 コマンドの組み合わせをコンボボックスで選択してください。&quot;上回転時のコマンド/下回転時のコマンド&quot;という書式で任意のコマンドを設定することもできます。<br>
 <b>例</b> <span class="inp_box">ToParent/BackDirHist</span><br>
@@ -57,12 +57,13 @@
 Windows 10 の設定で「ホバーしたときに非アクティブ ウィンドウをスクロールする」をオンしている場合、フォーカスのないファイルリストをマウスホイールでスクロールすると、そのリストにフォーカスが移ります。
 </div>
 
-<dt class="no_bg_indent1"><img src="edit.png" alt="" border=0> ホイールによるスクロール行数
+<dt class="no_bg_indent1">ホイールによるスクロール行数 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 2)</span>
 <dd>ファイルリストおよびログウィンドウでマウスホイールを回転させたときのスクロール行数を指定します。<br>
 
-<dt class="no_bg_indent1">ホイールボタン <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">ホイールボタン <img src="combobox.png" alt="" border=0>　<span class="def_text">(デフォルト: ZoomReset)</span>
 <dd>ホイールボタンを押したときに実行するコマンドを設定します。<span class="btn_frame">Ctrl</span>、<span class="btn_frame">Shift</span>キーとの組み合わせにより、4通りの動作が可能です。<br>
-<dt class="no_bg_indent1">X1ボタン <img src="combobox.png" alt="" border=0>　X2ボタン <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">X1ボタン <img src="combobox.png" alt="" border=0>　<span class="def_text">(デフォルト: BackDirHist)</span><br>
+X2ボタン <img src="combobox.png" alt="" border=0>
 <dd>多ボタンマウスのX1、X2ボタンを押したときに実行するコマンドを設定します。<br>
 <br>
 コンボボックスによる選択の他、任意のコマンドを設定することもできます。また<a href="hid00005.htm#ExeCommands">ExeCommands</a> コマンドを用いれば、複雑な動作も可能です。<br>
@@ -70,14 +71,14 @@ Windows 10 の設定で「ホバーしたときに非アクティブ ウィンドウをスクロールする」を
 <br><br>
 
 <dt><img src="grpbox.png" alt="" border=0> テキストビュアー
-<dt class="no_bg_indent1">マウスホイール <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">マウスホイール <img src="combobox.png" alt="" border=0>　<span class="def_text">(デフォルト: ScrollUp/ScrollDown、Ctrl+ ZoomIn/ZoomOut、Shift+ PageUp/PageDown)</span>
 <dd>マウスホイールを回転したときに実行するコマンドを設定します。<span class="btn_frame">Ctrl</span>、<span class="btn_frame">Shift</span>キーとの組み合わせにより、4通りの動作が可能です。<br>
 コマンドの組み合わせをコンボボックスで選択してください。&quot;上回転時のコマンド/下回転時のコマンド&quot;という書式で任意のコマンドを設定することもできます。<br>
 
-<dt class="no_bg_indent1"><img src="edit.png" alt="" border=0> ホイールによるスクロール行数
+<dt class="no_bg_indent1">ホイールによるスクロール行数 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 3)</span>
 <dd>マウスホイールの回転によってスクロールする行数を指定します。<br>
 
-<dt class="no_bg_indent1">ホイールボタン <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">ホイールボタン <img src="combobox.png" alt="" border=0>　<span class="def_text">(デフォルト: ZoomReset)</span>
 <dd>ホイールボタンを押したときに実行するコマンドを設定します。<br>
 <dt class="no_bg_indent1">X1ボタン <img src="combobox.png" alt="" border=0>　X2ボタン <img src="combobox.png" alt="" border=0>
 <dd>多ボタンマウスのX1、X2ボタンを押したときに実行するコマンドを設定します。<br>
@@ -88,10 +89,10 @@ Windows 10 の設定で「ホバーしたときに非アクティブ ウィンドウをスクロールする」を
 <br><br>
 
 <dt><img src="grpbox.png" alt="" border=0> イメージビュアー
-<dt class="no_bg_indent1">マウスホイール <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">マウスホイール <img src="combobox.png" alt="" border=0>　<span class="def_text">(デフォルト: PrevFile/NextFile、Ctrl+ ZoomIn/ZoomOut、Shift+ ScrollUp/ScrollDown、Ctrl+Shift+ ScrollLeft/ScrollRight)</span>
 <dd>マウスホイールを回転したときに実行するコマンドを設定します。<span class="btn_frame">Ctrl</span>、<span class="btn_frame">Shift</span>キーとの組み合わせにより、4通りの動作が可能です。<br>
 コマンドの組み合わせをコンボボックスで選択してください。&quot;上回転時のコマンド/下回転時のコマンド&quot;という書式で任意のコマンドを設定することもできます。<br>
-<dt class="no_bg_indent1">ホイールボタン <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">ホイールボタン <img src="combobox.png" alt="" border=0>　<span class="def_text">(デフォルト: FittedSize)</span>
 <dd>ホイールボタンを押したときに実行するコマンドを設定します。<br>
 <dt class="no_bg_indent1">X1ボタン <img src="combobox.png" alt="" border=0>　X2ボタン <img src="combobox.png" alt="" border=0>
 <dd>多ボタンマウスのX1、X2ボタンを押したときに実行するコマンドを設定します。<br>

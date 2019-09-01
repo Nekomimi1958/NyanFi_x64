@@ -148,7 +148,7 @@
 <dd>ファイル情報が取得されていて、テキストファイルの場合、プレビュー表示を行います。<br>
 ファイル情報が非表示(<a href="hid00005.htm#ShowProperty">ShowProperty</a>_OFF)でも、プレビューが表示(<a href="hid00005.htm#ShowPreview">ShowPreview</a>_ON)の場合、テキストと思われる拡張子のファイルについては、(ファイル情報を取得して)プレビュー表示を試みます。
 
-<dt class="no_bg_indent1">最大行数 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">最大行数 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 1000)</span>
 <dd>プレビュー表示する最大行数を指定します。0 を指定するとすべて表示します。<br>
 通常10000行ぐらいはストレスなく表示できると思います。<br>
 なお、1000以上に設定している場合、最大行数を超えるテキストのファイル情報に「推定行数」が表示されます。<br>
@@ -170,10 +170,10 @@
 <dt id="Log"><img src="grpbox.png" alt="" border=0> ログ
 <dd>
 
-<dt class="no_bg_indent1">更新間隔 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">更新間隔 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 250m秒)</span>
 <dd>ログウィンドウの更新間隔を m秒単位で指定します。
 
-<dt class="no_bg_indent1">最大表示行数 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">最大表示行数 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 1000)</span>
 <dd>ログウィンドウに表示する最大行数を指定します。0 を指定すると無制限になります。
 
 <dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> エラー箇所のみ表示
@@ -205,7 +205,7 @@
 <dd>終了時にログを保存する際に、前回保存したファイル(<b>tasklog.txt</b>)のタイムスタンプと同日だった場合、それに追記保存します。これによって日付ごとにログをまとめられます。
 <br>
 
-<dt class="no_bg_indent1">保存世代数 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">保存世代数 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 5)</span>
 <dd>ログをファイルに保存する際の最大世代数を指定します。<br>
 <br><br>
 
@@ -229,7 +229,7 @@
 
 <dt id="Sound"><img src="grpbox.png" alt="" border=0> サウンド再生
 <dd></dd>
-<dt class="no_bg_indent1">再生制限 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">再生制限 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 3秒)</span>
 <dd><b>.wav</b>、<b>.wma</b>、<b>.mp3</b>、<b>.mid</b> ファイル上で<span class="btn_frame">ENTER</span>キーを押したとき(<a href="hid00005.htm#OpenStandard">OpenStandard</a>)、ここで指定した秒数までで再生します。<br>
 <br>
 
@@ -254,7 +254,7 @@
 セキュリティを考慮し、実行できるのは <b>NyanFi</b> ディレクトリから相対指定のコマンドファイルに制限されます。<br>
 <br>
 
-<dt class="no_bg_indent1">7-zip64.dll(7z.dll対応版)の対応拡張子 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">7-zip64.dll(7z.dll対応版)の対応拡張子 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: .lzh.cab.iso.arj.chm.msi.wim)</span>
 <dd><b>7-zip64.dll 文字化け対策版</b>(x@rgs 氏作)の<b>7z.dll対応版</b>を利用している場合、対応したいアーカイブの拡張子(解凍のみ)を追加指定できます(デフォルト: .lzh.cab.iso.arj.chm.msi.wim)。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
 <b>.rar</b> を指定すると、unrar64j.dll/unrar64.dll を用いずに、7-zip64.dll(7z.dll対応版)で解凍を行います。それ以外で、他のアーカイバDLLが対応する拡張子については、そちらが優先されます。<br>
 
@@ -267,7 +267,7 @@
 </pre>
 と表示されます(Ver.18.06.00.xx の場合)。
 
-<dt class="no_bg_indent1">git.exe (Git for Windows) <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">git.exe (Git for Windows) <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 自動検出)</span>
 <dd>
 Git 関連の処理で利用する <b>git.exe</b> の場所を指定します。<br>
 標準的な場所にインストールされている場合は自動的に検出されますが、そうでない場合は手動で設定してください。<br>

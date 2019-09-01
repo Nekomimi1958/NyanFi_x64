@@ -63,14 +63,14 @@
 <br>
 
 <dt id="BorderLeftRight"><img src="grpbox.png" alt="" border=0> <a href="hid00005.htm#BorderLeft">BorderLeft</a>、<a href="hid00005.htm#BorderRight">BorderRight</a>
-<dd><b>１回の移動幅</b> <img src="edit.png" alt="" border=0><br>
+<dd><b>１回の移動幅</b> <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 50)</span><br>
 <div class="indent1">
 コマンドを一回実行した際の移動幅を設定します。<br>
 </div>
 <br>
 
 <dt id="CompleteDelete"><img src="grpbox.png" alt="" border=0> <a href="hid00005.htm#CompleteDelete">CompleteDelete</a>
-<dd><b>完全削除の上書き回数</b> <img src="edit.png" alt="" border=0><br>
+<dd><b>上書き回数</b> <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 3)</span><br>
 <div class="indent1">
 ファイルの完全削除を行う際の上書き回数を設定します。<br>
 </div>
@@ -84,7 +84,7 @@
 <br>
 
 <dt id="ExeCommandLine"><img src="grpbox.png" alt="" border=0> <a href="hid00005.htm#ExeCommandLine">ExeCommandLine</a>
-<dd><b>実行ファイルとみなす拡張子</b> <img src="edit.png" alt="" border=0><br>
+<dd><b>実行ファイルとみなす拡張子</b> <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: .exe.bat.cmd)</span><br>
 <div class="indent1">
 ここで指定した拡張子のファイルは、パラメータ <b>FN</b> でファイル名が入力される際、空白を付加して末尾にカーソルが設定されます。無指定の場合は、ファイル名の前に空白を挿入しカーソルが先頭に設定されます。
 </div>
@@ -120,7 +120,7 @@
 ファイラーで、見つかった項目が一つだけだった場合、自動的にインクリメンタルサーチ・モードから抜けます。<br>
 フィルタマスク・モード、<b>Migemo</b> モードでは機能しません。
 </div>
-<dd><b>Migemo 検索開始文字数</b> <img src="edit.png" alt="" border=0><br>
+<dd><b>Migemo 検索開始文字数</b> <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 1)</span><br>
 <div class="indent1">
 <b>Migemo</b> モードで検索を開始する入力文字数です。<br>
 この設定は、<a href="hid00005.htm#FindTagName">FindTagName</a> コマンドや、各種一覧のフィルタで Migemo を用いる際にも適用されます。
@@ -196,7 +196,7 @@
 <br>
 
 <dt id="OpenByApp"><img src="grpbox.png" alt="" border=0> <a href="hid00005.htm#OpenByApp">OpenByApp</a>
-<dd><img src="combobox.png" alt="" border=0> <b>関連付けされていない場合</b><br>
+<dd><img src="combobox.png" alt="" border=0> <b>関連付けされていない場合</b>　<span class="def_text">(デフォルト: そのまま)</span><br>
 <div class="indent1">
 <a href="hid00005.htm#OpenByApp">OpenByApp</a> コマンドで開こうとしたファイルが <a href="hid00013.htm">オプション設定 - 関連付け</a> で設定されていない場合の動作を指定します。また対象がディレクトリの場合にもこの指定が適用されます。<br>
 「<b>そのまま</b>」、「<b>Windowsの関連付けで開く</b>」(<a href="hid00005.htm#OpenByWin">OpenByWin</a>)、「<b>標準の Enter キー動作</b>」(<a href="hid00005.htm#OpenStandard">OpenStandard</a>)のいずれかを選択できます。<br>
@@ -235,11 +235,10 @@
 <br>
 
 <dt id="WebSearch"><img src="grpbox.png" alt="" border=0> <a href="hid00006.htm#WebSearch">WebSearch</a>
-<dd><b>URL</b> <img src="edit.png" alt="" border=0><br>
+<dd><b>URL</b> <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: https://www.google.co.jp/search?q=\S&amp;ie=UTF-8)</span><br>
 <div class="indent1">
 Web 検索に用いる検索エンジンの URL を指定します。<br>
 URL中の書式文字列 <b>\S</b> が検索語に置き換えられます。その際、日本語などが含まれていたら UTF-8 でエンコードされます。必要に応じてURLパラメータを設定してください。<br>
-<b>例</b>: <span class="inp_box">https://www.google.co.jp/search?q=\S&amp;ie=UTF-8</span><br>
 </div>
 </dl>
 <br><br>
