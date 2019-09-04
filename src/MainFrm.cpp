@@ -2126,6 +2126,13 @@ void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, 
 				if (lp->Tag & LBTAG_OPT_SDIR) {
 					lbuf = yen_to_delimiter(get_pre_tab(lbuf));
 				}
+				//アプリケーション一覧
+				else if (lp->Tag & LBTAG_APP_LIST) {
+					lbuf = yen_to_delimiter(lbuf);
+					std::unique_ptr<TStringList> sbuf(new TStringList());
+					sbuf->Text = lbuf;
+					if (sbuf->Count==2) lw = cv->TextWidth(sbuf->Strings[1]);
+				}
 				//ファイル名一覧/ツリー表示
 				else if (lp->Tag & LBTAG_TAB_FNAM) {
 					lbuf = yen_to_delimiter(get_post_tab(lbuf));
@@ -13830,8 +13837,8 @@ UnicodeString __fastcall TNyanFiForm::GetCopyFileNames(
 				max_len_half(w_p, pnam);
 				max_len_half(w_u, NetDriveName_to_UNC(pnam));
 				max_len_half(w_m, UNC_to_NetDriveName(pnam));
-				max_len_half(w_b, ExtractFileName(fnam));
-				max_len_half(w_n, ExtractFileName(fnam));
+				max_len_half(w_b, fp->b_name);
+				max_len_half(w_n, fp->b_name);
 				max_len_half(w_f, fnam);
 			}
 			else {
@@ -13855,7 +13862,7 @@ UnicodeString __fastcall TNyanFiForm::GetCopyFileNames(
 
 		//画像サイズ
 		unsigned int i_wd = 0, i_hi = 0;
-		if (!fp->is_dir && fp->f_attr!=faInvalid && contains_wd_i(fmt, _T("$W|$H")))
+		if (!fp->is_ftp && !fp->is_dir && fp->f_attr!=faInvalid && contains_wd_i(fmt, _T("$W|$H")))
 			get_img_size(fp->f_name, &i_wd, &i_hi);
 
 		//書式文字列の展開
@@ -13865,12 +13872,16 @@ UnicodeString __fastcall TNyanFiForm::GetCopyFileNames(
 			WideChar c = split_top_wch(fstr);
 			if (c=='$') {
 				c = split_top_wch(fstr);
-				UnicodeString fnam = fp->is_up? ExtractFileDir(fp->f_name)  : fp->f_name;
+				UnicodeString fnam = fp->f_name;
+				if (USAME_TS(fnam, "..")) fnam = fp->p_name + fnam;
+				if (fp->is_up) fnam = ExtractFileDir(fnam);
+				UnicodeString xnam = ExtractFileName(fnam);
 				UnicodeString pnam = fp->is_up? get_parent_path(fp->p_name) : fp->p_name;
 				if (fp->is_ftp) {
 					fnam = yen_to_slash(fnam);
 					pnam = yen_to_slash(pnam);
 				}
+
 				UnicodeString s;
 				int w_fmt = 0;
 
@@ -13885,12 +13896,12 @@ UnicodeString __fastcall TNyanFiForm::GetCopyFileNames(
 					if (is_esc) s = ReplaceStr(s, "\\", "\\\\");
 					break;
 
-				case 'B':	//パス無ファイル名
-					s = ExtractFileName(fnam);
+				case 'B':	//パス無しファイル名
+					s = xnam;
 					w_fmt = w_b;
 					break;
-				case 'N':	//パス無ファイル名主部
-					s = fp->is_up? ExtractFileName(fnam) : fp->b_name;
+				case 'N':	//パス無しファイル名主部
+					s = fp->is_up? xnam : fp->b_name;
 					w_fmt = w_n;
 					break;
 				case 'E':	//拡張子
@@ -13922,15 +13933,15 @@ UnicodeString __fastcall TNyanFiForm::GetCopyFileNames(
 					s = FormatDateTime(split_in_paren(fstr), fp->f_time);
 					break;
 				case 'W':	//画像サイズ
-					if (fp->f_attr==faInvalid) break;
+					if (fp->is_ftp || fp->f_attr==faInvalid) break;
 					if (i_wd>0) s.sprintf(_T("%u"), i_wd);
 					break;
 				case 'H':
-					if (fp->f_attr==faInvalid) break;
+					if (fp->is_ftp || fp->f_attr==faInvalid) break;
 					if (i_hi>0) s.sprintf(_T("%u"), i_hi);
 					break;
 				case 'R':	//プロパティ
-					{
+					if (!fp->is_ftp) {
 						UnicodeString titstr = split_in_paren(fstr);
 						if (fp->f_attr==faInvalid) break;
 						if (fp->inf_list->Count==0) GetFileInfList(fp, true);
@@ -13938,7 +13949,7 @@ UnicodeString __fastcall TNyanFiForm::GetCopyFileNames(
 					}
 					break;
 				case 'G':	//ハッシュ
-					{
+					if (!fp->is_ftp) {
 						UnicodeString idstr = split_in_paren(fstr);
 						if (fp->is_dir || fp->f_attr==faInvalid) break;
 						UnicodeString hash	= get_HashStr(fnam, idstr);
@@ -18489,9 +18500,9 @@ UnicodeString __fastcall TNyanFiForm::ApplyTemplate(
 				switch (c) {
 				//パス名
 				case 'P': s = ExtractFilePath(fnam);	break;
-				//パス無ファイル名
+				//パス無しファイル名
 				case 'B': s = ExtractFileName(fnam);	break;
-				//パス無ファイル名主部
+				//パス無しファイル名主部
 				case 'N': s = get_base_name(fnam);		break;
 				//パス付ファイル名
 				case 'F': s = fnam;						break;
@@ -23920,6 +23931,12 @@ void __fastcall TNyanFiForm::ShowHideAtrActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ShowIconActionExecute(TObject *Sender)
 {
+	if (TEST_ActParam("AC")) {
+		if (msgbox_Sure(LoadUsrMsg(USTR_DeleteQ, _T("キャッシュされているすべてのアイコン")), !(ExeCmdsBusy && XCMD_MsgOff)))
+			clr_all_CachedIcon();
+		return;
+	}
+
 	if (TEST_ActParam("FD")) {
 		IconMode = (IconMode==0)? 1 : (IconMode==1)? 2 : 1;
 	}
@@ -28188,7 +28205,8 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 					}
 					//ダウンロードファイルから更新
 					else if (DownloadWorkProgress(url + zip_nam, fnam)==mrOk) {
-						msg.sprintf(_T("V%.2f → V%.2f\n更新しますか?"), VersionNo/100.0, new_vno/100.0);
+						msg.sprintf(_T("NyanFi (%s)　　　　　　\nV%.2f → V%.2f\n更新しますか?"),
+									(is_X64()? _T("x64") : _T("x86")), VersionNo/100.0, new_vno/100.0);
 						if (no_conf || msgbox_Sure(msg, true, true)) {
 							if (!UpdateFromArc(fnam, true)) GlobalAbort();
 						}
@@ -28197,8 +28215,8 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 			}
 		}
 		else {
-			msg.sprintf(_T(" NyanFi %s (%s) : 最新バージョンを使用しています。"),
-						VersionStr.c_str(), is_X64()? _T("x64") : _T("x86")),
+			msg.sprintf(_T(" NyanFi (%s) %s : 最新バージョンを使用しています。"),
+						(is_X64()? _T("x64") : _T("x86")), VersionStr.c_str()),
 			msgbox_OK(msg, "更新の確認");
 		}
 	}
@@ -29077,7 +29095,6 @@ void __fastcall TNyanFiForm::GrepStartActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
 	if (ScrMode==SCMD_GREP && GrepPageControl->ActivePage==FindSheet) {
-		//正規表現パターンのチェック
 		UnicodeString kwd = Trim(GrepFindComboBox->Text);
 		bool reg_ng = RegExCheckBox->Checked && !kwd.IsEmpty() && !chk_RegExPtn(kwd);
 		bool kwd_ok = RegExCheckBox->Checked? (!kwd.IsEmpty() && !reg_ng) : !kwd.IsEmpty();
@@ -29728,15 +29745,11 @@ void __fastcall TNyanFiForm::ReplaceStartActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
 	if (GrepPageControl->ActivePage == ReplaceSheet) {
-		//正規表現パターンのチェック
 		UnicodeString kwd = RepFindComboBox->Text;
 		bool reg_ng = RegExRCheckBox->Checked && !kwd.IsEmpty() && !chk_RegExPtn(kwd);
 		bool kwd_ok = RegExRCheckBox->Checked? (!kwd.IsEmpty() && !reg_ng) : !kwd.IsEmpty();
-		if (IsDarkMode)
-			RepFindComboBox->Font->Color = reg_ng? col_Error : dcl_WindowText;
-		else
-			RepFindComboBox->Color = reg_ng? col_Illegal : scl_Window;
-		ap->Enabled = !FindBusy && kwd_ok;
+		set_ErrColor(RepFindComboBox, reg_ng);
+		ap->Enabled = !FindBusy && kwd_ok && !(GrepMaskComboBox->Enabled && GrepMaskComboBox->Text.IsEmpty());
 
 		StartRBtn->Default = !ResultListBox->Focused();
 		RepFindComboBox->Tag

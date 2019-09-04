@@ -44,7 +44,7 @@
 
 #define FEXT_CSV		_T(".csv.tsv")											//CSV
 
-#define FEXT_TEXT		FEXT_PROGRAM FEXT_HTML FEXT_XML FEXT_CSV _T(".txt.ini.md.inf.json.def.log.nbt.bat.cmd.reg.cbproj.dfm.dsp.dsw.css.hhp.hex.mot.yml.yaml")
+#define FEXT_TEXT		FEXT_PROGRAM FEXT_HTML FEXT_XML FEXT_CSV _T(".txt.ini.md.inf.json.def.log.nbt.bat.cmd.reg.cbproj.dfm.dsp.dsw.css.hhp.hex.m3u.m3u8.mot.wpl.yml.yaml")
 																				//テキストファイル
 
 #define FEXT_NONTEXT	_T(".ani.bin.chm.cur.hlp.ico.lnk.pdf.res.swf") FEXT_APPINFO FEXT_ARCHIVE FEXT_IMAGE FEXT_VIDEO FEXT_MCISND FEXT_FONT

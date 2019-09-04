@@ -67,7 +67,7 @@ object NyanFiForm: TNyanFiForm
       ParentBackground = False
       ParentDoubleBuffered = False
       ShowCaption = False
-      TabOrder = 2
+      TabOrder = 3
       Visible = False
       StyleElements = [seBorder]
       object ToolBarI: TToolBar
@@ -503,7 +503,7 @@ object NyanFiForm: TNyanFiForm
       BevelOuter = bvNone
       DoubleBuffered = True
       ParentDoubleBuffered = False
-      TabOrder = 3
+      TabOrder = 2
       Visible = False
       StyleElements = [seBorder]
       object ViewMemo: TRichEdit
@@ -677,7 +677,7 @@ object NyanFiForm: TNyanFiForm
       BevelOuter = bvNone
       ParentColor = True
       ShowCaption = False
-      TabOrder = 0
+      TabOrder = 1
       Visible = False
       object ResultListBox: TListBox
         Left = 0
@@ -846,10 +846,11 @@ object NyanFiForm: TNyanFiForm
               Caption = #28145#12373
             end
             object TLabel
-              Left = 11
+              Left = 15
               Top = 8
               Width = 26
               Height = 13
+              Alignment = taRightJustify
               Caption = #12510#12473#12463
             end
             object SubDirCheckBox: TCheckBox
@@ -1034,7 +1035,7 @@ object NyanFiForm: TNyanFiForm
                   TabOrder = 0
                   object RegExCheckBox: TCheckBox
                     Left = 2
-                    Top = 7
+                    Top = 9
                     Width = 78
                     Height = 17
                     Caption = #27491#35215#34920#29694
@@ -1043,7 +1044,7 @@ object NyanFiForm: TNyanFiForm
                   end
                   object NextLineCheckBox: TCheckBox
                     Left = 364
-                    Top = 7
+                    Top = 9
                     Width = 80
                     Height = 17
                     Caption = #27425#34892#34920#31034
@@ -1052,7 +1053,7 @@ object NyanFiForm: TNyanFiForm
                   end
                   object ExclTagCheckBox: TCheckBox
                     Left = 286
-                    Top = 7
+                    Top = 9
                     Width = 76
                     Height = 17
                     Caption = #12479#12464#38500#22806
@@ -1060,7 +1061,7 @@ object NyanFiForm: TNyanFiForm
                   end
                   object CaseCheckBox: TCheckBox
                     Left = 138
-                    Top = 7
+                    Top = 9
                     Width = 80
                     Height = 17
                     Caption = #22823#23567#21306#21029
@@ -1068,7 +1069,7 @@ object NyanFiForm: TNyanFiForm
                   end
                   object AndCheckBox: TCheckBox
                     Left = 84
-                    Top = 7
+                    Top = 9
                     Width = 52
                     Height = 17
                     Caption = 'AND'
@@ -1076,7 +1077,7 @@ object NyanFiForm: TNyanFiForm
                   end
                   object OneMatchCheckBox: TCheckBox
                     Left = 220
-                    Top = 7
+                    Top = 9
                     Width = 64
                     Height = 17
                     Caption = '1'#12510#12483#12481
@@ -1231,7 +1232,7 @@ object NyanFiForm: TNyanFiForm
       Align = alClient
       BevelOuter = bvNone
       ShowCaption = False
-      TabOrder = 1
+      TabOrder = 0
       StyleElements = [seBorder]
       object ListSubSplitter: TSplitter
         Left = 0
@@ -1333,7 +1334,7 @@ object NyanFiForm: TNyanFiForm
             ParentDoubleBuffered = False
             ParentShowHint = False
             ShowHint = False
-            TabOrder = 1
+            TabOrder = 2
             StyleElements = [seBorder]
             OnDblClick = FileListBoxDblClick
             OnDragDrop = FileListBoxDragDrop
@@ -1470,7 +1471,7 @@ object NyanFiForm: TNyanFiForm
             ParentDoubleBuffered = False
             ParentShowHint = False
             ShowHint = False
-            TabOrder = 1
+            TabOrder = 2
             StyleElements = [seBorder]
             OnDblClick = FileListBoxDblClick
             OnDragDrop = FileListBoxDragDrop
@@ -2184,7 +2185,7 @@ object NyanFiForm: TNyanFiForm
       Anchors = [akLeft, akBottom]
       Cancel = True
       Caption = #12461#12515#12531#12475#12523
-      TabOrder = 0
+      TabOrder = 1
       Visible = False
       OnClick = CanDlBtnClick
     end
@@ -2196,7 +2197,7 @@ object NyanFiForm: TNyanFiForm
       BevelOuter = bvNone
       DoubleBuffered = True
       ParentDoubleBuffered = False
-      TabOrder = 1
+      TabOrder = 0
       object WorkProgressBox: TPaintBox
         Left = 0
         Top = 0

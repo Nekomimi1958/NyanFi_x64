@@ -548,7 +548,9 @@ XML や HTML文書では、文字コード指定(encoding、charset)も書き換えます。<br>
 複数のファイルが選択されている場合、<b>$P</b>、<b>$N</b>、<b>$E</b>、<b>$B</b>、<b>$F</b> は最大幅にあわせ空白を付加して整形します(<b>$L</b>、<b>$X</b> 指定時は除く)。<br>
 <b>$L</b>、<b>$X</b>、<b>$\</b>、<b>$O</b> の位置は書式のどこでもかまいません。<br>
 <b>$G(</b>～<b>)</b>で取得した内容は、ファイル情報の表示にも反映されます。<br>
-
+<div class="note_text">
+FTPリモート側の場合、<b>$W</b>、<b>$H</b>、<b>$R(～)</b>、<b>$G(～)</b> は取得されません。<br>
+</div>
 <div class="spc_box">
 <b>例</b>: CopyFileName_$B$L<br>
 <pre>
@@ -1317,7 +1319,7 @@ FindTag<span class="pram_text">_;</span>
 カレントパス以下のテキストファイルに対して、文字列検索を行います。<br>
 またタブを切り替えることにより、<a href="hid00061.htm">文字列置換</a>もできます。<br>
 <a href="hid00052.htm">ファイル名検索</a>の結果リストや<a href="hid00060.htm">ワークリスト</a>に対しても実行可能。<br>
-なお、カレントで選択している項目がある場合は、それらが検索対象となります。<br>
+なお、カレントで選択している項目がある場合は、それらが検索対象となります(マスク指定は無視)。<br>
 パラメータに<b>検索文字列</b>を指定すると、文字列検索にしてそれを設定します。<br>
 
 <div class="spc_box">
@@ -2635,11 +2637,12 @@ SetTag<span class="pram_text">_;</span>
 <a href="hid00009.htm#Show">→ オプション設定 - 一般 - 表示 - 「隠しファイルを表示」</a><br>
 <a href="#ShowSystemAtr">→ ShowSystemAtr</a>
 
-<dt id="ShowIcon">ShowIcon<span class="pram_text">[_{ON|OFF|FD}]</span>
+<dt id="ShowIcon">ShowIcon<span class="pram_text">[_{ON|OFF|FD|AC}]</span>
 <dd>パラメータを指定しない場合、アイコンの表示/非表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
 パラメータに <b>FD</b> を指定すると、全表示/フォルダアイコンのみ表示をトグルで切り替えられます(非表示だった場合は一旦全表示)。<br>
 なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+パラメータに <b>AC</b> を指定すると、キャッシュされているアイコンをすべて削除できます。<br>
 <a href="hid00010.htm#ShowIcon">→ オプション設定 - デザイン - 「アイコン表示」</a><br>
 <a href="#SetFolderIcon">→ SetFolderIcon</a>
 
@@ -2805,7 +2808,7 @@ SortDlg<span class="pram_text">_L</span>
 パラメータに <b>TO</b> を指定すると、入れ替えとともに反対側へ移動します。<br>
 
 <dt id="SwapName">SwapName<span class="pram_text">[_LR]</span>
-<dd>選択している2項目の名前を入れ替えます。対象がファイルの場合、拡張子はそのままです。<br>
+<dd>選択している2項目の名前を入れ替えます。<span class="note_text">対象がファイルの場合、拡張子はそのままです。</span><br>
 パラメータに <b>LR</b> を指定すると、左右のファイルリストで一つずつ選択している項目の名前を入れ替えます。これは、左右とも通常のファイルリストの場合のみ可能です。また左右が親子関係にあって、一方のパスが改名される場合には対応していません。<br>
 <a href="#RenameDlg">→ RenameDlg</a>　<a href="#UndoRename">→ UndoRename</a>
 

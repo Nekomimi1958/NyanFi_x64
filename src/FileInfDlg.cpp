@@ -49,10 +49,9 @@ void __fastcall TFileInfoDlg::FormShow(TObject *Sender)
 
 	if (!isAppInfo && !isGitInfo) InfListBox->Clear();
 
-	InfListBox->Color = col_bgInf;
-	InfListBox->Font->Assign(FileInfFont);
-	set_ListBoxItemHi(InfListBox);
+	set_ListBoxItemHi(InfListBox, FileInfFont);
 	set_UsrScrPanel(ListScrPanel);
+	InfListBox->Color = col_bgInf;
 
 	if (!UpdateInfo()) ::PostMessage(Handle, WM_CLOSE, 0, 0);
 
@@ -235,7 +234,7 @@ bool __fastcall TFileInfoDlg::UpdateInfo()
 			MaxColWd0 = MaxColWd1 = MaxColWd2 = 0;;
 
 			TCanvas *cv = lp->Canvas;
-			cv->Font->Assign(FileInfFont);
+			cv->Font->Assign(lp->Font);
 			bool is_irreg = IsIrregularFont(cv->Font);
 
 			Max_freq = 0;
@@ -401,7 +400,7 @@ void __fastcall TFileInfoDlg::InfListBoxDrawItem(TWinControl *Control, int Index
 	//度数分布
 	if (isCalcItem && FreqIndex>0 && Index>=FreqIndex) {
 		TCanvas *cv = lp->Canvas;
-		cv->Font->Assign(FileInfFont);
+		cv->Font->Assign(lp->Font);
 		bool is_irreg = IsIrregularFont(cv->Font);
 
 		cv->Brush->Color = (State.Contains(odSelected) && lp->Focused())? col_selItem : col_bgInf;
@@ -473,8 +472,9 @@ void __fastcall TFileInfoDlg::InfListBoxKeyDown(TObject *Sender, WORD &Key, TShi
 	TListBox *lp = (TListBox*)Sender;
 
 	bool handled = true;
-	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))
+	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V)) {
 		;
+	}
 	//前後のファイルへ切り替え
 	else if (FileRec && !FileRec->is_ftp && !inhNxtPre && contained_wd_i(_T("PrevFile|NextFile"), cmd_V)) {
 		CmdStr = cmd_V;
@@ -483,12 +483,21 @@ void __fastcall TFileInfoDlg::InfListBoxKeyDown(TObject *Sender, WORD &Key, TShi
 		if (SubViewer->Visible) SubViewer->Perform(WM_SETREDRAW, 0, (NativeInt)0);
 		ModalResult = mrRetry;
 	}
-	else if (USAME_TI(cmd_F, "PropertyDlg"))		PropertyDlgAction->Execute();
-	else if (USAME_TI(cmd_F, "ShowPreview") || USAME_TI(cmd_V, "ImgPreview"))
-													ImgPreviewAction->Execute();
-	else if (SameText(KeyStr, KeyStr_Copy))			CopyAction->Execute();
-	else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
-	else if	(equal_ESC(KeyStr))						ModalResult = mrOk;
+	else if (USAME_TI(cmd_F, "PropertyDlg")) {
+		PropertyDlgAction->Execute();
+	}
+	else if (USAME_TI(cmd_F, "ShowPreview") || USAME_TI(cmd_V, "ImgPreview")) {
+		ImgPreviewAction->Execute();
+	}
+	else if (SameText(KeyStr, KeyStr_Copy)) {
+		CopyAction->Execute();
+	}
+	else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
+		show_PopupMenu(lp);
+	}
+	else if	(equal_ESC(KeyStr)) {
+		ModalResult = mrOk;
+	}
 	else handled = false;
 
 	if (handled) Key = 0;

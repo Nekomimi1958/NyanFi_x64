@@ -163,6 +163,7 @@ extern  FUNC_GetFontResourceInfo	lpfGetFontResourceInfo;
 #define LBTAG_FIF_LIST	0x02000000		//ファイル情報ダイアログ
 #define LBTAG_TAB_FNAM	0x04000000		//タブ以降にファイル名を持つ
 #define LBTAG_VAR_LIST	0x08000000		//「名前=値」形式
+#define LBTAG_APP_LIST	0x10000000		//アプリケーションリスト
 
 //---------------------------------------------------------------------------
 #define SHOW_WARN_TAG	-1
@@ -1740,6 +1741,8 @@ __int64 get_DirSize(UnicodeString dnam, int *f_cnt, int *d_cnt, __int64 *o_size,
 __int64 get_ArcDirSize(UnicodeString anam, UnicodeString dnam, int *f_cnt, int *d_cnt);
 
 void  del_CachedIcon(UnicodeString fnam);
+void  clr_all_CachedIcon();
+
 HICON get_file_SmallIcon(UnicodeString fnam);
 HICON get_fext_SmallIcon(UnicodeString fext = EmptyStr);
 HICON get_folder_icon(UnicodeString dnam = EmptyStr);

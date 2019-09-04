@@ -5640,19 +5640,19 @@ void update_DriveLog(bool save)
 //---------------------------------------------------------------------------
 void set_ListBoxItemHi(
 	TListBox *lp,
-	TFont *font,	//フォント			(default = NULL);
+	TFont *font,	//フォント			(default = NULL : Application->DefaultFont);
 	bool with_ico)	//アイコンを表示	(default = false)
 {
 	if (!font) font = Application->DefaultFont;
 	lp->Font->Assign(font);
 	lp->Canvas->Font->Assign(font);
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), 
+	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1),
 								with_ico? (int)(20 * ScrScale) : 0);
 }
 //---------------------------------------------------------------------------
 void set_ListBoxItemHi(
 	TCheckListBox *lp,
-	TFont *font,	//フォント			(default = NULL);
+	TFont *font,	//フォント			(default = NULL : Application->DefaultFont);
 	bool with_ico)	//アイコンを表示	(default = false)
 {
 	if (!font) font = Application->DefaultFont;
@@ -6376,6 +6376,20 @@ void del_CachedIcon(UnicodeString fnam)
 			CachedIcoList->Delete(idx);
 		}
 	IconRWLock->EndWrite();
+}
+
+//---------------------------------------------------------------------------
+//キャッシュされているアイコンをすべて削除
+//---------------------------------------------------------------------------
+void clr_all_CachedIcon()
+{
+	IconRWLock->BeginWrite();
+		for (int i=0; i<CachedIcoList->Count; i++) delete (TIcon*)CachedIcoList->Objects[i];
+		CachedIcoList->Clear();
+	IconRWLock->EndWrite();
+
+	for (int i=0; i<GeneralIconList->Count; i++) delete (TIcon*)GeneralIconList->Objects[i];
+	GeneralIconList->Clear();
 }
 
 //---------------------------------------------------------------------------
@@ -8002,7 +8016,7 @@ void assign_InfListBox(
 void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State)
 {
 	TCanvas *cv = lp->Canvas;
-	cv->Font->Assign(FileInfFont);
+	cv->Font->Assign(lp->Font);
 	bool is_irreg = IsIrregularFont(cv->Font);
 
 	cv->Brush->Color = (State.Contains(odSelected) && lp->Focused())? col_selItem : col_bgInf;
@@ -8098,7 +8112,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 //---------------------------------------------------------------------------
 void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State, TStringList *col_lst)
 {
-	TCanvas  *cv = lp->Canvas;
+	TCanvas *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
 	int yp = Rect.Top + get_TopMargin(cv);
 
@@ -10007,6 +10021,7 @@ bool add_PlayList(UnicodeString lnam)
 				PlayListFile = lnam;
 				for (int i=0; i<fbuf->Count; i++) {
 					UnicodeString inam = get_pre_tab(fbuf->Strings[i]);
+					if (StartsStr('#', inam) || StartsStr('\t', inam)) continue;
 					//ディレクトリ
 					if (dir_exists(inam)) {
 						std::unique_ptr<TStringList> fbuf(new TStringList());
@@ -10014,7 +10029,9 @@ bool add_PlayList(UnicodeString lnam)
 						for (int i=0; i<fbuf->Count; i++) add_PlayFile(fbuf->Strings[i]);
 					}
 					//ファイル
-					else if (file_exists(inam)) add_PlayFile(inam);
+					else if (file_exists(inam)) {
+						add_PlayFile(inam);
+					}
 				}
 			}
 		}
@@ -13213,11 +13230,11 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 		int d_sz = std::min(prm.ToIntDef(1), 12);
 		lp->Font->Size = USAME_TI(cmd, "ZoomIn") ? std::min(lp->Font->Size + d_sz, MAX_FNTZOOM_SZ)
 											 	 : std::max(lp->Font->Size - d_sz, MIN_FNTZOOM_SZ);
-		set_ListBoxItemHi(lp);
+		lp->ItemHeight = get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
+
 	}
 	else if ((lp->Tag & LBTAG_OPT_ZOOM) && USAME_TI(cmd, "ZoomReset")) {
-		lp->Font->Assign(l_font);
-		set_ListBoxItemHi(lp);
+		set_ListBoxItemHi(lp, l_font);
 	}
 	//フォントサイズ変更
 	else if ((lp->Tag & LBTAG_OPT_ZOOM) && USAME_TI(cmd, "SetFontSize")) {
@@ -13225,7 +13242,7 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 		if (!prm.IsEmpty()) {
 			int f_sz = std::max(std::min(prm.ToIntDef(l_font->Size), MAX_FNTZOOM_SZ), MIN_FNTZOOM_SZ);
 			lp->Font->Size = (x_sw && lp->Font->Size==f_sz)? l_font->Size : f_sz;
-			set_ListBoxItemHi(lp);
+			lp->ItemHeight = get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
 		}
 	}
 	//右クリックメニュー

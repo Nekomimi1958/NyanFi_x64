@@ -7,20 +7,11 @@
 
 //---------------------------------------------------------------------------
 #include <vcl.h>
+#include <winternl.h>
 #include <System.StrUtils.hpp>
 
 //---------------------------------------------------------------------------
-typedef struct _IO_STATUS_BLOCK {
-	union {
-		LONG  Status;
-		PVOID Pointer;
-	} DUMMYUNIONNAME;
-	ULONG_PTR Information;
-} IO_STATUS_BLOCK, *PIO_STATUS_BLOCK;
-
-enum FILE_INFORMATION_CLASS {
-	FileRenameInformation = 10
-};
+#define	FileRenameInformation (FILE_INFORMATION_CLASS)10
 
 typedef struct _FILE_RENAME_INFORMATION {
 	BOOLEAN ReplaceIfExists;

@@ -1089,7 +1089,7 @@ void get_PrmList(
 			params += "LK : ロック/解除\nRL : 左に90度回転\nRR : 右に90度回転\nFH : 左右反転\nFV : 上下反転\n";
 		}
 		if (USAME_TI(cmd, "ShowIcon")) {
-			params += "FD : 全表示/フォルダアイコンのみ表示\n";
+			params += "FD : 全表示/フォルダアイコンのみ表示\nAC : キャッシュをすべて削除\n";
 		}
 	}
 	//オプション設定

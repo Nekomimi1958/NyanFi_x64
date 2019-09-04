@@ -6,6 +6,7 @@
 #define AppDlgH
 //---------------------------------------------------------------------------
 #include <psapi.h>
+#include <winternl.h>
 #include <System.Classes.hpp>
 #include <System.Actions.hpp>
 #include <Vcl.Controls.hpp>
@@ -20,6 +21,43 @@
 //---------------------------------------------------------------------------
 typedef BOOL (WINAPI *FUNC_GetProcessMemoryInfo)(HANDLE, PPROCESS_MEMORY_COUNTERS, DWORD);
 
+#ifndef NT_ERROR
+#define NT_ERROR(Status) ((((ULONG)(Status)) >> 30) == 3)
+#endif
+
+struct RTL_USER_PROCESS_PARAMETERS_I {
+	BYTE  Reserved1[16];
+	PVOID Reserved2[10];
+	UNICODE_STRING ImagePathName;
+	UNICODE_STRING CommandLine;
+};
+
+struct PEB_INTERNAL {
+	BYTE  InheritedAddressSpace;
+	BYTE  ReadImageFileExecOptions;
+	BYTE  BeingDebugged;
+	BYTE  Spare;
+	PVOID Mutant;
+	PVOID ImageBaseAddress;
+	PPEB_LDR_DATA Ldr;
+	PRTL_USER_PROCESS_PARAMETERS	ProcessParameters;
+	BYTE  Reserved4[104];
+	PVOID Reserved5[52];
+	PPS_POST_PROCESS_INIT_ROUTINE	PostProcessInitRoutine;
+	BYTE  Reserved6[128];
+	PVOID Reserved7[1];
+	ULONG SessionId;
+};
+
+typedef NTSTATUS (NTAPI* FUNC_NtQueryInformationProcess)(
+	IN HANDLE ProcessHandle,
+	IN PROCESSINFOCLASS ProcessInformationClass,
+	OUT PVOID ProcessInformation,
+	IN ULONG ProcessInformationLength,
+	OUT PULONG ReturnLength OPTIONAL);
+
+typedef ULONG (NTAPI* FUNC_RtlNtStatusToDosErrorPtr)(NTSTATUS Status);
+
 //---------------------------------------------------------------------------
 #define ISWOW64_STR	_T(" \u208d\u2083\u2082\u208e")
 
@@ -32,6 +70,7 @@ public:
 	UnicodeString ClassName;
 	UnicodeString FileName;
 	UnicodeString Caption;
+	UnicodeString CmdParam;
 	int  PID;
 	int  TID;
 	TIcon *Icon;
@@ -93,6 +132,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *MaximizeAction;
 	TAction *MinimizeAction;
 	TAction *RestoreAction;
+	TAction *ShowCmdParamAction;
 	TAction *TopMostAction;
 	TActionList *ActionList1;
 	TListBox *AppListBox;
@@ -121,6 +161,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_l_1;
 	TMenuItem *Sep_l_2;
 	TMenuItem *Sep_l_3;
+	TMenuItem *ShowCmdParamItem;
 	TMenuItem *SortByIconItem;
 	TMenuItem *SortByRemItem;
 	TMenuItem *TerminateItem;
@@ -191,6 +232,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FitToFileListActionExecute(TObject *Sender);
 	void __fastcall FitToFileListActionUpdate(TObject *Sender);
 	void __fastcall SortByIconItemClick(TObject *Sender);
+	void __fastcall ShowCmdParamActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TAppWinList *AppInfoList;

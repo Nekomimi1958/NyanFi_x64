@@ -143,9 +143,9 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 				| (isVarList? LBTAG_VAR_LIST : 0)
 				| (isTree? LBTAG_OPT_TREE : 0);
 
+	set_ListBoxItemHi(lp, GenListFont);
 	lp->Color = isLog? col_bgLog : col_bgList;
 	ListPanel->Color = lp->Color;
-	set_ListBoxItemHi(lp, GenListFont);
 	lp->TabWidth = get_ViewTabWidth(get_extension(FileName));	//ƒ^ƒu•(•`‰æ‚Ì‚½‚ß‚É—¬—p)
 	set_UsrScrPanel(ListScrPanel);
 

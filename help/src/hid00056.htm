@@ -32,7 +32,7 @@
 <h2 id="Find">文字列検索</h2>
 <p>
 必用に応じて後述の項目を設定してください。<br>
-カレントで選択項目がある場合は、それらが検索対象となります。また非表示の項目は対象から外されます。<br>
+カレントで選択項目がある場合は、それらが検索対象となります(マスク指定は無視)。また非表示の項目は対象から外されます。<br>
 <span class="btn_frame">開始</span>ボタンで検索がはじまります。検索を中断したい場合は<span class="btn_frame">中断</span>ボタンまたは<span class="btn_frame">ESC</span>キーを押してください。<br>
 検索が終了すると、結果が下のリストに表示され、フォーカスが移ります。<br>
 </p>
@@ -109,7 +109,8 @@
 
 <dt class="no_bg">マスク <img src="edit.png" alt="" border=0>
 <dd>検索するファイルのマスクを指定します。マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
-なお、<a href="hid00063.htm#GrepSetMask">GrepSetMask</a> 補助コマンドや、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+<a href="hid00063.htm#GrepSetMask">GrepSetMask</a> 補助コマンドや、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+なおカレントで選択項目がある場合は、それらが検索対象となり、マスクは無視されます。<br>
 <b>例</b>: <span class="inp_box">*.txt;*.cpp;*.c;*.h </span>
 
 <dt class="no_bg"><img src="chkbox.png" alt="" border=0> サブディレクトリ
@@ -123,7 +124,7 @@
 
 <dt class="no_bg"><img src="chkbox.png" alt="" border=0> 正規表現
 <dd>検索に正規表現を用います。<br>
-入力内容が正しくない場合、背景色が変わり(<a href="hid00023.htm">オプション設定 - フォント・配色</a> 「不正な入力項目の背景色」)、検索を開始できません。<br>
+入力内容が正しくない場合、背景色が変わり(<a href="hid00023.htm">オプション設定 - フォント・配色</a> 「不正な入力項目の背景色」)、<span class="btn_frame">開始</span>ボタンを押せません。<br>
 なお検索文字列欄の右クリックメニューから、正規表現を参照できます。<br>
 
 <dt class="no_bg"><img src="chkbox.png" alt="" border=0> AND

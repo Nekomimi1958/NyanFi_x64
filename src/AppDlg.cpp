@@ -23,7 +23,9 @@ TAppListDlg *AppListDlg = NULL;
 
 //---------------------------------------------------------------------------
 HMODULE hPsApi = NULL;
-FUNC_GetProcessMemoryInfo lpfGetProcessMemoryInfo = NULL;
+FUNC_GetProcessMemoryInfo		lpfGetProcessMemoryInfo 	 = NULL;
+FUNC_NtQueryInformationProcess	lpfNtQueryInformationProcess = NULL;
+FUNC_RtlNtStatusToDosErrorPtr	lpfRtlNtStatusToDosError	 = NULL;
 
 
 //---------------------------------------------------------------------------
@@ -117,6 +119,10 @@ void __fastcall TAppListDlg::FormCreate(TObject *Sender)
 		}
 	}
 
+	HINSTANCE hNtDll = ::GetModuleHandle(_T("ntdll.dll"));
+	lpfNtQueryInformationProcess = (FUNC_NtQueryInformationProcess)::GetProcAddress(hNtDll, "NtQueryInformationProcess");
+	lpfRtlNtStatusToDosError	 = (FUNC_RtlNtStatusToDosErrorPtr)::GetProcAddress(hNtDll, "RtlNtStatusToDosError");
+
 	org_SttBar1WndProc	   = StatusBar1->WindowProc;
 	StatusBar1->WindowProc = SttBar1WndProc;
 
@@ -146,6 +152,7 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 		AppPanel->Visible	= true;
 		LRSplitter->Visible = true;
 		IniFile->LoadPosInfo(this, DialogCenter);
+		ShowCmdParamAction->Checked = IniFile->ReadBoolGen(_T("AppListShowCmdParam"));
 		ViewPanel->Height	= IniFile->ReadIntGen(_T("AppListThumbHi"), 100);
 		ViewPanel->Color	= col_bgImage;
 		ViewSplitter->Color = col_Splitter;
@@ -168,13 +175,13 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 	LaunchPath = IncludeTrailingPathDelimiter(IniFile->ReadStrGen(_T("AppListLaunchPath"), ExePath));
 	if (!dir_exists(LaunchPath)) LaunchPath = ExePath;
 	CurLaunchPath = LaunchPath;
-	IsMigemo = IniFile->ReadBoolGen(_T("AppListLaunchMigemo"));
+	IsMigemo	  = IniFile->ReadBoolGen(_T("AppListLaunchMigemo"));
 
 	AppInfoList->Clear();
 
 	//一覧初期化
 	TListBox *lp = AppListBox;
-	set_StdListBox(lp, LBTAG_OPT_LOOP);
+	set_StdListBox(lp, LBTAG_APP_LIST|LBTAG_OPT_LOOP);
 	set_UsrScrPanel(AppScrPanel);
 	int min_hi = ScaledInt(36);
 	if (lp->ItemHeight<min_hi) lp->ItemHeight = min_hi;
@@ -236,7 +243,8 @@ void __fastcall TAppListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	}
 	else {
 		IniFile->SavePosInfo(this);
-		IniFile->WriteIntGen(_T("AppListThumbHi"),		ViewPanel->Height);
+		IniFile->WriteBoolGen(_T("AppListShowCmdParam"),	ShowCmdParamAction->Checked);
+		IniFile->WriteIntGen(_T("AppListThumbHi"),			ViewPanel->Height);
 	}
 
 	if (!OnlyAppList && !OnlyLauncher)
@@ -454,15 +462,15 @@ void __fastcall TAppListDlg::UpdateAppList()
 			ap->TID 	   = tid;
 			ap->Exist	   = true;
 			ap->isNyan	   = (ProcessId==pid);
-			ap->WinText	   = wtxt;
+			ap->WinText    = wtxt;
 			ap->ClassName  = cnam;
-			ap->topMost	   = (w_style & WS_EX_TOPMOST);
+			ap->topMost    = (w_style & WS_EX_TOPMOST);
 			ap->win_wd	   = w_rect.Width();
 			ap->win_hi	   = w_rect.Height();
 			ap->win_left   = w_rect.Left;
-			ap->win_top	   = w_rect.Top;
+			ap->win_top    = w_rect.Top;
 			ap->win_xstyle = w_style;
-			ap->isWow64	   = false;
+			ap->isWow64    = false;
 			ap->isUWP	   = USAME_TI(cnam, "ApplicationFrameWindow");
 
 			//無応答チェック
@@ -487,6 +495,35 @@ void __fastcall TAppListDlg::UpdateAppList()
 				//作成時刻
 				FILETIME s_tm, x_tm, k_tm, u_tm, f_tm;
 				if (::GetProcessTimes(hProcess, &s_tm, &x_tm, &k_tm, &u_tm)) ap->StartTime = utc_to_DateTime(&s_tm);
+
+				//コマンドライン
+				if (lpfNtQueryInformationProcess && lpfRtlNtStatusToDosError) {
+					PROCESS_BASIC_INFORMATION pbi;
+					ULONG len;
+					NTSTATUS status = lpfNtQueryInformationProcess(hProcess, ProcessBasicInformation, &pbi, sizeof(pbi), &len);
+					::SetLastError(lpfRtlNtStatusToDosError(status));
+					if(!NT_ERROR(status) && pbi.PebBaseAddress) {
+						SIZE_T bytesRead = 0;
+						PEB_INTERNAL peb;
+						if(::ReadProcessMemory(hProcess, pbi.PebBaseAddress, &peb, sizeof(peb), &bytesRead)) {
+							RTL_USER_PROCESS_PARAMETERS_I upp;
+							if(::ReadProcessMemory(hProcess, peb.ProcessParameters, &upp, sizeof(upp), &bytesRead)) {
+								if(upp.CommandLine.Length>0) {
+									DWORD need_len = (upp.CommandLine.Length + 1) / sizeof(wchar_t) + 1;
+									std::unique_ptr<_TCHAR[]> lpszCbuf(new _TCHAR[need_len]);
+									lpszCbuf[need_len - 1] = L'\0';
+									if(::ReadProcessMemory(hProcess, upp.CommandLine.Buffer,
+										lpszCbuf.get(), upp.CommandLine.Length, &bytesRead))
+									{
+										ap->CmdParam = lpszCbuf.get();
+										split_file_param(ap->CmdParam);
+									}
+								}
+							}
+						}
+					}
+				}
+
 				::CloseHandle(hProcess);
 			}
 
@@ -773,7 +810,7 @@ void __fastcall TAppListDlg::Timer1Timer(TObject *Sender)
 //一覧の描画
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-		TOwnerDrawState State)
+	TOwnerDrawState State)
 {
 	AppWinInf *ap = AppInfoList->Items[Index];
 
@@ -860,13 +897,24 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	if (ap->isWow64) cv->TextOut(xp + get_TextWidth(cv, ap->Caption, is_irreg), yp, ISWOW64_STR);
 	xp += MaxWd_f + 12;
 	//テキスト
+	UnicodeString s = yen_to_delimiter(ap->WinText);
 	cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : col_fgList;
-	cv->TextOut(xp, yp, ap->WinText);
+	cv->TextOut(xp, yp, s);
+	//コマンドラインパラメータ
+	if (ShowCmdParamAction->Checked && !ap->CmdParam.IsEmpty()) {
+		cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : AdjustColor(col_fgList, ADJCOL_LIGHT);
+		xp += (get_TextWidth(cv, s, is_irreg) + get_CharWidth(cv, 2));
+		int w = Rect.Right - xp - cv->TextWidth("… ");
+		if (w>0) cv->TextOut(xp, yp, minimize_str(yen_to_delimiter(ap->CmdParam), cv, w, true));
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::AppListBoxData(TWinControl *Control, int Index, UnicodeString &Data)
 {
-	Data = AppInfoList->Items[Index]->Caption;
+	AppWinInf *ap = AppInfoList->Items[Index];
+	UnicodeString s = ap->Caption + "\r\n" + yen_to_delimiter(ap->WinText)+ "\r\n";
+	if (!ap->CmdParam.IsEmpty()) s += (yen_to_delimiter(ap->CmdParam) + "\r\n");
+	Data = s;
 }
 
 //---------------------------------------------------------------------------
@@ -1235,7 +1283,9 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 		tmp = ExtractFileName(c_ap->FileName);
 		if (c_ap->isWow64) tmp += "  (32-bit)"; else tmp += "  (64-bit)";
 		add_PropLine(_T("実行ファイル"),tmp, lst.get(), LBFLG_PATH_FIF);
-		add_PropLine(_T("実行パス"),	yen_to_delimiter(ExtractFilePath(c_ap->FileName)), lst.get(), LBFLG_PATH_FIF);
+		add_PropLine(_T("場所"),		yen_to_delimiter(ExtractFilePath(c_ap->FileName)), lst.get(), LBFLG_PATH_FIF);
+		add_PropLine(_T("パラメータ"),	c_ap->CmdParam,	lst.get());
+
 		lst->Add(get_img_size_str(c_ap->win_wd, 	c_ap->win_hi, "画面サイズ"));
 		tmp.sprintf(_T("(%d, %d) - (%d, %d)"), 
 			c_ap->win_left, c_ap->win_top, c_ap->win_left + c_ap->win_wd, c_ap->win_top + c_ap->win_hi);
@@ -1244,8 +1294,8 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 		lst->Add(EmptyStr);
 
 		HWND hWnd = c_ap->WinHandle;
-		add_PropLine(_T("クラス名"),		c_ap->ClassName,	lst.get());
-		add_PropLine(_T("スタイル"),		tmp.sprintf(fmt_08X, ::GetWindowLong(hWnd, GWL_STYLE)),	lst.get());
+		add_PropLine(_T("クラス名"),	c_ap->ClassName,	lst.get());
+		add_PropLine(_T("スタイル"),	tmp.sprintf(fmt_08X, ::GetWindowLong(hWnd, GWL_STYLE)),	lst.get());
 
 		tmp.sprintf(fmt_08X, c_ap->win_xstyle);
 		UnicodeString tmp2;
@@ -1281,6 +1331,14 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 
 	FileInfoDlg->isAppInfo = true;
 	FileInfoDlg->ShowModal();
+}
+//---------------------------------------------------------------------------
+//コマンドラインパラメータを表示
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::ShowCmdParamActionExecute(TObject *Sender)
+{
+	ShowCmdParamAction->Checked = !ShowCmdParamAction->Checked;
+	AppListBox->Invalidate();
 }
 
 //---------------------------------------------------------------------------

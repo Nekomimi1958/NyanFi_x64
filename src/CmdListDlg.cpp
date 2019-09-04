@@ -69,17 +69,15 @@ void __fastcall TCmdFileListDlg::FormShow(TObject *Sender)
 	PreviewSplitter->Color	 = col_Splitter;
 	ReferSplitter->Color	 = col_Splitter;
 
-	PreviewListBox->Font->Assign(TxtPrvFont);
+	set_ListBoxItemHi(PreviewListBox, TxtPrvFont);
+	set_UsrScrPanel(PrevScrPanel);
 	PreviewListBox->Color		= col_bgView;
 	PreviewListBox->Font->Color = col_fgView;
-	set_ListBoxItemHi(PreviewListBox);
-	set_UsrScrPanel(PrevScrPanel);
 
-	ReferListBox->Font->Assign(FileInfFont);
+	set_ListBoxItemHi(ReferListBox, FileInfFont);
+	set_UsrScrPanel(ReferScrPanel);
 	ReferListBox->Color		  = col_bgInf;
 	ReferListBox->Font->Color = col_fgInf;
-	set_ListBoxItemHi(ReferListBox);
-	set_UsrScrPanel(ReferScrPanel);
 
 	PreviewPanel->Height = IniFile->ReadIntGen(_T("CmdFileListPrevHeight"), 200);
 	ReferPanel->Width	 = IniFile->ReadIntGen(_T("CmdFileListReferWidth"), 200);
