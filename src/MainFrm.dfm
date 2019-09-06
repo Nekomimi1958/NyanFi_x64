@@ -728,7 +728,7 @@ object NyanFiForm: TNyanFiForm
           BevelOuter = bvNone
           TabOrder = 2
           object GrepSttSplitter: TSplitter
-            Left = 470
+            Left = 440
             Top = 0
             Width = 4
             Height = 30
@@ -739,7 +739,7 @@ object NyanFiForm: TNyanFiForm
           object GrepStatusBar: TStatusBar
             Left = 0
             Top = 0
-            Width = 470
+            Width = 440
             Height = 30
             Align = alClient
             Panels = <
@@ -760,20 +760,21 @@ object NyanFiForm: TNyanFiForm
             OnDrawPanel = GrepStatusBarDrawPanel
           end
           object GrepFilterPanel: TPanel
-            Left = 474
+            Left = 444
             Top = 0
-            Width = 250
+            Width = 280
             Height = 30
             Align = alRight
             BevelOuter = bvNone
+            Constraints.MinWidth = 280
             TabOrder = 1
             DesignSize = (
-              250
+              280
               30)
             object GrepFilterEdit: TLabeledEdit
               Left = 62
               Top = 5
-              Width = 28
+              Width = 58
               Height = 22
               Anchors = [akLeft, akTop, akRight]
               AutoSize = False
@@ -789,7 +790,7 @@ object NyanFiForm: TNyanFiForm
               OnKeyPress = GrepFilterEditKeyPress
             end
             object MigemoCheckBox: TCheckBox
-              Left = 96
+              Left = 126
               Top = 7
               Width = 72
               Height = 17
@@ -799,7 +800,7 @@ object NyanFiForm: TNyanFiForm
               OnClick = GrepFltOptCheckBoxClick
             end
             object AndOrCheckBox: TCheckBox
-              Left = 170
+              Left = 200
               Top = 7
               Width = 80
               Height = 17
@@ -819,7 +820,7 @@ object NyanFiForm: TNyanFiForm
           BevelOuter = bvNone
           TabOrder = 1
           object GrepMidSplitter: TSplitter
-            Left = 384
+            Left = 360
             Top = 0
             Width = 4
             Height = 34
@@ -829,17 +830,18 @@ object NyanFiForm: TNyanFiForm
           object GrepM1Panel: TPanel
             Left = 0
             Top = 0
-            Width = 384
+            Width = 360
             Height = 34
             Align = alLeft
             BevelOuter = bvNone
+            Constraints.MinWidth = 360
             TabOrder = 0
             DesignSize = (
-              384
+              360
               34)
             object TLabel
-              Left = 294
-              Top = 9
+              Left = 270
+              Top = 8
               Width = 20
               Height = 13
               Anchors = [akTop, akRight]
@@ -854,7 +856,7 @@ object NyanFiForm: TNyanFiForm
               Caption = #12510#12473#12463
             end
             object SubDirCheckBox: TCheckBox
-              Left = 185
+              Left = 161
               Top = 7
               Width = 103
               Height = 17
@@ -863,7 +865,7 @@ object NyanFiForm: TNyanFiForm
               TabOrder = 1
             end
             object SubDirNCombo: TComboBox
-              Left = 321
+              Left = 297
               Top = 5
               Width = 55
               Height = 21
@@ -874,7 +876,7 @@ object NyanFiForm: TNyanFiForm
             object GrepMaskComboBox: TComboBox
               Left = 48
               Top = 5
-              Width = 123
+              Width = 99
               Height = 21
               Anchors = [akLeft, akTop, akRight]
               DropDownCount = 20
@@ -882,20 +884,20 @@ object NyanFiForm: TNyanFiForm
             end
           end
           object GrepM2Panel: TPanel
-            Left = 388
+            Left = 364
             Top = 0
-            Width = 253
+            Width = 277
             Height = 34
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
             DesignSize = (
-              253
+              277
               34)
             object SkipDirEdit: TLabeledEdit
               Left = 118
               Top = 5
-              Width = 125
+              Width = 149
               Height = 22
               Anchors = [akLeft, akTop, akRight]
               AutoSize = False
@@ -1334,7 +1336,7 @@ object NyanFiForm: TNyanFiForm
             ParentDoubleBuffered = False
             ParentShowHint = False
             ShowHint = False
-            TabOrder = 2
+            TabOrder = 1
             StyleElements = [seBorder]
             OnDblClick = FileListBoxDblClick
             OnDragDrop = FileListBoxDragDrop
@@ -1471,7 +1473,7 @@ object NyanFiForm: TNyanFiForm
             ParentDoubleBuffered = False
             ParentShowHint = False
             ShowHint = False
-            TabOrder = 2
+            TabOrder = 1
             StyleElements = [seBorder]
             OnDblClick = FileListBoxDblClick
             OnDragDrop = FileListBoxDragDrop

@@ -4678,15 +4678,10 @@ void __fastcall TNyanFiForm::SetupDesign(
 	}
 
 	if (initial) {
-		GrepT2Panel->Width = IniFile->ReadIntGen(_T("GrepTR_Width"),	50);
-		RepT2Panel->Width  = IniFile->ReadIntGen(_T("RepTR_Width"),		50);
-		GrepM1Panel->Width = IniFile->ReadIntGen(_T("GrepLL_Width"),	ClientWidth/2);
-		GrepMidSplitter->MinSize = GrepM3Panel->Width + ScaledInt(200);	//***
-		if ((ClientWidth - GrepM1Panel->Width)<GrepMidSplitter->MinSize)
-			GrepM1Panel->Width = ClientWidth - GrepMidSplitter->MinSize;
-		GrepFilterPanel->Width = IniFile->ReadIntGen(_T("GrepFilterWidth"),	200);
-		if ((ClientWidth - GrepFilterPanel->Width)<GrepSttSplitter->MinSize)
-			GrepFilterPanel->Width = ClientWidth - GrepMidSplitter->MinSize;
+		GrepT2Panel->Width	   = IniFile->ReadIntGen(_T("GrepTR_Width"),	50);
+		RepT2Panel->Width	   = IniFile->ReadIntGen(_T("RepTR_Width"),		50);
+		GrepM1Panel->Width	   = std::max(IniFile->ReadIntGen(_T("GrepLL_Width"), ClientWidth/2), GrepM1Panel->Constraints->MinWidth);
+		GrepFilterPanel->Width = std::max(IniFile->ReadIntGen(_T("GrepFilterWidth"), 200), GrepFilterPanel->Constraints->MinWidth);
 	}
 
 	//メニューバー
