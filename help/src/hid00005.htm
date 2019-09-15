@@ -449,7 +449,7 @@ NyanFi.exe -XCalculator_CB
 XML や HTML文書では、文字コード指定(encoding、charset)も書き換えます。<br>
 反対側がカレントと同じ場合、確認なしで上書きされます。<br>
 
-<dt id="Copy">Copy<span class="pram_text">[_{SO|OP|OP2|TO|SD|SS}[;日付条件]]</span>
+<dt id="Copy">Copy<span class="pram_text">[_{SO|OP|OP2|TO|SD|SS|PR}[;日付条件]]</span>
 <dd>選択中(無ければカーソル位置)の項目を反対パスにコピーします。<br>
 <div class="spc_box">
 反対パスが<a href="hid00060.htm">ワークリスト</a>の場合、項目がリストに登録されます。<br>
@@ -468,7 +468,11 @@ XML や HTML文書では、文字コード指定(encoding、charset)も書き換えます。<br>
 <div class="spc_box">
 パラメータに <b>TO</b> を指定すると、反対パスではなく、入力ボックス(<a href="#InputDir">→ InputDir</a>)で指定したディレクトリがコピー先になります。このとき存在しないディレクトリを指定すると、確認メッセージが出てそれを新規作成できます。<br>
 パラメータに <b>SD</b> を指定すると、フォルダの参照ダイアログでコピー先を選択できます。<br>
-パラメータに <b>SS</b> を指定すると、カレントのサブディレクトリをコピー先として選択するダイアログが開きます。最初の <b>..</b> を選ぶと親ディレクトリにコピーします。<br>
+また <b>SS</b> を指定すると、カレントのサブディレクトリをコピー先として選択するダイアログが開きます。最初の <b>..</b> を選ぶと親ディレクトリにコピーします。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>PR</b> を指定すると、同名ファイルがあったときの処理(すべてに適用)をダイアログで事前に指定できます。これが適用されるのは、バックグラウンド・タスクによる通常のファイルコピーのみです。<br>
+なお直前に <a href="hid00063.htm#SetCopyMode">SetCopyMode</a> 補助コマンドを実行することでも指定可能です。<br>
 </div>
 <div class="spc_box">
 パラメータで<b>日付条件</b>を指定すると、それに合うファイルだけがコピーされます。<br>
@@ -1794,7 +1798,7 @@ MonitorOff<span class="pram_text">_KM[;解除ワード]</span>
 </div>
 <a href="#LockComputer">→ LockComputer</a>　<a href="#LockKeyMouse">→ LockKeyMouse</a>
 
-<dt id="Move">Move<span class="pram_text">[_{SO|OP|TO|SD|SS}]</span>
+<dt id="Move">Move<span class="pram_text">[_{SO|OP|TO|SD|SS|PR}]</span>
 <dd>選択中(無ければカーソル位置)の項目を反対パスに移動します。<br>
 移動処理はバックグラウンド・タスクで行われます。<br>
 
@@ -1806,7 +1810,11 @@ MonitorOff<span class="pram_text">_KM[;解除ワード]</span>
 <div class="spc_box">
 パラメータに <b>TO</b> を指定すると、反対パスではなく、入力ボックス(<a href="#InputDir">→ InputDir</a>)で指定したディレクトリが移動先になります。このとき存在しないディレクトリを指定すると、確認メッセージが出てそれを新規作成できます。<br>
 パラメータに <b>SD</b> を指定すると、フォルダの参照ダイアログで移動先を選択できます。<br>
-パラメータに <b>SS</b> を指定すると、カレントのサブディレクトリを移動先として選択するダイアログが開きます。最初の <b>..</b> を選ぶと親ディレクトリに移動します。<br>
+また <b>SS</b> を指定すると、カレントのサブディレクトリを移動先として選択するダイアログが開きます。最初の <b>..</b> を選ぶと親ディレクトリに移動します。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>PR</b> を指定すると、同名ファイルがあったときの処理(すべてに適用)をダイアログで事前に指定できます。<br>
+なお直前に <a href="hid00063.htm#SetCopyMode">SetCopyMode</a> 補助コマンドを実行することでも指定可能です。<br>
 </div>
 <a href="hid00009.htm#Copy">→ オプション設定 - 一般 - コピー動作</a><br>
 <a href="#MoveTo">→ MoveTo</a>　<a href="#Copy">→ Copy</a>　<a href="#CopyTo">→ CopyTo</a>
@@ -1876,8 +1884,8 @@ MonitorOff<span class="pram_text">_KM[;解除ワード]</span>
 <dd>カレントパスに新規テキストファイルを作成します。<br>
 ファイル名の拡張子を省略すると <b>.txt</b> が付加されます(代替データストリーム一覧の場合は除く)。<br>
 「<b>クリップボードから貼り付け</b>」をチェックしていると、クリップボードのテキスト内容をファイルに出力します(<a href="#Paste">Paste</a>_EX コマンドでも可能)。<br>
-文字コードはコンボボックスで選択できます。<br>
 「<b>エディタで開く</b>」チェックしていると、作成したファイルをテキストエディタで開きます。<br>
+「<b>文字コード</b>」はコンボボックスで選択できます。<br>
 
 <div class="spc_box">
 パラメータを指定すると、入力ボックスを出さずにその名前で直ちにファイルを作成します。名前の指定には以下の書式文字列が使えます。<br>

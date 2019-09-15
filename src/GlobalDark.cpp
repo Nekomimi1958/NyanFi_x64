@@ -800,9 +800,15 @@ void draw_MenuSeparator(TCanvas *cv, TRect rc)
 //---------------------------------------------------------------------------
 //TRadioGroup にフォーカス
 //---------------------------------------------------------------------------
-bool set_focus_RadioGroup(TRadioGroup *gp)
+bool set_focus_RadioGroup(
+	TRadioGroup *gp,
+	int idx)			//インデックス	(default = -1 : 無指定)
 {
-	if (!gp->Parent->Visible || !gp->Parent->Enabled || !gp->Visible || !gp->Enabled || gp->ItemIndex==-1) return false;
+	if (!gp->Parent->Visible || !gp->Parent->Enabled || !gp->Visible || !gp->Enabled) return false;
+
+	if (idx!=-1) gp->ItemIndex = idx;
+	if (gp->ItemIndex==-1) return false;
+
 	gp->Buttons[gp->ItemIndex]->SetFocus();
 	return true;
 }

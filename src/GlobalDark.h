@@ -125,7 +125,7 @@ void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool act
 void draw_MenuSeparator(TCanvas *cv, TRect rc);
 
 //---------------------------------------------------------------------------
-bool set_focus_RadioGroup(TRadioGroup *gp);
+bool set_focus_RadioGroup(TRadioGroup *gp, int idx = -1);
 bool set_focus_GroupBox(TGroupBox *gp);
 void invert_CheckBox(TCheckBox *cp);
 

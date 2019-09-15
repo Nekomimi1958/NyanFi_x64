@@ -1072,6 +1072,9 @@ void get_PrmList(
 				_T("OP : 反対側移動先のカーソル位置を設定\nOP2 : 移動先のカーソル位置を逐次設定\n")
 			 	_T("TO : 移動先を入力\nSD : 移動先を参照\nSS : カレントのサブディレクトリを選択\n"));
 		}
+		if (contained_wd_i(_T("Copy|Move"), cmd)) {
+			params += "PR : 同名時処理を事前に指定\n";
+		}
 	}
 	//トグル動作コマンド
 	else if (contained_wd_i(

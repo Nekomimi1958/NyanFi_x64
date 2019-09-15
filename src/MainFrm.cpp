@@ -78,6 +78,7 @@
 #include "PackDlg.h"
 #include "PrnImgDlg.h"
 #include "RenDlg.h"
+#include "PreSameDlg.h"
 #include "SameDlg.h"
 #include "SrtModDlg.h"
 #include "SyncDlg.h"
@@ -26259,6 +26260,13 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 
 			//タスク開始
 			if (tsk_lst->Count>0) {
+				//同名時処理の事前指定
+				if (TEST_DEL_ActParam("PR")) {
+					if (!PreSameNemeDlg) PreSameNemeDlg = new TPreSameNemeDlg(this);	//初回に動的作成
+					if (PreSameNemeDlg->ShowModal()!=mrOk) SkipAbort();
+					if (PreSameNemeDlg->PreMode>0) xCopyMode = PreSameNemeDlg->PreMode - 1;
+				}
+
 				TDateTime flt_dt;
 				int flt_cnd = get_DateCond(ActionParam, flt_dt);
 				if (flt_cnd==-1) UserAbort(USTR_IllegalDtCond);
@@ -26396,6 +26404,13 @@ void __fastcall TNyanFiForm::MoveActionExecute(TObject *Sender)
 
 		//タスク開始
 		if (tsk_lst->Count>0) {
+			//同名時処理の事前指定
+			if (TEST_DEL_ActParam("PR")) {
+				if (!PreSameNemeDlg) PreSameNemeDlg = new TPreSameNemeDlg(this);	//初回に動的作成
+				if (PreSameNemeDlg->ShowModal()!=mrOk) SkipAbort();
+				if (PreSameNemeDlg->PreMode>0) xCopyMode = PreSameNemeDlg->PreMode - 1;
+			}
+
 			TaskConfig  *cp = NULL;
 			TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
 			cp->TaskList->Assign(tsk_lst.get());

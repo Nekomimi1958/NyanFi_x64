@@ -387,7 +387,7 @@ void __fastcall TInpCmdsDlg::Filter()
 
 	//i‚èž‚Ý
 	if (lst->Count>0 && !contained_wd_i(_T("*|?| "), kwd)) {
-		UnicodeString ptn = usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, kwd);
+		UnicodeString ptn = usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, kwd, (SubComboBox->Tag==1)? 1 : 0);
 		if (!ptn.IsEmpty()) {
 			TRegExOptions opt; opt << roIgnoreCase;
 			int i=0;

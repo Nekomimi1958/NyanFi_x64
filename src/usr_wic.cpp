@@ -218,10 +218,10 @@ bool WIC_save_image(
 	UnicodeString fnam,			//ファイル名(拡張子から形式を設定)
 	Graphics::TBitmap *i_bmp,	//ビットマップ
 								//！グレー保存する場合、WIC_grayscale_image でグレー化しておく
-	int jpg_q ,					//jpeg 画質				(0～100 default = 100)
-	int jpg_ycrcb,				//jpeg サブサンプリング	(0～3	default = 0)
+	int  jpg_q,					//jpeg 画質				(0～100 default = 100)
+	int  jpg_ycrcb,				//jpeg サブサンプリング	(0～3	default = 0)
 	bool grayscale,				//jpeg/PNG グレースケール(8bit)で保存
-	int tif_cmp)				//tiff 圧縮				(0～7   default = 0)
+	int  tif_cmp)				//tiff 圧縮				(0～7   default = 0)
 {
 	UnicodeString fext = ExtractFileExt(fnam) + ".";
 	GUID fmt;
