@@ -165,10 +165,7 @@ void __fastcall TMemoForm::DelLineActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMemoForm::WebSearchActionExecute(TObject *Sender)
 {
-	UnicodeString kwd = MemoBox->SelText;
-	kwd = System::Netencoding::TURLEncoding::URL->Encode(kwd);
-	UnicodeString url = ReplaceStr(WebSeaUrl, "\\S", kwd);
-	if (!url.IsEmpty()) Execute_ex(url);
+	exe_WebSearch(MemoBox->SelText);
 }
 //---------------------------------------------------------------------------
 void __fastcall TMemoForm::WebSearchActionUpdate(TObject *Sender)

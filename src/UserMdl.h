@@ -157,6 +157,10 @@ __published:	// IDE で管理されるコンポーネント
 	TTimer *BlinkTimer;
 	TTimer *ScrollTimer;
 	TTimer *SpuitTimer;
+	TAction *WebSeaComboAction;
+	TAction *WebSeaEditAction;
+	TMenuItem *WebSeaComboItem;
+	TMenuItem *WebSeaEditItem;
 
 	void __fastcall DataModuleCreate(TObject *Sender);
 	void __fastcall UpListItemActionExecute(TObject *Sender);
@@ -209,6 +213,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall PopEditItemItemClick(TObject *Sender);
 	void __fastcall EditItemItemClick(TObject *Sender);
 	void __fastcall BlinkTimerTimer(TObject *Sender);
+	void __fastcall WebSeaComboActionExecute(TObject *Sender);
+	void __fastcall WebSeaComboActionUpdate(TObject *Sender);
+	void __fastcall WebSeaEditActionExecute(TObject *Sender);
+	void __fastcall WebSeaEditActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TCustomListBox *ActiveListBox;		//操作対象リストボックス

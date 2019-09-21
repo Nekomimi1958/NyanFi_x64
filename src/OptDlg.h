@@ -884,6 +884,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall AsoAppComboBoxDropDown(TObject *Sender);
 	void __fastcall KeyListBoxDblClick(TObject *Sender);
 	void __fastcall ExtSavDirHistCheckBoxClick(TObject *Sender);
+	void __fastcall PrtDirListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall AddPrtDirActionExecute(TObject *Sender);
 	void __fastcall OkActionExecute(TObject *Sender);
 	void __fastcall OkActionUpdate(TObject *Sender);

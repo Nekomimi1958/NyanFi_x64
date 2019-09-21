@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <RegularExpressions.hpp>
 #include "UserFunc.h"
+#include "UserMdl.h"
 #include "Global.h"
 #include "FindTag.h"
 

@@ -684,14 +684,21 @@ link
 個数に1より大きな値を指定すると、ファイル名の末尾に連番を付けて複数作成します。連番の桁数は入力内容にしたがいます(例: 010 なら 001～010 を付加)。<br>
 作成には fsutil を利用し、非表示で実行しています。ファイルシステムがNTFSなら、GB単位の巨大ファイルもすぐに作成できるはずです。FATでは時間がかかるので、NTFSで一旦作成してからコピーした方が良いかもしれません。
 
-<dt id="CsrDirToOpp">CsrDirToOpp<span class="pram_text">[_TO]</span>
+<dt id="CsrDirToOpp">CsrDirToOpp<span class="pram_text">[_{TO|LK}]</span>
 <dd>カーソル位置のディレクトリを反対側に開きます。<br>
 カーソル位置がアーカイブファイルの場合は、仮想ディレクトリとして反対側に開きます。7-zip64.dll 文字化け対策版(x@rgs 氏作)の7z.dll対応版を使用していると、<a href="hid00024.htm#Other">オプション設定 - 一般2 - その他</a> - 「<b>7-zip32.dll(7z.dll対応版)の対応拡張子</b>」に登録されていないものでも、アーカイブとして認識できれば開けます。<br>
 
 カーソル位置が <b>.library-ms</b> ファイルの場合は、ライブラリとして反対側に開きます(複数ある場合はポップアップメニューで選択)。<br>
 カーソル位置が <b>.nwl</b> ファイルの場合は、<a href="hid00060.htm">ワークリスト</a>として反対側に開きます。<br>
 カーソル位置が <b>axshell.spi</b> 用の <b>._sf</b> ファイルの場合、通常のパスなら反対側に開きます。<br>
+<div class="spc_box">
 パラメータに <b>TO</b> を指定すると、反対パス設定後に反対側へ移動します。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>LK</b> を指定すると、反対側への反映動作を維持します。カーソルを移動するたびに、カーソル位置のディレクトリが反対側で開かれます。<br>
+この動作を解除するには、再びパラメータ <b>LK</b> で実行するか(トグル動作)、パラメータなしで実行してください。<br>
+ツールボタンに <b>CsrDirToOpp</b>_LK コマンドが割り当てられている場合、動作中だとボタンが強調表示されます。<br>
+</div>
 <a href="#LinkToOpp">→ LinkToOpp</a>
 
 <dt id="CurrFromOpp">CurrFromOpp<span class="pram_text">[_SL]</span>
@@ -872,6 +879,9 @@ DirHistory<span class="pram_text">_RD</span>
 <dt id="DotNyanDlg">DotNyanDlg<span class="pram_text">[_RS]</span>
 <dd><b>.nyanfi</b> ファイルの設定ダイアログが開き、カレント側ディレクトリの<a href="hid00075.htm">.naynfi ファイル</a>を作成/変更/削除できます。<br>
 パラメータに <b>RS</b> を指定すると、カレント側に適用可能な <a href="hid00075.htm">.naynfi ファイル</a> がある場合、それを再度適用します。ダイアログは開きません。<br>
+<div class="spc_box">
+ツールボタンに <b>DotNyanDlg</b> コマンドが割り当てられている場合、カレントに .nyanfi ファイルがあるとボタンが強調表示されます。<br>
+</div>
 
 <dt id="DriveGraph">DriveGraph<span class="pram_text">[_ドライブ文字]</span>
 <dd>ドライブ使用率の推移をグラフ化する <a href="hid00086.htm">ドライブ使用率推移</a> を表示します。<br>
@@ -2016,6 +2026,7 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 <div class="spc_box">
 <a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で、特定のファイル拡張子に対し、標準とは異なる動作(<a href="#OpenByWin">OpenByWin</a>、<a href="#OpenByApp">OpenByApp</a>、<a href="#TextViewer">TextViewer</a>、<a href="#FileEdit">FileEdit</a>、<a href="#BinaryEdit">BinaryEdit</a>、<a href="#ExeCommands">ExeCommands</a>)を指定することも可能です。<br>
 <b>xd2txlib.dll</b> を利用して <b>.docx</b>、<b>.pptx</b>、<b>.xlsx</b> ファイルをテキスト表示したい場合は、これらの拡張子に対して「<b>テキストビュアーで開く(TextViewer)</b>」を設定してください。<br>
+なお、「<b>実行後にカーソルを下に移動</b>」をチェックしていると、実行後にカーソルが一つ下に移動します。<br>
 </div>
 
 <div class="spc_box">
@@ -3307,12 +3318,11 @@ google.maps.event.addDomListener(window, 'load',
 </p>
 
 <p class="note_text">
-<b></b> <b>Windows</b> では、ファイルやディレクトリ名は255文字、パス全体の長さは259文字までに制限されていますが、<b>NyanFi</b> では、ファイルやディレクトリ名の制限はそのままですが、パス全体の長さについては260文字以上でも扱うことができます。また末尾に空白があるものも扱えます。<br>
-ただし、コピー、移動、(ごみ箱を使わない)削除、名前の変更など基本的なファイル操作以外はできない場合があります。
+<b>NyanFi</b> では、260文字以上のパス名(ファイル/ディレクトリ名は255文字まで)や末尾に空白がある名前も扱うことができます。ただし、コピー、移動、(ごみ箱を使わない)削除、名前の変更などの基本的なファイル操作以外はできない場合があります。
 </p>
 
 <p class="note_text">
-<b></b> <b>NyanFi</b> では、名前が <b>.</b> で始まる場合(ドットファイル)、その直後の部分は拡張子ではなくファイル名主部とみなしています。
+<b></b> <b>NyanFi</b> では、名前が <b>.</b> で始まる場合(ドットファイル)、その直後の部分は拡張子ではなくファイル名主部として扱います。
 </p>
 <br><br><br><br>
 

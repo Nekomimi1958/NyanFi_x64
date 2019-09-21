@@ -200,6 +200,16 @@ object UserModule: TUserModule
       Caption = #12469#12452#12474#12392#20301#32622#12434#12501#12449#12452#12523#12522#12473#12488#12395#21512#12431#12379#12427
       OnExecute = SizePosToFlieListActionExecute
     end
+    object WebSeaComboAction: TAction
+      Category = 'ComboBox'
+      OnExecute = WebSeaComboActionExecute
+      OnUpdate = WebSeaComboActionUpdate
+    end
+    object WebSeaEditAction: TAction
+      Category = #32232#38598
+      OnExecute = WebSeaEditActionExecute
+      OnUpdate = WebSeaEditActionUpdate
+    end
   end
   object EditPopupMenuC: TPopupMenu
     OnPopup = EditPopupMenuCPopup
@@ -245,6 +255,9 @@ object UserModule: TUserModule
     end
     object CalculatorItem: TMenuItem
       Action = CalculatorAction
+    end
+    object WebSeaComboItem: TMenuItem
+      Action = WebSeaComboAction
     end
     object Sep_g_2: TMenuItem
       Caption = '-'
@@ -381,6 +394,9 @@ object UserModule: TUserModule
     end
     object CalculatorEItem: TMenuItem
       Action = CalculatorAction
+    end
+    object WebSeaEditItem: TMenuItem
+      Action = WebSeaEditAction
     end
     object Sep_e_5: TMenuItem
       Caption = '-'

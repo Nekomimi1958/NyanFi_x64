@@ -1048,6 +1048,7 @@ __published:	// IDE で管理されるコンポーネント
 	TToolBar *ToolBarV;
 	TTrackBar *SeekBar;
 	TTrayIcon *TrayIcon1;
+	TMenuItem *Sep_h_2;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -1949,6 +1950,7 @@ private:	// ユーザー宣言
 	bool fromOpenStd;					//OpenStandard から呼ばれている
 	bool fromFileList;					//ファイルリストから実行された
 	bool fromMenuFile;					//メニューファイルから実行された
+	bool fromFlToWork;					//ファイルリストからワークリストを開いた
 
 	UnicodeString GrepPath;				//GREP 対象パス
 	UnicodeString GrepKeyword;			//  検索語

@@ -293,7 +293,9 @@ void __fastcall TRenameDlg::WmFormShowed(TMessage &msg)
 		if (open_by_TextEditor(RenListFile)) {
 			if (msgbox_Sure(_T("リストファイルを読み込みますか?"))) LoadListFile();
 		}
-		else msgbox_ERR(GlobalErrMsg);
+		else {
+			msgbox_ERR(GlobalErrMsg);
+		}
 	}
 	else if (IsRenListSheet()) {
 		if (RenListComboBox->Items->Count>0) {
@@ -959,7 +961,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	MainPanel->Enabled = true;
 
 	//フォーカス状態を復帰
-	if (last_cp) {
+	if (last_cp && last_cp->Visible && last_cp->Enabled) {
 		last_cp->SetFocus();
 		if (last_ep) {
 			last_ep->SelStart  = last_ss;
@@ -1373,7 +1375,7 @@ UnicodeString __fastcall TRenameDlg::ConvCharType(UnicodeString s, int idx)
 //プレビューの描画
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::PreviewGridDrawCell(TObject *Sender, int ACol, int ARow,
-		TRect &Rect, TGridDrawState State)
+	TRect &Rect, TGridDrawState State)
 {
 	TStringGrid *gp = (TStringGrid*)Sender;
 	TCanvas *cv = gp->Canvas;

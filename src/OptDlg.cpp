@@ -4275,6 +4275,17 @@ void __fastcall TOptionDlg::EditFileActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TOptionDlg::PrtDirListBoxDrawItem(TWinControl *Control, int Index,
+	TRect &Rect, TOwnerDrawState State)
+{
+	TListBox *lp = (TListBox*)Control;
+	TCanvas  *cv = lp->Canvas;
+	cv->Font->Assign(lp->Font);
+	SetHighlight(cv, State.Contains(odSelected));
+	cv->FillRect(Rect);
+	cv->TextOut(Rect.Left + Scaled2, Rect.Top + get_TopMargin(cv), lp->Items->Strings[Index]);
+}
+//---------------------------------------------------------------------------
 //削除制限ディレクトリの追加
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::AddPrtDirActionExecute(TObject *Sender)

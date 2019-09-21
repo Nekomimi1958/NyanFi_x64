@@ -2985,6 +2985,9 @@ object NyanFiForm: TNyanFiForm
         Caption = #22793#26356#23653#27508'(&H)'
         OnClick = HelpHistoryItemClick
       end
+      object Sep_h_1: TMenuItem
+        Caption = '-'
+      end
       object AboutItem: TMenuItem
         Action = AboutNyanFiAction
       end
@@ -2992,7 +2995,7 @@ object NyanFiForm: TNyanFiForm
         Caption = #21205#20316#29872#22659#24773#22577#12434#12467#12500#12540'(&E)'
         OnClick = CopyEnvInfItemClick
       end
-      object Sep_h_1: TMenuItem
+      object Sep_h_2: TMenuItem
         Caption = '-'
       end
       object UpdateItem: TMenuItem

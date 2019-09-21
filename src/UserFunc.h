@@ -18,7 +18,6 @@
 #include "usr_msg.h"
 #include "usr_file_ex.h"
 #include "usr_file_inf.h"
-#include "UserMdl.h"
 
 //---------------------------------------------------------------------------
 #define URL_MATCH_PTN	_T("h?ttps?://[\\w/:%#$&?()~.=+-]+[\\w/]")		//URLópê≥ãKï\åª
@@ -180,6 +179,11 @@ void cursor_HourGlass();
 void cursor_Default();
 
 void reduction_MenuLine(TMenuItem *mp);
+
+//---------------------------------------------------------------------------
+extern UnicodeString WebSeaUrl;
+UnicodeString get_WebSeaCaption(UnicodeString kwd = EmptyStr, bool with_ak = true);
+bool exe_WebSearch(UnicodeString kwd);
 
 //---------------------------------------------------------------------------
 #endif

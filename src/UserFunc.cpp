@@ -1685,4 +1685,49 @@ void reduction_MenuLine(TMenuItem *mp)
 	if (ip_0 && USAME_TS(ip_0->Caption, "-")) ip_0->Visible = false;
 	if (ip_1 && USAME_TS(ip_1->Caption, "-")) ip_1->Visible = false;
 }
+
+//---------------------------------------------------------------------------
+//Web検索
+//---------------------------------------------------------------------------
+UnicodeString WebSeaUrl;		//WebSearch:  検索エンジンURL
+
+//---------------------------------------------------------------------------
+//Web検索表示文字列を取得
+//---------------------------------------------------------------------------
+UnicodeString get_WebSeaCaption(
+	UnicodeString kwd,	//検索語				(default = EmptyStr)
+	bool with_ak)		//アクセラレータを付加	(default = true)
+{
+	UnicodeString ret_str;
+	if (!kwd.IsEmpty()) {
+		kwd = Trim(get_first_line(kwd));
+		kwd = ReplaceStr(kwd, "&", "&&");
+		if (kwd.Length()>20) kwd = kwd.SubString(1, 20) + "…";
+		if (!kwd.IsEmpty()) ret_str.sprintf(_T("「%s」を "), kwd.c_str());
+	}
+
+	UnicodeString url = get_tkn_m(WebSeaUrl, _T("//"), _T("/"));
+	remove_top_text(url, _T("www."));
+	if (url.IsEmpty()) url = "Web";
+	ret_str.cat_sprintf(_T("%s で検索"), url.c_str());
+	if (with_ak) ret_str += "(&S)";
+
+	return ret_str;
+}
+
+//---------------------------------------------------------------------------
+//Web検索を実行
+//---------------------------------------------------------------------------
+bool exe_WebSearch(UnicodeString kwd)
+{
+	UnicodeString url;
+	if (!kwd.IsEmpty()) {
+		kwd = System::Netencoding::TURLEncoding::URL->Encode(kwd);
+		url = ReplaceStr(WebSeaUrl, "\\S", kwd);
+	}
+
+	return (!url.IsEmpty()?
+			(::ShellExecute(NULL, _T("open"), url.c_str(), NULL, NULL, SW_SHOWNORMAL) > (HINSTANCE)32) : false);
+}
+
 //---------------------------------------------------------------------------

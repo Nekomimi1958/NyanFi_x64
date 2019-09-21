@@ -668,6 +668,7 @@ void get_PrmList(
 	}
 	else if (contained_wd_i(_T("CsrDirToOpp|LinkToOpp|SwapLR"), cmd)) {
 		params = "\nTO : ”½‘Î‘¤‚ÖˆÚ“®\n";
+		if (USAME_TI(cmd, "CsrDirToOpp")) params += "LK : ”½‘Î‘¤‚Ö‚Ì”½‰f“®ì‚ğˆÛ/‰ğœ\n";
 	}
 	else if (contained_wd_i(_T("CurrFromOpp|CurrToOpp"), cmd)) {
 		params = "\nSL : ‘I‘ğó‘Ô‚ğ”½‰f\n";

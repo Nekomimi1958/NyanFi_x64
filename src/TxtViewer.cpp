@@ -17,6 +17,7 @@
 #include "usr_excmd.h"
 #include "usr_highlight.h"
 #include "UserFunc.h"
+#include "UserMdl.h"
 #include "FuncDlg.h"
 #include "FileInfDlg.h"
 #include "ChInfFrm.h"
@@ -4614,46 +4615,35 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		}
 		//URLを開く
 		else if (USAME_TI(cmd, "OpenURL")) {
-			UnicodeString urlstr;
+			UnicodeString url;
 			if (!prm.IsEmpty()) {
 				try {
-					urlstr = TIdURI::URLEncode(prm, IndyTextEncoding_UTF8());
+					url = TIdURI::URLEncode(prm, IndyTextEncoding_UTF8());
 				}
 				catch (Exception &e) {
-					urlstr = EmptyStr;
+					url = EmptyStr;
 				}
 			}
 			else {
 				UnicodeString lbuf = get_SelText();
 				if (lbuf.IsEmpty()) lbuf = get_CurLine(true);
-				urlstr = extract_URL(lbuf);
+				url = extract_URL(lbuf);
 			}
-			if (urlstr.IsEmpty())
-				GlobalErrMsg = LoadUsrMsg(USTR_NotFound, _T("URL"));
-			else
-				Execute_ex(urlstr);
+			if (!url.IsEmpty()) Execute_ex(url); else GlobalErrMsg = LoadUsrMsg(USTR_NotFound, _T("URL"));
 		}
 		//Web で検索
 		else if (USAME_TI(cmd, "WebSearch")) {
-			UnicodeString kw;
+			UnicodeString kwd;
 			if (USAME_TI(prm, "CB")) {
 				std::unique_ptr<TStringList> sbuf(new TStringList());
 				sbuf->Text  = Clipboard()->AsText;
-				if (sbuf->Count>0) kw = sbuf->Strings[0];
+				if (sbuf->Count>0) kwd = sbuf->Strings[0];
 			}
 			else {
-				kw = get_tkn(def_if_empty(prm, get_SelText()), _T("\r\n"));
+				kwd = get_tkn(def_if_empty(prm, get_SelText()), _T("\r\n"));
 			}
-
-			if (kw.IsEmpty()) kw = inputbox_dir(get_WebSeaCaption().c_str(), _T("WebSearch"));
-			if (!kw.IsEmpty()) {
-				kw = System::Netencoding::TURLEncoding::URL->Encode(kw);
-				UnicodeString urlstr = ReplaceStr(WebSeaUrl, "\\S", kw);
-				if (urlstr.IsEmpty())
-					GlobalErrMsg = LoadUsrMsg(USTR_NotFound, _T("URL"));
-				else
-					Execute_ex(urlstr);
-			}
+			if (kwd.IsEmpty()) kwd = inputbox_dir(get_WebSeaCaption().c_str(), _T("WebSearch"));
+			if (!kwd.IsEmpty() && !exe_WebSearch(kwd)) GlobalErrMsg = LoadUsrMsg(USTR_FaildProc);
 		}
 		//カーソル位置の単語のヘルプ
 		else if (USAME_TI(cmd, "HelpCurWord")) {

@@ -1089,6 +1089,42 @@ void __fastcall TUserModule::RegExCheckerActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//WebŒŸõ
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::WebSeaComboActionExecute(TObject *Sender)
+{
+	TComboBox *cp = GetActiveComboBox();
+	if (cp) exe_WebSearch((cp->SelLength>0)? cp->SelText : cp->Text);
+}
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::WebSeaComboActionUpdate(TObject *Sender)
+{
+	TComboBox *cp = GetActiveComboBox();
+	UnicodeString kwd = cp? ((cp->SelLength>0)? cp->SelText : cp->Text) : EmptyStr;
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = !kwd.IsEmpty();
+	ap->Enabled = ap->Visible && !WebSeaUrl.IsEmpty();
+	ap->Caption = get_WebSeaCaption(kwd);
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::WebSeaEditActionExecute(TObject *Sender)
+{
+	TCustomEdit *ep = GetActiveCustomEdit();
+	if (ep) exe_WebSearch((ep->SelLength>0)? ep->SelText : ep->Text);
+}
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::WebSeaEditActionUpdate(TObject *Sender)
+{
+	TCustomEdit *ep = GetActiveCustomEdit();
+	UnicodeString kwd = ep? ((ep->SelLength>0)? ep->SelText : ep->Text) : EmptyStr;
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = !kwd.IsEmpty();
+	ap->Enabled = ap->Visible && !WebSeaUrl.IsEmpty();
+	ap->Caption = get_WebSeaCaption(kwd);
+}
+
+//---------------------------------------------------------------------------
 //“d‘ì
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::CalculatorActionExecute(TObject *Sender)

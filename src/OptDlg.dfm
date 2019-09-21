@@ -27,7 +27,7 @@ object OptionDlg: TOptionDlg
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
-    TabOrder = 0
+    TabOrder = 1
     DesignSize = (
       914
       41)
@@ -74,7 +74,7 @@ object OptionDlg: TOptionDlg
     Align = alClient
     MultiLine = True
     OwnerDraw = True
-    TabOrder = 1
+    TabOrder = 0
     TabWidth = 110
     StyleElements = [seFont, seBorder]
     OnChange = PageControl1Change
@@ -5898,9 +5898,11 @@ object OptionDlg: TOptionDlg
           Top = 18
           Width = 414
           Height = 269
+          Style = lbOwnerDrawFixed
           ItemHeight = 13
           Sorted = True
           TabOrder = 0
+          OnDrawItem = PrtDirListBoxDrawItem
           OnKeyDown = OptListBoxKeyDown
         end
         object AddDirBtn: TButton

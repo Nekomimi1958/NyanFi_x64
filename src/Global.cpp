@@ -426,7 +426,6 @@ bool IncSeaLoop;				//IncSearch:  上下端でループ
 bool IncSeaMatch1Exit;			//IncSearch:  マッチ数1で抜ける
 int  IncSeaMigemoMin;			//IncSearch:  migemo の検索開始文字数
 bool NotShowNoTask;				//TaskMan:    タスクを実行していないときはマネージャを表示しない
-UnicodeString WebSeaUrl;		//WebSearch:  検索エンジンURL
 
 UnicodeString GetFaviconUrl;	//favicon 取得API
 
@@ -1500,7 +1499,7 @@ void InitializeGlobal()
 		{_T("DrvInfFmtN=\"$VN    $US Use    $FS Free($FR) \""),
 													(TObject*)&DrvInfFmtN},
 		{_T("WebSeaUrl=\"https://www.google.co.jp/search?q=\\S&ie=UTF-8\""),
-													(TObject*)&WebSeaUrl},
+													(TObject*)&WebSeaUrl},			//UserFunc.h
 		{_T("GetFaviconUrl=\"http://www.google.com/s2/favicons?domain=\\D\""),
 													(TObject*)&GetFaviconUrl},
 		{_T("DlgMoveShift=\"Alt+\""),				(TObject*)&DlgMoveShift},
@@ -2051,17 +2050,18 @@ void InitializeGlobal()
 			"F:V=TextViewer\n"
 			"F:W=WorkList\n"
 			"F:X=ContextMenu\n"
-			"F:ESC=TaskMan\n"
+			"F:Enter=OpenStandard\n"
+			"F:Esc=TaskMan\n"
 			"F:F3=FindFileDlg\n"
 			"F:F5=ReloadList\n"
-			"F:LEFT=ToLeft\n"
-			"F:RIGHT=ToRight\n"
-			"F:SPACE=Select\n"
+			"F:Left=ToLeft\n"
+			"F:Right=ToRight\n"
+			"F:Space=Select\n"
 			"F:Ctrl+Enter=OpenByApp\n"
 			"F:Shift+O=CurrToOpp\n"
-			"F:Shift+DOWN=CursorDownSel\n"
-			"F:Shift+UP=CursorUpSel\n"
-			"F:Shift+ENTER=OpenByWin\n"
+			"F:Shift+Down=CursorDownSel\n"
+			"F:Shift+Up=CursorUpSel\n"
+			"F:Shift+Enter=OpenByWin\n"
 			"V:B=ChangeViewMode\n"
 			"V:F=FindText\n"
 			"V:E=FileEdit\n"
@@ -2070,10 +2070,14 @@ void InitializeGlobal()
 			"I:D=Delete\n"
 			"I:E=FileEdit\n"
 			"I:S=SortDlg\n"
-			"I:SPACE=Select\n"
+			"I:Space=Select\n"
 			"I:Q=Close\n"
-			"L:ESC=TaskMan\n"
-			"S:ENTER=IncSearchExit\n";
+			"L:Esc=TaskMan\n"
+			"S:Enter=IncSearchExit\n";
+	}
+	else if (KeyFuncList->Values["F:ENTER"].IsEmpty()) {
+		KeyFuncList->Add("F:Enter=OpenStandard");
+		KeyFuncList->CustomSort(KeyComp_Key);
 	}
 
 	//デフォルトのパスマスク
@@ -3371,30 +3375,6 @@ UnicodeString get_dotNaynfi(UnicodeString dnam,
 		fnam = get_dotNaynfi(dnam);
 	}
 	return fnam;
-}
-
-//---------------------------------------------------------------------------
-//Web検索表示文字列を取得
-//---------------------------------------------------------------------------
-UnicodeString get_WebSeaCaption(
-	UnicodeString kwd,	//検索語				(default = EmptyStr)
-	bool with_ak)		//アクセラレータを付加	(default = true)
-{
-	UnicodeString ret_str;
-	if (!kwd.IsEmpty()) {
-		kwd = Trim(get_first_line(kwd));
-		kwd = ReplaceStr(kwd, "&", "&&");
-		if (kwd.Length()>20) kwd = kwd.SubString(1, 20) + "…";
-		if (!kwd.IsEmpty()) ret_str.sprintf(_T("「%s」を "), kwd.c_str());
-	}
-
-	UnicodeString url = get_tkn_m(WebSeaUrl, _T("//"), _T("/"));
-	remove_top_text(url, _T("www."));
-	if (url.IsEmpty()) url = "Web";
-	ret_str.cat_sprintf(_T("%s で検索"), url.c_str());
-	if (with_ak) ret_str += "(&S)";
-
-	return ret_str;
 }
 
 //---------------------------------------------------------------------------
