@@ -2067,7 +2067,7 @@ void AddLog(const _TCHAR *msg, bool with_t = false);
 void AddLogStrings(TStringList *lst);
 void AddLogCr();
 void AddErr_Highlight();
-void AddDebugLog(UnicodeString msg, UnicodeString info, UnicodeString info2);
+void AddDebugLog(UnicodeString msg, UnicodeString info = EmptyStr, UnicodeString info2 = EmptyStr);
 void FlushLog();
 
 void set_RedrawOff(TWinControl *cp);

@@ -12716,8 +12716,8 @@ void AddErr_Highlight()
 //---------------------------------------------------------------------------
 void AddDebugLog(
 	UnicodeString msg,		//メッセージ
-	UnicodeString info,		//不可情報 (1行)
-	UnicodeString info2)	//不可情報 (複数行)
+	UnicodeString info,		//付加可情報/1行	(default = EmptyStr)
+	UnicodeString info2)	//付加情報/複数行	(default = EmptyStr)
 {
 	if (!LogDebugInf) return;
 

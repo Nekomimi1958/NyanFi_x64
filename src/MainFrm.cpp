@@ -9914,11 +9914,6 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 				}
 				//その他 (アイコン/フォント/色見本)
 				else {
-					if (test_FileExt(fext, FEXT_ICONVIEW)) {
-						int ixn = (int)::ExtractIcon(HInstance, fnam.c_str(), -1);
-						if (ixn>1) add_PropLine(_T("アイコン数"), ixn, lp->Items);
-					}
-
 					//背景をクリア
 					std::unique_ptr<Graphics::TBitmap> v_bmp(new Graphics::TBitmap());
 					TCanvas *cv = v_bmp->Canvas;
@@ -20477,14 +20472,18 @@ void __fastcall TNyanFiForm::NameToUpperActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::NetConnectActionExecute(TObject *Sender)
 {
-	::WNetConnectionDialog(Handle, RESOURCETYPE_DISK);
+	AddDebugLog("Call WNetConnectionDialog");
+	DWORD res = ::WNetConnectionDialog(Handle, RESOURCETYPE_DISK);
+	AddDebugLog("Return", (res!=NO_ERROR)? SysErrorMessage(res) : EmptyStr);
 }
 //---------------------------------------------------------------------------
 //ネットワークドライブの切断
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::NetDisconnectActionExecute(TObject *Sender)
 {
-	::WNetDisconnectDialog(Handle, RESOURCETYPE_DISK);
+	AddDebugLog("Call WNetConnectionDialog");
+	DWORD res = ::WNetDisconnectDialog(Handle, RESOURCETYPE_DISK);
+	AddDebugLog("Return", (res!=NO_ERROR)? SysErrorMessage(res) : EmptyStr);
 }
 
 //---------------------------------------------------------------------------
@@ -35365,6 +35364,7 @@ void __fastcall TNyanFiForm::RecycleFTP()
 	IdAntiFreeze1 = new TIdAntiFreeze();
 
 	IdSSLIOHandlerSocketOpenSSL1 = new TIdSSLIOHandlerSocketOpenSSL();
+	IdSSLIOHandlerSocketOpenSSL1->SSLOptions->SSLVersions = TIdSSLVersions() << sslvTLSv1_2;
 	IdFTP1->IOHandler = IdSSLIOHandlerSocketOpenSSL1;
 
 	FTPhasCHMOD = false;

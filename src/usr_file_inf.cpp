@@ -1797,6 +1797,10 @@ void get_AppInf(
 		}
 	}
 	::HeapFree(::GetProcessHeap(), 0, lpBuffer);
+
+	//アイコン数
+	int ixn = (int)::ExtractIcon(HInstance, fnam.c_str(), -1);
+	if (ixn>1) add_PropLine(_T("アイコン数"), ixn, lst);
 }
 
 //---------------------------------------------------------------------------
