@@ -23,6 +23,8 @@ __fastcall TJoinTextDlg::TJoinTextDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TJoinTextDlg::FormCreate(TObject *Sender)
 {
+	UserModule->SetUsrPopupMenu(this);
+
 	set_ComboBoxText(OutCodeComboBox,
 		_T("©“®(æ“ª‚ÌƒR[ƒh‚É“ˆê)\n")
 		_T("Shift_JIS\n")

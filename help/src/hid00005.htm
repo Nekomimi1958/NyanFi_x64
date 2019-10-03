@@ -39,15 +39,17 @@
 なお、<a href="hid00019.htm">オプション設定 - コマンド</a> で動作の設定を行えるものがあります。<br>
 </p>
 <p>
-コマンドによっては<b>パラメータ</b>の設定が必用です(書式: コマンド_パラメータ)。複数のパラメータを指定できる場合は ; (セミコロン)で区切ってください。<br>
+コマンドの中には<b>パラメータ</b>が必要なものや、パラメータを設定することで動作を変更できるものがあります(書式: コマンド_パラメータ)。複数のパラメータを指定できる場合は ; (セミコロン)で区切ってください。<br>
 コマンド構文において、<b>[ ]</b> 内は任意、<b>{ }</b> 内は相互に排他的な選択肢です。<br>
+</p>
+<p>
 パラメータに文字列を指定できるコマンドの場合、先頭に :文字列: という書式で説明を付けると、キー割り当て一覧や2ストローク・ヒントの説明部分に表示されます。 <br>
 <b>例</b>:　FileEdit_:メモを編集:D:\hoge\memo.txt
 </p>
 
-<div class="link_box">
+<p class="link_box">
 <a href="#AboutNyanFi">A</a> <a href="#BackDirHist">B</a> <a href="#CalcDirSize">C</a> <a href="#DateSelect">D</a> <a href="#EditHighlight">E</a> <a href="#FileEdit">F</a> <a href="#GetHash">G</a> <a href="#HelpContents">H</a> <a href="#ImageViewer">I</a> <a href="#JoinText">J</a> <a href="#KeyList">K</a> <a href="#Library">L</a> <a href="#Mark">M</a> <a href="#NameFromClip">N</a> <a href="#OpenADS">O</a> <a href="#Pack">P</a> <a href="#Reboot">R</a> <a href="#SaveAsResultList">S</a> <a href="#TabDlg">T</a> <a href="#UndoRename">U</a> <a href="#ViewHistory">V</a> <a href="#WatchTail">W</a> <a href="#XmlViewer">X</a> <a href="#ZoomIn">Z</a>　　<a href="#Appendix">付記</a>　　<a href="hid00100.htm#FL">→ コマンド索引</a> ／ <a href="hid00101.htm#FL">→ 機能別索引</a>
-</div>
+</p>
 
 <dl class="indent1">
 
@@ -2330,7 +2332,7 @@ NyanFi.exe -XRegExChecker
 <div class="spc_box">
 <b>代替データストリーム</b>および<a href="hid00080.htm">FTP接続</a>時のリモート側の場合、カーソル位置の単純な改名のみになります。<br>
 <a href="hid00060.htm">ワークリスト</a>の場合、<a href="#SetAlias">SetAlias</a> コマンドが実行され、カーソル位置の登録ファイルにエイリアス(別名)を設定します。<br>
-仮想ディレクトリで、アーカイバDLLに <b>7-zip64.dll</b> 文字化け対策版(Ver.15.～)を使用している場合、<b>ZIP</b> および <b>7z</b> 内のファイル名を変更できます(カーソル位置の単純な改名のみ)。<br>
+<b>ZIP</b> および <b>7z</b> 形式の仮想ディレクトリで、アーカイバDLLに <b>7-zip32.dll</b> 文字化け対策版(Ver.15.～)を使用している場合、カーソル位置のファイル/ディレクトリ名を変更できます。<br>
 </div>
 
 <a href="#SetAlias">→ SetAlias</a>　<a href="#SwapName">→ SwapName</a>　<a href="#UndoRename">→ UndoRename</a>　<a href="#SetArcTime">→ SetArcTime</a>　<a href="#SetDirTime">→ SetDirTime</a>

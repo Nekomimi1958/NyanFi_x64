@@ -558,18 +558,32 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 	//幅制限
 	if (ViewFixedLimit>0 && ViewFixedLimit<4) ViewFixedLimit = 4;	//***
 	if (ViewFixedLimit>0) {
+		DynamicArray<int> wd_buf = FixWdList.Copy();
+		//制限
 		int fld_wd = !isFitWin? ViewFoldWidth : MaxFoldWd;
-		for (int j=c_cnt-1; j>=0; j--) {
-			//合計幅
+		for (int i=c_cnt-1; i>=0; i--) {
 			int rec_w = 0;
-			for (int k=0; k<c_cnt; k++) {
-				if (k>0) rec_w += 2;
-				rec_w += FixWdList[k];
-			}
+			for (int j=0; j<c_cnt; j++) rec_w += (wd_buf[j] + ((j>0)? 2 : 0));
 			if (rec_w<=fld_wd) break;
-			//制限
-			FixWdList[j] = std::min(FixWdList[j], ViewFixedLimit);
+			wd_buf[i] = std::min(wd_buf[i], ViewFixedLimit);
 		}
+
+		int mgn = fld_wd;
+		for (int i=0; i<c_cnt; i++) mgn -= (wd_buf[i] + ((i>0)? 2 : 0));
+		//余裕があれば再調整
+		if (mgn>0) {
+			for (;;) {
+				int cnt = 0;
+				for (int i=c_cnt-1; i>=0 && mgn>0; i--) {
+					if (wd_buf[i]<FixWdList[i]) {
+						wd_buf[i] += 1; mgn--;  cnt++;
+					}
+				}
+				if (cnt==0 || mgn==0) break;
+			}
+		}
+
+		FixWdList = wd_buf.Copy();
 	}
 
 	//整形
@@ -4673,6 +4687,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		else if (USAME_TI(cmd, "CsvRecord")) {
 			bool sw = CsvRecForm->Visible;
 			CsvRecForm->Visible = SetToggleSw(sw, prm);
+			if (CsvRecForm->Visible && get_LineRec(CurPos.y)->LineIdx>0) ToLine(get_CurLineNo());
 		}
 		//イメージプレビュー
 		else if (USAME_TI(cmd, "ImgPreview")) {

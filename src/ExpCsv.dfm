@@ -15,6 +15,7 @@ object ExpCsvDlg: TExpCsvDlg
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
+  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow

@@ -22,6 +22,11 @@ __fastcall TExpCsvDlg::TExpCsvDlg(TComponent* Owner)
 	Viewer = NULL;
 }
 //---------------------------------------------------------------------------
+void __fastcall TExpCsvDlg::FormCreate(TObject *Sender)
+{
+	UserModule->SetUsrPopupMenu(this);
+}
+//---------------------------------------------------------------------------
 void __fastcall TExpCsvDlg::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);

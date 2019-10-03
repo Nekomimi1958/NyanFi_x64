@@ -294,8 +294,12 @@ bool UserArcUnit::IsAvailable(UnicodeString arc_file,
 //---------------------------------------------------------------------------
 bool UserArcUnit::HasRename(UnicodeString arc_file)
 {
-	arc_func *fp = GetArcFunc(GetArcType(arc_file));
-	return fp? fp->hasRename : false;
+	if (test_FileExt(get_extension(arc_file), ".mobi")) return false;
+
+	arc_func *fp = GetArcFunc(UARCTYP_ZIP);
+	if (!fp || !fp->Available || !fp->GetArchiveType) return false;
+	int sub_t = fp->GetArchiveType(UTF8String(arc_file).c_str());
+	return ((sub_t==1 || sub_t==2) && fp->hasRename);
 }
 
 //---------------------------------------------------------------------------
@@ -661,19 +665,14 @@ bool UserArcUnit::DelFile(
 bool UserArcUnit::RenFile(UnicodeString arc_file, UnicodeString onam, UnicodeString nnam)
 {
 	int arc_t = GetArcType(arc_file);
-	if (arc_t==0) return false;
-
+	if (arc_t!=UARCTYP_ZIP && arc_t!=UARCTYP_7Z) return false;
 	arc_func *fp = GetArcFunc(arc_t);
-	if (!fp || !fp->Available || fp->GetRunning()) return false;
-	if (!fp->hasRename) return false;
+	if (!fp || !fp->Available || !fp->hasRename || fp->GetRunning()) return false;
 
 	//ƒRƒ}ƒ“ƒh
 	UnicodeString cmd = "rn";
-
 	cmd.cat_sprintf(_T(" %s"), add_quot_if_spc(arc_file).c_str());
-	cmd += " " + add_quot_if_spc(onam);
-	cmd += " " + add_quot_if_spc(nnam);
-
+	cmd.cat_sprintf(_T(" -- %s %s"), add_quot_if_spc(onam).c_str(), add_quot_if_spc(nnam).c_str());
 	return (ExeCommand(arc_t, fp, cmd, true)==0);
 }
 

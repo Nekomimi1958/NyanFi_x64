@@ -19329,7 +19329,6 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 			if (fp->hDll) {
 				get_FileNamePathInf(fp->FileName, i_lst, true);
 				if (fp->Available) {
-					//7z.dll版のエラー
 					if (fp->use7zdll) {
 						if (!FExt7zDll.IsEmpty()) add_PropLine(_T("追加拡張子"), FExt7zDll, i_lst);
 						if (fp->err7zdll) add_PropLine(_T("エラー"), "7z.dll not found", i_lst, LBFLG_ERR_FIF);
@@ -19341,9 +19340,10 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 							add_PropLine(_T("備考"), "使用されません。", i_lst);
 						}
 					}
+					if (fp->hasRename) add_PropLine(_T("備考"), "ZIP/7z内で改名可能。", i_lst);
 				}
 				else {
-					add_PropLine(_T("エラー"), "利用できません", i_lst, LBFLG_ERR_FIF);
+					add_PropLine(_T("エラー"), "利用できません。", i_lst, LBFLG_ERR_FIF);
 				}
 				i_lst->Add(EmptyStr);
 
@@ -20393,13 +20393,11 @@ void __fastcall TNyanFiForm::NameFromClipActionExecute(TObject *Sender)
 		bool ok = rename_File(cfp->f_name, new_name);
 		SetDirWatch(true);
 		if (ok) cfp->f_name = new_name; else set_LogErrMsg(msg);
-		AddLog(msg);
-		InvalidateFileList();
 		CurWorking = false;
-		ReloadList(CurListTag);
+		AddLog(msg);
 		EndLog(_T("改名"));
+		ReloadList(CurListTag, ok? new_name : EmptyStr);
 		if (!ok) UserAbort(USTR_FaildProc);
-		IndexOfFileList(new_name);
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);
