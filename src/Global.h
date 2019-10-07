@@ -1987,8 +1987,6 @@ bool saveto_TextUTF8(UnicodeString fnam, UnicodeString s);
 bool saveto_TextFile(UnicodeString fnam, TStrings *lst, TEncoding *enc = NULL);
 bool saveto_TextFile(UnicodeString fnam, TStrings *lst, int enc_idx);
 
-#define TXLIMIT_MARK "\x03\x03\x03"	//行数制限マーク
-
 int  load_text_ex(UnicodeString fnam, TStringList *f_buf, int code_page = 0, int limit_size = 0,
 	bool force_txt = false, UnicodeString *line_brk = NULL, bool *has_bom = NULL, double *ave_lsz = NULL);
 

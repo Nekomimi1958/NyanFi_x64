@@ -24,9 +24,13 @@ int __fastcall comp_AscendOrder(TStringList *List, int Index1, int Index2);
 int __fastcall comp_DescendOrder(TStringList *List, int Index1, int Index2);
 int __fastcall comp_ObjectsOrder(TStringList *List, int Index1, int Index2);
 
+//---------------------------------------------------------------------------
+#define TXLIMIT_MARK "\x03\x03\x03"	//行数制限マーク
+
 extern int  USR_CsvCol;
 extern int  USR_CsvSortMode;
 extern bool USR_CsvTopIsHdr;
+
 int comp_NumStr(UnicodeString s1, UnicodeString s2);
 int __fastcall comp_CsvNaturalOrder(TStringList *List, int Index1, int Index2);
 int __fastcall comp_TsvNaturalOrder(TStringList *List, int Index1, int Index2);

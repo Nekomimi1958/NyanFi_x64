@@ -79,18 +79,9 @@ int comp_NumStr(UnicodeString s1, UnicodeString s2)
 	s2 = extract_top_num_str(s2);
 	if (!s1.IsEmpty() && !s2.IsEmpty()) {
 		try {
-			//•„†–³‚µ®”
-			if (s1.Pos('.')==0 && s2.Pos('.')==0 && s1[1]!='+' && s1[1]!='+' && s1[1]!='-' && s1[1]!='-') {
-				res = StrCmpLogicalW(s1.c_str(), s2.c_str());
-			}
-			//ŽÀ”
-			else {
-				double r1 = s1.ToDouble();
-				double r2 = s2.ToDouble();
-				double r0 = std::min(fabsl(r1), fabsl(r2));
-				double k  = (r0>0 && r0<1)? 1000/r0 : 1000;
-				res = (int)((r1 - r2) * k);
-			}
+			double r1 = s1.ToDouble();
+			double r2 = s2.ToDouble();
+			res = (r1==r2)? 0 : (r1>r2)? 1 : -1;
 		}
 		catch (...) {
 			res = 0;
@@ -100,7 +91,7 @@ int comp_NumStr(UnicodeString s1, UnicodeString s2)
 }
 
 //---------------------------------------------------------------------------
-//CSV Ž©‘R¸‡ (“¯‚¶ê‡‚Í Objects ‚Å”äŠr)
+//CSV Ž©‘R‡ (“¯‚¶ê‡‚Í Objects ‚Å”äŠr)
 //  ”’l‚Æ‚µ‚Ä”äŠr‚Å‚«‚È‚¯‚ê‚Î•¶Žš—ñ‡A“¯‚¶‚È‚ç‚Îs”Ô†‡
 //---------------------------------------------------------------------------
 int __fastcall comp_CsvNaturalOrder(TStringList *List, int Index1, int Index2)
@@ -110,9 +101,13 @@ int __fastcall comp_CsvNaturalOrder(TStringList *List, int Index1, int Index2)
 		if ((int)List->Objects[Index2]==0) return  1;
 	}
 
-	UnicodeString s1 = get_csv_item(List->Strings[Index1], USR_CsvCol);
-	UnicodeString s2 = get_csv_item(List->Strings[Index2], USR_CsvCol);
+	UnicodeString s1 = List->Strings[Index1];
+	UnicodeString s2 = List->Strings[Index2];
+	if (USAME_TS(s1, TXLIMIT_MARK)) return 1;
+	if (USAME_TS(s2, TXLIMIT_MARK)) return -1;
 
+	s1 = get_csv_item(s1, USR_CsvCol);
+	s2 = get_csv_item(s2, USR_CsvCol);
 	int res = comp_NumStr(s1, s2);
 	if (res==0) res = StrCmpLogicalW(s1.c_str(), s2.c_str());
 	if (res==0) res = (int)List->Objects[Index1] - (int)List->Objects[Index2];
@@ -120,7 +115,7 @@ int __fastcall comp_CsvNaturalOrder(TStringList *List, int Index1, int Index2)
 	return res;
 }
 //---------------------------------------------------------------------------
-//TSV Ž©‘R¸‡ (“¯‚¶ê‡‚Í Objects ‚Å”äŠr)
+//TSV Ž©‘R‡ (“¯‚¶ê‡‚Í Objects ‚Å”äŠr)
 //  ”’l‚Æ‚µ‚Ä”äŠr‚Å‚«‚È‚¯‚ê‚Î•¶Žš—ñ‡A“¯‚¶‚È‚ç‚Îs”Ô†‡
 //---------------------------------------------------------------------------
 int __fastcall comp_TsvNaturalOrder(TStringList *List, int Index1, int Index2)
@@ -130,11 +125,15 @@ int __fastcall comp_TsvNaturalOrder(TStringList *List, int Index1, int Index2)
 		if ((int)List->Objects[Index2]==0) return  1;
 	}
 
-	TStringDynArray itm1 = SplitString(List->Strings[Index1], "\t");
-	TStringDynArray itm2 = SplitString(List->Strings[Index2], "\t");
-	UnicodeString s1  = (USR_CsvCol<itm1.Length)? itm1[USR_CsvCol] : EmptyStr;
-	UnicodeString s2  = (USR_CsvCol<itm2.Length)? itm2[USR_CsvCol] : EmptyStr;
+	UnicodeString s1 = List->Strings[Index1];
+	UnicodeString s2 = List->Strings[Index2];
+	if (USAME_TS(s1, TXLIMIT_MARK)) return 1;
+	if (USAME_TS(s2, TXLIMIT_MARK)) return -1;
 
+	TStringDynArray itm1 = SplitString(s1, "\t");
+	TStringDynArray itm2 = SplitString(s2, "\t");
+	s1  = (USR_CsvCol<itm1.Length)? itm1[USR_CsvCol] : EmptyStr;
+	s2  = (USR_CsvCol<itm2.Length)? itm2[USR_CsvCol] : EmptyStr;
 	int res = comp_NumStr(s1, s2);
 	if (res==0) res = StrCmpLogicalW(s1.c_str(), s2.c_str());
 	if (res==0) res = (int)List->Objects[Index1] - (int)List->Objects[Index2];

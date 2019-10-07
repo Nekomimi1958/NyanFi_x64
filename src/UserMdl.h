@@ -79,12 +79,15 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *RefCurFNameAction;
 	TAction *RefCurPathAction;
 	TAction *RefCurPNameAction;
+	TAction *RefFileNameAction;
 	TAction *RefOppPathAction;
 	TAction *RegExCheckerAction;
 	TAction *RenInsNameAction;
 	TAction *SelAllComboAction;
 	TAction *SizePosToFlieListAction;
 	TAction *UpListItemAction;
+	TAction *WebSeaComboAction;
+	TAction *WebSeaEditAction;
 	TActionList *CommonActList;
 	TColorDialog *ColorDlg;
 	TEditCopy *EditCopy1;
@@ -134,6 +137,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *RefCmdItem;
 	TMenuItem *RefCurFnamItem;
 	TMenuItem *RefCurPnamItem;
+	TMenuItem *RefFileNameItem;
 	TMenuItem *RegExChkEItem;
 	TMenuItem *RegExChkItem;
 	TMenuItem *RegExpEItem;
@@ -148,6 +152,8 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_g_1;
 	TMenuItem *Sep_g_2;
 	TMenuItem *Sep_g_3;
+	TMenuItem *WebSeaComboItem;
+	TMenuItem *WebSeaEditItem;
 	TOpenDialog *OpenDlg;
 	TOpenPictureDialog *OpenImgDlg;
 	TPopupMenu *EditPopupMenuC;
@@ -157,10 +163,6 @@ __published:	// IDE で管理されるコンポーネント
 	TTimer *BlinkTimer;
 	TTimer *ScrollTimer;
 	TTimer *SpuitTimer;
-	TAction *WebSeaComboAction;
-	TAction *WebSeaEditAction;
-	TMenuItem *WebSeaComboItem;
-	TMenuItem *WebSeaEditItem;
 
 	void __fastcall DataModuleCreate(TObject *Sender);
 	void __fastcall UpListItemActionExecute(TObject *Sender);
@@ -217,6 +219,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall WebSeaComboActionUpdate(TObject *Sender);
 	void __fastcall WebSeaEditActionExecute(TObject *Sender);
 	void __fastcall WebSeaEditActionUpdate(TObject *Sender);
+	void __fastcall RefFileNameActionExecute(TObject *Sender);
+	void __fastcall RefFileNameActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TCustomListBox *ActiveListBox;		//操作対象リストボックス
@@ -254,6 +258,7 @@ public:		// ユーザー宣言
 	UnicodeString CurFileName;	//カーソル位置のファイル名
 	UnicodeString CurPathName;	//現在のカレントパス名
 	UnicodeString OppPathName;	//現在の反対パス名
+	UnicodeString RefFileName;	//メニュー参照用ファイル名
 
 	UnicodeString IconFilePath;	//アイコン参照パス
 

@@ -805,6 +805,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_g_1;
 	TMenuItem *Sep_g_2;
 	TMenuItem *Sep_h_1;
+	TMenuItem *Sep_h_2;
 	TMenuItem *Sep_i_1;
 	TMenuItem *Sep_i_2;
 	TMenuItem *Sep_i_3;
@@ -1048,7 +1049,6 @@ __published:	// IDE で管理されるコンポーネント
 	TToolBar *ToolBarV;
 	TTrackBar *SeekBar;
 	TTrayIcon *TrayIcon1;
-	TMenuItem *Sep_h_2;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

@@ -54,6 +54,12 @@ object UserModule: TUserModule
       OnExecute = DownListItemActionExecute
       OnUpdate = DownListItemActionUpdate
     end
+    object RefFileNameAction: TAction
+      Category = 'Other'
+      Caption = #20803#12501#12449#12452#12523#21517#12434#25407#20837'(&F)'
+      OnExecute = RefFileNameActionExecute
+      OnUpdate = RefFileNameActionUpdate
+    end
     object DelListItemAction: TAction
       Category = 'ListBox'
       Caption = #21066#38500
@@ -206,7 +212,7 @@ object UserModule: TUserModule
       OnUpdate = WebSeaComboActionUpdate
     end
     object WebSeaEditAction: TAction
-      Category = #32232#38598
+      Category = 'Other'
       OnExecute = WebSeaEditActionExecute
       OnUpdate = WebSeaEditActionUpdate
     end
@@ -309,6 +315,9 @@ object UserModule: TUserModule
     end
     object Sep_e_3: TMenuItem
       Caption = '-'
+    end
+    object RefFileNameItem: TMenuItem
+      Action = RefFileNameAction
     end
     object PopRefCmdItem: TMenuItem
       Action = RefCmdNameAction

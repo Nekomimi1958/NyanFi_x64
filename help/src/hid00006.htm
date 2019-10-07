@@ -192,6 +192,9 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 度数分布では、最大値と最小値の間をスタージェスの公式で求めた階級数で等分しています。表示される数値は、左から階級下限値、度数、累積相対度数です。<br>
 なおCSV/TSVファイルでなくても、数値で始まる行からなるテキストファイルは集計が可能です。<br>
 右クリックメニューや<b>CSV/TSVレコード</b>で「<b>先頭行が項目名</b>」をチェックしていると、先頭行は集計対象から除外されますので注意してください。<br>
+<div class="note_text">
+<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合、読み込まれていない行は集計対象になりません。<br>
+</div>
 <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvGraph">→ CsvGraph</a>　<a href="#CsvRecord">→ CsvRecord</a>
 
 <dt id="CsvGraph">CsvGraph
@@ -200,6 +203,9 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 右クリックメニューでは、画像としてのコピーや基準ラインの表示/非表示が可能です。<br>
 <div class="spc_box">
 グラフの背景/ライン/グリッド/文字色は <a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。<br>
+</div>
+<div class="note_text">
+<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合、読み込まれていない行はグラフ化されません。<br>
 </div>
 <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvCalc">→ CsvCalc</a>　<a href="#CsvRecord">→ CsvRecord</a>
 
@@ -287,7 +293,9 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 左側リストから項目を選んで右側リストに追加し、出力ファイル名や形式を指定してください。<br>
 ファイル名にドライブ名がない場合は、閲覧中ファイルからの相対指定とみなされます。<br>
 なお <a href="#Sort">Sort</a> コマンドでソートしていると、その内容でエクスポートされます。<br>
-
+<div class="note_text">
+処理は元ファイル全体を一時バッファに読み込んで行うため、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合でも、すべての行内容がエクスポートされます(ソート状態も考慮)。<br>
+</div>
 <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvRecord">→ CsvRecord</a>　<a href="#Sort">→ Sort</a>
 
 <dt id="FileEdit">FileEdit<span class="pram_text">[_ファイル名]</span>

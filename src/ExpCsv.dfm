@@ -75,7 +75,7 @@ object ExpCsvDlg: TExpCsvDlg
       Cancel = True
       Caption = #12461#12515#12531#12475#12523
       ModalResult = 2
-      TabOrder = 5
+      TabOrder = 6
     end
     object OkButton: TButton
       Left = 283
@@ -85,12 +85,12 @@ object ExpCsvDlg: TExpCsvDlg
       Action = ExportAction
       Anchors = [akTop, akRight]
       Default = True
-      TabOrder = 4
+      TabOrder = 5
     end
     object OutNameEdit: TLabeledEdit
       Left = 108
       Top = 14
-      Width = 351
+      Width = 313
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 86
@@ -105,7 +105,7 @@ object ExpCsvDlg: TExpCsvDlg
       Width = 195
       Height = 17
       Caption = #38917#30446#12434#24341#29992#31526#12391#22258#12416
-      TabOrder = 3
+      TabOrder = 4
     end
     object CsvRadioBtn: TRadioButton
       Left = 110
@@ -113,7 +113,7 @@ object ExpCsvDlg: TExpCsvDlg
       Width = 59
       Height = 17
       Caption = 'CSV /'
-      TabOrder = 1
+      TabOrder = 2
     end
     object TsvRadioBtn: TRadioButton
       Left = 173
@@ -121,7 +121,17 @@ object ExpCsvDlg: TExpCsvDlg
       Width = 63
       Height = 17
       Caption = 'TSV'
-      TabOrder = 2
+      TabOrder = 3
+    end
+    object RefOutNameBtn: TButton
+      Left = 423
+      Top = 14
+      Width = 36
+      Height = 22
+      Anchors = [akTop, akRight]
+      Caption = '...'
+      TabOrder = 1
+      OnClick = RefOutNameBtnClick
     end
   end
   object MidPanel: TPanel

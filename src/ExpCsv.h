@@ -30,6 +30,7 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *DelItemBtn;
 	TButton *DownItemBtn;
 	TButton *OkButton;
+	TButton *RefOutNameBtn;
 	TButton *UpItemBtn;
 	TCheckBox *QuotCheckBox;
 	TLabel *Label1;
@@ -55,6 +56,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall DstListBoxDblClick(TObject *Sender);
 	void __fastcall ItemListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall RefOutNameBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool isTSV;

@@ -523,7 +523,8 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 
 	//１行目
 	bool is_tsv = ContainsStr(txt_lst->Strings[0], "\t");
-	TStringDynArray hdr_buf = is_tsv? split_strings_tab(txt_lst->Strings[0]) : get_csv_array(txt_lst->Strings[0], MAX_CSV_ITEM);
+	TStringDynArray hdr_buf = is_tsv? split_strings_tab(txt_lst->Strings[0]) :
+									  get_csv_array(txt_lst->Strings[0], MAX_CSV_ITEM);
 	if (hdr_buf.Length==0) return;
 	int c_cnt = hdr_buf.Length;
 	IsNumList.Length = c_cnt;
@@ -536,7 +537,10 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 
 	//２行目以降
 	for (int i=1; i<txt_lst->Count; i++) {
-		TStringDynArray itm_buf = is_tsv? split_strings_tab(txt_lst->Strings[i]) : get_csv_array(txt_lst->Strings[i], c_cnt, true);
+		UnicodeString lbuf = txt_lst->Strings[i];
+		if (i==txt_lst->Count-1 && USAME_TS(lbuf, TXLIMIT_MARK)) break;
+
+		TStringDynArray itm_buf = is_tsv? split_strings_tab(lbuf) : get_csv_array(lbuf, c_cnt, true);
 		itm_buf.Length = c_cnt;
 		for (int j=0; j<c_cnt; j++) {
 			//最大幅
@@ -589,6 +593,9 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 	//整形
 	for (int i=0; i<txt_lst->Count; i++) {
 		UnicodeString lbuf = txt_lst->Strings[i];
+		if (i==txt_lst->Count-2 && lbuf.IsEmpty()) continue;
+		if (i==txt_lst->Count-1 && USAME_TS(lbuf, TXLIMIT_MARK)) break;
+
 		UnicodeString nbuf;
 		for (int j=0; j<c_cnt; j++) {
 			if (j>0) nbuf += "  ";
@@ -1350,12 +1357,13 @@ void __fastcall TTxtViewer::AssignText(
 			TxtBufList->CustomSort(comp_ObjectsOrder);
 		}
 		else {
-			//指定列
+			//CSV/TSV指定列
 			if (CsvCol>=0) {
 				USR_CsvCol		= CsvCol;
 				USR_CsvSortMode = SortMode;
 				USR_CsvTopIsHdr = TopIsHeader;
-				TxtBufList->CustomSort(isTSV? comp_TsvNaturalOrder : comp_CsvNaturalOrder);
+				bool is_tsv = (TxtBufList->Count>0 && ContainsStr(TxtBufList->Strings[0], "\t"));
+				TxtBufList->CustomSort(is_tsv? comp_TsvNaturalOrder : comp_CsvNaturalOrder);
 			}
 			//通常
 			else {
@@ -1753,7 +1761,6 @@ void __fastcall TTxtViewer::PaintText()
 	int csr_bp = 0;
 	int csr_lw = std::max(CursorWidth, 1);
 	int csr_yl = FontHeight + csr_lw + 1;
-	bool csr_eof = false;
 
 	//バッファされている部分を描画
 	std::unique_ptr<Graphics::TBitmap> buf_bmp(new Graphics::TBitmap());
@@ -1820,7 +1827,6 @@ void __fastcall TTxtViewer::PaintText()
 				csr_yp = v_yp;
 				csr_xp = TopXpos - 1 +
 							(isBoxMode? CurHchX * HchWidth : get_StrWidth(lbuf.SubString(1, CurPos.x )));
-				csr_eof = (i==MaxDispLine-1);
 				//対応アドレスカーソル(バイナリ)
 				if (isBinary) {
 					int ofs = get_OfsR(CurPos.x);
@@ -2114,7 +2120,7 @@ void __fastcall TTxtViewer::PaintText()
 				if (!sbuf.IsEmpty()) TabTextOut(sbuf, tmp_cv, xp, fld_xp);
 
 				//固定長表示の縦罫線
-				if (isFixedLen && lp->LineIdx==0 && FixWdList.Length>0 && color_bdrFixed!=clNone) {
+				if (isFixedLen && lp->LineIdx==0 && FixWdList.Length>0 && !lbuf.IsEmpty() && color_bdrFixed!=clNone) {
 					int v_xp = TopXpos;
 					for (int j=0; j<FixWdList.Length-1; j++) {
 						v_xp += (FixWdList[j] + 1) * HchWidth;
@@ -2155,9 +2161,8 @@ void __fastcall TTxtViewer::PaintText()
 		//対応アドレスカーソル
 		if (isBinary) draw_Line(ViewCanvas, csr_bp, yp_l - LineHeight/2, csr_bp, yp_l - 1, 1, color_Cursor);
 		//固定長表示のセル背景アルファ
-		if (!csr_eof && isFixedLen && CellAlpha>0) {
-			if (get_LineRec(CurPos.y)->LineIdx==0) AlphaBlendCsvCol(ViewCanvas, fld_xp, csr_yp, LineHeight);
-		}
+		if (CellAlpha>0 && get_LineRec(CurPos.y)->LineIdx==0 && !get_DispLine(CurPos.y).IsEmpty())
+			AlphaBlendCsvCol(ViewCanvas, fld_xp, csr_yp, LineHeight);
 	}
 
 	LastPos = CurPos;

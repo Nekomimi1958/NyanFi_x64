@@ -667,8 +667,8 @@ void __fastcall TUserModule::RefCmdNameActionUpdate(TObject *Sender)
 void __fastcall TUserModule::RefCurFNameActionExecute(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;
-	if	  (class_is_CustomEdit(wp)) ((TCustomEdit *)wp)->Text = ExtractFileName(CurFileName);
-	else if (class_is_ComboBox(wp)) ((TComboBox*)wp)->SelText = ExtractFileName(CurFileName);
+	if	  (class_is_CustomEdit(wp)) ((TCustomEdit *)wp)->SelText = ExtractFileName(CurFileName);
+	else if (class_is_ComboBox(wp)) ((TComboBox*)wp)->SelText	 = ExtractFileName(CurFileName);
 }
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::RefCurFNameActionUpdate(TObject *Sender)
@@ -721,6 +721,21 @@ void __fastcall TUserModule::RefOppPathActionUpdate(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;
 	((TAction*)Sender)->Visible = (wp && contained_wd_i(_T("DistrDirEdit"), wp->Name));
+}
+//---------------------------------------------------------------------------
+//Œ³ƒtƒ@ƒCƒ‹–¼‚ð‘}“ü
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::RefFileNameActionExecute(TObject *Sender)
+{
+	TWinControl *wp = Screen->ActiveControl;
+	if (class_is_CustomEdit(wp)) ((TCustomEdit *)wp)->SelText = ExtractFileName(RefFileName);
+}
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::RefFileNameActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = !RefFileName.IsEmpty();
+	ap->Enabled = ap->Visible;
 }
 
 //---------------------------------------------------------------------------
