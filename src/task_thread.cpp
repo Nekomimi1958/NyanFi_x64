@@ -927,7 +927,7 @@ void __fastcall TTaskThread::DEL_core(
 
 		UnicodeString snam = fnam;
 		UnicodeString lnam = split_ADS_name(snam);
-		if (USAME_TI(get_extension(lnam), ".url") && ContainsText(snam, ":favicon")) del_CachedIcon(lnam);
+		if (USAME_TI(get_extension(lnam), ".url") && ContainsText(snam, FAVICON_ADS)) del_CachedIcon(lnam);
 
 		OkCount++;
 	}

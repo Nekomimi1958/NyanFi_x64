@@ -164,9 +164,10 @@ LRESULT CALLBACK DlgHookProc(int code, WPARAM wParam, LPARAM lParam)
 				if (is_fl) cp = (TControl *)NyanFiForm->ListPanel; else cp = (TControl *)NyanFiForm;
 				TPoint p_t = cp->ClientToScreen(Point(0, 8));
 				TPoint p_b = cp->ClientToScreen(Point(0, cp->Height - 8));
-				if (p.y < p_t.y)				 p.y = p_t.y;
+				TPoint p_lt = NyanFiForm->ClientToScreen(Point(0, 0));
 				if ((p.y + rc.Height()) > p_b.y) p.y = p_b.y - rc.Height();
-
+				p.y = std::max(p.y, p_t.y);
+				p.x = std::max(p.x, p_lt.x);
 				::SetWindowPos(hWnd, HWND_TOP, p.x, p.y, 0, 0, SWP_NOSIZE|SWP_NOZORDER);
 			}
 		}
@@ -3094,11 +3095,11 @@ void __fastcall TNyanFiForm::MakeUrlFile(UnicodeString fnam, UnicodeString url)
 			UnicodeString t_url = get_match_regex(url, _T("^https?://[^/]+/~[^/]+/"));	//~直下
 			if (t_url.IsEmpty()) t_url = get_match_regex(url, _T("^https?://[^/]+/"));	//ドメイン直下
 			if (t_url.IsEmpty()) Abort();
-			TModalResult mr = DownloadWorkProgress(t_url + "favicon.ico", fnam + ":favicon", FileListBox[DroppedTag]);
+			TModalResult mr = DownloadWorkProgress(t_url + "favicon.ico", fnam + FAVICON_ADS, FileListBox[DroppedTag]);
 			if (mr==mrCancel) SkipAbort();
 			if (mr!=mrOk && !GetFaviconUrl.IsEmpty() && ContainsStr(GetFaviconUrl, "\\D")) {
 				UnicodeString ggl_url = ReplaceStr(GetFaviconUrl, "\\D", t_url);
-				TModalResult mr = DownloadWorkProgress(ggl_url, fnam + ":favicon", FileListBox[DroppedTag]);
+				TModalResult mr = DownloadWorkProgress(ggl_url, fnam + FAVICON_ADS, FileListBox[DroppedTag]);
 				if (mr==mrCancel) SkipAbort();
 				if (mr!=mrOk) Abort();
 			}
@@ -5861,18 +5862,17 @@ void __fastcall TNyanFiForm::NotConvertAbort()
 //ファイル情報(FL/IV)の描画
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::InfListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-		TOwnerDrawState State)
+	TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	draw_InfListBox(lp, Rect, Index, State);
-	//カーソル
 	draw_ListCursor(lp, Rect, Index, State);
 }
 //---------------------------------------------------------------------------
 //テキストプレビューの描画(仮想)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TxtPrvListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -5959,7 +5959,7 @@ void __fastcall TNyanFiForm::TxtTailListBoxData(TWinControl *Control, int Index,
 //ログの描画
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::LogListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-		TOwnerDrawState State)
+	TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas *cv = lp->Canvas;
@@ -9887,7 +9887,7 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 					}
 				}
 				//画像
-				else if (is_ViewableFext(fext) || (EndsText(":favicon", fnam) && test_Png(fnam))) {
+				else if (is_ViewableFext(fext) || (EndsText(FAVICON_ADS, fnam) && test_Png(fnam))) {
 					ImgViewThread->AddRequest(_T("ROTATION"), 0);
 					ImgViewThread->AddRequest(_T("EXIFORI"),  fp->img_ori);
 					ImgViewThread->AddRequest(_T("FILE"), fnam);
@@ -9901,8 +9901,8 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 					ImgViewThread->AddRequest(_T("FILE"), fnam);
 				}
 				//フォルダ/アーカイブ (ADSサムネイル)
-				else if ((is_dir || usr_ARC->GetArcType(fnam, true)) && file_exists(fnam + ":thumbnail.jpg")) {
-					ImgViewThread->AddRequest(_T("FILE"), fnam + ":thumbnail.jpg");
+				else if ((is_dir || usr_ARC->GetArcType(fnam, true)) && file_exists(fnam + THUMB_JPG_ADS)) {
+					ImgViewThread->AddRequest(_T("FILE"), fnam + THUMB_JPG_ADS);
 				}
 				//フォルダ (特大アイコン、可能ならサムネイル)
 				else if (is_dir && ShowDirJumboIco) {
@@ -20646,6 +20646,7 @@ void __fastcall TNyanFiForm::OpenADSActionExecute(TObject *Sender)
 {
 	try {
 		if (CurStt->is_Arc || CurStt->is_ADS || CurStt->is_FTP) UserAbort(USTR_CantOperate);
+		if (!is_NTFS_Drive(CurPath[CurListTag])) UserAbort(USTR_CantOperate);
 
 		file_rec *cfp = GetCurFrecPtr(true);
 		if (!cfp || cfp->f_name.IsEmpty() || cfp->is_dummy) Abort();
@@ -25898,7 +25899,7 @@ bool __fastcall TNyanFiForm::CopyAdsCore(
 			if (dst_is_ads) {
 				UnicodeString snam = dst_nam;
 				UnicodeString fnam = split_ADS_name(snam);
-				if (USAME_TI(get_extension(fnam), ".url") && ContainsText(snam, ":favicon")) {
+				if (USAME_TI(get_extension(fnam), ".url") && ContainsText(snam, FAVICON_ADS)) {
 					del_CachedIcon(fnam);
 					del_CachedIcon(dst_nam);
 				}
@@ -30547,8 +30548,43 @@ void __fastcall TNyanFiForm::DirectTagJumpCore(
 void __fastcall TNyanFiForm::ViewPopupMenuPopup(TObject *Sender)
 {
 	SortItem->Visible = ScrMode==SCMD_TVIEW && TxtViewer->isText;
+
+	//列幅の最小化
+	MinColItem->Clear();
+	MinColItem->Visible = ScrMode==SCMD_TVIEW && TxtViewer->isText && TxtViewer->isFixedLen;
+	MinColItem->Enabled = MinColItem->Visible;
+	std::unique_ptr<TStringList> lst(new TStringList());
+	lst->CommaText = TxtViewer->NyanFiDef->Values["MinFixedCols"];
+	TStringDynArray hdr_lst = TxtViewer->GetCsvHdrList();
+	for (int i=0; i<hdr_lst.Length; i++) {
+		TMenuItem *mp = new TMenuItem(MinColItem);
+		mp->Caption   = ((i<26)? UnicodeString().sprintf(_T("&%c: "), (char)('A' + i)) : EmptyStr) + hdr_lst[i];
+		mp->OnClick   = MinColItemClick;
+		mp->Tag 	  = i;
+		mp->Checked   = (lst->IndexOf(IntToStr(i))!=-1);
+		MinColItem->Add(mp);
+	}
+
 	reduction_MenuLine(ViewPopupMenu->Items);
 }
+
+//---------------------------------------------------------------------------
+//列幅の最小化
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::MinColItemClick(TObject *Sender)
+{
+	TMenuItem *mp = (TMenuItem*)Sender;
+	std::unique_ptr<TStringList> lst(new TStringList());
+	lst->CommaText = TxtViewer->NyanFiDef->Values["MinFixedCols"];
+	UnicodeString idx_s = IntToStr(mp->Tag);
+	int idx = lst->IndexOf(idx_s);
+	if (idx!=-1) lst->Delete(idx); else lst->Add(idx_s);
+	lst->Sort();
+	TxtViewer->NyanFiDef->Values["MinFixedCols"] = lst->CommaText;
+	TxtViewer->SaveNyanFiDef();
+	TxtViewer->UpdateScr();
+}
+
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TV_EditCopyActionExecute(TObject *Sender)
 {
@@ -30610,7 +30646,6 @@ void __fastcall TNyanFiForm::TV_TopIsHdrActionExecute(TObject *Sender)
 	TxtViewer->SetSttInf();
 	if (CsvRecForm->Visible) CsvRecForm->TopIsHeaderCheckBox->Checked = TxtViewer->TopIsHeader;
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TV_TopIsHdrActionUpdate(TObject *Sender)
 {
@@ -30618,6 +30653,14 @@ void __fastcall TNyanFiForm::TV_TopIsHdrActionUpdate(TObject *Sender)
 	ap->Visible = ScrMode==SCMD_TVIEW && TxtViewer->isText && TxtViewer->CsvCol>=0;
 	ap->Enabled = ap->Visible;
 	ap->Checked = TxtViewer->TopIsHeader;
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TV_MinColActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = ScrMode==SCMD_TVIEW && TxtViewer->isText && TxtViewer->CsvCol>=0;
+	ap->Enabled = ap->Visible;
 }
 
 //---------------------------------------------------------------------------

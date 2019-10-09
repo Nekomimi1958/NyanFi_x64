@@ -153,6 +153,7 @@ public:
 	TStringList  *TxtBufList;		//内容リスト
 	TStringList  *TxtBufList2;		//HTML→TEXT変換後の内容リスト
 	TStringList  *DispLines;		//表示行リスト(テキスト用)
+	TStringList  *NyanFiDef;		//ADS定義ファイルの内容
 
 	UnicodeString FileName;			//ファイル名
 	UnicodeString OrgName;			//一時解凍している場合の元ファイル名
@@ -271,7 +272,7 @@ public:
 	__fastcall ~TTxtViewer();
 
 	bool __fastcall CloseAuxForm();
-
+	bool __fastcall SaveNyanFiDef();
 	void __fastcall Clear();
 	void __fastcall SetColor(TStringList *lst);
 	void __fastcall SetColor(UnicodeString prm = EmptyStr);
@@ -320,6 +321,7 @@ public:
 	unsigned int __fastcall get_CurAddrR();
 	unsigned int __fastcall get_OfsR(int xp);
 	TPoint __fastcall get_CurLinePos();
+	TStringDynArray __fastcall GetCsvHdrList();
 
 	void __fastcall SelectAll();
 	UnicodeString __fastcall GetCurWord(bool select = false, UnicodeString ptn = EmptyStr, int *xp = NULL);
@@ -360,6 +362,7 @@ public:
 	bool __fastcall ExeCommand(const _TCHAR *cmd, UnicodeString prm = EmptyStr);
 	bool __fastcall IsCmdAvailable(UnicodeString cmd);
 	bool __fastcall IsCmdInhibited(UnicodeString cmd);
+
 };
 //---------------------------------------------------------------------------
 extern TTxtViewer *TxtViewer;

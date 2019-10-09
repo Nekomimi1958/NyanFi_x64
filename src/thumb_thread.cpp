@@ -208,8 +208,8 @@ void __fastcall TThumbnailThread::MakeThumbnail(int idx)
 					int atr = file_GetAttr(fnam);
 					if (atr!=faInvalid && (atr & faReadOnly)==0) {
 						TDateTime ft = get_file_age(fnam);
-						UnicodeString fnam_t = fnam + ":thumbnail.jpg";
-						UnicodeString fnam_x = fnam + ":thumbnail.txt";
+						UnicodeString fnam_t = fnam + THUMB_JPG_ADS;
+						UnicodeString fnam_x = fnam + THUMB_TXT_ADS;
 						if (WIC_save_image(fnam_t, bp, 80, 0)) {
 							//表示情報 [TAB] タイムスタンプ [TAB] サムネイルサイズ [TAB] アルゴリズム
 							UnicodeString lbuf = get_post_tab(GetListItem(idx));

@@ -71,7 +71,8 @@ __fastcall TTxtViewer::TTxtViewer(
 
 	ImgBuff = new Graphics::TBitmap();
 
-	ColBufList = new TStringList();
+	ColBufList	= new TStringList();
+	NyanFiDef	= new TStringList();
 
 	TxtBufList	= new TStringList();
 	TxtBufList2 = new TStringList();
@@ -165,6 +166,7 @@ __fastcall TTxtViewer::~TTxtViewer()
 	ClearDispLine();
 
 	delete ColBufList;
+	delete NyanFiDef;
 	delete DispLines;
 	delete ImgBuff;
 	delete TxtBufList;
@@ -188,6 +190,23 @@ bool __fastcall TTxtViewer::CloseAuxForm()
 	if (InspectForm->Visible)  { InspectForm->Close();	closed = true; }
 	if (SubViewer->Visible)    { SubViewer->Close();	closed = true; }
 	return closed;
+}
+
+//---------------------------------------------------------------------------
+//ADSに設定を保存
+//---------------------------------------------------------------------------
+bool __fastcall TTxtViewer::SaveNyanFiDef()
+{
+	bool ok = false;
+	if (is_NTFS_Drive(FileName)) {
+		int atr = file_GetAttr(FileName);
+		if (atr!=faInvalid && (atr & faReadOnly)==0) {
+			TDateTime ft = get_file_age(FileName);
+			ok = saveto_TextUTF8(FileName + NYANFIDEF_ADS, NyanFiDef);
+			set_file_age(FileName, ft);
+		}
+	}
+	return ok;
 }
 
 //---------------------------------------------------------------------------
@@ -260,6 +279,8 @@ UnicodeString __fastcall TTxtViewer::get_DispLine(
 void __fastcall TTxtViewer::Clear()
 {
 	isReady = false;
+
+	NyanFiDef->Clear();
 
 	TxtBufList->Clear();
 	MaxLine = 0;
@@ -526,12 +547,13 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 	TStringDynArray hdr_buf = is_tsv? split_strings_tab(txt_lst->Strings[0]) :
 									  get_csv_array(txt_lst->Strings[0], MAX_CSV_ITEM);
 	if (hdr_buf.Length==0) return;
+
 	int c_cnt = hdr_buf.Length;
 	IsNumList.Length = c_cnt;
 	FixWdList.Length = c_cnt;
-	for (int j=0; j<c_cnt; j++) {
-		FixWdList[j] = str_len_half(hdr_buf[j]);
-		IsNumList[j] = true;
+	for (int i=0; i<c_cnt; i++) {
+		FixWdList[i] = std::max(str_len_half(hdr_buf[i]), 2);
+		IsNumList[i] = true;
 	}
 	if (!is_tsv) txt_lst->Strings[0] = ArrayToTsv(hdr_buf);
 
@@ -559,6 +581,13 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 		if (!is_tsv) txt_lst->Strings[i] = ArrayToTsv(itm_buf);
 	}
 
+	//列幅の最小化
+	TStringDynArray itm_buf = get_csv_array(NyanFiDef->Values["MinFixedCols"], c_cnt);
+	for (int i=0; i<itm_buf.Length; i++) {
+		int idx = itm_buf[i].ToIntDef(-1);
+		if (idx>=0 && idx<c_cnt) FixWdList[idx] = (idx<26)? 0 : 1;
+	}
+
 	//幅制限
 	if (ViewFixedLimit>0 && ViewFixedLimit<4) ViewFixedLimit = 4;	//***
 	if (ViewFixedLimit>0) {
@@ -579,7 +608,7 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 			for (;;) {
 				int cnt = 0;
 				for (int i=c_cnt-1; i>=0 && mgn>0; i--) {
-					if (wd_buf[i]<FixWdList[i]) {
+					if (wd_buf[i]>=2 && wd_buf[i]<FixWdList[i]) {
 						wd_buf[i] += 1; mgn--;  cnt++;
 					}
 				}
@@ -598,31 +627,50 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 
 		UnicodeString nbuf;
 		for (int j=0; j<c_cnt; j++) {
-			if (j>0) nbuf += "  ";
 			UnicodeString s = split_pre_tab(lbuf);
-			int dlen = FixWdList[j] - str_len_half(s);
-			//省略
-			if (dlen<0) {
-				int s_w = FixWdList[j] - 2;
-				for (int k=1; k<=s.Length(); k++) {
-					if (str_len_half(s.SubString(1, k)) > s_w) {
-						s = s.SubString(1, k - 1) + "…";
-						break;
+			if (j>0) nbuf += "  ";
+			int w_j = FixWdList[j];
+			if (w_j>=2) {
+				int dlen = w_j - str_len_half(s);
+				//省略
+				if (dlen<0) {
+					int s_w = w_j - 2;
+					for (int k=1; k<=s.Length(); k++) {
+						if (str_len_half(s.SubString(1, k)) > s_w) {
+							s = s.SubString(1, k - 1) + "…";
+							break;
+						}
 					}
+					dlen = w_j - str_len_half(s);
 				}
-				dlen = FixWdList[j] - str_len_half(s);
+				//空白付加
+				if (dlen>0) {
+					if (IsNumList[j])
+						s = StringOfChar(_T(' '), dlen) + s;
+					else
+						s += StringOfChar(_T(' '), dlen);
+				}
+				nbuf += s;
 			}
-			//空白付加
-			if (dlen>0) {
-				if (IsNumList[j])
-					s = StringOfChar(_T(' '), dlen) + s;
-				else
-					s += StringOfChar(_T(' '), dlen);
+			else if (w_j>0) {
+				nbuf += " ";
 			}
-			nbuf += s;
 		}
 		txt_lst->Strings[i] = nbuf;
 	}
+}
+
+//---------------------------------------------------------------------------
+//CSV見出しリストを取得
+//---------------------------------------------------------------------------
+TStringDynArray __fastcall TTxtViewer::GetCsvHdrList()
+{
+	UnicodeString lbuf = TxtBufList->Strings[0];
+	TStringDynArray ret_array = ContainsStr(lbuf, "\t")? split_strings_tab(lbuf) : get_csv_array(lbuf, MAX_CSV_ITEM);
+	if (!TopIsHeader) {
+		for (int i=0; i<ret_array.Length; i++) ret_array[i] = UnicodeString().sprintf(_T("項目%u"), i + 1);
+	}
+	return ret_array;
 }
 
 //---------------------------------------------------------------------------
@@ -1010,6 +1058,8 @@ void __fastcall TTxtViewer::UpdateScr(
 		else if (test_FileExt(fext, FEXT_CSV)) {
 			isCSV = true;
 			isTSV = (txt_buf->Count>0 && ContainsStr(txt_buf->Strings[0], "\t"));
+			UnicodeString snam = FileName + NYANFIDEF_ADS;
+			if (file_exists(snam)) load_text_ex(snam, NyanFiDef);
 			if (isFixedLen) FormatFixed(txt_buf.get());
 		}
 		//青空文庫形式

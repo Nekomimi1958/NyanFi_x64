@@ -2398,9 +2398,22 @@ void get_ADS_Inf(UnicodeString fnam, TStringList *lst)
 						;
 					}
 				}
-				else if (USAME_TI(snam, "thumbnail.txt")) {
-					UnicodeString lbuf = get_top_line(fnam + ":" + snam, 65001);
+				else if (USAME_TI(":" + snam, THUMB_TXT_ADS)) {
+					UnicodeString lbuf = get_top_line(fnam + THUMB_TXT_ADS, 65001);
 					if (!lbuf.IsEmpty()) add_PropLine(null_TCHAR, lbuf, lst);
+				}
+				else if (USAME_TI(":" + snam, NYANFIDEF_ADS)) {
+					UnicodeString anam = fnam + NYANFIDEF_ADS;
+					if (file_exists(anam)) {
+						try {
+							std::unique_ptr<TStringList> fbuf(new TStringList());
+							fbuf->LoadFromFile(anam);
+							for (int i=0; i<fbuf->Count; i++) add_PropLine(null_TCHAR, fbuf->Strings[i], lst);
+						}
+						catch (...) {
+							;
+						}
+					}
 				}
 			}
 		} while (::FindNextStreamW(hFS, &sd));

@@ -170,5 +170,17 @@ object CsvRecForm: TCsvRecForm
       Caption = #12467#12500#12540'(&C)'
       OnClick = CopyItemClick
     end
+    object OpenUrlItem: TMenuItem
+      Action = OpenUrlAction
+    end
+  end
+  object ActionList1: TActionList
+    Left = 137
+    Top = 135
+    object OpenUrlAction: TAction
+      Caption = 'URL'#12434#38283#12367'(&W)'
+      OnExecute = OpenUrlActionExecute
+      OnUpdate = OpenUrlActionUpdate
+    end
   end
 end

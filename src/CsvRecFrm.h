@@ -23,11 +23,14 @@
 class TCsvRecForm : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *OpenUrlAction;
+	TActionList *ActionList1;
 	TButton *CalcBtn;
 	TButton *GraphBtn;
 	TCheckBox *TopIsHeaderCheckBox;
 	THeaderControl *RecordHeader;
 	TMenuItem *CopyItem;
+	TMenuItem *OpenUrlItem;
 	TPanel *ClientPanel;
 	TPanel *GridPanel;
 	TPanel *OptPanel;
@@ -52,6 +55,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CalcBtnClick(TObject *Sender);
 	void __fastcall RecordGridClick(TObject *Sender);
 	void __fastcall GraphBtnClick(TObject *Sender);
+	void __fastcall OpenUrlActionExecute(TObject *Sender);
+	void __fastcall OpenUrlActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString HeaderStr;

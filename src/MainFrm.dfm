@@ -5033,6 +5033,11 @@ object NyanFiForm: TNyanFiForm
       OnExecute = TV_TopIsHdrActionExecute
       OnUpdate = TV_TopIsHdrActionUpdate
     end
+    object TV_MinColAction: TAction
+      Category = 'Menu'
+      Caption = #21015#24133#12398#26368#23567#21270'(&M)'
+      OnUpdate = TV_MinColActionUpdate
+    end
     object ShowOpenAsRunAction: TAction
       Category = 'Menu'
       Caption = #12501#12449#12452#12523#12434#38283#12367#12503#12525#12464#12521#12512#12398#36984#25246'(&O)...'
@@ -5618,6 +5623,15 @@ object NyanFiForm: TNyanFiForm
     end
     object TopIsHdrItem: TMenuItem
       Action = TV_TopIsHdrAction
+      AutoHotkeys = maManual
+    end
+    object MinColItem: TMenuItem
+      Caption = #21015#24133#12398#26368#23567#21270'(&M)'
+      object TMenuItem
+      end
+    end
+    object Sep_vp_3: TMenuItem
+      Caption = '-'
     end
     object PopCsvCalcItem: TMenuItem
       Action = CsvCalcAction
@@ -5625,7 +5639,7 @@ object NyanFiForm: TNyanFiForm
     object PopCsvGraphItem: TMenuItem
       Action = CsvGraphAction
     end
-    object Sep_vp_3: TMenuItem
+    object Sep_vp_4: TMenuItem
       Caption = '-'
     end
     object PoxExpCsvItem: TMenuItem

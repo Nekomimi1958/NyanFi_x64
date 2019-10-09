@@ -215,7 +215,7 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 ファイルの先頭行に TAB が含まれていたら <b>TSV</b>、そうでない場合は <b>CSV</b> とみなし、カーソル行を一つのレコードとして内容を一覧表示します。「<b>先頭行が項目名</b>」をチェックしていると、ファイルの一行目を項目名とみなしてそれを表示します(この設定は、テキストビュアーの右クリックメニューと連動)。<br>
 <span class="btn_frame">集計</span>ボタンを押すと、選択している項目に有効な数値がある場合、その合計、平均、最小、最大値、中央値、分散、標準偏差を計算して表示します。<br>
 また<span class="btn_frame">グラフ</span>ボタンを押すと、選択している項目に有効な数値がある場合、それをグラフ表示します。<br>
-右クリックメニューでは、内容の「<b>コピー</b>」が可能です(範囲指定可)。<br>
+右クリックメニューでは、内容の「<b>コピー</b>」(範囲指定可)や「<b>URLを開く</b>」が可能です。<br>
 <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvCalc">→ CsvCalc</a>　<a href="#CsvGraph">→ CsvGraph</a>　<a href="#ExportCsv">→ ExportCsv</a>
 
 <dt id="CursorDown">CursorDown<span class="pram_text">[_{行数|HP|FP}]</span>
@@ -373,9 +373,12 @@ HTML→テキスト変換表示で <a href="#TagView">TagView</a> コマンドで移動する場合な
 <dd>パラメータを指定しない場合、CSV/TSVファイルで、固定長表示/通常表示をトグルで切り替えます。<br>
 パラメータに <b>ON</b> を指定するとCSV/TSVファイルで固定長表示、<b>OFF</b> では通常表示になります。<br>
 対象となるのは、拡張子が <b>.csv</b>、<b>.tsv</b> のテキストファイルです。拡張子にかかわらず、ファイルの先頭行に TAB が含まれていたら <b>TSV</b>、そうでない場合は <b>CSV</b> とみなします。<br>
+<div class="spc_box">
 固定長表示では、項目ごとに最大幅で桁位置を合わせて整形表示します。項目数は1行目の内容に基づいています。<br>
 1レコードが1行に収まらないと見にくくなりますが、<a href="hid00011.htm#FixedLimit">オプション設定 - テキストビュアー</a> の「<b>固定長表示の制限幅</b>」を設定して省略表示すると収まるかもしれません。この値はパラメータでも指定できます。<br>
+また右クリックメニューの「<b>列幅の最小化</b>」で項目を選んでチェックすると、その列幅が最小化され内容が非表示になります。設定内容は、CSV/TSVファイルの代替データストリームに <b>nyanfi.def</b> という名前で保存されます。<br>
 <a href="hid00023.htm">オプション設定 - フォント・配色</a> - 配色の「<b>固定長表示の縦罫線</b>」を設定すると、固定長表示時に縦罫線が表示されます。ただし、各レコードの2行目以降には表示されません。<br>
+</div>
 固定長表示の場合、カーソル位置項目のソート(<a href="#Sort">Sort</a>)、集計(<a href="#CsvCalc">CsvCalc</a>)、グラフ表示(<a href="#CsvGraph">CsvGraph</a>)が可能です。<br>
 レコード毎の項目内容は、<b>CSV/TSVレコード</b> (<a href="#CsvRecord">CsvRecord</a>)でも確認できます。<br>
 <a href="#CsvRecord">→ CsvRecord</a>　<a href="#CsvCalc">→ CsvCalc</a>　<a href="#CsvGraph">→ CsvGraph</a>　<a href="#Sort">→ Sort</a>　<a href="#ExportCsv">→ ExportCsv</a>

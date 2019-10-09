@@ -482,6 +482,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ToTextAction;
 	TAction *TrimTagDataAction;
 	TAction *TV_EditAddAction;
+	TAction *TV_MinColAction;
 	TAction *TV_OrgOrderAction;
 	TAction *TV_SortAscAction;
 	TAction *TV_SortDesAction;
@@ -709,6 +710,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *MarkListItem;
 	TMenuItem *MarkListVItem;
 	TMenuItem *MaskSelItem;
+	TMenuItem *MinColItem;
 	TMenuItem *NetConDlgItem;
 	TMenuItem *NetDisDlgItem;
 	TMenuItem *NewFileItem;
@@ -840,6 +842,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_vp_1;
 	TMenuItem *Sep_vp_2;
 	TMenuItem *Sep_vp_3;
+	TMenuItem *Sep_vp_4;
 	TMenuItem *SetAliasItem;
 	TMenuItem *SetColorItem;
 	TMenuItem *SetExifTimeItem;
@@ -1862,6 +1865,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CopyEnvInfItemClick(TObject *Sender);
 	void __fastcall WorkProgressBoxPaint(TObject *Sender);
 	void __fastcall SetInterpolationActionExecute(TObject *Sender);
+	void __fastcall TV_MinColActionUpdate(TObject *Sender);
+	void __fastcall MinColItemClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

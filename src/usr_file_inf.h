@@ -14,6 +14,13 @@
 #define TXT_DETECT_SIZE	0x10000		//テキスト判定の読み込みサイズ(64KB)
 
 //---------------------------------------------------------------------------
+//ストリーム名
+#define NYANFIDEF_ADS ":nyanfi.def"		//設定情報
+#define THUMB_JPG_ADS ":thumbnail.jpg"	//サムネイル画像
+#define THUMB_TXT_ADS ":thumbnail.txt"	//サムネイル情報
+#define FAVICON_ADS   ":favicon"
+
+//---------------------------------------------------------------------------
 //拡張子
 #if defined(_WIN64)
 #define FEXT_ARCHIVE	FEXT_ZIP FEXT_7Z FEXT_TAR FEXT_RAR

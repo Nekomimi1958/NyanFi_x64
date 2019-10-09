@@ -6392,7 +6392,7 @@ HICON get_file_SmallIcon(
 	//ファイル名指定
 	else {
 		UnicodeString fext = get_extension(fnam);
-		if (test_FileExt(fext, ".url"))  hIcon = usr_SH->get_ico_f(fnam + ":favicon", 16, true);
+		if (test_FileExt(fext, ".url"))  hIcon = usr_SH->get_ico_f(fnam + FAVICON_ADS, 16, true);
 		if (!hIcon && is_ADS_name(fnam)) hIcon = usr_SH->get_ico_f(fnam, 16, true);
 
 		if (!hIcon) {
@@ -6486,7 +6486,7 @@ bool draw_SmallIcon(
 
 	UnicodeString snam;
 	if		(fp->is_ads && SameText(fp->n_name, "favicon")) snam = fp->f_name;
-	else if (test_FileExt(fp->f_ext, ".url"))				snam = fp->f_name + ":favicon";
+	else if (test_FileExt(fp->f_ext, ".url"))				snam = fp->f_name + FAVICON_ADS;
 	//PNG形式の favicon
 	if (file_exists(snam) && test_Png(snam)) {
 		try {
@@ -6513,7 +6513,7 @@ bool draw_SmallIcon(
 		UnicodeString fext = LowerCase(fp->f_ext);
 		//実ファイル依存
 		if ((UseIndIcon || force_cache)
-			&& (test_FileExt(fext, FEXT_INDIVICO) || fp->is_sym || EndsText(":favicon", fp->f_name)))
+			&& (test_FileExt(fext, FEXT_INDIVICO) || fp->is_sym || EndsText(FAVICON_ADS, fp->f_name)))
 		{
 			UnicodeString fnam = (fp->is_virtual || fp->is_ftp)? fp->tmp_name : fp->f_name;
 			if (!fnam.IsEmpty()) {
@@ -8042,7 +8042,8 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 	//項目値
 	cv->Font->Color = use_fgsel? col_fgSelItem :
 					  test_word_i(iname, EmpInfItems)? col_fgInfEmp :
-					  (flag & LBFLG_GIT_HASH)? col_GitHash : col_fgInf;
+									  iname.IsEmpty()? AdjustColor(col_fgInf, ADJCOL_FGLIST) :
+							  (flag & LBFLG_GIT_HASH)? col_GitHash : col_fgInf;
 
 	if		(flag & LBFLG_PATH_FIF)	PathNameOut(lbuf, cv, xp, yp);
 	else if (flag & LBFLG_FILE_FIF)	Emphasis_RLO_info(lbuf, cv, xp, yp);
@@ -8306,7 +8307,7 @@ bool get_FileInfList(
 
 		bool is_fav_ico = false;
 		bool is_fav_png = false;
-		if (EndsText(":favicon", fnam)) {
+		if (EndsText(FAVICON_ADS, fnam)) {
 			if		(test_Icon(fnam)) is_fav_ico = true;
 			else if (test_Png(fnam))  is_fav_png = true;
 		}
@@ -9225,8 +9226,8 @@ UnicodeString load_ImageThumbCache(UnicodeString fnam, Graphics::TBitmap *o_bmp)
 {
 	UnicodeString ibuf;
 	if (is_NTFS_Drive(fnam) && file_exists(fnam)) {
-		UnicodeString fnam_t = fnam + ":thumbnail.jpg";
-		UnicodeString fnam_x = fnam + ":thumbnail.txt";
+		UnicodeString fnam_t = fnam + THUMB_JPG_ADS;
+		UnicodeString fnam_x = fnam + THUMB_TXT_ADS;
 		if (file_exists(fnam_t) && file_exists(fnam_x)
 			&& load_ImageFile(fnam_t, o_bmp, WICIMG_THUMBNAIL, col_bgImage))
 		{

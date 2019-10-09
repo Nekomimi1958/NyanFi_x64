@@ -656,7 +656,7 @@ void __fastcall TImgViewThread::Execute()
 					}
 					//‰æ‘œ
 					else if (test_FileExt(fext, FEXT_META + get_img_fext())
-						|| (EndsText(":favicon", Img_f_name) && test_Png(Img_f_name)))
+						|| (EndsText(FAVICON_ADS, Img_f_name) && test_Png(Img_f_name)))
 					{
 						int res = load_ImageFile(Img_f_name, ImgBuff, WICIMG_PREVIEW, col_bgImage);
 						if (res==0) UserAbort(USTR_FaildLoad);

@@ -226,6 +226,21 @@ void __fastcall TCsvRecForm::CopyItemClick(TObject *Sender)
 	UpdateRecord(NULL, RecIndex);
 	Application->MainForm->SetFocus();
 }
+//---------------------------------------------------------------------------
+//URL‚ğŠJ‚­
+//---------------------------------------------------------------------------
+void __fastcall TCsvRecForm::OpenUrlActionExecute(TObject *Sender)
+{
+	TStringGrid *gp = RecordGrid;
+	Execute_ex(extract_URL(gp->Cells[1][gp->Row]));
+}
+//---------------------------------------------------------------------------
+void __fastcall TCsvRecForm::OpenUrlActionUpdate(TObject *Sender)
+{
+	TStringGrid *gp = RecordGrid;
+	UnicodeString url = extract_URL(gp->Cells[1][gp->Row]);
+	((TAction *)Sender)->Enabled = !url.IsEmpty();
+}
 
 //---------------------------------------------------------------------------
 //€–Ú‚ÌWŒv

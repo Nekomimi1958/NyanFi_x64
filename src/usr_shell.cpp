@@ -1595,7 +1595,7 @@ HICON UserShell::get_ico_f(
 			if (!test_IcoExt(fext)) Abort();
 		}
 		else {
-			if (!EndsText(":favicon", fnam)) Abort();
+			if (!EndsText(FAVICON_ADS, fnam)) Abort();
 		}
 
 		if (!test_Icon(fnam, force? 0 : size)) Abort();
@@ -1642,7 +1642,7 @@ HICON UserShell::get_Icon(
 
 	//インターネットショートカット(:favicon)
 	if (USAME_TI(fext, ".url")) {
-		hIcon = get_ico_f(fnam + ":favicon", 16);
+		hIcon = get_ico_f(fnam + FAVICON_ADS, 16);
 		if (hIcon) return hIcon;
 	}
 
