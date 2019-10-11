@@ -593,10 +593,9 @@ void UsrIniFile::LoadListItems(UnicodeString sct, TStringList *lst,
 	int max_items,		//ç≈ëÂçÄñ⁄êî	(default = 20)	  0 ÇÃèÍçáñ≥êßå¿
 	bool del_quot)		//à¯ópïÑÇäOÇ∑	(default = true)  ÅICSVçÄñ⁄ÇÃèÍçáÇÕ false Ç…
 {
-	UnicodeString key;
 	lst->Clear();
 	for (int i=0; (max_items==0 || i<max_items); i++) {
-		UnicodeString itm_str = ReadString(sct, key.sprintf(_T("Item%u"), i + 1), EmptyStr, del_quot);
+		UnicodeString itm_str = ReadString(sct, UnicodeString().sprintf(_T("Item%u"), i + 1), EmptyStr, del_quot);
 		if (itm_str.IsEmpty()) break;
 		lst->Add(itm_str);
 	}
@@ -607,14 +606,9 @@ void UsrIniFile::LoadListItems(UnicodeString sct, TStringList *lst,
 void UsrIniFile::SaveListItems(UnicodeString sct, TStringList *lst,
 	int max_items)		//ç≈ëÂçÄñ⁄êî	(default = 20)	  0 ÇÃèÍçáñ≥êßå¿
 {
-	UnicodeString key;
-	for (int i=0; (max_items==0 || i<max_items); i++) {
-		key.sprintf(_T("Item%u"), i + 1);
-		if (i<lst->Count)
-			WriteString(sct, key, lst->Strings[i]);
-		else
-			if (!DeleteKey(sct, key)) break;
-	}
+	EraseSection(sct);
+	for (int i=0; i<lst->Count && (max_items==0 || i<max_items); i++)
+		WriteString(sct, UnicodeString().sprintf(_T("Item%u"), i + 1), lst->Strings[i]);
 }
 
 //---------------------------------------------------------------------------

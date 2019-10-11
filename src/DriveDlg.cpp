@@ -134,12 +134,6 @@ void __fastcall TSelDriveDlg::UpdateDriveList()
 {
 	cursor_HourGlass();
 
-	//ボリューム名を更新
-	for (int i=0; i<DriveInfoList->Count; i++) {
-		drive_info *dp = (drive_info *)DriveInfoList->Objects[i];
-		if (dp->accessible) dp->volume = get_VolumeInfo(dp->drive_str);
-	}
-
 	TStringGrid *gp = DriveGrid;
 	int icon_md = ShowIconCheckBox->Checked? (LargeIconCheckBox->Checked? 2 : 1) : 0;
 	int icon_sz = ScaledInt((icon_md==2)? 32 : (icon_md==1)? 16 : 0);
@@ -147,6 +141,7 @@ void __fastcall TSelDriveDlg::UpdateDriveList()
 	if (icon_md==2 && gp->DefaultRowHeight<(icon_sz + 4)) gp->DefaultRowHeight = icon_sz + 4;
 
 	//表示ドライブを抽出
+	update_DriveInfo();
 	std::unique_ptr<TStringList> lst(new TStringList());
 	for (int i=0; i<DriveInfoList->Count; i++) {
 		drive_info *dp = (drive_info *)DriveInfoList->Objects[i];
@@ -171,7 +166,7 @@ void __fastcall TSelDriveDlg::UpdateDriveList()
 
 			//容量
 			bool ok = false;
-			if (!drv_str.IsEmpty() &&
+			if (!drv_str.IsEmpty() && dp->accessible &&
 				(gp->ColWidths[3]>=COL_WD_HIDE || gp->ColWidths[4]>=COL_WD_HIDE || gp->ColWidths[5]>=COL_WD_HIDE))
 			{
 				int dn = (char)drv_str[1] - 'A' + 1;
@@ -179,8 +174,8 @@ void __fastcall TSelDriveDlg::UpdateDriveList()
 				__int64 sFree  = DiskFree(dn);
 				__int64 sUsed  = sTotal - sFree;
 				if (sTotal>0 && sFree>=0) {
-					gp->Cells[3][rn] = get_size_str_T(sUsed, SizeDecDigits).cat_sprintf(_T(" (%4.1f%%)"), 100.0*sUsed/sTotal);
-					gp->Cells[4][rn] = get_size_str_T(sFree, SizeDecDigits).cat_sprintf(_T(" (%4.1f%%)"), 100.0*sFree/sTotal);
+					gp->Cells[3][rn] = get_size_str_T(sUsed,  SizeDecDigits).cat_sprintf(_T(" (%4.1f%%)"), 100.0*sUsed/sTotal);
+					gp->Cells[4][rn] = get_size_str_T(sFree,  SizeDecDigits).cat_sprintf(_T(" (%4.1f%%)"), 100.0*sFree/sTotal);
 					gp->Cells[5][rn] = get_size_str_T(sTotal, SizeDecDigits);
 					ok = true;
 				}

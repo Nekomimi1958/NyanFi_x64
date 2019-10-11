@@ -2829,14 +2829,9 @@ void __fastcall TTxtViewer::onDblClick()
 	}
 	//本文
 	else {
-		UnicodeString lbuf   = get_SelText();	if (lbuf.IsEmpty()) lbuf = get_CurLine(true);
-		UnicodeString urlstr = ClickableUrl? extract_URL(lbuf) : EmptyStr;
-		//URLを開く
-		if (!urlstr.IsEmpty())
-			Execute_ex(urlstr);
-		//カーソル位置の単語選択
-		else
-			GetCurWord(true);
+		//URLを開く/カーソル位置の単語選択
+		UnicodeString url = ClickableUrl? get_CurUrl() : EmptyStr;
+		if (!url.IsEmpty()) Execute_ex(url); else GetCurWord(true);
 	}
 
 	SelSkip = true;	//DblClick後の選択を回避
@@ -3382,6 +3377,27 @@ UnicodeString __fastcall TTxtViewer::get_SelText(
 	}
 
 	return sel_str;
+}
+
+//---------------------------------------------------------------------------
+//カーソル位置/行からURLを取得
+//---------------------------------------------------------------------------
+UnicodeString __fastcall TTxtViewer::get_CurUrl()
+{
+	UnicodeString lbuf = get_SelText();
+	//固定長表示
+	if (isCSV && isFixedLen && CsvCol>=0) {
+		line_rec *lp = get_LineRec(CurPos.y);
+		if (lp->LineNo>0) {
+			lbuf = TxtBufList->Strings[lp->LineNo - 1];
+			lbuf = isTSV? get_tsv_item(lbuf, CsvCol) : get_csv_item(lbuf, CsvCol);
+		}
+	}
+	//通常表示
+	else {
+		lbuf = get_CurLine(true);
+	}
+	return extract_URL(lbuf);
 }
 
 //---------------------------------------------------------------------------
@@ -4694,9 +4710,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 				}
 			}
 			else {
-				UnicodeString lbuf = get_SelText();
-				if (lbuf.IsEmpty()) lbuf = get_CurLine(true);
-				url = extract_URL(lbuf);
+				url = get_CurUrl();
 			}
 			if (!url.IsEmpty()) Execute_ex(url); else GlobalErrMsg = LoadUsrMsg(USTR_NotFound, _T("URL"));
 		}

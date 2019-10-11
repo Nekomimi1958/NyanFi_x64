@@ -315,6 +315,7 @@ public:
 	UnicodeString __fastcall get_DispLine(int idx, int b0 = 0, int b1 = 15);
 
 	UnicodeString __fastcall get_SelText(bool clr_sel = false);
+	UnicodeString __fastcall get_CurUrl();
 	UnicodeString __fastcall get_CurLine(bool to_cr = false);
 	int __fastcall get_CurLineNo();
 	__int64 __fastcall get_CurAddrA();

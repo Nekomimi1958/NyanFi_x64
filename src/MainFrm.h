@@ -2303,7 +2303,7 @@ private:	// ユーザー宣言
 	void __fastcall SetDirWatch(UnicodeString dnam, int tag);
 	void __fastcall SetDirWatch(bool active);
 
-	void __fastcall StoreTabStt(int idx);
+	void __fastcall StoreTabStt(int tab_idx);
 
 	bool __fastcall IncProtectItem();
 	bool __fastcall TestCurIncDir(bool only_cur = false);
@@ -2392,9 +2392,11 @@ private:	// ユーザー宣言
 	bool __fastcall ChangeAdsList(UnicodeString fnam, int tag);
 	bool __fastcall ChangeFtpFileList(int tag = CurListTag, UnicodeString dnam = EmptyStr, UnicodeString last_nam = EmptyStr);
 
+	UnicodeString __fastcall MakeDirHistoryStr(UnicodeString dnam, int tag);
+	void __fastcall UpdateDirHistory(UnicodeString dnam, int tab_idx, int tag);
 	void __fastcall AddDirHistory(UnicodeString dnam, int tag);
 	void __fastcall CheckDirHistory(int tag = CurListTag, UnicodeString drv = EmptyStr);
-	void __fastcall CaseDirHistory(TStringList *lst);
+	void __fastcall SetSortFromHistory(UnicodeString h_sort, int tag);
 	void __fastcall MoveDirHistCore(bool is_back);
 
 	bool __fastcall ExeCmdAction(TAction *ap, UnicodeString prm = EmptyStr);

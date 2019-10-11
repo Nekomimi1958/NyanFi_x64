@@ -573,12 +573,13 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	RemoteWaitTimeEdit->Tag 	= (int)&RemoteWaitTime;
 	NormalWaitTimeEdit->Tag 	= (int)&NormalWaitTime;
 	NopDtctTimeEdit->Tag		= (int)&NopDtctTime;
+	MaxDirHistEdit->Tag 		= (int)&MaxDirHistory;
 	ModalAlphaEdit->Tag 		= (int)&ModalScrAlpha;
 	BgColAlphaEdit->Tag 		= (int)&BgColAlpha;
 	HideTimeEdit->Tag			= (int)&BgHideTime;
 	TileIfSzEdit->Tag			= (int)&BgTileSize;
 	SplitWidthEdit->Tag 		= (int)&SplitterWidth;
-	SplitWidth2Edit->Tag 		= (int)&SplitterWidth2;
+	SplitWidth2Edit->Tag		= (int)&SplitterWidth2;
 	IconCacheEdit->Tag			= (int)&IconCache;
 	FindPathWdEdit->Tag 		= (int)&FindPathWidth;
 	FindTagsWdEdit->Tag 		= (int)&FindTagsWidth;
@@ -633,6 +634,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	AddToRecentCheckBox->Tag	= (int)&AddToRecent;
 	NoChkRUncCheckBox->Tag		= (int)&NoCheckRecentUnc;
 	DirHistCsrPosCheckBox->Tag	= (int)&DirHistCsrPos;
+	DirHistSrotMdCheckBox->Tag	= (int)&DirHistSortMode;
 	DelDplDirHistCheckBox->Tag	= (int)&DelDplDirHist;
 	WorkToDirHistCheckBox->Tag	= (int)&WorkToDirHist;
 	NoChkDirHistCheckBox->Tag	= (int)&NoCheckDirHist;

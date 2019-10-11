@@ -102,7 +102,7 @@ void __fastcall TTabSetDlg::SetCurDirBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TTabSetDlg::WorkRadioBtnClick(TObject *Sender)
 {
-	WorkListEdit->Color = Work2RadioBtn->Checked? scl_Window : col_Invalid;
+	WorkListEdit->Color = get_WinColor(!Work2RadioBtn->Checked);
 }
 
 //---------------------------------------------------------------------------

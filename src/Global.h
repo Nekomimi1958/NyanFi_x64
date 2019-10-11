@@ -366,6 +366,7 @@ extern bool NoCheckWorkUnc;
 extern bool AddToRecent;
 extern bool NoCheckRecentUnc;
 extern bool DirHistCsrPos;
+extern bool DirHistSortMode;
 extern bool DelDplDirHist;
 extern bool WorkToDirHist;
 extern bool NoCheckDirHist;
@@ -531,6 +532,7 @@ extern UnicodeString SttBarFmt;
 extern UnicodeString SttClockFmt;
 
 extern int  MaxLogFiles;
+extern int  MaxDirHistory;
 
 extern int  ProtectDirMode;
 extern bool ProtectSubDir;
@@ -1686,6 +1688,7 @@ TStringList *get_DirHistory(int tab_idx = -1, int tag = CurListTag);
 int  *get_DirHistPtr(int tab_idx = -1, int tag = CurListTag);
 void clear_DirHistory(int tab_idx = -1, int tag = CurListTag);
 UnicodeString get_TabWorkList(int tab_idx);
+void save_DirHistory(UsrIniFile *ini_file);
 bool save_TagGroup(UnicodeString fnam);
 
 void clear_FindStt(flist_stt *lst_stt);
@@ -1700,6 +1703,7 @@ UnicodeString get_FontInf(UnicodeString fnam, TStringList *lst = NULL);
 
 drive_info *get_DriveInfoList();
 drive_info *get_DriveInfo(UnicodeString dstr);
+void update_DriveInfo();
 bool is_NTFS_Drive(UnicodeString dnam);
 UnicodeString get_VolumeInfo(UnicodeString dnam, UnicodeString *fsys = NULL);
 

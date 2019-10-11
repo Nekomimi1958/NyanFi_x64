@@ -276,56 +276,76 @@ object OptionDlg: TOptionDlg
           434
           145)
         object DelDplDirHistCheckBox: TCheckBox
-          Left = 10
+          Left = 218
           Top = 45
-          Width = 178
+          Width = 200
           Height = 17
           Caption = #37325#35079#12377#12427#23653#27508#12434#21066#38500#12377#12427
-          TabOrder = 2
+          TabOrder = 3
         end
         object DirHistCsrPosCheckBox: TCheckBox
           Left = 10
           Top = 20
-          Width = 178
+          Width = 200
           Height = 17
           Caption = #12459#12540#12477#12523#20301#32622#12434#35352#25014#12377#12427
           TabOrder = 0
         end
         object NoChkDirHistCheckBox: TCheckBox
-          Left = 194
-          Top = 20
-          Width = 232
+          Left = 10
+          Top = 45
+          Width = 200
           Height = 17
           Caption = #23653#27508#12398#23384#22312#12481#12455#12483#12463#12434#34892#12431#12394#12356
-          TabOrder = 1
+          TabOrder = 2
         end
         object WorkToDirHistCheckBox: TCheckBox
-          Left = 194
-          Top = 45
-          Width = 232
-          Height = 17
-          Caption = #12527#12540#12463#12522#12473#12488#12434#23653#27508#12395#21547#12417#12427
-          TabOrder = 3
-        end
-        object ExtSavDirHistCheckBox: TCheckBox
           Left = 10
           Top = 70
-          Width = 178
+          Width = 200
+          Height = 17
+          Caption = #12527#12540#12463#12522#12473#12488#12434#23653#27508#12395#21547#12417#12427
+          TabOrder = 4
+        end
+        object ExtSavDirHistCheckBox: TCheckBox
+          Left = 218
+          Top = 70
+          Width = 200
           Height = 17
           Caption = #20840#20307#23653#27508#12434#21029#12501#12449#12452#12523#12395#20445#23384
-          TabOrder = 4
+          TabOrder = 5
           OnClick = ExtSavDirHistCheckBoxClick
         end
         object NoDirHistPathEdit: TLabeledEdit
-          Left = 10
+          Left = 71
           Top = 113
-          Width = 413
+          Width = 352
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 151
           EditLabel.Height = 13
           EditLabel.Caption = #23653#27508#12395#20837#12428#12394#12356#12497#12473'('#37096#20998#19968#33268')'
-          TabOrder = 5
+          TabOrder = 7
+        end
+        object DirHistSrotMdCheckBox: TCheckBox
+          Left = 218
+          Top = 20
+          Width = 200
+          Height = 17
+          Caption = #12477#12540#12488#26041#27861#12434#35352#25014#12377#12427
+          TabOrder = 1
+        end
+        object MaxDirHistEdit: TLabeledEdit
+          Left = 10
+          Top = 113
+          Width = 45
+          Height = 21
+          Alignment = taRightJustify
+          EditLabel.Width = 36
+          EditLabel.Height = 13
+          EditLabel.Caption = #20445#23384#25968
+          NumbersOnly = True
+          TabOrder = 6
         end
       end
       object DispGroupBox: TGroupBox

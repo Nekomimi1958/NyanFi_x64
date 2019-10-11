@@ -6402,6 +6402,8 @@ bool __fastcall TNyanFiForm::PopupDriveMenu(
 {
 	cursor_HourGlass();
 
+	update_DriveInfo();
+
 	TPopupMenu *pPop = DrivePopupMenu;
 	while (pPop->Items->Count>0) pPop->Items->Delete(0);
 	UnicodeString cur_key = ExtractFileDrive(CurPath[CurListTag]).SubString(1, 1);
@@ -7770,6 +7772,34 @@ void __fastcall TNyanFiForm::RepaintList(
 }
 
 //---------------------------------------------------------------------------
+//ディレクトリ履歴の項目文字列を作成
+//---------------------------------------------------------------------------
+UnicodeString __fastcall TNyanFiForm::MakeDirHistoryStr(UnicodeString dnam, int tag)
+{
+	UnicodeString ret_str;
+	ret_str.sprintf(_T("\"%s\",%d,%d"), dnam.c_str(), FileListBox[tag]->ItemIndex, SortMode[tag]);
+	ret_str += (FlOdrNatural[tag]? "1" : "0");
+	ret_str += (FlOdrDscName[tag]? "1" : "0");
+	ret_str += (FlOdrSmall[tag]  ? "1" : "0");
+	ret_str += (FlOdrOld[tag]    ? "1" : "0");
+	ret_str += (FlOdrDscAttr[tag]? "1" : "0");
+	return ret_str;
+}
+
+//---------------------------------------------------------------------------
+//現在のディレクトリ履歴を更新
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::UpdateDirHistory(UnicodeString dnam, int tab_idx, int tag)
+{
+	tab_info *tp = get_TabInfo(tab_idx);
+	if (tp) {
+		TStringList *h_lst = tp->dir_hist[tag];
+		int			*h_ptr = &tp->dir_hist_p[tag];
+		if (*h_ptr>=0 && *h_ptr<h_lst->Count && *h_ptr==indexof_csv_list(h_lst, dnam, 0))
+			h_lst->Strings[*h_ptr] = MakeDirHistoryStr(dnam, tag);
+	}
+}
+//---------------------------------------------------------------------------
 //ディレクトリ履歴に追加
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::AddDirHistory(UnicodeString dnam, int tag)
@@ -7779,9 +7809,13 @@ void __fastcall TNyanFiForm::AddDirHistory(UnicodeString dnam, int tag)
 	//除外するパスのチェック
 	if (ends_PathDlmtr(dnam) && match_path_list(dnam, NoDirHistPath)) return;
 
-	TStringList *h_lst = get_DirHistory(TabControl1->TabIndex, tag);
-	int *h_ptr = get_DirHistPtr(TabControl1->TabIndex, tag);
-	if (h_lst && h_ptr) {
+	UnicodeString h_str = MakeDirHistoryStr(dnam, tag);
+
+	tab_info *tp = get_TabInfo(TabControl1->TabIndex);
+	if (tp) {
+		TStringList *h_lst = tp->dir_hist[tag];
+		int			*h_ptr = &tp->dir_hist_p[tag];
+
 		//進む部分を削除
 		for (int i=0; i<*h_ptr && h_lst->Count>0; i++) h_lst->Delete(0);
 		*h_ptr = 0;
@@ -7793,22 +7827,19 @@ void __fastcall TNyanFiForm::AddDirHistory(UnicodeString dnam, int tag)
 				if (idx!=-1) h_lst->Delete(idx); else break;
 			}
 			//先頭に追加
-			if (file_exists(dnam))
-				h_lst->Insert(0, UnicodeString().sprintf(_T("\"%s\",%d"), dnam.c_str(), FileListBox[tag]->ItemIndex));
+			if (file_exists(dnam)) h_lst->Insert(0, h_str);
 		}
 	}
 
 	//全体履歴
-	h_lst = AllDirHistory;
-	if (indexof_csv_list(h_lst, dnam, 0)!=0) {
+	if (indexof_csv_list(AllDirHistory, dnam, 0)!=0) {
 		//重複する履歴を削除
 		for (;;) {
-			int idx = indexof_csv_list(h_lst, dnam, 0);
-			if (idx!=-1) h_lst->Delete(idx); else break;
+			int idx = indexof_csv_list(AllDirHistory, dnam, 0);
+			if (idx!=-1) AllDirHistory->Delete(idx); else break;
 		}
 		//先頭に追加
-		if (file_exists(dnam))
-			h_lst->Insert(0, UnicodeString().sprintf(_T("\"%s\",%d"), dnam.c_str(), FileListBox[tag]->ItemIndex));
+		if (file_exists(dnam)) AllDirHistory->Insert(0, h_str);
 	}
 }
 
@@ -7902,6 +7933,21 @@ void __fastcall TNyanFiForm::CheckDirHistory(int tag, UnicodeString drv)
 				else j++;
 			}
 		}
+	}
+}
+
+//---------------------------------------------------------------------------
+//履歴情報からソート方法を設定
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SetSortFromHistory(UnicodeString h_sort, int tag)
+{
+	if (h_sort.Length()==6) {
+		SortMode[tag]	  = h_sort.SubString(1, 1).ToIntDef(SortMode[tag]);
+		FlOdrNatural[tag] = equal_1(h_sort.SubString(2, 1));
+		FlOdrDscName[tag] = equal_1(h_sort.SubString(3, 1));
+		FlOdrSmall[tag]   = equal_1(h_sort.SubString(4, 1));
+		FlOdrOld[tag]	  = equal_1(h_sort.SubString(5, 1));
+		FlOdrDscAttr[tag] = equal_1(h_sort.SubString(6, 1));
 	}
 }
 
@@ -8004,9 +8050,10 @@ void __fastcall TNyanFiForm::SetCurPath(
 
 		//履歴を検索
 		UnicodeString h_dnam;
-		int h_idx = 0;
+		UnicodeString h_sort;
+		int h_idx  = 0;
 		TStringList *h_lst = get_DirHistory(TabControl1->TabIndex, Index);
-		int *h_ptr = get_DirHistPtr(TabControl1->TabIndex, Index);
+		int 		*h_ptr = get_DirHistPtr(TabControl1->TabIndex, Index);
 
 		//ルート
 		if (SameText(dnam, get_drive_str(dnam))) {
@@ -8018,11 +8065,12 @@ void __fastcall TNyanFiForm::SetCurPath(
 				CheckDirHistory(Index, dnam);	//該当ドライブの履歴のみチェック
 				if (h_lst) {
 					for (int i=0; i<h_lst->Count; i++) {
-						TStringDynArray itm_buf = get_csv_array(h_lst->Strings[i], 2, true);
+						TStringDynArray itm_buf = get_csv_array(h_lst->Strings[i], 3, true);
 						if (!ends_PathDlmtr(itm_buf[0])) continue;
 						if (StartsText(dnam, itm_buf[0])) {
 							h_dnam = itm_buf[0];
 							h_idx  = itm_buf[1].ToIntDef(0);
+							h_sort = itm_buf[2];
 							break;
 						}
 					}
@@ -8031,22 +8079,25 @@ void __fastcall TNyanFiForm::SetCurPath(
 		}
 		//ルート以外
 		else {
-			TStringDynArray itm_buf = record_of_csv_list(h_lst, dnam, 0, 2);
-			if (itm_buf.Length==2) {
+			TStringDynArray h_buf = record_of_csv_list(h_lst, IncludeTrailingPathDelimiter(dnam), 0, 3);
+			if (h_buf.Length==3) {
 				h_dnam = dnam;
-				h_idx  = itm_buf[1].ToIntDef(0);
+				h_idx  = h_buf[1].ToIntDef(0);
+				h_sort = h_buf[2];
 			}
 		}
 
 		//存在しないディレクトリを履歴から削除
-		if (h_lst && !h_dnam.IsEmpty() && !dir_exists(h_dnam)) {
+		if (h_lst && h_ptr && !h_dnam.IsEmpty() && !dir_exists(h_dnam)) {
 			int idx = 0;
 			while (idx<h_lst->Count) {
 				if (StartsText(h_dnam, get_csv_item(h_lst->Strings[idx], 0))) {
 					h_lst->Delete(idx);
 					if (idx<*h_ptr) --(*h_ptr);
 				}
-				else idx++;
+				else {
+					idx++;
+				}
 			}
 			h_dnam = EmptyStr;
 		}
@@ -8056,13 +8107,8 @@ void __fastcall TNyanFiForm::SetCurPath(
 
 		TListBox *lp = FileListBox[Index];
 
-		//直前のディレクトリのカーソル位置を保存
-		TStringList *h_lst0 = get_DirHistory(CurTabIndex, Index);
-		int *h_ptr0 = get_DirHistPtr(CurTabIndex, Index);
-		if (h_lst0 && h_ptr0) {
-			if (*h_ptr0>=0 && *h_ptr0<h_lst0->Count && *h_ptr0==indexof_csv_list(h_lst0, l_pnam, 0))
-				h_lst0->Strings[*h_ptr0] = UnicodeString().sprintf(_T("\"%s\",%d"), l_pnam.c_str(), lp->ItemIndex);
-		}
+		//直前のディレクトリの履歴情報を保存
+		UpdateDirHistory(l_pnam, CurTabIndex, Index);
 
 		set_RedrawOff(lp);
 		{
@@ -8087,6 +8133,7 @@ void __fastcall TNyanFiForm::SetCurPath(
 					bool cur_changed = (is_cur && !SameText(FCurPath[Index], dnam) && Initialized && !UnInitializing);
 					bool drv_changed = (!SameText(ExtractFileDrive(FCurPath[Index]), ExtractFileDrive(dnam))
 											&& Initialized && !UnInitializing);
+					bool srt_changed = false;
 
 					UnicodeString on_CurChange = is_cur? OnCurChange : EmptyStr;
 
@@ -8120,8 +8167,8 @@ void __fastcall TNyanFiForm::SetCurPath(
 							UnicodeString key = split_tkn(lbuf, '=');	if (lbuf.IsEmpty()) continue;
 
 							switch (idx_of_word_i(
-								_T("PathMask|SortMode|NaturalOrder|DscNameOrder|SmallOrder|OldOrder|DscAttrOrder|")				//0..6
-								_T("Color_bgDirInf|Color_fgDirInf|Color_bgDrvInf|Color_fgDrvInf|Color_Cursor|Color_selItem"),	//7..12
+								_T("PathMask|SortMode|NaturalOrder|DscNameOrder|SmallOrder|OldOrder|DscAttrOrder|")
+								_T("Color_bgDirInf|Color_fgDirInf|Color_bgDrvInf|Color_fgDrvInf|Color_Cursor|Color_selItem"),
 								key))
 							{
 							case 0: {
@@ -8131,9 +8178,12 @@ void __fastcall TNyanFiForm::SetCurPath(
 								}
 								break;
 							case 1: {
-									int idx = SortIdStr.Pos(lbuf[1]);	if (idx==0) break;
-									idx--;
-									SortMode[Index] = idx;
+									int idx = SortIdStr.Pos(lbuf[1]);
+									if (idx>0) {
+										idx--;
+										SortMode[Index] = idx;
+										srt_changed = true;
+									}
 								}
 								break;
 
@@ -8206,8 +8256,11 @@ void __fastcall TNyanFiForm::SetCurPath(
 							}	//end if switch
 						}	//end of for
 					}
+		
+					//履歴からソート方法を復元
+					if (!srt_changed && DirHistSortMode) SetSortFromHistory(h_sort, Index);
 
-					//ファイルリスト更新
+					//ファイルリスト更新r
 					UpdateList(FileList[Index], CurPath[Index], Index);
 					SetDirWatch(dnam, Index);
 					assign_FileListBox(lp, FileList[Index], (DirHistCsrPos? h_idx : 0), FlScrPanel[Index]);
@@ -9015,7 +9068,19 @@ int __fastcall TNyanFiForm::ChangeWorkList(
 	cur_stt->is_Arc  = false;
 	cur_stt->is_ADS  = false;
 	cur_stt->is_Find = false;
+
 	bool ini_flag = !cur_stt->is_Work;
+	int h_idx = -1;
+	UnicodeString h_sort;
+	if (ini_flag) {
+		//履歴情報の取得
+		TStringDynArray h_buf = record_of_csv_list(WorkListHistory, WorkListName, 0, 3);
+		if (h_buf.Length==3) {
+			h_idx  = h_buf[1].ToIntDef(0);
+			h_sort = h_buf[2];
+		}
+	}
+
 	cur_stt->is_Work = true;
 	UpdateBgImage();
 
@@ -9083,17 +9148,16 @@ int __fastcall TNyanFiForm::ChangeWorkList(
 	}
 
 	if (WorkListFiltered) ApplySelMask(WorkList, tag);
-	SortList(WorkList, tag);
+	if (!NotSortWorkList && !WorkListHasSep) {
+		if (DirHistSortMode) SetSortFromHistory(h_sort, tag);
+		SortList(WorkList, tag);
+	}
 	SetFlItemWidth(WorkList, tag);
 
 	//リストボックスに割り当て
 	TListBox *lp = FileListBox[tag];
 	int idx = lp->ItemIndex;
-	if (ini_flag) {
-		//履歴からカーソル位置を復元
-		TStringDynArray itm_buf = record_of_csv_list(WorkListHistory, WorkListName, 0, 2);
-		if (itm_buf.Length==2) idx = itm_buf[1].ToIntDef(0);
-	}
+	if (ini_flag && DirHistCsrPos && h_idx!=-1) idx = h_idx;
 	update_FileListBox(WorkList, tag, idx);
 	if (tag==CurListTag) lp->SetFocus();
 	RepaintList(tag);
@@ -9330,7 +9394,7 @@ void __fastcall TNyanFiForm::RecoverFileList(
 					int idx = indexof_csv_list(WorkListHistory, WorkListName, 0);
 					if (idx!=-1) WorkListHistory->Delete(idx); else break;
 				}
-				WorkListHistory->Insert(0, UnicodeString().sprintf(_T("\"%s\",%u"), WorkListName.c_str(), lp->ItemIndex));
+				WorkListHistory->Insert(0, MakeDirHistoryStr(WorkListName, tag));
 			}
 
 			fromFlToWork = false;
@@ -9344,21 +9408,14 @@ void __fastcall TNyanFiForm::RecoverFileList(
 		FindDiff = false;
 
 		FCurPath[tag] = CheckAvailablePath(CurPath[tag], tag);
+		TStringDynArray h_buf = record_of_csv_list(get_DirHistory(TabControl1->TabIndex, tag), CurPath[tag], 0, 3);
+		if (DirHistSortMode && h_buf.Length==3) SetSortFromHistory(h_buf[2], tag);
 		UpdateList(FileList[tag], CurPath[tag], tag);
 
 		//リストボックスに割り当て
 		update_FileListBox(FileList[tag], tag);
-
-		if (IndexOfFileList(last_fnam)==-1) {
-			//履歴からカーソル位置を復帰
-			if (DirHistCsrPos) {
-				TStringDynArray itm_buf = record_of_csv_list(get_DirHistory(TabControl1->TabIndex, tag), CurPath[tag], 0, 2);
-				if (itm_buf.Length==2) ListBoxSetIndex(lp, itm_buf[1].ToIntDef(0));
-			}
-			else {
-				lp->ItemIndex = 0;
-			}
-		}
+		if (IndexOfFileList(last_fnam)==-1)
+			ListBoxSetIndex(lp, (DirHistCsrPos && h_buf.Length==3)? h_buf[1].ToIntDef(0) : 0);
 
 		if (MainPanel->Visible && tag==CurListTag) lp->SetFocus();
 
@@ -15402,16 +15459,12 @@ void __fastcall TNyanFiForm::DriveGraphActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::DriveListActionExecute(TObject *Sender)
 {
-	//ボリューム名を更新
-	for (int i=0; i<DriveInfoList->Count; i++) {
-		drive_info *dp = (drive_info *)DriveInfoList->Objects[i];
-		if (dp->accessible) dp->volume = get_VolumeInfo(dp->drive_str);
-	}
-
-	if (TEST_ActParam("ND"))
+	if (TEST_ActParam("ND")) {
 		PopupDriveMenu();
-	else if (TEST_ActParam("NS"))
+	}
+	else if (TEST_ActParam("NS")) {
 		PopupDriveMenu(CurListTag, false, true);
+	}
 	else {
 		if (!SelDriveDlg) SelDriveDlg = new TSelDriveDlg(this);	//初回に動的作成
 		SelDriveDlg->ShowModal();
@@ -19820,7 +19873,7 @@ void __fastcall TNyanFiForm::LoadTabGroupActionExecute(TObject *Sender)
 		for (int i=0; i<TabList->Count; i++) {
 			tab_info *tp = cre_tab_info();
 			for (int j=0; j<MAX_FILELIST; j++) {
-				tab_file->LoadListItems(sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j), tp->dir_hist[j], 30, false);
+				tab_file->LoadListItems(sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j), tp->dir_hist[j], 0, false);
 			}
 			TabList->Objects[i] = (TObject*)tp;
 		}
@@ -21817,10 +21870,12 @@ void __fastcall TNyanFiForm::PopDirActionExecute(TObject *Sender)
 {
 	bool ok = false;
 	while (DirStack->Count>0 && !ok) {
-		TStringDynArray itm_buf = get_csv_array(DirStack->Strings[0], 2, true);
+		TStringDynArray itm_buf = get_csv_array(DirStack->Strings[0], 3, true);
 		DirStack->Delete(0);
 		if (dir_exists(itm_buf[0])) {
-			if (TEST_ActParam("OP"))
+			int tag = TEST_ActParam("OP")? OppListTag : CurListTag;
+			SetSortFromHistory(itm_buf[2], tag);
+			if (tag==OppListTag)
 				UpdateOppPath(itm_buf[0], itm_buf[1].ToIntDef(0));
 			else
 				UpdateCurPath(itm_buf[0], itm_buf[1].ToIntDef(0));
@@ -22152,17 +22207,14 @@ void __fastcall TNyanFiForm::PropertyDlgActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::PushDirActionExecute(TObject *Sender)
 {
-	UnicodeString tmp;
 	if (TEST_ActParam("OP")) {
 		if (IsOppFList())
-			DirStack->Insert(0,
-				tmp.sprintf(_T("\"%s\",%d"), CurPath[OppListTag].c_str(), FileListBox[OppListTag]->ItemIndex));
+			DirStack->Insert(0, MakeDirHistoryStr(CurPath[OppListTag], OppListTag));
 		else
 			SetActionAbort();
 	}
 	else if (IsCurFList()) {
-		DirStack->Insert(0,
-			tmp.sprintf(_T("\"%s\",%d"), CurPath[CurListTag].c_str(), FileListBox[CurListTag]->ItemIndex));
+		DirStack->Insert(0, MakeDirHistoryStr(CurPath[CurListTag], CurListTag));
 	}
 	else {
 		SetActionAbort();
@@ -27723,19 +27775,19 @@ void __fastcall TNyanFiForm::FileMenuClick(TObject *Sender)
 
 	if (ScrMode==SCMD_FLIST || ScrMode==SCMD_IVIEW) {
 		//ワークリスト履歴メニュー設定
-		TStringList *lp = WorkListHistory;
+		TStringList *lst = WorkListHistory;
 		for (int i=0; i<WorkListHistoryItem->Count; i++) {
 			TMenuItem *mp = WorkListHistoryItem->Items[i];
 			mp->Visible = false;
-			if (i>=lp->Count || lp->Strings[i].IsEmpty()) continue;
-			TStringDynArray itm_buf = get_csv_array(lp->Strings[i], 2);
-			if (itm_buf.Length>0) {
-				mp->Caption = make_MenuAccStr(i) + itm_buf[0];
+			if (i>=lst->Count || lst->Strings[i].IsEmpty()) continue;
+			TStringDynArray h_buf = get_csv_array(lst->Strings[i], 3);
+			if (h_buf.Length>0) {
+				mp->Caption = make_MenuAccStr(i) + h_buf[0];
 				mp->Visible = true;
 			}
 		}
 
-		WorkListHistoryItem->Enabled = (lp->Count>0);
+		WorkListHistoryItem->Enabled = (lst->Count>0);
 		WorkListHistoryItem->Visible = true;
 	}
 	else {
@@ -28221,7 +28273,7 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 		bool no_conf = TEST_ActParam("NC");	//保存場所の選択、確認無し
 		UnicodeString msg;
 		if (new_vno>VersionNo || force) {
-			msg.sprintf(_T("新バージョン [%s] があります。ダウンロードしますか?"), zip_nam.c_str());
+			msg.sprintf(_T("現バージョン [V%.2f] → 新バージョン [V%.2f] をダウンロードしますか?"), VersionNo/100.0, new_vno/100.0);
 			if (!inf_str.IsEmpty()) msg.cat_sprintf(_T("\r\n\r\n[変更点]\r\n%s"), inf_str.c_str());
 			if (no_conf || msgbox_Sure(msg, true, true)) {
 				UnicodeString fnam;
@@ -34583,9 +34635,9 @@ void __fastcall TNyanFiForm::SetCurTab(bool redraw)
 //---------------------------------------------------------------------------
 //タブの状態を保存
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::StoreTabStt(int idx)
+void __fastcall TNyanFiForm::StoreTabStt(int tab_idx)
 {
-	tab_info *tp = get_TabInfo(idx);
+	tab_info *tp = get_TabInfo(tab_idx);
 	if (tp) {
 		for (int i=0; i<MAX_FILELIST; i++) {
 			//選択状態
@@ -34597,8 +34649,11 @@ void __fastcall TNyanFiForm::StoreTabStt(int idx)
 				file_rec *fp = (file_rec*)lst->Objects[j];
 				if (fp->selected && !fp->is_dummy) tp->sel_list[i]->Add(fp->f_name);
 			}
+
 			//ソートモード
 			tp->sort_mode[i] = SortMode[i];
+			//履歴
+			UpdateDirHistory(CurPath[i], tab_idx, i);
 		}
 	}
 }
@@ -34618,8 +34673,11 @@ void __fastcall TNyanFiForm::TabControl1Change(TObject *Sender)
 	try {
 		int idx = TabControl1->TabIndex;
 		tab_info *tp = get_TabInfo(idx);	if (!tp) Abort();
-		SortMode[0] = tp->sort_mode[0];
-		SortMode[1] = tp->sort_mode[1];
+
+		if (!DirHistSortMode) {
+			SortMode[0] = tp->sort_mode[0];
+			SortMode[1] = tp->sort_mode[1];
+		}
 
 		if (TabBottomPaintBox->Visible) TabBottomPaintBox->Repaint();
 
@@ -35021,27 +35079,27 @@ void __fastcall TNyanFiForm::TabControl1MouseUp(TObject *Sender, TMouseButton Bu
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::AddTabActionExecute(TObject *Sender)
 {
-	int idx = TabControl1->TabIndex;
-	StoreTabStt(idx);
+	int tab_idx = TabControl1->TabIndex;
+	StoreTabStt(tab_idx);
 
 	UnicodeString ibuf;
 	ibuf.sprintf(_T("%s,%s"), make_csv_str(CurPath[0]).c_str(), make_csv_str(CurPath[1]).c_str());
 
 	//次に挿入
 	if (TEST_ActParam("NX")) {
-		idx++;
-		if (idx<TabList->Count) insert_TabList(idx, ibuf); else idx = add_TabList(ibuf);
+		tab_idx++;
+		if (tab_idx<TabList->Count) insert_TabList(tab_idx, ibuf); else tab_idx = add_TabList(ibuf);
 	}
 	//前に挿入
 	else if (TEST_ActParam("PR")) {
-		insert_TabList(idx, ibuf);
+		insert_TabList(tab_idx, ibuf);
 	}
 	//最後に追加
 	else {
-		idx = add_TabList(ibuf);
+		tab_idx = add_TabList(ibuf);
 	}
 
-	UpdateTabBar(idx);
+	UpdateTabBar(tab_idx);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::AddTabActionUpdate(TObject *Sender)
@@ -35092,16 +35150,16 @@ void __fastcall TNyanFiForm::MoveTabActionExecute(TObject *Sender)
 {
 	if (TabList->Count<2) return;
 
-	int idx0 = TabControl1->TabIndex;
-	if (idx0>=0 && idx0<TabList->Count) {
-		int idx1 = TEST_ActParam("TP")? 0 :
-				   TEST_ActParam("ED")? TabControl1->Tabs->Count - 1 : 
-				   TEST_ActParam("PR")? ((idx0>0)? idx0 - 1 : TabControl1->Tabs->Count - 1)
-									  : ((idx0 < TabControl1->Tabs->Count-1)? idx0 + 1 : 0);
-		if (idx0!=idx1) {
-			StoreTabStt(idx0);
-			TabList->Move(idx0, idx1);
-			TabControl1->TabIndex = idx1;
+	int tab_idx0 = TabControl1->TabIndex;
+	if (tab_idx0>=0 && tab_idx0<TabList->Count) {
+		int tab_idx1 = TEST_ActParam("TP")? 0 :
+					   TEST_ActParam("ED")? TabControl1->Tabs->Count - 1 : 
+					   TEST_ActParam("PR")? ((tab_idx0>0)? tab_idx0 - 1 : TabControl1->Tabs->Count - 1)
+										  : ((tab_idx0 < TabControl1->Tabs->Count-1)? tab_idx0 + 1 : 0);
+		if (tab_idx0!=tab_idx1) {
+			StoreTabStt(tab_idx0);
+			TabList->Move(tab_idx0, tab_idx1);
+			TabControl1->TabIndex = tab_idx1;
 			TabControl1Change(NULL);
 		}
 	}

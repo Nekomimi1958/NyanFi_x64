@@ -210,6 +210,7 @@ bool NoCheckWorkUnc;			//ワークリストのUNCをチェックしない
 bool AddToRecent;				//最近使った項目に追加
 bool NoCheckRecentUnc;			//UNCパスをチェックしない
 bool DirHistCsrPos;				//ディレクトリ履歴でカーソル位置を記憶
+bool DirHistSortMode;			//ディレクトリ履歴でソート方法を記憶
 bool DelDplDirHist;				//重複するディレクトリ履歴を削除
 bool WorkToDirHist;				//ワークリストを履歴に含める
 bool NoCheckDirHist;			//ディレクトリ履歴の存在チェックを行わない
@@ -387,6 +388,7 @@ UnicodeString HEAD_Mark;		//git HEAD マーク
 UnicodeString PLAY_Mark;		//再生中マーク
 
 int  MaxLogFiles;				//ログファイルの保存世代数
+int  MaxDirHistory;				//ディレクトリ履歴の保存数
 
 int  ProtectDirMode;			//ディレクトリの削除制限モード
 bool ProtectSubDir;				//下位ディレクトリも制限
@@ -1616,6 +1618,7 @@ void InitializeGlobal()
 		{_T("ImgDblMargin=0"),				(TObject*)&ImgDblMargin},
 		{_T("WicScaleOpt=3"),				(TObject*)&WicScaleOpt},
 		{_T("MaxLogFiles=5"),				(TObject*)&MaxLogFiles},
+		{_T("MaxDirHistory=30"),			(TObject*)&MaxDirHistory},
 		{_T("BatLowerLimit=50"),			(TObject*)&BatLowerLimit},
 		{_T("ScrBarStyle=0"),				(TObject*)&ScrBarStyle},
 		{_T("IconMode=0"),					(TObject*)&IconMode},
@@ -1704,6 +1707,7 @@ void InitializeGlobal()
 		{_T("NoCheckDirHist=false"),		(TObject*)&NoCheckDirHist},
 		{_T("ExtSaveDirHist=false"),		(TObject*)&ExtSaveDirHist},
 		{_T("DirHistCsrPos=true"),	 		(TObject*)&DirHistCsrPos},
+		{_T("DirHistSortMode=false"), 		(TObject*)&DirHistSortMode},
 		{_T("DelDplDirHist=false"),			(TObject*)&DelDplDirHist},
 		{_T("WorkToDirHist=false"),			(TObject*)&WorkToDirHist},
 		{_T("LoopFilerCursor=false"),		(TObject*)&LoopFilerCursor},
@@ -2341,7 +2345,7 @@ void LoadOptions()
 	for (int i=0; i<TabList->Count; i++) {
 		tab_info *tp = cre_tab_info();
 		for (int j=0; j<MAX_FILELIST; j++) {
-			IniFile->LoadListItems(sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j), tp->dir_hist[j], 30, false);
+			IniFile->LoadListItems(sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j), tp->dir_hist[j], 0, false);
 		}
 		TabList->Objects[i] = (TObject*)tp;
 	}
@@ -2417,17 +2421,6 @@ void LoadOptions()
 //---------------------------------------------------------------------------
 void SaveOptions()
 {
-	//ディレクトリ履歴の進む部分を削除
-	for (int i=0; i<TabList->Count; i++) {
-		for (int j=0; j<MAX_FILELIST; j++) {
-			TStringList *h_lst = get_DirHistory(i, j);
-			if (h_lst) {
-				int *h_ptr = get_DirHistPtr(i, j);
-				if (h_ptr) for (int k=0; k<*h_ptr && h_lst->Count>0; k++) h_lst->Delete(0);
-			}
-		}
-	}
-
 	UnicodeString sct;
 	//登録オプション
 	TStringList *lp = OptionList;
@@ -2460,17 +2453,8 @@ void SaveOptions()
 		}
 	}
 
-	//タブリスト
-	for (int i=0; i<MAX_TABLIST; i++) {
-		tab_info *tp = get_TabInfo(i);
-		for (int j=0; j<MAX_FILELIST; j++) {
-			sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j);
-			if (tp)
-				IniFile->SaveListItems(sct, tp->dir_hist[j], 30);
-			else
-				IniFile->EraseSection(sct);
-		}
-	}
+	//ディレクトリ履歴
+	save_DirHistory(IniFile);
 
 	//全体ディレクトリ履歴
 	if (ExtSaveDirHist) {
@@ -4700,7 +4684,8 @@ void del_tab_info(tab_info *tp)
 }
 
 //---------------------------------------------------------------------------
-tab_info *get_TabInfo(int tab_idx)
+tab_info *get_TabInfo(
+	int tab_idx)	//タブインデックス	(default = -1 : CurTabIndex)
 {
 	if (tab_idx==-1) tab_idx = CurTabIndex;
 	if (tab_idx>=0 && tab_idx<TabList->Count) return (tab_info*)TabList->Objects[tab_idx];
@@ -4708,19 +4693,28 @@ tab_info *get_TabInfo(int tab_idx)
 }
 
 //---------------------------------------------------------------------------
-TStringList *get_DirHistory(int tab_idx, int tag)
+TStringList *get_DirHistory(
+	int tab_idx,	//タブインデックス	(default = -1 : CurTabIndex)
+	int tag)		//タグ	(default = CurListTag);
 {
 	tab_info *tp = get_TabInfo(tab_idx);
 	return (tp? tp->dir_hist[tag] : NULL);
 }
 //---------------------------------------------------------------------------
-int *get_DirHistPtr(int tab_idx, int tag)
+int *get_DirHistPtr(
+	int tab_idx,	//タブインデックス	(default = -1 : CurTabIndex)
+	int tag)		//タグ	(default = CurListTag);
 {
 	tab_info *tp = get_TabInfo(tab_idx);
 	return (tp? &tp->dir_hist_p[tag] : NULL);
 }
+
 //---------------------------------------------------------------------------
-void clear_DirHistory(int tab_idx, int tag)
+//ディレクトリ履歴をクリア
+//---------------------------------------------------------------------------
+void clear_DirHistory(
+	int tab_idx,	//タブインデックス	(default = -1 : CurTabIndex)
+	int tag)		//タグ	(default = CurListTag);
 {
 	TStringList *h_lst = get_DirHistory(tab_idx, tag);
 	if (h_lst) h_lst->Clear();
@@ -4740,6 +4734,36 @@ UnicodeString get_TabWorkList(int tab_idx)
 }
 
 //---------------------------------------------------------------------------
+//ディレクトリ履歴を保存
+//---------------------------------------------------------------------------
+void save_DirHistory(UsrIniFile *ini_file)
+{
+	//進む部分を削除
+	for (int i=0; i<TabList->Count; i++) {
+		for (int j=0; j<MAX_FILELIST; j++) {
+			tab_info *tp = get_TabInfo(i);
+			if (tp) {
+				TStringList *h_lst = tp->dir_hist[j];
+				int			*h_ptr = &tp->dir_hist_p[j];
+				for (int k=0; k<*h_ptr && h_lst->Count>0; k++) h_lst->Delete(0);
+			}
+		}
+	}
+
+	//保存
+	UnicodeString sct;
+	for (int i=0; i<MAX_TABLIST; i++) {
+		tab_info *tp = get_TabInfo(i);
+		for (int j=0; j<MAX_FILELIST; j++) {
+			sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j);
+			if (tp)
+				ini_file->SaveListItems(sct, tp->dir_hist[j], MaxDirHistory);
+			else
+				ini_file->EraseSection(sct);
+		}
+	}
+}
+//---------------------------------------------------------------------------
 //タブグループの保存
 //---------------------------------------------------------------------------
 bool save_TagGroup(UnicodeString fnam)
@@ -4753,27 +4777,8 @@ bool save_TagGroup(UnicodeString fnam)
 	sct = "TabList";
 	tab_file->SaveListItems(sct, TabList, 30);
 
-	//ディレクトリ履歴の進む部分を削除
-	for (int i=0; i<TabList->Count; i++) {
-		for (int j=0; j<MAX_FILELIST; j++) {
-			TStringList *h_lst = get_DirHistory(i, j);
-			if (h_lst) {
-				int *h_ptr = get_DirHistPtr(i, j);
-				if (h_ptr) for (int k=0; k<*h_ptr && h_lst->Count>0; k++) h_lst->Delete(0);
-			}
-		}
-	}
 	//ディレクトリ履歴を保存
-	for (int i=0; i<MAX_TABLIST; i++) {
-		tab_info *tp = get_TabInfo(i);
-		for (int j=0; j<MAX_FILELIST; j++) {
-			sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j);
-			if (tp)
-				tab_file->SaveListItems(sct, tp->dir_hist[j], 30);
-			else
-				tab_file->EraseSection(sct);
-		}
-	}
+	save_DirHistory(tab_file.get());
 
 	return tab_file->UpdateFile(true);
 }
@@ -5453,6 +5458,26 @@ drive_info *get_DriveInfo(
 	}
 	return dp;
 }
+
+//---------------------------------------------------------------------------
+//既存ドライブ情報を更新
+//---------------------------------------------------------------------------
+void update_DriveInfo()
+{
+	for (int i=0; i<DriveInfoList->Count; i++) {
+		drive_info *dp = (drive_info *)DriveInfoList->Objects[i];
+		//アクセス可能再チェック
+		if (dp->drv_type==DRIVE_REMOVABLE) dp->accessible = is_drive_accessible(dp->drive_str);
+		//ボリューム名/表示名の更新
+		if (dp->accessible) {
+			dp->volume = get_VolumeInfo(dp->drive_str);
+			dp->label  =
+				dp->is_virtual? (is_root_dir(dp->mnt_dir)? dp->mnt_dir : "[" + ExtractFileName(dp->mnt_dir)) + "]" :
+							 (dp->drv_type==DRIVE_REMOTE)? yen_to_delimiter(dp->unc) : dp->volume;
+		}
+	}
+}
+
 //---------------------------------------------------------------------------
 //NTFSドライブか?
 //---------------------------------------------------------------------------

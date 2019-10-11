@@ -203,6 +203,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *DelDplDirHistCheckBox;
 	TCheckBox *DelUseTrsCheckBox;
 	TCheckBox *DirHistCsrPosCheckBox;
+	TCheckBox *DirHistSrotMdCheckBox;
 	TCheckBox *DirJumboCheckBox;
 	TCheckBox *DispRegNameCheckBox;
 	TCheckBox *DivDirInfUDCheckBox;
@@ -621,6 +622,7 @@ __published:	// IDE で管理されるコンポーネント
 	TLabeledEdit *MarkFextEdit;
 	TLabeledEdit *MarkMemoEdit;
 	TLabeledEdit *MarkPathEdit;
+	TLabeledEdit *MaxDirHistEdit;
 	TLabeledEdit *MaxLogFilesEdit;
 	TLabeledEdit *MaxLogLinesEdit;
 	TLabeledEdit *MenuAliasEdit;
