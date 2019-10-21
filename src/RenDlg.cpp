@@ -70,6 +70,7 @@ void __fastcall TRenameDlg::FormCreate(TObject *Sender)
 	EditedList	 = false;
 	IsMulti 	 = false;
 	LastEdit	 = NULL;
+	LastComboBox = NULL;
 	LastSelStart = LastSelLength = 0;
 }
 
@@ -406,6 +407,9 @@ void __fastcall TRenameDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPa
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 {
+	LastEdit	 = NULL;
+	LastComboBox = NULL;
+
 	TColor bg_inv = get_WinColor(true);
 
 	if (!IsOptionSheet()) {
@@ -590,7 +594,7 @@ bool __fastcall TRenameDlg::LoadListFile()
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::UpdateNewNameList()
 {
-	if (Previewing) return;
+	if (Previewing || ModalResult!=mrNone) return;
 
 	//フォーカス状態を待避
 	TWinControl *last_cp = Screen->ActiveControl;
@@ -1052,9 +1056,16 @@ void __fastcall TRenameDlg::Mp3FmtComboBoxChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::RefFmtBtnClick(TObject *Sender)
 {
-	UnicodeString s = get_word_i_idx(
+	if (LastComboBox) {
+		int ss = LastSelStart;
+		int sl = LastSelLength;
+		LastComboBox->SetFocus();
+		LastComboBox->SelStart	= ss;
+		LastComboBox->SelLength = sl;
+	}
+
+	Mp3FmtComboBox->SelText = get_word_i_idx(
 		_T("\\ID3(TP1)|\\ID3(TAL)|\\ID3(TT2)|\\ID3(TRK)|\\ID3(TYE)"), ((TComponent*)Sender)->Tag);
-	Mp3FmtComboBox->SelText = s;
 }
 
 //---------------------------------------------------------------------------
@@ -1723,8 +1734,8 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 
 				bool is_dir = ends_PathDlmtr(ItemList->Strings[i]);
 				ItemList->Strings[i] = ExcludeTrailingPathDelimiter(ItemList->Strings[i]);
-				UnicodeString fnam0 = ItemList->Strings[i];
-				UnicodeString nnam0 = NewNameList->Strings[i];
+				UnicodeString fnam0  = ItemList->Strings[i];
+				UnicodeString nnam0  = NewNameList->Strings[i];
 
 				//関連改名のチェック
 				if (!is_dir && !SameText(fnam0, nnam0) && AssRenList->Count>0) {
@@ -1736,8 +1747,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 
 					for (int j=0; j<lst->Count; j++) {
 						UnicodeString fnam1 = lst->Strings[j];
-						if (SameStr(fnam1, fnam0)) continue;
-						if (ItemList->IndexOf(fnam1)!=-1) continue;	//改名対象にあるものはスキップ
+						if (SameStr(fnam1, fnam0) || ItemList->IndexOf(fnam1)!=-1) continue;
 
 						//関連拡張子か?
 						UnicodeString fext1 = get_extension(fnam1);
@@ -1750,7 +1760,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 								opt = itm_buf[2];  found = true;  break;
 							}
 						}
-						if (!found) continue;						//関連ファイルでないものはスキップ
+						if (!found) continue;
 
 						UnicodeString nnam1;
 						UnicodeString bnam0 = get_base_name(fnam0);
@@ -1927,7 +1937,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 				Application->ProcessMessages();
 
 				for (;;) {
-					UnicodeString f_name   = ItemList->Strings[i];
+					UnicodeString f_name = ItemList->Strings[i];
 					if (set_file_age(f_name, dt, ForceDel)) break;
 
 					//失敗、再試行
@@ -2024,6 +2034,13 @@ void __fastcall TRenameDlg::RenOkActionUpdate(TObject *Sender)
 	}
 	else {
 		ap->Enabled = !ExistErr && !time_ng;
+	}
+
+	//※OnExit では ComboBox の直前の状態を取得できないようなので
+	if (Mp3FmtComboBox->Focused()) {
+		LastComboBox  = Mp3FmtComboBox;
+		LastSelStart  = Mp3FmtComboBox->SelStart;
+		LastSelLength = Mp3FmtComboBox->SelLength;
 	}
 
 	SrcStrComboBox->Tag =

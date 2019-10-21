@@ -242,7 +242,8 @@ private:	// ƒ†[ƒU[éŒ¾
 	bool isMp3;					//‚·‚×‚Ä‚Ì‘ÎÛ‚ªMP3
 	bool isFlac;				//‚·‚×‚Ä‚Ì‘ÎÛ‚ªFLAC
 
-	TEdit *LastEdit;
+	TEdit	  *LastEdit;
+	TComboBox *LastComboBox;
 	int LastSelStart;
 	int LastSelLength;
 
