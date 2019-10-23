@@ -40,7 +40,7 @@
 <p>コマンドに固有の設定を行います。</p>
 
 <p class="link_box">
-<a href="#AppList">AppList</a> ／ <a href="#BorderLeftRight">BorderLeftRight</a> ／ <a href="#CompleteDelete">CompleteDelete</a> ／ <a href="#DelJpgExif">DelJpgExif</a> ／ <a href="#ExeCommandLine">ExeCommandLine</a> ／ <a href="#FileEdit">FileEdit</a> ／ <a href="#IncSearch">IncSearch</a> ／ <a href="#InitialSearch">InitialSearch</a> ／ <a href="#TaskMan">TaskMan</a> ／ <a href="#OpenStandard">OpenStandard</a> ／ <a href="#OpenByApp">OpenByApp</a> ／ <a href="#OpenByWin">OpenByWin</a> ／ <a href="#WebSearch">WebSearch</a>
+<a href="#AppList">AppList</a> ／ <a href="#BorderLeftRight">BorderLeftRight</a> ／ <a href="#CompleteDelete">CompleteDelete</a> ／ <a href="#DelJpgExif">DelJpgExif</a> ／ <a href="#ExeCommandLine">ExeCommandLine</a> ／ <a href="#FileEdit">FileEdit</a> ／ <a href="#IncSearch">IncSearch</a> ／ <a href="#InitialSearch">InitialSearch</a> ／ <a href="#SyncLR">SyncLR</a> ／ <a href="#TaskMan">TaskMan</a> ／ <a href="#OpenStandard">OpenStandard</a> ／ <a href="#OpenByApp">OpenByApp</a> ／ <a href="#OpenByWin">OpenByWin</a> ／ <a href="#WebSearch">WebSearch</a>
 </p>
 <br>
 
@@ -148,10 +148,17 @@
 これらの設定は、<a href="hid00016.htm">キー設定</a>のエクスポート／インポートにも含まれます。<br>
 <br>
 
-<dt id="TaskMan"><img src="grpbox.png" alt="" border=0> <a href="hid00005.htm#TaskMan">TaskMan</a>
-<dd><img src="chkbox.png" alt="" border=0> <b>タスクを実行していないときはマネージャを表示しない</b><br>
+<dt id="SyncLR"><img src="grpbox.png" alt="" border=0> <a href="hid00005.htm#SyncLR">SyncLR</a>
+<dd><img src="chkbox.png" alt="" border=0> <b>項目位置も同期</b><br>
 <div class="indent1">
-何もタスクを実行していないときには、<a href="hid00069.htm">タスクマネージャ</a>を表示しません。
+階層同期機能が有効な場合、カーソル位置と同名の項目が反対側にあれば、その位置も同期して点線カーソルが表示されます(<a href="hid00005.htm#ToOppSameItem">ToOppSameItem</a>_NO コマンド相当)。<br>
+</div>
+<br>
+
+<dt id="TaskMan"><img src="grpbox.png" alt="" border=0> <a href="hid00005.htm#TaskMan">TaskMan</a>
+<dd><img src="chkbox.png" alt="" border=0> <b>タスクがないときはマネージャを表示しない</b><br>
+<div class="indent1">
+実行/待機中のタスクがないときには、<a href="hid00069.htm">タスクマネージャ</a>を表示しません。
 </div>
 <br>
 

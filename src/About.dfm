@@ -48,7 +48,7 @@ object AboutBox: TAboutBox
     end
     object Version: TLabel
       Left = 79
-      Top = 60
+      Top = 62
       Width = 180
       Height = 26
       Alignment = taCenter
@@ -57,9 +57,9 @@ object AboutBox: TAboutBox
       IsControl = True
     end
     object Copyright: TLabel
-      Left = 37
+      Left = 9
       Top = 96
-      Width = 263
+      Width = 320
       Height = 26
       Alignment = taCenter
       AutoSize = False
@@ -67,9 +67,9 @@ object AboutBox: TAboutBox
       IsControl = True
     end
     object SupportURL: TLabel
-      Left = 37
+      Left = 9
       Top = 126
-      Width = 263
+      Width = 320
       Height = 26
       Cursor = crHandPoint
       Alignment = taCenter

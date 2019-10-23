@@ -6652,7 +6652,7 @@ object OptionDlg: TOptionDlg
         Width = 434
         Height = 97
         Caption = 'OpenByApp '
-        TabOrder = 10
+        TabOrder = 11
         DesignSize = (
           434
           97)
@@ -6705,7 +6705,7 @@ object OptionDlg: TOptionDlg
         Width = 433
         Height = 50
         Caption = 'OpenByWin'
-        TabOrder = 11
+        TabOrder = 12
         object OpenOnlyCurWinCheckBox: TCheckBox
           Left = 10
           Top = 20
@@ -6729,7 +6729,7 @@ object OptionDlg: TOptionDlg
         Width = 434
         Height = 375
         Caption = 'OpenStandard'
-        TabOrder = 9
+        TabOrder = 10
         DesignSize = (
           434
           375)
@@ -6925,18 +6925,18 @@ object OptionDlg: TOptionDlg
         end
       end
       object TaskManGroupBox: TGroupBox
-        Left = 10
+        Left = 168
         Top = 449
-        Width = 434
+        Width = 276
         Height = 46
         Caption = 'TaskMan'
-        TabOrder = 7
+        TabOrder = 8
         object NotShowNoTaskCheckBox: TCheckBox
           Left = 10
           Top = 20
-          Width = 351
+          Width = 259
           Height = 17
-          Caption = #12479#12473#12463#12434#23455#34892#12375#12390#12356#12394#12356#12392#12365#12399#12510#12493#12540#12472#12515#12434#34920#31034#12375#12394#12356
+          Caption = #12479#12473#12463#12364#12394#12356#12392#12365#12399#12510#12493#12540#12472#12515#12434#34920#31034#12375#12394#12356
           TabOrder = 0
         end
       end
@@ -6946,7 +6946,7 @@ object OptionDlg: TOptionDlg
         Width = 434
         Height = 50
         Caption = 'WebSearch'
-        TabOrder = 8
+        TabOrder = 9
         object WebSeaUrlEdit: TLabeledEdit
           Left = 40
           Top = 18
@@ -6957,6 +6957,22 @@ object OptionDlg: TOptionDlg
           EditLabel.Height = 13
           EditLabel.Caption = 'URL'
           LabelPosition = lpLeft
+          TabOrder = 0
+        end
+      end
+      object SyncLRGroupBox: TGroupBox
+        Left = 10
+        Top = 449
+        Width = 150
+        Height = 46
+        Caption = 'SyncLR'
+        TabOrder = 7
+        object SyncItemCheckBox: TCheckBox
+          Left = 10
+          Top = 20
+          Width = 132
+          Height = 17
+          Caption = #38917#30446#20301#32622#12418#21516#26399
           TabOrder = 0
         end
       end

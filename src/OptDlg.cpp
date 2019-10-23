@@ -612,6 +612,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	CopyNoBuffCheckBox->Tag 	= (int)&CopyNoBuffering;
 	ShowArcCopyPrgCheckBox->Tag = (int)&ShowArcCopyProg;
 	DelUseTrsCheckBox->Tag		= (int)&DelUseTrash;
+	SyncItemCheckBox->Tag		= (int)&SyncItem;
 	NotShowNoTaskCheckBox->Tag	= (int)&NotShowNoTask;
 	ShowMsgHintCheckBox->Tag	= (int)&ShowMsgHint;
 	ShowKeyHintCheckBox->Tag	= (int)&ShowKeyHint;

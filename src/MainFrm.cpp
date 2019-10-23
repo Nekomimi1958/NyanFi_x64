@@ -6998,7 +6998,11 @@ void __fastcall TNyanFiForm::SetDirRelation()
 		}
 	}
 
-	if (SyncLR) msg += "階層同期 ON\n";
+	if (SyncLR) {
+		msg += "階層";
+		if (SyncItem) msg += "/項目";
+		msg += "同期 ON\n";
+	}
 
 	DirRelStr = rch1 + rel_str + rch2;
 
@@ -7447,9 +7451,9 @@ void __fastcall TNyanFiForm::SetFileInf()
 
 	//ディレクトリ比較結果リストのカーソル位置同期
 	if (IsDiffList()) {
-		TListBox *lp_c	= FileListBox[CurListTag];
-		TListBox *lp_o	= FileListBox[OppListTag];
-		lp_o->TopIndex	= lp_c->TopIndex;
+		TListBox *lp_c = FileListBox[CurListTag];
+		TListBox *lp_o = FileListBox[OppListTag];
+		lp_o->TopIndex = lp_c->TopIndex;
 		if (lp_o->ItemIndex!=lp_c->ItemIndex) {
 			lp_o->ItemIndex = lp_c->ItemIndex;
 			if (!has_KeyDownMsg()) lp_o->Repaint();
@@ -7457,6 +7461,9 @@ void __fastcall TNyanFiForm::SetFileInf()
 
 		SetDirCaption(OppListTag);
 		SetDriveFileInfo(OppListTag, false, false);
+	}
+	else if (SyncLR && SyncItem) {
+		ExeCommandAction("ToOppSameItem", "NO");
 	}
 
 	InfPanel->Visible = (PreviewPanel->Visible || InfListPanel->Visible);
@@ -7484,6 +7491,7 @@ void __fastcall TNyanFiForm::SetFileInf()
 			return;
 		}
 
+		CurStt->git_checked = (!cfp->is_virtual && cfp->is_up)? dir_exists(cfp->p_name + ".git") : false;
 		ViewFileInf(cfp);
 
 		//サブビュアー
@@ -9258,6 +9266,7 @@ void __fastcall TNyanFiForm::ReloadList(
 			if (i==CurListTag && CurWorking) continue;
 			if (lst_stt->is_Arc) continue;
 
+
 			//グラフ表示等の解除
 			lst_stt->show_f_d_cnt = lst_stt->dir_graph = lst_stt->dsk_graph = false;
 
@@ -9284,19 +9293,23 @@ void __fastcall TNyanFiForm::ReloadList(
 			else {
 				UnicodeString dnam = CurPath[i];
 				//ディレクトリが無くなっていたら親へ(UNCは除く)
-				if (!StartsStr("\\\\", dnam)) {
-					if (!dir_exists(dnam)) dnam = get_parent_path(dnam);
-				}
+				if (!StartsStr("\\\\", dnam) && !dir_exists(dnam)) dnam = get_parent_path(dnam);
 
 				//Git情報のキャッシュを削除
 				UnicodeString g_nam = get_GitTopPath(dnam);
+				bool skip = false;
 				if (!g_nam.IsEmpty()) {
-					int idx = GitInfList->IndexOfName(g_nam);
-					if (idx!=-1) GitInfList->Delete(idx);
+					skip = (lst_stt->git_checked && SameText(g_nam, dnam));
+					if (!skip) {
+						int idx = GitInfList->IndexOfName(g_nam);
+						if (idx!=-1) GitInfList->Delete(idx);
+					}
 				}
 
-				CurPath[i] = dnam;
+				if (!skip) CurPath[i] = dnam;
 			}
+
+			lst_stt->git_checked = false;
 
 			//カーソル位置を設定
 			if (!IsDiffList()) {
@@ -10077,7 +10090,7 @@ TPoint __fastcall TNyanFiForm::CurListItemPos()
 //ファイルリストの描画
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, TRect &Rect,
-		TOwnerDrawState State)
+	TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	int tag = lp->Tag;
@@ -24646,6 +24659,12 @@ void __fastcall TNyanFiForm::SyncLRActionExecute(TObject *Sender)
 {
 	SetToggleAction(SyncLR);
 	SetDirRelation();
+	if (SyncItem) {
+		if (SyncLR)
+			ExeCommandAction("ToOppSameItem", "NO");
+		else
+			FileListBox[OppListTag]->Invalidate();
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SyncLRActionUpdate(TObject *Sender)
@@ -24968,12 +24987,14 @@ void __fastcall TNyanFiForm::ToOppItemCore(const _TCHAR *mode_str)
 
 		//カーソル位置を取得
 		TStringList *lst = GetCurList(true);
-		TListBox *lp = FileListBox[CurListTag];
-		int idx_c = lp->ItemIndex;
-		int itm_p = idx_c - lp->TopIndex;
+		TListBox *lp_c = FileListBox[CurListTag];
+		int idx_c = lp_c->ItemIndex;
+		int pos_c = idx_c - lp_c->TopIndex;
 		if (idx_c==-1 || idx_c>=lst->Count) Abort();
 		file_rec *cfp = (file_rec*)lst->Objects[idx_c];
-		if (cfp->is_dummy) Abort();
+		if (cfp->is_dummy) {
+			if (SyncLR && SyncItem) SkipAbort(); else Abort();;
+		}
 
 		int idx_o = -1;
 		if (USAME_TI(mode_str, "NAME")) {
@@ -25008,24 +25029,25 @@ void __fastcall TNyanFiForm::ToOppItemCore(const _TCHAR *mode_str)
 
 		//見つかった
 		if (idx_o!=-1) {
+			TListBox *lp_o = FileListBox[OppListTag];
 			//反対側に点線カーソル表示
 			if (no_opp) {
-				lp = FileListBox[OppListTag];
-				lp->ItemIndex = idx_o;
-				lp->TopIndex  = std::max(idx_o - itm_p, 0);
-				DrawOppCsr++;
-				lp->Invalidate();
+				lp_o->ItemIndex = idx_o;
+				lp_o->TopIndex  = std::max(idx_o - pos_c, 0);
+				if (SyncLR && SyncItem) DrawOppCsr = 1; else DrawOppCsr++;
+				lp_o->Invalidate();
 			}
 			//反対側へ移動
 			else {
-				lp = FileListBox[CurListTag];
-				lp->Invalidate();
-				lp = FileListBox[OppListTag];
-				lp->ItemIndex = idx_o;
-				lp->TopIndex  = std::max(idx_o - itm_p, 0);
-				lp->SetFocus();
+				lp_c->Invalidate();
+				lp_o->ItemIndex = idx_o;
+				lp_o->TopIndex  = std::max(idx_o - pos_c, 0);
+				lp_o->SetFocus();
 				SetFileInf();
 			}
+			//カレント側のトップ位置調整
+			int pos_o = idx_o - lp_o->TopIndex;
+			if (pos_c>pos_o) lp_c->TopIndex = std::max(idx_c - pos_o, 0);
 		}
 		//見つからなかった
 		else {
@@ -25033,7 +25055,7 @@ void __fastcall TNyanFiForm::ToOppItemCore(const _TCHAR *mode_str)
 				DrawOppCsr = 0;
 				InvalidateFileList(OppListTag);
 			}
-			UserAbort(USTR_NotFound);
+			if (!SyncLR || !SyncItem) UserAbort(USTR_NotFound);
 		}
 	}
 	catch (EAbort &e) {

@@ -2843,9 +2843,12 @@ SortDlg<span class="pram_text">_L</span>
 <dd>カレント側で階層を移動したときに、反対側の階層も同期して変更する機能の有効/無効をトグルで切り替えます。<br>
 サブディレクトリに移ったとき、反対側にも同名のサブディレクトリがあれば同期してそのディレクトリに移ります。また親ディレクトリに移った場合、左右のパス無しディレクトリ名が同じなら反対側も親ディレクトリに移ります。<br>
 パラメータに <b>ON</b> を指定すると階層同期機能を有効、<b>OFF</b> で解除になります。<br>
-階層同期機能が有効の場合、ディレクトリ関係表示の上下端に横線が引かれます。<br>
+階層同期機能が有効な場合、ディレクトリ関係表示の上下端に横線が引かれます。<br>
 なお、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
-<a href="#OpenStandard">→ OpenStandard</a>　<a href="#ToParent">→ ToParent</a>
+<div class="spc_box">
+<a href="hid00019.htm#SyncLR">オプション設定 - コマンド - SyncLR</a> で「<b>項目位置も同期</b>」をチェックしていると、階層同期機能が有効な場合に、カーソル位置と同名の項目が反対側にあれば、その位置も同期して点線カーソルが表示されます(<a href="#ToOppSameItem">ToOppSameItem</a>_NO コマンド相当)。<br>
+</div>
+<a href="#OpenStandard">→ OpenStandard</a>　<a href="#ToParent">→ ToParent</a>　<a href="#ToOppSameItem">→ ToOppSameItem</a>
 
 <dt id="TabDlg">TabDlg
 <dd>タブの設定ダイアログを開きます<br>

@@ -42,9 +42,9 @@
 #include "usr_shell.h"
 #include "usr_scrpanel.h"
 #include "usr_spbar.h"
+#include "usr_hintwin.h"
 #include "Global.h"
 #include "task_thread.h"
-#include "usr_hintwin.h"
 
 //---------------------------------------------------------------------------
 #define EXTMENU_BASE	1000

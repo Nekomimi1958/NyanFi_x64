@@ -1088,12 +1088,12 @@ void get_PrmList(
 		cmd))
 	{
 		params = "\nON : 表示/有効\nOFF : 非表示/無効/解除\n";
-		if (USAME_TI(cmd, "SubViewer")) {
-			params += "CB : クリップボードの内容を表示\n";
-			params += "LK : ロック/解除\nRL : 左に90度回転\nRR : 右に90度回転\nFH : 左右反転\nFV : 上下反転\n";
-		}
 		if (USAME_TI(cmd, "ShowIcon")) {
 			params += "FD : 全表示/フォルダアイコンのみ表示\nAC : キャッシュをすべて削除\n";
+		}
+		else if (USAME_TI(cmd, "SubViewer")) {
+			params += "CB : クリップボードの内容を表示\n";
+			params += "LK : ロック/解除\nRL : 左に90度回転\nRR : 右に90度回転\nFH : 左右反転\nFV : 上下反転\n";
 		}
 	}
 	//オプション設定

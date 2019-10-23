@@ -130,13 +130,13 @@ bool gCopyCancel;
 
 int  gCopyMode	= CPYMD_OW;		//左右が別ディレクトリの場合のコピーモード
 int  gCopyMode2 = CPYMD_OW;		//左右が同一ディレクトリの場合のコピーモード
-int  xCopyMode = -1;			//ExeCommand 内で用いる強制モード
+int  xCopyMode	= -1;			//ExeCommand 内で用いる強制モード
 
 UnicodeString gCopyFmt = "\\N_\\SN(1)";
 
 int  OptionPageIndex = 0;		//オプション設定ダイアログのページインデックス
 
-bool SyncLR;					//左右のディレクトリ変更を同期
+bool SyncLR   = false;			//左右のディレクトリ変更を同期
 
 UnicodeString GlobalErrMsg;
 
@@ -332,6 +332,8 @@ UnicodeString DlgSizeShift;		//ダイアログのサイズ変更のシフトキー
 int  DlgMovePrm;
 int  DlgSizePrm;
 
+int  DblClickFlMode;			//ファイルリストでのダブルクリック
+
 UnicodeString WheelCmdF[4];		//ホイールコマンド
 UnicodeString WheelCmdV[4];
 UnicodeString WheelCmdI[4];
@@ -402,15 +404,14 @@ int  NormalWaitTime;
 int  NopDtctTime;				//無操作だとみなす時間
 int  TimeTolerance;				//タイムスタンプの許容誤差
 
-bool AppListChgMin;				//AppList:    他アプリに切り替えたときに最小化
-bool CreDirChg;					//CreateDir:  ディレクトリ作成後にカレント変更
-bool CreDirCnvChar;				//CreateDir:  文字置換を適用
+bool AppListChgMin;				//AppList:   他アプリに切り替えたときに最小化
+bool CreDirChg;					//CreateDir: ディレクトリ作成後にカレント変更
+bool CreDirCnvChar;				//CreateDir: 文字置換を適用
 UnicodeString FExtExeFile;		//ExeCommandLine: 実行ファイルとみなす拡張子
 bool OpenOnlyCurEdit;			//FileEdit:  選択状態にかかわらずカーソル位置のみを開く
 bool DontClrSelEdit;			//FileEdit:  選択を解除しない
 int  OpenByMode;				//OpenByApp:  関連付けされていない場合の動作モード
 bool OpenDirByStd;				//OpenByApp:  ディレクトリでは標準 Enter キー動作
-int  DblClickFlMode;			//ファイルリストでのダブルクリック
 bool OpenOnlyCurApp;			//OpenByApp:  選択状態にかかわらずカーソル位置のみを開く
 bool DontClrSelApp;				//OpenByApp:  選択を解除しない
 bool OpenOnlyCurWin;			//OpenByWin:  選択状態にかかわらずカーソル位置のみを開く
@@ -423,11 +424,12 @@ bool OpenStdOnResList;			//OpenStandard: 結果リストでも通常動作
 UnicodeString IniSeaShift;		//IniSearch:  頭文字サーチのシフトキー
 bool IniSeaByNum;				//  数字キーでも頭文字サーチ
 bool IniSeaBySign;				//  Shift+数字キーの記号もサーチ
-bool IncSeaCaseSens;			//IncSearch:  大小文字を区別
-bool IncSeaLoop;				//IncSearch:  上下端でループ
-bool IncSeaMatch1Exit;			//IncSearch:  マッチ数1で抜ける
-int  IncSeaMigemoMin;			//IncSearch:  migemo の検索開始文字数
-bool NotShowNoTask;				//TaskMan:    タスクを実行していないときはマネージャを表示しない
+bool IncSeaCaseSens;			//IncSearch: 大小文字を区別
+bool IncSeaLoop;				//IncSearch: 上下端でループ
+bool IncSeaMatch1Exit;			//IncSearch: マッチ数1で抜ける
+int  IncSeaMigemoMin;			//IncSearch: migemo の検索開始文字数
+bool SyncItem;					//SyncLR : 項目位置も同期
+bool NotShowNoTask;				//TaskMan: タスクを実行していないときはマネージャを表示しない
 
 UnicodeString GetFaviconUrl;	//favicon 取得API
 
@@ -1286,22 +1288,23 @@ void InitializeGlobal()
 		sp->color_bgDrvInf = col_None;
 		sp->color_fgDrvInf = col_None;
 
-		sp->is_TabFixed	 = false;
+		sp->is_TabFixed   = false;
+		sp->git_checked   = false;
 
-		sp->is_Work 	 = false;
-		sp->is_FTP		 = false;
-		sp->is_Arc		 = false;
-		sp->arc_RetList  = CreStringList();
-		sp->arc_TmpList  = CreStringList();
+		sp->is_Work 	  = false;
+		sp->is_FTP		  = false;
+		sp->is_Arc		  = false;
+		sp->arc_RetList   = CreStringList();
+		sp->arc_TmpList   = CreStringList();
 
-		sp->find_SubList = CreStringList();
-		sp->find_ResLink = false;
-		sp->find_DirLink = false;
-		sp->find_PathSort= false;
-		sp->is_IncSea	 = false;
-		sp->is_Migemo	 = false;
-		sp->is_Filter	 = false;
-		sp->filter_sens  = false;
+		sp->find_SubList  = CreStringList();
+		sp->find_ResLink  = false;
+		sp->find_DirLink  = false;
+		sp->find_PathSort = false;
+		sp->is_IncSea	  = false;
+		sp->is_Migemo	  = false;
+		sp->is_Filter	  = false;
+		sp->filter_sens   = false;
 		clear_FindStt(sp);
 	}
 
@@ -1830,6 +1833,7 @@ void InitializeGlobal()
 		{_T("DownAfterOpenStd=false"),		(TObject*)&DownAfterOpenStd},
 		{_T("OpenStdOnResList=false"),		(TObject*)&OpenStdOnResList},
 		{_T("SyncLR=false"),				(TObject*)&SyncLR},
+		{_T("SyncItem=false"),				(TObject*)&SyncItem},
 		{_T("ModalScreen=false"),			(TObject*)&ModalScreen},
 		{_T("BgImgGray=false"),				(TObject*)&BgImgGray},
 		{_T("BgImgHideScr=false"),			(TObject*)&BgImgHideScr},

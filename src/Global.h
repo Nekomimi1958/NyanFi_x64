@@ -18,10 +18,10 @@
 #include "usr_scrpanel.h"
 #include "usr_highlight.h"
 #include "usr_tag.h"
-#include "UIniFile.h"
-#include "UserFunc.h"
 #include "spiunit.h"
 #include "htmconv.h"
+#include "UIniFile.h"
+#include "UserFunc.h"
 #include "GlobalDark.h"
 #include "task_thread.h"
 #include "imgv_thread.h"
@@ -481,6 +481,8 @@ extern UnicodeString DlgSizeShift;
 extern int  DlgMovePrm;
 extern int  DlgSizePrm;
 
+extern int  DblClickFlMode;
+
 extern UnicodeString WheelCmdF[4];
 extern UnicodeString WheelCmdV[4];
 extern UnicodeString WheelCmdI[4];
@@ -558,7 +560,6 @@ extern bool OpenOnlyCurEdit;
 extern bool DontClrSelEdit;
 extern int  OpenByMode;
 extern bool OpenDirByStd;
-extern int  DblClickFlMode;
 extern bool OpenOnlyCurApp;
 extern bool DontClrSelApp;
 extern bool OpenOnlyCurWin;
@@ -575,6 +576,7 @@ extern bool IncSeaCaseSens;
 extern bool IncSeaLoop;
 extern bool IncSeaMatch1Exit;
 extern int  IncSeaMigemoMin;
+extern bool SyncItem;
 extern bool NotShowNoTask;
 extern UnicodeString GetFaviconUrl;
 
@@ -1319,6 +1321,8 @@ struct flist_stt {
 	TColor color_selItem;
 
 	bool is_TabFixed;			//タブ変更に対してパス固定
+
+	bool git_checked;			//[..]でGit情報を取得した
 
 	bool is_Work;				//ワークリスト
 	bool is_FTP;				//FTPリモート側

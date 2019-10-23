@@ -365,6 +365,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *SureUnPackCheckBox;
 	TCheckBox *SureWorkListCheckBox;
 	TCheckBox *SymColToCheckBox;
+	TCheckBox *SyncItemCheckBox;
 	TCheckBox *SysAtrCheckBox;
 	TCheckBox *TaskTrayCheckBox;
 	TCheckBox *ThumbExifCheckBox;
@@ -518,6 +519,7 @@ __published:	// IDE で管理されるコンポーネント
 	TGroupBox *SplitterGroupBox;
 	TGroupBox *SttBarGroupBox;
 	TGroupBox *SureMsgGroupBox;
+	TGroupBox *SyncLRGroupBox;
 	TGroupBox *TabGroupBox;
 	TGroupBox *TagColGroupBox;
 	TGroupBox *TaskGroupBox;

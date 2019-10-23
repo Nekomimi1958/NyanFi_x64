@@ -25,12 +25,13 @@ void __fastcall TAboutBox::FormCreate(TObject *Sender)
 
 	ProgramIcon->Picture->Assign(ico.get());
 	ProductName->Font->Assign(Application->DefaultFont);
-	ProductName->Font->Size = 20;
 }
 //---------------------------------------------------------------------------
 void __fastcall TAboutBox::FormShow(TObject *Sender)
 {
 	SetDarkWinTheme(this);
+
+	ProductName->Font->Size = 20;
 	SupportURL->Font->Color = IsDarkMode? TColor(RGB(0x66, 0x99, 0xFF)) : clNavy;
 }
 //---------------------------------------------------------------------------
