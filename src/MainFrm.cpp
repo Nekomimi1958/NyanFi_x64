@@ -733,8 +733,11 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 	//タブバーの初期化
 	UpdateTabBar(tab_idx, true);
 
-	//タブのワークリスト
 	if (ShowTabBar) {
+		//階層同期
+		tab_info *tp = get_TabInfo(tab_idx);
+		if (tp) SyncLR = tp->sync_lr;
+		//ワークリスト
 		UnicodeString wnam = get_TabWorkList(TabControl1->TabIndex);
 		if (!wnam.IsEmpty()) WorkListName = wnam;
 	}
@@ -1002,6 +1005,7 @@ void __fastcall TNyanFiForm::FormClose(TObject *Sender, TCloseAction &Action)
 	if (ScrMode!=SCMD_FLIST) SetScrMode();
 	RecoverFileList(0);
 	RecoverFileList(1);
+	StoreTabStt(TabControl1->TabIndex);
 
 	//タスク中断
 	CancelAllTaskAction->Execute();
@@ -4292,6 +4296,8 @@ void __fastcall TNyanFiForm::SetSubLayout(
 		if (PreviewPanel->Align==alTop)  PreviewHeight = PreviewPanel->Height;
 		if (PreviewPanel->Align==alLeft) PreviewWidth  = PreviewPanel->Width;
 	}
+
+	SetFileInf();
 }
 
 //---------------------------------------------------------------------------
@@ -5220,6 +5226,8 @@ void __fastcall TNyanFiForm::SetScrMode(
 	int scr_mode,	//モード (default = SCMD_FLIST)
 	int tag)
 {
+	if (FuncListDlg->Visible) FuncListDlg->ModalResult = mrCancel;
+
 	bool close_grep = (ScrMode==SCMD_GREP && scr_mode==SCMD_FLIST);
 
 	if (scr_mode!=ScrMode && !ExeCmdsBusy) {
@@ -5447,7 +5455,7 @@ void __fastcall TNyanFiForm::SetFlItemWidth(TStringList *lst, int tag)
 		lst_stt->lwd_fext_max = lst_stt->lwd_fext = 0;
 	}
 	else {
-		lst_stt->lwd_fext_max = get_TextWidth(cv, ".WWWWWWWWWWWW", is_irreg);
+		lst_stt->lwd_fext_max = get_TextWidth(cv, "." + StringOfChar(_T('W'), FExtMaxWidth), is_irreg);
 		lst_stt->lwd_fext	  = get_TextWidth(cv, ".WWW", is_irreg);	//最小幅
 		std::unique_ptr<TStringList> x_lst(new TStringList());
 		for (int i=0; i<lst->Count; i++) {
@@ -5457,7 +5465,7 @@ void __fastcall TNyanFiForm::SetFlItemWidth(TStringList *lst, int tag)
 		for (int i=0; i<x_lst->Count; i++) {
 			lst_stt->lwd_fext = std::max(lst_stt->lwd_fext, get_TextWidth(cv, x_lst->Strings[i], is_irreg));
 		}
-		lst_stt->lwd_fext = std::min(lst_stt->lwd_fext, lst_stt->lwd_fext_max);	//最大幅
+		lst_stt->lwd_fext = std::min(lst_stt->lwd_fext, lst_stt->lwd_fext_max);
 		if (is_irreg) lst_stt->lwd_fext += lst_stt->lwd_fext/lst_stt->lwd_half;
 	}
 
@@ -8141,7 +8149,6 @@ void __fastcall TNyanFiForm::SetCurPath(
 					bool cur_changed = (is_cur && !SameText(FCurPath[Index], dnam) && Initialized && !UnInitializing);
 					bool drv_changed = (!SameText(ExtractFileDrive(FCurPath[Index]), ExtractFileDrive(dnam))
 											&& Initialized && !UnInitializing);
-					bool srt_changed = false;
 
 					UnicodeString on_CurChange = is_cur? OnCurChange : EmptyStr;
 
@@ -8161,6 +8168,9 @@ void __fastcall TNyanFiForm::SetCurPath(
 					//.nyanfi による設定
 					//------------------------------
 					ApplyDotNyan = false;
+
+					//履歴からソート方法を復元
+					if (DirHistSortMode) SetSortFromHistory(h_sort, Index);
 
 					//個別配色をリセット
 					ResetIndColor(Index);
@@ -8190,7 +8200,6 @@ void __fastcall TNyanFiForm::SetCurPath(
 									if (idx>0) {
 										idx--;
 										SortMode[Index] = idx;
-										srt_changed = true;
 									}
 								}
 								break;
@@ -8265,10 +8274,7 @@ void __fastcall TNyanFiForm::SetCurPath(
 						}	//end of for
 					}
 		
-					//履歴からソート方法を復元
-					if (!srt_changed && DirHistSortMode) SetSortFromHistory(h_sort, Index);
-
-					//ファイルリスト更新r
+					//ファイルリスト更新
 					UpdateList(FileList[Index], CurPath[Index], Index);
 					SetDirWatch(dnam, Index);
 					assign_FileListBox(lp, FileList[Index], (DirHistCsrPos? h_idx : 0), FlScrPanel[Index]);
@@ -10303,11 +10309,11 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 				int w_nam = tmp_cv->TextWidth(dsp_name);
 				if (is_irreg) w_nam += dsp_name.Length();
 				int w_ext = (HideSizeTime? lst_stt->lxp_right : lst_stt->lxp_size) - x_base - w_half - w_nam;
-				x_fext = x_base + w_nam;
+				x_fext	= x_base + w_nam;
 				dsp_ext = minimize_str(dsp_ext, tmp_cv, w_ext, true);
 			}
 			else {
-				x_fext = HideSizeTime? lst_stt->lxp_right - lst_stt->lwd_fext - w_half : lst_stt->lxp_fext;
+				x_fext	= HideSizeTime? lst_stt->lxp_right - lst_stt->lwd_fext - w_half : lst_stt->lxp_fext;
 				dsp_ext = minimize_str(dsp_ext, tmp_cv, lst_stt->lwd_fext, true);
 			}
 
@@ -19884,7 +19890,7 @@ void __fastcall TNyanFiForm::LoadTabGroupActionExecute(TObject *Sender)
 		TabList->Assign(tab_lst.get());
 
 		for (int i=0; i<TabList->Count; i++) {
-			tab_info *tp = cre_tab_info();
+			tab_info *tp = cre_tab_info(equal_1(get_csv_item(TabList->Strings[i], 8)));
 			for (int j=0; j<MAX_FILELIST; j++) {
 				tab_file->LoadListItems(sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j), tp->dir_hist[j], 0, false);
 			}
@@ -34648,6 +34654,7 @@ void __fastcall TNyanFiForm::SetCurTab(bool redraw)
 		TStringDynArray itm_buf = get_csv_array(TabList->Strings[idx], TABLIST_CSVITMCNT, true);
 		itm_buf[0] = ListStt[0].is_Work? WorkListName : CurPath[0];
 		itm_buf[1] = ListStt[1].is_Work? WorkListName : CurPath[1];
+		itm_buf[8] = SyncLR? "1" : "0";
 		TabList->Strings[idx] = make_csv_rec_str(itm_buf);
 		SetTabStr(idx);
 		if (redraw) TabControl1->Repaint();
@@ -34672,11 +34679,11 @@ void __fastcall TNyanFiForm::StoreTabStt(int tab_idx)
 				if (fp->selected && !fp->is_dummy) tp->sel_list[i]->Add(fp->f_name);
 			}
 
-			//ソートモード
 			tp->sort_mode[i] = SortMode[i];
-			//履歴
 			UpdateDirHistory(CurPath[i], tab_idx, i);
 		}
+
+		tp->sync_lr = SyncLR;
 	}
 }
 
@@ -34700,6 +34707,8 @@ void __fastcall TNyanFiForm::TabControl1Change(TObject *Sender)
 			SortMode[0] = tp->sort_mode[0];
 			SortMode[1] = tp->sort_mode[1];
 		}
+
+		SyncLR = tp->sync_lr;
 
 		if (TabBottomPaintBox->Visible) TabBottomPaintBox->Repaint();
 

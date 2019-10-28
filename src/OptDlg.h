@@ -581,6 +581,7 @@ __published:	// IDE で管理されるコンポーネント
 	TLabeledEdit *FExtGetInfEdit;
 	TLabeledEdit *FExtImgEdit;
 	TLabeledEdit *FExtImgPrvEdit;
+	TLabeledEdit *FExtMaxWidthEdit;
 	TLabeledEdit *FExtNoImgPrvEdit;
 	TLabeledEdit *FExtNoInfEdit;
 	TLabeledEdit *FExtNoIViewEdit;

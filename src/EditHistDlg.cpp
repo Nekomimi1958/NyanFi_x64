@@ -306,7 +306,7 @@ void __fastcall TEditHistoryDlg::FormResize(TObject *Sender)
 //ヘッダの描画
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::EditHistHeaderDrawSection(THeaderControl *HeaderControl,
-		THeaderSection *Section, const TRect &Rect, bool Pressed)
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
 {
 	int mk_mode = 0;
 	if ((isRecent || isMark || isRepo) && Section->Index>0) {
@@ -323,7 +323,7 @@ void __fastcall TEditHistoryDlg::EditHistHeaderResize(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::EditHistHeaderSectionResize(THeaderControl *HeaderControl,
-		THeaderSection *Section)
+	THeaderSection *Section)
 {
 	set_GridFromHeader(EditHistHeader, EditHistGrid);
 	GridScrPanel->UpdateKnob();
@@ -621,6 +621,7 @@ void __fastcall TEditHistoryDlg::UpdateGrid()
 				file_rec *fp = (file_rec*)HistBufList->Objects[i];
 				MaxFextWd = std::max(get_TextWidth(gp->Canvas, fp->f_ext, is_irreg), MaxFextWd);
 			}
+			MaxFextWd = std::min(get_TextWidth(gp->Canvas, "." + StringOfChar(_T('W'), FExtMaxWidth), is_irreg), MaxFextWd);
 		}
 
 		gp->RowCount = HistBufList->Count;
@@ -719,7 +720,7 @@ bool __fastcall TEditHistoryDlg::del_HistItem()
 //セルの描画
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol, int ARow,
-		TRect &Rect, TGridDrawState State)
+	TRect &Rect, TGridDrawState State)
 {
 	TStringGrid *gp = (TStringGrid*)Sender;
 	TCanvas *cv = gp->Canvas;
@@ -781,10 +782,10 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 
 		//最近使ったファイル一覧/栞マーク一覧
 		if (isRecent || isMark) {
+			int mgn = Scaled4;
 			//ファイル名
 			if (ACol==1) {
 				cv->Font->Color = col_f;
-				int mgn = Scaled4;
 				//ディレクトリ
 				UnicodeString bnam;
 				if (fp->is_dir) {
@@ -801,7 +802,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 			//拡張子
 			else if (ACol==2) {
 				cv->Font->Color = col_x;
-				if (!fp->is_dir) cv->TextOut(xp, yp, lbuf);
+				if (!fp->is_dir) cv->TextOut(xp, yp, minimize_str(lbuf, cv, Rect.Width() - mgn, true));
 			}
 			//場所
 			else if (ACol==4) {
@@ -848,15 +849,15 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 		}
 		//その他の一覧
 		else {
+			int mgn = get_CharWidth(cv, 1);
 			//ファイル名
 			if (ACol==1) {
-				int mgn = get_CharWidth(cv, 1);
 				//ディレクトリ or 拡張子非分離
 				cv->Font->Color = col_f;
 				UnicodeString bnam;
 				if (NoSpaceFExt || fp->is_dir) {
 					bnam = (fp->is_dir && IconMode==0)? (DirBraStr + fp->b_name + DirKetStr) : fp->b_name;
-					bnam = minimize_str(bnam, cv, Rect.Right - xp - get_TextWidth(cv, fp->f_ext, is_irreg) - mgn, OmitEndOfName);
+					bnam = minimize_str(bnam, cv, Rect.Right - xp - std::min(get_TextWidth(cv, fp->f_ext, is_irreg), MaxFextWd) - mgn, OmitEndOfName);
 					cv->TextOut(xp, yp, bnam);
 					xp += get_TextWidth(cv, bnam, is_irreg);
 				}
@@ -871,7 +872,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 				//拡張子
 				if (!fp->is_dir) {
 					if (PriorFExtCol) cv->Font->Color = col_x;
-					cv->TextOut(xp, yp, fp->f_ext);
+					cv->TextOut(xp, yp, minimize_str(fp->f_ext, cv, Rect.Right - xp - mgn, true));
 				}
 			}
 			//場所
@@ -879,7 +880,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 				PathNameOut(lbuf, cv, xp, yp, gp->ColWidths[ACol] - Scaled8);
 			}
 			else {
-				if (isTagPtn && ACol==4) lbuf = minimize_str(lbuf, cv, Rect.Width() - 8, true);
+				if (isTagPtn && ACol==4) lbuf = minimize_str(lbuf, cv, Rect.Width() - mgn, true);
 				cv->TextRect(Rect, xp, yp, lbuf);
 			}
 		}

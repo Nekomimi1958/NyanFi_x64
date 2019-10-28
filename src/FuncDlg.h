@@ -118,7 +118,7 @@ public:		// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall ClearList();
 
 	BEGIN_MESSAGE_MAP
-		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,		TMessage,	WmMenuChar)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

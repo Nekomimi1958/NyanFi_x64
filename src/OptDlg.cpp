@@ -444,6 +444,8 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	FExtExeFileEdit->Hint  = hntstr;
 	FExtStdEdit->Hint	   = hntstr;
 
+	FExtMaxWidthEdit->Hint	   = "'W'‚Ì•‚ðŠî€‚É‚µ‚½•¶Žš”";
+
 	HideAtrCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowHideAtr"));
 	SysAtrCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowSystemAtr"));
 	DelUseTrsCheckBox->Hint    = LoadUsrMsg(USTR_OptCmdHint, _T("UseTrash"));
@@ -548,6 +550,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	ListInterLnEdit->Tag		= (int)&ListInterLn;
 	CursorWidthEdit->Tag		= (int)&CursorWidth;
 	CursorAlphaEdit->Tag		= (int)&CursorAlpha;
+	FExtMaxWidthEdit->Tag		= (int)&FExtMaxWidth;
 	ListPercentEdit->Tag		= (int)&ListPercent;
 	TabWidthEdit->Tag			= (int)&FlTabWidth;
 	TextInterLnEdit->Tag		= (int)&ViewTxtInterLn;

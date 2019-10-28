@@ -7,12 +7,12 @@
 #include <memory>
 
 //---------------------------------------------------------------------------
-USEFORM("ShareDlg.cpp", NetShareDlg);
 USEFORM("Splash.cpp", SplashForm);
+USEFORM("ShareDlg.cpp", NetShareDlg);
 USEFORM("SameDlg.cpp", SameNameDlg);
-USEFORM("PrnImgDlg.cpp", PrintImgDlg);
 USEFORM("RegExChk.cpp", RegExChecker);
 USEFORM("RenDlg.cpp", RenameDlg);
+USEFORM("PrnImgDlg.cpp", PrintImgDlg);
 USEFORM("TabDlg.cpp", TabSetDlg);
 USEFORM("TagDlg.cpp", TagManDlg);
 USEFORM("TaskDlg.cpp", TaskManDlg);
@@ -83,6 +83,7 @@ USEFORM("FindTxtDlg.cpp", FindTextDlg);
 USEFORM("FtpDlg.cpp", FtpConnectDlg);
 USEFORM("PreSameDlg.cpp", PreSameNemeDlg);
 //---------------------------------------------------------------------------
+#include <VersionHelpers.h>
 #include "Global.h"
 #include "Splash.h"
 
@@ -173,6 +174,9 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		Application->Initialize();
 		Application->MainFormOnTaskBar = true;
 
+		//ランドスケープモードに固定
+		if (IsWindows8OrGreater()) ::SetDisplayAutoRotationPreferences(ORIENTATION_PREFERENCE_LANDSCAPE);
+
 		//INIファイルの初期化
 		IniFile = new UsrIniFile(inam);
 
@@ -203,6 +207,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		Application->CreateForm(__classid(TFindTextDlg), &FindTextDlg);
 		Application->CreateForm(__classid(TFuncListDlg), &FuncListDlg);
 		Application->CreateForm(__classid(TGeneralInfoDlg), &GeneralInfoDlg);
+		Application->CreateForm(__classid(TSubViewer), &SubViewer);
 		Application->CreateForm(__classid(THistForm), &HistForm);
 		Application->CreateForm(__classid(TInpCmdsDlg), &InpCmdsDlg);
 		Application->CreateForm(__classid(TInputExDlg), &InputExDlg);
@@ -213,7 +218,6 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		Application->CreateForm(__classid(TSameNameDlg), &SameNameDlg);
 		Application->CreateForm(__classid(TInpDirDlg), &InpDirDlg);
 		Application->CreateForm(__classid(TGraphForm), &GraphForm);
-		Application->CreateForm(__classid(TSubViewer), &SubViewer);
 		cursor_Default();
 		Application->Run();
 	}

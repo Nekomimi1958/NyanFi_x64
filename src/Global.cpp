@@ -989,6 +989,7 @@ int  CursorAlpha;				//カーソル行背景アルファ
 int  CellAlpha;					//セルの背景アルファ
 int  SplitterWidth;				//境界線の幅
 int  SplitterWidth2;
+int  FExtMaxWidth;				//拡張子の最大文字数
 int  SizeFormatMode;
 int  SizeDecDigits;				//サイズ表示における小数点以下の桁数
 int  ListPercent;				//ファイルリスト幅の比率
@@ -1607,6 +1608,7 @@ void InitializeGlobal()
 		{_T("CellAlpha=64"),				(TObject*)&CellAlpha},
 		{_T("SplitterWidth=4"),				(TObject*)&SplitterWidth},
 		{_T("SplitterWidth2=4"),			(TObject*)&SplitterWidth2},
+		{_T("FExtMaxWidth=8"),				(TObject*)&FExtMaxWidth},
 		{_T("SizeFormatMode=0"),			(TObject*)&SizeFormatMode},
 		{_T("SizeDecDigits=1"),				(TObject*)&SizeDecDigits},
 		{_T("ListPercent=50"),				(TObject*)&ListPercent},
@@ -2347,7 +2349,7 @@ void LoadOptions()
 
 	//タブリストの初期化
 	for (int i=0; i<TabList->Count; i++) {
-		tab_info *tp = cre_tab_info();
+		tab_info *tp = cre_tab_info(equal_1(get_csv_item(TabList->Strings[i], 8)));
 		for (int j=0; j<MAX_FILELIST; j++) {
 			IniFile->LoadListItems(sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j), tp->dir_hist[j], 0, false);
 		}
@@ -4653,7 +4655,8 @@ void swap_FileList(TStringList *lst1, TStringList *lst2, bool swap_tag)
 //---------------------------------------------------------------------------
 //タブリストの処理
 //---------------------------------------------------------------------------
-tab_info* cre_tab_info()
+tab_info* cre_tab_info(
+	bool sync_lr)		//階層同期		(default = false)
 {
 	tab_info *tp = new tab_info;
 	for (int i=0; i<MAX_FILELIST; i++) {
@@ -4661,18 +4664,19 @@ tab_info* cre_tab_info()
 		tp->dir_hist[i]   = new TStringList();
 		tp->dir_hist_p[i] = 0;
 		tp->sort_mode[i]  = SortMode[i];
+		tp->sync_lr 	  = sync_lr;
 	}
 	return tp;
 }
 //---------------------------------------------------------------------------
 int add_TabList(UnicodeString item)
 {
-	return TabList->AddObject(item, (TObject*)cre_tab_info());
+	return TabList->AddObject(item, (TObject*)cre_tab_info(SyncLR));
 }
 //---------------------------------------------------------------------------
 void insert_TabList(int idx, UnicodeString item)
 {
-	TabList->InsertObject(idx, item, (TObject*)cre_tab_info());
+	TabList->InsertObject(idx, item, (TObject*)cre_tab_info(SyncLR));
 }
 
 //---------------------------------------------------------------------------
@@ -4779,7 +4783,7 @@ bool save_TagGroup(UnicodeString fnam)
 	tab_file->WriteInteger(sct, "CurTabIndex",	CurTabIndex);
 
 	sct = "TabList";
-	tab_file->SaveListItems(sct, TabList, 30);
+	tab_file->SaveListItems(sct, TabList, MAX_TABLIST);
 
 	//ディレクトリ履歴を保存
 	save_DirHistory(tab_file.get());
@@ -14075,6 +14079,8 @@ void AddCmdHistory(UnicodeString cmd, UnicodeString prm, UnicodeString id)
 //---------------------------------------------------------------------------
 UnicodeString get_GitTopPath(UnicodeString dnam)
 {
+	if (EndsStr(':', dnam)) return EmptyStr;
+
 	UnicodeString gnam = IncludeTrailingPathDelimiter(dnam) + ".git";
 	while (!file_exists(gnam)) {
 		if (is_root_dir(dnam)) break;
@@ -14103,7 +14109,7 @@ UnicodeString get_GitConfig(UnicodeString dnam)
 //---------------------------------------------------------------------------
 UnicodeString get_GitUrl(file_rec *fp)
 {
-	if (!fp || fp->is_virtual || fp->is_ftp) return EmptyStr;
+	if (!fp || fp->is_virtual || fp->is_ads || fp->is_ftp) return EmptyStr;
 
 	UnicodeString url;
 	UnicodeString cfg_nam = get_GitConfig((fp->is_dir && !fp->is_up)? fp->f_name : fp->p_name);

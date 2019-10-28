@@ -1809,7 +1809,10 @@ UnicodeString minimize_str(
 	bool is_irreg = IsIrregularFont(cv->Font);
 
 	int ww = get_TextWidth(cv, s, is_irreg);
-	if (ww > wd) {
+	if (wd<=0) {
+		s = EmptyStr;
+	}
+	else if (ww>wd) {
 		if (omit_end) {
 			s += "Åc";
 			int p = s.Length() - 1;

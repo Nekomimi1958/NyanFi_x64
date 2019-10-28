@@ -141,12 +141,12 @@ extern  FUNC_GetFontResourceInfo	lpfGetFontResourceInfo;
 #define SFX_AUTOREN   "_\\SN(1)"		//デフォルトの自動改名書式(サフィックス)
 #define FMT_AUTO_REN  "\\N" SFX_AUTOREN	//デフォルトの自動改名書式
 
-#define EXTMENU_CSVITMCNT	6
-#define EXTTOOL_CSVITMCNT	6
-#define TABLIST_CSVITMCNT	8
-#define DISTRLS_CSVITMCNT	4
-
-#define MAX_CSV_ITEM	255
+//CSV項目数
+#define EXTMENU_CSVITMCNT	6			//caption,cmd,prm,alias,show,icon
+#define EXTTOOL_CSVITMCNT	6			//caption,exe,prm,wk_dir,alias,show
+#define TABLIST_CSVITMCNT	9			//path0,path1,caption,icon,home0,home1,nwl_mode,nwl,sync_lr
+#define DISTRLS_CSVITMCNT	4			//title,enable,mask,dist
+#define MAX_CSV_ITEM	  255
 
 //---------------------------------------------------------------------------
 //リストボックス用オプションフラグ(Tag に設定)
@@ -1200,6 +1200,7 @@ extern int  CursorAlpha;
 extern int  CellAlpha;
 extern int  SplitterWidth;
 extern int  SplitterWidth2;
+extern int  FExtMaxWidth;
 extern int  SizeFormatMode;
 extern int  SizeDecDigits;
 extern int  ListPercent;
@@ -1485,6 +1486,7 @@ struct tab_info {
 	TStringList *dir_hist[MAX_FILELIST];	//ディレクトリ履歴
 	int			 dir_hist_p[MAX_FILELIST];	//履歴位置
 	int			 sort_mode[MAX_FILELIST];	//ソートモード
+	bool		 sync_lr;					//階層同期
 };
 
 //---------------------------------------------------------------------------
@@ -1683,7 +1685,7 @@ void del_FileListItem(TStringList *lst, int idx);
 
 void swap_FileList(TStringList *lst1, TStringList *lst2, bool swap_tag = true);
 
-tab_info* cre_tab_info();
+tab_info* cre_tab_info(bool sync_lr = false);
 int  add_TabList(UnicodeString item);
 void insert_TabList(int idx, UnicodeString item);
 void del_tab_info(tab_info *tp);

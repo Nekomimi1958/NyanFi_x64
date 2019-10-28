@@ -2117,7 +2117,7 @@ object OptionDlg: TOptionDlg
           Caption = 'px'
         end
         object TLabel
-          Left = 233
+          Left = 242
           Top = 82
           Width = 36
           Height = 13
@@ -2126,7 +2126,7 @@ object OptionDlg: TOptionDlg
           Caption = #23567#25968#26689
         end
         object TLabel
-          Left = 25
+          Left = 21
           Top = 82
           Width = 53
           Height = 13
@@ -2174,7 +2174,7 @@ object OptionDlg: TOptionDlg
           TabOrder = 1
         end
         object DirBraEdit: TLabeledEdit
-          Left = 125
+          Left = 121
           Top = 49
           Width = 40
           Height = 21
@@ -2185,7 +2185,7 @@ object OptionDlg: TOptionDlg
           TabOrder = 3
         end
         object DirKetEdit: TLabeledEdit
-          Left = 186
+          Left = 182
           Top = 49
           Width = 40
           Height = 21
@@ -2196,7 +2196,7 @@ object OptionDlg: TOptionDlg
           TabOrder = 4
         end
         object SizeDecDgtComboBox: TComboBox
-          Left = 272
+          Left = 280
           Top = 79
           Width = 45
           Height = 21
@@ -2204,15 +2204,15 @@ object OptionDlg: TOptionDlg
           TabOrder = 8
         end
         object TmStampFmtEdit: TLabeledEdit
-          Left = 80
+          Left = 167
           Top = 113
-          Width = 237
+          Width = 158
           Height = 21
-          EditLabel.Width = 58
+          EditLabel.Width = 48
           EditLabel.Height = 13
-          EditLabel.Caption = #26085#26178#12398#26360#24335
+          EditLabel.Caption = #26085#26178#26360#24335
           LabelPosition = lpLeft
-          TabOrder = 10
+          TabOrder = 11
         end
         object ShowIconCheckBox: TCheckBox
           Left = 240
@@ -2228,7 +2228,7 @@ object OptionDlg: TOptionDlg
           Width = 144
           Height = 17
           Caption = #12473#12463#12525#12540#12523#12496#12540#12434#38560#12377
-          TabOrder = 13
+          TabOrder = 14
         end
         object KeepOnResizeCheckBox: TCheckBox
           Left = 10
@@ -2236,7 +2236,7 @@ object OptionDlg: TOptionDlg
           Width = 87
           Height = 17
           Caption = #27604#29575#12434#32173#25345
-          TabOrder = 15
+          TabOrder = 16
         end
         object KeepCurListWdCheckBox: TCheckBox
           Left = 188
@@ -2244,7 +2244,7 @@ object OptionDlg: TOptionDlg
           Width = 144
           Height = 17
           Caption = #12459#12524#12531#12488#24133#12434#32173#25345
-          TabOrder = 17
+          TabOrder = 18
         end
         object NoSpcFExtCheckBox: TCheckBox
           Left = 188
@@ -2252,7 +2252,7 @@ object OptionDlg: TOptionDlg
           Width = 144
           Height = 17
           Caption = #25313#24373#23376#12434#20998#38626#12375#12394#12356
-          TabOrder = 20
+          TabOrder = 21
         end
         object ListPercentEdit: TLabeledEdit
           Left = 106
@@ -2265,7 +2265,7 @@ object OptionDlg: TOptionDlg
           EditLabel.Caption = '%'
           LabelPosition = lpRight
           NumbersOnly = True
-          TabOrder = 16
+          TabOrder = 17
         end
         object FixListCheckBox: TCheckBox
           Left = 338
@@ -2273,7 +2273,7 @@ object OptionDlg: TOptionDlg
           Width = 90
           Height = 17
           Caption = #24133#12434#22266#23450
-          TabOrder = 18
+          TabOrder = 19
         end
         object ShowHeaderCheckBox: TCheckBox
           Left = 10
@@ -2281,7 +2281,7 @@ object OptionDlg: TOptionDlg
           Width = 92
           Height = 17
           Caption = #12504#12483#12480#12434#34920#31034
-          TabOrder = 12
+          TabOrder = 13
         end
         object ShowByteSizeCheckBox: TCheckBox
           Left = 338
@@ -2312,12 +2312,12 @@ object OptionDlg: TOptionDlg
           Width = 174
           Height = 17
           Caption = #38263#12356#21517#21069#12399#26411#23614#12434#30465#30053
-          TabOrder = 19
+          TabOrder = 20
         end
         object SizeFmtComboBox: TComboBox
-          Left = 80
+          Left = 76
           Top = 79
-          Width = 125
+          Width = 146
           Height = 21
           Style = csDropDownList
           TabOrder = 7
@@ -2333,7 +2333,7 @@ object OptionDlg: TOptionDlg
           EditLabel.Caption = #26368#23567#21015#24133
           LabelPosition = lpLeft
           NumbersOnly = True
-          TabOrder = 23
+          TabOrder = 24
         end
         object FindPathColCheckBox: TCheckBox
           Left = 10
@@ -2341,7 +2341,7 @@ object OptionDlg: TOptionDlg
           Width = 193
           Height = 17
           Caption = #32080#26524#12522#12473#12488#12395#12300#22580#25152#12301#21015#12434#34920#31034
-          TabOrder = 22
+          TabOrder = 23
         end
         object FindTagsColCheckBox: TCheckBox
           Left = 10
@@ -2349,7 +2349,7 @@ object OptionDlg: TOptionDlg
           Width = 193
           Height = 17
           Caption = #12479#12464#26908#32034#12391#12399#12300#12479#12464#12301#21015#12434#34920#31034
-          TabOrder = 24
+          TabOrder = 25
         end
         object FindTagsWdEdit: TLabeledEdit
           Left = 256
@@ -2362,7 +2362,7 @@ object OptionDlg: TOptionDlg
           EditLabel.Caption = #26368#23567#21015#24133
           LabelPosition = lpLeft
           NumbersOnly = True
-          TabOrder = 25
+          TabOrder = 26
         end
         object FindTagsSortCheckBox: TCheckBox
           Left = 338
@@ -2370,7 +2370,7 @@ object OptionDlg: TOptionDlg
           Width = 90
           Height = 17
           Caption = #20006#12403#12434#12477#12540#12488
-          TabOrder = 26
+          TabOrder = 27
         end
         object ShowSpaceCheckBox: TCheckBox
           Left = 338
@@ -2378,7 +2378,7 @@ object OptionDlg: TOptionDlg
           Width = 90
           Height = 17
           Caption = #31354#30333#34920#31034
-          TabOrder = 21
+          TabOrder = 22
         end
         object ShowDirTypeCheckBox: TCheckBox
           Left = 338
@@ -2394,7 +2394,7 @@ object OptionDlg: TOptionDlg
           Width = 90
           Height = 17
           Caption = #23455#20307#34920#31034
-          TabOrder = 11
+          TabOrder = 12
         end
         object ShowPopDirBtnCheckBox: TCheckBox
           Left = 338
@@ -2402,7 +2402,20 @@ object OptionDlg: TOptionDlg
           Width = 90
           Height = 17
           Caption = #9660#12508#12479#12531
-          TabOrder = 14
+          TabOrder = 15
+        end
+        object FExtMaxWidthEdit: TLabeledEdit
+          Left = 65
+          Top = 113
+          Width = 36
+          Height = 21
+          Alignment = taRightJustify
+          EditLabel.Width = 48
+          EditLabel.Height = 13
+          EditLabel.Caption = #25313#24373#23376#24133
+          LabelPosition = lpLeft
+          NumbersOnly = True
+          TabOrder = 10
         end
       end
       object FlatInfPanelCheckBox: TCheckBox
