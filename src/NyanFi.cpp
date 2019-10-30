@@ -87,6 +87,8 @@ USEFORM("PreSameDlg.cpp", PreSameNemeDlg);
 #include "Global.h"
 #include "Splash.h"
 
+typedef BOOL (WINAPI *FUNC_SetDisplayAutoRotationPreferences)(DWORD);
+
 //---------------------------------------------------------------------------
 int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 {
@@ -175,7 +177,11 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		Application->MainFormOnTaskBar = true;
 
 		//ランドスケープモードに固定
-		if (IsWindows8OrGreater()) ::SetDisplayAutoRotationPreferences(ORIENTATION_PREFERENCE_LANDSCAPE);
+		FUNC_SetDisplayAutoRotationPreferences lpfSetDisplayAutoRotationPreferences
+			= (FUNC_SetDisplayAutoRotationPreferences)::GetProcAddress(
+				::GetModuleHandle(_T("user32.dll")), "SetDisplayAutoRotationPreferences");
+		if (lpfSetDisplayAutoRotationPreferences)
+			lpfSetDisplayAutoRotationPreferences(ORIENTATION_PREFERENCE_LANDSCAPE);
 
 		//INIファイルの初期化
 		IniFile = new UsrIniFile(inam);
