@@ -622,7 +622,7 @@ void __fastcall TImgViewThread::Execute()
 						TCanvas *cv = bg_bmp->Canvas;
 						cv->Lock();
 						{
-							cv->Brush->Color = scl_Window;
+							cv->Brush->Color = get_WinColor();
 							cv->FillRect(Rect(0, 0, size, size));
 							//ƒTƒ€ƒlƒCƒ‹
 							std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());

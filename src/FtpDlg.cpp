@@ -78,8 +78,7 @@ void __fastcall TFtpConnectDlg::FormShow(TObject *Sender)
 	HostListBox->SetFocus();
 	HostListBoxClick(HostListBox);
 
-	SetDarkWinTheme(this);
-	HostListBox->Color = IsDarkMode? dcl_Window : scl_Window;
+	SetDarkWinTheme(this, true);
 }
 
 //---------------------------------------------------------------------------

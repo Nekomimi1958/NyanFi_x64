@@ -29,6 +29,7 @@ public:
 	UnicodeString CmdStr;
 	UnicodeString InfStr;
 	UnicodeString DistPath;
+	UnicodeString WorkList;
 
 	UnicodeString CvImg_f_ext;
 	int  CvImg_quality;

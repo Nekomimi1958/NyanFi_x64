@@ -287,7 +287,7 @@ void __fastcall TColorPicker::StartRepActionUpdate(TObject *Sender)
 	bool is_bmp = StartsStr("BITMAP(", FmtComboBox->Text);
 	((TAction *)Sender)->Enabled = !is_bmp && !Repeating && EditToInt(RepCntEdit)>0;
 
-	RepSttLabel->Font->Color = is_bmp? col_Error : IsDarkMode? dcl_WindowText : scl_WindowText;
+	RepSttLabel->Font->Color = is_bmp? col_Error : get_TextColor();
 	UnicodeString stt_str;
 	if		(is_bmp)	stt_str = "ビットマップのコピーでは利用できません。";
 	else if (Repeating)	stt_str.sprintf(_T("連続取得中...　あと %u 回"), RepCount);

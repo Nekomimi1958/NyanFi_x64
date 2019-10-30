@@ -30,12 +30,9 @@ void __fastcall TEditItemDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TEditItemDlg::FormShow(TObject *Sender)
 {
-	TListBox *lp = ItemListBox;
-	set_ListBoxItemHi(lp);
-	UserModule->InitializeListBox(lp);
-
-	SetDarkWinTheme(this);
-	lp->Color = get_WinColor();
+	set_ListBoxItemHi(ItemListBox);
+	UserModule->InitializeListBox(ItemListBox);
+	SetDarkWinTheme(this, true);
 
 	ItemEdit->Text = EmptyStr;
 }

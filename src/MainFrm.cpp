@@ -1951,6 +1951,12 @@ void __fastcall TNyanFiForm::SplitterBgPaint(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TxtScrollPanelResize(TObject *Sender)
+{
+	if (ScrMode==SCMD_TVIEW) TxtViewer->SetMetric(true);
+}
+
+//---------------------------------------------------------------------------
 //アクティブ化
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FormActivate(TObject *Sender)
@@ -3072,8 +3078,7 @@ void __fastcall TNyanFiForm::GrepPageControlDrawTab(TCustomTabControl *Control, 
 	::DrawText(cv->Handle, tit.c_str(), -1, &rc, DT_LEFT);
 }
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepStatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-	const TRect &Rect)
+void __fastcall TNyanFiForm::GrepStatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Font->Assign(StatusBar->Font);
@@ -3721,7 +3726,10 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 					UnicodeString dnam = tp->Config->UpdDirList->Strings[i];
 					for (int j=0; j<MAX_FILELIST; j++) {
 						flist_stt *lst_stt = &ListStt[j];
-						if (!lst_stt->is_Arc && !lst_stt->is_Find && !lst_stt->is_Work && !lst_stt->is_FTP) {
+						if (lst_stt->is_Work) {
+							if (SameText(tp->Config->WorkList, WorkListName)) ChangeWorkList(j);
+						}
+						else if (!lst_stt->is_Arc && !lst_stt->is_Find && !lst_stt->is_FTP) {
 							if (SameText(dnam, CurPath[j])) ReloadList(j);
 						}
 					}
@@ -4305,6 +4313,8 @@ void __fastcall TNyanFiForm::SetSubLayout(
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetupFont()
 {
+	Screen->MessageFont->Assign(DialogFont);
+
 	for (int i=0; i<MAX_FILELIST; i++) set_StdListBox(FileListBox[i]);
 	set_StdListBox(ResultListBox, 0, GrepResFont);
 
@@ -4478,7 +4488,6 @@ void __fastcall TNyanFiForm::SetupDesign(
 	LogSplitPanel->Color		= SelectWorB(col_bgLog, 0.3);
 	TxtViewPanel->Color 		= col_bgView;
 	TxtScrollPanel->Color		= col_bgView;
-
 	ImgViewPanel->Color 		= col_bgImage;
 	ImgScrollBox->Color 		= col_bgImage;
 	ThumbnailGrid->Color		= col_bgImage;
@@ -5455,8 +5464,8 @@ void __fastcall TNyanFiForm::SetFlItemWidth(TStringList *lst, int tag)
 		lst_stt->lwd_fext_max = lst_stt->lwd_fext = 0;
 	}
 	else {
-		lst_stt->lwd_fext_max = get_TextWidth(cv, "." + StringOfChar(_T('W'), FExtMaxWidth), is_irreg);
-		lst_stt->lwd_fext	  = get_TextWidth(cv, ".WWW", is_irreg);	//最小幅
+		lst_stt->lwd_fext_max = get_TextWidth(cv, get_FExtMaxStr(), is_irreg);
+		lst_stt->lwd_fext	  = get_TextWidth(cv, ".WWW", is_irreg);
 		std::unique_ptr<TStringList> x_lst(new TStringList());
 		for (int i=0; i<lst->Count; i++) {
 			UnicodeString fext = ((file_rec*)lst->Objects[i])->f_ext;
@@ -6881,8 +6890,7 @@ void __fastcall TNyanFiForm::SetExtMenuItem(TMenuItem *m_item,
 //---------------------------------------------------------------------------
 //ステータスバーの描画
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::StatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-	const TRect &Rect)
+void __fastcall TNyanFiForm::StatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Font->Assign(StatusBar->Font);
@@ -9312,7 +9320,7 @@ void __fastcall TNyanFiForm::ReloadList(
 					}
 				}
 
-				if (!skip) CurPath[i] = dnam;
+				if (!skip || ChkHardLink) CurPath[i] = dnam;
 			}
 
 			lst_stt->git_checked = false;
@@ -10399,7 +10407,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 			else if (FindPathColumn) {
 				UnicodeString pstr = fp->p_name;
 				remove_top_text(pstr, lst_stt->find_Path);
-				pstr = get_MiniPathName(pstr, lst_stt->lwd_path - w_half, tmp_cv->Font);
+				pstr = get_MiniPathName(pstr, lst_stt->lwd_path, tmp_cv->Font);
 				tmp_cv->Font->Color = use_fgSel? col_fgSelItem : fp->is_dummy? col_InvItem : col_Folder;
 				PathNameOut(pstr, tmp_cv, xp, yp);
 			}
@@ -10411,7 +10419,6 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 
 	//カーソル
 	if (csr_style!=psClear) {
-		//カーソルを描画
 		int xp_r = HideScrBar? ((tag==1)? R_Panel->ClientWidth : L_Panel->ClientWidth) : tmp_rc.Right;
 		int p_wd = (csr_style==psSolid)? CursorWidth : 1;
 		if (p_wd==0 && CursorAlpha==0) p_wd = 1;
@@ -23557,6 +23564,7 @@ void __fastcall TNyanFiForm::SetDirTimeActionExecute(TObject *Sender)
 			cp->TaskList->Assign(tsk_lst.get());
 			cp->CmdStr	 = TaskCmdList->Values[cmd];
 			cp->DistPath = GetCurPathStr();
+			cp->WorkList = CurStt->is_Work? WorkListName : EmptyStr;
 			cp->InfStr	 = cp->DistPath;
 			ActivateTask(tp, cp);
 		}
@@ -28736,7 +28744,7 @@ void __fastcall TNyanFiForm::GrepFltOptCheckBoxClick(TObject *Sender)
 //Grep 検索結果の描画
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ResultListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	UnicodeString itmstr = lp->Items->Strings[Index];
@@ -28929,7 +28937,7 @@ void __fastcall TNyanFiForm::SetSttBarGrepDir(UnicodeString dnam)
 	if (dnam.IsEmpty()) dnam = GrepPath;
 	GrepStatusBar->Hint = yen_to_delimiter(dnam);
 	GrepStatusBar->Panels->Items[0]->Text
-		= get_MiniPathName(dnam, GrepStatusBar->Panels->Items[0]->Width, GrepStatusBar->Font, true);
+		= get_MiniPathName(dnam, GrepStatusBar->Panels->Items[0]->Width, GrepStatusBar->Font);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetSttBarGrepOpt()
@@ -32093,7 +32101,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 
 	TStatusBar *sp = ImgSttHeader;
 	sp->Panels->Items[0]->Bevel = isViewWork? pbRaised : pbLowered;
-	sp->Panels->Items[0]->Text	= get_MiniPathName(pnam, sp->Panels->Items[0]->Width - 4, sp->Font);
+	sp->Panels->Items[0]->Text	= get_MiniPathName(pnam, sp->Panels->Items[0]->Width - Scaled4, sp->Font);
 	sp->Panels->Items[1]->Text	= inf_str;
 	sp->Panels->Items[2]->Text	= sz_str;
 	sp->Hint					= yen_to_delimiter(ViewFileName);
@@ -34496,8 +34504,7 @@ void __fastcall TNyanFiForm::SidePanelUnDock(TObject *Sender, TControl *Client,
 //---------------------------------------------------------------------------
 //イメージビュアー情報ヘッダの描画
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ImgSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-		const TRect &Rect)
+void __fastcall TNyanFiForm::ImgSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect)
 {
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Font->Assign(StatusBar->Font);
@@ -35450,8 +35457,7 @@ void __fastcall TNyanFiForm::ShowNyanFiClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //テキストビュアー情報ヘッダの描画
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-	const TRect &Rect)
+void __fastcall TNyanFiForm::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect)
 {
 	TxtViewer->SttHeaderDrawPanel(StatusBar, Panel, Rect);
 }

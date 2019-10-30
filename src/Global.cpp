@@ -3284,10 +3284,10 @@ UnicodeString alt_yen_to(UnicodeString s)
 //指定幅に収まるようにパス名を調整
 //---------------------------------------------------------------------------
 UnicodeString get_MiniPathName(
-	UnicodeString pnam,		//パス名
+	UnicodeString pnam,		//パス名(\区切り)
 	int max_w,				//制限幅
 	TFont *font,
-	bool rep_delimiter)		//ディレクトリ区切りを置換	(default = false)
+	bool rep_delimiter)		//ディレクトリ区切りを置換	(default = true)
 {
 	HWND hWnd = Application->ActiveFormHandle;
 	HDC hDc = ::GetDC(hWnd);
@@ -3299,10 +3299,8 @@ UnicodeString get_MiniPathName(
 		bool ends_dlmt = EndsStr("\\", pnam);
 
 		//ディレクトリ区切りの違いによる制限幅の補正
-		if (rep_delimiter) {
-			int w = get_TextWidth(cv.get(), yen_to_delimiter(pnam), is_irreg) - get_TextWidth(cv.get(), pnam, is_irreg);
-			if (w>0) max_w -= w;
-		}
+		int w = get_TextWidth(cv.get(), yen_to_delimiter(pnam), is_irreg) - get_TextWidth(cv.get(), pnam, is_irreg);
+		if (w>0) max_w -= w;
 
 		while (get_TextWidth(cv.get(), pnam, is_irreg)>max_w) {
 			TStringDynArray plst = split_path(pnam);
@@ -10646,8 +10644,7 @@ void PathNameOut(
 {
 	if (s.IsEmpty()) return;
 
-	s = ReplaceStr(s, DirDelimiter, "\\");	//区切りが変換されていたら一旦 \ に戻す
-
+	s = ReplaceStr(s, DirDelimiter, "\\");
 	int s_len = s.Length();
 	std::unique_ptr<TColor[]> FgCol(new TColor[s_len + 1]);
 	std::unique_ptr<TColor[]> BgCol(new TColor[s_len + 1]);
@@ -10742,7 +10739,7 @@ void PathNameOut(
 {
 	if (s.IsEmpty()) return;
 
-	if (max_w>0) s = get_MiniPathName(s, max_w, cv->Font);
+	if (max_w>0) s = get_MiniPathName(ReplaceStr(s, DirDelimiter, "\\"), max_w, cv->Font, false);
 	int s_len = s.Length();
 
 	bool is_irreg = IsIrregularFont(cv->Font);

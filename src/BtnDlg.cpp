@@ -73,8 +73,7 @@ void __fastcall TToolBtnDlg::FormShow(TObject *Sender)
 		CaptionEdit->SetFocus();
 	}
 
-	SetDarkWinTheme(this);
-	BtnListBox->Color = IsDarkMode? dcl_Window : scl_Window;
+	SetDarkWinTheme(this, true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TToolBtnDlg::FormClose(TObject *Sender, TCloseAction &Action)

@@ -592,6 +592,7 @@ void __fastcall TRegDirDlg::RegDirListBoxClick(TObject *Sender)
 void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Index,
 	TRect &Rect, TOwnerDrawState State)
 {
+	THeaderSections *sp = RegDirHeader->Sections;
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(ListFont);
@@ -601,17 +602,23 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 	cv->Brush->Color = col_bgList;
 	cv->FillRect(Rect);
 
+	TRect rc = Rect;
+	if (ScrBarStyle>0) {
+		rc.SetWidth(ListScrPanel->ParentPanel->Width);
+		if (ListScrPanel->VisibleV) rc.Right -= (ListScrPanel->KnobWidth - 1);
+	}
+
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	if (!lbuf.IsEmpty()) {
 		//特殊フォルダ
 		if (IsSpecial) {
 			TStringDynArray itm_buf = split_strings_tab(lbuf);
 			if (itm_buf.Length==2) {
-				int xp = Rect.Left + Scaled4;
-				int yp = Rect.Top  + get_TopMargin2(cv);
+				int xp = rc.Left + Scaled4;
+				int yp = rc.Top  + get_TopMargin2(cv);
 				//セパレータ
 				if (itm_buf[0].IsEmpty()) {
-					draw_Separator(cv, Rect);
+					draw_Separator(cv, rc);
 					cv->Font->Color = col_Folder;
 					int s_cnt = 0;
 					for (int i=0; i<=Index; i++) if (StartsStr("\t", lp->Items->Strings[i])) s_cnt++;
@@ -627,8 +634,8 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 							   (s_cnt==5)? "<外部ツール>" : "";
 					}
 					if (!snam.IsEmpty()) {
-						TRect rc = Rect; rc.Left = xp; rc.Top  = yp;
-						::DrawText(cv->Handle, snam.c_str(), -1, &rc, DT_LEFT);
+						TRect tmp_rc = rc; tmp_rc.Left = xp; tmp_rc.Top = yp;
+						::DrawText(cv->Handle, snam.c_str(), -1, &tmp_rc, DT_LEFT);
 					}
 				}
 				//項目
@@ -641,7 +648,6 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 						xp += get_IcoWidth();
 					}
 					//名前
-					THeaderSections *sp = RegDirHeader->Sections;
 					cv->Font->Color = col_fgList;
 					UnicodeString inam = itm_buf[1];
 					bool brk = remove_top_s(inam, '|');
@@ -658,13 +664,13 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 							UnicodeString envstr = "%" + split_tkn(dnam, '%') + "%";
 							cv->Font->Color = adj_col;
 							cv->TextOut(xp, yp, envstr);
-							xp += get_TextWidth(cv, envstr, is_irreg) + 2;
+							xp += get_TextWidth(cv, envstr, is_irreg) + Scaled2;
 						}
 					}
 					cv->Font->Color = (StartsStr("shell:", dnam))? adj_col : col_Folder;
-					PathNameOut(dnam, cv, xp, yp, sp->Items[2]->Width);
+					PathNameOut(dnam, cv, xp, yp, rc.Right - xp - Scaled4);
 					//区切り線
-					if (brk) draw_separateLine(cv, Rect);
+					if (brk) draw_separateLine(cv, rc);
 				}
 			}
 		}
@@ -673,18 +679,17 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 			TStringDynArray itm_buf = get_csv_array(lbuf, 3, true);
 			//セパレータ
 			if (is_separator(itm_buf[1])) {
-				draw_Separator(cv, Rect);
+				draw_Separator(cv, rc);
 			}
 			//項目
 			else {
-				THeaderSections *sp = RegDirHeader->Sections;
 				//キー
 				cv->Font->Color = col_fgList;
 				cv->Font->Style = cv->Font->Style << fsBold;
 				int s_wd = cv->TextWidth(itm_buf[0]);
 				int c_wd = sp->Items[0]->Width - 4;
-				int xp = Rect.Left + Scaled2;
-				int yp = Rect.Top  + get_TopMargin2(cv);
+				int xp = rc.Left + Scaled2;
+				int yp = rc.Top  + get_TopMargin2(cv);
 				if (s_wd<c_wd) xp += (c_wd - s_wd)/2;	//センタリング
 				cv->TextOut(xp, yp, itm_buf[0]);
 				//名前
@@ -706,14 +711,14 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 						xp += get_TextWidth(cv, envstr, is_irreg) + 2;
 					}
 					cv->Font->Color = (StartsStr("shell:", dnam))? adj_col : col_Folder;
-					PathNameOut(dnam, cv, xp, yp, sp->Items[2]->Width);
+					PathNameOut(dnam, cv, xp, yp, rc.Right - xp - Scaled4);
 				}
 			}
 		}
 	}
 
 	//カーソル
-	draw_ListCursor2(lp, Rect, Index, State);
+	draw_ListCursor2(lp, rc, Index, State);
 }
 
 //---------------------------------------------------------------------------

@@ -54,6 +54,181 @@ object NyanFiForm: TNyanFiForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    object TxtViewPanel: TPanel
+      Left = 0
+      Top = 0
+      Width = 724
+      Height = 479
+      HelpContext = 6
+      Align = alClient
+      BevelOuter = bvNone
+      DoubleBuffered = True
+      ParentDoubleBuffered = False
+      TabOrder = 2
+      Visible = False
+      StyleElements = [seBorder]
+      object ViewMemo: TRichEdit
+        Left = 0
+        Top = 19
+        Width = 724
+        Height = 460
+        TabStop = False
+        Align = alClient
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        Font.Charset = SHIFTJIS_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        ParentShowHint = False
+        ReadOnly = True
+        ShowHint = False
+        TabOrder = 1
+        Visible = False
+        WantReturns = False
+        Zoom = 100
+      end
+      object ToolBarV: TToolBar
+        Left = 0
+        Top = 0
+        Width = 724
+        Height = 19
+        AutoSize = True
+        ButtonWidth = 70
+        DrawingStyle = dsGradient
+        Images = IconImgListV
+        List = True
+        ShowCaptions = True
+        AllowTextButtons = True
+        TabOrder = 0
+        Visible = False
+        StyleElements = []
+        OnDblClick = ToolBarDblClick
+      end
+      object TxtMainPanel: TPanel
+        Left = 0
+        Top = 19
+        Width = 724
+        Height = 460
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 2
+        object TxtSttHeader: TStatusBar
+          Left = 0
+          Top = 0
+          Width = 724
+          Height = 19
+          Align = alTop
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBtnText
+          Font.Height = -12
+          Font.Name = 'MS UI Gothic'
+          Font.Pitch = fpVariable
+          Font.Style = []
+          Panels = <
+            item
+              Style = psOwnerDraw
+              Width = 50
+            end
+            item
+              Style = psOwnerDraw
+              Width = 50
+            end
+            item
+              Style = psOwnerDraw
+              Width = 50
+            end
+            item
+              Style = psOwnerDraw
+              Width = 50
+            end
+            item
+              Bevel = pbNone
+              Style = psOwnerDraw
+              Width = 50
+            end>
+          UseSystemFont = False
+          StyleElements = []
+          OnDrawPanel = TxtSttHeaderDrawPanel
+        end
+        object TxtScrollPanel: TPanel
+          Left = 0
+          Top = 19
+          Width = 724
+          Height = 441
+          Align = alClient
+          BevelOuter = bvNone
+          DoubleBuffered = True
+          ParentDoubleBuffered = False
+          TabOrder = 1
+          StyleElements = [seBorder]
+          OnResize = TxtScrollPanelResize
+          object TextPaintBox: TPaintBox
+            Left = 0
+            Top = 16
+            Width = 705
+            Height = 425
+            Align = alClient
+            Color = clBtnFace
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -15
+            Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
+            Font.Style = []
+            ParentColor = False
+            ParentFont = False
+            PopupMenu = ViewPopupMenu
+            OnDblClick = TextPaintBoxDblClick
+            OnMouseDown = TextPaintBoxMouseDown
+            OnMouseMove = TextPaintBoxMouseMove
+            OnMouseUp = TextPaintBoxMouseUp
+            OnPaint = TextPaintBoxPaint
+          end
+          object TextRulerBox: TPaintBox
+            Left = 0
+            Top = 0
+            Width = 724
+            Height = 16
+            Align = alTop
+          end
+          object TextMarginBox: TPaintBox
+            Left = 722
+            Top = 16
+            Width = 2
+            Height = 425
+            Align = alRight
+            OnDblClick = TextMarginBoxDblClick
+            OnPaint = TextMarginBoxPaint
+          end
+          object TextScrollBar: TScrollBar
+            Left = 705
+            Top = 16
+            Width = 17
+            Height = 425
+            Align = alRight
+            Kind = sbVertical
+            Min = 1
+            PageSize = 0
+            Position = 1
+            TabOrder = 0
+            TabStop = False
+            OnChange = TextScrollBarChange
+          end
+          object TextCurColPanel: TPanel
+            Left = 32
+            Top = 221
+            Width = 60
+            Height = 24
+            TabOrder = 1
+            Visible = False
+            StyleElements = [seBorder]
+          end
+        end
+      end
+    end
     object ImgViewPanel: TPanel
       Left = 0
       Top = 0
@@ -492,180 +667,6 @@ object NyanFiForm: TNyanFiForm
       ShowCaptions = True
       TabOrder = 4
       StyleElements = []
-    end
-    object TxtViewPanel: TPanel
-      Left = 0
-      Top = 0
-      Width = 724
-      Height = 479
-      HelpContext = 6
-      Align = alClient
-      BevelOuter = bvNone
-      DoubleBuffered = True
-      ParentDoubleBuffered = False
-      TabOrder = 2
-      Visible = False
-      StyleElements = [seBorder]
-      object ViewMemo: TRichEdit
-        Left = 0
-        Top = 19
-        Width = 724
-        Height = 460
-        TabStop = False
-        Align = alClient
-        BevelInner = bvNone
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        Font.Charset = SHIFTJIS_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        ParentShowHint = False
-        ReadOnly = True
-        ShowHint = False
-        TabOrder = 1
-        Visible = False
-        WantReturns = False
-        Zoom = 100
-      end
-      object ToolBarV: TToolBar
-        Left = 0
-        Top = 0
-        Width = 724
-        Height = 19
-        AutoSize = True
-        ButtonWidth = 70
-        DrawingStyle = dsGradient
-        Images = IconImgListV
-        List = True
-        ShowCaptions = True
-        AllowTextButtons = True
-        TabOrder = 0
-        Visible = False
-        StyleElements = []
-        OnDblClick = ToolBarDblClick
-      end
-      object TxtMainPanel: TPanel
-        Left = 0
-        Top = 19
-        Width = 724
-        Height = 460
-        Align = alClient
-        BevelOuter = bvNone
-        TabOrder = 2
-        object TxtSttHeader: TStatusBar
-          Left = 0
-          Top = 0
-          Width = 724
-          Height = 19
-          Align = alTop
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBtnText
-          Font.Height = -12
-          Font.Name = 'MS UI Gothic'
-          Font.Pitch = fpVariable
-          Font.Style = []
-          Panels = <
-            item
-              Style = psOwnerDraw
-              Width = 50
-            end
-            item
-              Style = psOwnerDraw
-              Width = 50
-            end
-            item
-              Style = psOwnerDraw
-              Width = 50
-            end
-            item
-              Style = psOwnerDraw
-              Width = 50
-            end
-            item
-              Bevel = pbNone
-              Style = psOwnerDraw
-              Width = 50
-            end>
-          UseSystemFont = False
-          StyleElements = []
-          OnDrawPanel = TxtSttHeaderDrawPanel
-        end
-        object TxtScrollPanel: TPanel
-          Left = 0
-          Top = 19
-          Width = 724
-          Height = 441
-          Align = alClient
-          BevelOuter = bvNone
-          DoubleBuffered = True
-          ParentDoubleBuffered = False
-          TabOrder = 1
-          StyleElements = [seBorder]
-          object TextPaintBox: TPaintBox
-            Left = 0
-            Top = 16
-            Width = 705
-            Height = 425
-            Align = alClient
-            Color = clBtnFace
-            Font.Charset = ANSI_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -15
-            Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
-            Font.Style = []
-            ParentColor = False
-            ParentFont = False
-            PopupMenu = ViewPopupMenu
-            OnDblClick = TextPaintBoxDblClick
-            OnMouseDown = TextPaintBoxMouseDown
-            OnMouseMove = TextPaintBoxMouseMove
-            OnMouseUp = TextPaintBoxMouseUp
-            OnPaint = TextPaintBoxPaint
-          end
-          object TextRulerBox: TPaintBox
-            Left = 0
-            Top = 0
-            Width = 724
-            Height = 16
-            Align = alTop
-          end
-          object TextMarginBox: TPaintBox
-            Left = 722
-            Top = 16
-            Width = 2
-            Height = 425
-            Align = alRight
-            OnDblClick = TextMarginBoxDblClick
-            OnPaint = TextMarginBoxPaint
-          end
-          object TextScrollBar: TScrollBar
-            Left = 705
-            Top = 16
-            Width = 17
-            Height = 425
-            Align = alRight
-            Kind = sbVertical
-            Min = 1
-            PageSize = 0
-            Position = 1
-            TabOrder = 0
-            TabStop = False
-            OnChange = TextScrollBarChange
-          end
-          object TextCurColPanel: TPanel
-            Left = 32
-            Top = 221
-            Width = 60
-            Height = 24
-            TabOrder = 1
-            Visible = False
-            StyleElements = [seBorder]
-          end
-        end
-      end
     end
     object GrepPanel: TPanel
       Left = 0

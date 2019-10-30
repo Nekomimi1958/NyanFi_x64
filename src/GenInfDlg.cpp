@@ -566,7 +566,7 @@ void __fastcall TGeneralInfoDlg::SetStatusBar(UnicodeString msg)
 	StatusBar1->Panels->Items[3]->Text =
 			 !msg.IsEmpty()? msg :
 		!FirstKey.IsEmpty()? "2ストロークキー: " + FirstKey :
-			!fnam.IsEmpty()? get_MiniPathName(fnam, w3, StatusBar1->Font, true) :
+			!fnam.IsEmpty()? get_MiniPathName(fnam, w3, StatusBar1->Font) :
 		 !id3_str.IsEmpty()? id3_str :
 		!FileName.IsEmpty()? get_FileInfStr(FileName, false) : EmptyStr;
 

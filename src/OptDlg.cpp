@@ -1134,24 +1134,7 @@ void __fastcall TOptionDlg::SetWinTheme(
 {
 	if (!force && Color==get_PanelColor() && (KeySetOnly? IsDkKey : IsDkAll)==IsDarkMode) return;
 
-	SetDarkWinTheme(this);
-
-	TColor bg = get_WinColor();
-	OptColListBox->Color	= bg;
-	TimColListBox->Color	= bg;
-	ExtColListBox->Color	= bg;
-	AssociateListBox->Color = bg;
-	AssociateListBox->Color = bg;
-	EtcEditorListBox->Color = bg;
-	EventListBox->Color 	= bg;
-	KeyListBox->Color		= bg;
-	PrtDirListBox->Color	= bg;
-												//<<<<<<<X86_SPI
-	StdCmdListBox->Color	= bg;
-	TagColListBox->Color	= bg;
-	VirDrvListBox->Color	= bg;
-	ExtMenuListBox->Color	= bg;
-	ExtToolListBox->Color	= bg;
+	SetDarkWinTheme(this, true);
 
 	//‹^Ž—Bevel
 	Shape1->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;

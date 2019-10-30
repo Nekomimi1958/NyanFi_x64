@@ -36,9 +36,7 @@ void __fastcall TRegSyncDlg::FormShow(TObject *Sender)
 
 	InitDir = CurPathName;
 
-	SetDarkWinTheme(this);
-	RegListBox->Color = IsDarkMode? dcl_Window : scl_Window;
-	DirListBox->Color = IsDarkMode? dcl_Window : scl_Window;
+	SetDarkWinTheme(this, true);
 }
 //---------------------------------------------------------------------------
 //ˆê——‚Ì•\Ž¦
@@ -82,7 +80,7 @@ void __fastcall TRegSyncDlg::DirListBoxDrawItem(TWinControl *Control, int Index,
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->TextOut(Rect.Left + Scaled2, Rect.Top + get_TopMargin(cv),
-		get_MiniPathName(lp->Items->Strings[Index], lp->ClientWidth, lp->Font, true));
+				get_MiniPathName(lp->Items->Strings[Index], lp->ClientWidth, lp->Font));
 }
 
 //---------------------------------------------------------------------------

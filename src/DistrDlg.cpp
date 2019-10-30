@@ -142,11 +142,7 @@ void __fastcall TDistributionDlg::FormShow(TObject *Sender)
 
 	SkipCount = 0;
 
-	SetDarkWinTheme(this);
-	TColor bg = get_WinColor();
-	RegListBox->Color  = bg;
-	ListListBox->Color = bg;
-	PrvListBox->Color  = bg;
+	SetDarkWinTheme(this, true);
 	Shape1->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
 	Shape3->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
 	Shape2->Pen->Color = IsDarkMode? dcl_BtnHighlight : scl_BtnHighlight;

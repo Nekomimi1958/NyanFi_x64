@@ -548,7 +548,7 @@ void __fastcall TFileExtensionDlg::FextInfHeaderSectionClick(THeaderControl *Hea
 //Šg’£Žqˆê——‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TFileExtensionDlg::InfoListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	if (Index>=FextInfoList->Count) return;
 
@@ -681,7 +681,7 @@ void __fastcall TFileExtensionDlg::InfoListBoxKeyPress(TObject *Sender, System::
 //ƒtƒ@ƒCƒ‹ˆê——‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TFileExtensionDlg::FileListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -719,16 +719,22 @@ void __fastcall TFileExtensionDlg::FileListBoxDrawItem(TWinControl *Control, int
 		//Šg’£Žq•ª—£
 		else {
 			UnicodeString fext = get_extension(fnam);
-			int x_fx = Rect.Left + w_fn - get_TextWidth(cv, fext, is_irreg) - 8;
+			int x_wd = std::min(get_TextWidth(cv, get_FExtMaxStr(), is_irreg), get_TextWidth(cv, fext.UpperCase(), is_irreg));
+			int x_fx = Rect.Left + w_fn - x_wd - Scaled8;
 			cv->TextOut(xp, yp, minimize_str(get_base_name(fnam), cv, x_fx - xp, OmitEndOfName));
-			cv->TextOut(x_fx, yp, fext);
+			cv->TextOut(x_fx, yp, minimize_str(fext, cv, x_wd, true));
 		}
 		xp += w_fn;
 
 		UnicodeString pnam = ExtractFilePath(fnam).Delete(1, PathName.Length());
 		if (!pnam.IsEmpty()) {
+			TRect rc = Rect;
+			if (ScrBarStyle>0) {
+				rc.SetWidth(FileScrPanel->ParentPanel->Width);
+				if (FileScrPanel->VisibleV) rc.Right -= (FileScrPanel->KnobWidth - 1);
+			}
 			cv->Font->Color = col_Folder;
-			PathNameOut(pnam, cv, xp, yp, FileListHeader->Sections->Items[1]->Width);
+			PathNameOut(pnam, cv, xp, yp, rc.Right - xp - Scaled4);
 		}
 	}
 

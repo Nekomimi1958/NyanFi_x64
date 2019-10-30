@@ -54,9 +54,7 @@ void __fastcall TExpCsvDlg::FormShow(TObject *Sender)
 
 	if (isTSV) TsvRadioBtn->Checked = true; else CsvRadioBtn->Checked = true;
 
-	SetDarkWinTheme(this);
-	SrcListBox->Color  = IsDarkMode? dcl_Window : scl_Window;
-	DstListBox->Color = IsDarkMode? dcl_Window : scl_Window;
+	SetDarkWinTheme(this, true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TExpCsvDlg::FormClose(TObject *Sender, TCloseAction &Action)

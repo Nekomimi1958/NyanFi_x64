@@ -654,11 +654,13 @@ void __fastcall TUserModule::RefCmdNameActionExecute(TObject *Sender)
 void __fastcall TUserModule::RefCmdNameActionUpdate(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;
+	TComboBox   *cp = class_is_ComboBox(wp)? (TComboBox*)wp : NULL;
 	((TAction*)Sender)->Visible = (wp &&
 		 (  str_match("WheelBtn*ComboBox", wp->Name)
 		 || str_match("WheelCmd*ComboBox", wp->Name)
 		 || str_match("X?Btn?ComboBox",	   wp->Name)
-		 || contained_wd_i(_T("MenuPrmEdit|EventCmdsEdit|TimerCmd1Edit|TimerCmd2Edit|NewExeCmdEdit|BtnCmdsComboBox"), wp->Name)));
+		 || contained_wd_i(_T("MenuPrmEdit|EventCmdsEdit|TimerCmd1Edit|TimerCmd2Edit|NewExeCmdEdit|BtnCmdsComboBox"), wp->Name)
+		 || (cp && contained_wd_i(_T("AsoAppComboBox"), cp->Name) && StartsText("ExeCommands_", cp->Text))));
 }
 
 //---------------------------------------------------------------------------

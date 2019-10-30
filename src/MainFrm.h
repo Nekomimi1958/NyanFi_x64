@@ -1867,6 +1867,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SetInterpolationActionExecute(TObject *Sender);
 	void __fastcall TV_MinColActionUpdate(TObject *Sender);
 	void __fastcall MinColItemClick(TObject *Sender);
+	void __fastcall TxtScrollPanelResize(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

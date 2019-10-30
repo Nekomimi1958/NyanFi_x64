@@ -261,7 +261,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	OkButton->Enabled		 = true;
 	CanButton->Enabled		 = true;
 
-	SetDarkWinTheme(this);
+	SetDarkWinTheme(this, true);
 	SetDarkWinTheme(NameComPanel);
 
 	TColor bg_p = IsMulti? get_WinColor(true) : get_PanelColor();
@@ -271,9 +271,6 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	ArcPanel->Color 	 = bg_p;
 	CmpPanel->Color 	 = bg_p;
 	TimeMaskEdit->Color  = get_WinColor(!IsMulti);
-
-	AssRenListBox->Color  = get_WinColor();
-	CnvCharListBox->Color = get_WinColor();
 
 	SttPrgBar->BgColor	  = col_bgPrgBar;
 	SttPrgBar->BarColor   = col_fgPrgBar;

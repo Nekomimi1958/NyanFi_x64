@@ -1528,7 +1528,6 @@ inline bool is_SelFgCol(bool sel)
 	return (sel && col_fgSelItem!=col_None);
 }
 
-
 inline bool is_X64()
 {
 #if defined(_WIN64)
@@ -1536,6 +1535,11 @@ inline bool is_X64()
 #else
 	return false;
 #endif
+}
+
+inline UnicodeString get_FExtMaxStr()
+{
+	return ("." + StringOfChar(_T('W'), FExtMaxWidth));
 }
 
 //---------------------------------------------------------------------------
@@ -1604,8 +1608,7 @@ int __fastcall KeyComp_Dsc(TStringList *List, int Index1, int Index2);
 //---------------------------------------------------------------------------
 UnicodeString yen_to_delimiter(UnicodeString s);
 UnicodeString alt_yen_to(UnicodeString s);
-
-UnicodeString get_MiniPathName(UnicodeString pnam, int max_w, TFont *font, bool rep_delimiter = false);;
+UnicodeString get_MiniPathName(UnicodeString pnam, int max_w, TFont *font, bool rep_delimiter = true);
 
 UnicodeString get_dotNaynfi(UnicodeString dnam = EmptyStr);
 UnicodeString get_dotNaynfi(UnicodeString dnam, bool inherit, bool force = false);

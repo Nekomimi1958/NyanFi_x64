@@ -63,7 +63,7 @@ void __fastcall TDotNyanDlg::FormShow(TObject *Sender)
 		hFont = ::CreateFontIndirect(&nc_metrics.lfCaptionFont);
 	std::unique_ptr<TFont> titFont(new TFont());
 	if (hFont) titFont->Handle = hFont; else titFont->Assign(DialogFont);
-	Caption = get_MiniPathName(DotNyanName + " ÇÃê›íË", ClientWidth - ScaledInt(48), titFont.get(), true);
+	Caption = get_MiniPathName(DotNyanName + " ÇÃê›íË", ClientWidth - ScaledInt(48), titFont.get());
 
 	IniFile->LoadComboBoxItems(PathMaskComboBox, _T("DotMaskHistory"));
 	IniFile->LoadComboBoxItems(GrepMaskComboBox, _T("GrepMaskHistory"));
@@ -120,7 +120,7 @@ void __fastcall TDotNyanDlg::FormShow(TObject *Sender)
 	if (file_exists(inam)) {
 		load_text_ex(inam, InheritList);
 		InheritLabel->Caption = UnicodeString().sprintf(_T("[%s] Ç©ÇÁåpè≥â¬î\"),
-									get_MiniPathName(ExtractFileDir(inam), 400, Font, true).c_str());
+									get_MiniPathName(ExtractFileDir(inam), 400, Font).c_str());
 	}
 
 	SetDarkWinTheme(this);

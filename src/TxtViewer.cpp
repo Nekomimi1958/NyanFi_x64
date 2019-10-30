@@ -496,6 +496,7 @@ void __fastcall TTxtViewer::SetMetric(bool set_hi)
 	}
 
 	if (set_hi) {
+		ImgBuff->Handle = NULL;
 		SetScrBar();
 		UpdatePos(true, true);
 	}
@@ -1785,7 +1786,7 @@ void __fastcall TTxtViewer::PaintText()
 	tmp_bmp->SetSize(ViewBox->ClientWidth - (ScrBar->Visible? 1 : 0), LineHeight);
 	TRect    tmp_rc	= Rect(0, 0, tmp_bmp->Width, tmp_bmp->Height);
 	TCanvas *tmp_cv = tmp_bmp->Canvas;
-	TRect    img_rc = Rect(0, 0, tmp_bmp->Width, ViewBox->ClientHeight);
+	TRect    img_rc = Rect(0, 0, tmp_bmp->Width, ceil(1.0 * ViewBox->ClientHeight / LineHeight) * LineHeight);
 	tmp_cv->Font->Assign(ViewBox->Font);
 
 	int fld_xp	= isFitWin ? tmp_bmp->Width
@@ -1815,13 +1816,13 @@ void __fastcall TTxtViewer::PaintText()
 	//バッファされている部分を描画
 	std::unique_ptr<Graphics::TBitmap> buf_bmp(new Graphics::TBitmap());
 	buf_bmp->SetSize(img_rc.Width(), img_rc.Height());
-	TCanvas *buffer_cv = buf_bmp->Canvas;
+	TCanvas *buf_cv = buf_bmp->Canvas;
 
 	int  buf_idx0, buf_idx1;
 	bool buffered = (LastTop!=-1 && !ImgBuff->Empty && (abs(d_idx)<3));
 	if (buffered) {
 		TRect v_rc = img_rc;  OffsetRect(v_rc, 0, -(d_idx * LineHeight));
-		buffer_cv->CopyRect( v_rc, ImgBuff->Canvas, img_rc);
+		buf_cv->CopyRect( v_rc, ImgBuff->Canvas, img_rc);
 		ViewCanvas->CopyRect(v_rc, ImgBuff->Canvas, img_rc);
 		buf_idx0 = top_idx - d_idx;
 		buf_idx1 = btm_idx - d_idx - 1;
@@ -2191,7 +2192,7 @@ void __fastcall TTxtViewer::PaintText()
 
 		//バッファに描画
 		TRect v_rc = tmp_rc;  OffsetRect(v_rc, 0, v_yp);
-		buffer_cv->CopyRect(v_rc, tmp_bmp->Canvas, tmp_rc);
+		buf_cv->CopyRect(v_rc, tmp_bmp->Canvas, tmp_rc);
 		//行カーソルを一旦描画しておく
 		if (CurPos.y==i && ShowLineCursor)
 			draw_Line(tmp_cv, LeftMargin + 1, csr_yl, fld_xp - 2, csr_yl, csr_lw, color_Cursor);
@@ -2200,7 +2201,7 @@ void __fastcall TTxtViewer::PaintText()
 
 	//現在の画面をバッファにコピー
 	ImgBuff->SetSize(img_rc.Width(), img_rc.Height());
-	ImgBuff->Canvas->CopyRect(img_rc, buffer_cv, img_rc);
+	ImgBuff->Canvas->CopyRect(img_rc, buf_cv, img_rc);
 
 	if (csr_yp>=0) {
 		int yp_l = csr_yp + csr_yl;

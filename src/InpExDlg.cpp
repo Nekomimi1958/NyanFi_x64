@@ -330,7 +330,7 @@ void __fastcall TInputExDlg::InputComboBoxChange(TObject *Sender)
 	if (IpuntExMode==INPEX_CRE_DIR) {
 		int f_len = InputComboBox->Text.Length();
 		int p_len = PathName.Length() + f_len;
-		TColor fg = IsDarkMode? dcl_WindowText : scl_WindowText;
+		TColor fg = get_TextColor();
 		PathInfLabel->Font->Color = (p_len<248 || PathName.Pos('/'))? fg : col_Error;
 		NameInfLabel->Font->Color = (f_len<256)? fg : col_Error;
 		UnicodeString tmp;

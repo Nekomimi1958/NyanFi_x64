@@ -220,7 +220,8 @@ void SetHighlight(TCanvas *cv, bool hl)
 //---------------------------------------------------------------------------
 //コントロールにダークモードを適用
 //---------------------------------------------------------------------------
-void SetDarkWinTheme(TWinControl *wp)
+void SetDarkWinTheme(TWinControl *wp,
+	bool std_col)	//リストボックスなどで表示色を使用	(default = false)
 {
 	if (!wp) return;
 	if (wp->ClassNameIs("TStatusBar")) return;
@@ -253,14 +254,14 @@ void SetDarkWinTheme(TWinControl *wp)
 				lp->Color		= bg_panel;
 			}
 			else if (cp->InheritsFrom(__classid(TWinControl))) {
-				SetDarkWinTheme((TWinControl *)cp);
+				SetDarkWinTheme((TWinControl *)cp, std_col);
 			}
 		}
 	}
 	else if (wp->ClassNameIs("TPageControl")) {
 		TPageControl *pp = (TPageControl *)wp;
 		pp->StyleElements >> seClient;
-		for (int i=0; i<pp->PageCount; i++) SetDarkWinTheme(pp->Pages[i]);
+		for (int i=0; i<pp->PageCount; i++) SetDarkWinTheme(pp->Pages[i], std_col);
 	}
 	else if (wp->ClassNameIs("TPanel") || wp->ClassNameIs("TTabSheet")
 		|| wp->ClassNameIs("TGroupBox") || wp->ClassNameIs("TRadioGroup")
@@ -323,7 +324,7 @@ void SetDarkWinTheme(TWinControl *wp)
 					lp->Color		= bg_panel;
 				}
 				else if (cp->InheritsFrom(__classid(TWinControl))) {
-					SetDarkWinTheme((TWinControl *)cp);
+					SetDarkWinTheme((TWinControl *)cp, std_col);
 				}
 			}
 		}
@@ -404,6 +405,11 @@ void SetDarkWinTheme(TWinControl *wp)
 	}
 	else {
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
+
+		if (std_col) {
+			if		(wp->ClassNameIs("TListBox"))		((TListBox *)wp)->Color 	 = bg_win;
+			else if (wp->ClassNameIs("TCheckListBox"))	((TCheckListBox *)wp)->Color = bg_win;
+		}
 	}
 }
 

@@ -265,18 +265,18 @@ void __fastcall TRegExChecker::ReplaceActionExecute(TObject *Sender)
 
 		//結果
 		if (ResListBox->Count>0) {
-			ResultLabel->Caption = UnicodeString().sprintf(_T("%u箇所を置換しました"), MatchCount);
-			ResultLabel->Font->Color = IsDarkMode? dcl_WindowText : scl_WindowText;
+			ResultLabel->Caption	 = UnicodeString().sprintf(_T("%u箇所を置換しました"), MatchCount);
+			ResultLabel->Font->Color = get_TextColor();
 		}
 		else {
-			ResultLabel->Caption = "マッチしません";
+			ResultLabel->Caption	 = "マッチしません";
 			ResultLabel->Font->Color = col_Error;
 			beep_Warn();
 		}
 	}
 	catch (...) {
 		cursor_Default();
-		ResultLabel->Caption = "失敗しました";
+		ResultLabel->Caption	 = "失敗しました";
 		ResultLabel->Font->Color = col_Error;
 		beep_Warn();
 	}

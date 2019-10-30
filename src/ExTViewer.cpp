@@ -255,8 +255,7 @@ void __fastcall TExTxtViewer::TextPaintBoxDblClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //î•ñƒwƒbƒ_‚Ì•`‰æ
 //---------------------------------------------------------------------------
-void __fastcall TExTxtViewer::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
-	const TRect &Rect)
+void __fastcall TExTxtViewer::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect)
 {
 	ExViewer->SttHeaderDrawPanel(StatusBar, Panel, Rect);
 }

@@ -51,8 +51,7 @@ void __fastcall TJoinTextDlg::FormShow(TObject *Sender)
 	UserModule->InitializeListBox(SrcFileListBox);
 	OutNameEdit->SetFocus();
 
-	SetDarkWinTheme(this);
-	SrcFileListBox->Color = IsDarkMode? dcl_Window : scl_Window;
+	SetDarkWinTheme(this, true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TJoinTextDlg::FormClose(TObject *Sender, TCloseAction &Action)

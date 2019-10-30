@@ -224,7 +224,7 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 	cv->FillRect(rc);
 
 	if (ACol==0 || gp->ColWidths[ACol]>=COL_WD_HIDE) {
-		int xp = rc.Left + 4;
+		int xp = rc.Left + Scaled4;
 		int yp = rc.Top;
 		if (ShowIconCheckBox->Checked && LargeIconCheckBox->Checked)
 			yp += std::max(get_TopMargin2(cv), (rc.Height() - ListInterLn -get_FontHeight(cv->Font))/2);
@@ -277,13 +277,13 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 				if (!pnam.IsEmpty()) {
 					if (dp->is_virtual) {
 						UnicodeString dnam = ExtractFileName(pnam);
-						pnam = get_MiniPathName(pnam, c_wd, cv->Font, true);
+						pnam = get_MiniPathName(pnam, c_wd, cv->Font);
 						if (!ContainsText(pnam, dnam)) {
 							pnam = "[" + minimize_str(dnam, cv, c_wd - cv->TextWidth("[]"), true) + "]";
 						}
 					}
 					else if (dp->drv_type==DRIVE_REMOTE) {
-						pnam = get_MiniPathName(pnam, c_wd, cv->Font, true);
+						pnam = get_MiniPathName(pnam, c_wd, cv->Font);
 					}
 					cv->Font->Color = (fcol==col_None)? col_Folder : fcol;
 					cv->TextRect(rc, xp, yp, pnam);

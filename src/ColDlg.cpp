@@ -79,8 +79,7 @@ void __fastcall TColorDlg::FormShow(TObject *Sender)
 
 	ColBufList->Assign(ObjViewer->ColBufList);
 
-	SetDarkWinTheme(this);
-	ColorListBox->Color = IsDarkMode? dcl_Window : scl_Window;
+	SetDarkWinTheme(this, true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TColorDlg::FormClose(TObject *Sender, TCloseAction &Action)

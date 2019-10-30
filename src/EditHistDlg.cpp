@@ -610,7 +610,8 @@ void __fastcall TEditHistoryDlg::UpdateList()
 void __fastcall TEditHistoryDlg::UpdateGrid()
 {
 	TStringGrid *gp = EditHistGrid;
-	gp->Canvas->Font->Assign(ListFont);
+	TCanvas *cv = gp->Canvas;
+	cv->Font->Assign(ListFont);
 
 	if (HistBufList->Count>0) {
 		//Šg’£q‚ÌÅ‘å•‚ğæ“¾
@@ -619,9 +620,9 @@ void __fastcall TEditHistoryDlg::UpdateGrid()
 			bool is_irreg = IsIrregularFont(ListFont);
 			for (int i=0; i<HistBufList->Count; i++) {
 				file_rec *fp = (file_rec*)HistBufList->Objects[i];
-				MaxFextWd = std::max(get_TextWidth(gp->Canvas, fp->f_ext, is_irreg), MaxFextWd);
+				MaxFextWd = std::max(get_TextWidth(cv, fp->f_ext, is_irreg), MaxFextWd);
 			}
-			MaxFextWd = std::min(get_TextWidth(gp->Canvas, "." + StringOfChar(_T('W'), FExtMaxWidth), is_irreg), MaxFextWd);
+			MaxFextWd = std::min(get_TextWidth(cv, get_FExtMaxStr(), is_irreg), MaxFextWd);
 		}
 
 		gp->RowCount = HistBufList->Count;
@@ -877,7 +878,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 			}
 			//êŠ
 			else if (ACol==3) {
-				PathNameOut(lbuf, cv, xp, yp, gp->ColWidths[ACol] - Scaled8);
+				PathNameOut(lbuf, cv, xp, yp, Rect.Width() - mgn);
 			}
 			else {
 				if (isTagPtn && ACol==4) lbuf = minimize_str(lbuf, cv, Rect.Width() - mgn, true);

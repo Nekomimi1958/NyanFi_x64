@@ -9,6 +9,7 @@
 #include <Vcl.Buttons.hpp>
 #include <Vcl.Mask.hpp>
 #include <Vcl.ComCtrls.hpp>
+#include <Vcl.CheckLst.hpp>
 
 //---------------------------------------------------------------------------
 typedef BOOL (WINAPI *FUNC_ShouldAppsUseDarkMode)();
@@ -78,7 +79,7 @@ void InitializeDarkMode();
 void EndDarkMode();
 bool ApplyDarkMode(HWND);
 
-void SetDarkWinTheme(TWinControl *wp);
+void SetDarkWinTheme(TWinControl *wp, bool std_col = false);
 TLabel* AttachLabelToGroup(TWinControl *wp, UnicodeString s = EmptyStr);
 
 TColor get_WinColor(bool is_inv = false);

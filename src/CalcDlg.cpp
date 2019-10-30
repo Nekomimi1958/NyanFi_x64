@@ -812,7 +812,7 @@ void __fastcall TCalculator::ShowError(_TCHAR *msg)
 		LineEdit->Text	= s;
 		LineEdit->Repaint();
 		Sleep(1000);
-		LineEdit->Color = scl_Window;
+		LineEdit->Color = get_WinColor();
 		LineEdit->Text	= lbuf;
 		LineEdit->SelStart = lbuf.Length();
 	}
@@ -822,7 +822,7 @@ void __fastcall TCalculator::ShowError(_TCHAR *msg)
 		HistComboBox->Text	= s;
 		HistComboBox->Repaint();
 		Sleep(1000);
-		HistComboBox->Color = scl_Window;
+		HistComboBox->Color = get_WinColor();
 		HistComboBox->Text	= lbuf;
 		HistComboBox->SelStart = lbuf.Length();
 	}
