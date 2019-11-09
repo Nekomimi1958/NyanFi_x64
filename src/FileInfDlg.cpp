@@ -406,8 +406,8 @@ void __fastcall TFileInfoDlg::InfListBoxDrawItem(TWinControl *Control, int Index
 		cv->Brush->Color = (State.Contains(odSelected) && lp->Focused())? col_selItem : col_bgInf;
 		cv->FillRect(Rect);
 
-		int xp = Rect.Left + Scaled8;
-		int yp = Rect.Top + 1;
+		int xp = Rect.Left + ScaledIntX(8);
+		int yp = Rect.Top  + ScaledIntX(1);
 		bool use_fgsel = lp->Focused() && is_SelFgCol(State);
 
 		TStringDynArray itm_buf = split_strings_tab(lp->Items->Strings[Index]);
@@ -419,22 +419,22 @@ void __fastcall TFileInfoDlg::InfListBoxDrawItem(TWinControl *Control, int Index
 			//階級
 			cv->Font->Color = use_fgsel? col_fgSelItem : col_fgInf;
 			cv->TextOut(xp + MaxColWd0 - get_TextWidth(cv, itm_buf[0], is_irreg), yp, itm_buf[0]);
-			xp += MaxColWd0 + Scaled8;
+			xp += MaxColWd0 + ScaledIntX(8);
 			//区切り線
 			cv->Pen->Style = psSolid;
 			cv->Pen->Width = 1;
 			cv->Pen->Color = col_HR;
 			cv->MoveTo(xp, Rect.Top);  cv->LineTo(xp, Rect.Bottom);
 			//度数
-			xp += Scaled8;
+			xp += ScaledIntX(8);
 			int n = itm_buf[1].ToIntDef(0);
 			cv->TextOut(xp + MaxColWd1 - get_TextWidth(cv, itm_buf[1], is_irreg), yp, itm_buf[1]);
-			xp += MaxColWd1 + Scaled4;
+			xp += MaxColWd1 + ScaledIntX(4);
 			cv->MoveTo(xp, Rect.Top);  cv->LineTo(xp, Rect.Bottom);
 			//累積相対度数
-			xp += Scaled8;
+			xp += ScaledIntX(8);
 			cv->TextOut(xp + MaxColWd2 - get_TextWidth(cv, itm_buf[2], is_irreg), yp, itm_buf[2]);
-			xp += MaxColWd2 + Scaled4;
+			xp += MaxColWd2 + ScaledIntX(4);
 
 			//グラフ
 			TRect rc = Rect;

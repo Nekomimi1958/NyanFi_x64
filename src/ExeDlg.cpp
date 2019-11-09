@@ -33,9 +33,9 @@ void __fastcall TExeCmdDlg::FormShow(TObject *Sender)
 {
 	set_ComboBox_AutoComp(this);
 
-	Constraints->MinHeight = ScaledInt(220);
-	Constraints->MaxHeight = ScaledInt(220);
-	Constraints->MinWidth  = ScaledInt(500);
+	Constraints->MinHeight = ScaledInt(220, this);
+	Constraints->MaxHeight = ScaledInt(220, this);
+	Constraints->MinWidth  = ScaledInt(500, this);
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 	IniFile->LoadComboBoxItems(ExeComboBox,	_T("CmdLnHistory"));

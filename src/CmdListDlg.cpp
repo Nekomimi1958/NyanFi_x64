@@ -46,6 +46,7 @@ void __fastcall TCmdFileListDlg::FormShow(TObject *Sender)
 
 	setup_ToolBar(OpeToolBar);
 	OkBtn->Font->Assign(DialogFont);
+	OpePanel->ClientHeight = std::max(OpeToolBar->Height, ScaledInt(22, this));
 	FilterEdit->Width = IniFile->ReadIntGen(_T("CmdFileListFilterWidth"),	200);
 
 	set_MigemoAction(MigemoAction, _T("CmdFileListMigemo"));
@@ -302,7 +303,7 @@ void __fastcall TCmdFileListDlg::CmdFileGridDrawCell(TObject *Sender, int ACol, 
 			break;
 		case 4:	//ディレクトリ
 			if (remove_top_text(pnam, ExePath) && pnam.IsEmpty()) pnam = ".";
-			cellstr = get_MiniPathName(pnam, gp->ColWidths[4] - 8, cv->Font);
+			cellstr = get_MiniPathName(pnam, gp->ColWidths[4] - ScaledIntX(8), cv->Font);
 			cv->Font->Color = col_Folder;
 			break;
 		case 5:	//参照元
@@ -326,7 +327,7 @@ void __fastcall TCmdFileListDlg::CmdFileGridDrawCell(TObject *Sender, int ACol, 
 		}
 	}
 
-	int xp = Rect.Left + Scaled4;
+	int xp = Rect.Left + ScaledIntX(4);
 	int yp = Rect.Top  + get_TopMargin2(cv);
 	int r_mgn = get_CharWidth(cv, 1);
 

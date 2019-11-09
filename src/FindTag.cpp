@@ -158,11 +158,11 @@ void __fastcall TFindTagForm::TagsListBoxDrawItem(TWinControl *Control, int Inde
 	TListBox *lp = (TListBox *)Control;
 	TCanvas  *cv = lp->Canvas;
 
-	cv->Font->Assign(ListFont);
+	cv->Font->Assign(lp->Font);
 	cv->Brush->Color = State.Contains(odSelected)? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + Scaled4;
+	int xp = Rect.Left + ScaledIntX(4);
 	int yp = Rect.Top  + get_TopMargin2(cv);
 	cv->Font->Color = (State.Contains(odSelected) && col_fgSelItem!=clNone)? col_fgSelItem : col_fgList;
 
@@ -285,7 +285,7 @@ void __fastcall TFindTagForm::InfoListBoxDrawItem(TWinControl *Control, int Inde
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + Scaled4;
+	int xp = Rect.Left + ScaledIntX(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	cv->Brush->Color = col_bgList;

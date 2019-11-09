@@ -75,10 +75,8 @@ void __fastcall TExTxtViewer::FormShow(TObject *Sender)
 	TxtScrollPanel->Color = col_bgView;
 
 	//情報ヘッダ
-	TxtSttHeader->Align 	   = TxtSttIsBottom? alBottom : alTop;
-	TxtSttHeader->ClientHeight = get_FontHeight(ViewHdrFont, 4, 4);
-	TxtSttHeader->Font->Assign(ViewHdrFont);
-	TxtSttHeader->Repaint();
+	TxtSttHeader->Align = TxtSttIsBottom? alBottom : alTop;
+	setup_StatusBar(TxtSttHeader, ViewHdrFont);
 
 	set_UsrScrPanel(TxtViewScrPanel);
 
@@ -183,13 +181,12 @@ void __fastcall TExTxtViewer::WmExitSizeMove(TMessage &msg)
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::AdjustHdrWidth()
 {
-	TxtSttHeader->Font->Assign(ViewHdrFont);
-
 	TCanvas *cv = TxtSttHeader->Canvas;
-	cv->Font->Assign(ViewHdrFont);
-	TxtSttHeader->Panels->Items[1]->Width = cv->TextWidth(TxtSttHeader->Panels->Items[1]->Text) + 12;
-	TxtSttHeader->Panels->Items[2]->Width = cv->TextWidth(TxtSttHeader->Panels->Items[2]->Text) + 12;
-	TxtSttHeader->Panels->Items[3]->Width = cv->TextWidth(TxtSttHeader->Panels->Items[3]->Text) + 12;
+	cv->Font->Assign(TxtSttHeader->Font);
+	int s_12 = ScaledInt(12, this);
+	TxtSttHeader->Panels->Items[1]->Width = cv->TextWidth(TxtSttHeader->Panels->Items[1]->Text) + s_12;
+	TxtSttHeader->Panels->Items[2]->Width = cv->TextWidth(TxtSttHeader->Panels->Items[2]->Text) + s_12;
+	TxtSttHeader->Panels->Items[3]->Width = cv->TextWidth(TxtSttHeader->Panels->Items[3]->Text) + s_12;
 	UnicodeString tmp = "00000行 000桁 0000字選択 ";
 	if (ExViewer->CsvCol>=0) tmp += " 00列";
 	TxtSttHeader->Panels->Items[4]->Width = cv->TextWidth(tmp);
@@ -743,7 +740,7 @@ void __fastcall TExTxtViewer::WebSearchActionUpdate(TObject *Sender)
 void __fastcall TExTxtViewer::PopWebSearchItemMeasureItem(TObject *Sender, TCanvas *ACanvas,
 	int &Width, int &Height)
 {
-	Width = ACanvas->TextWidth(PopWebSearchItem->Caption) + ScaledInt(32);
+	Width = ACanvas->TextWidth(PopWebSearchItem->Caption) + ScaledInt(32, this);
 }
 
 //---------------------------------------------------------------------------

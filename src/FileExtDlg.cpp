@@ -130,14 +130,13 @@ void __fastcall TFileExtensionDlg::FormShow(TObject *Sender)
 	ClusterSize = get_ClusterSize(PathName);
 
 	//拡張子一覧の初期化
-	TListBox *lp = InfoListBox;
-	set_StdListBox(lp);
+	set_StdListBox(InfoListBox);
 	set_UsrScrPanel(InfoScrPanel);
-	TCanvas *cv = lp->Canvas;
+	TCanvas *cv = InfoListBox->Canvas;
 
 	//ヘッダを初期化
 	InitializeListHeader(FextInfHeader, _T("拡張子|ファイル数|合計サイズ|平均サイズ"));
-	FExtSctWd = get_CharWidth(cv, 14, ScaledInt((IconMode==1)? 20 : 0));	//" .XXXXXXXXXXXX" 
+	FExtSctWd = get_CharWidth(cv, 14, ScaledInt((IconMode==1)? 20 : 0, this));	//" .XXXXXXXXXXXX" 
 	FCntSctWd = get_CharWidth(cv, 10);	//" 9,999,999"
 	SizeSctWd = get_CharWidth(cv, 13);	//" 1999.999 MB "
 	PercSctWd = get_CharWidth(cv,  8);	//" 100.0% "
@@ -145,8 +144,7 @@ void __fastcall TFileExtensionDlg::FormShow(TObject *Sender)
 	THeaderSections *sp = FextInfHeader->Sections;
 	for (int i=0; i<sp->Count; i++) FextInfBar->Panels->Items[i]->Width = sp->Items[i]->Width;
 
-	FextInfBar->ClientHeight = get_FontHeight(ListFont, 4, 4);
-	FextInfBar->Font->Assign(ListFont);
+	setup_StatusBar(FextInfBar, ListFont);
 	for (int i=0; i<FextInfBar->Panels->Count; i++) FextInfBar->Panels->Items[i]->Text = EmptyStr;
 
 	//ファイル一覧の初期化
@@ -155,13 +153,11 @@ void __fastcall TFileExtensionDlg::FormShow(TObject *Sender)
 	FileListHeader->Sections->Items[0]->Width = IniFile->ReadIntGen(_T("FileExtFileHdrW0"),	200);
 	FileListHeader->Sections->Items[1]->Width = ClientWidth - FileListHeader->Sections->Items[0]->Width;
 
-	lp = FileListBox;
-	lp->Tag = LBTAG_OPT_LCPY;
-	set_StdListBox(lp);
+	FileListBox->Tag = LBTAG_OPT_LCPY;
+	set_StdListBox(FileListBox);
 	set_UsrScrPanel(FileScrPanel);
 
-	FileInfBar->ClientHeight = get_FontHeight(ListFont, 4, 4);
-	FileInfBar->Font->Assign(SttBarFont);
+	setup_StatusBar(FileInfBar);
 	FileInfBar->Panels->Items[0]->Text = EmptyStr;
 
 	ListSplitter->Color = col_Splitter;
@@ -502,7 +498,7 @@ void __fastcall TFileExtensionDlg::FextInfBarDrawPanel(TStatusBar *StatusBar, TS
 	cv->FillRect(Rect) ;
 
 	UnicodeString lbuf = Panel->Text;
-	int xp = ((Panel->Index==2)? Rect.Left + SizeSctWd - ScaledInt(4) : Rect.Right) - cv->TextWidth(lbuf) - ScaledInt(4);
+	int xp = ((Panel->Index==2)? Rect.Left + SizeSctWd - ScaledIntX(4) : Rect.Right) - cv->TextWidth(lbuf) - ScaledIntX(4);
 	cv->Font->Color = col_fgSttBar;
 	cv->TextOut(xp, Rect.Top, lbuf);
 }
@@ -563,19 +559,19 @@ void __fastcall TFileExtensionDlg::InfoListBoxDrawItem(TWinControl *Control, int
 	cv->Brush->Color = bgcol;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + Scaled4;
+	int xp = Rect.Left + ScaledIntX(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	UnicodeString fext = FextInfoList->Strings[Index];
 	//アイコン
 	if (IconMode==1) {
 		HICON hIcon = get_fext_SmallIcon(fext);
-		if (hIcon) ::DrawIconEx(cv->Handle, xp, yp, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+		if (hIcon) ::DrawIconEx(cv->Handle, xp, yp, hIcon, ScaledIntX(16), ScaledIntX(16), 0, NULL, DI_NORMAL);
 	}
 
 	//拡張子
 	cv->Font->Color = get_ExtColor(fext);
-	int i_w = ScaledInt(IconMode==1? 20 : 0);
+	int i_w = ScaledIntX(IconMode==1? 20 : 0);
 	cv->TextOut(xp + i_w, yp, minimize_str(fext, cv, FExtSctWd - i_w, true));
 	xp += FExtSctWd - 8;
 
@@ -691,7 +687,7 @@ void __fastcall TFileExtensionDlg::FileListBoxDrawItem(TWinControl *Control, int
 	cv->Brush->Color = is_AltLnBgCol(Index)? col_bgList2 : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + Scaled4;
+	int xp = Rect.Left + ScaledIntX(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	if (Index==MAX_FLIST_CNT) {
@@ -720,7 +716,7 @@ void __fastcall TFileExtensionDlg::FileListBoxDrawItem(TWinControl *Control, int
 		else {
 			UnicodeString fext = get_extension(fnam);
 			int x_wd = std::min(get_TextWidth(cv, get_FExtMaxStr(), is_irreg), get_TextWidth(cv, fext.UpperCase(), is_irreg));
-			int x_fx = Rect.Left + w_fn - x_wd - Scaled8;
+			int x_fx = Rect.Left + w_fn - x_wd - ScaledIntX(8);
 			cv->TextOut(xp, yp, minimize_str(get_base_name(fnam), cv, x_fx - xp, OmitEndOfName));
 			cv->TextOut(x_fx, yp, minimize_str(fext, cv, x_wd, true));
 		}
@@ -734,7 +730,7 @@ void __fastcall TFileExtensionDlg::FileListBoxDrawItem(TWinControl *Control, int
 				if (FileScrPanel->VisibleV) rc.Right -= (FileScrPanel->KnobWidth - 1);
 			}
 			cv->Font->Color = col_Folder;
-			PathNameOut(pnam, cv, xp, yp, rc.Right - xp - Scaled4);
+			PathNameOut(pnam, cv, xp, yp, rc.Right - xp - ScaledIntX(4));
 		}
 	}
 

@@ -325,7 +325,7 @@ void __fastcall TInpCmdsDlg::SubComboBoxDrawItem(TWinControl *Control, int Index
 	TCanvas *cv = SubComboBox->Canvas;
 	cv->FillRect(Rect);
 
-	int x = Rect.Left + Scaled4;
+	int x = Rect.Left + ScaledIntX(4);
 	int y = Rect.Top  + get_TopMargin(cv);
 	UnicodeString lbuf = SubComboBox->Items->Strings[Index];
 	cv->TextOut(x, y, split_tkn(lbuf, ' '));

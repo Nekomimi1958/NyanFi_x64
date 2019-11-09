@@ -793,6 +793,13 @@ void XCMD_upd_Var()
 	XCMD_set_Var(_T("LastWatchLog"),LastWatchLog);
 	XCMD_set_Var(_T("ModalResult"),	(int)XCMD_ModalResult);
 
+	UnicodeString lbuf;
+	for (int i=LogWndListBox->Count-1; i>=0; i--) {
+		lbuf = LogWndListBox->Items->Strings[i];
+		if (!lbuf.IsEmpty() && !EndsStr(LOG_ALL_TASK_RDY, lbuf)) break;
+	}
+	XCMD_set_Var(_T("LastLogText"),	lbuf);
+
 	switch (ScrMode) {
 	case SCMD_TVIEW:
 		if (TxtViewer->isReady) {

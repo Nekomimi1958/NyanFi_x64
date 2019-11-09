@@ -27,8 +27,8 @@ __fastcall TCharInfoForm::TCharInfoForm(TComponent* Owner)
 void __fastcall TCharInfoForm::FormShow(TObject *Sender)
 {
 	FontNamePanel->Font->Assign(DialogFont);
-	FontNamePanel->Font->Size = 8;
-	FontNamePanel->Height = abs(FontNamePanel->Font->Height) + Scaled4;
+	FontNamePanel->Font->Size = ScaledInt(8, this);
+	FontNamePanel->Height = abs(FontNamePanel->Font->Height) + ScaledInt(4, this);
 
 	Splitter1->MinSize = FontNamePanel->Height * 2;
 

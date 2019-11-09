@@ -952,6 +952,12 @@ private:	// ユーザー宣言
 
 	void __fastcall WmFormShowed(TMessage &msg);
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		SetDarkWinTheme(this, true);
+	}
+
 	void __fastcall InitializeOptListBox();
 	void __fastcall SetWinTheme(bool force = false);
 	void __fastcall DeselectComboBox(TGroupBox *gp);
@@ -1007,6 +1013,7 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,		TMessage,	WmFormShowed)
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,		TMessage,	WmDpiChanged)
 		VCL_MESSAGE_HANDLER(WM_FORM_DROPPED,	TMessage,	WmDropped)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_FLICON,	TMessage,	WmNyanFiFlIcon)
 	END_MESSAGE_MAP(TForm)

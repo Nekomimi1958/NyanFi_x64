@@ -20,15 +20,15 @@ FUNC_AllowDarkModeForApp	lpfAllowDarkModeForApp	  = NULL;
 FUNC_FlushMenuThemes		lpfFlushMenuThemes		  = NULL;
 
 //---------------------------------------------------------------------------
-bool SupportDarkMode = false;		//ダークモード適用可能
-bool IsDarkMode 	 = false;		//ダークモードが適用されている
-bool AllowDarkMode	 = false;		//ダークモードを適用(オプション設定)
+bool SupportDarkMode = false;	//ダークモード適用可能
+bool IsDarkMode 	 = false;	//ダークモードが適用されている
+bool AllowDarkMode	 = false;	//ダークモードを適用(オプション設定)
 
 //---------------------------------------------------------------------------
-bool SureCancel;					//キャンセルボタンを表示
-bool SureDefNo;						//「いいえ」がデフォルト
-bool SureAdjPos;					//表示位置を状況に合わせて調整
-bool MsgPosCenter = false;			//メイン画面の中央に表示
+bool SureCancel;				//キャンセルボタンを表示
+bool SureDefNo;					//「いいえ」がデフォルト
+bool SureAdjPos;				//表示位置を状況に合わせて調整
+bool MsgPosCenter = false;		//メイン画面の中央に表示
 
 //---------------------------------------------------------------------------
 const TColor col_None = Graphics::clNone;
@@ -220,8 +220,9 @@ void SetHighlight(TCanvas *cv, bool hl)
 //---------------------------------------------------------------------------
 //コントロールにダークモードを適用
 //---------------------------------------------------------------------------
-void SetDarkWinTheme(TWinControl *wp,
-	bool std_col)	//リストボックスなどで表示色を使用	(default = false)
+void SetDarkWinTheme(
+	TWinControl *wp,	//コントロール
+	bool std_col)		//リストボックスなどで標準色を使用	(default = false)
 {
 	if (!wp) return;
 	if (wp->ClassNameIs("TStatusBar")) return;
@@ -236,7 +237,12 @@ void SetDarkWinTheme(TWinControl *wp,
 	TColor bg_win	= get_WinColor();
 	TColor fg_txt   = get_TextColor();
 
-	double scale = Screen->PixelsPerInch / 96.0;
+	std::unique_ptr<TFont> def_font(new TFont());
+	def_font->Assign(Application->DefaultFont);
+	TWinControl *pp = wp->Parent;
+	if (pp && pp->ClassNameIs("TToolBar") && (wp->ClassNameIs("TComboBox") || wp->ClassNameIs("TEdit"))) {
+		def_font->Size = ((TToolBar*)pp)->Font->Size;
+	}
 
 	if (wp->InheritsFrom(__classid(TForm))) {
 		TForm *fp = (TForm*)wp;
@@ -249,7 +255,7 @@ void SetDarkWinTheme(TWinControl *wp,
 			TControl *cp = wp->Controls[i];
 			if (cp->ClassNameIs("TLabel")) {
 				TLabel *lp = (TLabel *)cp;
-				lp->Font->Assign(Application->DefaultFont);
+				lp->Font->Assign(def_font.get());
 				lp->Font->Color = fg_label;
 				lp->Color		= bg_panel;
 			}
@@ -265,12 +271,12 @@ void SetDarkWinTheme(TWinControl *wp,
 	}
 	else if (wp->ClassNameIs("TPanel") || wp->ClassNameIs("TTabSheet")
 		|| wp->ClassNameIs("TGroupBox") || wp->ClassNameIs("TRadioGroup")
-		|| wp->ClassNameIs("TTabControl"))
+		|| wp->ClassNameIs("TTabControl") || wp->ClassNameIs("TToolBar"))
 	{
 		if (wp->ClassNameIs("TPanel")) {
 			TPanel *pp = (TPanel *)wp;
 			pp->StyleElements.Clear();
-			pp->Font->Assign(Application->DefaultFont);
+			pp->Font->Assign(def_font.get());
 			pp->Font->Color = fg_label;
 			pp->Color		= bg_panel;
 		}
@@ -289,7 +295,7 @@ void SetDarkWinTheme(TWinControl *wp,
 						TLabel *lp = new TLabel(cp->Parent);
 						lp->Tag		= (18 << 16) + cp->Width - 8;	//検索マーク用 ***
 						lp->Parent	= cp->Parent;
-						lp->Font->Assign(Application->DefaultFont);
+						lp->Font->Assign(def_font.get());
 						lp->Color		= bg_panel;
 						lp->Font->Color = fg_label;
 						lp->Caption = cp->Caption;
@@ -307,7 +313,7 @@ void SetDarkWinTheme(TWinControl *wp,
 				TControl *cp = wp->Controls[i];
 				if (cp->ClassNameIs("TLabel")) {
 					TLabel *lp = (TLabel *)cp;
-					lp->Font->Assign(Application->DefaultFont);
+					lp->Font->Assign(def_font.get());
 					lp->Font->Color = fg_label;
 					lp->Color		= bg_panel;
 				}
@@ -319,7 +325,7 @@ void SetDarkWinTheme(TWinControl *wp,
 				TControl *cp = wp->Controls[i];
 				if (cp->ClassNameIs("TLabel")) {
 					TLabel *lp = (TLabel *)cp;
-					lp->Font->Assign(Application->DefaultFont);
+					lp->Font->Assign(def_font.get());
 					lp->Font->Color = fg_label;
 					lp->Color		= bg_panel;
 				}
@@ -332,20 +338,20 @@ void SetDarkWinTheme(TWinControl *wp,
 	//以下は単独の子コントロール
 	else if (wp->ClassNameIs("TEdit")) {
 		TEdit *ep = (TEdit *)wp;
-		ep->Font->Assign(Application->DefaultFont);
+		ep->Font->Assign(def_font.get());
 		ep->Font->Color = fg_txt;
 		ep->Color		= bg_win;
 	}
 	else if (wp->ClassNameIs("TLabeledEdit")) {
 		TLabeledEdit *ep = (TLabeledEdit *)wp;
-		ep->Font->Assign(Application->DefaultFont);
+		ep->Font->Assign(def_font.get());
 		ep->Font->Color = fg_txt;
 		ep->Color		= bg_win;
 		ep->EditLabel->Font->Color = fg_label;
 	}
 	else if (wp->ClassNameIs("TMaskEdit")) {
 		TMaskEdit *ep = (TMaskEdit *)wp;
-		ep->Font->Assign(Application->DefaultFont);
+		ep->Font->Assign(def_font.get());
 		ep->Font->Color = fg_txt;
 		ep->Color		= bg_win;
 	}
@@ -354,13 +360,13 @@ void SetDarkWinTheme(TWinControl *wp,
 	}
 	else if (wp->ClassNameIs("TSpeedButton")) {
 		TSpeedButton *bp = (TSpeedButton *)wp;
-		bp->Font->Assign(Application->DefaultFont);
+		bp->Font->Assign(def_font.get());
 		bp->Font->Color = fg_label;
 	}
 	else if (wp->ClassNameIs("TComboBox")) {
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_CFD") : NULL, NULL);
 		TComboBox *cp = (TComboBox *)wp;
-		cp->Font->Assign(Application->DefaultFont);
+		cp->Font->Assign(def_font.get());
 		cp->Font->Color = fg_txt;
 		cp->Color		= bg_win;
 	}
@@ -372,12 +378,12 @@ void SetDarkWinTheme(TWinControl *wp,
 				TLabel *lp = new TLabel(cp->Parent);
 				lp->Tag		= (cp->Height << 16) + cp->Width;	//検索マーク用
 				lp->Parent	= cp->Parent;
-				lp->Font->Assign(Application->DefaultFont);
+				lp->Font->Assign(def_font.get());
 				lp->Font->Color = fg_label;
 				lp->Color		= bg_panel;
 				lp->Caption = cp->Caption;
 				lp->Anchors = cp->Anchors;
-				lp->Left	= cp->Left + 16 * scale;
+				lp->Left	= cp->Left + (16 * wp->CurrentPPI / 96);
 				lp->Top 	= cp->Top;
 				cp->Caption = EmptyStr;
 				lp->BringToFront();
@@ -392,11 +398,11 @@ void SetDarkWinTheme(TWinControl *wp,
 				TLabel *lp = new TLabel(cp->Parent);
 				lp->Tag		= (cp->Height << 16) + cp->Width;	//検索マーク用
 				lp->Parent	= cp->Parent;
-				lp->Font->Assign(Application->DefaultFont);
+				lp->Font->Assign(def_font.get());
 				lp->Font->Color = fg_label;
 				lp->Color		= bg_panel;
 				lp->Caption = cp->Caption;
-				lp->Left	= cp->Left + 16 * scale;
+				lp->Left	= cp->Left + (16 * wp->CurrentPPI / 96);
 				lp->Top 	= cp->Top;
 				cp->Caption = EmptyStr;
 				lp->BringToFront();
@@ -416,21 +422,21 @@ void SetDarkWinTheme(TWinControl *wp,
 //---------------------------------------------------------------------------
 //TGroupBox/TRadioGroup にキャプション疑似表示用のラベルを追加
 //---------------------------------------------------------------------------
-TLabel* AttachLabelToGroup(TWinControl *wp,
+TLabel* AttachLabelToGroup(
+	TWinControl *wp,
 	UnicodeString s)	//キャプション	(default = EmptyStr)
 {
 	TLabel *ret_p = NULL;
 
-	UnicodeString cap_str;
 	TWinControl *parent;
+	UnicodeString cap_str;
+	int s_8 = 8 * wp->CurrentPPI / 96;
 	int xp, yp;
-	double scale = Screen->PixelsPerInch / 96.0;
-	int size8 = (int)(8 * scale);
 
 	if (wp->ClassNameIs("TGroupBox")) {
 		TGroupBox *gp = (TGroupBox *)wp;
 		parent = gp->Parent;
-		xp = gp->Left + size8;
+		xp = gp->Left + s_8;
 		yp = gp->Top - 1;
 		gp->Color		= get_PanelColor();
 		gp->Font->Color = get_LabelColor();
@@ -440,7 +446,7 @@ TLabel* AttachLabelToGroup(TWinControl *wp,
 	else if (wp->ClassNameIs("TRadioGroup")) {
 		TRadioGroup *gp = (TRadioGroup *)wp;
 		parent = gp->Parent;
-		xp = gp->Left + size8;
+		xp = gp->Left + s_8;
 		yp = gp->Top - 1;
 		gp->Color		= get_PanelColor();
 		gp->Font->Color = get_LabelColor();
@@ -456,7 +462,6 @@ TLabel* AttachLabelToGroup(TWinControl *wp,
 		TPanel *pp	= new TPanel(parent);
 		pp->Parent	= parent;
 		ret_p->Font->Assign(Application->DefaultFont);
-		if (scale>1.0) ret_p->Font->Size = (int)(ret_p->Font->Size/scale);	//※
 		ret_p->Font->Color = get_LabelColor();
 		ret_p->Color	   = get_PanelColor();
 		pp->Left		   = xp;
@@ -790,9 +795,8 @@ void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool act
 //---------------------------------------------------------------------------
 void draw_MenuSeparator(TCanvas *cv, TRect rc)
 {
-	double scale = Screen->PixelsPerInch / 96.0;
 	int yp = rc.Top + rc.Height()/2;
-	int x0 = rc.Left + ::GetSystemMetrics(SM_CYMENU) + (int)(4 *scale);
+	int x0 = rc.Left + ::GetSystemMetrics(SM_CYMENU) + (4 * Screen->PixelsPerInch / 96);
 	int x1 = rc.Right;
 	cv->Pen->Style = psSolid;
 	cv->Pen->Mode  = pmCopy;

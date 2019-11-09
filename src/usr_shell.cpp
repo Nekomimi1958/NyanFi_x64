@@ -464,7 +464,6 @@ UserShell::UserShell(HWND hWnd)
 	::OleInitialize(NULL);
 
 	TargetHandle = hWnd;
-	ScrScale	 = 1.0;
 
 	//浮動小数点例外の抑止マスク
 	FpuTmpMask<<exInvalidOp<<exDenormalized<<exZeroDivide<<exOverflow<<exUnderflow<<exPrecision;
@@ -758,10 +757,11 @@ UnicodeString UserShell::ShowContextMenu(
 							if (m_buf.Length==3) {
 								SHFILEINFO sif;
 								if (::SHGetFileInfo(m_buf[2].c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON)) {
+									int s_16 = 16 * Screen->PixelsPerInch / 96;
 									BITMAPINFOHEADER bmihdr = {sizeof(BITMAPINFOHEADER)};
 									BITMAPINFO bmi;
-									bmihdr.biWidth	  = 16 * ScrScale;
-									bmihdr.biHeight   = 16 * ScrScale;
+									bmihdr.biWidth	  = s_16;
+									bmihdr.biHeight   = s_16;
 									bmihdr.biPlanes   = 1;
 									bmihdr.biBitCount = 32;
 									bmi.bmiHeader = bmihdr;
@@ -769,7 +769,7 @@ UnicodeString UserShell::ShowContextMenu(
 									HBITMAP hBmp = ::CreateDIBSection(NULL, (LPBITMAPINFO)&bmi, DIB_RGB_COLORS, &lpBits, NULL, 0);
 									HDC hdcMem = ::CreateCompatibleDC(NULL);
 									HBITMAP hBmpPrev = (HBITMAP)::SelectObject(hdcMem, hBmp);
-									::DrawIconEx(hdcMem, 0, 0, sif.hIcon, 16 * ScrScale, 16 * ScrScale, 0, NULL, DI_NORMAL);
+									::DrawIconEx(hdcMem, 0, 0, sif.hIcon, s_16, s_16, 0, NULL, DI_NORMAL);
 									::SelectObject(hdcMem, hBmpPrev);
 									::DeleteDC(hdcMem);
 									mii.fMask = MIIM_BITMAP;
@@ -1750,7 +1750,8 @@ bool UserShell::draw_SmallIcon(UnicodeString fnam, TCanvas *cv, int x, int y)
 
 	HICON hIcon = get_SmallIcon(fnam);
 	if (hIcon) {
-		::DrawIconEx(cv->Handle, x, y, hIcon, 16 * ScrScale, 16 * ScrScale, 0, NULL, DI_NORMAL);
+		int s_16 = 16 * Screen->PixelsPerInch / 96;
+		::DrawIconEx(cv->Handle, x, y, hIcon, s_16, s_16, 0, NULL, DI_NORMAL);
 		::DestroyIcon(hIcon);
 		return true;
 	}
@@ -1764,9 +1765,8 @@ bool UserShell::draw_SmallIcon(UnicodeString fnam, TImage *ip, TColor bg)
 	TCanvas *cv = ip->Picture->Bitmap->Canvas;
 	cv->Brush->Color = bg;
 	cv->FillRect(ip->ClientRect);
-
-	int size = 16 * ScrScale;
-	return draw_SmallIcon(fnam, cv, (ip->ClientWidth - size) / 2, (ip->ClientHeight - size) / 2);
+	int s_16 = 16 * Screen->PixelsPerInch / 96;
+	return draw_SmallIcon(fnam, cv, (ip->ClientWidth - s_16) / 2, (ip->ClientHeight - s_16) / 2);
 }
 
 //---------------------------------------------------------------------------

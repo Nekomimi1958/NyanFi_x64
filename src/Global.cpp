@@ -86,14 +86,6 @@ win_dat Win2Data;				//二重起動終了時の画面情報
 
 int ScrMode  = SCMD_FLIST;	//画面モード
 
-double ScrScale = 1.0;			//画面スケーリング
-int    SIcoSize = 16;			//スモールアイコンの表示サイズ
-int    Scaled1  = 1;
-int    Scaled2  = 2;
-int    Scaled3  = 3;
-int    Scaled4  = 4;
-int    Scaled8  = 8;
-
 bool  IsMuted	= false;		//音量ミュート
 
 bool  GitExists = false;		//Git がインストールされている
@@ -1194,14 +1186,6 @@ void InitializeGlobal()
 	}
 	if (IsWindowsServer()) OSVerInfStr += "Server ";
 
-	ScrScale = Screen->PixelsPerInch / 96.0;	//スケーリングを設定
-	SIcoSize = ScaledInt(16);
-	Scaled1  = ScaledInt(1);
-	Scaled2  = ScaledInt(2);
-	Scaled3  = ScaledInt(3);
-	Scaled4  = ScaledInt(4);
-	Scaled8  = ScaledInt(8);
-
 	//ユーザ名
 	_TCHAR szName[256];
 	DWORD size = 256;
@@ -2116,7 +2100,6 @@ void InitializeGlobal()
 	//----------------------------------
 	usr_SH = new UserShell(MainHandle);
 	usr_SH->PropNameWidth = FPRP_NAM_WD;
-	usr_SH->ScrScale = ScrScale;
 
 	usr_ARC = new UserArcUnit(MainHandle);
 	usr_ARC->FExt7zDll = FExt7zDll;
@@ -2676,19 +2659,22 @@ void SetToolWinBorder(TForm *fp, bool sw)
 //---------------------------------------------------------------------------
 //一覧用グリッドの初期化
 //---------------------------------------------------------------------------
-void InitializeListGrid(TStringGrid *gp, TFont *fnt)
+void InitializeListGrid(TStringGrid *gp,
+	TFont *font)	//フォント	(default = NULL : ListFont)
 {
 	gp->Color = col_bgList;
-	gp->Font->Assign(fnt? fnt : ListFont);
+	gp->Font->Assign(font? font : ListFont);
 	gp->DefaultRowHeight = get_FontHeight(gp->Font, ListInterLn);
 }
 //---------------------------------------------------------------------------
 //一覧用ヘッダの初期化
 //---------------------------------------------------------------------------
-void InitializeListHeader(THeaderControl *hp, const _TCHAR *hdr, TFont *fnt)
+void InitializeListHeader(THeaderControl *hp,
+	const _TCHAR *hdr,	//見出し	("|" 区切り)
+	TFont *font)		//フォント	(default = NULL : LstHdrFont)
 {
 	hp->DoubleBuffered = true;
-	hp->Font->Assign(fnt? fnt : LstHdrFont);
+	hp->Font->Assign(font? font : LstHdrFont);
 	hp->Height = get_FontHeight(hp->Font, 6);
 
 	UnicodeString s = hdr;
@@ -5378,10 +5364,14 @@ drive_info *get_DriveInfoList()
 							dp->is_SSD = !pDescriptor->IncursSeekPenalty && !USAME_TI(dp->bus_type, "SD");
 							if (dp->is_SSD) dp->type_str = "ソリッドステート";
 						}
-						else rq_chk_ram = true;
+						else {
+							rq_chk_ram = true;
+						}
 					}
 				}
-				else rq_chk_ram = true;
+				else {
+					rq_chk_ram = true;
+				}
 
 				//RAMディスクの推測
 				if (rq_chk_ram && dp->accessible && dp->drv_type==DRIVE_FIXED && dp->bus_type.IsEmpty()) {
@@ -5651,26 +5641,24 @@ void update_DriveLog(bool save)
 //---------------------------------------------------------------------------
 void set_ListBoxItemHi(
 	TListBox *lp,
-	TFont *font,	//フォント			(default = NULL : Application->DefaultFont);
+	TFont *font,	//フォント			(default = NULL : Application->DefaultFont)
 	bool with_ico)	//アイコンを表示	(default = false)
 {
 	if (!font) font = Application->DefaultFont;
 	lp->Font->Assign(font);
 	lp->Canvas->Font->Assign(font);
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1),
-								with_ico? (int)(20 * ScrScale) : 0);
+	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
 }
 //---------------------------------------------------------------------------
 void set_ListBoxItemHi(
 	TCheckListBox *lp,
-	TFont *font,	//フォント			(default = NULL : Application->DefaultFont);
+	TFont *font,	//フォント			(default = NULL : Application->DefaultFont)
 	bool with_ico)	//アイコンを表示	(default = false)
 {
 	if (!font) font = Application->DefaultFont;
 	lp->Font->Assign(font);
 	lp->Canvas->Font->Assign(font);
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1),
-								with_ico? (int)(20 * ScrScale) : 0);
+	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
 }
 
 //---------------------------------------------------------------------------
@@ -5679,7 +5667,7 @@ void set_ListBoxItemHi(
 void set_StdListBox(
 	TListBox *lp,
 	int tag,		//	(default = 0)
-	TFont *font,	//	(default = NULL)
+	TFont *font,	//	(default = NULL : ListFont)
 	bool with_ico)	//アイコンを表示	(default = false)
 {
 	if (tag!=0) lp->Tag = tag;
@@ -5687,13 +5675,13 @@ void set_StdListBox(
 	if (!font) font = ListFont;
 	lp->Font->Assign(font);
 	lp->Canvas->Font->Assign(font);
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? (int)(20 * ScrScale) : 0);
+	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
 }
 //---------------------------------------------------------------------------
 void set_StdListBox(
 	TCheckListBox *lp,
 	int tag,		//	(default = 0)
-	TFont *font,	//	(default = NULL)
+	TFont *font,	//	(default = NULL : ListFont)
 	bool with_ico)	//アイコンを表示	(default = false)
 {
 	if (tag!=0) lp->Tag = tag;
@@ -5701,7 +5689,7 @@ void set_StdListBox(
 	if (!font) font = ListFont;
 	lp->Font->Assign(font);
 	lp->Canvas->Font->Assign(font);
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? (int)(20 * ScrScale) : 0);
+	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
 }
 
 //---------------------------------------------------------------------------
@@ -5733,6 +5721,30 @@ void setup_ToolBar(
 			if (cp->Action) cp->Action->Update();
 		}
 	}
+}
+
+//---------------------------------------------------------------------------
+//ステータスバーの設定
+//---------------------------------------------------------------------------
+void setup_StatusBar(
+	TStatusBar *sb,
+	TFont *font)	//フォント	(default = NULL : SttBarFont)
+{
+	if (!font) font = SttBarFont;
+	sb->Font->Assign(font);
+	sb->ClientHeight = get_FontHeight(sb->Font, 4, 4);
+}
+
+//---------------------------------------------------------------------------
+//パネルーの設定
+//---------------------------------------------------------------------------
+void setup_Panel(
+	TPanel *pp,
+	TFont *font)	//フォント	(default = NULL : DialogFont)
+{
+	if (!font) font = DialogFont;
+	pp->Font->Assign(font);
+	pp->ClientHeight = get_FontHeight(pp->Font, 4, 4);
 }
 
 //---------------------------------------------------------------------------
@@ -6524,7 +6536,7 @@ bool draw_SmallIcon(
 			std::unique_ptr<TPngImage> png_buf(new TPngImage());
 			png_buf->LoadFromFile(snam);
 			png_buf->Transparent = true;
-			png_buf->Draw(cv, Rect(x, y, x + SIcoSize, y + SIcoSize));
+			png_buf->Draw(cv, Rect(x, y, x + ScaledInt(16), y + ScaledInt(16)));
 			return true;
 		}
 		catch (...) {
@@ -6555,7 +6567,7 @@ bool draw_SmallIcon(
 					if (idx!=-1) {
 						if (CachedIcoList->Objects[idx]) {
 							hIcon = ((TIcon*)CachedIcoList->Objects[idx])->Handle;
-							::DrawIconEx(cv->Handle, x, y, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+							::DrawIconEx(cv->Handle, x, y, hIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
 							handled = true;
 						}
 					}
@@ -6580,11 +6592,11 @@ bool draw_SmallIcon(
 	if (!hIcon)  return false;
 
 	//描画
-	::DrawIconEx(cv->Handle, x, y, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+	::DrawIconEx(cv->Handle, x, y, hIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
 
 	//ディレクトリに矢印マークをオーバーレイ表示
 	if (fp->is_dir && fp->is_sym && hLinkIcon) {
-		::DrawIconEx(cv->Handle, x, y, hLinkIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+		::DrawIconEx(cv->Handle, x, y, hLinkIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
 	}
 
 	return true;
@@ -6607,7 +6619,7 @@ bool draw_SmallIconF(
 		if (idx!=-1) {
 			if (CachedIcoList->Objects[idx]) {
 				hIcon = ((TIcon*)CachedIcoList->Objects[idx])->Handle;
-				::DrawIconEx(cv->Handle, x, y, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+				::DrawIconEx(cv->Handle, x, y, hIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
 				handled = true;
 			}
 		}
@@ -6620,7 +6632,7 @@ bool draw_SmallIconF(
 	if (handled) return true;
 	if (!hIcon)  return false;
 
-	::DrawIconEx(cv->Handle, x, y, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+	::DrawIconEx(cv->Handle, x, y, hIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
 	return true;
 }
 
@@ -6677,7 +6689,7 @@ bool draw_SmallIcon2(
 	if (!hIcon)  return false;
 
 	//描画
-	::DrawIconEx(cv->Handle, x, y, hIcon, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+	::DrawIconEx(cv->Handle, x, y, hIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
 	return true;
 }
 
@@ -8006,17 +8018,18 @@ void assign_InfListBox(
 	UsrScrollPanel *sp)		//シンプルスクロールバー (default = NULL)
 {
 	TCanvas *cv = lp->Canvas;
-	cv->Font->Assign(FileInfFont);
+	cv->Font->Assign(lp->Font);
 
 	bool is_irreg = IsIrregularFont(cv->Font);
 	int w_max = 0;
 	for (int i=((lp->Tag & LBTAG_OPT_FIF1)? 3: 0); i<i_lst->Count; i++) {
+		if ((int)i_lst->Objects[i] & LBFLG_FEXT_FIF) continue;
 		UnicodeString lbuf = i_lst->Strings[i];
 		if (lbuf.Pos(": ")>1) w_max = std::max(w_max, get_TextWidth(cv, get_tkn(lbuf, _T(": ")), is_irreg));
 	}
+
 	lp->Tag &= 0x7fff0000;
 	lp->Tag |= w_max;
-
 	lp->Items->Assign(i_lst);
 	if (sp) sp->UpdateKnob();
 }
@@ -8033,8 +8046,8 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 	cv->Brush->Color = (State.Contains(odSelected) && lp->Focused())? col_selItem : col_bgInf;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + Scaled2;
-	int yp = Rect.Top  + Scaled1;
+	int xp = Rect.Left + ScaledInt(2);
+	int yp = Rect.Top  + ScaledInt(1);
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	bool use_fgsel = lp->Focused() && is_SelFgCol(State);
 
@@ -8054,31 +8067,38 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 		return;
 	}
 
-	//最大項目名幅を取得
-	int w_max = LOWORD(lp->Tag);
-
 	//項目名
-	UnicodeString namstr = split_tkn(lbuf, _T(": "));
-	xp = Rect.Left + 2 + w_max - get_TextWidth(cv, namstr, is_irreg);
-	UnicodeString iname = Trim(namstr);
-	namstr += ": ";
-	if (!iname.IsEmpty()) {
-		cv->Font->Color = use_fgsel? col_fgSelItem :
-			(flag & LBFLG_FEXT_FIF)? get_ExtColor(iname) :
-			 (flag & LBFLG_ERR_FIF)? col_Error : col_fgInfNam;
-		cv->TextOut(xp, yp, namstr);
+	int w_max = LOWORD(lp->Tag);	//最大項目名幅
+	UnicodeString inam = Trim(split_tkn(lbuf, _T(": ")));
+	UnicodeString fext;
+	if (flag & LBFLG_FEXT_FIF) {
+		fext = inam;
+		inam = minimize_str(inam, cv, w_max, true);
 	}
-	xp += get_TextWidth(cv, namstr, is_irreg);
+	xp = Rect.Left + ScaledInt(2) + w_max - get_TextWidth(cv, inam, is_irreg);
+	if (!inam.IsEmpty()) {
+		cv->Font->Color = use_fgsel? col_fgSelItem :
+			(flag & LBFLG_FEXT_FIF)? get_ExtColor(fext) :
+			 (flag & LBFLG_ERR_FIF)? col_Error : col_fgInfNam;
+		cv->TextOut(xp, yp, inam + ":");
+	}
+	xp += get_TextWidth(cv, inam + ": ", is_irreg);
 
 	//項目値
 	cv->Font->Color = use_fgsel? col_fgSelItem :
-					  test_word_i(iname, EmpInfItems)? col_fgInfEmp :
-									  iname.IsEmpty()? AdjustColor(col_fgInf, ADJCOL_FGLIST) :
-							  (flag & LBFLG_GIT_HASH)? col_GitHash : col_fgInf;
+					  test_word_i(inam, EmpInfItems)? col_fgInfEmp :
+									  inam.IsEmpty()? AdjustColor(col_fgInf, ADJCOL_FGLIST) :
+							 (flag & LBFLG_GIT_HASH)? col_GitHash : col_fgInf;
 
-	if		(flag & LBFLG_PATH_FIF)	PathNameOut(lbuf, cv, xp, yp);
-	else if (flag & LBFLG_FILE_FIF)	Emphasis_RLO_info(lbuf, cv, xp, yp);
-	else if (flag & LBFLG_TAGS_FIF)	usr_TAG->DrawTags(lbuf, cv, xp, yp, RevTagCololr? col_bgInf : col_None);
+	if (flag & LBFLG_PATH_FIF) {
+		PathNameOut(lbuf, cv, xp, yp);
+	}
+	else if (flag & LBFLG_FILE_FIF) {
+		Emphasis_RLO_info(lbuf, cv, xp, yp);
+	}
+	else if (flag & LBFLG_TAGS_FIF) {
+		usr_TAG->DrawTags(lbuf, cv, xp, yp, RevTagCololr? col_bgInf : col_None);
+	}
 	else if (flag & LBFLG_FEXT_FIF) {
 		xp = xp + (lbuf.Length() * cv->TextWidth("0")) - cv->TextWidth(lbuf);
 		cv->TextOut(xp, yp, lbuf);
@@ -8107,7 +8127,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 			int p = 0;
 			for (int i=1; i<=lbuf.Length() && !p; i++) if (lbuf.IsDelimiter("~^", i)) p = i;
 			UnicodeString tag = (p>1)? lbuf.SubString(1, p - 1) : lbuf;
-			draw_GitTag(cv, xp, yp, tag, Scaled4);
+			draw_GitTag(cv, xp, yp, tag, ScaledInt(4));
 			if (p>1) out_TextEx(cv, xp, yp, lbuf.Delete(1, p - 1));
 		}
 		else {
@@ -8134,17 +8154,17 @@ void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState Sta
 
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
-	cv->TextOut(Rect.Left + 34, yp, vbuf);
+	cv->TextOut(Rect.Left + ScaledInt(34), yp, vbuf);
 
 	//カラー
-	TRect rc = Rect;  rc.Right = rc.Left + 30;
+	TRect rc = Rect;  rc.Right = rc.Left + ScaledInt(30);
 	cv->Brush->Color = (TColor)col_lst->Values[col_nam].ToIntDef(clBlack);
 	if (cv->Brush->Color!=col_None)
 		cv->FillRect(rc);
 	else {
 		cv->Brush->Color = get_PanelColor();
 		cv->FillRect(rc);
-		out_Text(cv, rc.Left + 2, yp, _T("無効"), get_TextColor());
+		out_Text(cv, rc.Left + ScaledInt(2), yp, _T("無効"), get_TextColor());
 	}
 
 	//境界線
@@ -8162,7 +8182,7 @@ void draw_InputPaintBox(TPaintBox *pp, UnicodeString s)
 	cv->Brush->Color = col_bgList;
 	cv->FillRect(pp->ClientRect);
 
-	int xp = Scaled2;
+	int xp = ScaledInt(2);
 	int yp = get_TopMargin(cv);
 	cv->Font->Color = col_fgList;
 	cv->TextOut(xp, yp, s);
@@ -8170,7 +8190,7 @@ void draw_InputPaintBox(TPaintBox *pp, UnicodeString s)
 	xp += get_TextWidth(cv, s, IsIrregularFont(cv->Font));
 
 	//キャレット
-	if (UserModule->BlinkTimer->Tag>0) draw_Caret(cv, xp, yp + Scaled2);
+	if (UserModule->BlinkTimer->Tag>0) draw_Caret(cv, xp, yp + ScaledInt(2));
 }
 
 //---------------------------------------------------------------------------
@@ -10350,7 +10370,7 @@ void draw_Caret(TCanvas *cv, int x, int y)
 {
 	TColor bg = cv->Brush->Color;
 	cv->Brush->Color = col_Cursor;
-	cv->FillRect(Rect(x, y, x + Scaled2, y + cv->TextHeight("Q") - 1));
+	cv->FillRect(Rect(x, y, x + ScaledInt(2), y + cv->TextHeight("Q") - 1));
 	cv->Brush->Color = bg;
 }
 
@@ -10361,7 +10381,7 @@ void draw_TAB(TCanvas *cv, int x, int y, int w, int h)
 {
 	cv->TextOut(x, y, " ");
 	cv->Pen->Style = psSolid;
-	cv->Pen->Width = Scaled1;
+	cv->Pen->Width = ScaledInt(1);
 	cv->Pen->Color = col_TAB;
 	int w1 = w - 1;
 	int wa = w1/2;
@@ -10377,7 +10397,7 @@ void draw_CR(TCanvas *cv, int x, int y, int w, int h)
 {
 	cv->TextOut(x, y, " ");
 	cv->Pen->Style = psSolid;
-	cv->Pen->Width = Scaled1;
+	cv->Pen->Width = ScaledInt(1);
 	cv->Pen->Color = col_CR;
 	int w1 = w - 2;
 	int wa = w1/2;
@@ -10476,7 +10496,7 @@ void RuledLnTextOut(
 		//罫線
 		sbuf = s.SubString(p1, 1);
 		cv->Pen->Style = psSolid;
-		cv->Pen->Width = Scaled1;
+		cv->Pen->Width = ScaledInt(1);
 		cv->Pen->Color = col_HR;
 		int w  = get_TextWidth(cv, sbuf, is_irreg);
 		int xc = xp + w/2;
@@ -10600,7 +10620,7 @@ void PrvTextOut(
 void LineNoOut(TCanvas *cv, TRect &rc, UnicodeString l_str)
 {
 	//背景
-	int w_ln = get_CharWidth(cv, 6, Scaled4);
+	int w_ln = get_CharWidth(cv, 6, ScaledInt(4));
 	TRect l_rc = rc;
 	cv->Brush->Color = col_bgLineNo;
 	l_rc.Right = l_rc.Left + w_ln;
@@ -10617,7 +10637,7 @@ void LineNoOut(TCanvas *cv, TRect &rc, UnicodeString l_str)
 
 	//境界線
 	cv->Pen->Style = psSolid;
-	cv->Pen->Width = Scaled1;
+	cv->Pen->Width = ScaledInt(1);
 	cv->Pen->Color = col_bdrLine;
 	cv->MoveTo(l_rc.Right - 1, l_rc.Top);
 	cv->LineTo(l_rc.Right - 1, l_rc.Bottom);
@@ -10841,9 +10861,9 @@ void SpaceTextOut(
 	UnicodeString zs_ch = force_nrm? "　" : "<";
 	if ((ShowSpace || force_nrm) && (s.Pos(hs_ch) || s.Pos(zs_ch))) {
 		bool is_irreg = IsIrregularFont(cv->Font);
-		int w1 = Scaled1;
-		int w2 = Scaled2;
-		int w3 = Scaled3;
+		int w1 = ScaledInt(1);
+		int w2 = ScaledInt(2);
+		int w3 = ScaledInt(3);
 		int hs_wd = get_TextWidth(cv, hs_ch, is_irreg);
 		int zs_wd = std::min(abs(cv->Font->Height), hs_wd * 2);
 		cv->Pen->Width = w1;
@@ -10957,7 +10977,7 @@ void draw_SttBarPanel(TStatusBar *sp, TStatusPanel *pp, TRect rc)
 	cv->FillRect(rc);
 
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(rc.Left + Scaled4, rc.Top, pp->Text);
+	cv->TextOut(rc.Left + ScaledInt(4), rc.Top, pp->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -10975,7 +10995,7 @@ bool draw_SttBarBg(
 	cv->FillRect(sp->ClientRect);
 	//上端境界
 	cv->Pen->Color = SelectWorB(bg, 0.33);	//***
-	cv->Pen->Width = Scaled1;
+	cv->Pen->Width = ScaledInt(1);
 	cv->Pen->Style = psSolid;
 	cv->MoveTo(0, 0);
 	cv->LineTo(sp->ClientWidth, 0);
@@ -11026,7 +11046,7 @@ void draw_SortHeader(
 	//区切り線
 	if (sp->Index < hp->Sections->Count-1) {
 		cv->Pen->Style = psSolid;
-		cv->Pen->Width = Scaled1;
+		cv->Pen->Width = ScaledInt(1);
 		cv->Pen->Color = SelectWorB(cv->Brush->Color, 0.25);
 		cv->MoveTo(rc.Right - 2, rc.Top);  cv->LineTo(rc.Right - 2, rc.Bottom);
 	}
@@ -11082,7 +11102,7 @@ void draw_ImgGrid(TCanvas *cv, Graphics::TBitmap *bmp)
 {
 	//分割グリッド
 	cv->Pen->Style = psSolid;
-	cv->Pen->Width = Scaled1;
+	cv->Pen->Width = ScaledInt(1);
 	cv->Pen->Color = col_ImgGrid;
 	//横
 	for (int i=1; i<ImgGridHorzN; i++) {
@@ -12200,12 +12220,12 @@ void set_LogErrMsg(
 //---------------------------------------------------------------------------
 int get_TopMargin(TCanvas *cv)
 {
-	return has_Leading(cv)? 0 : Scaled2;
+	return has_Leading(cv)? 0 : ScaledIntX(2);
 }
 //---------------------------------------------------------------------------
 int get_TopMargin2(TCanvas *cv)
 {
-	return has_Leading(cv)? Scaled1 : std::max(ListInterLn/2, Scaled2);
+	return has_Leading(cv)? ScaledIntX(1) : std::max(ListInterLn/2, ScaledIntX(2));
 }
 
 //---------------------------------------------------------------------------
@@ -13173,6 +13193,8 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 		_T("PageDown|PageUp|ScrollDown|ScrollUp|ScrollCursorDown|ScrollCursorUp"),	//6～11
 		cmd);
 
+	bool zoomed = false;
+
 	if (cmd_id!=-1) {
 		switch (cmd_id) {
 		case 0:
@@ -13242,10 +13264,11 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 		lp->Font->Size = USAME_TI(cmd, "ZoomIn") ? std::min(lp->Font->Size + d_sz, MAX_FNTZOOM_SZ)
 											 	 : std::max(lp->Font->Size - d_sz, MIN_FNTZOOM_SZ);
 		lp->ItemHeight = get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
-
+		zoomed = true;
 	}
 	else if ((lp->Tag & LBTAG_OPT_ZOOM) && USAME_TI(cmd, "ZoomReset")) {
 		set_ListBoxItemHi(lp, l_font);
+		zoomed = true;
 	}
 	//フォントサイズ変更
 	else if ((lp->Tag & LBTAG_OPT_ZOOM) && USAME_TI(cmd, "SetFontSize")) {
@@ -13254,14 +13277,18 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 			int f_sz = std::max(std::min(prm.ToIntDef(l_font->Size), MAX_FNTZOOM_SZ), MIN_FNTZOOM_SZ);
 			lp->Font->Size = (x_sw && lp->Font->Size==f_sz)? l_font->Size : f_sz;
 			lp->ItemHeight = get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
+			zoomed = true;
 		}
 	}
 	//右クリックメニュー
 	else if (StartsText("ContextMenu", cmd) && lp->PopupMenu) {
 		show_PopupMenu(lp);
 	}
-	else return false;
+	else {
+		return false;
+	}
 
+	if (zoomed) SetDarkWinTheme(lp);
 	if (!lp->Focused()) lp->Invalidate();
 
 	return true;
@@ -14356,8 +14383,8 @@ void draw_GitGraph(
 	if (s1.Length()<(slen + 1)) s1 += StringOfChar(_T(' '), slen - s1.Length() + 1);
 	if (s2.Length()<(slen + 1)) s2 += StringOfChar(_T(' '), slen - s2.Length() + 1);
 
-	cv->Pen->Style	 = psSolid;
-	cv->Pen->Width	 = Scaled1;
+	cv->Pen->Style = psSolid;
+	cv->Pen->Width = ScaledInt(1);
 
 	TColor org_bg = cv->Brush->Color;
 	cv->Brush->Color = is_head? col_GitHEAD : is_wip? org_bg : col_GitMark;
@@ -14564,7 +14591,7 @@ void __fastcall UsrTooltipWindow::Paint(void)
 	Canvas->Brush->Color = col_bgTips;
 	Canvas->Font->Color  = col_fgTips;
 	Canvas->FillRect(rc);
-	int mgn = (int)(2 * (Screen->PixelsPerInch / 96.0));
+	int mgn = 2 * Screen->PixelsPerInch / 96;
 	rc.Top	+= mgn;
 	rc.Left += mgn;
 	::DrawText(Canvas->Handle, Caption.c_str(), -1, &rc, DT_WORDBREAK);

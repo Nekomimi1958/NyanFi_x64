@@ -76,6 +76,12 @@ private:	// ユーザー宣言
 	TStringList *MatchWdList;
 	int MatchCount;
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		SetDarkWinTheme(this);
+	}
+
 public:		// ユーザー宣言
 	TComboBox   *ObjComboBox;
 	TCustomEdit *ObjCustomEdit;
@@ -83,6 +89,10 @@ public:		// ユーザー宣言
 	UnicodeString PatternStr;
 
 	__fastcall TRegExChecker(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TRegExChecker *RegExChecker;

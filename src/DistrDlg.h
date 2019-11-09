@@ -106,9 +106,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RegListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall PrvListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall ListListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall ListListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CheckBtnClick(TObject *Sender);
 	void __fastcall RegListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall ListListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall PrvListBoxData(TWinControl *Control, int Index, UnicodeString &Data);
 	void __fastcall PrvListHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
 			const TRect &Rect, bool Pressed);
@@ -146,6 +146,12 @@ private:	// ユーザー宣言
 		org_SttBar1WndProc(msg);
 	}
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		SetDarkWinTheme(this, true);
+	}
+
 	void __fastcall WmFormShowed(TMessage &msg);
 	void __fastcall AssignRegListBox();
 	bool __fastcall LoadDistrFile();
@@ -168,6 +174,7 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

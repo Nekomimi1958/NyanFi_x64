@@ -396,7 +396,7 @@ void __fastcall TRenameDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPa
 	cv->Brush->Color = IsDarkMode? col_bgSttBar : scl_BtnFace;
 	cv->FillRect(Rect);
 	cv->Font->Color = (ExistErr && Panel->Index==0)? col_Error : IsDarkMode? col_fgSttBar : scl_BtnText;
-	cv->TextOut(Rect.Left + 2, Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + ScaledInt(2), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -1399,10 +1399,10 @@ void __fastcall TRenameDlg::PreviewGridDrawCell(TObject *Sender, int ACol, int A
 		else if (rel_str.IsEmpty() || USAME_TS(rel_str, "~"))
 			cv->Font->Color = col_Error;
 	}
-	cell_str = minimize_str(cell_str, cv, Rect.Width() - 4, OmitEndOfName);
+	cell_str = minimize_str(cell_str, cv, Rect.Width() - ScaledIntX(4), OmitEndOfName);
 
 	cv->FillRect(Rect);
-	cv->TextRect(Rect, Rect.Left + 2, Rect.Top + 2, cell_str);
+	cv->TextRect(Rect, Rect.Left + ScaledIntX(2), Rect.Top + ScaledIntX(2), cell_str);
 
 	if(State.Contains(gdFocused)) cv->DrawFocusRect(Rect);
 }
@@ -1444,7 +1444,7 @@ void __fastcall TRenameDlg::CnvCharListBoxDrawItem(TWinControl *Control, int Ind
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int x = Rect.Left + Scaled4;
+	int x = Rect.Left + ScaledIntX(4);
 	int y = Rect.Top  + get_TopMargin(cv);
 
 	SetHighlight(cv, State.Contains(odSelected));
@@ -1553,7 +1553,7 @@ void __fastcall TRenameDlg::AssRenListBoxDrawItem(TWinControl *Control, int Inde
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + Scaled2;
+	int xp = Rect.Left + ScaledIntX(2);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	int w_x = 50;

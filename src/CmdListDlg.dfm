@@ -226,71 +226,8 @@ object CmdFileListDlg: TCmdFileListDlg
     Width = 581
     Height = 22
     Align = alBottom
-    AutoSize = True
     BevelOuter = bvNone
     TabOrder = 2
-    object OpeToolBar: TToolBar
-      Left = 0
-      Top = 0
-      Width = 501
-      Height = 22
-      Align = alClient
-      AutoSize = True
-      ButtonHeight = 19
-      ButtonWidth = 86
-      DrawingStyle = dsGradient
-      List = True
-      ShowCaptions = True
-      AllowTextButtons = True
-      TabOrder = 0
-      object FilterBtn: TToolButton
-        Left = 0
-        Top = 0
-        Caption = #12501#12451#12523#12479'(&F)'
-        ImageIndex = 0
-        Style = tbsTextButton
-        OnClick = FilterBtnClick
-      end
-      object FilterEdit: TEdit
-        Left = 63
-        Top = 0
-        Width = 120
-        Height = 19
-        Align = alLeft
-        Constraints.MinWidth = 60
-        PopupMenu = UserModule.EditPopupMenuE
-        TabOrder = 0
-        OnChange = FilterEditChange
-        OnEnter = FilterEditEnter
-        OnExit = FilterEditExit
-        OnKeyDown = FilterEditKeyDown
-        OnKeyPress = FilterEditKeyPress
-      end
-      object FilterSplitter: TSplitter
-        Left = 183
-        Top = 0
-        Width = 4
-        Height = 19
-      end
-      object MigemoBtn: TToolButton
-        Left = 187
-        Top = 0
-        Action = MigemoAction
-        Style = tbsTextButton
-      end
-      object PreviewBtn: TToolButton
-        Left = 234
-        Top = 0
-        Action = PreviewAction
-        Style = tbsTextButton
-      end
-      object CnfExeBtn: TToolButton
-        Left = 303
-        Top = 0
-        Action = CnfExeAction
-        Style = tbsTextButton
-      end
-    end
     object OkBtn: TButton
       Left = 501
       Top = 0
@@ -299,8 +236,78 @@ object CmdFileListDlg: TCmdFileListDlg
       Align = alRight
       Caption = 'OK'
       Default = True
-      TabOrder = 1
+      TabOrder = 0
       OnClick = OkBtnClick
+    end
+    object ToolPanel: TPanel
+      Left = 0
+      Top = 0
+      Width = 501
+      Height = 22
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+      object OpeToolBar: TToolBar
+        Left = 0
+        Top = 0
+        Width = 501
+        Height = 19
+        AutoSize = True
+        ButtonHeight = 19
+        ButtonWidth = 86
+        DrawingStyle = dsGradient
+        List = True
+        ShowCaptions = True
+        AllowTextButtons = True
+        TabOrder = 0
+        object FilterBtn: TToolButton
+          Left = 0
+          Top = 0
+          Caption = #12501#12451#12523#12479'(&F)'
+          ImageIndex = 0
+          Style = tbsTextButton
+          OnClick = FilterBtnClick
+        end
+        object FilterEdit: TEdit
+          Left = 63
+          Top = 0
+          Width = 120
+          Height = 19
+          Align = alLeft
+          Constraints.MinWidth = 60
+          PopupMenu = UserModule.EditPopupMenuE
+          TabOrder = 0
+          OnChange = FilterEditChange
+          OnEnter = FilterEditEnter
+          OnExit = FilterEditExit
+          OnKeyDown = FilterEditKeyDown
+          OnKeyPress = FilterEditKeyPress
+        end
+        object FilterSplitter: TSplitter
+          Left = 183
+          Top = 0
+          Width = 4
+          Height = 19
+        end
+        object MigemoBtn: TToolButton
+          Left = 187
+          Top = 0
+          Action = MigemoAction
+          Style = tbsTextButton
+        end
+        object PreviewBtn: TToolButton
+          Left = 234
+          Top = 0
+          Action = PreviewAction
+          Style = tbsTextButton
+        end
+        object CnfExeBtn: TToolButton
+          Left = 303
+          Top = 0
+          Action = CnfExeAction
+          Style = tbsTextButton
+        end
+      end
     end
   end
   object ListPopupMenu: TPopupMenu

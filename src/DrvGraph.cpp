@@ -43,8 +43,7 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 	OldOdrAction->Checked = IniFile->ReadBoolGen(_T("DrvGrpahOldOdr"));
 	MinMaxAction->Checked = IniFile->ReadBoolGen(_T("DrvGrpahMinMax"));
 
-	StatusBar1->Font->Assign(SttBarFont);
-	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
+	setup_StatusBar(StatusBar1);
 
 	BarSize = IniFile->ReadIntGen( _T("DrvGrpahBarSize"), 8);
 	if (BarSize<1 || BarSize>16) BarSize = 8;
@@ -72,8 +71,6 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 	}
 
 	SetDarkWinTheme(this);
-	SetDarkWinTheme(DriveComboBox);
-	SetDarkWinTheme(SizeComboBox);
 
 	DlgInitialized = true;
 
@@ -121,7 +118,7 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 		int x_max = GraphTopX + xw * MaxUsed;
 
 		TColor col_grid = AdjustColor(col_bgPrgBar, 32);
-		cv->Pen->Width = Scaled1;
+		cv->Pen->Width = ScaledIntX(1);
 		cv->Font->Assign(Font);
 
 		int yt	= 0;

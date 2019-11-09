@@ -258,12 +258,20 @@ private:	// ユーザー宣言
 		org_SttBar1WndProc(msg);
 	}
 
+
+	void __fastcall WmFormShowed(TMessage &msg);
+
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		SetDarkWinTheme(this, true);
+	}
+
 	void __fastcall WmMenuChar(TMessage &msg)
 	{
 		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
 	}
 
-	void __fastcall WmFormShowed(TMessage &msg);
 	void __fastcall UpdateNewNameList();
 	void __fastcall UpdatePreview();
 	UnicodeString __fastcall ConvCharType(UnicodeString s, int idx);
@@ -303,8 +311,9 @@ public:		// ユーザー宣言
 	UnicodeString __fastcall MakeAssRenItem(int idx = -1);
 
 	BEGIN_MESSAGE_MAP
-		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

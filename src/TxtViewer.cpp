@@ -2726,11 +2726,11 @@ void __fastcall TTxtViewer::SttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPan
 	if (inc_flag) {
 		UnicodeString s = Panel->Text;
 		out_TextEx(cv, xp, yp, split_pre_tab(s), color_fgEmp, color_bgEmp);
-		xp += Scaled4;
+		xp += ScaledInt(4, OwnerForm);
 		out_TextEx(cv, xp, yp, split_pre_tab(s), col_fgView);
 
 		//疑似キャレット
-		if (UserModule->BlinkTimer->Tag>0) draw_Caret(cv, xp, yp + Scaled2);
+		if (UserModule->BlinkTimer->Tag>0) draw_Caret(cv, xp, yp + ScaledInt(2, OwnerForm));
 
 		//行位置/ヒット行数
 		if (!s.IsEmpty()) {

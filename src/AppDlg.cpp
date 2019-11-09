@@ -139,6 +139,8 @@ void __fastcall TAppListDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::FormShow(TObject *Sender)
 {
+	SetDarkWinTheme(this);
+
 	if (OnlyLauncher) {
 		set_FormTitle(this, _T("ランチャー"));
 		AppPanel->Visible	= false;
@@ -169,8 +171,7 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 		}
 	}
 
-	StatusBar1->Font->Assign(SttBarFont);
-	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
+	setup_StatusBar(StatusBar1);
 
 	LaunchPath = IncludeTrailingPathDelimiter(IniFile->ReadStrGen(_T("AppListLaunchPath"), ExePath));
 	if (!dir_exists(LaunchPath)) LaunchPath = ExePath;
@@ -183,10 +184,11 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 	TListBox *lp = AppListBox;
 	set_StdListBox(lp, LBTAG_APP_LIST|LBTAG_OPT_LOOP);
 	set_UsrScrPanel(AppScrPanel);
-	int min_hi = ScaledInt(36);
+	int min_hi = ScaledInt(36, this);
 	if (lp->ItemHeight<min_hi) lp->ItemHeight = min_hi;
 	lp->Count = 0;
 	lp->ItemIndex = -1;
+	SetDarkWinTheme(lp);
 
 	MaxWd_f = 0;
 	if (!OnlyLauncher) UpdateAppList();
@@ -282,7 +284,7 @@ void __fastcall TAppListDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusP
 	cv->Brush->Color = col_bgSttBar;
 	cv->FillRect(Rect);
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + Scaled2, Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + ScaledIntX(2), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -386,8 +388,8 @@ void __fastcall TAppListDlg::SetIncSeaMode(bool sw)
 	//通常表示
 	else {
 		InpPaintBox->Visible   = false;;
-		DirPanel->Font->Assign(DirInfFont);
-		DirPanel->ClientHeight = get_FontHeight(DirInfFont, 6, 6);
+
+		setup_Panel(DirPanel, DirInfFont);
 		DirPanel->Color 	   = col_bgDirInf;
 		DirPanel->Font->Color  = col_fgDirInf;
 		DirPanel->Alignment    = taCenter;
@@ -825,13 +827,13 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 																: col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + Scaled4;
+	int xp = Rect.Left + ScaledIntX(4);
 
 	//無応答表示
 	if (ap->isNoRes) {
 		TRect rc = Rect;
-		rc.Left	 = xp + 36;
-		rc.Right = xp + 44 + MaxWd_f + get_CharWidth(cv, 2);
+		rc.Left	 = xp + ScaledIntX(36);
+		rc.Right = xp + ScaledIntX(44) + MaxWd_f + get_CharWidth(cv, 2);
 		InflateRect(rc, 0, -2);
 		TColor br_col	 = cv->Brush->Color;
 		cv->Brush->Color = col_Error;
@@ -840,14 +842,15 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	}
 
 	//アンコン
+	int s_32 = ScaledIntX(32);
 	if (ap->Icon->Handle) {
-		::DrawIconEx(cv->Handle, xp, Rect.Top + 2, ap->Icon->Handle, 32, 32, 0, NULL, DI_NORMAL);
+		::DrawIconEx(cv->Handle, xp, Rect.Top + 2, ap->Icon->Handle, s_32, s_32, 0, NULL, DI_NORMAL);
 	}
 	//UWP用擬似アイコン
 	else if (ap->isUWP) {
 		TRect rc = Rect;
 		rc.Left = xp; rc.Top += 2;
-		rc.SetWidth(32); rc.SetHeight(32);
+		rc.SetWidth(s_32); rc.SetHeight(s_32);
 		cv->Brush->Color = TColor(0x00d5780a);
 		cv->FillRect(rc);
 		int org_fs = cv->Font->Size;
@@ -862,7 +865,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 				}
 			}
 			cv->Font->Color = clWhite;
-			cv->TextOut(rc.Left + (32 - cv->TextWidth(tit))/2, rc.Top + (is_edge? 0 : (32 - cv->TextHeight(tit))/2), tit);
+			cv->TextOut(rc.Left + (s_32 - cv->TextWidth(tit))/2, rc.Top + (is_edge? 0 : (s_32 - cv->TextHeight(tit))/2), tit);
 			cv->Font->Style = cv->Font->Style >> fsBold;
 		}
 		cv->Font->Size = org_fs;
@@ -870,13 +873,13 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 
 	//最小化マーク
 	if (::IsIconic(ap->WinHandle)) {
-		TRect rc(xp + 22, Rect.Top + 24, xp + 34, Rect.Top + 36);
+		TRect rc(xp + ScaledIntX(22), Rect.Top + ScaledIntX(24), xp + ScaledIntX(34), Rect.Top + ScaledIntX(36));
 		cv->Brush->Color = scl_BtnFace;
 		cv->FillRect(rc);
 		draw_Line(cv, rc.Left + 2, rc.Bottom - 3, rc.Right -2, rc.Bottom - 3, 2, scl_BtnText);
 		::DrawEdge(cv->Handle, &rc, BDR_RAISEDOUTER, BF_RECT);
 	}
-	xp += 40;
+	xp += ScaledIntX(40);
 	cv->Brush->Style = bsClear;
 
 	bool use_fgsel = is_SelFgCol(State);
@@ -895,7 +898,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : col_x;
 	cv->TextOut(xp, yp, ap->Caption);
 	if (ap->isWow64) cv->TextOut(xp + get_TextWidth(cv, ap->Caption, is_irreg), yp, ISWOW64_STR);
-	xp += MaxWd_f + 12;
+	xp += MaxWd_f + ScaledIntX(12);
 	//テキスト
 	UnicodeString s = yen_to_delimiter(ap->WinText);
 	cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : col_fgList;
@@ -1353,13 +1356,13 @@ void __fastcall TAppListDlg::LaunchListBoxDrawItem(TWinControl *Control, int Ind
 	cv->Brush->Color = (lp->Focused() && State.Contains(odSelected))? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + Scaled4;
-	int yp = Rect.Top  + Scaled2;
+	int xp = Rect.Left + ScaledIntX(4);
+	int yp = Rect.Top  + ScaledIntX(2);
 
 	file_rec *fp = (file_rec*)LaunchList->Objects[Index];
 	//アイコン
-	draw_SmallIcon(fp, cv, xp, Rect.Top + (Rect.Height() - SIcoSize)/2, true);
-	xp += SIcoSize + Scaled2;
+	draw_SmallIcon(fp, cv, xp, Rect.Top + (Rect.Height() - ScaledIntX(16))/2, true);
+	xp += ScaledIntX(16) + ScaledIntX(2);
 
 	//名前
 	cv->Font->Color = (lp->Focused() && is_SelFgCol(State))? col_fgSelItem :

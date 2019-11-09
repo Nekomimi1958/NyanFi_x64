@@ -126,6 +126,7 @@ object DriveGraph: TDriveGraph
       Height = 21
       Align = alRight
       Style = csDropDownList
+      DropDownCount = 16
       TabOrder = 1
       OnChange = SizeComboBoxChange
       OnKeyDown = OptComboBoxKeyDown

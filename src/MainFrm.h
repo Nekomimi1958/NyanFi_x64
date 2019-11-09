@@ -2027,6 +2027,12 @@ private:	// ユーザー宣言
 		WndSizing = true;
 	}
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		SetDarkWinTheme(this);
+	}
+
 	void __fastcall WmDropped(TMessage &msg);
 	void __fastcall WmSettingChange(TMessage &msg);
 	void __fastcall WmDeviceChange(TMessage &msg);
@@ -2290,6 +2296,15 @@ private:	// ユーザー宣言
 	{
 		return (dir_exists(fnam) || StartsStr('<', fnam)) ? UnicodeString("\\") 
 														  : def_if_empty(get_extension(fnam), ".");
+	}
+
+	void __fastcall JogMouseIfOutside()
+	{
+		if (!BoundsRect.PtInRect(Mouse->CursorPos)) {
+			TPoint p = Mouse->CursorPos;
+			Mouse->CursorPos = Point(p.x + 1, p.y + 1);
+			Mouse->CursorPos = p;
+		}
 	}
 
 	void __fastcall ResetIncSeaFilter(int tag, bool set_listbox = false);
@@ -2617,6 +2632,7 @@ public:		// ユーザー宣言
 		VCL_MESSAGE_HANDLER(WM_ACTIVATE,		TMessage,			WmActivate)
 		VCL_MESSAGE_HANDLER(WM_QUERYENDSESSION, TMessage,			WmQueryEndSession)
 		VCL_MESSAGE_HANDLER(WM_SYSCOMMAND, 		TWMSysCommand, 		WmSysCommand)
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,		TMessage,			WmDpiChanged)
 		VCL_MESSAGE_HANDLER(WM_FORM_DROPPED,	TMessage,			WmDropped)
 		VCL_MESSAGE_HANDLER(WM_SETTINGCHANGE,	TMessage,			WmSettingChange)
 		VCL_MESSAGE_HANDLER(WM_DEVICECHANGE, 	TMessage,			WmDeviceChange)

@@ -66,7 +66,7 @@ void __fastcall TEditItemDlg::ItemListBoxDrawItem(TWinControl *Control, int Inde
 	cv->Font->Assign(lp->Font);
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
-	cv->TextOut(Rect.Left + Scaled2, Rect.Top + get_TopMargin(cv), lp->Items->Strings[Index]);
+	cv->TextOut(Rect.Left + ScaledIntX(2), Rect.Top + get_TopMargin(cv), lp->Items->Strings[Index]);
 }
 
 //---------------------------------------------------------------------------

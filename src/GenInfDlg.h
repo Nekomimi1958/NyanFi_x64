@@ -119,6 +119,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall GenListBoxClick(TObject *Sender);
 	void __fastcall GenListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall GenListBoxKeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall GenListBoxDblClick(TObject *Sender);
+	void __fastcall GenListBoxExit(TObject *Sender);
 	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall CopyActionExecute(TObject *Sender);
 	void __fastcall CopyActionUpdate(TObject *Sender);
@@ -138,8 +140,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall OpenFileActionUpdate(TObject *Sender);
 	void __fastcall ErrOnlyActionExecute(TObject *Sender);
 	void __fastcall ErrOnlyActionUpdate(TObject *Sender);
-	void __fastcall GenListBoxDblClick(TObject *Sender);
-	void __fastcall GenListBoxExit(TObject *Sender);
 	void __fastcall Timer1Timer(TObject *Sender);
 	void __fastcall FindTextItemClick(TObject *Sender);
 	void __fastcall SortAscActionExecute(TObject *Sender);
@@ -180,6 +180,7 @@ private:	// ユーザー宣言
 	bool isFiltered;
 	int  LastIndex;
 	int  LastTopIndex;
+	int  ListWidth;				//リスト幅
 
 	UnicodeString FirstKey;		//2ストローク開始キー
 	bool Wait2ndKey;			//2ストローク目待ち状態
@@ -187,12 +188,17 @@ private:	// ユーザー宣言
 	__int64   FileSize;
 	TDateTime FileTime;
 
-	int  ListWidth;				//リスト幅
 	int  SortMode;				//ソートモード 1:昇順/ -1:降順/ 0:解除
 	bool Found;					//検索結果
 
 	void __fastcall WmFormShowed(TMessage &msg);
 	void __fastcall WmNyanFiPlayList(TMessage &msg);
+
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		SetDarkWinTheme(this);
+	}
 
 	void __fastcall WmMenuChar(TMessage &msg)
 	{
@@ -258,11 +264,14 @@ public:		// ユーザー宣言
 	__fastcall TGeneralInfoDlg(TComponent* Owner);
 	void __fastcall SetStatusBar(UnicodeString msg = EmptyStr);
 
+	void __fastcall ResetListWidth() { ListWidth = 0; }
+
 	bool __fastcall FindText(bool down);
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,		TMessage,	WmFormShowed)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_PLAYLIST, TMessage,	WmNyanFiPlayList)
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,		TMessage,	WmDpiChanged)
 		VCL_MESSAGE_HANDLER(WM_MENUCHAR,		TMessage,	WmMenuChar)
 	END_MESSAGE_MAP(TForm)
 };

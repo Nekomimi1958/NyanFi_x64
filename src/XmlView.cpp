@@ -422,7 +422,7 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	cv->Pen->Width = 1;
 	cv->Pen->Color = col_HR;
 	rc_s.Right = rc_t.Left;
-	int l_ofs  = rc_s.Left + ScaledInt(11);
+	int l_ofs  = rc_s.Left + ScaledIntX(11);
 	TTreeNode *pp = Node->Parent;
 	while (pp) {
 		if (pp->getNextSibling()) {
@@ -440,8 +440,8 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	if (Node->HasChildren) {
 		cv->Pen->Color	 = col_HR;
 		cv->Brush->Color = col_HR;
-		int w_btn = ScaledInt(11);	//ボタンサイズ
-		int xp = rc_s.Right - ScaledInt(w_btn + 5);
+		int w_btn = ScaledIntX(11);	//ボタンサイズ
+		int xp = rc_s.Right - ScaledIntX(w_btn + 5);
 		int yp = rc_s.Top + (rc_s.Height() - w_btn)/2;
 		if ((xp + w_btn)>=0) {
 			//枠
@@ -460,7 +460,7 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	else if (Node->Level>0) {
 		cv->Pen->Color = col_HR;
 		int xl = XmlTreeView->Indent * Node->Level + l_ofs - scr_p;
-		int x2 = xl + Scaled8;
+		int x2 = xl + ScaledIntX(8);
 		if (x2>=0) {
 			if (Node->getNextSibling()) {
 				cv->MoveTo(xl, rc_s.Top);
@@ -497,7 +497,7 @@ void __fastcall TXmlViewer::StatusBar1DrawPanel(TStatusBar *StatusBar,
 	cv->Brush->Color = col_bgSttBar;
 	cv->FillRect(Rect);
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + Scaled2, Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + ScaledIntX(2), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------

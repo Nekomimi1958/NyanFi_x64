@@ -70,7 +70,6 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	UserModule->SetUsrPopupMenu(this);
 
 	FindMarkList = new MarkList(this);
-	FindMarkList->ScrScale = Scaled? ScrScale : 1.0;
 	ColBufList	 = new TStringList();
 
 	SwatchPanel = new UsrSwatchPanel(this);
@@ -1122,8 +1121,8 @@ void __fastcall TOptionDlg::InitializeOptListBox()
 												//<<<<<<<X86_SPI
 	set_ListBoxItemHi(EtcEditorListBox, NULL, true);
 	set_ListBoxItemHi(AssociateListBox, NULL, true);
-	set_ListBoxItemHi(ExtMenuListBox, NULL, true);
-	set_ListBoxItemHi(ExtToolListBox, NULL, true);
+	set_ListBoxItemHi(ExtMenuListBox,   NULL, true);
+	set_ListBoxItemHi(ExtToolListBox,   NULL, true);
 	set_ListBoxItemHi(EventListBox);
 	set_ListBoxItemHi(PrtDirListBox);
 	set_ListBoxItemHi(VirDrvListBox);
@@ -1285,21 +1284,21 @@ void __fastcall TOptionDlg::UpdateMaxItemWidth()
 	MaxWd_AssExt = 0;
 	for (int i=0; i<AssociateListBox->Count; i++)
 		MaxWd_AssExt = std::max(cv->TextWidth(AssociateListBox->Items->Names[i]), MaxWd_AssExt);
-	MaxWd_AssExt += ScaledInt(20);
+	MaxWd_AssExt += ScaledInt(20, this);
 
 	cv = EventListBox->Canvas;
 	cv->Font->Assign(DialogFont);
 	MaxWd_Ev = 0;
 	for (int i=0; i<MAX_EVENT_CMD; i++)
 		MaxWd_Ev = std::max(cv->TextWidth(EventCmdList[i].dsc), MaxWd_Ev);
-	MaxWd_Ev += ScaledInt(20);
+	MaxWd_Ev += ScaledInt(20, this);
 
 	cv = TagColListBox->Canvas;
 	cv->Font->Assign(DialogFont);
 	MaxWd_Tag = 0;
 	for (int i=0; i<usr_TAG->TagNameList->Count; i++)
 		MaxWd_Tag = std::max(cv->TextWidth(usr_TAG->TagNameList->Strings[i]), MaxWd_Tag);
-	MaxWd_Tag += ScaledInt(20);
+	MaxWd_Tag += ScaledInt(20, this);
 }
 
 //---------------------------------------------------------------------------
@@ -1401,7 +1400,7 @@ void __fastcall TOptionDlg::EtcEditorListBoxDrawItem(TWinControl *Control, int I
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + Scaled4;
+	int xp = Rect.Left + ScaledIntX(4);
 	int yp = Rect.Top + (Rect.Height() - cv->TextHeight("Q"))/2;
 
 	int w_x = 0;
@@ -1415,8 +1414,8 @@ void __fastcall TOptionDlg::EtcEditorListBoxDrawItem(TWinControl *Control, int I
 	cv->TextOut(xp, yp, etc_fext);
 	xp += (w_x + 20);
 
-	draw_SmallIconF(etc_edtr, cv, xp, Rect.Top + (Rect.Height() - SIcoSize)/2);
-	xp += get_IcoWidth();
+	draw_SmallIconF(etc_edtr, cv, xp, Rect.Top + (Rect.Height() - ScaledIntX(16))/2);
+	xp += ScaledIntX(20);
 	cv->TextOut(xp, yp, etc_edtr);
 }
 //---------------------------------------------------------------------------
@@ -1549,7 +1548,7 @@ void __fastcall TOptionDlg::FontComboBoxDrawItem(TWinControl *Control, int Index
 	TComboBox *cp = (TComboBox*)Control;
 	TCanvas   *cv = cp->Canvas;
 	cv->Font->Assign(cp->Font);
-	int xp = Rect.Left + Scaled2;
+	int xp = Rect.Left + ScaledIntX(2);
 	int yp = Rect.Top  + get_TopMargin(cv);
 	int fh = abs(cv->Font->Height);
 
@@ -1756,7 +1755,7 @@ void __fastcall TOptionDlg::ExtColListBoxDrawItem(TWinControl *Control, int Inde
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + Scaled4;
+	int xp = Rect.Left + ScaledIntX(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
@@ -1767,7 +1766,7 @@ void __fastcall TOptionDlg::ExtColListBoxDrawItem(TWinControl *Control, int Inde
 
 	UnicodeString smpl_str;
 	smpl_str.sprintf(_T("%s"), is_dot? _T("\u2588 dot") : _T("\u2588.xxx"));
-	int smpl_wd = cv->TextWidth(_T("\u2588.xxx")) + ScaledInt(10);
+	int smpl_wd = cv->TextWidth(_T("\u2588.xxx")) + ScaledIntX(10);
 	TRect rc = Rect;  rc.Right = rc.Left + smpl_wd;
 	cv->FillRect(rc);
 	cv->TextOut(xp, yp, smpl_str);
@@ -2671,7 +2670,7 @@ void __fastcall TOptionDlg::TestAdvancedDrawItem(TObject *Sender, TCanvas *ACanv
 		//キャプション
 		TRect rc = ARect;
 		int hi = rc.Height();
-		rc.Left += (hi + Scaled8);
+		rc.Left += (hi + ScaledIntX(8));
 		int yp = ARect.Top + (hi - ACanvas->TextHeight("Q")) / 2;
 		rc.Top = yp;
 		UINT opt = DT_LEFT;  if (State.Contains(odNoAccel))  opt |= DT_HIDEPREFIX;
@@ -2680,7 +2679,7 @@ void __fastcall TOptionDlg::TestAdvancedDrawItem(TObject *Sender, TCanvas *ACanv
 		//アイコン
 		int idx = mp->ImageIndex;
 		if (idx>=0 && idx<IconImgListP->Count) {
-			IconImgListP->Draw(ACanvas, ARect.Left + Scaled4, yp, mp->ImageIndex);
+			IconImgListP->Draw(ACanvas, ARect.Left + ScaledIntX(4), yp, mp->ImageIndex);
 		}
 	}
 }
@@ -2754,7 +2753,7 @@ void __fastcall TOptionDlg::ChangeAssociateList(bool add)
 	MaxWd_AssExt = 0;
 	for (int i=0; i<AssociateListBox->Count; i++)
 		MaxWd_AssExt = std::max(AssociateListBox->Canvas->TextWidth(AssociateListBox->Items->Names[i]), MaxWd_AssExt);
-	MaxWd_AssExt += ScaledInt(20);
+	MaxWd_AssExt += ScaledIntX(20);
 }
 
 //---------------------------------------------------------------------------
@@ -2847,7 +2846,7 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 	}
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + Scaled2;
+	int xp = Rect.Left + ScaledIntX(2);
 	int yp = Rect.Top + (Rect.Height() - cv->TextHeight("Q"))/2;
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	bool brk = false;
@@ -2909,8 +2908,8 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 			fnam = get_actual_name(tmp);
 		}
 
-		if (file_exists(fnam)) draw_SmallIconF(fnam, cv, xp, Rect.Top + (Rect.Height() - SIcoSize)/2);
-		xp += get_IcoWidth();
+		if (file_exists(fnam)) draw_SmallIconF(fnam, cv, xp, Rect.Top + (Rect.Height() - ScaledIntX(16))/2);
+		xp += ScaledIntX(20);
 
 		cv->TextOut(xp, yp, exclude_quot(lbuf));
 	}
@@ -2941,21 +2940,21 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 			sub_lvl--;
 	}
 
-	int xp = Rect.Left + Scaled2 + ScaledInt(18) + (sub_lvl * cv->TextWidth("W"));
+	int xp = Rect.Left + ScaledIntX(2) + ScaledIntX(18) + (sub_lvl * cv->TextWidth("W"));
 	int yp = Rect.Top + (Rect.Height() - cv->TextHeight("Q"))/2;
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	TStringDynArray itm_buf = get_csv_array(lbuf, (is_tool? EXTTOOL_CSVITMCNT : EXTMENU_CSVITMCNT), true);
 	//セパレータ
 	if (is_separator(itm_buf[0])) {
-		TRect rc = Rect;  rc.Left = xp - 4;
+		TRect rc = Rect;  rc.Left = xp - ScaledIntX(4);
 		draw_Separator(cv, rc);
 	}
 	//項目
 	else {
 		//アイコン
 		draw_SmallIconF(to_absolute_name(cv_env_str(itm_buf[is_tool? 1 : 5])),
-						 cv, Rect.Left + 2, Rect.Top + (Rect.Height() - SIcoSize)/2);
+						 cv, Rect.Left + ScaledIntX(2), Rect.Top + (Rect.Height() - ScaledIntX(16))/2);
 		//キャプション
 		UnicodeString lbuf = minimize_str(itm_buf[0], cv, sp->Items[0]->Width - xp, true);
 		cv->TextOut(xp, yp, lbuf);
@@ -3124,7 +3123,7 @@ void __fastcall TOptionDlg::CmdComboBoxDrawItem(TWinControl *Control, int Index,
 {
 	TComboBox *cp = (TComboBox*)Control;
 	TCanvas   *cv = cp->Canvas;
-	int xp = Rect.Left + Scaled4;
+	int xp = Rect.Left + ScaledIntX(4);
 	int yp = Rect.Top + get_TopMargin(cv);
 
 	UnicodeString lbuf = cp->Items->Strings[Index];
@@ -3519,7 +3518,7 @@ void __fastcall TOptionDlg::KeyListBoxDrawItem(TWinControl *Control, int Index, 
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + Scaled2;
+	int xp = Rect.Left + ScaledIntX(2);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	UnicodeString key = lp->Items->Names[Index];
@@ -4064,7 +4063,7 @@ void __fastcall TOptionDlg::StdCmdListBoxDrawItem(TWinControl *Control, int Inde
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + Scaled2;
+	int xp = Rect.Left + ScaledIntX(2);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	SetHighlight(cv, State.Contains(odSelected));
@@ -4272,7 +4271,7 @@ void __fastcall TOptionDlg::PrtDirListBoxDrawItem(TWinControl *Control, int Inde
 	cv->Font->Assign(lp->Font);
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
-	cv->TextOut(Rect.Left + Scaled2, Rect.Top + get_TopMargin(cv), lp->Items->Strings[Index]);
+	cv->TextOut(Rect.Left + ScaledIntX(2), Rect.Top + get_TopMargin(cv), lp->Items->Strings[Index]);
 }
 //---------------------------------------------------------------------------
 //削除制限ディレクトリの追加

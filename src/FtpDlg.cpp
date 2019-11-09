@@ -128,7 +128,7 @@ void __fastcall TFtpConnectDlg::HostListBoxDrawItem(TWinControl *Control, int In
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + Scaled2;
+	int xp = Rect.Left + ScaledIntX(2);
 	int yp = Rect.Top  + get_TopMargin(cv);
 	cv->TextOut(xp, yp, get_csv_item(lp->Items->Strings[Index], 0));
 }

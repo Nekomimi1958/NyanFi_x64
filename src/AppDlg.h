@@ -190,19 +190,22 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall AppListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall AppListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall AppListBoxDblClick(TObject *Sender);
+	void __fastcall AppListBoxClick(TObject *Sender);
+	void __fastcall AppListBoxData(TWinControl *Control, int Index, UnicodeString &Data);
+	void __fastcall AppListBoxEnter(TObject *Sender);
 	void __fastcall PopupMenu1Popup(TObject *Sender);
 	void __fastcall CloseItemClick(TObject *Sender);
 	void __fastcall TerminateItemClick(TObject *Sender);
 	void __fastcall JumpExeItemClick(TObject *Sender);
 	void __fastcall CopyNameItemClick(TObject *Sender);
 	void __fastcall Timer1Timer(TObject *Sender);
-	void __fastcall AppListBoxClick(TObject *Sender);
 	void __fastcall DesktopItemClick(TObject *Sender);
 	void __fastcall LaunchListBoxDblClick(TObject *Sender);
 	void __fastcall LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall LaunchListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall AppListBoxData(TWinControl *Control, int Index, UnicodeString &Data);
 	void __fastcall LaunchListBoxData(TWinControl *Control, int Index, UnicodeString &Data);
+	void __fastcall LaunchListBoxClick(TObject *Sender);
+	void __fastcall LaunchListBoxEnter(TObject *Sender);
 	void __fastcall SelLaunhDirItemClick(TObject *Sender);
 	void __fastcall JumpLaunchDirItemClick(TObject *Sender);
 	void __fastcall DirPanelDblClick(TObject *Sender);
@@ -211,9 +214,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall PopupMenu2Popup(TObject *Sender);
 	void __fastcall UpdateIcoItemClick(TObject *Sender);
 	void __fastcall SortByRemItemClick(TObject *Sender);
-	void __fastcall LaunchListBoxClick(TObject *Sender);
-	void __fastcall AppListBoxEnter(TObject *Sender);
-	void __fastcall LaunchListBoxEnter(TObject *Sender);
 	void __fastcall CloseSameItemClick(TObject *Sender);
 	void __fastcall ViewPanelDblClick(TObject *Sender);
 	void __fastcall JumpLinkedActionExecute(TObject *Sender);
@@ -260,12 +260,20 @@ private:	// ユーザー宣言
 
 	void __fastcall WmFormShowed(TMessage &msg);
 	void __fastcall WMDropFiles(TWMDropFiles &msg);
-	void __fastcall WmNyanFiFlIcon(TMessage &msg) { LaunchListBox->Invalidate(); }
+
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		SetDarkWinTheme(this);
+		if (Timer1->Enabled) UpdateAppList();
+	}
 
 	void __fastcall WmMenuChar(TMessage &msg)
 	{
 		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
 	}
+
+	void __fastcall WmNyanFiFlIcon(TMessage &msg) { LaunchListBox->Invalidate(); }
 
 	void __fastcall SetIncSeaMode(bool sw);
 	void __fastcall UpdateAppList();
@@ -298,6 +306,7 @@ public:		// ユーザー宣言
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,		TMessage,		WmFormShowed)
 		VCL_MESSAGE_HANDLER(WM_DROPFILES, 		TWMDropFiles,	WMDropFiles)
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,		TMessage,		WmDpiChanged)
 		VCL_MESSAGE_HANDLER(WM_MENUCHAR,		TMessage,		WmMenuChar)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_FLICON,	TMessage,		WmNyanFiFlIcon)
 	END_MESSAGE_MAP(TForm)

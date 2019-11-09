@@ -59,13 +59,6 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 	set_ListBoxItemHi(DiffListBox,	 ListFont);
 	set_UsrScrPanel(DiffScrPanel);
 
-	HashChWidth = 0;
-	bool is_irreg = IsIrregularFont(ListFont);
-	for (int i=0; i<=0x0f; i++) {
-		HashChWidth = std::max(HashChWidth,
-						get_TextWidth(CommitListBox->Canvas, UnicodeString().sprintf(_T("%x"), i), is_irreg));
-	}
-
 	BranchPanel->Width = IniFile->ReadIntGen(_T("GitViewBranchWidth"),	200);
 	RL_Panel->Height   = IniFile->ReadIntGen(_T("GitViewDiffHeight"),	120);
 
@@ -693,8 +686,8 @@ void __fastcall TGitViewer::BranchListBoxDrawItem(TWinControl *Control, int Inde
 	cv->FillRect(Rect);
 	if (flag & GIT_FLAG_BLANK) return;
 
-	int xp = Rect.Left + Scaled4;
-	int yp = Rect.Top  + Scaled2;
+	int xp = Rect.Left + ScaledIntX(4);
+	int yp = Rect.Top  + ScaledIntX(2);
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	//ヘッダ
 	if (flag & GIT_FLAG_HDRLN) {
@@ -801,10 +794,18 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 	cv->Brush->Color = is_match? col_matchItem : lp->Color;
 	cv->FillRect(Rect);
 
+	int max_h_wd = 0;
+	bool is_irreg = IsIrregularFont(lp->Font);
+	for (int i=0; i<=0x0f; i++) {
+		max_h_wd = std::max(max_h_wd, get_TextWidth(cv, UnicodeString().sprintf(_T("%x"), i), is_irreg));
+	}
+
+	int s_4 = ScaledIntX(4);
+	int s_8 = ScaledIntX(8);
+
 	git_rec *gp = (git_rec *)lp->Items->Objects[Index];
-	int xp = Rect.Left + Scaled4;
-	int yp = Rect.Top  + Scaled2;
-	bool is_irreg = IsIrregularFont(cv->Font);
+	int xp = Rect.Left + s_4;
+	int yp = Rect.Top  + ScaledIntX(2);
 
 	if (USAME_TS(gp->graph, "#")) {
 		cv->Font->Color = col_LineNo;
@@ -830,11 +831,11 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 
 	xp += MaxGrWidth;
 	if (gp->is_stash) {
-		out_TextEx(cv, xp, yp, gp->stash, col_Folder, col_None, Scaled8, is_irreg);
+		out_TextEx(cv, xp, yp, gp->stash, col_Folder, col_None, s_8, is_irreg);
 		UnicodeString s = gp->msg;
-		out_TextEx(cv, xp, yp, split_tkn(s, ": "), col_GitBra, col_None, Scaled8, is_irreg);
+		out_TextEx(cv, xp, yp, split_tkn(s, ": "), col_GitBra, col_None, s_8, is_irreg);
 		if (is_match_regex(s, _T("^[0-9a-f]{7}\\s")))
-			out_TextEx(cv, xp, yp, split_tkn(s, ' '), col_GitHash, col_None, Scaled8);
+			out_TextEx(cv, xp, yp, split_tkn(s, ' '), col_GitHash, col_None, s_8);
 		out_TextEx(cv, xp, yp, s, col_fgList, col_None);
 	}
 	if (gp->is_work || gp->is_index) {
@@ -850,27 +851,27 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 		cv->Font->Color = col_GitHash;
 		for (int i=1; i<8; i++) {
 			UnicodeString c = gp->hash.SubString(i, 1);
-			cv->TextOut(xp + (HashChWidth - cv->TextWidth(c))/2, yp, c);
-			xp += HashChWidth;
+			cv->TextOut(xp + (max_h_wd - cv->TextWidth(c))/2, yp, c);
+			xp += max_h_wd;
 		}
-		xp += HashChWidth;
+		xp += max_h_wd;
 
 		//Author
 		if (ShowAuthorAction->Checked) {
 			cv->Font->Color = col_fgList;
 			cv->TextOut(xp, yp, gp->author);
-			xp += (MaxAnWidth + Scaled8);
+			xp += (MaxAnWidth + s_8);
 		}
 
 		//日時
 		UnicodeString tmp = FormatDateTime(TimeStampFmt, gp->f_time);
-		out_TextEx(cv, xp, yp, tmp, get_TimeColor(gp->f_time, col_fgList), col_None, HashChWidth, is_irreg);
+		out_TextEx(cv, xp, yp, tmp, get_TimeColor(gp->f_time, col_fgList), col_None, max_h_wd, is_irreg);
 
 		//タグ
 		if (!gp->tags.IsEmpty()) {
 			TStringDynArray t_lst = split_strings_tab(gp->tags);
-			for (int i=0; i<t_lst.Length; i++) draw_GitTag(cv, xp, yp, t_lst[i], Scaled4);
-			xp += Scaled4;
+			for (int i=0; i<t_lst.Length; i++) draw_GitTag(cv, xp, yp, t_lst[i], s_4);
+			xp += s_4;
 		}
 
 		//ブランチ名
@@ -880,12 +881,12 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 				UnicodeString ss = b_buf[i];
 				if (remove_top_s(ss, "HEAD -> ") || USAME_TS(ss, "HEAD"))
 					out_TextEx(cv, xp, yp, HEAD_Mark, col_GitHEAD, col_None, 0, is_irreg);
-				out_TextEx(cv, xp, yp, ss, col_bgList, col_GitBra, Scaled4, is_irreg);
-				xp += Scaled4;
+				out_TextEx(cv, xp, yp, ss, col_bgList, col_GitBra, s_4, is_irreg);
+				xp += s_4;
 			}
 		}
 		if (ShowRemoteAction->Checked && !gp->branch_r.IsEmpty()) {
-			out_TextEx(cv, xp, yp, gp->branch_r, col_bgList, col_GitBraR, Scaled8, is_irreg);
+			out_TextEx(cv, xp, yp, gp->branch_r, col_bgList, col_GitBraR, s_8, is_irreg);
 		}
 
 		//メッセージ
@@ -949,8 +950,8 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 	cv->Brush->Color = lp->Color;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + Scaled4;
-	int yp = Rect.Top  + Scaled2;
+	int xp = Rect.Left + ScaledIntX(4);
+	int yp = Rect.Top  + ScaledIntX(2);
 	bool is_irreg = IsIrregularFont(cv->Font);
 
 	UnicodeString lbuf = lp->Items->Strings[Index];

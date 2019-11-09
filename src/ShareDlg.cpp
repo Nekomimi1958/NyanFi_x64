@@ -239,7 +239,7 @@ void __fastcall TNetShareDlg::PathTabControlDrawTab(TCustomTabControl *Control, 
 	cv->Font->Color  = Active? col_fgOptTab : get_LabelColor();
 	cv->FillRect(Rect);
 	int yp = (Rect.Height() - cv->TextHeight("Q")) /2;
-	cv->TextOut(Rect.Left + 2, yp, yen_to_delimiter(PathTabControl->Tabs->Strings[TabIndex]));
+	cv->TextOut(Rect.Left + ScaledIntX(2), yp, yen_to_delimiter(PathTabControl->Tabs->Strings[TabIndex]));
 }
 //---------------------------------------------------------------------------
 void __fastcall TNetShareDlg::PathTabControlChange(TObject *Sender)
@@ -279,7 +279,7 @@ void __fastcall TNetShareDlg::ShareListBoxDrawItem(TWinControl *Control, int Ind
 		draw_Separator(cv, Rect, col_bgList);
 	}
 	else {
-		int xp = Rect.Left + Scaled2;
+		int xp = Rect.Left + ScaledIntX(2);
 		int yp = Rect.Top  + get_TopMargin2(cv);
 
 		//アクセスキー
@@ -303,8 +303,8 @@ void __fastcall TNetShareDlg::ShareListBoxDrawItem(TWinControl *Control, int Ind
 
 		//ライブラリ
 		if (isLibrary || (isPC && Index>=LibIdxBase)) {
-			draw_SmallIcon2(lbuf, cv, xp, std::max(yp + (cv->TextHeight("Q") - SIcoSize)/2, 0));
-			xp += get_IcoWidth();
+			draw_SmallIcon2(lbuf, cv, xp, std::max(yp + (cv->TextHeight("Q") - ScaledIntX(16))/2, 0));
+			xp += ScaledIntX(20);
 			lbuf = get_base_name(lbuf);
 			cv->Font->Color = col_Folder;
 		}
@@ -315,9 +315,9 @@ void __fastcall TNetShareDlg::ShareListBoxDrawItem(TWinControl *Control, int Ind
 				if (dp) {
 					TIcon *ip = dp->small_ico;
 					if (ip && ip->Handle)
-						::DrawIconEx(cv->Handle, xp, yp + 1, ip->Handle, SIcoSize, SIcoSize, 0, NULL, DI_NORMAL);
+						::DrawIconEx(cv->Handle, xp, yp + 1, ip->Handle, ScaledIntX(16), ScaledIntX(16), 0, NULL, DI_NORMAL);
 				}
-				xp += get_IcoWidth();
+				xp += ScaledIntX(20);
 				lbuf = get_tkn_r(lbuf, ' ');
 				cv->Font->Color = col_fgList;
 			}

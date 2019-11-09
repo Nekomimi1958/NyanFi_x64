@@ -136,9 +136,10 @@ void __fastcall TSelDriveDlg::UpdateDriveList()
 
 	TStringGrid *gp = DriveGrid;
 	int icon_md = ShowIconCheckBox->Checked? (LargeIconCheckBox->Checked? 2 : 1) : 0;
-	int icon_sz = ScaledInt((icon_md==2)? 32 : (icon_md==1)? 16 : 0);
+	int icon_sz = ScaledInt((icon_md==2)? 32 : (icon_md==1)? 16 : 0, this);
+	int s_4 = ScaledInt(4, this);
 	gp->DefaultRowHeight = get_FontHeight(gp->Font, ListInterLn) + std::max(8 - ListInterLn/2, 0);
-	if (icon_md==2 && gp->DefaultRowHeight<(icon_sz + 4)) gp->DefaultRowHeight = icon_sz + 4;
+	if (icon_md==2 && gp->DefaultRowHeight<(icon_sz + s_4)) gp->DefaultRowHeight = icon_sz + s_4;
 
 	//表示ドライブを抽出
 	update_DriveInfo();
@@ -224,7 +225,7 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 	cv->FillRect(rc);
 
 	if (ACol==0 || gp->ColWidths[ACol]>=COL_WD_HIDE) {
-		int xp = rc.Left + Scaled4;
+		int xp = rc.Left + ScaledIntX(4);
 		int yp = rc.Top;
 		if (ShowIconCheckBox->Checked && LargeIconCheckBox->Checked)
 			yp += std::max(get_TopMargin2(cv), (rc.Height() - ListInterLn -get_FontHeight(cv->Font))/2);
@@ -252,7 +253,7 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 			if (dp) {
 				//アイコン
 				if (ShowIconCheckBox->Checked) {
-					int icon_sz = ScaledInt(ShowIconCheckBox->Checked? (LargeIconCheckBox->Checked? 32 : 16) : 0);
+					int icon_sz = ScaledIntX(ShowIconCheckBox->Checked? (LargeIconCheckBox->Checked? 32 : 16) : 0);
 					TIcon *ip = LargeIconCheckBox->Checked? dp->large_ico : dp->small_ico;
 					if (ip && ip->Handle) {
 						::DrawIconEx(cv->Handle, rc.Left + 2, rc.Top + 2, ip->Handle, icon_sz, icon_sz, 0, NULL, DI_NORMAL);

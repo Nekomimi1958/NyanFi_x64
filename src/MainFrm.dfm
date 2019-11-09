@@ -2168,6 +2168,7 @@ object NyanFiForm: TNyanFiForm
       Width = 300
       Height = 20
       Alignment = taCenter
+      Anchors = [akLeft, akTop, akRight]
       AutoSize = False
       StyleElements = []
     end
@@ -2197,6 +2198,7 @@ object NyanFiForm: TNyanFiForm
       Top = 70
       Width = 241
       Height = 17
+      Anchors = [akLeft, akTop, akRight]
       BevelOuter = bvNone
       DoubleBuffered = True
       ParentDoubleBuffered = False

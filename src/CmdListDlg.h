@@ -16,8 +16,8 @@
 #include <Vcl.ActnList.hpp>
 #include <Vcl.Menus.hpp>
 #include <Vcl.ComCtrls.hpp>
-#include "usr_scrpanel.h"
 #include <Vcl.ToolWin.hpp>
+#include "usr_scrpanel.h"
 
 //---------------------------------------------------------------------------
 class TCmdFileListDlg : public TForm
@@ -56,6 +56,7 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *FilterBtn;
 	TToolButton *MigemoBtn;
 	TToolButton *PreviewBtn;
+	TPanel *ToolPanel;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -95,6 +96,13 @@ private:	// ユーザー宣言
 	bool ToSelect;
 
 	void __fastcall WmFormShowed(TMessage &msg);
+
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		SetDarkWinTheme(this);
+	}
+
 	void __fastcall UpdateList();
 	void __fastcall UpdateGrid();
 	int  __fastcall GetGridIndex();
@@ -113,6 +121,7 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

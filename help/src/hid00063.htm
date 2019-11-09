@@ -185,6 +185,7 @@ MsgBox_%..N%回目です
 <tr><th>Clipboard</th><td>クリップボードのテキスト内容</td></tr>
 <tr><th>DownloadName</th><td><a href="#Download">Download</a> コマンドでダウンロードしたファイル名</td></tr>
 <tr><th>LastWatchLog</th><td><a href="hid00005.htm#WatchTail">WatchTail</a> コマンドで最後に検出されたファイル名とその追記内容</td></tr>
+<tr><th>LastLogText</th><td>ログウィンドウの直前の行内容(空行や &quot; >All Task Ready&quot; はスキップ)</td></tr>
 <tr><th>Buffer</th><td>作業用バッファ、ファイルの読込/保存にも使用可能</td></tr>
 <tr><th>BufferLength</th><td>Buffer の総文字数</td></tr>
 <tr><th>BufferCount</th><td>Buffer の行数</td></tr>
@@ -280,6 +281,9 @@ Debug<span class="pram_text">_WL&lt;&lt;変数名</span>
 
 <div class="spc_box">
 なお <b>ExeCommands</b> コマンドの代わりに <a href="hid00005.htm#DebugCmdFile">DebugCmdFile</a> コマンドによってコマンドファイルを実行すると、<b>Debug</b> 補助コマンドが記述されていなくても最初からデバッグモードになります。
+</div>
+<div class="note_text">
+このコマンドは、コマンドファイル内でのみ使用できます。<br>
 </div>
 
 <dt id="Download" class="no_bg">Download<span class="pram_text">_URL[&gt;&gt;[テキストファイル名]]</span>
@@ -519,6 +523,15 @@ EndRepeat
 <dd>定義済み変数 <b>Buffer</b> の内容に指定文字列が含まれているかを調べます。文字列は ; (セミコロン)で区切って複数指定できます。大文字・小文字は区別されません。指定文字列を / で囲むと正規表現とみなされます。<br>
 結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
 また、マッチした行インデックスが <b>BufferIndex</b> に、マッチした部分の文字列が <b>MatchedStr</b> に設定されます。<br>
+<div class="spc_box">
+<b>例</b>: ハッシュ値が一致しなかったら中断
+<pre class="example_box">
+CompareHash
+Set_Buffer=%LastLogText%
+MatchBuffer_"/\b(ERR|NG):\d/"
+IfTrue_Exit
+</pre>
+</div>
 <a href="#FilterBuffer">→ FilterBuffer</a>
 
 <dt id="MatchDir" class="no_bg">MatchDir<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>

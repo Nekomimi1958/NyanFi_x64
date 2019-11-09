@@ -18,7 +18,6 @@ __fastcall MarkList::MarkList(Classes::TComponent* AOwner): TList()
 	MarkOwner = (TForm*)AOwner;
 
 	MarkColor = clYellow;
-	ScrScale  = 1.0;
 }
 //---------------------------------------------------------------------------
 __fastcall MarkList::~MarkList()
@@ -43,6 +42,7 @@ int __fastcall MarkList::SearchControl(TWinControl *ctrl, UnicodeString wd)
 {
 	int cnt = 0;
 	wd = wd.UpperCase();
+	double scale = MarkOwner->CurrentPPI / 96.0;
 
 	for (int i=0; i<ctrl->ControlCount; i++) {
 		TControl *cp = ctrl->Controls[i];
@@ -67,16 +67,16 @@ int __fastcall MarkList::SearchControl(TWinControl *ctrl, UnicodeString wd)
 				rc.SetWidth(w);
 				rc.SetHeight(h);
 				InflateRect(rc, 2, 0);
-				rc.Offset(-16 * ScrScale, 0);
+				rc.Offset(-16 * scale, 0);
 			}
 			InflateRect(rc, 2, 2);
 
 			//¦100%‚ð’´‚¦‚éê‡‚Ì•â³
-			if (ScrScale>1.0) {
-				rc.Left   /= ScrScale;
-				rc.Top	  /= ScrScale;
-				rc.Right  /= ScrScale;
-				rc.Bottom /= ScrScale;
+			if (scale>1.0) {
+				rc.Left   /= scale;
+				rc.Top	  /= scale;
+				rc.Right  /= scale;
+				rc.Bottom /= scale;
 			}
 
 			sp->BoundsRect	 = rc;

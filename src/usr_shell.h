@@ -174,7 +174,6 @@ public:
 	~UserShell();
 
 	int  PropNameWidth;		//プロパティ項目名の最大表示幅(半角単位)
-	double ScrScale;
 
 	void AddTargetList(TForm *form, TWinControl *ctrl);
 	void DelTargetItem(TForm *form);

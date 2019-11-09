@@ -215,8 +215,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)lp)->SetFocus();
 
 	//ステータスバー
-	StatusBar1->Font->Assign(SttBarFont);
-	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
+	setup_StatusBar(StatusBar1);
 	set_SttBarPanelWidth(StatusBar1, 0, 21 + IntToStr(GenInfoList->Count).Length() * 3);
 												//"項目: nnn  -  nnn    選択: nnn"
 	set_SttBarPanelWidth(StatusBar1, 1, "UTF-16(BE) BOM付");
@@ -586,8 +585,8 @@ void __fastcall TGeneralInfoDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TSta
 	UnicodeString lbuf = Panel->Text;
 	int yp = (Rect.Height() - abs(cv->Font->Height)) / 2;
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + Scaled2, yp, split_pre_tab(lbuf));
-	if (!lbuf.IsEmpty()) cv->TextOut(Rect.Right - cv->TextWidth(lbuf) - Scaled4, yp, lbuf);
+	cv->TextOut(Rect.Left + ScaledIntX(2), yp, split_pre_tab(lbuf));
+	if (!lbuf.IsEmpty()) cv->TextOut(Rect.Right - cv->TextWidth(lbuf) - ScaledIntX(4), yp, lbuf);
 }
 
 //---------------------------------------------------------------------------
@@ -962,7 +961,7 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 
 	//コマンド
 	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V)) {
-		;
+		if (StartsText("Zoom", cmd_F) || StartsText("Zoom", cmd_V)) ResetListWidth();
 	}
 	//フィルタ欄へ
 	else if (StartsText("IncSearch", cmd_F)) {

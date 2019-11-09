@@ -141,6 +141,8 @@ extern  FUNC_GetFontResourceInfo	lpfGetFontResourceInfo;
 #define SFX_AUTOREN   "_\\SN(1)"		//デフォルトの自動改名書式(サフィックス)
 #define FMT_AUTO_REN  "\\N" SFX_AUTOREN	//デフォルトの自動改名書式
 
+#define LOG_ALL_TASK_RDY	"All Task Ready"
+
 //CSV項目数
 #define EXTMENU_CSVITMCNT	6			//caption,cmd,prm,alias,show,icon
 #define EXTTOOL_CSVITMCNT	6			//caption,exe,prm,wk_dir,alias,show
@@ -230,14 +232,6 @@ extern bool   IsPrimary;
 extern int    StartedCount;
 extern int    NyanFiIdNo;
 extern int    ScrMode;
-
-extern double ScrScale;
-extern int    SIcoSize;
-extern int    Scaled1;
-extern int    Scaled2;
-extern int    Scaled3;
-extern int    Scaled4;
-extern int    Scaled8;
 
 extern TRect  FileListRect;
 extern bool   IsMuted;
@@ -1537,21 +1531,20 @@ inline bool is_X64()
 #endif
 }
 
-inline UnicodeString get_FExtMaxStr()
+inline UnicodeString get_FExtMaxStr(int n = 0)
 {
-	return ("." + StringOfChar(_T('W'), FExtMaxWidth));
+	return ("." + StringOfChar(_T('W'), (n>0)? n : FExtMaxWidth));
 }
 
 //---------------------------------------------------------------------------
 //スケーリングされた整数値を取得
-inline int ScaledInt(int n)
+inline int ScaledInt(int n, TControl *cp = NULL)
 {
-	return (int)(n * ScrScale);
+	return (n * (cp? cp->CurrentPPI : Screen->PixelsPerInch) / 96);
 }
-
-inline int get_IcoWidth()
+inline int ScaledIntX(int n)
 {
-	return (int)(20 * ScrScale);
+	return (n * (Screen->ActiveForm? Screen->ActiveForm->CurrentPPI : Screen->PixelsPerInch) / 96);
 }
 
 //---------------------------------------------------------------------------
@@ -1731,6 +1724,8 @@ void set_StdListBox(TListBox      *lp, int tag = 0, TFont *font = NULL, bool wit
 void set_StdListBox(TCheckListBox *lp, int tag = 0, TFont *font = NULL, bool with_ico = false);
 
 void setup_ToolBar(TToolBar *tb, bool upd_sw = false);
+void setup_StatusBar(TStatusBar *sb, TFont *font = NULL);
+void setup_Panel(TPanel *sb, TFont *font = NULL);
 
 void set_UsrScrPanel(UsrScrollPanel *sp);
 void set_FextWidth(file_rec *fp, int tag);
@@ -1897,8 +1892,8 @@ void ApplyOptionByTag(TPanel *pp);
 
 void SetToolWinBorder(TForm *fp, bool sw = true);
 
-void InitializeListGrid(TStringGrid *gp, TFont *fnt = NULL);
-void InitializeListHeader(THeaderControl *hp, const _TCHAR *hdr, TFont *fnt = NULL);
+void InitializeListGrid(TStringGrid *gp, TFont *font = NULL);
+void InitializeListHeader(THeaderControl *hp, const _TCHAR *hdr, TFont *font = NULL);
 
 void set_ComboBox_AutoComp(TForm *frm);
 void set_MigemoCheckBox(TCheckBox *cp, const _TCHAR *key, UnicodeString sct = EmptyStr);

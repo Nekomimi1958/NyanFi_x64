@@ -291,18 +291,19 @@ void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
 	//名前の最大幅を取得
 	TListBox *lp = RegDirListBox;
 	int n_wd = 0;
+	int i_wd = ShowIconAction->Checked? ScaledInt(20, this) : 0;
 	for (int i=0; i<SpDirBuff->Count; i++) {
 		UnicodeString dnam = get_post_tab(SpDirBuff->Strings[i]);
 		if (!dnam.IsEmpty()) {
 			int wd = lp->Canvas->TextWidth(dnam);
-			if ((int)SpDirBuff->Objects[i]==1 && ShowIconAction->Checked) wd += get_IcoWidth();
+			if ((int)SpDirBuff->Objects[i]==1) wd += i_wd;
 			n_wd = std::max(n_wd, wd);
 		}
 	}
 
 	THeaderSections *sp = RegDirHeader->Sections;
 	sp->Items[0]->Width = 0;
-	sp->Items[1]->Width = n_wd + ScaledInt(24);
+	sp->Items[1]->Width = n_wd + ScaledInt(24, this);
 	adjust_HeaderSecWidth(RegDirHeader, 2);
 
 	lp->Items->Assign(SpDirBuff);
@@ -595,7 +596,7 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 	THeaderSections *sp = RegDirHeader->Sections;
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
-	cv->Font->Assign(ListFont);
+	cv->Font->Assign(lp->Font);
 	bool is_irreg  = IsIrregularFont(cv->Font);
 	TColor adj_col = AdjustColor(col_Folder, ADJCOL_LIGHT);
 
@@ -614,7 +615,7 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 		if (IsSpecial) {
 			TStringDynArray itm_buf = split_strings_tab(lbuf);
 			if (itm_buf.Length==2) {
-				int xp = rc.Left + Scaled4;
+				int xp = rc.Left + ScaledIntX(4);
 				int yp = rc.Top  + get_TopMargin2(cv);
 				//セパレータ
 				if (itm_buf[0].IsEmpty()) {
@@ -644,8 +645,8 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 					bool is_exe = ((int)lp->Items->Objects[Index]==1);
 					//アイコン
 					if (is_exe && ShowIconAction->Checked) {
-						draw_SmallIconF(dnam, cv, xp, std::max(yp + (cv->TextHeight("Q") - SIcoSize)/2, 0));
-						xp += get_IcoWidth();
+						draw_SmallIconF(dnam, cv, xp, std::max(yp + (cv->TextHeight("Q") - ScaledIntX(16))/2, 0));
+						xp += ScaledIntX(20);
 					}
 					//名前
 					cv->Font->Color = col_fgList;
@@ -664,11 +665,11 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 							UnicodeString envstr = "%" + split_tkn(dnam, '%') + "%";
 							cv->Font->Color = adj_col;
 							cv->TextOut(xp, yp, envstr);
-							xp += get_TextWidth(cv, envstr, is_irreg) + Scaled2;
+							xp += get_TextWidth(cv, envstr, is_irreg) + ScaledIntX(2);
 						}
 					}
 					cv->Font->Color = (StartsStr("shell:", dnam))? adj_col : col_Folder;
-					PathNameOut(dnam, cv, xp, yp, rc.Right - xp - Scaled4);
+					PathNameOut(dnam, cv, xp, yp, rc.Right - xp - ScaledIntX(4));
 					//区切り線
 					if (brk) draw_separateLine(cv, rc);
 				}
@@ -688,7 +689,7 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 				cv->Font->Style = cv->Font->Style << fsBold;
 				int s_wd = cv->TextWidth(itm_buf[0]);
 				int c_wd = sp->Items[0]->Width - 4;
-				int xp = rc.Left + Scaled2;
+				int xp = rc.Left + ScaledIntX(2);
 				int yp = rc.Top  + get_TopMargin2(cv);
 				if (s_wd<c_wd) xp += (c_wd - s_wd)/2;	//センタリング
 				cv->TextOut(xp, yp, itm_buf[0]);
@@ -711,7 +712,7 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 						xp += get_TextWidth(cv, envstr, is_irreg) + 2;
 					}
 					cv->Font->Color = (StartsStr("shell:", dnam))? adj_col : col_Folder;
-					PathNameOut(dnam, cv, xp, yp, rc.Right - xp - Scaled4);
+					PathNameOut(dnam, cv, xp, yp, rc.Right - xp - ScaledIntX(4));
 				}
 			}
 		}

@@ -61,10 +61,20 @@ __published:	// IDE で管理されるコンポーネント
 private:	// ユーザー宣言
 	UnicodeString InitDir;
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		SetDarkWinTheme(this, true);
+	}
+
 	UnicodeString __fastcall MakeRegItem(int idx = -1);
 
 public:		// ユーザー宣言
 	__fastcall TRegSyncDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TRegSyncDlg *RegSyncDlg;

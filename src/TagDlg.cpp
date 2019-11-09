@@ -55,9 +55,8 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 	RevColCheckBox->Checked = RevTagCololr;
 
 	TCheckListBox *lp = TagCheckListBox;
-
 	set_StdListBox(lp);
-	if (!IsFolderIcon && RevTagCololr) lp->ItemHeight = lp->ItemHeight + Scaled2;
+	if (!IsFolderIcon && RevTagCololr) lp->ItemHeight = lp->ItemHeight + ScaledInt(2, this);
 
 	if (IsFolderIcon) {
 		std::unique_ptr<TStringList> lst(new TStringList());
@@ -67,10 +66,10 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 		for (int i=0; i<lst->Count; i++) {
 			MaxTagWidth = std::max(MaxTagWidth, lp->Canvas->TextWidth(get_base_name(lp->Items->Strings[i])));
 		}
-		MaxTagWidth += ScaledInt(32);
+		MaxTagWidth += ScaledInt(32, this);
 	}
 	else {
-		MaxTagWidth = usr_TAG->IniCheckList(TagCheckListBox) + ScaledInt(32);
+		MaxTagWidth = usr_TAG->IniCheckList(TagCheckListBox) + ScaledInt(32, this);
 	}
 
 	set_UsrScrPanel(ListScrPanel);
@@ -447,20 +446,20 @@ void __fastcall TTagManDlg::TagCheckListBoxDrawItem(TWinControl *Control, int In
 	cv->Brush->Color = lp->Checked[Index]? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + Scaled4;
+	int xp = Rect.Left + ScaledIntX(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	//フォルダアイコン
 	if (IsFolderIcon) {
 		UnicodeString inam = lp->Items->Strings[Index];
 		draw_SmallIcon2(inam, cv, xp, yp);
-		xp += ScaledInt(24);
+		xp += ScaledIntX(24);
 		cv->Font->Color = get_ExtColor(get_extension(inam));
 		cv->TextOut(xp, yp, get_base_name(inam));
 	}
 	//タグ
 	else {
-		if (RevTagCololr) yp += Scaled2;
+		if (RevTagCololr) yp += ScaledIntX(2);
 		usr_TAG->DrawTags(lp->Items->Strings[Index], cv, xp, yp,
 			(RevTagCololr? col_bgList : clNone), UserModule->SpuitEnabled());
 	}

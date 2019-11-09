@@ -75,6 +75,12 @@ private:	// ユーザー宣言
 	bool FindBusy;
 	bool FindAborted;
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		SetDarkWinTheme(this);
+	}
+
 	void __fastcall UpdateListBox(int idx = 0);
 	void __fastcall AddDirsCore(UnicodeString pnam, TStrings *lst, TStringDynArray ex_lst);
 
@@ -90,6 +96,10 @@ public:		// ユーザー宣言
 	UnicodeString WorkListName;
 
 	__fastcall TDirHistoryDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TDirHistoryDlg *DirHistoryDlg;

@@ -302,9 +302,13 @@ void __fastcall UsrScrollPanel::UpdateKnob()
 					ScrPanelV->Visible = true;
 					ScrPaintBoxV->Invalidate();
 				}
-				else ScrPanelV->Visible = false;
+				else {
+					ScrPanelV->Visible = false;
+				}
 			}
-			else ScrPanelV->Visible = false;
+			else {
+				ScrPanelV->Visible = false;
+			}
 
 			//水平スクロールバー
 			if (ScrPanelH && ScrPaintBoxH) {
@@ -317,7 +321,9 @@ void __fastcall UsrScrollPanel::UpdateKnob()
 					ScrPanelH->Visible = true;
 					ScrPaintBoxH->Invalidate();
 				}
-				else ScrPanelH->Visible = false;
+				else {
+					ScrPanelH->Visible = false;
+				}
 
 				//リストボックスの高さ調整
 				lp->Height = ParentPanel->ClientHeight
@@ -340,9 +346,13 @@ void __fastcall UsrScrollPanel::UpdateKnob()
 					ScrPanelV->Visible = true;
 					ScrPaintBoxV->Invalidate();
 				}
-				else ScrPanelV->Visible = false;
+				else {
+					ScrPanelV->Visible = false;
+				}
 			}
-			else ScrPanelV->Visible = false;
+			else {
+				ScrPanelV->Visible = false;
+			}
 		}
 		//グリッド
 		else if (AssoStrGrid) {
@@ -360,9 +370,13 @@ void __fastcall UsrScrollPanel::UpdateKnob()
 					ScrPanelV->Visible = true;
 					ScrPaintBoxV->Invalidate();
 				}
-				else ScrPanelV->Visible = false;
+				else {
+					ScrPanelV->Visible = false;
+				}
 			}
-			else ScrPanelV->Visible = false;
+			else {
+				ScrPanelV->Visible = false;
+			}
 
 			//水平スクロールバー
 			if (ScrPanelH && ScrPaintBoxH) {
@@ -375,7 +389,9 @@ void __fastcall UsrScrollPanel::UpdateKnob()
 					ScrPanelH->Visible = true;
 					ScrPaintBoxH->Invalidate();
 				}
-				else ScrPanelH->Visible = false;
+				else {
+					ScrPanelH->Visible = false;
+				}
 
 				//グリッドの高さ調整
 				gp->Height = ParentPanel->ClientHeight
@@ -398,13 +414,21 @@ void __fastcall UsrScrollPanel::UpdateKnob()
 					ScrPanelV->Visible = true;
 					ScrPaintBoxV->Invalidate();
 				}
-				else ScrPanelV->Visible = false;
+				else {
+					ScrPanelV->Visible = false;
+				}
 			}
-			else ScrPanelV->Visible = false;
+			else {
+				ScrPanelV->Visible = false;
+			}
 		}
-		else ScrPanelV->Visible = false;
+		else {
+			ScrPanelV->Visible = false;
+		}
 	}
-	else ScrPanelV->Visible = false;
+	else {
+		ScrPanelV->Visible = false;
+	}
 
 	VisibleV = ScrPanelV->Visible;
 	VisibleH = (ScrPanelH && ScrPanelH->Visible);

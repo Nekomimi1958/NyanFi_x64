@@ -234,8 +234,14 @@ bool has_Leading(TCanvas *cv)
 //---------------------------------------------------------------------------
 //指定フォントの描画高を取得
 //---------------------------------------------------------------------------
-int get_FontHeight(TFont *font, int mgn, int min_mgn)
+int get_FontHeight(TFont *font,
+	int mgn,		//	(default = 0)
+	int min_mgn)	//	(default = 2)
 {
+	int dpi = (Screen->ActiveForm)? Screen->ActiveForm->CurrentPPI : Screen->PixelsPerInch;
+	mgn 	= mgn * dpi / 96;
+	min_mgn = min_mgn * dpi / 96;
+
 	std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
 	TCanvas *cv = bmp->Canvas;
 	cv->Font->Assign(font);
