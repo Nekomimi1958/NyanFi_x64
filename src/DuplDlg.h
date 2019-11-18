@@ -28,6 +28,9 @@ __published:	// IDE で管理されるコンポーネント
 	TLabel *Label1;
 	TLabel *Label2;
 	TLabeledEdit *MaxSizeEdit;
+	TPanel *BottomPanel;
+	TPanel *OptPanel;
+	TPanel *TopPanel;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);

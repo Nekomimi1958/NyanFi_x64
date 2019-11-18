@@ -200,7 +200,6 @@ struct win_dat {
 //その他
 	bool ShowFileListOnly;
 };
-extern win_dat Win2Data;
 
 //---------------------------------------------------------------------------
 extern TCursor crTmpPrev;	//カーソルのプレビュー用
@@ -229,14 +228,13 @@ extern HWND   MainHandle;
 extern DWORD  ProcessId;
 extern bool   IsAdmin;
 extern bool   IsPrimary;
+extern bool   GitExists;
+extern bool   IsMuted;
 extern int    StartedCount;
 extern int    NyanFiIdNo;
 extern int    ScrMode;
 
 extern TRect  FileListRect;
-extern bool   IsMuted;
-
-extern bool   GitExists;
 
 extern TRichEdit *TempRichEdit;
 

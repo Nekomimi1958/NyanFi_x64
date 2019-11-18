@@ -1155,7 +1155,7 @@ hh.exe の仕様のため、出力パスの名前に半角空白が含まれていると処理できません。<br
 </div>
 <a href="#FindDirDlg">→ FindDirDlg</a>　<a href="#FindFileDlg">→ FindFileDlg</a>　<a href="#MaskFind">→ MaskFind</a>
 
-<dt id="FindDuplDlg">FindDuplDlg
+<dt id="FindDuplDlg">FindDuplDlg<span class="pram_text">[_LR]</span>
 <dd>「<b>重複ファイルの検索</b>」ダイアログを開きます。<br>
 対象となるファイルのうち、ハッシュ値が一致するものを重複ファイルとみなして検索します。<br>
 ハッシュ値の取得は、同サイズのファイルについてのみ行います。まず先頭32KBのハッシュ値でファイル数を絞ってから全体のハッシュ値をチェックします。サイズが 0 のファイルは検索されません。<br>
@@ -1169,7 +1169,11 @@ hh.exe の仕様のため、出力パスの名前に半角空白が含まれていると処理できません。<br
 結果リストでは、見つかった重複ファイルがセパレータで区切って表示されます。ソートは場所順に固定され変更できません。<br>
 また <a href="#ReloadList">ReloadList</a> コマンドによる再検索は行われません。<br>
 </div>
-<a href="#CompareDlg">→ CompareDlg</a>　<a href="#CompareHash">→ CompareHash</a>
+<div class="spc_box">
+パラメータに <b>LR</b> を指定すると、左右のディレクトリのみを対象とした検索を行い(シンボリックリンクは除外)、結果リストは表示せずに重複ファイルを選択します。前述のオプション・チェックボックスは表示されません。対応はファイル情報でハッシュ値を見比べるか、<a href="#ToOppSameHash">ToOppSameHash</a> コマンドで確認してください。<br>
+</div>
+
+<a href="#CompareDlg">→ CompareDlg</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>
 
 <dt id="FindFileDlg">FindFileDlg<span class="pram_text">[_{NM|FK}][;R{0|1}][;X{0|1}][;A{0|1}][;リストファイル名]</span>
 <dd>「<a href="hid00052.htm">ファイル名検索</a>」ダイアログを開きます。<br>

@@ -46,6 +46,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *PreviewPanel;
 	TPanel *PrevPanel;
 	TPanel *ReferPanel;
+	TPanel *ToolPanel;
 	TPopupMenu *ListPopupMenu;
 	TSplitter *FilterSplitter;
 	TSplitter *PreviewSplitter;
@@ -56,7 +57,6 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *FilterBtn;
 	TToolButton *MigemoBtn;
 	TToolButton *PreviewBtn;
-	TPanel *ToolPanel;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

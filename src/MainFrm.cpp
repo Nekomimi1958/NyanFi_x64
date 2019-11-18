@@ -134,7 +134,8 @@ LRESULT CALLBACK DlgHookProc(int code, WPARAM wParam, LPARAM lParam)
 					|| (SureAdjPos && (USAME_TS(tit, "確認") || USAME_TS(tit, "エラー")))))
 			{
 				TControl *cp = NULL;
-				bool is_fl = false;
+				bool is_fl	= false;
+				bool is_dlg = false;
 				//ダイアログ
 				for (int i=0; i<Screen->FormCount; i++) {
 					TForm *fp = Screen->Forms[i];
@@ -142,7 +143,9 @@ LRESULT CALLBACK DlgHookProc(int code, WPARAM wParam, LPARAM lParam)
 					if (!fp->Visible || !fp->Floating || fp==Application->MainForm) continue;
 					if (fp->BorderStyle==bsNone) continue;
 					if (fp->FormStyle==fsStayOnTop && !contained_wd_i(_T("CsvRecForm|DebugForm"), fp->Name)) continue;
-					cp = (TControl *)fp;  break;
+					cp = (TControl *)fp;
+					is_dlg = true;
+					break;
 				}
 				//メイン
 				if (!cp) {
@@ -161,13 +164,15 @@ LRESULT CALLBACK DlgHookProc(int code, WPARAM wParam, LPARAM lParam)
 				TPoint p = cp->ClientToScreen(cp->ClientRect.CenteredRect(rc).Location);
 
 				//はみ出し修正
-				if (is_fl) cp = (TControl *)NyanFiForm->ListPanel; else cp = (TControl *)NyanFiForm;
-				TPoint p_t = cp->ClientToScreen(Point(0, 8));
-				TPoint p_b = cp->ClientToScreen(Point(0, cp->Height - 8));
-				TPoint p_lt = NyanFiForm->ClientToScreen(Point(0, 0));
-				if ((p.y + rc.Height()) > p_b.y) p.y = p_b.y - rc.Height();
-				p.y = std::max(p.y, p_t.y);
-				p.x = std::max(p.x, p_lt.x);
+				if (!is_dlg) {
+					if (is_fl) cp = (TControl *)NyanFiForm->ListPanel; else cp = (TControl *)NyanFiForm;
+					TPoint p_t = cp->ClientToScreen(Point(0, 8));
+					TPoint p_b = cp->ClientToScreen(Point(0, cp->Height - 8));
+					TPoint p_lt = NyanFiForm->ClientToScreen(Point(0, 0));
+					if ((p.y + rc.Height()) > p_b.y) p.y = p_b.y - rc.Height();
+					p.y = std::max(p.y, p_t.y);
+					p.x = std::max(p.x, p_lt.x);
+				}
 				::SetWindowPos(hWnd, HWND_TOP, p.x, p.y, 0, 0, SWP_NOSIZE|SWP_NOZORDER);
 			}
 		}
@@ -1133,25 +1138,26 @@ void __fastcall TNyanFiForm::FormClose(TObject *Sender, TCloseAction &Action)
 	else {
 		HWND hPrimeWnd = get_PrimNyanWnd();
 		if (hPrimeWnd) {
+			std::unique_ptr<win_dat> win2data(new win_dat);
 			if (WindowState==wsMinimized) WindowState = wsNormal;
-			Win2Data.WinState = WindowState;
+			win2data->WinState = WindowState;
 			if (WindowState==wsMaximized) WindowState = wsNormal;
-			Win2Data.WinLeft	 = Left;
-			Win2Data.WinTop 	 = Top;
-			Win2Data.WinWidth	 = Width;
-			Win2Data.WinHeight	 = Height;
-			Win2Data.SubHeight	 = SubPanel->Height;
-			Win2Data.SubWidth	 = SubPanel->Width;
-			Win2Data.InfWidth	 = InfPanelWidth;
-			Win2Data.InfHeight	 = InfPanelHeight;
-			Win2Data.ImageWidth  = PreviewWidth;
-			Win2Data.ImageHeight = PreviewHeight;
-			Win2Data.TailHeight	 = TxtTailListPanel->Height;
-			Win2Data.ShowFileListOnly = IsPrimary? ShowFileListOnly : ShowFileListOnly2;
+			win2data->WinLeft	 = Left;
+			win2data->WinTop 	 = Top;
+			win2data->WinWidth	 = Width;
+			win2data->WinHeight	 = Height;
+			win2data->SubHeight	 = SubPanel->Height;
+			win2data->SubWidth	 = SubPanel->Width;
+			win2data->InfWidth	 = InfPanelWidth;
+			win2data->InfHeight	 = InfPanelHeight;
+			win2data->ImageWidth  = PreviewWidth;
+			win2data->ImageHeight = PreviewHeight;
+			win2data->TailHeight	 = TxtTailListPanel->Height;
+			win2data->ShowFileListOnly = IsPrimary? ShowFileListOnly : ShowFileListOnly2;
 			COPYDATASTRUCT cd;
 			cd.dwData = CPYDTID_DPL_INF;
-			cd.cbData = sizeof(Win2Data);
-			cd.lpData = &Win2Data;
+			cd.cbData = sizeof(win_dat);
+			cd.lpData = win2data.get();
 			::SendMessage(hPrimeWnd, WM_COPYDATA, 0, (LPARAM)&cd);
 		}
 	}
@@ -4317,7 +4323,8 @@ void __fastcall TNyanFiForm::SetSubLayout(
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetupFont()
 {
-	Screen->MessageFont->Assign(DialogFont);
+	Application->DefaultFont->Assign(DialogFont);
+	Screen->MessageFont->Assign(Application->DefaultFont);
 
 	for (int i=0; i<MAX_FILELIST; i++) set_StdListBox(FileListBox[i]);
 	set_StdListBox(ResultListBox, 0, GrepResFont);
@@ -16829,7 +16836,12 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 		if (CurStt->is_Arc || CurStt->is_ADS || CurStt->is_FTP || IsDiffList()) UserAbort(USTR_OpeNotSuported);
 		if (OppStt->is_Find) RecoverFileList(OppListTag);
 
+		bool is_lr = TEST_ActParam("LR");
+		if (is_lr && EqualDirLR()) UserAbort(USTR_SameDirLR);
+		if (is_lr) ExeCommandAction("ClearAll", "AL");
+
 		if (!FindDuplDlg) FindDuplDlg = new TFindDuplDlg(this);	//初回に動的作成
+		FindDuplDlg->OptPanel->Visible = !is_lr;
 		FindDuplDlg->OppPathCheckBox->Enabled = (IsOppFList() && !EqualDirLR());
 		FindDuplDlg->SubDirCheckBox->Enabled  = IsCurFList();
 		if (FindDuplDlg->ShowModal()!=mrOk) SkipAbort();
@@ -16850,15 +16862,15 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 		UnicodeString idstr = get_word_i_idx(HASH_ID_STR, FindDuplDlg->AlgComboBox->ItemIndex);
 		AddLog(msg.sprintf(_T("  ハッシュ: %s"), idstr.c_str()));
 
-		bool sub_sw  = (FindDuplDlg->SubDirCheckBox->Enabled && FindDuplDlg->SubDirCheckBox->Checked);
-		bool exc_sym = FindDuplDlg->ExcSymCheckBox->Checked;
+		bool sub_sw  = is_lr? false : (FindDuplDlg->SubDirCheckBox->Enabled && FindDuplDlg->SubDirCheckBox->Checked);
+		bool exc_sym = is_lr? true  : FindDuplDlg->ExcSymCheckBox->Checked;
 
 		//対象を取得
 		std::unique_ptr<TStringList> f_lst(new TStringList());
 		CancelWork = !get_NameList_objSize(GetCurList(true), f_lst.get(), sub_sw, exc_sym);
 
 		if (!CancelWork && !EqualDirLR()
-			&& FindDuplDlg->OppPathCheckBox->Enabled && FindDuplDlg->OppPathCheckBox->Checked)
+			&& (is_lr || (FindDuplDlg->OppPathCheckBox->Enabled && FindDuplDlg->OppPathCheckBox->Checked)))
 		{
 			AddLog(msg.sprintf(_T("  反対パス: %s"), CurPath[OppListTag].c_str()));
 			if (get_NameList_objSize(GetOppList(), f_lst.get(), sub_sw, exc_sym)) {
@@ -17004,42 +17016,79 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 				}
 				hs_lst->CustomSort(comp_FilePath);
 
-				TStringList *r_lst = ResultList[FindTag];
-				clear_FileList(r_lst);
+				//結果リスト
+				if (!is_lr) {
+					TStringList *r_lst = ResultList[FindTag];
+					clear_FileList(r_lst);
 
-				//戻り用
-				file_rec *fp = cre_new_up_rec(FindTag);
-				fp->f_time = Now();
-				fp->p_name = CurStt->find_Path;
-				r_lst->AddObject(fp->f_name, (TObject*)fp);
+					//戻り用
+					file_rec *fp = cre_new_up_rec(FindTag);
+					fp->f_time = Now();
+					fp->p_name = CurStt->find_Path;
+					r_lst->AddObject(fp->f_name, (TObject*)fp);
 
-				for (int i=0; i<hs_lst->Count; i++) {
-					//セパレータ
-					if (i>0) {
-						file_rec *fp = cre_new_file_rec("-");
-						r_lst->AddObject(EmptyStr, (TObject*)fp);
+					for (int i=0; i<hs_lst->Count; i++) {
+						//セパレータ
+						if (i>0) {
+							file_rec *fp = cre_new_file_rec("-");
+							r_lst->AddObject(EmptyStr, (TObject*)fp);
+						}
+						//項目
+						TStringList *s_lst = (TStringList *)hs_lst->Objects[i];
+						for (int j=0; j<s_lst->Count; j++) {
+							UnicodeString lbuf = s_lst->Strings[j];
+							file_rec *fp = cre_new_file_rec(get_pre_tab(lbuf));
+							fp->hash = get_post_tab(lbuf);
+							r_lst->AddObject(fp->f_name, (TObject*)fp);
+						}
 					}
-					//項目
-					TStringList *s_lst = (TStringList *)hs_lst->Objects[i];
-					for (int j=0; j<s_lst->Count; j++) {
-						UnicodeString lbuf = s_lst->Strings[j];
-						file_rec *fp = cre_new_file_rec(get_pre_tab(lbuf));
-						fp->hash = get_post_tab(lbuf);
-						r_lst->AddObject(fp->f_name, (TObject*)fp);
-					}
+
+					//リストボックス初期化(仮想)
+					CurStt->is_Find 	  = true;
+					CurStt->find_DUPL	  = true;
+					CurStt->find_PathSort = FindPathColumn;
+					TListBox *lp = FileListBox[FindTag];
+					lp->Color = col_bgFind;
+					UpdateBgImage();
+					SetFlItemWidth(r_lst, FindTag);
+					update_FileListBox(r_lst, FindTag, 0);
 				}
+				//結果選択
+				else {
+					TStringList *c_lst = GetCurList(true);
+					TStringList *o_lst = GetOppList();
+					int top_idx = -1;
+					for (int i=0; i<hs_lst->Count; i++) {
+						TStringList *s_lst = (TStringList *)hs_lst->Objects[i];
+						for (int j=0; j<s_lst->Count; j++) {
+							UnicodeString lbuf = s_lst->Strings[j];
+							UnicodeString fnam = get_pre_tab(lbuf);
+							UnicodeString hash = get_post_tab(lbuf);
+							int idx = c_lst->IndexOf(fnam);
+							if (idx!=-1) {
+								file_rec *fp = (file_rec*)c_lst->Objects[idx];
+								fp->hash	 = hash;
+								fp->selected = true;
+								if (top_idx==-1) top_idx = idx;
+								continue;
+							}
+							idx = o_lst->IndexOf(fnam);
+							if (idx!=-1) {
+								file_rec *fp = (file_rec*)o_lst->Objects[idx];
+								fp->hash	 = hash;
+								fp->selected = true;
+							}
+						}
+					}
+
+					if (top_idx!=-1) FileListBox[CurListTag]->ItemIndex = top_idx;
+					InvalidateFileList();
+					InvalidateFileList(OppListTag);
+				}
+
 				for (int i=0; i<hs_lst->Count; i++) delete (TStringList*)hs_lst->Objects[i];
 				res_str.cat_sprintf(_T("  HIT: %u (%u Files)"), hs_lst->Count, f_lst->Count);
 
-				//リストボックス初期化(仮想)
-				CurStt->is_Find 	  = true;
-				CurStt->find_DUPL	  = true;
-				CurStt->find_PathSort = FindPathColumn;
-				TListBox *lp = FileListBox[FindTag];
-				lp->Color = col_bgFind;
-				UpdateBgImage();
-				SetFlItemWidth(r_lst, FindTag);
-				update_FileListBox(r_lst, FindTag, 0);
 				ViewCurFileInf();
 				SetDirCaption(FindTag);
 				SetDriveFileInfo(FindTag);
@@ -18006,7 +18055,8 @@ void __fastcall TNyanFiForm::CopyEnvInfItemClick(TObject *Sender)
 	if (!SameStr(kb0, kb1)) infstr.cat_sprintf(_T("(%s)"), kb1.c_str());
 	//画面サイズ
 	TRect w_rc = get_window_rect(Handle);
-	infstr.cat_sprintf(_T(" %u×%u %u%%"), w_rc.Width(), w_rc.Height(), ScaledInt(100));
+	infstr.cat_sprintf(_T(" %u×%u %u%%"),w_rc.Width(), w_rc.Height(), ScaledInt(100));
+	if (Screen->MonitorCount>1) infstr.cat_sprintf(_T(" (%u Monitors)"), Screen->MonitorCount);
 	//OSバージョン情報
 	infstr += ("  OS" + OSVerInfStr);
 	//物理メモリ

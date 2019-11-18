@@ -57,7 +57,7 @@ object FileCompDlg: TFileCompDlg
   object CmpDirCheckBox: TCheckBox
     Left = 12
     Top = 246
-    Width = 152
+    Width = 154
     Height = 17
     Anchors = [akLeft, akBottom]
     Caption = #12487#12451#12524#12463#12488#12522#12418#27604#36611'(&D)'
@@ -181,16 +181,16 @@ object FileCompDlg: TFileCompDlg
   object SelMaskCheckBox: TCheckBox
     Left = 263
     Top = 271
-    Width = 162
+    Width = 163
     Height = 17
     Anchors = [akLeft, akBottom]
     Caption = #36984#25246#38917#30446#12384#12369#12434#27531#12377'(&M)'
     TabOrder = 8
   end
   object CmpArcCheckBox: TCheckBox
-    Left = 170
+    Left = 172
     Top = 246
-    Width = 207
+    Width = 223
     Height = 17
     Anchors = [akLeft, akBottom]
     Caption = #12487#12451#12524#12463#12488#12522#12392#12450#12540#12459#12452#12502#12434#27604#36611'(&P)'

@@ -82,13 +82,10 @@ bool  IsAdmin	 = false;		//管理者権限
 int   StartedCount;				//実行開始カウント(m秒)
 int   NyanFiIdNo = 0;			//多重 NyanFi 識別ID
 bool  IsPrimary  = true;		//最初に起動された
-win_dat Win2Data;				//二重起動終了時の画面情報
-
-int ScrMode  = SCMD_FLIST;	//画面モード
-
+bool  GitExists = false;		//Git がインストールされている
 bool  IsMuted	= false;		//音量ミュート
 
-bool  GitExists = false;		//Git がインストールされている
+int   ScrMode  = SCMD_FLIST;	//画面モード
 
 TRichEdit *TempRichEdit = NULL;
 
@@ -114,8 +111,8 @@ SpiUnit *SPI = NULL;			//Susieプラグイン
 UnicodeString SpiDir;			//Susieプラグインのディレクトリ
 bool UseSpiFirst;				//Susieプラグインを優先的に使う
 
-int  WicScaleOpt;				//WIC の縮小・拡大アルゴリズム
-UnicodeString WicFextStr;		//WIC が対応している拡張子
+int  WicScaleOpt;				//WICの縮小・拡大アルゴリズム
+UnicodeString WicFextStr;		//WICが対応している拡張子
 
 bool gCopyAll;
 bool gCopyCancel;

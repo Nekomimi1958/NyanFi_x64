@@ -725,6 +725,9 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "Filter")) {
 		params = "\nCS : 大小文字を区別\nCA : 実行前に選択マスクを解除\n";
 	}
+	else if (USAME_TI(cmd, "FindDuplDlg")) {
+		params = "\nLR : 左右で検索して重複ファイルを選択\n";
+	}
 	else if (contained_wd_i(_T("FindFileDlg|FindFileDirDlg"), cmd)) {
 		params.sprintf(_T("%s"),
 			_T("\n")

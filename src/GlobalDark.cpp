@@ -487,6 +487,7 @@ void msgbox_ERR(UnicodeString msg)
 {
 	if (msg.IsEmpty()) return;
 
+	Screen->MessageFont->Assign(Application->DefaultFont);
 	TForm *MsgDlg = CreateMessageDialog(msg, mtError, TMsgDlgButtons() << mbOK, mbOK);
 	SetDarkWinTheme(MsgDlg);
 	MsgDlg->ShowModal();
@@ -505,6 +506,7 @@ void msgbox_WARN(UnicodeString msg)
 {
 	if (msg.IsEmpty()) return;
 
+	Screen->MessageFont->Assign(Application->DefaultFont);
 	TForm *MsgDlg = CreateMessageDialog(msg, mtWarning, TMsgDlgButtons() << mbOK, mbOK);
 	SetDarkWinTheme(MsgDlg);
 	MsgDlg->ShowModal();
@@ -521,6 +523,7 @@ void msgbox_WARN(unsigned id)
 //---------------------------------------------------------------------------
 void msgbox_OK(UnicodeString msg, UnicodeString tit)
 {
+	Screen->MessageFont->Assign(Application->DefaultFont);
 	TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation, TMsgDlgButtons() << mbOK, mbOK);
 	SetDarkWinTheme(MsgDlg);
 	if (!tit.IsEmpty()) MsgDlg->Caption = tit;
@@ -530,6 +533,7 @@ void msgbox_OK(UnicodeString msg, UnicodeString tit)
 //---------------------------------------------------------------------------
 bool msgbox_Y_N(UnicodeString msg, UnicodeString tit)
 {
+	Screen->MessageFont->Assign(Application->DefaultFont);
 	TMsgDlgButtons opt = TMsgDlgButtons() << mbYes << mbNo;
 	TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation, opt, SureDefNo? mbNo : mbYes);
 	SetDarkWinTheme(MsgDlg);
@@ -541,6 +545,7 @@ bool msgbox_Y_N(UnicodeString msg, UnicodeString tit)
 //---------------------------------------------------------------------------
 TModalResult msgbox_Y_N_C(UnicodeString msg, UnicodeString tit)
 {
+	Screen->MessageFont->Assign(Application->DefaultFont);
 	TMsgDlgButtons opt = TMsgDlgButtons() << mbYes << mbNo << mbCancel;
 	TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation, opt, SureDefNo? mbNo : mbYes);
 	SetDarkWinTheme(MsgDlg);
@@ -552,6 +557,7 @@ TModalResult msgbox_Y_N_C(UnicodeString msg, UnicodeString tit)
 //---------------------------------------------------------------------------
 TModalResult msgbox_Retry(UnicodeString msg, UnicodeString tit)
 {
+	Screen->MessageFont->Assign(Application->DefaultFont);
 	TMsgDlgButtons opt = TMsgDlgButtons() << mbRetry  << mbCancel;
 	TForm *MsgDlg = CreateMessageDialog(msg, mtError, opt, mbRetry);
 	SetDarkWinTheme(MsgDlg);
@@ -566,6 +572,7 @@ bool msgbox_Sure(UnicodeString msg, bool ask, bool center)
 {
 	if (!ask) return true;
 
+	Screen->MessageFont->Assign(Application->DefaultFont);
 	TMsgDlgButtons opt = TMsgDlgButtons() << mbYes << mbNo;
 	if (SureCancel) opt << mbCancel; 
 	TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation, opt, SureDefNo? mbNo : mbYes);
@@ -594,6 +601,7 @@ bool msgbox_Sure(unsigned id, bool ask, bool center)
 //---------------------------------------------------------------------------
 int msgbox_SureAll(UnicodeString msg, bool &app_chk, bool center)
 {
+	Screen->MessageFont->Assign(Application->DefaultFont);
 	TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation,
 						TMsgDlgButtons() << mbYes << mbNo << mbCancel, 
 						SureDefNo? mbNo : mbYes);

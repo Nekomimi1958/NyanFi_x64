@@ -1140,6 +1140,7 @@ void __fastcall TGitViewer::DelBranchActionExecute(TObject *Sender)
 	if (!bnam.IsEmpty()) {
 		UnicodeString msg;
 		msg.sprintf(_T("ƒuƒ‰ƒ“ƒ`[%s]‚ðíœ‚µ‚Ä‚à‚æ‚¢‚Å‚·‚©?"), bnam.c_str());
+		Screen->MessageFont->Assign(Application->DefaultFont);
 		TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation,
 							TMsgDlgButtons() << mbYes << mbNo << mbCancel, mbNo);
 		TCheckBox *cp = new TCheckBox(MsgDlg);

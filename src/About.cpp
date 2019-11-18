@@ -24,13 +24,13 @@ void __fastcall TAboutBox::FormCreate(TObject *Sender)
 	ico->Handle = (HICON)::LoadImage(HInstance, _T("NYANFI_ICO"), IMAGE_ICON, 48, 48, LR_SHARED);
 
 	ProgramIcon->Picture->Assign(ico.get());
-	ProductName->Font->Assign(Application->DefaultFont);
 }
 //---------------------------------------------------------------------------
 void __fastcall TAboutBox::FormShow(TObject *Sender)
 {
 	SetDarkWinTheme(this);
 
+	ProductName->Font->Assign(Application->DefaultFont);
 	ProductName->Font->Size = 20;
 	SupportURL->Font->Color = IsDarkMode? TColor(RGB(0x66, 0x99, 0xFF)) : clNavy;
 }
