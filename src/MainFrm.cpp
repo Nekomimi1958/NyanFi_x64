@@ -25157,6 +25157,8 @@ void __fastcall TNyanFiForm::ToOppSameItemActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::ToParentActionExecute(TObject *Sender)
 {
 	try {
+		CurWorking = true;
+
 		//代替データストリーム/結果リスト
 		if (CurStt->is_ADS || CurStt->is_Find) {
 			RecoverFileList2();	//ファイルリストに戻る
@@ -25241,6 +25243,8 @@ void __fastcall TNyanFiForm::ToParentActionExecute(TObject *Sender)
 				}
 			}
 		}
+
+		CurWorking = false;
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);

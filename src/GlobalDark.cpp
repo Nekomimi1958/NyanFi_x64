@@ -364,11 +364,13 @@ void SetDarkWinTheme(
 		bp->Font->Color = fg_label;
 	}
 	else if (wp->ClassNameIs("TComboBox")) {
-		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_CFD") : NULL, NULL);
 		TComboBox *cp = (TComboBox *)wp;
+		UnicodeString s = cp->Text;
+		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_CFD") : NULL, NULL);
 		cp->Font->Assign(def_font.get());
 		cp->Font->Color = fg_txt;
 		cp->Color		= bg_win;
+		cp->Text		= s;
 	}
 	else if (wp->ClassNameIs("TCheckBox")) {
 		if (IsDarkMode) {

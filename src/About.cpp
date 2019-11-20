@@ -31,8 +31,9 @@ void __fastcall TAboutBox::FormShow(TObject *Sender)
 	SetDarkWinTheme(this);
 
 	ProductName->Font->Assign(Application->DefaultFont);
-	ProductName->Font->Size = 20;
-	SupportURL->Font->Color = IsDarkMode? TColor(RGB(0x66, 0x99, 0xFF)) : clNavy;
+	ProductName->Font->Size  = 20;
+	ProductName->Font->Color = get_TextColor();
+	SupportURL->Font->Color  = IsDarkMode? TColor(RGB(0x66, 0x99, 0xFF)) : clNavy;
 }
 //---------------------------------------------------------------------------
 void __fastcall TAboutBox::SupportURLClick(TObject *Sender)
