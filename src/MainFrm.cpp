@@ -19454,6 +19454,7 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 	TRect w_rc = get_window_rect(Handle);
 	add_PropLine(_T("画面サイズ"), get_wd_x_hi_str(w_rc.Width(), w_rc.Height()), i_lst);
 	add_PropLine(_T("スケーリング"), tmp.sprintf(_T("%u%%"), ScaledInt(100, this)), i_lst);
+	if (Screen->MonitorCount>1) add_PropLine(_T("モニタ数"), Screen->MonitorCount, i_lst);
 	add_PropLine(_T("OSバージョン"), OSVerInfStr, i_lst);
 	i_lst->Add(EmptyStr);
 

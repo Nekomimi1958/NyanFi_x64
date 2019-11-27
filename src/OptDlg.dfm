@@ -2515,6 +2515,7 @@ object OptionDlg: TOptionDlg
           Width = 172
           Height = 22
           Style = [cbStandardColors, cbCustomColor]
+          DropDownCount = 18
           TabOrder = 2
           OnChange = ModalColorBoxChange
         end

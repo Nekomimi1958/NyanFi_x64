@@ -411,6 +411,13 @@ void SetDarkWinTheme(
 			}
 		}
 	}
+	else if (wp->ClassNameIs("TColorBox")) {
+		TColorBox *cp = (TColorBox *)wp;
+		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_CFD") : NULL, NULL);
+		cp->Font->Assign(def_font.get());
+		cp->Font->Color = fg_txt;
+		cp->Color		= bg_win;
+	}
 	else {
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
 

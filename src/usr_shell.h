@@ -103,7 +103,7 @@ protected:
 	unsigned int refCount;
 
 	TDropTargetBase();
-	~TDropTargetBase() { }
+	virtual ~TDropTargetBase() { }
 
 	virtual HRESULT __stdcall QueryInterface(const IID& iid, void **ppv);
 	virtual ULONG __stdcall AddRef();

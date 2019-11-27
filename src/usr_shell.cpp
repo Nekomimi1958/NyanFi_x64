@@ -317,12 +317,10 @@ ULONG __stdcall TDropTargetBase::AddRef()
 ULONG __stdcall TDropTargetBase::Release()
 {
 	refCount--;
-	if (refCount==0) {
-		delete this;
-		return 0;
-	}
+	if (refCount>0) return refCount;
 
-	return refCount;
+	delete this;
+	return 0;
 }
 
 //---------------------------------------------------------------------------
