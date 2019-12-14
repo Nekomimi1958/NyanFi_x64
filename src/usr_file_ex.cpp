@@ -186,7 +186,7 @@ bool match_path_list(
 	bool ret = false;
 	TStringDynArray path_lst = split_strings_semicolon(plist);
 	for (int i=0; i<path_lst.Length && !ret; i++) {
-		UnicodeString pnam = cv_env_str(IncludeTrailingPathDelimiter(path_lst[i]));
+		UnicodeString pnam = cv_env_str(path_lst[i]);
 		if (pnam.IsEmpty()) continue;
 		ret = (start_sw? StartsText(pnam, dnam) : ContainsText(dnam, pnam));
 	}

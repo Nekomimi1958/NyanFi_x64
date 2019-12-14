@@ -448,7 +448,8 @@ void __fastcall TDotNyanDlg::InhCmdBtnClick(TObject *Sender)
 void __fastcall TDotNyanDlg::InheritBtnClick(TObject *Sender)
 {
 	UnicodeString vstr;
-	vstr = InheritList->Values["SortMode"];		 SortRadioGroup->ItemIndex = vstr.IsEmpty()? 0 : SortIdStr.Pos(vstr[1]);
+	vstr = InheritList->Values["SortMode"];
+	SortRadioGroup->ItemIndex = vstr.IsEmpty()? 0 : SortIdStr.Pos(vstr[1]);
 
 	SetOderOption(InheritList);
 

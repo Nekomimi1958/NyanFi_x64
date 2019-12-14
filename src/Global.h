@@ -869,6 +869,8 @@ extern UnicodeString OnTimerEvent[MAX_TIMER_EVENT];
 //---------------------------------------------------------------------------
 extern int  SortMode[MAX_FILELIST];
 extern int  DirSortMode[MAX_FILELIST];
+extern int  SubSortMode[5];
+extern int  PrimeSortMode;
 
 extern bool FlOdrNatural[MAX_FILELIST];
 extern bool FlOdrDscName[MAX_FILELIST];

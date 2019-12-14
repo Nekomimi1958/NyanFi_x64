@@ -1044,6 +1044,7 @@ void __fastcall TEditHistoryDlg::SortItemList()
 			OldOrder	 = (ListSortOdr[ListSortMode] == 1);	break;
 		}
 
+		PrimeSortMode = ListSortMode;
 		switch (ListSortMode) {
 		case 0: HistBufList->CustomSort(SortComp_Name);		break;
 		case 1: HistBufList->CustomSort(SortComp_Ext);		break;
@@ -1063,6 +1064,7 @@ void __fastcall TEditHistoryDlg::SortItemList()
 			OldOrder	 = (ListSortOdr[ListSortMode] == 1);	break;
 		}
 
+		PrimeSortMode = ListSortMode;
 		switch (ListSortMode) {
 		case 0: HistBufList->CustomSort(SortComp_Name);		break;
 		case 1: HistBufList->CustomSort(SortComp_Time);		break;

@@ -11,26 +11,40 @@
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
 #include <Vcl.ExtCtrls.hpp>
+#include <System.Actions.hpp>
+#include <Vcl.ActnList.hpp>
 
 //---------------------------------------------------------------------------
 class TSortModeDlg : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *ExOptAction;
+	TActionList *ActionList1;
 	TButton *CanButton;
 	TButton *OkButton;
+	TButton *OptBtn;
+	TCheckBox *AccDtoTCheckBox;
 	TCheckBox *DscAttrCheckBox;
 	TCheckBox *DscNameCheckBox;
+	TCheckBox *ExOptCheckBox;
 	TCheckBox *NaturalCheckBox;
 	TCheckBox *OldCheckBox;
+	TCheckBox *SameCloseCheckBox;
 	TCheckBox *SmallCheckBox;
 	TCheckBox *SortBothCheckBox;
 	TComboBox *DirSortModeComboBox;
+	TComboBox *PrimeComboBox;
 	TGroupBox *DirSortModeGroupBox;
 	TGroupBox *GroupBox1;
+	TGroupBox *PrimeGroupBox;
 	TPanel *BtnPanel;
 	TPanel *DirOptPanel;
+	TPanel *MainPanel;
 	TPanel *ModePanel;
+	TPanel *OptPanel;
 	TRadioGroup *SortModeRadioGroup;
+	TRadioGroup *SubModeRadioGroup;
+	TAction *OkAction;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
@@ -41,6 +55,12 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SortBothCheckBoxClick(TObject *Sender);
 	void __fastcall OptCheckBoxClick(TObject *Sender);
 	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall AccDtoTCheckBoxClick(TObject *Sender);
+	void __fastcall PrimeComboBoxClick(TObject *Sender);
+	void __fastcall SubModeRadioGroupClick(TObject *Sender);
+	void __fastcall ExOptActionExecute(TObject *Sender);
+	void __fastcall ExOptActionUpdate(TObject *Sender);
+	void __fastcall OkActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool Changed;
@@ -50,6 +70,8 @@ private:	// ユーザー宣言
 	{
 		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
 	}
+
+	void __fastcall SetAccDT();
 
 public:		// ユーザー宣言
 	bool DlgInitialized;

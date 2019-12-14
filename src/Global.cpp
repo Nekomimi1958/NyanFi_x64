@@ -636,6 +636,8 @@ bool ShowSplash;						//スプラッシュを表示
 int  SortMode[MAX_FILELIST];			//0:名前/ 1:拡張子/ 2:更新日時/ 3:サイズ/ 4:属性/ 5:なし
 int  DirSortMode[MAX_FILELIST];			//0:ファイルと同じ/ 1:名前/ 2:更新日時/ 3:サイズ/ 4:属性/
 										//	5:ディレクトリを区別しない/ 6:フォルダアイコン
+int  SubSortMode[5];					//第2ソートモード
+int  PrimeSortMode;						//第1ソートモード
 
 //ファイルリストのソート順
 bool FlOdrNatural[MAX_FILELIST];		//自然順
@@ -1838,6 +1840,11 @@ void InitializeGlobal()
 		{_T("U:TabGroupName=\"\""),			(TObject*)&TabGroupName},
 		{_T("U:SortMode1=1"),				(TObject*)&SortMode[0]},
 		{_T("U:SortMode2=1"),				(TObject*)&SortMode[1]},
+		{_T("U:SubSortMode1=5"),			(TObject*)&SubSortMode[0]},
+		{_T("U:SubSortMode2=0"),			(TObject*)&SubSortMode[1]},
+		{_T("U:SubSortMode3=1"),			(TObject*)&SubSortMode[2]},
+		{_T("U:SubSortMode4=1"),			(TObject*)&SubSortMode[3]},
+		{_T("U:SubSortMode5=1"),			(TObject*)&SubSortMode[4]},
 		{_T("U:DirSortMode1=0"),			(TObject*)&DirSortMode[0]},
 		{_T("U:DirSortMode2=0"),			(TObject*)&DirSortMode[1]},
 		{_T("U:IniPathMode1=0"),			(TObject*)&IniPathMode[0]},
@@ -2912,7 +2919,22 @@ int __fastcall SortComp_Ext(TStringList *List, int Index1, int Index2)
 		if (fp1->is_dir) return  1;
 	}
 
-	if (SameText(fp0->f_ext, fp1->f_ext)) return SortComp_Name(List, Index1, Index2);
+	if (SameText(fp0->f_ext, fp1->f_ext)) {
+		//第2ソート
+		if (PrimeSortMode==1) {
+			switch (SubSortMode[1]) {
+			case  0: return SortComp_Name(List, Index1, Index2);
+			case  2: return SortComp_Time(List, Index1, Index2);
+			case  3: return SortComp_Size(List, Index1, Index2);
+			case  4: return SortComp_Attr(List, Index1, Index2);
+			default: return (Index1 - Index2);
+			}
+		}
+		//第3ソート
+		else {
+			return SortComp_Name(List, Index1, Index2);
+		}
+	}
 
 	return CompTextN(fp0->f_ext, fp1->f_ext);
 }
@@ -2942,7 +2964,21 @@ int __fastcall SortComp_Time(TStringList *List, int Index1, int Index2)
 		if (fp1->is_dir) return  1;
 	}
 
-	if (fp0->f_time==fp1->f_time) return SortComp_Ext(List, Index1, Index2);
+	if (fp0->f_time==fp1->f_time) {
+		//第2ソート
+		if (PrimeSortMode==2) {
+			switch (SubSortMode[2]) {
+			case  0: return SortComp_Name(List, Index1, Index2);
+			case  1: return SortComp_Ext( List, Index1, Index2);
+			case  3: return SortComp_Size(List, Index1, Index2);
+			case  4: return SortComp_Attr(List, Index1, Index2);
+			default: return (Index1 - Index2);
+			}
+		}
+		else {
+			return 0;
+		}
+	}
 
 	return !OldOrder? ((fp0->f_time<fp1->f_time)? 1 : -1) : ((fp0->f_time>fp1->f_time)? 1 : -1);
 }
@@ -2972,7 +3008,21 @@ int __fastcall SortComp_Size(TStringList *List, int Index1, int Index2)
 		if (fp1->is_dir) return  1;
 	}
 
-	if (fp0->f_size==fp1->f_size) return SortComp_Ext(List, Index1, Index2);
+	if (fp0->f_size==fp1->f_size) {
+		//第2ソート
+		if (PrimeSortMode==3) {
+			switch (SubSortMode[3]) {
+			case  0: return SortComp_Name(List, Index1, Index2);
+			case  1: return SortComp_Ext( List, Index1, Index2);
+			case  2: return SortComp_Time(List, Index1, Index2);
+			case  4: return SortComp_Attr(List, Index1, Index2);
+			default: return (Index1 - Index2);
+			}
+		}
+		else {
+			return 0;
+		}
+	}
 
 	return !SmallOrder? ((fp1->f_size>fp0->f_size)? 1 : -1) : ((fp1->f_size<fp0->f_size)? 1 : -1);
 }
@@ -3002,7 +3052,21 @@ int __fastcall SortComp_Attr(TStringList *List, int Index1, int Index2)
 		if (fp1->is_dir) return 1;
 	}
 
-	if (fp0->f_attr==fp1->f_attr)	return SortComp_Ext(List, Index1, Index2);
+	if (fp0->f_attr==fp1->f_attr) {
+		//第2ソート
+		if (PrimeSortMode==4) {
+			switch (SubSortMode[4]) {
+			case  0: return SortComp_Name(List, Index1, Index2);
+			case  1: return SortComp_Ext( List, Index1, Index2);
+			case  2: return SortComp_Time(List, Index1, Index2);
+			case  3: return SortComp_Size(List, Index1, Index2);
+			default: return (Index1 - Index2);
+			}
+		}
+		else {
+			return 0;
+		}
+	}
 
 	return !DscAttrOrder? (fp1->f_attr - fp0->f_attr) : (fp0->f_attr - fp1->f_attr);
 }
@@ -3144,7 +3208,11 @@ int __fastcall SortComp_MarkTime(TStringList *List, int Index1, int Index2)
 		}
 	}
 
-	if (dt0==dt1) return SortComp_Ext(List, Index1, Index2);
+	if (dt0==dt1) {
+		PrimeSortMode = 2;
+		return SortComp_Ext(List, Index1, Index2);
+	}
+
 	if ((int)dt0==0 || (int)dt1==0) return ((int)dt0==0)? 1 : -1;
 
 	return !OldOrder? ((dt0<dt1)? 1 : -1) : ((dt0>dt1)? 1 : -1);
@@ -4243,7 +4311,8 @@ void SortList(TStringList *lst, int tag)
 		lst->CustomSort(SortComp_PathName);		//場所
 	}
 	else {
-		switch (SortMode[tag]) {
+		PrimeSortMode = SortMode[tag];
+		switch (PrimeSortMode) {
 		case 1:  lst->CustomSort(SortComp_Ext);		break;
 		case 2:  lst->CustomSort(SortComp_Time);	break;
 		case 3:  lst->CustomSort(SortComp_Size);	break;
@@ -4275,7 +4344,8 @@ void SortList(TStringList *lst, int tag)
 				}
 			}
 			break;
-		default: lst->CustomSort(SortComp_Name);
+		default:
+			lst->CustomSort(SortComp_Name);
 		}
 	}
 }
@@ -10929,7 +10999,9 @@ void Emphasis_RLO_info(
 		cv->TextOut(xp, yp, ")");
 	}
 	//通常
-	else cv->TextOut(xp, yp, fnam);
+	else {
+		cv->TextOut(xp, yp, fnam);
+	}
 }
 
 //---------------------------------------------------------------------------
