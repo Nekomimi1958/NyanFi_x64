@@ -264,7 +264,7 @@ private:	// ƒ†[ƒU[éŒ¾
 	void __fastcall WmDpiChanged(TMessage &msg)
 	{
 		TForm::Dispatch(&msg);
-		SetDarkWinTheme(this, true);
+		if (DlgInitialized) SetDarkWinTheme(this, true);
 	}
 
 	void __fastcall WmMenuChar(TMessage &msg)

@@ -4344,6 +4344,7 @@ void __fastcall TNyanFiForm::SetupFont()
 	KeyHint->Canvas->Font->Color = col_fgHint;
 
 	setup_StatusBar(StatusBar1);
+
 	StatusBar1->Panels->Items[0]->Width = ClientWidth
 		- set_SttBarPanelWidth(StatusBar1, 1, str_len_half(GetClockStr())) - ScaledInt(20);
 
@@ -4648,6 +4649,9 @@ void __fastcall TNyanFiForm::SetupDesign(
 	pp->Font->Assign(LogFont);
 	pp->Canvas->Font->Assign(LogFont);
 	TaskPaintBox->Width = get_CharWidth(pp->Canvas,  9);
+
+	//ステータスバー
+	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
 
 	//コンボボックスの自動補完
 	set_ComboBox_AutoComp(this);
@@ -28374,7 +28378,7 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 		UnicodeString msg;
 		if (new_vno>VersionNo || force) {
 			msg.sprintf(_T("現バージョン [V%.2f] → 新バージョン [V%.2f] をダウンロードしますか?"), VersionNo/100.0, new_vno/100.0);
-			if (!inf_str.IsEmpty()) msg.cat_sprintf(_T("\r\n\r\n[変更点]\r\n%s"), inf_str.c_str());
+			if (!inf_str.IsEmpty()) msg.cat_sprintf(_T("\r\n\r\n[変更点]\r\n%s\r\n"), inf_str.c_str());
 			if (no_conf || msgbox_Sure(msg, true, true)) {
 				UnicodeString fnam;
 				if (no_conf) {

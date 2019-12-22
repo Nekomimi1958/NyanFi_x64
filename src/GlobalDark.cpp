@@ -239,6 +239,8 @@ void SetDarkWinTheme(
 
 	std::unique_ptr<TFont> def_font(new TFont());
 	def_font->Assign(Application->DefaultFont);
+	def_font->Size = def_font->Size * wp->CurrentPPI / Screen->PixelsPerInch;
+
 	TWinControl *pp = wp->Parent;
 	if (pp && pp->ClassNameIs("TToolBar") && (wp->ClassNameIs("TComboBox") || wp->ClassNameIs("TEdit"))) {
 		def_font->Size = ((TToolBar*)pp)->Font->Size;

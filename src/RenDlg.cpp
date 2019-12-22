@@ -29,6 +29,8 @@ __fastcall TRenameDlg::TRenameDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::FormCreate(TObject *Sender)
 {
+	DlgInitialized = false;
+
 	org_SttBar1WndProc	   = StatusBar1->WindowProc;
 	StatusBar1->WindowProc = SttBar1WndProc;
 
@@ -77,9 +79,10 @@ void __fastcall TRenameDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::FormShow(TObject *Sender)
 {
+	DlgInitialized = false;
+
 	set_ComboBox_AutoComp(this);
 
-	DlgInitialized = false;
 	Previewing	   = Previewed = false;
 	ExistErr	   = false;
 	ChangeCount    = 0;
@@ -254,7 +257,6 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	IniSttComboBoxClick(NULL);
 
 	NameChanged = FExtChanged = AttrChanged = TimeChanged = false;
-	DlgInitialized = true;
 
 	NamePageControl->Enabled = true;
 	CommonPanel->Enabled	 = true;
@@ -275,6 +277,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	SttPrgBar->BgColor	  = col_bgPrgBar;
 	SttPrgBar->BarColor   = col_fgPrgBar;
 
+	DlgInitialized = true;
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
 }
 //---------------------------------------------------------------------------
