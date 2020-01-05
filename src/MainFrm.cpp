@@ -5577,6 +5577,15 @@ void __fastcall TNyanFiForm::SetCurStt(int tag, bool redraw)
 	//タイトルバー
 	UnicodeString tmp;
 	if (IsAdmin) tmp = "管理者: ";
+
+	if (CompInTitleBar) {
+		WCHAR cnam[256];
+		DWORD dwLen = 255;
+		if (::GetComputerName(cnam, &dwLen)) {
+			tmp.cat_sprintf(_T("%s - "), cnam);
+		}
+	}
+
 	if (PathInTitleBar) {
 		UnicodeString pnam;
 		try {

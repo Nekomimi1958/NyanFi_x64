@@ -59,6 +59,8 @@ __fastcall TOptionDlg::TOptionDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 {
+	DlgInitialized = false;
+
 	SplashHint = new UsrHintWindow(this);
 	SplashHint->Canvas->Font->Assign(HintFont);
 	SplashHint->Canvas->Font->Color = col_fgHint;
@@ -593,6 +595,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	SysAtrCheckBox->Tag 		= (int)&ShowSystemAtr;
 	DispRegNameCheckBox->Tag	= (int)&DispRegName;
 	UncToNetDriveCheckBox->Tag	= (int)&UncToNetDrive;
+	CompInTitleBarCheckBox->Tag = (int)&CompInTitleBar;
 	PathInTitleBarCheckBox->Tag = (int)&PathInTitleBar;
 	UseIndIconCheckBox->Tag 	= (int)&UseIndIcon;
 	OmitEndOfNameCheckBox->Tag	= (int)&OmitEndOfName;

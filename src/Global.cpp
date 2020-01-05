@@ -159,6 +159,7 @@ bool ShowHideAtr;				//隠しファイルを表示
 bool ShowSystemAtr;				//システムファイルを表示
 bool DispRegName;				//パスの表示に登録名を用いる
 bool UncToNetDrive;				//UNCをネットワークドライブ名に
+bool CompInTitleBar;			//タイトルバーにコンピュータ名を表示
 bool PathInTitleBar;			//タイトルバーにカレントパスを表示
 bool OmitEndOfName;				//長い名前は末尾を省略
 bool ShowAdsInf;				//代替データストリーム情報を表示
@@ -1651,6 +1652,7 @@ void InitializeGlobal()
 		{_T("ShowSystemAtr=false"),			(TObject*)&ShowSystemAtr},
 		{_T("DispRegName=false"),			(TObject*)&DispRegName},
 		{_T("UncToNetDrive=false"),			(TObject*)&UncToNetDrive},
+		{_T("CompInTitleBar=false"),		(TObject*)&CompInTitleBar},
 		{_T("PathInTitleBar=false"),		(TObject*)&PathInTitleBar},
 		{_T("OmitEndOfName=false"),			(TObject*)&OmitEndOfName},
 		{_T("ShowAdsInf=false"),			(TObject*)&ShowAdsInf},
@@ -1840,7 +1842,6 @@ void InitializeGlobal()
 		{_T("U:TabGroupName=\"\""),			(TObject*)&TabGroupName},
 		{_T("U:SortMode1=1"),				(TObject*)&SortMode[0]},
 		{_T("U:SortMode2=1"),				(TObject*)&SortMode[1]},
-		{_T("U:SubSortMode1=5"),			(TObject*)&SubSortMode[0]},
 		{_T("U:SubSortMode2=0"),			(TObject*)&SubSortMode[1]},
 		{_T("U:SubSortMode3=1"),			(TObject*)&SubSortMode[2]},
 		{_T("U:SubSortMode4=1"),			(TObject*)&SubSortMode[3]},
@@ -1979,6 +1980,8 @@ void InitializeGlobal()
 	for (int i=0; i<cnt; i++) OptionList->AddObject(opt_def_list[i].def, (TObject*)opt_def_list[i].vp);
 	//読み込み
 	LoadOptions();
+
+	SubSortMode[0] = 5;	//固定
 
 	//git.exe のチェック
 	std::unique_ptr<TStringList> plst(new TStringList());

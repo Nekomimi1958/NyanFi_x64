@@ -196,6 +196,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *CloseOtherCheckBox;
 	TCheckBox *ColOnlyFExtCheckBox;
 	TCheckBox *ColorHintCheckBox;
+	TCheckBox *CompInTitleBarCheckBox;
 	TCheckBox *CopyNoBuffCheckBox;
 	TCheckBox *CopyTagsCheckBox;
 	TCheckBox *CtrlCheckBox;
@@ -955,7 +956,7 @@ private:	// ユーザー宣言
 	void __fastcall WmDpiChanged(TMessage &msg)
 	{
 		TForm::Dispatch(&msg);
-		SetDarkWinTheme(this, true);
+		if (DlgInitialized) SetDarkWinTheme(this, true);
 	}
 
 	void __fastcall InitializeOptListBox();

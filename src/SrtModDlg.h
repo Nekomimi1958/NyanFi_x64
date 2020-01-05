@@ -19,6 +19,7 @@ class TSortModeDlg : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
 	TAction *ExOptAction;
+	TAction *OkAction;
 	TActionList *ActionList1;
 	TButton *CanButton;
 	TButton *OkButton;
@@ -44,7 +45,6 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *OptPanel;
 	TRadioGroup *SortModeRadioGroup;
 	TRadioGroup *SubModeRadioGroup;
-	TAction *OkAction;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);

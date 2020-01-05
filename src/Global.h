@@ -318,6 +318,7 @@ extern bool ShowHideAtr;
 extern bool ShowSystemAtr;
 extern bool DispRegName;
 extern bool UncToNetDrive;
+extern bool CompInTitleBar;
 extern bool PathInTitleBar;
 extern bool OmitEndOfName;
 extern bool ShowAdsInf;

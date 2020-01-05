@@ -358,15 +358,15 @@ object OptionDlg: TOptionDlg
         object HideAtrCheckBox: TCheckBox
           Left = 10
           Top = 20
-          Width = 200
+          Width = 129
           Height = 17
           Caption = #38560#12375#12501#12449#12452#12523#12434#34920#31034
           TabOrder = 0
         end
         object SysAtrCheckBox: TCheckBox
-          Left = 220
+          Left = 143
           Top = 20
-          Width = 200
+          Width = 154
           Height = 17
           Caption = #12471#12473#12486#12512#12501#12449#12452#12523#12434#34920#31034
           TabOrder = 1
@@ -377,7 +377,7 @@ object OptionDlg: TOptionDlg
           Width = 200
           Height = 17
           Caption = #12497#12473#34920#31034#12395#30331#37682#21517#12434#20351#29992
-          TabOrder = 2
+          TabOrder = 3
         end
         object UncToNetDriveCheckBox: TCheckBox
           Left = 220
@@ -385,7 +385,7 @@ object OptionDlg: TOptionDlg
           Width = 200
           Height = 17
           Caption = 'UNC'#12434#12493#12483#12488#12527#12540#12463#12489#12521#12452#12502#21517#12395
-          TabOrder = 3
+          TabOrder = 4
         end
         object PathInTitleBarCheckBox: TCheckBox
           Left = 10
@@ -393,10 +393,10 @@ object OptionDlg: TOptionDlg
           Width = 200
           Height = 17
           Caption = #12479#12452#12488#12523#12496#12540#12395#12459#12524#12531#12488#12497#12473#12434#34920#31034
-          TabOrder = 4
+          TabOrder = 5
         end
         object IconCacheEdit: TLabeledEdit
-          Left = 345
+          Left = 313
           Top = 93
           Width = 50
           Height = 21
@@ -406,7 +406,7 @@ object OptionDlg: TOptionDlg
           EditLabel.Caption = #12450#12452#12467#12531#12461#12515#12483#12471#12517#25968
           LabelPosition = lpLeft
           NumbersOnly = True
-          TabOrder = 7
+          TabOrder = 8
         end
         object UseIndIconCheckBox: TCheckBox
           Left = 10
@@ -414,18 +414,18 @@ object OptionDlg: TOptionDlg
           Width = 200
           Height = 17
           Caption = #12501#12449#12452#12523#22266#26377#12398#12450#12452#12467#12531#12434#34920#31034
-          TabOrder = 6
+          TabOrder = 7
         end
         object DirDelimiterEdit: TLabeledEdit
-          Left = 345
-          Top = 68
-          Width = 50
+          Left = 387
+          Top = 18
+          Width = 36
           Height = 21
-          EditLabel.Width = 105
+          EditLabel.Width = 81
           EditLabel.Height = 13
-          EditLabel.Caption = #12487#12451#12524#12463#12488#12522#21306#20999#12426#25991#23383
+          EditLabel.Caption = #12487#12451#12524#12463#12488#12522#21306#20999#12426
           LabelPosition = lpLeft
-          TabOrder = 5
+          TabOrder = 2
         end
         object GetFaviUrlEdit: TLabeledEdit
           Left = 110
@@ -437,7 +437,15 @@ object OptionDlg: TOptionDlg
           EditLabel.Height = 13
           EditLabel.Caption = 'favicon '#21462#24471'API'
           LabelPosition = lpLeft
-          TabOrder = 8
+          TabOrder = 9
+        end
+        object CompInTitleBarCheckBox: TCheckBox
+          Left = 220
+          Top = 70
+          Width = 204
+          Height = 17
+          Caption = #12479#12452#12488#12523#12496#12540#12395#12467#12531#12500#12517#12540#12479#21517#12434#34920#31034
+          TabOrder = 6
         end
       end
       object MigemoDirEdit: TLabeledEdit
