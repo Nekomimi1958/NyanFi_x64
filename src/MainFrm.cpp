@@ -1463,7 +1463,7 @@ void __fastcall TNyanFiForm::WmCopyData(TMessage& msg)
 									prmbuf.sprintf(_T("@%s"),	  split_tkn(cbuf, ' ').c_str());
 							}
 							else {
-								prmbuf = split_tkn(cbuf, ' ');
+								prmbuf = cbuf;
 							}
 						}
 
