@@ -45,6 +45,7 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *RefDirBtn;
 	TButton *RefSpBtn;
 	TButton *UpButton;
+	TCheckBox *CursorTopCheckBox;
 	TCheckBox *MoveTopCheckBox;
 	TEdit *DescEdit;
 	TEdit *DirEdit;

@@ -6398,19 +6398,27 @@ void __fastcall TNyanFiForm::RefDirBtnKeyDown(TObject *Sender, WORD &Key, TShift
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ApplyInpDir()
 {
-	UnicodeString dnam = to_absolute_name(cv_env_str(InpDirComboBox->Text), CurPath[CurListTag]);
-	int atr = file_GetAttr(dnam);
-	if (atr==faInvalid) {
-		SttBarWarn(SysErrorMessage(ERROR_PATH_NOT_FOUND));
+	UnicodeString dnam = cv_env_str(InpDirComboBox->Text);
+	if (is_computer_name(dnam)) {
+		NetShareDlg->ComputerName = dnam;
+		NetShareDlg->isShare = true;
+		NetShareDlg->ShowModal();
 	}
 	else {
-		UnicodeString fnam;
-		if (!(atr & faDirectory)) {
-			fnam = dnam;
-			dnam = ExtractFilePath(dnam);
+		dnam = to_absolute_name(dnam, CurPath[CurListTag]);
+		int atr = file_GetAttr(dnam);
+		if (atr==faInvalid) {
+			SttBarWarn(SysErrorMessage(ERROR_PATH_NOT_FOUND));
 		}
-		UpdateCurPath(dnam, fnam);
-		add_ComboBox_history(InpDirComboBox, dnam);
+		else {
+			UnicodeString fnam;
+			if (!(atr & faDirectory)) {
+				fnam = dnam;
+				dnam = ExtractFilePath(dnam);
+			}
+			UpdateCurPath(dnam, fnam);
+			add_ComboBox_history(InpDirComboBox, dnam);
+		}
 	}
 	HideInpDirPanel();
 }
@@ -12982,18 +12990,26 @@ void __fastcall TNyanFiForm::ChangeDirActionExecute(TObject *Sender)
 {
 	try {
 		if (ActionParam.IsEmpty()) UserAbort(USTR_NoParameter);
-		UnicodeString dnam = to_absolute_name(cv_env_str(ActionParam), CurPath[CurListTag]);
-		int atr = file_GetAttr(dnam);
-		if (atr==faInvalid) SysErrAbort(ERROR_PATH_NOT_FOUND);
 
-		UnicodeString fnam;
-		if (!(atr & faDirectory)) {
-			fnam = dnam;
-			dnam = ExtractFilePath(dnam);
+		if (is_computer_name(ActionParam)) {
+			NetShareDlg->ComputerName = IncludeTrailingPathDelimiter(ActionParam);
+			NetShareDlg->isShare = true;
+			NetShareDlg->ShowModal();
 		}
-		dnam = IncludeTrailingPathDelimiter(dnam);
-		UpdateCurPath(dnam, fnam);
-		if (!GlobalErrMsg.IsEmpty()) GlobalAbort();
+		else {
+			UnicodeString dnam = to_absolute_name(cv_env_str(ActionParam), CurPath[CurListTag]);
+			int atr = file_GetAttr(dnam);
+			if (atr==faInvalid) SysErrAbort(ERROR_PATH_NOT_FOUND);
+
+			UnicodeString fnam;
+			if (!(atr & faDirectory)) {
+				fnam = dnam;
+				dnam = ExtractFilePath(dnam);
+			}
+			dnam = IncludeTrailingPathDelimiter(dnam);
+			UpdateCurPath(dnam, fnam);
+			if (!GlobalErrMsg.IsEmpty()) GlobalAbort();
+		}
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);
@@ -18453,17 +18469,25 @@ void __fastcall TNyanFiForm::InputDirActionExecute(TObject *Sender)
 			dnam = to_absolute_name(cv_env_str(dnam), CurPath[CurListTag]);
 
 			if (StartsStr("\\\\", dnam)) {
-				UnicodeString rnam;
-				int p, cnt;
-				for (p=1,cnt=0; p<=dnam.Length(); p++) {
-					if (dnam[p]=='\\') {
-						cnt++;
-						if (cnt==4) break;
-					}
-				}
-				if (!CheckUncPath(dnam.SubString(1, p))) {
-					SetActionAbort(GlobalErrMsg);
+				if (is_computer_name(dnam)) {
+					NetShareDlg->ComputerName = dnam;
+					NetShareDlg->isShare = true;
+					NetShareDlg->ShowModal();
 					return;
+				}
+				else {
+					UnicodeString rnam;
+					int p, cnt;
+					for (p=1,cnt=0; p<=dnam.Length(); p++) {
+						if (dnam[p]=='\\') {
+							cnt++;
+							if (cnt==4) break;
+						}
+					}
+					if (!CheckUncPath(dnam.SubString(1, p))) {
+						SetActionAbort(GlobalErrMsg);
+						return;
+					}
 				}
 			}
 
@@ -19118,7 +19142,6 @@ void __fastcall TNyanFiForm::LibraryActionExecute(TObject *Sender)
 {
 	try {
 		if (TEST_ActParam("SD")) {
-			if (!NetShareDlg) NetShareDlg = new TNetShareDlg(this);	//初回に動的作成
 			NetShareDlg->isLibrary = true;
 			NetShareDlg->ShowModal();
 		}
@@ -23996,7 +24019,6 @@ void __fastcall TNyanFiForm::ShareListActionExecute(TObject *Sender)
 			}
 		}
 
-		if (!NetShareDlg) NetShareDlg = new TNetShareDlg(this);	//初回に動的作成
 		NetShareDlg->ComputerName = cnam;
 		NetShareDlg->isShare = true;
 		NetShareDlg->ShowModal();
@@ -24540,7 +24562,6 @@ void __fastcall TNyanFiForm::SubDirListActionExecute(TObject *Sender)
 		}
 		//ダイアログ表示
 		else {
-			if (!NetShareDlg) NetShareDlg = new TNetShareDlg(this);	//初回に動的作成
 			NetShareDlg->PathName = pnam;
 			NetShareDlg->isSelDir = true;
 			NetShareDlg->isSelSub = true;
@@ -25241,7 +25262,9 @@ void __fastcall TNyanFiForm::ToParentActionExecute(TObject *Sender)
 				if (is_root_dir(pnam)) {
 					if (TEST_ActParam("DL")) {
 						if (StartsStr("\\\\", pnam)) {
-							ShareListAction->Execute();
+							NetShareDlg->ComputerName = get_root_name(pnam);
+							NetShareDlg->isShare = true;
+							NetShareDlg->ShowModal();
 						}
 						else {
 							if (!SelDriveDlg) SelDriveDlg = new TSelDriveDlg(this);	//初回に動的作成
@@ -25974,7 +25997,6 @@ UnicodeString __fastcall TNyanFiForm::GetDistDir(bool is_move, bool *to_flag)
 	}
 	//サブディレクトリの選択(SSパラメータ)
 	else if (TEST_DEL_ActParam("SS")) {
-		if (!NetShareDlg) NetShareDlg = new TNetShareDlg(this);	//初回に動的作成
 		NetShareDlg->Caption   = tit;
 		NetShareDlg->PathName  = CurPath[CurListTag];
 		NetShareDlg->isSelDir  = true;
@@ -26948,11 +26970,18 @@ void __fastcall TNyanFiForm::DeleteActionExecute(TObject *Sender)
 
 	try {
 		TStringList *lst = GetCurList(true);
+		bool is_so = TEST_DEL_ActParam("SO");
+		if (!ActionParam.IsEmpty()) {
+			remove_top_s(ActionParam, ".\\");
+			if (SelectMask(lst, ActionParam)==0) UserAbort(USTR_NotFound);
+			is_so = true;
+		}
+
 		int sel_cnt = GetSelCount(lst);
 		int cur_idx = FileListBox[CurListTag]->ItemIndex;
 
 		if (is_drive_protected(CurPath[CurListTag])) SysErrAbort(ERROR_WRITE_PROTECT);
-		if (TEST_ActParam("SO") && sel_cnt==0) SkipAbort();
+		if (is_so && sel_cnt==0) SkipAbort();
 		if (TestCurIncFindVirtual()) UserAbort(USTR_OpeNotSuported);
 
 		bool sure_del = (ExeCmdsBusy && XCMD_MsgOff)? false : SureDelete;

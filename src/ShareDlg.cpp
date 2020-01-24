@@ -17,7 +17,7 @@
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
-TNetShareDlg *NetShareDlg = NULL;
+TNetShareDlg *NetShareDlg;
 
 //---------------------------------------------------------------------------
 __fastcall TNetShareDlg::TNetShareDlg(TComponent* Owner)

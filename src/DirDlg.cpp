@@ -103,9 +103,10 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 		HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
 		ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 
-		MoveTopCheckBox->Checked = IniFile->ReadBoolGen(_T("RegDirDlgMoveTop"));
-		OptPanel->Visible		 = IniFile->ReadBoolGen(_T("RegDirDlgShowOpt"),	true);
-		BlankPanel->Visible 	 = !OptPanel->Visible;
+		MoveTopCheckBox->Checked   = IniFile->ReadBoolGen(_T("RegDirDlgMoveTop"));
+		CursorTopCheckBox->Checked = IniFile->ReadBoolGen(_T("RegDirDlgCursorTop"));
+		OptPanel->Visible		   = IniFile->ReadBoolGen(_T("RegDirDlgShowOpt"),	true);
+		BlankPanel->Visible 	   = !OptPanel->Visible;
 
 		sp->Items[0]->Width = IniFile->ReadInteger("RegDirGrid", "ColWidth0",	40);
 		sp->Items[1]->Width = IniFile->ReadInteger("RegDirGrid", "ColWidth1",	200);
@@ -125,16 +126,24 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 		}
 		//‚»‚Ì‘¼
 		else {
-			int idx = IndexOfDir(CurPathName);
-			if (idx!=-1) {
-				lp->ItemIndex = idx;
-				IsAddMode = false;
-			}
-			else {
-				lp->Items->Add(EmptyStr);
-				lp->ItemIndex = lp->Count - 1;
+			if (CursorTopCheckBox->Checked) {
+				if (lp->Count==0) lp->Items->Add(EmptyStr);
+				lp->ItemIndex  = 0;
 				KeyEdit->Text  = EmptyStr;
 				DescEdit->Text = EmptyStr;
+			}
+			else {
+				int idx = IndexOfDir(CurPathName);
+				if (idx!=-1) {
+					lp->ItemIndex = idx;
+					IsAddMode = false;
+				}
+				else {
+					lp->Items->Add(EmptyStr);
+					lp->ItemIndex  = lp->Count - 1;
+					KeyEdit->Text  = EmptyStr;
+					DescEdit->Text = EmptyStr;
+				}
 			}
 			DirEdit->Text = CurPathName;
 		}
@@ -187,6 +196,7 @@ void __fastcall TRegDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		if (MoveTopCheckBox->Checked) move_top_RegDirItem(SelIndex);
 
 		IniFile->WriteBoolGen(_T("RegDirDlgMoveTop"),	MoveTopCheckBox);
+		IniFile->WriteBoolGen(_T("RegDirDlgCursorTop"),	CursorTopCheckBox);
 		IniFile->WriteBoolGen(_T("RegDirDlgShowOpt"),	OptPanel->Visible);
 
 		THeaderSections *sp = RegDirHeader->Sections;

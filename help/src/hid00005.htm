@@ -216,7 +216,8 @@ NyanFi.exe -XCalculator_CB
 <dt id="ChangeDir">ChangeDir<span class="pram_text">_ディレクトリ名</span>
 <dd>カレントを、パラメータで指定したディレクトリに変更します。既存のファイル名が指定された場合は、そのディレクトリのファイル位置に移動します。<br>
 <a href="#ExeCommands">ExeCommands</a> コマンドのパラメータ区切り文字との混同を避けるため、ルートディレクトリの場合は <b>:</b> の後に <b>\</b> を付けてください。&quot;%変数名%&quot; という書式で環境変数も使えます。なおドライブ名がない場合はカレントからの相対指定となります。<br>
-<a href="#ChangeOppDir">→ ChangeOppDir</a>　<a href="#InputDir">→ InputDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#SubDirList">→ SubDirList</a>　<a href="#SubDirList">→ SubDirList</a>
+なお、<b>\\</b> で始まるコンピュータ名だけを指定した場合は、共有フォルダ一覧(<a href="#ShareList">ShareList</a>)が表示されます<br>
+<a href="#ChangeOppDir">→ ChangeOppDir</a>　<a href="#InputDir">→ InputDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#SubDirList">→ SubDirList</a>　<a href="#ShareList">→ ShareList</a>
 
 <dt id="ChangeDrive">ChangeDrive<span class="pram_text">_ドライブ文字</span>
 <dd>カレントを、パラメータで指定したドライブに変更します。<br>
@@ -782,7 +783,8 @@ link
 </div>
 <small>補助コマンド</small> <a href="hid00063.htm#Debug">→ Debug</a>　<a href="#ExeCommands">→ ExeCommands</a>
 
-<dt id="Delete">Delete<span class="pram_text">[_SO]</span>
+<dt id="Delete">Delete<span class="pram_text">[_SO]</span><br>
+Delete<span class="pram_text">_[!]マスク[\][;[!]マスク[\]...]</span>
 <dd>選択中(無ければカーソル位置)の項目を削除します。<br>
 <a href="hid00009.htm#Delete">オプション設定 - 一般 - 削除/上書き動作</a> の「<b>削除にごみ箱を使う</b>」をチェックしていると、ごみ箱へ入れます。<br>
 ディレクトリのジャンクションやシンボリックリンクの場合、リンク先の実体は削除されません(ログでは <b>REMOVE</b> と表示)。<br>
@@ -790,7 +792,19 @@ link
 パラメータに <b>SO</b> を指定すると、選択されている項目のみを削除します。<br>
 削除処理(アーカイブやFTPは除く)はバックグラウンド・タスクで行われます。<br>
 なお、<a href="hid00080.htm">FTP接続</a>時のリモート側では、空でないディレクトリは削除できません。先にディレクトリ内のファイルを削除してください。<br>
-<a href="#CompleteDelete">→ CompleteDelete</a>
+
+<div class="spc_box">
+パラメータに<b>マスク</b>を指定すると、マッチする項目を選択して削除します。マッチしない場合は警告が出ます。<br>
+マスクの指定方法は <a href="#MaskSelect">MaskSelect</a> コマンドと同じです。<br>
+マスクの末尾が <b>\</b> の場合はディレクトリに、そうでない場合はファイルにマッチします。<br>
+マスクの先頭に <b>!</b> があると、それ以外のファイルまたはディレクトリが選択されます。<br>
+なお、&quot;SO&quot; という名前のファイルを削除したい場合は、先頭に <b>.\</b> を付けて Delete_.\SO としてください。<br>
+</div>
+<div class="spc_box">
+<b>例</b>: temp ディレクトリと、*.bak ファイルを削除<br>
+　Delete_temp\;*.bak<br>
+</div>
+<a href="#CompleteDelete">→ CompleteDelete</a>　<a href="#MaskSelect">→ MaskSelect</a>
 
 <dt id="DeleteADS">DeleteADS<span class="pram_text">[_{ZI|TC}]</span>
 <dd>選択中(なければカーソル位置)のファイルから代替データストリームを削除します。<br>
@@ -1440,17 +1454,20 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
 
 <dt id="InputDir">InputDir<span class="pram_text">[_{ND|ND2|SD}]</span>
 <dd>カレントを入力ボックスで指定したディレクトリに変更します。<br>
-&quot;%変数名%&quot; という書式で環境変数も使えます。またカレントからの相対指定も可能です。既存のファイル名が入力された場合は、そのディレクトリのファイル位置に移動します。<br>
+&quot;%変数名%&quot; という書式で環境変数も使えます。またカレントからの相対指定も可能です。既存のファイル名が入力された場合は、そのディレクトリのファイル位置に移動します。なお、<b>\\</b> で始まるコンピュータ名だけを入力した場合は、共有フォルダ一覧(<a href="#ShareList">ShareList</a>)が表示されます<br>
+
+<div class="spc_box">
 入力を行うとフルパスの補完機能が働きます。ドライブ指定がない場合は、カレントパスからの相対とみなして絶対パスに補完します。候補がドロップダウン表示されているとき、<span class="btn_frame">ENTER</span>キーを押すか項目をクリックするとそれが入力欄に設定されます。末尾に &quot;<b>\</b>&quot; を追加するとサブディレクトが候補としてさらに表示され、前方一致で候補を絞り込めます。なお、&quot;<b>\</b>&quot; の代わりに &quot;<b>/</b>&quot; もディレクトリ区切りとして使えます。<br>
 「<b>→で補完</b>」をチェックしていると、<span class="btn_frame">→</span>キーを押したときに補完リストがドロップダウンします。チェックしていない場合は自動的にドロップダウンしますが、空欄の場合(カレントのすべてのサブディレクトリが候補)のみ<span class="btn_frame">→</span>キーでのドロップダウンとなります。<br>
 補完候補が表示されていない場合、<span class="btn_frame">↓</span>キーで入力履歴が表示されます。なお、コンボボックス上の右クリックメニューで入力履歴を削除したりできます。<br>
 この入力ボックスは、<a href="#Copy">Copy</a><span class="pram_text">_TO</span>、<a href="#Move">Move</a><span class="pram_text">_TO</span>、<a href="#CopyDir">CopyDir</a><span class="pram_text">_TO</span> コマンドなどでも用いられます。<br>
+</div>
 
 <div class="spc_box">
 パラメータに <b>ND</b> を指定すると、ダイアログを出さずに、カレント側の<a href="hid00004.htm#DirInfo">ディレクトリ情報</a>部分に入力コンボボックスを表示します(補完機能無し)。ディレクトリ情報をダブルクリックすることでも、この機能を利用できます。また <b>ND2</b> を指定すると、ドロップダウンを開いた状態で入力コンボボックスを表示します。<br>
 <b>SD</b> を指定すると、フォルダの参照ダイアログを表示します。これは、<b>ND</b> でディレクトリ情報に入力欄を表示して<span class="btn_frame">...</span>ボタンを押した状態と同じです。<br>
 </div>
-<a href="#ChangeDir">→ ChangeDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#RegDirDlg">→ RegDirDlg</a>　<a href="#RegDirPopup">→ RegDirPopup</a>　<a href="#SubDirList">→ SubDirList</a>　<a href="#SubDirList">→ SubDirList</a>
+<a href="#ChangeDir">→ ChangeDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#RegDirDlg">→ RegDirDlg</a>　<a href="#RegDirPopup">→ RegDirPopup</a>　<a href="#SubDirList">→ SubDirList</a>　<a href="#ShareList">→ ShareList</a>
 
 <dt id="InputPathMask">InputPathMask
 <dd>パスマスクを入力します。マスクの指定は「<b>パスマスク</b>」ダイアログと同様です。マスクの先頭に <b>:</b>名前<b>:</b> という形でマスク名を指定することも可能です。<br>
@@ -1765,7 +1782,7 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 <dd>カレントパスまたは選択ディレクトリ以下で、指定マスクにマッチする項目を検索します。マスクの末尾が <b>\</b> の場合はディレクトリに、そうでない場合はファイルにマッチします。<a href="hid00052.htm">ファイル名検索</a>、<a href="hid00053.htm">ディレクトリ名検索</a> でマスクのみ指定した場合と同様になります。見つかるとカレント側に結果リストが表示されます。<br>
 <a href="#FindFileDlg">→ FindFileDlg</a>　<a href="#FindDirDlg">→ FindDirDlg</a>
 
-<dt id="MaskSelect">MaskSelect<span class="pram_text">[_[!]マスク[\][;[!]マスク[\]...]]</span>
+<dt id="MaskSelect">MaskSelect<span class="pram_text">_[!]マスク[\][;[!]マスク[\]...]</span>
 <dd>指定マスクにマッチする項目を選択します。マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
 マスクの末尾が <b>\</b> の場合はディレクトリに、そうでない場合はファイルにマッチします。<br>
 マスクの先頭に <b>!</b> があると、それ以外のファイルまたはディレクトリが選択されます。ファイルとディレクトリに対して別々に適用されますので、例えば !*.txt だけを指定した場合、*.txt 以外のファイルが選択されますがディレクトリは選択されません。<br>
@@ -1779,7 +1796,7 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 </div>
 <a href="#MatchSelect">→ MatchSelect</a>　<a href="#SelMask">→ SelMask</a>　<a href="#DateSelect">→ DateSelect</a>
 
-<dt id="MatchSelect">MatchSelect<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]]</span>
+<dt id="MatchSelect">MatchSelect<span class="pram_text">_{文字列|/正規表現パターン/}[;文字列...]</span>
 <dd>名前に指定文字列が含まれている項目を選択します。<br>
 文字列は ; (セミコロン)で区切って複数指定できます。大小文字は区別されません。指定文字列を / で囲むと正規表現パターンとみなされます。<br>
 また、文字列や正規表現パターンに <b>\N</b> という書式文字列が含まれていると、カーソル位置のファイル名主部またはディレクトリ名に置換して用いられます。<br>

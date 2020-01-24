@@ -7,12 +7,12 @@
 #include <memory>
 
 //---------------------------------------------------------------------------
-USEFORM("Splash.cpp", SplashForm);
 USEFORM("ShareDlg.cpp", NetShareDlg);
+USEFORM("Splash.cpp", SplashForm);
 USEFORM("SameDlg.cpp", SameNameDlg);
+USEFORM("PrnImgDlg.cpp", PrintImgDlg);
 USEFORM("RegExChk.cpp", RegExChecker);
 USEFORM("RenDlg.cpp", RenameDlg);
-USEFORM("PrnImgDlg.cpp", PrintImgDlg);
 USEFORM("TabDlg.cpp", TabSetDlg);
 USEFORM("TagDlg.cpp", TagManDlg);
 USEFORM("TaskDlg.cpp", TaskManDlg);
@@ -21,17 +21,18 @@ USEFORM("SrtModDlg.cpp", SortModeDlg);
 USEFORM("SubView.cpp", SubViewer);
 USEFORM("MaskDlg.cpp", PathMaskDlg);
 USEFORM("MaskSelDlg.cpp", MaskSelectDlg);
-USEFORM("MainFrm.cpp", NyanFiForm);
-USEFORM("JoinDlg.cpp", JoinTextDlg);
+USEFORM("MemoFrm.cpp", MemoForm);
 USEFORM("KeyDlg.cpp", KeyListDlg);
 USEFORM("LoupeFrm.cpp", LoupeForm);
+USEFORM("MainFrm.cpp", NyanFiForm);
 USEFORM("OptDlg.cpp", OptionDlg);
 USEFORM("PackDlg.cpp", PackArcDlg);
-USEFORM("MemoFrm.cpp", MemoForm);
+USEFORM("PreSameDlg.cpp", PreSameNemeDlg);
 USEFORM("ModalScr.cpp", ModalScrForm);
 USEFORM("NewDlg.cpp", NewFileDlg);
 USEFORM("XmlView.cpp", XmlViewer);
 USEFORM("UserMdl.cpp", UserModule); /* TDataModule: File Type */
+USEFORM("JoinDlg.cpp", JoinTextDlg);
 USEFORM("DebugFrm.cpp", DebugForm);
 USEFORM("DiffDlg.cpp", DiffDirDlg);
 USEFORM("DirDlg.cpp", RegDirDlg);
@@ -81,7 +82,6 @@ USEFORM("FuncDlg.cpp", FuncListDlg);
 USEFORM("FindTag.cpp", FindTagForm);
 USEFORM("FindTxtDlg.cpp", FindTextDlg);
 USEFORM("FtpDlg.cpp", FtpConnectDlg);
-USEFORM("PreSameDlg.cpp", PreSameNemeDlg);
 //---------------------------------------------------------------------------
 #include <VersionHelpers.h>
 #include "Global.h"
@@ -224,6 +224,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		Application->CreateForm(__classid(TSameNameDlg), &SameNameDlg);
 		Application->CreateForm(__classid(TInpDirDlg), &InpDirDlg);
 		Application->CreateForm(__classid(TGraphForm), &GraphForm);
+		Application->CreateForm(__classid(TNetShareDlg), &NetShareDlg);
 		cursor_Default();
 		Application->Run();
 	}

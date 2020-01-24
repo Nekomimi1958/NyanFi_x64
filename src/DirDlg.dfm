@@ -122,7 +122,7 @@ object RegDirDlg: TRegDirDlg
     object MoveTopCheckBox: TCheckBox
       Left = 316
       Top = 41
-      Width = 149
+      Width = 135
       Height = 17
       Caption = #21628#20986#38917#30446#12434#20808#38957#12408
       TabOrder = 10
@@ -136,6 +136,14 @@ object RegDirDlg: TRegDirDlg
       Caption = #29305#27530'...'
       TabOrder = 4
       OnClick = RefSpBtnClick
+    end
+    object CursorTopCheckBox: TCheckBox
+      Left = 453
+      Top = 41
+      Width = 135
+      Height = 17
+      Caption = #12459#12540#12477#12523#12434#20808#38957#12395
+      TabOrder = 11
     end
   end
   object HiddenCanBtn: TButton
