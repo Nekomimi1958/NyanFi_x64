@@ -4,9 +4,9 @@ object RegDirDlg: TRegDirDlg
   BorderIcons = [biSystemMenu]
   Caption = #30331#37682#12487#12451#12524#12463#12488#12522
   ClientHeight = 341
-  ClientWidth = 592
+  ClientWidth = 450
   Color = clBtnFace
-  Constraints.MinWidth = 320
+  Constraints.MinWidth = 460
   ParentFont = True
   KeyPreview = True
   OldCreateOrder = False
@@ -23,17 +23,17 @@ object RegDirDlg: TRegDirDlg
   object OptPanel: TPanel
     Left = 0
     Top = 252
-    Width = 592
+    Width = 450
     Height = 70
     Align = alBottom
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
     DesignSize = (
-      592
+      450
       70)
     object HideOptBtn: TSpeedButton
-      Left = 574
+      Left = 432
       Top = 54
       Width = 18
       Height = 16
@@ -93,7 +93,7 @@ object RegDirDlg: TRegDirDlg
     object DirEdit: TEdit
       Left = 224
       Top = 8
-      Width = 270
+      Width = 128
       Height = 21
       Hint = #29872#22659#22793#25968#12418#20351#29992#21487#33021
       Anchors = [akLeft, akTop, akRight]
@@ -101,7 +101,7 @@ object RegDirDlg: TRegDirDlg
       TabOrder = 2
     end
     object RefDirBtn: TButton
-      Left = 496
+      Left = 354
       Top = 8
       Width = 36
       Height = 22
@@ -128,7 +128,7 @@ object RegDirDlg: TRegDirDlg
       TabOrder = 10
     end
     object RefSpBtn: TButton
-      Left = 533
+      Left = 391
       Top = 8
       Width = 55
       Height = 22
@@ -149,7 +149,7 @@ object RegDirDlg: TRegDirDlg
   object HiddenCanBtn: TButton
     Left = 0
     Top = 252
-    Width = 592
+    Width = 450
     Height = 0
     Align = alBottom
     Cancel = True
@@ -159,7 +159,7 @@ object RegDirDlg: TRegDirDlg
   object RegDirHeader: THeaderControl
     Left = 0
     Top = 0
-    Width = 592
+    Width = 450
     Height = 20
     Sections = <
       item
@@ -189,18 +189,18 @@ object RegDirDlg: TRegDirDlg
   object ListPanel: TPanel
     Left = 0
     Top = 20
-    Width = 592
+    Width = 450
     Height = 232
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
     DesignSize = (
-      592
+      450
       232)
     object RegDirListBox: TListBox
       Left = 0
       Top = 0
-      Width = 592
+      Width = 450
       Height = 232
       Style = lbOwnerDrawFixed
       AutoComplete = False
@@ -229,7 +229,7 @@ object RegDirDlg: TRegDirDlg
       OnKeyPress = RegDirListBoxKeyPress
     end
     object BlankPanel: TPanel
-      Left = 574
+      Left = 432
       Top = 216
       Width = 18
       Height = 16
@@ -254,7 +254,7 @@ object RegDirDlg: TRegDirDlg
   object OpeToolBar: TToolBar
     Left = 0
     Top = 322
-    Width = 592
+    Width = 450
     Height = 19
     Align = alBottom
     AutoSize = True

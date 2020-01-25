@@ -510,7 +510,7 @@ void get_PrmList(
 		if (cp && contained_wd_i(
 			_T("AddTag|CalcDirSize|CalcDirSizeAll|Calculator|ChangeDir|ChangeOppDir|Clone|CloneToCurr|")
 			_T("ContextMenu|ConvertHtm2Txt|Copy|CopyTo|CountLines|CreateDir|CursorDown|CursorUp|")
-			_T("DateSelect|DebugCmdFile|DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|")
+			_T("DateSelect|DebugCmdFile|Delete|DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|")
 			_T("Filter|FindDown|FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|GitDiff|GitViewer|")
 			_T("Grep|HelpCurWord|ImageViewer|IncSearch|JumpIndex|JumpLine|JumpTo|ListArchive|")
 			_T("ListDuration|ListExpFunc|ListTail|ListText|ListTree|LoadBgImage|LoadResultList|")
