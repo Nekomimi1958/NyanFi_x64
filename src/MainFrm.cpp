@@ -2760,11 +2760,11 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 					TPanel *pp = dynamic_cast<TPanel *>(pCtrl);
 					if (pp) {
 						UnicodeString pnam = pp->Caption;
-						remove_top_s(pnam, TabPinMark);
+						bool has_pin = remove_top_s(pnam, TabPinMark);
 						//クリック位置のディレクトリを取得
 						int px = LOWORD(Msg.lParam);
 						int idx_r = -1;
-						int w = ScaledInt(4) + TabPinWidth;
+						int w = ScaledInt(4) + (has_pin? TabPinWidth : 0);
 						TStringDynArray plst = split_path(pnam, DirDelimiter);
 						for (int i=0; i<plst.Length && idx_r==-1; i++) {
 							w += get_WidthInPanel(plst[i] + DirDelimiter, pp);
@@ -23998,7 +23998,10 @@ void __fastcall TNyanFiForm::ShareListActionExecute(TObject *Sender)
 {
 	try {
 		UnicodeString cnam;
-		if (StartsStr("\\\\", CurPath[CurListTag])) {
+		if (!ActionParam.IsEmpty()) {
+			cnam = ActionParam;
+		}
+		else if (StartsStr("\\\\", CurPath[CurListTag])) {
 			cnam = get_root_name(CurPath[CurListTag]);
 		}
 		else {

@@ -554,6 +554,11 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 				CmdStr.sprintf(_T("FindTag_%s"), jdir.c_str());
 				ModalResult = mrOk;
 			}
+			//コンピュータ名
+			else if (is_computer_name(jdir)) {
+				CmdStr.sprintf(_T("ShareList_\"%s\""), jdir.c_str());
+				ModalResult = mrOk;
+			}
 			//通常ディレクトリ
 			else {
 				NyanFiForm->RecoverFileList2();
@@ -745,6 +750,7 @@ void __fastcall TRegDirDlg::ChangeItemActionExecute(
 
 	if (is_separator(DescEdit->Text)
 		|| StartsText("shell:", DirEdit->Text) || StartsText("#:", DirEdit->Text)
+		|| is_computer_name(DirEdit->Text)
 		|| dir_exists(get_actual_path(DirEdit->Text)))
 	{
 		UnicodeString lbuf;

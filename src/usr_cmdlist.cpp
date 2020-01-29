@@ -519,9 +519,9 @@ void get_PrmList(
 			_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|")
 			_T("ScrollCursorUp|ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|")
 			_T("ScrollUpText|SelByList|SetColor|SetDirTime|SetFontSize|SetMargin|SetPathMask|")
-			_T("SetInterpolation|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|SimilarSort|")
-			_T("SortDlg|SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToOppSameHash|ToTab|")
-			_T("UnPack|UnPackToCurr,|ViewTail|WatchTail|WidenCurList|WinPos|"),
+			_T("SetInterpolation|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|ShareList|")
+			_T("SimilarSort|SortDlg|SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToOppSameHash|")
+			_T("ToTab|UnPack|UnPackToCurr,|ViewTail|WatchTail|WidenCurList|WinPos|"),
 			cmd))
 		{
 			cp->Enabled = true;

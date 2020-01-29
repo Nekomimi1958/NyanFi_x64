@@ -15,13 +15,22 @@
 #include <Vcl.ComCtrls.hpp>
 #include <Vcl.Tabs.hpp>
 #include "usr_scrpanel.h"
+#include <System.Actions.hpp>
+#include <Vcl.ActnList.hpp>
 
 //-----------------------------------------------
 class TNetShareDlg : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *CopyPathAction;
+	TAction *CopyPathAllAction;
+	TAction *CopyUncAction;
+	TAction *CopyUncAllAction;
+	TActionList *ActionList1;
 	TButton *HiddenCanBtn;
 	TListBox *ShareListBox;
+	TMenuItem *CopyPathAllItem;
+	TMenuItem *CopyPathItem;
 	TMenuItem *CopyUncAllItem;
 	TMenuItem *CopyUncItem;
 	TPanel *ListPanel;
@@ -37,11 +46,16 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ShareListBoxDblClick(TObject *Sender);
 	void __fastcall ShareListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall ShareListBoxKeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall CopyUncItemClick(TObject *Sender);
-	void __fastcall PopupMenu1Popup(TObject *Sender);
-	void __fastcall CopyUncAllItemClick(TObject *Sender);
 	void __fastcall PathTabControlDrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 	void __fastcall PathTabControlChange(TObject *Sender);
+	void __fastcall CopyUncActionExecute(TObject *Sender);
+	void __fastcall CopyUncActionUpdate(TObject *Sender);
+	void __fastcall CopyPathActionExecute(TObject *Sender);
+	void __fastcall CopyPathActionUpdate(TObject *Sender);
+	void __fastcall CopyUncAllActionExecute(TObject *Sender);
+	void __fastcall CopyUncAllActionUpdate(TObject *Sender);
+	void __fastcall CopyPathAllActionExecute(TObject *Sender);
+	void __fastcall CopyPathAllActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	UsrScrollPanel *ListScrPanel;	//シンプルスクロールバー

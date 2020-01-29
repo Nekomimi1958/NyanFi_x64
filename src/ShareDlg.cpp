@@ -128,10 +128,11 @@ void __fastcall TNetShareDlg::FormDestroy(TObject *Sender)
 //---------------------------------------------------------------------------
 //共有フォルダ一覧の更新
 //---------------------------------------------------------------------------
-void __fastcall TNetShareDlg::UpdateShareList(UnicodeString cnam)
+void __fastcall TNetShareDlg::UpdateShareList(
+	UnicodeString cnam)	//\\コンピュータ名
 {
 	cnam = ExcludeTrailingPathDelimiter(cnam);
-	Caption = yen_to_delimiter(cnam);
+	Caption = yen_to_delimiter(cnam) + " - 共有フォルダ一覧";
 
 	TListBox *lp = ShareListBox;
 	lp->Clear();
@@ -147,9 +148,13 @@ void __fastcall TNetShareDlg::UpdateShareList(UnicodeString cnam)
 			}
 		}
 	}
+	else {
+		beep_Warn();
+		Caption = Caption + " - 取得に失敗!";
+	}
+	cursor_Default();
 
 	if (p_si) ::NetApiBufferFree(p_si);
-	cursor_Default();
 	ListScrPanel->UpdateKnob();
 
 	UnicodeString pnam = CurPathName;
@@ -435,12 +440,20 @@ void __fastcall TNetShareDlg::ShareListBoxKeyDown(TObject *Sender, WORD &Key, TS
 		}
 	}
 	//カーソル移動
-	else if	(ExeCmdListBox(lp, cmd_F))		;
+	else if	(ExeCmdListBox(lp, cmd_F)) {
+		;
+	}
 	//頭文字サーチ
-	else if (isSelDir && is_IniSeaKey(KeyStr))	ListBoxInitialSearch(lp, KeyStr, true);
+	else if (isSelDir && is_IniSeaKey(KeyStr)) {
+		ListBoxInitialSearch(lp, KeyStr, true);
+	}
 	//閉じる
-	else if (USAME_TI(cmd_F, "ReturnList"))	ModalResult = mrCancel;
-	else handled = false;
+	else if (USAME_TI(cmd_F, "ReturnList")) {
+		ModalResult = mrCancel;
+	}
+	else {
+		handled = false;
+	}
 
 	if (!is_DialogKey(Key) || handled) Key = 0;
 }
@@ -459,14 +472,23 @@ void __fastcall TNetShareDlg::ShareListBoxDblClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //UNCパスをコピー
 //---------------------------------------------------------------------------
-void __fastcall TNetShareDlg::CopyUncItemClick(TObject *Sender)
+void __fastcall TNetShareDlg::CopyUncActionExecute(TObject *Sender)
 {
 	TListBox *lp = ShareListBox;
 	if (lp->ItemIndex!=-1)
 		Clipboard()->AsText = IncludeTrailingPathDelimiter(ComputerName) + lp->Items->Strings[lp->ItemIndex];
 }
 //---------------------------------------------------------------------------
-void __fastcall TNetShareDlg::CopyUncAllItemClick(TObject *Sender)
+void __fastcall TNetShareDlg::CopyUncActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Visible = isShare;
+	ap->Enabled = ap->Visible && (ShareListBox->ItemIndex!=-1);
+}
+//---------------------------------------------------------------------------
+//すべてのUNCパスをコピー
+//---------------------------------------------------------------------------
+void __fastcall TNetShareDlg::CopyUncAllActionExecute(TObject *Sender)
 {
 	TListBox *lp = ShareListBox;
 	std::unique_ptr<TStringList> lst(new TStringList());
@@ -475,12 +497,53 @@ void __fastcall TNetShareDlg::CopyUncAllItemClick(TObject *Sender)
 	Clipboard()->AsText = lst->Text;
 }
 //---------------------------------------------------------------------------
-void __fastcall TNetShareDlg::PopupMenu1Popup(TObject *Sender)
+void __fastcall TNetShareDlg::CopyUncAllActionUpdate(TObject *Sender)
 {
-	CopyUncItem->Visible	= isShare;
-	CopyUncItem->Enabled	= isShare && (ShareListBox->ItemIndex!=-1);
-	CopyUncAllItem->Visible = isShare;
-	CopyUncAllItem->Enabled = isShare && (ShareListBox->Count>0);
+	TAction *ap = (TAction *)Sender;
+	ap->Visible = isShare;
+	ap->Enabled = ap->Visible && (ShareListBox->Count>0);
+}
+//---------------------------------------------------------------------------
+//ディレクトリ・パスをコピー
+//---------------------------------------------------------------------------
+void __fastcall TNetShareDlg::CopyPathActionExecute(TObject *Sender)
+{
+	TListBox *lp = ShareListBox;
+	if (lp->ItemIndex!=-1) {
+		UnicodeString lbuf = lp->Items->Strings[lp->ItemIndex];
+		if (isPC) lbuf = IncludeTrailingPathDelimiter(get_tkn(lbuf, ' '));
+		Clipboard()->AsText = lbuf;
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNetShareDlg::CopyPathActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Visible = isSelSub;
+	ap->Enabled = ap->Visible && (ShareListBox->ItemIndex!=-1);
+}
+//---------------------------------------------------------------------------
+//すべてのディレクトリ・パスをコピー
+//---------------------------------------------------------------------------
+void __fastcall TNetShareDlg::CopyPathAllActionExecute(TObject *Sender)
+{
+	TListBox *lp = ShareListBox;
+	std::unique_ptr<TStringList> lst(new TStringList());
+	bool is_drv = isPC;
+	for (int i=0; i<lp->Count; i++) {
+		UnicodeString lbuf = lp->Items->Strings[i];
+		if (is_drv && is_separator(lbuf)) is_drv = false;
+		if (is_drv) lbuf = IncludeTrailingPathDelimiter(get_tkn(lbuf, ' '));
+		lst->Add(lbuf);
+	}
+	Clipboard()->AsText = lst->Text;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNetShareDlg::CopyPathAllActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Visible = isSelSub;
+	ap->Enabled = ap->Visible && (ShareListBox->Count>0);
 }
 
 //---------------------------------------------------------------------------

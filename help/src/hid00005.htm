@@ -161,7 +161,9 @@ AddTag<span class="pram_text">_;</span>
 パラメータに <b>FC</b> を指定すると、タイムスタンプの代わりに、ファイル数とサブディレクトリ数が表示されます(<a href="hid00010.htm#TimeStampFmt">オプション設定 - デザイン - ファイルリスト - 「日時の書式」</a> の文字数が10以下の場合はファイル数のみ表示)。<br>
 パラメータに <b>LO</b> を指定すると計算結果をログに出力、<b>CC</b> を指定するクリップボードにコピー、<b>LS</b> を指定すると一覧で表示します。<br>
 パラメータに <b>SA</b> を指定するとサイズの小さい順に、<b>SD</b> を指定するとサイズの大きい順に結果がソートされます。どちらも指定していない場合は、現在のファイルリストの表示順と同じになります。<br>
-またパラメータに<b>ファイル名</b>を指定すると計算結果を保存できます。ドライブ名がない場合はカレントからの相対指定になります。ディレクトリ区切りを含む場合は <b>\\</b> を用いてください。<br>
+</div>
+<div class="spc_box">
+パラメータに<b>ファイル名</b>を指定すると計算結果を保存できます。ドライブ名がない場合はカレントからの相対指定になります。ディレクトリ区切りを含む場合は <b>\\</b> を用いてください。<br>
 ファイル名の指定には以下の書式文字列が使えます。<br>
 <div class="indent1">
 <b>\DT</b>(書式)　現在の日時 (書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)<br>
@@ -486,6 +488,7 @@ XML や HTML文書では、文字コード指定(encoding、charset)も書き換えます。<br>
 　絶対指定: {<b><</b>|<b>=</b>|<b>></b>}yyyy/mm/dd<br>
 　　<b><</b> :指定日付より古い、　<b>=</b> :指定日付と同じ、　<b>></b> :指定日付より新しい<br>
 </div>
+なお日付条件の指定は、バックグラウンド・タスクによる通常のファイルコピーでのみ有効です。<br>
 <b>例</b>:<br>
 　Copy_>-3D　　　　　　　3日前の日付より新しいファイルのみをコピー<br>
 　Copy_TO;<2017/01/01　　2017年1月1日よりも古いファイルのみを、入力ボックスで指定した場所にコピー
@@ -1782,13 +1785,13 @@ Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
 <dd>カレントパスまたは選択ディレクトリ以下で、指定マスクにマッチする項目を検索します。マスクの末尾が <b>\</b> の場合はディレクトリに、そうでない場合はファイルにマッチします。<a href="hid00052.htm">ファイル名検索</a>、<a href="hid00053.htm">ディレクトリ名検索</a> でマスクのみ指定した場合と同様になります。見つかるとカレント側に結果リストが表示されます。<br>
 <a href="#FindFileDlg">→ FindFileDlg</a>　<a href="#FindDirDlg">→ FindDirDlg</a>
 
-<dt id="MaskSelect">MaskSelect<span class="pram_text">_[!]マスク[\][;[!]マスク[\]...]</span>
-<dd>指定マスクにマッチする項目を選択します。マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
+<dt id="MaskSelect">MaskSelect<span class="pram_text">[_[!]マスク[\][;[!]マスク[\]...]]</span>
+<dd>マスク選択ダイアログが開き、指定したマスクにマッチする項目を選択します。マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
 マスクの末尾が <b>\</b> の場合はディレクトリに、そうでない場合はファイルにマッチします。<br>
 マスクの先頭に <b>!</b> があると、それ以外のファイルまたはディレクトリが選択されます。ファイルとディレクトリに対して別々に適用されますので、例えば !*.txt だけを指定した場合、*.txt 以外のファイルが選択されますがディレクトリは選択されません。<br>
 なお、コンボボックス上の右クリックメニューで入力履歴を削除したりできます。<br>
-パラメータにマスク文字列を指定すると、ダイアログを出さずにそのマスクで直ちに選択します。<br>
 <div class="spc_box">
+パラメータにマスク文字列を指定すると、ダイアログを出さずにそのマスクで直ちに選択します。<br>
 <b>例</b>: ZIP と 7z のアーカイブを選択<br>
 　MaskSelect_*.zip;*.7z<br>
 <b>例</b>: temp 以外のディレクトリと、*.bak 以外のファイルを選択<br>
@@ -2643,11 +2646,15 @@ SetTag<span class="pram_text">_;</span>
 <a href="hid00088.htm">→ タグによるファイル管理</a><br>
 <a href="#AddTag">→ AddTag</a>　<a href="#DelTag">→ DelTag</a>　<a href="#FindTag">→ FindTag</a>　<a href="#TrimTagData">→ TrimTagData</a>　<a href="#TagSelect">→ TagSelect</a>
 
-<dt id="ShareList">ShareList
+<dt id="ShareList">ShareList<span class="pram_text">_コンピュータ名</span>
 <dd>カレントのコンピュータの共有フォルダ一覧を表示します。フォルダを選択すると、そのUNCパスに移動します。<br>
 一覧でのキー操作は、<a href="hid00057.htm">ディレクトリ履歴</a>などと同様です。<br>
 なお、右クリックメニューで、UNCパスのコピーが可能です。<br>
-表示位置はカレント側の中央になりますが、サイズは変更可能で保存されます。<br>
+一覧の表示位置はカレント側の中央になりますが、サイズは変更可能で保存されます。<br>
+<div class="spc_box">
+パラメータでコンピュータ名を指定すると、そのコンピュータの共有フォルダ一覧が表示されます。<br>
+先頭の <b>\\</b> は無くてもかまいません。<br>
+</div>
 
 <dt id="ShowByteSize">ShowByteSize<span class="pram_text">[_{ON|OFF}]</span>
 <dd>パラメータを指定しない場合、ファイルサイズをバイト単位で表示するか、あるいは <a href="hid00010.htm#SizeFormat">オプション設定 - デザイン - 「サイズ表示」</a>で指定された書式で表示するかをトグルで切り替えます。<br>
@@ -2822,11 +2829,14 @@ SortDlg<span class="pram_text">_L</span>
 <div class="spc_box">
 一覧でのキー操作は、<a href="hid00057.htm">ディレクトリ履歴</a>などと同様です(頭文字サーチも可能)。<br>
 また<span class="btn_frame">←</span> / <span class="btn_frame">→</span>キーや、<a href="hid00005.htm#ToLeft">ToLeft</a>/<a href="hid00005.htm#ToRight">ToRight</a>、<a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a>/<a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a>、<a href="#PrevTab">PrevTab</a>/<a href="#NextTab">NextTab</a> コマンドが割り当てられているキーによって、基準となるディレクトリをパンくずリストのように遡って変更できます(マウスによる選択も可能)。左端ではドライブの変更(UNCパスの場合は共有フォルダ)やライブラリへの移動が可能。<br>
+なお、右クリックメニューでパスのコピーが可能です。<br>
 一覧の表示位置はカレント側の中央になりますが、サイズは変更可能で保存されます。<br>
 </div>
 <div class="spc_box">
 パラメータに <b>ND</b> をあわせて指定すると、ダイアログの代わりに、サブディレクトリを選択するポップアップメニューを表示します。<br>
 なお<a href="hid00004.htm#DirInfo">ディレクトリ情報</a>を右クリックすると、クリック位置のディレクトリのサブディレクトリを選択するポップアップメニューが出ます(イベント未割り当て時)。<br>
+</div>
+<div class="spc_box">
 <b>例</b>:<br>
 　SubDirList_..<br>
 　SubDirList_ND;\<br>

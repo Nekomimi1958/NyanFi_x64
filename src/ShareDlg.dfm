@@ -69,16 +69,43 @@ object NetShareDlg: TNetShareDlg
     OnDrawTab = PathTabControlDrawTab
   end
   object PopupMenu1: TPopupMenu
-    OnPopup = PopupMenu1Popup
     Left = 24
     Top = 48
     object CopyUncItem: TMenuItem
-      Caption = 'UNC'#12497#12473#12434#12467#12500#12540'(&C)'
-      OnClick = CopyUncItemClick
+      Action = CopyUncAction
     end
     object CopyUncAllItem: TMenuItem
+      Action = CopyUncAllAction
+    end
+    object CopyPathItem: TMenuItem
+      Action = CopyPathAction
+    end
+    object CopyPathAllItem: TMenuItem
+      Action = CopyPathAllAction
+    end
+  end
+  object ActionList1: TActionList
+    Left = 104
+    Top = 45
+    object CopyUncAction: TAction
+      Caption = 'UNC'#12497#12473#12434#12467#12500#12540'(&C)'
+      OnExecute = CopyUncActionExecute
+      OnUpdate = CopyUncActionUpdate
+    end
+    object CopyUncAllAction: TAction
       Caption = #12377#12409#12390#12398'UNC'#12497#12473#12434#12467#12500#12540'(&A)'
-      OnClick = CopyUncAllItemClick
+      OnExecute = CopyUncAllActionExecute
+      OnUpdate = CopyUncAllActionUpdate
+    end
+    object CopyPathAction: TAction
+      Caption = #12487#12451#12524#12463#12488#12522#12539#12497#12473#12434#12467#12500#12540'(&C)'
+      OnExecute = CopyPathActionExecute
+      OnUpdate = CopyPathActionUpdate
+    end
+    object CopyPathAllAction: TAction
+      Caption = #12377#12409#12390#12398#12487#12451#12524#12463#12488#12522#12539#12497#12473#12434#12467#12500#12540'(&A)'
+      OnExecute = CopyPathAllActionExecute
+      OnUpdate = CopyPathAllActionUpdate
     end
   end
 end
