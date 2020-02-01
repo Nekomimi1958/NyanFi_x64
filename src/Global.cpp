@@ -12245,7 +12245,8 @@ void RequestSlowTask()
 UnicodeString get_LogErrMsg(
 	UnicodeString msg,	//メッセージ		(default = EmptyStr)
 	bool add_cr,		//改行を挿入		(default = true)
-	UnicodeString fnam)	//対象ファイル名	(default = EmptyStr)
+	UnicodeString fnam,	//対象ファイル名	(default = EmptyStr)
+	int err_id)
 {
 	UnicodeString ret_str;
 
@@ -12254,11 +12255,11 @@ UnicodeString get_LogErrMsg(
 			ret_str = msg;
 		}
 		else {
-			int msg_id = GetLastError();
-			if (msg_id!=NO_ERROR) {
-				ret_str = SysErrorMessage(msg_id);
+			if (err_id==NO_ERROR) err_id = GetLastError();
+			if (err_id!=NO_ERROR) {
+				ret_str = SysErrorMessage(err_id);
 				//使用しているプロセスの実行ファイル名を付加
-				if ((msg_id==ERROR_SHARING_VIOLATION || msg_id==ERROR_LOCK_VIOLATION) && !fnam.IsEmpty()) {
+				if ((err_id==ERROR_SHARING_VIOLATION || err_id==ERROR_LOCK_VIOLATION) && !fnam.IsEmpty()) {
 					std::unique_ptr<TStringList> lst(new TStringList());
 					get_ProcessingInf(fnam, lst.get(), true);
 					if (lst->Count>0) {
@@ -12280,11 +12281,12 @@ UnicodeString get_LogErrMsg(
 void set_LogErrMsg(
 	UnicodeString &msg,	//メッセージ
 	UnicodeString s,	//追加メッセージ	(default = EmptyStr)
-	UnicodeString fnam)	//対象ファイル名	(default = EmptyStr)
+	UnicodeString fnam,	//対象ファイル名	(default = EmptyStr)
+	int err_id)
 {
 	if (StartsText("Abort", s)) s = EmptyStr;
 	if (!msg.IsEmpty()) msg[1] = ContainsStr(s, "中断しました")? 'C' : 'E';
-	msg += get_LogErrMsg(s, true, fnam);
+	msg += get_LogErrMsg(s, true, fnam, err_id);
 }
 
 //---------------------------------------------------------------------------

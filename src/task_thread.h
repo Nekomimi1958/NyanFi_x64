@@ -104,6 +104,8 @@ private:
 	__int64 SmplSize;
 	int  LastCount;
 
+	bool ErrCancel;
+
 	TStringList *TaskObjList;
 
 	static DWORD CALLBACK ProgressRoutine(

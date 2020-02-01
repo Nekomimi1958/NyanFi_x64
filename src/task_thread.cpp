@@ -151,6 +151,8 @@ __fastcall TTaskThread::TTaskThread(bool CreateSuspended) : TThread(CreateSuspen
 	SmplSize  = 0;
 	LastCount = 0;
 	Speed	  = 0;
+
+	ErrCancel = false;
 }
 
 //---------------------------------------------------------------------------
@@ -639,6 +641,8 @@ void __fastcall TTaskThread::CPY_core(
 	//上書き(改名)実行
 	if (w_flag) {
 		bool failed = false;
+		int  err_id = NO_ERROR;
+
 		try {
 			SetLastError(NO_ERROR);
 			if (!EX_set_writable(dst_fnam))		throw Exception(EmptyStr);
@@ -658,6 +662,7 @@ void __fastcall TTaskThread::CPY_core(
 				bool res = ::MoveFileWithProgress(cv_ex_filename(fnam).c_str(), cv_ex_filename(dst_fnam).c_str(),
 								ProgressRoutine, (LPVOID)this,
 								MOVEFILE_REPLACE_EXISTING|MOVEFILE_COPY_ALLOWED|MOVEFILE_WRITE_THROUGH);
+				if (!res) err_id = GetLastError();
 				AddDebugLog("Return");
 				if (!res) {
 					if (TaskCancel) Abort(); else throw Exception(EmptyStr);
@@ -677,6 +682,7 @@ void __fastcall TTaskThread::CPY_core(
 				AddDebugLog("Call CopyFileEx");
 				bool res = ::CopyFileEx(cv_ex_filename(fnam).c_str(), cv_ex_filename(dst_fnam).c_str(),
 								ProgressRoutine, (LPVOID)this, (LPBOOL)&cancel, cpyflag);
+				if (!res) err_id = GetLastError();
 				AddDebugLog("Return");
 				if (!res) {
 					if (TaskCancel) Abort(); else throw Exception(EmptyStr);
@@ -698,13 +704,17 @@ void __fastcall TTaskThread::CPY_core(
 		}
 		//中断
 		catch (EAbort &e) {
-			msg[1] = 'C';  msg += get_LogErrMsg();
+			msg[1] = 'C';  msg += get_LogErrMsg(EmptyStr, true, EmptyStr, err_id);
 			failed = true;
 		}
 		//エラー
 		catch (...) {
 			ErrCount++;
-			set_LogErrMsg(msg, EmptyStr, fnam);
+			set_LogErrMsg(msg, EmptyStr, fnam, err_id);
+			if (err_id==ERROR_DISK_FULL) {
+				TaskCancel = true;
+				ErrCancel  = true;
+			}
 			failed = true;
 		}
 
@@ -830,7 +840,9 @@ void __fastcall TTaskThread::Task_CPY(
 					if (CopyTags) usr_TAG->Copy(src_prm, dst_nam);
 					if (mov_sw) move_FolderIcon(src_prm, dst_nam); else copy_FolderIcon(src_prm, dst_nam);
 				}
-				else set_LogErrMsg(msg);
+				else {
+					set_LogErrMsg(msg);
+				}
 				AddLog(msg);
 			}
 
@@ -841,6 +853,9 @@ void __fastcall TTaskThread::Task_CPY(
 			}
 		}
 	}
+
+	//エラー中断
+	if (ErrCancel) AddLog("C エラーによりタスクを中断しました");
 }
 
 //---------------------------------------------------------------------------

@@ -2034,8 +2034,8 @@ void StartReserve();
 bool StartReserve(int idx, bool ext_sw = false);
 void RequestSlowTask();
 
-UnicodeString get_LogErrMsg(UnicodeString msg = EmptyStr, bool add_cr = true, UnicodeString fnam = EmptyStr);
-void set_LogErrMsg(UnicodeString &msg, UnicodeString s = EmptyStr, UnicodeString fnam = EmptyStr);
+UnicodeString get_LogErrMsg(UnicodeString msg = EmptyStr, bool add_cr = true, UnicodeString fnam = EmptyStr, int err_id = NO_ERROR);
+void set_LogErrMsg(UnicodeString &msg, UnicodeString s = EmptyStr, UnicodeString fnam = EmptyStr, int err_id = NO_ERROR);
 
 int get_TopMargin(TCanvas *cv);
 int get_TopMargin2(TCanvas *cv);
