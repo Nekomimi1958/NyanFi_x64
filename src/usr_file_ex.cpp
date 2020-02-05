@@ -1164,50 +1164,6 @@ bool rename_Path(UnicodeString old_nam, UnicodeString new_nam)
 }
 
 //---------------------------------------------------------------------------
-//パースポイントの参照先を取得
-//---------------------------------------------------------------------------
-UnicodeString get_ReparsePointTarget(
-	UnicodeString pnam,
-	bool &is_jct)		//[o] true = ジャンクション/ false = シンボリックリンク
-{
-	is_jct = false;
-	HANDLE hDir = ::CreateFile(pnam.c_str(), GENERIC_READ,
-						FILE_SHARE_READ, NULL, OPEN_EXISTING,
-						FILE_FLAG_OPEN_REPARSE_POINT|FILE_FLAG_BACKUP_SEMANTICS, NULL);
-	if (hDir==INVALID_HANDLE_VALUE) return EmptyStr;
-
-	std::unique_ptr<BYTE[]> dat_buf(new BYTE[MAXIMUM_REPARSE_DATA_BUFFER_SIZE]);
-	::ZeroMemory(dat_buf.get(), MAXIMUM_REPARSE_DATA_BUFFER_SIZE);
-
-	UnicodeString rnam;
-	DWORD dat_sz;
-	if (::DeviceIoControl(hDir, FSCTL_GET_REPARSE_POINT,
-		NULL, 0, dat_buf.get(), MAXIMUM_REPARSE_DATA_BUFFER_SIZE, &dat_sz, NULL))
-	{
-		REPARSE_DATA_BUFFER *rp_buf = (_REPARSE_DATA_BUFFER*)dat_buf.get();
-		if (IsReparseTagMicrosoft(rp_buf->ReparseTag)) {
-			unsigned int tag = rp_buf->ReparseTag;
-			switch (tag) {
-			case IO_REPARSE_TAG_MOUNT_POINT:	//ジャンクション
-				rnam = (WCHAR*)rp_buf->MountPointReparseBuffer.PathBuffer
-						+ rp_buf->MountPointReparseBuffer.SubstituteNameOffset/sizeof(WCHAR);
-				is_jct = true;
-				break;
-			case IO_REPARSE_TAG_SYMLINK:		//シンボリックリンク
-				rnam = (WCHAR*)rp_buf->SymbolicLinkReparseBuffer.PathBuffer
-						+ rp_buf->SymbolicLinkReparseBuffer.SubstituteNameOffset/sizeof(WCHAR);
-				break;
-			}
-			remove_top_s(rnam, _T("\\??\\"));
-		}
-	}
-
-	::CloseHandle(hDir);
-
-	return rnam;
-}
-
-//---------------------------------------------------------------------------
 //ジャンクションの作成
 //---------------------------------------------------------------------------
 bool cre_Junction(UnicodeString pnam, UnicodeString target)

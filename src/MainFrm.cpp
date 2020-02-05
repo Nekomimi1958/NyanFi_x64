@@ -7540,7 +7540,7 @@ void __fastcall TNyanFiForm::SetFileInf()
 			return;
 		}
 
-		CurStt->git_checked = (!cfp->is_virtual && cfp->is_up)? dir_exists(cfp->p_name + ".git") : false;
+		CurStt->git_checked = (!cfp->is_virtual && cfp->is_up && GitExists)? dir_exists(cfp->p_name + ".git") : false;
 		ViewFileInf(cfp);
 
 		//サブビュアー
@@ -7597,9 +7597,9 @@ void __fastcall TNyanFiForm::SetDriveFileInfo(
 bool __fastcall TNyanFiForm::SetTxtPreview(
 	UnicodeString fnam,		//ファイル名
 	UnicodeString text,		//テキスト内容
-	UnicodeString tail,		//末尾内容		(default = EmptyStr)
-	int idx,				//インデックス	(default = 0)
-	bool force_sw)			//強制表示		(default = false)
+	UnicodeString tail,		//末尾内容			(default = EmptyStr)
+	int idx,				//インデックス		(default = 0)
+	int ofs)				//末尾オフセット	(defalut = 0)
 {
 	if (UserHighlight->Recycle()) AddErr_Highlight();
 
@@ -7609,17 +7609,14 @@ bool __fastcall TNyanFiForm::SetTxtPreview(
 	TxtPrvBuff->Text  = text;
 	TxtTailBuff->Text = tail;
 
-	if (force_sw) TxtPrvListPanel->Visible = true;
-
 	TxtPrvListBox->TabWidth = get_ViewTabWidth(get_extension(fnam));	//描画のために流用
 	TxtPrvListBox->Tag		= TxtPrvShowLineNo? LBTAG_OPT_LNNO : 0;
 	assign_FileListBox(TxtPrvListBox, TxtPrvBuff, idx, TxtPrvScrPanel);
-	if (force_sw) TxtPrvListBox->Repaint();
 
 	if (TxtPrvBuff->Count>=PrvActTailLn && TxtTailBuff->Count>0) {
 		TxtTailListBox->TabWidth = TxtPrvListBox->TabWidth;
 		TxtTailListBox->Tag		 = TxtPrvListBox->Tag;
-		assign_FileListBox(TxtTailListBox, TxtTailBuff, TxtTailBuff->Count - 1, TxtTailScrPanel);
+		assign_FileListBox(TxtTailListBox, TxtTailBuff, TxtTailBuff->Count - 1 - ofs, TxtTailScrPanel);
 	}
 	else {
 		TxtTailListBox->Count = 0;
@@ -9825,8 +9822,9 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 	//--------------------------------------------------
 	//ファイル情報
 	//--------------------------------------------------
-	int tx_idx = TxtPrvKeepIndex? TxtPrvListBox->ItemIndex : 0;
-	int tx_top = TxtPrvKeepIndex? TxtPrvListBox->TopIndex  : 0;
+	int pr_idx = TxtPrvKeepIndex? TxtPrvListBox->ItemIndex : 0;
+	int pr_top = TxtPrvKeepIndex? TxtPrvListBox->TopIndex  : 0;
+	int tl_ofs = TxtPrvKeepIndex? (TxtTailListBox->Count - TxtTailListBox->ItemIndex - 1) : 0;
 
 	if (!LockTxtPrv) {
 		TxtPrvListBox->Count = 0;
@@ -9892,8 +9890,8 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 		if (ShowTextPreview && !fp->prv_text.IsEmpty()) {
 			UnicodeString fnam = test_LnkExt(fp->f_ext)? fp->r_name : fp->f_name;
 			if (!is_ViewableFext(get_extension(fnam)) && !IsSwatchbook(fnam)) {
-				SetTxtPreview(fnam, fp->prv_text, fp->tail_text, tx_idx);
-				if (TxtPrvKeepIndex) TxtPrvListBox->TopIndex = tx_top;
+				SetTxtPreview(fnam, fp->prv_text, fp->tail_text, pr_idx, tl_ofs);
+				if (TxtPrvKeepIndex) TxtPrvListBox->TopIndex = pr_top;
 			}
 		}
 	}
@@ -24058,6 +24056,8 @@ void __fastcall TNyanFiForm::ShowFileInfoActionExecute(TObject *Sender)
 		SetActionAbort();  return;
 	}
 
+	bool is_sd = TEST_ActParam("SD");
+
 	//ディレクトリの容量計算
 	if (ScrMode==SCMD_FLIST && cfp->is_dir && !cfp->is_up && !cfp->is_ftp) {
 		CalcBusy = true;
@@ -24069,7 +24069,7 @@ void __fastcall TNyanFiForm::ShowFileInfoActionExecute(TObject *Sender)
 		if (CalcAborted) SttBarWarnUstr(USTR_Canceled);
 	}
 
-	if (TEST_ActParam("SD")
+	if (is_sd
 		|| (ScrMode==SCMD_FLIST && !(SubPanel->Visible && InfListPanel->Visible))
 		|| (ScrMode==SCMD_TVIEW)
 		|| (ScrMode==SCMD_IVIEW && !ImgSidePanel->Visible))
@@ -28269,6 +28269,9 @@ void __fastcall TNyanFiForm::CP_xxx_ActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::EditIniFileActionExecute(TObject *Sender)
 {
+	SaveOptions();
+	UpdateIniFile(IniFile);
+
 	UnicodeString cmd;
 	cmd.sprintf(_T("FileEdit_\"%s\""), IniFile->FileName.c_str());
 	if (!ExeCommandsCore(cmd)) SetActionAbort(GlobalErrMsg);
@@ -28290,9 +28293,13 @@ void __fastcall TNyanFiForm::EditIniFileActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ViewIniFileActionExecute(TObject *Sender)
 {
-	UnicodeString prm = add_quot_if_spc(IniFile->FileName);
-	if (TEST_ActParam("XW")) prm += ";XW";
-	ExeCommandAction("TextViewer", prm);
+	SaveOptions();
+	UpdateIniFile(IniFile);
+
+	UnicodeString cmd;
+	cmd.sprintf(_T("TextViewer_\"%s\""), IniFile->FileName.c_str());
+	if (TEST_ActParam("XW")) cmd += ";XW";
+	if (!ExeCommandsCore(cmd)) SetActionAbort(GlobalErrMsg);
 }
 
 //---------------------------------------------------------------------------
@@ -31100,7 +31107,7 @@ void __fastcall TNyanFiForm::Txt_KeepIndexActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::Txt_KeepIndexActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
-	ap->Visible = TxtPrvListBox->Focused();
+	ap->Visible = TxtPrvListBox->Focused() || TxtTailListBox->Focused();
 	ap->Checked = TxtPrvKeepIndex;
 }
 //---------------------------------------------------------------------------

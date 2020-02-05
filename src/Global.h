@@ -643,6 +643,8 @@ extern UnicodeString NoViewHistPath;
 
 extern UnicodeString DirDelimiter;
 
+extern bool NoCheckUncRPT;
+
 extern int CurTabIndex;
 
 extern UnicodeString CurPathName;
@@ -1742,6 +1744,7 @@ void get_FindListD(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 void get_SubDirs(UnicodeString pnam, TStrings *lst, TStatusBar *stt_bar = NULL, int stt_idx = 0, bool proc_msg = false);
 
 int  get_HardLinkList(UnicodeString fnam, TStringList *o_lst);
+UnicodeString get_ReparsePointTarget(UnicodeString pnam, bool &is_jct, bool force = false);
 
 __int64 get_DirSize(UnicodeString dnam, int *f_cnt, int *d_cnt, __int64 *o_size, __int64 *c_size);
 __int64 get_ArcDirSize(UnicodeString anam, UnicodeString dnam, int *f_cnt, int *d_cnt);

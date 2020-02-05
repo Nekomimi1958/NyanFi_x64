@@ -156,7 +156,6 @@ typedef struct _REPARSE_DATA_BUFFER {
 #endif
 
 //---------------------------------------------------------------------------
-UnicodeString get_ReparsePointTarget(UnicodeString pnam, bool &is_jct);
 bool cre_Junction(UnicodeString pnam, UnicodeString target);
 
 //---------------------------------------------------------------------------

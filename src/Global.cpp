@@ -494,6 +494,9 @@ UnicodeString NoViewHistPath;	//閲覧履歴に入れないパス
 UnicodeString DirDelimiter;		//ディレクトリ区切りの表示文字
 
 //---------------------------------------------------------------------------
+bool NoCheckUncRPT;				//UNCパスのリパースポイント情報をチェックしない
+
+//---------------------------------------------------------------------------
 UnicodeString FTPTextModeFExt;	//テキストモードで転送する拡張子
 bool FTPDlKeepTime;				//ダウンロードファイルのタイムスタンプを維持
 bool FTPUpKeepTime;				//アップロードファイルのタイムスタンプを維持
@@ -1836,6 +1839,8 @@ void InitializeGlobal()
 		{_T("FindPathColumn=false"),		(TObject*)&FindPathColumn},
 		{_T("FindTagsColumn=false"),		(TObject*)&FindTagsColumn},
 		{_T("FindTagsSort=false"),			(TObject*)&usr_TAG->SortTags},
+
+		{_T("NoCheckUncRPT=false"),			(TObject*)&NoCheckUncRPT},		//隠し設定
 
 		//[General] (prefix = U:)
 		{_T("U:LastCurTag=0"),				(TObject*)&LastCurTag},
@@ -5933,7 +5938,7 @@ void assign_FileListBox(
 	else
 		lp->Items->Assign(lst);
 
-	if (idx!=-1) ListBoxSetIndex(lp, idx);
+	if (idx>=0) ListBoxSetIndex(lp, idx);
 
 	if (sp) sp->UpdateKnob();
 }
@@ -6345,6 +6350,55 @@ int get_HardLinkList(UnicodeString fnam, TStringList *o_lst)
 		for (int i=0; i<o_lst->Count; i++) o_lst->Strings[i] = drvstr + o_lst->Strings[i];
 	}
 	return o_lst->Count;
+}
+
+//---------------------------------------------------------------------------
+//リパースポイントの参照先を取得
+//---------------------------------------------------------------------------
+UnicodeString get_ReparsePointTarget(
+	UnicodeString pnam,
+	bool &is_jct,		//[o] true = ジャンクション/ false = シンボリックリンク
+	bool force)			//強制取得	(デフォルト = false)
+{
+	is_jct = false;
+
+	//UNCパスのリパースポイント情報をチェックしない
+	if (!force && NoCheckUncRPT && StartsStr("\\\\", pnam)) return EmptyStr;
+
+	HANDLE hDir = ::CreateFile(pnam.c_str(), GENERIC_READ,
+						FILE_SHARE_READ, NULL, OPEN_EXISTING,
+						FILE_FLAG_OPEN_REPARSE_POINT|FILE_FLAG_BACKUP_SEMANTICS, NULL);
+	if (hDir==INVALID_HANDLE_VALUE) return EmptyStr;
+
+	std::unique_ptr<BYTE[]> dat_buf(new BYTE[MAXIMUM_REPARSE_DATA_BUFFER_SIZE]);
+	::ZeroMemory(dat_buf.get(), MAXIMUM_REPARSE_DATA_BUFFER_SIZE);
+
+	UnicodeString rnam;
+	DWORD dat_sz;
+	if (::DeviceIoControl(hDir, FSCTL_GET_REPARSE_POINT,
+		NULL, 0, dat_buf.get(), MAXIMUM_REPARSE_DATA_BUFFER_SIZE, &dat_sz, NULL))
+	{
+		REPARSE_DATA_BUFFER *rp_buf = (_REPARSE_DATA_BUFFER*)dat_buf.get();
+		if (IsReparseTagMicrosoft(rp_buf->ReparseTag)) {
+			unsigned int tag = rp_buf->ReparseTag;
+			switch (tag) {
+			case IO_REPARSE_TAG_MOUNT_POINT:	//ジャンクション
+				rnam = (WCHAR*)rp_buf->MountPointReparseBuffer.PathBuffer
+						+ rp_buf->MountPointReparseBuffer.SubstituteNameOffset/sizeof(WCHAR);
+				is_jct = true;
+				break;
+			case IO_REPARSE_TAG_SYMLINK:		//シンボリックリンク
+				rnam = (WCHAR*)rp_buf->SymbolicLinkReparseBuffer.PathBuffer
+						+ rp_buf->SymbolicLinkReparseBuffer.SubstituteNameOffset/sizeof(WCHAR);
+				break;
+			}
+			remove_top_s(rnam, _T("\\??\\"));
+		}
+	}
+
+	::CloseHandle(hDir);
+
+	return rnam;
 }
 
 //---------------------------------------------------------------------------
@@ -7737,6 +7791,7 @@ void GetFileInfList(
 	fp->tail_text = EmptyStr;
 
 	bool is_inv_unc = is_InvalidUnc(fp->p_name);
+	bool no_chk_unc = !force && fp->is_dir && fp->is_sym && NoCheckUncRPT && StartsStr("\\\\", fp->f_name);
 
 	//ファイル名
 	UnicodeString lbuf;
@@ -7804,7 +7859,7 @@ void GetFileInfList(
 
 	//属性、サイズ、タイムスタンプ
 	if (!fp->is_virtual) {
-		if (is_inv_unc || is_root_unc(fp->f_name)) {
+		if (is_inv_unc || no_chk_unc || is_root_unc(fp->f_name)) {
 			if (is_inv_unc) {
 				fp->f_attr = faInvalid;
 				if (fp->tag!=-1) FileListBox[fp->tag]->Invalidate();
@@ -7838,9 +7893,9 @@ void GetFileInfList(
 	else
 		get_filename_warn(fp->f_name, i_list, fp->is_dir);
 
-	//ディレクトリ内情報
-	if (is_inv_unc) return;
+	if (is_inv_unc || no_chk_unc) return;
 
+	//ディレクトリ内情報
 	if (fp->is_dir) {
 		//FTPリモート
 		if (fp->is_ftp) {
@@ -7868,7 +7923,7 @@ void GetFileInfList(
 			else if (!is_all) {
 				UnicodeString tmp = "ディレクトリ";
 				if (!fp->is_virtual) {
-					is_git_top = dir_exists(rpnam + "\\.git");
+					is_git_top = GitExists && dir_exists(rpnam + "\\.git");
 					if (is_git_top) tmp += " (リポジトリ)";
 					if (is_ProtectDir(rpnam)) tmp += " (削除制限)";
 				}
@@ -7876,14 +7931,19 @@ void GetFileInfList(
 			}
 
 			//リンク先
+			if (force && fp->is_sym && fp->l_name.IsEmpty()) {
+				fp->l_name = get_ReparsePointTarget(fp->f_name, fp->is_jct, true);
+			}
 			if (!fp->l_name.IsEmpty()) {
 				add_PropLine(_T("リンク先"), fp->l_name, i_list, LBFLG_PATH_FIF);
-				if (file_exists(fp->l_name)) {
-					i_list->Add(EmptyStr);
-					i_list->AddObject(get_FileInfStr(fp->l_name), (TObject*)LBFLG_STD_FINF);
-				}
-				else if (fp->is_sym) {
-					add_WarnLine("存在しないオブジェクトへのリンク", i_list);
+				if (!StartsStr("\\\\", fp->f_name) || StartsStr("\\\\", fp->l_name)) {
+					if (file_exists(fp->l_name)) {
+						i_list->Add(EmptyStr);
+						i_list->AddObject(get_FileInfStr(fp->l_name), (TObject*)LBFLG_STD_FINF);
+					}
+					else if (fp->is_sym) {
+						add_WarnLine("存在しないオブジェクトへのリンク", i_list);
+					}
 				}
 			}
 
@@ -14177,7 +14237,7 @@ void AddCmdHistory(UnicodeString cmd, UnicodeString prm, UnicodeString id)
 //---------------------------------------------------------------------------
 UnicodeString get_GitTopPath(UnicodeString dnam)
 {
-	if (EndsStr(':', dnam)) return EmptyStr;
+	if (!GitExists || EndsStr(':', dnam)) return EmptyStr;
 
 	UnicodeString gnam = IncludeTrailingPathDelimiter(dnam) + ".git";
 	while (!file_exists(gnam)) {

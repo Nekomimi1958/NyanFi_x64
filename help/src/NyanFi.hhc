@@ -195,6 +195,10 @@
 			<param name="Local" value="hid00084.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="INIファイルの隠しオプション">
+			<param name="Local" value="hid00091.htm">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="起動時オプション">
 			<param name="Local" value="hid00089.htm">
 			</OBJECT>

@@ -2342,7 +2342,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall SetDriveFileInfo(int tag, bool drv_upd = true, bool sel_upd = true);
 
 	bool __fastcall SetTxtPreview(UnicodeString fnam, UnicodeString text, UnicodeString tail = EmptyStr,
-						int idx = 0, bool force_sw = false);
+						int idx = 0, int ofs = 0);
 	void __fastcall SetListHeader(int tag);
 	void __fastcall RepaintList(int tag = -1, UnicodeString cur_fnam = EmptyStr, bool sort_sw = false);
 	UnicodeString __fastcall GetCurFileStr(bool inc_dir = false);
