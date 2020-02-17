@@ -3778,23 +3778,7 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 
 			//ディレクトリ比較結果の更新
 			if (IsDiffList()) {
-				for (int i=0; i<MAX_FILELIST; i++) {
-					TStringList *r_lst = ResultList[i];
-					for (int j=0; j<r_lst->Count; j++) {
-						file_rec *fp = (file_rec*)r_lst->Objects[j];
-						if (file_exists(fp->f_name)) {
-							fp->is_dummy = false;
-							fp->f_time	 = get_file_age(fp->f_name);
-							fp->f_attr	 = file_GetAttr(fp->f_name);
-							fp->attr_str = get_file_attr_str(fp->f_attr);
-							fp->f_size	 = get_file_size(fp->f_name);
-						}
-						else {
-							fp->is_dummy = true;
-						}
-					}
-					RepaintList(i);
-				}
+				UpdateDiffList();
 				SetFileInf();
 			}
 			//結果一覧の更新
@@ -5891,13 +5875,16 @@ bool __fastcall TNyanFiForm::TestCurIncFindVirtual()
 //---------------------------------------------------------------------------
 //変換や抽出が不可の場合に UserAbort を送出
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::NotConvertAbort()
+void __fastcall TNyanFiForm::NotConvertAbort(
+	bool sw_diff)		//ディレクトリ比較結果リストを含む	(default = false)
 {
-	if (!IsOppFList()) 						UserAbort(USTR_CantOperate);
+	if (sw_diff && IsDiffList())	return;
+
+	if (!IsOppFList()) 				UserAbort(USTR_CantOperate);
 	if (CurStt->is_Arc || CurStt->is_ADS || CurStt->is_FTP)
-											UserAbort(USTR_OpeNotSuported);
-	if (TestCurIncDir())					UserAbort(USTR_IncludeDir);
-	if (TestCurIncFindVirtual())			UserAbort(USTR_OpeNotSuported);
+									UserAbort(USTR_OpeNotSuported);
+	if (TestCurIncDir())			UserAbort(USTR_IncludeDir);
+	if (TestCurIncFindVirtual())	UserAbort(USTR_OpeNotSuported);
 }
 
 //---------------------------------------------------------------------------
@@ -8664,6 +8651,36 @@ void __fastcall TNyanFiForm::UpdateCurPath(
 	SetFileInf();
 }
 //---------------------------------------------------------------------------
+//ディレクトリ比較結果リストの更新
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::UpdateDiffList(
+	int tag)		//リストタグ	(default = -1 : 左右とも更新)
+{
+	if (!IsDiffList()) return;
+
+	for (int i=0; i<MAX_FILELIST; i++) {
+		if (tag==-1 || tag==0) {
+			TStringList *r_lst = ResultList[i];
+			for (int j=0; j<r_lst->Count; j++) {
+				file_rec *fp = (file_rec*)r_lst->Objects[j];
+				if (file_exists(fp->f_name)) {
+					fp->is_dummy = false;
+					fp->f_time	 = get_file_age(fp->f_name);
+					fp->f_attr	 = file_GetAttr(fp->f_name);
+					fp->attr_str = get_file_attr_str(fp->f_attr);
+					fp->f_size	 = get_file_size(fp->f_name);
+				}
+				else {
+					fp->is_dummy = true;
+				}
+				fp->inf_list->Clear();
+			}
+			RepaintList(i);
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::RefreshCurPath(UnicodeString fnam)
 {
 	if (CurStt->is_Arc)
@@ -9310,12 +9327,15 @@ void __fastcall TNyanFiForm::ReloadList(
 			if (i==CurListTag && CurWorking) continue;
 			if (lst_stt->is_Arc) continue;
 
-
 			//グラフ表示等の解除
 			lst_stt->show_f_d_cnt = lst_stt->dir_graph = lst_stt->dsk_graph = false;
 
+			//ディレクトリ比較結果
+			if (IsDiffList()) {
+				UpdateDiffList(i);
+			}
 			//検索結果
-			if (!IsDiffList() && lst_stt->is_Find) {
+			else if (lst_stt->is_Find) {
 				lst_stt->find_DICON? FindFolderIconCore(i) :
 				lst_stt->find_HLINK? FindHardLinkCore(lst_stt->find_Name, i) :
 				lst_stt->find_MARK ? FindMarkCore(i) :
@@ -14404,7 +14424,7 @@ void __fastcall TNyanFiForm::CreateDirsDlgActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::CreateHardLinkActionExecute(TObject *Sender)
 {
 	try {
-		NotConvertAbort();
+		NotConvertAbort(true);
 		if (EqualDirLR()) UserAbort(USTR_SameDirLR);
 
 		UnicodeString fs;
@@ -14430,8 +14450,10 @@ void __fastcall TNyanFiForm::CreateHardLinkActionExecute(TObject *Sender)
 		for (int i=0; i<lst->Count; i++) {
 			file_rec *fp = (file_rec*)lst->Objects[i];
 			if ((fp->selected || (!lst_sel && i==cur_idx)) && fp->f_attr!=faInvalid) {
-				msg.sprintf(_T("  CREATE %s"), fp->n_name.c_str());
-				UnicodeString lnam = dst_dir + fp->n_name;
+				UnicodeString fnam = get_tkn_r(fp->f_name, CurPath[CurListTag]);	//ディレクトリ比較結果にも対応
+				UnicodeString lnam = dst_dir + fnam;
+				msg.sprintf(_T("  CREATE %s"), fnam.c_str());
+
 				//同名処理
 				if (file_exists(lnam)) {
 					if (SameText(fp->p_name, dst_dir)) {
@@ -14464,9 +14486,10 @@ void __fastcall TNyanFiForm::CreateHardLinkActionExecute(TObject *Sender)
 						}
 					}
 				}
+
 				//ハードリンク作成
 				if (msg[1]!='E' && msg[1]!='S') {
-					if (::CreateHardLink((dst_dir + fp->n_name).c_str(), fp->f_name.c_str(), NULL)) {
+					if (::CreateHardLink(lnam.c_str(), fp->f_name.c_str(), NULL)) {
 						fp->selected = false;
 						InvalidateFileList();
 					}

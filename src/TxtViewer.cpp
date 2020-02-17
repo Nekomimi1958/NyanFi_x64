@@ -2625,7 +2625,7 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 		UnicodeString colstr = GetCurWord(false,
 				"(#[0-9a-fA-F]{3}\\b)|(#[0-9a-fA-F]{6}\\b)|"
 				"(0x|\\$)[0-9a-fA-F]{6,8}|"
-				"(=[0-9a-fA-F]{6})", &xp);
+				"(=[0-9a-fA-F]{6})", NULL, &xp);
 
 		colstr = ReplaceStr(colstr, "$", "0x");
 		int col = -1;
@@ -3517,7 +3517,8 @@ void __fastcall TTxtViewer::SelectAll()
 UnicodeString __fastcall TTxtViewer::GetCurWord(
 	bool select,			//選択				(default = false)
 	UnicodeString ptn,		//マッチパターン	(default = EmptyStr)
-	int *xp)				//位置				(default = NULL)
+	int *p_s,				//開始位置			(default = NULL)
+	int *p_e)				//終了位置			(default = NULL)
 {
 	if (select) IniSelected();
 
@@ -3546,7 +3547,8 @@ UnicodeString __fastcall TTxtViewer::GetCurWord(
 			int p1 = p0 + mts.Item[i].Length;
 			if (p0<=CurPos.x && CurPos.x<p1) {
 				ret_str = mts.Item[i].Value;
-				if (xp) *xp = p1;
+				if (p_s) *p_s = p0;
+				if (p_e) *p_e = p1;
 				if (select) {
 					SelStart = nrm_Pos(Point(p0, CurPos.y));
 					SelEnd	 = nrm_Pos(Point(p1, CurPos.y));
@@ -4082,6 +4084,85 @@ bool __fastcall TTxtViewer::SearchPair(
 					lvl++;
 				}
 			}
+		}
+	}
+
+	//HTML ブロック
+	if (!found && test_HtmlExt(get_extension(FileName)) && !isHtm2Txt) {
+		int p_s, p_e;
+		UnicodeString tag_str =
+			GetCurWord(false,
+				"</?(head|body|div|header|footer|nav|main|section|article|aside|table|ul|ol|form|script).*?>",
+				&p_s, &p_e);
+
+		if (!tag_str.IsEmpty()) {
+			//開始 → 終了タグ
+			if (tag_str[2]!='/') {
+				UnicodeString b_str = get_tkn(get_tkn(tag_str, ">"), " ");
+				UnicodeString e_str = b_str + ">";	e_str.Insert("/", 2);
+				int lvl = 0;
+				for (int i=CurPos.y; !found && i<MaxDispLine; i++) {
+					UnicodeString lbuf = get_DispLine(i);
+					int p = (i==CurPos.y)? p_e : 1;
+					for (int j=p; !found && j<lbuf.Length(); j++) {
+						UnicodeString s = lbuf.SubString(j, lbuf.Length() - j + 1);
+						if (!has_CR(lbuf) && StartsStr("<", s) && !s.Pos(">") && i<(MaxDispLine - 1)) {
+							UnicodeString tmp = get_tkn(get_DispLine(i + 1), "<");
+							int q = tmp.Pos(">");
+							s += (q>0)? tmp.SubString(1, q) : get_tkn(tmp, " ");
+						}
+
+						if (StartsText(e_str, s)) {
+							if (lvl==0) {
+								CurPos = nrm_Pos(Point(j - 1, i));
+								found  = true;
+							}
+							else {
+								lvl--;
+							}
+						}
+						else if (StartsText(b_str, s)) {
+							lvl++;
+						}
+					}
+				}
+			}
+			//終了 → 開始タグ
+			else {
+				UnicodeString e_str = tag_str;
+				UnicodeString b_str = get_tkn(tag_str, ">");	b_str.Delete(2, 1);
+				int lvl = 0;
+				for (int i=CurPos.y; !found && i>=0; i--) {
+					UnicodeString lbuf = get_DispLine(i);
+					int p = (i==CurPos.y)? p_s : lbuf.Length();
+					if (i>0) {
+						UnicodeString tmp = get_DispLine(i - 1);
+						if (!has_CR(tmp)) {
+							lbuf.Insert(tmp, 1);
+							i--;
+							p += tmp.Length();
+						}
+					}
+
+					for (int j=p; !found && j>0; j--) {
+						UnicodeString s = lbuf.SubString(j, lbuf.Length() - j + 1);
+						if (StartsText(b_str, s)) {
+							if (lvl==0) {
+								CurPos = nrm_Pos(Point(j - 1, i));
+								found = true;
+							}
+							else {
+								lvl--;
+							}
+						}
+						else if (StartsText(e_str, s)) {
+							lvl++;
+						}
+					}
+				}
+			}
+
+			if (!found) beep_Warn();
 		}
 	}
 

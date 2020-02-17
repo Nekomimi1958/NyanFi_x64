@@ -601,7 +601,10 @@ OptionDlg<span class="pram_text">_KYO</span>
 <dd>カーソル位置の括弧と対応する括弧を検索します。<br>
 検索できるペアは（）〔〕［］｛｝〈〉《》「」『』【】(){}[] です。<br>
 <div class="spc_box">
-一部のプログラムソースなどでは、括弧以外に以下のような行単位の対応関係を検索できます。<br>
+通常表示のHTML文書では、カーソル位置に head、body、div、header、footer、nav、main、section、article、aside、table、ul、ol、form、script タグがあった場合、それに対応する開始/終了タグを検索します。<br>
+</div>
+<div class="spc_box">
+また、一部のプログラムソースなどでは、括弧以外に以下のような行単位の対応関係を検索できます。<br>
 <b>.cpp</b>、<b>.h</b> などでは、#if～/#endif を検索します。<br>
 <b>.pas</b> では、行単位で記述された begin/end などを検索します。<br>
 <b>.dfm</b> (Delphiフォームファイル)では、object/end や item/end を検索します。<br>
@@ -616,7 +619,7 @@ OptionDlg<span class="pram_text">_KYO</span>
 <b>例</b>: SearchPair_/^#BEGIN/;/^#END/<br>
 </div>
 <div class="spc_box">
-また<a href="hid00084.htm#PairBeginPtn">構文強調表示定義ファイル</a>を利用すると、複数の検索パターンを指定できます(PairBeginPtn1～、PairEndPtn1～)。<br>
+<a href="hid00084.htm#PairBeginPtn">構文強調表示定義ファイル</a>を利用すると、複数の検索パターンを指定できます(PairBeginPtn1～、PairEndPtn1～)。<br>
 特定の拡張子に対するデフォルトの検索パターンは、<b>設定メニュー</b> - [<b>デフォルトの構文強調表示定義をコピー</b>] で確認できます。<br>
 </div>
 

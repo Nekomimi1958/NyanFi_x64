@@ -2325,7 +2325,7 @@ private:	// ユーザー宣言
 	bool __fastcall TestCurIncDir(bool only_cur = false);
 	bool __fastcall TestCurIncNotDir();
 	bool __fastcall TestCurIncFindVirtual();
-	void __fastcall NotConvertAbort();
+	void __fastcall NotConvertAbort(bool sw_diff = false);
 	void __fastcall ApplySelMask(TStringList *lst, int tag, UnicodeString dnam = EmptyStr);
 	void __fastcall ApplyPathMask(TStringList *lst, int tag);
 	void __fastcall UpdateList(TStringList *lst, UnicodeString dnam, int tag = CurListTag);
@@ -2595,6 +2595,7 @@ public:		// ユーザー宣言
 	void __fastcall RecoverFileList2(int tag = CurListTag);
 	void __fastcall UpdateCurPath(UnicodeString dir = EmptyStr, int idx = -1, bool inh_hist = false);
 	void __fastcall UpdateCurPath(UnicodeString dir, UnicodeString fnam);
+	void __fastcall UpdateDiffList(int tag = -1);
 	void __fastcall RefreshCurPath(UnicodeString fnam);
 	void __fastcall UpdateOppPath(UnicodeString dir, int idx = -1);
 	void __fastcall UpdateCurDrive(UnicodeString drv, int tag = -1);

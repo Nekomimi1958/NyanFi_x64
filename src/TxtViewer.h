@@ -325,7 +325,7 @@ public:
 	TStringDynArray __fastcall GetCsvHdrList();
 
 	void __fastcall SelectAll();
-	UnicodeString __fastcall GetCurWord(bool select = false, UnicodeString ptn = EmptyStr, int *xp = NULL);
+	UnicodeString __fastcall GetCurWord(bool select = false, UnicodeString ptn = EmptyStr, int *p_s = NULL, int *p_e = NULL);
 	void __fastcall SelLine(bool cr = false);
 
 	int  __fastcall change_CodePage(UnicodeString prm);

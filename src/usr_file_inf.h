@@ -29,7 +29,7 @@
 #endif																			//アーカイブ
 
 #define FEXT_EXECUTE	_T(".exe.com.bat.cmd.msi.msu.lnk.scr")					//実行可能
-#define FEXT_JPEG		_T(".jpg.jpeg.jpe")										//Jpeg
+#define FEXT_JPEG		_T(".jpg.jpeg.jpe.jif.jfif")							//Jpeg
 #define FEXT_META		_T(".wmf.emf")											//メタファイル
 #define FEXT_RAW		_T(".3fr.arw.cr2.crw.dng.erf.mef.nef.nrw.orf.pef.raf.raw.rw2.sr2.srw.x3f")
 																				//RAW
