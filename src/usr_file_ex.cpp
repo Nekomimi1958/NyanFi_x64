@@ -162,6 +162,7 @@ UnicodeString to_absolute_name(
 		if (!remove_top_text(fnam, _T("..\\"))) break;
 		rnam = get_parent_path(rnam);
 	}
+
 	return contains_PathDlmtr(rnam)? rnam + fnam : EmptyStr;
 }
 

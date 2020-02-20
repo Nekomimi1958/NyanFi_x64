@@ -376,6 +376,7 @@ void __fastcall TDistributionDlg::UpdatePreview(bool upd)
 		SttPrgBar->SetPosI(i, ItemList->Count);
 
 		UnicodeString fnam = ItemList->Strings[i];
+		UnicodeString pnam = ExtractFilePath(fnam);
 		UnicodeString nnam = ExtractFileName(ExcludeTrailingPathDelimiter(fnam));
 
 		TRegExOptions opt; opt << roIgnoreCase;
@@ -395,13 +396,15 @@ void __fastcall TDistributionDlg::UpdatePreview(bool upd)
 				}
 			}
 			//マスクマッチ
-			else if (!str_match(dp->mask, nnam)) continue;
+			else if (!str_match(dp->mask, nnam)) {
+				continue;
+			}
 
 			dnam = format_FileName(dnam, ExcludeTrailingPathDelimiter(fnam));
 			lst->Add(tmp.sprintf(_T("%s\t%s"), fnam.c_str(), dnam.c_str()));
-
+			UnicodeString anam = IncludeTrailingPathDelimiter(dnam.IsEmpty()? OppPath : to_absolute_name(dnam, OppPath));
 			m_cnt++;
-			if (!CreDistrDirCheckBox->Checked && !dir_exists(dnam.IsEmpty()? OppPath : to_absolute_name(dnam, OppPath)))
+			if (SameText(pnam, anam) || (!CreDistrDirCheckBox->Checked && !dir_exists(anam)))
 				SkipCount++;
 			else if (ends_PathDlmtr(fnam))
 				d_cnt++;
@@ -607,17 +610,18 @@ void __fastcall TDistributionDlg::PrvListBoxDrawItem(TWinControl *Control, int I
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	UnicodeString fnam = split_pre_tab(lbuf);
+	UnicodeString pnam = ExtractFilePath(fnam);
 	fnam = ends_PathDlmtr(fnam)? IncludeTrailingPathDelimiter(ExtractFileName(ExcludeTrailingPathDelimiter(fnam)))
 							   : ExtractFileName(fnam);
 	UnicodeString dnam = lbuf;
-	UnicodeString anam = dnam.IsEmpty()? OppPath : to_absolute_name(dnam, OppPath);
+	UnicodeString anam = IncludeTrailingPathDelimiter(dnam.IsEmpty()? OppPath : to_absolute_name(dnam, OppPath));
 
 	THeaderSections *sp = PrvListHeader->Sections;
 	int wd = sp->Items[0]->Width;
 	cv->TextOut(xp, yp, minimize_str(fnam, cv, wd, OmitEndOfName));	xp += wd + 4;
 	out_Text(cv, xp, yp, _T("→"));	xp += cv->TextWidth("→") + 4;
 
-	cv->Font->Color = (!CreDistrDirCheckBox->Checked && !dir_exists(anam))? col_Error : get_TextColor();
+	cv->Font->Color = (SameText(pnam, anam) || (!CreDistrDirCheckBox->Checked && !dir_exists(anam)))? col_Error : get_TextColor();
 	cv->TextOut(xp, yp, yen_to_delimiter(dnam));
 }
 //---------------------------------------------------------------------------
@@ -938,7 +942,7 @@ void __fastcall TDistributionDlg::ExeMoveActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::ExeActionUpdate(TObject *Sender)
 {
-	((TAction*)Sender)->Enabled = (PrvListBox->Count>0);
+	((TAction*)Sender)->Enabled = (PrvListBox->Count>0 && PrvListBox->Count>SkipCount);
 }
 
 //---------------------------------------------------------------------------

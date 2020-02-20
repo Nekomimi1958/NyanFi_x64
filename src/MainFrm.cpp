@@ -15153,7 +15153,14 @@ void __fastcall TNyanFiForm::DistributionDlgActionExecute(TObject *Sender)
 				UnicodeString lbuf = dstr_lst->Strings[i];
 				UnicodeString fnam = split_pre_tab(lbuf);
 				UnicodeString dnam = IncludeTrailingPathDelimiter(lbuf.IsEmpty()? dst_dir : to_absolute_name(lbuf, dst_dir));
-				if (!DistributionDlg->CreDistrDirCheckBox->Checked && !dir_exists(dnam)) {
+				if (SameText(src_dir, dnam)) {
+					msg = make_LogHdr(DistributionDlg->IsMove? _T("MOVE") : _T("COPY"), fnam);
+					msg[1] = 'W';
+					msg.cat_sprintf(_T("\r\n    %s"),
+							LoadUsrMsg(DistributionDlg->IsMove? USTR_SameMoveDest : USTR_SameCopyDest).c_str());
+					AddLog(msg);
+				}
+				else if (!DistributionDlg->CreDistrDirCheckBox->Checked && !dir_exists(dnam)) {
 					msg = make_LogHdr(DistributionDlg->IsMove? _T("MOVE") : _T("COPY"), fnam);
 					msg[1] = 'W';
 					msg.cat_sprintf(_T("\r\n    [%s] ‚ª‘¶İ‚µ‚Ü‚¹‚ñB"), dnam.c_str());
