@@ -2036,6 +2036,7 @@ void ActivateTask(TTaskThread *tp, TaskConfig *cp);
 void StartReserve();
 bool StartReserve(int idx, bool ext_sw = false);
 void RequestSlowTask();
+bool is_OnTask(UnicodeString fnam);
 
 UnicodeString get_LogErrMsg(UnicodeString msg = EmptyStr, bool add_cr = true, UnicodeString fnam = EmptyStr, int err_id = NO_ERROR);
 void set_LogErrMsg(UnicodeString &msg, UnicodeString s = EmptyStr, UnicodeString fnam = EmptyStr, int err_id = NO_ERROR);

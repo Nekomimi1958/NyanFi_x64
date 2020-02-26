@@ -283,8 +283,10 @@ NyanFi.exe -XCalculator_CB
 書式を指定しないと \N_\SN(1) とみなされます。また書式に \SN(～) が含まれていなく重複を解決できなかった場合、書式の末尾に _\SN(1) を付加して再改名します。<br>
 <div class="spc_box">
 <b>例</b>:<br>
-　\N-コピー\-(\SN(1))　　hoge.txt → hoge-コピー.txt、hoge-コピー(1).txt、hoge-コピー(2).txt …<br>
-　\N_\DT(mmdd)　　hoge.txt → hoge_0401.txt、hoge_0401_1.txt、hoge_0401_2.txt …<br>
+　Clone_\N-コピー\-(\SN(1))<br>
+　　hoge.txt → hoge-コピー.txt、hoge-コピー(1).txt、hoge-コピー(2).txt …<br>
+　Clone_\N_\DT(mmdd)<br>
+　　hoge.txt → hoge_0401.txt、hoge_0401_1.txt、hoge_0401_2.txt …<br>
 </div>
 
 <div class="spc_box">
@@ -3353,13 +3355,13 @@ google.maps.event.addDomListener(window, 'load',
 <h3 id="Appendix">付記</h3>
 
 <p class="info_text">
-無効なUNCパスを開こうとしたり、最新の情報に更新しようとしたりした場合、パスの存在チェック処理をタイムアウト前に<span class="btn_frame">ESC</span>キーで中断できます。チェックを開始して約1秒後に、注意を促すヒント表示が出ます。存在チェックは、その都度スレッドを生成して行います。なお、<a href="hid00009.htm#CheckUnc">オプション設定 - 一般 - 監視/更新 -「UNCパスをチェック」</a> のチェックを外すと、この機器を無効にすることもできます。<br>
+無効なUNCパスを開こうとしたり、最新の情報に更新しようとしたりした場合、パスの存在チェック処理をタイムアウト前に<span class="btn_frame">ESC</span>キーで中断できます。チェックを開始して約1秒後に、注意を促すヒント表示が出ます。存在チェックは、その都度スレッドを生成して行います。なお、<a href="hid00009.htm#CheckUnc">オプション設定 - 一般 - 監視/更新 -「UNCパスをチェック」</a> のチェックを外すと、この機能を無効にできます。<br>
 </p>
 <p class="info_text">
 大量のファイルがあるディレクトリを開こうとした場合、ファイルの列挙処理を<span class="btn_frame">ESC</span>キーで中断できます。
 </p>
 <p class="info_text">
-外部からファイルリストにリンク項目をドロップした場合、URLが画像(.jpg .png .gif .webp .ico)だったらダウンロード保存、それ以外ではインターネットショートカットが作成されます。
+外部からファイルリストにリンク項目をドロップした場合、URLが画像(.jpg .png .gif .webp .ico)ならダウンロード保存、それ以外ではインターネットショートカットが作成されます。
 </p>
 <p class="info_text">
 <span class="btn_frame">F1</span>キーで状況依存ヘルプを表示している場合、元画面とヘルプ画面の間を<span class="btn_frame">F1</span>キーで交互に行き来できます。

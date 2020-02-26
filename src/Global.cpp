@@ -8051,9 +8051,17 @@ void GetFileInfList(
 				i_list->AddStrings(ads_lst.get());
 			}
 		}
+		return;
 	}
+
+	//タスク処理中のファイルは取得を抑止
+	if (is_OnTask(fp->f_name)) {
+		i_list->AddObject(make_PropLine(_T("警告"), "タスクで処理中です。"), (TObject*)LBFLG_ERR_FIF);
+		return;
+	}
+
 	//ファイル圧縮情報
-	else if ((fp->f_size>0) && fp->f_attr!=faInvalid && (fp->f_attr & faCompressed)) {
+	if ((fp->f_size>0) && fp->f_attr!=faInvalid && (fp->f_attr & faCompressed)) {
 		fp->c_size = get_comp_size(fp->f_name);
 		if (fp->c_size>=0) {
 			i_list->Add(get_PropTitle(_T("圧縮サイズ")).cat_sprintf(_T("%s (%s)"),
@@ -8063,11 +8071,8 @@ void GetFileInfList(
 		}
 	}
 
-	if (fp->is_dir) return;
-
 	fp->is_video = test_FileExt(fp->f_ext, FEXT_VIDEO);
 
-	UnicodeString msg;
 	if (!force) {
 		//ファイル情報を取得しないパスのチェック
 		if (is_NoInfPath(fp->p_name, NoInfPath)) return;
@@ -8076,6 +8081,7 @@ void GetFileInfList(
 		//ファイル情報を取得しない拡張子のチェック
 		if (test_FileExtSize(fp->f_ext, FExtNoInf, fp->f_size)) return;
 		//処理中か?
+		UnicodeString msg;
 		if (!ShowUseProcInf && is_Processing(fp, &msg)) {
 			add_WarnLine(msg, i_list);
 			return;
@@ -8086,6 +8092,7 @@ void GetFileInfList(
 		std::unique_ptr<TStringList> p_lst(new TStringList());
 		int use_cnt = get_ProcessingInf(fp->f_name, p_lst.get());
 		if (use_cnt>0) {
+			UnicodeString msg;
 			i_list->AddObject(
 					make_PropLine(_T("警告"), msg.sprintf(_T("以下の%u個のプロセスが使用中です。"), use_cnt)),
 					(TObject*)LBFLG_ERR_FIF);
@@ -8394,7 +8401,7 @@ bool get_FileInfList(
 
 		UnicodeString fnam = (fp->is_virtual || fp->is_ftp)? fp->tmp_name : fp->f_name;
 		UnicodeString fext = fp->f_ext;
-		if (!file_exists(fnam)) Abort();
+		if (!file_exists(fnam) || is_OnTask(fnam)) Abort();
 
 		//----------------------
 		//項目の種類
@@ -8877,7 +8884,9 @@ bool is_Processing(
 			flag = true;
 			if (err_msg) *err_msg = SysErrorMessage(GetLastError());
 		}
-		else ::CloseHandle(hFile);
+		else {
+			::CloseHandle(hFile);
+		}
 	}
 	return flag;
 }
@@ -12297,6 +12306,19 @@ void RequestSlowTask()
 		TTaskThread *tp = TaskThread[i];
 		if (tp) tp->ReqTaskSlow = true;
 	}
+}
+
+//---------------------------------------------------------------------------
+//タスクで処理中のファイルか?
+//---------------------------------------------------------------------------
+bool is_OnTask(UnicodeString fnam)
+{
+	bool ret = false;
+	for (int i=0; i<MAX_TASK_THREAD && !ret; i++) {
+		TTaskThread *tp = TaskThread[i];	if (!tp) continue;
+		ret = tp && (SameText(tp->CurFileName, fnam) || SameText(tp->DstFileName, fnam));
+	}
+	return ret;
 }
 
 //---------------------------------------------------------------------------

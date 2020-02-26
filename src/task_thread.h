@@ -264,8 +264,10 @@ public:
 	int  RemCount;				//残り時間(ms)
 	__int64 CurTotalSize;
 
-	UnicodeString CurFileName;
+	UnicodeString CurFileName;	//処理対象
 	double CurProgress;			//現在コピー/移動中ファイルの進捗率
+
+	UnicodeString DstFileName;	//コピー/移動/変換先
 
 	UnicodeString CurSrcName;	//コピー/移動元
 	UnicodeString CurDstName;	//コピー/移動先

@@ -246,15 +246,14 @@ void __fastcall TTaskThread::AddDebugLog(UnicodeString msg, UnicodeString info)
 }
 
 //---------------------------------------------------------------------------
-//ファイルが操作可能になるまで待つ(中断可)
+//ファイルが操作可能になるまで待つ(最大10秒、中断可)
 //  プレビュー読込中の場合の対処
 //---------------------------------------------------------------------------
 bool __fastcall TTaskThread::EX_wait_file_ready(UnicodeString fnam)
 {
-	int wait = 20;	//*** 最大10秒
-	while (!TaskCancel
-		&& ImgViewThread && !ImgViewThread->IsReady() && SameText(fnam, ImgViewThread->FileName)
-		&& wait>0)
+	int wait = 20;
+	while (!TaskCancel && wait>0
+		&& ImgViewThread && !ImgViewThread->IsReady() && SameText(fnam, ImgViewThread->FileName))
 	{
 		if (wait==20) AddDebugLog("Wait for File Ready");
 		Sleep(500); wait--;
@@ -335,7 +334,7 @@ int __fastcall TTaskThread::GetFiles(
 	UnicodeString sea_str;
 	TSearchRec sr;
 	sea_str = cv_ex_filename(pnam + "*");
-	if (FindFirst(sea_str, faAnyFile, sr)==0) {
+	if (!TaskCancel && FindFirst(sea_str, faAnyFile, sr)==0) {
 		do {
 			WaitIfPause();
 			if ((sr.Attr & faDirectory)==0) continue;
@@ -350,13 +349,13 @@ int __fastcall TTaskThread::GetFiles(
 				lst->Add(IncludeTrailingPathDelimiter(pnam + dnam));
 				PreCount = lst->Count;
 			}
-		} while(FindNext(sr)==0 && !TaskCancel);
+		} while(!TaskCancel && FindNext(sr)==0);
 		FindClose(sr);
 	}
 
 	//ファイルを検索
 	sea_str = cv_ex_filename(pnam + mask);
-	if (FindFirst(sea_str, faAnyFile, sr)==0) {
+	if (!TaskCancel && FindFirst(sea_str, faAnyFile, sr)==0) {
 		do {
 			WaitIfPause();
 			if (sr.Attr & faDirectory) continue;
@@ -376,7 +375,7 @@ int __fastcall TTaskThread::GetFiles(
 			lst->Add(pnam + sr.Name);
 			fcnt++;
 			PreCount = lst->Count;
-		} while(FindNext(sr)==0 && !TaskCancel);
+		} while(!TaskCancel && FindNext(sr)==0);
 		FindClose(sr);
 	}
 
@@ -564,10 +563,12 @@ void __fastcall TTaskThread::CPY_core(
 		TaskAskSame = true;
 		while (TaskAskSame && !TaskCancel) Sleep(250);
 	}
+
 	//中断
 	if (TaskCancel) {
 		msg[1] = 'C';
 		AddLog(msg);
+		CurFileName = EmptyStr;
 		return;
 	}
 
@@ -635,6 +636,7 @@ void __fastcall TTaskThread::CPY_core(
 		}
 	}
 
+	DstFileName = dst_fnam;
 	if (Config->DstPosMode==1 && FirstDstName.IsEmpty()) FirstDstName = dst_fnam;
 	if (Config->DstPosMode==2) LastDstName = dst_fnam;
 
@@ -730,6 +732,7 @@ void __fastcall TTaskThread::CPY_core(
 	CurProgress  = -1;
 	CurFileName  = EmptyStr;
 	CurTotalSize = 0;
+	DstFileName  = EmptyStr;
 }
 //---------------------------------------------------------------------------
 void __fastcall TTaskThread::Task_CPY(
@@ -809,47 +812,50 @@ void __fastcall TTaskThread::Task_CPY(
 			PreCount = 0;
 			GetFiles(src_prm, "*.*", fbuf.get(), true, true);
 			PreCount = 0;
-			std::unique_ptr<TStringList> skip_lst(new TStringList());
 
-			//コピー
-			if (fbuf->Count>0) {
-				fbuf->Sort();
-				for (int i=0; i<fbuf->Count; i++) {
-					UnicodeString fnam = fbuf->Strings[i];
-					if (!TaskCancel) {
-						SubCount = fbuf->Count - i;
-						UnicodeString sub_path = fnam;
-						sub_path.Delete(1, org_path.Length());
-						sub_path = ExtractFilePath(sub_path);
-						CPY_core(fnam, dst_path + sub_path, mov_sw, remove_ro, skip_lst.get());
-						Sleep(MIN_INTERVAL);
+			if (!TaskCancel) {
+				std::unique_ptr<TStringList> skip_lst(new TStringList());
+				//コピー
+				if (fbuf->Count>0) {
+					fbuf->Sort();
+					for (int i=0; i<fbuf->Count; i++) {
+						UnicodeString fnam = fbuf->Strings[i];
+						if (!TaskCancel) {
+							SubCount = fbuf->Count - i;
+							UnicodeString sub_path = fnam;
+							sub_path.Delete(1, org_path.Length());
+							sub_path = ExtractFilePath(sub_path);
+							CPY_core(fnam, dst_path + sub_path, mov_sw, remove_ro, skip_lst.get());
+							Sleep(MIN_INTERVAL);
+						}
+						else if (mov_sw) {
+							UnicodeString dnam = ExtractFilePath(fnam);
+							if (skip_lst->IndexOf(dnam)==-1) skip_lst->Add(dnam);
+						}
 					}
-					else if (mov_sw) {
-						//移動を中断しディレクトリをスキップリストに追加
-						UnicodeString dnam = ExtractFilePath(fnam);
+				}
+				//空ディレクトリ
+				else if (!dir_exists(dst_nam)) {
+					msg = make_LogHdr(_T("CREATE"), dst_nam, true);
+					SetLastError(NO_ERROR);
+					if (create_ForceDirs(dst_nam)) {
+						dir_CopyAttr(src_prm, dst_nam, remove_ro);
+						if (CopyTags) usr_TAG->Copy(src_prm, dst_nam);
+						if (mov_sw) move_FolderIcon(src_prm, dst_nam); else copy_FolderIcon(src_prm, dst_nam);
+					}
+					else {
+						set_LogErrMsg(msg);
+						UnicodeString dnam = IncludeTrailingPathDelimiter(src_nam);
 						if (skip_lst->IndexOf(dnam)==-1) skip_lst->Add(dnam);
 					}
+					AddLog(msg);
 				}
-			}
-			//空ディレクトリ
-			else if (!dir_exists(dst_nam)) {
-				msg = make_LogHdr(_T("CREATE"), dst_nam, true);
-				SetLastError(NO_ERROR);
-				if (create_ForceDirs(dst_nam)) {
-					dir_CopyAttr(src_prm, dst_nam, remove_ro);
-					if (CopyTags) usr_TAG->Copy(src_prm, dst_nam);
-					if (mov_sw) move_FolderIcon(src_prm, dst_nam); else copy_FolderIcon(src_prm, dst_nam);
-				}
-				else {
-					set_LogErrMsg(msg);
-				}
-				AddLog(msg);
-			}
 
-			//移動元のディレクトリ削除
-			if (mov_sw) {
-				DEL_dirs(src_prm, skip_lst.get());
-				usr_TAG->Rename(src_prm, dst_nam);	//タグの移動
+				//移動元のディレクトリ削除
+				if (mov_sw) {
+					DEL_dirs(src_prm, skip_lst.get());
+					usr_TAG->Rename(src_prm, dst_nam);	//タグの移動
+				}
 			}
 		}
 	}
@@ -1004,28 +1010,36 @@ void __fastcall TTaskThread::Task_DEL(UnicodeString prm)
 			}
 			//通常
 			else {
-				std::unique_ptr<TStringList> skip_lst(new TStringList());
 				//ディレクトリ内の削除
 				std::unique_ptr<TStringList> fbuf(new TStringList());
 				PreCount = 0;
 				GetFiles(prm, "*.*", fbuf.get());
 				PreCount = 0;
-				for (int i=0; i<fbuf->Count && !TaskCancel; i++) {
-					WaitIfPause();
-					SubCount = fbuf->Count - i;
-					DEL_core(fbuf->Strings[i], DelUseTrash, skip_lst.get());
-					if (ReqTaskSlow) {
-						ReqTaskSlow = false;
-						Sleep(SLOW_INTERVAL);
+
+				if (!TaskCancel) {
+					std::unique_ptr<TStringList> skip_lst(new TStringList());
+					for (int i=0; i<fbuf->Count; i++) {
+						UnicodeString fnam = fbuf->Strings[i];
+						if (!TaskCancel) {
+							WaitIfPause();
+							SubCount = fbuf->Count - i;
+							DEL_core(fnam, DelUseTrash, skip_lst.get());
+							if (ReqTaskSlow) {
+								ReqTaskSlow = false;
+								Sleep(SLOW_INTERVAL);
+							}
+							else if (i%32==0) {
+								Sleep(MIN_INTERVAL);
+							}
+						}
+						else {
+							UnicodeString dnam = ExtractFilePath(fnam);
+							if (skip_lst->IndexOf(dnam)==-1) skip_lst->Add(dnam);
+						}
 					}
-					else if (i%32==0) {
-						Sleep(MIN_INTERVAL);
-					}
+
+					if (!TaskCancel) DEL_dirs(prm, skip_lst.get());
 				}
-
-				Sleep(MIN_INTERVAL);
-
-				if (!TaskCancel) DEL_dirs(prm, skip_lst.get());
 			}
 		}
 	}
@@ -1432,6 +1446,7 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 			LastDstName = cv_nam;
 		}
 		cat_DestFile(msg, cv_nam);
+		DstFileName = cv_nam;
 
 		//形式変換して保存
 		if (!WIC_save_image(cv_nam, i_img.get(),
@@ -1454,6 +1469,7 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 
 	AddLog(msg);
 	CurFileName = EmptyStr;
+	DstFileName = EmptyStr;
 }
 
 //---------------------------------------------------------------------------

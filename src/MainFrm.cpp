@@ -9821,12 +9821,8 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 	bool force)		//強制的に取得 (default = false)
 {
 	//ファイル情報の取得が必要か
-	bool need_inf;
-
-	if (!fp || fp->is_dummy) {
-		need_inf = false;
-	}
-	else {
+	bool need_inf = false;
+	if (fp && !fp->is_dummy) {
 		need_inf = force;
 		if (!need_inf) {
 			if (ScrMode==SCMD_IVIEW)
@@ -9952,7 +9948,7 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 	//イメージプレビュー表示
 	//--------------------------------------------------
 	if (ScrMode==SCMD_FLIST && ImgViewThread) {
-		bool no_prv = (!fp || fp->failed || TxtPrvListPanel->Visible || !PreviewPanel->Visible);
+		bool no_prv = (!fp || fp->failed || TxtPrvListPanel->Visible || !PreviewPanel->Visible || is_OnTask(fp->f_name));
 		if (!no_prv && !force) {
 			//イメージプレビューを表示しないパスのチェック
 			no_prv = is_NoInfPath(fp->p_name, NoImgPrvPath);
@@ -13194,8 +13190,7 @@ void __fastcall TNyanFiForm::CmdHistoryActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::CommandPromptActionExecute(TObject *Sender)
 {
-	if (!Execute_ex("cmd.exe", EmptyStr, CurPath[CurListTag]))
-		SetActionAbort(USTR_FaildExec);
+	if (!Execute_ex("cmd.exe", EmptyStr, CurPath[CurListTag])) SetActionAbort(USTR_FaildExec);
 }
 
 //---------------------------------------------------------------------------
@@ -13203,6 +13198,13 @@ void __fastcall TNyanFiForm::CommandPromptActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 {
+	if ((IsCurFList() && IsOppFList() && EqualDirLR())
+		|| (CurStt->is_Arc && OppStt->is_Arc
+			&& SameText(CurStt->arc_Name, OppStt->arc_Name) && SameText(CurStt->arc_SubPath, OppStt->arc_SubPath)))
+	{
+		SetActionAbort(USTR_SameDirLR);  return;
+	}
+
 	TStringList *c_lst = GetCurList(true);
 	TStringList *o_lst = GetOppList();
 	UnicodeString top_fnam;
