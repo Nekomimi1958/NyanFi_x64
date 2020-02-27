@@ -161,6 +161,7 @@ bool DispRegName;				//パスの表示に登録名を用いる
 bool UncToNetDrive;				//UNCをネットワークドライブ名に
 bool CompInTitleBar;			//タイトルバーにコンピュータ名を表示
 bool PathInTitleBar;			//タイトルバーにカレントパスを表示
+bool TabGrInTitleBar;			//タイトルバーにタググループ名を表示
 bool OmitEndOfName;				//長い名前は末尾を省略
 bool ShowAdsInf;				//代替データストリーム情報を表示
 bool ShowUseProcInf;			//プロセス使用情報を表示
@@ -842,6 +843,7 @@ TColor col_fgHint;		//ヒント表示の文字色
 TColor col_bgWarn;		//警告表示の背景色
 TColor col_Tim1H;		//1時間以内のタイムスタンプ色
 TColor col_Tim3H;		//3時間以内の～
+TColor col_Tim6H;		//6時間以内の～
 TColor col_Tim1D;		//1日以内の～
 TColor col_Tim3D;		//3日以内の～
 TColor col_Tim7D;		//7日以内の～
@@ -852,7 +854,14 @@ TColor col_Tim1Y;		//1年以内の～
 TColor col_Tim3Y;		//3年以内の～
 TColor col_TimOld;		//それより前の～
 TColor col_Size4G;		//4GB以上
+TColor col_Size2G;		//2GB以上
 TColor col_Size1G;		//1GB以上
+TColor col_Size512M;	//512MB以上
+TColor col_Size256M;	//256MB以上
+TColor col_Size128M;	//128MB以上
+TColor col_Size64M;		//64MB以上
+TColor col_Size32M;		//32MB以上
+TColor col_Size16M;		//16MB以上
 TColor col_Size1M;		//1MB以上
 TColor col_Size1K;		//1KB以上
 TColor col_SizeLT;		//1KB未満
@@ -1210,17 +1219,6 @@ void InitializeGlobal()
 	WIC_get_ex_list(NULL, &WicFextStr);
 
 	mute_Volume("GET");	//ミュート状態を取得
-
-	//廃止セクション、キーの削除、修正
-	IniFile->DeleteKey( SCT_General, "MemoFormBgCol");		//v13.54
-	IniFile->DeleteKey( SCT_General, "MemoFormfgCol");
-	IniFile->DeleteKey( SCT_Option,  "SelColDrvInf");						//v13.53
-	IniFile->ReplaceKey(SCT_General, "ShowGifViewer",	"ShowSubViewer");	//v13.52
-	IniFile->ReplaceKey(SCT_General, "GifViewerLeft",	"SubViewerLeft");
-	IniFile->ReplaceKey(SCT_General, "GifViewerTop",	"SubViewerTop");
-	IniFile->ReplaceKey(SCT_General, "GifViewerWidth",	"SubViewerWidth");
-	IniFile->ReplaceKey(SCT_General, "GifViewerHeight",	"SubViewerHeight");
-	IniFile->ReplaceKey(SCT_General, "GifViewBgCol",	"SubViewerBgCol");
 
 	CurStt = &ListStt[CurListTag];
 	OppStt = &ListStt[OppListTag];
@@ -1657,6 +1655,7 @@ void InitializeGlobal()
 		{_T("UncToNetDrive=false"),			(TObject*)&UncToNetDrive},
 		{_T("CompInTitleBar=false"),		(TObject*)&CompInTitleBar},
 		{_T("PathInTitleBar=false"),		(TObject*)&PathInTitleBar},
+		{_T("TabGrInTitleBar=false"),		(TObject*)&TabGrInTitleBar},
 		{_T("OmitEndOfName=false"),			(TObject*)&OmitEndOfName},
 		{_T("ShowAdsInf=false"),			(TObject*)&ShowAdsInf},
 		{_T("ShowUseProcInf=false"),		(TObject*)&ShowUseProcInf},
@@ -4851,6 +4850,44 @@ bool save_TagGroup(UnicodeString fnam)
 }
 
 //---------------------------------------------------------------------------
+//タブグループの読み込み
+//戻り値: タブインデックス(-1:失敗)
+//---------------------------------------------------------------------------
+int load_TagGroup(UnicodeString fnam)
+{
+	if (!file_exists(fnam)) return -1;
+
+	try {
+		UnicodeString msg = make_LogHdr(_T("LOAD"), fnam);
+		std::unique_ptr<UsrIniFile> tab_file(new UsrIniFile(fnam));
+		UnicodeString sct = "General";
+		int tab_idx = tab_file->ReadInteger(sct, "CurTabIndex", 0);
+
+		std::unique_ptr<TStringList> tab_lst(new TStringList());
+		tab_file->LoadListItems("TabList", tab_lst.get(), 30, false);
+		if (tab_lst->Count==0) TextAbort(_T("有効な項目がありません。"));
+
+		for (int i=0; i<TabList->Count; i++) del_tab_info((tab_info*)TabList->Objects[i]);
+		TabList->Assign(tab_lst.get());
+
+		for (int i=0; i<TabList->Count; i++) {
+			tab_info *tp = cre_tab_info(equal_1(get_csv_item(TabList->Strings[i], 8)));
+			for (int j=0; j<MAX_FILELIST; j++) {
+				tab_file->LoadListItems(sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j), tp->dir_hist[j], 0, false);
+			}
+			TabList->Objects[i] = (TObject*)tp;
+		}
+
+		AddLog(msg);
+		return tab_idx;
+	}
+	catch (EAbort &e) {
+		GlobalErrMsg = e.Message;
+		return -1;
+	}
+}
+
+//---------------------------------------------------------------------------
 //検索設定のクリア
 //---------------------------------------------------------------------------
 void clear_FindStt(flist_stt *lst_stt)
@@ -7083,7 +7120,6 @@ bool load_WorkList(UnicodeString wnam)
 	}
 	catch (...) {
 		clear_FileList(WorkList);
-
 		msg[1] = 'E';
 		AddLog(msg);
 		return false;
@@ -7476,6 +7512,7 @@ TColor get_TimeColor(TDateTime dt, TColor col_def)
 	TColor col_t =
 			(dd <= 1.0/24) ? col_Tim1H :	//1時間以内
 			(dd <= 3.0/24) ? col_Tim3H : 	//3時間以内
+			(dd <= 6.0/24) ? col_Tim6H : 	//6時間以内
 			(dd <= 1.0)	   ? col_Tim1D :	//1日以内
 			(dd <= 3.0)	   ? col_Tim3D :	//3日以内
 			(dd <= 7.0)	   ? col_Tim7D :	//7日以内
@@ -7495,16 +7532,19 @@ TColor get_TimeColor(TDateTime dt, TColor col_def)
 //---------------------------------------------------------------------------
 TColor get_SizeColor(__int64 size, TColor col_def)
 {
-	TColor col_s =
-		           (size==-1) ? col_def    :
+	TColor col_s = (size==-1) ? col_def    :
 		            (size==0) ? col_Size0  :
 		(size>=4294967296ull) ? col_Size4G :
+		(size>=2147483648ull) ? col_Size2G :
 		(size>=1073741824ull) ? col_Size1G :
-		(size>=1073741824ull) ? col_Size1G :
-			(size>=1048576ul) ? col_Size1M :
-			     (size>=1024) ? col_Size1K :
-								col_SizeLT;
-
+		(size>= 536870912ull) ? col_Size512M :
+		(size>= 268435456ull) ? col_Size256M :
+		(size>= 134217728ull) ? col_Size128M :
+		(size>=  67108864ull) ? col_Size64M :
+		(size>=  33554432ull) ? col_Size32M :
+		(size>=  16777216ull) ? col_Size16M :
+		(size>=   1048576ull) ? col_Size1M :
+		(size>=         1024) ? col_Size1K : col_SizeLT;
 	if (col_s==col_None) col_s = col_def;
 
 	return col_s;
@@ -9760,6 +9800,12 @@ UnicodeString ApplyCnvCharList(UnicodeString s)
 }
 
 //---------------------------------------------------------------------------
+void init_ColorList(UnicodeString key, UnicodeString def)
+{
+	if (ColorList->Values[key].IsEmpty()) ColorList->Values[key] = ColorList->Values[def];
+}
+
+//---------------------------------------------------------------------------
 TColor read_ColorList(UnicodeString key, TColor def, TStringList *lst)
 {
 	TColor col = def;
@@ -9776,6 +9822,7 @@ TColor read_ColorList(const _TCHAR *key, TColor def, TStringList *lst)
 {
 	return read_ColorList(UnicodeString(key), def, lst);
 }
+
 
 //---------------------------------------------------------------------------
 //ColorList から個々の配色を取得
@@ -9891,6 +9938,7 @@ void set_col_from_ColorList()
 		{&col_OptFind,	_T("OptFind"),		clRed},
 		{&col_Tim1H,	_T("Tim1H"),		col_None},
 		{&col_Tim3H,	_T("Tim3H"),		col_None},
+		{&col_Tim6H,	_T("Tim6H"),		col_None},
 		{&col_Tim1D,	_T("Tim1D"),		col_None},
 		{&col_Tim3D,	_T("Tim3D"),		col_None},
 		{&col_Tim7D,	_T("Tim7D"),		col_None},
@@ -9901,7 +9949,14 @@ void set_col_from_ColorList()
 		{&col_Tim3Y,	_T("Tim3Y"),		col_None},
 		{&col_TimOld,	_T("TimOld"),		col_None},
 		{&col_Size4G,	_T("Size4G"),		col_None},
+		{&col_Size2G,	_T("Size2G"),		col_None},
 		{&col_Size1G,	_T("Size1G"),		col_None},
+		{&col_Size512M,	_T("Size512M"),		col_None},
+		{&col_Size256M,	_T("Size256M"),		col_None},
+		{&col_Size128M,	_T("Size128M"),		col_None},
+		{&col_Size64M,	_T("Size64M"),		col_None},
+		{&col_Size32M,	_T("Size32M"),		col_None},
+		{&col_Size16M,	_T("Size16M"),		col_None},
 		{&col_Size1M,	_T("Size1M"),		col_None},
 		{&col_Size1K,	_T("Size1K"),		col_None},
 		{&col_SizeLT,	_T("SizeLT"),		col_None},
@@ -9941,6 +9996,16 @@ void set_col_from_ColorList()
 		{&col_DkInval,	_T("DkInval"),		TColor(RGB(0x60, 0x60, 0x60))},
 		{&col_DkIlleg,	_T("DkIlleg"),		TColor(RGB(0x66, 0x00, 0x00))}
 	};
+
+	//V14.42 追加項目の初期化
+	init_ColorList("Tim6H",		"Tim1D");
+	init_ColorList("Size2G", 	"Size1G");
+	init_ColorList("Size512M",	"Size1M");
+	init_ColorList("Size256M",	"Size1M");
+	init_ColorList("Size128M",	"Size1M");
+	init_ColorList("Size64M",	"Size1M");
+	init_ColorList("Size32M",	"Size1M");
+	init_ColorList("Size16M",	"Size1M");
 
 	int cnt = sizeof(col_def_list)/sizeof(col_def_list[0]);
 	for (int i=0; i<cnt; i++)

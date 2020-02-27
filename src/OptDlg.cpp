@@ -238,6 +238,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	TimColListBox->Items->Text =
 		"Tim1H=1ŽžŠÔˆÈ“à\n"
 		"Tim3H=3ŽžŠÔˆÈ“à\n"
+		"Tim6H=6ŽžŠÔˆÈ“à\n"
 		"Tim1D=1“úˆÈ“à\n"
 		"Tim3D=3“úˆÈ“à\n"
 		"Tim7D=7“úˆÈ“à\n"
@@ -248,7 +249,14 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"Tim3Y=3”NˆÈ“à\n"
 		"TimOld=‚»‚ê‚æ‚è‘O\n"
 		"Size4G=|4GBˆÈã\n"
+		"Size2G=2GBˆÈã\n"
 		"Size1G=1GBˆÈã\n"
+		"Size512M=512MBˆÈã\n"
+		"Size256M=256MBˆÈã\n"
+		"Size128M=128MBˆÈã\n"
+		"Size64M=64MBˆÈã\n"
+		"Size32M=32MBˆÈã\n"
+		"Size16M=16MBˆÈã\n"
 		"Size1M=1MBˆÈã\n"
 		"Size1K=1KBˆÈã\n"
 		"SizeLT=1KB–¢–ž\n"
@@ -596,6 +604,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	DispRegNameCheckBox->Tag	= (int)&DispRegName;
 	UncToNetDriveCheckBox->Tag	= (int)&UncToNetDrive;
 	CompInTitleBarCheckBox->Tag = (int)&CompInTitleBar;
+	TabGrInTitleBarCheckBox->Tag= (int)&TabGrInTitleBar;
 	PathInTitleBarCheckBox->Tag = (int)&PathInTitleBar;
 	UseIndIconCheckBox->Tag 	= (int)&UseIndIcon;
 	OmitEndOfNameCheckBox->Tag	= (int)&OmitEndOfName;

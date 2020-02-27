@@ -854,7 +854,7 @@ void __fastcall TTaskThread::Task_CPY(
 				//移動元のディレクトリ削除
 				if (mov_sw) {
 					DEL_dirs(src_prm, skip_lst.get());
-					usr_TAG->Rename(src_prm, dst_nam);	//タグの移動
+					usr_TAG->Rename(src_prm, dst_nam);
 				}
 			}
 		}
@@ -869,7 +869,7 @@ void __fastcall TTaskThread::Task_CPY(
 //---------------------------------------------------------------------------
 void __fastcall TTaskThread::DEL_dirs(
 	UnicodeString pnam,			//削除するディレクトリ
-	TStringList *skip_list)		//スキップするディレクトリのリスト (default = NULL)
+	TStringList *skip_list)		//スキップするディレクトリのリスト	(default = NULL)
 {
 	if (pnam.IsEmpty()) return;
 	pnam = to_path_name(pnam);
@@ -902,7 +902,7 @@ void __fastcall TTaskThread::DEL_dirs(
 		}
 
 		if (skiped) {
-			if (LogHideSkip) msg = EmptyStr; else msg[1] = 'S';
+			msg = EmptyStr;
 		}
 		else {
 			SetLastError(NO_ERROR);
@@ -926,8 +926,7 @@ void __fastcall TTaskThread::DEL_dirs(
 void __fastcall TTaskThread::DEL_core(
 	UnicodeString fnam,
 	bool use_trash,			//ごみ箱を使用
-	TStringList *skip_list)	//スキップするディレクトリ(移動処理後に削除しない)
-							//	(default = NULL)
+	TStringList *skip_list)	//スキップするディレクトリ	(default = NULL)
 {
 	CurFileName = fnam;
 	UnicodeString msg = make_LogHdr(_T("DELETE"), fnam);
@@ -960,7 +959,7 @@ void __fastcall TTaskThread::DEL_core(
 	catch (...) {
 		ErrCount++;
 		set_LogErrMsg(msg, EmptyStr, fnam);
-		//削除に失敗したファイルのディレクトリは処理後の削除対象から除外
+
 		if (skip_list) {
 			UnicodeString dnam = ExtractFilePath(fnam);
 			if (skip_list->IndexOf(dnam)==-1) skip_list->Add(dnam);
@@ -1048,7 +1047,9 @@ void __fastcall TTaskThread::Task_DEL(UnicodeString prm)
 //---------------------------------------------------------------------------
 //ファイル完全削除
 //---------------------------------------------------------------------------
-void __fastcall TTaskThread::CMPDEL_core(UnicodeString fnam)
+void __fastcall TTaskThread::CMPDEL_core(
+	UnicodeString fnam,
+	TStringList *skip_list)	//スキップするディレクトリ	(default = NULL)
 {
 	//ハードリングの場合、通常削除
 	if (get_HardLinkCount(fnam)>1) {
@@ -1143,6 +1144,11 @@ void __fastcall TTaskThread::CMPDEL_core(UnicodeString fnam)
 	catch (...) {
 		ErrCount++;
 		set_LogErrMsg(msg, EmptyStr, fnam);
+
+		if (skip_list) {
+			UnicodeString dnam = ExtractFilePath(fnam);
+			if (skip_list->IndexOf(dnam)==-1) skip_list->Add(dnam);
+		}
 	}
 
 	AddLog(msg);
@@ -1155,19 +1161,24 @@ void __fastcall TTaskThread::Task_CMPDEL(UnicodeString prm)
 		CMPDEL_core(prm);
 	}
 	else if (EX_dir_exists(prm)) {
+		std::unique_ptr<TStringList> skip_lst(new TStringList());
 		if (!is_SymLink(prm)) {
 			//ディレクトリ内の削除
 			std::unique_ptr<TStringList> fbuf(new TStringList());
 			PreCount = 0;
 			GetFiles(prm, "*.*", fbuf.get());
 			PreCount = 0;
-			for (int i=0; i<fbuf->Count && !TaskCancel; i++) {
-				SubCount = fbuf->Count - i;
-				CMPDEL_core(fbuf->Strings[i]);
-				Sleep(MIN_INTERVAL);
+
+			if (!TaskCancel) {
+				for (int i=0; i<fbuf->Count && !TaskCancel; i++) {
+					SubCount = fbuf->Count - i;
+					CMPDEL_core(fbuf->Strings[i], skip_lst.get());
+					Sleep(MIN_INTERVAL);
+				}
 			}
 		}
-		if (!TaskCancel) DEL_dirs(prm);
+
+		if (!TaskCancel) DEL_dirs(prm, skip_lst.get());
 	}
 }
 

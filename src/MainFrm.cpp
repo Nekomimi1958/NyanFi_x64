@@ -5570,6 +5570,10 @@ void __fastcall TNyanFiForm::SetCurStt(int tag, bool redraw)
 		}
 	}
 
+	if (TabGrInTitleBar && !TabGroupName.IsEmpty()) {
+		tmp.cat_sprintf(_T("%s - "), get_base_name(TabGroupName).c_str());
+	}
+
 	if (PathInTitleBar) {
 		UnicodeString pnam;
 		try {
@@ -5581,6 +5585,7 @@ void __fastcall TNyanFiForm::SetCurStt(int tag, bool redraw)
 		}
 		tmp.cat_sprintf(_T("%s - "), pnam.c_str());
 	}
+
 	Caption = tmp + Application->Title;
 }
 
@@ -7452,7 +7457,7 @@ UnicodeString __fastcall TNyanFiForm::GetDriveInfo(
 //ドライブ表示
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetDriveInfo(
-	int tag,
+	int tag,			//						(default = CurListTag);
 	bool drv_upd,		//ドライブ情報を更新	(default = true)
 	bool sel_upd)		//選択情報を更新		(default = true)
 {
@@ -19979,7 +19984,12 @@ void __fastcall TNyanFiForm::LoadResultListActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::LoadTabGroupActionExecute(TObject *Sender)
 {
+	static bool loading = false;
+
 	try {
+		if (loading) Abort();
+		loading = true;
+
 		UnicodeString fnam;
 		if (!ActionParam.IsEmpty()) {
 			fnam = to_absolute_name(ActionParam);
@@ -20008,9 +20018,9 @@ void __fastcall TNyanFiForm::LoadTabGroupActionExecute(TObject *Sender)
 		if (fnam.IsEmpty()) SkipAbort();
 		if (!file_exists(fnam)) UserAbort(USTR_NotFound);
 
-		//現在のタググループを保存
 		if (!TabGroupName.IsEmpty()) save_TagGroup(TabGroupName);
 
+		UnicodeString msg = make_LogHdr(_T("LOAD"), fnam);
 		std::unique_ptr<UsrIniFile> tab_file(new UsrIniFile(fnam));
 		UnicodeString sct = "General";
 		int tab_idx = tab_file->ReadInteger(sct, "CurTabIndex", 0);
@@ -20030,13 +20040,17 @@ void __fastcall TNyanFiForm::LoadTabGroupActionExecute(TObject *Sender)
 			TabList->Objects[i] = (TObject*)tp;
 		}
 
+		TabGroupName = fnam;
 		UpdateTabBar(tab_idx, true);
 		TabControl1Change(NULL);
-		TabGroupName = fnam;
+		SetCurStt(CurListTag);
+		AddLog(msg);
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);
 	}
+
+	loading = false;
 }
 
 //---------------------------------------------------------------------------
@@ -34872,11 +34886,11 @@ void __fastcall TNyanFiForm::TabControl1Change(TObject *Sender)
 		int idx = TabControl1->TabIndex;
 		tab_info *tp = get_TabInfo(idx);	if (!tp) Abort();
 
+		UnicodeString tab_str = (idx>=0 && idx<TabList->Count)?  TabList->Strings[idx] : EmptyStr;
 		if (!DirHistSortMode) {
 			SortMode[0] = tp->sort_mode[0];
 			SortMode[1] = tp->sort_mode[1];
 		}
-
 		SyncLR = tp->sync_lr;
 
 		if (TabBottomPaintBox->Visible) TabBottomPaintBox->Repaint();
@@ -34893,7 +34907,7 @@ void __fastcall TNyanFiForm::TabControl1Change(TObject *Sender)
 		InhDirHist++;
 		//反対側
 		if (!OppStt->is_TabFixed) {
-			UnicodeString dnam = get_csv_item(TabList->Strings[idx], OppListTag);
+			UnicodeString dnam = get_csv_item(tab_str, OppListTag);
 			if (ends_PathDlmtr(dnam)) {
 				UpdateOppPath(dnam);
 				if (!GlobalErrMsg.IsEmpty()) GlobalAbort();
@@ -34909,7 +34923,7 @@ void __fastcall TNyanFiForm::TabControl1Change(TObject *Sender)
 		}
 		//カレント
 		if (!CurStt->is_TabFixed) {
-			UnicodeString dnam = get_csv_item(TabList->Strings[idx], CurListTag);
+			UnicodeString dnam = get_csv_item(tab_str, CurListTag);
 			if (ends_PathDlmtr(dnam)) {
 				UpdateCurPath(dnam);
 				if (!GlobalErrMsg.IsEmpty()) GlobalAbort();
@@ -34923,19 +34937,25 @@ void __fastcall TNyanFiForm::TabControl1Change(TObject *Sender)
 		SetCurTab(true);
 
 		//ファイルリストの選択状態を復元
-		for (int i=0; i<MAX_FILELIST; i++) {
-			flist_stt *lst_stt = &ListStt[i];
-			if (lst_stt->is_TabFixed || lst_stt->is_Arc || lst_stt->is_Find) continue;
-			TStringList *lst = (lst_stt->is_Work)? WorkList : FileList[i];
-			for (int j=0; j<lst->Count; j++) {
-				file_rec *fp = (file_rec*)lst->Objects[j];
-				fp->selected = (tp->sel_list[i]->IndexOf(fp->f_name)!=-1);
+		tp = get_TabInfo(TabControl1->TabIndex);
+		if (tp) {
+			for (int i=0; i<MAX_FILELIST; i++) {
+				flist_stt *lst_stt = &ListStt[i];
+				if (lst_stt->is_TabFixed || lst_stt->is_Arc || lst_stt->is_Find) continue;
+				TStringList *lst = (lst_stt->is_Work)? WorkList : FileList[i];
+				for (int j=0; j<lst->Count; j++) {
+					file_rec *fp = (file_rec*)lst->Objects[j];
+					fp->selected = (tp->sel_list[i]->IndexOf(fp->f_name)!=-1);
+				}
+				tp->sel_list[i]->Clear();
+				RepaintList(i);
 			}
-			tp->sel_list[i]->Clear();
 		}
 
 		//イベント: 別のタブに移った
 		ExeEventCommand(OnTabChange);
+
+		ClearKeyBuff(true);
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);

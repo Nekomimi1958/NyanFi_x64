@@ -368,6 +368,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *SymColToCheckBox;
 	TCheckBox *SyncItemCheckBox;
 	TCheckBox *SysAtrCheckBox;
+	TCheckBox *TabGrInTitleBarCheckBox;
 	TCheckBox *TaskTrayCheckBox;
 	TCheckBox *ThumbExifCheckBox;
 	TCheckBox *ThumbFExtCheckBox;

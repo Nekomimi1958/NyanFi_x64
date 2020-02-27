@@ -320,6 +320,7 @@ extern bool DispRegName;
 extern bool UncToNetDrive;
 extern bool CompInTitleBar;
 extern bool PathInTitleBar;
+extern bool TabGrInTitleBar;
 extern bool OmitEndOfName;
 extern bool ShowAdsInf;
 extern bool ShowUseProcInf;
@@ -1067,6 +1068,7 @@ extern TColor col_ImgGrid;
 extern TColor col_OptFind;
 extern TColor col_Tim1H;
 extern TColor col_Tim3H;
+extern TColor col_Tim6H;
 extern TColor col_Tim1D;
 extern TColor col_Tim3D;
 extern TColor col_Tim7D;
@@ -1077,7 +1079,14 @@ extern TColor col_Tim1Y;
 extern TColor col_Tim3Y;
 extern TColor col_TimOld;
 extern TColor col_Size4G;
+extern TColor col_Size2G;
 extern TColor col_Size1G;
+extern TColor col_Size512M;
+extern TColor col_Size256M;
+extern TColor col_Size128M;
+extern TColor col_Size64M;
+extern TColor col_Size32M;
+extern TColor col_Size16M;
 extern TColor col_Size1M;
 extern TColor col_Size1K;
 extern TColor col_SizeLT;
@@ -1695,6 +1704,7 @@ void clear_DirHistory(int tab_idx = -1, int tag = CurListTag);
 UnicodeString get_TabWorkList(int tab_idx);
 void save_DirHistory(UsrIniFile *ini_file);
 bool save_TagGroup(UnicodeString fnam);
+int  load_TagGroup(UnicodeString fnam);
 
 void clear_FindStt(flist_stt *lst_stt);
 bool is_FindAll(flist_stt *lst_stt);
@@ -1918,6 +1928,7 @@ UnicodeString get_CmdDesc(UnicodeString cmd, bool only_inf = false,
 
 UnicodeString ApplyCnvCharList(UnicodeString s);
 
+void   init_ColorList(UnicodeString key, UnicodeString def);
 TColor read_ColorList(UnicodeString key, TColor def, TStringList *lst = NULL);
 TColor read_ColorList(const _TCHAR *key, TColor def, TStringList *lst = NULL);
 void set_col_from_ColorList();

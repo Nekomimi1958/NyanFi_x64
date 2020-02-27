@@ -144,7 +144,7 @@ private:
 	void __fastcall DEL_dirs(UnicodeString pnam, TStringList *skip_list = NULL);
 	void __fastcall Task_DEL(UnicodeString prm);
 
-	void __fastcall CMPDEL_core(UnicodeString fnam);
+	void __fastcall CMPDEL_core(UnicodeString fnam, TStringList *skip_list = NULL);
 	void __fastcall Task_CMPDEL(UnicodeString prm);
 
 	void __fastcall Task_CPYDIR(UnicodeString prm);

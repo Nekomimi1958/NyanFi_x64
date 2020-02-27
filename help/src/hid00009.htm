@@ -62,13 +62,6 @@
 実際のパスと表示が異なるため注意が必要です。特別な理由がない場合はチェックしない方がよいでしょう。<br>
 なおファイル情報には実際のUNCパスが表示されます。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> タイトルバーにカレントパスを表示
-<dd>タイトルバーに、カレント側のフルパス名を表示します。<br>
-
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> タイトルバーにコンピュータ名を表示
-<dd>タイトルバーに、自身のコンピュータ名を表示します。<br>
-
-
 <dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ファイル固有のアイコンを表示
 <dd>チェックすると、ファイルリストでアイコンを表示する場合に、ファイル固有のアイコンを使用します(.exe .ico .cur .ani .lnk .url .library-ms)。<br>
 インターネットショートカット(.url)の場合、代替データストリームに <b>favicon</b> (.ico/.png 形式)があるとそれが用いられます。<br>
@@ -81,10 +74,19 @@
 <dd>ファイルリストなどでスモールアイコンを表示する場合、ファイル固有のアイコンを指定した数までキャッシュして利用します。超過した場合は、古いものから一旦破棄していきます。<br>
 拡張子にのみ依存するアイコンについては、この設定にかかわらず、すべてキャッシュされます。<br>
 なお、代替データストリームの .png 形式の  <b>favicon</b> はキャッシュされません。<br>
-<br>
+
 <dt id="FaviconApi" class="no_bg_indent1">favicon 取得API <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: http://www.google.com/s2/favicons?domain=\D)</span>
 <dd>ブラウザからリンク項目をドロップしてインターネットショートカットを作成する際にドメイン下で <b>favicon.ico</b> が取得できなかったときに利用する取得APIのURLを指定します。<br>
 URL中の書式文字列 <b>\D</b> がドメイン名に置き換えられます。<br>
+
+<dt class="no_bg_indent1">タイトルバー:<br>　<img src="chkbox.png" alt="" border=0> コンピュータ名
+<dd>タイトルバーに、自身のコンピュータ名を表示します。
+
+<dt class="no_bg_indent1">　<img src="chkbox.png" alt="" border=0> タブグループ
+<dd>タブグループ・ファイルを読み込んでいる場合、タイトルバーに、そのファイル名主部を表示します。<br>
+
+<dt class="no_bg_indent1">　<img src="chkbox.png" alt="" border=0> カレントパス
+<dd>タイトルバーに、カレント側のフルパス名を表示します。<br>
 <br>
 
 <dt id="Operation"><img src="grpbox.png" alt="" border=0> 操作
