@@ -273,6 +273,8 @@ int get_NrmLevenshteinDistance(UnicodeString s1, UnicodeString s2,
 	bool ig_case = false, bool ig_num = false, bool ig_fh = false);
 
 UnicodeString decode_TxtVal(UnicodeString s, bool with_q = false);
+UnicodeString conv_DfmText(UnicodeString s);
+void		  conv_DfmText(TStringList *txt_lst);
 
 UnicodeString make_MenuAccStr(int idx, bool alp_sw = false);
 

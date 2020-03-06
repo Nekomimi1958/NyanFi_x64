@@ -10795,23 +10795,8 @@ void PrvTextOut(
 		}
 
 		//.dfm 文字列値デコード
-		if (test_FileExt(get_extension(fnam), _T(".dfm"))) {
-			UnicodeString lbuf = s;
-			if (lbuf.Pos('=')) {
-				UnicodeString nbuf = split_tkn(lbuf, '=') + "= ";
-				lbuf = TrimLeft(lbuf);
-				if (starts_tchs(_T("\'#"), lbuf)) {
-					s = nbuf + decode_TxtVal(lbuf, true);
-				}
-			}
-			else {
-				lbuf = TrimLeft(lbuf);
-				if (starts_tchs(_T("\'#"), lbuf)) {
-					UnicodeString end_s = remove_end_s(lbuf, ')')? ")" : "";
-					s = StringOfChar(_T(' '), s.Length() - TrimLeft(s).Length())
-							+ decode_TxtVal(lbuf, true) + end_s;
-				}
-			}
+		if (DecodeDfmStr && test_FileExt(get_extension(fnam), _T(".dfm"))) {
+			s = conv_DfmText(s);
 		}
 
 		RuledLnTextOut(s, cv, rc, fg, tab_wd, kw_lst);

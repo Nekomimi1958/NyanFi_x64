@@ -458,11 +458,11 @@ const UnicodeString XCMD_SubCmds =
 
 //定義済み変数の名前リスト
 const UnicodeString XCMD_VarNames =
-	"UserName|ExePath|TmpPath|CurPath|OppPath|FileName|NamePart|BaseName|DirName|DownloadName|FileSize|FileSizeF|"
-	"FileTime|FileTimeF|Date|Time|TabNo|FileCount|DirCount|SelCount|SelFileCount|SelDirCount|VolumeLabel|ScrMode|"
-	"SortMode|SelText|LineNo|LineText|CursorPosY|CursorPosX|PageSize|Battery|TaskCount|MatchedStr|CodePage|MenuIndex|"
-	"ExitCode|WinWidth|WinHeight|Clipboard|Buffer|BufferLength|BufferCount|BufferIndex|BufferLine|CurFiles|SelFiles|"
-	"ModalResult|ThisName";
+	"BaseName|Battery|Buffer|BufferCount|BufferIndex|BufferLength|BufferLine|Clipboard|CodePage|CurFiles|CurPath|"
+	"CursorPosX|CursorPosY|Date|DirCount|DirName|DownloadName|ExePath|ExitCode|FileCount|FileName|FileSize|FileSizeF|"
+	"FileTime|FileTimeF|LastLogText|LastWatchLog|LineNo|LineText|MatchedStr|MenuIndex|MenuStr|ModalResult|NamePart|"
+	"OppPath|PageSize|ScrMode|SelCount|SelDirCount|SelFileCount|SelFiles|SelText|SortMode|TabGroup|TabNo|TaskCount|"
+	"ThisName|Time|TmpPath|UserName|VolumeLabel|WinHeight|WinWidth";
 
 //---------------------------------------------------------------------------
 //ExeCommands の処理
@@ -534,6 +534,7 @@ void XCMD_Initialize(UnicodeString &opt)
 	XCMD_set_Var(_T("TmpPath"),		TempPathA);
 	XCMD_set_Var(_T("BufferIndex"),	0);
 	XCMD_set_Var(_T("ModalResult"),	(int)mrNone);
+	XCMD_set_Var(_T("TabGroup"),	get_base_name(TabGroupName));
 
 	//すでに実行中タスクの最大IDを取得
 	XCMD_last_task_id = -1;

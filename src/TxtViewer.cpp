@@ -675,29 +675,6 @@ TStringDynArray __fastcall TTxtViewer::GetCsvHdrList()
 }
 
 //---------------------------------------------------------------------------
-//.dfm ファイル内の文字をデコード
-//---------------------------------------------------------------------------
-void __fastcall TTxtViewer::ConvDfmText(TStringList *txt_lst)
-{
-	for (int i=0; i<txt_lst->Count; i++) {
-		UnicodeString lbuf = txt_lst->Strings[i];
-		if (lbuf.Pos('=')) {
-			UnicodeString nbuf = split_tkn(lbuf, '=') + "= ";
-			UnicodeString s = TrimLeft(lbuf);
-			if (!starts_tchs(_T("\'#"), s)) continue;
-			txt_lst->Strings[i] = nbuf + decode_TxtVal(s, true);
-		}
-		else {
-			UnicodeString s =TrimLeft(lbuf);
-			if (!starts_tchs(_T("\'#"), s)) continue;
-			UnicodeString end_s = remove_end_s(s, ')')? ")" : "";
-			txt_lst->Strings[i] = StringOfChar(_T(' '), lbuf.Length() - TrimLeft(lbuf).Length())
-									+ decode_TxtVal(s, true) + end_s;
-		}
-	}
-}
-
-//---------------------------------------------------------------------------
 //画面に合わせて行内容を設定
 //---------------------------------------------------------------------------
 void __fastcall TTxtViewer::UpdateScr(
@@ -1053,7 +1030,7 @@ void __fastcall TTxtViewer::UpdateScr(
 		}
 		//.dfm ファイル内の文字列をデコード
 		else if (test_FileExt(fext, _T(".dfm"))) {
-			if (DecodeDfmStr) ConvDfmText(txt_buf.get());
+			if (DecodeDfmStr) conv_DfmText(txt_buf.get());
 		}
 		//CSV/TSV(固定長表示)
 		else if (test_FileExt(fext, FEXT_CSV)) {

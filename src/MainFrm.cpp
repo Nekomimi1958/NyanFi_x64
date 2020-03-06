@@ -20040,7 +20040,7 @@ void __fastcall TNyanFiForm::LoadTabGroupActionExecute(TObject *Sender)
 			TabList->Objects[i] = (TObject*)tp;
 		}
 
-		TabGroupName = fnam;
+		TabGroupName = fnam;  XCMD_set_Var(_T("TabGroup"), get_base_name(TabGroupName));
 		UpdateTabBar(tab_idx, true);
 		TabControl1Change(NULL);
 		SetCurStt(CurListTag);
@@ -22853,7 +22853,7 @@ void __fastcall TNyanFiForm::SaveAsTabGroupActionExecute(TObject *Sender)
 
 		if (fnam.IsEmpty()) SkipAbort();
 		if (!save_TagGroup(fnam)) UserAbort(USTR_FaildSave);
-		TabGroupName = fnam;
+		TabGroupName = fnam;  XCMD_set_Var(_T("TabGroup"), get_base_name(TabGroupName));
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);

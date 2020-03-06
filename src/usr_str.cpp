@@ -2791,6 +2791,35 @@ UnicodeString decode_TxtVal(UnicodeString s,
 }
 
 //---------------------------------------------------------------------------
+//.dfm ファイル内の文字をデコード
+//---------------------------------------------------------------------------
+UnicodeString conv_DfmText(UnicodeString s)
+{
+	UnicodeString lbuf = s;
+	if (lbuf.Pos('=')) {
+		UnicodeString nbuf = split_tkn(lbuf, '=') + "= ";
+		lbuf = TrimLeft(lbuf);
+		if (starts_tchs(_T("\'#"), lbuf)) {
+			s = nbuf + decode_TxtVal(lbuf, true);
+		}
+	}
+	else {
+		lbuf = TrimLeft(lbuf);
+		if (starts_tchs(_T("\'#"), lbuf)) {
+			UnicodeString end_s = remove_end_s(lbuf, ')')? ")" : "";
+			s = StringOfChar(_T(' '), s.Length() - TrimLeft(s).Length())
+					+ decode_TxtVal(lbuf, true) + end_s;
+		}
+	}
+	return s;
+}
+//---------------------------------------------------------------------------
+void conv_DfmText(TStringList *txt_lst)
+{
+	for (int i=0; i<txt_lst->Count; i++) txt_lst->Strings[i] = conv_DfmText(txt_lst->Strings[i]);
+}
+
+//---------------------------------------------------------------------------
 //インデックスからメニュー用アクセラレータ文字列を作成
 //---------------------------------------------------------------------------
 UnicodeString make_MenuAccStr(

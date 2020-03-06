@@ -120,7 +120,6 @@ private:
 
 	UnicodeString __fastcall ArrayToTsv(TStringDynArray lst);
 	void __fastcall FormatFixed(TStringList *txt_lst);
-	void __fastcall ConvDfmText(TStringList *txt_lst);
 
 	TPoint __fastcall nrm_Pos(TPoint p);
 	bool __fastcall has_CR(UnicodeString s);
