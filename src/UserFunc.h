@@ -88,6 +88,7 @@ TColor RatioCol(TColor col, float rt);
 TColor GrayCol(TColor col);
 void RgbToHsl(TColor col, int *h, int *s, int *l);
 void RgbToHsv(TColor col, int *h, int *s, int *v);
+void RgbToHsv(BYTE r, BYTE g, BYTE b, int *h, int *s, int *v);
 TColor SelectWorB(TColor col, float rt = 1.0);
 
 #define ADJCOL_LIGHT	72

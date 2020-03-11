@@ -648,15 +648,14 @@ void RgbToHsl(TColor col, int *h, int *s, int *l)
 //---------------------------------------------------------------------------
 //RGBÅ®HSV ïœä∑
 //---------------------------------------------------------------------------
-void RgbToHsv(TColor col, int *h, int *s, int *v)
+void RgbToHsv(BYTE r, BYTE g, BYTE b, int *h, int *s, int *v)
 {
-	int cref = ColorToRGB(col);
-	float r = GetRValue(cref)/255.0;
-	float g = GetGValue(cref)/255.0;
-	float b = GetBValue(cref)/255.0;
+	float f_r = r/255.0;
+	float f_g = g/255.0;
+	float f_b = b/255.0;
 
-	float maxv = std::max(r, std::max(g, b));
-	float minv = std::min(r, std::min(g, b));
+	float maxv = std::max(f_r, std::max(f_g, f_b));
+	float minv = std::min(f_r, std::min(f_g, f_b));
 	float h_f, s_f;
 	float v_f = maxv * 100;
 
@@ -665,9 +664,9 @@ void RgbToHsv(TColor col, int *h, int *s, int *v)
 	}
 	else {
 		float d = maxv - minv;
-		if		(maxv==r) h_f = (g - b)/d;
-		else if (maxv==g) h_f = (b - r)/d + 2.0;
-		else			  h_f = (r - g)/d + 4.0;
+		if		(maxv==f_r)	h_f = (f_g - f_b)/d;
+		else if (maxv==f_g)	h_f = (f_b - f_r)/d + 2.0;
+		else				h_f = (f_r - f_g)/d + 4.0;
 		h_f *= 60.0;
 		if (h_f<0.0) h_f += 360.0;
 
@@ -677,6 +676,12 @@ void RgbToHsv(TColor col, int *h, int *s, int *v)
 	*h = (int)(h_f + 0.5);
 	*s = (int)(s_f + 0.5);
 	*v = (int)(v_f + 0.5);
+}
+//---------------------------------------------------------------------------
+void RgbToHsv(TColor col, int *h, int *s, int *v)
+{
+	int cref = ColorToRGB(col);
+	RgbToHsv(GetRValue(cref), GetGValue(cref), GetBValue(cref), h, s, v);
 }
 
 //---------------------------------------------------------------------------

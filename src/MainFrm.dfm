@@ -3237,6 +3237,11 @@ object NyanFiForm: TNyanFiForm
       OnExecute = SidebarActionExecute
       OnUpdate = SidebarActionUpdate
     end
+    object SimilarImageAction: TAction
+      Category = 'CommandI'
+      OnExecute = SimilarImageActionExecute
+      OnUpdate = MenuIActionUpdate
+    end
     object SortDlgIAction: TAction
       Category = 'CommandI'
       OnExecute = SortDlgIActionExecute

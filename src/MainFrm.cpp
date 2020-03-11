@@ -6129,6 +6129,7 @@ void __fastcall TNyanFiForm::EndWorkProgress(UnicodeString tit, UnicodeString s,
 	Sleep(wait);
 	ProgressPanel->Visible = false;
 }
+
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::PosWorkProgress(int idx, int cnt)
 {
@@ -6204,7 +6205,7 @@ void __fastcall TNyanFiForm::CanDlBtnClick(TObject *Sender)
 		SetActionAbort(_T("キャンセルに失敗しました。"));
 	}
 
-	FileListBox[CurListTag]->SetFocus();
+	if (ScrMode==SCMD_FLIST) FileListBox[CurListTag]->SetFocus();
 }
 
 //---------------------------------------------------------------------------
@@ -14146,7 +14147,6 @@ UnicodeString __fastcall TNyanFiForm::GetCopyFileNames(
 	CurWorking = false;
 	InvalidateFileList();
 	SetDriveFileInfo(CurListTag);
-
 	EndWorkProgress(EmptyStr, EmptyStr, ((GetTickCount() - start_cnt)<500)? 0 : 500);
 
 	return cpystr;
@@ -21058,15 +21058,8 @@ void __fastcall TNyanFiForm::OpenByWinActionExecute(TObject *Sender)
 					file_rec *fp = (file_rec*)lst->Objects[i];
 					if (fp->is_dir) continue;
 					if ((!opn_cfp && fp->selected) || (opn_cfp && i==cur_idx)) {
-						UnicodeString fnam;
-						if (fp->is_virtual) {
-							if (!SetTmpFile(fp)) UserAbort(USTR_FaildTmpUnpack);
-							fnam = fp->tmp_name;
-						}
-						else {
-							fnam = fp->f_name;
-						}
-
+						if (fp->is_virtual && !SetTmpFile(fp)) UserAbort(USTR_FaildTmpUnpack);
+						UnicodeString fnam = fp->is_virtual? fp->tmp_name : fp->f_name;
 						if (::ShellExecute(NULL, _T("open"), fnam.c_str(), NULL,
 								ExtractFilePath(fnam).c_str(), SW_SHOWNORMAL) <= (HINSTANCE)32)
 									UserAbort(USTR_FaildExec);
@@ -33780,6 +33773,90 @@ void __fastcall TNyanFiForm::SidebarActionUpdate(TObject *Sender)
 	ap->Checked = ImgSidePanel->Visible;
 }
 //---------------------------------------------------------------------------
+//画像の類似性によるソート
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
+{
+	try {
+		bool is_dh = TEST_DEL_ActParam("DH");
+		bool is_ah = TEST_DEL_ActParam("AH");
+		bool is_ph = TEST_DEL_ActParam("PH");
+		UnicodeString id_str = (is_dh? "D" : is_ah? "A" : is_ph? "P" : "V");
+
+		int sz = 32;	//デフォルト・サイズ
+		if (!ActionParam.IsEmpty()) {
+			sz = ActionParam.ToIntDef(sz);
+			if (sz<4 || sz>120) UserAbort(USTR_IllegalParam);	//***
+		}
+
+		int idx = ViewFileList->IndexOf(ViewFileName);
+		if (idx==-1) Abort();
+
+		CurWorking = true;
+		CancelWork = false;
+		BeginWorkProgress(_T("類似画像ソート"), EmptyStr, ImgMainPanel, true);
+
+		int v_sz = is_ph? 64 : sz * sz * ((is_dh || is_ah)? 1 : 3);
+		int v_cnt = ViewFileList->Count;
+		UnicodeString r_hash;
+		for (int i=0; i<v_cnt && !CancelWork; i++) {
+			PosWorkProgress(i, v_cnt*2);
+			file_rec *fp = (file_rec*)ViewFileList->Objects[i];
+			bool to_get = !SameStr(id_str, get_pre_tab(fp->hash));
+			if (!to_get) {
+				UnicodeString hash = get_post_tab(fp->hash);
+				if (is_dh || is_ah || is_ph) {
+					to_get = (hash.Length()!=v_sz);
+				}
+				else {
+					TStringDynArray vlst = SplitString(hash, ",");
+					to_get = (vlst.Length!=v_sz);
+				}
+			}
+
+			if (to_get) {
+				if (fp->is_virtual && !SetTmpFile(fp)) UserAbort(USTR_FaildTmpUnpack);
+				UnicodeString fnam = fp->is_virtual? fp->tmp_name : fp->f_name;
+				int alg  = ThumbScaleOpt;
+				fp->hash = id_str + "\t" +
+							(is_dh? make_dHash(fnam, sz, alg) :
+							 is_ah? make_aHash(fnam, sz, alg) :
+							 is_ph? make_pHash(fnam, sz, alg) :
+									make_HsvVector(fnam, sz, alg));
+			}
+
+			if (i==idx) r_hash = get_post_tab(fp->hash);
+		}
+
+		for (int i=0; i<v_cnt && !CancelWork; i++) {
+			PosWorkProgress(i + v_cnt, v_cnt*2);
+			file_rec *fp = (file_rec*)ViewFileList->Objects[i];
+			if (i==idx) {
+				fp->distance = -1;
+			}
+			else {
+				UnicodeString hash = get_post_tab(fp->hash);
+				fp->distance = (is_dh || is_ah || is_ph)? get_HammingDistance(r_hash, hash)
+														: get_HsvDistance(r_hash, hash);
+			}
+		}
+
+		if (!CancelWork) {
+			ViewFileList->CustomSort(SortComp_Distance);
+			set_GridIndex(ThumbnailGrid, ViewFileList->IndexOf(ViewFileName), ViewFileList->Count);
+		}
+
+		CurWorking = false;
+		EndWorkProgress(EmptyStr, EmptyStr, 100);
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+	catch (...) {
+		SetInternalException();
+	}
+}
+//---------------------------------------------------------------------------
 //縮小・拡大アルゴリズムの設定
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetInterpolationActionExecute(TObject *Sender)
@@ -36073,8 +36150,8 @@ UnicodeString __fastcall TNyanFiForm::DownloadFtpCore(
 			}
 
 			if (tmp_ren) {
-				EndWorkProgress();
 				CurWorking = false;
+				EndWorkProgress();
 			}
 		}
 

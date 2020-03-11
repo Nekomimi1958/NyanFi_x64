@@ -68,22 +68,24 @@ void __fastcall THistForm::DrawHistogram(Graphics::TBitmap *i_bmp)
 	h_bmp->Assign(i_bmp);
 	h_bmp->PixelFormat = pf24bit;
 
-	for (int i=0; i<256; i++) R_buf[i] = G_buf[i] = B_buf[i] = 0;
+	int r_buf[256] = {};
+	int g_buf[256] = {};
+	int b_buf[256] = {};
 
 	for (int y=0; y<h_bmp->Height; y++) {
 		TRGBTriple *pYX = reinterpret_cast<TRGBTriple *>(h_bmp->ScanLine[y]);
 		for (int x=0; x<h_bmp->Width; x++,pYX++) {
-			R_buf[pYX->rgbtRed]++;
-			G_buf[pYX->rgbtGreen]++;
-			B_buf[pYX->rgbtBlue]++;
+			r_buf[pYX->rgbtRed]++;
+			g_buf[pYX->rgbtGreen]++;
+			b_buf[pYX->rgbtBlue]++;
 		}
 	}
 
 	int v_max = 0;
 	for (int i=0; i<256; i++) {
-		if (R_buf[i]>v_max) v_max = R_buf[i];
-		if (G_buf[i]>v_max) v_max = G_buf[i];
-		if (B_buf[i]>v_max) v_max = B_buf[i];
+		if (r_buf[i]>v_max) v_max = r_buf[i];
+		if (g_buf[i]>v_max) v_max = g_buf[i];
+		if (b_buf[i]>v_max) v_max = b_buf[i];
 	}
 
 	cv->Pen->Width = 1;
@@ -93,19 +95,19 @@ void __fastcall THistForm::DrawHistogram(Graphics::TBitmap *i_bmp)
 	cv->Pen->Color = TColor(RGB(255, 0, 0));
 	int x = H_LR_MARGIN;
 	for (int i=0; i<256; i++,x++) {
-		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - (1.0 * h_hi * R_buf[i]/v_max));
+		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - (1.0 * h_hi * r_buf[i]/v_max));
 	}
 	//G
 	cv->Pen->Color = TColor(RGB(0, 255, 0));
 	x = H_LR_MARGIN;
 	for (int i=0; i<256; i++,x++) {
-		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - (1.0 * h_hi * G_buf[i]/v_max));
+		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - (1.0 * h_hi * g_buf[i]/v_max));
 	}
 	//B
 	cv->Pen->Color = TColor(RGB(0, 0, 255));
 	x = H_LR_MARGIN;
 	for (int i=0; i<256; i++,x++) {
-		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - (1.0 * h_hi * B_buf[i]/v_max));
+		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - (1.0 * h_hi * b_buf[i]/v_max));
 	}
 
 	//ƒOƒŠƒbƒh

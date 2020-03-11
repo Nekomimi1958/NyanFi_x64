@@ -3225,7 +3225,7 @@ int __fastcall SortComp_MarkTime(TStringList *List, int Index1, int Index2)
 	return !OldOrder? ((dt0<dt1)? 1 : -1) : ((dt0>dt1)? 1 : -1);
 }
 //---------------------------------------------------------------------------
-//編集距離
+//編集/ハミング距離
 int __fastcall SortComp_Distance(TStringList *List, int Index1, int Index2)
 {
 	file_rec *fp0 = (file_rec*)List->Objects[Index1];
@@ -4541,8 +4541,8 @@ file_rec* cre_new_file_rec(file_rec *copy_fp)
 		fp->tmp_name   = copy_fp->tmp_name;
 		fp->r_name	   = copy_fp->r_name;
 		fp->l_name	   = copy_fp->l_name;
-		fp->memo	   = copy_fp->memo;
 		fp->tags	   = copy_fp->tags;
+		fp->memo	   = copy_fp->memo;
 
 		fp->tag 	   = copy_fp->tag;
 		fp->is_up	   = copy_fp->is_up;
@@ -7913,12 +7913,13 @@ void GetFileInfList(
 	i_list->AddObject(get_FileInfStr(fp), (TObject*)LBFLG_STD_FINF);
 
 	//ハッシュ
-	if (!fp->hash.IsEmpty()) {
-		int n = fp->hash.Length();
+	UnicodeString hash = get_pre_tab(fp->hash);
+	if (!hash.IsEmpty()) {
+		int n = hash.Length();
 		UnicodeString id_str =
 			(n==32)? "MD5" : (n==40)? "SHA1" : (n==64)? "SHA256" :
 			(n==96)? "SHA384" : (n==128)? "SHA512" : (n==8)? "CRC32" : "";
-		if (!id_str.IsEmpty()) add_PropLine(id_str, fp->hash, i_list);
+		if (!id_str.IsEmpty()) add_PropLine(id_str, hash, i_list);
 	}
 
 	//タグ
@@ -9489,6 +9490,173 @@ int get_ViewCount()
 		if (!((file_rec*)ViewFileList->Objects[i])->failed) cnt++;
 	return cnt;
 }
+
+//---------------------------------------------------------------------------
+//画像ファイルのHSVベクトル文字列を作成
+//---------------------------------------------------------------------------
+UnicodeString make_HsvVector(
+	UnicodeString fnam,	//画像ファイル名
+	int sz,				//縮小サイズ
+	int alg)			//縮小アルゴリズム	(default = 0)
+{
+	UnicodeString ret_str;
+	std::unique_ptr<Graphics::TBitmap> i_bp(new Graphics::TBitmap());
+	if (load_ImageFile(fnam, i_bp.get())) {
+		std::unique_ptr<Graphics::TBitmap> r_bp(new Graphics::TBitmap());
+		if (WIC_resize_image(i_bp.get(), r_bp.get(), 0.0, sz, sz, alg)) {
+			for (int y=0; y<r_bp->Height; y++) {
+				BYTE *p = (BYTE*)r_bp->ScanLine[y];
+				for (int x=0; x<r_bp->Width; x++,p+=3) {
+					int h, s, v;
+					RgbToHsv(p[0], p[1], p[2], &h, &s, &v);
+					ret_str.cat_sprintf(_T(",%u,%u,%u"), h, s, v);
+				}
+			}
+			ret_str.Delete(1, 1);
+		}
+	}
+	return ret_str;
+}
+//---------------------------------------------------------------------------
+//HSV空間の合計距離を取得
+//---------------------------------------------------------------------------
+int get_HsvDistance(
+	UnicodeString r_vct,	//基準		"H0,S0,V0,h1,S1,V1,.."
+	UnicodeString o_vct)	//比較対象
+{
+	TStringDynArray vct0 = SplitString(r_vct, ",");
+	TStringDynArray vct1 = SplitString(o_vct, ",");
+	int s = 0, t = 0;
+	int v_cnt = std::min(vct0.Length, vct1.Length);
+	for (int i=0; i<v_cnt; i++) {
+		int v0 = vct0[i].ToIntDef(0);
+		int v1 = vct1[i].ToIntDef(0);
+
+		int d = abs(v1 - v0);
+		if (i%3==0 && d>180) d = 360 - d;
+		t += d*d;
+
+		if (i%3==2) {
+			s += sqrt((double)t);
+			t = 0;
+		}
+	}
+	return s;
+}
+
+//---------------------------------------------------------------------------
+//画像ファイルの dHash 文字列を作成
+//---------------------------------------------------------------------------
+UnicodeString make_dHash(
+	UnicodeString fnam,	//画像ファイル名
+	int sz,				//縮小サイズ
+	int alg)			//縮小アルゴリズム	(default = 0)
+{
+	UnicodeString ret_str;
+	std::unique_ptr<Graphics::TBitmap> i_bp(new Graphics::TBitmap());
+	if (load_ImageFile(fnam, i_bp.get())) {
+		std::unique_ptr<Graphics::TBitmap> r_bp(new Graphics::TBitmap());
+		if (WIC_resize_image(i_bp.get(), r_bp.get(), 0.0, sz + 1, sz, alg)) {
+			if (WIC_grayscale_image(r_bp.get())) {
+				for (int y = 0; y<sz; y++) {
+					BYTE *p = (BYTE*)r_bp->ScanLine[y];
+					for (int x=0; x<sz; x++,p+=3) ret_str.cat_sprintf(_T("%u"), (p[0]<p[3])? 1 : 0);
+				}
+			}
+		}
+	}
+	return ret_str;
+}
+//---------------------------------------------------------------------------
+//画像ファイルの aHash 文字列を作成
+//---------------------------------------------------------------------------
+UnicodeString make_aHash(
+	UnicodeString fnam,	//画像ファイル名
+	int sz,				//縮小サイズ
+	int alg)			//縮小アルゴリズム	(default = 0)
+{
+	UnicodeString ret_str;
+	std::unique_ptr<Graphics::TBitmap> i_bp(new Graphics::TBitmap());
+	if (load_ImageFile(fnam, i_bp.get())) {
+		std::unique_ptr<Graphics::TBitmap> r_bp(new Graphics::TBitmap());
+		if (WIC_resize_image(i_bp.get(), r_bp.get(), 0.0, sz + 1, sz, alg)) {
+			if (WIC_grayscale_image(r_bp.get())) {
+				//平均値
+				int sum = 0;
+				for (int y = 0; y<sz; y++) {
+					BYTE *p = (BYTE*)r_bp->ScanLine[y];
+					for (int x=0; x<sz; x++,p+=3) sum += p[0];
+				}
+				int ave = sum/(sz*sz);
+				//ハッシュ作成
+				for (int y = 0; y<sz; y++) {
+					BYTE *p = (BYTE*)r_bp->ScanLine[y];
+					for (int x=0; x<sz; x++,p+=3) ret_str.cat_sprintf(_T("%u"), (p[0]>ave)? 1 : 0);
+				}
+			}
+		}
+	}
+	return ret_str;
+}
+//---------------------------------------------------------------------------
+//画像ファイルの pHash 文字列を作成
+//---------------------------------------------------------------------------
+UnicodeString make_pHash(
+	UnicodeString fnam,	//画像ファイル名
+	int sz,				//縮小サイズ
+	int alg)			//縮小アルゴリズム	(default = 0)
+{
+	UnicodeString ret_str;
+	std::unique_ptr<Graphics::TBitmap> i_bp(new Graphics::TBitmap());
+	if (load_ImageFile(fnam, i_bp.get())) {
+		std::unique_ptr<Graphics::TBitmap> r_bp(new Graphics::TBitmap());
+		if (WIC_resize_image(i_bp.get(), r_bp.get(), 0.0, sz, sz, 0)) {
+			if (WIC_grayscale_image(r_bp.get())) {
+				//離散コサイン変換
+				int n = 8, nn = 64;
+				double n2 = 2.0 / n;
+				double c0 = 1 / sqrt(2.0);
+				std::unique_ptr<int[]> data(new int[nn]);
+				int *dp = data.get();
+				for (int v = 0; v<n; v++) {
+					double cv = (v==0)? c0 : 1.0;
+					double pv = v * M_PI / (n*2);
+					for (int u = 0; u<n; u++, dp++) {
+						double cu = (u==0)? c0 : 1.0;
+						double pu = u * M_PI / (n*2);
+						double sum = 0.0;
+						for (int y = 0; y<sz; y++) {
+							BYTE *p = (BYTE*)r_bp->ScanLine[y];
+							for (int x=0; x<sz; x++,p+=3) {
+								sum += (p[0] * cos((2 * x + 1) * pu) * cos((2 * y + 1) * pv));
+							}
+						}
+						*dp = (int)(n2 * cu * cv * sum );
+					}
+				}
+
+				//ハッシュ作成
+				int ave = 0;
+				for (int i=0; i<nn; i++) ave += data[i];
+				ave /=nn;
+				for (int i=0; i<nn; i++) ret_str.cat_sprintf(_T("%u"), data[i]>ave? 1 : 0);
+			}
+		}
+	}
+	return ret_str;
+}
+
+//---------------------------------------------------------------------------
+//ハミング距離を取得
+//---------------------------------------------------------------------------
+int get_HammingDistance(UnicodeString vct0, UnicodeString vct1)
+{
+	int s = 0;
+	int sz = std::min(vct0.Length(), vct1.Length());
+	for (int i=1; i<=sz; i++) if (vct0[i]!=vct1[i]) s++;
+	return s;
+}
+
 
 //---------------------------------------------------------------------------
 //ファイルの削除

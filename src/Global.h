@@ -1243,10 +1243,10 @@ struct file_rec {
 	UnicodeString tmp_name;		//一時解凍名
 	UnicodeString r_name;		//表示名
 	UnicodeString l_name;		//リンク先
-	UnicodeString memo;			//栞マーク項目: メモ(内容 \t 設定日時)  栞マーク一覧で使用
-								//リポジトリ: 情報(コミット \t 状態)    リポジトリ一覧で使用
 	UnicodeString tags;			//タグ
-	UnicodeString hash;			//ハッシュ
+	UnicodeString hash;			//ハッシュ/ 画像:HSVベクトル/dHash(類似性ソート)
+	UnicodeString memo;			//栞マーク一覧:   メモ(内容 \t 設定日時)
+								//リポジトリ一覧: 情報(コミット \t 状態) 
 
 	int  tag;					//0: 左/ 1: 右
 	bool is_up;					//..
@@ -1793,6 +1793,13 @@ int to_NextSelItem(TStringList *lst, int idx);
 int to_PrevSelItem(TStringList *lst, int idx);
 
 int  get_ViewCount();
+UnicodeString make_HsvVector(UnicodeString fnam, int sz, int alg = 0);
+int get_HsvDistance(UnicodeString r_vct, UnicodeString o_vct);
+
+UnicodeString make_dHash(UnicodeString fnam, int sz, int alg = 0);
+UnicodeString make_aHash(UnicodeString fnam, int sz, int alg = 0);
+UnicodeString make_pHash(UnicodeString fnam, int sz, int alg = 0);
+int get_HammingDistance(UnicodeString vct0, UnicodeString vct1);
 
 bool delete_File(UnicodeString fnam, bool use_trash = false);
 void delete_FileIf(UnicodeString fnam);

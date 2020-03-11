@@ -29,10 +29,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormHide(TObject *Sender);
 
 private:	// ユーザー宣言
-	int R_buf[256];
-	int G_buf[256];
-	int B_buf[256];
-
 	void __fastcall WmSysCommand(TWMSysCommand & SysCom)
 	{
 		if (SysCom.CmdType==SC_CLOSE) {	//[×]ボタンが押された

@@ -395,6 +395,7 @@ void set_CmdList(
 		"I:ShowGrid=画像分割グリッドの表示/非表示\n"
 		"I:ShowSeekBar=シークバーの表示/非表示\n"
 		"I:Sidebar=サイドバーの表示/非表示\n"
+		"I:SimilarImage=画像の類似性によるソート\n"
 		"I:Thumbnail=サムネイルの表示/非表示\n"
 		"I:ThumbnailEx=サムネイルの全面表示/通常表示\n"
 		"I:TopFile=先頭ファイルに移動\n"
@@ -520,8 +521,8 @@ void get_PrmList(
 			_T("ScrollCursorUp|ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|")
 			_T("ScrollUpText|SelByList|SetColor|SetDirTime|SetFontSize|SetMargin|SetPathMask|")
 			_T("SetInterpolation|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|ShareList|")
-			_T("SimilarSort|SortDlg|SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToOppSameHash|")
-			_T("ToTab|UnPack|UnPackToCurr,|ViewTail|WatchTail|WidenCurList|WinPos|"),
+			_T("SimilarImage|SimilarSort|SortDlg|SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|")
+			_T("ToOppSameHash|ToTab|UnPack|UnPackToCurr,|ViewTail|WatchTail|WidenCurList|WinPos|"),
 			cmd))
 		{
 			cp->Enabled = true;
@@ -964,6 +965,13 @@ void get_PrmList(
 	}
 	else if (USAME_TI(cmd, "ShowFileInfo") && id_idx!=2) {
 		params = "\nSD : ダイアログで表示\n";
+	}
+	else if (USAME_TI(cmd, "SimilarImage")) {
+		params.sprintf(_T("%s"),
+			_T("\n")
+			_T("DH : dHash でソート\n")
+			_T("AH : aHash でソート\n")
+			_T("PH : pHash でソート\n"));
 	}
 	else if (USAME_TI(cmd, "SimilarSort")) {
 		params.sprintf(_T("%s"),

@@ -444,6 +444,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *ShowTabBarAction;
 	TAction *ShowToolBarAction;
 	TAction *SidebarAction;
+	TAction *SimilarImageAction;
 	TAction *SimilarSortAction;
 	TAction *SoloTabAction;
 	TAction *SortDlgAction;
@@ -1868,6 +1869,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TV_MinColActionUpdate(TObject *Sender);
 	void __fastcall MinColItemClick(TObject *Sender);
 	void __fastcall TxtScrollPanelResize(TObject *Sender);
+	void __fastcall SimilarImageActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

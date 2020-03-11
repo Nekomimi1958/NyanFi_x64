@@ -335,7 +335,7 @@ td a {
 <tr><td><a href="hid00005.htm#MaskFind">MaskFind</a></td><td>指定マスクにマッチするファイル/ディレクトリ名検索</td><td></td></tr>
 <tr><td><a href="hid00005.htm#SaveAsResultList">SaveAsResultList</a></td><td>結果リストに名前を付けて保存</td><td></td></tr>
 <tr><td><a href="hid00005.htm#SimilarSort">SimilarSort</a></td><td>カーソル位置項目名との類似性によるソート</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SortDlg">SortDlg</a></td><td>ソートダイアログ</td><td></td></tr>
+<tr><td><a href="hid00005.htm#SortDlg">SortDlg</a></td><td>ソートダイアログ</td><td></td></tr>
 <tr><td><a href="hid00005.htm#WebMap">WebMap</a></td><td>画像のGPS情報や指定地点の地図を開く</td><td></td></tr>
 <tr><td><a href="hid00005.htm#WebSearch">WebSearch</a></td><td>Webで検索</td><td></td></tr>
 
@@ -638,10 +638,6 @@ td a {
 <tr><td><a href="hid00006.htm#ScrollCursorUp">ScrollCursorUp</a></td><td>スクロールしながら上に移動</td><td></td></tr>
 <tr><td><a href="hid00006.htm#ScrollDown">ScrollDown</a></td><td>下にスクロール</td><td></td></tr>
 <tr><td><a href="hid00006.htm#ScrollUp">ScrollUp</a></td><td>上にスクロール</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ScrollDown">ScrollDown</a></td><td>下にスクロール</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ScrollLeft">ScrollLeft</a></td><td>左にスクロール</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ScrollRight">ScrollRight</a></td><td>右にスクロール</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ScrollUp">ScrollUp</a></td><td>上にスクロール</td><td></td></tr>
 
 <tr id="v_Select"><td colspan="3"><br><b>選択</b></td></tr>
 <tr><td><a href="hid00006.htm#BoxSelMode">BoxSelMode</a></td><td>箱形選択モードの開始/解除</td><td></td></tr>
@@ -815,9 +811,11 @@ td a {
 <a href="#i_Move">移動</a> ／ 
 <a href="#i_Select">選択</a> ／ 
 <a href="#i_Mark">栞マーク</a> ／ 
-<a href="#i_Open">開く</a> ／ 
+<a href="#i_Sort">ソート</a> ／ 
+<a href="#i_Scroll">スクロール</a> ／ 
 <a href="#i_Image">画像操作</a> ／ 
 <a href="#i_WorkList">ワークリスト</a> ／ 
+<a href="#i_Open">開く</a> ／ 
 <a href="#i_Command">実行</a> ／ 
 <a href="#i_Tool">ツール</a> ／ 
 <a href="#i_Info">情報</a> ／ 
@@ -862,10 +860,15 @@ td a {
 <tr><td><a href="hid00007.htm#PrevMark">PrevMark</a></td><td>前の栞マーク項目へ</td><td></td></tr>
 <tr><td><a href="hid00007.htm#SelMark">SelMark</a></td><td>栞マーク項目を選択</td><td></td></tr>
 
-<tr id="i_Open"><td colspan="3"><br><b>開く</b></td></tr>
-<tr><td><a href="hid00007.htm#FileEdit">FileEdit</a></td><td>ファイルの編集</td><td></td></tr>
-<tr><td><a href="hid00007.htm#OpenByApp">OpenByApp</a></td><td>独自の関連付けで開く</td><td></td></tr>
-<tr><td><a href="hid00007.htm#OpenByWin">OpenByWin</a></td><td>Windowsの関連付けで開く</td><td></td></tr>
+<tr id="i_Sort"><td colspan="3"><br><b>ソート</b></td></tr>
+<tr><td><a href="hid00007.htm#SimilarImage">SimilarImage</a></td><td>カーソル位置画像との類似性によるソート</td>
+<tr><td><a href="hid00007.htm#SortDlg">SortDlg</a></td><td>ソートダイアログ</td><td></td></tr>
+
+<tr id="i_Scroll"><td colspan="3"><br><b>スクロール</b></td></tr>
+<tr><td><a href="hid00007.htm#ScrollDown">ScrollDown</a></td><td>下にスクロール</td><td></td></tr>
+<tr><td><a href="hid00007.htm#ScrollLeft">ScrollLeft</a></td><td>左にスクロール</td><td></td></tr>
+<tr><td><a href="hid00007.htm#ScrollRight">ScrollRight</a></td><td>右にスクロール</td><td></td></tr>
+<tr><td><a href="hid00007.htm#ScrollUp">ScrollUp</a></td><td>上にスクロール</td><td></td></tr>
 
 <tr id="i_Image"><td colspan="3"><br><b>画像操作</b></td></tr>
 <tr><td><a href="hid00007.htm#ClipCopy">ClipCopy</a></td><td>クリップボードにコピー</td><td></td></tr>
@@ -885,6 +888,11 @@ td a {
 <tr><td><a href="hid00007.htm#SelWorkItem">SelWorkItem</a></td><td>ワークリストの登録項目を選択</td><td></td></tr>
 <tr><td><a href="hid00007.htm#SendToWorkList">SendToWorkList</a></td><td>ワークリストに送る</td><td></td></tr>
 <tr><td><a href="hid00007.htm#WorkList">WorkList</a></td><td>ワークリスト</td><td><a href="hid00060.htm">→ ワークリスト</a></td></tr>
+
+<tr id="i_Open"><td colspan="3"><br><b>開く</b></td></tr>
+<tr><td><a href="hid00007.htm#FileEdit">FileEdit</a></td><td>ファイルの編集</td><td></td></tr>
+<tr><td><a href="hid00007.htm#OpenByApp">OpenByApp</a></td><td>独自の関連付けで開く</td><td></td></tr>
+<tr><td><a href="hid00007.htm#OpenByWin">OpenByWin</a></td><td>Windowsの関連付けで開く</td><td></td></tr>
 
 <tr id="i_Command"><td colspan="3"><br><b>実行</b></td></tr>
 <tr><td><a href="hid00007.htm#CmdFileList">CmdFileList</a></td><td>コマンドファイル一覧</td><td><a href="hid00067.htm">→ コマンドファイル一覧</a></td></tr>
