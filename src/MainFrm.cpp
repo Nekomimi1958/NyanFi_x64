@@ -7679,7 +7679,9 @@ void __fastcall TNyanFiForm::SetSttBarInf(
 			else if (remove_top_s(fmt, 'Y'))		{ if (fp_ok) stt_str += get_size_str_B(fp->f_size, 0); }
 			else if (remove_top_s(fmt, 'T'))		{ if (fp_ok) stt_str += FormatDateTime(TimeStampFmt, fp->f_time); }
 		}
-		else stt_str.cat_sprintf(_T("%c"), c);
+		else {
+			stt_str.cat_sprintf(_T("%c"), c);
+		}
 	}
 
 	//$DV以降を右寄せ
@@ -25324,6 +25326,7 @@ void __fastcall TNyanFiForm::ToParentActionExecute(TObject *Sender)
 		}
 
 		CurWorking = false;
+		SetFileInf();
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);
@@ -33778,76 +33781,116 @@ void __fastcall TNyanFiForm::SidebarActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 {
 	try {
-		bool is_dh = TEST_DEL_ActParam("DH");
-		bool is_ah = TEST_DEL_ActParam("AH");
-		bool is_ph = TEST_DEL_ActParam("PH");
-		UnicodeString id_str = (is_dh? "D" : is_ah? "A" : is_ph? "P" : "V");
+		bool is_clip = TEST_DEL_ActParam("CB");
+		if (is_clip && !Clipboard()->HasFormat(CF_BITMAP)) UserAbort(USTR_NoObject);
 
-		int sz = 32;	//デフォルト・サイズ
+		bool is_hg	 = TEST_DEL_ActParam("HG");
+		bool is_dh	 = TEST_DEL_ActParam("DH");
+		bool is_ah	 = TEST_DEL_ActParam("AH");
+		bool is_ph	 = TEST_DEL_ActParam("PH");
+		bool is_hash = is_dh || is_ah || is_ph;
+		bool is_hsv  = (!is_hg && !is_hash);	//デフォルト
+
+		int sz = 32;							//デフォルト
 		if (!ActionParam.IsEmpty()) {
 			sz = ActionParam.ToIntDef(sz);
 			if (sz<4 || sz>120) UserAbort(USTR_IllegalParam);	//***
 		}
+		int wd = sz + (is_dh? 1 : 0);
+		int hi = sz;
+
+		UnicodeString tmp;
+		if (is_hsv) {
+			tmp += "V";
+		}
+		else {
+			if (is_hg) tmp += "H";
+			tmp += (is_dh? "D" : is_ah? "A" : is_ph? "P" : "");
+		}
+		UnicodeString id_str;
+		id_str.sprintf(_T("#%s%u"), tmp.c_str(), sz);
 
 		int idx = ViewFileList->IndexOf(ViewFileName);
 		if (idx==-1) Abort();
 
 		CurWorking = true;
 		CancelWork = false;
-		BeginWorkProgress(_T("類似画像ソート"), EmptyStr, ImgMainPanel, true);
+		BeginWorkProgress(_T("類似画像ソート"), "取得中...", ImgMainPanel, true);
 
-		int v_sz = is_ph? 64 : sz * sz * ((is_dh || is_ah)? 1 : 3);
+		std::unique_ptr<Graphics::TBitmap> c_bmp(new Graphics::TBitmap());	//カラー
+		std::unique_ptr<Graphics::TBitmap> g_bmp(new Graphics::TBitmap());	//グレー
+
 		int v_cnt = ViewFileList->Count;
-		UnicodeString r_hash;
 		for (int i=0; i<v_cnt && !CancelWork; i++) {
 			PosWorkProgress(i, v_cnt*2);
 			file_rec *fp = (file_rec*)ViewFileList->Objects[i];
-			bool to_get = !SameStr(id_str, get_pre_tab(fp->hash));
-			if (!to_get) {
-				UnicodeString hash = get_post_tab(fp->hash);
-				if (is_dh || is_ah || is_ph) {
-					to_get = (hash.Length()!=v_sz);
-				}
-				else {
-					TStringDynArray vlst = SplitString(hash, ",");
-					to_get = (vlst.Length!=v_sz);
-				}
-			}
-
-			if (to_get) {
+			if (!SameStr(id_str, get_pre_tab(fp->hash))) {
 				if (fp->is_virtual && !SetTmpFile(fp)) UserAbort(USTR_FaildTmpUnpack);
 				UnicodeString fnam = fp->is_virtual? fp->tmp_name : fp->f_name;
-				int alg  = ThumbScaleOpt;
-				fp->hash = id_str + "\t" +
-							(is_dh? make_dHash(fnam, sz, alg) :
-							 is_ah? make_aHash(fnam, sz, alg) :
-							 is_ph? make_pHash(fnam, sz, alg) :
-									make_HsvVector(fnam, sz, alg));
+				if (make_NrmImage(fnam, c_bmp.get(), (is_hash? g_bmp.get() : NULL), wd, hi)) {
+					fp->hash = id_str + "\t" +
+								(is_dh? make_dHash(g_bmp.get()) :
+								 is_ah? make_aHash(g_bmp.get()) :
+								 is_ph? make_pHash(g_bmp.get()) : EmptyStr);
+					fp->vctr =   is_hg? make_HistVector(c_bmp.get()) :
+							    is_hsv? make_HsvVector(c_bmp.get()) : EmptyStr;
+				}
 			}
-
-			if (i==idx) r_hash = get_post_tab(fp->hash);
 		}
 
+		//比較元ハッシュ/ベクトルを設定
+		UnicodeString r_hash, r_vctr;
+		if (is_clip) {
+			if (make_NrmImage(EmptyStr, c_bmp.get(), (is_hash? g_bmp.get() : NULL), wd, hi)) {
+				r_hash = id_str + "\t" +
+							(is_dh? make_dHash(g_bmp.get()) :
+							 is_ah? make_aHash(g_bmp.get()) :
+							 is_ph? make_pHash(g_bmp.get()) : EmptyStr);
+				r_vctr =     is_hg? make_HistVector(c_bmp.get()) :
+						    is_hsv? make_HsvVector(c_bmp.get()) : EmptyStr;
+			}
+		}
+		else {
+			file_rec *fp = (file_rec*)ViewFileList->Objects[idx];
+			r_hash = get_post_tab(fp->hash);
+			r_vctr = fp->vctr;
+		}
+
+		if (r_hash.IsEmpty() && r_vctr.IsEmpty()) SetActionAbort(USTR_FaildProc);
+
+		//比較
+		BeginWorkProgress(_T("類似画像ソート"), "比較中...", ImgMainPanel, true);
 		for (int i=0; i<v_cnt && !CancelWork; i++) {
 			PosWorkProgress(i + v_cnt, v_cnt*2);
 			file_rec *fp = (file_rec*)ViewFileList->Objects[i];
-			if (i==idx) {
+			if (!is_clip && i==idx) {
 				fp->distance = -1;
 			}
 			else {
 				UnicodeString hash = get_post_tab(fp->hash);
-				fp->distance = (is_dh || is_ah || is_ph)? get_HammingDistance(r_hash, hash)
-														: get_HsvDistance(r_hash, hash);
+				int s = 0;
+				if (is_hsv) {
+					s += eval_HsvVector(r_vctr, fp->vctr);
+				}
+				else {
+					if (is_hash) s += get_HammingDistance(r_hash, hash);
+					if (is_hg)	 s += eval_HistgramVector(r_vctr, fp->vctr);
+				}
+				fp->distance = s;
 			}
 		}
-
-		if (!CancelWork) {
-			ViewFileList->CustomSort(SortComp_Distance);
-			set_GridIndex(ThumbnailGrid, ViewFileList->IndexOf(ViewFileName), ViewFileList->Count);
-		}
+		//ソート
+		if (!CancelWork) ViewFileList->CustomSort(SortComp_Distance);
 
 		CurWorking = false;
 		EndWorkProgress(EmptyStr, EmptyStr, 100);
+
+		if (!CancelWork) {
+			if (is_clip)
+				TopFileAction->Execute();
+			else
+				set_GridIndex(ThumbnailGrid, ViewFileList->IndexOf(ViewFileName), ViewFileList->Count);
+		}
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);

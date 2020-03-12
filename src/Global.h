@@ -1244,7 +1244,8 @@ struct file_rec {
 	UnicodeString r_name;		//表示名
 	UnicodeString l_name;		//リンク先
 	UnicodeString tags;			//タグ
-	UnicodeString hash;			//ハッシュ/ 画像:HSVベクトル/dHash(類似性ソート)
+	UnicodeString hash;			//ハッシュ/ 画像ハッシュ(類似性ソート)
+	UnicodeString vctr;			//画像:ベクトル(類似性ソート)
 	UnicodeString memo;			//栞マーク一覧:   メモ(内容 \t 設定日時)
 								//リポジトリ一覧: 情報(コミット \t 状態) 
 
@@ -1787,18 +1788,21 @@ int  find_NextFile(TStringList *lst, int idx, UnicodeString fext = EmptyStr, Uni
 int  find_PrevFile(TStringList *lst, int idx, UnicodeString fext = EmptyStr, UnicodeString keywd = EmptyStr,
 		bool skip_dir = true, bool circular = true, bool case_sns = false, bool regex = true, bool with_tag = false);
 
-int to_NextFile(TStringList *lst, int idx);
-int to_PrevFile(TStringList *lst, int idx);
-int to_NextSelItem(TStringList *lst, int idx);
-int to_PrevSelItem(TStringList *lst, int idx);
+int  to_NextFile(TStringList *lst, int idx);
+int  to_PrevFile(TStringList *lst, int idx);
+int  to_NextSelItem(TStringList *lst, int idx);
+int  to_PrevSelItem(TStringList *lst, int idx);
 
 int  get_ViewCount();
-UnicodeString make_HsvVector(UnicodeString fnam, int sz, int alg = 0);
-int get_HsvDistance(UnicodeString r_vct, UnicodeString o_vct);
 
-UnicodeString make_dHash(UnicodeString fnam, int sz, int alg = 0);
-UnicodeString make_aHash(UnicodeString fnam, int sz, int alg = 0);
-UnicodeString make_pHash(UnicodeString fnam, int sz, int alg = 0);
+bool make_NrmImage(UnicodeString fnam, Graphics::TBitmap *c_bmp, Graphics::TBitmap *g_bmp, int wd, int hi);
+UnicodeString make_HsvVector(Graphics::TBitmap *i_bmp);
+UnicodeString make_HistVector(Graphics::TBitmap *i_bmp);
+UnicodeString make_dHash(Graphics::TBitmap *i_bmp);
+UnicodeString make_aHash(Graphics::TBitmap *i_bmp);
+UnicodeString make_pHash(Graphics::TBitmap *i_bmp);
+int eval_HsvVector(UnicodeString r_vct, UnicodeString o_vct);
+int eval_HistgramVector(UnicodeString r_vct, UnicodeString o_vct);
 int get_HammingDistance(UnicodeString vct0, UnicodeString vct1);
 
 bool delete_File(UnicodeString fnam, bool use_trash = false);

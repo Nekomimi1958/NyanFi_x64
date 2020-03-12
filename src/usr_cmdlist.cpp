@@ -971,7 +971,9 @@ void get_PrmList(
 			_T("\n")
 			_T("DH : dHash でソート\n")
 			_T("AH : aHash でソート\n")
-			_T("PH : pHash でソート\n"));
+			_T("PH : pHash でソート\n")
+			_T("HG : カラーヒストグラムでソート(DH|AH|PH と併用可)\n")
+			_T("CB : クリップボード内容との類似性でソート\n"));
 	}
 	else if (USAME_TI(cmd, "SimilarSort")) {
 		params.sprintf(_T("%s"),
