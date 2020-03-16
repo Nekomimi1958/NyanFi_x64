@@ -14138,12 +14138,15 @@ double GetDistance(double lat1, double lng1, double lat2, double lng2)
 }
 
 //---------------------------------------------------------------------------
-//緯度経度を指定して Google Maps を開く
+//緯度経度を指定して地図を開く
+//  デフォルトでは国土地理院地図を Leaflet で表示
 //---------------------------------------------------------------------------
-bool OpenGoogleMaps(
-	double lat,		//lat: 緯度
-	double lng,		//lng: 経度
-	UnicodeString fnam)
+bool OpenWebMaps(
+	double lat,			//緯度
+	double lng,			//経度
+	UnicodeString fnam,	//画像ファイル名
+	int   zoom,			//ズームレベル
+	int     hi)			//地図の高さ
 {
 	try {
 		GlobalErrMsg  = EmptyStr;
@@ -14159,35 +14162,39 @@ bool OpenGoogleMaps(
 		//デフォルト
 		else {
 			lbuf =
-				"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n"
-				"<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n"
-				"<head>\r\n"
-				"<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"/>\r\n"
-				"<title>$Title$</title>"
-				"<script type=\"text/javascript\" src=\"http://maps.google.com/maps/api/js?sensor=false\"></script>\r\n"
-				"<script type=\"text/javascript\">\r\n"
-				"google.maps.event.addDomListener(window, 'load', function() {\r\n"
-				"var latlng = new google.maps.LatLng($Latitude$, $Longitude$);\r\n"
-				"var options = {zoom:16, center:latlng, mapTypeId:google.maps.MapTypeId.ROADMAP};\r\n"
-				"var map = new google.maps.Map(document.getElementById(\"gmap\"), options);\r\n"
-				"var marker = new google.maps.Marker({position:latlng, map:map});\r\n"
-				"});\r\n"
-				"</script>\r\n"
-				"<style TYPE=\"text/css\">\r\n<!--\r\nhtml,body {height:100%;}\r\n-->\r\n</style>\r\n"
+				"<!DOCTYPE html>\r\n"
+				"<html>\r\n<head>\r\n"
+				"<meta charset=\"UTF-8\">\r\n"
+				"<title>$Title$</title>\r\n"
+				"<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.6.0/dist/leaflet.css\" />\r\n"
 				"</head>\r\n"
 				"<body>\r\n"
-				"<div id=\"gmap\" style=\"width:100%; height:90%;\"></div>\r\n"
-				"$FileRef$"
-				"</body></html>\r\n";
+				"<div id=\"mapid\" style=\"width: 100%; height: $Height$px;\"></div>\r\n"
+				"<script src=\"https://unpkg.com/leaflet@1.4.0/dist/leaflet.js\"></script>\r\n"
+				"<script>\r\n"
+				"var map = L.map('mapid').setView([$Latitude$, $Longitude$], $Zoom$);\r\n"
+				"L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', "
+				"{attribution: \"<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>\"}).addTo(map);\r\n"
+				"var marker = L.marker([$Latitude$, $Longitude$]).addTo(map);\r\n"
+				"</script>\r\n"
+				"$FileRef$\r\n"
+				"</body>\r\n</html>\r\n";
 
 			lbuf = ReplaceStr(lbuf, "$Title$",	 !fnam.IsEmpty()? "$FileName$の地図" : "指定地点の地図");
-			lbuf = ReplaceStr(lbuf, "$FileRef$", !fnam.IsEmpty()? "<p><a href=\"file:///$PathName$\">$PathName$</a></p>\r\n" : "");
+			lbuf = ReplaceStr(lbuf, "$FileRef$",
+				!fnam.IsEmpty()? "<p><a href=\"file:///$PathName$\">$PathName$</a>&nbsp;&nbsp;&nbsp;$ExifTime$</p>" : "");
+			lbuf = ReplaceStr(lbuf, "$Height$",	 IntToStr(hi));
+		}
+
+		if (ContainsText(lbuf, "$ExifTime$")) {
+			lbuf = ReplaceStr(lbuf, "$ExifTime$", !fnam.IsEmpty()? EXIF_GetExifTimeStr(fnam, "yyyy/mm/dd hh:nn:ss") : EmptyStr);
 		}
 
 		lbuf = ReplaceStr(lbuf, "$Latitude$",  UnicodeString().sprintf(_T("%.8f") ,lat));
 		lbuf = ReplaceStr(lbuf, "$Longitude$", UnicodeString().sprintf(_T("%.8f") ,lng));
 		lbuf = ReplaceStr(lbuf, "$FileName$",  ExtractFileName(fnam));
 		lbuf = ReplaceStr(lbuf, "$PathName$",  fnam);
+		lbuf = ReplaceStr(lbuf, "$Zoom$",	   IntToStr(std::min(std::max(zoom, 1), 18)));
 
 		std::unique_ptr<TStringList> lst(new TStringList());
 		lst->Text = lbuf;

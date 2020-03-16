@@ -31896,9 +31896,26 @@ void __fastcall TNyanFiForm::WatchTailActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::WebMapActionExecute(TObject *Sender)
 {
 	try {
+		int is_in = TEST_DEL_ActParam("IN");
+
 		UnicodeString fnam;
 		double lat, lng;
-		if (TEST_ActParam("IN") || ScrMode==SCMD_TVIEW) {
+		int zoom = 16, hi = 600;
+
+		TStringDynArray prm_lst = split_strings_semicolon(ActionParam);
+		for (int i=0; i<prm_lst.Length; i++) {
+			UnicodeString lbuf = prm_lst[i].UpperCase();
+			if (!starts_tchs(_T("ZH"), lbuf)) UserAbort(USTR_IllegalParam);
+			WideChar c = split_top_wch(lbuf);
+			if (lbuf.IsEmpty()) UserAbort(USTR_IllegalParam);
+			int v = lbuf.ToIntDef(0); if (v==0) UserAbort(USTR_IllegalParam);
+			switch (c) {
+			case 'Z': zoom = v;	break;
+			case 'H': hi  = v;	break;
+			}
+		}
+
+		if (is_in || ScrMode==SCMD_TVIEW) {
 			UnicodeString lbuf = Trim(inputbox_ex(_T("マップの表示地点"), _T("緯度,経度")));
 			if (lbuf.IsEmpty()) SkipAbort();
 
@@ -31922,7 +31939,7 @@ void __fastcall TNyanFiForm::WebMapActionExecute(TObject *Sender)
 			if (!get_GpsInf(fnam, &lat, &lng)) throw EAbort(LoadUsrMsg(USTR_CantGetInfo, _T("GPS")));
 		}
 
-		if (!OpenGoogleMaps(lat, lng, fnam)) GlobalAbort();
+		if (!OpenWebMaps(lat, lng, fnam, zoom, hi)) GlobalAbort();
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);

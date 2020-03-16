@@ -2154,10 +2154,10 @@ HWND get_HelpWnd();
 HWND get_MenuWnd();
 
 double GetDistance(double lat1, double lng1, double lat2, double lng2);
-bool OpenGoogleMaps(double lat, double lng, UnicodeString fnam);
+bool OpenWebMaps(double lat, double lng, UnicodeString fnam, int zoom, int hi);
 
 UnicodeString cipher(UnicodeString orgstr);
-UnicodeString uncipher(UnicodeString  cipstr);
+UnicodeString uncipher(UnicodeString cipstr);
 
 void AddToRecentFile(UnicodeString fnam);
 void AddToRecentFile(TStringList *lst);
