@@ -11554,7 +11554,7 @@ void __fastcall TNyanFiForm::ShowExPopupMenu()
 }
 
 //---------------------------------------------------------------------------
-//アクションのパラメータを調べる
+//アクションパラメータを調べる
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::TestActionParam(const _TCHAR *prm)
 {
@@ -11580,7 +11580,7 @@ bool __fastcall TNyanFiForm::TestDelActionParam(const _TCHAR *prm)
 	return (idx!=-1);
 }
 //---------------------------------------------------------------------------
-//アクションのパラメータから指定項目を除いた文字列を取得
+//アクションパラメータから指定項目を除いた文字列を取得
 //---------------------------------------------------------------------------
 UnicodeString __fastcall TNyanFiForm::ExceptActionParam(UnicodeString ex_list)
 {
@@ -31896,25 +31896,24 @@ void __fastcall TNyanFiForm::WatchTailActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::WebMapActionExecute(TObject *Sender)
 {
 	try {
-		int is_in = TEST_DEL_ActParam("IN");
-
-		UnicodeString fnam;
-		double lat, lng;
-		int zoom = 16, hi = 600;
-
+		bool is_in = TEST_DEL_ActParam("IN");
+		int map_idx = 0, zoom = 16;
 		TStringDynArray prm_lst = split_strings_semicolon(ActionParam);
 		for (int i=0; i<prm_lst.Length; i++) {
 			UnicodeString lbuf = prm_lst[i].UpperCase();
-			if (!starts_tchs(_T("ZH"), lbuf)) UserAbort(USTR_IllegalParam);
+			if (!starts_tchs(_T("MZ"), lbuf)) UserAbort(USTR_IllegalParam);
 			WideChar c = split_top_wch(lbuf);
 			if (lbuf.IsEmpty()) UserAbort(USTR_IllegalParam);
 			int v = lbuf.ToIntDef(0); if (v==0) UserAbort(USTR_IllegalParam);
 			switch (c) {
-			case 'Z': zoom = v;	break;
-			case 'H': hi  = v;	break;
+			case 'M': map_idx = v;	break;
+			case 'Z': zoom    = v;	break;
 			}
 		}
 
+		UnicodeString fnam;
+		double lat, lng;
+		//入力ボックスで指定
 		if (is_in || ScrMode==SCMD_TVIEW) {
 			UnicodeString lbuf = Trim(inputbox_ex(_T("マップの表示地点"), _T("緯度,経度")));
 			if (lbuf.IsEmpty()) SkipAbort();
@@ -31930,6 +31929,7 @@ void __fastcall TNyanFiForm::WebMapActionExecute(TObject *Sender)
 			lat = lat_str.ToDouble();
 			lng = lbuf.ToDouble();
 		}
+		//画像から取得
 		else {
 			file_rec *cfp = GetCurFrecPtr();
 			if (!cfp || !is_Viewable(cfp)) Abort();
@@ -31939,7 +31939,7 @@ void __fastcall TNyanFiForm::WebMapActionExecute(TObject *Sender)
 			if (!get_GpsInf(fnam, &lat, &lng)) throw EAbort(LoadUsrMsg(USTR_CantGetInfo, _T("GPS")));
 		}
 
-		if (!OpenWebMaps(lat, lng, fnam, zoom, hi)) GlobalAbort();
+		if (!OpenWebMaps(lat, lng, fnam, map_idx, zoom, ExePath + WEBMAP_TPLT)) GlobalAbort();
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);

@@ -1061,11 +1061,14 @@ void get_PrmList(
 			_T("AC : すべての監視を中止\n"));
 	}
 	if (USAME_TI(cmd, "WebMap")) {
-		params = "\nIN : 緯度,経度を入力\n";
+		params = "\nIN : 緯度,経度を入力\nM1 : 地図の選択(1～4)\nZ16 : ズームレベル(1～18)\n";
 	}
 	else if (USAME_TI(cmd, "WebSearch")) {
 		params = "\nCB : クリップボードの内容を検索\n";
 		if (id_idx==0) params += "FN : カーソル位置のファイル名を検索\n";
+	}
+	else if (USAME_TI(cmd, "WinPos")) {
+		params = "\nL : 左位置\nT : 上位置\nR : 右位置\nB : 下位置\n";
 	}
 	else if (USAME_TI(cmd, "WorkList") && id_idx==0) {
 		params = "\nOP : 反対側で実行\nRL : 変更内容を破棄して読み込み直す\nDI : 無効な項目を一括削除\n";

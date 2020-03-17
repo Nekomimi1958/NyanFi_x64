@@ -17,7 +17,6 @@
 	<param name="Keyword" value="favicon　">
 	<param name="Keyword" value="favicon.ico">
 	<param name="Keyword" value="FontSample.INI">
-	<param name="Keyword" value="Googleマップ">
 	<param name="Keyword" value="Highlight.INI">
 	<param name="Keyword" value="LoadResultList">
 	<param name="Keyword" value="LoadTabGroup">
@@ -88,7 +87,7 @@
 <div class="spc_box">
 表示色を変更したい場合は、設定メニュー - 「<b>色見本定義ファイルの編集</b>」で行ってください。<b>Swatchbook.INI</b> (なければデフォルトで新規作成)がテキストエディタで開かれ、<b>NyanFi</b> 側では再読み込みの確認メッセージが出ます。<br>
 色は、[<b>Swatchbook</b>] セクションの <b>Color001</b> ～ <b>Color112</b> に2桁16進数のRRGGBB形式で指定します。113～128番目までの16色は、「色の設定」ダイアログで作成した色になります。<br>
-アーカイブの <b>sample_ini</b> ディレクトリには、デフォルトとは異なる色見本のサンプルファイルがあります。<br>
+アーカイブの <b>sample_etc</b> ディレクトリには、デフォルトとは異なる色見本のサンプルファイルがあります。<br>
 </div>
 <div class="spc_box">
 なお名前が Swatchbook で始まり、1行目が &quot;[Swatchbook]&quot; の .INI ファイル(アーカイブ内は除く)は、イメージプレビューで内容を確認できます。<br>
@@ -147,9 +146,9 @@
 
 <dt>WEBMAP.HTM
 <dd>
-画像ファイルのExif GPS情報によって地図(Googleマップ)を表示する際のテンプレートです。<br>
+<a href="hid00005.htm#WebMap">WebMap</a> コマンドによって画像ファイルのGPS情報に基づいた地図を表示する際のテンプレートです。<br>
 存在しない場合はデフォルト設定で表示されます。<br>
-<a href="hid00005.htm#WebMap">→ WebMap</a><br>
+アーカイブの <b>sample_etc</b> ディレクトリには、デフォルト表示に相当するテンプレートがありますので、カスタマイズして利用したり、作成の際の参考にしたりしてください。<br>
 
 <dt>autorun.inf
 <dd>ドライブのルートにあって、アイコンが設定されている場合、<a href="hid00064.htm">ドライブ一覧</a>などのアイコン表示にそれが用いられます。<br>

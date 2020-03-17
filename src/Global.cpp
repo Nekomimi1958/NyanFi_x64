@@ -14145,49 +14145,73 @@ bool OpenWebMaps(
 	double lat,			//緯度
 	double lng,			//経度
 	UnicodeString fnam,	//画像ファイル名
-	int   zoom,			//ズームレベル
-	int     hi)			//地図の高さ
+	int map_idx,		//地図選択インデックス
+	int zoom,			//ズームレベル
+	UnicodeString tnam)	//テンプレートファイル名	(default = EmptyStr);
 {
 	try {
 		GlobalErrMsg  = EmptyStr;
 
 		UnicodeString lbuf;
-		//テンプレート
-		UnicodeString tnam = ExePath + WEBMAP_TPLT;
+		//指定テンプレート
 		if (file_exists(tnam)) {
 			std::unique_ptr<TStringList> fbuf(new TStringList());
 			if (load_text_ex(tnam, fbuf.get())==0) UserAbort(USTR_FaildProc);
 			lbuf = fbuf->Text;
 		}
-		//デフォルト
+		//デフォルト・テンプレート
 		else {
+			UnicodeString src_inf;
+			src_inf.sprintf(_T("<div style=\"position:absolute; bottom:0.5em;\">%s</div>\r\n"),
+				!fnam.IsEmpty()?
+					_T("<a href=\"file:///$PathName$\">$PathName$</a><br>$Latitude$, $Longitude$&nbsp;&nbsp;&nbsp;$ExifTime$&nbsp;&nbsp;&nbsp;$ExifInfo$") :
+					_T("$Latitude$, $Longitude$"));
+
+			UnicodeString map_tile = (map_idx==2)? "gsi_pale" : (map_idx==3)? "gsi_photo" : (map_idx==4)? "osm" : "gsi_std";
+			UnicodeString gsi_inf  = "{attribution: \"<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>\"}";
+
 			lbuf =
-				"<!DOCTYPE html>\r\n"
-				"<html>\r\n<head>\r\n"
+				"<!DOCTYPE html>\r\n<html>\r\n<head>\r\n"
 				"<meta charset=\"UTF-8\">\r\n"
 				"<title>$Title$</title>\r\n"
 				"<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.6.0/dist/leaflet.css\" />\r\n"
 				"</head>\r\n"
 				"<body>\r\n"
-				"<div id=\"mapid\" style=\"width: 100%; height: $Height$px;\"></div>\r\n"
-				"<script src=\"https://unpkg.com/leaflet@1.4.0/dist/leaflet.js\"></script>\r\n"
+				"<div id=\"mapid\" style=\"position:absolute; top:0; left:0; right:0; bottom:6em;\"></div>\r\n"
+				+ src_inf +
+				"<script src=\"https://unpkg.com/leaflet@1.6.0/dist/leaflet.js\"></script>\r\n"
 				"<script>\r\n"
 				"var map = L.map('mapid').setView([$Latitude$, $Longitude$], $Zoom$);\r\n"
-				"L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', "
-				"{attribution: \"<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>\"}).addTo(map);\r\n"
+				"var gsi_std = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', " + gsi_inf + ");\r\n"
+				"var gsi_pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', " + gsi_inf + ");\r\n"
+				"var gsi_photo = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg'," + gsi_inf + ");\r\n"
+				"var osm = L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png', {attribution: \"<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors\"});\r\n"
+
+				"var baseMaps = {\r\n"
+				"  \"地理院-標準地図\" : gsi_std,\r\n"
+				"  \"地理院-淡色地図\" : gsi_pale,\r\n"
+				"  \"地理院-写真\" : gsi_photo,\r\n"
+				"  \"Open Street Map\" : osm\r\n"
+				"};\r\n"
+				"L.control.layers(baseMaps).addTo(map);\r\n"
+				"L.control.scale({maxWidth:200,position:'bottomright',imperial:false}).addTo(map);\r\n"
+				+ map_tile + ".addTo(map);\r\n"
 				"var marker = L.marker([$Latitude$, $Longitude$]).addTo(map);\r\n"
 				"</script>\r\n"
-				"$FileRef$\r\n"
 				"</body>\r\n</html>\r\n";
 
 			lbuf = ReplaceStr(lbuf, "$Title$",	 !fnam.IsEmpty()? "$FileName$の地図" : "指定地点の地図");
-			lbuf = ReplaceStr(lbuf, "$FileRef$",
-				!fnam.IsEmpty()? "<p><a href=\"file:///$PathName$\">$PathName$</a>&nbsp;&nbsp;&nbsp;$ExifTime$</p>" : "");
-			lbuf = ReplaceStr(lbuf, "$Height$",	 IntToStr(hi));
 		}
 
 		if (ContainsText(lbuf, "$ExifTime$")) {
 			lbuf = ReplaceStr(lbuf, "$ExifTime$", !fnam.IsEmpty()? EXIF_GetExifTimeStr(fnam, "yyyy/mm/dd hh:nn:ss") : EmptyStr);
+		}
+
+		if (ContainsText(lbuf, "$ExifInfo$")) {
+			unsigned int i_wd, i_hi;
+			UnicodeString ex_str = !fnam.IsEmpty()? get_ExifInfStr(fnam, NULL, &i_wd, &i_hi) : EmptyStr;
+			if (!ex_str.IsEmpty()) ex_str.cat_sprintf(_T(" %u×%u"), i_wd, i_hi);
+			lbuf = ReplaceStr(lbuf, "$ExifInfo$", ex_str);;
 		}
 
 		lbuf = ReplaceStr(lbuf, "$Latitude$",  UnicodeString().sprintf(_T("%.8f") ,lat));

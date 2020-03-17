@@ -2154,7 +2154,7 @@ HWND get_HelpWnd();
 HWND get_MenuWnd();
 
 double GetDistance(double lat1, double lng1, double lat2, double lng2);
-bool OpenWebMaps(double lat, double lng, UnicodeString fnam, int zoom, int hi);
+bool OpenWebMaps(double lat, double lng, UnicodeString fnam, int map_idx, int zoom, UnicodeString tnam = EmptyStr);
 
 UnicodeString cipher(UnicodeString orgstr);
 UnicodeString uncipher(UnicodeString cipstr);
