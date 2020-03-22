@@ -1402,8 +1402,8 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 						r_wd = i_wd * r;
 						r_hi = i_hi * r;
 					}
-					r_img->SetSize(r_wd, r_hi);
 					r_img->PixelFormat = pf24bit;
+					r_img->SetSize(r_wd, r_hi);
 					r_img->Canvas->StretchDraw(Rect(0, 0, r_wd, r_hi), i_img.get());
 				}
 			}

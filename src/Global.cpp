@@ -9504,7 +9504,8 @@ bool make_NrmImage(
 	Graphics::TBitmap *c_bmp,	//出力ビットマップ(カラー)
 	Graphics::TBitmap *g_bmp,	//出力ビットマップ(グレースケール)
 	int wd,						//縮小幅
-	int hi)						//縮小高
+	int hi,						//縮小高
+	bool cc_sw)					//中央部クロップ(面積50%)
 {
 	std::unique_ptr<Graphics::TBitmap> i_bmp(new Graphics::TBitmap());
 	if (!fnam.IsEmpty()) {
@@ -9515,8 +9516,23 @@ bool make_NrmImage(
 		i_bmp->Assign(Clipboard());
 	}
 
+	//縮小/中央部クロップ
+	if (cc_sw) {
+		double r2 = sqrt(2.0);
+		int c_wd = wd * r2;
+		int c_hi = hi * r2;
+		std::unique_ptr<Graphics::TBitmap> t_bmp(new Graphics::TBitmap());
+		if (!WIC_resize_image(i_bmp.get(), t_bmp.get(), 0.0, c_wd, c_hi, ThumbScaleOpt)) return false;
+		c_bmp->PixelFormat = pf24bit;
+		c_bmp->SetSize(wd, hi);
+		TRect c_rc = Rect(0, 0, wd, hi);
+		TRect t_rc = c_rc;  t_rc.Offset((c_wd - wd)/2, (c_hi - hi)/2);
+		c_bmp->Canvas->CopyRect(c_rc, t_bmp->Canvas, t_rc);
+	}
 	//縮小
-	if (!WIC_resize_image(i_bmp.get(), c_bmp, 0.0, wd, hi, ThumbScaleOpt)) return false;
+	else {
+		if (!WIC_resize_image(i_bmp.get(), c_bmp, 0.0, wd, hi, ThumbScaleOpt)) return false;
+	}
 
 	//グレースケール化
 	if (g_bmp) {
@@ -14161,18 +14177,21 @@ bool OpenWebMaps(
 		}
 		//デフォルト・テンプレート
 		else {
-			UnicodeString src_inf;
-			src_inf.sprintf(_T("<div style=\"position:absolute; bottom:0.5em;\">%s</div>\r\n"),
-				!fnam.IsEmpty()?
-					_T("<a href=\"file:///$PathName$\">$PathName$</a><br>$Latitude$, $Longitude$&nbsp;&nbsp;&nbsp;$ExifTime$&nbsp;&nbsp;&nbsp;$ExifInfo$") :
-					_T("$Latitude$, $Longitude$"));
+			UnicodeString src_inf = "<div style=\"position:absolute; bottom:0.5em;\">";
+			UnicodeString geo_inf = "$Latitude$, $Longitude$&nbsp;&nbsp;<span id=\"Elevation\">-----</span>m";
+			if (!fnam.IsEmpty()) {
+				src_inf += "<a href=\"file:///$PathName$\">$PathName$</a><br>";
+				src_inf += (geo_inf + "&nbsp;&nbsp;&nbsp;$ExifTime$&nbsp;&nbsp;&nbsp;$ExifInfo$");
+			}
+			else {
+				src_inf += geo_inf;
+			}
+			src_inf += "</div>\r\n";
 
 			UnicodeString map_tile = (map_idx==2)? "gsi_pale" : (map_idx==3)? "gsi_photo" : (map_idx==4)? "osm" : "gsi_std";
 			UnicodeString gsi_inf  = "{attribution: \"<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>\"}";
-
 			lbuf =
-				"<!DOCTYPE html>\r\n<html>\r\n<head>\r\n"
-				"<meta charset=\"UTF-8\">\r\n"
+				"<!DOCTYPE html>\r\n<html>\r\n<head>\r\n<meta charset=\"UTF-8\">\r\n"
 				"<title>$Title$</title>\r\n"
 				"<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.6.0/dist/leaflet.css\" />\r\n"
 				"</head>\r\n"
@@ -14197,6 +14216,16 @@ bool OpenWebMaps(
 				"L.control.scale({maxWidth:200,position:'bottomright',imperial:false}).addTo(map);\r\n"
 				+ map_tile + ".addTo(map);\r\n"
 				"var marker = L.marker([$Latitude$, $Longitude$]).addTo(map);\r\n"
+				"var url = \"https://cyberjapandata2.gsi.go.jp/general/dem/scripts/getelevation.php?lon=$Longitude$&lat=$Latitude$&outtype=JSON\";\r\n"
+				"var request = new XMLHttpRequest();\r\n"
+				"request.open('GET', url);\r\n"
+				"request.onreadystatechange = function () {\r\n"
+				"  if(request.readyState === XMLHttpRequest.DONE) {\r\n"
+				"    var result = JSON.parse(request.responseText);\r\n"
+				"    document.getElementById(\"Elevation\").innerHTML = result.elevation;\r\n"
+				"  }\r\n"
+				"};\r\n"
+				"request.send(null);\r\n"
 				"</script>\r\n"
 				"</body>\r\n</html>\r\n";
 

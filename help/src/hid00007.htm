@@ -521,7 +521,7 @@ OptionDlg<span class="pram_text">_KYO</span>
 なおサイドバーが表示されている場合、情報ヘッダは非表示となり、一部の情報(インデックス、倍率など)がサイドバー上に表示されます。<br>
 <a href="#Loupe">→ Loupe</a>　<a href="#Histogram">→ Histogram</a>
 
-<dt id="SimilarImage">SimilarImage<span class="pram_text">[_{DH|AH|PH}][;HG][;サイズ][;CB]</span><br>
+<dt id="SimilarImage">SimilarImage<span class="pram_text">[_{DH|AH|PH}][;HG][;CC][;サイズ][;CB]</span><br>
 <dd>カーソル位置の画像との類似性に基づいてソートを行います。<br>
 デフォルトでは、画像を32×32のサイズに縮小し、各ピクセルについてHSV色空間での隔たりを計算して、その合計が小さい順に並べ替えます。縮小には、サムネイルの縮小アルゴリズムを用います(<a href="hid00020.htm#Thumbnail">オプション設定 - イメージビュアー</a> - 縮小)。<br>
 <div class="spc_box">
@@ -534,6 +534,10 @@ dHash/aHash/pHash では色情報を考慮しないため、色違いの類似画像などを探すのによい
 パラメータに <b>HG</b> を指定すると、カラーヒストグラムによってソートを行います。縮小画像から64色のストグラムを作成し、その類似度によって並べ替えます。<b>HG</b> は、<b>DH</b>、<b>AH</b>、<b>PH</b> のいずれかと同時に指定することもできます。その場合、両者の加算値が小さい順に並べ替えます。<br>
 </div>
 <div class="spc_box">
+パラメータに <b>CC</b> を指定すると、画像の中央部(面積50%)をクロップして比較を行います。注目部分が中央にあって、背景を無視したいような場合によいかもしれません。<br>
+</div>
+
+<div class="spc_box">
 パラメータで 32×32 以外の<b>サイズ</b>(4～120)を指定することも可能です。サイズを大きくすると処理時間がかかりますが、その分精度が上がるとは限りません。<br>
 なお、同じサイズ/方法で再実行すると、前回取得した情報を再利用するため処理が速くなります。<br>
 </div>
@@ -545,8 +549,8 @@ dHash/aHash/pHash では色情報を考慮しないため、色違いの類似画像などを探すのによい
 </div>
 
 <div class="spc_box">
-<b>例</b>: dHash とカラーヒストグラムを併用してソート<br>
-　SimilarImage_DH;HG
+<b>例</b>: 画像の中央部をクロップし、dHash とカラーヒストグラムを併用してソート<br>
+　SimilarImage_DH;HG;CC
 </div>
 <a href="#SortDlg">→ SortDlg</a>
 

@@ -33807,6 +33807,7 @@ void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 		bool is_ph	 = TEST_DEL_ActParam("PH");
 		bool is_hash = is_dh || is_ah || is_ph;
 		bool is_hsv  = (!is_hg && !is_hash);	//デフォルト
+		bool is_cc	 = TEST_DEL_ActParam("CC");
 
 		int sz = 32;							//デフォルト
 		if (!ActionParam.IsEmpty()) {
@@ -33824,6 +33825,7 @@ void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 			if (is_hg) tmp += "H";
 			tmp += (is_dh? "D" : is_ah? "A" : is_ph? "P" : "");
 		}
+		if (is_cc) tmp += "C";
 		UnicodeString id_str;
 		id_str.sprintf(_T("#%s%u"), tmp.c_str(), sz);
 
@@ -33844,7 +33846,7 @@ void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 			if (!SameStr(id_str, get_pre_tab(fp->hash))) {
 				if (fp->is_virtual && !SetTmpFile(fp)) UserAbort(USTR_FaildTmpUnpack);
 				UnicodeString fnam = fp->is_virtual? fp->tmp_name : fp->f_name;
-				if (make_NrmImage(fnam, c_bmp.get(), (is_hash? g_bmp.get() : NULL), wd, hi)) {
+				if (make_NrmImage(fnam, c_bmp.get(), (is_hash? g_bmp.get() : NULL), wd, hi, is_cc)) {
 					fp->hash = id_str + "\t" +
 								(is_dh? make_dHash(g_bmp.get()) :
 								 is_ah? make_aHash(g_bmp.get()) :
@@ -33858,7 +33860,7 @@ void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 		//比較元ハッシュ/ベクトルを設定
 		UnicodeString r_hash, r_vctr;
 		if (is_clip) {
-			if (make_NrmImage(EmptyStr, c_bmp.get(), (is_hash? g_bmp.get() : NULL), wd, hi)) {
+			if (make_NrmImage(EmptyStr, c_bmp.get(), (is_hash? g_bmp.get() : NULL), wd, hi, is_cc)) {
 				r_hash = id_str + "\t" +
 							(is_dh? make_dHash(g_bmp.get()) :
 							 is_ah? make_aHash(g_bmp.get()) :

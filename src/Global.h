@@ -1795,7 +1795,7 @@ int  to_PrevSelItem(TStringList *lst, int idx);
 
 int  get_ViewCount();
 
-bool make_NrmImage(UnicodeString fnam, Graphics::TBitmap *c_bmp, Graphics::TBitmap *g_bmp, int wd, int hi);
+bool make_NrmImage(UnicodeString fnam, Graphics::TBitmap *c_bmp, Graphics::TBitmap *g_bmp, int wd, int hi, bool cc_sw);
 UnicodeString make_HsvVector(Graphics::TBitmap *i_bmp);
 UnicodeString make_HistVector(Graphics::TBitmap *i_bmp);
 UnicodeString make_dHash(Graphics::TBitmap *i_bmp);
