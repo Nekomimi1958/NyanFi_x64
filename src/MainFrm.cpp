@@ -88,6 +88,7 @@
 #include "TabDlg.h"
 #include "FtpDlg.h"
 #include "ChmodDlg.h"
+#include "JsonView.h"
 #include "XmlView.h"
 #include "GitView.h"
 #include "ShareDlg.h"
@@ -18863,6 +18864,32 @@ void __fastcall TNyanFiForm::JoinTextActionExecute(TObject *Sender)
 			if (EqualDirLR()) ReloadList(CurListTag); else RepaintList(CurListTag);
 			EndWorkProgress();
 		}
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+}
+
+//---------------------------------------------------------------------------
+//JSONビュアー
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::JsonViewerActionExecute(TObject *Sender)
+{
+	try {
+		UnicodeString fnam;
+		bool is_cb = TEST_ActParam("CB");
+		if (!is_cb) {
+			file_rec *cfp = GetCurFrecPtr(true);
+			if (!cfp || cfp->is_dummy || cfp->is_dir || cfp->f_attr==faInvalid) Abort();
+			if (cfp->is_virtual && !SetTmpFile(cfp)) UserAbort(USTR_FaildTmpUnpack);
+			fnam = (cfp->is_virtual || cfp->is_ftp)? cfp->tmp_name : cfp->f_name;
+			if (!is_TextFile(fnam)) UserAbort(USTR_NotText);
+		}
+
+		if (!JsonViewer) JsonViewer = new TJsonViewer(this);	//初回に動的作成
+		JsonViewer->FileName = fnam;
+		JsonViewer->isClip	 = is_cb;
+		JsonViewer->ShowModal();
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);

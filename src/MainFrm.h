@@ -270,6 +270,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *IV_SidebarPosAction;
 	TAction *IV_ThumbPosAction;
 	TAction *JoinTextAction;
+	TAction *JsonViewerAction;
 	TAction *JumpIndexAction;
 	TAction *JumpToAction;
 	TAction *KeyListAction;
@@ -1870,6 +1871,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall MinColItemClick(TObject *Sender);
 	void __fastcall TxtScrollPanelResize(TObject *Sender);
 	void __fastcall SimilarImageActionExecute(TObject *Sender);
+	void __fastcall JsonViewerActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

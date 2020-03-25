@@ -62,6 +62,8 @@
 #define IDH_00088   88
 #define IDH_00089   89
 #define IDH_00090   90
+#define IDH_00091   91
+#define IDH_00092   92
 #define IDH_00100  100
 #define IDH_00101  101
 #define IDH_00102  102

@@ -128,6 +128,7 @@ void set_CmdList(
 		"F:ItemTmpMove=選択項目を一時的にカーソル位置に移動\n"
 		"F:ItemTmpUp=項目を一時的に1つ上に移動\n"
 		"F:JoinText=テキストファイルの結合\n"
+		"F:JsonViewer=JSONビュアー\n"
 		"F:JumpTo=指定したファイル位置へ\n"
 		"F:Library=ライブラリへ\n"
 		"F:LinkToOpp=リンク先を反対側に開く\n"
@@ -787,6 +788,9 @@ void get_PrmList(
 			_T("ND : ダイアログを表示しないで入力\n")
 			_T("ND2 : ND でドロップダウンを開いて表示\n")
 			_T("SD : フォルダ参照ダイアログを表示\n"));
+	}
+	else if (USAME_TI(cmd, "JsonViewer")) {
+		params = "\nCB : クリップボード内容を表示\n";
 	}
 	else if (USAME_TI(cmd, "DriveList")) {
 		params.sprintf(_T("%s"),

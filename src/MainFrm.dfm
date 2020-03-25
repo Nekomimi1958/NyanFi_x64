@@ -4056,6 +4056,12 @@ object NyanFiForm: TNyanFiForm
       OnExecute = JoinTextActionExecute
       OnUpdate = MenuFActionUpdate
     end
+    object JsonViewerAction: TAction
+      Category = 'Command'
+      Caption = 'JSON'#12499#12517#12450#12540'(&J)...'
+      OnExecute = JsonViewerActionExecute
+      OnUpdate = MenuFActionUpdate
+    end
     object JumpToAction: TAction
       Category = 'Command'
       OnExecute = JumpToActionExecute

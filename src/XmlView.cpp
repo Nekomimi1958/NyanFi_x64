@@ -117,6 +117,7 @@ void __fastcall TXmlViewer::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	XmlTreeView->Items->Clear();
 	XmlnsList->Clear();
+	FileName = EmptyStr;
 
 	IniFile->SavePosInfo(this);
 	IniFile->WriteIntGen(_T("XmlViewViewMode"),		ViewMode);
