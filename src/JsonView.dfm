@@ -85,6 +85,7 @@ object JsonViewer: TJsonViewer
       StyleElements = []
       OnChange = JsonTreeViewChange
       OnCustomDrawItem = JsonTreeViewCustomDrawItem
+      OnDeletion = JsonTreeViewDeletion
       OnHint = JsonTreeViewHint
       OnKeyDown = JsonTreeViewKeyDown
       OnKeyPress = JsonTreeViewKeyPress
@@ -181,11 +182,11 @@ object JsonViewer: TJsonViewer
     Left = 64
     Top = 144
     object ExpandItem: TMenuItem
-      Caption = #12377#12409#12390#23637#38283'(&E)'
+      Caption = #12377#12409#12390#23637#38283'(&A)'
       OnClick = ExpandItemClick
     end
     object CollapseItem: TMenuItem
-      Caption = #12377#12409#12390#30067#12416'(&A)'
+      Caption = #12377#12409#12390#30067#12416'(&X)'
       OnClick = CollapseItemClick
     end
     object Sep_1: TMenuItem
@@ -194,17 +195,23 @@ object JsonViewer: TJsonViewer
     object CopyItem: TMenuItem
       Action = CopyAction
     end
-    object CopyXmlItem: TMenuItem
+    object CopyPathItem: TMenuItem
+      Action = CopyJsonPathAction
+    end
+    object CopyJsonItem: TMenuItem
       Action = CopyJsonAction
     end
-    object XPath1: TMenuItem
-      Action = CopyJsonPathAction
+    object CopyFormatItem: TMenuItem
+      Action = CopyFormatAction
     end
     object Sep_2: TMenuItem
       Caption = '-'
     end
     object OpenUrlItem: TMenuItem
       Action = OpenUrlAction
+    end
+    object E1: TMenuItem
+      Action = EditErrAction
     end
     object Sep_3: TMenuItem
       Caption = '-'
@@ -215,7 +222,7 @@ object JsonViewer: TJsonViewer
   end
   object ActionList1: TActionList
     Left = 64
-    Top = 88
+    Top = 56
     object FindDownAction: TAction
       Caption = #9660
       OnExecute = FindDownActionExecute
@@ -247,6 +254,11 @@ object JsonViewer: TJsonViewer
       OnExecute = CopyJsonActionExecute
       OnUpdate = CopyJsonActionUpdate
     end
+    object CopyFormatAction: TAction
+      Caption = #20840#20307#12434#25972#24418#12375#12390#12467#12500#12540'(&F)'
+      OnExecute = CopyFormatActionExecute
+      OnUpdate = CopyFormatActionUpdate
+    end
     object CopyJsonPathAction: TAction
       Caption = #12497#12473#24335#12434#12467#12500#12540'(&P)'
       OnExecute = CopyJsonPathActionExecute
@@ -259,6 +271,11 @@ object JsonViewer: TJsonViewer
     end
     object AutoAction: TAction
       OnExecute = AutoActionExecute
+    end
+    object EditErrAction: TAction
+      Caption = #12456#12521#12540#34892#12434#12456#12487#12451#12479#12391#38283#12367'(&O)'
+      OnExecute = EditErrActionExecute
+      OnUpdate = EditErrActionUpdate
     end
   end
 end

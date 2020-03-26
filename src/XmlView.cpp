@@ -64,8 +64,7 @@ void __fastcall TXmlViewer::WmFormShowed(TMessage &msg)
 	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
 	Repaint();
 
-	ErrMsg = EmptyStr;
-
+	ErrMsg	 = EmptyStr;
 	ViewBusy = true;
 	set_RedrawOff(XmlTreeView);
 	try {

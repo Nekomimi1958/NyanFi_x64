@@ -192,11 +192,11 @@ object XmlViewer: TXmlViewer
     Left = 64
     Top = 144
     object ExpandItem: TMenuItem
-      Caption = #12377#12409#12390#23637#38283'(&E)'
+      Caption = #12377#12409#12390#23637#38283'(&A)'
       OnClick = ExpandItemClick
     end
     object CollapseItem: TMenuItem
-      Caption = #12377#12409#12390#30067#12416'(&A)'
+      Caption = #12377#12409#12390#30067#12416'(&X)'
       OnClick = CollapseItemClick
     end
     object Sep_1: TMenuItem

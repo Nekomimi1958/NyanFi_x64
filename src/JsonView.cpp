@@ -28,7 +28,8 @@ void __fastcall TJsonViewer::FormCreate(TObject *Sender)
 {
 	org_SttBar1WndProc	   = StatusBar1->WindowProc;
 	StatusBar1->WindowProc = SttBar1WndProc;
-	isClip = false;
+	isClip	  = false;
+	isJsonErr = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TJsonViewer::FormShow(TObject *Sender)
@@ -37,7 +38,7 @@ void __fastcall TJsonViewer::FormShow(TObject *Sender)
 
 	AutoCheckBox->Checked = IniFile->ReadBoolGen(_T("JsonViewAutoExp"));
 	NamCheckBox->Checked  = IniFile->ReadBoolGen(_T("JsonViewFindName"),	true);
-	ValCheckBox->Checked  = IniFile->ReadBoolGen(_T("JsonViewFindVal"),	true);
+	ValCheckBox->Checked  = IniFile->ReadBoolGen(_T("JsonViewFindVal"),		true);
 
 	JsonTreeView->Items->Clear();
 	JsonTreeView->Color = col_bgList;
@@ -59,9 +60,12 @@ void __fastcall TJsonViewer::WmFormShowed(TMessage &msg)
 	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
 	Repaint();
 
-	ErrMsg = EmptyStr;
+	ErrMsg	  = EmptyStr;
+	isJsonErr = false;
+	ErrLine	  = 0;
 
-	ViewBusy = true;
+	ViewBusy  = true;
+	JsonTreeView->SetFocus();
 	set_RedrawOff(JsonTreeView);
 	try {
 		std::unique_ptr<TStringList> fbuf(new TStringList());
@@ -73,12 +77,16 @@ void __fastcall TJsonViewer::WmFormShowed(TMessage &msg)
 			if (load_text_ex(FileName, fbuf.get())==0) UserAbort(USTR_FileNotOpen);
 			if (Trim(fbuf->Text).IsEmpty()) UserAbort(USTR_NoObject);
 		}
-		JsonTreeView->SetFocus();
-		AssignJsonView(fbuf->Text, NULL);
+		OrgText = fbuf->Text;
+		AssignJsonView(TJSONObject::ParseJSONValue(OrgText, false, true), NULL);	//RaiseExc = true
 
 		TTreeNode *TopNode = JsonTreeView->Items->GetFirstNode();
 		TopNode->Selected  = true;
 		TopNode->Expanded  = true;
+	}
+	catch (EJSONParseException &e) {
+		ErrMsg	= e.Message;
+		ErrLine = e.Line;
 	}
 	catch (Exception &e) {
 		ErrMsg = e.Message;
@@ -87,9 +95,10 @@ void __fastcall TJsonViewer::WmFormShowed(TMessage &msg)
 	ViewBusy = false;
 
 	if (!ErrMsg.IsEmpty()) {
-		JsonTreeView->Items->AddChildObject(NULL, "ERROR: " + LoadUsrMsg(USTR_FaildLoad), (void*)-1);
-		msgbox_ERR(ErrMsg);
-		StatusBar1->Panels->Items[0]->Text = ErrMsg;
+		isJsonErr = true;
+		UnicodeString *dp = new UnicodeString(EmptyStr);
+		JsonTreeView->Items->AddChildObject(NULL, "ERROR: " + ErrMsg, (void*)dp);
+		StatusBar1->Panels->Items[0]->Text = LoadUsrMsg(USTR_FaildLoad);
 	}
 }
 
@@ -97,8 +106,9 @@ void __fastcall TJsonViewer::WmFormShowed(TMessage &msg)
 void __fastcall TJsonViewer::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	JsonTreeView->Items->Clear();
-	FileName = EmptyStr;
-	isClip	 = false;
+	FileName  = EmptyStr;
+	OrgText   = EmptyStr;
+	isClip	  = false;
 
 	IniFile->SavePosInfo(this);
 	IniFile->WriteBoolGen(_T("JsonViewAutoExp"),	AutoCheckBox);
@@ -117,15 +127,14 @@ UnicodeString __fastcall TJsonViewer::get_JsonValStr(TJSONValue *val)
 }
 //---------------------------------------------------------------------------
 //ツリービューに割り当て
-//	表示文字列 [TAB] JSON文字列 で登録
+//	Data にJSON文字列を設定
 //---------------------------------------------------------------------------
-void __fastcall TJsonViewer::AssignJsonView(UnicodeString s, TTreeNode *np)
+void __fastcall TJsonViewer::AssignJsonView(TJSONValue *val, TTreeNode *np)
 {
-	TJSONValue *val = dynamic_cast<TJSONValue*>(TJSONObject::ParseJSONValue(s));
-
 	if (!np) {
 		JsonTreeView->Items->Clear();
-		np = JsonTreeView->Items->AddChildObject(NULL, "JSON\t" + (val? val->ToJSON() : EmptyStr), (void*)1);	//1=ノード
+		UnicodeString *dp = new UnicodeString(val? val->ToJSON() : EmptyStr);
+		np = JsonTreeView->Items->AddChildObject(NULL, "JSON", (void*)dp);
 	}
 
 	if (!val) return;
@@ -136,15 +145,14 @@ void __fastcall TJsonViewer::AssignJsonView(UnicodeString s, TTreeNode *np)
 		if (obj) {
 			for (int i=0; i<obj->Count; i++) {
 				TJSONPair* pair = obj->Pairs[i];
+				UnicodeString *dp = new UnicodeString(pair->ToJSON());
 				if (pair->JsonValue->ClassNameIs("TJSONObject") || pair->JsonValue->ClassNameIs("TJSONArray")) {
-					tmp.sprintf(_T("%s\t%s"), pair->JsonString->Value().c_str(), pair->ToJSON().c_str());
-					TTreeNode *sp = JsonTreeView->Items->AddChildObject(np, tmp, (void*)1);	//1=ノード
-					AssignJsonView(pair->JsonValue->ToString(), sp);
+					TTreeNode *sp = JsonTreeView->Items->AddChildObject(np, pair->JsonString->Value(), (void*)dp);
+					AssignJsonView(pair->JsonValue, sp);
 				}
 				else {
-					tmp.sprintf(_T("%s:%s\t%s"),
-						pair->JsonString->Value().c_str(), get_JsonValStr(pair->JsonValue).c_str(), pair->ToJSON().c_str());
-					JsonTreeView->Items->AddChildObject(np, tmp, (void*)0);	//0=値
+					tmp.sprintf(_T("%s:%s"), pair->JsonString->Value().c_str(), get_JsonValStr(pair->JsonValue).c_str());
+					JsonTreeView->Items->AddChildObject(np, tmp, (void*)dp);
 				}
 			}
 		}
@@ -154,22 +162,77 @@ void __fastcall TJsonViewer::AssignJsonView(UnicodeString s, TTreeNode *np)
 		if (ary) {
 			for (int i=0; i<ary->Count; i++) {
 				TJSONValue *itm = ary->Items[i];
+				UnicodeString *dp = new UnicodeString(itm->ToJSON());
 				if (itm->ClassNameIs("TJSONObject") || itm->ClassNameIs("TJSONArray")) {
-					tmp.sprintf(_T("[%u]\t%s"), i, itm->ToJSON().c_str());
-					TTreeNode *sp = JsonTreeView->Items->AddChildObject(np, tmp, (void*)1);	//1=ノード
-					AssignJsonView(itm->ToString(), sp);
+					tmp.sprintf(_T("[%u]"), i);
+					TTreeNode *sp = JsonTreeView->Items->AddChildObject(np, tmp, (void*)dp);
+					AssignJsonView(itm, sp);
 				}
 				else {
-					tmp.sprintf(_T("[%u]:%s\t%s"), i, get_JsonValStr(itm).c_str(), itm->ToJSON().c_str());
-					JsonTreeView->Items->AddChildObject(np, tmp, (void*)0);	//0=値
+					tmp.sprintf(_T("[%u]:%s"), i, get_JsonValStr(itm).c_str());
+					JsonTreeView->Items->AddChildObject(np, tmp, (void*)dp);
 				}
 			}
 		}
 	}
 	else {
-		tmp.sprintf(_T("%s:%s\t%s"), val->Value().c_str(), get_JsonValStr(val).c_str(), val->ToJSON().c_str());
-		JsonTreeView->Items->AddChildObject(np, tmp, (void*)0);	//0=値
+		UnicodeString *dp = new UnicodeString(val->ToJSON());
+		tmp.sprintf(_T("%s:%s"), val->Value().c_str(), get_JsonValStr(val).c_str());
+		JsonTreeView->Items->AddChildObject(np, tmp, (void*)dp);
 	}
+}
+//---------------------------------------------------------------------------
+//JSON文字列の整形
+//---------------------------------------------------------------------------
+void __fastcall TJsonViewer::FormatJson(TJSONValue *val, TStringList *lst, int lvl)
+{
+	if (!val) return;
+
+	if (lvl==0) lst->Add("{");
+
+	UnicodeString ind_str = StringOfChar(_T('\t'), lvl + 1);
+	if (val->ClassNameIs("TJSONObject")) {
+		TJSONObject* obj = dynamic_cast<TJSONObject*>(val);
+		if (obj) {
+			for (int i=0; i<obj->Count; i++) {
+				TJSONPair* pair = obj->Pairs[i];
+				UnicodeString lbuf = ind_str + "\"" + pair->JsonString->Value() + "\": ";
+				UnicodeString dlmt = (i<(obj->Count-1))? "," : "";
+				bool is_ary = pair->JsonValue->ClassNameIs("TJSONArray");
+				if (pair->JsonValue->ClassNameIs("TJSONObject") || is_ary) {
+					lst->Add(lbuf + (is_ary? "[" : "{"));
+					FormatJson(pair->JsonValue, lst, lvl + 1);
+					lst->Add(ind_str + (is_ary? "]" : "}") + dlmt);
+				}
+				else {
+					lst->Add(lbuf + get_JsonValStr(pair->JsonValue) + dlmt);
+				}
+			}
+		}
+	}
+	else if (val->ClassNameIs("TJSONArray")) {
+		TJSONArray* ary = dynamic_cast<TJSONArray*>(val);
+		if (ary) {
+			for (int i=0; i<ary->Count; i++) {
+				TJSONValue *itm = ary->Items[i];
+				UnicodeString dlmt = (i<(ary->Count-1))? "," : "";
+				bool is_ary = itm->ClassNameIs("TJSONArray");
+				if (itm->ClassNameIs("TJSONObject") || itm->ClassNameIs("TJSONArray")) {
+					lst->Add(ind_str + (is_ary? "[" : "{"));
+					FormatJson(itm, lst, lvl + 1);
+					lst->Add(ind_str + (is_ary? "]" : "}") + dlmt);
+				}
+				else {
+					lst->Add(ind_str + get_JsonValStr(itm) + dlmt);
+				}
+			}
+		}
+	}
+	else {
+		lst->Add(ind_str + "\"" + val->Value() + "\": " + get_JsonValStr(val));
+	}
+
+	if (lvl==0) lst->Add("}");
 }
 
 //---------------------------------------------------------------------------
@@ -197,7 +260,8 @@ UnicodeString __fastcall TJsonViewer::GetTreeViewText(
 	bool is_json)	//JSON文字列を取得	(default = false)
 {
 	if (!Node) Node = JsonTreeView->Selected;
-	return (Node? (is_json? get_post_tab(Node->Text) : get_pre_tab(Node->Text)) : EmptyStr);
+	if (!Node) return EmptyStr;
+	return is_json? *(UnicodeString*)Node->Data : Node->Text;
 }
 
 //---------------------------------------------------------------------------
@@ -223,15 +287,13 @@ UnicodeString __fastcall TJsonViewer::GetJsonPath(TTreeNode *Node)
 //---------------------------------------------------------------------------
 bool __fastcall TJsonViewer::MatchNode(TTreeNode *Node)
 {
-	if (!Node) return false;
+	if (isJsonErr || !Node) return false;
 
 	UnicodeString lbuf = GetTreeViewText(Node);
 	UnicodeString s;
-	//ノード
-	if ((int)Node->Data==1) {
+	if (Node->Count>0) {
 		if (NamCheckBox->Checked) s = lbuf;
 	}
-	//ペア
 	else {
 		s = (NamCheckBox->Checked && ValCheckBox->Checked)? lbuf:
 			 						  NamCheckBox->Checked? get_tkn(lbuf, ':') :
@@ -245,7 +307,7 @@ bool __fastcall TJsonViewer::MatchNode(TTreeNode *Node)
 //リストビューの描画
 //---------------------------------------------------------------------------
 void __fastcall TJsonViewer::JsonTreeViewCustomDrawItem(TCustomTreeView *Sender, TTreeNode *Node,
-		TCustomDrawState State, bool &DefaultDraw)
+	TCustomDrawState State, bool &DefaultDraw)
 {
 	DefaultDraw = false;
 
@@ -261,11 +323,11 @@ void __fastcall TJsonViewer::JsonTreeViewCustomDrawItem(TCustomTreeView *Sender,
 	bool is_irreg = IsIrregularFont(ListFont);
 
 	//テキスト
-	UnicodeString lbuf = GetTreeViewText(Node);
+	UnicodeString lbuf = Node->Text;
 
 	//※Sender->Canvas だとフォント色を途中で変更しても効かないようなので一旦バッファに描画
 	std::unique_ptr<Graphics::TBitmap> tmp_bmp(new Graphics::TBitmap());
-	tmp_bmp->SetSize(get_TextWidth(cv, lbuf, is_irreg) + 4, rc_t.Height());
+	tmp_bmp->SetSize(get_TextWidth(cv, lbuf + (lbuf.Pos(':')? " " : ""), is_irreg) + 4, rc_t.Height());
 
 	TCanvas *tmp_cv = tmp_bmp->Canvas;
 	TRect    tmp_rc	= Rect(0, 0, tmp_bmp->Width, tmp_bmp->Height);
@@ -275,16 +337,20 @@ void __fastcall TJsonViewer::JsonTreeViewCustomDrawItem(TCustomTreeView *Sender,
 
 	bool is_selfg = (Node->Selected && col_fgSelItem!=clNone);
 
-	int ntyp = (int)Node->Data;
+	//エラー
+	if ((*(UnicodeString*)Node->Data).IsEmpty()) {
+		tmp_cv->Font->Color = col_Error;
+		tmp_cv->TextOut(0, 0, lbuf);
+	}
 	//ノード
-	if (ntyp==1) {
+	else if (Node->Count>0) {
 		int xp = 0;
 		//名前
 		tmp_cv->Font->Color = is_selfg? col_fgSelItem : col_Reserved;
 		tmp_cv->TextOut(xp, 0, lbuf);
 	}
 	//ペア
-	else if (ntyp==0) {
+	else if (Node->Count==0) {
 		int xp = 0;
 		//名前
 		TColor fg = is_selfg? col_fgSelItem : col_Reserved;
@@ -293,16 +359,11 @@ void __fastcall TJsonViewer::JsonTreeViewCustomDrawItem(TCustomTreeView *Sender,
 		fg = is_selfg? col_fgSelItem : col_Symbol;
 		out_TextEx(tmp_cv, xp, 0, ": ", fg, col_None, 0, is_irreg);
 		//値
-		UnicodeString vstr	= get_tkn_r(lbuf, ':');
+		UnicodeString vstr = get_tkn_r(lbuf, ':');
 		fg = is_selfg? col_fgSelItem :
 				(StartsStr("\"http", vstr) && TRegEx::Match(vstr, URL_MATCH_PTN).Success)? col_URL :
 				is_quot(vstr)? col_Strings : col_Numeric;
 		out_TextEx(tmp_cv, xp, 0, vstr, fg, col_None, 0, is_irreg);
-	}
-	//エラー
-	else {
-		tmp_cv->Font->Color = col_Error;
-		tmp_cv->TextOut(0, 0, lbuf);
 	}
 
 	if (State.Contains(cdsSelected)) tmp_cv->DrawFocusRect(tmp_rc);
@@ -383,6 +444,11 @@ void __fastcall TJsonViewer::JsonTreeViewHint(TObject *Sender, TTreeNode * const
 {
 	Hint = EmptyStr;
 }
+//---------------------------------------------------------------------------
+void __fastcall TJsonViewer::JsonTreeViewDeletion(TObject *Sender, TTreeNode *Node)
+{
+	delete (UnicodeString*)Node->Data;
+}
 
 //---------------------------------------------------------------------------
 //ステータスバーの描画
@@ -432,7 +498,7 @@ void __fastcall TJsonViewer::CopyActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//JSONソースをコピー
+//JSON文字列をコピー
 //---------------------------------------------------------------------------
 void __fastcall TJsonViewer::CopyJsonActionExecute(TObject *Sender)
 {
@@ -445,7 +511,7 @@ void __fastcall TJsonViewer::CopyJsonActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//XPath をコピー
+//パス式をコピー
 //---------------------------------------------------------------------------
 void __fastcall TJsonViewer::CopyJsonPathActionExecute(TObject *Sender)
 {
@@ -454,7 +520,21 @@ void __fastcall TJsonViewer::CopyJsonPathActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TJsonViewer::CopyJsonPathActionUpdate(TObject *Sender)
 {
-	((TAction*)Sender)->Enabled = JsonTreeView->Selected;
+	((TAction*)Sender)->Enabled = !isJsonErr && JsonTreeView->Selected;
+}
+//---------------------------------------------------------------------------
+//全体を整形してコピー
+//---------------------------------------------------------------------------
+void __fastcall TJsonViewer::CopyFormatActionExecute(TObject *Sender)
+{
+	std::unique_ptr<TStringList> lst(new TStringList());
+	FormatJson(TJSONObject::ParseJSONValue(OrgText), lst.get());
+	copy_to_Clipboard(lst->Text);
+}
+//---------------------------------------------------------------------------
+void __fastcall TJsonViewer::CopyFormatActionUpdate(TObject *Sender)
+{
+	((TAction*)Sender)->Enabled = !isJsonErr;
 }
 
 //---------------------------------------------------------------------------
@@ -469,6 +549,20 @@ void __fastcall TJsonViewer::OpenUrlActionUpdate(TObject *Sender)
 {
 	UnicodeString vstr = exclude_quot(get_tkn_r(GetTreeViewText(), ':'));
 	((TAction*)Sender)->Enabled = (vstr.Pos("://") && TRegEx::Match(vstr, "^" URL_MATCH_PTN).Success);
+}
+//---------------------------------------------------------------------------
+//エラー行をエディタで開く
+//---------------------------------------------------------------------------
+void __fastcall TJsonViewer::EditErrActionExecute(TObject *Sender)
+{
+	if (!open_by_TextEditor(FileName, ErrLine)) msgbox_ERR(GlobalErrMsg);
+}
+//---------------------------------------------------------------------------
+void __fastcall TJsonViewer::EditErrActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Visible = !FileName.IsEmpty();
+	ap->Enabled = isJsonErr &&ap->Visible;
 }
 
 //---------------------------------------------------------------------------

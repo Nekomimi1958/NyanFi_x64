@@ -28,8 +28,10 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *AutoAction;
 	TAction *CollapseAction;
 	TAction *CopyAction;
+	TAction *CopyFormatAction;
 	TAction *CopyJsonAction;
 	TAction *CopyJsonPathAction;
+	TAction *EditErrAction;
 	TAction *ExpandAction;
 	TAction *FindDownAction;
 	TAction *FindUpAction;
@@ -45,50 +47,57 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *ValCheckBox;
 	TLabeledEdit *FindEdit;
 	TMenuItem *CollapseItem;
+	TMenuItem *CopyFormatItem;
 	TMenuItem *CopyItem;
-	TMenuItem *CopyXmlItem;
+	TMenuItem *CopyJsonItem;
+	TMenuItem *CopyPathItem;
+	TMenuItem *E1;
 	TMenuItem *ExpandItem;
 	TMenuItem *FitSizePosItem;
 	TMenuItem *OpenUrlItem;
 	TMenuItem *Sep_1;
 	TMenuItem *Sep_2;
 	TMenuItem *Sep_3;
-	TMenuItem *XPath1;
 	TPanel *OpePanel;
 	TPanel *ViewPanel;
 	TPopupMenu *PopupMenu1;
 	TStatusBar *StatusBar1;
 	TTreeView *JsonTreeView;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall ExpandItemClick(TObject *Sender);
-	void __fastcall CollapseItemClick(TObject *Sender);
 	void __fastcall JsonTreeViewCustomDrawItem(TCustomTreeView *Sender, TTreeNode *Node,
 		TCustomDrawState State, bool &DefaultDraw);
+	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
+	void __fastcall JsonTreeViewChange(TObject *Sender, TTreeNode *Node);
+	void __fastcall JsonTreeViewKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall JsonTreeViewHint(TObject *Sender, TTreeNode * const Node, UnicodeString &Hint);
+	void __fastcall JsonTreeViewKeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall ExpandItemClick(TObject *Sender);
+	void __fastcall CollapseItemClick(TObject *Sender);
+	void __fastcall FindEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall FindEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall OpenUrlActionExecute(TObject *Sender);
 	void __fastcall OpenUrlActionUpdate(TObject *Sender);
 	void __fastcall FindDownActionExecute(TObject *Sender);
 	void __fastcall FindActionUpdate(TObject *Sender);
 	void __fastcall FindUpActionExecute(TObject *Sender);
-	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall ExpandActionExecute(TObject *Sender);
 	void __fastcall CollapseActionExecute(TObject *Sender);
-	void __fastcall FindEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall JsonTreeViewKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CopyActionExecute(TObject *Sender);
 	void __fastcall CopyActionUpdate(TObject *Sender);
-	void __fastcall JsonTreeViewKeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall FindEditKeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall JsonTreeViewChange(TObject *Sender, TTreeNode *Node);
 	void __fastcall CopyJsonPathActionExecute(TObject *Sender);
 	void __fastcall CopyJsonPathActionUpdate(TObject *Sender);
-	void __fastcall JsonTreeViewHint(TObject *Sender, TTreeNode * const Node, UnicodeString &Hint);
 	void __fastcall CopyJsonActionExecute(TObject *Sender);
 	void __fastcall CopyJsonActionUpdate(TObject *Sender);
-	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
+	void __fastcall CopyFormatActionExecute(TObject *Sender);
 	void __fastcall AutoActionExecute(TObject *Sender);
+	void __fastcall JsonTreeViewDeletion(TObject *Sender, TTreeNode *Node);
+	void __fastcall CopyFormatActionUpdate(TObject *Sender);
+	void __fastcall EditErrActionExecute(TObject *Sender);
+	void __fastcall EditErrActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	//ViewBusy プロパティ  ツリービュー処理中
@@ -96,7 +105,10 @@ private:	// ユーザー宣言
 	void __fastcall SetViewBusy(bool Value);
 	__property bool ViewBusy = {read = FViewBusy,  write = SetViewBusy};
 
+	UnicodeString OrgText;
 	UnicodeString ErrMsg;
+	bool isJsonErr;
+	int  ErrLine;
 
 	void __fastcall WmMenuChar(TMessage &msg)
 	{
@@ -113,7 +125,8 @@ private:	// ユーザー宣言
 	void __fastcall WmFormShowed(TMessage &msg);
 
 	UnicodeString __fastcall get_JsonValStr(TJSONValue *val);
-	void __fastcall AssignJsonView(UnicodeString s, TTreeNode *np);
+	void __fastcall AssignJsonView(TJSONValue *val, TTreeNode *np);
+	void __fastcall FormatJson(TJSONValue *val, TStringList *lst, int lvl = 0);
 
 	UnicodeString __fastcall GetTreeViewText(TTreeNode *Node = NULL, bool is_json = false);
 	UnicodeString __fastcall GetJsonPath(TTreeNode *Node = NULL);

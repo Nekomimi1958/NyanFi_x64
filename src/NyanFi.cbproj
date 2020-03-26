@@ -79,9 +79,10 @@
         <SanitizedProjectName>NyanFi</SanitizedProjectName>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1041</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=14.5.0.0;InternalName=NyanFi;LegalCopyright=2019-2020 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=14.5.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=14.5.1.0;InternalName=NyanFi;LegalCopyright=2019-2020 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=14.5.1.0;Comments=</VerInfo_Keys>
         <VerInfo_MajorVer>14</VerInfo_MajorVer>
         <VerInfo_MinorVer>5</VerInfo_MinorVer>
+        <VerInfo_Release>1</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <PackageImports>adortl;appanalytics;bcbie;bcbsmp;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CodeSiteExpressPkg;CustomIPTransport;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXMySQLDriver;DBXSqliteDriver;dsnap;dsnapcon;dsnapxml;FireDACADSDriver;FireDACCommonODBC;FireDACMSAccDriver;FireDACMySQLDriver;FireDACPgDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inetdb;inetdbxpress;rtl;svn;Tee;TeeDB;TeeUI;tethering;vcl;vclactnband;vcldb;vcldsnap;vclFireDAC;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
@@ -732,32 +733,32 @@
             <DependentOn>XmlView.h</DependentOn>
             <BuildOrder>68</BuildOrder>
         </CppCompile>
-        <FormResources Include="ShareDlg.dfm"/>
-        <FormResources Include="Splash.dfm"/>
         <FormResources Include="SameDlg.dfm"/>
+        <FormResources Include="ShareDlg.dfm"/>
+        <FormResources Include="RenDlg.dfm"/>
+        <FormResources Include="PreSameDlg.dfm"/>
         <FormResources Include="PrnImgDlg.dfm"/>
         <FormResources Include="RegExChk.dfm"/>
-        <FormResources Include="RenDlg.dfm"/>
+        <FormResources Include="SyncDlg.dfm"/>
         <FormResources Include="TabDlg.dfm"/>
         <FormResources Include="TagDlg.dfm"/>
-        <FormResources Include="TaskDlg.dfm"/>
-        <FormResources Include="SyncDlg.dfm"/>
-        <FormResources Include="SrtModDlg.dfm"/>
         <FormResources Include="SubView.dfm"/>
+        <FormResources Include="Splash.dfm"/>
+        <FormResources Include="SrtModDlg.dfm"/>
         <FormResources Include="MaskDlg.dfm"/>
         <FormResources Include="MaskSelDlg.dfm"/>
-        <FormResources Include="MemoFrm.dfm"/>
+        <FormResources Include="MainFrm.dfm"/>
+        <FormResources Include="JsonView.dfm"/>
         <FormResources Include="KeyDlg.dfm"/>
         <FormResources Include="LoupeFrm.dfm"/>
-        <FormResources Include="MainFrm.dfm"/>
         <FormResources Include="OptDlg.dfm"/>
         <FormResources Include="PackDlg.dfm"/>
-        <FormResources Include="PreSameDlg.dfm"/>
+        <FormResources Include="MemoFrm.dfm"/>
         <FormResources Include="ModalScr.dfm"/>
         <FormResources Include="NewDlg.dfm"/>
+        <FormResources Include="TaskDlg.dfm"/>
         <FormResources Include="XmlView.dfm"/>
         <FormResources Include="UserMdl.dfm"/>
-        <FormResources Include="JoinDlg.dfm"/>
         <FormResources Include="DebugFrm.dfm"/>
         <FormResources Include="DiffDlg.dfm"/>
         <FormResources Include="DirDlg.dfm"/>
@@ -785,29 +786,29 @@
         <FormResources Include="CmdListDlg.dfm"/>
         <FormResources Include="ChInfFrm.dfm"/>
         <FormResources Include="ChmodDlg.dfm"/>
-        <FormResources Include="HistDlg.dfm"/>
+        <FormResources Include="ExeDlg.dfm"/>
         <FormResources Include="HistFrm.dfm"/>
-        <FormResources Include="GrepOptDlg.dfm"/>
+        <FormResources Include="HistDlg.dfm"/>
         <FormResources Include="GraphFrm.dfm"/>
-        <FormResources Include="InpDir.dfm"/>
+        <FormResources Include="GrepOptDlg.dfm"/>
         <FormResources Include="InpExDlg.dfm"/>
         <FormResources Include="InspectFrm.dfm"/>
+        <FormResources Include="JoinDlg.dfm"/>
+        <FormResources Include="InpDir.dfm"/>
         <FormResources Include="InpCmds.dfm"/>
-        <FormResources Include="FileInfDlg.dfm"/>
         <FormResources Include="FindDlg.dfm"/>
         <FormResources Include="FindKey.dfm"/>
-        <FormResources Include="FileExtDlg.dfm"/>
-        <FormResources Include="ExeDlg.dfm"/>
+        <FormResources Include="FindTag.dfm"/>
+        <FormResources Include="FileInfDlg.dfm"/>
         <FormResources Include="ExpCsv.dfm"/>
         <FormResources Include="ExTViewer.dfm"/>
-        <FormResources Include="GenInfDlg.dfm"/>
+        <FormResources Include="FileExtDlg.dfm"/>
         <FormResources Include="GitTag.dfm"/>
         <FormResources Include="GitView.dfm"/>
-        <FormResources Include="FuncDlg.dfm"/>
-        <FormResources Include="FindTag.dfm"/>
+        <FormResources Include="GenInfDlg.dfm"/>
         <FormResources Include="FindTxtDlg.dfm"/>
         <FormResources Include="FtpDlg.dfm"/>
-        <FormResources Include="JsonView.dfm"/>
+        <FormResources Include="FuncDlg.dfm"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
