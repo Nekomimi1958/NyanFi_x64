@@ -711,6 +711,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	ColorHintCheckBox->Tag		= (int)&TxtColorHint;
 	AltBackSlashCheckBox->Tag	= (int)&AltBackSlash;
 	DecDfmStrCheckBox->Tag		= (int)&DecodeDfmStr;
+	FormatJsonCheckBox->Tag		= (int)&FormatJson;
 	BinMemMapedCheckBox->Tag	= (int)&BinMemMaped;
 	EmRemCheckBox->Tag			= (int)&EmpComment;
 	EmStrCheckBox->Tag			= (int)&EmpStrings;

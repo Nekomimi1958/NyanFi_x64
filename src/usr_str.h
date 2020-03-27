@@ -9,6 +9,7 @@
 #include <vcl.h>
 #include <tchar.h>
 #include <RegularExpressions.hpp>
+#include <System.JSON.hpp>
 
 //---------------------------------------------------------------------------
 extern const _TCHAR *null_TCHAR;
@@ -271,6 +272,9 @@ UnicodeString check_EnvDepandChars(UnicodeString s);
 
 int get_NrmLevenshteinDistance(UnicodeString s1, UnicodeString s2,
 	bool ig_case = false, bool ig_num = false, bool ig_fh = false);
+
+UnicodeString get_JsonValStr(TJSONValue *val);
+void format_Json(TJSONValue *val, TStringList *lst, int lvl = 0);
 
 UnicodeString decode_TxtVal(UnicodeString s, bool with_q = false);
 UnicodeString conv_DfmText(UnicodeString s);

@@ -536,7 +536,7 @@ void __fastcall TFuncListDlg::UpdUserDefActionExecute(TObject *Sender)
 	if (!RegExCheckBox->Checked) mat_ptn = TRegEx::Escape(mat_ptn);
 	if (!mat_ptn.IsEmpty()) {
 		TRegExOptions opt; opt << roIgnoreCase;
-		TStringList *lst = (test_HtmlExt(get_extension(TxtViewer->FileName)) && TxtViewer->isHtm2Txt)?
+		TStringList *lst = ((test_HtmlExt(get_extension(TxtViewer->FileName)) && TxtViewer->isHtm2Txt) || TxtViewer->isJsonFmt)?
 								 TxtViewer->TxtBufList2 : TxtViewer->TxtBufList;
 		for (int i=0; i<lst->Count; i++) {
 			UnicodeString lbuf = lst->Strings[i];

@@ -263,6 +263,7 @@ bool TvCursorVisible;			//ビュアーでカーソルを常に可視領域に
 bool LimitBinCsr;				//バイナリ表示でカーソル移動を制限
 bool TxtColorHint;				//カーソル位置数値のカラーをヒント表示
 bool AltBackSlash;				//\ を ＼(U+2216)で表示
+bool FormatJson;				//.json ファイルを整形
 bool DecodeDfmStr;				//.dfm ファイルの文字列をデコード
 bool BinMemMaped;				//バイナリではメモリマップドファイルとして開く
 bool EmpComment;				//コメントを強調表示
@@ -1641,6 +1642,7 @@ void InitializeGlobal()
 		{_T("LimitBinCsr=true"),			(TObject*)&LimitBinCsr},
 		{_T("TxtColorHint=true"),			(TObject*)&TxtColorHint},
 		{_T("AltBackSlash=false"),			(TObject*)&AltBackSlash},
+		{_T("FormatJson=false"),			(TObject*)&FormatJson},
 		{_T("DecodeDfmStr=false"),			(TObject*)&DecodeDfmStr},
 		{_T("BinMemMaped=false"),			(TObject*)&BinMemMaped},
 		{_T("MultiInstance=false"),			(TObject*)&MultiInstance},

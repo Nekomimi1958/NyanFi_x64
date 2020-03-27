@@ -343,6 +343,8 @@ bool __fastcall TExTxtViewer::OpenViewer(
 		TxtMainPanel->Visible	= true;
 		cursor_Default();
 
+		if (!ExViewer->JsonErrMsg.IsEmpty()) msgbox_ERR(ExViewer->JsonErrMsg);
+
 		return true;
 	}
 	catch (...) {

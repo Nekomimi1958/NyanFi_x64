@@ -117,15 +117,6 @@ void __fastcall TJsonViewer::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
-UnicodeString __fastcall TJsonViewer::get_JsonValStr(TJSONValue *val)
-{
-	return
-		val->ClassNameIs("TJSONTrue")  ? UnicodeString("true") :
-		val->ClassNameIs("TJSONFalse") ? UnicodeString("false") :
-		val->ClassNameIs("TJSONNull")  ? UnicodeString("null") :
-		val->ClassNameIs("TJSONString")? ("\"" + val->Value() + "\"") : val->Value();
-}
-//---------------------------------------------------------------------------
 //ツリービューに割り当て
 //	Data にJSON文字列を設定
 //---------------------------------------------------------------------------
@@ -180,59 +171,6 @@ void __fastcall TJsonViewer::AssignJsonView(TJSONValue *val, TTreeNode *np)
 		tmp.sprintf(_T("%s:%s"), val->Value().c_str(), get_JsonValStr(val).c_str());
 		JsonTreeView->Items->AddChildObject(np, tmp, (void*)dp);
 	}
-}
-//---------------------------------------------------------------------------
-//JSON文字列の整形
-//---------------------------------------------------------------------------
-void __fastcall TJsonViewer::FormatJson(TJSONValue *val, TStringList *lst, int lvl)
-{
-	if (!val) return;
-
-	if (lvl==0) lst->Add("{");
-
-	UnicodeString ind_str = StringOfChar(_T('\t'), lvl + 1);
-	if (val->ClassNameIs("TJSONObject")) {
-		TJSONObject* obj = dynamic_cast<TJSONObject*>(val);
-		if (obj) {
-			for (int i=0; i<obj->Count; i++) {
-				TJSONPair* pair = obj->Pairs[i];
-				UnicodeString lbuf = ind_str + "\"" + pair->JsonString->Value() + "\": ";
-				UnicodeString dlmt = (i<(obj->Count-1))? "," : "";
-				bool is_ary = pair->JsonValue->ClassNameIs("TJSONArray");
-				if (pair->JsonValue->ClassNameIs("TJSONObject") || is_ary) {
-					lst->Add(lbuf + (is_ary? "[" : "{"));
-					FormatJson(pair->JsonValue, lst, lvl + 1);
-					lst->Add(ind_str + (is_ary? "]" : "}") + dlmt);
-				}
-				else {
-					lst->Add(lbuf + get_JsonValStr(pair->JsonValue) + dlmt);
-				}
-			}
-		}
-	}
-	else if (val->ClassNameIs("TJSONArray")) {
-		TJSONArray* ary = dynamic_cast<TJSONArray*>(val);
-		if (ary) {
-			for (int i=0; i<ary->Count; i++) {
-				TJSONValue *itm = ary->Items[i];
-				UnicodeString dlmt = (i<(ary->Count-1))? "," : "";
-				bool is_ary = itm->ClassNameIs("TJSONArray");
-				if (itm->ClassNameIs("TJSONObject") || itm->ClassNameIs("TJSONArray")) {
-					lst->Add(ind_str + (is_ary? "[" : "{"));
-					FormatJson(itm, lst, lvl + 1);
-					lst->Add(ind_str + (is_ary? "]" : "}") + dlmt);
-				}
-				else {
-					lst->Add(ind_str + get_JsonValStr(itm) + dlmt);
-				}
-			}
-		}
-	}
-	else {
-		lst->Add(ind_str + "\"" + val->Value() + "\": " + get_JsonValStr(val));
-	}
-
-	if (lvl==0) lst->Add("}");
 }
 
 //---------------------------------------------------------------------------
@@ -528,7 +466,7 @@ void __fastcall TJsonViewer::CopyJsonPathActionUpdate(TObject *Sender)
 void __fastcall TJsonViewer::CopyFormatActionExecute(TObject *Sender)
 {
 	std::unique_ptr<TStringList> lst(new TStringList());
-	FormatJson(TJSONObject::ParseJSONValue(OrgText), lst.get());
+	format_Json(TJSONObject::ParseJSONValue(OrgText), lst.get());
 	copy_to_Clipboard(lst->Text);
 }
 //---------------------------------------------------------------------------

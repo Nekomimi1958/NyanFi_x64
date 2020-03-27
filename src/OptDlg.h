@@ -238,6 +238,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *FlatInfPanelCheckBox;
 	TCheckBox *FlCsrVisiCheckBox;
 	TCheckBox *ForceDelCheckBox;
+	TCheckBox *FormatJsonCheckBox;
 	TCheckBox *GrayScaleCheckBox;
 	TCheckBox *HideAtrCheckBox;
 	TCheckBox *HideCsrFullCheckBox;

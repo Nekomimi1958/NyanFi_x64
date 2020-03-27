@@ -118,7 +118,7 @@ __fastcall TTxtViewer::TTxtViewer(
 	isTail		= false;
 	isContinue	= false;
 	ShowRuby	= true;
-	isAozora	= isLog = isClip = isIniFmt = isAwstats = isNyanTxt = false;
+	isAozora	= isLog = isClip = isIniFmt = isAwstats = isNyanTxt = isJsonFmt = false;
 	isSelMode	= isBoxMode = false;
 	reqCurPos	= false;
 
@@ -295,7 +295,7 @@ void __fastcall TTxtViewer::Clear()
 	isCSV	   = isTSV    = false;
 	isClip	   = false;
 	isTail	   = false;
-	isAozora   = isLog = isIniFmt = isAwstats = false;
+	isAozora   = isLog = isIniFmt = isAwstats = isJsonFmt = false;
 
 	isIncSea   = false;
 	IncSeaWord = EmptyStr;
@@ -334,6 +334,8 @@ void __fastcall TTxtViewer::ClearDispLine()
 
 	TxtBufList2->Clear();
 	FixWdList.Length = 0;
+
+	JsonErrMsg = EmptyStr;
 }
 
 //---------------------------------------------------------------------------
@@ -686,6 +688,7 @@ void __fastcall TTxtViewer::UpdateScr(
 	if (UserHighlight->Recycle()) AddErr_Highlight();
 
 	if (lno==0) lno = get_CurLineNo();
+	int cno = 1;
 
 	if (RulerBox) {
 		RulerBox->Visible = ShowTextRuler;
@@ -1028,6 +1031,24 @@ void __fastcall TTxtViewer::UpdateScr(
 			TxtBufList2->Assign(htmcnv->TxtBuf);
 			txt_buf->Assign(htmcnv->TxtBuf);
 		}
+		//.json ファイルを整形
+		else if (test_FileExt(fext, _T(".json"))) {
+			if (FormatJson) {
+				try {
+					std::unique_ptr<TStringList> jbuf(new TStringList());
+					format_Json(TJSONObject::ParseJSONValue(txt_buf->Text, false, true), jbuf.get());	//RaiseExc = true
+					for (int i=0; i<jbuf->Count; i++) jbuf->Objects[i] = (TObject*)(NativeInt)i;
+					TxtBufList2->Assign(jbuf.get());
+					txt_buf->Assign(jbuf.get());
+					isJsonFmt = true;
+				}
+				catch (EJSONParseException &e) {
+					JsonErrMsg = e.Message;
+					lno = e.Line;
+					cno = e.Position;
+				}
+			}
+		}
 		//.dfm ファイル内の文字列をデコード
 		else if (test_FileExt(fext, _T(".dfm"))) {
 			if (DecodeDfmStr) conv_DfmText(txt_buf.get());
@@ -1345,6 +1366,8 @@ void __fastcall TTxtViewer::UpdateScr(
 	SetScrBar();
 
 	ToLine(lno);
+	if (cno>1) for (int i=1; i<cno; i++) CursorRight(false, true);
+
 	ScrPanel->UpdateKnob();
 
 	isReady = true;
@@ -1463,7 +1486,7 @@ bool __fastcall TTxtViewer::AssignBin(
 		return ToAddrR(adr);
 	}
 	catch (EAbort &e) {
-		GlobalErrMsg   = e.Message;
+		GlobalErrMsg = e.Message;
 		cursor_Default();
 		return false;
 	}
@@ -2541,6 +2564,12 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 		else if (test_FileExt(fext, _T(".rtf.wri"))) {
 			sttstr = "PLAIN";
 		}
+		else if (isJsonFmt) {
+			sttstr = "JSON(整形)";
+		}
+		else if (!JsonErrMsg.IsEmpty()) {
+			sttstr = "JSON(不正)";
+		}
 		else if (isAozora) {
 			sttstr = "青空文庫";
 		}
@@ -2872,7 +2901,9 @@ void __fastcall TTxtViewer::CursorLeft(bool sel)
 	}
 }
 //---------------------------------------------------------------------------
-void __fastcall TTxtViewer::CursorRight(bool sel)
+void __fastcall TTxtViewer::CursorRight(
+	bool sel,			//選択					(default = false)
+	bool skip_end)		//行末文字から次行頭へ	(default = false)
 {
 	if (isBinary && !sel && isContinue && get_CurAddrR()==BinarySize-1) {
 		CursorDown(); LineTop();
@@ -2906,10 +2937,9 @@ void __fastcall TTxtViewer::CursorRight(bool sel)
 		}
 		else {
 			int n = CurPos.x + dx;
-			if (n>get_CurEndPos()) {
+			if (n > (get_CurEndPos() - (skip_end? 1 : 0))) {
 				if (CurPos.y < MaxDispLine - (CsvRecForm->Visible? 2 : 1)) {
-					//次行へ
-					CurPos.y++;
+					CurPos.y++;	//次行へ
 					n = 0;
 				}
 				else {

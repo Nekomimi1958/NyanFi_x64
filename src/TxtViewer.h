@@ -150,7 +150,7 @@ public:
 	MemMapFile	 *MMF;				//メモリマップドファイル
 
 	TStringList  *TxtBufList;		//内容リスト
-	TStringList  *TxtBufList2;		//HTML→TEXT変換後の内容リスト
+	TStringList  *TxtBufList2;		//HTML→TEXT変換後の内容リスト/ 整形後JSON
 	TStringList  *DispLines;		//表示行リスト(テキスト用)
 	TStringList  *NyanFiDef;		//ADS定義ファイルの内容
 
@@ -174,6 +174,7 @@ public:
 	bool isSelected;				//ファイル選択中
 	bool ShowRuby;					//ルビ表示
 	bool isAozora;					//青空文庫形式
+	bool isJsonFmt;					//整形後JSON
 	bool isLog;						//タスクログ
 	bool isClip;					//クリップボード
 	bool isIniFmt;					//INIファイルなど
@@ -210,6 +211,8 @@ public:
 
 	int  SortMode;					//ソートモード(0:なし/ 1:昇順/ -1:降順)
 	int  SortCol;					//ソート列(固定長表示モード時)
+
+	UnicodeString JsonErrMsg;		//JSON解析エラー
 
 	UnicodeString FindWord;			//検索文字列
 	UnicodeString RegExPtn;			//正規表現パターン
@@ -292,7 +295,7 @@ public:
 	void __fastcall onRulerDblClick(TObject *Sender);
 
 	void __fastcall CursorLeft(bool sel = false);
-	void __fastcall CursorRight(bool sel = false);
+	void __fastcall CursorRight(bool sel = false, bool skip_end = false);
 	void __fastcall CursorUp(bool sel = false, UnicodeString prm = EmptyStr);
 	void __fastcall CursorDown(bool sel = false, UnicodeString prm = EmptyStr);
 	void __fastcall MovePage(bool is_down, bool sel = false);

@@ -30204,6 +30204,9 @@ bool __fastcall TNyanFiForm::OpenTxtViewer(
 
 		//イベント: テキストビュアーを開いた直後
 		ExeEventCommand(OnTvOpened);
+
+		if (!TxtViewer->JsonErrMsg.IsEmpty()) msgbox_ERR(TxtViewer->JsonErrMsg);
+
 		return true;
 	}
 	catch (...) {

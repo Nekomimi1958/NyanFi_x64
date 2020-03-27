@@ -1185,6 +1185,7 @@ extern bool TvCursorVisible;
 extern bool LimitBinCsr;
 extern bool TxtColorHint;
 extern bool AltBackSlash;
+extern bool FormatJson;
 extern bool DecodeDfmStr;
 extern bool BinMemMaped;
 extern int  ViewFixedLimit;

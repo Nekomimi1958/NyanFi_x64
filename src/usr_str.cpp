@@ -2751,6 +2751,70 @@ int get_NrmLevenshteinDistance(UnicodeString s1, UnicodeString s2,
 }
 
 //---------------------------------------------------------------------------
+UnicodeString get_JsonValStr(TJSONValue *val)
+{
+	return
+		val->ClassNameIs("TJSONTrue")  ? UnicodeString("true") :
+		val->ClassNameIs("TJSONFalse") ? UnicodeString("false") :
+		val->ClassNameIs("TJSONNull")  ? UnicodeString("null") :
+		val->ClassNameIs("TJSONString")? ("\"" + val->Value() + "\"") : val->Value();
+}
+
+//---------------------------------------------------------------------------
+//JSON文字列の整形
+//---------------------------------------------------------------------------
+void format_Json(TJSONValue *val, TStringList *lst, int lvl)
+{
+	if (!val) return;
+
+	UnicodeString ind_str = StringOfChar(_T('\t'), lvl + 1);
+	if (val->ClassNameIs("TJSONObject")) {
+		TJSONObject* obj = dynamic_cast<TJSONObject*>(val);
+		if (obj) {
+			if (lvl==0) lst->Add("{");
+			for (int i=0; i<obj->Count; i++) {
+				TJSONPair* pair = obj->Pairs[i];
+				UnicodeString lbuf = ind_str + "\"" + pair->JsonString->Value() + "\": ";
+				UnicodeString dlmt = (i<(obj->Count-1))? "," : "";
+				bool is_ary = pair->JsonValue->ClassNameIs("TJSONArray");
+				if (pair->JsonValue->ClassNameIs("TJSONObject") || is_ary) {
+					lst->Add(lbuf + (is_ary? "[" : "{"));
+					format_Json(pair->JsonValue, lst, lvl + 1);
+					lst->Add(ind_str + (is_ary? "]" : "}") + dlmt);
+				}
+				else {
+					lst->Add(lbuf + get_JsonValStr(pair->JsonValue) + dlmt);
+				}
+			}
+			if (lvl==0) lst->Add("}");
+		}
+	}
+	else if (val->ClassNameIs("TJSONArray")) {
+		TJSONArray* ary = dynamic_cast<TJSONArray*>(val);
+		if (ary) {
+			if (lvl==0) lst->Add("[");
+			for (int i=0; i<ary->Count; i++) {
+				TJSONValue *itm = ary->Items[i];
+				UnicodeString dlmt = (i<(ary->Count-1))? "," : "";
+				bool is_ary = itm->ClassNameIs("TJSONArray");
+				if (itm->ClassNameIs("TJSONObject") || itm->ClassNameIs("TJSONArray")) {
+					lst->Add(ind_str + (is_ary? "[" : "{"));
+					format_Json(itm, lst, lvl + 1);
+					lst->Add(ind_str + (is_ary? "]" : "}") + dlmt);
+				}
+				else {
+					lst->Add(ind_str + get_JsonValStr(itm) + dlmt);
+				}
+			}
+			if (lvl==0) lst->Add("]");
+		}
+	}
+	else {
+		lst->Add(ind_str + "\"" + val->Value() + "\": " + get_JsonValStr(val));
+	}
+}
+
+//---------------------------------------------------------------------------
 //#nnnn 形式の値を文字列にデコード
 //---------------------------------------------------------------------------
 UnicodeString decode_TxtVal(UnicodeString s,

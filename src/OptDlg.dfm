@@ -3297,14 +3297,14 @@ object OptionDlg: TOptionDlg
       end
       object TLabel
         Left = 651
-        Top = 383
+        Top = 403
         Width = 12
         Height = 13
         Caption = 'KB'
       end
       object TLabel
         Left = 651
-        Top = 416
+        Top = 436
         Width = 14
         Height = 13
         Caption = 'MB'
@@ -3334,11 +3334,11 @@ object OptionDlg: TOptionDlg
       end
       object BinMemMapedCheckBox: TCheckBox
         Left = 684
-        Top = 415
+        Top = 435
         Width = 203
         Height = 17
         Caption = #12513#12514#12522#12510#12483#12503#12489#12501#12449#12452#12523#12392#12375#12390#38283#12367
-        TabOrder = 28
+        TabOrder = 29
       end
       object CellAlphaEdit: TLabeledEdit
         Left = 265
@@ -3494,7 +3494,7 @@ object OptionDlg: TOptionDlg
         Height = 76
         Anchors = [akLeft, akTop, akRight]
         Caption = #22806#37096#12499#12517#12450#12540
-        TabOrder = 29
+        TabOrder = 30
         object ExtTxViewerEdit: TEdit
           Left = 10
           Top = 18
@@ -3679,7 +3679,7 @@ object OptionDlg: TOptionDlg
       end
       object LimitBinEdit: TLabeledEdit
         Left = 589
-        Top = 413
+        Top = 433
         Width = 60
         Height = 21
         Alignment = taRightJustify
@@ -3688,11 +3688,11 @@ object OptionDlg: TOptionDlg
         EditLabel.Caption = #12496#12452#12490#12522#26368#22823#35501#36796#12469#12452#12474
         LabelPosition = lpLeft
         NumbersOnly = True
-        TabOrder = 27
+        TabOrder = 28
       end
       object LimitTxtEdit: TLabeledEdit
         Left = 589
-        Top = 380
+        Top = 400
         Width = 60
         Height = 21
         Alignment = taRightJustify
@@ -3701,7 +3701,7 @@ object OptionDlg: TOptionDlg
         EditLabel.Caption = #12486#12461#12473#12488#26368#22823#35501#36796#12469#12452#12474
         LabelPosition = lpLeft
         NumbersOnly = True
-        TabOrder = 26
+        TabOrder = 27
       end
       object RstViewLnCheckBox: TCheckBox
         Left = 281
@@ -3829,6 +3829,14 @@ object OptionDlg: TOptionDlg
         EditLabel.Height = 13
         EditLabel.Caption = #25313#24373#23376
         TabOrder = 13
+      end
+      object FormatJsonCheckBox: TCheckBox
+        Left = 470
+        Top = 365
+        Width = 205
+        Height = 17
+        Caption = '.json '#12501#12449#12452#12523#12434#25972#24418#12375#12390#34920#31034
+        TabOrder = 26
       end
     end
     object ImgViewerSheet: TTabSheet

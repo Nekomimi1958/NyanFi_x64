@@ -124,10 +124,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 
 	void __fastcall WmFormShowed(TMessage &msg);
 
-	UnicodeString __fastcall get_JsonValStr(TJSONValue *val);
 	void __fastcall AssignJsonView(TJSONValue *val, TTreeNode *np);
-	void __fastcall FormatJson(TJSONValue *val, TStringList *lst, int lvl = 0);
-
 	UnicodeString __fastcall GetTreeViewText(TTreeNode *Node = NULL, bool is_json = false);
 	UnicodeString __fastcall GetJsonPath(TTreeNode *Node = NULL);
 	bool __fastcall MatchNode(TTreeNode *Node);
