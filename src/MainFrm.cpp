@@ -1857,7 +1857,7 @@ void __fastcall TNyanFiForm::UpdateFileListRect()
 }
 
 //---------------------------------------------------------------------------
-//左側リストのサイズ変更
+//左/上側リストのサイズ変更
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::L_PanelResize(TObject *Sender)
 {
@@ -1882,7 +1882,7 @@ void __fastcall TNyanFiForm::L_PanelResize(TObject *Sender)
 	UpdateBgImage(true);
 }
 //---------------------------------------------------------------------------
-//右側リストのサイズ変更
+//右/下側リストのサイズ変更
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::R_PanelResize(TObject *Sender)
 {
@@ -2284,16 +2284,22 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 		//ファイラー
 		if (fl_tag!=-1) {
 			if (is_DialogKey(Key)) {
+				//インクリメンタルサーチ
+				if (ListStt[fl_tag].is_IncSea) {
+					if (!KeyFuncList->Values["S:" + KeyStr].IsEmpty()) {
+						FileListIncSearch(KeyStr);
+						Handled = true;
+					}
+					return;
+				}
+
 				if (Wait2ndKey) {
 					Wait2ndKey = false;
 					KeyStr.sprintf(_T("%s~%s"), FirstKey.c_str(), KeyStrK.c_str());
 				}
 
-				UnicodeString CmdStr, CmdStrS;
-				if (!ListStt[fl_tag].is_IncSea) {
-					CmdStr  = Key_to_CmdF(KeyStr);
-					CmdStrS = KeyFuncList->Values["F:SELECT+" + KeyStr];
-				}
+				UnicodeString CmdStr  = Key_to_CmdF(KeyStr);
+				UnicodeString CmdStrS = KeyFuncList->Values["F:SELECT+" + KeyStr];
 
 				CancelKeySeq();
 				ActionParam = EmptyStr;
@@ -2329,7 +2335,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 				else if (ExeCommandAction(CmdStr)) {
 					Handled = true;
 				}
-				else if (!ListStt[fl_tag].is_IncSea && Shift.Empty()) {
+				else if (Shift.Empty()) {
 					Handled = true;
 					switch (Key) {
 					case VK_RIGHT:	ExeCmdAction(ToRightAction);	break;
@@ -25756,21 +25762,24 @@ void __fastcall TNyanFiForm::WidenCurListActionExecute(TObject *Sender)
 	int tag = USAME_TI(ActionOptStr, "Left")? 0 : (USAME_TI(ActionOptStr, "Right")? 1: CurListTag);
 	ActionOptStr = EmptyStr;
 
-	float r = 0.75;
+	double r = 0.75;
 	bool x_sw = false;
 	if (!ActionParam.IsEmpty()) {
 		x_sw = remove_top_s(ActionParam, '^');
 		int p = ActionParam.ToIntDef(0);
 		if (p>0 && p<100) r = p/100.0;
 	}
+	if (tag==1) r = 1.0 - r;
 
 	if (DivFileListUD) {
 		if (x_sw && abs(L_Panel->Height - R_Panel->Height)>4) {
 			EqualListWidthAction->Execute();
 		}
 		else {
-			int h = L_Panel->Height + R_Panel->Height;
-			L_Panel->Height = h * ((tag==0)? r : 1.0 - r);
+			int r_hi = LRSplitter->Height;
+			if (TabPanel->Visible) r_hi += TabPanel->Height;
+			if (HdrPanel->Visible) r_hi += HdrPanel->Height;
+			L_Panel->Height = (ListPanel->ClientHeight - r_hi) * r;
 		}
 	}
 	else {
@@ -25778,7 +25787,7 @@ void __fastcall TNyanFiForm::WidenCurListActionExecute(TObject *Sender)
 			EqualListWidthAction->Execute();
 		}
 		else {
-			L_Panel->Width = (ListPanel->ClientWidth - LRSplitter->Width) * ((tag==0)? r : 1.0 - r);
+			L_Panel->Width = (ListPanel->ClientWidth - LRSplitter->Width) * r;
 			L_TopPanel->Width = L_Panel->Width - (RelPanel->Width - LRSplitter->Width)/2;
 		}
 	}
