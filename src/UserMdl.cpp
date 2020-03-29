@@ -894,10 +894,8 @@ bool __fastcall TUserModule::SelectDirEx(const _TCHAR *tit, UnicodeString &dnam,
 		return false;
 	}
 
-	if (to_rel) {
-		remove_top_text(dnam, ExePath);
-		if (!dnam.IsEmpty()) dnam = IncludeTrailingPathDelimiter(dnam);
-	}
+	if (to_rel) remove_top_text(dnam, ExePath);
+	if (!dnam.IsEmpty()) dnam = IncludeTrailingPathDelimiter(dnam);
 
 	return true;
 }
