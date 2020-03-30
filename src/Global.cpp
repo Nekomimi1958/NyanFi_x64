@@ -3457,9 +3457,9 @@ bool check_if_unc(UnicodeString pnam)
 		}
 		Sleep(100);
 	}
-
 	bool ok = tp->isOk;
 	tp->Terminate();
+
 	return ok;
 }
 

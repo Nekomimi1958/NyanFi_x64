@@ -18,6 +18,7 @@ __fastcall TCheckPathThread::TCheckPathThread(bool CreateSuspended) : TThread(Cr
 
 	PathName = EmptyStr;
 	isOk	 = false;
+	ErrCode  = NO_ERROR;
 }
 
 //---------------------------------------------------------------------------
@@ -25,7 +26,20 @@ void __fastcall TCheckPathThread::Execute()
 {
 	while (!Terminated) {
 		if (!PathName.IsEmpty()) {
-			isOk	 = ::PathIsDirectory(PathName.c_str());
+			ErrMsg	= EmptyStr;
+			ErrCode = NO_ERROR;
+
+			UnicodeString dstr = IncludeTrailingPathDelimiter(ExtractFileDrive(PathName));
+			UINT old_mode = ::SetErrorMode(SEM_FAILCRITICALERRORS);
+			DWORD MaxCompLen, Flags;
+			isOk = (::GetVolumeInformation(dstr.c_str(), NULL, 0, NULL, &MaxCompLen, &Flags, NULL, 0)!=0);
+			::SetErrorMode(old_mode);
+			if (isOk) isOk = ::PathIsDirectory(PathName.c_str());
+
+			if (!isOk) {
+				ErrCode = GetLastError();
+				ErrMsg	= SysErrorMessage(ErrCode);
+			}
 			PathName = EmptyStr;
 		}
 		Sleep(50);

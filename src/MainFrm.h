@@ -2589,7 +2589,7 @@ public:		// ÉÜÅ[ÉUÅ[êÈåæ
 
 	__fastcall TNyanFiForm(TComponent* Owner);
 
-	bool __fastcall CheckUncPath(UnicodeString pnam);
+	bool __fastcall CheckUncPath(UnicodeString pnam, unsigned int *err_code = NULL);
 	bool __fastcall CheckPath(UnicodeString dnam);
 
 	void __fastcall SetScrMode(int scr_mode = SCMD_FLIST, int tag = -1);

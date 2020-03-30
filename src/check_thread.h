@@ -35,6 +35,8 @@ public:
 	__property UnicodeString PathName = {read = GetPathName,  write = SetPathName};
 
 	bool isOk;
+	UnicodeString ErrMsg;
+	unsigned int  ErrCode;
 
 	__fastcall TCheckPathThread(bool CreateSuspended);
 };

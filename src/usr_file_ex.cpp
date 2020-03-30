@@ -476,7 +476,6 @@ bool is_drive_accessible(UnicodeString dnam)
 	DWORD MaxCompLen, Flags;
 	bool res = (::GetVolumeInformation(dstr.c_str(), NULL, 0, NULL, &MaxCompLen, &Flags, NULL, 0)!=0);
 	::SetErrorMode(old_mode);
-
 	return res;
 }
 //---------------------------------------------------------------------------

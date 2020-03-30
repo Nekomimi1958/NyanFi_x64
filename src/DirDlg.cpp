@@ -525,10 +525,13 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 			}
 		}
 
-		if (f_cnt==0)
+		if (f_cnt==0) {
 			beep_Warn();
-		else if (f_cnt==1)
+		}
+		else if (f_cnt==1) {
+			lp->ItemIndex = SelIndex;
 			found = true;
+		}
 	}
 
 	//Šm’è
@@ -563,12 +566,12 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 			else {
 				NyanFiForm->RecoverFileList2();
 				UnicodeString dnam = get_actual_path(jdir);
-				if (is_dir_accessible(dnam)) {
-					NyanFiForm->UpdateCurPath(dnam);
-					ModalResult = mrOk;
+				if (!StartsStr("\\\\", dnam) && !is_dir_accessible(dnam)) {
+					msgbox_ERR(USTR_CantAccessDir);
 				}
 				else {
-					msgbox_ERR(USTR_CantAccessDir);
+					NyanFiForm->UpdateCurPath(dnam);
+					ModalResult = mrOk;
 				}
 			}
 		}
@@ -608,6 +611,8 @@ void __fastcall TRegDirDlg::RegDirListBoxClick(TObject *Sender)
 void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Index,
 	TRect &Rect, TOwnerDrawState State)
 {
+	if (ModalResult!=mrNone) return;
+
 	THeaderSections *sp = RegDirHeader->Sections;
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
@@ -750,7 +755,7 @@ void __fastcall TRegDirDlg::ChangeItemActionExecute(
 
 	if (is_separator(DescEdit->Text)
 		|| StartsText("shell:", DirEdit->Text) || StartsText("#:", DirEdit->Text)
-		|| is_computer_name(DirEdit->Text)
+		|| is_computer_name(DirEdit->Text) || StartsStr("\\\\", DirEdit->Text)
 		|| dir_exists(get_actual_path(DirEdit->Text)))
 	{
 		UnicodeString lbuf;
