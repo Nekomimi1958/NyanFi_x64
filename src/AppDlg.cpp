@@ -182,7 +182,7 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 
 	//ˆê——‰Šú‰»
 	TListBox *lp = AppListBox;
-	set_StdListBox(lp, LBTAG_APP_LIST|LBTAG_OPT_LOOP);
+	set_StdListBox(lp, LBTAG_OPT_LOOP);
 	set_UsrScrPanel(AppScrPanel);
 	int min_hi = ScaledInt(36, this);
 	if (lp->ItemHeight<min_hi) lp->ItemHeight = min_hi;

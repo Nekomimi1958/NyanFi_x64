@@ -152,7 +152,8 @@ extern  FUNC_GetFontResourceInfo	lpfGetFontResourceInfo;
 
 //---------------------------------------------------------------------------
 //リストボックス用オプションフラグ(Tag に設定)
-//  ファイル情報では下位2バイトを項目名最大幅に利用
+//  下位2バイト = ファイル情報:項目名最大幅/ 登録ディレクトリ:「場所」の表示位置
+//  上位4ビットは UserMdl で使用
 #define LBTAG_OPT_FIF1	0x00010000		//ファイル情報(最初の3行は基本情報)
 #define LBTAG_OPT_FIF2	0x00020000		//ファイル情報
 #define LBTAG_OPT_SDIR	0x00040000		//特殊フォルダ一覧(環境変数使用時)
@@ -165,7 +166,6 @@ extern  FUNC_GetFontResourceInfo	lpfGetFontResourceInfo;
 #define LBTAG_FIF_LIST	0x02000000		//ファイル情報ダイアログ
 #define LBTAG_TAB_FNAM	0x04000000		//タブ以降にファイル名を持つ
 #define LBTAG_VAR_LIST	0x08000000		//「名前=値」形式
-#define LBTAG_APP_LIST	0x10000000		//アプリケーションリスト
 
 //---------------------------------------------------------------------------
 #define SHOW_WARN_TAG	-1

@@ -2657,7 +2657,7 @@ SetTag<span class="pram_text">_;</span>
 <a href="hid00088.htm">→ タグによるファイル管理</a><br>
 <a href="#AddTag">→ AddTag</a>　<a href="#DelTag">→ DelTag</a>　<a href="#FindTag">→ FindTag</a>　<a href="#TrimTagData">→ TrimTagData</a>　<a href="#TagSelect">→ TagSelect</a>
 
-<dt id="ShareList">ShareList<span class="pram_text">_コンピュータ名</span>
+<dt id="ShareList">ShareList<span class="pram_text">[_コンピュータ名]</span>
 <dd>カレントのコンピュータの共有フォルダ一覧を表示します。フォルダを選択すると、そのUNCパスに移動します。<br>
 一覧でのキー操作は、<a href="hid00057.htm">ディレクトリ履歴</a>などと同様です。<br>
 なお、右クリックメニューで、UNCパスのコピーが可能です。<br>
@@ -2665,6 +2665,7 @@ SetTag<span class="pram_text">_;</span>
 <div class="spc_box">
 パラメータでコンピュータ名を指定すると、そのコンピュータの共有フォルダ一覧が表示されます。<br>
 先頭の <b>\\</b> は無くてもかまいません。<br>
+なお、アクセスを拒否された場合、可能ならネットワーク資格情報の入力ダイアログによる接続を試みます。<br>
 </div>
 
 <dt id="ShowByteSize">ShowByteSize<span class="pram_text">[_{ON|OFF}]</span>

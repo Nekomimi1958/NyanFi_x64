@@ -675,6 +675,8 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 					cv->TextOut(xp, yp, inam);
 					xp = sp->Items[1]->Width + 1;
 					//場所
+					lp->Tag &= 0x7fff0000;
+					lp->Tag |= xp;			//表示位置を Tag に設定
 					if (is_exe) dnam = ExtractFilePath(dnam);
 					if (UseEnvVarAction->Checked) {
 						if (contained_wd_i(_T("TEMP|TMP"), itm_buf[1]))
@@ -719,6 +721,8 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 				cv->TextOut(xp, yp, itm_buf[1]);
 				xp += sp->Items[1]->Width + 1;
 				//場所
+				lp->Tag &= 0x7fff0000;
+				lp->Tag |= xp;			//表示位置を Tag に設定
 				UnicodeString dnam = itm_buf[2];
 				if (StartsStr("#:", dnam)) {
 					cv->Font->Color = adj_col;

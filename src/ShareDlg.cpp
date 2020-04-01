@@ -7,7 +7,6 @@
 #include <tchar.h>
 #include <memory>
 #include <algorithm>
-#include <lm.h>
 #include <Vcl.Clipbrd.hpp>
 #include "UserFunc.h"
 #include "Global.h"
@@ -126,6 +125,30 @@ void __fastcall TNetShareDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//共有フォルダ一覧の取得
+//---------------------------------------------------------------------------
+NET_API_STATUS __fastcall TNetShareDlg::GetShareList(
+	UnicodeString cnam,		//\\コンピュータ名
+	TListBox *lp)
+{
+	lp->Clear();
+	static PSHARE_INFO_1 p_si = NULL;
+	DWORD entry_cnt, total_cnt;
+	cursor_HourGlass();
+	NET_API_STATUS res = ::NetShareEnum(cnam.c_str(), 1, (LPBYTE *)&p_si, MAX_PREFERRED_LENGTH, &entry_cnt, &total_cnt, NULL);
+	if (res==NERR_Success) {
+		for (DWORD i=0; i<entry_cnt; i++) {
+			if (p_si[i].shi1_type==STYPE_DISKTREE) {
+				UnicodeString nnam = p_si[i].shi1_netname;
+				if (!EndsStr("$", nnam)) lp->Items->Add(nnam);
+			}
+		}
+	}
+	if (p_si) ::NetApiBufferFree(p_si);
+	cursor_Default();
+	return res;
+}
+//---------------------------------------------------------------------------
 //共有フォルダ一覧の更新
 //---------------------------------------------------------------------------
 void __fastcall TNetShareDlg::UpdateShareList(
@@ -135,26 +158,25 @@ void __fastcall TNetShareDlg::UpdateShareList(
 	Caption = yen_to_delimiter(cnam) + " - 共有フォルダ一覧";
 
 	TListBox *lp = ShareListBox;
-	lp->Clear();
-
-	static PSHARE_INFO_1 p_si = NULL;
-	DWORD entry_cnt, total_cnt;
-	cursor_HourGlass();
-	if (::NetShareEnum(cnam.c_str(), 1, (LPBYTE *)&p_si, MAX_PREFERRED_LENGTH, &entry_cnt, &total_cnt, NULL)==NERR_Success) {
-		for (DWORD i=0; i<entry_cnt; i++) {
-			if (p_si[i].shi1_type==STYPE_DISKTREE) {
-				UnicodeString nnam = p_si[i].shi1_netname;
-				if (!EndsStr("$", nnam)) lp->Items->Add(nnam);
-			}
+	NET_API_STATUS res = GetShareList(cnam, lp);
+	if (res!=NERR_Success) {
+		//コンピュータに接続
+		NETRESOURCEW tNetResource = {};
+		tNetResource.dwType 	  = RESOURCETYPE_ANY;
+		tNetResource.lpRemoteName = (LPWSTR)cnam.c_str();
+		DWORD n_res = WNetAddConnection3W(this->Handle, &tNetResource, _T(""), _T(""), CONNECT_INTERACTIVE);
+		if (n_res==NO_ERROR) {
+			res = GetShareList(cnam, lp);
+		}
+		else if (n_res==ERROR_CANCELLED) {
+			Close();
+			return;
 		}
 	}
-	else {
+	if (res!=NERR_Success) {
 		beep_Warn();
-		Caption = Caption + " - 取得に失敗!";
+		Caption = Caption + " - " + SysErrorMessage(res);
 	}
-	cursor_Default();
-
-	if (p_si) ::NetApiBufferFree(p_si);
 	ListScrPanel->UpdateKnob();
 
 	UnicodeString pnam = CurPathName;

@@ -2504,7 +2504,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall UpdateToolDriveBtn();
 	
 	void __fastcall InitFKeyBtn();
-	void __fastcall UpdateFKeyBtn(TShiftState shift);
+	void __fastcall UpdateFKeyBtn(TShiftState shift, bool force = false);
 	void __fastcall UpdateFKeyBtn();
 
 	bool __fastcall IsDoubleStep();

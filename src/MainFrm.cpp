@@ -2139,21 +2139,32 @@ void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, 
 				lbuf = get_post_tab(get_post_tab(lbuf)).TrimRight();
 				lbuf = ReplaceStr(lbuf, "\t", "  ");
 			}
+			//アプリケーション一覧
+			else if (SameText(lp->Name, "AppListBox")) {
+				lbuf = yen_to_delimiter(lbuf);
+				std::unique_ptr<TStringList> sbuf(new TStringList());
+				sbuf->Text = lbuf;
+				if (sbuf->Count==2) lw = cv->TextWidth(sbuf->Strings[1]);
+			}
+			else if (SameText(lp->Name, "RegDirListBox")) {
+				//特殊フォルダ一覧
+				if (RegDirDlg && RegDirDlg->IsSpecial) {
+					lbuf = yen_to_delimiter(get_pre_tab(lbuf));
+					//環境変数不使用時
+					if ((lp->Tag & LBTAG_OPT_SDIR)==0) lw = LOWORD(lp->Tag) + cv->TextWidth(lbuf);
+				}
+				//登録ディレクトリ
+				else {
+					lbuf = get_csv_item(lbuf, 2);
+					bool use_env = ContainsStr(lbuf, "%");
+					lbuf = yen_to_delimiter(cv_env_var(lbuf));
+					lw	 = use_env? 0 : LOWORD(lp->Tag) + cv->TextWidth(lbuf);
+				}
+			}
 			//その他
 			else {
-				//特殊フォルダ一覧
-				if (lp->Tag & LBTAG_OPT_SDIR) {
-					lbuf = yen_to_delimiter(get_pre_tab(lbuf));
-				}
-				//アプリケーション一覧
-				else if (lp->Tag & LBTAG_APP_LIST) {
-					lbuf = yen_to_delimiter(lbuf);
-					std::unique_ptr<TStringList> sbuf(new TStringList());
-					sbuf->Text = lbuf;
-					if (sbuf->Count==2) lw = cv->TextWidth(sbuf->Strings[1]);
-				}
 				//ファイル名一覧/ツリー表示
-				else if (lp->Tag & LBTAG_TAB_FNAM) {
+				if (lp->Tag & LBTAG_TAB_FNAM) {
 					lbuf = yen_to_delimiter(get_post_tab(lbuf));
 				}
 				//ファイル情報
@@ -2181,7 +2192,6 @@ void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, 
 				}
 				//通常
 				else {
-					if (SameStr(lbuf, ",-,")) lbuf = EmptyStr;
 					lw = get_TabTextWidth(lbuf, cv, lp->TabWidth);
 					if (lp->Tag & LBTAG_OPT_LNNO) lw += get_CharWidth(cv, 6, 4);	//行番号有り " 99999"
 				}
@@ -2270,12 +2280,9 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 		TShiftState   Shift   = get_Shift();
 		UnicodeString KeyStrK = get_KeyStr(Key);
 
+		//ファンクションキーバーの更新
 		if (KeyStrK.IsEmpty()) {
-			//ファンクションキーバーの更新
-			if (LastShift!=Shift) {
-				UpdateFKeyBtn(Shift);
-				LastShift = Shift;
-			}
+			UpdateFKeyBtn(Shift);
 			return;
 		}
 
@@ -2509,11 +2516,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 	}
 	else if (Msg.message==WM_SYSKEYDOWN || Msg.message==WM_SYSKEYUP || Msg.message==WM_KEYUP) {
 		//ファンクションキーバーの更新
-		TShiftState Shift = get_Shift();
-		if (LastShift!=Shift) {
-			UpdateFKeyBtn(Shift);
-			LastShift = Shift;
-		}
+		UpdateFKeyBtn(get_Shift());
 		//Altキーによるメニューフォーカスの抑止
 		if ((InhbitAltMenu || Menu==NULL) && Msg.message==WM_SYSKEYUP && Msg.wParam==VK_MENU) {
 			Handled = true;
@@ -5099,9 +5102,14 @@ void __fastcall TNyanFiForm::FKeyBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //ファンクションキーボタンの更新
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::UpdateFKeyBtn(TShiftState shift)
+void __fastcall TNyanFiForm::UpdateFKeyBtn(
+	TShiftState shift, 
+	bool force)			//強制更新	(default = flase)
 {
 	if (!Initialized || UnInitializing || WindowState==wsMinimized) return;
+
+	if (!force && LastShift==shift) return;
+	LastShift = shift;
 
 	TToolBar *tp = FKeyBar;
 	if (!tp->Visible) return;
@@ -5169,7 +5177,7 @@ void __fastcall TNyanFiForm::UpdateFKeyBtn()
 
 	FKeyBar->Visible = (ScrMode==SCMD_GREP || IS_FullScr())? false : ShowFKeyBar;
 
-	if (FKeyBar->Visible) UpdateFKeyBtn(get_Shift());
+	if (FKeyBar->Visible) UpdateFKeyBtn(get_Shift(), true);
 }
 
 //---------------------------------------------------------------------------
@@ -8108,14 +8116,14 @@ void __fastcall TNyanFiForm::SetCurPath(
 		}
 		cursor_Default();
 
-		//共有フォルダへ接続
+		//共有フォルダに接続
 		if (err_code==ERROR_LOGON_FAILURE) {
-			NETRESOURCEW tNetResource = {};
-			tNetResource.dwType 	  = RESOURCETYPE_ANY;
-			tNetResource.lpRemoteName = (LPWSTR)Value.c_str();
+			NETRESOURCEW nr = {};
+			nr.dwType 	  = RESOURCETYPE_ANY;
+			nr.lpRemoteName = (LPWSTR)Value.c_str();
 			DWORD res = WNetAddConnection3W(
 				((RegDirDlg && RegDirDlg->Visible)? RegDirDlg->Handle : this->Handle),
-					&tNetResource, _T(""), _T(""), CONNECT_INTERACTIVE);
+					&nr, _T(""), _T(""), CONNECT_INTERACTIVE);
 			if (res==ERROR_CANCELLED) return;
 
 			if (res==NO_ERROR) {

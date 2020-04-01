@@ -6,7 +6,9 @@
 #define ShareDlgH
 
 //---------------------------------------------------------------------------
+#include <lm.h>
 #include <System.Classes.hpp>
+#include <System.Actions.hpp>
 #include <Vcl.Controls.hpp>
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
@@ -14,9 +16,8 @@
 #include <Vcl.Menus.hpp>
 #include <Vcl.ComCtrls.hpp>
 #include <Vcl.Tabs.hpp>
-#include "usr_scrpanel.h"
-#include <System.Actions.hpp>
 #include <Vcl.ActnList.hpp>
+#include "usr_scrpanel.h"
 
 //-----------------------------------------------
 class TNetShareDlg : public TForm
@@ -76,6 +77,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
 	}
 
+	NET_API_STATUS __fastcall GetShareList(UnicodeString cnam, TListBox *lp);
 	void __fastcall UpdateShareList(UnicodeString cnam);
 	void __fastcall UpdatePathList(UnicodeString pnam);
 
