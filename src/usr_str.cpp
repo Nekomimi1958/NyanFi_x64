@@ -1682,18 +1682,39 @@ bool IsIrregularFont(TFont *fnt)
 int get_TextWidth(
 	TCanvas *cv,
 	UnicodeString s,	//文字列
-	bool is_irreg)		//true = 例外フォント(Ricty Diminished ～)
+	bool is_irreg,		//true = 例外フォント(Ricty Diminished ～)
+	bool spc_sw)		//半/全角空白の代替文字を考慮	(default = false)
 {
-	if (is_irreg) {
-		int wd = 0;
+	int wd = 0;
+
+	if (spc_sw) {
+		int hs_wd = get_TextWidth(cv, ">", is_irreg);
+		int zs_wd = std::min(abs(cv->Font->Height), hs_wd * 2);
 		for (int i=1; i<=s.Length(); i++) {
-			wd += cv->TextWidth(s[i]);
-			if (str_len_half(s[i])==1) wd++;
+			WideChar c = s[i];
+			switch (c) {
+			case '>': wd += hs_wd; break;
+			case '<': wd += zs_wd; break;
+			default:
+				wd += cv->TextWidth(c);
+				if (is_irreg && str_len_half(c)==1) wd++;
+			}
 		}
-		return wd;
+	}
+	else {
+		if (is_irreg) {
+			for (int i=1; i<=s.Length(); i++) {
+				wd += cv->TextWidth(s[i]);
+				if (str_len_half(s[i])==1) wd++;
+			}
+			return wd;
+		}
+		else {
+			wd = cv->TextWidth(s);
+		}
 	}
 
-	return cv->TextWidth(s);
+	return wd;
 }
 
 //---------------------------------------------------------------------------
@@ -1804,27 +1825,28 @@ UnicodeString minimize_str(
 	UnicodeString s,	//対象文字列
 	TCanvas *cv,
 	int  wd,			//制限幅
-	bool omit_end)		//末尾を省略 (default = false : 中間を省略)
+	bool omit_end,		//末尾を省略 (default = false : 中間を省略)
+	bool spc_sw)		//半/全角空白の代替文字を考慮	(default = false)
 {
 	bool is_irreg = IsIrregularFont(cv->Font);
 
-	int ww = get_TextWidth(cv, s, is_irreg);
+	int ww = get_TextWidth(cv, s, is_irreg, spc_sw);
 	if (wd<=0) {
 		s = EmptyStr;
 	}
-	else if (ww>wd) {
+	else if (ww > wd) {
 		if (omit_end) {
 			s += "…";
 			int p = s.Length() - 1;
 			while (p>0) {
 				s.Delete(p--, 1);
-				if (get_TextWidth(cv, s, is_irreg) <= wd) break;
+				if (get_TextWidth(cv, s, is_irreg, spc_sw) <= wd) break;
 			}
 		}
 		else {
 			int p = 0;
 			for (int i=1; i<s.Length(); i++) {
-				if (get_TextWidth(cv, s.SubString(1, i), is_irreg) > wd/2) {
+				if (get_TextWidth(cv, s.SubString(1, i), is_irreg, spc_sw) > wd/2) {
 					p = i - 1; break;
 				}
 			}
@@ -1832,7 +1854,7 @@ UnicodeString minimize_str(
 			s.Insert("…", p);	p += 1;
 			while (s.Length()>=p) {
 				s.Delete(p, 1);
-				if (get_TextWidth(cv, s, is_irreg) <= wd) break;
+				if (get_TextWidth(cv, s, is_irreg, spc_sw) <= wd) break;
 			}
 		}
 	}

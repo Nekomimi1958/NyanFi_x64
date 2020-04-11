@@ -227,7 +227,7 @@ UnicodeString __fastcall mSecToTStr(unsigned int ms, bool cs = true);
 int param_to_mSec(UnicodeString prm);
 
 bool IsIrregularFont(TFont *fnt);
-int get_TextWidth(TCanvas *cv, UnicodeString s, bool is_irreg);
+int get_TextWidth(TCanvas *cv, UnicodeString s, bool is_irreg, bool spc_sw = false);
 int get_CharWidth(TCanvas *cv, int n, int mgn = 0);
 
 int get_WidthInPanel(UnicodeString s, TPanel *pp, bool d2d_sw = false);
@@ -238,7 +238,7 @@ void max_len_half(int &w, UnicodeString s);
 
 UnicodeString align_r_str(UnicodeString s, int wd, UnicodeString post_s = EmptyStr);
 UnicodeString align_l_str(UnicodeString s, int wd, UnicodeString post_s = EmptyStr);
-UnicodeString minimize_str(UnicodeString s, TCanvas *cv, int wd, bool omit_end = false);
+UnicodeString minimize_str(UnicodeString s, TCanvas *cv, int wd, bool omit_end = false, bool spc_sw = false);
 UnicodeString fit_str(UnicodeString s, TCanvas *cv, int wd, bool omit_end = false);
 
 UnicodeString to_Full_or_Half(UnicodeString s, bool to_w);

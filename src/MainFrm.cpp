@@ -10396,7 +10396,8 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 		else {
 			w_name = fp->is_dir? w_date : std::max(w_date - lst_stt->lwd_fext, w_file);
 		}
-		dsp_name = minimize_str(dsp_name, tmp_cv, w_name, OmitEndOfName);
+
+		dsp_name = minimize_str(dsp_name, tmp_cv, w_name, OmitEndOfName, true);
 
 		TColor bg_name = IniFile->IsMarked(fp->r_name)? col_bgMark :
 							  (d_fp && d_fp->is_dummy)? col_DifferN : col_None;
@@ -10420,8 +10421,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 			UnicodeString dsp_ext = ReplaceStr(fp->f_ext, L"\u202e", "|");	//RLO --> | (警告表示)
 			int x_fext;
 			if (NoSpaceFExt) {
-				int w_nam = tmp_cv->TextWidth(dsp_name);
-				if (is_irreg) w_nam += dsp_name.Length();
+				int w_nam = get_TextWidth(tmp_cv, dsp_name, is_irreg, true);
 				int w_ext = (HideSizeTime? lst_stt->lxp_right : lst_stt->lxp_size) - x_base - w_half - w_nam;
 				x_fext	= x_base + w_nam;
 				dsp_ext = minimize_str(dsp_ext, tmp_cv, w_ext, true);
@@ -10450,8 +10450,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 				sz_str = fp->is_jct? "<JCT>" : fp->is_sym? "<SYM>" : "<DIR>";
 			}
 
-			int w_sz = tmp_cv->TextWidth(sz_str);
-			if (is_irreg) w_sz += sz_str.Length();
+			int w_sz = get_TextWidth(tmp_cv, sz_str, is_irreg);
 			int x_sz = lst_stt->lxp_size + lst_stt->lwd_size - w_sz - w_half;
 
 			//ディレクトリ比較結果
