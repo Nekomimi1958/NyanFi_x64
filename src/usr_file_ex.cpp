@@ -432,6 +432,19 @@ TStringDynArray split_path(UnicodeString pnam)
 }
 
 //---------------------------------------------------------------------------
+//"UNCパス:ユーザ名" からユーザ名を分離
+//---------------------------------------------------------------------------
+UnicodeString split_user_name(UnicodeString &dnam)
+{
+	UnicodeString unam;
+	if (StartsStr("\\\\", dnam) && dnam.Pos(":")>3) {
+		unam = get_tkn_r(dnam, ':');
+		dnam = get_tkn(dnam, ':');
+	}
+	return unam;
+}
+
+//---------------------------------------------------------------------------
 //コンピュータ名か?
 //---------------------------------------------------------------------------
 bool is_computer_name(UnicodeString pnam)

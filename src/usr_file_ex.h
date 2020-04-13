@@ -67,6 +67,8 @@ UnicodeString get_parent_path(UnicodeString dnam);
 TStringDynArray split_path(UnicodeString pnam, UnicodeString dlmt);
 TStringDynArray split_path(UnicodeString pnam);
 
+UnicodeString split_user_name(UnicodeString &dnam);
+
 bool is_computer_name(UnicodeString pnam);
 
 bool is_dir_accessible(UnicodeString dnam);

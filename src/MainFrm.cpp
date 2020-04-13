@@ -3905,7 +3905,8 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 			UnicodeString prm = exclude_quot(split_pre_tab(cbuf));
 			UnicodeString opt = cbuf;
 			if (USAME_TI(cmd, "ChangeDir")) {
-				UpdateCurPath(IncludeTrailingPathDelimiter(prm));
+				UnicodeString unam = split_user_name(prm);
+				UpdateCurPath(IncludeTrailingPathDelimiter(prm), -1, false, unam);
 			}
 			else if (USAME_TI(cmd, "JumpTo")) {
 				if (!JumpToList(CurListTag, prm)) GlobalAbort();
@@ -6413,19 +6414,25 @@ void __fastcall TNyanFiForm::ApplyInpDir()
 		NetShareDlg->ShowModal();
 	}
 	else {
-		dnam = to_absolute_name(dnam, CurPath[CurListTag]);
-		int atr = file_GetAttr(dnam);
-		if (atr==faInvalid) {
-			SttBarWarn(SysErrorMessage(ERROR_PATH_NOT_FOUND));
+		UnicodeString unam = split_user_name(dnam);
+		if (!unam.IsEmpty()) {
+			UpdateCurPath(dnam, -1, false, unam);
 		}
 		else {
-			UnicodeString fnam;
-			if (!(atr & faDirectory)) {
-				fnam = dnam;
-				dnam = ExtractFilePath(dnam);
+			dnam = to_absolute_name(dnam, CurPath[CurListTag]);
+			int atr = file_GetAttr(dnam);
+			if (atr==faInvalid) {
+				SttBarWarn(SysErrorMessage(ERROR_PATH_NOT_FOUND));
 			}
-			UpdateCurPath(dnam, fnam);
-			add_ComboBox_history(InpDirComboBox, dnam);
+			else {
+				UnicodeString fnam;
+				if (!(atr & faDirectory)) {
+					fnam = dnam;
+					dnam = ExtractFilePath(dnam);
+				}
+				UpdateCurPath(dnam, fnam);
+				add_ComboBox_history(InpDirComboBox, dnam);
+			}
 		}
 	}
 	HideInpDirPanel();
@@ -6580,8 +6587,9 @@ void __fastcall TNyanFiForm::PopupRegDirMenu(const _TCHAR *id_str)
 	}
 
 	if (lst) {
+		pPop->AutoHotkeys = (lst==RegDirList)? maManual : maAutomatic;
 		for (int i=0; i<lst->Count; i++) {
-			TStringDynArray itm_buf = get_csv_array(lst->Strings[i], 3);
+			TStringDynArray itm_buf = get_csv_array(lst->Strings[i], 4);
 			if (itm_buf.Length<3) continue;
 
 			TMenuItem *mp  = new TMenuItem(pPop);
@@ -6592,7 +6600,10 @@ void __fastcall TNyanFiForm::PopupRegDirMenu(const _TCHAR *id_str)
 			}
 			//項目
 			else {
-				mp->Caption = UnicodeString().sprintf(_T("&%s:%s"), itm_buf[0].c_str(), itm_buf[1].c_str());
+				UnicodeString lbuf;
+				lbuf.sprintf(_T("&%s:%s"), itm_buf[0].c_str(), itm_buf[1].c_str());
+				if (itm_buf.Length==4 && !itm_buf[3].IsEmpty()) lbuf.cat_sprintf(_T(" : %s"), itm_buf[3].c_str());
+				mp->Caption = lbuf;
 				mp->OnClick = PopSelectItemClick;
 				mp->Tag 	= i + tag_base;
 				mp->Checked = !cur_key.IsEmpty() && SameText(cur_key, itm_buf[0]);
@@ -6758,7 +6769,8 @@ void __fastcall TNyanFiForm::PopSelectItemClick(TObject *Sender)
 		ActionParam = kstr;
 		if (mp->Tag>=OPPDIR_BASE || mp->Tag>=REGDIR_BASE) {
 			int idx = mp->Tag - ((mp->Tag>=OPPDIR_BASE)? OPPDIR_BASE : REGDIR_BASE);
-			UnicodeString dnam = get_RegDirItem(idx);
+			UnicodeString unam;
+			UnicodeString dnam = get_RegDirItem(idx, &unam);
 			if (!dnam.IsEmpty()) {
 				//特殊フォルダ
 				if (StartsText("shell:", dnam)) {
@@ -6771,7 +6783,11 @@ void __fastcall TNyanFiForm::PopSelectItemClick(TObject *Sender)
 				}
 				//通常ディレクトリ
 				else {
-					if (mp->Tag>=OPPDIR_BASE) UpdateOppPath(dnam); else UpdateCurPath(dnam);
+					if (mp->Tag>=OPPDIR_BASE)
+						UpdateOppPath(dnam, -1, unam);
+					else
+						UpdateCurPath(dnam, -1, false, unam);
+
 					ActionErrMsg = GlobalErrMsg;
 				}
 				ActionOk = ActionErrMsg.IsEmpty();
@@ -8053,7 +8069,7 @@ bool __fastcall TNyanFiForm::CheckUncPath(
 	bool ok = tp->isOk;
 	int idx = InvalidUncList->IndexOf(pnam);
 	if (!ok) {
-		if (idx==-1 && tp->ErrCode!=ERROR_LOGON_FAILURE) InvalidUncList->Add(pnam);
+		if (idx==-1 && tp->ErrCode!=ERROR_LOGON_FAILURE && tp->ErrCode!=ERROR_ACCESS_DENIED) InvalidUncList->Add(pnam);
 		GlobalErrMsg = canceled? LoadUsrMsg(USTR_Canceled) : tp->ErrMsg;
 		if (err_code) *err_code = tp->ErrCode;
 	}
@@ -8087,14 +8103,16 @@ bool __fastcall TNyanFiForm::CheckPath(UnicodeString dnam)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetCurPath(
 	int Index,				//リストタグ
-	UnicodeString Value)	//ディレクトリ名
+	UnicodeString Value)	//ディレクトリ名 ([TAB] 接続ユーザ名)
 							//  末尾が\でないドライブ名の場合、ルートに設定
 							//  末尾が\のドライブ名の場合、履歴から設定
 {
-	GlobalErrMsg  = EmptyStr;
-
+	UnicodeString unam = def_if_empty(get_post_tab(Value), UserName);
+	Value = get_pre_tab(Value);
+	bool is_unc = StartsStr("\\\\", Value);
 	UnicodeString l_pnam = CurPath[Index];
 
+	GlobalErrMsg  = EmptyStr;
 	if (Index>=0 && Index<MAX_FILELIST && !Value.IsEmpty()) {
 		UnicodeString dnam;
 
@@ -8102,7 +8120,7 @@ void __fastcall TNyanFiForm::SetCurPath(
 		unsigned int err_code = NO_ERROR;
 		cursor_HourGlass();
 		if (!CheckUncPath(Value, &err_code)) {
-			if (err_code==ERROR_LOGON_FAILURE)
+			if (err_code==ERROR_LOGON_FAILURE || (is_unc && err_code==ERROR_ACCESS_DENIED))
 				GlobalErrMsg = EmptyStr;
 			else
 				dnam = CheckAvailablePath(EmptyStr, Index);
@@ -8112,18 +8130,20 @@ void __fastcall TNyanFiForm::SetCurPath(
 				err_code	 = GetLastError();
 				GlobalErrMsg = LoadUsrMsg(USTR_CantAccessDir);
 			}
-			if (err_code!=ERROR_LOGON_FAILURE) dnam = CheckAvailablePath(Value, Index);
+			if (err_code!=ERROR_LOGON_FAILURE && (!is_unc || err_code!=ERROR_ACCESS_DENIED)) {
+				dnam = CheckAvailablePath(Value, Index);
+			}
 		}
 		cursor_Default();
 
 		//共有フォルダに接続
-		if (err_code==ERROR_LOGON_FAILURE) {
+		if (err_code==ERROR_LOGON_FAILURE || (is_unc && err_code==ERROR_ACCESS_DENIED)) {
 			NETRESOURCEW nr = {};
-			nr.dwType 	  = RESOURCETYPE_ANY;
+			nr.dwType		= RESOURCETYPE_ANY;
 			nr.lpRemoteName = (LPWSTR)Value.c_str();
 			DWORD res = WNetAddConnection3W(
 				((RegDirDlg && RegDirDlg->Visible)? RegDirDlg->Handle : this->Handle),
-					&nr, _T(""), _T(""), CONNECT_INTERACTIVE);
+				&nr, _T(""), unam.c_str(), CONNECT_INTERACTIVE);
 			if (res==ERROR_CANCELLED) return;
 
 			if (res==NO_ERROR) {
@@ -8661,8 +8681,9 @@ void __fastcall TNyanFiForm::UpdateList(TStringList *lst, UnicodeString dnam, in
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::UpdateCurPath(
 	UnicodeString dir,
-	int  idx,			//					(default = -1)
-	bool inh_hist)		//履歴に入れない	(default = false)
+	int  idx,				//					(default = -1)
+	bool inh_hist,			//履歴に入れない	(default = false)
+	UnicodeString unam)		//接続ユーザ名		(default = EmptyStr)
 {
 	if (inh_hist) InhDirHist++;
 
@@ -8671,7 +8692,7 @@ void __fastcall TNyanFiForm::UpdateCurPath(
 	{
 		RecoverFileList2();
 		dir = dir.IsEmpty()? CurPath[CurListTag] : exclede_delimiter_if_root(dir);
-		CurPath[CurListTag] = dir;
+		CurPath[CurListTag] = dir + "\t" + unam;
 		if (DirHistCsrPos && idx!=-1) ListBoxSetIndex(lp, idx);
 	}
 	set_RedrawOn(lp);
@@ -8753,14 +8774,17 @@ void __fastcall TNyanFiForm::RefreshCurPath(UnicodeString fnam)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::UpdateOppPath(UnicodeString dir, int idx)
+void __fastcall TNyanFiForm::UpdateOppPath(
+	UnicodeString dir, 
+	int  idx,				//					(default = -1)
+	UnicodeString unam)		//接続ユーザ名		(default = EmptyStr)
 {
 	TListBox *lp = FileListBox[OppListTag];
 	set_RedrawOff(lp);
 	{
 		RecoverFileList2(OppListTag);
 		ApplyDotNyan = true;	//ディレクトリ変化がなくても強制的に .nyanfi を適用
-		CurPath[OppListTag] = exclede_delimiter_if_root(dir);
+		CurPath[OppListTag] = exclede_delimiter_if_root(dir) + "\t" + unam;
 		if (DirHistCsrPos && idx!=-1) ListBoxSetIndex(lp, idx);
 	}
 	set_RedrawOn(lp);
@@ -13067,7 +13091,14 @@ void __fastcall TNyanFiForm::ChangeDirActionExecute(TObject *Sender)
 			NetShareDlg->ShowModal();
 		}
 		else {
-			UnicodeString dnam = to_absolute_name(cv_env_str(ActionParam), CurPath[CurListTag]);
+			UnicodeString dnam = cv_env_str(ActionParam);
+			UnicodeString unam = split_user_name(dnam);
+			if (!unam.IsEmpty()) {
+				UpdateCurPath(IncludeTrailingPathDelimiter(dnam), -1, false, unam);
+				return;
+			}
+
+			dnam = to_absolute_name(dnam, CurPath[CurListTag]);
 			int atr = file_GetAttr(dnam);
 			if (atr==faInvalid) SysErrAbort(ERROR_PATH_NOT_FOUND);
 
@@ -13089,9 +13120,17 @@ void __fastcall TNyanFiForm::ChangeOppDirActionExecute(TObject *Sender)
 {
 	try {
 		if (ActionParam.IsEmpty()) UserAbort(USTR_NoParameter);
-		UnicodeString dnam = to_absolute_name(cv_env_str(ActionParam), CurPath[OppListTag]);
-		if (!dir_exists(dnam)) SysErrAbort(ERROR_PATH_NOT_FOUND);
-		UpdateOppPath(dnam);
+
+		UnicodeString dnam = cv_env_str(ActionParam);
+		UnicodeString unam = split_user_name(dnam);
+		if (!unam.IsEmpty()) {
+			UpdateOppPath(dnam, -1, unam);
+		}
+		else {
+			dnam = to_absolute_name(dnam, CurPath[OppListTag]);
+			if (!dir_exists(dnam)) SysErrAbort(ERROR_PATH_NOT_FOUND);
+			UpdateOppPath(dnam, -1, unam);
+		}
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);
@@ -13105,9 +13144,10 @@ void __fastcall TNyanFiForm::ChangeRegDirActionExecute(TObject *Sender)
 {
 	try {
 		if (ActionParam.IsEmpty()) UserAbort(USTR_NoParameter);
-		UnicodeString dnam = get_RegDirItem(ActionParam[1]);
+		UnicodeString unam;
+		UnicodeString dnam = get_RegDirItem(ActionParam[1], &unam);
 		if (dnam.IsEmpty()) Abort();
-		UpdateCurPath(dnam);
+		UpdateCurPath(dnam, -1, false, unam);
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);
@@ -13118,9 +13158,10 @@ void __fastcall TNyanFiForm::ChangeOppRegDirActionExecute(TObject *Sender)
 {
 	try {
 		if (ActionParam.IsEmpty()) UserAbort(USTR_NoParameter);
-		UnicodeString dnam = get_RegDirItem(ActionParam[1]);
+		UnicodeString unam;
+		UnicodeString dnam = get_RegDirItem(ActionParam[1], &unam);
 		if (dnam.IsEmpty()) Abort();
-		UpdateOppPath(dnam);
+		UpdateCurPath(dnam, -1, false, unam);
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);
@@ -18545,8 +18586,13 @@ void __fastcall TNyanFiForm::InputDirActionExecute(TObject *Sender)
 	else {
 		UnicodeString dnam = inputbox_dir(tit.c_str(), _T("InputDir"));
 		if (!dnam.IsEmpty()) {
-			dnam = to_absolute_name(cv_env_str(dnam), CurPath[CurListTag]);
+			UnicodeString unam = split_user_name(dnam);
+			if (!unam.IsEmpty()) {
+				UpdateCurPath(IncludeTrailingPathDelimiter(dnam), -1, false, unam);
+				return;
+			}
 
+			dnam = to_absolute_name(cv_env_str(dnam), CurPath[CurListTag]);
 			unsigned int err_code = NO_ERROR;
 			if (StartsStr("\\\\", dnam)) {
 				if (is_computer_name(dnam)) {
@@ -18564,8 +18610,9 @@ void __fastcall TNyanFiForm::InputDirActionExecute(TObject *Sender)
 							if (cnt==4) break;
 						}
 					}
+
 					if (!CheckUncPath(dnam.SubString(1, p), &err_code)) {
-						if (err_code!=ERROR_LOGON_FAILURE) {
+						if (err_code!=ERROR_LOGON_FAILURE && err_code!=ERROR_ACCESS_DENIED) {
 							SetActionAbort(GlobalErrMsg);
 							return;
 						}

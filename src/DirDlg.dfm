@@ -95,7 +95,7 @@ object RegDirDlg: TRegDirDlg
       Top = 8
       Width = 128
       Height = 21
-      Hint = #29872#22659#22793#25968#12418#20351#29992#21487#33021
+      Hint = #29872#22659#22793#25968#12418#20351#29992#21487#12289'UNC'#12398#22580#21512' : '#12391#21306#20999#12387#12390#12518#12540#12470#21517#25351#23450#21487
       Anchors = [akLeft, akTop, akRight]
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 2

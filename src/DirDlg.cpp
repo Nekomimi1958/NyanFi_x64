@@ -405,7 +405,7 @@ UnicodeString __fastcall TRegDirDlg::GetCurDirItem(
 			}
 		}
 		else {
-			TStringDynArray itm_buf = get_csv_array(lbuf, 3, true);
+			TStringDynArray itm_buf = get_csv_array(lbuf, REGDIR_CSVITMCNT, true);
 			if (!is_separator(itm_buf[1])) dnam = itm_buf[2];
 		}
 	}
@@ -500,7 +500,7 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	UnicodeString jdir;
+	UnicodeString jdir, unam;
 	bool found = false;
 	SelIndex = -1;
 
@@ -509,6 +509,7 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 		jdir = GetCurDirItem(false, IsSelect, true);
 		if (!jdir.IsEmpty()) {
 			SelIndex = lp->ItemIndex;
+			unam = get_csv_item(lp->Items->Strings[SelIndex], 3);
 			found = true;
 		}
 	}
@@ -517,9 +518,10 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 		int f_cnt = 0;
 		UnicodeString k = Key;
 		for (int i=0; i<lp->Count; i++) {
-			TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[i], 3, true);
+			TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[i], REGDIR_CSVITMCNT, true);
 			if (SameText(k, itm_buf[0])) {
 				jdir = itm_buf[2];
+				unam = itm_buf[3];
 				SelIndex = i;
 				f_cnt++;
 			}
@@ -564,13 +566,12 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 			}
 			//通常ディレクトリ
 			else {
-				NyanFiForm->RecoverFileList2();
 				UnicodeString dnam = get_actual_path(jdir);
 				if (!StartsStr("\\\\", dnam) && !is_dir_accessible(dnam)) {
 					msgbox_ERR(USTR_CantAccessDir);
 				}
 				else {
-					NyanFiForm->UpdateCurPath(dnam);
+					NyanFiForm->UpdateCurPath(dnam, -1, false, unam);
 					ModalResult = mrOk;
 				}
 			}
@@ -597,11 +598,11 @@ void __fastcall TRegDirDlg::RegDirListBoxClick(TObject *Sender)
 	if (idx==-1) return;
 	UnicodeString lbuf = RegDirListBox->Items->Strings[idx];
 	if (!lbuf.IsEmpty()) {
-		TStringDynArray itm_buf = get_csv_array(RegDirListBox->Items->Strings[idx], 3, true);
+		TStringDynArray itm_buf = get_csv_array(RegDirListBox->Items->Strings[idx], REGDIR_CSVITMCNT, true);
 		if (is_separator(itm_buf[1])) itm_buf[0] = itm_buf[2] = EmptyStr;
 		KeyEdit->Text  = itm_buf[0];
 		DescEdit->Text = itm_buf[1];
-		DirEdit->Text  = itm_buf[2];
+		DirEdit->Text  = itm_buf[2] + (!itm_buf[3].IsEmpty()? ":" + itm_buf[3] : EmptyStr);
 	}
 }
 
@@ -699,7 +700,7 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 		}
 		//登録ディレクトリ
 		else {
-			TStringDynArray itm_buf = get_csv_array(lbuf, 3, true);
+			TStringDynArray itm_buf = get_csv_array(lbuf, REGDIR_CSVITMCNT, true);
 			//セパレータ
 			if (is_separator(itm_buf[1])) {
 				draw_Separator(cv, rc);
@@ -737,6 +738,11 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 					}
 					cv->Font->Color = (StartsStr("shell:", dnam))? adj_col : col_Folder;
 					PathNameOut(dnam, cv, xp, yp, rc.Right - xp - ScaledIntX(4));
+					if (!itm_buf[3].IsEmpty()) {
+						out_TextEx(cv, xp, yp, " : ", adj_col);
+						cv->Font->Color = col_fgList;
+						cv->TextOut(xp, yp, itm_buf[3]);
+					}
 				}
 			}
 		}
@@ -752,27 +758,29 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 void __fastcall TRegDirDlg::ChangeItemActionExecute(
 	int chg_mod)	//変更モード 0:追加/ 1:変更/ 2:挿入
 {
-	if (chg_mod==0 && IndexOfDir(DirEdit->Text)!=-1) {
+	UnicodeString dnam = DirEdit->Text;
+	UnicodeString unam = split_user_name(dnam);
+
+	if (chg_mod==0 && IndexOfDir(dnam)!=-1) {
 		msgbox_WARN(LoadUsrMsg(USTR_Registered));
 		return;
 	}
 
 	if (is_separator(DescEdit->Text)
-		|| StartsText("shell:", DirEdit->Text) || StartsText("#:", DirEdit->Text)
-		|| is_computer_name(DirEdit->Text) || StartsStr("\\\\", DirEdit->Text)
-		|| dir_exists(get_actual_path(DirEdit->Text)))
+		|| StartsText("shell:", dnam) || StartsText("#:", dnam)
+		|| is_computer_name(dnam) || StartsStr("\\\\", dnam)
+		|| dir_exists(get_actual_path(dnam)))
 	{
 		UnicodeString lbuf;
 		if (is_separator(DescEdit->Text)) {
-			lbuf = ",-,";
+			lbuf = ",-,,";
 		}
 		else {
-			UnicodeString dnam = DirEdit->Text;
 			if (!StartsText("shell:", dnam) && !StartsText("#:", dnam))
 				dnam = IncludeTrailingPathDelimiter(dnam);
 			lbuf = KeyEdit->Text.SubString(1, 1).UpperCase();
-			lbuf.cat_sprintf(_T(",%s,%s"),
-				make_csv_str(DescEdit->Text).c_str(), make_csv_str(dnam).c_str());
+			lbuf.cat_sprintf(_T(",%s,%s,%s"),
+				make_csv_str(DescEdit->Text).c_str(), make_csv_str(dnam).c_str(), make_csv_str(unam).c_str());
 		}
 
 		TListBox *lp = RegDirListBox;
@@ -864,7 +872,10 @@ void __fastcall TRegDirDlg::DelItemActionUpdate(TObject *Sender)
 void __fastcall TRegDirDlg::RefDirBtnClick(TObject *Sender)
 {
 	UnicodeString dnam = DirEdit->Text;
-	if (UserModule->SelectDirEx(_T("登録ディレクトリ"), dnam)) DirEdit->Text = to_path_name(dnam);
+	UnicodeString unam = split_user_name(dnam);
+	if (UserModule->SelectDirEx(_T("登録ディレクトリ"), dnam)) {
+		DirEdit->Text = to_path_name(dnam) + (!unam.IsEmpty()? ":" + unam : EmptyStr);
+	}
 }
 //---------------------------------------------------------------------------
 //特殊フォルダの参照

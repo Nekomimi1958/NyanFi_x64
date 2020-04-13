@@ -2597,11 +2597,12 @@ public:		// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall SetFullScreen(bool full_sw, bool redraw = true);
 	void __fastcall RecoverFileList(int tag = CurListTag);
 	void __fastcall RecoverFileList2(int tag = CurListTag);
-	void __fastcall UpdateCurPath(UnicodeString dir = EmptyStr, int idx = -1, bool inh_hist = false);
+	void __fastcall UpdateCurPath(UnicodeString dir = EmptyStr, int idx = -1, bool inh_hist = false,
+						UnicodeString unam = EmptyStr);
 	void __fastcall UpdateCurPath(UnicodeString dir, UnicodeString fnam);
 	void __fastcall UpdateDiffList(int tag = -1);
 	void __fastcall RefreshCurPath(UnicodeString fnam);
-	void __fastcall UpdateOppPath(UnicodeString dir, int idx = -1);
+	void __fastcall UpdateOppPath(UnicodeString dir, int idx = -1, UnicodeString unam = NULL);
 	void __fastcall UpdateCurDrive(UnicodeString drv, int tag = -1);
 	void __fastcall OppToParent();
 

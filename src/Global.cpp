@@ -7753,23 +7753,27 @@ UnicodeString get_PathFrom_SF(file_rec *fp)
 //---------------------------------------------------------------------------
 //登録ディレクトリのパス項目を取得
 //---------------------------------------------------------------------------
-UnicodeString get_RegDirItem(int idx)
+UnicodeString get_RegDirItem(int idx, 
+	UnicodeString *unam)		//接続ユーザ名		(default = EmptyStr)
 {
 	UnicodeString dnam;
 	if (idx>=0 && idx<RegDirList->Count) {
-		TStringDynArray itm_buf = get_csv_array(RegDirList->Strings[idx], 3, true);
-		if (!itm_buf[2].IsEmpty())
-			dnam = exclede_delimiter_if_root(get_actual_path(itm_buf[2]));
+		TStringDynArray itm_buf = get_csv_array(RegDirList->Strings[idx], REGDIR_CSVITMCNT, true);
+		if (!itm_buf[2].IsEmpty()) dnam = exclede_delimiter_if_root(get_actual_path(itm_buf[2]));
+		if (unam) *unam = itm_buf[3];
 	}
 	return dnam;
 }
 //---------------------------------------------------------------------------
-UnicodeString get_RegDirItem(WideChar key)
+UnicodeString get_RegDirItem(WideChar key,
+	UnicodeString *unam)		//接続ユーザ名		(default = EmptyStr)
 {
 	UnicodeString dnam;
-	TStringDynArray itm_buf = record_of_csv_list(RegDirList, key, 0, 3);
-	if (itm_buf.Length==3 && !itm_buf[2].IsEmpty())
+	TStringDynArray itm_buf = record_of_csv_list(RegDirList, key, 0, REGDIR_CSVITMCNT);
+	if (itm_buf.Length>=3 && !itm_buf[2].IsEmpty()) {
 		dnam = exclede_delimiter_if_root(get_actual_path(itm_buf[2]));
+		if (unam && itm_buf.Length==4) *unam = itm_buf[3];
+	}
 	return dnam;
 }
 
@@ -7781,7 +7785,7 @@ void move_top_RegDirItem(int idx)
 	if (idx>0 && idx<RegDirList->Count) {
 		int top = 0;
 		for (int i=idx; i>0; i--) {
-			TStringDynArray itm_buf = get_csv_array(RegDirList->Strings[i], 3, true);
+			TStringDynArray itm_buf = get_csv_array(RegDirList->Strings[i], REGDIR_CSVITMCNT, true);
 			if (is_separator(itm_buf[1])) {
 				top = i + 1;
 				break;

@@ -215,19 +215,32 @@ NyanFi.exe -XCalculator_CB
 <dd>実行中のタスクをすべて中止します。確認メッセージは出ません。<br>
 <a href="#TaskMan">→ TaskMan</a>　<a href="#Suspend">→ Suspend</a>
 
-<dt id="ChangeDir">ChangeDir<span class="pram_text">_ディレクトリ名</span>
+<dt id="ChangeDir">ChangeDir<span class="pram_text">_ディレクトリ名</span><br>
+ChangeDir<span class="pram_text">_&quot;UNCパス:接続ユーザ名&quot;</span>
 <dd>カレントを、パラメータで指定したディレクトリに変更します。既存のファイル名が指定された場合は、そのディレクトリのファイル位置に移動します。<br>
 <a href="#ExeCommands">ExeCommands</a> コマンドのパラメータ区切り文字との混同を避けるため、ルートディレクトリの場合は <b>:</b> の後に <b>\</b> を付けてください。&quot;%変数名%&quot; という書式で環境変数も使えます。なおドライブ名がない場合はカレントからの相対指定となります。<br>
+<div class="spc_box">
+パスワード保護されている共有フォルダのUNCパスでは、その後に <b>:</b> (コロン)で区切って接続ユーザ名を指定できます。未接続だった場合、このユーザ名でネットワーク資格情報の入力ダイアログによる接続を試みます。なおユーザ名が指定されていない場合、デフォルトとして現在のログインユーザ名を明示的に用います。<br>
+<b>例</b>: ChangeDir_&quot;\\HOGE\share\:nyanko&quot;<br>
+</div>
+<div class="spc_box">
 なお、<b>\\</b> で始まるコンピュータ名だけを指定した場合は、共有フォルダ一覧(<a href="#ShareList">ShareList</a>)が表示されます<br>
+</div>
 <a href="#ChangeOppDir">→ ChangeOppDir</a>　<a href="#InputDir">→ InputDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#SubDirList">→ SubDirList</a>　<a href="#ShareList">→ ShareList</a>
 
 <dt id="ChangeDrive">ChangeDrive<span class="pram_text">_ドライブ文字</span>
 <dd>カレントを、パラメータで指定したドライブに変更します。<br>
 <a href="#NextDrive">→ NextDrive</a>　<a href="#PrevDrive">→ PrevDrive</a>　<a href="#DriveList">→ DriveList</a>
 
-<dt id="ChangeOppDir">ChangeOppDir<span class="pram_text">_ディレクトリ名</span>
+<dt id="ChangeOppDir">ChangeOppDir<span class="pram_text">_ディレクトリ名</span><br>
+ChangeOppDir<span class="pram_text">_&quot;UNCパス:接続ユーザ名&quot;</span>
 <dd>反対側を、パラメータで指定したディレクトリに変更します。<br>
 <a href="#ExeCommands">ExeCommands</a> コマンドのパラメータ区切り文字との混同を避けるため、ルートディレクトリの場合は <b>:</b> の後に <b>\</b> を付けてください(あるいは引用符で囲む)。&quot;%変数名%&quot; という書式で環境変数も使えます。なおドライブ名がない場合は反対パスからの相対指定となります。<br>
+<div class="spc_box">
+パスワード保護されている共有フォルダのUNCパスでは、その後に <b>:</b> (コロン)で区切って接続ユーザ名を指定できます。未接続だった場合、このユーザ名でネットワーク資格情報の入力ダイアログによる接続を試みます。なおユーザ名が指定されていない場合、デフォルトとして現在のログインユーザ名を明示的に用います。<br>
+<b>例</b>: ChangeOppDir_&quot;\\HOGE\share\:nyanko&quot;<br>
+</div>
+
 <a href="#ChangeDir">→ ChangeDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>
 
 <dt id="ChangeOppRegDir">ChangeOppRegDir<span class="pram_text">_呼び出しキー</span>
@@ -1461,7 +1474,12 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
 <dd>カレントを入力ボックスで指定したディレクトリに変更します。<br>
 &quot;%変数名%&quot; という書式で環境変数も使えます。またカレントからの相対指定も可能です。<br>
 既存のファイル名が入力された場合は、そのディレクトリのファイル位置に移動します。ただしパスワード保護された未接続のUNCパスは、事前に属性が取得できないためディレクトリ名とみなされます。<br>
+<div class="spc_box">
+パスワード保護されている共有フォルダのUNCパスでは、その後に <b>:</b> (コロン)で区切って接続ユーザ名を指定できます。未接続だった場合、このユーザ名でネットワーク資格情報の入力ダイアログによる接続を試みます。なおユーザ名が指定されていない場合、デフォルトとして現在のログインユーザ名を明示的に用います。<br>
+</div>
+<div class="spc_box">
 なお、<b>\\</b> で始まるコンピュータ名だけを入力した場合は、共有フォルダ一覧(<a href="#ShareList">ShareList</a>)が表示されます<br>
+</div>
 
 <div class="spc_box">
 入力を行うとフルパスの補完機能が働きます。ドライブ指定がない場合は、カレントパスからの相対とみなして絶対パスに補完します。候補がドロップダウン表示されているとき、<span class="btn_frame">ENTER</span>キーを押すか項目をクリックするとそれが入力欄に設定されます。末尾に &quot;<b>\</b>&quot; を追加するとサブディレクトが候補としてさらに表示され、前方一致で候補を絞り込めます。なお、&quot;<b>\</b>&quot; の代わりに &quot;<b>/</b>&quot; もディレクトリ区切りとして使えます。<br>

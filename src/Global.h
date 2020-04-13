@@ -148,6 +148,7 @@ extern  FUNC_GetFontResourceInfo	lpfGetFontResourceInfo;
 #define EXTTOOL_CSVITMCNT	6			//caption,exe,prm,wk_dir,alias,show
 #define TABLIST_CSVITMCNT	9			//path0,path1,caption,icon,home0,home1,nwl_mode,nwl,sync_lr
 #define DISTRLS_CSVITMCNT	4			//title,enable,mask,dist
+#define REGDIR_CSVITMCNT	4			//key,title,path,user_name
 #define MAX_CSV_ITEM	  255
 
 //---------------------------------------------------------------------------
@@ -1843,8 +1844,8 @@ UnicodeString UNC_to_NetDriveName(UnicodeString pnam);
 UnicodeString NetDriveName_to_UNC(UnicodeString pnam);
 UnicodeString VirtualDrive_to_Actual(UnicodeString pnam);
 UnicodeString get_PathFrom_SF(file_rec *fp);
-UnicodeString get_RegDirItem(int idx);
-UnicodeString get_RegDirItem(WideChar key);
+UnicodeString get_RegDirItem(int idx, UnicodeString *unam = NULL);
+UnicodeString get_RegDirItem(WideChar key, UnicodeString *unam = NULL);
 void move_top_RegDirItem(int idx);
 UnicodeString get_LRUD_str(int tag = CurListTag, bool both = false);
 
