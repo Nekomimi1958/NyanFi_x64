@@ -6281,7 +6281,7 @@ void __fastcall TNyanFiForm::SttBarWarnUstr(unsigned id)
 //---------------------------------------------------------------------------
 TControl * __fastcall TNyanFiForm::GetCurControl(bool center)
 {
-	if (Screen->ActiveForm->Visible && ModalScrForm->FullScr)
+	if (Screen->ActiveForm->Visible && ModalScrForm && ModalScrForm->FullScr)
 									return (TControl*)MainContainer;
 	if (Screen->ActiveForm!=this)	return (TControl*)Screen->ActiveForm;
 	if (TxtViewPanel->Visible)		return (TControl*)TxtViewPanel;
@@ -8136,23 +8136,29 @@ void __fastcall TNyanFiForm::SetCurPath(
 		}
 		cursor_Default();
 
-		//共有フォルダに接続
 		if (err_code==ERROR_LOGON_FAILURE || (is_unc && err_code==ERROR_ACCESS_DENIED)) {
-			NETRESOURCEW nr = {};
-			nr.dwType		= RESOURCETYPE_ANY;
-			nr.lpRemoteName = (LPWSTR)Value.c_str();
-			DWORD res = WNetAddConnection3W(
-				((RegDirDlg && RegDirDlg->Visible)? RegDirDlg->Handle : this->Handle),
-				&nr, _T(""), unam.c_str(), CONNECT_INTERACTIVE);
-			if (res==ERROR_CANCELLED) return;
+			if (Initialized) {
+				//共有フォルダに接続
+				NETRESOURCEW nr = {};
+				nr.dwType		= RESOURCETYPE_ANY;
+				nr.lpRemoteName = (LPWSTR)Value.c_str();
+				DWORD res = WNetAddConnection3W(
+					((RegDirDlg && RegDirDlg->Visible)? RegDirDlg->Handle : this->Handle),
+					&nr, NULL, (unam.IsEmpty()? NULL : unam.c_str()), CONNECT_INTERACTIVE);
+				if (res==ERROR_CANCELLED) return;
 
-			if (res==NO_ERROR) {
-				dnam = Value;
-				GlobalErrMsg = EmptyStr;
+				if (res==NO_ERROR) {
+					dnam = Value;
+					GlobalErrMsg = EmptyStr;
+				}
+				else {
+					GlobalErrMsg = SysErrorMessage(res);
+					dnam = CheckAvailablePath(Value, Index);
+				}
 			}
 			else {
-				GlobalErrMsg = SysErrorMessage(res);
-				dnam = CheckAvailablePath(Value, Index);
+				dnam = CheckAvailablePath(Value, Index, true);
+				if (!dnam.IsEmpty()) GlobalErrMsg = EmptyStr;
 			}
 		}
 
@@ -8164,7 +8170,7 @@ void __fastcall TNyanFiForm::SetCurPath(
 		}
 
 		if (!GlobalErrMsg.IsEmpty()) {
-			msgbox_ERR(GlobalErrMsg);
+			if (Initialized) msgbox_ERR(GlobalErrMsg);
 			return;
 		}
 

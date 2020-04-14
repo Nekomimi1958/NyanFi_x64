@@ -161,10 +161,10 @@ void __fastcall TNetShareDlg::UpdateShareList(
 	NET_API_STATUS res = GetShareList(cnam, lp);
 	if (res!=NERR_Success) {
 		//コンピュータに接続
-		NETRESOURCEW tNetResource = {};
-		tNetResource.dwType 	  = RESOURCETYPE_ANY;
-		tNetResource.lpRemoteName = (LPWSTR)cnam.c_str();
-		DWORD n_res = WNetAddConnection3W(this->Handle, &tNetResource, _T(""), _T(""), CONNECT_INTERACTIVE);
+		NETRESOURCEW nr = {};
+		nr.dwType		= RESOURCETYPE_ANY;
+		nr.lpRemoteName = (LPWSTR)cnam.c_str();
+		DWORD n_res = WNetAddConnection3W(this->Handle, &nr, NULL, NULL, CONNECT_INTERACTIVE);
 		if (n_res==NO_ERROR) {
 			res = GetShareList(cnam, lp);
 		}

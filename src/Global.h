@@ -1661,7 +1661,7 @@ UnicodeString ExtractInZipImg(UnicodeString arc_file, UnicodeString img_fext);
 void add_PackItem(file_rec *fp, int arc_t, UnicodeString src_dir, TStringList *lst);
 
 bool is_InvalidUnc(UnicodeString dnam, bool del_sw = false);
-UnicodeString CheckAvailablePath(UnicodeString dnam, int tag);
+UnicodeString CheckAvailablePath(UnicodeString dnam, int tag, bool prvnt_unc = false);
 
 TStringList *GetCurBtnList(int scr_mode = ScrMode);
 

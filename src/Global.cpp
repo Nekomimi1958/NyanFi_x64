@@ -4200,9 +4200,11 @@ bool is_InvalidUnc(UnicodeString dnam,
 //---------------------------------------------------------------------------
 //パスの存在をチェックし、無ければ利用可能なパスを取得
 //---------------------------------------------------------------------------
-UnicodeString CheckAvailablePath(UnicodeString dnam, int tag)
+UnicodeString CheckAvailablePath(UnicodeString dnam, int tag, 
+	bool prvnt_unc)	//UNCパスを抑止	(default = false);
 {
-	if (!StartsStr("\\\\", dnam)  && is_root_dir(dnam) && is_drive_accessible(dnam)) return dnam;
+	if (!StartsStr("\\\\", dnam) && is_root_dir(dnam) && is_drive_accessible(dnam)) return dnam;
+	if (prvnt_unc) dnam = EmptyStr;
 
 	//ディレクトリの存在チェック(なければ親を検索)
 	UnicodeString drvnam = ExtractFileDrive(dnam);
