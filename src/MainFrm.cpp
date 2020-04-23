@@ -22086,6 +22086,12 @@ void __fastcall TNyanFiForm::PlayListActionExecute(TObject *Sender)
 				mciSendString(_T("resume PLYLIST"), NULL, 0, NULL);
 		}
 	}
+	//停止・クリア
+	else if (TEST_ActParam("CA")) {
+		::mciSendString(_T("close PLYLIST"), NULL, 0, NULL);
+		PlayList->Clear();
+		PlayStbIdx = -1;
+	}
 	//ファイル情報
 	else if (TEST_ActParam("FI")) {
 		if (!PlayFile.IsEmpty()) FileInfoDlg->ShowModalEx(PlayFile);
@@ -22094,33 +22100,36 @@ void __fastcall TNyanFiForm::PlayListActionExecute(TObject *Sender)
 	else {
 		try {
 			bool is_ls = TEST_DEL_ActParam("LS");
+			bool is_rp = TEST_DEL_ActParam("RP");
+			bool is_sf = TEST_DEL_ActParam("SF");
+			bool is_sr = TEST_DEL_ActParam("SR");
 
-			if (!ActionParam.IsEmpty()) {
+			UnicodeString lnam = to_absolute_name(exclude_quot(ActionParam));
+			if (!lnam.IsEmpty() && !file_exists(lnam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("対象")));
+
+			//プレイリスト作成
+			TStringList *lst = GetCurList(true);
+			if (!lnam.IsEmpty() || GetSelCount(lst)>0) {
 				cursor_HourGlass();
 				::mciSendString(_T("close PLYLIST"), NULL, 0, NULL);
 				PlayList->Clear();
 				PlayStbIdx = -1;
 				PlayRepeat = PlayShuffle = false;
-				if		(TEST_DEL_ActParam("RP")) PlayRepeat  = true;
-				else if (TEST_DEL_ActParam("SF")) PlayShuffle = true;
-				else if (TEST_DEL_ActParam("SR")) PlayShuffle = PlayRepeat = true;
-				ActionParam = exclude_quot(ActionParam);
+				if		(is_rp) PlayRepeat  = true;
+				else if (is_sf) PlayShuffle = true;
+				else if (is_sr) PlayShuffle = PlayRepeat = true;
 
 				//対象指定
-				if (!ActionParam.IsEmpty()) {
-					if (!add_PlayList(to_absolute_name(ActionParam)))
-						throw EAbort(LoadUsrMsg(USTR_NotFound, _T("対象")));
+				if (!lnam.IsEmpty()) {
+					if (!add_PlayList(lnam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("対象")));
 				}
 				//選択指定
 				else {
-					TStringList *lst = GetCurList(true);
-					if (GetSelCount(lst)>0) {
-						for (int i=0; i<lst->Count; i++) {
-							file_rec *fp = (file_rec*)lst->Objects[i];
-							if (fp->selected) add_PlayList(fp->f_name);
-						}
-						ClearAllAction->Execute();
+					for (int i=0; i<lst->Count; i++) {
+						file_rec *fp = (file_rec*)lst->Objects[i];
+						if (fp->selected) add_PlayList(fp->f_name);
 					}
+					ClearAllAction->Execute();
 				}
 
 				//再生開始

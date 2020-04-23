@@ -2225,7 +2225,7 @@ OptionDlg<span class="pram_text">_KYO</span>
 <a href="#TaskMan">→ TaskMan</a>　<a href="#CancelAllTask">→ CancelAllTask</a>　<a href="#Suspend">→ Suspend</a>
 
 <dt id="PlayList">PlayList<span class="pram_text">[_{RP|SF|SR}][;LS][;ディレクトリ名|リストファイル名]</span><br>
-PlayList<span class="pram_text">[_{NX|PR|PS|RS|PP|FI|LS}]</span><br>
+PlayList<span class="pram_text">[_{NX|PR|PS|RS|PP|FI|LS|CA}]</span><br>
 <dd>選択中の項目からサウンドファイル(<b>.wav</b>、<b>.wma</b>、<b>.mp3</b>、<b>.mid</b>)のプレイリストを作成して再生します。ディレクトリが選択されている場合はその中のサウンドファイル(サブディレクトリを含む)が、リストファイル(ファイル/ディレクトリ名を列挙したテキストファイル、ワークリストも可)が選択されている場合はその内容がプレイリストに追加されます。<br>
 
 <div class="spc_box">
@@ -2234,6 +2234,7 @@ PlayList<span class="pram_text">[_{NX|PR|PS|RS|PP|FI|LS}]</span><br>
 </div>
 <div class="spc_box">
 プレイリストの再生中、パラメータに <b>NX</b> を指定すると次曲、<b>PR</b> で前曲、<b>PS</b> で一時停止、<b>RS</b> で再開となります。また <b>PP</b> を指定すると、現在の曲が再生中なら一時停止、そうでなければ再生します。<br>
+パラメータに <b>CA</b> を指定すると、再生を停止し、プレイリストをクリアします。<br>
 </div>
 <div class="spc_box">
 パラメータに <b>FI</b> を指定すると再生中のファイル情報をダイアログ表示、<b>LS</b> を指定すると再生中のプレイリストが<a href="hid00073.htm">一覧ダイアログ</a>で表示されます。この場合、シャッフル再生中だと一覧もそのときのシャッフルされた状態で表示されます。<br>

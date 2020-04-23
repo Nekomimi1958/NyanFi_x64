@@ -875,7 +875,8 @@ void get_PrmList(
 			_T("RS : 再開\n")
 			_T("PP : 再生/一時停止\n")
 			_T("FI : ファイル情報を表示\n")
-			_T("LS : プレイリストを表示\n"));
+			_T("LS : プレイリストを表示\n")
+			_T("CA : 停止してプレイリストをクリア\n"));
 	}
 	else if (USAME_TI(cmd, "PopupMainMenu")) {
 		params.sprintf(_T("%s"),

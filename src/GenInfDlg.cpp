@@ -544,7 +544,16 @@ void __fastcall TGeneralInfoDlg::SetStatusBar(UnicodeString msg)
 	if (lp->ItemIndex!=-1)	stt_str.cat_sprintf(_T("  -  %u"),lp->ItemIndex + 1);
 	if (lp->SelCount>0)		stt_str.cat_sprintf(_T("    ‘I‘ð: %u"), lp->SelCount);
 	StatusBar1->Panels->Items[0]->Text = stt_str;
-	StatusBar1->Panels->Items[1]->Text = get_NameOfCodePage(CodePage, false, HasBOM);
+
+	if (isPlayList) {
+		stt_str.sprintf(_T("%s - %s"),
+			(PlayRepeat? _T("RPT") : _T("___")), (PlayShuffle? _T("SHF") : _T("___")));
+	}
+	else {
+		stt_str = get_NameOfCodePage(CodePage, false, HasBOM);
+	}
+	StatusBar1->Panels->Items[1]->Text = stt_str;
+
 	StatusBar1->Panels->Items[2]->Text = LineBreakStr;
 
 	UnicodeString lbuf = (lp->ItemIndex!=-1)? lp->Items->Strings[lp->ItemIndex] : EmptyStr;
