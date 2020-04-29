@@ -11689,7 +11689,7 @@ void __fastcall TNyanFiForm::SetActionAbort(UnicodeString msg)
 	CurWorking = false;
 	ProgressPanel->Visible = false;
 
-	if (contained_wd_i(_T("SKIP|HANDLED"), msg)) return;
+	if (contained_wd_i(_T("SKIP|HANDLED|CANCELED"), msg)) return;
 
 	if (StartsText("Abort", msg) || USAME_TI(msg, "Operation aborted")) msg = EmptyStr;
 	ActionOk = false;  ActionErrMsg = msg;
@@ -13516,9 +13516,9 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 											h_flag = !SameStr(hash_c, hash_o);
 											if (!h_flag && cfp->f_size>FILE_RBUF_SIZE) {
 												cfp->hash = get_HashStr(fnam0, idstr, false, true);
-												if ((int)GetLastError()==E_ABORT) TextAbort(_T("CANCELED"));
+												if ((int)GetLastError()==E_ABORT) CancelAbort();
 												ofp->hash = get_HashStr(fnam1, idstr, false, true);
-												if ((int)GetLastError()==E_ABORT) TextAbort(_T("CANCELED"));
+												if ((int)GetLastError()==E_ABORT) CancelAbort();
 												if (cfp->hash.IsEmpty() || ofp->hash.IsEmpty()) EmptyAbort();;
 												h_flag = !SameStr(cfp->hash, ofp->hash);
 											}
@@ -13528,9 +13528,9 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 											h_flag = SameStr(hash_c, hash_o);
 											if (h_flag && cfp->f_size>FILE_RBUF_SIZE) {
 												cfp->hash = get_HashStr(fnam0, idstr, false, true);
-												if ((int)GetLastError()==E_ABORT) TextAbort(_T("CANCELED"));
+												if ((int)GetLastError()==E_ABORT) CancelAbort();
 												ofp->hash = get_HashStr(fnam1, idstr, false, true);
-												if ((int)GetLastError()==E_ABORT) TextAbort(_T("CANCELED"));
+												if ((int)GetLastError()==E_ABORT) CancelAbort();
 												if (cfp->hash.IsEmpty() || ofp->hash.IsEmpty()) EmptyAbort();;
 												h_flag = SameStr(cfp->hash, ofp->hash);
 											}
@@ -13541,7 +13541,10 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 									}
 								}
 								catch (EAbort &e) {
-									if (USAME_TS(e.Message, "CANCELED")) UserAbort(USTR_Canceled);
+									if (USAME_TS(e.Message, "CANCELED")) {
+										AddLog("比較中断");
+										UserAbort(USTR_Canceled);
+									}
 									set_LogErrMsg(msg, e.Message);
 									log_buf->Text = log_buf->Text + " >" + msg;
 									h_flag = false;
@@ -13719,7 +13722,7 @@ void __fastcall TNyanFiForm::CompareHashActionExecute(TObject *Sender)
 			}
 
 			UnicodeString hash0 = get_HashStr(fnam0, idstr, false, true);
-			if ((int)GetLastError()==E_ABORT) UserAbort(USTR_Canceled);
+			if ((int)GetLastError()==E_ABORT) CancelAbort();
 			msg = make_LogHdr(idstr, fnam0, false, w_fn);
 			if (!hash0.IsEmpty()) {
 				fp0->hash = hash0;
@@ -13746,7 +13749,7 @@ void __fastcall TNyanFiForm::CompareHashActionExecute(TObject *Sender)
 			UnicodeString hash1;
 			if (!fnam1.IsEmpty()) {
 				hash1 = get_HashStr(fnam1, idstr, false, true);
-				if ((int)GetLastError()==E_ABORT) UserAbort(USTR_Canceled);
+				if ((int)GetLastError()==E_ABORT) CancelAbort();
 				msg = make_LogHdr(idstr, fnam1, false, w_fn);
 				if (!hash1.IsEmpty()) {
 					fp1->hash = hash1;
@@ -13801,6 +13804,7 @@ void __fastcall TNyanFiForm::CompareHashActionExecute(TObject *Sender)
 		EndWorkProgress();
 	}
 	catch (EAbort &e) {
+		if (USAME_TS(e.Message, "CANCELED")) AddLog("比較中断");
 		SetActionAbort(e.Message);
 	}
 }
@@ -17012,7 +17016,8 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 		SttWorkMsg(_T("重複ファイルの検索中..."), CurListTag);
 		ShowMessageHintEsc("検索中...");
 
-		__int64 max_sz		 = FindDuplDlg->MaxSizeEdit->Text.ToIntDef(64) * 1048576ul;
+		__int64 max_sz = (__int64)FindDuplDlg->MaxSizeEdit->Text.ToIntDef(64) * 1048576ul;
+
 		CurStt->find_ResLink = FindDuplDlg->ResLinkCheckBox->Checked;
 		CurStt->find_Path	 = CurPath[CurListTag];
 
@@ -17091,20 +17096,20 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 				BeginWorkProgress(_T("ハッシュ値取得中..."),
 					msg.sprintf(_T("%s (%u)"), (ps==0)? _T("簡易") : _T("全体"), f_lst->Count),
 					FileListBox[CurListTag]);
-				for (int i=0; i<f_lst->Count; i++) {
+				for (int i=0; i<f_lst->Count && !CancelWork; i++) {
 					PosWorkProgress(i, f_lst->Count);
-					if (is_KeyPress_ESC()) { CancelWork = true; break; }
-
 					__int64 *sz = (__int64*)f_lst->Objects[i];
 					//1パス目 先頭32KBで簡易チェック
 					if (ps==0) {
 						UnicodeString fnam = f_lst->Strings[i];
 						f_lst->Strings[i]  = get_HashStr(fnam, idstr, true) + "\t" + fnam;
+						if ((int)GetLastError()==E_ABORT) CancelWork = true;
 					}
 					//2パス目 全体チェック
 					else if (*sz>FILE_RBUF_SIZE) {
 						UnicodeString fnam = get_post_tab(f_lst->Strings[i]);
-						f_lst->Strings[i]  = get_HashStr(fnam, idstr) + "\t" + fnam;
+						f_lst->Strings[i]  = get_HashStr(fnam, idstr, false, true) + "\t" + fnam;
+						if ((int)GetLastError()==E_ABORT) CancelWork = true;
 					}
 				}
 				EndWorkProgress(EmptyStr, " ");
@@ -17265,9 +17270,8 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 		else {
 			ClearKeyBuff(true);
 			msg = "比較中断";
-			SttWorkMsg(msg, FindTag);
 			AddLog(msg);
-			beep_Warn();
+			SttWorkMsg(msg, FindTag);
 		}
 
 		CurWorking = false;
@@ -18213,7 +18217,7 @@ void __fastcall TNyanFiForm::CopyEnvInfItemClick(TObject *Sender)
 	infstr.cat_sprintf(_T(" %u×%u %u%%"),w_rc.Width(), w_rc.Height(), ScaledInt(100));
 	if (Screen->MonitorCount>1) infstr.cat_sprintf(_T(" (%u Monitors)"), Screen->MonitorCount);
 	//OSバージョン情報
-	infstr += ("  OS" + OSVerInfStr);
+	infstr += ("  OS" + get_OsVerInfStr());
 	//物理メモリ
 	MEMORYSTATUSEX stt_ex = {sizeof(MEMORYSTATUSEX)};
 	if (::GlobalMemoryStatusEx(&stt_ex))
@@ -19650,7 +19654,7 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 	add_PropLine(_T("画面サイズ"), get_wd_x_hi_str(w_rc.Width(), w_rc.Height()), i_lst);
 	add_PropLine(_T("スケーリング"), tmp.sprintf(_T("%u%%"), ScaledInt(100, this)), i_lst);
 	if (Screen->MonitorCount>1) add_PropLine(_T("モニタ数"), Screen->MonitorCount, i_lst);
-	add_PropLine(_T("OSバージョン"), OSVerInfStr, i_lst);
+	add_PropLine(_T("OSバージョン"), get_OsVerInfStr(), i_lst);
 	i_lst->Add(EmptyStr);
 
 	//アーカイバDLL情報

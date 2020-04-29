@@ -142,6 +142,11 @@ void SkipAbort()
 	throw EAbort("SKIP");
 }
 //---------------------------------------------------------------------------
+void CancelAbort()
+{
+	throw EAbort("CANCELED");
+}
+//---------------------------------------------------------------------------
 void EmptyAbort()
 {
 	throw EAbort(EmptyStr);

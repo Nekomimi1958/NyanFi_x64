@@ -1903,6 +1903,8 @@ UnicodeString load_ImageThumbCache(UnicodeString fnam, Graphics::TBitmap *o_bmp)
 void InitializeGlobal();
 void EndGlobal();
 
+UnicodeString get_OsVerInfStr();
+
 void SetupTimer();
 void ClearNopStt();
 

@@ -2187,8 +2187,8 @@ UnicodeString get_HashStr(
 {
 	HCRYPTPROV hProv;
 	HCRYPTHASH hHash;
+	bool canceled = false;
 
-	SetLastError(NO_ERROR);
 	HANDLE hFile = ::CreateFile(fnam.c_str(), GENERIC_READ,
 				FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 	if (INVALID_HANDLE_VALUE==hFile) return EmptyStr;
@@ -2214,7 +2214,7 @@ UnicodeString get_HashStr(
 				if (only_1blk) break;
 				if (prc_msg && i%64==0 && is_KeyPress_ESC()) {	//***
 					ClearKeyBuff(true);
-					SetLastError(E_ABORT);
+					canceled = true;
 					Abort();
 				}
 			}
@@ -2233,6 +2233,9 @@ UnicodeString get_HashStr(
 		::CryptReleaseContext(hProv, 0);
 		::CloseHandle(hFile);
 	}
+
+	SetLastError(NO_ERROR);
+	if (canceled) SetLastError(E_ABORT);
 
 	return ret_str;
 }

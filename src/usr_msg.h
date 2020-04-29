@@ -96,6 +96,7 @@ void SysErrAbort(unsigned id);
 void LastErrAbort();
 void TextAbort(const _TCHAR *msg);
 void SkipAbort();
+void CancelAbort();
 void EmptyAbort();
 
 //---------------------------------------------------------------------------

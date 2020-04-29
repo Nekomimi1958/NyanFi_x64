@@ -1187,18 +1187,6 @@ void InitializeGlobal()
 	VersionNo = GetProductVersion(Application->ExeName, mj, mi, bl)? mj*100 + mi*10 + bl : 0;
 	VersionStr.sprintf(_T("V%.2f"), VersionNo/100.0);
 
-	//OSバージョン情報
-	OSVerInfStr.cat_sprintf(_T("%u.%u.%u "), TOSVersion::Major, TOSVersion::Minor, TOSVersion::Build);
-	if (IsWindows10OrGreater()) {
-		std::unique_ptr<TRegistry> reg(new TRegistry());
-		reg->RootKey = HKEY_LOCAL_MACHINE;
-		if (reg->OpenKeyReadOnly("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion")) {
-			UnicodeString s = reg->ReadString("ReleaseId");
-			if (!s.IsEmpty()) OSVerInfStr.cat_sprintf(_T("(%s) "), s.c_str());
-		}
-	}
-	if (IsWindowsServer()) OSVerInfStr += "Server ";
-
 	//ユーザ名
 	_TCHAR szName[256];
 	DWORD size = 256;
@@ -2223,6 +2211,42 @@ void EndGlobal()
 	if (hGdi32) ::FreeLibrary(hGdi32);
 
 	EndDarkMode();
+}
+
+//---------------------------------------------------------------------------
+//OSバージョン情報を取得
+//---------------------------------------------------------------------------
+UnicodeString get_OsVerInfStr()
+{
+	if (OSVerInfStr.IsEmpty()) {
+		std::unique_ptr<TStringList> o_lst(new TStringList());
+		if (Execute_cmdln("cmd /c ver", ExePath, "HO", NULL, o_lst.get())) {
+			for (int i=0; i<o_lst->Count; i++) {
+				UnicodeString lbuf = o_lst->Strings[i];
+				lbuf = Trim(get_tkn(get_tkn_r(lbuf, "[Version"), "]"));
+				if (!lbuf.IsEmpty()) {
+					OSVerInfStr = lbuf + " ";
+					break;
+				}
+			}
+		}
+
+		if (OSVerInfStr.IsEmpty()) {
+			OSVerInfStr.sprintf(_T("%u.%u.%u "), TOSVersion::Major, TOSVersion::Minor, TOSVersion::Build);
+		}
+
+		if (IsWindows10OrGreater()) {
+			std::unique_ptr<TRegistry> reg(new TRegistry());
+			reg->RootKey = HKEY_LOCAL_MACHINE;
+			if (reg->OpenKeyReadOnly("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion")) {
+				UnicodeString s = reg->ReadString("ReleaseId");
+				if (!s.IsEmpty()) OSVerInfStr.cat_sprintf(_T("(%s) "), s.c_str());
+			}
+		}
+		if (::IsWindowsServer()) OSVerInfStr += "Server ";
+	}
+
+	return OSVerInfStr;
 }
 
 //---------------------------------------------------------------------------
