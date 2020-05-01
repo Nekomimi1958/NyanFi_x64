@@ -1060,7 +1060,7 @@ void __fastcall TNyanFiForm::FormClose(TObject *Sender, TCloseAction &Action)
 		if (HistForm->Floating && HistForm->Visible) HistForm->Close();
 
 		IniFile->WriteBoolGen(_T("DockIsTop"),	SideDockPanel->Align==alTop);
-		if (LayoutMode==0) {
+		if (LayoutMode==0 || LayoutMode==3) {
 			IniFile->WriteIntGen(_T("SubHeight"),	SubPanel->Height);
 			IniFile->WriteIntGen(_T("InfWidth"),	InfPanelWidth);
 			IniFile->WriteIntGen(_T("ImageWidth"),	PreviewWidth);
@@ -1536,7 +1536,7 @@ void __fastcall TNyanFiForm::WmCopyData(TMessage& msg)
 		IniFile->WriteIntGen(_T("Win2Height"),			dp->WinHeight);
 		IniFile->WriteBoolGen(_T("ShowFileListOnly2"),	(ShowFileListOnly2 = dp->ShowFileListOnly));
 
-		if (LayoutMode==0) {
+		if (LayoutMode==0 || LayoutMode==3) {
 			IniFile->WriteIntGen(_T("SubHeight2"),		dp->SubHeight);
 			IniFile->WriteIntGen(_T("InfWidth2"),		dp->InfWidth);
 			IniFile->WriteIntGen(_T("ImageWidth2"),		dp->ImageWidth);
@@ -1900,7 +1900,7 @@ void __fastcall TNyanFiForm::SubPanelResize(TObject *Sender)
 {
 	if (!Initialized || UnInitializing) return;
 
-	if (LayoutMode==0)
+	if (LayoutMode==0 || LayoutMode==3)
 		IniFile->WriteIntGen(IsPrimary? _T("SubHeight") : _T("SubHeight2"),	SubPanel->Height);
 	else
 		IniFile->WriteIntGen(IsPrimary? _T("SubWidth")  : _T("SubWidth2"),	SubPanel->Width);
@@ -1911,7 +1911,8 @@ void __fastcall TNyanFiForm::ImgInfSplitterMoved(TObject *Sender)
 	if (!Initialized || UnInitializing) return;
 
 	if (PreviewPanel->Visible) {
-		if (LayoutMode==0) PreviewWidth = PreviewPanel->Width; else PreviewHeight = PreviewPanel->Height;
+		if (LayoutMode==0 || LayoutMode==3) PreviewWidth = PreviewPanel->Width; else PreviewHeight = PreviewPanel->Height;
+
 	}
 }
 //---------------------------------------------------------------------------
@@ -1920,7 +1921,7 @@ void __fastcall TNyanFiForm::InfLogSplitterMoved(TObject *Sender)
 	if (!Initialized || UnInitializing) return;
 
 	if (InfPanel->Visible) {
-		if (LayoutMode==0) InfPanelWidth = InfPanel->Width; else InfPanelHeight = InfPanel->Height;
+		if (LayoutMode==0 || LayoutMode==3) InfPanelWidth = InfPanel->Width; else InfPanelHeight = InfPanel->Height;
 	}
 }
 
@@ -4268,8 +4269,8 @@ void __fastcall TNyanFiForm::SetSubLayout(
 		InfPanelWidth  = IniFile->ReadIntGen(IsPrimary? _T("InfWidth")    : _T("InfWidth2"),	Width/2);
 	}
 
-	//サブパネルが下
-	if (LayoutMode==0) {
+	//サブパネルが下/上
+	if (LayoutMode==0 || LayoutMode==3) {
 		set_PanelAlign(InfPanel, InfLogSplitter, alLeft, SplitterWidth2);
 		if (!LogPanel->Visible) InfPanel->Align = alClient;
 
@@ -4284,7 +4285,7 @@ void __fastcall TNyanFiForm::SetSubLayout(
 			InfListBox->Width = InfPanel->Width - PreviewWidth;
 		ImgInfSplitter->Align = alLeft;
 	}
-	//サブパネルがサイド
+	//サブパネルが右/左
 	else {
 		set_PanelAlign(InfPanel, InfLogSplitter, alTop, SplitterWidth2);
 		if (!LogPanel->Visible) InfPanel->Align = alClient;
@@ -4655,6 +4656,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	if (chg_layout) {
 		SubPanel->Visible = !(IsPrimary? ShowFileListOnly : ShowFileListOnly2);
 		InfPanel->Visible = (PreviewPanel->Visible || InfListPanel->Visible);
+		ToolBarF->Top = 0;
 
 		set_PanelAlign(SubPanel, ListSubSplitter, LayoutMode, SplitterWidth);
 		SetSubLayout(initial);
@@ -4789,7 +4791,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	}
 
 	//時計パネル
-	ClockBar->Visible  = !ShowSttBar && (LayoutMode!=0) && !SttClockFmt.IsEmpty();
+	ClockBar->Visible  = !ShowSttBar && (LayoutMode==1 || LayoutMode==2) && !SttClockFmt.IsEmpty();
 	ClockBar->SizeGrip = (LayoutMode==1);
 	ClockBar->Repaint();
 
@@ -10870,7 +10872,9 @@ void __fastcall TNyanFiForm::FileListBoxMouseMove(TObject *Sender, TShiftState S
 		//イベント: ファイルリストからドラッグ完了時
 		ExeEventCommand(OnDragEnd);
 	}
-	else DragStartTag = -1;
+	else {
+		DragStartTag = -1;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -24039,14 +24043,14 @@ void __fastcall TNyanFiForm::SetSubSizeActionExecute(TObject *Sender)
 {
 	int size = ActionParam.ToIntDef(0);	if (size==0) return;
 	bool rel = (StartsStr('+', ActionParam) || StartsStr('-', ActionParam));
-	//サブパネルが下
-	if (LayoutMode==0) {
+	//サブパネルが下/上
+	if (LayoutMode==0 || LayoutMode==3) {
 		int hi = SubPanel->Height;
 		if (rel) hi += size; else hi = size;
 		if ((MainPanel->ClientHeight - hi)<ListPanel->Constraints->MinHeight) return;
 		SubPanel->Height = hi;
 	}
-	//サブパネルがサイド
+	//サブパネルが右/左
 	else {
 		int wd = SubPanel->Width;
 		if (rel) wd += size; else wd = size;
@@ -24396,7 +24400,7 @@ void __fastcall TNyanFiForm::ShowPropertyActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::ShowStatusBarActionExecute(TObject *Sender)
 {
 	StatusBar1->Visible = SetToggleAction(ShowSttBar);
-	ClockBar->Visible	= !ShowSttBar && (LayoutMode!=0) && !SttClockFmt.IsEmpty();
+	ClockBar->Visible	= !ShowSttBar && (LayoutMode==1 || LayoutMode==2) && !SttClockFmt.IsEmpty();
 	ClockBarI->Visible	= !ShowSttBar && !SttClockFmt.IsEmpty();;
 	if (StatusBar1->Visible) SetFileInf();
 }

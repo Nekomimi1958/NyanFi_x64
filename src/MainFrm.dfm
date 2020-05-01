@@ -1237,891 +1237,6 @@ object NyanFiForm: TNyanFiForm
       ShowCaption = False
       TabOrder = 0
       StyleElements = [seBorder]
-      object ListSubSplitter: TSplitter
-        Left = 0
-        Top = 362
-        Width = 724
-        Height = 4
-        Cursor = crVSplit
-        Align = alBottom
-        AutoSnap = False
-        Color = clBtnFace
-        MinSize = 60
-        ParentColor = False
-        OnCanResize = ListSubSplitterCanResize
-        OnPaint = SplitterBgPaint
-      end
-      object ListPanel: TPanel
-        Left = 0
-        Top = 22
-        Width = 724
-        Height = 340
-        Align = alClient
-        BevelOuter = bvNone
-        Constraints.MinHeight = 100
-        Constraints.MinWidth = 100
-        DoubleBuffered = True
-        ParentDoubleBuffered = False
-        TabOrder = 1
-        OnResize = ListPanelResize
-        object LRSplitter: TSplitter
-          Left = 342
-          Top = 53
-          Width = 4
-          Height = 287
-          AutoSnap = False
-          Color = clBtnFace
-          ParentColor = False
-          OnCanResize = LRSplitterCanResize
-          OnMoved = LRSplitterMoved
-          OnPaint = SplitterBgPaint
-        end
-        object L_Panel: TPanel
-          Left = 0
-          Top = 53
-          Width = 342
-          Height = 287
-          Align = alLeft
-          BevelOuter = bvNone
-          Constraints.MinWidth = 30
-          TabOrder = 2
-          OnResize = L_PanelResize
-          object L_StatPanel: TPanel
-            Left = 0
-            Top = 269
-            Width = 342
-            Height = 18
-            Align = alBottom
-            Alignment = taRightJustify
-            BevelEdges = [beTop]
-            BevelKind = bkFlat
-            BevelOuter = bvLowered
-            TabOrder = 3
-            StyleElements = [seBorder]
-            OnClick = L_StatPanelClick
-            object FilterComboBox: TComboBox
-              Left = 74
-              Top = 0
-              Width = 150
-              Height = 21
-              Font.Charset = DEFAULT_CHARSET
-              Font.Color = clWindowText
-              Font.Height = -11
-              Font.Name = 'Tahoma'
-              Font.Style = []
-              ParentFont = False
-              TabOrder = 0
-              Visible = False
-              OnChange = FilterComboBoxChange
-              OnExit = FilterComboBoxExit
-              OnKeyDown = FilterComboBoxKeyDown
-              OnKeyPress = FilterComboBoxKeyPress
-            end
-          end
-          object L_ListBox: TListBox
-            Left = 0
-            Top = 38
-            Width = 342
-            Height = 231
-            HelpContext = 4
-            Style = lbVirtualOwnerDraw
-            AutoComplete = False
-            Align = alLeft
-            Anchors = [akLeft, akTop, akRight, akBottom]
-            BevelInner = bvLowered
-            BorderStyle = bsNone
-            Constraints.MinHeight = 16
-            DoubleBuffered = False
-            ItemHeight = 20
-            MultiSelect = True
-            ParentDoubleBuffered = False
-            ParentShowHint = False
-            ShowHint = False
-            TabOrder = 1
-            StyleElements = [seBorder]
-            OnDblClick = FileListBoxDblClick
-            OnDragDrop = FileListBoxDragDrop
-            OnDragOver = FileListBoxDragOver
-            OnDrawItem = FileListDrawItem
-            OnEnter = FileListBoxEnter
-            OnExit = FileListBoxExit
-            OnKeyDown = FileListKeyDown
-            OnKeyPress = FileListKeyPress
-            OnKeyUp = FileListBoxKeyUp
-            OnMouseDown = FileListBoxMouseDown
-            OnMouseMove = FileListBoxMouseMove
-            OnMouseUp = FileListBoxMouseUp
-          end
-          object L_HeaderControl: THeaderControl
-            Left = 0
-            Top = 20
-            Width = 342
-            Height = 18
-            Sections = <
-              item
-                FixedWidth = True
-                ImageIndex = -1
-                Style = hsOwnerDraw
-                Width = 50
-              end
-              item
-                FixedWidth = True
-                ImageIndex = -1
-                Style = hsOwnerDraw
-                Width = 50
-              end
-              item
-                FixedWidth = True
-                ImageIndex = -1
-                Style = hsOwnerDraw
-                Width = 50
-              end
-              item
-                FixedWidth = True
-                ImageIndex = -1
-                Style = hsOwnerDraw
-                Width = 50
-              end
-              item
-                ImageIndex = -1
-                Style = hsOwnerDraw
-                Width = 50
-              end>
-            OnDrawSection = FL_HeaderControlDrawSection
-            OnSectionClick = FileListHeaderSectionClick
-            NoSizing = True
-          end
-          object L_HdrPanel: TPanel
-            Left = 0
-            Top = 0
-            Width = 342
-            Height = 20
-            Align = alTop
-            Alignment = taLeftJustify
-            TabOrder = 0
-            Visible = False
-            StyleElements = [seBorder]
-            object L_SelDrvBtn2: TSpeedButton
-              Left = 1
-              Top = 1
-              Width = 16
-              Height = 18
-              Align = alLeft
-              Flat = True
-              Layout = blGlyphTop
-              OnClick = SelDrvBtnClick
-            end
-            object L_DirPanel2: TPanel
-              Left = 17
-              Top = 1
-              Width = 276
-              Height = 18
-              Align = alClient
-              Alignment = taLeftJustify
-              BevelOuter = bvNone
-              ParentBackground = False
-              ParentColor = True
-              TabOrder = 0
-              OnClick = L_DirPanelClick
-            end
-            object RelPanel2: TPanel
-              Left = 293
-              Top = 1
-              Width = 48
-              Height = 18
-              Align = alRight
-              BevelOuter = bvLowered
-              TabOrder = 1
-              StyleElements = [seBorder]
-              object RelPaintBox2: TPaintBox
-                Left = 1
-                Top = 1
-                Width = 46
-                Height = 16
-                Align = alClient
-                OnPaint = RelPaintBoxPaint
-              end
-            end
-          end
-        end
-        object R_Panel: TPanel
-          Left = 346
-          Top = 53
-          Width = 378
-          Height = 287
-          Align = alClient
-          BevelOuter = bvNone
-          Constraints.MinWidth = 30
-          TabOrder = 3
-          OnResize = R_PanelResize
-          object R_ListBox: TListBox
-            Tag = 1
-            Left = 0
-            Top = 38
-            Width = 378
-            Height = 231
-            HelpContext = 4
-            Style = lbVirtualOwnerDraw
-            AutoComplete = False
-            Align = alLeft
-            Anchors = [akLeft, akTop, akRight, akBottom]
-            BevelInner = bvLowered
-            BorderStyle = bsNone
-            Constraints.MinHeight = 16
-            DoubleBuffered = False
-            ItemHeight = 20
-            MultiSelect = True
-            ParentDoubleBuffered = False
-            ParentShowHint = False
-            ShowHint = False
-            TabOrder = 1
-            StyleElements = [seBorder]
-            OnDblClick = FileListBoxDblClick
-            OnDragDrop = FileListBoxDragDrop
-            OnDragOver = FileListBoxDragOver
-            OnDrawItem = FileListDrawItem
-            OnEnter = FileListBoxEnter
-            OnExit = FileListBoxExit
-            OnKeyDown = FileListKeyDown
-            OnKeyPress = FileListKeyPress
-            OnKeyUp = FileListBoxKeyUp
-            OnMouseDown = FileListBoxMouseDown
-            OnMouseMove = FileListBoxMouseMove
-            OnMouseUp = FileListBoxMouseUp
-          end
-          object R_StatPanel: TPanel
-            Tag = 1
-            Left = 0
-            Top = 269
-            Width = 378
-            Height = 18
-            Align = alBottom
-            Alignment = taRightJustify
-            BevelEdges = [beTop]
-            BevelKind = bkFlat
-            BevelOuter = bvLowered
-            TabOrder = 3
-            StyleElements = [seBorder]
-            OnClick = R_StatPanelClick
-          end
-          object R_HeaderControl: THeaderControl
-            Tag = 1
-            Left = 0
-            Top = 20
-            Width = 378
-            Height = 18
-            Sections = <
-              item
-                FixedWidth = True
-                ImageIndex = -1
-                Style = hsOwnerDraw
-                Width = 50
-              end
-              item
-                FixedWidth = True
-                ImageIndex = -1
-                Style = hsOwnerDraw
-                Width = 50
-              end
-              item
-                FixedWidth = True
-                ImageIndex = -1
-                Style = hsOwnerDraw
-                Width = 50
-              end
-              item
-                FixedWidth = True
-                ImageIndex = -1
-                Style = hsOwnerDraw
-                Width = 50
-              end
-              item
-                ImageIndex = -1
-                Style = hsOwnerDraw
-                Width = 50
-              end>
-            OnDrawSection = FL_HeaderControlDrawSection
-            OnSectionClick = FileListHeaderSectionClick
-            NoSizing = True
-          end
-          object R_HdrPanel: TPanel
-            Left = 0
-            Top = 0
-            Width = 378
-            Height = 20
-            Align = alTop
-            Alignment = taLeftJustify
-            TabOrder = 0
-            Visible = False
-            StyleElements = [seBorder]
-            object R_SelDrvBtn2: TSpeedButton
-              Tag = 1
-              Left = 1
-              Top = 1
-              Width = 16
-              Height = 18
-              Align = alLeft
-              Flat = True
-              Layout = blGlyphTop
-              OnClick = SelDrvBtnClick
-            end
-            object R_DirPanel2: TPanel
-              Tag = 1
-              Left = 17
-              Top = 1
-              Width = 360
-              Height = 18
-              Align = alClient
-              Alignment = taLeftJustify
-              BevelOuter = bvNone
-              ParentBackground = False
-              ParentColor = True
-              TabOrder = 0
-              OnClick = R_DirPanelClick
-            end
-          end
-        end
-        object TabPanel: TPanel
-          Left = 0
-          Top = 0
-          Width = 724
-          Height = 31
-          Align = alTop
-          BevelOuter = bvNone
-          TabOrder = 0
-          StyleElements = [seBorder]
-          object TabBottomPaintBox: TPaintBox
-            Left = 0
-            Top = 30
-            Width = 724
-            Height = 1
-            Align = alBottom
-            OnPaint = TabBottomPaintBoxPaint
-          end
-          object TabOuterPanel: TPanel
-            Left = 0
-            Top = 0
-            Width = 724
-            Height = 30
-            Align = alClient
-            BevelOuter = bvNone
-            ParentColor = True
-            TabOrder = 0
-            StyleElements = []
-            DesignSize = (
-              724
-              30)
-            object PopTabBtn: TSpeedButton
-              Left = 0
-              Top = 4
-              Width = 16
-              Height = 25
-              Flat = True
-              Layout = blGlyphTop
-              OnClick = PopTabBtnClick
-            end
-            object TabControl1: TTabControl
-              Left = 16
-              Top = 4
-              Width = 709
-              Height = 27
-              Anchors = [akLeft, akTop, akRight]
-              DoubleBuffered = True
-              OwnerDraw = True
-              ParentDoubleBuffered = False
-              TabOrder = 0
-              TabStop = False
-              StyleElements = []
-              OnChange = TabControl1Change
-              OnChanging = TabControl1Changing
-              OnDrawTab = TabControl1DrawTab
-              OnEnter = TabControl1Enter
-              OnMouseDown = TabControl1MouseDown
-              OnMouseLeave = TabControl1MouseLeave
-              OnMouseMove = TabControl1MouseMove
-              OnMouseUp = TabControl1MouseUp
-              OnResize = TabControl1Resize
-              object DelTabBtn: TSpeedButton
-                Left = 675
-                Top = 6
-                Width = 14
-                Height = 14
-                Flat = True
-                Glyph.Data = {
-                  C6040000424DC60400000000000036040000280000000C0000000C0000000100
-                  08000000000090000000C30E0000C30E000000010000000000001C24AC00232A
-                  A900252DBF002B33BF002C34BD002D35BD002C34BF002E35BE002E36BE00262E
-                  C000262EC100252EC200262FC9002730C0002F37C900212BD800232DD800252F
-                  D9002630D9002731D9002831D9002932D9002933D9002832DA002A34D9002A34
-                  DA002B34DA002B35DA002D36D9002C36DA002D36DA002F38D8002E38DA002F38
-                  DA002F39DA002F39DC00313ADA00313ADB00323BDB00333CDB00353EDB003039
-                  DD00323BDC00313ADE00323CDD00333CDD00353FDC00363FDC00343EDE00353E
-                  DE00363FDE003740DD003641DF003840DA003841DC003A43DC003841DE003842
-                  DE003943DE003B44DC003F47DD003F48DD00414ADD005058E000545CE100565E
-                  E100585FE2005B63E2005D64E2007077E7007177E700747BE7007980E7007B81
-                  EB007C82EB007F85E9007E84EC007F85EC007E84ED0000C0C0008187E9008086
-                  EC00848AE900888DEA00898FEA008C91EB008E93EB00969BED009B9FEE00999E
-                  F1009EA3EE00A0A5EE00A0A4F200A8ADF000B9BDF300C2C6F500C9CCF600CACC
-                  F600D3D5F700D6D8F800D8DAF800F3F4FD00F4F5FD00F5F5FD00F7F7FD00F7F7
-                  FE00F9FAFE00FBFBFE00FFFFFF00000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  0000000000000000000000000000000000000000000000000000000000000000
-                  00000000000000000000000000000000000000000000000000004F0E03040707
-                  07080506014F461F2A292D383833232B35004E17475F3C223614565E340A4D19
-                  446A62370F536C5D2C094D271A426661546C5B1A320D4D2636163F696C5A102F
-                  390D4D262E14526B68603B203A0D4D261D556C573F65643D2D0D4C12486C5818
-                  154067633002511E41502128361B434B310B5C3E1C11252626261A13240C4F59
-                  4C494A4A4A4A4A4A454F}
-                Visible = False
-                OnClick = DelTabBtnClick
-                OnMouseLeave = DelTabBtnMouseLeave
-              end
-            end
-          end
-        end
-        object HdrPanel: TPanel
-          Left = 0
-          Top = 31
-          Width = 724
-          Height = 22
-          Align = alTop
-          BevelEdges = [beTop, beBottom]
-          TabOrder = 1
-          StyleElements = [seBorder]
-          object L_TopPanel: TPanel
-            Left = 1
-            Top = 1
-            Width = 320
-            Height = 20
-            Align = alLeft
-            Alignment = taLeftJustify
-            BevelOuter = bvNone
-            TabOrder = 0
-            StyleElements = [seBorder]
-            object L_SelDrvBtn: TSpeedButton
-              Left = 0
-              Top = 0
-              Width = 16
-              Height = 20
-              Align = alLeft
-              Flat = True
-              Layout = blGlyphTop
-              OnClick = SelDrvBtnClick
-            end
-            object L_DirPanel: TPanel
-              Left = 16
-              Top = 0
-              Width = 304
-              Height = 20
-              Align = alClient
-              Alignment = taLeftJustify
-              BevelOuter = bvNone
-              ParentBackground = False
-              ParentColor = True
-              TabOrder = 0
-              StyleElements = [seBorder]
-              OnClick = L_DirPanelClick
-            end
-          end
-          object R_TopPanel: TPanel
-            Tag = 1
-            Left = 369
-            Top = 1
-            Width = 354
-            Height = 20
-            Align = alClient
-            Alignment = taLeftJustify
-            BevelOuter = bvNone
-            TabOrder = 2
-            StyleElements = [seBorder]
-            object R_SelDrvBtn: TSpeedButton
-              Tag = 1
-              Left = 0
-              Top = 0
-              Width = 16
-              Height = 20
-              Align = alLeft
-              Flat = True
-              Layout = blGlyphTop
-              OnClick = SelDrvBtnClick
-            end
-            object R_DirPanel: TPanel
-              Tag = 1
-              Left = 16
-              Top = 0
-              Width = 338
-              Height = 20
-              Align = alClient
-              Alignment = taLeftJustify
-              BevelOuter = bvNone
-              ParentColor = True
-              TabOrder = 0
-              StyleElements = [seBorder]
-              OnClick = R_DirPanelClick
-            end
-          end
-          object RelPanel: TPanel
-            Left = 321
-            Top = 1
-            Width = 48
-            Height = 20
-            Align = alLeft
-            BevelOuter = bvLowered
-            TabOrder = 1
-            StyleElements = [seBorder]
-            object RelPaintBox: TPaintBox
-              Left = 1
-              Top = 1
-              Width = 46
-              Height = 18
-              Align = alClient
-              OnPaint = RelPaintBoxPaint
-            end
-          end
-        end
-      end
-      object SubPanel: TPanel
-        Left = 0
-        Top = 366
-        Width = 724
-        Height = 113
-        Align = alBottom
-        BevelOuter = bvNone
-        Constraints.MinHeight = 32
-        Constraints.MinWidth = 32
-        TabOrder = 2
-        StyleElements = []
-        OnResize = SubPanelResize
-        object InfLogSplitter: TSplitter
-          Tag = 1
-          Left = 341
-          Top = 0
-          Width = 4
-          Height = 113
-          AutoSnap = False
-          MinSize = 50
-          OnMoved = InfLogSplitterMoved
-          OnPaint = SplitterBgPaint
-        end
-        object InfPanel: TPanel
-          Left = 0
-          Top = 0
-          Width = 341
-          Height = 113
-          Align = alLeft
-          BevelOuter = bvNone
-          ParentBackground = False
-          TabOrder = 0
-          StyleElements = [seBorder]
-          object ImgInfSplitter: TSplitter
-            Tag = 1
-            Left = 136
-            Top = 0
-            Width = 4
-            Height = 113
-            OnCanResize = ImgInfSplitterCanResize
-            OnMoved = ImgInfSplitterMoved
-            OnPaint = SplitterBgPaint
-          end
-          object PreviewPanel: TPanel
-            Left = 0
-            Top = 0
-            Width = 136
-            Height = 113
-            Align = alLeft
-            BevelEdges = []
-            BevelOuter = bvNone
-            ParentBackground = False
-            TabOrder = 0
-            StyleElements = []
-            object LockTxtPanel: TPanel
-              Left = 0
-              Top = 89
-              Width = 136
-              Height = 24
-              Align = alBottom
-              Alignment = taLeftJustify
-              BevelEdges = [beTop]
-              BevelKind = bkSoft
-              BevelOuter = bvNone
-              PopupMenu = TxtPrvPopupMenu
-              TabOrder = 1
-              Visible = False
-              StyleElements = [seBorder]
-              OnDblClick = LockTxtPanelDblClick
-            end
-            object PrvInnerPanel: TPanel
-              Left = 0
-              Top = 0
-              Width = 136
-              Height = 89
-              Align = alClient
-              BevelOuter = bvNone
-              TabOrder = 0
-              StyleElements = []
-              DesignSize = (
-                136
-                89)
-              object PreviewImage: TImage
-                Left = 0
-                Top = 0
-                Width = 136
-                Height = 53
-                Align = alClient
-                PopupMenu = ImgPrvPopupMenu
-                OnDblClick = PreviewImageDblClick
-                OnMouseDown = PreviewImageMouseDown
-                OnMouseMove = PreviewImageMouseMove
-                OnMouseUp = PreviewImageMouseUp
-              end
-              object PreviewSizeLabel: TLabel
-                Left = 20
-                Top = 20
-                Width = 50
-                Height = 13
-                Caption = '100 '#215' 100'
-                Transparent = True
-                Visible = False
-              end
-              object PreviewSttLabel: TLabel
-                Left = 4
-                Top = 2
-                Width = 3
-                Height = 13
-                Anchors = []
-                Transparent = True
-                Visible = False
-              end
-              object TxtPrvSplitter: TSplitter
-                Tag = 1
-                Left = 0
-                Top = 53
-                Width = 136
-                Height = 4
-                Cursor = crVSplit
-                Align = alBottom
-                AutoSnap = False
-                Visible = False
-                OnMoved = TxtPrvSplitterMoved
-                OnPaint = SplitterBgPaint
-              end
-              object HotPosImage: TImage
-                Left = 0
-                Top = 0
-                Width = 64
-                Height = 64
-                Transparent = True
-                Visible = False
-              end
-              object TxtPrvListPanel: TPanel
-                Left = 0
-                Top = 0
-                Width = 136
-                Height = 53
-                Align = alClient
-                BevelOuter = bvNone
-                TabOrder = 0
-                Visible = False
-                object TxtPrvListBox: TListBox
-                  Left = 0
-                  Top = 0
-                  Width = 134
-                  Height = 53
-                  HelpContext = 82
-                  Style = lbVirtualOwnerDraw
-                  Align = alLeft
-                  Anchors = [akLeft, akTop, akRight, akBottom]
-                  BorderStyle = bsNone
-                  DoubleBuffered = False
-                  ItemHeight = 13
-                  MultiSelect = True
-                  ParentDoubleBuffered = False
-                  PopupMenu = TxtPrvPopupMenu
-                  TabOrder = 0
-                  StyleElements = [seBorder]
-                  OnData = TxtPrvListBoxData
-                  OnDrawItem = TxtPrvListBoxDrawItem
-                  OnEnter = TxtPrvListBoxEnter
-                  OnExit = SubListBoxExit
-                  OnKeyDown = InfListBoxKeyDown
-                  OnMouseDown = SubListBoxMouseDown
-                end
-              end
-              object TxtTailListPanel: TPanel
-                Left = 0
-                Top = 57
-                Width = 136
-                Height = 32
-                Align = alBottom
-                BevelOuter = bvNone
-                TabOrder = 1
-                Visible = False
-                object TxtTailListBox: TListBox
-                  Left = 0
-                  Top = 0
-                  Width = 134
-                  Height = 32
-                  HelpContext = 82
-                  Style = lbVirtualOwnerDraw
-                  Align = alLeft
-                  Anchors = [akLeft, akTop, akRight, akBottom]
-                  BorderStyle = bsNone
-                  DoubleBuffered = False
-                  ItemHeight = 13
-                  MultiSelect = True
-                  ParentDoubleBuffered = False
-                  PopupMenu = TxtPrvPopupMenu
-                  TabOrder = 0
-                  StyleElements = [seBorder]
-                  OnData = TxtTailListBoxData
-                  OnDrawItem = TxtTailListBoxDrawItem
-                  OnEnter = TxtPrvListBoxEnter
-                  OnExit = SubListBoxExit
-                  OnKeyDown = InfListBoxKeyDown
-                  OnMouseDown = SubListBoxMouseDown
-                end
-              end
-            end
-          end
-          object InfListPanel: TPanel
-            Left = 140
-            Top = 0
-            Width = 201
-            Height = 113
-            Align = alClient
-            BevelOuter = bvNone
-            TabOrder = 1
-            object InfListBox: TListBox
-              Left = 0
-              Top = 0
-              Width = 201
-              Height = 113
-              HelpContext = 4
-              Style = lbOwnerDrawFixed
-              Align = alLeft
-              Anchors = [akLeft, akTop, akRight, akBottom]
-              BorderStyle = bsNone
-              Constraints.MinHeight = 32
-              Constraints.MinWidth = 32
-              DoubleBuffered = False
-              ItemHeight = 13
-              MultiSelect = True
-              ParentDoubleBuffered = False
-              PopupMenu = InfPopupMenu
-              TabOrder = 0
-              StyleElements = [seBorder]
-              OnDrawItem = InfListBoxDrawItem
-              OnEnter = InfListBoxEnter
-              OnExit = SubListBoxExit
-              OnKeyDown = InfListBoxKeyDown
-              OnMouseDown = SubListBoxMouseDown
-            end
-          end
-        end
-        object LogPanel: TPanel
-          Left = 345
-          Top = 0
-          Width = 379
-          Height = 113
-          Align = alClient
-          BevelOuter = bvNone
-          DoubleBuffered = True
-          ParentDoubleBuffered = False
-          TabOrder = 1
-          object TaskPaintBox: TPaintBox
-            Left = 0
-            Top = 0
-            Width = 60
-            Height = 93
-            Align = alLeft
-            OnDblClick = TaskPaintBoxDblClick
-            OnMouseUp = TaskPaintBoxMouseUp
-            OnPaint = TaskPaintBoxPaint
-          end
-          object ClockBar: TStatusBar
-            Left = 0
-            Top = 93
-            Width = 379
-            Height = 20
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Pitch = fpVariable
-            Font.Style = []
-            Panels = <
-              item
-                Bevel = pbNone
-                Style = psOwnerDraw
-                Width = 200
-              end>
-            UseSystemFont = False
-            StyleElements = []
-            OnDrawPanel = StatusBarDrawPanel
-          end
-          object LogSplitPanel: TPanel
-            Left = 60
-            Top = 0
-            Width = 1
-            Height = 93
-            Align = alLeft
-            BevelOuter = bvNone
-            Color = clGrayText
-            ParentBackground = False
-            TabOrder = 0
-            StyleElements = []
-          end
-          object LogListPanel: TPanel
-            Left = 61
-            Top = 0
-            Width = 318
-            Height = 93
-            Align = alClient
-            BevelOuter = bvNone
-            TabOrder = 1
-            object LogListBox: TListBox
-              Left = 0
-              Top = 0
-              Width = 318
-              Height = 93
-              HelpContext = 4
-              Style = lbVirtualOwnerDraw
-              Align = alLeft
-              Anchors = [akLeft, akTop, akRight, akBottom]
-              BorderStyle = bsNone
-              DoubleBuffered = False
-              MultiSelect = True
-              ParentDoubleBuffered = False
-              PopupMenu = LogPopupMenu
-              TabOrder = 0
-              StyleElements = [seBorder]
-              OnData = LogListBoxData
-              OnDrawItem = LogListBoxDrawItem
-              OnEnter = LogListBoxEnter
-              OnExit = SubListBoxExit
-              OnKeyDown = LogListBoxKeyDown
-              OnKeyPress = LogListBoxKeyPress
-              OnMouseDown = SubListBoxMouseDown
-              OnMouseMove = LogListBoxMouseMove
-            end
-          end
-        end
-      end
       object ToolBarF: TToolBar
         Left = 0
         Top = 0
@@ -2146,6 +1261,900 @@ object NyanFiForm: TNyanFiForm
         Transparent = True
         StyleElements = []
         OnDblClick = ToolBarDblClick
+      end
+      object MainPanel2: TPanel
+        Left = 0
+        Top = 22
+        Width = 724
+        Height = 457
+        Align = alClient
+        BevelOuter = bvNone
+        TabOrder = 1
+        object ListSubSplitter: TSplitter
+          Left = 0
+          Top = 340
+          Width = 724
+          Height = 4
+          Cursor = crVSplit
+          Align = alBottom
+          AutoSnap = False
+          Color = clBtnFace
+          MinSize = 60
+          ParentColor = False
+          OnCanResize = ListSubSplitterCanResize
+          OnPaint = SplitterBgPaint
+        end
+        object ListPanel: TPanel
+          Left = 0
+          Top = 0
+          Width = 724
+          Height = 340
+          Align = alClient
+          BevelOuter = bvNone
+          Constraints.MinHeight = 100
+          Constraints.MinWidth = 100
+          DoubleBuffered = True
+          ParentDoubleBuffered = False
+          TabOrder = 0
+          OnResize = ListPanelResize
+          object LRSplitter: TSplitter
+            Left = 342
+            Top = 53
+            Width = 4
+            Height = 287
+            AutoSnap = False
+            Color = clBtnFace
+            ParentColor = False
+            OnCanResize = LRSplitterCanResize
+            OnMoved = LRSplitterMoved
+            OnPaint = SplitterBgPaint
+          end
+          object L_Panel: TPanel
+            Left = 0
+            Top = 53
+            Width = 342
+            Height = 287
+            Align = alLeft
+            BevelOuter = bvNone
+            Constraints.MinWidth = 30
+            TabOrder = 2
+            OnResize = L_PanelResize
+            object L_StatPanel: TPanel
+              Left = 0
+              Top = 269
+              Width = 342
+              Height = 18
+              Align = alBottom
+              Alignment = taRightJustify
+              BevelEdges = [beTop]
+              BevelKind = bkFlat
+              BevelOuter = bvLowered
+              TabOrder = 3
+              StyleElements = [seBorder]
+              OnClick = L_StatPanelClick
+              object FilterComboBox: TComboBox
+                Left = 74
+                Top = 0
+                Width = 150
+                Height = 21
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWindowText
+                Font.Height = -11
+                Font.Name = 'Tahoma'
+                Font.Style = []
+                ParentFont = False
+                TabOrder = 0
+                Visible = False
+                OnChange = FilterComboBoxChange
+                OnExit = FilterComboBoxExit
+                OnKeyDown = FilterComboBoxKeyDown
+                OnKeyPress = FilterComboBoxKeyPress
+              end
+            end
+            object L_ListBox: TListBox
+              Left = 0
+              Top = 38
+              Width = 342
+              Height = 231
+              HelpContext = 4
+              Style = lbVirtualOwnerDraw
+              AutoComplete = False
+              Align = alLeft
+              Anchors = [akLeft, akTop, akRight, akBottom]
+              BevelInner = bvLowered
+              BorderStyle = bsNone
+              Constraints.MinHeight = 16
+              DoubleBuffered = False
+              ItemHeight = 20
+              MultiSelect = True
+              ParentDoubleBuffered = False
+              ParentShowHint = False
+              ShowHint = False
+              TabOrder = 1
+              StyleElements = [seBorder]
+              OnDblClick = FileListBoxDblClick
+              OnDragDrop = FileListBoxDragDrop
+              OnDragOver = FileListBoxDragOver
+              OnDrawItem = FileListDrawItem
+              OnEnter = FileListBoxEnter
+              OnExit = FileListBoxExit
+              OnKeyDown = FileListKeyDown
+              OnKeyPress = FileListKeyPress
+              OnKeyUp = FileListBoxKeyUp
+              OnMouseDown = FileListBoxMouseDown
+              OnMouseMove = FileListBoxMouseMove
+              OnMouseUp = FileListBoxMouseUp
+            end
+            object L_HeaderControl: THeaderControl
+              Left = 0
+              Top = 20
+              Width = 342
+              Height = 18
+              Sections = <
+                item
+                  FixedWidth = True
+                  ImageIndex = -1
+                  Style = hsOwnerDraw
+                  Width = 50
+                end
+                item
+                  FixedWidth = True
+                  ImageIndex = -1
+                  Style = hsOwnerDraw
+                  Width = 50
+                end
+                item
+                  FixedWidth = True
+                  ImageIndex = -1
+                  Style = hsOwnerDraw
+                  Width = 50
+                end
+                item
+                  FixedWidth = True
+                  ImageIndex = -1
+                  Style = hsOwnerDraw
+                  Width = 50
+                end
+                item
+                  ImageIndex = -1
+                  Style = hsOwnerDraw
+                  Width = 50
+                end>
+              OnDrawSection = FL_HeaderControlDrawSection
+              OnSectionClick = FileListHeaderSectionClick
+              NoSizing = True
+            end
+            object L_HdrPanel: TPanel
+              Left = 0
+              Top = 0
+              Width = 342
+              Height = 20
+              Align = alTop
+              Alignment = taLeftJustify
+              TabOrder = 0
+              Visible = False
+              StyleElements = [seBorder]
+              object L_SelDrvBtn2: TSpeedButton
+                Left = 1
+                Top = 1
+                Width = 16
+                Height = 18
+                Align = alLeft
+                Flat = True
+                Layout = blGlyphTop
+                OnClick = SelDrvBtnClick
+              end
+              object L_DirPanel2: TPanel
+                Left = 17
+                Top = 1
+                Width = 276
+                Height = 18
+                Align = alClient
+                Alignment = taLeftJustify
+                BevelOuter = bvNone
+                ParentBackground = False
+                ParentColor = True
+                TabOrder = 0
+                OnClick = L_DirPanelClick
+              end
+              object RelPanel2: TPanel
+                Left = 293
+                Top = 1
+                Width = 48
+                Height = 18
+                Align = alRight
+                BevelOuter = bvLowered
+                TabOrder = 1
+                StyleElements = [seBorder]
+                object RelPaintBox2: TPaintBox
+                  Left = 1
+                  Top = 1
+                  Width = 46
+                  Height = 16
+                  Align = alClient
+                  OnPaint = RelPaintBoxPaint
+                end
+              end
+            end
+          end
+          object R_Panel: TPanel
+            Left = 346
+            Top = 53
+            Width = 378
+            Height = 287
+            Align = alClient
+            BevelOuter = bvNone
+            Constraints.MinWidth = 30
+            TabOrder = 3
+            OnResize = R_PanelResize
+            object R_ListBox: TListBox
+              Tag = 1
+              Left = 0
+              Top = 38
+              Width = 378
+              Height = 231
+              HelpContext = 4
+              Style = lbVirtualOwnerDraw
+              AutoComplete = False
+              Align = alLeft
+              Anchors = [akLeft, akTop, akRight, akBottom]
+              BevelInner = bvLowered
+              BorderStyle = bsNone
+              Constraints.MinHeight = 16
+              DoubleBuffered = False
+              ItemHeight = 20
+              MultiSelect = True
+              ParentDoubleBuffered = False
+              ParentShowHint = False
+              ShowHint = False
+              TabOrder = 1
+              StyleElements = [seBorder]
+              OnDblClick = FileListBoxDblClick
+              OnDragDrop = FileListBoxDragDrop
+              OnDragOver = FileListBoxDragOver
+              OnDrawItem = FileListDrawItem
+              OnEnter = FileListBoxEnter
+              OnExit = FileListBoxExit
+              OnKeyDown = FileListKeyDown
+              OnKeyPress = FileListKeyPress
+              OnKeyUp = FileListBoxKeyUp
+              OnMouseDown = FileListBoxMouseDown
+              OnMouseMove = FileListBoxMouseMove
+              OnMouseUp = FileListBoxMouseUp
+            end
+            object R_StatPanel: TPanel
+              Tag = 1
+              Left = 0
+              Top = 269
+              Width = 378
+              Height = 18
+              Align = alBottom
+              Alignment = taRightJustify
+              BevelEdges = [beTop]
+              BevelKind = bkFlat
+              BevelOuter = bvLowered
+              TabOrder = 3
+              StyleElements = [seBorder]
+              OnClick = R_StatPanelClick
+            end
+            object R_HeaderControl: THeaderControl
+              Tag = 1
+              Left = 0
+              Top = 20
+              Width = 378
+              Height = 18
+              Sections = <
+                item
+                  FixedWidth = True
+                  ImageIndex = -1
+                  Style = hsOwnerDraw
+                  Width = 50
+                end
+                item
+                  FixedWidth = True
+                  ImageIndex = -1
+                  Style = hsOwnerDraw
+                  Width = 50
+                end
+                item
+                  FixedWidth = True
+                  ImageIndex = -1
+                  Style = hsOwnerDraw
+                  Width = 50
+                end
+                item
+                  FixedWidth = True
+                  ImageIndex = -1
+                  Style = hsOwnerDraw
+                  Width = 50
+                end
+                item
+                  ImageIndex = -1
+                  Style = hsOwnerDraw
+                  Width = 50
+                end>
+              OnDrawSection = FL_HeaderControlDrawSection
+              OnSectionClick = FileListHeaderSectionClick
+              NoSizing = True
+            end
+            object R_HdrPanel: TPanel
+              Left = 0
+              Top = 0
+              Width = 378
+              Height = 20
+              Align = alTop
+              Alignment = taLeftJustify
+              TabOrder = 0
+              Visible = False
+              StyleElements = [seBorder]
+              object R_SelDrvBtn2: TSpeedButton
+                Tag = 1
+                Left = 1
+                Top = 1
+                Width = 16
+                Height = 18
+                Align = alLeft
+                Flat = True
+                Layout = blGlyphTop
+                OnClick = SelDrvBtnClick
+              end
+              object R_DirPanel2: TPanel
+                Tag = 1
+                Left = 17
+                Top = 1
+                Width = 360
+                Height = 18
+                Align = alClient
+                Alignment = taLeftJustify
+                BevelOuter = bvNone
+                ParentBackground = False
+                ParentColor = True
+                TabOrder = 0
+                OnClick = R_DirPanelClick
+              end
+            end
+          end
+          object TabPanel: TPanel
+            Left = 0
+            Top = 0
+            Width = 724
+            Height = 31
+            Align = alTop
+            BevelOuter = bvNone
+            TabOrder = 0
+            StyleElements = [seBorder]
+            object TabBottomPaintBox: TPaintBox
+              Left = 0
+              Top = 30
+              Width = 724
+              Height = 1
+              Align = alBottom
+              OnPaint = TabBottomPaintBoxPaint
+            end
+            object TabOuterPanel: TPanel
+              Left = 0
+              Top = 0
+              Width = 724
+              Height = 30
+              Align = alClient
+              BevelOuter = bvNone
+              ParentColor = True
+              TabOrder = 0
+              StyleElements = []
+              DesignSize = (
+                724
+                30)
+              object PopTabBtn: TSpeedButton
+                Left = 0
+                Top = 4
+                Width = 16
+                Height = 25
+                Flat = True
+                Layout = blGlyphTop
+                OnClick = PopTabBtnClick
+              end
+              object TabControl1: TTabControl
+                Left = 16
+                Top = 4
+                Width = 709
+                Height = 27
+                Anchors = [akLeft, akTop, akRight]
+                DoubleBuffered = True
+                OwnerDraw = True
+                ParentDoubleBuffered = False
+                TabOrder = 0
+                TabStop = False
+                StyleElements = []
+                OnChange = TabControl1Change
+                OnChanging = TabControl1Changing
+                OnDrawTab = TabControl1DrawTab
+                OnEnter = TabControl1Enter
+                OnMouseDown = TabControl1MouseDown
+                OnMouseLeave = TabControl1MouseLeave
+                OnMouseMove = TabControl1MouseMove
+                OnMouseUp = TabControl1MouseUp
+                OnResize = TabControl1Resize
+                object DelTabBtn: TSpeedButton
+                  Left = 675
+                  Top = 6
+                  Width = 14
+                  Height = 14
+                  Flat = True
+                  Glyph.Data = {
+                    C6040000424DC60400000000000036040000280000000C0000000C0000000100
+                    08000000000090000000C30E0000C30E000000010000000000001C24AC00232A
+                    A900252DBF002B33BF002C34BD002D35BD002C34BF002E35BE002E36BE00262E
+                    C000262EC100252EC200262FC9002730C0002F37C900212BD800232DD800252F
+                    D9002630D9002731D9002831D9002932D9002933D9002832DA002A34D9002A34
+                    DA002B34DA002B35DA002D36D9002C36DA002D36DA002F38D8002E38DA002F38
+                    DA002F39DA002F39DC00313ADA00313ADB00323BDB00333CDB00353EDB003039
+                    DD00323BDC00313ADE00323CDD00333CDD00353FDC00363FDC00343EDE00353E
+                    DE00363FDE003740DD003641DF003840DA003841DC003A43DC003841DE003842
+                    DE003943DE003B44DC003F47DD003F48DD00414ADD005058E000545CE100565E
+                    E100585FE2005B63E2005D64E2007077E7007177E700747BE7007980E7007B81
+                    EB007C82EB007F85E9007E84EC007F85EC007E84ED0000C0C0008187E9008086
+                    EC00848AE900888DEA00898FEA008C91EB008E93EB00969BED009B9FEE00999E
+                    F1009EA3EE00A0A5EE00A0A4F200A8ADF000B9BDF300C2C6F500C9CCF600CACC
+                    F600D3D5F700D6D8F800D8DAF800F3F4FD00F4F5FD00F5F5FD00F7F7FD00F7F7
+                    FE00F9FAFE00FBFBFE00FFFFFF00000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    0000000000000000000000000000000000000000000000000000000000000000
+                    00000000000000000000000000000000000000000000000000004F0E03040707
+                    07080506014F461F2A292D383833232B35004E17475F3C223614565E340A4D19
+                    446A62370F536C5D2C094D271A426661546C5B1A320D4D2636163F696C5A102F
+                    390D4D262E14526B68603B203A0D4D261D556C573F65643D2D0D4C12486C5818
+                    154067633002511E41502128361B434B310B5C3E1C11252626261A13240C4F59
+                    4C494A4A4A4A4A4A454F}
+                  Visible = False
+                  OnClick = DelTabBtnClick
+                  OnMouseLeave = DelTabBtnMouseLeave
+                end
+              end
+            end
+          end
+          object HdrPanel: TPanel
+            Left = 0
+            Top = 31
+            Width = 724
+            Height = 22
+            Align = alTop
+            BevelEdges = [beTop, beBottom]
+            TabOrder = 1
+            StyleElements = [seBorder]
+            object L_TopPanel: TPanel
+              Left = 1
+              Top = 1
+              Width = 320
+              Height = 20
+              Align = alLeft
+              Alignment = taLeftJustify
+              BevelOuter = bvNone
+              TabOrder = 0
+              StyleElements = [seBorder]
+              object L_SelDrvBtn: TSpeedButton
+                Left = 0
+                Top = 0
+                Width = 16
+                Height = 20
+                Align = alLeft
+                Flat = True
+                Layout = blGlyphTop
+                OnClick = SelDrvBtnClick
+              end
+              object L_DirPanel: TPanel
+                Left = 16
+                Top = 0
+                Width = 304
+                Height = 20
+                Align = alClient
+                Alignment = taLeftJustify
+                BevelOuter = bvNone
+                ParentBackground = False
+                ParentColor = True
+                TabOrder = 0
+                StyleElements = [seBorder]
+                OnClick = L_DirPanelClick
+              end
+            end
+            object R_TopPanel: TPanel
+              Tag = 1
+              Left = 369
+              Top = 1
+              Width = 354
+              Height = 20
+              Align = alClient
+              Alignment = taLeftJustify
+              BevelOuter = bvNone
+              TabOrder = 2
+              StyleElements = [seBorder]
+              object R_SelDrvBtn: TSpeedButton
+                Tag = 1
+                Left = 0
+                Top = 0
+                Width = 16
+                Height = 20
+                Align = alLeft
+                Flat = True
+                Layout = blGlyphTop
+                OnClick = SelDrvBtnClick
+              end
+              object R_DirPanel: TPanel
+                Tag = 1
+                Left = 16
+                Top = 0
+                Width = 338
+                Height = 20
+                Align = alClient
+                Alignment = taLeftJustify
+                BevelOuter = bvNone
+                ParentColor = True
+                TabOrder = 0
+                StyleElements = [seBorder]
+                OnClick = R_DirPanelClick
+              end
+            end
+            object RelPanel: TPanel
+              Left = 321
+              Top = 1
+              Width = 48
+              Height = 20
+              Align = alLeft
+              BevelOuter = bvLowered
+              TabOrder = 1
+              StyleElements = [seBorder]
+              object RelPaintBox: TPaintBox
+                Left = 1
+                Top = 1
+                Width = 46
+                Height = 18
+                Align = alClient
+                OnPaint = RelPaintBoxPaint
+              end
+            end
+          end
+        end
+        object SubPanel: TPanel
+          Left = 0
+          Top = 344
+          Width = 724
+          Height = 113
+          Align = alBottom
+          BevelOuter = bvNone
+          Constraints.MinHeight = 32
+          Constraints.MinWidth = 32
+          TabOrder = 1
+          StyleElements = []
+          OnResize = SubPanelResize
+          object InfLogSplitter: TSplitter
+            Tag = 1
+            Left = 341
+            Top = 0
+            Width = 4
+            Height = 113
+            AutoSnap = False
+            MinSize = 50
+            OnMoved = InfLogSplitterMoved
+            OnPaint = SplitterBgPaint
+          end
+          object InfPanel: TPanel
+            Left = 0
+            Top = 0
+            Width = 341
+            Height = 113
+            Align = alLeft
+            BevelOuter = bvNone
+            ParentBackground = False
+            TabOrder = 0
+            StyleElements = [seBorder]
+            object ImgInfSplitter: TSplitter
+              Tag = 1
+              Left = 136
+              Top = 0
+              Width = 4
+              Height = 113
+              OnCanResize = ImgInfSplitterCanResize
+              OnMoved = ImgInfSplitterMoved
+              OnPaint = SplitterBgPaint
+            end
+            object PreviewPanel: TPanel
+              Left = 0
+              Top = 0
+              Width = 136
+              Height = 113
+              Align = alLeft
+              BevelEdges = []
+              BevelOuter = bvNone
+              ParentBackground = False
+              TabOrder = 0
+              StyleElements = []
+              object LockTxtPanel: TPanel
+                Left = 0
+                Top = 89
+                Width = 136
+                Height = 24
+                Align = alBottom
+                Alignment = taLeftJustify
+                BevelEdges = [beTop]
+                BevelKind = bkSoft
+                BevelOuter = bvNone
+                PopupMenu = TxtPrvPopupMenu
+                TabOrder = 1
+                Visible = False
+                StyleElements = [seBorder]
+                OnDblClick = LockTxtPanelDblClick
+              end
+              object PrvInnerPanel: TPanel
+                Left = 0
+                Top = 0
+                Width = 136
+                Height = 89
+                Align = alClient
+                BevelOuter = bvNone
+                TabOrder = 0
+                StyleElements = []
+                DesignSize = (
+                  136
+                  89)
+                object PreviewImage: TImage
+                  Left = 0
+                  Top = 0
+                  Width = 136
+                  Height = 53
+                  Align = alClient
+                  PopupMenu = ImgPrvPopupMenu
+                  OnDblClick = PreviewImageDblClick
+                  OnMouseDown = PreviewImageMouseDown
+                  OnMouseMove = PreviewImageMouseMove
+                  OnMouseUp = PreviewImageMouseUp
+                end
+                object PreviewSizeLabel: TLabel
+                  Left = 20
+                  Top = 20
+                  Width = 50
+                  Height = 13
+                  Caption = '100 '#215' 100'
+                  Transparent = True
+                  Visible = False
+                end
+                object PreviewSttLabel: TLabel
+                  Left = 4
+                  Top = 2
+                  Width = 3
+                  Height = 13
+                  Anchors = []
+                  Transparent = True
+                  Visible = False
+                end
+                object TxtPrvSplitter: TSplitter
+                  Tag = 1
+                  Left = 0
+                  Top = 53
+                  Width = 136
+                  Height = 4
+                  Cursor = crVSplit
+                  Align = alBottom
+                  AutoSnap = False
+                  Visible = False
+                  OnMoved = TxtPrvSplitterMoved
+                  OnPaint = SplitterBgPaint
+                end
+                object HotPosImage: TImage
+                  Left = 0
+                  Top = 0
+                  Width = 64
+                  Height = 64
+                  Transparent = True
+                  Visible = False
+                end
+                object TxtPrvListPanel: TPanel
+                  Left = 0
+                  Top = 0
+                  Width = 136
+                  Height = 53
+                  Align = alClient
+                  BevelOuter = bvNone
+                  TabOrder = 0
+                  Visible = False
+                  object TxtPrvListBox: TListBox
+                    Left = 0
+                    Top = 0
+                    Width = 134
+                    Height = 53
+                    HelpContext = 82
+                    Style = lbVirtualOwnerDraw
+                    Align = alLeft
+                    Anchors = [akLeft, akTop, akRight, akBottom]
+                    BorderStyle = bsNone
+                    DoubleBuffered = False
+                    ItemHeight = 13
+                    MultiSelect = True
+                    ParentDoubleBuffered = False
+                    PopupMenu = TxtPrvPopupMenu
+                    TabOrder = 0
+                    StyleElements = [seBorder]
+                    OnData = TxtPrvListBoxData
+                    OnDrawItem = TxtPrvListBoxDrawItem
+                    OnEnter = TxtPrvListBoxEnter
+                    OnExit = SubListBoxExit
+                    OnKeyDown = InfListBoxKeyDown
+                    OnMouseDown = SubListBoxMouseDown
+                  end
+                end
+                object TxtTailListPanel: TPanel
+                  Left = 0
+                  Top = 57
+                  Width = 136
+                  Height = 32
+                  Align = alBottom
+                  BevelOuter = bvNone
+                  TabOrder = 1
+                  Visible = False
+                  object TxtTailListBox: TListBox
+                    Left = 0
+                    Top = 0
+                    Width = 134
+                    Height = 32
+                    HelpContext = 82
+                    Style = lbVirtualOwnerDraw
+                    Align = alLeft
+                    Anchors = [akLeft, akTop, akRight, akBottom]
+                    BorderStyle = bsNone
+                    DoubleBuffered = False
+                    ItemHeight = 13
+                    MultiSelect = True
+                    ParentDoubleBuffered = False
+                    PopupMenu = TxtPrvPopupMenu
+                    TabOrder = 0
+                    StyleElements = [seBorder]
+                    OnData = TxtTailListBoxData
+                    OnDrawItem = TxtTailListBoxDrawItem
+                    OnEnter = TxtPrvListBoxEnter
+                    OnExit = SubListBoxExit
+                    OnKeyDown = InfListBoxKeyDown
+                    OnMouseDown = SubListBoxMouseDown
+                  end
+                end
+              end
+            end
+            object InfListPanel: TPanel
+              Left = 140
+              Top = 0
+              Width = 201
+              Height = 113
+              Align = alClient
+              BevelOuter = bvNone
+              TabOrder = 1
+              object InfListBox: TListBox
+                Left = 0
+                Top = 0
+                Width = 201
+                Height = 113
+                HelpContext = 4
+                Style = lbOwnerDrawFixed
+                Align = alLeft
+                Anchors = [akLeft, akTop, akRight, akBottom]
+                BorderStyle = bsNone
+                Constraints.MinHeight = 32
+                Constraints.MinWidth = 32
+                DoubleBuffered = False
+                ItemHeight = 13
+                MultiSelect = True
+                ParentDoubleBuffered = False
+                PopupMenu = InfPopupMenu
+                TabOrder = 0
+                StyleElements = [seBorder]
+                OnDrawItem = InfListBoxDrawItem
+                OnEnter = InfListBoxEnter
+                OnExit = SubListBoxExit
+                OnKeyDown = InfListBoxKeyDown
+                OnMouseDown = SubListBoxMouseDown
+              end
+            end
+          end
+          object LogPanel: TPanel
+            Left = 345
+            Top = 0
+            Width = 379
+            Height = 113
+            Align = alClient
+            BevelOuter = bvNone
+            DoubleBuffered = True
+            ParentDoubleBuffered = False
+            TabOrder = 1
+            object TaskPaintBox: TPaintBox
+              Left = 0
+              Top = 0
+              Width = 60
+              Height = 93
+              Align = alLeft
+              OnDblClick = TaskPaintBoxDblClick
+              OnMouseUp = TaskPaintBoxMouseUp
+              OnPaint = TaskPaintBoxPaint
+            end
+            object ClockBar: TStatusBar
+              Left = 0
+              Top = 93
+              Width = 379
+              Height = 20
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Pitch = fpVariable
+              Font.Style = []
+              Panels = <
+                item
+                  Bevel = pbNone
+                  Style = psOwnerDraw
+                  Width = 200
+                end>
+              UseSystemFont = False
+              StyleElements = []
+              OnDrawPanel = StatusBarDrawPanel
+            end
+            object LogSplitPanel: TPanel
+              Left = 60
+              Top = 0
+              Width = 1
+              Height = 93
+              Align = alLeft
+              BevelOuter = bvNone
+              Color = clGrayText
+              ParentBackground = False
+              TabOrder = 0
+              StyleElements = []
+            end
+            object LogListPanel: TPanel
+              Left = 61
+              Top = 0
+              Width = 318
+              Height = 93
+              Align = alClient
+              BevelOuter = bvNone
+              TabOrder = 1
+              object LogListBox: TListBox
+                Left = 0
+                Top = 0
+                Width = 318
+                Height = 93
+                HelpContext = 4
+                Style = lbVirtualOwnerDraw
+                Align = alLeft
+                Anchors = [akLeft, akTop, akRight, akBottom]
+                BorderStyle = bsNone
+                DoubleBuffered = False
+                MultiSelect = True
+                ParentDoubleBuffered = False
+                PopupMenu = LogPopupMenu
+                TabOrder = 0
+                StyleElements = [seBorder]
+                OnData = LogListBoxData
+                OnDrawItem = LogListBoxDrawItem
+                OnEnter = LogListBoxEnter
+                OnExit = SubListBoxExit
+                OnKeyDown = LogListBoxKeyDown
+                OnKeyPress = LogListBoxKeyPress
+                OnMouseDown = SubListBoxMouseDown
+                OnMouseMove = LogListBoxMouseMove
+              end
+            end
+          end
+        end
       end
     end
   end

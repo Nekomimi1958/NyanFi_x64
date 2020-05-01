@@ -81,7 +81,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	FKeyLabelBuf = new TStringList();
 
 	set_ComboBoxText(LayoutComboBox,
-		_T("ファイルリストが上\nファイルリストが左\nファイルリストが右\n"));
+		_T("ファイルリストが上\nファイルリストが左\nファイルリストが右\nファイルリストが下\n"));
 
 	set_ComboBoxText(SizeFmtComboBox,
 		_T("GB/MB/バイト\nGB/MB/KB/バイト\nGB/MB/KB\n"));
