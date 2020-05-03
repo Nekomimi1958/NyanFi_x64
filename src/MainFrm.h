@@ -964,6 +964,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *LoupeDockPanel;
 	TPanel *MainContainer;
 	TPanel *MainPanel;
+	TPanel *MainPanel2;
 	TPanel *PreviewPanel;
 	TPanel *ProgressPanel;
 	TPanel *PrvInnerPanel;
@@ -1054,7 +1055,6 @@ __published:	// IDE で管理されるコンポーネント
 	TToolBar *ToolBarV;
 	TTrackBar *SeekBar;
 	TTrayIcon *TrayIcon1;
-	TPanel *MainPanel2;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

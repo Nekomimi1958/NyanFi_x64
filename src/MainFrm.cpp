@@ -16998,11 +16998,13 @@ int __fastcall comp_FilePath(TStringList *List, int Index1, int Index2)
 void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 {
 	try {
-		if (CurStt->is_Arc || CurStt->is_ADS || CurStt->is_FTP || IsDiffList()) UserAbort(USTR_OpeNotSuported);
-		if (OppStt->is_Find) RecoverFileList(OppListTag);
+		if (!IsCurFList()) UserAbort(USTR_OpeNotSuported);
 
 		bool is_lr = TEST_ActParam("LR");
-		if (is_lr && EqualDirLR()) UserAbort(USTR_SameDirLR);
+		if (is_lr && !IsOppFList())	UserAbort(USTR_OpeNotSuported);
+		if (is_lr && EqualDirLR())	UserAbort(USTR_SameDirLR);
+
+		if (OppStt->is_Find) RecoverFileList(OppListTag);
 		if (is_lr) ExeCommandAction("ClearAll", "AL");
 
 		if (!FindDuplDlg) FindDuplDlg = new TFindDuplDlg(this);	//‰‰ñ‚É“®“Iì¬
