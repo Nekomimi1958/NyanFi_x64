@@ -181,8 +181,10 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		FUNC_SetDisplayAutoRotationPreferences lpfSetDisplayAutoRotationPreferences
 			= (FUNC_SetDisplayAutoRotationPreferences)::GetProcAddress(
 				::GetModuleHandle(_T("user32.dll")), "SetDisplayAutoRotationPreferences");
-		if (lpfSetDisplayAutoRotationPreferences)
-			lpfSetDisplayAutoRotationPreferences(ORIENTATION_PREFERENCE_LANDSCAPE);
+		if (lpfSetDisplayAutoRotationPreferences) {
+			lpfSetDisplayAutoRotationPreferences(
+				ORIENTATION_PREFERENCE_LANDSCAPE | ORIENTATION_PREFERENCE_LANDSCAPE_FLIPPED);
+		}
 
 		//INIÉtÉ@ÉCÉãÇÃèâä˙âª
 		IniFile = new UsrIniFile(inam);
