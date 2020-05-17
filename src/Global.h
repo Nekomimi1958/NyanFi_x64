@@ -667,12 +667,15 @@ extern UnicodeString FTPSndConnect;
 extern UnicodeString FTPSndDiscon;
 extern UnicodeString FTPSndTransfer;
 
+extern UnicodeString FTPPathName;
+
 extern TListBox *FileListBox[MAX_FILELIST];
 extern TPanel	*FileListPanel[MAX_FILELIST];
 
 extern UnicodeString ViewFileName;
 extern UnicodeString ViewFileName2;
 extern bool ViewFromArc;
+
 
 //---------------------------------------------------------------------------
 #define GENLST_FILELIST	1
@@ -1379,7 +1382,7 @@ struct flist_stt {
 	bool find_PathSort;			//場所順でソート
 
 	UnicodeString find_Path;	//検索パス
-	UnicodeString find_DirList;	//検索ディレクトリリスト
+	UnicodeString find_DirList;	//検索ディレクトリ・リスト
 	UnicodeString find_Name;	//検索名(ハードリンク用)
 	UnicodeString find_Mask;	//マスク
 	UnicodeString find_Keywd;	//キーワード
@@ -1711,6 +1714,7 @@ int  load_TagGroup(UnicodeString fnam);
 
 void clear_FindStt(flist_stt *lst_stt);
 bool is_FindAll(flist_stt *lst_stt);
+UnicodeString get_FindInfStr(bool pnam_sw);
 
 bool check_int(int v0, int v1, int mode);
 bool check_prop(UnicodeString fnam, UnicodeString prop, int v, int mode);
@@ -2171,7 +2175,7 @@ int get_ViewTabWidth(UnicodeString fext);
 void MakeTreeList(TStringList *lst, UnicodeString pnam, bool chk_sw = false);
 bool AddPathToTreeList(TStringList *lst);
 
-void AddCmdHistory(UnicodeString cmd, UnicodeString prm = EmptyStr, UnicodeString id = EmptyStr);
+void AddCmdHistory(UnicodeString cmd, UnicodeString prm = EmptyStr, UnicodeString id = EmptyStr, UnicodeString fnam = EmptyStr);
 
 //Git 関連の関数
 UnicodeString get_GitTopPath(UnicodeString dnam);

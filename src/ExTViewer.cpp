@@ -468,7 +468,11 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 		prm = exclude_quot(get_PrmStr(cmd));
 		cmd = get_CmdStr(cmd);
 	}
-	AddCmdHistory(cmd, ActionParam, "V");
+
+	AddCmdHistory(cmd, ActionParam, "V",
+		!ExViewer->FileName.IsEmpty()? ExViewer->FileName : 
+					 ExViewer->isClip? UnicodeString("<クリップボード>")
+					 				 : UnicodeString("<タスクログ>"));
 
 	ActionParam = extract_ExeParam(prm, &ActionDesc);
 	ActionOk	= true;

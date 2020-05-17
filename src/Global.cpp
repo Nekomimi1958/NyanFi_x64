@@ -510,6 +510,8 @@ UnicodeString FTPSndConnect;	//接続時の通知音
 UnicodeString FTPSndDiscon;		//切断時の通知音
 UnicodeString FTPSndTransfer;	//転送完了時の通知音
 
+UnicodeString FTPPathName;
+
 //---------------------------------------------------------------------------
 int CurTabIndex = 0;			//タブインデックス(0～
 
@@ -7873,19 +7875,7 @@ void GetFileInfList(
 	//ファイル名
 	UnicodeString lbuf;
 	if (fp->is_up) {
-		if (lst_stt) {
-			if (lst_stt->is_Find) {
-				lbuf.sprintf(_T("<結果リスト%s>"),
-					lst_stt->find_DICON? _T(" - フォルダアイコン") :
-					lst_stt->find_HLINK? _T(" - ハードリンク") :
-					lst_stt->find_MARK?  _T(" - マーク") :
-					lst_stt->find_TAG?   _T(" - タグ") :
-					lst_stt->find_DUPL?  _T(" - 重複") : null_TCHAR);
-			}
-			else {
-				lbuf = "<カレント>";
-			}
-		}
+		if (lst_stt) lbuf = lst_stt->is_Find? get_FindInfStr(false) : UnicodeString("<カレント>");
 	}
 	else {
 		lbuf = fp->b_name + fp->f_ext;
@@ -14579,9 +14569,47 @@ bool AddPathToTreeList(TStringList *lst)
 }
 
 //---------------------------------------------------------------------------
+//検索リスト情報を取得
+//---------------------------------------------------------------------------
+UnicodeString get_FindInfStr(bool pnam_sw)
+{
+	UnicodeString ret_str;
+	if (CurStt->is_Find) {
+		ret_str.cat_sprintf(_T("<結果リスト%s>"),
+			CurStt->find_DICON? _T(" - フォルダアイコン") :
+			CurStt->find_HLINK? _T(" - ハードリンク") :
+			CurStt->find_MARK?  _T(" - マーク") :
+			CurStt->find_TAG?   _T(" - タグ") :
+			CurStt->find_DUPL?  _T(" - 重複") : null_TCHAR);
+
+		if (pnam_sw) {
+			if (is_FindAll(CurStt)) {
+				ret_str = ReplaceStr(ret_str, ">", " - 全体>");
+			}
+			else {
+				ret_str += (" " + CurPathName);
+				if (CurStt->find_MARK) {
+					if (CurStt->find_SubList->Count==0) ret_str = "*";
+				}
+				else {
+					if (!CurStt->find_DirList.IsEmpty()) ret_str = ExtractFileName(CurStt->find_DirList) + "/";
+					ret_str += CurStt->find_Mask;
+					if (!CurStt->find_Keywd.IsEmpty()) ret_str.cat_sprintf(_T(" : %s"), CurStt->find_Keywd.c_str());
+				}
+			}
+		}
+	}
+	return ret_str;
+}
+
+//---------------------------------------------------------------------------
 //コマンド履歴の追加
 //---------------------------------------------------------------------------
-void AddCmdHistory(UnicodeString cmd, UnicodeString prm, UnicodeString id)
+void AddCmdHistory(
+	UnicodeString cmd,		//コマンド
+	UnicodeString prm,		//パラメータ		(default = EmptyStr)
+	UnicodeString id,		//画面モード		(default = EmptyStr)
+	UnicodeString fnam)		//対象ファイル名	(default = EmptyStr)
 {
 	if (SameText(cmd, "CmdHistory") || (InhCmdHistory && !SameStr(id, "-"))) return;
 
@@ -14590,8 +14618,26 @@ void AddCmdHistory(UnicodeString cmd, UnicodeString prm, UnicodeString id)
 	if (!prm.IsEmpty()) lbuf.cat_sprintf(_T("_%s"), prm.c_str());
 
 	if (!SameStr(id, "-")) {
-		lbuf.cat_sprintf(_T("\t%s"), CurPathName.c_str());
-		if (CurStt->is_Arc) lbuf += CurStt->arc_DspPath;
+		lbuf += "\t";
+		if (SameStr(id, "V") || SameStr(id, "I")) {
+			lbuf += fnam;
+		}
+		else {
+			if (CurStt->is_Find) {
+				lbuf += ReplaceStr(get_FindInfStr(true), "<結果リスト", "<結果");
+			}
+			else if (CurStt->is_Work) {
+				lbuf.cat_sprintf(_T("<ワーク> %s"), WorkListName.c_str());
+			}
+			else if (CurStt->is_FTP) {
+				lbuf.cat_sprintf(_T("<FTP> %s"), FTPPathName.c_str());
+			}
+			else {
+				lbuf += CurPathName;
+				if		(CurStt->is_Arc) lbuf += CurStt->arc_DspPath;
+				else if (CurStt->is_ADS) lbuf += CurStt->ads_Name + ":";
+			}
+		}
 	}
 
 	CommandHistory->Add(lbuf);

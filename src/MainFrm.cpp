@@ -5574,6 +5574,14 @@ void __fastcall TNyanFiForm::SetCurStt(int tag, bool redraw)
 
 	UserModule->CurPathName = CurPathName;
 
+	try {
+		FTPPathName = (CurStt->is_FTP && IdFTP1->Connected())?
+						yen_to_slash(IdFTP1->Host + CurFTPPath) : EmptyStr;
+	}
+	catch (...) {
+		FTPPathName = EmptyStr;
+	}
+
 	SetCurTab(redraw);
 
 	//タイトルバー
@@ -5593,15 +5601,7 @@ void __fastcall TNyanFiForm::SetCurStt(int tag, bool redraw)
 	}
 
 	if (PathInTitleBar) {
-		UnicodeString pnam;
-		try {
-			pnam = (CurStt->is_FTP && IdFTP1->Connected())?
-					yen_to_slash(IdFTP1->Host + CurFTPPath) : yen_to_delimiter(CurPathName);
-		}
-		catch (...) {
-			pnam = yen_to_delimiter(CurPathName);
-		}
-		tmp.cat_sprintf(_T("%s - "), pnam.c_str());
+		tmp.cat_sprintf(_T("%s - "), (!FTPPathName.IsEmpty()? FTPPathName : yen_to_delimiter(CurPathName)).c_str());
 	}
 
 	Caption = tmp + Application->Title;
@@ -17551,7 +17551,7 @@ void __fastcall TNyanFiForm::FindFileDlgActionExecute(TObject *Sender)
 			FindFileDlgExecute(false, lst_name);
 		}
 		else {
-			if (CurStt->is_Arc || CurStt->is_Work) Abort();
+			if (CurStt->is_Arc || CurStt->is_ADS || CurStt->is_Work || CurStt->is_FTP) UserAbort(USTR_OpeNotSuported);
 			if (OppStt->is_Find) RecoverFileList(OppListTag);
 			CurStt->is_narrow = CurStt->is_Find;
 			FindFileDlgExecute(false);
@@ -30575,7 +30575,10 @@ bool __fastcall TNyanFiForm::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 		prm = exclude_quot(get_PrmStr(cmd));
 		cmd = get_CmdStr(cmd);
 	}
-	AddCmdHistory(cmd, prm, "V");
+
+	AddCmdHistory(cmd, prm, "V",
+		 TxtViewer->isClip? UnicodeString("<クリップボード>") :
+		  TxtViewer->isLog? UnicodeString("<タスクログ>") : TxtViewer->FileName);
 
 	ActionParam = extract_ExeParam(prm, &ActionDesc);
 	ActionOk	= true;
@@ -32941,7 +32944,9 @@ bool __fastcall TNyanFiForm::ExeCommandI(UnicodeString cmd, UnicodeString prm)
 		prm = exclude_quot(get_PrmStr(cmd));
 		cmd = get_CmdStr(cmd);
 	}
-	AddCmdHistory(cmd, prm, "I");
+
+	AddCmdHistory(cmd, prm, "I", isViewClip? UnicodeString("<クリップボード>") : ViewFileName);
+
 	ActionParam = extract_ExeParam(prm, &ActionDesc);
 	ActionOk	= true;
 

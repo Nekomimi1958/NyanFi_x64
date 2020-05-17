@@ -294,6 +294,7 @@ void __fastcall TTxtViewer::Clear()
 	isText	   = isBinary = isXDoc2Txt = false;
 	isCSV	   = isTSV    = false;
 	isClip	   = false;
+	isLog	   = false;
 	isTail	   = false;
 	isAozora   = isLog = isIniFmt = isAwstats = isJsonFmt = false;
 
@@ -4556,6 +4557,8 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 	if (!IsCmdAvailable(cmd)) return false;
 
 	AddCmdHistory(cmd, prm, "V");
+		 isClip? UnicodeString("<クリップボード>") :
+		  isLog? UnicodeString("<タスクログ>") : FileName;
 
 	int cur_lno = get_CurLineNo();
 

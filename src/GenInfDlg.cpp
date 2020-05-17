@@ -723,7 +723,6 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	else if (isCmdHistory) {
 		UnicodeString cmd_inf = split_pre_tab(lbuf);
 		int x0  = rc.Left;
-		int y	= rc.Top + 1;
 		int mgn = cv->TextWidth("W");
 		//Time
 		UnicodeString s = split_tkn(cmd_inf, ' ');
@@ -737,22 +736,22 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 			}
 		}
 		TColor fg = use_fgsel? col_fgSelItem : AdjustColor(col_fgList, ADJCOL_FGLIST);
-		out_TextEx(cv, xp, y, s, fg, col_None, mgn, is_irreg);
+		out_TextEx(cv, xp, yp, s, fg, col_None, mgn, is_irreg);
 		//ID
 		UnicodeString id = split_tkn(cmd_inf, ' ');
 		fg = use_fgsel? col_fgSelItem : col_fgList;
-		out_TextEx(cv, xp, y, ReplaceStr(id, "-", " "), fg, col_None, mgn, is_irreg);
+		out_TextEx(cv, xp, yp, ReplaceStr(id, "-", " "), fg, col_None, mgn, is_irreg);
 		//L/R
 		s = split_tkn(cmd_inf, ' ');
 		for (int i=1; i<=s.Length(); i++) {
 			fg = use_fgsel? col_fgSelItem : (s[i]=='_')? AdjustColor(col_fgList, ADJCOL_FGLIST) : col_fgList;
-			out_TextEx(cv, xp, y, s[i], fg, col_None, 0, is_irreg);
+			out_TextEx(cv, xp, yp, s[i], fg, col_None, 0, is_irreg);
 		}
 		xp += (mgn * 2);
 		//ScrMode 変更
 		if ((id=='-')) {
 			fg = use_fgsel? col_fgSelItem : col_Comment;
-			out_TextEx(cv, xp, y, cmd_inf, fg, col_None, mgn, is_irreg);
+			out_TextEx(cv, xp, yp, cmd_inf, fg, col_None, mgn, is_irreg);
 			rc.Left = xp;
 			draw_Separator(cv, rc);
 		}
@@ -767,18 +766,28 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 			UnicodeString prm = get_PrmStr(cmd_inf);
 			if (!prm.IsEmpty()) {
 				fg = use_fgsel? col_fgSelItem : col_Symbol;
-				out_TextEx(cv, xp, y, "_", fg, col_None, 0, is_irreg);
+				out_TextEx(cv, xp, yp, "_", fg, col_None, 0, is_irreg);
 				rc.Left = xp;
 				RuledLnTextOut(prm, cv, rc, use_fgsel? col_fgSelItem : col_fgList, tw, wlist.get());
 				xp = rc.Left + mgn * 2;
 			}
-			//カレントパス
+			//カレントパス/ファイル名
 			if (!lbuf.IsEmpty()) {
 				int cmd_w = x0 + get_CharWidth(cv, 40);
 				int tab_w = get_CharWidth(cv, 8);
 				if (xp<cmd_w) xp = cmd_w; else xp += (tab_w - xp%tab_w);
-				cv->Font->Color = use_fgsel? col_fgSelItem : col_Folder;
-				PathNameOut(lbuf, wlist.get(), cv, xp, yp);
+				if (StartsStr('<', lbuf)) {
+					out_TextEx(cv, xp, yp, split_tkn(lbuf, '>') + ">",
+						use_fgsel? col_fgSelItem : col_fgList, col_None, 0, is_irreg);
+				}
+				if (ends_PathDlmtr(lbuf)) {
+					cv->Font->Color = use_fgsel? col_fgSelItem : col_Folder;
+					PathNameOut(lbuf, wlist.get(), cv, xp, yp);
+				}
+				else {
+					rc.Left = xp;
+					FileNameOut(cv, rc, lbuf, use_fgsel, true, wlist.get());
+				}
 			}
 			//30秒以上空いたら分割線
 			if (is_brk) draw_separateLine(cv, Rect);
