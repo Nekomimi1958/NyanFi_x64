@@ -23632,6 +23632,34 @@ void __fastcall TNyanFiForm::SelReverseAllActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//結果リストで同じディレクトリにある項目を選択
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SelSameDirActionExecute(TObject *Sender)
+{
+	try {
+		if (!CurStt->is_Find) SkipAbort();
+
+		file_rec *cfp = GetCurFrecPtr();
+		if (!cfp) Abort();
+
+		UnicodeString pnam = cfp->p_name;
+		if (pnam.IsEmpty()) SkipAbort();
+
+		TStringList *lst = GetCurList();
+		for (int i=0; i<lst->Count; i++) {
+			file_rec *fp = (file_rec*)lst->Objects[i];
+			if (!is_selectable(fp)) continue;
+			fp->selected = SameText(fp->p_name, pnam);
+		}
+
+		RepaintList(CurListTag);
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+}
+
+//---------------------------------------------------------------------------
 //拡張子が同じファイルを選択
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SelSameExtActionExecute(TObject *Sender)

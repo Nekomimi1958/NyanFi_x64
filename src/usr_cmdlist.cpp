@@ -209,6 +209,7 @@ void set_CmdList(
 		"F:SelMask=選択中の項目だけを残して他を隠す\n"
 		"F:SelOnlyCur=カレント側だけにあるファイルを選択\n"
 		"F:SelReverseAll=すべての項目の選択状態を反転\n"
+		"F:SelSameDir=結果リストで同じディレクトリの項目を選択\n"
 		"F:SetAlias=ワークリストの項目にエイリアスを設定\n"
 		"F:SetArcTime=アーカイブのタイムスタンプを最新に合わせる\n"
 		"F:SetDirTime=ディレクトリのタイムスタンプを最新に合わせる\n"

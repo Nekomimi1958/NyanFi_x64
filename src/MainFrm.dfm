@@ -4665,6 +4665,11 @@ object NyanFiForm: TNyanFiForm
       OnExecute = SelReverseAllActionExecute
       OnUpdate = MenuFActionUpdate
     end
+    object SelSameDirAction: TAction
+      Category = 'Command'
+      OnExecute = SelSameDirActionExecute
+      OnUpdate = MenuFActionUpdate
+    end
     object SelSameExtAction: TAction
       Category = 'Command'
       OnExecute = SelSameExtActionExecute

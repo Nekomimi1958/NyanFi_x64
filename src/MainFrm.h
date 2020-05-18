@@ -403,6 +403,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *SelOnlyCurAction;
 	TAction *SelReverseAction;
 	TAction *SelReverseAllAction;
+	TAction *SelSameDirAction;
 	TAction *SelSameExtAction;
 	TAction *SelSameNameAction;
 	TAction *SelWorkItemAction;
@@ -1873,6 +1874,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TxtScrollPanelResize(TObject *Sender);
 	void __fastcall SimilarImageActionExecute(TObject *Sender);
 	void __fastcall JsonViewerActionExecute(TObject *Sender);
+	void __fastcall SelSameDirActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
