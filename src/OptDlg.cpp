@@ -2152,6 +2152,7 @@ void __fastcall TOptionDlg::OptListBoxKeyDown(TObject *Sender, WORD &Key, TShift
 				//<<<<<<<X86_SPI
 				//<<<<<<<X86_SPI
 				//<<<<<<<X86_SPI
+				//<<<<<<<X86_SPI
 
 //---------------------------------------------------------------------------
 //その他のエディタの追加
@@ -4630,7 +4631,7 @@ void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 
 	ListPercentEdit->Color	 = get_WinColor(!KeepOnResizeCheckBox->Checked);
 	FindPathWdEdit->Color	 = get_WinColor(!FindPathColCheckBox->Checked);
-	FindTagsWdEdit->Color	 = get_WinColor(!FindTagsColCheckBox->Checked);
+	FindTagsWdEdit->Color	 = get_WinColor(!FindTagsColCheckBox->Enabled || !FindTagsColCheckBox->Checked);
 
 	ModalAlphaEdit->Color	 = get_WinColor(!ModalScrCheckBox->Checked);
 	ModalColorBox->Color 	 = get_WinColor(!ModalScrCheckBox->Checked);
@@ -4647,6 +4648,7 @@ void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 	}
 
 	DivDirInfUDCheckBox->Enabled = DivFlistUDCheckBox->Checked;
+	FindTagsColCheckBox->Enabled = FindPathColCheckBox->Checked;
 
 	int bgmod = BgImgModeComboBox->ItemIndex;
 	BgImgSubModeComboBox->Enabled = (bgmod==1 || bgmod==2);

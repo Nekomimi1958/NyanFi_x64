@@ -5537,6 +5537,7 @@ void __fastcall TNyanFiForm::SetFlItemWidth(TStringList *lst, int tag)
 	int w_file = lst_stt->lwd_half * 8;
 	int x_base = ScaledInt((IconMode>0)? 20 : 8);
 	int x_path = x_right - ((lst_stt->is_Find && FindPathColumn)? lst_stt->lwd_path + lst_stt->lwd_half : 0);
+
 	int x_time = x_path - lst_stt->lwd_time - lst_stt->lwd_half;
 	int x_size = x_time - lst_stt->lwd_size;
 	int x_fext = x_size - lst_stt->lwd_fext - lst_stt->lwd_half;
@@ -7746,8 +7747,7 @@ void __fastcall TNyanFiForm::SetListHeader(int tag)
 		int mgn = hp->Width - lst_stt->lxp_right + 8;
 		sp->Items[1]->Width = lst_stt->lwd_fext + (HideSizeTime? mgn : 8);
 		sp->Items[4]->Width = HideSizeTime? 0 :
-								(lst_stt->is_Find && (FindPathColumn || (lst_stt->find_TAG && FindTagsColumn)))?
-									 std::max(hp->ClientWidth - ListStt[tag].lxp_path, 0) : 0;
+								(lst_stt->is_Find && FindPathColumn)? std::max(hp->ClientWidth - ListStt[tag].lxp_path, 0) : 0;
 		sp->Items[3]->Width = HideSizeTime? 0 :
 								std::max(hp->ClientWidth - sp->Items[4]->Width - ListStt[tag].lxp_time, 0);
 		sp->Items[2]->Width = HideSizeTime? 0 :
@@ -10534,14 +10534,14 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 		}
 
 		//場所/タグ (検索結果リスト)
-		if (lst_stt->is_Find && !HideSizeTime && !fp->is_dummy && !fp->is_up) {
+		if (lst_stt->is_Find && !HideSizeTime && FindPathColumn && !fp->is_dummy && !fp->is_up) {
 			int xp = lst_stt->lxp_path;
 			//タグ
 			if (lst_stt->find_TAG && FindTagsColumn) {
 				usr_TAG->DrawTags(fp->tags, tmp_cv, xp, yp, RevTagCololr? col_bgFind : col_None);
 			}
 			//場所
-			else if (FindPathColumn) {
+			else {
 				UnicodeString pstr = fp->p_name;
 				remove_top_text(pstr, lst_stt->find_Path);
 				pstr = get_MiniPathName(pstr, lst_stt->lwd_path, tmp_cv->Font);

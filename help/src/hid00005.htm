@@ -1207,8 +1207,11 @@ hh.exe の仕様のため、出力パスの名前に半角空白が含まれていると処理できません。<br
 <div class="spc_box">
 パラメータに <b>LR</b> を指定すると、左右のディレクトリのみを対象とした検索を行い(シンボリックリンクは除外)、結果リストは表示せずに重複ファイルを選択します。前述のオプション・チェックボックスは表示されません。対応はファイル情報でハッシュ値を見比べるか、<a href="#ToOppSameHash">ToOppSameHash</a> コマンドで確認してください。<br>
 </div>
+<div class="spc_box">
+<span class="tips">Tips</span>結果リストで <a href="#SelSameDir">SelSameDir</a> コマンドを用いると、カーソル位置のファイルと同じディレクトリにあるすべてのファイルを選択できます。
+</div>
 
-<a href="#CompareDlg">→ CompareDlg</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>
+<a href="#CompareDlg">→ CompareDlg</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>　<a href="#SelSameDir">→ SelSameDir</a>
 
 <dt id="FindFileDlg">FindFileDlg<span class="pram_text">[_{NM|FK}][;R{0|1}][;X{0|1}][;A{0|1}][;リストファイル名]</span>
 <dd>「<a href="hid00052.htm">ファイル名検索</a>」ダイアログを開きます。<br>
@@ -2569,6 +2572,7 @@ D:\Data\*.txt
 <dt id="SelSameDir">SelSameDir
 <dd>各種検索の結果リストで、カーソル位置の項目と同じディレクトリにあるすべての項目を選択します。<br>
 カレントが結果リストでない場合は何もしません。<br>
+<a href="hid00010.htm#FindPathCol">→ オプション設定 - デザイン - ファイルリスト - 「結果リストに「場所」列を表示」</a>
 
 <dt id="SelSameExt">SelSameExt
 <dd>カーソル位置のファイルと拡張子が同じすべてのファイルを選択します。<br>
