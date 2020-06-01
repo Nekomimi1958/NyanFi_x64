@@ -4185,6 +4185,7 @@ void __fastcall TNyanFiForm::KeyHintTimerTimer(TObject *Sender)
 	std::unique_ptr<TStringList> cmd_lst(new TStringList());
 	std::unique_ptr<TStringList> dsc_lst(new TStringList());
 	TCanvas *cv = KeyHint->Canvas;
+	cv->Font->Assign(KeyHint->Font);
 	int max_w_k = 0, max_w_c = 0;
 	for (int i=0; i<key_lst->Count; i++) {
 		max_w_k = std::max(cv->TextWidth(key_lst->Names[i]), max_w_k);
@@ -4334,10 +4335,9 @@ void __fastcall TNyanFiForm::SetupFont()
 	LockTxtPanel->Font->Assign(TxtPrvFont);
 	LockTxtPanel->ClientHeight = get_FontHeight(LockTxtPanel->Font, 4);
 
-	MsgHint->Canvas->Font->Assign(HintFont);
-	MsgHint->Canvas->Font->Color = col_fgHint;
-	KeyHint->Canvas->Font->Assign(HintFont);
-	KeyHint->Canvas->Font->Color = col_fgHint;
+	HintFont->Color = col_fgHint;
+	MsgHint->Font->Assign(HintFont);
+	KeyHint->Font->Assign(HintFont);
 
 	setup_StatusBar(StatusBar1);
 

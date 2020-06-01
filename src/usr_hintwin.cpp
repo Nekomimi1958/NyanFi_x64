@@ -39,6 +39,11 @@ void __fastcall UsrHintWindow::ActivateHintEx(
 {
 	if (!cp) return;
 
+	std::unique_ptr<TFont> font_buf(new TFont());
+	font_buf->Assign(Screen->HintFont);
+	Screen->HintFont->Assign(Font);
+	Color = bg_col;
+
 	TRect rc = CalcHintRect(max_w, msg, NULL);  rc.Right += 8;
 	if (rc.Width()<min_w) rc.SetWidth(min_w);
 
@@ -47,8 +52,9 @@ void __fastcall UsrHintWindow::ActivateHintEx(
 	if (p.x<mon_left) p.x = mon_left;
 	rc.Offset(p.x, p.y);
 
-	Brush->Color = bg_col;
 	ActivateHint(rc, msg);
 	Repaint();
+
+	Screen->HintFont->Assign(font_buf.get());
 }
 //---------------------------------------------------------------------------

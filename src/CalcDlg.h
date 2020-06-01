@@ -96,11 +96,7 @@ private:	// ユーザー宣言
 
 	bool __fastcall is_IllegalVal(long double v)
 	{
-#if defined(_WIN64)
 		return (v==HUGE_VALL || IsInfinite(v) || IsNan(v));
-#else
-		return (v==_LHUGE_VAL || IsInfinite(v) || IsNan(v));
-#endif
 	}
 
 public:		// ユーザー宣言

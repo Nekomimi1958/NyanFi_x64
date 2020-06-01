@@ -1604,9 +1604,11 @@ void __fastcall TRenameDlg::AssRenListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 //---------------------------------------------------------------------------
 UnicodeString __fastcall TRenameDlg::MakeAssRenItem(int idx)
 {
-	UnicodeString ret_str = make_csv_str(AssExtEdit->Text);
-	ret_str.cat_sprintf(_T("%s"), (idx!=-1 && AssRenListBox->Checked[idx])? _T(",\"1\"") : _T(",\"0\""));
-	ret_str.cat_sprintf(_T("%s"), PrtChgCheckBox->Checked? _T(",P") : _T(","));
+	UnicodeString ret_str;
+	ret_str.sprintf(_T("%s,%s,%s"),
+		make_csv_str(AssExtEdit->Text).c_str(),
+		make_csv_str(idx!=-1 && AssRenListBox->Checked[idx]).c_str(),
+		PrtChgCheckBox->Checked? _T("P") : null_TCHAR);
 	return ret_str;
 }
 //---------------------------------------------------------------------------

@@ -62,8 +62,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	DlgInitialized = false;
 
 	SplashHint = new UsrHintWindow(this);
-	SplashHint->Canvas->Font->Assign(HintFont);
-	SplashHint->Canvas->Font->Color = col_fgHint;
+	SplashHint->Font->Assign(HintFont);
 	SplashHint->ActivateHintEx(_T("\r\nƒIƒvƒVƒ‡ƒ“Ý’è‚Ì€”õ’†...\r\n"), 320, 240, Application->MainForm, col_bgHint);
 
 	cursor_HourGlass();

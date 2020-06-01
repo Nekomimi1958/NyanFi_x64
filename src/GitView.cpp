@@ -36,8 +36,7 @@ void __fastcall TGitViewer::FormCreate(TObject *Sender)
 	DiffScrPanel   = new UsrScrollPanel(DiffPanel,   DiffListBox,   USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
 
 	MsgHint = new UsrHintWindow(this);
-	MsgHint->Canvas->Font->Assign(HintFont);
-	MsgHint->Canvas->Font->Color = col_fgHint;
+	MsgHint->Font->Assign(HintFont);
 
 	StatusList = new TStringList();
 	Staged = false;

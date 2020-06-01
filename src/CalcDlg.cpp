@@ -244,11 +244,7 @@ long double __fastcall TCalculator::EvalNumStr(UnicodeString s)
 			bool is_fct = remove_end_s(s, '!');
 			wchar_t *topptr = s.c_str();
 			wchar_t *endptr;
-#if defined(_WIN64)
 			v = wcstold(topptr, &endptr);
-#else
-			v = _wcstold(topptr, &endptr);
-#endif
 			if ((topptr += s.Length()) != endptr) Abort();
 			if (is_IllegalVal(v)) Abort();
 
