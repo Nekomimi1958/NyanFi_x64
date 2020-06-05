@@ -2066,6 +2066,13 @@ private:	// ユーザー宣言
 
 	void __fastcall ActiveFormChange(TObject *Sender);
 
+	TWndMethod org_MainContainerWndProc;
+	void __fastcall MainContainerWndProc(TMessage &msg)
+	{
+		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
+		org_MainContainerWndProc(msg);
+	}
+
 	//タブ
 	TWndMethod org_TabCtrlWindowProc;
 	void __fastcall TabCtrlWindowProc(TMessage &msg);
@@ -2232,6 +2239,8 @@ private:	// ユーザー宣言
 	}
 
 	void __fastcall MakeUrlFile(UnicodeString fnam, UnicodeString url);
+
+	void __fastcall UpdateBusyCore(bool Value);
 
 	bool __fastcall UpdateBgImage(bool repaint_sw = false, bool reload_sw = false);
 	void __fastcall RestoreBgImg();

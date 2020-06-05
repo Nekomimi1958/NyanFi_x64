@@ -326,6 +326,9 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 
 	TempRichEdit = ViewMemo;
 
+	org_MainContainerWndProc	= MainContainer->WindowProc;
+	MainContainer->WindowProc	= MainContainerWndProc;
+
 	org_TabPanelWndProc 		= TabPanel->WindowProc;
 	TabPanel->WindowProc		= TabPanelWndProc;
 	org_TabCtrlWindowProc		= TabControl1->WindowProc;
@@ -1287,16 +1290,9 @@ void __fastcall TNyanFiForm::SetFindBusy(bool Value)
 		FindTag 	= CurListTag;
 		FindCount	= 0;
 		FindAborted = false;
-		cursor_HourGlass();
-	}
-	else {
-		MsgHint->ReleaseHandle();
-		cursor_Default();
 	}
 
-	for (int i=0; i<MainMenu1->Items->Count; i++) MainMenu1->Items->Items[i]->Enabled = !Value;
-	ToolBarF->Enabled = !Value;
-	set_CloseButton(!Value);
+	UpdateBusyCore(Value);
 }
 //---------------------------------------------------------------------------
 //CalcBusy プロパティの設定
@@ -1309,16 +1305,9 @@ void __fastcall TNyanFiForm::SetCalcBusy(bool Value)
 	if (Value) {
 		CalcTag = CurListTag;
 		CalcAborted = false;
-		cursor_HourGlass();
-	}
-	else {
-		MsgHint->ReleaseHandle();
-		cursor_Default();
 	}
 
-	for (int i=0; i<MainMenu1->Items->Count; i++) MainMenu1->Items->Items[i]->Enabled = !Value;
-	ToolBarF->Enabled = !Value;
-	set_CloseButton(!Value);
+	UpdateBusyCore(Value);
 }
 //---------------------------------------------------------------------------
 //CurWorking プロパティの設定
@@ -3140,6 +3129,32 @@ void __fastcall TNyanFiForm::MakeUrlFile(UnicodeString fnam, UnicodeString url)
 	catch (EAbort &e) {
 		if (!e.Message.IsEmpty() && !USAME_TI(e.Message, "SKIP")) SttBarWarn(e.Message);
 	}
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::UpdateBusyCore(bool Value)
+{
+	if (Value) {
+		cursor_HourGlass();
+	}
+	else {
+		MsgHint->ReleaseHandle();
+		cursor_Default();
+	}
+
+	for (int i=0; i<MainMenu1->Items->Count; i++) MainMenu1->Items->Items[i]->Enabled = !Value;
+
+	if (ToolBarF->Visible) {
+		ToolBarF->Enabled = !Value;
+		if (ToolBarF->Enabled) {
+			for (int i=0; i<ToolBarF->ButtonCount; i++) ToolBarF->Buttons[i]->Enabled = true;
+			UpdateToolDriveBtn();
+		}
+	}
+
+	UpdateFKeyBtn();
+
+	set_CloseButton(!Value);
 }
 
 //---------------------------------------------------------------------------
@@ -5163,7 +5178,7 @@ void __fastcall TNyanFiForm::UpdateFKeyBtn(
 				bp->Enabled = !cmd.IsEmpty() && !TxtViewer->IsCmdInhibited(cmd);
 			}
 			else {
-				bp->Enabled = !cmd.IsEmpty();
+				bp->Enabled = !cmd.IsEmpty() && !FindBusy && !CalcBusy;
 			}
 		}
 
