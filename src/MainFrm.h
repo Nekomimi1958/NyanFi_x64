@@ -332,6 +332,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *OpenStandardAction;
 	TAction *OpenTrashAction;
 	TAction *OptionDlgAction;
+	TAction *OptionKeyAction;
 	TAction *PackAction;
 	TAction *PackToCurrAction;
 	TAction *PageBindAction;
@@ -1190,6 +1191,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall WorkListActionExecute(TObject *Sender);
 	void __fastcall OptionDlgActionExecute(TObject *Sender);
 	void __fastcall OptionDlgActionUpdate(TObject *Sender);
+	void __fastcall OptionKeyActionExecute(TObject *Sender);
 	void __fastcall MenuBarActionExecute(TObject *Sender);
 	void __fastcall MenuBarActionUpdate(TObject *Sender);
 	void __fastcall ExPopupMenuActionExecute(TObject *Sender);
@@ -1865,7 +1867,6 @@ __published:	// IDE で管理されるコンポーネント
 		const TRect &ARect, TOwnerDrawState State);
 	void __fastcall MainMenuMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width, int &Height);
 	void __fastcall OdPopupMenuPopup(TObject *Sender);
-	void __fastcall OptKeyItemClick(TObject *Sender);
 	void __fastcall CopyEnvInfItemClick(TObject *Sender);
 	void __fastcall WorkProgressBoxPaint(TObject *Sender);
 	void __fastcall SetInterpolationActionExecute(TObject *Sender);
@@ -2376,8 +2377,8 @@ private:	// ユーザー宣言
 	void __fastcall SttBarWarn(const _TCHAR *msg);
 	void __fastcall SttBarWarnUstr(unsigned id);
 
-	void __fastcall DeleteSelFiles(TStringList *lst);
-	void __fastcall DeleteFileP(file_rec *fp);
+	void __fastcall DeleteSelFiles(TStringList *lst, bool use_sync, UnicodeString inf_str = EmptyStr);
+	void __fastcall DeleteFileP(file_rec *fp, bool use_sync, UnicodeString inf_str = EmptyStr);
 
 	bool __fastcall UnpackCopyCore(UnicodeString anam, UnicodeString snam, UnicodeString files, UnicodeString rnam,
 						UnicodeString dst_dir, TStringList *f_lst, TStringList *d_lst);

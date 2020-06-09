@@ -2921,8 +2921,7 @@ object NyanFiForm: TNyanFiForm
         Action = OptionDlgAction
       end
       object OptKeyItem: TMenuItem
-        Caption = #12461#12540#35373#23450'(&K)...'
-        OnClick = OptKeyItemClick
+        Action = OptionKeyAction
       end
       object SetToolBtnItem: TMenuItem
         Action = ToolBarDlgAction
@@ -5579,6 +5578,12 @@ object NyanFiForm: TNyanFiForm
       Category = 'Menu'
       Caption = #34920#31034#21517#12398#22793#26356'(&R)...'
       OnExecute = FK_RenameActionExecute
+    end
+    object OptionKeyAction: TAction
+      Category = 'Menu'
+      Caption = #12461#12540#35373#23450'(&K)...'
+      OnExecute = OptionKeyActionExecute
+      OnUpdate = OptionDlgActionUpdate
     end
   end
   object TaskSttTimer: TTimer

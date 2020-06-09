@@ -9631,9 +9631,13 @@ void __fastcall TNyanFiForm::RecoverFileList2(
 //---------------------------------------------------------------------------
 //選択中ファイルを削除
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::DeleteSelFiles(TStringList *lst)
+void __fastcall TNyanFiForm::DeleteSelFiles(
+	TStringList *lst,
+	bool use_sync,
+	UnicodeString inf_str)		//	(default = EmptyStr);
 {
 	UnicodeString cmd = "DEL";
+
 	std::unique_ptr<TStringList> tsk_lst(new TStringList());
 	for (int i=0; i<lst->Count; i++) {
 		file_rec *fp = (file_rec*)lst->Objects[i];
@@ -9645,8 +9649,14 @@ void __fastcall TNyanFiForm::DeleteSelFiles(TStringList *lst)
 
 	if (tsk_lst->Count>0) {
 		UnicodeString dnam = GetCurPathStr();
+		if (inf_str.IsEmpty()) inf_str = dnam;
+
 		std::unique_ptr<TStringList> dir_lst(new TStringList());
-		get_SyncDstList(dnam, dir_lst.get(), true);
+		if (use_sync)
+			get_SyncDstList(dnam, dir_lst.get(), true);
+		else
+			dir_lst->Add(dnam);
+
 		for (int i=0; i<dir_lst->Count; i++) {
 			std::unique_ptr<TStringList> t_buf(new TStringList());
 			t_buf->Assign(tsk_lst.get());
@@ -9666,7 +9676,7 @@ void __fastcall TNyanFiForm::DeleteSelFiles(TStringList *lst)
 				cp->TaskList->Assign(t_buf.get());
 				cp->CmdStr	 = TaskCmdList->Values[cmd];
 				cp->DistPath = dnam;
-				cp->InfStr	 = dnam;
+				cp->InfStr	 = inf_str;
 				ActivateTask(tp, cp);
 			}
 		}
@@ -9675,14 +9685,24 @@ void __fastcall TNyanFiForm::DeleteSelFiles(TStringList *lst)
 //---------------------------------------------------------------------------
 //指定ファイルを削除
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::DeleteFileP(file_rec *fp)
+void __fastcall TNyanFiForm::DeleteFileP(
+	file_rec *fp,
+	bool use_sync,
+	UnicodeString inf_str)		//	(default = EmptyStr);
 {
 	if (!fp || fp->is_dummy || fp->f_name.IsEmpty()) return;
 
 	UnicodeString cmd  = "DEL";
+
 	UnicodeString dnam = GetCurPathStr();
+	if (inf_str.IsEmpty()) inf_str = dnam;
+
 	std::unique_ptr<TStringList> dir_lst(new TStringList());
-	get_SyncDstList(dnam, dir_lst.get(), true);
+	if (use_sync)
+		get_SyncDstList(dnam, dir_lst.get(), true);
+	else
+		dir_lst->Add(dnam);
+
 	for (int i=0; i<dir_lst->Count; i++) {
 		UnicodeString tprm;
 		tprm.sprintf(_T("%s\t%s"),
@@ -9699,7 +9719,7 @@ void __fastcall TNyanFiForm::DeleteFileP(file_rec *fp)
 			cp->TaskList->Add(tprm);
 			cp->CmdStr	 = TaskCmdList->Values[cmd];
 			cp->DistPath = dnam;
-			cp->InfStr	 = dnam;
+			cp->InfStr	 = inf_str;
 			ActivateTask(tp, cp);
 		}
 	}
@@ -21729,6 +21749,13 @@ void __fastcall TNyanFiForm::OptionDlgActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = IsPrimary && !CurWorking && !FindBusy && !CalcBusy;
 }
+//---------------------------------------------------------------------------
+//キー設定
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::OptionKeyActionExecute(TObject *Sender)
+{
+	ExeCommandAction("OptionDlg", "KYO");
+}
 
 //---------------------------------------------------------------------------
 //アーカイブの作成
@@ -26674,7 +26701,12 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 		else {
 			std::unique_ptr<TStringList> tsk_lst(new TStringList());
 			std::unique_ptr<TStringList> dst_lst(new TStringList());
-			UnicodeString syn_opt = get_SyncDstList(dst_dir, dst_lst.get(), false, src_dir);
+			UnicodeString syn_opt;
+			if (IsCurFList() && IsOppFList())
+			 	syn_opt = get_SyncDstList(dst_dir, dst_lst.get(), false, src_dir);
+			else
+				dst_lst->Add(dst_dir);
+
 			UnicodeString cmd = "CPY";
 			UnicodeString tprm;
 			//選択項目
@@ -27340,6 +27372,8 @@ void __fastcall TNyanFiForm::DeleteActionExecute(TObject *Sender)
 			//削除制限項目のチェック
 			if (IncProtectItem()) SkipAbort();
 
+			bool has_sync = !CurStt->is_Find && !CurStt->is_ADS && has_SyncDir(CurPath[CurListTag], true);
+
 			//選択項目
 			if (sel_cnt>0) {
 				file_rec *sfp = GetCurRepFrecPtr();
@@ -27354,7 +27388,7 @@ void __fastcall TNyanFiForm::DeleteActionExecute(TObject *Sender)
 				else {
 					msg = LoadUsrMsg(USTR_DeleteQ, USTR_SelectedItem);
 				}
-				if (has_SyncDir(CurPath[CurListTag], true)) msg += "\r\n(同期先を含む)";
+				if (has_sync) msg += "\r\n(同期先を含む)";
 				if (!msgbox_Sure(msg, sure_del)) SkipAbort();
 
 				bool opp_is_sub = false;
@@ -27365,7 +27399,7 @@ void __fastcall TNyanFiForm::DeleteActionExecute(TObject *Sender)
 							opp_is_sub = true;
 				}
 				if (opp_is_sub) ExeCmdAction(CurrToOppAction);
-				DeleteSelFiles(lst);
+				DeleteSelFiles(lst, has_sync);
 			}
 			//カーソル位置
 			else {
@@ -27375,15 +27409,16 @@ void __fastcall TNyanFiForm::DeleteActionExecute(TObject *Sender)
 						LoadUsrMsg(USTR_DeleteQ, tmp.sprintf(_T("リンク %s "), get_DispName(cfp).c_str())) :
 						LoadUsrMsg(USTR_DeleteQ, tmp.sprintf(_T("ディレクトリ %s 全体"), get_DispName(cfp).c_str()));
 				}
-				else
+				else {
 					msg = LoadUsrMsg(USTR_DeleteQ, tmp.sprintf(_T("%s "), get_DispName(cfp).c_str()));
-				if (has_SyncDir(CurPath[CurListTag], true)) msg += "\r\n(同期先を含む)";
+				}
+				if (has_sync) msg += "\r\n(同期先を含む)";
 				if (!msgbox_Sure(msg, sure_del)) SkipAbort();
 
 				if (cfp->is_dir &&
 					StartsText(IncludeTrailingPathDelimiter(cfp->f_name), CurPath[OppListTag]))
 						ExeCmdAction(CurrToOppAction);
-				DeleteFileP(cfp);
+				DeleteFileP(cfp, has_sync);
 			}
 		}
 	}
@@ -28241,7 +28276,7 @@ bool __fastcall TNyanFiForm::ExeExtMenuItem(int idx)
 			case 1:	//削除
 				if (CurStt->is_Arc) Abort();
 				Sleep(500);
-				DeleteSelFiles(lst);
+				DeleteSelFiles(lst, IsCurFList());
 				break;
 			case 2:	//コピー
 				if (!ExeCmdAction(CopyAction)) ActionAbort();
@@ -36736,14 +36771,6 @@ void __fastcall TNyanFiForm::DefHighlightActionExecute(TObject *Sender)
 		}
 		else msgbox_WARN("定義されていません。");
 	}
-}
-
-//---------------------------------------------------------------------------
-//キー設定
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::OptKeyItemClick(TObject *Sender)
-{
-	ExeCommandAction("OptionDlg", "KYO");
 }
 
 //---------------------------------------------------------------------------

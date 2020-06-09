@@ -82,8 +82,8 @@ bool  IsAdmin	 = false;		//管理者権限
 int   StartedCount;				//実行開始カウント(m秒)
 int   NyanFiIdNo = 0;			//多重 NyanFi 識別ID
 bool  IsPrimary  = true;		//最初に起動された
-bool  GitExists = false;		//Git がインストールされている
-bool  IsMuted	= false;		//音量ミュート
+bool  GitExists  = false;		//Git がインストールされている
+bool  IsMuted	 = false;		//音量ミュート
 
 int   ScrMode  = SCMD_FLIST;	//画面モード
 
@@ -8066,7 +8066,7 @@ void GetFileInfList(
 				}
 			}
 
-			if (!fp->is_virtual && !is_all) {
+			if (!fp->is_virtual && !is_ads && !is_all) {
 				UnicodeString cfg_nam = get_dotNaynfi(fp->is_up? fp->p_name : fp->f_name);
 				//説明
 				if (file_exists(cfg_nam)) {
