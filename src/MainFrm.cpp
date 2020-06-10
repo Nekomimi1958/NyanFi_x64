@@ -17059,6 +17059,7 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 
 		__int64 max_sz = (__int64)FindDuplDlg->MaxSizeEdit->Text.ToIntDef(64) * 1048576ul;
 
+		clear_FindStt(CurStt);
 		CurStt->find_ResLink = FindDuplDlg->ResLinkCheckBox->Checked;
 		CurStt->find_Path	 = CurPath[CurListTag];
 
@@ -23548,12 +23549,14 @@ void __fastcall TNyanFiForm::SelMaskActionExecute(TObject *Sender)
 					CurToOppDiffList();
 				}
 			}
+			else if (CurStt->find_DUPL) {
+				RecoverFileList(CurListTag);
+			}
 			else {
 				CurStt->find_DICON? FindFolderIconCore(CurListTag) :
 				CurStt->find_HLINK? FindHardLinkCore(CurStt->find_Name, CurListTag) :
 				CurStt->find_MARK ? FindMarkCore(CurListTag) :
-				CurStt->find_TAG  ? FindTagCore(CurListTag)
-								  : FindFileCore(CurStt->find_Dir, CurListTag);
+				CurStt->find_TAG  ? FindTagCore(CurListTag) : FindFileCore(CurStt->find_Dir, CurListTag);
 			}
 		}
 		else if (CurStt->is_FTP) {
