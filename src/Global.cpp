@@ -8223,7 +8223,7 @@ void assign_InfListBox(
 	UsrScrollPanel *sp)		//シンプルスクロールバー (default = NULL)
 {
 	TCanvas *cv = lp->Canvas;
-	cv->Font->Assign(lp->Font);
+	cv->Font->Assign((lp->Tag & LBTAG_FIF_LIST)? FileInfFont : lp->Font);
 
 	bool is_irreg = IsIrregularFont(cv->Font);
 	int w_max = 0;
