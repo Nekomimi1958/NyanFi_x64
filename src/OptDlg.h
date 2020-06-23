@@ -863,6 +863,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall KeyHeaderControlDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
 			const TRect &Rect, bool Pressed);
 	void __fastcall KeyHeaderControlSectionClick(THeaderControl *HeaderControl, THeaderSection *Section);
+	void __fastcall KeyComboBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall KeyFilterEdit_Change(TObject *Sender);
 	void __fastcall KeyFilterEdit_KeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall KeyFilterEdit_KeyPress(TObject *Sender, System::WideChar &Key);
@@ -972,6 +973,7 @@ private:	// ユーザー宣言
 
 	bool __fastcall CheckDuplExt(int skip_idx = -1);
 	void __fastcall SetKeyComboBox();
+	void __fastcall UpdateKeyComboStt();
 	void __fastcall SetExtToolExeName(UnicodeString fnam);
 	void __fastcall ChangeExtToolList(bool add);
 	void __fastcall ChangeExtMenuList(bool add);

@@ -4644,12 +4644,13 @@ object OptionDlg: TOptionDlg
             Left = 8
             Top = 18
             Width = 83
-            Height = 21
-            Style = csDropDownList
+            Height = 22
+            Style = csOwnerDrawFixed
             DropDownCount = 26
             ImeMode = imClose
             TabOrder = 0
             OnClick = KeySetClick
+            OnDrawItem = KeyComboBoxDrawItem
           end
           object CtrlCheckBox: TCheckBox
             Left = 65
@@ -4682,13 +4683,14 @@ object OptionDlg: TOptionDlg
             Left = 109
             Top = 18
             Width = 83
-            Height = 21
+            Height = 22
             Hint = '2'#12473#12488#12525#12540#12463#12461#12540
-            Style = csDropDownList
+            Style = csOwnerDrawFixed
             DropDownCount = 27
             ImeMode = imClose
             TabOrder = 1
             OnClick = KeySetClick
+            OnDrawItem = KeyComboBoxDrawItem
           end
           object SelCheckBox: TCheckBox
             Left = 8
