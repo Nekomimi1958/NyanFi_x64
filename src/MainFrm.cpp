@@ -7252,7 +7252,6 @@ void __fastcall TNyanFiForm::SetDirCaption(int tag)
 	pp->Hint = (pnam.Length()<pnam0.Length())? (lst_stt->is_FTP? yen_to_slash(pnam0) : yen_to_delimiter(pnam0))
 											 : EmptyStr;
 	if (lst_stt->is_FTP) pnam = yen_to_slash(pnam);
-	pnam = ReplaceStr(pnam, "&", "&&");
 	if (lst_stt->is_TabFixed) pnam.Insert(TabPinMark, 1);
 	pp->Caption = pnam;
 
