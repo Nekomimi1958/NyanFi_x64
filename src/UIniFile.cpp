@@ -118,7 +118,7 @@ void UsrIniFile::Reload()
 void UsrIniFile::EraseSection(UnicodeString sct)
 {
 	int idx = SectionList->IndexOf(sct);
-	if (idx>=0) {
+	if (idx!=-1) {
 		delete (TStringList*)SectionList->Objects[idx];
 		SectionList->Delete(idx);
 		Modified = true;
@@ -132,10 +132,10 @@ bool UsrIniFile::DeleteKey(UnicodeString sct, UnicodeString key)
 {
 	bool deleted = false;
 	int idx = SectionList->IndexOf(sct);
-	if (idx>=0) {
+	if (idx!=-1) {
 		TStringList *klist = (TStringList*)SectionList->Objects[idx];
 		idx = klist->IndexOfName(key);
-		if (idx>=0) {
+		if (idx!=-1) {
 			klist->Delete(idx);
 			deleted = true;
 		}
@@ -150,7 +150,7 @@ bool UsrIniFile::KeyExists(UnicodeString sct, UnicodeString key)
 {
 	bool ret = false;
 	int idx = SectionList->IndexOf(sct);
-	if (idx>=0) {
+	if (idx!=-1) {
 		TStringList *klist = (TStringList*)SectionList->Objects[idx];
 		ret = (klist->IndexOfName(key) != -1);
 	}
@@ -165,7 +165,7 @@ void UsrIniFile::RenameKey(UnicodeString sct, UnicodeString old_key, UnicodeStri
 	if (idx>=0) {
 		TStringList *klist = (TStringList*)SectionList->Objects[idx];
 		idx = klist->IndexOfName(old_key);
-		if (idx>=0) klist->Strings[idx] = new_key + "=" + klist->ValueFromIndex[idx];
+		if (idx!=-1) klist->Strings[idx] = new_key + "=" + klist->ValueFromIndex[idx];
 	}
 }
 //---------------------------------------------------------------------------
@@ -174,11 +174,24 @@ void UsrIniFile::RenameKey(UnicodeString sct, UnicodeString old_key, UnicodeStri
 void UsrIniFile::ReplaceKey(UnicodeString sct, UnicodeString s0, UnicodeString s1)
 {
 	int idx = SectionList->IndexOf(sct);
-	if (idx>=0) {
+	if (idx!=-1) {
 		TStringList *klist = (TStringList*)SectionList->Objects[idx];
-		for (int i=0; i<klist->Count; i++) {
-			UnicodeString key = klist->Names[i];
-			if (ContainsText(key, s0)) klist->Strings[i] = ReplaceText(key, s0, s1) + "=" + klist->ValueFromIndex[i];
+		int i = 0;
+		while (i<klist->Count) {
+			UnicodeString key0 = klist->Names[i];
+			if (ContainsText(key0, s0)) {
+				UnicodeString key1 = ReplaceText(key0, s0, s1);
+				if (klist->IndexOfName(key1)!=-1) {
+					klist->Delete(i);
+				}
+				else {
+					klist->Strings[i] = key1 + "=" + klist->ValueFromIndex[i];
+					i++;
+				}
+			}
+			else {
+				i++;
+			}
 		}
 	}
 }
@@ -197,7 +210,7 @@ void UsrIniFile::ReadSection(UnicodeString sct, TStringList *lst)
 {
 	if (!lst) return;
 	int idx = SectionList->IndexOf(sct);
-	if (idx>=0) lst->Assign((TStringList*)SectionList->Objects[idx]);
+	if (idx!=-1) lst->Assign((TStringList*)SectionList->Objects[idx]);
 }
 //---------------------------------------------------------------------------
 //セクションへ複写
@@ -207,7 +220,7 @@ void UsrIniFile::AssignSection(UnicodeString sct, TStringList *lst)
 	if (!lst) return;
 
 	int idx = SectionList->IndexOf(sct);
-	TStringList *klist = (idx>=0)? (TStringList*)SectionList->Objects[idx] : AddSection(sct);
+	TStringList *klist = (idx!=-1)? (TStringList*)SectionList->Objects[idx] : AddSection(sct);
 	klist->Assign(lst);
 	Modified = true;
 }
@@ -219,7 +232,7 @@ UnicodeString UsrIniFile::ReadString(UnicodeString sct, UnicodeString key,
 {
 	UnicodeString ret;
 	int idx = SectionList->IndexOf(sct);
-	if (idx>=0) {
+	if (idx!=-1) {
 		TStringList * klist = (TStringList*)SectionList->Objects[idx];
 		ret = klist->Values[key];
 		if (del_quot) ret = exclude_quot(ret);
@@ -306,13 +319,13 @@ TFont* UsrIniFile::ReadFontInf(
 void UsrIniFile::WriteString(UnicodeString sct, UnicodeString key, UnicodeString v)
 {
 	int idx = SectionList->IndexOf(sct);
-	TStringList *klist = (idx>=0)? (TStringList*)SectionList->Objects[idx] : AddSection(sct);
+	TStringList *klist = (idx!=-1)? (TStringList*)SectionList->Objects[idx] : AddSection(sct);
 
 	UnicodeString s;
 	s.sprintf(_T("%s=%s"), key.c_str(), v.c_str());
 
 	idx = klist->IndexOfName(key);
-	if (idx>=0) {
+	if (idx!=-1) {
 		if (!SameStr(klist->Strings[idx], s)) {
 			klist->Strings[idx] = s;
 			Modified = true;
@@ -685,7 +698,9 @@ void UsrIniFile::ClearAllMark()
 			SectionList->Delete(i);
 			Modified = true;
 		}
-		else i++;
+		else {
+			i++;
+		}
 	}
 }
 
@@ -714,7 +729,7 @@ bool UsrIniFile::FileMark(
 
 	int s_idx = SectionList->IndexOf(sct);
 	TStringList *klist = NULL;
-	if (s_idx>=0) {
+	if (s_idx!=-1) {
 		klist = (TStringList*)SectionList->Objects[s_idx];
 		int k_idx = -1;
 		for (int i=0; i<klist->Count && k_idx==-1; i++)
@@ -777,7 +792,7 @@ bool UsrIniFile::IsMarked(UnicodeString fnam)
 	}
 
 	int idx = MarkIdxList->IndexOf(sct);
-	if (idx>=0) {
+	if (idx!=-1) {
 		TStringList *klist = (TStringList*)MarkIdxList->Objects[idx];
 		int k_idx = -1;
 		for (int i=0; i<klist->Count && k_idx==-1; i++)
@@ -828,7 +843,7 @@ UnicodeString UsrIniFile::GetMarkMemo(UnicodeString fnam)
 
 	UnicodeString memo;
 	int idx = MarkIdxList->IndexOf(sct);
-	if (idx>=0) {
+	if (idx!=-1) {
 		TStringList *klist = (TStringList*)MarkIdxList->Objects[idx];
 		for (int i=0; i<klist->Count; i++) {
 			UnicodeString lbuf = klist->Strings[i];	//ファイル名 \t メモ \t 設定日時

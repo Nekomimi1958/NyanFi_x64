@@ -40,13 +40,14 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter);
 
 	setup_ToolBar(OptToolBar);
-	DriveComboBox->Width  = IniFile->ReadIntGen(_T("DrvGrpahSlctrWidth"),	200);
-	OldOdrAction->Checked = IniFile->ReadBoolGen(_T("DrvGrpahOldOdr"));
-	MinMaxAction->Checked = IniFile->ReadBoolGen(_T("DrvGrpahMinMax"));
+	DriveComboBox->Width  = IniFile->ReadIntGen( _T("DrvGraphSlctrWidth"),	120);
+	OldOdrAction->Checked = IniFile->ReadBoolGen(_T("DrvGraphOldOdr"));
+	MinMaxAction->Checked = IniFile->ReadBoolGen(_T("DrvGraphMinMax"));
+	CursorAction->Checked = IniFile->ReadBoolGen(_T("DrvGraphCursor"));
 
 	setup_StatusBar(StatusBar1);
 
-	BarSize = IniFile->ReadIntGen( _T("DrvGrpahBarSize"), 8);
+	BarSize = IniFile->ReadIntGen( _T("DrvGraphBarSize"), 8);
 	if (BarSize<1 || BarSize>16) BarSize = 8;
 	SizeComboBox->ItemIndex = BarSize - 1;
 	GraphTopX = Canvas->TextWidth("9999/99/99 ") + 4;
@@ -82,10 +83,11 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 void __fastcall TDriveGraph::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	IniFile->SavePosInfo(this);
-	IniFile->WriteIntGen( _T("DrvGrpahSlctrWidth"),	DriveComboBox->Width);
-	IniFile->WriteBoolGen(_T("DrvGrpahOldOdr"),		OldOdrAction);
-	IniFile->WriteBoolGen(_T("DrvGrpahMinMax"),		MinMaxAction);
-	IniFile->WriteIntGen( _T("DrvGrpahBarSize"),	BarSize);
+	IniFile->WriteIntGen( _T("DrvGraphSlctrWidth"),	DriveComboBox->Width);
+	IniFile->WriteBoolGen(_T("DrvGraphOldOdr"),		OldOdrAction);
+	IniFile->WriteBoolGen(_T("DrvGraphMinMax"),		MinMaxAction);
+	IniFile->WriteBoolGen(_T("DrvGraphCursor"),		CursorAction);
+	IniFile->WriteIntGen( _T("DrvGraphBarSize"),	BarSize);
 	DataList->Clear();
 }
 //---------------------------------------------------------------------------
@@ -117,6 +119,13 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 		int x75 = GraphTopX + xw * 0.75;
 		int x_min = GraphTopX + xw * MinUsed;
 		int x_max = GraphTopX + xw * MaxUsed;
+		int x_cur = -1;
+		if (SttIndex>=0 && SttIndex<DataList->Count) {
+			UnicodeString lbuf = DataList->Strings[SttIndex];
+			__int64 used_sz = StrToInt64Def(get_csv_item(lbuf, 2), -1);
+			__int64 free_sz = StrToInt64Def(get_csv_item(lbuf, 3), -1);
+			if (used_sz>=0 && free_sz>=0) x_cur = GraphTopX + xw * (1.0 * used_sz / (used_sz + free_sz));
+		}
 
 		TColor col_grid = AdjustColor(col_bgPrgBar, 32);
 		cv->Pen->Width = ScaledIntX(1);
@@ -151,6 +160,11 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 				cv->MoveTo(x_min, yp);  cv->LineTo(x_min, yp + BarSize);
 				cv->Pen->Color = clRed;
 				cv->MoveTo(x_max, yp);  cv->LineTo(x_max, yp + BarSize);
+			}
+			//Cur ライン
+			if (CursorAction->Checked && x_cur!=-1) {
+				cv->Pen->Color = col_Cursor;
+				cv->MoveTo(x_cur, yp);  cv->LineTo(x_cur, yp + BarSize);
 			}
 
 			//ラインカーソル
@@ -347,4 +361,5 @@ void __fastcall TDriveGraph::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
+
 

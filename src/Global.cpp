@@ -1211,6 +1211,9 @@ void InitializeGlobal()
 
 	mute_Volume("GET");	//ミュート状態を取得
 
+	//廃止セクション、キーの削除、修正
+	IniFile->ReplaceKey(SCT_General, "DrvGrpah", "DrvGraph");	//v14.77
+
 	CurStt = &ListStt[CurListTag];
 	OppStt = &ListStt[OppListTag];
 

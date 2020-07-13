@@ -5,9 +5,9 @@ object DriveGraph: TDriveGraph
   BorderIcons = [biSystemMenu]
   Caption = #12489#12521#12452#12502#20351#29992#29575#25512#31227
   ClientHeight = 289
-  ClientWidth = 392
+  ClientWidth = 390
   Color = clBtnFace
-  Constraints.MinWidth = 360
+  Constraints.MinWidth = 400
   DoubleBuffered = True
   ParentFont = True
   KeyPreview = True
@@ -26,18 +26,19 @@ object DriveGraph: TDriveGraph
   object HiddenCanBtn: TButton
     Left = 0
     Top = 270
-    Width = 392
+    Width = 390
     Height = 0
     Align = alBottom
     Cancel = True
     ModalResult = 2
     TabOrder = 0
     TabStop = False
+    ExplicitWidth = 392
   end
   object GraphScrollBox: TScrollBox
     Left = 0
     Top = 19
-    Width = 392
+    Width = 390
     Height = 251
     HorzScrollBar.Visible = False
     VertScrollBar.Tracking = True
@@ -46,14 +47,16 @@ object DriveGraph: TDriveGraph
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 2
+    ExplicitWidth = 392
     object PaintBox1: TPaintBox
       Left = 0
       Top = 0
-      Width = 392
+      Width = 390
       Height = 251
       Align = alClient
       OnMouseDown = PaintBox1MouseDown
       OnPaint = PaintBox1Paint
+      ExplicitWidth = 392
     end
     object HiddenEdit: TEdit
       Left = 0
@@ -71,7 +74,7 @@ object DriveGraph: TDriveGraph
   object StatusBar1: TStatusBar
     Left = 0
     Top = 270
-    Width = 392
+    Width = 390
     Height = 19
     Panels = <
       item
@@ -80,11 +83,12 @@ object DriveGraph: TDriveGraph
       end>
     StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
+    ExplicitWidth = 392
   end
   object OptToolBar: TToolBar
     Left = 0
     Top = 0
-    Width = 392
+    Width = 390
     Height = 19
     AutoSize = True
     ButtonHeight = 19
@@ -94,6 +98,7 @@ object DriveGraph: TDriveGraph
     List = True
     AllowTextButtons = True
     TabOrder = 1
+    ExplicitWidth = 392
     object DriveComboBox: TComboBox
       Left = 0
       Top = 0
@@ -150,6 +155,12 @@ object DriveGraph: TDriveGraph
       Action = MinMaxAction
       Style = tbsTextButton
     end
+    object ToolButton1: TToolButton
+      Left = 328
+      Top = 0
+      Action = CursorAction
+      Style = tbsTextButton
+    end
   end
   object ActionList1: TActionList
     Left = 48
@@ -160,6 +171,12 @@ object DriveGraph: TDriveGraph
     end
     object MinMaxAction: TAction
       Caption = 'Min/Max'
+      Hint = #26368#23569'/'#26368#22823#20351#29992#29575#12521#12452#12531#12434#34920#31034
+      OnExecute = ToggleActionExecute
+    end
+    object CursorAction: TAction
+      Caption = 'Cursor'
+      Hint = #12459#12540#12477#12523#20301#32622#12398#20351#29992#29575#12521#12452#12531#12434#34920#31034
       OnExecute = ToggleActionExecute
     end
   end

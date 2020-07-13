@@ -21,6 +21,7 @@
 class TDriveGraph : public TForm
 {
 __published:	// IDE で管理されるコンポーネント
+	TAction *CursorAction;
 	TAction *MinMaxAction;
 	TAction *OldOdrAction;
 	TActionList *ActionList1;
@@ -35,6 +36,7 @@ __published:	// IDE で管理されるコンポーネント
 	TStatusBar *StatusBar1;
 	TToolBar *OptToolBar;
 	TToolButton *SizeBtn;
+	TToolButton *ToolButton1;
 	TToolButton *ToolButton3;
 	TToolButton *ToolButton4;
 	TToolButton *ToolButton5;

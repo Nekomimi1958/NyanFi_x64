@@ -6247,13 +6247,21 @@ void __fastcall TNyanFiForm::CanDlBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SttBarWarn(UnicodeString msg)
 {
+	static unsigned int  last_cnt = 0;
+	static _TCHAR last_msg[256] = {};
+
 	if (!Initialized || UnInitializing) return;
+
+	bool skip = (GetTickCount() - last_cnt)<200 && !msg.IsEmpty() && SameStr(msg, last_msg);
+	last_cnt  = GetTickCount();
+	lstrcpy(last_msg, (msg.Length()<250)? msg.c_str() : null_TCHAR);
 
 	if (StartsText("Abort", msg) || USAME_TI(msg, "Operation aborted")) {
 		StatusBar1->Panels->Items[0]->Text = EmptyStr;
 	}
 	else if (!msg.IsEmpty()) {
-		if (ShowMsgHint) ShowMessageHint(msg, col_bgWarn);	//ヒントで表示
+		//ヒントで表示
+		if (ShowMsgHint) ShowMessageHint(msg, col_bgWarn, !skip);
 
 		//ステータスバーに表示
 		if (ShowSttBar) {
@@ -6261,7 +6269,7 @@ void __fastcall TNyanFiForm::SttBarWarn(UnicodeString msg)
 			if (!ShowMsgHint) {
 				StatusBar1->Tag = SHOW_WARN_TAG;
 				StatusBar1->Repaint();
-				beep_Warn();
+				if (!skip) beep_Warn();
 				MsgHintTimer->Interval = MsgHintTime;
 				MsgHintTimer->Enabled  = true;
 			}
@@ -6272,7 +6280,7 @@ void __fastcall TNyanFiForm::SttBarWarn(UnicodeString msg)
 			DriveInf[CurListTag] = pp->Caption;
 			pp->Tag = SHOW_WARN_TAG;
 			SetDrivePanel(CurListTag, msg);
-			beep_Warn();
+			if (!skip) beep_Warn();
 			MsgHintTimer->Interval = MsgHintTime;
 			MsgHintTimer->Enabled  = true;
 		}
