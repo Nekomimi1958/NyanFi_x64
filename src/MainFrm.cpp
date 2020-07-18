@@ -17371,6 +17371,7 @@ void __fastcall TNyanFiForm::FindFileDlgExecute(
 		CurStt->find_Both	 = FindFileDlg->FindBoth;
 		CurStt->find_SubDir	 = FindFileDlg->SubDirCheckBox->Checked;
 		CurStt->find_Arc	 = FindFileDlg->ArcCheckBox->Checked;
+		CurStt->find_xTrash  = TEST_ActParam("NT");
 		CurStt->find_ResLink = FindFileDlg->ResLinkCheckBox->Checked;
 		CurStt->find_DirLink = both? FindFileDlg->DirLinkCheckBox->Checked : false;
 		CurStt->find_Mask	 = FindFileDlg->MaskComboBox->Text;
@@ -17584,7 +17585,7 @@ void __fastcall TNyanFiForm::FindFileDlgExecute(
 void __fastcall TNyanFiForm::FindFileDlgActionExecute(TObject *Sender)
 {
 	try {
-		UnicodeString lst_name = to_absolute_name(ExceptActionParam(_T("NM;FK;R0;R1;X0;X1;A0;A1")));
+		UnicodeString lst_name = to_absolute_name(ExceptActionParam(_T("NM;FK;R0;R1;NT;X0;X1;A0;A1")));
 		if (!lst_name.IsEmpty() && !file_exists(lst_name))
 			throw EAbort(LoadUsrMsg(USTR_NotFound, _T("リストファイル")));
 

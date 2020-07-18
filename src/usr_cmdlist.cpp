@@ -737,7 +737,8 @@ void get_PrmList(
 			_T("NM : マスク欄を非表示\n")
 			_T("FK : 検索語欄にフォーカス\n")
 			_T("R0 : 「サブディレクトリも検索」オフ\n")
-			_T("R1 : 「サブディレクトリも検索」オン\n"));
+			_T("R1 : 「サブディレクトリも検索」オン\n")
+			_T("NT : ごみ箱内は検索しない\n"));
 		if (USAME_TI(cmd, "FindFileDlg")) {
 			params.cat_sprintf(_T("%s"),
 				_T("X0 : 「拡張検索」オフ\n")

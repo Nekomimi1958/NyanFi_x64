@@ -1361,6 +1361,7 @@ struct flist_stt {
 	bool find_Both;				//ファイル・ディレクトリ検索
 	bool find_SubDir;			//サブディレクトリも検索
 	bool find_Arc;				//アーカイブ内も検索
+	bool find_xTrash;			//ごみ箱内は検索しない
 
 	bool find_MARK;				//マーク検索
 	bool find_TAG;				//タグ検索

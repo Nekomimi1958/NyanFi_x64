@@ -4937,6 +4937,7 @@ void clear_FindStt(flist_stt *lst_stt)
 	lst_stt->find_Both	  = false;
 	lst_stt->find_SubDir  = false;
 	lst_stt->find_Arc	  = false;
+	lst_stt->find_xTrash  = false;
 	lst_stt->find_MARK	  = false;
 	lst_stt->find_TAG	  = false;
 	lst_stt->find_TAG_all = false;
@@ -6129,6 +6130,7 @@ void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 	if (FindAborted) return;
 	if (pnam.IsEmpty()) return;
 	if (!dir_exists(pnam)) return;
+	if (lst_stt->find_xTrash && EndsText(":\\$RECYCLE.BIN", ExcludeTrailingPathDelimiter(pnam))) return;
 
 	pnam = IncludeTrailingPathDelimiter(pnam);
 	FindPath  = pnam;

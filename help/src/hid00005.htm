@@ -1188,12 +1188,17 @@ hh.exe の仕様のため、出力パスの名前に半角空白が含まれていると処理できません。<br
 マスク、日付、属性、内容の条件にマッチするファイルを検索できます。<br>
 <a href="#FindFileDlg">→ FindFileDlg</a>　<a href="#FindFileDirDlg">→ FindFileDirDlg</a>　<a href="#MaskFind">→ MaskFind</a>
 
-<dt id="FindFileDirDlg">FindFileDirDlg<span class="pram_text">[_{NM|FK}][;R{0|1}]</span>
+<dt id="FindFileDirDlg">FindFileDirDlg<span class="pram_text">[_{NM|FK}][;R{0|1}][;NT]</span>
 <dd>「<a href="hid00052.htm">ファイル/ディレクトリ名検索</a>」ダイアログを開きます。<br>
 マスク、検索語、日付、サイズ、属性の条件にマッチするファイルおよびディレクトリを検索できます。<br>
 パラメータに <b>NM</b> を指定するとマスク欄を表示しません。また <b>FK</b> を指定すると開いたとき検索語欄にフォーカスします。<br>
 <div class="spc_box">
 ダイアログを開いたときの「<b>サブディレクトリも検索</b>」のチェック状態を、パラメータであらかじめ設定しておくこともできます。パラメータに <b>R0</b> を指定するとチェックが外され、<b>R1</b> を指定するとチェックされます。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>NT</b> を指定すると、ごみ箱内を検索しません。これは、ドライブ直下にある隠し/システム属性の $RECYCLE.BIN ディレクトリがファイルリストに表示されている場合にのみ意味を持ちます。<br>
+</div>
+<div class="spc_box">
 複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
 </div>
 <a href="#FindDirDlg">→ FindDirDlg</a>　<a href="#FindFileDlg">→ FindFileDlg</a>　<a href="#MaskFind">→ MaskFind</a>
@@ -1221,13 +1226,16 @@ hh.exe の仕様のため、出力パスの名前に半角空白が含まれていると処理できません。<br
 
 <a href="#CompareDlg">→ CompareDlg</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#ToOppSameHash">→ ToOppSameHash</a>　<a href="#SelSameDir">→ SelSameDir</a>
 
-<dt id="FindFileDlg">FindFileDlg<span class="pram_text">[_{NM|FK}][;R{0|1}][;X{0|1}][;A{0|1}][;リストファイル名]</span>
+<dt id="FindFileDlg">FindFileDlg<span class="pram_text">[_{NM|FK}][;R{0|1}][;X{0|1}][;A{0|1}][;NT][;リストファイル名]</span>
 <dd>「<a href="hid00052.htm">ファイル名検索</a>」ダイアログを開きます。<br>
 マスク、検索語、日付、サイズ、属性の条件にマッチするファイルを検索できます。結果リストに対する絞り込み検索も可能です。<br>
 パラメータに <b>NM</b> を指定するとマスク欄を表示しません。また <b>FK</b> を指定すると開いたときに検索語欄にフォーカスします。<br>
 <div class="spc_box">
 ダイアログを開いたときの「<b>サブディレクトリも検索</b>」、「<b>拡張検索</b>」、「<b>アーカイブ内も検索</b>」オプションのチェック状態を、パラメータであらかじめ設定しておくこともできます。<br>
 パラメータに <b>R0</b> を指定すると「サブディレクトリも検索」のチェックが外され、<b>R1</b> を指定するとチェックされます。同様にして <b>X0</b>/<b>X1</b> で「拡張検索」、<b>A0</b>/<b>A1</b> で「アーカイブ内も検索」のチェック状態を設定できます。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>NT</b> を指定すると、ごみ箱内を検索しません。これは、ドライブ直下にある隠し/システム属性の $RECYCLE.BIN ディレクトリがファイルリストに表示されている場合にのみ意味を持ちます。<br>
 </div>
 
 <div class="spc_box">
