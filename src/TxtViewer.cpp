@@ -454,11 +454,11 @@ void __fastcall TTxtViewer::SetMetric(bool set_hi)
 	IsIrregFont = IsIrregularFont(ViewBox->Font);
 
 	//ƒY[ƒ€Žž‚ÌsŠÔ’²®
-	if (ViewBox->Font->Size != useFontSize) ViewTxtInterLn *= (1.0 * ViewBox->Font->Size/useFontSize);
-
+	int zm_InterLn = ViewTxtInterLn;
+	if (ViewBox->Font->Size != useFontSize) zm_InterLn *= (1.0 * ViewBox->Font->Size/useFontSize);
 	ViewCanvas->Font->Assign(ViewBox->Font);
 	FontHeight = abs(ViewCanvas->Font->Height);
-	LineHeight = FontHeight + ViewTxtInterLn;
+	LineHeight = FontHeight + zm_InterLn;
 	LineCount  = ViewBox->ClientHeight / LineHeight - 1;
 
 	if (TabLength==0) TabLength = get_ViewTabWidth(get_extension(FileName));

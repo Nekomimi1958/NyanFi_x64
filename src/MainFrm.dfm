@@ -3723,7 +3723,7 @@ object NyanFiForm: TNyanFiForm
     end
     object DriveGraphAction: TAction
       Category = 'Command'
-      Caption = #12489#12521#12452#12502#20351#29992#29575#25512#31227
+      Caption = #12489#12521#12452#12502#20351#29992#29575#25512#31227'...'
       HelpContext = 86
       OnExecute = DriveGraphActionExecute
       OnUpdate = MenuFActionUpdate

@@ -33,7 +33,6 @@ object DriveGraph: TDriveGraph
     ModalResult = 2
     TabOrder = 0
     TabStop = False
-    ExplicitWidth = 392
   end
   object GraphScrollBox: TScrollBox
     Left = 0
@@ -47,7 +46,6 @@ object DriveGraph: TDriveGraph
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 2
-    ExplicitWidth = 392
     object PaintBox1: TPaintBox
       Left = 0
       Top = 0
@@ -83,7 +81,6 @@ object DriveGraph: TDriveGraph
       end>
     StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
-    ExplicitWidth = 392
   end
   object OptToolBar: TToolBar
     Left = 0
@@ -98,7 +95,6 @@ object DriveGraph: TDriveGraph
     List = True
     AllowTextButtons = True
     TabOrder = 1
-    ExplicitWidth = 392
     object DriveComboBox: TComboBox
       Left = 0
       Top = 0
@@ -153,12 +149,14 @@ object DriveGraph: TDriveGraph
       Left = 277
       Top = 0
       Action = MinMaxAction
+      Caption = '&Min/Max'
       Style = tbsTextButton
     end
     object ToolButton1: TToolButton
       Left = 328
       Top = 0
       Action = CursorAction
+      Caption = '&Cursor'
       Style = tbsTextButton
     end
   end

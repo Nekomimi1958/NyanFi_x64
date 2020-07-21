@@ -10403,7 +10403,10 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 				float r_dir = lst_stt->dir_graph ? 1.0 * fp->f_size / lst_stt->cur_total
 												 : 1.0 * (fp->is_up? lst_stt->cur_total : fp->f_size) / lst_stt->drive_Total;
 				UnicodeString per_str;
-				per_str.sprintf(_T("%4.1f"), r_dir * 100.0);
+				if (r_dir < 1.0)
+					per_str.sprintf(_T("%4.1f"), r_dir * 100.0);
+				else
+					per_str = "100.";
 				tmp_cv->Font->Color = col_fgList;
 				int w_p4 = get_CharWidth(tmp_cv, 4, 2);
 				if (is_irreg) w_p4 += 4;

@@ -103,9 +103,9 @@ object PackArcDlg: TPackArcDlg
       Width = 319
       Height = 21
       Anchors = [akLeft, akTop, akRight]
-      EditLabel.Width = 47
+      EditLabel.Width = 61
       EditLabel.Height = 13
-      EditLabel.Caption = #12497#12473#12527#12540#12489
+      EditLabel.Caption = #12497#12473#12527#12540#12489'(&P)'
       LabelPosition = lpLeft
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 3
