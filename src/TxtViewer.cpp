@@ -4753,6 +4753,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		//HTML→テキスト変換
 		if (USAME_TI(cmd, "HtmlToText")) {
 			SetToggleSw(isHtm2Txt, prm);
+			if (isExtWnd) TxtViewer->isHtm2Txt = isHtm2Txt;		//内部ビュアーに反映
 			AssignText();
 		}
 		//CSV/TSVを固定長表示
@@ -4763,6 +4764,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 				prm = "ON";
 			}
 			SetToggleSw(isFixedLen, prm);
+			if (isExtWnd) TxtViewer->isFixedLen = isFixedLen;	//内部ビュアーに反映
 			AssignText(NULL, cur_lno);
 		}
 		//ルビを表示
