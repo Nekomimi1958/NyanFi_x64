@@ -5,6 +5,7 @@
 #include <vcl.h>
 #pragma hdrstop
 #include <tchar.h>
+#include <algorithm>
 #include "UserFunc.h"
 #include "Global.h"
 #include "MainFrm.h"
@@ -98,6 +99,10 @@ void __fastcall TTaskManDlg::TaskHeaderSectionResize(THeaderControl *HeaderContr
 void __fastcall TTaskManDlg::Timer1Timer(TObject *Sender)
 {
 	TStringGrid *gp = TaskGrid;
+	TCanvas *cv = gp->Canvas;
+	cv->Font->Assign(gp->Font);
+	bool is_irreg = IsIrregularFont(cv->Font);
+
 	int total_speed = 0;
 	int maxn = get_MaxTaskCount();
 
@@ -120,11 +125,19 @@ void __fastcall TTaskManDlg::Timer1Timer(TObject *Sender)
 				//コマンド
 				gp->Cells[1][i] = TaskCmdList->Values[tp->CmdName];
 				//詳細
+				UnicodeString sdir = ContainsStr(tp->Config->InfStr, "\\ ---> ")? get_tkn(tp->Config->InfStr, " ---> ") :
+							  SameText(tp->Config->InfStr, tp->Config->DistPath)? tp->Config->DistPath : EmptyStr;
+				UnicodeString finf = tp->CurFileName;
+				finf = (!sdir.IsEmpty() && StartsText(sdir, finf))? get_tkn_r(finf, sdir) : ExtractFileName(finf);
+				if (tp->CurTotalSize>0) finf.cat_sprintf(_T("  (%s)"), get_size_str_T(tp->CurTotalSize, SizeDecDigits).c_str());
+				UnicodeString pnam = ExtractFilePath(finf);
+				if (!pnam.IsEmpty()) {
+					finf   = get_tkn_r(finf, pnam);
+					int wd = std::max(gp->ColWidths[2] - get_TextWidth(cv, finf, is_irreg) - 4, 8);
+					finf   = get_MiniPathName(pnam, wd, cv->Font) + finf;
+				}
 				UnicodeString cell_str;
-				cell_str.sprintf(_T("%s\t%s"), tp->Config->InfStr.c_str(), ExtractFileName(tp->CurFileName).c_str());
-				if (tp->CurTotalSize>0)
-					cell_str.cat_sprintf(_T("  (%s)"), get_size_str_T(tp->CurTotalSize, SizeDecDigits).c_str());
-
+				cell_str.sprintf(_T("%s\t%s"), yen_to_delimiter(tp->Config->InfStr).c_str(), finf.c_str());
 				gp->Cells[2][i] = cell_str;
 				//残
 				cell_str = tp->Config->TaskList->Count;

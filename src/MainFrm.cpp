@@ -6040,8 +6040,7 @@ void __fastcall TNyanFiForm::LogListBoxDrawItem(TWinControl *Control, int Index,
 	int xp = Rect.Left + ScaledInt(2);
 	int yp = Rect.Top  + ScaledInt(1);
 
-	UnicodeString lbuf = lp->Items->Strings[Index];
-	if (!DirDelimiter.IsEmpty()) lbuf = ReplaceStr(lbuf, "\\", DirDelimiter);
+	UnicodeString lbuf = yen_to_delimiter(lp->Items->Strings[Index]);
 
 	if (cv->Font->Color!=col_fgSelItem) {
 		cv->Font->Color = get_LogColor(lbuf);
