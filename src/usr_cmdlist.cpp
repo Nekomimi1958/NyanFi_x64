@@ -516,7 +516,7 @@ void get_PrmList(
 			_T("DateSelect|DebugCmdFile|Delete|DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|")
 			_T("Filter|FindDown|FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|GitDiff|GitViewer|")
 			_T("Grep|HelpCurWord|ImageViewer|IncSearch|JumpIndex|JumpLine|JumpTo|ListArchive|")
-			_T("ListDuration|ListExpFunc|ListTail|ListText|ListTree|LoadBgImage|LoadResultList|")
+			_T("ListDuration|ListExpFunc|ListNyanFi|ListTail|ListText|ListTree|LoadBgImage|LoadResultList|")
 			_T("LoadTabGroup|LoadWorkList|LockKeyMouse|Mark|MaskFind|MaskSelect|MatchSelect|MonitorOff|")
 			_T("MoveTo|NameFromClip|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
 			_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|")
@@ -823,8 +823,16 @@ void get_PrmList(
 		for (int i=0; i<lst->Count; i++)
 			params.cat_sprintf(_T("%s\n"), get_base_name(lst->Strings[i]).c_str());
 	}
-	else if (contained_wd_i(_T("CountLines|ListArchive|ListDuration|ListExpFunc|ListNyanFi"), cmd)) {
+	else if (contained_wd_i(_T("CountLines|ListArchive|ListDuration|ListExpFunc"), cmd)) {
 		params = "\nCC : 結果をクリップボードにコピー\nLS : 結果を一覧表示\n";
+	}
+	else if (USAME_TI(cmd, "ListNyanFi")) {
+		params.sprintf(_T("%s"),
+			_T("\n")
+			_T("CC : 結果をクリップボードにコピー\n")
+			_T("LS : 結果を一覧表示\n")
+			_T("ED : エディタ情報を追加\n")
+			_T("XT : 外部ツール情報を追加\n"));
 	}
 	else if (USAME_TI(cmd, "ListLog")) {
 		params = "\nEO : エラー箇所の絞り込み表示\n";

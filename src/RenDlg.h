@@ -79,6 +79,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *CnvKanaCheckBox;
 	TCheckBox *EndMatchCheckBox;
 	TCheckBox *HiddenCheckBox;
+	TCheckBox *KeepBsExtCheckBox;
 	TCheckBox *NoRenLogCheckBox;
 	TCheckBox *OnlyBase2CheckBox;
 	TCheckBox *OnlyBaseCheckBox;

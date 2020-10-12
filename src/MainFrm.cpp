@@ -4560,9 +4560,9 @@ void __fastcall TNyanFiForm::SetupDesign(
 	set_ButtonMark(R_SelDrvBtn2, UBMK_DOWN, col_mk);
 	set_ButtonMark(PopTabBtn,    UBMK_DOWN, is_HighContrast()? scl_BtnText : SelectWorB(col_bgTabBar));
 
-	col_mk = SelectWorB(SeekPanel->Color);
-	set_ButtonMark(SeekLBtn, UBMK_HTOP, col_mk);
-	set_ButtonMark(SeekRBtn, UBMK_HEND, col_mk);
+	set_BtnMarkDark(SeekLBtn, UBMK_HTOP);
+	set_BtnMarkDark(SeekRBtn, UBMK_HEND);
+	set_BtnTextDark(HideSeekBtn, "×");
 
 	L_SelDrvBtn->Visible  = ShowPopDirBtn;
 	L_SelDrvBtn2->Visible = ShowPopDirBtn;
@@ -19691,7 +19691,6 @@ void __fastcall TNyanFiForm::ListLogActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 {
 	UnicodeString hr_str = StringOfChar(_T('-'), 62);
-	UnicodeString tmp;
 
 	std::unique_ptr<TStringList> lst(new TStringList());
 	TStringList *i_lst = lst.get();
@@ -19704,7 +19703,7 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 
 	TRect w_rc = get_window_rect(Handle);
 	add_PropLine(_T("画面サイズ"), get_wd_x_hi_str(w_rc.Width(), w_rc.Height()), i_lst);
-	add_PropLine(_T("スケーリング"), tmp.sprintf(_T("%u%%"), ScaledInt(100, this)), i_lst);
+	add_PropLine(_T("スケーリング"), UnicodeString().sprintf(_T("%u%%"), ScaledInt(100, this)), i_lst);
 	if (Screen->MonitorCount>1) add_PropLine(_T("モニタ数"), Screen->MonitorCount, i_lst);
 	add_PropLine(_T("OSバージョン"), get_OsVerInfStr(), i_lst);
 	i_lst->Add(EmptyStr);
@@ -19805,6 +19804,48 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 		i_lst->Add("[Git] ----------" + hr_str);
 		get_FileNamePathInf(CmdGitExe, i_lst, true);
 		i_lst->Add(EmptyStr);
+	}
+
+	hr_str = StringOfChar(_T('-'), 59);
+	//エディタ
+	if (TEST_DEL_ActParam("ED")) {
+		UnicodeString ed_nam = get_actual_path(TextEditor);
+		if (file_exists(ed_nam)) {
+			i_lst->Add("[テキストエディタ] " + hr_str);
+			get_FileNamePathInf(ed_nam, i_lst, true);
+			i_lst->Add(EmptyStr);
+		}
+		ed_nam = get_actual_path(ImageEditor);
+		if (file_exists(ed_nam)) {
+			i_lst->Add("[イメージエディタ] " + hr_str);
+			get_FileNamePathInf(ed_nam, i_lst, true);
+			i_lst->Add(EmptyStr);
+		}
+		ed_nam = get_actual_path(BinaryEditor);
+		if (file_exists(ed_nam)) {
+			i_lst->Add("[バイナリエディタ] " + hr_str);
+			get_FileNamePathInf(ed_nam, i_lst, true);
+			i_lst->Add(EmptyStr);
+		}
+		std::unique_ptr<TStringList> x_lst(new TStringList());
+		if (get_EtcEditorFiles(x_lst.get())>0) {
+			i_lst->Add("[その他のエディタ] " + hr_str);
+			for (int i=0; i<x_lst->Count; i++) {
+				get_FileNamePathInf(x_lst->Strings[i], i_lst, true);
+				i_lst->Add(EmptyStr);
+			}
+		}
+	}
+	//外部ツール
+	if (TEST_DEL_ActParam("XT")) {
+		std::unique_ptr<TStringList> x_lst(new TStringList());
+		if (get_ExtToolFiles(x_lst.get())>0) {
+			i_lst->Add("[外部ツール] ------" + hr_str);
+			for (int i=0; i<x_lst->Count; i++) {
+				get_FileNamePathInf(x_lst->Strings[i], i_lst, true);
+				i_lst->Add(EmptyStr);
+			}
+		}
 	}
 
 	//情報をログに表示

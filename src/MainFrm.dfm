@@ -336,7 +336,6 @@ object NyanFiForm: TNyanFiForm
             Height = 22
             Action = ShowSeekBarAction
             Anchors = [akTop, akRight]
-            Caption = #215
             Flat = True
           end
         end

@@ -110,9 +110,10 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	CnvKanaCheckBox->Checked   = IniFile->ReadBoolGen(_T("RenameDlgCnvKana"));
 	AutoPrvCheckBox->Checked   = IniFile->ReadBoolGen(_T("RenameDlgAutoPrv"),	true);
 	EndMatchCheckBox->Checked  = IniFile->ReadBoolGen(_T("RenameDlgEndMatch"));
+	KeepBsExtCheckBox->Checked = IniFile->ReadBoolGen(_T("RenameDlgKeepBsExt"));
 	NoRenLogCheckBox->Checked  = IniFile->ReadBoolGen(_T("RenameDlgNoRenLog"));
-	UnicodeString lastSheet    = IniFile->ReadStrGen(_T("RenameDlgLastSheet"),	"Serial");
-	UnicodeString lastMp3Sheet = IniFile->ReadStrGen(_T("RenameDlgLastMp3Sheet"),	"Mp3");
+	UnicodeString lastSheet    = IniFile->ReadStrGen( _T("RenameDlgLastSheet"),	"Serial");
+	UnicodeString lastMp3Sheet = IniFile->ReadStrGen( _T("RenameDlgLastMp3Sheet"),	"Mp3");
 
 	IniFile->LoadComboBoxItems(SrcStrComboBox,	RegExCheckBox->Checked? _T("RenSrcPtnHistory") : _T("RenSrcStrHistory"));
 	IniFile->LoadComboBoxItems(RepStrComboBox,	_T("RenRepStrHistory"));
@@ -142,8 +143,8 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	CnvChSEdit->Text = EmptyStr;
 	CnvChREdit->Text = EmptyStr;
 
-	FbaseRadioGroup->ItemIndex = 0;
-	FextRadioGroup->ItemIndex  = 0;
+	FbaseRadioGroup->ItemIndex = KeepBsExtCheckBox->Checked? IniFile->ReadIntGen(_T("RenameDlgBaseCh")) : 0;
+	FextRadioGroup->ItemIndex  = KeepBsExtCheckBox->Checked? IniFile->ReadIntGen(_T("RenameDlgExtCh")) : 0;
 
 	StatusBar1->Canvas->Font->Assign(SttBarFont);
 	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
@@ -325,7 +326,13 @@ void __fastcall TRenameDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteBoolGen(_T("RenameDlgCnvKana"),	CnvKanaCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgAutoPrv"),	AutoPrvCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgEndMatch"),	EndMatchCheckBox);
+	IniFile->WriteBoolGen(_T("RenameDlgKeepBsExt"),	KeepBsExtCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgNoRenLog"),	NoRenLogCheckBox);
+
+	if (KeepBsExtCheckBox->Checked) {
+		IniFile->WriteIntGen(_T("RenameDlgBaseCh"),	FbaseRadioGroup->ItemIndex);
+		IniFile->WriteIntGen(_T("RenameDlgExtCh"),	FextRadioGroup->ItemIndex);
+	}
 
 	const _TCHAR *key = (isMp3 || isFlac)? _T("RenameDlgLastMp3Sheet") : _T("RenameDlgLastSheet");
 	if 		(IsMp3Sheet())		IniFile->WriteStrGen(key,	"Mp3");
@@ -420,8 +427,12 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 		PathInfMLabel->Caption = EmptyStr;
 		NameInfMLabel->Caption = EmptyStr;
 		SttInfLabel->Caption   = EmptyStr;
-		FbaseRadioGroup->ItemIndex = 0;
-		FextRadioGroup->ItemIndex  = 0;
+
+		if (!KeepBsExtCheckBox->Checked) {
+			FbaseRadioGroup->ItemIndex = 0;
+			FextRadioGroup->ItemIndex  = 0;
+		}
+
 		SetDarkWinTheme(gp);
 		Repaint();
 	}

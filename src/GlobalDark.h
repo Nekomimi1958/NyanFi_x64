@@ -121,6 +121,7 @@ int  msgbox_SureAll(UnicodeString msg, bool &app_chk, bool center = false);
 void draw_SortMark(TCanvas *cv, int x, int y, bool is_asc, TColor fg = Graphics::clNone);
 void set_ButtonMark(TSpeedButton *bp, int id = UBMK_DOWN, TColor fg = scl_BtnText, TColor bg = scl_BtnFace);
 void set_BtnMarkDark(TSpeedButton *bp, int id);
+void set_BtnTextDark(TSpeedButton *bp, UnicodeString s);
 
 void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool active, bool dark_sw = false);
 void draw_MenuSeparator(TCanvas *cv, TRect rc);

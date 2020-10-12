@@ -1665,7 +1665,7 @@ JumpTo　　　　　　　　<span class="pram_text rem_text">(結果リスト、ワークリスト
 </div>
 <a href="#ViewLog">→ ViewLog</a>
 
-<dt id="ListNyanFi">ListNyanFi<span class="pram_text">[_{CC|LS|ファイル名}]</span>
+<dt id="ListNyanFi">ListNyanFi<span class="pram_text">[_{CC|LS|ファイル名}[;ED][;XT]]</span>
 <dd><b>NyanFi</b> についての情報をログに表示します。<br>
 <b>NyanFi</b>、アーカイバDLL、Migemo、WIC などについての詳細が一覧表示されます。<br>
 
@@ -1673,6 +1673,11 @@ JumpTo　　　　　　　　<span class="pram_text rem_text">(結果リスト、ワークリスト
 パラメータに <b>CC</b> を指定すると一覧をクリップボードにコピー、<b>LS</b> を指定すると<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
 またパラメータに<b>ファイル名</b>を指定すると一覧を保存できます。ドライブ名がない場合はカレントからの相対指定になります。ディレクトリ区切りを含む場合は <b>\\</b> を用いてください。<br>
 ファイル名の指定には、<a href="#ListArchive">ListArchive</a> コマンドと同じ書式文字列が使えます。<br>
+</div>
+<div class="spc_box">
+パラメータに <b>ED</b> を指定すると、テキストエディタ、イメージエディタ、バイナリエディタ、その他のエディタについてのファイル情報が一覧に追加されます。<br>
+パラメータに <b>XT</b> を指定すると、外部ツールについてのファイル情報が一覧に追加されます。<br>
+複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
 </div>
 
 <dt id="ListTail">ListTail<span class="pram_text">[_[R][行数][;TE][;FF][;/見出しパターン/][;ファイル名]]</span>

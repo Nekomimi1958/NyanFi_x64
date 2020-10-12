@@ -5207,7 +5207,6 @@ object OptionDlg: TOptionDlg
           Width = 23
           Height = 22
           Anchors = [akTop, akRight]
-          Caption = #9660
           Flat = True
           OnClick = RefToolFmtBtnClick
         end

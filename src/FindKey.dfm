@@ -67,7 +67,6 @@ object FindKeyDlg: TFindKeyDlg
         Top = 0
         Width = 80
         Height = 24
-        Caption = #12461#12515#12531#12475#12523
         OnClick = CancelBtnClick
       end
     end

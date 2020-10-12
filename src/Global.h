@@ -1622,6 +1622,9 @@ UnicodeString yen_to_delimiter(UnicodeString s);
 UnicodeString alt_yen_to(UnicodeString s);
 UnicodeString get_MiniPathName(UnicodeString pnam, int max_w, TFont *font, bool rep_delimiter = true);
 
+int get_EtcEditorFiles(TStringList *lst);
+int get_ExtToolFiles(TStringList *lst);
+
 UnicodeString get_dotNaynfi(UnicodeString dnam = EmptyStr);
 UnicodeString get_dotNaynfi(UnicodeString dnam, bool inherit, bool force = false);
 

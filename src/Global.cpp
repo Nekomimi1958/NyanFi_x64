@@ -3428,6 +3428,39 @@ UnicodeString get_MiniPathName(
 }
 
 //---------------------------------------------------------------------------
+//その他のエディタのファイル名一覧を取得
+//---------------------------------------------------------------------------
+int get_EtcEditorFiles(TStringList *lst)
+{
+	lst->Clear();
+	for (int i=0; i<EtcEditorList->Count; i++) {
+		UnicodeString xnam = exclude_quot(EtcEditorList->ValueFromIndex[i]);
+		if (!starts_Dollar(xnam) || contains_PathDlmtr(xnam)) {
+			xnam = get_actual_path(xnam);
+			if (file_exists(xnam) && lst->IndexOf(xnam)==-1) lst->Add(xnam);
+		}
+	}
+	lst->CustomSort(FileComp_Base);
+	return lst->Count;
+}
+//---------------------------------------------------------------------------
+//外部ツールのファイル名一覧を取得
+//---------------------------------------------------------------------------
+int get_ExtToolFiles(TStringList *lst)
+{
+	lst->Clear();
+	for (int i=0; i<ExtToolList->Count; i++) {
+		TStringDynArray itm_buf = get_csv_array(ExtToolList->Strings[i], 2, true);
+		UnicodeString xnam = itm_buf[1];	if (xnam.IsEmpty()) continue;
+		xnam = get_actual_path(xnam);
+		if (ExtractFileDrive(xnam).IsEmpty()) xnam = get_actual_name(xnam);
+		if (file_exists(xnam) && lst->IndexOf(xnam)==-1) lst->Add(xnam);
+	}
+	lst->CustomSort(FileComp_Base);
+	return lst->Count;
+}
+
+//---------------------------------------------------------------------------
 //.nyanfi 名を取得
 //---------------------------------------------------------------------------
 UnicodeString get_dotNaynfi(UnicodeString dnam)

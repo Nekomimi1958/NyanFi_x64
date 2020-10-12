@@ -27,6 +27,8 @@ typedef LONG (WINAPI *FUNC_NtSetInformationFile)(HANDLE, PIO_STATUS_BLOCK, PVOID
 extern UnicodeString ExePath;
 
 //---------------------------------------------------------------------------
+int __fastcall FileComp_Base(TStringList *List, int Index1, int Index2);
+
 UnicodeString cv_ex_filename(UnicodeString fnam);
 UnicodeString cv_env_var(UnicodeString s);
 UnicodeString cv_env_str(UnicodeString s);

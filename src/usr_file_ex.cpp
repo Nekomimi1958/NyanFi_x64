@@ -17,6 +17,18 @@
 UnicodeString ExePath;		//起動パス
 
 //---------------------------------------------------------------------------
+//ファイル名主部によるソート用比較関数
+//---------------------------------------------------------------------------
+int __fastcall FileComp_Base(TStringList *List, int Index1, int Index2)
+{
+	UnicodeString bnam0 = get_base_name(List->Strings[Index1]);
+	UnicodeString bnam1 = get_base_name(List->Strings[Index2]);
+	return SameText(bnam0, bnam1)?
+		StrCmpLogicalW(ExtractFileDir(List->Strings[Index1]).c_str(), ExtractFileDir(List->Strings[Index2]).c_str()) :
+		StrCmpLogicalW(bnam0.c_str(), bnam1.c_str());
+}
+
+//---------------------------------------------------------------------------
 //260文字以上のパス名に対応するためのファイル名変換
 //  末尾が空白の場合にも対応
 //---------------------------------------------------------------------------

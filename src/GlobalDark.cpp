@@ -360,11 +360,6 @@ void SetDarkWinTheme(
 	else if (wp->ClassNameIs("TMemo")) {
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
 	}
-	else if (wp->ClassNameIs("TSpeedButton")) {
-		TSpeedButton *bp = (TSpeedButton *)wp;
-		bp->Font->Assign(def_font.get());
-		bp->Font->Color = fg_label;
-	}
 	else if (wp->ClassNameIs("TComboBox")) {
 		TComboBox *cp = (TComboBox *)wp;
 		UnicodeString s = cp->Text;
@@ -786,6 +781,23 @@ void set_ButtonMark(TSpeedButton *bp,
 void set_BtnMarkDark(TSpeedButton *bp, int id)
 {
 	set_ButtonMark(bp, id, (IsDarkMode? dcl_BtnText : scl_BtnText), get_PanelColor());
+}
+
+//---------------------------------------------------------------------------
+//ボタンにテキストを設定
+//---------------------------------------------------------------------------
+void set_BtnTextDark(TSpeedButton *bp, UnicodeString s)
+{
+	bp->Caption = EmptyStr;
+	Graphics::TBitmap *bmp = bp->Glyph;
+	TCanvas *cv = bmp->Canvas;
+	bmp->SetSize(bp->ClientWidth, bp->ClientHeight);
+	bmp->Transparent = true;
+	cv->Brush->Color = get_PanelColor();
+	cv->FillRect(bp->ClientRect);
+	cv->Font->Assign(bp->Font);
+	cv->Font->Color = (IsDarkMode? dcl_BtnText : scl_BtnText);
+	cv->TextOut((bp->ClientWidth - cv->TextWidth(s))/2, (bp->ClientHeight - cv->TextHeight(s))/2, s);
 }
 
 //---------------------------------------------------------------------------

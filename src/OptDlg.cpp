@@ -1146,6 +1146,7 @@ void __fastcall TOptionDlg::SetWinTheme(
 	if (!force && Color==get_PanelColor() && (KeySetOnly? IsDkKey : IsDkAll)==IsDarkMode) return;
 
 	SetDarkWinTheme(this, true);
+	set_BtnTextDark(RefToolFmtBtn, "¥");
 
 	//‹^Ž—Bevel
 	Shape1->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
@@ -1487,8 +1488,13 @@ void __fastcall TOptionDlg::EtcEditorListBoxDrawItem(TWinControl *Control, int I
 	cv->FillRect(Rect);
 	cv->TextOut(xp, yp, etc_fext);
 	xp += (w_x + 20);
-
-	draw_SmallIconF(etc_edtr, cv, xp, Rect.Top + (Rect.Height() - ScaledIntX(16))/2);
+	if (!starts_Dollar(etc_edtr) || contains_PathDlmtr(etc_edtr)) {
+		UnicodeString etc_fnam = get_actual_path(etc_edtr);
+		if (file_exists(etc_fnam))
+			draw_SmallIconF(etc_fnam, cv, xp, Rect.Top + (Rect.Height() - ScaledIntX(16))/2);
+		else
+			cv->Font->Color = col_Error;
+	}
 	xp += ScaledIntX(20);
 	cv->TextOut(xp, yp, etc_edtr);
 }

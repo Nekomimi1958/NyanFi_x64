@@ -863,7 +863,7 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	else if (USAME_TS(Caption, "NyanFi èÓïÒ")) {
 		TColor fg =
 			use_fgsel? col_fgSelItem :
-			is_match_regex(lbuf, _T("^([^ :.]{3,}\\.(exe|dll|spi)|\\.|WIC)"))? col_Headline :
+			is_match_regex(lbuf, _T("^([^ :.]{2,}\\.(exe|dll|spi)|\\.|WIC)"))? col_Headline :
 			StartsStr("         ÉGÉâÅ[:", lbuf)? col_Error :
 			StartsStr('[', lbuf)? col_Comment : col_fgList;
 

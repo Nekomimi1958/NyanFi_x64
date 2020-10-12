@@ -1149,12 +1149,12 @@ object RenameDlg: TRenameDlg
               end
               object NoRenLogCheckBox: TCheckBox
                 Left = 279
-                Top = 162
-                Width = 184
+                Top = 182
+                Width = 233
                 Height = 17
                 Anchors = [akTop, akRight]
                 Caption = #25913#21517#12525#12464#12434#20316#25104#12375#12394#12356
-                TabOrder = 2
+                TabOrder = 3
               end
               object IniSttGroupBox: TGroupBox
                 Left = 271
@@ -1216,6 +1216,15 @@ object RenameDlg: TRenameDlg
                   TabOrder = 2
                 end
               end
+              object KeepBsExtCheckBox: TCheckBox
+                Left = 279
+                Top = 159
+                Width = 233
+                Height = 17
+                Anchors = [akTop, akRight]
+                Caption = #20027#37096'/'#25313#24373#23376#12398#25991#23383#31278#35373#23450#12434#35352#25014
+                TabOrder = 2
+              end
             end
           end
         end
@@ -1223,8 +1232,8 @@ object RenameDlg: TRenameDlg
     end
   end
   object ActionList1: TActionList
-    Left = 416
-    Top = 206
+    Left = 40
+    Top = 86
     object AddCnvChAction: TAction
       Caption = #36861#21152
       OnExecute = AddCnvChActionExecute
@@ -1287,8 +1296,8 @@ object RenameDlg: TRenameDlg
   end
   object FmtPopupMenu: TPopupMenu
     AutoHotkeys = maManual
-    Left = 486
-    Top = 206
+    Left = 38
+    Top = 158
     object DelItemItem: TMenuItem
       Action = DelItemAction
     end

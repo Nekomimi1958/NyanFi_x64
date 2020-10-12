@@ -269,9 +269,9 @@ public:
 	TColor color_HR;			//罫線の色
 	TColor color_Ctrl;			//コントロールコード
 
-	__fastcall TTxtViewer(TForm *frm, TPaintBox *viewbox, TScrollBar *scrbar, UsrScrollPanel *sp,
-							TStatusBar *stthdr, TPaintBox *ruler, TPanel *colref, TPaintBox *mgn_box = NULL);
-	__fastcall ~TTxtViewer();
+	TTxtViewer(TForm *frm, TPaintBox *viewbox, TScrollBar *scrbar, UsrScrollPanel *sp,
+				TStatusBar *stthdr, TPaintBox *ruler, TPanel *colref, TPaintBox *mgn_box = NULL);
+	~TTxtViewer();
 
 	bool __fastcall CloseAuxForm();
 	bool __fastcall SaveNyanFiDef();

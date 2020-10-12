@@ -40,7 +40,7 @@ TTxtViewer *TxtViewer;
 //---------------------------------------------------------------------------
 // TTxtViewer クラス
 //---------------------------------------------------------------------------
-__fastcall TTxtViewer::TTxtViewer(
+TTxtViewer::TTxtViewer(
 	TForm *frm,
 	TPaintBox *viewbox,		//表示領域
 	TScrollBar *scrbar,		//スクロールバー
@@ -161,7 +161,7 @@ __fastcall TTxtViewer::TTxtViewer(
 	inh_Repaint = false;
 }
 //---------------------------------------------------------------------------
-__fastcall TTxtViewer::~TTxtViewer()
+TTxtViewer::~TTxtViewer()
 {
 	ClearDispLine();
 

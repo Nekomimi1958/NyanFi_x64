@@ -258,33 +258,19 @@ void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
 			if (!BinaryEditor.IsEmpty())	SpDirList->AddObject(BinaryEditor + "\tバイナリエディタ", (TObject*)1);
 			//その他のエディタ
 			std::unique_ptr<TStringList> x_lst(new TStringList());
-			for (int i=0; i<EtcEditorList->Count; i++) {
-				UnicodeString xnam = exclude_quot(EtcEditorList->ValueFromIndex[i]);
-				if (!starts_Dollar(xnam) || contains_PathDlmtr(xnam)) {
-					xnam = get_actual_path(xnam);
-					if (x_lst->IndexOf(xnam)==-1) x_lst->Add(get_base_name(xnam) + "\t" + xnam);
+			if (get_EtcEditorFiles(x_lst.get())>0) {
+				for (int i=0; i<x_lst->Count; i++) {
+					UnicodeString xnam = x_lst->Strings[i];
+					SpDirList->AddObject(xnam + ((i==0)? "\t|" : "\t") + get_base_name(xnam), (TObject*)1);
 				}
 			}
-			x_lst->Sort();
-			for (int i=0; i<x_lst->Count; i++) {
-				UnicodeString lbuf = x_lst->Strings[i];
-				SpDirList->AddObject(get_post_tab(lbuf) + ((i==0)? "\t|" : "\t") + get_pre_tab(lbuf), (TObject*)1);
-			}
-
 			//外部ツール
-			SpDirList->Add("\t-");
-			x_lst->Clear();
-			for (int i=0; i<ExtToolList->Count; i++) {
-				TStringDynArray itm_buf = get_csv_array(ExtToolList->Strings[i], 2, true);
-				UnicodeString xnam = itm_buf[1];	if (xnam.IsEmpty()) continue;
-				xnam = get_actual_path(xnam);
-				if (ExtractFileDrive(xnam).IsEmpty()) xnam = get_actual_name(xnam);
-				if (x_lst->IndexOf(xnam)==-1) x_lst->Add(get_base_name(xnam) + "\t" + xnam);
-			}
-			x_lst->Sort();
-			for (int i=0; i<x_lst->Count; i++) {
-				UnicodeString lbuf = x_lst->Strings[i];
-				SpDirList->AddObject(get_post_tab(lbuf) + "\t" + get_pre_tab(lbuf), (TObject*)1);
+			if (get_ExtToolFiles(x_lst.get())>0) {
+				SpDirList->Add("\t-");
+				for (int i=0; i<x_lst->Count; i++) {
+					UnicodeString xnam = x_lst->Strings[i];
+					SpDirList->AddObject(xnam + "\t" + get_base_name(xnam), (TObject*)1);
+				}
 			}
 		}
 	}
