@@ -41,6 +41,7 @@ UserArcUnit::UserArcUnit(HWND hWnd)
 		fp->FileName  = EmptyStr;
 		fp->VerStr	  = EmptyStr;
 		fp->Prefix	  = get_word_i_idx(_T("SevenZip|Unlha|Cab|Tar|Unrar|UnIso"), i);
+		fp->dll7zName = EmptyStr;
 
 #if defined(_WIN64)
 		fp->DllName = get_word_i_idx(_T("7-zip64.dll|unlha64.dll|cab64.dll|tar64.dll|unrar64j.dll|uniso64.dll"), i);
@@ -80,18 +81,26 @@ UserArcUnit::UserArcUnit(HWND hWnd)
 			switch (i) {
 			case 0: case 5: //ZIP, ISO
 				fp->GetAttribute = (FUNC_ArcGetAttribute)GetProcAdr(fp, "GetAttribute");
+				if (fp->Available) fp->Available = fp->GetAttribute;
+				if (fp->Available && fp->SetUnicodeMode) fp->Available = fp->SetUnicodeMode(TRUE);
+
 				if (i==0) {
 					fp->Exists7zdll = (FUNC_SevenZipExists7zdll)GetProcAdr(fp, "Exists7zdll");
 					if (fp->Exists7zdll) {
 						fp->use7zdll = true;
 						Use7zDll	 = fp->Exists7zdll();
 						fp->err7zdll = !Use7zDll;
+						if (fp->Available && fp->use7zdll && Use7zDll) {
+							//7z.dll のフルパス名を取得
+							if (::GetModuleFileName(::GetModuleHandle(NULL), szFname, MAX_PATH)>0) {
+								fp->CheckArchive(UTF8String(szFname).c_str(), 0);	//※ロードするために実行ファイルをチェック
+								HINSTANCE h7z = ::GetModuleHandle(_T("7z.dll"));
+								if (h7z && ::GetModuleFileName(h7z, szFname, MAX_PATH)>0) fp->dll7zName = szFname;
+							}
+						}
 					}
-
 					fp->GetArchiveType = (FUNC_ArcGetArchiveType)GetProcAdr(fp, "GetArchiveType");
 				}
-				if (fp->Available) fp->Available = fp->GetAttribute;
-				if (fp->Available && fp->SetUnicodeMode) fp->Available = fp->SetUnicodeMode(TRUE);
 				break;
 
 			case 1:	//LHA

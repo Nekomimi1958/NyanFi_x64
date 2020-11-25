@@ -260,7 +260,7 @@ void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
 			std::unique_ptr<TStringList> x_lst(new TStringList());
 			if (get_EtcEditorFiles(x_lst.get())>0) {
 				for (int i=0; i<x_lst->Count; i++) {
-					UnicodeString xnam = x_lst->Strings[i];
+					UnicodeString xnam = x_lst->ValueFromIndex[i];
 					SpDirList->AddObject(xnam + ((i==0)? "\t|" : "\t") + get_base_name(xnam), (TObject*)1);
 				}
 			}

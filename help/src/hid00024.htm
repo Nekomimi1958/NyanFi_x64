@@ -255,7 +255,7 @@
 <br>
 
 <dt class="no_bg_indent1">7-zip64.dll(7z.dll対応版)の対応拡張子 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: .lzh.cab.iso.arj.chm.msi.wim)</span>
-<dd><b>7-zip64.dll 文字化け対策版</b>(x@rgs 氏作)の<b>7z.dll対応版</b>を利用している場合、対応したいアーカイブの拡張子(解凍のみ)を追加指定できます(デフォルト: .lzh.cab.iso.arj.chm.msi.wim)。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
+<dd><b>7-zip64.dll 文字化け対策版</b>(x@rgs 氏作)の<b>7z.dll対応版</b>を利用している場合、対応したいアーカイブの拡張子(解凍のみ)を追加指定できます。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
 <b>.rar</b> を指定すると、unrar64j.dll/unrar64.dll を用いずに、7-zip64.dll(7z.dll対応版)で解凍を行います。それ以外で、他のアーカイバDLLが対応する拡張子については、そちらが優先されます。<br>
 
 <div class="spc_box note_text">
@@ -263,9 +263,9 @@
 </div>
 7z.dll対応版が読み込まれていて、かつ 7z.dll の存在が正しく認識できている場合、起動時のログに<br>
 <pre class="example_box">
- &gt;    LOAD 7-zip64.dll  v18.06 using 7z.dll
+ &gt;    LOAD 7-zip64.dll  v19.00 using 7z.dll
 </pre>
-と表示されます(Ver.18.06.00.xx の場合)。
+と表示されます(Ver.19.00.00.xx の場合)。
 
 <dt class="no_bg_indent1">git.exe (Git for Windows) <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 自動検出)</span>
 <dd>

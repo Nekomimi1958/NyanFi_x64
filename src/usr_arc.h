@@ -152,6 +152,7 @@ struct arc_func {
 
 	bool use7zdll;
 	bool err7zdll;
+	UnicodeString dll7zName;
 };
 
 //---------------------------------------------------------------------------

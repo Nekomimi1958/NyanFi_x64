@@ -869,7 +869,7 @@ bool rename_ADS(
 	UnicodeString new_name)		//":新ストリーム名"
 {
 	bool res = false;
-	HMODULE hNtDll = ::GetModuleHandle(L"ntdll.dll");
+	HMODULE hNtDll = ::GetModuleHandle(_T("ntdll.dll"));
 	if (hNtDll) {
 		FUNC_NtSetInformationFile NtSetInformationFile = (FUNC_NtSetInformationFile)::GetProcAddress(hNtDll, "NtSetInformationFile");
 		if (NtSetInformationFile) {

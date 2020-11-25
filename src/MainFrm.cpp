@@ -19720,9 +19720,12 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 				if (fp->Available) {
 					if (fp->use7zdll) {
 						if (!FExt7zDll.IsEmpty()) add_PropLine(_T("追加拡張子"), FExt7zDll, i_lst);
-						if (fp->err7zdll) add_PropLine(_T("エラー"), "7z.dll not found", i_lst, LBFLG_ERR_FIF);
+						if (fp->err7zdll) {
+							add_PropLine(_T("エラー"), "7z.dll not found", i_lst, LBFLG_ERR_FIF);
+						}
 					}
 					else if (usr_ARC->Use7zDll) {
+
 						if ((USAME_TI(fp->Prefix, "Unrar") && test_FileExt(".rar", FExt7zDll)) ||
 							(USAME_TI(fp->Prefix, "UnIso") && test_FileExt(".iso", FExt7zDll)))
 						{
@@ -19736,8 +19739,13 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 				}
 				i_lst->Add(EmptyStr);
 
+				//7z.dll
+				if (USAME_TI(fp->Prefix, "SevenZip") && !fp->dll7zName.IsEmpty()) {
+					get_FileNamePathInf(fp->dll7zName, i_lst, true);
+					i_lst->Add(EmptyStr);
+				}
 				//unrar
-				if (USAME_TI(fp->Prefix, "Unrar")) {
+				else if (USAME_TI(fp->Prefix, "Unrar")) {
 					UnicodeString fnam = ExtractFilePath(fp->FileName) + (is_X64()? "unrar64.dll" : "unrar.dll");
 					i_lst->Add(ExtractFileName(fnam));
 					if (fnam.Pos('\\')) i_lst->Add(ExtractFilePath(fnam));
@@ -19819,6 +19827,7 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 		if (file_exists(ed_nam)) {
 			i_lst->Add("[イメージエディタ] " + hr_str);
 			get_FileNamePathInf(ed_nam, i_lst, true);
+			add_PropLine(_T("対応拡張子"), FExtImgEidt, i_lst);
 			i_lst->Add(EmptyStr);
 		}
 		ed_nam = get_actual_path(BinaryEditor);
@@ -19831,11 +19840,13 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 		if (get_EtcEditorFiles(x_lst.get())>0) {
 			i_lst->Add("[その他のエディタ] " + hr_str);
 			for (int i=0; i<x_lst->Count; i++) {
-				get_FileNamePathInf(x_lst->Strings[i], i_lst, true);
+				get_FileNamePathInf(x_lst->ValueFromIndex[i], i_lst, true);
+				add_PropLine(_T("対応拡張子"), x_lst->Names[i], i_lst);
 				i_lst->Add(EmptyStr);
 			}
 		}
 	}
+
 	//外部ツール
 	if (TEST_DEL_ActParam("XT")) {
 		std::unique_ptr<TStringList> x_lst(new TStringList());

@@ -939,7 +939,7 @@ UnicodeString ExtTxViewer;		//外部テキストビュアー
 UnicodeString ExtTxViewerFrmt;
 
 UnicodeString ImageEditor;		//イメージエディタ
-UnicodeString FExtImgEidt;		//イメージエディタの対象拡張子
+UnicodeString FExtImgEidt;		//イメージエディタの対応拡張子
 bool ImageEditSgl;				//イメージエディタをファイル毎に個別起動
 
 UnicodeString FExtViewTab4;		//タブ4の拡張子
@@ -2245,7 +2245,10 @@ UnicodeString get_OsVerInfStr()
 			reg->RootKey = HKEY_LOCAL_MACHINE;
 			if (reg->OpenKeyReadOnly("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion")) {
 				UnicodeString s = reg->ReadString("ReleaseId");
-				if (!s.IsEmpty()) OSVerInfStr.cat_sprintf(_T("(%s) "), s.c_str());
+				if (!s.IsEmpty()) {
+					if (s.ToIntDef(0)>=2009) s = reg->ReadString("DisplayVersion");	//※20H2以降に対応
+					if (!s.IsEmpty()) OSVerInfStr.cat_sprintf(_T("(%s) "), s.c_str());
+				}
 			}
 		}
 		if (::IsWindowsServer()) OSVerInfStr += "Server ";
@@ -3428,7 +3431,7 @@ UnicodeString get_MiniPathName(
 }
 
 //---------------------------------------------------------------------------
-//その他のエディタのファイル名一覧を取得
+//その他のエディタのファイル名一覧を取得 (拡張子=ファイル名形式)
 //---------------------------------------------------------------------------
 int get_EtcEditorFiles(TStringList *lst)
 {
@@ -3437,7 +3440,7 @@ int get_EtcEditorFiles(TStringList *lst)
 		UnicodeString xnam = exclude_quot(EtcEditorList->ValueFromIndex[i]);
 		if (!starts_Dollar(xnam) || contains_PathDlmtr(xnam)) {
 			xnam = get_actual_path(xnam);
-			if (file_exists(xnam) && lst->IndexOf(xnam)==-1) lst->Add(xnam);
+			if (file_exists(xnam) && lst->IndexOf(xnam)==-1) lst->Add(EtcEditorList->Names[i] + "=" + xnam);
 		}
 	}
 	lst->CustomSort(FileComp_Base);
