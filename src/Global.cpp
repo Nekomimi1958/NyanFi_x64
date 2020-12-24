@@ -13620,7 +13620,9 @@ bool is_OneNrmCmd(
 	if (starts_AT(cmds))	 							return false;
 	if (pos_r_q_colon(cmds)!=0)							return false;
 	if (CommandList->IndexOfName(get_CmdStr(cmds))==-1)	return false;
-	if (no_prm && !get_PrmStr(cmds).IsEmpty())	 		return false;
+	UnicodeString prm = cv_env_str(get_PrmStr(cmds));
+	if (no_prm && !prm.IsEmpty())	 					return false;
+	if (prm.Pos('%'))									return false;	//•Ï”—L‚è
 														return true;
 }
 

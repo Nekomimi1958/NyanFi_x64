@@ -11890,7 +11890,6 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 	UnicodeString tmp = cmds;
 	split_dsc(tmp);
 	if (USAME_TS(tmp, "@")) {
-		bool res = true;
 		InhCmdHistory = true;
 		try {
 			if (CurStt->is_FTP) UserAbort(USTR_CantOperate);
@@ -11902,10 +11901,9 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 		}
 		catch (EAbort &e) {
 			GlobalErrMsg = e.Message;
-			res = false;
+			return false;
 		}
 		InhCmdHistory = false;
-		return res;
 	}
 
 	bool ok = false;
