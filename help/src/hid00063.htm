@@ -81,12 +81,27 @@ ExeCommands_MsgBox_":エラー:処理に失敗しました"
 なお、ファイル名無しで <b>@</b> だけを指定した場合、ファイラーのカーソル位置が <b>.nbt</b> ファイルならそれを実行します。<br>
 <br>
 コマンドファイルでは、コマンドを <b>:</b> (コロン)だけでなく改行でも区切ることができます。また見やすくするためにインデントしたり空行を入れたりしてもかまいません。<br>
-コマンドのパラメータ中、<b>:\</b> 以外で <b>:</b> を用いたい場合は、パラメータ全体をダブルクォーテーションで囲んでください。なお、空白が含まれている場合なども、わかりやすくするためにダブルクォーテーションで囲んでかまいません。 <br>
+コマンドのパラメータ中、<b>:\</b> 以外で <b>:</b> を用いたい場合は、パラメータ全体をダブルクォーテーションで囲んでください。なお、空白が含まれている場合なども、わかりやすくするためにダブルクォーテーションで囲んでかまいません。<br>
 行頭が <b>;</b> (セミコロン) の場合はコメントとみなされます。<br>
-なお、コマンドや制御文の大文字・小文字は区別されません。<br>
+なお、コマンドや変数名などの大文字・小文字は区別されません。<br>
 </div>
-実行するコマンドのパラメータでは、&quot;%変数名%&quot; という形で、<a href="#UserVar">ユーザ定義変数</a>、<a href="#PreDefVar">定義済み変数</a>および<b>環境変数</b>を参照できます。<br>
+コマンドのパラメータでは、<a href="#UserVar">ユーザ定義変数</a>、<a href="#PreDefVar">定義済み変数</a>、および<b>環境変数</b>を参照できます。<br>
+参照には以下の書式を利用できます。<br>
+<dl>
+<dt class="no_bg_indent1"><span class="format_text">%変数名%</span>
+<dd>変数内容を参照します。
+<dt class="no_bg_indent1"><span class="format_text">%変数名[行インデックス]%</span>
+<dd>変数が1行以上の文字列を含む場合、行インデックスで指定した行内容を参照します。行末の改行コードは含まれません。行インデックスは0から始まる整数で、変数名も使えます。範囲外の値を指定した場合は空文字列になります。<br>
+<b>例</b>: MsgBox_&quot;:クリップボードの先頭行:%Clipboard[0]%&quot;
+
+<dt class="no_bg_indent1"><span class="format_text">%変数名.Count%</span>
+<dd>変数内容の行数です。
+<dt class="no_bg_indent1"><span class="format_text">%変数名.Length%</span>
+<dd>変数内容の総文字数です。複数行の場合、行末の改行コードもカウントされます。<br>
+<b>例</b>: MsgBox_&quot;:クリップボード:%Clipboard.Length%文字 %Clipboard.Count%行&quot;
+</dl>
 <br>
+
 <div class="info_text">
 ※実行したコマンドファイルの内容は内部に保持されます。再度実行しようとした際にファイルのタイムスタンプが前回から変化していなければ、保持している内容を再利用します。タイムスタンプが変化していたら、ファイルを読み込み直して実行します。なお、コマンドファイル中に <b>#noreload</b> という行を記述することより、タイムスタンプチェックによる再読み込みを無効にできます。<br>
 ※コマンドファイルのファイル名主部を <a href="hid00005.htm#RenameDlg">RenameDlg</a> コマンドで変更すると、キー設定や追加メニューなどで <b>ExeCommands</b> のパラメータとなっている箇所に反映されます。
@@ -104,12 +119,13 @@ ExeCommands_MsgBox_":エラー:処理に失敗しました"
 <h3 id="UserVar">ユーザ定義変数</h3>
 <div class="indent1">
 <p>
-<b>補助コマンド</b>の <a href="#Set">Set</a>、<a href="#Input">Input</a>、<a href="#Add">Add</a> などで内容を設定できます。<br>
+変数内容は、<b>補助コマンド</b>の <a href="#Set">Set</a>、<a href="#Input">Input</a>、<a href="#Add">Add</a> などで設定できます。<br>
 変数名の大文字・小文字は区別されません。また日本語も使えます。<br>
 値は文字列として設定されますが、<a href="#Set">Set</a> コマンドで複合代入演算子(+=、-=、*=、/=、%=)を用いた場合、整数値とみなして演算できます。<br>
 また <a href="#Test">Test</a> コマンドで、変数の内容と文字列を自然順で比較できます。<br>
-設定された変数は、&quot;%変数名%&quot; という形で、パラメータ内で参照できます。<br>
+設定された変数は、&quot;%変数名%&quot; などの書式を用いてパラメータ内で参照できます。
 </p>
+
 <b>例</b>: 2つの数を入力し、それらの積を表示<br>
 <pre class="example_box">
 Input_A
@@ -118,6 +134,7 @@ Set_答=%A%
 Set_答*=%B%
 MsgBox_%A%×%B%=%答%
 </pre>
+
 <p>
 通常、ユーザ定義変数の内容は <b>ExeCommands</b> コマンドが終了すると失われますが、変数名の先頭に &quot;<b>..</b>&quot; を付けると、コマンド終了後も <b>NyanFi</b> が終了するまでそのまま保持されます。
 </p>
@@ -133,7 +150,9 @@ MsgBox_%..N%回目です
 <div class="indent1">
 <b>ExeCommands</b> コマンドの実行中に参照できる<b>定義済み変数</b>として以下のものがあります。<br>
 変数名の大文字・小文字は区別されません。<br>
-これらは &quot;%変数名%&quot; という形で、パラメータ内で参照できます。<br>
+これらは、&quot;%変数名%&quot; などの書式を用いてパラメータ内で参照できます。<br>
+<br>
+
 <div class="indent1">
 <table border="0">
 <tr><th>UserName</th><td>ユーザ名</td></tr>
@@ -157,7 +176,7 @@ MsgBox_%..N%回目です
 <tr><th>FileCount</th><td>カレントのファイル数</td></tr>
 <tr><th>DirCount</th><td>カレントのディレクトリ数</td></tr>
 <tr><th>CurFiles</th><td>カレントのパス付きファイル名リスト(改行区切り、ディレクトリは末尾が <b>\</b>、<b>..</b> は除外)</td></tr>
-<tr><th>SelCount</th><td>カレントの選択項目数</td></tr>
+<tr><th>SelCount</th><td>カレントの選択項目数 (%SelFiles.Count% でも参照可能)</td></tr>
 <tr><th>SelFileCount</th><td>カレントの選択ファイル数</td></tr>
 <tr><th>SelDirCount</th><td>カレントの選択ディレクトリ数</td></tr>
 <tr><th>SelFiles</th><td>カレントで選択中のパス付きファイル名リスト(改行区切り、ディレクトリは末尾が <b>\</b>)</td></tr>
@@ -188,10 +207,10 @@ MsgBox_%..N%回目です
 <tr><th>LastWatchLog</th><td><a href="hid00005.htm#WatchTail">WatchTail</a> コマンドで最後に検出されたファイル名とその追記内容</td></tr>
 <tr><th>LastLogText</th><td>ログウィンドウの直前の行内容(空行や &quot; >All Task Ready&quot; はスキップ)</td></tr>
 <tr><th>Buffer</th><td>作業用バッファ、ファイルの読込/保存にも使用可能</td></tr>
-<tr><th>BufferLength</th><td>Buffer の総文字数</td></tr>
-<tr><th>BufferCount</th><td>Buffer の行数</td></tr>
+<tr><th>BufferLength</th><td>Buffer の総文字数 (%Buffer.Length% でも参照可能)</td></tr>
+<tr><th>BufferCount</th><td>Buffer の行数 (%Buffer.Count% でも参照可能)</td></tr>
 <tr><th>BufferIndex</th><td>Buffer の行インデックス (0 &lt;= BufferIndex &lt; BufferCount)</td></tr>
-<tr><th>BufferLine</th><td>Buffer の BufferIndex 行の内容</td></tr>
+<tr><th>BufferLine</th><td>Buffer の BufferIndex 行の内容 (%Buffer[BufferIndex]% でも参照可能)</td></tr>
 </table>
 </div>
 <br>
@@ -778,7 +797,7 @@ SendCommands_"ChangeOppDir_%OppPath%"
 
 <dt id="Set" class="no_bg">Set<span class="pram_text">_変数名{=|+=|-=|*=|/=|%=}文字列</span>
 <dd>
-変数に文字列を設定します。変数を代入する場合は、Set_変数A=%変数B% というようになりますので注意してください。<br>
+変数に文字列を設定します。変数を代入する場合は <span class="format_text">Set_変数A=%変数B%</span> というようになりますので注意してください。<br>
 <div class="spc_box">
 複合代入演算子(+=、-=)を用いた場合、変数内容の書式が yyyy/mm/dd hh:nn:ss、yyyy/mm/dd、hh:nn:ssのいずれかだったら、日付や時刻とみなして演算を行います。その場合、文字列の書式が yyyy/mm/dd や hh:nn:ss からなっていたら日時、それ以外は日数の整数値として演算します。結果の書式は元の変数にしたがいます。<br>
 </div>
@@ -856,6 +875,18 @@ IfFalse
   SetExeOpt_WH
   ShellExecute
 EndIf
+</pre>
+
+<b>例</b>: 選択項目に対して外部コマンドを順次実行
+<pre class="example_box">
+Set_i=0
+Repeat_%SelCount%
+  SetExeFile_&quot;hoge.exe&quot;
+  SetExeParam_&quot;-xxx %SelFiles[i]%&quot;
+  SetExeOpt_WH
+  ShellExecute
+  Set_i+=1
+EndRepeat
 </pre>
 <br>
 
@@ -1023,7 +1054,7 @@ IfFalse_Exit
 構文: <b>Repeat</b>[_繰り返し回数 | _IN | _YN]: コマンド:... <b>EndRepeat</b>
 </div>
 <div class="spc_box">
-<b>Repeat</b> ～ <b>EndRepeat</b> 間のコマンドを指定回数だけ繰り返し実行します。<br>
+<b>Repeat</b> ～ <b>EndRepeat</b> 間のコマンドを指定回数(変数も可)だけ繰り返し実行します。<br>
 パラメータに <b>IN</b> を指定すると繰り返し回数の入力ボックスが出ます。<br>
 また <b>YN</b> を指定すると繰り返しのたびに継続の確認ボックスが出ます。<br>
 何も指定しない場合は無限ループになりますので、<a href="#IfStatement">If 文</a>のパラメータ <b>Break</b> で抜ける必要があります。<br>
@@ -1037,6 +1068,21 @@ Set_番号=001
 Repeat_100
   Add_Buffer&lt;&lt;%番号%
   Set_番号+=1
+EndRepeat
+</pre>
+
+<b>例</b>: 複数の指定ディレクトリで共通処理<br>
+<pre class="example_box">
+Add_DirList<<&quot;D:\data\hoge&quot;
+Add_DirList<<&quot;D:\data\foo&quot;
+Add_DirList<<&quot;D:\data\nyan&quot;
+
+Set_i=0
+Repeat_3
+  ChangeDir_%DirList[i]%
+  Set_i+=1
+  …
+  …
 EndRepeat
 </pre>
 <hr>
@@ -1349,8 +1395,7 @@ FilterBuffer_"/^URL=/"
 Test_BufferCount>0
 IfFalse_Exit
 
-Set_BufferIndex=0
-Set_URL=%BufferLine%
+Set_URL=%Buffer[0]%
 Mid_URL;5
 HtmlToText_ON
 TextViewer_%URL%

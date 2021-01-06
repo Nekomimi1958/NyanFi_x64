@@ -189,6 +189,7 @@ bool ExeCmdsList::proc_Repeat(UnicodeString cmd, UnicodeString prm)
 
 	try {
 		int idx = idx_of_word_i(_T("Repeat|EndRepeat|Break|Continue"), cmd);
+		bool to_brk = false;
 		switch (idx) {
 		case 0:	//Repeat
 			if (RepLevel>=(MAX_REPEAT_LEVEL - 1)) TextAbort(_T("これ以上多重化できません。"));
@@ -202,9 +203,11 @@ bool ExeCmdsList::proc_Repeat(UnicodeString cmd, UnicodeString prm)
 			else {
 				if (USAME_TI(prm, "IN")) prm = inputbox_ex(_T("Repeat"), _T("繰り返し回数"), EmptyStr, true);
 				RepCnt[RepLevel] = prm.ToIntDef(0);
-				if (RepCnt[RepLevel]==0) SysErrAbort(ERROR_INVALID_PARAMETER);
+				to_brk = (RepCnt[RepLevel]==0);
 			}
 			RepTop[RepLevel] = ++PC;
+
+			if (to_brk) proc_Repeat("Break", EmptyStr);
 			break;
 
 		case 1:	//EndRepeat
@@ -761,14 +764,58 @@ file_rec *XCMD_set_cfp(UnicodeString fnam, UnicodeString cnam, file_rec *cfp)
 }
 
 //---------------------------------------------------------------------------
-//変数の解決
+//変数の解決 (環境変数を含む)
 //---------------------------------------------------------------------------
 UnicodeString XCMD_eval_Var(UnicodeString prm)
 {
-	if (ContainsStr(prm, "%")) {
-		for (int i=0; i<XCMD_VarList->Count; i++)
-			prm = ReplaceText(prm, "%" + XCMD_VarList->Names[i] + "%", XCMD_VarList->ValueFromIndex[i]);
+	TMatchCollection mts = TRegEx::Matches(prm, "%[^%]+%");
+	if (mts.Count>0) {
+		UnicodeString s;
+		int cp = 1;
+		std::unique_ptr<TStringList> rlst(new TStringList());
+		for (int i=0; i<mts.Count; i++) {
+			UnicodeString vbuf = mts.Item[i].Value;
+			UnicodeString nstr = exclude_top_end(vbuf);
+			UnicodeString rstr = EmptyStr;
+			//文字列リストの行参照 (%変数名[インデックス]%)
+			if (EndsStr(']', nstr)) {
+				UnicodeString istr = get_tkn_m(nstr, '[', ']');
+				std::unique_ptr<TStringList> vlst(new TStringList());
+				vlst->Text = XCMD_VarList->Values[get_tkn(nstr, '[')];
+				if (vlst->Count>0) {
+					int idx = istr.ToIntDef(-1);
+					if (idx==-1) idx = XCMD_VarList->Values[istr].ToIntDef(-1);
+					rstr = (idx>=0 && idx<vlst->Count)? vlst->Strings[idx] : EmptyStr;
+				}
+			}
+			//行数 (%変数名.Count%)
+			else if (EndsText(".Count", nstr)) {
+				std::unique_ptr<TStringList> vlst(new TStringList());
+				vlst->Text = XCMD_VarList->Values[nstr.SubString(1, nstr.Length() - 6)];
+				rstr = IntToStr(vlst->Count);
+			}
+			//総文字数 (%変数名.Length%)
+			else if (EndsText(".Length", nstr)) {
+				std::unique_ptr<TStringList> vlst(new TStringList());
+				vlst->Text = XCMD_VarList->Values[nstr.SubString(1, nstr.Length() - 7)];
+				rstr = IntToStr(vlst->Text.Length());
+			}
+			//通常
+			else {
+				int idx = XCMD_VarList->IndexOfName(nstr);
+				if (idx!=-1)		rstr = XCMD_VarList->ValueFromIndex[idx];
+				if (rstr.IsEmpty()) rstr = GetEnvironmentVariable(nstr);	//環境変数
+			}
+
+			int i_p = mts.Item[i].Index;
+			if (i_p>cp) s += prm.SubString(cp, i_p - cp);
+			s += rstr;
+			cp = i_p + mts.Item[i].Length;
+		}
+		if (cp <= prm.Length()) s += prm.SubString(cp, prm.Length() - cp + 1);
+		prm = s;
 	}
+
 	return prm;
 }
 
@@ -860,13 +907,8 @@ void XCMD_upd_Var()
 		XCMD_BufChanged = false;
 	}
 
-	if (!XCMD_prm.IsEmpty()) {
-		//変数の解決
-		XCMD_prm = XCMD_eval_Var(XCMD_prm);
-		//環境変数の解決
-		XCMD_prm = cv_env_str(XCMD_prm);
-		if (ContainsStr(XCMD_prm, "%")) XCMD_prm = TRegEx::Replace(XCMD_prm, "%.+%", EmptyStr);
-	}
+	//変数の解決
+	if (!XCMD_prm.IsEmpty()) XCMD_prm = XCMD_eval_Var(XCMD_prm);
 }
 
 //---------------------------------------------------------------------------

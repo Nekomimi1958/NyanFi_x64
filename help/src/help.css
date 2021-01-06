@@ -221,6 +221,7 @@ PRE {
 
 .format_text {
   padding: 0px 0.25em;
+  font-weight: normal;
   background-color: #ddd;
 }
 
