@@ -75,7 +75,7 @@ extern TBrush *MenuBrush;
 bool is_HighContrast();
 
 void InitializeSysColor();
-void InitializeDarkMode();
+void InitializeDarkMode(bool kill_sw = false);
 void EndDarkMode();
 bool ApplyDarkMode(HWND);
 

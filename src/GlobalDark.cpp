@@ -114,10 +114,11 @@ void InitializeSysColor()
 }
 
 //---------------------------------------------------------------------------
-void InitializeDarkMode()
+void InitializeDarkMode(
+	bool kill_sw)	//適用禁止 (default = false)
 {
 	//ダークモード初期化
-	if (CheckWin32Version(10) && TOSVersion::Build >= 17763 && !is_HighContrast()) {
+	if (!kill_sw && CheckWin32Version(10) && TOSVersion::Build >= 17763 && !is_HighContrast()) {
 		hUxTheme = ::LoadLibrary(_T("uxtheme.dll"));
 		if (hUxTheme) {
 			lpfShouldAppsUseDarkMode  = (FUNC_ShouldAppsUseDarkMode)::GetProcAddress(hUxTheme, MAKEINTRESOURCEA(132));

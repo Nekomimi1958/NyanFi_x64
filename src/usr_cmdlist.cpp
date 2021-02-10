@@ -684,7 +684,10 @@ void get_PrmList(
 		params = "\nKT : タイムスタンプを維持\n";
 	}
 	else if (USAME_TI(cmd, "DiffDir")) {
-		params = "\nAL : マスク *.*、サブディレクトリも対象として直ちに比較実行\n";
+		params.sprintf(_T("%s"),
+			_T("\n")
+			_T("AL : マスク *.*、サブディレクトリも対象として直ちに比較実行\n")
+			_T("DL : 前回の条件で直ちに比較実行\n"));
 	}
 	else if (USAME_TI(cmd, "DirHistory")) {
 		params.sprintf(_T("%s"),

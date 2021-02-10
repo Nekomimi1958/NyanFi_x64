@@ -709,6 +709,7 @@ object NyanFiForm: TNyanFiForm
         AutoSize = True
         BevelOuter = bvNone
         TabOrder = 0
+        StyleElements = [seFont]
         object GrepCanBtn: TButton
           Left = 0
           Top = 130
@@ -727,6 +728,7 @@ object NyanFiForm: TNyanFiForm
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 2
+          StyleElements = [seFont]
           object GrepSttSplitter: TSplitter
             Left = 440
             Top = 0
@@ -819,6 +821,7 @@ object NyanFiForm: TNyanFiForm
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 1
+          StyleElements = [seFont]
           object GrepMidSplitter: TSplitter
             Left = 360
             Top = 0
@@ -1304,6 +1307,7 @@ object NyanFiForm: TNyanFiForm
             AutoSnap = False
             Color = clBtnFace
             ParentColor = False
+            StyleElements = [seFont]
             OnCanResize = LRSplitterCanResize
             OnMoved = LRSplitterMoved
             OnPaint = SplitterBgPaint

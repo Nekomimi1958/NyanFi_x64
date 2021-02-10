@@ -15350,17 +15350,31 @@ void __fastcall TNyanFiForm::DistributionDlgActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::DiffDirActionExecute(TObject *Sender)
 {
 	try {
+		if (IsDiffList()) RecoverFileList2();
 		if (!IsCurFList() || !IsOppFList()) UserAbort(USTR_CantOperate);
 		if (EqualDirLR()) UserAbort(USTR_SameDirLR);
 
 		clear_FindStt(CurStt);
 		clear_FindStt(OppStt);
-		UnicodeString src_mask = "*.*";
-		UnicodeString exc_mask = EmptyStr;
-		UnicodeString exc_dir  = EmptyStr;
-		bool		  sub_sw   = true;
 
-		if (!TEST_ActParam("AL")) {
+		UnicodeString src_mask;
+		UnicodeString exc_mask;
+		UnicodeString exc_dir;
+		bool		  sub_sw;
+
+		if (TEST_ActParam("AL")) {
+			src_mask = "*.*";
+			exc_mask = EmptyStr;
+			exc_dir  = EmptyStr;
+			sub_sw   = true;
+		}
+		else if (TEST_ActParam("DL")) {
+			src_mask = IniFile->ReadStrGen(_T("DiffIncMask"), "*.*");
+			exc_mask = IniFile->ReadStrGen(_T("DiffExcMask"));
+			exc_dir  = IniFile->ReadStrGen(_T("DiffExcDir"));
+			sub_sw   = IniFile->ReadBoolGen(_T("DiffSubDir"));
+		}
+		else {
 			if (!DiffDirDlg) DiffDirDlg = new TDiffDirDlg(this);	//‰‰ñ‚É“®“Iì¬
 			DiffDirDlg->SrcDirEdit->Text = CurPath[CurListTag];
 			DiffDirDlg->DstDirEdit->Text = CurPath[OppListTag];

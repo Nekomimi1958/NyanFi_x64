@@ -855,13 +855,14 @@ Delete<span class="pram_text">_[!]マスク[\][;[!]マスク[\]...]</span>
 <a href="hid00088.htm">→ タグによるファイル管理</a><br>
 <a href="#AddTag">→ AddTag</a>　<a href="#SetTag">→ SetTag</a>　<a href="#FindTag">→ FindTag</a>　<a href="#TrimTagData">→ TrimTagData</a>
 
-<dt id="DiffDir">DiffDir<span class="pram_text">[_AL]</span>
+<dt id="DiffDir">DiffDir<span class="pram_text">[_{AL|DL}]</span>
 <dd>「<b>ディレクトリの比較</b>」ダイアログを開き、左右のディレクトリ内容を比較します。<br>
 「<b>対象マスク</b>」欄で対象とするファイルのマスクを、「<b>除外マスク</b>」欄で除外しいたファイルのマスクを指定できます。マスクは <b>;</b> (セミコロン)で区切って複数指定可能。<br>
 「<b>サブディレクトリも対象とする</b>」をチェックしていると、すべてのサブディレクトリのファイルも比較対象になります。<br>
 この場合、「<b>除外</b>」欄で除外したいディレクトリを指定できます。マスクは <b>;</b> (セミコロン)で区切って複数指定可能。<br>
 <div class="spc_box">
 パラメータに <b>AL</b> を指定すると、ダイアログを開かずに直ちに比較を開始します。この場合、マスクは <b>*.*</b> で、除外マスク無し、サブディレクトリも対象として比較を行います。<br>
+また <b>DL</b> を指定すると、前回ダイアログで指定した条件で、ダイアログを開かずに直ちに比較を開始します。<br>
 </div>
 <div class="spc_box">
 比較処理中は、<span class="btn_frame">ESC</span>キーで中断できます。<br>
@@ -870,14 +871,16 @@ Delete<span class="pram_text">_[!]マスク[\][;[!]マスク[\]...]</span>
 実行後は左右ともに結果リストになります。表示されるのは、サイズまたは更新日時が異なる同名ファイルと、一方にしかないファイルです。<br>
 左右の項目数は同じになっていて、相違箇所が「<b>結果リストの相違箇所背景色</b>」で、更新日時の新しい方は「<b>結果リストの注目箇所背景色</b>」)で強調されます。存在しないファイルは 「<b>無効な項目の文字色</b>」で表示され(サイズと更新日時は空欄)、存在する側の名前が「<b>結果リストの注目箇所背景色</b>」で強調されます。<br>
 ソートは左右とも場所(パス付きファイル名)の昇順で固定となり、左右のファイルの対応が常に保たれます。<br>
-
 </div>
 <div class="spc_box">
 カレントでカーソルを移動すると、反対側のカーソル位置もそれに同期し、点線カーソルが表示されます。<br>
 この状態で可能なファイル操作は、<b>削除</b>、<b>コピー</b>、および<b>ハードリンク作成</b>(<a href="#CreateHardLink">CreateHardLink</a>)だけです。禁止されている操作を行おうとすると警告が出ます。<br>
-カレントの結果リストから抜けると、反対側の結果リストも解除されます。<br>
 </div>
-<a href="#CompareDlg">→ CompareDlg</a>　<a href="#FindDuplDlg">→ FindDuplDlg</a>
+<div class="spc_box">
+カレントの結果リストから抜けると、反対側の結果リストも一緒に解除されます。<br>
+なお、結果リストで <b>DiffDir</b> コマンドを再度実行した場合、両方の結果リストを解除してから比較を行います。<br>
+</div>
+<a href="#SelOnlyCur">→ SelOnlyCur</a>　<a href="#CompareDlg">→ CompareDlg</a>　<a href="#FindDuplDlg">→ FindDuplDlg</a>
 
 <dt id="DirHistory">DirHistory<span class="pram_text">[_{GA|GS|FM|AC|GC}]</span><br>
 DirHistory<span class="pram_text">_RD</span>
@@ -2459,11 +2462,12 @@ NyanFi.exe -XRegExChecker
 <a href="#Exit">→ Exit</a>　<a href="#Close">→ Close</a>
 
 <dt id="ReturnList">ReturnList
-<dd>アーカイブの仮想ディレクトリ表示、<a href="hid00052.htm">ファイル名検索</a>／<a href="hid00053.htm">ディレクトリ名検索</a>の結果リスト、<a href="hid00060.htm">ワークリスト</a>から、通常のファイルリスト表示に戻ります。<br>
+<dd>アーカイブの仮想ディレクトリ表示、<a href="hid00052.htm">ファイル名検索</a>／<a href="hid00053.htm">ディレクトリ名検索</a> などの結果リスト、<a href="hid00060.htm">ワークリスト</a>から、通常のファイルリスト表示に戻ります。<br>
 これは<span class="btn_frame">ESC</span>キーによっても可能です(<a href="#ExeCommands">ExeCommands</a> が割り当てられている場合を除く)。<br>
 <div class="spc_box">
 また <a href="hid00056.htm">文字列検索(GREP)</a>の結果リスト、<a href="hid00058.htm">最近編集／閲覧したファイル一覧</a>、<a href="hid00057.htm">ディレクトリ履歴</a>、<a href="hid00055.htm">キー割り当て一覧</a>、<a href="hid00067.htm">コマンドファイル一覧</a>、<a href="hid00070.htm">栞マーク一覧</a>、<a href="hid00070.htm">拡張子別一覧</a>、<a href="hid00073.htm">一覧ダイアログ</a>、<a href="hid00069.htm">タスクマネージャ</a> では、<b>ReturnList</b> を割り当てたキーを押すことで画面を閉じられます。<br>
 </div>
+<a href="#ToParent">→ ToParent</a>
 
 <dt id="SaveAsResultList">SaveAsResultList
 <dd>カレントが検索結果リストの場合、それに名前を付けて保存します。<br>
@@ -2589,7 +2593,7 @@ D:\Data\hoge.txt
 
 <dt id="SelOnlyCur">SelOnlyCur
 <dd>カレント側だけにあって、反対側には存在しないファイルを選択します。<br>
-<a href="#CompareDlg">→ CompareDlg</a>
+<a href="#CompareDlg">→ CompareDlg</a>　<a href="#DiffDir">→ DiffDir</a>
 
 <dt id="SelReverse">SelReverse
 <dd>ファイルの選択状態を反転させます。<br>

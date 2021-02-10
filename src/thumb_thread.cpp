@@ -46,9 +46,9 @@ UnicodeString __fastcall TThumbnailThread::GetListItem(int idx)
 //---------------------------------------------------------------------------
 void __fastcall TThumbnailThread::SetListItem(int idx, UnicodeString s)
 {
-	TaskRWLock->BeginRead();
+	TaskRWLock->BeginWrite();
 	if (idx>=0 && idx<ThumbnailList->Count) ThumbnailList->Strings[idx] = s;
-	TaskRWLock->EndRead();
+	TaskRWLock->EndWrite();
 }
 //---------------------------------------------------------------------------
 Graphics::TBitmap* __fastcall TThumbnailThread::GetListBitmap(int idx)

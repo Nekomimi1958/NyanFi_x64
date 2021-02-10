@@ -54,6 +54,13 @@ private:	// ユーザー宣言
 		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
 	}
 
+	void __fastcall Label2RadioBtn(TLabel *lp, TRadioButton *bp)
+	{
+		if (bp->Caption.IsEmpty() && !lp->Caption.IsEmpty()) {
+			bp->Caption = lp->Caption;  lp->Caption = EmptyStr;  lp->Visible = false;
+		}
+	}
+
 	void __fastcall UpdateBtnLabel();
 
 public:		// ユーザー宣言

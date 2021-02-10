@@ -911,9 +911,7 @@ EndRepeat
 <dd>
 変数の内容と文字列を、大文字・小文字を区別せずに比較します。<br>
 比較は自然順ですので、桁数の違う数字なども数値のように扱えます。また日時の比較も可能です。<br>
-<div class="note_text">
-変数同士を比較する場合は、Test_変数A==%変数B% というようになりますので注意してください。<br>
-</div>
+変数同士を比較する場合は、<span class="format_text">Test_変数A==%変数B%</span> などのようになりますので注意してください。<br>
 結果は後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
 <a href="#Set">→ Set</a>　<a href="#Input">→ Input</a>
 
@@ -1078,7 +1076,7 @@ Add_DirList<<&quot;D:\data\foo&quot;
 Add_DirList<<&quot;D:\data\nyan&quot;
 
 Set_i=0
-Repeat_3
+Repeat_%DirList.Count%
   ChangeDir_%DirList[i]%
   Set_i+=1
   …

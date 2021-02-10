@@ -2142,7 +2142,8 @@ void InitializeGlobal()
 		lpfGetFontResourceInfo = (FUNC_GetFontResourceInfo)::GetProcAddress(hGdi32, "GetFontResourceInfoW");
 	}
 
-	InitializeDarkMode();
+	InitializeDarkMode(IniFile->ReadBoolGen(_T("KillDarkMode")));
+	//‰B‚µƒL[ KillDarkMode (SupportDarkMode ‚ğ‹­§“I‚É–³Œø‰»)
 
 	WorkListChanged = WorkListFiltered = rqWorkListDirInf = false;
 }

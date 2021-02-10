@@ -96,15 +96,24 @@ void __fastcall TSameNameDlg::FormShow(TObject *Sender)
 
 	SetDarkWinTheme(this);
 
-	Mode0Label->Font->Color = Mode0Btn->Enabled? get_LabelColor() : clGrayText;
-	Mode1Label->Font->Color = Mode1Btn->Enabled? get_LabelColor() : clGrayText;
-	Mode2Label->Font->Color = Mode2Btn->Enabled? get_LabelColor() : clGrayText;
+	if (SupportDarkMode) {
+		Mode0Label->Font->Color = Mode0Btn->Enabled? get_LabelColor() : clGrayText;
+		Mode1Label->Font->Color = Mode1Btn->Enabled? get_LabelColor() : clGrayText;
+		Mode2Label->Font->Color = Mode2Btn->Enabled? get_LabelColor() : clGrayText;
 
-	Mode0Label->Top = Mode0Btn->Top + (Mode0Btn->Height - Mode0Label->Height)/2;
-	Mode1Label->Top = Mode1Btn->Top + (Mode1Btn->Height - Mode1Label->Height)/2;
-	Mode2Label->Top = Mode2Btn->Top + (Mode2Btn->Height - Mode2Label->Height)/2;
-	Mode3Label->Top = Mode3Btn->Top + (Mode3Btn->Height - Mode3Label->Height)/2;
-	Mode4Label->Top = Mode4Btn->Top + (Mode4Btn->Height - Mode4Label->Height)/2;
+		Mode0Label->Top = Mode0Btn->Top + (Mode0Btn->Height - Mode0Label->Height)/2;
+		Mode1Label->Top = Mode1Btn->Top + (Mode1Btn->Height - Mode1Label->Height)/2;
+		Mode2Label->Top = Mode2Btn->Top + (Mode2Btn->Height - Mode2Label->Height)/2;
+		Mode3Label->Top = Mode3Btn->Top + (Mode3Btn->Height - Mode3Label->Height)/2;
+		Mode4Label->Top = Mode4Btn->Top + (Mode4Btn->Height - Mode4Label->Height)/2;
+	}
+	else {
+		Label2RadioBtn(Mode0Label, Mode0Btn);
+		Label2RadioBtn(Mode1Label, Mode1Btn);
+		Label2RadioBtn(Mode2Label, Mode2Btn);
+		Label2RadioBtn(Mode3Label, Mode3Btn);
+		Label2RadioBtn(Mode4Label, Mode4Btn);
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TSameNameDlg::FormClose(TObject *Sender, TCloseAction &Action)
