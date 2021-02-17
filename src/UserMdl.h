@@ -34,6 +34,7 @@
 #define EDTAG_RGEX_V	0x01000000		//正規表現参照を表示
 #define EDTAG_RGEX_E	0x02000000		//正規表現参照を有効
 #define EDTAG_DST_FMT	0x04000000		//振分先の書式文字列参照
+#define EDTAG_REF_CDIR	0x08000000		//カレントのパス無しディレクトリ名
 #define EDTAG_NO_CALC	0x10000000		//電卓を表示しない
 
 //ファイルダイアログ用フィルタ
@@ -76,6 +77,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *DownListItemAction;
 	TAction *PasteComboAction;
 	TAction *RefCmdNameAction;
+	TAction *RefCurDirAction;
 	TAction *RefCurFNameAction;
 	TAction *RefCurPathAction;
 	TAction *RefCurPNameAction;
@@ -135,6 +137,8 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *PopRefFmtItem;
 	TMenuItem *PopUndoItem;
 	TMenuItem *RefCmdItem;
+	TMenuItem *RefCurDirEItem;
+	TMenuItem *RefCurDirItem;
 	TMenuItem *RefCurFnamItem;
 	TMenuItem *RefCurPnamItem;
 	TMenuItem *RefFileNameItem;
@@ -152,6 +156,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_g_1;
 	TMenuItem *Sep_g_2;
 	TMenuItem *Sep_g_3;
+	TMenuItem *Sep_g_4;
 	TMenuItem *WebSeaComboItem;
 	TMenuItem *WebSeaEditItem;
 	TOpenDialog *OpenDlg;
@@ -221,6 +226,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall WebSeaEditActionUpdate(TObject *Sender);
 	void __fastcall RefFileNameActionExecute(TObject *Sender);
 	void __fastcall RefFileNameActionUpdate(TObject *Sender);
+	void __fastcall RefCurDirActionExecute(TObject *Sender);
+	void __fastcall RefCurDirActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TCustomListBox *ActiveListBox;		//操作対象リストボックス

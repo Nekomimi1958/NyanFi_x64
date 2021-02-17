@@ -176,6 +176,12 @@ object UserModule: TUserModule
       OnExecute = RefOppPathActionExecute
       OnUpdate = RefOppPathActionUpdate
     end
+    object RefCurDirAction: TAction
+      Category = 'Other'
+      Caption = #12459#12524#12531#12488#12398#12497#12473#28961#12375#12487#12451#12524#12463#12488#12522#21517
+      OnExecute = RefCurDirActionExecute
+      OnUpdate = RefCurDirActionUpdate
+    end
     object RefCmdNameAction: TAction
       Category = 'Other'
       Caption = #12467#12510#12531#12489#21517#12434#21442#29031'(&R)'
@@ -233,6 +239,9 @@ object UserModule: TUserModule
     object SelAllItem: TMenuItem
       Action = SelAllComboAction
     end
+    object Sep_g_1: TMenuItem
+      Caption = '-'
+    end
     object RenInputNameItem: TMenuItem
       Action = RenInsNameAction
       Visible = False
@@ -243,7 +252,10 @@ object UserModule: TUserModule
     object RefCurPnamItem: TMenuItem
       Action = RefCurPNameAction
     end
-    object Sep_g_1: TMenuItem
+    object RefCurDirItem: TMenuItem
+      Action = RefCurDirAction
+    end
+    object Sep_g_2: TMenuItem
       Caption = '-'
     end
     object CmdParamItem: TMenuItem
@@ -265,7 +277,7 @@ object UserModule: TUserModule
     object WebSeaComboItem: TMenuItem
       Action = WebSeaComboAction
     end
-    object Sep_g_2: TMenuItem
+    object Sep_g_3: TMenuItem
       Caption = '-'
     end
     object DelHistItem: TMenuItem
@@ -274,7 +286,7 @@ object UserModule: TUserModule
     object ClrHistItem: TMenuItem
       Action = ClrHistComboAction
     end
-    object Sep_g_3: TMenuItem
+    object Sep_g_4: TMenuItem
       Caption = '-'
     end
     object RefCmdItem: TMenuItem
@@ -318,6 +330,9 @@ object UserModule: TUserModule
     end
     object RefFileNameItem: TMenuItem
       Action = RefFileNameAction
+    end
+    object RefCurDirEItem: TMenuItem
+      Action = RefCurDirAction
     end
     object PopRefCmdItem: TMenuItem
       Action = RefCmdNameAction

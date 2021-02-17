@@ -36,6 +36,7 @@ void __fastcall TRenameDlg::FormCreate(TObject *Sender)
 
 	UserModule->SetUsrPopupMenu(this);
 
+	RenameEdit->Tag 	 = EDTAG_REF_CDIR;
 	SrcStrComboBox->Tag  = CBTAG_HISTORY;
 	RepStrComboBox->Tag  = CBTAG_HISTORY;
 	Mp3FmtComboBox->Tag  = CBTAG_HISTORY;

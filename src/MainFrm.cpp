@@ -9516,6 +9516,8 @@ void __fastcall TNyanFiForm::RecoverFileList(
 	flist_stt *lst_stt = &ListStt[tag];
 	if (!lst_stt->is_Arc && !lst_stt->is_ADS && !lst_stt->is_Find && !lst_stt->is_Work && !lst_stt->is_FTP) return;
 
+	UnicodeString lst_act_prm = ActionParam;
+
 	TListBox *lp = FileListBox[tag];
 	set_RedrawOff(lp);
 	{
@@ -9616,6 +9618,8 @@ void __fastcall TNyanFiForm::RecoverFileList(
 	set_RedrawOn(lp);
 
 	if (tag==CurListTag) SetFileInf();
+
+	ActionParam = lst_act_prm;
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::RecoverFileList2(
@@ -22854,6 +22858,11 @@ void __fastcall TNyanFiForm::RenameDlgActionExecute(TObject *Sender)
 
 		//ダイアログ準備
 		if (!RenameDlg) RenameDlg = new TRenameDlg(this);	//初回に動的作成
+
+		UnicodeString tmp = "名前の変更";
+		if (!CurStt->is_Find) tmp += (" - " + yen_to_delimiter(CurPath[CurListTag]));
+		RenameDlg->Caption = tmp;
+
 		RenameDlg->ItemList->Assign(o_lst.get());
 
 		//カレントの一覧を取得

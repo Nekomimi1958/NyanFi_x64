@@ -23,6 +23,7 @@ __fastcall TNewFileDlg::TNewFileDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TNewFileDlg::FormCreate(TObject *Sender)
 {
+	NewNameEdit->Tag = EDTAG_REF_CDIR;
 	UserModule->SetUsrPopupMenu(this);
 
 	TplComboBox->Tag = CBTAG_HISTORY;

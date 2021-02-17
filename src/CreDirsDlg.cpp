@@ -27,6 +27,9 @@ void __fastcall TCreateDirsDlg::FormCreate(TObject *Sender)
 {
 	org_SttBar1WndProc	   = StatusBar1->WindowProc;
 	StatusBar1->WindowProc = SttBar1WndProc;
+
+	StrEdit->Tag = EDTAG_REF_CDIR;
+	UserModule->SetUsrPopupMenu(this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TCreateDirsDlg::FormShow(TObject *Sender)

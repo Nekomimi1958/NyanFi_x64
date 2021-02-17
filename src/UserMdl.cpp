@@ -700,8 +700,8 @@ void __fastcall TUserModule::RefCurPNameActionUpdate(TObject *Sender)
 void __fastcall TUserModule::RefCurPathActionExecute(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;
-	if (class_is_LabeledEdit(wp))
-		((TLabeledEdit*)wp)->Text = ReplaceStr(ExcludeTrailingPathDelimiter(CurPathName), "\\", "\\\\");
+	if (class_is_Edit(wp))
+		((TEdit*)wp)->Text = ReplaceStr(ExcludeTrailingPathDelimiter(CurPathName), "\\", "\\\\");
 }
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::RefCurPathActionUpdate(TObject *Sender)
@@ -737,6 +737,26 @@ void __fastcall TUserModule::RefFileNameActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = !RefFileName.IsEmpty();
+	ap->Enabled = ap->Visible;
+}
+//---------------------------------------------------------------------------
+//カレントのパス無しディレクトリ名
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::RefCurDirActionExecute(TObject *Sender)
+{
+	TWinControl *wp = Screen->ActiveControl;
+	UnicodeString dnam = ExtractFileName(ExcludeTrailingPathDelimiter(CurPathName));;
+	if	 (class_is_CustomEdit(wp))	((TCustomEdit*)wp)->SelText = dnam;
+	else if (class_is_ComboBox(wp))	((TComboBox*)wp)->SelText	 = dnam;
+}
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::RefCurDirActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	TWinControl *wp = Screen->ActiveControl;
+	if 	(class_is_CustomEdit(wp))	ap->Visible = (((TCustomEdit*)wp)->Tag & EDTAG_REF_CDIR);
+	else if (class_is_ComboBox(wp))	ap->Visible = (((TComboBox*)wp)->Tag & EDTAG_REF_CDIR);
+	else							ap->Visible = false;
 	ap->Enabled = ap->Visible;
 }
 
