@@ -626,14 +626,14 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	int n_wd = SerNoEdit->Text.Length();
 
 	//’uŠ·
-	UnicodeString swd, rwd;
+	UnicodeString sea_wd, rep_wd;
 	TRegExOptions opt;
 	bool only_base;
 	if (IsReplaceSheet()) {
-		swd = SrcStrComboBox->Text;
-		rwd = RepStrComboBox->Text;
-		if (!RegExCheckBox->Checked) swd = TRegEx::Escape(swd);
-		RepStrComboBox->Color = get_WinColor(swd.IsEmpty());
+		sea_wd = SrcStrComboBox->Text;
+		rep_wd = RepStrComboBox->Text;
+		if (!RegExCheckBox->Checked) sea_wd = TRegEx::Escape(sea_wd);
+		RepStrComboBox->Color = get_WinColor(sea_wd.IsEmpty());
 		if (CaseCheckBox->Checked)  opt << roIgnoreCase;
 		only_base = OnlyBaseCheckBox->Checked;
 	}
@@ -667,6 +667,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 		bool is_dir = ends_PathDlmtr(f_name);
 		f_name = ExcludeTrailingPathDelimiter(f_name);
 		UnicodeString p_name   = ExtractFilePath(f_name);
+		UnicodeString c_name   = ExtractFileName(ExtractFileDir(f_name));
 		UnicodeString b_name   = is_dir? ExtractFileName(f_name) : get_base_name(f_name);
 		UnicodeString f_ext    = is_dir? EmptyStr : get_extension(f_name);
 		UnicodeString old_name = b_name + f_ext;
@@ -707,15 +708,16 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 		else if (IsReplaceSheet()) {
 			if (!illegal) {
 				try {
+					UnicodeString rwd = ReplaceStr(rep_wd, "\\C", c_name);
 					if (only_base) {
-						if (TRegEx::IsMatch(b_name, swd, opt)) {
-							new_name = replace_regex_2(b_name, swd, rwd, opt) + f_ext;
+						if (TRegEx::IsMatch(b_name, sea_wd, opt)) {
+							new_name = replace_regex_2(b_name, sea_wd, rwd, opt) + f_ext;
 							mat_cnt++;
 						}
 					}
 					else {
-						if (TRegEx::IsMatch(old_name, swd, opt)) {
-							new_name = replace_regex_2(old_name, swd, rwd, opt);
+						if (TRegEx::IsMatch(old_name, sea_wd, opt)) {
+							new_name = replace_regex_2(old_name, sea_wd, rwd, opt);
 							mat_cnt++;
 						}
 					}
@@ -745,9 +747,8 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 				bool matched = false;
 				for (int j=0; j<RepRenList->Count; j++) {
 					UnicodeString lbuf = RepRenList->Strings[j];
-					swd = split_pre_tab(lbuf);	if (swd.IsEmpty()) continue;
-					rwd = lbuf;
-
+					UnicodeString swd  = split_pre_tab(lbuf);	if (swd.IsEmpty()) continue;
+					UnicodeString rwd  = ReplaceStr(lbuf, "\\C", c_name);
 					try {
 						swd = !is_regex_slash(swd)? TRegEx::Escape(swd) : exclude_top_end(swd);
 						if (TRegEx::IsMatch(r_name, swd, opt)) {
