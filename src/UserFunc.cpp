@@ -399,6 +399,7 @@ UnicodeString get_res_cnt_str(int ok_cnt, int er_cnt, int sk_cnt, int ng_cnt)
 //結果リストの整形
 //  "ファイル名\t内容" --> "ファイル名   内容"
 //  内容に TAB が含まれていたら削除
+//  戻り値: ファイル名部分の最大幅
 //---------------------------------------------------------------------------
 int format_res_list(TStringList *lst, int mgn, int min_wd)
 {
@@ -411,8 +412,7 @@ int format_res_list(TStringList *lst, int mgn, int min_wd)
 	//結果を整形
 	for (int i=0; i<lst->Count; i++) {
 		UnicodeString lbuf = lst->Strings[i];
-		lst->Strings[i] = align_l_str(
-							get_pre_tab(lbuf), max_len, ReplaceStr(get_post_tab(lbuf), "\t", EmptyStr));
+		lst->Strings[i] = align_l_str(get_pre_tab(lbuf), max_len, ReplaceStr(get_post_tab(lbuf), "\t", EmptyStr));
 	}
 
 	return max_len;

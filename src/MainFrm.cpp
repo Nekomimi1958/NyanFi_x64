@@ -12928,7 +12928,7 @@ void __fastcall TNyanFiForm::CalcDirSizeCore(
 			UnicodeString lbuf;
 			lbuf.sprintf(_T("[%s]\t%s\t%s\t%s"),
 					fp->b_name.c_str(),
-					get_FileSizeStr(fp->f_size).c_str(),
+					get_FileSizeStrF(fp->f_size).c_str(),
 					get_size_str_B(f_cnt, 10).c_str(),
 					get_size_str_B(d_cnt, 8).c_str());
 
@@ -13029,24 +13029,25 @@ void __fastcall TNyanFiForm::CalcDirSizeActionExecute(TObject *Sender)
 		//結果を出力
 		if (out_log || out_clip || out_list || !outfnam.IsEmpty()) {
 			//整形
-			int max_len = format_res_list(r_lst.get(), 4, 18);
+			int f_wd = format_res_list(r_lst.get(), 4, 18);
 			//合計
-			UnicodeString hr_str = make_RuledLine(4, max_len - 2, (ShowByteSize? 15 : 11), 9, 7);
+			int s_wd = ShowByteSize? 15 : (SizeFormatMode>0)? (8 + SizeDecDigits) : 11;
+			UnicodeString hr_str = make_RuledLine(4, f_wd - 2, s_wd, 9, 7);
 			UnicodeString tmp;
 			r_lst->Add(hr_str);
 			r_lst->Add(tmp.sprintf(_T("%*s%s%s%s"),
-						max_len, _T("Total  "),
-						get_FileSizeStr(total_sz).c_str(),
+						f_wd, _T("Total  "),
+						get_FileSizeStrF(total_sz).c_str(),
 						get_size_str_B(total_f_cnt, 10).c_str(),
 						get_size_str_B(total_d_cnt, 8).c_str()));
 
 			if (total_d_csz<total_sz)
-				r_lst->Add(tmp.sprintf(_T("%*s%s"), max_len, _T("Compressed  "), get_FileSizeStr(total_d_csz).c_str()));
+				r_lst->Add(tmp.sprintf(_T("%*s%s"), f_wd, _T("Compressed  "), get_FileSizeStrF(total_d_csz).c_str()));
 
 			//ヘッダ
 			r_lst->Insert(0, hr_str);
-			r_lst->Insert(0, tmp.sprintf(_T("%-*s %-*s %-9s Subdirs"), max_len - 2,
-							_T("Directory Name"), (ShowByteSize? 15 : 11), _T("Size"), _T("Files")));
+			r_lst->Insert(0, tmp.sprintf(_T("%-*s %-*s %-9s Subdirs"),
+							f_wd - 2, _T("Directory Name"), s_wd, _T("Size"), _T("Files")));
 			r_lst->Insert(0, CurPath[CurListTag]);
 			//ログ出力
 			if (out_log) {
@@ -14225,7 +14226,8 @@ UnicodeString __fastcall TNyanFiForm::GetCopyFileNames(
 					break;
 				case 'S':	//サイズ
 					if (fp->f_attr==faInvalid) break;
-					s = get_FileSizeStr(fp->f_size, !is_fmt);
+					s = get_FileSizeStrF(fp->f_size);
+					if (!is_fmt) s = Trim(s);
 					break;
 				case 'Y':	//バイトサイズ
 					if (fp->f_attr==faInvalid) break;
@@ -14403,11 +14405,11 @@ void __fastcall TNyanFiForm::CountLinesActionExecute(TObject *Sender)
 		if (CalcAborted) SttBarWarnUstr(USTR_Canceled);
 
 		//整形
-		int max_len = format_res_list(r_lst.get());
+		int f_wd = format_res_list(r_lst.get());
 		//合計
-		UnicodeString hr_str = make_RuledLine(5, max_len, 9, 9, 9, 9);
+		UnicodeString hr_str = make_RuledLine(5, f_wd, 9, 9, 9, 9);
 		r_lst->Add(hr_str);
-		msg.sprintf(_T("%-*s%8u%s%s%s%s"), max_len - 10, _T("合計"), total_f_cnt,
+		msg.sprintf(_T("%-*s%8u%s%s%s%s"), f_wd - 10, _T("合計"), total_f_cnt,
 			get_size_str_B(total_l_cnt, 10).c_str(), get_size_str_B(total_s_cnt, 10).c_str(),
 			((total_r_cnt!=-1)? get_size_str_B(total_r_cnt, 10) : UnicodeString("       ---")).c_str(),
 			get_size_str_B(total_b_cnt, 10).c_str());
@@ -14415,7 +14417,7 @@ void __fastcall TNyanFiForm::CountLinesActionExecute(TObject *Sender)
 		r_lst->Add(msg);
 		//比率
 		if (total_l_cnt>0) {
-			msg.sprintf(_T("%-*s %8.1f%% "), max_len + 8, _T("比率"), 100.0*total_s_cnt/total_l_cnt);
+			msg.sprintf(_T("%-*s %8.1f%% "), f_wd + 8, _T("比率"), 100.0*total_s_cnt/total_l_cnt);
 			if (total_r_cnt!=-1)
 				msg.cat_sprintf(_T("%8.1f%%"), 100.0*total_r_cnt/total_l_cnt);
 			else
@@ -14425,7 +14427,7 @@ void __fastcall TNyanFiForm::CountLinesActionExecute(TObject *Sender)
 		}
 		//ヘッダ
 		r_lst->Insert(0, hr_str);
-		r_lst->Insert(0, msg.sprintf(_T("ファイル名%*s     行数      有効  コメント      空白"), max_len - 9, _T(" ")));
+		r_lst->Insert(0, msg.sprintf(_T("ファイル名%*s     行数      有効  コメント      空白"), f_wd - 9, _T(" ")));
 		r_lst->Insert(0, CurPath[CurListTag]);
 		//ログ出力
 		AddLogStrings(r_lst.get());
@@ -19576,19 +19578,23 @@ void __fastcall TNyanFiForm::ListDurationActionExecute(TObject *Sender)
 		if (CalcAborted) SttBarWarnUstr(USTR_Canceled);
 
 		//整形
-		int max_len = format_res_list(r_lst.get());
+		int f_wd = format_res_list(r_lst.get());
 		//合計
-		UnicodeString hr_str = inc_dir? make_RuledLine(3, max_len, 11, 10) : make_RuledLine(2, max_len, 11);
+		UnicodeString hr_str = inc_dir? make_RuledLine(3, f_wd, 11, 10) : make_RuledLine(2, f_wd, 11);
 		r_lst->Add(hr_str);
-		if (inc_dir)
-			msg.sprintf(_T("%-*s %-11s%11u"), max_len - 2, _T("合計"), mSecToTStr(total_time, total_time%1000>0).c_str(), total_f_cnt);
-		else
-			msg.sprintf(_T("%-*s%8u  %-11s"), max_len - 11, _T("合計"), total_f_cnt, mSecToTStr(total_time, total_time%1000>0).c_str());
+		if (inc_dir) {
+			msg.sprintf(_T("%-*s %-11s%11u"), f_wd - 2, _T("合計"),
+						mSecToTStr(total_time, total_time%1000>0).c_str(), total_f_cnt);
+		}
+		else {
+			msg.sprintf(_T("%-*s%8u  %-11s"), f_wd - 11, _T("合計"),
+						total_f_cnt, mSecToTStr(total_time, total_time%1000>0).c_str());
+		}
 		if (er_cnt>0) msg.cat_sprintf(_T("  ERR:%u"), er_cnt);
 		r_lst->Add(msg);
 		//ヘッダ
 		r_lst->Insert(0, hr_str);
-		msg.sprintf(_T("ファイル名%*s長さ"), max_len - 9, _T(" "));
+		msg.sprintf(_T("ファイル名%*s長さ"), f_wd - 9, _T(" "));
 		if (inc_dir) msg += "        ファイル数";
 		r_lst->Insert(0, msg);
 		r_lst->Insert(0, CurPath[CurListTag]);

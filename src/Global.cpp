@@ -8451,6 +8451,13 @@ UnicodeString get_FileSizeStr(__int64 sz,
 	if (trim) ret_str = Trim(ret_str);
 	return ret_str;
 }
+//---------------------------------------------------------------------------
+UnicodeString get_FileSizeStrF(__int64 sz)
+{
+	int wd = (SizeFormatMode>0)? (7 + SizeDecDigits) : 10;
+	return (ShowByteSize ? get_size_str_B(sz, 14)
+						 : get_size_str_G(sz, wd, SizeDecDigits, SizeFormatMode));
+}
 
 //---------------------------------------------------------------------------
 //ƒtƒ@ƒCƒ‹î•ñ•¶š—ñ‚ğæ“¾

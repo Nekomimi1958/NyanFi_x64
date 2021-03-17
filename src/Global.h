@@ -1868,6 +1868,7 @@ void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState Sta
 void draw_InputPaintBox(TPaintBox *pp, UnicodeString s);
 
 UnicodeString get_FileSizeStr(__int64 sz, bool trim = false);
+UnicodeString get_FileSizeStrF(__int64 sz);
 UnicodeString get_FileInfStr(file_rec *fp, bool with_atr = true);
 UnicodeString get_FileInfStr(UnicodeString fnam, bool with_atr = true);
 void get_FileNamePathInf(UnicodeString fnam, TStringList *lst, bool get_app = false);
