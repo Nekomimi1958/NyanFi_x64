@@ -634,11 +634,11 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 		rep_wd = RepStrComboBox->Text;
 		if (!RegExCheckBox->Checked) sea_wd = TRegEx::Escape(sea_wd);
 		RepStrComboBox->Color = get_WinColor(sea_wd.IsEmpty());
-		if (CaseCheckBox->Checked)  opt << roIgnoreCase;
+		if (!CaseCheckBox->Checked)  opt << roIgnoreCase;
 		only_base = OnlyBaseCheckBox->Checked;
 	}
 	else if (IsRenListSheet()) {
-		if (Case2CheckBox->Checked) opt << roIgnoreCase;
+		if (!Case2CheckBox->Checked) opt << roIgnoreCase;
 		only_base = OnlyBase2CheckBox->Checked;
 	}
 
