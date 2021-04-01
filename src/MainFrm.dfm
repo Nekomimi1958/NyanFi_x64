@@ -6066,6 +6066,9 @@ object NyanFiForm: TNyanFiForm
     object Sep_r_3: TMenuItem
       Caption = '-'
     end
+    object TrayAboutItem: TMenuItem
+      Action = AboutNyanFiAction
+    end
     object TrayExitItem: TMenuItem
       Action = ExitAction
     end

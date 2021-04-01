@@ -527,7 +527,7 @@ void __fastcall TUserModule::CopyComboActionExecute(TObject *Sender)
 void __fastcall TUserModule::PasteComboActionExecute(TObject *Sender)
 {
 	TComboBox *cp = GetActiveComboBox();
-	if (cp) cp->SelText = get_norm_str(Clipboard()->AsText);
+	if (cp) cp->SelText = get_norm_str(GetClipboardText());
 }
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::PasteComboActionUpdate(TObject *Sender)
@@ -539,7 +539,7 @@ void __fastcall TUserModule::EditPaste1Execute(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;	if (!wp) return;
 
-	UnicodeString s = get_norm_str(Clipboard()->AsText);
+	UnicodeString s = get_norm_str(GetClipboardText());
 	if (USAME_TI(wp->Name, "DistrDirEdit") && dir_exists(s)) s = ReplaceStr(s, "\\", "\\\\");
 
 	if (class_is_MaskEdit(wp)) {

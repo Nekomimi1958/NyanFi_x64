@@ -837,7 +837,7 @@ void XCMD_upd_Var()
 	XCMD_set_Var(_T("SelText"), 	(ScrMode==SCMD_TVIEW && TxtViewer->isReady)? TxtViewer->get_SelText() : EmptyStr);
 	XCMD_set_Var(_T("WinWidth"), 	Application->MainForm->Width);
 	XCMD_set_Var(_T("WinHeight"), 	Application->MainForm->Height);
-	XCMD_set_Var(_T("Clipboard"),	Clipboard()->AsText);
+	XCMD_set_Var(_T("Clipboard"),	GetClipboardText());
 	XCMD_set_Var(_T("LastWatchLog"),LastWatchLog);
 	XCMD_set_Var(_T("ModalResult"),	(int)XCMD_ModalResult);
 

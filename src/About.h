@@ -16,6 +16,7 @@ class TAboutBox : public TForm
 {
 __published:
 	TButton *CancelBtn;
+	TButton *ListNyanBtn;
 	TButton *OKButton;
 	TImage *ProgramIcon;
 	TLabel *Copyright;
@@ -26,6 +27,7 @@ __published:
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall SupportURLClick(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
+	void __fastcall ListNyanBtnClick(TObject *Sender);
 
 private:
 

@@ -87,7 +87,7 @@ object AboutBox: TAboutBox
   end
   object OKButton: TButton
     Left = 139
-    Top = 187
+    Top = 188
     Width = 75
     Height = 26
     Caption = 'OK'
@@ -103,6 +103,15 @@ object AboutBox: TAboutBox
     Align = alBottom
     Cancel = True
     ModalResult = 2
+    TabOrder = 3
+  end
+  object ListNyanBtn: TButton
+    Left = 240
+    Top = 188
+    Width = 106
+    Height = 26
+    Caption = #35443#32048#19968#35239'(&L)'
     TabOrder = 2
+    OnClick = ListNyanBtnClick
   end
 end

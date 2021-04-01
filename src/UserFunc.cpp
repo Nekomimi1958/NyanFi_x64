@@ -2,22 +2,22 @@
 // 汎用共通関数															//
 //																		//
 //----------------------------------------------------------------------//
-#include <windows.h>
-#include <setupapi.h>
-#include <cfgmgr32.h>
-
 #include <vcl.h>
 #pragma hdrstop
 #include <tchar.h>
-#include <algorithm>
-#include <memory>
-#include <math.h>
+#include <winioctl.h>
 #include <wininet.h>
+#include <setupapi.h>
+#include <cfgmgr32.h>
+#include <math.h>
+#include <memory>
+#include <algorithm>
 #include <System.StrUtils.hpp>
 #include <System.IOUtils.hpp>
 #include <System.DateUtils.hpp>
 #include <System.NetEncoding.hpp>
 #include <Vcl.FileCtrl.hpp>
+#include <Vcl.Clipbrd.hpp>
 #include <RegularExpressions.hpp>
 #include "usr_shell.h"
 #include "UserFunc.h"
@@ -154,6 +154,26 @@ int del_ComboBox_history(TComboBox *cp, UnicodeString kwd)
 		}
 	}
 	return idx;
+}
+
+//---------------------------------------------------------------------------
+//クリップボード・テキストを取得
+//---------------------------------------------------------------------------
+UnicodeString GetClipboardText(
+	bool top_sw)	//一行目のみ取得	(default = false)
+{
+	UnicodeString ret_str;
+	if (Clipboard()->HasFormat(CF_TEXT)) {
+		if (top_sw) {
+			std::unique_ptr<TStringList> sbuf(new TStringList());
+			sbuf->Text = Clipboard()->AsText;
+			if (sbuf->Count>0) ret_str = sbuf->Strings[0];
+		}
+		else {
+			ret_str = Clipboard()->AsText;
+		}
+	}
+	return ret_str;
 }
 
 //---------------------------------------------------------------------------

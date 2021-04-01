@@ -669,7 +669,7 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 //---------------------------------------------------------------------------
 TStringDynArray __fastcall TTxtViewer::GetCsvHdrList()
 {
-	UnicodeString lbuf = TxtBufList->Strings[0];
+	UnicodeString lbuf = (TxtBufList->Count>0)? TxtBufList->Strings[0] : EmptyStr;
 	TStringDynArray ret_array = ContainsStr(lbuf, "\t")? split_strings_tab(lbuf) : get_csv_array(lbuf, MAX_CSV_ITEM);
 	if (!TopIsHeader) {
 		for (int i=0; i<ret_array.Length; i++) ret_array[i] = UnicodeString().sprintf(_T("çÄñ⁄%u"), i + 1);
@@ -2808,7 +2808,7 @@ void __fastcall TTxtViewer::onMouseDown(int x, int y)
 void __fastcall TTxtViewer::onMouseMove(int x, int y)
 {
 	if (PtInSelect) {
-		UnicodeString tmp = Clipboard()->AsText;
+		UnicodeString tmp = GetClipboardText();
 		Clipboard()->AsText = get_SelText();
 		usr_SH->DoClipDragDrop();
 		Clipboard()->AsText = tmp;
@@ -3205,7 +3205,7 @@ void __fastcall TTxtViewer::ClipCopy(
 	}
 
 	if (!sel_str.IsEmpty()) {
-		if (append) sel_str.Insert(Clipboard()->AsText, 1);	//í«â¡
+		if (append) sel_str.Insert(GetClipboardText(), 1);	//í«â¡
 		copy_to_Clipboard(sel_str);
 		IniSelected();
 		SetSttInf();
@@ -4810,15 +4810,8 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		}
 		//Web Ç≈åüçı
 		else if (USAME_TI(cmd, "WebSearch")) {
-			UnicodeString kwd;
-			if (USAME_TI(prm, "CB")) {
-				std::unique_ptr<TStringList> sbuf(new TStringList());
-				sbuf->Text  = Clipboard()->AsText;
-				if (sbuf->Count>0) kwd = sbuf->Strings[0];
-			}
-			else {
-				kwd = get_tkn(def_if_empty(prm, get_SelText()), _T("\r\n"));
-			}
+			UnicodeString kwd = USAME_TI(prm, "CB")? GetClipboardText(true) :
+													 get_tkn(def_if_empty(prm, get_SelText()), _T("\r\n"));
 			if (kwd.IsEmpty()) kwd = inputbox_dir(get_WebSeaCaption().c_str(), _T("WebSearch"));
 			if (!kwd.IsEmpty() && !exe_WebSearch(kwd)) GlobalErrMsg = LoadUsrMsg(USTR_FaildProc);
 		}

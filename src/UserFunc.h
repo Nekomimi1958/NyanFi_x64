@@ -44,6 +44,8 @@ void set_ComboBoxText(TComboBox *cp, const _TCHAR *s);
 void add_ComboBox_history(TComboBox *cp, UnicodeString kwd = EmptyStr);
 int  del_ComboBox_history(TComboBox *cp, UnicodeString kwd = EmptyStr);
 
+UnicodeString GetClipboardText(bool top_sw = false);
+
 bool is_IME_Open(HWND hWnd);
 bool is_IME_Typing(HWND hWnd);
 bool is_IME_Empty(HWND hWnd);

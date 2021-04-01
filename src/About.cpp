@@ -35,11 +35,29 @@ void __fastcall TAboutBox::FormShow(TObject *Sender)
 	ProductName->Font->Size  = 20;
 	ProductName->Font->Color = get_TextColor();
 	SupportURL->Font->Color  = IsDarkMode? TColor(RGB(0x66, 0x99, 0xFF)) : clNavy;
+	ListNyanBtn->Enabled	 = ScrMode==SCMD_FLIST;
+	OKButton->SetFocus();
 }
 //---------------------------------------------------------------------------
 void __fastcall TAboutBox::SupportURLClick(TObject *Sender)
 {
 	Execute_ex(SupportURL->Caption);
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TAboutBox::ListNyanBtnClick(TObject *Sender)
+{
+	HWND hWnd = Application->MainFormHandle;
+	if (hWnd) {
+		if (::IsIconic(hWnd)) ::SendMessage(hWnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+		UnicodeString lbuf = "-XListNyanFi_ED;XT;LS";
+		COPYDATASTRUCT cd;
+		cd.dwData = 1;
+		cd.cbData = sizeof(_TCHAR) * (lbuf.Length() + 1);
+		cd.lpData = lbuf.c_str();
+		::SendMessage(hWnd, WM_COPYDATA, 0, (LPARAM)&cd);
+		Close();
+	}
 }
 //---------------------------------------------------------------------------
 

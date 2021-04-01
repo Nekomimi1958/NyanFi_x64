@@ -70,13 +70,12 @@ void __fastcall TJsonViewer::WmFormShowed(TMessage &msg)
 	try {
 		std::unique_ptr<TStringList> fbuf(new TStringList());
 		if (isClip) {
-			if (!Clipboard()->HasFormat(CF_TEXT)) UserAbort(USTR_NoObject);
-			fbuf->Text = Clipboard()->AsText;
+			fbuf->Text = GetClipboardText();
 		}
 		else {
 			if (load_text_ex(FileName, fbuf.get())==0) UserAbort(USTR_FileNotOpen);
-			if (Trim(fbuf->Text).IsEmpty()) UserAbort(USTR_NoObject);
 		}
+		if (Trim(fbuf->Text).IsEmpty()) UserAbort(USTR_NoObject);
 		OrgText = fbuf->Text;
 		AssignJsonView(TJSONObject::ParseJSONValue(OrgText, false, true), NULL);	//RaiseExc = true
 

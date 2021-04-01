@@ -77,8 +77,9 @@ void __fastcall TInpDirDlg::FormShow(TObject *Sender)
 void __fastcall TInpDirDlg::FormCloseQuery(TObject *Sender, bool &CanClose)
 {
 	if (ModalResult==mrOk) {
-		if (isWebSea)
+		if (isWebSea) {
 			add_ComboBox_history(InpDirComboBox);
+		}
 		else {
 			UnicodeString dnam = to_absolute_name(cv_env_str(InpDirComboBox->Text), InitialPath);
 			if (file_exists(dnam)) add_ComboBox_history(InpDirComboBox, dnam);

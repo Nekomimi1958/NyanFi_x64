@@ -5,21 +5,21 @@
 #include <vcl.h>
 #pragma hdrstop
 #include <tchar.h>
-#include <algorithm>
-#include <memory>
 #include <math.h>
 #include <mmsystem.h>
 #include <shlobj.h>
+#include <algorithm>
+#include <memory>
 #include <VersionHelpers.h>
 #include <System.IOUtils.hpp>
 #include <System.DateUtils.hpp>
 #include <System.WideStrUtils.hpp>
 #include <System.NetEncoding.hpp>
 #include <System.Zip.hpp>
+#include <RegularExpressions.hpp>
 #include <Vcl.Imaging.GIFImg.hpp>
 #include <Vcl.Clipbrd.hpp>
 #include <Vcl.Direct2D.hpp>
-#include <RegularExpressions.hpp>
 #include "UserMdl.h"
 #include "usr_file_ex.h"
 #include "usr_wic.h"
@@ -13092,7 +13092,7 @@ void __fastcall TNyanFiForm::CalculatorActionExecute(TObject *Sender)
 	}
 
 	if (use_cb) {
-		if (s.IsEmpty()) s = Clipboard()->AsText;
+		if (s.IsEmpty()) s = GetClipboardText();
 		Calculator->CalcLine(s, true);
 		copy_to_Clipboard(Calculator->OutputLine);
 	}
@@ -19650,9 +19650,9 @@ void __fastcall TNyanFiForm::ListClipboardActionExecute(TObject *Sender)
 {
 	try {
 		GeneralInfoDlg->ToFilter = TEST_ActParam("FF");
-		if (Clipboard()->AsText.IsEmpty()) Abort();
 		std::unique_ptr<TStringList> lst(new TStringList());
-		lst->Text = Clipboard()->AsText;
+		lst->Text = GetClipboardText();
+		if (lst->Text.IsEmpty()) UserAbort(USTR_NoObject);
 		set_FormTitle(GeneralInfoDlg, _T("クリップボード"));
 		GeneralInfoDlg->GenInfoList->Assign(lst.get());
 		GeneralInfoDlg->ShowModal();
@@ -20825,10 +20825,7 @@ void __fastcall TNyanFiForm::NameFromClipActionExecute(TObject *Sender)
 		if (!IsCurFList()) UserAbort(USTR_OpeNotSuported);
 		file_rec *cfp = GetCurFrecPtr();	if (!cfp) Abort();
 
-		UnicodeString clp_name;
-		if (Clipboard()->HasFormat(CF_TEXT)) {
-			clp_name = ExtractFileName(get_norm_str(exclude_quot(Clipboard()->AsText)));
-		}
+		UnicodeString clp_name = ExtractFileName(get_norm_str(exclude_quot(GetClipboardText())));
 
 		if (ActionParam.IsEmpty() || ContainsText(ActionParam, "\\C")) {
 			if (clp_name.IsEmpty()) SysErrAbort(CLIPBRD_E_BAD_DATA);
@@ -21029,7 +21026,7 @@ void __fastcall TNyanFiForm::NewTextFileActionExecute(TObject *Sender)
 		StartLog("テキスト作成開始  " + GetSrcPathStr());
 		UnicodeString msg = make_LogHdr(_T("CREATE"), fnam);
 		std::unique_ptr<TStringList> o_buf(new TStringList());
-		if (is_clip || InputExDlg->ClipCheckBox->Checked) o_buf->Text = Clipboard()->AsText;
+		if (is_clip || InputExDlg->ClipCheckBox->Checked) o_buf->Text = GetClipboardText();
 		if (!saveto_TextFile(fnam, o_buf.get(), InputExDlg->CodePageComboBox->ItemIndex)) set_LogErrMsg(msg);
 		AddLog(msg);
 		if (msg[1]=='E') UserAbort(USTR_FaildProc);
@@ -30650,7 +30647,7 @@ bool __fastcall TNyanFiForm::ViewClipText()
 	SetScrMode(SCMD_TVIEW);
 	TxtViewer->FileName = EmptyStr;
 	std::unique_ptr<TStringList> vbuf(new TStringList());
-	vbuf->Text = Clipboard()->AsText;
+	vbuf->Text = GetClipboardText();
 	TxtViewer->isClip = true;
 	TxtViewer->AssignText(vbuf.get());
 	TxtViewer->SttHdrInf = UnicodeString().sprintf(_T("クリップボード  行数:%u"), TxtViewer->MaxLine);
@@ -32275,21 +32272,10 @@ void __fastcall TNyanFiForm::WebMapActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::WebSearchActionExecute(TObject *Sender)
 {
 	if (ScrMode==SCMD_FLIST) {
-		UnicodeString kwd;
-		if (TEST_ActParam("CB")) {
-			std::unique_ptr<TStringList> sbuf(new TStringList());
-			sbuf->Text = Clipboard()->AsText;
-			if (sbuf->Count>0) kwd = sbuf->Strings[0];
-		}
-		else if (TEST_ActParam("FN")) {
-			kwd = ExtractFileName(GetCurFileStr(true));
-		}
-		else {
-			kwd = ActionParam;
-		}
-
+		UnicodeString kwd = TEST_ActParam("CB")? GetClipboardText(true) :
+							TEST_ActParam("FN")? ExtractFileName(GetCurFileStr(true)) : ActionParam;
 		if (kwd.IsEmpty()) kwd = inputbox_dir(get_WebSeaCaption(EmptyStr, false).c_str(), _T("WebSearch"));
-		if (!exe_WebSearch(kwd)) SetActionAbort(USTR_FaildProc);
+		exe_WebSearch(kwd);
 	}
 	else if (ScrMode==SCMD_TVIEW) {
 		ExeCommandV(_T("WebSearch"));

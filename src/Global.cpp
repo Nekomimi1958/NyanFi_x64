@@ -5,14 +5,14 @@
 #include <vcl.h>
 #pragma hdrstop
 #include <tchar.h>
-#include <algorithm>
-#include <memory>
 #include <utilcls.h>
 #include <shlwapi.h>
 #include <winioctl.h>
 #include <mmdeviceapi.h>
 #include <endpointvolume.h>
 #include <VersionHelpers.h>
+#include <memory>
+#include <algorithm>
 #include <System.DateUtils.hpp>
 #include <System.Character.hpp>
 #include <System.IOUtils.hpp>
@@ -13738,7 +13738,8 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 			lp->ClearSelection();
 			lp->Perform(WM_SETREDRAW, 1, (NativeInt)0);
 			::InvalidateRect(lp->Handle, NULL, TRUE);
-			if (USAME_TI(prm, "AD")) cb_buf->Text.Insert(Clipboard()->AsText, 1);	//’Ç‰Á
+			//’Ç‰Á
+			if (USAME_TI(prm, "AD")) cb_buf->Text.Insert(GetClipboardText(), 1);
 			cursor_Default();
 			copy_to_Clipboard(cb_buf->Text);
 		}

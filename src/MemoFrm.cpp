@@ -143,7 +143,7 @@ void __fastcall TMemoForm::PasteActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMemoForm::PasteActionUpdate(TObject *Sender)
 {
-	((TAction *)Sender)->Enabled = !Clipboard()->AsText.IsEmpty();
+	((TAction *)Sender)->Enabled = GetClipboardText().IsEmpty();
 }
 
 //---------------------------------------------------------------------------

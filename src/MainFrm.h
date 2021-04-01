@@ -891,6 +891,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *ToolMenu;
 	TMenuItem *TopIsHdrItem;
 	TMenuItem *ToUpperItem;
+	TMenuItem *TrayAboutItem;
 	TMenuItem *TrayAppListItem;
 	TMenuItem *TrayDuplItem;
 	TMenuItem *TrayExitItem;

@@ -103,7 +103,7 @@ void __fastcall TExTxtViewer::WmFormShowed(TMessage &msg)
 		if (isClip) {
 			set_FormTitle(this, _T("クリップボード - テキストビュアー"));
 			std::unique_ptr<TStringList> vbuf(new TStringList());
-			if (Clipboard()->HasFormat(CF_TEXT)) vbuf->Text = Clipboard()->AsText;
+			vbuf->Text = GetClipboardText();
 			ExViewer->isClip = isClip;
 			ExViewer->AssignText(vbuf.get());
 			ExViewer->SttHdrInf = tmp.sprintf(_T("クリップボード  行数:%u"), ExViewer->MaxLine);
