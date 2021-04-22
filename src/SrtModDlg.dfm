@@ -249,16 +249,24 @@ object SortModeDlg: TSortModeDlg
     end
     object ExOptCheckBox: TCheckBox
       Left = 8
-      Top = 274
+      Top = 299
       Width = 234
       Height = 17
       Caption = #25313#24373#35373#23450#12434#24120#12395#34920#31034
+      TabOrder = 4
+    end
+    object TopSymCheckBox: TCheckBox
+      Left = 8
+      Top = 274
+      Width = 234
+      Height = 17
+      Caption = #33258#28982#38918#28961#21177#26178#12395#35352#21495#12434#29420#33258#12477#12540#12488
       TabOrder = 3
     end
   end
   object ActionList1: TActionList
-    Left = 326
-    Top = 304
+    Left = 470
+    Top = 296
     object ExOptAction: TAction
       Caption = #25313#24373#35373#23450
       OnExecute = ExOptActionExecute

@@ -30,6 +30,15 @@
 <dt class="no_bg_indent1">[Option] PLAY_Mark　<span class="def_text">(デフォルト: &#x25b6;)</span>
 <dd>プレイリスト(<a href="hid00005.htm#PlayList">PlayList</a>)に表示される再生中マークです。<br>
 
+<dt class="no_bg_indent1" id="SortSymList">[Option] SortSymList　<span class="def_text">(デフォルト: 空文字　&quot; -'!#$%&amp;(),.;@[]^_`{}~\+=&quot; に相当)</span>
+<dd>ソートダイアログ(<a href="hid00005.htm#SortDlg">SortDlg</a>)の「拡張設定」で「<b>自然順無効時に記号を独自ソート</b>」が有効な場合に用いられる文字並びです。<br>
+何も設定しないと(デフォルト)、半角記号の &quot; -'!#$%&amp;(),.;@[]^_`{}~\+=&quot; とみなされ、この順序で他の文字よりも前に並びます(降順では逆)。<br>
+ここには任意の文字を指定できるため、半角/全角を混在させたソートも可能です。<br>
+
+<pre class="example_box">
+SortSymList=★☆_＿!！#＃$＄@＠
+</pre>
+
 </dl>
 
 </body>

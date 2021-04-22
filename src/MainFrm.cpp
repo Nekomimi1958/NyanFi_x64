@@ -34909,7 +34909,7 @@ void __fastcall TNyanFiForm::ThumbnailGridMouseMove(TObject *Sender, TShiftState
 		//イベント: サムネイルからドラッグ開始時
 		if (!OnDragStartI.IsEmpty()) {
 			ExeEventCommand(OnDragStartI);
- 			JogMouseIfOutside();
+			JogMouseIfOutside();
 		}
 
 		DragStartTag = 2;

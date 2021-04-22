@@ -1859,13 +1859,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TextMarginBoxDblClick(TObject *Sender);
 	void __fastcall TabControl1Resize(TObject *Sender);
 	void __fastcall RefDirBtnKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall GrepPageControlDrawTab(TCustomTabControl *Control, int TabIndex,
-		const TRect &Rect, bool Active);
+	void __fastcall GrepPageControlDrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 	void __fastcall GrepStatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
-	void __fastcall MainMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
-		const TRect &ARect, TOwnerDrawState State);
-	void __fastcall PopMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
-		const TRect &ARect, TOwnerDrawState State);
+	void __fastcall MainMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas, const TRect &ARect, TOwnerDrawState State);
+	void __fastcall PopMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas, const TRect &ARect, TOwnerDrawState State);
 	void __fastcall MainMenuMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width, int &Height);
 	void __fastcall OdPopupMenuPopup(TObject *Sender);
 	void __fastcall CopyEnvInfItemClick(TObject *Sender);

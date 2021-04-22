@@ -893,7 +893,10 @@ extern bool SmallOrder;
 extern bool OldOrder;
 extern bool DscAttrOrder;
 extern bool DscPathOrder;
+extern bool TopSymbol;
 extern bool SortBoth;
+extern bool SortSymbol;
+extern UnicodeString SortSymList;
 
 extern TStringList *OptionList;
 extern TStringList *KeyFuncList;
@@ -1579,19 +1582,10 @@ inline int TagSortMode(int tag)
 }
 
 //---------------------------------------------------------------------------
-inline int CompTextN(UnicodeString s0, UnicodeString s1)
-{
-	if (DscNameOrder) std::swap(s0, s1);	//ñºëOóp
-	return NaturalOrder? StrCmpLogicalW(s0.c_str(), s1.c_str()) : CompareText(s0, s1);
-}
-//---------------------------------------------------------------------------
-inline int CompTextN2(UnicodeString s0, UnicodeString s1)
-{
-	if (DscPathOrder) std::swap(s0, s1);	//èÍèäóp
-	return NaturalOrder? StrCmpLogicalW(s0.c_str(), s1.c_str()) : CompareText(s0, s1);
-}
+int __fastcall CompSymN(UnicodeString s0, UnicodeString s1);
+int __fastcall CompNameFN(UnicodeString s0, UnicodeString s1);
+int __fastcall CompNameLN(UnicodeString s0, UnicodeString s1);
 
-//---------------------------------------------------------------------------
 int __fastcall CompDirName(file_rec *fp0, file_rec *fp1);
 int __fastcall CompDirTime(file_rec *fp0, file_rec *fp1);
 int __fastcall CompDirSize(file_rec *fp0, file_rec *fp1);

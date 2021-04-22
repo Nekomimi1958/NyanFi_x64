@@ -656,6 +656,8 @@ bool FlOdrDscAttr[MAX_FILELIST];		//属性降順
 bool FlOdrDscPath[MAX_FILELIST];		//場所降順
 
 bool SortBoth;					//左右とも変更
+bool SortSymbol;				//半角記号を分けて比較
+UnicodeString SortSymList;
 
 //比較関数のソート順
 bool NaturalOrder = true;		//自然順
@@ -1533,6 +1535,7 @@ void InitializeGlobal()
 		{_T("TabPinMark=\"\""),						(TObject*)&TabPinMark},
 		{_T("HEAD_Mark=\"\""),						(TObject*)&HEAD_Mark},		//隠し設定
 		{_T("PLAY_Mark=\"\""),						(TObject*)&PLAY_Mark},		//隠し設定
+		{_T("SortSymList=\"\""),					(TObject*)&SortSymList},	//隠し設定
 
 		// default = ExePath
 		{_T("DownloadPath=\"%ExePath%\""),			(TObject*)&DownloadPath},
@@ -1884,8 +1887,9 @@ void InitializeGlobal()
 		{_T("U:FlOdrDscAttr2=false"),		(TObject*)&FlOdrDscAttr[1]},
 		{_T("U:FlOdrDscPath1=false"),		(TObject*)&FlOdrDscPath[0]},
 		{_T("U:FlOdrDscPath2=false"),		(TObject*)&FlOdrDscPath[1]},
-
 		{_T("U:SortBoth=false"),			(TObject*)&SortBoth},
+		{_T("U:SortSymbol=false"),			(TObject*)&SortSymbol},
+
 		{_T("U:ShowImgSidebar=false"),		(TObject*)&ShowImgSidebar},
 		{_T("U:ImgSidebarIsLeft=true"),		(TObject*)&ImgSidebarIsLeft},
 		{_T("U:ThumbnailPos=1"),			(TObject*)&ThumbnailPos},
@@ -2376,6 +2380,9 @@ void LoadOptions()
 	if (HEAD_Mark.IsEmpty())  HEAD_Mark  = _T("\u25b6");
 	if (PLAY_Mark.IsEmpty())  PLAY_Mark  = _T("\u25b6");
 
+	//記号並びのデフォルト設定
+	if (SortSymList.IsEmpty()) SortSymList = " -'!#$%&(),.;@[]^_`{}~\\+=";
+
 	//タブリストの初期化
 	for (int i=0; i<TabList->Count; i++) {
 		tab_info *tp = cre_tab_info(equal_1(get_csv_item(TabList->Strings[i], 8)));
@@ -2863,12 +2870,54 @@ void filter_List(
 }
 
 //---------------------------------------------------------------------------
-//ファイル一覧ソート用比較関数
+//記号比較関数
+//---------------------------------------------------------------------------
+int __fastcall CompSymN(UnicodeString s0, UnicodeString s1)
+{
+	int n0 = s0.Length();
+	int n1 = s1.Length();
+	int nn = std::min(n0, n1);
+	for (int i=1; i<=nn; i++) {
+		WideChar c0 = s0[i];
+		WideChar c1 = s1[i];
+		if (c0==c1) continue;
+		int p0 = SortSymList.Pos(c0);
+		int p1 = SortSymList.Pos(c1);
+		if (p0>0 && p1>0) return (p0 - p1);
+		if (p0>0) return -1;
+		if (p1>0) return 1;
+		return CompareText(s0.SubString(i, n0 - i + 1), s1.SubString(i, n1 - i + 1));
+	}
+	return (n0 - n1);
+}
+//---------------------------------------------------------------------------
+//ファイル名比較関数
+//---------------------------------------------------------------------------
+int __fastcall CompNameFN(UnicodeString s0, UnicodeString s1)
+{
+	if (DscNameOrder) std::swap(s0, s1);	//名前用
+
+	return NaturalOrder? StrCmpLogicalW(s0.c_str(), s1.c_str()) :
+			 SortSymbol? CompSymN(s0, s1)
+			 		   : CompareText(s0, s1);
+}
+//---------------------------------------------------------------------------
+int __fastcall CompNameLN(UnicodeString s0, UnicodeString s1)
+{
+	if (DscPathOrder) std::swap(s0, s1);	//場所用
+
+	return NaturalOrder? StrCmpLogicalW(s0.c_str(), s1.c_str()) :
+			 SortSymbol? CompSymN(s0, s1)
+			 		   : CompareText(s0, s1);
+}
+
+//---------------------------------------------------------------------------
+//ファイル一覧のソート用比較関数
 //---------------------------------------------------------------------------
 int __fastcall CompDirName(file_rec *fp0, file_rec *fp1)
 {
-	return SameText(fp0->b_name, fp1->b_name) ? CompTextN(fp0->p_name, fp1->p_name)
-											  : CompTextN(fp0->b_name, fp1->b_name);
+	return SameText(fp0->b_name, fp1->b_name) ? CompNameFN(fp0->p_name, fp1->p_name)
+											  : CompNameFN(fp0->b_name, fp1->b_name);
 }
 //---------------------------------------------------------------------------
 int __fastcall CompDirTime(file_rec *fp0, file_rec *fp1)
@@ -2898,7 +2947,7 @@ int __fastcall CompDirIcon(file_rec *fp0, file_rec *fp1)
 	if (SameText(inam0, inam1)) return CompDirName(fp0, fp1);
 	if (inam0.IsEmpty()) return 1;
 	if (inam1.IsEmpty()) return -1;
-	return CompTextN(inam0, inam1);
+	return CompNameFN(inam0, inam1);
 }
 
 //---------------------------------------------------------------------------
@@ -2931,8 +2980,8 @@ int __fastcall SortComp_Name(TStringList *List, int Index1, int Index2)
 	//ファイル同士
 	UnicodeString nam0 = !fp0->alias.IsEmpty()? fp0->alias : fp0->b_name;
 	UnicodeString nam1 = !fp1->alias.IsEmpty()? fp1->alias : fp1->b_name;
-	int res = SameText(nam0, nam1)? CompTextN(fp0->f_ext, fp1->f_ext) : CompTextN(nam0, nam1);
-	return (res==0)? CompTextN(fp0->p_name, fp1->p_name) : res;
+	int res = SameText(nam0, nam1)? CompNameFN(fp0->f_ext, fp1->f_ext) : CompNameFN(nam0, nam1);
+	return (res==0)? CompNameFN(fp0->p_name, fp1->p_name) : res;
 }
 //---------------------------------------------------------------------------
 //拡張子
@@ -2978,7 +3027,7 @@ int __fastcall SortComp_Ext(TStringList *List, int Index1, int Index2)
 		}
 	}
 
-	return CompTextN(fp0->f_ext, fp1->f_ext);
+	return CompNameFN(fp0->f_ext, fp1->f_ext);
 }
 //---------------------------------------------------------------------------
 //タイムスタンプ
@@ -3157,8 +3206,8 @@ int __fastcall SortComp_PathName(TStringList *List, int Index1, int Index2)
 			case 3:  return CompDirSize(fp0, fp1);
 			case 4:  return CompDirAttr(fp0, fp1);
 			default:
-				return (SameText(pnam0, pnam1) ? CompTextN2(fp0->b_name, fp1->b_name)
-											   : CompTextN2(pnam0, pnam1));
+				return (SameText(pnam0, pnam1) ? CompNameLN(fp0->b_name, fp1->b_name)
+											   : CompNameLN(pnam0, pnam1));
 			}
 		}
 
@@ -3168,12 +3217,12 @@ int __fastcall SortComp_PathName(TStringList *List, int Index1, int Index2)
 
 	//ファイル同士
 	if (SameText(pnam0, pnam1)) {
-		int res = SameText(fp0->b_name, fp1->b_name) ? CompTextN2(fp0->f_ext, fp1->f_ext)
-													 : CompTextN2(fp0->b_name, fp1->b_name);
-		return (res==0)? CompTextN2(fp0->p_name, fp1->p_name) : res;
+		int res = SameText(fp0->b_name, fp1->b_name) ? CompNameLN(fp0->f_ext, fp1->f_ext)
+													 : CompNameLN(fp0->b_name, fp1->b_name);
+		return (res==0)? CompNameLN(fp0->p_name, fp1->p_name) : res;
 	}
 
-	return CompTextN2(pnam0, pnam1);
+	return CompNameLN(pnam0, pnam1);
 }
 //---------------------------------------------------------------------------
 //メモ内容	(fp->memo の \t 前)
@@ -3190,12 +3239,12 @@ int __fastcall SortComp_Memo(TStringList *List, int Index1, int Index2)
 	if (!memo0.IsEmpty() && memo1.IsEmpty()) return -1;
 
 	if ((memo0.IsEmpty() && memo1.IsEmpty()) || SameText(memo0, memo1)) {
-		int res = SameText(fp0->b_name, fp1->b_name) ? CompTextN(fp0->f_ext, fp1->f_ext)
-													 : CompTextN(fp0->b_name, fp1->b_name);
-		return (res==0)? CompTextN(fp0->p_name, fp1->p_name) : res;
+		int res = SameText(fp0->b_name, fp1->b_name) ? CompNameFN(fp0->f_ext, fp1->f_ext)
+													 : CompNameFN(fp0->b_name, fp1->b_name);
+		return (res==0)? CompNameFN(fp0->p_name, fp1->p_name) : res;
 	}
 
-	return CompTextN(memo0, memo1);
+	return CompNameFN(memo0, memo1);
 }
 //---------------------------------------------------------------------------
 //Git状態	(fp->memo の \t 後)
@@ -3212,12 +3261,12 @@ int __fastcall SortComp_GitStt(TStringList *List, int Index1, int Index2)
 	if (!memo0.IsEmpty() && memo1.IsEmpty()) return -1;
 
 	if ((memo0.IsEmpty() && memo1.IsEmpty()) || SameText(memo0, memo1)) {
-		int res = SameText(fp0->b_name, fp1->b_name) ? CompTextN(fp0->f_ext, fp1->f_ext)
-													 : CompTextN(fp0->b_name, fp1->b_name);
-		return (res==0)? CompTextN(fp0->p_name, fp1->p_name) : res;
+		int res = SameText(fp0->b_name, fp1->b_name) ? CompNameFN(fp0->f_ext, fp1->f_ext)
+													 : CompNameFN(fp0->b_name, fp1->b_name);
+		return (res==0)? CompNameFN(fp0->p_name, fp1->p_name) : res;
 	}
 
-	return CompTextN(memo0, memo1);
+	return CompNameFN(memo0, memo1);
 }
 //---------------------------------------------------------------------------
 //マーク設定日時
