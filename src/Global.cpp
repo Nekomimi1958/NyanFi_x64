@@ -656,7 +656,7 @@ bool FlOdrDscAttr[MAX_FILELIST];		//属性降順
 bool FlOdrDscPath[MAX_FILELIST];		//場所降順
 
 bool SortBoth;					//左右とも変更
-bool SortSymbol;				//半角記号を分けて比較
+bool SortLogical;				//論理ソート(自然順ソート無効時)
 UnicodeString SortSymList;
 
 //比較関数のソート順
@@ -1214,7 +1214,8 @@ void InitializeGlobal()
 	mute_Volume("GET");	//ミュート状態を取得
 
 	//廃止セクション、キーの削除、修正
-	IniFile->ReplaceKey(SCT_General, "DrvGrpah", "DrvGraph");	//v14.77
+	IniFile->ReplaceKey(SCT_General, "SortSymbol", "SortLogical");	//v14.93
+	IniFile->ReplaceKey(SCT_General, "DrvGrpah", "DrvGraph");		//v14.77
 
 	CurStt = &ListStt[CurListTag];
 	OppStt = &ListStt[OppListTag];
@@ -1888,7 +1889,7 @@ void InitializeGlobal()
 		{_T("U:FlOdrDscPath1=false"),		(TObject*)&FlOdrDscPath[0]},
 		{_T("U:FlOdrDscPath2=false"),		(TObject*)&FlOdrDscPath[1]},
 		{_T("U:SortBoth=false"),			(TObject*)&SortBoth},
-		{_T("U:SortSymbol=false"),			(TObject*)&SortSymbol},
+		{_T("U:SortLogical=false"),			(TObject*)&SortLogical},
 
 		{_T("U:ShowImgSidebar=false"),		(TObject*)&ShowImgSidebar},
 		{_T("U:ImgSidebarIsLeft=true"),		(TObject*)&ImgSidebarIsLeft},
@@ -2380,9 +2381,6 @@ void LoadOptions()
 	if (HEAD_Mark.IsEmpty())  HEAD_Mark  = _T("\u25b6");
 	if (PLAY_Mark.IsEmpty())  PLAY_Mark  = _T("\u25b6");
 
-	//記号並びのデフォルト設定
-	if (SortSymList.IsEmpty()) SortSymList = " -'!#$%&(),.;@[]^_`{}~\\+=";
-
 	//タブリストの初期化
 	for (int i=0; i<TabList->Count; i++) {
 		tab_info *tp = cre_tab_info(equal_1(get_csv_item(TabList->Strings[i], 8)));
@@ -2870,25 +2868,38 @@ void filter_List(
 }
 
 //---------------------------------------------------------------------------
-//記号比較関数
+//論理ソート用比較関数
 //---------------------------------------------------------------------------
-int __fastcall CompSymN(UnicodeString s0, UnicodeString s1)
+int __fastcall CompLogical(UnicodeString s0, UnicodeString s1, bool natural_sw)
 {
-	int n0 = s0.Length();
-	int n1 = s1.Length();
-	int nn = std::min(n0, n1);
-	for (int i=1; i<=nn; i++) {
-		WideChar c0 = s0[i];
-		WideChar c1 = s1[i];
-		if (c0==c1) continue;
-		int p0 = SortSymList.Pos(c0);
-		int p1 = SortSymList.Pos(c1);
-		if (p0>0 && p1>0) return (p0 - p1);
-		if (p0>0) return -1;
-		if (p1>0) return 1;
-		return CompareText(s0.SubString(i, n0 - i + 1), s1.SubString(i, n1 - i + 1));
+	if (!SortSymList.IsEmpty()) {
+		int n0 = s0.Length();
+		int n1 = s1.Length();
+		int nn = std::min(n0, n1);
+		for (int i=1; i<=nn; i++) {
+			WideChar c0 = s0[i];
+			WideChar c1 = s1[i];
+			if (c0==c1) continue;
+			int p0 = SortSymList.Pos(c0);
+			int p1 = SortSymList.Pos(c1);
+			if (p0>0 && p1>0) return (p0 - p1);
+			if (p0>0) return -1;
+			if (p1>0) return 1;
+			UnicodeString ss0 = s0.SubString(i, n0 - i + 1);
+			UnicodeString ss1 = s1.SubString(i, n1 - i + 1);
+			if (natural_sw)
+				return StrCmpLogicalW(ss0.c_str(), ss1.c_str());
+			else
+				return (::CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, ss0.c_str(), -1, ss1.c_str(), -1) - CSTR_EQUAL);
+		}
+		return (n0 - n1);
 	}
-	return (n0 - n1);
+	else {
+		if (natural_sw)
+			return StrCmpLogicalW(s0.c_str(), s1.c_str());
+		else
+			return (::CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, s0.c_str(), -1, s1.c_str(), -1) - CSTR_EQUAL);
+	}
 }
 //---------------------------------------------------------------------------
 //ファイル名比較関数
@@ -2897,18 +2908,18 @@ int __fastcall CompNameFN(UnicodeString s0, UnicodeString s1)
 {
 	if (DscNameOrder) std::swap(s0, s1);	//名前用
 
-	return NaturalOrder? StrCmpLogicalW(s0.c_str(), s1.c_str()) :
-			 SortSymbol? CompSymN(s0, s1)
-			 		   : CompareText(s0, s1);
+	return NaturalOrder? CompLogical(s0.c_str(), s1.c_str(), true) :
+			SortLogical? CompLogical(s0, s1, false)
+					   : CompareText(s0, s1);
 }
 //---------------------------------------------------------------------------
 int __fastcall CompNameLN(UnicodeString s0, UnicodeString s1)
 {
 	if (DscPathOrder) std::swap(s0, s1);	//場所用
 
-	return NaturalOrder? StrCmpLogicalW(s0.c_str(), s1.c_str()) :
-			 SortSymbol? CompSymN(s0, s1)
-			 		   : CompareText(s0, s1);
+	return NaturalOrder? CompLogical(s0.c_str(), s1.c_str(), true) :
+			SortLogical? CompLogical(s0, s1, false)
+					   : CompareText(s0, s1);
 }
 
 //---------------------------------------------------------------------------
@@ -4294,7 +4305,9 @@ void add_PackItem(file_rec *fp, int arc_t, UnicodeString src_dir, TStringList *l
 			lst->Add(fnam);
 		}
 	}
-	else lst->Add(fnam);
+	else {
+		lst->Add(fnam);
+	}
 }
 
 //---------------------------------------------------------------------------

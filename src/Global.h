@@ -895,7 +895,7 @@ extern bool DscAttrOrder;
 extern bool DscPathOrder;
 extern bool TopSymbol;
 extern bool SortBoth;
-extern bool SortSymbol;
+extern bool SortLogical;
 extern UnicodeString SortSymList;
 
 extern TStringList *OptionList;
@@ -1582,7 +1582,7 @@ inline int TagSortMode(int tag)
 }
 
 //---------------------------------------------------------------------------
-int __fastcall CompSymN(UnicodeString s0, UnicodeString s1);
+int __fastcall CompLogical(UnicodeString s0, UnicodeString s1, bool natural_sw);
 int __fastcall CompNameFN(UnicodeString s0, UnicodeString s1);
 int __fastcall CompNameLN(UnicodeString s0, UnicodeString s1);
 

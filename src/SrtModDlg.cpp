@@ -56,7 +56,6 @@ void __fastcall TSortModeDlg::FormShow(TObject *Sender)
 		SubModeRadioGroup->ItemIndex = -1;
 	}
 
-
 	DirSortModeComboBox->ItemIndex = DirSortMode[CurListTag];
 	NaturalCheckBox->Checked	   = FlOdrNatural[CurListTag];
 	DscNameCheckBox->Checked	   = FlOdrDscName[CurListTag];
@@ -64,7 +63,7 @@ void __fastcall TSortModeDlg::FormShow(TObject *Sender)
 	SmallCheckBox->Checked		   = FlOdrSmall[CurListTag];
 	DscAttrCheckBox->Checked	   = FlOdrDscAttr[CurListTag];
 	SortBothCheckBox->Checked	   = SortBoth;
-	TopSymCheckBox->Checked 	   = SortSymbol;
+	SortLogicalCheckBox->Checked   = SortLogical;
 
 	SortModeRadioGroup->SetFocus();
 	this->Perform(WM_NEXTDLGCTL, 0, (NativeInt)0);
@@ -101,7 +100,7 @@ void __fastcall TSortModeDlg::FormClose(TObject *Sender, TCloseAction &Action)
 			FlOdrDscAttr[OppListTag] = FlOdrDscAttr[CurListTag];
 		}
 
-		SortSymbol = TopSymCheckBox->Checked;
+		SortLogical = SortLogicalCheckBox->Checked;
 	}
 }
 

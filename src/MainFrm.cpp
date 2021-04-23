@@ -7680,7 +7680,7 @@ void __fastcall TNyanFiForm::SetSttBarInf(
 	file_rec *fp,				// (default = NULL)
 	UnicodeString *stt_txt)		// (default = NULL)
 {
-	if (!Initialized || UnInitializing || (!StatusBar1->Visible && !stt_txt)) return;
+	if (!Initialized || UnInitializing || CurWorking || (!StatusBar1->Visible && !stt_txt)) return;
 
 	if (!fp) fp = GetCurFrecPtr();
 
@@ -8582,11 +8582,12 @@ void __fastcall TNyanFiForm::ApplyPathMask(TStringList *lst, int tag)
 void __fastcall TNyanFiForm::UpdateList(TStringList *lst, UnicodeString dnam, int tag)
 {
 	if (InhUpdate) return;
-	InhUpdate = true;
+	InhUpdate  = true;
+	CurWorking = true;
 
-	cursor_HourGlass();
+	bool canceled = false;
 
-	while (HIBYTE(::GetAsyncKeyState(VK_ESCAPE)) != 0) Sleep(50);	//Œë’†’f–h~
+	while (HIBYTE(::GetAsyncKeyState(VK_ESCAPE))!=0) Sleep(50);	//Œë’†’f–h~
 
 	//’¼‘O‚Ì‘I‘ğó‘Ô‚ğæ“¾
 	std::unique_ptr<TStringList> sel_lst(new TStringList());
@@ -8598,13 +8599,16 @@ void __fastcall TNyanFiForm::UpdateList(TStringList *lst, UnicodeString dnam, in
 
 	UnicodeString sea_str = dnam + "*.*";
 	bool is_NTFS = false;
+	int  esc_int = ESC_INTERVAL;
 	if (StartsStr("\\\\", sea_str)) {
 		sea_str.Insert("?\\UNC\\", 3);
+		esc_int /= 4;
 	}
 	else {
 		sea_str.Insert("\\\\?\\", 1);
 		drive_info *dp = get_DriveInfo(dnam);
 		is_NTFS = dp? dp->is_NTFS : false;
+		if (dp && dp->drv_type==DRIVE_REMOTE) esc_int /= 4;
 	}
 
 	TSearchRec sr;
@@ -8661,10 +8665,11 @@ void __fastcall TNyanFiForm::UpdateList(TStringList *lst, UnicodeString dnam, in
 			fp->attr_str = get_file_attr_str(fp->f_attr);
 
 			//€–Ú’Ç‰Á
-			if (lst->AddObject(fp->f_name, (TObject*)fp)%ESC_INTERVAL==0) {
+			if (lst->AddObject(fp->f_name, (TObject*)fp) % esc_int == 0) {
 				//ESC ‚Å’†’f
 				if (is_KeyPress_ESC()) {
 					ClearKeyBuff(true);
+					canceled = true;
 					break;
 				}
 			}
@@ -8703,8 +8708,14 @@ void __fastcall TNyanFiForm::UpdateList(TStringList *lst, UnicodeString dnam, in
 
 	UpdateBgImage();
 
-	cursor_Default();
-	InhUpdate = false;
+	if (canceled) {
+		SttBarWarnUstr(USTR_Canceled);
+		Sleep(MsgHintTime);
+		ClearKeyBuff(true);
+	}
+
+	CurWorking = false;
+	InhUpdate  = false;
 }
 
 //---------------------------------------------------------------------------
@@ -10618,6 +10629,8 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FileListBoxEnter(TObject *Sender)
 {
+	if (CurWorking) return;
+
 	TListBox *lp = (TListBox*)Sender;
 
 	flist_stt *cur_stt = &ListStt[lp->Tag];
@@ -21927,7 +21940,7 @@ void __fastcall TNyanFiForm::PackActionExecute(TObject *Sender)
 				arc_name = PackArcDlg->ArcNameEdit->Text;
 				pasaword = PackArcDlg->PasswordEdit->Text;
 				arc_fext = PackArcDlg->FextLabel->Caption;
-				pack_per_dir = PackArcDlg->PerDirCheckBox->Checked;
+				pack_per_dir = (PackArcDlg->PerDirCheckBox->Enabled && PackArcDlg->PerDirCheckBox->Checked);
 				inc_top_dir  = PackArcDlg->IncDirCheckBox->Checked;
 				if (!pack_per_dir) {
 					if (arc_name.IsEmpty()) Abort();

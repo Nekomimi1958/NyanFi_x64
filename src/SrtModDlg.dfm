@@ -255,12 +255,12 @@ object SortModeDlg: TSortModeDlg
       Caption = #25313#24373#35373#23450#12434#24120#12395#34920#31034
       TabOrder = 4
     end
-    object TopSymCheckBox: TCheckBox
+    object SortLogicalCheckBox: TCheckBox
       Left = 8
       Top = 274
       Width = 234
       Height = 17
-      Caption = #33258#28982#38918#28961#21177#26178#12395#35352#21495#12434#29420#33258#12477#12540#12488
+      Caption = #33258#28982#38918#28961#21177#26178#12395#35542#29702#12477#12540#12488
       TabOrder = 3
     end
   end

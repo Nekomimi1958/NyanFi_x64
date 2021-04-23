@@ -33,7 +33,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *SameCloseCheckBox;
 	TCheckBox *SmallCheckBox;
 	TCheckBox *SortBothCheckBox;
-	TCheckBox *TopSymCheckBox;
+	TCheckBox *SortLogicalCheckBox;
 	TComboBox *DirSortModeComboBox;
 	TComboBox *PrimeComboBox;
 	TGroupBox *DirSortModeGroupBox;
