@@ -1885,6 +1885,7 @@ UnicodeString get_IniTypeStr(file_rec *fp);
 bool is_MenuFile(file_rec *fp);
 bool is_ResultList(file_rec *fp);
 bool is_AudioVideo(UnicodeString fnam);
+bool is_SoundID(UnicodeString s);
 bool is_ViewableFext(UnicodeString fext);
 bool is_Viewable(file_rec *fp);
 bool is_ExtractIcon(file_rec *fp);
@@ -1963,6 +1964,7 @@ void flash_win(int cnt = 0, int tm = 0);
 bool mute_Volume(UnicodeString prm);
 
 bool play_sound(UnicodeString fnam);
+bool play_sound_id(UnicodeString id);
 bool play_sound_ex(UnicodeString fnam, bool limit = true);
 bool add_PlayFile(UnicodeString fnam);
 bool add_PlayList(UnicodeString lnam);

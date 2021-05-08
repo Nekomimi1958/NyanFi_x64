@@ -8384,8 +8384,7 @@ void __fastcall TNyanFiForm::SetCurPath(
 										}
 										break;
 									case 8:
-										fnam = to_absolute_name(lbuf);
-										if (file_exists(fnam)) play_sound_ex(fnam, false);
+										if (is_SoundID(lbuf)) play_sound_id(lbuf); else play_sound_ex(lbuf, false);
 										break;
 									case 9:
 										if (!Initialized || UnInitializing) break;

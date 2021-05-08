@@ -9379,6 +9379,23 @@ bool is_AudioVideo(UnicodeString fnam)
 }
 
 //---------------------------------------------------------------------------
+//サウンド識別子か?
+//---------------------------------------------------------------------------
+bool is_SoundID(UnicodeString s)
+{
+	std::unique_ptr<TRegistry> reg(new TRegistry());
+	reg->RootKey = HKEY_CURRENT_USER;
+	if (reg->OpenKeyReadOnly("AppEvents\\Schemes\\Apps\\.Default")) {
+		std::unique_ptr<TStringList> lst(new TStringList());
+		reg->GetKeyNames(lst.get());
+		return (lst->IndexOf(s)!=-1);
+	}
+	else {
+		return false;
+	}
+}
+
+//---------------------------------------------------------------------------
 //ビュアーで表示可能か？ (アイコンは除く)
 //---------------------------------------------------------------------------
 bool is_ViewableFext(UnicodeString fext)
@@ -10518,16 +10535,32 @@ bool mute_Volume(
 
 //---------------------------------------------------------------------------
 //サウンド再生
-// ファイル名は実行パスからの相対指定でも可
-// ファイルが存在しないときは何も鳴らさない
 //---------------------------------------------------------------------------
-bool play_sound(UnicodeString fnam)
+bool play_sound(
+	UnicodeString fnam)		//ファイル名(実行パスからの相対指定可)/ サウンド識別子
 {
-	fnam = to_absolute_name(fnam);
-	if (!file_exists(fnam)) return false;
-
-	::sndPlaySound(fnam.c_str(), SND_ASYNC);
-	return true;
+	//サウンド識別子
+	if (is_SoundID(fnam)) {
+		play_sound_id(fnam);
+		return true;
+	}
+	//WAVファイル名
+	else {
+		fnam = to_absolute_name(fnam);
+		if (file_exists(fnam)) {
+			::sndPlaySound(fnam.c_str(), SND_ASYNC);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+}
+//---------------------------------------------------------------------------
+bool play_sound_id(
+	UnicodeString id)	//サウンド識別子
+{
+	return ::PlaySound(id.c_str(), NULL, SND_ALIAS|SND_ASYNC|SND_NODEFAULT);
 }
 
 //---------------------------------------------------------------------------
@@ -10535,7 +10568,7 @@ bool play_sound(UnicodeString fnam)
 //！メイン側で MM_MCINOTIFY を処理
 //---------------------------------------------------------------------------
 bool play_sound_ex(
-	UnicodeString fnam,		//ファイル名(実行パスからの相対指定でも可)
+	UnicodeString fnam,		//ファイル名(実行パスからの相対指定可)
 	bool limit)				//秒数制限する (default = true)
 {
 	::mciSendString(_T("close TPLYSND"), NULL, 0, NULL);

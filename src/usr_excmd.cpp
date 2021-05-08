@@ -1679,13 +1679,21 @@ int XCMD_MsgBox(UnicodeString cmd, UnicodeString prm)
 //---------------------------------------------------------------------------
 void XCMD_PlaySound(UnicodeString prm)
 {
+	//í‚é~
 	if (prm.IsEmpty()) {
 		::mciSendString(_T("close TPLYSND"), NULL, 0, NULL);
+		::PlaySound(NULL, NULL, SND_PURGE);
 	}
+	//çƒê∂
 	else {
-		UnicodeString fnam = to_absolute_name(prm);
-		if (!file_exists(fnam)) SysErrAbort(ERROR_FILE_NOT_FOUND);
-		play_sound_ex(fnam, false);
+		if (is_SoundID(prm)) {
+			play_sound_id(prm);
+		}
+		else {
+			UnicodeString fnam = to_absolute_name(prm);
+			if (!file_exists(fnam)) SysErrAbort(ERROR_FILE_NOT_FOUND);
+			play_sound_ex(fnam, false);
+		}
 	}
 }
 

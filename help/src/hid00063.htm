@@ -25,6 +25,7 @@
 	<param name="Keyword" value="ユーザ定義変数">
 	<param name="Keyword" value="環境変数">
 	<param name="Keyword" value="制御文">
+	<param name="Keyword" value="定義済みサウンド識別子">
 	<param name="Keyword" value="定義済み変数">
 	<param name="Keyword" value="補助コマンド">
 </object>
@@ -610,13 +611,21 @@ MsgBox<span class="pram_text">_&quot;:タイトル:メッセージ&quot;</span>
 <dt id="Nop" class="no_bg">Nop
 <dd>何もしません。
 
-<dt id="PlaySound" class="no_bg">PlaySound<span class="pram_text">_ファイル名</span>
-<dd>指定したサウンドファイル(<b>.wav</b>、<b>.mp3</b>、<b>.mid</b>)を再生します。<br>
+<dt id="PlaySound" class="no_bg">PlaySound<span class="pram_text">_{ファイル名|サウンド識別子}</span><br>
+PlaySound
+<dd>指定したサウンドファイル(<b>.wav</b>、<b>.wma</b>、<b>.mp3</b>、<b>.mid</b>)を再生します。<br>
 ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
 なお再生を中断したいときは、ファイル名を指定せずに <b>PlaySound</b> コマンドを実行してください。<br>
 <div class="note_text">
 <b>.mp3</b> の場合ID3タグの内容によっては再生できない場合があります。適切なコーデックを別途インストールすれば再生できるようになります。<br>
 </div>
+<b>例</b>: PlaySound_&quot;d:\sound\BGM.mp3&quot;<br>
+<div class="spc_box">
+ファイル名の代わりに <a href="hid00093.htm">定義済みサウンド識別子</a> を指定することもできます。<br>
+<b>例</b>: PlaySound_WindowsUnlock<br>
+<b>例</b>: PlaySound_Notification.Looping.Alarm<br>
+</div>
+
 <a href="#FlashWin">→ FlashWin</a>
 
 <dt id="PopIndex" class="no_bg">PopIndex

@@ -121,9 +121,10 @@ BgImage<span class="pram_text">=ファイル名</span>
 <br>
 
 <dt class="no_bg_indent1">サウンド<br>
-PlaySound<span class="pram_text">=ファイル名</span>
+PlaySound<span class="pram_text">=ファイル名|サウンド識別子</span>
 <dd>指定したサウンドファイル(<b>.wav</b>、<b>.mp3</b>、<b>.mid</b>)を再生します。<br>
 ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+ファイル名の代わりに <a href="hid00093.htm">定義済みサウンド識別子</a> を指定することもできます。<br>
 <a href="hid00063.htm#PlaySound">→ PlaySound</a><br>
 <br>
 
@@ -132,12 +133,12 @@ ExeCommands<span class="pram_text">=@コマンドファイル名</span>
 <dd>指定したコマンドファイルを <a href="hid00063.htm">ExeCommands コマンド</a> のパラメータとして実行します。<br>
 セキュリティを考慮し、実行できるのは <b>NyanFi</b> ディレクトリから相対指定のコマンドファイルに制限されます。<br>
 また、<a href="hid00024.htm#Other">オプション設定 - 一般2 - その他</a> で「<b>.nyanfi でのコマンドファイル実行を許可</b>」がチェックされている必要があります。<br>
-なお、これが設定されていると、<a href="hid00021.htm">オプション設定 - イベント</a>の「<b>カレントのディレクトリ変更(FL)</b>」に設定されているコマンドは実行されません。<br>
+なお、これが設定されていると、<a href="hid00021.htm">オプション設定 - イベント</a> の「<b>カレントのディレクトリ変更(FL)</b>」に設定されているコマンドは実行されません。<br>
 <br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 「カレントのディレクトリ変更」を抑止<br>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 「カレントのディレクトリ変更」イベントを抑止<br>
 Handled<span class="pram_text">=1|0</span>
-<dd>これを <b>1</b> に設定すると、<a href="hid00021.htm">オプション設定 - イベント</a>の「<b>カレントのディレクトリ変更(FL)</b>」に設定されているコマンドが実行されません。<br>
+<dd>これを <b>1</b> に設定すると、<a href="hid00021.htm">オプション設定 - イベント</a> の「<b>カレントのディレクトリ変更(FL)</b>」に設定されているコマンドが実行されません。<br>
 <br>
 
 <dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 隠しファイル
