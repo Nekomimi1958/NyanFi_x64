@@ -349,9 +349,10 @@ ChangeOppDir<span class="pram_text">_&quot;UNCパス:接続ユーザ名&quot;</span>
 </div>
 <a href="hid00063.htm">→ ExeCommands コマンド</a>
 
-<dt id="CommandPrompt">CommandPrompt
+<dt id="CommandPrompt">CommandPrompt<span class="pram_text">[_RA]</span>
 <dd>コマンドプロンプトを起動します。作業ディレクトリはカレントパスになります。<br>
-<a href="#PowerShell">→ PowerShell</a>　<a href="#FileRun">→ FileRun</a>
+パラメータに <b>RA</b> を指定すると、管理者として実行します。<br>
+<a href="#PowerShell">→ PowerShell</a>　<a href="#ExeCommandLine">→ ExeCommandLine</a>　<a href="#FileRun">→ FileRun</a>
 
 <dt id="CompareDlg">CompareDlg<span class="pram_text">[_NC]</span>
 <dd>「<b>同名ファイルの比較</b>」ダイアログを開きます。<br>
@@ -1162,7 +1163,7 @@ hh.exe の仕様のため、出力パスの名前に半角空白が含まれていると処理できません。<br
 　FileRun_&quot;perfmon /rel&quot;<br>
 </div>
 
-<a href="#CommandPrompt">→ CommandPrompt</a>　<a href="#ExeCommandLine">→ ExeCommandLine</a>　<a href="#PowerShell">→ PowerShell</a>
+<a href="#ExeCommandLine">→ ExeCommandLine</a>　<a href="#CommandPrompt">→ CommandPrompt</a>　<a href="#PowerShell">→ PowerShell</a>
 
 <dt id="Filter">Filter<span class="pram_text">[_CS[;CA]]</span>
 <dd>ファイルリストに対してフィルタによる絞り込みを行います(<b>選択マスク</b>)。<a href="hid00050.htm">インクリメンタルサーチ</a>のフィルタマスク・モードと似ていますが、フィルタ欄に入力した文字列がそのまま検索語となります(IME使用可能)。<br>
@@ -2095,6 +2096,7 @@ GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
 <dd>カーソル位置の項目に対し、<span class="btn_frame">Enter</span>キーによる標準の動作を行います。<br>
 <div class="indent1">
 ・実行可能なファイルは実行します(仮想ディレクトリ内は除く)。<br>
+・「管理者として実行」が設定されているショートカット(<b>.lnk</b>)は、管理者として実行します。<br>
 ・画像ファイルやアイコンファイルはイメージビュアーで表示。<br>
 ・サウンドファイル(<b>.wav</b>、<b>.wma</b>、<b>.mp3</b>、<b>.mid</b>)は秒数制限で再生。<br>
 ・対応可能なアーカイブは仮想ディレクトリとして開きます。<br>
@@ -2309,10 +2311,10 @@ PlayList<span class="pram_text">[_{NX|PR|PS|RS|PP|FI|LS|CA}]</span><br>
 <dd><b>NyanFi</b> の終了処理後、<b>Windows</b> を終了します。<br>
 <a href="#Reboot">→ Reboot</a>
 
-<dt id="PowerShell">PowerShell
-<dd><b>PowerShell</b> を起動します(<a href="#FileRun">FileRun</a><span class="pram_text">_powershell</span> に相当)。<br>
-作業ディレクトリはカレントパスになります。<br>
-<a href="#CommandPrompt">→ CommandPrompt</a>　<a href="#FileRun">→ FileRun</a>
+<dt id="PowerShell">PowerShell<span class="pram_text">[_RA]</span>
+<dd><b>PowerShell</b> を起動します。作業ディレクトリはカレントパスになります。<br>
+パラメータに <b>RA</b> を指定すると、管理者として実行します。<br>
+<a href="#CommandPrompt">→ CommandPrompt</a>　<a href="#ExeCommandLine">→ ExeCommandLine</a>　<a href="#FileRun">→ FileRun</a>
 
 <dt id="PrevDrive">PrevDrive
 <dd>利用可能な前のドライブに移ります。<br>

@@ -1373,7 +1373,7 @@ UnicodeString UserShell::get_FileTypeStr(UnicodeString fnam)
 //ショートカット情報の取得
 //---------------------------------------------------------------------------
 bool UserShell::get_LnkInf(UnicodeString fnam, TStringList *lst,
-	UnicodeString *nam, UnicodeString *prm, UnicodeString *fld, int *shw, UnicodeString *rem)
+	UnicodeString *nam, UnicodeString *prm, UnicodeString *fld, int *shw, UnicodeString *rem, bool *rau)
 {
 	try {
 		std::unique_ptr<TFileStream>   fs(new TFileStream(fnam, fmOpenRead | fmShareDenyNone));
@@ -1403,6 +1403,7 @@ bool UserShell::get_LnkInf(UnicodeString fnam, TStringList *lst,
 		bool has_argument = (flags & 0x0020);
 		bool has_icon_loc = (flags & 0x0040);
 		bool is_unicode   = (flags & 0x0080);
+		bool is_rau		  = (flags & 0x2000);
 		if (flags & 0x0100) has_link_inf = false;
 		bool has_exstr	  = (flags & 0x0101);
 
@@ -1540,6 +1541,7 @@ bool UserShell::get_LnkInf(UnicodeString fnam, TStringList *lst,
 			}
 
 			add_PropLine_if(_T("コメント"),		l_rem, lst);
+			if (is_rau) add_PropLine(_T("詳細設定"), "管理者として実行", lst);
 
 			//リンク先チェック
 			if (!l_fnam.IsEmpty() && !StartsStr("::", l_fnam)) {
@@ -1549,7 +1551,9 @@ bool UserShell::get_LnkInf(UnicodeString fnam, TStringList *lst,
 					else
 						add_PropLine(_T("リンク先の種類"), get_FileTypeStr(l_fnam), lst);
 				}
-				else add_PropLine_if(_T("エラー"), "リンク先が見つかりません。", lst, LBFLG_ERR_FIF);
+				else {
+					add_PropLine_if(_T("エラー"), "リンク先が見つかりません。", lst, LBFLG_ERR_FIF);
+				}
 			}
 		}
 
@@ -1558,6 +1562,7 @@ bool UserShell::get_LnkInf(UnicodeString fnam, TStringList *lst,
 		if (fld) *fld = l_fld;
 		if (shw) *shw = show_cmd;
 		if (rem) *rem = l_rem;
+		if (rau) *rau = is_rau;
 
 		return (!l_nam.IsEmpty());
 	}

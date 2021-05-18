@@ -196,7 +196,7 @@ public:
 	int  get_Duration(UnicodeString fnam);
 
 	bool get_LnkInf(UnicodeString fnam, TStringList *lst, UnicodeString *nam = NULL,
-		UnicodeString *prm = NULL, UnicodeString *fld = NULL, int *shw = NULL, UnicodeString *rem = NULL);
+		UnicodeString *prm = NULL, UnicodeString *fld = NULL, int *shw = NULL, UnicodeString *rem = NULL, bool *is_ra = NULL);
 
 	UnicodeString get_FileTypeStr(UnicodeString fnam);
 	UnicodeString get_LnkName(UnicodeString fnam);

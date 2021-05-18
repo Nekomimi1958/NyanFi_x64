@@ -12411,10 +12411,11 @@ bool Execute_ex(
 			bool ok = false;
 			if (test_LnkExt(get_extension(cmd))) {
 				UnicodeString lnam, prm, fld;
-				int shw;
-				usr_SH->get_LnkInf(cmd, NULL, &lnam, &prm, &fld, &shw);
+				int  shw;
+				bool rau;
+				usr_SH->get_LnkInf(cmd, NULL, &lnam, &prm, &fld, &shw, NULL, &rau);
 				if (!lnam.IsEmpty()) {
-					ok = (::ShellExecute(NULL, _T("open"), lnam.c_str(), prm.c_str(), fld.c_str(), shw) > (HINSTANCE)32);
+					ok = (::ShellExecute(NULL, rau? _T("runas"): _T("open"), lnam.c_str(), prm.c_str(), fld.c_str(), shw) > (HINSTANCE)32);
 				}
 			}
 			if (!ok) {

@@ -620,6 +620,9 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "Close") && id_idx==2) {
 		params = "\nAL : すべての別ウィンドウを閉じる\n";
 	}
+	else if (contained_wd_i(_T("CommandPrompt|PowerShell"), cmd)) {
+		params = "\nRA : 管理者として実行\n";
+	}
 	else if (USAME_TI(cmd, "CompareDlg")) {
 		params = "\nNC : ダイアログを出さず、名前のみ比較\n";
 	}

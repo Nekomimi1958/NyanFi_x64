@@ -13352,7 +13352,7 @@ void __fastcall TNyanFiForm::CmdHistoryActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::CommandPromptActionExecute(TObject *Sender)
 {
-	if (!Execute_ex("cmd.exe", EmptyStr, CurPath[CurListTag])) SetActionAbort(USTR_FaildExec);
+	if (!Execute_ex("cmd.exe", EmptyStr, CurPath[CurListTag], TEST_ActParam("RA")? "A" : "")) SetActionAbort(USTR_FaildExec);
 }
 
 //---------------------------------------------------------------------------
@@ -21677,8 +21677,9 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 				//ショートカット
 				else if (test_LnkExt(cfp->f_ext)) {
 					UnicodeString lnam, prm, fld;
-					int shw;
-					usr_SH->get_LnkInf(cfp->f_name, NULL, &lnam, &prm, &fld, &shw);
+					int  shw;
+					bool rau;
+					usr_SH->get_LnkInf(cfp->f_name, NULL, &lnam, &prm, &fld, &shw, NULL, &rau);
 					//ディレクトリへのショートカットの場合、リンク先に移動
 					if (dir_exists(lnam)) {
 						if (CurStt->is_Work) RecoverFileList();
@@ -21701,7 +21702,7 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 									UserAbort(USTR_FaildExec);
 							}
 							//一般 (※ ～.lnk を直接起動すると失敗する場合がある)
-							else if (::ShellExecute(NULL, _T("open"),
+							else if (::ShellExecute(NULL, (rau? _T("runas"): _T("open")),
 								lnam.c_str(), prm.c_str(), fld.c_str(), shw) <= (HINSTANCE)32)
 							{
 								UserAbort(USTR_FaildExec);
@@ -22606,7 +22607,7 @@ void __fastcall TNyanFiForm::PowerOffActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::PowerShellActionExecute(TObject *Sender)
 {
-	ExeCommandAction("FileRun", "powershell");
+	if (!Execute_ex("powershell.exe", EmptyStr, CurPath[CurListTag], TEST_ActParam("RA")? "A" : "")) SetActionAbort(USTR_FaildExec);
 }
 
 //---------------------------------------------------------------------------
