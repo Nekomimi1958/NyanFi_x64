@@ -2,9 +2,7 @@
 // NyanFi																//
 //  FTP接続ダイアログ													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
 #include "Global.h"
 #include "UserFunc.h"
 #include "UserMdl.h"
@@ -31,6 +29,11 @@ void __fastcall TFtpConnectDlg::FormCreate(TObject *Sender)
 		_T("暗号化しない\n")
 		_T("Explicit TLS\n")
 		_T("Implicit TLS\n"));
+
+	UnicodeString hntstr  = LoadUsrMsg(USTR_HintSndID);
+	SndConnectEdit->Hint  = hntstr;
+	SndDisconEdit->Hint   = hntstr;
+	SndTransferEdit->Hint = hntstr;
 }
 //---------------------------------------------------------------------------
 void __fastcall TFtpConnectDlg::FormShow(TObject *Sender)

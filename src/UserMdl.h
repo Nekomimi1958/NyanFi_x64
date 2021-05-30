@@ -135,6 +135,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *PopRefCmdItem;
 	TMenuItem *PopRefDlmtItem;
 	TMenuItem *PopRefFmtItem;
+	TMenuItem *PopRefSndIdItem;
 	TMenuItem *PopUndoItem;
 	TMenuItem *RefCmdItem;
 	TMenuItem *RefCurDirEItem;
@@ -228,6 +229,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefFileNameActionUpdate(TObject *Sender);
 	void __fastcall RefCurDirActionExecute(TObject *Sender);
 	void __fastcall RefCurDirActionUpdate(TObject *Sender);
+	void __fastcall PopSndIdItemClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	TCustomListBox *ActiveListBox;		//操作対象リストボックス

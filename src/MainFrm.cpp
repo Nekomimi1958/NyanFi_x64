@@ -2,23 +2,13 @@
 // 2画面ファイラー NyanFi												//
 //  メインフォーム														//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
 #include <math.h>
-#include <mmsystem.h>
 #include <shlobj.h>
-#include <algorithm>
-#include <memory>
 #include <VersionHelpers.h>
-#include <System.IOUtils.hpp>
-#include <System.DateUtils.hpp>
 #include <System.WideStrUtils.hpp>
-#include <System.NetEncoding.hpp>
 #include <System.Zip.hpp>
-#include <RegularExpressions.hpp>
 #include <Vcl.Imaging.GIFImg.hpp>
-#include <Vcl.Clipbrd.hpp>
 #include <Vcl.Direct2D.hpp>
 #include "UserMdl.h"
 #include "usr_file_ex.h"

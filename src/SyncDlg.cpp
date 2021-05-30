@@ -2,9 +2,7 @@
 // NyanFi																//
 //  “¯ŠúƒRƒs[‚Ìİ’è													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <algorithm>
 #include <Vcl.FileCtrl.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"

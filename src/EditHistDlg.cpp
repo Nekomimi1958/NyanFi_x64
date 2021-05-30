@@ -3,12 +3,7 @@
 //  最近編集/閲覧した/使ったファイル一覧								//
 //  栞マーク一覧/ リポジトリ一覧/ ダイレクトタグジャンプ				//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <algorithm>
-#include <RegularExpressions.hpp>
 #include "usr_excmd.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

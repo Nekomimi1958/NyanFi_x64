@@ -2,7 +2,7 @@
 // ヒントウィンドウ														//
 //  背景色変更のためにサブクラス化										//
 //----------------------------------------------------------------------//
-#include <memory>
+#pragma hdrstop
 #include "usr_str.h"
 #include "usr_hintwin.h"
 

@@ -2,10 +2,7 @@
 // NyanFi																//
 //  タスクマネージャ													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <algorithm>
 #include "UserFunc.h"
 #include "Global.h"
 #include "MainFrm.h"

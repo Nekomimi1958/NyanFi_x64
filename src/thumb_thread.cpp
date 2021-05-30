@@ -2,10 +2,7 @@
 // NyanFi																//
 //  サムネイル取得スレッド												//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
 #include "usr_wic.h"
 #include "usr_shell.h"
 #include "UserFunc.h"

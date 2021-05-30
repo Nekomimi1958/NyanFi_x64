@@ -2,12 +2,8 @@
 // NyanFi																//
 //  サブビュアー														//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <algorithm>
-#include <memory>
 #include <Vcl.Imaging.GIFImg.hpp>
-#include <Vcl.Clipbrd.hpp>
 #include "usr_wic.h"
 #include "usr_id3.h"
 #include "Global.h"

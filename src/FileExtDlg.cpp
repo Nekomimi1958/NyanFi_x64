@@ -2,12 +2,7 @@
 // NyanFi																//
 //  Šg’£Žq•Êˆê——														//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
-#include <Vcl.Clipbrd.hpp>
-#include <RegularExpressions.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

@@ -2,12 +2,7 @@
 // NyanFi																//
 //  振り分けダイアログ													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <algorithm>
-#include <RegularExpressions.hpp>
 #include "Global.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

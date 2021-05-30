@@ -2,7 +2,6 @@
 // NyanFi																//
 //  同名ファイルの比較ダイアログ										//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
 #include "UserFunc.h"
 #include "Global.h"

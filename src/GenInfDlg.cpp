@@ -2,13 +2,7 @@
 // NyanFi																//
 //  汎用一覧ダイアログ													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
-#include <System.DateUtils.hpp>
-#include <RegularExpressions.hpp>
-#include <Vcl.Clipbrd.hpp>
 #include "usr_id3.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

@@ -2,26 +2,18 @@
 // NyanFi																//
 //  ÉOÉçÅ[ÉoÉã															//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
 #include <utilcls.h>
 #include <shlwapi.h>
 #include <winioctl.h>
 #include <mmdeviceapi.h>
 #include <endpointvolume.h>
 #include <VersionHelpers.h>
-#include <memory>
-#include <algorithm>
-#include <System.DateUtils.hpp>
 #include <System.Character.hpp>
-#include <System.IOUtils.hpp>
 #include <System.Win.Registry.hpp>
 #include <System.Zip.hpp>
-#include <RegularExpressions.hpp>
 #include <Vcl.Imaging.pngimage.hpp>
 #include <Vcl.Imaging.GIFImg.hpp>
-#include <Vcl.Clipbrd.hpp>
 #include "usr_wic.h"
 #include "usr_arc.h"
 #include "usr_mmfile.h"

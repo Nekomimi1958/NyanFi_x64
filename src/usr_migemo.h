@@ -6,9 +6,6 @@
 #define UsrMigemoH
 
 //---------------------------------------------------------------------------
-#include <vcl.h>
-
-//---------------------------------------------------------------------------
 typedef struct _migemo migemo;
 typedef migemo*			(WINAPI *FUNC_migemo_open)(const char*);
 typedef void			(WINAPI *FUNC_migemo_close)(migemo*);

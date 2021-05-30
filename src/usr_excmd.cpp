@@ -2,14 +2,7 @@
 // NyanFi																//
 //  ExeCommands ópä÷êî													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <System.DateUtils.hpp>
-#include <System.IOUtils.hpp>
-#include <Vcl.Clipbrd.hpp>
-#include <RegularExpressions.hpp>
 #include "usr_str.h"
 #include "usr_file_ex.h"
 #include "usr_wic.h"

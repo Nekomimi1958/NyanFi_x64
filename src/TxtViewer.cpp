@@ -2,15 +2,8 @@
 // NyanFi																//
 //  テキストビュアー													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <algorithm>
-#include <System.NetEncoding.hpp>
 #include <IdURI.hpp>
-#include <Vcl.Clipbrd.hpp>
-#include <RegularExpressions.hpp>
 #include "htmconv.h"
 #include "usr_mmfile.h"
 #include "usr_xd2tx.h"

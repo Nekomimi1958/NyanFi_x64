@@ -2,10 +2,7 @@
 // NyanFi																//
 //  ビットマップビュー													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
 #include "UserFunc.h"
 #include "Global.h"
 #include "TxtViewer.h"

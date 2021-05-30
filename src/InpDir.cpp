@@ -2,9 +2,7 @@
 // NyanFi																//
 //  ディレクトリを開く/ Web検索											//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
 #include <Vcl.FileCtrl.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"

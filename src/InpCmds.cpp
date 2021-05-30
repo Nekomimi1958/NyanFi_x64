@@ -2,10 +2,7 @@
 // NyanFi																//
 //  ƒRƒ}ƒ“ƒh‚Ì“ü—Í														//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <RegularExpressions.hpp>
 #include "usr_excmd.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

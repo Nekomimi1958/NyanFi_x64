@@ -6,8 +6,6 @@
 #define GlobalH
 
 //---------------------------------------------------------------------------
-#include <vcl.h>
-#pragma hdrstop
 #include <htmlhelp.h>
 #include <mmsystem.h>
 #include "usr_file_ex.h"

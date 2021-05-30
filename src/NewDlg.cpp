@@ -2,9 +2,7 @@
 // NyanFi																//
 //  新規ファイルの作成ダイアログ										//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <algorithm>
 #include "Global.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

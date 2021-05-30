@@ -2,14 +2,8 @@
 // NyanFi																//
 //  オプション設定														//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <algorithm>
 #include <mmsystem.h>
-#include <Vcl.FileCtrl.hpp>
-#include <RegularExpressions.hpp>
 #include "usr_shell.h"
 #include "usr_xd2tx.h"
 #include "usr_arc.h"
@@ -452,24 +446,30 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	FExtExeFileEdit->Hint  = hntstr;
 	FExtStdEdit->Hint	   = hntstr;
 
+	hntstr = LoadUsrMsg(USTR_HintSndID);
+	SndWarnEdit->Hint	   = hntstr;
+	SndTaskFinEdit->Hint   = hntstr;
+	SndFindFinEdit->Hint   = hntstr;
+	SndWatchEdit->Hint	   = hntstr;
+
 	FExtMaxWidthEdit->Hint	   = "'W'の幅を基準にした文字数";
 
-	HideAtrCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowHideAtr"));
-	SysAtrCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowSystemAtr"));
-	DelUseTrsCheckBox->Hint    = LoadUsrMsg(USTR_OptCmdHint, _T("UseTrash"));
-	ShowRulerCheckBox->Hint    = LoadUsrMsg(USTR_OptCmdHint, _T("ShowRuler"));
-	ShowLnNoCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowLineNo"));
-	LeftMarginEdit->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("SetMargin"));
-	ShowTabCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowTAB"));
-	ShowCrCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowCR"));
-	FoldGroupBox->Hint		   = LoadUsrMsg(USTR_OptCmdHint, _T("SetWidth"));
-	FixedLimitEdit->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("FixedLen"));
-	ShowIconCheckBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowIcon"));
-	ShowByteSizeCheckBox->Hint = LoadUsrMsg(USTR_OptCmdHint, _T("ShowByteSize"));
-	ShowImgPrvCheckBox->Hint   = LoadUsrMsg(USTR_OptCmdHint, _T("ShowPreview"));
-	ShowFilePropCheckBox->Hint = LoadUsrMsg(USTR_OptCmdHint, _T("ShowProperty"));
-	ShowMainMenuCheckBox->Hint = LoadUsrMsg(USTR_OptCmdHint, _T("MenuBar"));
-	ScaleOptComboBox->Hint	   = LoadUsrMsg(USTR_OptCmdHint, _T("SetInterpolation"));
+	HideAtrCheckBox->Hint	   = LoadUsrMsg(USTR_HintOptCmd, _T("ShowHideAtr"));
+	SysAtrCheckBox->Hint	   = LoadUsrMsg(USTR_HintOptCmd, _T("ShowSystemAtr"));
+	DelUseTrsCheckBox->Hint    = LoadUsrMsg(USTR_HintOptCmd, _T("UseTrash"));
+	ShowRulerCheckBox->Hint    = LoadUsrMsg(USTR_HintOptCmd, _T("ShowRuler"));
+	ShowLnNoCheckBox->Hint	   = LoadUsrMsg(USTR_HintOptCmd, _T("ShowLineNo"));
+	LeftMarginEdit->Hint	   = LoadUsrMsg(USTR_HintOptCmd, _T("SetMargin"));
+	ShowTabCheckBox->Hint	   = LoadUsrMsg(USTR_HintOptCmd, _T("ShowTAB"));
+	ShowCrCheckBox->Hint	   = LoadUsrMsg(USTR_HintOptCmd, _T("ShowCR"));
+	FoldGroupBox->Hint		   = LoadUsrMsg(USTR_HintOptCmd, _T("SetWidth"));
+	FixedLimitEdit->Hint	   = LoadUsrMsg(USTR_HintOptCmd, _T("FixedLen"));
+	ShowIconCheckBox->Hint	   = LoadUsrMsg(USTR_HintOptCmd, _T("ShowIcon"));
+	ShowByteSizeCheckBox->Hint = LoadUsrMsg(USTR_HintOptCmd, _T("ShowByteSize"));
+	ShowImgPrvCheckBox->Hint   = LoadUsrMsg(USTR_HintOptCmd, _T("ShowPreview"));
+	ShowFilePropCheckBox->Hint = LoadUsrMsg(USTR_HintOptCmd, _T("ShowProperty"));
+	ShowMainMenuCheckBox->Hint = LoadUsrMsg(USTR_HintOptCmd, _T("MenuBar"));
+	ScaleOptComboBox->Hint	   = LoadUsrMsg(USTR_HintOptCmd, _T("SetInterpolation"));
 
 	//コントロールのタグに、対応する変数のポインタを設定
 	//UnicodeString

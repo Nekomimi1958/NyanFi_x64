@@ -3,11 +3,7 @@
 //  タグ設定/検索														//
 //  フォルダアイコン検索												//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <algorithm>
-#include <memory>
-#include <RegularExpressions.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

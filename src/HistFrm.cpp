@@ -2,9 +2,7 @@
 // NyanFi																//
 //  ヒストグラム表示													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
 #include "Global.h"
 #include "MainFrm.h"
 #include "LoupeFrm.h"

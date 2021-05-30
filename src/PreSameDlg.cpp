@@ -2,7 +2,6 @@
 // NyanFi																//
 //  同名時処理の事前指定ダイアログ										//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
 #include "Global.h"
 #include "PreSameDlg.h"

@@ -2,13 +2,9 @@
 // •¶š—ñ‘€ì															//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <algorithm>
 #include <vector>
-#include <memory>
 #include <math.h>
-#include <System.StrUtils.hpp>
 #include <System.Masks.hpp>
 #include <Vcl.Direct2D.hpp>
 #include "usr_str.h"

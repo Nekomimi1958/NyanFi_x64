@@ -2,11 +2,7 @@
 // NyanFi																//
 //  ファイル情報/項目の集計												//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
-#include <Vcl.Clipbrd.hpp>
 #include "UserFunc.h"
 #include "Global.h"
 #include "MainFrm.h"

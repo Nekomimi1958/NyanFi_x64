@@ -78,10 +78,10 @@
         <SanitizedProjectName>NyanFi</SanitizedProjectName>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1041</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=14.9.5.0;InternalName=NyanFi;LegalCopyright=2019-2021 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=14.9.5.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=14.9.6.0;InternalName=NyanFi;LegalCopyright=2019-2021 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=14.9.6.0;Comments=</VerInfo_Keys>
         <VerInfo_MajorVer>14</VerInfo_MajorVer>
         <VerInfo_MinorVer>9</VerInfo_MinorVer>
-        <VerInfo_Release>5</VerInfo_Release>
+        <VerInfo_Release>6</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <PackageImports>adortl;appanalytics;bcbie;bcbsmp;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CodeSiteExpressPkg;CustomIPTransport;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXMySQLDriver;DBXSqliteDriver;dsnap;dsnapcon;dsnapxml;FireDACADSDriver;FireDACCommonODBC;FireDACMSAccDriver;FireDACMySQLDriver;FireDACPgDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inetdb;inetdbxpress;rtl;svn;Tee;TeeDB;TeeUI;tethering;vcl;vclactnband;vcldb;vcldsnap;vclFireDAC;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
@@ -101,6 +101,7 @@
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <Icon_MainIcon>NyanFi_Icon.ico</Icon_MainIcon>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+        <BCC_PCHName_Clang>NyanFiPCH1.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <BCC_OptimizeForSpeed>false</BCC_OptimizeForSpeed>
@@ -538,6 +539,10 @@
         <CppCompile Include="NyanFi.cpp">
             <BuildOrder>0</BuildOrder>
         </CppCompile>
+        <PCHCompile Include="NyanFiPCH1.h">
+            <BuildOrder>114</BuildOrder>
+            <PCH>true</PCH>
+        </PCHCompile>
         <RcItem Include="NyanFi_Icon.ico">
             <ResourceType>ICON</ResourceType>
             <ResourceId>NYANFI_ICO</ResourceId>
@@ -746,18 +751,18 @@
         <FormResources Include="SrtModDlg.dfm"/>
         <FormResources Include="MaskDlg.dfm"/>
         <FormResources Include="MaskSelDlg.dfm"/>
-        <FormResources Include="MainFrm.dfm"/>
-        <FormResources Include="JsonView.dfm"/>
+        <FormResources Include="MemoFrm.dfm"/>
         <FormResources Include="KeyDlg.dfm"/>
         <FormResources Include="LoupeFrm.dfm"/>
+        <FormResources Include="MainFrm.dfm"/>
         <FormResources Include="OptDlg.dfm"/>
         <FormResources Include="PackDlg.dfm"/>
-        <FormResources Include="MemoFrm.dfm"/>
         <FormResources Include="ModalScr.dfm"/>
         <FormResources Include="NewDlg.dfm"/>
         <FormResources Include="TaskDlg.dfm"/>
         <FormResources Include="XmlView.dfm"/>
         <FormResources Include="UserMdl.dfm"/>
+        <FormResources Include="JsonView.dfm"/>
         <FormResources Include="DebugFrm.dfm"/>
         <FormResources Include="DiffDlg.dfm"/>
         <FormResources Include="DirDlg.dfm"/>
@@ -850,14 +855,14 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\NyanFi.exe" Configuration="Release" Class="ProjectOutput">
-                    <Platform Name="Win64">
-                        <RemoteName>NyanFi.exe</RemoteName>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32260.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32260.dll" Class="DependencyModule">
-                    <Platform Name="Win32">
+                <DeployFile LocalName=".\NyanFi.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>NyanFi.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

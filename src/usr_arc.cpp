@@ -2,12 +2,7 @@
 // アーカイブ処理														//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <algorithm>
-#include <System.StrUtils.hpp>
 #include "usr_str.h"
 #include "usr_file_ex.h"
 #include "usr_arc.h"

@@ -6232,7 +6232,7 @@ object OptionDlg: TOptionDlg
           TabOrder = 1
           OnClick = RefSoundBtnClick
         end
-        object Button18: TButton
+        object TestSndWarnBtn: TButton
           Left = 405
           Top = 17
           Width = 22

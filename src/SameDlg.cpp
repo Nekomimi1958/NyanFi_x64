@@ -2,11 +2,7 @@
 // NyanFi																//
 //  同名ファイルの処理ダイアログ										//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <System.DateUtils.hpp>
-#include <RegularExpressions.hpp>
 #include "Global.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

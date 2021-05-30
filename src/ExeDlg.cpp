@@ -2,9 +2,7 @@
 // NyanFi																//
 //  コマンドラインの実行												//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "ExeDlg.h"

@@ -2,12 +2,8 @@
 // NyanFi																//
 //  インスペクタ														//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
 #include <System.Math.hpp>
-#include <Vcl.Clipbrd.hpp>
 #include "UserFunc.h"
 #include "Global.h"
 #include "InspectFrm.h"

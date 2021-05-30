@@ -2,9 +2,7 @@
 // スウォッチブック・パネル												//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
 #include "usr_str.h"
 #include "usr_file_ex.h"
 #include "usr_file_inf.h"

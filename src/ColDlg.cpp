@@ -2,9 +2,7 @@
 // NyanFi																//
 //  テキストビュアーの配色												//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

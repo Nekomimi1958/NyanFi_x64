@@ -2,9 +2,7 @@
 // NyanFi																//
 //  デバッグ情報														//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "usr_excmd.h"

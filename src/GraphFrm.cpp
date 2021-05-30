@@ -2,10 +2,7 @@
 // NyanFi																//
 //  ƒOƒ‰ƒt•\Ž¦															//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
 #include "UserFunc.h"
 #include "Global.h"
 #include "TxtViewer.h"

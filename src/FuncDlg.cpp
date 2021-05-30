@@ -2,12 +2,7 @@
 // NyanFi																//
 //  関数／ユーザ定義文字列／マーク行一覧								//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <Vcl.Clipbrd.hpp>
-#include <RegularExpressions.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

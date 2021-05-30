@@ -2,12 +2,7 @@
 // NyanFi																//
 //  カラーピッカー														//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <algorithm>
-#include <memory>
-#include <Vcl.Clipbrd.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

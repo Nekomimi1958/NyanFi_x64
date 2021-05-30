@@ -2,11 +2,7 @@
 // NyanFi																//
 //  画像ビュー処理スレッド												//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
-#include <RegularExpressions.hpp>
 #include "usr_wic.h"
 #include "usr_exif.h"
 #include "usr_id3.h"

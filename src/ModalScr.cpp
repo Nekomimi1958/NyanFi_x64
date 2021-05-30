@@ -2,7 +2,6 @@
 // NyanFi																//
 //  モーダル表示効果用スクリーン										//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
 #include "Global.h"
 #include "ModalScr.h"

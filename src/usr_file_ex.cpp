@@ -2,11 +2,8 @@
 // ファイル操作 (260文字以上のパスに対応)								//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
 #include <winioctl.h>
-#include <memory>
 #include "usr_str.h"
 #include "usr_file_ex.h"
 

@@ -2,11 +2,7 @@
 // NyanFi																//
 //  置換確認ダイアログ													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <algorithm>
 #include "UserFunc.h"
 #include "Global.h"
 #include "AskRep.h"

@@ -6,9 +6,7 @@
 #define UsrFileExH
 
 //---------------------------------------------------------------------------
-#include <vcl.h>
 #include <winternl.h>
-#include <System.StrUtils.hpp>
 
 //---------------------------------------------------------------------------
 #define	FileRenameInformation (FILE_INFORMATION_CLASS)10

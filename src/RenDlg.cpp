@@ -2,13 +2,7 @@
 // NyanFi																//
 //  –¼‘O‚Ì•ÏX															//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <algorithm>
-#include <System.DateUtils.hpp>
-#include <RegularExpressions.hpp>
 #include "usr_exif.h"
 #include "usr_id3.h"
 #include "UserFunc.h"

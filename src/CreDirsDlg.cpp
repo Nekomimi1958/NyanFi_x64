@@ -2,10 +2,7 @@
 // NyanFi																//
 //  ディレクトリ一括作成ダイアログ										//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <System.DateUtils.hpp>
 #include "Global.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

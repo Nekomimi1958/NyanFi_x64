@@ -2,10 +2,7 @@
 // NyanFi																//
 //  文字列検索(テキストビュアー)										//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <RegularExpressions.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

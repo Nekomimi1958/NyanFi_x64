@@ -6,9 +6,6 @@
 #define UsrExifH
 
 //---------------------------------------------------------------------------
-#include <vcl.h>
-
-//---------------------------------------------------------------------------
 float CIFF_ev(int v);
 bool CIFF_GetInf(UnicodeString fnam, TStringList *lst);
 

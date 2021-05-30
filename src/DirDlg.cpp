@@ -2,10 +2,7 @@
 // NyanFi																//
 //  登録ディレクトリ/特殊フォルダ一覧/参照								//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

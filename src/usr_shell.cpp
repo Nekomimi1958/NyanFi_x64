@@ -2,14 +2,8 @@
 // Shell ŠÖ˜A															//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
-#include <mmsystem.h>
 #include <utilcls.h>
-#include <System.StrUtils.hpp>
-#include <System.NetEncoding.hpp>
 #include "usr_str.h"
 #include "usr_key.h"
 #include "usr_file_ex.h"

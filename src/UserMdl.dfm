@@ -337,6 +337,10 @@ object UserModule: TUserModule
     object PopRefCmdItem: TMenuItem
       Action = RefCmdNameAction
     end
+    object PopRefSndIdItem: TMenuItem
+      AutoHotkeys = maManual
+      Caption = #12469#12454#12531#12489#35672#21029#23376#12434#21442#29031'(&S)'
+    end
     object PopRefFmtItem: TMenuItem
       Caption = #26360#24335#25991#23383#21015#12434#21442#29031'(&R)'
       object PopDFmt01Item: TMenuItem

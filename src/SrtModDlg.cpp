@@ -2,7 +2,6 @@
 // NyanFi																//
 //  ソートダイアログ													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
 #include "Global.h"
 #include "UserFunc.h"

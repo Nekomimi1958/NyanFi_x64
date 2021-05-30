@@ -2,9 +2,7 @@
 // NyanFi																//
 //  画像変換ダイアログ													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
 #include "Global.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

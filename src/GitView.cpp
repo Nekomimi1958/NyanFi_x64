@@ -2,11 +2,7 @@
 // NyanFi																//
 //  Gitƒrƒ…ƒA[															//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
-#include <System.StrUtils.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

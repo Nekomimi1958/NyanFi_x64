@@ -2,11 +2,7 @@
 // NyanFi																//
 //  ディレクトリ履歴/ スタック											//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <RegularExpressions.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

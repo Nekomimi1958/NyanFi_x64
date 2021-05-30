@@ -2,13 +2,8 @@
 // Exif î•ñ‚Ìˆ—														//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
-#include <mmsystem.h>
 #include <time.h>
-#include <System.StrUtils.hpp>
 #include "usr_str.h"
 #include "usr_file_ex.h"
 #include "usr_exif.h"

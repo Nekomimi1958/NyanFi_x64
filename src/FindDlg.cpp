@@ -2,10 +2,7 @@
 // NyanFi																//
 //  ÉtÉ@ÉCÉãñºåüçı														//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <algorithm>
-#include <System.DateUtils.hpp>
 #include "usr_wic.h"
 #include "usr_xd2tx.h"
 #include "usr_highlight.h"

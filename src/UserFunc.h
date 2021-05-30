@@ -6,9 +6,7 @@
 #define UsrFuncH
 
 //---------------------------------------------------------------------------
-#include <vcl.h>
 #include <shlobj.h>
-#include <System.StrUtils.hpp>
 #include <Vcl.ComCtrls.hpp>
 #include <Vcl.Buttons.hpp>
 #include <Vcl.Grids.hpp>

@@ -2,10 +2,7 @@
 // ステータスバー上のプログレスバー										//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <algorithm>
-#include <math.h>
 #include "usr_str.h"
 #include "usr_spbar.h"
 

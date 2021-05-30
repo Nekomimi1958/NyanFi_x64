@@ -2,14 +2,7 @@
 // NyanFi																//
 //  正規表現チェッカー													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <algorithm>
-#include <System.StrUtils.hpp>
-#include <RegularExpressions.hpp>
-#include <Vcl.Clipbrd.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

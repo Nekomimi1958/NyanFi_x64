@@ -1,12 +1,7 @@
 //----------------------------------------------------------------------//
 // MIGEMO																//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <System.StrUtils.hpp>
-#include <System.IOUtils.hpp>
-#include <RegularExpressions.hpp>
 #include "usr_str.h"
 #include "usr_migemo.h"
 

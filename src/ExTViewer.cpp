@@ -2,11 +2,8 @@
 // NyanFi																//
 //  テキストビュアー(外部ウィンドウ)									//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
 #include <utilcls.h>
-#include <Vcl.Clipbrd.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "usr_xd2tx.h"

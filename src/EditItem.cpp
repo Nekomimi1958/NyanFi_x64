@@ -2,10 +2,7 @@
 // NyanFi																//
 //  設定項目の編集ダイアログ											//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <System.StrUtils.hpp>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

@@ -2,12 +2,7 @@
 // NyanFi																//
 //  CSV/TSVÉåÉRÅ[Éh														//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <algorithm>
-#include <memory>
-#include <Vcl.Clipbrd.hpp>
 #include "UserFunc.h"
 #include "Global.h"
 #include "FileInfDlg.h"

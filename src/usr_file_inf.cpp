@@ -2,16 +2,10 @@
 // 各種フォーマットのファイル情報取得									//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <algorithm>
-#include <memory>
 #include <mmreg.h>
-#include <mmsystem.h>
 #include <imagehlp.h>
 #include <RestartManager.h>
-#include <System.StrUtils.hpp>
 #include "usr_str.h"
 #include "usr_key.h"
 #include "usr_file_ex.h"

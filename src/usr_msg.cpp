@@ -2,11 +2,7 @@
 // メッセージ															//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <System.StrUtils.hpp>
 #include "usr_str.h"
 #include "usr_msg.h"
 
@@ -91,7 +87,8 @@ UnicodeString LoadUsrMsg(int id, UnicodeString s)
 		"1069=Gitの作業ディレクトリではありません。\n"			//USTR_NotRepository
 		"1070=設定パネルを隠す\n"								//USTR_HideOptPanel
 		"1071=設定パネルを表示\n"								//USTR_ShowOptPanel
-		"1072=%s コマンドで変更可能\n"							//USTR_OptCmdHint
+		"1072=%s コマンドで変更可能\n"							//USTR_HintOptCmd
+		"1073=サウンド識別子でも可\n"							//USTR_HintSndID
 
 		"1100=選択項目\n"										//USTR_SelectedItem
 		"1101=一覧\n"											//USTR_List

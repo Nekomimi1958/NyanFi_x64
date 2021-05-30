@@ -2,13 +2,7 @@
 // NyanFi																//
 //  タスク処理スレッド													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
-#include <mmsystem.h>
-#include <System.DateUtils.hpp>
-#include <Vcl.Clipbrd.hpp>
 #include "usr_file_ex.h"
 #include "usr_file_inf.h"
 #include "usr_wic.h"

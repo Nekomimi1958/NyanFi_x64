@@ -6,10 +6,6 @@
 #define UsrKeyH
 
 //---------------------------------------------------------------------------
-#include <vcl.h>
-#include <tchar.h>
-
-//---------------------------------------------------------------------------
 #define ESC_INTERVAL	256
 
 extern UnicodeString KeyStr_Shift;

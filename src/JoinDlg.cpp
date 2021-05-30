@@ -2,7 +2,6 @@
 // NyanFi																//
 //  テキストファイルの結合ダイアログ									//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"

@@ -2,8 +2,7 @@
 // メモリマップドファイルクラス											//
 //																		//
 //----------------------------------------------------------------------//
-#include <memory>
-#include <algorithm>
+#pragma hdrstop
 #include "usr_file_ex.h"
 #include "usr_mmfile.h"
 

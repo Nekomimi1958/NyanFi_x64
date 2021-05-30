@@ -2,7 +2,6 @@
 // NyanFi																//
 //  UNCパスの存在チェック・スレッド										//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
 #include "check_thread.h"
 

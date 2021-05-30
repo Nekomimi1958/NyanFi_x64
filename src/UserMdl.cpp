@@ -3,9 +3,8 @@
 //																		//
 //----------------------------------------------------------------------//
 #pragma hdrstop
-#include <Vcl.Clipbrd.hpp>
+#include <System.Win.Registry.hpp>
 #include <Vcl.FileCtrl.hpp>
-#include <RegularExpressions.hpp>
 #include "usr_msg.h"
 #include "usr_file_ex.h"
 #include "usr_swatch.h"
@@ -766,8 +765,10 @@ void __fastcall TUserModule::RefCurDirActionUpdate(TObject *Sender)
 void __fastcall TUserModule::EditPopupMenuCPopup(TObject *Sender)
 {
 	TComboBox *cp = GetActiveComboBox();
-	RegExpItem->Visible = (cp && (cp->Tag & CBTAG_RGEX_V));
-	RegExpItem->Enabled = (cp && (cp->Tag & CBTAG_RGEX_E));
+	int tag = (cp && !contained_wd_i(_T("OptionDlg|GrepExOptDlg"), Screen->ActiveForm->Name))? cp->Tag : 0;
+
+	RegExpItem->Visible = (tag & CBTAG_RGEX_V);
+	RegExpItem->Enabled = (tag & CBTAG_RGEX_E);
 
 	EditItemItem->Visible = (cp && (StartsStr(". で区切って", cp->Hint) || StartsStr("; で区切って", cp->Hint)));
 	EditItemItem->Enabled = EditItemItem->Visible;
@@ -794,7 +795,7 @@ void __fastcall TUserModule::EditPopupMenuCPopup(TObject *Sender)
 void __fastcall TUserModule::EditPopupMenuEPopup(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;
-	int tag = (class_is_LabeledEdit(wp) && !USAME_TS(Screen->ActiveForm->Name, "OptionDlg"))? wp->Tag : 0;
+	int tag = (class_is_LabeledEdit(wp) && !contained_wd_i(_T("OptionDlg|GrepExOptDlg"), Screen->ActiveForm->Name))? wp->Tag : 0;
 
 	PopRefFmtItem->Visible	 = (tag & EDTAG_DST_FMT);
 	PopRefFmtItem->Enabled	 = PopRefFmtItem->Visible;
@@ -809,6 +810,32 @@ void __fastcall TUserModule::EditPopupMenuEPopup(TObject *Sender)
 	PopEditItemItem->Visible = wp && (StartsStr(". で区切って", wp->Hint) || StartsStr("; で区切って", wp->Hint));
 	PopEditItemItem->Enabled = PopEditItemItem->Visible;
 
+	//サウンド識別子
+	PopRefSndIdItem->Visible = wp && ContainsStr(wp->Hint, "サウンド識別子");
+	if (PopRefSndIdItem->Visible) {
+		PopRefSndIdItem->Clear();
+		std::unique_ptr<TRegistry> reg(new TRegistry());
+		reg->RootKey = HKEY_CURRENT_USER;
+		if (reg->OpenKeyReadOnly("AppEvents\\Schemes\\Apps\\.Default")) {
+			std::unique_ptr<TStringList> lst(new TStringList());
+			reg->GetKeyNames(lst.get());
+			reg->CloseKey();
+			for (int i=0; i<lst->Count; i++) {
+				UnicodeString id  = lst->Strings[i];
+				UnicodeString key = "AppEvents\\Schemes\\Apps\\.Default\\" + id + "\\.Current";
+				if (reg->OpenKeyReadOnly(key)) {
+					if (!reg->ReadString(EmptyStr).IsEmpty()) {
+						TMenuItem *mp = new TMenuItem(PopRefSndIdItem);
+						mp->Caption = id;
+						mp->OnClick = PopSndIdItemClick;
+						PopRefSndIdItem->Add(mp);
+					}
+					reg->CloseKey();
+				}
+			}
+		}
+	}
+
 	reduction_MenuLine(EditPopupMenuE->Items);
 }
 
@@ -820,6 +847,14 @@ void __fastcall TUserModule::CmdParamItemClick(TObject *Sender)
 	UnicodeString lbuf = get_tkn(((TMenuItem*)Sender)->Caption, _T(" : "));
 	TComboBox *cp = GetActiveComboBox();
 	if (cp) cp->SelText = lbuf;
+}
+//---------------------------------------------------------------------------
+//サウンド識別子の参照
+//---------------------------------------------------------------------------
+void __fastcall TUserModule::PopSndIdItemClick(TObject *Sender)
+{
+	TCustomEdit *ep = GetActiveCustomEdit();
+	if (ep) ep->Text = ((TMenuItem*)Sender)->Caption;
 }
 //---------------------------------------------------------------------------
 //正規表現の参照

@@ -2,10 +2,7 @@
 // INIファイル処理クラス												//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <System.StrUtils.hpp>
 #include "usr_str.h"
 #include "usr_file_ex.h"
 #include "UIniFile.h"

@@ -2,9 +2,7 @@
 // NyanFi																//
 //  パーミッション設定													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <RegularExpressions.hpp>
 #include "UserFunc.h"
 #include "Global.h"
 #include "ChmodDlg.h"

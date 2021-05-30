@@ -1,0 +1,11 @@
+#include <vcl.h>
+#include <tchar.h>
+#include <mmsystem.h>
+#include <memory>
+#include <algorithm>
+#include <RegularExpressions.hpp>
+#include <System.StrUtils.hpp>
+#include <System.DateUtils.hpp>
+#include <System.IOUtils.hpp>
+#include <System.NetEncoding.hpp>
+#include <Vcl.Clipbrd.hpp>

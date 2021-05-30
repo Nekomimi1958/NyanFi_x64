@@ -6,7 +6,6 @@
 #define UsrTagManagerH
 
 //---------------------------------------------------------------------------
-#include <vcl.h>
 #include <Vcl.CheckLst.hpp>
 #include "usr_str.h"
 

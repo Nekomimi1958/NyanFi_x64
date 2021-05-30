@@ -2,10 +2,7 @@
 // NyanFi																//
 //  Edit コマンド用メモボックス											//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <System.NetEncoding.hpp>
-#include <Vcl.Clipbrd.hpp>
 #include "UserMdl.h"
 #include "Global.h"
 #include "MemoFrm.h"

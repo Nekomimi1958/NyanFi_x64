@@ -2,10 +2,7 @@
 // NyanFi																//
 //  ƒhƒ‰ƒCƒuˆê——														//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
 #include <winioctl.h>
 #include "UserFunc.h"
 #include "Global.h"

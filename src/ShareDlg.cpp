@@ -2,12 +2,7 @@
 // NyanFi																//
 //  共有フォルダ/サブディレクトリ選択/ライブラリ一覧					//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <memory>
-#include <algorithm>
-#include <Vcl.Clipbrd.hpp>
 #include "UserFunc.h"
 #include "Global.h"
 #include "MainFrm.h"

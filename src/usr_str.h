@@ -6,9 +6,6 @@
 #define UsrStrH
 
 //---------------------------------------------------------------------------
-#include <vcl.h>
-#include <tchar.h>
-#include <RegularExpressions.hpp>
 #include <System.JSON.hpp>
 
 //---------------------------------------------------------------------------

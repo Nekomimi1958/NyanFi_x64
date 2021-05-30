@@ -2,10 +2,7 @@
 // ç\ï∂ã≠í≤ï\é¶															//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <System.StrUtils.hpp>
 #include "usr_str.h"
 #include "usr_file_ex.h"
 #include "usr_file_inf.h"

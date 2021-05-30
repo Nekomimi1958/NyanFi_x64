@@ -2,23 +2,12 @@
 // îƒópã§í ä÷êî															//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
 #include <winioctl.h>
 #include <wininet.h>
 #include <setupapi.h>
 #include <cfgmgr32.h>
-#include <math.h>
-#include <memory>
-#include <algorithm>
-#include <System.StrUtils.hpp>
-#include <System.IOUtils.hpp>
-#include <System.DateUtils.hpp>
-#include <System.NetEncoding.hpp>
 #include <Vcl.FileCtrl.hpp>
-#include <Vcl.Clipbrd.hpp>
-#include <RegularExpressions.hpp>
 #include "usr_shell.h"
 #include "UserFunc.h"
 

@@ -2,10 +2,7 @@
 // NyanFi																//
 //  ドライブ使用率推移													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
 #include <System.Math.hpp>
 #include "UserFunc.h"
 #include "Global.h"

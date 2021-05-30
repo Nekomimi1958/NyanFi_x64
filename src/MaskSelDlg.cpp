@@ -2,7 +2,6 @@
 // NyanFi																//
 //  マスク/マッチ選択ダイアログ											//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"

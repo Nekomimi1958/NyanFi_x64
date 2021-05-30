@@ -2,12 +2,7 @@
 // NyanFi																//
 //  グローバル(ダークモード対応)										//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <algorithm>
-#include <memory>
-#include <System.StrUtils.hpp>
 #include "usr_msg.h"
 #include "GlobalDark.h"
 

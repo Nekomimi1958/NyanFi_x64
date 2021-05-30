@@ -2,9 +2,7 @@
 // NyanFi																//
 //  ディレクトリの比較ダイアログ										//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
 #include "Global.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

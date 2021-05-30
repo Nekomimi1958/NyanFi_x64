@@ -2,9 +2,7 @@
 // NyanFi																//
 //  .nyanfi ƒtƒ@ƒCƒ‹‚Ìİ’è												//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"
@@ -29,9 +27,9 @@ void __fastcall TDotNyanDlg::FormCreate(TObject *Sender)
 	PathMaskComboBox->Tag = CBTAG_HISTORY;
 	GrepMaskComboBox->Tag = CBTAG_HISTORY;
 
-	UnicodeString hntstr = LoadUsrMsg(USTR_HintMltSepSC);
-	PathMaskComboBox->Hint = hntstr;
-	GrepMaskComboBox->Hint = hntstr;
+	PathMaskComboBox->Hint = LoadUsrMsg(USTR_HintMltSepSC);
+	GrepMaskComboBox->Hint = LoadUsrMsg(USTR_HintMltSepSC);
+	SoundEdit->Hint 	   = LoadUsrMsg(USTR_HintSndID);
 
 	ColBufList	= new TStringList();
 	InheritList = new TStringList();

@@ -2,12 +2,7 @@
 // HTML→テキスト変換処理クラス											//
 // Markdown記法にも対応													//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <tchar.h>
-#include <algorithm>
-#include <memory>
-#include <System.StrUtils.hpp>
 #include "usr_str.h"
 #include "htmconv.h"
 

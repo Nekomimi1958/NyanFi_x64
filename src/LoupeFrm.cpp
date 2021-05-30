@@ -2,9 +2,7 @@
 // NyanFi																//
 //  ÉãÅ[Éy																//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
 #include "usr_wic.h"
 #include "Global.h"
 #include "MainFrm.h"

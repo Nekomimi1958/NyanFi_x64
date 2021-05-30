@@ -2,11 +2,7 @@
 // タグ管理ユニット														//
 //																		//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
-#include <memory>
-#include <algorithm>
-#include <System.StrUtils.hpp>
 #include "usr_file_ex.h"
 #include "usr_tag.h"
 

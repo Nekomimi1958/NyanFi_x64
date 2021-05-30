@@ -2,7 +2,6 @@
 // NyanFi																//
 //  アイコン取得スレッド												//
 //----------------------------------------------------------------------//
-#include <vcl.h>
 #pragma hdrstop
 #include "Global.h"
 #include "AppDlg.h"
