@@ -2,7 +2,6 @@
 // NyanFi																//
 //  ファイル情報/項目の集計												//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "Global.h"
 #include "MainFrm.h"

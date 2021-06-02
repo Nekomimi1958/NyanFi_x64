@@ -3,10 +3,6 @@
 //																		//
 // ！スレッド毎に CoInitialize/CoUninitialize が必要					//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <utilcls.h>
-#include <VersionHelpers.h>
-#include <System.Win.Registry.hpp>
 #include "usr_file_ex.h"
 #include "usr_wic.h"
 

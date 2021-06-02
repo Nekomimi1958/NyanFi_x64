@@ -2,7 +2,6 @@
 // NyanFi																//
 //  .nyanfi ファイルの設定												//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"
@@ -173,7 +172,7 @@ void __fastcall TDotNyanDlg::SetColorOption(TStringList *lst)
 	for (int i=0; i<n_lst.Length; i++) {
 		UnicodeString lbuf = lst->Values[n_lst[i]];
 		ColBufList->Values[n_lst[i]] = lbuf;
-		if ((TColor)lbuf.ToIntDef(clNone)!=clNone && idx==-1) idx = i;
+		if ((TColor)lbuf.ToIntDef(col_None)!=col_None && idx==-1) idx = i;
 	}
 
 	ColorComboBox->ItemIndex = idx;
@@ -238,8 +237,8 @@ void __fastcall TDotNyanDlg::ColorComboBoxDrawItem(TWinControl *Control, int Ind
 
 	//カラー
 	TRect rc = Rect;  rc.Right = rc.Left + ScaledIntX(30);
-	cv->Brush->Color = (TColor)ColBufList->Values[col_nam].ToIntDef(clNone);
-	if (cv->Brush->Color!=clNone) {
+	cv->Brush->Color = (TColor)ColBufList->Values[col_nam].ToIntDef(col_None);
+	if (cv->Brush->Color!=col_None) {
 		cv->FillRect(rc);
 	}
 	else {
@@ -275,7 +274,7 @@ void __fastcall TDotNyanDlg::SpuitImageMouseDown(TObject *Sender, TMouseButton B
 	SwatchPanel->Visible = true;
 	SwatchPanel->BringToFront();
 
-	TColor col_def = (TColor)ColBufList->Values[cp->Items->Names[cp->ItemIndex]].ToIntDef(clNone);
+	TColor col_def = (TColor)ColBufList->Values[cp->Items->Names[cp->ItemIndex]].ToIntDef(col_None);
 	UserModule->BeginSpuit(SpuitPanel, SpuitImage, col_def);
 }
 //---------------------------------------------------------------------------
@@ -300,7 +299,7 @@ void __fastcall TDotNyanDlg::DisableColActionExecute(TObject *Sender)
 {
 	TComboBox *cp = ColorComboBox;
 	if (cp->ItemIndex!=-1) {
-		ColBufList->Values[cp->Items->Names[cp->ItemIndex]] = IntToStr(clNone);
+		ColBufList->Values[cp->Items->Names[cp->ItemIndex]] = IntToStr(col_None);
 		cp->Invalidate();
 	}
 }
@@ -374,7 +373,7 @@ void __fastcall TDotNyanDlg::CreNyanActionExecute(TObject *Sender)
 	if (HandledCheckBox->Checked)			lbuf += "Handled=1\r\n";
 
 	for (int i=0; i<ColBufList->Count; i++)
-		if ((TColor)ColBufList->ValueFromIndex[i].ToIntDef(clNone)!=clNone)
+		if ((TColor)ColBufList->ValueFromIndex[i].ToIntDef(col_None)!=col_None)
 			lbuf.cat_sprintf(_T("%s\r\n"), ColBufList->Strings[i].c_str());
 
 	std::unique_ptr<TStringList> cfg_lst(new TStringList());

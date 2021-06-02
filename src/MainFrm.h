@@ -18,7 +18,6 @@
 #include <Vcl.StdActns.hpp>
 #include <Vcl.AppEvnts.hpp>
 #include <Vcl.Menus.hpp>
-#include <Vcl.FileCtrl.hpp>
 #include <Vcl.Grids.hpp>
 #include <Vcl.Buttons.hpp>
 #include <Vcl.Dialogs.hpp>
@@ -238,11 +237,13 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *GrepOmitTopAction;
 	TAction *GrepOpenUrlAction;
 	TAction *GrepOptionAction;
+	TAction *GrepOrgOrderAction;
 	TAction *GrepReleaseAction;
 	TAction *GrepSaveAsAction;
 	TAction *GrepSelResAction;
 	TAction *GrepShowItemNoAction;
 	TAction *GrepShowSubDirAction;
+	TAction *GrepSortLineAction;
 	TAction *GrepStartAction;
 	TAction *GrepTrimTopAction;
 	TAction *HelpContentsAction;
@@ -677,11 +678,13 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *GrepItem;
 	TMenuItem *GrepOmitTopItem;
 	TMenuItem *GrepOptionItem;
+	TMenuItem *GrepOrgOrderItem;
 	TMenuItem *GrepReleaseItem;
 	TMenuItem *GrepSaveAsItem;
 	TMenuItem *GrepSelResItem;
 	TMenuItem *GrepShowItemNoItem;
 	TMenuItem *GrepShowSubDirItem;
+	TMenuItem *GrepSortLineItem;
 	TMenuItem *GrepTrimTopItem;
 	TMenuItem *HelpContentsItem;
 	TMenuItem *HelpHistoryItem;
@@ -733,6 +736,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Pop_g_2;
 	TMenuItem *Pop_g_3;
 	TMenuItem *Pop_g_4;
+	TMenuItem *Pop_g_5;
 	TMenuItem *PopAddTabItem;
 	TMenuItem *PopClrLogItem;
 	TMenuItem *PopCopyFileInfoItm;
@@ -755,9 +759,11 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *PopGrepLineCopyItem;
 	TMenuItem *PopGrepOmitItem;
 	TMenuItem *PopGrepOpenUrlItem;
+	TMenuItem *PopGrepOrgOrderItem;
 	TMenuItem *PopGrepReleaseItem;
 	TMenuItem *PopGrepSaveAsItem;
 	TMenuItem *PopGrepSelResItem;
+	TMenuItem *PopGrepSortLineItem;
 	TMenuItem *PopGrepSubDirItem;
 	TMenuItem *PopGrepTrimTopItem;
 	TMenuItem *PopLoadTabGroupItem;
@@ -801,6 +807,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_e_4;
 	TMenuItem *Sep_e_5;
 	TMenuItem *Sep_e_6;
+	TMenuItem *Sep_e_7;
 	TMenuItem *Sep_f_1;
 	TMenuItem *Sep_f_2;
 	TMenuItem *Sep_f_3;
@@ -1874,6 +1881,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SimilarImageActionExecute(TObject *Sender);
 	void __fastcall JsonViewerActionExecute(TObject *Sender);
 	void __fastcall SelSameDirActionExecute(TObject *Sender);
+	void __fastcall GrepSortLineActionExecute(TObject *Sender);
+	void __fastcall GrepSortLineActionUpdate(TObject *Sender);
+	void __fastcall GrepOrgOrderActionExecute(TObject *Sender);
+	void __fastcall GrepOrgOrderActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -1973,6 +1984,7 @@ private:	// ユーザー宣言
 
 	bool GrepCaseSenstive;				//大小文字を区別
 	bool GrepFiltered;					//結果絞り込み中
+	bool GrepLnSorted;					//行内容でソート中
 	bool GrepWorkList;					//対象がワークリスト
 
 	bool fromViewer;					//テキストビュアーから

@@ -2,7 +2,6 @@
 // NyanFi																//
 //  重複ファイルの検索ダイアログ										//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "Global.h"
 #include "DuplDlg.h"

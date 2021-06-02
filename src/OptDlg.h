@@ -81,7 +81,7 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *AsoChgBtn;
 	TButton *AsoDelBtn;
 	TButton *AsoRefBtn;
-	TButton *Button18;
+	TButton *TestSndWarnBtn;
 	TButton *CanButton;
 	TButton *ChgColBtn;
 	TButton *ChgDrvBtn;

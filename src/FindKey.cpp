@@ -2,7 +2,6 @@
 // NyanFi																//
 //  ÉLÅ[åüçı															//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_key.h"
 #include "Global.h"
 #include "FindKey.h"

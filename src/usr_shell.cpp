@@ -2,8 +2,6 @@
 // Shell ŠÖ˜A															//
 //																		//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <utilcls.h>
 #include "usr_str.h"
 #include "usr_key.h"
 #include "usr_file_ex.h"

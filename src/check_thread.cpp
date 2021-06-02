@@ -2,7 +2,6 @@
 // NyanFi																//
 //  UNCパスの存在チェック・スレッド										//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "check_thread.h"
 
 #pragma package(smart_init)

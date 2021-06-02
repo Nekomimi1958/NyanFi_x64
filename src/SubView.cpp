@@ -2,8 +2,6 @@
 // NyanFi																//
 //  サブビュアー														//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <Vcl.Imaging.GIFImg.hpp>
 #include "usr_wic.h"
 #include "usr_id3.h"
 #include "Global.h"

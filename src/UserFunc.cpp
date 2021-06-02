@@ -2,12 +2,9 @@
 // îƒópã§í ä÷êî															//
 //																		//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <winioctl.h>
 #include <wininet.h>
 #include <setupapi.h>
 #include <cfgmgr32.h>
-#include <Vcl.FileCtrl.hpp>
 #include "usr_shell.h"
 #include "UserFunc.h"
 
@@ -527,7 +524,7 @@ void draw_Separator(
 	int x0 = rc.Left  + 4;
 	int x1 = rc.Right - 4;
 
-	double v  = GetLuminance((bg==clNone)? cv->Brush->Color : bg);
+	double v  = GetLuminance((bg==Graphics::clNone)? cv->Brush->Color : bg);
 	TColor c0 = TColor((v>0.5)? RGB(0x77, 0x77, 0x77) : RGB(0x33, 0x33, 0x33));	//***
 	TColor c1 = TColor((v>0.5)? RGB(0xdd, 0xdd, 0xdd) : RGB(0x99, 0x99, 0x99));	//***
 
@@ -614,7 +611,7 @@ TColor RatioCol(TColor col, float rt)
 //---------------------------------------------------------------------------
 TColor GrayCol(TColor col)
 {
-	if (col==clNone) col = clBlack;
+	if (col==Graphics::clNone) col = clBlack;
 	BYTE v = (BYTE)(GetLuminance(col) * 255);
 	return TColor(RGB(v, v, v));
 }
@@ -751,8 +748,8 @@ TColor Mix2Colors(TColor col1, TColor col2)
 //---------------------------------------------------------------------------
 void str_to_Color(TColor &col, UnicodeString s)
 {
-	TColor c = (TColor)s.ToIntDef((int)clNone);
-	if (c!=clNone) col = c;
+	TColor c = (TColor)s.ToIntDef(Graphics::clNone);
+	if (c!=Graphics::clNone) col = c;
 }
 
 //---------------------------------------------------------------------------

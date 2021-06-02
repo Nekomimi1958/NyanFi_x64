@@ -2,7 +2,6 @@
 // NyanFi																//
 //  JSONビュアー														//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"
@@ -267,7 +266,7 @@ void __fastcall TJsonViewer::JsonTreeViewCustomDrawItem(TCustomTreeView *Sender,
 	tmp_cv->Brush->Color = Node->Selected? col_selItem : col_bgList;
 	tmp_cv->FillRect(tmp_rc);
 
-	bool is_selfg = (Node->Selected && col_fgSelItem!=clNone);
+	bool is_selfg = (Node->Selected && col_fgSelItem!=col_None);
 
 	//エラー
 	if ((*(UnicodeString*)Node->Data).IsEmpty()) {

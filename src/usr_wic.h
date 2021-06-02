@@ -6,9 +6,6 @@
 #define UserWicH
 
 //---------------------------------------------------------------------------
-#include <shlobj.h>
-
-//---------------------------------------------------------------------------
 #define WICIMG_FRAME		0
 #define WICIMG_PREVIEW		1
 #define WICIMG_THUMBNAIL	2

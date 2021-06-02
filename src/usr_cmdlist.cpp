@@ -2,7 +2,6 @@
 //ƒRƒ}ƒ“ƒhˆê——															//
 //																		//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_file_ex.h"
 #include "usr_tag.h"
 #include "usr_cmdlist.h"

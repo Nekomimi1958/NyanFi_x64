@@ -2,7 +2,6 @@
 // NyanFi																//
 //  ƒOƒ‰ƒt•\Ž¦															//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "Global.h"
 #include "TxtViewer.h"

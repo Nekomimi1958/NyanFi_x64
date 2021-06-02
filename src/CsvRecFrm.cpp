@@ -2,7 +2,6 @@
 // NyanFi																//
 //  CSV/TSVÉåÉRÅ[Éh														//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "Global.h"
 #include "FileInfDlg.h"

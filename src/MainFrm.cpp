@@ -2,14 +2,7 @@
 // 2画面ファイラー NyanFi												//
 //  メインフォーム														//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <math.h>
-#include <shlobj.h>
-#include <VersionHelpers.h>
 #include <System.WideStrUtils.hpp>
-#include <System.Zip.hpp>
-#include <Vcl.Imaging.GIFImg.hpp>
-#include <Vcl.Direct2D.hpp>
 #include "UserMdl.h"
 #include "usr_file_ex.h"
 #include "usr_wic.h"
@@ -28922,6 +28915,7 @@ void __fastcall TNyanFiForm::PrepareGrep()
 {
 	FindBusy	 = true;
 	GrepFiltered = false;
+	GrepLnSorted = false;
 
 	SttPrgBar->Begin(_T("準備中..."));
 	GrepResultList->Clear();
@@ -29160,7 +29154,8 @@ void __fastcall TNyanFiForm::GrepFindComboBoxKeyDown(TObject *Sender, WORD &Key,
 		ResultListBox->SetFocus();
 	else if (SameText(KeyStr, KeyStr_Filter))
 		GrepFilterEdit->SetFocus();
-	else return;
+	else
+		return;
 
 	Key = 0;
 }
@@ -29263,13 +29258,12 @@ void __fastcall TNyanFiForm::ResultListBoxDrawItem(TWinControl *Control, int Ind
 	//項目番号
 	if (GrepShowItemNo) {
 		int idx = Index + 1;
-		if (GrepFileItemNo) {	//ファイル単位で先頭行のみに表示
-			idx  = (int)lp->Items->Objects[Index];
+		if (GrepFileItemNo && !GrepLnSorted) {	//ファイル単位で先頭行のみに表示
+			idx = (int)lp->Items->Objects[Index];
 			int idx0 = (Index>0)? (int)lp->Items->Objects[Index - 1] : -1;
 			if ((int)lp->Items->Objects[Index] == idx0) idx = 0;
 		}
 		LineNoOut(tmp_cv, tmp_rc, idx);
-
 		tmp_cv->Brush->Color = col_bgList;
 		dx = tmp_rc.Left;
 	}
@@ -29769,28 +29763,30 @@ void __fastcall TNyanFiForm::GrepExtractCore(
 	UnicodeString swd = inputbox_ex(msg.c_str(), _T("キーワード"), EmptyStr);
 	if (!swd.IsEmpty()) {
 		cursor_HourGlass();
+		TListBox *lp = ResultListBox;
 		int idx = 0;
-		while (idx<ResultListBox->Count) {
-			if (find_mlt(swd, ResultListBox->Items->Strings[idx], !except, !except))
-				ResultListBox->Items->Delete(idx);
-			else idx++;
+		while (idx<lp->Count) {
+			UnicodeString lbuf = lp->Items->Strings[idx];
+			if (!NextLineCheckBox->Checked) lbuf = get_tkn(lbuf, '\n');
+			if (find_mlt(swd, lbuf, !except, !except))
+				lp->Items->Delete(idx);
+			else
+				idx++;
 		}
-
-		set_ListBox_ItemNo(ResultListBox);
-
+		set_ListBox_ItemNo(lp);
 		ResultScrPanel->UpdateKnob();
 		cursor_Default();
 
-		if (ResultListBox->Count>0) {
-			ResultListBox->ItemIndex = 0;
-			ResultListBox->SetFocus();
-			ResultListBoxClick(ResultListBox);
+		if (lp->Count>0) {
+			lp->ItemIndex = 0;
+			lp->SetFocus();
+			ResultListBoxClick(lp);
 		}
 		else {
 			SttBarWarn(_T("絞り込んだ項目がありません。"));
 		}
 
-		SttPrgBar->End(msg.sprintf(_T("絞り込み (%u/%u)"), ResultListBox->Count, GrepResultList->Count));
+		SttPrgBar->End(msg.sprintf(_T("絞り込み (%u/%u)"), lp->Count, GrepResultList->Count));
 		GrepFiltered = true;
 	}
 }
@@ -29822,14 +29818,16 @@ void __fastcall TNyanFiForm::GrepResultActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GrepReleaseActionExecute(TObject *Sender)
 {
-	ResultListBox->Items->Assign(GrepResultList);
-	set_ListBox_ItemNo(ResultListBox);
-
-	ResultListBox->ItemIndex = 0;
+	TListBox *lp = ResultListBox;
+	lp->Items->Assign(GrepResultList);
+	set_ListBox_ItemNo(lp);
+	lp->ItemIndex = 0;
 	ResultScrPanel->UpdateKnob();
-	ResultListBox->SetFocus();
-	ResultListBoxClick(ResultListBox);
+	lp->SetFocus();
+	ResultListBoxClick(lp);
 	GrepFiltered = false;
+	GrepLnSorted = false;
+	GrepFilterEdit->Text = EmptyStr;
 	SttPrgBar->End(GrepResultMsg);
 }
 //---------------------------------------------------------------------------
@@ -29845,7 +29843,7 @@ void __fastcall TNyanFiForm::GrepReleaseActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::GrepConfirmActionExecute(TObject *Sender)
 {
 	GrepResultList->Assign(ResultListBox->Items);
-	GrepFiltered = false;
+	GrepFiltered  = false;
 	GrepResultMsg = get_tkn(GrepResultMsg, ' ').cat_sprintf(_T(" %u行発見*"), GrepResultList->Count);
 	SttPrgBar->End(GrepResultMsg);
 }
@@ -29855,6 +29853,70 @@ void __fastcall TNyanFiForm::GrepConfirmActionUpdate(TObject *Sender)
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = ScrMode==SCMD_GREP;
 	ap->Enabled = ap->Visible && GrepFiltered;
+}
+
+//---------------------------------------------------------------------------
+//行内容でソート
+//---------------------------------------------------------------------------
+int __fastcall comp_GrepLine(TStringList *List, int Index1, int Index2)
+{
+	UnicodeString t1 = get_tkn(List->Strings[Index1], '\n');
+	UnicodeString t2 = get_tkn(List->Strings[Index2], '\n');
+	UnicodeString p1 = split_pre_tab(t1);
+	UnicodeString p2 = split_pre_tab(t2);
+	UnicodeString n1 = split_pre_tab(t1);
+	UnicodeString n2 = split_pre_tab(t2);
+
+	int res = StrCmpLogicalW(t1.c_str(), t2.c_str());			//行内容
+	if (res==0) res = StrCmpLogicalW(p1.c_str(), p2.c_str());	//パス
+	if (res==0) res = StrCmpLogicalW(n1.c_str(), n2.c_str());	//行番号
+	return res;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepSortLineActionExecute(TObject *Sender)
+{
+	cursor_HourGlass();
+	std::unique_ptr<TStringList> r_lst(new TStringList());
+	r_lst->Assign(ResultListBox->Items);
+	r_lst->CustomSort(comp_GrepLine);
+	GrepLnSorted = true;
+	ResultListBox->Items->Assign(r_lst.get());
+	ResultScrPanel->UpdateKnob();
+	cursor_Default();
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepSortLineActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = ScrMode==SCMD_GREP;
+	ap->Enabled = ap->Visible && !FindBusy && ResultListBox->Count>0 && !GrepLnSorted;
+}
+//---------------------------------------------------------------------------
+//ソート/絞り込み解除
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepOrgOrderActionExecute(TObject *Sender)
+{
+	if (GrepFiltered) {
+		GrepReleaseAction->Execute();
+	}
+	else {
+		cursor_HourGlass();
+		std::unique_ptr<TStringList> r_lst(new TStringList());
+		r_lst->Assign(ResultListBox->Items);
+		r_lst->CustomSort(comp_ObjectsOrder);
+		GrepLnSorted = false;
+		ResultListBox->Items->Assign(r_lst.get());
+		ResultScrPanel->UpdateKnob();
+		cursor_Default();
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepOrgOrderActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = ScrMode==SCMD_GREP;
+	ap->Enabled = ap->Visible && !FindBusy && ResultListBox->Count>0 && GrepLnSorted;
+	ap->Caption = (ap->Enabled && GrepFiltered)? "ソート/絞り込み解除" : "ソート解除";
 }
 
 //---------------------------------------------------------------------------
@@ -30074,6 +30136,8 @@ void __fastcall TNyanFiForm::GrepAdjNextLnActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::GrepFilterEditChange(TObject *Sender)
 {
 	if (GrepResultList->Count==0) return;
+
+	GrepLnSorted = false;
 
 	if (!GrepFilterEdit->Text.IsEmpty()
 		&& (!MigemoCheckBox->Checked || (MigemoCheckBox->Checked && GrepFilterEdit->Text.Length()>=IncSeaMigemoMin)))
@@ -30803,11 +30867,12 @@ bool __fastcall TNyanFiForm::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 			bool is_prev = USAME_TI(cmd, "PrevFile");
 			//Grep検索結果リスト
 			if (fromGrep) {
-				if (ResultListBox->Count==0) Abort();
-				int idx = is_prev? ResultListBox->ItemIndex - 1 : ResultListBox->ItemIndex + 1;
-				if (idx<0) idx = ResultListBox->Count - 1; else if (idx>=ResultListBox->Count) idx = 0;
-				ResultListBox->ItemIndex = idx;
-				UnicodeString lbuf = ResultListBox->Items->Strings[idx];
+				TListBox *lp_r = ResultListBox;
+				if (lp_r->Count==0) Abort();
+				int idx = is_prev? lp_r->ItemIndex - 1 : lp_r->ItemIndex + 1;
+				if (idx<0) idx = lp_r->Count - 1; else if (idx>=lp_r->Count) idx = 0;
+				lp_r->ItemIndex = idx;
+				UnicodeString lbuf = lp_r->Items->Strings[idx];
 				UnicodeString fnam = split_pre_tab(lbuf);
 				int			   lno = get_pre_tab(lbuf).ToIntDef(0);
 				//同ファイル内移動
@@ -31123,22 +31188,24 @@ void __fastcall TNyanFiForm::DirectTagJumpCore(
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ViewPopupMenuPopup(TObject *Sender)
 {
-	SortItem->Visible = ScrMode==SCMD_TVIEW && TxtViewer->isText;
+	SortItem->Visible	= ScrMode==SCMD_TVIEW && TxtViewer->isText;
 
 	//列幅の最小化
 	MinColItem->Clear();
-	MinColItem->Visible = ScrMode==SCMD_TVIEW && TxtViewer->isText && TxtViewer->isFixedLen;
+	MinColItem->Visible = ScrMode==SCMD_TVIEW && TxtViewer->isCSV && TxtViewer->isFixedLen;
 	MinColItem->Enabled = MinColItem->Visible;
-	std::unique_ptr<TStringList> lst(new TStringList());
-	lst->CommaText = TxtViewer->NyanFiDef->Values["MinFixedCols"];
-	TStringDynArray hdr_lst = TxtViewer->GetCsvHdrList();
-	for (int i=0; i<hdr_lst.Length; i++) {
-		TMenuItem *mp = new TMenuItem(MinColItem);
-		mp->Caption   = ((i<26)? UnicodeString().sprintf(_T("&%c: "), (char)('A' + i)) : EmptyStr) + hdr_lst[i];
-		mp->OnClick   = MinColItemClick;
-		mp->Tag 	  = i;
-		mp->Checked   = (lst->IndexOf(IntToStr(i))!=-1);
-		MinColItem->Add(mp);
+	if (MinColItem->Enabled) {
+		std::unique_ptr<TStringList> lst(new TStringList());
+		lst->CommaText = TxtViewer->NyanFiDef->Values["MinFixedCols"];
+		TStringDynArray hdr_lst = TxtViewer->GetCsvHdrList();
+		for (int i=0; i<hdr_lst.Length; i++) {
+			TMenuItem *mp = new TMenuItem(MinColItem);
+			mp->Caption   = ((i<26)? UnicodeString().sprintf(_T("&%c: "), (char)('A' + i)) : EmptyStr) + hdr_lst[i];
+			mp->OnClick   = MinColItemClick;
+			mp->Tag 	  = i;
+			mp->Checked   = (lst->IndexOf(IntToStr(i))!=-1);
+			MinColItem->Add(mp);
+		}
 	}
 
 	reduction_MenuLine(ViewPopupMenu->Items);
@@ -31226,7 +31293,7 @@ void __fastcall TNyanFiForm::TV_TopIsHdrActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::TV_TopIsHdrActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
-	ap->Visible = ScrMode==SCMD_TVIEW && TxtViewer->isText && TxtViewer->CsvCol>=0;
+	ap->Visible = ScrMode==SCMD_TVIEW && TxtViewer->isCSV;
 	ap->Enabled = ap->Visible;
 	ap->Checked = TxtViewer->TopIsHeader;
 }
@@ -31922,7 +31989,7 @@ void __fastcall TNyanFiForm::ExportCsvActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::ExportCsvActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
-	ap->Visible = ScrMode==SCMD_TVIEW && TxtViewer->isText && TxtViewer->isCSV;
+	ap->Visible = ScrMode==SCMD_TVIEW && TxtViewer->isCSV;
 	ap->Enabled = ap->Visible;
 }
 

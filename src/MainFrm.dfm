@@ -2476,6 +2476,15 @@ object NyanFiForm: TNyanFiForm
       object Sep_e_6: TMenuItem
         Caption = '-'
       end
+      object GrepSortLineItem: TMenuItem
+        Action = GrepSortLineAction
+      end
+      object GrepOrgOrderItem: TMenuItem
+        Action = GrepOrgOrderAction
+      end
+      object Sep_e_7: TMenuItem
+        Caption = '-'
+      end
       object GrepSelResItem: TMenuItem
         Action = GrepSelResAction
       end
@@ -5588,6 +5597,18 @@ object NyanFiForm: TNyanFiForm
       OnExecute = OptionKeyActionExecute
       OnUpdate = OptionDlgActionUpdate
     end
+    object GrepSortLineAction: TAction
+      Category = 'Grep'
+      Caption = #34892#20869#23481#12391#12477#12540#12488
+      OnExecute = GrepSortLineActionExecute
+      OnUpdate = GrepSortLineActionUpdate
+    end
+    object GrepOrgOrderAction: TAction
+      Category = 'Grep'
+      Caption = #12477#12540#12488#35299#38500
+      OnExecute = GrepOrgOrderActionExecute
+      OnUpdate = GrepOrgOrderActionUpdate
+    end
   end
   object TaskSttTimer: TTimer
     Enabled = False
@@ -5663,8 +5684,6 @@ object NyanFiForm: TNyanFiForm
     end
     object MinColItem: TMenuItem
       Caption = #21015#24133#12398#26368#23567#21270'(&M)'
-      object TMenuItem
-      end
     end
     object Sep_vp_3: TMenuItem
       Caption = '-'
@@ -5948,13 +5967,22 @@ object NyanFiForm: TNyanFiForm
     object Pop_g_3: TMenuItem
       Caption = '-'
     end
+    object PopGrepSortLineItem: TMenuItem
+      Action = GrepSortLineAction
+    end
+    object PopGrepOrgOrderItem: TMenuItem
+      Action = GrepOrgOrderAction
+    end
+    object Pop_g_4: TMenuItem
+      Caption = '-'
+    end
     object PopGrepSelResItem: TMenuItem
       Action = GrepSelResAction
     end
     object PopGrepOpenUrlItem: TMenuItem
       Action = GrepOpenUrlAction
     end
-    object Pop_g_4: TMenuItem
+    object Pop_g_5: TMenuItem
       Caption = '-'
     end
     object PopGrepItemNoItem: TMenuItem

@@ -2,7 +2,6 @@
 // タグ管理ユニット														//
 //																		//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_file_ex.h"
 #include "usr_tag.h"
 
@@ -638,7 +637,7 @@ void TagManager::DrawTags(
 
 	TColor org_fg = cv->Font->Color;
 	TColor org_bg = cv->Brush->Color;
-	bool rev = (col_rev!=clNone);
+	bool rev = (col_rev!=Graphics::clNone);
 
 	for (int i=0; i<tlst->Count; i++) {
 		UnicodeString tag = tlst->Strings[i];

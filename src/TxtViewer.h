@@ -197,7 +197,11 @@ public:
 	bool isTail;					//末尾を表示
 	bool isReverse;					//逆順
 	int  TailLine;					//末尾行数
-	bool TopIsHeader;				//先頭行はCSV項目名
+
+	//TopIsHeader プロパティ		先頭行はCSV項目名
+	bool FTopIsHeader;
+	void __fastcall SetTopIsHeader(bool Value);
+	__property bool TopIsHeader = {read = FTopIsHeader,  write = SetTopIsHeader};
 
 	unsigned int BinarySize;		//バイナリ読込サイズ
 	unsigned __int64 BinFileSize;	//ファイルサイズ
@@ -274,6 +278,7 @@ public:
 	~TTxtViewer();
 
 	bool __fastcall CloseAuxForm();
+	bool __fastcall LoadNyanFiDef();
 	bool __fastcall SaveNyanFiDef();
 	void __fastcall Clear();
 	void __fastcall SetColor(TStringList *lst);

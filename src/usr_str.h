@@ -17,7 +17,6 @@ extern const _TCHAR *null_TCHAR;
 
 //---------------------------------------------------------------------------
 int __fastcall comp_NaturalOrder(TStringList *List, int Index1, int Index2);
-
 int __fastcall comp_AscendOrder(TStringList *List, int Index1, int Index2);
 int __fastcall comp_DescendOrder(TStringList *List, int Index1, int Index2);
 int __fastcall comp_ObjectsOrder(TStringList *List, int Index1, int Index2);

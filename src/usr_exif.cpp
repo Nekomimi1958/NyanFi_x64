@@ -2,7 +2,6 @@
 // Exif î•ñ‚Ìˆ—														//
 //																		//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include <time.h>
 #include "usr_str.h"
 #include "usr_file_ex.h"

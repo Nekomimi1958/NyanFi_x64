@@ -2,7 +2,6 @@
 // NyanFi																//
 //  ƒ^ƒO–¼‚ÌŒŸõ														//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"
@@ -160,7 +159,7 @@ void __fastcall TFindTagForm::TagsListBoxDrawItem(TWinControl *Control, int Inde
 
 	int xp = Rect.Left + ScaledIntX(4);
 	int yp = Rect.Top  + get_TopMargin2(cv);
-	cv->Font->Color = (State.Contains(odSelected) && col_fgSelItem!=clNone)? col_fgSelItem : col_fgList;
+	cv->Font->Color = (State.Contains(odSelected) && col_fgSelItem!=col_None)? col_fgSelItem : col_fgList;
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	if (!IncSeaWord.IsEmpty()) {

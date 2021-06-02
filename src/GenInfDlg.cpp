@@ -2,7 +2,6 @@
 // NyanFi																//
 //  汎用一覧ダイアログ													//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_id3.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

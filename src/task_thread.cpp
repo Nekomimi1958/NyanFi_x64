@@ -2,7 +2,6 @@
 // NyanFi																//
 //  タスク処理スレッド													//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_file_ex.h"
 #include "usr_file_inf.h"
 #include "usr_wic.h"
@@ -1271,7 +1270,7 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 		}
 		//画像ファイル
 		else {
-			TColor bg = test_FileExt(ExtractFileExt(fnam), _T(".png.gif"))? Config->CvImg_mgn_color : clNone;
+			TColor bg = test_FileExt(ExtractFileExt(fnam), _T(".png.gif"))? Config->CvImg_mgn_color : col_None;
 			if (load_ImageFile(fnam, i_img.get(), (Config->CvImg_not_use_prvw? WICIMG_FRAME : WICIMG_PREVIEW), bg)==0)
 				UserAbort(USTR_FaildLoad);
 			i_wd = i_img->Width;

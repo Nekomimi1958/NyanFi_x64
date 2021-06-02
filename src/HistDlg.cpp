@@ -2,7 +2,6 @@
 // NyanFi																//
 //  ディレクトリ履歴/ スタック											//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

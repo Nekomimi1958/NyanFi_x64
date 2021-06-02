@@ -2,7 +2,6 @@
 // NyanFi																//
 //  サムネイル取得スレッド												//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_wic.h"
 #include "usr_shell.h"
 #include "UserFunc.h"

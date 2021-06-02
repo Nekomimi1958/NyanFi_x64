@@ -2,9 +2,6 @@
 // 汎用共用モジュール													//
 //																		//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <System.Win.Registry.hpp>
-#include <Vcl.FileCtrl.hpp>
 #include "usr_msg.h"
 #include "usr_file_ex.h"
 #include "usr_swatch.h"
@@ -367,7 +364,7 @@ void __fastcall TUserModule::BeginSpuit(
 	SpuitPanel = pp;
 	SpuitPanelColor = pp->Color;
 	SpuitDefColor	= col_def;
-	if (col_def!=clNone) pp->Color = col_def;
+	if (col_def!=col_None) pp->Color = col_def;
 
 	Screen->Cursor = crSpuitTool;
 	SpuitTimer->Enabled = true;

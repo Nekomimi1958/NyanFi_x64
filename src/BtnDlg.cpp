@@ -2,7 +2,6 @@
 // NyanFi																//
 //  ツールバーの設定													//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

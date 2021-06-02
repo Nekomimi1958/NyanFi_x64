@@ -2,7 +2,6 @@
 // NyanFi																//
 //  パーミッション設定													//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "Global.h"
 #include "ChmodDlg.h"

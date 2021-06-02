@@ -2,7 +2,6 @@
 // NyanFi																//
 //  ÉãÅ[Éy																//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_wic.h"
 #include "Global.h"
 #include "MainFrm.h"

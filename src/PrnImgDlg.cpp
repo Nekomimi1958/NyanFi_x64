@@ -2,7 +2,6 @@
 // NyanFi																//
 //  ˆóüİ’è															//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_wic.h"
 #include "usr_exif.h"
 #include "UserFunc.h"

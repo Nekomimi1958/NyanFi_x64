@@ -2,7 +2,6 @@
 // NyanFi																//
 //  ÉtÉ@ÉCÉãñºåüçı														//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_wic.h"
 #include "usr_xd2tx.h"
 #include "usr_highlight.h"

@@ -2,7 +2,6 @@
 // NyanFi																//
 //  テキストビュアー													//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include <IdURI.hpp>
 #include "htmconv.h"
 #include "usr_mmfile.h"
@@ -172,6 +171,19 @@ TTxtViewer::~TTxtViewer()
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TTxtViewer::SetTopIsHeader(bool Value)
+{
+	USR_CsvTopIsHdr = FTopIsHeader = Value;
+	if (isCSV) {
+		UnicodeString v = FTopIsHeader? "1" : "0";
+		if (!SameStr(NyanFiDef->Values["TopIsHeader"], v)) {
+			NyanFiDef->Values["TopIsHeader"] = v;
+			SaveNyanFiDef();
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
 //補助画面を閉じる
 //---------------------------------------------------------------------------
 bool __fastcall TTxtViewer::CloseAuxForm()
@@ -185,6 +197,14 @@ bool __fastcall TTxtViewer::CloseAuxForm()
 	return closed;
 }
 
+//---------------------------------------------------------------------------
+//ADSから設定を読込
+//---------------------------------------------------------------------------
+bool __fastcall TTxtViewer::LoadNyanFiDef()
+{
+	UnicodeString snam = FileName + NYANFIDEF_ADS;
+	return (file_exists(snam) && load_text_ex(snam, NyanFiDef)!=0);
+}
 //---------------------------------------------------------------------------
 //ADSに設定を保存
 //---------------------------------------------------------------------------
@@ -908,11 +928,11 @@ void __fastcall TTxtViewer::UpdateScr(
 	//--------------------------
 	//0									予約語
 	EmPtn[0] = ReservedPtn;
-	EmBgC[0] = clNone;
+	EmBgC[0] = col_None;
 	EmFgC[0] = color_Reserved;
 	//1									URL
 	EmPtn[1] = "(" URL_MATCH_PTN ")|(" MAIL_MATCH_PTN ")";
-	EmBgC[1] = clNone;
+	EmBgC[1] = col_None;
 	EmFgC[1] = color_URL;
 	//2									検索強調語
 	EmPtn[2] = EmptyStr;
@@ -936,7 +956,7 @@ void __fastcall TTxtViewer::UpdateScr(
 		EmPtn[3] = LOCAL_FILE_PTN;
 		EmFgC[3] = color_LocalLink;
 	}
-	EmBgC[3] = clNone;
+	EmBgC[3] = col_None;
 
 	//4
 	if (isBinary) {						//バイナリ強調2
@@ -955,7 +975,7 @@ void __fastcall TTxtViewer::UpdateScr(
 		EmPtn[4] = RubyPtn;
 		EmFgC[4] = color_Ruby;
 	}
-	EmBgC[4] = clNone;
+	EmBgC[4] = col_None;
 
 	//5
 	if (isBinary) {						//バイナリ強調1
@@ -974,12 +994,12 @@ void __fastcall TTxtViewer::UpdateScr(
 		EmPtn[5] = UsrKeyword;
 		EmFgC[5] = UsrKeywdCol;
 	}
-	EmBgC[5] = clNone;
+	EmBgC[5] = col_None;
 
 	//6									ユーザ定義キーワード2
 	EmPtn[6] = UsrKeyword2;
 	EmFgC[6] = UsrKeywdCol2;
-	EmBgC[6] = clNone;
+	EmBgC[6] = col_None;
 	//--------------------------
 
 	SetMetric();
@@ -1051,8 +1071,18 @@ void __fastcall TTxtViewer::UpdateScr(
 		else if (test_FileExt(fext, FEXT_CSV)) {
 			isCSV = true;
 			isTSV = (txt_buf->Count>0 && ContainsStr(txt_buf->Strings[0], "\t"));
-			UnicodeString snam = FileName + NYANFIDEF_ADS;
-			if (file_exists(snam)) load_text_ex(snam, NyanFiDef);
+			bool ok = false;
+			if (LoadNyanFiDef()) {
+				UnicodeString v = NyanFiDef->Values["TopIsHeader"];
+				if (!v.IsEmpty()) {
+					TopIsHeader = SameStr(v, "1");
+					ok = true;
+				}
+			}
+			if (!ok) {
+				NyanFiDef->Values["TopIsHeader"] = FTopIsHeader? "1" : "0";
+				SaveNyanFiDef();
+			}
 			if (isFixedLen) FormatFixed(txt_buf.get());
 		}
 		//青空文庫形式
@@ -1406,7 +1436,6 @@ void __fastcall TTxtViewer::AssignText(
 			if (CsvCol>=0) {
 				USR_CsvCol		= CsvCol;
 				USR_CsvSortMode = SortMode;
-				USR_CsvTopIsHdr = TopIsHeader;
 				bool is_tsv = (TxtBufList->Count>0 && ContainsStr(TxtBufList->Strings[0], "\t"));
 				TxtBufList->CustomSort(is_tsv? comp_TsvNaturalOrder : comp_CsvNaturalOrder);
 			}
@@ -2065,7 +2094,7 @@ void __fastcall TTxtViewer::PaintText()
 								TColor *fg = &curFgCol[i_x];
 								if (*fg!=color_Comment && *fg!=color_Strings) *fg = EmFgC[i_p];
 								TColor *bg = &curBgCol[i_x];
-								if (EmBgC[i_p]!=clNone && *bg!=color_selItem) *bg = EmBgC[i_p];
+								if (EmBgC[i_p]!=col_None && *bg!=color_selItem) *bg = EmBgC[i_p];
 							}
 							mt_Idx[i_p] = (mt_Len[i_p]>0)? 1 : 0;
 						}
@@ -2097,7 +2126,7 @@ void __fastcall TTxtViewer::PaintText()
 										*fg = EmFgC[i_p];
 									//背景
 									TColor *bg = &curBgCol[i_x];
-									if (EmBgC[i_p]!=clNone && *bg!=color_selItem) *bg = EmBgC[i_p];
+									if (EmBgC[i_p]!=col_None && *bg!=color_selItem) *bg = EmBgC[i_p];
 								}
 								if (mt_Len[i_p]>0) {
 									mt_Idx[i_p] = 1; break;	//次行に続く
@@ -2142,7 +2171,7 @@ void __fastcall TTxtViewer::PaintText()
 				}
 
 				//文字列描画
-				if (color_fgSelItem!=clNone) {
+				if (color_fgSelItem!=col_None) {
 					for (int j=1; j<=lbuf_len; j++)
 						if (curBgCol[j]==color_selItem) curFgCol[j] = color_fgSelItem;
 				}
@@ -2165,7 +2194,7 @@ void __fastcall TTxtViewer::PaintText()
 				if (!sbuf.IsEmpty()) TabTextOut(sbuf, tmp_cv, xp, fld_xp);
 
 				//固定長表示の縦罫線
-				if (isFixedLen && lp->LineIdx==0 && FixWdList.Length>0 && !lbuf.IsEmpty() && color_bdrFixed!=clNone) {
+				if (isFixedLen && lp->LineIdx==0 && FixWdList.Length>0 && !lbuf.IsEmpty() && color_bdrFixed!=col_None) {
 					int v_xp = TopXpos;
 					for (int j=0; j<FixWdList.Length-1; j++) {
 						v_xp += (FixWdList[j] + 1) * HchWidth;
@@ -2178,10 +2207,10 @@ void __fastcall TTxtViewer::PaintText()
 		}
 
 		//行番号境界線
-		if ((ShowLineNo || isBinary) && color_bdrLine!=clNone)
+		if ((ShowLineNo || isBinary) && color_bdrLine!=col_None)
 			draw_Line(tmp_cv, TopXpos - TopMargin, 0, TopXpos - TopMargin, LineHeight, 1, color_bdrLine);
 		//折り返し境界線
-		if (!isFitWin && color_bdrFold!=clNone)
+		if (!isFitWin && color_bdrFold!=col_None)
 			draw_Line(tmp_cv, fld_xp, 0, fld_xp, LineHeight, 1, color_bdrFold);
 
 		//バッファに描画

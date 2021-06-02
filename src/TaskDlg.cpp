@@ -2,7 +2,6 @@
 // NyanFi																//
 //  タスクマネージャ													//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "Global.h"
 #include "MainFrm.h"

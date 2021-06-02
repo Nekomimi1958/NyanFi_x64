@@ -2,7 +2,6 @@
 // NyanFi																//
 //  同名ファイルの処理ダイアログ										//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "Global.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

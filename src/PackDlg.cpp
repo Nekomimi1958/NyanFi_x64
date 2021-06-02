@@ -2,7 +2,6 @@
 // NyanFi																//
 //  アーカイブ作成ダイアログ											//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "Global.h"
 #include "usr_arc.h"
 #include "UserFunc.h"

@@ -2,7 +2,6 @@
 // NyanFi																//
 //  同名ファイルの比較ダイアログ										//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "Global.h"
 #include "CompDlg.h"

@@ -2,8 +2,6 @@
 // ファイル操作 (260文字以上のパスに対応)								//
 //																		//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <winioctl.h>
 #include "usr_str.h"
 #include "usr_file_ex.h"
 

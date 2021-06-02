@@ -2,7 +2,6 @@
 // NyanFi																//
 //  文字列検索(テキストビュアー)										//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

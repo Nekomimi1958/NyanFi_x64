@@ -2,7 +2,6 @@
 // NyanFi																//
 //  FTP接続ダイアログ													//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "Global.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

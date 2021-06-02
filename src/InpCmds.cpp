@@ -2,7 +2,6 @@
 // NyanFi																//
 //  ƒRƒ}ƒ“ƒh‚Ì“ü—Í														//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_excmd.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

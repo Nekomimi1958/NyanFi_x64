@@ -2,18 +2,9 @@
 // NyanFi																//
 //  ÉOÉçÅ[ÉoÉã															//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <utilcls.h>
-#include <shlwapi.h>
-#include <winioctl.h>
 #include <mmdeviceapi.h>
 #include <endpointvolume.h>
-#include <VersionHelpers.h>
 #include <System.Character.hpp>
-#include <System.Win.Registry.hpp>
-#include <System.Zip.hpp>
-#include <Vcl.Imaging.pngimage.hpp>
-#include <Vcl.Imaging.GIFImg.hpp>
 #include "usr_wic.h"
 #include "usr_arc.h"
 #include "usr_mmfile.h"
@@ -2882,7 +2873,7 @@ int __fastcall CompLogical(UnicodeString s0, UnicodeString s1, bool natural_sw)
 			if (natural_sw)
 				return StrCmpLogicalW(ss0.c_str(), ss1.c_str());
 			else
-				return (::CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, ss0.c_str(), -1, ss1.c_str(), -1) - CSTR_EQUAL);
+				return (CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, ss0.c_str(), -1, ss1.c_str(), -1) - CSTR_EQUAL);
 		}
 		return (n0 - n1);
 	}
@@ -2890,7 +2881,7 @@ int __fastcall CompLogical(UnicodeString s0, UnicodeString s1, bool natural_sw)
 		if (natural_sw)
 			return StrCmpLogicalW(s0.c_str(), s1.c_str());
 		else
-			return (::CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, s0.c_str(), -1, s1.c_str(), -1) - CSTR_EQUAL);
+			return (CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, s0.c_str(), -1, s1.c_str(), -1) - CSTR_EQUAL);
 	}
 }
 //---------------------------------------------------------------------------

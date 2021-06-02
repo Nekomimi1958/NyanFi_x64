@@ -2,7 +2,6 @@
 // 各種フォーマットのファイル情報取得									//
 //																		//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include <mmreg.h>
 #include <imagehlp.h>
 #include <RestartManager.h>

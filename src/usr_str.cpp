@@ -2,11 +2,7 @@
 // ï∂éöóÒëÄçÏ															//
 //																		//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include <vector>
-#include <math.h>
-#include <System.Masks.hpp>
-#include <Vcl.Direct2D.hpp>
 #include "usr_str.h"
 
 //---------------------------------------------------------------------------
@@ -811,7 +807,7 @@ TColor xRRGGBB_to_col(UnicodeString s)
 			TColor(RGB(("0x" + s.SubString(1,2)).ToIntDef(0),
 					   ("0x" + s.SubString(3,2)).ToIntDef(0),
 					   ("0x" + s.SubString(5,2)).ToIntDef(0))) :
-			clNone;
+			Graphics::clNone;
 }
 //---------------------------------------------------------------------------
 //TColor ÇRRGGBBå`éÆÇÃï∂éöóÒÇ…ïœä∑

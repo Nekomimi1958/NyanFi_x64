@@ -2,7 +2,6 @@
 // NyanFi																//
 //  デバッグ情報														//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "usr_excmd.h"

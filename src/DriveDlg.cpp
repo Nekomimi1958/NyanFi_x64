@@ -2,8 +2,6 @@
 // NyanFi																//
 //  ƒhƒ‰ƒCƒuˆê——														//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <winioctl.h>
 #include "UserFunc.h"
 #include "Global.h"
 #include "InpExDlg.h"

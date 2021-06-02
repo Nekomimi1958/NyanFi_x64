@@ -2,8 +2,6 @@
 // NyanFi																//
 //  インスペクタ														//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <System.Math.hpp>
 #include "UserFunc.h"
 #include "Global.h"
 #include "InspectFrm.h"

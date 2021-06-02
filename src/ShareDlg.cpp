@@ -2,7 +2,6 @@
 // NyanFi																//
 //  共有フォルダ/サブディレクトリ選択/ライブラリ一覧					//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "Global.h"
 #include "MainFrm.h"

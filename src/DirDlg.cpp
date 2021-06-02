@@ -2,7 +2,6 @@
 // NyanFi																//
 //  登録ディレクトリ/特殊フォルダ一覧/参照								//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"
@@ -710,7 +709,7 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 				UnicodeString dnam = itm_buf[2];
 				if (StartsStr("#:", dnam)) {
 					cv->Font->Color = adj_col;
-					usr_TAG->DrawTags(dnam, cv, xp, yp, RevTagCololr? col_bgList : clNone);
+					usr_TAG->DrawTags(dnam, cv, xp, yp, RevTagCololr? col_bgList : col_None);
 				}
 				else {
 					if (remove_top_s(dnam, '%')) {

@@ -2,7 +2,6 @@
 // NyanFi																//
 //  Edit コマンド用メモボックス											//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserMdl.h"
 #include "Global.h"
 #include "MemoFrm.h"
@@ -59,8 +58,8 @@ void __fastcall TMemoForm::FormShow(TObject *Sender)
 	pf2.bLineSpacingRule = 5;	//dyLineSpacing/20 行単位
 	pf2.dyLineSpacing	 = 20 * ViewTxtInterLn / f_hi;
 	MemoBox->Perform(EM_SETPARAFORMAT, 0, (LPARAM)&pf2);
-	MemoBox->Font->Color = (col_fgEdBox!=clNone)? col_fgEdBox : col_fgView;
-	MemoBox->Color		 = (col_bgEdBox!=clNone)? col_bgEdBox : col_bgView;
+	MemoBox->Font->Color = (col_fgEdBox!=col_None)? col_fgEdBox : col_fgView;
+	MemoBox->Color		 = (col_bgEdBox!=col_None)? col_bgEdBox : col_bgView;
 
 	//下部パネル
 	OptPanel->Visible = IniFile->ReadBoolGen(_T("MemoFormShowOpt"), true);
@@ -202,7 +201,7 @@ void __fastcall TMemoForm::ColDefItemClick(TObject *Sender)
 	MemoBox->Color		 = col_bgView;
 	MemoBox->Font->Color = col_fgView;
 
-	col_bgEdBox = col_fgEdBox = clNone;
+	col_bgEdBox = col_fgEdBox = col_None;
 	ColorList->Values["bgEdBox"] = IntToStr((int)col_bgEdBox);
 	ColorList->Values["fgEdBox"] = IntToStr((int)col_fgEdBox);
 }

@@ -7,11 +7,11 @@
 
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
+#include <System.Actions.hpp>
 #include <Vcl.Controls.hpp>
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
 #include <Vcl.ExtCtrls.hpp>
-#include <System.Actions.hpp>
 #include <Vcl.ActnList.hpp>
 
 //---------------------------------------------------------------------------

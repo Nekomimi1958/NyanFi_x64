@@ -2,7 +2,6 @@
 // NyanFi																//
 //  関数／ユーザ定義文字列／マーク行一覧								//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

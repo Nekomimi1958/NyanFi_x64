@@ -2,8 +2,6 @@
 // NyanFi																//
 //  GREPägí£ê›íË														//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <Vcl.FileCtrl.hpp>
 #include "usr_shell.h"
 #include "UserFunc.h"
 #include "UserMdl.h"

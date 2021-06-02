@@ -2,8 +2,6 @@
 // NyanFi																//
 //  テキストビュアー(外部ウィンドウ)									//
 //----------------------------------------------------------------------//
-#pragma hdrstop
-#include <utilcls.h>
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "usr_xd2tx.h"

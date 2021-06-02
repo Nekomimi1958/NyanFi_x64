@@ -2,7 +2,6 @@
 // NyanFi																//
 //  画像ビュー処理スレッド												//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_wic.h"
 #include "usr_exif.h"
 #include "usr_id3.h"

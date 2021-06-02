@@ -2,7 +2,6 @@
 // NyanFi																//
 //  置換確認ダイアログ													//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "Global.h"
 #include "AskRep.h"

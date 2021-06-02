@@ -2,7 +2,6 @@
 // NyanFi																//
 //  “d‘ì																//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "Global.h"
 #include "CalcDlg.h"

@@ -1,12 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
 //----------------------------------------------------------------------//
-#include <vcl.h>
-#pragma hdrstop
-#include <tchar.h>
-#include <memory>
-
-//---------------------------------------------------------------------------
 USEFORM("SameDlg.cpp", SameNameDlg);
 USEFORM("ShareDlg.cpp", NetShareDlg);
 USEFORM("RenDlg.cpp", RenameDlg);
@@ -84,7 +78,6 @@ USEFORM("FindTxtDlg.cpp", FindTextDlg);
 USEFORM("FtpDlg.cpp", FtpConnectDlg);
 USEFORM("FuncDlg.cpp", FuncListDlg);
 //---------------------------------------------------------------------------
-#include <VersionHelpers.h>
 #include "Global.h"
 #include "Splash.h"
 

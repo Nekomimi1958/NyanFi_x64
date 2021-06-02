@@ -2,7 +2,6 @@
 // NyanFi																//
 //  XMLビュアー															//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"
@@ -310,7 +309,7 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	tmp_cv->Brush->Color = Node->Selected? col_selItem : col_bgList;
 	tmp_cv->FillRect(tmp_rc);
 
-	bool is_selfg = (Node->Selected && col_fgSelItem!=clNone);
+	bool is_selfg = (Node->Selected && col_fgSelItem!=col_None);
 
 	int ntyp = (int)Node->Data;
 	//ノード

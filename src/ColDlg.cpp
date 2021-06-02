@@ -2,7 +2,6 @@
 // NyanFi																//
 //  テキストビュアーの配色												//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"
@@ -130,7 +129,7 @@ void __fastcall TColorDlg::SpuitImageMouseDown(TObject *Sender, TMouseButton But
 	SwatchPanel->Visible = true;
 	SwatchPanel->BringToFront();
 
-	TColor col_def = (TColor)ColBufList->Values[lp->Items->Names[lp->ItemIndex]].ToIntDef(clNone);
+	TColor col_def = (TColor)ColBufList->Values[lp->Items->Names[lp->ItemIndex]].ToIntDef(col_None);
 	UserModule->BeginSpuit(SpuitPanel, SpuitImage, col_def);
 }
 //---------------------------------------------------------------------------
@@ -234,7 +233,7 @@ void __fastcall TColorDlg::DisableColActionExecute(TObject *Sender)
 {
 	TListBox *lp = ColorListBox;
 	if (lp->ItemIndex!=-1) {
-		ColBufList->Values[lp->Items->Names[lp->ItemIndex]] = IntToStr(clNone);
+		ColBufList->Values[lp->Items->Names[lp->ItemIndex]] = IntToStr(col_None);
 		lp->Invalidate();
 	}
 }

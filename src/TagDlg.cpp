@@ -3,7 +3,6 @@
 //  タグ設定/検索														//
 //  フォルダアイコン検索												//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"
@@ -457,7 +456,7 @@ void __fastcall TTagManDlg::TagCheckListBoxDrawItem(TWinControl *Control, int In
 	else {
 		if (RevTagCololr) yp += ScaledIntX(2);
 		usr_TAG->DrawTags(lp->Items->Strings[Index], cv, xp, yp,
-			(RevTagCololr? col_bgList : clNone), UserModule->SpuitEnabled());
+			(RevTagCololr? col_bgList : col_None), UserModule->SpuitEnabled());
 	}
 
 	//使用数
@@ -536,7 +535,7 @@ void __fastcall TTagManDlg::DefColorActionExecute(TObject *Sender)
 {
 	if (TagCheckListBox->ItemIndex==-1) return;
 
-	usr_TAG->SetColor(TagCheckListBox->Items->Strings[TagCheckListBox->ItemIndex], clNone);
+	usr_TAG->SetColor(TagCheckListBox->Items->Strings[TagCheckListBox->ItemIndex], col_None);
 	TagCheckListBox->Repaint();
 }
 //---------------------------------------------------------------------------
@@ -646,7 +645,7 @@ void __fastcall TTagManDlg::SpuitImageMouseDown(TObject *Sender, TMouseButton Bu
 	SwatchPanel->Visible = true;
 	SwatchPanel->BringToFront();
 
-	TColor col_def = usr_TAG->GetColor(lp->Items->Strings[lp->ItemIndex], clNone);
+	TColor col_def = usr_TAG->GetColor(lp->Items->Strings[lp->ItemIndex], col_None);
 	UserModule->BeginSpuit(SpuitPanel, (TImage*)Sender, col_def);
 	lp->Repaint();
 }

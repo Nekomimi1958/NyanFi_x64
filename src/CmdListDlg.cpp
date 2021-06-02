@@ -2,7 +2,6 @@
 // NyanFi																//
 //  コマンドファイル一覧												//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"

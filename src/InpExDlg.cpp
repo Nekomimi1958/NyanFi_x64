@@ -3,7 +3,6 @@
 //  拡張入力ボックス													//
 //  カレントリストの中央に表示											//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "usr_tag.h"

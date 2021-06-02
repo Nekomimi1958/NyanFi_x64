@@ -2,7 +2,6 @@
 // ç\ï∂ã≠í≤ï\é¶															//
 //																		//
 //----------------------------------------------------------------------//
-#pragma hdrstop
 #include "usr_str.h"
 #include "usr_file_ex.h"
 #include "usr_file_inf.h"
