@@ -18,8 +18,8 @@ TDistributionDlg *DistributionDlg = NULL;
 //ƒtƒ@ƒCƒ‹–¼
 int __fastcall DistrCmp_Name(TStringList *List, int Index1, int Index2)
 {
-	UnicodeString name1 = ExtractFileName(ExcludeTrailingPathDelimiter(get_pre_tab(List->Strings[Index1])));
-	UnicodeString name2 = ExtractFileName(ExcludeTrailingPathDelimiter(get_pre_tab(List->Strings[Index2])));
+	UnicodeString name1 = get_dir_name(get_pre_tab(List->Strings[Index1]));
+	UnicodeString name2 = get_dir_name(get_pre_tab(List->Strings[Index2]));
 	return StrCmpLogicalW(name1.c_str(), name2.c_str());
 }
 //---------------------------------------------------------------------------
@@ -371,7 +371,7 @@ void __fastcall TDistributionDlg::UpdatePreview(bool upd)
 
 		UnicodeString fnam = ItemList->Strings[i];
 		UnicodeString pnam = ExtractFilePath(fnam);
-		UnicodeString nnam = ExtractFileName(ExcludeTrailingPathDelimiter(fnam));
+		UnicodeString nnam = get_dir_name(fnam);
 
 		TRegExOptions opt; opt << roIgnoreCase;
 		for (int j=0; j<def_lst->Count; j++) {
@@ -605,8 +605,7 @@ void __fastcall TDistributionDlg::PrvListBoxDrawItem(TWinControl *Control, int I
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	UnicodeString fnam = split_pre_tab(lbuf);
 	UnicodeString pnam = ExtractFilePath(fnam);
-	fnam = ends_PathDlmtr(fnam)? IncludeTrailingPathDelimiter(ExtractFileName(ExcludeTrailingPathDelimiter(fnam)))
-							   : ExtractFileName(fnam);
+	fnam = ends_PathDlmtr(fnam)? IncludeTrailingPathDelimiter(get_dir_name(fnam)) : ExtractFileName(fnam);
 	UnicodeString dnam = lbuf;
 	UnicodeString anam = IncludeTrailingPathDelimiter(dnam.IsEmpty()? OppPath : to_absolute_name(dnam, OppPath));
 
@@ -630,7 +629,7 @@ void __fastcall TDistributionDlg::PrvListBoxDblClick(TObject *Sender)
 	//ŠY“–‚·‚é“o˜^€–Ú‚ðŒŸõ
 	TListBox *lp = (TListBox*)Sender;
 	if (lp->ItemIndex!=-1) {
-		UnicodeString nnam = ExtractFileName(ExcludeTrailingPathDelimiter(get_pre_tab(lp->Items->Strings[lp->ItemIndex])));
+		UnicodeString nnam = get_dir_name(get_pre_tab(lp->Items->Strings[lp->ItemIndex]));
 		TCheckListBox *cp = RegListBox;
 		cp->ItemIndex = -1;
 		for (int i=0; i<cp->Count && cp->ItemIndex==-1; i++) {

@@ -4847,7 +4847,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 		set_PanelAlign(ImgSidePanel, ImgSideSplitter, ImgSidebarIsLeft? alLeft : alRight, SplitterWidth);
 
 		//時計パネル
-		ClockBarI->Visible	= !ShowSttBar && !SttClockFmt.IsEmpty();;
+		ClockBarI->Visible	= !ShowSttBar && !SttClockFmt.IsEmpty();
 		ClockBarI->SizeGrip = !ImgSidebarIsLeft;
 	}
 
@@ -8406,13 +8406,11 @@ void __fastcall TNyanFiForm::SetCurPath(
 							if (IsOppFList()) {
 								//親ディレクトリへ
 								if (SameText(IncludeTrailingPathDelimiter(get_parent_path(l_pnam)), dnam)) {
-									if (SameText(ExtractFileName(ExcludeTrailingPathDelimiter(l_pnam)),
-												 ExtractFileName(ExcludeTrailingPathDelimiter(CurPath[OppListTag]))))
-										OppToParent();
+									if (SameText(get_dir_name(l_pnam), get_dir_name(CurPath[OppListTag]))) OppToParent();
 								}
 								//サブディレクトリへ
 								else {
-									UnicodeString onam = CurPath[OppListTag] + ExtractFileName(ExcludeTrailingPathDelimiter(dnam));
+									UnicodeString onam = CurPath[OppListTag] + get_dir_name(dnam);
 									if (IndexOfFileList(onam, OppListTag)!=-1) {
 										FCurPath[OppListTag] = IncludeTrailingPathDelimiter(onam);
 										UpdateList(FileList[OppListTag], CurPath[OppListTag], OppListTag);
@@ -8425,17 +8423,14 @@ void __fastcall TNyanFiForm::SetCurPath(
 							else if (OppStt->is_FTP) {
 								if (SameText(IncludeTrailingPathDelimiter(get_parent_path(l_pnam)), dnam)) {
 									//親ディレクトリへ
-									if (SameText(
-										ExtractFileName(ExcludeTrailingPathDelimiter(l_pnam)),
-										ExtractFileName(ExcludeTrailingPathDelimiter(CurFTPPath))))
-									{
+									if (SameText(get_dir_name(l_pnam), get_dir_name(CurFTPPath))) {
 										UnicodeString lnam = ExcludeTrailingPathDelimiter(CurFTPPath);
 										if (!ChangeFtpFileList(OppListTag, "..", lnam)) GlobalAbort();
 									}
 								}
 								else {
 									//サブディレクトリへ
-									UnicodeString onam = CurFTPPath + ExtractFileName(ExcludeTrailingPathDelimiter(dnam));
+									UnicodeString onam = CurFTPPath + get_dir_name(dnam);
 									if (IndexOfFileList(onam, OppListTag)!=-1) {
 										if (!ChangeFtpFileList(OppListTag, ExtractFileName(onam), "..")) GlobalAbort();
 									}
@@ -12588,7 +12583,7 @@ void __fastcall TNyanFiForm::AddTagActionExecute(TObject *Sender)
 			if (USAME_TS(tags, ";")) {
 				InputExDlg->IpuntExMode = INPEX_ADD_TAG;
 				InputExDlg->InputComboBox->Text = EmptyStr;
-				if (InputExDlg->ShowModal()!=mrOk) SkipAbort();;
+				if (InputExDlg->ShowModal()!=mrOk) SkipAbort();
 				tags = InputExDlg->InputComboBox->Text;
 			}
 		}
@@ -13565,7 +13560,7 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 												if ((int)GetLastError()==E_ABORT) CancelAbort();
 												ofp->hash = get_HashStr(fnam1, idstr, false, true);
 												if ((int)GetLastError()==E_ABORT) CancelAbort();
-												if (cfp->hash.IsEmpty() || ofp->hash.IsEmpty()) EmptyAbort();;
+												if (cfp->hash.IsEmpty() || ofp->hash.IsEmpty()) EmptyAbort();
 												h_flag = !SameStr(cfp->hash, ofp->hash);
 											}
 										}
@@ -13577,7 +13572,7 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 												if ((int)GetLastError()==E_ABORT) CancelAbort();
 												ofp->hash = get_HashStr(fnam1, idstr, false, true);
 												if ((int)GetLastError()==E_ABORT) CancelAbort();
-												if (cfp->hash.IsEmpty() || ofp->hash.IsEmpty()) EmptyAbort();;
+												if (cfp->hash.IsEmpty() || ofp->hash.IsEmpty()) EmptyAbort();
 												h_flag = SameStr(cfp->hash, ofp->hash);
 											}
 										}
@@ -21548,17 +21543,14 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 				if (cfp->is_up) {
 					UnicodeString l_pnam = CurFTPPath;
 					if (!ChangeFtpFileList(CurListTag, "..", CurFTPPath)) GlobalAbort();
-					if (SyncLR && IsOppFList() &&
-						SameText(ExtractFileName(ExcludeTrailingPathDelimiter(l_pnam)),
-							     ExtractFileName(ExcludeTrailingPathDelimiter(CurPath[OppListTag]))))
-					{
+					if (SyncLR && IsOppFList() && SameText(get_dir_name(l_pnam), get_dir_name(CurPath[OppListTag]))) {
 						OppToParent();
 					}
 				}
 				//サブディレクトリへ
 				else {
 					if (!ChangeFtpFileList(CurListTag, cfp->n_name, "..")) GlobalAbort();
-					UnicodeString onam = CurPath[OppListTag] + ExtractFileName(ExcludeTrailingPathDelimiter(CurFTPPath));
+					UnicodeString onam = CurPath[OppListTag] + get_dir_name(CurFTPPath);
 					if (SyncLR && IsOppFList() && IndexOfFileList(onam, OppListTag)!=-1) {
 						FCurPath[OppListTag] = IncludeTrailingPathDelimiter(onam);
 						UpdateList(FileList[OppListTag], CurPath[OppListTag], OppListTag);
@@ -22876,7 +22868,7 @@ void __fastcall TNyanFiForm::RenameDlgActionExecute(TObject *Sender)
 			std::unique_ptr<TStringList> fbuf(new TStringList());
 			int w = std::max(UnicodeString(o_lst->Count).Length(), 3);
 			for (int i=0; i<o_lst->Count; i++) {
-				UnicodeString fnam = ExtractFileName(ExcludeTrailingPathDelimiter(o_lst->Strings[i]));
+				UnicodeString fnam = get_dir_name(o_lst->Strings[i]);
 				fbuf->Add(UnicodeString().sprintf(_T("%0*u\t%s"), w, i + 1, fnam.c_str()));
 			}
 			fbuf->Add(EmptyStr);
@@ -24305,7 +24297,7 @@ void __fastcall TNyanFiForm::SetTagActionExecute(TObject *Sender)
 			if (USAME_TS(tags, ";")) {
 				InputExDlg->IpuntExMode = INPEX_SET_TAG;
 				InputExDlg->InputComboBox->Text = def_tag;
-				if (InputExDlg->ShowModal()!=mrOk) SkipAbort();;
+				if (InputExDlg->ShowModal()!=mrOk) SkipAbort();
 				tags = InputExDlg->InputComboBox->Text;
 			}
 		}
@@ -24558,7 +24550,7 @@ void __fastcall TNyanFiForm::ShowStatusBarActionExecute(TObject *Sender)
 {
 	StatusBar1->Visible = SetToggleAction(ShowSttBar);
 	ClockBar->Visible	= !ShowSttBar && (LayoutMode==1 || LayoutMode==2) && !SttClockFmt.IsEmpty();
-	ClockBarI->Visible	= !ShowSttBar && !SttClockFmt.IsEmpty();;
+	ClockBarI->Visible	= !ShowSttBar && !SttClockFmt.IsEmpty();
 	if (StatusBar1->Visible) SetFileInf();
 }
 //---------------------------------------------------------------------------
@@ -25442,7 +25434,7 @@ void __fastcall TNyanFiForm::ToOppItemCore(const _TCHAR *mode_str)
 		if (idx_c==-1 || idx_c>=lst->Count) Abort();
 		file_rec *cfp = (file_rec*)lst->Objects[idx_c];
 		if (cfp->is_dummy) {
-			if (SyncLR && SyncItem) SkipAbort(); else Abort();;
+			if (SyncLR && SyncItem) SkipAbort(); else Abort();
 		}
 
 		int idx_o = -1;
@@ -25551,7 +25543,7 @@ void __fastcall TNyanFiForm::ToParentActionExecute(TObject *Sender)
 					CurStt->arc_RetList->Delete(0);
 					CurStt->arc_Name	= get_pre_tab(lbuf);
 					CurStt->arc_SubPath = get_post_tab(lbuf);
-					last_dir = CurStt->arc_SubPath + ExtractFileName(ExcludeTrailingPathDelimiter(CurStt->arc_DspPath));
+					last_dir = CurStt->arc_SubPath + get_dir_name(CurStt->arc_DspPath);
 					CurStt->arc_DspPath = get_parent_path(CurStt->arc_DspPath);
 				}
 				else {
@@ -25580,10 +25572,7 @@ void __fastcall TNyanFiForm::ToParentActionExecute(TObject *Sender)
 			}
 			UnicodeString l_pnam = CurFTPPath;
 			if (!ChangeFtpFileList(CurListTag, "..", CurFTPPath)) GlobalAbort();
-			if (SyncLR && IsOppFList() &&
-				SameText(ExtractFileName(ExcludeTrailingPathDelimiter(l_pnam)),
-						 ExtractFileName(ExcludeTrailingPathDelimiter(CurPath[OppListTag]))))
-			{
+			if (SyncLR && IsOppFList() && SameText(get_dir_name(l_pnam), get_dir_name(CurPath[OppListTag]))) {
 				OppToParent();
 			}
 		}
@@ -29604,7 +29593,7 @@ void __fastcall TNyanFiForm::GrepStartActionExecute(TObject *Sender)
 		}
 	}
 
-	GrepOptPanel->Enabled	  = true;;
+	GrepOptPanel->Enabled	  = true;
 	GrepFindComboBox->Enabled = true;
 
 	//---------------------------

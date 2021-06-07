@@ -22,20 +22,19 @@ void __fastcall TCharInfoForm::FormShow(TObject *Sender)
 {
 	FontNamePanel->Font->Assign(DialogFont);
 	FontNamePanel->Font->Size = ScaledInt(8, this);
-	FontNamePanel->Height = abs(FontNamePanel->Font->Height) + ScaledInt(4, this);
-
+	FontNamePanel->Height	  = abs(FontNamePanel->Font->Height) + ScaledInt(4, this);
+	FontNamePanel->Visible	  = IniFile->ReadBoolGen(_T("CharInfoShowFontName"), true);
 	Splitter1->MinSize = FontNamePanel->Height * 2;
 
 	IniFile->LoadPosInfo(this);
 	SetToolWinBorder(this);
-
-	SamplePanel->Height = std::max(IniFile->ReadIntGen( _T("CharInfoCharHeight"), 180), Splitter1->MinSize);
+	SamplePanel->Height  = std::max(IniFile->ReadIntGen(_T("CharInfoCharHeight"), 180), Splitter1->MinSize);
 
 	TListBox *lp = InfoListBox;
 	lp->Color = col_bgInf;
 	set_ListBoxItemHi(lp, FileInfFont);
 
-	ClientHeight = SamplePanel->Height + lp->ItemHeight * CHARINF_ITEMCOUNT;
+	SetInfoHeight();
 	ClientWidth  = get_CharWidth_Font(lp->Font, 41);	//***
 	SamplePanel->Constraints->MaxHeight = ClientWidth;
 
@@ -48,15 +47,22 @@ void __fastcall TCharInfoForm::FormHide(TObject *Sender)
 {
 	IniFile->SavePosInfo(this);
 
-	IniFile->WriteIntGen(_T("CharInfoCharHeight"),	SamplePanel->Height);
+	IniFile->WriteIntGen(_T("CharInfoCharHeight"),		SamplePanel->Height);
+	IniFile->WriteBoolGen(_T("CharInfoShowFontName"),	FontNamePanel->Visible);
 }
 
 //---------------------------------------------------------------------------
 void __fastcall TCharInfoForm::Splitter1Moved(TObject *Sender)
 {
 	SetCharFont();
-	ClientHeight = SamplePanel->Height + InfoListBox->ItemHeight * CHARINF_ITEMCOUNT;
+	SetInfoHeight();
 }
+//---------------------------------------------------------------------------
+void __fastcall TCharInfoForm::SetInfoHeight()
+{
+	ClientHeight = SamplePanel->Height + InfoListBox->ItemHeight * (CHARINF_ITEMCOUNT + (!RefInfo.IsEmpty()? 1 : 0));
+}
+
 //---------------------------------------------------------------------------
 void __fastcall TCharInfoForm::SetCharFont()
 {
@@ -73,9 +79,17 @@ void __fastcall TCharInfoForm::SetCharFont()
 //---------------------------------------------------------------------------
 //表示を更新
 //---------------------------------------------------------------------------
-void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
+void __fastcall TCharInfoForm::UpdateChar(
+	UnicodeString c,		//対象文字(サロゲートペア対応)
+	UnicodeString inf)		//付加情報	(default = EmptyStr)
 {
+	UniCharName = NumRefHex = NumRefDec = RefInfo = EmptyStr;
+
 	std::unique_ptr<TStringList> i_lst(new TStringList());
+	if (!inf.IsEmpty()) {
+		RefInfo = inf;
+		i_lst->AddObject(RefInfo, (TObject*)(LBFLG_STD_FINF));
+	}
 
 	if (!c.IsEmpty()) {
 		CharPanel->Caption = SameStr(c, '&')? _T("&&") : c.c_str();
@@ -179,19 +193,20 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 		//Unicode
 		cd_str = "   Unicode: ";
 		int uc;
-		if (c.Length()==2) {
-			//サロゲートペア
-			unsigned int ld = (unsigned int)c[1];
-			unsigned int tl = (unsigned int)c[2];
-			int plane = ((ld - 0xd800) / 0x0040) + 1;
-			int ld2 = ld - (0xd800 + 0x0040 * (plane - 1));
-			int tl2 = tl - 0xdc00;
-			uc = plane * 0x10000 + ld2* 0x100 + ld2* 0x300 + tl2;
-			cd_str.cat_sprintf(_T("U+%05X (%04X %04X)"), uc, ld, tl);
-		}
-		else if (!is_cr) {
-			uc = (unsigned int)c[1];
-			cd_str.cat_sprintf(_T("U+%04X"), uc);
+		if (!is_cr) {
+			if (c.Length()==2) {
+				//サロゲートペア
+				uc = SurrogateToUnicodePoint(c);
+				cd_str.cat_sprintf(_T("U+%05X (%04X %04X)"), uc, c[1], c[2]);
+				UniCharName.sprintf(_T("\\U%08X"), uc);
+			}
+			else {
+				uc = (unsigned int)c[1];
+				cd_str.cat_sprintf(_T("U+%04X"), uc);
+				UniCharName.sprintf(_T("\\u%04X"), uc);
+			}
+			NumRefHex.sprintf(_T("&#x%X;"), uc);
+			NumRefDec.sprintf(_T("&#%u;"), uc);
 		}
 		i_lst->Add(cd_str);
 
@@ -212,6 +227,7 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 		CharPanel->Caption = EmptyStr;
 	}
 
+	SetInfoHeight();
 	assign_InfListBox(InfoListBox, i_lst.get());
 
 	Application->MainForm->SetFocus();
@@ -223,11 +239,24 @@ void __fastcall TCharInfoForm::UpdateChar(UnicodeString c)
 void __fastcall TCharInfoForm::InfoListBoxDrawItem(TWinControl *Control, int Index,
 	TRect &Rect, TOwnerDrawState State)
 {
-	draw_InfListBox((TListBox*)Control, Rect, Index, State);
+	TListBox *lp = (TListBox*)Control;
+	draw_InfListBox(lp, Rect, Index, State);
+	if (Index==0 && ((int)lp->Items->Objects[Index] & LBFLG_STD_FINF)) draw_separateLine(lp->Canvas, Rect, 2);
 }
 
 //---------------------------------------------------------------------------
-//情報のコピー
+//右クリックメニュー
+//---------------------------------------------------------------------------
+void __fastcall TCharInfoForm::PopupMenu1Popup(TObject *Sender)
+{
+	CopyUniChNameItem->Enabled = !UniCharName.IsEmpty();
+	NumRefDecItem->Enabled	   = !NumRefDec.IsEmpty();
+	NumRefHexItem->Enabled	   = !NumRefHex.IsEmpty();
+	FontNameItem->Checked	   = FontNamePanel->Visible;
+}
+
+//---------------------------------------------------------------------------
+//情報をコピー
 //---------------------------------------------------------------------------
 void __fastcall TCharInfoForm::CopyItemClick(TObject *Sender)
 {
@@ -235,6 +264,27 @@ void __fastcall TCharInfoForm::CopyItemClick(TObject *Sender)
 	i_lst->Add(CharPanel->Caption);
 	i_lst->AddStrings(InfoListBox->Items);
 	copy_to_Clipboard(i_lst->Text);
+}
+//---------------------------------------------------------------------------
+//ユニバーサル文字名をコピー
+//---------------------------------------------------------------------------
+void __fastcall TCharInfoForm::CopyUniChNameItemClick(TObject *Sender)
+{
+	copy_to_Clipboard(UniCharName);
+}
+//---------------------------------------------------------------------------
+//数値文字参照(10進数)をコピー
+//---------------------------------------------------------------------------
+void __fastcall TCharInfoForm::NumRefDecItemClick(TObject *Sender)
+{
+	copy_to_Clipboard(NumRefDec);
+}
+//---------------------------------------------------------------------------
+//数値文字参照(16進数)をコピー
+//---------------------------------------------------------------------------
+void __fastcall TCharInfoForm::NumRefHexItemClick(TObject *Sender)
+{
+	copy_to_Clipboard(NumRefHex);
 }
 
 //---------------------------------------------------------------------------
@@ -247,7 +297,7 @@ void __fastcall TCharInfoForm::ChgFontItemClick(TObject *Sender)
 	if (UserModule->FontDlgToFont(CharInfFont)) SetCharFont();
 }
 //---------------------------------------------------------------------------
-//サンプルの配所を設定
+//サンプルの配色を設定
 //---------------------------------------------------------------------------
 void __fastcall TCharInfoForm::SetColItemClick(TObject *Sender)
 {
@@ -261,4 +311,11 @@ void __fastcall TCharInfoForm::SetColItemClick(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
-
+//フォント名を表示
+//---------------------------------------------------------------------------
+void __fastcall TCharInfoForm::FontNameItemClick(TObject *Sender)
+{
+	FontNamePanel->Visible = !FontNamePanel->Visible;
+	SetCharFont();
+}
+//---------------------------------------------------------------------------

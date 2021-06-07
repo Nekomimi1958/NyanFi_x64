@@ -1328,8 +1328,7 @@ void __fastcall TGitViewer::ArchiveActionExecute(TObject *Sender)
 void __fastcall TGitViewer::OpenTmpArcActionExecute(TObject *Sender)
 {
 	if (!CommitID.IsEmpty()) {
-		UnicodeString tmp_name = TempPathA + CommitID.SubString(1, 8) + "_"
-									+ ExtractFileName(ExcludeTrailingPathDelimiter(WorkDir)) + ".zip";
+		UnicodeString tmp_name = TempPathA + CommitID.SubString(1, 8) + "_" + get_dir_name(WorkDir) + ".zip";
 		UnicodeString prm;
 		prm.sprintf(_T("archive --format=zip %s --output=\"%s\""), CommitID.c_str(), yen_to_slash(tmp_name).c_str());
 		if (GitExeList(prm, NULL, "アーカイブ作成中...") && file_exists(tmp_name)) {

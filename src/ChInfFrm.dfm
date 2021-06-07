@@ -133,11 +133,24 @@ object CharInfoForm: TCharInfoForm
     end
   end
   object PopupMenu1: TPopupMenu
+    OnPopup = PopupMenu1Popup
     Left = 112
     Top = 40
     object CopyItem: TMenuItem
       Caption = #24773#22577#12434#12467#12500#12540'(&C)'
       OnClick = CopyItemClick
+    end
+    object CopyUniChNameItem: TMenuItem
+      Caption = #12518#12491#12496#12540#12469#12523#25991#23383#21517#12434#12467#12500#12540'(&U)'
+      OnClick = CopyUniChNameItemClick
+    end
+    object NumRefDecItem: TMenuItem
+      Caption = #25968#20516#25991#23383#21442#29031'(10'#36914#25968')'#12434#12467#12500#12540'(&D)'
+      OnClick = NumRefDecItemClick
+    end
+    object NumRefHexItem: TMenuItem
+      Caption = #25968#20516#25991#23383#21442#29031'(16'#36914#25968')'#12434#12467#12500#12540'(&X)'
+      OnClick = NumRefHexItemClick
     end
     object Sep_1: TMenuItem
       Caption = '-'
@@ -154,6 +167,13 @@ object CharInfoForm: TCharInfoForm
       Tag = 1
       Caption = #25313#22823#34920#31034#12398#25991#23383#33394'(&T)...'
       OnClick = SetColItemClick
+    end
+    object Sep_2: TMenuItem
+      Caption = '-'
+    end
+    object FontNameItem: TMenuItem
+      Caption = #12501#12457#12531#12488#21517#12434#34920#31034
+      OnClick = FontNameItemClick
     end
   end
 end

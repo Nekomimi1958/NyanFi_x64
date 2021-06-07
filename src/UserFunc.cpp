@@ -226,7 +226,7 @@ TPoint get_ListItemPos(TListBox *lp, int xp)
 void pos_ListBoxItem(TListBox *lp, int xp)
 {
 	if (xp==0) xp = lp->ClientWidth/3;
-	Mouse->CursorPos = get_ListItemPos(lp, xp);;
+	Mouse->CursorPos = get_ListItemPos(lp, xp);
 }
 
 //---------------------------------------------------------------------------

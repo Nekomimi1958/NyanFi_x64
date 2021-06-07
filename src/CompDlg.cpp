@@ -74,7 +74,7 @@ void __fastcall TFileCompDlg::OkActionUpdate(TObject *Sender)
 	AlgComboBox->Enabled	= HashRadioGroup->Enabled;
 
 	IdRadioGroup->Enabled	= !CmpDirCheckBox->Checked && (SizeRadioGroup->ItemIndex==0 || SizeRadioGroup->ItemIndex==2)
-								&& !CurStt->is_Arc && !OppStt->is_Arc && !CurStt->is_FTP && !OppStt->is_FTP;;
+								&& !CurStt->is_Arc && !OppStt->is_Arc && !CurStt->is_FTP && !OppStt->is_FTP;
 
 	CmpArcCheckBox->Enabled	= CmpDirCheckBox->Checked;
 

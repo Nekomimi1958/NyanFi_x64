@@ -381,8 +381,7 @@ void __fastcall TAppListDlg::SetIncSeaMode(bool sw)
 	}
 	//’Êí•\Ž¦
 	else {
-		InpPaintBox->Visible   = false;;
-
+		InpPaintBox->Visible   = false;
 		setup_Panel(DirPanel, DirInfFont);
 		DirPanel->Color 	   = col_bgDirInf;
 		DirPanel->Font->Color  = col_fgDirInf;
@@ -641,8 +640,7 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 	}
 	//’Êíƒ‚[ƒh
 	else {
-		DirPanel->Caption = get_MiniPathName(ExtractFileName(ExcludeTrailingPathDelimiter(CurLaunchPath)),
-								DirPanel->ClientWidth, DirPanel->Font);
+		DirPanel->Caption = get_MiniPathName(get_dir_name(CurLaunchPath), DirPanel->ClientWidth, DirPanel->Font);
 		TSearchRec sr;
 		if (FindFirst(CurLaunchPath + "*.*", faAnyFile, sr)==0) {
 			do {
@@ -655,7 +653,9 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 						fnam = IncludeTrailingPathDelimiter(fnam);
 					}
 				}
-				else if (!test_FileExt(get_extension(fnam), _T(".lnk.url"))) continue;
+				else if (!test_FileExt(get_extension(fnam), _T(".lnk.url"))) {
+					continue;
+				}
 
 				if (!USAME_TS(fnam, "..")) fnam = CurLaunchPath + fnam;
 				file_rec *fp = cre_new_file_rec(fnam);  if (!fp) continue;

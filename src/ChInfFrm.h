@@ -24,7 +24,12 @@ __published:	// IDE で管理されるコンポーネント
 	TListBox *InfoListBox;
 	TMenuItem *ChgFontItem;
 	TMenuItem *CopyItem;
+	TMenuItem *CopyUniChNameItem;
+	TMenuItem *FontNameItem;
+	TMenuItem *NumRefDecItem;
+	TMenuItem *NumRefHexItem;
 	TMenuItem *Sep_1;
+	TMenuItem *Sep_2;
 	TMenuItem *SetBgColItem;
 	TMenuItem *SetFgColItem;
 	TPanel *CharPanel;
@@ -35,7 +40,6 @@ __published:	// IDE で管理されるコンポーネント
 	TPopupMenu *PopupMenu1;
 	TShape *BorderShape1;
 	TShape *BorderShape2;
-	TShape *BorderShape3;
 	TSplitter *Splitter1;
 
 	void __fastcall FormShow(TObject *Sender);
@@ -45,14 +49,25 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ChgFontItemClick(TObject *Sender);
 	void __fastcall Splitter1Moved(TObject *Sender);
 	void __fastcall SetColItemClick(TObject *Sender);
+	void __fastcall CopyUniChNameItemClick(TObject *Sender);
+	void __fastcall NumRefHexItemClick(TObject *Sender);
+	void __fastcall NumRefDecItemClick(TObject *Sender);
+	void __fastcall PopupMenu1Popup(TObject *Sender);
+	void __fastcall FontNameItemClick(TObject *Sender);
 
 private:	// ユーザー宣言
+	UnicodeString UniCharName;
+	UnicodeString NumRefHex;
+	UnicodeString NumRefDec;
+	UnicodeString RefInfo;		//参照情報
+
+	void __fastcall SetInfoHeight();
 	void __fastcall SetCharFont();
 
 public:		// ユーザー宣言
 	__fastcall TCharInfoForm(TComponent* Owner);
 
-	void __fastcall UpdateChar(UnicodeString c);
+	void __fastcall UpdateChar(UnicodeString c, UnicodeString inf = EmptyStr);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TCharInfoForm *CharInfoForm;

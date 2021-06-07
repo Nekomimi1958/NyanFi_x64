@@ -741,7 +741,7 @@ void __fastcall TUserModule::RefFileNameActionUpdate(TObject *Sender)
 void __fastcall TUserModule::RefCurDirActionExecute(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;
-	UnicodeString dnam = ExtractFileName(ExcludeTrailingPathDelimiter(CurPathName));;
+	UnicodeString dnam = get_dir_name(CurPathName);
 	if	 (class_is_CustomEdit(wp))	((TCustomEdit*)wp)->SelText = dnam;
 	else if (class_is_ComboBox(wp))	((TComboBox*)wp)->SelText	 = dnam;
 }

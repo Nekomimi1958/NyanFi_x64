@@ -27,6 +27,7 @@
 #define LBFLG_ATTR_FIF	0x00100000		//属性
 #define LBFLG_TAGS_FIF	0x00200000		//タグ
 #define LBFLG_TYPE_FIF	0x00400000		//種類
+
 #define LBFLG_FEXT_FIF	0x01000000		//拡張子別ファイル数
 #define LBFLG_CRCD_FIF	0x02000000		//改行コード
 #define LBFLG_ERR_FIF	0x04000000		//エラー/警告

@@ -1983,7 +1983,7 @@ void __fastcall TOptionDlg::TagColListBoxDrawItem(TWinControl *Control, int Inde
 	UnicodeString stt;
 	TColor col = (TColor)lp->Items->ValueFromIndex[Index].ToIntDef(col_None);
 	if (col==col_None) {
-		col = (TColor)ColBufList->Values["fgTagNam"].ToIntDef(clBlack);;
+		col = (TColor)ColBufList->Values["fgTagNam"].ToIntDef(clBlack);
 		stt = "<デフォルト>";
 	}
 

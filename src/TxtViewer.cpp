@@ -2696,17 +2696,37 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 
 	//文字情報
 	if (isText && CharInfoForm->Visible) {
-		UnicodeString chstr;
-		UnicodeString lnstr = get_DispLine(CurPos.y);
-		int p = CurPos.x;
-		if (p<lnstr.Length()) {
-			chstr = lnstr[++p];
-			if (lnstr.IsLeadSurrogate(p) && p<lnstr.Length())
-				chstr += lnstr[++p];
-			else if (lnstr.IsTrailSurrogate(p))
-				chstr = EmptyStr;
+		UnicodeString chstr, inf;
+		UnicodeString s = get_SelText();
+		if (!s.IsEmpty()) {
+			TMatch mt = TRegEx::Match(s, "&[a-zA-Z]+[0-9]*;");
+			if (mt.Success) {
+				s = ChEntRef_to_NumChRef(mt.Value);
+				inf = mt.Value + " (文字実体参照)";
+			}
+			int		   uc = extract_UnicodePoint(s, "&#([0-9]{1,7});", true);
+			if (uc==0) uc = extract_UnicodePoint(s, "&#x([0-9a-fA-F]{1,5});");
+			if (uc==0) uc = extract_UnicodePoint(s, "\\\\u([0-9a-fA-F]{4})");
+			if (uc==0) uc = extract_UnicodePoint(s, "\\\\U([0-9a-fA-F]{8})");
+			if (uc>0) {
+				chstr = UnicodePointToStr(uc);
+				if (inf.IsEmpty()) inf = s + (StartsStr("&#", s)? " (数値文字参照)" : " (ユニバーサル文字名)");
+			}
 		}
-		CharInfoForm->UpdateChar(chstr);
+
+		if (chstr.IsEmpty()) {
+			UnicodeString lnstr = get_DispLine(CurPos.y);
+			int p = CurPos.x;
+			if (p<lnstr.Length()) {
+				chstr = lnstr[++p];
+				if (lnstr.IsLeadSurrogate(p) && p<lnstr.Length())
+					chstr += lnstr[++p];
+				else if (lnstr.IsTrailSurrogate(p))
+					chstr = EmptyStr;
+			}
+		}
+
+		CharInfoForm->UpdateChar(chstr, inf);
 	}
 
 	//CSV/TSVレコード

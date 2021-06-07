@@ -258,6 +258,10 @@ extern const UnicodeString CodePageListX;
 UnicodeString get_NameOfCodePage(int code_page, bool long_sw = false, bool has_bom = false);
 int get_CodePageOfName(UnicodeString code_name);
 UnicodeString get_UnicodeBlockName(int code);
+int extract_UnicodePoint(UnicodeString &s, UnicodeString ptn, bool dec_sw = false);
+UnicodeString UnicodePointToStr(int uc);
+int SurrogateToUnicodePoint(UnicodeString c);
+UnicodeString ChEntRef_to_NumChRef(UnicodeString s);
 
 int  check_UTF8(BYTE *bp, int size);
 int  get_MemoryCodePage(TMemoryStream *ms, bool *has_bom = NULL);

@@ -5811,7 +5811,7 @@ void get_DriveLogList(
 				__int64 used_sz = StrToInt64Def(get_csv_item(lbuf, 2), -1);
 				__int64 free_sz = StrToInt64Def(get_csv_item(lbuf, 3), -1);
 				if (used_sz>=0 && free_sz>=0) {
-					double r = 1.0 * used_sz / (used_sz + free_sz);;
+					double r = 1.0 * used_sz / (used_sz + free_sz);
 					r_min = (r_min<0)? r : std::min(r_min, r);
 					r_max = (r_max<0)? r : std::max(r_max, r);
 				}
@@ -12520,7 +12520,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 				}
 				//èIóπë“Çø
 				else if (ContainsStr(opt, "W")) {
-					while (::WaitForSingleObject(pi.hProcess, 50)==WAIT_TIMEOUT) Application->ProcessMessages();;
+					while (::WaitForSingleObject(pi.hProcess, 50)==WAIT_TIMEOUT) Application->ProcessMessages();
 					exited = true;
 				}
 
@@ -14393,7 +14393,7 @@ bool OpenWebMaps(
 			unsigned int i_wd, i_hi;
 			UnicodeString ex_str = !fnam.IsEmpty()? get_ExifInfStr(fnam, NULL, &i_wd, &i_hi) : EmptyStr;
 			if (!ex_str.IsEmpty()) ex_str.cat_sprintf(_T(" %uÅ~%u"), i_wd, i_hi);
-			lbuf = ReplaceStr(lbuf, "$ExifInfo$", ex_str);;
+			lbuf = ReplaceStr(lbuf, "$ExifInfo$", ex_str);
 		}
 
 		lbuf = ReplaceStr(lbuf, "$Latitude$",  UnicodeString().sprintf(_T("%.8f") ,lat));

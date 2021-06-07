@@ -226,7 +226,7 @@ bool __fastcall TFileInfoDlg::UpdateInfo()
 				}
 			}
 
-			MaxColWd0 = MaxColWd1 = MaxColWd2 = 0;;
+			MaxColWd0 = MaxColWd1 = MaxColWd2 = 0;
 
 			TCanvas *cv = lp->Canvas;
 			cv->Font->Assign(lp->Font);

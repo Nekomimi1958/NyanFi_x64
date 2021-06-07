@@ -363,7 +363,7 @@ void __fastcall TFuncListDlg::FuncListBoxDrawItem(TWinControl *Control, int Inde
 	}
 
 	//ÉJÅ[É\Éã
-	draw_ListCursor(lp, Rect, Index, State);
+	draw_ListCursor2(lp, Rect, Index, State);
 }
 
 //---------------------------------------------------------------------------

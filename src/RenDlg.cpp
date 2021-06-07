@@ -1667,10 +1667,7 @@ void __fastcall TRenameDlg::DelAssRenActionUpdate(TObject *Sender)
 void __fastcall TRenameDlg::Inp1stNameActionExecute(TObject *Sender)
 {
 	UnicodeString fnam = ItemList->Strings[0];
-	if (dir_exists(fnam))
-		fnam = ExtractFileName(ExcludeTrailingPathDelimiter(fnam));
-	else
-		fnam = ChangeFileExt(ExtractFileName(fnam), EmptyStr);
+	fnam = dir_exists(fnam)? get_dir_name(fnam) : ChangeFileExt(ExtractFileName(fnam), EmptyStr);
 
 	SrcStrComboBox->SetFocus();
 	SrcStrComboBox->Text	  = fnam;

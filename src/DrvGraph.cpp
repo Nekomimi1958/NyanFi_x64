@@ -141,7 +141,7 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 			__int64 used_sz = StrToInt64Def(get_csv_item(lbuf, 2), -1);
 			__int64 free_sz = StrToInt64Def(get_csv_item(lbuf, 3), -1);
 			if (used_sz>=0 && free_sz>=0) {
-				double r = 1.0 * used_sz / (used_sz + free_sz);;
+				double r = 1.0 * used_sz / (used_sz + free_sz);
 				draw_BarGraph(cv, Rect(GraphTopX, yp, GraphTopX + xw, yp + BarSize), r);
 			}
 			//ƒOƒŠƒbƒh
