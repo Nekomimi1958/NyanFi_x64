@@ -152,7 +152,6 @@ public:
 	TStringList  *TxtBufList;		//内容リスト
 	TStringList  *TxtBufList2;		//HTML→TEXT変換後の内容リスト/ 整形後JSON
 	TStringList  *DispLines;		//表示行リスト(テキスト用)
-	TStringList  *NyanFiDef;		//ADS定義ファイルの内容
 
 	UnicodeString FileName;			//ファイル名
 	UnicodeString OrgName;			//一時解凍している場合の元ファイル名
@@ -278,8 +277,6 @@ public:
 	~TTxtViewer();
 
 	bool __fastcall CloseAuxForm();
-	bool __fastcall LoadNyanFiDef();
-	bool __fastcall SaveNyanFiDef();
 	void __fastcall Clear();
 	void __fastcall SetColor(TStringList *lst);
 	void __fastcall SetColor(UnicodeString prm = EmptyStr);
@@ -335,6 +332,7 @@ public:
 	UnicodeString __fastcall GetCurWord(bool select = false, UnicodeString ptn = EmptyStr, int *p_s = NULL, int *p_e = NULL);
 	void __fastcall SelLine(bool cr = false);
 
+	void __fastcall saveDef_CodePage(int code_page);
 	int  __fastcall change_CodePage(UnicodeString prm);
 
 	UnicodeString __fastcall GetCurImgFile();

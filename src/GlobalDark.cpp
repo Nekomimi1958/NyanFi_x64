@@ -1,12 +1,12 @@
-ï»¿//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
 // NyanFi																//
-//  ã‚°ãƒ­ãƒ¼ãƒãƒ«(ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰å¯¾å¿œ)										//
+//  ƒOƒ[ƒoƒ‹(ƒ_[ƒNƒ‚[ƒh‘Î‰)										//
 //----------------------------------------------------------------------//
 #include "usr_msg.h"
 #include "GlobalDark.h"
 
 //---------------------------------------------------------------------------
-//éå…¬é–‹API
+//”ñŒöŠJAPI
 HMODULE hUxTheme = NULL;
 FUNC_ShouldAppsUseDarkMode	lpfShouldAppsUseDarkMode  = NULL;
 FUNC_AllowDarkModeForWindow	lpfAllowDarkModeForWindow = NULL;
@@ -14,30 +14,30 @@ FUNC_AllowDarkModeForApp	lpfAllowDarkModeForApp	  = NULL;
 FUNC_FlushMenuThemes		lpfFlushMenuThemes		  = NULL;
 
 //---------------------------------------------------------------------------
-bool SupportDarkMode = false;	//ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰é©ç”¨å¯èƒ½
-bool IsDarkMode 	 = false;	//ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰ãŒé©ç”¨ã•ã‚Œã¦ã„ã‚‹
-bool AllowDarkMode	 = false;	//ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰ã‚’é©ç”¨(ã‚ªãƒ—ã‚·ãƒ§ãƒ³è¨­å®š)
+bool SupportDarkMode = false;	//ƒ_[ƒNƒ‚[ƒh“K—p‰Â”\
+bool IsDarkMode 	 = false;	//ƒ_[ƒNƒ‚[ƒh‚ª“K—p‚³‚ê‚Ä‚¢‚é
+bool AllowDarkMode	 = false;	//ƒ_[ƒNƒ‚[ƒh‚ğ“K—p(ƒIƒvƒVƒ‡ƒ“İ’è)
 
 //---------------------------------------------------------------------------
-bool SureCancel;				//ã‚­ãƒ£ãƒ³ã‚»ãƒ«ãƒœã‚¿ãƒ³ã‚’è¡¨ç¤º
-bool SureDefNo;					//ã€Œã„ã„ãˆã€ãŒãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
-bool SureAdjPos;				//è¡¨ç¤ºä½ç½®ã‚’çŠ¶æ³ã«åˆã‚ã›ã¦èª¿æ•´
-bool MsgPosCenter = false;		//ãƒ¡ã‚¤ãƒ³ç”»é¢ã®ä¸­å¤®ã«è¡¨ç¤º
+bool SureCancel;				//ƒLƒƒƒ“ƒZƒ‹ƒ{ƒ^ƒ“‚ğ•\¦
+bool SureDefNo;					//u‚¢‚¢‚¦v‚ªƒfƒtƒHƒ‹ƒg
+bool SureAdjPos;				//•\¦ˆÊ’u‚ğó‹µ‚É‡‚í‚¹‚Ä’²®
+bool MsgPosCenter = false;		//ƒƒCƒ“‰æ–Ê‚Ì’†‰›‚É•\¦
 
 //---------------------------------------------------------------------------
 const TColor col_None = Graphics::clNone;
 
-TColor col_bgOptTab;			//ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªè¨­å®šã‚¿ãƒ–ã®èƒŒæ™¯è‰²
-TColor col_fgOptTab;			//ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªè¨­å®šã‚¿ãƒ–ã®æ–‡å­—è‰²
-TColor col_Invalid;				//ç„¡åŠ¹ãªé …ç›®ã®èƒŒæ™¯è‰²
-TColor col_Illegal;				//ä¸æ­£ãªå…¥åŠ›é …ç›®ã®èƒŒæ™¯è‰²
+TColor col_bgOptTab;			//ƒAƒNƒeƒBƒu‚Èİ’èƒ^ƒu‚Ì”wŒiF
+TColor col_fgOptTab;			//ƒAƒNƒeƒBƒu‚Èİ’èƒ^ƒu‚Ì•¶šF
+TColor col_Invalid;				//–³Œø‚È€–Ú‚Ì”wŒiF
+TColor col_Illegal;				//•s³‚È“ü—Í€–Ú‚Ì”wŒiF
 
-TColor col_DkPanel = col_None;	//ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰: ãƒ‘ãƒãƒ«ã®èƒŒæ™¯è‰²
-TColor col_DkInval;				//ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰: ç„¡åŠ¹ãªé …ç›®ã®èƒŒæ™¯è‰²
-TColor col_DkIlleg;				//ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰: ä¸æ­£ãªå…¥åŠ›é …ç›®ã®èƒŒæ™¯è‰²
+TColor col_DkPanel = col_None;	//ƒ_[ƒNƒ‚[ƒh: ƒpƒlƒ‹‚Ì”wŒiF
+TColor col_DkInval;				//ƒ_[ƒNƒ‚[ƒh: –³Œø‚È€–Ú‚Ì”wŒiF
+TColor col_DkIlleg;				//ƒ_[ƒNƒ‚[ƒh: •s³‚È“ü—Í€–Ú‚Ì”wŒiF
 
 //---------------------------------------------------------------------------
-//ã‚·ã‚¹ãƒ†ãƒ è‰²
+//ƒVƒXƒeƒ€F
 TColor scl_Window;
 TColor scl_WindowText;
 TColor scl_Highlight;
@@ -51,7 +51,7 @@ TColor scl_MenuText;
 TColor scl_MenuSelect;
 TColor scl_MenuSelect2;
 
-//ãƒ€ãƒ¼ã‚¯è‰²
+//ƒ_[ƒNF
 TColor dcl_Window;
 TColor dcl_WindowText;
 TColor dcl_Highlight;
@@ -67,7 +67,7 @@ TColor dcl_MenuText;
 TBrush *MenuBrush = NULL;
 
 //---------------------------------------------------------------------------
-//ãƒã‚¤ã‚³ãƒ³ãƒˆãƒ©ã‚¹ãƒˆã‹?
+//ƒnƒCƒRƒ“ƒgƒ‰ƒXƒg‚©?
 //---------------------------------------------------------------------------
 bool is_HighContrast()
 {
@@ -77,7 +77,7 @@ bool is_HighContrast()
 }
 
 //---------------------------------------------------------------------------
-//ã‚·ã‚¹ãƒ†ãƒ è‰²ã®åˆæœŸåŒ–
+//ƒVƒXƒeƒ€F‚Ì‰Šú‰»
 //---------------------------------------------------------------------------
 void InitializeSysColor()
 {
@@ -109,9 +109,9 @@ void InitializeSysColor()
 
 //---------------------------------------------------------------------------
 void InitializeDarkMode(
-	bool kill_sw)	//é©ç”¨ç¦æ­¢ (default = false)
+	bool kill_sw)	//“K—p‹Ö~ (default = false)
 {
-	//ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰åˆæœŸåŒ–
+	//ƒ_[ƒNƒ‚[ƒh‰Šú‰»
 	if (!kill_sw && CheckWin32Version(10) && TOSVersion::Build >= 17763 && !is_HighContrast()) {
 		hUxTheme = ::LoadLibrary(_T("uxtheme.dll"));
 		if (hUxTheme) {
@@ -137,7 +137,7 @@ void EndDarkMode()
 }
 
 //---------------------------------------------------------------------------
-//ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰ã‚’é©ç”¨
+//ƒ_[ƒNƒ‚[ƒh‚ğ“K—p
 //---------------------------------------------------------------------------
 bool ApplyDarkMode(HWND hWnd)
 {
@@ -159,22 +159,22 @@ bool ApplyDarkMode(HWND hWnd)
 }
 
 //---------------------------------------------------------------------------
-//ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰ã‚’è€ƒæ…®ã—ãŸè‰²ã®å–å¾—
+//ƒ_[ƒNƒ‚[ƒh‚ğl—¶‚µ‚½F‚Ìæ“¾
 //---------------------------------------------------------------------------
 TColor get_WinColor(
-	bool is_inv)	//ç„¡åŠ¹ãªé …ç›®	(default = false)
+	bool is_inv)	//–³Œø‚È€–Ú	(default = false)
 {
 	return is_inv? (IsDarkMode? col_DkInval : col_Invalid) : (IsDarkMode? dcl_Window : scl_Window);
 }
 //---------------------------------------------------------------------------
 TColor get_TextColor(
-	bool hl)	//ãƒã‚¤ãƒ©ã‚¤ãƒˆ	(default = false)
+	bool hl)	//ƒnƒCƒ‰ƒCƒg	(default = false)
 {
 	return hl? (IsDarkMode? dcl_HighlightText : scl_HighlightText) : (IsDarkMode? dcl_WindowText : scl_WindowText);
 }
 //---------------------------------------------------------------------------
 TColor get_PanelColor(
-	bool is_inv)	//ç„¡åŠ¹ãªé …ç›®	(default = false)
+	bool is_inv)	//–³Œø‚È€–Ú	(default = false)
 {
 	if (is_inv) return (IsDarkMode? col_DkInval : col_Invalid);
 	return (IsDarkMode? ((col_DkPanel!=col_None)? col_DkPanel : dcl_BtnFace) : scl_BtnFace);
@@ -186,7 +186,7 @@ TColor get_LabelColor()
 }
 
 //---------------------------------------------------------------------------
-//ãƒ¡ãƒ‹ãƒ¥ãƒ¼èƒŒæ™¯ã®è¨­å®š
+//ƒƒjƒ…[”wŒi‚Ìİ’è
 //---------------------------------------------------------------------------
 void SetMenuBgColor(HMENU hMenu)
 {
@@ -198,7 +198,7 @@ void SetMenuBgColor(HMENU hMenu)
 }
 
 //---------------------------------------------------------------------------
-//ãƒã‚¤ãƒ©ã‚¤ãƒˆè‰²ã®è¨­å®š
+//ƒnƒCƒ‰ƒCƒgF‚Ìİ’è
 //---------------------------------------------------------------------------
 void SetHighlight(TCanvas *cv, bool hl)
 {
@@ -213,11 +213,11 @@ void SetHighlight(TCanvas *cv, bool hl)
 }
 
 //---------------------------------------------------------------------------
-//ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã«ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰ã‚’é©ç”¨
+//ƒRƒ“ƒgƒ[ƒ‹‚Éƒ_[ƒNƒ‚[ƒh‚ğ“K—p
 //---------------------------------------------------------------------------
 void SetDarkWinTheme(
-	TWinControl *wp,	//ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«
-	bool std_col)		//ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ãªã©ã§æ¨™æº–è‰²ã‚’ä½¿ç”¨	(default = false)
+	TWinControl *wp,	//ƒRƒ“ƒgƒ[ƒ‹
+	bool std_col)		//ƒŠƒXƒgƒ{ƒbƒNƒX‚È‚Ç‚Å•W€F‚ğg—p	(default = false)
 {
 	if (!wp) return;
 	if (wp->ClassNameIs("TStatusBar")) return;
@@ -281,16 +281,16 @@ void SetDarkWinTheme(
 			AttachLabelToGroup(wp);
 		}
 
-		//ãƒ©ã‚¸ã‚ªãƒœã‚¿ãƒ³ãƒ»ã‚°ãƒ«ãƒ¼ãƒ—
+		//ƒ‰ƒWƒIƒ{ƒ^ƒ“EƒOƒ‹[ƒv
 		if (wp->ClassNameIs("TRadioGroup")) {
 			if (IsDarkMode) {
 				TRadioGroup *gp = (TRadioGroup *)wp;
 				for (int i=0; i<gp->Items->Count; i++) {
 					if (!gp->Items->Strings[i].IsEmpty()) {
-						//ãƒœã‚¿ãƒ³ã®ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³ã‚’ãƒ©ãƒ™ãƒ«ã«ç½®ãæ›ãˆã‚‹
+						//ƒ{ƒ^ƒ“‚ÌƒLƒƒƒvƒVƒ‡ƒ“‚ğƒ‰ƒxƒ‹‚É’u‚«Š·‚¦‚é
 						TRadioButton *cp = gp->Buttons[i];
 						TLabel *lp = new TLabel(cp->Parent);
-						lp->Tag		= (18 << 16) + cp->Width - 8;	//æ¤œç´¢ãƒãƒ¼ã‚¯ç”¨ ***
+						lp->Tag		= (18 << 16) + cp->Width - 8;	//ŒŸõƒ}[ƒN—p ***
 						lp->Parent	= cp->Parent;
 						lp->Font->Assign(def_font.get());
 						lp->Color		= bg_panel;
@@ -316,7 +316,7 @@ void SetDarkWinTheme(
 				}
 			}
 		}
-		//ãã®ä»–ä¸€èˆ¬
+		//‚»‚Ì‘¼ˆê”Ê
 		else {
 			for (int i=0; i<wp->ControlCount; i++) {
 				TControl *cp = wp->Controls[i];
@@ -332,7 +332,7 @@ void SetDarkWinTheme(
 			}
 		}
 	}
-	//ä»¥ä¸‹ã¯å˜ç‹¬ã®å­ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«
+	//ˆÈ‰º‚Í’P“Æ‚ÌqƒRƒ“ƒgƒ[ƒ‹
 	else if (wp->ClassNameIs("TEdit")) {
 		TEdit *ep = (TEdit *)wp;
 		ep->Font->Assign(def_font.get());
@@ -368,9 +368,9 @@ void SetDarkWinTheme(
 		if (IsDarkMode) {
 			TCheckBox *cp = (TCheckBox *)wp;
 			if (!cp->Caption.IsEmpty()) {
-				//ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³ã‚’ãƒ©ãƒ™ãƒ«ã«ç½®ãæ›ãˆã‚‹
+				//ƒLƒƒƒvƒVƒ‡ƒ“‚ğƒ‰ƒxƒ‹‚É’u‚«Š·‚¦‚é
 				TLabel *lp = new TLabel(cp->Parent);
-				lp->Tag		= (cp->Height << 16) + cp->Width;	//æ¤œç´¢ãƒãƒ¼ã‚¯ç”¨
+				lp->Tag		= (cp->Height << 16) + cp->Width;	//ŒŸõƒ}[ƒN—p
 				lp->Parent	= cp->Parent;
 				lp->Font->Assign(def_font.get());
 				lp->Font->Color = fg_label;
@@ -388,9 +388,9 @@ void SetDarkWinTheme(
 		if (IsDarkMode) {
 			TRadioButton *cp = (TRadioButton *)wp;
 			if (!cp->Caption.IsEmpty()) {
-				//ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³ã‚’ãƒ©ãƒ™ãƒ«ã«ç½®ãæ›ãˆã‚‹
+				//ƒLƒƒƒvƒVƒ‡ƒ“‚ğƒ‰ƒxƒ‹‚É’u‚«Š·‚¦‚é
 				TLabel *lp = new TLabel(cp->Parent);
-				lp->Tag		= (cp->Height << 16) + cp->Width;	//æ¤œç´¢ãƒãƒ¼ã‚¯ç”¨
+				lp->Tag		= (cp->Height << 16) + cp->Width;	//ŒŸõƒ}[ƒN—p
 				lp->Parent	= cp->Parent;
 				lp->Font->Assign(def_font.get());
 				lp->Font->Color = fg_label;
@@ -421,11 +421,11 @@ void SetDarkWinTheme(
 }
 
 //---------------------------------------------------------------------------
-//TGroupBox/TRadioGroup ã«ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³ç–‘ä¼¼è¡¨ç¤ºç”¨ã®ãƒ©ãƒ™ãƒ«ã‚’è¿½åŠ 
+//TGroupBox/TRadioGroup ‚ÉƒLƒƒƒvƒVƒ‡ƒ“‹^—•\¦—p‚Ìƒ‰ƒxƒ‹‚ğ’Ç‰Á
 //---------------------------------------------------------------------------
 TLabel* AttachLabelToGroup(
 	TWinControl *wp,
-	UnicodeString s)	//ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³	(default = EmptyStr)
+	UnicodeString s)	//ƒLƒƒƒvƒVƒ‡ƒ“	(default = EmptyStr)
 {
 	TLabel *ret_p = NULL;
 
@@ -482,7 +482,7 @@ TLabel* AttachLabelToGroup(
 }
 
 //---------------------------------------------------------------------------
-//ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+//ƒGƒ‰[ƒƒbƒZ[ƒW
 //---------------------------------------------------------------------------
 void msgbox_ERR(UnicodeString msg)
 {
@@ -501,7 +501,7 @@ void msgbox_ERR(unsigned id)
 }
 
 //---------------------------------------------------------------------------
-//è­¦å‘Šãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+//ŒxƒƒbƒZ[ƒW
 //---------------------------------------------------------------------------
 void msgbox_WARN(UnicodeString msg)
 {
@@ -520,7 +520,7 @@ void msgbox_WARN(unsigned id)
 }
 
 //---------------------------------------------------------------------------
-//ç¢ºèªãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+//Šm”FƒƒbƒZ[ƒW
 //---------------------------------------------------------------------------
 void msgbox_OK(UnicodeString msg, UnicodeString tit)
 {
@@ -598,7 +598,7 @@ bool msgbox_Sure(unsigned id, bool ask, bool center)
 }
 
 //---------------------------------------------------------------------------
-//ã€Œã™ã¹ã¦ã«é©ç”¨ã€ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ä»˜ãç¢ºèªãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+//u‚·‚×‚Ä‚É“K—pvƒ`ƒFƒbƒNƒ{ƒbƒNƒX•t‚«Šm”FƒƒbƒZ[ƒW
 //---------------------------------------------------------------------------
 int msgbox_SureAll(UnicodeString msg, bool &app_chk, bool center)
 {
@@ -607,12 +607,12 @@ int msgbox_SureAll(UnicodeString msg, bool &app_chk, bool center)
 						TMsgDlgButtons() << mbYes << mbNo << mbCancel, 
 						SureDefNo? mbNo : mbYes);
 
-	//ã€Œã™ã¹ã¦ã«é©ç”¨ã€ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã‚’è¿½åŠ 
+	//u‚·‚×‚Ä‚É“K—pvƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ğ’Ç‰Á
 	TCheckBox *cp = new TCheckBox(MsgDlg);
 	MsgDlg->ClientHeight = MsgDlg->ClientHeight + cp->Height + 12;
 	SetDarkWinTheme(MsgDlg);
 
-	cp->Caption = "ã™ã¹ã¦ã«é©ç”¨(&A)";
+	cp->Caption = "‚·‚×‚Ä‚É“K—p(&A)";
 	cp->Parent	= MsgDlg;
 	cp->Left	= 20;
 	cp->Top		= MsgDlg->ClientHeight - cp->Height - 12;
@@ -648,20 +648,20 @@ int msgbox_SureAll(UnicodeString msg, bool &app_chk, bool center)
 }
 
 //---------------------------------------------------------------------------
-//ã‚½ãƒ¼ãƒˆæ–¹å‘ãƒãƒ¼ã‚¯ã‚’æç”»
+//ƒ\[ƒg•ûŒüƒ}[ƒN‚ğ•`‰æ
 //---------------------------------------------------------------------------
 void draw_SortMark(TCanvas *cv, int x, int y,
-	bool is_asc,	//æ˜‡é †
-	TColor fg)		//ãƒãƒ¼ã‚¯è‰²
+	bool is_asc,	//¸‡
+	TColor fg)		//ƒ}[ƒNF
 {
 	TPoint mrk[3];
-	//â–²
+	//£
 	if (is_asc) {
 		mrk[0] = Point(x,	  y + 3);
 		mrk[1] = Point(x + 6, y + 3);
 		mrk[2] = Point(x + 3, y);
 	}
-	//â–¼
+	//¥
 	else {
 		mrk[0] = Point(x,	  y);
 		mrk[1] = Point(x + 6, y);
@@ -675,12 +675,12 @@ void draw_SortMark(TCanvas *cv, int x, int y,
 }
 
 //---------------------------------------------------------------------------
-//ãƒœã‚¿ãƒ³ã«ãƒãƒ¼ã‚¯ã‚’è¨­å®š
+//ƒ{ƒ^ƒ“‚Éƒ}[ƒN‚ğİ’è
 //---------------------------------------------------------------------------
 void set_ButtonMark(TSpeedButton *bp,
-	int id,		//è­˜åˆ¥å­	(default = UBMK_DOWN)
-	TColor fg,	//å‰æ™¯è‰²	(default = col_BtnText)
-	TColor bg)	//èƒŒæ™¯è‰²	(default = col_BtnFace)
+	int id,		//¯•Êq	(default = UBMK_DOWN)
+	TColor fg,	//‘OŒiF	(default = col_BtnText)
+	TColor bg)	//”wŒiF	(default = col_BtnFace)
 {
 	int size;
 	switch (id) {
@@ -771,7 +771,7 @@ void set_ButtonMark(TSpeedButton *bp,
 	}
 }
 //---------------------------------------------------------------------------
-//ãƒœã‚¿ãƒ³ã«ãƒãƒ¼ã‚¯ã‚’è¨­å®š
+//ƒ{ƒ^ƒ“‚Éƒ}[ƒN‚ğİ’è
 //---------------------------------------------------------------------------
 void set_BtnMarkDark(TSpeedButton *bp, int id)
 {
@@ -779,7 +779,7 @@ void set_BtnMarkDark(TSpeedButton *bp, int id)
 }
 
 //---------------------------------------------------------------------------
-//ãƒœã‚¿ãƒ³ã«ãƒ†ã‚­ã‚¹ãƒˆã‚’è¨­å®š
+//ƒ{ƒ^ƒ“‚ÉƒeƒLƒXƒg‚ğİ’è
 //---------------------------------------------------------------------------
 void set_BtnTextDark(TSpeedButton *bp, UnicodeString s)
 {
@@ -796,17 +796,17 @@ void set_BtnTextDark(TSpeedButton *bp, UnicodeString s)
 }
 
 //---------------------------------------------------------------------------
-//ã‚¿ãƒ–ã®æç”»
+//ƒ^ƒu‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool active,
-	bool dark_sw)	//ãƒ€ãƒ¼ã‚¯ãƒ¢ãƒ¼ãƒ‰é©ç”¨		(default = false)
+	bool dark_sw)	//ƒ_[ƒNƒ‚[ƒh“K—p		(default = false)
 {
 	TTabControl *tp = (TTabControl*)Control;
 	TCanvas *cv = tp->Canvas;
-	//èƒŒæ™¯
+	//”wŒi
 	cv->Brush->Color = active? col_bgOptTab : get_PanelColor();
 	cv->FillRect(rc);
-	//æ–‡å­—
+	//•¶š
 	UnicodeString titstr = tp->Tabs->Strings[idx];
 	cv->Font->Color = active? col_fgOptTab : get_LabelColor();
 	cv->Font->Style = active? (cv->Font->Style << fsBold) : (cv->Font->Style >> fsBold);
@@ -817,7 +817,7 @@ void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool act
 }
 
 //---------------------------------------------------------------------------
-//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚»ãƒ‘ãƒ¬ãƒ¼ã‚¿ã®æç”»
+//ƒƒjƒ…[ƒZƒpƒŒ[ƒ^‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void draw_MenuSeparator(TCanvas *cv, TRect rc)
 {
@@ -832,13 +832,13 @@ void draw_MenuSeparator(TCanvas *cv, TRect rc)
 }
 
 //---------------------------------------------------------------------------
-//ä»¥ä¸‹ã¯æ“¬ä¼¼çš„ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®ã‚¢ã‚¯ã‚»ãƒ©ãƒ¬ãƒ¼ã‚¿å‡¦ç†ã«åˆ©ç”¨
+//ˆÈ‰º‚Í‹[—“IƒRƒ“ƒgƒ[ƒ‹‚ÌƒAƒNƒZƒ‰ƒŒ[ƒ^ˆ—‚É—˜—p
 //---------------------------------------------------------------------------
-//TRadioGroup ã«ãƒ•ã‚©ãƒ¼ã‚«ã‚¹
+//TRadioGroup ‚ÉƒtƒH[ƒJƒX
 //---------------------------------------------------------------------------
 bool set_focus_RadioGroup(
 	TRadioGroup *gp,
-	int idx)			//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹	(default = -1 : ç„¡æŒ‡å®š)
+	int idx)			//ƒCƒ“ƒfƒbƒNƒX	(default = -1 : –³w’è)
 {
 	if (!gp->Parent->Visible || !gp->Parent->Enabled || !gp->Visible || !gp->Enabled) return false;
 
@@ -849,7 +849,7 @@ bool set_focus_RadioGroup(
 	return true;
 }
 //---------------------------------------------------------------------------
-//TGroupBox ã«ãƒ•ã‚©ãƒ¼ã‚«ã‚¹
+//TGroupBox ‚ÉƒtƒH[ƒJƒX
 //---------------------------------------------------------------------------
 bool set_focus_GroupBox(TGroupBox *gp)
 {
@@ -877,7 +877,7 @@ bool set_focus_GroupBox(TGroupBox *gp)
 	return true;
 }
 //---------------------------------------------------------------------------
-//ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã®åè»¢
+//ƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚Ì”½“]
 //---------------------------------------------------------------------------
 void invert_CheckBox(TCheckBox *cp)
 {

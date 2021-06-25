@@ -64,7 +64,6 @@ TTxtViewer::TTxtViewer(
 	ImgBuff = new Graphics::TBitmap();
 
 	ColBufList	= new TStringList();
-	NyanFiDef	= new TStringList();
 
 	TxtBufList	= new TStringList();
 	TxtBufList2 = new TStringList();
@@ -158,7 +157,6 @@ TTxtViewer::~TTxtViewer()
 	ClearDispLine();
 
 	delete ColBufList;
-	delete NyanFiDef;
 	delete DispLines;
 	delete ImgBuff;
 	delete TxtBufList;
@@ -174,13 +172,7 @@ TTxtViewer::~TTxtViewer()
 void __fastcall TTxtViewer::SetTopIsHeader(bool Value)
 {
 	USR_CsvTopIsHdr = FTopIsHeader = Value;
-	if (isCSV) {
-		UnicodeString v = FTopIsHeader? "1" : "0";
-		if (!SameStr(NyanFiDef->Values["TopIsHeader"], v)) {
-			NyanFiDef->Values["TopIsHeader"] = v;
-			SaveNyanFiDef();
-		}
-	}
+	if (isCSV) write_NyanFiDef(FileName, "TopIsHeader", FTopIsHeader? "1" : "0");
 }
 
 //---------------------------------------------------------------------------
@@ -195,31 +187,6 @@ bool __fastcall TTxtViewer::CloseAuxForm()
 	if (InspectForm->Visible)  { InspectForm->Close();	closed = true; }
 	if (SubViewer->Visible)    { SubViewer->Close();	closed = true; }
 	return closed;
-}
-
-//---------------------------------------------------------------------------
-//ADSから設定を読込
-//---------------------------------------------------------------------------
-bool __fastcall TTxtViewer::LoadNyanFiDef()
-{
-	UnicodeString snam = FileName + NYANFIDEF_ADS;
-	return (file_exists(snam) && load_text_ex(snam, NyanFiDef)!=0);
-}
-//---------------------------------------------------------------------------
-//ADSに設定を保存
-//---------------------------------------------------------------------------
-bool __fastcall TTxtViewer::SaveNyanFiDef()
-{
-	bool ok = false;
-	if (is_NTFS_Drive(FileName)) {
-		int atr = file_GetAttr(FileName);
-		if (atr!=faInvalid && (atr & faReadOnly)==0) {
-			TDateTime ft = get_file_age(FileName);
-			ok = saveto_TextUTF8(FileName + NYANFIDEF_ADS, NyanFiDef);
-			set_file_age(FileName, ft);
-		}
-	}
-	return ok;
 }
 
 //---------------------------------------------------------------------------
@@ -292,8 +259,6 @@ UnicodeString __fastcall TTxtViewer::get_DispLine(
 void __fastcall TTxtViewer::Clear()
 {
 	isReady = false;
-
-	NyanFiDef->Clear();
 
 	TxtBufList->Clear();
 	MaxLine = 0;
@@ -599,7 +564,7 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 	}
 
 	//列幅の最小化
-	TStringDynArray itm_buf = get_csv_array(NyanFiDef->Values["MinFixedCols"], c_cnt);
+	TStringDynArray itm_buf = get_csv_array(read_NyanFiDef(FileName, "MinFixedCols"), c_cnt);
 	for (int i=0; i<itm_buf.Length; i++) {
 		int idx = itm_buf[i].ToIntDef(-1);
 		if (idx>=0 && idx<c_cnt) FixWdList[idx] = (idx<26)? 0 : 1;
@@ -1072,16 +1037,17 @@ void __fastcall TTxtViewer::UpdateScr(
 			isCSV = true;
 			isTSV = (txt_buf->Count>0 && ContainsStr(txt_buf->Strings[0], "\t"));
 			bool ok = false;
-			if (LoadNyanFiDef()) {
-				UnicodeString v = NyanFiDef->Values["TopIsHeader"];
+			std::unique_ptr<TStringList> fbuf(new TStringList());
+			if (load_NyanFiDef(FileName, fbuf.get())) {
+				UnicodeString v = fbuf->Values["TopIsHeader"];
 				if (!v.IsEmpty()) {
 					TopIsHeader = SameStr(v, "1");
 					ok = true;
 				}
 			}
 			if (!ok) {
-				NyanFiDef->Values["TopIsHeader"] = FTopIsHeader? "1" : "0";
-				SaveNyanFiDef();
+				fbuf->Values["TopIsHeader"] = FTopIsHeader? "1" : "0";
+				save_NyanFiDef(FileName, fbuf.get());
 			}
 			if (isFixedLen) FormatFixed(txt_buf.get());
 		}
@@ -3641,6 +3607,13 @@ void __fastcall TTxtViewer::SelLine(bool cr)
 //コードページの変更
 // 戻り値 : 0 = 不正な指定
 //---------------------------------------------------------------------------
+void __fastcall TTxtViewer::saveDef_CodePage(int code_page)
+{
+	if (code_page>0 && code_page!=TxtBufList->Encoding->CodePage) {
+		write_NyanFiDef(FileName, "CodePage", IntToStr(code_page));
+	}
+}
+//---------------------------------------------------------------------------
 int __fastcall TTxtViewer::change_CodePage(UnicodeString prm)
 {
 	std::unique_ptr<TStringList> cp_lst(new TStringList());
@@ -3662,6 +3635,7 @@ int __fastcall TTxtViewer::change_CodePage(UnicodeString prm)
 		code_page = (pn!=-1)? cp_lst->Strings[(pn + 1)%cp_lst->Count].ToIntDef(932) : 932;
 	}
 
+	saveDef_CodePage(code_page);
 	return code_page;
 }
 

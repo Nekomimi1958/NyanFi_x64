@@ -1285,6 +1285,7 @@ struct file_rec {
 	TStringList *inf_list;		//情報リスト
 	UnicodeString prv_text;		//テキストプレビュー
 	UnicodeString tail_text;	//テキストプレビュー(末尾)
+	int  code_page;				//コードページ
 };
 
 //---------------------------------------------------------------------------
@@ -1623,6 +1624,11 @@ UnicodeString get_dotNaynfi(UnicodeString dnam, bool inherit, bool force = false
 bool is_NewerTime(TDateTime scr_t, TDateTime dst_t);
 
 bool check_if_unc(UnicodeString pnam);
+
+bool load_NyanFiDef(UnicodeString fnam, TStringList *lst);
+bool save_NyanFiDef(UnicodeString fnam, TStringList *lst);
+UnicodeString read_NyanFiDef(UnicodeString fnam, UnicodeString key);
+bool write_NyanFiDef(UnicodeString fnam, UnicodeString key, UnicodeString v);
 
 UnicodeString get_cmdfile(UnicodeString s);
 UnicodeString get_cmds_prm_file(UnicodeString prm);

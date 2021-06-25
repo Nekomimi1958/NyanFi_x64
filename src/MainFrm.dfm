@@ -5897,6 +5897,30 @@ object NyanFiForm: TNyanFiForm
     object TxtShowLineNoItem: TMenuItem
       Action = Txt_ShowLnNoAction
     end
+    object TxtCodePageItem: TMenuItem
+      Action = ChgCodePageAction
+      object TxtCpShiftJisItem: TMenuItem
+        Action = CP_ShiftJisAction
+      end
+      object TxtCpJisItem: TMenuItem
+        Action = CP_JisAction
+      end
+      object TxtCpEucItem: TMenuItem
+        Action = CP_EucAction
+      end
+      object TxtCpLatin1Item: TMenuItem
+        Action = CP_Latin1Action
+      end
+      object TxtCpUtf8Item: TMenuItem
+        Action = CP_UTF8Action
+      end
+      object TxtCpUtf16Item: TMenuItem
+        Action = CP_UTF16Action
+      end
+      object TxtCpAutoItem: TMenuItem
+        Action = CP_AutoAction
+      end
+    end
     object TxtKeepIndexItem: TMenuItem
       Action = Txt_KeepIndexAction
     end

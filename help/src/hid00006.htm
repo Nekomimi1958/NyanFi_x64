@@ -8,6 +8,7 @@
 	<param name="Keyword" value="CSV">
 	<param name="Keyword" value="CSV/TSVレコード">
 	<param name="Keyword" value="HTML→テキスト変換表示">
+	<param name="Keyword" value="nyanfi.def">
 	<param name="Keyword" value="TextViewe">
 	<param name="Keyword" value="TSV">
 	<param name="Keyword" value="xd2txlib.dll">
@@ -146,6 +147,9 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 パラメータを指定しないと、現在の文字コードから Shift_JIS → JIS → EUC-JP → Latin-1 → UTF-8 → UTF-16 の順で切り替えます。<br>
 パラメータで特定のコードページを指定することもできます。<br>
 <b>例</b>: ChangeCodePage_932<br>
+<div class="spc_box">
+文字コードを変更すると、そのコードページがファイルの代替データストリームに <a href="hid00102.htm#NyanfiDef">nyanfi.def</a> という名前で保存され、次回表示時にもそれが用いられます。<br>
+</div>
 
 <dt id="ChangeViewMode">ChangeViewMode
 <dd>テキスト/バイナリ・ダンプ表示を切り替えます。<br>
@@ -218,7 +222,7 @@ Calculator<span class="pram_text">_CB[;計算式]</span>
 パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
 ファイルの先頭行に TAB が含まれていたら <b>TSV</b>、そうでない場合は <b>CSV</b> とみなし、カーソル行を一つのレコードとして内容を一覧表示します。<br>
 <div class="spc_box">
-「<b>先頭行が項目名</b>」をチェックしていると、ファイルの一行目を項目名とみなしてそれを表示します(テキストビュアーの右クリックメニューと連動)。この設定は、CSV/TSVファイルの代替データストリームに <b>nyanfi.def</b> という名前で保存されます。<br>
+「<b>先頭行が項目名</b>」をチェックしていると、ファイルの一行目を項目名とみなしてそれを表示します(テキストビュアーの右クリックメニューと連動)。この設定は、CSV/TSVファイルの代替データストリームに <a href="hid00102.htm#NyanfiDef">nyanfi.def</a> という名前で保存されます。<br>
 </div>
 <div class="spc_box">
 <span class="btn_frame">集計</span>ボタンを押すと、選択している項目に有効な数値がある場合、その合計、平均、最小、最大値、中央値、分散、標準偏差を計算して表示します。<br>
@@ -387,7 +391,7 @@ HTML→テキスト変換表示で <a href="#TagView">TagView</a> コマンドで移動する場合な
 <div class="spc_box">
 固定長表示では、項目ごとに最大幅で桁位置を合わせて整形表示します。項目数は1行目の内容に基づいています。<br>
 1レコードが1行に収まらないと見にくくなりますが、<a href="hid00011.htm#FixedLimit">オプション設定 - テキストビュアー</a> の「<b>固定長表示の制限幅</b>」を設定して省略表示すると収まるかもしれません。この値はパラメータでも指定できます。<br>
-また右クリックメニューの「<b>列幅の最小化</b>」で項目を選んでチェックすると、その列幅が最小化され内容が非表示になります。設定内容は、CSV/TSVファイルの代替データストリームに <b>nyanfi.def</b> という名前で保存されます。<br>
+また右クリックメニューの「<b>列幅の最小化</b>」で項目を選んでチェックすると、その列幅が最小化され内容が非表示になります。設定内容は、CSV/TSVファイルの代替データストリームに <a href="hid00102.htm#NyanfiDef">nyanfi.def</a> という名前で保存されます。<br>
 <a href="hid00023.htm">オプション設定 - フォント・配色</a> - 配色の「<b>固定長表示の縦罫線</b>」を設定すると、固定長表示時に縦罫線が表示されます。ただし、各レコードの2行目以降には表示されません。<br>
 </div>
 固定長表示の場合、カーソル位置項目のソート(<a href="#Sort">Sort</a>)、集計(<a href="#CsvCalc">CsvCalc</a>)、グラフ表示(<a href="#CsvGraph">CsvGraph</a>)が可能です。<br>

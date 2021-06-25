@@ -908,6 +908,14 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *TV_EditCopyItem;
 	TMenuItem *TV_EditSelectAllItem;
 	TMenuItem *TV_FindTextItem;
+	TMenuItem *TxtCodePageItem;
+	TMenuItem *TxtCpAutoItem;
+	TMenuItem *TxtCpEucItem;
+	TMenuItem *TxtCpJisItem;
+	TMenuItem *TxtCpLatin1Item;
+	TMenuItem *TxtCpShiftJisItem;
+	TMenuItem *TxtCpUtf8Item;
+	TMenuItem *TxtCpUtf16Item;
 	TMenuItem *TxtEditCopyItem;
 	TMenuItem *TxtEditSelectAllItem;
 	TMenuItem *TxtKeepIndexItem;

@@ -169,9 +169,10 @@ icon=SSD.ico
 <a href="hid00020.htm#ThumbCache">オプション設定 - イメージビュアー - サムネイル - 「代替データストリームにキャッシュ」</a> が有効な場合、イメージビュアーで閲覧した画像ファイルに代替データストリームとして保存されます。<br>
 内容は、&quot;表示文字列 <span class="ctrl_text">[TAB]</span> タイムスタンプ <span class="ctrl_text">[TAB]</span> サムネイルサイズ <span class="ctrl_text">[TAB]</span> 縮小アルゴリズム番号&quot; という一行です。<br>
 
-<dt>nyanfi.def　<span class="small_nrm">(代替データストリーム)</span>
+<dt id="NyanfiDef">nyanfi.def　<span class="small_nrm">(代替データストリーム)</span>
 <dd>ファイルに固有の設定情報です。<br>
-今のところ、<a href="hid00006.htm">テキストビュアー</a>でCSV/TSVファイルを開いた場合に、「先頭行が項目名」設定(TopIsHeader)と、「項目列の最小化」情報(MinFixedCols=列インデックス番号,…)が保存されます。<br>
+<a href="hid00006.htm">テキストビュアー</a>でCSV/TSVファイルを開いた場合に、「先頭行が項目名」設定(TopIsHeader)と、「項目列の最小化」情報(MinFixedCols=列インデックス番号,…)が保存されます。<br>
+また、<a href="hid00082.htm">テキストプレビュー</a>や<a href="hid00006.htm">テキストビュアー</a>で文字コードを変更すると、そのコードページ(CodePage)が保存されます。<br>
 
 <dt>favicon　<span class="small_nrm">(代替データストリーム)</span>
 <dd>ブラウザからリンク項目をドロップしたとき、ドメイン下で <b>favicon.ico</b> が取得できたら、インターネットショートカット(.url)の代替データストリームに <b>favicon</b> という名前で保存し、リストのアイコン表示に用います。<br>
@@ -192,6 +193,11 @@ icon=SSD.ico
 <dd><a href="hid00086.htm">ドライブ使用率推移</a>のログです。<br>
 
 </dl>
+<br>
+
+<p class="note_text">
+<b>代替データストリーム</b>は、<b>NTFS</b>でないと利用できません。他のファイルシステムにファイルをコピーすると、代替データストリームは失われます。<br>
+</p>
 <br><br>
 
 </body>

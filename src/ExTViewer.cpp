@@ -784,7 +784,9 @@ void __fastcall TExTxtViewer::CodePageActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::CodePageActionExecute(TObject *Sender)
 {
-	OpenViewer(false, ((TAction*)Sender)->Tag, 0, true);
+	int code_page = ((TAction*)Sender)->Tag;
+	ExViewer->saveDef_CodePage(code_page);
+	OpenViewer(false, code_page, 0, true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::CP_xxx_ActionUpdate(TObject *Sender)

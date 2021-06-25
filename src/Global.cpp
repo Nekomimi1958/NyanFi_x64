@@ -3573,6 +3573,67 @@ bool check_if_unc(UnicodeString pnam)
 }
 
 //---------------------------------------------------------------------------
+//ADS nyanfi.def を読込
+//---------------------------------------------------------------------------
+bool load_NyanFiDef(UnicodeString fnam, TStringList *lst)
+{
+	UnicodeString snam = fnam + NYANFIDEF_ADS;
+	return (file_exists(snam) && load_text_ex(snam, lst)!=0);
+}
+//---------------------------------------------------------------------------
+//ADS nyanfi.def を保存
+//---------------------------------------------------------------------------
+bool save_NyanFiDef(UnicodeString fnam, TStringList *lst)
+{
+	bool ok = false;
+	if (is_NTFS_Drive(fnam)) {
+		int atr = file_GetAttr(fnam);
+		if (atr!=faInvalid && (atr & faReadOnly)==0) {
+			TDateTime ft = get_file_age(fnam);
+			ok = saveto_TextUTF8(fnam + NYANFIDEF_ADS, lst);
+			set_file_age(fnam, ft);
+		}
+	}
+	return ok;
+}
+//---------------------------------------------------------------------------
+//ADS nyanfi.def の値を読込
+//---------------------------------------------------------------------------
+UnicodeString read_NyanFiDef(UnicodeString fnam, UnicodeString key)
+{
+	UnicodeString ret_str;
+	if (is_NTFS_Drive(fnam)) {
+		UnicodeString snam = fnam + NYANFIDEF_ADS;
+		std::unique_ptr<TStringList> fbuf(new TStringList());
+		if (file_exists(snam) && load_text_ex(snam, fbuf.get())!=0) {
+			ret_str = fbuf->Values[key];
+		}
+	}
+	return ret_str;
+}
+//---------------------------------------------------------------------------
+//ADS nyanfi.def に値を書込
+//---------------------------------------------------------------------------
+bool write_NyanFiDef(UnicodeString fnam, UnicodeString key, UnicodeString v)
+{
+	if (!is_NTFS_Drive(fnam)) return false;
+
+	int atr = file_GetAttr(fnam);
+	if (atr==faInvalid || (atr & faReadOnly)!=0) return false;
+
+	UnicodeString snam = fnam + NYANFIDEF_ADS;
+	std::unique_ptr<TStringList> fbuf(new TStringList());
+	if (file_exists(snam)) load_text_ex(snam, fbuf.get());
+
+	fbuf->Values[key] = v;
+
+	TDateTime ft = get_file_age(fnam);
+	bool ok = saveto_TextUTF8(snam, fbuf.get());
+	set_file_age(fnam, ft);
+	return ok;
+}
+
+//---------------------------------------------------------------------------
 //文字列からコマンドファイル名を取得
 // 先頭の @ は削除し、絶対パス化
 // .nbt でなければ EmptyStr を返す
@@ -4688,6 +4749,7 @@ file_rec* cre_new_file_rec(file_rec *copy_fp)
 		fp->inf_list->Assign(copy_fp->inf_list);
 		fp->prv_text   = copy_fp->prv_text;
 		fp->tail_text  = copy_fp->tail_text;
+		fp->code_page  = copy_fp->code_page;
 		fp->base_end_x = copy_fp->base_end_x;
 	}
 	else {
@@ -4711,6 +4773,7 @@ file_rec* cre_new_file_rec(file_rec *copy_fp)
 		fp->img_ori    = 0;
 		fp->distance   = 0;
 		fp->is_video   = false;
+		fp->code_page  = 0;
 		fp->base_end_x = 0;
 	}
 
@@ -8847,6 +8910,7 @@ bool get_FileInfList(
 		UnicodeString line_brk;
 		bool has_bom;
 		bool is_text = is_TextFile(fnam, &code_page, &line_brk, &has_bom);
+		if (fp->code_page>0) code_page = fp->code_page;
 
 		if (ShowTextPreview) {
 			//リッチテキスト
@@ -8867,12 +8931,13 @@ bool get_FileInfList(
 				std::unique_ptr<TStringList> f_buf(new TStringList());
 				int lmit_size = (PrvTxtInfLn>0)? std::max(PrvTxtInfLn*1024, TXT_DETECT_SIZE) : 0;		//***
 				double ave_lsz = 0;
-				code_page = load_text_ex(fnam, f_buf.get(), 0, lmit_size, false, NULL, NULL, &ave_lsz);
+				code_page = load_text_ex(fnam, f_buf.get(), code_page, lmit_size, false, NULL, NULL, &ave_lsz);
 				int ln_cnt = f_buf->Count;
 
 				//エラー
 				if (!GlobalErrMsg.IsEmpty()) {
 					add_list_errmsg(lst, GlobalErrMsg);
+					fp->prv_text = "    ";	//***
 				}
 				else {
 					//XML
@@ -8885,6 +8950,7 @@ bool get_FileInfList(
 
 					//コードページ
 					if (code_page>0) {
+						fp->code_page = code_page;
 						UnicodeString cp_str = make_PropLine(_T("コードページ"), code_page);
 						UnicodeString cnam	 = get_NameOfCodePage(code_page, true, has_bom);
 						if (!cnam.IsEmpty()) cp_str.cat_sprintf(_T(" / %s"), cnam.c_str());
@@ -9189,6 +9255,8 @@ int get_FileCodePage(
 	}
 
 	if (!enc.IsEmpty()) code_page = get_CodePageOfName(enc);
+
+	if (code_page==0) code_page = read_NyanFiDef(fnam, "CodePage").ToIntDef(0);
 
 	//その他
 	if (code_page==0 || line_brk || has_bom) {
@@ -10615,8 +10683,9 @@ bool add_PlayList(UnicodeString lnam)
 	//ファイル
 	else if (file_exists(lnam)) {
 		//サウンドファイル
-		if (add_PlayFile(lnam))
+		if (add_PlayFile(lnam)) {
 			;
+		}
 		//リストファイル
 		else if (is_TextFile(lnam)) {
 			std::unique_ptr<TStringList> fbuf(new TStringList());

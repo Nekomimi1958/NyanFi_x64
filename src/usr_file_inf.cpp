@@ -2399,6 +2399,7 @@ void get_ADS_Inf(UnicodeString fnam, TStringList *lst)
 					if (!lbuf.IsEmpty()) add_PropLine(null_TCHAR, lbuf, lst);
 				}
 				else if (USAME_TI(":" + snam, NYANFIDEF_ADS)) {
+					std::unique_ptr<TStringList> fbuf(new TStringList());
 					UnicodeString anam = fnam + NYANFIDEF_ADS;
 					if (file_exists(anam)) {
 						try {

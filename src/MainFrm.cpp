@@ -28015,11 +28015,11 @@ void __fastcall TNyanFiForm::ConvertTextEncActionExecute(TObject *Sender)
 
 		if (CvTxtEncDlg->ShowModal()==mrOk) {
 			UnicodeString charset = CvTxtEncDlg->OutCodeComboBox->Text;
-			int o_cp = get_CodePageOfName(charset);
-			if (o_cp==0) UserAbort(USTR_IllegalParam);
+			int code_page = get_CodePageOfName(charset);
+			if (code_page==0) UserAbort(USTR_IllegalParam);
 			charset = ReplaceText(charset, "UTF-16(BE)", "UTF-16");
 
-			std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(o_cp));
+			std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(code_page));
 			bool with_bom = (CvTxtEncDlg->BomCheckBox->Enabled && CvTxtEncDlg->BomCheckBox->Checked);
 
 			UnicodeString dst_dir = GetCurPathStr(OppListTag);
@@ -28100,7 +28100,7 @@ void __fastcall TNyanFiForm::ConvertTextEncActionExecute(TObject *Sender)
 					//BOM
 					f_buf->WriteBOM = with_bom;
 
-					//•Û‘¶
+					//•Û‘¶ (:nyanfi.def ‚ÍŽ¸‚í‚ê‚é)
 					UnicodeString fnam = dst_dir + fp->n_name;
 					if (!saveto_TextFile(fnam, f_buf.get(), enc.get())) UserAbort(USTR_FaildSave);
 					fp->selected = false;
@@ -28594,13 +28594,40 @@ void __fastcall TNyanFiForm::ChgCodePageActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ChgCodePageActionUpdate(TObject *Sender)
 {
-	((TAction*)Sender)->Visible = ScrMode==SCMD_TVIEW && isViewText && !isRichText && !isXDoc2Txt;
+	TAction *ap = (TAction*)Sender;
+	switch (ScrMode) {
+	case SCMD_FLIST:
+		if (LockTxtPrv) {
+			ap->Visible = false;
+		}
+		else {
+			file_rec *cfp = GetCurFrecPtr(true);
+			bool is_rtf = (cfp && test_FileExt(cfp->f_ext, _T(".rtf.wri")));
+			ap->Visible = (TxtPrvListBox->Focused() || TxtTailListBox->Focused()) && !is_rtf;
+		}
+		break;
+	case SCMD_TVIEW:
+		ap->Visible = isViewText && !isRichText && !isXDoc2Txt;
+		break;
+	default:
+		ap->Visible = false;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::CP_xxx_ActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
-	ap->Checked = TxtViewer->TxtBufList->Encoding->CodePage==(unsigned int)ap->Tag;
+	switch (ScrMode) {
+	case SCMD_FLIST:
+		{
+			file_rec *cfp = GetCurFrecPtr(true);
+			if (cfp) ap->Checked = cfp->code_page==ap->Tag;
+		}
+		break;
+	case SCMD_TVIEW:
+		ap->Checked = TxtViewer->TxtBufList->Encoding->CodePage==(unsigned int)ap->Tag;
+		break;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -30776,7 +30803,23 @@ void __fastcall TNyanFiForm::TextMarginBoxDblClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::CodePageActionExecute(TObject *Sender)
 {
-	OpenTxtViewer(GetCurFrecPtr(), false, ((TAction*)Sender)->Tag, 0, true);
+	int code_page = ((TAction*)Sender)->Tag;
+	switch (ScrMode) {
+	case SCMD_FLIST:
+		{
+			file_rec *cfp = GetCurFrecPtr(true);
+			if (cfp) {
+				cfp->code_page = code_page;
+				write_NyanFiDef(cfp->f_name, "CodePage", code_page);
+				ViewFileInf(cfp, true);
+			}
+		}
+		break;
+	case SCMD_TVIEW:
+		TxtViewer->saveDef_CodePage(code_page);
+		OpenTxtViewer(GetCurFrecPtr(), false, code_page, 0, true);
+		break;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -31185,7 +31228,7 @@ void __fastcall TNyanFiForm::ViewPopupMenuPopup(TObject *Sender)
 	MinColItem->Enabled = MinColItem->Visible;
 	if (MinColItem->Enabled) {
 		std::unique_ptr<TStringList> lst(new TStringList());
-		lst->CommaText = TxtViewer->NyanFiDef->Values["MinFixedCols"];
+		lst->CommaText = read_NyanFiDef(TxtViewer->FileName, "MinFixedCols");
 		TStringDynArray hdr_lst = TxtViewer->GetCsvHdrList();
 		for (int i=0; i<hdr_lst.Length; i++) {
 			TMenuItem *mp = new TMenuItem(MinColItem);
@@ -31206,14 +31249,16 @@ void __fastcall TNyanFiForm::ViewPopupMenuPopup(TObject *Sender)
 void __fastcall TNyanFiForm::MinColItemClick(TObject *Sender)
 {
 	TMenuItem *mp = (TMenuItem*)Sender;
+	std::unique_ptr<TStringList> fbuf(new TStringList());
+	load_NyanFiDef(TxtViewer->FileName, fbuf.get());
 	std::unique_ptr<TStringList> lst(new TStringList());
-	lst->CommaText = TxtViewer->NyanFiDef->Values["MinFixedCols"];
+	lst->CommaText = fbuf->Values["MinFixedCols"];
 	UnicodeString idx_s = IntToStr(mp->Tag);
 	int idx = lst->IndexOf(idx_s);
 	if (idx!=-1) lst->Delete(idx); else lst->Add(idx_s);
 	lst->Sort();
-	TxtViewer->NyanFiDef->Values["MinFixedCols"] = lst->CommaText;
-	TxtViewer->SaveNyanFiDef();
+	fbuf->Values["MinFixedCols"] = lst->CommaText;
+	save_NyanFiDef(TxtViewer->FileName, fbuf.get());
 	TxtViewer->UpdateScr();
 }
 
