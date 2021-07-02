@@ -17,10 +17,7 @@ TAppListDlg *AppListDlg = NULL;
 
 //---------------------------------------------------------------------------
 HMODULE hPsApi = NULL;
-FUNC_GetProcessMemoryInfo		lpfGetProcessMemoryInfo 	 = NULL;
-FUNC_NtQueryInformationProcess	lpfNtQueryInformationProcess = NULL;
-FUNC_RtlNtStatusToDosErrorPtr	lpfRtlNtStatusToDosError	 = NULL;
-
+FUNC_GetProcessMemoryInfo lpfGetProcessMemoryInfo = NULL;
 
 //---------------------------------------------------------------------------
 //ソート用比較関数
@@ -65,12 +62,14 @@ AppWinInf::AppWinInf()
 	toClose	  = false;
 	isNoRes	  = false;
 	Icon	  = new TIcon();
+	PngImg	  = new TPngImage();
 	hThumb	  = NULL;
 }
 //---------------------------------------------------------------------------
 AppWinInf::~AppWinInf()
 {
 	delete Icon;
+	delete PngImg;
 
 	if (hThumb) ::DwmUnregisterThumbnail(hThumb);
 }
@@ -112,10 +111,6 @@ void __fastcall TAppListDlg::FormCreate(TObject *Sender)
 			if (hPsApi) lpfGetProcessMemoryInfo = (FUNC_GetProcessMemoryInfo)::GetProcAddress(hPsApi, "GetProcessMemoryInfo");
 		}
 	}
-
-	HINSTANCE hNtDll = ::GetModuleHandle(_T("ntdll.dll"));
-	lpfNtQueryInformationProcess = (FUNC_NtQueryInformationProcess)::GetProcAddress(hNtDll, "NtQueryInformationProcess");
-	lpfRtlNtStatusToDosError	 = (FUNC_RtlNtStatusToDosErrorPtr)::GetProcAddress(hNtDll, "RtlNtStatusToDosError");
 
 	org_SttBar1WndProc	   = StatusBar1->WindowProc;
 	StatusBar1->WindowProc = SttBar1WndProc;
@@ -417,6 +412,7 @@ void __fastcall TAppListDlg::UpdateAppList()
 			//クラス名
 			UnicodeString cnam = get_WndClassName(hWnd);
 			if (!::IsWindowVisible(hWnd) && !Application->MainForm->ClassNameIs(cnam)) break;
+			if (ProcessId==pid && contained_wd_i("TAppListDlg|HH Parent", cnam)) break;
 
 			BOOL cloaked;
 			if (::DwmGetWindowAttribute(hWnd, DWMWA_CLOAKED, &cloaked, sizeof(cloaked))==S_OK && cloaked) break;
@@ -434,10 +430,19 @@ void __fastcall TAppListDlg::UpdateAppList()
 			//テキスト
 			UnicodeString wtxt = get_WndText(hWnd);
 			if (wtxt.IsEmpty()) break;
-			if (USAME_TI(wtxt, "Windows シェル エクスペリエンス ホスト")) break;
-			if (USAME_TI(cnam, "Windows.UI.Core.CoreWindow")) break;
-			if (USAME_TI(cnam, "ApplicationFrameWindow") && USAME_TS(wtxt, "Microsoft Edge")) break;	//*** 
-			if (ProcessId==pid && contained_wd_i("TAppListDlg|HH Parent", cnam)) break;
+
+			//UWPアプリ
+			bool is_uwp = SameText(cnam, "ApplicationFrameWindow");
+			DWORD pid2 = 0, tid2 = 0;
+			UnicodeString cnam2;
+			if (is_uwp) {
+				HWND hCore = ::FindWindowEx(hWnd, NULL, _T("Windows.UI.Core.CoreWindow"), NULL);
+				if (!hCore) hCore = ::FindWindow(_T("Windows.UI.Core.CoreWindow"), wtxt.c_str());
+				if (hCore) {
+					tid2  = ::GetWindowThreadProcessId(hCore, &pid2);
+					cnam2 = "Windows.UI.Core.CoreWindow";
+				}
+			}
 
 			//既存か?
 			AppWinInf *ap = NULL;
@@ -453,12 +458,13 @@ void __fastcall TAppListDlg::UpdateAppList()
 			}
 
 			ap->WinHandle  = hWnd;
-			ap->PID 	   = pid;
-			ap->TID 	   = tid;
+			ap->PID 	   = (pid2!=0)? pid2 : pid;
+			ap->TID 	   = (tid2!=0)? tid2 : tid;
 			ap->Exist	   = true;
 			ap->isNyan	   = (ProcessId==pid);
 			ap->WinText    = wtxt;
 			ap->ClassName  = cnam;
+			ap->ClassName2 = cnam2;
 			ap->topMost    = (w_style & WS_EX_TOPMOST);
 			ap->win_wd	   = w_rect.Width();
 			ap->win_hi	   = w_rect.Height();
@@ -466,7 +472,7 @@ void __fastcall TAppListDlg::UpdateAppList()
 			ap->win_top    = w_rect.Top;
 			ap->win_xstyle = w_style;
 			ap->isWow64    = false;
-			ap->isUWP	   = USAME_TI(cnam, "ApplicationFrameWindow");
+			ap->isUWP	   = is_uwp;
 
 			//無応答チェック
 			bool last_nores = ap->isNoRes;
@@ -492,6 +498,12 @@ void __fastcall TAppListDlg::UpdateAppList()
 				if (::GetProcessTimes(hProcess, &s_tm, &x_tm, &k_tm, &u_tm)) ap->StartTime = utc_to_DateTime(&s_tm);
 
 				//コマンドライン
+				HINSTANCE hNtDll = ::GetModuleHandle(_T("ntdll.dll"));
+				NTSTATUS (NTAPI* lpfNtQueryInformationProcess)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG) = 
+					(NTSTATUS (NTAPI*)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG))::GetProcAddress(hNtDll, "NtQueryInformationProcess");
+				ULONG (NTAPI* lpfRtlNtStatusToDosError)(NTSTATUS) =
+					(ULONG (NTAPI*)(NTSTATUS))::GetProcAddress(hNtDll, "RtlNtStatusToDosError");
+
 				if (lpfNtQueryInformationProcess && lpfRtlNtStatusToDosError) {
 					PROCESS_BASIC_INFORMATION pbi;
 					ULONG len;
@@ -538,25 +550,71 @@ void __fastcall TAppListDlg::UpdateAppList()
 					ap->Icon->Assign(Application->Icon);
 				}
 				else {
-					//無応答でなければアイコンを取得(UWPは除く)
-					if (!ap->isNoRes && !ap->isUWP)
+					if (!ap->isNoRes && !ap->isUWP) {
 						ap->Icon->Handle = (HICON)::SendMessage(hWnd, WM_GETICON, ICON_BIG, 0);
+					}
 
-					hProcess = ::OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
+					hProcess = ::OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, ap->PID);
 					if (hProcess) {
-						//ファイル名
 						_TCHAR sbuf[MAX_PATH];
 						DWORD sz = MAX_PATH;
 						UnicodeString fnam = ::QueryFullProcessImageName(hProcess, 0, sbuf, &sz)? sbuf : _T("");
 						::CloseHandle(hProcess);
 						ap->FileName = fnam;
 						ap->Caption	 = get_base_name(fnam);
+					}
 
-						if (ap->Icon->Empty && !fnam.IsEmpty()) {
-							SHFILEINFO sif;
-							if (::SHGetFileInfo(fnam.c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_LARGEICON))
-								ap->Icon->Handle = sif.hIcon;
+					if (ap->isUWP) {
+						hProcess = ::OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, ap->PID);
+						if (hProcess) {
+							try {
+								HINSTANCE hKernel32 = ::GetModuleHandle(_T("kernel32"));
+								LONG (WINAPI*lpfGetPackageFullName)(HANDLE, UINT32*, PWSTR) =
+									(LONG (WINAPI*)(HANDLE, UINT32*, PWSTR))::GetProcAddress(hKernel32, "GetPackageFullName");
+								LONG (WINAPI*lpfGetPackagePathByFullName)(PCWSTR,UINT32*,PWSTR) =
+									(LONG (WINAPI*)(PCWSTR, UINT32*, PWSTR))::GetProcAddress(hKernel32, "GetPackagePathByFullName");
+								if (!lpfGetPackageFullName || !lpfGetPackagePathByFullName) Abort();
+
+								UINT32 buf_len = 0;
+								LONG res = lpfGetPackageFullName(hProcess, &buf_len, NULL);
+								if (res!=ERROR_INSUFFICIENT_BUFFER || buf_len==0) Abort();
+								std::unique_ptr<_TCHAR[]> pkg_buf(new _TCHAR[buf_len]);
+								PWSTR pkg_name = pkg_buf.get();
+								if (lpfGetPackageFullName(hProcess, &buf_len, pkg_name)!=ERROR_SUCCESS) Abort();
+
+								buf_len = 0;
+								res = lpfGetPackagePathByFullName(pkg_name, &buf_len, NULL);
+								if (res!=ERROR_INSUFFICIENT_BUFFER || buf_len==0) Abort();
+								std::unique_ptr<_TCHAR[]> pth_buf(new _TCHAR[buf_len]);
+								PWSTR pth_name = pth_buf.get();
+								if (lpfGetPackagePathByFullName(pkg_name, &buf_len, pth_name)!=ERROR_SUCCESS) Abort();
+								UnicodeString pnam = IncludeTrailingPathDelimiter(pth_buf.get());
+								std::unique_ptr<TStringList> fbuf(new TStringList());
+								if (load_text_ex(pnam + "AppxManifest.xml", fbuf.get())==0) Abort();
+								UnicodeString snam = get_tkn(get_tkn_r(fbuf->Text, "Square44x44Logo=\""), "\"");
+								if (!snam.IsEmpty()) {
+									UnicodeString fext = get_extension(snam);
+									UnicodeString bnam = get_base_name(snam);
+									UnicodeString dnam = ExtractFilePath(pnam + snam);
+									UnicodeString inam = dnam + bnam + fext;
+									if (!file_exists(inam)) inam = dnam + bnam + ".targetsize-32" + fext;
+									if (file_exists(inam)) {
+										ap->PngImg->LoadFromFile(inam);
+										ap->PngImg->Transparent = true;
+									}
+								}
+							}
+							catch (...) {
+								;
+							}
+
+							::CloseHandle(hProcess);
 						}
+					}
+
+					if (ap->Icon->Empty && !ap->FileName.IsEmpty()) {
+						int size = 32;
+						ap->Icon->Handle = usr_SH->get_Icon(ap->FileName, size, false);
 					}
 				}
 			}
@@ -835,34 +893,16 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 		cv->Brush->Color = br_col;
 	}
 
-	//アンコン
+	//アイコン
 	int s_32 = ScaledIntX(32);
-	if (ap->Icon->Handle) {
-		::DrawIconEx(cv->Handle, xp, Rect.Top + 2, ap->Icon->Handle, s_32, s_32, 0, NULL, DI_NORMAL);
-	}
-	//UWP用擬似アイコン
-	else if (ap->isUWP) {
+	if (!ap->PngImg->Empty) {
 		TRect rc = Rect;
 		rc.Left = xp; rc.Top += 2;
 		rc.SetWidth(s_32); rc.SetHeight(s_32);
-		cv->Brush->Color = TColor(0x00d5780a);
-		cv->FillRect(rc);
-		int org_fs = cv->Font->Size;
-		{
-			bool is_edge = EndsStr("Microsoft Edge", ap->WinText);
-			UnicodeString tit = is_edge? "ｅ" : "UWP";
-			if (is_edge) cv->Font->Style = cv->Font->Style << fsBold;
-			for (int sz=8;;sz++) {
-				cv->Font->Height = sz;
-				if (cv->TextWidth(tit)>24 || cv->TextHeight(tit)>28) {
-					cv->Font->Height = sz -1;	break;
-				}
-			}
-			cv->Font->Color = clWhite;
-			cv->TextOut(rc.Left + (s_32 - cv->TextWidth(tit))/2, rc.Top + (is_edge? 0 : (s_32 - cv->TextHeight(tit))/2), tit);
-			cv->Font->Style = cv->Font->Style >> fsBold;
-		}
-		cv->Font->Size = org_fs;
+		ap->PngImg->Draw(cv, rc);
+	}
+	else if (ap->Icon->Handle) {
+		::DrawIconEx(cv->Handle, xp, Rect.Top + 2, ap->Icon->Handle, s_32, s_32, 0, NULL, DI_NORMAL);
 	}
 
 	//最小化マーク
@@ -1291,7 +1331,9 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 		lst->Add(EmptyStr);
 
 		HWND hWnd = c_ap->WinHandle;
-		add_PropLine(_T("クラス名"),	c_ap->ClassName,	lst.get());
+		tmp = c_ap->ClassName;
+		if (!c_ap->ClassName2.IsEmpty()) tmp.cat_sprintf(_T(" (%s)"), c_ap->ClassName2.c_str());
+		add_PropLine(_T("クラス名"),	tmp,	lst.get());
 		add_PropLine(_T("スタイル"),	tmp.sprintf(fmt_08X, ::GetWindowLong(hWnd, GWL_STYLE)),	lst.get());
 
 		tmp.sprintf(fmt_08X, c_ap->win_xstyle);
@@ -1314,11 +1356,7 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 		add_PropLine(_T("プロセスID"),		tmp.sprintf(fmt_08X_U, c_ap->PID, c_ap->PID),	lst.get());
 		add_PropLine(_T("スレッドID"),		tmp.sprintf(fmt_08X_U, c_ap->TID, c_ap->TID),	lst.get());
 		add_PropLine(_T("ハンドル"),		tmp.sprintf(fmt_08X_U, hWnd, hWnd),				lst.get());
-		lst->Add(EmptyStr);
-		add_PropLine(_T("ウインドウID"),	tmp.sprintf(fmt_08X, ::GetWindowLongPtr(hWnd, GWL_ID)),			lst.get());
-		add_PropLine(_T("インスタンス"),	tmp.sprintf(fmt_08X, ::GetWindowLongPtr(hWnd, GWLP_HINSTANCE)),	lst.get());
-		add_PropLine(_T("プロシージャ"),	tmp.sprintf(fmt_08X, ::GetWindowLongPtr(hWnd, GWLP_WNDPROC)),	lst.get());
-		add_PropLine(_T("ユーザデータ"),	tmp.sprintf(fmt_08X, ::GetWindowLongPtr(hWnd, GWLP_USERDATA)),	lst.get());
+
 		lst->Add(EmptyStr);
 		get_AppInf(c_ap->FileName, lst.get(), false);
 

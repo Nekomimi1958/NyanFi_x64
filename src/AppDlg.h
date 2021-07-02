@@ -49,15 +49,6 @@ struct PEB_INTERNAL {
 	ULONG SessionId;
 };
 
-typedef NTSTATUS (NTAPI* FUNC_NtQueryInformationProcess)(
-	IN HANDLE ProcessHandle,
-	IN PROCESSINFOCLASS ProcessInformationClass,
-	OUT PVOID ProcessInformation,
-	IN ULONG ProcessInformationLength,
-	OUT PULONG ReturnLength OPTIONAL);
-
-typedef ULONG (NTAPI* FUNC_RtlNtStatusToDosErrorPtr)(NTSTATUS Status);
-
 //---------------------------------------------------------------------------
 #define ISWOW64_STR	_T(" \u208d\u2083\u2082\u208e")
 
@@ -68,12 +59,18 @@ public:
 	HWND WinHandle;
 	UnicodeString WinText;
 	UnicodeString ClassName;
+	UnicodeString ClassName2;
 	UnicodeString FileName;
 	UnicodeString Caption;
 	UnicodeString CmdParam;
+	UnicodeString IconPng;
+
 	int  PID;
 	int  TID;
+
 	TIcon *Icon;
+	TPngImage *PngImg;
+
 	bool isNyan;
 	bool isWow64;
 	bool isUWP;
