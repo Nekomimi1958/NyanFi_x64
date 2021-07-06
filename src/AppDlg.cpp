@@ -23,6 +23,7 @@ FUNC_GetProcessMemoryInfo lpfGetProcessMemoryInfo = NULL;
 //ソート用比較関数
 //---------------------------------------------------------------------------
 bool SortByIcon = true;
+
 //---------------------------------------------------------------------------
 int __fastcall SortComp_Launch(TStringList *List, int Index1, int Index2)
 {
@@ -47,6 +48,20 @@ int __fastcall SortComp_Launch(TStringList *List, int Index1, int Index2)
 		UnicodeString nam0 = !fp0->alias.IsEmpty()? fp0->alias : fp0->b_name;
 		UnicodeString nam1 = !fp1->alias.IsEmpty()? fp1->alias : fp1->b_name;
 		int res = StrCmpLogicalW(nam0.c_str(), nam1.c_str());
+		return (res==0)? StrCmpLogicalW(fp0->p_name.c_str(), fp1->p_name.c_str()) : res;
+	}
+
+	return CompareText(fp0->f_ext, fp1->f_ext);
+}
+//---------------------------------------------------------------------------
+int __fastcall SortComp_LaunchS(TStringList *List, int Index1, int Index2)
+{
+	file_rec *fp0 = (file_rec*)List->Objects[Index1];
+	file_rec *fp1 = (file_rec*)List->Objects[Index2];
+	if (!fp0 || !fp1) return 0;
+
+	if (SameText(fp0->f_ext, fp1->f_ext)) {
+		int res = StrCmpLogicalW(fp0->b_name.c_str(), fp1->b_name.c_str());
 		return (res==0)? StrCmpLogicalW(fp0->p_name.c_str(), fp1->p_name.c_str()) : res;
 	}
 
@@ -356,6 +371,12 @@ void __fastcall TAppListDlg::LaunchListBoxEnter(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::SetIncSeaMode(bool sw)
 {
+	UnicodeString l_fnam;
+	if (IsIncSea) {
+		file_rec *cfp = GetLaunchFrecPtr();
+		if (cfp) l_fnam = cfp->f_name;
+	}
+
 	IsIncSea = sw;
 	UserModule->SetBlinkTimer(NULL);
 
@@ -376,15 +397,15 @@ void __fastcall TAppListDlg::SetIncSeaMode(bool sw)
 	}
 	//通常表示
 	else {
+		if (!l_fnam.IsEmpty()) CurLaunchPath = ExtractFilePath(l_fnam);
 		InpPaintBox->Visible   = false;
 		setup_Panel(DirPanel, DirInfFont);
 		DirPanel->Color 	   = col_bgDirInf;
 		DirPanel->Font->Color  = col_fgDirInf;
-		DirPanel->Alignment    = taCenter;
 		DirPanel->BevelOuter   = FlatInfPanel? bvNone : bvRaised;
 	}
 
-	UpdateLaunchList();
+	UpdateLaunchList(l_fnam);
 }
 
 //---------------------------------------------------------------------------
@@ -684,7 +705,8 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 
 	//インクリメンタルサーチ
 	if (IsIncSea) {
-		UnicodeString ptn = usr_Migemo->GetRegExPtn(IsMigemo, IncSeaWord);
+		UnicodeString ptn = contained_wd_i(_T("*|?| "), IncSeaWord)?
+								UnicodeString(".+") : usr_Migemo->GetRegExPtn(IsMigemo, IncSeaWord);
 		if (!ptn.IsEmpty()) {
 			TRegExOptions opt; opt << roIgnoreCase;
 			for (int i=0; i<LaunchFileList->Count; i++) {
@@ -694,11 +716,13 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 					lst->AddObject(fp->f_name, (TObject*)fp);
 				}
 			}
+			lst->CustomSort(SortComp_LaunchS);
 		}
 	}
 	//通常モード
 	else {
-		DirPanel->Caption = get_MiniPathName(get_dir_name(CurLaunchPath), DirPanel->ClientWidth, DirPanel->Font);
+		DirPanel->Caption =
+			get_MiniPathName(get_tkn_r(CurLaunchPath, get_parent_path(LaunchPath)), DirPanel->ClientWidth, DirPanel->Font);
 		TSearchRec sr;
 		if (FindFirst(CurLaunchPath + "*.*", faAnyFile, sr)==0) {
 			do {
@@ -1070,9 +1094,6 @@ void __fastcall TAppListDlg::PopupMenu2Popup(TObject *Sender)
 		LaunchRightItem->Checked = (LaunchPanel->Align==alRight);
 		LaunchLeftItem->Checked  = (LaunchPanel->Align==alLeft);
 	}
-
-	SortByIconItem->Checked = SortByIcon;
-	SortByRemItem->Checked	= SortByRem;
 }
 
 //---------------------------------------------------------------------------
@@ -1402,7 +1423,7 @@ void __fastcall TAppListDlg::LaunchListBoxDrawItem(TWinControl *Control, int Ind
 	cv->TextOut(xp, yp, fp->b_name);
 
 	//分割線
-	if (Index>0) {
+	if (Index>0 && !IsIncSea) {
 		file_rec *fp2 = (file_rec*)LaunchList->Objects[Index - 1];
 		if (!SameText(fp->f_ext, fp2->f_ext))	draw_separateLine(cv, Rect, 0);
 		if (EndsStr('-', fp->alias)) 			draw_separateLine(cv, Rect, 2);	//コメント
@@ -1505,13 +1526,12 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 	else if (USAME_TI(CmdStr, "Delete")) {
 		if (cfp && !cfp->is_up) {
 			try {
-				if (cfp->is_dir && !is_EmptyDir(cfp->f_name)) SysErrAbort(ERROR_DIR_NOT_EMPTY);
 				if (msgbox_Sure(LoadUsrMsg(USTR_DeleteQ,
 					UnicodeString().sprintf(_T("%s "), get_DispName(cfp).c_str())), SureDelete))
 				{
 					if (ForceDel && !set_FileWritable(cfp->f_name)) UserAbort(USTR_FaildDelete);
 					if (cfp->is_dir) {
-						if (!delete_Dir(cfp->f_name)) UserAbort(USTR_FaildDelete);
+						if (!delete_DirEx(cfp->f_name, DelUseTrash, ForceDel)) UserAbort(USTR_FaildDelete);
 					}
 					else {
 						if (!delete_File(cfp->f_name, DelUseTrash)) UserAbort(USTR_FaildDelete);
@@ -1549,7 +1569,9 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 			CurLaunchPath = get_parent_path(CurLaunchPath);
 			UpdateLaunchList(l_fnam);
 		}
-		else beep_Warn();
+		else {
+			beep_Warn();
+		}
 	}
 	//一覧へ
 	else if (AppPanel->Visible && LaunchPanel->Align==alRight && is_ToLeftOpe(KeyStr, CmdStr)) {
@@ -1608,7 +1630,13 @@ void __fastcall TAppListDlg::DirPanelDblClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::JumpLaunchDirItemClick(TObject *Sender)
 {
-	JumpPathName = LaunchPath;
+	UnicodeString pnam = CurLaunchPath;
+	if (IsIncSea) {
+		file_rec *cfp = GetLaunchFrecPtr();
+		if (cfp) pnam = cfp->p_name;
+	}
+
+	JumpPathName = pnam;
 	ModalResult  = mrOk;
 }
 //---------------------------------------------------------------------------
@@ -1639,18 +1667,32 @@ void __fastcall TAppListDlg::LaunchPosItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //フォルダアイコンでソート
 //---------------------------------------------------------------------------
-void __fastcall TAppListDlg::SortByIconItemClick(TObject *Sender)
+void __fastcall TAppListDlg::SortByIconActionExecute(TObject *Sender)
 {
 	SortByIcon = !SortByIcon;
 	UpdateLaunchList();
 }
 //---------------------------------------------------------------------------
+void __fastcall TAppListDlg::SortByIconActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Enabled = !IsIncSea;
+	ap->Checked = SortByIcon;
+}
+//---------------------------------------------------------------------------
 //コメントでソート
 //---------------------------------------------------------------------------
-void __fastcall TAppListDlg::SortByRemItemClick(TObject *Sender)
+void __fastcall TAppListDlg::SortByRemActionExecute(TObject *Sender)
 {
 	SortByRem = !SortByRem;
 	UpdateLaunchList();
+}
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::SortByRemActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Enabled = !IsIncSea;
+	ap->Checked = SortByRem;
 }
 
 //---------------------------------------------------------------------------

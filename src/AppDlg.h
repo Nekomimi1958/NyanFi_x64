@@ -130,6 +130,8 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *MinimizeAction;
 	TAction *RestoreAction;
 	TAction *ShowCmdParamAction;
+	TAction *SortByIconAction;
+	TAction *SortByRemAction;
 	TAction *TopMostAction;
 	TActionList *ActionList1;
 	TListBox *AppListBox;
@@ -210,7 +212,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall LaunchPosItemClick(TObject *Sender);
 	void __fastcall PopupMenu2Popup(TObject *Sender);
 	void __fastcall UpdateIcoItemClick(TObject *Sender);
-	void __fastcall SortByRemItemClick(TObject *Sender);
 	void __fastcall CloseSameItemClick(TObject *Sender);
 	void __fastcall ViewPanelDblClick(TObject *Sender);
 	void __fastcall JumpLinkedActionExecute(TObject *Sender);
@@ -228,8 +229,11 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InpPaintBoxPaint(TObject *Sender);
 	void __fastcall FitToFileListActionExecute(TObject *Sender);
 	void __fastcall FitToFileListActionUpdate(TObject *Sender);
-	void __fastcall SortByIconItemClick(TObject *Sender);
 	void __fastcall ShowCmdParamActionExecute(TObject *Sender);
+	void __fastcall SortByIconActionExecute(TObject *Sender);
+	void __fastcall SortByIconActionUpdate(TObject *Sender);
+	void __fastcall SortByRemActionExecute(TObject *Sender);
+	void __fastcall SortByRemActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TAppWinList *AppInfoList;

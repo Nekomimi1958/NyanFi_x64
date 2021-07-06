@@ -1100,8 +1100,11 @@ bool create_ForceDirs(UnicodeString dnam)
 //---------------------------------------------------------------------------
 //ディレクトリの削除
 //---------------------------------------------------------------------------
-bool delete_Dir(UnicodeString dnam)
+bool delete_Dir(
+	UnicodeString dnam,
+	bool force)			//強制的に削除 (default = false)
 {
+	if (force && !set_FileWritable(dnam)) return false;
 	return ::RemoveDirectory(cv_ex_filename(dnam).c_str());
 }
 //---------------------------------------------------------------------------

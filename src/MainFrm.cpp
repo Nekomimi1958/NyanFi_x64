@@ -17052,15 +17052,15 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 	try {
 		if (!IsCurFList()) UserAbort(USTR_OpeNotSuported);
 
-		bool is_lr = TEST_ActParam("LR");
-		if (is_lr && !IsOppFList())	UserAbort(USTR_OpeNotSuported);
-		if (is_lr && EqualDirLR())	UserAbort(USTR_SameDirLR);
+		bool is_LR = TEST_ActParam("LR");
+		if (is_LR && !IsOppFList())	UserAbort(USTR_OpeNotSuported);
+		if (is_LR && EqualDirLR())	UserAbort(USTR_SameDirLR);
 
 		if (OppStt->is_Find) RecoverFileList(OppListTag);
-		if (is_lr) ExeCommandAction("ClearAll", "AL");
+		if (is_LR) ExeCommandAction("ClearAll", "AL");
 
 		if (!FindDuplDlg) FindDuplDlg = new TFindDuplDlg(this);	//初回に動的作成
-		FindDuplDlg->OptPanel->Visible = !is_lr;
+		FindDuplDlg->OptPanel->Visible = !is_LR;
 		FindDuplDlg->OppPathCheckBox->Enabled = (IsOppFList() && !EqualDirLR());
 		FindDuplDlg->SubDirCheckBox->Enabled  = IsCurFList();
 		if (FindDuplDlg->ShowModal()!=mrOk) SkipAbort();
@@ -17083,15 +17083,15 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 		UnicodeString idstr = get_word_i_idx(HASH_ID_STR, FindDuplDlg->AlgComboBox->ItemIndex);
 		AddLog(msg.sprintf(_T("  ハッシュ: %s"), idstr.c_str()));
 
-		bool sub_sw  = is_lr? false : (FindDuplDlg->SubDirCheckBox->Enabled && FindDuplDlg->SubDirCheckBox->Checked);
-		bool exc_sym = is_lr? true  : FindDuplDlg->ExcSymCheckBox->Checked;
+		bool sub_sw  = is_LR? false : (FindDuplDlg->SubDirCheckBox->Enabled && FindDuplDlg->SubDirCheckBox->Checked);
+		bool exc_sym = is_LR? true  : FindDuplDlg->ExcSymCheckBox->Checked;
 
 		//対象を取得
 		std::unique_ptr<TStringList> f_lst(new TStringList());
 		CancelWork = !get_NameList_objSize(GetCurList(true), f_lst.get(), sub_sw, exc_sym);
 
 		if (!CancelWork && !EqualDirLR()
-			&& (is_lr || (FindDuplDlg->OppPathCheckBox->Enabled && FindDuplDlg->OppPathCheckBox->Checked)))
+			&& (is_LR || (FindDuplDlg->OppPathCheckBox->Enabled && FindDuplDlg->OppPathCheckBox->Checked)))
 		{
 			AddLog(msg.sprintf(_T("  反対パス: %s"), CurPath[OppListTag].c_str()));
 			if (get_NameList_objSize(GetOppList(), f_lst.get(), sub_sw, exc_sym)) {
@@ -17238,7 +17238,7 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 				hs_lst->CustomSort(comp_FilePath);
 
 				//結果リスト
-				if (!is_lr) {
+				if (!is_LR) {
 					TStringList *r_lst = ResultList[FindTag];
 					clear_FileList(r_lst);
 
@@ -19037,8 +19037,8 @@ void __fastcall TNyanFiForm::JsonViewerActionExecute(TObject *Sender)
 {
 	try {
 		UnicodeString fnam;
-		bool is_cb = TEST_ActParam("CB");
-		if (!is_cb) {
+		bool is_CB = TEST_ActParam("CB");
+		if (!is_CB) {
 			file_rec *cfp = GetCurFrecPtr(true);
 			if (!cfp || cfp->is_dummy || cfp->is_dir || cfp->f_attr==faInvalid) Abort();
 			if (cfp->is_virtual && !SetTmpFile(cfp)) UserAbort(USTR_FaildTmpUnpack);
@@ -19048,7 +19048,7 @@ void __fastcall TNyanFiForm::JsonViewerActionExecute(TObject *Sender)
 
 		if (!JsonViewer) JsonViewer = new TJsonViewer(this);	//初回に動的作成
 		JsonViewer->FileName = fnam;
-		JsonViewer->isClip	 = is_cb;
+		JsonViewer->isClip	 = is_CB;
 		JsonViewer->ShowModal();
 	}
 	catch (EAbort &e) {
@@ -23142,14 +23142,14 @@ void __fastcall TNyanFiForm::TabGroupActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SaveAsWorkListActionExecute(TObject *Sender)
 {
-	bool is_fl = TEST_ActParam("FL");
-	if (is_fl && CurStt->is_Arc) { SetActionAbort(); return; }
+	bool is_FL = TEST_ActParam("FL");
+	if (is_FL && CurStt->is_Arc) { SetActionAbort(); return; }
 
-	UnicodeString fnam = is_fl? EmptyStr : ExtractFileName(WorkListName);
+	UnicodeString fnam = is_FL? EmptyStr : ExtractFileName(WorkListName);
 	UserModule->PrepareSaveDlg(LoadUsrMsg(USTR_SaveAs, _T("ワークリスト")).c_str(), F_FILTER_NWL, fnam.c_str(), WorkListPath);
 	fnam = UserModule->SaveDlgExecute();
 	if (!fnam.IsEmpty()) {
-		if (save_WorkList(fnam, is_fl? GetCurList() : WorkList)) {
+		if (save_WorkList(fnam, is_FL? GetCurList() : WorkList)) {
 			WorkListName = fnam;
 			WorkListPath = ExtractFilePath(WorkListName);
 			WorkListTime = get_file_age(WorkListName);
@@ -23343,12 +23343,12 @@ void __fastcall TNyanFiForm::SelAllItemActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
 {
 	try {
-		bool is_lr = TEST_DEL_ActParam("LR");
-		bool is_sm = TEST_DEL_ActParam("SM");
-		bool is_cp = TEST_DEL_ActParam("CP");
-		bool is_op = TEST_DEL_ActParam("OP");
+		bool is_LR = TEST_DEL_ActParam("LR");
+		bool is_SM = TEST_DEL_ActParam("SM");
+		bool is_CP = TEST_DEL_ActParam("CP");
+		bool is_OP = TEST_DEL_ActParam("OP");
 
-		UnicodeString lnam = (is_cp || is_op)? GetCurFileName()
+		UnicodeString lnam = (is_CP || is_OP)? GetCurFileName()
 											 : to_absolute_name(cv_env_str(exclude_quot(ActionParam)), CurPath[CurListTag]);
 		if (lnam.IsEmpty()) UserAbort(USTR_NoParameter);
 		if (!file_exists(lnam)) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("リストファイル")));
@@ -23358,15 +23358,15 @@ void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
 
 		CurWorking = true;
 		for (int i=0; i<MAX_FILELIST; i++) {
-			int s_tag = is_lr? ((i==0)? CurListTag : OppListTag) :
-					    is_op? ((i==0)? OppListTag : -1) : ((i==0)? CurListTag : -1);
+			int s_tag = is_LR? ((i==0)? CurListTag : OppListTag) :
+					    is_OP? ((i==0)? OppListTag : -1) : ((i==0)? CurListTag : -1);
 			if (s_tag==-1) continue;
 
 			TStringList *lst = GetFileList(s_tag);
 			ClrSelect(lst);
 
 			TStringList *sm_lst = SelMaskList[s_tag];
-			if (is_sm) sm_lst->Clear();
+			if (is_SM) sm_lst->Clear();
 
 			UnicodeString top_fnam;
 			for (int j=0; j<f_lst->Count; j++) {
@@ -23388,7 +23388,7 @@ void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
 					int idx = lst->IndexOf(fnam);
 					if (idx!=-1) {
 						file_rec *fp = (file_rec*)lst->Objects[idx];
-						if (is_sm) sm_lst->Add(fp->f_name); else fp->selected = true;
+						if (is_SM) sm_lst->Add(fp->f_name); else fp->selected = true;
 						if (top_fnam.IsEmpty()) top_fnam = fp->f_name;
 					}
 				}
@@ -23405,14 +23405,14 @@ void __fastcall TNyanFiForm::SelByListActionExecute(TObject *Sender)
 						if (is_reg? TRegEx::IsMatch(fp->n_name, fnam, opt) :
 							is_ptn? str_match(fnam, fp->n_name) : SameText(fnam, fp->n_name))
 						{
-							if (is_sm) sm_lst->Add(fp->f_name); else fp->selected = true;
+							if (is_SM) sm_lst->Add(fp->f_name); else fp->selected = true;
 							if (top_fnam.IsEmpty()) top_fnam = fp->f_name;
 						}
 					}
 				}
 			}
 
-			if (is_sm) {
+			if (is_SM) {
 				ApplySelMask(lst, s_tag);
 				AssignFileList(lst, s_tag, top_fnam);
 			}
@@ -23501,11 +23501,11 @@ void __fastcall TNyanFiForm::SelEmptyDirActionExecute(TObject *Sender)
 {
 	if (CurStt->is_Arc || CurStt->is_ADS || CurStt->is_FTP) { SetActionAbort(USTR_OpeNotSuported); return; }
 
-	bool no_file = TEST_ActParam("NF");
+	bool is_NF = TEST_ActParam("NF");
 	TStringList *lst = GetCurList(true);
 	for (int i=0; i<lst->Count; i++) {
 		file_rec *fp = (file_rec*)lst->Objects[i];
-		fp->selected = fp->is_dir? is_EmptyDir(fp->f_name, no_file) : false;
+		fp->selected = fp->is_dir? is_EmptyDir(fp->f_name, is_NF) : false;
 	}
 	RepaintList(CurListTag);
 	if (GetSelCount(lst)==0) SttBarWarnUstr(USTR_NotFound);
@@ -23672,18 +23672,19 @@ void __fastcall TNyanFiForm::SelMaskActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SelOnlyCurActionExecute(TObject *Sender)
 {
+	bool is_OD = TEST_ActParam("OD");
+	bool is_FD = TEST_ActParam("FD");
 	TStringList *c_lst = GetCurList(true);
 	TStringList *o_lst = GetOppList();
-
 	int top_s_idx = -1;
 	for (int c_i=0; c_i<c_lst->Count; c_i++) {
 		file_rec *cfp = (file_rec*)c_lst->Objects[c_i];
 		cfp->selected = false;
-		if (cfp->is_dir) continue;
+		if (!is_FD && ((!is_OD && cfp->is_dir) || (is_OD && !cfp->is_dir))) continue;
 		cfp->selected = true;
 		for (int o_i=0; o_i<o_lst->Count; o_i++) {
 			file_rec *ofp = (file_rec*)o_lst->Objects[o_i];
-			if (ofp->is_dir) continue;
+			if (ofp->is_dir!=cfp->is_dir) continue;
 			if (SameText(ofp->n_name, cfp->n_name)) {
 				cfp->selected = (IsDiffList() && ofp->is_dummy);
 				//反対側が比較結果の不在項目なら選択/通常は解除
@@ -24385,7 +24386,7 @@ void __fastcall TNyanFiForm::ShowFileInfoActionExecute(TObject *Sender)
 		SetActionAbort();  return;
 	}
 
-	bool is_sd = TEST_ActParam("SD");
+	bool is_SD = TEST_ActParam("SD");
 
 	//ディレクトリの容量計算
 	if (ScrMode==SCMD_FLIST && cfp->is_dir && !cfp->is_up && !cfp->is_ftp) {
@@ -24398,7 +24399,7 @@ void __fastcall TNyanFiForm::ShowFileInfoActionExecute(TObject *Sender)
 		if (CalcAborted) SttBarWarnUstr(USTR_Canceled);
 	}
 
-	if (is_sd
+	if (is_SD
 		|| (ScrMode==SCMD_FLIST && !(SubPanel->Visible && InfListPanel->Visible))
 		|| (ScrMode==SCMD_TVIEW)
 		|| (ScrMode==SCMD_IVIEW && !ImgSidePanel->Visible))
@@ -24978,14 +24979,14 @@ void __fastcall TNyanFiForm::SwapNameActionExecute(TObject *Sender)
 		CurWorking = true;
 
 		SetDirWatch(false);
-		bool is_lr = TEST_ActParam("LR");
+		bool is_LR = TEST_ActParam("LR");
 		TStringList *lst0 = GetCurList(true);
 		TStringList *lst1 = GetOppList();
 		UnicodeString itm_name[2], org_name[2], new_name[2], fext[2], tmp_name[2];
 		std::unique_ptr<TStringList> r_lst(new TStringList());
 
 		//左右
-		if (is_lr) {
+		if (is_LR) {
 			if (!IsCurFList() || !IsOppFList()) UserAbort(USTR_OpeNotSuported);
 
 			std::unique_ptr<TStringList> s_lst0(new TStringList());
@@ -25050,7 +25051,7 @@ void __fastcall TNyanFiForm::SwapNameActionExecute(TObject *Sender)
 			if (move_FileT(itm_name[i], new_name[i])) {
 				r_lst->Add(org_name[i] + "\t" + new_name[i]);
 				//反対パスに反映されるかをチェック
-				if (!is_lr) {
+				if (!is_LR) {
 					UnicodeString org_pnam = IncludeTrailingPathDelimiter(org_name[i]);
 					if (file_GetAttr(new_name[i]) & faDirectory) {
 						if (StartsText(org_pnam, opp_path))
@@ -25065,7 +25066,7 @@ void __fastcall TNyanFiForm::SwapNameActionExecute(TObject *Sender)
 		CurWorking = false;
 		ClrSelect();
 		ReloadList(CurListTag);
-		if (is_lr) {
+		if (is_LR) {
 			ClrSelect(lst1);
 			ReloadList(OppListTag);
 		}
@@ -25073,7 +25074,7 @@ void __fastcall TNyanFiForm::SwapNameActionExecute(TObject *Sender)
 		SetDirWatch(true);
 
 		//必要なら反対パスへ反映
-		if (!is_lr && IsOppFList()) {
+		if (!is_LR && IsOppFList()) {
 			if (!opp_path.IsEmpty() && !SameText(opp_path, CurPath[OppListTag]))
 				CurPath[OppListTag] = IncludeTrailingPathDelimiter(opp_path);
 			else if (EqualDirLR() || CurStt->is_Find)
@@ -25818,9 +25819,9 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 		UnicodeString msg;
 		bool sure_unpack = (ExeCmdsBusy && XCMD_MsgOff)? false : SureUnPack;
 
-		bool is_cd	= TEST_ActParam("CD");
-		bool is_cd2 = TEST_ActParam("CD2");
-		bool is_ow	= TEST_ActParam("OW");
+		bool is_CD	= TEST_ActParam("CD");
+		bool is_CD2 = TEST_ActParam("CD2");
+		bool is_OW	= TEST_ActParam("OW");
 
 		TStringList *lst = GetCurList(true);
 		int sel_cnt = GetSelCount(lst);
@@ -25847,7 +25848,7 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 					file_rec *fp = (file_rec*)lst->Objects[i];  if (!fp->selected) continue;
 					UnicodeString dnam = dst_dir;
 					//ディレクトリ作成
-					if (is_cd || (is_cd2 && usr_ARC->GetRootCount(fp->f_name)>1)) {
+					if (is_CD || (is_CD2 && usr_ARC->GetRootCount(fp->f_name)>1)) {
 						dnam.cat_sprintf(_T("%s\\"), fp->b_name.c_str());
 						SetLastError(NO_ERROR);
 						if (!dir_exists(dnam) && !create_Dir(dnam)) {
@@ -25858,7 +25859,7 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 					}
 					msg = make_LogHdr(_T("UNPACK"), fp);
 					SetDirWatch(false);
-					if (!usr_ARC->UnPack(fp->f_name, dnam, EmptyStr, true, false, is_ow))
+					if (!usr_ARC->UnPack(fp->f_name, dnam, EmptyStr, true, false, is_OW))
 						set_LogErrMsg(msg, usr_ARC->ErrMsg);
 					SetDirWatch(true);
 					AddLog(msg);
@@ -25888,7 +25889,7 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 				UnicodeString dnam = dst_dir;
 				UnicodeString opp_dnam;
 				//ディレクトリ作成
-				if (is_cd || (is_cd2 && usr_ARC->GetRootCount(cfp->f_name)>1)) {
+				if (is_CD || (is_CD2 && usr_ARC->GetRootCount(cfp->f_name)>1)) {
 					dnam.cat_sprintf(_T("%s\\"), cfp->b_name.c_str());
 					SetLastError(NO_ERROR);
 					if (!dir_exists(dnam) && !create_Dir(dnam)) {
@@ -25900,7 +25901,7 @@ void __fastcall TNyanFiForm::UnPackActionExecute(TObject *Sender)
 				UnicodeString msg = make_LogHdr(_T("UNPACK"), cfp);
 				CurWorking = true;
 				SetDirWatch(false);
-				if (!usr_ARC->UnPack(cfp->f_name, dnam, EmptyStr, true, false, is_ow))
+				if (!usr_ARC->UnPack(cfp->f_name, dnam, EmptyStr, true, false, is_OW))
 					set_LogErrMsg(msg, usr_ARC->ErrMsg);
 
 				SetDirWatch(true);
@@ -34211,23 +34212,23 @@ void __fastcall TNyanFiForm::SidebarActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 {
 	try {
-		bool is_clip = TEST_DEL_ActParam("CB");
-		if (is_clip && !Clipboard()->HasFormat(CF_BITMAP)) UserAbort(USTR_NoObject);
+		bool is_CB = TEST_DEL_ActParam("CB");
+		if (is_CB && !Clipboard()->HasFormat(CF_BITMAP)) UserAbort(USTR_NoObject);
 
-		bool is_hg	 = TEST_DEL_ActParam("HG");
-		bool is_dh	 = TEST_DEL_ActParam("DH");
-		bool is_ah	 = TEST_DEL_ActParam("AH");
-		bool is_ph	 = TEST_DEL_ActParam("PH");
-		bool is_hash = is_dh || is_ah || is_ph;
-		bool is_hsv  = (!is_hg && !is_hash);	//デフォルト
-		bool is_cc	 = TEST_DEL_ActParam("CC");
+		bool is_HG	 = TEST_DEL_ActParam("HG");
+		bool is_DH	 = TEST_DEL_ActParam("DH");
+		bool is_AH	 = TEST_DEL_ActParam("AH");
+		bool is_PH	 = TEST_DEL_ActParam("PH");
+		bool is_hash = is_DH || is_AH || is_PH;
+		bool is_hsv  = (!is_HG && !is_hash);	//デフォルト
+		bool is_CC	 = TEST_DEL_ActParam("CC");
 
 		int sz = 32;							//デフォルト
 		if (!ActionParam.IsEmpty()) {
 			sz = ActionParam.ToIntDef(sz);
 			if (sz<4 || sz>120) UserAbort(USTR_IllegalParam);	//***
 		}
-		int wd = sz + (is_dh? 1 : 0);
+		int wd = sz + (is_DH? 1 : 0);
 		int hi = sz;
 
 		UnicodeString tmp;
@@ -34235,10 +34236,10 @@ void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 			tmp += "V";
 		}
 		else {
-			if (is_hg) tmp += "H";
-			tmp += (is_dh? "D" : is_ah? "A" : is_ph? "P" : "");
+			if (is_HG) tmp += "H";
+			tmp += (is_DH? "D" : is_AH? "A" : is_PH? "P" : "");
 		}
-		if (is_cc) tmp += "C";
+		if (is_CC) tmp += "C";
 		UnicodeString id_str;
 		id_str.sprintf(_T("#%s%u"), tmp.c_str(), sz);
 
@@ -34259,12 +34260,12 @@ void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 			if (!SameStr(id_str, get_pre_tab(fp->hash))) {
 				if (fp->is_virtual && !SetTmpFile(fp)) UserAbort(USTR_FaildTmpUnpack);
 				UnicodeString fnam = fp->is_virtual? fp->tmp_name : fp->f_name;
-				if (make_NrmImage(fnam, c_bmp.get(), (is_hash? g_bmp.get() : NULL), wd, hi, is_cc)) {
+				if (make_NrmImage(fnam, c_bmp.get(), (is_hash? g_bmp.get() : NULL), wd, hi, is_CC)) {
 					fp->hash = id_str + "\t" +
-								(is_dh? make_dHash(g_bmp.get()) :
-								 is_ah? make_aHash(g_bmp.get()) :
-								 is_ph? make_pHash(g_bmp.get()) : EmptyStr);
-					fp->vctr =   is_hg? make_HistVector(c_bmp.get()) :
+								(is_DH? make_dHash(g_bmp.get()) :
+								 is_AH? make_aHash(g_bmp.get()) :
+								 is_PH? make_pHash(g_bmp.get()) : EmptyStr);
+					fp->vctr =   is_HG? make_HistVector(c_bmp.get()) :
 							    is_hsv? make_HsvVector(c_bmp.get()) : EmptyStr;
 				}
 			}
@@ -34272,13 +34273,13 @@ void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 
 		//比較元ハッシュ/ベクトルを設定
 		UnicodeString r_hash, r_vctr;
-		if (is_clip) {
-			if (make_NrmImage(EmptyStr, c_bmp.get(), (is_hash? g_bmp.get() : NULL), wd, hi, is_cc)) {
+		if (is_CB) {
+			if (make_NrmImage(EmptyStr, c_bmp.get(), (is_hash? g_bmp.get() : NULL), wd, hi, is_CC)) {
 				r_hash = id_str + "\t" +
-							(is_dh? make_dHash(g_bmp.get()) :
-							 is_ah? make_aHash(g_bmp.get()) :
-							 is_ph? make_pHash(g_bmp.get()) : EmptyStr);
-				r_vctr =     is_hg? make_HistVector(c_bmp.get()) :
+							(is_DH? make_dHash(g_bmp.get()) :
+							 is_AH? make_aHash(g_bmp.get()) :
+							 is_PH? make_pHash(g_bmp.get()) : EmptyStr);
+				r_vctr =	 is_HG? make_HistVector(c_bmp.get()) :
 						    is_hsv? make_HsvVector(c_bmp.get()) : EmptyStr;
 			}
 		}
@@ -34295,7 +34296,7 @@ void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 		for (int i=0; i<v_cnt && !CancelWork; i++) {
 			PosWorkProgress(i + v_cnt, v_cnt*2);
 			file_rec *fp = (file_rec*)ViewFileList->Objects[i];
-			if (!is_clip && i==idx) {
+			if (!is_CB && i==idx) {
 				fp->distance = -1;
 			}
 			else {
@@ -34306,7 +34307,7 @@ void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 				}
 				else {
 					if (is_hash) s += get_HammingDistance(r_hash, hash);
-					if (is_hg)	 s += eval_HistgramVector(r_vctr, fp->vctr);
+					if (is_HG)	 s += eval_HistgramVector(r_vctr, fp->vctr);
 				}
 				fp->distance = s;
 			}
@@ -34318,7 +34319,7 @@ void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 		EndWorkProgress(EmptyStr, EmptyStr, 100);
 
 		if (!CancelWork) {
-			if (is_clip)
+			if (is_CB)
 				TopFileAction->Execute();
 			else
 				set_GridIndex(ThumbnailGrid, ViewFileList->IndexOf(ViewFileName), ViewFileList->Count);

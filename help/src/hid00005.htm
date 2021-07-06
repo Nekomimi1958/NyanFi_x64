@@ -99,7 +99,10 @@ AddTag<span class="pram_text">_;</span>
 <dt id="AppList">AppList<span class="pram_text">[_{FA|FL|FI|AO|LO|LI}]</span>
 <dd><a href="hid00076.htm">アプリケーション一覧</a>が開き、実行中のアプリケーションが表示されます。<br>
 アプリケーションの切り替え、終了、ウィンドウ操作、実行ファイル情報のコピーなどが可能です。<br>
+<div class="spc_box">
 また、指定ディレクトリ下に置かれたショートカットを一覧表示する簡易ランチャーも備えています。<br>
+<span class="tips">Tips</span><b>%APPDATA%\Microsoft\Windows\Start Menu</b> と <b>%PROGRAMDATA%\Microsoft\Windows\Start Menu</b> の内容を合わせてコピーすれば、スタートメニューの代わりになるかもしれません。<br>
+</div>
 
 <div class="spc_box">
 パラメータに <b>FA</b> を指定すると、開いたとき一覧側にフォーカスします。<br>
@@ -2594,8 +2597,9 @@ D:\Data\hoge.txt
 なお、選択マスクは、パスマスクとは独立して働きます。<br>
 <a href="#DelSelMask">→ DelSelMask</a>　<a href="#MarkMask">→ MarkMask</a>　<a href="#PathMaskDlg">→ PathMaskDlg</a>　<a href="#MaskSelect">→ MaskSelect</a>　<a href="#MatchSelect">→ MatchSelect</a>　<a href="#IncSearch">→ IncSearch</a>　<a href="#Filter">→ Filter</a>　<a href="#ClearMask">→ ClearMask</a>　<a href="#SelByList">→ SelByList</a>
 
-<dt id="SelOnlyCur">SelOnlyCur
+<dt id="SelOnlyCur">SelOnlyCur<span class="pram_text">[_{OD|FD}]</span>
 <dd>カレント側だけにあって、反対側には存在しないファイルを選択します。<br>
+パラメータに <b>OD</b> を指定すると、カレント側にあって反対側には存在しないディレクトリだけを、<b>FD</b> を指定するとファイルとディレクトリの両方を選択します。<br>
 <a href="#CompareDlg">→ CompareDlg</a>　<a href="#DiffDir">→ DiffDir</a>
 
 <dt id="SelReverse">SelReverse

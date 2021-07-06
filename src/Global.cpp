@@ -9952,6 +9952,46 @@ void delete_FileIf(UnicodeString fnam)
 }
 
 //---------------------------------------------------------------------------
+//ディレクトリの一括削除
+// ごみ箱(DelUseTrash)/強制削除(ForceDel) 対応
+//---------------------------------------------------------------------------
+bool delete_DirEx(
+	UnicodeString pnam,
+	bool use_trash,			//ごみ箱を使用	(default = false)
+	bool force)				//強制削除		(default = false)
+{
+	bool ret = true;
+	if (use_trash) {
+		if (force && !set_FileWritable(pnam))
+			ret = false;
+		else
+			ret = delete_File(pnam, use_trash);
+	}
+	else {
+		pnam = IncludeTrailingPathDelimiter(pnam);
+		TSearchRec sr;
+		if (FindFirst(cv_ex_filename(pnam + "*"), faAnyFile, sr)==0) {
+			do {
+				UnicodeString fnam = pnam + sr.Name;
+				if (ContainsStr("..", sr.Name)) continue;
+				if ((sr.Attr & faDirectory)!=0) {
+					if (!is_SymLink(fnam)) ret = delete_DirEx(fnam, use_trash, force);
+				}
+				else {
+					if (force && !set_FileWritable(fnam))
+						ret = false;
+					else
+						ret = delete_File(fnam);
+				}
+			} while(ret && FindNext(sr)==0);
+			FindClose(sr);
+		}
+		if (ret) ret = delete_Dir(pnam, force);
+	}
+	return ret;
+}
+
+//---------------------------------------------------------------------------
 //ファイルの移動(タグ/フォルダアイコンを考慮)
 //---------------------------------------------------------------------------
 bool move_FileT(UnicodeString old_nam, UnicodeString new_nam)

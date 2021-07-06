@@ -949,6 +949,9 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "SelEmptyDir")) {
 		params = "\nNF : ファイルが含まれていなければ選択\n";
 	}
+	else if (USAME_TI(cmd, "SelOnlyCur")) {
+		params = "\nOD : ディレクトリだけを選択\nFD : ファイルとディレクトリの両方を選択\n";
+	}
 	else if (contained_wd_i(_T("MarkMask|SelMask"), cmd)) {
 		params = "\nCA : マスクを解除\n";
 	}

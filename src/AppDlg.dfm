@@ -72,6 +72,7 @@ object AppListDlg: TAppListDlg
         Width = 100
         Height = 22
         Align = alTop
+        Alignment = taLeftJustify
         PopupMenu = PopupMenu2
         TabOrder = 0
         StyleElements = [seBorder]
@@ -280,12 +281,10 @@ object AppListDlg: TAppListDlg
       OnClick = UpdateIcoItemClick
     end
     object SortByIconItem: TMenuItem
-      Caption = #12501#12457#12523#12480#12450#12452#12467#12531#12391#12477#12540#12488'(&F)'
-      OnClick = SortByIconItemClick
+      Action = SortByIconAction
     end
     object SortByRemItem: TMenuItem
-      Caption = #12467#12513#12531#12488#12391#12477#12540#12488'(&S)'
-      OnClick = SortByRemItemClick
+      Action = SortByRemAction
     end
     object Sep_l_3: TMenuItem
       Caption = '-'
@@ -335,6 +334,16 @@ object AppListDlg: TAppListDlg
     object ShowCmdParamAction: TAction
       Caption = #12467#12510#12531#12489#12521#12452#12531#12497#12521#12513#12540#12479#12434#34920#31034'(&P)'
       OnExecute = ShowCmdParamActionExecute
+    end
+    object SortByIconAction: TAction
+      Caption = #12501#12457#12523#12480#12450#12452#12467#12531#12391#12477#12540#12488'(&F)'
+      OnExecute = SortByIconActionExecute
+      OnUpdate = SortByIconActionUpdate
+    end
+    object SortByRemAction: TAction
+      Caption = #12467#12513#12531#12488#12391#12477#12540#12488'(&S)'
+      OnExecute = SortByRemActionExecute
+      OnUpdate = SortByRemActionUpdate
     end
   end
 end

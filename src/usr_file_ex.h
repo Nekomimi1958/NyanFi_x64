@@ -118,7 +118,7 @@ bool set_file_age(UnicodeString fnam, TDateTime dt, bool force = false);
 bool create_EmptyFile(UnicodeString fnam);
 bool create_Dir(UnicodeString dnam);
 bool create_ForceDirs(UnicodeString dnam);
-bool delete_Dir(UnicodeString dnam);
+bool delete_Dir(UnicodeString dnam, bool force = false);
 bool delete_Dirs(UnicodeString pnam);
 bool move_File(UnicodeString old_nam, UnicodeString new_nam);
 bool copy_File(UnicodeString src_nam, UnicodeString dst_nam);

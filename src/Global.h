@@ -1816,6 +1816,8 @@ int get_HammingDistance(UnicodeString vct0, UnicodeString vct1);
 bool delete_File(UnicodeString fnam, bool use_trash = false);
 void delete_FileIf(UnicodeString fnam);
 
+bool delete_DirEx(UnicodeString pnam, bool use_trash = false, bool force = false);
+
 bool move_FileT(UnicodeString old_nam, UnicodeString new_nam);
 
 void move_FolderIcon(UnicodeString old_dnam, UnicodeString new_dnam);
