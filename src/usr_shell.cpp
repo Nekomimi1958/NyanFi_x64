@@ -6,6 +6,7 @@
 #include "usr_key.h"
 #include "usr_file_ex.h"
 #include "usr_file_inf.h"
+#include "UIniFile.h"
 #include "usr_shell.h"
 
 //---------------------------------------------------------------------------
@@ -26,6 +27,24 @@ UnicodeString get_WndClassName(HWND hWnd)
 {
 	_TCHAR cbuf[256];
 	return ((::GetClassName(hWnd, cbuf, 255)>0)? UnicodeString(cbuf) : EmptyStr);
+}
+
+//---------------------------------------------------------------------------
+//フォルダの表示名を desktop.ini から取得 (属性は無視)
+//---------------------------------------------------------------------------
+UnicodeString get_LocalFlderName(UnicodeString pnam)
+{
+	UnicodeString ret_str;
+	UnicodeString inam = IncludeTrailingPathDelimiter(pnam) + "\\desktop.ini";
+	if (file_exists(inam)) {
+		std::unique_ptr<UsrIniFile> d_ini(new UsrIniFile(inam));
+		ret_str = d_ini->ReadString(".ShellClassInfo", "LocalizedResourceName", EmptyStr);
+		if (StartsStr("@", ret_str)) {
+			_TCHAR sbuf[MAX_PATH];
+			if (SUCCEEDED(SHLoadIndirectString(ret_str.c_str(), sbuf, ARRAYSIZE(sbuf), NULL))) ret_str = sbuf;
+		}
+	}
+	return ret_str;
 }
 
 //---------------------------------------------------------------------------
@@ -1856,23 +1875,28 @@ UnicodeString UserShell::KnownGuidToPath(REFKNOWNFOLDERID id)
 //---------------------------------------------------------------------------
 void UserShell::AddKnownPath(
 	REFKNOWNFOLDERID id,	//ID
-	const _TCHAR *inam,		//名前	(先頭に | があると上端に区切り線を表示)
-	TStringList *lst)		//[o] リスト
+	TStringList *lst,		//[o] リスト
+	bool brk_sw)			//上端に区切り線を表示	(default = false)
 {
 	UnicodeString dnam = KnownGuidToPath(id);
 	if (!dnam.IsEmpty()) {
-		lst->Add(UnicodeString().sprintf(_T("%s\t%s"), IncludeTrailingPathDelimiter(dnam).c_str(), inam));
+		UnicodeString rnam = get_LocalFlderName(dnam);
+		if (rnam.IsEmpty())  rnam = ExtractFileName(ExcludeTrailingPathDelimiter(dnam));
+		if (brk_sw) rnam.Insert("|", 1);
+		lst->Add(UnicodeString().sprintf(_T("%s\t%s"), IncludeTrailingPathDelimiter(dnam).c_str(), rnam.c_str()));
 	}
 }
 //---------------------------------------------------------------------------
 void UserShell::AddEnvPath(
-	const _TCHAR *enam,
-	const _TCHAR *inam,
-	TStringList *lst)
+	UnicodeString enam,
+	TStringList *lst,
+	bool brk_sw)			//上端に区切り線を表示	(default = false)
 {
 	UnicodeString dnam = cv_env_str(enam);
 	if (!dnam.IsEmpty() && dnam.Pos('%')==0) {
-		lst->Add(UnicodeString().sprintf(_T("%s\t%s"), IncludeTrailingPathDelimiter(dnam).c_str(), inam));
+		UnicodeString rnam = ExtractFileName(ExcludeTrailingPathDelimiter(dnam));
+		if (brk_sw) rnam.Insert("|", 1);
+		lst->Add(UnicodeString().sprintf(_T("%s\t%s"), IncludeTrailingPathDelimiter(dnam).c_str(), rnam.c_str()));
 	}
 }
 
@@ -1881,53 +1905,53 @@ void UserShell::AddEnvPath(
 //---------------------------------------------------------------------------
 void UserShell::get_SpecialFolderList(TStringList *lst)
 {
-	AddKnownPath(FOLDERID_Profile,			_T("ユーザプロファイル"),	lst);
-	AddKnownPath(FOLDERID_Desktop,			_T("デスクトップ"),			lst);
-	AddKnownPath(FOLDERID_Favorites,		_T("お気に入り"),			lst);
-	AddKnownPath(FOLDERID_Documents,		_T("ドキュメント"),			lst);
-	AddKnownPath(FOLDERID_Downloads,		_T("ダウンロード"),			lst);
-	AddKnownPath(FOLDERID_Pictures,			_T("ピクチャ"),				lst);
-	AddKnownPath(FOLDERID_Videos,			_T("ビデオ"),				lst);
-	AddKnownPath(FOLDERID_Music,			_T("ミュージック"),			lst);
-	AddEnvPath(_T("%OneDrive%"),			_T("OneDrive"),				lst);
-	AddKnownPath(FOLDERID_RoamingAppData,	_T("|Application Data"),	lst);
-	AddEnvPath(_T("%APPDATA%\\Microsoft\\Windows\\Libraries"), _T("ライブラリ"), lst);
-	AddKnownPath(FOLDERID_StartMenu,		_T("スタートメニュー"),		lst);
-	AddKnownPath(FOLDERID_Programs,			_T("プログラム"),			lst);
-	AddKnownPath(FOLDERID_Startup,			_T("スタートアップ"),		lst);
-	AddKnownPath(FOLDERID_AdminTools,		_T("管理ツール"),			lst);
-	AddKnownPath(FOLDERID_QuickLaunch,		_T("クイック起動"),			lst);
-	AddKnownPath(FOLDERID_Recent,			_T("最近使った項目"),		lst);
-	AddKnownPath(FOLDERID_SendTo,			_T("SendTo"),				lst);
-	AddKnownPath(FOLDERID_Templates,		_T("テンプレート"),			lst);
-	AddKnownPath(FOLDERID_PrintHood,		_T("プリンター"),			lst);
-	AddKnownPath(FOLDERID_NetHood,			_T("NetHood"),				lst);
-	AddKnownPath(FOLDERID_CDBurning,		_T("CDBURN AREA"),			lst);
-	AddKnownPath(FOLDERID_Cookies,			_T("Cookies"),				lst);
-	AddKnownPath(FOLDERID_History,			_T("履歴"),					lst);
-	AddKnownPath(FOLDERID_InternetCache,	_T("インターネット一時ファイル"),	lst);
+	AddKnownPath(FOLDERID_Profile,			lst);
+	AddKnownPath(FOLDERID_Desktop,			lst);
+	AddKnownPath(FOLDERID_Favorites,		lst);
+	AddKnownPath(FOLDERID_Documents,		lst);
+	AddKnownPath(FOLDERID_Downloads,		lst);
+	AddKnownPath(FOLDERID_Pictures,			lst);
+	AddKnownPath(FOLDERID_Videos,			lst);
+	AddKnownPath(FOLDERID_Music,			lst);
+	AddEnvPath("%OneDrive%",				lst);
+	AddKnownPath(FOLDERID_RoamingAppData,	lst, true);
+	AddEnvPath("%APPDATA%\\Microsoft\\Windows\\Libraries", lst);
+	AddKnownPath(FOLDERID_StartMenu,		lst);
+	AddKnownPath(FOLDERID_Programs,			lst);
+	AddKnownPath(FOLDERID_Startup,			lst);
+	AddKnownPath(FOLDERID_AdminTools,		lst);
+	AddKnownPath(FOLDERID_QuickLaunch,		lst);
+	AddKnownPath(FOLDERID_Recent,			lst);
+	AddKnownPath(FOLDERID_SendTo,			lst);
+	AddKnownPath(FOLDERID_Templates,		lst);
+	AddKnownPath(FOLDERID_PrintHood,		lst);
+	AddKnownPath(FOLDERID_NetHood,			lst);
+	AddKnownPath(FOLDERID_CDBurning,		lst);
+	AddKnownPath(FOLDERID_Cookies,			lst);
+	AddKnownPath(FOLDERID_History,			lst);
+	AddKnownPath(FOLDERID_InternetCache,	lst);
 
 	lst->Add("\t-");	//セパレータ
-	AddKnownPath(FOLDERID_PublicDesktop,	_T("デスクトップ"),			lst);
-	AddKnownPath(FOLDERID_PublicDocuments,	_T("ドキュメント"),			lst);
-	AddKnownPath(FOLDERID_PublicPictures,	_T("ピクチャ"),				lst);
-	AddKnownPath(FOLDERID_PublicVideos,		_T("ビデオ"),				lst);
-	AddKnownPath(FOLDERID_PublicMusic,		_T("ミュージック"),			lst);
-	AddKnownPath(FOLDERID_ProgramData,		_T("|Application Data"),	lst);
-	AddKnownPath(FOLDERID_CommonStartMenu,	_T("スタートメニュー"),		lst);
-	AddKnownPath(FOLDERID_CommonPrograms,	_T("プログラム"),			lst);
-	AddKnownPath(FOLDERID_CommonStartup,	_T("スタートアップ"),		lst);
-	AddKnownPath(FOLDERID_CommonAdminTools,	_T("管理ツール"),			lst);
-	AddKnownPath(FOLDERID_CommonTemplates,	_T("テンプレート"),			lst);
+	AddKnownPath(FOLDERID_PublicDesktop,	lst);
+	AddKnownPath(FOLDERID_PublicDocuments,	lst);
+	AddKnownPath(FOLDERID_PublicPictures,	lst);
+	AddKnownPath(FOLDERID_PublicVideos,		lst);
+	AddKnownPath(FOLDERID_PublicMusic,		lst);
+	AddKnownPath(FOLDERID_ProgramData,		lst, true);
+	AddKnownPath(FOLDERID_CommonStartMenu,	lst);
+	AddKnownPath(FOLDERID_CommonPrograms,	lst);
+	AddKnownPath(FOLDERID_CommonStartup,	lst);
+	AddKnownPath(FOLDERID_CommonAdminTools,	lst);
+	AddKnownPath(FOLDERID_CommonTemplates,	lst);
 
-	AddEnvPath(_T("%ProgramW6432%"),		_T("|Program Files"),		lst);
-	AddKnownPath(FOLDERID_ProgramFilesX86,	_T("Program Files (x86)"),	lst);
-	AddKnownPath(FOLDERID_Windows,			_T("Windows"),				lst);
-	AddKnownPath(FOLDERID_System,			_T("Windows System"),		lst);
-	AddKnownPath(FOLDERID_SystemX86,		_T("Windows System32"),		lst);
-	AddKnownPath(FOLDERID_Fonts,			_T("フォント"),				lst);
-	AddEnvPath(_T("%TEMP%"),				_T("TEMP"),					lst);
-	AddEnvPath(_T("%TMP%"),					_T("TMP"),					lst);
+	AddEnvPath("%ProgramW6432%",			lst, true);
+	AddKnownPath(FOLDERID_ProgramFilesX86,	lst);
+	AddKnownPath(FOLDERID_Windows,			lst);
+	AddKnownPath(FOLDERID_System,			lst);
+	AddKnownPath(FOLDERID_SystemX86,		lst);
+	AddKnownPath(FOLDERID_Fonts,			lst);
+	AddEnvPath("%TEMP%",					lst);
+	AddEnvPath("%TMP%",						lst);
 
 	lst->Add("\t-");	//セパレータ
 	lst->Add("shell:::{20D04FE0-3AEA-1069-A2D8-08002B30309D}\tPC/コンピュータ");

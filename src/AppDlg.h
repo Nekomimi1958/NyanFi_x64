@@ -87,6 +87,7 @@ public:
 	LONG  win_xstyle;
 	int win_wd, win_hi;
 	int win_left, win_top;
+	int mon_no;
 
 	TDateTime StartTime;
 
@@ -130,9 +131,11 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *MinimizeAction;
 	TAction *RestoreAction;
 	TAction *ShowCmdParamAction;
+	TAction *ShowMonNoAction;
 	TAction *SortByIconAction;
 	TAction *SortByRemAction;
 	TAction *TopMostAction;
+	TAction *ToPrimaryAction;
 	TActionList *ActionList1;
 	TListBox *AppListBox;
 	TListBox *LaunchListBox;
@@ -161,10 +164,13 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_l_2;
 	TMenuItem *Sep_l_3;
 	TMenuItem *ShowCmdParamItem;
+	TMenuItem *ShowMonNoItem;
 	TMenuItem *SortByIconItem;
 	TMenuItem *SortByRemItem;
 	TMenuItem *TerminateItem;
 	TMenuItem *TopMostItem;
+	TMenuItem *ToPrimaryItem;
+	TMenuItem *u;
 	TMenuItem *UpdateIcoItem;
 	TPaintBox *InpPaintBox;
 	TPanel *AppListPanel;
@@ -234,6 +240,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SortByIconActionUpdate(TObject *Sender);
 	void __fastcall SortByRemActionExecute(TObject *Sender);
 	void __fastcall SortByRemActionUpdate(TObject *Sender);
+	void __fastcall ShowMonNoActionExecute(TObject *Sender);
+	void __fastcall ShowMonNoActionUpdate(TObject *Sender);
+	void __fastcall ToPrimaryActionExecute(TObject *Sender);
+	void __fastcall ToPrimaryActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TAppWinList *AppInfoList;

@@ -82,7 +82,7 @@ public:
 
 	void WriteFontInf(UnicodeString sct, TFont *f);
 
-	void LoadFormPos(TForm *frm, int w, int h, UnicodeString prfx = EmptyStr);
+	void LoadFormPos(TForm *frm, int w, int h, UnicodeString prfx = EmptyStr, bool scl_sw = false);
 	void SaveFormPos(TForm *frm);
 	void LoadPosInfo(TForm *frm, int x, int y, int w, int h, UnicodeString key = EmptyStr);
 	void LoadPosInfo(TForm *frm, bool dlg_center = false, UnicodeString key = EmptyStr);

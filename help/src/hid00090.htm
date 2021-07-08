@@ -203,10 +203,10 @@ Endif
 
 Git_status --porcelain --branch
 Set_RES=%Buffer%
-Add_RES<<""
+Add_RES&lt;&lt;""
 
 Git_log --graph --decorate --oneline
-Add_RES<<%Buffer%
+Add_RES&lt;&lt;%Buffer%
 
 Set_Buffer=%RES%
 ListBuffer_"Git Status/Log - %CurPath%"
@@ -220,10 +220,10 @@ IfTrue_Exit
 
 Git_add -A
 Set_RES=%Buffer%
-Add_RES<<""
+Add_RES&lt;&lt;""
 
 Git_commit -m "%MSG%"
-Add_RES<<%Buffer%
+Add_RES&lt;&lt;%Buffer%
 
 Set_Buffer=%RES%
 ListBuffer_"Git Add/Commit - %CurPath%"

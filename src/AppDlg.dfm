@@ -184,6 +184,9 @@ object AppListDlg: TAppListDlg
     object RstWinItem: TMenuItem
       Action = RestoreAction
     end
+    object u: TMenuItem
+      Action = ToPrimaryAction
+    end
     object FitToFileListItem: TMenuItem
       Action = FitToFileListAction
     end
@@ -227,6 +230,9 @@ object AppListDlg: TAppListDlg
     end
     object AppInfoItem: TMenuItem
       Action = AppInfoAction
+    end
+    object ShowMonNoItem: TMenuItem
+      Action = ShowMonNoAction
     end
     object ShowCmdParamItem: TMenuItem
       Action = ShowCmdParamAction
@@ -317,6 +323,11 @@ object AppListDlg: TAppListDlg
       OnExecute = TopMostActionExecute
       OnUpdate = TopMostActionUpdate
     end
+    object ToPrimaryAction: TAction
+      Caption = #12503#12521#12452#12510#12522#12514#12491#12479#12395#31227#21205'(&G)'
+      OnExecute = ToPrimaryActionExecute
+      OnUpdate = ToPrimaryActionUpdate
+    end
     object AppInfoAction: TAction
       Caption = #12450#12503#12522#12465#12540#12471#12519#12531#24773#22577'(&A)'
       OnExecute = AppInfoActionExecute
@@ -330,6 +341,11 @@ object AppListDlg: TAppListDlg
       Caption = #12501#12449#12452#12523#12522#12473#12488#12395#21512#12431#12379#12427'(&L)'
       OnExecute = FitToFileListActionExecute
       OnUpdate = FitToFileListActionUpdate
+    end
+    object ShowMonNoAction: TAction
+      Caption = #12514#12491#12479#30058#21495#12434#34920#31034'(&M)'
+      OnExecute = ShowMonNoActionExecute
+      OnUpdate = ShowMonNoActionUpdate
     end
     object ShowCmdParamAction: TAction
       Caption = #12467#12510#12531#12489#12521#12452#12531#12497#12521#12513#12540#12479#12434#34920#31034'(&P)'

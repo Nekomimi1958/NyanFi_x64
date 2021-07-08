@@ -319,7 +319,7 @@ URLの後に &gt;&gt;[テキストファイル名] を指定すると、ダウンロードしたファイルがH
 <div class="spc_box">
 <b>例</b>: ダウンロードしたHTML文書をテキストに変換して指定ファイルに保存し、一覧ダイアログで表示
 <pre class="example_box">
-Download_"http://nekomimi.la.coocan.jp/freesoft/nyanfi.htm>>D:\hoge\nyan.txt"
+Download_"http://nekomimi.la.coocan.jp/freesoft/nyanfi.htm&gt;&gt;D:\hoge\nyan.txt"
 ListText_D:\hoge\nyan.txt
 </pre>
 </div>
@@ -658,9 +658,9 @@ PlaySound
 <div class="spc_box">
 <b>例</b>:
 <pre class="example_box">
-Add_メニュー<<ねこ(&amp;C)
-Add_メニュー<<いぬ(&amp;D)
-Add_メニュー<<とり(&amp;B)
+Add_メニュー&lt;&lt;ねこ(&amp;C)
+Add_メニュー&lt;&lt;いぬ(&amp;D)
+Add_メニュー&lt;&lt;とり(&amp;B)
 PopupMenu_メニュー
 MsgBox_項目%MenuIndex%の「%MenuStr%」が選択されました
 </pre>
@@ -1080,9 +1080,9 @@ EndRepeat
 
 <b>例</b>: 複数の指定ディレクトリで共通処理<br>
 <pre class="example_box">
-Add_DirList<<&quot;D:\data\hoge&quot;
-Add_DirList<<&quot;D:\data\foo&quot;
-Add_DirList<<&quot;D:\data\nyan&quot;
+Add_DirList&lt;&lt;&quot;D:\data\hoge&quot;
+Add_DirList&lt;&lt;&quot;D:\data\foo&quot;
+Add_DirList&lt;&lt;&quot;D:\data\nyan&quot;
 
 Set_i=0
 Repeat_%DirList.Count%
@@ -1384,7 +1384,7 @@ EndIf
 Set_ログ="D:\Data\NyanFiだニャン_その3.txt"
 
 IfConnected
-  Download_"https://egg.5ch.net/test/read.cgi/software/1508314110/>>%ログ%"
+  Download_"https://egg.5ch.net/test/read.cgi/software/1508314110/&gt;&gt;%ログ%"
   ListTail_"200;TE;/^\d{1,4}\s.+\sID:/;%DownloadName%"
 Else
   Warn_未接続!

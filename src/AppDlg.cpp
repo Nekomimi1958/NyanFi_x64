@@ -158,6 +158,7 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 		AppPanel->Visible	= true;
 		LRSplitter->Visible = true;
 		IniFile->LoadPosInfo(this, DialogCenter);
+		ShowMonNoAction->Checked	= IniFile->ReadBoolGen(_T("AppListShowMonNo"));
 		ShowCmdParamAction->Checked = IniFile->ReadBoolGen(_T("AppListShowCmdParam"));
 		ViewPanel->Height	= IniFile->ReadIntGen(_T("AppListThumbHi"), 100);
 		ViewPanel->Color	= col_bgImage;
@@ -249,7 +250,8 @@ void __fastcall TAppListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	}
 	else {
 		IniFile->SavePosInfo(this);
-		IniFile->WriteBoolGen(_T("AppListShowCmdParam"),	ShowCmdParamAction->Checked);
+		IniFile->WriteBoolGen(_T("AppListShowMonNo"),		ShowMonNoAction);
+		IniFile->WriteBoolGen(_T("AppListShowCmdParam"),	ShowCmdParamAction);
 		IniFile->WriteIntGen(_T("AppListThumbHi"),			ViewPanel->Height);
 	}
 
@@ -487,13 +489,23 @@ void __fastcall TAppListDlg::UpdateAppList()
 			ap->ClassName  = cnam;
 			ap->ClassName2 = cnam2;
 			ap->topMost    = (w_style & WS_EX_TOPMOST);
+			ap->win_xstyle = w_style;
+			ap->isWow64    = false;
+			ap->isUWP	   = is_uwp;
 			ap->win_wd	   = w_rect.Width();
 			ap->win_hi	   = w_rect.Height();
 			ap->win_left   = w_rect.Left;
 			ap->win_top    = w_rect.Top;
-			ap->win_xstyle = w_style;
-			ap->isWow64    = false;
-			ap->isUWP	   = is_uwp;
+			//表示モニタ
+			ap->mon_no = -1;
+			for (int i=0; i<Screen->MonitorCount; i++) {
+				TRect m_rc = Screen->Monitors[i]->BoundsRect;
+				TRect rc   = TRect::Intersect(m_rc, w_rect);
+				if ((rc.Width() * rc.Height()) > (ap->win_wd * ap->win_hi / 2)) {
+					ap->mon_no = i;
+					break;
+				}
+			}
 
 			//無応答チェック
 			bool last_nores = ap->isNoRes;
@@ -815,7 +827,15 @@ void __fastcall TAppListDlg::UpdateAppSttBar()
 			get_size_str_K(c_ap->mem_WS).c_str(), get_size_str_K(c_ap->mem_pWS).c_str(),
 			get_size_str_K(c_ap->mem_PF).c_str(), get_size_str_K(c_ap->mem_pPF).c_str(),
 			c_ap->win_wd, c_ap->win_hi);
-		if (::IsIconic(c_ap->WinHandle)) msg += " (min)";
+		if (::IsIconic(c_ap->WinHandle)) {
+			msg += " (_)";
+		}
+		else {
+			if (c_ap->mon_no>=0)
+				msg.cat_sprintf(_T(" (%u)"), c_ap->mon_no + 1);
+			else
+				msg += " (?)";
+		}
 		if (c_ap->isNoRes) msg += " (無応答)";
 		msg += "  Started:";
 		msg += format_DateTime(c_ap->StartTime, true);
@@ -951,6 +971,27 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	}
 	cv->Font->Style = cv->Font->Style >> fsUnderline;
 	xp += get_CharWidth(cv, 2);
+
+	//モニタ番号
+	if (Screen->MonitorCount>1 && ShowMonNoAction->Checked) {
+		xp += get_CharWidth(cv, 1);
+		if (::IsIconic(ap->WinHandle)) {
+			cv->Font->Color = col_InvItem;
+			cv->TextOut(xp, yp, "_");
+		}
+		else {
+			if (ap->mon_no>=0) {
+				cv->Font->Color = use_fgsel? col_fgSelItem : AdjustColor(col_fgList, ADJCOL_LIGHT);
+				cv->TextOut(xp, yp, UnicodeString().sprintf(_T("%u"), ap->mon_no + 1));
+			}
+			else {
+				cv->Font->Color = col_Error;
+				cv->TextOut(xp, yp, "?");
+			}
+		}
+		xp += get_CharWidth(cv, 2);
+	}
+
 	//名前
 	TColor col_x = get_ExtColor(ExtractFileExt(ap->FileName));
 	cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : col_x;
@@ -1179,6 +1220,29 @@ void __fastcall TAppListDlg::MaximizeActionUpdate(TObject *Sender)
 	AppWinInf *ap = GetCurAppWinInf();
 	((TAction*)Sender)->Enabled = (ap && ap->WinHandle!=Application->MainForm->Handle);
 }
+
+//---------------------------------------------------------------------------
+//プライマリモニタに移動
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::ToPrimaryActionExecute(TObject *Sender)
+{
+	AppWinInf *ap = GetCurAppWinInf();
+	if (ap && !::IsIconic(ap->WinHandle)) {
+		TRect rc = Screen->PrimaryMonitor->BoundsRect;
+		if (ap->win_wd>rc.Width())  ap->win_wd = rc.Width();
+		if (ap->win_hi>rc.Height()) ap->win_hi = rc.Height();
+		rc.SetWidth(ap->win_wd);
+		rc.SetHeight(ap->win_hi);
+		set_window_pos_ex(ap->WinHandle, rc);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::ToPrimaryActionUpdate(TObject *Sender)
+{
+	AppWinInf *ap = GetCurAppWinInf();
+	((TAction *)Sender)->Enabled = (ap && !::IsIconic(ap->WinHandle));
+}
+
 //---------------------------------------------------------------------------
 //ファイルリストに合わせる
 //---------------------------------------------------------------------------
@@ -1387,6 +1451,20 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 
 	FileInfoDlg->isAppInfo = true;
 	FileInfoDlg->ShowModal();
+}
+
+//---------------------------------------------------------------------------
+//モニタ番号を表示
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::ShowMonNoActionExecute(TObject *Sender)
+{
+	ShowMonNoAction->Checked = !ShowMonNoAction->Checked;
+	AppListBox->Invalidate();
+}
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::ShowMonNoActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Enabled = (Screen->MonitorCount>1);
 }
 //---------------------------------------------------------------------------
 //コマンドラインパラメータを表示

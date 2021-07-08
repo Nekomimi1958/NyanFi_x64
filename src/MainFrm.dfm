@@ -5300,6 +5300,12 @@ object NyanFiForm: TNyanFiForm
       OnExecute = GrepShowSubDirActionExecute
       OnUpdate = GrepShowSubDirActionUpdate
     end
+    object WinTerminalAction: TAction
+      Category = 'Command'
+      Caption = 'WinTerminalAction'
+      OnExecute = WinTerminalActionExecute
+      OnUpdate = MenuFActionUpdate
+    end
     object WorkItemDownAction: TAction
       Category = 'Command'
       Caption = #12527#12540#12463#12522#12473#12488#12398#38917#30446#12434'1'#12388#19979#12395#31227#21205

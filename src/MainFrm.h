@@ -517,6 +517,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *WinMinimizeAction;
 	TAction *WinNormalAction;
 	TAction *WinPosAction;
+	TAction *WinTerminalAction;
 	TAction *WorkItemDownAction;
 	TAction *WorkItemMoveAction;
 	TAction *WorkItemUpAction;
@@ -1893,6 +1894,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall GrepSortLineActionUpdate(TObject *Sender);
 	void __fastcall GrepOrgOrderActionExecute(TObject *Sender);
 	void __fastcall GrepOrgOrderActionUpdate(TObject *Sender);
+	void __fastcall WinTerminalActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

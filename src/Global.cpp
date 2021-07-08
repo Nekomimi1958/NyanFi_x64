@@ -7100,10 +7100,11 @@ UnicodeString get_file_from_cmd(UnicodeString s)
 	cmd = Trim(ReplaceStr(cmd, "\f", ":\\"));
 
 	//ファイル名を取得
-	if (USAME_TI(cmd, "PowerShell")) cmd = "FileRun_powershell";
+	if		(USAME_TI(cmd, "PowerShell"))  cmd = "FileRun_powershell";
+	else if (USAME_TI(cmd, "WinTerminal")) cmd = "FileRun_wt";
 	UnicodeString fnam;
 	if (remove_top_text(cmd, _T("OpenByWin_")) || remove_top_text(cmd, _T("SetExeFile_"))
-		 || remove_top_text(cmd, _T("FileRun_")) || remove_top_text(cmd, _T("FileEdit_")))
+		|| remove_top_text(cmd, _T("FileRun_")) || remove_top_text(cmd, _T("FileEdit_")))
 	{
 		fnam = get_actual_name(exclude_quot(cmd));
 	}
@@ -8146,6 +8147,12 @@ void GetFileInfList(
 					if (is_ProtectDir(rpnam)) tmp += " (削除制限)";
 				}
 				add_PropLine(_T("種類"), tmp, i_list);
+			}
+
+			//表示名
+			if (!fp->is_virtual) {
+				UnicodeString tmp = get_LocalFlderName(rpnam);
+				if (!tmp.IsEmpty()) add_PropLine(_T("表示名"), tmp, i_list);
 			}
 
 			//リンク先
@@ -10894,7 +10901,7 @@ void out_TextEx(
 }
 
 //---------------------------------------------------------------------------
-//文字列に対するマッチ語のリストを取得
+//文字列に対するマッチ語のリストを取得(一覧での強調表示用)
 //---------------------------------------------------------------------------
 int get_MatchWordList(
 	UnicodeString lbuf,	//対象文字列
@@ -10919,11 +10926,14 @@ int get_MatchWordList(
 			bool and_ok = true;
 			for (int j=0; j<and_lst.Length && and_ok; j++) {
 				UnicodeString s   = Trim(and_lst[j]);
-				UnicodeString ptn = regex_sw? s : migemo_sw? usr_Migemo->GetRegExPtn(migemo_sw, s) : TRegEx::Escape(s);
-				if (ptn.IsEmpty()) continue;
-				TMatchCollection mts = TRegEx::Matches(lbuf, ptn, opt);
-				and_ok = (mts.Count>0);
-				if (and_ok) for (int j=0; j<mts.Count; j++) tmp_lst->Add(mts.Item[j].Value);
+				UnicodeString ptn = regex_sw? s :
+								   migemo_sw? usr_Migemo->GetRegExPtn(migemo_sw, s)
+											: TRegEx::Escape(conv_esc_char(s));
+				if (!ptn.IsEmpty()) {
+					TMatchCollection mts = TRegEx::Matches(lbuf, ptn, opt);
+					and_ok = (mts.Count>0);
+					if (and_ok) for (int j=0; j<mts.Count; j++) tmp_lst->Add(mts.Item[j].Value);
+				}
 			}
 
 			if (and_ok) {
@@ -10934,10 +10944,25 @@ int get_MatchWordList(
 	}
 	//単純検索
 	else if (!kwd.IsEmpty()) {
-		UnicodeString ptn = regex_sw? kwd : migemo_sw? usr_Migemo->GetRegExPtn(migemo_sw, kwd) : TRegEx::Escape(kwd);
-		if (!ptn.IsEmpty()) {
-			TMatchCollection mts = TRegEx::Matches(lbuf, ptn, opt);
-			for (int i=0; i<mts.Count; i++) lst->Add(mts.Item[i].Value);
+		//正規表現/Migemo
+		if (regex_sw || migemo_sw) {
+			UnicodeString ptn = regex_sw? kwd : usr_Migemo->GetRegExPtn(migemo_sw, kwd);
+			if (!ptn.IsEmpty()) {
+				TMatchCollection mts = TRegEx::Matches(lbuf, ptn, opt);
+				for (int i=0; i<mts.Count; i++) lst->Add(mts.Item[i].Value);
+			}
+		}
+		//AND/OR(' ')
+		else {
+			std::unique_ptr<TStringList> klst(new TStringList());
+			get_find_wd_list(kwd, klst.get());
+			for (int i=0; i<klst->Count; i++) {
+				UnicodeString ptn = TRegEx::Escape(klst->Strings[i]);
+				if (!ptn.IsEmpty()) {
+					TMatchCollection mts = TRegEx::Matches(lbuf, ptn, opt);
+					for (int j=0; j<mts.Count; j++) lst->Add(mts.Item[j].Value);
+				}
+			}
 		}
 	}
 

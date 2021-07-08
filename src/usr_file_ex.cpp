@@ -83,8 +83,8 @@ UnicodeString get_actual_path(UnicodeString pnam)
 UnicodeString get_actual_name(UnicodeString fnam)
 {
 	fnam = cv_env_str(fnam);
-
 	if (!fnam.IsEmpty() && fnam.Pos('\\')==0) {
+		//PATH
 		bool chk_ext = get_extension(fnam).IsEmpty();
 		TStringDynArray plst = split_strings_semicolon(GetEnvironmentVariable("PATH"));
 		TStringDynArray xlst = split_strings_semicolon(GetEnvironmentVariable("PATHEXT"));
@@ -100,7 +100,20 @@ UnicodeString get_actual_name(UnicodeString fnam)
 			else if (file_exists(pnam + fnam)) {
 				rnam = pnam + fnam;
 			}
+			//シンボリックリンクなら App Paths をチェック
+			if (!rnam.IsEmpty() && is_SymLink(rnam)) {
+				rnam = EmptyStr;
+				std::unique_ptr<TRegistry> reg(new TRegistry());
+				reg->RootKey = HKEY_CURRENT_USER;
+				UnicodeString key = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\" + fnam;
+				if (chk_ext) key += ".exe";
+				if (reg->OpenKeyReadOnly(key)) {
+					rnam = reg->ReadString(EmptyStr);
+					reg->CloseKey();
+				}
+			}
 		}
+
 		if (!rnam.IsEmpty()) fnam = rnam;
 	}
 

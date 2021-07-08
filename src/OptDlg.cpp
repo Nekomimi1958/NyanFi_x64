@@ -3032,8 +3032,15 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 	//項目
 	else {
 		//アイコン
-		draw_SmallIconF(to_absolute_name(cv_env_str(itm_buf[is_tool? 1 : 5])),
-						 cv, Rect.Left + ScaledIntX(2), Rect.Top + (Rect.Height() - ScaledIntX(16))/2);
+		UnicodeString fnam = cv_env_str(itm_buf[is_tool? 1 : 5]);
+		if (is_tool) {
+			fnam = get_actual_name(fnam);
+		}
+		else {
+			UnicodeString anam = to_absolute_name(fnam);
+			fnam = file_exists(anam)? anam : get_actual_name(fnam);
+		}
+		draw_SmallIconF(fnam, cv, Rect.Left + ScaledIntX(2), Rect.Top + (Rect.Height() - ScaledIntX(16))/2);
 		//キャプション
 		UnicodeString lbuf = minimize_str(itm_buf[0], cv, sp->Items[0]->Width - xp, true);
 		cv->TextOut(xp, yp, lbuf);

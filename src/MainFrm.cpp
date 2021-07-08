@@ -764,7 +764,7 @@ void __fastcall TNyanFiForm::FormShow(TObject *Sender)
 		}
 		//前回のサイズ
 		else {
-			IniFile->LoadFormPos(this, 800,600);
+			IniFile->LoadFormPos(this, 800, 600);
 		}
 	}
 	//二重起動
@@ -1131,8 +1131,8 @@ void __fastcall TNyanFiForm::FormClose(TObject *Sender, TCloseAction &Action)
 			if (WindowState==wsMaximized) WindowState = wsNormal;
 			win2data->WinLeft	 = Left;
 			win2data->WinTop 	 = Top;
-			win2data->WinWidth	 = Width;
-			win2data->WinHeight	 = Height;
+			win2data->WinWidth	 = Width  * 96 / CurrentPPI;
+			win2data->WinHeight	 = Height * 96 / CurrentPPI;
 			win2data->SubHeight	 = SubPanel->Height;
 			win2data->SubWidth	 = SubPanel->Width;
 			win2data->InfWidth	 = InfPanelWidth;
@@ -18274,8 +18274,8 @@ void __fastcall TNyanFiForm::CopyEnvInfItemClick(TObject *Sender)
 	if (!SameStr(kb0, kb1)) infstr.cat_sprintf(_T("(%s)"), kb1.c_str());
 	//画面サイズ
 	TRect w_rc = get_window_rect(Handle);
-	infstr.cat_sprintf(_T(" %u×%u %u%%"),w_rc.Width(), w_rc.Height(), ScaledInt(100));
-	if (Screen->MonitorCount>1) infstr.cat_sprintf(_T(" (%u Monitors)"), Screen->MonitorCount);
+	infstr.cat_sprintf(_T(" %u×%u %u%%"),w_rc.Width(), w_rc.Height(), ScaledInt(100, this));
+	if (Screen->MonitorCount>1) infstr.cat_sprintf(_T(" (Monitor:%u/%u)"), this->Monitor->MonitorNum + 1, Screen->MonitorCount);
 	//OSバージョン情報
 	infstr += ("  OS" + get_OsVerInfStr());
 	//物理メモリ
@@ -21778,7 +21778,7 @@ void __fastcall TNyanFiForm::OptionDlgActionExecute(TObject *Sender)
 		if (!is_kyo) {
 			if (OptionDlg->WinSizeChanged && IniWinMode==1) {
 				WindowState = wsNormal;
-				SetBounds(IniWinLeft, IniWinTop, IniWinWidth, IniWinHeight);
+				SetBounds(IniWinLeft, IniWinTop, ScaledIntX(IniWinWidth), ScaledIntX(IniWinHeight));
 			}
 
 			//デザイン、フォント、配色
@@ -22583,6 +22583,14 @@ void __fastcall TNyanFiForm::PowerOffActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::PowerShellActionExecute(TObject *Sender)
 {
 	if (!Execute_ex("powershell.exe", EmptyStr, CurPath[CurListTag], TEST_ActParam("RA")? "A" : "")) SetActionAbort(USTR_FaildExec);
+}
+
+//---------------------------------------------------------------------------
+//Windows Terminal
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::WinTerminalActionExecute(TObject *Sender)
+{
+	if (!Execute_ex("wt.exe", EmptyStr, CurPath[CurListTag], TEST_ActParam("RA")? "A" : "")) SetActionAbort(USTR_FaildExec);
 }
 
 //---------------------------------------------------------------------------
@@ -26120,14 +26128,14 @@ void __fastcall TNyanFiForm::WinPosActionExecute(TObject *Sender)
 		if (IsPrimary) {
 			if (IniWinMode==1) {
 				WindowState = wsNormal;
-				SetBounds(IniWinLeft, IniWinTop, IniWinWidth, IniWinHeight);
+				SetBounds(IniWinLeft, IniWinTop, ScaledIntX(IniWinWidth), ScaledIntX(IniWinHeight));
 			}
 			else {
-				IniFile->LoadFormPos(this, 800,600);
+				IniFile->LoadFormPos(this, 800,600, EmptyStr, true);
 			}
 		}
 		else {
-			IniFile->LoadFormPos(this, 800,600, "Win2");
+			IniFile->LoadFormPos(this, 800,600, "Win2", true);
 		}
 	}
 
@@ -29331,7 +29339,7 @@ void __fastcall TNyanFiForm::ResultListBoxDrawItem(TWinControl *Control, int Ind
 			}
 			//検索語
 			else {
-				get_MatchWordList(ln_str, GrepKeyword, 
+				get_MatchWordList(ln_str, GrepKeyword,
 					false, RegExCheckBox->Checked, AndOrCheckBox->Checked, GrepCaseSenstive, wlist.get());
 			}
 

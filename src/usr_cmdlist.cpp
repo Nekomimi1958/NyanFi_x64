@@ -260,6 +260,7 @@ void set_CmdList(
 		"F:WinMaximize=ウィンドウの最大化\n"
 		"F:WinMinimize=ウィンドウの最小化\n"
 		"F:WinNormal=ウィンドウを元のサイズに戻す\n"
+		"F:WinTerminal=Windows Terminal を起動\n"
 		"F:WorkItemDown=ワークリストの項目を1つ下に移動\n"
 		"F:WorkItemMove=選択ワークリスト項目をカーソル位置に移動\n"
 		"F:WorkItemUP=ワークリストの項目を1つ上に移動\n"
@@ -617,7 +618,7 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "Close") && id_idx==2) {
 		params = "\nAL : すべての別ウィンドウを閉じる\n";
 	}
-	else if (contained_wd_i(_T("CommandPrompt|PowerShell"), cmd)) {
+	else if (contained_wd_i(_T("CommandPrompt|PowerShell|WinTerminal"), cmd)) {
 		params = "\nRA : 管理者として実行\n";
 	}
 	else if (USAME_TI(cmd, "CompareDlg")) {

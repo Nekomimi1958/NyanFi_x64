@@ -430,21 +430,30 @@ void UsrIniFile::WriteFontInf(UnicodeString sct, TFont *f)
 //---------------------------------------------------------------------------
 //メインフォームの位置・サイズを復元
 //---------------------------------------------------------------------------
-void UsrIniFile::LoadFormPos(TForm *frm, int w, int h,
-	UnicodeString prfx)	//キー名のプリフィックス
+void UsrIniFile::LoadFormPos(
+	TForm *frm, int w, int h,
+	UnicodeString prfx,	//キー名のプリフィックス
+	bool scl_sw)		//スケーリングで拡大	(default = false)
 {
 	if (prfx.IsEmpty()) prfx = "Win";
 
-	if (w>0) frm->Width  = ReadInteger(SCT_General, prfx + "Width",		w);
-	if (h>0) frm->Height = ReadInteger(SCT_General, prfx + "Height",	h);
-	frm->Left = ReadInteger(SCT_General, prfx + "Left", (Screen->Width - frm->Width)/2);
+	if (scl_sw && frm->Scaled) {
+		if (w>0) frm->Width  = ReadInteger(SCT_General, prfx + "Width",	 w) * frm->CurrentPPI / 96;
+		if (h>0) frm->Height = ReadInteger(SCT_General, prfx + "Height", h) * frm->CurrentPPI / 96;
+	}
+	else {
+		if (w>0) frm->Width  = ReadInteger(SCT_General, prfx + "Width",	 w);
+		if (h>0) frm->Height = ReadInteger(SCT_General, prfx + "Height", h);
+	}
+
+	frm->Left = ReadInteger(SCT_General, prfx + "Left", (Screen->Width  - frm->Width)/2);
 	frm->Top  = ReadInteger(SCT_General, prfx + "Top",  (Screen->Height - frm->Height)/2);
 
 	if (Screen->MonitorCount==1) {
 		//1画面の場合、画面外に出ないように
 		if (frm->Left<0) frm->Left = 0;
 		if (frm->Top<0)  frm->Top  = 0;
-		if (frm->BoundsRect.Right>Screen->Width)   frm->Left = Screen->Width - frm->Width;
+		if (frm->BoundsRect.Right>Screen->Width)   frm->Left = Screen->Width  - frm->Width;
 		if (frm->BoundsRect.Bottom>Screen->Height) frm->Top  = Screen->Height - frm->Height;
 	}
 
@@ -459,10 +468,18 @@ void UsrIniFile::SaveFormPos(TForm *frm)
 	WriteIntGen(_T("WinState"),		(int)frm->WindowState);
 	if (frm->WindowState==wsMaximized) frm->WindowState = wsNormal;
 
+	int wd = frm->Width;
+	int hi = frm->Height;
 	WriteIntGen(_T("WinLeft"),		frm->Left);
 	WriteIntGen(_T("WinTop"),		frm->Top);
-	WriteIntGen(_T("WinWidth"),		frm->Width);
-	WriteIntGen(_T("WinHeight"),	frm->Height);
+	if (frm->Scaled) {
+		WriteIntGen(_T("WinWidth"),		frm->Width  * 96 / frm->CurrentPPI);
+		WriteIntGen(_T("WinHeight"),	frm->Height * 96 / frm->CurrentPPI);
+	}
+	else {
+		WriteIntGen(_T("WinWidth"),		frm->Width);
+		WriteIntGen(_T("WinHeight"),	frm->Height);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -523,8 +540,14 @@ void UsrIniFile::SavePosInfo(TForm *frm, UnicodeString key)
 	WriteInteger(SCT_General, key + "Top",  frm->Top  - (ofs? PosOffsetTop  : 0));
 
 	if (frm->BorderStyle!=bsDialog) {
-		WriteInteger(SCT_General, key + "Width",  frm->Width);
-		WriteInteger(SCT_General, key + "Height", frm->Height);
+		if (frm->Scaled) {
+			WriteInteger(SCT_General, key + "Width",  frm->Width  * 96 / frm->CurrentPPI);
+			WriteInteger(SCT_General, key + "Height", frm->Height * 96 / frm->CurrentPPI);
+		}
+		else {
+			WriteInteger(SCT_General, key + "Width",  frm->Width);
+			WriteInteger(SCT_General, key + "Height", frm->Height);
+		}
 	}
 }
 

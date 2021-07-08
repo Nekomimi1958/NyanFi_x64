@@ -39,6 +39,8 @@
 UnicodeString get_WndText(HWND hWnd);
 UnicodeString get_WndClassName(HWND hWnd);
 
+UnicodeString get_LocalFlderName(UnicodeString pnam);
+
 UnicodeString get_PropTitle(UnicodeString s);
 UnicodeString get_PropTitle(const _TCHAR *s);
 UnicodeString make_PropLine(UnicodeString tit, UnicodeString str);
@@ -210,8 +212,8 @@ public:
 
 	UnicodeString KnownGuidStrToPath(UnicodeString s);
 	UnicodeString KnownGuidToPath(REFKNOWNFOLDERID id);
-	void AddKnownPath(REFKNOWNFOLDERID id, const _TCHAR *inam, TStringList *lst);
-	void AddEnvPath(const _TCHAR *enam, const _TCHAR *inam, TStringList *lst);
+	void AddKnownPath(REFKNOWNFOLDERID id, TStringList *lst, bool brk_sw = false);
+	void AddEnvPath(UnicodeString enam, TStringList *lst, bool brk_sw = false);
 	void get_SpecialFolderList(TStringList *lst);
 };
 //---------------------------------------------------------------------------
