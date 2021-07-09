@@ -764,7 +764,7 @@ void __fastcall TNyanFiForm::FormShow(TObject *Sender)
 		}
 		//前回のサイズ
 		else {
-			IniFile->LoadFormPos(this, 800, 600);
+			IniFile->LoadFormPos(this, 800,600);
 		}
 	}
 	//二重起動
@@ -785,6 +785,7 @@ void __fastcall TNyanFiForm::FormShow(TObject *Sender)
 			rc.SetWidth( IniFile->ReadInteger(SCT_General, "WinWidth",	0));
 			rc.SetHeight(IniFile->ReadInteger(SCT_General, "WinHeight",	0));
 		}
+
 		//交差面積が半分以下ならオフセットを設定
 		rc = TRect::Intersect(rc, BoundsRect);
 		if ((rc.Width() * rc.Height()) <= (Width * Height / 2)) {
@@ -1729,16 +1730,7 @@ void __fastcall TNyanFiForm::FormResize(TObject *Sender)
 	if (!Initialized || UnInitializing) return;
 
 	if (WindowState!=wsMinimized) {
-		//ファイルリスト
-		if (DivFileListUD && !DivDirInfUD) L_TopPanel->Width = (HdrPanel->Width - RelPanel->Width)/2;
-
-		if (KeepOnResize) {
-			ActionParam = ListPercent;
-			if (KeepCurListWidth && ListPercent!=50) ActionOptStr.sprintf(_T("%s"), (CurListTag==0)? _T("Left") : _T("Right"));
-			WidenCurListAction->Execute();
-		}
-
-		//ファンクションキーバー
+		KeepFileListRerio();
 		UpdateFKeyBtn();
 
 		//ステータスバー
@@ -1784,16 +1776,10 @@ void __fastcall TNyanFiForm::ListPanelResize(TObject *Sender)
 {
 	if (!Initialized || UnInitializing) return;
 
+	RequestSlowTask();
 	UpdateTabWidth();
 	UpdateFileListRect();
-
-	RequestSlowTask();
-
-	if (KeepOnResize) {
-		ActionParam = ListPercent;
-		if (KeepCurListWidth && ListPercent!=50) ActionOptStr.sprintf(_T("%s"), (CurListTag==0)? _T("Left") : _T("Right"));
-		WidenCurListAction->Execute();
-	}
+	KeepFileListRerio();
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TabControl1Resize(TObject *Sender)
@@ -1811,7 +1797,6 @@ void __fastcall TNyanFiForm::LRSplitterMoved(TObject *Sender)
 	if (!Initialized || UnInitializing) return;
 
 	RequestSlowTask();
-
 	if (!DivFileListUD) {
 		SetDirCaption(0);
 		SetDirCaption(1);
@@ -1826,6 +1811,28 @@ void __fastcall TNyanFiForm::UpdateFileListRect()
 	TPoint lt = ListPanel->ClientToScreen(Point(0, 0));
 	TPoint rb = ListPanel->ClientToScreen(Point(ListPanel->Width, ListPanel->Height));
 	UserModule->FileListRect = Rect(lt.x, lt.y, rb.x, rb.y);
+}
+
+//---------------------------------------------------------------------------
+//ファイルリスト幅の左右比率維持
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::KeepFileListRerio()
+{
+	if (KeepOnResize && ListPercent>0 && ListPercent<100) {
+		double r = ListPercent/100.0;
+		if (KeepCurListWidth && CurListTag==1) r = 1.0 - r;
+		if (DivFileListUD) {
+			int r_hi = LRSplitter->Height;
+			if (TabPanel->Visible) r_hi += TabPanel->Height;
+			if (HdrPanel->Visible) r_hi += HdrPanel->Height;
+			L_Panel->Height = (ListPanel->ClientHeight - r_hi) * r;
+			if (!DivDirInfUD) L_TopPanel->Width = (HdrPanel->Width - RelPanel->Width)/2;
+		}
+		else {
+			L_Panel->Width = (ListPanel->ClientWidth - LRSplitter->Width) * r;
+			L_TopPanel->Width = L_Panel->Width - (RelPanel->Width - LRSplitter->Width)/2;
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -4699,11 +4706,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 		R_HdrPanel->Visible = false;
 	}
 
-	if (KeepOnResize) {
-		ActionParam = ListPercent;
-		if (KeepCurListWidth && ListPercent!=50) ActionOptStr.sprintf(_T("%s"), (CurListTag==0)? _T("Left") : _T("Right"));
-		WidenCurListAction->Execute();
-	}
+	KeepFileListRerio();
 
 	if (initial) {
 		GrepT2Panel->Width	   = IniFile->ReadIntGen(_T("GrepTR_Width"),	50);
@@ -26131,11 +26134,11 @@ void __fastcall TNyanFiForm::WinPosActionExecute(TObject *Sender)
 				SetBounds(IniWinLeft, IniWinTop, ScaledIntX(IniWinWidth), ScaledIntX(IniWinHeight));
 			}
 			else {
-				IniFile->LoadFormPos(this, 800,600, EmptyStr, true);
+				IniFile->LoadFormPos(this, 800,600);
 			}
 		}
 		else {
-			IniFile->LoadFormPos(this, 800,600, "Win2", true);
+			IniFile->LoadFormPos(this, 800,600, "Win2");
 		}
 	}
 

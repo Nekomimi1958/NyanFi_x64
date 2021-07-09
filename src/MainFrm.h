@@ -2275,6 +2275,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall SetFileListFontSize(int sz = 0, bool r_sw = false, bool x_sw = false);
 
 	void __fastcall UpdateFileListRect();
+	void __fastcall KeepFileListRerio();
 
 	void __fastcall SetManuOwnerDrawEvent(TMenuItem *mp);
 	void __fastcall SetExtMenuItem(TMenuItem *m_item, TStringList *lst, int tag_base, int s_idx = -1);

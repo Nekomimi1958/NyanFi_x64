@@ -432,29 +432,32 @@ void UsrIniFile::WriteFontInf(UnicodeString sct, TFont *f)
 //---------------------------------------------------------------------------
 void UsrIniFile::LoadFormPos(
 	TForm *frm, int w, int h,
-	UnicodeString prfx,	//キー名のプリフィックス
-	bool scl_sw)		//スケーリングで拡大	(default = false)
+	UnicodeString prfx)	//キー名のプリフィックス
 {
 	if (prfx.IsEmpty()) prfx = "Win";
 
-	if (scl_sw && frm->Scaled) {
-		if (w>0) frm->Width  = ReadInteger(SCT_General, prfx + "Width",	 w) * frm->CurrentPPI / 96;
-		if (h>0) frm->Height = ReadInteger(SCT_General, prfx + "Height", h) * frm->CurrentPPI / 96;
+	frm->Left = ReadInteger(SCT_General, prfx + "Left", (Screen->Width  - w)/2);
+	frm->Top  = ReadInteger(SCT_General, prfx + "Top",  (Screen->Height - h)/2);
+	//Left, Top よって CurrentPPI が変化
+
+	int ww = ReadInteger(SCT_General, prfx + "Width",	w);
+	int hh = ReadInteger(SCT_General, prfx + "Height",	h);
+	if (frm->Scaled) {
+		frm->Width	= ww * frm->CurrentPPI / DEFAULT_PPI;
+		frm->Height = hh * frm->CurrentPPI / DEFAULT_PPI;
 	}
 	else {
-		if (w>0) frm->Width  = ReadInteger(SCT_General, prfx + "Width",	 w);
-		if (h>0) frm->Height = ReadInteger(SCT_General, prfx + "Height", h);
+		frm->Width	= ww;
+		frm->Height = hh;
 	}
 
-	frm->Left = ReadInteger(SCT_General, prfx + "Left", (Screen->Width  - frm->Width)/2);
-	frm->Top  = ReadInteger(SCT_General, prfx + "Top",  (Screen->Height - frm->Height)/2);
-
+	//1画面の場合、画面外に出ないように
 	if (Screen->MonitorCount==1) {
-		//1画面の場合、画面外に出ないように
-		if (frm->Left<0) frm->Left = 0;
-		if (frm->Top<0)  frm->Top  = 0;
-		if (frm->BoundsRect.Right>Screen->Width)   frm->Left = Screen->Width  - frm->Width;
-		if (frm->BoundsRect.Bottom>Screen->Height) frm->Top  = Screen->Height - frm->Height;
+		int mgn = 8;
+		if (frm->Left<-mgn) frm->Left = 0;
+		if (frm->Top<-mgn)  frm->Top  = 0;
+		if (frm->BoundsRect.Right > Screen->Width+mgn)   frm->Left = Screen->Width  - frm->Width;
+		if (frm->BoundsRect.Bottom > Screen->Height+mgn) frm->Top  = Screen->Height - frm->Height;
 	}
 
 	frm->WindowState = (TWindowState)ReadInteger(SCT_General, prfx + "State", (int)wsNormal);
@@ -468,13 +471,12 @@ void UsrIniFile::SaveFormPos(TForm *frm)
 	WriteIntGen(_T("WinState"),		(int)frm->WindowState);
 	if (frm->WindowState==wsMaximized) frm->WindowState = wsNormal;
 
-	int wd = frm->Width;
-	int hi = frm->Height;
-	WriteIntGen(_T("WinLeft"),		frm->Left);
-	WriteIntGen(_T("WinTop"),		frm->Top);
+	WriteIntGen(_T("WinLeft"),	frm->Left);
+	WriteIntGen(_T("WinTop"),	frm->Top);
+
 	if (frm->Scaled) {
-		WriteIntGen(_T("WinWidth"),		frm->Width  * 96 / frm->CurrentPPI);
-		WriteIntGen(_T("WinHeight"),	frm->Height * 96 / frm->CurrentPPI);
+		WriteIntGen(_T("WinWidth"),		frm->Width  * DEFAULT_PPI / frm->CurrentPPI);
+		WriteIntGen(_T("WinHeight"),	frm->Height * DEFAULT_PPI / frm->CurrentPPI);
 	}
 	else {
 		WriteIntGen(_T("WinWidth"),		frm->Width);
@@ -494,11 +496,15 @@ void UsrIniFile::LoadPosInfo(TForm *frm, int x, int y, int w, int h, UnicodeStri
 
 	if ((frm->BorderStyle==bsSizeable || frm->BorderStyle==bsSizeToolWin) && w>0 && h>0) {
 		int ww = ReadInteger(SCT_General, key + "Width",  w);
-		if (ww<=0) ww = w;
-		int wh = ReadInteger(SCT_General, key + "Height", h);
-		if (wh<=0) wh = h;
-		frm->Width	= ww;
-		frm->Height = wh;
+		int hh = ReadInteger(SCT_General, key + "Height", h);
+		if (frm->Scaled) {
+			frm->Width	= ww * frm->CurrentPPI / DEFAULT_PPI;
+			frm->Height = hh * frm->CurrentPPI / DEFAULT_PPI;
+		}
+		else {
+			frm->Width	= ww;
+			frm->Height = hh;
+		}
 	}
 
 	//1画面の場合、半分以上が画面外だったら中央に戻す
@@ -541,8 +547,8 @@ void UsrIniFile::SavePosInfo(TForm *frm, UnicodeString key)
 
 	if (frm->BorderStyle!=bsDialog) {
 		if (frm->Scaled) {
-			WriteInteger(SCT_General, key + "Width",  frm->Width  * 96 / frm->CurrentPPI);
-			WriteInteger(SCT_General, key + "Height", frm->Height * 96 / frm->CurrentPPI);
+			WriteInteger(SCT_General, key + "Width",  frm->Width  * DEFAULT_PPI / frm->CurrentPPI);
+			WriteInteger(SCT_General, key + "Height", frm->Height * DEFAULT_PPI / frm->CurrentPPI);
 		}
 		else {
 			WriteInteger(SCT_General, key + "Width",  frm->Width);

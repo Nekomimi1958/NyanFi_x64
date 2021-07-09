@@ -9,6 +9,8 @@
 #include <Vcl.Grids.hpp>
 
 //----------------------------------------------------------------------
+#define DEFAULT_PPI	96
+
 extern UnicodeString SCT_General;
 extern UnicodeString SCT_Option;
 
@@ -82,7 +84,7 @@ public:
 
 	void WriteFontInf(UnicodeString sct, TFont *f);
 
-	void LoadFormPos(TForm *frm, int w, int h, UnicodeString prfx = EmptyStr, bool scl_sw = false);
+	void LoadFormPos(TForm *frm, int w, int h, UnicodeString prfx = EmptyStr);
 	void SaveFormPos(TForm *frm);
 	void LoadPosInfo(TForm *frm, int x, int y, int w, int h, UnicodeString key = EmptyStr);
 	void LoadPosInfo(TForm *frm, bool dlg_center = false, UnicodeString key = EmptyStr);

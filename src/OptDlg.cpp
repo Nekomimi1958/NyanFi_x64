@@ -2948,6 +2948,7 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 		UnicodeString tmp = split_pre_tab(lbuf);
 		brk = remove_top_s(tmp, '|');
 		cv->TextOut(xp, yp, tmp);
+		if (StartsStr(';', lbuf)) cv->Font->Color = AdjustColor(cv->Font->Color, ADJCOL_FGLIST);
 		cv->TextOut(xp + MaxWd_Ev, yp, lbuf);
 	}
 	//仮想ドライブ

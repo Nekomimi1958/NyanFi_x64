@@ -27,20 +27,30 @@
 以下のイベントが発生したときに、指定したコマンドを <a href="hid00063.htm">ExeCommands コマンド</a> のパラメータとして実行できます。<br>
 設定したいイベントを一覧で選択し、<b>イベント発生時に実行するコマンド</b> <img src="edit.png" alt="" border=0> にコマンドを設定してください。コマンドは <b>:</b> (コロン)で区切って複数指定できます。<br>
 先頭が <b>@</b> の場合、<b>コマンドファイル</b>の指定になります。なお、右クリックメニューで「<b>コマンド名の参照</b>」が可能です(<a href="hid00005.htm#CopyCmdName">→ CopyCmdName</a>)。<br>
-また、先頭 <b>$</b> の場合、<a href="hid00014.htm">追加メニュー</a>または<a href="hid00015.htm">外部ツール</a>で設定されている<b>エイリアス</b>とみなし、その項目を実行します(サブメニューの親項目の場合は、そのサブメニューをポップアップ表示)。<br>
-<br>
+先頭 <b>$</b> の場合、<a href="hid00014.htm">追加メニュー</a>または<a href="hid00015.htm">外部ツール</a>で設定されている<b>エイリアス</b>とみなし、その項目を実行します(サブメニューの親項目の場合は、そのサブメニューをポップアップ表示)。<br>
+なお、先頭に <b>;</b> (セミコロン)を挿入すると、そのコマンド設定を無効にできます。
+</p>
+
+<p>
 <span class="btn_frame">...</span>ボタンを押すと<a href="hid00067.htm">コマンドファイル一覧</a>(選択)画面が表示され、ファイルを参照できます。また、コマンド欄が <a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a>, <a href="hid00005.htm#FileEdit">FileEdit</a>、<a href="hid00005.htm#LoadWorkList">LoadWorkList</a>、<a href="hid00005.htm#OpenByApp">OpenByApp</a>、<a href="hid00005.htm#OpenByWin">OpenByWin</a>、<a href="hid00005.htm#TextViewer">TextViewer</a> で始まる場合は、通常のファイル選択が出ます。<br>
 <b>コマンドファイル</b>や、<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a>_ で始まる<b>メニュー定義ファイル</b>を指定した場合、<span class="btn_frame">ファイル編集</span>ボタンを押すと、テキストエディタでそのファイルを開けます。<br>
-<b>コマンドファイル</b>や、<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a>、<a href="hid00005.htm#LoadWorkList">LoadWorkList</a> コマンドの対象ファイルは、<b>NyanFi</b> ディレクトリからの相対指定が可能です。<br>
-<br>
-イベント名で括弧内は、コマンドが実行される画面モード(<b>FL</b>:ファイラー、<b>TV</b>:テキストビュアー、<b>IV</b>:イメージビュアー)です。モードに固有のコマンドを用いる際は注意してください。<br>
-<br>
-<b>検索</b> <img src="edit.png" alt="" border=0> 欄に文字列を入力して<span class="btn_frame">∨</span>/<span class="btn_frame">∧</span>ボタン(or <span class="btn_frame">↓</span>/<span class="btn_frame">↑</span>キー)を押すと一覧の内容を検索できます。<br>
-<br>
+<b>コマンドファイル</b>や、<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a>、<a href="hid00005.htm#LoadWorkList">LoadWorkList</a> コマンドの対象ファイルは、<b>NyanFi</b> ディレクトリからの相対指定が可能です。
+</p>
 
+<p>
+イベント名で括弧内は、コマンドが実行される画面モード(<b>FL</b>:ファイラー、<b>TV</b>:テキストビュアー、<b>IV</b>:イメージビュアー)です。モードに固有のコマンドを用いる際は注意してください。
+</p>
+
+<p>
+<b>検索</b> <img src="edit.png" alt="" border=0> 欄に文字列を入力して<span class="btn_frame">∨</span>/<span class="btn_frame">∧</span>ボタン(or <span class="btn_frame">↓</span>/<span class="btn_frame">↑</span>キー)を押すと一覧の内容を検索できます。<br>
+</p>
+
+<p>
 他の <b>ExeCommands</b> コマンド実行中にイベントが発生した場合、コマンドは実行されません。<br>
-ただし、<b>ExeCommands</b> コマンドの最後(<b>Exit</b> は除く)で <a href="hid00005.htm#FindFileDlg">FindFileDlg</a>、<a href="hid00005.htm#FindFileDirDlg">FindFileDirDlg</a>、<a href="hid00005.htm#FindDirDlg">FindDirDlg</a>、<a href="hid00005.htm#FindHardLink">FindHardLink</a>、<a href="hid00005.htm#FindMark">FindMark</a>、<a href="hid00005.htm#FindTag">FindTag</a>、<a href="hid00005.htm#MaskFind">MaskFind</a> コマンドが実行されて結果リストが表示された場合には、「<b>検索結果リストが表示された直後(FL)</b>」イベントのコマンドが実行されます。<br>
-<br>
+ただし、<b>ExeCommands</b> コマンドの最後(<b>Exit</b> は除く)で <a href="hid00005.htm#FindFileDlg">FindFileDlg</a>、<a href="hid00005.htm#FindFileDirDlg">FindFileDirDlg</a>、<a href="hid00005.htm#FindDirDlg">FindDirDlg</a>、<a href="hid00005.htm#FindHardLink">FindHardLink</a>、<a href="hid00005.htm#FindMark">FindMark</a>、<a href="hid00005.htm#FindTag">FindTag</a>、<a href="hid00005.htm#MaskFind">MaskFind</a> コマンドが実行されて結果リストが表示された場合には、「<b>検索結果リストが表示された直後(FL)</b>」イベントのコマンドが実行されます。
+</p>
+
+<p>
 最初に起動した <b>NyanFi</b> と二重起動したものとで動作を変えたい場合は、<a href="hid00063.htm#IfStatement">If 文</a> の <b>Primary</b> 条件を用いてください(例: IfNotPrimary_Exit)。
 </p>
 <br>
