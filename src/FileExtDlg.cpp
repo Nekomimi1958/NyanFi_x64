@@ -492,7 +492,7 @@ void __fastcall TFileExtensionDlg::FextInfBarDrawPanel(TStatusBar *StatusBar, TS
 	cv->FillRect(Rect) ;
 
 	UnicodeString lbuf = Panel->Text;
-	int xp = ((Panel->Index==2)? Rect.Left + SizeSctWd - ScaledIntX(4) : Rect.Right) - cv->TextWidth(lbuf) - ScaledIntX(4);
+	int xp = ((Panel->Index==2)? Rect.Left + SizeSctWd - ScaledInt(4) : Rect.Right) - cv->TextWidth(lbuf) - ScaledInt(4);
 	cv->Font->Color = col_fgSttBar;
 	cv->TextOut(xp, Rect.Top, lbuf);
 }
@@ -553,19 +553,19 @@ void __fastcall TFileExtensionDlg::InfoListBoxDrawItem(TWinControl *Control, int
 	cv->Brush->Color = bgcol;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledIntX(4);
+	int xp = Rect.Left + ScaledInt(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	UnicodeString fext = FextInfoList->Strings[Index];
 	//アイコン
 	if (IconMode==1) {
 		HICON hIcon = get_fext_SmallIcon(fext);
-		if (hIcon) ::DrawIconEx(cv->Handle, xp, yp, hIcon, ScaledIntX(16), ScaledIntX(16), 0, NULL, DI_NORMAL);
+		if (hIcon) ::DrawIconEx(cv->Handle, xp, yp, hIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
 	}
 
 	//拡張子
 	cv->Font->Color = get_ExtColor(fext);
-	int i_w = ScaledIntX(IconMode==1? 20 : 0);
+	int i_w = ScaledInt(IconMode==1? 20 : 0);
 	cv->TextOut(xp + i_w, yp, minimize_str(fext, cv, FExtSctWd - i_w, true));
 	xp += FExtSctWd - 8;
 
@@ -681,7 +681,7 @@ void __fastcall TFileExtensionDlg::FileListBoxDrawItem(TWinControl *Control, int
 	cv->Brush->Color = is_AltLnBgCol(Index)? col_bgList2 : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledIntX(4);
+	int xp = Rect.Left + ScaledInt(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	if (Index==MAX_FLIST_CNT) {
@@ -710,7 +710,7 @@ void __fastcall TFileExtensionDlg::FileListBoxDrawItem(TWinControl *Control, int
 		else {
 			UnicodeString fext = get_extension(fnam);
 			int x_wd = std::min(get_TextWidth(cv, get_FExtMaxStr(), is_irreg), get_TextWidth(cv, fext.UpperCase(), is_irreg));
-			int x_fx = Rect.Left + w_fn - x_wd - ScaledIntX(8);
+			int x_fx = Rect.Left + w_fn - x_wd - ScaledInt(8);
 			cv->TextOut(xp, yp, minimize_str(get_base_name(fnam), cv, x_fx - xp, OmitEndOfName));
 			cv->TextOut(x_fx, yp, minimize_str(fext, cv, x_wd, true));
 		}
@@ -724,7 +724,7 @@ void __fastcall TFileExtensionDlg::FileListBoxDrawItem(TWinControl *Control, int
 				if (FileScrPanel->VisibleV) rc.Right -= (FileScrPanel->KnobWidth - 1);
 			}
 			cv->Font->Color = col_Folder;
-			PathNameOut(pnam, cv, xp, yp, rc.Right - xp - ScaledIntX(4));
+			PathNameOut(pnam, cv, xp, yp, rc.Right - xp - ScaledInt(4));
 		}
 	}
 

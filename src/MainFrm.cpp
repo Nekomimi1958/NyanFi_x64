@@ -746,11 +746,6 @@ void __fastcall TNyanFiForm::FormShow(TObject *Sender)
 
 	Screen->OnActiveFormChange = ActiveFormChange;
 
-	IconImgList->SetSize(ScaledInt(16), ScaledInt(16));
-	IconImgListI->SetSize(ScaledInt(16), ScaledInt(16));
-	IconImgListP->SetSize(ScaledInt(16), ScaledInt(16));
-	IconImgListV->SetSize(ScaledInt(16), ScaledInt(16));
-
 	//透過設定
 	AlphaBlend		= AlphaForm;
 	AlphaBlendValue = AlphaValue;
@@ -796,6 +791,12 @@ void __fastcall TNyanFiForm::FormShow(TObject *Sender)
 
 	OrgWinState  = WindowState;
 	LastWinState = WindowState;
+
+	int s_16 = ScaledInt(16, this);
+	IconImgList->SetSize( s_16, s_16);
+	IconImgListI->SetSize(s_16, s_16);
+	IconImgListP->SetSize(s_16, s_16);
+	IconImgListV->SetSize(s_16, s_16);
 
 	//デザイン設定
 	SetupDesign(true, true);
@@ -1132,8 +1133,8 @@ void __fastcall TNyanFiForm::FormClose(TObject *Sender, TCloseAction &Action)
 			if (WindowState==wsMaximized) WindowState = wsNormal;
 			win2data->WinLeft	 = Left;
 			win2data->WinTop 	 = Top;
-			win2data->WinWidth	 = Width  * 96 / CurrentPPI;
-			win2data->WinHeight	 = Height * 96 / CurrentPPI;
+			win2data->WinWidth	 = Width  * DEFAULT_PPI / CurrentPPI;
+			win2data->WinHeight	 = Height * DEFAULT_PPI / CurrentPPI;
 			win2data->SubHeight	 = SubPanel->Height;
 			win2data->SubWidth	 = SubPanel->Width;
 			win2data->InfWidth	 = InfPanelWidth;
@@ -2912,7 +2913,7 @@ void __fastcall TNyanFiForm::MainMenuAdvancedDrawItem(TObject *Sender, TCanvas *
 	}
 }
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::PopMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas, 
+void __fastcall TNyanFiForm::PopMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
 	const TRect &ARect, TOwnerDrawState State)
 {
 	TMenuItem *mp = (TMenuItem*)Sender;
@@ -19719,7 +19720,11 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 	TRect w_rc = get_window_rect(Handle);
 	add_PropLine(_T("画面サイズ"), get_wd_x_hi_str(w_rc.Width(), w_rc.Height()), i_lst);
 	add_PropLine(_T("スケーリング"), UnicodeString().sprintf(_T("%u%%"), ScaledInt(100, this)), i_lst);
-	if (Screen->MonitorCount>1) add_PropLine(_T("モニタ数"), Screen->MonitorCount, i_lst);
+	if (Screen->MonitorCount>1) {
+		add_PropLine(_T("モニタ番号"),	this->Monitor->MonitorNum + 1, i_lst);
+		add_PropLine(_T("モニタ数"),	Screen->MonitorCount, i_lst);
+	}
+
 	add_PropLine(_T("OSバージョン"), get_OsVerInfStr(), i_lst);
 	i_lst->Add(EmptyStr);
 
@@ -21781,7 +21786,7 @@ void __fastcall TNyanFiForm::OptionDlgActionExecute(TObject *Sender)
 		if (!is_kyo) {
 			if (OptionDlg->WinSizeChanged && IniWinMode==1) {
 				WindowState = wsNormal;
-				SetBounds(IniWinLeft, IniWinTop, ScaledIntX(IniWinWidth), ScaledIntX(IniWinHeight));
+				SetBounds(IniWinLeft, IniWinTop, ScaledInt(IniWinWidth), ScaledInt(IniWinHeight));
 			}
 
 			//デザイン、フォント、配色
@@ -26131,7 +26136,7 @@ void __fastcall TNyanFiForm::WinPosActionExecute(TObject *Sender)
 		if (IsPrimary) {
 			if (IniWinMode==1) {
 				WindowState = wsNormal;
-				SetBounds(IniWinLeft, IniWinTop, ScaledIntX(IniWinWidth), ScaledIntX(IniWinHeight));
+				SetBounds(IniWinLeft, IniWinTop, ScaledInt(IniWinWidth), ScaledInt(IniWinHeight));
 			}
 			else {
 				IniFile->LoadFormPos(this, 800,600);

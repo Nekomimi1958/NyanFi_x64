@@ -1408,10 +1408,10 @@ void __fastcall TRenameDlg::PreviewGridDrawCell(TObject *Sender, int ACol, int A
 		else if (rel_str.IsEmpty() || USAME_TS(rel_str, "~"))
 			cv->Font->Color = col_Error;
 	}
-	cell_str = minimize_str(cell_str, cv, Rect.Width() - ScaledIntX(4), OmitEndOfName);
+	cell_str = minimize_str(cell_str, cv, Rect.Width() - ScaledInt(4), OmitEndOfName);
 
 	cv->FillRect(Rect);
-	cv->TextRect(Rect, Rect.Left + ScaledIntX(2), Rect.Top + ScaledIntX(2), cell_str);
+	cv->TextRect(Rect, Rect.Left + ScaledInt(2), Rect.Top + ScaledInt(2), cell_str);
 
 	if(State.Contains(gdFocused)) cv->DrawFocusRect(Rect);
 }
@@ -1453,7 +1453,7 @@ void __fastcall TRenameDlg::CnvCharListBoxDrawItem(TWinControl *Control, int Ind
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int x = Rect.Left + ScaledIntX(4);
+	int x = Rect.Left + ScaledInt(4);
 	int y = Rect.Top  + get_TopMargin(cv);
 
 	SetHighlight(cv, State.Contains(odSelected));
@@ -1562,7 +1562,7 @@ void __fastcall TRenameDlg::AssRenListBoxDrawItem(TWinControl *Control, int Inde
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + ScaledIntX(2);
+	int xp = Rect.Left + ScaledInt(2);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	int w_x = 50;

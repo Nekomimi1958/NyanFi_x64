@@ -6876,13 +6876,16 @@ bool draw_SmallIcon(
 	UnicodeString snam;
 	if		(fp->is_ads && SameText(fp->n_name, "favicon")) snam = fp->f_name;
 	else if (test_FileExt(fp->f_ext, ".url"))				snam = fp->f_name + FAVICON_ADS;
+
+	int s_16 = ScaledInt(16);
+
 	//PNG形式の favicon
 	if (file_exists(snam) && test_Png(snam)) {
 		try {
 			std::unique_ptr<TPngImage> png_buf(new TPngImage());
 			png_buf->LoadFromFile(snam);
 			png_buf->Transparent = true;
-			png_buf->Draw(cv, Rect(x, y, x + ScaledInt(16), y + ScaledInt(16)));
+			png_buf->Draw(cv, Rect(x, y, x + s_16, y + s_16));
 			return true;
 		}
 		catch (...) {
@@ -6913,7 +6916,7 @@ bool draw_SmallIcon(
 					if (idx!=-1) {
 						if (CachedIcoList->Objects[idx]) {
 							hIcon = ((TIcon*)CachedIcoList->Objects[idx])->Handle;
-							::DrawIconEx(cv->Handle, x, y, hIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
+							::DrawIconEx(cv->Handle, x, y, hIcon, s_16, s_16, 0, NULL, DI_NORMAL);
 							handled = true;
 						}
 					}
@@ -6938,15 +6941,16 @@ bool draw_SmallIcon(
 	if (!hIcon)  return false;
 
 	//描画
-	::DrawIconEx(cv->Handle, x, y, hIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
+	::DrawIconEx(cv->Handle, x, y, hIcon, s_16, s_16, 0, NULL, DI_NORMAL);
 
 	//ディレクトリに矢印マークをオーバーレイ表示
 	if (fp->is_dir && fp->is_sym && hLinkIcon) {
-		::DrawIconEx(cv->Handle, x, y, hLinkIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
+		::DrawIconEx(cv->Handle, x, y, hLinkIcon, s_16, s_16, 0, NULL, DI_NORMAL);
 	}
 
 	return true;
 }
+
 //---------------------------------------------------------------------------
 //スモールアイコンを描画 (スレッドで取得、CachedIcoList 使用)
 //  実ファイル依存専用
@@ -6959,13 +6963,14 @@ bool draw_SmallIconF(
 
 	HICON hIcon  = NULL;
 	bool handled = false;
+	int s_16 = ScaledInt(16);
 	IconRWLock->BeginWrite();
 	{
 		int idx = CachedIcoList->IndexOf(fnam);
 		if (idx!=-1) {
 			if (CachedIcoList->Objects[idx]) {
 				hIcon = ((TIcon*)CachedIcoList->Objects[idx])->Handle;
-				::DrawIconEx(cv->Handle, x, y, hIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
+				::DrawIconEx(cv->Handle, x, y, hIcon, s_16, s_16, 0, NULL, DI_NORMAL);
 				handled = true;
 			}
 		}
@@ -6978,7 +6983,7 @@ bool draw_SmallIconF(
 	if (handled) return true;
 	if (!hIcon)  return false;
 
-	::DrawIconEx(cv->Handle, x, y, hIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
+	::DrawIconEx(cv->Handle, x, y, hIcon, s_16, s_16, 0, NULL, DI_NORMAL);
 	return true;
 }
 
@@ -12928,12 +12933,12 @@ void set_LogErrMsg(
 //---------------------------------------------------------------------------
 int get_TopMargin(TCanvas *cv)
 {
-	return has_Leading(cv)? 0 : ScaledIntX(2);
+	return has_Leading(cv)? 0 : ScaledInt(2);
 }
 //---------------------------------------------------------------------------
 int get_TopMargin2(TCanvas *cv)
 {
-	return has_Leading(cv)? ScaledIntX(1) : std::max(ListInterLn/2, ScaledIntX(2));
+	return has_Leading(cv)? ScaledInt(1) : std::max(ListInterLn/2, ScaledInt(2));
 }
 
 //---------------------------------------------------------------------------

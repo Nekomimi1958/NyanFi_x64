@@ -81,7 +81,7 @@ void __fastcall TExpCsvDlg::ItemListBoxDrawItem(TWinControl *Control, int Index,
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->Font->Color = get_TextColor(State.Contains(odSelected));
-	cv->TextOut(Rect.Left + ScaledIntX(4), Rect.Top + get_TopMargin(cv), lp->Items->Strings[Index]);
+	cv->TextOut(Rect.Left + ScaledInt(4), Rect.Top + get_TopMargin(cv), lp->Items->Strings[Index]);
 }
 //---------------------------------------------------------------------------
 //€–Ú‚Ì’Ç‰Á

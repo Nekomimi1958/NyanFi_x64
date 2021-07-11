@@ -1558,17 +1558,6 @@ inline UnicodeString get_FExtMaxStr(int n = 0)
 }
 
 //---------------------------------------------------------------------------
-//スケーリングされた整数値を取得
-inline int ScaledInt(int n, TControl *cp = NULL)
-{
-	return (n * (cp? cp->CurrentPPI : Screen->PixelsPerInch) / 96);
-}
-inline int ScaledIntX(int n)
-{
-	return (n * (Screen->ActiveForm? Screen->ActiveForm->CurrentPPI : Screen->PixelsPerInch) / 96);
-}
-
-//---------------------------------------------------------------------------
 //ソートモード
 inline int CurSortMode()
 {

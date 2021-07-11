@@ -9,8 +9,21 @@
 #include <Vcl.Grids.hpp>
 
 //----------------------------------------------------------------------
+//スケーリングされた整数値を取得
+//----------------------------------------------------------------------
 #define DEFAULT_PPI	96
 
+extern int MainPPI;
+
+//----------------------------------------------------------------------
+inline int ScaledInt(int n, TControl *cp = NULL)
+{
+	int ppi = cp? cp->CurrentPPI : Screen->ActiveForm? Screen->ActiveForm->CurrentPPI : MainPPI;
+	return (n * ppi / DEFAULT_PPI);
+}
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
 extern UnicodeString SCT_General;
 extern UnicodeString SCT_Option;
 

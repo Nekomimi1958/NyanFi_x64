@@ -312,20 +312,20 @@ void __fastcall TFuncListDlg::FuncListBoxDrawItem(TWinControl *Control, int Inde
 
 	//マーク
 	if (ListMode!=2) {
-		rc.Right = rc.Left + ScaledIntX(8);
+		rc.Right = rc.Left + ScaledInt(8);
 		cv->Brush->Color = col_bgLineNo;  cv->FillRect(rc);
 		if (TxtViewer->IsMarked(lno)) {
-			InflateRect(rc, ScaledIntX(-1), ScaledIntX(-4));
+			InflateRect(rc, ScaledInt(-1), ScaledInt(-4));
 			cv->Brush->Color = col_Mark;  cv->FillRect(rc);
 		}
-		xp += ScaledIntX(8);
+		xp += ScaledInt(8);
 	}
 
 	//行番号
 	rc = Rect;  rc.Left = xp;
 	cv->Font->Assign(lp->Font);
 	LineNoOut(cv, rc, lno);
-	xp = rc.Left + ScaledIntX(4);
+	xp = rc.Left + ScaledInt(4);
 
 	//内容
 	cv->Brush->Color = col_bgList;

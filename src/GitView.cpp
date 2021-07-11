@@ -680,8 +680,8 @@ void __fastcall TGitViewer::BranchListBoxDrawItem(TWinControl *Control, int Inde
 	cv->FillRect(Rect);
 	if (flag & GIT_FLAG_BLANK) return;
 
-	int xp = Rect.Left + ScaledIntX(4);
-	int yp = Rect.Top  + ScaledIntX(2);
+	int xp = Rect.Left + ScaledInt(4);
+	int yp = Rect.Top  + ScaledInt(2);
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	//ƒwƒbƒ_
 	if (flag & GIT_FLAG_HDRLN) {
@@ -794,12 +794,12 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 		max_h_wd = std::max(max_h_wd, get_TextWidth(cv, UnicodeString().sprintf(_T("%x"), i), is_irreg));
 	}
 
-	int s_4 = ScaledIntX(4);
-	int s_8 = ScaledIntX(8);
+	int s_4 = ScaledInt(4);
+	int s_8 = ScaledInt(8);
 
 	git_rec *gp = (git_rec *)lp->Items->Objects[Index];
 	int xp = Rect.Left + s_4;
-	int yp = Rect.Top  + ScaledIntX(2);
+	int yp = Rect.Top  + ScaledInt(2);
 
 	if (USAME_TS(gp->graph, "#")) {
 		cv->Font->Color = col_LineNo;
@@ -944,8 +944,8 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 	cv->Brush->Color = lp->Color;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledIntX(4);
-	int yp = Rect.Top  + ScaledIntX(2);
+	int xp = Rect.Left + ScaledInt(4);
+	int yp = Rect.Top  + ScaledInt(2);
 	bool is_irreg = IsIrregularFont(cv->Font);
 
 	UnicodeString lbuf = lp->Items->Strings[Index];

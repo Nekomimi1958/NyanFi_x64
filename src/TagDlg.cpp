@@ -441,20 +441,20 @@ void __fastcall TTagManDlg::TagCheckListBoxDrawItem(TWinControl *Control, int In
 	cv->Brush->Color = lp->Checked[Index]? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledIntX(4);
+	int xp = Rect.Left + ScaledInt(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	//フォルダアイコン
 	if (IsFolderIcon) {
 		UnicodeString inam = lp->Items->Strings[Index];
 		draw_SmallIcon2(inam, cv, xp, yp);
-		xp += ScaledIntX(24);
+		xp += ScaledInt(24);
 		cv->Font->Color = get_ExtColor(get_extension(inam));
 		cv->TextOut(xp, yp, get_base_name(inam));
 	}
 	//タグ
 	else {
-		if (RevTagCololr) yp += ScaledIntX(2);
+		if (RevTagCololr) yp += ScaledInt(2);
 		usr_TAG->DrawTags(lp->Items->Strings[Index], cv, xp, yp,
 			(RevTagCololr? col_bgList : col_None), UserModule->SpuitEnabled());
 	}

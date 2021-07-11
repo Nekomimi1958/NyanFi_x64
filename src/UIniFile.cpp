@@ -7,6 +7,8 @@
 #include "UIniFile.h"
 
 //---------------------------------------------------------------------------
+int MainPPI = DEFAULT_PPI;
+
 UnicodeString SCT_General;
 UnicodeString SCT_Option;
 
@@ -439,12 +441,13 @@ void UsrIniFile::LoadFormPos(
 	frm->Left = ReadInteger(SCT_General, prfx + "Left", (Screen->Width  - w)/2);
 	frm->Top  = ReadInteger(SCT_General, prfx + "Top",  (Screen->Height - h)/2);
 	//Left, Top ‚æ‚Á‚Ä CurrentPPI ‚ª•Ï‰»
+	MainPPI = frm->CurrentPPI;
 
 	int ww = ReadInteger(SCT_General, prfx + "Width",	w);
 	int hh = ReadInteger(SCT_General, prfx + "Height",	h);
 	if (frm->Scaled) {
-		frm->Width	= ww * frm->CurrentPPI / DEFAULT_PPI;
-		frm->Height = hh * frm->CurrentPPI / DEFAULT_PPI;
+		frm->Width	= ww * MainPPI / DEFAULT_PPI;
+		frm->Height = hh * MainPPI / DEFAULT_PPI;
 	}
 	else {
 		frm->Width	= ww;

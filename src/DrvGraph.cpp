@@ -123,7 +123,7 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 		}
 
 		TColor col_grid = AdjustColor(col_bgPrgBar, 32);
-		cv->Pen->Width = ScaledIntX(1);
+		cv->Pen->Width = ScaledInt(1);
 		cv->Font->Assign(Font);
 
 		int yt	= 0;

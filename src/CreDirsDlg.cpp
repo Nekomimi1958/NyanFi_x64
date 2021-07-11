@@ -85,7 +85,7 @@ void __fastcall TCreateDirsDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStat
 	cv->Brush->Color = IsDarkMode? col_bgSttBar : scl_BtnFace;
 	cv->FillRect(Rect);
 	cv->Font->Color = IsDarkMode? col_fgSttBar : scl_BtnText;
-	cv->TextOut(Rect.Left + ScaledIntX(2), Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + ScaledInt(2), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------

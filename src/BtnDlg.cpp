@@ -220,8 +220,8 @@ void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index,
 	TColor org_fg = cv->Font->Color;
 	cv->FillRect(Rect);
 
-	int x = Rect.Left + ScaledIntX(6);
-	int y = Rect.Top + get_TopMargin(cv) + ScaledIntX(1);
+	int x = Rect.Left + ScaledInt(6);
+	int y = Rect.Top + get_TopMargin(cv) + ScaledInt(1);
 
 	TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[Index], 3, true);
 	//セパレータ
@@ -234,15 +234,14 @@ void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index,
 	else {
 		TRect rc = Rect;
 		rc.Left  = x;
-		rc.Right = BtnCmdsComboBox->Left - ScaledIntX(6);
+		rc.Right = BtnCmdsComboBox->Left - ScaledInt(6);
 		cv->Brush->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
 		cv->FillRect(rc);
 		if (State.Contains(odSelected)) alpha_blend_Rect(cv, rc, scl_Highlight, 48);
 
-		x += ScaledIntX(4);
-		if (draw_SmallIconF(to_absolute_name(get_actual_name(itm_buf[2])),
-				cv, x, Rect.Top + (Rect.Height() - ScaledIntX(16))/2))
-					x += ScaledIntX(20);
+		x += ScaledInt(4);
+		if (draw_SmallIconF(to_absolute_name(get_actual_name(itm_buf[2])), cv, x, Rect.Top + (Rect.Height() - ScaledInt(16))/2))
+			x += ScaledInt(20);
 
 		cv->Brush->Style = bsClear;
 		cv->Font->Color  = col_fgTlBar;

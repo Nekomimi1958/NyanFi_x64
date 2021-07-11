@@ -179,7 +179,7 @@ void __fastcall TSameNameDlg::InfoListBoxDrawItem(TWinControl *Control, int Inde
 	TCanvas  *cv = lp->Canvas;
 	cv->Brush->Color = col_bgList;
 	cv->FillRect(Rect);
-	int xp = Rect.Left + ScaledIntX(4);
+	int xp = Rect.Left + ScaledInt(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	if (Index==2 || Index==4) {

@@ -587,8 +587,8 @@ void __fastcall TGeneralInfoDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TSta
 	UnicodeString lbuf = Panel->Text;
 	int yp = (Rect.Height() - abs(cv->Font->Height)) / 2;
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + ScaledIntX(2), yp, split_pre_tab(lbuf));
-	if (!lbuf.IsEmpty()) cv->TextOut(Rect.Right - cv->TextWidth(lbuf) - ScaledIntX(4), yp, lbuf);
+	cv->TextOut(Rect.Left + ScaledInt(2), yp, split_pre_tab(lbuf));
+	if (!lbuf.IsEmpty()) cv->TextOut(Rect.Right - cv->TextWidth(lbuf) - ScaledInt(4), yp, lbuf);
 }
 
 //---------------------------------------------------------------------------

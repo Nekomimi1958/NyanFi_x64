@@ -329,7 +329,6 @@ ULONG __stdcall TDropTargetBase::Release()
 {
 	refCount--;
 	if (refCount>0) return refCount;
-
 	delete this;
 	return 0;
 }
@@ -766,7 +765,7 @@ UnicodeString UserShell::ShowContextMenu(
 							if (m_buf.Length==3) {
 								SHFILEINFO sif;
 								if (::SHGetFileInfo(m_buf[2].c_str(), 0, &sif, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON)) {
-									int s_16 = 16 * Screen->PixelsPerInch / 96;
+									int s_16 = ScaledInt(16);
 									BITMAPINFOHEADER bmihdr = {sizeof(BITMAPINFOHEADER)};
 									BITMAPINFO bmi;
 									bmihdr.biWidth	  = s_16;
@@ -1764,7 +1763,7 @@ bool UserShell::draw_SmallIcon(UnicodeString fnam, TCanvas *cv, int x, int y)
 
 	HICON hIcon = get_SmallIcon(fnam);
 	if (hIcon) {
-		int s_16 = 16 * Screen->PixelsPerInch / 96;
+		int s_16 = ScaledInt(16);
 		::DrawIconEx(cv->Handle, x, y, hIcon, s_16, s_16, 0, NULL, DI_NORMAL);
 		::DestroyIcon(hIcon);
 		return true;
@@ -1779,7 +1778,7 @@ bool UserShell::draw_SmallIcon(UnicodeString fnam, TImage *ip, TColor bg)
 	TCanvas *cv = ip->Picture->Bitmap->Canvas;
 	cv->Brush->Color = bg;
 	cv->FillRect(ip->ClientRect);
-	int s_16 = 16 * Screen->PixelsPerInch / 96;
+	int s_16 = ScaledInt(16);
 	return draw_SmallIcon(fnam, cv, (ip->ClientWidth - s_16) / 2, (ip->ClientHeight - s_16) / 2);
 }
 
