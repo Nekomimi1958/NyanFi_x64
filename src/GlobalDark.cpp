@@ -2,6 +2,7 @@
 // NyanFi																//
 //  グローバル(ダークモード対応)										//
 //----------------------------------------------------------------------//
+#include "usr_scale.h"
 #include "usr_msg.h"
 #include "GlobalDark.h"
 
@@ -233,9 +234,7 @@ void SetDarkWinTheme(
 	TColor fg_txt   = get_TextColor();
 
 	std::unique_ptr<TFont> def_font(new TFont());
-	def_font->Assign(Application->DefaultFont);
-	def_font->Size = def_font->Size * wp->CurrentPPI / Screen->PixelsPerInch;
-
+	AssignScaledFont(def_font.get(), Application->DefaultFont, wp);
 	TWinControl *pp = wp->Parent;
 	if (pp && pp->ClassNameIs("TToolBar") && (wp->ClassNameIs("TComboBox") || wp->ClassNameIs("TEdit"))) {
 		def_font->Size = ((TToolBar*)pp)->Font->Size;
@@ -377,7 +376,7 @@ void SetDarkWinTheme(
 				lp->Color		= bg_panel;
 				lp->Caption = cp->Caption;
 				lp->Anchors = cp->Anchors;
-				lp->Left	= cp->Left + (16 * wp->CurrentPPI / 96);
+				lp->Left	= cp->Left + ScaledInt(16, wp);
 				lp->Top 	= cp->Top;
 				cp->Caption = EmptyStr;
 				lp->BringToFront();
@@ -396,7 +395,7 @@ void SetDarkWinTheme(
 				lp->Font->Color = fg_label;
 				lp->Color		= bg_panel;
 				lp->Caption = cp->Caption;
-				lp->Left	= cp->Left + (16 * wp->CurrentPPI / 96);
+				lp->Left	= cp->Left + ScaledInt(16, wp);
 				lp->Top 	= cp->Top;
 				cp->Caption = EmptyStr;
 				lp->BringToFront();
@@ -412,6 +411,9 @@ void SetDarkWinTheme(
 	}
 	else {
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
+		if (wp->ClassNameIs("TButton")) {
+			((TButton *)wp)->Font->Assign(def_font.get());
+		}
 
 		if (std_col) {
 			if		(wp->ClassNameIs("TListBox"))		((TListBox *)wp)->Color 	 = bg_win;
@@ -431,7 +433,7 @@ TLabel* AttachLabelToGroup(
 
 	TWinControl *parent;
 	UnicodeString cap_str;
-	int s_8 = 8 * wp->CurrentPPI / 96;
+	int s_8 = ScaledInt(8, wp);
 	int xp, yp;
 
 	if (wp->ClassNameIs("TGroupBox")) {
@@ -689,6 +691,10 @@ void set_ButtonMark(TSpeedButton *bp,
 	default:
 		size = 9;
 	}
+	size = ScaledInt(size, bp);
+
+	if ((bp->Align==alNone || bp->Align==alTop || bp->Align==alBottom) && bp->Height<size) bp->Height = size;
+	if ((bp->Align==alNone || bp->Align==alLeft || bp->Align==alRight) && bp->Width<size)  bp->Width  = size;
 
 	Graphics::TBitmap *bmp = bp->Glyph;
 	TCanvas *cv = bmp->Canvas;
@@ -822,7 +828,7 @@ void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool act
 void draw_MenuSeparator(TCanvas *cv, TRect rc)
 {
 	int yp = rc.Top + rc.Height()/2;
-	int x0 = rc.Left + ::GetSystemMetrics(SM_CYMENU) + (4 * Screen->PixelsPerInch / 96);
+	int x0 = rc.Left + ScaledInt(::GetSystemMetrics(SM_CYMENU) + 4);
 	int x1 = rc.Right;
 	cv->Pen->Style = psSolid;
 	cv->Pen->Mode  = pmCopy;

@@ -138,10 +138,10 @@ void __fastcall TGraphForm::PaintBox1Paint(TObject *Sender)
 	cv->FillRect(rc);
 
 	cv->Pen->Style = psSolid;
-	cv->Pen->Width = ScaledInt(1);
+	cv->Pen->Width = ScaledInt(1, this);
 	cv->Pen->Color = col_GrGrid;
 	cv->Font->Assign(ListFont);
-	cv->Font->Height = ScaledInt(12);
+	cv->Font->Height = ScaledInt(12, this);
 	cv->Font->Color  = col_GrText;
 	cv->Brush->Style = bsClear;
 
@@ -154,13 +154,15 @@ void __fastcall TGraphForm::PaintBox1Paint(TObject *Sender)
 	int y_hi = pp->Height*0.1;	//上限
 	if (ShowMaxAction->Checked) {
 		cv->MoveTo(x_Margin, y_hi);	cv->LineTo(pp->Width - x_Margin, y_hi);
-		cv->TextOut(x_Margin + ScaledInt(4), y_hi - ScaledInt(16),	"最大値=" + ldouble_to_str(MaxItemValue, f_Width));
+		cv->TextOut(x_Margin + ScaledInt(4, this), y_hi - ScaledInt(16, this),
+						"最大値=" + ldouble_to_str(MaxItemValue, f_Width));
 	}
 	//最小値
 	int y_lo = pp->Height*0.9;	//下限
 	if (ShowMinAction->Checked) {
 		cv->MoveTo(x_Margin, y_lo);	cv->LineTo(pp->Width - x_Margin, y_lo);
-		cv->TextOut(x_Margin + ScaledInt(4), y_lo + ScaledInt(4), "最小値=" + ldouble_to_str(MinItemValue, f_Width));
+		cv->TextOut(x_Margin + ScaledInt(4, this), y_lo + ScaledInt(4, this),
+						"最小値=" + ldouble_to_str(MinItemValue, f_Width));
 	}
 
 	//グラフ
@@ -181,7 +183,8 @@ void __fastcall TGraphForm::PaintBox1Paint(TObject *Sender)
 		int y_av = y_lo - (y_w * ((AveItemValue - MinItemValue) / r_w));
 		cv->Pen->Color = col_GrGrid;
 		cv->MoveTo(x_Margin, y_av);	cv->LineTo(pp->Width - x_Margin, y_av);
-		cv->TextOut(x_Margin + ScaledInt(4), y_av - ScaledInt(16), "平均値=" + ldouble_to_str(AveItemValue, f_Width + 1));
+		cv->TextOut(x_Margin + ScaledInt(4, this), y_av - ScaledInt(16, this),
+						"平均値=" + ldouble_to_str(AveItemValue, f_Width + 1));
 	}
 }
 

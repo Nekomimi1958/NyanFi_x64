@@ -73,13 +73,13 @@ void __fastcall TNewFileDlg::TplComboBoxDrawItem(TWinControl *Control, int Index
 	TCanvas *cv = TplComboBox->Canvas;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(2);
+	int xp = Rect.Left + ScaledInt(2, this);
 	int yp = Rect.Top  + get_TopMargin(cv);
 	UnicodeString tnam = TplComboBox->Items->Strings[Index];
 
 	//アイコン
-	draw_SmallIcon2(tnam, cv, xp, std::max(yp + (cv->TextHeight("Q") - ScaledInt(16))/2, 0));
-	xp += ScaledInt(20);
+	draw_SmallIcon2(tnam, cv, xp, std::max(yp + (cv->TextHeight("Q") - ScaledInt(16, this))/2, 0), this);
+	xp += ScaledInt(20, this);
 	//ファイル名
 	cv->TextOut(xp, yp, ExtractFileName(tnam));
 }

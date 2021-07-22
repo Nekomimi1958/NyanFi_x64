@@ -132,12 +132,7 @@ private:	// ƒ†[ƒU[éŒ¾
 	UsrSwatchPanel *SwatchPanel;
 
 	void __fastcall WmFormShowed(TMessage &msg);
-
-	void __fastcall WmDpiChanged(TMessage &msg)
-	{
-		TForm::Dispatch(&msg);
-		SetDarkWinTheme(this);
-	}
+	void __fastcall WmDpiChanged(TMessage &msg);
 
 	void __fastcall WmMenuChar(TMessage &msg)
 	{

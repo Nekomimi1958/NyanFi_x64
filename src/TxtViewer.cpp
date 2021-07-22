@@ -264,9 +264,9 @@ void __fastcall TTxtViewer::Clear()
 	MaxLine = 0;
 	ClearDispLine();
 
-	ViewBox->Font->Assign(ViewerFont);
-	useFontName = ViewerFont->Name;
-	useFontSize = ViewerFont->Size;
+	AssignScaledFont(ViewBox->Font, ViewerFont, OwnerForm);
+	useFontName = ViewBox->Font->Name;
+	useFontSize = ViewBox->Font->Size;
 
 	isSelected = false;
 	isText	   = isBinary = isXDoc2Txt = false;
@@ -436,7 +436,7 @@ void __fastcall TTxtViewer::SetMetric(bool set_hi)
 	if (ViewBox->Font->Size != useFontSize) zm_InterLn *= (1.0 * ViewBox->Font->Size/useFontSize);
 	ViewCanvas->Font->Assign(ViewBox->Font);
 	FontHeight = abs(ViewCanvas->Font->Height);
-	LineHeight = FontHeight + zm_InterLn;
+	LineHeight = FontHeight + ScaledInt(zm_InterLn, OwnerForm);
 	LineCount  = ViewBox->ClientHeight / LineHeight - 1;
 
 	if (TabLength==0) TabLength = get_ViewTabWidth(get_extension(FileName));
@@ -671,7 +671,10 @@ void __fastcall TTxtViewer::UpdateScr(
 
 	if (RulerBox) {
 		RulerBox->Visible = ShowTextRuler;
-		if (RulerBox->Visible) RulerBox->Repaint();
+		if (RulerBox->Visible) {
+			RulerBox->Height = ScaledInt(16, OwnerForm);
+			RulerBox->Repaint();
+		}
 	}
 
 	UnicodeString fext = get_extension(FileName);
@@ -778,8 +781,8 @@ void __fastcall TTxtViewer::UpdateScr(
 	//フォント
 	useFontName = usr_hl? UserHighlight->ReadKeyStr(_T("FontName")) : ViewerFont->Name;
 	if (useFontName.IsEmpty()) useFontName = ViewerFont->Name;
-	useFontSize = usr_hl? UserHighlight->ReadKeyInt(_T("FontSize")) : ViewerFont->Size;
-	if (useFontSize==0) useFontSize = ViewerFont->Size;
+	useFontSize = ScaledInt(usr_hl? UserHighlight->ReadKeyInt(_T("FontSize")) : ViewerFont->Size, OwnerForm);;
+	if (useFontSize==0) useFontSize = ScaledInt(ViewerFont->Size, OwnerForm);
 	ViewBox->Font->Assign(ViewerFont);
 	ViewBox->Font->Name = useFontName;
 	ViewBox->Font->Size = useFontSize;
@@ -2225,6 +2228,7 @@ void __fastcall TTxtViewer::onRulerPaint(TObject *Sender)
 	cv->Pen->Color = color_fgRuler;
 	cv->Pen->Width = 1;
 	cv->Font->Assign(DialogFont);
+	cv->Font->Size	= ScaledInt(DialogFont->Size, OwnerForm);
 	cv->Font->Color = color_fgRuler;
 	int xp = TopXpos - 1;
 
@@ -2268,7 +2272,7 @@ void __fastcall TTxtViewer::onRulerPaint(TObject *Sender)
 	}
 	//通常表示
 	else {
-		cv->Font->Height = 10;
+		cv->Font->Height = ScaledInt(10, OwnerForm);
 		//目盛
 		for (int i=0; i<MaxFoldWd; i++) {
 			if (i%10==0) {

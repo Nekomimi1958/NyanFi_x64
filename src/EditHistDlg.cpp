@@ -336,7 +336,7 @@ void __fastcall TEditHistoryDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TSta
 	UnicodeString lbuf = Panel->Text;
 	cv->Font->Color = col_fgSttBar;
 	cv->TextOut(rc.Left + 2, rc.Top, split_pre_tab(lbuf));
-	if (!lbuf.IsEmpty()) cv->TextOut(rc.Right - cv->TextWidth(lbuf) - ScaledInt(20), rc.Top, lbuf);
+	if (!lbuf.IsEmpty()) cv->TextOut(rc.Right - cv->TextWidth(lbuf) - ScaledInt(20, this), rc.Top, lbuf);
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::SetSttBar()
@@ -759,7 +759,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 		}
 		cv->Font->Color = col_fg;
 
-		int xp = Rect.Left + ScaledInt(4);
+		int xp = Rect.Left + ScaledInt(4, this);
 		int yp = Rect.Top + get_TopMargin2(cv);
 
 		TColor col_x = get_ExtColor(fp->f_ext);
@@ -769,7 +769,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 		if (ACol==1) {
 			//ƒAƒCƒRƒ“
 			if (IconMode==1 || (isRepo && IconMode>0)) {
-				draw_SmallIcon(fp, cv, xp, std::max(yp + (cv->TextHeight("Q") - ScaledInt(16))/2, 0));
+				draw_SmallIcon(fp, cv, xp, std::max(yp + (cv->TextHeight("Q") - ScaledInt(16, this))/2, 0), false, this);
 				xp += ScaledInt(20);
 			}
 		}

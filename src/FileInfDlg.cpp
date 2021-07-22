@@ -21,12 +21,15 @@ __fastcall TFileInfoDlg::TFileInfoDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TFileInfoDlg::FormCreate(TObject *Sender)
 {
+	DlgInitialized = false;
+
 	FileRec    = NULL;
 	isAppInfo  = isGitInfo = false;
 	isCalcItem = inhNxtPre = inhImgPrv = useImgPrv = false;
 
-	CsvCol	  = -1;
-	DataList  = NULL;
+	CsvCol	 = -1;
+	DataList = NULL;
+	ItemList = new TStringList();
 
 	ListScrPanel = new UsrScrollPanel(ListPanel, InfListBox, USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
 	InfListBox->Tag = LBTAG_FIF_LIST | LBTAG_OPT_FIF2 | LBTAG_OPT_ZOOM;
@@ -34,6 +37,8 @@ void __fastcall TFileInfoDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFileInfoDlg::FormShow(TObject *Sender)
 {
+	DlgInitialized = false;
+
 	CmdStr = EmptyStr;
 	useImgPrv = !inhImgPrv && !isCalcItem && !isAppInfo && !isGitInfo;
 
@@ -59,6 +64,8 @@ void __fastcall TFileInfoDlg::FormShow(TObject *Sender)
 		if (FileRec) SubViewer->DrawImage(FileRec->f_name);
 		SetFocus();
 	}
+
+	DlgInitialized = true;
 }
 //---------------------------------------------------------------------------
 void __fastcall TFileInfoDlg::FormClose(TObject *Sender, TCloseAction &Action)
@@ -81,7 +88,19 @@ void __fastcall TFileInfoDlg::FormClose(TObject *Sender, TCloseAction &Action)
 //---------------------------------------------------------------------------
 void __fastcall TFileInfoDlg::FormDestroy(TObject *Sender)
 {
+	delete ItemList;
 	delete ListScrPanel;
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TFileInfoDlg::WmDpiChanged(TMessage &msg)
+{
+	TForm::Dispatch(&msg);
+
+	if (DlgInitialized) {
+		SetDarkWinTheme(this);
+		UpdateInfo();
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -120,23 +139,22 @@ int __fastcall comp_ObjLD(TStringList *List, int Index1, int Index2)
 	if (*v0==*v1)	return 0;
 	return (*v0 > *v1)? 1 : -1;
 }
-
 //---------------------------------------------------------------------------
 bool __fastcall TFileInfoDlg::UpdateInfo()
 {
+	TListBox *lp = InfListBox;
+
 	if (isAppInfo) {
 		set_FormTitle(this, _T("アプリケーション情報"));
-		ListScrPanel->UpdateKnob();
+		assign_InfListBox(lp, ItemList, ListScrPanel);
 		return true;
 	}
 
 	if (isGitInfo) {
 		set_FormTitle(this, _T("コミット情報"));
-		ListScrPanel->UpdateKnob();
+		assign_InfListBox(lp, ItemList, ListScrPanel);
 		return true;
 	}
-
-	TListBox *lp = InfListBox;
 
 	//項目の集計
 	if (isCalcItem) {
@@ -277,7 +295,6 @@ bool __fastcall TFileInfoDlg::UpdateInfo()
 				FreqIndex = i_lst->Add(_T("度数分布"));
 				i_lst->AddStrings(f_lst.get());
 			}
-
 			assign_InfListBox(lp, i_lst.get(), ListScrPanel);
 			return true;
 		}
@@ -372,7 +389,6 @@ bool __fastcall TFileInfoDlg::UpdateInfo()
 			}
 			i_lst->Insert(idx, EmptyStr);
 		}
-
 		assign_InfListBox(lp, i_lst.get());
 		cursor_Default();
 	}
@@ -401,8 +417,8 @@ void __fastcall TFileInfoDlg::InfListBoxDrawItem(TWinControl *Control, int Index
 		cv->Brush->Color = (State.Contains(odSelected) && lp->Focused())? col_selItem : col_bgInf;
 		cv->FillRect(Rect);
 
-		int xp = Rect.Left + ScaledInt(8);
-		int yp = Rect.Top  + ScaledInt(1);
+		int xp = Rect.Left + ScaledInt(8, this);
+		int yp = Rect.Top  + ScaledInt(1, this);
 		bool use_fgsel = lp->Focused() && is_SelFgCol(State);
 
 		TStringDynArray itm_buf = split_strings_tab(lp->Items->Strings[Index]);
@@ -414,22 +430,22 @@ void __fastcall TFileInfoDlg::InfListBoxDrawItem(TWinControl *Control, int Index
 			//階級
 			cv->Font->Color = use_fgsel? col_fgSelItem : col_fgInf;
 			cv->TextOut(xp + MaxColWd0 - get_TextWidth(cv, itm_buf[0], is_irreg), yp, itm_buf[0]);
-			xp += MaxColWd0 + ScaledInt(8);
+			xp += MaxColWd0 + ScaledInt(8, this);
 			//区切り線
 			cv->Pen->Style = psSolid;
 			cv->Pen->Width = 1;
 			cv->Pen->Color = col_HR;
 			cv->MoveTo(xp, Rect.Top);  cv->LineTo(xp, Rect.Bottom);
 			//度数
-			xp += ScaledInt(8);
+			xp += ScaledInt(8, this);
 			int n = itm_buf[1].ToIntDef(0);
 			cv->TextOut(xp + MaxColWd1 - get_TextWidth(cv, itm_buf[1], is_irreg), yp, itm_buf[1]);
-			xp += MaxColWd1 + ScaledInt(4);
+			xp += MaxColWd1 + ScaledInt(4, this);
 			cv->MoveTo(xp, Rect.Top);  cv->LineTo(xp, Rect.Bottom);
 			//累積相対度数
-			xp += ScaledInt(8);
+			xp += ScaledInt(8, this);
 			cv->TextOut(xp + MaxColWd2 - get_TextWidth(cv, itm_buf[2], is_irreg), yp, itm_buf[2]);
-			xp += MaxColWd2 + ScaledInt(4);
+			xp += MaxColWd2 + ScaledInt(4, this);
 
 			//グラフ
 			TRect rc = Rect;

@@ -240,8 +240,9 @@ void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index,
 		if (State.Contains(odSelected)) alpha_blend_Rect(cv, rc, scl_Highlight, 48);
 
 		x += ScaledInt(4);
-		if (draw_SmallIconF(to_absolute_name(get_actual_name(itm_buf[2])), cv, x, Rect.Top + (Rect.Height() - ScaledInt(16))/2))
-			x += ScaledInt(20);
+		if (draw_SmallIconF(to_absolute_name(get_actual_name(itm_buf[2])),
+			cv, x, Rect.Top + (Rect.Height() - ScaledInt(16))/2), this)
+				x += ScaledInt(20);
 
 		cv->Brush->Style = bsClear;
 		cv->Font->Color  = col_fgTlBar;

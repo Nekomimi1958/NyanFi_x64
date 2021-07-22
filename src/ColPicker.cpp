@@ -56,7 +56,7 @@ void __fastcall TColorPicker::FormShow(TObject *Sender)
 	RepCount  = 0;
 	RepSttLabel->Caption = EmptyStr;
 
-	ColLabel->Font->Size = 9;
+	ColLabel->Font->Size = ScaledInt(9, this);
 	ColLabel->Caption	 = DefColCaption;
 
 	ColImage->Picture->Bitmap->SetSize(ColImage->Width, ColImage->Width);

@@ -65,12 +65,9 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 	//ƒtƒHƒ“ƒg‚Ìİ’è
 	std::unique_ptr<TFont> ttFont(new TFont());
 	ttFont->Assign(ViewerFont);
-	ttFont->Size  = Font->Size;
+	ttFont->Size  = DialogFont->Size;
 	ttFont->Color = col_fgList;
-	ObjMemo->Font->Assign(ttFont.get());
-	ObjMemo->Font->Size  = ScaledInt(ttFont->Size, this);
-	ObjMemo->Font->Color = col_fgView;
-
+	AssignScaledFont(ObjMemo->Font, ttFont.get(), this);
 	set_ListBoxItemHi(ResListBox,	ttFont.get());
 	set_ListBoxItemHi(ReferListBox, ttFont.get());
 

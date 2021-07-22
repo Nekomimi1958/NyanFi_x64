@@ -233,10 +233,10 @@ void __fastcall TDotNyanDlg::ColorComboBoxDrawItem(TWinControl *Control, int Ind
 
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
-	cv->TextOut(Rect.Left + ScaledInt(34), yp, vbuf);
+	cv->TextOut(Rect.Left + ScaledInt(34, this), yp, vbuf);
 
 	//ƒJƒ‰[
-	TRect rc = Rect;  rc.Right = rc.Left + ScaledInt(30);
+	TRect rc = Rect;  rc.Right = rc.Left + ScaledInt(30, this);
 	cv->Brush->Color = (TColor)ColBufList->Values[col_nam].ToIntDef(col_None);
 	if (cv->Brush->Color!=col_None) {
 		cv->FillRect(rc);
@@ -244,7 +244,7 @@ void __fastcall TDotNyanDlg::ColorComboBoxDrawItem(TWinControl *Control, int Ind
 	else {
 		cv->Brush->Color = get_PanelColor();
 		cv->FillRect(rc);
-		out_Text(cv, rc.Left + ScaledInt(2), yp, _T("–³Œø"), get_LabelColor());
+		out_Text(cv, rc.Left + ScaledInt(2, this), yp, _T("–³Œø"), get_LabelColor());
 	}
 }
 //---------------------------------------------------------------------------

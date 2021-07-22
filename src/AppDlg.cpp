@@ -290,7 +290,7 @@ void __fastcall TAppListDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusP
 	cv->Brush->Color = col_bgSttBar;
 	cv->FillRect(Rect);
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + ScaledInt(2), Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + ScaledInt(2, this), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -384,12 +384,11 @@ void __fastcall TAppListDlg::SetIncSeaMode(bool sw)
 
 	//インクリメンタルサーチモード
 	if (IsIncSea) {
-		DirPanel->Font->Assign(ListFont);
-		DirPanel->ClientHeight = get_FontHeight(ListFont, 4, 4);
-		DirPanel->Color 	   = col_bgList;
-		DirPanel->BevelOuter   = bvLowered;
-		DirPanel->Caption	   = EmptyStr;
-		InpPaintBox->Visible   = true;
+		setup_Panel(DirPanel, ListFont);
+		DirPanel->Color 	 = col_bgList;
+		DirPanel->BevelOuter = bvLowered;
+		DirPanel->Caption	 = EmptyStr;
+		InpPaintBox->Visible = true;
 		UserModule->SetBlinkTimer(InpPaintBox);
 
 		IncSeaWord = EmptyStr;
@@ -400,11 +399,11 @@ void __fastcall TAppListDlg::SetIncSeaMode(bool sw)
 	//通常表示
 	else {
 		if (!l_fnam.IsEmpty()) CurLaunchPath = ExtractFilePath(l_fnam);
-		InpPaintBox->Visible   = false;
+		InpPaintBox->Visible  = false;
 		setup_Panel(DirPanel, DirInfFont);
-		DirPanel->Color 	   = col_bgDirInf;
-		DirPanel->Font->Color  = col_fgDirInf;
-		DirPanel->BevelOuter   = FlatInfPanel? bvNone : bvRaised;
+		DirPanel->Color 	  = col_bgDirInf;
+		DirPanel->Font->Color = col_fgDirInf;
+		DirPanel->BevelOuter  = FlatInfPanel? bvNone : bvRaised;
 	}
 
 	UpdateLaunchList(l_fnam);
@@ -923,13 +922,13 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 																: col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4);
+	int xp = Rect.Left + ScaledInt(4, this);
 
 	//無応答表示
 	if (ap->isNoRes) {
 		TRect rc = Rect;
-		rc.Left	 = xp + ScaledInt(36);
-		rc.Right = xp + ScaledInt(44) + MaxWd_f + get_CharWidth(cv, 2);
+		rc.Left	 = xp + ScaledInt(36, this);
+		rc.Right = xp + ScaledInt(44, this) + MaxWd_f + get_CharWidth(cv, 2);
 		InflateRect(rc, 0, -2);
 		TColor br_col	 = cv->Brush->Color;
 		cv->Brush->Color = col_Error;
@@ -938,7 +937,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	}
 
 	//アイコン
-	int s_32 = ScaledInt(32);
+	int s_32 = ScaledInt(32, this);
 	if (!ap->PngImg->Empty) {
 		TRect rc = Rect;
 		rc.Left = xp; rc.Top += 2;
@@ -951,13 +950,14 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 
 	//最小化マーク
 	if (::IsIconic(ap->WinHandle)) {
-		TRect rc(xp + ScaledInt(22), Rect.Top + ScaledInt(24), xp + ScaledInt(34), Rect.Top + ScaledInt(36));
+		TRect rc(xp + ScaledInt(22, this), Rect.Top + ScaledInt(24, this), 
+				 xp + ScaledInt(34, this), Rect.Top + ScaledInt(36, this));
 		cv->Brush->Color = scl_BtnFace;
 		cv->FillRect(rc);
 		draw_Line(cv, rc.Left + 2, rc.Bottom - 3, rc.Right -2, rc.Bottom - 3, 2, scl_BtnText);
 		::DrawEdge(cv->Handle, &rc, BDR_RAISEDOUTER, BF_RECT);
 	}
-	xp += ScaledInt(40);
+	xp += ScaledInt(40, this);
 	cv->Brush->Style = bsClear;
 
 	bool use_fgsel = is_SelFgCol(State);
@@ -997,7 +997,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : col_x;
 	cv->TextOut(xp, yp, ap->Caption);
 	if (ap->isWow64) cv->TextOut(xp + get_TextWidth(cv, ap->Caption, is_irreg), yp, ISWOW64_STR);
-	xp += MaxWd_f + ScaledInt(12);
+	xp += MaxWd_f + ScaledInt(12, this);
 	//テキスト
 	UnicodeString s = yen_to_delimiter(ap->WinText);
 	cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : col_fgList;
@@ -1391,35 +1391,33 @@ void __fastcall TAppListDlg::JumpExeItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 {
-	TListBox *lp = FileInfoDlg->InfListBox;
-	lp->Clear();
-
 	AppWinInf *c_ap = GetCurAppWinInf();
 	if (c_ap) {
 		cursor_HourGlass();
-		std::unique_ptr<TStringList> lst(new TStringList());
 		const _TCHAR *fmt_08X   = _T("0x%08X");
 		const _TCHAR *fmt_08X_U = _T("0x%08X (%u)");
+
+		std::unique_ptr<TStringList> i_lst(new TStringList());
 		UnicodeString tmp;
-		add_PropLine(_T("キャプション"),	c_ap->WinText,	lst.get());
+		add_PropLine(_T("キャプション"),	c_ap->WinText,	i_lst.get());
 		tmp = ExtractFileName(c_ap->FileName);
 		if (c_ap->isWow64) tmp += "  (32-bit)"; else tmp += "  (64-bit)";
-		add_PropLine(_T("実行ファイル"),tmp, lst.get(), LBFLG_PATH_FIF);
-		add_PropLine(_T("場所"),		yen_to_delimiter(ExtractFilePath(c_ap->FileName)), lst.get(), LBFLG_PATH_FIF);
-		add_PropLine(_T("パラメータ"),	c_ap->CmdParam,	lst.get());
+		add_PropLine(_T("実行ファイル"),tmp, i_lst.get(), LBFLG_PATH_FIF);
+		add_PropLine(_T("場所"),		yen_to_delimiter(ExtractFilePath(c_ap->FileName)), i_lst.get(), LBFLG_PATH_FIF);
+		add_PropLine(_T("パラメータ"),	c_ap->CmdParam,	i_lst.get());
 
-		lst->Add(get_img_size_str(c_ap->win_wd, 	c_ap->win_hi, "画面サイズ"));
+		i_lst->Add(get_img_size_str(c_ap->win_wd, 	c_ap->win_hi, "画面サイズ"));
 		tmp.sprintf(_T("(%d, %d) - (%d, %d)"), 
 			c_ap->win_left, c_ap->win_top, c_ap->win_left + c_ap->win_wd, c_ap->win_top + c_ap->win_hi);
-		add_PropLine(_T("矩形"),		tmp,	lst.get()),
-		add_PropLine(_T("開始タイム"),	format_DateTime(c_ap->StartTime),	lst.get());
-		lst->Add(EmptyStr);
+		add_PropLine(_T("矩形"),		tmp,	i_lst.get()),
+		add_PropLine(_T("開始タイム"),	format_DateTime(c_ap->StartTime),	i_lst.get());
+		i_lst->Add(EmptyStr);
 
 		HWND hWnd = c_ap->WinHandle;
 		tmp = c_ap->ClassName;
 		if (!c_ap->ClassName2.IsEmpty()) tmp.cat_sprintf(_T(" (%s)"), c_ap->ClassName2.c_str());
-		add_PropLine(_T("クラス名"),	tmp,	lst.get());
-		add_PropLine(_T("スタイル"),	tmp.sprintf(fmt_08X, ::GetWindowLong(hWnd, GWL_STYLE)),	lst.get());
+		add_PropLine(_T("クラス名"),	tmp,	i_lst.get());
+		add_PropLine(_T("スタイル"),	tmp.sprintf(fmt_08X, ::GetWindowLong(hWnd, GWL_STYLE)),	i_lst.get());
 
 		tmp.sprintf(fmt_08X, c_ap->win_xstyle);
 		UnicodeString tmp2;
@@ -1435,22 +1433,21 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 			remove_top_s(tmp2, _T(", "));
 			tmp.cat_sprintf(_T(" (%s)"), tmp2.c_str());
 		}
-		add_PropLine(_T("拡張スタイル"),	tmp,	lst.get());
+		add_PropLine(_T("拡張スタイル"),	tmp,	i_lst.get());
 
-		lst->Add(EmptyStr);
-		add_PropLine(_T("プロセスID"),		tmp.sprintf(fmt_08X_U, c_ap->PID, c_ap->PID),	lst.get());
-		add_PropLine(_T("スレッドID"),		tmp.sprintf(fmt_08X_U, c_ap->TID, c_ap->TID),	lst.get());
-		add_PropLine(_T("ハンドル"),		tmp.sprintf(fmt_08X_U, hWnd, hWnd),				lst.get());
+		i_lst->Add(EmptyStr);
+		add_PropLine(_T("プロセスID"),		tmp.sprintf(fmt_08X_U, c_ap->PID, c_ap->PID),	i_lst.get());
+		add_PropLine(_T("スレッドID"),		tmp.sprintf(fmt_08X_U, c_ap->TID, c_ap->TID),	i_lst.get());
+		add_PropLine(_T("ハンドル"),		tmp.sprintf(fmt_08X_U, hWnd, hWnd),				i_lst.get());
 
-		lst->Add(EmptyStr);
-		get_AppInf(c_ap->FileName, lst.get(), false);
-
-		assign_InfListBox(lp, lst.get());
+		i_lst->Add(EmptyStr);
+		get_AppInf(c_ap->FileName, i_lst.get(), false);
 		cursor_Default();
-	}
 
-	FileInfoDlg->isAppInfo = true;
-	FileInfoDlg->ShowModal();
+		FileInfoDlg->ItemList->Assign(i_lst.get());
+		FileInfoDlg->isAppInfo = true;
+		FileInfoDlg->ShowModal();
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -1487,13 +1484,13 @@ void __fastcall TAppListDlg::LaunchListBoxDrawItem(TWinControl *Control, int Ind
 	cv->Brush->Color = (lp->Focused() && State.Contains(odSelected))? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4);
-	int yp = Rect.Top  + ScaledInt(2);
+	int xp = Rect.Left + ScaledInt(4, this);
+	int yp = Rect.Top  + ScaledInt(2, this);
 
 	file_rec *fp = (file_rec*)LaunchList->Objects[Index];
 	//アイコン
-	draw_SmallIcon(fp, cv, xp, Rect.Top + (Rect.Height() - ScaledInt(16))/2, true);
-	xp += ScaledInt(16) + ScaledInt(2);
+	draw_SmallIcon(fp, cv, xp, Rect.Top + (Rect.Height() - ScaledInt(16, this))/2, true, this);
+	xp += ScaledInt(18, this);
 
 	//名前
 	cv->Font->Color = (lp->Focused() && is_SelFgCol(State))? col_fgSelItem :

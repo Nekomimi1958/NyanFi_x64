@@ -75,12 +75,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	bool FindBusy;
 	bool FindAborted;
 
-	void __fastcall WmDpiChanged(TMessage &msg)
-	{
-		TForm::Dispatch(&msg);
-		SetDarkWinTheme(this);
-	}
-
+	void __fastcall WmDpiChanged(TMessage &msg);
 	void __fastcall UpdateListBox(int idx = 0);
 	void __fastcall AddDirsCore(UnicodeString pnam, TStrings *lst, TStringDynArray ex_lst);
 

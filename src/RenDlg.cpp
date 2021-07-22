@@ -140,8 +140,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	FbaseRadioGroup->ItemIndex = KeepBsExtCheckBox->Checked? IniFile->ReadIntGen(_T("RenameDlgBaseCh")) : 0;
 	FextRadioGroup->ItemIndex  = KeepBsExtCheckBox->Checked? IniFile->ReadIntGen(_T("RenameDlgExtCh")) : 0;
 
-	StatusBar1->Canvas->Font->Assign(SttBarFont);
-	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
+	setup_StatusBar(StatusBar1);
 
 	if (UnInitializing) return;
 
@@ -269,8 +268,8 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	CmpPanel->Color 	 = bg_p;
 	TimeMaskEdit->Color  = get_WinColor(!IsMulti);
 
-	SttPrgBar->BgColor	  = col_bgPrgBar;
-	SttPrgBar->BarColor   = col_fgPrgBar;
+	SttPrgBar->BgColor	 = col_bgPrgBar;
+	SttPrgBar->BarColor  = col_fgPrgBar;
 
 	DlgInitialized = true;
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
@@ -367,10 +366,10 @@ void __fastcall TRenameDlg::FormDestroy(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::FormResize(TObject *Sender)
 {
-	int s_wd = ::GetSystemMetrics(SM_CXVSCROLL) + 2;	//スクロールバーの幅を取得
 	TStringGrid *gp = PreviewGrid;
 	gp->ColWidths[1] = 20;
-	int wd = (gp->ClientWidth - s_wd - gp->ColWidths[1])/2;
+	int s_wd = ScaledInt(::GetSystemMetrics(SM_CXVSCROLL) + 2, this);	//スクロールバー幅
+	int wd	 = (gp->ClientWidth - s_wd - gp->ColWidths[1])/2;
 	gp->ColWidths[0] = wd;
 	gp->ColWidths[2] = wd;
 }
@@ -400,7 +399,7 @@ void __fastcall TRenameDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPa
 	cv->Brush->Color = IsDarkMode? col_bgSttBar : scl_BtnFace;
 	cv->FillRect(Rect);
 	cv->Font->Color = (ExistErr && Panel->Index==0)? col_Error : IsDarkMode? col_fgSttBar : scl_BtnText;
-	cv->TextOut(Rect.Left + ScaledInt(2), Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + ScaledInt(2, this), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -1408,10 +1407,10 @@ void __fastcall TRenameDlg::PreviewGridDrawCell(TObject *Sender, int ACol, int A
 		else if (rel_str.IsEmpty() || USAME_TS(rel_str, "×"))
 			cv->Font->Color = col_Error;
 	}
-	cell_str = minimize_str(cell_str, cv, Rect.Width() - ScaledInt(4), OmitEndOfName);
+	cell_str = minimize_str(cell_str, cv, Rect.Width() - ScaledInt(4, this), OmitEndOfName);
 
 	cv->FillRect(Rect);
-	cv->TextRect(Rect, Rect.Left + ScaledInt(2), Rect.Top + ScaledInt(2), cell_str);
+	cv->TextRect(Rect, Rect.Left + ScaledInt(2, this), Rect.Top + ScaledInt(2, this), cell_str);
 
 	if(State.Contains(gdFocused)) cv->DrawFocusRect(Rect);
 }
@@ -1453,7 +1452,7 @@ void __fastcall TRenameDlg::CnvCharListBoxDrawItem(TWinControl *Control, int Ind
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int x = Rect.Left + ScaledInt(4);
+	int x = Rect.Left + ScaledInt(4, this);
 	int y = Rect.Top  + get_TopMargin(cv);
 
 	SetHighlight(cv, State.Contains(odSelected));
@@ -1562,7 +1561,7 @@ void __fastcall TRenameDlg::AssRenListBoxDrawItem(TWinControl *Control, int Inde
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + ScaledInt(2);
+	int xp = Rect.Left + ScaledInt(2, this);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	int w_x = 50;

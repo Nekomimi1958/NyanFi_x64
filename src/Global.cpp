@@ -2698,6 +2698,7 @@ void InitializeListGrid(TStringGrid *gp,
 {
 	gp->Color = col_bgList;
 	gp->Font->Assign(font? font : ListFont);
+	gp->Font->Size = ScaledInt(gp->Font->Size, gp);
 	gp->DefaultRowHeight = get_FontHeight(gp->Font, ListInterLn);
 }
 //---------------------------------------------------------------------------
@@ -2709,6 +2710,7 @@ void InitializeListHeader(THeaderControl *hp,
 {
 	hp->DoubleBuffered = true;
 	hp->Font->Assign(font? font : LstHdrFont);
+	hp->Font->Size = ScaledInt(hp->Font->Size, hp);
 	hp->Height = get_FontHeight(hp->Font, 6);
 
 	UnicodeString s = hdr;
@@ -5510,7 +5512,7 @@ UnicodeString get_FontInf(
 
 		std::unique_ptr<TFont> tmp_font(new TFont());
 		tmp_font->Name	 = font_name;
-		tmp_font->Height = 100;	//***
+		tmp_font->Height = 100;
 
 		HDC hDc = ::GetDC(MainHandle);
 		if (hDc) {
@@ -5940,9 +5942,8 @@ void set_ListBoxItemHi(
 	TFont *font,	//フォント			(default = NULL : Application->DefaultFont)
 	bool with_ico)	//アイコンを表示	(default = false)
 {
-	if (!font) font = Application->DefaultFont;
-	lp->Font->Assign(font);
-	lp->Canvas->Font->Assign(font);
+	AssignScaledFont(lp->Font, (font? font : Application->DefaultFont), lp);
+	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
 }
 //---------------------------------------------------------------------------
@@ -5951,9 +5952,8 @@ void set_ListBoxItemHi(
 	TFont *font,	//フォント			(default = NULL : Application->DefaultFont)
 	bool with_ico)	//アイコンを表示	(default = false)
 {
-	if (!font) font = Application->DefaultFont;
-	lp->Font->Assign(font);
-	lp->Canvas->Font->Assign(font);
+	AssignScaledFont(lp->Font, (font? font : Application->DefaultFont), lp);
+	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
 }
 
@@ -5968,9 +5968,9 @@ void set_StdListBox(
 {
 	if (tag!=0) lp->Tag = tag;
 	lp->Color = col_bgList;
-	if (!font) font = ListFont;
-	lp->Font->Assign(font);
-	lp->Canvas->Font->Assign(font);
+	lp->Font->Assign(font? font : ListFont);
+	lp->Font->Size = ScaledInt(lp->Font->Size, lp);
+	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
 }
 //---------------------------------------------------------------------------
@@ -5982,9 +5982,9 @@ void set_StdListBox(
 {
 	if (tag!=0) lp->Tag = tag;
 	lp->Color = col_bgList;
-	if (!font) font = ListFont;
-	lp->Font->Assign(font);
-	lp->Canvas->Font->Assign(font);
+	lp->Font->Assign(font? font : ListFont);
+	lp->Font->Size = ScaledInt(lp->Font->Size, lp);
+	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
 }
 
@@ -5996,6 +5996,7 @@ void setup_ToolBar(
 	bool upd_sw)	//true = ボタンアクションを更新	(default = false)
 {
 	tb->Font->Assign(ToolBarFont);
+	tb->Font->Size = ScaledInt(ToolBarFont->Size, tb);
 	tb->Font->Color 	   = col_fgTlBar;
 	tb->GradientStartColor = col_bgTlBar1;
 	tb->GradientEndColor   = col_bgTlBar2;
@@ -6004,11 +6005,15 @@ void setup_ToolBar(
 	for (int i=0; i<tb->ControlCount; i++) {
 		TControl *cp = tb->Controls[i];
 		if (class_is_Edit(cp)) {
-			((TEdit*)cp)->Font->Assign(DialogFont);
-			((TEdit*)cp)->Text = EmptyStr;
+			TEdit *ep = (TEdit*)cp;
+			ep->Font->Assign(DialogFont);
+			ep->Font->Size = ScaledInt(ep->Font->Size, cp);
+			ep->Text = EmptyStr;
 		}
 		else if (class_is_ComboBox(cp)) {
-			((TComboBox*)cp)->Font->Assign(DialogFont);
+			TComboBox *bp = (TComboBox*)cp;
+			bp->Font->Assign(DialogFont);
+			bp->Font->Size = ScaledInt(bp->Font->Size, cp);
 		}
 		else if (cp->ClassNameIs("TSplitter")) {
 			((TSplitter*)cp)->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
@@ -6026,20 +6031,20 @@ void setup_StatusBar(
 	TStatusBar *sb,
 	TFont *font)	//フォント	(default = NULL : SttBarFont)
 {
-	if (!font) font = SttBarFont;
-	sb->Font->Assign(font);
+	sb->Font->Assign(font? font : SttBarFont);
+	sb->Font->Size	 = ScaledInt(sb->Font->Size, sb);
 	sb->ClientHeight = get_FontHeight(sb->Font, 4, 4);
 }
 
 //---------------------------------------------------------------------------
-//パネルーの設定
+//パネルの設定
 //---------------------------------------------------------------------------
 void setup_Panel(
 	TPanel *pp,
 	TFont *font)	//フォント	(default = NULL : DialogFont)
 {
-	if (!font) font = DialogFont;
-	pp->Font->Assign(font);
+	pp->Font->Assign(font? font : DialogFont);
+	pp->Font->Size   = ScaledInt(pp->Font->Size, pp);
 	pp->ClientHeight = get_FontHeight(pp->Font, 4, 4);
 }
 
@@ -6048,7 +6053,7 @@ void setup_Panel(
 //---------------------------------------------------------------------------
 void set_UsrScrPanel(UsrScrollPanel *sp)
 {
-	int std_wd = ::GetSystemMetrics(SM_CXVSCROLL);
+	int std_wd	= ScaledInt(::GetSystemMetrics(SM_CXVSCROLL), sp->ParentPanel);
 	int knob_wd = std_wd;
 
 	sp->KnobImgBuffV = NULL;
@@ -6869,7 +6874,8 @@ HICON get_folder_icon(UnicodeString dnam)
 bool draw_SmallIcon(
 	file_rec *fp,
 	TCanvas *cv, int x, int y,
-	bool force_cache)	//強制的にキャシュ	(default = false)
+	bool force_cache,	//強制的にキャシュ	(default = false)
+	TControl *cp)
 {
 	if (!is_selectable(fp)) return false;
 
@@ -6877,7 +6883,7 @@ bool draw_SmallIcon(
 	if		(fp->is_ads && SameText(fp->n_name, "favicon")) snam = fp->f_name;
 	else if (test_FileExt(fp->f_ext, ".url"))				snam = fp->f_name + FAVICON_ADS;
 
-	int s_16 = ScaledInt(16);
+	int s_16 = ScaledInt(16, cp);
 
 	//PNG形式の favicon
 	if (file_exists(snam) && test_Png(snam)) {
@@ -6957,13 +6963,14 @@ bool draw_SmallIcon(
 //---------------------------------------------------------------------------
 bool draw_SmallIconF(
 	UnicodeString fnam,
-	TCanvas *cv, int x, int y)
+	TCanvas *cv, int x, int y,
+	TControl *cp)
 {
 	if (fnam.IsEmpty() || (starts_Dollar(fnam) && !contains_PathDlmtr(fnam))) return false;
 
 	HICON hIcon  = NULL;
 	bool handled = false;
-	int s_16 = ScaledInt(16);
+	int s_16 = ScaledInt(16, cp);
 	IconRWLock->BeginWrite();
 	{
 		int idx = CachedIcoList->IndexOf(fnam);
@@ -6993,7 +7000,8 @@ bool draw_SmallIconF(
 //---------------------------------------------------------------------------
 bool draw_SmallIcon2(
 	UnicodeString fnam,
-	TCanvas *cv, int x, int y)
+	TCanvas *cv, int x, int y,
+	TControl *cp)
 {
 	HICON hIcon;
 
@@ -7040,7 +7048,7 @@ bool draw_SmallIcon2(
 	if (!hIcon)  return false;
 
 	//描画
-	::DrawIconEx(cv->Handle, x, y, hIcon, ScaledInt(16), ScaledInt(16), 0, NULL, DI_NORMAL);
+	::DrawIconEx(cv->Handle, x, y, hIcon, ScaledInt(16, cp), ScaledInt(16, cp), 0, NULL, DI_NORMAL);
 	return true;
 }
 
@@ -8380,12 +8388,12 @@ UnicodeString get_FileInfValue(
 //  最大項目名幅を Tag の下位2バイトに設定
 //---------------------------------------------------------------------------
 void assign_InfListBox(
-	TListBox *lp, 
+	TListBox *lp,
 	TStringList *i_lst,		//ファイル情報リスト
 	UsrScrollPanel *sp)		//シンプルスクロールバー (default = NULL)
 {
 	TCanvas *cv = lp->Canvas;
-	cv->Font->Assign((lp->Tag & LBTAG_FIF_LIST)? FileInfFont : lp->Font);
+	cv->Font->Assign(lp->Font);
 
 	bool is_irreg = IsIrregularFont(cv->Font);
 	int w_max = 0;
@@ -13977,8 +13985,9 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 	//ズーム
 	else if ((lp->Tag & LBTAG_OPT_ZOOM) && contained_wd_i(_T("ZoomIn|ZoomOut"), cmd)) {
 		int d_sz = std::min(prm.ToIntDef(1), 12);
-		lp->Font->Size = USAME_TI(cmd, "ZoomIn") ? std::min(lp->Font->Size + d_sz, MAX_FNTZOOM_SZ)
-											 	 : std::max(lp->Font->Size - d_sz, MIN_FNTZOOM_SZ);
+		int z_sz = USAME_TI(cmd, "ZoomIn") ? std::min(UnscaledInt(lp->Font->Size, lp) + d_sz, MAX_FNTZOOM_SZ)
+										   : std::max(UnscaledInt(lp->Font->Size, lp) - d_sz, MIN_FNTZOOM_SZ);
+		lp->Font->Size = ScaledInt(z_sz, lp);
 		lp->ItemHeight = get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
 		zoomed = true;
 	}
@@ -13991,7 +14000,7 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 		bool x_sw = remove_top_s(prm, '^');
 		if (!prm.IsEmpty()) {
 			int f_sz = std::max(std::min(prm.ToIntDef(l_font->Size), MAX_FNTZOOM_SZ), MIN_FNTZOOM_SZ);
-			lp->Font->Size = (x_sw && lp->Font->Size==f_sz)? l_font->Size : f_sz;
+			lp->Font->Size = ScaledInt((x_sw && lp->Font->Size==ScaledInt(f_sz))? l_font->Size : f_sz, lp);
 			lp->ItemHeight = get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
 			zoomed = true;
 		}
@@ -15407,7 +15416,7 @@ void __fastcall UsrTooltipWindow::Paint(void)
 	Canvas->Brush->Color = col_bgTips;
 	Canvas->Font->Color  = col_fgTips;
 	Canvas->FillRect(rc);
-	int mgn = 2 * Screen->PixelsPerInch / 96;
+	int mgn = ScaledInt(2);
 	rc.Top	+= mgn;
 	rc.Left += mgn;
 	::DrawText(Canvas->Handle, Caption.c_str(), -1, &rc, DT_WORDBREAK);

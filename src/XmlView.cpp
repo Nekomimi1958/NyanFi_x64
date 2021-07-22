@@ -40,10 +40,9 @@ void __fastcall TXmlViewer::FormShow(TObject *Sender)
 
 	XmlTreeView->Items->Clear();
 	XmlTreeView->Color = col_bgList;
-	XmlTreeView->Font->Assign(ListFont);
+	AssignScaledFont(XmlTreeView->Font, ListFont, this);
 
-	StatusBar1->Font->Assign(SttBarFont);
-	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
+	setup_StatusBar(StatusBar1);
 
 	Caption = yen_to_delimiter(FileName) + " - XMLビュアー";
 
@@ -54,8 +53,6 @@ void __fastcall TXmlViewer::FormShow(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TXmlViewer::WmFormShowed(TMessage &msg)
 {
-	StatusBar1->Font->Assign(SttBarFont);
-	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
 	Repaint();
 
 	ErrMsg	 = EmptyStr;
@@ -281,7 +278,7 @@ bool __fastcall TXmlViewer::MatchNode(TTreeNode *Node)
 //リストビューの描画
 //---------------------------------------------------------------------------
 void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, TTreeNode *Node,
-		TCustomDrawState State, bool &DefaultDraw)
+	TCustomDrawState State, bool &DefaultDraw)
 {
 	DefaultDraw = false;
 
@@ -290,11 +287,12 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	TRect rc_t = Node->DisplayRect(true);
 	if (rc_t.Left==0) return;
 
+	TTreeView *vp = XmlTreeView;
+	TCanvas *cv   = vp->Canvas;
 	TRect rc_s = Node->DisplayRect(false);
-	TCanvas *cv = Sender->Canvas;
 	cv->Brush->Color = Node->Selected? col_selItem : col_bgList;
 	cv->FillRect(rc_s);
-	bool is_irreg = IsIrregularFont(ListFont);
+	bool is_irreg = IsIrregularFont(vp->Font);
 
 	//テキスト
 	UnicodeString lbuf = Node->Text;
@@ -305,7 +303,7 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 
 	TCanvas *tmp_cv = tmp_bmp->Canvas;
 	TRect    tmp_rc	= Rect(0, 0, tmp_bmp->Width, tmp_bmp->Height);
-	tmp_cv->Font->Assign(ListFont);
+	tmp_cv->Font->Assign(vp->Font);
 	tmp_cv->Brush->Color = Node->Selected? col_selItem : col_bgList;
 	tmp_cv->FillRect(tmp_rc);
 
@@ -409,14 +407,14 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	//横スクロール位置を取得
 	int scr_p = 0;
 	SCROLLINFO si = {sizeof(SCROLLINFO), SIF_TRACKPOS};
-	if (::GetScrollInfo(Sender->Handle, SB_HORZ, &si)) scr_p = si.nTrackPos;
+	if (::GetScrollInfo(vp->Handle, SB_HORZ, &si)) scr_p = si.nTrackPos;
 
 	//親ライン
 	cv->Pen->Style = psSolid;
 	cv->Pen->Width = 1;
 	cv->Pen->Color = col_HR;
 	rc_s.Right = rc_t.Left;
-	int l_ofs  = rc_s.Left + ScaledInt(11);
+	int l_ofs  = rc_s.Left + ScaledInt(11, this);
 	TTreeNode *pp = Node->Parent;
 	while (pp) {
 		if (pp->getNextSibling()) {
@@ -434,8 +432,8 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	if (Node->HasChildren) {
 		cv->Pen->Color	 = col_HR;
 		cv->Brush->Color = col_HR;
-		int w_btn = ScaledInt(11);	//ボタンサイズ
-		int xp = rc_s.Right - ScaledInt(w_btn + 5);
+		int w_btn = ScaledInt(11, this);	//ボタンサイズ
+		int xp = rc_s.Right - ScaledInt(w_btn + 5, this);
 		int yp = rc_s.Top + (rc_s.Height() - w_btn)/2;
 		if ((xp + w_btn)>=0) {
 			//枠
@@ -454,7 +452,7 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	else if (Node->Level>0) {
 		cv->Pen->Color = col_HR;
 		int xl = XmlTreeView->Indent * Node->Level + l_ofs - scr_p;
-		int x2 = xl + ScaledInt(8);
+		int x2 = xl + ScaledInt(8, this);
 		if (x2>=0) {
 			if (Node->getNextSibling()) {
 				cv->MoveTo(xl, rc_s.Top);
@@ -491,7 +489,7 @@ void __fastcall TXmlViewer::StatusBar1DrawPanel(TStatusBar *StatusBar,
 	cv->Brush->Color = col_bgSttBar;
 	cv->FillRect(Rect);
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + ScaledInt(2), Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + ScaledInt(2, this), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------

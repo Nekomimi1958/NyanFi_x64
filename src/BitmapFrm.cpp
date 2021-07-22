@@ -50,10 +50,9 @@ void __fastcall TBitmapForm::FormShow(TObject *Sender)
 	BorderPanel->Color = IsDarkMode? dcl_Window : clAppWorkSpace;
 	MapScrBox->Color   = BorderPanel->Color;
 
-	SttPanel->Color = col_bgSttBar;
-	SttPanel->Font->Assign(ViewerFont);
-	SttPanel->Font->Color  = col_fgSttBar;
-	SttPanel->ClientHeight = get_FontHeight(ViewerFont, 4);
+	setup_Panel(SttPanel, SttBarFont);
+	SttPanel->Color 	  = col_bgSttBar;
+	SttPanel->Font->Color = col_fgSttBar;
 }
 //---------------------------------------------------------------------------
 void __fastcall TBitmapForm::FormHide(TObject *Sender)
@@ -153,7 +152,7 @@ void __fastcall TBitmapForm::SetMapWidth(int w)
 	MapWidth = w;
 
 	Constraints->MinWidth
-		= FileMapPanel->Width + MapWidth + (Width - ClientWidth) + ::GetSystemMetrics(SM_CXVSCROLL)
+		= FileMapPanel->Width + MapWidth + (Width - ClientWidth) + ScaledInt(::GetSystemMetrics(SM_CXVSCROLL), this)
 			+ (BorderShape1->Visible? TlWinBorderWidth * 2 : 0) + 12;
 
 	Constraints->MaxWidth = Constraints->MinWidth;

@@ -70,12 +70,7 @@ private:	// ƒ†[ƒU[éŒ¾
 
 	int MaxTagWidth;
 
-	void __fastcall WmDpiChanged(TMessage &msg)
-	{
-		TForm::Dispatch(&msg);
-		SetDarkWinTheme(this);
-	}
-
+	void __fastcall WmDpiChanged(TMessage &msg);
 	void __fastcall ClearTagList();
 	void __fastcall UpdateList();
 

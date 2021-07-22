@@ -56,7 +56,7 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 	BranchPanel->Width = IniFile->ReadIntGen(_T("GitViewBranchWidth"),	200);
 	RL_Panel->Height   = IniFile->ReadIntGen(_T("GitViewDiffHeight"),	120);
 
-	FindCommitEdit->Font->Assign(DialogFont);
+	AssignScaledFont(FindCommitEdit->Font, DialogFont, this);
 	FindCommitEdit->Width = IniFile->ReadIntGen(_T("GitViewFindWidth"),	200);
 
 	ShowRBranchAction->Checked	= IniFile->ReadBoolGen(_T("GitViewShowRBranch"),true);
@@ -680,8 +680,8 @@ void __fastcall TGitViewer::BranchListBoxDrawItem(TWinControl *Control, int Inde
 	cv->FillRect(Rect);
 	if (flag & GIT_FLAG_BLANK) return;
 
-	int xp = Rect.Left + ScaledInt(4);
-	int yp = Rect.Top  + ScaledInt(2);
+	int xp = Rect.Left + ScaledInt(4, this);
+	int yp = Rect.Top  + ScaledInt(2, this);
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	//ƒwƒbƒ_
 	if (flag & GIT_FLAG_HDRLN) {
@@ -794,12 +794,12 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 		max_h_wd = std::max(max_h_wd, get_TextWidth(cv, UnicodeString().sprintf(_T("%x"), i), is_irreg));
 	}
 
-	int s_4 = ScaledInt(4);
-	int s_8 = ScaledInt(8);
+	int s_4 = ScaledInt(4, this);
+	int s_8 = ScaledInt(8, this);
 
 	git_rec *gp = (git_rec *)lp->Items->Objects[Index];
 	int xp = Rect.Left + s_4;
-	int yp = Rect.Top  + ScaledInt(2);
+	int yp = Rect.Top  + ScaledInt(2, this);
 
 	if (USAME_TS(gp->graph, "#")) {
 		cv->Font->Color = col_LineNo;
@@ -944,8 +944,8 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 	cv->Brush->Color = lp->Color;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4);
-	int yp = Rect.Top  + ScaledInt(2);
+	int xp = Rect.Left + ScaledInt(4, this);
+	int yp = Rect.Top  + ScaledInt(2, this);
 	bool is_irreg = IsIrregularFont(cv->Font);
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
@@ -1504,8 +1504,7 @@ void __fastcall TGitViewer::CommitInfoActionExecute(TObject *Sender)
 	}
 
 	if (i_lst->Count>0) {
-		TListBox *lp = FileInfoDlg->InfListBox;
-		assign_InfListBox(lp, i_lst.get());
+		FileInfoDlg->ItemList->Assign(i_lst.get());
 		FileInfoDlg->isGitInfo = true;
 		FileInfoDlg->inhNxtPre = true;
 		FileInfoDlg->ShowModal();

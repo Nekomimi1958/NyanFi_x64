@@ -70,18 +70,15 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ImgPreviewActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
+	bool DlgInitialized;
+
 	int Max_freq;
 	int MaxColWd0;
 	int MaxColWd1;
 	int MaxColWd2;
 	int FreqIndex;
 
-	void __fastcall WmDpiChanged(TMessage &msg)
-	{
-		TForm::Dispatch(&msg);
-		SetDarkWinTheme(this);
-	}
-
+	void __fastcall WmDpiChanged(TMessage &msg);
 	bool __fastcall UpdateInfo();
 
 public:		// ユーザー宣言
@@ -98,7 +95,9 @@ public:		// ユーザー宣言
 	bool isCalcItem;
 	int  CsvCol;
 	bool TopIsHeader;
-	TStringList *DataList;
+
+	TStringList *DataList;			//集計元データへのポインタ
+	TStringList *ItemList;			//表示項目リスト
 
 	__fastcall TFileInfoDlg(TComponent* Owner);
 	int __fastcall ShowModalEx(UnicodeString fnam);

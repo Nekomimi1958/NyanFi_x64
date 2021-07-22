@@ -2,6 +2,7 @@
 // Shell ŠÖ˜A															//
 //																		//
 //----------------------------------------------------------------------//
+#include "usr_scale.h"
 #include "usr_str.h"
 #include "usr_key.h"
 #include "usr_file_ex.h"

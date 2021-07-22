@@ -5,6 +5,7 @@
 #include <wininet.h>
 #include <setupapi.h>
 #include <cfgmgr32.h>
+#include "usr_scale.h"
 #include "usr_shell.h"
 #include "UserFunc.h"
 
@@ -244,9 +245,8 @@ int get_FontHeight(TFont *font,
 	int mgn,		//	(default = 0)
 	int min_mgn)	//	(default = 2)
 {
-	int dpi = (Screen->ActiveForm)? Screen->ActiveForm->CurrentPPI : Screen->PixelsPerInch;
-	mgn 	= mgn * dpi / 96;
-	min_mgn = min_mgn * dpi / 96;
+	mgn 	= ScaledInt(mgn);
+	min_mgn = ScaledInt(min_mgn);
 
 	std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
 	TCanvas *cv = bmp->Canvas;
@@ -1376,7 +1376,8 @@ int get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel,
 //---------------------------------------------------------------------------
 void set_SplitterWidht(TSplitter *sp, int sp_wd)
 {
-	if (sp->Align==alLeft || sp->Align==alRight) sp->Width = sp_wd; else sp->Height = sp_wd;
+	int sz = ScaledInt(sp_wd, sp);
+	if (sp->Align==alLeft || sp->Align==alRight) sp->Width = sz; else sp->Height = sz;
 	sp->Repaint();
 }
 
@@ -1385,30 +1386,31 @@ void set_SplitterWidht(TSplitter *sp, int sp_wd)
 //---------------------------------------------------------------------------
 void set_PanelAlign(TPanel *pp, TSplitter *sp, int mode, int sp_wd)
 {
+	int sz = ScaledInt(sp_wd, sp);
 	switch (mode) {
 	case 1:	//‰E
 		sp->Align = alLeft;
 		pp->Align = alRight;
 		sp->Align = alRight;
-		sp->Width = pp->Visible? sp_wd : 0;
+		sp->Width = pp->Visible? sz : 0;
 		break;
 	case 2:	//¶
 		sp->Align = alRight;
 		pp->Align = alLeft;
 		sp->Align = alLeft;
-		sp->Width = pp->Visible? sp_wd : 0;
+		sp->Width = pp->Visible? sz : 0;
 		break;
 	case 3: //ã
 		sp->Align  = alBottom;
 		pp->Align  = alTop;
 		sp->Align  = alTop;
-		sp->Height = pp->Visible? sp_wd : 0;
+		sp->Height = pp->Visible? sz : 0;
 		break;
 	default:	//0: ‰º
 		sp->Align  = alTop;
 		pp->Align  = alBottom;
 		sp->Align  = alBottom;
-		sp->Height = pp->Visible? sp_wd : 0;
+		sp->Height = pp->Visible? sz : 0;
 	}
 }
 //---------------------------------------------------------------------------

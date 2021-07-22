@@ -8,6 +8,7 @@
 //---------------------------------------------------------------------------
 #include <htmlhelp.h>
 #include <mmsystem.h>
+#include "usr_scale.h"
 #include "usr_file_ex.h"
 #include "usr_shell.h"
 #include "usr_arc.h"
@@ -1764,9 +1765,9 @@ HICON get_file_SmallIcon(UnicodeString fnam);
 HICON get_fext_SmallIcon(UnicodeString fext = EmptyStr);
 HICON get_folder_icon(UnicodeString dnam = EmptyStr);
 
-bool draw_SmallIcon(file_rec *fp, TCanvas *cv, int x, int y, bool force_cache = false);
-bool draw_SmallIconF(UnicodeString fnam, TCanvas *cv, int x, int y);
-bool draw_SmallIcon2(UnicodeString fnam, TCanvas *cv, int x, int y);
+bool draw_SmallIcon(file_rec *fp, TCanvas *cv, int x, int y, bool force_cache = false, TControl *cp = NULL);
+bool draw_SmallIconF(UnicodeString fnam, TCanvas *cv, int x, int y, TControl *cp = NULL);
+bool draw_SmallIcon2(UnicodeString fnam, TCanvas *cv, int x, int y, TControl *cp = NULL);
 int  add_IconImage(UnicodeString fnam, TImageList *lst);
 
 UnicodeString get_file_from_cmd(UnicodeString s);

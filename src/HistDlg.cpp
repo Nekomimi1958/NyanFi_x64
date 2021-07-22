@@ -40,10 +40,9 @@ void __fastcall TDirHistoryDlg::FormShow(TObject *Sender)
 	FindBusy = FindAborted = false;
 	HintPanel->Visible = false;
 
-	InpPanel->Font->Assign(ListFont);
-	InpPanel->ClientHeight = get_FontHeight(ListFont, 4, 4);
-	InpPanel->Color 	   = col_bgList;
-	InpPanel->Visible	   = IsFindDirHist;
+	setup_Panel(InpPanel, ListFont);
+	InpPanel->Color   = col_bgList;
+	InpPanel->Visible = IsFindDirHist;
 	if (IsFindDirHist) UserModule->SetBlinkTimer(InpPaintBox);
 
 	set_StdListBox(DirHistListBox);
@@ -69,6 +68,14 @@ void __fastcall TDirHistoryDlg::FormDestroy(TObject *Sender)
 {
 	delete ListBuff;
 	delete ListScrPanel;
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TDirHistoryDlg::WmDpiChanged(TMessage &msg)
+{
+	TForm::Dispatch(&msg);
+	SetDarkWinTheme(this);
+	setup_Panel(InpPanel, ListFont);
 }
 
 //---------------------------------------------------------------------------
@@ -171,11 +178,11 @@ void __fastcall TDirHistoryDlg::DirHistListBoxDrawItem(TWinControl *Control, int
 {
 	TListBox *lp = (TListBox*)Control;
 	TCanvas *cv = lp->Canvas;
-	cv->Font->Assign(ListFont);
+	cv->Font->Assign(lp->Font);
 	cv->Brush->Color = col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4);
+	int xp = Rect.Left + ScaledInt(4, this);
 	int yp = Rect.Top  + get_TopMargin2(cv);
 
 	if (!IsFindDirHist) {

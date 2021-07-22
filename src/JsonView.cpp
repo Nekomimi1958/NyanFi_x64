@@ -36,10 +36,8 @@ void __fastcall TJsonViewer::FormShow(TObject *Sender)
 
 	JsonTreeView->Items->Clear();
 	JsonTreeView->Color = col_bgList;
-	JsonTreeView->Font->Assign(ListFont);
-
-	StatusBar1->Font->Assign(SttBarFont);
-	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
+	AssignScaledFont(JsonTreeView->Font, ListFont, this);
+	setup_StatusBar(StatusBar1);
 
 	Caption = (isClip? UnicodeString("クリップボード") : yen_to_delimiter(FileName)) + " - JSONビュアー";
 
@@ -50,8 +48,6 @@ void __fastcall TJsonViewer::FormShow(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TJsonViewer::WmFormShowed(TMessage &msg)
 {
-	StatusBar1->Font->Assign(SttBarFont);
-	StatusBar1->ClientHeight = get_FontHeight(SttBarFont, 4, 4);
 	Repaint();
 
 	ErrMsg	  = EmptyStr;
@@ -247,11 +243,12 @@ void __fastcall TJsonViewer::JsonTreeViewCustomDrawItem(TCustomTreeView *Sender,
 	TRect rc_t = Node->DisplayRect(true);
 	if (rc_t.Left==0) return;
 
+	TTreeView *vp = JsonTreeView;
+	TCanvas *cv   = vp->Canvas;
 	TRect rc_s = Node->DisplayRect(false);
-	TCanvas *cv = Sender->Canvas;
 	cv->Brush->Color = Node->Selected? col_selItem : col_bgList;
 	cv->FillRect(rc_s);
-	bool is_irreg = IsIrregularFont(ListFont);
+	bool is_irreg = IsIrregularFont(vp->Font);
 
 	//テキスト
 	UnicodeString lbuf = Node->Text;
@@ -262,7 +259,7 @@ void __fastcall TJsonViewer::JsonTreeViewCustomDrawItem(TCustomTreeView *Sender,
 
 	TCanvas *tmp_cv = tmp_bmp->Canvas;
 	TRect    tmp_rc	= Rect(0, 0, tmp_bmp->Width, tmp_bmp->Height);
-	tmp_cv->Font->Assign(ListFont);
+	tmp_cv->Font->Assign(vp->Font);
 	tmp_cv->Brush->Color = Node->Selected? col_selItem : col_bgList;
 	tmp_cv->FillRect(tmp_rc);
 
@@ -304,18 +301,18 @@ void __fastcall TJsonViewer::JsonTreeViewCustomDrawItem(TCustomTreeView *Sender,
 	//横スクロール位置を取得
 	int scr_p = 0;
 	SCROLLINFO si = {sizeof(SCROLLINFO), SIF_TRACKPOS};
-	if (::GetScrollInfo(Sender->Handle, SB_HORZ, &si)) scr_p = si.nTrackPos;
+	if (::GetScrollInfo(vp->Handle, SB_HORZ, &si)) scr_p = si.nTrackPos;
 
 	//親ライン
 	cv->Pen->Style = psSolid;
 	cv->Pen->Width = 1;
 	cv->Pen->Color = col_HR;
 	rc_s.Right = rc_t.Left;
-	int l_ofs  = rc_s.Left + ScaledInt(11);
+	int l_ofs  = rc_s.Left + ScaledInt(11, this);
 	TTreeNode *pp = Node->Parent;
 	while (pp) {
 		if (pp->getNextSibling()) {
-			int xl = JsonTreeView->Indent * pp->Level + l_ofs - scr_p;
+			int xl = vp->Indent * pp->Level + l_ofs - scr_p;
 			if (xl>=0) {
 				cv->MoveTo(xl, rc_s.Top);
 				cv->LineTo(xl, rc_s.Bottom);
@@ -329,8 +326,8 @@ void __fastcall TJsonViewer::JsonTreeViewCustomDrawItem(TCustomTreeView *Sender,
 	if (Node->HasChildren) {
 		cv->Pen->Color	 = col_HR;
 		cv->Brush->Color = col_HR;
-		int w_btn = ScaledInt(11);	//ボタンサイズ
-		int xp = rc_s.Right - ScaledInt(w_btn + 5);
+		int w_btn = ScaledInt(11, this);	//ボタンサイズ
+		int xp = rc_s.Right - ScaledInt(w_btn + 5, this);
 		int yp = rc_s.Top + (rc_s.Height() - w_btn)/2;
 		if ((xp + w_btn)>=0) {
 			//枠
@@ -348,8 +345,8 @@ void __fastcall TJsonViewer::JsonTreeViewCustomDrawItem(TCustomTreeView *Sender,
 	//子ライン
 	else if (Node->Level>0) {
 		cv->Pen->Color = col_HR;
-		int xl = JsonTreeView->Indent * Node->Level + l_ofs - scr_p;
-		int x2 = xl + ScaledInt(8);
+		int xl = vp->Indent * Node->Level + l_ofs - scr_p;
+		int x2 = xl + ScaledInt(8, this);
 		if (x2>=0) {
 			if (Node->getNextSibling()) {
 				cv->MoveTo(xl, rc_s.Top);
@@ -391,7 +388,7 @@ void __fastcall TJsonViewer::StatusBar1DrawPanel(TStatusBar *StatusBar,
 	cv->Brush->Color = col_bgSttBar;
 	cv->FillRect(Rect);
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + ScaledInt(2), Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + ScaledInt(2, this), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------

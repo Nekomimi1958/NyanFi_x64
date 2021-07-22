@@ -196,21 +196,25 @@ object BitmapForm: TBitmapForm
     end
     object SetTopAdrAction: TAction
       Caption = #20808#38957#12450#12489#12524#12473#12434#12501#12449#12452#12523#12398#20808#38957#12395'(&T) '
+      Hint = #20808#38957#12450#12489#12524#12473#12434#12501#12449#12452#12523#12398#20808#38957#12395
       OnExecute = SetTopAdrActionExecute
       OnUpdate = SetTopAdrActionUpdate
     end
     object SetNextAdrAction: TAction
       Caption = #20808#38957#12450#12489#12524#12473#12434#12501#12449#12452#12523#12398#24460#32154#37096#12395'(&N)'
+      Hint = #20808#38957#12450#12489#12524#12473#12434#12501#12449#12452#12523#12398#24460#32154#37096#12395
       OnExecute = SetNextAdrActionExecute
       OnUpdate = SetNextAdrActionUpdate
     end
     object SetPreAdrAction: TAction
       Caption = #20808#38957#12450#12489#12524#12473#12434#12501#12449#12452#12523#12398#20808#34892#37096#12395'(&P)'
+      Hint = #20808#38957#12450#12489#12524#12473#12434#12501#12449#12452#12523#12398#20808#34892#37096#12395
       OnExecute = SetPreAdrActionExecute
       OnUpdate = SetPreAdrActionUpdate
     end
     object SetEndAdrAction: TAction
       Caption = #26368#32066#12450#12489#12524#12473#12434#12501#12449#12452#12523#12398#26368#24460#12395'(&E)'
+      Hint = #26368#32066#12450#12489#12524#12473#12434#12501#12449#12452#12523#12398#26368#24460#12395
       OnExecute = SetEndAdrActionExecute
       OnUpdate = SetEndAdrActionUpdate
     end

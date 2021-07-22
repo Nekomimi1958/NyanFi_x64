@@ -23,6 +23,7 @@
 #include <Vcl.Graphics.hpp>
 #include <Vcl.ImgList.hpp>
 #include "MarkList.h"
+#include "usr_scale.h"
 #include "usr_swatch.h"
 #include "usr_hintwin.h"
 
@@ -81,7 +82,6 @@ __published:	// IDE で管理されるコンポーネント
 	TButton *AsoChgBtn;
 	TButton *AsoDelBtn;
 	TButton *AsoRefBtn;
-	TButton *TestSndWarnBtn;
 	TButton *CanButton;
 	TButton *ChgColBtn;
 	TButton *ChgDrvBtn;
@@ -164,6 +164,7 @@ __published:	// IDE で管理されるコンポーネント
 												//<<<<<<<X86_SPI
 	TButton *TestSndFindFinBtn;
 	TButton *TestSndTaskFinBtn;
+	TButton *TestSndWarnBtn;
 	TButton *TestSndWatchBtn;
 	TButton *UpAssBtn;
 	TButton *UpCmdBtn;
@@ -1001,6 +1002,11 @@ private:	// ユーザー宣言
 		ExtMenuListBox->Invalidate();
 		ExtToolListBox->Invalidate();
 		EtcEditorListBox->Invalidate();
+	}
+
+	int  __fastcall ScaledThis(int n)
+	{
+		return (n * CurrentPPI / DEFAULT_PPI);
 	}
 
 public:		// ユーザー宣言

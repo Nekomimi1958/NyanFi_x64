@@ -78,9 +78,9 @@
         <SanitizedProjectName>NyanFi</SanitizedProjectName>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1041</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=15.0.4.0;InternalName=NyanFi;LegalCopyright=2019-2021 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=15.0.4.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=15.0.5.0;InternalName=NyanFi;LegalCopyright=2019-2021 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=15.0.5.0;Comments=</VerInfo_Keys>
         <VerInfo_MajorVer>15</VerInfo_MajorVer>
-        <VerInfo_Release>4</VerInfo_Release>
+        <VerInfo_Release>5</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <PackageImports>adortl;appanalytics;bcbie;bcbsmp;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CodeSiteExpressPkg;CustomIPTransport;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXMySQLDriver;DBXSqliteDriver;dsnap;dsnapcon;dsnapxml;FireDACADSDriver;FireDACCommonODBC;FireDACMSAccDriver;FireDACMySQLDriver;FireDACPgDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inetdb;inetdbxpress;rtl;svn;Tee;TeeDB;TeeUI;tethering;vcl;vclactnband;vcldb;vcldsnap;vclFireDAC;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
@@ -707,11 +707,14 @@
         <CppCompile Include="usr_msg.cpp">
             <BuildOrder>92</BuildOrder>
         </CppCompile>
+        <CppCompile Include="usr_scale.cpp">
+            <BuildOrder>115</BuildOrder>
+        </CppCompile>
         <CppCompile Include="usr_scrpanel.cpp">
             <BuildOrder>93</BuildOrder>
         </CppCompile>
         <CppCompile Include="usr_shell.cpp">
-            <BuildOrder>94</BuildOrder>
+            <BuildOrder>114</BuildOrder>
         </CppCompile>
         <CppCompile Include="usr_spbar.cpp">
             <BuildOrder>95</BuildOrder>
@@ -737,18 +740,19 @@
             <DependentOn>XmlView.h</DependentOn>
             <BuildOrder>68</BuildOrder>
         </CppCompile>
-        <FormResources Include="SameDlg.dfm"/>
         <FormResources Include="ShareDlg.dfm"/>
-        <FormResources Include="RenDlg.dfm"/>
-        <FormResources Include="PreSameDlg.dfm"/>
+        <FormResources Include="Splash.dfm"/>
+        <FormResources Include="SameDlg.dfm"/>
         <FormResources Include="PrnImgDlg.dfm"/>
         <FormResources Include="RegExChk.dfm"/>
-        <FormResources Include="SyncDlg.dfm"/>
+        <FormResources Include="RenDlg.dfm"/>
         <FormResources Include="TabDlg.dfm"/>
         <FormResources Include="TagDlg.dfm"/>
-        <FormResources Include="SubView.dfm"/>
-        <FormResources Include="Splash.dfm"/>
+        <FormResources Include="TaskDlg.dfm"/>
+        <FormResources Include="SyncDlg.dfm"/>
         <FormResources Include="SrtModDlg.dfm"/>
+        <FormResources Include="SubView.dfm"/>
+        <FormResources Include="PreSameDlg.dfm"/>
         <FormResources Include="MaskDlg.dfm"/>
         <FormResources Include="MaskSelDlg.dfm"/>
         <FormResources Include="MemoFrm.dfm"/>
@@ -759,24 +763,23 @@
         <FormResources Include="PackDlg.dfm"/>
         <FormResources Include="ModalScr.dfm"/>
         <FormResources Include="NewDlg.dfm"/>
-        <FormResources Include="TaskDlg.dfm"/>
         <FormResources Include="XmlView.dfm"/>
         <FormResources Include="UserMdl.dfm"/>
-        <FormResources Include="JsonView.dfm"/>
-        <FormResources Include="DebugFrm.dfm"/>
         <FormResources Include="DiffDlg.dfm"/>
         <FormResources Include="DirDlg.dfm"/>
-        <FormResources Include="CvImgDlg.dfm"/>
-        <FormResources Include="CreDirsDlg.dfm"/>
+        <FormResources Include="DistrDlg.dfm"/>
+        <FormResources Include="DebugFrm.dfm"/>
         <FormResources Include="CsvRecFrm.dfm"/>
         <FormResources Include="CvEncDlg.dfm"/>
-        <FormResources Include="DuplDlg.dfm"/>
+        <FormResources Include="CvImgDlg.dfm"/>
         <FormResources Include="EditHistDlg.dfm"/>
         <FormResources Include="EditItem.dfm"/>
-        <FormResources Include="DrvGraph.dfm"/>
-        <FormResources Include="DistrDlg.dfm"/>
+        <FormResources Include="ExeDlg.dfm"/>
+        <FormResources Include="DuplDlg.dfm"/>
         <FormResources Include="DotDlg.dfm"/>
         <FormResources Include="DriveDlg.dfm"/>
+        <FormResources Include="DrvGraph.dfm"/>
+        <FormResources Include="CreDirsDlg.dfm"/>
         <FormResources Include="BitmapFrm.dfm"/>
         <FormResources Include="BtnDlg.dfm"/>
         <FormResources Include="CalcDlg.dfm"/>
@@ -790,16 +793,16 @@
         <FormResources Include="CmdListDlg.dfm"/>
         <FormResources Include="ChInfFrm.dfm"/>
         <FormResources Include="ChmodDlg.dfm"/>
-        <FormResources Include="ExeDlg.dfm"/>
         <FormResources Include="HistFrm.dfm"/>
-        <FormResources Include="HistDlg.dfm"/>
         <FormResources Include="GraphFrm.dfm"/>
         <FormResources Include="GrepOptDlg.dfm"/>
-        <FormResources Include="InpExDlg.dfm"/>
+        <FormResources Include="HistDlg.dfm"/>
         <FormResources Include="InspectFrm.dfm"/>
         <FormResources Include="JoinDlg.dfm"/>
-        <FormResources Include="InpDir.dfm"/>
+        <FormResources Include="JsonView.dfm"/>
+        <FormResources Include="InpExDlg.dfm"/>
         <FormResources Include="InpCmds.dfm"/>
+        <FormResources Include="InpDir.dfm"/>
         <FormResources Include="FindDlg.dfm"/>
         <FormResources Include="FindKey.dfm"/>
         <FormResources Include="FindTag.dfm"/>
@@ -855,9 +858,8 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\NyanFi.exe" Configuration="Release" Class="ProjectOutput">
-                    <Platform Name="Win64">
-                        <RemoteName>NyanFi.exe</RemoteName>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32260.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -866,8 +868,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32260.dll" Class="DependencyModule">
-                    <Platform Name="Win32">
+                <DeployFile LocalName=".\NyanFi.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>NyanFi.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

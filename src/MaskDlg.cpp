@@ -120,7 +120,7 @@ void __fastcall TPathMaskDlg::PathMaskListBoxDrawItem(TWinControl *Control, int 
 		cv->Font->Style  = cv->Font->Style << fsBold;
 		int s_wd = cv->TextWidth(itm_buf[0]);
 		int c_wd = sp->Items[0]->Width - 4;
-		int xp = Rect.Left + ScaledInt(2);
+		int xp = Rect.Left + ScaledInt(2, this);
 		int yp = Rect.Top  + get_TopMargin2(cv);
 		if (s_wd<c_wd) xp += (c_wd - s_wd)/2;	//ƒZƒ“ƒ^ƒŠƒ“ƒO
 		cv->TextOut(xp, yp, itm_buf[0]);

@@ -48,9 +48,8 @@ void __fastcall TFindTagForm::FormShow(TObject *Sender)
 	TagInfo = EmptyStr;
 
 	IncSeaWord = EmptyStr;
-	InpPanel->Font->Assign(ListFont);
-	InpPanel->ClientHeight = get_FontHeight(ListFont, 4, 4);
-	InpPanel->Color 	   = col_bgList;
+	setup_Panel(InpPanel, ListFont);
+	InpPanel->Color = col_bgList;
 	UserModule->SetBlinkTimer(InpPaintBox);
 
 	ClearTagList();
@@ -106,6 +105,14 @@ void __fastcall TFindTagForm::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TFindTagForm::WmDpiChanged(TMessage &msg)
+{
+	TForm::Dispatch(&msg);
+	SetDarkWinTheme(this);
+	setup_Panel(InpPanel, ListFont);
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TFindTagForm::ClearTagList()
 {
 	for (int i=0; i<TagList->Count; i++) delete (TStringList*)TagList->Objects[i];
@@ -119,7 +126,7 @@ void __fastcall TFindTagForm::UpdateList()
 	cursor_HourGlass();
 	filter_List(TagList, ResListBuf, IncSeaWord, IsMigemo, true);	//AND/ORŒŸõ—LŒø
 	TListBox *lp = TagsListBox;
-	lp->Canvas->Font->Assign(ListFont);
+	lp->Canvas->Font->Assign(lp->Font);
 	int list_n = lp->ClientHeight / lp->ItemHeight + 1;
 	MaxTagWidth = 0;
 	for (int i=0; i<ResListBuf->Count && i<list_n; i++)
@@ -157,7 +164,7 @@ void __fastcall TFindTagForm::TagsListBoxDrawItem(TWinControl *Control, int Inde
 	cv->Brush->Color = State.Contains(odSelected)? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4);
+	int xp = Rect.Left + ScaledInt(4, this);
 	int yp = Rect.Top  + get_TopMargin2(cv);
 	cv->Font->Color = (State.Contains(odSelected) && col_fgSelItem!=col_None)? col_fgSelItem : col_fgList;
 
@@ -280,7 +287,7 @@ void __fastcall TFindTagForm::InfoListBoxDrawItem(TWinControl *Control, int Inde
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + ScaledInt(4);
+	int xp = Rect.Left + ScaledInt(4, this);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	cv->Brush->Color = col_bgList;

@@ -445,7 +445,7 @@ void __fastcall TImgViewThread::Execute()
 					cv->Lock();
 					try {
 						cv->Font->Assign(FileInfFont);
-						cv->Font->Size	= 9;
+						cv->Font->Size	= ScaledInt(9);
 						cv->Font->Color = SelectWorB(col_bgImage);
 						int fh = cv->TextHeight("Q") + 2;
 

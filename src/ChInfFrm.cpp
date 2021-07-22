@@ -20,13 +20,12 @@ __fastcall TCharInfoForm::TCharInfoForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TCharInfoForm::FormShow(TObject *Sender)
 {
-	FontNamePanel->Font->Assign(DialogFont);
-	FontNamePanel->Font->Size = ScaledInt(8, this);
-	FontNamePanel->Height	  = abs(FontNamePanel->Font->Height) + ScaledInt(4, this);
-	FontNamePanel->Visible	  = IniFile->ReadBoolGen(_T("CharInfoShowFontName"), true);
+	IniFile->LoadPosInfo(this);
+
+	setup_Panel(FontNamePanel, DialogFont);
+	FontNamePanel->Visible = IniFile->ReadBoolGen(_T("CharInfoShowFontName"), true);
 	Splitter1->MinSize = FontNamePanel->Height * 2;
 
-	IniFile->LoadPosInfo(this);
 	SetToolWinBorder(this);
 	SamplePanel->Height  = std::max(IniFile->ReadIntGen(_T("CharInfoCharHeight"), 180), Splitter1->MinSize);
 

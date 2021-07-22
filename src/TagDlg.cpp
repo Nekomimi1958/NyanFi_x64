@@ -147,6 +147,8 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 
 	SetOptBtn();
 
+	AssignScaledFont(TagEdit->Font, ListFont, this, get_TextColor());
+	InpPanel->Color   = col_bgList;
 	InpPanel->Visible = HidePanel->Visible && !HideCheckBox->Checked;
 
 	::PostMessage(Handle, WM_FORM_SHOWED, 0, 0);
@@ -212,6 +214,14 @@ void __fastcall TTagManDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TTagManDlg::FormDestroy(TObject *Sender)
 {
 	delete ListScrPanel;
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TTagManDlg::WmDpiChanged(TMessage &msg)
+{
+	TForm::Dispatch(&msg);
+	SetDarkWinTheme(this);
+	AssignScaledFont(TagEdit->Font, ListFont, this, get_TextColor());
 }
 
 //---------------------------------------------------------------------------
@@ -441,20 +451,20 @@ void __fastcall TTagManDlg::TagCheckListBoxDrawItem(TWinControl *Control, int In
 	cv->Brush->Color = lp->Checked[Index]? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4);
+	int xp = Rect.Left + ScaledInt(4, this);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	//フォルダアイコン
 	if (IsFolderIcon) {
 		UnicodeString inam = lp->Items->Strings[Index];
-		draw_SmallIcon2(inam, cv, xp, yp);
-		xp += ScaledInt(24);
+		draw_SmallIcon2(inam, cv, xp, yp, this);
+		xp += ScaledInt(24, this);
 		cv->Font->Color = get_ExtColor(get_extension(inam));
 		cv->TextOut(xp, yp, get_base_name(inam));
 	}
 	//タグ
 	else {
-		if (RevTagCololr) yp += ScaledInt(2);
+		if (RevTagCololr) yp += ScaledInt(2, this);
 		usr_TAG->DrawTags(lp->Items->Strings[Index], cv, xp, yp,
 			(RevTagCololr? col_bgList : col_None), UserModule->SpuitEnabled());
 	}

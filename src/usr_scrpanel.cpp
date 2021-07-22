@@ -2,6 +2,7 @@
 // シンプルスクロールバー・パネル										//
 //																		//
 //----------------------------------------------------------------------//
+#include "usr_scale.h"
 #include "usr_scrpanel.h"
 
 //---------------------------------------------------------------------------
@@ -90,7 +91,7 @@ void __fastcall UsrScrollPanel::InitializePanel()
 
 	OnRButtonUp  = NULL;
 
-	KnobWidth = ::GetSystemMetrics(SM_CXVSCROLL);
+	KnobWidth = ScaledInt(::GetSystemMetrics(SM_CXVSCROLL), ParentPanel);
 
 	ListCsrVisible = false;
 
@@ -281,6 +282,7 @@ void __fastcall UsrScrollPanel::UpdateKnob()
 			ScrPanelH->Top		 = ParentPanel->ClientHeight - ScrPanelH->Height;
 			ScrPaintBoxH->Height = ScrPanelH->ClientHeight;
 		}
+		int s_hi = ScaledInt(::GetSystemMetrics(SM_CYHSCROLL), ParentPanel);	//水平スクロールバーの幅を取得
 
 		//リストボックス
 		if (AssoListBox) {
@@ -322,8 +324,7 @@ void __fastcall UsrScrollPanel::UpdateKnob()
 				}
 
 				//リストボックスの高さ調整
-				lp->Height = ParentPanel->ClientHeight
-								+ (ScrPanelH->Visible? (::GetSystemMetrics(SM_CYHSCROLL) - ScrPanelH->Height + 1) : 0);
+				lp->Height = ParentPanel->ClientHeight + (ScrPanelH->Visible? (s_hi - ScrPanelH->Height + 1) : 0);
 			}
 		}
 		//チェックリストボックス
@@ -390,8 +391,7 @@ void __fastcall UsrScrollPanel::UpdateKnob()
 				}
 
 				//グリッドの高さ調整
-				gp->Height = ParentPanel->ClientHeight
-								+ (ScrPanelH->Visible? (::GetSystemMetrics(SM_CYHSCROLL) - ScrPanelH->Height + 1) : 0);
+				gp->Height = ParentPanel->ClientHeight + (ScrPanelH->Visible? (s_hi - ScrPanelH->Height + 1) : 0);
 			}
 		}
 		//スクロールバー

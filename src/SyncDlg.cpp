@@ -43,7 +43,7 @@ void __fastcall TRegSyncDlg::RegListBoxDrawItem(TWinControl *Control, int Index,
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + ScaledInt(2);
+	int xp = Rect.Left + ScaledInt(2, this);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	int w_x = 50;
@@ -75,7 +75,7 @@ void __fastcall TRegSyncDlg::DirListBoxDrawItem(TWinControl *Control, int Index,
 	cv->Font->Assign(lp->Font);
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
-	cv->TextOut(Rect.Left + ScaledInt(2), Rect.Top + get_TopMargin(cv),
+	cv->TextOut(Rect.Left + ScaledInt(2, this), Rect.Top + get_TopMargin(cv),
 				get_MiniPathName(lp->Items->Strings[Index], lp->ClientWidth, lp->Font));
 }
 
