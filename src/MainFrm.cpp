@@ -2,6 +2,7 @@
 // 2画面ファイラー NyanFi												//
 //  メインフォーム														//
 //----------------------------------------------------------------------//
+#include <dwmapi.h>
 #include <System.WideStrUtils.hpp>
 #include "UserMdl.h"
 #include "usr_file_ex.h"
@@ -112,6 +113,18 @@ LRESULT CALLBACK DlgHookProc(int code, WPARAM wParam, LPARAM lParam)
 		PCWPSTRUCT sp = (PCWPSTRUCT)lParam;
 		if (sp->message==WM_SHOWWINDOW && sp->wParam==1) {
 			HWND  hWnd = sp->hwnd;
+
+			//角丸フォームの抑止
+			if (NoRoundWin) {
+				for (int i=0; i<Screen->FormCount; i++) {
+					if (Screen->Forms[i]->Handle==hWnd) {
+						unsigned int preference = 1;	//DONOTROUND
+						DwmSetWindowAttribute(hWnd, 33, &preference, sizeof(preference));
+						break;
+					}
+				}
+			}
+
 			UnicodeString tit = get_WndText(hWnd);
 			if (contained_wd_i(_T("#32770|TMessageForm"), get_WndClassName(hWnd))
 				&& (USAME_TS(tit, "フォルダーの参照") || USAME_TS(tit, "アイコンの変更")

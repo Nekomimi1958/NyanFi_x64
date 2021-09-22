@@ -70,6 +70,8 @@ bool  IsMuted	 = false;		//音量ミュート
 
 int   ScrMode  = SCMD_FLIST;	//画面モード
 
+bool  NoRoundWin = false;		//角丸ウィンドウ抑止(隠し設定)
+
 TRichEdit *TempRichEdit = NULL;
 
 TTaskThread *TaskThread[MAX_TASK_THREAD];	//タスク処理スレッド
@@ -1822,6 +1824,7 @@ void InitializeGlobal()
 		{_T("FindTagsSort=false"),			(TObject*)&usr_TAG->SortTags},
 
 		{_T("NoCheckUncRPT=false"),			(TObject*)&NoCheckUncRPT},		//隠し設定
+		{_T("NoRoundWin=false"),			(TObject*)&NoRoundWin},			//隠し設定
 
 		//[General] (prefix = U:)
 		{_T("U:LastCurTag=0"),				(TObject*)&LastCurTag},

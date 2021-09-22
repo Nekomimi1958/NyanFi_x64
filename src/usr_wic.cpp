@@ -37,7 +37,8 @@ int WIC_get_ex_list(
 		for (int i=0; i<id_lst->Count; i++) {
 			if (reg->OpenKeyReadOnly(tmp.sprintf(_T("CLSID\\%s"), id_lst->Strings[i].c_str()))) {
 				UnicodeString xstr = reg->ReadString("FileExtensions").LowerCase();
-				x_lst->AddStrings(SplitString(xstr, ","));
+				TStringDynArray x_buf = SplitString(xstr, ",");
+				for (int j=0; j<x_buf.Length; j++) x_lst->Add(x_buf[j]);
 				if (lst) {
 					lst->Add(xstr);
 					lst->Add("  " + reg->ReadString("FriendlyName"));

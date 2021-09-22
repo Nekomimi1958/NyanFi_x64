@@ -23,16 +23,15 @@ void make_KeyList(TStrings *lst)
 	for (int i=0; i<10; i++) klst->Add(itmbuf.sprintf(_T("%c"), '0' + i));	//数字
 
 	for (int i=0; i<12; i++) klst->Add(itmbuf.sprintf(_T("F%u"), i + 1));	//Fキー
-	klst->AddStrings(
-		SplitString("Del|Ins|BkSp|Left|Right|UP|Down|PgUp|PgDn|Home|End|Pause|Tab|Esc|Enter|Space|App", "|"));
+	klst->Text += "Del\nIns\nBkSp\nLeft\nRight\nUP\nDown\nPgUp\nPgDn\nHome\nEnd\nPause\nTab\nEsc\nEnter\nSpace\nApp\n";
 
 	if (is_JpKeybd())
-		klst->AddStrings(SplitString("-|^|\\|@|[|;|:|]|,|.|/|＼", "|"));		//JP
+		klst->Text += "-\n^\n\\\n@\n[\n;\n:\n]\n,\n.\n/\n＼\n";		//JP
 	else
-		klst->AddStrings(SplitString("`|-|＝|[|]|\\|;|'|,|.|/", "|"));		//US
+		klst->Text += "`\n-\n＝\n[\n]\n\\\n;\n'\n,\n.\n/\n";		//US
 
 	for (int i=0; i<10; i++) klst->Add(itmbuf.sprintf(_T("10Key_%u"), i));	//10キー
-	klst->AddStrings(SplitString("10Key_*|10Key_+|10Key_-|10Key_/|10Key_.", "|"));
+	klst->Text += "10Key_*\n10Key_+\n10Key_-\n10Key_/\n10Key_.\n";
 
 	lst->Assign(klst.get());
 }

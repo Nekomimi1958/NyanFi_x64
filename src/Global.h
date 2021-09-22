@@ -234,6 +234,8 @@ extern int    StartedCount;
 extern int    NyanFiIdNo;
 extern int    ScrMode;
 
+extern bool   NoRoundWin;
+
 extern TRect  FileListRect;
 
 extern TRichEdit *TempRichEdit;
