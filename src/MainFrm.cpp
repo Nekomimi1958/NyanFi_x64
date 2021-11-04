@@ -22866,9 +22866,11 @@ void __fastcall TNyanFiForm::RenameDlgActionExecute(TObject *Sender)
 		//‘ÎÛˆê——‚ğæ“¾
 		std::unique_ptr<TStringList> o_lst(new TStringList());
 		TStringList *lst = GetCurList();
+		int o_idx = -1;
 		for (int i=0; i<lst->Count; i++) {
 			file_rec *fp = (file_rec*)lst->Objects[i];
 			if (!fp->selected) continue;
+			if (o_idx==-1) o_idx = i;
 			UnicodeString fnam = fp->f_name;
 			if (fp->is_dir) fnam = IncludeTrailingPathDelimiter(fnam);
 			o_lst->Add(fnam);
@@ -22877,6 +22879,7 @@ void __fastcall TNyanFiForm::RenameDlgActionExecute(TObject *Sender)
 		if (o_lst->Count==0) {
 			file_rec *cfp = GetCurFrecPtr(true);
 			if (cfp) {
+				o_idx = GetCurIndex();
 				UnicodeString fnam = cfp->f_name;
 				if (cfp->is_dir) fnam = IncludeTrailingPathDelimiter(fnam);
 				o_lst->Add(fnam);
@@ -22937,7 +22940,9 @@ void __fastcall TNyanFiForm::RenameDlgActionExecute(TObject *Sender)
 			FlushLog();
 			ClrSelect();
 			ReloadList(CurListTag);
-			if (!RenameDlg->IsMulti) IndexOfFileList(RenameDlg->ItemList->Strings[0]);
+			if (!RenameDlg->IsMulti && !RenameDlg->KeepCsr) {
+				IndexOfFileList(RenameDlg->ItemList->Strings[0]);
+			}
 			SetFileInf();
 			SetDirWatch(true);
 

@@ -80,6 +80,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *EndMatchCheckBox;
 	TCheckBox *HiddenCheckBox;
 	TCheckBox *KeepBsExtCheckBox;
+	TCheckBox *KeepCsrCheckBox;
 	TCheckBox *NoRenLogCheckBox;
 	TCheckBox *OnlyBase2CheckBox;
 	TCheckBox *OnlyBaseCheckBox;
@@ -135,6 +136,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *Opt1BtmPanel;
 	TPanel *Opt1MainPanel;
 	TPanel *Opt2MainPanel;
+	TPanel *Opt2SubPanel;
 	TPanel *ReadOnlyPanel;
 	TPanel *ReplaceTopPanel;
 	TPanel *SerEditPanel;
@@ -306,6 +308,7 @@ public:		// ユーザー宣言
 	bool FExtChanged;			//連番改名で拡張子変更
 	bool AttrChanged;			//属性変更
 	bool TimeChanged;			//タイムスタンプ変更
+	bool KeepCsr;				//単独改名後にカーソルを移動しない
 
 	__fastcall TRenameDlg(TComponent* Owner);
 

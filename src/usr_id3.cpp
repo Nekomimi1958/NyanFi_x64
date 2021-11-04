@@ -157,13 +157,14 @@ bool ID3_GetInf(
 					case 3:	 ts->LoadFromStream(ms.get(), TEncoding::UTF8); break;
 					default: ts->LoadFromStream(ms.get());
 					}
-					if (ts->Count>0 && !lbuf.IsEmpty()) lst->Add(lbuf + ts->Strings[0]);
+					if (ts->Count>0 && !lbuf.IsEmpty()) lst->Add(lbuf + Trim(ts->Strings[0]));
 				}
 				else {
 					fs->Seek(size, soFromCurrent);
 				}
 				if (fs->Position>=last_p) break;
 			}
+
 			ret = true;
 		}
 		else {

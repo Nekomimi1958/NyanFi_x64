@@ -2792,7 +2792,7 @@ object OptionDlg: TOptionDlg
         Top = 518
         Width = 263
         Height = 17
-        Caption = 'Windows 10 '#12398#12480#12540#12463#12514#12540#12489#12434#36969#29992
+        Caption = 'Windows '#12480#12540#12463#12514#12540#12489#12434#36969#29992
         TabOrder = 5
       end
       object AppColorBtn: TButton

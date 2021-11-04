@@ -106,6 +106,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	EndMatchCheckBox->Checked  = IniFile->ReadBoolGen(_T("RenameDlgEndMatch"));
 	KeepBsExtCheckBox->Checked = IniFile->ReadBoolGen(_T("RenameDlgKeepBsExt"));
 	NoRenLogCheckBox->Checked  = IniFile->ReadBoolGen(_T("RenameDlgNoRenLog"));
+	KeepCsrCheckBox->Checked   = IniFile->ReadBoolGen(_T("RenameDlgKeepCsr"));
 	UnicodeString lastSheet    = IniFile->ReadStrGen( _T("RenameDlgLastSheet"),	"Serial");
 	UnicodeString lastMp3Sheet = IniFile->ReadStrGen( _T("RenameDlgLastMp3Sheet"),	"Mp3");
 
@@ -158,6 +159,8 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	gp->RowCount = ItemList->Count;
 	for (int i=0; i<gp->RowCount; i++) clear_GridRow(gp, i);
 	AutoPrvCheckBox->Enabled = IsMulti;
+
+	KeepCsrCheckBox->Enabled = !IsMulti;
 
 	//‘®«‚Ì‰Šú‰»
 	int atr = file_GetAttr(ItemList->Strings[0]);
@@ -321,6 +324,7 @@ void __fastcall TRenameDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteBoolGen(_T("RenameDlgEndMatch"),	EndMatchCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgKeepBsExt"),	KeepBsExtCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgNoRenLog"),	NoRenLogCheckBox);
+	IniFile->WriteBoolGen(_T("RenameDlgKeepCsr"),	KeepCsrCheckBox);
 
 	if (KeepBsExtCheckBox->Checked) {
 		IniFile->WriteIntGen(_T("RenameDlgBaseCh"),	FbaseRadioGroup->ItemIndex);
@@ -790,7 +794,8 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 						p += fmt.Length();
 					}
 					else {
-						new_name += c;	p++;
+						new_name += c;
+						p++;
 					}
 				}
 				new_name += cmnFext;
@@ -828,7 +833,8 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 						p += fmt.Length();
 					}
 					else {
-						new_name += c;	p++;
+						new_name += c;
+						p++;
 					}
 				}
 				new_name += cmnFext;
@@ -2016,6 +2022,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 
 	NamePageControl->Enabled = true;
 	CommonPanel->Enabled	 = true;
+	KeepCsr = KeepCsrCheckBox->Checked;
 	ModalResult = mrOk;
 }
 //---------------------------------------------------------------------------
@@ -2111,4 +2118,6 @@ void __fastcall TRenameDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 	}
 }
 //---------------------------------------------------------------------------
+
+
 
