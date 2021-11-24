@@ -11079,10 +11079,13 @@ void __fastcall TNyanFiForm::FileListKeyDown(TObject *Sender, WORD &Key, TShiftS
 			Key = 0;
 		}
 		//タブをドラッグ中
-		else if (DragTabIndex!=-1) {
+		else if (TabMouseCliped && DragTabIndex!=-1) {
 			if (equal_ESC(KeyStr)) {
+				::ClipCursor(NULL);
+				TabMouseCliped = false;
 				DragTabIndex = HotTabIndex = -1;
-				TabControl1->Cursor = crDefault;
+				TabControl1->Repaint();
+				cursor_Default();
 			}
 		}
 		//仮想ディレクトリ/ 検索結果リスト/ ワークリストから抜ける
@@ -35818,6 +35821,7 @@ void __fastcall TNyanFiForm::TabControl1MouseMove(TObject *Sender, TShiftState S
 					rc.Right = TabControl1->TabRect(TabControl1->Tabs->Count - 1).Right;
 					rc.SetLocation(TabControl1->ClientToScreen(rc.Location));
 					::ClipCursor(&rc);
+					TabMouseCliped = true;
 				}
 				for (int i=0; i<TabControl1->Tabs->Count; i++) {
 					if (HotTabIndex!=i && TabControl1->TabRect(i).PtInRect(Point(X, Y))) {

@@ -61,6 +61,7 @@ public:		// ÉÜÅ[ÉUÅ[êÈåæ
 
 	void __fastcall MakeList(UnicodeString s, UnicodeString delimiter, TStringList *lst);
 	void __fastcall AssignItems(TControl *cp);
+	void __fastcall AssignText(UnicodeString tit, UnicodeString s, UnicodeString delimiter = ";");
 
 	__fastcall TEditItemDlg(TComponent* Owner);
 

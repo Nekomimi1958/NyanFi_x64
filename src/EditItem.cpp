@@ -115,6 +115,19 @@ void __fastcall TEditItemDlg::AssignItems(TControl *cp)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TEditItemDlg::AssignText(
+	UnicodeString tit,				//ƒvƒƒ“ƒvƒg
+	UnicodeString s,				//Ý’è•¶Žš—ñ
+	UnicodeString delimiter)		//‹æØ‚è	(default = ";")
+{
+	ItemEdit->EditLabel->Caption = tit;
+	ItemDelimiter = delimiter;
+	std::unique_ptr<TStringList> lst(new TStringList());
+	MakeList(s, ItemDelimiter, lst.get());
+	ItemListBox->Items->Assign(lst.get());
+}
+
+//---------------------------------------------------------------------------
 //’Ç‰Á
 //---------------------------------------------------------------------------
 void __fastcall TEditItemDlg::AddItemActionExecute(TObject *Sender)

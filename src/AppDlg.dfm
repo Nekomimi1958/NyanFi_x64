@@ -9,7 +9,6 @@ object AppListDlg: TAppListDlg
   DoubleBuffered = True
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -19,7 +18,7 @@ object AppListDlg: TAppListDlg
   OnMouseWheel = FormMouseWheel
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object StatusBar1: TStatusBar
     Left = 0
     Top = 270
@@ -184,7 +183,7 @@ object AppListDlg: TAppListDlg
     object RstWinItem: TMenuItem
       Action = RestoreAction
     end
-    object u: TMenuItem
+    object ToPrimaryItem: TMenuItem
       Action = ToPrimaryAction
     end
     object FitToFileListItem: TMenuItem
@@ -236,6 +235,10 @@ object AppListDlg: TAppListDlg
     end
     object ShowCmdParamItem: TMenuItem
       Action = ShowCmdParamAction
+    end
+    object ExcAppTextItem: TMenuItem
+      Caption = #38500#22806#12486#12461#12473#12488#12434#35373#23450'(&E)'
+      OnClick = ExcAppTextItemClick
     end
     object FitSizePosItem: TMenuItem
       Action = UserModule.SizePosToFlieListAction

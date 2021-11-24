@@ -7,6 +7,7 @@
 #include "Global.h"
 #include "InpDir.h"
 #include "InpExDlg.h"
+#include "EditItem.h"
 #include "FileInfDlg.h"
 #include "AppDlg.h"
 
@@ -176,6 +177,8 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 		}
 	}
 
+	ExcAppText = IniFile->ReadStrGen(_T("AppListExcAppText"));
+
 	setup_StatusBar(StatusBar1);
 
 	LaunchPath = IncludeTrailingPathDelimiter(IniFile->ReadStrGen(_T("AppListLaunchPath"), ExePath));
@@ -265,6 +268,8 @@ void __fastcall TAppListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		IniFile->WriteStrGen( _T("AppListLaunchPath"),		LaunchPath);
 		IniFile->WriteBoolGen(_T("AppListLaunchMigemo"),	IsMigemo);
 	}
+
+	IniFile->WriteStrGen(_T("AppListExcAppText"),	ExcAppText);
 
 	OnlyLauncher = OnlyAppList = false;
 }
@@ -452,6 +457,15 @@ void __fastcall TAppListDlg::UpdateAppList()
 			//テキスト
 			UnicodeString wtxt = get_WndText(hWnd);
 			if (wtxt.IsEmpty()) break;
+			//除外チェック
+			if (!ExcAppText.IsEmpty()) {
+				TStringDynArray exc_txt_lst = split_strings_semicolon(ExcAppText);
+				bool ok = true;
+				for (int i=0; i<exc_txt_lst.Length && ok; i++) {
+					if (!exc_txt_lst[i].IsEmpty() && ContainsText(wtxt, exc_txt_lst[i])) ok = false;
+				}
+				if (!ok) break;
+			}
 
 			//UWPアプリ
 			bool is_uwp = SameText(cnam, "ApplicationFrameWindow");
@@ -1383,6 +1397,19 @@ void __fastcall TAppListDlg::JumpExeItemClick(TObject *Sender)
 	if (ap) {
 		JumpFileName = ap->FileName;
 		ModalResult  = mrOk;
+	}
+}
+
+//---------------------------------------------------------------------------
+//除外テキストを設定
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::ExcAppTextItemClick(TObject *Sender)
+{
+	if (!EditItemDlg) EditItemDlg = new TEditItemDlg(this);	//初回に動的作成
+	EditItemDlg->AssignText("除外テキスト", ExcAppText);
+	if (EditItemDlg->ShowModal()==mrOk) {
+		ExcAppText = EditItemDlg->RetStr;
+		if (!OnlyLauncher) UpdateAppList();
 	}
 }
 

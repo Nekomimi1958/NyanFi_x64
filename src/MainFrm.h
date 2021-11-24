@@ -24,6 +24,7 @@
 #include <Vcl.ExtDlgs.hpp>
 #include <Vcl.ToolWin.hpp>
 #include <Vcl.ImgList.hpp>
+#include <Vcl.Mask.hpp>
 #include <IdBaseComponent.hpp>
 #include <IdComponent.hpp>
 #include <IdExplicitTLSClientServerBase.hpp>

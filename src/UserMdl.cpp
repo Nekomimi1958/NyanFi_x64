@@ -11,8 +11,8 @@
 #include "InpCmds.h"
 #include "RegExChk.h"
 #include "CalcDlg.h"
-#include "UserMdl.h"
 #include "EditItem.h"
+#include "UserMdl.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)

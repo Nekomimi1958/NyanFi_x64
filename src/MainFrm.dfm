@@ -9,7 +9,6 @@ object NyanFiForm: TNyanFiForm
   ParentFont = True
   KeyPreview = True
   Menu = MainMenu1
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnActivate = FormActivate
@@ -21,7 +20,7 @@ object NyanFiForm: TNyanFiForm
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object StatusBar1: TStatusBar
     Left = 0
     Top = 501
@@ -89,7 +88,6 @@ object NyanFiForm: TNyanFiForm
         TabOrder = 1
         Visible = False
         WantReturns = False
-        Zoom = 100
       end
       object ToolBarV: TToolBar
         Left = 0
@@ -780,11 +778,12 @@ object NyanFiForm: TNyanFiForm
               Height = 22
               Anchors = [akLeft, akTop, akRight]
               AutoSize = False
-              EditLabel.Width = 33
-              EditLabel.Height = 13
+              EditLabel.Width = 36
+              EditLabel.Height = 15
               EditLabel.Caption = #12501#12451#12523#12479
               LabelPosition = lpLeft
               TabOrder = 0
+              Text = ''
               OnChange = GrepFilterEditChange
               OnEnter = GrepFilterEditEnter
               OnExit = GrepFilterEditExit
@@ -845,16 +844,16 @@ object NyanFiForm: TNyanFiForm
             object TLabel
               Left = 270
               Top = 8
-              Width = 20
-              Height = 13
+              Width = 22
+              Height = 15
               Anchors = [akTop, akRight]
               Caption = #28145#12373
             end
             object TLabel
-              Left = 15
+              Left = 12
               Top = 8
-              Width = 26
-              Height = 13
+              Width = 29
+              Height = 15
               Alignment = taRightJustify
               Caption = #12510#12473#12463
             end
@@ -871,7 +870,7 @@ object NyanFiForm: TNyanFiForm
               Left = 297
               Top = 5
               Width = 55
-              Height = 21
+              Height = 23
               Style = csDropDownList
               Anchors = [akTop, akRight]
               TabOrder = 2
@@ -880,7 +879,7 @@ object NyanFiForm: TNyanFiForm
               Left = 48
               Top = 5
               Width = 99
-              Height = 21
+              Height = 23
               Anchors = [akLeft, akTop, akRight]
               DropDownCount = 20
               TabOrder = 0
@@ -904,11 +903,12 @@ object NyanFiForm: TNyanFiForm
               Height = 22
               Anchors = [akLeft, akTop, akRight]
               AutoSize = False
-              EditLabel.Width = 73
-              EditLabel.Height = 13
+              EditLabel.Width = 80
+              EditLabel.Height = 15
               EditLabel.Caption = #38500#22806#12487#12451#12524#12463#12488#12522
               LabelPosition = lpLeft
               TabOrder = 0
+              Text = ''
             end
           end
           object GrepM3Panel: TPanel
@@ -953,17 +953,18 @@ object NyanFiForm: TNyanFiForm
               Left = 704
               Top = 0
               Width = 4
-              Height = 36
+              Height = 34
               Align = alRight
               AutoSnap = False
               Beveled = True
               MinSize = 8
+              ExplicitHeight = 36
             end
             object GrepT1Panel: TPanel
               Left = 0
               Top = 0
               Width = 704
-              Height = 36
+              Height = 34
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
@@ -971,19 +972,19 @@ object NyanFiForm: TNyanFiForm
                 Left = 0
                 Top = 0
                 Width = 152
-                Height = 36
+                Height = 34
                 Align = alClient
                 BevelOuter = bvNone
                 TabOrder = 0
                 OnResize = GrepT11PanelResize
                 DesignSize = (
                   152
-                  36)
+                  34)
                 object GrepFindLabel: TLabel
-                  Left = 16
+                  Left = 11
                   Top = 11
-                  Width = 60
-                  Height = 13
+                  Width = 65
+                  Height = 15
                   Alignment = taRightJustify
                   Caption = #26908#32034#25991#23383#21015
                 end
@@ -991,7 +992,7 @@ object NyanFiForm: TNyanFiForm
                   Left = 80
                   Top = 7
                   Width = 59
-                  Height = 21
+                  Height = 23
                   Anchors = [akLeft, akTop, akRight]
                   DropDownCount = 24
                   TabOrder = 0
@@ -1004,13 +1005,13 @@ object NyanFiForm: TNyanFiForm
                 Left = 152
                 Top = 0
                 Width = 552
-                Height = 36
+                Height = 34
                 Align = alRight
                 BevelOuter = bvNone
                 TabOrder = 1
                 DesignSize = (
                   552
-                  36)
+                  34)
                 object StartBtn: TButton
                   Left = 445
                   Top = 5
@@ -1034,7 +1035,7 @@ object NyanFiForm: TNyanFiForm
                   Left = 0
                   Top = 0
                   Width = 443
-                  Height = 36
+                  Height = 34
                   Align = alLeft
                   BevelOuter = bvNone
                   TabOrder = 0
@@ -1095,7 +1096,7 @@ object NyanFiForm: TNyanFiForm
               Left = 708
               Top = 0
               Width = 8
-              Height = 36
+              Height = 34
               Align = alRight
               BevelOuter = bvNone
               Constraints.MinWidth = 4
@@ -1127,20 +1128,20 @@ object NyanFiForm: TNyanFiForm
               OnResize = RepT1PanelResize
               DesignSize = (
                 704
-                36)
+                34)
               object RepStrLabel: TLabel
-                Left = 209
+                Left = 205
                 Top = 11
-                Width = 74
-                Height = 13
+                Width = 78
+                Height = 15
                 Alignment = taRightJustify
                 Caption = #8594' '#32622#25563#25991#23383#21015
               end
               object RepFindLabel: TLabel
-                Left = 16
+                Left = 11
                 Top = 11
-                Width = 60
-                Height = 13
+                Width = 65
+                Height = 15
                 Alignment = taRightJustify
                 Caption = #26908#32034#25991#23383#21015
               end
@@ -1219,11 +1220,12 @@ object NyanFiForm: TNyanFiForm
               Left = 708
               Top = 0
               Width = 8
-              Height = 36
+              Height = 34
               Align = alRight
               BevelOuter = bvNone
               Constraints.MinWidth = 4
               TabOrder = 1
+              ExplicitHeight = 36
             end
           end
         end
@@ -1929,7 +1931,7 @@ object NyanFiForm: TNyanFiForm
                   Left = 20
                   Top = 20
                   Width = 50
-                  Height = 13
+                  Height = 15
                   Caption = '100 '#215' 100'
                   Transparent = True
                   Visible = False
@@ -1938,7 +1940,7 @@ object NyanFiForm: TNyanFiForm
                   Left = 4
                   Top = 2
                   Width = 3
-                  Height = 13
+                  Height = 15
                   Anchors = []
                   Transparent = True
                   Visible = False

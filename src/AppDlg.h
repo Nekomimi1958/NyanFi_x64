@@ -144,6 +144,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *CloseSameItem;
 	TMenuItem *CopyNameItem;
 	TMenuItem *DesktopItem;
+	TMenuItem *ExcAppTextItem;
 	TMenuItem *FitSizePosItem;
 	TMenuItem *FitToFileListItem;
 	TMenuItem *JumpExeItem;
@@ -170,7 +171,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *TerminateItem;
 	TMenuItem *TopMostItem;
 	TMenuItem *ToPrimaryItem;
-	TMenuItem *u;
 	TMenuItem *UpdateIcoItem;
 	TPaintBox *InpPaintBox;
 	TPanel *AppListPanel;
@@ -244,6 +244,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ShowMonNoActionUpdate(TObject *Sender);
 	void __fastcall ToPrimaryActionExecute(TObject *Sender);
 	void __fastcall ToPrimaryActionUpdate(TObject *Sender);
+	void __fastcall ExcAppTextItemClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	TAppWinList *AppInfoList;
@@ -258,6 +259,8 @@ private:	// ユーザー宣言
 	bool IsMigemo;
 	UnicodeString IncSeaWord;
 	TStringList *LaunchFileList;
+
+	UnicodeString ExcAppText;
 
 	TWndMethod org_SttBar1WndProc;
 	void __fastcall SttBar1WndProc(TMessage &msg)

@@ -42,8 +42,9 @@ HWND get_window_from_pos()
 //---------------------------------------------------------------------------
 TRect get_window_rect(HWND hWnd)
 {
-	TRect rc;
+	TRect rc = Rect(0, 0, 0, 0);
 	if (::DwmGetWindowAttribute(hWnd, DWMWA_EXTENDED_FRAME_BOUNDS, &rc, sizeof(rc))!=S_OK) ::GetWindowRect(hWnd, &rc);
+	if ((rc.Top > rc.Bottom) || (rc.Left > rc.Right)) rc = Rect(0, 0, 0, 0);
 	return rc;
 }
 //---------------------------------------------------------------------------
