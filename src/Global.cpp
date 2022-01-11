@@ -8469,6 +8469,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 							 (flag & LBFLG_GIT_HASH)? col_GitHash : col_fgInf;
 
 	if (flag & LBFLG_PATH_FIF) {
+		if (SameStr(inam, "プログラム")) lbuf = ExtractFileName(lbuf) + "  " + ExtractFileDir(lbuf);
 		PathNameOut(lbuf, cv, xp, yp);
 	}
 	else if (flag & LBFLG_FILE_FIF) {
@@ -8729,9 +8730,8 @@ bool get_FileInfList(
 			if (::AssocQueryString(ASSOCF_NOTRUNCATE, ASSOCSTR_EXECUTABLE,
 				fext.c_str(), _T("open"), pszFile, &dwOut)==S_OK)
 			{
-				lst->AddObject(UnicodeString().sprintf(_T("%s%s  %s"),
-					get_PropTitle(_T("プログラム")).c_str(),
-					ExtractFileName(pszFile).c_str(), ExtractFileDir(pszFile).c_str()),
+				lst->AddObject(
+					UnicodeString().sprintf(_T("%s%s"), get_PropTitle(_T("プログラム")).c_str(), pszFile),
 					(TObject*)LBFLG_PATH_FIF);
 			}
 		}

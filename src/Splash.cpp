@@ -31,12 +31,6 @@ void __fastcall TSplashForm::FormCreate(TObject *Sender)
 	MsgLabel->Font->Color = clBlack;
 }
 //---------------------------------------------------------------------------
-void __fastcall TSplashForm::FormShow(TObject *Sender)
-{
-	Width  = 320;
-	Height = 240;
-}
-//---------------------------------------------------------------------------
 void __fastcall TSplashForm::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	Action = caFree;

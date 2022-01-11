@@ -16,7 +16,6 @@ object SplashForm: TSplashForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnPaint = FormPaint
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 15
   object MsgLabel: TLabel

@@ -1111,17 +1111,18 @@ object NyanFiForm: TNyanFiForm
               Left = 704
               Top = 0
               Width = 4
-              Height = 36
+              Height = 34
               Align = alRight
               AutoSnap = False
               Beveled = True
               MinSize = 8
+              ExplicitHeight = 36
             end
             object RepT1Panel: TPanel
               Left = 0
               Top = 0
               Width = 704
-              Height = 36
+              Height = 34
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
@@ -1196,7 +1197,7 @@ object NyanFiForm: TNyanFiForm
                 Left = 80
                 Top = 7
                 Width = 2
-                Height = 21
+                Height = 23
                 Anchors = [akLeft, akTop, akRight]
                 DropDownCount = 24
                 TabOrder = 0
@@ -1208,7 +1209,7 @@ object NyanFiForm: TNyanFiForm
                 Left = 290
                 Top = 7
                 Width = 2
-                Height = 21
+                Height = 23
                 Anchors = [akLeft, akTop, akRight]
                 DropDownCount = 24
                 TabOrder = 1
@@ -1225,7 +1226,6 @@ object NyanFiForm: TNyanFiForm
               BevelOuter = bvNone
               Constraints.MinWidth = 4
               TabOrder = 1
-              ExplicitHeight = 36
             end
           end
         end
@@ -5361,12 +5361,12 @@ object NyanFiForm: TNyanFiForm
       OnExecute = Inf_EditSelectAllExecute
       OnUpdate = Inf_EditSelectAllUpdate
     end
-    object Inf_OpenUrlAction: TAction
+    object Inf_OpenLocAction: TAction
       Category = 'Menu'
-      Caption = 'URL'#12434#38283#12367'(&W)'
+      Caption = #22580#25152#12434#38283#12367'(&L)'
       ShortCut = 13
-      OnExecute = Inf_OpenUrlActionExecute
-      OnUpdate = Inf_OpenUrlActionUpdate
+      OnExecute = Inf_OpenLocActionExecute
+      OnUpdate = Inf_OpenLocActionUpdate
     end
     object Inf_EmpItemAction: TAction
       Category = 'Menu'
@@ -5857,8 +5857,8 @@ object NyanFiForm: TNyanFiForm
     object Sep_i_3: TMenuItem
       Caption = '-'
     end
-    object InfOpenUrlItem: TMenuItem
-      Action = Inf_OpenUrlAction
+    object InfOpenDirItem: TMenuItem
+      Action = Inf_OpenLocAction
     end
     object PopPropertyItem: TMenuItem
       Action = PropertyDlgAction
@@ -6103,7 +6103,7 @@ object NyanFiForm: TNyanFiForm
   end
   object TrayPopupMenu: TPopupMenu
     OnPopup = TrayPopupMenuPopup
-    Left = 642
+    Left = 650
     Top = 403
     object Sep_r_1: TMenuItem
       Caption = '-'

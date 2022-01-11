@@ -19091,6 +19091,8 @@ bool __fastcall TNyanFiForm::JumpToList(int tag, UnicodeString fnam)
 {
 	GlobalErrMsg = EmptyStr;
 	try {
+		if (ScrMode==SCMD_FLIST && tag==CurListTag && !FileListBox[tag]->Focused()) FileListBox[tag]->SetFocus();
+
 		UnicodeString mask = ExtractFileName(fnam);
 		bool has_wc = mask.Pos('*') || mask.Pos('?');	//ワイルドカード有り
 
@@ -20587,7 +20589,9 @@ void __fastcall TNyanFiForm::MarkListActionExecute(TObject *Sender)
 				if (ExeCommandAction(EditHistoryDlg->CmdStr, ActionParam)) ActionOk = true;
 			}
 		}
-		else SetActionAbort(GlobalErrMsg);
+		else {
+			SetActionAbort(GlobalErrMsg);
+		}
 	}
 }
 
@@ -24462,7 +24466,13 @@ void __fastcall TNyanFiForm::ShowFileInfoActionExecute(TObject *Sender)
 			}
 		}
 		KeepModalScr = false;	ModalScrForm->Visible = false;
-		if (ScrMode!=SCMD_TVIEW) SetFileInf();
+
+		if (ScrMode==SCMD_FLIST && !FileInfoDlg->JumpFileName.IsEmpty()) {
+			if (!JumpToList(CurListTag, FileInfoDlg->JumpFileName)) SetActionAbort(GlobalErrMsg);
+		}
+		else {
+			if (ScrMode!=SCMD_TVIEW) SetFileInf();
+		}
 	}
 	else {
 		ViewFileInf(cfp, true);
@@ -31538,19 +31548,38 @@ void __fastcall TNyanFiForm::ShowInfItemClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//URLを開く
+//URL/場所を開く
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::Inf_OpenUrlActionExecute(TObject *Sender)
+void __fastcall TNyanFiForm::Inf_OpenLocActionExecute(TObject *Sender)
 {
-	Execute_ex(ListBoxGetURL(GetCurInfListBox()));
+	TListBox *lp = GetCurInfListBox();
+	if (lp->Focused()) {
+		if ((ScrMode==SCMD_FLIST || ScrMode==SCMD_IVIEW) && !ListBoxGetURL(lp).IsEmpty()) {
+			Execute_ex(ListBoxGetURL(GetCurInfListBox()));
+		}
+		else if (ScrMode==SCMD_FLIST && !InfListBoxGetDir(lp).IsEmpty()) {
+			if (!JumpToList(CurListTag, InfListBoxGetDir(GetCurInfListBox()))) SetActionAbort(GlobalErrMsg);
+		}
+	}
 }
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::Inf_OpenUrlActionUpdate(TObject *Sender)
+void __fastcall TNyanFiForm::Inf_OpenLocActionUpdate(TObject *Sender)
 {
 	TAction *ap  = (TAction*)Sender;
-	ap->Visible  = ScrMode==SCMD_FLIST || ScrMode==SCMD_IVIEW;
 	TListBox *lp = GetCurInfListBox();
-	ap->Enabled  = ap->Visible && lp->Focused() && !ListBoxGetURL(lp).IsEmpty();
+	if ((ScrMode==SCMD_FLIST || ScrMode==SCMD_IVIEW) && !ListBoxGetURL(lp).IsEmpty()) {
+		ap->Caption = "URLを開く(&W)";
+		ap->Visible = true;
+	}
+	else if (ScrMode==SCMD_FLIST && !InfListBoxGetDir(lp).IsEmpty()) {
+		ap->Caption = "場所を開く(&L)";
+		ap->Visible = true;
+	}
+	else {
+		ap->Visible = false;
+	}
+
+	ap->Enabled = ap->Visible && lp->Focused();
 }
 
 //---------------------------------------------------------------------------

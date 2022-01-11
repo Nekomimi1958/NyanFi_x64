@@ -1131,6 +1131,15 @@ int ListBoxInitialSearch(
 }
 
 //---------------------------------------------------------------------------
+//InfListBox の現在行からディレクトリ名を取得
+//---------------------------------------------------------------------------
+UnicodeString InfListBoxGetDir(TListBox *lp)
+{
+	int idx = lp->ItemIndex;
+	return (idx!=-1 && ((int)lp->Items->Objects[idx] & LBFLG_PATH_FIF))?
+						  get_tkn_r(lp->Items->Strings[idx], _T(": ")) : EmptyStr;
+}
+//---------------------------------------------------------------------------
 //ListBox の現在行からURLを取得
 //---------------------------------------------------------------------------
 UnicodeString ListBoxGetURL(TListBox *lp)
@@ -1749,5 +1758,4 @@ bool exe_WebSearch(UnicodeString kwd)
 	return (!url.IsEmpty()?
 			(::ShellExecute(NULL, _T("open"), url.c_str(), NULL, NULL, SW_SHOWNORMAL) > (HINSTANCE)32) : false);
 }
-
 //---------------------------------------------------------------------------

@@ -261,7 +261,6 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *Inf_EditSelectAll;
 	TAction *Inf_EmpItemAction;
 	TAction *Inf_HideItemAction;
-	TAction *Inf_OpenUrlAction;
 	TAction *InputCommandsAction;
 	TAction *InputDirAction;
 	TAction *InputPathMaskAction;
@@ -701,7 +700,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *InfEditSelectAllItem;
 	TMenuItem *InfEmpItemItem;
 	TMenuItem *InfHideItemItem;
-	TMenuItem *InfOpenUrlItem;
 	TMenuItem *InfShowItemItem;
 	TMenuItem *InspectorItem;
 	TMenuItem *InsSeparatorItem;
@@ -1076,6 +1074,8 @@ __published:	// IDE で管理されるコンポーネント
 	TToolBar *ToolBarV;
 	TTrackBar *SeekBar;
 	TTrayIcon *TrayIcon1;
+	TAction *Inf_OpenLocAction;
+	TMenuItem *InfOpenDirItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -1851,8 +1851,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall Inf_EmpItemActionUpdate(TObject *Sender);
 	void __fastcall Inf_HideItemActionExecute(TObject *Sender);
 	void __fastcall Inf_HideItemActionUpdate(TObject *Sender);
-	void __fastcall Inf_OpenUrlActionExecute(TObject *Sender);
-	void __fastcall Inf_OpenUrlActionUpdate(TObject *Sender);
 	void __fastcall OpenGitURLActionExecute(TObject *Sender);
 	void __fastcall SelByListActionExecute(TObject *Sender);
 	void __fastcall SelGitChangedActionExecute(TObject *Sender);
@@ -1897,6 +1895,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall GrepOrgOrderActionExecute(TObject *Sender);
 	void __fastcall GrepOrgOrderActionUpdate(TObject *Sender);
 	void __fastcall WinTerminalActionExecute(TObject *Sender);
+	void __fastcall Inf_OpenLocActionExecute(TObject *Sender);
+	void __fastcall Inf_OpenLocActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

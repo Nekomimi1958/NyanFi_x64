@@ -23,9 +23,9 @@ void __fastcall TFileInfoDlg::FormCreate(TObject *Sender)
 {
 	DlgInitialized = false;
 
-	FileRec    = NULL;
-	isAppInfo  = isGitInfo = false;
-	isCalcItem = inhNxtPre = inhImgPrv = useImgPrv = false;
+	FileRec   = NULL;
+	isAppInfo = isGitInfo = isCalcItem = false;
+	inhNxtPre = inhImgPrv = useImgPrv = false;
 
 	CsvCol	 = -1;
 	DataList = NULL;
@@ -41,6 +41,8 @@ void __fastcall TFileInfoDlg::FormShow(TObject *Sender)
 
 	CmdStr = EmptyStr;
 	useImgPrv = !inhImgPrv && !isCalcItem && !isAppInfo && !isGitInfo;
+
+	JumpFileName = EmptyStr;
 
 	if (isCalcItem)
 		IniFile->LoadPosInfo(this, DialogCenter, "CalcItem");
@@ -519,6 +521,11 @@ void __fastcall TFileInfoDlg::InfListBoxKeyPress(TObject *Sender, System::WideCh
 	//インクリメンタルサーチを回避
 	if (_istalnum(Key) || Key==VK_SPACE) Key = 0;
 }
+//---------------------------------------------------------------------------
+void __fastcall TFileInfoDlg::InfListBoxDblClick(TObject *Sender)
+{
+	OpenLocAction->Execute();
+}
 
 //---------------------------------------------------------------------------
 //ファイル情報をコピー
@@ -589,21 +596,35 @@ void __fastcall TFileInfoDlg::SelAllActionExecute(TObject *Sender)
 	ListBoxSelectAll(InfListBox);
 }
 //---------------------------------------------------------------------------
-//URLを開く
+//URL/場所を開く
 //---------------------------------------------------------------------------
-void __fastcall TFileInfoDlg::OpenUrlActionExecute(TObject *Sender)
+void __fastcall TFileInfoDlg::OpenLocActionExecute(TObject *Sender)
 {
-	Execute_ex(ListBoxGetURL(InfListBox));
+	if (Active && !ListBoxGetURL(InfListBox).IsEmpty()) {
+		Execute_ex(ListBoxGetURL(InfListBox));
+	}
+	else if (ScrMode==SCMD_FLIST && !isAppInfo && !isGitInfo && !isCalcItem) {
+		JumpFileName = InfListBoxGetDir(InfListBox);
+		ModalResult  = mrOk;
+	}
 }
 //---------------------------------------------------------------------------
-void __fastcall TFileInfoDlg::OpenUrlActionUpdate(TObject *Sender)
+void __fastcall TFileInfoDlg::OpenLocActionUpdate(TObject *Sender)
 {
-	((TAction*)Sender)->Enabled = (Active && !ListBoxGetURL(InfListBox).IsEmpty());
-}
-//---------------------------------------------------------------------------
-void __fastcall TFileInfoDlg::InfListBoxDblClick(TObject *Sender)
-{
-	OpenUrlAction->Execute();
+	TAction *ap = (TAction*)Sender;
+	if (Active && !ListBoxGetURL(InfListBox).IsEmpty()) {
+		ap->Caption = "URLを開く(&W)";
+		ap->Visible = true;
+	}
+	else if (ScrMode==SCMD_FLIST && !isAppInfo && !isGitInfo && !isCalcItem && !InfListBoxGetDir(InfListBox).IsEmpty()) {
+		ap->Caption = "場所を開く(&L)";
+		ap->Visible = true;
+	}
+	else {
+		ap->Visible = false;
+	}
+
+	ap->Enabled = ap->Visible;
 }
 
 //---------------------------------------------------------------------------

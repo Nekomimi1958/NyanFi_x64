@@ -130,6 +130,7 @@ void ListBoxScrollUp(TListBox *lp, int n, bool move_csr = false);
 void ListBoxScrollUp(TListBox *lp, UnicodeString prm);
 void ListBoxSelectAll(TListBox *lp, bool sw = true);
 int  ListBoxInitialSearch(TListBox *lp, UnicodeString kptn, bool fnam_sw = false);
+UnicodeString InfListBoxGetDir(TListBox *lp);
 UnicodeString ListBoxGetURL(TListBox *lp);
 void set_ListBox_ItemNo(TListBox *lp);
 int get_CheckListCount(TCheckListBox *lp);

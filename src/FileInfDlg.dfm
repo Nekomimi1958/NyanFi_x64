@@ -8,7 +8,6 @@ object FileInfoDlg: TFileInfoDlg
   Constraints.MinWidth = 320
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -18,7 +17,7 @@ object FileInfoDlg: TFileInfoDlg
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object ListPanel: TPanel
     Left = 0
     Top = 0
@@ -78,8 +77,8 @@ object FileInfoDlg: TFileInfoDlg
     object Sep_i_2: TMenuItem
       Caption = '-'
     end
-    object OpenUrlItem: TMenuItem
-      Action = OpenUrlAction
+    object OpenDirItem: TMenuItem
+      Action = OpenLocAction
     end
     object Sep_i_3: TMenuItem
       Caption = '-'
@@ -122,11 +121,11 @@ object FileInfoDlg: TFileInfoDlg
       OnExecute = ImgPreviewActionExecute
       OnUpdate = ImgPreviewActionUpdate
     end
-    object OpenUrlAction: TAction
-      Caption = 'URL'#12434#38283#12367'(&W)'
+    object OpenLocAction: TAction
+      Caption = #22580#25152#12434#38283#12367'(&L)'
       ShortCut = 13
-      OnExecute = OpenUrlActionExecute
-      OnUpdate = OpenUrlActionUpdate
+      OnExecute = OpenLocActionExecute
+      OnUpdate = OpenLocActionUpdate
     end
     object EmpItemAction: TAction
       Caption = #12371#12398#38917#30446#20869#23481#12434#24375#35519#34920#31034'(&E)'

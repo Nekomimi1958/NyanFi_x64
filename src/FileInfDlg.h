@@ -26,7 +26,6 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *CopyValueAction;
 	TAction *EmpItemAction;
 	TAction *ImgPreviewAction;
-	TAction *OpenUrlAction;
 	TAction *PropertyDlgAction;
 	TAction *SelAllAction;
 	TActionList *ActionList1;
@@ -35,7 +34,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *ImgPreviewItem;
 	TMenuItem *InfEditCopyItem;
 	TMenuItem *InfEditSelectAllItem;
-	TMenuItem *OpenUrlItem;
 	TMenuItem *PopCopyFileInfoItm;
 	TMenuItem *PopCopyValueItem;
 	TMenuItem *PropertyDlgItem;
@@ -44,6 +42,8 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_i_3;
 	TPanel *ListPanel;
 	TPopupMenu *InfPopupMenu;
+	TAction *OpenLocAction;
+	TMenuItem *OpenDirItem;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
@@ -58,8 +58,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall PropertyDlgActionUpdate(TObject *Sender);
 	void __fastcall PropertyDlgActionExecute(TObject *Sender);
 	void __fastcall InfListBoxKeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall OpenUrlActionExecute(TObject *Sender);
-	void __fastcall OpenUrlActionUpdate(TObject *Sender);
 	void __fastcall InfListBoxDblClick(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormResize(TObject *Sender);
@@ -68,6 +66,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall EmpItemActionUpdate(TObject *Sender);
 	void __fastcall ImgPreviewActionExecute(TObject *Sender);
 	void __fastcall ImgPreviewActionUpdate(TObject *Sender);
+	void __fastcall OpenLocActionExecute(TObject *Sender);
+	void __fastcall OpenLocActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;
@@ -95,6 +95,8 @@ public:		// ユーザー宣言
 	bool isCalcItem;
 	int  CsvCol;
 	bool TopIsHeader;
+
+	UnicodeString JumpFileName;
 
 	TStringList *DataList;			//集計元データへのポインタ
 	TStringList *ItemList;			//表示項目リスト

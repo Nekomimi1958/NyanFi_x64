@@ -24,7 +24,6 @@ __published:	// IDE 管理のコンポーネント
 	void __fastcall FormPaint(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall FormShow(TObject *Sender);
 
 private:	// ユーザー宣言
 

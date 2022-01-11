@@ -1540,7 +1540,7 @@ bool UserShell::get_LnkInf(UnicodeString fnam, TStringList *lst,
 		UnicodeString l_fnam = cv_env_var(l_nam);
 
 		if (lst) {
-			add_PropLine_if(_T("リンク先"),		l_nam, lst);
+			add_PropLine_if(_T("リンク先"),		l_nam, lst, LBFLG_PATH_FIF);
 			add_PropLine_if(_T("パラメータ"),	l_prm, lst);
 			add_PropLine_if(_T("作業場所"),		l_fld, lst, LBFLG_PATH_FIF);
 			add_PropLine_if(_T("キー"),			l_key, lst);
