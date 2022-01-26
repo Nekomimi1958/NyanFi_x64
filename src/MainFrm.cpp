@@ -2035,7 +2035,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Activate(TObject *Sender)
 	}
 	else if (ReqActWnd && ReqActWnd!=MainHandle) {
 		::SetFocus(ReqActWnd);
-		if (RestoreComboBox && ReqActWnd!=get_HelpWnd()) UserModule->RestoreLastComboBox();
+		if (ReqActWnd!=get_HelpWnd()) UserModule->RestoreLastComboBox();
 	}
 	else if (Active && Screen->ActiveForm==this) {
 		if (ScrMode==SCMD_FLIST) {
@@ -2341,13 +2341,17 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 					switch (Key) {
 					case VK_RIGHT:	ExeCmdAction(ToRightAction);	break;
 					case VK_LEFT:	ExeCmdAction(ToLeftAction);		break;
-					case VK_TAB:	ExeCmdAction((fl_tag==0)? ToRightAction : ToLeftAction);	break;
 					case VK_UP:		ExeCmdAction(CursorUpAction);	break;
 					case VK_DOWN:	ExeCmdAction(CursorDownAction);	break;
 					case VK_PRIOR:	ExeCmdAction(PageUpAction);		break;
 					case VK_NEXT:	ExeCmdAction(PageDownAction);	break;
 					case VK_HOME:	ExeCmdAction(CursorTopAction);	break;
 					case VK_END:	ExeCmdAction(CursorEndAction);	break;
+					case VK_TAB:	if (!TabFocusSubWin)
+										ExeCmdAction((fl_tag==0)? ToRightAction : ToLeftAction);
+									else
+										Handled = false;
+									break;
 					default:		Handled = false;
 					}
 				}
@@ -2855,7 +2859,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Idle(TObject *Sender, bool &Done)
 	}
 
 	//アクティブなコンボボックスの状態を保存
-	if (RestoreComboBox) UserModule->SaveLastComboBox();
+	UserModule->SaveLastComboBox();
 }
 
 //---------------------------------------------------------------------------
@@ -6472,20 +6476,25 @@ void __fastcall TNyanFiForm::ApplyInpDir()
 //---------------------------------------------------------------------------
 //ディレクトリ入力パネルのキー操作
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::InpDirEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+void __fastcall TNyanFiForm::InpDirBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	if		(Key==VK_RETURN) ApplyInpDir();
 	else if (Key==VK_ESCAPE) HideInpDirPanel();
 }
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::InpDirEditKeyPress(TObject *Sender, System::WideChar &Key)
+void __fastcall TNyanFiForm::InpDirBoxKeyPress(TObject *Sender, System::WideChar &Key)
 {
 	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
 }
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::InpDirEditExit(TObject *Sender)
+void __fastcall TNyanFiForm::InpDirBoxExit(TObject *Sender)
 {
 	if (!RefDirBtn->Focused()) HideInpDirPanel();
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::RefDirBtnExit(TObject *Sender)
+{
+	if (!InpDirComboBox->Focused()) HideInpDirPanel();
 }
 
 //---------------------------------------------------------------------------
@@ -29142,7 +29151,7 @@ void __fastcall TNyanFiForm::ResultListBoxKeyDown(TObject *Sender, WORD &Key, TS
 					GrepFiltered = true;
 				}
 				//検索語へ
-				else if (USAME_TI(KeyStr, "Ctrl+S")) {
+				else if (equal_TAB(KeyStr) || USAME_TI(KeyStr, "Ctrl+S")) {
 					((GrepPageControl->ActivePage==FindSheet)? GrepFindComboBox : RepFindComboBox)->SetFocus();
 				}
 				//フィルタへ

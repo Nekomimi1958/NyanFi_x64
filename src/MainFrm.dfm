@@ -2252,9 +2252,9 @@ object NyanFiForm: TNyanFiForm
       DropDownCount = 20
       TabOrder = 0
       TabStop = False
-      OnExit = InpDirEditExit
-      OnKeyDown = InpDirEditKeyDown
-      OnKeyPress = InpDirEditKeyPress
+      OnExit = InpDirBoxExit
+      OnKeyDown = InpDirBoxKeyDown
+      OnKeyPress = InpDirBoxKeyPress
     end
     object RefDirBtn: TButton
       Left = 195
@@ -2265,6 +2265,7 @@ object NyanFiForm: TNyanFiForm
       Caption = '...'
       TabOrder = 1
       OnClick = RefDirBtnClick
+      OnExit = RefDirBtnExit
       OnKeyDown = RefDirBtnKeyDown
     end
   end

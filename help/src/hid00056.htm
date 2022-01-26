@@ -41,7 +41,7 @@
 <dt class="no_bg">結果リストでのキー操作
 <dd>
 ファイラーで割り当てられているのと同じキーで、カーソル移動や、ファイルの閲覧(<a href="hid00005.htm#TextViewer">TextViewer</a> / <b>TextViewer</b>_XW)、編集(<a href="hid00005.htm#FileEdit">FileEdit</a>)が行えます。また <a href="hid00005.htm#OpenByApp">OpenByApp</a>、<a href="hid00005.htm#OpenByWin">OpenByWin</a> コマンドも実行できます。<br>
-<b>TextViewer</b>_XW で別ウィンドウのビュアー開いている場合、<span class="btn_frame">TAB</span>キーで結果リストとの間を行き来できます。<br>
+<b>TextViewer</b>_XW で別ウィンドウのテキストビュアーを開いている場合、<span class="btn_frame">TAB</span>キーで結果リストとの間を行き来できます。<br>
 <a href="hid00012.htm">オプション設定 - エディタ</a> - テキストエディタ の「<b>パラメータ(GREP用)</b>」を設定しておけば、エディタで開いてその行位置に移動(タグジャンプ)できます。バイナリ文書では対応するエディタで開きます。<br>
 また<span class="btn_frame">ENTER</span>キーを押すと、結果リストから抜けて、そのファイルのある位置に移動します。<br>
 <span class="btn_frame">DEL</span>キーや <a href="hid00005.htm#Delete">Delete</a> コマンドが割り当てられているキーを押すと、カーソル位置の項目が一時的に削除されます。これは、後述の絞り込みを行った場合と同様で、メニューの「<b>絞り込みの解除</b>」によって元に戻ります。<br>
@@ -49,7 +49,7 @@
 なお、2ストロークキー操作には対応していません。<br>
 
 <div class="spc_box">
-検索結果は、再度検索を行うまで保持されています。画面を閉じても再度開けばまた見ることができます。その場合、対象ディレクトリ表示には、一覧にフォーカスがあれば前回検索時のパスが、そうでない場合はカレントパスが表示されます。<br>
+検索結果は、再度検索を行うまで保持されています。画面を閉じても再度開けばまた見ることができます。その場合、対象ディレクトリ表示には、結果リストにフォーカスがあれば前回検索時のパスが、そうでない場合はカレントパスが表示されます。<br>
 </div>
 
 <dt class="no_bg" id="Filter">フィルタ
@@ -63,11 +63,11 @@
 なお、大小文字は区別されません。<br>
 入力欄の幅は、状態表示との間にある境界線をドラッグすることで変更できます。<br>
 
-<div class="spc_box">
-一覧にフォーカスがある場合、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">F</span>キーでフィルタ欄に、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">S</span>キーで検索文字列欄に移れます。<br>
+<dt class="no_bg">フォーカス移動など
+<dd>
+結果リストにフォーカスがある場合、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">F</span>キーでフィルタ欄に、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">S</span>キーで検索文字列欄に移れます。また、別ウィンドウのテキストビュアーがなければ、<span class="btn_frame">TAB</span>キーでも移れます。<br>
 フィルタ欄からは、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">L</span>で結果リストに、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">F</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">S</span>)で検索文字列欄に移れます。また<span class="btn_frame">Ctrl</span>+<span class="btn_frame">M</span>で Migemo モードを切り替えられます。<br>
 なお、フィルタが適用される際に、キーによる項目の一時的な削除や、絞り込み、行内容によるソートは解除されます。<br>
-</div>
 <br>
 
 <dt class="no_bg">メニュー

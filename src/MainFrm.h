@@ -261,6 +261,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *Inf_EditSelectAll;
 	TAction *Inf_EmpItemAction;
 	TAction *Inf_HideItemAction;
+	TAction *Inf_OpenLocAction;
 	TAction *InputCommandsAction;
 	TAction *InputDirAction;
 	TAction *InputPathMaskAction;
@@ -700,6 +701,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *InfEditSelectAllItem;
 	TMenuItem *InfEmpItemItem;
 	TMenuItem *InfHideItemItem;
+	TMenuItem *InfOpenDirItem;
 	TMenuItem *InfShowItemItem;
 	TMenuItem *InspectorItem;
 	TMenuItem *InsSeparatorItem;
@@ -1074,8 +1076,6 @@ __published:	// IDE で管理されるコンポーネント
 	TToolBar *ToolBarV;
 	TTrackBar *SeekBar;
 	TTrayIcon *TrayIcon1;
-	TAction *Inf_OpenLocAction;
-	TMenuItem *InfOpenDirItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -1506,9 +1506,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall PopSelectItemDrawItem(TObject *Sender, TCanvas *ACanvas, const TRect &ARect, bool Selected);
 	void __fastcall PopSelectItemClick(TObject *Sender);
 	void __fastcall SelDrvBtnClick(TObject *Sender);
-	void __fastcall InpDirEditExit(TObject *Sender);
-	void __fastcall InpDirEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall InpDirEditKeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall InpDirBoxExit(TObject *Sender);
+	void __fastcall InpDirBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall InpDirBoxKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall RefDirBtnClick(TObject *Sender);
 	void __fastcall SetWidthActionExecute(TObject *Sender);
 	void __fastcall SetMarginActionExecute(TObject *Sender);
@@ -1897,6 +1897,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall WinTerminalActionExecute(TObject *Sender);
 	void __fastcall Inf_OpenLocActionExecute(TObject *Sender);
 	void __fastcall Inf_OpenLocActionUpdate(TObject *Sender);
+	void __fastcall RefDirBtnExit(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

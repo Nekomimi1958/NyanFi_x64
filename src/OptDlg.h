@@ -26,6 +26,7 @@
 #include "usr_scale.h"
 #include "usr_swatch.h"
 #include "usr_hintwin.h"
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 #define MAX_KEYTABS	5
@@ -311,7 +312,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *RegWkCsrPosCheckBox;
 	TCheckBox *ReloadActCheckBox;
 	TCheckBox *RemoveCdRoCheckBox;
-	TCheckBox *RestoreComboCheckBox;
+	TCheckBox *TabFocusCheckBox;
 	TCheckBox *RevTagColCheckBox;
 	TCheckBox *RotViewImgCheckBox;
 	TCheckBox *RstViewLnCheckBox;

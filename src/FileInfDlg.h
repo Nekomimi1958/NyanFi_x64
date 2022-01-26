@@ -26,6 +26,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *CopyValueAction;
 	TAction *EmpItemAction;
 	TAction *ImgPreviewAction;
+	TAction *OpenLocAction;
 	TAction *PropertyDlgAction;
 	TAction *SelAllAction;
 	TActionList *ActionList1;
@@ -34,6 +35,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *ImgPreviewItem;
 	TMenuItem *InfEditCopyItem;
 	TMenuItem *InfEditSelectAllItem;
+	TMenuItem *OpenDirItem;
 	TMenuItem *PopCopyFileInfoItm;
 	TMenuItem *PopCopyValueItem;
 	TMenuItem *PropertyDlgItem;
@@ -42,8 +44,6 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_i_3;
 	TPanel *ListPanel;
 	TPopupMenu *InfPopupMenu;
-	TAction *OpenLocAction;
-	TMenuItem *OpenDirItem;
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);

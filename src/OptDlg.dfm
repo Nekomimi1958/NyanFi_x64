@@ -9,7 +9,6 @@ object OptionDlg: TOptionDlg
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poMainFormCenter
   ShowHint = True
   OnClose = FormClose
@@ -19,7 +18,7 @@ object OptionDlg: TOptionDlg
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object BottomPanel: TPanel
     Left = 0
     Top = 630
@@ -46,12 +45,13 @@ object OptionDlg: TOptionDlg
       Left = 691
       Top = 10
       Width = 200
-      Height = 21
-      EditLabel.Width = 24
-      EditLabel.Height = 13
+      Height = 23
+      EditLabel.Width = 26
+      EditLabel.Height = 15
       EditLabel.Caption = #26908#32034
       LabelPosition = lpLeft
       TabOrder = 2
+      Text = ''
       OnChange = FindEditChange
     end
     object OkButton: TButton
@@ -85,7 +85,7 @@ object OptionDlg: TOptionDlg
       ImageIndex = -1
       DesignSize = (
         906
-        584)
+        580)
       object CopyGroupBox: TGroupBox
         Left = 460
         Top = 10
@@ -96,56 +96,59 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 187
           Top = 92
-          Width = 20
-          Height = 13
+          Width = 24
+          Height = 15
           Caption = 'm'#31186
         end
         object TLabel
           Left = 381
           Top = 92
-          Width = 20
-          Height = 13
+          Width = 24
+          Height = 15
           Caption = 'm'#31186
         end
         object NopDtctTimeEdit: TLabeledEdit
           Left = 10
           Top = 116
           Width = 50
-          Height = 21
+          Height = 23
           Hint = '0 '#12391#28961#21177
           Alignment = taRightJustify
-          EditLabel.Width = 177
-          EditLabel.Height = 13
+          EditLabel.Width = 193
+          EditLabel.Height = 15
           EditLabel.Caption = #31186#20197#19978#28961#25805#20316#12394#12425#24453#12385#26178#38291#12434#26368#23567#12395
           LabelPosition = lpRight
           NumbersOnly = True
           TabOrder = 5
+          Text = ''
         end
         object NormalWaitTimeEdit: TLabeledEdit
           Left = 327
           Top = 89
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 69
-          EditLabel.Height = 13
+          EditLabel.Width = 75
+          EditLabel.Height = 15
           EditLabel.Caption = #36890#24120#24453#12385#26178#38291
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 4
+          Text = ''
         end
         object RemoteWaitTimeEdit: TLabeledEdit
           Left = 133
           Top = 89
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 97
-          EditLabel.Height = 13
+          EditLabel.Width = 107
+          EditLabel.Height = 15
           EditLabel.Caption = #12493#12483#12488#12527#12540#12463#24453#12385#26178#38291
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 3
+          Text = ''
         end
         object RemoveCdRoCheckBox: TCheckBox
           Left = 10
@@ -159,12 +162,13 @@ object OptionDlg: TOptionDlg
           Left = 101
           Top = 45
           Width = 322
-          Height = 21
-          EditLabel.Width = 72
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 78
+          EditLabel.Height = 15
           EditLabel.Caption = #33258#21205#25913#21517#26360#24335
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
         end
         object CopyNoBuffCheckBox: TCheckBox
           Left = 10
@@ -320,12 +324,13 @@ object OptionDlg: TOptionDlg
           Left = 71
           Top = 113
           Width = 352
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 151
-          EditLabel.Height = 13
+          EditLabel.Width = 164
+          EditLabel.Height = 15
           EditLabel.Caption = #23653#27508#12395#20837#12428#12394#12356#12497#12473'('#37096#20998#19968#33268')'
           TabOrder = 7
+          Text = ''
         end
         object DirHistSrotMdCheckBox: TCheckBox
           Left = 218
@@ -339,13 +344,14 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 113
           Width = 45
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 36
-          EditLabel.Height = 13
+          EditLabel.Width = 39
+          EditLabel.Height = 15
           EditLabel.Caption = #20445#23384#25968
           NumbersOnly = True
           TabOrder = 6
+          Text = ''
         end
       end
       object DispGroupBox: TGroupBox
@@ -358,8 +364,8 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 10
           Top = 130
-          Width = 59
-          Height = 13
+          Width = 63
+          Height = 15
           Caption = #12479#12452#12488#12523#12496#12540':'
         end
         object HideAtrCheckBox: TCheckBox
@@ -406,14 +412,15 @@ object OptionDlg: TOptionDlg
           Left = 313
           Top = 68
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 90
-          EditLabel.Height = 13
+          EditLabel.Width = 99
+          EditLabel.Height = 15
           EditLabel.Caption = #12450#12452#12467#12531#12461#12515#12483#12471#12517#25968
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 6
+          Text = ''
         end
         object UseIndIconCheckBox: TCheckBox
           Left = 10
@@ -427,24 +434,26 @@ object OptionDlg: TOptionDlg
           Left = 387
           Top = 18
           Width = 36
-          Height = 21
-          EditLabel.Width = 81
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 88
+          EditLabel.Height = 15
           EditLabel.Caption = #12487#12451#12524#12463#12488#12522#21306#20999#12426
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
         end
         object GetFaviUrlEdit: TLabeledEdit
           Left = 110
           Top = 97
           Width = 313
-          Height = 21
+          Height = 23
           Hint = ' \D : '#12489#12513#12452#12531#21517
-          EditLabel.Width = 79
-          EditLabel.Height = 13
+          EditLabel.Width = 86
+          EditLabel.Height = 15
           EditLabel.Caption = 'favicon '#21462#24471'API'
           LabelPosition = lpLeft
           TabOrder = 7
+          Text = ''
         end
         object CompInTitleBarCheckBox: TCheckBox
           Left = 83
@@ -467,12 +476,13 @@ object OptionDlg: TOptionDlg
         Left = 120
         Top = 41
         Width = 285
-        Height = 21
-        EditLabel.Width = 88
-        EditLabel.Height = 13
+        Height = 23
+        EditLabel.Width = 102
+        EditLabel.Height = 15
         EditLabel.Caption = 'Migemo '#12487#12451#12524#12463#12488#12522
         LabelPosition = lpLeft
         TabOrder = 2
+        Text = ''
       end
       object OpeGroupBox: TGroupBox
         Left = 10
@@ -537,12 +547,12 @@ object OptionDlg: TOptionDlg
           Caption = 'Alt'#12461#12540#12391#12513#12491#12517#12540#12395#31227#12425#12394#12356
           TabOrder = 5
         end
-        object RestoreComboCheckBox: TCheckBox
-          Left = 188
+        object TabFocusCheckBox: TCheckBox
+          Left = 220
           Top = 95
-          Width = 238
+          Width = 200
           Height = 17
-          Caption = #12450#12463#12486#12451#12502#26178#12395#12467#12531#12508#12508#12483#12463#12473#12398#29366#24907#12434#24489#20803
+          Caption = 'TAB'#12461#12540#12391#12469#12502#12454#12451#12531#12489#12454#12408
           TabOrder = 7
         end
       end
@@ -598,10 +608,10 @@ object OptionDlg: TOptionDlg
         Caption = #12479#12473#12463
         TabOrder = 7
         object TLabel
-          Left = 58
+          Left = 52
           Top = 21
-          Width = 61
-          Height = 13
+          Width = 67
+          Height = 15
           Alignment = taRightJustify
           Caption = #26368#22823#12479#12473#12463#25968
         end
@@ -609,7 +619,7 @@ object OptionDlg: TOptionDlg
           Left = 125
           Top = 18
           Width = 58
-          Height = 21
+          Height = 23
           Style = csDropDownList
           TabOrder = 0
         end
@@ -618,12 +628,13 @@ object OptionDlg: TOptionDlg
         Left = 120
         Top = 12
         Width = 285
-        Height = 21
-        EditLabel.Width = 73
-        EditLabel.Height = 13
+        Height = 23
+        EditLabel.Width = 80
+        EditLabel.Height = 15
         EditLabel.Caption = #19968#26178#12487#12451#12524#12463#12488#12522
         LabelPosition = lpLeft
         TabOrder = 0
+        Text = ''
       end
       object TimeGroupBox: TGroupBox
         Left = 231
@@ -636,14 +647,15 @@ object OptionDlg: TOptionDlg
           Left = 106
           Top = 18
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 20
-          EditLabel.Height = 13
+          EditLabel.Width = 24
+          EditLabel.Height = 15
           EditLabel.Caption = 'm'#31186
           LabelPosition = lpRight
           NumbersOnly = True
           TabOrder = 0
+          Text = ''
         end
       end
       object WatchGroupBox: TGroupBox
@@ -659,8 +671,8 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 397
           Top = 50
-          Width = 20
-          Height = 13
+          Width = 24
+          Height = 15
           Caption = 'm'#31186
         end
         object ReloadActCheckBox: TCheckBox
@@ -683,26 +695,28 @@ object OptionDlg: TOptionDlg
           Left = 345
           Top = 47
           Width = 50
-          Height = 21
+          Height = 23
           Hint = '0 '#12391#30435#35222#12434#20572#27490
           Alignment = taRightJustify
-          EditLabel.Width = 97
-          EditLabel.Height = 13
+          EditLabel.Width = 106
+          EditLabel.Height = 15
           EditLabel.Caption = #12487#12451#12524#12463#12488#12522#30435#35222#38291#38548
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 3
+          Text = ''
         end
         object NoWatchPathEdit: TLabeledEdit
           Left = 10
           Top = 96
           Width = 413
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 160
-          EditLabel.Height = 13
+          EditLabel.Width = 174
+          EditLabel.Height = 15
           EditLabel.Caption = #30435#35222#12363#12425#38500#22806#12377#12427#12497#12473'('#21069#26041#19968#33268')'
           TabOrder = 4
+          Text = ''
         end
         object CheckUncCheckBox: TCheckBox
           Left = 10
@@ -762,7 +776,7 @@ object OptionDlg: TOptionDlg
         Left = 515
         Top = 320
         Width = 19
-        Height = 13
+        Height = 15
         Caption = '(JP)'
       end
       object DlgKeyGroupBox: TGroupBox
@@ -775,15 +789,15 @@ object OptionDlg: TOptionDlg
         object DlgMoveLabel: TLabel
           Left = 170
           Top = 21
-          Width = 103
-          Height = 13
+          Width = 111
+          Height = 15
           Caption = '+ '#12459#12540#12477#12523#12461#12540#12391#31227#21205
         end
         object DlgSizeLabel: TLabel
           Left = 170
           Top = 48
-          Width = 132
-          Height = 13
+          Width = 142
+          Height = 15
           Caption = '+ '#12459#12540#12477#12523#12461#12540#12391#12469#12452#12474#22793#26356
         end
         object DlgMoveAltCheckBox: TCheckBox
@@ -838,7 +852,7 @@ object OptionDlg: TOptionDlg
           Left = 344
           Top = 18
           Width = 45
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
           NumbersOnly = True
           TabOrder = 3
@@ -847,7 +861,7 @@ object OptionDlg: TOptionDlg
           Left = 344
           Top = 45
           Width = 45
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
           NumbersOnly = True
           TabOrder = 7
@@ -896,21 +910,23 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 128
           Width = 413
-          Height = 21
-          EditLabel.Width = 188
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 204
+          EditLabel.Height = 15
           EditLabel.Caption = '7-zip32.dll(7z.dll'#23550#24540#29256')'#12398#23550#24540#25313#24373#23376
           TabOrder = 4
+          Text = ''
         end
         object CmdGitExeEdit: TLabeledEdit
           Left = 10
           Top = 175
           Width = 374
-          Height = 21
-          EditLabel.Width = 121
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 131
+          EditLabel.Height = 15
           EditLabel.Caption = 'git.exe (Git for Windows)'
           TabOrder = 5
+          Text = ''
         end
         object RefCmdGitExeBtn: TButton
           Tag = 4
@@ -937,34 +953,37 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 79
           Width = 413
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 112
-          EditLabel.Height = 13
+          EditLabel.Width = 122
+          EditLabel.Height = 15
           EditLabel.Caption = #24773#22577#12434#21462#24471#12377#12427#25313#24373#23376
           TabOrder = 1
+          Text = ''
         end
         object FExtNoInfEdit: TLabeledEdit
           Left = 10
           Top = 124
           Width = 413
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 172
-          EditLabel.Height = 13
+          EditLabel.Width = 187
+          EditLabel.Height = 15
           EditLabel.Caption = #24773#22577#12434#21462#24471#12375#12394#12356#25313#24373#23376'[:'#21046#38480'MB]'
           TabOrder = 2
+          Text = ''
         end
         object NoInfPathEdit: TLabeledEdit
           Left = 10
           Top = 34
           Width = 413
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 161
-          EditLabel.Height = 13
+          EditLabel.Width = 174
+          EditLabel.Height = 15
           EditLabel.Caption = #24773#22577#12434#21462#24471#12375#12394#12356#12497#12473'('#21069#26041#19968#33268')'
           TabOrder = 0
+          Text = ''
         end
         object ShowAdsInfCheckBox: TCheckBox
           Left = 10
@@ -1018,7 +1037,7 @@ object OptionDlg: TOptionDlg
           Left = 253
           Top = 18
           Width = 70
-          Height = 21
+          Height = 23
           Style = csDropDownList
           DropDownCount = 24
           ImeMode = imClose
@@ -1055,34 +1074,37 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 34
           Width = 413
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 170
-          EditLabel.Height = 13
+          EditLabel.Width = 186
+          EditLabel.Height = 15
           EditLabel.Caption = #12503#12524#12499#12517#12540#12434#34892#12431#12394#12356#12497#12473'('#21069#26041#19968#33268')'
           TabOrder = 0
+          Text = ''
         end
         object FExtNoImgPrvEdit: TLabeledEdit
           Left = 10
           Top = 124
           Width = 413
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 181
-          EditLabel.Height = 13
+          EditLabel.Width = 199
+          EditLabel.Height = 15
           EditLabel.Caption = #12503#12524#12499#12517#12540#12434#34892#12431#12394#12356#25313#24373#23376'[:'#21046#38480'MB]'
           TabOrder = 2
+          Text = ''
         end
         object FExtImgPrvEdit: TLabeledEdit
           Left = 10
           Top = 79
           Width = 413
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 108
-          EditLabel.Height = 13
+          EditLabel.Width = 119
+          EditLabel.Height = 15
           EditLabel.Caption = #12503#12524#12499#12517#12540#12434#34892#12358#25313#24373#23376
           TabOrder = 1
+          Text = ''
         end
         object AniGifCheckBox: TCheckBox
           Left = 10
@@ -1133,8 +1155,8 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 126
           Top = 19
-          Width = 20
-          Height = 13
+          Width = 24
+          Height = 15
           Caption = 'm'#31186
         end
         object SaveLogCheckBox: TCheckBox
@@ -1173,41 +1195,44 @@ object OptionDlg: TOptionDlg
           Left = 76
           Top = 16
           Width = 48
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #26356#26032#38291#38548
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 0
+          Text = ''
         end
         object MaxLogLinesEdit: TLabeledEdit
           Left = 277
           Top = 16
           Width = 48
-          Height = 21
+          Height = 23
           Hint = '0 '#12391#28961#21046#38480
           Alignment = taRightJustify
-          EditLabel.Width = 72
-          EditLabel.Height = 13
+          EditLabel.Width = 78
+          EditLabel.Height = 15
           EditLabel.Caption = #26368#22823#34920#31034#34892#25968
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 1
+          Text = ''
         end
         object MaxLogFilesEdit: TLabeledEdit
           Left = 344
           Top = 96
           Width = 45
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 60
-          EditLabel.Height = 13
+          EditLabel.Width = 65
+          EditLabel.Height = 15
           EditLabel.Caption = #20445#23384#19990#20195#25968
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 10
+          Text = ''
         end
         object LogFullPathCheckBox: TCheckBox
           Left = 165
@@ -1252,22 +1277,23 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 138
           Top = 21
-          Width = 12
-          Height = 13
+          Width = 13
+          Height = 15
           Caption = #31186
         end
         object LimitSndEdit: TLabeledEdit
           Left = 91
           Top = 18
           Width = 45
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #20877#29983#21046#38480
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 0
+          Text = ''
         end
       end
       object TxtPrvGroupBox: TGroupBox
@@ -1289,15 +1315,16 @@ object OptionDlg: TOptionDlg
           Left = 135
           Top = 18
           Width = 58
-          Height = 21
+          Height = 23
           Hint = '0 '#12398#22580#21512#12377#12409#12390#34920#31034
           Alignment = taRightJustify
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #26368#22823#34892#25968
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 1
+          Text = ''
         end
         object PrevTailCheckBox: TCheckBox
           Left = 10
@@ -1311,27 +1338,29 @@ object OptionDlg: TOptionDlg
           Left = 135
           Top = 45
           Width = 58
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 15
           EditLabel.Caption = #34892
           LabelPosition = lpRight
           NumbersOnly = True
           TabOrder = 3
+          Text = ''
         end
         object PrvActTailLnEdit: TLabeledEdit
           Left = 237
           Top = 45
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 78
-          EditLabel.Height = 13
+          EditLabel.Width = 85
+          EditLabel.Height = 15
           EditLabel.Caption = #34892#20197#19978#12394#12425#20998#21106
           LabelPosition = lpRight
           NumbersOnly = True
           TabOrder = 4
+          Text = ''
         end
       end
       object ViewArcInfCheckBox: TCheckBox
@@ -1360,103 +1389,103 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 10
           Top = 22
-          Width = 136
-          Height = 13
+          Width = 150
+          Height = 15
           Caption = #12501#12449#12452#12523#12522#12473#12488#12391#12398#12480#12502#12523#12463#12522#12483#12463
         end
         object TLabel
           Left = 10
           Top = 72
-          Width = 190
-          Height = 13
+          Width = 208
+          Height = 15
           Caption = #12501#12449#12452#12523#12522#12473#12488#12408#12398#12487#12501#12457#12523#12488#12398#12489#12525#12483#12503#21205#20316
         end
         object TLabel
-          Left = 26
+          Left = 20
           Top = 176
-          Width = 66
-          Height = 13
+          Width = 72
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = #12510#12454#12473#12507#12452#12540#12523
         end
         object TLabel
-          Left = 36
+          Left = 32
           Top = 257
-          Width = 55
-          Height = 13
+          Width = 59
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Ctrl+Shift+'
         end
         object TLabel
-          Left = 61
+          Left = 59
           Top = 230
-          Width = 30
-          Height = 13
+          Width = 32
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Shift+'
         end
         object TLabel
-          Left = 66
+          Left = 64
           Top = 203
-          Width = 25
-          Height = 13
+          Width = 27
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Ctrl+'
         end
         object TLabel
-          Left = 26
+          Left = 20
           Top = 330
-          Width = 66
-          Height = 13
+          Width = 72
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = #12507#12452#12540#12523#12508#12479#12531
         end
         object TLabel
-          Left = 36
+          Left = 32
           Top = 411
-          Width = 55
-          Height = 13
+          Width = 59
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Ctrl+Shift+'
         end
         object TLabel
-          Left = 61
+          Left = 59
           Top = 384
-          Width = 30
-          Height = 13
+          Width = 32
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Shift+'
         end
         object TLabel
-          Left = 66
+          Left = 64
           Top = 357
-          Width = 25
-          Height = 13
+          Width = 27
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Ctrl+'
         end
         object TLabel
-          Left = 52
+          Left = 48
           Top = 448
-          Width = 39
-          Height = 13
+          Width = 43
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'X1'#12508#12479#12531
         end
         object TLabel
-          Left = 52
+          Left = 48
           Top = 475
-          Width = 39
-          Height = 13
+          Width = 43
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'X2'#12508#12479#12531
@@ -1465,7 +1494,7 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 41
           Width = 413
-          Height = 21
+          Height = 23
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
@@ -1475,7 +1504,7 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 91
           Width = 413
-          Height = 21
+          Height = 23
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
@@ -1501,20 +1530,21 @@ object OptionDlg: TOptionDlg
           Left = 383
           Top = 285
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 139
-          EditLabel.Height = 13
+          EditLabel.Width = 151
+          EditLabel.Height = 15
           EditLabel.Caption = ' '#12507#12452#12540#12523#12395#12424#12427#12473#12463#12525#12540#12523#34892#25968
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 9
+          Text = ''
         end
         object WheelCmdF0ComboBox: TComboBox
           Left = 95
           Top = 173
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 5
@@ -1523,7 +1553,7 @@ object OptionDlg: TOptionDlg
           Left = 95
           Top = 254
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 8
@@ -1532,7 +1562,7 @@ object OptionDlg: TOptionDlg
           Left = 95
           Top = 227
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 7
@@ -1541,7 +1571,7 @@ object OptionDlg: TOptionDlg
           Left = 95
           Top = 200
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 6
@@ -1550,7 +1580,7 @@ object OptionDlg: TOptionDlg
           Left = 95
           Top = 327
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 10
@@ -1559,7 +1589,7 @@ object OptionDlg: TOptionDlg
           Left = 95
           Top = 408
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 13
@@ -1568,7 +1598,7 @@ object OptionDlg: TOptionDlg
           Left = 95
           Top = 381
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 12
@@ -1577,7 +1607,7 @@ object OptionDlg: TOptionDlg
           Left = 95
           Top = 354
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 11
@@ -1586,7 +1616,7 @@ object OptionDlg: TOptionDlg
           Left = 95
           Top = 445
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 14
@@ -1595,7 +1625,7 @@ object OptionDlg: TOptionDlg
           Left = 95
           Top = 472
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 15
@@ -1620,64 +1650,64 @@ object OptionDlg: TOptionDlg
           434
           234)
         object TLabel
-          Left = 66
+          Left = 64
           Top = 50
-          Width = 25
-          Height = 13
+          Width = 27
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Ctrl+'
         end
         object TLabel
-          Left = 61
+          Left = 59
           Top = 77
-          Width = 30
-          Height = 13
+          Width = 32
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Shift+'
         end
         object TLabel
-          Left = 36
+          Left = 32
           Top = 104
-          Width = 55
-          Height = 13
+          Width = 59
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Ctrl+Shift+'
         end
         object TLabel
-          Left = 24
+          Left = 18
           Top = 23
-          Width = 66
-          Height = 13
+          Width = 72
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = #12510#12454#12473#12507#12452#12540#12523
         end
         object TLabel
-          Left = 26
+          Left = 20
           Top = 141
-          Width = 66
-          Height = 13
+          Width = 72
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = #12507#12452#12540#12523#12508#12479#12531
         end
         object TLabel
-          Left = 52
+          Left = 48
           Top = 175
-          Width = 39
-          Height = 13
+          Width = 43
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'X1'#12508#12479#12531
         end
         object TLabel
-          Left = 52
+          Left = 48
           Top = 202
-          Width = 39
-          Height = 13
+          Width = 43
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'X2'#12508#12479#12531
@@ -1686,7 +1716,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 20
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 0
@@ -1695,7 +1725,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 47
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 1
@@ -1704,7 +1734,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 74
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 2
@@ -1713,7 +1743,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 101
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 3
@@ -1722,7 +1752,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 138
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 4
@@ -1731,7 +1761,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 172
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 5
@@ -1740,7 +1770,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 199
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 6
@@ -1757,64 +1787,64 @@ object OptionDlg: TOptionDlg
           434
           267)
         object TLabel
-          Left = 66
+          Left = 64
           Top = 50
-          Width = 25
-          Height = 13
+          Width = 27
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Ctrl+'
         end
         object TLabel
-          Left = 61
+          Left = 59
           Top = 77
-          Width = 30
-          Height = 13
+          Width = 32
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Shift+'
         end
         object TLabel
-          Left = 36
+          Left = 32
           Top = 104
-          Width = 55
-          Height = 13
+          Width = 59
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'Ctrl+Shift+'
         end
         object TLabel
-          Left = 26
+          Left = 20
           Top = 23
-          Width = 66
-          Height = 13
+          Width = 72
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = #12510#12454#12473#12507#12452#12540#12523
         end
         object TLabel
-          Left = 26
+          Left = 20
           Top = 174
-          Width = 66
-          Height = 13
+          Width = 72
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = #12507#12452#12540#12523#12508#12479#12531
         end
         object TLabel
-          Left = 52
+          Left = 48
           Top = 209
-          Width = 39
-          Height = 13
+          Width = 43
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'X1'#12508#12479#12531
         end
         object TLabel
-          Left = 52
+          Left = 48
           Top = 236
-          Width = 39
-          Height = 13
+          Width = 43
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = 'X2'#12508#12479#12531
@@ -1823,20 +1853,21 @@ object OptionDlg: TOptionDlg
           Left = 384
           Top = 132
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 136
-          EditLabel.Height = 13
+          EditLabel.Width = 148
+          EditLabel.Height = 15
           EditLabel.Caption = #12507#12452#12540#12523#12395#12424#12427#12473#12463#12525#12540#12523#34892#25968
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 4
+          Text = ''
         end
         object WheelCmdV0ComboBox: TComboBox
           Left = 96
           Top = 20
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 0
@@ -1845,7 +1876,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 47
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 1
@@ -1854,7 +1885,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 74
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 2
@@ -1863,7 +1894,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 101
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 3
@@ -1872,7 +1903,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 171
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 5
@@ -1881,7 +1912,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 206
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 6
@@ -1890,7 +1921,7 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 233
           Width = 328
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
           TabOrder = 7
@@ -1902,18 +1933,18 @@ object OptionDlg: TOptionDlg
       Caption = #12487#12470#12452#12531
       ImageIndex = -1
       object TLabel
-        Left = 752
+        Left = 748
         Top = 551
-        Width = 48
-        Height = 13
+        Width = 52
+        Height = 15
         Alignment = taRightJustify
         Caption = #12487#12470#12452#12531#12398
       end
       object TLabel
-        Left = 682
+        Left = 676
         Top = 425
-        Width = 66
-        Height = 13
+        Width = 72
+        Height = 15
         Alignment = taRightJustify
         Caption = #12473#12463#12525#12540#12523#12496#12540
       end
@@ -1939,15 +1970,15 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 359
           Top = 175
-          Width = 20
-          Height = 13
+          Width = 24
+          Height = 15
           Caption = 'm'#31186
         end
         object BgImgModeComboBox: TComboBox
           Left = 10
           Top = 18
           Width = 195
-          Height = 21
+          Height = 23
           Style = csDropDownList
           TabOrder = 0
         end
@@ -1955,12 +1986,13 @@ object OptionDlg: TOptionDlg
           Left = 50
           Top = 49
           Width = 335
-          Height = 21
-          EditLabel.Width = 30
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 32
+          EditLabel.Height = 15
           EditLabel.Caption = #30011#20687'1'
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
         end
         object RefBgImg1Btn: TButton
           Left = 388
@@ -1976,7 +2008,7 @@ object OptionDlg: TOptionDlg
           Left = 209
           Top = 18
           Width = 214
-          Height = 21
+          Height = 23
           Style = csDropDownList
           TabOrder = 1
         end
@@ -1995,26 +2027,28 @@ object OptionDlg: TOptionDlg
           Left = 50
           Top = 78
           Width = 335
-          Height = 21
-          EditLabel.Width = 30
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 32
+          EditLabel.Height = 15
           EditLabel.Caption = #30011#20687'2'
           LabelPosition = lpLeft
           TabOrder = 4
+          Text = ''
         end
         object BgColAlphaEdit: TLabeledEdit
           Left = 99
           Top = 111
           Width = 50
-          Height = 21
+          Height = 23
           Hint = '0'#65374'255'
           Alignment = taRightJustify
-          EditLabel.Width = 42
-          EditLabel.Height = 13
+          EditLabel.Width = 46
+          EditLabel.Height = 15
           EditLabel.Caption = #32972#26223#33394#945
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 6
+          Text = ''
           OnChange = ModalAlphaEditChange
         end
         object GrayScaleCheckBox: TCheckBox
@@ -2037,14 +2071,15 @@ object OptionDlg: TOptionDlg
           Left = 309
           Top = 172
           Width = 48
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #24489#24112#26178#38291
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 11
+          Text = ''
         end
         object TileIfCheckBox: TCheckBox
           Left = 10
@@ -2058,14 +2093,15 @@ object OptionDlg: TOptionDlg
           Left = 309
           Top = 142
           Width = 48
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 15
           EditLabel.Caption = 'px'
           LabelPosition = lpRight
           NumbersOnly = True
           TabOrder = 9
+          Text = ''
         end
       end
       object DriveInfGroupBox: TGroupBox
@@ -2082,37 +2118,40 @@ object OptionDlg: TOptionDlg
           Left = 58
           Top = 18
           Width = 366
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 28
-          EditLabel.Height = 13
+          EditLabel.Width = 31
+          EditLabel.Height = 15
           EditLabel.Caption = #12523#12540#12488
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
         end
         object DrvInfFmtSEdit: TLabeledEdit
           Left = 58
           Top = 45
           Width = 366
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 36
-          EditLabel.Height = 13
+          EditLabel.Width = 39
+          EditLabel.Height = 15
           EditLabel.Caption = #36984#25246#26178
           LabelPosition = lpLeft
           TabOrder = 1
+          Text = ''
         end
         object DrvInfFmtNEdit: TLabeledEdit
           Left = 58
           Top = 72
           Width = 366
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 31
-          EditLabel.Height = 13
+          EditLabel.Width = 34
+          EditLabel.Height = 15
           EditLabel.Caption = #12381#12398#20182
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
         end
       end
       object FileListGroupBox: TGroupBox
@@ -2128,101 +2167,105 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 83
           Top = 21
-          Width = 12
-          Height = 13
+          Width = 13
+          Height = 15
           Caption = 'px'
         end
         object TLabel
           Left = 242
           Top = 21
-          Width = 12
-          Height = 13
+          Width = 13
+          Height = 15
           Caption = 'px'
         end
         object TLabel
-          Left = 242
+          Left = 239
           Top = 82
-          Width = 36
-          Height = 13
+          Width = 39
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = #23567#25968#26689
         end
         object TLabel
-          Left = 21
+          Left = 17
           Top = 82
-          Width = 53
-          Height = 13
+          Width = 57
+          Height = 15
           Alignment = taRightJustify
           Caption = #12469#12452#12474#34920#31034
         end
         object TLabel
           Left = 306
           Top = 228
-          Width = 12
-          Height = 13
+          Width = 13
+          Height = 15
           Caption = 'px'
         end
         object TLabel
           Left = 306
           Top = 255
-          Width = 12
-          Height = 13
+          Width = 13
+          Height = 15
           Caption = 'px'
         end
         object ListInterLnEdit: TLabeledEdit
           Left = 41
           Top = 18
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 24
-          EditLabel.Height = 13
+          EditLabel.Width = 26
+          EditLabel.Height = 15
           EditLabel.Caption = #34892#38291
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 0
+          Text = ''
         end
         object CursorWidthEdit: TLabeledEdit
           Left = 200
           Top = 18
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 62
-          EditLabel.Height = 13
+          EditLabel.Width = 67
+          EditLabel.Height = 15
           EditLabel.Caption = #12459#12540#12477#12523#32218#24133
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 1
+          Text = ''
         end
         object DirBraEdit: TLabeledEdit
           Left = 121
           Top = 49
           Width = 40
-          Height = 21
-          EditLabel.Width = 97
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 106
+          EditLabel.Height = 15
           EditLabel.Caption = #12487#12451#12524#12463#12488#12522#25324#24359#25991#23383
           LabelPosition = lpLeft
           TabOrder = 3
+          Text = ''
         end
         object DirKetEdit: TLabeledEdit
           Left = 182
           Top = 49
           Width = 40
-          Height = 21
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 13
+          EditLabel.Height = 15
           EditLabel.Caption = #65374
           LabelPosition = lpLeft
           TabOrder = 4
+          Text = ''
         end
         object SizeDecDgtComboBox: TComboBox
           Left = 280
           Top = 79
           Width = 45
-          Height = 21
+          Height = 23
           Style = csDropDownList
           TabOrder = 8
         end
@@ -2230,12 +2273,13 @@ object OptionDlg: TOptionDlg
           Left = 167
           Top = 113
           Width = 158
-          Height = 21
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #26085#26178#26360#24335
           LabelPosition = lpLeft
           TabOrder = 11
+          Text = ''
         end
         object ShowIconCheckBox: TCheckBox
           Left = 240
@@ -2281,14 +2325,15 @@ object OptionDlg: TOptionDlg
           Left = 106
           Top = 173
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 11
-          EditLabel.Height = 13
+          EditLabel.Width = 10
+          EditLabel.Height = 15
           EditLabel.Caption = '%'
           LabelPosition = lpRight
           NumbersOnly = True
           TabOrder = 17
+          Text = ''
         end
         object FixListCheckBox: TCheckBox
           Left = 338
@@ -2318,15 +2363,16 @@ object OptionDlg: TOptionDlg
           Left = 338
           Top = 18
           Width = 48
-          Height = 21
+          Height = 23
           Hint = '0'#65374'255'
           Alignment = taRightJustify
-          EditLabel.Width = 42
-          EditLabel.Height = 13
+          EditLabel.Width = 46
+          EditLabel.Height = 15
           EditLabel.Caption = #34892#32972#26223#945
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 2
+          Text = ''
           OnChange = ModalAlphaEditChange
         end
         object OmitEndOfNameCheckBox: TCheckBox
@@ -2341,7 +2387,7 @@ object OptionDlg: TOptionDlg
           Left = 76
           Top = 79
           Width = 146
-          Height = 21
+          Height = 23
           Style = csDropDownList
           TabOrder = 7
         end
@@ -2349,14 +2395,15 @@ object OptionDlg: TOptionDlg
           Left = 256
           Top = 225
           Width = 48
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #26368#23567#21015#24133
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 24
+          Text = ''
         end
         object FindPathColCheckBox: TCheckBox
           Left = 10
@@ -2378,14 +2425,15 @@ object OptionDlg: TOptionDlg
           Left = 256
           Top = 252
           Width = 48
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #26368#23567#21015#24133
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 26
+          Text = ''
         end
         object FindTagsSortCheckBox: TCheckBox
           Left = 338
@@ -2431,14 +2479,15 @@ object OptionDlg: TOptionDlg
           Left = 65
           Top = 113
           Width = 36
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #25313#24373#23376#24133
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 10
+          Text = ''
         end
       end
       object FlatInfPanelCheckBox: TCheckBox
@@ -2461,7 +2510,7 @@ object OptionDlg: TOptionDlg
         Left = 752
         Top = 422
         Width = 16
-        Height = 21
+        Height = 23
         TabOrder = 13
         Visible = False
       end
@@ -2479,7 +2528,7 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 18
           Width = 180
-          Height = 21
+          Height = 23
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
@@ -2521,15 +2570,16 @@ object OptionDlg: TOptionDlg
           Left = 133
           Top = 18
           Width = 48
-          Height = 21
+          Height = 23
           Hint = '0'#65374'255'
           Alignment = taRightJustify
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #19981#36879#26126#24230
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 1
+          Text = ''
           OnChange = ModalAlphaEditChange
         end
         object ModalColorBox: TColorBox
@@ -2547,18 +2597,19 @@ object OptionDlg: TOptionDlg
         Left = 518
         Top = 449
         Width = 40
-        Height = 21
-        EditLabel.Width = 42
-        EditLabel.Height = 13
+        Height = 23
+        EditLabel.Width = 46
+        EditLabel.Height = 15
         EditLabel.Caption = #22266#23450#12500#12531
         LabelPosition = lpLeft
         TabOrder = 14
+        Text = ''
       end
       object ScrBarStyleComboBox: TComboBox
         Left = 752
         Top = 422
         Width = 132
-        Height = 21
+        Height = 23
         Style = csDropDownList
         TabOrder = 12
         OnClick = ScrBarStyleComboBoxClick
@@ -2603,12 +2654,13 @@ object OptionDlg: TOptionDlg
           Left = 29
           Top = 20
           Width = 292
-          Height = 21
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 13
+          EditLabel.Height = 15
           EditLabel.Caption = #27491
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
         end
         object RefSpImgBtn: TButton
           Tag = 2
@@ -2636,38 +2688,41 @@ object OptionDlg: TOptionDlg
           Left = 29
           Top = 49
           Width = 292
-          Height = 21
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 13
+          EditLabel.Height = 15
           EditLabel.Caption = #21103
           LabelPosition = lpLeft
           TabOrder = 3
+          Text = ''
         end
         object SplitWidthEdit: TLabeledEdit
           Left = 365
           Top = 19
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 15
           EditLabel.Caption = 'px'
           LabelPosition = lpRight
           NumbersOnly = True
           TabOrder = 2
+          Text = ''
         end
         object SplitWidth2Edit: TLabeledEdit
           Left = 365
           Top = 48
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 15
           EditLabel.Caption = 'px'
           LabelPosition = lpRight
           NumbersOnly = True
           TabOrder = 5
+          Text = ''
         end
       end
       object SttBarGroupBox: TGroupBox
@@ -2684,7 +2739,7 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 18
           Width = 414
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
@@ -2692,13 +2747,14 @@ object OptionDlg: TOptionDlg
           Left = 79
           Top = 46
           Width = 345
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 54
-          EditLabel.Height = 13
+          EditLabel.Width = 59
+          EditLabel.Height = 15
           EditLabel.Caption = #26178#35336#12497#12493#12523
           LabelPosition = lpLeft
           TabOrder = 1
+          Text = ''
         end
       end
       object TabGroupBox: TGroupBox
@@ -2714,15 +2770,15 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 100
           Top = 21
-          Width = 12
-          Height = 13
+          Width = 13
+          Height = 15
           Caption = 'px'
         end
         object TLabel
-          Left = 136
+          Left = 133
           Top = 21
-          Width = 36
-          Height = 13
+          Width = 39
+          Height = 15
           Alignment = taRightJustify
           Caption = #12473#12479#12452#12523
         end
@@ -2730,20 +2786,21 @@ object OptionDlg: TOptionDlg
           Left = 58
           Top = 18
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 29
-          EditLabel.Height = 13
+          EditLabel.Width = 32
+          EditLabel.Height = 15
           EditLabel.Caption = #12479#12502#24133
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 0
+          Text = ''
         end
         object TabStyleComboBox: TComboBox
           Left = 176
           Top = 18
           Width = 84
-          Height = 21
+          Height = 23
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 1
@@ -2772,18 +2829,18 @@ object OptionDlg: TOptionDlg
       Caption = #12501#12457#12531#12488#12539#37197#33394
       ImageIndex = -1
       object TLabel
-        Left = 473
+        Left = 470
         Top = 551
-        Width = 34
-        Height = 13
+        Width = 37
+        Height = 15
         Alignment = taRightJustify
         Caption = #37197#33394#12398
       end
       object TLabel
-        Left = 727
+        Left = 719
         Top = 551
-        Width = 73
-        Height = 13
+        Width = 81
+        Height = 15
         Alignment = taRightJustify
         Caption = #12501#12457#12531#12488#12539#37197#33394#12398
       end
@@ -2862,13 +2919,14 @@ object OptionDlg: TOptionDlg
           Left = 57
           Top = 186
           Width = 280
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akRight, akBottom]
-          EditLabel.Width = 36
-          EditLabel.Height = 13
+          EditLabel.Width = 39
+          EditLabel.Height = 15
           EditLabel.Caption = #25313#24373#23376
           LabelPosition = lpLeft
           TabOrder = 1
+          Text = ''
         end
         object AddColBtn: TButton
           Left = 10
@@ -2978,13 +3036,14 @@ object OptionDlg: TOptionDlg
           Left = 341
           Top = 216
           Width = 82
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akBottom]
-          EditLabel.Width = 24
-          EditLabel.Height = 13
+          EditLabel.Width = 26
+          EditLabel.Height = 15
           EditLabel.Caption = #26908#32034
           LabelPosition = lpLeft
           TabOrder = 10
+          Text = ''
           OnChange = FindXColEditChange
         end
       end
@@ -3101,12 +3160,13 @@ object OptionDlg: TOptionDlg
           Left = 198
           Top = 251
           Width = 160
-          Height = 21
-          EditLabel.Width = 24
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 26
+          EditLabel.Height = 15
           EditLabel.Caption = #26908#32034
           LabelPosition = lpLeft
           TabOrder = 4
+          Text = ''
           OnChange = FindColEditChange
           OnKeyDown = FindColEditKeyDown
         end
@@ -3287,33 +3347,33 @@ object OptionDlg: TOptionDlg
       ImageIndex = -1
       DesignSize = (
         906
-        584)
+        580)
       object TLabel
         Left = 90
         Top = 147
-        Width = 12
-        Height = 13
+        Width = 13
+        Height = 15
         Caption = 'px'
       end
       object TLabel
         Left = 651
         Top = 403
-        Width = 12
-        Height = 13
+        Width = 14
+        Height = 15
         Caption = 'KB'
       end
       object TLabel
         Left = 651
         Top = 436
-        Width = 14
-        Height = 13
+        Width = 18
+        Height = 15
         Caption = 'MB'
       end
       object TLabel
         Left = 220
         Top = 147
-        Width = 12
-        Height = 13
+        Width = 13
+        Height = 15
         Caption = 'px'
       end
       object AltBackSlashCheckBox: TCheckBox
@@ -3344,15 +3404,16 @@ object OptionDlg: TOptionDlg
         Left = 265
         Top = 279
         Width = 48
-        Height = 21
+        Height = 23
         Hint = '0'#65374'255'
         Alignment = taRightJustify
-        EditLabel.Width = 26
-        EditLabel.Height = 13
+        EditLabel.Width = 29
+        EditLabel.Height = 15
         EditLabel.Caption = #12475#12523#945
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 15
+        Text = ''
         OnChange = ModalAlphaEditChange
       end
       object ClickableUrlCheckBox: TCheckBox
@@ -3437,11 +3498,12 @@ object OptionDlg: TOptionDlg
           Height = 21
           Hint = #27491#35215#34920#29694#21487
           AutoSize = False
-          EditLabel.Width = 66
-          EditLabel.Height = 13
+          EditLabel.Width = 70
+          EditLabel.Height = 15
           EditLabel.Caption = #12496#12452#12490#12522#24375#35519'1'
           LabelPosition = lpLeft
           TabOrder = 7
+          Text = ''
         end
         object EmpBin2Edit: TLabeledEdit
           Left = 89
@@ -3451,10 +3513,11 @@ object OptionDlg: TOptionDlg
           Hint = #27491#35215#34920#29694#21487
           AutoSize = False
           EditLabel.Width = 6
-          EditLabel.Height = 13
+          EditLabel.Height = 15
           EditLabel.Caption = '2'
           LabelPosition = lpLeft
           TabOrder = 8
+          Text = ''
         end
         object EmSymCheckBox: TCheckBox
           Left = 169
@@ -3481,10 +3544,11 @@ object OptionDlg: TOptionDlg
           Anchors = [akLeft, akTop, akRight]
           AutoSize = False
           EditLabel.Width = 6
-          EditLabel.Height = 13
+          EditLabel.Height = 15
           EditLabel.Caption = '3'
           LabelPosition = lpLeft
           TabOrder = 9
+          Text = ''
         end
       end
       object ExtTxViewerGroupBox: TGroupBox
@@ -3499,7 +3563,7 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 18
           Width = 379
-          Height = 21
+          Height = 23
           TabOrder = 0
         end
         object RefExtTxViewerBtn: TButton
@@ -3516,28 +3580,30 @@ object OptionDlg: TOptionDlg
           Left = 189
           Top = 44
           Width = 200
-          Height = 21
+          Height = 23
           Hint = '$F '#12501#12449#12452#12523#21517'/  $L '#34892#30058#21495
-          EditLabel.Width = 44
-          EditLabel.Height = 13
+          EditLabel.Width = 49
+          EditLabel.Height = 15
           EditLabel.Caption = #12497#12521#12513#12540#12479
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
         end
       end
       object FixedLimitEdit: TLabeledEdit
         Left = 142
         Top = 279
         Width = 60
-        Height = 21
+        Height = 23
         Hint = '0 '#12391#28961#21046#38480
         Alignment = taRightJustify
-        EditLabel.Width = 106
-        EditLabel.Height = 13
+        EditLabel.Width = 115
+        EditLabel.Height = 15
         EditLabel.Caption = #22266#23450#38263#34920#31034#12398#21046#38480#24133
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 14
+        Text = ''
       end
       object FoldGroupBox: TGroupBox
         Left = 10
@@ -3568,7 +3634,7 @@ object OptionDlg: TOptionDlg
           Left = 352
           Top = 16
           Width = 65
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
           NumbersOnly = True
           TabOrder = 2
@@ -3586,22 +3652,24 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 190
           Width = 414
-          Height = 21
-          EditLabel.Width = 162
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 177
+          EditLabel.Height = 15
           EditLabel.Caption = '<div>'#12398#21069#12395#32619#32218#12434#25407#20837#12377#12427#12463#12521#12473
           TabOrder = 3
+          Text = ''
         end
         object HdrStrEdit: TLabeledEdit
           Left = 10
           Top = 36
           Width = 160
-          Height = 21
+          Height = 23
           Hint = '; '#12391#21306#20999#12387#12390'6'#20491#12414#12391#25351#23450#21487#33021
-          EditLabel.Width = 103
-          EditLabel.Height = 13
+          EditLabel.Width = 112
+          EditLabel.Height = 15
           EditLabel.Caption = #35211#20986#12375#25991#23383'(H1'#65374'H6)'
           TabOrder = 0
+          Text = ''
         end
         object InsHrSctCheckBox: TCheckBox
           Left = 10
@@ -3639,35 +3707,38 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 88
           Width = 414
-          Height = 21
-          EditLabel.Width = 135
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 148
+          EditLabel.Height = 15
           EditLabel.Caption = #21066#38500#12377#12427#12502#12525#12483#12463#35201#32032#12398#12463#12521#12473
           TabOrder = 1
+          Text = ''
         end
         object DelBlkIdEdit: TLabeledEdit
           Left = 10
           Top = 135
           Width = 414
-          Height = 21
-          EditLabel.Width = 121
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 131
+          EditLabel.Height = 15
           EditLabel.Caption = #21066#38500#12377#12427#12502#12525#12483#12463#35201#32032#12398'ID'
           TabOrder = 2
+          Text = ''
         end
       end
       object LeftMarginEdit: TLabeledEdit
         Left = 178
         Top = 144
         Width = 40
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 48
-        EditLabel.Height = 13
+        EditLabel.Width = 52
+        EditLabel.Height = 15
         EditLabel.Caption = #24038#20596#20313#30333
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 8
+        Text = ''
       end
       object LimitBinCsrCheckBox: TCheckBox
         Left = 20
@@ -3681,27 +3752,29 @@ object OptionDlg: TOptionDlg
         Left = 589
         Top = 433
         Width = 60
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 113
-        EditLabel.Height = 13
+        EditLabel.Width = 121
+        EditLabel.Height = 15
         EditLabel.Caption = #12496#12452#12490#12522#26368#22823#35501#36796#12469#12452#12474
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 28
+        Text = ''
       end
       object LimitTxtEdit: TLabeledEdit
         Left = 589
         Top = 400
         Width = 60
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 113
-        EditLabel.Height = 13
+        EditLabel.Width = 123
+        EditLabel.Height = 15
         EditLabel.Caption = #12486#12461#12473#12488#26368#22823#35501#36796#12469#12452#12474
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 27
+        Text = ''
       end
       object RstViewLnCheckBox: TCheckBox
         Left = 281
@@ -3763,26 +3836,28 @@ object OptionDlg: TOptionDlg
         Left = 16
         Top = 244
         Width = 54
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 50
-        EditLabel.Height = 13
+        EditLabel.Width = 56
+        EditLabel.Height = 15
         EditLabel.Caption = #12479#12502#12473#12488#12483#12503
         NumbersOnly = True
         TabOrder = 12
+        Text = ''
       end
       object TextInterLnEdit: TLabeledEdit
         Left = 48
         Top = 144
         Width = 40
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 24
-        EditLabel.Height = 13
+        EditLabel.Width = 26
+        EditLabel.Height = 15
         EditLabel.Caption = #34892#38291
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 7
+        Text = ''
       end
       object TvCsrVisiCheckBox: TCheckBox
         Left = 20
@@ -3812,23 +3887,25 @@ object OptionDlg: TOptionDlg
         Left = 16
         Top = 197
         Width = 414
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
-        EditLabel.Width = 102
-        EditLabel.Height = 13
+        EditLabel.Width = 112
+        EditLabel.Height = 15
         EditLabel.Caption = #12479#12502#12473#12488#12483#12503'4'#12398#25313#24373#23376
         TabOrder = 11
+        Text = ''
       end
       object ViewTabXEdit: TLabeledEdit
         Left = 74
         Top = 244
         Width = 356
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
-        EditLabel.Width = 36
-        EditLabel.Height = 13
+        EditLabel.Width = 39
+        EditLabel.Height = 15
         EditLabel.Caption = #25313#24373#23376
         TabOrder = 13
+        Text = ''
       end
       object FormatJsonCheckBox: TCheckBox
         Left = 470
@@ -3845,26 +3922,26 @@ object OptionDlg: TOptionDlg
       ImageIndex = -1
       DesignSize = (
         906
-        584)
+        580)
       object TLabel
         Left = 391
         Top = 53
-        Width = 11
-        Height = 13
+        Width = 10
+        Height = 15
         Caption = '%'
       end
       object TLabel
         Left = 199
         Top = 83
-        Width = 12
-        Height = 13
+        Width = 13
+        Height = 15
         Caption = 'px'
       end
       object TLabel
-        Left = 34
+        Left = 23
         Top = 19
-        Width = 109
-        Height = 13
+        Width = 120
+        Height = 15
         Alignment = taRightJustify
         Anchors = [akTop, akRight]
         Caption = #32302#23567#12539#25313#22823#12450#12523#12468#12522#12474#12512
@@ -3872,15 +3949,15 @@ object OptionDlg: TOptionDlg
       object TLabel
         Left = 199
         Top = 53
-        Width = 12
-        Height = 13
+        Width = 13
+        Height = 15
         Caption = 'px'
       end
       object TLabel
         Left = 199
         Top = 115
-        Width = 20
-        Height = 13
+        Width = 24
+        Height = 15
         Caption = 'm'#31186
       end
       object AnimateGifCheckBox: TCheckBox
@@ -3903,38 +3980,41 @@ object OptionDlg: TOptionDlg
         Left = 470
         Top = 181
         Width = 414
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
-        EditLabel.Width = 133
-        EditLabel.Height = 13
+        EditLabel.Width = 144
+        EditLabel.Height = 15
         EditLabel.Caption = #34920#31034#12375#12394#12356#12501#12449#12452#12523#12398#25313#24373#23376
         TabOrder = 22
+        Text = ''
       end
       object FitMaxZoomEdit: TLabeledEdit
         Left = 339
         Top = 50
         Width = 50
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 78
-        EditLabel.Height = 13
+        EditLabel.Width = 85
+        EditLabel.Height = 15
         EditLabel.Caption = #35377#23481#12501#12451#12483#12488#20493#29575
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 2
+        Text = ''
       end
       object FrmMgnEdit: TLabeledEdit
         Left = 147
         Top = 50
         Width = 50
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 100
-        EditLabel.Height = 13
+        EditLabel.Width = 109
+        EditLabel.Height = 15
         EditLabel.Caption = #12501#12451#12483#12488#34920#31034#12398#20313#30333#24133
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 1
+        Text = ''
       end
       object HideCsrFullCheckBox: TCheckBox
         Left = 223
@@ -3964,27 +4044,29 @@ object OptionDlg: TOptionDlg
         Left = 339
         Top = 80
         Width = 30
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 71
-        EditLabel.Height = 13
+        EditLabel.Width = 77
+        EditLabel.Height = 15
         EditLabel.Caption = #20998#21106#12464#12522#12483#12489' '#27178
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 4
+        Text = ''
       end
       object ImgGridVEdit: TLabeledEdit
         Left = 399
         Top = 80
         Width = 30
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 12
-        EditLabel.Height = 13
+        EditLabel.Width = 13
+        EditLabel.Height = 15
         EditLabel.Caption = #32294
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 5
+        Text = ''
       end
       object ImgSttIsBtmCheckBox: TCheckBox
         Left = 12
@@ -4011,14 +4093,15 @@ object OptionDlg: TOptionDlg
         Left = 147
         Top = 80
         Width = 50
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 57
-        EditLabel.Height = 13
+        EditLabel.Width = 62
+        EditLabel.Height = 15
         EditLabel.Caption = #35211#38283#12365#38291#38548
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 3
+        Text = ''
       end
       object KeepZoomCheckBox: TCheckBox
         Left = 207
@@ -4058,46 +4141,50 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 107
           Width = 202
-          Height = 21
-          EditLabel.Width = 79
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 86
+          EditLabel.Height = 15
           EditLabel.Caption = #36969#29992#12377#12427#25313#24373#23376
           TabOrder = 2
+          Text = ''
         end
         object MarkMemoEdit: TLabeledEdit
           Left = 222
           Top = 107
           Width = 202
-          Height = 21
-          EditLabel.Width = 17
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 19
+          EditLabel.Height = 15
           EditLabel.Caption = #12513#12514
           TabOrder = 3
+          Text = ''
         end
         object MarkPathEdit: TLabeledEdit
           Left = 10
           Top = 60
           Width = 414
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 148
-          EditLabel.Height = 13
+          EditLabel.Width = 161
+          EditLabel.Height = 15
           EditLabel.Caption = #36969#29992#12377#12427#12487#12451#12524#12463#12488#12522'('#21069#26041#19968#33268')'
           TabOrder = 1
+          Text = ''
         end
       end
       object MinShowTimeEdit: TLabeledEdit
         Left = 147
         Top = 112
         Width = 50
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 75
-        EditLabel.Height = 13
+        EditLabel.Width = 81
+        EditLabel.Height = 15
         EditLabel.Caption = #26368#23567#34920#31034#12479#12452#12512
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 6
+        Text = ''
       end
       object RotViewImgCheckBox: TCheckBox
         Left = 12
@@ -4111,7 +4198,7 @@ object OptionDlg: TOptionDlg
         Left = 147
         Top = 16
         Width = 170
-        Height = 21
+        Height = 23
         Style = csDropDownList
         TabOrder = 0
       end
@@ -4142,10 +4229,10 @@ object OptionDlg: TOptionDlg
           434
           201)
         object TLabel
-          Left = 109
+          Left = 107
           Top = 23
-          Width = 24
-          Height = 13
+          Width = 26
+          Height = 15
           Alignment = taRightJustify
           Caption = #32302#23567
         end
@@ -4161,27 +4248,29 @@ object OptionDlg: TOptionDlg
           Left = 48
           Top = 20
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 29
-          EditLabel.Height = 13
+          EditLabel.Width = 31
+          EditLabel.Height = 15
           EditLabel.Caption = #12469#12452#12474
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 0
+          Text = ''
         end
         object ThumbBdrEdit: TLabeledEdit
           Left = 373
           Top = 20
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #22659#30028#32218#24133
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 2
+          Text = ''
         end
         object ThumbFExtCheckBox: TCheckBox
           Left = 290
@@ -4235,18 +4324,19 @@ object OptionDlg: TOptionDlg
           Left = 26
           Top = 168
           Width = 397
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 147
-          EditLabel.Height = 13
+          EditLabel.Width = 160
+          EditLabel.Height = 15
           EditLabel.Caption = #12461#12515#12483#12471#12517#12375#12394#12356#12497#12473'('#21069#26041#19968#33268')'
           TabOrder = 10
+          Text = ''
         end
         object ThumbOptComboBox: TComboBox
           Left = 137
           Top = 20
           Width = 170
-          Height = 21
+          Height = 23
           Style = csDropDownList
           TabOrder = 1
         end
@@ -4266,7 +4356,7 @@ object OptionDlg: TOptionDlg
       ImageIndex = -1
       DesignSize = (
         906
-        584)
+        580)
       object BinEditGroupBox: TGroupBox
         Left = 10
         Top = 184
@@ -4293,7 +4383,7 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 18
           Width = 830
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
@@ -4324,25 +4414,27 @@ object OptionDlg: TOptionDlg
           Left = 90
           Top = 259
           Width = 120
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akBottom]
-          EditLabel.Width = 60
-          EditLabel.Height = 13
+          EditLabel.Width = 65
+          EditLabel.Height = 15
           EditLabel.Caption = #23550#35937#25313#24373#23376
           LabelPosition = lpLeft
           TabOrder = 1
+          Text = ''
         end
         object EtcEditorEdit: TLabeledEdit
           Left = 276
           Top = 259
           Width = 564
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akRight, akBottom]
-          EditLabel.Width = 34
-          EditLabel.Height = 13
+          EditLabel.Width = 37
+          EditLabel.Height = 15
           EditLabel.Caption = #12456#12487#12451#12479
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
         end
         object EtcEditorListBox: TListBox
           Left = 10
@@ -4430,19 +4522,20 @@ object OptionDlg: TOptionDlg
           Left = 95
           Top = 49
           Width = 578
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 60
-          EditLabel.Height = 13
+          EditLabel.Width = 65
+          EditLabel.Height = 15
           EditLabel.Caption = #23550#35937#25313#24373#23376
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
         end
         object ImageEditorEdit: TEdit
           Left = 10
           Top = 18
           Width = 830
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
@@ -4470,7 +4563,7 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 18
           Width = 830
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
@@ -4488,14 +4581,15 @@ object OptionDlg: TOptionDlg
           Left = 363
           Top = 47
           Width = 477
-          Height = 21
+          Height = 23
           Hint = '$F '#12501#12449#12452#12523#21517'/  $L '#34892#30058#21495
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 247
-          EditLabel.Height = 13
+          EditLabel.Width = 272
+          EditLabel.Height = 15
           EditLabel.Caption = #12497#12521#12513#12540#12479' (GREP'#12420#12486#12461#12473#12488#12499#12517#12450#12540#12391#12398#12479#12464#12472#12515#12531#12503#29992')'
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
         end
       end
     end
@@ -4507,7 +4601,7 @@ object OptionDlg: TOptionDlg
         Left = 0
         Top = 0
         Width = 906
-        Height = 454
+        Height = 450
         Align = alClient
         OwnerDraw = True
         TabOrder = 0
@@ -4528,7 +4622,7 @@ object OptionDlg: TOptionDlg
           Left = 4
           Top = 21
           Width = 898
-          Height = 407
+          Height = 401
           Style = lbOwnerDrawFixed
           Align = alClient
           ItemHeight = 13
@@ -4569,7 +4663,7 @@ object OptionDlg: TOptionDlg
         end
         object KeySpcPanel: TPanel
           Left = 4
-          Top = 428
+          Top = 422
           Width = 898
           Height = 4
           Align = alBottom
@@ -4579,7 +4673,7 @@ object OptionDlg: TOptionDlg
       end
       object KeySetPanel: TPanel
         Left = 0
-        Top = 454
+        Top = 450
         Width = 906
         Height = 130
         Align = alBottom
@@ -4589,10 +4683,10 @@ object OptionDlg: TOptionDlg
           906
           130)
         object TLabel
-          Left = 650
+          Left = 645
           Top = 103
-          Width = 54
-          Height = 13
+          Width = 59
+          Height = 15
           Alignment = taRightJustify
           Caption = #12461#12540#35373#23450#12398
         end
@@ -4617,12 +4711,13 @@ object OptionDlg: TOptionDlg
           Left = 448
           Top = 98
           Width = 105
-          Height = 21
-          EditLabel.Width = 24
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 26
+          EditLabel.Height = 15
           EditLabel.Caption = #26908#32034
           LabelPosition = lpLeft
           TabOrder = 5
+          Text = ''
           OnChange = FindKeyEditChange
           OnKeyDown = FindKeyEditKeyDown
         end
@@ -4637,7 +4732,7 @@ object OptionDlg: TOptionDlg
             Left = 96
             Top = 22
             Width = 8
-            Height = 13
+            Height = 15
             Caption = '~'
           end
           object KeyComboBox: TComboBox
@@ -4723,10 +4818,10 @@ object OptionDlg: TOptionDlg
             691
             79)
           object TLabel
-            Left = 164
+            Left = 159
             Top = 51
-            Width = 44
-            Height = 13
+            Width = 49
+            Height = 15
             Alignment = taRightJustify
             Anchors = [akTop, akRight]
             Caption = #12497#12521#12513#12540#12479
@@ -4786,12 +4881,13 @@ object OptionDlg: TOptionDlg
             Left = 497
             Top = 18
             Width = 114
-            Height = 21
-            EditLabel.Width = 33
-            EditLabel.Height = 13
+            Height = 23
+            EditLabel.Width = 36
+            EditLabel.Height = 15
             EditLabel.Caption = #12501#12451#12523#12479
             LabelPosition = lpLeft
             TabOrder = 1
+            Text = ''
             OnChange = KeyFilterEdit_Change
             OnKeyDown = KeyFilterEdit_KeyDown
             OnKeyPress = KeyFilterEdit_KeyPress
@@ -4848,7 +4944,7 @@ object OptionDlg: TOptionDlg
         Left = 0
         Top = 0
         Width = 906
-        Height = 514
+        Height = 510
         Style = lbOwnerDrawFixed
         Align = alClient
         DoubleBuffered = False
@@ -4863,7 +4959,7 @@ object OptionDlg: TOptionDlg
       end
       object AsoPanel: TPanel
         Left = 0
-        Top = 514
+        Top = 510
         Width = 906
         Height = 70
         Align = alBottom
@@ -4875,15 +4971,15 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 436
           Top = 44
-          Width = 311
-          Height = 13
+          Width = 341
+          Height = 15
           Caption = #8251#12371#12371#12391#35373#23450#12375#12383#38306#36899#20184#12369#12399' OpenByApp '#12467#12510#12531#12489#12391#29992#12356#12425#12428#12414#12377#12290
         end
         object TLabel
           Left = 126
           Top = 11
           Width = 12
-          Height = 13
+          Height = 15
           Caption = #10145
         end
         object AsoRefBtn: TButton
@@ -4940,12 +5036,13 @@ object OptionDlg: TOptionDlg
           Left = 56
           Top = 8
           Width = 60
-          Height = 21
-          EditLabel.Width = 36
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 39
+          EditLabel.Height = 15
           EditLabel.Caption = #25313#24373#23376
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
         end
         object AsoSortCheckBox: TCheckBox
           Left = 336
@@ -4959,7 +5056,7 @@ object OptionDlg: TOptionDlg
           Left = 146
           Top = 8
           Width = 717
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 20
           TabOrder = 1
@@ -4973,7 +5070,7 @@ object OptionDlg: TOptionDlg
       ImageIndex = -1
       object ExtMenuPanel: TPanel
         Left = 0
-        Top = 434
+        Top = 430
         Width = 906
         Height = 150
         Align = alBottom
@@ -4985,15 +5082,15 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 436
           Top = 124
-          Width = 263
-          Height = 13
+          Width = 289
+          Height = 15
           Caption = #8251#12371#12371#12391#35373#23450#12375#12383#38917#30446#12399#12300#32232#38598#12513#12491#12517#12540#12301#12395#36861#21152#12373#12428#12414#12377#12290
         end
         object TLabel
-          Left = 49
+          Left = 46
           Top = 41
-          Width = 35
-          Height = 13
+          Width = 38
+          Height = 15
           Alignment = taRightJustify
           Caption = #12467#12510#12531#12489
         end
@@ -5008,19 +5105,20 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 8
           Width = 220
-          Height = 21
-          EditLabel.Width = 52
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 58
+          EditLabel.Height = 15
           EditLabel.Caption = #12461#12515#12503#12471#12519#12531
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
           OnChange = MenuTitEditChange
         end
         object MenuCmdComboBox: TComboBox
           Left = 96
           Top = 35
           Width = 802
-          Height = 21
+          Height = 23
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
@@ -5030,13 +5128,14 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 62
           Width = 673
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 44
-          EditLabel.Height = 13
+          EditLabel.Width = 49
+          EditLabel.Height = 15
           EditLabel.Caption = #12497#12521#12513#12540#12479
           LabelPosition = lpLeft
           TabOrder = 3
+          Text = ''
         end
         object RefMenuPrmBtn: TButton
           Left = 771
@@ -5092,13 +5191,14 @@ object OptionDlg: TOptionDlg
           Left = 400
           Top = 8
           Width = 205
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 43
-          EditLabel.Height = 13
+          EditLabel.Width = 47
+          EditLabel.Height = 15
           EditLabel.Caption = #12456#12452#12522#12450#12473
           LabelPosition = lpLeft
           TabOrder = 1
+          Text = ''
         end
         object ExEditBtn: TButton
           Left = 808
@@ -5113,13 +5213,14 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 89
           Width = 673
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 35
-          EditLabel.Height = 13
+          EditLabel.Width = 38
+          EditLabel.Height = 15
           EditLabel.Caption = #12450#12452#12467#12531
           LabelPosition = lpLeft
           TabOrder = 6
+          Text = ''
         end
         object RefMenuIconBtn: TButton
           Tag = 100
@@ -5137,7 +5238,7 @@ object OptionDlg: TOptionDlg
         Left = 0
         Top = 20
         Width = 906
-        Height = 414
+        Height = 410
         Align = alClient
         DoubleBuffered = False
         DragMode = dmAutomatic
@@ -5185,7 +5286,7 @@ object OptionDlg: TOptionDlg
       ImageIndex = -1
       object ExtToolPanel: TPanel
         Left = 0
-        Top = 434
+        Top = 430
         Width = 906
         Height = 150
         Align = alBottom
@@ -5197,8 +5298,8 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 436
           Top = 124
-          Width = 268
-          Height = 13
+          Width = 295
+          Height = 15
           Caption = #8251#12371#12371#12391#35373#23450#12375#12383#38917#30446#12399#12300#12484#12540#12523#12513#12491#12517#12540#12301#12395#36861#21152#12373#12428#12414#12377#12290
         end
         object RefToolFmtBtn: TSpeedButton
@@ -5221,37 +5322,40 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 8
           Width = 220
-          Height = 21
-          EditLabel.Width = 52
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 58
+          EditLabel.Height = 15
           EditLabel.Caption = #12461#12515#12503#12471#12519#12531
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
           OnChange = ToolTitEditChange
         end
         object ToolExeEdit: TLabeledEdit
           Left = 96
           Top = 35
           Width = 764
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 58
-          EditLabel.Height = 13
+          EditLabel.Width = 63
+          EditLabel.Height = 15
           EditLabel.Caption = #23455#34892#12501#12449#12452#12523
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
         end
         object ToolPrmEdit: TLabeledEdit
           Left = 96
           Top = 62
           Width = 764
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 44
-          EditLabel.Height = 13
+          EditLabel.Width = 49
+          EditLabel.Height = 15
           EditLabel.Caption = #12497#12521#12513#12540#12479
           LabelPosition = lpLeft
           TabOrder = 4
+          Text = ''
         end
         object RefExeBtn: TButton
           Left = 862
@@ -5317,32 +5421,34 @@ object OptionDlg: TOptionDlg
           Left = 96
           Top = 89
           Width = 764
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 73
-          EditLabel.Height = 13
+          EditLabel.Width = 80
+          EditLabel.Height = 15
           EditLabel.Caption = #20316#26989#12487#12451#12524#12463#12488#12522
           LabelPosition = lpLeft
           TabOrder = 5
+          Text = ''
         end
         object ToolAliasEdit: TLabeledEdit
           Left = 400
           Top = 8
           Width = 205
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 43
-          EditLabel.Height = 13
+          EditLabel.Width = 47
+          EditLabel.Height = 15
           EditLabel.Caption = #12456#12452#12522#12450#12473
           LabelPosition = lpLeft
           TabOrder = 1
+          Text = ''
         end
       end
       object ExtToolListBox: TCheckListBox
         Left = 0
         Top = 20
         Width = 906
-        Height = 414
+        Height = 410
         Align = alClient
         DragMode = dmAutomatic
         Style = lbOwnerDrawFixed
@@ -5387,7 +5493,7 @@ object OptionDlg: TOptionDlg
       ImageIndex = -1
       DesignSize = (
         906
-        584)
+        580)
       object DuplGroupBox: TGroupBox
         Left = 10
         Top = 392
@@ -5457,54 +5563,58 @@ object OptionDlg: TOptionDlg
           Left = 139
           Top = 44
           Width = 55
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 15
           EditLabel.Caption = #24038
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
           OnChange = IniWinSizeChange
         end
         object IniWinTopEdit: TLabeledEdit
           Left = 220
           Top = 44
           Width = 55
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 15
           EditLabel.Caption = #19978
           LabelPosition = lpLeft
           TabOrder = 3
+          Text = ''
           OnChange = IniWinSizeChange
         end
         object IniWinWdEdit: TLabeledEdit
           Left = 301
           Top = 44
           Width = 55
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 15
           EditLabel.Caption = #24133
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 4
+          Text = ''
           OnChange = IniWinSizeChange
         end
         object IniWinHiEdit: TLabeledEdit
           Left = 382
           Top = 44
           Width = 55
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 15
           EditLabel.Caption = #39640
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 5
+          Text = ''
           OnChange = IniWinSizeChange
         end
         object AlRightBtn: TButton
@@ -5576,7 +5686,7 @@ object OptionDlg: TOptionDlg
           Left = 375
           Top = 18
           Width = 463
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
         end
@@ -5602,10 +5712,10 @@ object OptionDlg: TOptionDlg
           434
           186)
         object TLabel
-          Left = 22
+          Left = 17
           Top = 154
-          Width = 45
-          Height = 13
+          Width = 50
+          Height = 15
           Alignment = taRightJustify
           Caption = #12497#12473#12510#12473#12463
         end
@@ -5640,7 +5750,7 @@ object OptionDlg: TOptionDlg
           Left = 71
           Top = 40
           Width = 353
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 3
         end
@@ -5676,7 +5786,7 @@ object OptionDlg: TOptionDlg
           Left = 71
           Top = 151
           Width = 353
-          Height = 21
+          Height = 23
           TabOrder = 6
         end
       end
@@ -5691,10 +5801,10 @@ object OptionDlg: TOptionDlg
           434
           186)
         object TLabel
-          Left = 22
+          Left = 17
           Top = 154
-          Width = 45
-          Height = 13
+          Width = 50
+          Height = 15
           Alignment = taRightJustify
           Caption = #12497#12473#12510#12473#12463
         end
@@ -5729,7 +5839,7 @@ object OptionDlg: TOptionDlg
           Left = 71
           Top = 40
           Width = 353
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 3
         end
@@ -5766,7 +5876,7 @@ object OptionDlg: TOptionDlg
           Left = 71
           Top = 151
           Width = 353
-          Height = 21
+          Height = 23
           TabOrder = 6
         end
       end
@@ -5789,10 +5899,10 @@ object OptionDlg: TOptionDlg
           884
           119)
         object TLabel
-          Left = 454
+          Left = 452
           Top = 27
-          Width = 35
-          Height = 13
+          Width = 37
+          Height = 15
           Alignment = taRightJustify
           Caption = #12489#12521#12452#12502
         end
@@ -5839,7 +5949,7 @@ object OptionDlg: TOptionDlg
           Left = 450
           Top = 52
           Width = 388
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
         end
@@ -5857,7 +5967,7 @@ object OptionDlg: TOptionDlg
           Left = 493
           Top = 24
           Width = 80
-          Height = 21
+          Height = 23
           Style = csDropDownList
           TabOrder = 1
         end
@@ -5870,15 +5980,15 @@ object OptionDlg: TOptionDlg
       object TLabel
         Left = 768
         Top = 53
-        Width = 20
-        Height = 13
+        Width = 24
+        Height = 15
         Caption = 'm'#31186
       end
       object TLabel
         Left = 768
         Top = 21
-        Width = 20
-        Height = 13
+        Width = 24
+        Height = 15
         Caption = 'm'#31186
       end
       object EtcWarnGroupBox: TGroupBox
@@ -5908,14 +6018,15 @@ object OptionDlg: TOptionDlg
           Left = 274
           Top = 18
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 11
-          EditLabel.Height = 13
+          EditLabel.Width = 10
+          EditLabel.Height = 15
           EditLabel.Caption = '%'
           LabelPosition = lpRight
           NumbersOnly = True
           TabOrder = 2
+          Text = ''
         end
         object WarnDisconCheckBox: TCheckBox
           Left = 10
@@ -5930,27 +6041,29 @@ object OptionDlg: TOptionDlg
         Left = 718
         Top = 49
         Width = 48
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 48
-        EditLabel.Height = 13
+        EditLabel.Width = 52
+        EditLabel.Height = 15
         EditLabel.Caption = #24453#27231#26178#38291
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 9
+        Text = ''
       end
       object MsgHintTimeEdit: TLabeledEdit
         Left = 718
         Top = 18
         Width = 48
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 48
-        EditLabel.Height = 13
+        EditLabel.Width = 52
+        EditLabel.Height = 15
         EditLabel.Caption = #34920#31034#26178#38291
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 7
+        Text = ''
       end
       object PrtDirGroupBox: TGroupBox
         Left = 460
@@ -6078,7 +6191,7 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 18
           Width = 356
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
@@ -6120,15 +6233,15 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 198
           Top = 49
-          Width = 20
-          Height = 13
+          Width = 24
+          Height = 15
           Caption = 'm'#31186
         end
         object SndTaskFinEdit: TEdit
           Left = 10
           Top = 18
           Width = 356
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
@@ -6160,40 +6273,43 @@ object OptionDlg: TOptionDlg
           Left = 243
           Top = 46
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 111
-          EditLabel.Height = 13
+          EditLabel.Width = 122
+          EditLabel.Height = 15
           EditLabel.Caption = #31186#20197#19978#12398#12479#12473#12463#12391#40180#12425#12377
           LabelPosition = lpRight
           NumbersOnly = True
           TabOrder = 5
+          Text = ''
         end
         object FwCntTaskFinEdit: TLabeledEdit
           Left = 72
           Top = 46
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #28857#28357#22238#25968
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 3
+          Text = ''
         end
         object FwTmTaskFinEdit: TLabeledEdit
           Left = 156
           Top = 46
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 24
-          EditLabel.Height = 13
+          EditLabel.Width = 26
+          EditLabel.Height = 15
           EditLabel.Caption = #38291#38548
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 4
+          Text = ''
         end
       end
       object SndWarnGroupBox: TGroupBox
@@ -6209,15 +6325,15 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 198
           Top = 49
-          Width = 20
-          Height = 13
+          Width = 24
+          Height = 15
           Caption = 'm'#31186
         end
         object SndWarnEdit: TEdit
           Left = 10
           Top = 18
           Width = 356
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
@@ -6247,27 +6363,29 @@ object OptionDlg: TOptionDlg
           Left = 72
           Top = 46
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 48
-          EditLabel.Height = 13
+          EditLabel.Width = 52
+          EditLabel.Height = 15
           EditLabel.Caption = #28857#28357#22238#25968
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 3
+          Text = ''
         end
         object FwTmWarnEdit: TLabeledEdit
           Left = 156
           Top = 46
           Width = 40
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 24
-          EditLabel.Height = 13
+          EditLabel.Width = 26
+          EditLabel.Height = 15
           EditLabel.Caption = #38291#38548
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 4
+          Text = ''
         end
       end
       object SndWatchGroupBox: TGroupBox
@@ -6284,7 +6402,7 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 18
           Width = 356
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
@@ -6435,15 +6553,15 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 10
           Top = 22
-          Width = 45
-          Height = 13
+          Width = 50
+          Height = 15
           Caption = #12507#12483#12488#12461#12540
         end
         object TLabel
-          Left = 213
+          Left = 208
           Top = 51
-          Width = 44
-          Height = 13
+          Width = 49
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akLeft, akTop, akRight]
           Caption = #12497#12521#12513#12540#12479
@@ -6476,7 +6594,7 @@ object OptionDlg: TOptionDlg
           Left = 350
           Top = 19
           Width = 75
-          Height = 21
+          Height = 23
           Style = csDropDownList
           DropDownCount = 24
           ImeMode = imClose
@@ -6502,7 +6620,7 @@ object OptionDlg: TOptionDlg
           Left = 261
           Top = 48
           Width = 164
-          Height = 21
+          Height = 23
           Style = csDropDownList
           TabOrder = 6
         end
@@ -6518,14 +6636,15 @@ object OptionDlg: TOptionDlg
           Left = 156
           Top = 16
           Width = 48
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 64
-          EditLabel.Height = 13
+          EditLabel.Width = 69
+          EditLabel.Height = 15
           EditLabel.Caption = '1'#22238#12398#31227#21205#24133
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 0
+          Text = ''
         end
       end
       object CompDelGroupBox: TGroupBox
@@ -6539,14 +6658,15 @@ object OptionDlg: TOptionDlg
           Left = 156
           Top = 16
           Width = 48
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 57
-          EditLabel.Height = 13
+          EditLabel.Width = 62
+          EditLabel.Height = 15
           EditLabel.Caption = #19978#26360#12365#22238#25968
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 0
+          Text = ''
         end
       end
       object ExeCmdLineGroupBox: TGroupBox
@@ -6560,12 +6680,13 @@ object OptionDlg: TOptionDlg
           Left = 182
           Top = 18
           Width = 243
-          Height = 21
-          EditLabel.Width = 133
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 144
+          EditLabel.Height = 15
           EditLabel.Caption = #23455#34892#12501#12449#12452#12523#12392#12415#12394#12377#25313#24373#23376
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
         end
       end
       object FileEditGroupBox: TGroupBox
@@ -6627,14 +6748,15 @@ object OptionDlg: TOptionDlg
           Left = 182
           Top = 45
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 123
-          EditLabel.Height = 13
+          EditLabel.Width = 139
+          EditLabel.Height = 15
           EditLabel.Caption = 'Migemo '#26908#32034#38283#22987#25991#23383#25968
           LabelPosition = lpLeft
           NumbersOnly = True
           TabOrder = 3
+          Text = ''
         end
       end
       object IniSearchGroupBox: TGroupBox
@@ -6647,8 +6769,8 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 171
           Top = 19
-          Width = 120
-          Height = 13
+          Width = 130
+          Height = 15
           Caption = '+ A '#65374' Z '#12391#38957#25991#23383#12469#12540#12481
         end
         object IniSeaAltCheckBox: TCheckBox
@@ -6703,10 +6825,10 @@ object OptionDlg: TOptionDlg
           434
           97)
         object TLabel
-          Left = 42
+          Left = 30
           Top = 20
-          Width = 128
-          Height = 13
+          Width = 140
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akTop, akRight]
           Caption = #38306#36899#20184#12369#12373#12428#12390#12356#12394#12356#22580#21512
@@ -6715,7 +6837,7 @@ object OptionDlg: TOptionDlg
           Left = 176
           Top = 16
           Width = 247
-          Height = 21
+          Height = 23
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
@@ -6782,15 +6904,15 @@ object OptionDlg: TOptionDlg
         object TLabel
           Left = 11
           Top = 16
-          Width = 101
-          Height = 13
+          Width = 110
+          Height = 15
           Caption = #12467#12510#12531#12489#12408#12398#38306#36899#20184#12369
         end
         object TLabel
-          Left = 52
+          Left = 49
           Top = 233
-          Width = 35
-          Height = 13
+          Width = 38
+          Height = 15
           Alignment = taRightJustify
           Anchors = [akRight, akBottom]
           Caption = #12467#12510#12531#12489
@@ -6799,19 +6921,20 @@ object OptionDlg: TOptionDlg
           Left = 92
           Top = 201
           Width = 331
-          Height = 21
+          Height = 23
           Anchors = [akRight, akBottom]
-          EditLabel.Width = 60
-          EditLabel.Height = 13
+          EditLabel.Width = 65
+          EditLabel.Height = 15
           EditLabel.Caption = #23550#35937#25313#24373#23376
           LabelPosition = lpLeft
           TabOrder = 1
+          Text = ''
         end
         object StdCmdComboBox: TComboBox
           Left = 92
           Top = 228
           Width = 331
-          Height = 21
+          Height = 23
           Style = csDropDownList
           Anchors = [akRight, akBottom]
           TabOrder = 2
@@ -6897,14 +7020,15 @@ object OptionDlg: TOptionDlg
           Left = 92
           Top = 255
           Width = 291
-          Height = 21
+          Height = 23
           Anchors = [akRight, akBottom]
-          EditLabel.Width = 44
-          EditLabel.Height = 13
+          EditLabel.Width = 49
+          EditLabel.Height = 15
           EditLabel.Caption = #12497#12521#12513#12540#12479
           Enabled = False
           LabelPosition = lpLeft
           TabOrder = 3
+          Text = ''
         end
         object RefStdCmdPrmBtn: TButton
           Tag = 100
@@ -6997,13 +7121,14 @@ object OptionDlg: TOptionDlg
           Left = 40
           Top = 18
           Width = 385
-          Height = 21
+          Height = 23
           Hint = '\S : '#26908#32034#35486
-          EditLabel.Width = 19
-          EditLabel.Height = 13
+          EditLabel.Width = 21
+          EditLabel.Height = 15
           EditLabel.Caption = 'URL'
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
         end
       end
       object SyncLRGroupBox: TGroupBox
@@ -7029,7 +7154,7 @@ object OptionDlg: TOptionDlg
       ImageIndex = -1
       DesignSize = (
         906
-        584)
+        580)
       object EvEditBtn: TButton
         Left = 797
         Top = 438
@@ -7043,12 +7168,13 @@ object OptionDlg: TOptionDlg
         Left = 12
         Top = 439
         Width = 740
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
-        EditLabel.Width = 297
-        EditLabel.Height = 13
+        EditLabel.Width = 327
+        EditLabel.Height = 15
         EditLabel.Caption = #12452#12505#12531#12488#30330#29983#26178#12395#23455#34892#12377#12427#12467#12510#12531#12489' (ExeCommands '#12398#12497#12521#12513#12540#12479')'
         TabOrder = 4
+        Text = ''
         OnChange = EventCmdsEditChange
       end
       object EventListBox: TListBox
@@ -7077,12 +7203,13 @@ object OptionDlg: TOptionDlg
         Left = 592
         Top = 411
         Width = 160
-        Height = 21
-        EditLabel.Width = 24
-        EditLabel.Height = 13
+        Height = 23
+        EditLabel.Width = 26
+        EditLabel.Height = 15
         EditLabel.Caption = #26908#32034
         LabelPosition = lpLeft
         TabOrder = 1
+        Text = ''
         OnChange = FindEvEditChange
         OnKeyDown = FindEvEditKeyDown
       end
@@ -7120,12 +7247,13 @@ object OptionDlg: TOptionDlg
           Left = 234
           Top = 32
           Width = 508
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 35
-          EditLabel.Height = 13
+          EditLabel.Width = 38
+          EditLabel.Height = 15
           EditLabel.Caption = #12467#12510#12531#12489
           TabOrder = 1
+          Text = ''
         end
         object RefCmdsT1Btn: TButton
           Tag = 101
@@ -7152,11 +7280,12 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 32
           Width = 220
-          Height = 21
-          EditLabel.Width = 24
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 26
+          EditLabel.Height = 15
           EditLabel.Caption = #26465#20214
           TabOrder = 0
+          Text = ''
         end
         object EvEditT2Btn: TButton
           Tag = 2
@@ -7183,14 +7312,14 @@ object OptionDlg: TOptionDlg
           Left = 10
           Top = 60
           Width = 220
-          Height = 21
+          Height = 23
           TabOrder = 4
         end
         object TimerCmd2Edit: TEdit
           Left = 234
           Top = 60
           Width = 508
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 5
         end
