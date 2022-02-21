@@ -22,11 +22,12 @@
 #include <Vcl.CheckLst.hpp>
 #include <Vcl.Graphics.hpp>
 #include <Vcl.ImgList.hpp>
-#include "MarkList.h"
+#include <Vcl.Mask.hpp>
 #include "usr_scale.h"
 #include "usr_swatch.h"
 #include "usr_hintwin.h"
-#include <Vcl.Mask.hpp>
+#include "MarkList.h"
+#include "UserMdl.h"
 
 //---------------------------------------------------------------------------
 #define MAX_KEYTABS	5
@@ -1005,6 +1006,11 @@ private:	// ユーザー宣言
 		EtcEditorListBox->Invalidate();
 	}
 
+	void __fastcall WmNyanFiClsEdItm(TMessage &msg)
+	{
+		UserModule->InitializeListBox(GetCurListBox());
+	}
+
 	int  __fastcall ScaledThis(int n)
 	{
 		return (n * CurrentPPI / DEFAULT_PPI);
@@ -1028,6 +1034,7 @@ public:		// ユーザー宣言
 		VCL_MESSAGE_HANDLER(WM_DPICHANGED,		TMessage,	WmDpiChanged)
 		VCL_MESSAGE_HANDLER(WM_FORM_DROPPED,	TMessage,	WmDropped)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_FLICON,	TMessage,	WmNyanFiFlIcon)
+		VCL_MESSAGE_HANDLER(WM_NYANFI_CLSEDITM,	TMessage,	WmNyanFiClsEdItm)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

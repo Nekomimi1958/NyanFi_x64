@@ -9,7 +9,6 @@ object RegDirDlg: TRegDirDlg
   Constraints.MinWidth = 460
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -19,16 +18,17 @@ object RegDirDlg: TRegDirDlg
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object OptPanel: TPanel
     Left = 0
-    Top = 252
+    Top = 250
     Width = 450
     Height = 70
     Align = alBottom
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
+    ExplicitTop = 252
     DesignSize = (
       450
       70)
@@ -85,7 +85,7 @@ object RegDirDlg: TRegDirDlg
       Left = 59
       Top = 8
       Width = 163
-      Height = 21
+      Height = 23
       Hint = #21517#21069
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 1
@@ -94,7 +94,7 @@ object RegDirDlg: TRegDirDlg
       Left = 224
       Top = 8
       Width = 128
-      Height = 21
+      Height = 23
       Hint = #29872#22659#22793#25968#12418#20351#29992#21487#12289'UNC'#12398#22580#21512' : '#12391#21306#20999#12387#12390#12518#12540#12470#21517#25351#23450#21487
       Anchors = [akLeft, akTop, akRight]
       PopupMenu = UserModule.EditPopupMenuE
@@ -114,7 +114,7 @@ object RegDirDlg: TRegDirDlg
       Left = 16
       Top = 8
       Width = 41
-      Height = 21
+      Height = 23
       Hint = #12461#12540
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 0
@@ -148,13 +148,14 @@ object RegDirDlg: TRegDirDlg
   end
   object HiddenCanBtn: TButton
     Left = 0
-    Top = 252
+    Top = 250
     Width = 450
     Height = 0
     Align = alBottom
     Cancel = True
     ModalResult = 2
     TabOrder = 1
+    ExplicitTop = 252
   end
   object RegDirHeader: THeaderControl
     Left = 0
@@ -190,18 +191,19 @@ object RegDirDlg: TRegDirDlg
     Left = 0
     Top = 20
     Width = 450
-    Height = 232
+    Height = 230
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitHeight = 232
     DesignSize = (
       450
-      232)
+      230)
     object RegDirListBox: TListBox
       Left = 0
       Top = 0
       Width = 450
-      Height = 232
+      Height = 230
       Style = lbOwnerDrawFixed
       AutoComplete = False
       Align = alLeft
@@ -227,10 +229,11 @@ object RegDirDlg: TRegDirDlg
       OnDrawItem = RegDirListBoxDrawItem
       OnKeyDown = RegDirListBoxKeyDown
       OnKeyPress = RegDirListBoxKeyPress
+      ExplicitHeight = 232
     end
     object BlankPanel: TPanel
       Left = 432
-      Top = 216
+      Top = 214
       Width = 18
       Height = 16
       Anchors = [akRight, akBottom]
@@ -241,6 +244,7 @@ object RegDirDlg: TRegDirDlg
       TabOrder = 1
       Visible = False
       StyleElements = [seBorder]
+      ExplicitTop = 216
       object ShowOptBtn: TSpeedButton
         Left = 0
         Top = 0
@@ -253,18 +257,19 @@ object RegDirDlg: TRegDirDlg
   end
   object OpeToolBar: TToolBar
     Left = 0
-    Top = 322
+    Top = 320
     Width = 450
-    Height = 19
+    Height = 21
     Align = alBottom
     AutoSize = True
-    ButtonHeight = 19
-    ButtonWidth = 59
+    ButtonHeight = 21
+    ButtonWidth = 62
     DrawingStyle = dsGradient
     List = True
     ShowCaptions = True
     AllowTextButtons = True
     TabOrder = 4
+    ExplicitTop = 322
     object FilterBtn: TToolButton
       Left = 0
       Top = 0
@@ -274,10 +279,10 @@ object RegDirDlg: TRegDirDlg
       OnClick = FilterBtnClick
     end
     object FilterEdit: TEdit
-      Left = 63
+      Left = 66
       Top = 0
       Width = 120
-      Height = 19
+      Height = 21
       Align = alLeft
       Constraints.MinWidth = 60
       PopupMenu = UserModule.EditPopupMenuE
@@ -289,19 +294,19 @@ object RegDirDlg: TRegDirDlg
       OnKeyPress = FilterEditKeyPress
     end
     object FilterSplitter: TSplitter
-      Left = 183
+      Left = 186
       Top = 0
       Width = 4
-      Height = 19
+      Height = 21
     end
     object MigemoBtn: TToolButton
-      Left = 187
+      Left = 190
       Top = 0
       Action = MigemoAction
       Style = tbsTextButton
     end
     object AndOrBtn: TToolButton
-      Left = 234
+      Left = 246
       Top = 0
       Action = AndOrAction
       Style = tbsTextButton
@@ -370,6 +375,10 @@ object RegDirDlg: TRegDirDlg
       Caption = #23455#34892#12501#12449#12452#12523#12398#12450#12452#12467#12531#12434#34920#31034'(&I)'
       OnExecute = ToggleActionExecute
     end
+    object AddPathAction: TAction
+      Caption = #29872#22659#22793#25968'PATH'#12434#34920#31034'(&P)'
+      OnExecute = AddPathActionExecute
+    end
   end
   object PopupMenu1: TPopupMenu
     Left = 128
@@ -400,6 +409,10 @@ object RegDirDlg: TRegDirDlg
     end
     object AddNyanFiItem: TMenuItem
       Action = AddNyanFiAction
+    end
+    object PATHP1: TMenuItem
+      Action = AddPathAction
+      Caption = 'PATH'#12398#12487#12451#12524#12463#12488#12522#12434#34920#31034'(&P)'
     end
     object ShowIconItem: TMenuItem
       Action = ShowIconAction

@@ -39,6 +39,7 @@
 #define WM_NYANFI_CLPCOPIED	(WM_APP + 103)	//クリップボードにコピーした
 #define WM_NYANFI_PLAYLIST	(WM_APP + 104)	//プレイリスト通知
 #define WM_NYANFI_LOCKKEY	(WM_APP + 105)	//LockKeyMouse 動作中のキー処理
+#define WM_NYANFI_CLSEDITM	(WM_APP + 106)	//設定項目の編集ダイアログを閉じた
 
 //---------------------------------------------------------------------------
 //WM_COPYDATA メッセージの識別番号

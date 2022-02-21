@@ -26,20 +26,20 @@
 <br>
 
 <dl>
-<dt id="InitialPath"><img src="grpbox.png" alt="" border=0> 初期パス - 左／右
+<dt id="InitialPath"><img src="grpbox.png" alt=""> 初期パス - 左／右
 <dd>起動した直後の、左右ファイルリストのパスとソート方法、パスマスクをそれぞれ設定します。<br>
-<img src="radio.png" alt="" border=0> <b>前回終了時のパス</b>、<img src="radio.png" alt="" border=0> <a href="hid00060.htm"><b>ワークリスト</b></a>、<img src="radio.png" alt="" border=0> <b>指定パス</b> のいずれかを指定できます。<br>
+<img src="radio.png" alt=""> <b>前回終了時のパス</b>、<img src="radio.png" alt=""> <a href="hid00060.htm"><b>ワークリスト</b></a>、<img src="radio.png" alt=""> <b>指定パス</b> のいずれかを指定できます。<br>
 なお<a href="hid00089.htm">起動時オプション</a>を指定している場合は、そちらが優先されます。<br>
 <br>
 パスマスクは <b>;</b> (セミコロン)で区切って複数指定できます。マスクの先頭に <b>!</b>があると除外になります(<a href="hid00005.htm#PathMaskDlg">→ PathMaskDlg</a>)。また先頭に :文字列: という書式でマスク名を指定できます(無指定の場合は「起動時」)。<br>
 <b>例</b>: <span class="inp_box">:テキスト:*.txt;*.ini</span><br>
 <br>
 
-<img src="chkbox.png" alt="" border=0> <b>初期パスを最初のタブで開く</b> をチェックすると、左右の初期パスは必ず最初のタブで開きます。<br>
+<img src="chkbox.png" alt=""> <b>初期パスを最初のタブで開く</b> をチェックすると、左右の初期パスは必ず最初のタブで開きます。<br>
 チェックしていないと、左右の初期パスと一致する既存タブがあればそれで、なければ先頭に新規タブを挿入して開きます。左右の初期パスを「<b>前回終了時のパス</b>」にしている場合は、チェックしない方がよいでしょう。<br>
 
 <div class="spc_box">
-<img src="chkbox.png" alt="" border=0> <b>初期パス以外のタブをホームに戻す</b> をチェックすると、初期パスを設定したタブ以外のすべてのタブを、ホームに戻します(→ <a href="hid00005.htm#TabHome">TabHome</a>)。<br>
+<img src="chkbox.png" alt=""> <b>初期パス以外のタブをホームに戻す</b> をチェックすると、初期パスを設定したタブ以外のすべてのタブを、ホームに戻します(→ <a href="hid00005.htm#TabHome">TabHome</a>)。<br>
 </div>
 <br>
 
@@ -48,26 +48,26 @@
 </div>
 <br>
 
-<dt id="WinSize"><img src="grpbox.png" alt="" border=0> ウィンドウサイズ
+<dt id="WinSize"><img src="grpbox.png" alt=""> ウィンドウサイズ
 <dd>起動時のウィンドウサイズを指定します。<br>
-<img src="radio.png" alt="" border=0> <b>前回終了時のサイズ</b> または <img src="radio.png" alt="" border=0> <b>指定サイズ</b> を選択できます。<br>
-<b>指定サイズ</b> を選んだ場合、<img src="chkbox.png" alt="" border=0> <b>サイズと位置を固定</b> をチェックすると、ウィンドウのサイズおよび位置の変更を禁止できます。<br>
+<img src="radio.png" alt=""> <b>前回終了時のサイズ</b> または <img src="radio.png" alt=""> <b>指定サイズ</b> を選択できます。<br>
+<b>指定サイズ</b> を選んだ場合、<img src="chkbox.png" alt=""> <b>サイズと位置を固定</b> をチェックすると、ウィンドウのサイズおよび位置の変更を禁止できます。<br>
 この設定は、最初に起動した <b>NyanFi</b> にのみ適用されます。<a href="#Duplicate">二重起動</a>した場合は、前回二重起動したときの位置とサイズが復元されます。<br>
 なお Windows 10 で透明な境界部分を持つテーマを用いている場合、サイズ/位置は境界も含んだ値となっているため、見た目と一致させるにはその分を加減する必要があります。<br>
 <br>
 
-<dt id="WorkList"><img src="grpbox.png" alt="" border=0> 起動時に読み込むワークリスト
+<dt id="WorkList"><img src="grpbox.png" alt=""> 起動時に読み込むワークリスト
 <dd>起動時に読み込む<a href="hid00060.htm"><b>ワークリスト</b></a>を指定します。<br>
-<img src="radio.png" alt="" border=0> <b>前回終了時のワークリスト</b> または <img src="radio.png" alt="" border=0> <b>指定ワークリスト(ホーム)</b> を選択できます。<br>
+<img src="radio.png" alt=""> <b>前回終了時のワークリスト</b> または <img src="radio.png" alt=""> <b>指定ワークリスト(ホーム)</b> を選択できます。<br>
 指定ワークリストは<b>ホームワークリスト</b>としても用いられ、ファイラーやイメージビュアーで <a href="hid00005.htm#HomeWorkList">HomeWorkList</a> コマンドによって呼び出せます。<br>
 なおファイル名にドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対パスとみなされます。<br>
 <br>
 
-<dt id="Duplicate"><img src="grpbox.png" alt="" border=0> 二重起動
+<dt id="Duplicate"><img src="grpbox.png" alt=""> 二重起動
 <dd>
-<img src="chkbox.png" alt="" border=0> <b>許可</b> をチェックすると、<b>NyanFi</b> を二重起動できます。<br>
+<img src="chkbox.png" alt=""> <b>許可</b> をチェックすると、<b>NyanFi</b> を二重起動できます。<br>
 ただし、<a href="hid00089.htm">起動オプション</a>を指定した場合は二重起動されずに、最初に起動した <b>NyanFi</b> に対して起動オプションが渡されます。<br>
-<img src="chkbox.png" alt="" border=0> <b>終了時に、二重起動したNyanFiも終了する</b> をチェックすると、最初に起動した <b>NyanFi</b> を終了するときに、二重起動された他の <b>NyanFi</b> をすべて終了します。<br>
+<img src="chkbox.png" alt=""> <b>終了時に、二重起動したNyanFiも終了する</b> をチェックすると、最初に起動した <b>NyanFi</b> を終了するときに、二重起動された他の <b>NyanFi</b> をすべて終了します。<br>
 なお、この設定にかかわらず、<a href="hid00024.htm#Other">オプション設定 - 一般2</a> で「<b>最小化時にタスクトレイに格納</b>」がチェックされていると、トレイアイコンの右クリックメニューで終了したり、最初に起動した <b>NyanFi</b> を終了したりしたときに、すべての <b>NyanFi</b> が終了します。<br>
 また、最初に起動した <b>NyanFi</b> で <a href="hid00005.htm#Exit">Exit</a>_NX コマンドを実行すると、設定にかかわらず、二重起動した他の <b>NyanFi</b> を終了させないで終了することができます。<br>
 <br>
@@ -89,11 +89,11 @@
 </p>
 <br>
 
-<dt class="no_bg"><img src="chkbox.png" alt="" border=0> スプラッシュ画面を表示
+<dt class="no_bg"><img src="chkbox.png" alt=""> スプラッシュ画面を表示
 <dd>起動時にスプラッシュ画面を表示します。<br>
 <br>
 
-<dt><img src="grpbox.png" alt="" border=0> 仮想ドライブのマウント
+<dt><img src="grpbox.png" alt=""> 仮想ドライブのマウント
 <dd>
 起動時に、指定したローカル・ディレクトリを仮想ドライブとしてマウントできます(subst コマンド相当)。そのドライブがすでに使われている場合は適用されません。<br>
 マウントしたいドライブとディレクトリを指定して<span class="btn_frame">追加</span>ボタンを押してください。<br>

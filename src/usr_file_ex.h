@@ -31,7 +31,7 @@ UnicodeString cv_ex_filename(UnicodeString fnam);
 UnicodeString cv_env_var(UnicodeString s);
 UnicodeString cv_env_str(UnicodeString s);
 UnicodeString get_actual_path(UnicodeString pnam);
-UnicodeString get_actual_name(UnicodeString fnam);
+UnicodeString get_actual_name(UnicodeString fnam, bool sw_fmt = false);
 UnicodeString exclude_env_path(UnicodeString fnam);
 UnicodeString to_relative_name(UnicodeString fnam);
 UnicodeString to_absolute_name(UnicodeString fnam, UnicodeString rnam = EmptyStr);

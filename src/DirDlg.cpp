@@ -15,6 +15,9 @@
 TRegDirDlg *RegDirDlg = NULL;
 
 //---------------------------------------------------------------------------
+#define SPITM_EXE 100	//項目は実行ファイル (SpDirList->Objects)
+
+//---------------------------------------------------------------------------
 __fastcall TRegDirDlg::TRegDirDlg(TComponent* Owner)
 	: TForm(Owner)
 {
@@ -38,9 +41,10 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 	Caption = IsSpecial? "特殊フォルダ一覧" : "登録ディレクトリ";
 	CmdStr	= EmptyStr;
 
-	OpeToolBar->Visible 	 = IsSpecial;
+	OpeToolBar->Visible      = IsSpecial;
 	ShowIconAction->Visible  = IsSpecial;
 	AddNyanFiAction->Visible = IsSpecial;
+	AddPathAction->Visible   = IsSpecial;
 
 	if (IsSpecial) {
 		setup_ToolBar(OpeToolBar);
@@ -70,6 +74,7 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 		UseEnvVarAction->Checked = IniFile->ReadBoolGen(_T("SpecialDirUseEnv"));
 		if (UseEnvVarAction->Checked) lp->Tag |= LBTAG_OPT_SDIR;
 		AddNyanFiAction->Checked = IniFile->ReadBoolGen(_T("SpecialDirAddNyanFi"));
+		AddPathAction->Checked   = IniFile->ReadBoolGen(_T("SpecialDirAddPath"));
 
 		//環境変数変換リストを作成
 		EnvVarList->Clear();
@@ -169,6 +174,7 @@ void __fastcall TRegDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		IniFile->WriteBoolGen(_T("SpecialDirShowIcon"),		ShowIconAction);
 		IniFile->WriteBoolGen(_T("SpecialDirUseEnv"),		UseEnvVarAction);
 		IniFile->WriteBoolGen(_T("SpecialDirAddNyanFi"),	AddNyanFiAction);
+		IniFile->WriteBoolGen(_T("SpecialDirAddPath"),		AddPathAction);
 
 		SpDirList->Clear();
 		SpDirBuff->Clear();
@@ -236,38 +242,56 @@ void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
 	if (reload) {
 		SpDirList->Clear();
 		usr_SH->get_SpecialFolderList(SpDirList);
+		//SpDirList->Objects でセパレータを識別(1～)
+		int s_idx = 1;
+		for (int i=0; i<SpDirList->Count; i++) {
+			if (SameStr(SpDirList->Strings[i], "\t-")) {
+				SpDirList->Objects[i] = (TObject*)s_idx;
+				s_idx++;
+			}
+		}
 
 		//NyanFi 固有
 		if (AddNyanFiAction->Checked) {
-			SpDirList->Add("\t-");		//セパレータ
+			SpDirList->AddObject("\t-", (TObject*)5);		//セパレータ
 			SpDirList->Add(ExePath   + "\t実行パス");
 			SpDirList->Add(TempPathA + "\t一時ディレクトリ");
 			if (!DownloadPath.IsEmpty())	SpDirList->Add(DownloadPath + "\tダウンロード");
 			if (usr_Migemo->Available)		SpDirList->Add(to_absolute_name(MigemoPath) + "\tMigemo");
 			if (!SpiDir.IsEmpty())			SpDirList->Add(to_absolute_name(SpiDir) + "\tSusie プラグイン");
-			if (!CmdGitExe.IsEmpty())		SpDirList->AddObject(CmdGitExe + "\tgit.exe",	  		  (TObject*)1);
+			if (!CmdGitExe.IsEmpty())		SpDirList->AddObject(CmdGitExe + "\tgit.exe", (TObject*)SPITM_EXE);
 
 			//エディタ
-			SpDirList->Add("\t-");
-			if (!TextEditor.IsEmpty())		SpDirList->AddObject(TextEditor + "\tテキストエディタ",  (TObject*)1);
-			if (!ImageEditor.IsEmpty())		SpDirList->AddObject(ImageEditor + "\tイメージエディタ",  (TObject*)1);
-			if (!BinaryEditor.IsEmpty())	SpDirList->AddObject(BinaryEditor + "\tバイナリエディタ", (TObject*)1);
+			SpDirList->AddObject("\t-", (TObject*)6);
+			if (!TextEditor.IsEmpty())		SpDirList->AddObject(TextEditor + "\tテキストエディタ", (TObject*)SPITM_EXE);
+			if (!ImageEditor.IsEmpty())		SpDirList->AddObject(ImageEditor + "\tイメージエディタ", (TObject*)SPITM_EXE);
+			if (!BinaryEditor.IsEmpty())	SpDirList->AddObject(BinaryEditor + "\tバイナリエディタ", (TObject*)SPITM_EXE);
 			//その他のエディタ
 			std::unique_ptr<TStringList> x_lst(new TStringList());
 			if (get_EtcEditorFiles(x_lst.get())>0) {
 				for (int i=0; i<x_lst->Count; i++) {
 					UnicodeString xnam = x_lst->ValueFromIndex[i];
-					SpDirList->AddObject(xnam + ((i==0)? "\t|" : "\t") + get_base_name(xnam), (TObject*)1);
+					SpDirList->AddObject(xnam + ((i==0)? "\t|" : "\t") + get_base_name(xnam), (TObject*)SPITM_EXE);
 				}
 			}
 			//外部ツール
 			if (get_ExtToolFiles(x_lst.get())>0) {
-				SpDirList->Add("\t-");
+				SpDirList->AddObject("\t-", (TObject*)7);
 				for (int i=0; i<x_lst->Count; i++) {
 					UnicodeString xnam = x_lst->Strings[i];
-					SpDirList->AddObject(xnam + "\t" + get_base_name(xnam), (TObject*)1);
+					SpDirList->AddObject(xnam + "\t" + get_base_name(xnam), (TObject*)SPITM_EXE);
 				}
 			}
+		}
+
+		//PATH
+		if (AddPathAction->Checked) {
+			std::unique_ptr<TStringList> plst(new TStringList());
+			TStringDynArray elst = split_strings_semicolon(GetEnvironmentVariable("PATH"));
+			for (int i=0; i<elst.Length; i++) if (!elst[i].IsEmpty()) plst->Add(elst[i]);
+			plst->Sort();
+			SpDirList->AddObject("\t-", (TObject*)8);	//セパレータ
+			for (int i=0; i<plst->Count; i++) SpDirList->Add(plst->Strings[i] + "\t");
 		}
 	}
 
@@ -288,7 +312,7 @@ void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
 		UnicodeString dnam = get_post_tab(SpDirBuff->Strings[i]);
 		if (!dnam.IsEmpty()) {
 			int wd = lp->Canvas->TextWidth(dnam);
-			if ((int)SpDirBuff->Objects[i]==1) wd += i_wd;
+			if ((int)SpDirBuff->Objects[i]==SPITM_EXE) wd += i_wd;
 			n_wd = std::max(n_wd, wd);
 		}
 	}
@@ -455,15 +479,15 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	else if (IsSpecial) {
 		int s_idx = USAME_TI(KeyStr, "Alt+U")? 1 :
 					USAME_TI(KeyStr, "Alt+V")? 2 :
-					USAME_TI(KeyStr, "Alt+N")? 3 :
-					USAME_TI(KeyStr, "Alt+E")? 4 :
-					USAME_TI(KeyStr, "Alt+X")? 5 : 0;
+					USAME_TI(KeyStr, "Alt+N")? 5 :
+					USAME_TI(KeyStr, "Alt+E")? 6 :
+					USAME_TI(KeyStr, "Alt+X")? 7 :
+					USAME_TI(KeyStr, "Alt+P")? 8 : 0;
 		if (s_idx>0) {
-			int s_cnt = 0;
 			for (int i=0; i<lp->Count; i++) {
-				if (StartsStr("\t", lp->Items->Strings[i])) {
-					s_cnt++;
-					if (s_cnt==s_idx) ListBoxSetIndex(lp, i + 1, true);
+				if ((int)lp->Items->Objects[i]==s_idx) {
+					ListBoxSetIndex(lp, i + 1, true);
+					break;
 				}
 			}
 		}
@@ -526,7 +550,7 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 		}
 		else {
 			//実行ファイル
-			if (SelIndex!=-1 && (int)lp->Items->Objects[SelIndex]==1) {
+			if (SelIndex!=-1 && (int)lp->Items->Objects[SelIndex]==SPITM_EXE) {
 				CmdStr.sprintf(_T("JumpTo_\"%s\""), jdir.c_str());
 				ModalResult = mrOk;
 			}
@@ -624,18 +648,15 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 				if (itm_buf[0].IsEmpty()) {
 					draw_Separator(cv, rc);
 					cv->Font->Color = col_Folder;
-					int s_cnt = 0;
-					for (int i=0; i<=Index; i++) if (StartsStr("\t", lp->Items->Strings[i])) s_cnt++;
 					UnicodeString snam;
-					if (lp->Focused()) {
-						snam = (s_cnt==1)? "<All Users (&U)> " : (s_cnt==2)? "<仮想フォルダ (&V)>" :
-							   (s_cnt==3)? "<NyanFi (&N)> "    : (s_cnt==4)? "<エディタ (&E)>" :
-							   (s_cnt==5)? "<外部ツール (&X)>" : "";
-					}
-					else {
-						snam = (s_cnt==1)? "<All Users> " : (s_cnt==2)? "<仮想フォルダ>" :
-							   (s_cnt==3)? "<NyanFi>"     : (s_cnt==4)? "<エディタ>" :
-							   (s_cnt==5)? "<外部ツール>" : "";
+					switch ((int)lp->Items->Objects[Index]) {
+					case  1: snam = lp->Focused()? "<All Users (&U)> " : "<All Users> "; break;
+					case  2: snam = lp->Focused()? "<仮想フォルダ (&V)> " : "<仮想フォルダ> "; break;
+					case  5: snam = lp->Focused()? "<NyanFi (&N)> " : "<NyanFi> "; break;
+					case  6: snam = lp->Focused()? "<エディタ (&E)> " : "<エディタ> "; break;
+					case  7: snam = lp->Focused()? "<外部ツール (&X)> " : "<外部ツール> "; break;
+					case  8: snam = lp->Focused()? "<&PATH> " : "<PATH> "; break;
+					default: snam = "";
 					}
 					if (!snam.IsEmpty()) {
 						TRect tmp_rc = rc; tmp_rc.Left = xp; tmp_rc.Top = yp;
@@ -645,7 +666,7 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 				//項目
 				else {
 					UnicodeString dnam = itm_buf[0];
-					bool is_exe = ((int)lp->Items->Objects[Index]==1);
+					bool is_exe = ((int)lp->Items->Objects[Index]==SPITM_EXE);
 					//アイコン
 					if (is_exe && ShowIconAction->Checked) {
 						draw_SmallIconF(dnam, cv, xp, std::max(yp + (cv->TextHeight("Q") - ScaledInt(16, this))/2, 0), this);
@@ -916,6 +937,13 @@ void __fastcall TRegDirDlg::AddNyanFiActionExecute(TObject *Sender)
 	ap->Checked = !ap->Checked;
 	UpdateSpDirList(true);
 }
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::AddPathActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+	UpdateSpDirList(true);
+}
 
 //---------------------------------------------------------------------------
 //エクスプローラで開く
@@ -971,7 +999,7 @@ void __fastcall TRegDirDlg::AppInfoActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::SaveAsWorkActionExecute(TObject *Sender)
 {
-	UserModule->PrepareSaveDlg(LoadUsrMsg(USTR_SaveAs, _T("ワークリスト")).c_str(), 
+	UserModule->PrepareSaveDlg(LoadUsrMsg(USTR_SaveAs, _T("ワークリスト")).c_str(),
 		F_FILTER_NWL, _T("SpecialDir.nwl"), WorkListPath);
 
 	UnicodeString fnam = UserModule->SaveDlgExecute();

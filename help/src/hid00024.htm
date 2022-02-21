@@ -37,7 +37,7 @@
 <br>
 
 <dl>
-<dt id="FileInfo"><img src="grpbox.png" alt="" border=0> ファイル情報
+<dt id="FileInfo"><img src="grpbox.png" alt=""> ファイル情報
 <dd>
 ファイル情報の取得・表示に関する設定です。情報取得に時間がかかってファイラー操作がもたつく場合などに設定してみてください。<br>
 ファイル情報が非表示で、かつステータスバーが非表示あるいは表示されていても書式に <b>$PR</b>(プロパティ)が用いられていない場合には、ファイル情報を取得しません。また、コピー・移動などで処理中のファイルは取得が抑止されます。<br>
@@ -45,7 +45,7 @@
 なお、ファイル情報の右クリックメニューで「<b>この項目を隠す</b>」/「<b>隠した項目を戻す</b>」を用いると、拡張子ごとに非表示にしたい項目を設定できます。<br>
 </div>
 
-<dt class="no_bg_indent1">情報を取得しないパス(前方一致) <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">情報を取得しないパス(前方一致) <img src="edit.png" alt="">
 <dd>
 ここで指定したパス以下では、表示用のファイル情報(テキストプレビューを含む)を取得しません。これは、拡張子に対する設定よりも優先されます。<br>
 ドライブ名から始まるフルパスで指定します。<b>;</b> (セミコロン)で区切って複数指定可能です。前方一致なので、完全なパスの形式になっていなくてもかまいません。例えば &quot;<b>\\</b>&quot; を指定すると、すべてのUNCパスにマッチします。<br>
@@ -66,13 +66,13 @@
 <b>例2</b>: <span class="inp_box">\\;$N;$UC;$UR</span>
 </div>
 
-<dt class="no_bg_indent1">情報を取得する拡張子 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">情報を取得する拡張子 <img src="edit.png" alt="">
 <dd>
 表示用ファイル情報を取得する拡張子を限定したい場合、ここで指定してください。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
 空欄の場合は、次の「<b>情報を取得しない拡張子</b>」を除くすべての拡張子が取得対象となります。<br>
 なお <a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> コマンド実行時には、この設定にかかわらず強制的にファイル情報が表示されます。
 
-<dt class="no_bg_indent1">情報を取得しない拡張子[:制限MB] <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">情報を取得しない拡張子[:制限MB] <img src="edit.png" alt="">
 <dd>
 ここで指定した拡張子を持つファイルは、表示用のファイル情報を取得しません。<br>
 拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<b>*</b> を指定すると、すべての拡張子に対してファイル情報の取得が行われなくなります。<br>
@@ -82,19 +82,19 @@
 <b>例</b>: <span class="inp_box">.foo.rar:10.chm:5</span>　.foo、10MB以上の .rar、5MB以上の .chm は取得しない<br>
 </div>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 代替データストリーム情報を表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 代替データストリーム情報を表示
 <dd>ファイルにNTFSの代替データストリームがある場合、そのストリーム名やサイズを表示します。<br>
 また Zone.Identifier の場合はそのテキスト内容も表示します。<br>
 <span class="tips">Tips</span>インターネットからダウンロードしたファイルは、Zone.Identifier でURLを確認できる場合があります。<br>
 <a href="hid00005.htm#OpenADS">OpenADS</a> コマンドを実行すると、代替データストリーム一覧を仮想リストとして開いて操作できます。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> プロセス使用情報を表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> プロセス使用情報を表示
 <dd>ファイルが何らかのプロセスによって使用中の場合、その名前、実行ファイル、プロセスIDを表示します。<br>
 <br><br>
 
-<dt id="ImagePreview"><img src="grpbox.png" alt="" border=0> イメージプレビュー
+<dt id="ImagePreview"><img src="grpbox.png" alt=""> イメージプレビュー
 <dd>
-<dt class="no_bg_indent1">プレビューを行わないパス(前方一致) <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">プレビューを行わないパス(前方一致) <img src="edit.png" alt="">
 <dd>
 ここで指定したパス以下では、イメージプレビューを行いません(拡張子に対する設定よりも優先)。<br>
 ドライブ名から始まるフルパスで指定します。<b>;</b> (セミコロン)で区切って複数指定可能です。前方一致なので、完全なパスの形式になっていなくてもかまいません。例えば &quot;<b>\\</b>&quot; を指定すると、すべてのUNCパスにマッチします。<br>
@@ -109,12 +109,12 @@
 </div>
 なお <a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> コマンド実行時には、この設定はかかわらず強制的にプレビューがファイル情報とともに表示されます。<br>
 
-<dt class="no_bg_indent1">プレビューを行う拡張子 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">プレビューを行う拡張子 <img src="edit.png" alt="">
 <dd>
 イメージプレビューを行う拡張子を限定したい場合、ここで指定してください。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
 なお <a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> コマンド実行時には、この設定はかかわらず強制的にプレビューがファイル情報とともに表示されます。<br>
 
-<dt class="no_bg_indent1">プレビューを行わない拡張子[:制限MB] <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">プレビューを行わない拡張子[:制限MB] <img src="edit.png" alt="">
 <dd>
 ここで指定した拡張子を持つファイルは、イメージプレビューを行いません。<br>
 拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。また拡張子に後に <b>:</b> (コロン)で区切って制限サイズ(MB単位)を指定することもできます。<br>
@@ -123,138 +123,138 @@
 <b>例</b>: <span class="inp_box">.vob.raw:10</span>　.vod、10MB以上の .raw はプレビューしない<br>
 </div>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ディレクトリは特大アイコンを表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ディレクトリは特大アイコンを表示
 <dd>ディレクトリに対するイメージプレビューに特大アイコン(可能ならサムネイル)を表示します。チェックを外すと、サイズ16～64のアイコン表示になります。<br>
 なおこの設定にかかわらず、ディレクトリに <b>thumbnail.jpg</b> という名前の代替データストリームがある場合、それが優先的に表示されます。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ZIP内の画像を表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ZIP内の画像を表示
 <dd>ZIPアーカイブ(<b>.zip</b>、<b>.cbz</b>、<b>.epub</b>、<b>.gdtf</b> に対応)内に適当な画像があれば、それを表示します。<br>
 複数の画像がある場合、ファイル名に &quot;thumbnail&quot;、&quot;cover&quot;、&quot;title&quot;、&quot;page&quot; が含まれるものを優先します。<br>
 パスワードが設定されている場合や、実行ファイルなどが含まれているアーカイブでは表示されません。<br>
 なおこの設定にかかわらず、すべての種類のアーカイブで、 <b>thumbnail.jpg</b> という名前の代替データストリームがある場合、それが優先的に表示されます。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> アニメGIFに対応
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> アニメGIFに対応
 <dd>アニメーションGIFの表示に対応します。<br>
 この場合、<b>.GIF</b> ファイルの処理にスレッドを利用しませんので、サイズなどによっては時間がかかるかもしれません。また縮小された場合、表示がきたなくなることがあります。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> マウスポインタを設定
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> マウスポインタを設定
 <dd><b>.cur</b>、<b>.ani</b> ファイルを表示しているプレビュー上でのマウスポインタが一時的に変更されます。<br>
 この状態でマウスの左ボタンを押すと、ホットスポットに赤い十字線が表示されます。<br>
 <br><br>
 
-<dt id="TextPreview"><img src="grpbox.png" alt="" border=0> テキストプレビュー
+<dt id="TextPreview"><img src="grpbox.png" alt=""> テキストプレビュー
 <dd>
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 有効
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 有効
 <dd>ファイル情報が取得されていて、テキストファイルの場合、プレビュー表示を行います。<br>
 ファイル情報が非表示(<a href="hid00005.htm#ShowProperty">ShowProperty</a>_OFF)でも、プレビューが表示(<a href="hid00005.htm#ShowPreview">ShowPreview</a>_ON)の場合、テキストと思われる拡張子のファイルについては、(ファイル情報を取得して)プレビュー表示を試みます。
 
-<dt class="no_bg_indent1">最大行数 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 1000)</span>
+<dt class="no_bg_indent1">最大行数 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 1000)</span>
 <dd>プレビュー表示する最大行数を指定します。0 を指定するとすべて表示します。<br>
 通常10000行ぐらいはストレスなく表示できると思います。<br>
 なお、1000以上に設定している場合、最大行数を超えるテキストのファイル情報に「推定行数」が表示されます。<br>
 値は、読み込んだ部分の平均行サイズでファイルサイズを割り、有効数字2桁で切り捨てています。ファイル内容によっては、かなり誤差が出る場合がありますので、だいたいの目安としてください。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 末尾分割表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 末尾分割表示
 <dd><a href="hid00082.htm">テキストプレビュー</a>を上下に分割し、テキストの末尾を指定行数分だけ表示します。<br>
-<img src="edit.png" alt="" border=0> <b>行以上なら分割</b>で、分割表示を有効にする行数を指定できます。<br>
+<img src="edit.png" alt=""> <b>行以上なら分割</b>で、分割表示を有効にする行数を指定できます。<br>
 なお、「<b>最大行数</b>」を超えるファイルでも実際の末尾が表示されますが、総行数が不明なため、行番号は最終行からの相対表示(負数)になります。<br>
 表示/非表示の切り替えは、テキストプレビューの右クリックメニューからも可能です。<br>
 <br>
 
-<dt class="no_bg"><img src="chkbox.png" alt="" border=0> アーカイブ内のファイル情報/プレビューを表示(一時解凍)
+<dt class="no_bg"><img src="chkbox.png" alt=""> アーカイブ内のファイル情報/プレビューを表示(一時解凍)
 <dd>
 アーカイブ内のファイルについても、上述の設定にしたがってファイル情報やプレビューの表示を行います。そのために、ファイルを一時ディレクトリ下に解凍します。一時解凍したファイルは、アーカイブの仮想ディレクトリから抜けるときに削除されます。<br>
 なお <a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> コマンド実行時には、この設定はかかわらず強制的にファイル情報やプレビューが表示されます。<br>
 <br><br>
 
-<dt id="Log"><img src="grpbox.png" alt="" border=0> ログ
+<dt id="Log"><img src="grpbox.png" alt=""> ログ
 <dd>
 
-<dt class="no_bg_indent1">更新間隔 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 250m秒)</span>
+<dt class="no_bg_indent1">更新間隔 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 250m秒)</span>
 <dd>ログウィンドウの更新間隔を m秒単位で指定します。
 
-<dt class="no_bg_indent1">最大表示行数 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 1000)</span>
+<dt class="no_bg_indent1">最大表示行数 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 1000)</span>
 <dd>ログウィンドウに表示する最大行数を指定します。0 を指定すると無制限になります。
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> エラー箇所のみ表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> エラー箇所のみ表示
 <dd>タスクを実行しているとき、エラーがあった箇所のみをログに出力します。
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> エラーメッセージ
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> エラーメッセージ
 <dd>OSなどからの直前のエラーメッセージをログに出力します。
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> デバッグ情報
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> デバッグ情報
 <dd>タスクでの主なファイル処理内容をタイム付きでログに出力します。またアーカイバDLLを利用する際のコマンドや応答内容なども出力されます。<br>
 ログが肥大化するため、特別な理由がない場合はチェックしない方がよいでしょう。<br>
 この設定は、ログウィンドウの右クリックメニューからも変更できます。
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> スキップ項目を非表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> スキップ項目を非表示
 <dd>コピー・移動などで、スキップした項目をログに出力しません。
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> フルパス表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> フルパス表示
 <dd>処理対象のファイル/ディレクトリ名をフルパスで表示します。チェックを外すと、パス無しで表示します。
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 処理先を表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 処理先を表示
 <dd>ファイルのコピー/移動などで、開始行だけでなく、個々のすべての処理項目にもデスティネーションを表示します。<br>
 表示の際には、上述の「<b>フルパス表示</b>」オプションも適用されます。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ログを保存
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ログを保存
 <dd><b>NyanFi</b> の終了時にログウィンドウの内容をファイル(実行ディレクト\<b>tasklog.txt</b>)に保存します。ファイルは「<b>保存世代数</b>」で指定されたファイルまでが残り、それ以前のものは削除されます。<br>
 なお、二重起動された <b>NyanFi</b> のログは、それぞれ個別に保存されます(<b>tasklog2.txt</b>、<b>tasklog3.txt</b> …)。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 同日のログは追記
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 同日のログは追記
 <dd>終了時にログを保存する際に、前回保存したファイル(<b>tasklog.txt</b>)のタイムスタンプと同日だった場合、それに追記保存します。これによって日付ごとにログをまとめられます。
 <br>
 
-<dt class="no_bg_indent1">保存世代数 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 5)</span>
+<dt class="no_bg_indent1">保存世代数 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 5)</span>
 <dd>ログをファイルに保存する際の最大世代数を指定します。<br>
 <br><br>
 
-<dt id="NyanfiHotKey"><img src="grpbox.png" alt="" border=0> NyanFi 呼び出しホットキー
+<dt id="NyanfiHotKey"><img src="grpbox.png" alt=""> NyanFi 呼び出しホットキー
 <dd><b>NyanFi</b> を呼び出すホットキーを設定します。ホットキーを押すと、ウィンドウがアクティブ(最小化されていたら元の大きさに戻す)になります。<br>
 ホットキーは、<span class="btn_frame">Shift</span><span class="btn_frame">Ctrl</span><span class="btn_frame">Alt</span><span class="btn_frame">Win</span>とキーとの組み合わせで指定してださい。それ以外の場合は、ホットキーの登録が解除されます。<br>
 なお、<b>NyanFi</b> を<a href="hid00017.htm#Duplicate">二重起動</a>している場合は、最初に起動した <b>NyanFi</b> が呼び出されます。<br>
 <br>
 
-<dt id="DialogKey"><img src="grpbox.png" alt="" border=0> キーによるダイアログの移動/サイズ変更
+<dt id="DialogKey"><img src="grpbox.png" alt=""> キーによるダイアログの移動/サイズ変更
 <dd>指定した<span class="btn_frame">Shift</span><span class="btn_frame">Ctrl</span><span class="btn_frame">Alt</span>の組み合わせと<span class="btn_frame">↑</span><span class="btn_frame">↓</span><span class="btn_frame">←</span><span class="btn_frame">→</span>キーによって、各種ダイアログ(設定用は除く)を移動したり、サイズを変更(可能な場合)したりできます。また、移動、サイズ変更のそれぞれについて、一回の変化量も指定可能です。<br>
 修飾キーを何も指定しないと無効になります。<br>
 <br>
 
-<dt id="Keyboard"><img src="grpbox.png" alt="" border=0> キーボードの種類
+<dt id="Keyboard"><img src="grpbox.png" alt=""> キーボードの種類
 <dd>
 通常は「<b>自動</b>」にしておいてください。<br>
 キーボードの種類が誤認識されている場合、「<b>JP</b>」/「<b>US</b>」を選ぶと、<b>NyanFi</b> から見たキーボードの種類を強制的に変更できます。<br>
 この設定は直ちに適用されます。<br>
 <br><br>
 
-<dt id="Sound"><img src="grpbox.png" alt="" border=0> サウンド再生
+<dt id="Sound"><img src="grpbox.png" alt=""> サウンド再生
 <dd></dd>
-<dt class="no_bg_indent1">再生制限 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 3秒)</span>
+<dt class="no_bg_indent1">再生制限 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 3秒)</span>
 <dd><b>.wav</b>、<b>.wma</b>、<b>.mp3</b>、<b>.mid</b> ファイル上で<span class="btn_frame">ENTER</span>キーを押したとき(<a href="hid00005.htm#OpenStandard">OpenStandard</a>)、ここで指定した秒数までで再生します。<br>
 <br>
 
-<dt id="Other"><img src="grpbox.png" alt="" border=0> その他
+<dt id="Other"><img src="grpbox.png" alt=""> その他
 <dd></dd>
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 最小化時にアイコンを通知領域に格納<br>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 最小化時にアイコンを通知領域に格納<br>
 <dd>最小化したときに、アイコンをタスクバーの通知領域に格納します。<br>
 格納されたアイコンをクリックすると、最初に起動した <b>NyanFi</b> がアクティブになります。<br>
 アイコンの右クリックメニューでは、<a href="hid00017.htm#Duplicate">二重起動</a>された <b>NyanFi</b> を選んでアクティブ化したり、二重起動(<a href="hid00005.htm#Duplicate">Duplicate</a>)、再起動(<a href="hid00005.htm#Restart">Restart</a>)などが可能。<br>
 なお、右クリックメニューで終了したり、最初に起動した <b>NyanFi</b> を終了したりすると、すべての <b>NyanFi</b> が終了します。<br>
 <br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> .nyanfi がない場合、上位から継承
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> .nyanfi がない場合、上位から継承
 <dd>移動したディレクトリに <a href="hid00075.htm">.nyanfi ファイル</a> がなかった場合、親ディレクトリを(ルートまで)さかのぼって検索し、見つかったらその内容を適用します。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ユーザ名別に作成
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ユーザ名別に作成
 <dd>
 チェックすると、現在のユーザ名にしたがって &quot;<b>.nyanfi</b>_ユーザ名&quot; という名前で<a href="hid00075.htm">.nyanfi ファイル</a>を作成し、それを適用します。<br>
 共有フォルダを複数ユーザで利用するような場合、ユーザごとに設定を分けられます。<br>
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> .nyanfi でのコマンドファイル実行を許可
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> .nyanfi でのコマンドファイル実行を許可
 <dd><a href="hid00075.htm">.nyanfi ファイル</a>で設定されているコマンドファイルの実行を許可します。<br>
 セキュリティを考慮し、実行できるのは <b>NyanFi</b> ディレクトリから相対指定のコマンドファイルに制限されます。<br>
 <br>
 
-<dt class="no_bg_indent1">7-zip64.dll(7z.dll対応版)の対応拡張子 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: .lzh.cab.iso.arj.chm.msi.wim)</span>
+<dt class="no_bg_indent1">7-zip64.dll(7z.dll対応版)の対応拡張子 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: .lzh.cab.iso.arj.chm.msi.wim)</span>
 <dd><b>7-zip64.dll 文字化け対策版</b>(x@rgs 氏作)の<b>7z.dll対応版</b>を利用している場合、対応したいアーカイブの拡張子(解凍のみ)を追加指定できます。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
 <b>.rar</b> を指定すると、unrar64j.dll/unrar64.dll を用いずに、7-zip64.dll(7z.dll対応版)で解凍を行います。それ以外で、他のアーカイバDLLが対応する拡張子については、そちらが優先されます。<br>
 
@@ -267,7 +267,7 @@
 </pre>
 と表示されます(Ver.19.00.00.xx の場合)。
 
-<dt class="no_bg_indent1">git.exe (Git for Windows) <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 自動検出)</span>
+<dt class="no_bg_indent1">git.exe (Git for Windows) <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 自動検出)</span>
 <dd>
 Git 関連の処理で利用する <b>git.exe</b> の場所を指定します。<br>
 標準的な場所にインストールされている場合は自動的に検出されますが、そうでない場合は手動で設定してください。<br>

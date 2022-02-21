@@ -12224,7 +12224,9 @@ bool open_by_TextEditor(UnicodeString fnam, int lno)
 			prmstr = p_fnam;
 		}
 
-		if (!Execute_ex(editor, prmstr)) UserAbort(USTR_FaildExec);
+		if (::ShellExecute(NULL, _T("open"), editor.c_str(), prmstr.c_str(), NULL, SW_SHOWNORMAL) <= (HINSTANCE)32)
+			UserAbort(USTR_FaildExec);
+
 		if (AddToRecent) AddToRecentFile(fnam);
 
 		//•ÒW—š—ð‚ðXV

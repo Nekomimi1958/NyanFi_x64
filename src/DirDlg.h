@@ -25,6 +25,7 @@ class TRegDirDlg : public TForm
 __published:	// IDE で管理されるコンポーネント
 	TAction *AddItemAction;
 	TAction *AddNyanFiAction;
+	TAction *AddPathAction;
 	TAction *AndOrAction;
 	TAction *AppInfoAction;
 	TAction *CopyPathAction;
@@ -58,6 +59,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *CopyPathItem;
 	TMenuItem *FitSizePosItem;
 	TMenuItem *OpenByExpItem;
+	TMenuItem *PATHP1;
 	TMenuItem *PropertyItem;
 	TMenuItem *SaveAsWorkItem;
 	TMenuItem *Sep_1;
@@ -119,6 +121,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall AddNyanFiActionExecute(TObject *Sender);
 	void __fastcall AppInfoActionExecute(TObject *Sender);
 	void __fastcall AppInfoActionUpdate(TObject *Sender);
+	void __fastcall AddPathActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	int SelIndex;

@@ -5,6 +5,7 @@
 #include "UserFunc.h"
 #include "UserMdl.h"
 #include "Global.h"
+#include "OptDlg.h"
 #include "EditItem.h"
 
 //---------------------------------------------------------------------------
@@ -51,6 +52,8 @@ void __fastcall TEditItemDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		}
 		if (USAME_TS(ItemDelimiter, ".")) RetStr.Insert(".", 1);
 	}
+
+	if (OptionDlg && OptionDlg->Visible) ::PostMessage(OptionDlg->Handle, WM_NYANFI_CLSEDITM, 0, 0);
 }
 
 //---------------------------------------------------------------------------

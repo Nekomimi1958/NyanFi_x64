@@ -1081,7 +1081,7 @@ void __fastcall TAppListDlg::AppListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 		RestoreAction->Execute();
 	}
 	else if (USAME_TI(CmdStr, "Delete")) {
-		CloseItemClick(NULL);
+		CloseItem->Click();
 	}
 	else if (ExeCmdListBox(lp, CmdStr)) {
 		;
@@ -1662,7 +1662,7 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 	}
 	//プロパティ
 	else if (USAME_TI(CmdStr, "PropertyDlg")) {
-		PropertyItemClick(NULL);
+		PropertyItem->Click();
 	}
 	//親ディレクトリへ
 	else if (USAME_TI(get_CmdStr(CmdStr), "ToParent")) {
@@ -1725,7 +1725,7 @@ void __fastcall TAppListDlg::SelLaunhDirItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::DirPanelDblClick(TObject *Sender)
 {
-	SelLaunhDirItemClick(NULL);
+	SelLaunhDirItem->Click();
 }
 //---------------------------------------------------------------------------
 //このディレクトリに移動

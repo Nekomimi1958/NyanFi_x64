@@ -30,16 +30,14 @@
 	<param name="Keyword" value="補助コマンド">
 </object>
 
-<style TYPE="text/css">
-<!--
-th {
-  text-align: left;
-  vertical-align: top;
-  font-weight: bold;
-  padding-right: 1em;
-  white-space: nowrap;
-}
--->
+<style type="text/css">
+  th {
+    text-align: left;
+    vertical-align: top;
+    font-weight: bold;
+    padding-right: 1em;
+    white-space: nowrap;
+  }
 </style>
 </head>
 
@@ -206,7 +204,7 @@ MsgBox_%..N%回目です
 <tr><th>Clipboard</th><td>クリップボードのテキスト内容</td></tr>
 <tr><th>DownloadName</th><td><a href="#Download">Download</a> コマンドでダウンロードしたファイル名</td></tr>
 <tr><th>LastWatchLog</th><td><a href="hid00005.htm#WatchTail">WatchTail</a> コマンドで最後に検出されたファイル名とその追記内容</td></tr>
-<tr><th>LastLogText</th><td>ログウィンドウの直前の行内容(空行や &quot; >All Task Ready&quot; はスキップ)</td></tr>
+<tr><th>LastLogText</th><td>ログウィンドウの直前の行内容(空行や &quot; &gt;All Task Ready&quot; はスキップ)</td></tr>
 <tr><th>Buffer</th><td>作業用バッファ、ファイルの読込/保存にも使用可能</td></tr>
 <tr><th>BufferLength</th><td>Buffer の総文字数 (%Buffer.Length% でも参照可能)</td></tr>
 <tr><th>BufferCount</th><td>Buffer の行数 (%Buffer.Count% でも参照可能)</td></tr>
@@ -1211,7 +1209,7 @@ D:\hoge\backup に移動し、7日前の日付より古いファイルを選択して削除、終わったら元
 Echo_古いバックアップを削除
 PushDir
   ChangeDir_D:\hoge\backup
-  DateSelect_<-7D
+  DateSelect_&lt;-7D
   IfSel
     MsgBoxYN_古いファイルを削除しますか?
     IfYes
@@ -1278,14 +1276,14 @@ PlaySound_OK.WAV
 現在時刻が17:00:00以降なら D:\hoge 以下のファイルで14日前の日付より古いものを削除し、NyanFi を終了。
 <pre class="example_box">
 EchoT_終了時処理
-Test_Time>="17:00:00"
+Test_Time&gt;="17:00:00"
 IfTrue
   MsgOff
   PushDir
     ChangeDir_D:\hoge
     MaskFind_*.*
     IfFound
-      DateSelect_<-14D
+      DateSelect_&lt;-14D
       Delete_SO
       ReturnList
     EndIf
@@ -1330,7 +1328,7 @@ Repeat
   Add_Buffer&lt;&lt;%LineText%
 EndRepeat
 
-Test_BufferCount>0
+Test_BufferCount&gt;0
 IfTrue
   SetClipboard_%Buffer%
 EndIf
@@ -1391,7 +1389,6 @@ Else
 EndIf
 </pre>
 
-
 カーソル位置がインターネットショートカットなら、そのページをテキストビュアーで表示
 <pre class="example_box">
 MatchExt_.url
@@ -1399,7 +1396,7 @@ IfFalse_Exit
 
 LoadBuffer_%FileName%
 FilterBuffer_"/^URL=/"
-Test_BufferCount>0
+Test_BufferCount&gt;0
 IfFalse_Exit
 
 Set_URL=%Buffer[0]%

@@ -16447,12 +16447,12 @@ void __fastcall TNyanFiForm::FileEditActionExecute(TObject *Sender)
 		for (int i=0; i<EtcEditorList->Count; i++) {
 			if (!test_FileExt(fext, EtcEditorList->Names[i])) continue;
 			UnicodeString edtr = exclude_quot(EtcEditorList->ValueFromIndex[i]);
-			if (!starts_Dollar(edtr) || contains_PathDlmtr(edtr)) edtr = get_actual_path(edtr);
+			if (!starts_Dollar(edtr) || contains_PathDlmtr(edtr)) edtr = get_actual_name(edtr, true);
 			add_dyn_array(etc_lst, edtr);
 		}
 
-		UnicodeString txt_editor = get_actual_path(TextEditor);
-		UnicodeString img_editor = get_actual_path(ImageEditor);
+		UnicodeString txt_editor = get_actual_name(TextEditor, true);
+		UnicodeString img_editor = get_actual_name(ImageEditor, true);
 		if (etc_lst.Length>0) {
 			if (test_FileExt(fext, FExtImgEidt)) add_dyn_array(etc_lst, img_editor, true);
 			if (test_FileExt(fext, FEXT_TEXT))   add_dyn_array(etc_lst, txt_editor,  true);

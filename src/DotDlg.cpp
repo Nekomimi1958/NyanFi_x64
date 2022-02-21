@@ -453,9 +453,9 @@ void __fastcall TDotNyanDlg::InheritBtnClick(TObject *Sender)
 	HandledCheckBox->Checked = equal_1(InheritList->Values["Handled"]);
 	HideCheckBox->Checked    = (file_GetAttr(DotNyanName) & faHidden);
 
-	InhSndBtnClick(NULL);
-	InhImgBtnClick(NULL);
-	InhCmdBtnClick(NULL);
+	InhSndBtn->Click();
+	InhImgBtn->Click();
+	InhCmdBtn->Click();
 }
 
 //---------------------------------------------------------------------------

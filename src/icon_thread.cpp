@@ -27,12 +27,12 @@ __fastcall TGetIconThread::TGetIconThread(bool CreateSuspended) : TThread(Create
 //---------------------------------------------------------------------------
 void __fastcall TGetIconThread::IconNotify()
 {
-	if (CallbackWnd) ::SendMessage(CallbackWnd, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
+	if (CallbackWnd) ::SendMessage(CallbackWnd, WM_NYANFI_FLICON, 0, 0);
 
 	TForm *forms[] = {AppListDlg, EditHistoryDlg, RegDirDlg, OptionDlg, ToolBtnDlg};
 	int cnt = sizeof(forms)/sizeof(forms[0]);
 	for (int i=0; i<cnt; i++) {
-		if (forms[i] && forms[i]->Visible) ::SendMessage(forms[i]->Handle, WM_NYANFI_FLICON, (WPARAM)0, (LPARAM)0);
+		if (forms[i] && forms[i]->Visible) ::SendMessage(forms[i]->Handle, WM_NYANFI_FLICON, 0, 0);
 	}
 }
 

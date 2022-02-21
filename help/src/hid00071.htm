@@ -25,28 +25,28 @@
 </p>
 
 <dl>
-<dt class="no_bg_indent1">対象マスク <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">対象マスク <img src="combobox.png" alt="">
 <dd>バックアップするファイルのマスクを指定します。<br>
 マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
 何も指定しないと &quot;*&quot; とみなされ、すべてのファイルがバックアップ対象となります。<br>
 <b>例</b>: <span class="inp_box">*.cpp;*.c;*.h;*.txt;*.ico</span>
 
-<dt class="no_bg_indent1">除外マスク <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">除外マスク <img src="combobox.png" alt="">
 <dd>バックアップから除外するファイルのマスクを指定します。<br>
 マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
 <b>例</b>: <span class="inp_box">*.bak;*.tmp;*.~?~</span>
 <br><br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> サブディレクトリも対象とする<br>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> サブディレクトリも対象とする<br>
 <dd>バックアップ元パス以下の、すべてのサブディレクトリのファイルも対象とします。<br>
 
-<dt class="no_bg_indent1">除外マスク <img src="edit.png" alt="" border=0><br>
+<dt class="no_bg_indent1">除外マスク <img src="edit.png" alt=""><br>
 <dd>「<b>サブディレクトリも対象とする</b>」がチェックされている場合、除外したいディレクトリのマスクを指定できます。<br>
 マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
 <b>例</b>: <span class="inp_box">temp;test;debug*;__*</span>
 <br><br>
 
-<dt class="no_bg_indent1">日付条件 <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">日付条件 <img src="combobox.png" alt="">
 <dd>日付条件を指定すると、それに合うファイルだけがバックアップの対象になります。<br>
 大量のファイルを定期的にバックアップしている場合、指定すると処理を高速化できるかもしれません。<br>
 以下のように、現在の日付からの相対指定と、絶対指定が可能です。
@@ -60,22 +60,22 @@
 　<span class="inp_box">&gt;2016/12/31</span>　2016年12月31日よりも新しいファイルのみをコピー
 </div>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ミラーリングを行う<br>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ミラーリングを行う<br>
 <dd>コピー後、バックアップ先のすべてのファイルをチェックし、バックアップ元に存在しないものを削除します。<br>
 逆の場合、バックアップ元のファイルが削除されることはありません。<br>
 「<b>サブディレクトリも対象とする</b>」がチェックされていると、バックアップ先パス以下のすべてのファイルおよびディレクトリがチェック対象となります。そうでない場合は、バックアップ先パスにあるファイルのみがチェックされます。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 同期バックアップ有効<br>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 同期バックアップ有効<br>
 <dd>バックアップ先が同期ディレクトリとして登録されている場合、他のディレクトリにも同期してバックアップを行います(<a href="hid00005.htm#RegSyncDlg">→ RegSyncDlg</a>)。<br>
 <br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 開始確認<br>
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 開始確認<br>
 <dd>
 <span class="btn_frame">開始</span>ボタンを押した時に、確認メッセージが出ます。<br>
 なお、<b>Backup</b>_設定名 によってダイアログ非表示で実行したときにも、確認メッセージが出ます(<a href="hid00063.htm#MsgOff">MsgOff</a> 補助コマンドで確認メッセージの抑止可能)。<br>
 <br>
 
-<dt class="no_bg_indent1">設定 <img src="combobox.png" alt="" border=0>
+<dt class="no_bg_indent1">設定 <img src="combobox.png" alt="">
 <dd>
 現在の設定内容に名前を付けて、<span class="btn_frame">保存</span>ボタンで保存できます。<br>
 この名前を <b>Backup</b> コマンドのパラメータに指定すると、ダイアログを出さずに直ちにバックアップを実行することも可能です。<br>

@@ -1486,7 +1486,7 @@ void __fastcall TOptionDlg::EtcEditorListBoxDrawItem(TWinControl *Control, int I
 	cv->TextOut(xp, yp, etc_fext);
 	xp += (w_x + 20);
 	if (!starts_Dollar(etc_edtr) || contains_PathDlmtr(etc_edtr)) {
-		UnicodeString etc_fnam = get_actual_path(etc_edtr);
+		UnicodeString etc_fnam = get_actual_name(etc_edtr, true);
 		if (file_exists(etc_fnam))
 			draw_SmallIconF(etc_fnam, cv, xp, Rect.Top + (Rect.Height() - ScaledThis(16))/2, this);
 		else

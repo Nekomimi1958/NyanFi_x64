@@ -80,9 +80,12 @@ UnicodeString get_actual_path(UnicodeString pnam)
 //---------------------------------------------------------------------------
 //パスが通っている場合、パス無しファイル名をパス付きに変換
 //---------------------------------------------------------------------------
-UnicodeString get_actual_name(UnicodeString fnam)
+UnicodeString get_actual_name(
+	UnicodeString fnam,
+	bool sw_fmt)			//書式文字列を展開	(default = false)
 {
-	fnam = cv_env_str(fnam);
+	fnam = sw_fmt? get_actual_path(fnam) : cv_env_str(fnam);
+
 	if (!fnam.IsEmpty() && fnam.Pos('\\')==0) {
 		//PATH
 		bool chk_ext = get_extension(fnam).IsEmpty();

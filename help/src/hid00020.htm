@@ -30,7 +30,7 @@
 <br>
 
 <dl>
-<dt class="no_bg_indent1">縮小・拡大アルゴリズム <img src="combobox.png" alt="" border=0>　<span class="def_text">(デフォルト: ファント・リサンプリング)</span>
+<dt class="no_bg_indent1">縮小・拡大アルゴリズム <img src="combobox.png" alt="">　<span class="def_text">(デフォルト: ファント・リサンプリング)</span>
 <dd>画像(メタファイルは除く)の縮小・拡大に用いる補間法を選択します。<br>
 この設定は、ファイラーのイメージプレビューやファイルリストの背景画像表示にも適用されます。<br>
 なおサブビュアーに対しては適用されません(<a href="hid00007.htm#SubViewer">→ SubViewer</a>)。<br>
@@ -39,112 +39,112 @@
 サムネイルを作成する際の縮小アルゴリズムについては、後述の <a href="#Thumbnail">サムネイル</a> - 「<b>縮小</b>」で指定してください。<br>
 </div>
 
-<dt class="no_bg_indent1">フィット表示時の余白幅 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 0px)</span>
+<dt class="no_bg_indent1">フィット表示時の余白幅 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 0px)</span>
 <dd>フィット表示している場合の余白幅をピクセル単位で指定します。
 
-<dt class="no_bg_indent1">許容フィット倍率 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 100%)</span>
+<dt class="no_bg_indent1">許容フィット倍率 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 100%)</span>
 <dd>フィット表示時に画像サイズが表示領域よりも小さい場合、ここで設定した倍率の範囲内でフィット可能なら拡大表示します。そうでない場合は等倍表示になります。<br>
 値は100以上の整数パーセントで指定してください。100より小さい値は100とみなされます。
 
-<dt class="no_bg_indent1">見開き間隔 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 0px)</span>
+<dt class="no_bg_indent1">見開き間隔 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 0px)</span>
 <dd>見開き表示の場合の左右の間隔を、フィット表示時換算のピクセル単位で指定します。<br>
 間隔やサイズ差による余白部分の色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます(見開き表示の余白色)。<br>
 
-<dt class="no_bg_indent1">画像分割グリッド <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 3)</span>
+<dt class="no_bg_indent1">画像分割グリッド <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 3)</span>
 <dd>イメージビュアーにおいて <b>ShowGrid</b> コマンドで表示される画像分割グリッドの、縦横の分割数を指定します。<br>
 グリッドの色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。<br>
 
-<dt class="no_bg_indent1" id="MinShowTime">最小表示タイム <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 0m秒)</span>
+<dt class="no_bg_indent1" id="MinShowTime">最小表示タイム <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 0m秒)</span>
 <dd>m秒単位で 0 より大きな値を指定すると、画像表示後にその間 <a href="hid00007.htm#NextFile">NextFile</a>、<a href="hid00007.htm#PrevFile">PrevFile</a> コマンドを受け付けません。コマンドを割り当てたキーを押しっぱなしにすると、画像を順に見ていくことができます。<br>
 値に0を指定すると、処理が間に合わない場合、表示が飛ばされます。サムネイルを表示している場合などには、0にした方が操作しやすいかもしれません。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> Exif情報にしたがって回転
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> Exif情報にしたがって回転
 <dd>Exif 情報の画像方向の内容にしたがって、画像を回転させて表示します。<br>
 ただし <b>WIC</b> 標準対応以外のコーデックを使用する場合、この設定にかかわらず <b>WIC</b> 側に処理をまかせています。
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ズーム倍率を維持する
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ズーム倍率を維持する
 <dd><a href="hid00007.htm#NextFile">NextFile</a>、<a href="hid00007.htm#PrevFile">PrevFile</a> コマンドで別のファイルに移った時に、直前のズーム倍率を維持します。<br>
 サムネイルの表示を切り替えた場合も維持されます。<br>
 なお、アイコン表示に移った場合には維持されずに、必ず等倍表示となります。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> カーソルをループ移動する
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> カーソルをループ移動する
 <dd>カーソルが先頭にあるとき <a href="hid00007.htm#PrevFile">PrevFile</a> コマンドで最後のファイルへ、末尾にあるとき <a href="hid00007.htm#NextFile">NextFile</a> コマンドで先頭のファイルへ移動します。<br>
 なお、見開き表示の場合には無効となります。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 先頭・最後でヒント表示　<img src="chkbox.png" alt="" border=0> 警告音
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 先頭・最後でヒント表示　<img src="chkbox.png" alt=""> 警告音
 <dd>先頭または最後からさらに移動しようとした場合にヒント表示します。「<b>カーソルをループ移動する</b>」が有効な場合、さらに <a href="hid00007.htm#PrevFile">PrevFile</a>、<a href="hid00007.htm#NextFile">NextFile</a> コマンドを実行するとループ移動します。<br>
 なおヒント表示の際に、警告音を鳴らすことも可能です。
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 情報ヘッダを下部に表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 情報ヘッダを下部に表示
 <dd>ビュアーの情報ヘッダを下部に移動します。<br>
 サイドバーを表示している場合は、そこに表示されるの一部の情報(インデックス、倍率など)を下部に移動します。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ツールバーをサイドバー上に表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ツールバーをサイドバー上に表示
 <dd>ツールバーが表示状態になっている場合に、画面上部ではなく、サイドバーの上端に表示します。サイドバーが非表示の場合は、画面上部に表示します。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> シークバーの始点を綴じ方向に合わす
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> シークバーの始点を綴じ方向に合わす
 <dd>見開き表示の場合、右綴じならシークバーの始点も右端にします。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 右綴じでNext/Prev入替
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 右綴じでNext/Prev入替
 <dd>「<b>シークバーの始点を綴じ方向に合わす</b>」がチェックされていて、右綴じ見開き表示で、シークバーが表示になっている場合(全画面表示で隠れていても)、キーによる前後移動の動作(<a href="hid00007.htm#NextFile">NextFile</a> / <a href="hid00007.htm#PrevFile">PrevFile</a> コマンド)を入れ替えます。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 全画面表示でマウスポインタを隠す
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 全画面表示でマウスポインタを隠す
 <dd>
 <a href="hid00007.htm#FullScreen">FullScreen</a> コマンドで全画面表示に切り替えた際に、マウスポインタを隠します。<br>
 この場合、クリックで非表示状態が解除されます。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 全画面表示でサムネイルを隠す
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 全画面表示でサムネイルを隠す
 <dd><a href="hid00007.htm#FullScreen">FullScreen</a> コマンドで全画面表示に切り替えた際に、サムネイルを隠します。<br>
 全画面表示でも、<a href="hid00007.htm#Thumbnail">Thumbnail</a> コマンドで表示/非表示を切り替えられます。全画面表示から抜けると、以前の表示状態に戻りますが、全画面表示時に切り替えた場合はそれが維持されます。<br>
 
-<dt class="no_bg_indent1" id="AnimateGif"><img src="chkbox.png" alt="" border=0> アニメーションGIFを再生する
+<dt class="no_bg_indent1" id="AnimateGif"><img src="chkbox.png" alt=""> アニメーションGIFを再生する
 <dd>フレーム数が1より大きいGIF画像を等倍表示でアニメーション再生します。<br>
 ただし以下の制限があります。ズーム倍率の変更、回転、グレースケール表示、グリッド表示、白飛び警告、印刷はできません。ルーペ、ヒストグラム、カラーピッカーは利用できません。
 「<a href="#MinShowTime">最小表示タイム</a>」の設定は効きません。見開き表示では通常表示になります。<br>
 場合によってはサブビュアー(<a href="hid00007.htm#SubViewer">→ SubViewer</a>)で再生した方がよいでしょう。<br>
 <br><br>
 
-<dt id="InitialStt"><img src="grpbox.png" alt="" border=0> 開いた時の初期状態
+<dt id="InitialStt"><img src="grpbox.png" alt=""> 開いた時の初期状態
 <dd>
 イメージビュアーを開いた時の、画像表示の初期状態を設定します。<br>
 <br><br>
 
-<dt id="Thumbnail"><img src="grpbox.png" alt="" border=0> サムネイル
+<dt id="Thumbnail"><img src="grpbox.png" alt=""> サムネイル
 <dd>
-<dt class="no_bg_indent1">サイズ <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 120)</span>
+<dt class="no_bg_indent1">サイズ <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 120)</span>
 <dd>サムネイルの大きさをピクセル単位で指定します。<br>
 90～160 くらいがよいでしょう。ファイルから取得されたサムネイルがこのサイズよりも小さい場合、拡大はされません。
 
-<dt class="no_bg_indent1">縮小 <img src="combobox.png" alt="" border=0>　<span class="def_text">(デフォルト: ファント・リサンプリング)</span>
+<dt class="no_bg_indent1">縮小 <img src="combobox.png" alt="">　<span class="def_text">(デフォルト: ファント・リサンプリング)</span>
 <dd>サムネイルを作成する際の縮小アルゴリズムを選択します。<br>
 
-<dt class="no_bg_indent1">境界線幅 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: 3)</span>
+<dt class="no_bg_indent1">境界線幅 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 3)</span>
 <dd>サムネイル間の境界線の幅をピクセル単位で指定します。<br>
 境界線の色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> スクロールバーを表示
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> スクロールバーを表示
 <dd>サムネイルにスクロールバーを表示します。
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> ファイル名
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ファイル名
 <dd>サムネイルの下にファイル名を右揃えで表示します。配色はファイルリストの場合と同じになります。
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> Exif情報
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> Exif情報
 <dd>サムネイルの下に Exif 情報を右揃えで簡略表示します。表示されるのは、F値、シャッター速度、ISO感度、露出補正です。ただし表示幅に収まらない場合、後ろの項目が省略されます。Exif 情報がない場合は、画像サイズを表示します。また実行ファイルやDLLの場合は抽出アイコン数を表示します。<br>
 文字色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> タグ
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> タグ
 <dd>サムネイルの下にタグを左揃えで表示します。<br>
 文字色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> の「<b>タグ別配色</b>」で設定できます。<br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> 拡張子強調
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 拡張子強調
 <dd>サムネイルの左上隅に拡張子を反転文字で表示します。色は拡張子別配色にしたがいます。<br>
 カレントで RAW と JPG が混在している場合などに分かりやすくなります。<br>
 <br>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt="" border=0> アーカイブ内では一括取得しない
+<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> アーカイブ内では一括取得しない
 <dd>アーカイブ内の場合、サムネイルを一括取得しません。画像を表示させるごとに、そのサムネイルを追加表示していきます。<br>
 
-<dt class="no_bg_indent1" id="ThumbCache"><img src="chkbox.png" alt="" border=0> 代替データストリームにキャッシュ
+<dt class="no_bg_indent1" id="ThumbCache"><img src="chkbox.png" alt=""> 代替データストリームにキャッシュ
 <dd>取得したサムネイルを、その画像ファイルの代替データストリームに保存します(<b>NTFS</b> のみ)。<br>
 <b>thumbnail.jpg</b> にサムネイル画像、<b>thumbnail.txt</b> にサムネイル情報(表示文字列、タイムスタンプ、サムネイルサイズ、アルゴリズム)が保存されます。<br>
 画像のタイムスタンプやサムネイル設定が変更されていると、サムネイルを利用しようとしたときに自動的にキャッシュが作り直されます。<br>
@@ -154,7 +154,7 @@
 キャッシュデータを削除したい場合は、画像ファイルに対して <a href="hid00005.htm#DeleteADS">DeleteADS</a>_TC コマンドを実行してください。<br>
 </div>
 
-<dt class="no_bg_indent1">キャッシュしないパス(前方一致) <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">キャッシュしないパス(前方一致) <img src="edit.png" alt="">
 <dd>
 ここで指定したパス以下では、キャッシュの保存を行いません。<br>
 ドライブ名から始まるフルパスで指定します。<b>;</b> (セミコロン)で区切って複数指定可能です。前方一致なので、完全なパスの形式になっていなくてもかまいません。例えば &quot;<b>\\</b>&quot; を指定すると、すべてのUNCパスにマッチします。<br>
@@ -167,25 +167,25 @@
 </div>
 <br><br>
 
-<dt id="SetMark"><img src="grpbox.png" alt="" border=0> 閉じた時に栞マークを設定
+<dt id="SetMark"><img src="grpbox.png" alt=""> 閉じた時に栞マークを設定
 <dd>
-<img src="chkbox.png" alt="" border=0> <b>有効</b> をチェックしていると、イメージビュアーを閉じた時に、表示していた画像に栞マーク(<a href="hid00007.htm#Mark">Mark</a>)を設定します。この際、カレントの栞マークは一旦すべて解除(<a href="hid00007.htm#ClearMark">ClearMark</a>)されます。<br>
+<img src="chkbox.png" alt=""> <b>有効</b> をチェックしていると、イメージビュアーを閉じた時に、表示していた画像に栞マーク(<a href="hid00007.htm#Mark">Mark</a>)を設定します。この際、カレントの栞マークは一旦すべて解除(<a href="hid00007.htm#ClearMark">ClearMark</a>)されます。<br>
 <div class="spc_box">
 <span class="tips">Tips</span>アーカイブ内にマークされた画像がある場合、アーカイブファイルに対して <a href="hid00005.htm#ImageViewer">ImageViewer</a> コマンドを実行すると、アーカイブを開いてその画像を表示します。この場合、イメージビュアーを閉じると仮想ディレクトリから抜けます。<br>
 </div>
 
-<dt class="no_bg_indent1">適用するディレクトリ(前方一致) <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">適用するディレクトリ(前方一致) <img src="edit.png" alt="">
 <dd>栞マークを設定するパスを指定します。<b>;</b> (セミコロン)で区切って複数指定可能です。前方一致なので、完全なパスの形式になっていなくてもかまいません。<br>
 無指定の場合は、すべてのパスで適用されます。<br>
 
-<dt class="no_bg_indent1">適用する拡張子 <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: .jpg)</span>
+<dt class="no_bg_indent1">適用する拡張子 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: .jpg)</span>
 <dd>栞マークを設定する画像の拡張子を指定します。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
 
-<dt class="no_bg_indent1">メモ <img src="edit.png" alt="" border=0>　<span class="def_text">(デフォルト: しおり)</span>
+<dt class="no_bg_indent1">メモ <img src="edit.png" alt="">　<span class="def_text">(デフォルト: しおり)</span>
 <dd>栞マークを設定する際のメモ内容を指定できます。<br>
 <br><br>
 
-<dt class="no_bg_indent1">表示しないファイルの拡張子 <img src="edit.png" alt="" border=0>
+<dt class="no_bg_indent1">表示しないファイルの拡張子 <img src="edit.png" alt="">
 <dd>イメージビュアーで表示しないファイルの拡張子を指定します。拡張子は <b>.</b> (ピリオド)で区切って複数指定できます。<br>
 ここで指定したファイルは、<a href="hid00005.htm#ImageViewer">ImageViewer</a> コマンドで開けず、またサムネイルにもリストアップされません。<br>
 <br><br>
