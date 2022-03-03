@@ -148,7 +148,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 
 		if (!restart && !duplicate) {	//再起動で無い場合二重起動せずに終了
 			::CloseHandle(hMutex);
-			return -1;
+			return 0;
 		}
 	}
 
@@ -158,7 +158,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR lpCmdLine, int)
 		for (int i=0; i<200 && !ok; i++) if (::WaitForSingleObject(hMutex, 100)==WAIT_OBJECT_0) ok = true;
 		if (!ok) {	//既存が終了されないので終了
 			::CloseHandle(hMutex);
-			return -1;
+			return 0;
 		}
 		IsPrimary = true;
 	}

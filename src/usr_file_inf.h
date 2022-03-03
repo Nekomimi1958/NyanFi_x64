@@ -64,7 +64,7 @@
 #define FEXT_C_SH	FEXT_C_SRC FEXT_C_HDR
 #define FEXT_PASCAL	_T(".pas.dpr.dpk.inc")
 
-#define FEXT_PROGRAM	FEXT_C_SH FEXT_PASCAL _T(".ahk.as.asm.awk.bas.bsh.cgi.cs.d.fs.go.hs.hsp.inc.java.js.jsx.kt.kts.lisp.lsp.lua.mac.php.pl.pm.ps1.psm1.py.qml.rb.rc.drc.rs.sh.swift.scala.sql.st.vb.vbs.v.vhd.PspScript")
+#define FEXT_PROGRAM	FEXT_C_SH FEXT_PASCAL _T(".ahk.as.asm.awk.bas.bsh.cgi.cs.d.fs.go.hs.hsp.inc.java.js.jsx.kt.kts.lisp.lsp.lua.mac.php.pl.pm.ps1.psm1.py.qml.rb.rc.drc.rs.sh.swift.scala.sql.st.vb.vbs.v.vhd.ts.PspScript")
 															//プログラム
 
 #define FEXT_HTML	_T(".htm.html.sht.shtm.shtml.hta.xhtml.xht.hhc.hhk.php")
@@ -72,7 +72,7 @@
 #define FEXT_XML	_T(".xml.xsd.xsl.xslt.dtd.svg.rdf.manifest.library-ms.cdxml.ps1xml.ptxml.csproj.vbproj.vcxproj.cbproj.xaml")
 															//XML
 
-#define FEXT_NRM_REM	FEXT_C_SH _T(".as.cs.css.d.go.idl.java.js.jsx.kt.qml.rc.rs.scala.swift.v")	//コメントが // or /*～*/
+#define FEXT_NRM_REM	FEXT_C_SH _T(".as.cs.css.d.go.idl.java.js.jsx.kt.qml.rc.rs.scala.swift.ts.v")	//コメントが // or /*～*/
 #define FEXT_SMCL_REM	_T(".as.asm.h51.h32.hsp.nbt.qbt")	//コメントが ;
 
 //---------------------------------------------------------------------------

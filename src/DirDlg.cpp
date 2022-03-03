@@ -246,7 +246,7 @@ void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
 		int s_idx = 1;
 		for (int i=0; i<SpDirList->Count; i++) {
 			if (SameStr(SpDirList->Strings[i], "\t-")) {
-				SpDirList->Objects[i] = (TObject*)s_idx;
+				SpDirList->Objects[i] = (TObject*)(NativeInt)s_idx;
 				s_idx++;
 			}
 		}

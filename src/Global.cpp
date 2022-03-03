@@ -3646,7 +3646,7 @@ bool write_NyanFiDef(UnicodeString fnam, UnicodeString key, UnicodeString v)
 //---------------------------------------------------------------------------
 UnicodeString get_cmdfile(UnicodeString s)
 {
-	if (!remove_top_AT(s) && !test_NbtExt(get_extension(s))) return EmptyStr; 
+	if (!remove_top_AT(s) && !test_NbtExt(get_extension(s))) return EmptyStr;
 	return to_absolute_name(s);
 }
 
@@ -4378,7 +4378,7 @@ bool is_InvalidUnc(UnicodeString dnam,
 //---------------------------------------------------------------------------
 //パスの存在をチェックし、無ければ利用可能なパスを取得
 //---------------------------------------------------------------------------
-UnicodeString CheckAvailablePath(UnicodeString dnam, int tag, 
+UnicodeString CheckAvailablePath(UnicodeString dnam, int tag,
 	bool prvnt_unc)	//UNCパスを抑止	(default = false);
 {
 	if (!StartsStr("\\\\", dnam) && is_root_dir(dnam) && is_drive_accessible(dnam)) return dnam;
@@ -5926,7 +5926,7 @@ void update_DriveLog(bool save)
 
 		UnicodeString lbuf = FormatDateTime("yyyy/mm/dd", Now());
 		lbuf.cat_sprintf(_T(",%s,%llu,%llu"), dp->drive_str.SubString(1, 1).c_str(), used_sz, free_sz);
-		if (idx!=-1) 
+		if (idx!=-1)
 			DriveLogList->Strings[idx] = lbuf;
 		else
 			DriveLogList->Add(lbuf);
@@ -7144,7 +7144,7 @@ UnicodeString get_file_from_cmd(UnicodeString s)
 //---------------------------------------------------------------------------
 //実行ファイル名を取得してコントロールに設定 (.lnk からの抽出に対応)
 //---------------------------------------------------------------------------
-void SetExtNameToCtrl(UnicodeString fnam, TWinControl *cp, 
+void SetExtNameToCtrl(UnicodeString fnam, TWinControl *cp,
 	bool nbt_sw)	//.nbt に対応 (default = false)
 {
 	UnicodeString fext = get_extension(fnam);
@@ -7949,7 +7949,7 @@ UnicodeString get_PathFrom_SF(file_rec *fp)
 //---------------------------------------------------------------------------
 //登録ディレクトリのパス項目を取得
 //---------------------------------------------------------------------------
-UnicodeString get_RegDirItem(int idx, 
+UnicodeString get_RegDirItem(int idx,
 	UnicodeString *unam)		//接続ユーザ名		(default = EmptyStr)
 {
 	UnicodeString dnam;
@@ -8313,7 +8313,8 @@ void GetFileInfList(
 		}
 	}
 
-	fp->is_video = test_FileExt(fp->f_ext, FEXT_VIDEO);
+	fp->is_video = USAME_TI(fp->f_ext, ".ts")?
+					 is_MPEG2_TS(fp->f_name) : test_FileExt(fp->f_ext, FEXT_VIDEO);
 
 	if (!force) {
 		//ファイル情報を取得しないパスのチェック
@@ -9311,8 +9312,15 @@ bool is_TextFile(
 {
 	if (!file_exists(fnam)) return false;
 
-	//明らかにテキストではない拡張子ははねる
-	if (test_NonTxtExt(get_extension(fnam))) return false;
+	UnicodeString fext = get_extension(fnam);
+	if (USAME_TI(fext, ".ts")) {
+		//.ts が動画ならはねる
+		if (is_MPEG2_TS(fnam)) return false;
+	}
+	else {
+		//明らかにテキストではない拡張子ははねる
+		if (test_NonTxtExt(fext)) return false;
+	}
 
 	//コードページを調べる(取得できなかったら非テキストとみなす)
 	int cp = get_FileCodePage(fnam, line_brk, has_bom);
@@ -9451,6 +9459,38 @@ bool is_AudioVideo(UnicodeString fnam)
 	if (test_FileExt(ExtractFileExt(fnam), FEXT_DURATION)) return true;
 	if (contained_wd_i(_T("ビデオ|オーディオ"), usr_SH->get_PropInf(fnam))) return true;
 	return false;
+}
+
+//--------------------------------------------------------------------------
+//MPEG-2 TS ファイルか?
+//--------------------------------------------------------------------------
+bool is_MPEG2_TS(UnicodeString fnam)
+{
+	if (!file_exists(fnam)) return false;
+
+	try {
+		std::unique_ptr<TFileStream> fs(new TFileStream(fnam, fmOpenRead | fmShareDenyNone));
+		int syn_cnt = 0;
+		int syn_len = 0;
+		int syn_max = 0;
+		__int64 dtct_sz = std::min<__int64>(188*100, fs->Size);
+		for (__int64 i=0; i<dtct_sz; i++) {
+			BYTE xbuf;
+			fs->ReadBuffer(&xbuf, 1);
+			if (xbuf==0x47) {
+				if (syn_cnt>0) syn_max = std::max(syn_max, syn_len);
+				syn_len = 1;
+				syn_cnt++;
+			}
+			else if (syn_len>0) {
+				syn_len++;
+			}
+		}
+		return (syn_cnt>(dtct_sz/188/2) && syn_max>=188 && syn_max<=204);
+	}
+	catch (...) {
+		return false;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -14998,7 +15038,7 @@ UnicodeString get_GitUrl(file_rec *fp)
 					if (USAME_TI(key, "url")) {
 						url = Trim(lbuf);
 						if (url.Pos('@')) {
-							url = TRegEx::Replace(url, 
+							url = TRegEx::Replace(url,
 									"(https?://)(\\w+@)([\\w/:%#$&?()~.=+-]+)", "\\1\\3");
 						}
 						break;
@@ -15301,7 +15341,7 @@ void get_GitInf(
 	//.git/index が変化していなく既存情報があれば利用
 	dnam = IncludeTrailingPathDelimiter(dnam);
 	UnicodeString xnam = dnam + ".git\\index";
-	TDateTime xdt = file_exists(xnam)? get_file_age(xnam) : 
+	TDateTime xdt = file_exists(xnam)? get_file_age(xnam) :
 		   file_exists(dnam + ".git")? get_file_age(dnam + ".git")
 									 : get_file_age(dnam);
 

@@ -1884,6 +1884,7 @@ UnicodeString get_IniTypeStr(file_rec *fp);
 bool is_MenuFile(file_rec *fp);
 bool is_ResultList(file_rec *fp);
 bool is_AudioVideo(UnicodeString fnam);
+bool is_MPEG2_TS(UnicodeString fnam);
 bool is_SoundID(UnicodeString s);
 bool is_ViewableFext(UnicodeString fext);
 bool is_Viewable(file_rec *fp);

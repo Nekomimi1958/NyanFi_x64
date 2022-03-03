@@ -571,7 +571,7 @@ UnicodeString GetDefReservedPtn(
 			_T("oncmd|onerror|onexit|onkey|repeat|return|run|stop|wait|array|double|int|str|var)\\b|")
 			_T("^\\s*#\\w+\\b"));
 	}
-	else if (test_FileExt(fext, _T(".js.jsx"))) {
+	else if (test_FileExt(fext, _T(".js.jsx.ts"))) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(abstract|boolean|break|byte|case|catch|char|class|const|continue|default|do|")
 			_T("double|else|extends|false|final|finally|float|for|function|goto|if|implements|import|")
@@ -841,7 +841,7 @@ UnicodeString GetDefQuotChars(
 														"\"" :
 		test_FileExt(fext, FEXT_PASCAL _T(".dfm.st"))?	"\'" :
 		(test_FileExt(fext, _T(".php")) && !is_h2t)?	"\"\'" :
-		test_FileExt(fext, _T(".as.au3.css.js.jsx.kt.kts.pl.ps1.psm1.rb.py.sql.PspScript"))?
+		test_FileExt(fext, _T(".as.au3.css.js.jsx.kt.kts.pl.ps1.psm1.rb.py.sql.PspScript.ts"))?
 														"\"\'" :
 		test_FileExt(fext, _T(".go"))?					"\"`" :
 		test_FileExt(fext, _T(".sh"))?					"\"\'`" :
@@ -883,7 +883,7 @@ UnicodeString GetDefFunctionPtn(
 		func_ptn = "^#(defcfunc|deffunc)\\s+\\w+";
 		name_ptn = "\\b\\w+\\b";
 	}
-	else if (test_FileExt(fext, _T(".js.jsx.as.awk"))) {
+	else if (test_FileExt(fext, _T(".js.jsx.ts.as.awk"))) {
 		func_ptn = "^function\\s+[_a-zA-Z]\\w*\\(";
 		name_ptn = std_ptn;
 	}
