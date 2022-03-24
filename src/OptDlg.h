@@ -389,6 +389,7 @@ __published:	// IDE で管理されるコンポーネント
 												//<<<<<<<X86_SPI
 	TCheckBox *UseXd2txCheckBox;
 	TCheckBox *ViewArcInfCheckBox;
+	TCheckBox *CheckTSCheckBox;
 	TCheckBox *WarnDisconCheckBox;
 	TCheckBox *WarnLowBatheckBox;
 	TCheckBox *WarnPowFailCheckBox;

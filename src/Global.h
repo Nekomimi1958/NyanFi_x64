@@ -339,6 +339,7 @@ extern bool ShowArcCopyProg;
 extern bool DelUseTrash;
 extern bool EditNewText;
 extern bool ViewArcInf;
+extern bool CheckTS;
 extern bool ReloadOnActive;
 extern bool OpenAddedDrive;
 extern bool CheckUnc;

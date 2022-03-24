@@ -23,7 +23,7 @@ extern  HMODULE hUxTheme;
 extern  FUNC_ShouldAppsUseDarkMode	lpfShouldAppsUseDarkMode;
 extern  FUNC_AllowDarkModeForWindow	lpfAllowDarkModeForWindow;
 extern  FUNC_AllowDarkModeForApp	lpfAllowDarkModeForApp;
-extern  FUNC_FlushMenuThemes		lpfFlushMenuThemes ;
+extern  FUNC_FlushMenuThemes		lpfFlushMenuThemes;
 
 extern bool SupportDarkMode;
 extern bool IsDarkMode;

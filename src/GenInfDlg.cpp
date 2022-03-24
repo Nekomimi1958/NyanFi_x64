@@ -582,7 +582,7 @@ void __fastcall TGeneralInfoDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TSta
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Font->Assign(StatusBar->Font);
 	cv->Brush->Color = col_bgSttBar;
-	cv->FillRect(Rect) ;
+	cv->FillRect(Rect);
 
 	UnicodeString lbuf = Panel->Text;
 	int yp = (Rect.Height() - abs(cv->Font->Height)) / 2;

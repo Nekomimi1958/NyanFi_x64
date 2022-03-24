@@ -489,7 +489,7 @@ void __fastcall TFileExtensionDlg::FextInfBarDrawPanel(TStatusBar *StatusBar, TS
 	TCanvas *cv = StatusBar->Canvas;
 	cv->Font->Assign(StatusBar->Font);
 	cv->Brush->Color = col_bgSttBar;
-	cv->FillRect(Rect) ;
+	cv->FillRect(Rect);
 
 	UnicodeString lbuf = Panel->Text;
 	int xp = ((Panel->Index==2)? Rect.Left + SizeSctWd - ScaledInt(4, this) : Rect.Right)

@@ -50,8 +50,8 @@ Win32/
 Win64/
 __*/
 temp/
+.history/
 
 .nyanfi*
-tags
 *.ini
 *.wav

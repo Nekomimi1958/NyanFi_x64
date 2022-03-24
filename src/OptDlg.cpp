@@ -614,6 +614,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	PrevTxtToInfCheckBox->Tag	= (int)&ShowTextPreview;
 	PrevTailCheckBox->Tag		= (int)&ShowTailPreview;
 	ViewArcInfCheckBox->Tag 	= (int)&ViewArcInf;
+	CheckTSCheckBox->Tag 		= (int)&CheckTS;
 	ReloadActCheckBox->Tag		= (int)&ReloadOnActive;
 	OpenAddDrvCheckBox->Tag 	= (int)&OpenAddedDrive;
 	CheckUncCheckBox->Tag		= (int)&CheckUnc;

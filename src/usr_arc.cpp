@@ -938,7 +938,7 @@ bool UserArcUnit::GetFileInf(
 		if (FindFirstEx(dnam, inf)) {
 			do {
 				if (SameText(inf->f_name, fnam)) {
-					res = true ; break;
+					res = true; break;
 				}
 			} while (FindNextEx(inf));
 		}

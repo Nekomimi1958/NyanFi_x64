@@ -162,6 +162,7 @@ bool ShowArcCopyProg;
 bool DelUseTrash;				//ファイルの削除にゴミ箱を使う
 bool EditNewText;				//新規テキスト作成後にエディタで開く
 bool ViewArcInf;				//アーカイブ内のファイル情報を表示
+bool CheckTS;					//拡張子 .ts (MPEG2-TS/TypeScript)の判別を行う
 bool ReloadOnActive;			//アクティブ時に最新の情報に
 bool OpenAddedDrive;			//ドライブが追加されたらカレントに表示
 bool CheckUnc;					//UNCパスをチェック
@@ -1656,6 +1657,7 @@ void InitializeGlobal()
 		{_T("DelUseTrash=false"),			(TObject*)&DelUseTrash},
 		{_T("EditNewText=false"),			(TObject*)&EditNewText},
 		{_T("ViewArcInf=true"),				(TObject*)&ViewArcInf},
+		{_T("CheckTS=false"),				(TObject*)&CheckTS},
 		{_T("PreviewTxtToInf=true"),		(TObject*)&ShowTextPreview},
 		{_T("ShowTailPreview=false"),		(TObject*)&ShowTailPreview},
 		{_T("ReloadOnActive=true"),			(TObject*)&ReloadOnActive},
@@ -2200,7 +2202,7 @@ void EndGlobal()
 
 	if (hHHctrl) {
 		if (lpfHtmlHelp) {
-			lpfHtmlHelp(NULL, NULL, HH_CLOSE_ALL, 0) ;
+			lpfHtmlHelp(NULL, NULL, HH_CLOSE_ALL, 0);
 			lpfHtmlHelp(NULL, NULL, HH_UNINITIALIZE, (DWORD)Cookie);
 		}
 		::FreeLibrary(hHHctrl);
@@ -8657,7 +8659,8 @@ bool get_FileInfList(
 		//----------------------
 		//項目の種類
 		//----------------------
-		UnicodeString tnam = (!fp->is_dir && fp->is_sym)? UnicodeString("シンボリックリンク")
+		UnicodeString tnam = (!fp->is_dir && fp->is_sym)? UnicodeString("シンボリックリンク") :
+				(USAME_TI(fext, ".ts") && !fp->is_video)? UnicodeString("TypeScript ソースファイル")
 														: usr_SH->get_FileTypeStr(fnam);
 		//NyanFi 固有のファイル
 		UnicodeString typ_str = get_IniTypeStr(fp);
@@ -9466,6 +9469,8 @@ bool is_AudioVideo(UnicodeString fnam)
 //--------------------------------------------------------------------------
 bool is_MPEG2_TS(UnicodeString fnam)
 {
+	if (!CheckTS) return true;
+
 	if (!file_exists(fnam)) return false;
 
 	try {
@@ -10673,7 +10678,7 @@ bool mute_Volume(
 			__uuidof(IAudioEndpointVolume), CLSCTX_INPROC_SERVER, NULL, (void**)&endp_vol))) Abort();
 
 		BOOL mute = FALSE;
-		if (FAILED(endp_vol->GetMute(&mute))) Abort() ;
+		if (FAILED(endp_vol->GetMute(&mute))) Abort();
 		IsMuted = mute;
 
 		if (!USAME_TI(prm, "GET")) {
@@ -12823,7 +12828,7 @@ bool has_EmptyTask(
 {
 	bool res = false;
 	int maxn = ex_sw? std::min((MaxTasks + 2), MAX_TASK_THREAD): MaxTasks;
-	for (int i=0; i<maxn && !res ; i++) if (!TaskThread[i]) res = true;
+	for (int i=0; i<maxn && !res; i++) if (!TaskThread[i]) res = true;
 	return res;
 }
 
