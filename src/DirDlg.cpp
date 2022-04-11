@@ -1101,7 +1101,7 @@ void __fastcall TRegDirDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShift
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key) || Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
 }
 
 //---------------------------------------------------------------------------

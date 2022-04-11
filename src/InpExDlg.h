@@ -12,6 +12,7 @@
 #include <Vcl.Forms.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include "Global.h"
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 //拡張モード
@@ -67,7 +68,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall OptionClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall InputEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall InputEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall SelDefCheckBoxClick(TObject *Sender);
 	void __fastcall InputComboBoxChange(TObject *Sender);
 

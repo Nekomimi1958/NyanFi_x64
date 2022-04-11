@@ -9,7 +9,6 @@ object FindTextDlg: TFindTextDlg
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -19,13 +18,12 @@ object FindTextDlg: TFindTextDlg
   DesignSize = (
     524
     126)
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object KwdLabel: TLabel
-    Left = 20
+    Left = 17
     Top = 11
-    Width = 50
-    Height = 13
+    Width = 53
+    Height = 15
     Alignment = taRightJustify
     Caption = #26908#32034#35486'(&S)'
     FocusControl = FindComboBox
@@ -39,7 +37,6 @@ object FindTextDlg: TFindTextDlg
     TabOrder = 0
     OnChange = FindComboBoxChange
     OnKeyDown = FindComboBoxKeyDown
-    OnKeyPress = FindComboBoxKeyPress
   end
   object FindBtn: TButton
     Left = 421

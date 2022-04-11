@@ -19,7 +19,6 @@ object NyanFiForm: TNyanFiForm
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 15
   object StatusBar1: TStatusBar
     Left = 0
@@ -788,7 +787,6 @@ object NyanFiForm: TNyanFiForm
               OnEnter = GrepFilterEditEnter
               OnExit = GrepFilterEditExit
               OnKeyDown = GrepFilterEditKeyDown
-              OnKeyPress = GrepFilterEditKeyPress
             end
             object MigemoCheckBox: TCheckBox
               Left = 126
@@ -998,7 +996,6 @@ object NyanFiForm: TNyanFiForm
                   TabOrder = 0
                   OnEnter = GrepRepComboBoxEnter
                   OnKeyDown = GrepFindComboBoxKeyDown
-                  OnKeyPress = GrepFindComboBoxKeyPress
                 end
               end
               object GrepT12Panel: TPanel
@@ -1203,7 +1200,6 @@ object NyanFiForm: TNyanFiForm
                 TabOrder = 0
                 OnEnter = GrepRepComboBoxEnter
                 OnKeyDown = GrepFindComboBoxKeyDown
-                OnKeyPress = GrepFindComboBoxKeyPress
               end
               object RepStrComboBox: TComboBox
                 Left = 290
@@ -1214,7 +1210,6 @@ object NyanFiForm: TNyanFiForm
                 DropDownCount = 24
                 TabOrder = 1
                 OnKeyDown = GrepFindComboBoxKeyDown
-                OnKeyPress = GrepFindComboBoxKeyPress
               end
             end
             object RepT2Panel: TPanel

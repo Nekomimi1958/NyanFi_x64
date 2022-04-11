@@ -1168,10 +1168,7 @@ void __fastcall TEditHistoryDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key)) {
-		Key = 0;
-	}
-	else if (Key==VK_RETURN) {
+	if (Key==VK_RETURN) {
 		if (set_FileName(EditHistGrid->Row)) {
 			CmdStr.sprintf(_T("%s"), (isMark && OpenAction->Checked)? _T("OpenStandard") : null_TCHAR);
 			ModalResult = mrClose;	//ˆÚ“®

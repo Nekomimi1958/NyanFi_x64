@@ -16,8 +16,6 @@ extern int KeyboardMode;
 void make_KeyList(TStrings *lst);
 
 bool is_KeyDown(WORD key);
-bool is_KeyPress_CtrlNotCV(WORD key);
-bool is_KeyPress_CtrlNotCVX(WORD key);
 bool is_DialogKey(WORD Key);
 bool is_Num0to9(UnicodeString keystr);
 int  get_shift_from_wparam(WPARAM prm);

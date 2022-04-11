@@ -7,7 +7,6 @@ object SameNameDlg: TSameNameDlg
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -17,8 +16,7 @@ object SameNameDlg: TSameNameDlg
   DesignSize = (
     394
     400)
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object OkButton: TButton
     Left = 109
     Top = 368
@@ -53,36 +51,36 @@ object SameNameDlg: TSameNameDlg
     object Mode0Label: TLabel
       Left = 28
       Top = 23
-      Width = 73
-      Height = 13
+      Width = 79
+      Height = 15
       Caption = #24375#21046#19978#26360#12365'(&O)'
     end
     object Mode1Label: TLabel
       Left = 28
       Top = 47
-      Width = 90
-      Height = 13
+      Width = 99
+      Height = 15
       Caption = #26368#26032#12394#12425#19978#26360#12365'(&N)'
     end
     object Mode2Label: TLabel
       Left = 28
       Top = 72
-      Width = 49
-      Height = 13
+      Width = 53
+      Height = 15
       Caption = #12473#12461#12483#12503'(&S)'
     end
     object Mode3Label: TLabel
       Left = 28
       Top = 96
-      Width = 117
-      Height = 13
+      Width = 127
+      Height = 15
       Caption = #33258#21205#30340#12395#21517#21069#12434#22793#26356'(&U)'
     end
     object Mode4Label: TLabel
       Left = 28
       Top = 120
-      Width = 72
-      Height = 13
+      Width = 77
+      Height = 15
       Caption = #21517#21069#12434#22793#26356'(&R)'
     end
     object Mode0Btn: TRadioButton
@@ -126,7 +124,6 @@ object SameNameDlg: TSameNameDlg
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 5
       OnKeyDown = RenameEditKeyDown
-      OnKeyPress = RenameEditKeyPress
     end
     object Mode3Btn: TRadioButton
       Left = 11

@@ -493,7 +493,7 @@ void __fastcall TFuncListDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShi
 //---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key) || Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
 }
 
 //---------------------------------------------------------------------------

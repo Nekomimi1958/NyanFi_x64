@@ -773,7 +773,7 @@ void __fastcall TXmlViewer::FindEditKeyDown(TObject *Sender, WORD &Key, TShiftSt
 //---------------------------------------------------------------------------
 void __fastcall TXmlViewer::FindEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key) || Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
 }
 
 //---------------------------------------------------------------------------

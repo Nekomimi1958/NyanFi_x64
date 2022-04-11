@@ -44,7 +44,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InfoListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall RenameEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall RenameEditKeyPress(TObject *Sender, System::WideChar &Key);
 
 private:	// ユーザー宣言
 	bool InhAllChk;

@@ -220,11 +220,6 @@ void __fastcall TSameNameDlg::RenameEditKeyDown(TObject *Sender, WORD &Key, TShi
 	else SpecialEditProc(Sender, Key, Shift);
 }
 //---------------------------------------------------------------------------
-void __fastcall TSameNameDlg::RenameEditKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (is_KeyPress_CtrlNotCV(Key)) Key = 0;
-}
-//---------------------------------------------------------------------------
 void __fastcall TSameNameDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);

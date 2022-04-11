@@ -182,12 +182,6 @@ void __fastcall TFindTextDlg::FindComboBoxKeyDown(TObject *Sender, WORD &Key, TS
 	Key = 0;
 }
 //---------------------------------------------------------------------------
-void __fastcall TFindTextDlg::FindComboBoxKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (is_KeyPress_CtrlNotCVX(Key)) Key = 0;
-}
-
-//---------------------------------------------------------------------------
 //検索文字列が変化したらビュアーの表示を更新
 //---------------------------------------------------------------------------
 void __fastcall TFindTextDlg::FindComboBoxChange(TObject *Sender)

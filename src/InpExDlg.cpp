@@ -318,11 +318,6 @@ void __fastcall TInputExDlg::InputEditKeyDown(TObject *Sender, WORD &Key, TShift
 	SpecialEditProc(Sender, Key, Shift);
 }
 //---------------------------------------------------------------------------
-void __fastcall TInputExDlg::InputEditKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (is_KeyPress_CtrlNotCV(Key)) Key = 0;
-}
-//---------------------------------------------------------------------------
 void __fastcall TInputExDlg::InputComboBoxChange(TObject *Sender)
 {
 	if (IpuntExMode==INPEX_CRE_DIR) {

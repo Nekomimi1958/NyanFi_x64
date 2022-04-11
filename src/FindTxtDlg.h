@@ -46,7 +46,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SubOptClick(TObject *Sender);
 	void __fastcall FindComboBoxChange(TObject *Sender);
 	void __fastcall FindComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall FindComboBoxKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall FindOptChangedClick(TObject *Sender);
 	void __fastcall FindNextActionUpdate(TObject *Sender);
 	void __fastcall FindNextActionExecute(TObject *Sender);

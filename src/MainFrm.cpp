@@ -29240,12 +29240,6 @@ void __fastcall TNyanFiForm::GrepFindComboBoxKeyDown(TObject *Sender, WORD &Key,
 	Key = 0;
 }
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepFindComboBoxKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (is_KeyPress_CtrlNotCVX(Key)) Key = 0;
-}
-
-//---------------------------------------------------------------------------
 //フィルタでのキー操作
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GrepFilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -29268,11 +29262,6 @@ void __fastcall TNyanFiForm::GrepFilterEditKeyDown(TObject *Sender, WORD &Key, T
 	}
 
 	Key = 0;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepFilterEditKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (is_KeyPress_CtrlNotCVX(Key)) Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GrepFilterEditEnter(TObject *Sender)

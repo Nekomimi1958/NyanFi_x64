@@ -666,7 +666,7 @@ void __fastcall TJsonViewer::FindEditKeyDown(TObject *Sender, WORD &Key, TShiftS
 //---------------------------------------------------------------------------
 void __fastcall TJsonViewer::FindEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key) || Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
 }
 
 //---------------------------------------------------------------------------

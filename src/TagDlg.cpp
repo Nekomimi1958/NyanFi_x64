@@ -354,7 +354,7 @@ void __fastcall TTagManDlg::TagEditKeyDown(TObject *Sender, WORD &Key, TShiftSta
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::TagEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key) || Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
 }
 
 //---------------------------------------------------------------------------

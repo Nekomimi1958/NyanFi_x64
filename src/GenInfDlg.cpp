@@ -617,7 +617,7 @@ void __fastcall TGeneralInfoDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key) || Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterEditEnter(TObject *Sender)

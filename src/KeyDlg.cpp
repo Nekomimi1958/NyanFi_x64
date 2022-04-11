@@ -345,10 +345,7 @@ void __fastcall TKeyListDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShif
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key)) {
-		Key = 0;
-	}
-	else if (Key==VK_RETURN) {
+	if (Key==VK_RETURN) {
 		if (KeyListGrid->Row!=-1) {
 			CommandStr	= KeyListGrid->Cells[1][KeyListGrid->Row];
 			ModalResult = mrOk;

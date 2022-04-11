@@ -1276,9 +1276,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall GrepFilterEditEnter(TObject *Sender);
 	void __fastcall GrepFilterEditExit(TObject *Sender);
 	void __fastcall GrepFilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall GrepFilterEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall GrepFindComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall GrepFindComboBoxKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall GrepSttSplitterMoved(TObject *Sender);
 	void __fastcall GrepCanBtnClick(TObject *Sender);
 	void __fastcall InsSeparatorActionExecute(TObject *Sender);

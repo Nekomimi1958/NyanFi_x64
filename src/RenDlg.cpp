@@ -1027,11 +1027,6 @@ void __fastcall TRenameDlg::RenameEditKeyDown(TObject *Sender, WORD &Key, TShift
 		SpecialEditProc(Sender, Key, Shift);
 }
 //---------------------------------------------------------------------------
-void __fastcall TRenameDlg::RenameEditKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (is_KeyPress_CtrlNotCV(Key)) Key = 0;
-}
-//---------------------------------------------------------------------------
 void __fastcall TRenameDlg::EtcNameEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	if (is_IME_Empty(Handle)) UpdatePreview();

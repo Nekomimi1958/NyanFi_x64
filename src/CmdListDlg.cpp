@@ -418,10 +418,7 @@ void __fastcall TCmdFileListDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key)) {
-		Key = 0;
-	}
-	else if (Key==VK_RETURN && !ToSelect) {
+	if (Key==VK_RETURN && !ToSelect) {
 		int idx = GetGridIndex();
 		if (idx!=-1) {
 			CmdFileName = ((file_rec*)GridItemList->Objects[idx])->f_name;

@@ -7,15 +7,13 @@ object InputExDlg: TInputExDlg
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object InputPanel: TPanel
     Left = 0
     Top = 0
@@ -25,10 +23,10 @@ object InputExDlg: TInputExDlg
     BevelOuter = bvNone
     TabOrder = 0
     object NameLabel: TLabel
-      Left = 18
+      Left = 16
       Top = 13
-      Width = 24
-      Height = 13
+      Width = 26
+      Height = 15
       Alignment = taRightJustify
       Caption = #21517#21069
     end
@@ -37,14 +35,14 @@ object InputExDlg: TInputExDlg
       Top = 10
       Width = 341
       Height = 21
-      EditLabel.Width = 24
-      EditLabel.Height = 13
+      EditLabel.Width = 26
+      EditLabel.Height = 15
       EditLabel.Caption = #21517#21069
       LabelPosition = lpLeft
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 0
+      Text = ''
       OnKeyDown = InputEditKeyDown
-      OnKeyPress = InputEditKeyPress
     end
     object InputComboBox: TComboBox
       Left = 45
@@ -265,11 +263,12 @@ object InputExDlg: TInputExDlg
       Width = 120
       Height = 21
       Alignment = taRightJustify
-      EditLabel.Width = 29
-      EditLabel.Height = 13
+      EditLabel.Width = 31
+      EditLabel.Height = 15
       EditLabel.Caption = #12469#12452#12474
       LabelPosition = lpLeft
       TabOrder = 0
+      Text = ''
     end
     object TestCntEdit: TLabeledEdit
       Left = 271
@@ -277,12 +276,13 @@ object InputExDlg: TInputExDlg
       Width = 60
       Height = 21
       Alignment = taRightJustify
-      EditLabel.Width = 24
-      EditLabel.Height = 13
+      EditLabel.Width = 26
+      EditLabel.Height = 15
       EditLabel.Caption = #20491#25968
       LabelPosition = lpLeft
       NumbersOnly = True
       TabOrder = 1
+      Text = ''
     end
   end
 end

@@ -1791,7 +1791,7 @@ void __fastcall TGitViewer::FindDownActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FindCommitEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (is_KeyPress_CtrlNotCV(Key) || Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FindBtnClick(TObject *Sender)

@@ -222,7 +222,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall LatestTimeActionUpdate(TObject *Sender);
 	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall RenameEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall RenameEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall RegExCheckBoxClick(TObject *Sender);
 	void __fastcall Opt2MainPanelResize(TObject *Sender);
 	void __fastcall AddCnvChActionUpdate(TObject *Sender);
