@@ -23,9 +23,10 @@ void __fastcall TXmlViewer::FormCreate(TObject *Sender)
 	org_SttBar1WndProc	   = StatusBar1->WindowProc;
 	StatusBar1->WindowProc = SttBar1WndProc;
 
-	ViewMode = 0;
-
 	XmlnsList = new TStringList();
+
+	ViewMode   = 0;
+	KeyHandled = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TXmlViewer::FormShow(TObject *Sender)
@@ -768,12 +769,16 @@ void __fastcall TXmlViewer::FindEditKeyDown(TObject *Sender, WORD &Key, TShiftSt
 	else if (contained_wd_i(KeysStr_ToList, KeyStr)) XmlTreeView->SetFocus();
 	else return;
 
+	KeyHandled = true;
 	Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TXmlViewer::FindEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (KeyHandled || Key==VK_RETURN || Key==VK_ESCAPE) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 
 //---------------------------------------------------------------------------

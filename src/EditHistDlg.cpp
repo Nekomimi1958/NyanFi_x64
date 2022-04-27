@@ -31,7 +31,8 @@ void __fastcall TEditHistoryDlg::FormCreate(TObject *Sender)
 	GridScrPanel = new UsrScrollPanel(GridPanel, EditHistGrid, USCRPNL_FLAG_P_WP | USCRPNL_FLAG_G_WP | USCRPNL_FLAG_HS);
 
 	isView = isRecent = isMark = isRepo = isTags = isTagPtn = false;
-	ToFilter = false;
+	ToFilter   = false;
+	KeyHandled = false;
 
 	HistoryList = NULL;
 	HistBufList = new TStringList();
@@ -1163,12 +1164,17 @@ void __fastcall TEditHistoryDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 	else if (SameText(KeyStr, KeyStr_Migemo))			MigemoAction->Checked = !MigemoAction->Checked;
 	else return;
 
+	KeyHandled = true;
 	Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (Key==VK_RETURN) {
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
+	else if (Key==VK_RETURN) {
 		if (set_FileName(EditHistGrid->Row)) {
 			CmdStr.sprintf(_T("%s"), (isMark && OpenAction->Checked)? _T("OpenStandard") : null_TCHAR);
 			ModalResult = mrClose;	//ˆÚ“®

@@ -22,8 +22,9 @@ void __fastcall TJsonViewer::FormCreate(TObject *Sender)
 {
 	org_SttBar1WndProc	   = StatusBar1->WindowProc;
 	StatusBar1->WindowProc = SttBar1WndProc;
-	isClip	  = false;
-	isJsonErr = false;
+	isClip     = false;
+	isJsonErr  = false;
+	KeyHandled = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TJsonViewer::FormShow(TObject *Sender)
@@ -643,12 +644,16 @@ void __fastcall TJsonViewer::JsonTreeViewKeyDown(TObject *Sender, WORD &Key, TSh
 	else return;
 
 	ClearKeyBuff(true);
+	KeyHandled = true;
 	Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TJsonViewer::JsonTreeViewKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (_istalnum(Key) || Key==VK_SPACE || Key==VK_RETURN || is_KeyDown(VK_CONTROL)) Key = 0;
+	if (_istalnum(Key) || Key==VK_SPACE || Key==VK_RETURN || KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -661,12 +666,16 @@ void __fastcall TJsonViewer::FindEditKeyDown(TObject *Sender, WORD &Key, TShiftS
 	else if (contained_wd_i(KeysStr_ToList, KeyStr)) JsonTreeView->SetFocus();
 	else return;
 
+	KeyHandled = true;
 	Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TJsonViewer::FindEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (KeyHandled || Key==VK_RETURN || Key==VK_ESCAPE) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 
 //---------------------------------------------------------------------------

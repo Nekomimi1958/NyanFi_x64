@@ -119,11 +119,12 @@ object SameNameDlg: TSameNameDlg
       Left = 30
       Top = 142
       Width = 337
-      Height = 21
+      Height = 23
       Anchors = [akLeft, akTop, akRight]
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 5
       OnKeyDown = RenameEditKeyDown
+      OnKeyPress = RenameEditKeyPress
     end
     object Mode3Btn: TRadioButton
       Left = 11

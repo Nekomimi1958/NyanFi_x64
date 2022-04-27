@@ -34,7 +34,9 @@ void __fastcall TGitViewer::FormCreate(TObject *Sender)
 	MsgHint->Font->Assign(HintFont);
 
 	StatusList = new TStringList();
-	Staged = false;
+
+	Staged     = false;
+	KeyHandled = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FormShow(TObject *Sender)
@@ -1699,7 +1701,16 @@ void __fastcall TGitViewer::FindCommitEditKeyDown(TObject *Sender, WORD &Key, TS
 	else return;
 
 	if (c_idx!=lp->ItemIndex) lp->Invalidate();
+	KeyHandled = true;
 	Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::FindCommitEditKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (KeyHandled || Key==VK_RETURN || Key==VK_ESCAPE) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FindCommitEditChange(TObject *Sender)
@@ -1787,11 +1798,6 @@ void __fastcall TGitViewer::FindDownActionUpdate(TObject *Sender)
 			found = ContainsText(lp->Items->Strings[i], kwd);
 	}
 	((TAction*)Sender)->Enabled = found;
-}
-//---------------------------------------------------------------------------
-void __fastcall TGitViewer::FindCommitEditKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FindBtnClick(TObject *Sender)

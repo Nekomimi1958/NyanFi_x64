@@ -34,7 +34,7 @@ object InputExDlg: TInputExDlg
       Left = 45
       Top = 10
       Width = 341
-      Height = 21
+      Height = 23
       EditLabel.Width = 26
       EditLabel.Height = 15
       EditLabel.Caption = #21517#21069
@@ -43,12 +43,13 @@ object InputExDlg: TInputExDlg
       TabOrder = 0
       Text = ''
       OnKeyDown = InputEditKeyDown
+      OnKeyPress = InputEditKeyPress
     end
     object InputComboBox: TComboBox
       Left = 45
       Top = 10
       Width = 341
-      Height = 21
+      Height = 23
       PopupMenu = UserModule.EditPopupMenuC
       TabOrder = 1
       OnChange = InputComboBoxChange
@@ -77,7 +78,7 @@ object InputExDlg: TInputExDlg
       Left = 228
       Top = 24
       Width = 158
-      Height = 21
+      Height = 23
       Style = csDropDownList
       TabOrder = 2
     end
@@ -261,7 +262,7 @@ object InputExDlg: TInputExDlg
       Left = 95
       Top = 6
       Width = 120
-      Height = 21
+      Height = 23
       Alignment = taRightJustify
       EditLabel.Width = 31
       EditLabel.Height = 15
@@ -274,7 +275,7 @@ object InputExDlg: TInputExDlg
       Left = 271
       Top = 6
       Width = 60
-      Height = 21
+      Height = 23
       Alignment = taRightJustify
       EditLabel.Width = 26
       EditLabel.Height = 15

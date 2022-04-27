@@ -128,6 +128,7 @@ private:	// ƒ†[ƒU[éŒ¾
 	int  MaxTagWidth;
 	bool InhEdit;
 	bool IsFolderIcon;
+	bool KeyHandled;
 
 	UsrSwatchPanel *SwatchPanel;
 

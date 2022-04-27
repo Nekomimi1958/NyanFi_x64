@@ -350,11 +350,17 @@ void __fastcall TTagManDlg::TagEditKeyDown(TObject *Sender, WORD &Key, TShiftSta
 		}
 	}
 	else return;
+
+	KeyHandled = true;
+	Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::TagEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (KeyHandled || Key==VK_RETURN || Key==VK_ESCAPE) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 
 //---------------------------------------------------------------------------

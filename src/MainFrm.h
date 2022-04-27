@@ -1276,7 +1276,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall GrepFilterEditEnter(TObject *Sender);
 	void __fastcall GrepFilterEditExit(TObject *Sender);
 	void __fastcall GrepFilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall GrepFilterEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall GrepFindComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall GrepFindComboBoxKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall GrepSttSplitterMoved(TObject *Sender);
 	void __fastcall GrepCanBtnClick(TObject *Sender);
 	void __fastcall InsSeparatorActionExecute(TObject *Sender);
@@ -1962,6 +1964,7 @@ private:	// ユーザー宣言
 
 	UnicodeString FirstKey;				//2ストローク開始キー
 	bool Wait2ndKey;					//2ストローク目待ち状態
+	bool KeyHandled;					//特殊ショートカット処理済み(ビープ音回避用)
 	bool DblClicked;					//ダブルクリックされた
 	bool R_Clicked;
 	bool RClickAtCur;					//カーソル位置項目が右クリックされた

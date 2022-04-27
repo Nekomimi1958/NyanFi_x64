@@ -275,6 +275,7 @@ __fastcall TNyanFiForm::TNyanFiForm(TComponent* Owner)
 	fromFlToWork = false;
 
 	Wait2ndKey	 = false;
+	KeyHandled	 = false; 
 	DblClicked	 = R_Clicked = RClickAtCur = false;
 	DragCancel	 = false;
 	LastIndex[0] = LastIndex[1] = -1;
@@ -29230,15 +29231,26 @@ void __fastcall TNyanFiForm::GrepFindComboBoxKeyDown(TObject *Sender, WORD &Key,
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 
-	if (contained_wd_i(KeysStr_ToList, KeyStr) && ResultListBox->Count>0)
+	if (contained_wd_i(KeysStr_ToList, KeyStr) && ResultListBox->Count>0) {
 		ResultListBox->SetFocus();
-	else if (SameText(KeyStr, KeyStr_Filter))
+	}
+	else if (SameText(KeyStr, KeyStr_Filter)) {
 		GrepFilterEdit->SetFocus();
-	else
-		return;
+	}
+	else return;
 
+	KeyHandled = true;
 	Key = 0;
 }
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepFindComboBoxKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
+}
+
 //---------------------------------------------------------------------------
 //フィルタでのキー操作
 //---------------------------------------------------------------------------
@@ -29257,11 +29269,18 @@ void __fastcall TNyanFiForm::GrepFilterEditKeyDown(TObject *Sender, WORD &Key, T
 	else if (SameText(KeyStr, KeyStr_Migemo)) {
 		MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
 	}
-	else {
-		return;
-	}
+	else return;
 
+	KeyHandled = true;
 	Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepFilterEditKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GrepFilterEditEnter(TObject *Sender)
@@ -37149,4 +37168,3 @@ void __fastcall TNyanFiForm::GrepRepComboBoxEnter(TObject *Sender)
 	UpdateActions();
 }
 //---------------------------------------------------------------------------
-

@@ -440,6 +440,7 @@ object RenameDlg: TRenameDlg
             TabOrder = 0
             OnChange = RenameEditChange
             OnKeyDown = RenameEditKeyDown
+            OnKeyPress = RenameEditKeyPress
           end
         end
       end

@@ -30,9 +30,10 @@ void __fastcall TRegDirDlg::FormCreate(TObject *Sender)
 	SpDirList	 = new TStringList();
 	SpDirBuff	 = new TStringList();
 
-	IsSpecial = false;
-	ToFilter  = false;
-	IsAddMode = IsSelect = false;
+	IsSpecial  = false;
+	ToFilter   = false;
+	KeyHandled = false;
+	IsAddMode  = IsSelect = false;
 }
 
 //---------------------------------------------------------------------------
@@ -1096,12 +1097,16 @@ void __fastcall TRegDirDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShift
 	else return;
 
 	lp->Invalidate();
+	KeyHandled = true;
 	Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (KeyHandled || Key==VK_RETURN || Key==VK_ESCAPE) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 
 //---------------------------------------------------------------------------

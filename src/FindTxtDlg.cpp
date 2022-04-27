@@ -39,6 +39,7 @@ void __fastcall TFindTextDlg::FormCreate(TObject *Sender)
 		_T("UTF-8\n"));
 
 	fromTV = false;
+	KeyHandled= false; 
 }
 
 //---------------------------------------------------------------------------
@@ -179,8 +180,18 @@ void __fastcall TFindTextDlg::FindComboBoxKeyDown(TObject *Sender, WORD &Key, TS
 		return;
 	}
 
+	KeyHandled = true;
 	Key = 0;
 }
+//---------------------------------------------------------------------------
+void __fastcall TFindTextDlg::FindComboBoxKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
+}
+
 //---------------------------------------------------------------------------
 //検索文字列が変化したらビュアーの表示を更新
 //---------------------------------------------------------------------------

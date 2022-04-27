@@ -32,9 +32,10 @@ void __fastcall TFuncListDlg::FormCreate(TObject *Sender)
 	UserDefList  = new TStringList();
 	MarkLineList = new TStringList();
 
-	ListMode = 0;
-	LineNo	 = -1;
-	ToFilter = false;
+	ListMode   = 0;
+	LineNo     = -1;
+	ToFilter   = false;
+	KeyHandled = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::FormShow(TObject *Sender)
@@ -488,12 +489,16 @@ void __fastcall TFuncListDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShi
 	lp->Repaint();
 	if (LinkCheckBox->Checked && idx!=lp->ItemIndex) ToLine();
 
+	KeyHandled = true;
 	Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (KeyHandled || Key==VK_RETURN || Key==VK_ESCAPE) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 
 //---------------------------------------------------------------------------

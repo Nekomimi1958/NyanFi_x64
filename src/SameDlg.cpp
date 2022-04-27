@@ -27,6 +27,7 @@ void __fastcall TSameNameDlg::FormCreate(TObject *Sender)
 	InhAllChk  = false;
 
 	CurSrcName = CurDstName = EmptyStr;
+	KeyHandled = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TSameNameDlg::FormShow(TObject *Sender)
@@ -215,9 +216,25 @@ void __fastcall TSameNameDlg::InfoListBoxDrawItem(TWinControl *Control, int Inde
 void __fastcall TSameNameDlg::RenameEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(equal_UP(KeyStr))	 { Mode3Btn->SetFocus();	Key = 0; }
-	else if (equal_DOWN(KeyStr)) { AllCheckBox->SetFocus();	Key = 0; }
-	else SpecialEditProc(Sender, Key, Shift);
+	if (equal_UP(KeyStr))	 {
+		Mode3Btn->SetFocus();
+		Key = 0; 
+	}
+	else if (equal_DOWN(KeyStr)) {
+		AllCheckBox->SetFocus();
+		Key = 0;
+	}
+	else {
+		KeyHandled = SpecialEditProc(Sender, Key, Shift);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TSameNameDlg::RenameEditKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TSameNameDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)

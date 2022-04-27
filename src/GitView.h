@@ -302,7 +302,9 @@ private:	// ƒ†[ƒU[éŒ¾
 	UnicodeString BranchName;
 	UnicodeString TagNames;
 	UnicodeString StashName;
+
 	bool AutoCrlf;
+	bool KeyHandled;
 
 	UsrHintWindow *MsgHint;
 

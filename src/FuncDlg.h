@@ -91,6 +91,7 @@ private:	// ƒ†[ƒU[éŒ¾
 	TStringList *MarkLineList;
 
 	bool DlgInitialized;
+	bool KeyHandled;
 
 	void __fastcall WmDpiChanged(TMessage &msg)
 	{

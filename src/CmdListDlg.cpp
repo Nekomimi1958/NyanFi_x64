@@ -28,8 +28,9 @@ void __fastcall TCmdFileListDlg::FormCreate(TObject *Sender)
 	GridItemList = new TStringList();
 	cmdfile_List = new TStringList();
 
-	ToFilter = false;
-	ToSelect = false;
+	ToFilter   = false;
+	ToSelect   = false;
+	KeyHandled = false;
 
 	ReferListBox->Tag = LBTAG_OPT_FIF2;
 }
@@ -413,12 +414,17 @@ void __fastcall TCmdFileListDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 	else return;
 
 	CmdFileGrid->Invalidate();
+	KeyHandled = true;
 	Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (Key==VK_RETURN && !ToSelect) {
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
+	else if (Key==VK_RETURN && !ToSelect) {
 		int idx = GetGridIndex();
 		if (idx!=-1) {
 			CmdFileName = ((file_rec*)GridItemList->Objects[idx])->f_name;

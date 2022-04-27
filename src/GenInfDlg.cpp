@@ -38,6 +38,7 @@ void __fastcall TGeneralInfoDlg::FormCreate(TObject *Sender)
 	isTail		 = isReverse = isFTP = false;
 	fromGitView	 = false;
 	ToFilter	 = ToEnd = false;
+	KeyHandled	 = false; 
 	ErrOnly 	 = false;
 	isFiltered	 = false;
 
@@ -612,12 +613,16 @@ void __fastcall TGeneralInfoDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, T
 
 	lp->Invalidate();
 	SetStatusBar();
+	KeyHandled = true;
 	Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (Key==VK_RETURN || Key==VK_ESCAPE) Key = 0;
+	if (KeyHandled || Key==VK_RETURN || Key==VK_ESCAPE) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::FilterEditEnter(TObject *Sender)

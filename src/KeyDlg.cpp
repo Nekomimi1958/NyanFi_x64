@@ -23,7 +23,8 @@ void __fastcall TKeyListDlg::FormCreate(TObject *Sender)
 
 	CurList = new TStringList();
 
-	ToFilter = false;
+	ToFilter   = false;
+	KeyHandled = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::FormShow(TObject *Sender)
@@ -338,6 +339,7 @@ void __fastcall TKeyListDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShif
 	else if (SameText(KeyStr, KeyStr_Migemo))			MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
 	else return;
 
+	KeyHandled = true;
 	Key = 0;
 }
 //---------------------------------------------------------------------------
@@ -345,7 +347,11 @@ void __fastcall TKeyListDlg::FilterEditKeyDown(TObject *Sender, WORD &Key, TShif
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::FilterEditKeyPress(TObject *Sender, System::WideChar &Key)
 {
-	if (Key==VK_RETURN) {
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
+	else if (Key==VK_RETURN) {
 		if (KeyListGrid->Row!=-1) {
 			CommandStr	= KeyListGrid->Cells[1][KeyListGrid->Row];
 			ModalResult = mrOk;

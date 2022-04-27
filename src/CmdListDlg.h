@@ -93,7 +93,9 @@ __published:	// IDE で管理されるコンポーネント
 private:	// ユーザー宣言
 	TStringList *GridItemList;
 	TStringList *cmdfile_List;
+
 	bool ToSelect;
+	bool KeyHandled;
 
 	void __fastcall WmFormShowed(TMessage &msg);
 

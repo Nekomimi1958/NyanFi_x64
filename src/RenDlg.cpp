@@ -63,11 +63,12 @@ void __fastcall TRenameDlg::FormCreate(TObject *Sender)
 	CurNameList   = new TStringList();
 	RepRenList	  = new TStringList();
 
-	EditedList	 = false;
-	IsMulti 	 = false;
-	LastEdit	 = NULL;
+	EditedList   = false;
+	IsMulti      = false;
+	LastEdit     = NULL;
 	LastComboBox = NULL;
 	LastSelStart = LastSelLength = 0;
+	KeyHandled   = false;
 }
 
 //---------------------------------------------------------------------------
@@ -1024,7 +1025,15 @@ void __fastcall TRenameDlg::RenameEditKeyDown(TObject *Sender, WORD &Key, TShift
 	if (is_IME_Empty(Handle))
 		UpdatePreview();
 	else
-		SpecialEditProc(Sender, Key, Shift);
+		KeyHandled = SpecialEditProc(Sender, Key, Shift);
+}
+//---------------------------------------------------------------------------
+void __fastcall TRenameDlg::RenameEditKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::EtcNameEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -2113,6 +2122,4 @@ void __fastcall TRenameDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 	}
 }
 //---------------------------------------------------------------------------
-
-
 

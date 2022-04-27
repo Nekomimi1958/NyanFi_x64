@@ -108,6 +108,7 @@ private:	// ユーザー宣言
 
 	TStringList *XmlnsList;		//名前空間リスト
 	UnicodeString ErrMsg;
+	bool KeyHandled;
 
 	void __fastcall WmMenuChar(TMessage &msg)
 	{

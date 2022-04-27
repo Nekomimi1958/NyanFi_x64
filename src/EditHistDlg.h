@@ -142,6 +142,7 @@ __published:	// IDE で管理されるコンポーネント
 
 private:	// ユーザー宣言
 	bool DlgInitialized;
+	bool KeyHandled;
 
 	TStringList *HistoryList;
 	TStringList *HistBufList;

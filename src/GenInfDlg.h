@@ -184,6 +184,7 @@ private:	// ユーザー宣言
 
 	UnicodeString FirstKey;		//2ストローク開始キー
 	bool Wait2ndKey;			//2ストローク目待ち状態
+	bool KeyHandled;
 
 	__int64   FileSize;
 	TDateTime FileTime;

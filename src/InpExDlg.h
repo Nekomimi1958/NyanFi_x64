@@ -70,9 +70,11 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InputEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall SelDefCheckBoxClick(TObject *Sender);
 	void __fastcall InputComboBoxChange(TObject *Sender);
+	void __fastcall InputEditKeyPress(TObject *Sender, System::WideChar &Key);
 
 private:	// ユーザー宣言
 	UnicodeString HelpTopic;
+	bool KeyHandled;
 
 	void __fastcall WmMenuChar(TMessage &msg)
 	{

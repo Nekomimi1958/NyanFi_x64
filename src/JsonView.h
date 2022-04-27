@@ -109,6 +109,7 @@ private:	// ƒ†[ƒU[éŒ¾
 	UnicodeString ErrMsg;
 	bool isJsonErr;
 	int  ErrLine;
+	bool KeyHandled;
 
 	void __fastcall WmMenuChar(TMessage &msg)
 	{

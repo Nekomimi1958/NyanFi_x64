@@ -28,6 +28,8 @@ void __fastcall TInputExDlg::FormCreate(TObject *Sender)
 
 	for (int i=0; i<MAX_SAVE_CODEPAGES; i++) CodePageComboBox->Items->Add(SaveCodePages[i].name);
 	CodePageComboBox->ItemIndex = 0;
+
+	KeyHandled = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TInputExDlg::FormShow(TObject *Sender)
@@ -315,7 +317,15 @@ void __fastcall TInputExDlg::SelDefCheckBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TInputExDlg::InputEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	SpecialEditProc(Sender, Key, Shift);
+	KeyHandled = SpecialEditProc(Sender, Key, Shift);
+}
+//---------------------------------------------------------------------------
+void __fastcall TInputExDlg::InputEditKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TInputExDlg::InputComboBoxChange(TObject *Sender)

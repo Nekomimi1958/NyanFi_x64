@@ -232,6 +232,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CnvChSEditChange(TObject *Sender);
 	void __fastcall RenPageControlDrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 	void __fastcall EtcNameEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall RenameEditKeyPress(TObject *Sender, System::WideChar &Key);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;
@@ -239,6 +240,7 @@ private:	// ユーザー宣言
 	bool Previewed;
 	int  ChangeCount;
 	bool ExistErr;
+	bool KeyHandled;
 
 	UnicodeString cmnFext;		//共通拡張子
 	bool isMp3;					//すべての対象がMP3

@@ -85,7 +85,8 @@ __published:	// IDE で管理されるコンポーネント
 
 private:	// ユーザー宣言
 	TStringList *CurList;
-	int KeySortMode;
+	int  KeySortMode;
+	bool KeyHandled;
 
 	void __fastcall WmMenuChar(TMessage &msg)
 	{

@@ -787,6 +787,7 @@ object NyanFiForm: TNyanFiForm
               OnEnter = GrepFilterEditEnter
               OnExit = GrepFilterEditExit
               OnKeyDown = GrepFilterEditKeyDown
+              OnKeyPress = GrepFilterEditKeyPress
             end
             object MigemoCheckBox: TCheckBox
               Left = 126
@@ -996,6 +997,7 @@ object NyanFiForm: TNyanFiForm
                   TabOrder = 0
                   OnEnter = GrepRepComboBoxEnter
                   OnKeyDown = GrepFindComboBoxKeyDown
+                  OnKeyPress = GrepFindComboBoxKeyPress
                 end
               end
               object GrepT12Panel: TPanel

@@ -32,11 +32,12 @@ object FindTextDlg: TFindTextDlg
     Left = 74
     Top = 8
     Width = 339
-    Height = 21
+    Height = 23
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 0
     OnChange = FindComboBoxChange
     OnKeyDown = FindComboBoxKeyDown
+    OnKeyPress = FindComboBoxKeyPress
   end
   object FindBtn: TButton
     Left = 421
@@ -140,7 +141,7 @@ object FindTextDlg: TFindTextDlg
       Left = 107
       Top = 2
       Width = 115
-      Height = 21
+      Height = 23
       Style = csDropDownList
       DropDownCount = 12
       TabOrder = 1

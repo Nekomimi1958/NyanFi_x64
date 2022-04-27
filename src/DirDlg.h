@@ -126,6 +126,8 @@ __published:	// IDE で管理されるコンポーネント
 private:	// ユーザー宣言
 	int SelIndex;
 
+	bool KeyHandled;
+
 	TStringList *EnvVarList;
 	TStringList *SpDirList;
 	TStringList *SpDirBuff;
