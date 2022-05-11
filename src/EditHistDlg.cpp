@@ -127,7 +127,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 		}
 	}
 
-	HelpContext = isTags? 83 : isMark? 70 : 58;
+	HelpContext = isTags? 83 : isMark? 70 : isRepo? 90 : 58;
 
 	EditHistHeader->Style = (isRecent || isMark || isRepo)? hsButtons : hsFlat;
 	OpenAction->Checked   = IniFile->ReadBoolGen(_T("MarkListCnfOpen"));
@@ -395,7 +395,8 @@ void __fastcall TEditHistoryDlg::UpdateList()
 
 	clear_FileList(HistBufList);
 
-	UnicodeString ptn = OpeToolBar->Visible? usr_Migemo->GetRegExPtn(MigemoAction->Checked, FilterEdit->Text) : EmptyStr;
+	UnicodeString ptn = OpeToolBar->Visible ? usr_Migemo->GetRegExPtn(MigemoAction->Checked, FilterEdit->Text)
+										    : EmptyStr;
 	TRegExOptions opt; opt << roIgnoreCase;
 
 	//最近使ったファイル
@@ -525,9 +526,10 @@ void __fastcall TEditHistoryDlg::UpdateList()
 				GitInfList->Delete(i);
 			}
 			else {
-				bool ok = true;
 				TStringDynArray ibuf = get_csv_array(GitInfList->ValueFromIndex[i], 3);
-				if (!ptn.IsEmpty()) {
+
+				bool ok = !match_path_list(dnam, NoRepoListPath);
+				if (ok && !ptn.IsEmpty()) {
 					UnicodeString s = dnam;
 					for (int j=1; j<ibuf.Length; j++) s.cat_sprintf(_T(" %s"), ibuf[j].c_str());
 					ok = TRegEx::IsMatch(s, ptn, opt);
@@ -684,7 +686,7 @@ void __fastcall TEditHistoryDlg::UpdateGrid()
 bool __fastcall TEditHistoryDlg::del_HistItem()
 {
 	try {
-		if (!isRecent && !isMark && !HistoryList) Abort();
+		if (!isRecent && !isMark && !isRepo && !HistoryList) Abort();
 
 		int idx = EditHistGrid->Row;
 		file_rec *fp = get_CurFileRec();  if (!fp) Abort();
@@ -695,6 +697,10 @@ bool __fastcall TEditHistoryDlg::del_HistItem()
 		}
 		else if (isMark) {
 			IniFile->FileMark(fp->f_name, 0);
+		}
+		else if (isRepo) {
+			int idx = GitInfList->IndexOfName(IncludeTrailingPathDelimiter(fp->r_name));
+			if (idx!=-1) GitInfList->Delete(idx);
 		}
 		else {
 			int i = 0;
@@ -1199,7 +1205,10 @@ void __fastcall TEditHistoryDlg::ClearAllItemClick(TObject *Sender)
 void __fastcall TEditHistoryDlg::NoHistItemClick(TObject *Sender)
 {
 	UnicodeString *p = isView? &NoViewHistPath : &NoEditHistPath;
-	if (input_query_ex(_T("履歴に入れないパスの設定 (部分一致)"), null_TCHAR, p, 0, false, LoadUsrMsg(USTR_HintMltSepSC))) {
+
+	if (input_query_ex(_T("表示しないパスの設定 (部分一致)"),
+			null_TCHAR, p, 0, false, LoadUsrMsg(USTR_HintMltSepSC)))
+	{
 		if (!(*p).IsEmpty()) {
 			TStringDynArray path_lst = split_strings_semicolon(*p);
 			int idx = 0;
@@ -1367,6 +1376,17 @@ void __fastcall TEditHistoryDlg::UpdateGitInfActionExecute(TObject *Sender)
 void __fastcall TEditHistoryDlg::UpdateGitInfActionUpdate(TObject *Sender)
 {
 	((TAction *)Sender)->Enabled = (HistBufList->Count>0);
+}
+//---------------------------------------------------------------------------
+//一覧に表示しないパスの設定
+//---------------------------------------------------------------------------
+void __fastcall TEditHistoryDlg::NoRepoItemClick(TObject *Sender)
+{
+	if (input_query_ex(_T("一覧に表示しないパスの設定 (部分一致)"),
+		null_TCHAR, &NoRepoListPath, 0, false, LoadUsrMsg(USTR_HintMltSepSC)))
+	{
+		UpdateList();
+	}
 }
 //---------------------------------------------------------------------------
 //Gitビュアーを開く

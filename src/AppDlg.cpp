@@ -1407,7 +1407,7 @@ void __fastcall TAppListDlg::ExcAppTextItemClick(TObject *Sender)
 {
 	if (!EditItemDlg) EditItemDlg = new TEditItemDlg(this);	//初回に動的作成
 	EditItemDlg->AssignText("除外テキスト", ExcAppText);
-	if (EditItemDlg->ShowModal()==mrOk) {
+	if (show_ModalDlg(EditItemDlg)==mrOk) {
 		ExcAppText = EditItemDlg->RetStr;
 		if (!OnlyLauncher) UpdateAppList();
 	}

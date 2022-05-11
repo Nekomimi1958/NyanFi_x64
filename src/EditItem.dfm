@@ -7,13 +7,11 @@ object EditItemDlg: TEditItemDlg
   ClientWidth = 354
   Color = clBtnFace
   ParentFont = True
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object ItemListBox: TListBox
     Left = 0
     Top = 0
@@ -83,11 +81,12 @@ object EditItemDlg: TEditItemDlg
       Left = 10
       Top = 22
       Width = 335
-      Height = 21
-      EditLabel.Width = 40
-      EditLabel.Height = 13
+      Height = 23
+      EditLabel.Width = 44
+      EditLabel.Height = 15
       EditLabel.Caption = 'ItemEdit'
       TabOrder = 0
+      Text = ''
     end
     object OkButton: TButton
       Left = 89

@@ -895,7 +895,7 @@ void __fastcall TUserModule::PopEditItemItemClick(TObject *Sender)
 	if (ep) {
 		if (!EditItemDlg) EditItemDlg = new TEditItemDlg(this);	//‰‰ñ‚É“®“Iì¬
 		EditItemDlg->AssignItems(ep);
-		if (EditItemDlg->ShowModal()==mrOk && !EditItemDlg->RetStr.IsEmpty()) {
+		if (show_ModalDlg(EditItemDlg)==mrOk && !EditItemDlg->RetStr.IsEmpty()) {
 			ep->Text = EditItemDlg->RetStr;
 		}
 	}
@@ -907,7 +907,7 @@ void __fastcall TUserModule::EditItemItemClick(TObject *Sender)
 	if (cp) {
 		if (!EditItemDlg) EditItemDlg = new TEditItemDlg(this);	//‰‰ñ‚É“®“Iì¬
 		EditItemDlg->AssignItems(cp);
-		if (EditItemDlg->ShowModal()==mrOk && !EditItemDlg->RetStr.IsEmpty()) {
+		if (show_ModalDlg(EditItemDlg)==mrOk && !EditItemDlg->RetStr.IsEmpty()) {
 			cp->Text = EditItemDlg->RetStr;
 		}
 	}

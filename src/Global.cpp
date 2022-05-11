@@ -478,6 +478,7 @@ int SaveEncIndex;				//エンコーディングのインデックス
 UnicodeString NoDirHistPath;	//ディレクトリ履歴に入れないパス
 UnicodeString NoEditHistPath;	//編集履歴に入れないパス
 UnicodeString NoViewHistPath;	//閲覧履歴に入れないパス
+UnicodeString NoRepoListPath;	//リポジトリ一覧に表示しないパス
 
 UnicodeString DirDelimiter;		//ディレクトリ区切りの表示文字
 
@@ -1513,6 +1514,7 @@ void InitializeGlobal()
 		{_T("NoDirHistPath=\"\""),					(TObject*)&NoDirHistPath},
 		{_T("NoEditHistPath=\"\""),					(TObject*)&NoEditHistPath},
 		{_T("NoViewHistPath=\"\""),					(TObject*)&NoViewHistPath},
+		{_T("NoRepoListPath=\"\""),					(TObject*)&NoRepoListPath},
 		{_T("DirDelimiter=\"/\""),					(TObject*)&DirDelimiter},
 		{_T("FTPTextModeFExt=\".txt.htm.html.shtm.shtml.css.cgi.log.pl.sh.rb.js.c.cpp.h\""),
 													(TObject*)&FTPTextModeFExt},
@@ -12749,7 +12751,9 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 //---------------------------------------------------------------------------
 //git.exe を実行
 //---------------------------------------------------------------------------
-bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, DWORD *exit_cd)
+bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, 
+	DWORD *exit_cd, 		//終了コード	(default = NULL)
+	TStringList *w_lst)		//警告			(警告を分離して取得		default = NULL)
 {
 	if (!GitExists) return false;
 
@@ -12760,6 +12764,9 @@ bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, DWOR
 	DWORD exit_code = 0;
 	bool res = Execute_cmdln(cmdln, wdir, "HWO", &exit_code, o_lst);
 	if (exit_cd) *exit_cd = exit_code;
+
+	//警告の分離
+	if (res && o_lst->Count>0 && w_lst) split_GitWarning(o_lst, w_lst);
 
 	return res;
 }
@@ -12788,6 +12795,25 @@ bool GitShellExe(UnicodeString prm, UnicodeString wdir)
 
 	DWORD exit_code = 0;
 	return (Execute_cmdln(cmdln, ExcludeTrailingPathDelimiter(wdir), "H", &exit_code) && exit_code==0);
+}
+//---------------------------------------------------------------------------
+//git の出力から警告行を分離して取得(重複削除)
+//---------------------------------------------------------------------------
+void split_GitWarning(
+	TStringList *o_lst,		//出力リスト 
+	TStringList *w_lst)		//警告リスト	(default = NULL)
+{
+	int i = 0;
+	while (i<o_lst->Count) {
+		UnicodeString lbuf = o_lst->Strings[i];
+		if (StartsText("warning:", lbuf) || StartsText("fatal:", lbuf)) {
+			if (w_lst && w_lst->IndexOf(lbuf)==-1) w_lst->AddObject(lbuf, (TObject *)LBFLG_ERR_FIF);
+			o_lst->Delete(i);
+		}
+		else {
+			i++;
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -14982,13 +15008,13 @@ UnicodeString get_GitTopPath(UnicodeString dnam)
 	if (!GitExists || EndsStr(':', dnam)) return EmptyStr;
 
 	UnicodeString gnam = IncludeTrailingPathDelimiter(dnam) + ".git";
-	while (!file_exists(gnam)) {
+	while (!dir_exists(gnam)) {
 		if (is_root_dir(dnam)) break;
 		dnam = IncludeTrailingPathDelimiter(get_parent_path(dnam));
 		gnam = dnam + ".git";
 	}
 
-	return file_exists(gnam)? ExtractFilePath(gnam) : EmptyStr;
+	return dir_exists(gnam)? ExtractFilePath(gnam) : EmptyStr;
 }
 
 //---------------------------------------------------------------------------
@@ -15108,8 +15134,13 @@ int get_GitStatusList(
 		if (pnam.IsEmpty()) Abort();
 
 		std::unique_ptr<TStringList> o_buf(new TStringList());
+		std::unique_ptr<TStringList> w_buf(new TStringList());
 		DWORD exit_code = 0;
-		if (!GitShellExe("status --porcelain", pnam, o_buf.get(), &exit_code) || exit_code!=0) Abort();
+		if (!GitShellExe("status --porcelain", pnam, o_buf.get(), &exit_code, w_buf.get())
+			|| exit_code!=0)
+		{
+			Abort();
+		}
 
 		lst->Clear();
 		for (int i=0; i<o_buf->Count; i++) {
@@ -15335,7 +15366,7 @@ void draw_GitTag(
 }
 
 //---------------------------------------------------------------------------
-//Gitリポジトリ情報(Git-Commit/Status)を取得
+//Gitリポジトリ情報(Git-Commit/Status)を取得、GitInfList にキャッシュ
 //---------------------------------------------------------------------------
 void get_GitInf(
 	UnicodeString dnam,
@@ -15377,15 +15408,17 @@ void get_GitInf(
 	add_dyn_array(ibuf, FormatDateTime("yyyy/mm/dd hh:nn:ss", xdt));
 
 	std::unique_ptr<TStringList> o_buf(new TStringList());
+	std::unique_ptr<TStringList> w_buf(new TStringList());
 	DWORD exit_code;
 
 	//コミット情報
 	UnicodeString hide_items = HideInfItems->Values["\\"];
 	if (!test_word_i("Git-Commit", hide_items)
-		&& GitShellExe("log -1 --pretty=format:\"%d\t%s\"", dnam, o_buf.get(), &exit_code)
-			&& exit_code==0 && o_buf->Count>0)
+		&& GitShellExe("log -1 --pretty=format:\"%d\t%s\"", dnam, o_buf.get(), &exit_code, w_buf.get())
+		&& exit_code==0 && o_buf->Count>0)
 	{
 		UnicodeString lbuf = o_buf->Strings[0];
+
 		UnicodeString cmt_s;
 		TStringDynArray b_buf = SplitString(get_in_paren(get_pre_tab(lbuf)), ",");
 		for (int i=0; i<b_buf.Length; i++) {
@@ -15400,7 +15433,11 @@ void get_GitInf(
 			cmt_s = "(" + cmt_s + ") ";
 		}
 		cmt_s += get_post_tab(lbuf);
-		if (lst) add_PropLine_if(_T("Git-Commit"), cmt_s, lst);
+		if (lst) {
+			add_PropLine_if(_T("Git-Commit"), cmt_s, lst);
+			add_PropLine_if(_T("警告"), Trim(get_tkn_r(w_buf->Text, "warning:")), lst, LBFLG_ERR_FIF);
+		}
+		
 		add_dyn_array(ibuf, "Git-Commit: " + cmt_s);
 	}
 

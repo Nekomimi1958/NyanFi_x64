@@ -33,6 +33,7 @@ void __fastcall TGitViewer::FormCreate(TObject *Sender)
 	MsgHint = new UsrHintWindow(this);
 	MsgHint->Font->Assign(HintFont);
 
+	WarnList   = new TStringList();
 	StatusList = new TStringList();
 
 	Staged     = false;
@@ -61,11 +62,11 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 	AssignScaledFont(FindCommitEdit->Font, DialogFont, this);
 	FindCommitEdit->Width = IniFile->ReadIntGen(_T("GitViewFindWidth"),	200);
 
-	ShowRBranchAction->Checked	= IniFile->ReadBoolGen(_T("GitViewShowRBranch"),true);
-	ShowTagAction->Checked		= IniFile->ReadBoolGen(_T("GitViewShowTag"),	true);
+	ShowRBranchAction->Checked  = IniFile->ReadBoolGen(_T("GitViewShowRBranch"),true);
+	ShowTagAction->Checked      = IniFile->ReadBoolGen(_T("GitViewShowTag"),	true);
 	ShowBranchesAction->Checked = IniFile->ReadBoolGen(_T("GitViewShowBranches"));
-	ShowRemoteAction->Checked	= IniFile->ReadBoolGen(_T("GitViewShowRemote"));
-	ShowAuthorAction->Checked	= IniFile->ReadBoolGen(_T("GitViewShowAuthor"));
+	ShowRemoteAction->Checked   = IniFile->ReadBoolGen(_T("GitViewShowRemote"));
+	ShowAuthorAction->Checked   = IniFile->ReadBoolGen(_T("GitViewShowAuthor"));
 
 	SetDarkWinTheme(this);
 	CommitSplitter->Color = col_Splitter;
@@ -116,6 +117,7 @@ void __fastcall TGitViewer::FormDestroy(TObject *Sender)
 	delete CommitScrPanel;
 	delete DiffScrPanel;
 	delete MsgHint;
+	delete WarnList;
 	delete StatusList;
 }
 
@@ -195,7 +197,7 @@ UnicodeString __fastcall TGitViewer::GitExeStr(UnicodeString prm)
 }
 //---------------------------------------------------------------------------
 //git実行結果を TStringDynArray で取得
-//  エラー表示/ 一覧の更新は行わない
+//  エラー表示/ 一覧の更新は行わない/ 警告を分離取得
 //---------------------------------------------------------------------------
 TStringDynArray __fastcall TGitViewer::GitExeStrArray(UnicodeString prm)
 {
@@ -207,6 +209,7 @@ TStringDynArray __fastcall TGitViewer::GitExeStrArray(UnicodeString prm)
 
 	TStringDynArray ret_array;
 	if (res && exit_code==0) {
+		split_GitWarning(o_lst.get(), WarnList);
 		for (int i=0; i<o_lst->Count; i++) add_dyn_array(ret_array, o_lst->Strings[i]);
 	}
 	return ret_array;
@@ -301,6 +304,7 @@ void __fastcall TGitViewer::ClearCommitList()
 	MaxGrWidth = lp->ItemHeight;
 	MaxAnWidth = 0;
 
+	WarnList->Clear();
 	StatusList->Clear();
 	Staged = false;
 }
@@ -341,18 +345,17 @@ void __fastcall TGitViewer::UpdateCommitList(
 
 	//Stash
 	UnicodeString prm = "stash list";
-	if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0) {
+	if (GitShellExe(prm, WorkDir, o_lst.get(), NULL, WarnList) && o_lst->Count>0) {
 		git_rec *gp;
 		for (int i=0; i<o_lst->Count; i++) {
 			UnicodeString lbuf = o_lst->Strings[i];
-			gp  = cre_GitRec();
+			gp = cre_GitRec();
 			gp->graph	 = "*";
 			gp->is_stash = true;
 			gp->stash	 = split_tkn(lbuf, ": ");
 			gp->msg		 = lbuf;
 			c_lst->AddObject(EmptyStr, (TObject *)gp);
 		}
-
 		//セパレータ
 		gp = cre_GitRec();
 		gp->graph = "-";
@@ -396,7 +399,7 @@ void __fastcall TGitViewer::UpdateCommitList(
 	UnicodeString last_parent;
 	DWORD exit_code;
 	o_lst->Clear();
-	if (GitShellExe(prm, WorkDir, o_lst.get(), &exit_code) && exit_code==0 && o_lst->Count>0) {
+	if (GitShellExe(prm, WorkDir, o_lst.get(), &exit_code, WarnList) && exit_code==0 && o_lst->Count>0) {
 		int max_gr_len = 0, max_an_wd = 0;
 		for (int i=0; i<o_lst->Count; i++) {
 			UnicodeString lbuf = o_lst->Strings[i];
@@ -456,7 +459,7 @@ void __fastcall TGitViewer::UpdateCommitList(
 			prm.sprintf(_T("rev-list --count %s"), last_parent.c_str());
 			if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" -- %s"), add_quot_if_spc(FilterName).c_str());
 			o_lst->Clear();
-			if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0) {
+			if (GitShellExe(prm, WorkDir, o_lst.get(), NULL, WarnList) && o_lst->Count>0) {
 				int cnt = o_lst->Strings[0].ToIntDef(0);
 				if (cnt>0) {
 					git_rec *gp = cre_GitRec(
@@ -488,6 +491,8 @@ void __fastcall TGitViewer::UpdateCommitList(
 	MsgHint->ReleaseHandle();
 
 	UpdateBranchList();
+
+	if (WarnList->Count>0) msgbox_WARN(WarnList->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -503,7 +508,7 @@ void __fastcall TGitViewer::UpdateBranchList()
 	int idx = -1;
 	RefHEAD = EmptyStr;
 	std::unique_ptr<TStringList> o_lst(new TStringList());
-	if (GitShellExe("branch", WorkDir, o_lst.get())) { 
+	if (GitShellExe("branch", WorkDir, o_lst.get(), NULL, WarnList)) { 
 		std::unique_ptr<TStringList> lst(new TStringList());
 		lst->AddObject("ブランチ", (TObject *)(NativeInt)(GIT_FLAG_HDRLN|GIT_FLAG_LOCAL));
 		for (int i=0; i<o_lst->Count; i++) {
@@ -520,7 +525,7 @@ void __fastcall TGitViewer::UpdateBranchList()
 	//リモート
 	if (ShowRBranchAction->Checked) {
 		o_lst->Clear();
-		if (GitShellExe("branch -r", WorkDir, o_lst.get())) { 
+		if (GitShellExe("branch -r", WorkDir, o_lst.get(), NULL, WarnList)) { 
 			std::unique_ptr<TStringList> lst(new TStringList());
 			lst->AddObject(EmptyStr, (TObject *)(NativeInt)GIT_FLAG_BLANK);
 			lst->AddObject("リモート", (TObject *)(NativeInt)(GIT_FLAG_HDRLN|GIT_FLAG_REMOTE));
@@ -537,7 +542,7 @@ void __fastcall TGitViewer::UpdateBranchList()
 	//タグ
 	if (ShowTagAction->Checked) {
 		o_lst->Clear();
-		if (GitShellExe("tag", WorkDir, o_lst.get())) { 
+		if (GitShellExe("tag", WorkDir, o_lst.get(), NULL, WarnList)) { 
 			//コミット一覧にあるタグのリストを作成
 			std::unique_ptr<TStringList> tag_lst(new TStringList());
 			for (int i=0; i<CommitListBox->Count; i++) {
@@ -554,7 +559,8 @@ void __fastcall TGitViewer::UpdateBranchList()
 			lst->AddObject(EmptyStr, (TObject *)(NativeInt)GIT_FLAG_BLANK);
 			lst->AddObject("タグ", (TObject *)(NativeInt)(GIT_FLAG_HDRLN|GIT_FLAG_TAG));
 			for (int i=0; i<o_lst->Count; i++) {
-				UnicodeString tag = o_lst->Strings[i];  if (tag.IsEmpty()) continue;
+				UnicodeString tag = o_lst->Strings[i];
+				if (tag.IsEmpty()) continue;
 				int flag = GIT_FLAG_TAG;
 				if (tag_lst->IndexOf(tag)==-1) flag |= GIT_FLAG_INVAL;
 				lst->AddObject(tag, (TObject *)(NativeInt)flag);
@@ -587,7 +593,7 @@ void __fastcall TGitViewer::UpdateDiffList(
 		StashName = gp->stash;
 		UnicodeString prm = "stash show " + gp->stash;
 		GitBusy = true;
-		if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0)
+		if (GitShellExe(prm, WorkDir, o_lst.get(), NULL, WarnList) && o_lst->Count>0)
 			gp->diff_inf = o_lst->Text;
 		GitBusy = false;
 	}
@@ -608,7 +614,7 @@ void __fastcall TGitViewer::UpdateDiffList(
 
 			if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" -- \"%s\""), FilterName.c_str());
 			GitBusy = true;
-			if (GitShellExe(prm, WorkDir, o_lst.get()) && o_lst->Count>0)
+			if (GitShellExe(prm, WorkDir, o_lst.get(), NULL, WarnList) && o_lst->Count>0)
 				gp->diff_inf = o_lst->Text;
 			GitBusy = false;
 		}
@@ -1387,6 +1393,7 @@ void __fastcall TGitViewer::LogThisFileActionExecute(TObject *Sender)
 void __fastcall TGitViewer::CommitInfoActionExecute(TObject *Sender)
 {
 	std::unique_ptr<TStringList> i_lst(new TStringList());
+	WarnList->Clear();
 
 	//基本情報
 	UnicodeString prm =
@@ -1503,6 +1510,13 @@ void __fastcall TGitViewer::CommitInfoActionExecute(TObject *Sender)
 	if (r_buf.Length>0) {
 		add_PropLine("相対参照", r_buf[0], i_lst.get(),
 			StartsStr("tags/", r_buf[0])? LBFLG_GIT_TAG : 0);
+	}
+
+	//警告
+	if (WarnList->Count>0) {
+		i_lst->Add(EmptyStr);
+		i_lst->AddStrings(WarnList);
+		WarnList->Clear();
 	}
 
 	if (i_lst->Count>0) {

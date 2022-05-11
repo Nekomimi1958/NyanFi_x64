@@ -137,7 +137,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *Sep_d_1;
 	TMenuItem *Sep_d_2;
 	TMenuItem *SetTagItem;
-	TMenuItem *ShowAuthorAction1;
+	TMenuItem *ShowAuthorItem;
 	TMenuItem *ShowBranchesItem;
 	TMenuItem *ShowRemoteBrItem;
 	TMenuItem *ShowRemoteItem;
@@ -308,6 +308,7 @@ private:	// ユーザー宣言
 
 	UsrHintWindow *MsgHint;
 
+	TStringList *WarnList;
 	TStringList *StatusList;
 	bool Staged;
 

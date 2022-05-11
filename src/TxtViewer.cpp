@@ -4638,12 +4638,12 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 				if (xtv) {
 					ColorDlg->ObjViewer = xtv->ExViewer;
 					ColorDlg->FileName  = col_fnam;
-					ColorDlg->ShowModal();
+					show_ModalDlg(ColorDlg);
 				}
 			}
 			else {
 				ColorDlg->FileName = col_fnam;
-				ColorDlg->ShowModal();
+				show_ModalDlg(ColorDlg);
 			}
 		}
 		Repaint(true);

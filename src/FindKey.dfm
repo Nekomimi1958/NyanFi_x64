@@ -8,20 +8,18 @@ object FindKeyDlg: TFindKeyDlg
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poOwnerFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object Label1: TLabel
     Left = 64
     Top = 16
-    Width = 143
-    Height = 13
+    Width = 157
+    Height = 15
     Caption = #26908#32034#12377#12427#12461#12540#12434#25276#12375#12390#12367#12384#12373#12356#12290
   end
   object KeyLabel: TLabel

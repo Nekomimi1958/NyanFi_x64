@@ -645,6 +645,7 @@ extern int SaveEncIndex;
 extern UnicodeString NoDirHistPath;
 extern UnicodeString NoEditHistPath;
 extern UnicodeString NoViewHistPath;
+extern UnicodeString NoRepoListPath;
 
 extern UnicodeString DirDelimiter;
 
@@ -2055,9 +2056,11 @@ bool Execute_ex(UnicodeString cmd, UnicodeString prm = EmptyStr, UnicodeString w
 		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL);
 bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir = EmptyStr,
 		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL, TMemoryStream *o_ms = NULL);
-bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, DWORD *exit_cd = NULL);
+bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst,
+		DWORD *exit_cd = NULL, TStringList *w_lst = NULL);
 bool GitShellExe(UnicodeString prm, UnicodeString wdir, TMemoryStream *o_ms, DWORD *exit_cd = NULL);
 bool GitShellExe(UnicodeString prm, UnicodeString wdir);
+void split_GitWarning(TStringList *o_lst, TStringList *w_lst = NULL);
 
 int  get_BusyTaskCount();
 int  get_MaxTaskCount();

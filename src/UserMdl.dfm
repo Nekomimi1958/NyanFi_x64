@@ -1,5 +1,4 @@
 object UserModule: TUserModule
-  OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Height = 220

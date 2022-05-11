@@ -7,7 +7,6 @@ object GitViewer: TGitViewer
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -15,8 +14,7 @@ object GitViewer: TGitViewer
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object CommitSplitter: TSplitter
     Left = 185
     Top = 0
@@ -51,7 +49,7 @@ object GitViewer: TGitViewer
         Left = 0
         Top = 0
         Width = 521
-        Height = 174
+        Height = 172
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
@@ -60,7 +58,7 @@ object GitViewer: TGitViewer
           Left = 0
           Top = 0
           Width = 521
-          Height = 174
+          Height = 172
           Style = lbOwnerDrawFixed
           Align = alLeft
           Anchors = [akLeft, akTop, akRight, akBottom]
@@ -79,13 +77,13 @@ object GitViewer: TGitViewer
       end
       object DiffBar: TToolBar
         Left = 0
-        Top = 174
+        Top = 172
         Width = 521
-        Height = 19
+        Height = 21
         Align = alBottom
         AutoSize = True
-        ButtonHeight = 19
-        ButtonWidth = 58
+        ButtonHeight = 21
+        ButtonWidth = 65
         Caption = 'DiffBar'
         DrawingStyle = dsGradient
         List = True
@@ -98,13 +96,13 @@ object GitViewer: TGitViewer
           Style = tbsTextButton
         end
         object ResetBtn: TToolButton
-          Left = 50
+          Left = 53
           Top = 0
           Action = ResetAction
           Style = tbsTextButton
         end
         object DiffSpcBtn1: TToolButton
-          Left = 100
+          Left = 105
           Top = 0
           Width = 8
           Caption = 'DiffSpcBtn1'
@@ -112,13 +110,13 @@ object GitViewer: TGitViewer
           Style = tbsSeparator
         end
         object ToolButton1: TToolButton
-          Left = 108
+          Left = 113
           Top = 0
           Action = CommitAction
           Style = tbsTextButton
         end
         object DiffSpcBtn2: TToolButton
-          Left = 165
+          Left = 177
           Top = 0
           Width = 20
           Caption = 'DiffSpcBtn2'
@@ -126,7 +124,7 @@ object GitViewer: TGitViewer
           Style = tbsSeparator
         end
         object EditBtn: TToolButton
-          Left = 185
+          Left = 197
           Top = 0
           Hint = #12486#12461#12473#12488#12456#12487#12451#12479#12391#38283#12367
           Action = EditFileAction
@@ -134,7 +132,7 @@ object GitViewer: TGitViewer
           Style = tbsTextButton
         end
         object DetailBtn: TToolButton
-          Left = 234
+          Left = 248
           Top = 0
           Hint = #24046#20998#35443#32048#12434#34920#31034
           Action = DiffDetailAction
@@ -142,7 +140,7 @@ object GitViewer: TGitViewer
           Style = tbsTextButton
         end
         object DiffSpcBtn3: TToolButton
-          Left = 281
+          Left = 296
           Top = 0
           Width = 16
           Caption = 'DiffSpcBtn3'
@@ -150,7 +148,7 @@ object GitViewer: TGitViewer
           Style = tbsSeparator
         end
         object DeffToolBtn: TToolButton
-          Left = 297
+          Left = 312
           Top = 0
           Hint = 'diff'#12484#12540#12523#12434#36215#21205
           Action = DiffToolAction
@@ -158,7 +156,7 @@ object GitViewer: TGitViewer
           Style = tbsTextButton
         end
         object BlameBtn: TToolButton
-          Left = 346
+          Left = 366
           Top = 0
           Action = BlameAction
           Caption = '&Blame'
@@ -178,7 +176,7 @@ object GitViewer: TGitViewer
         Left = 0
         Top = 0
         Width = 521
-        Height = 232
+        Height = 230
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
@@ -187,7 +185,7 @@ object GitViewer: TGitViewer
           Left = 0
           Top = 0
           Width = 521
-          Height = 232
+          Height = 230
           Style = lbOwnerDrawFixed
           Align = alLeft
           Anchors = [akLeft, akTop, akRight, akBottom]
@@ -209,13 +207,13 @@ object GitViewer: TGitViewer
       end
       object FindBar: TToolBar
         Left = 0
-        Top = 232
+        Top = 230
         Width = 521
-        Height = 19
+        Height = 21
         Align = alBottom
         AutoSize = True
-        ButtonHeight = 19
-        ButtonWidth = 51
+        ButtonHeight = 21
+        ButtonWidth = 55
         DrawingStyle = dsGradient
         List = True
         PopupMenu = ComOptPopupMenu
@@ -231,10 +229,10 @@ object GitViewer: TGitViewer
           OnClick = FindBtnClick
         end
         object FindCommitEdit: TEdit
-          Left = 54
+          Left = 56
           Top = 0
           Width = 101
-          Height = 19
+          Height = 21
           Align = alLeft
           Constraints.MinWidth = 60
           TabOrder = 0
@@ -245,19 +243,19 @@ object GitViewer: TGitViewer
           OnKeyPress = FindCommitEditKeyPress
         end
         object FindSplitter: TSplitter
-          Left = 155
+          Left = 157
           Top = 0
           Width = 4
-          Height = 19
+          Height = 21
         end
         object FindUpBtn: TToolButton
-          Left = 159
+          Left = 161
           Top = 0
           Action = FindUpAction
           Style = tbsTextButton
         end
         object FindDownBtn: TToolButton
-          Left = 181
+          Left = 182
           Top = 0
           Action = FindDownAction
           Style = tbsTextButton
@@ -277,13 +275,13 @@ object GitViewer: TGitViewer
           Style = tbsTextButton
         end
         object ToolButton2: TToolButton
-          Left = 293
+          Left = 296
           Top = 0
           Action = StashAction
           Style = tbsTextButton
         end
         object FindSpcBtn2: TToolButton
-          Left = 342
+          Left = 347
           Top = 0
           Width = 16
           Caption = 'FindSpcBtn2'
@@ -291,13 +289,13 @@ object GitViewer: TGitViewer
           Style = tbsSeparator
         end
         object ConsoleBtn: TToolButton
-          Left = 358
+          Left = 363
           Top = 0
           Action = ConsoleAction
           Style = tbsTextButton
         end
         object GuiBtn: TToolButton
-          Left = 407
+          Left = 417
           Top = 0
           Action = GuiAction
           Style = tbsTextButton
@@ -681,7 +679,7 @@ object GitViewer: TGitViewer
     object ShowRemoteItem: TMenuItem
       Action = ShowRemoteAction
     end
-    object ShowAuthorAction1: TMenuItem
+    object ShowAuthorItem: TMenuItem
       Action = ShowAuthorAction
     end
     object FitSizePosItem: TMenuItem

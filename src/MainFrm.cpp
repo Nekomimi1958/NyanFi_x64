@@ -15701,7 +15701,7 @@ void __fastcall TNyanFiForm::DotNyanDlgActionExecute(TObject *Sender)
 		else {
 			if (!DotNyanDlg) DotNyanDlg = new TDotNyanDlg(this);	//‰‰ñ‚É“®“Iì¬
 			DotNyanDlg->DotNyanName = get_dotNaynfi(CurPath[CurListTag]);
-			if (DotNyanDlg->ShowModal()==mrOk) {
+			if (show_ModalDlg(DotNyanDlg)==mrOk) {
 				ApplyDotNyan = true;
 				CurPath[CurListTag] = CurPath[CurListTag];
 			}
@@ -21820,7 +21820,7 @@ void __fastcall TNyanFiForm::OptionDlgActionExecute(TObject *Sender)
 		Application->ProcessMessages();	
 	}
 
-	if (OptionDlg->ShowModal()==mrOk) {
+	if (show_ModalDlg(OptionDlg)==mrOk) {
 		if (!is_kyo) {
 			if (OptionDlg->WinSizeChanged && IniWinMode==1) {
 				WindowState = wsNormal;
@@ -29474,7 +29474,7 @@ void __fastcall TNyanFiForm::ResultListBoxDrawItem(TWinControl *Control, int Ind
 void __fastcall TNyanFiForm::GrepOptionActionExecute(TObject *Sender)
 {
 	if (!GrepExOptDlg) GrepExOptDlg = new TGrepExOptDlg(this);	//‰‰ñ‚É“®“Iì¬
-	if (GrepExOptDlg->ShowModal()==mrOk) {
+	if (show_ModalDlg(GrepExOptDlg)==mrOk) {
 		GrepStatusBar->Panels->Items[2]->Text = EmptyStr;
 		SetSttBarGrepOpt();
 	}
@@ -35380,7 +35380,7 @@ void __fastcall TNyanFiForm::ToolBarDlgActionExecute(TObject *Sender)
 		ToolBtnDlg->IniIndex = idx;
 	}
 
-	if (ToolBtnDlg->ShowModal()==mrOk) UpdateToolBtn();
+	if (show_ModalDlg(ToolBtnDlg)==mrOk) UpdateToolBtn();
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ToolBarDlgActionUpdate(TObject *Sender)
@@ -35396,7 +35396,7 @@ void __fastcall TNyanFiForm::ToolBarDlgActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::RegSyncDlgActionExecute(TObject *Sender)
 {
 	if (!RegSyncDlg) RegSyncDlg = new TRegSyncDlg(this);	//‰‰ñ‚É“®“Iì¬
-	RegSyncDlg->ShowModal();
+	show_ModalDlg(RegSyncDlg);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::RegSyncDlgActionUpdate(TObject *Sender)

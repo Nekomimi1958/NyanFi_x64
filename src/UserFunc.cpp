@@ -65,6 +65,36 @@ void set_window_pos_ex(HWND hWnd, TRect rc)
 }
 
 //---------------------------------------------------------------------------
+//ダイアログが複数画面にまたがる場合、メイン/アクティブ画面の中央に表示
+//---------------------------------------------------------------------------
+void set_DlgPosition(TForm *fp)
+{
+	TRect mon_rc = Application->MainForm->Monitor->BoundsRect;
+	if (Screen->ActiveForm && Screen->ActiveForm!=Application->MainForm) {
+		TRect dlg_rc = Screen->ActiveForm->BoundsRect.CenteredRect(fp->BoundsRect);
+		if (mon_rc.Contains(dlg_rc)) {
+			fp->Position   = poDesigned;
+			fp->BoundsRect = dlg_rc;
+		}
+		else {
+			fp->Position = poScreenCenter;
+		}
+	}
+	else {
+		TRect dlg_rc = Application->MainForm->BoundsRect.CenteredRect(fp->BoundsRect);
+		fp->Position = mon_rc.Contains(dlg_rc)? poMainFormCenter : poScreenCenter;
+	}
+}
+//---------------------------------------------------------------------------
+//ダイアログを表示 (複数画面に対処)
+//---------------------------------------------------------------------------
+int show_ModalDlg(TForm *fp)
+{
+	set_DlgPosition(fp);
+	return fp->ShowModal();
+}
+
+//---------------------------------------------------------------------------
 //コントロールに右クリックメニューを表示
 //---------------------------------------------------------------------------
 void show_PopupMenu(TPopupMenu *mp, TControl *cp)
@@ -1301,7 +1331,7 @@ bool InternetConnected()
 //---------------------------------------------------------------------------
 //オンライン上のファイルを取得
 //---------------------------------------------------------------------------
-int get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel, 
+int get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel,
 	TPaintBox *prg_box,		//進捗バー	(default = NULL)
 	double *prg_ratio)		//進捗率	(default = NULL)
 {
@@ -1579,11 +1609,11 @@ bool EjectDrive2(UnicodeString drvnam, bool eject)
 				if (CM_Get_Device_ID(devInstChild, pszDevInstanceId, MAX_PATH, 0)==CR_SUCCESS) {
 					UnicodeString strDiList;
 					ULONG ulSize;
-					if (CM_Get_Device_Interface_List_Size(&ulSize, (LPGUID)&VolumeClassGuid, 
+					if (CM_Get_Device_Interface_List_Size(&ulSize, (LPGUID)&VolumeClassGuid,
 							pszDevInstanceId, 0)==CR_SUCCESS)
 					{
 						std::unique_ptr<_TCHAR[]> pszList(new _TCHAR[ulSize + 1]);
-						if (CM_Get_Device_Interface_List((LPGUID)&VolumeClassGuid, 
+						if (CM_Get_Device_Interface_List((LPGUID)&VolumeClassGuid,
 							pszDevInstanceId, pszList.get(), ulSize, 0)==CR_SUCCESS)
 								strDiList = UnicodeString(pszList.get());
 					}

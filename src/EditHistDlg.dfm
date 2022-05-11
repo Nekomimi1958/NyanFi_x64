@@ -8,7 +8,6 @@ object EditHistoryDlg: TEditHistoryDlg
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -17,11 +16,10 @@ object EditHistoryDlg: TEditHistoryDlg
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object HiddenCanBtn: TButton
     Left = 0
-    Top = 303
+    Top = 260
     Width = 630
     Height = 0
     Align = alBottom
@@ -45,18 +43,18 @@ object EditHistoryDlg: TEditHistoryDlg
     Left = 0
     Top = 17
     Width = 630
-    Height = 286
+    Height = 243
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
     DesignSize = (
       630
-      286)
+      243)
     object EditHistGrid: TStringGrid
       Left = 0
       Top = 0
       Width = 630
-      Height = 303
+      Height = 260
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
       Color = clAppWorkSpace
@@ -92,7 +90,7 @@ object EditHistoryDlg: TEditHistoryDlg
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 322
+    Top = 260
     Width = 630
     Height = 19
     Panels = <
@@ -105,13 +103,13 @@ object EditHistoryDlg: TEditHistoryDlg
   end
   object OpeToolBar: TToolBar
     Left = 0
-    Top = 303
+    Top = 279
     Width = 630
-    Height = 19
+    Height = 62
     Align = alBottom
     AutoSize = True
-    ButtonHeight = 19
-    ButtonWidth = 85
+    ButtonHeight = 21
+    ButtonWidth = 91
     Caption = 'OpeToolBar'
     DrawingStyle = dsGradient
     List = True
@@ -127,10 +125,10 @@ object EditHistoryDlg: TEditHistoryDlg
       OnClick = FilterBtnClick
     end
     object FilterEdit: TEdit
-      Left = 63
+      Left = 66
       Top = 0
       Width = 121
-      Height = 19
+      Height = 21
       Align = alLeft
       Constraints.MinWidth = 60
       PopupMenu = UserModule.EditPopupMenuE
@@ -142,54 +140,55 @@ object EditHistoryDlg: TEditHistoryDlg
       OnKeyPress = FilterEditKeyPress
     end
     object FilterSplitter: TSplitter
-      Left = 184
+      Left = 187
       Top = 0
       Width = 4
-      Height = 19
+      Height = 21
     end
     object MigemoBtn: TToolButton
-      Left = 188
+      Left = 191
       Top = 0
       Action = MigemoAction
       Style = tbsTextButton
     end
     object OpenBtn: TToolButton
-      Left = 235
+      Left = 247
       Top = 0
       Action = OpenAction
       Style = tbsTextButton
     end
     object ToolButton5: TToolButton
-      Left = 298
+      Left = 0
       Top = 0
       Width = 20
       Caption = 'ToolButton5'
       ImageIndex = 0
+      Wrap = True
       Style = tbsSeparator
     end
     object MemoBtn: TToolButton
-      Left = 318
-      Top = 0
+      Left = 0
+      Top = 41
       Action = MemoAction
       Style = tbsTextButton
     end
     object OptMode0Btn: TToolButton
-      Left = 362
-      Top = 0
+      Left = 47
+      Top = 41
       Action = OptMode0Action
       Grouped = True
       Style = tbsTextButton
     end
     object OptMode1Btn: TToolButton
-      Left = 441
-      Top = 0
+      Left = 132
+      Top = 41
       Action = OptMode1Action
       Grouped = True
       Style = tbsTextButton
     end
     object OptMode2Btn: TToolButton
-      Left = 525
-      Top = 0
+      Left = 222
+      Top = 41
       Action = OptMode2Action
       Grouped = True
       Style = tbsTextButton
@@ -371,6 +370,10 @@ object EditHistoryDlg: TEditHistoryDlg
     Top = 65
     object UpdGitInfItem: TMenuItem
       Action = UpdateGitInfAction
+    end
+    object NoRepoItem: TMenuItem
+      Caption = #19968#35239#12395#34920#31034#12375#12394#12356#12497#12473#12398#35373#23450'(&N)...'
+      OnClick = NoRepoItemClick
     end
     object Sep_g_1: TMenuItem
       Caption = '-'

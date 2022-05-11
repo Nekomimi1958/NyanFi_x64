@@ -97,6 +97,7 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *OptMode1Btn;
 	TToolButton *OptMode2Btn;
 	TToolButton *ToolButton5;
+	TMenuItem *NoRepoItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -139,6 +140,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall UpdateGitInfActionExecute(TObject *Sender);
 	void __fastcall UpdateGitInfActionUpdate(TObject *Sender);
 	void __fastcall GitViewerActionExecute(TObject *Sender);
+	void __fastcall NoRepoItemClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;
