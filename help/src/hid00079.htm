@@ -1,62 +1,69 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>ディレクトリ一括作成ダイアログ</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="CreateDirsDlg">
-	<param name="Keyword" value="ディレクトリ一括作成ダイアログ">
-	<param name="Keyword" value="ファイル名主部の文字置換">
-	<param name="Keyword" value="連番">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>ディレクトリ一括作成ダイアログ</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="CreateDirsDlg">
+    <param name="Keyword" value="ディレクトリ一括作成ダイアログ">
+    <param name="Keyword" value="ファイル名主部の文字置換">
+    <param name="Keyword" value="連番">
+  </object>
 </head>
 
 <body>
 
-<h1>ディレクトリ一括作成ダイアログ</h1>
-<p>
-ファイラーで <a href="hid00005.htm#CreateDirsDlg">CreateDirsDlg</a> コマンドを実行するとこのダイアログが開きます。<br>
-リストに入力した内容にしたがって、複数のディレクトリを一括作成します。<br>
-ドライブ名がない場合は、相対指定とみなしてカレント側に作成します。<b>\</b> を用いると、複数階層のディレクトリも作成できます。<br>
-ドライブ名がある場合は、そのまま絶対指定で作成します。
-</p>
+  <h1>ディレクトリ一括作成ダイアログ</h1>
+  <p>
+    ファイラーで <a href="hid00005.htm#CreateDirsDlg">CreateDirsDlg</a> コマンドを実行するとこのダイアログが開きます。<br>
+    リストに入力した内容にしたがって、複数のディレクトリを一括作成します。<br>
+    ドライブ名がない場合は、相対指定とみなしてカレント側に作成します。<b>\</b> を用いると、複数階層のディレクトリも作成できます。<br>
+    ドライブ名がある場合は、そのまま絶対指定で作成します。
+  </p>
 
-<dl class="sub_item">
-<dt><img src="grpbox.png" alt=""> 連番
-<dd>現在のリスト項目の前後に連番を付加します。<br>
-<b>開始値</b>と<b>増分</b>を指定し、<b>前置</b>/<b>後置</b>を選んで、<span class="btn_frame">付加</span>ボタンを押してください。<br>
-連番の桁は<b>開始値</b>に入力された桁幅になります。例えば1から始まる4桁の連番を付加したい場合は、0001 と入力してください。<br>
-<br>
+  <dl class="sub_item">
+    <dt><img src="grpbox.png" alt=""> 連番</dt>
+    <dd>現在のリスト項目の前後に連番を付加します。<br>
+      <b>開始値</b>と<b>増分</b>を指定し、<b>前置</b>/<b>後置</b>を選んで、<span class="btn_frame">付加</span>ボタンを押してください。<br>
+      連番の桁は<b>開始値</b>に入力された桁幅になります。例えば1から始まる4桁の連番を付加したい場合は、0001 と入力してください。<br>
+      <br>
+    </dd>
 
-<dt><img src="grpbox.png" alt=""> 日付
-<dd>現在のリスト項目の前後に、指定した書式で日付を付加します。<br>
-<b>書式</b>と<b>開始日</b>を指定し、<b>前置</b>/<b>後置</b>を選んで、<span class="btn_frame">付加</span>ボタンを押してください。<br>
-書式には以下の指定子が使えます。yyyy 年(4桁)、yy 年(2桁)、mm 月(01～12)、dd 日(01～31)。<br>
-日付の増分は、書式に dd が含まれていれば1日、mm が含まれていれば1ヶ月、それ以外では1年になります。<br>
-なお、開始日欄が全選択または選択無しの状態で貼り付けを行おうとした場合、可能ならクリップボード内容を yyyy/mm/dd 形式に変換して貼り付けます。～年～月～日 などの形式にも対応。<br>
-<b>例</b>: <span class="inp_box">yy年mm月</span>　<span class="inp_box">2016/01/01</span>　→　16年01月、16年02月、16年03月…<br>
-<br>
+    <dt><img src="grpbox.png" alt=""> 日付</dt>
+    <dd>現在のリスト項目の前後に、指定した書式で日付を付加します。<br>
+      <b>書式</b>と<b>開始日</b>を指定し、<b>前置</b>/<b>後置</b>を選んで、<span class="btn_frame">付加</span>ボタンを押してください。<br>
+      書式には以下の指定子が使えます。yyyy 年(4桁)、yy 年(2桁)、mm 月(01～12)、dd 日(01～31)。<br>
+      日付の増分は、書式に dd が含まれていれば1日、mm が含まれていれば1ヶ月、それ以外では1年になります。<br>
+      なお、開始日欄が全選択または選択無しの状態で貼り付けを行おうとした場合、可能ならクリップボード内容を yyyy/mm/dd 形式に変換して貼り付けます。～年～月～日 などの形式にも対応。<br>
+      <b>例</b>: <span class="inp_box">yy年mm月</span>　<span class="inp_box">2016/01/01</span>　→　16年01月、16年02月、16年03月…<br>
+      <br>
+    </dd>
 
-<dt><img src="grpbox.png" alt=""> 文字列
-<dd>現在のリスト項目の前後に任意の文字列を付加します。<br>
-任意の文字列を入力し、<b>前置</b>/<b>後置</b>を選んで、<span class="btn_frame">付加</span>ボタンを押してください。<br>
-</dl>
+    <dt><img src="grpbox.png" alt=""> 文字列</dt>
+    <dd>現在のリスト項目の前後に任意の文字列を付加します。<br>
+      任意の文字列を入力し、<b>前置</b>/<b>後置</b>を選んで、<span class="btn_frame">付加</span>ボタンを押してください。<br>
+    </dd>
+  </dl>
 
-<p>
-リスト上の右クリックメニューで、リストについてのさまざまな操作が可能です。<br>
-「<b>空項目を追加</b>」では、入力した数分の空項目が追加されます。この空項目に対して、連番、日付、文字列を付加すれば、任意の形の連番項目を作成できます。<br>
-「<b>サブディレクトリを取得</b>」では、指定したディレクトリ下にあるすべてのサブディレクトリを取得してリストに追加します。サブディレクトリを含まない、特定階層のディレクトリだけを追加したい場合は、<a href="hid00005.htm#CopyFileName">CopyFileName</a> コマンドでコピーしたものを貼り付けてください。<br>
-「<b>リストに名前付けて保存</b>」で、現在のリスト内容をテキストファイとして保存できます。<br>
-保存したファイルは、「<b>リストをファイルから読み込む</b>」で再利用できます。<br>
-「<b>禁止文字の置換</b>」では、<a href="hid00051.htm">名前の変更ダイアログ</a>の「<b>ファイル名主部の文字置換</b>」で設定されている置換内容を、リストに適用します。<b>\</b> も置換されますので注意してください。<br>
-「<b>元に戻す</b>」では、直前の連番/文字列付加などの操作を元に戻せます。<br>
-</p>
+  <p>
+    リスト上の右クリックメニューで、リストについてのさまざまな操作が可能です。<br>
+    「<b>空項目を追加</b>」では、入力した数分の空項目が追加されます。この空項目に対して、連番、日付、文字列を付加すれば、任意の形の連番項目を作成できます。<br>
+    「<b>サブディレクトリを取得</b>」では、指定したディレクトリ下にあるすべてのサブディレクトリを取得してリストに追加します。サブディレクトリを含まない、特定階層のディレクトリだけを追加したい場合は、<a
+      href="hid00005.htm#CopyFileName">CopyFileName</a> コマンドでコピーしたものを貼り付けてください。<br>
+    「<b>リストに名前付けて保存</b>」で、現在のリスト内容をテキストファイとして保存できます。<br>
+    保存したファイルは、「<b>リストをファイルから読み込む</b>」で再利用できます。<br>
+    「<b>禁止文字の置換</b>」では、<a href="hid00051.htm">名前の変更ダイアログ</a>の「<b>ファイル名主部の文字置換</b>」で設定されている置換内容を、リストに適用します。<b>\</b>
+    も置換されますので注意してください。<br>
+    「<b>元に戻す</b>」では、直前の連番/文字列付加などの操作を元に戻せます。<br>
+  </p>
 
-<p>
-設定がよければ、<span class="btn_frame">作成</span>ボタンを押してください。ディレクトリの一括作成が開始されます。
-</p>
-<br><br>
+  <p>
+    設定がよければ、<span class="btn_frame">作成</span>ボタンを押してください。ディレクトリの一括作成が開始されます。
+  </p>
+  <br><br>
 
 </body>
+
 </html>

@@ -1,91 +1,101 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>バックアップダイアログ</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="Backup">
-	<param name="Keyword" value="バックアップダイアログ">
-	<param name="Keyword" value="ミラーリング">
-	<param name="Keyword" value="同期バックアップ">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>バックアップダイアログ</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="Backup">
+    <param name="Keyword" value="バックアップダイアログ">
+    <param name="Keyword" value="ミラーリング">
+    <param name="Keyword" value="同期バックアップ">
+  </object>
 </head>
 
 <body>
 
-<h1>バックアップダイアログ</h1>
-<p>
-ファイラーで <a href="hid00005.htm#Backup">Backup</a> コマンドを実行すると、このダイアログが開きます。必要な設定を行い、<span class="btn_frame">開始</span>ボタンを押すとバックアップが始まります。<br>
-バックアップ先に同名ファイルがあった場合、最新なら上書きコピーします。コピー後、設定によりミラーリングも可能です。<br>
-なおバックアップ処理は、バックグラウンドのタスクで行われます。<br>
-</p>
-<p class="note_text">
-画面の上部に、バックアップ元とバックアップ先のパス名が表示されていますので、よく確認してから実行してください(特に<b>ミラーリング</b>を行う場合は注意)。
-</p>
+  <h1>バックアップダイアログ</h1>
+  <p>
+    ファイラーで <a href="hid00005.htm#Backup">Backup</a> コマンドを実行すると、このダイアログが開きます。必要な設定を行い、<span
+      class="btn_frame">開始</span>ボタンを押すとバックアップが始まります。<br>
+    バックアップ先に同名ファイルがあった場合、最新なら上書きコピーします。コピー後、設定によりミラーリングも可能です。<br>
+    なおバックアップ処理は、バックグラウンドのタスクで行われます。<br>
+  </p>
+  <p class="note_text">
+    画面の上部に、バックアップ元とバックアップ先のパス名が表示されていますので、よく確認してから実行してください(特に<b>ミラーリング</b>を行う場合は注意)。
+  </p>
 
-<dl>
-<dt class="no_bg_indent1">対象マスク <img src="combobox.png" alt="">
-<dd>バックアップするファイルのマスクを指定します。<br>
-マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
-何も指定しないと &quot;*&quot; とみなされ、すべてのファイルがバックアップ対象となります。<br>
-<b>例</b>: <span class="inp_box">*.cpp;*.c;*.h;*.txt;*.ico</span>
+  <dl>
+    <dt class="no_bg_indent1">対象マスク <img src="combobox.png" alt=""></dt>
+    <dd>バックアップするファイルのマスクを指定します。<br>
+      マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
+      何も指定しないと &quot;*&quot; とみなされ、すべてのファイルがバックアップ対象となります。<br>
+      <b>例</b>: <span class="inp_box">*.cpp;*.c;*.h;*.txt;*.ico</span>
+    </dd>
 
-<dt class="no_bg_indent1">除外マスク <img src="combobox.png" alt="">
-<dd>バックアップから除外するファイルのマスクを指定します。<br>
-マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
-<b>例</b>: <span class="inp_box">*.bak;*.tmp;*.~?~</span>
-<br><br>
+    <dt class="no_bg_indent1">除外マスク <img src="combobox.png" alt=""></dt>
+    <dd>バックアップから除外するファイルのマスクを指定します。<br>
+      マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
+      <b>例</b>: <span class="inp_box">*.bak;*.tmp;*.~?~</span>
+      <br><br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> サブディレクトリも対象とする<br>
-<dd>バックアップ元パス以下の、すべてのサブディレクトリのファイルも対象とします。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> サブディレクトリも対象とする</dt>
+    <dd>バックアップ元パス以下の、すべてのサブディレクトリのファイルも対象とします。</dd>
 
-<dt class="no_bg_indent1">除外マスク <img src="edit.png" alt=""><br>
-<dd>「<b>サブディレクトリも対象とする</b>」がチェックされている場合、除外したいディレクトリのマスクを指定できます。<br>
-マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
-<b>例</b>: <span class="inp_box">temp;test;debug*;__*</span>
-<br><br>
+    <dt class="no_bg_indent1">除外マスク <img src="edit.png" alt=""></dt>
+    <dd>「<b>サブディレクトリも対象とする</b>」がチェックされている場合、除外したいディレクトリのマスクを指定できます。<br>
+      マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
+      <b>例</b>: <span class="inp_box">temp;test;debug*;__*</span>
+      <br><br>
+    </dd>
 
-<dt class="no_bg_indent1">日付条件 <img src="combobox.png" alt="">
-<dd>日付条件を指定すると、それに合うファイルだけがバックアップの対象になります。<br>
-大量のファイルを定期的にバックアップしている場合、指定すると処理を高速化できるかもしれません。<br>
-以下のように、現在の日付からの相対指定と、絶対指定が可能です。
-<div class="mono_text">
-　相対指定: {<b>&lt;</b>|<b>=</b>|<b>&gt;</b>}-n{<b>D</b>|<b>M</b>|<b>Y</b>}　　(D:日、M:月、Y:年)<br>
-　絶対指定: {<b>&lt;</b>|<b>=</b>|<b>&gt;</b>}yyyy/mm/dd<br>
-　　<b>&lt;</b> :指定日付より古い、　<b>=</b> :指定日付と同じ、　<b>&gt;</b> :指定日付より新しい<br>
-何も指定しないと、ファイルの日付は無視されます。<br>
-<b>例</b>:<br>
-　<span class="inp_box">&gt;-7D</span>　　　　7日前の日付より新しいファイルのみをコピー<br>
-　<span class="inp_box">&gt;2016/12/31</span>　2016年12月31日よりも新しいファイルのみをコピー
-</div>
+    <dt class="no_bg_indent1">日付条件 <img src="combobox.png" alt=""></dt>
+    <dd>日付条件を指定すると、それに合うファイルだけがバックアップの対象になります。<br>
+      大量のファイルを定期的にバックアップしている場合、指定すると処理を高速化できるかもしれません。<br>
+      以下のように、現在の日付からの相対指定と、絶対指定が可能です。
+      <div class="mono_text">
+        　相対指定: {<b>&lt;</b>|<b>=</b>|<b>&gt;</b>}-n{<b>D</b>|<b>M</b>|<b>Y</b>}　　(D:日、M:月、Y:年)<br>
+        　絶対指定: {<b>&lt;</b>|<b>=</b>|<b>&gt;</b>}yyyy/mm/dd<br>
+        　　<b>&lt;</b> :指定日付より古い、　<b>=</b> :指定日付と同じ、　<b>&gt;</b> :指定日付より新しい<br>
+        何も指定しないと、ファイルの日付は無視されます。<br>
+        <b>例</b>:<br>
+        　<span class="inp_box">&gt;-7D</span>　　　　7日前の日付より新しいファイルのみをコピー<br>
+        　<span class="inp_box">&gt;2016/12/31</span>　2016年12月31日よりも新しいファイルのみをコピー
+      </div>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ミラーリングを行う<br>
-<dd>コピー後、バックアップ先のすべてのファイルをチェックし、バックアップ元に存在しないものを削除します。<br>
-逆の場合、バックアップ元のファイルが削除されることはありません。<br>
-「<b>サブディレクトリも対象とする</b>」がチェックされていると、バックアップ先パス以下のすべてのファイルおよびディレクトリがチェック対象となります。そうでない場合は、バックアップ先パスにあるファイルのみがチェックされます。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ミラーリングを行う</dt>
+    <dd>コピー後、バックアップ先のすべてのファイルをチェックし、バックアップ元に存在しないものを削除します。<br>
+      逆の場合、バックアップ元のファイルが削除されることはありません。<br>
+      「<b>サブディレクトリも対象とする</b>」がチェックされていると、バックアップ先パス以下のすべてのファイルおよびディレクトリがチェック対象となります。そうでない場合は、バックアップ先パスにあるファイルのみがチェックされます。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 同期バックアップ有効<br>
-<dd>バックアップ先が同期ディレクトリとして登録されている場合、他のディレクトリにも同期してバックアップを行います(<a href="hid00005.htm#RegSyncDlg">→ RegSyncDlg</a>)。<br>
-<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 同期バックアップ有効</dt>
+    <dd>バックアップ先が同期ディレクトリとして登録されている場合、他のディレクトリにも同期してバックアップを行います(<a href="hid00005.htm#RegSyncDlg">→ RegSyncDlg</a>)。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 開始確認<br>
-<dd>
-<span class="btn_frame">開始</span>ボタンを押した時に、確認メッセージが出ます。<br>
-なお、<b>Backup</b>_設定名 によってダイアログ非表示で実行したときにも、確認メッセージが出ます(<a href="hid00063.htm#MsgOff">MsgOff</a> 補助コマンドで確認メッセージの抑止可能)。<br>
-<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 開始確認</dt>
+    <dd>
+      <span class="btn_frame">開始</span>ボタンを押した時に、確認メッセージが出ます。<br>
+      なお、<b>Backup</b>_設定名 によってダイアログ非表示で実行したときにも、確認メッセージが出ます(<a href="hid00063.htm#MsgOff">MsgOff</a>
+      補助コマンドで確認メッセージの抑止可能)。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">設定 <img src="combobox.png" alt="">
-<dd>
-現在の設定内容に名前を付けて、<span class="btn_frame">保存</span>ボタンで保存できます。<br>
-この名前を <b>Backup</b> コマンドのパラメータに指定すると、ダイアログを出さずに直ちにバックアップを実行することも可能です。<br>
-なお、保存されるのはバックアップ方法についてだけで、バックアップ元やバックアップ先は保存されません。<br>
-バックアップ元とバックアップ先は常に、<b>Backup</b> コマンドを実行したときのカレントパスと反対パスになります。<br>
-<br>
-<span class="btn_frame">コマンドファイルとして保存...</span>ボタンを押すと、指定バックアップ元/先を選択中の設定で保存するコマンドファイルを作成します。<br>
-ファイルの内容は以下のようになります。動作は、現在のディレクトリを待避し、カレントをバックアップ元、反対側をバックアップ先にしてバックアップを開始し、すぐに元のディレクトリに戻ります。<br>
+    <dt class="no_bg_indent1">設定 <img src="combobox.png" alt=""></dt>
+    <dd>
+      現在の設定内容に名前を付けて、<span class="btn_frame">保存</span>ボタンで保存できます。<br>
+      この名前を <b>Backup</b> コマンドのパラメータに指定すると、ダイアログを出さずに直ちにバックアップを実行することも可能です。<br>
+      なお、保存されるのはバックアップ方法についてだけで、バックアップ元やバックアップ先は保存されません。<br>
+      バックアップ元とバックアップ先は常に、<b>Backup</b> コマンドを実行したときのカレントパスと反対パスになります。<br>
+      <br>
+      <span class="btn_frame">コマンドファイルとして保存...</span>ボタンを押すと、指定バックアップ元/先を選択中の設定で保存するコマンドファイルを作成します。<br>
+      ファイルの内容は以下のようになります。動作は、現在のディレクトリを待避し、カレントをバックアップ元、反対側をバックアップ先にしてバックアップを開始し、すぐに元のディレクトリに戻ります。<br>
 
-<pre class="example_box">
+      <pre class="example_box">
 <span class="rem_text">;バックアップ</span>
 PushDir
 PushDir_OP
@@ -95,10 +105,10 @@ BackUp_"設定名"
 PopDir_OP
 PopDir
 </pre>
-<br>
+      <br>
 
-<span class="tips">Tips</span>コマンドファイルで複数のバックアップ処理をまとめて行うことも可能です。<br>
-<pre class="example_box">
+      <span class="tips">Tips</span>コマンドファイルで複数のバックアップ処理をまとめて行うことも可能です。<br>
+      <pre class="example_box">
 <span class="rem_text">;一括バックアップ</span>
 PushDir
 PushDir_OP
@@ -119,9 +129,10 @@ PopDir_OP
 PopDir
 PlaySound_完了.wav
 </pre>
-
-</dl>
-<br><br>
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

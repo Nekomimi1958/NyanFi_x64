@@ -1,905 +1,1087 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>テキストビュアー</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="CSV">
-	<param name="Keyword" value="CSV/TSVレコード">
-	<param name="Keyword" value="HTML→テキスト変換表示">
-	<param name="Keyword" value="nyanfi.def">
-	<param name="Keyword" value="TextViewe">
-	<param name="Keyword" value="TSV">
-	<param name="Keyword" value="xd2txlib.dll">
-	<param name="Keyword" value="インスペクタ">
-	<param name="Keyword" value="ダイレクトタグジャンプ">
-	<param name="Keyword" value="タグジャンプ">
-	<param name="Keyword" value="ツールバー">
-	<param name="Keyword" value="テキストビュアー">
-	<param name="Keyword" value="バイナリ・ダンプ表示">
-	<param name="Keyword" value="ビットマップビュー">
-	<param name="Keyword" value="メニュー定義ファイル">
-	<param name="Keyword" value="固定長表示">
-	<param name="Keyword" value="青空文庫">
-	<param name="Keyword" value="文字情報">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>テキストビュアー</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="CSV">
+    <param name="Keyword" value="CSV/TSVレコード">
+    <param name="Keyword" value="HTML→テキスト変換表示">
+    <param name="Keyword" value="nyanfi.def">
+    <param name="Keyword" value="TextViewe">
+    <param name="Keyword" value="TSV">
+    <param name="Keyword" value="xd2txlib.dll">
+    <param name="Keyword" value="インスペクタ">
+    <param name="Keyword" value="ダイレクトタグジャンプ">
+    <param name="Keyword" value="タグジャンプ">
+    <param name="Keyword" value="ツールバー">
+    <param name="Keyword" value="テキストビュアー">
+    <param name="Keyword" value="バイナリ・ダンプ表示">
+    <param name="Keyword" value="ビットマップビュー">
+    <param name="Keyword" value="メニュー定義ファイル">
+    <param name="Keyword" value="固定長表示">
+    <param name="Keyword" value="青空文庫">
+    <param name="Keyword" value="文字情報">
+  </object>
 </head>
 
 <body>
 
-<h1>テキストビュアー</h1>
-
-<p>
-ファイルリストで<span class="btn_frame">ENTER</span>キーを押すか、<a href="hid00005.htm#TextViewer">TextViewer</a> コマンドを実行すると、テキストビュアー画面に変わり、カーソル位置のファイル内容を表示します。<br>
-ビュアーに読み込まれるサイズは、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」によって制限されます。
-</p>
-<div class="spc_box_p">
-プログラムソース(.as .au3 .bat .c .cpp .fs .go .hs .hsp .java .js .jsx .kt .lua .pas .php .pl .ps1 .py .rb .rs .scala .sh .st .swift .ts .v .vbs .vhd などに対応)の場合、コメント、文字列、予約語、シンボルを別色で強調表示できます(<span class="note_text">厳密ではないため対応できない場合もあり</span>)。<a href="hid00084.htm">構文強調表示定義ファイル</a>を作成することによってユーザ定義も可能です。<br>
-強調表示の切り替えは <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>強調表示</b>」で、文字色は <a href="hid00023.htm">オプション設定 - フォント・配色</a> で指定してください。<br>
-</div>
-
-<div class="spc_box_p">
-CSV/TSVファイルの場合、<a href="#FixedLen">FixedLen</a> コマンドによって、項目位置をそろえた固定長表示が可能です。<br>
-</div>
-<div class="spc_box_p">
-HTML文書の場合、<a href="#HtmlToText">HtmlToText</a> コマンドによってHTML→テキスト変換表示が可能です。<br>
-</div>
-
-<div class="spc_box_p">
-<a href="hid00011.htm">オプション設定 - テキストビュアー</a> で「<b>青空文庫形式に対応する</b>」をチェックしている場合、&quot;［＃～］&quot; という書式を含むテキストファイル(.txt)を青空文庫形式とみなし、&quot;［＃～］&quot; 部分はコメント色で、&quot;《～》&quot; 部分はルビ色で表示します。また「字下げ」や「地からの字上げ」にほぼ対応しています。<br>
-</div>
-
-<div class="spc_box_p">
-リッチテキスト(<b>.RTF</b>)は、書式無しのプレーンテキストとして表示します。読込サイズは制限されません。<br>
-</div>
-
-<div class="spc_box_p">
-<b>xd2txlib.dll</b> (hishida 氏作 xdoc2txt のDLL版)がインストールされていて、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> で「<b>xd2txlib.dll でテキスト表示</b>」をチェックしている場合、PDF、WORD、EXCEL、一太郎などの各種バイナリ文書からテキストを抽出して表示できます。読込サイズは制限されません。<br>
-</div>
-
-<div class="spc_box_p">
-ファイルをテキスト表示できない場合は、<b>バイナリ・ダンプ表示</b>します。<br>
-表示範囲は <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>バイナリ最大読込サイズ</b>」によって制限されますが、最上/最下行からカーソルをさらに移動すると自動的に先頭アドレスが切り替わるので、大きなファイル(4GB超も可)も任意の部分を閲覧できます。<br>
-</div>
-
-<hr id="XW">
-<p>
-<a href="hid00005.htm#TextViewer">TextViewer</a>_XW コマンドを実行すると、テキストビュアーを別ウィンドウで開きます。<br>
-これはモーダルウィンドウではないので、表示したままメイン画面での操作が可能です。また複数のウィンドウを開くこともできます。<br>
-ビュアーからは<span class="btn_frame">TAB</span>キーでファイラーにフォーカスが戻ります。ファイラーからは <a href="hid00005.htm#ToExViewer">ToExViewer</a> コマンドで、開いているビュアーに移れます(複数ある場合はポップアップメニューで選択)。また、内部と別ウィンドウの両方でテキストビュアーを開いている場合、<span class="btn_frame">TAB</span>キーで両者の間を行き来できます。<br>
-<br>
-別ウィンドウのテキストビュアーでは以下のような制限や違いがあります。
-</p>
-
-<ul>
-<li>ウィンドウは、常にメイン画面の前面になります。
-<li>メニューバーやツールバーはありません(右クリックメニューは利用可能)。
-<li>折り返しはウィンドウの幅に固定され、左側余白は 0 になります。
-<li><a href="#BitmapView">BitmapView</a>、<a href="#CharInfo">CharInfo</a>、<a href="#CsvRecord">CsvRecord</a>、<a href="#Delete">Delete</a>、<a href="#FunctionList">FunctionList</a>、<a href="#Inspector">Inspector</a>、<a href="#ImgPreview">ImgPreview</a>、<a href="#ListFileInfo">ListFileInfo</a>、<a href="#MarkList">MarkList</a>、<a href="#SelectFile">SelectFile</a>、<a href="#SetMargin">SetMargin</a>、<a href="#SetTopAddr">SetTopAddr</a>、<a href="#SetWidth">SetWidth</a>、<a href="#ShowFileInfo">ShowFileInfo</a>、<a href="#UserDefList">UserDefList</a> コマンドや、<a href="#ExeCommands">ExeCommands</a>、<a href="#Grep">Grep</a>、<a href="#InputCommands">InputCommands</a>、<a href="#KeyList">KeyList</a> コマンドなどは使えません。実行しようとすると警告が出ます。<br>
-<li>対応している<a href="hid00021.htm">イベント</a>は、「<b>テキストビュアーを開く直前</b>」のみです。
-<li><a href="#NextFile">NextFile</a>/<a href="#PrevFile">PrevFile</a> コマンドは、複数開いている場合のウィンドウ切り替えとして機能します。
-<li>表示ファイルが切り替わっても、ファイルリストのカーソル位置は同期しません。
-</ul>
-<br>
-
-<h3 id="Command">コマンド</h3>
-<p>
-テキストビュアーでは以下のコマンドを使用できます。<br>
-これらは、<a href="hid00016.htm">オプション設定 - キー設定</a>でキーに割り当てることができます(2ストロークキー操作可能)。<br>
-<a href="hid00055.htm">キー割り当て一覧</a>は、<b>一覧メニュー</b> - [<b>キー割り当て一覧</b>] や、<b>KeyList</b> コマンドで表示できます。<br>
-パラメータに文字列を指定できるコマンドの場合、先頭に :文字列: という形で説明を付けると、キー割り当て一覧や2ストローク・ヒントの説明部分に表示されます。
-</p>
-<p>コマンド構文において、<b>[ ]</b> 内は任意、<b>{ }</b> 内は相互に排他的な選択肢です。</p>
-
-<p class="link_box">
-<a href="#AlphaBlend">A</a> <a href="#BackViewHist">B</a> <a href="#Calculator">C</a> <a href="#DebugCmdFile">D</a> <a href="#EditHighlight">E</a> <a href="#FileEdit">F</a> <a href="#Grep">G</a> <a href="#HelpContents">H</a> <a href="#ImgPreview">I</a> <a href="#JumpLine">J</a> <a href="#KeyList">K</a> <a href="#LineEnd">L</a> <a href="#Mark">M</a> <a href="#NextErr">N</a> <a href="#OpenURL">O</a> <a href="#PageDown">P</a> <a href="#RegExChecker">R</a> <a href="#SaveDump">S</a> <a href="#TagJump">T</a> <a href="#UserDefList">U</a> <a href="#ViewHistory">V</a> <a href="#WebMap">W</a> <a href="#ZoomIn">Z</a>　　　　<a href="hid00100.htm#TV">→ コマンド索引</a> ／ <a href="hid00101.htm#TV">→ 機能別索引</a>
-</p>
-
-<dl class = "indent1">
-<dt id="AlphaBlend">AlphaBlend<span class="pram_text">[_IN|[[^|+|-]不透明度]</span>
-<dd>メインウィンドウを透過表示にします。<br>
-パラメータに <b>IN</b> を指定すると、入力ボックスで不透明度(64:半透明～255:不透明)を指定できます。<br>
-パラメータで<b>不透明度</b>を指定する場合、先頭に <b>^</b> を付けると、すでに透過表示なら解除、そうでなければ指定値が適用されます。<br>
-先頭に <b>+</b> や <b>-</b> を付けると、現在の不透明度に対して指定値分だけ増減させます。値のみの場合は絶対指定になります。<br>
-パラメータが指定されていないと透過表示が解除されます。<br>
-
-<dt id="AppList">AppList<span class="pram_text">[_{FA|FL|FI|AO|LO|LI}]</span>
-<dd><a href="hid00076.htm">アプリケーション一覧</a>が開き、実行中のアプリケーションが表示されます。簡易ランチャーも備えています。<br>
-
-<div class="spc_box">
-パラメータに <b>FA</b> を指定すると、開いたとき一覧側にフォーカスします。<br>
-また <b>FL</b> を指定するとランチャー側にフォーカス、 <b>FI</b> を指定するとランチャー側をインクリメンタルサーチモードにしてフォーカスします。<br>
-<b>AO</b> を指定すると、一覧のみを表示します。<br>
-<b>LO</b> を指定すると、ランチャーのみを表示します。<br>
-<b>LI</b> を指定すると、ランチャーのみを表示し、インクリメンタルサーチモードにします。<br>
-</div>
-<a href="hid00019.htm#AppList">→ オプション設定 - コマンド</a><br>
-
-<dt id="BackViewHist">BackViewHist
-<dd>テキストビュアーで開いたファイルの履歴を戻ります。<br>
-
-<dt id="BinaryEdit">BinaryEdit
-<dd>現在のファイルをバイナリエディタで開きます。使用するバイナリエディタは、<a href="hid00012.htm">オプション設定 - エディタ</a>で設定しておいてください。<br>
-なおアーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。編集後に保存してもアーカイブには反映されず、仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください。<br>
-<a href="#FileEdit">→ FileEdit</a>
-
-<dt id="BitmapView">BitmapView<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、バイナリ・ダンプ表示で、<b>ビットマップビュー</b>の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-マップをクリックすると、そのアドレスに移動します。右クリックメニューで、幅を128または256に切り替えられます。<br>
-マップ左側にあるのは、ファイル全体に対する読み込み済み部分のマップ表示です。クリックすると、その位置に先頭アドレスが変更されます。またボタンや右クリックメニューでも変更できます。<br>
-<a href="#Inspector">→ Inspector</a>　<a href="#SetTopAddr">→ SetTopAddr</a>
-
-<dt id="BoxSelMode">BoxSelMode
-<dd>箱形選択モードを開始します。箱形選択モードでは、すべての移動コマンドが箱形選択しながらの動作になります。<br>
-<a href="#ClipCopy">ClipCopy</a> コマンドを実行するか、<b>BoxSelMode</b> コマンドをもう一度実行すると、箱形選択モードが解除されます。
-
-<dt id="Calculator">Calculator<span class="pram_text">[_計算式]</span><br>
-Calculator<span class="pram_text">_CB[;計算式]</span>
-<dd><a href="hid00087.htm">電卓</a>が開きます。<br>
-パラメータで<b>計算式</b>を指定すると、入力欄にそれを設定して開きます。<br>
-無指定の場合、選択中の文字列があれば、それが入力欄に設定されます。複数行が選択されていたら、それらの内容を &quot;<b>+</b>&quot; 記号で連結したものが設定されます(空白行などは無視)。例えば、固定長表示で数値項目を箱形選択すれば、それらの合計を計算できます。<br>
-パラメータに <b>CB</b> を用いた書式については、ファイラーの同コマンドを参照してください(<a href="hid00005.htm#Calculator">→ ファイラー: Calculator</a>)。
-
-<dt id="ChangeCodePage">ChangeCodePage<span class="pram_text">[_コードページ]</span>
-<dd>テキスト表示で、文字コードを変更します。<br>
-パラメータを指定しないと、現在の文字コードから Shift_JIS → JIS → EUC-JP → Latin-1 → UTF-8 → UTF-16 の順で切り替えます。<br>
-パラメータで特定のコードページを指定することもできます。<br>
-<b>例</b>: ChangeCodePage_932<br>
-<div class="spc_box">
-文字コードを変更すると、そのコードページがファイルの代替データストリームに <a href="hid00102.htm#NyanfiDef">nyanfi.def</a> という名前で保存され、次回表示時にもそれが用いられます。<br>
-</div>
-
-<dt id="ChangeViewMode">ChangeViewMode
-<dd>テキスト/バイナリ・ダンプ表示を切り替えます。<br>
-バイナリからテキスト表示に切り替えた場合、テキストとみなされないファイルでも強制的にテキスト表示します。この場合、ヌル文字は空白に置換されます。<br>
-
-<dt id="CharInfo">CharInfo<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、バイナリ・ダンプ表示で、<b>文字情報</b>の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-カーソル位置の文字を拡大表示し、その文字コードを確認できます。<br>
-なお、ユニバーサル文字名(\uXXXX、\UXXXXXXXX)、数値文字参照(&amp;#nnnn;、&amp;#xXXXX;)、文字実体参照(例: &amp;copy;)を選択していると、その文字が表示されます。<br>
-<div class="spc_box">
-右クリックメニューで「<b>情報をコピー</b>」、「<b>ユニバーサル文字名をコピー</b>」、「<b>数値文字参照(10進数</b>/<b>16進数)をコピー</b>」、「<b>フォントの選択</b>」、「<b>拡大表示の背景色</b>/<b>文字色</b>」の設定、「<b>フォント名を表示</b>」の切り替えが可能です。<br>
-拡大表示の文字サイズは、情報との分割境界線を上下にドラッグすることで変わります。<br>
-</div>
-
-<dt id="ClipCopy">ClipCopy<span class="pram_text">[_AD]</span>
-<dd>選択中の文字列をクリップボードにコピーします。<br>
-バイナリ・ダンプ表示の場合、アドレスも含んだダンプ形式でコピーします(箱形選択モード時は除く)。<br>
-パラメータに <b>AD</b> を指定すると、現在のクリップボードの内容に、選択中文字列を追加します。<br>
-<a href="#SaveDump">→ SaveDump</a>
-
-<dt id="Close">Close<span class="pram_text">[_AL]</span>
-<dd>テキストビュアーを閉じます。<br>
-<span class="btn_frame">ENTER</span>キーを押すか、画面のテキスト外部分をダブルクリックしても閉じることができます。<br>
-また<span class="btn_frame">ESC</span>キーを押すと、<b>文字情報</b>、<b>CSV/TSVレコード</b>、<b>ビットマップビュー</b>、<b>インスペクタ</b>、<b>イメージプレビュー</b> が表示されていたらそれを閉じ、なにも表示されていなかったらビュアーを閉じます。<br>
-パラメータに <b>AL</b> を指定すると、別ウィンドウで開いているすべてのテキストビュアーを閉じます。<br>
-
-<dt id="ClearMark">ClearMark
-<dd>すべてのマークを解除します。<br>
-<a href="#Mark">→ Mark</a>　<a href="#FindMarkDown">→ FindMarkDown</a>　<a href="#FindMarkUp">→ FindMarkUp</a>
-
-<dt id="CmdFileList">CmdFileList<span class="pram_text">[_FF]</span>
-<dd><a href="hid00067.htm">コマンドファイル一覧</a>を表示します。一覧からは、コマンドファイルの実行、編集、閲覧ができます。<br>
-パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
-<a href="#ExeCommands">→ ExeCommands</a>　<a href="#FileEdit">→ FileEdit</a>
-
-<dt id="CmdHistory">CmdHistory<span class="pram_text">[_FF]</span>
-<dd><b>NyanFi</b> 起動後に実行されたコマンドの履歴を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
-パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
-詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#CmdHistory">→ ファイラー: CmdHistory</a>)。
-
-<dt id="CopyFileInfo">CopyFileInfo
-<dd>ファイル情報をクリップボードにコピーします。
-
-<dt id="CsvCalc">CsvCalc
-<dd>CSV/TSVファイルを固定長表示していて、カーソル位置の項目に有効な数値がある場合、その合計、平均、最小、最大値、中央値、分散、標準偏差、度数分布を計算して表示します。<br>
-度数分布では、最大値と最小値の間をスタージェスの公式で求めた階級数で等分しています。表示される数値は、左から階級下限値、度数、累積相対度数です。<br>
-右クリックメニューや<b>CSV/TSVレコード</b>で「<b>先頭行が項目名</b>」をチェックしていると、先頭行は集計対象から除外されますので注意してください。<br>
-なおCSV/TSVファイルでなくても、数値で始まる行からなるテキストファイルは集計が可能です。<br>
-<div class="note_text">
-<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合、読み込まれていない行は集計対象になりません。<br>
-</div>
-<a href="#FixedLen">→ FixedLen</a>　<a href="#CsvGraph">→ CsvGraph</a>　<a href="#CsvRecord">→ CsvRecord</a>
-
-<dt id="CsvGraph">CsvGraph
-<dd>CSV/TSVファイルを固定長表示していて、カーソル位置の項目に有効な数値がある場合、最小値/最大値間の相対的な変化を折れ線グラフで表示します。<br>
-グラフ上をクリックすると、テキストビュアーのカーソルがその項目位置に移動します。<br>
-右クリックメニューでは、画像としてのコピーや基準ラインの表示/非表示が可能です。<br>
-なおCSV/TSVファイルでなくても、数値で始まる行からなるテキストファイルはグラフ表示が可能です。<br>
-<div class="spc_box">
-グラフの背景/ライン/グリッド/文字色は <a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。<br>
-</div>
-<div class="note_text">
-<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合、読み込まれていない行はグラフ化されません。<br>
-</div>
-<a href="#FixedLen">→ FixedLen</a>　<a href="#CsvCalc">→ CsvCalc</a>　<a href="#CsvRecord">→ CsvRecord</a>
-
-<dt id="CsvRecord">CsvRecord<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、<b>CSV/TSVレコード</b>の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-ファイルの先頭行に TAB が含まれていたら <b>TSV</b>、そうでない場合は <b>CSV</b> とみなし、カーソル行を一つのレコードとして内容を一覧表示します。<br>
-<div class="spc_box">
-「<b>先頭行が項目名</b>」をチェックしていると、ファイルの一行目を項目名とみなしてそれを表示します(テキストビュアーの右クリックメニューと連動)。この設定は、CSV/TSVファイルの代替データストリームに <a href="hid00102.htm#NyanfiDef">nyanfi.def</a> という名前で保存されます。<br>
-</div>
-<div class="spc_box">
-<span class="btn_frame">集計</span>ボタンを押すと、選択している項目に有効な数値がある場合、その合計、平均、最小、最大値、中央値、分散、標準偏差を計算して表示します。<br>
-また<span class="btn_frame">グラフ</span>ボタンを押すと、選択している項目に有効な数値がある場合、それをグラフ表示します。<br>
-</div>
-<div class="spc_box">
-右クリックメニューでは、内容の「<b>コピー</b>」(範囲指定可)や「<b>URLを開く</b>」が可能です。<br>
-</div>
-<a href="#FixedLen">→ FixedLen</a>　<a href="#CsvCalc">→ CsvCalc</a>　<a href="#CsvGraph">→ CsvGraph</a>　<a href="#ExportCsv">→ ExportCsv</a>
-
-<dt id="CursorDown">CursorDown<span class="pram_text">[_{行数|HP|FP}]</span>
-<dd>カーソルをパラメータで指定した行数(無指定の場合は1行)下に移動します。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分下に移動します。<br>
-<a href="#CursorUp">→ CursorUp</a>　<a href="#ScrollDown">→ ScrollDown</a>　<a href="#ScrollCursorDown">→ ScrollCursorDown</a>
-
-<dt id="CursorDownSel">CursorDownSel
-<dd>選択しながらカーソルを下に移動します。<br>
-<a href="#CursorUpSel">→ CursorUpSel</a>
-
-<dt id="CursorLeft">CursorLeft
-<dd>カーソルを左に移動します。バイナリ・ダンプ表示の場合はバイト単位の移動になります。<br>
-<a href="#CursorRight">→ CursorRight</a>　<a href="#WordLeft">→ WordLeft</a>
-
-<dt id="CursorLeftSel">CursorLeftSel
-<dd>選択しながらカーソルを左に移動します。<br>
-<a href="#CursorRightSel">→ CursorRightSel</a>
-
-<dt id="CursorRight">CursorRight
-<dd>カーソルを右に移動します。バイナリ・ダンプ表示の場合はバイト単位の移動になります。<br>
-<a href="#CursorLeft">→ CursorLeft</a>　<a href="#WordRight">→ WordRight</a>
-
-<dt id="CursorRightSel">CursorRightSel
-<dd>選択しながらカーソルを右に移動します。<br>
-<a href="#CursorLeftSel">→ CursorLeftSel</a>
-
-<dt id="CursorUp">CursorUp<span class="pram_text">[_{行数|HP|FP}]</span>
-<dd>カーソルをパラメータで指定した行数(無指定の場合は1行)上に移動します。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上に移動します。<br>
-<a href="#CursorDown">→ CursorDown</a>　<a href="#ScrollUp">→ ScrollUp</a>　<a href="#ScrollCursorUp">→ ScrollCursorUp</a>
-
-<dt id="CursorUpSel">CursorUpSel
-<dd>選択しながらカーソルを上に移動します。<br>
-<a href="#CursorDownSel">→ CursorDownSel</a>
-
-<dt id="DebugCmdFile">DebugCmdFile<span class="pram_text">_@ファイル名</span><br>
-<dd>
-パラメータで指定したコマンドファイル(.nbt)に対するデバッグウィンドウを開き、デバッグモードで実行します。<br>
-詳しくは <a href="hid00063.htm#Debug">Debug</a> 補助コマンドを参照してください。<br>
-
-<dt id="Delete">Delete<span class="pram_text">[_SO]</span>
-<dd>選択中(無ければ表示中)のファイルを削除します。表示中のファイルが削除された場合、次のファイルを表示します。<br>
-このコマンドは、通常のファイルリストおよび検索結果リストにおいてのみ有効です。選択中のディレクトリは削除されません。また、バイナリ・ダンプ表示中のファイルは削除できません。なおテキストビュアーでの削除は、バックグラウンド・タスクでは行いません。<br>
-パラメータに <b>SO</b> を指定すると、選択されているファイルのみを削除します。<br>
-<a href="#SelectFile">→ SelectFile</a>
-
-<dt id="Duplicate">Duplicate<span class="pram_text">[_RA]</span>
-<dd><a href="hid00017.htm#Duplicate">オプション設定 - 起動時</a> で二重起動が許可されている場合、新たに <b>NyanFi</b> を起動します。<br>
-パラメータに <b>RA</b> を指定すると、管理者として起動します。<br>
-
-<dt id="EditHighlight">EditHighlight
-<dd><a href="hid00084.htm">構文強調表示定義ファイル</a>(<b>Highlight.INI</b>)をテキストエディタで開きます。<br>
-定義ファイルが存在しない場合には実行できません。<br>
-
-<dt id="EditHistory">EditHistory
-<dd><a href="hid00058.htm">最近編集したファイル一覧</a>を表示します。<br>
-画面は <a href="#ViewHistory">ViewHistory</a> と共用なので、表示位置やサイズは同じになります。
-
-<dt id="ExeCommands">ExeCommands<span class="pram_text">_{コマンド[:コマンド...] | @ファイル名}</span>
-<dd>パラメータで指定したコマンドを実行します。コマンドは <b>:</b> (コロン)で区切って複数指定できます。<br>
-またパラメータでのみ使える補助コマンドや制御文もあります。<br>
-パラメータの先頭が <b>@</b> の場合、コマンドファイル名の指定になります。<br>
-詳細は「<a href="hid00063.htm">ExeCommands コマンド</a>」のページを参照してください。<br>
-
-<dt id="ExeMenuFile">ExeMenuFile<span class="pram_text">_ファイル名</span>
-<dd>指定した<b>メニュー定義ファイル</b>を読み込んで、マウス位置にポップアップメニューを表示し、選択された項目を実行します。<br>
-詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#ExeMenuFile">→ ファイラー: ExeMenuFile</a>)。
-
-<dt id="ExeToolBtn">ExeToolBtn<span class="pram_text">_ボタン番号</span>
-<dd>パラメータで指定した番号(1～)のツールボタンを実行します。<br>
-<a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ShowToolBar">→ ShowToolBar</a>
-
-<dt id="ExportCsv">ExportCsv
-<dd><b>CSV/TSVエクスポート</b>ダイアログを開きます。<br>
-閲覧してるCSV/TSVファイルから、指定した項目を別ファイルにエクスポートできます。<br>
-左側リストから項目を選んで右側リストに追加し、出力ファイル名や形式を指定してください。<br>
-ファイル名にドライブ名がない場合は、閲覧中ファイルからの相対指定とみなされます。<br>
-なお <a href="#Sort">Sort</a> コマンドでソートしていると、その内容でエクスポートされます。<br>
-<div class="note_text">
-処理は元ファイル全体を一時バッファに読み込んで行うため、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合でも、すべての行内容がエクスポートされます(ソート状態も考慮)。<br>
-</div>
-<a href="#FixedLen">→ FixedLen</a>　<a href="#CsvRecord">→ CsvRecord</a>　<a href="#Sort">→ Sort</a>
-
-<dt id="FileEdit">FileEdit<span class="pram_text">[_ファイル名]</span>
-<dd>現在のファイルをテキストエディタで開き、カーソル行へ飛びます。<br>
-<b>xd2txlib.dll</b> で各種バイナリ文書をテキスト表示している場合は、対応するエディタで開きます。<br>
-エディタの設定は、<a href="hid00012.htm">オプション設定 - エディタ</a>で行ってください。<br>
-アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。編集後に保存してもアーカイブには反映されません。またアーカイブの仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください。<br>
-クリップボードの内容を閲覧している場合は、一時ディレクトリに <b>CLIPBOARD.TXT</b> という名前で保存して開きます。一時ファイルは <b>NyanFi</b> 終了時に削除されます。<br>
-パラメータで<strong>ファイル名</strong>を指定して開くこともできます。<br>
-<div class="note_text">
-ファイラーから <a href="hid00005.htm#ViewTail">ViewTail</a> コマンドで閲覧している場合、行番号は相対的な表示になるので、実際のファイルでの位置には移れません。<br>
-</div>
-<a href="#BinaryEdit">→ BinaryEdit</a>
-
-<dt id="FindText">FindText
-<dd><a href="hid00065.htm">文字列検索ダイアログ</a>を表示し、検索を行います。<br>
-バイナリ・ダンプ表示の場合は、文字列検索の他にバイト列検索も可能です。<br>
-なおダイアログを閉じても、<a href="#FindDown">FindDown</a> や <a href="#FindUp">FindUp</a> コマンドで直前の検索条件による再検索ができます。<br>
-<a href="#Highlight">→ Highlight</a>　<a href="#IncSearch">→ IncSearch</a>　<a href="#IncSearch">→ IncSearch</a>　<a href="#Grep">→ Grep</a>
-<br>
-
-<dt id="FindDown">FindDown<span class="pram_text">[_文字列|/正規表現パターン/]</span>
-<dd>直前に<a href="hid00065.htm">文字列検索ダイアログ</a>で行った検索条件で、下方向に再検索します。<br>
-パラメータで文字列を指定して検索することも可能です。その場合、文字列を / で囲むと正規表現とみなされます。<br>
-<b>例</b>: FindDown_:URLを検索:&quot;/https?://[\w/:%#\$&amp;\?\(\)~\.=\+\-]+/&quot;<br>
-<a href="#FindSelDown">→ FindSelDown</a>　<a href="#FindSelUp">→ FindSelUp</a>
-
-<dt id="FindUp">FindUp<span class="pram_text">[_文字列|/正規表現パターン/]</span>
-<dd>直前に<a href="hid00065.htm">文字列検索ダイアログ</a>で行った検索条件で、上方向に再検索します。<br>
-パラメータで文字列を指定して検索することも可能です。その場合、文字列を / で囲むと正規表現とみなされます。<br>
-<a href="#FindSelDown">→ FindSelDown</a>　<a href="#FindSelUp">→ FindSelUp</a>
-
-<dt id="FindLinkDown">FindLinkDown
-<dd>
-リンク先(&quot;http://～&quot;、&quot;mailto:～&quot; または &quot;file://～&quot;)を下方向に検索します。<br>
-HTML→テキスト変換表示で <a href="#TagView">TagView</a> コマンドで移動する場合などに便利です。<br>
-
-<dt id="FindLinkUp">FindLinkUp
-<dd>
-リンク先(&quot;http://～&quot;、&quot;mailto:～&quot; または &quot;file://～&quot;)を上方向に検索します。<br>
-HTML→テキスト変換表示で <a href="#TagView">TagView</a> コマンドで移動する場合などに便利です。<br>
-
-<dt id="FindMarkDown">FindMarkDown
-<dd>マーク行を下方向に検索します。<br>
-バイナリ最大読込サイズを超えた検索も可能です。<br>
-<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
-
-<dt id="FindMarkUp">FindMarkUp
-<dd>マーク行を上方向に検索します。<br>
-バイナリ最大読込サイズを超えた検索も可能です。<br>
-<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
-
-<dt id="FindSelDown">FindSelDown<span class="pram_text">[_SW]</span>
-<dd>選択中の文字列を下方向に検索します。<br>
-見つかると、その文字列が新たに選択状態となり、引き続きそれを検索できます。<br>
-検索に用いられた選択文字列は内部的に保持されます。次回検索時に選択中でなかったら、前回のものが用いられます。<br>
-パラメータに <b>EM</b> を指定すると、すべてのマッチ語が強調表示されます(<a href="#Highlight">Highlight</a>_ON)。<br>
-<a href="#FindDown">→ FindDown</a>　<a href="#FindUp">→ FindUp</a>　<a href="#Highlight">→ Highlight</a>
-
-<dt id="FindSelUp">FindSelUp<span class="pram_text">[_SW]</span>
-<dd>選択中の文字列を上方向に検索します。<br>
-見つかると、その文字列が新たに選択状態となり、引き続きそれを検索できます。<br>
-検索に用いられた選択文字列は内部的に保持されます。次回検索時に選択中でなかったら、前回のものが用いられます。<br>
-パラメータに <b>EM</b> を指定すると、すべてのマッチ語が強調表示されます(<a href="#Highlight">Highlight</a>_ON)。<br>
-<a href="#FindDown">→ FindDown</a>　<a href="#FindUp">→ FindUp</a>　<a href="#Highlight">→ Highlight</a>
-
-<dt id="FindTagName">FindTagName<span class="pram_text">[_EJ][;CO]</span>
-<dd><a href="hid00083.htm#Dialog">タグ名検索ダイアログ</a> を開いて <b>tags</b> からタグ名を検索した後、ダイレクトタグジャンプを行います。<br>
-パラメータに <b>EJ</b> を指定すると ダイレクトタグジャンプをテキストエディタで(<a href="#TagJumpDirect">TagJumpDirect</a>)、そうでない場合はテキストビュアーで(<a href="#TagViewDirect">TagViewDirect</a>)行います。<br>
-パラメータに <b>CO</b> を指定すると、現在閲覧中のファイルに関するタグ名だけを検索します。この場合、ダイアログで何も入力していないと、すべてのタグが一覧表示されます。用途によっては<a href="hid00066.htm">関数一覧</a>より便利かもしれません。<br>
-複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
-<a href="#TagJumpDirect">→ TagJumpDirect</a>　<a href="#TagViewDirect">→ TagViewDirect</a>　<a href="#FunctionList">→ FunctionList</a><br>
-
-<dt id="FixedLen">FixedLen<span class="pram_text">[_{ON|OFF|制限幅}]</span>
-<dd>パラメータを指定しない場合、CSV/TSVファイルで、固定長表示/通常表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定するとCSV/TSVファイルで固定長表示、<b>OFF</b> では通常表示になります。<br>
-対象となるのは、拡張子が <b>.csv</b> または <b>.tsv</b> のテキストファイルです。どちらの拡張子でも、ファイルの先頭行に TAB が含まれていたら <b>TSV</b>、そうでない場合は <b>CSV</b> とみなします。<br>
-<div class="spc_box">
-固定長表示では、項目ごとに最大幅で桁位置を合わせて整形表示します。項目数は1行目の内容に基づいています。<br>
-1レコードが1行に収まらないと見にくくなりますが、<a href="hid00011.htm#FixedLimit">オプション設定 - テキストビュアー</a> の「<b>固定長表示の制限幅</b>」を設定して省略表示すると収まるかもしれません。この値はパラメータでも指定できます。<br>
-また右クリックメニューの「<b>列幅の最小化</b>」で項目を選んでチェックすると、その列幅が最小化され内容が非表示になります。設定内容は、CSV/TSVファイルの代替データストリームに <a href="hid00102.htm#NyanfiDef">nyanfi.def</a> という名前で保存されます。<br>
-<a href="hid00023.htm">オプション設定 - フォント・配色</a> - 配色の「<b>固定長表示の縦罫線</b>」を設定すると、固定長表示時に縦罫線が表示されます。ただし、各レコードの2行目以降には表示されません。<br>
-</div>
-固定長表示の場合、カーソル位置項目のソート(<a href="#Sort">Sort</a>)、集計(<a href="#CsvCalc">CsvCalc</a>)、グラフ表示(<a href="#CsvGraph">CsvGraph</a>)が可能です。<br>
-レコード毎の項目内容は、<b>CSV/TSVレコード</b> (<a href="#CsvRecord">CsvRecord</a>)でも確認できます。<br>
-<a href="#CsvRecord">→ CsvRecord</a>　<a href="#CsvCalc">→ CsvCalc</a>　<a href="#CsvGraph">→ CsvGraph</a>　<a href="#Sort">→ Sort</a>　<a href="#ExportCsv">→ ExportCsv</a>
-
-<dt id="FunctionList">FunctionList<span class="pram_text">[_FF]</span>
-<dd><a href="hid00066.htm">関数一覧</a>を表示します。<br>
-ファイルの種類によっては、「見出し一覧」、「セクション一覧」、「ラベル一覧」、「オブジェクト一覧」、「タスク一覧」になります。<br>
-パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
-<a href="#UserDefList">→ UserDefList</a>　<a href="#MarkList">→ MarkList</a>
-
-<dt id="Grep">Grep<span class="pram_text">[_検索文字列]</span>
-<dd><a href="hid00056.htm">文字列検索(GREP)</a>を開きます。<br>
-カレントパス以下のテキストファイルに対して、文字列検索を行います。<br>
-パラメータに検索文字列を指定すると、それを設定します。またパラメータ無指定で、選択中の文字列がある場合はそれを設定します。<br>
-<a href="#FindText">→ FindText</a>　<a href="#FindSelDown">→ FindSelDown</a>　<a href="#FindSelUp">→ FindSelUp</a>
-
-<dt id="HelpContents">HelpContents<span class="pram_text">[_{CI|FI}]</span>
-<dd>ヘルプの目次を表示します。<br>
-パラメータに <b>CI</b> を指定すると「コマンドの索引(アルファベット順)」のページを、<b>FI</b> を指定すると「コマンドの索引(機能別)」のページを表示します。<br>
-
-<dt id="HelpCurWord">HelpCurWord<span class="pram_text">_ヘルプファイル名</span>
-<dd>指定したHTMLヘルプファイル(.chm)を用いて、カーソル位置の単語を検索します。<br>
-見つからなかった場合は、ヘルプ画面がキーワードタブになります。<br>
-<b>例</b>: HelpCurWord_"C:\Program Files (x86)\Embarcadero\Studio\19.0\Help\Doc\ja\vcl.chm"
-
-<dt id="Highlight">Highlight<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、<a href="hid00065.htm">文字列検索ダイアログ</a>での検索条件にマッチしている語の強調表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-文字列検索ダイアログの「<b>強調表示を維持</b>」をチェックしていると、ダイアログを閉じた後もマッチ語の強調表示を行います。<br>
-<a href="#FindText">→ FindText</a>　<a href="#FindSelDown">→ FindSelDown</a>　<a href="#FindSelUp">→ FindSelUp</a>
-
-<dt id="HtmlToText">HtmlToText<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、HTML文書で、HTML→テキスト変換表示/通常表示(ソース)をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定するとHTML→テキスト変換表示、<b>OFF</b> では通常表示になります。<br>
-&lt;H1&gt;～&lt;H6&gt; は、見出しマーク文字が付加されます。箇条書きなどにも対応。リンク先のURLは括弧内に表示されます。また存在するローカルファイルへのリンクも表示され、<a href="#TagJump">TagJump</a> や <a href="#TagView">TagView</a> コマンドで開けます(name や id による指定は無効)。<br>
-なお、<a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビュアーを開いたり、通常テキストから <a href="#TagView">TagView</a> コマンドで開いたりした場合は通常表示に戻ります。<br>
-<a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー -「HTML→テキスト変換」</a><br>
-
-<dt id="ImgPreview">ImgPreview
-<dd>カーソル位置に表示可能な画像ファイル名がある場合、イメージプレビューを表示します(イメージビュアーのサブビュアーを利用 <a href="hid00007.htm#SubViewer">→ SubViewer</a>)。<br>
-ドライブ名がない場合は閲覧中ファイルからの相対指定とみなされます。<br>
-プレビュー中に、カーソルを別の画像ファイル名に移すと、それにあわせて表示も変わります。<br>
-現在プレビュー中のファイル名上、または有効なファイル名がないカーソル位置でコマンドを再び実行すると、プレビューが閉じます(<span class="btn_frame">ESC</span>キーでも可能)。<br>
-
-<dt id="IncSearch">IncSearch<span class="pram_text">[_[MM|NM]]</span>
-<dd><a href="hid00050.htm">インクリメンタルサーチ・モード</a>で文字列検索を行います。<br>
-パラメータに <b>MM</b> を指定すると Migemo モード、<b>NM</b> を指定すると通常モード、無指定の場合は前回のモードになります。<br>
-<a href="hid00019.htm#IncSearch">→ オプション設定 - コマンド</a><br>
-<a href="#FindText">→ FindText</a>　<a href="#Highlight">→ Highlight</a>
-
-<dt id="InputCommands">InputCommands<span class="pram_text">[_EL]</span>
-<dd>入力したコマンド( : で区切って複数指定可)を、<a href="#ExeCommands">ExeCommands</a> のパラメータとして実行します。<br>
-詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#InputCommands">→ ファイラー: InputCommands</a>)。
-
-<dt id="Inspector">Inspector<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、バイナリ・ダンプ表示で、<b>インスペクタ</b>の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-インスペクタには、カーソル位置から1、2、4、8バイト分の値が表示されます。<br>
-unsigned/signed(整数)、Big/Little-Endian を切り替えられます(synchsafe int は Big のみ)。<br>
-右クリックメニューで内容の「<b>コピー</b>」が可能です。<br>
-また、カーソル位置から最大128バイトを各種文字コードで強制的に表した文字列(ヌル終端)を一覧表示します。<br>
-<a href="#BitmapView">→ BitmapView</a>
-
-<dt id="JumpLine">JumpLine<span class="pram_text">[_{行番号|[+|-]アドレス}]</span>
-<dd>テキスト表示の場合、指定した行番号に移動します。<br>
-バイナリ・ダンプ表示の場合は、指定した(16進/10進)アドレスに移動します。その際、<b>+</b> または <b>-</b> を付けると、現在位置からの相対移動になります。また、指定アドレスが読み込み済み範囲外だった場合、先頭アドレスを変更して移動します。<br>
-パラメータを指定しない場合は入力ボックスが出ます。<br>
-<a href="#SetTopAddr">→ SetTopAddr</a>
-
-<dt id="KeyList">KeyList<span class="pram_text">[_FF]</span>
-<dd><a href="hid00055.htm">キー割り当て一覧</a>を表示します。<br>
-パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
-
-<dt id="LineEnd">LineEnd
-<dd>行末に移動します。<br>
-<a href="#LineTop">→ LineTop</a>
-
-<dt id="LineEndSel">LineEndSel
-<dd>選択しながら行末に移動します。<br>
-<a href="#LineTopSel">→ LineTopSel</a>
-
-<dt id="LineTop">LineTop
-<dd>行頭に移動します。<br>
-<a href="#LineEnd">→ LineEnd</a>
-
-<dt id="LineTopSel">LineTopSel
-<dd>選択しながら行頭に移動します。<br>
-<a href="#LineEndSel">→ LineEndSel</a>
-
-<dt id="ListFileInfo">ListFileInfo
-<dd><a href="#ShowFileInfo">ShowFileInfo</a> のエイリアス(別名)です。<br>
-表示中ファイルのファイル情報をダイアログ表示します。<br>
-<a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#PropertyDlg">→ PropertyDlg</a>
-
-<dt id="ListLog">ListLog<span class="pram_text">[_EO]</span>
-<dd>現在のログ内容を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
-パラメータに <b>EO</b> を指定すると、ログの中からエラー箇所を絞り込んで表示します。一覧の右クリックメニューでも「エラー箇所の絞り込み」を切り替え可能。<br>
-
-<dt id="Mark">Mark
-<dd>カーソル行をマークします。すでにマークされている場合は解除します。マーク情報は、ファイルの閲覧履歴に保存されます。<br>
-<div class="note_text">
-ファイラーやイメージビュアーの <b>Mark</b> コマンドと混同しないでください。<br>
-</div>
-<a href="#ClearMark">→ ClearMark</a>　<a href="#FindMarkDown">→ FindMarkDown</a>　<a href="#FindMarkUp">→ FindMarkUp</a>
-
-<dt id="MarkList">MarkList<span class="pram_text">[_FF]</span>
-<dd>テキスト表示で、<a href="hid00066.htm">マーク行一覧</a>を表示します。<br>
-パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
-<div class="note_text">
-ファイラーやイメージビュアーの <b>MarkList</b> コマンド(<a href="hid00070.htm">栞マーク一覧</a>)と混同しないでください。<br>
-</div>
-<a href="#FunctionList">→ FunctionList</a>　<a href="#UserDefList">→ UserDefList</a>
-
-<dt id="MenuBar">MenuBar
-<dd>メニューバーの表示／非表示を切り替えます(トグル動作)。<br>
-<a href="#PopupMainMenu">→ PopupMainMenu</a>
-
-<dt id="NextErr">NextErr
-<dd>ログ内容を閲覧している場合、次のエラー位置(W:警告、C:中断を含む)に移動します。
-ログ以外のファイルでは機能しません。<br>
-<a href="#PrevErr">→ PrevErr</a>
-
-<dt id="NextFile">NextFile
-<dd>次のファイルを表示します。<br>
-別ウィンドウのテキストビュアーの場合、複数開いていれば次のウィンドウにフォーカスを移します。<br>
-<a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビュアーを開いている場合は、結果リストの次の項目を表示します。<br>
-<a href="hid00080.htm">FTP接続</a>時のリモート側では無効です。<br>
-<a href="#PrevFile">→ PrevFile</a>
-
-<dt id="NextNyanFi">NextNyanFi<span class="pram_text">[_DN]</span>
-<dd>複数起動されている場合、次の <b>NyanFi</b> をアクティブにします。<br>
-パラメータに <b>DN</b> を指定すると、複数起動されていない場合、新たに <b>NyanFi</b> を二重起動します。<br>
-<a href="#PrevNyanFi">→ PrevNyanFi</a>　<a href="#Duplicate">→ Duplicate</a>
-
-<dt id="OpenURL">OpenURL<span class="pram_text">[_URL]</span>
-<dd>選択中の文字列(なければ現在行)からURLを抽出して開きます(<b>ttp://</b>～の場合、先頭の<b>h</b>を補完)。また <b>mailto:～</b> の場合は既定のメーラで開きます。<br />
-なお、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> で「<b>ダブルクリックでURLを開く</b>」をチェックしていると、テキスト上のダブルクリックでも実行されます。<br>
-パラメータで URL を指定することもできます。その場合、URL に日本語などが含まれていたら UTF-8 でエンコードします。<br>
-<b>例</b>: OpenURL_:googleで「猫を」検索:&quot;https://www.google.co.jp/search?q=猫&amp;ie=UTF-8&quot;<br>
-<a href="#WebSearch">→ WebSearch</a>
-
-<dt id="OptionDlg">OptionDlg<span class="pram_text">[_{GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV}]</span><br>
-OptionDlg<span class="pram_text">_KYO</span>
-<dd>「<a href="hid00008.htm">オプション設定</a>」ダイアログを開きます。このとき、ビュアーは安全のため一旦閉じます。<br>
-パラメータを指定すると特定のタブを開くことができます。パラメータとタブの対応は次の通りです。<b>GN</b>: 一般、<b>G2</b>: 一般2、<b>MO</b>: マウス操作、<b>DS</b>: デザイン、<b>FC</b>: フォント・配色、<b>TV</b>: テキストビュアー、<b>IV</b>: イメージビュアー、<b>ED</b>: エディタ、<b>KY</b>: キー設定、<b>AC</b>: 関連付け、<b>XM</b>: 追加メニュー、<b>XT</b>: 外部ツール、<b>ST</b>: 起動時、<b>NT</b>: 通知・確認、<b>CM</b>: コマンド、<b>EV</b>: イベント。<br>
-<div class="spc_box">
-パラメータに <b>KYO</b> を指定すると、「キー設定」のみのダイアログが開きます。<br>
-この場合、ビュアーは開いたままで設定を行えます。また通常のダイアログよりも若干速く開きます。<br>
-</div>
-このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
-
-<dt id="PageDown">PageDown
-<dd>カーソルを1ページ下に移動します。<br>
-<a href="#PageUp">→ PageUp</a>
-
-<dt id="PageDownSel">PageDownSel
-<dd>選択しながらカーソルを1ページ下に移動します。<br>
-<a href="#PageUpSel">→ PageUpSel</a>
-
-<dt id="PageUp">PageUp
-<dd>カーソルを1ページ上に移動します。<br>
-<a href="#PageDown">→ PageDown</a>
-
-<dt id="PageUpSel">PageUpSel
-<dd>選択しながらカーソルを1ページ上に移動します。<br>
-<a href="#PageDownSel">→ PageDownSel</a>
-
-<dt id="PopupMainMenu">PopupMainMenu
-<dd>メインメニューの内容をポップアップメニューに変換して表示します。<br>
-<a href="#MenuBar">→ MenuBar</a>
-
-<dt id="PrevErr">PrevErr
-<dd>ログ内容を閲覧している場合、前のエラー位置(W:警告、C:中断を含む)に移動します。<br>
-ログ以外のファイルでは機能しません。<br>
-<a href="#NextErr">→ NextErr</a>
-
-<dt id="PrevFile">PrevFile
-<dd>前のファイルを表示します。<br>
-別ウィンドウのテキストビュアーの場合、複数開いていれば前のウィンドウにフォーカスを移します。<br>
-<a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビュアーを開いている場合は、結果リストの前の項目を表示します。<br>
-<a href="hid00080.htm">FTP接続</a>時のリモート側では無効です。<br>
-<a href="#NextFile">→ NextFile</a>
-
-<dt id="PrevNyanFi">PrevNyanFi
-<dd>複数起動されている場合、前の <b>NyanFi</b> をアクティブにします。<br>
-<a href="#NextNyanFi">→ NextNyanFi</a>　<a href="#Duplicate">→ Duplicate</a>
-
-<dt id="PropertyDlg">PropertyDlg<span class="pram_text">[_{ファイル名|ディレクトリ名}]</span>
-<dd>表示中ファイルについてのプロパティダイアログを表示します。
-パラメータで、対象のファイル名やディレクトリ名を指定することもできます。<br>
-
-<dt id="RegExChecker">RegExChecker<span class="pram_text">[_パターン]</span>
-<dd><a href="hid00085.htm">正規表現チェッカー</a> を開きます。<br>
-パラメータに<b>パターン</b>を指定すると、チェッカー画面のパターン欄に入力されます。<br>
-
-<dt id="ReloadFile">ReloadFile
-<dd>表示中のファイルを再読み込みします。<br>
-
-<dt id="SaveDump">SaveDump
-<dd>バイナリ・ダンプ表示の場合、ダンプリストに名前を付けてファイルに保存します。<br>
-その際、選択中ならその範囲を、そうでない場合は読み込み済み範囲の全体を保存します。<br>
-
-<dt id="ScrollCursorDown">ScrollCursorDown<span class="pram_text">[_{行数|HP|FP}]</span>
-<dd>画面をパラメータで指定した行数(無指定の場合はホイール設定)下にスクロールし、その分カーソルも移動します。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分下にスクロール移動します。<br>
-<a href="#ScrollDown">→ ScrollDown</a>　<a href="#CursorDown">→ CursorDown</a>
-
-<dt id="ScrollCursorUp">ScrollCursorUp<span class="pram_text">[_{行数|HP|FP}]</span>
-<dd>画面をパラメータで指定した行数(無指定の場合はホイール設定)上にスクロールし、その分カーソルも移動します。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上にスクロール移動します。<br>
-<a href="#ScrollUp">→ ScrollUp</a>　<a href="#CursorUp">→ CursorUp</a>
-
-<dt id="ScrollDown">ScrollDown<span class="pram_text">[_{行数|HP|FP}]</span>
-<dd>画面をパラメータで指定した行数(無指定の場合はホイール設定)下にスクロールします。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分下にスクロールします。なおカーソル位置は変わりません。<br>
-<a href="#ScrollCursorDown">→ ScrollCursorDown</a>　<a href="#CursorDown">→ CursorDown</a>
-
-<dt id="ScrollUp">ScrollUp<span class="pram_text">[_{行数|HP|FP}]</span>
-<dd>画面をパラメータで指定した行数(無指定の場合はホイール設定)上にスクロールします。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上にスクロールします。なおカーソル位置は変わりません。<br>
-<a href="#ScrollCursorUp">→ ScrollCursorUp</a>　<a href="#CursorUp">→ CursorUp</a>
-
-<dt id="SearchPair">SearchPair<span class="pram_text">[_/開始行パターン/;/終了行パターン/]</span>
-<dd>カーソル位置の括弧と対応する括弧を検索します。<br>
-検索できるペアは（）〔〕［］｛｝〈〉《》「」『』【】(){}[] です。<br>
-<div class="spc_box">
-通常表示のHTML文書では、カーソル位置に head、body、div、header、footer、nav、main、section、article、aside、table、ul、ol、form、script タグがあった場合、それに対応する開始/終了タグを検索します。<br>
-</div>
-<div class="spc_box">
-また、一部のプログラムソースなどでは、括弧以外に以下のような行単位の対応関係を検索できます。<br>
-<b>.cpp</b>、<b>.h</b> などでは、#if～/#endif を検索します。<br>
-<b>.pas</b> では、行単位で記述された begin/end などを検索します。<br>
-<b>.dfm</b> (Delphiフォームファイル)では、object/end や item/end を検索します。<br>
-<b>.vbs</b> では、各種制御文などに対応しています(例: sub/end sub、if/end if、for/next …)。<br>
-<b>.pod</b> では、=pod/=cut および =over/=back を検索します(.pl、.pm 内でも可)。<br>
-<div class="note_text">
-正規表現で処理しているため、正しく検索できない場合もあります。<br>
-</div>
-</div>
-<div class="spc_box">
-検索のための<b>開始行パターン</b>と<b>終了行パターン</b>は、パラメータで指定することもできます。<br>
-<b>例</b>: SearchPair_/^#BEGIN/;/^#END/<br>
-</div>
-<div class="spc_box">
-<a href="hid00084.htm#PairBeginPtn">構文強調表示定義ファイル</a>を利用すると、複数の検索パターンを指定できます(PairBeginPtn1～、PairEndPtn1～)。<br>
-特定の拡張子に対するデフォルトの検索パターンは、<b>設定メニュー</b> - [<b>デフォルトの構文強調表示定義をコピー</b>] で確認できます。<br>
-</div>
-
-<dt id="SelCurWord">SelCurWord
-<dd>カーソル位置の単語またはURLを選択します。<br>
-なお、ダブルクリックした場合にも、その位置の単語が選択されます。ただし、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> で「<b>ダブルクリックでURLを開く</b>」をチェックしていると、その行にURLが含まれている場合、それが開かれます。<br>
-
-<dt id="SelLine">SelLine
-<dd>カーソル行を選択します。<br>
-<a href="#SelLineCR">→ SelLineCR</a>
-
-<dt id="SelLineCR">SelLineCR
-<dd>カーソル行全体を改行単位で選択します。<br>
-<a href="#SelLine">→ SelLine</a>
-
-<dt id="SelectAll">SelectAll
-<dd>すべてを選択します。
-
-<dt id="SelectFile">SelectFile<span class="pram_text">[_NX]</span>
-<dd>表示中のファイルを、カレントのファイルリストで選択状態にします。すでに選択中の場合は解除します。<br>
-ファイルが選択されていると、情報ヘッダが選択中の配色になります。<br>
-パラメータに <b>NX</b> を指定すると、実行後に次のファイルを表示します。<br>
-<a href="#Delete">→ Delete</a>　<a href="#NextFile">→ NextFile</a>
-
-<dt id="SelectMode">SelectMode
-<dd>選択モードを開始します。選択モードでは、すべての移動コマンドが選択しながらの動作になります。<br>
-<a href="#ClipCopy">ClipCopy</a> コマンド、<a href="#FindSelDown">FindSelDown</a>、<a href="#FindSelUp">FindSelUp</a> コマンドを実行するか、<b>SelectMode</b> コマンドをもう一度実行すると、選択モードが解除されます。
-
-<dt id="SetColor">SetColor<span class="pram_text">[_{ファイル名|RS}]</span>
-<dd>
-<b>テキストビュアーの配色</b>ダイアログを開きます。このダイアログでの設定は一時的なもので、テキストビュアーを閉じるとリセットされます。<br>
-ただし<span class="btn_frame">全体に反映</span>ボタンを押すと、全体のオプション設定にも反映されます。<br>
-パラメータにファイル名を指定すると、カラー設定ファイル(.INI)を読み込んで、テキストビュアーの配色を一時的に変更します。ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
-また <b>RS</b> を指定すると配色をリセットします。<br>
-
-<div class="spc_box">
-設定ファイルには、このダイアログでエクスポートしたもの、<a href="hid00023.htm">オプション設定 - フォント・配色</a> - 配色の「エクスポート」で保存したもの、あるいは <b>NyanFi</b> のINIファイルのいずれかを利用できます。読み込む際には、テキストビュアーに関する設定内容だけが用いられます。<br>
-なお、<a href="hid00084.htm">構文強調表示定義ファイル</a>でも、このカラー設定ファイルを用いて配色を変更できます。<br>
-このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
-</div>
-
-<dt id="SetFontSize">SetFontSize<span class="pram_text">_[^]サイズ</span>
-<dd>フォントサイズをパラメータで指定した値にします。値はポイント単位で 2～72 を指定できます。<br>
-値の先頭に <b>^</b> を付けると、すでにそのサイズなら通常サイズに戻し、そうでなければ指定値に設定します。<br>
-サイズ変更は一時的なもので、次回開いた時には通常サイズに戻ります。<br>
-<b>例</b>:最小/通常サイズをトグル切り替え<br>
-　SetFontSize_^2<br>
-<a href="#ZoomIn">→ ZoomIn</a>　<a href="#ZoomOut">→ ZoomOut</a>　<a href="#ZoomReset">→ ZoomReset</a>
-
-<dt id="SetMargin">SetMargin<span class="pram_text">_左側余白幅</span>
-<dd><a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>左側余白幅</b>」を設定します。
-
-<dt id="SetTab">SetTab<span class="pram_text">[_タブストップ幅]</span>
-<dd>タブストップを任意の幅に変更します。<br>
-0 または無指定の場合は、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>タブストップ4の拡張子</b>」や「<b>タブストップ ～ の拡張子</b>」の設定にしたがいます(デフォルト=8)。<br>
-この変更は一時的なもので、テキストビュアーを閉じるとリセットされます。<br>
-
-<dt id="SetTopAddr">SetTopAddr<span class="pram_text">[_{TP|PR|NX|ED}]</span>
-<dd>バイナリ・ダンプ表示の場合、先頭アドレスを設定して、ファイルの再読み込みを行います。<br>
-これにより、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> 「<b>バイナリ最大読込サイズ</b>」よりも大きなファイル(4GB超も可)でも、任意の部分を閲覧できます。なお<b>ビットマップビュー</b>のファイルマップ表示をクリックすることでも先頭アドレスを変更できます。<br>
-
-<div class="spc_box">
-パラメータに <b>TP</b> を指定すると、入力ボックスを出さずに、先頭アドレスをファイルの先頭に設定します。<b>PR</b> を指定すると先頭アドレスをファイルの先行部に、<b>NX</b> を指定するとファイルの後続部に設定します。<b>ED</b> を指定すると、終端アドレスをファイルの最後に設定します。<br>
-これらは、<b>ビットマップビュー</b>のファイルマップの右クリックメニューからも可能です。<br>
-</div>
-<a href="#JumpLine">→ JumpLine</a>　<a href="#BitmapView">→ BitmapView</a>
-
-<dt id="SetUserDefStr">SetUserDefStr<span class="pram_text">_文字列</span>
-<dd>
-<a href="hid00066.htm">ユーザ定義文字列一覧</a>で検索に用いる文字列を事前に設定します。<br>
-一覧を開くとこの設定はクリアされます。事前設定していない場合は、前回使用した文字列が用いられます。<br>
-
-<a href="#UserDefList">→ UserDefList</a>
-
-<dt id="SetWidth">SetWidth<span class="pram_text">[_折り返し幅]</span>
-<dd>
-<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>折り返し幅</b>」を設定します。入力値を 0 (または空欄)にするとウィンドウの幅に合わせます。<br>
-パラメータで幅を指定すると、入力ボックスを出さずに、その値を設定します。<br>
-なおルーラを表示している場合、ダブルクリックで折り返し幅を変更することもできます。<br>
-<a href="#ShowRuler">→ ShowRuler</a>
-
-<dt id="ShowCR">ShowCR<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、改行マーク(<b>&#x21b5;</b>)の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
-<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>改行を表示</b>」に反映されます。<br>
-<a href="#ShowTAB">→ ShowTAB</a>
-
-<dt id="ShowFileInfo">ShowFileInfo
-<dd>表示中ファイルのファイル情報をダイアログで表示します。<br>
-<a href="#ListFileInfo">ListFileInfo</a> コマンドでも同じです。<br>
-ファイラーやイメージビュアーの場合とは異なり、パラメータはありません。<br>
-<a href="#ListFileInfo">→ ListFileInfo</a>　<a href="#PropertyDlg">→ PropertyDlg</a>
-
-<dt id="ShowFKeyBar">ShowFKeyBar<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、ファンクションキーバーの表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
-ファンクションキーバーのボタンには、キーに割り当てられているコマンド名(パラメータ部分を除く)がデフォルトで表示されますが、変更も可能です。<br>
-ボタンを右クリックするか、<a href="hid00016.htm">オプション設定 - キー設定</a>の一覧で項目をダブルクリックすると、表示名変更のための入力ボックスが表示されます。<br>
-なおツールバーとは異なり、割り当てられているコマンドの有効/無効やチェック状態はボタンに反映されません。<br>
-
-<dt id="ShowLineNo">ShowLineNo<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、行番号の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>行番号を表示</b>」に反映されます。
-
-<dt id="ShowRuby">ShowRuby<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、青空文庫形式やHTML→テキスト変換表示で、ルビ部分の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-
-<dt id="ShowRuler">ShowRuler<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、ルーラの表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>ルーラを表示</b>」に反映されます。<br>
-ルーラを表示していると、ダブルクリックで折り返し幅を変更することもできます。<br>
-<a href="#SetWidth">→ SetWidth</a>
-
-<dt id="ShowStatusBar">ShowStatusBar<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、ステータスバーの表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-
-<dt id="ShowTAB">ShowTAB<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、タブマーク(<b>&#x21c0;</b>)の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
-これは、テキストプレビューや<a href="hid00073.htm">一覧ダイアログ</a>でのテキスト表示にも適用されます。<br>
-<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>タブを表示</b>」に反映されます。<br>
-<a href="#ShowCR">→ ShowCR</a>
-
-<dt id="ShowToolBar">ShowToolBar<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、<b>ツールバー</b>の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
-<a href="hid00068.htm">「ツールバーの設定」ダイアログ</a>は、ツールバーをダブルクリックするか、<b>設定メニュー</b> - 「<b>ツールバーの設定</b>」あるいは <a href="#ToolBarDlg">ToolBarDlg</a> コマンドで表示されます。<br>
-<a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
-
-<dt id="Sort">Sort<span class="pram_text">[_{AO|DO}]</span>
-<dd>テキスト表示で、全体を改行単位でソートします。<br>
-パラメータに <b>AO</b> を指定すると昇順、<b>DO</b> で降順になります。無指定の場合は、ソートが解除され行番号順に戻ります。<br>
-CSV/TSVファイルで固定長表示の場合、カーソル位置の項目がソート対象になります。<b>CSV/TSVレコード</b> (<a href="#CsvRecord">CsvRecord</a>)や右クリックメニューで「<b>先頭行が項目名</b>」をチェックしていると、先頭行はソートされません。<br>
-ソートは右クリックメニューからも可能です。<br>
-<a href="#FixedLen">→ FixedLen</a>　<a href="#CsvRecord">→ CsvRecord</a>　<a href="#ExportCsv">→ ExportCsv</a>
-
-<dt id="SwitchSameName">SwitchSameName
-<dd>カレントディレクトリ内で、表示中ファイルとファイル名主部が同じ次のテキストファイルに切り替えます(ループ動作)。<br>
-
-<dt id="SwitchSrcHdr">SwitchSrcHdr
-<dd>カレントディレクトリ内にある c、c++ のヘッダ/ソースファイルを切り替えます。<br>
-
-<dt id="TagJump">TagJump<span class="pram_text">[_DJ]</span>
-<dd>現在行の内容でタグジャンプを行い、テキストエディタで開きます。<br>
-選択中ならその文字列、そうでない場合はカーソル行を対象とします。行内に複数のジャンプ先がある場合、カーソル位置から最初に見つかったものを開きます。<br>
-HTML→テキスト変換表示の場合、file:://～ という形式のローカルファイルや、Markdown記法によるリンクにも対応(name や id による移動先指定は無効)。<br>
-また #include 相対ファイル名 という形式も開けます。
-
-<br>
-行番号の指定のためのパラメータは、<a href="hid00012.htm">オプション設定 - エディタ</a>で設定できます。<br>
-パラメータに <b>DJ</b> を指定すると、タグジャンプができなかった場合、カーソル位置の単語で<a href="hid00083.htm">ダイレクトタグジャンプ</a> (<a href="#TagJumpDirect">TagJumpDirect</a>)を試みます。<br>
-<a href="#TagView">→ TagView</a>　<a href="#TagJumpDirect">→ TagJumpDirect</a>
-
-<dt id="TagJumpDirect">TagJumpDirect<span class="pram_text">[_タグ名]</span>
-<dd>カーソル位置の単語で<a href="hid00083.htm">ダイレクトタグジャンプ</a>を行い、テキストエディタで開きます。ジャンプ先の候補が複数ある場合、一覧で選択できます。<br>
-パラメータでタグ名を指定すると、その単語でダイレクトタグジャンプを行います。<br>
-<a href="#TagViewDirect">→ TagViewDirect</a>　<a href="#FindTagName">→ FindTagName</a>
-
-<dt id="TagView">TagView<span class="pram_text">[_DJ]</span>
-<dd>現在行の内容でタグジャンプを行い、テキストビュアーで開きます。<br>
-選択中ならその文字列、そうでない場合はカーソル行を対象とします。行内に複数のジャンプ先がある場合、カーソル位置から最初に見つかったものを開きます。<br>
-HTML→テキスト変換表示の場合、file:://～ という形式のローカルファイルへのリンクにも対応(name や id による移動先指定は無効)。また #include 相対ファイル名 という形式も開けます。<br>
-パラメータに <b>DJ</b> を指定すると、タグジャンプができなかった場合、カーソル位置の単語で<a href="hid00083.htm">ダイレクトタグジャンプ</a> (<a href="#TagViewDirect">TagViewDirect</a>)を試みます。<br>
-<a href="#TagJump">→ TagJump</a>　<a href="#TagViewDirect">→ TagViewDirect</a>
-
-<dt id="TagViewDirect">TagViewDirect<span class="pram_text">[_タグ名]</span>
-<dd>カーソル位置の単語で<a href="hid00083.htm">ダイレクトタグジャンプ</a>を行い、テキストビュアーで開きます。ジャンプ先の候補が複数ある場合、一覧で選択できます。<br>
-パラメータでタグ名を指定すると、その単語でダイレクトタグジャンプを行います。<br>
-<a href="#TagJumpDirect">→ TagJumpDirect</a>　<a href="#FindTagName">→ FindTagName</a>
-
-<dt id="TextEnd">TextEnd
-<dd>最後尾に移動します。<br>
-<a href="#TextTop">→ TextTop</a>
-
-<dt id="TextEndSel">TextEndSel
-<dd>選択しながら最後尾に移動します。<br>
-<a href="#TextTopSel">→ TextTopSel</a>
-
-<dt id="TextTop">TextTop
-<dd>先頭に移動します。<br>
-<a href="#TextEnd">→ TextEnd</a>
-
-<dt id="TextTopSel">TextTopSel
-<dd>選択しながら先頭に移動します。<br>
-<a href="#TextEndSel">→ TextEndSel</a>
-
-<dt id="ToolBarDlg">ToolBarDlg
-<dd><a href="hid00068.htm">「ツールバーの設定」ダイアログ</a>を表示します。<br>
-<a href="#ShowToolBar">→ ShowToolBar</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
-このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
-
-<dt id="UserDefList">UserDefList<span class="pram_text">[_FF]</span>
-<dd><a href="hid00066.htm">ユーザ定義文字列一覧</a>を表示します。<br>
-パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
-なお <a href="#SetUserDefStr">SetUserDefStr</a> コマンドで、事前に文字列を設定しておくことができます。<br>
-<a href="#SetUserDefStr">→ SetUserDefStr</a> 　<a href="#FunctionList">→ FunctionList</a>　<a href="#MarkList">→ MarkList</a>
-
-<dt id="ViewHistory">ViewHistory
-<dd><a href="hid00058.htm">最近閲覧したファイル一覧</a>を表示します。<br>
-画面は <a href="#EditHistory">EditHistory</a> と共用なので、表示位置やサイズは同じになります。
-
-<dt id="WebMap">WebMap<span class="pram_text">[_Z1～18(デフォルト=16)][;H高さ(デフォルト=600)]</span>
-<dd>入力ボックスで指定した緯度経度の地図(デフォルト:国土地理院/Leaflet)を開きます。<br>
-マップ表示用のHTMLファイルを生成し、一時ディレクトリに <b>$~WEBMAP.HTM</b> という名前で保存して開きます。<br>
-指定には10進数のDEG表記を用い、緯度経度の順に、<b>,</b>(カンマ) 、<b>;</b> (セミコロン)、半角空白のいずれかで区切って入力してください(クリップボードから貼り付けた場合はタブ文字でも可)。<br>
-<div class="spc_box">
-パラメータに <b>Z</b> と1～18の数値を指定すると、地図のズームレベルを設定できます。<br>
-パラメータに <b>H</b> と数値(px)を指定すると、地図の表示高を設定できます。<br>
-複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
-</div>
-<div class="spc_box">
-なお表示をカスタマイズしたい場合、実行ディレクトリに <b>WEBMAP.HTM</b> という名前のHTMLファイルを置くと、それがテンプレートとして用いられます。<br>
-詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#WebMap">→ ファイラー: WebMap</a>)。<br>
-</div>
-<a href="#WebSearch">→ WebSearch</a>　<a href="#OpenURL">→ OpenURL</a>
-
-<dt id="WebSearch">WebSearch<span class="pram_text">[_{CB|検索語}]</span>
-<dd>選択中の文字列(無ければ入力ボックスで指定)を Web で検索します。複数行が選択されている場合は、最初の行が対象となります。<br>
-パラメータに <b>CB</b> を指定すると、クリップボードのテキスト内容を検索します。<br>
-それ以外のパラメータは、検索語とみなして検索します。<br>
-使用する検索エンジンのURLは、<a href="hid00019.htm">オプション設定 - コマンド</a> で指定しておいてください。<br>
-なお、右クリックメニューからも実行できます。<br>
-<a href="#WebMap">→ WebMap</a>　<a href="#OpenURL">→ OpenURL</a>
-
-<dt id="WinPos">WinPos<span class="pram_text">[_{L|T|R|B}[+|-]数値][;...]</span>
-<dd>ウィンドウの四辺の位置を設定します。<br>
-パラメータで L(左)、T(上)、R(右)、B(下)を任意に組み合わせて設定できます。数値の前に <b>+</b> または <b>-</b> を付けると、現在位置からの相対指定になります。<br>
-パラメータを何も指定しないと、起動時の画面状態に戻ります。<br>
-
-<dt id="WordLeft">WordLeft
-<dd>カーソルを前の単語に移動します。<br>
-固定長表示でレコードの1行目部分の場合は、左隣の列項目に移動します。<br>
-バイナリ・ダンプ表示では 2バイト(WORD)分左に移動します。<br>
-<a href="#CursorLeft">→ CursorLeft</a>
-
-<dt id="WordRight">WordRight
-<dd>カーソルを次の単語に移動します。<br>
-固定長表示でレコードの1行目部分の場合は、右隣の列項目に移動します。<br>
-バイナリ・ダンプ表示では 2バイト(WORD)分右に移動します。<br>
-<a href="#CursorRight">→ CursorRight</a>
-
-<dt id="ZoomIn">ZoomIn<span class="pram_text">[_1～12]</span>
-<dd>フォントサイズをポイント単位で大きくします(最大72ポイント)。<br>
-なお、折り返し位置の更新は行いませんので、条件によっては右端が切れます。<br>
-パラメータで、ポイントの増分を指定することもできます(無指定の場合は 1)。<br>
-この機能は一時的なもので、次回開いた時には解除されます。<br>
-<a href="#SetFontSize">→ SetFontSize</a>
-
-<dt id="ZoomOut">ZoomOut<span class="pram_text">[_1～12]</span>
-<dd>フォントサイズをポイント単位で小さくします(最小2ポイント)。<br>
-なお、折り返し位置の更新は行いません。<br>
-パラメータで、ポイントの減分を指定することもできます(無指定の場合は 1)。<br>
-この機能は一時的なもので、次回開いた時には解除されます。<br>
-<a href="#SetFontSize">→ SetFontSize</a>
-
-<dt id="ZoomReset">ZoomReset
-<dd>フォントサイズをデフォルトに戻し、ズーム状態を解除します。<br>
-<a href="#SetFontSize">→ SetFontSize</a>
-
-</dl>
-<br><br><br><br>
+  <h1>テキストビュアー</h1>
+
+  <p>
+    ファイルリストで<span class="btn_frame">ENTER</span>キーを押すか、<a href="hid00005.htm#TextViewer">TextViewer</a>
+    コマンドを実行すると、テキストビュアー画面に変わり、カーソル位置のファイル内容を表示します。<br>
+    ビュアーに読み込まれるサイズは、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」によって制限されます。
+  </p>
+  <div class="spc_box_p">
+    プログラムソース(.as .au3 .bat .c .cpp .fs .go .hs .hsp .java .js .jsx .kt .lua .pas .php .pl .ps1 .py .rb .rs .scala .sh
+    .st .swift .ts .v .vbs .vhd などに対応)の場合、コメント、文字列、予約語、シンボルを別色で強調表示できます(<span
+      class="note_text">厳密ではないため対応できない場合もあり</span>)。<a href="hid00084.htm">構文強調表示定義ファイル</a>を作成することによってユーザ定義も可能です。<br>
+    強調表示の切り替えは <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>強調表示</b>」で、文字色は <a href="hid00023.htm">オプション設定 -
+      フォント・配色</a> で指定してください。<br>
+  </div>
+
+  <div class="spc_box_p">
+    CSV/TSVファイルの場合、<a href="#FixedLen">FixedLen</a> コマンドによって、項目位置をそろえた固定長表示が可能です。<br>
+  </div>
+  <div class="spc_box_p">
+    HTML文書の場合、<a href="#HtmlToText">HtmlToText</a> コマンドによってHTML→テキスト変換表示が可能です。<br>
+  </div>
+
+  <div class="spc_box_p">
+    <a href="hid00011.htm">オプション設定 - テキストビュアー</a> で「<b>青空文庫形式に対応する</b>」をチェックしている場合、&quot;［＃～］&quot;
+    という書式を含むテキストファイル(.txt)を青空文庫形式とみなし、&quot;［＃～］&quot; 部分はコメント色で、&quot;《～》&quot;
+    部分はルビ色で表示します。また「字下げ」や「地からの字上げ」にほぼ対応しています。<br>
+  </div>
+
+  <div class="spc_box_p">
+    リッチテキスト(<b>.RTF</b>)は、書式無しのプレーンテキストとして表示します。読込サイズは制限されません。<br>
+  </div>
+
+  <div class="spc_box_p">
+    <b>xd2txlib.dll</b> (hishida 氏作 xdoc2txt のDLL版)がインストールされていて、<a href="hid00011.htm">オプション設定 - テキストビュアー</a>
+    で「<b>xd2txlib.dll でテキスト表示</b>」をチェックしている場合、PDF、WORD、EXCEL、一太郎などの各種バイナリ文書からテキストを抽出して表示できます。読込サイズは制限されません。<br>
+  </div>
+
+  <div class="spc_box_p">
+    ファイルをテキスト表示できない場合は、<b>バイナリ・ダンプ表示</b>します。<br>
+    表示範囲は <a href="hid00011.htm">オプション設定 - テキストビュアー</a>
+    の「<b>バイナリ最大読込サイズ</b>」によって制限されますが、最上/最下行からカーソルをさらに移動すると自動的に先頭アドレスが切り替わるので、大きなファイル(4GB超も可)も任意の部分を閲覧できます。<br>
+  </div>
+
+  <hr id="XW">
+  <p>
+    <a href="hid00005.htm#TextViewer">TextViewer</a>_XW コマンドを実行すると、テキストビュアーを別ウィンドウで開きます。<br>
+    これはモーダルウィンドウではないので、表示したままメイン画面での操作が可能です。また複数のウィンドウを開くこともできます。<br>
+    ビュアーからは<span class="btn_frame">TAB</span>キーでファイラーにフォーカスが戻ります。ファイラーからは <a
+      href="hid00005.htm#ToExViewer">ToExViewer</a>
+    コマンドで、開いているビュアーに移れます(複数ある場合はポップアップメニューで選択)。また、内部と別ウィンドウの両方でテキストビュアーを開いている場合、<span
+      class="btn_frame">TAB</span>キーで両者の間を行き来できます。<br>
+    <br>
+    別ウィンドウのテキストビュアーでは以下のような制限や違いがあります。
+  </p>
+
+  <ul>
+    <li>ウィンドウは、常にメイン画面の前面になります。</li>
+    <li>メニューバーやツールバーはありません(右クリックメニューは利用可能)。</li>
+    <li>折り返しはウィンドウの幅に固定され、左側余白は 0 になります。</li>
+    <li><a href="#BitmapView">BitmapView</a>、<a href="#CharInfo">CharInfo</a>、<a href="#CsvRecord">CsvRecord</a>、<a
+        href="#Delete">Delete</a>、<a href="#FunctionList">FunctionList</a>、<a href="#Inspector">Inspector</a>、<a
+        href="#ImgPreview">ImgPreview</a>、<a href="#ListFileInfo">ListFileInfo</a>、<a href="#MarkList">MarkList</a>、<a
+        href="#SelectFile">SelectFile</a>、<a href="#SetMargin">SetMargin</a>、<a href="#SetTopAddr">SetTopAddr</a>、<a
+        href="#SetWidth">SetWidth</a>、<a href="#ShowFileInfo">ShowFileInfo</a>、<a href="#UserDefList">UserDefList</a>
+      コマンドや、<a href="#ExeCommands">ExeCommands</a>、<a href="#Grep">Grep</a>、<a
+        href="#InputCommands">InputCommands</a>、<a href="#KeyList">KeyList</a> コマンドなどは使えません。実行しようとすると警告が出ます。</li>
+    <li>対応している<a href="hid00021.htm">イベント</a>は、「<b>テキストビュアーを開く直前</b>」のみです。</li>
+    <li><a href="#NextFile">NextFile</a>/<a href="#PrevFile">PrevFile</a> コマンドは、複数開いている場合のウィンドウ切り替えとして機能します。</li>
+    <li>表示ファイルが切り替わっても、ファイルリストのカーソル位置は同期しません。</li>
+  </ul>
+  <br>
+
+  <h3 id="Command">コマンド</h3>
+  <p>
+    テキストビュアーでは以下のコマンドを使用できます。<br>
+    これらは、<a href="hid00016.htm">オプション設定 - キー設定</a>でキーに割り当てることができます(2ストロークキー操作可能)。<br>
+    <a href="hid00055.htm">キー割り当て一覧</a>は、<b>一覧メニュー</b> - [<b>キー割り当て一覧</b>] や、<b>KeyList</b> コマンドで表示できます。<br>
+    パラメータに文字列を指定できるコマンドの場合、先頭に :文字列: という形で説明を付けると、キー割り当て一覧や2ストローク・ヒントの説明部分に表示されます。
+  </p>
+  <p>コマンド構文において、<b>[ ]</b> 内は任意、<b>{ }</b> 内は相互に排他的な選択肢です。</p>
+
+  <p class="link_box">
+    <a href="#AlphaBlend">A</a> <a href="#BackViewHist">B</a> <a href="#Calculator">C</a> <a href="#DebugCmdFile">D</a>
+    <a href="#EditHighlight">E</a> <a href="#FileEdit">F</a> <a href="#Grep">G</a> <a href="#HelpContents">H</a> <a
+      href="#ImgPreview">I</a> <a href="#JumpLine">J</a> <a href="#KeyList">K</a> <a href="#LineEnd">L</a> <a
+      href="#Mark">M</a> <a href="#NextErr">N</a> <a href="#OpenURL">O</a> <a href="#PageDown">P</a> <a
+      href="#RegExChecker">R</a> <a href="#SaveDump">S</a> <a href="#TagJump">T</a> <a href="#UserDefList">U</a> <a
+      href="#ViewHistory">V</a> <a href="#WebMap">W</a> <a href="#ZoomIn">Z</a>　　　　<a href="hid00100.htm#TV">→
+      コマンド索引</a> ／ <a href="hid00101.htm#TV">→ 機能別索引</a>
+  </p>
+
+  <dl class="indent1">
+    <dt id="AlphaBlend">AlphaBlend<span class="pram_text">[_IN|[[^|+|-]不透明度]</span></dt>
+    <dd>メインウィンドウを透過表示にします。<br>
+      パラメータに <b>IN</b> を指定すると、入力ボックスで不透明度(64:半透明～255:不透明)を指定できます。<br>
+      パラメータで<b>不透明度</b>を指定する場合、先頭に <b>^</b> を付けると、すでに透過表示なら解除、そうでなければ指定値が適用されます。<br>
+      先頭に <b>+</b> や <b>-</b> を付けると、現在の不透明度に対して指定値分だけ増減させます。値のみの場合は絶対指定になります。<br>
+      パラメータが指定されていないと透過表示が解除されます。<br>
+    </dd>
+
+    <dt id="AppList">AppList<span class="pram_text">[_{FA|FL|FI|AO|LO|LI}]</span></dt>
+    <dd><a href="hid00076.htm">アプリケーション一覧</a>が開き、実行中のアプリケーションが表示されます。簡易ランチャーも備えています。<br>
+
+      <div class="spc_box">
+        パラメータに <b>FA</b> を指定すると、開いたとき一覧側にフォーカスします。<br>
+        また <b>FL</b> を指定するとランチャー側にフォーカス、 <b>FI</b> を指定するとランチャー側をインクリメンタルサーチモードにしてフォーカスします。<br>
+        <b>AO</b> を指定すると、一覧のみを表示します。<br>
+        <b>LO</b> を指定すると、ランチャーのみを表示します。<br>
+        <b>LI</b> を指定すると、ランチャーのみを表示し、インクリメンタルサーチモードにします。<br>
+      </div>
+      <a href="hid00019.htm#AppList">→ オプション設定 - コマンド</a><br>
+    </dd>
+
+    <dt id="BackViewHist">BackViewHist</dt>
+    <dd>テキストビュアーで開いたファイルの履歴を戻ります。</dd>
+
+    <dt id="BinaryEdit">BinaryEdit</dt>
+    <dd>現在のファイルをバイナリエディタで開きます。使用するバイナリエディタは、<a href="hid00012.htm">オプション設定 - エディタ</a>で設定しておいてください。<br>
+      なおアーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。編集後に保存してもアーカイブには反映されず、仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください。<br>
+      <a href="#FileEdit">→ FileEdit</a>
+    </dd>
+
+    <dt id="BitmapView">BitmapView<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、バイナリ・ダンプ表示で、<b>ビットマップビュー</b>の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      マップをクリックすると、そのアドレスに移動します。右クリックメニューで、幅を128または256に切り替えられます。<br>
+      マップ左側にあるのは、ファイル全体に対する読み込み済み部分のマップ表示です。クリックすると、その位置に先頭アドレスが変更されます。またボタンや右クリックメニューでも変更できます。<br>
+      <a href="#Inspector">→ Inspector</a>　<a href="#SetTopAddr">→ SetTopAddr</a>
+    </dd>
+
+    <dt id="BoxSelMode">BoxSelMode</dt>
+    <dd>箱形選択モードを開始します。箱形選択モードでは、すべての移動コマンドが箱形選択しながらの動作になります。<br>
+      <a href="#ClipCopy">ClipCopy</a> コマンドを実行するか、<b>BoxSelMode</b> コマンドをもう一度実行すると、箱形選択モードが解除されます。
+    </dd>
+
+    <dt id="Calculator">Calculator<span class="pram_text">[_計算式]</span><br>
+      Calculator<span class="pram_text">_CB[;計算式]</span></dt>
+    <dd><a href="hid00087.htm">電卓</a>が開きます。<br>
+      パラメータで<b>計算式</b>を指定すると、入力欄にそれを設定して開きます。<br>
+      無指定の場合、選択中の文字列があれば、それが入力欄に設定されます。複数行が選択されていたら、それらの内容を &quot;<b>+</b>&quot;
+      記号で連結したものが設定されます(空白行などは無視)。例えば、固定長表示で数値項目を箱形選択すれば、それらの合計を計算できます。<br>
+      パラメータに <b>CB</b> を用いた書式については、ファイラーの同コマンドを参照してください(<a href="hid00005.htm#Calculator">→ ファイラー: Calculator</a>)。
+    </dd>
+
+    <dt id="ChangeCodePage">ChangeCodePage<span class="pram_text">[_コードページ]</span></dt>
+    <dd>テキスト表示で、文字コードを変更します。<br>
+      パラメータを指定しないと、現在の文字コードから Shift_JIS → JIS → EUC-JP → Latin-1 → UTF-8 → UTF-16 の順で切り替えます。<br>
+      パラメータで特定のコードページを指定することもできます。<br>
+      <b>例</b>: ChangeCodePage_932<br>
+      <div class="spc_box">
+        文字コードを変更すると、そのコードページがファイルの代替データストリームに <a href="hid00102.htm#NyanfiDef">nyanfi.def</a>
+        という名前で保存され、次回表示時にもそれが用いられます。<br>
+      </div>
+    </dd>
+
+    <dt id="ChangeViewMode">ChangeViewMode</dt>
+    <dd>テキスト/バイナリ・ダンプ表示を切り替えます。<br>
+      バイナリからテキスト表示に切り替えた場合、テキストとみなされないファイルでも強制的にテキスト表示します。この場合、ヌル文字は空白に置換されます。
+    </dd>
+
+    <dt id="CharInfo">CharInfo<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、バイナリ・ダンプ表示で、<b>文字情報</b>の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      カーソル位置の文字を拡大表示し、その文字コードを確認できます。<br>
+      なお、ユニバーサル文字名(\uXXXX、\UXXXXXXXX)、数値文字参照(&amp;#nnnn;、&amp;#xXXXX;)、文字実体参照(例: &amp;copy;)を選択していると、その文字が表示されます。<br>
+      <div class="spc_box">
+        右クリックメニューで「<b>情報をコピー</b>」、「<b>ユニバーサル文字名をコピー</b>」、「<b>数値文字参照(10進数</b>/<b>16進数)をコピー</b>」、「<b>フォントの選択</b>」、「<b>拡大表示の背景色</b>/<b>文字色</b>」の設定、「<b>フォント名を表示</b>」の切り替えが可能です。<br>
+        拡大表示の文字サイズは、情報との分割境界線を上下にドラッグすることで変わります。<br>
+      </div>
+    </dd>
+
+    <dt id="ClipCopy">ClipCopy<span class="pram_text">[_AD]</span></dt>
+    <dd>選択中の文字列をクリップボードにコピーします。<br>
+      バイナリ・ダンプ表示の場合、アドレスも含んだダンプ形式でコピーします(箱形選択モード時は除く)。<br>
+      パラメータに <b>AD</b> を指定すると、現在のクリップボードの内容に、選択中文字列を追加します。<br>
+      <a href="#SaveDump">→ SaveDump</a>
+    </dd>
+
+    <dt id="Close">Close<span class="pram_text">[_AL]</span></dt>
+    <dd>テキストビュアーを閉じます。<br>
+      <span class="btn_frame">ENTER</span>キーを押すか、画面のテキスト外部分をダブルクリックしても閉じることができます。<br>
+      また<span
+        class="btn_frame">ESC</span>キーを押すと、<b>文字情報</b>、<b>CSV/TSVレコード</b>、<b>ビットマップビュー</b>、<b>インスペクタ</b>、<b>イメージプレビュー</b>
+      が表示されていたらそれを閉じ、なにも表示されていなかったらビュアーを閉じます。<br>
+      パラメータに <b>AL</b> を指定すると、別ウィンドウで開いているすべてのテキストビュアーを閉じます。
+    </dd>
+
+    <dt id="ClearMark">ClearMark</dt>
+    <dd>すべてのマークを解除します。<br>
+      <a href="#Mark">→ Mark</a>　<a href="#FindMarkDown">→ FindMarkDown</a>　<a href="#FindMarkUp">→ FindMarkUp</a>
+    </dd>
+
+    <dt id="CmdFileList">CmdFileList<span class="pram_text">[_FF]</span></dt>
+    <dd><a href="hid00067.htm">コマンドファイル一覧</a>を表示します。一覧からは、コマンドファイルの実行、編集、閲覧ができます。<br>
+      パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+      <a href="#ExeCommands">→ ExeCommands</a>　<a href="#FileEdit">→ FileEdit</a>
+    </dd>
+
+    <dt id="CmdHistory">CmdHistory<span class="pram_text">[_FF]</span></dt>
+    <dd><b>NyanFi</b> 起動後に実行されたコマンドの履歴を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+      パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+      詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#CmdHistory">→ ファイラー: CmdHistory</a>)。
+    </dd>
+
+    <dt id="CopyFileInfo">CopyFileInfo</dt>
+    <dd>ファイル情報をクリップボードにコピーします。</dd>
+
+    <dt id="CsvCalc">CsvCalc</dt>
+    <dd>CSV/TSVファイルを固定長表示していて、カーソル位置の項目に有効な数値がある場合、その合計、平均、最小、最大値、中央値、分散、標準偏差、度数分布を計算して表示します。<br>
+      度数分布では、最大値と最小値の間をスタージェスの公式で求めた階級数で等分しています。表示される数値は、左から階級下限値、度数、累積相対度数です。<br>
+      右クリックメニューや<b>CSV/TSVレコード</b>で「<b>先頭行が項目名</b>」をチェックしていると、先頭行は集計対象から除外されますので注意してください。<br>
+      なおCSV/TSVファイルでなくても、数値で始まる行からなるテキストファイルは集計が可能です。<br>
+      <div class="note_text">
+        <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合、読み込まれていない行は集計対象になりません。<br>
+      </div>
+      <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvGraph">→ CsvGraph</a>　<a href="#CsvRecord">→ CsvRecord</a>
+    </dd>
+
+    <dt id="CsvGraph">CsvGraph</dt>
+    <dd>CSV/TSVファイルを固定長表示していて、カーソル位置の項目に有効な数値がある場合、最小値/最大値間の相対的な変化を折れ線グラフで表示します。<br>
+      グラフ上をクリックすると、テキストビュアーのカーソルがその項目位置に移動します。<br>
+      右クリックメニューでは、画像としてのコピーや基準ラインの表示/非表示が可能です。<br>
+      なおCSV/TSVファイルでなくても、数値で始まる行からなるテキストファイルはグラフ表示が可能です。<br>
+      <div class="spc_box">
+        グラフの背景/ライン/グリッド/文字色は <a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。<br>
+      </div>
+      <div class="note_text">
+        <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合、読み込まれていない行はグラフ化されません。<br>
+      </div>
+      <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvCalc">→ CsvCalc</a>　<a href="#CsvRecord">→ CsvRecord</a>
+    </dd>
+
+    <dt id="CsvRecord">CsvRecord<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、<b>CSV/TSVレコード</b>の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      ファイルの先頭行に TAB が含まれていたら <b>TSV</b>、そうでない場合は <b>CSV</b> とみなし、カーソル行を一つのレコードとして内容を一覧表示します。<br>
+      <div class="spc_box">
+        「<b>先頭行が項目名</b>」をチェックしていると、ファイルの一行目を項目名とみなしてそれを表示します(テキストビュアーの右クリックメニューと連動)。この設定は、CSV/TSVファイルの代替データストリームに <a
+          href="hid00102.htm#NyanfiDef">nyanfi.def</a> という名前で保存されます。<br>
+      </div>
+      <div class="spc_box">
+        <span class="btn_frame">集計</span>ボタンを押すと、選択している項目に有効な数値がある場合、その合計、平均、最小、最大値、中央値、分散、標準偏差を計算して表示します。<br>
+        また<span class="btn_frame">グラフ</span>ボタンを押すと、選択している項目に有効な数値がある場合、それをグラフ表示します。<br>
+      </div>
+      <div class="spc_box">
+        右クリックメニューでは、内容の「<b>コピー</b>」(範囲指定可)や「<b>URLを開く</b>」が可能です。<br>
+      </div>
+      <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvCalc">→ CsvCalc</a>　<a href="#CsvGraph">→ CsvGraph</a>　<a
+        href="#ExportCsv">→ ExportCsv</a>
+    </dd>
+
+    <dt id="CursorDown">CursorDown<span class="pram_text">[_{行数|HP|FP}]</span></dt>
+    <dd>カーソルをパラメータで指定した行数(無指定の場合は1行)下に移動します。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分下に移動します。<br>
+      <a href="#CursorUp">→ CursorUp</a>　<a href="#ScrollDown">→ ScrollDown</a>　<a href="#ScrollCursorDown">→
+        ScrollCursorDown</a>
+    </dd>
+
+    <dt id="CursorDownSel">CursorDownSel</dt>
+    <dd>選択しながらカーソルを下に移動します。<br>
+      <a href="#CursorUpSel">→ CursorUpSel</a>
+    </dd>
+
+    <dt id="CursorLeft">CursorLeft</dt>
+    <dd>カーソルを左に移動します。バイナリ・ダンプ表示の場合はバイト単位の移動になります。<br>
+      <a href="#CursorRight">→ CursorRight</a>　<a href="#WordLeft">→ WordLeft</a>
+    </dd>
+
+    <dt id="CursorLeftSel">CursorLeftSel</dt>
+    <dd>選択しながらカーソルを左に移動します。<br>
+      <a href="#CursorRightSel">→ CursorRightSel</a>
+    </dd>
+
+    <dt id="CursorRight">CursorRight</dt>
+    <dd>カーソルを右に移動します。バイナリ・ダンプ表示の場合はバイト単位の移動になります。<br>
+      <a href="#CursorLeft">→ CursorLeft</a>　<a href="#WordRight">→ WordRight</a>
+    </dd>
+
+    <dt id="CursorRightSel">CursorRightSel</dt>
+    <dd>選択しながらカーソルを右に移動します。<br>
+      <a href="#CursorLeftSel">→ CursorLeftSel</a>
+    </dd>
+
+    <dt id="CursorUp">CursorUp<span class="pram_text">[_{行数|HP|FP}]</span></dt>
+    <dd>カーソルをパラメータで指定した行数(無指定の場合は1行)上に移動します。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上に移動します。<br>
+      <a href="#CursorDown">→ CursorDown</a>　<a href="#ScrollUp">→ ScrollUp</a>　<a href="#ScrollCursorUp">→
+        ScrollCursorUp</a>
+    </dd>
+
+    <dt id="CursorUpSel">CursorUpSel</dt>
+    <dd>選択しながらカーソルを上に移動します。<br>
+      <a href="#CursorDownSel">→ CursorDownSel</a>
+    </dd>
+
+    <dt id="DebugCmdFile">DebugCmdFile<span class="pram_text">_@ファイル名</span></dt>
+    <dd>
+      パラメータで指定したコマンドファイル(.nbt)に対するデバッグウィンドウを開き、デバッグモードで実行します。<br>
+      詳しくは <a href="hid00063.htm#Debug">Debug</a> 補助コマンドを参照してください。<br>
+    </dd>
+
+    <dt id="Delete">Delete<span class="pram_text">[_SO]</span></dt>
+    <dd>選択中(無ければ表示中)のファイルを削除します。表示中のファイルが削除された場合、次のファイルを表示します。<br>
+      このコマンドは、通常のファイルリストおよび検索結果リストにおいてのみ有効です。選択中のディレクトリは削除されません。また、バイナリ・ダンプ表示中のファイルは削除できません。なおテキストビュアーでの削除は、バックグラウンド・タスクでは行いません。<br>
+      パラメータに <b>SO</b> を指定すると、選択されているファイルのみを削除します。<br>
+      <a href="#SelectFile">→ SelectFile</a>
+    </dd>
+
+    <dt id="Duplicate">Duplicate<span class="pram_text">[_RA]</span></dt>
+    <dd><a href="hid00017.htm#Duplicate">オプション設定 - 起動時</a> で二重起動が許可されている場合、新たに <b>NyanFi</b> を起動します。<br>
+      パラメータに <b>RA</b> を指定すると、管理者として起動します。
+    </dd>
+
+    <dt id="EditHighlight">EditHighlight</dt>
+    <dd><a href="hid00084.htm">構文強調表示定義ファイル</a>(<b>Highlight.INI</b>)をテキストエディタで開きます。<br>
+      定義ファイルが存在しない場合には実行できません。
+    </dd>
+
+    <dt id="EditHistory">EditHistory</dt>
+    <dd><a href="hid00058.htm">最近編集したファイル一覧</a>を表示します。<br>
+      画面は <a href="#ViewHistory">ViewHistory</a> と共用なので、表示位置やサイズは同じになります。
+    </dd>
+
+    <dt id="ExeCommands">ExeCommands<span class="pram_text">_{コマンド[:コマンド...] | @ファイル名}</span></dt>
+    <dd>パラメータで指定したコマンドを実行します。コマンドは <b>:</b> (コロン)で区切って複数指定できます。<br>
+      またパラメータでのみ使える補助コマンドや制御文もあります。<br>
+      パラメータの先頭が <b>@</b> の場合、コマンドファイル名の指定になります。<br>
+      詳細は「<a href="hid00063.htm">ExeCommands コマンド</a>」のページを参照してください。
+    </dd>
+
+    <dt id="ExeMenuFile">ExeMenuFile<span class="pram_text">_ファイル名</span></dt>
+    <dd>指定した<b>メニュー定義ファイル</b>を読み込んで、マウス位置にポップアップメニューを表示し、選択された項目を実行します。<br>
+      詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#ExeMenuFile">→ ファイラー: ExeMenuFile</a>)。
+    </dd>
+
+    <dt id="ExeToolBtn">ExeToolBtn<span class="pram_text">_ボタン番号</span></dt>
+    <dd>パラメータで指定した番号(1～)のツールボタンを実行します。<br>
+      <a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ShowToolBar">→ ShowToolBar</a>
+    </dd>
+
+    <dt id="ExportCsv">ExportCsv</dt>
+    <dd><b>CSV/TSVエクスポート</b>ダイアログを開きます。<br>
+      閲覧してるCSV/TSVファイルから、指定した項目を別ファイルにエクスポートできます。<br>
+      左側リストから項目を選んで右側リストに追加し、出力ファイル名や形式を指定してください。<br>
+      ファイル名にドライブ名がない場合は、閲覧中ファイルからの相対指定とみなされます。<br>
+      なお <a href="#Sort">Sort</a> コマンドでソートしていると、その内容でエクスポートされます。<br>
+      <div class="note_text">
+        処理は元ファイル全体を一時バッファに読み込んで行うため、<a href="hid00011.htm">オプション設定 - テキストビュアー</a>
+        の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合でも、すべての行内容がエクスポートされます(ソート状態も考慮)。<br>
+      </div>
+      <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvRecord">→ CsvRecord</a>　<a href="#Sort">→ Sort</a>
+    </dd>
+
+    <dt id="FileEdit">FileEdit<span class="pram_text">[_ファイル名]</span></dt>
+    <dd>現在のファイルをテキストエディタで開き、カーソル行へ飛びます。<br>
+      <b>xd2txlib.dll</b> で各種バイナリ文書をテキスト表示している場合は、対応するエディタで開きます。<br>
+      エディタの設定は、<a href="hid00012.htm">オプション設定 - エディタ</a>で行ってください。<br>
+      アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。編集後に保存してもアーカイブには反映されません。またアーカイブの仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください。<br>
+      クリップボードの内容を閲覧している場合は、一時ディレクトリに <b>CLIPBOARD.TXT</b> という名前で保存して開きます。一時ファイルは <b>NyanFi</b> 終了時に削除されます。<br>
+      パラメータで<strong>ファイル名</strong>を指定して開くこともできます。<br>
+      <div class="note_text">
+        ファイラーから <a href="hid00005.htm#ViewTail">ViewTail</a> コマンドで閲覧している場合、行番号は相対的な表示になるので、実際のファイルでの位置には移れません。<br>
+      </div>
+      <a href="#BinaryEdit">→ BinaryEdit</a>
+    </dd>
+
+    <dt id="FindText">FindText</dt>
+    <dd><a href="hid00065.htm">文字列検索ダイアログ</a>を表示し、検索を行います。<br>
+      バイナリ・ダンプ表示の場合は、文字列検索の他にバイト列検索も可能です。<br>
+      なおダイアログを閉じても、<a href="#FindDown">FindDown</a> や <a href="#FindUp">FindUp</a> コマンドで直前の検索条件による再検索ができます。<br>
+      <a href="#Highlight">→ Highlight</a>　<a href="#IncSearch">→ IncSearch</a>　<a href="#IncSearch">→ IncSearch</a>　<a
+        href="#Grep">→ Grep</a>
+      <br>
+    </dd>
+
+    <dt id="FindDown">FindDown<span class="pram_text">[_文字列|/正規表現パターン/]</span></dt>
+    <dd>直前に<a href="hid00065.htm">文字列検索ダイアログ</a>で行った検索条件で、下方向に再検索します。<br>
+      パラメータで文字列を指定して検索することも可能です。その場合、文字列を / で囲むと正規表現とみなされます。<br>
+      <b>例</b>: FindDown_:URLを検索:&quot;/https?://[\w/:%#\$&amp;\?\(\)~\.=\+\-]+/&quot;<br>
+      <a href="#FindSelDown">→ FindSelDown</a>　<a href="#FindSelUp">→ FindSelUp</a>
+    </dd>
+
+    <dt id="FindUp">FindUp<span class="pram_text">[_文字列|/正規表現パターン/]</span></dt>
+    <dd>直前に<a href="hid00065.htm">文字列検索ダイアログ</a>で行った検索条件で、上方向に再検索します。<br>
+      パラメータで文字列を指定して検索することも可能です。その場合、文字列を / で囲むと正規表現とみなされます。<br>
+      <a href="#FindSelDown">→ FindSelDown</a>　<a href="#FindSelUp">→ FindSelUp</a>
+    </dd>
+
+    <dt id="FindLinkDown">FindLinkDown</dt>
+    <dd>リンク先(&quot;http://～&quot;、&quot;mailto:～&quot; または &quot;file://～&quot;)を下方向に検索します。<br>
+      HTML→テキスト変換表示で <a href="#TagView">TagView</a> コマンドで移動する場合などに便利です。<br>
+    </dd>
+
+    <dt id="FindLinkUp">FindLinkUp</dt>
+    <dd>リンク先(&quot;http://～&quot;、&quot;mailto:～&quot; または &quot;file://～&quot;)を上方向に検索します。<br>
+      HTML→テキスト変換表示で <a href="#TagView">TagView</a> コマンドで移動する場合などに便利です。<br>
+    </dd>
+
+    <dt id="FindMarkDown">FindMarkDown</dt>
+    <dd>マーク行を下方向に検索します。<br>
+      バイナリ最大読込サイズを超えた検索も可能です。<br>
+      <a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
+    </dd>
+
+    <dt id="FindMarkUp">FindMarkUp</dt>
+    <dd>マーク行を上方向に検索します。<br>
+      バイナリ最大読込サイズを超えた検索も可能です。<br>
+      <a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
+    </dd>
+
+    <dt id="FindSelDown">FindSelDown<span class="pram_text">[_SW]</span></dt>
+    <dd>選択中の文字列を下方向に検索します。<br>
+      見つかると、その文字列が新たに選択状態となり、引き続きそれを検索できます。<br>
+      検索に用いられた選択文字列は内部的に保持されます。次回検索時に選択中でなかったら、前回のものが用いられます。<br>
+      パラメータに <b>EM</b> を指定すると、すべてのマッチ語が強調表示されます(<a href="#Highlight">Highlight</a>_ON)。<br>
+      <a href="#FindDown">→ FindDown</a>　<a href="#FindUp">→ FindUp</a>　<a href="#Highlight">→ Highlight</a>
+    </dd>
+
+    <dt id="FindSelUp">FindSelUp<span class="pram_text">[_SW]</span></dt>
+    <dd>選択中の文字列を上方向に検索します。<br>
+      見つかると、その文字列が新たに選択状態となり、引き続きそれを検索できます。<br>
+      検索に用いられた選択文字列は内部的に保持されます。次回検索時に選択中でなかったら、前回のものが用いられます。<br>
+      パラメータに <b>EM</b> を指定すると、すべてのマッチ語が強調表示されます(<a href="#Highlight">Highlight</a>_ON)。<br>
+      <a href="#FindDown">→ FindDown</a>　<a href="#FindUp">→ FindUp</a>　<a href="#Highlight">→ Highlight</a>
+    </dd>
+
+    <dt id="FindTagName">FindTagName<span class="pram_text">[_EJ][;CO]</span></dt>
+    <dd><a href="hid00083.htm#Dialog">タグ名検索ダイアログ</a> を開いて <b>tags</b> からタグ名を検索した後、ダイレクトタグジャンプを行います。<br>
+      パラメータに <b>EJ</b> を指定すると ダイレクトタグジャンプをテキストエディタで(<a href="#TagJumpDirect">TagJumpDirect</a>)、そうでない場合はテキストビュアーで(<a
+        href="#TagViewDirect">TagViewDirect</a>)行います。<br>
+      パラメータに <b>CO</b> を指定すると、現在閲覧中のファイルに関するタグ名だけを検索します。この場合、ダイアログで何も入力していないと、すべてのタグが一覧表示されます。用途によっては<a
+        href="hid00066.htm">関数一覧</a>より便利かもしれません。<br>
+      複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+      <a href="#TagJumpDirect">→ TagJumpDirect</a>　<a href="#TagViewDirect">→ TagViewDirect</a>　<a
+        href="#FunctionList">→ FunctionList</a>
+    </dd>
+
+    <dt id="FixedLen">FixedLen<span class="pram_text">[_{ON|OFF|制限幅}]</span></dt>
+    <dd>パラメータを指定しない場合、CSV/TSVファイルで、固定長表示/通常表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定するとCSV/TSVファイルで固定長表示、<b>OFF</b> では通常表示になります。<br>
+      対象となるのは、拡張子が <b>.csv</b> または <b>.tsv</b> のテキストファイルです。どちらの拡張子でも、ファイルの先頭行に TAB が含まれていたら <b>TSV</b>、そうでない場合は
+      <b>CSV</b> とみなします。<br>
+      <div class="spc_box">
+        固定長表示では、項目ごとに最大幅で桁位置を合わせて整形表示します。項目数は1行目の内容に基づいています。<br>
+        1レコードが1行に収まらないと見にくくなりますが、<a href="hid00011.htm#FixedLimit">オプション設定 - テキストビュアー</a>
+        の「<b>固定長表示の制限幅</b>」を設定して省略表示すると収まるかもしれません。この値はパラメータでも指定できます。<br>
+        また右クリックメニューの「<b>列幅の最小化</b>」で項目を選んでチェックすると、その列幅が最小化され内容が非表示になります。設定内容は、CSV/TSVファイルの代替データストリームに <a
+          href="hid00102.htm#NyanfiDef">nyanfi.def</a> という名前で保存されます。<br>
+        <a href="hid00023.htm">オプション設定 - フォント・配色</a> -
+        配色の「<b>固定長表示の縦罫線</b>」を設定すると、固定長表示時に縦罫線が表示されます。ただし、各レコードの2行目以降には表示されません。<br>
+      </div>
+      固定長表示の場合、カーソル位置項目のソート(<a href="#Sort">Sort</a>)、集計(<a href="#CsvCalc">CsvCalc</a>)、グラフ表示(<a
+        href="#CsvGraph">CsvGraph</a>)が可能です。<br>
+      レコード毎の項目内容は、<b>CSV/TSVレコード</b> (<a href="#CsvRecord">CsvRecord</a>)でも確認できます。<br>
+      <a href="#CsvRecord">→ CsvRecord</a>　<a href="#CsvCalc">→ CsvCalc</a>　<a href="#CsvGraph">→ CsvGraph</a>　<a
+        href="#Sort">→ Sort</a>　<a href="#ExportCsv">→ ExportCsv</a>
+    </dd>
+
+    <dt id="FunctionList">FunctionList<span class="pram_text">[_FF]</span></dt>
+    <dd><a href="hid00066.htm">関数一覧</a>を表示します。<br>
+      ファイルの種類によっては、「見出し一覧」、「セクション一覧」、「ラベル一覧」、「オブジェクト一覧」、「タスク一覧」になります。<br>
+      パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+      <a href="#UserDefList">→ UserDefList</a>　<a href="#MarkList">→ MarkList</a>
+    </dd>
+
+    <dt id="Grep">Grep<span class="pram_text">[_検索文字列]</span></dt>
+    <dd><a href="hid00056.htm">文字列検索(GREP)</a>を開きます。<br>
+      カレントパス以下のテキストファイルに対して、文字列検索を行います。<br>
+      パラメータに検索文字列を指定すると、それを設定します。またパラメータ無指定で、選択中の文字列がある場合はそれを設定します。<br>
+      <a href="#FindText">→ FindText</a>　<a href="#FindSelDown">→ FindSelDown</a>　<a href="#FindSelUp">→ FindSelUp</a>
+    </dd>
+
+    <dt id="HelpContents">HelpContents<span class="pram_text">[_{CI|FI}]</span></dt>
+    <dd>ヘルプの目次を表示します。<br>
+      パラメータに <b>CI</b> を指定すると「コマンドの索引(アルファベット順)」のページを、<b>FI</b> を指定すると「コマンドの索引(機能別)」のページを表示します。
+    </dd>
+
+    <dt id="HelpCurWord">HelpCurWord<span class="pram_text">_ヘルプファイル名</span></dt>
+    <dd>指定したHTMLヘルプファイル(.chm)を用いて、カーソル位置の単語を検索します。<br>
+      見つからなかった場合は、ヘルプ画面がキーワードタブになります。<br>
+      <b>例</b>: HelpCurWord_&quot;C:\Program Files (x86)\Embarcadero\Studio\19.0\Help\Doc\ja\vcl.chm&quot;
+    </dd>
+
+    <dt id="Highlight">Highlight<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、<a href="hid00065.htm">文字列検索ダイアログ</a>での検索条件にマッチしている語の強調表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      文字列検索ダイアログの「<b>強調表示を維持</b>」をチェックしていると、ダイアログを閉じた後もマッチ語の強調表示を行います。<br>
+      <a href="#FindText">→ FindText</a>　<a href="#FindSelDown">→ FindSelDown</a>　<a href="#FindSelUp">→ FindSelUp</a>
+    </dd>
+
+    <dt id="HtmlToText">HtmlToText<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、HTML文書で、HTML→テキスト変換表示/通常表示(ソース)をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定するとHTML→テキスト変換表示、<b>OFF</b> では通常表示になります。<br>
+      &lt;H1&gt;～&lt;H6&gt; は、見出しマーク文字が付加されます。箇条書きなどにも対応。リンク先のURLは括弧内に表示されます。また存在するローカルファイルへのリンクも表示され、<a
+        href="#TagJump">TagJump</a> や <a href="#TagView">TagView</a> コマンドで開けます(name や id による指定は無効)。<br>
+      なお、<a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビュアーを開いたり、通常テキストから <a href="#TagView">TagView</a>
+      コマンドで開いたりした場合は通常表示に戻ります。<br>
+      <a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー -「HTML→テキスト変換」</a>
+    </dd>
+
+    <dt id="ImgPreview">ImgPreview</dt>
+    <dd>カーソル位置に表示可能な画像ファイル名がある場合、イメージプレビューを表示します(イメージビュアーのサブビュアーを利用 <a href="hid00007.htm#SubViewer">→
+        SubViewer</a>)。<br>
+      ドライブ名がない場合は閲覧中ファイルからの相対指定とみなされます。<br>
+      プレビュー中に、カーソルを別の画像ファイル名に移すと、それにあわせて表示も変わります。<br>
+      現在プレビュー中のファイル名上、または有効なファイル名がないカーソル位置でコマンドを再び実行すると、プレビューが閉じます(<span class="btn_frame">ESC</span>キーでも可能)。
+    </dd>
+
+    <dt id="IncSearch">IncSearch<span class="pram_text">[_[MM|NM]]</span></dt>
+    <dd><a href="hid00050.htm">インクリメンタルサーチ・モード</a>で文字列検索を行います。<br>
+      パラメータに <b>MM</b> を指定すると Migemo モード、<b>NM</b> を指定すると通常モード、無指定の場合は前回のモードになります。<br>
+      <a href="hid00019.htm#IncSearch">→ オプション設定 - コマンド</a><br>
+      <a href="#FindText">→ FindText</a>　<a href="#Highlight">→ Highlight</a>
+    </dd>
+
+    <dt id="InputCommands">InputCommands<span class="pram_text">[_EL]</span></dt>
+    <dd>入力したコマンド( : で区切って複数指定可)を、<a href="#ExeCommands">ExeCommands</a> のパラメータとして実行します。<br>
+      詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#InputCommands">→ ファイラー: InputCommands</a>)。
+    </dd>
+
+    <dt id="Inspector">Inspector<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、バイナリ・ダンプ表示で、<b>インスペクタ</b>の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      インスペクタには、カーソル位置から1、2、4、8バイト分の値が表示されます。<br>
+      unsigned/signed(整数)、Big/Little-Endian を切り替えられます(synchsafe int は Big のみ)。<br>
+      右クリックメニューで内容の「<b>コピー</b>」が可能です。<br>
+      また、カーソル位置から最大128バイトを各種文字コードで強制的に表した文字列(ヌル終端)を一覧表示します。<br>
+      <a href="#BitmapView">→ BitmapView</a>
+    </dd>
+
+    <dt id="JumpLine">JumpLine<span class="pram_text">[_{行番号|[+|-]アドレス}]</span></dt>
+    <dd>テキスト表示の場合、指定した行番号に移動します。<br>
+      バイナリ・ダンプ表示の場合は、指定した(16進/10進)アドレスに移動します。その際、<b>+</b> または <b>-</b>
+      を付けると、現在位置からの相対移動になります。また、指定アドレスが読み込み済み範囲外だった場合、先頭アドレスを変更して移動します。<br>
+      パラメータを指定しない場合は入力ボックスが出ます。<br>
+      <a href="#SetTopAddr">→ SetTopAddr</a>
+    </dd>
+
+    <dt id="KeyList">KeyList<span class="pram_text">[_FF]</span></dt>
+    <dd><a href="hid00055.htm">キー割り当て一覧</a>を表示します。<br>
+      パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。
+    </dd>
+
+    <dt id="LineEnd">LineEnd</dt>
+    <dd>行末に移動します。<br>
+      <a href="#LineTop">→ LineTop</a>
+    </dd>
+
+    <dt id="LineEndSel">LineEndSel</dt>
+    <dd>選択しながら行末に移動します。<br>
+      <a href="#LineTopSel">→ LineTopSel</a>
+    </dd>
+
+    <dt id="LineTop">LineTop</dt>
+    <dd>行頭に移動します。<br>
+      <a href="#LineEnd">→ LineEnd</a>
+    </dd>
+
+    <dt id="LineTopSel">LineTopSel</dt>
+    <dd>選択しながら行頭に移動します。<br>
+      <a href="#LineEndSel">→ LineEndSel</a>
+    </dd>
+
+    <dt id="ListFileInfo">ListFileInfo</dt>
+    <dd><a href="#ShowFileInfo">ShowFileInfo</a> のエイリアス(別名)です。<br>
+      表示中ファイルのファイル情報をダイアログ表示します。<br>
+      <a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#PropertyDlg">→ PropertyDlg</a>
+    </dd>
+
+    <dt id="ListLog">ListLog<span class="pram_text">[_EO]</span></dt>
+    <dd>現在のログ内容を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+      パラメータに <b>EO</b> を指定すると、ログの中からエラー箇所を絞り込んで表示します。一覧の右クリックメニューでも「エラー箇所の絞り込み」を切り替え可能。
+    </dd>
+
+    <dt id="Mark">Mark</dt>
+    <dd>カーソル行をマークします。すでにマークされている場合は解除します。マーク情報は、ファイルの閲覧履歴に保存されます。<br>
+      <div class="note_text">
+        ファイラーやイメージビュアーの <b>Mark</b> コマンドと混同しないでください。<br>
+      </div>
+      <a href="#ClearMark">→ ClearMark</a>　<a href="#FindMarkDown">→ FindMarkDown</a>　<a href="#FindMarkUp">→
+        FindMarkUp</a>
+    </dd>
+
+    <dt id="MarkList">MarkList<span class="pram_text">[_FF]</span></dt>
+    <dd>テキスト表示で、<a href="hid00066.htm">マーク行一覧</a>を表示します。<br>
+      パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+      <div class="note_text">
+        ファイラーやイメージビュアーの <b>MarkList</b> コマンド(<a href="hid00070.htm">栞マーク一覧</a>)と混同しないでください。<br>
+      </div>
+      <a href="#FunctionList">→ FunctionList</a>　<a href="#UserDefList">→ UserDefList</a>
+    </dd>
+
+    <dt id="MenuBar">MenuBar</dt>
+    <dd>メニューバーの表示／非表示を切り替えます(トグル動作)。<br>
+      <a href="#PopupMainMenu">→ PopupMainMenu</a>
+    </dd>
+
+    <dt id="NextErr">NextErr</dt>
+    <dd>ログ内容を閲覧している場合、次のエラー位置(W:警告、C:中断を含む)に移動します。
+      ログ以外のファイルでは機能しません。<br>
+      <a href="#PrevErr">→ PrevErr</a>
+    </dd>
+
+    <dt id="NextFile">NextFile</dt>
+    <dd>次のファイルを表示します。<br>
+      別ウィンドウのテキストビュアーの場合、複数開いていれば次のウィンドウにフォーカスを移します。<br>
+      <a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビュアーを開いている場合は、結果リストの次の項目を表示します。<br>
+      <a href="hid00080.htm">FTP接続</a>時のリモート側では無効です。<br>
+      <a href="#PrevFile">→ PrevFile</a>
+    </dd>
+
+    <dt id="NextNyanFi">NextNyanFi<span class="pram_text">[_DN]</span></dt>
+    <dd>複数起動されている場合、次の <b>NyanFi</b> をアクティブにします。<br>
+      パラメータに <b>DN</b> を指定すると、複数起動されていない場合、新たに <b>NyanFi</b> を二重起動します。<br>
+      <a href="#PrevNyanFi">→ PrevNyanFi</a>　<a href="#Duplicate">→ Duplicate</a>
+    </dd>
+
+    <dt id="OpenURL">OpenURL<span class="pram_text">[_URL]</span></dt>
+    <dd>選択中の文字列(なければ現在行)からURLを抽出して開きます(<b>ttp://</b>～の場合、先頭の<b>h</b>を補完)。また <b>mailto:～</b> の場合は既定のメーラで開きます。<br />
+      なお、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> で「<b>ダブルクリックでURLを開く</b>」をチェックしていると、テキスト上のダブルクリックでも実行されます。<br>
+      パラメータで URL を指定することもできます。その場合、URL に日本語などが含まれていたら UTF-8 でエンコードします。<br>
+      <b>例</b>: OpenURL_:googleで「猫を」検索:&quot;https://www.google.co.jp/search?q=猫&amp;ie=UTF-8&quot;<br>
+      <a href="#WebSearch">→ WebSearch</a>
+    </dd>
+
+    <dt id="OptionDlg">OptionDlg<span class="pram_text">[_{GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV}]</span><br>
+      OptionDlg<span class="pram_text">_KYO</span></dt>
+    <dd>「<a href="hid00008.htm">オプション設定</a>」ダイアログを開きます。このとき、ビュアーは安全のため一旦閉じます。<br>
+      パラメータを指定すると特定のタブを開くことができます。パラメータとタブの対応は次の通りです。<b>GN</b>: 一般、<b>G2</b>: 一般2、<b>MO</b>: マウス操作、<b>DS</b>:
+      デザイン、<b>FC</b>: フォント・配色、<b>TV</b>: テキストビュアー、<b>IV</b>: イメージビュアー、<b>ED</b>: エディタ、<b>KY</b>: キー設定、<b>AC</b>:
+      関連付け、<b>XM</b>: 追加メニュー、<b>XT</b>: 外部ツール、<b>ST</b>: 起動時、<b>NT</b>: 通知・確認、<b>CM</b>: コマンド、<b>EV</b>: イベント。<br>
+      <div class="spc_box">
+        パラメータに <b>KYO</b> を指定すると、「キー設定」のみのダイアログが開きます。<br>
+        この場合、ビュアーは開いたままで設定を行えます。また通常のダイアログよりも若干速く開きます。<br>
+      </div>
+      このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。
+    </dd>
+
+    <dt id="PageDown">PageDown</dt>
+    <dd>カーソルを1ページ下に移動します。<br>
+      <a href="#PageUp">→ PageUp</a>
+    </dd>
+
+    <dt id="PageDownSel">PageDownSel</dt>
+    <dd>選択しながらカーソルを1ページ下に移動します。<br>
+      <a href="#PageUpSel">→ PageUpSel</a>
+    </dd>
+
+    <dt id="PageUp">PageUp</dt>
+    <dd>カーソルを1ページ上に移動します。<br>
+      <a href="#PageDown">→ PageDown</a>
+    </dd>
+
+    <dt id="PageUpSel">PageUpSel</dt>
+    <dd>選択しながらカーソルを1ページ上に移動します。<br>
+      <a href="#PageDownSel">→ PageDownSel</a>
+    </dd>
+
+    <dt id="PopupMainMenu">PopupMainMenu</dt>
+    <dd>メインメニューの内容をポップアップメニューに変換して表示します。<br>
+      <a href="#MenuBar">→ MenuBar</a>
+    </dd>
+
+    <dt id="PrevErr">PrevErr</dt>
+    <dd>ログ内容を閲覧している場合、前のエラー位置(W:警告、C:中断を含む)に移動します。<br>
+      ログ以外のファイルでは機能しません。<br>
+      <a href="#NextErr">→ NextErr</a>
+    </dd>
+
+    <dt id="PrevFile">PrevFile</dt>
+    <dd>前のファイルを表示します。<br>
+      別ウィンドウのテキストビュアーの場合、複数開いていれば前のウィンドウにフォーカスを移します。<br>
+      <a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビュアーを開いている場合は、結果リストの前の項目を表示します。<br>
+      <a href="hid00080.htm">FTP接続</a>時のリモート側では無効です。<br>
+      <a href="#NextFile">→ NextFile</a>
+    </dd>
+
+    <dt id="PrevNyanFi">PrevNyanFi</dt>
+    <dd>複数起動されている場合、前の <b>NyanFi</b> をアクティブにします。<br>
+      <a href="#NextNyanFi">→ NextNyanFi</a>　<a href="#Duplicate">→ Duplicate</a>
+    </dd>
+
+    <dt id="PropertyDlg">PropertyDlg<span class="pram_text">[_{ファイル名|ディレクトリ名}]</span></dt>
+    <dd>表示中ファイルについてのプロパティダイアログを表示します。
+      パラメータで、対象のファイル名やディレクトリ名を指定することもできます。
+    </dd>
+
+    <dt id="RegExChecker">RegExChecker<span class="pram_text">[_パターン]</span></dt>
+    <dd><a href="hid00085.htm">正規表現チェッカー</a> を開きます。<br>
+      パラメータに<b>パターン</b>を指定すると、チェッカー画面のパターン欄に入力されます。
+    </dd>
+
+    <dt id="ReloadFile">ReloadFile</dt>
+    <dd>表示中のファイルを再読み込みします。</dd>
+
+    <dt id="SaveDump">SaveDump</dt>
+    <dd>バイナリ・ダンプ表示の場合、ダンプリストに名前を付けてファイルに保存します。<br>
+      その際、選択中ならその範囲を、そうでない場合は読み込み済み範囲の全体を保存します。
+    </dd>
+
+    <dt id="ScrollCursorDown">ScrollCursorDown<span class="pram_text">[_{行数|HP|FP}]</span></dt>
+    <dd>画面をパラメータで指定した行数(無指定の場合はホイール設定)下にスクロールし、その分カーソルも移動します。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分下にスクロール移動します。<br>
+      <a href="#ScrollDown">→ ScrollDown</a>　<a href="#CursorDown">→ CursorDown</a>
+    </dd>
+
+    <dt id="ScrollCursorUp">ScrollCursorUp<span class="pram_text">[_{行数|HP|FP}]</span></dt>
+    <dd>画面をパラメータで指定した行数(無指定の場合はホイール設定)上にスクロールし、その分カーソルも移動します。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上にスクロール移動します。<br>
+      <a href="#ScrollUp">→ ScrollUp</a>　<a href="#CursorUp">→ CursorUp</a>
+    </dd>
+
+    <dt id="ScrollDown">ScrollDown<span class="pram_text">[_{行数|HP|FP}]</span></dt>
+    <dd>画面をパラメータで指定した行数(無指定の場合はホイール設定)下にスクロールします。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分下にスクロールします。なおカーソル位置は変わりません。<br>
+      <a href="#ScrollCursorDown">→ ScrollCursorDown</a>　<a href="#CursorDown">→ CursorDown</a>
+    </dd>
+
+    <dt id="ScrollUp">ScrollUp<span class="pram_text">[_{行数|HP|FP}]</span></dt>
+    <dd>画面をパラメータで指定した行数(無指定の場合はホイール設定)上にスクロールします。また <b>HP</b> では半ページ、<b>FP</b> では1ページ分上にスクロールします。なおカーソル位置は変わりません。<br>
+      <a href="#ScrollCursorUp">→ ScrollCursorUp</a>　<a href="#CursorUp">→ CursorUp</a>
+    </dd>
+
+    <dt id="SearchPair">SearchPair<span class="pram_text">[_/開始行パターン/;/終了行パターン/]</span></dt>
+    <dd>カーソル位置の括弧と対応する括弧を検索します。<br>
+      検索できるペアは（）〔〕［］｛｝〈〉《》「」『』【】(){}[] です。<br>
+      <div class="spc_box">
+        通常表示のHTML文書では、カーソル位置に head、body、div、header、footer、nav、main、section、article、aside、table、ul、ol、form、script
+        タグがあった場合、それに対応する開始/終了タグを検索します。<br>
+      </div>
+      <div class="spc_box">
+        また、一部のプログラムソースなどでは、括弧以外に以下のような行単位の対応関係を検索できます。<br>
+        <b>.cpp</b>、<b>.h</b> などでは、#if～/#endif を検索します。<br>
+        <b>.pas</b> では、行単位で記述された begin/end などを検索します。<br>
+        <b>.dfm</b> (Delphiフォームファイル)では、object/end や item/end を検索します。<br>
+        <b>.vbs</b> では、各種制御文などに対応しています(例: sub/end sub、if/end if、for/next …)。<br>
+        <b>.pod</b> では、=pod/=cut および =over/=back を検索します(.pl、.pm 内でも可)。<br>
+        <div class="note_text">
+          正規表現で処理しているため、正しく検索できない場合もあります。<br>
+        </div>
+      </div>
+      <div class="spc_box">
+        検索のための<b>開始行パターン</b>と<b>終了行パターン</b>は、パラメータで指定することもできます。<br>
+        <b>例</b>: SearchPair_/^#BEGIN/;/^#END/<br>
+      </div>
+      <div class="spc_box">
+        <a href="hid00084.htm#PairBeginPtn">構文強調表示定義ファイル</a>を利用すると、複数の検索パターンを指定できます(PairBeginPtn1～、PairEndPtn1～)。<br>
+        特定の拡張子に対するデフォルトの検索パターンは、<b>設定メニュー</b> - [<b>デフォルトの構文強調表示定義をコピー</b>] で確認できます。<br>
+      </div>
+    </dd>
+
+    <dt id="SelCurWord">SelCurWord</dt>
+    <dd>カーソル位置の単語またはURLを選択します。<br>
+      なお、ダブルクリックした場合にも、その位置の単語が選択されます。ただし、<a href="hid00011.htm">オプション設定 - テキストビュアー</a>
+      で「<b>ダブルクリックでURLを開く</b>」をチェックしていると、その行にURLが含まれている場合、それが開かれます。
+    </dd>
+
+    <dt id="SelLine">SelLine</dt>
+    <dd>カーソル行を選択します。<br>
+      <a href="#SelLineCR">→ SelLineCR</a>
+    </dd>
+
+    <dt id="SelLineCR">SelLineCR</dt>
+    <dd>カーソル行全体を改行単位で選択します。<br>
+      <a href="#SelLine">→ SelLine</a>
+    </dd>
+
+    <dt id="SelectAll">SelectAll</dt>
+    <dd>すべてを選択します。</dd>
+
+    <dt id="SelectFile">SelectFile<span class="pram_text">[_NX]</span></dt>
+    <dd>表示中のファイルを、カレントのファイルリストで選択状態にします。すでに選択中の場合は解除します。<br>
+      ファイルが選択されていると、情報ヘッダが選択中の配色になります。<br>
+      パラメータに <b>NX</b> を指定すると、実行後に次のファイルを表示します。<br>
+      <a href="#Delete">→ Delete</a>　<a href="#NextFile">→ NextFile</a>
+    </dd>
+
+    <dt id="SelectMode">SelectMode</dt>
+    <dd>選択モードを開始します。選択モードでは、すべての移動コマンドが選択しながらの動作になります。<br>
+      <a href="#ClipCopy">ClipCopy</a> コマンド、<a href="#FindSelDown">FindSelDown</a>、<a href="#FindSelUp">FindSelUp</a>
+      コマンドを実行するか、<b>SelectMode</b> コマンドをもう一度実行すると、選択モードが解除されます。
+    </dd>
+
+    <dt id="SetColor">SetColor<span class="pram_text">[_{ファイル名|RS}]</span></dt>
+    <dd>
+      <b>テキストビュアーの配色</b>ダイアログを開きます。このダイアログでの設定は一時的なもので、テキストビュアーを閉じるとリセットされます。<br>
+      ただし<span class="btn_frame">全体に反映</span>ボタンを押すと、全体のオプション設定にも反映されます。<br>
+      パラメータにファイル名を指定すると、カラー設定ファイル(.INI)を読み込んで、テキストビュアーの配色を一時的に変更します。ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+      また <b>RS</b> を指定すると配色をリセットします。<br>
+      <div class="spc_box">
+        設定ファイルには、このダイアログでエクスポートしたもの、<a href="hid00023.htm">オプション設定 - フォント・配色</a> - 配色の「エクスポート」で保存したもの、あるいは <b>NyanFi</b>
+        のINIファイルのいずれかを利用できます。読み込む際には、テキストビュアーに関する設定内容だけが用いられます。<br>
+        なお、<a href="hid00084.htm">構文強調表示定義ファイル</a>でも、このカラー設定ファイルを用いて配色を変更できます。<br>
+        このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
+      </div>
+    </dd>
+
+    <dt id="SetFontSize">SetFontSize<span class="pram_text">_[^]サイズ</span></dt>
+    <dd>フォントサイズをパラメータで指定した値にします。値はポイント単位で 2～72 を指定できます。<br>
+      値の先頭に <b>^</b> を付けると、すでにそのサイズなら通常サイズに戻し、そうでなければ指定値に設定します。<br>
+      サイズ変更は一時的なもので、次回開いた時には通常サイズに戻ります。<br>
+      <b>例</b>:最小/通常サイズをトグル切り替え<br>
+      　SetFontSize_^2<br>
+      <a href="#ZoomIn">→ ZoomIn</a>　<a href="#ZoomOut">→ ZoomOut</a>　<a href="#ZoomReset">→ ZoomReset</a>
+    </dd>
+
+    <dt id="SetMargin">SetMargin<span class="pram_text">_左側余白幅</span></dt>
+    <dd><a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>左側余白幅</b>」を設定します。</dd>
+
+    <dt id="SetTab">SetTab<span class="pram_text">[_タブストップ幅]</span></dt>
+    <dd>タブストップを任意の幅に変更します。<br>
+      0 または無指定の場合は、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>タブストップ4の拡張子</b>」や「<b>タブストップ ～
+        の拡張子</b>」の設定にしたがいます(デフォルト=8)。<br>
+      この変更は一時的なもので、テキストビュアーを閉じるとリセットされます。
+    </dd>
+
+    <dt id="SetTopAddr">SetTopAddr<span class="pram_text">[_{TP|PR|NX|ED}]</span></dt>
+    <dd>バイナリ・ダンプ表示の場合、先頭アドレスを設定して、ファイルの再読み込みを行います。<br>
+      これにより、<a href="hid00011.htm">オプション設定 - テキストビュアー</a>
+      「<b>バイナリ最大読込サイズ</b>」よりも大きなファイル(4GB超も可)でも、任意の部分を閲覧できます。なお<b>ビットマップビュー</b>のファイルマップ表示をクリックすることでも先頭アドレスを変更できます。<br>
+      <div class="spc_box">
+        パラメータに <b>TP</b> を指定すると、入力ボックスを出さずに、先頭アドレスをファイルの先頭に設定します。<b>PR</b> を指定すると先頭アドレスをファイルの先行部に、<b>NX</b>
+        を指定するとファイルの後続部に設定します。<b>ED</b> を指定すると、終端アドレスをファイルの最後に設定します。<br>
+        これらは、<b>ビットマップビュー</b>のファイルマップの右クリックメニューからも可能です。<br>
+      </div>
+      <a href="#JumpLine">→ JumpLine</a>　<a href="#BitmapView">→ BitmapView</a>
+    </dd>
+
+    <dt id="SetUserDefStr">SetUserDefStr<span class="pram_text">_文字列</span></dt>
+    <dd><a href="hid00066.htm">ユーザ定義文字列一覧</a>で検索に用いる文字列を事前に設定します。<br>
+      一覧を開くとこの設定はクリアされます。事前設定していない場合は、前回使用した文字列が用いられます。<br>
+      <a href="#UserDefList">→ UserDefList</a>
+    </dd>
+
+    <dt id="SetWidth">SetWidth<span class="pram_text">[_折り返し幅]</span></dt>
+    <dd><a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>折り返し幅</b>」を設定します。入力値を 0 (または空欄)にするとウィンドウの幅に合わせます。<br>
+      パラメータで幅を指定すると、入力ボックスを出さずに、その値を設定します。<br>
+      なおルーラを表示している場合、ダブルクリックで折り返し幅を変更することもできます。<br>
+      <a href="#ShowRuler">→ ShowRuler</a>
+    </dd>
+
+    <dt id="ShowCR">ShowCR<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、改行マーク(<b>&#x21b5;</b>)の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+      <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>改行を表示</b>」に反映されます。<br>
+      <a href="#ShowTAB">→ ShowTAB</a>
+    </dd>
+
+    <dt id="ShowFileInfo">ShowFileInfo</dt>
+    <dd>表示中ファイルのファイル情報をダイアログで表示します。<br>
+      <a href="#ListFileInfo">ListFileInfo</a> コマンドでも同じです。<br>
+      ファイラーやイメージビュアーの場合とは異なり、パラメータはありません。<br>
+      <a href="#ListFileInfo">→ ListFileInfo</a>　<a href="#PropertyDlg">→ PropertyDlg</a>
+    </dd>
+
+    <dt id="ShowFKeyBar">ShowFKeyBar<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、ファンクションキーバーの表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+      ファンクションキーバーのボタンには、キーに割り当てられているコマンド名(パラメータ部分を除く)がデフォルトで表示されますが、変更も可能です。<br>
+      ボタンを右クリックするか、<a href="hid00016.htm">オプション設定 - キー設定</a>の一覧で項目をダブルクリックすると、表示名変更のための入力ボックスが表示されます。<br>
+      なおツールバーとは異なり、割り当てられているコマンドの有効/無効やチェック状態はボタンに反映されません。
+    </dd>
+
+    <dt id="ShowLineNo">ShowLineNo<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、行番号の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>行番号を表示</b>」に反映されます。
+    </dd>
+
+    <dt id="ShowRuby">ShowRuby<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、青空文庫形式やHTML→テキスト変換表示で、ルビ部分の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。
+    </dd>
+
+    <dt id="ShowRuler">ShowRuler<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、ルーラの表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>ルーラを表示</b>」に反映されます。<br>
+      ルーラを表示していると、ダブルクリックで折り返し幅を変更することもできます。<br>
+      <a href="#SetWidth">→ SetWidth</a>
+    </dd>
+
+    <dt id="ShowStatusBar">ShowStatusBar<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、ステータスバーの表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。
+    </dd>
+
+    <dt id="ShowTAB">ShowTAB<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、タブマーク(<b>&#x21c0;</b>)の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+      これは、テキストプレビューや<a href="hid00073.htm">一覧ダイアログ</a>でのテキスト表示にも適用されます。<br>
+      <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>タブを表示</b>」に反映されます。<br>
+      <a href="#ShowCR">→ ShowCR</a>
+    </dd>
+
+    <dt id="ShowToolBar">ShowToolBar<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、<b>ツールバー</b>の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+      <a href="hid00068.htm">「ツールバーの設定」ダイアログ</a>は、ツールバーをダブルクリックするか、<b>設定メニュー</b> - 「<b>ツールバーの設定</b>」あるいは <a
+        href="#ToolBarDlg">ToolBarDlg</a> コマンドで表示されます。<br>
+      <a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
+    </dd>
+
+    <dt id="Sort">Sort<span class="pram_text">[_{AO|DO}]</span></dt>
+    <dd>テキスト表示で、全体を改行単位でソートします。<br>
+      パラメータに <b>AO</b> を指定すると昇順、<b>DO</b> で降順になります。無指定の場合は、ソートが解除され行番号順に戻ります。<br>
+      CSV/TSVファイルで固定長表示の場合、カーソル位置の項目がソート対象になります。<b>CSV/TSVレコード</b> (<a
+        href="#CsvRecord">CsvRecord</a>)や右クリックメニューで「<b>先頭行が項目名</b>」をチェックしていると、先頭行はソートされません。<br>
+      ソートは右クリックメニューからも可能です。<br>
+      <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvRecord">→ CsvRecord</a>　<a href="#ExportCsv">→ ExportCsv</a>
+    </dd>
+
+    <dt id="SwitchSameName">SwitchSameName</dt>
+    <dd>カレントディレクトリ内で、表示中ファイルとファイル名主部が同じ次のテキストファイルに切り替えます(ループ動作)。</dd>
+
+    <dt id="SwitchSrcHdr">SwitchSrcHdr</dt>
+    <dd>カレントディレクトリ内にある c、c++ のヘッダ/ソースファイルを切り替えます。</dd>
+
+    <dt id="TagJump">TagJump<span class="pram_text">[_DJ]</span></dt>
+    <dd>現在行の内容でタグジャンプを行い、テキストエディタで開きます。<br>
+      選択中ならその文字列、そうでない場合はカーソル行を対象とします。行内に複数のジャンプ先がある場合、カーソル位置から最初に見つかったものを開きます。<br>
+      HTML→テキスト変換表示の場合、file:://～ という形式のローカルファイルや、Markdown記法によるリンクにも対応(name や id による移動先指定は無効)。<br>
+      また #include 相対ファイル名 という形式も開けます。<br>
+      行番号の指定のためのパラメータは、<a href="hid00012.htm">オプション設定 - エディタ</a>で設定できます。<br>
+      パラメータに <b>DJ</b> を指定すると、タグジャンプができなかった場合、カーソル位置の単語で<a href="hid00083.htm">ダイレクトタグジャンプ</a> (<a
+        href="#TagJumpDirect">TagJumpDirect</a>)を試みます。<br>
+      <a href="#TagView">→ TagView</a>　<a href="#TagJumpDirect">→ TagJumpDirect</a>
+    </dd>
+
+    <dt id="TagJumpDirect">TagJumpDirect<span class="pram_text">[_タグ名]</span></dt>
+    <dd>カーソル位置の単語で<a href="hid00083.htm">ダイレクトタグジャンプ</a>を行い、テキストエディタで開きます。ジャンプ先の候補が複数ある場合、一覧で選択できます。<br>
+      パラメータでタグ名を指定すると、その単語でダイレクトタグジャンプを行います。<br>
+      <a href="#TagViewDirect">→ TagViewDirect</a>　<a href="#FindTagName">→ FindTagName</a>
+    </dd>
+
+    <dt id="TagView">TagView<span class="pram_text">[_DJ]</span></dt>
+    <dd>現在行の内容でタグジャンプを行い、テキストビュアーで開きます。<br>
+      選択中ならその文字列、そうでない場合はカーソル行を対象とします。行内に複数のジャンプ先がある場合、カーソル位置から最初に見つかったものを開きます。<br>
+      HTML→テキスト変換表示の場合、file:://～ という形式のローカルファイルへのリンクにも対応(name や id による移動先指定は無効)。また #include 相対ファイル名 という形式も開けます。<br>
+      パラメータに <b>DJ</b> を指定すると、タグジャンプができなかった場合、カーソル位置の単語で<a href="hid00083.htm">ダイレクトタグジャンプ</a> (<a
+        href="#TagViewDirect">TagViewDirect</a>)を試みます。<br>
+      <a href="#TagJump">→ TagJump</a>　<a href="#TagViewDirect">→ TagViewDirect</a>
+    </dd>
+
+    <dt id="TagViewDirect">TagViewDirect<span class="pram_text">[_タグ名]</span></dt>
+    <dd>カーソル位置の単語で<a href="hid00083.htm">ダイレクトタグジャンプ</a>を行い、テキストビュアーで開きます。ジャンプ先の候補が複数ある場合、一覧で選択できます。<br>
+      パラメータでタグ名を指定すると、その単語でダイレクトタグジャンプを行います。<br>
+      <a href="#TagJumpDirect">→ TagJumpDirect</a>　<a href="#FindTagName">→ FindTagName</a>
+    </dd>
+
+    <dt id="TextEnd">TextEnd</dt>
+    <dd>最後尾に移動します。<br>
+      <a href="#TextTop">→ TextTop</a>
+    </dd>
+
+    <dt id="TextEndSel">TextEndSel</dt>
+    <dd>選択しながら最後尾に移動します。<br>
+      <a href="#TextTopSel">→ TextTopSel</a>
+    </dd>
+
+    <dt id="TextTop">TextTop</dt>
+    <dd>先頭に移動します。<br>
+      <a href="#TextEnd">→ TextEnd</a>
+    </dd>
+
+    <dt id="TextTopSel">TextTopSel</dt>
+    <dd>選択しながら先頭に移動します。<br>
+      <a href="#TextEndSel">→ TextEndSel</a>
+    </dd>
+
+    <dt id="ToolBarDlg">ToolBarDlg</dt>
+    <dd><a href="hid00068.htm">「ツールバーの設定」ダイアログ</a>を表示します。<br>
+      <a href="#ShowToolBar">→ ShowToolBar</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
+      このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。
+    </dd>
+
+    <dt id="UserDefList">UserDefList<span class="pram_text">[_FF]</span></dt>
+    <dd><a href="hid00066.htm">ユーザ定義文字列一覧</a>を表示します。<br>
+      パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+      なお <a href="#SetUserDefStr">SetUserDefStr</a> コマンドで、事前に文字列を設定しておくことができます。<br>
+      <a href="#SetUserDefStr">→ SetUserDefStr</a> 　<a href="#FunctionList">→ FunctionList</a>　<a href="#MarkList">→
+        MarkList</a>
+    </dd>
+
+    <dt id="ViewHistory">ViewHistory</dt>
+    <dd><a href="hid00058.htm">最近閲覧したファイル一覧</a>を表示します。<br>
+      画面は <a href="#EditHistory">EditHistory</a> と共用なので、表示位置やサイズは同じになります。
+    </dd>
+
+    <dt id="WebMap">WebMap<span class="pram_text">[_Z1～18(デフォルト=16)][;H高さ(デフォルト=600)]</span></dt>
+    <dd>入力ボックスで指定した緯度経度の地図(デフォルト:国土地理院/Leaflet)を開きます。<br>
+      マップ表示用のHTMLファイルを生成し、一時ディレクトリに <b>$~WEBMAP.HTM</b> という名前で保存して開きます。<br>
+      指定には10進数のDEG表記を用い、緯度経度の順に、<b>,</b>(カンマ) 、<b>;</b> (セミコロン)、半角空白のいずれかで区切って入力してください(クリップボードから貼り付けた場合はタブ文字でも可)。<br>
+      <div class="spc_box">
+        パラメータに <b>Z</b> と1～18の数値を指定すると、地図のズームレベルを設定できます。<br>
+        パラメータに <b>H</b> と数値(px)を指定すると、地図の表示高を設定できます。<br>
+        複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+      </div>
+      <div class="spc_box">
+        なお表示をカスタマイズしたい場合、実行ディレクトリに <b>WEBMAP.HTM</b> という名前のHTMLファイルを置くと、それがテンプレートとして用いられます。<br>
+        詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#WebMap">→ ファイラー: WebMap</a>)。<br>
+      </div>
+      <a href="#WebSearch">→ WebSearch</a>　<a href="#OpenURL">→ OpenURL</a>
+    </dd>
+
+    <dt id="WebSearch">WebSearch<span class="pram_text">[_{CB|検索語}]</span></dt>
+    <dd>選択中の文字列(無ければ入力ボックスで指定)を Web で検索します。複数行が選択されている場合は、最初の行が対象となります。<br>
+      パラメータに <b>CB</b> を指定すると、クリップボードのテキスト内容を検索します。<br>
+      それ以外のパラメータは、検索語とみなして検索します。<br>
+      使用する検索エンジンのURLは、<a href="hid00019.htm">オプション設定 - コマンド</a> で指定しておいてください。<br>
+      なお、右クリックメニューからも実行できます。<br>
+      <a href="#WebMap">→ WebMap</a>　<a href="#OpenURL">→ OpenURL</a>
+    </dd>
+
+    <dt id="WinPos">WinPos<span class="pram_text">[_{L|T|R|B}[+|-]数値][;...]</span></dt>
+    <dd>ウィンドウの四辺の位置を設定します。<br>
+      パラメータで L(左)、T(上)、R(右)、B(下)を任意に組み合わせて設定できます。数値の前に <b>+</b> または <b>-</b> を付けると、現在位置からの相対指定になります。<br>
+      パラメータを何も指定しないと、起動時の画面状態に戻ります。
+    </dd>
+
+    <dt id="WordLeft">WordLeft</dt>
+    <dd>カーソルを前の単語に移動します。<br>
+      固定長表示でレコードの1行目部分の場合は、左隣の列項目に移動します。<br>
+      バイナリ・ダンプ表示では 2バイト(WORD)分左に移動します。<br>
+      <a href="#CursorLeft">→ CursorLeft</a>
+    </dd>
+
+    <dt id="WordRight">WordRight</dt>
+    <dd>カーソルを次の単語に移動します。<br>
+      固定長表示でレコードの1行目部分の場合は、右隣の列項目に移動します。<br>
+      バイナリ・ダンプ表示では 2バイト(WORD)分右に移動します。<br>
+      <a href="#CursorRight">→ CursorRight</a>
+    </dd>
+
+    <dt id="ZoomIn">ZoomIn<span class="pram_text">[_1～12]</span></dt>
+    <dd>フォントサイズをポイント単位で大きくします(最大72ポイント)。<br>
+      なお、折り返し位置の更新は行いませんので、条件によっては右端が切れます。<br>
+      パラメータで、ポイントの増分を指定することもできます(無指定の場合は 1)。<br>
+      この機能は一時的なもので、次回開いた時には解除されます。<br>
+      <a href="#SetFontSize">→ SetFontSize</a>
+    </dd>
+
+    <dt id="ZoomOut">ZoomOut<span class="pram_text">[_1～12]</span></dt>
+    <dd>フォントサイズをポイント単位で小さくします(最小2ポイント)。<br>
+      なお、折り返し位置の更新は行いません。<br>
+      パラメータで、ポイントの減分を指定することもできます(無指定の場合は 1)。<br>
+      この機能は一時的なもので、次回開いた時には解除されます。<br>
+      <a href="#SetFontSize">→ SetFontSize</a>
+    </dd>
+
+    <dt id="ZoomReset">ZoomReset</dt>
+    <dd>フォントサイズをデフォルトに戻し、ズーム状態を解除します。<br>
+      <a href="#SetFontSize">→ SetFontSize</a>
+    </dd>
+
+  </dl>
+  <br><br><br><br>
 
 </body>
+
 </html>

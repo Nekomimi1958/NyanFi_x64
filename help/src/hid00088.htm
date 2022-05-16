@@ -1,100 +1,121 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>タグによるファイル管理</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="AddTag">
-	<param name="Keyword" value="DelTag">
-	<param name="Keyword" value="FindFileDlg">
-	<param name="Keyword" value="FindTag">
-	<param name="Keyword" value="SetTag">
-	<param name="Keyword" value="TAGDATA.TXT">
-	<param name="Keyword" value="TagSelect">
-	<param name="Keyword" value="TrimTagData">
-	<param name="Keyword" value="タグ">
-	<param name="Keyword" value="タグデータ">
-	<param name="Keyword" value="タグによるファイル管理">
-	<param name="Keyword" value="タグの設定">
-	<param name="Keyword" value="タグの追加">
-	<param name="Keyword" value="タグ検索">
-	<param name="Keyword" value="ファイル名検索">
-	<param name="Keyword" value="拡張検索">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>タグによるファイル管理</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="AddTag">
+    <param name="Keyword" value="DelTag">
+    <param name="Keyword" value="FindFileDlg">
+    <param name="Keyword" value="FindTag">
+    <param name="Keyword" value="SetTag">
+    <param name="Keyword" value="TAGDATA.TXT">
+    <param name="Keyword" value="TagSelect">
+    <param name="Keyword" value="TrimTagData">
+    <param name="Keyword" value="タグ">
+    <param name="Keyword" value="タグデータ">
+    <param name="Keyword" value="タグによるファイル管理">
+    <param name="Keyword" value="タグの設定">
+    <param name="Keyword" value="タグの追加">
+    <param name="Keyword" value="タグ検索">
+    <param name="Keyword" value="ファイル名検索">
+    <param name="Keyword" value="拡張検索">
+  </object>
 </head>
 
 <body>
 
-<h1>タグによるファイル管理</h1>
+  <h1>タグによるファイル管理</h1>
 
-<p>
-<b>NyanFi</b> では、すべての種類のファイルやディレクトリに<b>タグ</b>(ラベル)を付けて管理することができます。<br>
-<span class="note_text">これは、一部のファイルに対して「プロパティ」で設定できるタグとは無関係です。また対象そのものには一切変更を加えません。</span>
-</p>
+  <p>
+    <b>NyanFi</b> では、すべての種類のファイルやディレクトリに<b>タグ</b>(ラベル)を付けて管理することができます。<br>
+    <span class="note_text">これは、一部のファイルに対して「プロパティ」で設定できるタグとは無関係です。また対象そのものには一切変更を加えません。</span>
+  </p>
 
-<dl>
-<dt class="no_bg">タグの設定
-<dd>
-ファイラーや<a href="hid00007.htm">イメージビュアー</a>で <a href="hid00005.htm#SetTag">SetTag</a> コマンドを実行すると、「<b>タグの設定</b>」ダイアログが開き、選択中(無ければカーソル位置)の項目に<b>タグ</b>を設定できます。<br>
-また <a href="hid00005.htm#AddTag">AddTag</a> コマンドでは、「<b>タグの追加</b>」ダイアログによって対象項目にタグを追加できます。<br>
-なおコマンドのパラメータに <b>;</b> (セミコロン)だけを指定すると、ダイアログの代わりに入力ボックスでタグを指定できます。<br>
-項目からタグを削除したい場合は、<a href="hid00005.htm#DelTag">DelTag</a> コマンドを用いてください。<br>
-<div class="spc_box">
-設定されているタグは、ファイル情報で確認できます。ファイル情報を取得していない項目についてもタグは表示されます。<br>
-ステータスバーに表示したい場合は、<a href="hid00010.htm#StatusBar">オプション設定 - デザイン - ステータスバーの書式</a> に <b>$PR(タグ)</b> を設定してください。<br>
-イメージビュアーでは、サムネイルの下部にタグを表示できます。<br>
-</div>
+  <dl>
+    <dt class="no_bg">タグの設定</dt>
+    <dd>
+      ファイラーや<a href="hid00007.htm">イメージビュアー</a>で <a href="hid00005.htm#SetTag">SetTag</a>
+      コマンドを実行すると、「<b>タグの設定</b>」ダイアログが開き、選択中(無ければカーソル位置)の項目に<b>タグ</b>を設定できます。<br>
+      また <a href="hid00005.htm#AddTag">AddTag</a> コマンドでは、「<b>タグの追加</b>」ダイアログによって対象項目にタグを追加できます。<br>
+      なおコマンドのパラメータに <b>;</b> (セミコロン)だけを指定すると、ダイアログの代わりに入力ボックスでタグを指定できます。<br>
+      項目からタグを削除したい場合は、<a href="hid00005.htm#DelTag">DelTag</a> コマンドを用いてください。<br>
+      <div class="spc_box">
+        設定されているタグは、ファイル情報で確認できます。ファイル情報を取得していない項目についてもタグは表示されます。<br>
+        ステータスバーに表示したい場合は、<a href="hid00010.htm#StatusBar">オプション設定 - デザイン - ステータスバーの書式</a> に <b>$PR(タグ)</b>
+        を設定してください。<br>
+        イメージビュアーでは、サムネイルの下部にタグを表示できます。<br>
+      </div>
+    </dd>
 
-<dt class="no_bg">タグ検索
-<dd>
-ファイラーで <a href="hid00005.htm#FindTag">FindTag</a> コマンドを実行すると、「<b>タグ検索</b>」ダイアログが開き、ファイルやディレクトリに設定されている<b>タグ</b>を検索できます(コマンドのパラメータに <b>;</b> だけを指定すると、ダイアログの代わりに入力ボックスで検索)。<br>
+    <dt class="no_bg">タグ検索</dt>
+    <dd>
+      ファイラーで <a href="hid00005.htm#FindTag">FindTag</a>
+      コマンドを実行すると、「<b>タグ検索</b>」ダイアログが開き、ファイルやディレクトリに設定されている<b>タグ</b>を検索できます(コマンドのパラメータに <b>;</b>
+      だけを指定すると、ダイアログの代わりに入力ボックスで検索)。<br>
 
-<div class="spc_box">
-一覧の右クリックメニューにある「<b>コマンドファイルとして保存</b>」で、現在の設定で検索を行うコマンドファイルを作成できます。「<b>カレント側で検索</b>」と「<b>反対側で検索</b>」のいずれかを選べます。これを<a href="hid00060.htm">ワークリスト</a>等に登録すると便利かもしれません。<br>
-</div>
+      <div class="spc_box">
+        一覧の右クリックメニューにある「<b>コマンドファイルとして保存</b>」で、現在の設定で検索を行うコマンドファイルを作成できます。「<b>カレント側で検索</b>」と「<b>反対側で検索</b>」のいずれかを選べます。これを<a
+          href="hid00060.htm">ワークリスト</a>等に登録すると便利かもしれません。<br>
+      </div>
 
-<div class="spc_box">
-<a href="hid00010.htm#FileList">オプション設定 - デザイン - ファイルリスト</a> で「<b>タグ検索では「タグ」列を表示</b>」をチェックしていると、結果リストに「<b>タグ(場所)</b>」列が表示されます(ソートはパス付きファイル名)。<br>
-この場合、タグも <a href="hid00005.htm#IncSearch">IncSearch</a>、<a href="hid00005.htm#Filter">Filter</a> コマンドの検索対象となります。<br>
-</div>
+      <div class="spc_box">
+        <a href="hid00010.htm#FileList">オプション設定 - デザイン - ファイルリスト</a>
+        で「<b>タグ検索では「タグ」列を表示</b>」をチェックしていると、結果リストに「<b>タグ(場所)</b>」列が表示されます(ソートはパス付きファイル名)。<br>
+        この場合、タグも <a href="hid00005.htm#IncSearch">IncSearch</a>、<a href="hid00005.htm#Filter">Filter</a>
+        コマンドの検索対象となります。<br>
+      </div>
 
-<div class="spc_box">
-結果リストに対して反対側から <a href="hid00005.htm#Copy">Copy</a> コマンドを実行すると、対象に検索タグが追加され再検索が行われます(結果リストに項目が追加されたようになります)。対象をドラッグ＆ドロップした場合も同様です。<br>
-結果リストから項目を除くには <a href="hid00005.htm#DelTag">DelTag</a> コマンドを用いてください。<a href="hid00005.htm#Delete">Delete</a> コマンドだと実体が削除されてしまいます。<br>
-</div>
+      <div class="spc_box">
+        結果リストに対して反対側から <a href="hid00005.htm#Copy">Copy</a>
+        コマンドを実行すると、対象に検索タグが追加され再検索が行われます(結果リストに項目が追加されたようになります)。対象をドラッグ＆ドロップした場合も同様です。<br>
+        結果リストから項目を除くには <a href="hid00005.htm#DelTag">DelTag</a> コマンドを用いてください。<a href="hid00005.htm#Delete">Delete</a>
+        コマンドだと実体が削除されてしまいます。<br>
+      </div>
 
-<div class="spc_box">
-タグ検索は、「<a href="hid00052.htm">ファイル名検索</a>」(<a href="hid00005.htm#FindFileDlg">FindFileDlg</a>)の<b>拡張検索</b>によっても可能です。この場合、様々な条件とともにカレントのリストに対する検索を行えます。<a href="hid00005.htm#FindTag">FindTag</a> コマンドの結果リストに対する絞り込み検索も可能です。<br>
-</div>
+      <div class="spc_box">
+        タグ検索は、「<a href="hid00052.htm">ファイル名検索</a>」(<a
+          href="hid00005.htm#FindFileDlg">FindFileDlg</a>)の<b>拡張検索</b>によっても可能です。この場合、様々な条件とともにカレントのリストに対する検索を行えます。<a
+          href="hid00005.htm#FindTag">FindTag</a> コマンドの結果リストに対する絞り込み検索も可能です。<br>
+      </div>
 
-<div class="spc_box">
-特定のタグ検索を<a href="hid00054.htm">登録ディレクトリダイアログ</a>に登録することもできます。<br>
-</div>
+      <div class="spc_box">
+        特定のタグ検索を<a href="hid00054.htm">登録ディレクトリダイアログ</a>に登録することもできます。<br>
+      </div>
 
-<div class="spc_box">
-ファイラーや<a href="hid00007.htm">イメージビュアー</a>で <a href="hid00005.htm#TagSelect">TagSelect</a> コマンドを実行すると、「<b>タグ選択</b>」ダイアログが開き、指定したタグが設定されている項目を選択できます。<br>
-</div>
+      <div class="spc_box">
+        ファイラーや<a href="hid00007.htm">イメージビュアー</a>で <a href="hid00005.htm#TagSelect">TagSelect</a>
+        コマンドを実行すると、「<b>タグ選択</b>」ダイアログが開き、指定したタグが設定されている項目を選択できます。<br>
+      </div>
+    </dd>
 
-<dt class="no_bg">タグデータ
-<dd>
-タグに関するデータは、<b>NyanFi</b> 実行ディレクトリの <b>TAGDATA.TXT</b> というファイルに、&quot;ファイル名またはディレクトリ名 <span class="ctrl_text">[TAB]</span> タグ&quot; という書式で保存されています。<br>
-このファイルは、タグを変更するたびに更新されます。また、外部による変更によってタイムスタンプが変化していた場合、コマンド実行前に再読み込みされます。<br>
+    <dt class="no_bg">タグデータ</dt>
+    <dd>
+      タグに関するデータは、<b>NyanFi</b> 実行ディレクトリの <b>TAGDATA.TXT</b> というファイルに、&quot;ファイル名またはディレクトリ名 <span
+        class="ctrl_text">[TAB]</span> タグ&quot; という書式で保存されています。<br>
+      このファイルは、タグを変更するたびに更新されます。また、外部による変更によってタイムスタンプが変化していた場合、コマンド実行前に再読み込みされます。<br>
 
-<div class="spc_box">
-項目の移動や改名を行った場合、そのタグは維持されます。<br>
-また <a href="hid00009.htm#Copy">オプション設定 - 一般 - コピー動作</a>の「<b>タグをコピー</b>」がチェックされていると、コピーの際にもタグが反映されます。<br>
-<b>NyanFi</b> 上で項目を削除した場合や、タグ検索でマッチした項目が存在しなくなっていた場合(無効なドライブは除く)、設定されていたタグデータは自動的に削除されます。<br>
-ファイラーで <a href="hid00005.htm#TrimTagData">TrimTagData</a> コマンドを実行すると、存在しない項目に関するタグデータが一括で削除されます。無効なドライブのデータも削除されますので注意してください。<br>
-</div>
+      <div class="spc_box">
+        項目の移動や改名を行った場合、そのタグは維持されます。<br>
+        また <a href="hid00009.htm#Copy">オプション設定 - 一般 - コピー動作</a>の「<b>タグをコピー</b>」がチェックされていると、コピーの際にもタグが反映されます。<br>
+        <b>NyanFi</b> 上で項目を削除した場合や、タグ検索でマッチした項目が存在しなくなっていた場合(無効なドライブは除く)、設定されていたタグデータは自動的に削除されます。<br>
+        ファイラーで <a href="hid00005.htm#TrimTagData">TrimTagData</a>
+        コマンドを実行すると、存在しない項目に関するタグデータが一括で削除されます。無効なドライブのデータも削除されますので注意してください。<br>
+      </div>
+    </dd>
 
-<dt class="no_bg">タグの配色
-<dd>
-ファイルリスト、ファイル情報、およびイメージビュアーのサムネイルにタグを表示する際の文字色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> - 「<b>タグ別配色</b>」で設定できます(無設定の場合、「<b>配色</b>」の「<b>デフォルトのタグ色</b>」)。<br>
-<img src="chkbox.png" alt=""> <b>反転</b> をチェックしていると、タグの文字色/背景色が反転表示になって見やすいかもしれません。<br>
-配色は、タグ関係のダイアログで、下部設定パネルや一覧の右クリックメニューから直接設定することも可能です。<br>
-</dl>
-<br><br>
+    <dt class="no_bg">タグの配色</dt>
+    <dd>
+      ファイルリスト、ファイル情報、およびイメージビュアーのサムネイルにタグを表示する際の文字色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> -
+      「<b>タグ別配色</b>」で設定できます(無設定の場合、「<b>配色</b>」の「<b>デフォルトのタグ色</b>」)。<br>
+      <img src="chkbox.png" alt=""> <b>反転</b> をチェックしていると、タグの文字色/背景色が反転表示になって見やすいかもしれません。<br>
+      配色は、タグ関係のダイアログで、下部設定パネルや一覧の右クリックメニューから直接設定することも可能です。<br>
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

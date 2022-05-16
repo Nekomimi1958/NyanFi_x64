@@ -1,204 +1,263 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>NyanFi が用いるファイル</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value=".nyanfi">
-	<param name="Keyword" value="AGDATA.TXT">
-	<param name="Keyword" value="autorun.inf">
-	<param name="Keyword" value="Calculator.INI">
-	<param name="Keyword" value="DirHistory.INI">
-	<param name="Keyword" value="Distribute.INI">
-	<param name="Keyword" value="DriveLog.csv">
-	<param name="Keyword" value="ExeCommands">
-	<param name="Keyword" value="ExeMenuFile">
-	<param name="Keyword" value="favicon　">
-	<param name="Keyword" value="favicon.ico">
-	<param name="Keyword" value="FontSample.INI">
-	<param name="Keyword" value="Highlight.INI">
-	<param name="Keyword" value="LoadResultList">
-	<param name="Keyword" value="LoadTabGroup">
-	<param name="Keyword" value="NyanFi が用いるファイル">
-	<param name="Keyword" value="NyanFi.INI">
-	<param name="Keyword" value="OpenStandard">
-	<param name="Keyword" value="renamelog.txt">
-	<param name="Keyword" value="SaveAsResultList">
-	<param name="Keyword" value="SaveAsTabGroup">
-	<param name="Keyword" value="Swatchbook.INI">
-	<param name="Keyword" value="TAGDATA.TXT">
-	<param name="Keyword" value="tasklog.txt">
-	<param name="Keyword" value="thumbnail.jpg">
-	<param name="Keyword" value="thumbnail.txt">
-	<param name="Keyword" value="UndoRename">
-	<param name="Keyword" value="watchbook.INI">
-	<param name="Keyword" value="WebMap">
-	<param name="Keyword" value="WEBMAP.HTM">
-	<param name="Keyword" value="WORKLIST.nwl">
-	<param name="Keyword" value="タブグループ">
-	<param name="Keyword" value="フォルダアイコン">
-	<param name="Keyword" value="フォントのサンプル表示">
-	<param name="Keyword" value="色見本">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>NyanFi が用いるファイル</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value=".nyanfi">
+    <param name="Keyword" value="AGDATA.TXT">
+    <param name="Keyword" value="autorun.inf">
+    <param name="Keyword" value="Calculator.INI">
+    <param name="Keyword" value="DirHistory.INI">
+    <param name="Keyword" value="Distribute.INI">
+    <param name="Keyword" value="DriveLog.csv">
+    <param name="Keyword" value="ExeCommands">
+    <param name="Keyword" value="ExeMenuFile">
+    <param name="Keyword" value="favicon　">
+    <param name="Keyword" value="favicon.ico">
+    <param name="Keyword" value="FontSample.INI">
+    <param name="Keyword" value="Highlight.INI">
+    <param name="Keyword" value="LoadResultList">
+    <param name="Keyword" value="LoadTabGroup">
+    <param name="Keyword" value="NyanFi が用いるファイル">
+    <param name="Keyword" value="NyanFi.INI">
+    <param name="Keyword" value="OpenStandard">
+    <param name="Keyword" value="renamelog.txt">
+    <param name="Keyword" value="SaveAsResultList">
+    <param name="Keyword" value="SaveAsTabGroup">
+    <param name="Keyword" value="Swatchbook.INI">
+    <param name="Keyword" value="TAGDATA.TXT">
+    <param name="Keyword" value="tasklog.txt">
+    <param name="Keyword" value="thumbnail.jpg">
+    <param name="Keyword" value="thumbnail.txt">
+    <param name="Keyword" value="UndoRename">
+    <param name="Keyword" value="watchbook.INI">
+    <param name="Keyword" value="WebMap">
+    <param name="Keyword" value="WEBMAP.HTM">
+    <param name="Keyword" value="WORKLIST.nwl">
+    <param name="Keyword" value="タブグループ">
+    <param name="Keyword" value="フォルダアイコン">
+    <param name="Keyword" value="フォントのサンプル表示">
+    <param name="Keyword" value="色見本">
+  </object>
 </head>
 
 <body>
 
-<h1><b>NyanFi</b> が用いるファイル</h1>
+  <h1><b>NyanFi</b> が用いるファイル</h1>
 
-<p>
-以下は、<b>NyanFi</b> が用いる設定/定義ファイルやログです。<br>
-重要と思われるものはバックアップしておくことをお勧めします。<br>
-</p>
-<p class="note_text"><b>UTF-8</b>のファイルは<b>BOM付き</b>で保存してください。BOMがないと正しく読み込めません。</p>
-<br>
+  <p>
+    以下は、<b>NyanFi</b> が用いる設定/定義ファイルやログです。<br>
+    重要と思われるものはバックアップしておくことをお勧めします。<br>
+  </p>
+  <p class="note_text"><b>UTF-8</b>のファイルは<b>BOM付き</b>で保存してください。BOMがないと正しく読み込めません。</p>
+  <br>
 
-<dl>
-<dt>NyanFi.INI　<span class="small_nrm">(デフォルト)</span>
-<dd><b>NyanFi</b> の設定情報が保存されています。レジストリは使用していません。<br>
-※<a href="hid00089.htm">起動時オプション</a>(-I)で指定する場合、任意の名前を使用可能。<br>
+  <dl>
+    <dt>NyanFi.INI　<span class="small_nrm">(デフォルト)</span></dt>
+    <dd><b>NyanFi</b> の設定情報が保存されています。レジストリは使用していません。<br>
+      ※<a href="hid00089.htm">起動時オプション</a>(-I)で指定する場合、任意の名前を使用可能。<br>
+    </dd>
 
-<dt id="FolderIcon">FolderIcon.INI
-<dd><a href="hid00005.htm#SetFolderIcon">SetFolderIcon</a> コマンドによって設定されたフォルダアイコンの内容です。<br>
-[<b>FolderIcon</b>] セクションに &quot;ディレクトリ名=アイコンファイル名&quot; の形で保存されます。<br>
+    <dt id="FolderIcon">FolderIcon.INI</dt>
+    <dd><a href="hid00005.htm#SetFolderIcon">SetFolderIcon</a> コマンドによって設定されたフォルダアイコンの内容です。<br>
+      [<b>FolderIcon</b>] セクションに &quot;ディレクトリ名=アイコンファイル名&quot; の形で保存されます。<br>
+    </dd>
 
-<dt>Highlight.INI
-<dd><a href="hid00006.htm">テキストビュアー</a>での構文強調表示をユーザ定義できます。<br>
-<a href="hid00084.htm">→ 構文強調表示定義ファイル</a><br>
+    <dt>Highlight.INI</dt>
+    <dd><a href="hid00006.htm">テキストビュアー</a>での構文強調表示をユーザ定義できます。<br>
+      <a href="hid00084.htm">→ 構文強調表示定義ファイル</a><br>
+    </dd>
 
-<dt>DirHistory.INI
-<dd>
-全体としてのディレクトリ履歴を、INIファイルではなく別ファイルとして保存できます。これによって履歴数の制限がなくなります。<br>
-<a href="hid00009.htm#DirHistoryINI">→ オプション設定 - 一般 - ディレクトリ履歴 - 全体履歴を別ファイルに保存</a><br>
+    <dt>DirHistory.INI</dt>
+    <dd>
+      全体としてのディレクトリ履歴を、INIファイルではなく別ファイルとして保存できます。これによって履歴数の制限がなくなります。<br>
+      <a href="hid00009.htm#DirHistoryINI">→ オプション設定 - 一般 - ディレクトリ履歴 - 全体履歴を別ファイルに保存</a><br>
+    </dd>
 
-<dt>Distribute.INI　<span class="small_nrm">(デフォルト)</span>
-<dd>振り分けダイアログでの登録内容を、INIファイルではなく別ファイルとして保存できます。<br>
-※任意の名前も使用可能。<br>
-<a href="hid00077.htm#DistributeINI">→ 振り分けダイアログ - 振り分け登録ファイル</a>
+    <dt>Distribute.INI　<span class="small_nrm">(デフォルト)</span></dt>
+    <dd>振り分けダイアログでの登録内容を、INIファイルではなく別ファイルとして保存できます。<br>
+      ※任意の名前も使用可能。<br>
+      <a href="hid00077.htm#DistributeINI">→ 振り分けダイアログ - 振り分け登録ファイル</a>
+    </dd>
 
-<dt>Calculator.INI
-<dd><a href="hid00087.htm">電卓</a>で用いる関数および定数をユーザ定義できます。<br>
-<a href="hid00087.htm#UserDef">→ 電卓 - ユーザ定義ファイル</a><br>
+    <dt>Calculator.INI</dt>
+    <dd><a href="hid00087.htm">電卓</a>で用いる関数および定数をユーザ定義できます。<br>
+      <a href="hid00087.htm#UserDef">→ 電卓 - ユーザ定義ファイル</a><br>
+    </dd>
 
-<dt id="Swatchbook">Swatchbook.INI
-<dd>色見本のユーザ定義ファイルです。各種配色設定でスポイト使用時に表示される色見本に用いられます。<br>
-実行ディレクトリにこのファイルがあると <b>NyanFi</b> 起動時に読み込まれます。ファイルがない場合はデフォルトの色見本が表示されます。<br>
-<div class="spc_box">
-表示色を変更したい場合は、設定メニュー - 「<b>色見本定義ファイルの編集</b>」で行ってください。<b>Swatchbook.INI</b> (なければデフォルトで新規作成)がテキストエディタで開かれ、<b>NyanFi</b> 側では再読み込みの確認メッセージが出ます。<br>
-色は、[<b>Swatchbook</b>] セクションの <b>Color001</b> ～ <b>Color112</b> に2桁16進数のRRGGBB形式で指定します。113～128番目までの16色は、「色の設定」ダイアログで作成した色になります。<br>
-アーカイブの <b>sample_etc</b> ディレクトリには、デフォルトとは異なる色見本のサンプルファイルがあります。<br>
-</div>
-<div class="spc_box">
-なお名前が Swatchbook で始まり、1行目が &quot;[Swatchbook]&quot; の .INI ファイル(アーカイブ内は除く)は、イメージプレビューで内容を確認できます。<br>
-</div>
+    <dt id="Swatchbook">Swatchbook.INI</dt>
+    <dd>色見本のユーザ定義ファイルです。各種配色設定でスポイト使用時に表示される色見本に用いられます。<br>
+      実行ディレクトリにこのファイルがあると <b>NyanFi</b> 起動時に読み込まれます。ファイルがない場合はデフォルトの色見本が表示されます。<br>
+      <div class="spc_box">
+        表示色を変更したい場合は、設定メニュー - 「<b>色見本定義ファイルの編集</b>」で行ってください。<b>Swatchbook.INI</b>
+        (なければデフォルトで新規作成)がテキストエディタで開かれ、<b>NyanFi</b> 側では再読み込みの確認メッセージが出ます。<br>
+        色は、[<b>Swatchbook</b>] セクションの <b>Color001</b> ～ <b>Color112</b>
+        に2桁16進数のRRGGBB形式で指定します。113～128番目までの16色は、「色の設定」ダイアログで作成した色になります。<br>
+        アーカイブの <b>sample_etc</b> ディレクトリには、デフォルトとは異なる色見本のサンプルファイルがあります。<br>
+      </div>
+      <div class="spc_box">
+        なお名前が Swatchbook で始まり、1行目が &quot;[Swatchbook]&quot; の .INI ファイル(アーカイブ内は除く)は、イメージプレビューで内容を確認できます。<br>
+      </div>
+    </dd>
 
-<dt id="FontSample">FontSample.INI
-<dd>フォントファイルをイメージプレビューでサンプル表示する際の内容を定義できます。<br>
-実行ディレクトリにこのファイルがあると <b>NyanFi</b> 起動時に読み込まれます。ファイルがない場合はデフォルトで表示されます。<br>
-<div class="spc_box">
-表示内容を変更したい場合は、設定メニュー - 「<b>フォントサンプル定義ファイルの編集</b>」で行ってください(フォントを表示しているイメージプレビューの右クリックメニューからも可能)。<b>FontSample.INI</b> (なければデフォルトで新規作成)がテキストエディタで開かれ、<b>NyanFi</b> 側では再読み込みの確認メッセージが出ます。<br>
-[<b>FontSample</b>] セクションで以下のキーを設定できます。<br>
-<table border="0" cellpadding="0.5em">
-<tr><td><b>Size</b></td><td>フォントサイズ</td></tr>
-<tr><td><b>BgCol</b></td><td>背景色(2桁16進数によるRRGGBB形式)</td></tr>
-<tr><td><b>FgCol</b></td><td>文字色(2桁16進数によるRRGGBB形式)</td></tr>
-<tr><td valign="top"><b>Text1</b> ～</td><td>表示内容です。デフォルトでは Text4 までの4行ですが、Text5 以降を指定すれば行を増やせます。</td></tr>
-<tr><td valign="top" nowrap><b>Symbol1</b> ～</td><td>シンボルフォントの場合、Text1～の代わりに表示される内容です。対応する通常の文字で指定してください。</td></tr>
-<tr><td valign="top"><b>ShowGrid</b></td><td>1行目のサンプルに各種基準線を表示します(1 で表示、0 で非表示)。<br>
-上端、内部レディング、ベースライン、下端を表示します。フォントによっては位置が重なる場合があります。</td></tr>
-<tr><td><b>GridColor</b></td><td>基準線の色(2桁16進数によるRRGGBB形式)</td></tr>
-</table>
-</div>
+    <dt id="FontSample">FontSample.INI</dt>
+    <dd>フォントファイルをイメージプレビューでサンプル表示する際の内容を定義できます。<br>
+      実行ディレクトリにこのファイルがあると <b>NyanFi</b> 起動時に読み込まれます。ファイルがない場合はデフォルトで表示されます。<br>
+      <div class="spc_box">
+        表示内容を変更したい場合は、設定メニュー -
+        「<b>フォントサンプル定義ファイルの編集</b>」で行ってください(フォントを表示しているイメージプレビューの右クリックメニューからも可能)。<b>FontSample.INI</b>
+        (なければデフォルトで新規作成)がテキストエディタで開かれ、<b>NyanFi</b> 側では再読み込みの確認メッセージが出ます。<br>
+        [<b>FontSample</b>] セクションで以下のキーを設定できます。<br>
+        <table cellpadding="0.5em">
+          <tr>
+            <td><b>Size</b></td>
+            <td>フォントサイズ</td>
+          </tr>
+          <tr>
+            <td><b>BgCol</b></td>
+            <td>背景色(2桁16進数によるRRGGBB形式)</td>
+          </tr>
+          <tr>
+            <td><b>FgCol</b></td>
+            <td>文字色(2桁16進数によるRRGGBB形式)</td>
+          </tr>
+          <tr>
+            <td valign="top"><b>Text1</b> ～</td>
+            <td>表示内容です。デフォルトでは Text4 までの4行ですが、Text5 以降を指定すれば行を増やせます。</td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap><b>Symbol1</b> ～</td>
+            <td>シンボルフォントの場合、Text1～の代わりに表示される内容です。対応する通常の文字で指定してください。</td>
+          </tr>
+          <tr>
+            <td valign="top"><b>ShowGrid</b></td>
+            <td>1行目のサンプルに各種基準線を表示します(1 で表示、0 で非表示)。<br>
+              上端、内部レディング、ベースライン、下端を表示します。フォントによっては位置が重なる場合があります。</td>
+          </tr>
+          <tr>
+            <td><b>GridColor</b></td>
+            <td>基準線の色(2桁16進数によるRRGGBB形式)</td>
+          </tr>
+        </table>
+      </div>
+    </dd>
 
-<dt>xxxx.INI
-<dd>現在のタブバーの状態(ディレクトリ履歴を含む)を、<a href="hid00005.htm#SaveAsTabGroup">SaveAsTabGroup</a> コマンドでタブグループとして保存できます。<br>
-保存したファイルは、<a href="hid00005.htm#LoadTabGroup">LoadTabGroup</a> コマンドで読み込んで復元できます。<br>
-また <a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>タブグループ</b>」をチェックしていると、<a href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
+    <dt>xxxx.INI</dt>
+    <dd>現在のタブバーの状態(ディレクトリ履歴を含む)を、<a href="hid00005.htm#SaveAsTabGroup">SaveAsTabGroup</a> コマンドでタブグループとして保存できます。<br>
+      保存したファイルは、<a href="hid00005.htm#LoadTabGroup">LoadTabGroup</a> コマンドで読み込んで復元できます。<br>
+      また <a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>タブグループ</b>」をチェックしていると、<a
+        href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
+    </dd>
 
-<dt>.nyanfi[_ユーザ名]<br>
-<dd>ディレクトリにこのファイルがあると、カレント側でそこに移動したとき、ファイラー設定を自動的に変更できます。<br>
+    <dt>.nyanfi[_ユーザ名]</dt>
+    <dd>ディレクトリにこのファイルがあると、カレント側でそこに移動したとき、ファイラー設定を自動的に変更できます。<br>
 
-<a href="hid00075.htm">→ .nyanfi ファイルによるファイラー設定</a><br>
+      <a href="hid00075.htm">→ .nyanfi ファイルによるファイラー設定</a><br>
+    </dd>
 
-<dt>TAGDATA.TXT
-<dd>ファイルやディレクトリ付けられたタグ(ラベル)情報が保存されます。<br>
-<a href="hid00088.htm">→ タグによるファイル管理</a><br>
+    <dt>TAGDATA.TXT</dt>
+    <dd>ファイルやディレクトリ付けられたタグ(ラベル)情報が保存されます。<br>
+      <a href="hid00088.htm">→ タグによるファイル管理</a><br>
+    </dd>
 
-<dt>WORKLIST.nwl　<span class="small_nrm">(デフォルト)</span>
-<dd>ワークリストファイルです。ファイルやディレクトリの参照リストで、よく使うものを登録しておくと素早くアクセスできます。<br>
-※任意の名前を使用可能。<br>
-<a href="hid00060.htm">→ ワークリスト</a><br>
+    <dt>WORKLIST.nwl　<span class="small_nrm">(デフォルト)</span></dt>
+    <dd>ワークリストファイルです。ファイルやディレクトリの参照リストで、よく使うものを登録しておくと素早くアクセスできます。<br>
+      ※任意の名前を使用可能。<br>
+      <a href="hid00060.htm">→ ワークリスト</a><br>
+    </dd>
 
-<dt>xxxx.nbt
-<dd>一連の処理を記述したコマンドファイルです。制御文などを用いたバッチ処理も可能です。<br>
-<a href="hid00063.htm">→ ExeCommands コマンド</a>　<a href="hid00067.htm">→ コマンドファイル一覧</a>
+    <dt>xxxx.nbt</dt>
+    <dd>一連の処理を記述したコマンドファイルです。制御文などを用いたバッチ処理も可能です。<br>
+      <a href="hid00063.htm">→ ExeCommands コマンド</a>　<a href="hid00067.htm">→ コマンドファイル一覧</a>
+    </dd>
 
-<dt>xxxx.txt
-<dd>ポップアップメニュー用の定義ファイルです。<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a> コマンドで表示できます。<br>
-一行目に &quot;;[MenuFile]&quot; と記述しておくと、<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>メニュー定義</b>」をチェックすることで <a href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
+    <dt>xxxx.txt</dt>
+    <dd>ポップアップメニュー用の定義ファイルです。<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a> コマンドで表示できます。<br>
+      一行目に &quot;;[MenuFile]&quot; と記述しておくと、<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a>
+      で「<b>メニュー定義</b>」をチェックすることで <a href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
+    </dd>
 
-<dt>xxxx.txt
-<dd>検索結果リストを <a href="hid00005.htm#SaveAsResultList">SaveAsResultList</a> コマンドで保存できます。<br>
-内容はワークリストと同様ですが、先頭に &quot;;[ResultList]&quot; という識別行が、その後に &quot;;&quot; で始まるコメントの形で検索情報が付加されます。<br>
-保存したファイルは、<a href="hid00005.htm#LoadResultList">LoadResultList</a> コマンドで読み込んで再利用できます。<br>
-また <a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>結果リスト</b>」をチェックしていると、<a href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
+    <dt>xxxx.txt</dt>
+    <dd>検索結果リストを <a href="hid00005.htm#SaveAsResultList">SaveAsResultList</a> コマンドで保存できます。<br>
+      内容はワークリストと同様ですが、先頭に &quot;;[ResultList]&quot; という識別行が、その後に &quot;;&quot; で始まるコメントの形で検索情報が付加されます。<br>
+      保存したファイルは、<a href="hid00005.htm#LoadResultList">LoadResultList</a> コマンドで読み込んで再利用できます。<br>
+      また <a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>結果リスト</b>」をチェックしていると、<a
+        href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
+    </dd>
 
-<dt>WEBMAP.HTM
-<dd>
-<a href="hid00005.htm#WebMap">WebMap</a> コマンドによって画像ファイルのGPS情報に基づいた地図を表示する際のテンプレートです。<br>
-存在しない場合はデフォルト設定で表示されます。<br>
-アーカイブの <b>sample_etc</b> ディレクトリには、テンプレートのサンプルファイルがありますので、カスタマイズして利用したり、作成の際の参考にしたりしてください。<br>
+    <dt>WEBMAP.HTM</dt>
+    <dd>
+      <a href="hid00005.htm#WebMap">WebMap</a> コマンドによって画像ファイルのGPS情報に基づいた地図を表示する際のテンプレートです。<br>
+      存在しない場合はデフォルト設定で表示されます。<br>
+      アーカイブの <b>sample_etc</b> ディレクトリには、テンプレートのサンプルファイルがありますので、カスタマイズして利用したり、作成の際の参考にしたりしてください。<br>
+    </dd>
 
-<dt>autorun.inf
-<dd>ドライブのルートにあって、アイコンが設定されている場合、<a href="hid00064.htm">ドライブ一覧</a>などのアイコン表示にそれが用いられます。<br>
-<pre class="example_box">
+    <dt>autorun.inf</dt>
+    <dd>ドライブのルートにあって、アイコンが設定されている場合、<a href="hid00064.htm">ドライブ一覧</a>などのアイコン表示にそれが用いられます。<br>
+      <pre class="example_box">
 [autorun]
 icon=SSD.ico
 </pre>
+    </dd>
 
-<dt>thumbnail.jpg　<span class="small_nrm">(代替データストリーム)</span>
-<dd>サムネイルキャッシュ画像です。<br>
-<a href="hid00020.htm#ThumbCache">オプション設定 - イメージビュアー - サムネイル - 「代替データストリームにキャッシュ」</a> が有効な場合、イメージビュアーで閲覧した画像ファイルに代替データストリームとして保存されます。<br>
-<div class="spc_box">
-なおディレクトリやアーカイブの代替データストリームに <b>thumbnail.jpg</b> という名前の画像を保存しておくと、それが優先的にイメージプレビューされます。<br>
-</div>
+    <dt>thumbnail.jpg　<span class="small_nrm">(代替データストリーム)</span></dt>
+    <dd>サムネイルキャッシュ画像です。<br>
+      <a href="hid00020.htm#ThumbCache">オプション設定 - イメージビュアー - サムネイル - 「代替データストリームにキャッシュ」</a>
+      が有効な場合、イメージビュアーで閲覧した画像ファイルに代替データストリームとして保存されます。<br>
+      <div class="spc_box">
+        なおディレクトリやアーカイブの代替データストリームに <b>thumbnail.jpg</b> という名前の画像を保存しておくと、それが優先的にイメージプレビューされます。<br>
+      </div>
+    </dd>
 
-<dt>thumbnail.txt　<span class="small_nrm">(代替データストリーム)</span>
-<dd>サムネイルキャッシュ情報です。<br>
-<a href="hid00020.htm#ThumbCache">オプション設定 - イメージビュアー - サムネイル - 「代替データストリームにキャッシュ」</a> が有効な場合、イメージビュアーで閲覧した画像ファイルに代替データストリームとして保存されます。<br>
-内容は、&quot;表示文字列 <span class="ctrl_text">[TAB]</span> タイムスタンプ <span class="ctrl_text">[TAB]</span> サムネイルサイズ <span class="ctrl_text">[TAB]</span> 縮小アルゴリズム番号&quot; という一行です。<br>
+    <dt>thumbnail.txt　<span class="small_nrm">(代替データストリーム)</span></dt>
+    <dd>サムネイルキャッシュ情報です。<br>
+      <a href="hid00020.htm#ThumbCache">オプション設定 - イメージビュアー - サムネイル - 「代替データストリームにキャッシュ」</a>
+      が有効な場合、イメージビュアーで閲覧した画像ファイルに代替データストリームとして保存されます。<br>
+      内容は、&quot;表示文字列 <span class="ctrl_text">[TAB]</span> タイムスタンプ <span class="ctrl_text">[TAB]</span> サムネイルサイズ <span
+        class="ctrl_text">[TAB]</span> 縮小アルゴリズム番号&quot; という一行です。<br>
+    </dd>
 
-<dt id="NyanfiDef">nyanfi.def　<span class="small_nrm">(代替データストリーム)</span>
-<dd>ファイルに固有の設定情報です。<br>
-<a href="hid00006.htm">テキストビュアー</a>でCSV/TSVファイルを開いた場合に、「先頭行が項目名」設定(TopIsHeader)と、「項目列の最小化」情報(MinFixedCols=列インデックス番号,…)が保存されます。<br>
-また、<a href="hid00082.htm">テキストプレビュー</a>や<a href="hid00006.htm">テキストビュアー</a>で文字コードを変更すると、そのコードページ(CodePage)が保存されます。<br>
+    <dt id="NyanfiDef">nyanfi.def　<span class="small_nrm">(代替データストリーム)</span></dt>
+    <dd>ファイルに固有の設定情報です。<br>
+      <a
+        href="hid00006.htm">テキストビュアー</a>でCSV/TSVファイルを開いた場合に、「先頭行が項目名」設定(TopIsHeader)と、「項目列の最小化」情報(MinFixedCols=列インデックス番号,…)が保存されます。<br>
+      また、<a href="hid00082.htm">テキストプレビュー</a>や<a
+        href="hid00006.htm">テキストビュアー</a>で文字コードを変更すると、そのコードページ(CodePage)が保存されます。<br>
+    </dd>
 
-<dt>favicon　<span class="small_nrm">(代替データストリーム)</span>
-<dd>ブラウザからリンク項目をドロップしたとき、ドメイン下で <b>favicon.ico</b> が取得できたら、インターネットショートカット(.url)の代替データストリームに <b>favicon</b> という名前で保存し、リストのアイコン表示に用います。<br>
-<a href="hid00009.htm#FaviconApi">オプション設定 - 一般 - 表示 - 「<b>favicon 取得API</b>」</a>で、favicon.ico が取得できなかったときに利用する取得APIを指定できます。<br>
-<b>.png</b> 形式の表示にも対応しています。後から手動で favicon を変更してもかまいません。<br>
+    <dt>favicon　<span class="small_nrm">(代替データストリーム)</span></dt>
+    <dd>ブラウザからリンク項目をドロップしたとき、ドメイン下で <b>favicon.ico</b> が取得できたら、インターネットショートカット(.url)の代替データストリームに <b>favicon</b>
+      という名前で保存し、リストのアイコン表示に用います。<br>
+      <a href="hid00009.htm#FaviconApi">オプション設定 - 一般 - 表示 - 「<b>favicon 取得API</b>」</a>で、favicon.ico
+      が取得できなかったときに利用する取得APIを指定できます。<br>
+      <b>.png</b> 形式の表示にも対応しています。後から手動で favicon を変更してもかまいません。<br>
+    </dd>
 
-<dt>tasklog[n~m].txt
-<dd>タスクログです。終了時にログウィンドウの内容が保存されます。<br>
-二重起動された <b>NyanFi</b> では n を付加、m は世代数です。<br>
+    <dt>tasklog[n~m].txt</dt>
+    <dd>タスクログです。終了時にログウィンドウの内容が保存されます。<br>
+      二重起動された <b>NyanFi</b> では n を付加、m は世代数です。<br>
+      <a href="hid00024.htm#Log">→ オプション設定 - 一般2 - ログ</a><br>
+    </dd>
 
-<a href="hid00024.htm#Log">→ オプション設定 - 一般2 - ログ</a><br>
+    <dt>renamelog.txt</dt>
+    <dd>改名ログです。このファイルに基づいてアンドゥが可能です。<br>
+      <a href="hid00005.htm#UndoRename">→ UndoRename</a>　<a href="hid00051.htm">→ 名前の変更ダイアログ</a><br>
+    </dd>
 
-<dt>renamelog.txt
-<dd>改名ログです。このファイルに基づいてアンドゥが可能です。<br>
-<a href="hid00005.htm#UndoRename">→ UndoRename</a>　<a href="hid00051.htm">→ 名前の変更ダイアログ</a><br>
+    <dt>DriveLog.csv</dt>
+    <dd><a href="hid00086.htm">ドライブ使用率推移</a>のログです。</dd>
 
-<dt>DriveLog.csv
-<dd><a href="hid00086.htm">ドライブ使用率推移</a>のログです。<br>
+  </dl>
+  <br>
 
-</dl>
-<br>
-
-<p class="note_text">
-<b>代替データストリーム</b>は、<b>NTFS</b>でないと利用できません。他のファイルシステムにファイルをコピーすると、代替データストリームは失われます。<br>
-</p>
-<br><br>
+  <p class="note_text">
+    <b>代替データストリーム</b>は、<b>NTFS</b>でないと利用できません。他のファイルシステムにファイルをコピーすると、代替データストリームは失われます。<br>
+  </p>
+  <br><br>
 
 </body>
+
 </html>

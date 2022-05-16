@@ -1,116 +1,125 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>構文強調表示定義ファイル</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="FunctionList">
-	<param name="Keyword" value="Highlight.INI">
-	<param name="Keyword" value="SearchPair">
-	<param name="Keyword" value="SetColor">
-	<param name="Keyword" value="TextViewer">
-	<param name="Keyword" value="テキストビュアー">
-	<param name="Keyword" value="関数一覧">
-	<param name="Keyword" value="構文強調表示定義ファイル">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>構文強調表示定義ファイル</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="FunctionList">
+    <param name="Keyword" value="Highlight.INI">
+    <param name="Keyword" value="SearchPair">
+    <param name="Keyword" value="SetColor">
+    <param name="Keyword" value="TextViewer">
+    <param name="Keyword" value="テキストビュアー">
+    <param name="Keyword" value="関数一覧">
+    <param name="Keyword" value="構文強調表示定義ファイル">
+  </object>
 </head>
 
 <body>
-<h1>構文強調表示定義ファイル</h1>
+  <h1>構文強調表示定義ファイル</h1>
 
-<p>
-<a href="hid00006.htm">テキストビュアー</a>での構文強調表示などを、ファイルによってユーザ定義できます。<br>
-定義ファイルは、<b>NyanFi</b> 実行ディレクトリに &quot;<b>Highlight.INI</b>&quot; という名前で作成してください。<br>
-<b>NyanFi</b> がデフォルトで対応している拡張子についても、ファイルで定義し直すと、それが優先的に適用されます。<br>
-一旦読み込まれた定義ファイルは、内容を保持して再利用します。タイムスタンプが変化していたら読み込み直します。<br>
-</p>
+  <p>
+    <a href="hid00006.htm">テキストビュアー</a>での構文強調表示などを、ファイルによってユーザ定義できます。<br>
+    定義ファイルは、<b>NyanFi</b> 実行ディレクトリに &quot;<b>Highlight.INI</b>&quot; という名前で作成してください。<br>
+    <b>NyanFi</b> がデフォルトで対応している拡張子についても、ファイルで定義し直すと、それが優先的に適用されます。<br>
+    一旦読み込まれた定義ファイルは、内容を保持して再利用します。タイムスタンプが変化していたら読み込み直します。<br>
+  </p>
 
-<p>
-<b>設定メニュー</b> - [<b>デフォルトの構文強調表示定義をコピー</b>] を用いると、特定の拡張子に対するデフォルトの構文強調表示定義をクリップボードにコピーできます(<span class="note_text">例外的な処理もあるため、実際の動作と一致しない場合もあり</span>)。取得した内容を変更して定義ファイルに設定すれば、デフォルトの定義を拡張できます。
-</p>
+  <p>
+    <b>設定メニュー</b> - [<b>デフォルトの構文強調表示定義をコピー</b>] を用いると、特定の拡張子に対するデフォルトの構文強調表示定義をクリップボードにコピーできます(<span
+      class="note_text">例外的な処理もあるため、実際の動作と一致しない場合もあり</span>)。取得した内容を変更して定義ファイルに設定すれば、デフォルトの定義を拡張できます。
+  </p>
 
-<p>
-定義ファイルの書式は一般的なINIファイルと同様です。<br>
-ファイルの種類ごとにセクションを作り、その中に定義を記述してください。<br>
-セクション名は、定義したいファイルの拡張子とします。拡張子は . (ピリオド)で区切って複数指定できます。<br>
-. のみを指定すると、拡張子なしのファイル(ドットファイルを含む)にマッチします。<br>
-なお <b>xd2txlib.dll</b> でバイナリ文書をテキスト表示している場合も、その拡張子に対して定義可能です。<br>
-</p>
+  <p>
+    定義ファイルの書式は一般的なINIファイルと同様です。<br>
+    ファイルの種類ごとにセクションを作り、その中に定義を記述してください。<br>
+    セクション名は、定義したいファイルの拡張子とします。拡張子は . (ピリオド)で区切って複数指定できます。<br>
+    . のみを指定すると、拡張子なしのファイル(ドットファイルを含む)にマッチします。<br>
+    なお <b>xd2txlib.dll</b> でバイナリ文書をテキスト表示している場合も、その拡張子に対して定義可能です。<br>
+  </p>
 
-<div class="indent1">
-<pre class="example_box">
+  <div class="indent1">
+    <pre class="example_box">
 [.f03.f08.f90.f95]
 </pre>
-</div>
+  </div>
 
-<p>
-セクション名を <b>CLIPBOARD</b> にすると、<a href="hid00005.htm#TextViewer">TextViewer</a>_CB コマンドでクリップボードを閲覧している場合の構文強調表示を定義できます。
-</p>
-<div class="indent1">
-<pre class="example_box">
+  <p>
+    セクション名を <b>CLIPBOARD</b> にすると、<a href="hid00005.htm#TextViewer">TextViewer</a>_CB
+    コマンドでクリップボードを閲覧している場合の構文強調表示を定義できます。
+  </p>
+  <div class="indent1">
+    <pre class="example_box">
 [CLIPBOARD]
 </pre>
-</div>
+  </div>
 
-<p>
-セクション名を <b>TASKLOG</b> にすると、タスクログの構文強調表示を定義できます。<br>
-.txt に対する別のセクションにログファイルがマッチする可能性がある場合は、それより前に記述してください。先にマッチしたものが優先されます。<br>
-</p>
-<div class="indent1">
-<pre class="example_box">
+  <p>
+    セクション名を <b>TASKLOG</b> にすると、タスクログの構文強調表示を定義できます。<br>
+    .txt に対する別のセクションにログファイルがマッチする可能性がある場合は、それより前に記述してください。先にマッチしたものが優先されます。<br>
+  </p>
+  <div class="indent1">
+    <pre class="example_box">
 [TASKLOG]
 </pre>
-</div>
+  </div>
 
-<p>
-セクション名を <b>HTML2TEXT</b> にすると、HTML→テキスト変換表示中の構文強調表示を定義できます。
-</p>
-<div class="indent1">
-<pre class="example_box">
+  <p>
+    セクション名を <b>HTML2TEXT</b> にすると、HTML→テキスト変換表示中の構文強調表示を定義できます。
+  </p>
+  <div class="indent1">
+    <pre class="example_box">
 [HTML2TEXT]
 </pre>
-</div>
-<br><br>
+  </div>
+  <br><br>
 
-<p>
-セクション内では、以下のキーを利用できます。必要に応じて設定してください。
-</p>
+  <p>
+    セクション内では、以下のキーを利用できます。必要に応じて設定してください。
+  </p>
 
-<hr>
-<dl class="indent1">
+  <hr>
+  <dl class="indent1">
 
-<dt class="no_bg">TargetPath
-<dd>特定のパスでのみ定義を適用したい場合に指定します。<br>
-無指定の場合は、すべてのパスが対象となります。<br>
-パスは <b>;</b> (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。また環境変数や<a href="hid00063.htm#PreDefVar">定義済み変数</a>の <b>%ExePath%</b> も使えます。<br>
+    <dt class="no_bg">TargetPath</dt>
+    <dd>特定のパスでのみ定義を適用したい場合に指定します。<br>
+      無指定の場合は、すべてのパスが対象となります。<br>
+      パスは <b>;</b>
+      (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。また環境変数や<a
+        href="hid00063.htm#PreDefVar">定義済み変数</a>の <b>%ExePath%</b> も使えます。<br>
 
-<pre class="example_box">
+      <pre class="example_box">
 TargetPath=D:\Projects\Source;E:\Backup\Source
 </pre>
+    </dd>
 
-<dt class="no_bg">ExcludePath
-<dd>定義を適用したくないパスを指定します。<br>
-パスは、<b>;</b> (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。また環境変数や<a href="hid00063.htm#PreDefVar">定義済み変数</a>の <b>%ExePath%</b> も使えます。<br>
+    <dt class="no_bg">ExcludePath</dt>
+    <dd>定義を適用したくないパスを指定します。<br>
+      パスは、<b>;</b>
+      (セミコロン)で区切って複数指定できます。ドライブ名から始まるフルパスで指定しますが、前方一致でマッチするので、完全なパスの形式になっていなかったり、ファイル名部分まで及んだりしてもかまいません。また環境変数や<a
+        href="hid00063.htm#PreDefVar">定義済み変数</a>の <b>%ExePath%</b> も使えます。<br>
 
-<pre class="example_box">
+      <pre class="example_box">
 TargetPath=D:\Prog\NyanFi\tasklog
 </pre>
+    </dd>
 
-<dt class="no_bg">TargetName
-<dd>特定のファイル名主部を持つファイルに対してのみ定義を適用したい場合に指定します。<br>
-完全一致ですが、大小文字は区別されません。<br>
-名前は <b>;</b> (セミコロン)で区切って複数指定できます。<br>
-[.] セクションで指定すると、特定のドットファイルなどに適用できます。<br>
-<b>NyanFi</b> では、先頭のドット以降部分は拡張子ではなくファイル名主部とみなしています。<br>
+    <dt class="no_bg">TargetName</dt>
+    <dd>特定のファイル名主部を持つファイルに対してのみ定義を適用したい場合に指定します。<br>
+      完全一致ですが、大小文字は区別されません。<br>
+      名前は <b>;</b> (セミコロン)で区切って複数指定できます。<br>
+      [.] セクションで指定すると、特定のドットファイルなどに適用できます。<br>
+      <b>NyanFi</b> では、先頭のドット以降部分は拡張子ではなくファイル名主部とみなしています。<br>
+    </dd>
+  </dl>
 
-</dl>
-
-<p>
-同一拡張子に対して異なる条件で別の定義を適用したい場合は、拡張子の末尾に <b>:</b> (コロン)で区切って任意の文字列を付加し、セクション名が一意的になるようにしてください。<br>
-</p>
-<div class="indent2">
-<pre class="example_box">
+  <p>
+    同一拡張子に対して異なる条件で別の定義を適用したい場合は、拡張子の末尾に <b>:</b> (コロン)で区切って任意の文字列を付加し、セクション名が一意的になるようにしてください。<br>
+  </p>
+  <div class="indent2">
+    <pre class="example_box">
 [.txt:D1]
 TargetPath=D:\hoge\data1
 …
@@ -128,212 +137,221 @@ TargetName=hogehoge
 …
 
 </pre>
-</div>
+  </div>
 
-<p>セクション名が <b>CLIPBOARD</b>、<b>TASKLOG</b> の場合、<b>TargetPath</b>、<b>ExcludePath</b> は無効です。</p>
-<br><hr>
+  <p>セクション名が <b>CLIPBOARD</b>、<b>TASKLOG</b> の場合、<b>TargetPath</b>、<b>ExcludePath</b> は無効です。</p>
+  <br>
+  <hr>
 
-<dl class="indent1">
-<dt class="no_bg">FontName
-<dd>通常とは異なる等幅フォントで表示したい場合、その名前を設定してください。<br>
-誤ってプロポーショナルフォントを設定すると表示が崩れますので注意してください。<br>
+  <dl class="indent1">
+    <dt class="no_bg">FontName</dt>
+    <dd>通常とは異なる等幅フォントで表示したい場合、その名前を設定してください。<br>
+      誤ってプロポーショナルフォントを設定すると表示が崩れますので注意してください。<br>
+    </dd>
 
-<dt class="no_bg">FontSize
-<dd>通常とは異なるフォントサイズで表示したい場合に設定してください。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">FontSize</dt>
+    <dd>通常とは異なるフォントサイズで表示したい場合に設定してください。<br>
+      <pre class="example_box">
 FontName="Source Code Pro Medium"
 FontSize=14
 </pre>
-<br>
+      <br>
+    </dd>
 
-<dt class="no_bg">Comment1～
-<dd>行コメントの開始文字列です。<br>
-キー名の末尾に連番を振ることで複数指定できます。<br>
-この設定は、テキストプレビューや一覧ダイアログにも適用されます。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">Comment1～</dt>
+    <dd>行コメントの開始文字列です。<br>
+      キー名の末尾に連番を振ることで複数指定できます。<br>
+      この設定は、テキストプレビューや一覧ダイアログにも適用されます。<br>
+      <pre class="example_box">
 CommentEnd1=@REM
 CommentEnd2=REM
 CommentEnd3=::
 </pre>
+    </dd>
 
-<dt class="no_bg">CommentBgn1～<br>
-CommentEnd1～
-<dd>
-ブロックコメントの開始/終了文字列です。<br>
-キー名の末尾に連番を振ることで複数指定できます。必ず開始/終了を組にして指定してください。<br>
-この設定は、テキストプレビューや一覧ダイアログにも適用されますが、開始/終了文字列が同じだと対応できない場合があります。<br>
+    <dt class="no_bg">CommentBgn1～<br>
+      CommentEnd1～</dt>
+    <dd>
+      ブロックコメントの開始/終了文字列です。<br>
+      キー名の末尾に連番を振ることで複数指定できます。必ず開始/終了を組にして指定してください。<br>
+      この設定は、テキストプレビューや一覧ダイアログにも適用されますが、開始/終了文字列が同じだと対応できない場合があります。<br>
 
-<pre class="example_box">
+      <pre class="example_box">
 CommentBgn1={
 CommentEnd1=}
 CommentBgn2=(*
 CommentEnd2=*)
 </pre>
 
-先頭と末尾が同じ引用符になる場合は、全体を &quot; または ' で囲んでください。<br>
+      先頭と末尾が同じ引用符になる場合は、全体を &quot; または ' で囲んでください。<br>
 
-<pre class="example_box">
+      <pre class="example_box">
 CommentBgn1='&quot;&quot;&quot;'
 CommentEnd1='&quot;&quot;&quot;'
 CommentBgn2=&quot;'''&quot;
 CommentEnd2=&quot;'''&quot;
 </pre>
-<br>
+      <br>
+    </dd>
 
-<dt class="no_bg">ReservedPtn<br>
-<dd>
-予約語の正規表現パターンです。<br>
-多数になる場合でも、一行で記述してください。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">ReservedPtn</dt>
+    <dd>
+      予約語の正規表現パターンです。<br>
+      多数になる場合でも、一行で記述してください。<br>
+      <pre class="example_box">
 ReservedPtn=\b(if|begin|else|end|function)\b
 </pre>
+    </dd>
 
-<dt class="no_bg">ReservedCase<br>
-<dd>予約語に対する大小文字区別の有無です。<br>
-区別する場合は <b>1</b> (デフォルト)を、区別しない場合は <b>0</b> を指定してください。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">ReservedCase</dt>
+    <dd>予約語に対する大小文字区別の有無です。<br>
+      区別する場合は <b>1</b> (デフォルト)を、区別しない場合は <b>0</b> を指定してください。<br>
+      <pre class="example_box">
 ReservedCase=0
 </pre>
-<br>
+      <br>
+    </dd>
 
-<dt class="no_bg">NumericPtn
-<dd>数値の正規表現パターンです。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">NumericPtn</dt>
+    <dd>数値の正規表現パターンです。<br>
+      <pre class="example_box">
 NumericPtn=\b[0-9]+\b
 </pre>
-<br>
+      <br>
+    </dd>
 
-<dt class="no_bg">Symbol
-<dd>シンボルとみなす文字を列挙します。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">Symbol</dt>
+    <dd>シンボルとみなす文字を列挙します。<br>
+      <pre class="example_box">
 Symbol={}()[]+-*/%&|^!~=&lt;&gt;,:;?
 </pre>
-<br>
+      <br>
+    </dd>
 
-<dt class="no_bg">Strings
-<dd>文字列表示のための引用符を列挙します。
-
-<pre class="example_box">
+    <dt class="no_bg">Strings</dt>
+    <dd>文字列表示のための引用符を列挙します。
+      <pre class="example_box">
 Strings="'
 </pre>
+    </dd>
 
-<dt class="no_bg">UseEsc
-<dd>Strings で指定した引用符内でのエスケープシーケンスの有無です。<br>
-\ によるエスケープシーケンスがある場合は <b>1</b> (デフォルト)を、ない場合は <b>0</b> を指定してください。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">UseEsc</dt>
+    <dd>Strings で指定した引用符内でのエスケープシーケンスの有無です。<br>
+      \ によるエスケープシーケンスがある場合は <b>1</b> (デフォルト)を、ない場合は <b>0</b> を指定してください。<br>
+      <pre class="example_box">
 UseEsc=1
 </pre>
-<br>
+      <br>
+    </dd>
 
-<dt class="no_bg">HeadlinePtn
-<dd>見出し行の正規表現パターンです。マッチした行が、「見出しの文字色」で表示されます。<br>
-無指定の場合、デフォルトのパターンがあればそれが用いられます。<br>
-これが指定されていて <a href="#FunctionPtn">FunctionPtn</a> が無指定の場合、<a href="hid00006.htm#FunctionList">FunctionList</a> コマンドを実行すると「見出し一覧」が表示されます。<br>
-またこの設定は、一覧ダイアログでの見出し表示にも適用されます。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">HeadlinePtn</dt>
+    <dd>見出し行の正規表現パターンです。マッチした行が、「見出しの文字色」で表示されます。<br>
+      無指定の場合、デフォルトのパターンがあればそれが用いられます。<br>
+      これが指定されていて <a href="#FunctionPtn">FunctionPtn</a> が無指定の場合、<a href="hid00006.htm#FunctionList">FunctionList</a>
+      コマンドを実行すると「見出し一覧」が表示されます。<br>
+      またこの設定は、一覧ダイアログでの見出し表示にも適用されます。<br>
+      <pre class="example_box">
 HeadlinePtn=^[●○◎]\.+
 </pre>
-<br>
+      <br>
+    </dd>
 
-<dt class="no_bg">ColorIniFile
-<dd>指定したカラー設定ファイル(.INI)によって、テキストビュアーの配色を一時的に変更します。<br>
-設定ファイルには、<b>テキストビュアーの配色</b>ダイアログ(<a href="hid00006.htm#SetColor">SetColor</a>)や <a href="hid00023.htm">オプション設定 - フォント・配色</a> でエクスポートしたもの、あるいは <b>NyanFi</b> のINIファイルを利用できます。ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">ColorIniFile</dt>
+    <dd>指定したカラー設定ファイル(.INI)によって、テキストビュアーの配色を一時的に変更します。<br>
+      設定ファイルには、<b>テキストビュアーの配色</b>ダイアログ(<a href="hid00006.htm#SetColor">SetColor</a>)や <a href="hid00023.htm">オプション設定 -
+        フォント・配色</a> でエクスポートしたもの、あるいは <b>NyanFi</b> のINIファイルを利用できます。ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+      <pre class="example_box">
 ColorIniFile=DarkColor.INI
 </pre>
+    </dd>
 
-<dt class="no_bg">CommentCol、ReservedCol、NumericCol、SymbolCol、StringsCol、HeadlineCol
-<dd>コメント、予約語、数値、シンボル、文字列、見出しを、通常と異なる文字色で表示したい場合に設定してください。<br>
-色は、2桁の16進数によるRRGGBB形式で指定します。<br>
-なおテキストプレビューや一覧ダイアログに CommentCol は適用されません。また一覧ダイアログに HeadlineCol は適用されません。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">CommentCol、ReservedCol、NumericCol、SymbolCol、StringsCol、HeadlineCol</dt>
+    <dd>コメント、予約語、数値、シンボル、文字列、見出しを、通常と異なる文字色で表示したい場合に設定してください。<br>
+      色は、2桁の16進数によるRRGGBB形式で指定します。<br>
+      なおテキストプレビューや一覧ダイアログに CommentCol は適用されません。また一覧ダイアログに HeadlineCol は適用されません。<br>
+      <pre class="example_box">
 CommentCol=FFFF66
 ReservedCol=66FFFF
 </pre>
-<br>
+      <br>
+    </dd>
 
-<dt class="no_bg">KeywordPtn、KeywordPtn2
-<dd>予約語以外のキーワードの正規表現パターンです。キーワードは2種類まで指定できます。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">KeywordPtn、KeywordPtn2</dt>
+    <dd>予約語以外のキーワードの正規表現パターンです。キーワードは2種類まで指定できます。<br>
+      <pre class="example_box">
 KeywordPtn=\b(hoge|fuga|piyo)\b
 KeywordPtn2=[子丑寅卯辰巳午未申酉戌亥]
 </pre>
+    </dd>
 
-<dt class="no_bg">KeywordCase、KeywordCase2
-<dd>KeywordPtn、KeywordPtn2 で指定したキーワードに対する大小文字区別の有無です。<br>
-区別する場合は <b>1</b> (デフォルト)を、区別しない場合は <b>0</b> を指定してください。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">KeywordCase、KeywordCase2</dt>
+    <dd>KeywordPtn、KeywordPtn2 で指定したキーワードに対する大小文字区別の有無です。<br>
+      区別する場合は <b>1</b> (デフォルト)を、区別しない場合は <b>0</b> を指定してください。<br>
+      <pre class="example_box">
 KeywordCase=0
 KeywordCase2=0
 </pre>
+    </dd>
 
-<dt class="no_bg">KeywordCol、KeywordCol2
-<dd>KeywordPtn、KeywordPtn2 で指定したキーワードの表示色です。<br>
-2桁の16進数によるRRGGBB形式で指定してください。<br>
-
-<pre class="example_box">
+    <dt class="no_bg">KeywordCol、KeywordCol2</dt>
+    <dd>KeywordPtn、KeywordPtn2 で指定したキーワードの表示色です。<br>
+      2桁の16進数によるRRGGBB形式で指定してください。<br>
+      <pre class="example_box">
 KeywordCol=FFFF66
 KeywordCol2=66FFFF
 </pre>
-<br>
+      <br>
+    </dd>
 
-<dt class="no_bg" id="FunctionPtn">FunctionPtn
-<dd><a href="hid00066.htm">関数一覧</a>で表示する関数の正規表現パターンです。<br>
-
-<pre class="example_box">
+    <dt class="no_bg" id="FunctionPtn">FunctionPtn</dt>
+    <dd><a href="hid00066.htm">関数一覧</a>で表示する関数の正規表現パターンです。<br>
+      <pre class="example_box">
 FunctionPtn=^function\s+[_a-zA-Z]\w*\(
 </pre>
+    </dd>
 
-<dt class="no_bg">FuncNamePtn
-<dd><a href="hid00066.htm">関数一覧</a>で、<img src="chkbox.png" alt=""> <b>名前</b> をチェックしている場合に、関数の名前部分を取得するための正規表現パターンです。<br>
-マッチした名前の末尾に括弧がある場合、それを除いて表示します。
-
-<pre class="example_box">
+    <dt class="no_bg">FuncNamePtn</dt>
+    <dd><a href="hid00066.htm">関数一覧</a>で、<img src="chkbox.png" alt=""> <b>名前</b>
+      をチェックしている場合に、関数の名前部分を取得するための正規表現パターンです。<br>
+      マッチした名前の末尾に括弧がある場合、それを除いて表示します。
+      <pre class="example_box">
 FuncNamePtn=\b[_a-zA-Z]\w*\(
 </pre>
-<br>
+      <br>
+    </dd>
 
-<dt class="no_bg">AltBackSlash
-<dd><a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>&quot;\&quot; を &quot;&#x2216&quot;(U+2216)で表示</b>」の設定内容を変更できます。<br>
-有効にする場合は <b>1</b> を、無効にする場合は <b>0</b> を指定してください。このキーがない場合は、オプション設定に従います。<br>
-<br>
+    <dt class="no_bg">AltBackSlash</dt>
+    <dd><a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>&quot;\&quot; を
+        &quot;&#x2216&quot;(U+2216)で表示</b>」の設定内容を変更できます。<br>
+      有効にする場合は <b>1</b> を、無効にする場合は <b>0</b> を指定してください。このキーがない場合は、オプション設定に従います。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg" id="PairBeginPtn">PairBeginPtn1～、PairEndPtn1～
-<dd><a href="hid00006.htm#SearchPair">SearchPair</a> コマンドの検索で用いられる、開始行/終了行の正規表現パターンです。<br>
-キー名の末尾に連番を振ることで複数指定できます。必ず開始/終了を組にして指定してください。<br>
-<pre class="example_box">
+    <dt class="no_bg" id="PairBeginPtn">PairBeginPtn1～、PairEndPtn1～</dt>
+    <dd><a href="hid00006.htm#SearchPair">SearchPair</a> コマンドの検索で用いられる、開始行/終了行の正規表現パターンです。<br>
+      キー名の末尾に連番を振ることで複数指定できます。必ず開始/終了を組にして指定してください。<br>
+      <pre class="example_box">
 PairBeginPtn1=^#BEGIN$
 PairEndPtn1=^#END$
 PairBeginPtn2=^#HEAD$
 PairEndPtn2=^#FOOT$
 </pre>
-</dl>
-<br>
+    </dd>
+  </dl>
+  <br>
 
-<div class="indent1">
-<p class="note_text">
-不正な正規表現パターンが指定されていると無効になります。うまく機能しない場合は設定を確認してください。<br>
-起動時や再読み込み時、構文強調表示定義ファイルに誤りがあったら、その内容がログに出力されます。<br>
-</p>
-</div>
-<br>
-<hr>
+  <div class="indent1">
+    <p class="note_text">
+      不正な正規表現パターンが指定されていると無効になります。うまく機能しない場合は設定を確認してください。<br>
+      起動時や再読み込み時、構文強調表示定義ファイルに誤りがあったら、その内容がログに出力されます。<br>
+    </p>
+  </div>
+  <br>
+  <hr>
 
-<div class="indent1">
-<b>Highlight.INI の例</b><br>
-<pre class="example_box">
+  <div class="indent1">
+    <b>Highlight.INI の例</b><br>
+    <pre class="example_box">
 [.h51.mac]
 Comment1=;
 ReservedPtn=\b(BIT|CREF|DATA|DB|DW|END|ENDM|EQU|INCLUDE|MACRO|ORG|PAGE)\b
@@ -365,8 +383,9 @@ FunctionPtn=^function\s+[_a-zA-Z]\w*\(
 FuncNamePtn=\b[_a-zA-Z]\w*\(
 
 </pre>
-</div>
-<br><br>
+  </div>
+  <br><br>
 
 </body>
+
 </html>

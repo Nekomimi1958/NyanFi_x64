@@ -1,394 +1,471 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>オプション設定 - デザイン</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="アイコン">
-	<param name="Keyword" value="イメージプレビュー">
-	<param name="Keyword" value="インポート">
-	<param name="Keyword" value="エクスポート">
-	<param name="Keyword" value="カウントダウン">
-	<param name="Keyword" value="シンプルスクロールバー">
-	<param name="Keyword" value="スクロールバー">
-	<param name="Keyword" value="ステータスバー">
-	<param name="Keyword" value="ダークモード">
-	<param name="Keyword" value="タブバー">
-	<param name="Keyword" value="ドライブ情報">
-	<param name="Keyword" value="ファイルリスト">
-	<param name="Keyword" value="メニューバー">
-	<param name="Keyword" value="モーダル表示効果">
-	<param name="Keyword" value="画面レイアウト">
-	<param name="Keyword" value="時計パネル">
-	<param name="Keyword" value="分割境界線">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>オプション設定 - デザイン</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="アイコン">
+    <param name="Keyword" value="イメージプレビュー">
+    <param name="Keyword" value="インポート">
+    <param name="Keyword" value="エクスポート">
+    <param name="Keyword" value="カウントダウン">
+    <param name="Keyword" value="シンプルスクロールバー">
+    <param name="Keyword" value="スクロールバー">
+    <param name="Keyword" value="ステータスバー">
+    <param name="Keyword" value="ダークモード">
+    <param name="Keyword" value="タブバー">
+    <param name="Keyword" value="ドライブ情報">
+    <param name="Keyword" value="ファイルリスト">
+    <param name="Keyword" value="メニューバー">
+    <param name="Keyword" value="モーダル表示効果">
+    <param name="Keyword" value="画面レイアウト">
+    <param name="Keyword" value="時計パネル">
+    <param name="Keyword" value="分割境界線">
+  </object>
 </head>
 
 <body>
 
-<h1>オプション設定 - デザイン</h1>
+  <h1>オプション設定 - デザイン</h1>
 
-<p class="link_box">
-<a href="#Layout">画面レイアウト</a> ／ <a href="#FileList">ファイルリスト</a> ／ <a href="#BgImage">背景画像</a> ／ <a href="#TabBar">タブバー</a> ／ <a href="#DriveInfo">ドライブ情報の書式</a> ／ <a href="#StatusBar">ステータスバーの書式</a> ／ <a href="#ModalEffect">モーダル表示効果</a>
-</p>
-<br>
+  <p class="link_box">
+    <a href="#Layout">画面レイアウト</a> ／ <a href="#FileList">ファイルリスト</a> ／ <a href="#BgImage">背景画像</a> ／ <a
+      href="#TabBar">タブバー</a> ／ <a href="#DriveInfo">ドライブ情報の書式</a> ／ <a href="#StatusBar">ステータスバーの書式</a> ／ <a
+      href="#ModalEffect">モーダル表示効果</a>
+  </p>
+  <br>
 
-<dl>
-<dt id="Layout"><img src="grpbox.png" alt=""> 画面レイアウト
-<dd><img src="combobox.png" alt="">　<span class="def_text">(デフォルト: ファイルリストが上)</span><br>
-ファイルリストとそれ以外の画面(プレビュー、情報、ログ)をどのように配置するかを選択します。<br>
-なお <a href="hid00005.htm#FileListOnly">FileListOnly</a> コマンドで、ファイルリストのみの表示に切り替えることも可能です。<br>
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 上下に分割
-<dd>ファイルリストを上下に分割して配置します。<br>
-上下分割の場合、ファイルリストの「左」「右」は、「上」「下」に読み替えてください。<br>
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> Dir.情報も上下
-<dd>「<b>上下に分割</b>」と同時にチェックすると、<a href="hid00004.htm#DirInfo">ディレクトリ情報</a>を分けてそれぞれのリストの上端に表示します。ディレクトリ関係は、上側のディレクトリ情報右端に表示されます。
-<br>
-チェックしないと、画面上端に左右均等でディレクトリ情報が表示されます。<br>
-<br>
+  <dl>
+    <dt id="Layout"><img src="grpbox.png" alt=""> 画面レイアウト</dt>
+    <dd><img src="combobox.png" alt="">　<span class="def_text">(デフォルト: ファイルリストが上)</span><br>
+      ファイルリストとそれ以外の画面(プレビュー、情報、ログ)をどのように配置するかを選択します。<br>
+      なお <a href="hid00005.htm#FileListOnly">FileListOnly</a> コマンドで、ファイルリストのみの表示に切り替えることも可能です。<br>
+    </dd>
 
-<dt id="FileList"><img src="grpbox.png" alt=""> ファイルリスト
-<dd>
-<dt class="no_bg_indent1">行間 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 4px)</span>
-<dd>ファイルリストの行間をピクセル単位で指定できます。<br>
-なお、内部レディングがあるフォントの場合、それを差し引いた値が適用されます。
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 上下に分割</dt>
+    <dd>ファイルリストを上下に分割して配置します。<br>
+      上下分割の場合、ファイルリストの「左」「右」は、「上」「下」に読み替えてください。<br>
+    </dd>
 
-<dt class="no_bg_indent1">カーソル線幅 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 2px)</span>
-<dd>ファイルリストに表示されるラインカーソルの幅をピクセル単位で指定できます。<br>
-ラインカーソルの設定は、他の一覧などでも用いられます。
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> Dir.情報も上下</dt>
+    <dd>「<b>上下に分割</b>」と同時にチェックすると、<a
+        href="hid00004.htm#DirInfo">ディレクトリ情報</a>を分けてそれぞれのリストの上端に表示します。ディレクトリ関係は、上側のディレクトリ情報右端に表示されます。
+      <br>
+      チェックしないと、画面上端に左右均等でディレクトリ情報が表示されます。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">行背景α <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 0)</span>
-<dd>数値(0:透明～255:不透明)を指定すると、カーソル行の背景にカーソル色がブレンドされます。<br>
-1以上の値を設定し、かつ「<b>カーソル線幅</b>」を 0 にすると、ファイルリストではラインカーソルが表示されなくなります(他の一覧などでは、線幅=1 でカーソルを描画)。<br>
+    <dt id="FileList"><img src="grpbox.png" alt=""> ファイルリスト</dt>
+    <dd></dd>
+    <dt class="no_bg_indent1">行間 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 4px)</span></dt>
+    <dd>ファイルリストの行間をピクセル単位で指定できます。<br>
+      なお、内部レディングがあるフォントの場合、それを差し引いた値が適用されます。
+    </dd>
 
-<dt class="no_bg_indent1">ディレクトリ括弧文字 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: [ ～ ])</span>
-<dd>ファイルリストでディレクトリ名を囲む文字列を指定できます。文字は、そのフォントで表示できるものであれば何でもかまいません。1文字以上でも、また片方だけあるいは両方とも無しでもかまいません。括弧ではなく装飾記号などをアイコンに見立てて用いるのもよいでしょう。<br>
-なお「<b>アイコン表示</b>」がチェックされている場合、この文字列は表示されません。
+    <dt class="no_bg_indent1">カーソル線幅 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 2px)</span></dt>
+    <dd>ファイルリストに表示されるラインカーソルの幅をピクセル単位で指定できます。<br>
+      ラインカーソルの設定は、他の一覧などでも用いられます。
+    </dd>
 
-<dt class="no_bg_indent1" id="ShowIcon"><img src="chkbox.png" alt=""> アイコン表示
-<dd>ファイルリストにスモールアイコン(16×16)を表示します。<br>
-<a href="hid00005.htm#ShowIcon">→ ShowIcon</a><br>
-<div class="spc_box">
-<a href="hid00009.htm#Show">オプション設定 - 一般 - 表示</a> で「<strong>ファイル固有のアイコンを表示</strong>」のチェックを外すと、ファイル固有のアイコンの代わりに、拡張子に対応するデフォルトのアイコンを表示します。<br>
-</div>
-<div class="spc_box">
-アイコンが表示されている場合、「<b>ディレクトリ括弧文字</b>」は表示されません。<br>
-<a href="hid00005.htm#ShowIcon">ShowIcon</a>_FD コマンドを用いれば、ディレクトリにだけアイコンを表示することもできます。<br>
-</div>
-<div class="note_text">
-動的なアイコンオーバーレイには対応していません。
-</div>
+    <dt class="no_bg_indent1">行背景α <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 0)</span></dt>
+    <dd>数値(0:透明～255:不透明)を指定すると、カーソル行の背景にカーソル色がブレンドされます。<br>
+      1以上の値を設定し、かつ「<b>カーソル線幅</b>」を 0 にすると、ファイルリストではラインカーソルが表示されなくなります(他の一覧などでは、線幅=1 でカーソルを描画)。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> DIR種別
-<dd>ディレクトリのサイズが未取得の場合、代わりにその種別(<b>&lt;DIR&gt;</b> :通常ディレクトリ/ <b>&lt;SYM&gt;</b> :シンボリックリンク/ <b>&lt;JCT&gt;</b> :ジャンクション)を表示します。<br>
+    <dt class="no_bg_indent1">ディレクトリ括弧文字 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: [ ～ ])</span></dt>
+    <dd>
+      ファイルリストでディレクトリ名を囲む文字列を指定できます。文字は、そのフォントで表示できるものであれば何でもかまいません。1文字以上でも、また片方だけあるいは両方とも無しでもかまいません。括弧ではなく装飾記号などをアイコンに見立てて用いるのもよいでしょう。<br>
+      なお「<b>アイコン表示</b>」がチェックされている場合、この文字列は表示されません。
+    </dd>
 
-<dt class="no_bg_indent1" id="SizeFormat">サイズ表示 <img src="combobox.png" alt="">　<span class="def_text">(デフォルト: GB/MB/バイト)</span>
-<dd>サイズ表示の書式を、<b>GB/MB/バイト</b>、<b>GB/MB/KB/バイト</b>、<b>GB/MB/KB</b>(1024バイト未満もKB表示)のいずれかに設定できます。<br>
+    <dt class="no_bg_indent1" id="ShowIcon"><img src="chkbox.png" alt=""> アイコン表示</dt>
+    <dd>ファイルリストにスモールアイコン(16×16)を表示します。<br>
+      <a href="hid00005.htm#ShowIcon">→ ShowIcon</a><br>
+      <div class="spc_box">
+        <a href="hid00009.htm#Show">オプション設定 - 一般 - 表示</a>
+        で「<strong>ファイル固有のアイコンを表示</strong>」のチェックを外すと、ファイル固有のアイコンの代わりに、拡張子に対応するデフォルトのアイコンを表示します。<br>
+      </div>
+      <div class="spc_box">
+        アイコンが表示されている場合、「<b>ディレクトリ括弧文字</b>」は表示されません。<br>
+        <a href="hid00005.htm#ShowIcon">ShowIcon</a>_FD コマンドを用いれば、ディレクトリにだけアイコンを表示することもできます。<br>
+      </div>
+      <div class="note_text">
+        動的なアイコンオーバーレイには対応していません。
+      </div>
+    </dd>
 
-<dt class="no_bg_indent1">小数桁 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 1)</span>
-<dd>ファイルやドライブのサイズをTB/GB/MB単位で表示する際の小数点以下の桁数(0～3)です。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> DIR種別</dt>
+    <dd>ディレクトリのサイズが未取得の場合、代わりにその種別(<b>&lt;DIR&gt;</b> :通常ディレクトリ/ <b>&lt;SYM&gt;</b> :シンボリックリンク/ <b>&lt;JCT&gt;</b>
+      :ジャンクション)を表示します。<br>
+    </dd>
 
-<dt class="no_bg_indent1" id="ShowByteSize"><img src="chkbox.png" alt=""> バイト表示
-<dd><b>サイズ表示</b>の設定にかかわらず、ファイルサイズをバイト単位でそのまま表示します(3桁カンマ区切り)。<br>
-なお、ドライブの容量などはTB/GB/MB単位で表示します。<br>
-<a href="hid00005.htm#ShowByteSize">→ ShowByteSize</a><br>
+    <dt class="no_bg_indent1" id="SizeFormat">サイズ表示 <img src="combobox.png" alt="">　<span class="def_text">(デフォルト:
+        GB/MB/バイト)</span></dt>
+    <dd>サイズ表示の書式を、<b>GB/MB/バイト</b>、<b>GB/MB/KB/バイト</b>、<b>GB/MB/KB</b>(1024バイト未満もKB表示)のいずれかに設定できます。</dd>
 
-<dt class="no_bg_indent1">拡張子幅 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 8文字)</span>
-<dd>拡張子の最大表示幅を '<b>W</b>' の幅を基準とした文字数で指定します。この幅を超えると拡張子の末尾が省略されます。<br>
-なお「<b>拡張子を分離しない</b>」をチェックしている場合は適用されません。<br>
+    <dt class="no_bg_indent1">小数桁 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 1)</span></dt>
+    <dd>ファイルやドライブのサイズをTB/GB/MB単位で表示する際の小数点以下の桁数(0～3)です。</dd>
 
-<dt class="no_bg_indent1" id="TimeStampFmt">日時書式 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: yy/mm/dd hh:nn)</span>
-<dd>ファイルリストに表示される更新日時の書式を指定します(デフォルト = yy/mm/dd hh:nn)。<br>
-書式には以下の指定子が使えます。<br>
-yyyy 年(4桁)、yy 年(2桁)、mm 月(01～12)、dd 日(01～31)、hh 時(00～23)、nn 分(00～59)、ss 秒(00～59)<br>
-<b>例</b> <span class="inp_box">yyyy-mm-dd hh:nn:ss</span><br>
-<br>
+    <dt class="no_bg_indent1" id="ShowByteSize"><img src="chkbox.png" alt=""> バイト表示</dt>
+    <dd><b>サイズ表示</b>の設定にかかわらず、ファイルサイズをバイト単位でそのまま表示します(3桁カンマ区切り)。<br>
+      なお、ドライブの容量などはTB/GB/MB単位で表示します。<br>
+      <a href="hid00005.htm#ShowByteSize">→ ShowByteSize</a><br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 実体表示
-<dd>シンボリックリンクやジャンクションの場合、リンク先実体の更新日時を表示します。またファイルのシンボリックリンクでは、リンク先実体のサイズを表示します。<br>
-チェックしていない場合は、項目そのものの更新日時が表示されます。<br>
-この設定は、<a href="hid00052.htm">ファイル/ディレクトリ名検索</a>における更新日付やサイズの比較にも影響します。<br>
-なおこの設定にかかわらず、ワークリストに登録されているシンボリックリンクやジャンクションについては、常にリンク先実体の情報が表示されます。<br>
+    <dt class="no_bg_indent1">拡張子幅 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 8文字)</span></dt>
+    <dd>拡張子の最大表示幅を '<b>W</b>' の幅を基準とした文字数で指定します。この幅を超えると拡張子の末尾が省略されます。<br>
+      なお「<b>拡張子を分離しない</b>」をチェックしている場合は適用されません。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ヘッダを表示
-<dd>ファイルリストにヘッダを表示します。ヘッダをクリックすることでソートを変更できます。
+    <dt class="no_bg_indent1" id="TimeStampFmt">日時書式 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: yy/mm/dd
+        hh:nn)</span></dt>
+    <dd>ファイルリストに表示される更新日時の書式を指定します(デフォルト = yy/mm/dd hh:nn)。<br>
+      書式には以下の指定子が使えます。<br>
+      yyyy 年(4桁)、yy 年(2桁)、mm 月(01～12)、dd 日(01～31)、hh 時(00～23)、nn 分(00～59)、ss 秒(00～59)<br>
+      <b>例</b> <span class="inp_box">yyyy-mm-dd hh:nn:ss</span><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ▼ボタン
-<dd>チェックすると、ディレクトリ情報の左端に▼ボタンが表示され、ドライブ選択ポップアップメニューにアクセスできます。<br>
-このメニューは、<a href="hid00005.htm#DriveList">DriveList</a>_NS コマンドでも表示できます。
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 実体表示</dt>
+    <dd>シンボリックリンクやジャンクションの場合、リンク先実体の更新日時を表示します。またファイルのシンボリックリンクでは、リンク先実体のサイズを表示します。<br>
+      チェックしていない場合は、項目そのものの更新日時が表示されます。<br>
+      この設定は、<a href="hid00052.htm">ファイル/ディレクトリ名検索</a>における更新日付やサイズの比較にも影響します。<br>
+      なおこの設定にかかわらず、ワークリストに登録されているシンボリックリンクやジャンクションについては、常にリンク先実体の情報が表示されます。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> スクロールバーを隠す
-<dd>ファイルリストの垂直スクロールバーを隠します。
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ヘッダを表示</dt>
+    <dd>ファイルリストにヘッダを表示します。ヘッダをクリックすることでソートを変更できます。</dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 比率を維持
-<dd><b>NyanFi</b> のウィンドウサイズを変更したときに、自動的に左右の比率を指定したパーセント値に維持します。<br>
-設定値は、全体幅に対する左側リスト幅の比率になります(50%で左右均等)。<br>
-なお「<b>カレント幅を維持</b>」がチェックされている場合は、フォーカス移動にしたがって左右の比率が反転します。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ▼ボタン</dt>
+    <dd>チェックすると、ディレクトリ情報の左端に▼ボタンが表示され、ドライブ選択ポップアップメニューにアクセスできます。<br>
+      このメニューは、<a href="hid00005.htm#DriveList">DriveList</a>_NS コマンドでも表示できます。
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> カレント幅を維持
-<dd>カレント側のファイルリスト幅を維持します。リストのフォーカスを左右に移動すると、それにともなって左右の幅が入れ替わります。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> スクロールバーを隠す</dt>
+    <dd>ファイルリストの垂直スクロールバーを隠します。</dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 幅を固定
-<dd>左右境界のマウスドラッグによるリスト幅変更を禁止します。<br>
-ただし、<a href="hid00005.htm#WidenCurList">WidenCurList</a>、<a href="hid00005.htm#BorderLeft">BorderLeft</a>、<a href="hid00005.htm#BorderRight">BorderRight</a>、<a href="hid00005.htm#EqualListWidth">EqualListWidth</a>コマンドによる変更は可能です。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 比率を維持</dt>
+    <dd><b>NyanFi</b> のウィンドウサイズを変更したときに、自動的に左右の比率を指定したパーセント値に維持します。<br>
+      設定値は、全体幅に対する左側リスト幅の比率になります(50%で左右均等)。<br>
+      なお「<b>カレント幅を維持</b>」がチェックされている場合は、フォーカス移動にしたがって左右の比率が反転します。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 長い名前は末尾を省略
-<dd>ファイルリストで、ファイル名やディレクトリ名が長すぎて収まらない場合に、名前の末尾を省略します。チェックしていない場合は、中央部分を省略します。<br>
-なお、拡張子の表示幅が '<b>W</b>' 12文字分を超える場合は末尾を省略します。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> カレント幅を維持</dt>
+    <dd>カレント側のファイルリスト幅を維持します。リストのフォーカスを左右に移動すると、それにともなって左右の幅が入れ替わります。</dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 拡張子を分離しない
-<dd>ファイル名と拡張子を分離せずに付けて表示します。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 幅を固定</dt>
+    <dd>左右境界のマウスドラッグによるリスト幅変更を禁止します。<br>
+      ただし、<a href="hid00005.htm#WidenCurList">WidenCurList</a>、<a href="hid00005.htm#BorderLeft">BorderLeft</a>、<a
+        href="hid00005.htm#BorderRight">BorderRight</a>、<a
+        href="hid00005.htm#EqualListWidth">EqualListWidth</a>コマンドによる変更は可能です。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 空白表示
-<dd>ファイル名に含まれている半角空白を空白記号(open box)で、全角空白を四隅の欠けた四角で表示します。記号は線で描いているため、フォントに依存しません。<br>
-表示色は、<a href="hid00023.htm#Color">オプション設定 - フォント・配色</a> の「<b>空白記号の文字色</b>」で指定できます。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 長い名前は末尾を省略</dt>
+    <dd>ファイルリストで、ファイル名やディレクトリ名が長すぎて収まらない場合に、名前の末尾を省略します。チェックしていない場合は、中央部分を省略します。<br>
+      なお、拡張子の表示幅が '<b>W</b>' 12文字分を超える場合は末尾を省略します。<br>
+    </dd>
 
-<dt class="no_bg_indent1" id="FindPathCol"><img src="chkbox.png" alt=""> 結果リストに「場所」列を表示
-<dd>チェックすると、各種検索の結果リストに「<b>場所</b>」列が表示され(カレント下は相対表示)、パス付きファイル名によるソートが行われます。<br>
-この設定は、<a href="hid00005.htm#FindFileDlg">FindFileDlg</a>、<a href="hid00005.htm#FindFileDirDlg">FindFileDirDlg</a>、<a href="hid00005.htm#FindDirDlg">FindDirDlg</a>、<a href="hid00005.htm#FindDuplDlg">FindDuplDlg</a>、<a href="hid00005.htm#FindHardLink">FindHardLink</a>、<a href="hid00005.htm#FindMark">FindMark</a>、<a href="hid00005.htm#FindTag">FindTag</a>、<a href="hid00005.htm#DiffDir">DiffDir</a> コマンドの結果リストに対して共通で適用されます。<br>
-<b>最小列幅</b> <img src="edit.png" alt=""> で表示幅の最小値を指定できます。結果リストの幅が反対側のリスト幅よりも大きい場合、左右差の1/4が列幅に加算されます(名前と場所の幅を拡大)。表示幅に収まらないときは順次省略されますが、階層数が多いと末尾が欠ける場合があります。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 拡張子を分離しない</dt>
+    <dd>ファイル名と拡張子を分離せずに付けて表示します。</dd>
 
-<dt class="no_bg_indent1" id="FindTagCol"><img src="chkbox.png" alt=""> タグ検索では「タグ」列を表示
-<dd>上の「<b>結果リストに「場所」列を表示</b>」がチェックされている場合にこれをチェックすると、タグ検索(<a href="hid00005.htm#FindTag">FindTag</a>)の結果リストで「<b>場所</b>」列の代わりに「<b>タグ(場所)</b>」列が表示されます。なお、ソートは場所(パス付きファイル名)に基づいて行われます。<br>
-<b>最小列幅</b> <img src="edit.png" alt=""> で表示幅の最小値を指定できます。結果リストの幅が反対側のリスト幅よりも大きい場合、左右差の1/4が列幅に加算されます(名前とタグの幅を拡大)。<br>
-<img src="chkbox.png" alt=""> <b>並びをソート</b> をチェックすると、複数のタグの並びをソートして表示します。チェックしないと、設定されている順番で表示されます。この設定は、ファイル情報やイメージビュアーのサムネイルにタグを表示する際にも適用されます。<br>
-<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 空白表示</dt>
+    <dd>ファイル名に含まれている半角空白を空白記号(open box)で、全角空白を四隅の欠けた四角で表示します。記号は線で描いているため、フォントに依存しません。<br>
+      表示色は、<a href="hid00023.htm#Color">オプション設定 - フォント・配色</a> の「<b>空白記号の文字色</b>」で指定できます。<br>
+    </dd>
 
-<dt id="BgImage"><img src="grpbox.png" alt=""> 背景画像
-<dd>
-ファイルリストの背景に、画像やデスクトップ背景を表示できます。<br>
-画像表示の場合、左上のコンボボックスで「<b>2画面にわたって表示</b>」が選択されていると、<b>画像1</b>で指定した画像が左右(上下)のファイルリストにわたって表示されます。また「<b>それぞれに表示</b>」が選択されていると、左(上)側には<b>画像1</b>が、右(下)側には<b>画像2</b>(無指定なら<b>画像1</b>)が表示されます。となりのコンボボックスでは、画像の表示方法を指定できます。<br>
-「<b>デスクトップ背景を表示</b>」が選択されていると、ファイルリスト位置のデスクトップ背景(壁紙)が表示されます。<br>
-<b>背景色α</b> <img src="edit.png" alt=""> に数値(0:透明～255:不透明)を指定すると、画像に対して現在のリスト背景色がブレンドされます。<br>
-<img src="chkbox.png" alt=""> <b>グレースケール化</b> をチェックすると、画像がグレースケールで表示されます。<br>
-なお、<a href="hid00005.htm#LoadBgImage">LoadBgImage</a> コマンドで画像を読み込むことも可能です。<br>
-<img src="chkbox.png" alt=""> <b>短辺が指定サイズ以下なら常に並べて表示</b> をチェックすると、背景画像の短辺が指定サイズ以下の場合、表示方法の設定にかかわらず「並べて表示」になります。<br>
-<img src="chkbox.png" alt=""> <b>スクロール時に画像を隠す</b> をチェックすると、ファイルリストをスクロールしているときに背景画像を表示しないようにします。スクロールをやめると、<b>復帰時間</b> で設定した時間後に背景が復帰します。<br>
-<br>
+    <dt class="no_bg_indent1" id="FindPathCol"><img src="chkbox.png" alt=""> 結果リストに「場所」列を表示</dt>
+    <dd>チェックすると、各種検索の結果リストに「<b>場所</b>」列が表示され(カレント下は相対表示)、パス付きファイル名によるソートが行われます。<br>
+      この設定は、<a href="hid00005.htm#FindFileDlg">FindFileDlg</a>、<a
+        href="hid00005.htm#FindFileDirDlg">FindFileDirDlg</a>、<a href="hid00005.htm#FindDirDlg">FindDirDlg</a>、<a
+        href="hid00005.htm#FindDuplDlg">FindDuplDlg</a>、<a href="hid00005.htm#FindHardLink">FindHardLink</a>、<a
+        href="hid00005.htm#FindMark">FindMark</a>、<a href="hid00005.htm#FindTag">FindTag</a>、<a
+        href="hid00005.htm#DiffDir">DiffDir</a> コマンドの結果リストに対して共通で適用されます。<br>
+      <b>最小列幅</b> <img src="edit.png" alt="">
+      で表示幅の最小値を指定できます。結果リストの幅が反対側のリスト幅よりも大きい場合、左右差の1/4が列幅に加算されます(名前と場所の幅を拡大)。表示幅に収まらないときは順次省略されますが、階層数が多いと末尾が欠ける場合があります。<br>
+    </dd>
 
-<dt id="TabBar"><img src="grpbox.png" alt=""> タブバー
-<dd>
-タブバーは、表示メニューまたは <a href="hid00005.htm#ShowTabBar">ShowTabBar</a> コマンドで表示できます。<br>
+    <dt class="no_bg_indent1" id="FindTagCol"><img src="chkbox.png" alt=""> タグ検索では「タグ」列を表示</dt>
+    <dd>上の「<b>結果リストに「場所」列を表示</b>」がチェックされている場合にこれをチェックすると、タグ検索(<a
+        href="hid00005.htm#FindTag">FindTag</a>)の結果リストで「<b>場所</b>」列の代わりに「<b>タグ(場所)</b>」列が表示されます。なお、ソートは場所(パス付きファイル名)に基づいて行われます。<br>
+      <b>最小列幅</b> <img src="edit.png" alt="">
+      で表示幅の最小値を指定できます。結果リストの幅が反対側のリスト幅よりも大きい場合、左右差の1/4が列幅に加算されます(名前とタグの幅を拡大)。<br>
+      <img src="chkbox.png" alt=""> <b>並びをソート</b>
+      をチェックすると、複数のタグの並びをソートして表示します。チェックしないと、設定されている順番で表示されます。この設定は、ファイル情報やイメージビュアーのサムネイルにタグを表示する際にも適用されます。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">タブ幅 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 120)</span>
-<dd>タブの幅をピクセル単位で指定できます。0 にすると、表示内容にしたがって自動的に幅が調整されます。<br>
-指定した幅ですべてのタブが納まらない場合、設定値/2までの範囲でタブ幅が自動調整されます。それで対応しきれない場合はスクロールボタンが出ます。<br>
-幅を指定した場合、ある程度余裕があれば左右両方のディレクトリ名があわせて表示されます。そうでない場合、カレント側のディレクトリ名のみが表示されます。<br>
+    <dt id="BgImage"><img src="grpbox.png" alt=""> 背景画像</dt>
+    <dd>ファイルリストの背景に、画像やデスクトップ背景を表示できます。<br>
+      画像表示の場合、左上のコンボボックスで「<b>2画面にわたって表示</b>」が選択されていると、<b>画像1</b>で指定した画像が左右(上下)のファイルリストにわたって表示されます。また「<b>それぞれに表示</b>」が選択されていると、左(上)側には<b>画像1</b>が、右(下)側には<b>画像2</b>(無指定なら<b>画像1</b>)が表示されます。となりのコンボボックスでは、画像の表示方法を指定できます。<br>
+      「<b>デスクトップ背景を表示</b>」が選択されていると、ファイルリスト位置のデスクトップ背景(壁紙)が表示されます。<br>
+      <b>背景色α</b> <img src="edit.png" alt=""> に数値(0:透明～255:不透明)を指定すると、画像に対して現在のリスト背景色がブレンドされます。<br>
+      <img src="chkbox.png" alt=""> <b>グレースケール化</b> をチェックすると、画像がグレースケールで表示されます。<br>
+      なお、<a href="hid00005.htm#LoadBgImage">LoadBgImage</a> コマンドで画像を読み込むことも可能です。<br>
+      <img src="chkbox.png" alt=""> <b>短辺が指定サイズ以下なら常に並べて表示</b>
+      をチェックすると、背景画像の短辺が指定サイズ以下の場合、表示方法の設定にかかわらず「並べて表示」になります。<br>
+      <img src="chkbox.png" alt=""> <b>スクロール時に画像を隠す</b>
+      をチェックすると、ファイルリストをスクロールしているときに背景画像を表示しないようにします。スクロールをやめると、<b>復帰時間</b> で設定した時間後に背景が復帰します。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">スタイル <img src="combobox.png" alt="">　<span class="def_text">(デフォルト: タブ)</span>
-<dd>タブの表示スタイル(タブ、タブ(斜)、ボタン、フラット)を指定できます。<br>
+    <dt id="TabBar"><img src="grpbox.png" alt=""> タブバー</dt>
+    <dd>タブバーは、表示メニューまたは <a href="hid00005.htm#ShowTabBar">ShowTabBar</a> コマンドで表示できます。</dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 削除ボタン
-<dd>チェックすると、タブ右上隅のマウスオーバー時にタブの削除ボタンが表示されます。<br>
-マウスでタブを切り替える際にの誤削除を避けたい場合はチェックを外してください。削除は <a href="hid00005.htm#DelTab">DelTab</a> コマンドや右クリックメニューで行えます。<br>
+    <dt class="no_bg_indent1">タブ幅 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 120)</span></dt>
+    <dd>タブの幅をピクセル単位で指定できます。0 にすると、表示内容にしたがって自動的に幅が調整されます。<br>
+      指定した幅ですべてのタブが納まらない場合、設定値/2までの範囲でタブ幅が自動調整されます。それで対応しきれない場合はスクロールボタンが出ます。<br>
+      幅を指定した場合、ある程度余裕があれば左右両方のディレクトリ名があわせて表示されます。そうでない場合、カレント側のディレクトリ名のみが表示されます。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ▼ボタン
-<dd>チェックすると、タブバーの左端に▼ボタンが表示され、タブ選択ポップアップメニューにアクセスできます。<br>
-このメニューは、<a href="hid00005.htm#PopupTab">PopupTab</a> コマンドでも表示できます。<br>
-<br>
+    <dt class="no_bg_indent1">スタイル <img src="combobox.png" alt="">　<span class="def_text">(デフォルト: タブ)</span></dt>
+    <dd>タブの表示スタイル(タブ、タブ(斜)、ボタン、フラット)を指定できます。</dd>
 
-<dt id="DriveInfo"><img src="grpbox.png" alt=""> ドライブ情報の書式
-<dd>
-<b>ルート</b> <img src="edit.png" alt="">　<span class="def_text">(デフォルト: $VN    $US Use    $FS Free($FR) )</span><br>
-<b>選択時</b> <img src="edit.png" alt="">　<span class="def_text">(デフォルト: $AD $SD Directories    $AF $SF Files Selected    $SZ )</span><br>
-<b>その他</b> <img src="edit.png" alt="">　<span class="def_text">(デフォルト: $VN    $US Use    $FS Free($FR) )</span><br>
-<div class="spc_box">
-ファイルリストの下に表示される<a href="hid00004.htm#DriveInfo">ドライブ情報</a>の書式を、ルートディレクトリ、項目選択時、その他の場合について個別に設定できます。<br>
-設定では以下の書式文字列が使えます。<br>
-</div>
-　<b>$DN</b>　ドライブ名<br>
-　<b>$VN</b>　ドライブのボリュームラベル<br>
-　<b>$US</b>　ドライブ使用容量<br>
-　<b>$UB</b>　ドライブ使用容量(バイト単位)<br>
-　<b>$UR</b>　ドライブ使用率(%表示)<br>
-　<b>$FS</b>　ドライブ空き容量<br>
-　<b>$FB</b>　ドライブ空き容量(バイト単位)<br>
-　<b>$FR</b>　ドライブ空き率(%表示)<br>
-　<b>$TS</b>　ドライブ全体容量<br>
-　<b>$TB</b>　ドライブ全体容量(バイト単位)<br>
-　<b>$TD</b>　カレントのディレクトリ総数<br>
-　<b>$TF</b>　カレントのファイル総数<br>
-　<b>$SD</b>　ディレクトリ選択数<br>
-　<b>$SF</b>　ファイル選択数<br>
-　<b>$SI</b>　項目選択数 ($SD + $SF)<br>
-　<b>$SZ</b>　選択項目の合計サイズ<br>
-　<b>$SB</b>　選択項目の合計サイズ(バイト単位)<br>
-　<b>$AD</b>　全ディレクトリ選択時に &quot;All&quot; を表示<br>
-　<b>$AF</b>　全ファイル選択時に &quot;All&quot; を表示<br>
-　<b>$TP</b>　ファイルリストのページ数 (&quot;..&quot; は除いて計算)<br>
-　<b>$CP</b>　カーソル位置のページ<br>
-　<b>$TI</b>　ファイルリストリストの項目総数 (&quot;..&quot; は除く)<br>
-　<b>$CI</b>　カーソル位置 (&quot;..&quot; は 0)<br>
-　<b>$SM</b>　ソートモード(名前、拡張子、日時、サイズ、属性、なし、場所)<br>
-　<b>$S2</b>　ソートモード(名、拡、時、サ、属、無、場)<br>
-　<b>$HS</b>　隠しファイル表示で H、システムファイル表示で S、非表示は _　(全体で共通)<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 削除ボタン</dt>
+    <dd>チェックすると、タブ右上隅のマウスオーバー時にタブの削除ボタンが表示されます。<br>
+      マウスでタブを切り替える際にの誤削除を避けたい場合はチェックを外してください。削除は <a href="hid00005.htm#DelTab">DelTab</a> コマンドや右クリックメニューで行えます。<br>
+    </dd>
 
-<br>
-<b>例</b> <span class="inp_box">$AD $SD Directories    $AF $SF Files Selected    $SZ </span>
-<pre>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ▼ボタン</dt>
+    <dd>チェックすると、タブバーの左端に▼ボタンが表示され、タブ選択ポップアップメニューにアクセスできます。<br>
+      このメニューは、<a href="hid00005.htm#PopupTab">PopupTab</a> コマンドでも表示できます。<br>
+      <br>
+    </dd>
+
+    <dt id="DriveInfo"><img src="grpbox.png" alt=""> ドライブ情報の書式</dt>
+    <dd>
+      <b>ルート</b> <img src="edit.png" alt="">　<span class="def_text">(デフォルト: $VN $US Use $FS Free($FR) )</span><br>
+      <b>選択時</b> <img src="edit.png" alt="">　<span class="def_text">(デフォルト: $AD $SD Directories $AF $SF Files Selected
+        $SZ )</span><br>
+      <b>その他</b> <img src="edit.png" alt="">　<span class="def_text">(デフォルト: $VN $US Use $FS Free($FR) )</span><br>
+      <div class="spc_box">
+        ファイルリストの下に表示される<a href="hid00004.htm#DriveInfo">ドライブ情報</a>の書式を、ルートディレクトリ、項目選択時、その他の場合について個別に設定できます。<br>
+        設定では以下の書式文字列が使えます。<br>
+      </div>
+      　<b>$DN</b>　ドライブ名<br>
+      　<b>$VN</b>　ドライブのボリュームラベル<br>
+      　<b>$US</b>　ドライブ使用容量<br>
+      　<b>$UB</b>　ドライブ使用容量(バイト単位)<br>
+      　<b>$UR</b>　ドライブ使用率(%表示)<br>
+      　<b>$FS</b>　ドライブ空き容量<br>
+      　<b>$FB</b>　ドライブ空き容量(バイト単位)<br>
+      　<b>$FR</b>　ドライブ空き率(%表示)<br>
+      　<b>$TS</b>　ドライブ全体容量<br>
+      　<b>$TB</b>　ドライブ全体容量(バイト単位)<br>
+      　<b>$TD</b>　カレントのディレクトリ総数<br>
+      　<b>$TF</b>　カレントのファイル総数<br>
+      　<b>$SD</b>　ディレクトリ選択数<br>
+      　<b>$SF</b>　ファイル選択数<br>
+      　<b>$SI</b>　項目選択数 ($SD + $SF)<br>
+      　<b>$SZ</b>　選択項目の合計サイズ<br>
+      　<b>$SB</b>　選択項目の合計サイズ(バイト単位)<br>
+      　<b>$AD</b>　全ディレクトリ選択時に &quot;All&quot; を表示<br>
+      　<b>$AF</b>　全ファイル選択時に &quot;All&quot; を表示<br>
+      　<b>$TP</b>　ファイルリストのページ数 (&quot;..&quot; は除いて計算)<br>
+      　<b>$CP</b>　カーソル位置のページ<br>
+      　<b>$TI</b>　ファイルリストリストの項目総数 (&quot;..&quot; は除く)<br>
+      　<b>$CI</b>　カーソル位置 (&quot;..&quot; は 0)<br>
+      　<b>$SM</b>　ソートモード(名前、拡張子、日時、サイズ、属性、なし、場所)<br>
+      　<b>$S2</b>　ソートモード(名、拡、時、サ、属、無、場)<br>
+      　<b>$HS</b>　隠しファイル表示で H、システムファイル表示で S、非表示は _　(全体で共通)<br>
+
+      <br>
+      <b>例</b> <span class="inp_box">$AD $SD Directories $AF $SF Files Selected $SZ </span>
+      <pre>
 <span class="scr_box"> 5 Directories    All 101 Files Selected    789.01 KB </span>
 </pre>
-ここで設定した文字列は右寄せで表示されますが、パスマスクが適用されている場合はマスク情報が左寄せで表示されます。<br>
+      ここで設定した文字列は右寄せで表示されますが、パスマスクが適用されている場合はマスク情報が左寄せで表示されます。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 選択時はファイルリストの配色に
-<dd>チェックすると、選択時にはファイルリストの「選択項目の背景色」と「選択項目の文字色」(無効なら「リストの文字色」)でドライブ情報を表示します。選択項目が表示範囲外にスクロールしていても、選択中かどうかがわかりやすくなります。<br>
-<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 選択時はファイルリストの配色に</dt>
+    <dd>
+      チェックすると、選択時にはファイルリストの「選択項目の背景色」と「選択項目の文字色」(無効なら「リストの文字色」)でドライブ情報を表示します。選択項目が表示範囲外にスクロールしていても、選択中かどうかがわかりやすくなります。<br>
+      <br>
+    </dd>
 
-<dt id="StatusBar"><img src="grpbox.png" alt=""> ステータスバーの書式
-<dd>
-<img src="edit.png" alt="">　<span class="def_text">(デフォルト: $F)</span><br>
-ステータスバーにカーソル位置のファイル情報を表示する際の書式を設定できます。ファイラーの <a href="hid00005.htm#SetSttBarFmt">SetSttBarFmt</a> コマンドでも設定可能。<br>
-設定には以下の書式文字列が使えます。<br>
-　<b>$P </b>　パス名<br>
-　<b>$P2</b>　パス名(\ を <a href="hid00009.htm#Show">オプション設定 - 一般1 - 表示</a>の「<b>ディレクトリ区切り</b>」に置換)<br>
-　<b>$B </b>　パス無しファイル名<br>
-　<b>$F </b>　パス付ファイル名($P + $B)<br>
-　<b>$F2</b>　パス付ファイル名($P2 + $B)<br>
-　<b>$Z </b>　サイズ (ファイルリストの表示と同じ書式)<br>
-　<b>$Y </b>　サイズ (バイト単位、カンマ付)<br>
-　<b>$T </b>　タイムスタンプ(ファイルリストの表示と同じ書式)<br>
-　<b>$M </b>　マーク項目のメモ<br>
-　<b>$S </b>　ソートモード(名前、拡張子、日時、サイズ、属性、なし、場所)<br>
-<div class="mgn_btm_h">
-　<b>$S2</b>　ソートモード(名、拡、時、サ、属、無、場)<br>
-　<b>$HS</b>　隠しファイル表示で H、システムファイル表示で S、非表示は _　(全体で共通)<br>
-</div>
-<div class="mgn_btm_h">
-　<b>$PR(</b>プロパティ名[,前置文字列[,後置文字列]]<b>)</b><br>
-　　　　ファイル情報に表示されるプロパティ(ないときは空文字列)<br>
-　　　　　　プロパティ名:　ファイル情報に表示されるプロパティ名(必須)<br>
-　　　　　　前置文字列:　　直前に表示する文字列 (空白を含む場合は引用符で囲む)<br>
-　　　　　　後置文字列:　　直後に表示する文字列 (空白を含む場合は引用符で囲む)<br>
-　　　　<span class="note_text">※ファイル情報が取得されていないと表示されません。</span><br>
-</div>
-　<b>$DV</b>　これ以降の内容を分割して右寄せで表示<br>
-<br>
-<b>例</b> <span class="inp_box">$F2$DV$PR(ファイルVer.,v)$PR(画像サイズ)$PR(長さ)$PR(タイトル,&quot;  『&quot;,』)</span>
-<pre>
+    <dt id="StatusBar"><img src="grpbox.png" alt=""> ステータスバーの書式</dt>
+    <dd>
+      <img src="edit.png" alt="">　<span class="def_text">(デフォルト: $F)</span><br>
+      ステータスバーにカーソル位置のファイル情報を表示する際の書式を設定できます。ファイラーの <a href="hid00005.htm#SetSttBarFmt">SetSttBarFmt</a> コマンドでも設定可能。<br>
+      設定には以下の書式文字列が使えます。<br>
+      　<b>$P </b>　パス名<br>
+      　<b>$P2</b>　パス名(\ を <a href="hid00009.htm#Show">オプション設定 - 一般1 - 表示</a>の「<b>ディレクトリ区切り</b>」に置換)<br>
+      　<b>$B </b>　パス無しファイル名<br>
+      　<b>$F </b>　パス付ファイル名($P + $B)<br>
+      　<b>$F2</b>　パス付ファイル名($P2 + $B)<br>
+      　<b>$Z </b>　サイズ (ファイルリストの表示と同じ書式)<br>
+      　<b>$Y </b>　サイズ (バイト単位、カンマ付)<br>
+      　<b>$T </b>　タイムスタンプ(ファイルリストの表示と同じ書式)<br>
+      　<b>$M </b>　マーク項目のメモ<br>
+      　<b>$S </b>　ソートモード(名前、拡張子、日時、サイズ、属性、なし、場所)<br>
+      <div class="mgn_btm_h">
+        　<b>$S2</b>　ソートモード(名、拡、時、サ、属、無、場)<br>
+        　<b>$HS</b>　隠しファイル表示で H、システムファイル表示で S、非表示は _　(全体で共通)<br>
+      </div>
+      <div class="mgn_btm_h">
+        　<b>$PR(</b>プロパティ名[,前置文字列[,後置文字列]]<b>)</b><br>
+        　　　　ファイル情報に表示されるプロパティ(ないときは空文字列)<br>
+        　　　　　　プロパティ名:　ファイル情報に表示されるプロパティ名(必須)<br>
+        　　　　　　前置文字列:　　直前に表示する文字列 (空白を含む場合は引用符で囲む)<br>
+        　　　　　　後置文字列:　　直後に表示する文字列 (空白を含む場合は引用符で囲む)<br>
+        　　　　<span class="note_text">※ファイル情報が取得されていないと表示されません。</span><br>
+      </div>
+      　<b>$DV</b>　これ以降の内容を分割して右寄せで表示<br>
+      <br>
+      <b>例</b> <span class="inp_box">$F2$DV$PR(ファイルVer.,v)$PR(画像サイズ)$PR(長さ)$PR(タイトル,&quot; 『&quot;,』)</span>
+      <pre>
 <span class="scr_box">D:/Music/Hiroko/03_NekoMori.mp3            00:03:41  『ねこの森には帰れない』</span>
 <span class="scr_box">D:/Photo/140909/DSC_1234.jpg                              960 × 720  (4 : 3)</span>
 <span class="scr_box">D:/Embarcadero/Studio/19.0/Projects/NyanFi/NyanFi.exe               v11.7.2.0</span>
 </pre>
-<br>
+      <br>
 
-<b>時計パネル</b> <img src="edit.png" alt="">
-<div class="indent1">
-ここに書式を設定すると、ステータスバー右端に時計パネルが表示されます。空欄にするとパネルが非表示になります。<br>
-ステータスバーが非表示で、画面レイアウトが「ファイルリストが左/右」の場合、ログウィンドウの下に時計パネルが表示されます。またイメージビュアーでサイドバーが表示されている場合、サイドバーの下端に表示されます。<br>
-<br>
-日付や時刻には以下の指定子が使えます。<br>
-　<b>yyyy</b> 年(4桁)、<b>yy</b> 年(2桁)、<b>mm</b> 月、<b>dd</b> 日、<b>ddd</b> 曜日、<b>dddd</b> 曜日(完全名)、<b>hh</b> 時、<b>nn</b> 分、<b>ss</b> 秒<br>
-　<b>G</b> 元号(略)、<b>gg</b> 元号(完全名)、<b>ee</b> 元号年<br>
-また、書式文字列の任意の位置に <b>$EN</b> を記述すると、ロケールが英語(en-US)に切り替わり、以下のような表示になります。<br>
-　<b>ddd</b> 曜日(Sun～Sat)、<b>dddd</b> (Sunday～Saturday)、<b>mmm</b> 月(Jan～Dec)、<b>mmmm</b> (January～December)<br>
-なおシングル/ダブルクォーテーションで囲まれた文字はそのまま表示されます。ここに挙げた以外にも指定子として機能する文字があるため、英字はシングルクォーテーションで囲んでおいた方がよいでしょう。<br>
-<br>
+      <b>時計パネル</b> <img src="edit.png" alt="">
+      <div class="indent1">
+        ここに書式を設定すると、ステータスバー右端に時計パネルが表示されます。空欄にするとパネルが非表示になります。<br>
+        ステータスバーが非表示で、画面レイアウトが「ファイルリストが左/右」の場合、ログウィンドウの下に時計パネルが表示されます。またイメージビュアーでサイドバーが表示されている場合、サイドバーの下端に表示されます。<br>
+        <br>
+        日付や時刻には以下の指定子が使えます。<br>
+        　<b>yyyy</b> 年(4桁)、<b>yy</b> 年(2桁)、<b>mm</b> 月、<b>dd</b> 日、<b>ddd</b> 曜日、<b>dddd</b> 曜日(完全名)、<b>hh</b>
+        時、<b>nn</b> 分、<b>ss</b> 秒<br>
+        　<b>G</b> 元号(略)、<b>gg</b> 元号(完全名)、<b>ee</b> 元号年<br>
+        また、書式文字列の任意の位置に <b>$EN</b> を記述すると、ロケールが英語(en-US)に切り替わり、以下のような表示になります。<br>
+        　<b>ddd</b> 曜日(Sun～Sat)、<b>dddd</b> (Sunday～Saturday)、<b>mmm</b> 月(Jan～Dec)、<b>mmmm</b> (January～December)<br>
+        なおシングル/ダブルクォーテーションで囲まれた文字はそのまま表示されます。ここに挙げた以外にも指定子として機能する文字があるため、英字はシングルクォーテーションで囲んでおいた方がよいでしょう。<br>
+        <br>
 
-日付のカウントダウンとして以下の書式文字列が使えます。<br>
-<dl>
-<dt class="no_bg_indent1">$CD(<span class="pram_text">yyyy/mm/dd[;タイトル]</span>)<br>
-$CD(<span class="pram_text">[+|-][mm/]dd[;タイトル]</span>)
-<dd>
-yyyy/mm/dd 形式で指定した日付までの日数を、&quot;タイトルまで(から)n日&quot; の形式で表示します。<br>
-タイトルを指定しないと指定した日付が表示されます。<br>
-なお $CD は複数指定できます。<br>
+        日付のカウントダウンとして以下の書式文字列が使えます。<br>
+        <dl>
+          <dt class="no_bg_indent1">$CD(<span class="pram_text">yyyy/mm/dd[;タイトル]</span>)<br>
+            $CD(<span class="pram_text">[+|-][mm/]dd[;タイトル]</span>)</dt>
+          <dd>
+            yyyy/mm/dd 形式で指定した日付までの日数を、&quot;タイトルまで(から)n日&quot; の形式で表示します。<br>
+            タイトルを指定しないと指定した日付が表示されます。<br>
+            なお $CD は複数指定できます。<br>
 
-<div class="spc_box">
-2番目の書式のように年を省略すると今年、月も省略すると今月の日付とみなされます。<br>
-この場合、日付の先頭に &quot;<b>+</b>&quot; があれば「～まで」、&quot;<b>-</b>&quot; があれば「～から」の表示になるように、対象となる年/月が前後に調整されます。なお指定日が対象月の日数より大きくなる場合は月末の日付に自動修正されます。<br>
-</div>
-<b>例</b> <span class="inp_box">$CD(yyyy/mm/dd 1958/08/02;生誕) $CD(31;月末)</span>
-<pre>
+            <div class="spc_box">
+              2番目の書式のように年を省略すると今年、月も省略すると今月の日付とみなされます。<br>
+              この場合、日付の先頭に &quot;<b>+</b>&quot; があれば「～まで」、&quot;<b>-</b>&quot;
+              があれば「～から」の表示になるように、対象となる年/月が前後に調整されます。なお指定日が対象月の日数より大きくなる場合は月末の日付に自動修正されます。<br>
+            </div>
+            <b>例</b> <span class="inp_box">$CD(yyyy/mm/dd 1958/08/02;生誕) $CD(31;月末)</span>
+            <pre>
 <span class="scr_box">2018/09/30 生誕から21,974日 月末当日</span><br>
 </pre>
-<b>例</b> <span class="inp_box">$CD(yyyy/mm/dd  $CD(-1/1;元旦) $CD(+12/31;年末)</span>
-<pre>
+            <b>例</b> <span class="inp_box">$CD(yyyy/mm/dd $CD(-1/1;元旦) $CD(+12/31;年末)</span>
+            <pre>
 <span class="scr_box">2018/09/30 元旦から242日 年末まで93日</span><br>
 </pre>
-</dl>
+          </dd>
+        </dl>
 
-バッテリー状態などの表示用として以下の書式文字列も使えます。<br>
-<dl>
-<dt class="no_bg_indent1">$BP
-<dd>バッテリー残量%   0～100%  不明の場合は <b>----</b><br>
-<dt class="no_bg_indent1">$BT
-<dd>バッテリー残時間  hh:mm  不明の場合は <b>--:--</b>、電源接続時は <b>ONLINE</b><br>
-<dt class="no_bg_indent1">$PS(<span class="pram_text">電源接続時:バッテリー駆動時</span>)
-<dd>電源状態を指定文字列で表示。<br>
-<dt class="no_bg_indent1">$NS(<span class="pram_text">接続時:未接続時</span>)
-<dd>インターネット接続状況を指定文字列で表示。<br>
-</dl>
+        バッテリー状態などの表示用として以下の書式文字列も使えます。<br>
+        <dl>
+          <dt class="no_bg_indent1">$BP</dt>
+          <dd>バッテリー残量% 0～100% 不明の場合は <b>----</b></dd>
+          <dt class="no_bg_indent1">$BT</dt>
+          <dd>バッテリー残時間 hh:mm 不明の場合は <b>--:--</b>、電源接続時は <b>ONLINE</b></dd>
+          <dt class="no_bg_indent1">$PS(<span class="pram_text">電源接続時:バッテリー駆動時</span>)</dt>
+          <dd>電源状態を指定文字列で表示。</dd>
+          <dt class="no_bg_indent1">$NS(<span class="pram_text">接続時:未接続時</span>)</dt>
+          <dd>インターネット接続状況を指定文字列で表示。</dd>
+        </dl>
 
-<b>例</b> <span class="inp_box">yyyy/mm/dd(ddd) hh:nn│$BP $PS(<img src="char_PS.png" alt="" height="18" width="40">) $NS(<img src="char_NS.png" alt="" height="18" width="48">)</span>
-</div>
-<br>
+        <b>例</b> <span class="inp_box">yyyy/mm/dd(ddd) hh:nn│$BP $PS(<img src="char_PS.png" alt="" height="18"
+            width="40">) $NS(<img src="char_NS.png" alt="" height="18" width="48">)</span>
+      </div>
+      <br>
+    </dd>
 
-<dt><img src="grpbox.png" alt=""> 分割境界線
-<dd>
-指定した画像で分割境界線を描画できます。<br>
-「<b>正</b>」は左右リストの分割境界線および他の画面との分割境界線、「<b>副</b>」はそれ以外の分割境界線です。<br>
-それぞれについて画像と境界線幅を指定できます。画像は縦長/横長どちらでもかまいません。境界線の外形にしたがって回転(90°+左右反転)しストレッチ表示します。また <b>PNG</b> 画像ではアルファチャンネルに対応しています。<br>
-画像が無指定の場合は、<a href="hid00023.htm#Color">オプション設定 - フォント・配色</a>で指定されている「<b>分割境界線の色</b>」でフラットに塗られます。<br>
-なお、<a href="hid00024.htm">オプション設定 - 一般2 - テキストプレビュー</a> で「<b>末尾分割表示</b>」がチェックされている場合に表示される分割境界線は、「<b>副</b>」ですが幅は 4px 固定となります。<br>
-<br><br>
+    <dt><img src="grpbox.png" alt=""> 分割境界線</dt>
+    <dd>
+      指定した画像で分割境界線を描画できます。<br>
+      「<b>正</b>」は左右リストの分割境界線および他の画面との分割境界線、「<b>副</b>」はそれ以外の分割境界線です。<br>
+      それぞれについて画像と境界線幅を指定できます。画像は縦長/横長どちらでもかまいません。境界線の外形にしたがって回転(90°+左右反転)しストレッチ表示します。また <b>PNG</b>
+      画像ではアルファチャンネルに対応しています。<br>
+      画像が無指定の場合は、<a href="hid00023.htm#Color">オプション設定 - フォント・配色</a>で指定されている「<b>分割境界線の色</b>」でフラットに塗られます。<br>
+      なお、<a href="hid00024.htm">オプション設定 - 一般2 - テキストプレビュー</a> で「<b>末尾分割表示</b>」がチェックされている場合に表示される分割境界線は、「<b>副</b>」ですが幅は
+      4px 固定となります。<br>
+      <br><br>
+    </dd>
 
-<dt class="no_bg_indent1" id="ShowPreview"><img src="chkbox.png" alt=""> プレビューを表示
-<dd>ファイラー画面に<b>プレビュー</b>を表示します。<br>
-カーソル位置ファイルの画像やアイコン、テキスト内容が表示されます。<br>
-<a href="hid00005.htm#ShowPreview">→ ShowPreview</a><br>
+    <dt class="no_bg_indent1" id="ShowPreview"><img src="chkbox.png" alt=""> プレビューを表示</dt>
+    <dd>ファイラー画面に<b>プレビュー</b>を表示します。<br>
+      カーソル位置ファイルの画像やアイコン、テキスト内容が表示されます。<br>
+      <a href="hid00005.htm#ShowPreview">→ ShowPreview</a><br>
+    </dd>
 
-<dt class="no_bg_indent1" id="ShowProperty"><img src="chkbox.png" alt=""> ファイル情報を表示
-<dd>ファイラー画面に<b>ファイル情報</b>を表示します。<br>
-<a href="hid00005.htm#ShowProperty">→ ShowProperty</a><br>
-<div class="spc_box">
-なお、ファイル情報が非表示で、かつステータスバーが非表示あるいは表示されていても書式に <b>$PR</b>(プロパティ)が用いられていない場合には、ファイル情報を取得しません。<br>
-</div>
+    <dt class="no_bg_indent1" id="ShowProperty"><img src="chkbox.png" alt=""> ファイル情報を表示</dt>
+    <dd>ファイラー画面に<b>ファイル情報</b>を表示します。<br>
+      <a href="hid00005.htm#ShowProperty">→ ShowProperty</a><br>
+      <div class="spc_box">
+        なお、ファイル情報が非表示で、かつステータスバーが非表示あるいは表示されていても書式に <b>$PR</b>(プロパティ)が用いられていない場合には、ファイル情報を取得しません。<br>
+      </div>
+    </dd>
 
-<dt class="no_bg_indent1" id="MenuBar"><img src="chkbox.png" alt=""> メニューバーを表示 
-<dd><b>メニューバー</b>を表示します。<br>
-<a href="hid00005.htm#MenuBar">→ MenuBar</a><br>
+    <dt class="no_bg_indent1" id="MenuBar"><img src="chkbox.png" alt=""> メニューバーを表示</dt>
+    <dd><b>メニューバー</b>を表示します。<br>
+      <a href="hid00005.htm#MenuBar">→ MenuBar</a><br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 最大化時にタイトルバーとメニューを隠す
-<dd>ウィンドウを最大化した時にタイトルバーとメニューを隠します。この場合でも、マウスで画面の最上部をクリックすればドロップダウンメニューが出ます。また、キーボードからのメニュー操作は可能です。<br>
-画面サイズを元に戻したいときは、<b>WinNormal</b> コマンドを実行するか、<span class="btn_frame">Alt</span>+ スペースキーでシステムメニューを表示させてください。<br>
-なお、最大化した状態で <a href="hid00005.htm#MenuBar">MenuBar</a> コマンドを実行してメニューバーを隠すと、ディレクトリ表示部が上に潜り込んでしまいますので、注意してください。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 最大化時にタイトルバーとメニューを隠す</dt>
+    <dd>ウィンドウを最大化した時にタイトルバーとメニューを隠します。この場合でも、マウスで画面の最上部をクリックすればドロップダウンメニューが出ます。また、キーボードからのメニュー操作は可能です。<br>
+      画面サイズを元に戻したいときは、<b>WinNormal</b> コマンドを実行するか、<span class="btn_frame">Alt</span>+ スペースキーでシステムメニューを表示させてください。<br>
+      なお、最大化した状態で <a href="hid00005.htm#MenuBar">MenuBar</a> コマンドを実行してメニューバーを隠すと、ディレクトリ表示部が上に潜り込んでしまいますので、注意してください。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 情報パネルをフラット表示
-<dd><a href="hid00004.htm#DirInfo">ディレクトリ情報</a>、ディレクトリ関係、<a href="hid00004.htm#DriveInfo">ドライブ情報</a>部分をフラット表示にします。<br>
-なおこれがチェックされている場合、タブバーが表示されていて、スタイルが「タブ」または「タブ(斜)」で「タブの輪郭線」色が指定されていると、ディレクトリ情報との間に「タブの輪郭線」色で境界線が描画されます(アクティブなタブの底辺部分は除く)。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 情報パネルをフラット表示</dt>
+    <dd><a href="hid00004.htm#DirInfo">ディレクトリ情報</a>、ディレクトリ関係、<a
+        href="hid00004.htm#DriveInfo">ドライブ情報</a>部分をフラット表示にします。<br>
+      なおこれがチェックされている場合、タブバーが表示されていて、スタイルが「タブ」または「タブ(斜)」で「タブの輪郭線」色が指定されていると、ディレクトリ情報との間に「タブの輪郭線」色で境界線が描画されます(アクティブなタブの底辺部分は除く)。<br>
+    </dd>
 
-<dt class="no_bg_indent1" id="ScrollBar">スクロールバー <img src="combobox.png" alt="">　<span class="def_text">(デフォルト: 標準)</span>
-<dd>コンボボックスで「<b>シンプル</b>」、「<b>シンプル(3/4幅)</b>」、「<b>シンプル(1/2幅)</b>」、「<b>シンプル(画像)</b>」のいずれかを選ぶと、配色指定可能なリスト、一覧、ダイアログ(<a href="hid00081.htm">XMLビュアー</a>は除く)のスクロールバーが独自のものに変わります。<br>
-このシンプルスクロールバーは、スクロールノブだけからなり、<a href="hid00023.htm#Color">オプション設定 - フォント・配色</a> で「<b>シンプルスクロールバーの背景色</b>」、「<b>シンプルスクロールノブの色</b>」、「<b>シンプルスクロールノブの輪郭色</b>」を指定できます。この場合、「～<b>ノブの輪郭色</b>」を「<b>無効</b>」にすると、単純な長方形でノブが描かれます。<br>
-また「<b>シンプル(画像)</b>」を選ぶと、ノブの画像をダイアログで指定できます。スクロールバーの幅は、指定画像の幅 + 2px(余裕) か標準幅のうち小さい方になり、ノブの表示領域に画像がストレッチ表示されます。<b>PNG</b> 画像ではアルファチャンネルに対応しており、「～<b>ノブの色</b>」の上に重ねられます。「～<b>ノブの輪郭色</b>」は無視されます。水平スクロールバーでは、指定画像を回転(90°+左右反転)してストレッチ表示します。<br>
-<div class="spc_box">
-シンプルスクロールバーを利用している場合、ファイラーで<a href="hid00050.htm">インクリメンタルサーチ</a>を行ったり、<a href="hid00006.htm">テキストビュアー</a>/<a href="hid00073.htm">一覧ダイアログ</a>で文字列検索を行ったりすると、ヒット位置を示す半透明の横線がスクロールバー上に表示されます。表示色は「<b>シンプルスクロールバーのヒット位置</b>」で指定できます(無効にすると非表示)。<br>
-また「<b>シンプルスクロールバーの選択位置(FL)</b>」を設定していると、ファイラーで項目を選択している場合、選択位置を示す半透明の横線がスクロールバー上に表示されます。<br>
-なおノブのサイズは全体に対する1ページ分の割合になりますが、最小サイズの制限があるため、ノブ上にヒット/選択表示があっても現在のページ範囲から外れている場合があります。<br>
-</div>
-<div class="spc_box">
-「<b>標準</b>」を選ぶと、通常のスクロールバーになります。<br>
-この場合、Windows のダークモードが有効で、<a href="hid00023.htm#Color">オプション設定 - フォント・配色</a> - 「<b>Windows ダークモードを適用</b>」をチェックしていると、スクロールバーにダークモードが適用されます。<br>
-</div>
+    <dt class="no_bg_indent1" id="ScrollBar">スクロールバー <img src="combobox.png" alt="">　<span class="def_text">(デフォルト:
+        標準)</span></dt>
+    <dd>コンボボックスで「<b>シンプル</b>」、「<b>シンプル(3/4幅)</b>」、「<b>シンプル(1/2幅)</b>」、「<b>シンプル(画像)</b>」のいずれかを選ぶと、配色指定可能なリスト、一覧、ダイアログ(<a
+        href="hid00081.htm">XMLビュアー</a>は除く)のスクロールバーが独自のものに変わります。<br>
+      このシンプルスクロールバーは、スクロールノブだけからなり、<a href="hid00023.htm#Color">オプション設定 - フォント・配色</a>
+      で「<b>シンプルスクロールバーの背景色</b>」、「<b>シンプルスクロールノブの色</b>」、「<b>シンプルスクロールノブの輪郭色</b>」を指定できます。この場合、「～<b>ノブの輪郭色</b>」を「<b>無効</b>」にすると、単純な長方形でノブが描かれます。<br>
+      また「<b>シンプル(画像)</b>」を選ぶと、ノブの画像をダイアログで指定できます。スクロールバーの幅は、指定画像の幅 + 2px(余裕)
+      か標準幅のうち小さい方になり、ノブの表示領域に画像がストレッチ表示されます。<b>PNG</b>
+      画像ではアルファチャンネルに対応しており、「～<b>ノブの色</b>」の上に重ねられます。「～<b>ノブの輪郭色</b>」は無視されます。水平スクロールバーでは、指定画像を回転(90°+左右反転)してストレッチ表示します。<br>
+      <div class="spc_box">
+        シンプルスクロールバーを利用している場合、ファイラーで<a href="hid00050.htm">インクリメンタルサーチ</a>を行ったり、<a href="hid00006.htm">テキストビュアー</a>/<a
+          href="hid00073.htm">一覧ダイアログ</a>で文字列検索を行ったりすると、ヒット位置を示す半透明の横線がスクロールバー上に表示されます。表示色は「<b>シンプルスクロールバーのヒット位置</b>」で指定できます(無効にすると非表示)。<br>
+        また「<b>シンプルスクロールバーの選択位置(FL)</b>」を設定していると、ファイラーで項目を選択している場合、選択位置を示す半透明の横線がスクロールバー上に表示されます。<br>
+        なおノブのサイズは全体に対する1ページ分の割合になりますが、最小サイズの制限があるため、ノブ上にヒット/選択表示があっても現在のページ範囲から外れている場合があります。<br>
+      </div>
+      <div class="spc_box">
+        「<b>標準</b>」を選ぶと、通常のスクロールバーになります。<br>
+        この場合、Windows のダークモードが有効で、<a href="hid00023.htm#Color">オプション設定 - フォント・配色</a> - 「<b>Windows
+          ダークモードを適用</b>」をチェックしていると、スクロールバーにダークモードが適用されます。<br>
+      </div>
+    </dd>
 
-<dt id="PinMark" class="no_bg_indent1">固定ピン <img src="edit.png" alt="">　<span class="def_text">(デフォルト: <img src="char_Pin.png" alt="" height="18" width="19">)</span>
-<dd><a href="hid00005.htm#FixTabPath">FixTabPath</a> コマンドでファイルリストを固定したときに表示されるマーク文字を変更できます。<br>
-絵文字を指定した場合、実際の画面ではカラー表示になります。<br>
-<br>
+    <dt id="PinMark" class="no_bg_indent1">固定ピン <img src="edit.png" alt="">　<span class="def_text">(デフォルト: <img
+          src="char_Pin.png" alt="" height="18" width="19">)</span></dt>
+    <dd><a href="hid00005.htm#FixTabPath">FixTabPath</a> コマンドでファイルリストを固定したときに表示されるマーク文字を変更できます。<br>
+      絵文字を指定した場合、実際の画面ではカラー表示になります。<br>
+      <br>
+    </dd>
 
-<dt id="ModalEffect"><img src="grpbox.png" alt=""> モーダル表示効果
-<dd>
-<img src="chkbox.png" alt=""> <b>有効</b> がチェックされていると、ファイラーで何らかのダイアログ(オプション設定や<a href="hid00076.htm">アプリケーション一覧</a>などは除く)をモーダル表示した場合、メイン画面全体が半透明のスクリーンで覆われます。<br>
-また <a href="hid00005.htm#LockKeyMouse">LockKeyMouse</a> コマンドでキーボード/マウスをロックした際に、デスクトップ全体がスクリーンで覆われます。<br>
-スクリーンの不透明度(0:透明～255:不透明)や色を指定できます。<br>
-<br>
+    <dt id="ModalEffect"><img src="grpbox.png" alt=""> モーダル表示効果</dt>
+    <dd>
+      <img src="chkbox.png" alt=""> <b>有効</b> がチェックされていると、ファイラーで何らかのダイアログ(オプション設定や<a
+        href="hid00076.htm">アプリケーション一覧</a>などは除く)をモーダル表示した場合、メイン画面全体が半透明のスクリーンで覆われます。<br>
+      また <a href="hid00005.htm#LockKeyMouse">LockKeyMouse</a> コマンドでキーボード/マウスをロックした際に、デスクトップ全体がスクリーンで覆われます。<br>
+      スクリーンの不透明度(0:透明～255:不透明)や色を指定できます。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">デザインの
-<dd>
-<span class="btn_frame">&nbsp;適用&nbsp;</span>ボタンを押すと、現在のデザイン設定が直ちに画面に反映されます。<br>
-</dl>
-<br><br>
+    <dt class="no_bg_indent1">デザインの</dt>
+    <dd>
+      <span class="btn_frame">&nbsp;適用&nbsp;</span>ボタンを押すと、現在のデザイン設定が直ちに画面に反映されます。<br>
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

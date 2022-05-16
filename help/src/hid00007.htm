@@ -1,657 +1,797 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>イメージビュアー</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="2ストロークキー操作">
-	<param name="Keyword" value="Exif情報">
-	<param name="Keyword" value="GPS情報">
-	<param name="Keyword" value="ImageViewer">
-	<param name="Keyword" value="WIC">
-	<param name="Keyword" value="イメージビュアー">
-	<param name="Keyword" value="カラーピッカー">
-	<param name="Keyword" value="サイドバー">
-	<param name="Keyword" value="サムネイル">
-	<param name="Keyword" value="シークバー">
-	<param name="Keyword" value="ツールバー">
-	<param name="Keyword" value="ドッキング">
-	<param name="Keyword" value="ヒストグラム">
-	<param name="Keyword" value="メタファイル">
-	<param name="Keyword" value="メニュー定義ファイル">
-	<param name="Keyword" value="ルーペ">
-	<param name="Keyword" value="印刷">
-	<param name="Keyword" value="見開き表示">
-	<param name="Keyword" value="全画面表示">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>イメージビュアー</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="2ストロークキー操作">
+    <param name="Keyword" value="Exif情報">
+    <param name="Keyword" value="GPS情報">
+    <param name="Keyword" value="ImageViewer">
+    <param name="Keyword" value="WIC">
+    <param name="Keyword" value="イメージビュアー">
+    <param name="Keyword" value="カラーピッカー">
+    <param name="Keyword" value="サイドバー">
+    <param name="Keyword" value="サムネイル">
+    <param name="Keyword" value="シークバー">
+    <param name="Keyword" value="ツールバー">
+    <param name="Keyword" value="ドッキング">
+    <param name="Keyword" value="ヒストグラム">
+    <param name="Keyword" value="メタファイル">
+    <param name="Keyword" value="メニュー定義ファイル">
+    <param name="Keyword" value="ルーペ">
+    <param name="Keyword" value="印刷">
+    <param name="Keyword" value="見開き表示">
+    <param name="Keyword" value="全画面表示">
+  </object>
 </head>
 
 <body>
-<h1>イメージビュアー</h1>
-
-<p>
-ファイルリストで<span class="btn_frame">ENTER</span>キーを押すか、<a href="hid00005.htm#ImageViewer">ImageViewer</a> コマンドを実行すると、イメージビュアー画面に変わり、カーソル位置の画像ファイルを表示します。また実行ファイルやDLLの場合は、アイコンを抽出して一覧表示します。<br>
-また、カレント側にある画像ファイルの<b>サムネイル</b>を一覧表示することもできます。ただし、<a href="hid00052.htm">ファイル名検索</a>の結果リストの場合、アーカイブ内ファイルは表示対象から外されます。<br>
-</p>
-<p>
-画像ファイルの表示は、<b>WIC</b> コーデックで行っています。<br>
-必要に応じてコーデックをインストールしてください。<br>
-インストールされているコーデックの詳細は、<a href="hid00005.htm#ListNyanFi">ListNyanFi</a> コマンドで確認できます。<br>
-また、メタファイル(<b>.WMF</b>、<b>.EMF</b>)にも対応しています。背景色はデフォルトで白ですが、<a href="hid00023.htm#Color">オプション設定 - フォント・配色</a>の「<b>配色</b>」で変更可能です。<br>
-<a href="hid00020.htm#AnimateGif">オプション設定 - イメージビュアー</a>の「<b>アニメーションGIFを再生する</b>」をチェックしていると、アニメーションGIFを再生できます(ビュアー機能の制限あり)。
-</p>
-
-<p>
-<b>Exif</b> 情報は自前で取得しています。対応しているのは、<b>.JPG</b>、<b>.TIF</b>、<b>.HEIC</b>、<b>.ARW</b>(Sony)、<b>.CR2</b>(Canon)、<b>.DNG</b>(その他)、<b>.ERF</b>(Epson)、<b>.MEF</b>(Mamiya)、<b>.NEF</b>/<b>.NRW</b>(Nikon)、<b>.ORF</b>(OLYMPUS)、<b>.PEF</b>(Pentax)、<b>.RAF</b>(FujiFilm)、<b>.RAW</b>(Panasonic、Leica等)、<b>.RW2</b>(Panasonic)、<b>.SR2</b>(Sony)、<b>.SRW</b>(Samsung)、<b>.X3F</b>(SIGMA)、<b>.3FR</b>(Hasselblad)です。また <b>.CRW</b>(古い Canon RAW)については <b>CIFF</b> 情報を取得しています。
-</p>
-
-<p>
-サムネイルからは、外部へのドラッグ＆ドロップが可能です。選択中(無ければカーソル位置)のファイルが対象となります。<br>
-</p>
-<br>
-
-<h3 id="Command">コマンド</h3>
-<p>
-イメージビュアーでは以下のコマンドを使用できます。<br>
-これらは、<a href="hid00016.htm">オプション設定 - キー設定</a>でキーに割り当てることができます(2ストロークキー操作可能)。<br>
-<a href="hid00055.htm">キー割り当て一覧</a>は、<b>一覧メニュー</b> - [<b>キー割り当て一覧</b>] や、<b>KeyList</b> コマンドで表示できます。<br>
-</p>
-<p>コマンド構文において、<b>[ ]</b> 内は任意、<b>{ }</b> 内は相互に排他的な選択肢です。</p>
-
-<p class="link_box">
-<a href="#AlphaBlend">A</a> <a href="#Calculator">C</a> <a href="#DebugCmdFile">D</a> <a href="#EndFile">E</a> <a href="#FileEdit">F</a> <a href="#GrayScale">G</a> <a href="#HelpContents">H</a> <a href="#InputCommands">I</a> <a href="#JumpIndex">J</a> <a href="#KeyList">K</a> <a href="#ListFileInfo">L</a> <a href="#Mark">M</a> <a href="#NewWorkList">N</a> <a href="#OpenByApp">O</a> <a href="#PageBind">P</a> <a href="#RotateLeft">R</a> <a href="#SaveAsWorkList">S</a> <a href="#TagSelect">T</a> <a href="#WarnHighlight">W</a> <a href="#ZoomIn">Z</a>　　　　<a href="hid00100.htm#IV">→ コマンド索引</a> ／ <a href="hid00101.htm#IV">→ 機能別索引</a>
-</p>
-
-<dl class = "indent1">
-<dt id="AddTag">AddTag<span class="pram_text">[_タグ[;タグ...]]</span>
-<dd>選択中(無ければ現在表示中)のファイルに<b>タグ</b>を追加します。<br>
-詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#AddTag">→ ファイラー: AddTag</a>)。
-<a href="#SetTag">→ SetTag</a>　<a href="#DelTag">→ DelTag</a>
-
-<dt id="AlphaBlend">AlphaBlend<span class="pram_text">[_IN|[[^|+|-]不透明度]</span>
-<dd>メインウィンドウを透過表示にします。<br>
-パラメータに <b>IN</b> を指定すると、入力ボックスで不透明度(64:半透明～255:不透明)を指定できます。<br>
-パラメータで<b>不透明度</b>を指定する場合、先頭に <b>^</b> を付けると、すでに透過表示なら解除、そうでなければ指定値が適用されます。<br>
-先頭に <b>+</b> や <b>-</b> を付けると、現在の不透明度に対して指定値分だけ増減させます。値のみの場合は絶対指定になります。<br>
-パラメータが指定されていないと透過表示が解除されます。<br>
-
-<dt id="AppList">AppList<span class="pram_text">[_{FA|FL|FI|AO|LO|LI}]</span>
-<dd><a href="hid00076.htm">アプリケーション一覧</a>が開き、実行中のアプリケーションが表示されます。簡易ランチャーも備えています。<br>
-パラメータに <b>FA</b> を指定すると、開いたとき一覧側にフォーカスします。<br>
-また <b>FL</b> を指定するとランチャー側にフォーカス、 <b>FI</b> を指定するとランチャー側をインクリメンタルサーチモードにしてフォーカスします。<br>
-<b>AO</b> を指定すると、一覧のみを表示します。<br>
-<b>LO</b> を指定すると、ランチャーのみを表示します。<br>
-<b>LI</b> を指定すると、ランチャーのみを表示し、インクリメンタルサーチモードにします。<br>
-<a href="hid00019.htm#AppList">→ オプション設定 - コマンド</a><br>
-
-<dt id="Calculator">Calculator<span class="pram_text">_計算式</span>
-Calculator<span class="pram_text">_CB[;計算式]</span>
-<dd><a href="hid00087.htm">電卓</a>が開きます。<br>
-パラメータで<b>計算式</b>を指定すると、入力欄にそれを設定して開きます。<br>
-パラメータに <b>CB</b> を用いた書式については、ファイラーの同コマンドを参照してください(<a href="hid00005.htm#Calculator">→ ファイラー: Calculator</a>)。
-
-<dt id="ClearMark">ClearMark
-<dd>カレントのすべての栞マークを解除します。<br>
-<a href="#Mark">→ Mark</a>　<a href="#NextMark">→ NextMark</a>　<a href="#PrevMark">→ PrevMark</a>　<a href="#SelMark">→ SelMark</a>
-
-<dt id="ClipCopy">ClipCopy<span class="pram_text">[_VI]</span>
-<dd>画像をクリップボードにコピーします。縮小表示されている場合でも、元サイズの画像がコピーされます。<br>
-パラメータに <b>VI</b> を指定すると、元サイズではなく、実際に表示されている状態でコピーします。クリップボードの内容を閲覧している場合は表示も更新されます。<br>
-見開き表示では、左右2画像を連結したものがコピーされます。<br>
-
-<dt id="Close">Close
-<dd>イメージビュアーを閉じます。<br>
-<span class="btn_frame">ENTER</span>キーまたは<span class="btn_frame">ESC</span>キー(通常表示時)を押すか、サムネイル以外の部分をダブルクリックしても閉じることができます。<br>
-
-<dt id="CmdFileList">CmdFileList<span class="pram_text">[_FF]</span>
-<dd><a href="hid00067.htm">コマンドファイル一覧</a>を表示します。一覧からは、コマンドファイルの実行、編集、閲覧ができます。<br>
-パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
-<a href="#ExeCommands">→ ExeCommands</a>　<a href="#FileEdit">→ FileEdit</a>
-
-<dt id="CmdHistory">CmdHistory<span class="pram_text">[_FF]</span>
-<dd><b>NyanFi</b> 起動後に実行されたコマンドの履歴を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
-パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
-詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#CmdHistory">→ ファイラー: CmdHistory</a>)。
-
-<dt id="ColorPicker">ColorPicker
-<dd>カラーピッカーを表示します。<br>
-画像をクリック(<span class="btn_frame">ENTER</span>キーでも可)すると、その位置のピクセル色を、コンボボックスで選択した書式でクリップボードにコピーします。また「<b>BITMAP</b>(～)」を選んでいると、括弧内のサイズの正方形を取得色で塗りつぶしたものをビットマップとしてコピーします。<br>
-「<b>9px平均</b>」をチェックすると、隣接する9ピクセルの平均色を取得します。また、「<b>補色</b>」をチェックすると補色を、「<b>セーフカラー</b>」をチェックすると、Webセーフカラーの近似色を取得します。<br>
-<div class="spc_box">
-「<b>連続取得</b>」では、ピクセル色を連続的に取得できます(ビットマップのコピーでは不可)。<br>
-回数および結果の連結方法を指定して<span class="btn_frame">開始</span>キーを押してください。<span class="btn_frame">ESC</span>キーで中断できます。
-</div>
-<div class="spc_box">
-マウスが画像上にある場合、カーソルキーでマウスポインタを上下左右に1pxずつ移動できます。<br>
-</div>
-
-<dt id="CopyFileInfo">CopyFileInfo
-<dd>ファイル情報をクリップボードにコピーします。<br>
-
-<dt id="DebugCmdFile">DebugCmdFile<span class="pram_text">_@ファイル名</span><br>
-<dd>
-パラメータで指定したコマンドファイル(.nbt)に対するデバッグウィンドウを開き、デバッグモードで実行します。<br>
-詳しくは <a href="hid00063.htm#Debug">Debug</a> 補助コマンドを参照してください。<br>
-
-<dt id="Delete">Delete<span class="pram_text">[_SO]</span>
-<dd>選択中のファイルがあればそれを、無ければ現在表示中のファイルを削除します。<br>
-なおイメージビュアーでの削除は、バックグラウンド・タスクでは行いません。<br>
-パラメータに <b>SO</b> を指定すると、選択されているファイルのみを削除します。<br>
-
-<dt id="DelTag">DelTag
-<dd>選択中(無ければ現在表示中)のファイルの<b>タグ</b>を削除します。<br>
-<a href="#AddTag">→ AddTag</a>　<a href="#SetTag">→ SetTag</a>
-
-<dt id="DoublePage">DoublePage<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、通常表示/見開き表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると見開き表示、<b>OFF</b> では通常表示になります。<br>
-見開き表示では、現在の画像と次の画像を2つ左右に並べて連結表示します。左右で高さが異なる場合は、縦方向に中央揃えします。綴じ方向は <a href="#PageBind">PageBind</a> コマンドや表示メニューで変更できます。なおメタファイルやアイコンの場合は見開き表示になりません。<br>
-<a href="#PageBind">→ PageBind</a>
-
-<dt id="Duplicate">Duplicate<span class="pram_text">[_RA]</span>
-<dd><a href="hid00017.htm#Duplicate">オプション設定 - 起動時</a> で二重起動が許可されている場合、新たに <b>NyanFi</b> を起動します。<br>
-パラメータに <b>RA</b> を指定すると、管理者として起動します。<br>
-
-<dt id="EndFile">EndFile
-<dd>表示可能な最後のファイルに移動します。<br>
-<a href="#TopFile">→ TopFile</a>
-
-<dt id="EqualSize">EqualSize
-<dd>画像を元のサイズで等倍表示します。<br>
-画像が画面サイズより大きい場合、中心部が表示され、カーソルキーやマウスドラッグによってスクロールできます。<br>
-なおフィット表示されている画像をマウス左ボタンで押していると、一時的に等倍表示になり、そのままドラッグでスクロールできます。<br>
-<a href="#FittedSize">→ FittedSize</a>　<a href="#ZoomIn">→ ZoomIn</a>　<a href="#ZoomOut">→ ZoomOut</a>
-
-<dt id="ExeCommands">ExeCommands<span class="pram_text">_[:説明:]{コマンド[:コマンド...] | @ファイル名}</span>
-<dd>パラメータで指定したコマンドを実行します。コマンドは <b>:</b> (コロン)で区切って複数指定できます。<br>
-またパラメータでのみ使える補助コマンドや制御文もあります。<br>
-パラメータの先頭が <b>@</b> の場合、コマンドファイル名の指定になります。<br>
-詳細は「<a href="hid00063.htm">ExeCommands コマンド</a>」のページを参照してください。<br>
-
-<dt id="ExeMenuFile">ExeMenuFile<span class="pram_text">_ファイル名</span>
-<dd>指定した<b>メニュー定義ファイル</b>を読み込んで、マウス位置にポップアップメニューを表示し、選択された項目を実行します。<br>
-詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#ExeMenuFile">→ ファイラー: ExeMenuFile</a>)。
-
-<dt id="ExeToolBtn">ExeToolBtn<span class="pram_text">_ボタン番号</span>
-<dd>パラメータで指定した番号(1～)のツールボタンを実行します。<br>
-<a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ShowToolBar">→ ShowToolBar</a>
-
-<dt id="FileEdit">FileEdit<span class="pram_text">[_ファイル名]</span>
-<dd>選択中(無ければ現在表示中)のファイルをイメージエディタ(ペイントソフト等)またはその他のエディタで開きます。<br>
-エディタの設定は、<a href="hid00012.htm">オプション設定 - エディタ</a>で行ってください。<br>
-アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。編集後に保存してもアーカイブには反映されません。またアーカイブの仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください。<br>
-クリップボードの内容を閲覧している場合は、一時ディレクトリに <b>CLIPBOARD.BMP</b> という名前で保存して開きます。一時ファイルは <b>NyanFi</b> 終了時に削除されます。<br>
-パラメータで<b>ファイル名</b>を指定して開くこともできます。<br>
-
-<dt id="FlipHorz">FlipHorz
-<dd>画像表示の左右を反転します(アイコン表示の場合は無効)。<br>
-<a href="#FlipVert">→ FlipVert</a>
-
-<dt id="FlipVert">FlipVert
-<dd>画像表示の上下を反転します(アイコン表示の場合は無効)。<br>
-<a href="#FlipHorz">→ FlipHorz</a>
-
-<dt id="FittedSize">FittedSize
-<dd>画像を画面サイズにフィットするように表示します(アイコン表示の場合は無効)。<br>
-画像が画面サイズより小さい場合は等倍表示になります。<br>
-縮小・縮小アルゴリズムは <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で選べます。<br>
-フィット表示されている画像をマウス左ボタンで押していると、一時的に等倍表示になり、そのままドラッグでスクロールできます。<br>
-なお、<a href="hid00020.htm">オプション設定 - イメージビュアー</a> で「<b>許容フィット倍率</b>」に100よりも大きな値を設定した場合、その倍率の範囲内でフィットできれば拡大表示します(そうでない場合は等倍表示)。<br>
-<a href="#EqualSize">→ EqualSize</a>　<a href="#ZoomIn">→ ZoomIn</a>　<a href="#ZoomOut">→ ZoomOut</a>
-
-<dt id="FullScreen">FullScreen<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、イメージビュアーの全画面表示/通常表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると全画面表示、<b>OFF</b> では通常表示になります。<br>
-全画面表示からは、<span class="btn_frame">ESC</span>キーでも通常表示に戻れます。<br>
-全画面表示では、サイドバー、シークバー、情報ヘッダ、ステータスバーは表示されません。<br>
-<a href="hid00020.htm">オプション設定 - イメージビュアー</a> で「<b>全画面表示でサムネイルを隠す</b>」をチェックしていると、サムネイルも非表示になります。全画面表示から抜けると、以前の表示状態に戻りますが、全画面表示時に表示を切り替えた場合はそれが維持されます。<br>
-「<b>全画面表示でマウスポインタを隠す</b>」をチェックしていると、マウスポインタが隠れます。この場合、クリックで非表示状態が解除されます。<br>
-
-<dt id="GrayScale">GrayScale<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、画像のグレースケール表示/通常表示をトグルで切り替えます(アイコン表示の場合は無効)。<br>
-パラメータに <b>ON</b> を指定するとグレースケール表示、<b>OFF</b> では通常表示になります。<br>
-
-<dt id="HelpContents">HelpContents<span class="pram_text">[_{CI|FI}]</span>
-<dd>ヘルプの目次を表示します。<br>
-パラメータに <b>CI</b> を指定すると「コマンドの索引(アルファベット順)」のページを、<b>FI</b> を指定すると「コマンドの索引(機能別)」のページを表示します。<br>
-
-<dt id="Histogram">Histogram<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、<b>ヒストグラム</b>の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-画像が表示されている場合は、元サイズのデータからヒストグラムを作成しますが、サムネイル全面表示の場合は、サムネイル画像から作成するのであまり正確ではありません。<br>
-サイドバーが表示されている場合、ファイル情報の上または下にヒストグラムをドッキングすることもできます。<br>
-全画面表示では、サイドバーにドッキングされていない場合にのみ表示可能です。<br>
-<a href="#Sidebar">→ Sidebar</a>　　<a href="#Histogram">→ Histogram</a>
-
-<dt id="HomeWorkList">HomeWorkList
-<dd>ホームワークリストを読み込みます。ワークリスト表示でない場合、表示は切り替わりません。<br>
-ホームワークリストは、<a href="hid00017.htm">オプション設定 - 起動時</a> で指定されているファイルが用いられます。<br>
-<a href="#WorkList">→ WorkList</a>　<a href="#LoadWorkList">→ LoadWorkList</a>
-
-<dt id="InputCommands">InputCommands<span class="pram_text">[_EL]</span>
-<dd>入力したコマンド( : で区切って複数指定可)を、<a href="#ExeCommands">ExeCommands</a> のパラメータとして実行します。<br>
-詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#InputCommands">→ ファイラー: InputCommands</a>)。
-
-<dt id="JumpIndex">JumpIndex<span class="pram_text">[_[+|-]インデックス]</span>
-<dd>指定した<b>インデックス</b>のファイルに移動します。<br>
-+ または - を付けると、現在位置からの相対移動になります。<br>
-パラメータを指定しない場合は入力ボックスが出ます。<br>
-<a href="#NextFile">→ NextFile</a>　<a href="#PrevFile">→ PrevFile</a>
-
-<dt id="KeyList">KeyList<span class="pram_text">[_FF]</span>
-<dd><a href="hid00055.htm">キー割り当て一覧</a>を表示します。<br>
-パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
-
-<dt id="ListFileInfo">ListFileInfo
-<dd><a href="#ShowFileInfo">ShowFileInfo</a>_SD のエイリアス(別名)です。<br>
-表示中画像のファイル情報をダイアログ表示します。<br>
-<a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#PropertyDlg">→ PropertyDlg</a>
-
-<dt id="ListLog">ListLog<span class="pram_text">[_EO]</span>
-<dd>現在のログ内容を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
-パラメータに <b>EO</b> を指定すると、ログの中からエラー箇所を絞り込んで表示します。一覧の右クリックメニューでも「エラー箇所の絞り込み」を切り替え可能。<br>
-
-<dt id="LoadBgImage">LoadBgImage<span class="pram_text">[_ファイル名]</span>
-<dd>表示中のファイル(メタファイルは除く)を背景画像として読み込みます。<br>
-<a href="hid00010.htm#BgImage">→ オプション設定 - デザイン - 「背景画像表示」</a> で「<b>2画面にわたって表示</b>」が選択されている場合は<b>画像1</b>に、「<b>それぞれに表示</b>」が選択されている場合は、左側なら<b>画像1</b>に、右側なら<b>画像2</b>に読み込まれます。<br>
-パラメータに<b>ファイル名</b>を指定すると直接開けます(ドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定)。<br>
-
-<dt id="LoadWorkList">LoadWorkList<span class="pram_text">[_ファイル名]</span>
-<dd><a href="hid00060.htm">ワークリスト</a>をファイルから読み込みます。ワークリスト表示でない場合、表示は切り替わりません。<br>
-直前に使用していたワークリストは自動的に保存されます(無名だった場合は「ワークリストに名前を付けて保存」ダイアログが出ます)。<br>
-パラメータに<b>ファイル名</b>を指定すると直接開けます(ドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定)。<br>
-<a href="#SaveWorkList">→ SaveWorkList</a>　<a href="#SaveAsWorkList">→ SaveAsWorkList</a>　<a href="#NewWorkList">→ NewWorkList</a>
-
-<dt id="Loupe">Loupe<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、ルーペの表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-画像(メタファイルは除く)のマウス位置を拡大表示します。倍率は<span class="btn_frame">×1</span><span class="btn_frame">×2</span><span class="btn_frame">×4</span><span class="btn_frame">×8</span>ボタンか右クリックメニューで切り替えられます。拡大の際に補間は行われません。<br>
-サイドバーが表示されている場合、ファイル情報の上または下にルーペをドッキングすることもできます。<br>
-なお、クリックで一時的に等倍表示になっている間は、浮動化しているルーペは隠れます。<br>
-全画面表示では、サイドバーにドッキングされていない場合にのみ表示可能です。<br>
-<a href="#Sidebar">→ Sidebar</a>　<a href="#Histogram">→ Histogram</a>
-
-<dt id="Mark">Mark<span class="pram_text">[_{IM|メモ}[;ND]]</span><br>
-Mark<span class="pram_text">_SL[;{IM|メモ}]</span>
-<dd>カーソル位置のファイルに<b>栞マーク</b>を設定します。すでに設定されている場合は解除します。<br>
-パラメータに <b>IM</b> を指定すると、項目に栞マークを設定するとともに、入力ボックスでメモを設定できます。パラメータでメモ内容を直接指定することも可能。なおメモ設定時は、実行後、次のファイルに移動しません。<br>
-パラメータに <b>ND</b> を指定すると、実行後、次のファイルに移動しません。<br>
-複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
-<div class="spc_box">
-パラメータに <b>SL</b> を指定すると、選択されている項目の栞マーク状態を一括で反転させます。実行後、次のファイルに移動しません。<br>
-さらに <b>IM</b> またはメモ内容を指定した場合は、(反転ではなく)栞マークとともにメモを設定します。<br>
-選択項目がない場合は、カーソル位置の項目が対象になります(<b>SL</b> を指定しない場合と同じ)。<br>
-</div>
-
-<a href="#ClearMark">→ ClearMark</a>　<a href="#NextMark">→ NextMark</a>　<a href="#PrevMark">→ PrevMark</a>　<a href="#MarkList">→ MarkList</a>　<a href="#SelMark">→ SelMark</a>
-
-<dt id="MarkList">MarkList<span class="pram_text">[_FF]</span>
-<dd><a href="hid00070.htm">栞マーク一覧</a>を表示します。<br>
-パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
-<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
-
-<dt id="MaskSelect">MaskSelect
-<dd>サムネイルを表示している場合、指定マスクに一致するファイルを選択します。<br>
-<a href="#TagSelect">→ TagSelect</a>
-
-<dt id="MenuBar">MenuBar<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、メニューバーの表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-<a href="#PopupMainMenu">→ PopupMainMenu</a>
-
-<dt id="NewWorkList">NewWorkList
-<dd>新規に空の<a href="hid00060.htm">ワークリスト</a>を作成して表示します。ワークリスト表示でない場合、表示は切り替わりません。<br>
-新規ワークリストは無名ですので、保存するには <a href="#SaveAsWorkList">SaveAsWorkList</a> コマンドを用いてください。<br>
-<a href="#LoadWorkList">→ LoadWorkList</a>　<a href="#SaveWorkList">→ SaveWorkList</a>　<a href="#SaveAsWorkList">→ SaveAsWorkList</a>
-
-<dt id="NextFile">NextFile<span class="pram_text">[_F1]</span>
-<dd>表示可能な次のファイルに移動します。<br>
-<a href="hid00020.htm">オプション設定 - イメージビュアー</a> で「<b>カーソルをループ移動する</b>」をチェックしている場合、最後まで達したら先頭に移ります(見開き表示では無効)。また「<b>先頭・最後でヒント表示</b>」をチェックしていると、先頭からさらに移動しようとした場合にヒント表示します。<br>
-見開き表示している場合は2ファイル単位での移動になりますが、パラメータに <b>F1</b> を指定すると1ファイルずつ移動できます。<br>
-なお、「<b>シークバーの始点を綴じ方向に合わす</b>」と「<strong>右綴じでNext/Prev入替</strong>」がチェックされていて、右綴じ見開き表示でシークバーが表示になっている場合、キーによってこのコマンドを実行しようとすると、代わりに <a href="#PrevFile">PrevFile</a> が実行されます。<br>
-<a href="hid00080.htm">FTP接続</a>時のリモート側では無効です。<br>
-<a href="#PrevFile">→ PrevFile</a>　<a href="#JumpIndex">→ JumpIndex</a>
-
-<dt id="NextMark">NextMark
-<dd>次の栞マークファイルへ移動します(ループ動作)。<br>
-<a href="#PrevMark">→ PrevMark</a>　<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
-
-<dt id="NextNyanFi">NextNyanFi<span class="pram_text">[_DN]</span>
-<dd>複数起動されている場合、次の <b>NyanFi</b> をアクティブにします。<br>
-パラメータに <b>DN</b> を指定すると、複数起動されていない場合、新たに <b>NyanFi</b> を二重起動します。<br>
-<a href="#PrevNyanFi">→ PrevNyanFi</a>　<a href="#Duplicate">→ Duplicate</a>
-
-<dt id="NextPage">NextPage
-<dd>サムネイルを表示している場合、通常表示では1ページ分後に、全面表示では1行下に移動します。<br>
-サムネイルが非表示の場合は何もしません。<br>
-<a href="#PrevPage">→ PrevPage</a>
-
-<dt id="NextSameName">NextSameName
-<dd>カーソル位置とファイル名主部が同じ次のファイルへ移動します。見つからなかった場合は先頭から探します。
-
-<dt id="OpenByApp">OpenByApp<span class="pram_text">[_ファイル名]</span>
-<dd>選択中(無ければカーソル位置)のファイルを、独自の関連付けで開きます。関連付けは、<a href="hid00012.htm">オプション設定 - 関連付け</a>で行ってください。<br>
-アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
-パラメータに<b>ファイル名</b>を指定すると直接開けます。ドライブ名がない場合はカレントからの相対指定になります。<br>
-
-<dt id="OpenByWin">OpenByWin<span class="pram_text">[_ファイル名]</span>
-<dd>選択中(無ければカーソル位置)のファイルを、Windowsの関連付けで開きます。<br>
-アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
-パラメータで<b>ファイル名</b>を指定して開くこともできます。ドライブ名がない場合はカレントからの相対指定になります。<br>
-
-<dt id="OptionDlg">OptionDlg<span class="pram_text">[_{GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV}]</span><br>
-OptionDlg<span class="pram_text">_KYO</span>
-<dd>「<a href="hid00008.htm">オプション設定</a>」ダイアログを開きます。このとき、ビュアーは安全のため一旦閉じます。<br>
-パラメータを指定すると特定のタブを開くことができます。パラメータとタブの対応は次の通りです。<b>GN</b>: 一般、<b>G2</b>: 一般2、<b>MO</b>: マウス操作、<b>DS</b>: デザイン、<b>FC</b>: フォント・配色、<b>TV</b>: テキストビュアー、<b>IV</b>: イメージビュアー、<b>ED</b>: エディタ、<b>KY</b>: キー設定、<b>AC</b>: 関連付け、<b>XM</b>: 追加メニュー、<b>XT</b>: 外部ツール、<b>ST</b>: 起動時、<b>NT</b>: 通知・確認、<b>CM</b>: コマンド、<b>EV</b>: イベント。<br>
-<div class="spc_box">
-パラメータに <b>KYO</b> を指定すると、「キー設定」のみのダイアログが開きます。<br>
-この場合、ビュアーは開いたままで設定を行えます。また通常のダイアログよりも若干速く開きます。<br>
-</div>
-このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
-
-<dt id="PageBind">PageBind<span class="pram_text">[_{R|L}]</span>
-<dd>見開き表示のときの綴じ方向を設定します。<br>
-パラメータを指定しない場合、現在と逆の方向に変更します。<br>
-パラメータに <b>R</b> を指定すると右綴じ、<b>L</b> では左綴じになります。<br>
-<a href="#DoublePage">→ DoublePage</a>
-
-<dt id="PageUp">PageUp
-<dd>サムネイル全面表示の場合に、1ページ上に移動します。
-
-<dt id="PageDown">PageDown
-<dd>サムネイル全面表示の場合に、1ページ下に移動します。
-
-<dt id="PopupMainMenu">PopupMainMenu
-<dd>メインメニューの内容をポップアップメニューに変換して表示します。<br>
-<a href="#MenuBar">→ MenuBar</a>
-
-<dt id="PrevFile">PrevFile<span class="pram_text">[_F1]</span>
-<dd>表示可能な前のファイルに移動します。<br>
-<a href="hid00020.htm">オプション設定 - イメージビュアー</a> で「<b>カーソルをループ移動する</b>」をチェックしている場合、先頭まで達したら最後に移ります(見開き表示では無効)。また「<b>先頭・最後でヒント表示</b>」をチェックしていると、最後からさらに移動しようとした場合にヒント表示します。<br>
-見開き表示している場合は2ファイル単位での移動になりますが、パラメータに <b>F1</b> を指定すると1ファイルずつ移動できます。<br>
-なお、「<b>シークバーの始点を綴じ方向に合わす</b>」と「<strong>右綴じでNext/Prev入替</strong>」がチェックされていて、右綴じ見開き表示でシークバーが表示になっている場合、キーによってこのコマンドを実行しようとすると、代わりに <a href="#NextFile">NextFile</a> が実行されます。<br>
-<a href="hid00080.htm">FTP接続</a>時のリモート側では無効です。<br>
-<a href="#NextFile">→ NextFile</a>　<a href="#JumpIndex">→ JumpIndex</a>
-
-<dt id="PrevMark">PrevMark
-<dd>前の栞マークファイルへ移動します(ループ動作)。<br>
-<a href="#NextMark">→ NextMark</a>　<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
-
-<dt id="PrevNyanFi">PrevNyanFi
-<dd>複数起動されている場合、前の <b>NyanFi</b> をアクティブにします。<br>
-<a href="#NextNyanFi">→ NextNyanFi</a>　<a href="#Duplicate">→ Duplicate</a>
-
-<dt id="PrevPage">PrevPage
-<dd>サムネイルを表示している場合、通常表示では1ページ分前に、全面表示では1行上に移動します。<br>
-サムネイルが非表示の場合は何もしません。<br>
-<a href="#NextPage">→ NextPage</a>
-
-<dt id="Print">Print
-<dd>表示中の画像を印刷するためのダイアログを表示します(アイコンや再生中のアニメーションGIFは印刷不可)。<br>
-プリンターの設定の他、印刷位置やサイズなどを設定できます。スケールやオフセットなどは用紙サイズに対するパーセントで指定します。<br>
-<span class="tab_frame">文字</span>タブでは、文字入れの設定を行え、以下の書式文字列が使えます。<br>
-　<b>$F</b>　パス付ファイル名<br>
-　<b>$B</b>　パス無しファイル名<br>
-　<b>$XT(</b>書式<b>)</b>　Exif撮影日時(取得できない場合はタイムスタンプ、クリップボードの場合は現在日時)<br>
-　　　　　書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒<br>
-なお、画面下部の移動ボタンによって、ダイアログを表示したまま前後の画像に移動できます。<br>
-
-<dt id="PropertyDlg">PropertyDlg<span class="pram_text">[_{ファイル名|ディレクトリ名}]</span>
-<dd>表示中画像についてのプロパティダイアログを表示します。<br>
-パラメータで、対象の<b>ファイル名</b>や<b>ディレクトリ名</b>を指定することもできます。<br>
-<a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#ListFileInfo">→ ListFileInfo</a>
-
-<dt id="RotateLeft">RotateLeft
-<dd>画像表示を左に90度回転します(アイコン表示の場合は無効)。<br>
-なおメタファイルをフィット表示している場合、回転しても倍率が変化しません。<br>
-<a href="#RotateRight">→ RotateRight</a>
-
-<dt id="RotateRight">RotateRight
-<dd>画像表示を右に90度回転します(アイコン表示の場合は無効)。<br>
-なおメタファイルをフィット表示している場合、回転しても倍率が変化しません。<br>
-<a href="#RotateLeft">→ RotateLeft</a>
-
-<dt id="SaveAsWorkList">SaveAsWorkList
-<dd>現在の<a href="hid00060.htm">ワークリスト</a>に名前を付けて保存します。<br>
-<a href="#SaveWorkList">→ SaveWorkList</a>
-
-<dt id="SaveWorkList">SaveWorkList
-<dd>現在の<a href="hid00060.htm">ワークリスト</a>を上書き保存します。無名だった場合は、<a href="#SaveAsWorkList">SaveAsWorkList</a> コマンドが実行されます。<br>
-なお、<b>NyanFi</b> 終了時には自動的に現在のワークリストが上書き保存されます。<br>
-<a href="#SaveAsWorkList">→ SaveAsWorkList</a>　<a href="#LoadWorkList">→ LoadWorkList</a> 
-
-<dt id="ScrollDown">ScrollDown
-<dd>画像を下にスクロールします。
-
-<dt id="ScrollLeft">ScrollLeft
-<dd>画像を左にスクロールします。
-
-<dt id="ScrollRight">ScrollRight
-<dd>画像を右にスクロールします。
-
-<dt id="ScrollUp">ScrollUp
-<dd>画像を上にスクロールします。
-
-<dt id="SelAllFile">SelAllFile
-<dd>サムネイルを表示している場合、すべてファイルを選択します。<br>
-すでに選択されているファイルがある場合は、すべての選択が解除されます。
-
-<dt id="Select">Select<span class="pram_text">[_ND]</span>
-<dd>現在表示しているファイルを選択します。すでに選択中の場合は解除します。<br>
-パラメータに <b>ND</b> を指定すると、実行後、次のファイルに移動しません。<br>
-
-<dt id="SelMark">SelMark
-<dd>栞マーク項目を選択します。<br>
-<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
-
-<dt id="SelReverse">SelReverse
-<dd>サムネイルを表示している場合、ファイルの選択状態を反転させます。
-
-<dt id="SelSameExt">SelSameExt
-<dd>サムネイルを表示している場合、カーソル位置のファイルと拡張子が同じすべてのファイルを選択します。<br>
-<a href="#SelSameName">→ SelSameName</a>
-
-<dt id="SelSameName">SelSameName
-<dd>サムネイルを表示している場合、カーソル位置のファイルと名前主部が同じすべてのファイルを選択します。
-<a href="#SelSameExt">→ SelSameExt</a>
-
-<dt id="SelWorkItem">SelWorkItem
-<dd>現在の<a href="hid00060.htm">ワークリスト</a>に登録されているファイルを選択します。<br>
-<a href="#WorkList">→ WorkList</a>
-
-<dt id="SendToWorkList">SendToWorkList
-<dd>選択中(無ければ現在表示中)のファイルを、現在の<a href="hid00060.htm">ワークリスト</a>に送ります。<br>
-<a href="#WorkList">→ WorkList</a>
-
-<dt id="SetInterpolation">SetInterpolation<span class="pram_text">_{N|L|C|F|X}[{N|L|C|F|X}...]</span>
-<dd><a href="hid00020.htm">オプション設定 - イメージビュアー</a> - 「<b>縮小・拡大アルゴリズム</b>」を変更します。<br>
-パラメータで <b>N</b> (ニアレストネイバー)、<b>L</b> (バイリニア)、<b>C</b> (バイキュービック)、<b>F</b> (ファントリサンプリング)、<b>X</b> (補間しない)のいずれかを指定してください。複数を組み合わせて指定すると、それらの間をトグルで切り替えられます。<br>
-縮小・拡大時には情報ヘッダに補間法(N、L、C、F、X)が表示されます。<br>
-
-<div class="spc_box">
-<b>例</b>: バイリニア/ファントリサンプリング/補間しない をトグル切り替え<br>
-　SetInterpolation_LFX
-</div>
-<a href="#ZoomIn">→ ZoomIn</a>　<a href="#ZoomOut">→ ZoomOut</a>
-
-<dt id="SetTag">SetTag
-<dd>選択中(無ければ現在表示中)のファイルに<b>タグ</b>を設定します。<br>
-詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#SetTag">→ ファイラー: SetTag</a>)。<br>
-<a href="#AddTag">→ AddTag</a>　<a href="#DelTag">→ DelTag</a>
-
-<dt id="ShowFileInfo">ShowFileInfo<span class="pram_text">[_SD]</span>
-<dd>サイドバーが非表示の場合、表示中の画像のファイル情報をダイアログで表示します。<br>
-パラメータに <b>SD</b> を指定すると、サイドバーの表示状態にかかわらずダイアログを表示します。<br>
-<a href="#ListFileInfo">→ ListFileInfo</a>　<a href="#PropertyDlg">→ PropertyDlg</a>
-
-<dt id="ShowFKeyBar">ShowFKeyBar<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、ファンクションキーバーの表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
-ファンクションキーバーのボタンには、キーに割り当てられているコマンド名(パラメータ部分を除く)がデフォルトで表示されますが、変更も可能です。<br>
-ボタンを右クリックするか、<a href="hid00016.htm">オプション設定 - キー設定</a>の一覧で項目をダブルクリックすると、表示名変更のための入力ボックスが表示されます。<br>
-なおツールバーとは異なり、割り当てられているコマンドの有効/無効やチェック状態はボタンに反映されません。<br>
-
-<dt id="ShowGrid">ShowGrid<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、画像分割グリッドの表示/非表示をトグルで切り替えます(アイコン表示の場合は無効)。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-グリッドの分割数は <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で設定できます。<br>
-
-<dt id="ShowSeekBar">ShowSeekBar<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、シークバーの表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-<a href="hid00020.htm">オプション設定 - イメージビュアー</a> で「<b>シークバーの始点を綴じ方向に合わす</b>」をチェックしていると、右綴じ見開き表示の場合にシークバーの始点も右端になります。さらに「<b>右綴じでNext/Prev入替</b>」をチェックしていると、キーによる前後移動(<a href="hid00007.htm#NextFile">NextFile</a>/<a href="hid00007.htm#PrevFile">PrevFile</a> コマンド)も入れ替わります。
-
-<dt id="ShowStatusBar">ShowStatusBar<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、ステータスバーの表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-
-<dt id="ShowToolBar">ShowToolBar<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、<b>ツールバー</b>の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
-<a href="hid00020.htm">オプション設定 - イメージビュアー</a> で「<b>ツールバーをサイドバー上に表示</b>」をチェックしていると、画面上部ではなく、サイドバーの上端にツールバーが表示されます。<br>
-<a href="hid00068.htm">「ツールバーの設定」ダイアログ</a>は、ツールバーをダブルクリックするか、<b>設定メニュー</b> - 「<b>ツールバーの設定</b>」あるいは <a href="#ToolBarDlg">ToolBarDlg</a> コマンドで表示されます。<br>
-<a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
-
-<dt id="Sidebar">Sidebar<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、サイドバーの表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-サイドバーには、表示中の画像のファイル情報が表示されます。<br>
-またファイル情報の上または下に、ルーペやヒストグラムをドッキングすることも可能です。ルーペとヒストグラムを両方ともドッキングした場合、ヒストグラムはルーペのすぐ下になります。<br>
-なおサイドバーが表示されている場合、情報ヘッダは非表示となり、一部の情報(インデックス、倍率など)がサイドバー上に表示されます。<br>
-<a href="#Loupe">→ Loupe</a>　<a href="#Histogram">→ Histogram</a>
-
-<dt id="SimilarImage">SimilarImage<span class="pram_text">[_{DH|AH|PH}][;HG][;CC][;サイズ][;CB]</span><br>
-<dd>カーソル位置の画像との類似性に基づいてソートを行います。<br>
-デフォルトでは、画像を32×32のサイズに縮小し、各ピクセルについてHSV色空間での隔たりを計算して、その合計が小さい順に並べ替えます。縮小には、サムネイルの縮小アルゴリズムを用います(<a href="hid00020.htm#Thumbnail">オプション設定 - イメージビュアー</a> - 縮小)。<br>
-<div class="spc_box">
-パラメータに <b>DH</b> を指定すると、<b>dHash</b> (difference hash)でソートを行います。縮小画像をグレースケール化し、隣接領域との差分からハッシュを求め、そのハミング距離の小さい順に並べ替えます。<br>
-パラメータに <b>AH</b> を指定すると、<b>aHash</b> (average hash)でソートを行います。縮小画像をグレースケール化し、平均値との比較でハッシュを求め、そのハミング距離の小さい順に並べ替えます。<br>
-パラメータに <b>PH</b> を指定すると、<b>pHash</b> (perceptual hash)でソートを行います。縮小画像をグレースケール化し、離散コサイン変換した結果から平均値との比較でハッシュを求め、そのハミング距離の小さい順に並べ替えます。<br>
-dHash/aHash/pHash では色情報を考慮しないため、色違いの類似画像などを探すのによいかもしれません。<br>
-</div>
-<div class="spc_box">
-パラメータに <b>HG</b> を指定すると、カラーヒストグラムによってソートを行います。縮小画像から64色のストグラムを作成し、その類似度によって並べ替えます。<b>HG</b> は、<b>DH</b>、<b>AH</b>、<b>PH</b> のいずれかと同時に指定することもできます。その場合、両者の加算値が小さい順に並べ替えます。<br>
-</div>
-<div class="spc_box">
-パラメータに <b>CC</b> を指定すると、画像の中央部(面積50%)をクロップして比較を行います。注目部分が中央にあって、背景を無視したいような場合によいかもしれません。<br>
-</div>
-
-<div class="spc_box">
-パラメータで 32×32 以外の<b>サイズ</b>(4～120)を指定することも可能です。サイズを大きくすると処理時間がかかりますが、その分精度が上がるとは限りません。<br>
-なお、同じサイズ/方法で再実行すると、前回取得した情報を再利用するため処理が速くなります。<br>
-</div>
-<div class="spc_box">
-パラメータに <b>CB</b> を指定すると、クリップボードのビットマップ内容との類似性に基づいてソートを行います。<br>
-</div>
-<div class="spc_box">
-複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
-</div>
-
-<div class="spc_box">
-<b>例</b>: 画像の中央部をクロップし、dHash とカラーヒストグラムを併用してソート<br>
-　SimilarImage_DH;HG;CC
-</div>
-<a href="#SortDlg">→ SortDlg</a>
-
-<dt id="SortDlg">SortDlg<span class="pram_text">[_{F|E|D|S}]</span>
-<dd>「<b>ソート</b>」ダイアログを開きます。<b>名前</b>、<b>拡張子</b>、<b>更新日時</b>、<b>サイズ</b>によるソート方法を選べます。名前順の場合、「<b>自然順</b>」をチェックすると、数字を数値とみなすソートになります。<br>
-なお、<b>パラメータ</b> (<b>F</b> :名前順、<b>E</b> :拡張子順、<b>D</b> :更新日時順、<b>S</b> :サイズ順) を指定すると、ダイアログを出さずに変更することも可能です。<br>
-<a href="#SimilarImage">→ SimilarImage</a>
-
-<dt id="SubViewer">SubViewer<span class="pram_text">[_{ON|OFF|CB|LK|RL|RR|FH|FV}]</span><br>
-<dd>
-パラメータを指定しない場合、<b>サブビュアー</b>の表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-サブビュアーには、現在表示中の画像がフィット表示されます(アニメーションGIF対応)。<br>
-縮小の際は単純な補間しか行われませんが、画面のリサイズにしたがってすぐにフィットします。なお実行ファイルなどのアイコンは表示されません。<br>
-<div class="spc_box">
-パラメータに <b>CB</b> を指定すると、クリップボードのビットマップ内容を表示します。<br>
-パラメータに <b>LK</b> を指定すると、現在表示中の画像の固定/解除をトグルで切り替えます。固定状態(赤枠表示)では、別のファイルに移動しても表示が変わりません。<br>
-パラメータに <b>RL</b> を指定すると表示中の画像(GIFやメタファイルは除く)を左に90度、<b>RR</b> を指定すると右に90度回転します。また <b>FH</b> では左右反転、 <b>FV</b> では上下反転します。これらの操作は右クリックメニューからも可能です。<br>
-なお、右クリックメニューで背景色を変更できます。<br>
-</div>
-<div class="spc_box">
-複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
-</div>
-
-<dt id="TagSelect">TagSelect<span class="pram_text">[_タグ[;タグ...]]</span>
-<dd>指定タグが設定されている画像を選択します。<br>
-パラメータを指定しないと、「<b>タグ選択</b>」ダイアログが開きますので、入力欄に入力するか、一覧のチェックボックスで選択してください。<br>
-タグは <b>;</b> (セミコロン)で区切って複数指定できます。大小文字は区別されません。<br>
-「<b>AND検索</b>」をチェックしていると、指定したすべてのタグを含む項目が、チェックを外すと、いずれかのタグを含む項目がマッチします。<br>
-<div class="spc_box">
-パラメータに<b>タグ</b>を指定すると、ダイアログを出さずに直ちに実行できます。<br>
-複数のタグを指定する場合、<b>;</b> (セミコロン)で区切るとAND検索、<b>|</b> で区切るとOR検索になります。混在はできません。<br>
-</div>
-<a href="hid00088.htm">→ タグによるファイル管理</a><br>
-<a href="#MaskSelect">→ MaskSelect</a>
-
-<dt id="Thumbnail">Thumbnail<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、サムネイルの表示/非表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定するとサムネイルを表示、<b>OFF</b> では非表示になります。<br>
-表示する位置は <b>表示メニュー</b> - [<b>サムネイルの位置</b>] で選べます。<br>
-それ以外の設定は <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で行ってください。<br>
-<a href="#ThumbnailEx">→ ThumbnailEx</a>
-
-<dt id="ThumbnailEx">ThumbnailEx<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、サムネイルの全面表示/通常表示をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると全面表示、<b>OFF</b> では通常表示になります。<br>
-<a href="#Thumbnail">→ Thumbnail</a>
-
-<dt id="ToolBarDlg">ToolBarDlg
-<dd><a href="hid00068.htm">「ツールバーの設定」ダイアログ</a>を表示します。<br>
-このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
-<a href="#ShowToolBar">→ ShowToolBar</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
-
-<dt id="TopFile">TopFile
-<dd>表示可能な先頭のファイルに移動します。<br>
-<a href="#EndFile">→ EndFile</a>
-
-<dt id="WarnHighlight">WarnHighlight<span class="pram_text">[_{ON|OFF}]</span>
-<dd>パラメータを指定しない場合、白飛び警告の有効/無効をトグルで切り替えます。<br>
-パラメータに <b>ON</b> を指定すると有効、<b>OFF</b> では無効になります。<br>
-画像の白飛び部分をブリンク表示で警告します。<br>
-
-<dt id="WebMap">WebMap<span class="pram_text">[_IN][;Z1～18(デフォルト=16)][;H高さ(デフォルト=600)]</span>
-<dd>表示中画像からExif GPS情報を取得し、地図(デフォルト:国土地理院/Leaflet)を開きます。<br>
-緯度、経度からマップ表示用のHTMLファイルを生成し、一時ディレクトリに <b>$~WEBMAP.HTM</b> という名前で保存して開きます。<br>
-パラメータに <b>IN</b> を指定すると、入力ボックスで指定した地点のマップを開けます。指定には10進数のDEG表記を用い、緯度経度の順に、<b>,</b>(カンマ) 、<b>;</b> (セミコロン)、半角空白のいずれかで区切って入力してください(クリップボードから貼り付けた場合はタブ文字でも可)。<br>
-
-<div class="spc_box">
-パラメータに <b>Z</b> と1～18の数値を指定すると、地図のズームレベルを設定できます。<br>
-パラメータに <b>H</b> と数値(px)を指定すると、地図の表示高を設定できます。<br>
-複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
-</div>
-<div class="spc_box">
-なお表示をカスタマイズしたい場合、実行ディレクトリに <b>WEBMAP.HTM</b> という名前のHTMLファイルを置くと、それがテンプレートとして用いられます。<br>
-詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#WebMap">→ ファイラー: WebMap</a>)。<br>
-</div>
-
-<dt id="WinPos">WinPos<span class="pram_text">[_{L|T|R|B}[+|-]数値][;...]</span>
-<dd>ウィンドウの四辺の位置を設定します。<br>
-パラメータで L(左)、T(上)、R(右)、B(下)を任意に組み合わせて設定できます。数値の前に <b>+</b> または <b>-</b> を付けると、現在位置からの相対指定になります。<br>
-パラメータを何も指定しないと、起動時の画面状態に戻ります。<br>
-
-<dt id="WorkList">WorkList
-<dd>イメージビュアーに<a href="hid00060.htm">ワークリスト</a>の内容を表示します。もう一度実行するとカレントパスの内容表示に戻ります。ただしカレントがワークリストだった場合は、そのまま切り替わりません。<br>
-<a href="#HomeWorkList">→ HomeWorkList</a>　<a href="#LoadWorkList">→ LoadWorkList</a>　<a href="#NewWorkList">→ NewWorkList</a>
-
-<dt id="ZoomIn">ZoomIn
-<dd>ズームインします(アイコン表示の場合は無効)。<br>
-ズーム倍率は、10、25、50、75、100、150、200、300、400%のいずれかになります。<br>
-縮小・拡大アルゴリズムは <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で選択できます(<a href="#SetInterpolation">SetInterpolation</a> コマンドでも変更可能)。<br>
-なおメタファイルは、ベクタイメージとして処理されます。<br>
-<a href="#ZoomOut">→ ZoomOut</a>　<a href="#FittedSize">→ FittedSize</a>　<a href="#EqualSize">→ EqualSize</a>　<a href="#SetInterpolation">→ SetInterpolation</a>
-
-<dt id="ZoomOut">ZoomOut
-<dd>ズームアウトします(アイコン表示の場合は無効)。<br>
-ズーム倍率は、10、25、50、75、100、150、200、300、400%のいずれかになります。<br>
-縮小・拡大アルゴリズムは <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で選択できます。なおメタファイルは、ベクタイメージとして処理されます。<br>
-<a href="#ZoomIn">→ ZoomIn</a>　<a href="#FittedSize">→ FittedSize</a>　<a href="#EqualSize">→ EqualSize</a>　<a href="#SetInterpolation">→ SetInterpolation</a>
-
-</dl>
-<br><br><br><br>
+  <h1>イメージビュアー</h1>
+
+  <p>
+    ファイルリストで<span class="btn_frame">ENTER</span>キーを押すか、<a href="hid00005.htm#ImageViewer">ImageViewer</a>
+    コマンドを実行すると、イメージビュアー画面に変わり、カーソル位置の画像ファイルを表示します。また実行ファイルやDLLの場合は、アイコンを抽出して一覧表示します。<br>
+    また、カレント側にある画像ファイルの<b>サムネイル</b>を一覧表示することもできます。ただし、<a
+      href="hid00052.htm">ファイル名検索</a>の結果リストの場合、アーカイブ内ファイルは表示対象から外されます。<br>
+  </p>
+  <p>
+    画像ファイルの表示は、<b>WIC</b> コーデックで行っています。<br>
+    必要に応じてコーデックをインストールしてください。<br>
+    インストールされているコーデックの詳細は、<a href="hid00005.htm#ListNyanFi">ListNyanFi</a> コマンドで確認できます。<br>
+    また、メタファイル(<b>.WMF</b>、<b>.EMF</b>)にも対応しています。背景色はデフォルトで白ですが、<a href="hid00023.htm#Color">オプション設定 -
+      フォント・配色</a>の「<b>配色</b>」で変更可能です。<br>
+    <a href="hid00020.htm#AnimateGif">オプション設定 -
+      イメージビュアー</a>の「<b>アニメーションGIFを再生する</b>」をチェックしていると、アニメーションGIFを再生できます(ビュアー機能の制限あり)。
+  </p>
+
+  <p>
+    <b>Exif</b>
+    情報は自前で取得しています。対応しているのは、<b>.JPG</b>、<b>.TIF</b>、<b>.HEIC</b>、<b>.ARW</b>(Sony)、<b>.CR2</b>(Canon)、<b>.DNG</b>(その他)、<b>.ERF</b>(Epson)、<b>.MEF</b>(Mamiya)、<b>.NEF</b>/<b>.NRW</b>(Nikon)、<b>.ORF</b>(OLYMPUS)、<b>.PEF</b>(Pentax)、<b>.RAF</b>(FujiFilm)、<b>.RAW</b>(Panasonic、Leica等)、<b>.RW2</b>(Panasonic)、<b>.SR2</b>(Sony)、<b>.SRW</b>(Samsung)、<b>.X3F</b>(SIGMA)、<b>.3FR</b>(Hasselblad)です。また
+    <b>.CRW</b>(古い Canon RAW)については <b>CIFF</b> 情報を取得しています。
+  </p>
+
+  <p>
+    サムネイルからは、外部へのドラッグ＆ドロップが可能です。選択中(無ければカーソル位置)のファイルが対象となります。<br>
+  </p>
+  <br>
+
+  <h3 id="Command">コマンド</h3>
+  <p>
+    イメージビュアーでは以下のコマンドを使用できます。<br>
+    これらは、<a href="hid00016.htm">オプション設定 - キー設定</a>でキーに割り当てることができます(2ストロークキー操作可能)。<br>
+    <a href="hid00055.htm">キー割り当て一覧</a>は、<b>一覧メニュー</b> - [<b>キー割り当て一覧</b>] や、<b>KeyList</b> コマンドで表示できます。<br>
+  </p>
+  <p>コマンド構文において、<b>[ ]</b> 内は任意、<b>{ }</b> 内は相互に排他的な選択肢です。</p>
+
+  <p class="link_box">
+    <a href="#AlphaBlend">A</a> <a href="#Calculator">C</a> <a href="#DebugCmdFile">D</a> <a href="#EndFile">E</a> <a
+      href="#FileEdit">F</a> <a href="#GrayScale">G</a> <a href="#HelpContents">H</a> <a href="#InputCommands">I</a> <a
+      href="#JumpIndex">J</a> <a href="#KeyList">K</a> <a href="#ListFileInfo">L</a> <a href="#Mark">M</a> <a
+      href="#NewWorkList">N</a> <a href="#OpenByApp">O</a> <a href="#PageBind">P</a> <a href="#RotateLeft">R</a> <a
+      href="#SaveAsWorkList">S</a> <a href="#TagSelect">T</a> <a href="#WarnHighlight">W</a> <a
+      href="#ZoomIn">Z</a>　　　　<a href="hid00100.htm#IV">→ コマンド索引</a> ／ <a href="hid00101.htm#IV">→ 機能別索引</a>
+  </p>
+
+  <dl class="indent1">
+    <dt id="AddTag">AddTag<span class="pram_text">[_タグ[;タグ...]]</span></dt>
+    <dd>選択中(無ければ現在表示中)のファイルに<b>タグ</b>を追加します。<br>
+      詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#AddTag">→ ファイラー: AddTag</a>)。
+      <a href="#SetTag">→ SetTag</a>　<a href="#DelTag">→ DelTag</a>
+    </dd>
+
+    <dt id="AlphaBlend">AlphaBlend<span class="pram_text">[_IN|[[^|+|-]不透明度]</span></dt>
+    <dd>メインウィンドウを透過表示にします。<br>
+      パラメータに <b>IN</b> を指定すると、入力ボックスで不透明度(64:半透明～255:不透明)を指定できます。<br>
+      パラメータで<b>不透明度</b>を指定する場合、先頭に <b>^</b> を付けると、すでに透過表示なら解除、そうでなければ指定値が適用されます。<br>
+      先頭に <b>+</b> や <b>-</b> を付けると、現在の不透明度に対して指定値分だけ増減させます。値のみの場合は絶対指定になります。<br>
+      パラメータが指定されていないと透過表示が解除されます。
+    </dd>
+
+    <dt id="AppList">AppList<span class="pram_text">[_{FA|FL|FI|AO|LO|LI}]</span></dt>
+    <dd><a href="hid00076.htm">アプリケーション一覧</a>が開き、実行中のアプリケーションが表示されます。簡易ランチャーも備えています。<br>
+      パラメータに <b>FA</b> を指定すると、開いたとき一覧側にフォーカスします。<br>
+      また <b>FL</b> を指定するとランチャー側にフォーカス、 <b>FI</b> を指定するとランチャー側をインクリメンタルサーチモードにしてフォーカスします。<br>
+      <b>AO</b> を指定すると、一覧のみを表示します。<br>
+      <b>LO</b> を指定すると、ランチャーのみを表示します。<br>
+      <b>LI</b> を指定すると、ランチャーのみを表示し、インクリメンタルサーチモードにします。<br>
+      <a href="hid00019.htm#AppList">→ オプション設定 - コマンド</a><br>
+    </dd>
+
+    <dt id="Calculator">Calculator<span class="pram_text">_計算式</span></dt>
+    Calculator<span class="pram_text">_CB[;計算式]</span>
+    <dd><a href="hid00087.htm">電卓</a>が開きます。<br>
+      パラメータで<b>計算式</b>を指定すると、入力欄にそれを設定して開きます。<br>
+      パラメータに <b>CB</b> を用いた書式については、ファイラーの同コマンドを参照してください(<a href="hid00005.htm#Calculator">→ ファイラー: Calculator</a>)。
+    </dd>
+
+    <dt id="ClearMark">ClearMark</dt>
+    <dd>カレントのすべての栞マークを解除します。<br>
+      <a href="#Mark">→ Mark</a>　<a href="#NextMark">→ NextMark</a>　<a href="#PrevMark">→ PrevMark</a>　<a
+        href="#SelMark">→ SelMark</a>
+    </dd>
+
+    <dt id="ClipCopy">ClipCopy<span class="pram_text">[_VI]</span></dt>
+    <dd>画像をクリップボードにコピーします。縮小表示されている場合でも、元サイズの画像がコピーされます。<br>
+      パラメータに <b>VI</b> を指定すると、元サイズではなく、実際に表示されている状態でコピーします。クリップボードの内容を閲覧している場合は表示も更新されます。<br>
+      見開き表示では、左右2画像を連結したものがコピーされます。
+    </dd>
+
+    <dt id="Close">Close</dt>
+    <dd>イメージビュアーを閉じます。<br>
+      <span class="btn_frame">ENTER</span>キーまたは<span
+        class="btn_frame">ESC</span>キー(通常表示時)を押すか、サムネイル以外の部分をダブルクリックしても閉じることができます。
+    </dd>
+
+    <dt id="CmdFileList">CmdFileList<span class="pram_text">[_FF]</span></dt>
+    <dd><a href="hid00067.htm">コマンドファイル一覧</a>を表示します。一覧からは、コマンドファイルの実行、編集、閲覧ができます。<br>
+      パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+      <a href="#ExeCommands">→ ExeCommands</a>　<a href="#FileEdit">→ FileEdit</a>
+    </dd>
+
+    <dt id="CmdHistory">CmdHistory<span class="pram_text">[_FF]</span></dt>
+    <dd><b>NyanFi</b> 起動後に実行されたコマンドの履歴を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+      パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+      詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#CmdHistory">→ ファイラー: CmdHistory</a>)。
+    </dd>
+
+    <dt id="ColorPicker">ColorPicker</dt>
+    <dd>カラーピッカーを表示します。<br>
+      画像をクリック(<span
+        class="btn_frame">ENTER</span>キーでも可)すると、その位置のピクセル色を、コンボボックスで選択した書式でクリップボードにコピーします。また「<b>BITMAP</b>(～)」を選んでいると、括弧内のサイズの正方形を取得色で塗りつぶしたものをビットマップとしてコピーします。<br>
+      「<b>9px平均</b>」をチェックすると、隣接する9ピクセルの平均色を取得します。また、「<b>補色</b>」をチェックすると補色を、「<b>セーフカラー</b>」をチェックすると、Webセーフカラーの近似色を取得します。<br>
+      <div class="spc_box">
+        「<b>連続取得</b>」では、ピクセル色を連続的に取得できます(ビットマップのコピーでは不可)。<br>
+        回数および結果の連結方法を指定して<span class="btn_frame">開始</span>キーを押してください。<span class="btn_frame">ESC</span>キーで中断できます。
+      </div>
+      <div class="spc_box">
+        マウスが画像上にある場合、カーソルキーでマウスポインタを上下左右に1pxずつ移動できます。<br>
+      </div>
+    </dd>
+
+    <dt id="CopyFileInfo">CopyFileInfo</dt>
+    <dd>ファイル情報をクリップボードにコピーします。</dd>
+
+    <dt id="DebugCmdFile">DebugCmdFile<span class="pram_text">_@ファイル名</span><br></dt>
+    <dd>パラメータで指定したコマンドファイル(.nbt)に対するデバッグウィンドウを開き、デバッグモードで実行します。<br>
+      詳しくは <a href="hid00063.htm#Debug">Debug</a> 補助コマンドを参照してください。
+    </dd>
+
+    <dt id="Delete">Delete<span class="pram_text">[_SO]</span></dt>
+    <dd>選択中のファイルがあればそれを、無ければ現在表示中のファイルを削除します。<br>
+      なおイメージビュアーでの削除は、バックグラウンド・タスクでは行いません。<br>
+      パラメータに <b>SO</b> を指定すると、選択されているファイルのみを削除します。
+    </dd>
+
+    <dt id="DelTag">DelTag</dt>
+    <dd>選択中(無ければ現在表示中)のファイルの<b>タグ</b>を削除します。<br>
+      <a href="#AddTag">→ AddTag</a>　<a href="#SetTag">→ SetTag</a>
+    </dd>
+
+    <dt id="DoublePage">DoublePage<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、通常表示/見開き表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると見開き表示、<b>OFF</b> では通常表示になります。<br>
+      見開き表示では、現在の画像と次の画像を2つ左右に並べて連結表示します。左右で高さが異なる場合は、縦方向に中央揃えします。綴じ方向は <a href="#PageBind">PageBind</a>
+      コマンドや表示メニューで変更できます。なおメタファイルやアイコンの場合は見開き表示になりません。<br>
+      <a href="#PageBind">→ PageBind</a>
+    </dd>
+
+    <dt id="Duplicate">Duplicate<span class="pram_text">[_RA]</span></dt>
+    <dd><a href="hid00017.htm#Duplicate">オプション設定 - 起動時</a> で二重起動が許可されている場合、新たに <b>NyanFi</b> を起動します。<br>
+      パラメータに <b>RA</b> を指定すると、管理者として起動します。
+    </dd>
+
+    <dt id="EndFile">EndFile</dt>
+    <dd>表示可能な最後のファイルに移動します。<br>
+      <a href="#TopFile">→ TopFile</a>
+    </dd>
+
+    <dt id="EqualSize">EqualSize</dt>
+    <dd>画像を元のサイズで等倍表示します。<br>
+      画像が画面サイズより大きい場合、中心部が表示され、カーソルキーやマウスドラッグによってスクロールできます。<br>
+      なおフィット表示されている画像をマウス左ボタンで押していると、一時的に等倍表示になり、そのままドラッグでスクロールできます。<br>
+      <a href="#FittedSize">→ FittedSize</a>　<a href="#ZoomIn">→ ZoomIn</a>　<a href="#ZoomOut">→ ZoomOut</a>
+    </dd>
+
+    <dt id="ExeCommands">ExeCommands<span class="pram_text">_[:説明:]{コマンド[:コマンド...] | @ファイル名}</span></dt>
+    <dd>パラメータで指定したコマンドを実行します。コマンドは <b>:</b> (コロン)で区切って複数指定できます。<br>
+      またパラメータでのみ使える補助コマンドや制御文もあります。<br>
+      パラメータの先頭が <b>@</b> の場合、コマンドファイル名の指定になります。<br>
+      詳細は「<a href="hid00063.htm">ExeCommands コマンド</a>」のページを参照してください。
+    </dd>
+
+    <dt id="ExeMenuFile">ExeMenuFile<span class="pram_text">_ファイル名</span></dt>
+    <dd>指定した<b>メニュー定義ファイル</b>を読み込んで、マウス位置にポップアップメニューを表示し、選択された項目を実行します。<br>
+      詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#ExeMenuFile">→ ファイラー: ExeMenuFile</a>)。
+    </dd>
+
+    <dt id="ExeToolBtn">ExeToolBtn<span class="pram_text">_ボタン番号</span></dt>
+    <dd>パラメータで指定した番号(1～)のツールボタンを実行します。<br>
+      <a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ShowToolBar">→ ShowToolBar</a>
+    </dd>
+
+    <dt id="FileEdit">FileEdit<span class="pram_text">[_ファイル名]</span></dt>
+    <dd>選択中(無ければ現在表示中)のファイルをイメージエディタ(ペイントソフト等)またはその他のエディタで開きます。<br>
+      エディタの設定は、<a href="hid00012.htm">オプション設定 - エディタ</a>で行ってください。<br>
+      アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。編集後に保存してもアーカイブには反映されません。またアーカイブの仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください。<br>
+      クリップボードの内容を閲覧している場合は、一時ディレクトリに <b>CLIPBOARD.BMP</b> という名前で保存して開きます。一時ファイルは <b>NyanFi</b> 終了時に削除されます。<br>
+      パラメータで<b>ファイル名</b>を指定して開くこともできます。
+    </dd>
+
+    <dt id="FlipHorz">FlipHorz</dt>
+    <dd>画像表示の左右を反転します(アイコン表示の場合は無効)。<br>
+      <a href="#FlipVert">→ FlipVert</a>
+    </dd>
+
+    <dt id="FlipVert">FlipVert</dt>
+    <dd>画像表示の上下を反転します(アイコン表示の場合は無効)。<br>
+      <a href="#FlipHorz">→ FlipHorz</a>
+    </dd>
+
+    <dt id="FittedSize">FittedSize</dt>
+    <dd>画像を画面サイズにフィットするように表示します(アイコン表示の場合は無効)。<br>
+      画像が画面サイズより小さい場合は等倍表示になります。<br>
+      縮小・縮小アルゴリズムは <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で選べます。<br>
+      フィット表示されている画像をマウス左ボタンで押していると、一時的に等倍表示になり、そのままドラッグでスクロールできます。<br>
+      なお、<a href="hid00020.htm">オプション設定 - イメージビュアー</a>
+      で「<b>許容フィット倍率</b>」に100よりも大きな値を設定した場合、その倍率の範囲内でフィットできれば拡大表示します(そうでない場合は等倍表示)。<br>
+      <a href="#EqualSize">→ EqualSize</a>　<a href="#ZoomIn">→ ZoomIn</a>　<a href="#ZoomOut">→ ZoomOut</a>
+    </dd>
+
+    <dt id="FullScreen">FullScreen<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、イメージビュアーの全画面表示/通常表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると全画面表示、<b>OFF</b> では通常表示になります。<br>
+      全画面表示からは、<span class="btn_frame">ESC</span>キーでも通常表示に戻れます。<br>
+      全画面表示では、サイドバー、シークバー、情報ヘッダ、ステータスバーは表示されません。<br>
+      <a href="hid00020.htm">オプション設定 - イメージビュアー</a>
+      で「<b>全画面表示でサムネイルを隠す</b>」をチェックしていると、サムネイルも非表示になります。全画面表示から抜けると、以前の表示状態に戻りますが、全画面表示時に表示を切り替えた場合はそれが維持されます。<br>
+      「<b>全画面表示でマウスポインタを隠す</b>」をチェックしていると、マウスポインタが隠れます。この場合、クリックで非表示状態が解除されます。
+    </dd>
+
+    <dt id="GrayScale">GrayScale<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、画像のグレースケール表示/通常表示をトグルで切り替えます(アイコン表示の場合は無効)。<br>
+      パラメータに <b>ON</b> を指定するとグレースケール表示、<b>OFF</b> では通常表示になります。
+    </dd>
+
+    <dt id="HelpContents">HelpContents<span class="pram_text">[_{CI|FI}]</span></dt>
+    <dd>ヘルプの目次を表示します。<br>
+      パラメータに <b>CI</b> を指定すると「コマンドの索引(アルファベット順)」のページを、<b>FI</b> を指定すると「コマンドの索引(機能別)」のページを表示します。<br>
+    </dd>
+
+    <dt id="Histogram">Histogram<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、<b>ヒストグラム</b>の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      画像が表示されている場合は、元サイズのデータからヒストグラムを作成しますが、サムネイル全面表示の場合は、サムネイル画像から作成するのであまり正確ではありません。<br>
+      サイドバーが表示されている場合、ファイル情報の上または下にヒストグラムをドッキングすることもできます。<br>
+      全画面表示では、サイドバーにドッキングされていない場合にのみ表示可能です。<br>
+      <a href="#Sidebar">→ Sidebar</a>　　<a href="#Histogram">→ Histogram</a>
+    </dd>
+
+    <dt id="HomeWorkList">HomeWorkList</dt>
+    <dd>ホームワークリストを読み込みます。ワークリスト表示でない場合、表示は切り替わりません。<br>
+      ホームワークリストは、<a href="hid00017.htm">オプション設定 - 起動時</a> で指定されているファイルが用いられます。<br>
+      <a href="#WorkList">→ WorkList</a>　<a href="#LoadWorkList">→ LoadWorkList</a>
+    </dd>
+
+    <dt id="InputCommands">InputCommands<span class="pram_text">[_EL]</span></dt>
+    <dd>入力したコマンド( : で区切って複数指定可)を、<a href="#ExeCommands">ExeCommands</a> のパラメータとして実行します。<br>
+      詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#InputCommands">→ ファイラー: InputCommands</a>)。
+    </dd>
+
+    <dt id="JumpIndex">JumpIndex<span class="pram_text">[_[+|-]インデックス]</span></dt>
+    <dd>指定した<b>インデックス</b>のファイルに移動します。<br>
+      + または - を付けると、現在位置からの相対移動になります。<br>
+      パラメータを指定しない場合は入力ボックスが出ます。<br>
+      <a href="#NextFile">→ NextFile</a>　<a href="#PrevFile">→ PrevFile</a>
+    </dd>
+
+    <dt id="KeyList">KeyList<span class="pram_text">[_FF]</span></dt>
+    <dd><a href="hid00055.htm">キー割り当て一覧</a>を表示します。<br>
+      パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。
+    </dd>
+
+    <dt id="ListFileInfo">ListFileInfo</dt>
+    <dd><a href="#ShowFileInfo">ShowFileInfo</a>_SD のエイリアス(別名)です。<br>
+      表示中画像のファイル情報をダイアログ表示します。<br>
+      <a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#PropertyDlg">→ PropertyDlg</a>
+    </dd>
+
+    <dt id="ListLog">ListLog<span class="pram_text">[_EO]</span></dt>
+    <dd>現在のログ内容を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
+      パラメータに <b>EO</b> を指定すると、ログの中からエラー箇所を絞り込んで表示します。一覧の右クリックメニューでも「エラー箇所の絞り込み」を切り替え可能。
+    </dd>
+
+    <dt id="LoadBgImage">LoadBgImage<span class="pram_text">[_ファイル名]</span></dt>
+    <dd>表示中のファイル(メタファイルは除く)を背景画像として読み込みます。<br>
+      <a href="hid00010.htm#BgImage">→ オプション設定 - デザイン - 「背景画像表示」</a>
+      で「<b>2画面にわたって表示</b>」が選択されている場合は<b>画像1</b>に、「<b>それぞれに表示</b>」が選択されている場合は、左側なら<b>画像1</b>に、右側なら<b>画像2</b>に読み込まれます。<br>
+      パラメータに<b>ファイル名</b>を指定すると直接開けます(ドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定)。
+    </dd>
+
+    <dt id="LoadWorkList">LoadWorkList<span class="pram_text">[_ファイル名]</span></dt>
+    <dd><a href="hid00060.htm">ワークリスト</a>をファイルから読み込みます。ワークリスト表示でない場合、表示は切り替わりません。<br>
+      直前に使用していたワークリストは自動的に保存されます(無名だった場合は「ワークリストに名前を付けて保存」ダイアログが出ます)。<br>
+      パラメータに<b>ファイル名</b>を指定すると直接開けます(ドライブ名がない場合は <b>NyanFi</b> ディレクトリからの相対指定)。<br>
+      <a href="#SaveWorkList">→ SaveWorkList</a>　<a href="#SaveAsWorkList">→ SaveAsWorkList</a>　<a href="#NewWorkList">→
+        NewWorkList</a>
+    </dd>
+
+    <dt id="Loupe">Loupe<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、ルーペの表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      画像(メタファイルは除く)のマウス位置を拡大表示します。倍率は<span class="btn_frame">×1</span><span class="btn_frame">×2</span><span
+        class="btn_frame">×4</span><span class="btn_frame">×8</span>ボタンか右クリックメニューで切り替えられます。拡大の際に補間は行われません。<br>
+      サイドバーが表示されている場合、ファイル情報の上または下にルーペをドッキングすることもできます。<br>
+      なお、クリックで一時的に等倍表示になっている間は、浮動化しているルーペは隠れます。<br>
+      全画面表示では、サイドバーにドッキングされていない場合にのみ表示可能です。<br>
+      <a href="#Sidebar">→ Sidebar</a>　<a href="#Histogram">→ Histogram</a>
+    </dd>
+
+    <dt id="Mark">Mark<span class="pram_text">[_{IM|メモ}[;ND]]</span><br>
+      Mark<span class="pram_text">_SL[;{IM|メモ}]</span></dt>
+    <dd>カーソル位置のファイルに<b>栞マーク</b>を設定します。すでに設定されている場合は解除します。<br>
+      パラメータに <b>IM</b> を指定すると、項目に栞マークを設定するとともに、入力ボックスでメモを設定できます。パラメータでメモ内容を直接指定することも可能。なおメモ設定時は、実行後、次のファイルに移動しません。<br>
+      パラメータに <b>ND</b> を指定すると、実行後、次のファイルに移動しません。<br>
+      複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+      <div class="spc_box">
+        パラメータに <b>SL</b> を指定すると、選択されている項目の栞マーク状態を一括で反転させます。実行後、次のファイルに移動しません。<br>
+        さらに <b>IM</b> またはメモ内容を指定した場合は、(反転ではなく)栞マークとともにメモを設定します。<br>
+        選択項目がない場合は、カーソル位置の項目が対象になります(<b>SL</b> を指定しない場合と同じ)。<br>
+      </div>
+      <a href="#ClearMark">→ ClearMark</a>　<a href="#NextMark">→ NextMark</a>　<a href="#PrevMark">→ PrevMark</a>　<a
+        href="#MarkList">→ MarkList</a>　<a href="#SelMark">→ SelMark</a>
+    </dd>
+
+    <dt id="MarkList">MarkList<span class="pram_text">[_FF]</span></dt>
+    <dd><a href="hid00070.htm">栞マーク一覧</a>を表示します。<br>
+      パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+      <a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
+    </dd>
+
+    <dt id="MaskSelect">MaskSelect</dt>
+    <dd>サムネイルを表示している場合、指定マスクに一致するファイルを選択します。<br>
+      <a href="#TagSelect">→ TagSelect</a>
+    </dd>
+
+    <dt id="MenuBar">MenuBar<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、メニューバーの表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      <a href="#PopupMainMenu">→ PopupMainMenu</a>
+    </dd>
+
+    <dt id="NewWorkList">NewWorkList</dt>
+    <dd>新規に空の<a href="hid00060.htm">ワークリスト</a>を作成して表示します。ワークリスト表示でない場合、表示は切り替わりません。<br>
+      新規ワークリストは無名ですので、保存するには <a href="#SaveAsWorkList">SaveAsWorkList</a> コマンドを用いてください。<br>
+      <a href="#LoadWorkList">→ LoadWorkList</a>　<a href="#SaveWorkList">→ SaveWorkList</a>　<a href="#SaveAsWorkList">→
+        SaveAsWorkList</a>
+    </dd>
+
+    <dt id="NextFile">NextFile<span class="pram_text">[_F1]</span></dt>
+    <dd>表示可能な次のファイルに移動します。<br>
+      <a href="hid00020.htm">オプション設定 - イメージビュアー</a>
+      で「<b>カーソルをループ移動する</b>」をチェックしている場合、最後まで達したら先頭に移ります(見開き表示では無効)。また「<b>先頭・最後でヒント表示</b>」をチェックしていると、先頭からさらに移動しようとした場合にヒント表示します。<br>
+      見開き表示している場合は2ファイル単位での移動になりますが、パラメータに <b>F1</b> を指定すると1ファイルずつ移動できます。<br>
+      なお、「<b>シークバーの始点を綴じ方向に合わす</b>」と「<strong>右綴じでNext/Prev入替</strong>」がチェックされていて、右綴じ見開き表示でシークバーが表示になっている場合、キーによってこのコマンドを実行しようとすると、代わりに
+      <a href="#PrevFile">PrevFile</a> が実行されます。<br>
+      <a href="hid00080.htm">FTP接続</a>時のリモート側では無効です。<br>
+      <a href="#PrevFile">→ PrevFile</a>　<a href="#JumpIndex">→ JumpIndex</a>
+    </dd>
+
+    <dt id="NextMark">NextMark</dt>
+    <dd>次の栞マークファイルへ移動します(ループ動作)。<br>
+      <a href="#PrevMark">→ PrevMark</a>　<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
+    </dd>
+
+    <dt id="NextNyanFi">NextNyanFi<span class="pram_text">[_DN]</span></dt>
+    <dd>複数起動されている場合、次の <b>NyanFi</b> をアクティブにします。<br>
+      パラメータに <b>DN</b> を指定すると、複数起動されていない場合、新たに <b>NyanFi</b> を二重起動します。<br>
+      <a href="#PrevNyanFi">→ PrevNyanFi</a>　<a href="#Duplicate">→ Duplicate</a>
+    </dd>
+
+    <dt id="NextPage">NextPage</dt>
+    <dd>サムネイルを表示している場合、通常表示では1ページ分後に、全面表示では1行下に移動します。<br>
+      サムネイルが非表示の場合は何もしません。<br>
+      <a href="#PrevPage">→ PrevPage</a>
+    </dd>
+
+    <dt id="NextSameName">NextSameName</dt>
+    <dd>カーソル位置とファイル名主部が同じ次のファイルへ移動します。見つからなかった場合は先頭から探します。</dd>
+
+    <dt id="OpenByApp">OpenByApp<span class="pram_text">[_ファイル名[;_ファイル名...]]</span></dt>
+    <dd>選択中(無ければカーソル位置)のファイルを、独自の関連付けで開きます。関連付けは、<a href="hid00012.htm">オプション設定 - 関連付け</a>で行ってください。<br>
+      アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
+      パラメータに<b>ファイル名</b>を指定すると直接開けます。<br>
+      詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#OpenByApp">→ ファイラー: OpenByApp</a>)。<br>
+    </dd>
+
+    <dt id="OpenByWin">OpenByWin<span class="pram_text">[_ファイル名[;_ファイル名...]]</span><br>
+      OpenByWin<span class="pram_text">_{&quot;http://～&quot;|&quot;mailto:～&quot;}</span>
+    </dt>
+    <dd>選択中(無ければカーソル位置)のファイルを、Windowsの関連付けで開きます。<br>
+      アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
+      パラメータに<b>ファイル名</b>を指定すると直接開けます。<br>
+      詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#OpenByWin">→ ファイラー: OpenByWin</a>)。<br>
+    </dd>
+
+    <dt id="OptionDlg">OptionDlg<span class="pram_text">[_{GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV}]</span><br>
+      OptionDlg<span class="pram_text">_KYO</span></dt>
+    <dd>「<a href="hid00008.htm">オプション設定</a>」ダイアログを開きます。このとき、ビュアーは安全のため一旦閉じます。<br>
+      パラメータを指定すると特定のタブを開くことができます。パラメータとタブの対応は次の通りです。<b>GN</b>: 一般、<b>G2</b>: 一般2、<b>MO</b>: マウス操作、<b>DS</b>:
+      デザイン、<b>FC</b>: フォント・配色、<b>TV</b>: テキストビュアー、<b>IV</b>: イメージビュアー、<b>ED</b>: エディタ、<b>KY</b>: キー設定、<b>AC</b>:
+      関連付け、<b>XM</b>: 追加メニュー、<b>XT</b>: 外部ツール、<b>ST</b>: 起動時、<b>NT</b>: 通知・確認、<b>CM</b>: コマンド、<b>EV</b>: イベント。<br>
+      <div class="spc_box">
+        パラメータに <b>KYO</b> を指定すると、「キー設定」のみのダイアログが開きます。<br>
+        この場合、ビュアーは開いたままで設定を行えます。また通常のダイアログよりも若干速く開きます。<br>
+      </div>
+      このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。
+    </dd>
+
+    <dt id="PageBind">PageBind<span class="pram_text">[_{R|L}]</span></dt>
+    <dd>見開き表示のときの綴じ方向を設定します。<br>
+      パラメータを指定しない場合、現在と逆の方向に変更します。<br>
+      パラメータに <b>R</b> を指定すると右綴じ、<b>L</b> では左綴じになります。<br>
+      <a href="#DoublePage">→ DoublePage</a>
+    </dd>
+
+    <dt id="PageUp">PageUp</dt>
+    <dd>サムネイル全面表示の場合に、1ページ上に移動します。</dd>
+
+    <dt id="PageDown">PageDown</dt>
+    <dd>サムネイル全面表示の場合に、1ページ下に移動します。</dd>
+
+    <dt id="PopupMainMenu">PopupMainMenu</dt>
+    <dd>メインメニューの内容をポップアップメニューに変換して表示します。<br>
+      <a href="#MenuBar">→ MenuBar</a>
+    </dd>
+
+    <dt id="PrevFile">PrevFile<span class="pram_text">[_F1]</span></dt>
+    <dd>表示可能な前のファイルに移動します。<br>
+      <a href="hid00020.htm">オプション設定 - イメージビュアー</a>
+      で「<b>カーソルをループ移動する</b>」をチェックしている場合、先頭まで達したら最後に移ります(見開き表示では無効)。また「<b>先頭・最後でヒント表示</b>」をチェックしていると、最後からさらに移動しようとした場合にヒント表示します。<br>
+      見開き表示している場合は2ファイル単位での移動になりますが、パラメータに <b>F1</b> を指定すると1ファイルずつ移動できます。<br>
+      なお、「<b>シークバーの始点を綴じ方向に合わす</b>」と「<strong>右綴じでNext/Prev入替</strong>」がチェックされていて、右綴じ見開き表示でシークバーが表示になっている場合、キーによってこのコマンドを実行しようとすると、代わりに
+      <a href="#NextFile">NextFile</a> が実行されます。<br>
+      <a href="hid00080.htm">FTP接続</a>時のリモート側では無効です。<br>
+      <a href="#NextFile">→ NextFile</a>　<a href="#JumpIndex">→ JumpIndex</a>
+    </dd>
+
+    <dt id="PrevMark">PrevMark</dt>
+    <dd>前の栞マークファイルへ移動します(ループ動作)。<br>
+      <a href="#NextMark">→ NextMark</a>　<a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
+    </dd>
+
+    <dt id="PrevNyanFi">PrevNyanFi</dt>
+    <dd>複数起動されている場合、前の <b>NyanFi</b> をアクティブにします。<br>
+      <a href="#NextNyanFi">→ NextNyanFi</a>　<a href="#Duplicate">→ Duplicate</a>
+    </dd>
+
+    <dt id="PrevPage">PrevPage</dt>
+    <dd>サムネイルを表示している場合、通常表示では1ページ分前に、全面表示では1行上に移動します。<br>
+      サムネイルが非表示の場合は何もしません。<br>
+      <a href="#NextPage">→ NextPage</a>
+    </dd>
+
+    <dt id="Print">Print</dt>
+    <dd>表示中の画像を印刷するためのダイアログを表示します(アイコンや再生中のアニメーションGIFは印刷不可)。<br>
+      プリンターの設定の他、印刷位置やサイズなどを設定できます。スケールやオフセットなどは用紙サイズに対するパーセントで指定します。<br>
+      <span class="tab_frame">文字</span>タブでは、文字入れの設定を行え、以下の書式文字列が使えます。<br>
+      　<b>$F</b>　パス付ファイル名<br>
+      　<b>$B</b>　パス無しファイル名<br>
+      　<b>$XT(</b>書式<b>)</b>　Exif撮影日時(取得できない場合はタイムスタンプ、クリップボードの場合は現在日時)<br>
+      　　　　　書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒<br>
+      なお、画面下部の移動ボタンによって、ダイアログを表示したまま前後の画像に移動できます。
+    </dd>
+
+    <dt id="PropertyDlg">PropertyDlg<span class="pram_text">[_{ファイル名|ディレクトリ名}]</span></dt>
+    <dd>表示中画像についてのプロパティダイアログを表示します。<br>
+      パラメータで、対象の<b>ファイル名</b>や<b>ディレクトリ名</b>を指定することもできます。<br>
+      <a href="#ShowFileInfo">→ ShowFileInfo</a>　<a href="#ListFileInfo">→ ListFileInfo</a>
+    </dd>
+
+    <dt id="RotateLeft">RotateLeft</dt>
+    <dd>画像表示を左に90度回転します(アイコン表示の場合は無効)。<br>
+      なおメタファイルをフィット表示している場合、回転しても倍率が変化しません。<br>
+      <a href="#RotateRight">→ RotateRight</a>
+    </dd>
+
+    <dt id="RotateRight">RotateRight</dt>
+    <dd>画像表示を右に90度回転します(アイコン表示の場合は無効)。<br>
+      なおメタファイルをフィット表示している場合、回転しても倍率が変化しません。<br>
+      <a href="#RotateLeft">→ RotateLeft</a>
+    </dd>
+
+    <dt id="SaveAsWorkList">SaveAsWorkList</dt>
+    <dd>現在の<a href="hid00060.htm">ワークリスト</a>に名前を付けて保存します。<br>
+      <a href="#SaveWorkList">→ SaveWorkList</a>
+    </dd>
+
+    <dt id="SaveWorkList">SaveWorkList</dt>
+    <dd>現在の<a href="hid00060.htm">ワークリスト</a>を上書き保存します。無名だった場合は、<a href="#SaveAsWorkList">SaveAsWorkList</a>
+      コマンドが実行されます。<br>
+      なお、<b>NyanFi</b> 終了時には自動的に現在のワークリストが上書き保存されます。<br>
+      <a href="#SaveAsWorkList">→ SaveAsWorkList</a>　<a href="#LoadWorkList">→ LoadWorkList</a>
+    </dd>
+
+    <dt id="ScrollDown">ScrollDown</dt>
+    <dd>画像を下にスクロールします。</dd>
+
+    <dt id="ScrollLeft">ScrollLeft</dt>
+    <dd>画像を左にスクロールします。</dd>
+
+    <dt id="ScrollRight">ScrollRight</dt>
+    <dd>画像を右にスクロールします。</dd>
+
+    <dt id="ScrollUp">ScrollUp</dt>
+    <dd>画像を上にスクロールします。</dd>
+
+    <dt id="SelAllFile">SelAllFile</dt>
+    <dd>サムネイルを表示している場合、すべてファイルを選択します。<br>
+      すでに選択されているファイルがある場合は、すべての選択が解除されます。
+    </dd>
+
+    <dt id="Select">Select<span class="pram_text">[_ND]</span></dt>
+    <dd>現在表示しているファイルを選択します。すでに選択中の場合は解除します。<br>
+      パラメータに <b>ND</b> を指定すると、実行後、次のファイルに移動しません。
+    </dd>
+
+    <dt id="SelMark">SelMark</dt>
+    <dd>栞マーク項目を選択します。<br>
+      <a href="#Mark">→ Mark</a>　<a href="#ClearMark">→ ClearMark</a>
+    </dd>
+
+    <dt id="SelReverse">SelReverse</dt>
+    <dd>サムネイルを表示している場合、ファイルの選択状態を反転させます。</dd>
+
+    <dt id="SelSameExt">SelSameExt</dt>
+    <dd>サムネイルを表示している場合、カーソル位置のファイルと拡張子が同じすべてのファイルを選択します。<br>
+      <a href="#SelSameName">→ SelSameName</a>
+    </dd>
+
+    <dt id="SelSameName">SelSameName</dt>
+    <dd>サムネイルを表示している場合、カーソル位置のファイルと名前主部が同じすべてのファイルを選択します。
+      <a href="#SelSameExt">→ SelSameExt</a>
+    </dd>
+
+    <dt id="SelWorkItem">SelWorkItem</dt>
+    <dd>現在の<a href="hid00060.htm">ワークリスト</a>に登録されているファイルを選択します。<br>
+      <a href="#WorkList">→ WorkList</a>
+    </dd>
+
+    <dt id="SendToWorkList">SendToWorkList</dt>
+    <dd>選択中(無ければ現在表示中)のファイルを、現在の<a href="hid00060.htm">ワークリスト</a>に送ります。<br>
+      <a href="#WorkList">→ WorkList</a>
+    </dd>
+
+    <dt id="SetInterpolation">SetInterpolation<span class="pram_text">_{N|L|C|F|X}[{N|L|C|F|X}...]</span></dt>
+    <dd><a href="hid00020.htm">オプション設定 - イメージビュアー</a> - 「<b>縮小・拡大アルゴリズム</b>」を変更します。<br>
+      パラメータで <b>N</b> (ニアレストネイバー)、<b>L</b> (バイリニア)、<b>C</b> (バイキュービック)、<b>F</b> (ファントリサンプリング)、<b>X</b>
+      (補間しない)のいずれかを指定してください。複数を組み合わせて指定すると、それらの間をトグルで切り替えられます。<br>
+      縮小・拡大時には情報ヘッダに補間法(N、L、C、F、X)が表示されます。<br>
+      <div class="spc_box">
+        <b>例</b>: バイリニア/ファントリサンプリング/補間しない をトグル切り替え<br>
+        　SetInterpolation_LFX
+      </div>
+      <a href="#ZoomIn">→ ZoomIn</a>　<a href="#ZoomOut">→ ZoomOut</a>
+    </dd>
+
+    <dt id="SetTag">SetTag</dt>
+    <dd>選択中(無ければ現在表示中)のファイルに<b>タグ</b>を設定します。<br>
+      詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#SetTag">→ ファイラー: SetTag</a>)。<br>
+      <a href="#AddTag">→ AddTag</a>　<a href="#DelTag">→ DelTag</a>
+    </dd>
+
+    <dt id="ShowFileInfo">ShowFileInfo<span class="pram_text">[_SD]</span></dt>
+    <dd>サイドバーが非表示の場合、表示中の画像のファイル情報をダイアログで表示します。<br>
+      パラメータに <b>SD</b> を指定すると、サイドバーの表示状態にかかわらずダイアログを表示します。<br>
+      <a href="#ListFileInfo">→ ListFileInfo</a>　<a href="#PropertyDlg">→ PropertyDlg</a>
+    </dd>
+
+    <dt id="ShowFKeyBar">ShowFKeyBar<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、ファンクションキーバーの表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+      ファンクションキーバーのボタンには、キーに割り当てられているコマンド名(パラメータ部分を除く)がデフォルトで表示されますが、変更も可能です。<br>
+      ボタンを右クリックするか、<a href="hid00016.htm">オプション設定 - キー設定</a>の一覧で項目をダブルクリックすると、表示名変更のための入力ボックスが表示されます。<br>
+      なおツールバーとは異なり、割り当てられているコマンドの有効/無効やチェック状態はボタンに反映されません。
+    </dd>
+
+    <dt id="ShowGrid">ShowGrid<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、画像分割グリッドの表示/非表示をトグルで切り替えます(アイコン表示の場合は無効)。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      グリッドの分割数は <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で設定できます。
+    </dd>
+
+    <dt id="ShowSeekBar">ShowSeekBar<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、シークバーの表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      <a href="hid00020.htm">オプション設定 - イメージビュアー</a>
+      で「<b>シークバーの始点を綴じ方向に合わす</b>」をチェックしていると、右綴じ見開き表示の場合にシークバーの始点も右端になります。さらに「<b>右綴じでNext/Prev入替</b>」をチェックしていると、キーによる前後移動(<a
+        href="hid00007.htm#NextFile">NextFile</a>/<a href="hid00007.htm#PrevFile">PrevFile</a> コマンド)も入れ替わります。
+    </dd>
+
+    <dt id="ShowStatusBar">ShowStatusBar<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、ステータスバーの表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。
+    </dd>
+
+    <dt id="ShowToolBar">ShowToolBar<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、<b>ツールバー</b>の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
+      <a href="hid00020.htm">オプション設定 - イメージビュアー</a>
+      で「<b>ツールバーをサイドバー上に表示</b>」をチェックしていると、画面上部ではなく、サイドバーの上端にツールバーが表示されます。<br>
+      <a href="hid00068.htm">「ツールバーの設定」ダイアログ</a>は、ツールバーをダブルクリックするか、<b>設定メニュー</b> - 「<b>ツールバーの設定</b>」あるいは <a
+        href="#ToolBarDlg">ToolBarDlg</a> コマンドで表示されます。<br>
+      <a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
+    </dd>
+
+    <dt id="Sidebar">Sidebar<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、サイドバーの表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      サイドバーには、表示中の画像のファイル情報が表示されます。<br>
+      またファイル情報の上または下に、ルーペやヒストグラムをドッキングすることも可能です。ルーペとヒストグラムを両方ともドッキングした場合、ヒストグラムはルーペのすぐ下になります。<br>
+      なおサイドバーが表示されている場合、情報ヘッダは非表示となり、一部の情報(インデックス、倍率など)がサイドバー上に表示されます。<br>
+      <a href="#Loupe">→ Loupe</a>　<a href="#Histogram">→ Histogram</a>
+    </dd>
+
+    <dt id="SimilarImage">SimilarImage<span class="pram_text">[_{DH|AH|PH}][;HG][;CC][;サイズ][;CB]</span></dt>
+    <dd>カーソル位置の画像との類似性に基づいてソートを行います。<br>
+      デフォルトでは、画像を32×32のサイズに縮小し、各ピクセルについてHSV色空間での隔たりを計算して、その合計が小さい順に並べ替えます。縮小には、サムネイルの縮小アルゴリズムを用います(<a
+        href="hid00020.htm#Thumbnail">オプション設定 - イメージビュアー</a> - 縮小)。<br>
+      <div class="spc_box">
+        パラメータに <b>DH</b> を指定すると、<b>dHash</b> (difference
+        hash)でソートを行います。縮小画像をグレースケール化し、隣接領域との差分からハッシュを求め、そのハミング距離の小さい順に並べ替えます。<br>
+        パラメータに <b>AH</b> を指定すると、<b>aHash</b> (average
+        hash)でソートを行います。縮小画像をグレースケール化し、平均値との比較でハッシュを求め、そのハミング距離の小さい順に並べ替えます。<br>
+        パラメータに <b>PH</b> を指定すると、<b>pHash</b> (perceptual
+        hash)でソートを行います。縮小画像をグレースケール化し、離散コサイン変換した結果から平均値との比較でハッシュを求め、そのハミング距離の小さい順に並べ替えます。<br>
+        dHash/aHash/pHash では色情報を考慮しないため、色違いの類似画像などを探すのによいかもしれません。<br>
+      </div>
+      <div class="spc_box">
+        パラメータに <b>HG</b> を指定すると、カラーヒストグラムによってソートを行います。縮小画像から64色のストグラムを作成し、その類似度によって並べ替えます。<b>HG</b>
+        は、<b>DH</b>、<b>AH</b>、<b>PH</b> のいずれかと同時に指定することもできます。その場合、両者の加算値が小さい順に並べ替えます。<br>
+      </div>
+      <div class="spc_box">
+        パラメータに <b>CC</b> を指定すると、画像の中央部(面積50%)をクロップして比較を行います。注目部分が中央にあって、背景を無視したいような場合によいかもしれません。<br>
+      </div>
+
+      <div class="spc_box">
+        パラメータで 32×32 以外の<b>サイズ</b>(4～120)を指定することも可能です。サイズを大きくすると処理時間がかかりますが、その分精度が上がるとは限りません。<br>
+        なお、同じサイズ/方法で再実行すると、前回取得した情報を再利用するため処理が速くなります。<br>
+      </div>
+      <div class="spc_box">
+        パラメータに <b>CB</b> を指定すると、クリップボードのビットマップ内容との類似性に基づいてソートを行います。<br>
+      </div>
+      <div class="spc_box">
+        複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+      </div>
+
+      <div class="spc_box">
+        <b>例</b>: 画像の中央部をクロップし、dHash とカラーヒストグラムを併用してソート<br>
+        　SimilarImage_DH;HG;CC
+      </div>
+      <a href="#SortDlg">→ SortDlg</a>
+    </dd>
+
+    <dt id="SortDlg">SortDlg<span class="pram_text">[_{F|E|D|S}]</span></dt>
+    <dd>
+      「<b>ソート</b>」ダイアログを開きます。<b>名前</b>、<b>拡張子</b>、<b>更新日時</b>、<b>サイズ</b>によるソート方法を選べます。名前順の場合、「<b>自然順</b>」をチェックすると、数字を数値とみなすソートになります。<br>
+      なお、<b>パラメータ</b> (<b>F</b> :名前順、<b>E</b> :拡張子順、<b>D</b> :更新日時順、<b>S</b> :サイズ順) を指定すると、ダイアログを出さずに変更することも可能です。<br>
+      <a href="#SimilarImage">→ SimilarImage</a>
+    </dd>
+
+    <dt id="SubViewer">SubViewer<span class="pram_text">[_{ON|OFF|CB|LK|RL|RR|FH|FV}]</span></dt>
+    <dd>
+      パラメータを指定しない場合、<b>サブビュアー</b>の表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
+      サブビュアーには、現在表示中の画像がフィット表示されます(アニメーションGIF対応)。<br>
+      縮小の際は単純な補間しか行われませんが、画面のリサイズにしたがってすぐにフィットします。なお実行ファイルなどのアイコンは表示されません。<br>
+      <div class="spc_box">
+        パラメータに <b>CB</b> を指定すると、クリップボードのビットマップ内容を表示します。<br>
+        パラメータに <b>LK</b> を指定すると、現在表示中の画像の固定/解除をトグルで切り替えます。固定状態(赤枠表示)では、別のファイルに移動しても表示が変わりません。<br>
+        パラメータに <b>RL</b> を指定すると表示中の画像(GIFやメタファイルは除く)を左に90度、<b>RR</b> を指定すると右に90度回転します。また <b>FH</b> では左右反転、 <b>FV</b>
+        では上下反転します。これらの操作は右クリックメニューからも可能です。<br>
+        なお、右クリックメニューで背景色を変更できます。<br>
+      </div>
+      <div class="spc_box">
+        複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+      </div>
+    </dd>
+
+    <dt id="TagSelect">TagSelect<span class="pram_text">[_タグ[;タグ...]]</span></dt>
+    <dd>指定タグが設定されている画像を選択します。<br>
+      パラメータを指定しないと、「<b>タグ選択</b>」ダイアログが開きますので、入力欄に入力するか、一覧のチェックボックスで選択してください。<br>
+      タグは <b>;</b> (セミコロン)で区切って複数指定できます。大小文字は区別されません。<br>
+      「<b>AND検索</b>」をチェックしていると、指定したすべてのタグを含む項目が、チェックを外すと、いずれかのタグを含む項目がマッチします。<br>
+      <div class="spc_box">
+        パラメータに<b>タグ</b>を指定すると、ダイアログを出さずに直ちに実行できます。<br>
+        複数のタグを指定する場合、<b>;</b> (セミコロン)で区切るとAND検索、<b>|</b> で区切るとOR検索になります。混在はできません。<br>
+      </div>
+      <a href="hid00088.htm">→ タグによるファイル管理</a><br>
+      <a href="#MaskSelect">→ MaskSelect</a>
+    </dd>
+
+    <dt id="Thumbnail">Thumbnail<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、サムネイルの表示/非表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定するとサムネイルを表示、<b>OFF</b> では非表示になります。<br>
+      表示する位置は <b>表示メニュー</b> - [<b>サムネイルの位置</b>] で選べます。<br>
+      それ以外の設定は <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で行ってください。<br>
+      <a href="#ThumbnailEx">→ ThumbnailEx</a>
+    </dd>
+
+    <dt id="ThumbnailEx">ThumbnailEx<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、サムネイルの全面表示/通常表示をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると全面表示、<b>OFF</b> では通常表示になります。<br>
+      <a href="#Thumbnail">→ Thumbnail</a>
+    </dd>
+
+    <dt id="ToolBarDlg">ToolBarDlg</dt>
+    <dd><a href="hid00068.htm">「ツールバーの設定」ダイアログ</a>を表示します。<br>
+      このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
+      <a href="#ShowToolBar">→ ShowToolBar</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
+    </dd>
+
+    <dt id="TopFile">TopFile</dt>
+    <dd>表示可能な先頭のファイルに移動します。<br>
+      <a href="#EndFile">→ EndFile</a>
+    </dd>
+
+    <dt id="WarnHighlight">WarnHighlight<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dd>パラメータを指定しない場合、白飛び警告の有効/無効をトグルで切り替えます。<br>
+      パラメータに <b>ON</b> を指定すると有効、<b>OFF</b> では無効になります。<br>
+      画像の白飛び部分をブリンク表示で警告します。
+    </dd>
+
+    <dt id="WebMap">WebMap<span class="pram_text">[_IN][;Z1～18(デフォルト=16)][;H高さ(デフォルト=600)]</span></dt>
+    <dd>表示中画像からExif GPS情報を取得し、地図(デフォルト:国土地理院/Leaflet)を開きます。<br>
+      緯度、経度からマップ表示用のHTMLファイルを生成し、一時ディレクトリに <b>$~WEBMAP.HTM</b> という名前で保存して開きます。<br>
+      パラメータに <b>IN</b> を指定すると、入力ボックスで指定した地点のマップを開けます。指定には10進数のDEG表記を用い、緯度経度の順に、<b>,</b>(カンマ) 、<b>;</b>
+      (セミコロン)、半角空白のいずれかで区切って入力してください(クリップボードから貼り付けた場合はタブ文字でも可)。<br>
+
+      <div class="spc_box">
+        パラメータに <b>Z</b> と1～18の数値を指定すると、地図のズームレベルを設定できます。<br>
+        パラメータに <b>H</b> と数値(px)を指定すると、地図の表示高を設定できます。<br>
+        複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
+      </div>
+      <div class="spc_box">
+        なお表示をカスタマイズしたい場合、実行ディレクトリに <b>WEBMAP.HTM</b> という名前のHTMLファイルを置くと、それがテンプレートとして用いられます。<br>
+        詳しくはファイラーの同コマンドを参照してください(<a href="hid00005.htm#WebMap">→ ファイラー: WebMap</a>)。<br>
+      </div>
+    </dd>
+
+    <dt id="WinPos">WinPos<span class="pram_text">[_{L|T|R|B}[+|-]数値][;...]</span></dt>
+    <dd>ウィンドウの四辺の位置を設定します。<br>
+      パラメータで L(左)、T(上)、R(右)、B(下)を任意に組み合わせて設定できます。数値の前に <b>+</b> または <b>-</b> を付けると、現在位置からの相対指定になります。<br>
+      パラメータを何も指定しないと、起動時の画面状態に戻ります。
+    </dd>
+
+    <dt id="WorkList">WorkList</dt>
+    <dd>イメージビュアーに<a
+        href="hid00060.htm">ワークリスト</a>の内容を表示します。もう一度実行するとカレントパスの内容表示に戻ります。ただしカレントがワークリストだった場合は、そのまま切り替わりません。<br>
+      <a href="#HomeWorkList">→ HomeWorkList</a>　<a href="#LoadWorkList">→ LoadWorkList</a>　<a href="#NewWorkList">→
+        NewWorkList</a>
+    </dd>
+
+    <dt id="ZoomIn">ZoomIn</dt>
+    <dd>ズームインします(アイコン表示の場合は無効)。<br>
+      ズーム倍率は、10、25、50、75、100、150、200、300、400%のいずれかになります。<br>
+      縮小・拡大アルゴリズムは <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で選択できます(<a
+        href="#SetInterpolation">SetInterpolation</a> コマンドでも変更可能)。<br>
+      なおメタファイルは、ベクタイメージとして処理されます。<br>
+      <a href="#ZoomOut">→ ZoomOut</a>　<a href="#FittedSize">→ FittedSize</a>　<a href="#EqualSize">→ EqualSize</a>　<a
+        href="#SetInterpolation">→ SetInterpolation</a>
+    </dd>
+
+    <dt id="ZoomOut">ZoomOut</dt>
+    <dd>ズームアウトします(アイコン表示の場合は無効)。<br>
+      ズーム倍率は、10、25、50、75、100、150、200、300、400%のいずれかになります。<br>
+      縮小・拡大アルゴリズムは <a href="hid00020.htm">オプション設定 - イメージビュアー</a> で選択できます。なおメタファイルは、ベクタイメージとして処理されます。<br>
+      <a href="#ZoomIn">→ ZoomIn</a>　<a href="#FittedSize">→ FittedSize</a>　<a href="#EqualSize">→ EqualSize</a>　<a
+        href="#SetInterpolation">→ SetInterpolation</a>
+    </dd>
+  </dl>
+  <br><br><br><br>
 
 </body>
+
 </html>

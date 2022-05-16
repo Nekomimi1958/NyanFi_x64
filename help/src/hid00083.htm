@@ -1,107 +1,130 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>ダイレクトタグジャンプ</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="ClipCopy">
-	<param name="Keyword" value="ctags">
-	<param name="Keyword" value="FileEdit">
-	<param name="Keyword" value="FindTagName">
-	<param name="Keyword" value="IncSearch">
-	<param name="Keyword" value="Migomo">
-	<param name="Keyword" value="TagJumpDirect">
-	<param name="Keyword" value="tags">
-	<param name="Keyword" value="TagViewDirect">
-	<param name="Keyword" value="TextViewer">
-	<param name="Keyword" value="ダイレクトタグジャンプ">
-	<param name="Keyword" value="タグ名検索">
-	<param name="Keyword" value="テキストビュアー">
-	<param name="Keyword" value="外部ツール">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>ダイレクトタグジャンプ</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="ClipCopy">
+    <param name="Keyword" value="ctags">
+    <param name="Keyword" value="FileEdit">
+    <param name="Keyword" value="FindTagName">
+    <param name="Keyword" value="IncSearch">
+    <param name="Keyword" value="Migomo">
+    <param name="Keyword" value="TagJumpDirect">
+    <param name="Keyword" value="tags">
+    <param name="Keyword" value="TagViewDirect">
+    <param name="Keyword" value="TextViewer">
+    <param name="Keyword" value="ダイレクトタグジャンプ">
+    <param name="Keyword" value="タグ名検索">
+    <param name="Keyword" value="テキストビュアー">
+    <param name="Keyword" value="外部ツール">
+  </object>
 </head>
 
 <body>
 
-<h1>ダイレクトタグジャンプ</h1>
-<p>
-<a href="hid00006.htm">テキストビュアー</a>で、<a href="hid00006.htm#TagJumpDirect">TagJumpDirect</a> (エディタ)/ <a href="hid00006.htm#TagViewDirect">TagViewDirect</a> (ビュアー) コマンドを実行すると、カーソル位置の単語でダイレクトタグジャンプを行います。<br>
-また <a href="hid00006.htm#TagJump">TagJump</a>_DJ /<a href="hid00006.htm#TagView">TagView</a>_DJ でタグジャンプができなかった場合もダイレクトタグジャンプを試みます。<br>
-なお、テキストエディタへの行番号指定は、<a href="hid00012.htm">オプション設定 - エディタ</a> で設定しておいてください。<br>
-</p>
+  <h1>ダイレクトタグジャンプ</h1>
+  <p>
+    <a href="hid00006.htm">テキストビュアー</a>で、<a href="hid00006.htm#TagJumpDirect">TagJumpDirect</a> (エディタ)/ <a
+      href="hid00006.htm#TagViewDirect">TagViewDirect</a> (ビュアー) コマンドを実行すると、カーソル位置の単語でダイレクトタグジャンプを行います。<br>
+    また <a href="hid00006.htm#TagJump">TagJump</a>_DJ /<a href="hid00006.htm#TagView">TagView</a>_DJ
+    でタグジャンプができなかった場合もダイレクトタグジャンプを試みます。<br>
+    なお、テキストエディタへの行番号指定は、<a href="hid00012.htm">オプション設定 - エディタ</a> で設定しておいてください。<br>
+  </p>
 
-<dl>
-<dt class="no_bg">タグファイル
-<dd>
-ダイレクトタグジャンプを行うには、あらかじめ <b>ctags</b> (hp.vector.co.jp/authors/VA025040/) によって、タグファイル <b>tags</b> を作成しておく必要があります。<br>
-<b>ctags</b> は、<a href="hid00015.htm">外部ツール</a> などに登録しておくと便利です。<br>
-実行時には、対象ファイルのディレクトリを順にさかのぼり、最初に見つかった <b>tags</b> ファイルを利用します。<br>
-タグファイルの形式は、行番号(--excmd=number)と検索パターン(--excmd=pattern)の両方に対応しています。<br>
-検索パターンの場合、対象ファイルを一旦読み込んで検索し、内部で行番号に変換しています。<br>
+  <dl>
+    <dt class="no_bg">タグファイル</dt>
+    <dd>
+      ダイレクトタグジャンプを行うには、あらかじめ <b>ctags</b> (hp.vector.co.jp/authors/VA025040/) によって、タグファイル <b>tags</b>
+      を作成しておく必要があります。<br>
+      <b>ctags</b> は、<a href="hid00015.htm">外部ツール</a> などに登録しておくと便利です。<br>
+      実行時には、対象ファイルのディレクトリを順にさかのぼり、最初に見つかった <b>tags</b> ファイルを利用します。<br>
+      タグファイルの形式は、行番号(--excmd=number)と検索パターン(--excmd=pattern)の両方に対応しています。<br>
+      検索パターンの場合、対象ファイルを一旦読み込んで検索し、内部で行番号に変換しています。<br>
+    </dd>
 
-<dt class="no_bg">候補一覧
-<dd>
-ジャンプ先の候補が複数ある場合、候補一覧が表示されます。<br>
-一覧には、「ファイル名」、「更新日時」、「場所」(tags から相対)、「行番号」/「パターン」、「備考」(拡張フィールド)が表示されます。不要な項目は、列幅を変更すれば隠せます。<br>
-一覧で <span class="btn_frame">1</span>～<span class="btn_frame">9</span>、<span class="btn_frame">0</span>や<span class="btn_frame">ENTER</span>キーを押すと、<b>TagJumpDirect</b> ではテキストエディタで、<b>TagViewDirect</b> ではテキストビュアーで開いて定義位置にジャンプします。<br>
-カーソル移動は、ファイラーで割り当てられているのと同じキーで行えます。<br>
-なお、2ストロークキー操作には対応していません。<br>
-</dl>
-<br>
+    <dt class="no_bg">候補一覧</dt>
+    <dd>
+      ジャンプ先の候補が複数ある場合、候補一覧が表示されます。<br>
+      一覧には、「ファイル名」、「更新日時」、「場所」(tags から相対)、「行番号」/「パターン」、「備考」(拡張フィールド)が表示されます。不要な項目は、列幅を変更すれば隠せます。<br>
+      一覧で <span class="btn_frame">1</span>～<span class="btn_frame">9</span>、<span class="btn_frame">0</span>や<span
+        class="btn_frame">ENTER</span>キーを押すと、<b>TagJumpDirect</b> ではテキストエディタで、<b>TagViewDirect</b>
+      ではテキストビュアーで開いて定義位置にジャンプします。<br>
+      カーソル移動は、ファイラーで割り当てられているのと同じキーで行えます。<br>
+      なお、2ストロークキー操作には対応していません。<br>
+    </dd>
+  </dl>
+  <br>
 
-<h3 id="Dialog">タグ名検索</h3>
-<p>
-ファイラーまたは<a href="hid00006.htm">テキストビュアー</a>で <a href="hid00005.htm#FindTagName">FindTagName</a> コマンドを実行すると、タグ名検索ダイアログが開きます。<br>
-</p>
+  <h3 id="Dialog">タグ名検索</h3>
+  <p>
+    ファイラーまたは<a href="hid00006.htm">テキストビュアー</a>で <a href="hid00005.htm#FindTagName">FindTagName</a>
+    コマンドを実行すると、タグ名検索ダイアログが開きます。<br>
+  </p>
 
-<p>
-キーワードを入力すると、それが含まれるタグ名の候補が下の一覧に表示されます(インクリメンタルサーチ)。<br>
-複数のキーワードを空白で区切って入力すると<b>AND</b>検索、&quot;<b>|</b>&quot; で区切ると<b>OR</b>検索になります。区切りが混在しているその場合は、空白(AND)の方が | (OR)よりも優先順位が高くなります。<br>
-<b>例</b>: &quot;set&quot; と &quot;nyan&quot; の両方が含まれているか、&quot;get&quot; と &quot;nyan&quot; の両方が含まれている。<br>
-　<span class="inp_box">set nayn|get nyan</span><br>
-<br>
+  <p>
+    キーワードを入力すると、それが含まれるタグ名の候補が下の一覧に表示されます(インクリメンタルサーチ)。<br>
+    複数のキーワードを空白で区切って入力すると<b>AND</b>検索、&quot;<b>|</b>&quot; で区切ると<b>OR</b>検索になります。区切りが混在しているその場合は、空白(AND)の方が |
+    (OR)よりも優先順位が高くなります。<br>
+    <b>例</b>: &quot;set&quot; と &quot;nyan&quot; の両方が含まれているか、&quot;get&quot; と &quot;nyan&quot; の両方が含まれている。<br>
+    　<span class="inp_box">set nayn|get nyan</span><br>
+    <br>
 
-<span class="btn_frame">BS</span>または<span class="btn_frame">Ctrl</span>+<span class="btn_frame">H</span>で一文字後退、インクリメンタルサーチで <a href="hid00050.htm#ClearIncKeyword">ClearIncKeyword</a> コマンドが割り当てられているキーで入力がクリアされます。<br>
-また <a href="hid00050.htm#MigemoMode">MigemoMode</a> コマンドが割り当てられているキーで <b>Migomo</b> モードに切り替えると、日本語を含むタグも検索できます(例: HTML文書の見出しなど)。<br>
-<br>
-タグ名一覧では<span class="btn_frame">↑</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">E</span>) / <span class="btn_frame">↓</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">X</span>)キーでカーソル移動が、<span class="btn_frame">PGUP</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">R</span>) / <span class="btn_frame">PGDN</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">C</span>)キーでページ移動が可能です。<br>
-<span class="btn_frame">ENTER</span>キーを押すと、一覧で選択されているタグ名でダイレクトタグジャンプを行います。一覧の項目をダブルクリックしてもかまいません。<b>FindTagName</b> のパラメータに <b>EJ</b> が指定されている場合はテキストエディタで、そうでない場合はテキストビュアーでダイレクトタグジャンプします。ジャンプ先の候補が複数ある場合は、<b>候補一覧</b>が表示されます。
-</p>
+    <span class="btn_frame">BS</span>または<span class="btn_frame">Ctrl</span>+<span
+      class="btn_frame">H</span>で一文字後退、インクリメンタルサーチで <a href="hid00050.htm#ClearIncKeyword">ClearIncKeyword</a>
+    コマンドが割り当てられているキーで入力がクリアされます。<br>
+    また <a href="hid00050.htm#MigemoMode">MigemoMode</a> コマンドが割り当てられているキーで <b>Migomo</b> モードに切り替えると、日本語を含むタグも検索できます(例:
+    HTML文書の見出しなど)。<br>
+    <br>
+    タグ名一覧では<span class="btn_frame">↑</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">E</span>) /
+    <span class="btn_frame">↓</span>(or <span class="btn_frame">Ctrl</span>+<span
+      class="btn_frame">X</span>)キーでカーソル移動が、<span class="btn_frame">PGUP</span>(or <span
+      class="btn_frame">Ctrl</span>+<span class="btn_frame">R</span>) / <span class="btn_frame">PGDN</span>(or <span
+      class="btn_frame">Ctrl</span>+<span class="btn_frame">C</span>)キーでページ移動が可能です。<br>
+    <span class="btn_frame">ENTER</span>キーを押すと、一覧で選択されているタグ名でダイレクトタグジャンプを行います。一覧の項目をダブルクリックしてもかまいません。<b>FindTagName</b>
+    のパラメータに <b>EJ</b> が指定されている場合はテキストエディタで、そうでない場合はテキストビュアーでダイレクトタグジャンプします。ジャンプ先の候補が複数ある場合は、<b>候補一覧</b>が表示されます。
+  </p>
 
-<p>
-ファイラーやテキストビュアーで割り当てられているのと同じキー操作でも、一覧でのカーソル移動などを行えます。<br>
-また <a href="hid00050.htm">インクリメンタルサーチ</a>で <a href="hid00050.htm#IncSearchDown">IncSearchDown</a>/ <a href="hid00050.htm#IncSearchUp">IncSearchUp</a> コマンドが割り当てられているキーでも、上下移動できます。<br>
-</p>
+  <p>
+    ファイラーやテキストビュアーで割り当てられているのと同じキー操作でも、一覧でのカーソル移動などを行えます。<br>
+    また <a href="hid00050.htm">インクリメンタルサーチ</a>で <a href="hid00050.htm#IncSearchDown">IncSearchDown</a>/ <a
+      href="hid00050.htm#IncSearchUp">IncSearchUp</a> コマンドが割り当てられているキーでも、上下移動できます。<br>
+  </p>
 
-<p>
-<a href="hid00005.htm#FileEdit">FileEdit</a> コマンドが割り当てられているキーを押すと、パラメータ指定にかかわらずテキストエディタで、また <a href="hid00005.htm#TextViewer">TextViewer</a> コマンドが割り当てられているキーを押すとテキストビュアーでダイレクトタグジャンプします。なお、テキストビュアーで <a href="hid00006.htm#ClipCopy">ClipCopy</a> コマンドが割り当てられているキーを押すと、選択されているタグ名のコピーだけを行ってダイアログを閉じます。<br>
-これらは、右クリックメニューからも可能です。<br>
-</p>
+  <p>
+    <a href="hid00005.htm#FileEdit">FileEdit</a> コマンドが割り当てられているキーを押すと、パラメータ指定にかかわらずテキストエディタで、また <a
+      href="hid00005.htm#TextViewer">TextViewer</a> コマンドが割り当てられているキーを押すとテキストビュアーでダイレクトタグジャンプします。なお、テキストビュアーで <a
+      href="hid00006.htm#ClipCopy">ClipCopy</a> コマンドが割り当てられているキーを押すと、選択されているタグ名のコピーだけを行ってダイアログを閉じます。<br>
+    これらは、右クリックメニューからも可能です。<br>
+  </p>
 
-<p>
-単純な文字キーは入力用として優先されるため、必要な場合は特殊キーや修飾付きキーでも割り当てておいてください。<br>
-なお、2ストロークキー操作には対応していません。
-</p>
+  <p>
+    単純な文字キーは入力用として優先されるため、必要な場合は特殊キーや修飾付きキーでも割り当てておいてください。<br>
+    なお、2ストロークキー操作には対応していません。
+  </p>
 
-<p>
-タグ名一覧の下には、カーソル位置タグのジャンプ先ファイル名が一覧表示されます。<br>
-ファイル名一覧にフォーカスがある場合、カーソル位置のファイルに直ちにダイレクトタグジャンプできます。
-</p>
-<br>
+  <p>
+    タグ名一覧の下には、カーソル位置タグのジャンプ先ファイル名が一覧表示されます。<br>
+    ファイル名一覧にフォーカスがある場合、カーソル位置のファイルに直ちにダイレクトタグジャンプできます。
+  </p>
+  <br>
 
-<hr>
-<dl>
-<dt class="no_bg"><span class="tips">Tips</span>
-<dd>
-<b>ctags</b> は、正規表現の置換パターンを定義することによりプログラミング言語以外でも利用できます。<br>
-例えば以下のようにして tags ファイルを作成すると、HTML文書の見出し(H1)内容をタグとして検索できます。<br>
-<pre class="example_box">
+  <hr>
+  <dl>
+    <dt class="no_bg"><span class="tips">Tips</span></dt>
+    <dd>
+      <b>ctags</b> は、正規表現の置換パターンを定義することによりプログラミング言語以外でも利用できます。<br>
+      例えば以下のようにして tags ファイルを作成すると、HTML文書の見出し(H1)内容をタグとして検索できます。<br>
+      <pre class="example_box">
 ctags --regex-html=/&lt;h1[^&gt;]*&gt;(.+)&lt;\/h1&gt;/\1/h,header/ *.html
 </pre>
-パターン定義が多い場合は、--options によってファイルからオプションを読み込むことも可能です。<br>
-</dl>
-<br><br>
+      パターン定義が多い場合は、--options によってファイルからオプションを読み込むことも可能です。<br>
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

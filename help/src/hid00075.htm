@@ -1,150 +1,178 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>.nyanfi ファイルによるファイラー設定</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value=".nyanfi">
-	<param name="Keyword" value=".nyanfi ファイルによるファイラー設定">
-	<param name="Keyword" value="DotNyanDlg">
-	<param name="Keyword" value="GREP">
-	<param name="Keyword" value="GrepSetMask">
-	<param name="Keyword" value="PlaySound">
-	<param name="Keyword" value="SetPathMask">
-	<param name="Keyword" value="ShowHideAtr">
-	<param name="Keyword" value="ShowIcon">
-	<param name="Keyword" value="ShowSystemAtr">
-	<param name="Keyword" value="SortDlg">
-	<param name="Keyword" value="SyncLR">
-	<param name="Keyword" value="WidenCurList">
-	<param name="Keyword" value="コマンドファイル">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>.nyanfi ファイルによるファイラー設定</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value=".nyanfi">
+    <param name="Keyword" value=".nyanfi ファイルによるファイラー設定">
+    <param name="Keyword" value="DotNyanDlg">
+    <param name="Keyword" value="GREP">
+    <param name="Keyword" value="GrepSetMask">
+    <param name="Keyword" value="PlaySound">
+    <param name="Keyword" value="SetPathMask">
+    <param name="Keyword" value="ShowHideAtr">
+    <param name="Keyword" value="ShowIcon">
+    <param name="Keyword" value="ShowSystemAtr">
+    <param name="Keyword" value="SortDlg">
+    <param name="Keyword" value="SyncLR">
+    <param name="Keyword" value="WidenCurList">
+    <param name="Keyword" value="コマンドファイル">
+  </object>
 </head>
 
 <body>
-<h1>.nyanfi ファイルによるファイラー設定</h1>
-<p>
-ディレクトリに <b>.nyanfi</b> という名前のファイルを置くと、カレント側でそのディレクトリに移動したとき、ファイラー設定を自動的に変更できます(隠し属性にして非表示の場合にも有効)。<br>
-また、別のタブに移ったとき、反対側ディレクトリに対しても、ソート方法(SortMode)とパスマスク(PathMask)については、その <b>.nyanfi</b> 設定が適用されます。<br>
-<a href="hid00024.htm#Other">オプション設定 - 一般2 - その他</a> で「<b>.nyanfi がない場合、上位から継承</b>」がチェックされていると、移動したディレクトリに <b>.nyanfi</b> がなかった場合、親ディレクトリへ(ルートまで)さかのぼって検索し、見つかったらその内容を適用します。<br>
-また、「<b>ユーザ名別を作成</b>」がチェックされていると、現在のユーザ名にしたがって &quot;<b>.nyanfi</b>_ユーザ名&quot; という名前で <b>.nyanfi</b> ファイルを作成し、それを適用します。これにより、共有フォルダを複数ユーザで利用するような場合、ユーザごとに設定を分けられます。
-</p>
+  <h1>.nyanfi ファイルによるファイラー設定</h1>
+  <p>
+    ディレクトリに <b>.nyanfi</b> という名前のファイルを置くと、カレント側でそのディレクトリに移動したとき、ファイラー設定を自動的に変更できます(隠し属性にして非表示の場合にも有効)。<br>
+    また、別のタブに移ったとき、反対側ディレクトリに対しても、ソート方法(SortMode)とパスマスク(PathMask)については、その <b>.nyanfi</b> 設定が適用されます。<br>
+    <a href="hid00024.htm#Other">オプション設定 - 一般2 - その他</a> で「<b>.nyanfi がない場合、上位から継承</b>」がチェックされていると、移動したディレクトリに
+    <b>.nyanfi</b> がなかった場合、親ディレクトリへ(ルートまで)さかのぼって検索し、見つかったらその内容を適用します。<br>
+    また、「<b>ユーザ名別を作成</b>」がチェックされていると、現在のユーザ名にしたがって &quot;<b>.nyanfi</b>_ユーザ名&quot; という名前で <b>.nyanfi</b>
+    ファイルを作成し、それを適用します。これにより、共有フォルダを複数ユーザで利用するような場合、ユーザごとに設定を分けられます。
+  </p>
 
-<p>
-ファイラーで <a href="hid00005.htm#DotNyanDlg">DotNyanDlg</a> コマンドを実行すると、<b>.nyanfi</b> ファイルの設定ダイアログが開き、カレント側ディレクトリの <b>.naynfi</b> ファイルを作成/変更/削除できます。<br>
-カレントに <b>.nyanfi</b> ファイルがない場合、<span class="btn_frame">継承</span>ボタンを押すと、親ディレクトリをルートまでさかのぼって <b>.nyanfi</b> ファイルを検索し、見つかったらその内容を設定します。「<b>配色</b>」、「<b>背景画像</b>」、「<b>サウンド</b>」、「<b>コマンドファイル</b>」のボタンでは個別に、ダイアログ下端のボタンではすべての内容を継承して設定します。
-</p>
+  <p>
+    ファイラーで <a href="hid00005.htm#DotNyanDlg">DotNyanDlg</a> コマンドを実行すると、<b>.nyanfi</b> ファイルの設定ダイアログが開き、カレント側ディレクトリの
+    <b>.naynfi</b> ファイルを作成/変更/削除できます。<br>
+    カレントに <b>.nyanfi</b> ファイルがない場合、<span class="btn_frame">継承</span>ボタンを押すと、親ディレクトリをルートまでさかのぼって <b>.nyanfi</b>
+    ファイルを検索し、見つかったらその内容を設定します。「<b>配色</b>」、「<b>背景画像</b>」、「<b>サウンド</b>」、「<b>コマンドファイル</b>」のボタンでは個別に、ダイアログ下端のボタンではすべての内容を継承して設定します。
+  </p>
 
-<p>
-<b>.nyanfi</b> ファイルは 名前=設定値 の書式で、以下のような設定が可能です。直接編集してもかまいません。
-</p>
+  <p>
+    <b>.nyanfi</b> ファイルは 名前=設定値 の書式で、以下のような設定が可能です。直接編集してもかまいません。
+  </p>
 
-<dl>
-<dt class="no_bg_indent1">ソート方法<br>
-SortMode<span class="pram_text">=F|E|D|S|A|U</span><br>
-NaturalOrder<span class="pram_text">/</span>DscNameOrder<span class="pram_text">/</span>SmallOrder<span class="pram_text">/</span>OldOrder<span class="pram_text">/</span>DscAttrOrder<span class="pram_text">=1|0</span>
-<dd>ファイルリストのソート方法を設定します。<br>
-<b>F</b> :名前順、<b>E</b> :拡張子順、<b>D</b> :更新日時順、<b>S</b> :サイズ順、<b>A</b> :属性、<b>U</b> : なし となります。<br>
-ソート順も変えたい場合は、 <img src="chkbox.png" alt=""> <b>そのまま</b> のチェックを外して、その下の各チェックボックスを設定してください。<br>
-<a href="hid00005.htm#SortDlg">→ SortDlg</a><br>
-<br>
+  <dl>
+    <dt class="no_bg_indent1">ソート方法<br>
+      SortMode<span class="pram_text">=F|E|D|S|A|U</span><br>
+      NaturalOrder<span class="pram_text">/</span>DscNameOrder<span class="pram_text">/</span>SmallOrder<span
+        class="pram_text">/</span>OldOrder<span class="pram_text">/</span>DscAttrOrder<span
+        class="pram_text">=1|0</span></dt>
+    <dd>ファイルリストのソート方法を設定します。<br>
+      <b>F</b> :名前順、<b>E</b> :拡張子順、<b>D</b> :更新日時順、<b>S</b> :サイズ順、<b>A</b> :属性、<b>U</b> : なし となります。<br>
+      ソート順も変えたい場合は、 <img src="chkbox.png" alt=""> <b>そのまま</b> のチェックを外して、その下の各チェックボックスを設定してください。<br>
+      <a href="hid00005.htm#SortDlg">→ SortDlg</a><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">隠しファイル<br>
-ShowHideAtr<span class="pram_text">=1|0</span>
-<dd>隠しファイル属性項目の表示/非表示を設定します。<b>1</b> で表示、<b>0</b> で非表示となります。<br>
-<a href="hid00005.htm#ShowHideAtr">→ ShowHideAtr</a><br>
-<br>
+    <dt class="no_bg_indent1">隠しファイル<br>
+      ShowHideAtr<span class="pram_text">=1|0</span></dt>
+    <dd>隠しファイル属性項目の表示/非表示を設定します。<b>1</b> で表示、<b>0</b> で非表示となります。<br>
+      <a href="hid00005.htm#ShowHideAtr">→ ShowHideAtr</a><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">システムファイル<br>
-ShowSystemAtr<span class="pram_text">=1|0</span>
-<dd>システムファイル属性項目の表示/非表示を設定します。<b>1</b> で表示、<b>0</b> で非表示となります。<br>
-<a href="hid00005.htm#ShowSystemAtr">→ ShowSystemAtr</a><br>
-<br>
+    <dt class="no_bg_indent1">システムファイル<br>
+      ShowSystemAtr<span class="pram_text">=1|0</span></dt>
+    <dd>システムファイル属性項目の表示/非表示を設定します。<b>1</b> で表示、<b>0</b> で非表示となります。<br>
+      <a href="hid00005.htm#ShowSystemAtr">→ ShowSystemAtr</a><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">アイコン<br>
-ShowIcon<span class="pram_text">=0|1|2</span>
-<dd>アイコンの表示/非表示を設定します。<b>0</b> で非表示、<b>1</b> で表示、<b>2</b> でフォルダアイコンのみ表示となります。<br>
-<a href="hid00005.htm#ShowIcon">→ ShowIcon</a><br>
-<br>
+    <dt class="no_bg_indent1">アイコン<br>
+      ShowIcon<span class="pram_text">=0|1|2</span></dt>
+    <dd>アイコンの表示/非表示を設定します。<b>0</b> で非表示、<b>1</b> で表示、<b>2</b> でフォルダアイコンのみ表示となります。<br>
+      <a href="hid00005.htm#ShowIcon">→ ShowIcon</a><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">サイズ表示<br>
-ShowByteSize<span class="pram_text">=1|0</span>
-<dd>ファイルサイズ表示がバイト単位かTB/GB/MB単位かを設定します。<b>1</b> でバイト単位、<b>0</b> でTB/GB/MB単位となります。<br>
-<a href="hid00005.htm#ShowByteSize">→ ShowByteSize</a><br>
-<br>
+    <dt class="no_bg_indent1">サイズ表示<br>
+      ShowByteSize<span class="pram_text">=1|0</span></dt>
+    <dd>ファイルサイズ表示がバイト単位かTB/GB/MB単位かを設定します。<b>1</b> でバイト単位、<b>0</b> でTB/GB/MB単位となります。<br>
+      <a href="hid00005.htm#ShowByteSize">→ ShowByteSize</a><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">左右ディレクトリの同期変更
-SyncLR<span class="pram_text">=1|0</span>
-<dd>反対側の階層を同期して変更する機能の有効/無効を設定します。<b>1</b> で有効、<b>0</b> で無効となります。<br>
-<a href="hid00019.htm#SyncLR">オプション設定 - コマンド - SyncLR</a> で「<b>項目位置も同期</b>」をチェックしていると、有効時にカーソル位置と同名の項目が反対側にあれば、その位置も同期して点線カーソルが表示されます。<br>
-<a href="hid00005.htm#SyncLR">→ SyncLR</a><br>
-<br>
+    <dt class="no_bg_indent1">左右ディレクトリの同期変更
+      SyncLR<span class="pram_text">=1|0</span></dt>
+    <dd>反対側の階層を同期して変更する機能の有効/無効を設定します。<b>1</b> で有効、<b>0</b> で無効となります。<br>
+      <a href="hid00019.htm#SyncLR">オプション設定 - コマンド - SyncLR</a>
+      で「<b>項目位置も同期</b>」をチェックしていると、有効時にカーソル位置と同名の項目が反対側にあれば、その位置も同期して点線カーソルが表示されます。<br>
+      <a href="hid00005.htm#SyncLR">→ SyncLR</a><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">ファイルリストの幅<br>
-ListWidth<span class="pram_text">=パーセント値</span>
-<dd>ファイルリストの幅を設定します。<br>
-<a href="hid00005.htm#WidenCurList">→ WidenCurList</a><br>
-<br>
+    <dt class="no_bg_indent1">ファイルリストの幅<br>
+      ListWidth<span class="pram_text">=パーセント値</span></dt>
+    <dd>ファイルリストの幅を設定します。<br>
+      <a href="hid00005.htm#WidenCurList">→ WidenCurList</a><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">パスマスク<br>
-PathMask<span class="pram_text">=[:マスク名:][!]マスク[\][;[!]マスク[\]...]</span>
-<dd>パスマスクを設定します。<br>
-マスクは、<b>;</b> (セミコロン)で区切って複数指定できます。マスクの先頭に <b>!</b> があると除外になります。また、末尾が <b>\</b> の場合はディレクトリとみなされます。<br>
-説明文字列の書式でマスク名を指定すると、<a href="hid00004.htm#DriveInfo">ドライブ情報</a>にそれが表示されます。無指定の場合は、マスクがそのまま表示されます。<br>
-<b>例</b>:PathMask=:画像:*.jpg;*.png;*gif<br>
-<a href="hid00005.htm#SetPathMask">→ SetPathMask</a><br>
-<br>
+    <dt class="no_bg_indent1">パスマスク<br>
+      PathMask<span class="pram_text">=[:マスク名:][!]マスク[\][;[!]マスク[\]...]</span></dt>
+    <dd>パスマスクを設定します。<br>
+      マスクは、<b>;</b> (セミコロン)で区切って複数指定できます。マスクの先頭に <b>!</b> があると除外になります。また、末尾が <b>\</b> の場合はディレクトリとみなされます。<br>
+      説明文字列の書式でマスク名を指定すると、<a href="hid00004.htm#DriveInfo">ドライブ情報</a>にそれが表示されます。無指定の場合は、マスクがそのまま表示されます。<br>
+      <b>例</b>:PathMask=:画像:*.jpg;*.png;*gif<br>
+      <a href="hid00005.htm#SetPathMask">→ SetPathMask</a><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">GREPマスク<br>
-GrepMask<span class="pram_text">=マスク</span>
-<dd><a href="hid00056.htm">文字列検索(GREP)</a>で検索する際のマスクを設定します。マスクは ; (セミコロン)で区切って複数指定できます。<br>
-<a href="hid00063.htm#GrepSetMask">→ GrepSetMask</a><br>
-<br>
+    <dt class="no_bg_indent1">GREPマスク<br>
+      GrepMask<span class="pram_text">=マスク</span></dt>
+    <dd><a href="hid00056.htm">文字列検索(GREP)</a>で検索する際のマスクを設定します。マスクは ; (セミコロン)で区切って複数指定できます。<br>
+      <a href="hid00063.htm#GrepSetMask">→ GrepSetMask</a><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">説明<br>
-Description<span class="pram_text">=説明</span>
-<dd>ディレクトリについての説明です。<br>
-記述しておくと、ディレクトリについてのファイル情報に表示されます。<br>
-<br>
+    <dt class="no_bg_indent1">説明<br>
+      Description<span class="pram_text">=説明</span></dt>
+    <dd>ディレクトリについての説明です。<br>
+      記述しておくと、ディレクトリについてのファイル情報に表示されます。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">配色<br>
-Color_bgDirInf<span class="pram_text">/</span>Color_fgDirInf<span class="pram_text">/</span>Color_bgDrvInf<span class="pram_text">/</span>Color_fgDrvInf<span class="pram_text">/</span>Color_Cursor<span class="pram_text">/</span>Color_selItem<span class="pram_text">=カラー値</span>
-<dd>ファイルリストの一部の配色を個別に設定できます。ディレクトリを移ったとき、指定がなければ通常の配色に戻ります。<br>
-<br>
+    <dt class="no_bg_indent1">配色<br>
+      Color_bgDirInf<span class="pram_text">/</span>Color_fgDirInf<span class="pram_text">/</span>Color_bgDrvInf<span
+        class="pram_text">/</span>Color_fgDrvInf<span class="pram_text">/</span>Color_Cursor<span
+        class="pram_text">/</span>Color_selItem<span class="pram_text">=カラー値</span></dt>
+    <dd>ファイルリストの一部の配色を個別に設定できます。ディレクトリを移ったとき、指定がなければ通常の配色に戻ります。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">背景画像<br>
-BgImage<span class="pram_text">=ファイル名</span>
-<dd>指定した画像ファイル(メタファイルは除く)を背景画像として読み込みます。ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
-<a href="hid00010.htm#BgImage">オプション設定 - デザイン</a> の「<b>背景画像</b>」が「<b>非表示</b>」または「<b>デスクトップ背景を表示</b>」の場合には読み込まれません。<br>
-<a href="hid00005.htm#LoadBgImage">→ LoadBgImage</a><br>
-<br>
+    <dt class="no_bg_indent1">背景画像<br>
+      BgImage<span class="pram_text">=ファイル名</span></dt>
+    <dd>指定した画像ファイル(メタファイルは除く)を背景画像として読み込みます。ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+      <a href="hid00010.htm#BgImage">オプション設定 - デザイン</a>
+      の「<b>背景画像</b>」が「<b>非表示</b>」または「<b>デスクトップ背景を表示</b>」の場合には読み込まれません。<br>
+      <a href="hid00005.htm#LoadBgImage">→ LoadBgImage</a><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">サウンド<br>
-PlaySound<span class="pram_text">=ファイル名|サウンド識別子</span>
-<dd>指定したサウンドファイル(<b>.wav</b>、<b>.mp3</b>、<b>.mid</b>)を再生します。<br>
-ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
-ファイル名の代わりに <a href="hid00093.htm">定義済みサウンド識別子</a> を指定することもできます。<br>
-<a href="hid00063.htm#PlaySound">→ PlaySound</a><br>
-<br>
+    <dt class="no_bg_indent1">サウンド<br>
+      PlaySound<span class="pram_text">=ファイル名|サウンド識別子</span></dt>
+    <dd>指定したサウンドファイル(<b>.wav</b>、<b>.mp3</b>、<b>.mid</b>)を再生します。<br>
+      ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+      ファイル名の代わりに <a href="hid00093.htm">定義済みサウンド識別子</a> を指定することもできます。<br>
+      <a href="hid00063.htm#PlaySound">→ PlaySound</a><br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">コマンドファイル<br>
-ExeCommands<span class="pram_text">=@コマンドファイル名</span>
-<dd>指定したコマンドファイルを <a href="hid00063.htm">ExeCommands コマンド</a> のパラメータとして実行します。<br>
-セキュリティを考慮し、実行できるのは <b>NyanFi</b> ディレクトリから相対指定のコマンドファイルに制限されます。<br>
-また、<a href="hid00024.htm#Other">オプション設定 - 一般2 - その他</a> で「<b>.nyanfi でのコマンドファイル実行を許可</b>」がチェックされている必要があります。<br>
-なお、これが設定されていると、<a href="hid00021.htm">オプション設定 - イベント</a> の「<b>カレントのディレクトリ変更(FL)</b>」に設定されているコマンドは実行されません。<br>
-<br>
+    <dt class="no_bg_indent1">コマンドファイル<br>
+      ExeCommands<span class="pram_text">=@コマンドファイル名</span></dt>
+    <dd>指定したコマンドファイルを <a href="hid00063.htm">ExeCommands コマンド</a> のパラメータとして実行します。<br>
+      セキュリティを考慮し、実行できるのは <b>NyanFi</b> ディレクトリから相対指定のコマンドファイルに制限されます。<br>
+      また、<a href="hid00024.htm#Other">オプション設定 - 一般2 - その他</a> で「<b>.nyanfi でのコマンドファイル実行を許可</b>」がチェックされている必要があります。<br>
+      なお、これが設定されていると、<a href="hid00021.htm">オプション設定 - イベント</a> の「<b>カレントのディレクトリ変更(FL)</b>」に設定されているコマンドは実行されません。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 「カレントのディレクトリ変更」イベントを抑止<br>
-Handled<span class="pram_text">=1|0</span>
-<dd>これを <b>1</b> に設定すると、<a href="hid00021.htm">オプション設定 - イベント</a> の「<b>カレントのディレクトリ変更(FL)</b>」に設定されているコマンドが実行されません。<br>
-<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 「カレントのディレクトリ変更」イベントを抑止<br>
+      Handled<span class="pram_text">=1|0</span></dt>
+    <dd>これを <b>1</b> に設定すると、<a href="hid00021.htm">オプション設定 - イベント</a>
+      の「<b>カレントのディレクトリ変更(FL)</b>」に設定されているコマンドが実行されません。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 隠しファイル
-<dd><b>.nyanfi</b> を作成/変更する際に、隠しファイル属性を設定します。<br>
-</dl>
-<br><br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 隠しファイル</dt>
+    <dd><b>.nyanfi</b> を作成/変更する際に、隠しファイル属性を設定します。</dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

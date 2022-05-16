@@ -88,6 +88,7 @@ bool is_IdenticalFile(UnicodeString fnam1, UnicodeString fnam2);
 bool file_exists(UnicodeString fnam);
 bool file_exists_x(UnicodeString fnam);
 bool file_exists_ico(UnicodeString fnam);
+bool file_exists_wc(UnicodeString &fnam);
 bool dir_exists(UnicodeString dnam);
 
 TDateTime utc_to_DateTime(FILETIME *utc);

@@ -1,210 +1,244 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>文字列検索(GREP)</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="FileEdit">
-	<param name="Keyword" value="GREP">
-	<param name="Keyword" value="ReturnList">
-	<param name="Keyword" value="TextViewer">
-	<param name="Keyword" value="xd2txlib.dll">
-	<param name="Keyword" value="タグジャンプ">
-	<param name="Keyword" value="環境変数">
-	<param name="Keyword" value="正規表現">
-	<param name="Keyword" value="文字列検索">
-	<param name="Keyword" value="文字列置換">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>文字列検索(GREP)</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="FileEdit">
+    <param name="Keyword" value="GREP">
+    <param name="Keyword" value="ReturnList">
+    <param name="Keyword" value="TextViewer">
+    <param name="Keyword" value="xd2txlib.dll">
+    <param name="Keyword" value="タグジャンプ">
+    <param name="Keyword" value="環境変数">
+    <param name="Keyword" value="正規表現">
+    <param name="Keyword" value="文字列検索">
+    <param name="Keyword" value="文字列置換">
+  </object>
 </head>
 
 <body>
 
-<h1>文字列検索(GREP)</h1>
-<p>
-<a href="hid00005.htm#Grep">Grep</a> コマンドを実行すると、カレント側ファイルリスト(<a href="hid00052.htm">ファイル名検索</a>の結果リストや<a href="hid00060.htm">ワークリスト</a>も可)のテキストファイルに対する <b>文字列検索(GREP)</b> 画面が開きます。<br>
-<b>xd2txlib.dll</b> がインストールされていると、PDF、WORD、EXCEL、一太郎などの各種バイナリ文書も検索可能です。
-</p>
-<p>
-上部のタブを切り替えることにより、<b>文字列検索</b>および<a href="hid00061.htm">文字列置換</a>を行えます。<br>
-</p>
+  <h1>文字列検索(GREP)</h1>
+  <p>
+    <a href="hid00005.htm#Grep">Grep</a> コマンドを実行すると、カレント側ファイルリスト(<a href="hid00052.htm">ファイル名検索</a>の結果リストや<a
+      href="hid00060.htm">ワークリスト</a>も可)のテキストファイルに対する <b>文字列検索(GREP)</b> 画面が開きます。<br>
+    <b>xd2txlib.dll</b> がインストールされていると、PDF、WORD、EXCEL、一太郎などの各種バイナリ文書も検索可能です。
+  </p>
+  <p>
+    上部のタブを切り替えることにより、<b>文字列検索</b>および<a href="hid00061.htm">文字列置換</a>を行えます。<br>
+  </p>
 
-<h2 id="Find">文字列検索</h2>
-<p>
-必用に応じて後述の項目を設定してください。<br>
-カレントで選択項目がある場合は、それらが検索対象となります(マスク指定は無視)。また非表示の項目は対象から外されます。<br>
-<span class="btn_frame">開始</span>ボタンで検索がはじまります。検索を中断したい場合は<span class="btn_frame">中断</span>ボタンまたは<span class="btn_frame">ESC</span>キーを押してください。<br>
-検索が終了すると、結果が下のリストに表示され、フォーカスが移ります。<br>
-</p>
+  <h2 id="Find">文字列検索</h2>
+  <p>
+    必用に応じて後述の項目を設定してください。<br>
+    カレントで選択項目がある場合は、それらが検索対象となります(マスク指定は無視)。また非表示の項目は対象から外されます。<br>
+    <span class="btn_frame">開始</span>ボタンで検索がはじまります。検索を中断したい場合は<span class="btn_frame">中断</span>ボタンまたは<span
+      class="btn_frame">ESC</span>キーを押してください。<br>
+    検索が終了すると、結果が下のリストに表示され、フォーカスが移ります。<br>
+  </p>
 
-<dl>
-<dt class="no_bg">結果リストでのキー操作
-<dd>
-ファイラーで割り当てられているのと同じキーで、カーソル移動や、ファイルの閲覧(<a href="hid00005.htm#TextViewer">TextViewer</a> / <b>TextViewer</b>_XW)、編集(<a href="hid00005.htm#FileEdit">FileEdit</a>)が行えます。また <a href="hid00005.htm#OpenByApp">OpenByApp</a>、<a href="hid00005.htm#OpenByWin">OpenByWin</a> コマンドも実行できます。<br>
-<b>TextViewer</b>_XW で別ウィンドウのテキストビュアーを開いている場合、<span class="btn_frame">TAB</span>キーで結果リストとの間を行き来できます。<br>
-<a href="hid00012.htm">オプション設定 - エディタ</a> - テキストエディタ の「<b>パラメータ(GREP用)</b>」を設定しておけば、エディタで開いてその行位置に移動(タグジャンプ)できます。バイナリ文書では対応するエディタで開きます。<br>
-また<span class="btn_frame">ENTER</span>キーを押すと、結果リストから抜けて、そのファイルのある位置に移動します。<br>
-<span class="btn_frame">DEL</span>キーや <a href="hid00005.htm#Delete">Delete</a> コマンドが割り当てられているキーを押すと、カーソル位置の項目が一時的に削除されます。これは、後述の絞り込みを行った場合と同様で、メニューの「<b>絞り込みの解除</b>」によって元に戻ります。<br>
-画面を閉じてファイラーに戻るには、<span class="btn_frame">ESC</span>キーを押すか、<a href="hid00005.htm#ReturnList">ReturnList</a> が割り当てられているキーを結果リストで押してください。<br>
-なお、2ストロークキー操作には対応していません。<br>
+  <dl>
+    <dt class="no_bg">結果リストでのキー操作</dt>
+    <dd>
+      ファイラーで割り当てられているのと同じキーで、カーソル移動や、ファイルの閲覧(<a href="hid00005.htm#TextViewer">TextViewer</a> /
+      <b>TextViewer</b>_XW)、編集(<a href="hid00005.htm#FileEdit">FileEdit</a>)が行えます。また <a
+        href="hid00005.htm#OpenByApp">OpenByApp</a>、<a href="hid00005.htm#OpenByWin">OpenByWin</a> コマンドも実行できます。<br>
+      <b>TextViewer</b>_XW で別ウィンドウのテキストビュアーを開いている場合、<span class="btn_frame">TAB</span>キーで結果リストとの間を行き来できます。<br>
+      <a href="hid00012.htm">オプション設定 - エディタ</a> - テキストエディタ
+      の「<b>パラメータ(GREP用)</b>」を設定しておけば、エディタで開いてその行位置に移動(タグジャンプ)できます。バイナリ文書では対応するエディタで開きます。<br>
+      また<span class="btn_frame">ENTER</span>キーを押すと、結果リストから抜けて、そのファイルのある位置に移動します。<br>
+      <span class="btn_frame">DEL</span>キーや <a href="hid00005.htm#Delete">Delete</a>
+      コマンドが割り当てられているキーを押すと、カーソル位置の項目が一時的に削除されます。これは、後述の絞り込みを行った場合と同様で、メニューの「<b>絞り込みの解除</b>」によって元に戻ります。<br>
+      画面を閉じてファイラーに戻るには、<span class="btn_frame">ESC</span>キーを押すか、<a href="hid00005.htm#ReturnList">ReturnList</a>
+      が割り当てられているキーを結果リストで押してください。<br>
+      なお、2ストロークキー操作には対応していません。<br>
 
-<div class="spc_box">
-検索結果は、再度検索を行うまで保持されています。画面を閉じても再度開けばまた見ることができます。その場合、対象ディレクトリ表示には、結果リストにフォーカスがあれば前回検索時のパスが、そうでない場合はカレントパスが表示されます。<br>
-</div>
+      <div class="spc_box">
+        検索結果は、再度検索を行うまで保持されています。画面を閉じても再度開けばまた見ることができます。その場合、対象ディレクトリ表示には、結果リストにフォーカスがあれば前回検索時のパスが、そうでない場合はカレントパスが表示されます。<br>
+      </div>
+    </dd>
 
-<dt class="no_bg" id="Filter">フィルタ
-<dd>
-検索を行った後で、<b>フィルタ</b> <img src="edit.png" alt=""> 欄に文字を入力すると、結果リストを絞り込むことができます。<br>
-<img src="chkbox.png" alt=""> <b>Migemo</b> をチェックしていると、<b>Migemo</b> モードで絞り込みを行えます。<br>
-<div class="note_text">
-※<b>Migemo</b> モードだと処理が重くなります。フィルタ欄には日本語も入力できるので、項目数が多い場合は通常モードにした方がよいでしょう。<br>
-</div>
-<img src="chkbox.png" alt=""> <b>AND/OR</b> をチェックしていると、複数のキーワードを空白で区切って入力した場合にAND検索、&quot;<b>|</b>&quot; で区切るとOR検索で絞り込めます。区切りが混在しているその場合は、空白(AND)の方が | (OR)よりも優先順位が高くなります。<br>
-なお、大小文字は区別されません。<br>
-入力欄の幅は、状態表示との間にある境界線をドラッグすることで変更できます。<br>
+    <dt class="no_bg" id="Filter">フィルタ</dt>
+    <dd>
+      検索を行った後で、<b>フィルタ</b> <img src="edit.png" alt=""> 欄に文字を入力すると、結果リストを絞り込むことができます。<br>
+      <img src="chkbox.png" alt=""> <b>Migemo</b> をチェックしていると、<b>Migemo</b> モードで絞り込みを行えます。<br>
+      <div class="note_text">
+        ※<b>Migemo</b> モードだと処理が重くなります。フィルタ欄には日本語も入力できるので、項目数が多い場合は通常モードにした方がよいでしょう。<br>
+      </div>
+      <img src="chkbox.png" alt=""> <b>AND/OR</b> をチェックしていると、複数のキーワードを空白で区切って入力した場合にAND検索、&quot;<b>|</b>&quot;
+      で区切るとOR検索で絞り込めます。区切りが混在しているその場合は、空白(AND)の方が | (OR)よりも優先順位が高くなります。<br>
+      なお、大小文字は区別されません。<br>
+      入力欄の幅は、状態表示との間にある境界線をドラッグすることで変更できます。<br>
+    </dd>
 
-<dt class="no_bg">フォーカス移動など
-<dd>
-結果リストにフォーカスがある場合、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">F</span>キーでフィルタ欄に、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">S</span>キーで検索文字列欄に移れます。また、別ウィンドウのテキストビュアーがなければ、<span class="btn_frame">TAB</span>キーでも移れます。<br>
-フィルタ欄からは、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">L</span>で結果リストに、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">F</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">S</span>)で検索文字列欄に移れます。また<span class="btn_frame">Ctrl</span>+<span class="btn_frame">M</span>で Migemo モードを切り替えられます。<br>
-なお、フィルタが適用される際に、キーによる項目の一時的な削除や、絞り込み、行内容によるソートは解除されます。<br>
-<br>
+    <dt class="no_bg">フォーカス移動など</dt>
+    <dd>
+      結果リストにフォーカスがある場合、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">F</span>キーでフィルタ欄に、<span
+        class="btn_frame">Ctrl</span>+<span class="btn_frame">S</span>キーで検索文字列欄に移れます。また、別ウィンドウのテキストビュアーがなければ、<span
+        class="btn_frame">TAB</span>キーでも移れます。<br>
+      フィルタ欄からは、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">L</span>で結果リストに、<span
+        class="btn_frame">Ctrl</span>+<span class="btn_frame">F</span>(or <span class="btn_frame">Ctrl</span>+<span
+        class="btn_frame">S</span>)で検索文字列欄に移れます。また<span class="btn_frame">Ctrl</span>+<span class="btn_frame">M</span>で
+      Migemo モードを切り替えられます。<br>
+      なお、フィルタが適用される際に、キーによる項目の一時的な削除や、絞り込み、行内容によるソートは解除されます。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg">メニュー
-<dd>
-編集メニュー(または結果リストの右クリックメニュー)の「<b>検索結果の絞り込み : 抽出</b>」および「<b>検索結果の絞り込み : 除外</b>」で、結果リストを絞り込めます。キーワードは、空白で区切って複数指定可能。その場合、抽出ではいずれかを含むものが、除外ではいずれも含まないものが残ります。大小文字は区別されません。「<b>絞り込みの解除</b>」で、絞り込みを解除できます。「<b>絞り込みを確定</b>」で、絞り込みによって表示から除外された項目を結果リストから削除します。<br>
+    <dt class="no_bg">メニュー</dt>
+    <dd>
+      編集メニュー(または結果リストの右クリックメニュー)の「<b>検索結果の絞り込み : 抽出</b>」および「<b>検索結果の絞り込み :
+        除外</b>」で、結果リストを絞り込めます。キーワードは、空白で区切って複数指定可能。その場合、抽出ではいずれかを含むものが、除外ではいずれも含まないものが残ります。大小文字は区別されません。「<b>絞り込みの解除</b>」で、絞り込みを解除できます。「<b>絞り込みを確定</b>」で、絞り込みによって表示から除外された項目を結果リストから削除します。<br>
 
-<div class="spc_box">
-「<b>行内容でソート</b>」では、マッチ行(次行部分は無視)の内容に基づいて結果リストをソートをできます。なお、絞り込みが行われた状態でソートを解除すると、絞り込みも解除されます。<br>
-</div>
+      <div class="spc_box">
+        「<b>行内容でソート</b>」では、マッチ行(次行部分は無視)の内容に基づいて結果リストをソートをできます。なお、絞り込みが行われた状態でソートを解除すると、絞り込みも解除されます。<br>
+      </div>
 
-<div class="spc_box">
-「<b>検索結果の退避</b>」で、現在表示されている結果リストの内容をバッファに退避できます。退避しておいた内容は、「<b>検索結果の復帰</b>」で結果リストに呼び戻せます。</div>
+      <div class="spc_box">
+        「<b>検索結果の退避</b>」で、現在表示されている結果リストの内容をバッファに退避できます。退避しておいた内容は、「<b>検索結果の復帰</b>」で結果リストに呼び戻せます。</div>
 
-<div class="spc_box">
-「<b>ヒットしたカレントのファイルを選択</b>」では、結果リストに表示されているファイルのうち、カレントのファイルリストにあるものを選択状態にします。この後でさらに検索を行った場合、選択されているファイルが検索対象となります。<br>
-</div>
+      <div class="spc_box">
+        「<b>ヒットしたカレントのファイルを選択</b>」では、結果リストに表示されているファイルのうち、カレントのファイルリストにあるものを選択状態にします。この後でさらに検索を行った場合、選択されているファイルが検索対象となります。<br>
+      </div>
 
-<div class="spc_box">
-結果リストのカーソル行にURLが含まれている場合、右クリックメニューの「<b>URLを開く</b>」でそれを開けます。<br>
-</div>
+      <div class="spc_box">
+        結果リストのカーソル行にURLが含まれている場合、右クリックメニューの「<b>URLを開く</b>」でそれを開けます。<br>
+      </div>
 
-<div class="spc_box">
-表示メニュー(または結果リストの右クリックメニュー)の「<b>結果リストに項目番号を表示</b>」をチェックすると、項目の通し番号が表示されます。また、「<b>項目番号をファイル単位で表示</b>」もチェックすると、項目番号をファイル単位の連番で表示します。ファイル内で複数行ヒットした場合、最初の行だけに番号が表示されます。なお、行内容でソートしている場合は項目の通し番号になります。<br>
-「<b>結果リストにサブディレクトリ名を表示</b>」をチェックすると、ファイル名の前にカレント以下のサブディレクトリ名が表示されます(ワークリストの場合は除く)。<br>
-「<b>行頭のタブや空白を非表示</b>」をチェックすると、結果リストで、行頭のタブや空白を除外して表示します(次行部分を含む)。<br>
-「<b>マッチ語が見えないとき前部分を省略</b>」をチェックすると、結果リストの各行で、マッチした語が見えない場合、前部分を省略して見えるように表示します。<br>
-「<b>フィルタの語を強調表示</b>」をチェックすると、結果リストをフィルタで絞り込んでいる場合、検索文字列の代わりに<a href="#Filter">フィルタ</a>の語を強調表示します。<br>
-「<b>次行表示部分の明度を加減</b>」をチェックすると、後述の <img src="chkbox.png" alt=""> <b>次行表示</b> をチェックしている場合に、次行部分の文字明度を加減してマッチ行と区別しやすくします。<br>
-</div>
+      <div class="spc_box">
+        表示メニュー(または結果リストの右クリックメニュー)の「<b>結果リストに項目番号を表示</b>」をチェックすると、項目の通し番号が表示されます。また、「<b>項目番号をファイル単位で表示</b>」もチェックすると、項目番号をファイル単位の連番で表示します。ファイル内で複数行ヒットした場合、最初の行だけに番号が表示されます。なお、行内容でソートしている場合は項目の通し番号になります。<br>
+        「<b>結果リストにサブディレクトリ名を表示</b>」をチェックすると、ファイル名の前にカレント以下のサブディレクトリ名が表示されます(ワークリストの場合は除く)。<br>
+        「<b>行頭のタブや空白を非表示</b>」をチェックすると、結果リストで、行頭のタブや空白を除外して表示します(次行部分を含む)。<br>
+        「<b>マッチ語が見えないとき前部分を省略</b>」をチェックすると、結果リストの各行で、マッチした語が見えない場合、前部分を省略して見えるように表示します。<br>
+        「<b>フィルタの語を強調表示</b>」をチェックすると、結果リストをフィルタで絞り込んでいる場合、検索文字列の代わりに<a href="#Filter">フィルタ</a>の語を強調表示します。<br>
+        「<b>次行表示部分の明度を加減</b>」をチェックすると、後述の <img src="chkbox.png" alt=""> <b>次行表示</b>
+        をチェックしている場合に、次行部分の文字明度を加減してマッチ行と区別しやすくします。<br>
+      </div>
 
-<div class="spc_box">
-なお、結果リストの内容をテキストエディタなどで利用したい場合、ファイルメニューの「<b>検索結果に名前を付けて保存</b>」でテキストファイルとして保存したり、編集メニュー(または結果リストの右クリックメニュー)の「<b>検索結果をクリップボードにコピー</b>」でコピーしたりしてください。<br>
-また後述の「<b>拡張設定</b>」により、結果をファイルやクリップボードに出力し、指定アプリケーションを起動することも可能です。
-</div>
-</dl>
-<br>
+      <div class="spc_box">
+        なお、結果リストの内容をテキストエディタなどで利用したい場合、ファイルメニューの「<b>検索結果に名前を付けて保存</b>」でテキストファイルとして保存したり、編集メニュー(または結果リストの右クリックメニュー)の「<b>検索結果をクリップボードにコピー</b>」でコピーしたりしてください。<br>
+        また後述の「<b>拡張設定</b>」により、結果をファイルやクリップボードに出力し、指定アプリケーションを起動することも可能です。
+      </div>
+    </dd>
+  </dl>
+  <br>
 
-<hr size="1">
-<dl class="indent1">
-<dt class="no_bg">検索文字列 <img src="edit.png" alt="">
-<dd>検索文字列を指定します。半角または全角空白で区切って複数の語を指定することも可能です(AND または OR 検索)。<br>
-先頭や末尾の半角空白は無視されます。このような場合、正規表現では <b>\x20</b> を用いてください。<br>
-正規表現でない場合、<b>\s</b> は半角空白、<b>\t</b> はタブ文字とみなされます。<br>
+  <hr size="1">
+  <dl class="indent1">
+    <dt class="no_bg">検索文字列 <img src="edit.png" alt=""></dt>
+    <dd>検索文字列を指定します。半角または全角空白で区切って複数の語を指定することも可能です(AND または OR 検索)。<br>
+      先頭や末尾の半角空白は無視されます。このような場合、正規表現では <b>\x20</b> を用いてください。<br>
+      正規表現でない場合、<b>\s</b> は半角空白、<b>\t</b> はタブ文字とみなされます。<br>
+    </dd>
 
-<dt class="no_bg">マスク <img src="edit.png" alt="">
-<dd>検索するファイルのマスクを指定します。マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
-<a href="hid00063.htm#GrepSetMask">GrepSetMask</a> 補助コマンドや、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
-なおカレントで選択項目がある場合は、それらが検索対象となり、マスクは無視されます。<br>
-入力欄の幅は、<b>除外ディレクトリ</b>欄との間にある境界線をドラッグすることで変更できます。<br>
-<b>例</b>: <span class="inp_box">*.txt;*.cpp;*.c;*.h </span>
+    <dt class="no_bg">マスク <img src="edit.png" alt=""></dt>
+    <dd>検索するファイルのマスクを指定します。マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
+      <a href="hid00063.htm#GrepSetMask">GrepSetMask</a> 補助コマンドや、<a href="hid00075.htm">.nyanfi ファイルによる設定</a>も可能です。<br>
+      なおカレントで選択項目がある場合は、それらが検索対象となり、マスクは無視されます。<br>
+      入力欄の幅は、<b>除外ディレクトリ</b>欄との間にある境界線をドラッグすることで変更できます。<br>
+      <b>例</b>: <span class="inp_box">*.txt;*.cpp;*.c;*.h </span>
+    </dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> サブディレクトリ
-<dd>サブディレクトリも検索対象とします。ディレクトリの深さも指定できます(カレントは0、サブディレクトリが1、その下が2…)。<br>
-なおカレントでディレクトリを選択している場合、チェックしていなくても、その中のファイル(深さ1)は対象となります。<br>
+    <dt class="no_bg"><img src="chkbox.png" alt=""> サブディレクトリ</dt>
+    <dd>サブディレクトリも検索対象とします。ディレクトリの深さも指定できます(カレントは0、サブディレクトリが1、その下が2…)。<br>
+      なおカレントでディレクトリを選択している場合、チェックしていなくても、その中のファイル(深さ1)は対象となります。<br>
+    </dd>
 
-<dt class="no_bg">除外ディレクトリ <img src="edit.png" alt="">
-<dd>検索から除外するディレクトリのマスクを指定します。マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
-なおカレントで選択されているディレクトリは除外されません。<br>
-<b>例</b>: <span class="inp_box">__*;backup;test;temp </span>
+    <dt class="no_bg">除外ディレクトリ <img src="edit.png" alt=""></dt>
+    <dd>検索から除外するディレクトリのマスクを指定します。マスクは <b>;</b> (セミコロン)で区切って複数指定できます。<br>
+      なおカレントで選択されているディレクトリは除外されません。<br>
+      <b>例</b>: <span class="inp_box">__*;backup;test;temp </span>
+    </dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> 正規表現
-<dd>検索に正規表現を用います。<br>
-入力内容が正しくない場合、背景色が変わり(<a href="hid00023.htm">オプション設定 - フォント・配色</a> 「不正な入力項目の背景色」)、<span class="btn_frame">開始</span>ボタンを押せません。<br>
-なお検索文字列欄の右クリックメニューから、正規表現を参照できます。<br>
+    <dt class="no_bg"><img src="chkbox.png" alt=""> 正規表現</dt>
+    <dd>検索に正規表現を用います。<br>
+      入力内容が正しくない場合、背景色が変わり(<a href="hid00023.htm">オプション設定 - フォント・配色</a> 「不正な入力項目の背景色」)、<span
+        class="btn_frame">開始</span>ボタンを押せません。<br>
+      なお検索文字列欄の右クリックメニューから、正規表現を参照できます。<br>
+    </dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> AND
-<dd>検索語を複数指定している場合に、AND検索を行います。チェックを外すとOR検索になります。
+    <dt class="no_bg"><img src="chkbox.png" alt=""> AND</dt>
+    <dd>検索語を複数指定している場合に、AND検索を行います。チェックを外すとOR検索になります。</dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> 大小区別
-<dd>大文字・小文字を区別して検索します。
+    <dt class="no_bg"><img src="chkbox.png" alt=""> 大小区別</dt>
+    <dd>大文字・小文字を区別して検索します。</dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> 1マッチ
-<dd>そのファイルで一箇所マッチしたらそれ以降の検索を止め、次のファイルに移ります。
+    <dt class="no_bg"><img src="chkbox.png" alt=""> 1マッチ</dt>
+    <dd>そのファイルで一箇所マッチしたらそれ以降の検索を止め、次のファイルに移ります。</dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> タグ除外
-<dd>ファイルがHTML文書の場合、HTMLタグ部分を除外して検索します。<br>
-HTML文書以外のファイルに対しては機能しません。
+    <dt class="no_bg"><img src="chkbox.png" alt=""> タグ除外</dt>
+    <dd>ファイルがHTML文書の場合、HTMLタグ部分を除外して検索します。<br>
+      HTML文書以外のファイルに対しては機能しません。
+    </dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> 次行表示
-<dd>結果リストに、マッチした行以降の3行(空行は除く)を改行マークで区切って表示します。<br>
-検索終了後に変更した場合にも、表示が切り替わります。
-</dl>
-<br>
+    <dt class="no_bg"><img src="chkbox.png" alt=""> 次行表示</dt>
+    <dd>結果リストに、マッチした行以降の3行(空行は除く)を改行マークで区切って表示します。<br>
+      検索終了後に変更した場合にも、表示が切り替わります。
+    </dd>
+  </dl>
+  <br>
 
-<hr>
+  <hr>
 
-<p id="Option">
-<span class="btn_frame">拡張設定</span>ボタンを押すと、<b>拡張設定</b>ダイアログが開きます(二重起動した <b>NyanFi</b> では開けません)。<br>
-設定を行うことにより、検索終了後に、ファイルやクリップボードに結果リストを出力し、指定アプリケーションを起動したりできます。<br>
-</p>
+  <p id="Option">
+    <span class="btn_frame">拡張設定</span>ボタンを押すと、<b>拡張設定</b>ダイアログが開きます(二重起動した <b>NyanFi</b> では開けません)。<br>
+    設定を行うことにより、検索終了後に、ファイルやクリップボードに結果リストを出力し、指定アプリケーションを起動したりできます。<br>
+  </p>
 
-<dl>
-<dt><img src="grpbox.png" alt=""> 出力方法
-<dd>検索終了時の結果リストの出力方法を設定します。
+  <dl>
+    <dt><img src="grpbox.png" alt=""> 出力方法</dt>
+    <dd>検索終了時の結果リストの出力方法を設定します。</dd>
 
-<dt class="no_bg_indent1"><img src="grpbox.png" alt=""> 出力先
-<dd>出力先を指定します。「無し」を選んだ場合は、検索終了時に何も行いません。
-<dt class="no_bg_indent1"><img src="grpbox.png" alt=""> 出力ファイル
-<dd>出力先で「ファイル」を選んだ場合、ファイル名を指定してください。ドライブ指定がない場合 NyanFi ディレクトリからの相対パスとみなされます。ファイルはUnicode(UTF-8 BOM付き)で保存されます。<br>
-<img src="chkbox.png" alt=""> <b>既存ファイルがあれば追加</b> をチェックすると、既存の出力ファイルに結果を追加していきます。
+    <dt class="no_bg_indent1"><img src="grpbox.png" alt=""> 出力先</dt>
+    <dd>出力先を指定します。「無し」を選んだ場合は、検索終了時に何も行いません。</dd>
 
-<dt class="no_bg_indent1"><img src="grpbox.png" alt=""> 起動アプリケーション
-<dd>結果出力後に、外部アプリケーションを起動したい場合に設定してください。チェックを外していると起動しません。<br>
-実行ファイル名には以下の書式文字列が使えます。<br>
-　<b>$X</b>　<b>NyanFi</b> の起動パス(末尾の \ は無し)<br>
-　<b>$D</b>　<b>NyanFi</b> の起動ドライブ(末尾の \ は無し、例: &quot;D:&quot;)<br>
-　<b>$$</b>　$ そのもの<br>
-また &quot;%変数名%&quot; という書式で環境変数を用いることも可能です。<br>
-出力ファイルを渡したい場合は、<b>パラメータ</b>に書式文字列 <b>$F</b> を指定してください。また既存ファイルに追加する場合、<b>$L</b> (行番号) も指定すると、追加した先頭位置に移動できます。<br>
-<br>
+    <dt class="no_bg_indent1"><img src="grpbox.png" alt=""> 出力ファイル</dt>
+    <dd>出力先で「ファイル」を選んだ場合、ファイル名を指定してください。ドライブ指定がない場合 NyanFi ディレクトリからの相対パスとみなされます。ファイルはUnicode(UTF-8 BOM付き)で保存されます。<br>
+      <img src="chkbox.png" alt=""> <b>既存ファイルがあれば追加</b> をチェックすると、既存の出力ファイルに結果を追加していきます。
+    </dd>
 
-<dt><img src="grpbox.png" alt=""> 出力形式
-<dd>結果出力の形式を設定します。<br>
-なおこの設定は、ファイルメニューの「<b>検索結果に名前を付けて保存</b>」や、編集メニューの「<b>検索結果をクリップボードにコピー</b>」の際にも用いられます。<br>
-<dt class="no_bg_indent1">ファイル情報の書式 <img src="edit.png" alt="">
-<dd>ファイル名や行番号の書式を指定します。<br>
-書式には以下の書式文字列を使えます。空欄の場合は &quot;<b>$F $L:</b>&quot; とみなされます。<br>
-　<b>$F</b> : パス付ファイル名<br>
-　<b>$B</b> : パス無しファイル名<br>
-　<b>$L</b> : 行番号<br>
-　<b>\t</b> : タブ<br>
-　<b>\n</b> : 改行<br>
-　<b>\s</b> : 空白 (&quot; &quot; でよいのですが、わかりやするために)<br>
-　<b>\\</b> : \ そのもの<br>
+    <dt class="no_bg_indent1"><img src="grpbox.png" alt=""> 起動アプリケーション</dt>
+    <dd>結果出力後に、外部アプリケーションを起動したい場合に設定してください。チェックを外していると起動しません。<br>
+      実行ファイル名には以下の書式文字列が使えます。<br>
+      　<b>$X</b>　<b>NyanFi</b> の起動パス(末尾の \ は無し)<br>
+      　<b>$D</b>　<b>NyanFi</b> の起動ドライブ(末尾の \ は無し、例: &quot;D:&quot;)<br>
+      　<b>$$</b>　$ そのもの<br>
+      また &quot;%変数名%&quot; という書式で環境変数を用いることも可能です。<br>
+      出力ファイルを渡したい場合は、<b>パラメータ</b>に書式文字列 <b>$F</b> を指定してください。また既存ファイルに追加する場合、<b>$L</b> (行番号) も指定すると、追加した先頭位置に移動できます。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1">マッチ語前後の挿入文字列 <img src="edit.png" alt="">
-<dd>マッチした語の前後に文字列を挿入できます。書式文字列は <b>\t</b>、<b>\n</b>、<b>\s</b> および <b>\\</b>を使えます。
+    <dt><img src="grpbox.png" alt=""> 出力形式</dt>
+    <dd>結果出力の形式を設定します。<br>
+      なおこの設定は、ファイルメニューの「<b>検索結果に名前を付けて保存</b>」や、編集メニューの「<b>検索結果をクリップボードにコピー</b>」の際にも用いられます。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 行頭のタブや空白を削除
-<dd>
-マッチ行以降で、行頭にタブや空白があったら削除します。
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> タブを空白1文字に置換
-<dd>マッチ行以降で、タブを空白1文字に置換します。ただし、削除された行頭のタブは置換されません。
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 改行を文字列に置換
-<dd>マッチ行以降の改行(最後尾を除く)を、指定した文字列に置換します。
-</dl>
-<br><br>
+    <dt class="no_bg_indent1">ファイル情報の書式 <img src="edit.png" alt=""></dt>
+    <dd>ファイル名や行番号の書式を指定します。<br>
+      書式には以下の書式文字列を使えます。空欄の場合は &quot;<b>$F $L:</b>&quot; とみなされます。<br>
+      　<b>$F</b> : パス付ファイル名<br>
+      　<b>$B</b> : パス無しファイル名<br>
+      　<b>$L</b> : 行番号<br>
+      　<b>\t</b> : タブ<br>
+      　<b>\n</b> : 改行<br>
+      　<b>\s</b> : 空白 (&quot; &quot; でよいのですが、わかりやするために)<br>
+      　<b>\\</b> : \ そのもの<br>
+    </dd>
+
+    <dt class="no_bg_indent1">マッチ語前後の挿入文字列 <img src="edit.png" alt=""></dt>
+    <dd>マッチした語の前後に文字列を挿入できます。書式文字列は <b>\t</b>、<b>\n</b>、<b>\s</b> および <b>\\</b>を使えます。</dd>
+
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 行頭のタブや空白を削除</dt>
+    <dd>マッチ行以降で、行頭にタブや空白があったら削除します。</dd>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> タブを空白1文字に置換</dt>
+    <dd>マッチ行以降で、タブを空白1文字に置換します。ただし、削除された行頭のタブは置換されません。</dd>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 改行を文字列に置換</dt>
+    <dd>マッチ行以降の改行(最後尾を除く)を、指定した文字列に置換します。</dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

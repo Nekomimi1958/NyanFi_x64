@@ -1,90 +1,104 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>ディレクトリ名検索ダイアログ</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="FindDirDlg">
-	<param name="Keyword" value="ディレクトリ名検索ダイアログ">
-	<param name="Keyword" value="ライブラリファイル">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>ディレクトリ名検索ダイアログ</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="FindDirDlg">
+    <param name="Keyword" value="ディレクトリ名検索ダイアログ">
+    <param name="Keyword" value="ライブラリファイル">
+  </object>
 </head>
 
 <body>
 
-<h1>ディレクトリ名検索ダイアログ</h1>
-<p>
-ファイラーで <a href="hid00005.htm#FindDirDlg">FindDirDlg</a> コマンドを実行するとこのダイアログが開きます。<br>
-指定したマスク、および更新日付、属性、内容の条件にマッチするディレクトリをカレントパス下(すべてのサブディレクトリを含む)で検索します。<br>
-カレントにあるライブラリファイル(<b>.library-ms</b>)はディレクトリの集合とみなします。ディレクトリが選択されている場合は、そのディレクトリ下が対象になります。
-</p>
+  <h1>ディレクトリ名検索ダイアログ</h1>
+  <p>
+    ファイラーで <a href="hid00005.htm#FindDirDlg">FindDirDlg</a> コマンドを実行するとこのダイアログが開きます。<br>
+    指定したマスク、および更新日付、属性、内容の条件にマッチするディレクトリをカレントパス下(すべてのサブディレクトリを含む)で検索します。<br>
+    カレントにあるライブラリファイル(<b>.library-ms</b>)はディレクトリの集合とみなします。ディレクトリが選択されている場合は、そのディレクトリ下が対象になります。
+  </p>
 
-<dl>
-<dt class="no_bg_indent1"><img src="combobox.png" alt=""> マスク
-<dd>必用ならマスクを指定します。マスクには &quot;<b>*</b>&quot; または &quot;<b>?</b>&quot; のワイルドカード文字を含めることができます。<br>
-空欄の場合は &quot;<b>*</b>&quot; とみなされます。<br>
-<br>
+  <dl>
+    <dt class="no_bg_indent1"><img src="combobox.png" alt=""> マスク</dt>
+    <dd>必用ならマスクを指定します。マスクには &quot;<b>*</b>&quot; または &quot;<b>?</b>&quot; のワイルドカード文字を含めることができます。<br>
+      空欄の場合は &quot;<b>*</b>&quot; とみなされます。<br>
+      <br>
+    </dd>
 
-<dt><img src="grpbox.png" alt=""> 更新日付
-<dd>
-<span class="btn_frame">本日</span>ボタンを押すと、今日の日付が設定されます。また<span class="btn_frame">-1D</span>ボタンでは現在設定されている日付に対して相対的に1日前、また<span class="btn_frame">-7D</span>ボタンでは7日前、<span class="btn_frame">-1M</span>ボタンでは1月前、<span class="btn_frame">-1Y</span>ボタンでは1年前に変更します。<br>
-条件が「<b>以前</b>」の場合、設定されている日付を含めて、それより古いディレクトリがマッチします。<br>
-条件が「<b>以降</b>」の場合、設定されている日付を含めて、それより新しいディレクトリがマッチします。<br>
-条件が「<b>一致</b>」の場合、日付の設定にワイルドカード <b>?</b> を使えます。<br>
-　<b>例</b>: <span class="inp_box">2016/01/??</span> 2016年1月のディレクトリを検索<br>
-<br>
+    <dt><img src="grpbox.png" alt=""> 更新日付</dt>
+    <dd>
+      <span class="btn_frame">本日</span>ボタンを押すと、今日の日付が設定されます。また<span
+        class="btn_frame">-1D</span>ボタンでは現在設定されている日付に対して相対的に1日前、また<span class="btn_frame">-7D</span>ボタンでは7日前、<span
+        class="btn_frame">-1M</span>ボタンでは1月前、<span class="btn_frame">-1Y</span>ボタンでは1年前に変更します。<br>
+      条件が「<b>以前</b>」の場合、設定されている日付を含めて、それより古いディレクトリがマッチします。<br>
+      条件が「<b>以降</b>」の場合、設定されている日付を含めて、それより新しいディレクトリがマッチします。<br>
+      条件が「<b>一致</b>」の場合、日付の設定にワイルドカード <b>?</b> を使えます。<br>
+      　<b>例</b>: <span class="inp_box">2016/01/??</span> 2016年1月のディレクトリを検索<br>
+      <br>
+    </dd>
 
-<dt><img src="grpbox.png" alt=""> 属性
-<dd>
-条件が「<b>含む</b>」の場合、チェックしている属性のいずれかが含まれるディレクトリがマッチします。<br>
-条件が「<b>含まない</b>」の場合、チェックしている属性のいずれも含まれないディレクトリがマッチします。<br>
-なお <a href="hid00009.htm#Show">オプション設定 - 一般 - 表示</a> で、隠しファイル属性やシステムファイル属性を非表示にしている場合、それらは条件として設定できません。
+    <dt><img src="grpbox.png" alt=""> 属性</dt>
+    <dd>
+      条件が「<b>含む</b>」の場合、チェックしている属性のいずれかが含まれるディレクトリがマッチします。<br>
+      条件が「<b>含まない</b>」の場合、チェックしている属性のいずれも含まれないディレクトリがマッチします。<br>
+      なお <a href="hid00009.htm#Show">オプション設定 - 一般 - 表示</a> で、隠しファイル属性やシステムファイル属性を非表示にしている場合、それらは条件として設定できません。
+    </dd>
 
-<dt><img src="grpbox.png" alt=""> 内容
-<dd>
-条件が「<b>空</b>」の場合、空のディレクトリがマッチします。 <br>
-条件が「<b>空でない</b>」の場合、空でないディレクトリがマッチします。<br>
+    <dt><img src="grpbox.png" alt=""> 内容</dt>
+    <dd>
+      条件が「<b>空</b>」の場合、空のディレクトリがマッチします。 <br>
+      条件が「<b>空でない</b>」の場合、空でないディレクトリがマッチします。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 好ましくないディレクトリ名<br>
-<dd>長すぎるパス名や、先頭/末尾の全角/半角空白、連続した半角空白、サロゲートペア文字、環境依存文字(ローマ数字、囲み文字、単位記号、合成文字など)、RLO文字を含む名前がマッチします。<br>
-マッチ理由はファイル情報で確認できます。<br>
-<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 好ましくないディレクトリ名</dt>
+    <dd>長すぎるパス名や、先頭/末尾の全角/半角空白、連続した半角空白、サロゲートペア文字、環境依存文字(ローマ数字、囲み文字、単位記号、合成文字など)、RLO文字を含む名前がマッチします。<br>
+      マッチ理由はファイル情報で確認できます。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 結果リストから反対側へ反映
-<dd>
-チェックすると、検索の結果リストでカーソルを移動した際に、反対パスがカーソル位置のディレクトリに自動的に変更されます。
-チェックしていない場合でも、<a href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドを実行すると、個々に同様の動作が可能です。
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 結果リストから反対側へ反映</dt>
+    <dd>
+      チェックすると、検索の結果リストでカーソルを移動した際に、反対パスがカーソル位置のディレクトリに自動的に変更されます。
+      チェックしていない場合でも、<a href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドを実行すると、個々に同様の動作が可能です。
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ディレクトリ名を反映
-<dd>
-「<b>結果リストから反対側へ反映</b>」がチェックされている場合、反対パスを、カーソル位置のディレクトリの親ディレクトリに変更し、その中の当該ディレクトリに点線カーソルを表示します。<a href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドを実行した場合も同様になります。<br>
-<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ディレクトリ名を反映</dt>
+    <dd>
+      「<b>結果リストから反対側へ反映</b>」がチェックされている場合、反対パスを、カーソル位置のディレクトリの親ディレクトリに変更し、その中の当該ディレクトリに点線カーソルを表示します。<a
+        href="hid00005.htm#CurrToOpp">CurrToOpp</a> コマンドを実行した場合も同様になります。<br>
+      <br>
+    </dd>
+  </dl>
 
-</dl>
+  <p>
+    更新日付、属性、内容で無効になっているものは、わかりやすいように背景がグレー表示になります(<a href="hid00023.htm">オプション設定 - フォント・配色</a> 「無効な項目の背景色」で変更可能)。
+  </p>
 
-<p>
-更新日付、属性、内容で無効になっているものは、わかりやすいように背景がグレー表示になります(<a href="hid00023.htm">オプション設定 - フォント・配色</a> 「無効な項目の背景色」で変更可能)。
-</p>
+  <p>
+    検索中にディレクトリが見つかるとカレント側に表示されていきます。また、ステータスバー(非表示の場合はドライブ情報部分)には検索状況が表示されます。括弧内の数字はヒット数です。<br>
+    検索を中断したい場合は<span class="btn_frame">ESC</span>キーを押してください。<br>
+    なお検索中は、カーソル移動以外の操作はできません。
+  </p>
 
-<p>
-検索中にディレクトリが見つかるとカレント側に表示されていきます。また、ステータスバー(非表示の場合はドライブ情報部分)には検索状況が表示されます。括弧内の数字はヒット数です。<br>
-検索を中断したい場合は<span class="btn_frame">ESC</span>キーを押してください。<br>
-なお検索中は、カーソル移動以外の操作はできません。
-</p>
-
-<hr>
-<p>
-検索が終わると、カレント側に結果リストが表示されます。<br>
-<a href="hid00010.htm#FileList">オプション設定 - デザイン</a> - <b>ファイルリスト</b> で「<b>結果リストに「場所」列を表示</b>」をチェックしていると、結果リストに「<b>場所</b>」列が表示され、パス付きファイル名に基づくソートが行われます。<br>
-</p>
-<p>
-項目上で<span class="btn_frame">ENTER</span>キーを押すと、結果リストから抜けて、そのディレクトリに移動します。<br>
-通常のファイルリスト表示に戻るには、<span class="btn_frame">ESC</span>キーを押すか、&quot;<b>..</b>&quot; で<span class="btn_frame">ENTER</span>キーを押してください。<br>
-<a href="hid00005.htm#ReturnList">ReturnList</a> コマンドや <a href="hid00005.htm#ToParent">ToParent</a> コマンドでも戻れます。<br>
-なお、<span class="btn_frame">ESC</span>キーに <a href="hid00005.htm#ExeCommands">ExeCommands</a> コマンドが割り当てられている場合は、それが優先的に実行されます。
-</p>
-<br><br>
+  <hr>
+  <p>
+    検索が終わると、カレント側に結果リストが表示されます。<br>
+    <a href="hid00010.htm#FileList">オプション設定 - デザイン</a> - <b>ファイルリスト</b>
+    で「<b>結果リストに「場所」列を表示</b>」をチェックしていると、結果リストに「<b>場所</b>」列が表示され、パス付きファイル名に基づくソートが行われます。<br>
+  </p>
+  <p>
+    項目上で<span class="btn_frame">ENTER</span>キーを押すと、結果リストから抜けて、そのディレクトリに移動します。<br>
+    通常のファイルリスト表示に戻るには、<span class="btn_frame">ESC</span>キーを押すか、&quot;<b>..</b>&quot; で<span
+      class="btn_frame">ENTER</span>キーを押してください。<br>
+    <a href="hid00005.htm#ReturnList">ReturnList</a> コマンドや <a href="hid00005.htm#ToParent">ToParent</a> コマンドでも戻れます。<br>
+    なお、<span class="btn_frame">ESC</span>キーに <a href="hid00005.htm#ExeCommands">ExeCommands</a>
+    コマンドが割り当てられている場合は、それが優先的に実行されます。
+  </p>
+  <br><br>
 
 </body>
+
 </html>

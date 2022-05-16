@@ -1,67 +1,79 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>拡張子別一覧</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="Mark">
-	<param name="Keyword" value="MarkList">
-	<param name="Keyword" value="MaskFind">
-	<param name="Keyword" value="ReturnList">
-	<param name="Keyword" value="ToLeft">
-	<param name="Keyword" value="ToRight">
-	<param name="Keyword" value="マウスホイール">
-	<param name="Keyword" value="ライブラリファイル">
-	<param name="Keyword" value="拡張子別一覧">
-	<param name="Keyword" value="頭文字サーチ">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>拡張子別一覧</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="Mark">
+    <param name="Keyword" value="MarkList">
+    <param name="Keyword" value="MaskFind">
+    <param name="Keyword" value="ReturnList">
+    <param name="Keyword" value="ToLeft">
+    <param name="Keyword" value="ToRight">
+    <param name="Keyword" value="マウスホイール">
+    <param name="Keyword" value="ライブラリファイル">
+    <param name="Keyword" value="拡張子別一覧">
+    <param name="Keyword" value="頭文字サーチ">
+  </object>
 </head>
 
 <body>
 
-<h1>拡張子別一覧</h1>
-<p>
-ファイラーで <a href="hid00005.htm#FileExtList">FileExtList</a> コマンドを実行すると <b>拡張子別一覧</b> が開き、カレント以下のすべてのファイルを検索して、拡張子毎のファイル数やサイズを一覧表示します。なお、カレントにあるライブラリファイル(<b>.library-ms</b>)はディレクトリの集合とみなして登録場所を検索します。<br>
-検索を中断したい場合は、<span class="btn_frame">ESC</span>キーを押してください。<br>
-</p>
+  <h1>拡張子別一覧</h1>
+  <p>
+    ファイラーで <a href="hid00005.htm#FileExtList">FileExtList</a> コマンドを実行すると <b>拡張子別一覧</b>
+    が開き、カレント以下のすべてのファイルを検索して、拡張子毎のファイル数やサイズを一覧表示します。なお、カレントにあるライブラリファイル(<b>.library-ms</b>)はディレクトリの集合とみなして登録場所を検索します。<br>
+    検索を中断したい場合は、<span class="btn_frame">ESC</span>キーを押してください。<br>
+  </p>
 
-<p>
-一覧のヘッダをクリックするとソート方法を切り替えられます(右クリックメニューでも可能)。<br>
-ファイルリストがアイコン表示になっている場合、拡張子一覧もアイコン表示になります。<br>
-またカーソル位置拡張子のファイル一覧が下に表示されます(最大1000ファイルまで)。<br>
-</p>
-<p class="note_text">
-※システムディレクトリなどでは、アクセスを拒否されて取得できない場合があります。<br>
-</p>
+  <p>
+    一覧のヘッダをクリックするとソート方法を切り替えられます(右クリックメニューでも可能)。<br>
+    ファイルリストがアイコン表示になっている場合、拡張子一覧もアイコン表示になります。<br>
+    またカーソル位置拡張子のファイル一覧が下に表示されます(最大1000ファイルまで)。<br>
+  </p>
+  <p class="note_text">
+    ※システムディレクトリなどでは、アクセスを拒否されて取得できない場合があります。<br>
+  </p>
 
-<dl>
-<dt class="no_bg">一覧でのキー操作
-<dd>
-一覧でのカーソル移動などは、ファイラーやテキストビュアーで割り当てられているのと同じキー操作や、テキストビュアーで割り当てられているマウスホイール操作によってできます(CursorDown/Up/Top/End、PageDown/Up、ScrollDown/Up、ScrollCursorDown/Up(TV)、SelAll～、SelectAll(TV)、Close(TV) コマンドに対応)。<br>
-拡張子一覧とファイル一覧との間は、<span class="btn_frame">TAB</span>キーで行き来できます。さらに、拡張子一覧からは、<span class="btn_frame">ENTER</span>キーや、ファイラーで <a href="hid00005.htm#ToRight">ToRight</a> に割り当てられているキーでファイル一覧へ、ファイル一覧からは、<a href="hid00005.htm#ToLeft">ToLeft</a> に割り当てられているキーで拡張子一覧へ移れます。<br>
-画面を閉じたい場合は、<span class="btn_frame">ESC</span>(or <span class="btn_frame">Alt</span>+<span class="btn_frame">F4</span>)キーを押すか、<a href="hid00005.htm#ReturnList">ReturnList</a> が割り当てられているキーを押してください。<br>
+  <dl>
+    <dt class="no_bg">一覧でのキー操作</dt>
+    <dd>
+      一覧でのカーソル移動などは、ファイラーやテキストビュアーで割り当てられているのと同じキー操作や、テキストビュアーで割り当てられているマウスホイール操作によってできます(CursorDown/Up/Top/End、PageDown/Up、ScrollDown/Up、ScrollCursorDown/Up(TV)、SelAll～、SelectAll(TV)、Close(TV)
+      コマンドに対応)。<br>
+      拡張子一覧とファイル一覧との間は、<span class="btn_frame">TAB</span>キーで行き来できます。さらに、拡張子一覧からは、<span
+        class="btn_frame">ENTER</span>キーや、ファイラーで <a href="hid00005.htm#ToRight">ToRight</a>
+      に割り当てられているキーでファイル一覧へ、ファイル一覧からは、<a href="hid00005.htm#ToLeft">ToLeft</a> に割り当てられているキーで拡張子一覧へ移れます。<br>
+      画面を閉じたい場合は、<span class="btn_frame">ESC</span>(or <span class="btn_frame">Alt</span>+<span
+        class="btn_frame">F4</span>)キーを押すか、<a href="hid00005.htm#ReturnList">ReturnList</a> が割り当てられているキーを押してください。<br>
 
-<div class="spc_box">
-ファイル一覧で <span class="btn_frame">ENTER</span>キーを押すと、ダイアログが閉じ、そのファイル位置に移動します。<br>
-ファイラーで <a href="hid00005.htm#Mark">Mark</a>[_ND] が割り当てられているキーを押すと、カーソル位置ファイルのマーク設定/解除が可能です。<br>
-カーソル位置のファイルに対して、<a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> コマンド(パラメータは無視)が割り当てられているキーを押すとファイル情報ダイアログが、<a href="hid00005.htm#PropertyDlg">PropertyDlg</a> コマンドが割り当てられているキーを押すとプロパティダイアログが表示されます(右クリックメニューからも可能)。<br>
-なお、2ストロークキー操作には対応していません。<br>
-</div>
+      <div class="spc_box">
+        ファイル一覧で <span class="btn_frame">ENTER</span>キーを押すと、ダイアログが閉じ、そのファイル位置に移動します。<br>
+        ファイラーで <a href="hid00005.htm#Mark">Mark</a>[_ND] が割り当てられているキーを押すと、カーソル位置ファイルのマーク設定/解除が可能です。<br>
+        カーソル位置のファイルに対して、<a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a>
+        コマンド(パラメータは無視)が割り当てられているキーを押すとファイル情報ダイアログが、<a href="hid00005.htm#PropertyDlg">PropertyDlg</a>
+        コマンドが割り当てられているキーを押すとプロパティダイアログが表示されます(右クリックメニューからも可能)。<br>
+        なお、2ストロークキー操作には対応していません。<br>
+      </div>
+    </dd>
 
-<dt class="no_bg">右クリックメニュー
-<dd>
-右クリックメニューでは、拡張子一覧およびファイル一覧それぞれに対して、「<b>一覧をクリップボードにコピー</b>」、「<b>一覧をログに出力</b>」、「<b>一覧をファイルに保存</b>」が可能です。また拡張子一覧では、「<b>一覧をCSV形式で保存</b>」、「<b>一覧をTSV形式で保存</b>」(拡張子、ファイル数、合計サイズ、平均サイズ)も可能です。<br>
-「<b>拡張子でマスク検索</b>」を選ぶと、カーソル位置の拡張子をマスクとし、ファイラーに戻ってファイル検索を実行します(<a href="hid00005.htm#MaskFind">→ MaskFind</a>)。
-<br>
-<div class="spc_box">
-「<b>サイズと位置をファイルリストに合わせる</b>」では、メイン画面のファイルリスト全体を覆うように、ダイアログの位置とサイズを調整します。<br>
-</div>
-<div class="spc_box">
-なお右クリックメニューは、アプリケーションキーや<span class="btn_frame">Shift</span>+<span class="btn_frame">F10</span>キーの他に、ファイラーで <a href="hid00005.htm#ContextMenu">ContextMenu</a> コマンドが割り当てられているキーでも表示できます。<br>
-</div>
-</dl>
-<br><br>
+    <dt class="no_bg">右クリックメニュー</dt>
+    <dd>
+      右クリックメニューでは、拡張子一覧およびファイル一覧それぞれに対して、「<b>一覧をクリップボードにコピー</b>」、「<b>一覧をログに出力</b>」、「<b>一覧をファイルに保存</b>」が可能です。また拡張子一覧では、「<b>一覧をCSV形式で保存</b>」、「<b>一覧をTSV形式で保存</b>」(拡張子、ファイル数、合計サイズ、平均サイズ)も可能です。<br>
+      「<b>拡張子でマスク検索</b>」を選ぶと、カーソル位置の拡張子をマスクとし、ファイラーに戻ってファイル検索を実行します(<a href="hid00005.htm#MaskFind">→ MaskFind</a>)。
+      <br>
+      <div class="spc_box">
+        「<b>サイズと位置をファイルリストに合わせる</b>」では、メイン画面のファイルリスト全体を覆うように、ダイアログの位置とサイズを調整します。<br>
+      </div>
+      <div class="spc_box">
+        なお右クリックメニューは、アプリケーションキーや<span class="btn_frame">Shift</span>+<span class="btn_frame">F10</span>キーの他に、ファイラーで <a
+          href="hid00005.htm#ContextMenu">ContextMenu</a> コマンドが割り当てられているキーでも表示できます。<br>
+      </div>
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

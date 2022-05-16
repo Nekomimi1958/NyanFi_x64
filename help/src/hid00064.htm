@@ -1,62 +1,77 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>ドライブ一覧</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="autorun.inf">
-	<param name="Keyword" value="DriveGraph">
-	<param name="Keyword" value="DriveList">
-	<param name="Keyword" value="EjectDrive">
-	<param name="Keyword" value="ドライブの取り外し">
-	<param name="Keyword" value="ドライブ一覧">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>ドライブ一覧</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="autorun.inf">
+    <param name="Keyword" value="DriveGraph">
+    <param name="Keyword" value="DriveList">
+    <param name="Keyword" value="EjectDrive">
+    <param name="Keyword" value="ドライブの取り外し">
+    <param name="Keyword" value="ドライブ一覧">
+  </object>
 </head>
 
 <body>
 
-<h1>ドライブ一覧</h1>
-<p>
-ファイラーで <a href="hid00005.htm#DriveList">DriveList</a> コマンドを実行するとこのダイアログが開きます。<br>
-ドライブ文字のキーを押すと、そのドライブに移動します。<br>
-移動せずに画面を閉じたい場合は、<span class="btn_frame">ESC</span>(or <span class="btn_frame">Alt</span>+<span class="btn_frame">F4</span>)キーを押してください。
-</p>
+  <h1>ドライブ一覧</h1>
+  <p>
+    ファイラーで <a href="hid00005.htm#DriveList">DriveList</a> コマンドを実行するとこのダイアログが開きます。<br>
+    ドライブ文字のキーを押すと、そのドライブに移動します。<br>
+    移動せずに画面を閉じたい場合は、<span class="btn_frame">ESC</span>(or <span class="btn_frame">Alt</span>+<span
+      class="btn_frame">F4</span>)キーを押してください。
+  </p>
 
-<dl>
-<dt class="no_bg">一覧の表示内容
-<dd>
-一覧には、呼び出しキー(ドライブ文字)、ボリューム名、種類および接続インターフェイス、使用容量、空き容量、全体容量、ファイルシステムが表示されます。<br>
-Windwos 7 以降では HDD と SSD を判別して表示可能。また、デバイス情報が取得できず、かつサイズが物理メモリの使用容量より小さい固定ドライブはRAMディスクと推測して表示します。なお、記憶域スペースの場合、接続インターフェイスは <b>SPACE</b> と表示されます。<br>
-全体容量の下には使用率グラフが表示されます。バーの色は、50%以下で緑、50%～100%では緑～黄～赤と変化します。<br>
-種類の表示が収まらない場合、内容を順次省略していきます(例: リムーバブル・メディア → リムーバブル → RM → (I/F)を省略)。また使用容量、空き容量の表示が収まらない場合、パーセント表示を省略します。列幅を16px未満に狭めると、その項目が非表示になります。<br>
-なおネットワークドライブや仮想ドライブの場合、ボリューム列には、UNCパスや対応ディレクトリ名(余裕があればパス付き)が表示され、さらに余裕があればボリューム名も表示されます。<br>
+  <dl>
+    <dt class="no_bg">一覧の表示内容</dt>
+    <dd>
+      一覧には、呼び出しキー(ドライブ文字)、ボリューム名、種類および接続インターフェイス、使用容量、空き容量、全体容量、ファイルシステムが表示されます。<br>
+      Windwos 7 以降では HDD と SSD
+      を判別して表示可能。また、デバイス情報が取得できず、かつサイズが物理メモリの使用容量より小さい固定ドライブはRAMディスクと推測して表示します。なお、記憶域スペースの場合、接続インターフェイスは <b>SPACE</b>
+      と表示されます。<br>
+      全体容量の下には使用率グラフが表示されます。バーの色は、50%以下で緑、50%～100%では緑～黄～赤と変化します。<br>
+      種類の表示が収まらない場合、内容を順次省略していきます(例: リムーバブル・メディア → リムーバブル → RM →
+      (I/F)を省略)。また使用容量、空き容量の表示が収まらない場合、パーセント表示を省略します。列幅を16px未満に狭めると、その項目が非表示になります。<br>
+      なおネットワークドライブや仮想ドライブの場合、ボリューム列には、UNCパスや対応ディレクトリ名(余裕があればパス付き)が表示され、さらに余裕があればボリューム名も表示されます。<br>
+    </dd>
 
-<dt class="no_bg">操作
-<dd>
-<span class="btn_frame">プロパティ</span>ボタンを押すと、選択されているドライブのプロパティダイアログが表示されます。<br>
-<span class="btn_frame">▲</span>ボタンを押すと、CD/DVDドライブのトレイを開きます。<br>
-<div class="spc_box">
-<span class="btn_frame">取り外し</span>ボタンを押すと、選択されているドライブを取り外せます。<br>
-特定のディレクトリをマウントした仮想ドライブの場合は、それを解除します。<br>
-CD/DVDドライブ(OS機能によってマウントされたISOドライブを含む)の場合は、コンテキストメニューの「<b>取り出し</b>」に相当する処理を適用します(<a href="hid00005.htm#EjectDrive">→ EjectDrive</a>)。これらは右クリックによるコンテキストメニューからも可能です。<br>
-</div>
+    <dt class="no_bg">操作</dt>
+    <dd>
+      <span class="btn_frame">プロパティ</span>ボタンを押すと、選択されているドライブのプロパティダイアログが表示されます。<br>
+      <span class="btn_frame">▲</span>ボタンを押すと、CD/DVDドライブのトレイを開きます。<br>
+      <div class="spc_box">
+        <span class="btn_frame">取り外し</span>ボタンを押すと、選択されているドライブを取り外せます。<br>
+        特定のディレクトリをマウントした仮想ドライブの場合は、それを解除します。<br>
+        CD/DVDドライブ(OS機能によってマウントされたISOドライブを含む)の場合は、コンテキストメニューの「<b>取り出し</b>」に相当する処理を適用します(<a
+          href="hid00005.htm#EjectDrive">→ EjectDrive</a>)。これらは右クリックによるコンテキストメニューからも可能です。<br>
+      </div>
+    </dd>
 
-<dt class="no_bg">オプション
-<dd>
-<img src="chkbox.png" alt=""> <b>アクセス可能のみ表示</b> がチェックされていると、アクセス可能なドライブのみを一覧に表示し、メディアの挿入されていないドライブなどは隠します。<br>
-<img src="chkbox.png" alt=""> <b>アイコンを表示</b> がチェックされていると、ボリュームラベルの前にアイコンが表示されます。このとき <img src="chkbox.png" alt=""> <b>ラージ</b> がチェックされていればラージアイコンが、そうでなければスモールアイコンが表示されます。<br>
-なお、ドライブ(内蔵を含む)のルートに <b>autorun.inf</b> があってアイコンが設定されている場合、それを表示します。<br>
-<img src="chkbox.png" alt=""> <b>ルートに移動</b> がチェックされていると、ドライブに移動した際に、以前のディレクトリではなく、必ずルートディレクトリに移ります。<br>
-右下隅の<span class="btn_frame">∨</span>/<span class="btn_frame">∧</span>ボタン(<span class="btn_frame">Alt</span>+<span class="btn_frame">O</span>キーでも可)で設定パネルを開閉できます。<br>
+    <dt class="no_bg">オプション</dt>
+    <dd>
+      <img src="chkbox.png" alt=""> <b>アクセス可能のみ表示</b> がチェックされていると、アクセス可能なドライブのみを一覧に表示し、メディアの挿入されていないドライブなどは隠します。<br>
+      <img src="chkbox.png" alt=""> <b>アイコンを表示</b> がチェックされていると、ボリュームラベルの前にアイコンが表示されます。このとき <img src="chkbox.png" alt="">
+      <b>ラージ</b> がチェックされていればラージアイコンが、そうでなければスモールアイコンが表示されます。<br>
+      なお、ドライブ(内蔵を含む)のルートに <b>autorun.inf</b> があってアイコンが設定されている場合、それを表示します。<br>
+      <img src="chkbox.png" alt=""> <b>ルートに移動</b> がチェックされていると、ドライブに移動した際に、以前のディレクトリではなく、必ずルートディレクトリに移ります。<br>
+      右下隅の<span class="btn_frame">∨</span>/<span class="btn_frame">∧</span>ボタン(<span class="btn_frame">Alt</span>+<span
+        class="btn_frame">O</span>キーでも可)で設定パネルを開閉できます。<br>
+    </dd>
 
-<dt class="no_bg">コンテキストメニュー
-<dd>
-一覧のコンテキストメニューには、標準的な項目の他に、「<b>ネットワークドライブの割り当て</b>」、「<b>ネットワークドライブの切断</b>」、「<b>ボリューム名の変更</b>」、「<b>最新の情報に更新</b>」、「<a href="hid00086.htm">ドライブ使用率推移</a>」があります。<br>
-プロパティでボリューム名を変更した場合は、「<strong>最新の情報に更新</strong>」で反映されます。<br>
-なお <b>ドライブ使用率推移</b> は、ファイラーで <a href="hid00005.htm#DriveGraph">DriveGraph</a> コマンドが割り当てられているキーで、またコンテキストメニューは <a href="hid00005.htm#ContextMenu">ContextMenu</a> コマンドのキーでも開けます。ただし、キーが単独英字の場合はドライブ選択が優先されます。
-</dl>
-<br><br>
+    <dt class="no_bg">コンテキストメニュー</dt>
+    <dd>
+      一覧のコンテキストメニューには、標準的な項目の他に、「<b>ネットワークドライブの割り当て</b>」、「<b>ネットワークドライブの切断</b>」、「<b>ボリューム名の変更</b>」、「<b>最新の情報に更新</b>」、「<a
+        href="hid00086.htm">ドライブ使用率推移</a>」があります。<br>
+      プロパティでボリューム名を変更した場合は、「<strong>最新の情報に更新</strong>」で反映されます。<br>
+      なお <b>ドライブ使用率推移</b> は、ファイラーで <a href="hid00005.htm#DriveGraph">DriveGraph</a> コマンドが割り当てられているキーで、またコンテキストメニューは <a
+        href="hid00005.htm#ContextMenu">ContextMenu</a> コマンドのキーでも開けます。ただし、キーが単独英字の場合はドライブ選択が優先されます。
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

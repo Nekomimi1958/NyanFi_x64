@@ -6583,6 +6583,7 @@ int get_HardLinkList(UnicodeString fnam, TStringList *o_lst)
 	DWORD exit_code;
 	if (Execute_ex("fsutil", prm, ExtractFileDir(fnam), "OH", &exit_code, o_lst) && exit_code==0) {
 		for (int i=0; i<o_lst->Count; i++) o_lst->Strings[i] = drvstr + o_lst->Strings[i];
+		o_lst->Sort();
 	}
 	return o_lst->Count;
 }
@@ -8686,13 +8687,43 @@ bool get_FileInfList(
 
 		add_PropLine(_T("種類"), tnam, lst, LBFLG_TYPE_FIF);
 
-		//ハードリンク数
+		//------------------------------------------
+		//関連づけされているプログラム
+		//------------------------------------------
+		if (!test_FileExt(fext, FEXT_EXECUTE FEXT_APPINFO _T(".nbt.nwl"))) {
+			_TCHAR pszFile[MAX_PATH*2];
+			DWORD dwOut = MAX_PATH*2;
+			if (::AssocQueryString(ASSOCF_NOTRUNCATE, ASSOCSTR_EXECUTABLE,
+				fext.c_str(), _T("open"), pszFile, &dwOut)==S_OK)
+			{
+				lst->AddObject(
+					UnicodeString().sprintf(_T("%s%s"), get_PropTitle(_T("プログラム")).c_str(), pszFile),
+					(TObject*)LBFLG_PATH_FIF);
+			}
+		}
+
+		//------------------------------------------
+		//ハードリンク数/リンク先
+		//------------------------------------------
 		int lnk_cnt = get_HardLinkCount(fnam);
-		if (lnk_cnt>1) add_PropLine(_T("ハードリンク数"), lnk_cnt, lst);
+		if (lnk_cnt>1) {
+			add_PropLine(_T("ハードリンク数"), lnk_cnt, lst);
+			std::unique_ptr<TStringList> lnk_lst(new TStringList());
+			if (get_HardLinkList(fnam, lnk_lst.get())>1) {
+				int cnt = 0;
+				for (int i=0; i<lnk_lst->Count; i++) {
+					if (SameText(fnam, lnk_lst->Strings[i])) continue;
+					add_PropLine(UnicodeString().sprintf(_T("リンク先%u"), ++cnt),
+						lnk_lst->Strings[i], lst, LBFLG_PATH_FIF);
+				}
+			}
+			if (test_LnkExt(fext)) lst->Add(EmptyStr);	//セパレータ
+		}
 
 		//Git URL
-		if (GitExists && !test_word_i("Remote URL", HideInfItems->Values["\\"]))
+		if (GitExists && !test_word_i("Remote URL", HideInfItems->Values["\\"])) {
 			add_PropLine_if(_T("Remote URL"), get_GitUrl(fp), lst);
+		}
 
 		bool fp_created = false;
 		file_rec *org_fp = fp;
@@ -8726,21 +8757,6 @@ bool get_FileInfList(
 			lst->Add(EmptyStr);	//セパレータ
 			//リンク先基本情報
 			if (file_exists(fp->l_name)) lst->AddObject(get_FileInfStr(fp->l_name), (TObject*)LBFLG_STD_FINF);
-		}
-
-		//------------------------------------------
-		//関連づけされているプログラム
-		//------------------------------------------
-		if (!test_FileExt(fext, FEXT_EXECUTE FEXT_APPINFO _T(".nbt.nwl"))) {
-			_TCHAR pszFile[MAX_PATH*2];
-			DWORD dwOut = MAX_PATH*2;
-			if (::AssocQueryString(ASSOCF_NOTRUNCATE, ASSOCSTR_EXECUTABLE,
-				fext.c_str(), _T("open"), pszFile, &dwOut)==S_OK)
-			{
-				lst->AddObject(
-					UnicodeString().sprintf(_T("%s%s"), get_PropTitle(_T("プログラム")).c_str(), pszFile),
-					(TObject*)LBFLG_PATH_FIF);
-			}
 		}
 
 		//------------------------------------------

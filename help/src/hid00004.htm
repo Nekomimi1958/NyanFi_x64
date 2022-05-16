@@ -1,112 +1,148 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>画面構成</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="64ビット">
-	<param name="Keyword" value="ステータスバー">
-	<param name="Keyword" value="ダークモード">
-	<param name="Keyword" value="タスク表示">
-	<param name="Keyword" value="タブバー">
-	<param name="Keyword" value="ツールバー">
-	<param name="Keyword" value="ディレクトリ関係">
-	<param name="Keyword" value="ディレクトリ情報">
-	<param name="Keyword" value="ドライブ情報">
-	<param name="Keyword" value="ファイルリスト">
-	<param name="Keyword" value="ファイル情報">
-	<param name="Keyword" value="プレビュー">
-	<param name="Keyword" value="メニューバー">
-	<param name="Keyword" value="ログウィンドウ">
-	<param name="Keyword" value="画面構成">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>画面構成</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="64ビット">
+    <param name="Keyword" value="ステータスバー">
+    <param name="Keyword" value="ダークモード">
+    <param name="Keyword" value="タスク表示">
+    <param name="Keyword" value="タブバー">
+    <param name="Keyword" value="ツールバー">
+    <param name="Keyword" value="ディレクトリ関係">
+    <param name="Keyword" value="ディレクトリ情報">
+    <param name="Keyword" value="ドライブ情報">
+    <param name="Keyword" value="ファイルリスト">
+    <param name="Keyword" value="ファイル情報">
+    <param name="Keyword" value="プレビュー">
+    <param name="Keyword" value="メニューバー">
+    <param name="Keyword" value="ログウィンドウ">
+    <param name="Keyword" value="画面構成">
+  </object>
 </head>
 
 <body>
 
-<h1>画面構成</h1>
-<p><img src="nyanfi_scr.png" alt="" height="600" width="800"></p>
+  <h1>画面構成</h1>
+  <p><img src="nyanfi_scr.png" alt="" height="600" width="800"></p>
 
-<dl>
-<dt class="no_bg_indent1">1 メニューバー</dt>
-<dd>
-<b>NyanFi</b> でのほとんどの操作は、キーなどに割り当てられた<a href="hid00005.htm">コマンド</a>で行いますが、一部はメニューからもアクセスできます。<br>
-なお、<a href="hid00010.htm">オプション設定 - デザイン</a> で「<b>メニューバーを表示</b>」のチェックを外せば、非表示にできます(<a href="hid00005.htm#MenuBar">→ MenuBar</a>)。<br>
-<div class="spc_box info_text">
-上の画面例にはありませんが、<b>ツールバー</b> (<a href="hid00005.htm#ShowToolBar">→ ShowToolBar</a>)、<b>タブバー</b> (<a href="hid00005.htm#ShowTabBar">→ ShowTabBar</a>)、<b>ファンクションキーバー</b>(<a href="hid00005.htm#ShowFKeyBar">→ ShowFKeyBar</a>)も表示できます。<br>
-</div>
-</dd>
+  <dl>
+    <dt class="no_bg_indent1">1 メニューバー</dt>
+    <dd>
+      <b>NyanFi</b> でのほとんどの操作は、キーなどに割り当てられた<a href="hid00005.htm">コマンド</a>で行いますが、一部はメニューからもアクセスできます。<br>
+      なお、<a href="hid00010.htm">オプション設定 - デザイン</a> で「<b>メニューバーを表示</b>」のチェックを外せば、非表示にできます(<a
+        href="hid00005.htm#MenuBar">→ MenuBar</a>)。<br>
+      <div class="spc_box info_text">
+        上の画面例にはありませんが、<b>ツールバー</b> (<a href="hid00005.htm#ShowToolBar">→ ShowToolBar</a>)、<b>タブバー</b> (<a
+          href="hid00005.htm#ShowTabBar">→ ShowTabBar</a>)、<b>ファンクションキーバー</b>(<a href="hid00005.htm#ShowFKeyBar">→
+          ShowFKeyBar</a>)も表示できます。<br>
+      </div>
+    </dd>
 
-<dt class="no_bg_indent1" id="DirInfo">2 ディレクトリ情報</dt>
-<dd>
-それぞれのファイルリストのディレクトリ名が表示されます。<br>
-ダブルクリックすれば、ディレクトリ名を直接入力することも可能(<a href="hid00005.htm#InputDir">→ InputDir</a>)。また右クリックすると、クリック位置のディレクトリ内のサブディレクトリを選択するポップアップメニューが出ます(<a href="hid00005.htm#SubDirList">→ SubDirList</a>)。<br>
-左端の<span class="btn_frame">▼</span>ボタンを押すと、ドライブを選択するポップアップメニューが出ます(<a href="hid00005.htm#DriveList">→ DriveList</a>)。<br>
-中央部分には、左右の<b>ディレクトリ関係</b>が以下のような記号で表示されます(ヒント表示あり)。<br>
-<table border="0" cellpadding="2" class="margin1">
-<tr><td>＝</td><td>同一パス</td></tr>
-<tr><td>＞ (＜)</td><td>直下のサブディレクトリ</td></tr>
-<tr><td>≫ (≪)</td><td>複数階層下のサブディレクトリ</td></tr>
-<tr><td>≒</td><td>別ドライブの同名パス (例: D:\Data\hoge ≒ E:\Data\hoge)</td></tr>
-<tr><td>∽</td><td>同名ディレクトリ (例: D:\Data ∽ E:\Backup\Data)</td></tr>
-<tr><td>⇔</td><td>カレント側が検索結果リストや<a href="hid00060.htm">ワークリスト</a>の場合、カーソル位置項目のパスと反対パスが一致</td></tr>
-<tr><td>≠</td><td>上述以外</td></tr>
-</table>
-左右が同ドライブの場合、記号の上下に横線が表示されます。また、ディレクトリの階層同期機能(<a href="hid00005.htm#SyncLR">→ SyncLR</a>)が有効な場合、表示部の上下端に横線が表示されます。
-</dd>
+    <dt class="no_bg_indent1" id="DirInfo">2 ディレクトリ情報</dt>
+    <dd>
+      それぞれのファイルリストのディレクトリ名が表示されます。<br>
+      ダブルクリックすれば、ディレクトリ名を直接入力することも可能(<a href="hid00005.htm#InputDir">→
+        InputDir</a>)。また右クリックすると、クリック位置のディレクトリ内のサブディレクトリを選択するポップアップメニューが出ます(<a href="hid00005.htm#SubDirList">→
+        SubDirList</a>)。<br>
+      左端の<span class="btn_frame">▼</span>ボタンを押すと、ドライブを選択するポップアップメニューが出ます(<a href="hid00005.htm#DriveList">→
+        DriveList</a>)。<br>
+      中央部分には、左右の<b>ディレクトリ関係</b>が以下のような記号で表示されます(ヒント表示あり)。<br>
+      <table cellpadding="2" class="margin1">
+        <tr>
+          <td>＝</td>
+          <td>同一パス</td>
+        </tr>
+        <tr>
+          <td>＞ (＜)</td>
+          <td>直下のサブディレクトリ</td>
+        </tr>
+        <tr>
+          <td>≫ (≪)</td>
+          <td>複数階層下のサブディレクトリ</td>
+        </tr>
+        <tr>
+          <td>≒</td>
+          <td>別ドライブの同名パス (例: D:\Data\hoge ≒ E:\Data\hoge)</td>
+        </tr>
+        <tr>
+          <td>∽</td>
+          <td>同名ディレクトリ (例: D:\Data ∽ E:\Backup\Data)</td>
+        </tr>
+        <tr>
+          <td>⇔</td>
+          <td>カレント側が検索結果リストや<a href="hid00060.htm">ワークリスト</a>の場合、カーソル位置項目のパスと反対パスが一致</td>
+        </tr>
+        <tr>
+          <td>≠</td>
+          <td>上述以外</td>
+        </tr>
+      </table>
+      左右が同ドライブの場合、記号の上下に横線が表示されます。また、ディレクトリの階層同期機能(<a href="hid00005.htm#SyncLR">→ SyncLR</a>)が有効な場合、表示部の上下端に横線が表示されます。
+    </dd>
 
-<dt class="no_bg_indent1">3 ファイルリスト</dt>
-<dd>
-ファイルの一覧が表示されます。<br>
-デフォルトでは左右ですが、<a href="hid00010.htm#Layout">オプション設定 - デザイン - 画面レイアウト</a> の「<b>ファイルリストを上下に分割</b>」をチェックすれば上下にもできます。またファイルリストとそれ以外の画面(プレビュー、情報、ログ)の配置も変更できます。なお <a href="hid00005.htm#FileListOnly">FileListOnly</a> コマンドで、ファイルリストのみの表示に切り替えることも可能。
-</dd>
+    <dt class="no_bg_indent1">3 ファイルリスト</dt>
+    <dd>
+      ファイルの一覧が表示されます。<br>
+      デフォルトでは左右ですが、<a href="hid00010.htm#Layout">オプション設定 - デザイン - 画面レイアウト</a>
+      の「<b>ファイルリストを上下に分割</b>」をチェックすれば上下にもできます。またファイルリストとそれ以外の画面(プレビュー、情報、ログ)の配置も変更できます。なお <a
+        href="hid00005.htm#FileListOnly">FileListOnly</a> コマンドで、ファイルリストのみの表示に切り替えることも可能。
+    </dd>
 
-<dt class="no_bg_indent1" id="DriveInfo">4 ドライブ情報</dt>
-<dd>
-それぞれのドライブの使用状況や選択状態が表示されます。<br>
-<a href="hid00010.htm#DriveInfo">オプション設定 - デザイン - ドライブ情報の書式</a> で表示内容を指定できます。<br>
-なお、<a href="hid00050.htm">インクリメンタルサーチ</a>(<a href="hid00005.htm#IncSearch">→ IncSearch</a>)や、フィルタによる絞り込み(<a href="hid00005.htm#Filter">→ Filter</a>)を行う場合、検索語の表示/入力にこの部分が用いられます。<br>
-</dd>
+    <dt class="no_bg_indent1" id="DriveInfo">4 ドライブ情報</dt>
+    <dd>
+      それぞれのドライブの使用状況や選択状態が表示されます。<br>
+      <a href="hid00010.htm#DriveInfo">オプション設定 - デザイン - ドライブ情報の書式</a> で表示内容を指定できます。<br>
+      なお、<a href="hid00050.htm">インクリメンタルサーチ</a>(<a href="hid00005.htm#IncSearch">→ IncSearch</a>)や、フィルタによる絞り込み(<a
+        href="hid00005.htm#Filter">→ Filter</a>)を行う場合、検索語の表示/入力にこの部分が用いられます。<br>
+    </dd>
 
-<dt class="no_bg_indent1">5 プレビュー</dt>
-<dd>カーソル位置のファイルの画像やアイコン、テキスト内容(<a href="hid00082.htm">→ テキストプレビュー</a>)が表示されます。<br>
-</dd>
+    <dt class="no_bg_indent1">5 プレビュー</dt>
+    <dd>カーソル位置のファイルの画像やアイコン、テキスト内容(<a href="hid00082.htm">→ テキストプレビュー</a>)が表示されます。<br>
+    </dd>
 
-<dt class="no_bg_indent1">6 ファイル情報</dt>
-<dd>
-カーソル位置のファイルの種類によって、バージョン情報、ショートカット情報、HTMLヘッダ情報、Exif情報、MP3のID3タグ、プロパティなどが表示されます。<br>
-[..] 位置ではカレントの、アーカイブの場合はそれに含まれる、拡張子別ファイル数が表示されます。<br>
-好ましくないファイル名が用いられている場合や、他のプロセスがファイルを使用中の場合などには、警告も表示されます。<br>
-右クリックメニューでは「<b>この項目内容を強調表示</b>」や「<b>この項目を隠す</b>/<b>戻す</b>」なども可能です。<br>
-なお情報取得に時間がかかって操作がもたつく場合は、<a href="hid00024.htm#FileInfo">オプション設定 - 一般2 - ファイル情報</a> で動作を制限できます。
-</dd>
+    <dt class="no_bg_indent1">6 ファイル情報</dt>
+    <dd>
+      カーソル位置のファイルの種類によって、バージョン情報、ショートカット情報、HTMLヘッダ情報、Exif情報、MP3のID3タグ、プロパティなどが表示されます。<br>
+      [..] 位置ではカレントの、アーカイブの場合はそれに含まれる、拡張子別ファイル数が表示されます。<br>
+      好ましくないファイル名が用いられている場合や、他のプロセスがファイルを使用中の場合などには、警告も表示されます。<br>
+      右クリックメニューでは「<b>この項目内容を強調表示</b>」や「<b>この項目を隠す</b>/<b>戻す</b>」なども可能です。<br>
+      なお情報取得に時間がかかって操作がもたつく場合は、<a href="hid00024.htm#FileInfo">オプション設定 - 一般2 - ファイル情報</a> で動作を制限できます。
+    </dd>
 
-<dt class="no_bg_indent1">7 タスク表示</dt>
-<dd>タスクの実行状況の概略が表示されます。緑文字表示の場合、処理対象のカウント中です。またコピー/移動処理中に、<a href="hid00009.htm#Copy">オプション設定 - 一般 - コピー動作</a> - 「～<b>秒以上無操作なら待ち時間を最小に</b>」で指定した秒数以上操作をしなかった場合、待ち時間が最小(転送速度が約64MB/秒以上なら 0 そうでなければ 1ms)の高速実行になり、進捗バーの左に<span style="color:#ff0000;">■</span>マークが出ます。<br>
-実行状況の詳細を確認したいときは、<a href="hid00069.htm">タスクマネージャ</a>を開いてください(<a href="hid00005.htm#TaskMan">→ TaskMan</a>)。
-</dd>
+    <dt class="no_bg_indent1">7 タスク表示</dt>
+    <dd>タスクの実行状況の概略が表示されます。緑文字表示の場合、処理対象のカウント中です。またコピー/移動処理中に、<a href="hid00009.htm#Copy">オプション設定 - 一般 - コピー動作</a> -
+      「～<b>秒以上無操作なら待ち時間を最小に</b>」で指定した秒数以上操作をしなかった場合、待ち時間が最小(転送速度が約64MB/秒以上なら 0 そうでなければ 1ms)の高速実行になり、進捗バーの左に<span
+        style="color:#ff0000;">■</span>マークが出ます。<br>
+      実行状況の詳細を確認したいときは、<a href="hid00069.htm">タスクマネージャ</a>を開いてください(<a href="hid00005.htm#TaskMan">→ TaskMan</a>)。
+    </dd>
 
-<dt class="no_bg_indent1">8 ログウィンドウ</dt>
-<dd>タスクなどの実行結果が表示されます。ログの表示や保存についての設定は、<a href="hid00024.htm#Log">オプション設定 - 一般 - ログ</a> で行ってください。
-</dd>
+    <dt class="no_bg_indent1">8 ログウィンドウ</dt>
+    <dd>タスクなどの実行結果が表示されます。ログの表示や保存についての設定は、<a href="hid00024.htm#Log">オプション設定 - 一般 - ログ</a> で行ってください。
+    </dd>
 
-<dt class="no_bg_indent1">9 ステータスバー</dt>
-<dd>
-カーソル位置のファイル情報や警告メッセージが表示されます。<br>
-<a href="hid00010.htm#StatusBar">オプション設定 - デザイン - ステータスバーの書式</a> で表示内容を指定できます。また、ステータスバーの右端に時計パネルを表示することも可能。
-</dd>
+    <dt class="no_bg_indent1">9 ステータスバー</dt>
+    <dd>
+      カーソル位置のファイル情報や警告メッセージが表示されます。<br>
+      <a href="hid00010.htm#StatusBar">オプション設定 - デザイン - ステータスバーの書式</a> で表示内容を指定できます。また、ステータスバーの右端に時計パネルを表示することも可能。
+    </dd>
 
-<dt class="no_bg">ダーク系の配色について</dt>
-<dd>
-メイン画面、ビュアー、各種一覧などについては、ほとんどの部分の色を変更できますので、ダーク系に統一可能です。<br>
-主なスクロールバーについては、<a href="hid00010.htm#ScrollBar">オプション設定 - デザイン -「スクロールバー」</a> で<b>シンプルスクロールバー</b>を選択すると、任意の色を指定できます(ヒット位置表示も可能)。
-<div class="spc_box">
-Windows のダークモードが有効な場合、<a href="hid00023.htm#DarkMode">オプション設定 - フォント・配色</a> - 「<b>Windows ダークモードを適用</b>」をチェックすると、色指定できない部分も含め、全体がダーク系になります(一部のコモンダイアログは除く)。<br>
-</div>
-</dd>
-</dl>
-<br><br>
+    <dt class="no_bg">ダーク系の配色について</dt>
+    <dd>
+      メイン画面、ビュアー、各種一覧などについては、ほとんどの部分の色を変更できますので、ダーク系に統一可能です。<br>
+      主なスクロールバーについては、<a href="hid00010.htm#ScrollBar">オプション設定 - デザイン -「スクロールバー」</a>
+      で<b>シンプルスクロールバー</b>を選択すると、任意の色を指定できます(ヒット位置表示も可能)。
+      <div class="spc_box">
+        Windows のダークモードが有効な場合、<a href="hid00023.htm#DarkMode">オプション設定 - フォント・配色</a> - 「<b>Windows
+          ダークモードを適用</b>」をチェックすると、色指定できない部分も含め、全体がダーク系になります(一部のコモンダイアログは除く)。<br>
+      </div>
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

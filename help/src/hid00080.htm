@@ -1,162 +1,189 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>FTP接続ダイアログ</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="FtpConnect">
-	<param name="Keyword" value="FtpDisonnect">
-	<param name="Keyword" value="FTPS">
-	<param name="Keyword" value="FTP接続ダイアログ">
-	<param name="Keyword" value="SSL暗号化">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>FTP接続ダイアログ</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="FtpConnect">
+    <param name="Keyword" value="FtpDisonnect">
+    <param name="Keyword" value="FTPS">
+    <param name="Keyword" value="FTP接続ダイアログ">
+    <param name="Keyword" value="SSL暗号化">
+  </object>
 </head>
 
 <body>
 
-<h1>FTP接続ダイアログ</h1>
-<p>
-ファイラーで <a href="hid00005.htm#FTPConnect">FTPConnect</a> コマンドを実行するとこのダイアログが開きます。<br>
-</p>
+  <h1>FTP接続ダイアログ</h1>
+  <p>
+    ファイラーで <a href="hid00005.htm#FTPConnect">FTPConnect</a> コマンドを実行するとこのダイアログが開きます。<br>
+  </p>
 
-<dl>
-<dt>ホストの登録
-<dd>
-必要な項目を設定して<span class="btn_frame">追加</span>ボタンを押すと、一覧にホストが登録されます。<br>
-<br>
-<dl>
-<dt class="no_bg">ホスト名 <img src="edit.png" alt="">
-<dd>任意の名前を設定してください。<br>
-<b>FTPConnect</b> コマンドのパラメータに指定すると、ダイアログを表示しないで直ちに接続できます。<br>
+  <dl>
+    <dt>ホストの登録</dt>
+    <dd>
+      必要な項目を設定して<span class="btn_frame">追加</span>ボタンを押すと、一覧にホストが登録されます。<br>
+      <br>
+      <dl>
+        <dt class="no_bg">ホスト名 <img src="edit.png" alt=""></dt>
+        <dd>任意の名前を設定してください。<br>
+          <b>FTPConnect</b> コマンドのパラメータに指定すると、ダイアログを表示しないで直ちに接続できます。<br>
+        </dd>
 
-<dt class="no_bg">アドレス <img src="edit.png" alt="">
-<dd>ホストのアドレスです。<br>
-標準以外のポート番号を使用したい場合は、アドレスの末尾に <b>:</b> (コロン)で区切ってポート番号を指定してください(例: ftp.hoge.jp:2221)。<br>
+        <dt class="no_bg">アドレス <img src="edit.png" alt=""></dt>
+        <dd>ホストのアドレスです。<br>
+          標準以外のポート番号を使用したい場合は、アドレスの末尾に <b>:</b> (コロン)で区切ってポート番号を指定してください(例: ftp.hoge.jp:2221)。<br>
+        </dd>
 
-<dt class="no_bg">ユーザID <img src="edit.png" alt="">
-<dd>ホストのログイン用ユーザIDです。<br>
+        <dt class="no_bg">ユーザID <img src="edit.png" alt=""></dt>
+        <dd>ホストのログイン用ユーザIDです。</dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> anonymous
-<dd>匿名FTPサーバに接続する場合にチェックします。ユーザID が &quot;anonymous&quot; になります。<br>
+        <dt class="no_bg"><img src="chkbox.png" alt=""> anonymous</dt>
+        <dd>匿名FTPサーバに接続する場合にチェックします。ユーザID が &quot;anonymous&quot; になります。</dd>
 
-<dt class="no_bg">パスワード <img src="edit.png" alt="">
-<dd>ホストのログイン用パスワードです。<br>
-<b>anonymous</b> をチェックしている場合、メールアドレスをパスワードとして設定する慣行があります。<br>
-<div class="note_text">
-パスワードは暗号化してINIファイルに保存されます。ユーザ名とシステムドライブのシリアルナンバーを元に暗号化しているため、別環境にINIファイルを移動した場合は再設定が必要となります。<br>
-</div>
+        <dt class="no_bg">パスワード <img src="edit.png" alt=""></dt>
+        <dd>ホストのログイン用パスワードです。<br>
+          <b>anonymous</b> をチェックしている場合、メールアドレスをパスワードとして設定する慣行があります。<br>
+          <div class="note_text">
+            パスワードは暗号化してINIファイルに保存されます。ユーザ名とシステムドライブのシリアルナンバーを元に暗号化しているため、別環境にINIファイルを移動した場合は再設定が必要となります。<br>
+          </div>
+        </dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> PASVモード
-<dd>チェックしていると<b>PASV</b>モードで転送を行います。チェックを外すと<b>PORT</b>モードになります。通常は、<b>PASV</b>モードにしておく方がよいでしょう。<br>
+        <dt class="no_bg"><img src="chkbox.png" alt=""> PASVモード</dt>
+        <dd>チェックしていると<b>PASV</b>モードで転送を行います。チェックを外すと<b>PORT</b>モードになります。通常は、<b>PASV</b>モードにしておく方がよいでしょう。<br>
+        </dd>
 
-<dt class="no_bg">SSL暗号化 <img src="combobox.png" alt="">
-<dd>サーバが <b>FTPS</b>(FTP over SSL) に対応している場合、通信を暗号化できます(TLS1.2)。<br>
-ネゴシエーションに失敗すると切断しますので、サーバが非対応の場合は必ず「<b>暗号化しない</b>」に設定してください。<br>
-なおSSLを利用するには、<b>libeay32.dll</b>、<b>ssleay32.dll</b> が必要です(indy.fulgan.com/SSL/)<br>
+        <dt class="no_bg">SSL暗号化 <img src="combobox.png" alt=""></dt>
+        <dd>サーバが <b>FTPS</b>(FTP over SSL) に対応している場合、通信を暗号化できます(TLS1.2)。<br>
+          ネゴシエーションに失敗すると切断しますので、サーバが非対応の場合は必ず「<b>暗号化しない</b>」に設定してください。<br>
+          なおSSLを利用するには、<b>libeay32.dll</b>、<b>ssleay32.dll</b> が必要です(indy.fulgan.com/SSL/)<br>
+        </dd>
 
-<dt class="no_bg">ホスト開始ディレクトリ <img src="edit.png" alt="">
-<dd>ホストに接続したときカレントで開くリモート側のディレクトリです。<br>
-<a href="hid00005.htm#ToRoot">ToRoot</a> コマンドではここで設定されたディレクトリに移ります。<br>
+        <dt class="no_bg">ホスト開始ディレクトリ <img src="edit.png" alt=""></dt>
+        <dd>ホストに接続したときカレントで開くリモート側のディレクトリです。<br>
+          <a href="hid00005.htm#ToRoot">ToRoot</a> コマンドではここで設定されたディレクトリに移ります。<br>
+        </dd>
 
-<dt class="no_bg">ローカル開始ディレクトリ <img src="edit.png" alt="">
-<dd>指定すると、ホストに接続したときに、反対側(ローカル)でそのディレクトリを開きます。
+        <dt class="no_bg">ローカル開始ディレクトリ <img src="edit.png" alt=""></dt>
+        <dd>指定すると、ホストに接続したときに、反対側(ローカル)でそのディレクトリを開きます。</dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> 左右ディレクトリの同期変更
-<dd>接続中に、反対側のディレクトリも同期して変更する機能を有効にします(<b>SyncLR</b>_ON)。切断時には、接続前の状態に戻ります。<br>
-<a href="hid00005.htm#SyncLR">→ SyncLR</a><br>
-</dl>
+        <dt class="no_bg"><img src="chkbox.png" alt=""> 左右ディレクトリの同期変更</dt>
+        <dd>接続中に、反対側のディレクトリも同期して変更する機能を有効にします(<b>SyncLR</b>_ON)。切断時には、接続前の状態に戻ります。<br>
+          <a href="hid00005.htm#SyncLR">→ SyncLR</a><br>
+        </dd>
+      </dl>
 
-<br>
-一覧で選択されている項目の内容を変更したい場合は<span class="btn_frame">変更</span>ボタンを、削除したい場合は<span class="btn_frame">削除</span>ボタンを押してください。また<span class="btn_frame">↑</span>/<span class="btn_frame">↓</span>ボタンで、項目を上下に移動できます。一覧にフォーカスがある場合は、 <span class="btn_frame">Shift</span>+<span class="btn_frame">Ctrl</span>+<span class="btn_frame">↑</span>/<span class="btn_frame">↓</span>キーで項目の上下移動、<span class="btn_frame">DEL</span>キーで削除が可能です。項目の移動はドラッグ＆ドロップでもできます(上下端で自動スクロール)。<br>
-なお、<span class="btn_frame">キャンセル</span>ボタンを押しても、登録された内容は保存されます。<br>
-<br><br>
+      <br>
+      一覧で選択されている項目の内容を変更したい場合は<span class="btn_frame">変更</span>ボタンを、削除したい場合は<span
+        class="btn_frame">削除</span>ボタンを押してください。また<span class="btn_frame">↑</span>/<span
+        class="btn_frame">↓</span>ボタンで、項目を上下に移動できます。一覧にフォーカスがある場合は、 <span class="btn_frame">Shift</span>+<span
+        class="btn_frame">Ctrl</span>+<span class="btn_frame">↑</span>/<span class="btn_frame">↓</span>キーで項目の上下移動、<span
+        class="btn_frame">DEL</span>キーで削除が可能です。項目の移動はドラッグ＆ドロップでもできます(上下端で自動スクロール)。<br>
+      なお、<span class="btn_frame">キャンセル</span>ボタンを押しても、登録された内容は保存されます。<br>
+      <br><br>
+    </dd>
 
-<dt>接続
-<dd>
-<span class="btn_frame">接続</span>ボタンを押すと、一覧で選択されているホストに接続します。<br>
-アドレス欄で明示的にポート番号を指定していない場合、通常の接続はポート21を、「<b>SSL暗号化</b>」を「<b>Implicit TLS</b>」にした場合はポート990を使用します。<br>
-なお、一覧の <b>ホスト名</b> を <b>FTPConnect</b> コマンドのパラメータに指定すると、ダイアログを表示しないで直ちに接続できます。<br>
-<div class="spc_box">
-接続した時、リモート側のパスマスクはローカル側と同じになります。切断時してリモート側が通常リストに戻るとパスマスクも復帰します。<br>
-</div>
-<div class="spc_box note_text">
-接続している状態で<b>オプション設定</b>(<a href="hid00005.htm#OptionDlg">OptionDlg</a>)を開くと切断されますので注意してください。
-</div>
-<br>
+    <dt>接続</dt>
+    <dd>
+      <span class="btn_frame">接続</span>ボタンを押すと、一覧で選択されているホストに接続します。<br>
+      アドレス欄で明示的にポート番号を指定していない場合、通常の接続はポート21を、「<b>SSL暗号化</b>」を「<b>Implicit TLS</b>」にした場合はポート990を使用します。<br>
+      なお、一覧の <b>ホスト名</b> を <b>FTPConnect</b> コマンドのパラメータに指定すると、ダイアログを表示しないで直ちに接続できます。<br>
+      <div class="spc_box">
+        接続した時、リモート側のパスマスクはローカル側と同じになります。切断時してリモート側が通常リストに戻るとパスマスクも復帰します。<br>
+      </div>
+      <div class="spc_box note_text">
+        接続している状態で<b>オプション設定</b>(<a href="hid00005.htm#OptionDlg">OptionDlg</a>)を開くと切断されますので注意してください。
+      </div>
+      <br>
+    </dd>
 
-<dt>切断
-<dd>
-<a href="hid00005.htm#FTPDisconnect">FTPDisonnect</a> コマンドで切断できます。<br>
-また、リモート側を何らかのコマンドでローカルのディレクトリに切り替えたときや、<b>NyanFi</b> 終了時にも切断します。<br>
-なお、リモート側へのコピー(アップロード)をキャンセルした場合も切断されます。
-<br>
-</dl>
-<br>
+    <dt>切断</dt>
+    <dd>
+      <a href="hid00005.htm#FTPDisconnect">FTPDisonnect</a> コマンドで切断できます。<br>
+      また、リモート側を何らかのコマンドでローカルのディレクトリに切り替えたときや、<b>NyanFi</b> 終了時にも切断します。<br>
+      なお、リモート側へのコピー(アップロード)をキャンセルした場合も切断されます。
+      <br>
+    </dd>
+  </dl>
+  <br>
 
-<dl>
-<dt>オプション
-<dd>
-<span class="tab_frame">オプション</span>タブでFTP接続全般に関するオプション設定を行えます。<br>
-<br>
-<dl>
+  <dl>
+    <dt>オプション</dt>
+    <dd>
+      <span class="tab_frame">オプション</span>タブでFTP接続全般に関するオプション設定を行えます。<br>
+      <br>
+      <dl>
+        <dt class="no_bg"><img src="grpbox.png" alt=""> リモート側</dt>
+        <dd>接続するときにファイルリストのどちらをリモート側にするかを設定できます。</dd>
 
-<dt class="no_bg"><img src="grpbox.png" alt=""> リモート側
-<dd>接続するときにファイルリストのどちらをリモート側にするかを設定できます。<br>
+        <dt class="no_bg">アクティビティがない場合の自動切断</dt>
+        <dd>タイムアウトに設定した秒数を超えてホストとのやりとりがない場合、<b>NyanFi</b> 側から自動的に切断します。<br>
+          タイムアウトになるまでの間はホストから切断されないように、60秒ごとに NOOP コマンドを送っています。<br>
+        </dd>
 
-<dt class="no_bg">アクティビティがない場合の自動切断
-<dd>タイムアウトに設定した秒数を超えてホストとのやりとりがない場合、<b>NyanFi</b> 側から自動的に切断します。<br>
-タイムアウトになるまでの間はホストから切断されないように、60秒ごとに NOOP コマンドを送っています。<br>
+        <dt class="no_bg">テキストモードで転送する拡張子 <img src="edit.png" alt="">　<span class="def_text">(デフォルト:
+            .txt.htm.html.shtm.shtml.css.cgi.log.pl.sh.rb.js.c.cpp.h)</span></dt>
+        <dd>
+          ここで指定した拡張子を持つファイルは、テキストモードでアップロード/ダウンロードされます。<br>
+          拡張子は <b>.</b> (ピリオド)で区切って指定してください。
+          なお、リモート側で
+          <a href="hid00005.htm#TextViewer">TextViewer</a>、<a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a>
+          コマンドなどを実行した場合は、改行コード等の確認のためバイナリモードで一時ダウンロードします。<br>
+        </dd>
 
-<dt class="no_bg">テキストモードで転送する拡張子 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: .txt.htm.html.shtm.shtml.css.cgi.log.pl.sh.rb.js.c.cpp.h)</span>
-<dd>
-ここで指定した拡張子を持つファイルは、テキストモードでアップロード/ダウンロードされます。<br>
-拡張子は <b>.</b> (ピリオド)で区切って指定してください。
-なお、リモート側で 
-<a href="hid00005.htm#TextViewer">TextViewer</a>、<a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a>  コマンドなどを実行した場合は、改行コード等の確認のためバイナリモードで一時ダウンロードします。<br>
+        <dt class="no_bg"><img src="chkbox.png" alt=""> ダウンロードファイルのタイムスタンプを維持</dt>
+        <dd>チェックすると、ダウンロードしたファイルのタイムスタンプをホスト側のものに合わせます。</dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> ダウンロードファイルのタイムスタンプを維持
-<dd>チェックすると、ダウンロードしたファイルのタイムスタンプをホスト側のものに合わせます。<br>
+        <dt class="no_bg"><img src="chkbox.png" alt=""> アップロードファイルのタイムスタンプを維持</dt>
+        <dd>チェックすると、アップロードしたファイルのタイムスタンプをローカル側のものに合わせます。<br>
+          ただし、サーバがタイムスタンプ設定に対応していないと機能しません。接続後、最初のアップロードでタイムスタンプ設定に失敗した場合、それ以降は切断時まで設定を試みません。<br>
+        </dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> アップロードファイルのタイムスタンプを維持
-<dd>チェックすると、アップロードしたファイルのタイムスタンプをローカル側のものに合わせます。<br>
-ただし、サーバがタイムスタンプ設定に対応していないと機能しません。接続後、最初のアップロードでタイムスタンプ設定に失敗した場合、それ以降は切断時まで設定を試みません。<br>
+        <dt class="no_bg"><img src="chkbox.png" alt=""> ファイル名を小文字化してアップロードする</dt>
+        <dd>チェックすると、ファイル名をすべて小文字化してアップロードします。</dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> ファイル名を小文字化してアップロードする
-<dd>チェックすると、ファイル名をすべて小文字化してアップロードします。
+        <dt class="no_bg"><img src="chkbox.png" alt=""> ホストからの応答メッセージをログに表示</dt>
+        <dd>チェックすると、FTPコマンド実行後のホストからの応答メッセージをログに表示します。</dd>
 
-<dt class="no_bg"><img src="chkbox.png" alt=""> ホストからの応答メッセージをログに表示
-<dd>チェックすると、FTPコマンド実行後のホストからの応答メッセージをログに表示します。
+        <dt class="no_bg"><img src="grpbox.png" alt=""> 通知音</dt>
+        <dd>ホスト接続、切断、ファイル転送完了時の通知音です。無指定の場合は何も鳴りません。<br>
+          <span class="btn_frame"> ... </span>ボタンでファイル参照、<span class="btn_frame">&gt;</span>ボタンでテスト再生できます。<br>
+          ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+          サウンドファイル名の代わりに <a href="hid00093.htm">定義済みサウンド識別子</a> を指定することもできます。<br>
+        </dd>
+      </dl>
+    </dd>
+  </dl>
+  <br>
 
-<dt class="no_bg"><img src="grpbox.png" alt=""> 通知音
-<dd>ホスト接続、切断、ファイル転送完了時の通知音です。無指定の場合は何も鳴りません。<br>
-<span class="btn_frame"> ... </span>ボタンでファイル参照、<span class="btn_frame">&gt;</span>ボタンでテスト再生できます。<br>
-ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
-サウンドファイル名の代わりに <a href="hid00093.htm">定義済みサウンド識別子</a> を指定することもできます。<br>
-</dl>
-</dl>
-<br>
+  <dl>
+    <dt>制限事項</dt>
+    <dd>
+      FTP接続時、リモート側に対する操作には以下のような制限があります。
+      <ul>
+        <li>基本的なファイル操作と一部のコマンドについてのみ対応しています。実行できないコマンドでは警告が出ます。</li>
+        <li>ディレクトリのコピー(アップロード/ダウンロード)には対応していません。</li>
+        <li>ドラッグ＆ドロップでファイルをコピーする場合、リモート側へのコピー(アップロード)は可能ですが、リモート側からのコピー(ダウンロード)はできません。</li>
+        <li>コピーの際の同名ファイル処理で自動的に名前を変更する場合、書式は「ファイル名_連番.拡張子」の固定になります。</li>
+        <li>空でないディレクトリは削除できません。先にディレクトリ内のファイルを削除してください。</li>
+        <li>ファイル名の変更は、個別の単純な改名のみ可能です。</li>
+        <li><a href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドではディレクトリの変更のみ可能です。また、アーカイブの仮想ディレクトリ表示はできません。</li>
+        <li>テキストファイルなどの内容を確認したい場合は、<a href="hid00005.htm#TextViewer">TextViewer</a>、<a
+            href="hid00005.htm#ListText">ListText</a> コマンドなどを利用してください(バイナリモードで一時ダウンロード)。<a
+            href="hid00006.htm#NextFile">NextFile</a> / <a href="hid00006.htm#PrevFile">PrevFile</a> コマンドは無効です。</li>
+        <li>画像ファイルを確認したい場合は、<a href="hid00005.htm#ImageViewer">ImageViewer</a> コマンドを利用してください。イメージビュアーではサムネイルが表示されず、<a
+            href="hid00007.htm#NextFile">NextFile</a> / <a href="hid00007.htm#PrevFile">PrevFile</a> コマンドなどは無効です。</li>
+        <li>通常はファイル情報やプレビューが表示されませんが、<a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a>
+          コマンドを実行すると、一時ディレクトリにダウンロードして強制的に表示し、カレントのファイルリストが更新されるまで保持されます。また、テキストビュアーやイメージビュアーなどで開いたファイルについても同様です。</li>
+        <li>ディレクトリ履歴は使えません。ただし、左右ディレクトリの同期変更が有効な場合、ローカル側で履歴をたどればリモート側も連動します。</li>
+      </ul>
+    </dd>
+  </dl>
 
-<dl>
-<dt>制限事項
-<dd>
-FTP接続時、リモート側に対する操作には以下のような制限があります。
-<ul>
-<li>基本的なファイル操作と一部のコマンドについてのみ対応しています。実行できないコマンドでは警告が出ます。
-<li>ディレクトリのコピー(アップロード/ダウンロード)には対応していません。
-<li>ドラッグ＆ドロップでファイルをコピーする場合、リモート側へのコピー(アップロード)は可能ですが、リモート側からのコピー(ダウンロード)はできません。
-<li>コピーの際の同名ファイル処理で自動的に名前を変更する場合、書式は「ファイル名_連番.拡張子」の固定になります。
-<li>空でないディレクトリは削除できません。先にディレクトリ内のファイルを削除してください。
-<li>ファイル名の変更は、個別の単純な改名のみ可能です。
-<li><a href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドではディレクトリの変更のみ可能です。また、アーカイブの仮想ディレクトリ表示はできません。
-<li>テキストファイルなどの内容を確認したい場合は、<a href="hid00005.htm#TextViewer">TextViewer</a>、<a href="hid00005.htm#ListText">ListText</a> コマンドなどを利用してください(バイナリモードで一時ダウンロード)。<a href="hid00006.htm#NextFile">NextFile</a> / <a href="hid00006.htm#PrevFile">PrevFile</a> コマンドは無効です。
-<li>画像ファイルを確認したい場合は、<a href="hid00005.htm#ImageViewer">ImageViewer</a> コマンドを利用してください。イメージビュアーではサムネイルが表示されず、<a href="hid00007.htm#NextFile">NextFile</a> / <a href="hid00007.htm#PrevFile">PrevFile</a> コマンドなどは無効です。
-<li>通常はファイル情報やプレビューが表示されませんが、<a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> コマンドを実行すると、一時ディレクトリにダウンロードして強制的に表示し、カレントのファイルリストが更新されるまで保持されます。また、テキストビュアーやイメージビュアーなどで開いたファイルについても同様です。
-<li>ディレクトリ履歴は使えません。ただし、左右ディレクトリの同期変更が有効な場合、ローカル側で履歴をたどればリモート側も連動します。
-</ul>
-</dl>
-
-<br><br><br><br>
+  <br><br><br><br>
 
 </body>
+
 </html>

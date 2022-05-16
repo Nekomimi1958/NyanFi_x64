@@ -630,7 +630,6 @@ bool is_SymLink(UnicodeString fnam)
 int get_HardLinkCount(UnicodeString fnam)
 {
 	int cnt = 0;
-
 	HANDLE hFile = ::CreateFile(cv_ex_filename(fnam).c_str(),
 		0, FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE, NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile!=INVALID_HANDLE_VALUE) {
@@ -638,7 +637,6 @@ int get_HardLinkCount(UnicodeString fnam)
 		if (::GetFileInformationByHandle(hFile, &fi)) cnt = fi.nNumberOfLinks;
 		::CloseHandle(hFile);
 	}
-
 	return cnt;
 }
 //---------------------------------------------------------------------------
@@ -691,6 +689,22 @@ bool file_exists_ico(UnicodeString fnam)
 	if (ico_idx!=-1) fnam = get_tkn(fnam, ",");
 
 	return (file_GetAttr(fnam) != faInvalid);
+}
+
+//---------------------------------------------------------------------------
+//ワイルドカードに対応した存在チェック
+//---------------------------------------------------------------------------
+bool file_exists_wc(
+	UnicodeString &fnam)	//ファイル名(ワイルドカード可)
+							//最初にマッチしたものを返す、なければ EmptyStr
+{
+	UnicodeString mask = ExtractFileName(fnam);
+	if (mask.Pos('*') || mask.Pos('?')) {
+		std::unique_ptr<TStringList> lst(new TStringList());
+		get_files(ExtractFilePath(fnam), mask.c_str(), lst.get()); 
+		fnam = (lst->Count>0)? lst->Strings[0] : EmptyStr;
+	}
+	return file_exists(fnam);
 }
 
 //---------------------------------------------------------------------------

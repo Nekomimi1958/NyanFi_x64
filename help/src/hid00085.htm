@@ -1,68 +1,74 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>正規表現チェッカー</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="RegExChecker">
-	<param name="Keyword" value="正規表現チェッカー">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>正規表現チェッカー</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="RegExChecker">
+    <param name="Keyword" value="正規表現チェッカー">
+  </object>
 </head>
 
 <body>
 
-<h1>正規表現チェッカー</h1>
-<p>
-<a href="hid00005.htm#RegExChecker">RegExChecker</a> コマンドを実行すると、<b>正規表現チェッカー</b>が表示されます。<br>
-また、<a href="hid00052.htm">ファイル名検索</a>、<a href="hid00051.htm#Replace">名前の変更 - 置換</a>、<a href="hid00056.htm">文字列検索(GREP)/文字列置換</a>、テキストビュアー/一覧ダイアログでの<a href="hid00065.htm">文字列検索</a>、<a href="hid00066.htm">ユーザ定義文字列一覧</a>、および<a href="hid00077.htm">振り分け</a>において、正規表現を使える入力欄の右クリックメニューからも利用できます。
-</p>
+  <h1>正規表現チェッカー</h1>
+  <p>
+    <a href="hid00005.htm#RegExChecker">RegExChecker</a> コマンドを実行すると、<b>正規表現チェッカー</b>が表示されます。<br>
+    また、<a href="hid00052.htm">ファイル名検索</a>、<a href="hid00051.htm#Replace">名前の変更 - 置換</a>、<a
+      href="hid00056.htm">文字列検索(GREP)/文字列置換</a>、テキストビュアー/一覧ダイアログでの<a href="hid00065.htm">文字列検索</a>、<a
+      href="hid00066.htm">ユーザ定義文字列一覧</a>、および<a href="hid00077.htm">振り分け</a>において、正規表現を使える入力欄の右クリックメニューからも利用できます。
+  </p>
 
-<p>
-画面の右側には、正規表現のメタ文字やエスケープシーケンスなどの簡単な説明が一覧表示されています。<br>
-また一覧の下部には、いくつかのサンプルパターンもあります。<br>
-項目をクリックすると、その内容が、<b>パターン</b>のキャレット位置に挿入されます。<br>
-</p>
+  <p>
+    画面の右側には、正規表現のメタ文字やエスケープシーケンスなどの簡単な説明が一覧表示されています。<br>
+    また一覧の下部には、いくつかのサンプルパターンもあります。<br>
+    項目をクリックすると、その内容が、<b>パターン</b>のキャレット位置に挿入されます。<br>
+  </p>
 
-<p>
-検索対象に<b>ファイル</b>を指定すると、その内容を読み込んでテストできます。ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
-<img src="chkbox.png" alt=""> <b>変更反映</b> がチェックされていると、内容を編集した場合、画面を閉じる際にファイルに変更が反映されます。<br>
-ファイルが指定されていない場合は、直接入力された内容が対象になります。この内容は保存されますが、INIファイルの肥大化を避けるため最大20行に制限しています。20行を超える内容を一時的に入力してテストすることは可能です。<br>
-</p>
+  <p>
+    検索対象に<b>ファイル</b>を指定すると、その内容を読み込んでテストできます。ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+    <img src="chkbox.png" alt=""> <b>変更反映</b> がチェックされていると、内容を編集した場合、画面を閉じる際にファイルに変更が反映されます。<br>
+    ファイルが指定されていない場合は、直接入力された内容が対象になります。この内容は保存されますが、INIファイルの肥大化を避けるため最大20行に制限しています。20行を超える内容を一時的に入力してテストすることは可能です。<br>
+  </p>
 
-<p>
-<span class="btn_frame">テスト</span>ボタンを押すと、<b>検索対象</b>に対し<b>パターン</b>を用いてテストを行います。<br>
-検索は対象に対して行ごとに行われます。この際、各行末の改行コード(\r\n)は除外されます。<a href="hid00056.htm">文字列検索(GREP)</a> においても、これと同様の動作になります。<br>
-下の結果リストにはマッチした行が表示され、マッチ部分が強調表示されます。<br>
-</p>
-<p>
-<span class="btn_frame">置換</span>ボタンを押すと、<b>検索対象</b>で<b>パターン</b>にマッチする部分を<b>置換文字列</b>で置換します。<br>
-下の結果リストにはマッチした行が表示され、置換部分が強調表示されます。<br>
-</p>
+  <p>
+    <span class="btn_frame">テスト</span>ボタンを押すと、<b>検索対象</b>に対し<b>パターン</b>を用いてテストを行います。<br>
+    検索は対象に対して行ごとに行われます。この際、各行末の改行コード(\r\n)は除外されます。<a href="hid00056.htm">文字列検索(GREP)</a> においても、これと同様の動作になります。<br>
+    下の結果リストにはマッチした行が表示され、マッチ部分が強調表示されます。<br>
+  </p>
+  <p>
+    <span class="btn_frame">置換</span>ボタンを押すと、<b>検索対象</b>で<b>パターン</b>にマッチする部分を<b>置換文字列</b>で置換します。<br>
+    下の結果リストにはマッチした行が表示され、置換部分が強調表示されます。<br>
+  </p>
 
-<p>
-<span class="btn_frame">コピー</span>ボタンを押すと、パターンがクリップボードにコピーされます。<br>
+  <p>
+    <span class="btn_frame">コピー</span>ボタンを押すと、パターンがクリップボードにコピーされます。<br>
 
-<span class="btn_frame">コピー(C文字列)</span>ボタンを押すと、パターン内の <b>\</b> を <b>\\</b>、<b>&quot;</b> を <b>\&quot;</b>に変え、全体をダブルクォーテーションで囲ったものがコピーされます。
-<br>
+    <span class="btn_frame">コピー(C文字列)</span>ボタンを押すと、パターン内の <b>\</b> を <b>\\</b>、<b>&quot;</b> を
+    <b>\&quot;</b>に変え、全体をダブルクォーテーションで囲ったものがコピーされます。
+    <br>
 
-入力欄の右クリックメニューからチェッカーを開いている場合、<span class="btn_frame">貼り付け</span>ボタンを押すと、その入力欄にパターンを貼り付けて画面を閉じます。
-</p>
+    入力欄の右クリックメニューからチェッカーを開いている場合、<span class="btn_frame">貼り付け</span>ボタンを押すと、その入力欄にパターンを貼り付けて画面を閉じます。
+  </p>
 
-<p>
-検索対象と結果リストの高さ配分や、右側一覧の幅は、マウスで変更できます。<br>
-検索対象と結果リストは等幅フォントで表示されます(テキストビュアーのものを利用、サイズはダイアログフォントと同じ)。
-</p>
+  <p>
+    検索対象と結果リストの高さ配分や、右側一覧の幅は、マウスで変更できます。<br>
+    検索対象と結果リストは等幅フォントで表示されます(テキストビュアーのものを利用、サイズはダイアログフォントと同じ)。
+  </p>
 
-<dl>
-<dt class="no_bg"><span class="tips">Tips</span>
-<dd>
-正規表現チェッカーを外部から呼び出して利用することもできます。
-<pre class="example_box">
+  <dl>
+    <dt class="no_bg"><span class="tips">Tips</span></dt>
+    <dd>
+      正規表現チェッカーを外部から呼び出して利用することもできます。
+      <pre class="example_box">
 NyanFi.exe -XRegExChecker
 </pre>
-</dl>
-<br><br>
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

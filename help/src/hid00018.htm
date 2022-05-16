@@ -1,159 +1,196 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>オプション設定 - 通知・確認</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="ディレクトリの削除制限">
-	<param name="Keyword" value="確認メッセージ">
-	<param name="Keyword" value="警告">
-	<param name="Keyword" value="通知・確認">
-	<param name="Keyword" value="通知音">
-	<param name="Keyword" value="定義済みサウンド識別子">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>オプション設定 - 通知・確認</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="ディレクトリの削除制限">
+    <param name="Keyword" value="確認メッセージ">
+    <param name="Keyword" value="警告">
+    <param name="Keyword" value="通知・確認">
+    <param name="Keyword" value="通知音">
+    <param name="Keyword" value="定義済みサウンド識別子">
+  </object>
 </head>
 
 <body>
 
-<h1>オプション設定 - 通知・確認</h1>
+  <h1>オプション設定 - 通知・確認</h1>
 
-<p class="link_box">
-<a href="#Beep">警告音</a> ／ <a href="#TaskNotify">タスク終了時の通知音</a> ／ <a href="#FindNotify">検索終了時の通知音</a> ／ <a href="#WatchNotify">ファイル監視の通知音</a> ／ <a href="#Message">確認メッセージ</a> ／ <a href="#Others">その他の警告</a> ／ <a href="#ProtectDir">ディレクトリの削除制限</a>
-</p>
-<br>
+  <p class="link_box">
+    <a href="#Beep">警告音</a> ／ <a href="#TaskNotify">タスク終了時の通知音</a> ／ <a href="#FindNotify">検索終了時の通知音</a> ／ <a
+      href="#WatchNotify">ファイル監視の通知音</a> ／ <a href="#Message">確認メッセージ</a> ／ <a href="#Others">その他の警告</a> ／ <a
+      href="#ProtectDir">ディレクトリの削除制限</a>
+  </p>
+  <br>
 
-<dl>
-<dt id="Beep"><img src="grpbox.png" alt=""> 警告音
-<dd>無効な操作などを行った際の警告音を独自に指定できます。無指定の場合は、システム音が使用されます。<br>
-<span class="btn_frame"> ... </span>ボタンでファイル参照、<span class="btn_frame">&gt;</span>ボタンでテスト再生できます。<br>
-ドライブ指定がない場合は <b>NyanFi</b> ディレクトリから相対指定とみなされます。<br>
-<br>
-<b>点滅回数</b> <img src="edit.png" alt="">　<b>間隔</b>  <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 0)</span>
-<div class="indent1">
-0 でない値を設定すると、ウィンドウのタイトルバーが点滅します。これが設定されていてかつ警告音が無指定の場合、システム音は鳴らずに点滅だけとなります。
-</div>
-<br>
+  <dl>
+    <dt id="Beep"><img src="grpbox.png" alt=""> 警告音</dt>
+    <dd>無効な操作などを行った際の警告音を独自に指定できます。無指定の場合は、システム音が使用されます。<br>
+      <span class="btn_frame"> ... </span>ボタンでファイル参照、<span class="btn_frame">&gt;</span>ボタンでテスト再生できます。<br>
+      ドライブ指定がない場合は <b>NyanFi</b> ディレクトリから相対指定とみなされます。<br>
+      <br>
+      <b>点滅回数</b> <img src="edit.png" alt="">　<b>間隔</b> <img src="edit.png" alt="">　<span class="def_text">(デフォルト:
+        0)</span>
+      <div class="indent1">
+        0 でない値を設定すると、ウィンドウのタイトルバーが点滅します。これが設定されていてかつ警告音が無指定の場合、システム音は鳴らずに点滅だけとなります。
+      </div>
+      <br>
+    </dd>
 
-<dt id="TaskNotify"><img src="grpbox.png" alt=""> タスク終了時の通知音
-<dd>タスク終了時の通知音です。無指定の場合は何も鳴りません。<br>
-<span class="btn_frame"> ... </span>ボタンでファイル参照、<span class="btn_frame">&gt;</span>ボタンでテスト再生できます。<br>ドライブ指定がない場合は <b>NyanFi</b> ディレクトリ下の相対パスとみなされます。<br>
-<br>
-<b>点滅回数</b> <img src="edit.png" alt="">　<b>間隔</b>  <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 0)</span>
-<div class="indent1">
-0 でない値を設定すると、ウィンドウのタイトルバーが点滅します。
-</div>
-<br>
+    <dt id="TaskNotify"><img src="grpbox.png" alt=""> タスク終了時の通知音</dt>
+    <dd>タスク終了時の通知音です。無指定の場合は何も鳴りません。<br>
+      <span class="btn_frame"> ... </span>ボタンでファイル参照、<span class="btn_frame">&gt;</span>ボタンでテスト再生できます。<br>ドライブ指定がない場合は
+      <b>NyanFi</b> ディレクトリ下の相対パスとみなされます。<br>
+      <br>
+      <b>点滅回数</b> <img src="edit.png" alt="">　<b>間隔</b> <img src="edit.png" alt="">　<span class="def_text">(デフォルト:
+        0)</span>
+      <div class="indent1">
+        0 でない値を設定すると、ウィンドウのタイトルバーが点滅します。
+      </div>
+      <br>
 
-<img src="edit.png" alt=""> <b>秒以上かかったタスクの終了時に鳴らす</b>　<span class="def_text">(デフォルト: 10秒)</span><br>
-<div class="indent1">
-タスクの処理に指定した秒数以上かかった場合にのみ終了通知音を鳴らします。<br>
-</div>
-<br>
+      <img src="edit.png" alt=""> <b>秒以上かかったタスクの終了時に鳴らす</b>　<span class="def_text">(デフォルト: 10秒)</span><br>
+      <div class="indent1">
+        タスクの処理に指定した秒数以上かかった場合にのみ終了通知音を鳴らします。<br>
+      </div>
+      <br>
+    </dd>
 
-<dt id="FindNotify"><img src="grpbox.png" alt=""> 検索終了時の通知音
-<dd><a href="hid00052.htm">ファイル名検索</a>、<a href="hid00053.htm">ディレクトリ名検索</a>、<a href="hid00056.htm">文字列検索(GREP)</a>における検索終了時の通知音です。無指定の場合は何も鳴りません。<br>
-<span class="btn_frame"> ... </span>ボタンでファイル参照、<span class="btn_frame">&gt;</span>ボタンでテスト再生できます。<br>
-ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
-<br>
+    <dt id="FindNotify"><img src="grpbox.png" alt=""> 検索終了時の通知音</dt>
+    <dd><a href="hid00052.htm">ファイル名検索</a>、<a href="hid00053.htm">ディレクトリ名検索</a>、<a
+        href="hid00056.htm">文字列検索(GREP)</a>における検索終了時の通知音です。無指定の場合は何も鳴りません。<br>
+      <span class="btn_frame"> ... </span>ボタンでファイル参照、<span class="btn_frame">&gt;</span>ボタンでテスト再生できます。<br>
+      ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+      <br>
+    </dd>
 
-<dt id="WatchNotify"><img src="grpbox.png" alt=""> ファイル監視の通知音
-<dd><a href="hid00005.htm#ListTail">ListTail</a>、 <a href="hid00005.htm#WatchTail">WatchTail</a> コマンドで追記が検出されたときの通知音です。無指定の場合は何も鳴りません。<br>
+    <dt id="WatchNotify"><img src="grpbox.png" alt=""> ファイル監視の通知音</dt>
+    <dd><a href="hid00005.htm#ListTail">ListTail</a>、 <a href="hid00005.htm#WatchTail">WatchTail</a>
+      コマンドで追記が検出されたときの通知音です。無指定の場合は何も鳴りません。<br>
 
-<span class="btn_frame"> ... </span>ボタンでファイル参照、<span class="btn_frame">&gt;</span>ボタンでテスト再生できます。<br>
-ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
-</dl>
-<br>
+      <span class="btn_frame"> ... </span>ボタンでファイル参照、<span class="btn_frame">&gt;</span>ボタンでテスト再生できます。<br>
+      ドライブ指定がない場合は <b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+    </dd>
+  </dl>
+  <br>
 
-<p class="info_text">
-サウンドファイル名の代わりに <a href="hid00093.htm">定義済みサウンド識別子</a> を指定することもできます。<br>
-右クリックメニューの「<b>サウンド識別子を参照</b>」を用いると、サウンドが設定されている有効な識別子を選択できます。<br>
-<b>例</b>: Notification.SMS<br>
-</p>
-<p class="info_text">
-<b>FTP</b>の通知音は、<a href="hid00080.htm">FTP接続ダイアログ</a>のオプションタブで設定してください。<br>
-</p>
-<br>
+  <p class="info_text">
+    サウンドファイル名の代わりに <a href="hid00093.htm">定義済みサウンド識別子</a> を指定することもできます。<br>
+    右クリックメニューの「<b>サウンド識別子を参照</b>」を用いると、サウンドが設定されている有効な識別子を選択できます。<br>
+    <b>例</b>: Notification.SMS<br>
+  </p>
+  <p class="info_text">
+    <b>FTP</b>の通知音は、<a href="hid00080.htm">FTP接続ダイアログ</a>のオプションタブで設定してください。<br>
+  </p>
+  <br>
 
-<dl>
-<dt id="Message"><img src="grpbox.png" alt=""> 確認メッセージ
-<dd>ファイル操作を行おうとした際の、確認メッセージの有無を設定します。<br>
-<img src="chkbox.png" alt=""> <b>その他</b> は、<a href="hid00005.htm#ConvertHtm2Txt">ConvertHtm2Txt</a>、<a href="hid00005.htm#DelJpgExif">DelJpgExif</a>、<a href="hid00005.htm#ExtractChmSrc">ExtractChmSrc</a>、<a href="hid00005.htm#ExtractGifBmp">ExtractGifBmp</a>、<a href="hid00005.htm#ExtractIcon">ExtractIcon</a>、<a href="hid00005.htm#ExtractImage">ExtractImage</a>(<a href="hid00005.htm#ExtractMp3Img">ExtractMp3Img</a>) コマンドの確認です。<br>
-なお完全削除(<a href="hid00005.htm#CompleteDelete">CompleteDelete</a>)の際は必ず確認メッセージが出ますが、<img src="chkbox.png" alt=""> <b>完全削除は2度確認</b> をチェックしていると2回確認メッセージが出ます。<br>
-<div class="spc_box">
-<img src="chkbox.png" alt=""> <b>ワークリスト更新時の再読み込み</b> をチェックしていると、使用中の<a href="hid00060.htm">ワークリスト</a>・ファイルを外部で更新した場合、<b>NyanFi</b> がアクティブになったときや、ワークリストを開いたときに、再読み込みを促す確認メッセージが出ます。チェックを外すと、未保存の変更がない場合は確認なしで再読み込みを行います。<br>
-</div>
+  <dl>
+    <dt id="Message"><img src="grpbox.png" alt=""> 確認メッセージ</dt>
+    <dd>ファイル操作を行おうとした際の、確認メッセージの有無を設定します。<br>
+      <img src="chkbox.png" alt=""> <b>その他</b> は、<a href="hid00005.htm#ConvertHtm2Txt">ConvertHtm2Txt</a>、<a
+        href="hid00005.htm#DelJpgExif">DelJpgExif</a>、<a href="hid00005.htm#ExtractChmSrc">ExtractChmSrc</a>、<a
+        href="hid00005.htm#ExtractGifBmp">ExtractGifBmp</a>、<a href="hid00005.htm#ExtractIcon">ExtractIcon</a>、<a
+        href="hid00005.htm#ExtractImage">ExtractImage</a>(<a href="hid00005.htm#ExtractMp3Img">ExtractMp3Img</a>)
+      コマンドの確認です。<br>
+      なお完全削除(<a href="hid00005.htm#CompleteDelete">CompleteDelete</a>)の際は必ず確認メッセージが出ますが、<img src="chkbox.png" alt="">
+      <b>完全削除は2度確認</b> をチェックしていると2回確認メッセージが出ます。<br>
+      <div class="spc_box">
+        <img src="chkbox.png" alt=""> <b>ワークリスト更新時の再読み込み</b> をチェックしていると、使用中の<a
+          href="hid00060.htm">ワークリスト</a>・ファイルを外部で更新した場合、<b>NyanFi</b>
+        がアクティブになったときや、ワークリストを開いたときに、再読み込みを促す確認メッセージが出ます。チェックを外すと、未保存の変更がない場合は確認なしで再読み込みを行います。<br>
+      </div>
 
-<div class="spc_box">
-<img src="chkbox.png" alt=""> <b>キャンセルボタンを表示</b> をチェックしていると、<span class="btn_frame">はい</span><span class="btn_frame">いいえ</span>の他に<span class="btn_frame">キャンセル</span>ボタンも表示され、<span class="btn_frame">ESC</span>キーでのキャンセルが可能になります。<br>
-<img src="chkbox.png" alt=""> <b>「いいえ」がデフォルトボタン</b> をチェックしていると、<span class="btn_frame">Enter</span>キー押したときに「いいえ」が選択されます。なお「<a href="#ProtectDir">ディレクトリの削除制限</a>」の確認メッセージについては、この設定にかかわらず「いいえ」がデフォルトボタンになります。
-<br>
-<img src="chkbox.png" alt=""> <b>状況に応じて表示位置を調整</b> をチェックしていると、状況に応じて、カレント側ファイルリスト/メイン画面/ダイアログのいずれかの中央に確認メッセージが表示されます。チェックを外すと従来通りモニタ画面中央に表示されます。<br>
-</div>
-<div class="info_text">
-コマンドファイル内などで確認メッセージを抑止したい場合は、<a href="hid00063.htm#MsgOff">MsgOff</a> 補助コマンドを用いてください。
-</div>
-<br>
+      <div class="spc_box">
+        <img src="chkbox.png" alt=""> <b>キャンセルボタンを表示</b> をチェックしていると、<span class="btn_frame">はい</span><span
+          class="btn_frame">いいえ</span>の他に<span class="btn_frame">キャンセル</span>ボタンも表示され、<span
+          class="btn_frame">ESC</span>キーでのキャンセルが可能になります。<br>
+        <img src="chkbox.png" alt=""> <b>「いいえ」がデフォルトボタン</b> をチェックしていると、<span
+          class="btn_frame">Enter</span>キー押したときに「いいえ」が選択されます。なお「<a
+          href="#ProtectDir">ディレクトリの削除制限</a>」の確認メッセージについては、この設定にかかわらず「いいえ」がデフォルトボタンになります。
+        <br>
+        <img src="chkbox.png" alt=""> <b>状況に応じて表示位置を調整</b>
+        をチェックしていると、状況に応じて、カレント側ファイルリスト/メイン画面/ダイアログのいずれかの中央に確認メッセージが表示されます。チェックを外すと従来通りモニタ画面中央に表示されます。<br>
+      </div>
+      <div class="info_text">
+        コマンドファイル内などで確認メッセージを抑止したい場合は、<a href="hid00063.htm#MsgOff">MsgOff</a> 補助コマンドを用いてください。
+      </div>
+      <br>
+    </dd>
 
-<dt id="Others"><img src="grpbox.png" alt=""> その他の警告
-<dd>
-<img src="chkbox.png" alt=""> <b>電源の接続切れ</b><br>
-<div class="indent1">
-電源の接続が切れたときに警告を出します。<br>
-</div>
-<img src="chkbox.png" alt=""> <b>バッテリー低下</b><br>
-<div class="indent1">
-バッテリーの残量が指定パーセント値より下がったときに警告を出します。<br>
-</div>
+    <dt id="Others"><img src="grpbox.png" alt=""> その他の警告</dt>
+    <dd>
+      <img src="chkbox.png" alt=""> <b>電源の接続切れ</b><br>
+      <div class="indent1">
+        電源の接続が切れたときに警告を出します。<br>
+      </div>
+      <img src="chkbox.png" alt=""> <b>バッテリー低下</b><br>
+      <div class="indent1">
+        バッテリーの残量が指定パーセント値より下がったときに警告を出します。<br>
+      </div>
 
-<img src="chkbox.png" alt=""> <b>インターネット接続切れ</b><br>
-<div class="indent1">
-インターネット接続が切れたときに警告を出します。<br>
-</div>
-<br><br>
+      <img src="chkbox.png" alt=""> <b>インターネット接続切れ</b><br>
+      <div class="indent1">
+        インターネット接続が切れたときに警告を出します。<br>
+      </div>
+      <br><br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> メッセージをヒント表示
-<dd>警告メッセージなどをヒントウィンドウで表示します。ステータスバーを非表示にしている場合などに役立ちます。<br>
-<b>表示時間</b>をm秒単位で指定できます(0だと次の操作まで表示したまま)。<br>
-ヒントの背景/文字色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> メッセージをヒント表示</dt>
+    <dd>警告メッセージなどをヒントウィンドウで表示します。ステータスバーを非表示にしている場合などに役立ちます。<br>
+      <b>表示時間</b>をm秒単位で指定できます(0だと次の操作まで表示したまま)。<br>
+      ヒントの背景/文字色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 2ストロークのヒント表示
-<dd>2ストローク操作の開始キーを押した時に、該当するキー操作一覧をヒント表示します。キーを押してから表示されるまでの<b>待機時間</b>を m秒単位で指定できます(0だと表示されません)。
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 2ストロークのヒント表示</dt>
+    <dd>2ストローク操作の開始キーを押した時に、該当するキー操作一覧をヒント表示します。キーを押してから表示されるまでの<b>待機時間</b>を m秒単位で指定できます(0だと表示されません)。
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 無効な2ストローク操作に警告を出す
-<dd>コマンドの割り当てられていない2ストローク操作を行った際に警告を出します。<br>
-なお無効な2ストローク操作の2ストローク目が<span class="btn_frame">ESC</span>キーだった場合は、キャンセルとみなされ、警告は出ません。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 無効な2ストローク操作に警告を出す</dt>
+    <dd>コマンドの割り当てられていない2ストローク操作を行った際に警告を出します。<br>
+      なお無効な2ストローク操作の2ストローク目が<span class="btn_frame">ESC</span>キーだった場合は、キャンセルとみなされ、警告は出ません。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> クリップボードへのコピー情報をヒント表示
-<dd>テキストや画像をクリップボードへコピーした際に、コピーしたサイズや行/文字数をヒント表示します。<br>
-なお、テキストボックスやコンボボックスなどではヒント表示されません。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> クリップボードへのコピー情報をヒント表示</dt>
+    <dd>テキストや画像をクリップボードへコピーした際に、コピーしたサイズや行/文字数をヒント表示します。<br>
+      なお、テキストボックスやコンボボックスなどではヒント表示されません。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 二重起動されたNyanFiからの通知を表示
-<dd>最初に起動された <b>NyanFi</b> がアクティブな場合、二重起動された <b>NyanFi</b> からの通知(すべてのタスクが終了、圧縮/解凍が終了、ListTail コマンドでの更新検出)をヒント表示します。<br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 二重起動されたNyanFiからの通知を表示</dt>
+    <dd>最初に起動された <b>NyanFi</b> がアクティブな場合、二重起動された <b>NyanFi</b> からの通知(すべてのタスクが終了、圧縮/解凍が終了、ListTail
+      コマンドでの更新検出)をヒント表示します。<br>
+    </dd>
 
-<dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ツールチップを表示
-<dd>コントロールへのマウスオーバー時にツールチップを表示します。<br>
-ツールチップの背景/文字色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。
-<br><br>
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ツールチップを表示</dt>
+    <dd>コントロールへのマウスオーバー時にツールチップを表示します。<br>
+      ツールチップの背景/文字色は、<a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。
+      <br><br>
+    </dd>
 
-<dt id="ProtectDir"><img src="grpbox.png" alt=""> ディレクトリの削除制限
-<dd>この一覧に登録したディレクトリは、<a href="hid00005.htm#Delete">Delete</a> または <a href="hid00005.htm#CompleteDelete">CompleteDelete</a> コマンドで削除しようとした際に、指定したモードによる削除制限がかかります。<br>
-<span class="btn_frame">追加</span>ボタンを押すと、ディレクトリを参照して一覧に追加できます。<br>
+    <dt id="ProtectDir"><img src="grpbox.png" alt=""> ディレクトリの削除制限</dt>
+    <dd>この一覧に登録したディレクトリは、<a href="hid00005.htm#Delete">Delete</a> または <a
+        href="hid00005.htm#CompleteDelete">CompleteDelete</a> コマンドで削除しようとした際に、指定したモードによる削除制限がかかります。<br>
+      <span class="btn_frame">追加</span>ボタンを押すと、ディレクトリを参照して一覧に追加できます。<br>
 
-<div class="spc_box">
-<b>制限モード</b>は、<img src="radio.png" alt=""> <b>削除禁止</b> または <img src="radio.png" alt=""> <b>確認して削除</b> のいずれかを選んでください。<br>
-<b>削除禁止</b> の場合、警告メッセージが出て削除できません。<br>
-<b>確認して削除</b> の場合、確認メッセージ(「いいえ」がデフォルトボタン)で「はい」を選ぶと削除が可能になります。<br>
-</div>
+      <div class="spc_box">
+        <b>制限モード</b>は、<img src="radio.png" alt=""> <b>削除禁止</b> または <img src="radio.png" alt=""> <b>確認して削除</b>
+        のいずれかを選んでください。<br>
+        <b>削除禁止</b> の場合、警告メッセージが出て削除できません。<br>
+        <b>確認して削除</b> の場合、確認メッセージ(「いいえ」がデフォルトボタン)で「はい」を選ぶと削除が可能になります。<br>
+      </div>
 
-<div class="spc_box">
-制限は、登録ディレクトリのすべての上位ディレクトリにもかかります。<br>
-<img src="chkbox.png" alt=""> <b>下位ディレクトリも制限</b> がチェックされていると、すべての下位ディレクトリも制限されます。<br>
-<img src="chkbox.png" alt=""> <b>ファイルの削除も制限</b>  がチェックされていると、制限ディレクトリ内でのファイル削除も制限されます。チェックしていない場合は、制限ディレクトリ内でもファイルは普通に削除できます。<br>
-</div>
-
-</dl>
-<br><br>
+      <div class="spc_box">
+        制限は、登録ディレクトリのすべての上位ディレクトリにもかかります。<br>
+        <img src="chkbox.png" alt=""> <b>下位ディレクトリも制限</b> がチェックされていると、すべての下位ディレクトリも制限されます。<br>
+        <img src="chkbox.png" alt=""> <b>ファイルの削除も制限</b>
+        がチェックされていると、制限ディレクトリ内でのファイル削除も制限されます。チェックしていない場合は、制限ディレクトリ内でもファイルは普通に削除できます。<br>
+      </div>
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

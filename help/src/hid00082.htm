@@ -1,75 +1,83 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>テキストプレビュー</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="nyanfi.def">
-	<param name="Keyword" value="ToLeft">
-	<param name="Keyword" value="ToParentOnLeft">
-	<param name="Keyword" value="ToParentOnRight">
-	<param name="Keyword" value="ToRight">
-	<param name="Keyword" value="ToText">
-	<param name="Keyword" value="テキストプレビュー">
-	<param name="Keyword" value="末尾分割表示">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>テキストプレビュー</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="nyanfi.def">
+    <param name="Keyword" value="ToLeft">
+    <param name="Keyword" value="ToParentOnLeft">
+    <param name="Keyword" value="ToParentOnRight">
+    <param name="Keyword" value="ToRight">
+    <param name="Keyword" value="ToText">
+    <param name="Keyword" value="テキストプレビュー">
+    <param name="Keyword" value="末尾分割表示">
+  </object>
 </head>
 
 <body>
 
-<h1>テキストプレビュー</h1>
-<p>
-ファイラー画面にプレビューが表示されている場合、カーソル位置がテキストファイルだと、その内容をプレビュー表示できます。<br>
-ファイラーで <a href="hid00005.htm#ToText">ToText</a> コマンドを実行すると、プレビューにフォーカスが移ります。
-</p>
+  <h1>テキストプレビュー</h1>
+  <p>
+    ファイラー画面にプレビューが表示されている場合、カーソル位置がテキストファイルだと、その内容をプレビュー表示できます。<br>
+    ファイラーで <a href="hid00005.htm#ToText">ToText</a> コマンドを実行すると、プレビューにフォーカスが移ります。
+  </p>
 
-<dl>
-<dt class="no_bg">プレビューでのキー操作
-<dd>
-プレビューにフォーカスがあると、プレビュー側にラインカーソルが表示されます。<br>
-カーソル移動などは、ファイラーやテキストビュアーで割り当てられているのと同じキー操作で行えます。<br>
-対応しているコマンドは、CursorDown/Up/Top/End、TextTop/End(TV)、PageDown/Up、ScrollDown/Up、ScrollCursorDown/Up(TV)、Select、SelAll～、SelectAll(TV)、ClipCopy(TV)、OpenURL(TV) です。<br>
-ただし2ストロークキー操作には対応していません。<br>
-<div class="spc_box">
-ファイラーで <a href="hid00005.htm#ToLeft">ToLeft</a> / <a href="hid00005.htm#ToRight">ToRight</a>、<a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a> / <a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a> コマンドが割り当てられているキーや、<span class="btn_frame">←</span> / <span class="btn_frame">→</span>キーを押すと、左/右ファイルリストに戻れます。<br>
-</div>
-<br>
+  <dl>
+    <dt class="no_bg">プレビューでのキー操作</dt>
+    <dd>
+      プレビューにフォーカスがあると、プレビュー側にラインカーソルが表示されます。<br>
+      カーソル移動などは、ファイラーやテキストビュアーで割り当てられているのと同じキー操作で行えます。<br>
+      対応しているコマンドは、CursorDown/Up/Top/End、TextTop/End(TV)、PageDown/Up、ScrollDown/Up、ScrollCursorDown/Up(TV)、Select、SelAll～、SelectAll(TV)、ClipCopy(TV)、OpenURL(TV)
+      です。<br>
+      ただし2ストロークキー操作には対応していません。<br>
+      <div class="spc_box">
+        ファイラーで <a href="hid00005.htm#ToLeft">ToLeft</a> / <a href="hid00005.htm#ToRight">ToRight</a>、<a
+          href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a> / <a
+          href="hid00005.htm#ToParentOnRight">ToParentOnRight</a> コマンドが割り当てられているキーや、<span class="btn_frame">←</span> /
+        <span class="btn_frame">→</span>キーを押すと、左/右ファイルリストに戻れます。<br>
+      </div>
+      <br>
+    </dd>
 
+    <dt class="no_bg">右クリックメニュー</dt>
+    <dd>
+      「<b>コピー</b>」、「<b>すべて選択</b>」、「<b>URLを開く</b>」が可能です。<br>
+      また「<b>行番号を表示</b>」させることもできます。その場合、行番号の配色はテキストビュアーと同じになります。<br>
 
-<dt class="no_bg">右クリックメニュー
-<dd>
-「<b>コピー</b>」、「<b>すべて選択</b>」、「<b>URLを開く</b>」が可能です。<br>
-また「<b>行番号を表示</b>」させることもできます。その場合、行番号の配色はテキストビュアーと同じになります。<br>
+      <div class="spc_box">
+        「<b>文字コード変更</b>」を行うと、そのコードページがファイルの代替データストリームに <a href="hid00102.htm#NyanfiDef">nyanfi.def</a>
+        という名前で保存され、次回表示時にもそれが用いられます。<br>
+      </div>
 
-<div class="spc_box">
-「<b>文字コード変更</b>」を行うと、そのコードページがファイルの代替データストリームに <a href="hid00102.htm#NyanfiDef">nyanfi.def</a> という名前で保存され、次回表示時にもそれが用いられます。<br>
-</div>
+      <div class="spc_box">
+        「<b>カーソル位置を維持</b>」をチェックしていると、ファイラーで別のテキストファイルに移ったときに、プレビューのカーソル位置が可能な限り維持されます(テキストファイル以外に移るとリセット)。<br>
+      </div>
 
-<div class="spc_box">
-「<b>カーソル位置を維持</b>」をチェックしていると、ファイラーで別のテキストファイルに移ったときに、プレビューのカーソル位置が可能な限り維持されます(テキストファイル以外に移るとリセット)。<br>
-</div>
+      <div class="spc_box">
+        「<b>末尾分割表示</b>」をチェックしていると、テキストプレビューを上下に分割し、テキストの末尾を表示します。<br>
+        これは、<a href="hid00024.htm#TextPreview">オプション設定 - 一般2 - テキストプレビュー</a> の「<b>末尾分割表示</b>」と連動しています。<br>
+      </div>
 
-<div class="spc_box">
-「<b>末尾分割表示</b>」をチェックしていると、テキストプレビューを上下に分割し、テキストの末尾を表示します。<br>
-これは、<a href="hid00024.htm#TextPreview">オプション設定 - 一般2 - テキストプレビュー</a> の「<b>末尾分割表示</b>」と連動しています。<br>
-</div>
+      <div class="spc_box">
+        「<b>テキストプレビューのロック</b>」で、プレビュー表示をロックできます。ファイラーで別のファイルにカーソルを移動しても、表示内容がそのまま保持されます。<br>
+        ロック解除は、右クリックメニューか、プレビュー下部のロック表示をダブルクリックで可能です。<br>
+        ファイラーからは、<a href="hid00005.htm#LockTextPreview">LockTextPreview</a> コマンドでロック/解除できます。<br>
+      </div>
+    </dd>
 
-<div class="spc_box">
-「<b>テキストプレビューのロック</b>」で、プレビュー表示をロックできます。ファイラーで別のファイルにカーソルを移動しても、表示内容がそのまま保持されます。<br>
-ロック解除は、右クリックメニューか、プレビュー下部のロック表示をダブルクリックで可能です。<br>
-ファイラーからは、<a href="hid00005.htm#LockTextPreview">LockTextPreview</a> コマンドでロック/解除できます。<br>
-</div>
-
-<dt class="no_bg">設定
-<dd>
-テキストプレビューについての設定は、<a href="hid00024.htm#TextPreview">オプション設定 - 一般2 - テキストプレビュー</a> で行ってください。<br>
-「<b>末尾分割表示</b>」がチェックされていると、テキストプレビューを上下に分割し、テキストの末尾を指定行数分だけ表示できます。<br>
-<br>
-なお、<a href="hid00021.htm">オプション設定 - イベント</a> で、テキストプレビューをダブルクリックしたときに実行するコマンドを指定できます。
-
-</dl>
-<br><br>
+    <dt class="no_bg">設定</dt>
+    <dd>
+      テキストプレビューについての設定は、<a href="hid00024.htm#TextPreview">オプション設定 - 一般2 - テキストプレビュー</a> で行ってください。<br>
+      「<b>末尾分割表示</b>」がチェックされていると、テキストプレビューを上下に分割し、テキストの末尾を指定行数分だけ表示できます。<br>
+      <br>
+      なお、<a href="hid00021.htm">オプション設定 - イベント</a> で、テキストプレビューをダブルクリックしたときに実行するコマンドを指定できます。
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

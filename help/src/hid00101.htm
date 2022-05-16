@@ -1,979 +1,4024 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>コマンドの索引(機能別)</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="イメージビュアー">
-	<param name="Keyword" value="インクリメンタルサーチ">
-	<param name="Keyword" value="コマンドの索引">
-	<param name="Keyword" value="テキストビュアー">
-	<param name="Keyword" value="ファイラー">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>コマンドの索引(機能別)</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="イメージビュアー">
+    <param name="Keyword" value="インクリメンタルサーチ">
+    <param name="Keyword" value="コマンドの索引">
+    <param name="Keyword" value="テキストビュアー">
+    <param name="Keyword" value="ファイラー">
+  </object>
 
-<style type="text/css">
-  div a {
-    white-space: nowrap;
-  }
+  <style type="text/css">
+    div a {
+      white-space: nowrap;
+    }
 
-  td {
-    vertical-align:top;
-    padding: 0px 0.5em;
-    border-style: none none solid none;
-    border-width: 1px;
-    border-color: #dddddd;
-  }
+    td {
+      vertical-align: top;
+      padding: 0px 0.5em;
+      border-style: none none solid none;
+      border-width: 1px;
+      border-color: #dddddd;
+    }
 
-  td a {
-    display: table-cell;
-    width: 100%;
-  }
-</style>
+    td a {
+      display: table-cell;
+      width: 100%;
+    }
+  </style>
 </head>
 
 <body>
-<h1>コマンドの索引(機能別)</h1>
-
-<p class="link_box">
-<a href="#FL">ファイラー</a> (<a href="#IS"><small>インクリメンタルサーチ</small></a>) ／ <a href="#TV">テキストビュアー</a> ／ <a href="#IV">イメージビュアー</a><br>
-　　<a href="hid00100.htm">→ アルファベット順索引</a> ／ 　<a href="hid00063.htm">→ ExeCommands コマンド</a>
-</p>
-<p>コマンドによっては、複数の項目に分類されている場合があります。</p>
-
-<h2 id="FL">ファイラー</h2>
-<p class="link_box">
-<a href="#f_File">ファイル操作</a> ／ 
-<a href="#f_Arc">アーカイブ</a> ／ 
-<a href="#f_FTP">FTP</a> ／ 
-<a href="#f_Open">開く</a> ／ 
-<a href="#f_Drive">ドライブ</a> ／ 
-<a href="#f_Dir">ディレクトリ</a> ／ 
-<a href="#f_Tab">タブ操作</a> ／ 
-<a href="#f_FileList">ファイルリスト</a> ／ 
-<a href="#f_Cursor">カーソル移動</a> ／ 
-<a href="#f_Scroll">スクロール</a> ／ 
-<a href="#f_Select">選択</a> ／ 
-<a href="#f_Mark">栞マーク</a> ／ 
-<a href="#f_Tag">タグ管理</a> ／ 
-<a href="#f_Mask">マスク</a> ／ 
-<a href="#f_Find">検索・ソート・比較</a> ／ 
-<a href="#f_List">一覧</a> ／ 
-<a href="#f_WorkList">ワークリスト</a> ／ 
-<a href="#f_Menu">メニュー</a> ／ 
-<a href="#f_Command">実行</a> ／ 
-<a href="#f_Tool">ツール</a> ／ 
-<a href="#f_Task">タスク</a> ／ 
-<a href="#f_Info">情報</a> ／ 
-<a href="#f_View">表示</a> ／ 
-<a href="#f_Setup">設定</a> ／ 
-<a href="#f_Git">Git</a> ／ 
-<a href="#f_Other">その他</a> ／ 
-<a href="#f_TV">テキストビュアー設定</a>
-</p>
-
-<table border="0" cellspacing="0">
-<tr id="f_File"><td colspan="3"><br><b>ファイル操作</b></td></tr>
-<tr><td><a href="hid00005.htm#Backup">Backup</a></td><td>反対パスにバックアップ</td><td><a href="hid00071.htm">→ バックアップダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#Clone">Clone</a></td><td>反対パスにクローン作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CloneToCurr">CloneToCurr</a></td><td>カレントにクローン作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CompleteDelete">CompleteDelete</a></td><td>完全削除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CompressDir">CompressDir</a></td><td>ディレクトリのNTFS圧縮</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Copy">Copy</a></td><td>コピー</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CopyDir">CopyDir</a></td><td>ディレクトリ構造のコピー</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CopyFileName">CopyFileName</a></td><td>ファイル名をクリップボードにコピー</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CopyTo">CopyTo</a></td><td>指定ディレクトリにコピー</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CopyToClip">CopyToClip</a></td><td>クリップボードにコピー</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CreateDir">CreateDir</a></td><td>ディレクトリの作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CreateDirsDlg">CreateDirsDlg</a></td><td>ディレクトリ一括作成ダイアログ</td><td><a href="hid00079.htm">→ ディレクトリ一括作成ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#CreateHardLink">CreateHardLink</a></td><td>ハードリンクの作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CreateJunction">CreateJunction</a></td><td>ジャンクションの作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CreateShortcut">CreateShortcut</a></td><td>ショートカットの作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CreateSymLink">CreateSymLink</a></td><td>シンボリックリンクの作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CreateTestFile">CreateTestFile</a></td><td>テストファイルの作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CutToClip">CutToClip</a></td><td>クリップボードに切り取り</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Delete">Delete</a></td><td>削除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#DeleteADS">DeleteADS</a></td><td>代替データストリームを削除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#DistributionDlg">DistributionDlg</a></td><td>振り分けダイアログ</td><td><a href="hid00077.htm">→ 振り分けダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#EmptyTrash">EmptyTrash</a></td><td>ごみ箱を空にする</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Move">Move</a></td><td>移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MoveTo">MoveTo</a></td><td>指定ディレクトリへ移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NameFromClip">NameFromClip</a></td><td>ファイル名をクリップボードの内容に</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NameToLower">NameToLower</a></td><td>ファイル名の小文字化</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NameToUpper">NameToUpper</a></td><td>ファイル名の大文字化</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NewFile">NewFile</a></td><td>新規ファイルの作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NewTextFile">NewTextFile</a></td><td>新規テキストファイルの作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Paste">Paste</a></td><td>貼り付け</td><td></td></tr>
-<tr><td><a href="hid00005.htm#RenameDlg">RenameDlg</a></td><td>名前等の変更</td><td><a href="hid00051.htm">→ 名前の変更ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#RegSyncDlg">RegSyncDlg</a></td><td>同期コピーの設定ダイアログ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetArcTime">SetArcTime</a></td><td>アーカイブのタイムスタンプを最新に合わせる</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetDirTime">SetDirTime</a></td><td>ディレクトリのタイムスタンプを最新に合わせる</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SortDlg">SortDlg</a></td><td>ソートダイアログ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SwapName">SwapName</a></td><td>名前を入れ替える</td><td></td></tr>
-<tr><td><a href="hid00005.htm#UndoRename">UndoRename</a></td><td>直前の改名を元に戻す</td><td></td></tr>
-<tr><td><a href="hid00005.htm#UnPackToCurr">UnPackToCurr</a></td><td>カレントパスに解凍</td><td></td></tr>
-<tr><td><a href="hid00005.htm#UseTrash">UseTrash</a></td><td>削除にごみ箱を使う/使わない</td><td></td></tr>
-
-<tr id="f_Arc"><td colspan="3"><br><b>アーカイブ</b></td></tr>
-<tr><td><a href="hid00005.htm#ListArchive">ListArchive</a></td><td>アーカイブの内容一覧をログに表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Pack">Pack</a></td><td>反対パスにアーカイブ作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PackToCurr">PackToCurr</a></td><td>カレントパスにアーカイブ作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#TestArchive">TestArchive</a></td><td>アーカイブの正当性を検査</td><td></td></tr>
-<tr><td><a href="hid00005.htm#UnPack">UnPack</a></td><td>反対パスに解凍</td><td></td></tr>
-<tr><td><a href="hid00005.htm#UpdateFromArc">UpdateFromArc</a></td><td>アーカイブから更新</td><td></td></tr>
-
-<tr id="f_FTP"><td colspan="3"><br><b>FTP</b></td></tr>
-<tr><td><a href="hid00005.htm#FTPChmod">FTPChmod</a></td><td>パーミッションの設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FTPConnect">FTPConnect</a></td><td>FTPホストに接続</td><td><a href="hid00080.htm">→ FTP接続ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#FTPDisconnect">FTPDisconnect</a></td><td>FTPホストから切断</td><td></td></tr>
-
-<tr id="f_Open"><td colspan="3"><br><b>開く</b></td></tr>
-<tr><td><a href="hid00005.htm#BinaryEdit">BinaryEdit</a></td><td>ファイルのバイナリ編集</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FileEdit">FileEdit</a></td><td>ファイルの編集</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ImageViewer">ImageViewer</a></td><td>イメージビュアーで開く</td><td><a href="hid00007.htm">→ イメージビュアー</a></td></tr>
-<tr><td><a href="hid00005.htm#OpenADS">OpenADS</a></td><td>代替データストリームを仮想リストとして開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#OpenByApp">OpenByApp</a></td><td>独自の関連付けで開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#OpenByExp">OpenByExp</a></td><td>エクスプローラで開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#OpenByWin">OpenByWin</a></td><td>Windowsの関連付けで開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#OpenCtrlPanel">OpenCtrlPanel</a></td><td>コントロールパネルを開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#OpenGitURL">OpenGitURL</a></td><td>リモートリポジトリURLを開く</td><td><a href="hid00090.htm">→ Git の利用について</a></td></tr>
-<tr><td><a href="hid00005.htm#OpenStandard">OpenStandard</a></td><td>標準の Enter キー動作</td><td></td></tr>
-<tr><td><a href="hid00005.htm#OpenTrash">OpenTrash</a></td><td>ごみ箱を開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#TextViewer">TextViewer</a></td><td>テキストビュアーで開く</td><td><a href="hid00006.htm">→ テキストビュアー</a></td></tr>
-<tr><td><a href="hid00005.htm#SubViewer">SubViewer</a></td><td>サブビュアーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ViewTail">ViewTail</a></td><td>テキストファイルの末尾を閲覧</td><td><a href="hid00006.htm">→ テキストビュアー</a></td></tr>
-
-<tr id="f_Drive"><td colspan="3"><br><b>ドライブ</b></td></tr>
-<tr><td><a href="hid00005.htm#ChangeDrive">ChangeDrive</a></td><td>ドライブの変更</td><td></td></tr>
-<tr><td><a href="hid00005.htm#DriveGraph">DriveGraph</a></td><td>ドライブ使用率推移</td><td><a href="hid00086.htm">→ ドライブ使用率推移</a></td></tr>
-<tr><td><a href="hid00005.htm#DriveList">DriveList</a></td><td>ドライブ一覧</td><td><a href="hid00064.htm">→ ドライブ一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#Eject">Eject</a></td><td>CD/DVDドライブのトレイを開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#EjectDrive">EjectDrive</a></td><td>ドライブの取り外し</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NetConnect">NetConnect</a></td><td>ネットワークドライブの割り当て</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NetDisconnect">NetDisconnect</a></td><td>ネットワークドライブの切断</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NextDrive">NextDrive</a></td><td>次のドライブへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PrevDrive">PrevDrive</a></td><td>前のドライブへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShareList">ShareList</a></td><td>共有フォルダ一覧</td><td></td></tr>
-
-<tr id="f_Dir"><td colspan="3"><br><b>ディレクトリ</b></td></tr>
-<tr><td><a href="hid00005.htm#BackDirHist">BackDirHist</a></td><td>ディレクトリ履歴を戻る</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ChangeDir">ChangeDir</a></td><td>ディレクトリを変更</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ChangeOppDir">ChangeOppDir</a></td><td>反対側のディレクトリを変更</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ChangeOppRegDir">ChangeOppRegDir</a></td><td>反対側で登録ディレクトリを開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ChangeRegDir">ChangeRegDir</a></td><td>登録ディレクトリを開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CsrDirToOpp">CsrDirToOpp</a></td><td>カーソル位置のディレクトリを反対側に開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CurrFromOpp">CurrFromOpp</a></td><td>カレントパスを反対パスに</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CurrToOpp">CurrToOpp</a></td><td>反対パスをカレントパスに</td><td></td></tr>
-<tr><td><a href="hid00005.htm#DirHistory">DirHistory</a></td><td>ディレクトリ履歴</td><td><a href="hid00057.htm">→ ディレクトリ履歴</a></td></tr>
-<tr><td><a href="hid00005.htm#DirStack">DirStack</a></td><td>ディレクトリ・スタック</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ForwardDirHist">ForwardDirHist</a></td><td>ディレクトリ履歴を進む</td><td></td></tr>
-<tr><td><a href="hid00005.htm#InputDir">InputDir</a></td><td>入力したディレクトリに変更</td><td></td></tr>
-<tr><td><a href="hid00005.htm#JumpTo">JumpTo</a></td><td>指定したファイル位置へ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Library">Library</a></td><td>ライブラリを開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#LinkToOpp">LinkToOpp</a></td><td>リンク先を反対側に開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ListTree">ListTree</a></td><td>ディレクトリ構造を一覧でツリー表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#OpenCtrlPanel">OpenCtrlPanel</a></td><td>コントロールパネルを開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#OpenTrash">OpenTrash</a></td><td>ごみ箱を開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PopDir">PopDir</a></td><td>ディレクトリをポップ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PushDir">PushDir</a></td><td>ディレクトリをプッシュ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#RegDirDlg">RegDirDlg</a></td><td>登録ディレクトリダイアログ</td><td><a href="hid00054.htm">→ 登録ディレクトリダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#RegDirPopup">RegDirPopup</a></td><td>登録ディレクトリ・ポップアップメニュー</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SpecialDirList">SpecialDirList</a></td><td>特殊フォルダ一覧</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SubDirList">SubDirList</a></td><td>サブディレクトリ一覧</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShareList">ShareList</a></td><td>共有フォルダ一覧</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SyncLR">SyncLR</a></td><td>左右ディレクトリの同期変更を有効/解除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToParent">ToParent</a></td><td>親ディレクトリへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a></td><td>左ファイルリストで親ディレクトリへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a></td><td>右ファイルリストで親ディレクトリへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToRoot">ToRoot</a></td><td>ルートディレクトリへ</td><td></td></tr>
-
-<tr id="f_Tab"><td colspan="3"><br><b>タブ操作</b></td></tr>
-<tr><td><a href="hid00005.htm#AddTab">AddTab</a></td><td>タブを追加</td><td></td></tr>
-<tr><td><a href="hid00005.htm#DelTab">DelTab</a></td><td>タブを削除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FixTabPath">FixTabPath</a></td><td>タブ変更に対してカレントパスを一時固定/解除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#LoadTabGroup">LoadTabGroup</a></td><td>タブグループをファイルから読み込む</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MoveTab">MoveTab</a></td><td>タブの位置を移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NextTab">NextTab</a></td><td>次のタブへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PopupTab">PopupTab</a></td><td>タブ選択メニューを表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PrevTab">PrevTab</a></td><td>前のタブへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SaveAsTabGroup">SaveAsTabGroup</a></td><td>タブグループに名前を付けて保存</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SaveTabGroup">SaveTabGroup</a></td><td>タブグループを上書き保存</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowTabBar">ShowTabBar</a></td><td>タブバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SoloTab">SoloTab</a></td><td>他のタブをすべて削除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#TabDlg">TabDlg</a></td><td>タブの設定ダイアログ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#TabHome">TabHome</a></td><td>タブのホームへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToTab">ToTab</a></td><td>指定番号のタブへ</td><td></td></tr>
-
-<tr id="f_FileList"><td colspan="3"><br><b>ファイルリスト</b></td></tr>
-<tr><td><a href="hid00005.htm#ItemTmpDown">ItemTmpDown</a></td><td>項目を一時的に一つ下に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ItemTmpMove">ItemTmpMove</a></td><td>選択項目を一時的にカーソル位置に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ItemTmpUp">ItemTmpUp</a></td><td>項目を一時的に一つ上に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#LoadResultList">LoadResultList</a></td><td>結果リストをファイルから読み込む</td><td></td></tr>
-<tr><td><a href="hid00005.htm#OpenADS">OpenADS</a></td><td>代替データストリームを仮想リストとして開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ReloadList">ReloadList</a></td><td>ファイルリストを最新の情報に更新</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ReturnList">ReturnList</a></td><td>ファイルリスト表示に戻る</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SaveAsResultList">SaveAsResultList</a></td><td>結果リストに名前を付けて保存</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SwapLR">SwapLR</a></td><td>左右のファイルリストを入れ替える</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToLeft">ToLeft</a></td><td>左ファイルリストへ</td><td>逆カーソルで親ディレクトリに移動したい場合は <b>ToParentOnLeft</b></td>
-</tr>
-<tr><td><a href="hid00005.htm#ToLog">ToLog</a></td><td>ログウィンドウへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToNextOnRight">ToNextOnRight</a></td><td>右ファイルリストで次のNyanFiへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToOpposite">ToOpposite</a></td><td>反対側のファイルリストへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToOppSameItem">ToOppSameItem</a></td><td>カーソル位置と同名の反対パス項目へ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a></td><td>左ファイルリストで親ディレクトリへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a></td><td>右ファイルリストで親ディレクトリへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToPrevOnLeft">ToPrevOnLeft</a></td><td>左ファイルリストで前のNyanFiへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToRight">ToRight</a></td><td>右ファイルリストへ</td><td>逆カーソルで親ディレクトリに移動したい場合は <b>ToParentOnRight</b></td></tr>
-<tr><td><a href="hid00005.htm#ToText">ToText</a></td><td>テキストプレビューへ</td><td></td></tr>
-
-<tr id="f_Cursor"><td colspan="3"><br><b>カーソル移動</b></td></tr>
-<tr><td><a href="hid00005.htm#CursorDown">CursorDown</a></td><td>カーソルを下に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CursorDownSel">CursorDownSel</a></td><td>選択しながらカーソルを下に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CursorEnd">CursorEnd</a></td><td>カーソルを最下行に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CursorEndSel">CursorEndSel</a></td><td>選択しながらカーソルを最下行に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CursorTop">CursorTop</a></td><td>カーソルを最上行に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CursorTopSel">CursorTopSel</a></td><td>選択しながらカーソルを最上行に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CursorUp">CursorUp</a></td><td>カーソルを上に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CursorUpSel">CursorUpSel</a></td><td>選択しながらカーソルを上に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#JumpTo">JumpTo</a></td><td>指定したファイル位置へ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NextMark">NextMark</a></td><td>次の栞マーク項目へ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NextSameName">NextSameName</a></td><td>ファイル名主部が同じ次ファイルへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NextSelItem">NextSelItem</a></td><td>次の選択項目にカーソル移動</td><td><b>CursorDown</b>_SL のエイリアス</td></tr>
-<tr><td><a href="hid00005.htm#PageDown">PageDown</a></td><td>1ページ下に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PageDownSel">PageDownSel</a></td><td>選択しながら1ページ下に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PageUp">PageUp</a></td><td>1ページ上に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PageUpSel">PageUpSel</a></td><td>選択しながら1ページ上に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PrevMark">PrevMark</a></td><td>前の栞マーク項目へ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PrevSelItem">PrevSelItem</a></td><td>前の選択項目にカーソル移動</td><td><b>CursorUp</b>_SL のエイリアス</td></tr>
-
-<tr id="f_Scroll"><td colspan="3"><br><b>スクロール</b></td></tr>
-<tr><td><a href="hid00005.htm#ScrollDown">ScrollDown</a></td><td>下にスクロール</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ScrollDownLog">ScrollDownLog</a></td><td>ログを下にスクロール</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ScrollDownText">ScrollDownText</a></td><td>テキストプレビューを下にスクロール</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ScrollUp">ScrollUp</a></td><td>上にスクロール</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ScrollUpLog">ScrollUpLog</a></td><td>ログを上にスクロール</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ScrollUpText">ScrollUpText</a></td><td>テキストプレビューを上にスクロール</td><td></td></tr>
-
-<tr id="f_Select"><td colspan="3"><br><b>選択</b></td></tr>
-<tr><td><a href="hid00005.htm#ClearAll">ClearAll</a></td><td>すべての選択状態を解除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CursorDownSel">CursorDownSel</a></td><td>選択しながらカーソルを下に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CursorEndSel">CursorEndSel</a></td><td>選択しながらカーソルを最下行に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CursorTopSel">CursorTopSel</a></td><td>選択しながらカーソルを最上行に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CursorUpSel">CursorUpSel</a></td><td>選択しながらカーソルを上に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#DateSelect">DateSelect</a></td><td>指定した日付条件に合うファイルを選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MaskSelect">MaskSelect</a></td><td>指定マスクにマッチするファイルを選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MatchSelect">MatchSelect</a></td><td>指定文字列を含む項目を選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PageDownSel">PageDownSel</a></td><td>選択しながら1ページ下に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PageUpSel">PageUpSel</a></td><td>選択しながら1ページ上に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelAllFile">SelAllFile</a></td><td>すべてのファイルを選択/解除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelAllItem">SelAllItem</a></td><td>すべての項目を選択/解除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelByList">SelByList</a></td><td>リストによって項目を選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Select">Select</a></td><td>選択/解除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelectUp">SelectUp</a></td><td>選択/解除後、カーソルを上に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelGitChanged">SelGitChanged</a></td><td>Git作業ディレクトリで変更ファイルを選択</td><td><a href="hid00090.htm">→ Git の利用について</a></td></tr>
-<tr><td><a href="hid00005.htm#SelEmptyDir">SelEmptyDir</a></td><td>空のディレクトリだけを選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelMark">SelMark</a></td><td>栞マーク項目を選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelMask">SelMask</a></td><td>選択中の項目だけを残して他を隠す</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelOnlyCur">SelOnlyCur</a></td><td>カレント側だけにあるファイルを選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelReverse">SelReverse</a></td><td>ファイルの選択状態を反転</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelReverseAll">SelReverseAll</a></td><td>すべての項目の選択状態を反転</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelSameDir">SelSameDir</a></td><td>結果リストで同じディレクトリの項目を選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelSameExt">SelSameExt</a></td><td>拡張子が同じファイルを選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelSameName">SelSameName</a></td><td>ファイル名主部が同じファイルを選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelWorkItem">SelWorkItem</a></td><td>ワークリストの登録項目を選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#TagSelect">TagSelect</a></td><td>指定タグを含む項目を選択</td><td></td></tr>
-
-<tr id="f_Mark"><td colspan="3"><br><b>栞マーク</b></td></tr>
-<tr><td><a href="hid00005.htm#ClearMark">ClearMark</a></td><td>すべての栞マークを解除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FindMark">FindMark</a></td><td>栞マーク項目を検索</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Mark">Mark</a></td><td>栞マーク/解除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MarkList">MarkList</a></td><td>栞マーク一覧</td><td><a href="hid00070.htm">→ 栞マーク一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#MarkMask">MarkMask</a></td><td>栞マーク項目だけを残して他を隠す</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NextMark">NextMark</a></td><td>次の栞マーク項目へ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PrevMark">PrevMark</a></td><td>前の栞マーク項目へ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelMark">SelMark</a></td><td>栞マーク項目を選択</td><td></td></tr>
-
-<tr id="f_Tag"><td colspan="2"><br><b>タグ管理</b></td><td><br><a href="hid00088.htm">→ タグによるファイル管理</a></td></tr>
-<tr><td><a href="hid00005.htm#AddTag">AddTag</a></td><td>項目にタグを追加</td><td></td></tr>
-<tr><td><a href="hid00005.htm#DelTag">DelTag</a></td><td>項目のタグを削除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FindTag">FindTag</a></td><td>タグ検索</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetTag">SetTag</a></td><td>項目にタグを設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#TagSelect">TagSelect</a></td><td>指定タグを含む項目を選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#TrimTagData">TrimTagData</a></td><td>タグデータの整理</td><td></td></tr>
-
-<tr id="f_Mask"><td colspan="3"><br><b>マスク</b></td></tr>
-<tr><td><a href="hid00005.htm#ClearMask">ClearMask</a></td><td>選択マスク/パスマスクを解除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#DelSelMask">DelSelMask</a></td><td>選択マスクから項目を削除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Filter">Filter</a></td><td>ファイルリストの絞り込み</td><td></td></tr>
-<tr><td><a href="hid00005.htm#InputPathMask">InputPathMask</a></td><td>パスマスクを入力</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MarkMask">MarkMask</a></td><td>栞マーク項目だけを残して他を隠す</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MaskFind">MaskFind</a></td><td>指定マスクにマッチするファイル/ディレクトリ名検索</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MaskSelect">MaskSelect</a></td><td>指定マスクにマッチするファイルを選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PathMaskDlg">PathMaskDlg</a></td><td>パスマスクダイアログ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetPathMask">SetPathMask</a></td><td>パスマスクを設定</td><td></td></tr>
-
-<tr id="f_Find"><td colspan="3"><br><b>検索・ソート・比較</b></td></tr>
-<tr><td><a href="hid00005.htm#CompareDlg">CompareDlg</a></td><td>同名ファイルの比較ダイアログ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CompareHash">CompareHash</a></td><td>ハッシュ値の比較</td><td></td></tr>
-<tr><td><a href="hid00005.htm#DiffDir">DiffDir</a></td><td>ディレクトリの比較</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Filter">Filter</a></td><td>ファイルリストの絞り込み</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FindDirDlg">FindDirDlg</a></td><td>ディレクトリ名検索ダイアログ</td><td><a href="hid00053.htm">→ ディレクトリ名検索ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#FindDuplDlg">FindDuplDlg</a></td><td>重複ファイルの検索ダイアログ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FindFileDirDlg">FindFileDirDlg</a></td><td>ファイル/ディレクトリ名検索ダイアログ</td><td><a href="hid00052.htm">→ ファイル/ディレクトリ名検索ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#FindFileDlg">FindFileDlg</a></td><td>ファイル名検索ダイアログ</td><td><a href="hid00052.htm">→ ファイル名検索ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#FindFolderIcon">FindFolderIcon</a></td><td>フォルダアイコン検索</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FindHardLink">FindHardLink</a></td><td>ハードリンクを列挙</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FindMark">FindMark</a></td><td>栞マーク項目を検索</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FindTag">FindTag</a></td><td>タグ検索</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FindTagName">FindTagName</a></td><td>tags からタグ名検索</td><td><a href="hid00083.htm">→ ダイレクトタグジャンプ</a></td></tr>
-<tr><td><a href="hid00005.htm#Grep">Grep</a></td><td>文字列検索(GREP)</td><td><a href="hid00056.htm">→ 文字列検索</a></td></tr>
-<tr><td><a href="hid00005.htm#IncSearch">IncSearch</a></td><td>インクリメンタルサーチ</td><td><a href="hid00050.htm">→ インクリメンタルサーチ・モード</a></td></tr>
-<tr><td><a href="hid00005.htm#JumpTo">JumpTo</a></td><td>指定したファイル位置へ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#LoadResultList">LoadResultList</a></td><td>結果リストをファイルから読み込む</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MaskFind">MaskFind</a></td><td>指定マスクにマッチするファイル/ディレクトリ名検索</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SaveAsResultList">SaveAsResultList</a></td><td>結果リストに名前を付けて保存</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SimilarSort">SimilarSort</a></td><td>カーソル位置項目名との類似性によるソート</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SortDlg">SortDlg</a></td><td>ソートダイアログ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WebMap">WebMap</a></td><td>画像のGPS情報や指定地点の地図を開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WebSearch">WebSearch</a></td><td>Webで検索</td><td></td></tr>
-
-<tr id="f_List"><td colspan="3"><br><b>一覧</b></td></tr>
-<tr><td><a href="hid00005.htm#AppList">AppList</a></td><td>アプリケーション一覧</td><td><a href="hid00076.htm">→ アプリケーション一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#CmdFileList">CmdFileList</a></td><td>コマンドファイル一覧</td><td><a href="hid00067.htm">→ コマンドファイル一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#CmdHistory">CmdHistory</a></td><td>コマンド履歴</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#CountLines">CountLines</a></td><td>テキストファイルの行数をカウント</td><td></td></tr>
-<tr><td><a href="hid00005.htm#DirHistory">DirHistory</a></td><td>ディレクトリ履歴</td><td><a href="hid00057.htm">→ ディレクトリ履歴</a></td></tr>
-<tr><td><a href="hid00005.htm#DirStack">DirStack</a></td><td>ディレクトリ・スタック</td><td></td></tr>
-<tr><td><a href="hid00005.htm#DriveGraph">DriveGraph</a></td><td>ドライブ使用率推移</td><td><a href="hid00086.htm">→ ドライブ使用率推移</a></td></tr>
-<tr><td><a href="hid00005.htm#DriveList">DriveList</a></td><td>ドライブ一覧</td><td><a href="hid00064.htm">→ ドライブ一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#EditHistory">EditHistory</a></td><td>最近編集したファイル一覧</td><td><a href="hid00058.htm">→ 最近編集したファイル一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#FileExtList">FileExtList</a></td><td>拡張子別一覧</td><td><a href="hid00072.htm">→ 拡張子別一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#KeyList">KeyList</a></td><td>キー割り当て一覧</td><td><a href="hid00055.htm">→ キー割り当て一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#ListFileInfo">ListFileInfo</a></td><td>ファイル情報をダイアログ表示</td><td><b>ShowFileInfo</b>_SD のエイリアス</td></tr>
-<tr><td><a href="hid00005.htm#ListFileName">ListFileName</a></td><td>ファイル名を一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ListArchive">ListArchive</a></td><td>アーカイブの内容一覧をログに表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ListClipboard">ListClipboard</a></td><td>クリップボードを一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ListDuration">ListDuration</a></td><td>ファイル再生時間の一覧をログに表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ListExpFunc">ListExpFunc</a></td><td>エクスポート関数一覧をログに表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ListLog">ListLog</a></td><td>ログを一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ListNyanFi">ListNyanFi</a></td><td>NyanFi についての情報をログに表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ListTail">ListTail</a></td><td>テキストファイルの末尾を一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ListText">ListText</a></td><td>テキストファイルを一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ListTree">ListTree</a></td><td>ディレクトリ構造を一覧でツリー表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#MarkList">MarkList</a></td><td>栞マーク一覧</td><td><a href="hid00070.htm">→ 栞マーク一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#PathMaskDlg">PathMaskDlg</a></td><td>パスマスクダイアログ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#RecentList">RecentList</a></td><td>最近使ったファイル一覧</td><td><a href="hid00058.htm#RecentList">→ 最近使ったファイル一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#RepositoryList">RepositoryList</a></td><td>リポジトリ一覧</td><td><a href="hid00090.htm">→ Git の利用について</a></td></tr>
-<tr><td><a href="hid00005.htm#ShareList">ShareList</a></td><td>共有フォルダ一覧</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SpecialDirList">SpecialDirList</a></td><td>特殊フォルダ一覧</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SubDirList">SubDirList</a></td><td>サブディレクトリ一覧</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ViewHistory">ViewHistory</a></td><td>最近閲覧したファイル一覧</td><td><a href="hid00058.htm">→ 最近閲覧したファイル一覧</a></td></tr>
-
-<tr id="f_WorkList"><td colspan="3"><br><b>ワークリスト</b></td></tr>
-<tr><td><a href="hid00005.htm#HomeWorkList">HomeWorkList</a></td><td>ホームワークリストを開く</td><td></td></tr>
-<tr><td><a href="hid00005.htm#InsSeparator">InsSeparator</a></td><td>ワークリストにセパレータを挿入</td><td></td></tr>
-<tr><td><a href="hid00005.htm#LoadWorkList">LoadWorkList</a></td><td>ワークリストをファイルから読み込む</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NewWorkList">NewWorkList</a></td><td>新規ワークリストの作成</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SaveAsWorkList">SaveAsWorkList</a></td><td>ワークリストに名前を付けて保存</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SaveWorkList">SaveWorkList</a></td><td>ワークリストを上書き保存</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SelWorkItem">SelWorkItem</a></td><td>ワークリストの登録項目を選択</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetAlias">SetAlias</a></td><td>ワークリストの項目にエイリアスを設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WorkItemDown">WorkItemDown</a></td><td>ワークリストの項目を一つ下に移動</td><td><b>ItemTmpDown</b> で代替可能</td></tr>
-<tr><td><a href="hid00005.htm#WorkItemMove">WorkItemMove</a></td><td>選択ワークリスト項目をカーソル位置に移動</td><td><b>ItemTmpMove</b> で代替可能</td></tr>
-<tr><td><a href="hid00005.htm#WorkItemUP">WorkItemUP</a></td><td>ワークリストの項目を一つ上に移動</td><td><b>ItemTmpUp</b> で代替可能</td></tr>
-<tr><td><a href="hid00005.htm#WorkList">WorkList</a></td><td>ワークリスト</td><td><a href="hid00060.htm">→ ワークリスト</a></td></tr>
-
-<tr id="f_Menu"><td colspan="3"><br><b>メニュー</b></td></tr>
-<tr><td><a href="hid00005.htm#ContextMenu">ContextMenu</a></td><td>コンテキストメニューを表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExeExtMenu">ExeExtMenu</a></td><td>追加メニューの実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a></td><td>メニューファイルの実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExPopupMenu">ExPopupMenu</a></td><td>拡張ポップアップメニュー</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PopupMainMenu">PopupMainMenu</a></td><td>メインメニューをポップアップ表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#RegDirPopup">RegDirPopup</a></td><td>登録ディレクトリ・ポップアップメニュー</td><td></td></tr>
-
-<tr id="f_Command"><td colspan="3"><br><b>実行</b></td></tr>
-<tr><td><a href="hid00005.htm#CmdFileList">CmdFileList</a></td><td>コマンドファイル一覧</td><td><a href="hid00067.htm">→ コマンドファイル一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#DebugCmdFile">DebugCmdFile</a></td><td>コマンドファイルのデバッグ実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExeCommandLine">ExeCommandLine</a></td><td>コマンドラインの実行</td><td><a href="hid00062.htm">→ コマンドラインの実行ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ExeCommands">ExeCommands</a></td><td>指定したコマンドを実行</td><td><a href="hid00063.htm">→ 詳細</a></td></tr>
-<tr><td><a href="hid00005.htm#ExeExtMenu">ExeExtMenu</a></td><td>追加メニューの実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExeExtTool">ExeExtTool</a></td><td>外部ツールの実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a></td><td>メニューファイルの実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExeToolBtn">ExeToolBtn</a></td><td>ツールボタンの実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FileRun">FileRun</a></td><td>ファイル名を指定して実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#InputCommands">InputCommands</a></td><td>入力したコマンドを実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#KeyList">KeyList</a></td><td>キー割り当て一覧</td><td><a href="hid00055.htm">→ キー割り当て一覧</a></td></tr>
-
-<tr id="f_Tool"><td colspan="3"><br><b>ツール</b></td></tr>
-<tr><td><a href="hid00005.htm#Calculator">Calculator</a></td><td>電卓</td><td><a href="hid00087.htm">→ 電卓</a></td></tr>
-<tr><td><a href="hid00005.htm#CommandPrompt">CommandPrompt</a></td><td>コマンドプロンプト</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CompressDir">CompressDir</a></td><td>ディレクトリのNTFS圧縮</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ConvertDoc2Txt">ConvertDoc2Txt</a></td><td>バイナリ文書→テキスト変換表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ConvertHtm2Txt">ConvertHtm2Txt</a></td><td>HTML→テキスト変換表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ConvertImage">ConvertImage</a></td><td>画像ファイルの変換</td><td><a href="hid00059.htm">→ 画像ファイルの変換ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ConvertTextEnc">ConvertTextEnc</a></td><td>文字コードの変換</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CountLines">CountLines</a></td><td>テキストファイルの行数をカウント</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CreateDirsDlg">CreateDirsDlg</a></td><td>ディレクトリ一括作成ダイアログ</td><td><a href="hid00079.htm">→ ディレクトリ一括作成ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#DelJpgExif">DelJpgExif</a></td><td>Exif情報を削除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExeCommandLine">ExeCommandLine</a></td><td>コマンドラインの実行</td><td><a href="hid00062.htm">→ コマンドラインの実行ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ExeExtTool">ExeExtTool</a></td><td>外部ツールの実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExeToolBtn">ExeToolBtn</a></td><td>ツールボタンの実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExtractChmSrc">ExtractChmSrc</a></td><td>CHMからソースを抽出</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExtractGifBmp">ExtractGifBmp</a></td><td>アニメGIFからビットマップを抽出</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExtractIcon">ExtractIcon</a></td><td>アイコンを抽出</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExtractImage">ExtractImage</a></td><td>埋め込み画像を抽出</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ExtractMp3Img">ExtractMp3Img</a></td><td>MP3の埋め込み画像を抽出</td><td><b>ExtractImage</b> で代替可能</td></tr>
-<tr><td><a href="hid00005.htm#FileRun">FileRun</a></td><td>ファイル名を指定して実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#JoinText">JoinText</a></td><td>テキストファイルの結合</td><td><a href="hid00078.htm">→ テキストファイルの結合ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#JsonViewer">JsonViewer</a></td><td>JSONビュアー</td><td><a href="hid00092.htm">→ JSONビュアー</a></td></tr>
-<tr><td><a href="hid00005.htm#ListArchive">ListArchive</a></td><td>アーカイブの内容一覧をログに表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ListDuration">ListDuration</a></td><td>ファイル再生時間の一覧をログに表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ListExpFunc">ListExpFunc</a></td><td>エクスポート関数一覧をログに表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NameToLower">NameToLower</a></td><td>ファイル名の小文字化</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NameToUpper">NameToUpper</a></td><td>ファイル名の大文字化</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PowerShell">PowerShell</a></td><td>PowerShell を起動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetArcTime">SetArcTime</a></td><td>アーカイブのタイムスタンプを最新に合わせる</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetDirTime">SetDirTime</a></td><td>ディレクトリのタイムスタンプを最新に合わせる</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetExifTime">SetExifTime</a></td><td>タイムスタンプをExif撮影日時に設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#TestArchive">TestArchive</a></td><td>アーカイブの正当性を検査</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WinTerminal">WinTerminal</a></td><td>Windows Terminal を起動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#XmlViewer">XmlViewer</a></td><td>XMLビュアー</td><td><a href="hid00081.htm">→ XMLビュアー</a></td></tr>
-
-<tr id="f_Task"><td colspan="3"><br><b>タスク</b></td></tr>
-<tr><td><a href="hid00005.htm#CancelAllTask">CancelAllTask</a></td><td>すべてのタスクを中断</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PauseAllTask">PauseAllTask</a></td><td>すべてのタスクを一旦停止/再開</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Suspend">Suspend</a></td><td>タスク予約項目の実行を保留/解除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#TaskMan">TaskMan</a></td><td>タスクマネージャ</td><td><a href="hid00069.htm">→ タスクマネージャ</a></td></tr>
-
-<tr id="f_Info"><td colspan="3"><br><b>情報</b></td></tr>
-<tr><td><a href="hid00005.htm#CalcDirSize">CalcDirSize</a></td><td>ディレクトリ使用量を計算</td><td></td></tr>
-<tr id="f_C"><td><a href="hid00005.htm#CalcDirSizeAll">CalcDirSizeAll</a></td><td>全ディレクトリの使用量を計算</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ClearLog">ClearLog</a></td><td>ログをクリア</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CmdHistory">CmdHistory</a></td><td>コマンド履歴</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#CopyCmdName">CopyCmdName</a></td><td>コマンド名をクリップボードにコピー</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CopyFileInfo">CopyFileInfo</a></td><td>ファイル情報をクリップボードにコピー</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CopyFileName">CopyFileName</a></td><td>ファイル名をクリップボードにコピー</td><td></td></tr>
-<tr><td><a href="hid00005.htm#GetHash">GetHash</a></td><td>ファイルのハッシュ値を取得</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ListFileInfo">ListFileInfo</a></td><td>ファイル情報をダイアログ表示</td><td><b>ShowFileInfo</b>_SD のエイリアス</td></tr>
-<tr><td><a href="hid00005.htm#ListFileName">ListFileName</a></td><td>ファイル名を一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ListLog">ListLog</a></td><td>ログを一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ListNyanFi">ListNyanFi</a></td><td>NyanFi についての情報をログに表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ListTail">ListTail</a></td><td>テキストファイルの末尾を一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ListText">ListText</a></td><td>テキストファイルを一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#LogFileInfo">LogFileInfo</a></td><td>ファイル情報をログに出力</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PropertyDlg">PropertyDlg</a></td><td>プロパティダイアログを表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ReloadList">ReloadList</a></td><td>ファイルリストを最新の情報に更新</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a></td><td>ファイル情報を強制的に表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ViewLog">ViewLog</a></td><td>ログをテキストビュアーで表示</td><td><a href="hid00006.htm">→ テキストビュアー</a></td></tr>
-<tr><td><a href="hid00005.htm#ViewTail">ViewTail</a></td><td>テキストファイルの末尾を閲覧</td><td><a href="hid00006.htm">→ テキストビュアー</a></td></tr>
-<tr><td><a href="hid00005.htm#WatchTail">WatchTail</a></td><td>テキストファイルの追加更新を監視</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WebMap">WebMap</a></td><td>画像のGPS情報や指定地点の地図を開く</td><td></td></tr>
-
-<tr id="f_View"><td colspan="3"><br><b>表示</b></td></tr>
-<tr><td><a href="hid00005.htm#AlphaBlend">AlphaBlend</a></td><td>メインウィンドウを透過表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#BgImgMode">BgImgMode</a></td><td>背景画像の表示モードを設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#BorderCenter">BorderCenter</a></td><td>ファイルリストの境界を中央に移動</td><td><b>EqualListWidth</b> のエイリアス</td></tr>
-<tr><td><a href="hid00005.htm#BorderLeft">BorderLeft</a></td><td>ファイルリストの境界を左に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#BorderRight">BorderRight</a></td><td>ファイルリストの境界を右に移動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#EqualListWidth">EqualListWidth</a></td><td>左右のリスト幅を均等に</td><td></td></tr>
-<tr><td><a href="hid00005.htm#FileListOnly">FileListOnly</a></td><td>ファイルリストのみを表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#HideSizeTime">HideSizeTime</a></td><td>サイズと更新日時を隠す</td><td></td></tr>
-<tr><td><a href="hid00005.htm#LoadBgImage">LoadBgImage</a></td><td>背景画像を読み込む</td><td></td></tr>
-<tr><td><a href="hid00005.htm#LockTextPreview">LockTextPreview</a></td><td>テキストプレビューをロック/解除</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MenuBar">MenuBar</a></td><td>メニューバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ReturnList">ReturnList</a></td><td>ファイルリスト表示に戻る</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetFolderIcon">SetFolderIcon</a></td><td>フォルダアイコンの設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetFontSize">SetFontSize</a></td><td>フォントサイズを変更</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetInterpolation">SetInterpolation</a></td><td>縮小・拡大アルゴリズムを設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetSttBarFmt">SetSttBarFmt</a></td><td>ステータスバー書式を設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetSubSize">SetSubSize</a></td><td>サブウィンドウのサイズを設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowByteSize">ShowByteSize</a></td><td>ファイルサイズをバイト単位で表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowFKeyBar">ShowFKeyBar</a></td><td>ファンクションキーバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowHideAtr">ShowHideAtr</a></td><td>隠しファイルを表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowIcon">ShowIcon</a></td><td>アイコンの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowLogWin">ShowLogWin</a></td><td>ログウィンドウの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowPreview">ShowPreview</a></td><td>プレビューの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowProperty">ShowProperty</a></td><td>ファイル情報の表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowStatusBar">ShowStatusBar</a></td><td>ステータスバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowSystemAtr">ShowSystemAtr</a></td><td>システムファイルを表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowToolBar">ShowToolBar</a></td><td>ツールバーを表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WidenCurList">WidenCurList</a></td><td>カレント側リストの幅を広げる</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WinMaximize">WinMaximize</a></td><td>ウィンドウの最大化</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WinMinimize">WinMinimize</a></td><td>ウィンドウの最小化</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WinNormal">WinNormal</a></td><td>ウィンドウを元のサイズに戻す</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WinPos">WinPos</a></td><td>ウィンドウの四辺を設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ZoomIn">ZoomIn</a></td><td>ズームイン</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ZoomOut">ZoomOut</a></td><td>ズームアウト</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ZoomReset">ZoomReset</a></td><td>ズーム解除</td><td></td></tr>
-
-<tr id="f_Setup"><td colspan="3"><br><b>設定</b></td></tr>
-<tr><td><a href="hid00005.htm#DotNyanDlg">DotNyanDlg</a></td><td>.nyanfi ファイルの設定</td><td><a href="hid00075.htm">→ .nyanfi ファイル</a> </td></tr>
-<tr><td><a href="hid00005.htm#EditHighlight">EditHighlight</a></td><td>構文強調表示定義ファイルの編集</td><td><a href="hid00084.htm">→ 構文強調表示定義ファイル</a></td></tr>
-<tr><td><a href="hid00005.htm#EditIniFile">EditIniFile</a></td><td>INIファイルの編集</td><td></td></tr>
-<tr><td><a href="hid00005.htm#LoadBgImage">LoadBgImage</a></td><td>背景画像を読み込む</td><td></td></tr>
-<tr><td><a href="hid00005.htm#OptionDlg">OptionDlg</a></td><td>オプション設定</td><td><a href="hid00008.htm">→  オプション設定</a></td></tr>
-<tr><td><a href="hid00005.htm#RegSyncDlg">RegSyncDlg</a></td><td>同期コピーの設定ダイアログ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetFolderIcon">SetFolderIcon</a></td><td>フォルダアイコンの設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToolBarDlg">ToolBarDlg</a></td><td>ツールバーの設定</td><td><a href="hid00068.htm">→ ツールバーの設定ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#ViewIniFile">ViewIniFile</a></td><td>INIファイルの閲覧</td><td></td></tr>
-
-<tr id="f_Git"><td colspan="3"><br><b>Git</b></td></tr>
-<tr><td><a href="hid00005.htm#GitDiff">GitDiff</a></td><td>カーソル位置ファイルの差分詳細を表示</td><td><a href="hid00090.htm">→ Git の利用について</a></td></tr>
-<tr><td><a href="hid00005.htm#GitViewer">GitViewer</a></td><td>Gitビュアー</td><td><a href="hid00090.htm">→ Git の利用について</a></td></tr>
-<tr><td><a href="hid00005.htm#OpenGitURL">OpenGitURL</a></td><td>リモートリポジトリURLを開く</td><td><a href="hid00090.htm">→ Git の利用について</a></td></tr>
-<tr><td><a href="hid00005.htm#RepositoryList">RepositoryList</a></td><td>リポジトリ一覧</td><td><a href="hid00090.htm">→ Git の利用について</a></td></tr>
-<tr><td><a href="hid00005.htm#SelGitChanged">SelGitChanged</a></td><td>Git作業ディレクトリで変更ファイルを選択</td><td><a href="hid00090.htm">→ Git の利用について</a></td></tr>
-
-<tr id="f_Other"><td colspan="3"><br><b>その他</b></td></tr>
-<tr><td><a href="hid00005.htm#AppList">AppList</a></td><td>アプリケーション一覧</td><td><a href="hid00076.htm">→ アプリケーション一覧</a></td></tr>
-<tr><td><a href="hid00005.htm#AboutNyanFi">AboutNyanFi</a></td><td>バージョン情報</td><td></td></tr>
-<tr><td><a href="hid00005.htm#CheckUpdate">CheckUpdate</a></td><td>更新の確認</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Calculator">Calculator</a></td><td>電卓</td><td><a href="hid00087.htm">→ 電卓</a></td></tr>
-<tr><td><a href="hid00005.htm#Close">Close</a></td><td>NyanFiの終了</td><td><b>Exit</b> のエイリアス</td></tr>
-<tr><td><a href="hid00005.htm#CmdHistory">CmdHistory</a></td><td>コマンド履歴</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00005.htm#DebugCmdFile">DebugCmdFile</a></td><td>コマンドファイルのデバッグ実行</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Duplicate">Duplicate</a></td><td>NyanFiの二重起動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Exit">Exit</a></td><td>NyanFiの終了</td><td></td></tr>
-<tr><td><a href="hid00005.htm#HelpContents">HelpContents</a></td><td>ヘルプの目次/索引を表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#LockComputer">LockComputer</a></td><td>コンピュータのロック</td><td></td></tr>
-<tr><td><a href="hid00005.htm#LockKeyMouse">LockKeyMouse</a></td><td>キーボード/マウスのロック</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MonitorOff">MonitorOff</a></td><td>ディスプレイの電源を切る</td><td></td></tr>
-<tr><td><a href="hid00005.htm#MuteVolume">MuteVolume</a></td><td>音量ミュート</td><td></td></tr>
-<tr><td><a href="hid00005.htm#NextNyanFi">NextNyanFi</a></td><td>次のNyanFiをアクティブに</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PlayList">PlayList</a></td><td>プレイリストを作って再生</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PowerOff">PowerOff</a></td><td>Windowsを終了</td><td></td></tr>
-<tr><td><a href="hid00005.htm#PrevNyanFi">PrevNyanFi</a></td><td>前のNyanFiをアクティブに</td><td></td></tr>
-<tr><td><a href="hid00005.htm#Reboot">Reboot</a></td><td>Windowsを再起動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#RegExChecker">RegExChecker</a></td><td>正規表現チェッカー</td><td><a href="hid00085.htm">→ 正規表現チェッカー</a></td></tr>
-<tr><td><a href="hid00005.htm#Restart">Restart</a></td><td>NyanFiの再起動</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToExViewer">ToExViewer</a></td><td>別ウィンドウのテキストビュアーへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToNextOnRight">ToNextOnRight</a></td><td>右ファイルリストで次のNyanFiへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ToPrevOnLeft">ToPrevOnLeft</a></td><td>左ファイルリストで前のNyanFiへ</td><td></td></tr>
-<tr><td><a href="hid00005.htm#UpdateFromArc">UpdateFromArc</a></td><td>アーカイブから更新</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WatchTail">WatchTail</a></td><td>テキストファイルの追加更新を監視</td><td></td></tr>
-<tr><td><a href="hid00005.htm#WebMap">WebMap</a></td><td>画像のGPS情報や指定地点の地図を開く</td><td></td></tr>
-
-<tr id="f_TV"><td colspan="3"><br><b>テキストビュアー設定</b></td></tr>
-<tr><td><a href="hid00005.htm#FixedLen">FixedLen</a></td><td>テキストビュアーでCSV/TSVを固定長表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#HtmlToText">HtmlToText</a></td><td>テキストビュアーでHTML→テキスト変換表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetColor">SetColor</a></td><td>テキストビュアーの配色</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetMargin">SetMargin</a></td><td>テキストビュアーの左側余白を設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetTab">SetTab</a></td><td>テキストビュアーのタブストップ幅を設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#SetWidth">SetWidth</a></td><td>テキストビュアーの折り返し幅を設定</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowCR">ShowCR</a></td><td>テキストビュアーで改行を表示/非表示</td><td>※TV</td></tr>
-<tr><td><a href="hid00005.htm#ShowLineNo">ShowLineNo</a></td><td>テキストビュアーの行番号を表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowRuby">ShowRuby</a></td><td>テキストビュアーでルビを表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowRuler">ShowRuler</a></td><td>テキストビュアーのルーラを表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00005.htm#ShowTAB">ShowTAB</a></td><td>テキストビュアーでタブを表示/非表示</td><td>※TV</td></tr>
-
-<tr id="IS"><td colspan="2"><br><br><b>インクリメンタルサーチ</b></td><td><br><br><a href="hid00050.htm">→ インクリメンタルサーチ・モード</a></td></tr>
-<tr><td><a href="hid00050.htm#ClearAll">ClearAll</a></td><td>すべての選択状態を解除</td><td></td></tr>
-<tr><td><a href="hid00050.htm#ClearIncKeyword">ClearIncKeyword</a></td><td>キーワードをクリア</td><td></td></tr>
-<tr><td><a href="hid00050.htm#HelpContents">HelpContents</a></td><td>ヘルプの目次を表示</td><td></td></tr>
-<tr><td><a href="hid00050.htm#IncMatchSelect">IncMatchSelect</a></td><td>マッチする項目をすべて選択</td><td></td></tr>
-<tr><td><a href="hid00050.htm#IncSearchDown">IncSearchDown</a></td><td>マッチする項目を下方向検索</td><td></td></tr>
-<tr><td><a href="hid00050.htm#IncSearchExit">IncSearchExit</a></td><td>インクリメンタルサーチから抜ける</td><td></td></tr>
-<tr><td><a href="hid00050.htm#IncSearchTop">IncSearchTop</a></td><td>マッチする項目を先頭から再検索</td><td></td></tr>
-<tr><td><a href="hid00050.htm#IncSearchUp">IncSearchUp</a></td><td>マッチする項目を上方向検索</td><td></td></tr>
-<tr><td><a href="hid00050.htm#KeyList">KeyList</a></td><td>キー割り当て一覧</td><td><a href="hid00055.htm">→ キー割り当て一覧</a></td></tr>
-<tr><td><a href="hid00050.htm#KeywordHistory">KeywordHistory</a></td><td>キーワード履歴を参照</td><td></td></tr>
-<tr><td><a href="hid00050.htm#MigemoMode">MigemoMode</a></td><td>Migomoモードの切り換え</td><td></td></tr>
-<tr><td><a href="hid00050.htm#NormalMode">NormalMode</a></td><td>通常のサーチモードに戻る</td><td></td></tr>
-<tr><td><a href="hid00050.htm#OptionDlg">OptionDlg</a></td><td>オプション設定を開く</td><td><a href="hid00008.htm">オプション設定</a></td></tr>
-<tr><td><a href="hid00050.htm#Select">Select</a></td><td>選択/解除</td><td></td></tr>
-<tr><td><a href="hid00050.htm#SelectDown">SelectDown</a></td><td>選択/解除後、下方向に検索</td><td></td></tr>
-</table>
-<br>
-
-<p class="link_box"><a href="#FL">ファイラー</a> ／ <a href="#IV">イメージビュアー</a></p><br>
-
-<h2 id="TV">テキストビュアー</h2>
-<p class="link_box">
-<a href="#v_Cursor">カーソル移動</a> ／ 
-<a href="#v_Scroll">スクロール</a> ／ 
-<a href="#v_Select">選択</a> ／ 
-<a href="#v_Mark">マーク</a> ／ 
-<a href="#v_Find">検索</a> ／ 
-<a href="#v_Move">移動</a> ／ 
-<a href="#v_Edit">編集</a> ／ 
-<a href="#v_Open">開く</a> ／ 
-<a href="#v_List">一覧</a> ／ 
-<a href="#v_Info">情報</a> ／ 
-<a href="#v_Binary">バイナリ</a> ／ 
-<a href="#v_Command">実行</a> ／ 
-<a href="#v_View">表示</a> ／ 
-<a href="#v_Setup">設定</a> ／ 
-<a href="#v_Other">その他</a>
-</p>
-
-<table border="0" cellspacing="0">
-<tr id="v_Cursor"><td colspan="3"><br><b>カーソル移動</b></td></tr>
-<tr><td><a href="hid00006.htm#CursorDown">CursorDown</a></td><td>カーソルを下に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CursorDownSel">CursorDownSel</a></td><td>選択しながらカーソルを下に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CursorLeft">CursorLeft</a></td><td>カーソルを左に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CursorLeftSel">CursorLeftSel</a></td><td>選択しながらカーソルを左に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CursorRight">CursorRight</a></td><td>カーソルを右に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CursorRightSel">CursorRightSel</a></td><td>選択しながらカーソルを右に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CursorUp">CursorUp</a></td><td>カーソルを上に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CursorUpSel">CursorUpSel</a></td><td>選択しながらカーソルを上に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#JumpLine">JumpLine</a></td><td>指定行番号に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#LineEnd">LineEnd</a></td><td>行末に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#LineEndSel">LineEndSel</a></td><td>選択しながら行末に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#LineTop">LineTop</a></td><td>行頭に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#LineTopSel">LineTopSel</a></td><td>選択しながら行頭に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#PageDown">PageDown</a></td><td>1ページ下に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#PageDownSel">PageDownSel</a></td><td>選択しながら1ページ下に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#PageUp">PageUp</a></td><td>1ページ上に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#PageUpSel">PageUpSel</a></td><td>選択しながら1ページ上に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#TextEnd">TextEnd</a></td><td>最後尾に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#TextEndSel">TextEndSel</a></td><td>選択しながら最後尾に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#TextTop">TextTop</a></td><td>先頭に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#TextTopSel">TextTopSel</a></td><td>選択しながら先頭に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#WordLeft">WordLeft</a></td><td>前の単語に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#WordRight">WordRight</a></td><td>次の単語に移動</td><td></td></tr>
-
-<tr id="v_Scroll"><td colspan="3"><br><b>スクロール</b></td></tr>
-<tr><td><a href="hid00006.htm#ScrollCursorDown">ScrollCursorDown</a></td><td>スクロールしながら下に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ScrollCursorUp">ScrollCursorUp</a></td><td>スクロールしながら上に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ScrollDown">ScrollDown</a></td><td>下にスクロール</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ScrollUp">ScrollUp</a></td><td>上にスクロール</td><td></td></tr>
-
-<tr id="v_Select"><td colspan="3"><br><b>選択</b></td></tr>
-<tr><td><a href="hid00006.htm#BoxSelMode">BoxSelMode</a></td><td>箱形選択モードの開始/解除</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CursorDownSel">CursorDownSel</a></td><td>選択しながらカーソルを下に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CursorLeftSel">CursorLeftSel</a></td><td>選択しながらカーソルを左に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CursorRightSel">CursorRightSel</a></td><td>選択しながらカーソルを右に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CursorUpSel">CursorUpSel</a></td><td>選択しながらカーソルを上に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#LineEndSel">LineEndSel</a></td><td>選択しながら行末に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#LineTopSel">LineTopSel</a></td><td>選択しながら行頭に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#PageDownSel">PageDownSel</a></td><td>選択しながら1ページ下に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#PageUpSel">PageUpSel</a></td><td>選択しながら1ページ上に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SelCurWord">SelCurWord</a></td><td>カーソル位置の単語を選択</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SelectAll">SelectAll</a></td><td>すべて選択</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SelectFile">SelectFile</a></td><td>表示中ファイルをリストで選択/解除</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SelectMode">SelectMode</a></td><td>選択モードの開始/解除</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SelLine">SelLine</a></td><td>カーソル行を選択</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SelLineCR">SelLineCR</a></td><td>カーソル行全体を改行単位で選択</td><td></td></tr>
-<tr><td><a href="hid00006.htm#TextEndSel">TextEndSel</a></td><td>選択しながら最後尾に移動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#TextTopSel">TextTopSel</a></td><td>選択しながら先頭に移動</td><td></td></tr>
-
-<tr id="v_Mark"><td colspan="3"><br><b>マーク</b></td></tr>
-<tr><td><a href="hid00006.htm#ClearMark">ClearMark</a></td><td>すべてのマークを解除</td><td></td></tr>
-<tr><td><a href="hid00006.htm#FindMarkDown">FindMarkDown</a></td><td>マークを下方向に検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#FindMarkUp">FindMarkUp</a></td><td>マークを上方向に検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#Mark">Mark</a></td><td>マーク/解除</td><td></td></tr>
-<tr><td><a href="hid00006.htm#MarkList">MarkList</a></td><td>マーク行一覧を表示</td><td><a href="hid00066.htm">→ マーク行一覧</a></td></tr>
-
-<tr id="v_Find"><td colspan="3"><br><b>検索</b></td></tr>
-<tr><td><a href="hid00006.htm#FindDown">FindDown</a></td><td>下方向に再検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#FindLinkDown">FindLinkDown</a></td><td>リンク先を下方向に検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#FindLinkUp">FindLinkUp</a></td><td>リンク先を上方向に検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#FindMarkDown">FindMarkDown</a></td><td>マーク行を下方向に検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#FindMarkUp">FindMarkUp</a></td><td>マーク行を上方向に検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#FindSelDown">FindSelDown</a></td><td>選択文字列を下方向に検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#FindSelUp">FindSelUp</a></td><td>選択文字列を上方向に検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#FindTagName">FindTagName</a></td><td>tags からタグ名検索</td><td><a href="hid00083.htm">→ ダイレクトタグジャンプ</a></td></tr>
-<tr><td><a href="hid00006.htm#FindText">FindText</a></td><td>文字列検索</td><td><a href="hid00065.htm">→ 文字列検索ダイアログ</a></td></tr>
-<tr><td><a href="hid00006.htm#FindUp">FindUp</a></td><td>上方向に再検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#Grep">Grep</a></td><td>文字列検索(GREP)</td><td></td></tr>
-<tr><td><a href="hid00006.htm#IncSearch">IncSearch</a></td><td>インクリメンタルサーチ</td><td><a href="hid00050.htm">→ インクリメンタルサーチ・モード</a></td></tr>
-<tr><td><a href="hid00006.htm#NextErr">NextErr</a></td><td>次のエラー位置に移動(ログ)</td><td></td></tr>
-<tr><td><a href="hid00006.htm#PrevErr">PrevErr</a></td><td>前のエラー位置に移動(ログ)</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SearchPair">SearchPair</a></td><td>対応する括弧を検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#WebMap">WebMap</a></td><td>指定地点の地図を開く</td><td></td></tr>
-<tr><td><a href="hid00006.htm#WebSearch">WebSearch</a></td><td>Webで検索</td><td></td></tr>
-
-<tr id="v_Move"><td colspan="3"><br><b>移動</b></td></tr>
-<tr><td><a href="hid00006.htm#BackViewHist">BackViewHist</a></td><td>テキストビュアーの履歴を戻る</td><td></td></tr>
-<tr><td><a href="hid00006.htm#NextFile">NextFile</a></td><td>次のファイルを表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#PrevFile">PrevFile</a></td><td>前のファイルを表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SwitchSameName">SwitchSameName</a></td><td>ファイル名主部が同じ次のファイルに切り換え</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SwitchSrcHdr">SwitchSrcHdr</a></td><td>ヘッダ/ソースファイルの切り換え</td><td></td></tr>
-<tr><td><a href="hid00006.htm#TagJump">TagJump</a></td><td>エディタでタグジャンプ</td><td></td></tr>
-<tr><td><a href="hid00006.htm#TagJumpDirect">TagJumpDirect</a></td><td>エディタでダイレクトタグジャンプ</td><td><a href="hid00083.htm">→ ダイレクトタグジャンプ</a></td></tr>
-<tr><td><a href="hid00006.htm#TagView">TagView</a></td><td>ビュアーでタグジャンプ</td><td></td></tr>
-<tr><td><a href="hid00006.htm#TagViewDirect">TagViewDirect</a></td><td>ビュアーでダイレクトタグジャンプ</td><td><a href="hid00083.htm">→ ダイレクトタグジャンプ</a></td></tr>
-
-<tr id="v_Edit"><td colspan="3"><br><b>編集</b></td></tr>
-<tr><td><a href="hid00006.htm#ClipCopy">ClipCopy</a></td><td>クリップボードにコピー</td><td></td></tr>
-<tr><td><a href="hid00006.htm#Sort">Sort</a></td><td>テキスト全体を改行単位でソート</td><td></td></tr>
-
-<tr id="v_Open"><td colspan="3"><br><b>開く</b></td></tr>
-<tr><td><a href="hid00006.htm#BinaryEdit">BinaryEdit</a></td><td>ファイルのバイナリ編集</td><td></td></tr>
-<tr><td><a href="hid00006.htm#FileEdit">FileEdit</a></td><td>ファイルの編集</td><td></td></tr>
-<tr><td><a href="hid00006.htm#OpenURL">OpenURL</a></td><td>URLを開く</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ReloadFile">ReloadFile</a></td><td>ファイルの再読み込み</td><td></td></tr>
-
-<tr id="v_List"><td colspan="3"><br><b>一覧</b></td></tr>
-<tr><td><a href="hid00006.htm#AppList">AppList</a></td><td>アプリケーション一覧</td><td><a href="hid00076.htm">→ アプリケーション一覧</a></td></tr>
-<tr><td><a href="hid00006.htm#CmdFileList">CmdFileList</a></td><td>コマンドファイル一覧</td><td><a href="hid00067.htm">→ コマンドファイル一覧</a></td></tr>
-<tr><td><a href="hid00006.htm#CmdHistory">CmdHistory</a></td><td>コマンド履歴</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00006.htm#EditHistory">EditHistory</a></td><td>最近編集したファイル一覧</td><td><a href="hid00058.htm">→ 最近編集したファイル一覧</a></td></tr>
-<tr><td><a href="hid00006.htm#FunctionList">FunctionList</a></td><td>関数一覧</td><td><a href="hid00066.htm">→ 関数一覧</a></td></tr>
-<tr><td><a href="hid00006.htm#KeyList">KeyList</a></td><td>キー割り当て一覧</td><td><a href="hid00055.htm">→ キー割り当て一覧</a></td></tr>
-<tr><td><a href="hid00006.htm#ListLog">ListLog</a></td><td>ログを一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00006.htm#MarkList">MarkList</a></td><td>マーク行一覧を表示</td><td><a href="hid00066.htm">→ マーク行一覧</a></td></tr>
-<tr><td><a href="hid00006.htm#SetUserDefStr">SetUserDefStr</a></td><td>ユーザ定義文字列を設定</td><td></td></tr>
-<tr><td><a href="hid00006.htm#UserDefList">UserDefList</a></td><td>ユーザ定義文字列一覧</td><td><a href="hid00066.htm">→ ユーザ定義文字列一覧</a></td></tr>
-<tr><td><a href="hid00006.htm#ViewHistory">ViewHistory</a></td><td>最近閲覧したファイル一覧</td><td><a href="hid00058.htm">→ 最近閲覧したファイル一覧</a></td></tr>
-
-<tr id="v_Info"><td colspan="3"><br><b>情報</b></td></tr>
-<tr><td><a href="hid00006.htm#CharInfo">CharInfo</a></td><td>文字情報の表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CopyFileInfo">CopyFileInfo</a></td><td>ファイル情報をクリップボードにコピー</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CsvCalc">CsvCalc</a></td><td>CSV/TSV項目の集計</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CsvGraph">CsvGraph</a></td><td>CSV/TSV項目のグラフ</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CsvRecord">CsvRecord</a></td><td>CSV/TSVレコードの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ListFileInfo">ListFileInfo</a></td><td>ファイル情報をダイアログ表示</td><td><b>ShowFileInfo</b> のエイリアス</td></tr>
-<tr><td><a href="hid00006.htm#PropertyDlg">PropertyDlg</a></td><td>プロパティダイアログを表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ShowFileInfo">ShowFileInfo</a></td><td>ファイル情報をダイアログ表示</td><td><b>ListFileInfo</b> でも同じ</td></tr>
-
-<tr id="v_Binary"><td colspan="3"><br><b>バイナリ</b></td></tr>
-<tr><td><a href="hid00006.htm#BinaryEdit">BinaryEdit</a></td><td>ファイルのバイナリ編集</td><td></td></tr>
-<tr><td><a href="hid00006.htm#BitmapView">BitmapView</a></td><td>ビットマップビューの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ChangeViewMode">ChangeViewMode</a></td><td>テキスト/バイナリ表示の切り換え</td><td></td></tr>
-<tr><td><a href="hid00006.htm#Inspector">Inspector</a></td><td>インスペクタの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SaveDump">SaveDump</a></td><td>ダンプリストをファイルに保存</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SetTopAddr">SetTopAddr</a></td><td>先頭アドレスを設定</td><td></td></tr>
-
-<tr id="v_Command"><td colspan="3"><br><b>実行</b></td></tr>
-<tr><td><a href="hid00006.htm#CmdFileList">CmdFileList</a></td><td>コマンドファイル一覧</td><td><a href="hid00067.htm">→ コマンドファイル一覧</a></td></tr>
-<tr><td><a href="hid00006.htm#DebugCmdFile">DebugCmdFile</a></td><td>コマンドファイルのデバッグ実行</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ExeCommands">ExeCommands</a></td><td>指定したコマンドを実行</td><td><a href="hid00063.htm">→ 詳細</a></td></tr>
-<tr><td><a href="hid00006.htm#ExeMenuFile">ExeMenuFile</a></td><td>メニューファイルの実行</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ExeToolBtn">ExeToolBtn</a></td><td>ツールボタンの実行</td><td></td></tr>
-<tr><td><a href="hid00006.htm#InputCommands">InputCommands</a></td><td>入力したコマンドを実行</td><td></td></tr>
-<tr><td><a href="hid00006.htm#KeyList">KeyList</a></td><td>キー割り当て一覧</td><td><a href="hid00055.htm">→ キー割り当て一覧</a></td></tr>
-
-<tr id="v_View"><td colspan="3"><br><b>表示</b></td></tr>
-<tr><td><a href="hid00006.htm#AlphaBlend">AlphaBlend</a></td><td>メインウィンドウを透過表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ChangeCodePage">ChangeCodePage</a></td><td>文字コード変更</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ChangeViewMode">ChangeViewMode</a></td><td>テキスト/バイナリ表示の切り換え</td><td></td></tr>
-<tr><td><a href="hid00006.htm#FixedLen">FixedLen</a></td><td>テキストビュアーでCSV/TSVを固定長表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#Highlight">Highlight</a></td><td>マッチ語を強調表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#HtmlToText">HtmlToText</a></td><td>テキストビュアーでHTML→テキスト変換表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ImgPreview">ImgPreview</a></td><td>イメージプレビュー</td><td></td></tr>
-<tr><td><a href="hid00006.htm#MenuBar">MenuBar</a></td><td>メニューバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SetColor">SetColor</a></td><td>テキストビュアーの配色</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SetFontSize">SetFontSize</a></td><td>フォントサイズを変更</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SetMargin">SetMargin</a></td><td>テキストビュアーの左側余白を設定</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SetTab">SetTab</a></td><td>テキストビュアーのタブストップ幅を設定</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SetWidth">SetWidth</a></td><td>テキストビュアーの折り返し幅を設定</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ShowCR">ShowCR</a></td><td>テキストビュアーで改行を表示/非表示</td><td>※TV</td></tr>
-<tr><td><a href="hid00006.htm#ShowFKeyBar">ShowFKeyBar</a></td><td>ファンクションキーバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ShowLineNo">ShowLineNo</a></td><td>テキストビュアーの行番号を表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ShowRuby">ShowRuby</a></td><td>テキストビュアーでルビを表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ShowRuler">ShowRuler</a></td><td>テキストビュアーのルーラを表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ShowStatusBar">ShowStatusBar</a></td><td>ステータスバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ShowTAB">ShowTAB</a></td><td>テキストビュアーでタブを表示/非表示</td><td>※TV</td></tr>
-<tr><td><a href="hid00006.htm#ShowToolBar">ShowToolBar</a></td><td>ツールバーを表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SwitchSameName">SwitchSameName</a></td><td>ファイル名主部が同じ次のファイルに切り換え</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SwitchSrcHdr">SwitchSrcHdr</a></td><td>ヘッダ/ソースファイルの切り換え</td><td></td></tr>
-<tr><td><a href="hid00006.htm#WinPos">WinPos</a></td><td>ウィンドウの四辺を設定</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ZoomIn">ZoomIn</a></td><td>ズームイン</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ZoomOut">ZoomOut</a></td><td>ズームアウト</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ZoomReset">ZoomReset</a></td><td>ズーム解除</td><td></td></tr>
-
-<tr id="v_Setup"><td colspan="3"><br><b>設定</b></td></tr>
-<tr><td><a href="hid00006.htm#EditHighlight">EditHighlight</a></td><td>構文強調表示定義ファイルの編集</td><td><a href="hid00084.htm">→ 構文強調表示定義ファイル</a></td></tr>
-<tr><td><a href="hid00006.htm#OptionDlg">OptionDlg</a></td><td>オプション設定を開く</td><td><a href="hid00008.htm">→  オプション設定</a></td></tr>
-<tr><td><a href="hid00006.htm#ToolBarDlg">ToolBarDlg</a></td><td>ツールバーの設定</td><td><a href="hid00068.htm">→ ツールバーの設定ダイアログ</a></td></tr>
-
-<tr id="v_Other"><td colspan="3"><br><b>その他</b></td></tr>
-<tr><td><a href="hid00006.htm#AppList">AppList</a></td><td>アプリケーション一覧</td><td><a href="hid00076.htm">→ アプリケーション一覧</a></td></tr>
-<tr><td><a href="hid00006.htm#Calculator">Calculator</a></td><td>電卓</td><td><a href="hid00087.htm">→ 電卓</a></td></tr>
-<tr><td><a href="hid00006.htm#Close">Close</a></td><td>閉じる</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CmdHistory">CmdHistory</a></td><td>コマンド履歴</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00006.htm#CsvCalc">CsvCalc</a></td><td>CSV/TSV項目の集計</td><td></td></tr>
-<tr><td><a href="hid00006.htm#CsvGraph">CsvGraph</a></td><td>CSV/TSV項目のグラフ</td><td></td></tr>
-<tr><td><a href="hid00006.htm#Delete">Delete</a></td><td>ファイルを削除</td><td></td></tr>
-<tr><td><a href="hid00006.htm#Duplicate">Duplicate</a></td><td>NyanFiの二重起動</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ExportCsv">ExportCsv</a></td><td>CSV/TSVエクスポート</td><td></td></tr>
-<tr><td><a href="hid00006.htm#HelpContents">HelpContents</a></td><td>ヘルプの目次を表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#HelpCurWord">HelpCurWord</a></td><td>カーソル位置の単語を指定ヘルプで検索</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ImgPreview">ImgPreview</a></td><td>イメージプレビュー</td><td></td></tr>
-<tr><td><a href="hid00006.htm#ListLog">ListLog</a></td><td>ログを一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00006.htm#NextNyanFi">NextNyanFi</a></td><td>次のNyanFiをアクティブに</td><td></td></tr>
-<tr><td><a href="hid00006.htm#PopupMainMenu">PopupMainMenu</a></td><td>メインメニューをポップアップ表示</td><td></td></tr>
-<tr><td><a href="hid00006.htm#PrevNyanFi">PrevNyanFi</a></td><td>前のNyanFiをアクティブに</td><td></td></tr>
-<tr><td><a href="hid00006.htm#RegExChecker">RegExChecker</a></td><td>正規表現チェッカー</td><td><a href="hid00085.htm">→ 正規表現チェッカー</a></td></tr>
-<tr><td><a href="hid00006.htm#ReloadFile">ReloadFile</a></td><td>ファイルの再読み込み</td><td></td></tr>
-<tr><td><a href="hid00006.htm#SelectFile">SelectFile</a></td><td>表示中ファイルをリストで選択/解除</td><td></td></tr>
-<tr><td><a href="hid00006.htm#Sort">Sort</a></td><td>テキスト全体を改行単位でソート</td><td></td></tr>
-
-</table>
-<br>
-
-<p class="link_box"><a href="#FL">ファイラー</a> ／ <a href="#TV">テキストビュアー</a></p><br>
-
-<h2 id="IV">イメージビュアー</h2>
-<p class="link_box">
-<a href="#i_Move">移動</a> ／ 
-<a href="#i_Select">選択</a> ／ 
-<a href="#i_Mark">栞マーク</a> ／ 
-<a href="#i_Sort">ソート</a> ／ 
-<a href="#i_Scroll">スクロール</a> ／ 
-<a href="#i_Image">画像操作</a> ／ 
-<a href="#i_WorkList">ワークリスト</a> ／ 
-<a href="#i_Open">開く</a> ／ 
-<a href="#i_Command">実行</a> ／ 
-<a href="#i_Tool">ツール</a> ／ 
-<a href="#i_Info">情報</a> ／ 
-<a href="#i_View">表示</a> ／ 
-<a href="#i_Tag">タグ管理</a> ／ 
-<a href="#i_Setup">設定</a> ／ 
-<a href="#i_Other">その他</a>
-</p>
-
-<table border="0" cellspacing="0">
-<tr id="i_Move"><td colspan="3"><br><b>移動</b></td></tr>
-<tr><td><a href="hid00007.htm#EndFile">EndFile</a></td><td>最後のファイルに移動</td><td></td></tr>
-<tr><td><a href="hid00007.htm#JumpIndex">JumpIndex</a></td><td>指定したインデックスに移動</td><td></td></tr>
-<tr><td><a href="hid00007.htm#NextFile">NextFile</a></td><td>次のファイルを表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#NextMark">NextMark</a></td><td>次の栞マーク項目へ</td><td></td></tr>
-<tr><td><a href="hid00007.htm#NextPage">NextPage</a></td><td>サムネイルの次ページに移動</td><td></td></tr>
-<tr><td><a href="hid00007.htm#NextSameName">NextSameName</a></td><td>ファイル名主部が同じ次ファイルへ</td><td></td></tr>
-<tr><td><a href="hid00007.htm#PageDown">PageDown</a></td><td>1ページ下に移動</td><td></td></tr>
-<tr><td><a href="hid00007.htm#PageUp">PageUp</a></td><td>1ページ上に移動</td><td></td></tr>
-<tr><td><a href="hid00007.htm#PrevFile">PrevFile</a></td><td>前のファイルを表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#PrevMark">PrevMark</a></td><td>前の栞マーク項目へ</td><td></td></tr>
-<tr><td><a href="hid00007.htm#PrevPage">PrevPage</a></td><td>サムネイルの前ページに移動</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ShowSeekBar">ShowSeekBar</a></td><td>シークバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#TopFile">TopFile</a></td><td>先頭ファイルに移動</td><td></td></tr>
-
-<tr id="i_Select"><td colspan="3"><br><b>選択</b></td></tr>
-<tr><td><a href="hid00007.htm#MaskSelect">MaskSelect</a></td><td>指定マスクにマッチするファイルを選択</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SelAllFile">SelAllFile</a></td><td>すべてのファイルを選択/解除</td><td></td></tr>
-<tr><td><a href="hid00007.htm#Select">Select</a></td><td>選択/解除</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SelMark">SelMark</a></td><td>栞マーク項目を選択</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SelReverse">SelReverse</a></td><td>ファイルの選択状態を反転</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SelSameExt">SelSameExt</a></td><td>拡張子が同じファイルを選択</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SelSameName">SelSameName</a></td><td>ファイル名主部が同じファイルを選択</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SelWorkItem">SelWorkItem</a></td><td>ワークリストの登録項目を選択</td><td></td></tr>
-<tr><td><a href="hid00007.htm#TagSelect">TagSelect</a></td><td>指定タグを含むファイルを選択</td><td></td></tr>
-
-<tr id="i_Mark"><td colspan="3"><br><b>栞マーク</b></td></tr>
-<tr><td><a href="hid00007.htm#ClearMark">ClearMark</a></td><td>すべての栞マークを解除</td><td></td></tr>
-<tr><td><a href="hid00007.htm#Mark">Mark</a></td><td>栞マーク/解除</td><td></td></tr>
-<tr><td><a href="hid00007.htm#MarkList">MarkList</a></td><td>栞マーク一覧</td><td><a href="hid00070.htm">→ 栞マーク一覧</a></td></tr>
-<tr><td><a href="hid00007.htm#NextMark">NextMark</a></td><td>次の栞マーク項目へ</td><td></td></tr>
-<tr><td><a href="hid00007.htm#PrevMark">PrevMark</a></td><td>前の栞マーク項目へ</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SelMark">SelMark</a></td><td>栞マーク項目を選択</td><td></td></tr>
-
-<tr id="i_Sort"><td colspan="3"><br><b>ソート</b></td></tr>
-<tr><td><a href="hid00007.htm#SimilarImage">SimilarImage</a></td><td>カーソル位置画像との類似性によるソート</td>
-<tr><td><a href="hid00007.htm#SortDlg">SortDlg</a></td><td>ソートダイアログ</td><td></td></tr>
-
-<tr id="i_Scroll"><td colspan="3"><br><b>スクロール</b></td></tr>
-<tr><td><a href="hid00007.htm#ScrollDown">ScrollDown</a></td><td>下にスクロール</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ScrollLeft">ScrollLeft</a></td><td>左にスクロール</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ScrollRight">ScrollRight</a></td><td>右にスクロール</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ScrollUp">ScrollUp</a></td><td>上にスクロール</td><td></td></tr>
-
-<tr id="i_Image"><td colspan="3"><br><b>画像操作</b></td></tr>
-<tr><td><a href="hid00007.htm#ClipCopy">ClipCopy</a></td><td>クリップボードにコピー</td><td></td></tr>
-<tr><td><a href="hid00007.htm#Delete">Delete</a></td><td>ファイルを削除</td><td></td></tr>
-<tr><td><a href="hid00007.htm#FlipHorz">FlipHorz</a></td><td>左右反転</td><td></td></tr>
-<tr><td><a href="hid00007.htm#FlipVert">FlipVert</a></td><td>上下反転</td><td></td></tr>
-<tr><td><a href="hid00007.htm#GrayScale">GrayScale</a></td><td>グレースケール表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#RotateLeft">RotateLeft</a></td><td>左に90度回転</td><td></td></tr>
-<tr><td><a href="hid00007.htm#RotateRight">RotateRight</a></td><td>右に90度回転</td><td></td></tr>
-
-<tr id="i_WorkList"><td colspan="3"><br><b>ワークリスト</b></td></tr>
-<tr><td><a href="hid00007.htm#HomeWorkList">HomeWorkList</a></td><td>ホームワークリストを開く</td><td></td></tr>
-<tr><td><a href="hid00007.htm#LoadWorkList">LoadWorkList</a></td><td>ワークリストをファイルから読み込む</td><td></td></tr>
-<tr><td><a href="hid00007.htm#NewWorkList">NewWorkList</a></td><td>新規ワークリストの作成</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SaveAsWorkList">SaveAsWorkList</a></td><td>ワークリストに名前を付けて保存</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SaveWorkList">SaveWorkList</a></td><td>ワークリストを上書き保存</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SelWorkItem">SelWorkItem</a></td><td>ワークリストの登録項目を選択</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SendToWorkList">SendToWorkList</a></td><td>ワークリストに送る</td><td></td></tr>
-<tr><td><a href="hid00007.htm#WorkList">WorkList</a></td><td>ワークリスト</td><td><a href="hid00060.htm">→ ワークリスト</a></td></tr>
-
-<tr id="i_Open"><td colspan="3"><br><b>開く</b></td></tr>
-<tr><td><a href="hid00007.htm#FileEdit">FileEdit</a></td><td>ファイルの編集</td><td></td></tr>
-<tr><td><a href="hid00007.htm#OpenByApp">OpenByApp</a></td><td>独自の関連付けで開く</td><td></td></tr>
-<tr><td><a href="hid00007.htm#OpenByWin">OpenByWin</a></td><td>Windowsの関連付けで開く</td><td></td></tr>
-
-<tr id="i_Command"><td colspan="3"><br><b>実行</b></td></tr>
-<tr><td><a href="hid00007.htm#CmdFileList">CmdFileList</a></td><td>コマンドファイル一覧</td><td><a href="hid00067.htm">→ コマンドファイル一覧</a></td></tr>
-<tr><td><a href="hid00007.htm#DebugCmdFile">DebugCmdFile</a></td><td>コマンドファイルのデバッグ実行</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ExeCommands">ExeCommands</a></td><td>指定したコマンドを実行</td><td><a href="hid00063.htm">→ 詳細</a></td></tr>
-<tr><td><a href="hid00007.htm#ExeMenuFile">ExeMenuFile</a></td><td>メニューファイルの実行</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ExeToolBtn">ExeToolBtn</a></td><td>ツールボタンの実行</td><td></td></tr>
-<tr><td><a href="hid00007.htm#InputCommands">InputCommands</a></td><td>入力したコマンドを実行</td><td></td></tr>
-<tr><td><a href="hid00007.htm#KeyList">KeyList</a></td><td>キー割り当て一覧</td><td><a href="hid00055.htm">→ キー割り当て一覧</a></td></tr>
-
-<tr id="i_Tool"><td colspan="3"><br><b>ツール</b></td></tr>
-<tr><td><a href="hid00007.htm#Calculator">Calculator</a></td><td>電卓</td><td><a href="hid00087.htm">→ 電卓</a></td></tr>
-<tr><td><a href="hid00007.htm#ColorPicker">ColorPicker</a></td><td>カラーピッカー</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ExeToolBtn">ExeToolBtn</a></td><td>ツールボタンの実行</td><td></td></tr>
-<tr><td><a href="hid00007.htm#Print">Print</a></td><td>画像の印刷</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SubViewer">SubViewer</a></td><td>サブビュアーの表示/非表示</td><td></td></tr>
-
-<tr id="i_Info"><td colspan="3"><br><b>情報</b></td></tr>
-<tr><td><a href="hid00007.htm#CopyFileInfo">CopyFileInfo</a></td><td>ファイル情報をクリップボードにコピー</td><td></td></tr>
-<tr><td><a href="hid00007.htm#CmdHistory">CmdHistory</a></td><td>コマンド履歴</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00007.htm#Histogram">Histogram</a></td><td>ヒストグラムの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ListFileInfo">ListFileInfo</a></td><td>ファイル情報をダイアログ表示</td><td><b>ShowFileInfo</b>_SD のエイリアス</td></tr>
-<tr><td><a href="hid00007.htm#Loupe">Loupe</a></td><td>ルーペの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#PropertyDlg">PropertyDlg</a></td><td>プロパティダイアログを表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ShowFileInfo">ShowFileInfo</a></td><td>ファイル情報を強制的に表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#Sidebar">Sidebar</a></td><td>サイドバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#WarnHighlight">WarnHighlight</a></td><td>白飛び警告</td><td></td></tr>
-<tr><td><a href="hid00007.htm#WebMap">WebMap</a></td><td>画像のGPS情報や指定地点の地図を開く</td><td></td></tr>
-
-<tr id="i_View"><td colspan="3"><br><b>表示</b></td></tr>
-<tr><td><a href="hid00007.htm#AlphaBlend">AlphaBlend</a></td><td>メインウィンドウを透過表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#DoublePage">DoublePage</a></td><td>見開き表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#EqualSize">EqualSize</a></td><td>等倍表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#FittedSize">FittedSize</a></td><td>画面フィット表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#FullScreen">FullScreen</a></td><td>全画面表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#GrayScale">GrayScale</a></td><td>グレースケール表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#Loupe">Loupe</a></td><td>ルーペの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#MenuBar">MenuBar</a></td><td>メニューバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#PageBind">PageBind</a></td><td>見開き表示の綴じ方向を設定</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SetInterpolation">SetInterpolation</a></td><td>縮小・拡大アルゴリズムを設定</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ShowFKeyBar">ShowFKeyBar</a></td><td>ファンクションキーバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ShowGrid">ShowGrid</a></td><td>画像分割グリッドの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ShowSeekBar">ShowSeekBar</a></td><td>シークバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ShowStatusBar">ShowStatusBar</a></td><td>ステータスバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ShowToolBar">ShowToolBar</a></td><td>ツールバーを表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#Sidebar">Sidebar</a></td><td>サイドバーの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#Thumbnail">Thumbnail</a></td><td>サムネイルの表示/非表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ThumbnailEx">ThumbnailEx</a></td><td>サムネイルの全面表示/通常表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#WarnHighlight">WarnHighlight</a></td><td>白飛び警告</td><td></td></tr>
-<tr><td><a href="hid00007.htm#WinPos">WinPos</a></td><td>ウィンドウの四辺を設定</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ZoomIn">ZoomIn</a></td><td>ズームイン</td><td></td></tr>
-<tr><td><a href="hid00007.htm#ZoomOut">ZoomOut</a></td><td>ズームアウト</td><td></td></tr>
-
-<tr id="i_Tag"><td colspan="2"><br><b>タグ管理</b></td><td><br><a href="hid00088.htm">→ タグによるファイル管理</a></td></tr>
-<tr><td><a href="hid00007.htm#AddTag">AddTag</a></td><td>ファイルにタグを追加</td><td></td></tr>
-<tr><td><a href="hid00007.htm#DelTag">DelTag</a></td><td>ファイルのタグを削除</td><td></td></tr>
-<tr><td><a href="hid00007.htm#SetTag">SetTag</a></td><td>ファイルにタグを設定</td><td></td></tr>
-<tr><td><a href="hid00007.htm#TagSelect">TagSelect</a></td><td>指定タグを含むファイルを選択</td><td></td></tr>
-
-<tr id="i_Setup"><td colspan="3"><br><b>設定</b></td></tr>
-<tr><td><a href="hid00007.htm#LoadBgImage">LoadBgImage</a></td><td>背景画像を読み込む</td><td></td></tr>
-<tr><td><a href="hid00007.htm#OptionDlg">OptionDlg</a></td><td>オプション設定を開く</td><td><a href="hid00008.htm">→  オプション設定</a></td></tr>
-<tr><td><a href="hid00007.htm#ToolBarDlg">ToolBarDlg</a></td><td>ツールバーの設定</td><td><a href="hid00068.htm">→ ツールバーの設定ダイアログ</a></td></tr>
-
-<tr id="i_Other"><td colspan="3"><br><b>その他</b></td></tr>
-<tr><td><a href="hid00007.htm#AppList">AppList</a></td><td>アプリケーション一覧</td><td><a href="hid00076.htm">→ アプリケーション一覧</a></td></tr>
-<tr><td><a href="hid00007.htm#Calculator">Calculator</a></td><td>電卓</td><td><a href="hid00087.htm">→ 電卓</a></td></tr>
-<tr><td><a href="hid00007.htm#CmdHistory">CmdHistory</a></td><td>コマンド履歴</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00007.htm#Close">Close</a></td><td>閉じる</td><td></td></tr>
-<tr><td><a href="hid00007.htm#Duplicate">Duplicate</a></td><td>NyanFiの二重起動</td><td></td></tr>
-<tr><td><a href="hid00007.htm#HelpContents">HelpContents</a></td><td>ヘルプの目次を表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#KeyList">KeyList</a></td><td>キー割り当て一覧</td><td><a href="hid00055.htm">→ キー割り当て一覧</a></td></tr>
-<tr><td><a href="hid00007.htm#ListLog">ListLog</a></td><td>ログを一覧で表示</td><td><a href="hid00073.htm">→ 一覧ダイアログ</a></td></tr>
-<tr><td><a href="hid00007.htm#NextNyanFi">NextNyanFi</a></td><td>次のNyanFiをアクティブに</td><td></td></tr>
-<tr><td><a href="hid00007.htm#PopupMainMenu">PopupMainMenu</a></td><td>メインメニューをポップアップ表示</td><td></td></tr>
-<tr><td><a href="hid00007.htm#PrevNyanFi">PrevNyanFi</a></td><td>前のNyanFiをアクティブに</td><td></td></tr>
-<tr><td><a href="hid00007.htm#WebMap">WebMap</a></td><td>画像のGPS情報や指定地点の地図を開く</td><td></td></tr>
-
-</table>
-
-<p class="link_box"><a href="#FL">ファイラー</a> ／ <a href="#TV">テキストビュアー</a> ／ <a href="#IV">イメージビュアー</a></p>
-<br><br><br><br><br><br><br><br>
+  <h1>コマンドの索引(機能別)</h1>
+
+  <p class="link_box">
+    <a href="#FL">ファイラー</a> (<a href="#IS"><small>インクリメンタルサーチ</small></a>) ／ <a href="#TV">テキストビュアー</a> ／ <a
+      href="#IV">イメージビュアー</a><br>
+    　　<a href="hid00100.htm">→ アルファベット順索引</a> ／ 　<a href="hid00063.htm">→ ExeCommands コマンド</a>
+  </p>
+  <p>コマンドによっては、複数の項目に分類されている場合があります。</p>
+
+  <h2 id="FL">ファイラー</h2>
+  <p class="link_box">
+    <a href="#f_File">ファイル操作</a> ／
+    <a href="#f_Arc">アーカイブ</a> ／
+    <a href="#f_FTP">FTP</a> ／
+    <a href="#f_Open">開く</a> ／
+    <a href="#f_Drive">ドライブ</a> ／
+    <a href="#f_Dir">ディレクトリ</a> ／
+    <a href="#f_Tab">タブ操作</a> ／
+    <a href="#f_FileList">ファイルリスト</a> ／
+    <a href="#f_Cursor">カーソル移動</a> ／
+    <a href="#f_Scroll">スクロール</a> ／
+    <a href="#f_Select">選択</a> ／
+    <a href="#f_Mark">栞マーク</a> ／
+    <a href="#f_Tag">タグ管理</a> ／
+    <a href="#f_Mask">マスク</a> ／
+    <a href="#f_Find">検索・ソート・比較</a> ／
+    <a href="#f_List">一覧</a> ／
+    <a href="#f_WorkList">ワークリスト</a> ／
+    <a href="#f_Menu">メニュー</a> ／
+    <a href="#f_Command">実行</a> ／
+    <a href="#f_Tool">ツール</a> ／
+    <a href="#f_Task">タスク</a> ／
+    <a href="#f_Info">情報</a> ／
+    <a href="#f_View">表示</a> ／
+    <a href="#f_Setup">設定</a> ／
+    <a href="#f_Git">Git</a> ／
+    <a href="#f_Other">その他</a> ／
+    <a href="#f_TV">テキストビュアー設定</a>
+  </p>
+
+  <table cellspacing="0">
+    <tr id="f_File">
+      <td colspan="3"><br><b>ファイル操作</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Backup">Backup</a></td>
+      <td>反対パスにバックアップ</td>
+      <td><a href="hid00071.htm">→ バックアップダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Clone">Clone</a></td>
+      <td>反対パスにクローン作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CloneToCurr">CloneToCurr</a></td>
+      <td>カレントにクローン作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CompleteDelete">CompleteDelete</a></td>
+      <td>完全削除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CompressDir">CompressDir</a></td>
+      <td>ディレクトリのNTFS圧縮</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Copy">Copy</a></td>
+      <td>コピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CopyDir">CopyDir</a></td>
+      <td>ディレクトリ構造のコピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CopyFileName">CopyFileName</a></td>
+      <td>ファイル名をクリップボードにコピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CopyTo">CopyTo</a></td>
+      <td>指定ディレクトリにコピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CopyToClip">CopyToClip</a></td>
+      <td>クリップボードにコピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CreateDir">CreateDir</a></td>
+      <td>ディレクトリの作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CreateDirsDlg">CreateDirsDlg</a></td>
+      <td>ディレクトリ一括作成ダイアログ</td>
+      <td><a href="hid00079.htm">→ ディレクトリ一括作成ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CreateHardLink">CreateHardLink</a></td>
+      <td>ハードリンクの作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CreateJunction">CreateJunction</a></td>
+      <td>ジャンクションの作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CreateShortcut">CreateShortcut</a></td>
+      <td>ショートカットの作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CreateSymLink">CreateSymLink</a></td>
+      <td>シンボリックリンクの作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CreateTestFile">CreateTestFile</a></td>
+      <td>テストファイルの作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CutToClip">CutToClip</a></td>
+      <td>クリップボードに切り取り</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Delete">Delete</a></td>
+      <td>削除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DeleteADS">DeleteADS</a></td>
+      <td>代替データストリームを削除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DistributionDlg">DistributionDlg</a></td>
+      <td>振り分けダイアログ</td>
+      <td><a href="hid00077.htm">→ 振り分けダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#EmptyTrash">EmptyTrash</a></td>
+      <td>ごみ箱を空にする</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Move">Move</a></td>
+      <td>移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MoveTo">MoveTo</a></td>
+      <td>指定ディレクトリへ移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NameFromClip">NameFromClip</a></td>
+      <td>ファイル名をクリップボードの内容に</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NameToLower">NameToLower</a></td>
+      <td>ファイル名の小文字化</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NameToUpper">NameToUpper</a></td>
+      <td>ファイル名の大文字化</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NewFile">NewFile</a></td>
+      <td>新規ファイルの作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NewTextFile">NewTextFile</a></td>
+      <td>新規テキストファイルの作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Paste">Paste</a></td>
+      <td>貼り付け</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#RenameDlg">RenameDlg</a></td>
+      <td>名前等の変更</td>
+      <td><a href="hid00051.htm">→ 名前の変更ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#RegSyncDlg">RegSyncDlg</a></td>
+      <td>同期コピーの設定ダイアログ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetArcTime">SetArcTime</a></td>
+      <td>アーカイブのタイムスタンプを最新に合わせる</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetDirTime">SetDirTime</a></td>
+      <td>ディレクトリのタイムスタンプを最新に合わせる</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SortDlg">SortDlg</a></td>
+      <td>ソートダイアログ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SwapName">SwapName</a></td>
+      <td>名前を入れ替える</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#UndoRename">UndoRename</a></td>
+      <td>直前の改名を元に戻す</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#UnPackToCurr">UnPackToCurr</a></td>
+      <td>カレントパスに解凍</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#UseTrash">UseTrash</a></td>
+      <td>削除にごみ箱を使う/使わない</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Arc">
+      <td colspan="3"><br><b>アーカイブ</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListArchive">ListArchive</a></td>
+      <td>アーカイブの内容一覧をログに表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Pack">Pack</a></td>
+      <td>反対パスにアーカイブ作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PackToCurr">PackToCurr</a></td>
+      <td>カレントパスにアーカイブ作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#TestArchive">TestArchive</a></td>
+      <td>アーカイブの正当性を検査</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#UnPack">UnPack</a></td>
+      <td>反対パスに解凍</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#UpdateFromArc">UpdateFromArc</a></td>
+      <td>アーカイブから更新</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_FTP">
+      <td colspan="3"><br><b>FTP</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FTPChmod">FTPChmod</a></td>
+      <td>パーミッションの設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FTPConnect">FTPConnect</a></td>
+      <td>FTPホストに接続</td>
+      <td><a href="hid00080.htm">→ FTP接続ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FTPDisconnect">FTPDisconnect</a></td>
+      <td>FTPホストから切断</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Open">
+      <td colspan="3"><br><b>開く</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#BinaryEdit">BinaryEdit</a></td>
+      <td>ファイルのバイナリ編集</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FileEdit">FileEdit</a></td>
+      <td>ファイルの編集</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ImageViewer">ImageViewer</a></td>
+      <td>イメージビュアーで開く</td>
+      <td><a href="hid00007.htm">→ イメージビュアー</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenADS">OpenADS</a></td>
+      <td>代替データストリームを仮想リストとして開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenByApp">OpenByApp</a></td>
+      <td>独自の関連付けで開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenByExp">OpenByExp</a></td>
+      <td>エクスプローラで開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenByWin">OpenByWin</a></td>
+      <td>Windowsの関連付けで開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenCtrlPanel">OpenCtrlPanel</a></td>
+      <td>コントロールパネルを開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenGitURL">OpenGitURL</a></td>
+      <td>リモートリポジトリURLを開く</td>
+      <td><a href="hid00090.htm">→ Git の利用について</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenStandard">OpenStandard</a></td>
+      <td>標準の Enter キー動作</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenTrash">OpenTrash</a></td>
+      <td>ごみ箱を開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#TextViewer">TextViewer</a></td>
+      <td>テキストビュアーで開く</td>
+      <td><a href="hid00006.htm">→ テキストビュアー</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SubViewer">SubViewer</a></td>
+      <td>サブビュアーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ViewTail">ViewTail</a></td>
+      <td>テキストファイルの末尾を閲覧</td>
+      <td><a href="hid00006.htm">→ テキストビュアー</a></td>
+    </tr>
+
+    <tr id="f_Drive">
+      <td colspan="3"><br><b>ドライブ</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ChangeDrive">ChangeDrive</a></td>
+      <td>ドライブの変更</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DriveGraph">DriveGraph</a></td>
+      <td>ドライブ使用率推移</td>
+      <td><a href="hid00086.htm">→ ドライブ使用率推移</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DriveList">DriveList</a></td>
+      <td>ドライブ一覧</td>
+      <td><a href="hid00064.htm">→ ドライブ一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Eject">Eject</a></td>
+      <td>CD/DVDドライブのトレイを開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#EjectDrive">EjectDrive</a></td>
+      <td>ドライブの取り外し</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NetConnect">NetConnect</a></td>
+      <td>ネットワークドライブの割り当て</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NetDisconnect">NetDisconnect</a></td>
+      <td>ネットワークドライブの切断</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NextDrive">NextDrive</a></td>
+      <td>次のドライブへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PrevDrive">PrevDrive</a></td>
+      <td>前のドライブへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShareList">ShareList</a></td>
+      <td>共有フォルダ一覧</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Dir">
+      <td colspan="3"><br><b>ディレクトリ</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#BackDirHist">BackDirHist</a></td>
+      <td>ディレクトリ履歴を戻る</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ChangeDir">ChangeDir</a></td>
+      <td>ディレクトリを変更</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ChangeOppDir">ChangeOppDir</a></td>
+      <td>反対側のディレクトリを変更</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ChangeOppRegDir">ChangeOppRegDir</a></td>
+      <td>反対側で登録ディレクトリを開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ChangeRegDir">ChangeRegDir</a></td>
+      <td>登録ディレクトリを開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CsrDirToOpp">CsrDirToOpp</a></td>
+      <td>カーソル位置のディレクトリを反対側に開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CurrFromOpp">CurrFromOpp</a></td>
+      <td>カレントパスを反対パスに</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CurrToOpp">CurrToOpp</a></td>
+      <td>反対パスをカレントパスに</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DirHistory">DirHistory</a></td>
+      <td>ディレクトリ履歴</td>
+      <td><a href="hid00057.htm">→ ディレクトリ履歴</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DirStack">DirStack</a></td>
+      <td>ディレクトリ・スタック</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ForwardDirHist">ForwardDirHist</a></td>
+      <td>ディレクトリ履歴を進む</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#InputDir">InputDir</a></td>
+      <td>入力したディレクトリに変更</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#JumpTo">JumpTo</a></td>
+      <td>指定したファイル位置へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Library">Library</a></td>
+      <td>ライブラリを開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#LinkToOpp">LinkToOpp</a></td>
+      <td>リンク先を反対側に開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListTree">ListTree</a></td>
+      <td>ディレクトリ構造を一覧でツリー表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenCtrlPanel">OpenCtrlPanel</a></td>
+      <td>コントロールパネルを開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenTrash">OpenTrash</a></td>
+      <td>ごみ箱を開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PopDir">PopDir</a></td>
+      <td>ディレクトリをポップ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PushDir">PushDir</a></td>
+      <td>ディレクトリをプッシュ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#RegDirDlg">RegDirDlg</a></td>
+      <td>登録ディレクトリダイアログ</td>
+      <td><a href="hid00054.htm">→ 登録ディレクトリダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#RegDirPopup">RegDirPopup</a></td>
+      <td>登録ディレクトリ・ポップアップメニュー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SpecialDirList">SpecialDirList</a></td>
+      <td>特殊フォルダ一覧</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SubDirList">SubDirList</a></td>
+      <td>サブディレクトリ一覧</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShareList">ShareList</a></td>
+      <td>共有フォルダ一覧</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SyncLR">SyncLR</a></td>
+      <td>左右ディレクトリの同期変更を有効/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToParent">ToParent</a></td>
+      <td>親ディレクトリへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a></td>
+      <td>左ファイルリストで親ディレクトリへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a></td>
+      <td>右ファイルリストで親ディレクトリへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToRoot">ToRoot</a></td>
+      <td>ルートディレクトリへ</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Tab">
+      <td colspan="3"><br><b>タブ操作</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#AddTab">AddTab</a></td>
+      <td>タブを追加</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DelTab">DelTab</a></td>
+      <td>タブを削除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FixTabPath">FixTabPath</a></td>
+      <td>タブ変更に対してカレントパスを一時固定/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#LoadTabGroup">LoadTabGroup</a></td>
+      <td>タブグループをファイルから読み込む</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MoveTab">MoveTab</a></td>
+      <td>タブの位置を移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NextTab">NextTab</a></td>
+      <td>次のタブへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PopupTab">PopupTab</a></td>
+      <td>タブ選択メニューを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PrevTab">PrevTab</a></td>
+      <td>前のタブへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SaveAsTabGroup">SaveAsTabGroup</a></td>
+      <td>タブグループに名前を付けて保存</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SaveTabGroup">SaveTabGroup</a></td>
+      <td>タブグループを上書き保存</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowTabBar">ShowTabBar</a></td>
+      <td>タブバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SoloTab">SoloTab</a></td>
+      <td>他のタブをすべて削除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#TabDlg">TabDlg</a></td>
+      <td>タブの設定ダイアログ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#TabHome">TabHome</a></td>
+      <td>タブのホームへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToTab">ToTab</a></td>
+      <td>指定番号のタブへ</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_FileList">
+      <td colspan="3"><br><b>ファイルリスト</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ItemTmpDown">ItemTmpDown</a></td>
+      <td>項目を一時的に一つ下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ItemTmpMove">ItemTmpMove</a></td>
+      <td>選択項目を一時的にカーソル位置に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ItemTmpUp">ItemTmpUp</a></td>
+      <td>項目を一時的に一つ上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#LoadResultList">LoadResultList</a></td>
+      <td>結果リストをファイルから読み込む</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenADS">OpenADS</a></td>
+      <td>代替データストリームを仮想リストとして開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ReloadList">ReloadList</a></td>
+      <td>ファイルリストを最新の情報に更新</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ReturnList">ReturnList</a></td>
+      <td>ファイルリスト表示に戻る</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SaveAsResultList">SaveAsResultList</a></td>
+      <td>結果リストに名前を付けて保存</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SwapLR">SwapLR</a></td>
+      <td>左右のファイルリストを入れ替える</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToLeft">ToLeft</a></td>
+      <td>左ファイルリストへ</td>
+      <td>逆カーソルで親ディレクトリに移動したい場合は <b>ToParentOnLeft</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToLog">ToLog</a></td>
+      <td>ログウィンドウへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToNextOnRight">ToNextOnRight</a></td>
+      <td>右ファイルリストで次のNyanFiへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToOpposite">ToOpposite</a></td>
+      <td>反対側のファイルリストへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToOppSameItem">ToOppSameItem</a></td>
+      <td>カーソル位置と同名の反対パス項目へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a></td>
+      <td>左ファイルリストで親ディレクトリへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a></td>
+      <td>右ファイルリストで親ディレクトリへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToPrevOnLeft">ToPrevOnLeft</a></td>
+      <td>左ファイルリストで前のNyanFiへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToRight">ToRight</a></td>
+      <td>右ファイルリストへ</td>
+      <td>逆カーソルで親ディレクトリに移動したい場合は <b>ToParentOnRight</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToText">ToText</a></td>
+      <td>テキストプレビューへ</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Cursor">
+      <td colspan="3"><br><b>カーソル移動</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorDown">CursorDown</a></td>
+      <td>カーソルを下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorDownSel">CursorDownSel</a></td>
+      <td>選択しながらカーソルを下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorEnd">CursorEnd</a></td>
+      <td>カーソルを最下行に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorEndSel">CursorEndSel</a></td>
+      <td>選択しながらカーソルを最下行に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorTop">CursorTop</a></td>
+      <td>カーソルを最上行に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorTopSel">CursorTopSel</a></td>
+      <td>選択しながらカーソルを最上行に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorUp">CursorUp</a></td>
+      <td>カーソルを上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorUpSel">CursorUpSel</a></td>
+      <td>選択しながらカーソルを上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#JumpTo">JumpTo</a></td>
+      <td>指定したファイル位置へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NextMark">NextMark</a></td>
+      <td>次の栞マーク項目へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NextSameName">NextSameName</a></td>
+      <td>ファイル名主部が同じ次ファイルへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NextSelItem">NextSelItem</a></td>
+      <td>次の選択項目にカーソル移動</td>
+      <td><b>CursorDown</b>_SL のエイリアス</td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PageDown">PageDown</a></td>
+      <td>1ページ下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PageDownSel">PageDownSel</a></td>
+      <td>選択しながら1ページ下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PageUp">PageUp</a></td>
+      <td>1ページ上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PageUpSel">PageUpSel</a></td>
+      <td>選択しながら1ページ上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PrevMark">PrevMark</a></td>
+      <td>前の栞マーク項目へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PrevSelItem">PrevSelItem</a></td>
+      <td>前の選択項目にカーソル移動</td>
+      <td><b>CursorUp</b>_SL のエイリアス</td>
+    </tr>
+
+    <tr id="f_Scroll">
+      <td colspan="3"><br><b>スクロール</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ScrollDown">ScrollDown</a></td>
+      <td>下にスクロール</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ScrollDownLog">ScrollDownLog</a></td>
+      <td>ログを下にスクロール</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ScrollDownText">ScrollDownText</a></td>
+      <td>テキストプレビューを下にスクロール</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ScrollUp">ScrollUp</a></td>
+      <td>上にスクロール</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ScrollUpLog">ScrollUpLog</a></td>
+      <td>ログを上にスクロール</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ScrollUpText">ScrollUpText</a></td>
+      <td>テキストプレビューを上にスクロール</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Select">
+      <td colspan="3"><br><b>選択</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ClearAll">ClearAll</a></td>
+      <td>すべての選択状態を解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorDownSel">CursorDownSel</a></td>
+      <td>選択しながらカーソルを下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorEndSel">CursorEndSel</a></td>
+      <td>選択しながらカーソルを最下行に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorTopSel">CursorTopSel</a></td>
+      <td>選択しながらカーソルを最上行に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CursorUpSel">CursorUpSel</a></td>
+      <td>選択しながらカーソルを上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DateSelect">DateSelect</a></td>
+      <td>指定した日付条件に合うファイルを選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MaskSelect">MaskSelect</a></td>
+      <td>指定マスクにマッチするファイルを選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MatchSelect">MatchSelect</a></td>
+      <td>指定文字列を含む項目を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PageDownSel">PageDownSel</a></td>
+      <td>選択しながら1ページ下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PageUpSel">PageUpSel</a></td>
+      <td>選択しながら1ページ上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelAllFile">SelAllFile</a></td>
+      <td>すべてのファイルを選択/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelAllItem">SelAllItem</a></td>
+      <td>すべての項目を選択/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelByList">SelByList</a></td>
+      <td>リストによって項目を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Select">Select</a></td>
+      <td>選択/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelectUp">SelectUp</a></td>
+      <td>選択/解除後、カーソルを上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelGitChanged">SelGitChanged</a></td>
+      <td>Git作業ディレクトリで変更ファイルを選択</td>
+      <td><a href="hid00090.htm">→ Git の利用について</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelEmptyDir">SelEmptyDir</a></td>
+      <td>空のディレクトリだけを選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelMark">SelMark</a></td>
+      <td>栞マーク項目を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelMask">SelMask</a></td>
+      <td>選択中の項目だけを残して他を隠す</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelOnlyCur">SelOnlyCur</a></td>
+      <td>カレント側だけにあるファイルを選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelReverse">SelReverse</a></td>
+      <td>ファイルの選択状態を反転</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelReverseAll">SelReverseAll</a></td>
+      <td>すべての項目の選択状態を反転</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelSameDir">SelSameDir</a></td>
+      <td>結果リストで同じディレクトリの項目を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelSameExt">SelSameExt</a></td>
+      <td>拡張子が同じファイルを選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelSameName">SelSameName</a></td>
+      <td>ファイル名主部が同じファイルを選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelWorkItem">SelWorkItem</a></td>
+      <td>ワークリストの登録項目を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#TagSelect">TagSelect</a></td>
+      <td>指定タグを含む項目を選択</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Mark">
+      <td colspan="3"><br><b>栞マーク</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ClearMark">ClearMark</a></td>
+      <td>すべての栞マークを解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FindMark">FindMark</a></td>
+      <td>栞マーク項目を検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Mark">Mark</a></td>
+      <td>栞マーク/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MarkList">MarkList</a></td>
+      <td>栞マーク一覧</td>
+      <td><a href="hid00070.htm">→ 栞マーク一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MarkMask">MarkMask</a></td>
+      <td>栞マーク項目だけを残して他を隠す</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NextMark">NextMark</a></td>
+      <td>次の栞マーク項目へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PrevMark">PrevMark</a></td>
+      <td>前の栞マーク項目へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelMark">SelMark</a></td>
+      <td>栞マーク項目を選択</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Tag">
+      <td colspan="2"><br><b>タグ管理</b></td>
+      <td><br><a href="hid00088.htm">→ タグによるファイル管理</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#AddTag">AddTag</a></td>
+      <td>項目にタグを追加</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DelTag">DelTag</a></td>
+      <td>項目のタグを削除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FindTag">FindTag</a></td>
+      <td>タグ検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetTag">SetTag</a></td>
+      <td>項目にタグを設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#TagSelect">TagSelect</a></td>
+      <td>指定タグを含む項目を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#TrimTagData">TrimTagData</a></td>
+      <td>タグデータの整理</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Mask">
+      <td colspan="3"><br><b>マスク</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ClearMask">ClearMask</a></td>
+      <td>選択マスク/パスマスクを解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DelSelMask">DelSelMask</a></td>
+      <td>選択マスクから項目を削除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Filter">Filter</a></td>
+      <td>ファイルリストの絞り込み</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#InputPathMask">InputPathMask</a></td>
+      <td>パスマスクを入力</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MarkMask">MarkMask</a></td>
+      <td>栞マーク項目だけを残して他を隠す</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MaskFind">MaskFind</a></td>
+      <td>指定マスクにマッチするファイル/ディレクトリ名検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MaskSelect">MaskSelect</a></td>
+      <td>指定マスクにマッチするファイルを選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PathMaskDlg">PathMaskDlg</a></td>
+      <td>パスマスクダイアログ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetPathMask">SetPathMask</a></td>
+      <td>パスマスクを設定</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Find">
+      <td colspan="3"><br><b>検索・ソート・比較</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CompareDlg">CompareDlg</a></td>
+      <td>同名ファイルの比較ダイアログ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CompareHash">CompareHash</a></td>
+      <td>ハッシュ値の比較</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DiffDir">DiffDir</a></td>
+      <td>ディレクトリの比較</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Filter">Filter</a></td>
+      <td>ファイルリストの絞り込み</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FindDirDlg">FindDirDlg</a></td>
+      <td>ディレクトリ名検索ダイアログ</td>
+      <td><a href="hid00053.htm">→ ディレクトリ名検索ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FindDuplDlg">FindDuplDlg</a></td>
+      <td>重複ファイルの検索ダイアログ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FindFileDirDlg">FindFileDirDlg</a></td>
+      <td>ファイル/ディレクトリ名検索ダイアログ</td>
+      <td><a href="hid00052.htm">→ ファイル/ディレクトリ名検索ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FindFileDlg">FindFileDlg</a></td>
+      <td>ファイル名検索ダイアログ</td>
+      <td><a href="hid00052.htm">→ ファイル名検索ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FindFolderIcon">FindFolderIcon</a></td>
+      <td>フォルダアイコン検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FindHardLink">FindHardLink</a></td>
+      <td>ハードリンクを列挙</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FindMark">FindMark</a></td>
+      <td>栞マーク項目を検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FindTag">FindTag</a></td>
+      <td>タグ検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FindTagName">FindTagName</a></td>
+      <td>tags からタグ名検索</td>
+      <td><a href="hid00083.htm">→ ダイレクトタグジャンプ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Grep">Grep</a></td>
+      <td>文字列検索(GREP)</td>
+      <td><a href="hid00056.htm">→ 文字列検索</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#IncSearch">IncSearch</a></td>
+      <td>インクリメンタルサーチ</td>
+      <td><a href="hid00050.htm">→ インクリメンタルサーチ・モード</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#JumpTo">JumpTo</a></td>
+      <td>指定したファイル位置へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#LoadResultList">LoadResultList</a></td>
+      <td>結果リストをファイルから読み込む</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MaskFind">MaskFind</a></td>
+      <td>指定マスクにマッチするファイル/ディレクトリ名検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SaveAsResultList">SaveAsResultList</a></td>
+      <td>結果リストに名前を付けて保存</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SimilarSort">SimilarSort</a></td>
+      <td>カーソル位置項目名との類似性によるソート</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SortDlg">SortDlg</a></td>
+      <td>ソートダイアログ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WebMap">WebMap</a></td>
+      <td>画像のGPS情報や指定地点の地図を開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WebSearch">WebSearch</a></td>
+      <td>Webで検索</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_List">
+      <td colspan="3"><br><b>一覧</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#AppList">AppList</a></td>
+      <td>アプリケーション一覧</td>
+      <td><a href="hid00076.htm">→ アプリケーション一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CmdFileList">CmdFileList</a></td>
+      <td>コマンドファイル一覧</td>
+      <td><a href="hid00067.htm">→ コマンドファイル一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CmdHistory">CmdHistory</a></td>
+      <td>コマンド履歴</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CountLines">CountLines</a></td>
+      <td>テキストファイルの行数をカウント</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DirHistory">DirHistory</a></td>
+      <td>ディレクトリ履歴</td>
+      <td><a href="hid00057.htm">→ ディレクトリ履歴</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DirStack">DirStack</a></td>
+      <td>ディレクトリ・スタック</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DriveGraph">DriveGraph</a></td>
+      <td>ドライブ使用率推移</td>
+      <td><a href="hid00086.htm">→ ドライブ使用率推移</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DriveList">DriveList</a></td>
+      <td>ドライブ一覧</td>
+      <td><a href="hid00064.htm">→ ドライブ一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#EditHistory">EditHistory</a></td>
+      <td>最近編集したファイル一覧</td>
+      <td><a href="hid00058.htm">→ 最近編集したファイル一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FileExtList">FileExtList</a></td>
+      <td>拡張子別一覧</td>
+      <td><a href="hid00072.htm">→ 拡張子別一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#KeyList">KeyList</a></td>
+      <td>キー割り当て一覧</td>
+      <td><a href="hid00055.htm">→ キー割り当て一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListFileInfo">ListFileInfo</a></td>
+      <td>ファイル情報をダイアログ表示</td>
+      <td><b>ShowFileInfo</b>_SD のエイリアス</td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListFileName">ListFileName</a></td>
+      <td>ファイル名を一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListArchive">ListArchive</a></td>
+      <td>アーカイブの内容一覧をログに表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListClipboard">ListClipboard</a></td>
+      <td>クリップボードを一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListDuration">ListDuration</a></td>
+      <td>ファイル再生時間の一覧をログに表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListExpFunc">ListExpFunc</a></td>
+      <td>エクスポート関数一覧をログに表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListLog">ListLog</a></td>
+      <td>ログを一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListNyanFi">ListNyanFi</a></td>
+      <td>NyanFi についての情報をログに表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListTail">ListTail</a></td>
+      <td>テキストファイルの末尾を一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListText">ListText</a></td>
+      <td>テキストファイルを一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListTree">ListTree</a></td>
+      <td>ディレクトリ構造を一覧でツリー表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MarkList">MarkList</a></td>
+      <td>栞マーク一覧</td>
+      <td><a href="hid00070.htm">→ 栞マーク一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PathMaskDlg">PathMaskDlg</a></td>
+      <td>パスマスクダイアログ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#RecentList">RecentList</a></td>
+      <td>最近使ったファイル一覧</td>
+      <td><a href="hid00058.htm#RecentList">→ 最近使ったファイル一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#RepositoryList">RepositoryList</a></td>
+      <td>リポジトリ一覧</td>
+      <td><a href="hid00090.htm">→ Git の利用について</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShareList">ShareList</a></td>
+      <td>共有フォルダ一覧</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SpecialDirList">SpecialDirList</a></td>
+      <td>特殊フォルダ一覧</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SubDirList">SubDirList</a></td>
+      <td>サブディレクトリ一覧</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ViewHistory">ViewHistory</a></td>
+      <td>最近閲覧したファイル一覧</td>
+      <td><a href="hid00058.htm">→ 最近閲覧したファイル一覧</a></td>
+    </tr>
+
+    <tr id="f_WorkList">
+      <td colspan="3"><br><b>ワークリスト</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#HomeWorkList">HomeWorkList</a></td>
+      <td>ホームワークリストを開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#InsSeparator">InsSeparator</a></td>
+      <td>ワークリストにセパレータを挿入</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#LoadWorkList">LoadWorkList</a></td>
+      <td>ワークリストをファイルから読み込む</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NewWorkList">NewWorkList</a></td>
+      <td>新規ワークリストの作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SaveAsWorkList">SaveAsWorkList</a></td>
+      <td>ワークリストに名前を付けて保存</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SaveWorkList">SaveWorkList</a></td>
+      <td>ワークリストを上書き保存</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelWorkItem">SelWorkItem</a></td>
+      <td>ワークリストの登録項目を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetAlias">SetAlias</a></td>
+      <td>ワークリストの項目にエイリアスを設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WorkItemDown">WorkItemDown</a></td>
+      <td>ワークリストの項目を一つ下に移動</td>
+      <td><b>ItemTmpDown</b> で代替可能</td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WorkItemMove">WorkItemMove</a></td>
+      <td>選択ワークリスト項目をカーソル位置に移動</td>
+      <td><b>ItemTmpMove</b> で代替可能</td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WorkItemUP">WorkItemUP</a></td>
+      <td>ワークリストの項目を一つ上に移動</td>
+      <td><b>ItemTmpUp</b> で代替可能</td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WorkList">WorkList</a></td>
+      <td>ワークリスト</td>
+      <td><a href="hid00060.htm">→ ワークリスト</a></td>
+    </tr>
+
+    <tr id="f_Menu">
+      <td colspan="3"><br><b>メニュー</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ContextMenu">ContextMenu</a></td>
+      <td>コンテキストメニューを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExeExtMenu">ExeExtMenu</a></td>
+      <td>追加メニューの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a></td>
+      <td>メニューファイルの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExPopupMenu">ExPopupMenu</a></td>
+      <td>拡張ポップアップメニュー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PopupMainMenu">PopupMainMenu</a></td>
+      <td>メインメニューをポップアップ表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#RegDirPopup">RegDirPopup</a></td>
+      <td>登録ディレクトリ・ポップアップメニュー</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Command">
+      <td colspan="3"><br><b>実行</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CmdFileList">CmdFileList</a></td>
+      <td>コマンドファイル一覧</td>
+      <td><a href="hid00067.htm">→ コマンドファイル一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DebugCmdFile">DebugCmdFile</a></td>
+      <td>コマンドファイルのデバッグ実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExeCommandLine">ExeCommandLine</a></td>
+      <td>コマンドラインの実行</td>
+      <td><a href="hid00062.htm">→ コマンドラインの実行ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExeCommands">ExeCommands</a></td>
+      <td>指定したコマンドを実行</td>
+      <td><a href="hid00063.htm">→ 詳細</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExeExtMenu">ExeExtMenu</a></td>
+      <td>追加メニューの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExeExtTool">ExeExtTool</a></td>
+      <td>外部ツールの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a></td>
+      <td>メニューファイルの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExeToolBtn">ExeToolBtn</a></td>
+      <td>ツールボタンの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FileRun">FileRun</a></td>
+      <td>ファイル名を指定して実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#InputCommands">InputCommands</a></td>
+      <td>入力したコマンドを実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#KeyList">KeyList</a></td>
+      <td>キー割り当て一覧</td>
+      <td><a href="hid00055.htm">→ キー割り当て一覧</a></td>
+    </tr>
+
+    <tr id="f_Tool">
+      <td colspan="3"><br><b>ツール</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Calculator">Calculator</a></td>
+      <td>電卓</td>
+      <td><a href="hid00087.htm">→ 電卓</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CommandPrompt">CommandPrompt</a></td>
+      <td>コマンドプロンプト</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CompressDir">CompressDir</a></td>
+      <td>ディレクトリのNTFS圧縮</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ConvertDoc2Txt">ConvertDoc2Txt</a></td>
+      <td>バイナリ文書→テキスト変換表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ConvertHtm2Txt">ConvertHtm2Txt</a></td>
+      <td>HTML→テキスト変換表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ConvertImage">ConvertImage</a></td>
+      <td>画像ファイルの変換</td>
+      <td><a href="hid00059.htm">→ 画像ファイルの変換ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ConvertTextEnc">ConvertTextEnc</a></td>
+      <td>文字コードの変換</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CountLines">CountLines</a></td>
+      <td>テキストファイルの行数をカウント</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CreateDirsDlg">CreateDirsDlg</a></td>
+      <td>ディレクトリ一括作成ダイアログ</td>
+      <td><a href="hid00079.htm">→ ディレクトリ一括作成ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DelJpgExif">DelJpgExif</a></td>
+      <td>Exif情報を削除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExeCommandLine">ExeCommandLine</a></td>
+      <td>コマンドラインの実行</td>
+      <td><a href="hid00062.htm">→ コマンドラインの実行ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExeExtTool">ExeExtTool</a></td>
+      <td>外部ツールの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExeToolBtn">ExeToolBtn</a></td>
+      <td>ツールボタンの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExtractChmSrc">ExtractChmSrc</a></td>
+      <td>CHMからソースを抽出</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExtractGifBmp">ExtractGifBmp</a></td>
+      <td>アニメGIFからビットマップを抽出</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExtractIcon">ExtractIcon</a></td>
+      <td>アイコンを抽出</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExtractImage">ExtractImage</a></td>
+      <td>埋め込み画像を抽出</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ExtractMp3Img">ExtractMp3Img</a></td>
+      <td>MP3の埋め込み画像を抽出</td>
+      <td><b>ExtractImage</b> で代替可能</td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FileRun">FileRun</a></td>
+      <td>ファイル名を指定して実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#JoinText">JoinText</a></td>
+      <td>テキストファイルの結合</td>
+      <td><a href="hid00078.htm">→ テキストファイルの結合ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#JsonViewer">JsonViewer</a></td>
+      <td>JSONビュアー</td>
+      <td><a href="hid00092.htm">→ JSONビュアー</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListArchive">ListArchive</a></td>
+      <td>アーカイブの内容一覧をログに表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListDuration">ListDuration</a></td>
+      <td>ファイル再生時間の一覧をログに表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListExpFunc">ListExpFunc</a></td>
+      <td>エクスポート関数一覧をログに表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NameToLower">NameToLower</a></td>
+      <td>ファイル名の小文字化</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NameToUpper">NameToUpper</a></td>
+      <td>ファイル名の大文字化</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PowerShell">PowerShell</a></td>
+      <td>PowerShell を起動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetArcTime">SetArcTime</a></td>
+      <td>アーカイブのタイムスタンプを最新に合わせる</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetDirTime">SetDirTime</a></td>
+      <td>ディレクトリのタイムスタンプを最新に合わせる</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetExifTime">SetExifTime</a></td>
+      <td>タイムスタンプをExif撮影日時に設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#TestArchive">TestArchive</a></td>
+      <td>アーカイブの正当性を検査</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WinTerminal">WinTerminal</a></td>
+      <td>Windows Terminal を起動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#XmlViewer">XmlViewer</a></td>
+      <td>XMLビュアー</td>
+      <td><a href="hid00081.htm">→ XMLビュアー</a></td>
+    </tr>
+
+    <tr id="f_Task">
+      <td colspan="3"><br><b>タスク</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CancelAllTask">CancelAllTask</a></td>
+      <td>すべてのタスクを中断</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PauseAllTask">PauseAllTask</a></td>
+      <td>すべてのタスクを一旦停止/再開</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Suspend">Suspend</a></td>
+      <td>タスク予約項目の実行を保留/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#TaskMan">TaskMan</a></td>
+      <td>タスクマネージャ</td>
+      <td><a href="hid00069.htm">→ タスクマネージャ</a></td>
+    </tr>
+
+    <tr id="f_Info">
+      <td colspan="3"><br><b>情報</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CalcDirSize">CalcDirSize</a></td>
+      <td>ディレクトリ使用量を計算</td>
+      <td></td>
+    </tr>
+    <tr id="f_C">
+      <td><a href="hid00005.htm#CalcDirSizeAll">CalcDirSizeAll</a></td>
+      <td>全ディレクトリの使用量を計算</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ClearLog">ClearLog</a></td>
+      <td>ログをクリア</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CmdHistory">CmdHistory</a></td>
+      <td>コマンド履歴</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CopyCmdName">CopyCmdName</a></td>
+      <td>コマンド名をクリップボードにコピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CopyFileInfo">CopyFileInfo</a></td>
+      <td>ファイル情報をクリップボードにコピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CopyFileName">CopyFileName</a></td>
+      <td>ファイル名をクリップボードにコピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#GetHash">GetHash</a></td>
+      <td>ファイルのハッシュ値を取得</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListFileInfo">ListFileInfo</a></td>
+      <td>ファイル情報をダイアログ表示</td>
+      <td><b>ShowFileInfo</b>_SD のエイリアス</td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListFileName">ListFileName</a></td>
+      <td>ファイル名を一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListLog">ListLog</a></td>
+      <td>ログを一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListNyanFi">ListNyanFi</a></td>
+      <td>NyanFi についての情報をログに表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListTail">ListTail</a></td>
+      <td>テキストファイルの末尾を一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ListText">ListText</a></td>
+      <td>テキストファイルを一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#LogFileInfo">LogFileInfo</a></td>
+      <td>ファイル情報をログに出力</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PropertyDlg">PropertyDlg</a></td>
+      <td>プロパティダイアログを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ReloadList">ReloadList</a></td>
+      <td>ファイルリストを最新の情報に更新</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a></td>
+      <td>ファイル情報を強制的に表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ViewLog">ViewLog</a></td>
+      <td>ログをテキストビュアーで表示</td>
+      <td><a href="hid00006.htm">→ テキストビュアー</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ViewTail">ViewTail</a></td>
+      <td>テキストファイルの末尾を閲覧</td>
+      <td><a href="hid00006.htm">→ テキストビュアー</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WatchTail">WatchTail</a></td>
+      <td>テキストファイルの追加更新を監視</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WebMap">WebMap</a></td>
+      <td>画像のGPS情報や指定地点の地図を開く</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_View">
+      <td colspan="3"><br><b>表示</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#AlphaBlend">AlphaBlend</a></td>
+      <td>メインウィンドウを透過表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#BgImgMode">BgImgMode</a></td>
+      <td>背景画像の表示モードを設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#BorderCenter">BorderCenter</a></td>
+      <td>ファイルリストの境界を中央に移動</td>
+      <td><b>EqualListWidth</b> のエイリアス</td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#BorderLeft">BorderLeft</a></td>
+      <td>ファイルリストの境界を左に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#BorderRight">BorderRight</a></td>
+      <td>ファイルリストの境界を右に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#EqualListWidth">EqualListWidth</a></td>
+      <td>左右のリスト幅を均等に</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FileListOnly">FileListOnly</a></td>
+      <td>ファイルリストのみを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#HideSizeTime">HideSizeTime</a></td>
+      <td>サイズと更新日時を隠す</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#LoadBgImage">LoadBgImage</a></td>
+      <td>背景画像を読み込む</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#LockTextPreview">LockTextPreview</a></td>
+      <td>テキストプレビューをロック/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MenuBar">MenuBar</a></td>
+      <td>メニューバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ReturnList">ReturnList</a></td>
+      <td>ファイルリスト表示に戻る</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetFolderIcon">SetFolderIcon</a></td>
+      <td>フォルダアイコンの設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetFontSize">SetFontSize</a></td>
+      <td>フォントサイズを変更</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetInterpolation">SetInterpolation</a></td>
+      <td>縮小・拡大アルゴリズムを設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetSttBarFmt">SetSttBarFmt</a></td>
+      <td>ステータスバー書式を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetSubSize">SetSubSize</a></td>
+      <td>サブウィンドウのサイズを設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowByteSize">ShowByteSize</a></td>
+      <td>ファイルサイズをバイト単位で表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowFKeyBar">ShowFKeyBar</a></td>
+      <td>ファンクションキーバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowHideAtr">ShowHideAtr</a></td>
+      <td>隠しファイルを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowIcon">ShowIcon</a></td>
+      <td>アイコンの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowLogWin">ShowLogWin</a></td>
+      <td>ログウィンドウの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowPreview">ShowPreview</a></td>
+      <td>プレビューの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowProperty">ShowProperty</a></td>
+      <td>ファイル情報の表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowStatusBar">ShowStatusBar</a></td>
+      <td>ステータスバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowSystemAtr">ShowSystemAtr</a></td>
+      <td>システムファイルを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowToolBar">ShowToolBar</a></td>
+      <td>ツールバーを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WidenCurList">WidenCurList</a></td>
+      <td>カレント側リストの幅を広げる</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WinMaximize">WinMaximize</a></td>
+      <td>ウィンドウの最大化</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WinMinimize">WinMinimize</a></td>
+      <td>ウィンドウの最小化</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WinNormal">WinNormal</a></td>
+      <td>ウィンドウを元のサイズに戻す</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WinPos">WinPos</a></td>
+      <td>ウィンドウの四辺を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ZoomIn">ZoomIn</a></td>
+      <td>ズームイン</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ZoomOut">ZoomOut</a></td>
+      <td>ズームアウト</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ZoomReset">ZoomReset</a></td>
+      <td>ズーム解除</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Setup">
+      <td colspan="3"><br><b>設定</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DotNyanDlg">DotNyanDlg</a></td>
+      <td>.nyanfi ファイルの設定</td>
+      <td><a href="hid00075.htm">→ .nyanfi ファイル</a> </td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#EditHighlight">EditHighlight</a></td>
+      <td>構文強調表示定義ファイルの編集</td>
+      <td><a href="hid00084.htm">→ 構文強調表示定義ファイル</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#EditIniFile">EditIniFile</a></td>
+      <td>INIファイルの編集</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#LoadBgImage">LoadBgImage</a></td>
+      <td>背景画像を読み込む</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OptionDlg">OptionDlg</a></td>
+      <td>オプション設定</td>
+      <td><a href="hid00008.htm">→ オプション設定</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#RegSyncDlg">RegSyncDlg</a></td>
+      <td>同期コピーの設定ダイアログ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetFolderIcon">SetFolderIcon</a></td>
+      <td>フォルダアイコンの設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToolBarDlg">ToolBarDlg</a></td>
+      <td>ツールバーの設定</td>
+      <td><a href="hid00068.htm">→ ツールバーの設定ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ViewIniFile">ViewIniFile</a></td>
+      <td>INIファイルの閲覧</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_Git">
+      <td colspan="3"><br><b>Git</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#GitDiff">GitDiff</a></td>
+      <td>カーソル位置ファイルの差分詳細を表示</td>
+      <td><a href="hid00090.htm">→ Git の利用について</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#GitViewer">GitViewer</a></td>
+      <td>Gitビュアー</td>
+      <td><a href="hid00090.htm">→ Git の利用について</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#OpenGitURL">OpenGitURL</a></td>
+      <td>リモートリポジトリURLを開く</td>
+      <td><a href="hid00090.htm">→ Git の利用について</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#RepositoryList">RepositoryList</a></td>
+      <td>リポジトリ一覧</td>
+      <td><a href="hid00090.htm">→ Git の利用について</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SelGitChanged">SelGitChanged</a></td>
+      <td>Git作業ディレクトリで変更ファイルを選択</td>
+      <td><a href="hid00090.htm">→ Git の利用について</a></td>
+    </tr>
+
+    <tr id="f_Other">
+      <td colspan="3"><br><b>その他</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#AppList">AppList</a></td>
+      <td>アプリケーション一覧</td>
+      <td><a href="hid00076.htm">→ アプリケーション一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#AboutNyanFi">AboutNyanFi</a></td>
+      <td>バージョン情報</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CheckUpdate">CheckUpdate</a></td>
+      <td>更新の確認</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Calculator">Calculator</a></td>
+      <td>電卓</td>
+      <td><a href="hid00087.htm">→ 電卓</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Close">Close</a></td>
+      <td>NyanFiの終了</td>
+      <td><b>Exit</b> のエイリアス</td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#CmdHistory">CmdHistory</a></td>
+      <td>コマンド履歴</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#DebugCmdFile">DebugCmdFile</a></td>
+      <td>コマンドファイルのデバッグ実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Duplicate">Duplicate</a></td>
+      <td>NyanFiの二重起動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Exit">Exit</a></td>
+      <td>NyanFiの終了</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#HelpContents">HelpContents</a></td>
+      <td>ヘルプの目次/索引を表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#LockComputer">LockComputer</a></td>
+      <td>コンピュータのロック</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#LockKeyMouse">LockKeyMouse</a></td>
+      <td>キーボード/マウスのロック</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MonitorOff">MonitorOff</a></td>
+      <td>ディスプレイの電源を切る</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#MuteVolume">MuteVolume</a></td>
+      <td>音量ミュート</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#NextNyanFi">NextNyanFi</a></td>
+      <td>次のNyanFiをアクティブに</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PlayList">PlayList</a></td>
+      <td>プレイリストを作って再生</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PowerOff">PowerOff</a></td>
+      <td>Windowsを終了</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#PrevNyanFi">PrevNyanFi</a></td>
+      <td>前のNyanFiをアクティブに</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Reboot">Reboot</a></td>
+      <td>Windowsを再起動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#RegExChecker">RegExChecker</a></td>
+      <td>正規表現チェッカー</td>
+      <td><a href="hid00085.htm">→ 正規表現チェッカー</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#Restart">Restart</a></td>
+      <td>NyanFiの再起動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToExViewer">ToExViewer</a></td>
+      <td>別ウィンドウのテキストビュアーへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToNextOnRight">ToNextOnRight</a></td>
+      <td>右ファイルリストで次のNyanFiへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ToPrevOnLeft">ToPrevOnLeft</a></td>
+      <td>左ファイルリストで前のNyanFiへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#UpdateFromArc">UpdateFromArc</a></td>
+      <td>アーカイブから更新</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WatchTail">WatchTail</a></td>
+      <td>テキストファイルの追加更新を監視</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#WebMap">WebMap</a></td>
+      <td>画像のGPS情報や指定地点の地図を開く</td>
+      <td></td>
+    </tr>
+
+    <tr id="f_TV">
+      <td colspan="3"><br><b>テキストビュアー設定</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#FixedLen">FixedLen</a></td>
+      <td>テキストビュアーでCSV/TSVを固定長表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#HtmlToText">HtmlToText</a></td>
+      <td>テキストビュアーでHTML→テキスト変換表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetColor">SetColor</a></td>
+      <td>テキストビュアーの配色</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetMargin">SetMargin</a></td>
+      <td>テキストビュアーの左側余白を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetTab">SetTab</a></td>
+      <td>テキストビュアーのタブストップ幅を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#SetWidth">SetWidth</a></td>
+      <td>テキストビュアーの折り返し幅を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowCR">ShowCR</a></td>
+      <td>テキストビュアーで改行を表示/非表示</td>
+      <td>※TV</td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowLineNo">ShowLineNo</a></td>
+      <td>テキストビュアーの行番号を表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowRuby">ShowRuby</a></td>
+      <td>テキストビュアーでルビを表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowRuler">ShowRuler</a></td>
+      <td>テキストビュアーのルーラを表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00005.htm#ShowTAB">ShowTAB</a></td>
+      <td>テキストビュアーでタブを表示/非表示</td>
+      <td>※TV</td>
+    </tr>
+
+    <tr id="IS">
+      <td colspan="2"><br><br><b>インクリメンタルサーチ</b></td>
+      <td><br><br><a href="hid00050.htm">→ インクリメンタルサーチ・モード</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#ClearAll">ClearAll</a></td>
+      <td>すべての選択状態を解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#ClearIncKeyword">ClearIncKeyword</a></td>
+      <td>キーワードをクリア</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#HelpContents">HelpContents</a></td>
+      <td>ヘルプの目次を表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#IncMatchSelect">IncMatchSelect</a></td>
+      <td>マッチする項目をすべて選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#IncSearchDown">IncSearchDown</a></td>
+      <td>マッチする項目を下方向検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#IncSearchExit">IncSearchExit</a></td>
+      <td>インクリメンタルサーチから抜ける</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#IncSearchTop">IncSearchTop</a></td>
+      <td>マッチする項目を先頭から再検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#IncSearchUp">IncSearchUp</a></td>
+      <td>マッチする項目を上方向検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#KeyList">KeyList</a></td>
+      <td>キー割り当て一覧</td>
+      <td><a href="hid00055.htm">→ キー割り当て一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#KeywordHistory">KeywordHistory</a></td>
+      <td>キーワード履歴を参照</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#MigemoMode">MigemoMode</a></td>
+      <td>Migomoモードの切り換え</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#NormalMode">NormalMode</a></td>
+      <td>通常のサーチモードに戻る</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#OptionDlg">OptionDlg</a></td>
+      <td>オプション設定を開く</td>
+      <td><a href="hid00008.htm">オプション設定</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#Select">Select</a></td>
+      <td>選択/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00050.htm#SelectDown">SelectDown</a></td>
+      <td>選択/解除後、下方向に検索</td>
+      <td></td>
+    </tr>
+  </table>
+  <br>
+
+  <p class="link_box"><a href="#FL">ファイラー</a> ／ <a href="#IV">イメージビュアー</a></p><br>
+
+  <h2 id="TV">テキストビュアー</h2>
+  <p class="link_box">
+    <a href="#v_Cursor">カーソル移動</a> ／
+    <a href="#v_Scroll">スクロール</a> ／
+    <a href="#v_Select">選択</a> ／
+    <a href="#v_Mark">マーク</a> ／
+    <a href="#v_Find">検索</a> ／
+    <a href="#v_Move">移動</a> ／
+    <a href="#v_Edit">編集</a> ／
+    <a href="#v_Open">開く</a> ／
+    <a href="#v_List">一覧</a> ／
+    <a href="#v_Info">情報</a> ／
+    <a href="#v_Binary">バイナリ</a> ／
+    <a href="#v_Command">実行</a> ／
+    <a href="#v_View">表示</a> ／
+    <a href="#v_Setup">設定</a> ／
+    <a href="#v_Other">その他</a>
+  </p>
+
+  <table border="0" cellspacing="0">
+    <tr id="v_Cursor">
+      <td colspan="3"><br><b>カーソル移動</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorDown">CursorDown</a></td>
+      <td>カーソルを下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorDownSel">CursorDownSel</a></td>
+      <td>選択しながらカーソルを下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorLeft">CursorLeft</a></td>
+      <td>カーソルを左に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorLeftSel">CursorLeftSel</a></td>
+      <td>選択しながらカーソルを左に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorRight">CursorRight</a></td>
+      <td>カーソルを右に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorRightSel">CursorRightSel</a></td>
+      <td>選択しながらカーソルを右に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorUp">CursorUp</a></td>
+      <td>カーソルを上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorUpSel">CursorUpSel</a></td>
+      <td>選択しながらカーソルを上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#JumpLine">JumpLine</a></td>
+      <td>指定行番号に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#LineEnd">LineEnd</a></td>
+      <td>行末に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#LineEndSel">LineEndSel</a></td>
+      <td>選択しながら行末に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#LineTop">LineTop</a></td>
+      <td>行頭に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#LineTopSel">LineTopSel</a></td>
+      <td>選択しながら行頭に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#PageDown">PageDown</a></td>
+      <td>1ページ下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#PageDownSel">PageDownSel</a></td>
+      <td>選択しながら1ページ下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#PageUp">PageUp</a></td>
+      <td>1ページ上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#PageUpSel">PageUpSel</a></td>
+      <td>選択しながら1ページ上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#TextEnd">TextEnd</a></td>
+      <td>最後尾に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#TextEndSel">TextEndSel</a></td>
+      <td>選択しながら最後尾に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#TextTop">TextTop</a></td>
+      <td>先頭に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#TextTopSel">TextTopSel</a></td>
+      <td>選択しながら先頭に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#WordLeft">WordLeft</a></td>
+      <td>前の単語に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#WordRight">WordRight</a></td>
+      <td>次の単語に移動</td>
+      <td></td>
+    </tr>
+
+    <tr id="v_Scroll">
+      <td colspan="3"><br><b>スクロール</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ScrollCursorDown">ScrollCursorDown</a></td>
+      <td>スクロールしながら下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ScrollCursorUp">ScrollCursorUp</a></td>
+      <td>スクロールしながら上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ScrollDown">ScrollDown</a></td>
+      <td>下にスクロール</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ScrollUp">ScrollUp</a></td>
+      <td>上にスクロール</td>
+      <td></td>
+    </tr>
+
+    <tr id="v_Select">
+      <td colspan="3"><br><b>選択</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#BoxSelMode">BoxSelMode</a></td>
+      <td>箱形選択モードの開始/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorDownSel">CursorDownSel</a></td>
+      <td>選択しながらカーソルを下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorLeftSel">CursorLeftSel</a></td>
+      <td>選択しながらカーソルを左に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorRightSel">CursorRightSel</a></td>
+      <td>選択しながらカーソルを右に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CursorUpSel">CursorUpSel</a></td>
+      <td>選択しながらカーソルを上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#LineEndSel">LineEndSel</a></td>
+      <td>選択しながら行末に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#LineTopSel">LineTopSel</a></td>
+      <td>選択しながら行頭に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#PageDownSel">PageDownSel</a></td>
+      <td>選択しながら1ページ下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#PageUpSel">PageUpSel</a></td>
+      <td>選択しながら1ページ上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SelCurWord">SelCurWord</a></td>
+      <td>カーソル位置の単語を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SelectAll">SelectAll</a></td>
+      <td>すべて選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SelectFile">SelectFile</a></td>
+      <td>表示中ファイルをリストで選択/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SelectMode">SelectMode</a></td>
+      <td>選択モードの開始/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SelLine">SelLine</a></td>
+      <td>カーソル行を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SelLineCR">SelLineCR</a></td>
+      <td>カーソル行全体を改行単位で選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#TextEndSel">TextEndSel</a></td>
+      <td>選択しながら最後尾に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#TextTopSel">TextTopSel</a></td>
+      <td>選択しながら先頭に移動</td>
+      <td></td>
+    </tr>
+
+    <tr id="v_Mark">
+      <td colspan="3"><br><b>マーク</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ClearMark">ClearMark</a></td>
+      <td>すべてのマークを解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindMarkDown">FindMarkDown</a></td>
+      <td>マークを下方向に検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindMarkUp">FindMarkUp</a></td>
+      <td>マークを上方向に検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#Mark">Mark</a></td>
+      <td>マーク/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#MarkList">MarkList</a></td>
+      <td>マーク行一覧を表示</td>
+      <td><a href="hid00066.htm">→ マーク行一覧</a></td>
+    </tr>
+
+    <tr id="v_Find">
+      <td colspan="3"><br><b>検索</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindDown">FindDown</a></td>
+      <td>下方向に再検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindLinkDown">FindLinkDown</a></td>
+      <td>リンク先を下方向に検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindLinkUp">FindLinkUp</a></td>
+      <td>リンク先を上方向に検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindMarkDown">FindMarkDown</a></td>
+      <td>マーク行を下方向に検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindMarkUp">FindMarkUp</a></td>
+      <td>マーク行を上方向に検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindSelDown">FindSelDown</a></td>
+      <td>選択文字列を下方向に検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindSelUp">FindSelUp</a></td>
+      <td>選択文字列を上方向に検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindTagName">FindTagName</a></td>
+      <td>tags からタグ名検索</td>
+      <td><a href="hid00083.htm">→ ダイレクトタグジャンプ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindText">FindText</a></td>
+      <td>文字列検索</td>
+      <td><a href="hid00065.htm">→ 文字列検索ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FindUp">FindUp</a></td>
+      <td>上方向に再検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#Grep">Grep</a></td>
+      <td>文字列検索(GREP)</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#IncSearch">IncSearch</a></td>
+      <td>インクリメンタルサーチ</td>
+      <td><a href="hid00050.htm">→ インクリメンタルサーチ・モード</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#NextErr">NextErr</a></td>
+      <td>次のエラー位置に移動(ログ)</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#PrevErr">PrevErr</a></td>
+      <td>前のエラー位置に移動(ログ)</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SearchPair">SearchPair</a></td>
+      <td>対応する括弧を検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#WebMap">WebMap</a></td>
+      <td>指定地点の地図を開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#WebSearch">WebSearch</a></td>
+      <td>Webで検索</td>
+      <td></td>
+    </tr>
+
+    <tr id="v_Move">
+      <td colspan="3"><br><b>移動</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#BackViewHist">BackViewHist</a></td>
+      <td>テキストビュアーの履歴を戻る</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#NextFile">NextFile</a></td>
+      <td>次のファイルを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#PrevFile">PrevFile</a></td>
+      <td>前のファイルを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SwitchSameName">SwitchSameName</a></td>
+      <td>ファイル名主部が同じ次のファイルに切り換え</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SwitchSrcHdr">SwitchSrcHdr</a></td>
+      <td>ヘッダ/ソースファイルの切り換え</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#TagJump">TagJump</a></td>
+      <td>エディタでタグジャンプ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#TagJumpDirect">TagJumpDirect</a></td>
+      <td>エディタでダイレクトタグジャンプ</td>
+      <td><a href="hid00083.htm">→ ダイレクトタグジャンプ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#TagView">TagView</a></td>
+      <td>ビュアーでタグジャンプ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#TagViewDirect">TagViewDirect</a></td>
+      <td>ビュアーでダイレクトタグジャンプ</td>
+      <td><a href="hid00083.htm">→ ダイレクトタグジャンプ</a></td>
+    </tr>
+
+    <tr id="v_Edit">
+      <td colspan="3"><br><b>編集</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ClipCopy">ClipCopy</a></td>
+      <td>クリップボードにコピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#Sort">Sort</a></td>
+      <td>テキスト全体を改行単位でソート</td>
+      <td></td>
+    </tr>
+
+    <tr id="v_Open">
+      <td colspan="3"><br><b>開く</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#BinaryEdit">BinaryEdit</a></td>
+      <td>ファイルのバイナリ編集</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FileEdit">FileEdit</a></td>
+      <td>ファイルの編集</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#OpenURL">OpenURL</a></td>
+      <td>URLを開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ReloadFile">ReloadFile</a></td>
+      <td>ファイルの再読み込み</td>
+      <td></td>
+    </tr>
+
+    <tr id="v_List">
+      <td colspan="3"><br><b>一覧</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#AppList">AppList</a></td>
+      <td>アプリケーション一覧</td>
+      <td><a href="hid00076.htm">→ アプリケーション一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CmdFileList">CmdFileList</a></td>
+      <td>コマンドファイル一覧</td>
+      <td><a href="hid00067.htm">→ コマンドファイル一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CmdHistory">CmdHistory</a></td>
+      <td>コマンド履歴</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#EditHistory">EditHistory</a></td>
+      <td>最近編集したファイル一覧</td>
+      <td><a href="hid00058.htm">→ 最近編集したファイル一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FunctionList">FunctionList</a></td>
+      <td>関数一覧</td>
+      <td><a href="hid00066.htm">→ 関数一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#KeyList">KeyList</a></td>
+      <td>キー割り当て一覧</td>
+      <td><a href="hid00055.htm">→ キー割り当て一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ListLog">ListLog</a></td>
+      <td>ログを一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#MarkList">MarkList</a></td>
+      <td>マーク行一覧を表示</td>
+      <td><a href="hid00066.htm">→ マーク行一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SetUserDefStr">SetUserDefStr</a></td>
+      <td>ユーザ定義文字列を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#UserDefList">UserDefList</a></td>
+      <td>ユーザ定義文字列一覧</td>
+      <td><a href="hid00066.htm">→ ユーザ定義文字列一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ViewHistory">ViewHistory</a></td>
+      <td>最近閲覧したファイル一覧</td>
+      <td><a href="hid00058.htm">→ 最近閲覧したファイル一覧</a></td>
+    </tr>
+
+    <tr id="v_Info">
+      <td colspan="3"><br><b>情報</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CharInfo">CharInfo</a></td>
+      <td>文字情報の表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CopyFileInfo">CopyFileInfo</a></td>
+      <td>ファイル情報をクリップボードにコピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CsvCalc">CsvCalc</a></td>
+      <td>CSV/TSV項目の集計</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CsvGraph">CsvGraph</a></td>
+      <td>CSV/TSV項目のグラフ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CsvRecord">CsvRecord</a></td>
+      <td>CSV/TSVレコードの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ListFileInfo">ListFileInfo</a></td>
+      <td>ファイル情報をダイアログ表示</td>
+      <td><b>ShowFileInfo</b> のエイリアス</td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#PropertyDlg">PropertyDlg</a></td>
+      <td>プロパティダイアログを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ShowFileInfo">ShowFileInfo</a></td>
+      <td>ファイル情報をダイアログ表示</td>
+      <td><b>ListFileInfo</b> でも同じ</td>
+    </tr>
+
+    <tr id="v_Binary">
+      <td colspan="3"><br><b>バイナリ</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#BinaryEdit">BinaryEdit</a></td>
+      <td>ファイルのバイナリ編集</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#BitmapView">BitmapView</a></td>
+      <td>ビットマップビューの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ChangeViewMode">ChangeViewMode</a></td>
+      <td>テキスト/バイナリ表示の切り換え</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#Inspector">Inspector</a></td>
+      <td>インスペクタの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SaveDump">SaveDump</a></td>
+      <td>ダンプリストをファイルに保存</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SetTopAddr">SetTopAddr</a></td>
+      <td>先頭アドレスを設定</td>
+      <td></td>
+    </tr>
+
+    <tr id="v_Command">
+      <td colspan="3"><br><b>実行</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CmdFileList">CmdFileList</a></td>
+      <td>コマンドファイル一覧</td>
+      <td><a href="hid00067.htm">→ コマンドファイル一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#DebugCmdFile">DebugCmdFile</a></td>
+      <td>コマンドファイルのデバッグ実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ExeCommands">ExeCommands</a></td>
+      <td>指定したコマンドを実行</td>
+      <td><a href="hid00063.htm">→ 詳細</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ExeMenuFile">ExeMenuFile</a></td>
+      <td>メニューファイルの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ExeToolBtn">ExeToolBtn</a></td>
+      <td>ツールボタンの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#InputCommands">InputCommands</a></td>
+      <td>入力したコマンドを実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#KeyList">KeyList</a></td>
+      <td>キー割り当て一覧</td>
+      <td><a href="hid00055.htm">→ キー割り当て一覧</a></td>
+    </tr>
+
+    <tr id="v_View">
+      <td colspan="3"><br><b>表示</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#AlphaBlend">AlphaBlend</a></td>
+      <td>メインウィンドウを透過表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ChangeCodePage">ChangeCodePage</a></td>
+      <td>文字コード変更</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ChangeViewMode">ChangeViewMode</a></td>
+      <td>テキスト/バイナリ表示の切り換え</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#FixedLen">FixedLen</a></td>
+      <td>テキストビュアーでCSV/TSVを固定長表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#Highlight">Highlight</a></td>
+      <td>マッチ語を強調表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#HtmlToText">HtmlToText</a></td>
+      <td>テキストビュアーでHTML→テキスト変換表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ImgPreview">ImgPreview</a></td>
+      <td>イメージプレビュー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#MenuBar">MenuBar</a></td>
+      <td>メニューバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SetColor">SetColor</a></td>
+      <td>テキストビュアーの配色</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SetFontSize">SetFontSize</a></td>
+      <td>フォントサイズを変更</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SetMargin">SetMargin</a></td>
+      <td>テキストビュアーの左側余白を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SetTab">SetTab</a></td>
+      <td>テキストビュアーのタブストップ幅を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SetWidth">SetWidth</a></td>
+      <td>テキストビュアーの折り返し幅を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ShowCR">ShowCR</a></td>
+      <td>テキストビュアーで改行を表示/非表示</td>
+      <td>※TV</td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ShowFKeyBar">ShowFKeyBar</a></td>
+      <td>ファンクションキーバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ShowLineNo">ShowLineNo</a></td>
+      <td>テキストビュアーの行番号を表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ShowRuby">ShowRuby</a></td>
+      <td>テキストビュアーでルビを表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ShowRuler">ShowRuler</a></td>
+      <td>テキストビュアーのルーラを表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ShowStatusBar">ShowStatusBar</a></td>
+      <td>ステータスバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ShowTAB">ShowTAB</a></td>
+      <td>テキストビュアーでタブを表示/非表示</td>
+      <td>※TV</td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ShowToolBar">ShowToolBar</a></td>
+      <td>ツールバーを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SwitchSameName">SwitchSameName</a></td>
+      <td>ファイル名主部が同じ次のファイルに切り換え</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SwitchSrcHdr">SwitchSrcHdr</a></td>
+      <td>ヘッダ/ソースファイルの切り換え</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#WinPos">WinPos</a></td>
+      <td>ウィンドウの四辺を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ZoomIn">ZoomIn</a></td>
+      <td>ズームイン</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ZoomOut">ZoomOut</a></td>
+      <td>ズームアウト</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ZoomReset">ZoomReset</a></td>
+      <td>ズーム解除</td>
+      <td></td>
+    </tr>
+
+    <tr id="v_Setup">
+      <td colspan="3"><br><b>設定</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#EditHighlight">EditHighlight</a></td>
+      <td>構文強調表示定義ファイルの編集</td>
+      <td><a href="hid00084.htm">→ 構文強調表示定義ファイル</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#OptionDlg">OptionDlg</a></td>
+      <td>オプション設定を開く</td>
+      <td><a href="hid00008.htm">→ オプション設定</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ToolBarDlg">ToolBarDlg</a></td>
+      <td>ツールバーの設定</td>
+      <td><a href="hid00068.htm">→ ツールバーの設定ダイアログ</a></td>
+    </tr>
+
+    <tr id="v_Other">
+      <td colspan="3"><br><b>その他</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#AppList">AppList</a></td>
+      <td>アプリケーション一覧</td>
+      <td><a href="hid00076.htm">→ アプリケーション一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#Calculator">Calculator</a></td>
+      <td>電卓</td>
+      <td><a href="hid00087.htm">→ 電卓</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#Close">Close</a></td>
+      <td>閉じる</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CmdHistory">CmdHistory</a></td>
+      <td>コマンド履歴</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CsvCalc">CsvCalc</a></td>
+      <td>CSV/TSV項目の集計</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#CsvGraph">CsvGraph</a></td>
+      <td>CSV/TSV項目のグラフ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#Delete">Delete</a></td>
+      <td>ファイルを削除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#Duplicate">Duplicate</a></td>
+      <td>NyanFiの二重起動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ExportCsv">ExportCsv</a></td>
+      <td>CSV/TSVエクスポート</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#HelpContents">HelpContents</a></td>
+      <td>ヘルプの目次を表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#HelpCurWord">HelpCurWord</a></td>
+      <td>カーソル位置の単語を指定ヘルプで検索</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ImgPreview">ImgPreview</a></td>
+      <td>イメージプレビュー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ListLog">ListLog</a></td>
+      <td>ログを一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#NextNyanFi">NextNyanFi</a></td>
+      <td>次のNyanFiをアクティブに</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#PopupMainMenu">PopupMainMenu</a></td>
+      <td>メインメニューをポップアップ表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#PrevNyanFi">PrevNyanFi</a></td>
+      <td>前のNyanFiをアクティブに</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#RegExChecker">RegExChecker</a></td>
+      <td>正規表現チェッカー</td>
+      <td><a href="hid00085.htm">→ 正規表現チェッカー</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#ReloadFile">ReloadFile</a></td>
+      <td>ファイルの再読み込み</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#SelectFile">SelectFile</a></td>
+      <td>表示中ファイルをリストで選択/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00006.htm#Sort">Sort</a></td>
+      <td>テキスト全体を改行単位でソート</td>
+      <td></td>
+    </tr>
+
+  </table>
+  <br>
+
+  <p class="link_box"><a href="#FL">ファイラー</a> ／ <a href="#TV">テキストビュアー</a></p><br>
+
+  <h2 id="IV">イメージビュアー</h2>
+  <p class="link_box">
+    <a href="#i_Move">移動</a> ／
+    <a href="#i_Select">選択</a> ／
+    <a href="#i_Mark">栞マーク</a> ／
+    <a href="#i_Sort">ソート</a> ／
+    <a href="#i_Scroll">スクロール</a> ／
+    <a href="#i_Image">画像操作</a> ／
+    <a href="#i_WorkList">ワークリスト</a> ／
+    <a href="#i_Open">開く</a> ／
+    <a href="#i_Command">実行</a> ／
+    <a href="#i_Tool">ツール</a> ／
+    <a href="#i_Info">情報</a> ／
+    <a href="#i_View">表示</a> ／
+    <a href="#i_Tag">タグ管理</a> ／
+    <a href="#i_Setup">設定</a> ／
+    <a href="#i_Other">その他</a>
+  </p>
+
+  <table cellspacing="0">
+    <tr id="i_Move">
+      <td colspan="3"><br><b>移動</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#EndFile">EndFile</a></td>
+      <td>最後のファイルに移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#JumpIndex">JumpIndex</a></td>
+      <td>指定したインデックスに移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#NextFile">NextFile</a></td>
+      <td>次のファイルを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#NextMark">NextMark</a></td>
+      <td>次の栞マーク項目へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#NextPage">NextPage</a></td>
+      <td>サムネイルの次ページに移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#NextSameName">NextSameName</a></td>
+      <td>ファイル名主部が同じ次ファイルへ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#PageDown">PageDown</a></td>
+      <td>1ページ下に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#PageUp">PageUp</a></td>
+      <td>1ページ上に移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#PrevFile">PrevFile</a></td>
+      <td>前のファイルを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#PrevMark">PrevMark</a></td>
+      <td>前の栞マーク項目へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#PrevPage">PrevPage</a></td>
+      <td>サムネイルの前ページに移動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ShowSeekBar">ShowSeekBar</a></td>
+      <td>シークバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#TopFile">TopFile</a></td>
+      <td>先頭ファイルに移動</td>
+      <td></td>
+    </tr>
+
+    <tr id="i_Select">
+      <td colspan="3"><br><b>選択</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#MaskSelect">MaskSelect</a></td>
+      <td>指定マスクにマッチするファイルを選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SelAllFile">SelAllFile</a></td>
+      <td>すべてのファイルを選択/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Select">Select</a></td>
+      <td>選択/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SelMark">SelMark</a></td>
+      <td>栞マーク項目を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SelReverse">SelReverse</a></td>
+      <td>ファイルの選択状態を反転</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SelSameExt">SelSameExt</a></td>
+      <td>拡張子が同じファイルを選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SelSameName">SelSameName</a></td>
+      <td>ファイル名主部が同じファイルを選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SelWorkItem">SelWorkItem</a></td>
+      <td>ワークリストの登録項目を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#TagSelect">TagSelect</a></td>
+      <td>指定タグを含むファイルを選択</td>
+      <td></td>
+    </tr>
+
+    <tr id="i_Mark">
+      <td colspan="3"><br><b>栞マーク</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ClearMark">ClearMark</a></td>
+      <td>すべての栞マークを解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Mark">Mark</a></td>
+      <td>栞マーク/解除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#MarkList">MarkList</a></td>
+      <td>栞マーク一覧</td>
+      <td><a href="hid00070.htm">→ 栞マーク一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#NextMark">NextMark</a></td>
+      <td>次の栞マーク項目へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#PrevMark">PrevMark</a></td>
+      <td>前の栞マーク項目へ</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SelMark">SelMark</a></td>
+      <td>栞マーク項目を選択</td>
+      <td></td>
+    </tr>
+
+    <tr id="i_Sort">
+      <td colspan="3"><br><b>ソート</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SimilarImage">SimilarImage</a></td>
+      <td>カーソル位置画像との類似性によるソート</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SortDlg">SortDlg</a></td>
+      <td>ソートダイアログ</td>
+      <td></td>
+    </tr>
+
+    <tr id="i_Scroll">
+      <td colspan="3"><br><b>スクロール</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ScrollDown">ScrollDown</a></td>
+      <td>下にスクロール</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ScrollLeft">ScrollLeft</a></td>
+      <td>左にスクロール</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ScrollRight">ScrollRight</a></td>
+      <td>右にスクロール</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ScrollUp">ScrollUp</a></td>
+      <td>上にスクロール</td>
+      <td></td>
+    </tr>
+
+    <tr id="i_Image">
+      <td colspan="3"><br><b>画像操作</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ClipCopy">ClipCopy</a></td>
+      <td>クリップボードにコピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Delete">Delete</a></td>
+      <td>ファイルを削除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#FlipHorz">FlipHorz</a></td>
+      <td>左右反転</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#FlipVert">FlipVert</a></td>
+      <td>上下反転</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#GrayScale">GrayScale</a></td>
+      <td>グレースケール表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#RotateLeft">RotateLeft</a></td>
+      <td>左に90度回転</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#RotateRight">RotateRight</a></td>
+      <td>右に90度回転</td>
+      <td></td>
+    </tr>
+
+    <tr id="i_WorkList">
+      <td colspan="3"><br><b>ワークリスト</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#HomeWorkList">HomeWorkList</a></td>
+      <td>ホームワークリストを開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#LoadWorkList">LoadWorkList</a></td>
+      <td>ワークリストをファイルから読み込む</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#NewWorkList">NewWorkList</a></td>
+      <td>新規ワークリストの作成</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SaveAsWorkList">SaveAsWorkList</a></td>
+      <td>ワークリストに名前を付けて保存</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SaveWorkList">SaveWorkList</a></td>
+      <td>ワークリストを上書き保存</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SelWorkItem">SelWorkItem</a></td>
+      <td>ワークリストの登録項目を選択</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SendToWorkList">SendToWorkList</a></td>
+      <td>ワークリストに送る</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#WorkList">WorkList</a></td>
+      <td>ワークリスト</td>
+      <td><a href="hid00060.htm">→ ワークリスト</a></td>
+    </tr>
+
+    <tr id="i_Open">
+      <td colspan="3"><br><b>開く</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#FileEdit">FileEdit</a></td>
+      <td>ファイルの編集</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#OpenByApp">OpenByApp</a></td>
+      <td>独自の関連付けで開く</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#OpenByWin">OpenByWin</a></td>
+      <td>Windowsの関連付けで開く</td>
+      <td></td>
+    </tr>
+
+    <tr id="i_Command">
+      <td colspan="3"><br><b>実行</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#CmdFileList">CmdFileList</a></td>
+      <td>コマンドファイル一覧</td>
+      <td><a href="hid00067.htm">→ コマンドファイル一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#DebugCmdFile">DebugCmdFile</a></td>
+      <td>コマンドファイルのデバッグ実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ExeCommands">ExeCommands</a></td>
+      <td>指定したコマンドを実行</td>
+      <td><a href="hid00063.htm">→ 詳細</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ExeMenuFile">ExeMenuFile</a></td>
+      <td>メニューファイルの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ExeToolBtn">ExeToolBtn</a></td>
+      <td>ツールボタンの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#InputCommands">InputCommands</a></td>
+      <td>入力したコマンドを実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#KeyList">KeyList</a></td>
+      <td>キー割り当て一覧</td>
+      <td><a href="hid00055.htm">→ キー割り当て一覧</a></td>
+    </tr>
+
+    <tr id="i_Tool">
+      <td colspan="3"><br><b>ツール</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Calculator">Calculator</a></td>
+      <td>電卓</td>
+      <td><a href="hid00087.htm">→ 電卓</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ColorPicker">ColorPicker</a></td>
+      <td>カラーピッカー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ExeToolBtn">ExeToolBtn</a></td>
+      <td>ツールボタンの実行</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Print">Print</a></td>
+      <td>画像の印刷</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SubViewer">SubViewer</a></td>
+      <td>サブビュアーの表示/非表示</td>
+      <td></td>
+    </tr>
+
+    <tr id="i_Info">
+      <td colspan="3"><br><b>情報</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#CopyFileInfo">CopyFileInfo</a></td>
+      <td>ファイル情報をクリップボードにコピー</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#CmdHistory">CmdHistory</a></td>
+      <td>コマンド履歴</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Histogram">Histogram</a></td>
+      <td>ヒストグラムの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ListFileInfo">ListFileInfo</a></td>
+      <td>ファイル情報をダイアログ表示</td>
+      <td><b>ShowFileInfo</b>_SD のエイリアス</td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Loupe">Loupe</a></td>
+      <td>ルーペの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#PropertyDlg">PropertyDlg</a></td>
+      <td>プロパティダイアログを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ShowFileInfo">ShowFileInfo</a></td>
+      <td>ファイル情報を強制的に表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Sidebar">Sidebar</a></td>
+      <td>サイドバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#WarnHighlight">WarnHighlight</a></td>
+      <td>白飛び警告</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#WebMap">WebMap</a></td>
+      <td>画像のGPS情報や指定地点の地図を開く</td>
+      <td></td>
+    </tr>
+
+    <tr id="i_View">
+      <td colspan="3"><br><b>表示</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#AlphaBlend">AlphaBlend</a></td>
+      <td>メインウィンドウを透過表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#DoublePage">DoublePage</a></td>
+      <td>見開き表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#EqualSize">EqualSize</a></td>
+      <td>等倍表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#FittedSize">FittedSize</a></td>
+      <td>画面フィット表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#FullScreen">FullScreen</a></td>
+      <td>全画面表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#GrayScale">GrayScale</a></td>
+      <td>グレースケール表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Loupe">Loupe</a></td>
+      <td>ルーペの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#MenuBar">MenuBar</a></td>
+      <td>メニューバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#PageBind">PageBind</a></td>
+      <td>見開き表示の綴じ方向を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SetInterpolation">SetInterpolation</a></td>
+      <td>縮小・拡大アルゴリズムを設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ShowFKeyBar">ShowFKeyBar</a></td>
+      <td>ファンクションキーバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ShowGrid">ShowGrid</a></td>
+      <td>画像分割グリッドの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ShowSeekBar">ShowSeekBar</a></td>
+      <td>シークバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ShowStatusBar">ShowStatusBar</a></td>
+      <td>ステータスバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ShowToolBar">ShowToolBar</a></td>
+      <td>ツールバーを表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Sidebar">Sidebar</a></td>
+      <td>サイドバーの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Thumbnail">Thumbnail</a></td>
+      <td>サムネイルの表示/非表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ThumbnailEx">ThumbnailEx</a></td>
+      <td>サムネイルの全面表示/通常表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#WarnHighlight">WarnHighlight</a></td>
+      <td>白飛び警告</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#WinPos">WinPos</a></td>
+      <td>ウィンドウの四辺を設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ZoomIn">ZoomIn</a></td>
+      <td>ズームイン</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ZoomOut">ZoomOut</a></td>
+      <td>ズームアウト</td>
+      <td></td>
+    </tr>
+
+    <tr id="i_Tag">
+      <td colspan="2"><br><b>タグ管理</b></td>
+      <td><br><a href="hid00088.htm">→ タグによるファイル管理</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#AddTag">AddTag</a></td>
+      <td>ファイルにタグを追加</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#DelTag">DelTag</a></td>
+      <td>ファイルのタグを削除</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#SetTag">SetTag</a></td>
+      <td>ファイルにタグを設定</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#TagSelect">TagSelect</a></td>
+      <td>指定タグを含むファイルを選択</td>
+      <td></td>
+    </tr>
+
+    <tr id="i_Setup">
+      <td colspan="3"><br><b>設定</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#LoadBgImage">LoadBgImage</a></td>
+      <td>背景画像を読み込む</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#OptionDlg">OptionDlg</a></td>
+      <td>オプション設定を開く</td>
+      <td><a href="hid00008.htm">→ オプション設定</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ToolBarDlg">ToolBarDlg</a></td>
+      <td>ツールバーの設定</td>
+      <td><a href="hid00068.htm">→ ツールバーの設定ダイアログ</a></td>
+    </tr>
+
+    <tr id="i_Other">
+      <td colspan="3"><br><b>その他</b></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#AppList">AppList</a></td>
+      <td>アプリケーション一覧</td>
+      <td><a href="hid00076.htm">→ アプリケーション一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Calculator">Calculator</a></td>
+      <td>電卓</td>
+      <td><a href="hid00087.htm">→ 電卓</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#CmdHistory">CmdHistory</a></td>
+      <td>コマンド履歴</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Close">Close</a></td>
+      <td>閉じる</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#Duplicate">Duplicate</a></td>
+      <td>NyanFiの二重起動</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#HelpContents">HelpContents</a></td>
+      <td>ヘルプの目次を表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#KeyList">KeyList</a></td>
+      <td>キー割り当て一覧</td>
+      <td><a href="hid00055.htm">→ キー割り当て一覧</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#ListLog">ListLog</a></td>
+      <td>ログを一覧で表示</td>
+      <td><a href="hid00073.htm">→ 一覧ダイアログ</a></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#NextNyanFi">NextNyanFi</a></td>
+      <td>次のNyanFiをアクティブに</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#PopupMainMenu">PopupMainMenu</a></td>
+      <td>メインメニューをポップアップ表示</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#PrevNyanFi">PrevNyanFi</a></td>
+      <td>前のNyanFiをアクティブに</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="hid00007.htm#WebMap">WebMap</a></td>
+      <td>画像のGPS情報や指定地点の地図を開く</td>
+      <td></td>
+    </tr>
+
+  </table>
+
+  <p class="link_box"><a href="#FL">ファイラー</a> ／ <a href="#TV">テキストビュアー</a> ／ <a href="#IV">イメージビュアー</a></p>
+  <br><br><br><br><br><br><br><br>
 
 </body>
+
 </html>

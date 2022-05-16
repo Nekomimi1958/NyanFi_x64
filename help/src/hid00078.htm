@@ -1,67 +1,112 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>テキストファイルの結合ダイアログ</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="HTML→テキスト変換">
-	<param name="Keyword" value="JoinText">
-	<param name="Keyword" value="テキストファイルの結合ダイアログ">
-	<param name="Keyword" value="テンプレート">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>テキストファイルの結合ダイアログ</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="HTML→テキスト変換">
+    <param name="Keyword" value="JoinText">
+    <param name="Keyword" value="テキストファイルの結合ダイアログ">
+    <param name="Keyword" value="テンプレート">
+  </object>
 </head>
 
 <body>
 
-<h1>テキストファイルの結合ダイアログ</h1>
-<p>
-ファイラーで <a href="hid00005.htm#JoinText">JoinText</a> コマンドを実行するとこのダイアログが開きます。<br>
-カレント側で選択中のテキストファイルを結合して反対パスに出力します。<br>
-入力ファイルの文字コードは自動判定しますので、そろっていなくてもかまいません。<br>
-</p>
-<p>
-一覧には、選択中のファイルが表示されます。<br>
-<span class="btn_frame">↑</span><span class="btn_frame">↓</span>ボタンで項目を移動すれば、結合の順番を変更できます。一覧にフォーカスがある場合は、 <span class="btn_frame">Shift</span>+<span class="btn_frame">Ctrl</span>+<span class="btn_frame">↑</span>/<span class="btn_frame">↓</span>キーで移動、<span class="btn_frame">DEL</span>キーで削除が可能です。項目の移動はドラッグ＆ドロップでもできます(上下端で自動スクロール)。<br>
-</p>
-<p><b>出力ファイル名</b>、<b>出力コード</b>、<b>改行</b>、(必要なら)<b>テンプレート</b>を指定してください。<br>
-ユニコードの場合は<b>BOM</b>の有無も指定できます(出力コードが自動の場合は先頭ファイルと同じ)。<br>
-<span class="btn_frame">開始</span>ボタンを押すと結合処理が開始されます。
-</p>
+  <h1>テキストファイルの結合ダイアログ</h1>
+  <p>
+    ファイラーで <a href="hid00005.htm#JoinText">JoinText</a> コマンドを実行するとこのダイアログが開きます。<br>
+    カレント側で選択中のテキストファイルを結合して反対パスに出力します。<br>
+    入力ファイルの文字コードは自動判定しますので、そろっていなくてもかまいません。<br>
+  </p>
+  <p>
+    一覧には、選択中のファイルが表示されます。<br>
+    <span class="btn_frame">↑</span><span class="btn_frame">↓</span>ボタンで項目を移動すれば、結合の順番を変更できます。一覧にフォーカスがある場合は、 <span
+      class="btn_frame">Shift</span>+<span class="btn_frame">Ctrl</span>+<span class="btn_frame">↑</span>/<span
+      class="btn_frame">↓</span>キーで移動、<span
+      class="btn_frame">DEL</span>キーで削除が可能です。項目の移動はドラッグ＆ドロップでもできます(上下端で自動スクロール)。<br>
+  </p>
+  <p><b>出力ファイル名</b>、<b>出力コード</b>、<b>改行</b>、(必要なら)<b>テンプレート</b>を指定してください。<br>
+    ユニコードの場合は<b>BOM</b>の有無も指定できます(出力コードが自動の場合は先頭ファイルと同じ)。<br>
+    <span class="btn_frame">開始</span>ボタンを押すと結合処理が開始されます。
+  </p>
 
-<hr>
-<p>
-<b>テンプレート</b>は、ファイルを結合する際にヘッダやフッタ、ファイル区切りなどを付加するための書式を記述したテキストファイルです。<br>
-ファイル名にドライブ指定がない場合 <b>NyanFi</b> ディレクトリ下の相対パスとみなされます。<br>
-テンプレートでは、通常の文字列の他に、以下の書式文字列が使えます。<br>
-</p>
+  <hr>
+  <p>
+    <b>テンプレート</b>は、ファイルを結合する際にヘッダやフッタ、ファイル区切りなどを付加するための書式を記述したテキストファイルです。<br>
+    ファイル名にドライブ指定がない場合 <b>NyanFi</b> ディレクトリ下の相対パスとみなされます。<br>
+    テンプレートでは、通常の文字列の他に、以下の書式文字列が使えます。<br>
+  </p>
 
-<div class="indent1">
-<table border="0">
-<tr><td><b>$P</b></td><td>パス名</td></tr>
-<tr><td><b>$B</b></td><td>パス無しファイル名</td></tr>
-<tr><td><b>$N</b></td><td>パス無しファイル名主部</td></tr>
-<tr><td><b>$F</b></td><td>パス付ファイル名($P + $B)</td></tr>
-<tr><td><b>$T</b></td><td>タイムスタンプ(ファイルリストの表示と同じ書式)</td></tr>
-<tr><td><b>$D(</b>書式<b>)</b></td><td>タイムスタンプ(書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)</td></tr>
-<tr><td><b>$I</b></td><td>インデックス番号(1～)</td></tr>
-<tr><td><b>$$</b></td><td>$ そのもの</td></tr>
-<tr><td>　</td><td>　</td></tr>
-<tr><td><b>$TEXT</b></td><td>テキストファイルの内容</td></tr>
-<tr><td valign="top"><b>$HTM2TXT</b></td>
-<td>
-HTML→テキスト変換した内容(テキストビュアーでの場合とほぼ同じ)<br>
-　<a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー -「HTML→テキスト変換」</a><br>
-HTML文書でない場合は、ファイルの内容(<b>$TEXT</b> と同じ)になります。<br>
-</td></tr>
-<tr><td><b>$HTM_TIT</b></td><td>HTMLヘッダの title (HTML文書でなければ空)</td></tr>
-<tr><td><b>$HTM_DSC</b></td><td>HTMLヘッダの description (HTML文書でなければ空)</td></tr>
-<tr><td><b>$HTM_KWD</b></td><td>HTMLヘッダの keywords (HTML文書でなければ空)</td></tr>
-</table>
-<br><br>
+  <div class="indent1">
+    <table>
+      <tr>
+        <td><b>$P</b></td>
+        <td>パス名</td>
+      </tr>
+      <tr>
+        <td><b>$B</b></td>
+        <td>パス無しファイル名</td>
+      </tr>
+      <tr>
+        <td><b>$N</b></td>
+        <td>パス無しファイル名主部</td>
+      </tr>
+      <tr>
+        <td><b>$F</b></td>
+        <td>パス付ファイル名($P + $B)</td>
+      </tr>
+      <tr>
+        <td><b>$T</b></td>
+        <td>タイムスタンプ(ファイルリストの表示と同じ書式)</td>
+      </tr>
+      <tr>
+        <td><b>$D(</b>書式<b>)</b></td>
+        <td>タイムスタンプ(書式: yyyy 年(4桁)、yy 年(2桁)、mm 月、dd 日、hh 時、nn 分、ss 秒)</td>
+      </tr>
+      <tr>
+        <td><b>$I</b></td>
+        <td>インデックス番号(1～)</td>
+      </tr>
+      <tr>
+        <td><b>$$</b></td>
+        <td>$ そのもの</td>
+      </tr>
+      <tr>
+        <td>　</td>
+        <td>　</td>
+      </tr>
+      <tr>
+        <td><b>$TEXT</b></td>
+        <td>テキストファイルの内容</td>
+      </tr>
+      <tr>
+        <td valign="top"><b>$HTM2TXT</b></td>
+        <td>
+          HTML→テキスト変換した内容(テキストビュアーでの場合とほぼ同じ)<br>
+          　<a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー -「HTML→テキスト変換」</a><br>
+          HTML文書でない場合は、ファイルの内容(<b>$TEXT</b> と同じ)になります。<br>
+        </td>
+      </tr>
+      <tr>
+        <td><b>$HTM_TIT</b></td>
+        <td>HTMLヘッダの title (HTML文書でなければ空)</td>
+      </tr>
+      <tr>
+        <td><b>$HTM_DSC</b></td>
+        <td>HTMLヘッダの description (HTML文書でなければ空)</td>
+      </tr>
+      <tr>
+        <td><b>$HTM_KWD</b></td>
+        <td>HTMLヘッダの keywords (HTML文書でなければ空)</td>
+      </tr>
+    </table>
+    <br><br>
 
-<b>例</b>: ヘッダ/フッタを付加して結合<br>
-<pre class="example_box">
+    <b>例</b>: ヘッダ/フッタを付加して結合<br>
+    <pre class="example_box">
 $F $T
 --------------------------------------------------------------------------------
 $TEXT
@@ -71,8 +116,8 @@ $TEXT
 </pre>
 
 
-<b>例</b>: HTML→テキスト変換して結合<br>
-<pre class="example_box">
+    <b>例</b>: HTML→テキスト変換して結合<br>
+    <pre class="example_box">
 ================================================================================
 ファイル名: $F
   更新日時: $T
@@ -83,8 +128,9 @@ $TEXT
 $HTM2TXT
 
 </pre>
-</div>
-<br><br>
+  </div>
+  <br><br>
 
 </body>
+
 </html>

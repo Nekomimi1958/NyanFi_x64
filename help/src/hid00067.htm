@@ -1,79 +1,105 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>コマンドファイル一覧</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="CmdFileList">
-	<param name="Keyword" value="ExeCommands">
-	<param name="Keyword" value="FileEdit">
-	<param name="Keyword" value="IncSearch">
-	<param name="Keyword" value="Migemo">
-	<param name="Keyword" value="ReturnList">
-	<param name="Keyword" value="TextViewer">
-	<param name="Keyword" value="コマンドファイル">
-	<param name="Keyword" value="コマンドファイル一覧">
-	<param name="Keyword" value="フィルタ">
-	<param name="Keyword" value="頭文字サーチ">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>コマンドファイル一覧</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="CmdFileList">
+    <param name="Keyword" value="ExeCommands">
+    <param name="Keyword" value="FileEdit">
+    <param name="Keyword" value="IncSearch">
+    <param name="Keyword" value="Migemo">
+    <param name="Keyword" value="ReturnList">
+    <param name="Keyword" value="TextViewer">
+    <param name="Keyword" value="コマンドファイル">
+    <param name="Keyword" value="コマンドファイル一覧">
+    <param name="Keyword" value="フィルタ">
+    <param name="Keyword" value="頭文字サーチ">
+  </object>
 </head>
 
 <body>
 
-<h1>コマンドファイル一覧</h1>
-<p>
-<a href="hid00005.htm#CmdFileList">CmdFileList</a> コマンドを実行するとこのダイアログが開きます。<br>
+  <h1>コマンドファイル一覧</h1>
+  <p>
+    <a href="hid00005.htm#CmdFileList">CmdFileList</a> コマンドを実行するとこのダイアログが開きます。
+  </p>
 
-<dl>
-<dt class="no_bg">一覧の表示内容
-<dd>
-<b>NyanFi</b> ディレクトリ以下(サブディレクトリを含む)にあるコマンドファイル(<b>*.nbt</b>)の一覧が表示されます。<br>
-ファイルの一行目がコメントの場合、それが「<b>説明</b>」として表示されます。<br>
-実際に割り当てられているコマンドファイルには、その「<b>参照元</b>」が、<b>K</b>(キー)、<b>M</b>(メニュー)、<b>A</b>(OpenByApp)、<b>S</b>(OpenStandard)、<b>E</b>(イベント)という文字の組み合わせで表示されます(<a href="hid00005.htm#ExeMenuFile">メニュー定義ファイル</a>内のものは除く)。<br>
-また <b>NyanFi</b> 起動後に実行されたコマンドファイルには「<b>実行回数</b>」が表示されます。<br>
+  <dl>
+    <dt class="no_bg">一覧の表示内容</dt>
+    <dd>
+      <b>NyanFi</b> ディレクトリ以下(サブディレクトリを含む)にあるコマンドファイル(<b>*.nbt</b>)の一覧が表示されます。<br>
+      ファイルの一行目がコメントの場合、それが「<b>説明</b>」として表示されます。<br>
+      実際に割り当てられているコマンドファイルには、その「<b>参照元</b>」が、<b>K</b>(キー)、<b>M</b>(メニュー)、<b>A</b>(OpenByApp)、<b>S</b>(OpenStandard)、<b>E</b>(イベント)という文字の組み合わせで表示されます(<a
+        href="hid00005.htm#ExeMenuFile">メニュー定義ファイル</a>内のものは除く)。<br>
+      また <b>NyanFi</b> 起動後に実行されたコマンドファイルには「<b>実行回数</b>」が表示されます。<br>
+    </dd>
 
-<dt class="no_bg">一覧でのキー操作
-<dd>
-選択しているコマンドファイルを、<span class="btn_frame">ENTER</span>キーまたはダブルクリックで実行できます。<br>
-また、ファイラーで割り当てられているのと同じキーで、カーソル移動や頭文字サーチ、ファイルの削除(<a href="hid00005.htm#Delete">Delete</a>)、閲覧(<a href="hid00005.htm#TextViewer">TextViewer</a>)、編集(<a href="hid00005.htm#FileEdit">FileEdit</a>)が行えます(<b>FileEdit</b> についてはフォーカスにかかわらず<span class="btn_frame">Alt</span>+<span class="btn_frame">E</span>キーでも可能)。<a href="hid00005.htm#RenameDlg">RenameDlg</a> に割り当てられてるキーでは、入力ボックスが出てコマンドファイルの名前(拡張子はそのまま)を変更できます(オプション設定に反映)。また、<span class="btn_frame">Ctrl</span>+ 英字キーによるキーの頭文字サーチが可能です。<br>
-なお、2ストロークキー操作には対応していません。<br>
-<br>
+    <dt class="no_bg">一覧でのキー操作</dt>
+    <dd>
+      選択しているコマンドファイルを、<span class="btn_frame">ENTER</span>キーまたはダブルクリックで実行できます。<br>
+      また、ファイラーで割り当てられているのと同じキーで、カーソル移動や頭文字サーチ、ファイルの削除(<a href="hid00005.htm#Delete">Delete</a>)、閲覧(<a
+        href="hid00005.htm#TextViewer">TextViewer</a>)、編集(<a
+        href="hid00005.htm#FileEdit">FileEdit</a>)が行えます(<b>FileEdit</b> についてはフォーカスにかかわらず<span
+        class="btn_frame">Alt</span>+<span class="btn_frame">E</span>キーでも可能)。<a
+        href="hid00005.htm#RenameDlg">RenameDlg</a>
+      に割り当てられてるキーでは、入力ボックスが出てコマンドファイルの名前(拡張子はそのまま)を変更できます(オプション設定に反映)。また、<span class="btn_frame">Ctrl</span>+
+      英字キーによるキーの頭文字サーチが可能です。<br>
+      なお、2ストロークキー操作には対応していません。<br>
+      <br>
+    </dd>
 
-<dt class="no_bg">フィルタ
-<dd>
-<b>フィルタ</b>覧に文字列を入力すると、それが含まれている項目だけが絞り込み表示されます。<br>
-このとき<span class="btn_frame">ENTER</span>キーを押すと、一覧で選択されているファイルが実行されます。<br>
-空欄にすると、絞り込みが解除され、すべてのファイルが表示されます。<br>
-<span class="btn_frame">Migemo</span>を有効にすると、<b>Migemo</b> モードで絞り込みを行えます。モード切り替えは、フィルタ欄で <span class="btn_frame">Ctrl</span>+<span class="btn_frame">M</span>キーでも可能です。<br>
+    <dt class="no_bg">フィルタ</dt>
+    <dd>
+      <b>フィルタ</b>覧に文字列を入力すると、それが含まれている項目だけが絞り込み表示されます。<br>
+      このとき<span class="btn_frame">ENTER</span>キーを押すと、一覧で選択されているファイルが実行されます。<br>
+      空欄にすると、絞り込みが解除され、すべてのファイルが表示されます。<br>
+      <span class="btn_frame">Migemo</span>を有効にすると、<b>Migemo</b> モードで絞り込みを行えます。モード切り替えは、フィルタ欄で <span
+        class="btn_frame">Ctrl</span>+<span class="btn_frame">M</span>キーでも可能です。<br>
 
-<div class="spc_box">
-フィルタ覧にフォーカスがある場合でも、<span class="btn_frame">↑</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">E</span>) / <span class="btn_frame">↓</span>(選択中でなければ<span class="btn_frame">Ctrl</span>+<span class="btn_frame">X</span>でも可)キーで一覧のカーソル移動が、<span class="btn_frame">PGUP</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">R</span>) / <span class="btn_frame">PGDN</span>(選択中でなければ<span class="btn_frame">Ctrl</span>+<span class="btn_frame">C</span>でも可)キーでページ移動が可能です。<br>
-</div>
+      <div class="spc_box">
+        フィルタ覧にフォーカスがある場合でも、<span class="btn_frame">↑</span>(or <span class="btn_frame">Ctrl</span>+<span
+          class="btn_frame">E</span>) / <span class="btn_frame">↓</span>(選択中でなければ<span
+          class="btn_frame">Ctrl</span>+<span class="btn_frame">X</span>でも可)キーで一覧のカーソル移動が、<span
+          class="btn_frame">PGUP</span>(or <span class="btn_frame">Ctrl</span>+<span class="btn_frame">R</span>) / <span
+          class="btn_frame">PGDN</span>(選択中でなければ<span class="btn_frame">Ctrl</span>+<span
+          class="btn_frame">C</span>でも可)キーでページ移動が可能です。<br>
+      </div>
 
-<div class="spc_box">
-一覧とフィルタ欄との間は、<span class="btn_frame">TAB</span>キーで行き来できます。また一覧からは、ファイラーで <a href="hid00005.htm#IncSearch">IncSearch</a> コマンドに割り当てられているキーでフィルタ欄に、フィルタ欄からは<span class="btn_frame">Ctrl</span>+<span class="btn_frame">L</span>で一覧に移れます。<br>
-画面を閉じたい場合は、<span class="btn_frame">ESC</span>(or <span class="btn_frame">Alt</span>+<span class="btn_frame">F4</span>)キーを押すか、<a href="hid00005.htm#ReturnList">ReturnList</a> コマンドが割り当てられているキーを一覧で押してください。<br>
-</div>
+      <div class="spc_box">
+        一覧とフィルタ欄との間は、<span class="btn_frame">TAB</span>キーで行き来できます。また一覧からは、ファイラーで <a
+          href="hid00005.htm#IncSearch">IncSearch</a> コマンドに割り当てられているキーでフィルタ欄に、フィルタ欄からは<span
+          class="btn_frame">Ctrl</span>+<span class="btn_frame">L</span>で一覧に移れます。<br>
+        画面を閉じたい場合は、<span class="btn_frame">ESC</span>(or <span class="btn_frame">Alt</span>+<span
+          class="btn_frame">F4</span>)キーを押すか、<a href="hid00005.htm#ReturnList">ReturnList</a>
+        コマンドが割り当てられているキーを一覧で押してください。<br>
+      </div>
+    </dd>
 
-<dt class="no_bg">その他
-<dd>
-<span class="btn_frame">プレビュー</span>を有効にすると、一覧で選択されているファイルのプレビューとファイル情報が表示されます。<br>
-コマンドファイルが、キー、追加メニュー、関連付け(OpenByApp、OpenStandard)、イベントに割り当てられている場合、その参照元が表示されます(<a href="hid00005.htm#ExeMenuFile">メニュー定義ファイル</a>内のものは除く)。<br>
+    <dt class="no_bg">その他</dt>
+    <dd>
+      <span class="btn_frame">プレビュー</span>を有効にすると、一覧で選択されているファイルのプレビューとファイル情報が表示されます。<br>
+      コマンドファイルが、キー、追加メニュー、関連付け(OpenByApp、OpenStandard)、イベントに割り当てられている場合、その参照元が表示されます(<a
+        href="hid00005.htm#ExeMenuFile">メニュー定義ファイル</a>内のものは除く)。<br>
 
-<div class="spc_box">
-<span class="btn_frame">確定即実行</span>を有効にしていると、<b>フィルタ</b>によって候補が一つに確定した場合、0.5秒後にそのコマンドファイルを自動的に実行します。<br>
-</div>
+      <div class="spc_box">
+        <span class="btn_frame">確定即実行</span>を有効にしていると、<b>フィルタ</b>によって候補が一つに確定した場合、0.5秒後にそのコマンドファイルを自動的に実行します。<br>
+      </div>
 
-<div class="spc_box">
-なお、<a href="hid00008.htm">オプション設定</a>でコマンドファイルの参照ボタンを押した場合も、この画面が表示され(タイトルは「<b>コマンドファイルの選択</b>」)、コマンドファイルを選択できます。ただし、閲覧や編集はできません。<br>
-</div>
+      <div class="spc_box">
+        なお、<a
+          href="hid00008.htm">オプション設定</a>でコマンドファイルの参照ボタンを押した場合も、この画面が表示され(タイトルは「<b>コマンドファイルの選択</b>」)、コマンドファイルを選択できます。ただし、閲覧や編集はできません。<br>
+      </div>
 
-<div class="spc_box">
-コマンドファイルの詳細は「<a href="hid00063.htm">ExeCommands コマンド</a>」のページを参照してください。<br>
-</div>
-</dl>
-<br><br>
+      <div class="spc_box">
+        コマンドファイルの詳細は「<a href="hid00063.htm">ExeCommands コマンド</a>」のページを参照してください。<br>
+      </div>
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

@@ -1,89 +1,104 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>JSONビュアー</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="JsonViewer">
-	<param name="Keyword" value="JSONビュアー">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>JSONビュアー</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="JsonViewer">
+    <param name="Keyword" value="JSONビュアー">
+  </object>
 </head>
 
 <body>
 
-<h1>JSONビュアー</h1>
-<p>
-ファイラーで <a href="hid00005.htm#JsonViewer">JsonViewer</a> コマンドを実行すると<b>JSONビュアー</b>が開き、カーソル位置のJSONファイルをツリービューで閲覧できます。<br>
-</p>
+  <h1>JSONビュアー</h1>
+  <p>
+    ファイラーで <a href="hid00005.htm#JsonViewer">JsonViewer</a>
+    コマンドを実行すると<b>JSONビュアー</b>が開き、カーソル位置のJSONファイルをツリービューで閲覧できます。<br>
+  </p>
 
-<dl>
-<dt class="no_bg">ツリービューでの操作
-<dd>
-カーソル移動などは、標準キー以外に、ファイラーやテキストビュアーで割り当てられているのと同じキーによっても可能です(CursorDown/Up/Top/End、TextTop/End(TV)、PageDown/Up コマンドに対応)。<br>
-<span class="btn_frame">ENTER</span>キーを押すと、選択中のノードを開閉できます。このとき <img src="chkbox.png" alt=""> <b>自動開閉</b> がチェックされていると、展開したノードと同レベルの他のノードがすべて畳まれます。<br>
-なお、URLの値を選択している場合、<span class="btn_frame">ENTER</span>キーでURLを開けます。<br>
-<div class="note_text">
-※ノード数が多いと自動開閉の処理に時間がかかります。<br>
-</div>
-<div class="spc_box">
-なお、画面左下の<span class="btn_frame">+</span>/<span class="btn_frame">-</span>ボタンを押すと、選択ノードのすべての子ノードを開閉できます。<br>
-</div>
+  <dl>
+    <dt class="no_bg">ツリービューでの操作</dt>
+    <dd>
+      カーソル移動などは、標準キー以外に、ファイラーやテキストビュアーで割り当てられているのと同じキーによっても可能です(CursorDown/Up/Top/End、TextTop/End(TV)、PageDown/Up
+      コマンドに対応)。<br>
+      <span class="btn_frame">ENTER</span>キーを押すと、選択中のノードを開閉できます。このとき <img src="chkbox.png" alt=""> <b>自動開閉</b>
+      がチェックされていると、展開したノードと同レベルの他のノードがすべて畳まれます。<br>
+      なお、URLの値を選択している場合、<span class="btn_frame">ENTER</span>キーでURLを開けます。<br>
+      <div class="note_text">
+        ※ノード数が多いと自動開閉の処理に時間がかかります。<br>
+      </div>
+      <div class="spc_box">
+        なお、画面左下の<span class="btn_frame">+</span>/<span class="btn_frame">-</span>ボタンを押すと、選択ノードのすべての子ノードを開閉できます。<br>
+      </div>
+    </dd>
 
-<dt class="no_bg">検索
-<dd>
-<b>検索</b>覧に文字列を入力し、<img src="chkbox.png" alt=""> <b>名</b> (キー名)/ <img src="chkbox.png" alt=""> <b>値</b> で検索対象を設定して<span class="btn_frame">∨</span>/<span class="btn_frame">∧</span>ボタンを押すと、下方向/上方向に検索できます。<br>
-ボタンの代わりに<b>検索</b>覧で<span class="btn_frame">↓</span>/<span class="btn_frame">↑</span>キーでも検索可能。またツリービューにフォーカスがある場合は、テキストビュアーで <b>FindDown</b>/<b>FindUp</b> コマンドが割り当てられているのと同じキーによっても検索できます(下方向は<span class="btn_frame">F3</span>キーでも可)。<br>
+    <dt class="no_bg">検索</dt>
+    <dd>
+      <b>検索</b>覧に文字列を入力し、<img src="chkbox.png" alt=""> <b>名</b> (キー名)/ <img src="chkbox.png" alt=""> <b>値</b>
+      で検索対象を設定して<span class="btn_frame">∨</span>/<span class="btn_frame">∧</span>ボタンを押すと、下方向/上方向に検索できます。<br>
+      ボタンの代わりに<b>検索</b>覧で<span class="btn_frame">↓</span>/<span
+        class="btn_frame">↑</span>キーでも検索可能。またツリービューにフォーカスがある場合は、テキストビュアーで <b>FindDown</b>/<b>FindUp</b>
+      コマンドが割り当てられているのと同じキーによっても検索できます(下方向は<span class="btn_frame">F3</span>キーでも可)。<br>
 
-<div class="spc_box">
-一覧からは、ファイラーで <b>IncSearch</b> コマンドに割り当てられているキーや<span class="btn_frame">Ctrl</span>+<span class="btn_frame">F</span>キーで検索欄に、検索欄からは<span class="btn_frame">Ctrl</span>+<span class="btn_frame">L</span>で一覧に移れます。<br>
-</div>
+      <div class="spc_box">
+        一覧からは、ファイラーで <b>IncSearch</b> コマンドに割り当てられているキーや<span class="btn_frame">Ctrl</span>+<span
+          class="btn_frame">F</span>キーで検索欄に、検索欄からは<span class="btn_frame">Ctrl</span>+<span
+          class="btn_frame">L</span>で一覧に移れます。<br>
+      </div>
+    </dd>
 
-<dt class="no_bg">右クリックメニュー
-<dd>
-<dl>
-<dt class="no_bg">すべて展開
-<dd>ルート以下のすべてのノードを展開します。<br>
-<div class="note_text">
-※ノード数が多いと時間がかかります。<br>
-</div>
+    <dt class="no_bg">右クリックメニュー</dt>
+    <dd>
+      <dl>
+        <dt class="no_bg">すべて展開</dt>
+        <dd>ルート以下のすべてのノードを展開します。<br>
+          <div class="note_text">
+            ※ノード数が多いと時間がかかります。<br>
+          </div>
+        </dd>
 
-<dt class="no_bg">すべて畳む
-<dd>ルート以下のすべてのノードを畳みます。
+        <dt class="no_bg">すべて畳む</dt>
+        <dd>ルート以下のすべてのノードを畳みます。</dd>
 
-<dt class="no_bg">コピー
-<dd>選択項目の表示内容をクリップボードにコピーします。<br>
+        <dt class="no_bg">コピー</dt>
+        <dd>選択項目の表示内容をクリップボードにコピーします。</dd>
 
-<dt class="no_bg">パス式をコピー
-<dd>選択項目のパス式をクリップボードにコピーします。<br>
+        <dt class="no_bg">パス式をコピー</dt>
+        <dd>選択項目のパス式をクリップボードにコピーします。</dd>
 
-<dt class="no_bg">JSON文字列をコピー
-<dd>選択項目のJSON文字列をクリップボードにコピーします。Unicode文字は \uXXXX 形式にエスケープします。<br>
-先頭項目 <b>JSON</b> を選択している場合は、全体の完全なJSON文字列が取得されます。それ以外では、部分的な文字列になります。<br>
+        <dt class="no_bg">JSON文字列をコピー</dt>
+        <dd>選択項目のJSON文字列をクリップボードにコピーします。Unicode文字は \uXXXX 形式にエスケープします。<br>
+          先頭項目 <b>JSON</b> を選択している場合は、全体の完全なJSON文字列が取得されます。それ以外では、部分的な文字列になります。<br>
+        </dd>
 
-<dt class="no_bg">全体を整形してコピー
-<dd>JSON文字列全体をタブ文字でインデント整形してクリップボードにコピーします。Unicode文字をエスケープしません。<br>
+        <dt class="no_bg">全体を整形してコピー</dt>
+        <dd>JSON文字列全体をタブ文字でインデント整形してクリップボードにコピーします。Unicode文字をエスケープしません。</dd>
 
-<dt class="no_bg">URLを開く
-<dd>選択項目がURL値の場合、それを開きます。
+        <dt class="no_bg">URLを開く</dt>
+        <dd>選択項目がURL値の場合、それを開きます。</dd>
 
-<dt class="no_bg">エラー行をエディタで開く
-<dd>不正なJSONファイルを読み込んでエラーになった場合、エラー行をテキストエディタで開きます。<br>
+        <dt class="no_bg">エラー行をエディタで開く</dt>
+        <dd>不正なJSONファイルを読み込んでエラーになった場合、エラー行をテキストエディタで開きます。</dd>
 
-<dt class="no_bg">サイズと位置をファイルリストに合わせる
-<dd>メイン画面のファイルリスト全体を覆うように、ダイアログの位置とサイズを調整します。<br>
+        <dt class="no_bg">サイズと位置をファイルリストに合わせる</dt>
+        <dd>メイン画面のファイルリスト全体を覆うように、ダイアログの位置とサイズを調整します。</dd>
+      </dl>
+    </dd>
 
-</dl>
-
-<dt class="no_bg">表示
-<dd>
-ツリービューの表示フォントは、<a href="hid00023.htm#Font">オプション設定 - フォント・配色</a> - フォント の「<b>リスト</b>」が用いられます。<br>
-背景は「<b>リストの背景色</b>」になります。また、キー名は「<b>予約語の文字色</b>」、<b>:</b> (コロン)は「<b>シンボルの文字色</b>」、値がURLの場合は「<b>URLの文字色</b>」、文字列の場合は「<b>文字列の文字色</b>」、それ以外の値は「<b>数値の文字色</b>」になります。<br>
-ノードをつなぐラインやプラス/マイナスボタンは、テキストビュアーの「<b>罫線の色</b>」で描かれます。<br>
-なお、ツリービューにはシンプルスクロールバーの設定が適用されず、標準のスクロールバーになります。<br>
-
-</dl>
-<br><br>
+    <dt class="no_bg">表示</dt>
+    <dd>
+      ツリービューの表示フォントは、<a href="hid00023.htm#Font">オプション設定 - フォント・配色</a> - フォント の「<b>リスト</b>」が用いられます。<br>
+      背景は「<b>リストの背景色</b>」になります。また、キー名は「<b>予約語の文字色</b>」、<b>:</b>
+      (コロン)は「<b>シンボルの文字色</b>」、値がURLの場合は「<b>URLの文字色</b>」、文字列の場合は「<b>文字列の文字色</b>」、それ以外の値は「<b>数値の文字色</b>」になります。<br>
+      ノードをつなぐラインやプラス/マイナスボタンは、テキストビュアーの「<b>罫線の色</b>」で描かれます。<br>
+      なお、ツリービューにはシンプルスクロールバーの設定が適用されず、標準のスクロールバーになります。<br>
+    </dd>
+  </dl>
+  <br><br>
 
 </body>
+
 </html>

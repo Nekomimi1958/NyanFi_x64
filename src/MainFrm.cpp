@@ -21173,8 +21173,19 @@ void __fastcall TNyanFiForm::OpenByAppActionExecute(TObject *Sender)
 	try {
 		//パラメータ指定
 		if (!ActionParam.IsEmpty()) {
-			UnicodeString fnam = to_absolute_name(ActionParam, CurPath[CurListTag]);
-			if (!file_exists(fnam)) SysErrAbort(ERROR_FILE_NOT_FOUND);
+			TStringDynArray plst = split_strings_semicolon(ActionParam);
+			UnicodeString fnam = EmptyStr;
+			for (int i=0; i<plst.Length; i++) {
+				UnicodeString prm = plst[i];
+				if (remove_top_s(prm, '/')) {
+					file_rec *cfp = GetCurFrecPtr(true);
+					prm = (cfp && cfp->is_dir)? cfp->b_name + "\\" + prm : EmptyStr;
+				}
+				fnam = to_absolute_name(prm, CurPath[CurListTag]);
+				if (file_exists_wc(fnam)) break;
+				if (i == plst.Length - 1) SysErrAbort(ERROR_FILE_NOT_FOUND); 
+			}
+
 			UnicodeString app = get_MenuItemStr(get_AssociatedApps(get_extension(fnam)));
 			if (app.IsEmpty()) TextAbort(_T("関連付けられていません。"));
 			if (USAME_TS(app, "SKIP")) SkipAbort();
@@ -21316,10 +21327,22 @@ void __fastcall TNyanFiForm::OpenByWinActionExecute(TObject *Sender)
 	try {
 		//パラメータ指定
 		if (!ActionParam.IsEmpty()) {
-			UnicodeString fnam = ActionParam;
-			if (!is_match_regex(fnam, _T("^") URL_MATCH_PTN) && !StartsText("mailto:", fnam)) {
-				fnam = to_absolute_name(fnam, CurPath[CurListTag]);
-				if (!file_exists(fnam)) SysErrAbort(ERROR_FILE_NOT_FOUND);
+			UnicodeString fnam = EmptyStr;
+			if (is_match_regex(ActionParam, _T("^") URL_MATCH_PTN) || StartsText("mailto:", ActionParam)) {
+				fnam = ActionParam;
+			}
+			else {
+				TStringDynArray plst = split_strings_semicolon(ActionParam);
+				for (int i=0; i<plst.Length; i++) {
+					UnicodeString prm = plst[i];
+					if (remove_top_s(prm, '/')) {
+						file_rec *cfp = GetCurFrecPtr(true);
+						prm = (cfp && cfp->is_dir)? cfp->b_name + "\\" + prm : EmptyStr;
+					}
+					fnam = to_absolute_name(prm, CurPath[CurListTag]);
+					if (file_exists_wc(fnam)) break;
+ 					if (i == plst.Length - 1) SysErrAbort(ERROR_FILE_NOT_FOUND); 
+				}
 			}
 			Execute_ex(fnam, EmptyStr, ExtractFilePath(fnam));
 		}

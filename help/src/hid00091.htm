@@ -1,48 +1,56 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-<title>INIファイルの隠しオプション</title>
-<link rel="stylesheet" type="text/css" href="help.css">
-<object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="INIファイル">
-	<param name="Keyword" value="INIファイルの隠しオプション">
-	<param name="Keyword" value="Windows 11">
-</object>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+  <title>INIファイルの隠しオプション</title>
+  <link rel="stylesheet" type="text/css" href="help.css">
+  <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+    <param name="Keyword" value="INIファイル">
+    <param name="Keyword" value="INIファイルの隠しオプション">
+    <param name="Keyword" value="Windows 11">
+  </object>
 </head>
 
 <body>
 
-<h1>INIファイルの隠しオプション</h1>
+  <h1>INIファイルの隠しオプション</h1>
 
-<p>
-以下は、オプション設定ダイアログ(<a href="hid00005.htm#OptionDlg">OptionDlg</a>)には無い特殊な隠しオプションです。<br>
-設定を変更するには、<b>NyanFi.INI</b> を直接編集する必用があります(<a href="hid00005.htm#EditIniFile">EditIniFile</a>)。
-</p>
+  <p>
+    以下は、オプション設定ダイアログ(<a href="hid00005.htm#OptionDlg">OptionDlg</a>)には無い特殊な隠しオプションです。<br>
+    設定を変更するには、<b>NyanFi.INI</b> を直接編集する必用があります(<a href="hid00005.htm#EditIniFile">EditIniFile</a>)。
+  </p>
 
-<dl>
-<dt class="no_bg_indent1">[Option] NoCheckUncRPT　<span class="def_text">(デフォルト: 0)</span>
-<dd><b>NoCheckUncRPT=1</b> に設定すると、UNCパスのシンボリックリンク/ジャンクションに対するリパースポイント情報をチェックしません。またファイル情報ではリンク先情報が表示されません。正常なシンボリックリンク/ジャンクションのリンク先情報については、<a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> コマンドで強制取得してください。<br>
-このオプションは、ファイルリストでUNCパスを開いたとき、ネットワーク環境の問題などによって、シンボリックリンク/ジャンクションで「エラーコード: 0x80070035」が発生し、しばらく無応答になってしまうのを回避するためのものです。通常は 0 のままにしておいてください。<br>
+  <dl>
+    <dt class="no_bg_indent1">[Option] NoCheckUncRPT　<span class="def_text">(デフォルト: 0)</span></dt>
+    <dd><b>NoCheckUncRPT=1</b>
+      に設定すると、UNCパスのシンボリックリンク/ジャンクションに対するリパースポイント情報をチェックしません。またファイル情報ではリンク先情報が表示されません。正常なシンボリックリンク/ジャンクションのリンク先情報については、<a
+        href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> コマンドで強制取得してください。<br>
+      このオプションは、ファイルリストでUNCパスを開いたとき、ネットワーク環境の問題などによって、シンボリックリンク/ジャンクションで「エラーコード:
+      0x80070035」が発生し、しばらく無応答になってしまうのを回避するためのものです。通常は 0 のままにしておいてください。<br>
+    </dd>
 
-<dt class="no_bg_indent1">[Option] HEAD_Mark　<span class="def_text">(デフォルト: &#x25b6;)</span>
-<dd>ファイル情報や<a href="hid00090.htm#GitViewer">Gitビュアー</a>に表示される HEAD マークです。<br>
+    <dt class="no_bg_indent1">[Option] HEAD_Mark　<span class="def_text">(デフォルト: &#x25b6;)</span></dt>
+    <dd>ファイル情報や<a href="hid00090.htm#GitViewer">Gitビュアー</a>に表示される HEAD マークです。</dd>
 
-<dt class="no_bg_indent1">[Option] PLAY_Mark　<span class="def_text">(デフォルト: &#x25b6;)</span>
-<dd>プレイリスト(<a href="hid00005.htm#PlayList">PlayList</a>)に表示される再生中マークです。<br>
+    <dt class="no_bg_indent1">[Option] PLAY_Mark　<span class="def_text">(デフォルト: &#x25b6;)</span></dt>
+    <dd>プレイリスト(<a href="hid00005.htm#PlayList">PlayList</a>)に表示される再生中マークです。</dd>
 
-<dt class="no_bg_indent1" id="SortSymList">[Option] SortSymList　<span class="def_text">(デフォルト: 空文字)</span>
-<dd>ソートダイアログ(<a href="hid00005.htm#SortDlg">SortDlg</a>)で、<b>自然順</b> が有効な場合、あるいは「拡張設定」-「<b>自然順無効時に論理ソート</b>」が有効な場合、優先的に用いられる文字並びです。<br>
-ここに指定した文字は、その順序に基づいて先頭に集められます(降順では逆)。<br>
-<pre class="example_box">
+    <dt class="no_bg_indent1" id="SortSymList">[Option] SortSymList　<span class="def_text">(デフォルト: 空文字)</span></dt>
+    <dd>ソートダイアログ(<a href="hid00005.htm#SortDlg">SortDlg</a>)で、<b>自然順</b>
+      が有効な場合、あるいは「拡張設定」-「<b>自然順無効時に論理ソート</b>」が有効な場合、優先的に用いられる文字並びです。<br>
+      ここに指定した文字は、その順序に基づいて先頭に集められます(降順では逆)。<br>
+      <pre class="example_box">
 SortSymList=★☆●○■□◆◇※
 </pre>
-
-<dt class="no_bg_indent1">[Option] NoRoundWin　<span class="def_text">(デフォルト: 0)</span>
-<dd><b>NoRoundWin=1</b> に設定すると、<b>NyanFi</b> の各ウィンドウに対して、Windows 11 の角丸表示を抑止します。<br>
-なお、ファイルやディレクトリ選択などのコモンダイアログには適用されません。<br>
-
-</dl>
+    </dd>
+ 
+    <dt class="no_bg_indent1">[Option] NoRoundWin　<span class="def_text">(デフォルト: 0)</span></dt>
+    <dd><b>NoRoundWin=1</b> に設定すると、<b>NyanFi</b> の各ウィンドウに対して、Windows 11 の角丸表示を抑止します。<br>
+      なお、ファイルやディレクトリ選択などのコモンダイアログには適用されません。<br>
+    </dd>
+  </dl>
 
 </body>
+
 </html>
