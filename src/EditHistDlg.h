@@ -65,6 +65,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *mPropertyItem;
 	TMenuItem *mStatusBarItem;
 	TMenuItem *NoHistItem;
+	TMenuItem *NoRepoItem;
 	TMenuItem *rFileInfoItem;
 	TMenuItem *rFitSizePosItem;
 	TMenuItem *rPropertyItem;
@@ -97,7 +98,6 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *OptMode1Btn;
 	TToolButton *OptMode2Btn;
 	TToolButton *ToolButton5;
-	TMenuItem *NoRepoItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

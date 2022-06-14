@@ -371,15 +371,19 @@ UnicodeString get_extension_if_file(UnicodeString fnam)
 //---------------------------------------------------------------------------
 //拡張子のチェック
 //---------------------------------------------------------------------------
+UnicodeString nrm_FileExt(UnicodeString fext)
+{
+	if (fext.IsEmpty()) return EmptyStr;
+	if (!StartsStr('.', fext)) fext.Insert(".", 1);
+	if (!EndsStr('.', fext))   fext += ".";
+	return fext;
+}
+//---------------------------------------------------------------------------
 bool test_FileExt(UnicodeString fext, UnicodeString list)
 {
 	if (list.IsEmpty() || fext.IsEmpty() || USAME_TS(fext, ".")) return false;
 	if (USAME_TS(list, "*") || USAME_TS(list, ".*")) return true;
-	if (!StartsStr('.', fext)) fext.Insert(".", 1);
-	if (!EndsStr('.', fext))   fext += ".";
-	if (!StartsStr('.', list)) list.Insert(".", 1);
-	if (!EndsStr('.', list))   list += ".";
-	return ContainsText(list, fext);
+	return ContainsText(nrm_FileExt(list), nrm_FileExt(fext));
 }
 //---------------------------------------------------------------------------
 bool test_FileExt(UnicodeString fext, const _TCHAR *list)

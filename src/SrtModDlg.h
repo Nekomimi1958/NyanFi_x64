@@ -13,6 +13,7 @@
 #include <Vcl.Forms.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.ActnList.hpp>
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 class TSortModeDlg : public TForm
@@ -39,6 +40,7 @@ __published:	// IDE で管理されるコンポーネント
 	TGroupBox *DirSortModeGroupBox;
 	TGroupBox *GroupBox1;
 	TGroupBox *PrimeGroupBox;
+	TLabeledEdit *ExtListEdit;
 	TPanel *BtnPanel;
 	TPanel *DirOptPanel;
 	TPanel *MainPanel;

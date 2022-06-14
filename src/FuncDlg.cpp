@@ -258,7 +258,7 @@ void __fastcall TFuncListDlg::UpdateList(
 	}
 
 	TListBox *lp = FuncListBox;
-	set_RedrawOff(lp);
+	lp->LockDrawing();
 	{
 		lp->Items->Assign(flst.get());
 		if (lp->Count>0) {
@@ -273,7 +273,7 @@ void __fastcall TFuncListDlg::UpdateList(
 			lp->ItemIndex = idx;
 		}
 	}
-	set_RedrawOn(lp);
+	lp->UnlockDrawing();
 	ListScrPanel->UpdateKnob();
 
 	if (link) ToLine();

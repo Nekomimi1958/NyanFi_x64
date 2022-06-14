@@ -58,7 +58,7 @@ void __fastcall TXmlViewer::WmFormShowed(TMessage &msg)
 
 	ErrMsg	 = EmptyStr;
 	ViewBusy = true;
-	set_RedrawOff(XmlTreeView);
+	XmlTreeView->LockDrawing();
 	try {
 		XmlTreeView->SetFocus();
 		//XMLƒtƒ@ƒCƒ‹‚Ì“Ç‚Ýž‚Ý
@@ -93,7 +93,7 @@ void __fastcall TXmlViewer::WmFormShowed(TMessage &msg)
 	catch (Exception &e) {
 		ErrMsg = e.Message;
 	}
-	set_RedrawOn(XmlTreeView);
+	XmlTreeView->UnlockDrawing();
 	ViewBusy = false;
 
 	if (!ErrMsg.IsEmpty()) {
@@ -499,12 +499,10 @@ void __fastcall TXmlViewer::StatusBar1DrawPanel(TStatusBar *StatusBar,
 void __fastcall TXmlViewer::ExpandItemClick(TObject *Sender)
 {
 	ViewBusy = true;
-	set_RedrawOff(XmlTreeView);
-	{
-		XmlTreeView->FullExpand();
-		XmlTreeView->TopItem = XmlTreeView->Items->GetFirstNode();
-	}
-	set_RedrawOn(XmlTreeView);
+	XmlTreeView->LockDrawing();
+	XmlTreeView->FullExpand();
+	XmlTreeView->TopItem = XmlTreeView->Items->GetFirstNode();
+	XmlTreeView->UnlockDrawing();
 	ViewBusy = false;
 }
 //---------------------------------------------------------------------------
@@ -588,14 +586,12 @@ void __fastcall TXmlViewer::ViewModeItemClick(TObject *Sender)
 	XmlTreeView->Items->Clear();
 
 	ViewBusy = true;
-	set_RedrawOff(XmlTreeView);
-	{
-		AssignView(NULL, XMLDocument1->Node);
-		TTreeNode *TopNode = XmlTreeView->Items->GetFirstNode();
-		TopNode->Selected  = true;
-		TopNode->Expanded  = true;
-	}
-	set_RedrawOn(XmlTreeView);
+	XmlTreeView->LockDrawing();
+	AssignView(NULL, XMLDocument1->Node);
+	TTreeNode *TopNode = XmlTreeView->Items->GetFirstNode();
+	TopNode->Selected  = true;
+	TopNode->Expanded  = true;
+	XmlTreeView->UnlockDrawing();
 	ViewBusy = false;
 }
 
@@ -646,17 +642,15 @@ void __fastcall TXmlViewer::FindActionUpdate(TObject *Sender)
 void __fastcall TXmlViewer::ExpandActionExecute(TObject *Sender)
 {
 	ViewBusy = true;
-	set_RedrawOff(XmlTreeView);
-	{
-		TTreeNode *sp = XmlTreeView->Selected;
-		TTreeNode *sp0 = sp;
-		while (sp) {
-			sp->Expanded = true;
-			sp = sp->GetNext();
-			if (!sp || sp->Level<=sp0->Level) break;
-		}
+	XmlTreeView->LockDrawing();
+	TTreeNode *sp = XmlTreeView->Selected;
+	TTreeNode *sp0 = sp;
+	while (sp) {
+		sp->Expanded = true;
+		sp = sp->GetNext();
+		if (!sp || sp->Level<=sp0->Level) break;
 	}
-	set_RedrawOn(XmlTreeView);
+	XmlTreeView->UnlockDrawing();
 	ViewBusy = false;
 }
 //---------------------------------------------------------------------------
@@ -718,12 +712,12 @@ void __fastcall TXmlViewer::XmlTreeViewKeyDown(TObject *Sender, WORD &Key, TShif
 					TTreeNode *pp = sp->Parent;
 					if (pp && XmlTreeView->AutoExpand) {
 						ViewBusy = true;
-						set_RedrawOff(XmlTreeView);
+						XmlTreeView->LockDrawing();
 						for (int i=0; i<pp->Count; i++) {
 							TTreeNode *ip = pp->Item[i];
 							ip->Expanded = (ip==sp);
 						}
-						set_RedrawOn(XmlTreeView);
+						XmlTreeView->UnlockDrawing();
 						ViewBusy = false;
 					}
 					else {

@@ -4981,7 +4981,7 @@ void __fastcall TNyanFiForm::UpdateToolBtn(int scr_mode)
 
 	if (b_lst->Count==0) b_lst->Add("\"設定\",\"ToolBarDlg\",\"\"");	//デフォルト
 
-	set_RedrawOff(tp);
+	tp->LockDrawing();
 	{
 		//一旦破棄
 		while (tp->ButtonCount>0) delete tp->Buttons[0];
@@ -5028,7 +5028,7 @@ void __fastcall TNyanFiForm::UpdateToolBtn(int scr_mode)
 			bp->Parent = tp;
 		}
 	}
-	set_RedrawOn(tp);
+	tp->UnlockDrawing();
 
 	//ドライブボタンの状態更新
 	if (scr_mode==SCMD_FLIST) UpdateToolDriveBtn();
@@ -5074,7 +5074,7 @@ void __fastcall TNyanFiForm::InitFKeyBtn()
 	int bw = (tp->ClientWidth - 24) / 12;
 	UnicodeString kid = (ScrMode==SCMD_TVIEW)? "V" : (ScrMode==SCMD_IVIEW)? "I" : "F";
 
-	set_RedrawOff(tp);
+	tp->LockDrawing();
 	{
 		//一旦破棄
 		while (tp->ButtonCount>0) delete tp->Buttons[0];
@@ -5101,7 +5101,7 @@ void __fastcall TNyanFiForm::InitFKeyBtn()
 			}
 		}
 	}
-	set_RedrawOn(tp);
+	tp->UnlockDrawing();
 }
 //---------------------------------------------------------------------------
 //ファンクションキーボタンの実行
@@ -5250,25 +5250,23 @@ void __fastcall TNyanFiForm::FKeyBtnMouseUp(TObject *Sender, TMouseButton Button
 void __fastcall TNyanFiForm::UpdateToolDriveBtn()
 {
 	if (ToolBarF->Visible) {
-		set_RedrawOff(ToolBarF);
-		{
-			for (int i=0; i<ToolBarF->ButtonCount; i++) {
-				TStringDynArray itm_buf = get_csv_array(ToolBtnList->Strings[i], 3, true);
-				UnicodeString dstr = itm_buf[1];
-				if (remove_top_text(dstr, _T("ChangeDrive_"))) {
-					TToolButton *bp = ToolBarF->Buttons[i];
-					bp->Visible = false;
-					bool found  = false;
-					for (int j=0; j<DriveInfoList->Count && !found; j++) {
-						drive_info *dp = (drive_info *)DriveInfoList->Objects[j];
-						found = dp->accessible && StartsText(dstr, dp->drive_str);
-					}
-					bp->Visible = found;
-					bp->Enabled = found;
+		ToolBarF->LockDrawing();
+		for (int i=0; i<ToolBarF->ButtonCount; i++) {
+			TStringDynArray itm_buf = get_csv_array(ToolBtnList->Strings[i], 3, true);
+			UnicodeString dstr = itm_buf[1];
+			if (remove_top_text(dstr, _T("ChangeDrive_"))) {
+				TToolButton *bp = ToolBarF->Buttons[i];
+				bp->Visible = false;
+				bool found  = false;
+				for (int j=0; j<DriveInfoList->Count && !found; j++) {
+					drive_info *dp = (drive_info *)DriveInfoList->Objects[j];
+					found = dp->accessible && StartsText(dstr, dp->drive_str);
 				}
+				bp->Visible = found;
+				bp->Enabled = found;
 			}
 		}
-		set_RedrawOn(ToolBarF);
+		ToolBarF->UnlockDrawing();
 	}
 }
 
@@ -5653,13 +5651,11 @@ void __fastcall TNyanFiForm::SetCurPathMask(UnicodeString kstr)
 	}
 
 	TListBox *lp = FileListBox[CurListTag];
-	set_RedrawOff(lp);
-	{
-		UnicodeString fnam = GetCurFileName();
-		PathMask[CurListTag] = lbuf;
-		RefreshCurPath(fnam);
-	}
-	set_RedrawOn(lp);
+	lp->LockDrawing();
+	UnicodeString fnam = GetCurFileName();
+	PathMask[CurListTag] = lbuf;
+	RefreshCurPath(fnam);
+	lp->UnlockDrawing();
 }
 
 //---------------------------------------------------------------------------
@@ -7846,8 +7842,8 @@ void __fastcall TNyanFiForm::RepaintList(
 
 	if (ScrMode!=SCMD_FLIST) return;
 
-	if (tag==-1 || tag==0) set_RedrawOff(FileListBox[0]);
-	if (tag==-1 || tag==1) set_RedrawOff(FileListBox[1]);
+	if (tag==-1 || tag==0) FileListBox[0]->LockDrawing();
+	if (tag==-1 || tag==1) FileListBox[1]->LockDrawing();
 	{
 		if (cur_fnam.IsEmpty() && (tag==-1 || tag==CurListTag)) cur_fnam = GetCurFileName();
 
@@ -7884,8 +7880,8 @@ void __fastcall TNyanFiForm::RepaintList(
 		}
 		if ((tag==-1 || tag==CurListTag) && !cur_fnam.IsEmpty()) IndexOfFileList(cur_fnam);
 	}
-	if (tag==-1 || tag==0) set_RedrawOn(FileListBox[0]);
-	if (tag==-1 || tag==1) set_RedrawOn(FileListBox[1]);
+	if (tag==-1 || tag==0) FileListBox[0]->UnlockDrawing();
+	if (tag==-1 || tag==1) FileListBox[1]->UnlockDrawing();
 
 	SetSttBarInf();
 }
@@ -8275,7 +8271,7 @@ void __fastcall TNyanFiForm::SetCurPath(
 		//直前のディレクトリの履歴情報を保存
 		UpdateDirHistory(l_pnam, CurTabIndex, Index);
 
-		set_RedrawOff(lp);
+		lp->LockDrawing();
 		{
 			try {
 				bool chg_img = false;
@@ -8484,8 +8480,7 @@ void __fastcall TNyanFiForm::SetCurPath(
 				;
 			}
 		}
-
-		set_RedrawOn(lp);
+		lp->UnlockDrawing();
 	}
 }
 
@@ -8738,14 +8733,12 @@ void __fastcall TNyanFiForm::UpdateCurPath(
 	if (inh_hist) InhDirHist++;
 
 	TListBox *lp = FileListBox[CurListTag];
-	set_RedrawOff(lp);
-	{
-		RecoverFileList2();
-		dir = dir.IsEmpty()? CurPath[CurListTag] : exclede_delimiter_if_root(dir);
-		CurPath[CurListTag] = dir + "\t" + unam;
-		if (DirHistCsrPos && idx!=-1) ListBoxSetIndex(lp, idx);
-	}
-	set_RedrawOn(lp);
+	lp->LockDrawing();
+	RecoverFileList2();
+	dir = dir.IsEmpty()? CurPath[CurListTag] : exclede_delimiter_if_root(dir);
+	CurPath[CurListTag] = dir + "\t" + unam;
+	if (DirHistCsrPos && idx!=-1) ListBoxSetIndex(lp, idx);
+	lp->UnlockDrawing();
 	SetFileInf();
 
 	if (inh_hist) InhDirHist--;
@@ -8756,7 +8749,7 @@ void __fastcall TNyanFiForm::UpdateCurPath(
 	UnicodeString fnam)
 {
 	TListBox *lp = FileListBox[CurListTag];
-	set_RedrawOff(lp);
+	lp->LockDrawing();
 	{
 		RecoverFileList2();
 		dir = dir.IsEmpty()? CurPath[CurListTag] : exclede_delimiter_if_root(dir);
@@ -8777,7 +8770,7 @@ void __fastcall TNyanFiForm::UpdateCurPath(
 			if (idx!=-1) lp->ItemIndex = idx;
 		}
 	}
-	set_RedrawOn(lp);
+	lp->UnlockDrawing();
 	SetFileInf();
 }
 //---------------------------------------------------------------------------
@@ -8830,14 +8823,12 @@ void __fastcall TNyanFiForm::UpdateOppPath(
 	UnicodeString unam)		//接続ユーザ名		(default = EmptyStr)
 {
 	TListBox *lp = FileListBox[OppListTag];
-	set_RedrawOff(lp);
-	{
-		RecoverFileList2(OppListTag);
-		ApplyDotNyan = true;	//ディレクトリ変化がなくても強制的に .nyanfi を適用
-		CurPath[OppListTag] = exclede_delimiter_if_root(dir) + "\t" + unam;
-		if (DirHistCsrPos && idx!=-1) ListBoxSetIndex(lp, idx);
-	}
-	set_RedrawOn(lp);
+	lp->LockDrawing();
+	RecoverFileList2(OppListTag);
+	ApplyDotNyan = true;	//ディレクトリ変化がなくても強制的に .nyanfi を適用
+	CurPath[OppListTag] = exclede_delimiter_if_root(dir) + "\t" + unam;
+	if (DirHistCsrPos && idx!=-1) ListBoxSetIndex(lp, idx);
+	lp->UnlockDrawing();
 }
 
 //---------------------------------------------------------------------------
@@ -8847,12 +8838,10 @@ void __fastcall TNyanFiForm::UpdateCurDrive(
 {
 	if (tag==-1) tag = CurListTag;
 	TListBox *lp = FileListBox[tag];
-	set_RedrawOff(lp);
-	{
-		RecoverFileList2();
-		CurPath[tag] = drv;
-	}
-	set_RedrawOn(lp);
+	lp->LockDrawing();
+	RecoverFileList2();
+	CurPath[tag] = drv;
+	lp->UnlockDrawing();
 	SetFileInf();
 }
 
@@ -8888,7 +8877,7 @@ void __fastcall TNyanFiForm::AssignFileList(
 	if (last_idx==-1) last_idx = lp->ItemIndex;
 	if (last_top==-1) last_top = lp->TopIndex;
 
-	set_RedrawOff(lp);
+	lp->LockDrawing();
 	{
 		lp->Count = lst->Count;
 		FlScrPanel[tag]->UpdateKnob();
@@ -8908,7 +8897,7 @@ void __fastcall TNyanFiForm::AssignFileList(
 		if (tag==CurListTag) lp->SetFocus();
 		RepaintList(tag);
 	}
-	set_RedrawOn(lp);
+	lp->UnlockDrawing();
 	if (tag==CurListTag) SetFileInf();
 }
 
@@ -9451,8 +9440,8 @@ void __fastcall TNyanFiForm::ReloadList(
 		lnam[i] = (idx[i]>=0 && idx[i]<lst->Count)? lst->Strings[idx[i]] : EmptyStr;
 	}
 
-	if (tag==-1 || tag==0) set_RedrawOff(FileListBox[0]);
-	if (tag==-1 || tag==1) set_RedrawOff(FileListBox[1]);
+	if (tag==-1 || tag==0) FileListBox[0]->LockDrawing();
+	if (tag==-1 || tag==1) FileListBox[1]->LockDrawing();
 	{
 		for (int i=0; i<MAX_FILELIST; i++) {
 			flist_stt *lst_stt = &ListStt[i];
@@ -9520,8 +9509,8 @@ void __fastcall TNyanFiForm::ReloadList(
 			}
 		}
 	}
-	if (tag==-1 || tag==0) set_RedrawOn(FileListBox[0]);
-	if (tag==-1 || tag==1) set_RedrawOn(FileListBox[1]);
+	if (tag==-1 || tag==0) FileListBox[0]->UnlockDrawing();
+	if (tag==-1 || tag==1) FileListBox[1]->UnlockDrawing();
 
 	if (tag==-1 || tag==CurListTag) SetFileInf();
 }
@@ -9540,7 +9529,7 @@ void __fastcall TNyanFiForm::RecoverFileList(
 	UnicodeString lst_act_prm = ActionParam;
 
 	TListBox *lp = FileListBox[tag];
-	set_RedrawOff(lp);
+	lp->LockDrawing();
 	{
 		bool ret_arc = false;
 		UnicodeString last_fnam;
@@ -9636,7 +9625,7 @@ void __fastcall TNyanFiForm::RecoverFileList(
 
 		RepaintList(tag);
 	}
-	set_RedrawOn(lp);
+	lp->UnlockDrawing();
 
 	if (tag==CurListTag) SetFileInf();
 
@@ -19120,12 +19109,10 @@ bool __fastcall TNyanFiForm::JumpToList(int tag, UnicodeString fnam)
 				UnicodeString dnam = ExtractFilePath(anam);
 				if (!SameText(CurPath[OppListTag], dnam)) {
 					TListBox *lp = FileListBox[OppListTag];
-					set_RedrawOff(lp);
-					{
-						RecoverFileList(OppListTag);
-						CurPath[OppListTag] = dnam;
-					}
-					set_RedrawOn(lp);
+					lp->LockDrawing();
+					RecoverFileList(OppListTag);
+					CurPath[OppListTag] = dnam;
+					lp->UnlockDrawing();
 				}
 			}
 
@@ -24250,12 +24237,10 @@ void __fastcall TNyanFiForm::SetPathMaskActionExecute(TObject *Sender)
 	if (desc.IsEmpty()) desc = mask;
 
 	TListBox *lp = FileListBox[CurListTag];
-	set_RedrawOff(lp);
-	{
-		PathMask[CurListTag] = make_PathMask(mask, desc);
-		RefreshCurPath(fnam);
-	}
-	set_RedrawOn(lp);
+	lp->LockDrawing();
+	PathMask[CurListTag] = make_PathMask(mask, desc);
+	RefreshCurPath(fnam);
+	lp->UnlockDrawing();
 }
 
 //---------------------------------------------------------------------------
@@ -31031,9 +31016,9 @@ bool __fastcall TNyanFiForm::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 			if (TxtViewer->FileName.IsEmpty()) UserAbort(USTR_InvalidCmd);
 			bool ok;
 			if (TxtViewer->isTail) {
-				set_RedrawOff(TxtViewPanel);	//ちらつき防止
+				TxtViewPanel->LockDrawing();	//ちらつき防止
 				ok = OpenTxtViewerTail(TxtViewer->FileName, TxtViewer->TailLine, TxtViewer->isReverse);
-				set_RedrawOn(TxtViewPanel);
+				TxtViewPanel->UnlockDrawing();
 				TxtViewer->Repaint(true);
 			}
 			else {
@@ -33500,7 +33485,7 @@ bool __fastcall TNyanFiForm::DeleteICore(int idx)
 void __fastcall TNyanFiForm::DeleteIActionExecute(TObject *Sender)
 {
 	TStringGrid *gp = ThumbnailGrid;
-	if (gp->Visible) set_RedrawOff(gp);
+	if (gp->Visible) gp->LockDrawing();
 
 	try {
 		if (CurStt->is_Arc || CurStt->is_FTP) UserAbort(USTR_OpeNotSuported);
@@ -33621,7 +33606,7 @@ void __fastcall TNyanFiForm::DeleteIActionExecute(TObject *Sender)
 		SetActionAbort(e.Message);
 	}
 
-	if (gp->Visible) set_RedrawOn(gp);
+	if (gp->Visible) gp->UnlockDrawing();
 }
 
 //---------------------------------------------------------------------------
@@ -35473,7 +35458,7 @@ void __fastcall TNyanFiForm::UpdateTabBar(
 {
 	if (!TabPanel->Visible && !force) return;
 
-	set_RedrawOff(TabControl1);
+	TabControl1->LockDrawing();
 	{
 		UpdateTabWidth();
 		TabControl1->Tabs->Clear();
@@ -35484,7 +35469,7 @@ void __fastcall TNyanFiForm::UpdateTabBar(
 			TabControl1->TabIndex = idx;
 		}
 	}
-	set_RedrawOn(TabControl1);
+	TabControl1->UnlockDrawing();
 
 	if (TabBottomPaintBox->Visible) TabBottomPaintBox->Repaint();
 }

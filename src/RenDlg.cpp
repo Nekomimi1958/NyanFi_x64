@@ -523,10 +523,10 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 
 	Previewed = false;
 	TStringGrid *gp = PreviewGrid;
-	set_RedrawOff(gp);
+	gp->LockDrawing();
 	for (int i=0; i<gp->RowCount; i++) clear_GridRow(gp, i);
 	gp->Color = bg_inv;
-	set_RedrawOn(gp);
+	gp->UnlockDrawing();
 
 	if (IsOptionSheet()) {
 		CnvCharListBox->ItemIndex = -1;
@@ -640,7 +640,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	}
 
 	TStringGrid *gp = PreviewGrid;
-	set_RedrawOff(gp);
+	gp->LockDrawing();
 
 	int max_flen = 0;
 	int max_plen = 0;
@@ -951,7 +951,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	}
 
 	gp->Color = get_WinColor(ChangeCount==0);
-	set_RedrawOn(gp);
+	gp->UnlockDrawing();
 
 	//•¶Žš”î•ñ‚Ì•\Ž¦
 	PathInfMLabel->Font->Color = (max_plen>=MAX_PATH)? col_Error : get_TextColor();

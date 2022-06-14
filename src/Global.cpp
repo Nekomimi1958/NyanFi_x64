@@ -645,6 +645,7 @@ bool FlOdrDscPath[MAX_FILELIST];		//êŠ~‡
 bool SortBoth;					//¶‰E‚Æ‚à•ÏX
 bool SortLogical;				//˜_—ƒ\[ƒg(Ž©‘R‡ƒ\[ƒg–³ŒøŽž)
 UnicodeString SortSymList;
+UnicodeString SortExtList;		//Šg’£Žq‡‚Å—Dæ‚·‚éŠg’£Žq
 
 //”äŠrŠÖ”‚Ìƒ\[ƒg‡
 bool NaturalOrder = true;		//Ž©‘R‡
@@ -1526,6 +1527,7 @@ void InitializeGlobal()
 		{_T("HEAD_Mark=\"\""),						(TObject*)&HEAD_Mark},		//‰B‚µÝ’è
 		{_T("PLAY_Mark=\"\""),						(TObject*)&PLAY_Mark},		//‰B‚µÝ’è
 		{_T("SortSymList=\"\""),					(TObject*)&SortSymList},	//‰B‚µÝ’è
+		{_T("SortExtList=\"\""),					(TObject*)&SortExtList},	//‰B‚µÝ’è
 
 		// default = ExePath
 		{_T("DownloadPath=\"%ExePath%\""),			(TObject*)&DownloadPath},
@@ -3029,6 +3031,18 @@ int __fastcall SortComp_Ext(TStringList *List, int Index1, int Index2)
 		else {
 			return SortComp_Name(List, Index1, Index2);
 		}
+	}
+
+	if (!SortExtList.IsEmpty()) {
+		UnicodeString extlst = nrm_FileExt(SortExtList);
+		UnicodeString ext0   = nrm_FileExt(fp0->f_ext);
+		UnicodeString ext1   = nrm_FileExt(fp1->f_ext);
+		if (DscNameOrder) std::swap(ext0, ext1);
+		int p0 = pos_i(ext0, extlst);
+		int p1 = pos_i(ext1, extlst);
+		if (p0>0 && p1>0) return (p0 - p1);
+		if (p0>0) return -1;
+		if (p1>0) return 1;
 	}
 
 	return CompNameFN(fp0->f_ext, fp1->f_ext);
@@ -13616,55 +13630,6 @@ void FlushLog()
 		std::unique_ptr<TStringList> log_buf(new TStringList());
 		log_buf->Text = msg;
 		AddLogStrings(log_buf.get());
-	}
-}
-
-//---------------------------------------------------------------------------
-//•`‰æ‚ÌˆêŽž’âŽ~
-// ‘½dÝ’è‚É‘Î‰ž
-//---------------------------------------------------------------------------
-void set_RedrawOff(TWinControl *cp)
-{
-	int idx = RedrawList->IndexOfObject((TObject*)cp);
-	if (idx==-1) {
-		RedrawList->AddObject("1", (TObject*)cp);
-		cp->Perform(WM_SETREDRAW, 0, (NativeInt)0);
-	}
-	else {
-		int n = RedrawList->Strings[idx].ToIntDef(0);
-		RedrawList->Strings[idx] = IntToStr(n + 1);
-	}
-}
-
-//---------------------------------------------------------------------------
-//•`‰æ’âŽ~‚Ì‰ðœ
-// ‚·‚×‚Ä‰ðœ‚³‚ê‚½‚Æ‚«‚É•`‰æÄŠJ
-//---------------------------------------------------------------------------
-void set_RedrawOn(TWinControl *cp)
-{
-	bool flag = false;
-	int idx = RedrawList->IndexOfObject((TObject*)cp);
-	if (idx!=-1) {
-		//1’iŠK‰ðœ
-		int n = RedrawList->Strings[idx].ToIntDef(0);
-		if (n>0) n--;
-		if (n==0) {
-			//‚·‚×‚Ä‰ðœ‚³‚ê‚½
-			RedrawList->Delete(idx);
-			flag = true;
-		}
-		else {
-			RedrawList->Strings[idx] = IntToStr(n);
-		}
-	}
-	else {
-		flag = true;
-	}
-
-	//•`‰æÄŠJ
-	if (flag) {
-		cp->Perform(WM_SETREDRAW, 1, (NativeInt)0);
-		::InvalidateRect(cp->Handle, NULL, TRUE);
 	}
 }
 

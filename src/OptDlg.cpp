@@ -3439,17 +3439,15 @@ void __fastcall TOptionDlg::KeyFilterEdit_Change(TObject *Sender)
 {
 	UnicodeString kwd = ((TEdit*)Sender)->Text;
 	cursor_Default();
-	set_RedrawOff(CmdComboBox);
-	{
-		CmdComboBox->DroppedDown = false;
-		SetCmdCombo(kwd);
-		if (!kwd.IsEmpty()) {
-			CmdComboBox->DroppedDown = true;
-			CmdComboBox->ItemIndex	 = 0;
-			CmdComboBoxChange(CmdComboBox);
-		}
+	CmdComboBox->LockDrawing();
+	CmdComboBox->DroppedDown = false;
+	SetCmdCombo(kwd);
+	if (!kwd.IsEmpty()) {
+		CmdComboBox->DroppedDown = true;
+		CmdComboBox->ItemIndex	 = 0;
+		CmdComboBoxChange(CmdComboBox);
 	}
-	set_RedrawOn(CmdComboBox);
+	CmdComboBox->UnlockDrawing();
 	Screen->Cursor = crArrow;	//※ドロップダウン時にカーソルが消える現象への対策
 }
 //---------------------------------------------------------------------------

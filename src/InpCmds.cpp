@@ -400,15 +400,13 @@ void __fastcall TInpCmdsDlg::Filter()
 		if (changed) {
 			//裏コンボボックスに割り当て
 			cursor_Default();
-			set_RedrawOff(SubComboBox);
-			{
-				SubComboBox->DroppedDown = false;
-				SubComboBox->Items->Assign(lst.get());
-				SubComboBox->DroppedDown = true;
-				SubComboBox->ItemIndex	 = 0;
-				SubComboBox->Enabled	 = true;
-			}
-			set_RedrawOn(SubComboBox);
+			SubComboBox->LockDrawing();
+			SubComboBox->DroppedDown = false;
+			SubComboBox->Items->Assign(lst.get());
+			SubComboBox->DroppedDown = true;
+			SubComboBox->ItemIndex	 = 0;
+			SubComboBox->Enabled	 = true;
+			SubComboBox->UnlockDrawing();
 			Screen->Cursor = crArrow;	//※ドロップダウン時にカーソルが消える現象への対策
 		}
 	}

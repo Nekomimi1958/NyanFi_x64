@@ -57,7 +57,7 @@ void __fastcall TJsonViewer::WmFormShowed(TMessage &msg)
 
 	ViewBusy  = true;
 	JsonTreeView->SetFocus();
-	set_RedrawOff(JsonTreeView);
+	JsonTreeView->LockDrawing();
 	try {
 		std::unique_ptr<TStringList> fbuf(new TStringList());
 		if (isClip) {
@@ -81,7 +81,7 @@ void __fastcall TJsonViewer::WmFormShowed(TMessage &msg)
 	catch (Exception &e) {
 		ErrMsg = e.Message;
 	}
-	set_RedrawOn(JsonTreeView);
+	JsonTreeView->UnlockDrawing();
 	ViewBusy = false;
 
 	if (!ErrMsg.IsEmpty()) {
@@ -398,12 +398,10 @@ void __fastcall TJsonViewer::StatusBar1DrawPanel(TStatusBar *StatusBar,
 void __fastcall TJsonViewer::ExpandItemClick(TObject *Sender)
 {
 	ViewBusy = true;
-	set_RedrawOff(JsonTreeView);
-	{
-		JsonTreeView->FullExpand();
-		JsonTreeView->TopItem = JsonTreeView->Items->GetFirstNode();
-	}
-	set_RedrawOn(JsonTreeView);
+	JsonTreeView->LockDrawing();
+	JsonTreeView->FullExpand();
+	JsonTreeView->TopItem = JsonTreeView->Items->GetFirstNode();
+	JsonTreeView->UnlockDrawing();
 	ViewBusy = false;
 }
 //---------------------------------------------------------------------------
@@ -539,17 +537,15 @@ void __fastcall TJsonViewer::FindActionUpdate(TObject *Sender)
 void __fastcall TJsonViewer::ExpandActionExecute(TObject *Sender)
 {
 	ViewBusy = true;
-	set_RedrawOff(JsonTreeView);
-	{
-		TTreeNode *sp = JsonTreeView->Selected;
-		TTreeNode *sp0 = sp;
-		while (sp) {
-			sp->Expanded = true;
-			sp = sp->GetNext();
-			if (!sp || sp->Level<=sp0->Level) break;
-		}
+	JsonTreeView->LockDrawing();
+	TTreeNode *sp = JsonTreeView->Selected;
+	TTreeNode *sp0 = sp;
+	while (sp) {
+		sp->Expanded = true;
+		sp = sp->GetNext();
+		if (!sp || sp->Level<=sp0->Level) break;
 	}
-	set_RedrawOn(JsonTreeView);
+	JsonTreeView->UnlockDrawing();
 	ViewBusy = false;
 }
 //---------------------------------------------------------------------------
@@ -611,12 +607,12 @@ void __fastcall TJsonViewer::JsonTreeViewKeyDown(TObject *Sender, WORD &Key, TSh
 					TTreeNode *pp = sp->Parent;
 					if (pp && JsonTreeView->AutoExpand) {
 						ViewBusy = true;
-						set_RedrawOff(JsonTreeView);
+						JsonTreeView->LockDrawing();
 						for (int i=0; i<pp->Count; i++) {
 							TTreeNode *ip = pp->Item[i];
 							ip->Expanded = (ip==sp);
 						}
-						set_RedrawOn(JsonTreeView);
+						JsonTreeView->UnlockDrawing();
 						ViewBusy = false;
 					}
 					else {

@@ -901,6 +901,7 @@ extern bool TopSymbol;
 extern bool SortBoth;
 extern bool SortLogical;
 extern UnicodeString SortSymList;
+extern UnicodeString SortExtList;
 
 extern TStringList *OptionList;
 extern TStringList *KeyFuncList;
@@ -2115,9 +2116,6 @@ void AddLogCr();
 void AddErr_Highlight();
 void AddDebugLog(UnicodeString msg, UnicodeString info = EmptyStr, UnicodeString info2 = EmptyStr);
 void FlushLog();
-
-void set_RedrawOff(TWinControl *cp);
-void set_RedrawOn(TWinControl *cp);
 
 bool __fastcall SpecialKeyProc(TForm *frm, WORD &Key, TShiftState Shift, const _TCHAR *topic = NULL);
 bool __fastcall SpecialKeyProc(TForm *frm, WORD &Key, TShiftState Shift, int hlp_cnt);

@@ -9,15 +9,13 @@ object SortModeDlg: TSortModeDlg
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object MainPanel: TPanel
     Left = 0
     Top = 0
@@ -74,7 +72,7 @@ object SortModeDlg: TSortModeDlg
           Left = 10
           Top = 18
           Width = 218
-          Height = 21
+          Height = 23
           Style = csDropDownList
           TabOrder = 0
         end
@@ -191,33 +189,33 @@ object SortModeDlg: TSortModeDlg
     TabOrder = 1
     object AccDtoTCheckBox: TCheckBox
       Left = 8
-      Top = 224
+      Top = 236
       Width = 234
       Height = 17
       Caption = #26356#26032#26085#26178#12398#12450#12463#12475#12521#12524#12540#12479#12434' T '#12395#22793#26356
-      TabOrder = 1
+      TabOrder = 2
       OnClick = AccDtoTCheckBoxClick
     end
     object SameCloseCheckBox: TCheckBox
       Left = 8
-      Top = 249
+      Top = 261
       Width = 234
       Height = 17
       Caption = #29694#12514#12540#12489#12398#12461#12540#12434#25276#12375#12383#12392#12365#12418#38281#12376#12427
-      TabOrder = 2
+      TabOrder = 3
     end
     object PrimeGroupBox: TGroupBox
       Left = 8
       Top = 8
       Width = 234
-      Height = 192
+      Height = 161
       Caption = #31532'1'#12477#12540#12488#26041#27861
       TabOrder = 0
       object PrimeComboBox: TComboBox
         Left = 10
         Top = 18
         Width = 213
-        Height = 21
+        Height = 23
         Style = csDropDownList
         TabOrder = 0
         OnClick = PrimeComboBoxClick
@@ -249,24 +247,35 @@ object SortModeDlg: TSortModeDlg
     end
     object ExOptCheckBox: TCheckBox
       Left = 8
-      Top = 299
+      Top = 311
       Width = 234
       Height = 17
       Caption = #25313#24373#35373#23450#12434#24120#12395#34920#31034
-      TabOrder = 4
+      TabOrder = 5
     end
     object SortLogicalCheckBox: TCheckBox
       Left = 8
-      Top = 274
+      Top = 286
       Width = 234
       Height = 17
       Caption = #33258#28982#38918#28961#21177#26178#12395#35542#29702#12477#12540#12488
-      TabOrder = 3
+      TabOrder = 4
+    end
+    object ExtListEdit: TLabeledEdit
+      Left = 8
+      Top = 199
+      Width = 234
+      Height = 23
+      EditLabel.Width = 149
+      EditLabel.Height = 15
+      EditLabel.Caption = #25313#24373#23376#38918#12391#20778#20808#12377#12427#25313#24373#23376
+      TabOrder = 1
+      Text = ''
     end
   end
   object ActionList1: TActionList
-    Left = 470
-    Top = 296
+    Left = 166
+    Top = 176
     object ExOptAction: TAction
       Caption = #25313#24373#35373#23450
       OnExecute = ExOptActionExecute

@@ -2000,12 +2000,12 @@ void XCMD_Redraw(UnicodeString prm)
 
 	switch (idx_of_word_i(_T("ON|OFF"), prm)) {
 	case 0:
-		if (tag==-1 || tag==0) set_RedrawOn(FileListPanel[0]);
-		if (tag==-1 || tag==1) set_RedrawOn(FileListPanel[1]);
+		if (tag==-1 || tag==0) FileListPanel[0]->UnlockDrawing();
+		if (tag==-1 || tag==1) FileListPanel[1]->UnlockDrawing();
 		break;
 	case 1:
-		if (tag==-1 || tag==0) set_RedrawOff(FileListPanel[0]);
-		if (tag==-1 || tag==1) set_RedrawOff(FileListPanel[1]);
+		if (tag==-1 || tag==0) FileListPanel[0]->LockDrawing();
+		if (tag==-1 || tag==1) FileListPanel[1]->LockDrawing();
 		break;
 	default:
 		UserAbort(USTR_SyntaxError);

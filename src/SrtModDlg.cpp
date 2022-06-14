@@ -4,6 +4,7 @@
 //----------------------------------------------------------------------//
 #include "Global.h"
 #include "UserFunc.h"
+#include "UserMdl.h"
 #include "SrtModDlg.h"
 
 //---------------------------------------------------------------------------
@@ -19,8 +20,12 @@ __fastcall TSortModeDlg::TSortModeDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::FormCreate(TObject *Sender)
 {
+	UserModule->SetUsrPopupMenu(this);
+
 	set_ComboBoxText(DirSortModeComboBox,
 		_T("ファイルと同じ\n名前\n更新日時\nサイズ\n属性\nディレクトリを区別しない\nアイコン(ファイル:名前/拡張子)\n"));
+
+	ExtListEdit->Hint = LoadUsrMsg(USTR_HintMltFExt);
 }
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::FormShow(TObject *Sender)
@@ -55,13 +60,14 @@ void __fastcall TSortModeDlg::FormShow(TObject *Sender)
 	}
 
 	DirSortModeComboBox->ItemIndex = DirSortMode[CurListTag];
-	NaturalCheckBox->Checked	   = FlOdrNatural[CurListTag];
-	DscNameCheckBox->Checked	   = FlOdrDscName[CurListTag];
-	OldCheckBox->Checked		   = FlOdrOld[CurListTag];
-	SmallCheckBox->Checked		   = FlOdrSmall[CurListTag];
-	DscAttrCheckBox->Checked	   = FlOdrDscAttr[CurListTag];
-	SortBothCheckBox->Checked	   = SortBoth;
+	NaturalCheckBox->Checked       = FlOdrNatural[CurListTag];
+	DscNameCheckBox->Checked       = FlOdrDscName[CurListTag];
+	OldCheckBox->Checked           = FlOdrOld[CurListTag];
+	SmallCheckBox->Checked         = FlOdrSmall[CurListTag];
+	DscAttrCheckBox->Checked       = FlOdrDscAttr[CurListTag];
+	SortBothCheckBox->Checked      = SortBoth;
 	SortLogicalCheckBox->Checked   = SortLogical;
+	ExtListEdit->Text              = SortExtList;
 
 	SortModeRadioGroup->SetFocus();
 	this->Perform(WM_NEXTDLGCTL, 0, (NativeInt)0);
@@ -99,6 +105,7 @@ void __fastcall TSortModeDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		}
 
 		SortLogical = SortLogicalCheckBox->Checked;
+		SortExtList = ExtListEdit->Text;
 	}
 }
 

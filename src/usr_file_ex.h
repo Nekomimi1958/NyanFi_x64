@@ -56,6 +56,7 @@ UnicodeString get_base_name(UnicodeString fnam);
 UnicodeString get_extension(UnicodeString fnam);
 UnicodeString get_extension_if_file(UnicodeString fnam);
 
+UnicodeString nrm_FileExt(UnicodeString fext);
 bool test_FileExt(UnicodeString fext, UnicodeString list);
 bool test_FileExt(UnicodeString fext, const _TCHAR *list);
 bool test_FileExtSize(UnicodeString fext, UnicodeString list, __int64 size);

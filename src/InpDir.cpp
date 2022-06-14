@@ -178,15 +178,13 @@ void __fastcall TInpDirDlg::Filter()
 
 		//裏コンボボックスに割り当て
 		cursor_Default();
-		set_RedrawOff(SubComboBox);
-		{
-			SubComboBox->DroppedDown = false;
-			SubComboBox->Items->Assign(lst.get());
-			SubComboBox->DroppedDown = !CmpByKeyCheckBox->Checked && !InpDirComboBox->Text.IsEmpty();
-			SubComboBox->ItemIndex	 = 0;
-			SubComboBox->Enabled	 = true;
-		}
-		set_RedrawOn(SubComboBox);
+		SubComboBox->LockDrawing();
+		SubComboBox->DroppedDown = false;
+		SubComboBox->Items->Assign(lst.get());
+		SubComboBox->DroppedDown = !CmpByKeyCheckBox->Checked && !InpDirComboBox->Text.IsEmpty();
+		SubComboBox->ItemIndex	 = 0;
+		SubComboBox->Enabled	 = true;
+		SubComboBox->UnlockDrawing();
 		Screen->Cursor = crArrow;	//※ドロップダウン時にカーソルが消える現象への対策
 	}
 	catch (...) {
