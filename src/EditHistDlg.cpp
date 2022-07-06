@@ -577,7 +577,7 @@ void __fastcall TEditHistoryDlg::UpdateList()
 	//履歴
 	else if (HistoryList) {
 		for (int i=0; i<HistoryList->Count; i++) {
-			UnicodeString fnam = get_csv_item(HistoryList->Strings[i], 0); 
+			UnicodeString fnam = get_csv_item(HistoryList->Strings[i], 0);
 			if (OptMode0Action->Checked ||
 			   (OptMode1Action->Checked && StartsText(CurPathName, fnam)) ||
 			   (OptMode2Action->Checked && SameText(CurPathName, ExtractFilePath(fnam))))
@@ -923,7 +923,7 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 	try {
 		//数字キーによるアクセス
 		if (is_Num0to9(KeyStr)) {
-			if (!set_FileName((KeyStr.ToIntDef(0) + 9)%10)) Abort(); 
+			if (!set_FileName((KeyStr.ToIntDef(0) + 9)%10)) Abort();
 			if (isRecent || isRepo) {
 				CmdStr = EmptyStr;
 				ModalResult = mrClose;	//移動

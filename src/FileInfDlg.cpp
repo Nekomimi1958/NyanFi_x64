@@ -344,7 +344,7 @@ bool __fastcall TFileInfoDlg::UpdateInfo()
 				if (FileRec->f_size>=0) {
 					i_lst->Insert(idx++,
 						get_PropTitle(_T("サイズ")).cat_sprintf(_T("%s (%s)"),
-							get_size_str_G(FileRec->f_size, 10, SizeDecDigits, 1).c_str(), 
+							get_size_str_G(FileRec->f_size, 10, SizeDecDigits, 1).c_str(),
 							get_size_str_B(FileRec->f_size, 5).c_str()));
 				}
 				//占有サイズ
@@ -362,7 +362,7 @@ bool __fastcall TFileInfoDlg::UpdateInfo()
 						if (o_size>=0) {
 							i_lst->Insert(idx++,
 								get_PropTitle(_T("占有サイズ")).cat_sprintf(_T("%s (%s)"),
-									get_size_str_G(o_size, 10, SizeDecDigits, 1).c_str(), 
+									get_size_str_G(o_size, 10, SizeDecDigits, 1).c_str(),
 									get_size_str_B(o_size, 5).c_str()));
 						}
 					}

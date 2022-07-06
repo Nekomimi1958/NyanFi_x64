@@ -705,7 +705,7 @@ bool file_exists_wc(
 	UnicodeString mask = ExtractFileName(fnam);
 	if (mask.Pos('*') || mask.Pos('?')) {
 		std::unique_ptr<TStringList> lst(new TStringList());
-		get_files(ExtractFilePath(fnam), mask.c_str(), lst.get()); 
+		get_files(ExtractFilePath(fnam), mask.c_str(), lst.get());
 		fnam = (lst->Count>0)? lst->Strings[0] : EmptyStr;
 	}
 	return file_exists(fnam);
@@ -936,7 +936,7 @@ UnicodeString chk_cre_dir(UnicodeString dnam)
 //---------------------------------------------------------------------------
 //空ディレクトリか？
 //---------------------------------------------------------------------------
-bool is_EmptyDir(UnicodeString dnam, 
+bool is_EmptyDir(UnicodeString dnam,
 	bool no_file)	//true = ファイルが含まれていない(サイズ=0) (default = false);
 {
 	bool e_flag = true;

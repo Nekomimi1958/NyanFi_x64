@@ -315,7 +315,7 @@ int UserArcUnit::ExeCommand(
 	arc_func *fp,
 	UnicodeString cmd,	//コマンド
 	bool large_buf)		//バッファサイズを大きくとる (default = false)
-{ 
+{
 	if (fpAddDebugLog) fpAddDebugLog(fp->Prefix, cmd, EmptyStr);
 
 	DWORD buf_size = large_buf? 1048576 : 4096;
@@ -522,7 +522,7 @@ bool UserArcUnit::UnPack(
 		if		(arc_t==UARCTYP_ZIP || arc_t==UARCTYP_7Z || arc_t==UARCTYP_ISO)
 									 cmd += " -aoa";
 		else if (arc_t==UARCTYP_LHA) cmd += " -jyo";
-		else if (arc_t==UARCTYP_CAB || arc_t==UARCTYP_RAR) 
+		else if (arc_t==UARCTYP_CAB || arc_t==UARCTYP_RAR)
 									 cmd += " -o";
 	}
 

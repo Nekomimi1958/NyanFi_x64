@@ -130,7 +130,7 @@ void __fastcall TFileExtensionDlg::FormShow(TObject *Sender)
 
 	//ヘッダを初期化
 	InitializeListHeader(FextInfHeader, _T("拡張子|ファイル数|合計サイズ|平均サイズ"));
-	FExtSctWd = get_CharWidth(cv, 14, ScaledInt((IconMode==1)? 20 : 0, this));	//" .XXXXXXXXXXXX" 
+	FExtSctWd = get_CharWidth(cv, 14, ScaledInt((IconMode==1)? 20 : 0, this));	//" .XXXXXXXXXXXX"
 	FCntSctWd = get_CharWidth(cv, 10);	//" 9,999,999"
 	SizeSctWd = get_CharWidth(cv, 13);	//" 1999.999 MB "
 	PercSctWd = get_CharWidth(cv,  8);	//" 100.0% "

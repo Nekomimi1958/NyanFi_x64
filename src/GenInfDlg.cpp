@@ -38,7 +38,7 @@ void __fastcall TGeneralInfoDlg::FormCreate(TObject *Sender)
 	isTail		 = isReverse = isFTP = false;
 	fromGitView	 = false;
 	ToFilter	 = ToEnd = false;
-	KeyHandled	 = false; 
+	KeyHandled	 = false;
 	ErrOnly 	 = false;
 	isFiltered	 = false;
 

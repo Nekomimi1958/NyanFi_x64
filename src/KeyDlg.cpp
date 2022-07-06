@@ -181,7 +181,7 @@ void __fastcall TKeyListDlg::KeyTabControlChange(TObject *Sender)
 			gp->Cells[2][i] = get_CmdDesc(cmd, true, NULL,NULL, USAME_TI(id_str, "V:"));
 			gp->Cells[1][i] = del_CmdDesc(cmd);
 		}
-	} 
+	}
 	else {
 		gp->RowCount = 1;
 		clear_GridRow(gp, 0);

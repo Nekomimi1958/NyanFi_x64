@@ -372,7 +372,7 @@ int split_cmd_line(UnicodeString s, TStringList *lst)
 			}
 			else if (c==' ') {
 				if (!lbuf.IsEmpty()) {
-					lst->Add(lbuf); 
+					lst->Add(lbuf);
 					lbuf = EmptyStr;
 				}
 				continue;
@@ -2071,7 +2071,7 @@ const UnicodeString CodePageListX =
 //コードページの名前を取得
 //---------------------------------------------------------------------------
 UnicodeString get_NameOfCodePage(
-	int code_page, 
+	int code_page,
 	bool long_sw,		//true = 長い表示	(default = false)
 	bool has_bom)		//true = BOM付き	(default = false)
 {

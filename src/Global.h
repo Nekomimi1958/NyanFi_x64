@@ -1260,7 +1260,7 @@ struct file_rec {
 	UnicodeString hash;			//ハッシュ/ 画像ハッシュ(類似性ソート)
 	UnicodeString vctr;			//画像:ベクトル(類似性ソート)
 	UnicodeString memo;			//栞マーク一覧:   メモ(内容 \t 設定日時)
-								//リポジトリ一覧: 情報(コミット \t 状態) 
+								//リポジトリ一覧: 情報(コミット \t 状態)
 
 	int  tag;					//0: 左/ 1: 右
 	bool is_up;					//..

@@ -2336,7 +2336,7 @@ private:	// ƒ†[ƒU[éŒ¾
 
 	UnicodeString __fastcall GetCurInfFext(UnicodeString fnam)
 	{
-		return (dir_exists(fnam) || StartsStr('<', fnam)) ? UnicodeString("\\") 
+		return (dir_exists(fnam) || StartsStr('<', fnam)) ? UnicodeString("\\")
 														  : def_if_empty(get_extension(fnam), ".");
 	}
 

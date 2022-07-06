@@ -121,9 +121,8 @@ bool Closing		= false;	//終了処理中
 int  InhReload = 0;				//Reload の抑止
 bool DisReload = false;			//Reload の無効化
 
-bool InhUpdate = false;			//UpdateList 抑止
-
-bool InhCmdHistory = false;		//コマンド履歴の抑止
+bool InhUpdate     = false;  	//UpdateList 抑止
+bool InhCmdHistory = false;  	//コマンド履歴の抑止
 
 UnicodeString FindPath;
 bool FindAborted;				//検索中断要求
@@ -2054,6 +2053,12 @@ void InitializeGlobal()
 			"F:F5=ReloadList\n"
 			"F:Left=ToLeft\n"
 			"F:Right=ToRight\n"
+			"F:Up=CursorUp\n"
+			"F:Down=CursorDown\n"
+			"F:PgUp=PageUp\n"
+			"F:PgDn=PageDown\n"
+			"F:Home=CursorTop\n"
+			"F:End=CursorEnd\n"
 			"F:Space=Select\n"
 			"F:Ctrl+Enter=OpenByApp\n"
 			"F:Shift+O=CurrToOpp\n"
@@ -12781,7 +12786,7 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 //---------------------------------------------------------------------------
 //git.exe を実行
 //---------------------------------------------------------------------------
-bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst, 
+bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst,
 	DWORD *exit_cd, 		//終了コード	(default = NULL)
 	TStringList *w_lst)		//警告			(警告を分離して取得		default = NULL)
 {
@@ -12830,7 +12835,7 @@ bool GitShellExe(UnicodeString prm, UnicodeString wdir)
 //git の出力から警告行を分離して取得(重複削除)
 //---------------------------------------------------------------------------
 void split_GitWarning(
-	TStringList *o_lst,		//出力リスト 
+	TStringList *o_lst,		//出力リスト
 	TStringList *w_lst)		//警告リスト	(default = NULL)
 {
 	int i = 0;

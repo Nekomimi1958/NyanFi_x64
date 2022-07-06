@@ -756,7 +756,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 					catch (...) {
 						illegal = true;
 						ListErrLabel->Caption
-							= UnicodeString().sprintf(_T("リストファイルに不正な行があります(%u)"), j + 1); 
+							= UnicodeString().sprintf(_T("リストファイルに不正な行があります(%u)"), j + 1);
 						break;
 					}
 				}
@@ -1544,7 +1544,7 @@ void __fastcall TRenameDlg::ChgCnvChActionUpdate(TObject *Sender)
 	else if (idx>=9) {
 		if (StartsStr("\\x{", sch) && EndsStr("}", sch))
 			ap->Enabled = chk_RegExPtn(sch);
-		else 
+		else
 			ap->Enabled = (!sch.IsEmpty() && UnicodeString("\\/:*?\"<>|").Pos(sch)==0);
 	}
 }
@@ -1766,7 +1766,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 						//関連拡張子か?
 						UnicodeString fext1 = get_extension(fnam1);
 						bool found = false;
-						UnicodeString opt; 
+						UnicodeString opt;
 						for (int k=0; k<AssRenList->Count; k++) {
 							TStringDynArray itm_buf = get_csv_array(AssRenList->Strings[k], 3, true);
 							if (!equal_1(itm_buf[1])) continue;

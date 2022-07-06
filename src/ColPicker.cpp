@@ -139,7 +139,7 @@ void __fastcall TColorPicker::UpdateStt(int x, int y, float ratio)
 		int h, s, v, l;
 		UnicodeString msg;
 		RgbToHsv(c, &h, &s, &v);
-		msg.sprintf(_T("X%d Y%d (x%d y%d)\nR%d G%d B%d  #%02x%02x%02x\nH%d S%d V%d"), 
+		msg.sprintf(_T("X%d Y%d (x%d y%d)\nR%d G%d B%d  #%02x%02x%02x\nH%d S%d V%d"),
 						(int)(x/ratio + 0.5), (int)(y/ratio + 0.5),  x, y,  r, g, b,  r, g, b,  h, s, v);
 		RgbToHsl(c, &h, &s, &l);
 		msg.cat_sprintf(_T(" / H%d S%d L%d"), h, s, l);

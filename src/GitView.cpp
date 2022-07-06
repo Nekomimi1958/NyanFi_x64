@@ -508,7 +508,7 @@ void __fastcall TGitViewer::UpdateBranchList()
 	int idx = -1;
 	RefHEAD = EmptyStr;
 	std::unique_ptr<TStringList> o_lst(new TStringList());
-	if (GitShellExe("branch", WorkDir, o_lst.get(), NULL, WarnList)) { 
+	if (GitShellExe("branch", WorkDir, o_lst.get(), NULL, WarnList)) {
 		std::unique_ptr<TStringList> lst(new TStringList());
 		lst->AddObject("ブランチ", (TObject *)(NativeInt)(GIT_FLAG_HDRLN|GIT_FLAG_LOCAL));
 		for (int i=0; i<o_lst->Count; i++) {
@@ -525,7 +525,7 @@ void __fastcall TGitViewer::UpdateBranchList()
 	//リモート
 	if (ShowRBranchAction->Checked) {
 		o_lst->Clear();
-		if (GitShellExe("branch -r", WorkDir, o_lst.get(), NULL, WarnList)) { 
+		if (GitShellExe("branch -r", WorkDir, o_lst.get(), NULL, WarnList)) {
 			std::unique_ptr<TStringList> lst(new TStringList());
 			lst->AddObject(EmptyStr, (TObject *)(NativeInt)GIT_FLAG_BLANK);
 			lst->AddObject("リモート", (TObject *)(NativeInt)(GIT_FLAG_HDRLN|GIT_FLAG_REMOTE));
@@ -542,7 +542,7 @@ void __fastcall TGitViewer::UpdateBranchList()
 	//タグ
 	if (ShowTagAction->Checked) {
 		o_lst->Clear();
-		if (GitShellExe("tag", WorkDir, o_lst.get(), NULL, WarnList)) { 
+		if (GitShellExe("tag", WorkDir, o_lst.get(), NULL, WarnList)) {
 			//コミット一覧にあるタグのリストを作成
 			std::unique_ptr<TStringList> tag_lst(new TStringList());
 			for (int i=0; i<CommitListBox->Count; i++) {
@@ -1205,7 +1205,7 @@ void __fastcall TGitViewer::SetTagActionExecute(TObject *Sender)
 void __fastcall TGitViewer::SetTagActionUpdate(TObject *Sender)
 {
 	((TAction *)Sender)->Visible =
-		BranchListBox->Focused()? !GetCurBranchName(true, true).IsEmpty() : 
+		BranchListBox->Focused()? !GetCurBranchName(true, true).IsEmpty() :
 		CommitListBox->Focused()? !CommitID.IsEmpty() : false;
 }
 

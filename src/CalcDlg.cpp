@@ -110,7 +110,7 @@ void __fastcall TCalculator::InitUsrDef()
 	def_file->ReadSection("Function", FuncList);
 
 	//’è”
-	ConstList->Text = 
+	ConstList->Text =
 		"pi=3.14159265358979323846	‰~Žü—¦\n"
 		"e=2.71828182845904523536	Ž©‘R‘Î”‚Ì’ê\n"
 		"c=299792458	^‹ó’†‚ÌŒõ‘¬“x [m*sec^-1]\n"

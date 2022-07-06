@@ -169,7 +169,7 @@ void __fastcall TInspectForm::UpdateValue()
 				unsigned char c = Bytes[i];
 				hstr.cat_sprintf(_T(" %02X"), c);
 				if (isprint(c))
-					astr.cat_sprintf(_T("%c"), c); 
+					astr.cat_sprintf(_T("%c"), c);
 				else
 					astr += ".";
 			}
@@ -239,7 +239,7 @@ void __fastcall TInspectForm::UpdateValue()
 		//int64 ‚ÉƒJƒ“ƒ}‘}“ü
 		int n = vstr.Length();
 		if (StartsStr('-', vstr)) n--;
-		for (int j=4,p=2; j<20 && j<=n; j+=3,p+=4) vstr.Insert(",", vstr.Length() - p); 
+		for (int j=4,p=2; j<20 && j<=n; j+=3,p+=4) vstr.Insert(",", vstr.Length() - p);
 		gp->Cells[1][3] = vstr;
 
 		//double

@@ -218,7 +218,7 @@ void __fastcall TSameNameDlg::RenameEditKeyDown(TObject *Sender, WORD &Key, TShi
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 	if (equal_UP(KeyStr))	 {
 		Mode3Btn->SetFocus();
-		Key = 0; 
+		Key = 0;
 	}
 	else if (equal_DOWN(KeyStr)) {
 		AllCheckBox->SetFocus();

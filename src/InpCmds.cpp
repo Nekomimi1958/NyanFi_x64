@@ -215,7 +215,7 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	}
 	else if (equal_DEL(KeyStr)) {
 		UnicodeString kwd = cp_inp->Text;
-		int p = pos_r_q_colon(kwd); 
+		int p = pos_r_q_colon(kwd);
 		UnicodeString wd = (p>0)? kwd.SubString(p + 1, kwd.Length() - p) : kwd;
 		//パラメータなしならコマンドごと削除
 		if (!ContainsStr(wd, "_")) {
@@ -334,7 +334,7 @@ void __fastcall TInpCmdsDlg::SubComboBoxClick(TObject *Sender)
 {
 	UnicodeString wd = get_tkn(SubComboBox->Text, ' ');
 	UnicodeString lbuf = CmdsComboBox->Text;
-	int p = pos_r_q_colon(lbuf); 
+	int p = pos_r_q_colon(lbuf);
 	lbuf = (p>0)? (lbuf.SubString(1, p) + " ") : EmptyStr;
 	lbuf += wd;
 
@@ -365,7 +365,7 @@ void __fastcall TInpCmdsDlg::Filter()
 		return;
 	}
 
-	int p = pos_r_q_colon(kwd); 
+	int p = pos_r_q_colon(kwd);
 	if (p>0) kwd = Trim(kwd.Delete(1, p));
 
 	std::unique_ptr<TStringList> lst(new TStringList());

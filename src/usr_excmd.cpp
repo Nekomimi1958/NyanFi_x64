@@ -1218,7 +1218,7 @@ void XCMD_Set(UnicodeString prm)
 		if (t_flag==-1) {
 			try {
 				//êÆêîââéZ
-				if (!vstr.IsEmpty() && !nstr.IsEmpty()) { 
+				if (!vstr.IsEmpty() && !nstr.IsEmpty()) {
 					int v = vstr.ToInt();
 					int n = nstr.ToInt();
 					if (USAME_TS(opstr, "/=") && n==0) SysErrAbort(DISP_E_DIVBYZERO);
@@ -1763,7 +1763,7 @@ void XCMD_Sleep(UnicodeString prm)
 //---------------------------------------------------------------------------
 void XCMD_Timer(UnicodeString prm)
 {
-	XCMD_tim_cnt = 0; 
+	XCMD_tim_cnt = 0;
 	XCMD_tim_t	 = 0;
 
 	if (!prm.IsEmpty()) {
@@ -1781,7 +1781,7 @@ void XCMD_Timer(UnicodeString prm)
 			if (CompareDateTime(Now(), XCMD_tim_t)==GreaterThanValue) XCMD_tim_t = IncDay(XCMD_tim_t, 1);
 		}
 		//éûä‘
-		else { 
+		else {
 			int ms = param_to_mSec(prm);
 			if (ms<=0) UserAbort(USTR_SyntaxError);
 			XCMD_tim_cnt   = ms;

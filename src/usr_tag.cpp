@@ -603,7 +603,7 @@ void TagManager::SetColor(UnicodeString tag, TColor col)
 	int idx = TagColList->IndexOfName(tag);
 	if (idx!=-1)
 		TagColList->ValueFromIndex[idx] = tmp.sprintf(_T("%d"), col);
-	else 
+	else
 		TagColList->Add(tmp.sprintf(_T("%s=%d"), tag.c_str(), col));
 }
 //---------------------------------------------------------------------------

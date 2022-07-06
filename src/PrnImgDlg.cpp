@@ -93,7 +93,7 @@ void __fastcall TPrintImgDlg::PageControl1DrawTab(TCustomTabControl *Control,
 //---------------------------------------------------------------------------
 void __fastcall TPrintImgDlg::OptionChanged(TObject *Sender)
 {
-	Printer()->Orientation = OriHBtn->Checked? poLandscape : poPortrait; 
+	Printer()->Orientation = OriHBtn->Checked? poLandscape : poPortrait;
 	UpdatePreview();
 }
 //---------------------------------------------------------------------------

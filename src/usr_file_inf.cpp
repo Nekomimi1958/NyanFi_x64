@@ -964,7 +964,7 @@ bool get_PngInf(
 			if (USAME_TS(name, "IHDR")) {
 				//サイズ
 				int iw = fsRead_int4(fs.get(), true);
-				int ih = fsRead_int4(fs.get(), true); 
+				int ih = fsRead_int4(fs.get(), true);
 				lst->Add(get_img_size_str(iw, ih));
 				if (i_wd && i_hi) { *i_wd = iw; *i_hi = ih; }
 				//ビット深度
@@ -1664,7 +1664,7 @@ void get_AppInf(
 			unsigned int   ui_buf;
 			fs->ReadBuffer(&us_buf, 2);
 			if (us_buf!=0x5a4d) {	//"MZ"
-				if (test_AppInfExt(get_extension(fnam))) warn_msg = LoadUsrMsg(USTR_IllegalFormat); 
+				if (test_AppInfExt(get_extension(fnam))) warn_msg = LoadUsrMsg(USTR_IllegalFormat);
 				Abort();
 			}
 

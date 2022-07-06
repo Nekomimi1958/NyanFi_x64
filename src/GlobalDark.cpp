@@ -577,7 +577,7 @@ bool msgbox_Sure(UnicodeString msg, bool ask, bool center)
 
 	Screen->MessageFont->Assign(Application->DefaultFont);
 	TMsgDlgButtons opt = TMsgDlgButtons() << mbYes << mbNo;
-	if (SureCancel) opt << mbCancel; 
+	if (SureCancel) opt << mbCancel;
 	TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation, opt, SureDefNo? mbNo : mbYes);
 	SetDarkWinTheme(MsgDlg);
 
@@ -606,7 +606,7 @@ int msgbox_SureAll(UnicodeString msg, bool &app_chk, bool center)
 {
 	Screen->MessageFont->Assign(Application->DefaultFont);
 	TForm *MsgDlg = CreateMessageDialog(msg, mtConfirmation,
-						TMsgDlgButtons() << mbYes << mbNo << mbCancel, 
+						TMsgDlgButtons() << mbYes << mbNo << mbCancel,
 						SureDefNo? mbNo : mbYes);
 
 	//「すべてに適用」チェックボックスを追加

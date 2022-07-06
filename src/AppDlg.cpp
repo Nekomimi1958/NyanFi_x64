@@ -321,7 +321,7 @@ void __fastcall TAppListDlg::WMDropFiles(TWMDropFiles &msg)
 			//コピー
 			if (f_list->Count>0) {
 				for (int i=0; i<f_list->Count; i++) {
-					fnam = f_list->Strings[i]; 
+					fnam = f_list->Strings[i];
 					if (!copy_File(fnam, CurLaunchPath + ExtractFileName(fnam))) UserAbort(USTR_FaildCopy);
 				}
 				UpdateLaunchList(CurLaunchPath + ExtractFileName(f_list->Strings[0]));
@@ -545,7 +545,7 @@ void __fastcall TAppListDlg::UpdateAppList()
 
 				//コマンドライン
 				HINSTANCE hNtDll = ::GetModuleHandle(_T("ntdll.dll"));
-				NTSTATUS (NTAPI* lpfNtQueryInformationProcess)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG) = 
+				NTSTATUS (NTAPI* lpfNtQueryInformationProcess)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG) =
 					(NTSTATUS (NTAPI*)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG))::GetProcAddress(hNtDll, "NtQueryInformationProcess");
 				ULONG (NTAPI* lpfRtlNtStatusToDosError)(NTSTATUS) =
 					(ULONG (NTAPI*)(NTSTATUS))::GetProcAddress(hNtDll, "RtlNtStatusToDosError");
@@ -964,7 +964,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 
 	//最小化マーク
 	if (::IsIconic(ap->WinHandle)) {
-		TRect rc(xp + ScaledInt(22, this), Rect.Top + ScaledInt(24, this), 
+		TRect rc(xp + ScaledInt(22, this), Rect.Top + ScaledInt(24, this),
 				 xp + ScaledInt(34, this), Rect.Top + ScaledInt(36, this));
 		cv->Brush->Color = scl_BtnFace;
 		cv->FillRect(rc);
@@ -1434,7 +1434,7 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 		add_PropLine(_T("パラメータ"),	c_ap->CmdParam,	i_lst.get());
 
 		i_lst->Add(get_img_size_str(c_ap->win_wd, 	c_ap->win_hi, "画面サイズ"));
-		tmp.sprintf(_T("(%d, %d) - (%d, %d)"), 
+		tmp.sprintf(_T("(%d, %d) - (%d, %d)"),
 			c_ap->win_left, c_ap->win_top, c_ap->win_left + c_ap->win_wd, c_ap->win_top + c_ap->win_hi);
 		add_PropLine(_T("矩形"),		tmp,	i_lst.get()),
 		add_PropLine(_T("開始タイム"),	format_DateTime(c_ap->StartTime),	i_lst.get());

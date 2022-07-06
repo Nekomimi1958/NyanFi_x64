@@ -23,7 +23,7 @@ void make_KeyList(TStrings *lst)
 	for (int i=0; i<10; i++) klst->Add(itmbuf.sprintf(_T("%c"), '0' + i));	//”š
 
 	for (int i=0; i<12; i++) klst->Add(itmbuf.sprintf(_T("F%u"), i + 1));	//FƒL[
-	klst->Text += "Del\nIns\nBkSp\nLeft\nRight\nUP\nDown\nPgUp\nPgDn\nHome\nEnd\nPause\nTab\nEsc\nEnter\nSpace\nApp\n";
+	klst->Text += "Del\nIns\nBkSp\nLeft\nRight\nUp\nDown\nPgUp\nPgDn\nHome\nEnd\nPause\nTab\nEsc\nEnter\nSpace\nApp\n";
 
 	if (is_JpKeybd())
 		klst->Text += "-\n^\n\\\n@\n[\n;\n:\n]\n,\n.\n/\n_\n";		//JP

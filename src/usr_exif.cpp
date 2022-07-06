@@ -916,7 +916,7 @@ bool Exif_GetImgSize(TStringList *lst, UnicodeString fext, unsigned int *w, unsi
 	}
 
 	//•ûŒü
-	if (!test_FileExt(fext, _T(".3fr"))) { 
+	if (!test_FileExt(fext, _T(".3fr"))) {
 		int ori = get_ListIntVal(lst, _T("274"));
 		if (ori==6 || ori==8) std::swap(w_str, h_str);
 	}

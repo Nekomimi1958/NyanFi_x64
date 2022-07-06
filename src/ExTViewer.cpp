@@ -406,7 +406,7 @@ void __fastcall TExTxtViewer::CancelKeySeq()
 //！失敗したら EAbort 例外
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::DirectTagJumpCore(
-	bool is_edit,			//true = 編集/ false = 閲覧	(default = false) 
+	bool is_edit,			//true = 編集/ false = 閲覧	(default = false)
 	UnicodeString prm)		//単語指定					(default = EmptyStr)
 {
 	UnicodeString tnam = prm.IsEmpty()? ExViewer->GetCurWord() : prm;
@@ -465,7 +465,7 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 	}
 
 	AddCmdHistory(cmd, ActionParam, "V",
-		!ExViewer->FileName.IsEmpty()? ExViewer->FileName : 
+		!ExViewer->FileName.IsEmpty()? ExViewer->FileName :
 					 ExViewer->isClip? UnicodeString("<クリップボード>")
 					 				 : UnicodeString("<タスクログ>"));
 

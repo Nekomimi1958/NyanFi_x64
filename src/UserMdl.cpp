@@ -283,7 +283,7 @@ void __fastcall TUserModule::ListBoxDragOver(TObject *Sender, TObject *Source, i
 	}
 	else if (Y>(ch - (ih - 4))) {
 		//下へスクロール
-		ScrollTimer->Interval = 100; 
+		ScrollTimer->Interval = 100;
 		ScrollTimer->Tag	  = (Y>=ch)? 2 : 1;
 		ScrollTimer->Enabled  = true;
 	}
@@ -337,7 +337,7 @@ void __fastcall TUserModule::ScrollTimerTimer(TObject *Sender)
 //リストボックスの項目に対するキー操作 (移動、削除)
 //---------------------------------------------------------------------------
 bool __fastcall TUserModule::ListBoxOpeItem(UnicodeString keystr)
-{ 
+{
 	switch (idx_of_word_i(_T("Shift+Ctrl+DOWN|Shift+Ctrl+UP|DEL"), keystr)) {
 	case  0: DownListItemAction->Execute();	break;
 	case  1: UpListItemAction->Execute();	break;

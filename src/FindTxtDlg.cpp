@@ -39,7 +39,7 @@ void __fastcall TFindTextDlg::FormCreate(TObject *Sender)
 		_T("UTF-8\n"));
 
 	fromTV = false;
-	KeyHandled= false; 
+	KeyHandled= false;
 }
 
 //---------------------------------------------------------------------------
@@ -67,7 +67,7 @@ void __fastcall TFindTextDlg::FormShow(TObject *Sender)
 		FindComboBox->Text = GeneralInfoDlg->FindWord;
 	}
 
-	((IniFile->ReadIntGen(_T("FindTxtDlgUpDown"), 1)==1)? DownRadioBtn : UpRadioBtn)->Checked = true; 
+	((IniFile->ReadIntGen(_T("FindTxtDlgUpDown"), 1)==1)? DownRadioBtn : UpRadioBtn)->Checked = true;
 
 	BytesCheckBox->Checked		= IniFile->ReadBoolGen(_T("FindTxtDlgBytes"));
 	HighlightCheckBox->Checked	= IniFile->ReadBoolGen(_T("FindTxtDlgHighlight"));
