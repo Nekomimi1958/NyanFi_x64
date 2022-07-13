@@ -2270,9 +2270,10 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 	//キー
 	//----------------------
 	if (Msg.message==WM_KEYDOWN) {
-		WORD Key = Msg.wParam;
-		TShiftState   Shift   = get_Shift();
-		UnicodeString KeyStrK = get_KeyStr(Key);
+		WORD          Key      = Msg.wParam;
+		TShiftState   Shift    = get_Shift();
+		UnicodeString KeyStrK  = get_KeyStr(Key);
+		UnicodeString KeyStr   = get_KeyStr(Key, Shift);
 
 		//ファンクションキーバーの更新
 		if (KeyStrK.IsEmpty()) {
@@ -2280,7 +2281,6 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 			return;
 		}
 
-		UnicodeString KeyStr = get_ShiftStr(Shift) + KeyStrK;
 		ClearNopStt();
 
 		//ファイラー
@@ -2348,13 +2348,17 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 					case VK_NEXT:	ExeCmdAction(PageDownAction);	break;
 					case VK_HOME:	ExeCmdAction(CursorTopAction);	break;
 					case VK_END:	ExeCmdAction(CursorEndAction);	break;
-					case VK_TAB:	if (!TabFocusSubWin)
-										ExeCmdAction((fl_tag==0)? ToRightAction : ToLeftAction);
+					case VK_TAB:	if (fl_tag==0) 
+										ExeCmdAction(ToRightAction);
 									else
 										Handled = false;
 									break;
 					default:		Handled = false;
 					}
+				}
+				else if (SameText(KeyStr, "Shift+TAB") && fl_tag==1) {
+					ExeCmdAction(ToLeftAction);
+					Handled = true;
 				}
 			}
 			//TListBox のインクリメンタルサーチを回避
@@ -2443,21 +2447,33 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 			Handled = true;
 
 			//別テキストビュアーから
-			if (ex_tv)
+			if (ex_tv) {
 				SetFocus();
-			//ログ
-			else if (pCtrl==LogListBox)
+			}
+			//テキストプレビュー/ファイル情報/ログ
+			else if (
+				(pCtrl==TxtPrvListBox && !TxtTailListPanel->Visible && !InfListPanel->Visible && !LogPanel->Visible) ||
+				(pCtrl==TxtTailListBox && !InfListPanel->Visible && !LogPanel->Visible) ||
+				(pCtrl==InfListBox && !LogPanel->Visible) ||
+				(pCtrl==LogListBox))
+			{
 				ExeCmdAction(ToLeftAction);
+				ExeCmdAction(ToLeftAction);
+			}
 			//キー一覧
-			else if (pCtrl==KeyListDlg->KeyListGrid)
+			else if (pCtrl==KeyListDlg->KeyListGrid) {
 				KeyListDlg->FilterEdit->SetFocus();
-			else if (pCtrl==KeyListDlg->FilterEdit)
+			}
+			else if (pCtrl==KeyListDlg->FilterEdit) {
 				KeyListDlg->KeyListGrid->SetFocus();
+			}
 			//コマンドファイル一覧
-			else if (pCtrl==CmdFileListDlg->CmdFileGrid)
+			else if (pCtrl==CmdFileListDlg->CmdFileGrid) {
 				CmdFileListDlg->FilterEdit->SetFocus();
-			else if (pCtrl==CmdFileListDlg->FilterEdit)
+			}
+			else if (pCtrl==CmdFileListDlg->FilterEdit) {
 				CmdFileListDlg->CmdFileGrid->SetFocus();
+			}
 			//関数一覧
 			else if (pCtrl==FuncListDlg->FuncListBox) {
 				if (FuncListDlg->ListMode==1)
@@ -2465,24 +2481,41 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 				else
 					FuncListDlg->FilterEdit->SetFocus();
 			}
-			else if (pCtrl==FuncListDlg->FilterEdit)
+			else if (pCtrl==FuncListDlg->FilterEdit) {
 				FuncListDlg->FuncListBox->SetFocus();
+			}
 			//最近編集/閲覧したファイル一覧/栞マーク一覧
-			else if (pCtrl==EditHistoryDlg->EditHistGrid && EditHistoryDlg->OpeToolBar->Visible)
+			else if (pCtrl==EditHistoryDlg->EditHistGrid && EditHistoryDlg->OpeToolBar->Visible) {
 				EditHistoryDlg->FilterEdit->SetFocus();
-			else if (pCtrl==EditHistoryDlg->FilterEdit)
+			}
+			else if (pCtrl==EditHistoryDlg->FilterEdit) {
 				EditHistoryDlg->EditHistGrid->SetFocus();
+			}
 			//一覧ダイアログ
-			else if (pCtrl==GeneralInfoDlg->GenListBox)
+			else if (pCtrl==GeneralInfoDlg->GenListBox) {
 				GeneralInfoDlg->FilterEdit->SetFocus();
-			else if (pCtrl==GeneralInfoDlg->FilterEdit)
+			}
+			else if (pCtrl==GeneralInfoDlg->FilterEdit) {
 				GeneralInfoDlg->GenListBox->SetFocus();
+			}
 			//特殊フォルダ一覧
-			else if (RegDirDlg && RegDirDlg->IsSpecial && pCtrl==RegDirDlg->RegDirListBox)
+			else if (RegDirDlg && RegDirDlg->IsSpecial && pCtrl==RegDirDlg->RegDirListBox) {
 				RegDirDlg->FilterEdit->SetFocus();
-			else if (RegDirDlg && RegDirDlg->IsSpecial && pCtrl==RegDirDlg->FilterEdit)
+			}
+			else if (RegDirDlg && RegDirDlg->IsSpecial && pCtrl==RegDirDlg->FilterEdit) {
 				RegDirDlg->RegDirListBox->SetFocus();
+			}
 			else Handled = false;
+		}
+		//Shift+TABキーの処理(フォーカス移動)
+		else if (SameText(KeyStr, "Shift+TAB")) {
+			if ((pCtrl==TxtPrvListBox) ||
+				(pCtrl==InfListBox && !TxtPrvListPanel->Visible) ||
+				(pCtrl==LogListBox && !InfListPanel->Visible && !TxtPrvListPanel->Visible))
+			{
+				ExeCmdAction(ToRightAction);
+				Handled = true;
+			}
 		}
 		//アプリケーションキーの処理(エディット/コンボボックスのメニュー表示)
 		//※Shift+F10は拾えない
@@ -10812,6 +10845,7 @@ void __fastcall TNyanFiForm::FileListBoxMouseDown(TObject *Sender, TMouseButton 
 
 	LastIndex[CurListTag] = lp->ItemIndex;
 	lp->Repaint();
+	
 	SetDriveInfo();
 	SetFileInf();
 }
@@ -25460,10 +25494,12 @@ void __fastcall TNyanFiForm::ToExViewerActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ToLeftActionExecute(TObject *Sender)
 {
+	bool changed = (CurListTag==1);
 	InvalidateFileList(1);
 	FileListBox[0]->SetFocus();
 	if (GetSelCount(GetCurList())>0) InvalidateFileList(0);
 	ListBoxSetIndex(FileListBox[0], FileListBox[0]->ItemIndex);
+	if (changed) SetFileInf();
 }
 
 //---------------------------------------------------------------------------
@@ -25729,10 +25765,12 @@ void __fastcall TNyanFiForm::ToNextOnRightActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ToRightActionExecute(TObject *Sender)
 {
+	bool changed = (CurListTag==0);
 	InvalidateFileList(0);
 	FileListBox[1]->SetFocus();
 	if (GetSelCount(GetCurList())>0) InvalidateFileList(1);
 	ListBoxSetIndex(FileListBox[1], FileListBox[1]->ItemIndex);
+	if (changed) SetFileInf();
 }
 
 //---------------------------------------------------------------------------

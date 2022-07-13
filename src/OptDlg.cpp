@@ -655,7 +655,6 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	LoopFlCsrCheckBox->Tag		= (int)&LoopFilerCursor;
 	FlCsrVisiCheckBox->Tag		= (int)&FlCursorVisible;
 	AutoCompCheckBox->Tag		= (int)&AutoCompComboBox;
-	TabFocusCheckBox->Tag		= (int)&TabFocusSubWin;
 	AutoHotkeyCheckBox->Tag 	= (int)&MenuAutoHotkey;
 	EscHelpCheckBox->Tag		= (int)&EscapeHelp;
 	InhAltMenuCheckBox->Tag 	= (int)&InhbitAltMenu;
@@ -4830,4 +4829,3 @@ void __fastcall TOptionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 	}
 }
 //---------------------------------------------------------------------------
-

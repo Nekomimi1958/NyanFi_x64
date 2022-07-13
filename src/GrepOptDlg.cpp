@@ -48,14 +48,14 @@ void __fastcall TGrepExOptDlg::FormCreate(TObject *Sender)
 
 	//ドロップターゲットを設定
 	usr_SH->AddTargetList(this, AppNameEdit);
-
-	SetDarkWinTheme(this);
-	SampleMemo->Color		= get_WinColor();
-	SampleMemo->Font->Color = get_TextColor();
 }
 //---------------------------------------------------------------------------
 void __fastcall TGrepExOptDlg::FormShow(TObject *Sender)
 {
+	SetDarkWinTheme(this);
+	SampleMemo->Color		= get_WinColor();
+	SampleMemo->Font->Color = get_TextColor();
+
 	//タグを用いてコントロールに値を設定
 	BringOptionByTag(this);
 

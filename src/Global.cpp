@@ -194,7 +194,6 @@ bool ExtSaveDirHist;			//全体履歴を別ファイルに保存
 bool LoopFilerCursor;			//ファイラーでカーソルをループ移動
 bool FlCursorVisible;			//ファイラーでカーソルを常に可視領域に
 bool AutoCompComboBox;			//コンボボックス入力を自動補完
-bool TabFocusSubWin;			//TABキーでサブウィンドウへ
 bool DialogCenter;				//ダイアログをメイン画面の中央に
 bool MenuAutoHotkey;			//メニューのアクセラレータキーを自動調整
 bool EscapeHelp;				//ESCキーでヘルプを閉じる
@@ -1201,6 +1200,7 @@ void InitializeGlobal()
 	mute_Volume("GET");	//ミュート状態を取得
 
 	//廃止セクション、キーの削除、修正
+	IniFile->DeleteKey( SCT_Option,  "TabFocusSubWin");				//v15.20
 	IniFile->DeleteKey( SCT_Option,  "RestoreComboBox");			//v15.10
 	IniFile->ReplaceKey(SCT_General, "SortSymbol", "SortLogical");	//v14.93
 	IniFile->ReplaceKey(SCT_General, "DrvGrpah", "DrvGraph");		//v14.77
@@ -1695,7 +1695,6 @@ void InitializeGlobal()
 		{_T("LoopFilerCursor=false"),		(TObject*)&LoopFilerCursor},
 		{_T("FlCursorVisible=false"),		(TObject*)&FlCursorVisible},
 		{_T("AutoCompComboBox=true"),		(TObject*)&AutoCompComboBox},
-		{_T("TabFocusSubWin=false"),		(TObject*)&TabFocusSubWin},
 		{_T("DialogCenter=false"),			(TObject*)&DialogCenter},
 		{_T("SelectByMouse=false"),			(TObject*)&SelectByMouse},
 		{_T("SelectBaseOnly=false"),		(TObject*)&SelectBaseOnly},

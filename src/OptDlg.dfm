@@ -546,14 +546,6 @@ object OptionDlg: TOptionDlg
           Caption = 'Alt'#12461#12540#12391#12513#12491#12517#12540#12395#31227#12425#12394#12356
           TabOrder = 5
         end
-        object TabFocusCheckBox: TCheckBox
-          Left = 220
-          Top = 95
-          Width = 200
-          Height = 17
-          Caption = 'TAB'#12461#12540#12391#12469#12502#12454#12451#12531#12489#12454#12408
-          TabOrder = 7
-        end
       end
       object RecentGroupBox: TGroupBox
         Left = 460

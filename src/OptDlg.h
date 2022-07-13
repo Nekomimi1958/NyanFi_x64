@@ -313,7 +313,6 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *RegWkCsrPosCheckBox;
 	TCheckBox *ReloadActCheckBox;
 	TCheckBox *RemoveCdRoCheckBox;
-	TCheckBox *TabFocusCheckBox;
 	TCheckBox *RevTagColCheckBox;
 	TCheckBox *RotViewImgCheckBox;
 	TCheckBox *RstViewLnCheckBox;

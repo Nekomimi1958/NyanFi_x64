@@ -372,7 +372,6 @@ extern bool ExtSaveDirHist;
 extern bool LoopFilerCursor;
 extern bool FlCursorVisible;
 extern bool AutoCompComboBox;
-extern bool TabFocusSubWin;
 extern bool DialogCenter;
 extern bool MenuAutoHotkey;
 extern bool EscapeHelp;

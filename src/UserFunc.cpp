@@ -65,32 +65,21 @@ void set_window_pos_ex(HWND hWnd, TRect rc)
 }
 
 //---------------------------------------------------------------------------
-//ダイアログが複数画面にまたがる場合、メイン/アクティブ画面の中央に表示
-//---------------------------------------------------------------------------
-void set_DlgPosition(TForm *fp)
-{
-	TRect mon_rc = Application->MainForm->Monitor->BoundsRect;
-	if (Screen->ActiveForm && Screen->ActiveForm!=Application->MainForm) {
-		TRect dlg_rc = Screen->ActiveForm->BoundsRect.CenteredRect(fp->BoundsRect);
-		if (mon_rc.Contains(dlg_rc)) {
-			fp->Position   = poDesigned;
-			fp->BoundsRect = dlg_rc;
-		}
-		else {
-			fp->Position = poScreenCenter;
-		}
-	}
-	else {
-		TRect dlg_rc = Application->MainForm->BoundsRect.CenteredRect(fp->BoundsRect);
-		fp->Position = mon_rc.Contains(dlg_rc)? poMainFormCenter : poScreenCenter;
-	}
-}
-//---------------------------------------------------------------------------
-//ダイアログを表示 (複数画面に対処)
+//ダイアログを表示
+//	複数モニタにまたがる場合メインモニタの中央に移動
+//  それ以外は呼び出し元画面の中央
 //---------------------------------------------------------------------------
 int show_ModalDlg(TForm *fp)
 {
-	set_DlgPosition(fp);
+	fp->Position = poDesigned;
+	//※Position で切り替えると一部のダークモードが解除されてしまうので BoundsRect を変更
+	TRect dlg_rc = (Screen->ActiveForm && Screen->ActiveForm!=Application->MainForm)?
+						Screen->ActiveForm->BoundsRect.CenteredRect(fp->BoundsRect) :
+					 Application->MainForm->BoundsRect.CenteredRect(fp->BoundsRect);
+	TRect mon_rc = Application->MainForm->Monitor->BoundsRect;
+	if (!mon_rc.Contains(dlg_rc)) dlg_rc = mon_rc.CenteredRect(dlg_rc);
+	fp->BoundsRect = dlg_rc;
+
 	return fp->ShowModal();
 }
 
