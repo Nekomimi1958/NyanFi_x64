@@ -598,6 +598,23 @@ void XCMD_set_Var(const _TCHAR *name, int v)
 }
 
 //---------------------------------------------------------------------------
+bool XCMD_TestDelParam(UnicodeString prm)
+{
+	TStringDynArray lst = split_strings_semicolon(XCMD_prm);
+	int idx = -1;
+	for (int i=0; i<lst.Length && idx==-1; i++) if (SameText(prm, lst[i])) idx = i;
+
+	//該当パラメータがあったら削除
+	if (idx!=-1) {
+		UnicodeString lbuf;
+		for (int i=0; i<lst.Length; i++) if (i!=idx) cat_str_semicolon(lbuf, lst[i]);
+		XCMD_prm = lbuf;
+	}
+
+	return (idx!=-1);
+}
+
+//---------------------------------------------------------------------------
 //コマンドリストを追加
 //---------------------------------------------------------------------------
 ExeCmdsList *XCMD_AddCmdsList(UnicodeString cmds, bool is_call)

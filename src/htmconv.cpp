@@ -352,7 +352,9 @@ UnicodeString HtmConv::RefEntity(UnicodeString s)
 						int cn = s.SubString(p0, p - p0).ToIntDef(0);
 						p0 -= 2;
 						s.Delete(p0, p - p0 + 1);
-						if (cn>=32 && cn<65535)
+						if (ToMarkdown && (cn==60 || cn==62))
+							s.Insert((cn==60)? "&lt;" : "&gt;", p0);
+						else if (cn>=32 && cn<65535)
 							s.Insert((WideChar)cn, p0);
 						else
 							s.Insert("?", p0);
@@ -385,7 +387,19 @@ void HtmConv::FlushText(UnicodeString s)
 
 	if (!Skip) {
 		if (!fXMP) s = RefEntity(s);
-		TxtBuf->Add(s);
+
+		if (s.IsEmpty()) {
+			TxtBuf->Add(EmptyStr);
+		}
+		else {
+			if (!fPRE && !fXMP && ToMarkdown) {
+				//改行(半角スペース×2)を付加
+				if (!TRegEx::IsMatch(s, NO_CRSPC_PTN)) s += "  ";
+			}
+			//引用
+			if (BQ_level>0) s = StringOfChar(_T('>'), BQ_level) + s;
+			TxtBuf->Add(s);
+		}
 	}
 
 	TxtLineBuf = EmptyStr;
@@ -396,17 +410,14 @@ void HtmConv::FlushText(UnicodeString s)
 //---------------------------------------------------------------------------
 void HtmConv::AddHR()
 {
+	UnicodeString s;
 	if (ToMarkdown) {
-		TxtBuf->Add(EmptyStr);
-		TxtLineBuf = StringOfChar(_T('-'), LineWidth);
+		s = StringOfChar(_T('-'), LineWidth);
 	}
 	else {
-		TxtLineBuf = StringOfChar(_T('─'), LineWidth/2);
+		s = StringOfChar(_T('─'), LineWidth/2);
 	}
-
-	FlushText();
-
-	if (ToMarkdown) TxtBuf->Add(EmptyStr);
+	TxtBuf->Add(s);
 }
 
 //---------------------------------------------------------------------------
@@ -418,7 +429,7 @@ void HtmConv::Convert()
 	Title = Description = Keywords = EmptyStr;
 
 	if (ToMarkdown) {
-		HeaderStr = "#;##;###;####;#####;######";
+		HeaderStr = "# ;## ;### ;#### ;##### ;###### ";
 		UlMarkStr = "- ";
 	}
 	else {
@@ -463,7 +474,7 @@ void HtmConv::Convert()
 	//コメントアウトされていない場合の対策
 	//------------------------------
 	del_tag_block(tmp_buf, _T("<SCRIPT"), 	 _T("</SCRIPT>"));
-	del_tag_block(tmp_buf, _T("<NOSCRIPT"), _T("</NOSCRIPT>"));
+	del_tag_block(tmp_buf, _T("<NOSCRIPT"),  _T("</NOSCRIPT>"));
 	del_tag_block(tmp_buf, _T("<STYLE"),	 _T("</STYLE>"));
 
 	//php 部分を削除
@@ -539,12 +550,13 @@ void HtmConv::Convert()
 	int  fTR    = 0;
 	int  fP_al  = 0;
 	int  fTABLE = 0;
-	int  fBLKQ	= 0;
 	bool fRUBY  = false;
 	bool fRP	= false;
 	bool fRT	= false;
-	bool pstHdr = false;
+	bool noSPC  = false;
+
 	fPRE = fXMP = false;
+	BQ_level = 0;
 	Skip = false;
 
 	TxtLineBuf = EmptyStr;
@@ -555,26 +567,21 @@ void HtmConv::Convert()
 		UnicodeString lbuf = tmp_buf->Strings[i];
 		UnicodeString tag  = GetTag(lbuf);
 		if (tag.IsEmpty()) {
-			pstHdr = false;
 			if (fTITLE) {
 				Title += lbuf;
 			}
 			else if (fPRE || fXMP || fRUBY) {
-				if (fPRE) lbuf.Insert("    ", 1);
 				TxtLineBuf += lbuf;
 			}
 			else if (!Skip) {
 				//半角文字間にスペースを挿入
 				do {
 					if (TxtLineBuf.IsEmpty() || lbuf.IsEmpty()) break;
-					if (ends_tchs(_T(" [*_"), TxtLineBuf)) break;
-					if (StartsStr(' ', lbuf)) break;
-					if (fRT) { fRT = false; break; }
+					if (EndsStr(" ", TxtLineBuf) || StartsStr(" ", lbuf)) break;
+					if (noSPC) { noSPC = false; break; }
+					if (fRT)   { fRT = false; break; }
 					TxtLineBuf += " ";
 				} while (0);
-
-				//引用
-				if (fBLKQ>0) lbuf.Insert(StringOfChar(_T('>'), fBLKQ) + " ", 1);
 				TxtLineBuf += lbuf;
 			}
 		}
@@ -607,7 +614,7 @@ void HtmConv::Convert()
 			if (USAME_TS(tag, "/")) {
 				if (fPRE || fXMP) {
 					UnicodeString s = trim_ex(TxtLineBuf);
-					if (s.IsEmpty()) TxtBuf->Add(TxtLineBuf); else FlushText();
+					if (s.IsEmpty() && !ToMarkdown) TxtBuf->Add(TxtLineBuf); else FlushText();
 				}
 			}
 			else if (USAME_TS(tag, "/XMP")) {
@@ -618,8 +625,7 @@ void HtmConv::Convert()
 			}
 			else if (USAME_TS(tag, "P")) {
 				FlushText();
-				if (!pstHdr) TxtBuf->Add(EmptyStr);
-				pstHdr = false;
+				TxtBuf->Add(EmptyStr);
 				fP_al++;
 			}
 			else if (USAME_TS(tag, "/P")) {
@@ -628,26 +634,36 @@ void HtmConv::Convert()
 			}
 			else if (USAME_TS(tag, "BLOCKQUOTE")) {
 				FlushText();
-				if (!pstHdr) TxtBuf->Add((fBLKQ>0)? StringOfChar(_T('>'), fBLKQ) : EmptyStr);
-				pstHdr = false;
-				fBLKQ++;
+				if (ToMarkdown && BQ_level==0) TxtBuf->Add(EmptyStr);
+				BQ_level++;
 			}
 			else if (USAME_TS(tag, "/BLOCKQUOTE")) {
 				FlushText();
-				if (fBLKQ>0) fBLKQ--;
+				DecLevel(BQ_level);
 			}
 			else if (contained_wd_i(_T("BR|BR/|BR /"), tag)) {
 				if (!TxtLineBuf.IsEmpty()) FlushText(); else TxtBuf->Add(EmptyStr);
 				TxtLineBuf += indent_str;
 			}
 			else if (USAME_TS(tag, "PRE")) {
-				FlushText();	fPRE = true;
+				FlushText();
+				if (ToMarkdown) {
+					TxtBuf->Add(EmptyStr);
+					TxtBuf->Add("```");
+				}
+				fPRE = true;
 			}
 			else if (USAME_TS(tag, "/PRE")) {
-				FlushText();	fPRE = false;
+				FlushText();
+				if (ToMarkdown) {
+					TxtBuf->Add("```");
+					TxtBuf->Add(EmptyStr);
+				}
+				fPRE = false;
 			}
 			else if (USAME_TS(tag, "XMP")) {
-				FlushText();	fXMP = true;
+				FlushText();
+				fXMP = true;
 			}
 			else if (contained_wd_i(_T("CENTER|/CENTER"), tag)) {
 				FlushText();
@@ -671,15 +687,16 @@ void HtmConv::Convert()
 			}
 			else if (contained_wd_i(_T("H1|H2|H3|H4|H5|H6"), tag)) {
 				FlushText();
-				if (!pstHdr && TxtBuf->Count>0) TxtBuf->Add(EmptyStr);
-				pstHdr = false;
+				if (TxtBuf->Count>0) TxtBuf->Add(EmptyStr);
 				//見出し文字
 				TStringDynArray hlst = split_strings_semicolon(HeaderStr);
 				int idx = tag.SubString(2, 1).ToIntDef(1) - 1;
 				TxtLineBuf = (idx<hlst.Length)? hlst[idx] : EmptyStr;
+				noSPC = true;
 			}
 			else if (contained_wd_i(_T("/H1|/H2|/H3|/H4|/H5|/H6"), tag)) {
 				FlushText();
+				if (ToMarkdown) TxtBuf->Add(EmptyStr);
 			}
 			else if (USAME_TS(tag, "HR")) {
 				FlushText();  AddHR();
@@ -687,21 +704,20 @@ void HtmConv::Convert()
 			//箇条書き
 			else if (USAME_TS(tag, "UL")) {
 				FlushText();
-				if (LI_level==0 && !pstHdr) TxtBuf->Add(EmptyStr);
-				pstHdr = false;
+				if (LI_level==0 && ToMarkdown) TxtBuf->Add(EmptyStr);
 				LI_No[++LI_level] = -1;
 			}
 			else if (USAME_TS(tag, "OL")) {
 				FlushText();
-				if (LI_level==0 && !pstHdr) TxtBuf->Add(EmptyStr);
-				pstHdr = false;
+				if (LI_level==0 && ToMarkdown) TxtBuf->Add(EmptyStr);
 				LI_No[++LI_level] = GetTagAtr(lbuf, tag, _T("START")).ToIntDef(1);
 				tmpstr = GetTagAtr(lbuf, tag, _T("TYPE"));
 				if (tmpstr.IsEmpty()) OL_type[LI_level] = '1'; else OL_type[LI_level] = tmpstr[1];
 			}
 			else if (contained_wd_i(_T("/UL|/OL"), tag)) {
 				FlushText();
-				LI_level = std::max(LI_level - 1, 0);
+				DecLevel(LI_level);
+				if (LI_level==0 && ToMarkdown) TxtBuf->Add(EmptyStr);
 			}
 			else if (USAME_TS(tag, "LI")) {
 				FlushText();
@@ -718,6 +734,7 @@ void HtmConv::Convert()
 						case 'I': tmpstr = int_to_roman(n).UpperCase(); break;
 						}
 						tmpstr += ".";
+						if (ToMarkdown) tmpstr += " ";
 						TxtLineBuf += tmpstr;
 						LI_No[LI_level]++;
 					}
@@ -725,17 +742,17 @@ void HtmConv::Convert()
 					else {
 						TxtLineBuf += UlMarkStr;
 					}
+					noSPC = true;
 				}
 			}
 			else if (USAME_TS(tag, "DL")) {
 				FlushText();
-				if (DL_level==0 && !pstHdr) TxtBuf->Add(EmptyStr);
-				pstHdr = false;
+				if (DL_level==0 && ToMarkdown) TxtBuf->Add(EmptyStr);
 				DL_level++;
 			}
 			else if (USAME_TS(tag, "/DL")) {
 				FlushText();
-				DL_level = std::max(DL_level - 1, 0);
+				DecLevel(DL_level);
 			}
 			else if (USAME_TS(tag, "DT")) {
 				FlushText();
@@ -751,8 +768,7 @@ void HtmConv::Convert()
 			else if (USAME_TS(tag, "TABLE")) {
 				tr_list->Clear();
 				FlushText();
-				if (!pstHdr) TxtBuf->Add(EmptyStr);
-				pstHdr = false;
+				TxtBuf->Add(EmptyStr);
 				fTABLE++;
 			}
 			else if (USAME_TS(tag, "/TABLE")) {
@@ -824,19 +840,20 @@ void HtmConv::Convert()
 			//リンク
 			else if (USAME_TS(tag, "A")) {
 				HrefStr = GetTagAtr(lbuf, tag, _T("HREF"));
-				if (ToMarkdown && !HrefStr.IsEmpty()) {
-					TxtLineBuf += "[";
-				}
-				else {
-					if (StartsText("file://", HrefStr)) {
-						HrefStr = "file:///" + slash_to_yen(get_tkn_m(HrefStr, _T("file:///"), _T("#")));
+				if (!HrefStr.IsEmpty() && !TRegEx::IsMatch(HrefStr, "^(https?|mailto|file):|^//")) {
+					if (!BaseStr.IsEmpty()) {
+						HrefStr = BaseStr + HrefStr;
 					}
-					else if (!StartsText("http", HrefStr) && !StartsText("mailto:", HrefStr) && !StartsStr("//", HrefStr)) {
-						UnicodeString fnam = slash_to_yen(get_tkn(HrefStr, '#'));
+					else if (!FileName.IsEmpty()) {
+						UnicodeString fnam = ReplaceStr(get_tkn(HrefStr, '#'), "/", "\\");
+						UnicodeString anam = get_tkn_r(HrefStr, '#');
 						fnam = rel_to_abs(fnam, FileName);
-						if (FileExists(fnam)) HrefStr.sprintf(_T("file:///%s"), fnam.c_str()); else HrefStr = EmptyStr;
+						if (FileExists(fnam)) HrefStr.sprintf(_T("file:///%s"), fnam.c_str());
+						if (!anam.IsEmpty())  HrefStr.cat_sprintf(_T("#s"), anam.c_str());
 					}
 				}
+				if (ToMarkdown && !HrefStr.IsEmpty()) TxtLineBuf += "[";
+				noSPC = true;
 			}
 			else if (USAME_TS(tag, "/A")) {
 				if (!HrefStr.IsEmpty()) {
@@ -872,19 +889,25 @@ void HtmConv::Convert()
 
 			//Markdown の場合のみ
 			else if (ToMarkdown) {
-				if (contained_wd_i(_T("B|/B|EM|/EM|STRONG|/STRONG"), tag)) {
+				if (contained_wd_i(_T("B|/B|STRONG|/STRONG"), tag)) {
 					TxtLineBuf += "**";
+					noSPC = true;
 				}
-				else if (contained_wd_i(_T("I|/I"), tag)) {
+				else if (contained_wd_i(_T("I|/I|EM|/EM"), tag)) {
 					TxtLineBuf += "*";
+					noSPC = true;
 				}
 				else if (contained_wd_i(_T("S|/S|DEL|/DEL"), tag)) {
 					TxtLineBuf += "~~";
+					noSPC = true;
 				}
 				//画像
 				else if (USAME_TS(tag, "IMG")) {
 					UnicodeString alt_str = def_if_empty(GetTagAtr(lbuf, tag, _T("ALT")), _T("画像"));
 					UnicodeString src_str = GetTagAtr(lbuf, tag, _T("SRC"));
+					if (!BaseStr.IsEmpty() && !TRegEx::IsMatch(src_str, "^(https?|file):")) {
+						src_str = BaseStr + src_str;
+					}
 					if (!src_str.IsEmpty()) TxtLineBuf.cat_sprintf(_T("![%s](%s)"), alt_str.c_str(), src_str.c_str());
 				}
 			}
@@ -898,7 +921,20 @@ void HtmConv::Convert()
 	while (i<TxtBuf->Count) {
 		if (TxtBuf->Strings[i].IsEmpty()) {
 			blkln++;
-			if (blkln>DEF_BLANK_LN_LIMIT) TxtBuf->Delete(i); else i++;
+			if (blkln>DEF_BLANK_LN_LIMIT) {
+				TxtBuf->Delete(i);
+			}
+			else if (ToMarkdown && blkln>1 && i>0 && i<TxtBuf->Count-1) {
+				if (TRegEx::IsMatch(TxtBuf->Strings[i + 1], NO_CRSPC_PTN)) {
+					if (TxtBuf->Strings[i - 1].IsEmpty()) TxtBuf->Delete(i); else i++;
+				}
+				else {
+					TxtBuf->Strings[i++] = "<br>";
+				}
+			}
+			else {
+				i++;
+			}
 		}
 		else {
 			blkln = 0;

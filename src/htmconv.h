@@ -10,12 +10,16 @@
 #define DEF_BLANK_LN_LIMIT	3				//連続空行制限
 
 //---------------------------------------------------------------------------
+#define NO_CRSPC_PTN	"^(#{1,6}|\\s*[\\*\\+\\-]|\\s*\\d+\\.)\\s.+|^```"
+
+//---------------------------------------------------------------------------
 class HtmConv
 {
 private:
 	UnicodeString TxtLineBuf;
 	bool Skip;
 	bool fPRE, fXMP;
+	int  BQ_level;
 
 	UnicodeString rel_to_abs(UnicodeString fnam, UnicodeString rnam);
 
@@ -27,11 +31,19 @@ private:
 	void FlushText(UnicodeString s = EmptyStr);
 	void AddHR();
 
+	void DecLevel(int &n)
+	{
+		n = std::max(n - 1, 0);
+	}
+
 public:
 	HtmConv();
 	~HtmConv();
 
 	UnicodeString FileName;
+	UnicodeString UrlStr;
+	UnicodeString BaseStr;
+
 	TStringList *HtmBuf;		//HTML文書入力バッファ
 	TStringList *TxtBuf;		//テキスト出力バッファ
 

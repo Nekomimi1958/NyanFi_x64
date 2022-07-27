@@ -174,6 +174,8 @@ extern TDateTime XCMD_f_time;
 void XCMD_Initialize(UnicodeString &opt);
 void XCMD_Uninitialize();
 
+bool XCMD_TestDelParam(UnicodeString prm);
+
 void XCMD_set_Var(const _TCHAR *name, UnicodeString v);
 void XCMD_set_Var(const _TCHAR *name, int v);
 

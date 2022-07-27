@@ -498,15 +498,16 @@ AppendBuffer_"nyan.log"
         </div>
       </dd>
 
-      <dt id="Download" class="no_bg">Download<span class="pram_text">_URL[&gt;&gt;[テキストファイル名]]</span></dt>
+      <dt id="Download" class="no_bg">Download<span class="pram_text">_URL[&gt;&gt;[テキストファイル名][;{MD|TX}]]</span></dt>
       <dd>パラメータで指定したURLのファイルを、一時ディレクトリにダウンロードします(進捗ダイアログを表示)。<br>
         ダウンロードしたファイル名は、定義済み変数 <b>DownloadName</b> で参照できます(キャンセル、失敗時は空文字列)。<br>
         なお、URLの末尾が <b>/</b> の場合 &quot;<b>index.htm</b>&quot; が付加されます。<br>
         <div class="spc_box">
           URLの後に &gt;&gt;[テキストファイル名]
-          を指定すると、ダウンロードしたファイルがHTML文書の場合、それをテキストに変換して保存します。変換はテキストビュアーでのHTML→テキスト変換表示に準じます。ただし拡張子を .md にすると、オプション設定にかかわらず
-          Markdown 記法に変換します。<br>
-          ファイル名にドライブ指定がない場合はカレントからの相対指定とみなされます。ファイル名を指定しない場合は、ダウンロードしたファイルの拡張子を .txt に変えて一時ディレクトリに保存します。
+          を指定すると、ダウンロードしたファイルがHTML文書の場合、それをテキストに変換して保存します。<br>
+          変換はテキストビュアーでのHTML→テキスト変換表示に準じます。ただし拡張子を .md にすると、オプション設定にかかわらずMarkdown記法に変換します。また、パラメータに <b>MD</b>
+          を指定するとMarkdown記法に、<b>TX</b> を指定すると通常テキストに変換します。<br>
+          ファイル名にドライブ指定がない場合はカレントからの相対指定とみなされます。ファイル名を指定しない場合は、ダウンロードしたファイルの拡張子を .txt または .md に変えて一時ディレクトリに保存します。
           <b>DownloadName</b> は変換保存したファイル名になります。<br>
         </div>
 
@@ -514,7 +515,12 @@ AppendBuffer_"nyan.log"
           <b>例</b>: ダウンロードしたHTML文書をテキストに変換して指定ファイルに保存し、一覧ダイアログで表示
           <pre class="example_box">
 Download_"http://nekomimi.la.coocan.jp/freesoft/nyanfi.htm&gt;&gt;D:\hoge\nyan.txt"
-ListText_D:\hoge\nyan.txt
+ListText_%DownloadName%
+</pre>
+          <b>例</b>: ダウンロードしたHTML文書をMarkdown記法に変換して一時ディレクトリに保存し、一覧ダイアログで表示
+          <pre class="example_box">
+Download_"http://nekomimi.la.coocan.jp/freesoft/nyanfi.htm&gt;&gt;;MD"
+ListText_%DownloadName%
 </pre>
         </div>
       </dd>

@@ -1905,7 +1905,6 @@ void __fastcall TNyanFiForm::ImgInfSplitterMoved(TObject *Sender)
 
 	if (PreviewPanel->Visible) {
 		if (LayoutMode==0 || LayoutMode==3) PreviewWidth = PreviewPanel->Width; else PreviewHeight = PreviewPanel->Height;
-
 	}
 }
 //---------------------------------------------------------------------------
@@ -12353,7 +12352,9 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 				case XCMDID_Download:
 					{
 						XCMD_set_Var(_T("DownloadName"), EmptyStr);
-						bool h2t = ContainsStr(XCMD_prm, ">>");
+						bool is_MD = XCMD_TestDelParam("MD");
+						bool is_TX = XCMD_TestDelParam("TX");
+						bool h2t   = ContainsStr(XCMD_prm, ">>");
 						UnicodeString url = split_tkn(XCMD_prm, _T(">>"));
 						if (EndsStr('/', url)) url += "index.htm";
 						UnicodeString fnam = ExtractFileName(slash_to_yen(url));
@@ -12369,8 +12370,10 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 								//•ÏŠ·
 								cursor_HourGlass();
 								std::unique_ptr<HtmConv> htmcnv(new HtmConv());
-								ini_HtmConv_def(htmcnv.get(), fnam);
-								if (test_FileExt(get_extension(XCMD_prm), _T(".md"))) htmcnv->ToMarkdown = true;
+								ini_HtmConv_def(htmcnv.get(), fnam, url);
+								if 		(is_MD) htmcnv->ToMarkdown = true;
+								else if (is_TX) htmcnv->ToMarkdown = false;
+								else if (test_FileExt(get_extension(XCMD_prm), ".md")) htmcnv->ToMarkdown = true;
 								htmcnv->HtmBuf->Assign(f_buf.get());
 								htmcnv->CodePage = codepage;
 								htmcnv->Convert();
@@ -12378,7 +12381,7 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 								//•Û‘¶
 								UnicodeString tnam = !XCMD_prm.IsEmpty()?
 												to_absolute_name(exclude_quot(XCMD_prm), XCMD_cur_path) :
-												ChangeFileExt(fnam, ".txt");
+												ChangeFileExt(fnam, htmcnv->ToMarkdown? ".md" : ".txt");
 								std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(codepage));
 								if (!saveto_TextFile(tnam, htmcnv->TxtBuf, enc.get())) UserAbort(USTR_FaildSave);
 								fnam = tnam;
@@ -14916,7 +14919,7 @@ void __fastcall TNyanFiForm::CsrDirToOppActionExecute(TObject *Sender)
 		}
 
 		//axshell.spi —p ._sf
-		if (test_FileExt(cfp->f_ext, _T("._sf"))) {
+		if (test_FileExt(cfp->f_ext, "._sf")) {
 			UnicodeString dnam = get_PathFrom_SF(cfp);
 			if (ExtractFileDrive(dnam).IsEmpty()) Abort();
 			UpdateOppPath(dnam);
@@ -15213,7 +15216,7 @@ void __fastcall TNyanFiForm::DateSelectActionExecute(TObject *Sender)
 			fp->selected = false;
 			if (fp->is_dir) continue;
 			//”äŠr
-			TValueRelationship res = System::Dateutils::CompareDate(fp->f_time, dt);
+			TValueRelationship res = Dateutils::CompareDate(fp->f_time, dt);
 			switch (cnd) {
 			case 1: fp->selected = (res==LessThanValue);	break;
 			case 2: fp->selected = (res==EqualsValue);		break;
@@ -16175,7 +16178,7 @@ void __fastcall TNyanFiForm::ExtractChmSrcActionExecute(TObject *Sender)
 	try {
 		if (CurStt->is_ADS || CurStt->is_FTP || !IsOppFList()) UserAbort(USTR_CantOperate);
 		file_rec *cfp = GetCurFrecPtr();
-		if (!cfp || cfp->is_dir || !test_FileExt(cfp->f_ext, _T(".chm"))) Abort();
+		if (!cfp || cfp->is_dir || !test_FileExt(cfp->f_ext, ".chm")) Abort();
 		if (cfp->is_virtual && !SetTmpFile(cfp)) UserAbort(USTR_FaildTmpUnpack);
 
 		UnicodeString fnam  = cfp->is_virtual? cfp->tmp_name : cfp->f_name;
@@ -21322,7 +21325,7 @@ void __fastcall TNyanFiForm::OpenByExpActionExecute(TObject *Sender)
 			file_rec *cfp = GetCurFrecPtr(true, true);
 			if (!cfp || cfp->is_dummy || cfp->f_attr==faInvalid) Abort();
 
-			if (test_FileExt(cfp->f_ext, _T("._sf")))
+			if (test_FileExt(cfp->f_ext, "._sf"))
 				prm = "/e," + get_PathFrom_SF(cfp);
 			else if (cfp->is_dir)
 				prm = "/e," + (cfp->is_up? CurPath[CurListTag] : cfp->f_name);
@@ -27989,11 +27992,10 @@ void __fastcall TNyanFiForm::ConvertHtm2TxtActionExecute(TObject *Sender)
 				htmcnv->Convert();
 
 				//•Û‘¶
-				UnicodeString fnam = dst_dir + get_base_name(fp->f_name) + ".txt";
+				UnicodeString fnam = dst_dir + get_base_name(fp->f_name) + (htmcnv->ToMarkdown? ".md" : ".txt");
 				cat_DestFile(msg, fnam);
 				std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(code_page));
-				if (!saveto_TextFile(fnam, htmcnv->TxtBuf, enc.get()))
-					UserAbort(USTR_FaildSave);
+				if (!saveto_TextFile(fnam, htmcnv->TxtBuf, enc.get())) UserAbort(USTR_FaildSave);
 				fp->selected = false;
 				ok_cnt++;
 			}
@@ -28712,7 +28714,7 @@ void __fastcall TNyanFiForm::ChgCodePageActionUpdate(TObject *Sender)
 		}
 		else {
 			file_rec *cfp = GetCurFrecPtr(true);
-			bool is_rtf = (cfp && test_FileExt(cfp->f_ext, _T(".rtf.wri")));
+			bool is_rtf = (cfp && test_FileExt(cfp->f_ext, ".rtf.wri"));
 			ap->Visible = (TxtPrvListBox->Focused() || TxtTailListBox->Focused()) && !is_rtf;
 		}
 		break;
@@ -30613,7 +30615,7 @@ bool __fastcall TNyanFiForm::OpenTxtViewer(
 
 		int cpag = 0;
 		isXDoc2Txt = bin_mode? false : ((UseXd2tx || fromGrep) && xd2tx_TestExt(cfp->f_ext));
-		isRichText = bin_mode? false : test_FileExt(cfp->f_ext, _T(".rtf.wri"));
+		isRichText = bin_mode? false : test_FileExt(cfp->f_ext, ".rtf.wri");
 		isViewText = bin_mode? false : (force_txt? true : is_TextFile(fnam, &cpag, NULL, &TxtViewer->HasBOM));
 		if (cfp->is_ftp || cfp->inf_list->Count==0) GetFileInfList(cfp, true);
 
@@ -31812,7 +31814,7 @@ void __fastcall TNyanFiForm::HtmlToTextActionExecute(TObject *Sender)
 	if (ScrMode==SCMD_TVIEW)
 		TxtViewer->ExeCommand(_T("HtmlToText"), ActionParam);
 	else
-		SetToggleAction(TxtViewer->isHtm2Txt);
+		TxtViewer->SetHtmlToText(ActionParam);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::HtmlToTextActionUpdate(TObject *Sender)

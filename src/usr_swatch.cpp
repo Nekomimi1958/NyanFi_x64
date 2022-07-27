@@ -46,7 +46,7 @@ int SWATCH_ColBuff[MAX_SWATCH_COLOR];
 bool IsSwatchbook(UnicodeString fnam)
 {
 	return (
-		test_FileExt(get_extension(fnam), _T(".ini"))
+		test_FileExt(get_extension(fnam), ".ini")
 		&& StartsText("Swatchbook", ExtractFileName(fnam))
 		&& SameText(get_top_line(fnam), "[Swatchbook]"));
 }

@@ -42,7 +42,7 @@ bool xd2tx_TestExt(UnicodeString fext,
 	bool inc_rtf)	//.rtf .wri ‚ðŠÜ‚Þ	(default = false)
 {
 	return (xd2tx_Available
-				&& (test_FileExt(fext, FEXT_XD2TX) || (inc_rtf && test_FileExt(fext, _T(".rtf.wri")))));
+				&& (test_FileExt(fext, FEXT_XD2TX) || (inc_rtf && test_FileExt(fext, ".rtf.wri"))));
 }
 
 //---------------------------------------------------------------------------

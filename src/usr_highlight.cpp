@@ -233,85 +233,85 @@ bool HighlightFile::GetCommentList(
 			bgn_lst->Add("(*");	end_lst->Add("*)");
 		}
 		//個別
-		else if (test_FileExt(fext, _T(".ahk"))) {
+		else if (test_FileExt(fext, ".ahk")) {
 			ln_lst->Add(";");
 			bgn_lst->Add("/*");	end_lst->Add("*/");
 		}
-		else if (test_FileExt(fext, _T(".au3"))) {
+		else if (test_FileExt(fext, ".au3")) {
 			ln_lst->Add(";");
 			bgn_lst->Add("#comments-start");	end_lst->Add("#comments-end");
 			bgn_lst->Add("#cs");	end_lst->Add("#ce");
 		}
-		else if (test_FileExt(fext, _T(".awk.pl.pm.pod.sh"))) {
+		else if (test_FileExt(fext, ".awk.pl.pm.pod.sh")) {
 			ln_lst->Add("#");
 		}
-		else if (test_FileExt(fext, _T(".bat.cmd"))) {
+		else if (test_FileExt(fext, ".bat.cmd")) {
 			ln_lst->Add("@REM");
 			ln_lst->Add("REM");
 			ln_lst->Add("::");
 		}
-		else if (test_FileExt(fext, _T(".css.drc"))) {
+		else if (test_FileExt(fext, ".css.drc")) {
 			bgn_lst->Add("/*");	end_lst->Add("*/");
 		}
-		else if (test_FileExt(fext, _T(".fs"))) {
+		else if (test_FileExt(fext, ".fs")) {
 			ln_lst->Add("//");
 			bgn_lst->Add("(*");	end_lst->Add("*)");
 		}
-		else if (test_FileExt(fext, _T(".hs"))) {
+		else if (test_FileExt(fext, ".hs")) {
 			ln_lst->Add("--");
 			bgn_lst->Add("{-");	end_lst->Add("-}");
 		}
-		else if (test_FileExt(fext, _T(".lisp.lsp"))) {
+		else if (test_FileExt(fext, ".lisp.lsp")) {
 			ln_lst->Add(";");
 			bgn_lst->Add("#|");	end_lst->Add("|#");
 		}
-		else if (test_FileExt(fext, _T(".lua"))) {
+		else if (test_FileExt(fext, ".lua")) {
 			ln_lst->Add("--");
 		}
-		else if (test_FileExt(fext, _T(".m"))) {
+		else if (test_FileExt(fext, ".m")) {
 			ln_lst->Add("%");
 			bgn_lst->Add("%{");	end_lst->Add("%}");
 		}
-		else if (test_FileExt(fext, _T(".rb"))) {
+		else if (test_FileExt(fext, ".rb")) {
 			ln_lst->Add("#");
 			bgn_lst->Add("=begin");	end_lst->Add("=end");
 		}
-		else if (test_FileExt(fext, _T(".sql"))) {
+		else if (test_FileExt(fext, ".sql")) {
 			ln_lst->Add("--");
 			bgn_lst->Add("/*");	end_lst->Add("*/");
 		}
-		else if (test_FileExt(fext, _T(".bas.vb.vbs.mac"))) {
+		else if (test_FileExt(fext, ".bas.vb.vbs.mac")) {
 			ln_lst->Add("'");
 		}
-		else if (test_FileExt(fext, _T(".php"))) {
+		else if (test_FileExt(fext, ".php")) {
 			ln_lst->Add("//");
 			ln_lst->Add("#");
 			bgn_lst->Add("/*");		end_lst->Add("*/");
 			bgn_lst->Add("<!--");	end_lst->Add("-->");
 		}
-		else if (test_FileExt(fext, _T(".ps1.psm1.psd1"))) {
+		else if (test_FileExt(fext, ".ps1.psm1.psd1")) {
 			ln_lst->Add("#");
 			bgn_lst->Add("<#");	end_lst->Add("#>");
 		}
-		else if (test_FileExt(fext, _T(".py"))) {
+		else if (test_FileExt(fext, ".py")) {
 			ln_lst->Add("#");
 			bgn_lst->Add("\"\"\""); end_lst->Add("\"\"\"");
 			bgn_lst->Add("\'\'\'"); end_lst->Add("\'\'\'");
 		}
-		else if (test_FileExt(fext, _T(".st"))) {
+		else if (test_FileExt(fext, ".st")) {
 			bgn_lst->Add("\"");	end_lst->Add("\"");
 		}
-		else if (test_FileExt(fext, _T(".vhd"))) {
+		else if (test_FileExt(fext, ".vhd")) {
 			ln_lst->Add("--");
 		}
 		//その他
-		else if (test_FileExt(fext, _T(".dsp.dsw.nodoka.yml.yaml.PspScript"))) {
+		else if (test_FileExt(fext, ".dsp.dsw.nodoka.yml.yaml.PspScript")) {
 			ln_lst->Add("#");
 		}
 		else if ((!is_h2t && test_FileExt(fext, FEXT_HTML)) || test_FileExt(fext, FEXT_XML)) {
 			bgn_lst->Add("<!--");	end_lst->Add("-->");
 		}
-		else if (test_FileExt(fext, _T(".txt")) && StartsStr("awstats", ExtractFileName(fnam))) {
+		else if (test_FileExt(fext, ".txt") && StartsStr("awstats", ExtractFileName(fnam))) {
 			ln_lst->Add("#");
 		}
 	}
@@ -401,7 +401,7 @@ int HighlightFile::GetCommentPos(
 					int p_u = s.Pos("://");
 					if (p_u>0 && p==p_u + 1) p = 0;
 				}
-				else if (test_FileExt(fext, _T(".ps1.psm1")) && p>0 && (s.Pos("<#") || s.Pos("#>"))) {
+				else if (test_FileExt(fext, ".ps1.psm1") && p>0 && (s.Pos("<#") || s.Pos("#>"))) {
 					p = 0;
 				}
 			}
@@ -419,12 +419,12 @@ int HighlightFile::GetCommentPos(
 UnicodeString HighlightFile::GetDefHeadlnPtn(UnicodeString fext)
 {
 	return (
-		test_FileExt(fext, _T(".bat.cmd.qbt")) ? "^:[^:]+" :
-		test_FileExt(fext, _T(".dfm"))		   ? "^\\s*object\\s" :
-		test_FileExt(fext, _T(".eml"))		   ? "^Subject:" :
-		test_FileExt(fext, _T(".hsp"))		   ? "^\\*\\w+" :
-		test_FileExt(fext, _T(".md"))		   ? "^#+" :
-		test_FileExt(fext, _T(".pod.pl.pm"))   ? "^=head\\d\\b" : "");
+		test_FileExt(fext, ".bat.cmd.qbt") ? "^:[^:]+" :
+		test_FileExt(fext, ".dfm")		   ? "^\\s*object\\s" :
+		test_FileExt(fext, ".eml")		   ? "^Subject:" :
+		test_FileExt(fext, ".hsp")		   ? "^\\*\\w+" :
+		test_FileExt(fext, ".md")		   ? "^#+" :
+		test_FileExt(fext, ".pod.pl.pm")   ? "^=head\\d\\b" : "");
 }
 //---------------------------------------------------------------------------
 //見出しパターンを取得
@@ -446,8 +446,8 @@ UnicodeString HighlightFile::GetHeadlinePtn(
 	//デフォルト
 	if (h_ptn.IsEmpty()) h_ptn = GetDefHeadlnPtn(fext);
 	if (h_ptn.IsEmpty()) {
-		h_ptn = test_FileExt(fext, _T(".ini.inf.reg.url")) ? "^\\[.+?\\]" :
-				test_FileExt(fext, FEXT_HTML)			   ? "<[hH][1-6]" : "";
+		h_ptn = test_FileExt(fext, ".ini.inf.reg.url") ? "^\\[.+?\\]" :
+				test_FileExt(fext, FEXT_HTML)		   ? "<[hH][1-6]" : "";
 	}
 
 	return (chk_RegExPtn(h_ptn)? h_ptn : EmptyStr);
@@ -480,35 +480,35 @@ UnicodeString GetDefReservedPtn(
 			_T("FILEINFO|FTPGET|FTPPUT|GIFBMP|HTM2TX|JOIN|LIST|LOAD|MOVE|NOPTM|PACK|PLAY|RCVMSG|REMOVE|")
 			_T("RENAME|SAVE|TEST|TIME|TIMER|UNDO|UNPACK|WATCH|WORKLIST)\\s|\\s(OK:|SKIP:)"));
 	}
-	else if (test_FileExt(fext, _T(".ahk"))) {
+	else if (test_FileExt(fext, ".ahk")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(gosub|goto|if|else|loop)\\b|")
 			_T("^\\s*#\\w+\\b"));
 	}
-	else if (test_FileExt(fext, _T(".as"))) {
+	else if (test_FileExt(fext, ".as")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(as|break|case|catch|class|const|continue|default|delete|do|else|extends|false|")
 			_T("finally|for|function|if|implements|import|in|instanceof|interface|internal|is|native|")
 			_T("new|null|package|private|protected|public|return|super|switch|this|throw|to|true|try|")
 			_T("typeof|use|var|void|while|with)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".au3"))) {
+	else if (test_FileExt(fext, ".au3")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(ContinuelOop|Dim|Global|Local|Const|Do|Until|Exit|Exitloop|For|Next|Func|Return|")
 			_T("Endfunc|If|Then|Elseif|Else|Endif|Redim|Select|Case|Endselect|While|Wend)\\b|")
 			_T("^\\s*#\\w+\\b"));
 		sns_case = false;
 	}
-	else if (test_FileExt(fext, _T(".awk"))) {
+	else if (test_FileExt(fext, ".awk")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(BEGIN|break|close|continue|delete|do|else|END|exit|for|function|getline|gsub|if|index|")
 			_T("length|match|next|print|printf|return|split|sprintf|sub|substr|system|tolower|toupper|while)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".bat.cmd.qbt"))) {
+	else if (test_FileExt(fext, ".bat.cmd.qbt")) {
 		ret_str  = "(@|\\b)(call|cls|cmd|echo|errorlevel|exit|for|goto|if|pause|rem|set|shift|start)\\b";
 		sns_case = false;
 	}
-	else if (test_FileExt(fext, _T(".cs"))) {
+	else if (test_FileExt(fext, ".cs")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(abstract|as|async|await|base|bool|break|byte|case|catch|char|checked|class|")
 			_T("const|continue|decimal|default|delegate|do|double|else|enum|event|explicit|extern|")
@@ -535,17 +535,17 @@ UnicodeString GetDefReservedPtn(
 			_T("unsigned|using|virtual|void|volatile|wchar_t|while)\\b|")
 			_T("^\\s*#\\w+\\b"));
 	}
-	else if (test_FileExt(fext, _T(".dfm"))) {
+	else if (test_FileExt(fext, ".dfm")) {
 		ret_str = "\\b(object|item|end)\\b";
 	}
-	else if (test_FileExt(fext, _T(".dsp"))) {
+	else if (test_FileExt(fext, ".dsp")) {
 		ret_str = "^!\\w+\\b";
 	}
-	else if (test_FileExt(fext, _T(".eml"))) {
+	else if (test_FileExt(fext, ".eml")) {
 		ret_str  = "^(Bcc|Cc|Date|From|Subject|To):";
 		sns_case = false;
 	}
-	else if (test_FileExt(fext, _T(".fs"))) {
+	else if (test_FileExt(fext, ".fs")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(abstract|and|as|asr|assert|base|begin|class|default|delegate|do|done|downcast|")
 			_T("downto|elif|else|end|exception|extern|false|finally|for|fun|function|global|if|")
@@ -555,23 +555,23 @@ UnicodeString GetDefReservedPtn(
 			_T("while|with|yield!?)\\b|")
 			_T("^\\s*#\\w+\\b"));
 	}
-	else if (test_FileExt(fext, _T(".go"))) {
+	else if (test_FileExt(fext, ".go")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(break|case|chan|const|continue|default|defer|else|fallthrough|for|func|go|goto|")
 			_T("if|import|interface|map|package|range|return|select|struct|switch|type|var)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".hs"))) {
+	else if (test_FileExt(fext, ".hs")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(as|case|of|class|data|default|deriving|do|forall|foreign|hiding|if|then|else|")
 			_T("import|infix|infixl|infixr|instance|let|in|mdo|module|newtype|qualified|type|where)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".hsp"))) {
+	else if (test_FileExt(fext, ".hsp")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(await|break|continue|else|end|exec|exgoto|foreach|gosub|goto|if|loop|on|onclick|")
 			_T("oncmd|onerror|onexit|onkey|repeat|return|run|stop|wait|array|double|int|str|var)\\b|")
 			_T("^\\s*#\\w+\\b"));
 	}
-	else if (test_FileExt(fext, _T(".js.jsx.ts"))) {
+	else if (test_FileExt(fext, ".js.jsx.ts")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(abstract|boolean|break|byte|case|catch|char|class|const|continue|default|do|")
 			_T("double|else|extends|false|final|finally|float|for|function|goto|if|implements|import|")
@@ -579,18 +579,18 @@ UnicodeString GetDefReservedPtn(
 			_T("return|short|static|super|switch|synchronized|this|throw|throws|transient|true|")
 			_T("try|typeof|var|void|while|with)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".java"))) {
+	else if (test_FileExt(fext, ".java")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|")
 			_T("do|double|else|enum|extends|final|finally|float|for|goto|if|implements|import|instanceof|")
 			_T("int|interface|long|native|new|package|private|protected|public|return|short|static|")
 			_T("strictfp|super|switch|synchrnized|this|throw|throws|transient|try|void|volatile|while)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".json"))) {
+	else if (test_FileExt(fext, ".json")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(true|false|null)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".kt.kts"))) {
+	else if (test_FileExt(fext, ".kt.kts")) {
 		ret_str.sprintf(_T("%s"),
 			//Hard
 			_T("\\b(as|break|class|continue|do|else|false|for|fun|if|in|interface|is|null|object|package|")
@@ -603,7 +603,7 @@ UnicodeString GetDefReservedPtn(
 			_T("infix|inline|inner|internal|lateinit|noinline|open|operator|out|override|private|")
 			_T("protected|public|reified|sealed|suspend|tailrec|vararg)\\s"));
 	}
-	else if (test_FileExt(fext, _T(".lua"))) {
+	else if (test_FileExt(fext, ".lua")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(and|break|do|else|elseif|end|false|for|function|if|in|local|nil|not|or|repeat|")
 			_T("return|then|true|until|while)\\b"));
@@ -620,7 +620,7 @@ UnicodeString GetDefReservedPtn(
 			_T("until|uses|var|virtual|while|with|write|xor)\\b"));
 		sns_case = false;
 	}
-	else if (test_FileExt(fext, _T(".php")) && !is_h2t) {
+	else if (test_FileExt(fext, ".php") && !is_h2t) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(abstract|and|array|as|break|case|catch|cfunction|class|clone|const|continue|")
 			_T("declare|default|die|do|echo|else|elseif|empty|enddeclare|endfor|endforeach|endif|")
@@ -630,7 +630,7 @@ UnicodeString GetDefReservedPtn(
 			_T("return|static|switch|this|throw|try|unset|use|var|while|xor|__CLASS__|__FILE__|")
 			_T("__FUNCTION__|__LINE__|__METHOD__)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".pl.pm"))) {
+	else if (test_FileExt(fext, ".pl.pm")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(abs|accept|alarm|and|atan2|bind|binmode|bless|caller|chdir|chmod|chomp|chop|")
 			_T("chown|chr|chroot|close|closedir|cmp|connect|continue|cos|crypt|dbmclose|dbmopen|")
@@ -652,47 +652,47 @@ UnicodeString GetDefReservedPtn(
 			_T("utime|values|vec|wait|waitpid|wantarray|warn|while|write|xor|)\\b|")
 			_T("^=[a-zA-Z]+\\b"));
 	}
-	else if (test_FileExt(fext, _T(".pod"))) {
+	else if (test_FileExt(fext, ".pod")) {
 		ret_str = "^=[a-zA-Z]+\\b";
 	}
-	else if (test_FileExt(fext, _T(".py"))) {
+	else if (test_FileExt(fext, ".py")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(access|and|break|class|continue|def|del|elif|else|expect|exec|finally|for|form|")
 			_T("global|if|import|in|is|lambda|not|or|pass|print|raise|return|try|while)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".ps1.psm1"))) {
+	else if (test_FileExt(fext, ".ps1.psm1")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(Begin|Break|Catch|Class|Continue|Data|Define|Do|DynamicParam|Else|ElseIf|End|Exit|")
 			_T("Filter|Finally|For|ForEach|From|Function|If|In|InlineScript|Parallel|Param|Process|")
 			_T("Return|Sequence|Switch|Throw|Trap|Try|Until|Using|Var|While|Workflow)\\b"));
 		sns_case = false;
 	}
-	else if (test_FileExt(fext, _T(".rb"))) {
+	else if (test_FileExt(fext, ".rb")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(BEGIN|END|alias|and|begin|break|case|class|def|defined|do|else|elsif|end|ensure|")
 			_T("false|for|if|in|module|next|nil|not|or|redo|rescue|retry|return|self|super|then|")
 			_T("true|undef|unless|until|when|while|yield)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".rc.drc"))) {
+	else if (test_FileExt(fext, ".rc.drc")) {
 		ret_str = "^\\s*#\\w+\\b";
 	}
-	else if (test_FileExt(fext, _T(".rs"))) {
+	else if (test_FileExt(fext, ".rs")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(abstract|alignof|as|become|box|break|const|continue|crate|do|else|enum|extern|")
 			_T("false|final|fn|for|if|impl|in|let|loop|macro|match|mod|move|mut|offsetof|override|")
 			_T("priv|proc|pub|pure|ref|return|Self|self|sizeof|static|struct|super|trait|true|type|")
 			_T("typeof|unsafe|unsized|use|virtual|where|while|yiel)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".scala"))) {
+	else if (test_FileExt(fext, ".scala")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(abstract|case|catch|class|def|do|else|extends|false|finalfinally|for|forSome|if|")
 			_T("implicit|import|lazy|match|new|null|object|override|package|private|protected|requires|")
 			_T("return|sealed|super|this|throw|trait|try|true|type|val|var|while|with|yield|_)\\b|=>|<:|<%|>:"));
 	}
-	else if (test_FileExt(fext, _T(".st"))) {
+	else if (test_FileExt(fext, ".st")) {
 		ret_str = "\\b(self|super|nil|true|false|thisContext)\\b";
 	}
-	else if (test_FileExt(fext, _T(".swift"))) {
+	else if (test_FileExt(fext, ".swift")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(as|associativity|break|case|class|continue|default|deinit|didSet|do|dynamicType|")
 			_T("else|enum|extension|fallthrough|for|func|get|if|import|in|infix|init|inout|is|left|")
@@ -700,13 +700,13 @@ UnicodeString GetDefReservedPtn(
 			_T("return|right|Self|self|set|static|struct|subscript|super|switch|Type|typealias|")
 			_T("unowned|var|weak|where|while|willSet|__COLUMN__|__FILE__|__FUNCTION__|__LINE__)\\b"));
 	}
-	else if (test_FileExt(fext, _T(".sh"))) {
+	else if (test_FileExt(fext, ".sh")) {
 		ret_str = "\\b(case|in|esac|for|do|done|function|if|then|fi|elif|else|select|time|until|while)\\b";
 	}
-	else if (test_FileExt(fext, _T(".tex"))) {
+	else if (test_FileExt(fext, ".tex")) {
 		ret_str = "\\\\\\w+\\b";
 	}
-	else if (test_FileExt(fext, _T(".vb.bas"))) {
+	else if (test_FileExt(fext, ".vb.bas")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(AddHandler|AddressOf|Alias|And|AndAlso|As|Boolean|ByRef|Byte|ByVal|Call|Case|")
 			_T("Catch|CBool|CByte|CChar|CDate|CDec|CDbl|Char|CInt|Class|CLng|CObj|Const|Continue|")
@@ -723,7 +723,7 @@ UnicodeString GetDefReservedPtn(
 			_T("While|Widening|With|WithEvents|WriteOnly|Xor)\\b|(#(Const|Else|ElseIf|End|If))\\b"));
 		sns_case = false;
 	}
-	else if (test_FileExt(fext, _T(".vbs.mac"))) {
+	else if (test_FileExt(fext, ".vbs.mac")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(And|As|Boolean|ByRef|Byte|ByVal|Call|Case|Class|Const|Currency|Debug|Dim|Do|")
 			_T("Double|Each|Else|ElseIf|Empty|End|EndIf|Enum|Eqv|Event|Exit|False|For|Function|")
@@ -733,7 +733,7 @@ UnicodeString GetDefReservedPtn(
 			_T("TypeOf|Until|Variant|Wend|While|With|Xor)\\b"));
 		sns_case = false;
 	}
-	else if (test_FileExt(fext, _T(".v"))) {
+	else if (test_FileExt(fext, ".v")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(always|and|assign|begin|buf|bufif0|bufif1|case|casx|casez|cmos|deassign|default|")
 			_T("defparam|disable|edge|else|end|endcase|endmodule|endfuncion|endprimitive|endspecify|")
@@ -745,7 +745,7 @@ UnicodeString GetDefReservedPtn(
 			_T("tri|tri0|tri1|triand|trior|trireg|vectored|wait|wand|weak0|weak1|while|wire|wor|xnor|xor)\\b|")
 			_T("^\\s*`\\w+\\b"));
 	}
-	else if (test_FileExt(fext, _T(".vhd"))) {
+	else if (test_FileExt(fext, ".vhd")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(abs|access|after|alias|all|and|architecture|array|assert|attribute|begin|block|")
 			_T("body|buffer|bus|case|component|configuration|constant|disconnect|downto|else|elsif|")
@@ -763,7 +763,7 @@ UnicodeString GetDefReservedPtn(
 			sns_case = false;
 		}
 	}
-	else if (USAME_TI(fext, ".nbt")) {
+	else if (test_FileExt(fext, ".nbt")) {
 		ret_str.sprintf(_T("%s"),
 			_T("\\b(ActivateWnd|Add|(Append|Filter|Load|Replace|Save)Buffer|Break|CallCommands|Close|Continue|")
 			_T("Debug|Download|Echo(On|Off|T?)|Edit|Else|End(If|Repeat)|Exit|FileExists|FlashWin|Format(DT|DI|FN)?|")
@@ -784,18 +784,18 @@ UnicodeString GetDefReservedPtn(
 UnicodeString GetDefNumericPtn(UnicodeString fext)
 {
 	return (
-		test_FileExt(fext, _T(".css")) ? "([: ]+#[0-9a-f]+)|(\\b[0-9][0-9.]*)" :
-		test_FileExt(fext, _T(".dfm")) ? "\\s-?[0-9]+\\b" :
-		test_FileExt(fext, _T(".fs"))  ? "\\b[0-9][box0-9a-f.]*\\b" :
-		test_FileExt(fext, _T(".json"))? "\\b-?[0-9][0-9.]*\\b" :
-		test_FileExt(fext, _T(".v"))   ? "\\b[0-9]+('(b[01_]+|o[0-7_]+|d[0-9_]+|h[0-9a-f_]+))?" :
-		test_FileExt(fext, _T(".swift"))?
+		test_FileExt(fext, ".css")  ? "([: ]+#[0-9a-f]+)|(\\b[0-9][0-9.]*)" :
+		test_FileExt(fext, ".dfm")  ? "\\s-?[0-9]+\\b" :
+		test_FileExt(fext, ".fs")   ? "\\b[0-9][box0-9a-f.]*\\b" :
+		test_FileExt(fext, ".json") ? "\\b-?[0-9][0-9.]*\\b" :
+		test_FileExt(fext, ".v")    ? "\\b[0-9]+('(b[01_]+|o[0-7_]+|d[0-9_]+|h[0-9a-f_]+))?" :
+		test_FileExt(fext, ".swift")?
 			"\\b([0-9][0-9._]*(e[\\+\\-]?[0-9]+)?|0x[0-9a-f.]+(p[\\+\\-]?[0-9]+)?|0b[01]+|0o[0-7]+)\\b" :
-		test_FileExt(fext, _T(".vb.vbs.bas.mac"))?
+		test_FileExt(fext, ".vb.vbs.bas.mac")?
 			"(\\b[0-9][0-9.]*\\b)|(&h[0-9a-f]+&?)" :
 		test_FileExt(fext, FEXT_PASCAL) ? "((\\b[0-9][0-9.]*)|(\\$[0-9a-f]+))\\b" :
 		test_FileExt(fext, FEXT_PROGRAM)? "\\b[0-9][x0-9a-f.]*[ul]*\\b" :
-		USAME_TI(fext, ".nbt")? "\\b[0-9]+\\b" : "");
+		test_FileExt(fext, ".nbt")  ? "\\b[0-9]+\\b" : "");
 }
 
 //---------------------------------------------------------------------------
@@ -807,17 +807,17 @@ UnicodeString GetDefSymbolChars(
 	bool is_h2t)			//HTML→TEXT変換モード
 {
 	return (
-		is_xml?										"{}/=<>:;?" :
-		test_FileExt(fext, _T(".au3"))?				"{}()[]+-*/%&!~=<>,.:" :
-		test_FileExt(fext, _T(".css"))?				"{}()*:;" :
-		test_FileExt(fext, _T(".dfm"))?				"{}()[]<>=:" :
-		test_FileExt(fext, _T(".dsp.dsw"))?			"{}/=<>:?" :
-		test_FileExt(fext, _T(".json"))?			"{}[],:" :
-		test_FileExt(fext, _T(".ps1.psm1"))?		"{}()[]+-*/%|=,:@" :
-		test_FileExt(fext, _T(".vb.vbs.bas.mac"))?	"{}()[]+-*/%|^!~=<>,:;?" :
-		test_FileExt(fext, _T(".vhd"))?				"{}()[]+-*/%&!=<>,:;" :
-		test_FileExt(fext, FEXT_PROGRAM)?			"{}()[]+-*/%&|^!~=<>,:;?" :
-		USAME_TI(fext, ".nbt")?						"+-*/%!=<>#_" :
+		is_xml?									"{}/=<>:;?" :
+		test_FileExt(fext, ".au3")?				"{}()[]+-*/%&!~=<>,.:" :
+		test_FileExt(fext, ".css")?				"{}()*:;" :
+		test_FileExt(fext, ".dfm")?				"{}()[]<>=:" :
+		test_FileExt(fext, ".dsp.dsw")?			"{}/=<>:?" :
+		test_FileExt(fext, ".json")?			"{}[],:" :
+		test_FileExt(fext, ".ps1.psm1")?		"{}()[]+-*/%|=,:@" :
+		test_FileExt(fext, ".vb.vbs.bas.mac")?	"{}()[]+-*/%|^!~=<>,:;?" :
+		test_FileExt(fext, ".vhd")?				"{}()[]+-*/%&!=<>,:;" :
+		test_FileExt(fext, FEXT_PROGRAM)?		"{}()[]+-*/%&|^!~=<>,:;?" :
+		test_FileExt(fext, ".nbt")?				"+-*/%!=<>#_" :
 		(test_FileExt(fext, FEXT_HTML) && !is_h2t)?	"{}</>=:;" : "");
 }
 
@@ -831,7 +831,7 @@ UnicodeString GetDefQuotChars(
 	bool is_ini,			//対象がINIファイル書式
 	bool is_h2t)			//HTML→TEXT変換モード
 {
-	use_esc = (!test_FileExt(fext, _T(".vbs.bas.vb.mac.qbt")) && !is_ini);
+	use_esc = (!test_FileExt(fext, ".vbs.bas.vb.mac.qbt") && !is_ini);
 
 	return (
 		test_FileExt(fext,
@@ -840,14 +840,14 @@ UnicodeString GetDefQuotChars(
 			_T(".java.json.lisp.lsp.lua.mac.qbt.qml.rc.rs.scala.swift.vb.vbs.v.vhd"))?
 														"\"" :
 		test_FileExt(fext, FEXT_PASCAL _T(".dfm.st"))?	"\'" :
-		(test_FileExt(fext, _T(".php")) && !is_h2t)?	"\"\'" :
-		test_FileExt(fext, _T(".as.au3.css.js.jsx.kt.kts.pl.ps1.psm1.rb.py.sql.PspScript.ts"))?
+		(test_FileExt(fext, ".php") && !is_h2t)?		"\"\'" :
+		test_FileExt(fext, ".as.au3.css.js.jsx.kt.kts.pl.ps1.psm1.rb.py.sql.PspScript.ts")?
 														"\"\'" :
-		test_FileExt(fext, _T(".go"))?					"\"`" :
-		test_FileExt(fext, _T(".sh"))?					"\"\'`" :
+		test_FileExt(fext, ".go")?						"\"`" :
+		test_FileExt(fext, ".sh")?						"\"\'`" :
 		(test_FileExt(fext, FEXT_HTML) && !is_h2t)?		"\"" :
 		(is_xml || is_ini)?								"\"" :
-		USAME_TI(fext, ".nbt")?							"\"%" : "");
+		test_FileExt(fext, ".nbt")?						"\"%" : "");
 }
 
 //---------------------------------------------------------------------------
@@ -863,11 +863,11 @@ UnicodeString GetDefFunctionPtn(
 
 	UnicodeString std_ptn = "\\b[_a-zA-Z]\\w*\\(";
 
-	if (test_FileExt(fext, _T(".ahk"))) {
+	if (test_FileExt(fext, ".ahk")) {
 		func_ptn = "^[_a-zA-Z]\\w*\\(\\w*\\)\\s*{";
 		name_ptn = "^[_a-zA-Z]\\w*\\(";
 	}
-	else if (test_FileExt(fext, _T(".au3"))) {
+	else if (test_FileExt(fext, ".au3")) {
 		func_ptn = "^Func\\s+[_a-zA-Z]\\w*\\(";
 		name_ptn = std_ptn;
 	}
@@ -875,63 +875,63 @@ UnicodeString GetDefFunctionPtn(
 		func_ptn = "^([_a-zA-Z][^\\(=;:,]*[\\t ]+)*\\**([_a-zA-Z]\\w*::)?[~_a-zA-Z]\\w*\\([^;]*$";
 		name_ptn = "(\\b|~)[_a-zA-Z]\\w*\\(";
 	}
-	else if (test_FileExt(fext, _T(".go"))) {
+	else if (test_FileExt(fext, ".go")) {
 		func_ptn = "^func(\\s\\(.+\\))?\\s+[_a-zA-Z]\\w*";
 		name_ptn = std_ptn;
 	}
-	else if (test_FileExt(fext, _T(".hsp"))) {
+	else if (test_FileExt(fext, ".hsp")) {
 		func_ptn = "^#(defcfunc|deffunc)\\s+\\w+";
 		name_ptn = "\\b\\w+\\b";
 	}
-	else if (test_FileExt(fext, _T(".js.jsx.ts.as.awk"))) {
+	else if (test_FileExt(fext, ".js.jsx.ts.as.awk")) {
 		func_ptn = "^function\\s+[_a-zA-Z]\\w*\\(";
 		name_ptn = std_ptn;
 	}
-	else if (test_FileExt(fext, _T(".java"))) {
+	else if (test_FileExt(fext, ".java")) {
 		func_ptn = "^\\s*((public|private|protected)\\s+)?[_a-zA-Z][^\\(=;:]*\\s+[_a-zA-Z]\\w*\\([^;]*$";
 		name_ptn = std_ptn;
 	}
-	else if (test_FileExt(fext, _T(".kt.kts"))) {
+	else if (test_FileExt(fext, ".kt.kts")) {
 		func_ptn = "^\\s*fun\\s+.+\\(.*\\)";
 		name_ptn = std_ptn;
 	}
-	else if (test_FileExt(fext, _T(".lua"))) {
+	else if (test_FileExt(fext, ".lua")) {
 		func_ptn = "^(local\\s)?function\\s+[_a-zA-Z][\\w\\.:]*\\(";
 		name_ptn = std_ptn;
 	}
-	else if (test_FileExt(fext, _T(".mac"))) {
+	else if (test_FileExt(fext, ".mac")) {
 		func_ptn = "^(sub|proc|function)\\s+[_a-zA-Z]\\w*";
 	}
-	else if (test_FileExt(fext, _T(".pas.dpr.dpk.inc"))) {
+	else if (test_FileExt(fext, ".pas.dpr.dpk.inc")) {
 		func_ptn = "^(procedure|function)\\s+[_a-zA-Z]\\w*";
 	}
-	else if (test_FileExt(fext, _T(".php")) && !is_h2t) {
+	else if (test_FileExt(fext, ".php") && !is_h2t) {
 		func_ptn = "^(function)\\s+[_a-zA-Z]\\w*";
 	}
-	else if (test_FileExt(fext, _T(".pl.pm"))) {
+	else if (test_FileExt(fext, ".pl.pm")) {
 		func_ptn = "^(sub\\s+[_a-zA-Z]\\w*|=head\\d\\b)";
 	}
-	else if (test_FileExt(fext, _T(".ps1.psm1"))) {
+	else if (test_FileExt(fext, ".ps1.psm1")) {
 		func_ptn = "^function\\s+[_a-zA-Z](\\w|-)*\\b";
 		name_ptn = "\\s[_a-zA-Z](\\w|-)*\\b";
 	}
-	else if (test_FileExt(fext, _T(".rb.py")))
+	else if (test_FileExt(fext, ".rb.py"))
 		func_ptn = "^\\s*def\\s+[_a-zA-Z]\\w*";
-	else if (test_FileExt(fext, _T(".rs")))
+	else if (test_FileExt(fext, ".rs"))
 		func_ptn = "^(pub\\s)?(fn)\\s+[_a-zA-Z]\\w*";
-	else if (test_FileExt(fext, _T(".scala"))) {
+	else if (test_FileExt(fext, ".scala")) {
 		func_ptn = "^\\s*def\\s+[_a-zA-Z][^:]*:[^:]*";
 		name_ptn = "\\b[_a-zA-Z]\\w*[\\(\\[:]";
 	}
-	else if (test_FileExt(fext, _T(".sh"))) {
+	else if (test_FileExt(fext, ".sh")) {
 		func_ptn = "^(function\\s)?[_a-zA-Z]\\w*\\(";
 		name_ptn = std_ptn;
 	}
-	else if (test_FileExt(fext, _T(".swift"))) {
+	else if (test_FileExt(fext, ".swift")) {
 		func_ptn = "^\\s*func\\s+[_a-zA-Z]\\w*\\(";
 		name_ptn = std_ptn;
 	}
-	else if (test_FileExt(fext, _T(".vbs.vb"))) {
+	else if (test_FileExt(fext, ".vbs.vb")) {
 		func_ptn = "^\\s*((public|private)\\s)?(shared\\s)?(sub|proc|function)\\s+[_a-zA-Z]\\w*";
 	}
 
@@ -944,17 +944,17 @@ UnicodeString GetDefFunctionPtn(
 bool GetSearchPairPtn(UnicodeString fext, TStringList *lst)
 {
 	UnicodeString tab = "\t";
-	if (test_FileExt(fext, _T(".dfm"))) {
+	if (test_FileExt(fext, ".dfm")) {
 		lst->Add("^\\s*((object\\s)|item$)" + tab + "^\\s*end>?$");
 	}
-	else if (test_FileExt(fext, _T(".pas"))) {
+	else if (test_FileExt(fext, ".pas")) {
 		lst->Add("(^\\s*(((else\\s)?begin)|case|try|record)\\b)|(\\w+\\s=\\s(class|interface|record)\\b)"
 					+ tab + "^\\s*end[;).]?\\b");
 	}
 	else if (test_FileExt(fext, FEXT_C_SH)) {
 		lst->Add("^\\s*#\\s*if\\w*" + tab + "^\\s*#\\s*endif");
 	}
-	else if (test_FileExt(fext, _T(".vbs.vb.mac"))) {
+	else if (test_FileExt(fext, ".vbs.vb.mac")) {
 		lst->Add("^\\s*sub\\s+\\w+\\b" + tab + "^\\s*end\\s+sub\\b");
 		lst->Add("^\\s*function\\s+\\w+\\b" + tab + "^\\s*end\\s+function\\b");
 		lst->Add("^\\s*proc\\s+\\w+\\b" + tab + "^\\s*end\\s+proc\\b");
@@ -964,7 +964,7 @@ bool GetSearchPairPtn(UnicodeString fext, TStringList *lst)
 		lst->Add("^\\s*select\\s+case\\s" + tab + "^\\s*end\\s+select\\b");
 		lst->Add("^\\s*class\\s+\\w+\\b" + tab + "^\\s*end\\s+class\\b");
 	}
-	else if (test_FileExt(fext, _T(".pod.pl.pm"))) {
+	else if (test_FileExt(fext, ".pod.pl.pm")) {
 		lst->Add("^=pod\\b" + tab + "^=cut\\b");
 		lst->Add("^=over\\b" + tab + "^=back\\b");
 	}
@@ -983,7 +983,7 @@ bool GetDefaultHighlight(
 	if (!StartsStr('.', fext)) fext.Insert(".", 1);
 
 	bool is_xml = test_FileExt(fext, FEXT_XML);
-	bool is_ini = test_FileExt(fext, _T(".ini.inf.reg.url"));
+	bool is_ini = test_FileExt(fext, ".ini.inf.reg.url");
 
 	UnicodeString lbuf;
 	lst->Clear();

@@ -205,8 +205,10 @@
       <div class="indent1">
         チェックすると、Markdown記法に準じた変換を行います。<br>
         「<b>見出し文字</b>」の設定は無効となり、<b>#</b> を用いた表記で変換されます。<br>
-        また、画像が &quot;![alt属性](ファイル名)&quot; という形で挿入されます(alt無指定の場合&quot;画像&quot;)。<br>
+        画像は &quot;![alt属性](ファイル名)&quot; という形で挿入されます(alt無指定の場合&quot;画像&quot;)。<br>
         定義リストでは、<b>dd</b> 要素の前に &quot;:&nbsp;&nbsp;&nbsp;&quot; が挿入されます。<br>
+        <b>table</b> には対応していませんが、&quot;---- ---- ～&quot; という形の区切りが挿入されます。<br>
+        なお、<a href="hid00006.htm#HtmlToText">HtmlToText</a> コマンドのパラメータでこの設定を切り替えることもできます(<b>MD</b> で有効、<b>TX</b> で無効)。
       </div>
       <hr><br>
     </dd>

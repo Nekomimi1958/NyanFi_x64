@@ -517,14 +517,17 @@
       <a href="#FindText">→ FindText</a>　<a href="#FindSelDown">→ FindSelDown</a>　<a href="#FindSelUp">→ FindSelUp</a>
     </dd>
 
-    <dt id="HtmlToText">HtmlToText<span class="pram_text">[_{ON|OFF}]</span></dt>
+    <dt id="HtmlToText">HtmlToText<span class="pram_text">[_{ON|OFF}[;{[^]MD|TX}]]</span></dt>
     <dd>パラメータを指定しない場合、HTML文書で、HTML→テキスト変換表示/通常表示(ソース)をトグルで切り替えます。<br>
       パラメータに <b>ON</b> を指定するとHTML→テキスト変換表示、<b>OFF</b> では通常表示になります。<br>
       &lt;H1&gt;～&lt;H6&gt; は、見出しマーク文字が付加されます。箇条書きなどにも対応。リンク先のURLは括弧内に表示されます。また存在するローカルファイルへのリンクも表示され、<a
         href="#TagJump">TagJump</a> や <a href="#TagView">TagView</a> コマンドで開けます(name や id による指定は無効)。<br>
+      <div class="spc_box">
+        さらに <b>MD</b> を指定すると、<a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー -「HTML→テキスト変換」</a> の 「<b>Markdown記法に変換</b>」オプションが有効に、<b>TX</b> を指定するとオプションが無効になります。また、<b>^MD</b> では状態が反転します。<br>
+        <b>例</b>: HtmlToText_ON;MD
+      </div>
       なお、<a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビュアーを開いたり、通常テキストから <a href="#TagView">TagView</a>
       コマンドで開いたりした場合は通常表示に戻ります。<br>
-      <a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー -「HTML→テキスト変換」</a>
     </dd>
 
     <dt id="ImgPreview">ImgPreview</dt>

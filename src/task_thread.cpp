@@ -1270,7 +1270,7 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 		}
 		//‰æ‘œƒtƒ@ƒCƒ‹
 		else {
-			TColor bg = test_FileExt(ExtractFileExt(fnam), _T(".png.gif"))? Config->CvImg_mgn_color : col_None;
+			TColor bg = test_FileExt(ExtractFileExt(fnam), ".png.gif")? Config->CvImg_mgn_color : col_None;
 			if (load_ImageFile(fnam, i_img.get(), (Config->CvImg_not_use_prvw? WICIMG_FRAME : WICIMG_PREVIEW), bg)==0)
 				UserAbort(USTR_FaildLoad);
 			i_wd = i_img->Width;

@@ -684,18 +684,18 @@ void __fastcall TTxtViewer::UpdateScr(
 		is_xml = (StartsText("<?xml ", TxtBufList->Strings[0]) || test_FileExt(fext, FEXT_XML));
 
 	//青空文庫か？
-	isAozora = ChkAozora && test_FileExt(fext, _T(".txt")) && is_match_regex(TxtBufList->Text, _T("［＃.*?］"));
+	isAozora = ChkAozora && test_FileExt(fext, ".txt") && is_match_regex(TxtBufList->Text, _T("［＃.*?］"));
 
 	isIniFmt = isAwstats = isNyanTxt = false;
 	if (!isBinary && !isLog && !is_xml && !isAozora) {
 		//セクションを持っているか？
-		isIniFmt = test_FileExt(fext, _T(".ini.inf.reg.url"));
+		isIniFmt = test_FileExt(fext, ".ini.inf.reg.url");
 		if (!isIniFmt && !test_FileExt(fext, _T(".txt.log") FEXT_PROGRAM FEXT_HTML)) {
 			TRegExOptions opt; opt << roMultiLine;
 			isIniFmt = TRegEx::IsMatch(TxtBufList->Text, "^\\[[a-zA-Z0-9_ ]+\\]$", opt);
 		}
 		//AWStatsデーか？
-		if (test_FileExt(fext, _T(".txt")) && StartsStr("awstats", ExtractFileName(FileName))) {
+		if (test_FileExt(fext, ".txt") && StartsStr("awstats", ExtractFileName(FileName))) {
 			isAwstats = StartsStr("AWSTATS DATA FILE", TxtBufList->Text);
 		}
 		//NyanFi用テキストか？
@@ -853,9 +853,9 @@ void __fastcall TTxtViewer::UpdateScr(
 			if (EmpComment) {
 				if (isAwstats)
 					RemLnList->Add("#");
-				else if (test_FileExt(fext, _T(".bat.cmd")))
+				else if (test_FileExt(fext, ".bat.cmd"))
 					RemLnList->Add("$BAT");
-				else if (test_FileExt(fext, _T(".nbt.qbt")))
+				else if (test_FileExt(fext, ".nbt.qbt"))
 					RemLnList->Add("$QBT");
 				else if (isIniFmt || isNyanTxt)
 					RemLnList->Add("$INI");
@@ -1014,7 +1014,7 @@ void __fastcall TTxtViewer::UpdateScr(
 			txt_buf->Assign(htmcnv->TxtBuf);
 		}
 		//.json ファイルを整形
-		else if (test_FileExt(fext, _T(".json"))) {
+		else if (test_FileExt(fext, ".json")) {
 			if (FormatJson) {
 				try {
 					std::unique_ptr<TStringList> jbuf(new TStringList());
@@ -1032,7 +1032,7 @@ void __fastcall TTxtViewer::UpdateScr(
 			}
 		}
 		//.dfm ファイル内の文字列をデコード
-		else if (test_FileExt(fext, _T(".dfm"))) {
+		else if (test_FileExt(fext, ".dfm")) {
 			if (DecodeDfmStr) conv_DfmText(txt_buf.get());
 		}
 		//CSV/TSV(固定長表示)
@@ -1084,8 +1084,9 @@ void __fastcall TTxtViewer::UpdateScr(
 						if (ind_n>0) txt_buf->Strings[i] = StringOfChar(_T('　'), ind_n) + lbuf;
 					}
 					//改丁、改ページ
-					else if (USAME_TS(lbuf, "［＃改丁］") || USAME_TS(lbuf, "［＃改ページ］"))
+					else if (USAME_TS(lbuf, "［＃改丁］") || USAME_TS(lbuf, "［＃改ページ］")) {
 						txt_buf->Strings[i] = StringOfChar(_T('─'), MaxHchX/2);
+					}
 				}
 				//罫線
 				else {
@@ -2533,7 +2534,7 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 		//文字コード
 		UnicodeString fext = get_extension(FileName);
 		UnicodeString sttstr =
-			(!isXDoc2Txt && !test_FileExt(fext, _T(".rtf")) && isText)?
+			(!isXDoc2Txt && !test_FileExt(fext, ".rtf") && isText)?
 				get_NameOfCodePage(TxtBufList->Encoding->CodePage, false, HasBOM) : UnicodeString("----");
 		SttHeader->Panels->Items[1]->Text = sttstr;
 
@@ -2548,13 +2549,16 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 			sttstr = "BINARY";
 		}
 		else if (test_HtmlExt(fext)) {
-			sttstr.sprintf(_T("%s"), isHtm2Txt?  _T("TEXT") : _T("SOURCE"));
+			sttstr.sprintf(_T("%s"), isHtm2Txt? (ToMarkdown? _T("MARKDOWN") : _T("TEXT")) : _T("SOURCE"));
+		}
+		else if (test_FileExt(fext, ".md")) {
+			sttstr = "MARKDOWN";
 		}
 		else if (isCSV) {
 			sttstr.sprintf(_T("%s"), isTSV? _T("TSV") : _T("CSV"));
 			if (isFixedLen) sttstr.Insert("FIXED - ", 1);
 		}
-		else if (test_FileExt(fext, _T(".rtf.wri"))) {
+		else if (test_FileExt(fext, ".rtf.wri")) {
 			sttstr = "PLAIN";
 		}
 		else if (isJsonFmt) {
@@ -2783,6 +2787,22 @@ bool __fastcall TTxtViewer::SetToggleSw(bool &sw, UnicodeString prm)
 {
 	sw = USAME_TI(prm, "ON")? true : USAME_TI(prm, "OFF")? false : !sw;
 	return sw;
+}
+//---------------------------------------------------------------------------
+//HtmlToText のオプション設定
+//---------------------------------------------------------------------------
+void __fastcall TTxtViewer::SetHtmlToText(UnicodeString prm)
+{
+	TStringDynArray lst = split_strings_semicolon(prm);
+	UnicodeString tgl_prm;
+	for (int i=0; i<lst.Length; i++) {
+		UnicodeString s = lst[i];
+		if (contained_wd_i("ON|OFF", s)) tgl_prm = s;
+		else if (SameText(s, "MD"))	 ToMarkdown = true;
+		else if (SameText(s, "^MD")) ToMarkdown = !ToMarkdown;
+		else if (SameText(s, "TX"))	 ToMarkdown = false;
+	}
+	SetToggleSw(isHtm2Txt, tgl_prm);
 }
 
 //---------------------------------------------------------------------------
@@ -4772,7 +4792,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 	else if (isText) {
 		//HTML→テキスト変換
 		if (USAME_TI(cmd, "HtmlToText")) {
-			SetToggleSw(isHtm2Txt, prm);
+			SetHtmlToText(prm);
 			if (isExtWnd) TxtViewer->isHtm2Txt = isHtm2Txt;		//内部ビュアーに反映
 			AssignText();
 		}

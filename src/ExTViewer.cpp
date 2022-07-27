@@ -271,7 +271,7 @@ bool __fastcall TExTxtViewer::OpenViewer(
 		int cpag = 0;
 
 		isXDoc2Txt = bin_mode? false : (UseXd2tx && xd2tx_TestExt(fext));
-		isRichText = bin_mode? false : test_FileExt(fext, _T(".rtf.wri"));
+		isRichText = bin_mode? false : test_FileExt(fext, ".rtf.wri");
 		isViewText = bin_mode? false : (force_txt? true : is_TextFile(FileName, &cpag, NULL, &ExViewer->HasBOM));
 
 		TxtMainPanel->Visible	= false;

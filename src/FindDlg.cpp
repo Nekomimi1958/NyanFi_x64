@@ -434,9 +434,9 @@ void __fastcall TFindFileDlg::MaskComboBoxChange(TObject *Sender)
 	UnicodeString fext = get_extension(MaskComboBox->Text);
 	bool is_text = test_TxtFile(MaskComboBox->Text);
 	hasTime   = test_FileExt(fext, FEXT_DURATION);
-	hasRate   = test_FileExt(fext, _T(".mp3.wma"));
+	hasRate   = test_FileExt(fext, ".mp3.wma");
 	hasFrame  = test_FileExt(fext, FEXT_VIDEO);
-	hasFormat = test_FileExt(fext, _T(".wav.flac"));
+	hasFormat = test_FileExt(fext, ".wav.flac");
 	hasImage  = test_FileExt(fext, FEXT_IMAGE + get_img_fext() + FEXT_PSP);
 	hasExif   = test_ExifExt(fext);
 	hasText   = is_text || xd2tx_TestExt(fext);

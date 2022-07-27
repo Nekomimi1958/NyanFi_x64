@@ -369,6 +369,7 @@ public:
 	bool __fastcall IsCmdAvailable(UnicodeString cmd);
 	bool __fastcall IsCmdInhibited(UnicodeString cmd);
 
+	void __fastcall SetHtmlToText(UnicodeString prm);
 };
 //---------------------------------------------------------------------------
 extern TTxtViewer *TxtViewer;

@@ -296,7 +296,6 @@ void __fastcall TTagManDlg::SetOptBtn()
 		else
 			ListScrPanel->SetRBCornerPanel(BlankPanel);
 	}
-
 }
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::ChgOptBtnClick(TObject *Sender)

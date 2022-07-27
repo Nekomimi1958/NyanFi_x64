@@ -163,7 +163,7 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 		UserDefPanel->Visible = false;
 
 		UnicodeString fext = get_extension(TxtViewer->FileName);
-		is_DFM = test_FileExt(fext, _T(".dfm"));
+		is_DFM = test_FileExt(fext, ".dfm");
 
 		UnicodeString fnc_ptn;
 
@@ -181,7 +181,7 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 
 		//関数以外
 		if (fnc_ptn.IsEmpty()) {
-			if (test_FileExt(fext, _T(".bat.cmd.qbt"))) {
+			if (test_FileExt(fext, ".bat.cmd.qbt")) {
 				fnc_ptn = "^:[^:]+";
 				cap_str = "ラベル一覧";
 			}
@@ -196,7 +196,7 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 			}
 			else if (!TxtViewer->HeadlinePtn.IsEmpty()) {
 				fnc_ptn = TxtViewer->HeadlinePtn;
-				cap_str = test_FileExt(fext, _T(".eml"))? "件名一覧" : TxtViewer->isLog? "タスク一覧" : "見出し一覧";
+				cap_str = test_FileExt(fext, ".eml")? "件名一覧" : TxtViewer->isLog? "タスク一覧" : "見出し一覧";
 			}
 		}
 

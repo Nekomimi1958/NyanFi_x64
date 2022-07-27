@@ -5,6 +5,7 @@
 #include <mmdeviceapi.h>
 #include <endpointvolume.h>
 #include <System.Character.hpp>
+#include <IdURI.hpp>
 #include "usr_wic.h"
 #include "usr_arc.h"
 #include "usr_mmfile.h"
@@ -2281,13 +2282,13 @@ void SetupTimer()
 						UnicodeString mm = get_tkn_r(prm_lst[j], _T("??:"));
 						for (int h=0; h<24; h++) {
 							TDateTime dt = TTime(UnicodeString().sprintf(_T("%02u:%s"), h, mm.c_str())) + Date();
-							if (CompareDateTime(Now(), dt)==GreaterThanValue) dt = IncDay(dt, 1);
+							if (Dateutils::CompareDateTime(Now(), dt)==GreaterThanValue) dt = IncDay(dt, 1);
 							Timer_AlarmList[i]->Add(format_DateTime(dt));
 						}
 					}
 					else {
 						TDateTime dt = TTime(prm_lst[j]) + Date();
-						if (CompareDateTime(Now(), dt)==GreaterThanValue) dt = IncDay(dt, 1);
+						if (Dateutils::CompareDateTime(Now(), dt)==GreaterThanValue) dt = IncDay(dt, 1);
 						Timer_AlarmList[i]->Add(format_DateTime(dt));
 					}
 				}
@@ -5231,7 +5232,7 @@ bool check_file_std(
 			if (!str_match(lst_stt->find_DT_str, format_Date(f_tm))) return false;
 		}
 		else {
-			TValueRelationship res = CompareDate(f_tm, lst_stt->find_DT_value);
+			TValueRelationship res = Dateutils::CompareDate(f_tm, lst_stt->find_DT_value);
 			switch (lst_stt->find_DT_mode) {
 			case 1: if (res!=EqualsValue)							return false; break;
 			case 2: if (res!=EqualsValue && res!=LessThanValue)		return false; break;
@@ -5405,7 +5406,7 @@ bool check_file_ex(UnicodeString fnam, flist_stt *lst_stt)
 
 		if (use_Proc) 						get_ProcessingInf(fnam, i_lst);
 
-		if (test_FileExt(fext, _T(".pdf"))) get_PdfVer(fnam, i_lst);
+		if (test_FileExt(fext, ".pdf"))		get_PdfVer(fnam, i_lst);
 
 		if		(test_AppInfExt(fext))		get_AppInf(fnam,  i_lst);
 		else if (test_HtmlExt(fext))		get_HtmlInf(fnam, i_lst);
@@ -5938,7 +5939,7 @@ void update_DriveLog(bool save)
 			UnicodeString ibuf = DriveLogList->Strings[j];
 			TDateTime dt;
 			if (str_to_DateTime(get_csv_item(ibuf, 0), &dt)) {
-				TValueRelationship res = CompareDate(dt, Now());
+				TValueRelationship res = Dateutils::CompareDate(dt, Now());
 				if (res==LessThanValue) continue;
 				if (res==EqualsValue && SameText(get_csv_item(ibuf, 1), dstr)) {
 					idx = j; break;
@@ -6498,7 +6499,7 @@ void get_FindListD(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 					    match = str_match(lst_stt->find_DT_str, format_Date(f_tm));
 					}
 					else {
-						TValueRelationship res = CompareDate(f_tm, lst_stt->find_DT_value);
+						TValueRelationship res = Dateutils::CompareDate(f_tm, lst_stt->find_DT_value);
 						switch (lst_stt->find_DT_mode) {
 						case 1: match = (res==EqualsValue); break;
 						case 2: match = (res==EqualsValue || res==LessThanValue);    break;
@@ -7184,7 +7185,7 @@ void SetExtNameToCtrl(UnicodeString fnam, TWinControl *cp,
 		}
 	}
 
-	if (nbt_sw && test_FileExt(fext, _T(".nbt")))
+	if (nbt_sw && test_FileExt(fext, ".nbt"))
 		fnam = "@" + to_relative_name(fnam);
 
 	//コントロールに設定
@@ -8372,7 +8373,7 @@ void GetFileInfList(
 	//--------------------------
 	std::unique_ptr<TStringList> i_buf(new TStringList());
 	//._SF
-	if (test_FileExt(fp->f_ext, _T("._sf"))) {
+	if (test_FileExt(fp->f_ext, "._sf")) {
 		//種類
 		add_PropLine(_T("種類"), "_SF ファイル", i_list);
 		//パス
@@ -8867,7 +8868,7 @@ bool get_FileInfList(
 			add_PropLine_if(_T("IconFile"), url_file->ReadString("InternetShortcut", "IconFile"), lst);
 		}
 		//PDFバージョン
-		else if (test_FileExt(fext, _T(".pdf"))) {
+		else if (test_FileExt(fext, ".pdf")) {
 			get_PdfVer(fnam, lst);
 		}
 		//XML
@@ -8886,7 +8887,7 @@ bool get_FileInfList(
 				add_PropLine(_T("charset"), exclude_quot(Trim(get_tkn(lbuf.Delete(1, 8), ';'))), lst);
 		}
 		//C++Builder プロジェクト、ソース
-		else if (test_FileExt(fext, _T(".cbproj.dproj.cpp.pas.dfm.fmx.h"))) {
+		else if (test_FileExt(fext, ".cbproj.dproj.cpp.pas.dfm.fmx.h")) {
 			get_BorlandInf(fnam, lst);
 		}
 		//NyanFi コマンドファイル
@@ -8978,7 +8979,7 @@ bool get_FileInfList(
 
 		if (ShowTextPreview) {
 			//リッチテキスト
-			if (test_FileExt(fext, _T(".rtf.wri"))) {
+			if (test_FileExt(fext, ".rtf.wri")) {
 				if (TempRichEdit) {
 					TempRichEdit->Lines->LoadFromFile(fnam);
 					fp->prv_text = TempRichEdit->Lines->Text;
@@ -11394,7 +11395,7 @@ void PrvTextOut(
 		}
 
 		//.dfm 文字列値デコード
-		if (DecodeDfmStr && test_FileExt(get_extension(fnam), _T(".dfm"))) {
+		if (DecodeDfmStr && test_FileExt(get_extension(fnam), ".dfm")) {
 			s = conv_DfmText(s);
 		}
 
@@ -12577,17 +12578,34 @@ int get_FileNameByTag(
 //---------------------------------------------------------------------------
 //HtmConv をデフォルトで初期化
 //---------------------------------------------------------------------------
-void ini_HtmConv_def(HtmConv *htmcnv, UnicodeString fnam)
+void ini_HtmConv_def(HtmConv *htmcnv, UnicodeString fnam, UnicodeString url)
 {
-	htmcnv->FileName	 = fnam;
-	htmcnv->ToMarkdown	 = ToMarkdown;
-	htmcnv->HeaderStr	 = HtmHdrStr;
-	htmcnv->InsHrClass	 = HtmInsHrCls;
+	htmcnv->FileName = fnam;
+	htmcnv->UrlStr   = EmptyStr;
+	htmcnv->BaseStr	 = EmptyStr;
+	if (is_match_regex(url, _T("^https?://"))) {
+		try {
+			if (url.Pos("%")==0) url = TIdURI::URLEncode(url, IndyTextEncoding_UTF8());
+			htmcnv->UrlStr = url;
+			if (!EndsStr("/", url)) {
+				int p = pos_r(_T("/"), url);
+				if (p>0) url = url.SubString(1, p);
+			}
+			htmcnv->BaseStr = url;
+		}
+		catch (Exception &exception) {
+			;
+		}
+	}
+
+	htmcnv->ToMarkdown   = ToMarkdown;
+	htmcnv->HeaderStr    = HtmHdrStr;
+	htmcnv->InsHrClass   = HtmInsHrCls;
 	htmcnv->InsHrSection = HtmInsHrSct;
 	htmcnv->InsHrArticle = HtmInsHrArt;
-	htmcnv->InsHrNav	 = HtmInsHrNav;
-	htmcnv->DelBlkCls	 = HtmDelBlkCls;
-	htmcnv->DelBlkId	 = HtmDelBlkId;
+	htmcnv->InsHrNav     = HtmInsHrNav;
+	htmcnv->DelBlkCls    = HtmDelBlkCls;
+	htmcnv->DelBlkId     = HtmDelBlkId;
 }
 
 //---------------------------------------------------------------------------

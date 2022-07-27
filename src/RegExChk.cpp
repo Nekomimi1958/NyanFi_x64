@@ -56,9 +56,11 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 
-	MainPanel->Width	  = IniFile->ReadIntGen( _T("RegExMainWidth"),	MainPanel->Constraints->MinWidth);
-	OpePanel->Height	  = IniFile->ReadIntGen( _T("RegExOpeHeight"),	OpePanel->Constraints->MinHeight);
-	ReplaceEdit->Text	  = IniFile->ReadStrGen( _T("RegExChkRepStr"));
+	int mp_wd = IniFile->ReadIntGen( _T("RegExMainWidth"),	MainPanel->Constraints->MinWidth);
+	ReferPanel->Width     = ClientWidth - mp_wd - Splitter1->Width;
+	MainPanel->Width      = IniFile->ReadIntGen( _T("RegExMainWidth"),	MainPanel->Constraints->MinWidth);
+	OpePanel->Height      = IniFile->ReadIntGen( _T("RegExOpeHeight"),	OpePanel->Constraints->MinHeight);
+	ReplaceEdit->Text     = IniFile->ReadStrGen( _T("RegExChkRepStr"));
 	CaseCheckBox->Checked = IniFile->ReadBoolGen(_T("RegExChkCase"),	false);
 	UpdtCheckBox->Checked = IniFile->ReadBoolGen(_T("RegExChkUpdate"),	false);
 
@@ -166,8 +168,11 @@ void __fastcall TRegExChecker::TestActionExecute(TObject *Sender)
 		UnicodeString ptnstr = PtnComboBox->Text;
 		TRegExOptions opt;
 		if (!CaseCheckBox->Checked) opt<<roIgnoreCase;
-		for (int i=0; i<ObjMemo->Lines->Count; i++) {
-			UnicodeString lbuf = ObjMemo->Lines->Strings[i];
+		std::unique_ptr<TStringList> slst(new TStringList());
+		slst->Text = ObjMemo->Lines->Text;
+		int max_wd = 0;
+		for (int i=0; i<slst->Count; i++) {
+			UnicodeString lbuf = slst->Strings[i];
 			TMatchCollection mts = TRegEx::Matches(lbuf, ptnstr, opt);
 			if (mts.Count>0) {
 				UnicodeString mbuf;
@@ -180,8 +185,10 @@ void __fastcall TRegExChecker::TestActionExecute(TObject *Sender)
 				}
 				MatchWdList->Add(mbuf);
 				ResListBox->Items->Add(lbuf);
+				max_wd = std::max(max_wd, get_TabTextWidth(lbuf, ResListBox->Canvas, 8));
 			}
 		}
+		ResListBox->ScrollWidth = max_wd + ResListBox->Font->Size * 2;
 		cursor_Default();
 
 		//Œ‹‰Ê
@@ -230,8 +237,11 @@ void __fastcall TRegExChecker::ReplaceActionExecute(TObject *Sender)
 		UnicodeString ptnstr = PtnComboBox->Text;
 		TRegExOptions opt;
 		if (!CaseCheckBox->Checked) opt<<roIgnoreCase;
-		for (int i=0; i<ObjMemo->Lines->Count; i++) {
-			UnicodeString lbuf = ObjMemo->Lines->Strings[i];
+		std::unique_ptr<TStringList> slst(new TStringList());
+		slst->Text = ObjMemo->Lines->Text;
+		int max_wd = 0;
+		for (int i=0; i<slst->Count; i++) {
+			UnicodeString lbuf = slst->Strings[i];
 			TMatchCollection mts = TRegEx::Matches(lbuf, ptnstr, opt);
 			if (mts.Count>0) {
 				UnicodeString rbuf = replace_regex_2(lbuf, ptnstr, ReplaceEdit->Text, opt);
@@ -250,8 +260,10 @@ void __fastcall TRegExChecker::ReplaceActionExecute(TObject *Sender)
 				}
 				MatchWdList->Add(mbuf);
 				ResListBox->Items->Add(rbuf);
+				max_wd = std::max(max_wd, get_TabTextWidth(rbuf, ResListBox->Canvas, 8));
 			}
 		}
+		ResListBox->ScrollWidth = max_wd + ResListBox->Font->Size * 2;
 		cursor_Default();
 
 		//Œ‹‰Ê

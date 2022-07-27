@@ -9,7 +9,6 @@ object RegExChecker: TRegExChecker
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -17,13 +16,13 @@ object RegExChecker: TRegExChecker
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object Splitter1: TSplitter
     Left = 380
     Top = 0
     Width = 5
     Height = 400
+    Align = alRight
     AutoSnap = False
     MinSize = 60
   end
@@ -32,7 +31,7 @@ object RegExChecker: TRegExChecker
     Top = 0
     Width = 380
     Height = 400
-    Align = alLeft
+    Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
     Constraints.MinWidth = 380
@@ -60,18 +59,18 @@ object RegExChecker: TRegExChecker
         372
         244)
       object TLabel
-        Left = 39
+        Left = 35
         Top = 7
-        Width = 37
-        Height = 13
+        Width = 41
+        Height = 15
         Alignment = taRightJustify
         Caption = #12497#12479#12540#12531
       end
       object TLabel
         Left = 4
         Top = 134
-        Width = 48
-        Height = 13
+        Width = 52
+        Height = 15
         Caption = #26908#32034#23550#35937
       end
       object CaseCheckBox: TCheckBox
@@ -107,7 +106,7 @@ object RegExChecker: TRegExChecker
         Left = 80
         Top = 4
         Width = 208
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
         DropDownCount = 20
         TabOrder = 0
@@ -125,14 +124,15 @@ object RegExChecker: TRegExChecker
         Left = 80
         Top = 35
         Width = 208
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
-        EditLabel.Width = 60
-        EditLabel.Height = 13
+        EditLabel.Width = 65
+        EditLabel.Height = 15
         EditLabel.Caption = #32622#25563#25991#23383#21015
         LabelPosition = lpLeft
         PopupMenu = UserModule.EditPopupMenuE
         TabOrder = 2
+        Text = ''
       end
       object CopyBtn: TButton
         Left = 208
@@ -169,13 +169,14 @@ object RegExChecker: TRegExChecker
         Left = 120
         Top = 129
         Width = 128
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
-        EditLabel.Width = 34
-        EditLabel.Height = 13
+        EditLabel.Width = 37
+        EditLabel.Height = 15
         EditLabel.Caption = #12501#12449#12452#12523
         LabelPosition = lpLeft
         TabOrder = 8
+        Text = ''
       end
       object RefFileBtn: TButton
         Left = 252
@@ -238,8 +239,8 @@ object RegExChecker: TRegExChecker
       object ResultLabel: TLabel
         Left = 4
         Top = 4
-        Width = 24
-        Height = 13
+        Width = 26
+        Height = 15
         Caption = #32080#26524
         StyleElements = [seClient, seBorder]
       end
@@ -263,7 +264,7 @@ object RegExChecker: TRegExChecker
     Top = 0
     Width = 240
     Height = 400
-    Align = alClient
+    Align = alRight
     BevelOuter = bvLowered
     BorderWidth = 4
     TabOrder = 1
@@ -274,7 +275,7 @@ object RegExChecker: TRegExChecker
       Height = 390
       Align = alClient
       BorderStyle = bsNone
-      ItemHeight = 13
+      ItemHeight = 15
       TabOrder = 0
       TabWidth = 36
       OnDblClick = ReferListBoxDblClick

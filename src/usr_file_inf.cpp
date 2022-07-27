@@ -1859,7 +1859,7 @@ void get_BorlandInf(
 	UnicodeString fext = get_extension(fnam);
 
 	//プロジェクト
-	if (test_FileExt(fext, _T(".cbproj.dproj"))) {
+	if (test_FileExt(fext, ".cbproj.dproj")) {
 		std::unique_ptr<TStringList> fbuf(new TStringList());
 		fbuf->LoadFromFile(fnam);
 		bool flag = false;
@@ -1890,7 +1890,7 @@ void get_BorlandInf(
 		lst->Add(EmptyStr);
 	}
 	//ソース
-	else if (test_FileExt(fext, _T(".cpp.pas.dfm.fmx.h"))) {
+	else if (test_FileExt(fext, ".cpp.pas.dfm.fmx.h")) {
 		UnicodeString fm_nam = ChangeFileExt(fnam, ".dfm");
 		if (!file_exists(fm_nam)) fm_nam = ChangeFileExt(fnam, ".fmx");
 		if (file_exists(fm_nam)) {
@@ -2258,7 +2258,7 @@ int get_duration(UnicodeString fnam)
 	int t = -1;
 	UnicodeString fext = get_extension(fnam);
 
-	if (test_FileExt(fext, _T(".cda"))) {
+	if (test_FileExt(fext, ".cda")) {
 		int len;
 		if (get_CdaInf(fnam, NULL, &len)) t = len;
 	}

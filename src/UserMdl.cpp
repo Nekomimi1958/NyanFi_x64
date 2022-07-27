@@ -198,7 +198,6 @@ void __fastcall TUserModule::UpListItemActionUpdate(TObject *Sender)
 	((TAction*)Sender)->Enabled
 		= ActiveListBox && (ActiveListBox->Tag & LBTAG_OPT_INHI)==0
 			&& ActiveListBox->ItemIndex>=1 && ActiveListBox->ItemIndex<ActiveListBox->Count;
-
 }
 //---------------------------------------------------------------------------
 //ƒŠƒXƒg€–Ú‚ðˆê‚Â‰º‚Ö
@@ -928,10 +927,10 @@ void __fastcall TUserModule::SetOpenImgFilter(UnicodeString fnam)
 	UnicodeString ext = ExtractFileExt(fnam);
 	if (!ext.IsEmpty()) {
 		OpenImgDlg->FilterIndex =
-			test_FileExt(ext, _T(".bmp"))? 			1 :
-			test_FileExt(ext, _T(".jpg.jpe.jpeg"))?	2 :
-			test_FileExt(ext, _T(".png"))?			3 :
-			test_FileExt(ext, _T(".gif"))?			4 : 1;
+			test_FileExt(ext, ".bmp")? 			1 :
+			test_FileExt(ext, ".jpg.jpe.jpeg")?	2 :
+			test_FileExt(ext, ".png")?			3 :
+			test_FileExt(ext, ".gif")?			4 : 1;
 	}
 }
 
@@ -963,7 +962,7 @@ UnicodeString __fastcall TUserModule::get_DlgDefExt(UnicodeString filter)
 	TStringDynArray f_buf = SplitString(filter, "|");
 	if (f_buf.Length>=2) {
 		fext = ExtractFileExt(get_tkn(f_buf[1], ';')).LowerCase();
-		fext = test_FileExt(fext, _T(".txt.ini.csv.nbt.nwl.wav.zip"))? get_tkn_r(fext, '.') : EmptyStr;
+		fext = test_FileExt(fext, ".txt.ini.csv.nbt.nwl.wav.zip")? get_tkn_r(fext, '.') : EmptyStr;
 	}
 
 	return fext;
@@ -1083,7 +1082,7 @@ bool __fastcall TUserModule::FontDlgToFont(TFont *f)
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::SelectIconDlg(UnicodeString &fnam)
 {
-	if (test_FileExt(ExtractFileExt(fnam), _T(".exe.dll"))) {
+	if (test_FileExt(ExtractFileExt(fnam), ".exe.dll")) {
 		int ixn = (int)::ExtractIcon(HInstance, fnam.c_str(), -1);
 		if (ixn>1) {
 			HMODULE hShell32 = ::LoadLibrary(_T("shell32.dll"));

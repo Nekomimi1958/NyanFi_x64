@@ -15,6 +15,7 @@
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.AppEvnts.hpp>
 #include <Vcl.ActnList.hpp>
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 class TRegExChecker : public TForm

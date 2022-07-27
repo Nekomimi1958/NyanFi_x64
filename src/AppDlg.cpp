@@ -315,7 +315,7 @@ void __fastcall TAppListDlg::WMDropFiles(TWMDropFiles &msg)
 				int atr = file_GetAttr(fnam);
 				if (atr==faInvalid)		LoadUsrMsg(USTR_CantAccessDir);
 				if (faDirectory & atr)	UserAbort(USTR_IncludeDir);
-				if (!test_FileExt(get_extension(fnam), _T(".lnk.url"))) continue;
+				if (!test_FileExt(get_extension(fnam), ".lnk.url")) continue;
 				f_list->Add(fnam);
 			}
 			//ÉRÉsÅ[
@@ -760,7 +760,7 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 						fnam = IncludeTrailingPathDelimiter(fnam);
 					}
 				}
-				else if (!test_FileExt(get_extension(fnam), _T(".lnk.url"))) {
+				else if (!test_FileExt(get_extension(fnam), ".lnk.url")) {
 					continue;
 				}
 

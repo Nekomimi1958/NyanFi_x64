@@ -2050,7 +2050,7 @@ int  get_FileNameByTag(UnicodeString tnam, UnicodeString &rnam, TStringList *lst
 bool open_by_TextEditor(UnicodeString fnam, int lno = 0);
 bool open_by_ExtTextViewer(UnicodeString fnam, int lno = 0);
 
-void ini_HtmConv_def(HtmConv *htmcnv, UnicodeString fnam = EmptyStr);
+void ini_HtmConv_def(HtmConv *htmcnv, UnicodeString fnam = EmptyStr, UnicodeString url = EmptyStr);
 
 bool Execute_ex(UnicodeString cmd, UnicodeString prm = EmptyStr, UnicodeString wdir = EmptyStr,
 		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL);

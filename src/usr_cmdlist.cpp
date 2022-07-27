@@ -513,7 +513,7 @@ void get_PrmList(
 			_T("ContextMenu|ConvertHtm2Txt|Copy|CopyTo|CountLines|CreateDir|CursorDown|CursorUp|")
 			_T("DateSelect|DebugCmdFile|Delete|DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|")
 			_T("Filter|FindDown|FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|GitDiff|GitViewer|")
-			_T("Grep|HelpCurWord|ImageViewer|IncSearch|JumpIndex|JumpLine|JumpTo|ListArchive|")
+			_T("Grep|HelpCurWord|HtmlToText|ImageViewer|IncSearch|JumpIndex|JumpLine|JumpTo|ListArchive|")
 			_T("ListDuration|ListExpFunc|ListNyanFi|ListTail|ListText|ListTree|LoadBgImage|LoadResultList|")
 			_T("LoadTabGroup|LoadWorkList|LockKeyMouse|Mark|MaskFind|MaskSelect|MatchSelect|MonitorOff|")
 			_T("MoveTo|NameFromClip|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
@@ -1133,6 +1133,9 @@ void get_PrmList(
 		else if (USAME_TI(cmd, "SubViewer")) {
 			params += "CB : クリップボードの内容を表示\n";
 			params += "LK : ロック/解除\nRL : 左に90度回転\nRR : 右に90度回転\nFH : 左右反転\nFV : 上下反転\n";
+		}
+		else if (USAME_TI(cmd, "HtmlToText")) {
+			params += "MD : Markdown記法に変換\nTX : 通常テキストに変換\n";
 		}
 	}
 	//オプション設定

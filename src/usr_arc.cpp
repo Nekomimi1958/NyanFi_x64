@@ -1075,7 +1075,7 @@ bool UserArcUnit::HasZipImg(
 				do {
 					if (!inf.is_dir && !starts_AT(inf.f_name)) {
 						UnicodeString fext = get_extension(inf.f_name);
-						if (test_FileExt(fext, _T(".exe.com.msi.msu.scr.dll.rll.cpl.ocx"))) {
+						if (test_FileExt(fext, ".exe.com.msi.msu.scr.dll.rll.cpl.ocx")) {
 							ret = false;  break;
 						}
 						if (test_FileExt(fext, xlist)) {

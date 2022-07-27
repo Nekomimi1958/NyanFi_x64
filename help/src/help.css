@@ -251,13 +251,22 @@ PRE {
   font-family: monospace;
 }
 
-.inp_box {
+.inp_box_l {
   padding: 0px 40px 0px 4px;
   background-color: #fff;
   border-color: #666;
   border-style: solid;
   border-width: 1px;
   font-size: 90%;
+}
+
+.inp_box {
+    padding: 0px 40px 0px 4px;
+    background-color: #fff;
+    border-color: #666;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 90%;
 }
 
 .example_box {

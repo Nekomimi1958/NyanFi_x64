@@ -448,7 +448,7 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 	vnam = "34855";
 	vstr = EmptyStr;
 	idx  = lst->IndexOfName(vnam);
-	if (test_FileExt(fext, _T(".rw2"))) vstr = lst->Values["23"];
+	if (test_FileExt(fext, ".rw2")) vstr = lst->Values["23"];
 	if (vstr.IsEmpty()) vstr = lst->Values[vnam];
 	if (vstr.IsEmpty() || USAME_TS(vstr, "0")) vstr = get_tkn_r(lst->Values["NK:2"], ',');
 	if (!vstr.IsEmpty()) {
@@ -582,13 +582,13 @@ bool EXIF_GetInf(
 	if (!file_exists(fnam)) return false;
 
 	UnicodeString fext = get_extension(fnam);
-	bool isJpeg  = test_FileExt(fext, _T(".jpg.jpeg.jpe"));
-	bool isHeic	 = test_FileExt(fext, _T(".heic"));
-	bool isNikon = test_FileExt(fext, _T(".nef.nrw"));
-	bool isCR2	 = test_FileExt(fext, _T(".cr2"));
-	bool isCRW	 = test_FileExt(fext, _T(".crw"));
-	bool isRaf	 = test_FileExt(fext, _T(".raf"));
-	bool isX3f	 = test_FileExt(fext, _T(".x3f"));
+	bool isJpeg  = test_FileExt(fext, ".jpg.jpeg.jpe");
+	bool isHeic	 = test_FileExt(fext, ".heic");
+	bool isNikon = test_FileExt(fext, ".nef.nrw");
+	bool isCR2	 = test_FileExt(fext, ".cr2");
+	bool isCRW	 = test_FileExt(fext, ".crw");
+	bool isRaf	 = test_FileExt(fext, ".raf");
+	bool isX3f	 = test_FileExt(fext, ".x3f");
 
 	unsigned char xbuf[16];
 	UnicodeString itmbuf;
@@ -699,10 +699,10 @@ bool EXIF_GetInf(
 
 			//Magic Number
 			int magic_no = fsRead_int2(fsp, BigEndian);
-			if (test_FileExt(fext, _T(".rw2.raw"))) {
+			if (test_FileExt(fext, ".rw2.raw")) {
 				if (magic_no!=0x0055) Abort();
 			}
-			else if (test_FileExt(fext, _T(".orf"))) {
+			else if (test_FileExt(fext, ".orf")) {
 				if (magic_no!=0x4f52 && magic_no!=0x5352) Abort();
 			}
 			else if (magic_no!=0x002a) Abort();
@@ -855,7 +855,7 @@ bool Exif_GetImgSize(TStringList *lst, UnicodeString fext, unsigned int *w, unsi
 	UnicodeString w_str, h_str;
 
 	//RW2
-	if (test_FileExt(fext, _T(".rw2.raw")) && !lst->Values["4"].IsEmpty()) {
+	if (test_FileExt(fext, ".rw2.raw") && !lst->Values["4"].IsEmpty()) {
 		w_str = lst->Values["2"]; h_str = lst->Values["3"];
 		int s_w = get_ListIntVal(lst, _T("7")) - get_ListIntVal(lst, _T("5"));
 		if (s_w>0) w_str = s_w;
@@ -863,7 +863,7 @@ bool Exif_GetImgSize(TStringList *lst, UnicodeString fext, unsigned int *w, unsi
 		if (s_h>0) h_str = s_h;
 	}
 	//X3F
-	else if (test_FileExt(fext, _T(".x3f")) && !lst->Values["X3F:256"].IsEmpty()) {
+	else if (test_FileExt(fext, ".x3f") && !lst->Values["X3F:256"].IsEmpty()) {
 		w_str = lst->Values["X3F:256"]; h_str = lst->Values["X3F:257"];
 	}
 	//RAF (CFA)
@@ -877,7 +877,7 @@ bool Exif_GetImgSize(TStringList *lst, UnicodeString fext, unsigned int *w, unsi
 			hi = get_ListIntVal(lst, _T("40963"));
 		}
 
-		if (!test_FileExt(fext, _T(".jpg.jpeg.jpe")) || wd==0 || hi==0) {
+		if (!test_FileExt(fext, ".jpg.jpeg.jpe") || wd==0 || hi==0) {
 			if (!ListVal_is_empty(lst, _T("S2:256"))) {
 				wd = std::max(get_ListIntVal(lst, _T("S2:256")), wd);
 				hi = std::max(get_ListIntVal(lst, _T("S2:257")), hi);
@@ -916,7 +916,7 @@ bool Exif_GetImgSize(TStringList *lst, UnicodeString fext, unsigned int *w, unsi
 	}
 
 	//•ûŒü
-	if (!test_FileExt(fext, _T(".3fr"))) {
+	if (!test_FileExt(fext, ".3fr")) {
 		int ori = get_ListIntVal(lst, _T("274"));
 		if (ori==6 || ori==8) std::swap(w_str, h_str);
 	}
