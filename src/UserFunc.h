@@ -19,7 +19,7 @@
 //---------------------------------------------------------------------------
 #define URL_MATCH_PTN	_T("h?ttps?://[\\w/:%#$&?()~.=+-]+[\\w/]")		//URL用正規表現
 #define MAIL_MATCH_PTN	_T("mailto:[a-zA-Z0-9]+[\\w.-]*@[\\w.-]+")		//メール用正規表現
-#define LOCAL_FILE_PTN	_T("file:///[^/*?\"<>|）]+\\.[a-zA-Z0-9]+")		//ローカルファイルの正規表現
+#define LOCAL_FILE_PTN	_T("file:///[^*?\"<>|)）]+\\.[a-zA-Z0-9]+")		//ローカルファイルの正規表現
 
 #define LISTBOX_SCRMGN	2
 

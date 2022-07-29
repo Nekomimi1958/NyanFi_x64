@@ -14,7 +14,7 @@
 #define WORD_MATCH_PTN	"\\w+|[一-龠]+|[ぁ-ん]+|[ァ-ヴー]+|[ａ-ｚＡ-Ｚ０-９]+|[ｦ-ﾟ]+|#[0-9a-fA-F]{3,6}"
 
 //リンク先検索の正規表現
-#define LINK_MATCH_PTN	"(https?://[\\w/:%#$&?()~.=+-]+)|(file:///[^/*?\"<>|）]+)|(mailto:[a-zA-Z0-9]+[\\w.-]*@[\\w.-]+)"
+#define LINK_MATCH_PTN	"(https?://[\\w/:%#$&?()~.=+-]+)|(file:///[^*?\"<>|)）]+\\.[a-zA-Z0-9]+)|(mailto:[a-zA-Z0-9]+[\\w.-]*@[\\w.-]+)"
 	
 #define MAX_BIN_HCH_X	67
 #define MARK_WIDTH		8

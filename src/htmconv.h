@@ -27,9 +27,15 @@ private:
 	UnicodeString int_to_roman(int n);
 	void del_tag_block(TStringList *lst, const _TCHAR *start_wd, const _TCHAR *end_wd);
 
+	UnicodeString ToAbsUrl(UnicodeString url);
 	UnicodeString GetTag(UnicodeString s);
 	void FlushText(UnicodeString s = EmptyStr);
 	void AddHR();
+
+	bool is_rel_url(UnicodeString s)
+	{
+		return (!s.IsEmpty() && !TRegEx::IsMatch(s, "^(https?|mailto|file):|^//"));
+	}
 
 	void DecLevel(int &n)
 	{
@@ -40,9 +46,11 @@ public:
 	HtmConv();
 	~HtmConv();
 
-	UnicodeString FileName;
-	UnicodeString UrlStr;
-	UnicodeString BaseStr;
+	UnicodeString FileName;		//ファイル名
+	UnicodeString UrlStr;		//URL
+	UnicodeString TopLevel;		//トップレベル
+	UnicodeString Scheme;		//スキーム
+	UnicodeString BaseUrl;
 
 	TStringList *HtmBuf;		//HTML文書入力バッファ
 	TStringList *TxtBuf;		//テキスト出力バッファ

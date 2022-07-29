@@ -12582,16 +12582,21 @@ void ini_HtmConv_def(HtmConv *htmcnv, UnicodeString fnam, UnicodeString url)
 {
 	htmcnv->FileName = fnam;
 	htmcnv->UrlStr   = EmptyStr;
-	htmcnv->BaseStr	 = EmptyStr;
+	htmcnv->TopLevel = EmptyStr;
+	htmcnv->Scheme   = EmptyStr;
+	htmcnv->BaseUrl  = EmptyStr;
+
 	if (is_match_regex(url, _T("^https?://"))) {
 		try {
 			if (url.Pos("%")==0) url = TIdURI::URLEncode(url, IndyTextEncoding_UTF8());
-			htmcnv->UrlStr = url;
+			htmcnv->UrlStr   = url;
+			htmcnv->TopLevel = TRegEx::Replace(url, "(^https?://[\\w\\.\\-]+)(/.*)*", "$1");
+			htmcnv->Scheme   = get_tkn(htmcnv->TopLevel, "//");
 			if (!EndsStr("/", url)) {
 				int p = pos_r(_T("/"), url);
 				if (p>0) url = url.SubString(1, p);
 			}
-			htmcnv->BaseStr = url;
+			htmcnv->BaseUrl = url;
 		}
 		catch (Exception &exception) {
 			;
@@ -15072,8 +15077,7 @@ UnicodeString get_GitUrl(file_rec *fp)
 					if (USAME_TI(key, "url")) {
 						url = Trim(lbuf);
 						if (url.Pos('@')) {
-							url = TRegEx::Replace(url,
-									"(https?://)(\\w+@)([\\w/:%#$&?()~.=+-]+)", "\\1\\3");
+							url = TRegEx::Replace(url, "(https?://)(\\w+@)([\\w/:%#$&?()~.=+-]+)", "\\1\\3");
 						}
 						break;
 					}
