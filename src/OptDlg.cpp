@@ -775,6 +775,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	DowAfterStdCheckBox->Tag	= (int)&DownAfterOpenStd;
 	OpnStdResCheckBox->Tag		= (int)&OpenStdOnResList;
 	IncSeaCaseCheckBox->Tag 	= (int)&IncSeaCaseSens;
+	IncSeaFuzzyCheckBox->Tag	= (int)&IncSeaFuzzy;
 	IncSeaLoopCheckBox->Tag 	= (int)&IncSeaLoop;
 	IncSea1ExitCheckBox->Tag	= (int)&IncSeaMatch1Exit;
 	IniPathToTab1CheckBox->Tag	= (int)&IniPathToTab1;

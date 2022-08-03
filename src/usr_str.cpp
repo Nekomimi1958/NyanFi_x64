@@ -950,6 +950,30 @@ bool contains_word_and_or(
 }
 
 //---------------------------------------------------------------------------
+//文字列にあいまい語が含まれているか?
+//---------------------------------------------------------------------------
+bool contains_fuzzy_word(
+	UnicodeString s,
+	UnicodeString kwd,	//検索語
+	bool case_sw)		//大小文字区別
+{
+	if (kwd.IsEmpty()) return false;
+
+	if (!case_sw) {
+		s   = s.UpperCase();
+		kwd = kwd.UpperCase();
+	}
+
+	bool ok = true;
+	int p = 0;
+	for (int i=1; i<=kwd.Length() && ok; i++) {
+		int p1 = Pos(kwd[i], s, p + 1);
+		if (p1>=(p + 1)) p = p1; else ok = false;
+	}
+	return ok;
+}
+
+//---------------------------------------------------------------------------
 // | 区切りリストに指定語が含まれているか？
 //---------------------------------------------------------------------------
 bool contained_wd_i(UnicodeString lst, UnicodeString wd)

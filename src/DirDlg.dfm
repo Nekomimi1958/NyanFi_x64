@@ -17,7 +17,6 @@ object RegDirDlg: TRegDirDlg
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 15
   object OptPanel: TPanel
     Left = 0
@@ -28,7 +27,6 @@ object RegDirDlg: TRegDirDlg
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
-    ExplicitTop = 252
     DesignSize = (
       450
       70)
@@ -155,7 +153,6 @@ object RegDirDlg: TRegDirDlg
     Cancel = True
     ModalResult = 2
     TabOrder = 1
-    ExplicitTop = 252
   end
   object RegDirHeader: THeaderControl
     Left = 0
@@ -195,7 +192,6 @@ object RegDirDlg: TRegDirDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitHeight = 232
     DesignSize = (
       450
       230)
@@ -229,7 +225,6 @@ object RegDirDlg: TRegDirDlg
       OnDrawItem = RegDirListBoxDrawItem
       OnKeyDown = RegDirListBoxKeyDown
       OnKeyPress = RegDirListBoxKeyPress
-      ExplicitHeight = 232
     end
     object BlankPanel: TPanel
       Left = 432
@@ -244,7 +239,6 @@ object RegDirDlg: TRegDirDlg
       TabOrder = 1
       Visible = False
       StyleElements = [seBorder]
-      ExplicitTop = 216
       object ShowOptBtn: TSpeedButton
         Left = 0
         Top = 0
@@ -269,7 +263,6 @@ object RegDirDlg: TRegDirDlg
     ShowCaptions = True
     AllowTextButtons = True
     TabOrder = 4
-    ExplicitTop = 322
     object FilterBtn: TToolButton
       Left = 0
       Top = 0
@@ -381,7 +374,7 @@ object RegDirDlg: TRegDirDlg
     end
   end
   object PopupMenu1: TPopupMenu
-    Left = 128
+    Left = 136
     Top = 41
     object OpenByExpItem: TMenuItem
       Action = OpenByExpAction

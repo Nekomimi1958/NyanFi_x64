@@ -1360,7 +1360,7 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
         href="#WinTerminal">→ WinTerminal</a>　<a href="#PowerShell">→ PowerShell</a>
     </dd>
 
-    <dt id="Filter">Filter<span class="pram_text">[_CS[;CA]]</span></dt>
+    <dt id="Filter">Filter<span class="pram_text">[_CS[;CA][;FZ]]</span></dt>
     <dd>ファイルリストに対してフィルタによる絞り込みを行います(<b>選択マスク</b>)。<a
         href="hid00050.htm">インクリメンタルサーチ</a>のフィルタマスク・モードと似ていますが、フィルタ欄に入力した文字列がそのまま検索語となります(IME使用可能)。<br>
       フィルタ欄で<span class="btn_frame">ESC</span>または<span class="btn_frame">ENTER</span>キーを押すか、フォーカスが失われると通常動作に戻ります。<br>
@@ -1388,6 +1388,7 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
       </div>
       <div class="spc_box">
         パラメータに <b>CS</b> を指定すると、大小文字を区別します。<br>
+        パラメータに <b>FZ</b> を指定すると、検索語の各文字間に任意の文字列があってもマッチする<b>あいまい検索</b>になります。なお半角空白は、AND検索ではなく文字と見なされます。<br>
         複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
       </div>
       <a href="#IncSearch">→ IncSearch</a>　<a href="#SelMask">→ SelMask</a>　<a href="#ClearMask">→ ClearMask</a>

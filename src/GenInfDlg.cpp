@@ -102,7 +102,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 
 	set_MigemoAction(MigemoAction, _T("GenInfoMigemo"));
 
-	AndOrAction->Checked	 = IniFile->ReadBoolGen(_T("GenInfoFltAndOr"));
+	AndOrAction->Checked     = IniFile->ReadBoolGen(_T("GenInfoFltAndOr"));
 	HighlightAction->Checked = IniFile->ReadBoolGen(_T("GenInfoHighlight"));
 
 	if (isTail) {
@@ -390,8 +390,12 @@ bool __fastcall TGeneralInfoDlg::UpdateList(bool reload)
 	{
 		UnicodeString pnam = (isTree && GenInfoList->Count>0)? get_post_tab(GenInfoList->Strings[0]) : EmptyStr;
 
-		filter_List(GenInfoList, GenInfoBuff, FilterEdit->Text,
-					MigemoAction->Checked, AndOrAction->Checked, false, isFileList, isTree);
+		SearchOption opt;
+		if (MigemoAction->Checked) opt << soMigemo;
+		if (AndOrAction->Checked)  opt << soAndOr;
+		if (isFileList)			   opt << soTSV;
+		if (isTree)				   opt << soTree;
+		filter_List(GenInfoList, GenInfoBuff, FilterEdit->Text, opt);
 
 		if (isTree) {
 			MakeTreeList(GenInfoBuff, pnam, true);
@@ -661,16 +665,20 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	//文字数制限
 	if (lbuf.Length()>1024) lbuf = lbuf.SubString(1, 1024) + "…";	//***
 
-	//フィルタ/検索のマッチ語
+	//マッチ語
 	std::unique_ptr<TStringList> wlist(new TStringList());
 	if (HighlightAction->Checked) {
+		//文字列検索
+		SearchOption opt;
+		if (AndOrAction->Checked) opt << soAndOr;
 		if (Found && Index==lp->ItemIndex) {
-			get_MatchWordList(lbuf, RegExPtn,
-				false, true, AndOrAction->Checked, false, wlist.get());
+			opt << soRegEx;
+			get_MatchWordList(lbuf, RegExPtn, opt, wlist.get());
 		}
+		//フィルタ
 		else if (!FilterEdit->Text.IsEmpty()) {
-			get_MatchWordList(lbuf, FilterEdit->Text,
-				MigemoAction->Checked, false, AndOrAction->Checked, false, wlist.get());
+			if (MigemoAction->Checked) opt << soMigemo;
+			get_MatchWordList(lbuf, FilterEdit->Text, opt, wlist.get());
 		}
 	}
 
@@ -1525,7 +1533,10 @@ void __fastcall TGeneralInfoDlg::ToggleActionExecute(TObject *Sender)
 	Timer1->Enabled = WatchAction->Checked;
 	NotifyAction->Enabled = WatchAction->Checked;
 
-	if (ap==HighlightAction) GenListBox->Repaint();
+	if (ap==HighlightAction)
+		GenListBox->Repaint();
+	else
+		UpdateList();
 }
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::TailActionUpdate(TObject *Sender)

@@ -299,7 +299,10 @@ void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
 	if (!FilterEdit->Text.IsEmpty()
 		&& (!MigemoAction->Checked || (MigemoAction->Checked && FilterEdit->Text.Length()>=IncSeaMigemoMin)))
 	{
-		filter_List(SpDirList, SpDirBuff, FilterEdit->Text, MigemoAction->Checked, AndOrAction->Checked);
+		SearchOption opt;
+		if (MigemoAction->Checked) opt << soMigemo;
+		if (AndOrAction->Checked)  opt << soAndOr;
+		filter_List(SpDirList, SpDirBuff, FilterEdit->Text, opt); 
 	}
 	else {
 		SpDirBuff->Assign(SpDirList);

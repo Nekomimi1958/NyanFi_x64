@@ -1076,6 +1076,15 @@ __published:	// IDE で管理されるコンポーネント
 	TToolBar *ToolBarV;
 	TTrackBar *SeekBar;
 	TTrayIcon *TrayIcon1;
+	TPopupMenu *IncSeaPopupMenu;
+	TAction *IS_CaseAction;
+	TAction *IS_FuzzyAction;
+	TAction *IS_LoopAction;
+	TAction *IS_Match1Action;
+	TMenuItem *IS_CaseItem;
+	TMenuItem *IS_FuzzyItem;
+	TMenuItem *IS_LoopItem;
+	TMenuItem *IS_Match1Item;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -1898,6 +1907,14 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall Inf_OpenLocActionExecute(TObject *Sender);
 	void __fastcall Inf_OpenLocActionUpdate(TObject *Sender);
 	void __fastcall RefDirBtnExit(TObject *Sender);
+	void __fastcall IS_CaseActionExecute(TObject *Sender);
+	void __fastcall IS_CaseActionUpdate(TObject *Sender);
+	void __fastcall IS_FuzzyActionExecute(TObject *Sender);
+	void __fastcall IS_FuzzyActionUpdate(TObject *Sender);
+	void __fastcall IS_LoopActionExecute(TObject *Sender);
+	void __fastcall IS_LoopActionUpdate(TObject *Sender);
+	void __fastcall IS_Match1ActionExecute(TObject *Sender);
+	void __fastcall IS_Match1ActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -2377,6 +2394,7 @@ private:	// ユーザー宣言
 	void __fastcall SetDirRelation();
 	void __fastcall SetDirCaption(int tag);
 	void __fastcall SetDrivePanel(int tag, UnicodeString msg = EmptyStr);
+	void __fastcall SetFilterStt(TStringList *lst);
 	UnicodeString __fastcall GetDriveInfo(int tag, bool drv_upd = true, bool sel_upd = true, UnicodeString get_str = EmptyStr);
 	void __fastcall SetDriveInfo(int tag = CurListTag, bool drv_upd = true, bool sel_upd = true);
 	void __fastcall SetScrSelLines(int tag);
@@ -2393,7 +2411,7 @@ private:	// ユーザー宣言
 	void __fastcall SplitMasksFD(UnicodeString masks, TStringList *f_msk, TStringList *d_msk, bool sel_sw = false);
 	int  __fastcall SelectMask(TStringList *lst, UnicodeString masks);
 	int  __fastcall set_IncSeaStt(bool sel_sw = false, bool smsk_sw = false);
-	void __fastcall FileListIncSearch(UnicodeString keystr);
+	void __fastcall FileListIncSearch(UnicodeString keystr, UnicodeString cmd = EmptyStr);
 	void __fastcall SetFlItemWidth(TStringList *lst, int tag);
 
 	void __fastcall SttWorkMsg(UnicodeString msg, int tag);

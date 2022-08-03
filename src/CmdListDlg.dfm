@@ -8,7 +8,6 @@ object CmdFileListDlg: TCmdFileListDlg
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -16,8 +15,7 @@ object CmdFileListDlg: TCmdFileListDlg
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object HiddenCanBtn: TButton
     Left = 0
     Top = 350
@@ -251,10 +249,10 @@ object CmdFileListDlg: TCmdFileListDlg
         Left = 0
         Top = 0
         Width = 501
-        Height = 19
+        Height = 21
         AutoSize = True
-        ButtonHeight = 19
-        ButtonWidth = 86
+        ButtonHeight = 21
+        ButtonWidth = 92
         DrawingStyle = dsGradient
         List = True
         ShowCaptions = True
@@ -269,10 +267,10 @@ object CmdFileListDlg: TCmdFileListDlg
           OnClick = FilterBtnClick
         end
         object FilterEdit: TEdit
-          Left = 63
+          Left = 66
           Top = 0
           Width = 120
-          Height = 19
+          Height = 21
           Align = alLeft
           Constraints.MinWidth = 60
           PopupMenu = UserModule.EditPopupMenuE
@@ -284,25 +282,25 @@ object CmdFileListDlg: TCmdFileListDlg
           OnKeyPress = FilterEditKeyPress
         end
         object FilterSplitter: TSplitter
-          Left = 183
+          Left = 186
           Top = 0
           Width = 4
-          Height = 19
+          Height = 21
         end
         object MigemoBtn: TToolButton
-          Left = 187
+          Left = 190
           Top = 0
           Action = MigemoAction
           Style = tbsTextButton
         end
         object PreviewBtn: TToolButton
-          Left = 234
+          Left = 247
           Top = 0
           Action = PreviewAction
           Style = tbsTextButton
         end
         object CnfExeBtn: TToolButton
-          Left = 303
+          Left = 322
           Top = 0
           Action = CnfExeAction
           Style = tbsTextButton
@@ -343,7 +341,7 @@ object CmdFileListDlg: TCmdFileListDlg
       OnUpdate = ReqEditActionUpdate
     end
     object MigemoAction: TAction
-      Caption = '&Migomo'
+      Caption = '&Migemo'
       OnExecute = MigemoActionExecute
     end
     object PreviewAction: TAction

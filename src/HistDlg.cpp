@@ -92,7 +92,9 @@ void __fastcall TDirHistoryDlg::UpdateListBox(
 	if (IsFindDirHist) {
 		if (!IncSeaWord.IsEmpty()) {
 			std::unique_ptr<TStringList> f_lst(new TStringList());
-			filter_List(AllDirHistory, f_lst.get(), IncSeaWord, IsMigemo, true, true);
+			SearchOption opt;  opt << soAndOr << soCSV;
+			if (IsMigemo) opt << soMigemo;
+			filter_List(AllDirHistory, f_lst.get(), slash_to_yen(IncSeaWord), opt);
 			ListBuff->Assign(f_lst.get());
 		}
 		else {
@@ -202,7 +204,9 @@ void __fastcall TDirHistoryDlg::DirHistListBoxDrawItem(TWinControl *Control, int
 	cv->Font->Color = col_Folder;
 	if (IsFindDirHist && !IncSeaWord.IsEmpty()) {
 		std::unique_ptr<TStringList> wlist(new TStringList());
-		get_MatchWordList(lbuf, slash_to_yen(IncSeaWord), IsMigemo, false, true, false, wlist.get());
+		SearchOption opt;  opt << soAndOr;
+		if (IsMigemo) opt << soMigemo;
+		get_MatchWordList(lbuf, slash_to_yen(IncSeaWord), opt, wlist.get());
 		PathNameOut(lbuf, wlist.get(), cv, xp, yp);
 	}
 	else {

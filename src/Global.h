@@ -87,6 +87,11 @@ extern  HMODULE hGdi32;
 extern  FUNC_GetFontResourceInfo	lpfGetFontResourceInfo;
 
 //---------------------------------------------------------------------------
+//検索用オプション
+enum SeaOpt {soMigemo, soRegEx, soAndOr, soFuzzy, soCaseSens, soCSV, soTSV, soTree};
+typedef Set <SeaOpt, soMigemo, soTree> SearchOption;
+
+//---------------------------------------------------------------------------
 //画面モード(ScrMode)
 #define SCMD_FLIST	1					//ファイラー
 #define SCMD_TVIEW	2					//テキストビュアー
@@ -570,6 +575,7 @@ extern UnicodeString IniSeaShift;
 extern bool IniSeaByNum;
 extern bool IniSeaBySign;
 extern bool IncSeaCaseSens;
+extern bool IncSeaFuzzy;
 extern bool IncSeaLoop;
 extern bool IncSeaMatch1Exit;
 extern int  IncSeaMigemoMin;
@@ -1462,8 +1468,9 @@ struct flist_stt {
 	int    find_GpsRange;
 
 	bool is_IncSea;				//インクリメンタルサーチ中
-	bool is_Migemo;				//Migomoモード
+	bool is_Migemo;				//Migemoモード
 	bool is_Filter;				//フィルタモード
+	bool is_Fuzzy;				//あいまいモード
 	bool filter_sens;			//フィルタで大小文字を区別
 	UnicodeString incsea_Word;
 	UnicodeString incsea_Ptn;
@@ -1786,10 +1793,9 @@ bool save_WorkList(UnicodeString wnam, TStringList *lst = NULL);
 bool load_FontSample(UnicodeString fnam);
 bool save_FontSample(UnicodeString fnam);
 
-int  find_NextFile(TStringList *lst, int idx, UnicodeString fext = EmptyStr, UnicodeString keywd = EmptyStr,
-		bool skip_dir = true, bool circular = true, bool case_sns = false, bool regex = true, bool with_tag = false);
-int  find_PrevFile(TStringList *lst, int idx, UnicodeString fext = EmptyStr, UnicodeString keywd = EmptyStr,
-		bool skip_dir = true, bool circular = true, bool case_sns = false, bool regex = true, bool with_tag = false);
+int  find_NextIncSea(TStringList *lst, int idx);
+int  find_PrevIncSea(TStringList *lst, int idx);
+int  find_NextIniSea(TStringList *lst, int idx, UnicodeString keywd = EmptyStr, bool circular = true);
 
 int  to_NextFile(TStringList *lst, int idx);
 int  to_PrevFile(TStringList *lst, int idx);
@@ -1935,8 +1941,7 @@ void set_MigemoCheckBox(TCheckBox *cp, const _TCHAR *key, UnicodeString sct = Em
 void set_MigemoAction(TAction *ap, const _TCHAR *key, UnicodeString sct = EmptyStr);
 void change_ComboBoxHistory(TComboBox *cp, const _TCHAR *nrm_sct, const _TCHAR *reg_sct, bool reg_sw);
 
-void filter_List(TStringList *i_lst, TStringList *o_lst, UnicodeString kwd,
-	bool migemo_sw, bool and_or_sw = false, bool csv_sw = false, bool tsv_sw = false, bool tree_sw = false);
+void filter_List(TStringList *i_lst, TStringList *o_lst, UnicodeString kwd, SearchOption opt);
 
 UnicodeString Key_to_CmdF(UnicodeString key);
 UnicodeString Key_to_CmdV(UnicodeString key);
@@ -1983,8 +1988,7 @@ void out_Text(TCanvas *cv, int x, int y, const _TCHAR *s, TColor fg);
 void out_TextEx(TCanvas *cv, int &x, int y, UnicodeString s,
 	TColor fg = col_None, TColor bg = col_None, int mgn = 0, bool is_irreg = false);
 
-int  get_MatchWordList(UnicodeString lbuf, UnicodeString kwd,
-	bool migemo_sw, bool regex_sw, bool and_or_sw, bool case_sw, TStringList *lst);
+int  get_MatchWordList(UnicodeString lbuf, UnicodeString kwd, SearchOption opt, TStringList *lst);
 
 void EmphasisTextOut(UnicodeString s, TStringList *kw_lst, TCanvas *cv, int &x, int y,
 	bool case_sns = false, bool only_top = false, TColor fg = col_fgEmp, TColor bg = col_bgEmp);

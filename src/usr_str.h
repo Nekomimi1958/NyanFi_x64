@@ -133,6 +133,7 @@ int pos_r_q(UnicodeString wd, UnicodeString s);
 int pos_r_q_colon(UnicodeString s);
 
 bool contains_word_and_or(UnicodeString s, UnicodeString kwd, bool case_sw = false);
+bool contains_fuzzy_word(UnicodeString s, UnicodeString kwd, bool case_sw = false);
 
 bool contained_wd_i(UnicodeString lst, UnicodeString wd);
 bool contained_wd_i(const _TCHAR *lst, UnicodeString wd);

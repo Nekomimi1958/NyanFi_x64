@@ -5615,6 +5615,30 @@ object NyanFiForm: TNyanFiForm
       OnExecute = GrepOrgOrderActionExecute
       OnUpdate = GrepOrgOrderActionUpdate
     end
+    object IS_CaseAction: TAction
+      Category = 'Menu'
+      Caption = #22823#23567#25991#23383#12434#21306#21029'(&C)'
+      OnExecute = IS_CaseActionExecute
+      OnUpdate = IS_CaseActionUpdate
+    end
+    object IS_FuzzyAction: TAction
+      Category = 'Menu'
+      Caption = #12354#12356#12414#12356#26908#32034'(&F)'
+      OnExecute = IS_FuzzyActionExecute
+      OnUpdate = IS_FuzzyActionUpdate
+    end
+    object IS_LoopAction: TAction
+      Category = 'Menu'
+      Caption = #19978#19979#31471#12391#12523#12540#12503'(&L)'
+      OnExecute = IS_LoopActionExecute
+      OnUpdate = IS_LoopActionUpdate
+    end
+    object IS_Match1Action: TAction
+      Category = 'Menu'
+      Caption = #12510#12483#12481#25968'1'#12391#25244#12369#12427'(&X)'
+      OnExecute = IS_Match1ActionExecute
+      OnUpdate = IS_Match1ActionUpdate
+    end
   end
   object TaskSttTimer: TTimer
     Enabled = False
@@ -6129,6 +6153,22 @@ object NyanFiForm: TNyanFiForm
     end
     object TrayExitItem: TMenuItem
       Action = ExitAction
+    end
+  end
+  object IncSeaPopupMenu: TPopupMenu
+    Left = 248
+    Top = 246
+    object IS_CaseItem: TMenuItem
+      Action = IS_CaseAction
+    end
+    object IS_FuzzyItem: TMenuItem
+      Action = IS_FuzzyAction
+    end
+    object IS_LoopItem: TMenuItem
+      Action = IS_LoopAction
+    end
+    object IS_Match1Item: TMenuItem
+      Action = IS_Match1Action
     end
   end
 end

@@ -402,6 +402,7 @@ UnicodeString IniSeaShift;		//IniSearch:  頭文字サーチのシフトキー
 bool IniSeaByNum;				//  数字キーでも頭文字サーチ
 bool IniSeaBySign;				//  Shift+数字キーの記号もサーチ
 bool IncSeaCaseSens;			//IncSearch: 大小文字を区別
+bool IncSeaFuzzy;				//IncSearch: あいまい検索
 bool IncSeaLoop;				//IncSearch: 上下端でループ
 bool IncSeaMatch1Exit;			//IncSearch: マッチ数1で抜ける
 int  IncSeaMigemoMin;			//IncSearch: migemo の検索開始文字数
@@ -1276,6 +1277,7 @@ void InitializeGlobal()
 		sp->is_IncSea	  = false;
 		sp->is_Migemo	  = false;
 		sp->is_Filter	  = false;
+		sp->is_Fuzzy	  = false;
 		sp->filter_sens   = false;
 		clear_FindStt(sp);
 	}
@@ -1804,6 +1806,7 @@ void InitializeGlobal()
 		{_T("IniSeaByNum=false"),	 		(TObject*)&IniSeaByNum},
 		{_T("IniSeaBySign=false"),			(TObject*)&IniSeaBySign},
 		{_T("IncSeaCaseSens=false"),		(TObject*)&IncSeaCaseSens},
+		{_T("IncSeaFuzzy=false"),			(TObject*)&IncSeaFuzzy},
 		{_T("IncSeaLoop=true"),				(TObject*)&IncSeaLoop},
 		{_T("IncSeaMatch1Exit=false"),		(TObject*)&IncSeaMatch1Exit},
 		{_T("OpenStdTabGroup=false"),		(TObject*)&OpenStdTabGroup},
@@ -2787,16 +2790,12 @@ void filter_List(
 	TStringList *i_lst, //対象リスト
 	TStringList *o_lst, //結果リスト
 	UnicodeString kwd,	//検索語
-	bool migemo_sw,		//Migemoを使用
-	bool and_or_sw,		//AND(' ') / OR('|') 検索	(default = false)
-	bool csv_sw,		//CSVの最初の項目			(default = false)
-	bool tsv_sw,		//TSVの最初の項目			(default = false)
-	bool tree_sw)		//ツリーの表示項目			(default = false)
+	SearchOption opt)	//検索オプション
 {
 	o_lst->Clear();
 
 	//AND/OR検索
-	if (and_or_sw) {
+	if (opt.Contains(soAndOr)) {
 		//パターンリストを作成
 		std::unique_ptr<TStringList> ptn_lst(new TStringList());
 		TStringDynArray or_lst = SplitString(Trim(kwd), "|");
@@ -2807,7 +2806,7 @@ void filter_List(
 				TStringList *sp = new TStringList();
 				for (int j=0; j<and_lst.Length; j++) {
 					UnicodeString  ptn = Trim(and_lst[j]);
-					if (migemo_sw) ptn = usr_Migemo->GetRegExPtn(true, ptn);
+					if (opt.Contains(soMigemo)) ptn = usr_Migemo->GetRegExPtn(true, ptn);
 					if (!ptn.IsEmpty()) sp->Add(ptn);
 				}
 				ptn_lst->AddObject(lbuf, (TObject*)sp);
@@ -2816,23 +2815,24 @@ void filter_List(
 
 		//検索
 		if (ptn_lst->Count>0) {
-			TRegExOptions opt; opt << roIgnoreCase;
+			TRegExOptions x_opt; x_opt << roIgnoreCase;
 			for (int i=0; i<i_lst->Count; i++) {
 				UnicodeString lbuf = i_lst->Strings[i];
 
 				bool ok = false;
-				if (tree_sw && i==0) {
+				if (opt.Contains(soTree) && i==0) {
 					ok = true;
 				}
 				else {
-					UnicodeString sbuf = csv_sw? get_csv_item(lbuf, 0) : (tree_sw || tsv_sw)? get_pre_tab(lbuf) : lbuf;
+					UnicodeString sbuf = opt.Contains(soCSV)? get_csv_item(lbuf, 0) :
+							(opt.Contains(soTree) || opt.Contains(soTSV))? get_pre_tab(lbuf) : lbuf;
 					for (int j=0; j<ptn_lst->Count && !ok; j++) {
 						TStringList *sp = (TStringList *)ptn_lst->Objects[j];
 						if (sp->Count>0) {
 							bool and_ok = true;
 							for (int k=0; k<sp->Count && and_ok; k++) {
 								UnicodeString ptn = sp->Strings[k];
-								and_ok = migemo_sw? TRegEx::IsMatch(sbuf, ptn, opt) : ContainsText(sbuf, ptn);
+								and_ok = opt.Contains(soMigemo)? TRegEx::IsMatch(sbuf, ptn, x_opt) : ContainsText(sbuf, ptn);
 							}
 							ok = and_ok;
 						}
@@ -2849,15 +2849,37 @@ void filter_List(
 			for (int i=0; i<ptn_lst->Count; i++) delete (TStringList*)ptn_lst->Objects[i];
 		}
 	}
-	//単純検索
-	else {
-		UnicodeString ptn = migemo_sw? usr_Migemo->GetRegExPtn(true, kwd) : kwd;
-		if (!ptn.IsEmpty()) {
-			TRegExOptions opt; opt << roIgnoreCase;
+	//あいまい検索
+	else if (opt.Contains(soFuzzy)) {
+		if (!kwd.IsEmpty()) {
 			for (int i=0; i<i_lst->Count; i++) {
 				UnicodeString lbuf = i_lst->Strings[i];
-				UnicodeString sbuf = csv_sw? get_csv_item(lbuf, 0) : lbuf;
-				if (migemo_sw? TRegEx::IsMatch(sbuf, ptn, opt) : ContainsText(sbuf, ptn)) {
+				bool ok = false;
+				if (opt.Contains(soTree) && i==0) {
+					ok = true;
+				}
+				else {
+					UnicodeString sbuf = opt.Contains(soCSV)? get_csv_item(lbuf, 0) :
+							(opt.Contains(soTree) || opt.Contains(soTSV))? get_pre_tab(lbuf) : lbuf;
+					ok = contains_fuzzy_word(sbuf, kwd, false);
+				}
+				if (ok) {
+					int idx = (int)i_lst->Objects[i];
+					if (idx==0) idx = i;
+					o_lst->AddObject(lbuf, (TObject*)(NativeInt)idx);
+				}
+			}
+		}
+	}
+	//単純検索
+	else {
+		UnicodeString ptn = opt.Contains(soMigemo)? usr_Migemo->GetRegExPtn(true, kwd) : kwd;
+		if (!ptn.IsEmpty()) {
+			TRegExOptions x_opt; x_opt << roIgnoreCase;
+			for (int i=0; i<i_lst->Count; i++) {
+				UnicodeString lbuf = i_lst->Strings[i];
+				UnicodeString sbuf = opt.Contains(soCSV)? get_csv_item(lbuf, 0) : lbuf;
+				if (opt.Contains(soMigemo)? TRegEx::IsMatch(sbuf, ptn, x_opt) : ContainsText(sbuf, ptn)) {
 					int idx = (int)i_lst->Objects[i];
 					if (idx==0) idx = i;
 					o_lst->AddObject(lbuf, (TObject*)(NativeInt)idx);
@@ -7459,81 +7481,88 @@ bool save_FontSample(UnicodeString fnam)
 }
 
 //---------------------------------------------------------------------------
-//指定拡張子やキーワードにマッチする次のファイルを検索
+//インクリメンタルサーチ - 次のマッチ項目
 //---------------------------------------------------------------------------
-int find_NextFile(
-	TStringList *lst,
-	int idx,
-	UnicodeString fext,		//拡張子リスト						(default = EmptyStr)
-	UnicodeString keywd,	//キーワード(正規表現)				(default = EmptyStr)
-	bool skip_dir,			//ディレクトリをスキップ			(default = true)
-	bool circular,			//見つからなかったら先頭から再検索	(default = true)
-	bool case_sns,			//大小文字を区別					(default = false)
-	bool regex,				//正規表現							(default = true)
-	bool with_tag)			//タグも対象						(default = false)
+int find_NextIncSea(TStringList *lst, int idx)
 {
 	try {
-		TRegExOptions opt; if (!case_sns) opt << roIgnoreCase;
+		UnicodeString kwd = CurStt->is_Migemo? CurStt->incsea_Ptn : CurStt->incsea_Word;
+		TRegExOptions opt; if (!IncSeaCaseSens) opt << roIgnoreCase;
 		int idx0 = -1, idx1 = -1;
 		for (int i=0; i<lst->Count && idx1==-1; i++) {
 			if (i<=idx && idx0!=-1) continue;
 			file_rec *fp = (file_rec*)lst->Objects[i];
-			if ((skip_dir && fp->is_dir) || fp->is_dummy) continue;
-
-			bool match;
-			if (!keywd.IsEmpty()) {
+			if (fp->is_dummy) continue;
+			bool match = true;
+			if (!kwd.IsEmpty()) {
 				UnicodeString lbuf = (!fp->alias.IsEmpty())? (fp->alias + fp->f_ext) : fp->n_name;
-				if (with_tag) lbuf.cat_sprintf(_T("\t%s"), fp->tags.c_str());
-				match = regex? TRegEx::IsMatch(lbuf, keywd, opt) : contains_word_and_or(lbuf, keywd, case_sns);
+				if (CurStt->find_TAG && FindTagsColumn) lbuf.cat_sprintf(_T("\t%s"), fp->tags.c_str());
+				match = CurStt->is_Migemo? TRegEx::IsMatch(lbuf, kwd, opt) :
+						      IncSeaFuzzy? contains_fuzzy_word(lbuf, kwd, IncSeaCaseSens) :
+							   			   contains_word_and_or(lbuf, kwd, IncSeaCaseSens);
 			}
-			else {
-				match = (fext.IsEmpty() || test_FileExt(fp->f_ext, fext));
-			}
-
 			if (match) {
 				if (i<=idx) idx0 = i; else idx1 = i;
 			}
 		}
-		return (idx1!=-1)? idx1 : (circular? idx0 : -1);
+		return (idx1!=-1)? idx1 : (IncSeaLoop? idx0 : -1);
 	}
 	catch (...) {
 		return -1;
 	}
 }
 //---------------------------------------------------------------------------
-//指定拡張子やキーワードにマッチする前のファイルを検索
+//インクリメンタルサーチ - 前のマッチ項目
 //---------------------------------------------------------------------------
-int find_PrevFile(
-	TStringList *lst,
-	int idx,
-	UnicodeString fext,		//拡張子リスト
-	UnicodeString keywd,	//キーワード(正規表現)
-	bool skip_dir,			//ディレクトリをスキップ
-	bool circular,			//見つからなかったら最後から再検索
-	bool case_sns,			//大小文字を区別
-	bool regex,				//正規表現
-	bool with_tag)			//タグも対象
+int find_PrevIncSea(TStringList *lst, int idx)
 {
 	try {
-		TRegExOptions opt; if (!case_sns) opt << roIgnoreCase;
+		UnicodeString keywd = CurStt->is_Migemo? CurStt->incsea_Ptn : CurStt->incsea_Word;
+		TRegExOptions opt; if (!IncSeaCaseSens) opt << roIgnoreCase;
 		int idx0 = -1, idx1 = -1;
 		for (int i=lst->Count-1; i>=0 && idx1==-1; i--) {
 			if (i>=idx && idx0!=-1) continue;
 			file_rec *fp = (file_rec*)lst->Objects[i];
-			if ((skip_dir && fp->is_dir) || fp->is_dummy) continue;
-
-			bool match;
+			if (fp->is_dummy) continue;
+			bool match = true;
 			if (!keywd.IsEmpty()) {
 				UnicodeString lbuf = (!fp->alias.IsEmpty())? (fp->alias + fp->f_ext) : fp->n_name;
-				if (with_tag) lbuf.cat_sprintf(_T("\t%s"), fp->tags.c_str());
-				match = regex? TRegEx::IsMatch(lbuf, keywd, opt) : contains_word_and_or(lbuf, keywd, case_sns);
+				if (CurStt->find_TAG && FindTagsColumn) lbuf.cat_sprintf(_T("\t%s"), fp->tags.c_str());
+				match = CurStt->is_Migemo? TRegEx::IsMatch(lbuf, keywd, opt) :
+							 IncSeaFuzzy ? contains_fuzzy_word(lbuf, keywd, IncSeaCaseSens) :
+							   			   contains_word_and_or(lbuf, keywd, IncSeaCaseSens);
 			}
-			else {
-				match = (fext.IsEmpty() || test_FileExt(fp->f_ext, fext));
-			}
-
 			if (match) {
 				if (i>=idx) idx0 = i; else idx1 = i;
+			}
+		}
+		return (idx1!=-1)? idx1 : (IncSeaLoop? idx0 : -1);
+	}
+	catch (...) {
+		return -1;
+	}
+}
+
+//---------------------------------------------------------------------------
+//頭文字サーチ - 次のマッチ項目
+//---------------------------------------------------------------------------
+int find_NextIniSea(
+	TStringList *lst,
+	int idx,
+	UnicodeString keywd,	//キーワード(正規表現)				(default = EmptyStr)
+	bool circular)			//見つからなかったら先頭から再検索	(default = true)
+{
+	try {
+		if (keywd.IsEmpty()) Abort();
+		TRegExOptions opt; opt << roIgnoreCase;
+		int idx0 = -1, idx1 = -1;
+		for (int i=0; i<lst->Count && idx1==-1; i++) {
+			if (i<=idx && idx0!=-1) continue;
+			file_rec *fp = (file_rec*)lst->Objects[i];
+			if (fp->is_dummy) continue;
+			UnicodeString lbuf = (!fp->alias.IsEmpty())? (fp->alias + fp->f_ext) : fp->n_name;
+			if (TRegEx::IsMatch(lbuf, keywd, opt)) {
+				if (i<=idx) idx0 = i; else idx1 = i;
 			}
 		}
 		return (idx1!=-1)? idx1 : (circular? idx0 : -1);
@@ -11005,19 +11034,16 @@ void out_TextEx(
 int get_MatchWordList(
 	UnicodeString lbuf,	//対象文字列
 	UnicodeString kwd,	//検索語
-	bool migemo_sw,		//Migemoを使用
-	bool regex_sw,		//kwd は正規表現
-	bool and_or_sw,		//AND(' ') / OR('|') 検索
-	bool case_sw,		//大小文字を区別
-	TStringList *lst)	//[o] マッチ語リスト
+	SearchOption  opt,	//オプション
+	TStringList  *lst)	//[o] マッチ語リスト
 {
 	lst->Clear();
 
-	TRegExOptions opt;
-	if (!case_sw) opt << roIgnoreCase;
+	TRegExOptions x_opt;
+	if (!opt.Contains(soCaseSens)) x_opt << roIgnoreCase;
 
 	//AND/OR検索
-	if (and_or_sw) {
+	if (opt.Contains(soAndOr)) {
 		TStringDynArray or_lst = SplitString(Trim(kwd), "|");
 		for (int i=0; i<or_lst.Length; i++) {
 			std::unique_ptr<TStringList> tmp_lst(new TStringList());
@@ -11025,11 +11051,11 @@ int get_MatchWordList(
 			bool and_ok = true;
 			for (int j=0; j<and_lst.Length && and_ok; j++) {
 				UnicodeString s   = Trim(and_lst[j]);
-				UnicodeString ptn = regex_sw? s :
-								   migemo_sw? usr_Migemo->GetRegExPtn(migemo_sw, s)
-											: TRegEx::Escape(conv_esc_char(s));
+				UnicodeString ptn = opt.Contains(soRegEx)? s :
+					 			   opt.Contains(soMigemo)? usr_Migemo->GetRegExPtn(true, s)
+														 : TRegEx::Escape(conv_esc_char(s));
 				if (!ptn.IsEmpty()) {
-					TMatchCollection mts = TRegEx::Matches(lbuf, ptn, opt);
+					TMatchCollection mts = TRegEx::Matches(lbuf, ptn, x_opt);
 					and_ok = (mts.Count>0);
 					if (and_ok) for (int j=0; j<mts.Count; j++) tmp_lst->Add(mts.Item[j].Value);
 				}
@@ -11044,12 +11070,22 @@ int get_MatchWordList(
 	//単純検索
 	else if (!kwd.IsEmpty()) {
 		//正規表現/Migemo
-		if (regex_sw || migemo_sw) {
-			UnicodeString ptn = regex_sw? kwd : usr_Migemo->GetRegExPtn(migemo_sw, kwd);
+		if (opt.Contains(soRegEx) || opt.Contains(soMigemo)) {
+			UnicodeString ptn = opt.Contains(soRegEx)? kwd : usr_Migemo->GetRegExPtn(opt.Contains(soMigemo), kwd);
 			if (!ptn.IsEmpty()) {
-				TMatchCollection mts = TRegEx::Matches(lbuf, ptn, opt);
+				TMatchCollection mts = TRegEx::Matches(lbuf, ptn, x_opt);
 				for (int i=0; i<mts.Count; i++) lst->Add(mts.Item[i].Value);
 			}
+		}
+		//あいまい検索
+		else if (opt.Contains(soFuzzy)) {
+			UnicodeString ptn;
+			for (int i=1; i<=kwd.Length(); i++) {
+				if (i>1) ptn += ".*";
+				ptn += TRegEx::Escape(kwd[i]);
+			}
+			TMatchCollection mts = TRegEx::Matches(lbuf, ptn, x_opt);
+			for (int i=0; i<mts.Count; i++) lst->Add(mts.Item[i].Value);
 		}
 		//AND/OR(' ')
 		else {
@@ -11058,7 +11094,7 @@ int get_MatchWordList(
 			for (int i=0; i<klst->Count; i++) {
 				UnicodeString ptn = TRegEx::Escape(klst->Strings[i]);
 				if (!ptn.IsEmpty()) {
-					TMatchCollection mts = TRegEx::Matches(lbuf, ptn, opt);
+					TMatchCollection mts = TRegEx::Matches(lbuf, ptn, x_opt);
 					for (int j=0; j<mts.Count; j++) lst->Add(mts.Item[j].Value);
 				}
 			}
@@ -15444,7 +15480,7 @@ void get_GitInf(
 			add_PropLine_if(_T("Git-Commit"), cmt_s, lst);
 			add_PropLine_if(_T("警告"), Trim(get_tkn_r(w_buf->Text, "warning:")), lst, LBFLG_ERR_FIF);
 		}
-		
+
 		add_dyn_array(ibuf, "Git-Commit: " + cmt_s);
 	}
 

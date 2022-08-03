@@ -6728,7 +6728,7 @@ object OptionDlg: TOptionDlg
           TabOrder = 0
         end
         object IncSeaLoopCheckBox: TCheckBox
-          Left = 148
+          Left = 158
           Top = 20
           Width = 126
           Height = 17
@@ -6736,7 +6736,7 @@ object OptionDlg: TOptionDlg
           TabOrder = 1
         end
         object IncSea1ExitCheckBox: TCheckBox
-          Left = 280
+          Left = 290
           Top = 20
           Width = 136
           Height = 17
@@ -6744,8 +6744,8 @@ object OptionDlg: TOptionDlg
           TabOrder = 2
         end
         object MigemoMinEdit: TLabeledEdit
-          Left = 182
-          Top = 45
+          Left = 375
+          Top = 44
           Width = 50
           Height = 23
           Alignment = taRightJustify
@@ -6754,8 +6754,16 @@ object OptionDlg: TOptionDlg
           EditLabel.Caption = 'Migemo '#26908#32034#38283#22987#25991#23383#25968
           LabelPosition = lpLeft
           NumbersOnly = True
-          TabOrder = 3
+          TabOrder = 4
           Text = ''
+        end
+        object IncSeaFuzzyCheckBox: TCheckBox
+          Left = 10
+          Top = 47
+          Width = 132
+          Height = 17
+          Caption = #12354#12356#12414#12356#26908#32034
+          TabOrder = 3
         end
       end
       object IniSearchGroupBox: TGroupBox

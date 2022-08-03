@@ -124,7 +124,11 @@ void __fastcall TFindTagForm::UpdateList()
 	InpPaintBox->Repaint();
 
 	cursor_HourGlass();
-	filter_List(TagList, ResListBuf, IncSeaWord, IsMigemo, true);	//AND/ORåüçıóLå¯
+
+	SearchOption opt;  opt << soAndOr;
+	if (IsMigemo) opt << soMigemo;
+	filter_List(TagList, ResListBuf, IncSeaWord, opt);
+
 	TListBox *lp = TagsListBox;
 	lp->Canvas->Font->Assign(lp->Font);
 	int list_n = lp->ClientHeight / lp->ItemHeight + 1;
@@ -171,7 +175,9 @@ void __fastcall TFindTagForm::TagsListBoxDrawItem(TWinControl *Control, int Inde
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	if (!IncSeaWord.IsEmpty()) {
 		std::unique_ptr<TStringList> wlist(new TStringList());
-		get_MatchWordList(lbuf, IncSeaWord, IsMigemo, false, true, false, wlist.get());
+		SearchOption opt;  opt << soAndOr;
+		if (IsMigemo) opt << soMigemo;
+		get_MatchWordList(lbuf, IncSeaWord, opt, wlist.get());
 		EmphasisTextOut(lbuf, wlist.get(), cv, xp, yp);
 	}
 	else {

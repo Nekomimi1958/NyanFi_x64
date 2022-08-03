@@ -9,7 +9,6 @@ object GeneralInfoDlg: TGeneralInfoDlg
   Constraints.MinWidth = 320
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -17,8 +16,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object StatusBar1: TStatusBar
     Left = 0
     Top = 492
@@ -65,7 +63,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
       Left = 0
       Top = 0
       Width = 530
-      Height = 473
+      Height = 450
       Align = alClient
       BevelOuter = bvNone
       DoubleBuffered = False
@@ -73,12 +71,12 @@ object GeneralInfoDlg: TGeneralInfoDlg
       TabOrder = 0
       DesignSize = (
         530
-        473)
+        450)
       object GenListBox: TListBox
         Left = 0
         Top = 0
         Width = 530
-        Height = 473
+        Height = 450
         Style = lbVirtualOwnerDraw
         Anchors = [akLeft, akTop, akRight, akBottom]
         BorderStyle = bsNone
@@ -103,13 +101,13 @@ object GeneralInfoDlg: TGeneralInfoDlg
     end
     object OpeToolBar: TToolBar
       Left = 0
-      Top = 473
+      Top = 450
       Width = 530
-      Height = 19
+      Height = 42
       Align = alBottom
       AutoSize = True
-      ButtonHeight = 19
-      ButtonWidth = 59
+      ButtonHeight = 21
+      ButtonWidth = 62
       DrawingStyle = dsGradient
       List = True
       ShowCaptions = True
@@ -124,10 +122,10 @@ object GeneralInfoDlg: TGeneralInfoDlg
         OnClick = FilterBtnClick
       end
       object FilterEdit: TEdit
-        Left = 63
+        Left = 66
         Top = 0
         Width = 120
-        Height = 19
+        Height = 21
         Align = alLeft
         Constraints.MinWidth = 60
         PopupMenu = UserModule.EditPopupMenuE
@@ -140,63 +138,64 @@ object GeneralInfoDlg: TGeneralInfoDlg
         OnKeyPress = FilterEditKeyPress
       end
       object FilterSplitter: TSplitter
-        Left = 183
+        Left = 186
         Top = 0
         Width = 4
-        Height = 19
+        Height = 21
       end
       object MigemoBtn: TToolButton
-        Left = 187
+        Left = 190
         Top = 0
         Action = MigemoAction
         Style = tbsTextButton
       end
       object AndOrBtn: TToolButton
-        Left = 234
+        Left = 246
         Top = 0
         Action = AndOrAction
+        Wrap = True
         Style = tbsTextButton
       end
       object HighlightBtn: TToolButton
-        Left = 285
-        Top = 0
+        Left = 0
+        Top = 21
         Action = HighlightAction
         Style = tbsTextButton
       end
       object ToolButton5: TToolButton
-        Left = 335
-        Top = 0
+        Left = 54
+        Top = 21
         Width = 8
         ImageIndex = 4
         Style = tbsSeparator
       end
       object WatchBtn: TToolButton
-        Left = 343
-        Top = 0
+        Left = 62
+        Top = 21
         Action = WatchAction
         Style = tbsTextButton
       end
       object NotifyBtn: TToolButton
-        Left = 396
-        Top = 0
+        Left = 118
+        Top = 21
         Action = NotifyAction
         Style = tbsTextButton
       end
       object PlayPrevBtn: TToolButton
-        Left = 446
-        Top = 0
+        Left = 172
+        Top = 21
         Action = PlayPrevAction
         Style = tbsTextButton
       end
       object PlayPauseBtn: TToolButton
-        Left = 473
-        Top = 0
+        Left = 199
+        Top = 21
         Action = PlayPauseAction
         Style = tbsTextButton
       end
       object PlayNextBtn: TToolButton
-        Left = 501
-        Top = 0
+        Left = 226
+        Top = 21
         Action = PlayNextAction
         Style = tbsTextButton
       end
@@ -413,7 +412,7 @@ object GeneralInfoDlg: TGeneralInfoDlg
       OnUpdate = PropertyActionUpdate
     end
     object MigemoAction: TAction
-      Caption = '&Migomo'
+      Caption = '&Migemo'
       OnExecute = ToggleActionExecute
     end
     object AndOrAction: TAction

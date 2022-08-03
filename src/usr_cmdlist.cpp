@@ -407,7 +407,7 @@ void set_CmdList(
 		"S:IncSearchTop=マッチする項目を先頭から再検索\n"
 		"S:IncSearchUp=マッチする項目を上方向検索\n"
 		"S:KeywordHistory=キーワード履歴を参照\n"
-		"S:MigemoMode=Migomoモードの切り換え\n"
+		"S:MigemoMode=Migemoモードの切り換え\n"
 		"S:NormalMode=通常のサーチモードに戻る\n"
 		"S:SelectDown=選択/解除後、下方向に検索\n"
 		"V:BackViewHist=テキストビュアーの履歴を戻る\n"
@@ -731,6 +731,7 @@ void get_PrmList(
 	}
 	else if (USAME_TI(cmd, "Filter")) {
 		params = "\nCS : 大小文字を区別\nCA : 実行前に選択マスクを解除\n";
+		if (id_idx==0) params += "FZ : あいまい検索\n";
 	}
 	else if (USAME_TI(cmd, "FindDuplDlg")) {
 		params = "\nLR : 左右で検索して重複ファイルを選択\n";
@@ -785,7 +786,7 @@ void get_PrmList(
 		params = "\nCI : コマンドの索引\nFI : コマンドの機能別索引\nCH : 変更履歴\n";
 	}
 	else if (USAME_TI(cmd, "IncSearch")) {
-		params = "\nMM : Migomoモード\nNM : 通常モード\n";
+		params = "\nMM : Migemoモード\nNM : 通常モード\n";
 		if (id_idx==0) params += "FM : フィルタマスク・モード\nCA : 実行前に選択マスクを解除\n";
 	}
 	else if (USAME_TI(cmd, "InputDir")) {

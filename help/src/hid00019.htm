@@ -125,6 +125,12 @@
       <div class="indent1">
         <a href="hid00050.htm">インクリメンタルサーチ</a>で、大文字・小文字を区別します。
       </div>
+
+      <img src="chkbox.png" alt=""> <b>あいまい検索</b>
+      <div class="indent1">
+        検索語の各文字間に任意の文字列があってもマッチする<b>あいまい検索</b>になります。なお半角空白は、AND検索ではなく文字と見なされます。例えば、大小文字の区別が有効な場合、検索語 &quot;NF&quot; は &quot;hogeNF&quot;、&quot;NyanFi&quot; などにマッチします。<br>
+      </div>
+
       <img src="chkbox.png" alt=""> <b>上下端でループ</b>
       <div class="indent1">
         ファイラーで、下方向に検索して見つからなかった場合は先頭から、上方向で見つからなかった場合は最後から再検索します。マッチ数が1だった場合は、設定にかかわらずその項目に移動します。<br>
@@ -134,9 +140,12 @@
       <img src="chkbox.png" alt=""> <b>マッチ数1で抜ける</b>
       <div class="indent1">
         ファイラーで、見つかった項目が一つだけだった場合、自動的にインクリメンタルサーチ・モードから抜けます。<br>
-        フィルタマスク・モード、<b>Migemo</b> モードでは機能しません。
+      </div>
+      <div class="info_text">
+        これらのオプションは、ファイラーでインクリメンタルサーチ中に、状態表示部分(ドライブ情報)の右クリックメニューでも切り替えられます。
       </div>
     </dd>
+
     <dd><b>Migemo 検索開始文字数</b> <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 1)</span><br>
       <div class="indent1">
         <b>Migemo</b> モードで検索を開始する入力文字数です。<br>

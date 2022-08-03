@@ -258,6 +258,7 @@ __published:	// IDE で管理されるコンポーネント
 	TCheckBox *ImgSttIsBtmCheckBox;
 	TCheckBox *IncSea1ExitCheckBox;
 	TCheckBox *IncSeaCaseCheckBox;
+	TCheckBox *IncSeaFuzzyCheckBox;
 	TCheckBox *IncSeaLoopCheckBox;
 	TCheckBox *InhAltMenuCheckBox;
 	TCheckBox *InheritDotCheckBox;
