@@ -2269,7 +2269,7 @@ object NyanFiForm: TNyanFiForm
   object MainMenu1: TMainMenu
     AutoHotkeys = maManual
     OwnerDraw = True
-    Left = 32
+    Left = 40
     Top = 136
     object FileMenu: TMenuItem
       AutoHotkeys = maAutomatic
@@ -2487,6 +2487,9 @@ object NyanFiForm: TNyanFiForm
       end
       object GrepSelResItem: TMenuItem
         Action = GrepSelResAction
+      end
+      object GrepSelDirItem: TMenuItem
+        Action = GrepSelDirAction
       end
     end
     object FindMenu: TMenuItem
@@ -3031,7 +3034,7 @@ object NyanFiForm: TNyanFiForm
   end
   object ActionList1: TActionList
     OnExecute = ActionList1Execute
-    Left = 32
+    Left = 40
     Top = 88
     object ClipCopyAction: TAction
       Category = 'CommandI'
@@ -5282,6 +5285,12 @@ object NyanFiForm: TNyanFiForm
       OnExecute = GrepSelResActionExecute
       OnUpdate = GrepSelResActionUpdate
     end
+    object GrepSelDirAction: TAction
+      Category = 'Grep'
+      Caption = #12498#12483#12488#12375#12383#12501#12449#12452#12523#12434#21547#12416#12487#12451#12524#12463#12488#12522#12434#36984#25246
+      OnExecute = GrepSelDirActionExecute
+      OnUpdate = GrepSelDirActionUpdate
+    end
     object GrepShowItemNoAction: TAction
       Category = 'Grep'
       Caption = #32080#26524#12522#12473#12488#12395#38917#30446#30058#21495#12434#34920#31034
@@ -5649,7 +5658,7 @@ object NyanFiForm: TNyanFiForm
   end
   object ViewPopupMenu: TPopupMenu
     OnPopup = ViewPopupMenuPopup
-    Left = 136
+    Left = 144
     Top = 246
     object ViewCopyItem: TMenuItem
       Action = TV_EditCopyAction
@@ -5744,7 +5753,7 @@ object NyanFiForm: TNyanFiForm
     OnModalBegin = ApplicationEvents1ModalBegin
     OnModalEnd = ApplicationEvents1ModalEnd
     OnShowHint = ApplicationEvents1ShowHint
-    Left = 140
+    Left = 148
     Top = 88
   end
   object LogPopupMenu: TPopupMenu
@@ -5784,7 +5793,7 @@ object NyanFiForm: TNyanFiForm
     Images = IconImgListP
     OwnerDraw = True
     OnPopup = OdPopupMenuPopup
-    Left = 139
+    Left = 147
     Top = 137
   end
   object WatchDirTimer: TTimer
@@ -5809,7 +5818,7 @@ object NyanFiForm: TNyanFiForm
   end
   object DropPopupMenu: TPopupMenu
     AutoHotkeys = maManual
-    Left = 248
+    Left = 256
     Top = 138
     object DropCopyItem: TMenuItem
       Caption = #12467#12500#12540'(&C)'
@@ -5828,7 +5837,7 @@ object NyanFiForm: TNyanFiForm
   end
   object ImgPrvPopupMenu: TPopupMenu
     OnPopup = ImgPrvPopupMenuPopup
-    Left = 31
+    Left = 39
     Top = 300
     object CopyPrviewImgItem: TMenuItem
       Action = CopyPreImgOrgAction
@@ -5896,17 +5905,17 @@ object NyanFiForm: TNyanFiForm
   object DrivePopupMenu: TPopupMenu
     OwnerDraw = True
     OnPopup = OdPopupMenuPopup
-    Left = 34
+    Left = 42
     Top = 190
   end
   object SelItemPopupMenu: TPopupMenu
     OwnerDraw = True
     OnPopup = OdPopupMenuPopup
-    Left = 136
+    Left = 144
     Top = 192
   end
   object TxtPrvPopupMenu: TPopupMenu
-    Left = 135
+    Left = 143
     Top = 300
     object TxtEditCopyItem: TMenuItem
       Action = Txt_EditCopy
@@ -5983,7 +5992,7 @@ object NyanFiForm: TNyanFiForm
   end
   object GrepPopupMenu: TPopupMenu
     AutoLineReduction = maManual
-    Left = 32
+    Left = 40
     Top = 248
     object PopGrepClipCopyItem: TMenuItem
       Action = GrepClipCopyAction
@@ -6033,6 +6042,9 @@ object NyanFiForm: TNyanFiForm
     object PopGrepSelResItem: TMenuItem
       Action = GrepSelResAction
     end
+    object PopGrepSelDirItem: TMenuItem
+      Action = GrepSelDirAction
+    end
     object PopGrepOpenUrlItem: TMenuItem
       Action = GrepOpenUrlAction
     end
@@ -6063,7 +6075,7 @@ object NyanFiForm: TNyanFiForm
   end
   object TabPopupMenu: TPopupMenu
     OnPopup = TabPopupMenuPopup
-    Left = 248
+    Left = 256
     Top = 193
     object PopAddTabItem: TMenuItem
       Action = AddTabAction
@@ -6156,7 +6168,7 @@ object NyanFiForm: TNyanFiForm
     end
   end
   object IncSeaPopupMenu: TPopupMenu
-    Left = 248
+    Left = 256
     Top = 246
     object IS_CaseItem: TMenuItem
       Action = IS_CaseAction

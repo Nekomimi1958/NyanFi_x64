@@ -242,6 +242,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *GrepOrgOrderAction;
 	TAction *GrepReleaseAction;
 	TAction *GrepSaveAsAction;
+	TAction *GrepSelDirAction;
 	TAction *GrepSelResAction;
 	TAction *GrepShowItemNoAction;
 	TAction *GrepShowSubDirAction;
@@ -267,6 +268,10 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *InputPathMaskAction;
 	TAction *InspectorAction;
 	TAction *InsSeparatorAction;
+	TAction *IS_CaseAction;
+	TAction *IS_FuzzyAction;
+	TAction *IS_LoopAction;
+	TAction *IS_Match1Action;
 	TAction *ItemTmpDownAction;
 	TAction *ItemTmpMoveAction;
 	TAction *ItemTmpUpAction;
@@ -706,6 +711,10 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *InspectorItem;
 	TMenuItem *InsSeparatorItem;
 	TMenuItem *InvSelItem;
+	TMenuItem *IS_CaseItem;
+	TMenuItem *IS_FuzzyItem;
+	TMenuItem *IS_LoopItem;
+	TMenuItem *IS_Match1Item;
 	TMenuItem *IV_ClipCopyItem;
 	TMenuItem *JoinTextItem;
 	TMenuItem *KeyListItem;
@@ -765,6 +774,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *PopGrepOrgOrderItem;
 	TMenuItem *PopGrepReleaseItem;
 	TMenuItem *PopGrepSaveAsItem;
+	TMenuItem *PopGrepSelDirItem;
 	TMenuItem *PopGrepSelResItem;
 	TMenuItem *PopGrepSortLineItem;
 	TMenuItem *PopGrepSubDirItem;
@@ -1021,6 +1031,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPopupMenu *ExPopupMenu;
 	TPopupMenu *GrepPopupMenu;
 	TPopupMenu *ImgPrvPopupMenu;
+	TPopupMenu *IncSeaPopupMenu;
 	TPopupMenu *InfPopupMenu;
 	TPopupMenu *LogPopupMenu;
 	TPopupMenu *SelItemPopupMenu;
@@ -1076,15 +1087,7 @@ __published:	// IDE で管理されるコンポーネント
 	TToolBar *ToolBarV;
 	TTrackBar *SeekBar;
 	TTrayIcon *TrayIcon1;
-	TPopupMenu *IncSeaPopupMenu;
-	TAction *IS_CaseAction;
-	TAction *IS_FuzzyAction;
-	TAction *IS_LoopAction;
-	TAction *IS_Match1Action;
-	TMenuItem *IS_CaseItem;
-	TMenuItem *IS_FuzzyItem;
-	TMenuItem *IS_LoopItem;
-	TMenuItem *IS_Match1Item;
+	TMenuItem *GrepSelDirItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -1915,6 +1918,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall IS_LoopActionUpdate(TObject *Sender);
 	void __fastcall IS_Match1ActionExecute(TObject *Sender);
 	void __fastcall IS_Match1ActionUpdate(TObject *Sender);
+	void __fastcall GrepSelDirActionExecute(TObject *Sender);
+	void __fastcall GrepSelDirActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;

@@ -14844,7 +14844,7 @@ void __fastcall TNyanFiForm::CreateShortcutActionExecute(TObject *Sender)
 			file_rec *fp = (file_rec*)lst->Objects[i];
 			if ((fp->selected || (!lst_sel && i==cur_idx)) && fp->f_attr!=faInvalid) {
 				msg = "  CREATE ";
-				UnicodeString lnam = dst_dir + ChangeFileExt(fp->n_name, ".lnk");
+				UnicodeString lnam = dst_dir + fp->b_name + ".lnk";
 				msg += ExtractFileName(lnam);
 				if (usr_SH->CreateShortCut(lnam, fp->f_name)) {
 					fp->selected = false;
@@ -30177,6 +30177,48 @@ void __fastcall TNyanFiForm::GrepSelResActionUpdate(TObject *Sender)
 	ap->Visible = ScrMode==SCMD_GREP;
 	ap->Enabled = ap->Visible && !FindBusy && ResultListBox->Count>0;
 }
+//---------------------------------------------------------------------------
+//ヒットしたファイルを含むディレクトリを選択
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepSelDirActionExecute(TObject *Sender)
+{
+	TStringList *lst = GetCurList();
+	ClrSelect(lst);
+
+	std::unique_ptr<TStringList> dlst(new TStringList());
+	int cnt = 0;
+	for (int i=0; i<ResultListBox->Count; i++) {
+		UnicodeString itmstr = ResultListBox->Items->Strings[i];
+		UnicodeString d_nam  = ExtractFilePath(split_pre_tab(itmstr));
+		if (dlst->IndexOf(d_nam)==-1) dlst->Add(d_nam);
+	}
+
+	for (int i=0; i<lst->Count; i++) {
+		file_rec *fp = (file_rec*)lst->Objects[i];
+		if (fp->is_dir && !fp->is_up) {
+			for (int j=0; j<dlst->Count; j++) {
+				if (StartsText(IncludeTrailingPathDelimiter(fp->f_name), dlst->Strings[j])) {
+					fp->selected = true;
+					cnt++;
+					break;
+				}
+			}
+		}
+	}
+
+	//情報表示を更新
+	SetDriveInfo();
+	SetSttBarInf();
+
+	if (cnt>0) msgbox_OK(UnicodeString().sprintf(_T("%u 個のディレクトリを選択しました。"), cnt));
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepSelDirActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = ScrMode==SCMD_GREP;
+	ap->Enabled = ap->Visible && !FindBusy && ResultListBox->Count>0;
+}
 
 //---------------------------------------------------------------------------
 //GREP結果リストに項目番号を表示
@@ -37303,3 +37345,4 @@ void __fastcall TNyanFiForm::IS_Match1ActionUpdate(TObject *Sender)
 	ap->Enabled = !CurStt->is_Migemo && !CurStt->is_Filter;
 }
 //---------------------------------------------------------------------------
+
