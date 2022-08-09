@@ -139,6 +139,7 @@ void __fastcall TAppListDlg::FormCreate(TObject *Sender)
 	LaunchFileList = new TStringList();
 
 	ToAppList = ToLauncher = ToIncSea = false;
+	isFuzzy = false;
 }
 
 //---------------------------------------------------------------------------
@@ -730,8 +731,10 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 
 	//インクリメンタルサーチ
 	if (IsIncSea) {
-		UnicodeString ptn = contained_wd_i(_T("*|?| "), IncSeaWord)?
-								UnicodeString(".+") : usr_Migemo->GetRegExPtn(IsMigemo, IncSeaWord);
+		UnicodeString ptn =
+			contained_wd_i(_T("*|?| "), IncSeaWord)? UnicodeString(".+") : 
+							 (isFuzzy && !IsMigemo)? get_fuzzy_ptn(IncSeaWord) : 
+													 usr_Migemo->GetRegExPtn(IsMigemo, IncSeaWord);
 		if (!ptn.IsEmpty()) {
 			TRegExOptions opt; opt << roIgnoreCase;
 			for (int i=0; i<LaunchFileList->Count; i++) {

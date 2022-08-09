@@ -1741,6 +1741,8 @@ bool is_ExePath(UnicodeString pnam);
 void get_DriveLogList(UnicodeString dstr, TStringList *lst, double &r_min, double &r_max);
 void update_DriveLog(bool save = false);
 
+bool save_RenLog(TStringList *lst);
+
 void set_ListBoxItemHi(TListBox      *lp, TFont *font = NULL, bool with_ico = false);
 void set_ListBoxItemHi(TCheckListBox *lp, TFont *font = NULL, bool with_ico = false);
 

@@ -52,7 +52,7 @@ void __fastcall TInpCmdsDlg::FormShow(TObject *Sender)
 	set_MigemoCheckBox(MigemoCheckBox, _T("InpCmdsMigemo"));
 
 	HistoryList = NULL;
-	InhFilter	= false;
+	InhFilter   = false;
 	IsRef		= toCopy || toRefer;
 	SetList();
 
@@ -383,7 +383,9 @@ void __fastcall TInpCmdsDlg::Filter()
 
 	//i‚èž‚Ý
 	if (lst->Count>0 && !contained_wd_i(_T("*|?| "), kwd)) {
-		UnicodeString ptn = usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, kwd, (SubComboBox->Tag==1)? 1 : 0);
+		UnicodeString ptn = (isFuzzy && !MigemoCheckBox->Checked)?
+			get_fuzzy_ptn(kwd, true) :
+			usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, kwd, (SubComboBox->Tag==1)? 1 : 0);
 		if (!ptn.IsEmpty()) {
 			TRegExOptions opt; opt << roIgnoreCase;
 			int i=0;

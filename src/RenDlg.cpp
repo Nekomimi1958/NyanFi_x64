@@ -1916,7 +1916,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 			}
 
 			//‰ü–¼ƒƒO‚Ì•Û‘¶
-			if (!NoRenLogCheckBox->Checked && !saveto_TextUTF8(ExePath + RENLOG_FILE, r_lst.get()))
+			if (!NoRenLogCheckBox->Checked && !save_RenLog(r_lst.get()))
 				throw EAbort(LoadUsrMsg(USTR_FaildSave, _T("‰ü–¼ƒƒO")));
 
 			SttPrgBar->End();

@@ -509,20 +509,20 @@ void get_PrmList(
 		cp->Enabled = false;
 
 		if (cp && contained_wd_i(
-			_T("AddTag|CalcDirSize|CalcDirSizeAll|Calculator|ChangeDir|ChangeOppDir|Clone|CloneToCurr|")
-			_T("ContextMenu|ConvertHtm2Txt|Copy|CopyTo|CountLines|CreateDir|CursorDown|CursorUp|")
-			_T("DateSelect|DebugCmdFile|Delete|DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|")
-			_T("Filter|FindDown|FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|GitDiff|GitViewer|")
-			_T("Grep|HelpCurWord|HtmlToText|ImageViewer|IncSearch|JumpIndex|JumpLine|JumpTo|ListArchive|")
-			_T("ListDuration|ListExpFunc|ListNyanFi|ListTail|ListText|ListTree|LoadBgImage|LoadResultList|")
-			_T("LoadTabGroup|LoadWorkList|LockKeyMouse|Mark|MaskFind|MaskSelect|MatchSelect|MonitorOff|")
-			_T("MoveTo|NameFromClip|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
+			_T("AddTag|AppList|CalcDirSize|CalcDirSizeAll|Calculator|ChangeDir|ChangeOppDir|Clone|CloneToCurr|")
+			_T("ContextMenu|ConvertHtm2Txt|Copy|CopyTo|CountLines|CreateDir|CursorDown|CursorUp|DateSelect|")
+			_T("DebugCmdFile|Delete|DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|Filter|FindDown|")
+			_T("FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|FunctionList|GitDiff|GitViewer|Grep|")
+			_T("HelpCurWord|HtmlToText|ImageViewer|IncSearch|InputCommands|JumpIndex|JumpLine|JumpTo|")
+			_T("ListArchive|ListDuration|ListExpFunc|ListNyanFi|ListTail|ListText|ListTree|LoadBgImage|")
+			_T("LoadResultList|LoadTabGroup|LoadWorkList|LockKeyMouse|Mark|MaskFind|MaskSelect|MatchSelect|")
+			_T("MonitorOff|MoveTo|NameFromClip|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
 			_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|")
-			_T("ScrollCursorUp|ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|")
-			_T("ScrollUpText|SelByList|SetColor|SetDirTime|SetFontSize|SetMargin|SetPathMask|")
-			_T("SetInterpolation|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|ShareList|")
-			_T("SimilarImage|SimilarSort|SortDlg|SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|")
-			_T("ToOppSameHash|ToTab|UnPack|UnPackToCurr,|ViewTail|WatchTail|WidenCurList|WinPos|"),
+			_T("ScrollCursorUp|ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|ScrollUpText|")
+			_T("SelByList|SetColor|SetDirTime|SetFontSize|SetInterpolation|SetMargin|SetPathMask|SetSttBarFmt|")
+			_T("SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|ShareList|SimilarImage|SimilarSort|SortDlg|")
+			_T("SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToOppSameHash|ToTab|UnPack|")
+			_T("UnPackToCurr|ViewTail|WatchTail|WidenCurList|WinPos"),
 			cmd))
 		{
 			cp->Enabled = true;
@@ -547,7 +547,8 @@ void get_PrmList(
 			_T("FI : ランチャー側にフォーカス(INC.サーチ)\n")
 			_T("AO : 一覧のみ表示\n")
 			_T("LO : ランチャーのみ表示\n")
-			_T("LI : ランチャーのみ表示(INC.サーチ)\n"));
+			_T("LI : ランチャーのみ表示(INC.サーチ)\n")
+			_T("FZ : あいまい検索(INC.サーチ)\n"));
 	}
 	else if (USAME_TI(cmd, "BgImgMode")) {
 		params.sprintf(_T("%s"),
@@ -772,6 +773,9 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "FixTabPath")) {
 		params = "\nON : カレント側を固定\nOFF : 固定解除\n";
 	}
+	else if (USAME_TI(cmd, "FunctionList")) {
+		params = "\nFF : フィルタ欄にフォーカス\nFZ : あいまい検索\n";
+	}
 	else if (USAME_TI(cmd, "GitDiff")) {
 		params = "\nHD : HEAD から差分を表示\nXT : 外部diffツールで表示\n";
 	}
@@ -794,7 +798,8 @@ void get_PrmList(
 			_T("\n")
 			_T("ND : ダイアログを表示しないで入力\n")
 			_T("ND2 : ND でドロップダウンを開いて表示\n")
-			_T("SD : フォルダ参照ダイアログを表示\n"));
+			_T("SD : フォルダ参照ダイアログを表示\n")
+			_T("CB : クリップボード内容のディレクトリに移動\n"));
 	}
 	else if (USAME_TI(cmd, "JsonViewer")) {
 		params = "\nCB : クリップボード内容を表示\n";
@@ -806,10 +811,10 @@ void get_PrmList(
 			_T("NS : ポップアップメニューで選択(空き容量非表示)\n"));
 	}
 	else if (USAME_TI(cmd, "InputCommands")) {
-		params = "\nEL : エコー、コマンドファイルの行番号表示\n";
+		params = "\nFZ : あいまい検索\nEL : エコー、コマンドファイルの行番号表示\n";
 	}
 	else if (contained_wd_i(
-		_T("CmdFileList|CmdHistory|ListClipboard|MarkList|KeyList|FunctionList|RepositoryList|SpecialDirList|UserDefList"),
+		_T("CmdFileList|CmdHistory|ListClipboard|MarkList|KeyList|RepositoryList|SpecialDirList|UserDefList"),
 		cmd))
 	{
 		params = "\nFF : フィルタ欄にフォーカス\n";

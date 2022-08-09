@@ -60,6 +60,7 @@ private:	// ユーザー宣言
 public:		// ユーザー宣言
 	bool toCopy;
 	bool toRefer;
+	bool isFuzzy;
 
 	__fastcall TInpCmdsDlg(TComponent* Owner);
 

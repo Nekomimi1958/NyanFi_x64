@@ -11230,10 +11230,19 @@ int __fastcall TNyanFiForm::set_IncSeaStt(
 			file_rec *fp = (file_rec*)lst->Objects[i];
 			if (!fp->is_up && !fp->is_dummy) {
 				UnicodeString lbuf = (!fp->alias.IsEmpty())? (fp->alias + fp->f_ext) : fp->n_name;
-				if (CurStt->find_TAG && FindTagsColumn) lbuf.cat_sprintf(_T("\t%s"), fp->tags.c_str());
-				fp->matched = CurStt->is_Migemo ? TRegEx::IsMatch(lbuf, CurStt->incsea_Ptn, opt) :
-							         IncSeaFuzzy? contains_fuzzy_word(lbuf, CurStt->incsea_Word, IncSeaCaseSens)
-												: contains_word_and_or(lbuf, CurStt->incsea_Word, IncSeaCaseSens);
+				fp->matched =
+					CurStt->is_Migemo ? TRegEx::IsMatch(lbuf, CurStt->incsea_Ptn, opt) :
+						   IncSeaFuzzy? contains_fuzzy_word(lbuf, CurStt->incsea_Word, IncSeaCaseSens)
+									  : contains_word_and_or(lbuf, CurStt->incsea_Word, IncSeaCaseSens);
+				//タグ
+				if (!fp->matched && CurStt->find_TAG && FindTagsColumn) {
+					lbuf = fp->tags;
+					fp->matched = 
+						CurStt->is_Migemo ? TRegEx::IsMatch(lbuf, CurStt->incsea_Ptn, opt) :
+						 	   IncSeaFuzzy? contains_fuzzy_word(lbuf, CurStt->incsea_Word, IncSeaCaseSens, ";")
+										  : contains_word_and_or(lbuf, CurStt->incsea_Word, IncSeaCaseSens);
+				}
+
 				if (fp->matched) {
 					if (sel_sw) fp->selected = true;
 					match_cnt++;
@@ -12746,9 +12755,10 @@ void __fastcall TNyanFiForm::AppListActionExecute(TObject *Sender)
 	if (!AppListDlg) AppListDlg = new TAppListDlg(this);	//初回に動的作成
 	AppListDlg->OnlyAppList  = TEST_ActParam("AO");
 	AppListDlg->OnlyLauncher = TEST_ActParam("LO") || TEST_ActParam("LI");
-	AppListDlg->ToAppList	 = TEST_ActParam("FA");
-	AppListDlg->ToLauncher	 = TEST_ActParam("FL");
-	AppListDlg->ToIncSea	 = TEST_ActParam("FI") || TEST_ActParam("LI");
+	AppListDlg->ToAppList    = TEST_ActParam("FA");
+	AppListDlg->ToLauncher   = TEST_ActParam("FL");
+	AppListDlg->ToIncSea     = TEST_ActParam("FI") || TEST_ActParam("LI");
+	AppListDlg->isFuzzy      = TEST_ActParam("FZ");
 
 	int res = mrNone;
 	do {
@@ -18688,7 +18698,8 @@ void __fastcall TNyanFiForm::ExitIncSearch()
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::CopyCmdNameActionExecute(TObject *Sender)
 {
-	InpCmdsDlg->toCopy = true;
+	InpCmdsDlg->toCopy  = true;
+	InpCmdsDlg->isFuzzy = TEST_ActParam("FZ");
 	if (InpCmdsDlg->ShowModal()==mrOk) copy_to_Clipboard(InpCmdsDlg->CmdsComboBox->Text);
 }
 
@@ -18698,6 +18709,7 @@ void __fastcall TNyanFiForm::CopyCmdNameActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::InputCommandsActionExecute(TObject *Sender)
 {
 	try {
+		InpCmdsDlg->isFuzzy = TEST_ActParam("FZ"); 
 		if (InpCmdsDlg->ShowModal()==mrOk) {
 			UnicodeString cmds = InpCmdsDlg->CmdsComboBox->Text;
 			if (TEST_ActParam("EL")) ActionOptStr = ActionParam;
@@ -18746,9 +18758,10 @@ void __fastcall TNyanFiForm::InputDirActionExecute(TObject *Sender)
 			HideInpDirPanel();
 		}
 	}
-	//入力ボックス
+	//入力ボックス/クリップボード
 	else {
-		UnicodeString dnam = inputbox_dir(tit.c_str(), _T("InputDir"));
+		UnicodeString dnam = TEST_ActParam("CB")? exclude_quot(get_norm_str(GetClipboardText(), true))
+												: inputbox_dir(tit.c_str(), _T("InputDir"));
 		if (!dnam.IsEmpty()) {
 			UnicodeString unam = split_user_name(dnam);
 			if (!unam.IsEmpty()) {
@@ -20915,7 +20928,7 @@ void __fastcall TNyanFiForm::NameFromClipActionExecute(TObject *Sender)
 		if (!IsCurFList()) UserAbort(USTR_OpeNotSuported);
 		file_rec *cfp = GetCurFrecPtr();	if (!cfp) Abort();
 
-		UnicodeString clp_name = ExtractFileName(get_norm_str(exclude_quot(GetClipboardText())));
+		UnicodeString clp_name = ExtractFileName(exclude_quot(get_norm_str(GetClipboardText(), true)));
 
 		if (ActionParam.IsEmpty() || ContainsText(ActionParam, "\\C")) {
 			if (clp_name.IsEmpty()) SysErrAbort(CLIPBRD_E_BAD_DATA);
@@ -20946,16 +20959,29 @@ void __fastcall TNyanFiForm::NameFromClipActionExecute(TObject *Sender)
 
 		new_name = CurPath[CurListTag] + new_name;
 
+		std::unique_ptr<TStringList> r_lst(new TStringList());
+
 		StartLog("改名開始  " + GetSrcPathStr());
 		CurWorking = true;
 		UnicodeString msg = make_RenameLog(cfp->f_name, new_name);
 		SetDirWatch(false);
 		bool ok = rename_File(cfp->f_name, new_name);
 		SetDirWatch(true);
-		if (ok) cfp->f_name = new_name; else set_LogErrMsg(msg);
+		if (ok) {
+			r_lst->Add(cfp->f_name + "\t" + new_name);
+			cfp->f_name = new_name;
+		}
+		else {
+			set_LogErrMsg(msg);
+		}
 		CurWorking = false;
 		AddLog(msg);
 		EndLog(_T("改名"));
+
+		//改名ログの作成
+		if (!IniFile->ReadBoolGen(_T("RenameDlgNoRenLog")) && !save_RenLog(r_lst.get()))
+			throw EAbort(LoadUsrMsg(USTR_FaildSave, _T("改名ログ")));
+
 		ReloadList(CurListTag, ok? new_name : EmptyStr);
 		if (!ok) UserAbort(USTR_FaildProc);
 	}
@@ -25198,7 +25224,9 @@ void __fastcall TNyanFiForm::SwapNameActionExecute(TObject *Sender)
 					}
 				}
 			}
-			else set_LogErrMsg(msg, get_LogErrMsg(EmptyStr, false));
+			else {
+				set_LogErrMsg(msg, get_LogErrMsg(EmptyStr, false));
+			}
 			AddLog(msg);
 		}
 
@@ -25221,7 +25249,7 @@ void __fastcall TNyanFiForm::SwapNameActionExecute(TObject *Sender)
 		}
 
 		//改名ログの作成
-		if (!IniFile->ReadBoolGen(_T("RenameDlgNoRenLog")) && !saveto_TextUTF8(ExePath + RENLOG_FILE, r_lst.get()))
+		if (!IniFile->ReadBoolGen(_T("RenameDlgNoRenLog")) && !save_RenLog(r_lst.get()))
 			throw EAbort(LoadUsrMsg(USTR_FaildSave, _T("改名ログ")));
 
 		AddLog(_T("改名終了  OK"), true);
@@ -31850,6 +31878,7 @@ void __fastcall TNyanFiForm::Log_DebugInfActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::FunctionListActionExecute(TObject *Sender)
 {
 	FuncListDlg->ToFilter = TEST_ActParam("FF");
+	FuncListDlg->isFuzzy  = TEST_ActParam("FZ");
 	FuncListDlg->ListMode = 0;
 	if (FuncListDlg->ShowModal()==mrOk && FuncListDlg->ReqEdit) ExeCommandV(_T("FileEdit"));
 }

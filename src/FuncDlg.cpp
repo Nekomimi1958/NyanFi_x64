@@ -35,6 +35,7 @@ void __fastcall TFuncListDlg::FormCreate(TObject *Sender)
 	ListMode   = 0;
 	LineNo     = -1;
 	ToFilter   = false;
+	isFuzzy    = false;
 	KeyHandled = false;
 }
 //---------------------------------------------------------------------------
@@ -76,6 +77,7 @@ void __fastcall TFuncListDlg::FormShow(TObject *Sender)
 void __fastcall TFuncListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	UserDefStr = EmptyStr;
+	isFuzzy = false;
 
 	IniFile->SavePosInfo(this);
 
@@ -238,7 +240,8 @@ void __fastcall TFuncListDlg::UpdateList(
 	flst->Assign((ListMode==0)? FunctionList : ((ListMode==1)? UserDefList : MarkLineList));
 
 	//ƒtƒBƒ‹ƒ^
-	UnicodeString ptn = usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, FilterEdit->Text);
+	UnicodeString ptn = (isFuzzy && !MigemoCheckBox->Checked)? FilterEdit->Text :
+							usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, FilterEdit->Text);
 	if (!ptn.IsEmpty()) {
 		TRegExOptions opt; opt << roIgnoreCase;
 		int i=0;
@@ -253,25 +256,25 @@ void __fastcall TFuncListDlg::UpdateList(
 					remove_end_s(lbuf, ':');
 				}
 			}
-			if (!TRegEx::IsMatch(lbuf, ptn, opt)) flst->Delete(i); else i++;
+			bool ok = (isFuzzy && !MigemoCheckBox->Checked)?
+						contains_fuzzy_word(lbuf, ptn) : TRegEx::IsMatch(lbuf, ptn, opt);
+			if (!ok) flst->Delete(i); else i++;
 		}
 	}
 
 	TListBox *lp = FuncListBox;
 	lp->LockDrawing();
-	{
-		lp->Items->Assign(flst.get());
-		if (lp->Count>0) {
-			int idx = 0;
-			if (LineNo!=-1) {
-				for (int i=0; i<lp->Count; i++) {
-					int lno = (int)lp->Items->Objects[i];
-					if (LineNo < lno) break;
-					if (LineNo >= lno) idx = i;
-				}
+	lp->Items->Assign(flst.get());
+	if (lp->Count>0) {
+		int idx = 0;
+		if (LineNo!=-1) {
+			for (int i=0; i<lp->Count; i++) {
+				int lno = (int)lp->Items->Objects[i];
+				if (LineNo < lno) break;
+				if (LineNo >= lno) idx = i;
 			}
-			lp->ItemIndex = idx;
 		}
+		lp->ItemIndex = idx;
 	}
 	lp->UnlockDrawing();
 	ListScrPanel->UpdateKnob();

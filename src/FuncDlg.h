@@ -116,6 +116,7 @@ public:		// ユーザー宣言
 	int  LineNo;
 	bool ToFilter;
 	bool ReqEdit;
+	bool isFuzzy;
 	UnicodeString UserDefStr;
 	UnicodeString NamePtn;	//関数名の強調パターン
 

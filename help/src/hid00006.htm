@@ -485,10 +485,12 @@
         href="#Sort">→ Sort</a>　<a href="#ExportCsv">→ ExportCsv</a>
     </dd>
 
-    <dt id="FunctionList">FunctionList<span class="pram_text">[_FF]</span></dt>
+    <dt id="FunctionList">FunctionList<span class="pram_text">[_FF][;FZ]</span></dt>
     <dd><a href="hid00066.htm">関数一覧</a>を表示します。<br>
       ファイルの種類によっては、「見出し一覧」、「セクション一覧」、「ラベル一覧」、「オブジェクト一覧」、「タスク一覧」になります。<br>
       パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
+      パラメータに <b>FZ</b> を指定すると、検索語の各文字間に任意の文字列があってもマッチするあいまい検索になります(Migemoモード時を除く)。<br>
+      複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
       <a href="#UserDefList">→ UserDefList</a>　<a href="#MarkList">→ MarkList</a>
     </dd>
 
@@ -540,7 +542,7 @@
 
     <dt id="IncSearch">IncSearch<span class="pram_text">[_[MM|NM]]</span></dt>
     <dd><a href="hid00050.htm">インクリメンタルサーチ・モード</a>で文字列検索を行います。<br>
-      パラメータに <b>MM</b> を指定すると Migemo モード、<b>NM</b> を指定すると通常モード、無指定の場合は前回のモードになります。<br>
+      パラメータに <b>MM</b> を指定するとMigemoモード、<b>NM</b> を指定すると通常モード、無指定の場合は前回のモードになります。<br>
       <a href="hid00019.htm#IncSearch">→ オプション設定 - コマンド</a><br>
       <a href="#FindText">→ FindText</a>　<a href="#Highlight">→ Highlight</a>
     </dd>

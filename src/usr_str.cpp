@@ -243,15 +243,21 @@ UnicodeString split_in_paren(UnicodeString &s)
 //前後にタブを含まない文字列を取得
 //  複数行の場合、空でない最初の文字列
 //---------------------------------------------------------------------------
-UnicodeString get_norm_str(UnicodeString s)
+UnicodeString get_norm_str(UnicodeString s,
+	bool trim_sw)		//前後の空白や制御文字を削除	(default = false)
 {
 	UnicodeString ret_str;
 	std::unique_ptr<TStringList> lst(new TStringList());
 	lst->Text = s;
 	for (int i=0; i<lst->Count; i++) {
 		ret_str = lst->Strings[i];
-		ret_str = replace_regex(ret_str, _T("^\\t+"), null_TCHAR);
-		ret_str = replace_regex(ret_str, _T("\\t+$"), null_TCHAR);
+		if (trim_sw) {
+			ret_str = Trim(ret_str);
+		}
+		else {
+			ret_str = replace_regex(ret_str, _T("^\\t+"), null_TCHAR);
+			ret_str = replace_regex(ret_str, _T("\\t+$"), null_TCHAR);
+		}
 		if (!ret_str.IsEmpty()) break;
 	}
 	return ret_str;
@@ -955,7 +961,8 @@ bool contains_word_and_or(
 bool contains_fuzzy_word(
 	UnicodeString s,
 	UnicodeString kwd,	//検索語
-	bool case_sw)		//大小文字区別
+	bool case_sw,		//大小文字区別		(default = false)
+	UnicodeString sp)	//リストセパレータ	(default = EmptyStr)
 {
 	if (kwd.IsEmpty()) return false;
 
@@ -964,11 +971,21 @@ bool contains_fuzzy_word(
 		kwd = kwd.UpperCase();
 	}
 
-	bool ok = true;
-	int p = 0;
-	for (int i=1; i<=kwd.Length() && ok; i++) {
-		int p1 = Pos(kwd[i], s, p + 1);
-		if (p1>=(p + 1)) p = p1; else ok = false;
+	bool ok;
+	if (!sp.IsEmpty()) {
+		ok = false;
+		TStringDynArray lst = SplitString(s, sp);
+		for (int i=0; i<lst.Length && !ok; i++) {
+			ok = contains_fuzzy_word(lst[i], kwd, case_sw);
+		}
+	}
+	else {
+		ok = true;
+		int p = 0;
+		for (int i=1; i<=kwd.Length() && ok; i++) {
+			int p1 = Pos(kwd[i], s, p + 1);
+			if (p1>=(p + 1)) p = p1; else ok = false;
+		}
 	}
 	return ok;
 }
@@ -1170,6 +1187,20 @@ bool starts_ptn(
 	catch (...) {
 		return false;
 	}
+}
+
+//---------------------------------------------------------------------------
+//あいまい検索パターンを取得
+//---------------------------------------------------------------------------
+UnicodeString get_fuzzy_ptn(UnicodeString kwd, 
+	bool sep_sw)	//\s,\\,/ 区切りをまたがない	(default = false)
+{
+	UnicodeString ptn;
+	for (int i=1; i<=kwd.Length(); i++) {
+		if (i>1) ptn += sep_sw? "[^\\s\\\\/]*?" : ".*?";
+		ptn += TRegEx::Escape(kwd[i]);
+	}
+	return ptn;
 }
 
 //---------------------------------------------------------------------------

@@ -5984,6 +5984,15 @@ void update_DriveLog(bool save)
 }
 
 //---------------------------------------------------------------------------
+//改名ログの保存
+//---------------------------------------------------------------------------
+bool save_RenLog(TStringList *lst)
+{
+	return saveto_TextUTF8(ExePath + RENLOG_FILE, lst);
+}
+
+
+//---------------------------------------------------------------------------
 //汎用リストの項目高を設定 (行間 = 1/3)
 //---------------------------------------------------------------------------
 void set_ListBoxItemHi(
@@ -11079,12 +11088,7 @@ int get_MatchWordList(
 		}
 		//あいまい検索
 		else if (opt.Contains(soFuzzy)) {
-			UnicodeString ptn;
-			for (int i=1; i<=kwd.Length(); i++) {
-				if (i>1) ptn += ".*";
-				ptn += TRegEx::Escape(kwd[i]);
-			}
-			TMatchCollection mts = TRegEx::Matches(lbuf, ptn, x_opt);
+			TMatchCollection mts = TRegEx::Matches(lbuf, get_fuzzy_ptn(kwd), x_opt);
 			for (int i=0; i<mts.Count; i++) lst->Add(mts.Item[i].Value);
 		}
 		//AND/OR(' ')

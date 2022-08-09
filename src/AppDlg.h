@@ -314,6 +314,7 @@ public:		// ƒ†[ƒU[éŒ¾
 	bool OnlyAppList;
 	bool OnlyLauncher;
 	bool ToAppList, ToLauncher, ToIncSea;
+	bool isFuzzy;
 
 	__fastcall TAppListDlg(TComponent* Owner);
 

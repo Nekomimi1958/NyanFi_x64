@@ -423,7 +423,7 @@ UnicodeString HighlightFile::GetDefHeadlnPtn(UnicodeString fext)
 		test_FileExt(fext, ".dfm")		   ? "^\\s*object\\s" :
 		test_FileExt(fext, ".eml")		   ? "^Subject:" :
 		test_FileExt(fext, ".hsp")		   ? "^\\*\\w+" :
-		test_FileExt(fext, ".md")		   ? "^#+" :
+		test_FileExt(fext, ".md")		   ? "^#+\\s" :
 		test_FileExt(fext, ".pod.pl.pm")   ? "^=head\\d\\b" : "");
 }
 //---------------------------------------------------------------------------

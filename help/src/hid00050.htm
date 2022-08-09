@@ -6,14 +6,15 @@
   <title>インクリメンタルサーチ・モード</title>
   <link rel="stylesheet" type="text/css" href="help.css">
   <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-    <param name="Keyword" value="Filter">
-    <param name="Keyword" value="IncSearch">
-    <param name="Keyword" value="Migemo">
-    <param name="Keyword" value="SelMask">
-    <param name="Keyword" value="インクリメンタルサーチ">
-    <param name="Keyword" value="テキストビュアー">
-    <param name="Keyword" value="フィルタマスク・モード">
-    <param name="Keyword" value="ワークリスト">
+	<param name="Keyword" value="Filter">
+	<param name="Keyword" value="IncSearch">
+	<param name="Keyword" value="Migemo">
+	<param name="Keyword" value="SelMask">
+	<param name="Keyword" value="あいまい検索">
+	<param name="Keyword" value="インクリメンタルサーチ">
+	<param name="Keyword" value="テキストビュアー">
+	<param name="Keyword" value="フィルタマスク・モード">
+	<param name="Keyword" value="ワークリスト">
   </object>
 </head>
 
@@ -61,7 +62,8 @@
       <div class="info_text">
         <a href="hid00005.htm#Filter">Filter</a> コマンドを用いると、フィルタマスク・モードと同様の動作を、フィルタ欄に入力した文字列を検索語として行えます(IME使用可能)。また、<a
           href="#Select">Select</a>(<a href="#SelectDown">SelectDown</a>)、<a href="#ClearAll">ClearAll</a>、<a
-          href="#ClearIncKeyword">ClearIncKeyword</a> コマンドに割り当てたキーで同様の操作が可能です。なお、大小文字の区別やあいまい検索は、パラメータで指定します。
+          href="#ClearIncKeyword">ClearIncKeyword</a> コマンドに割り当てたキーで同様の操作が可能です。
+          なお、パラメータによって大小文字の区別(CS)やあいまい検索(FZ)も指定できます。
       </div>
     </dd>
 
@@ -90,7 +92,7 @@
     <dt class="no_bg">ランチャー</dt>
     <dd>
       <a href="hid00005.htm#AppList">AppList</a> コマンドによる <a href="hid00076.htm">アプリケーション一覧</a> のランチャーで、<a
-        href="hid00005.htm#IncSearch">IncSearch</a> コマンドが割り当てられているキーを押すと、インクリメンタルサーチ・モードで項目を絞り込み表示できます。
+        href="hid00005.htm#IncSearch">IncSearch</a> コマンドが割り当てられているキーを押すと、インクリメンタルサーチ・モードで項目を絞り込み表示できます。パラメータ指定(FZ)によってあいまい検索も可能です。
     </dd>
   </dl>
 

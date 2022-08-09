@@ -54,7 +54,7 @@ UnicodeString get_first_line(UnicodeString s);
 
 UnicodeString get_in_paren(UnicodeString s);
 UnicodeString split_in_paren(UnicodeString &s);
-UnicodeString get_norm_str(UnicodeString s);
+UnicodeString get_norm_str(UnicodeString s, bool trim_sw = false);
 
 UnicodeString split_tkn(UnicodeString &s, UnicodeString sp);
 UnicodeString split_tkn(UnicodeString &s, const _TCHAR *sp);
@@ -133,7 +133,7 @@ int pos_r_q(UnicodeString wd, UnicodeString s);
 int pos_r_q_colon(UnicodeString s);
 
 bool contains_word_and_or(UnicodeString s, UnicodeString kwd, bool case_sw = false);
-bool contains_fuzzy_word(UnicodeString s, UnicodeString kwd, bool case_sw = false);
+bool contains_fuzzy_word(UnicodeString s, UnicodeString kwd, bool case_sw = false, UnicodeString sp = EmptyStr);
 
 bool contained_wd_i(UnicodeString lst, UnicodeString wd);
 bool contained_wd_i(const _TCHAR *lst, UnicodeString wd);
@@ -153,6 +153,8 @@ UnicodeString get_match_regex(UnicodeString s, const _TCHAR *ptn);
 UnicodeString extract_prm_RegExPtn(UnicodeString &s);
 UnicodeString ptn_match_str(UnicodeString ptn, UnicodeString s);
 bool starts_ptn(UnicodeString ptn, UnicodeString s);
+
+UnicodeString get_fuzzy_ptn(UnicodeString kwd, bool sep_sw = false);
 
 void get_find_wd_list(UnicodeString wd, TStringList *lst);
 bool find_mlt(UnicodeString wd, UnicodeString s, bool and_sw = false, bool not_sw = false, bool case_sw = false);

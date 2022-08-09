@@ -111,7 +111,7 @@
         href="#TrimTagData">→ TrimTagData</a>
     </dd>
 
-    <dt id="AppList">AppList<span class="pram_text">[_{FA|FL|FI|AO|LO|LI}]</span></dt>
+    <dt id="AppList">AppList<span class="pram_text">[_{FA|FL|FI|AO|LO|LI}][;FZ]</span></dt>
     <dd><a href="hid00076.htm">アプリケーション一覧</a>が開き、実行中のアプリケーションが表示されます。<br>
       アプリケーションの切り替え、終了、ウィンドウ操作、実行ファイル情報のコピーなどが可能です。<br>
       <div class="spc_box">
@@ -126,6 +126,7 @@
         <b>AO</b> を指定すると、一覧のみを表示します。<br>
         <b>LO</b> を指定すると、ランチャーのみを表示します。<br>
         <b>LI</b> を指定すると、ランチャーのみを表示し、インクリメンタルサーチモードにします。<br>
+        パラメータに <b>FZ</b> を指定すると、ランチャーのインクリメンタルサーチモードがあいまい検索になります。
       </div>
       <a href="hid00019.htm#AppList">→ オプション設定 - コマンド</a><br>
     </dd>
@@ -186,7 +187,7 @@
         WidenCurList</a>　<a href="#EqualListWidth">→ EqualListWidth</a>
     </dd>
 
-    <dt id="CalcDirSize">CalcDirSize<span class="pram_text">[_[FC][;LO][;CC][;LS][;SA|SD][;ファイル名]</span></dt>
+    <dt id="CalcDirSize">CalcDirSize<span class="pram_text">[_FC][;LO][;CC][;LS][;SA|SD][;ファイル名]</span></dt>
     <dd>選択中(無ければカーソル位置)のディレクトリ容量を計算します。中断したい場合は<span class="btn_frame">ESC</span>キーを押してください。<br>
       仮想ディレクトリでない場合、ファイル情報で占有サイズやクラスタギャップを確認できます。また、NTFS圧縮が適用されていている場合、圧縮サイズと圧縮率が表示されます。<br>
       なお、隠しファイルやシステムファイルを非表示にしている場合でも、ディレクトリ内のものは計算に入ります。<br>
@@ -214,7 +215,7 @@
       <a href="#CalcDirSizeAll">→ CalcDirSizeAll</a>　<a href="#ReloadList">→ ReloadList</a>
     </dd>
 
-    <dt id="CalcDirSizeAll">CalcDirSizeAll<span class="pram_text">[_{FC|SG|DG}[;LO][;CC][;LS][;SA|SD][;ファイル名]</span>
+    <dt id="CalcDirSizeAll">CalcDirSizeAll<span class="pram_text">[_{FC|SG|DG}][;LO][;CC][;LS][;SA|SD][;ファイル名]</span>
     </dt>
     <dd>カレントにある全ディレクトリの容量を計算します。中断したい場合は<span class="btn_frame">ESC</span>キーを押してください。<br>
       仮想ディレクトリでない場合、ファイル情報で占有サイズやクラスタギャップを確認できます([..] 位置ではカレント全体についての情報を表示)。また、NTFS圧縮が適用されていている場合、圧縮サイズや圧縮率が表示されます。<br>
@@ -256,7 +257,7 @@ NyanFi.exe -XCalculator_CB
       <a href="#TaskMan">→ TaskMan</a>　<a href="#Suspend">→ Suspend</a>
     </dd>
 
-    <dt id="ChangeDir">ChangeDir<span class="pram_text">_ディレクトリ名</span><br>
+    <dt id="ChangeDir">ChangeDir<span class="pram_text">_ディレクトリ名[\ファイル名]</span><br>
       ChangeDir<span class="pram_text">_&quot;UNCパス:接続ユーザ名&quot;</span></dt>
     <dd>カレントを、パラメータで指定したディレクトリに変更します。既存のファイル名が指定された場合は、そのディレクトリのファイル位置に移動します。<br>
       <a href="#ExeCommands">ExeCommands</a> コマンドのパラメータ区切り文字との混同を避けるため、ルートディレクトリの場合は <b>:</b> の後に <b>\</b>
@@ -1360,7 +1361,7 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
         href="#WinTerminal">→ WinTerminal</a>　<a href="#PowerShell">→ PowerShell</a>
     </dd>
 
-    <dt id="Filter">Filter<span class="pram_text">[_CS[;CA][;FZ]]</span></dt>
+    <dt id="Filter">Filter<span class="pram_text">[_CS][;CA][;FZ]</span></dt>
     <dd>ファイルリストに対してフィルタによる絞り込みを行います(<b>選択マスク</b>)。<a
         href="hid00050.htm">インクリメンタルサーチ</a>のフィルタマスク・モードと似ていますが、フィルタ欄に入力した文字列がそのまま検索語となります(IME使用可能)。<br>
       フィルタ欄で<span class="btn_frame">ESC</span>または<span class="btn_frame">ENTER</span>キーを押すか、フォーカスが失われると通常動作に戻ります。<br>
@@ -1621,7 +1622,7 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
       <a href="hid00090.htm">→ Git の利用について</a>
     </dd>
 
-    <dt id="GitViewer">GitViewer<span class="pram_text">[_N履歴制限数(デフォルト=100)[;CP]]</span></dt>
+    <dt id="GitViewer">GitViewer<span class="pram_text">[_N履歴制限数(デフォルト=100)][;CP]</span></dt>
     <dd>Gitの作業ディレクトリにいる場合、<a href="hid00090.htm#GitViewer">Gitビュアー</a>が表示されます。<br>
       ブランチ一覧、コミット履歴、差分の概略を確認でき、ブランチやコミットに対する操作、ステージングやコミット、Console、GUI、diffツールの起動などを行えます。<br>
       <div class="spc_box">
@@ -1696,7 +1697,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       <a href="#SubViewer">→ SubViewer</a>
     </dd>
 
-    <dt id="IncSearch">IncSearch<span class="pram_text">[_[MM|NM][;FM[;CA]]</span></dt>
+    <dt id="IncSearch">IncSearch<span class="pram_text">[_MM|NM][;FM][;CA]</span></dt>
     <dd><a href="hid00050.htm">インクリメンタルサーチ・モード</a>に移ります。<br>
       パラメータに <b>MM</b> を指定すると Migemo モードで、<b>NM</b> を指定すると通常モードでインクリメンタルサーチに移ります。無指定の場合は前回のモードになります。<br>
 
@@ -1738,13 +1739,13 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       <a href="hid00019.htm#InitialSearch">→ オプション設定 - コマンド</a>
     </dd>
 
-    <dt id="InputCommands">InputCommands<span class="pram_text">[_EL]</span></dt>
+    <dt id="InputCommands">InputCommands<span class="pram_text">[_FZ][;EL]</span></dt>
     <dd>入力したコマンドを <a href="#ExeCommands">ExeCommands</a> のパラメータとして実行します。<br>
       先頭が <b>@</b> の場合は<b>コマンドファイル</b>を、また <b>$</b> の場合は<a href="hid00014.htm">追加メニュー</a>または<a
         href="hid00015.htm">外部ツール</a>の<b>エイリアス</b>とみなし、その項目を実行します。<br>
       コマンドは <b>:</b> (コロン)で区切って複数指定できます。パラメータに <b>:</b> が含まれる場合は、パラメータ全体をダブルクォーテーションで囲んでください。<br>
       <div class="spc_box">
-        入力ボックスで文字列を入力すると、それが含まれる候補がドロップダウン表示されます(Migemo 対応)。また &quot;<b>*</b>&quot;、&quot;<b>?</b>&quot;、&quot;<b>
+        入力ボックスで検索語を入力すると、それが含まれる候補がドロップダウン表示されます(Migemo 対応)。また &quot;<b>*</b>&quot;、&quot;<b>?</b>&quot;、&quot;<b>
         </b>&quot; のいずれかを入力すると、すべてのコマンドが表示されます。<br>
         またコマンドの後に &quot;<b>_</b>&quot; を入力すると、そのコマンドで利用できるパラメータの候補(一部動的なものを除く)がドロップダウン表示されます。<br>
         候補が出ている場合、<span class="btn_frame">ENTER</span>キーを押すか項目をクリックすると確定し、さらに<span
@@ -1754,13 +1755,15 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
         <span class="btn_frame">F1</span>キーを押すと、入力されているコマンド、またはドロップダウンで選択されていコマンドについてのヘルプが表示されます。<br>
       </div>
       <div class="spc_box">
+        パラメータに <b>FZ</b> を指定すると、検索語の各文字間に任意の文字列があってもマッチするあいまい検索になります。<br>
         パラメータに <b>EL</b> を指定すると、ログウィンドウへのエコー機能が有効になり、コマンドファイルの場合、行番号が表示されます(<a href="hid00063.htm#EchoOn">EchoOn_LN</a>
         に相当)。<br>
+        複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。<br>
       </div>
       <a href="#CopyCmdName">→ CopyCmdName</a>
     </dd>
 
-    <dt id="InputDir">InputDir<span class="pram_text">[_{ND|ND2|SD}]</span></dt>
+    <dt id="InputDir">InputDir<span class="pram_text">[_{ND|ND2|SD|CB}]</span></dt>
     <dd>カレントを入力ボックスで指定したディレクトリに変更します。<br>
       &quot;%変数名%&quot; という書式で環境変数も使えます。またカレントからの相対指定も可能です。<br>
       既存のファイル名が入力された場合は、そのディレクトリのファイル位置に移動します。ただしパスワード保護された未接続のUNCパスは、事前に属性が取得できないためディレクトリ名とみなされます。<br>
@@ -1792,6 +1795,9 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
         <b>ND2</b> を指定すると、ドロップダウンを開いた状態で入力コンボボックスを表示します。<br>
         <b>SD</b> を指定すると、フォルダの参照ダイアログを表示します。これは、<b>ND</b> でディレクトリ情報に入力欄を表示して<span
           class="btn_frame">...</span>ボタンを押した状態と同じです。<br>
+      </div>
+      <div class="spc_box">
+        パラメータに <b>CB</b> を指定すると、ダイアログを出さずに、クリップボードのテキスト内容からディレクトリ[\ファイル名]を取得してカレントを変更します。内容が複数行の場合は空でない最初の行内容を取得し、前後の制御文字や空白、引用符などは削除して用います。
       </div>
       <a href="#ChangeDir">→ ChangeDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#RegDirDlg">→
         RegDirDlg</a>　<a href="#RegDirPopup">→ RegDirPopup</a>　<a href="#SubDirList">→ SubDirList</a>　<a
@@ -1962,7 +1968,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       <a href="#CopyFileName">→ CopyFileName</a>　<a href="#CopyDir">→ CopyDir</a>　<a href="#ListTree">→ ListTree</a>
     </dd>
 
-    <dt id="ListLog">ListLog<span class="pram_text">[_[FF][;EO]]</span></dt>
+    <dt id="ListLog">ListLog<span class="pram_text">[_FF][;EO]</span></dt>
     <dd>現在のログ内容を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
 
       <div class="spc_box">
@@ -1973,7 +1979,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       <a href="#ViewLog">→ ViewLog</a>
     </dd>
 
-    <dt id="ListNyanFi">ListNyanFi<span class="pram_text">[_{CC|LS|ファイル名}[;ED][;XT]]</span></dt>
+    <dt id="ListNyanFi">ListNyanFi<span class="pram_text">[_{CC|LS|ファイル名}][;ED][;XT]</span></dt>
     <dd><b>NyanFi</b> についての情報をログに表示します。<br>
       <b>NyanFi</b>、アーカイバDLL、Migemo、WIC などについての詳細が一覧表示されます。<br>
 
@@ -1989,7 +1995,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       </div>
     </dd>
 
-    <dt id="ListTail">ListTail<span class="pram_text">[_[R][行数][;TE][;FF][;/見出しパターン/][;ファイル名]]</span></dt>
+    <dt id="ListTail">ListTail<span class="pram_text">[_[R]行数][;TE][;FF][;/見出しパターン/][;ファイル名]</span></dt>
     <dd>カーソル位置のテキストファイルの末尾から指定行数分を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
       表示部分のみを読み込むので、巨大なログファイルなどもすばやく確認できます。またフィルタによる絞り込み表示が可能。<br>
 
@@ -2018,7 +2024,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       <a href="#WatchTail">→ WatchTail</a>　<a href="#ViewTail">→ ViewTail</a>
     </dd>
 
-    <dt id="ListText">ListText<span class="pram_text">[_[FF][;EO][;/見出しパターン/][;ファイル名]]</span></dt>
+    <dt id="ListText">ListText<span class="pram_text">[_FF][;EO][;/見出しパターン/][;ファイル名]</span></dt>
     <dd>カーソル位置のテキストファイルを<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
       表示処理などが単純な分、テキストビュアーよりも高速に動作します。またフィルタによる絞り込み表示が可能。<br>
 
@@ -2138,7 +2144,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
         ShowProperty</a>
     </dd>
 
-    <dt id="Mark">Mark<span class="pram_text">[_{IM|メモ}[;ND]]</span><br>
+    <dt id="Mark">Mark<span class="pram_text">[_{IM|メモ}][;ND]</span><br>
       Mark<span class="pram_text">_SL[;{IM|メモ}]</span></dt>
     <dd>カーソル位置の項目に<b>栞マーク</b>を設定します。すでに設定されている場合は解除します。<br>
       栞マークは、<a href="hid00070.htm">栞マーク一覧</a>などで参照できます。<br>
@@ -2289,8 +2295,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
 
     <dt id="NameFromClip">NameFromClip<span class="pram_text">[_[RC][;書式]]</span></dt>
     <dd>カーソル位置項目の名前を、クリップボードの内容に変更します。<br>
-      文字列が引用符で囲まれていたら外します。ドライブ名やディレクトリ名が含まれている場合、ファイル名部分のみを抽出して用います。また、前後の制御文字や空白は取り除き、複数行の場合は空でない最初の行内容を用います。<br>
-
+      内容が複数行の場合は空でない最初の行内容を取得します。前後の制御文字や空白、引用符などは削除し、ドライブ名やディレクトリ名が含まれていたら、ファイル名部分のみを抽出して用います。<br>
       <div class="spc_box">
         パラメータに <b>RC</b> を指定すると、<a href="hid00051.htm">名前の変更ダイアログ</a>の「<b>ファイル名主部の文字置換</b>」で設定されている置換内容を適用します。<br>
       </div>
@@ -2309,7 +2314,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
         　NameFromClip_RC;\CA.\E<br>
         　NameFromClip_\A.\E.bak<br>
       </div>
-      <a href="#CopyFileName">→ CopyFileName</a>
+      <a href="#CopyFileName">→ CopyFileName</a>　<a href="#UndoRename">→ UndoRename</a>
     </dd>
 
     <dt id="NameToLower">NameToLower</dt>
@@ -2913,7 +2918,7 @@ NyanFi.exe -XRegExChecker
         文字化け対策版(Ver.15.～)を使用している場合、カーソル位置のファイル/ディレクトリ名を変更できます。<br>
       </div>
 
-      <a href="#SetAlias">→ SetAlias</a>　<a href="#SwapName">→ SwapName</a>　<a href="#UndoRename">→ UndoRename</a>　<a
+      <a href="#SetAlias">→ SetAlias</a>　<a href="#SwapName">→ SwapName</a>　<a href="#NameFromClip">→ NameFromClip</a>　<a href="#UndoRename">→ UndoRename</a>　<a
         href="#SetArcTime">→ SetArcTime</a>　<a href="#SetDirTime">→ SetDirTime</a>
     </dd>
 
@@ -2931,7 +2936,7 @@ NyanFi.exe -XRegExChecker
       <a href="#GitViewer">→ GitViewer</a><br>
     </dd>
 
-    <dt id="Restart">Restart<span class="pram_text">[_[NS][;RA|DM][;ファイル名]</span></dt>
+    <dt id="Restart">Restart<span class="pram_text">[_NS][;RA|DM][;ファイル名]</span></dt>
     <dd><b>NyanFi</b> を再起動します。<br>
       パラメータに <b>NS</b> を指定すると、終了時に INIファイルを保存しません。<br>
       パラメータに <b>RA</b> を指定すると、管理者として再起動します。<br>
@@ -3405,7 +3410,7 @@ D:\Data\hoge.txt
       <a href="#ToolBarDlg">→ ToolBarDlg</a>　<a href="#ExeToolBtn">→ ExeToolBtn</a>
     </dd>
 
-    <dt id="SimilarSort">SimilarSort<span class="pram_text">[_[IX][;IC][;IN][;IF]]</span><br>
+    <dt id="SimilarSort">SimilarSort<span class="pram_text">[_IX][;IC][;IN][;IF]</span><br>
       SimilarSort<span class="pram_text">_IA</span></dt>
     <dd>カーソル位置のファイル名との類似性(標準化されたレーベンシュタイン距離)に基づいてファイルリストをソートします。<br>
       ファイルとディレクトリは区別されません。<br>
@@ -3580,7 +3585,7 @@ D:\Data\hoge.txt
     <dd>選択している2項目の名前を入れ替えます。<span class="note_text">対象がファイルの場合、拡張子はそのままです。</span><br>
       パラメータに <b>LR</b>
       を指定すると、左右のファイルリストで一つずつ選択している項目の名前を入れ替えます。これは、左右とも通常のファイルリストの場合のみ可能です。また左右が親子関係にあって、一方のパスが改名される場合には対応していません。<br>
-      <a href="#RenameDlg">→ RenameDlg</a>　<a href="#UndoRename">→ UndoRename</a>
+      <a href="#RenameDlg">→ RenameDlg</a>　<a href="#NameFromClip">→ NameFromClip</a>　<a href="#UndoRename">→ UndoRename</a>
     </dd>
 
     <dt id="SyncLR">SyncLR<span class="pram_text">[_{ON|OFF}]</span></dt>
@@ -3738,7 +3743,7 @@ D:\Data\hoge.txt
         href="#ToPrevOnLeft">→ ToPrevOnLeft</a>
     </dd>
 
-    <dt id="ToOppSameHash">ToOppSameHash<span class="pram_text">[_{MD5|SHA1|SHA256|SHA384|SHA512|CRC32}[;NO]]</span>
+    <dt id="ToOppSameHash">ToOppSameHash<span class="pram_text">[_{MD5|SHA1|SHA256|SHA384|SHA512|CRC32}][;NO]</span>
     </dt>
     <dd>カーソル位置のファイルと同じハッシュ値のファイルが反対側に存在する場合、その位置に移動します。このとき、可能なら表示位置を左右で合わせます。<br>
       パラメータでハッシュの種類を指定してください。省略した場合は、MD5 とみなします。<br>
@@ -3836,14 +3841,14 @@ D:\Data\hoge.txt
     </dd>
 
     <dt id="UndoRename">UndoRename</dt>
-    <dd>直前の <a href="#RenameDlg">RenameDlg</a> または <a href="#SwapName">SwapName</a> コマンドで変更したファイル名を元に戻します。<br>
+    <dd>直前の <a href="#RenameDlg">RenameDlg</a>、<a href="#SwapName">SwapName</a>、または <a href="#NameFromClip">NameFromClip</a> コマンドで変更したファイル名を元に戻します。<br>
       改名を行うと、<b>NyanFi</b> ディレクトリに &quot;<b>renamelog.txt</b>&quot;
       という改名ログが作成されます。アンドゥはこのログファイルに基づいて行われ、実行後には削除されます。<br>
       なお、「<a href="hid00051.htm">名前の変更</a>」ダイアログの 設定 - その他 で「<b>改名ログを作成しない</b>」をチェックしていると、改名ログが作成されませんので注意してください。<br>
-      <a href="#RenameDlg">→ RenameDlg</a>　<a href="#SwapName">→ SwapName</a>
+      <a href="#RenameDlg">→ RenameDlg</a>　<a href="#SwapName">→ SwapName</a>　<a href="#NameFromClip">→ NameFromClip</a>
     </dd>
 
-    <dt id="UnPack">UnPack<span class="pram_text">[_{CD|CD2}[;OW]]</span></dt>
+    <dt id="UnPack">UnPack<span class="pram_text">[_{CD|CD2}][;OW]</span></dt>
     <dd>選択中(無ければカーソル位置)のアーカイブを反対パスに解凍します。<br>
       <b>ZIP</b>、<b>7Z</b>、<b>LHA</b>、<b>CAB</b>、<b>TAR</b>、<b>RAR</b>、<b>ISO</b> に対応しています(要
       7-zip32.dll、unlha32.dll、cab32.dll、tar32.dll、unrar32.dll、unrar.dll、uniso32.dll)。特殊な拡張子でも、アーカイバが対応できるものは解凍可能です。<br>
@@ -3948,7 +3953,7 @@ D:\Data\hoge.txt
       <a href="#ListTail">→ ListTail</a>　<a href="#ViewTail">→ ViewTail</a>
     </dd>
 
-    <dt id="WebMap">WebMap<span class="pram_text">[_IN][M1～4(デフォルト=1)][;Z1～18(デフォルト=16)]</span></dt>
+    <dt id="WebMap">WebMap<span class="pram_text">[_IN][;M1～4(デフォルト=1)][;Z1～18(デフォルト=16)]</span></dt>
     <dd>カーソル位置の画像ファイルからExif GPS情報を取得し、地図(デフォルト:国土地理院/Leaflet)を開きます。<br>
       緯度、経度から地図表示用HTMLファイルを生成し、一時ディレクトリに <b>$~WEBMAP.HTM</b> という名前で保存して開きます。なお、国内については標高も表示されます(国土地理院APIで取得)。<br>
 
