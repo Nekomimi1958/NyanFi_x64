@@ -127,6 +127,7 @@ void __fastcall TFindTagForm::UpdateList()
 
 	SearchOption opt;  opt << soAndOr;
 	if (IsMigemo) opt << soMigemo;
+	if (contains_upper(IncSeaWord)) opt << soCaseSens;
 	filter_List(TagList, ResListBuf, IncSeaWord, opt);
 
 	TListBox *lp = TagsListBox;
@@ -177,8 +178,9 @@ void __fastcall TFindTagForm::TagsListBoxDrawItem(TWinControl *Control, int Inde
 		std::unique_ptr<TStringList> wlist(new TStringList());
 		SearchOption opt;  opt << soAndOr;
 		if (IsMigemo) opt << soMigemo;
+		if (contains_upper(IncSeaWord)) opt << soCaseSens;
 		get_MatchWordList(lbuf, IncSeaWord, opt, wlist.get());
-		EmphasisTextOut(lbuf, wlist.get(), cv, xp, yp);
+		EmphasisTextOut(lbuf, wlist.get(), cv, xp, yp, opt.Contains(soCaseSens));
 	}
 	else {
 		cv->TextOut(xp, yp, lbuf);

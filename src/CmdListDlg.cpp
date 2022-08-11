@@ -596,7 +596,7 @@ void __fastcall TCmdFileListDlg::PreviewListBoxDrawItem(TWinControl *Control, in
 
 	PrvTextOut(lp, Index, cv, Rect,
 		is_SelFgCol(State)? col_fgSelItem : col_fgView,
-		4, NULL, "*.nbt");
+		4, NULL, false, "*.nbt");
 }
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::PreviewActionExecute(TObject *Sender)

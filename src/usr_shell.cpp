@@ -1384,7 +1384,12 @@ UnicodeString UserShell::get_FileTypeStr(UnicodeString fnam)
 //ショートカット情報の取得
 //---------------------------------------------------------------------------
 bool UserShell::get_LnkInf(UnicodeString fnam, TStringList *lst,
-	UnicodeString *nam, UnicodeString *prm, UnicodeString *fld, int *shw, UnicodeString *rem, bool *rau)
+	UnicodeString *nam,		//リンク先
+	UnicodeString *prm,		//パラメータ
+	UnicodeString *fld,		//作業場所
+	int *shw, 				//実行時の大きさ
+	UnicodeString *rem, 	//コメント
+	bool *rau)				//管理者として実行
 {
 	try {
 		std::unique_ptr<TFileStream>   fs(new TFileStream(fnam, fmOpenRead | fmShareDenyNone));

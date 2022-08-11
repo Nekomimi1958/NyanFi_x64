@@ -395,6 +395,7 @@ bool __fastcall TGeneralInfoDlg::UpdateList(bool reload)
 		if (AndOrAction->Checked)  opt << soAndOr;
 		if (isFileList)			   opt << soTSV;
 		if (isTree)				   opt << soTree;
+		if (contains_upper(FilterEdit->Text)) opt << soCaseSens;
 		filter_List(GenInfoList, GenInfoBuff, FilterEdit->Text, opt);
 
 		if (isTree) {
@@ -666,18 +667,20 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	if (lbuf.Length()>1024) lbuf = lbuf.SubString(1, 1024) + "…";	//***
 
 	//マッチ語
+	SearchOption opt;
 	std::unique_ptr<TStringList> wlist(new TStringList());
 	if (HighlightAction->Checked) {
 		//文字列検索
-		SearchOption opt;
-		if (AndOrAction->Checked) opt << soAndOr;
 		if (Found && Index==lp->ItemIndex) {
 			opt << soRegEx;
+			if (FindTextDlg->CaseCheckBox->Checked) opt << soCaseSens;
 			get_MatchWordList(lbuf, RegExPtn, opt, wlist.get());
 		}
 		//フィルタ
 		else if (!FilterEdit->Text.IsEmpty()) {
 			if (MigemoAction->Checked) opt << soMigemo;
+			if (AndOrAction->Checked)  opt << soAndOr;
+			if (contains_upper(FilterEdit->Text)) opt << soCaseSens;
 			get_MatchWordList(lbuf, FilterEdit->Text, opt, wlist.get());
 		}
 	}
@@ -705,24 +708,25 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 	int w0 = rc.Left;
 
 	bool use_fgsel = is_SelFgCol(State);
+	bool case_sns  = opt.Contains(soCaseSens);
 
 	//ログ
 	if (isLog) {
 		RuledLnTextOut(yen_to_delimiter(lbuf), cv, rc,
-			(use_fgsel? col_fgSelItem : get_LogColor(lbuf)), tw, wlist.get());
+			(use_fgsel? col_fgSelItem : get_LogColor(lbuf)), tw, wlist.get(), case_sns);
 	}
 	//変数一覧
 	else if (isVarList) {
 		if (lbuf.Pos('=')) {
 			UnicodeString namstr = split_tkn(lbuf, '=') + " = ";
 			rc.Left = xp + MaxNameWidth - get_TextWidth(cv, namstr, is_irreg);
-			RuledLnTextOut(namstr, cv, rc, use_fgsel? col_fgSelItem : col_fgInfNam, tw, wlist.get());
+			RuledLnTextOut(namstr, cv, rc, use_fgsel? col_fgSelItem : col_fgInfNam, tw, wlist.get(), case_sns);
 			rc.Left = xp + MaxNameWidth;
 			lw = MaxNameWidth + get_TabTextWidth(lbuf, cv, tw);
-			RuledLnTextOut(lbuf, cv, rc, use_fgsel? col_fgSelItem : col_fgList, tw, wlist.get());
+			RuledLnTextOut(lbuf, cv, rc, use_fgsel? col_fgSelItem : col_fgList, tw, wlist.get(), case_sns);
 		}
 		else {
-			RuledLnTextOut(lbuf, cv, rc, use_fgsel? col_fgSelItem : col_Headline, tw, wlist.get());
+			RuledLnTextOut(lbuf, cv, rc, use_fgsel? col_fgSelItem : col_Headline, tw, wlist.get(), case_sns);
 		}
 	}
 	//コマンド履歴
@@ -766,7 +770,7 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 			//command
 			UnicodeString cmd = get_CmdStr(cmd_inf);
 			rc.Left = xp;
-			RuledLnTextOut(cmd, cv, rc, use_fgsel? col_fgSelItem : col_Headline, tw, wlist.get());
+			RuledLnTextOut(cmd, cv, rc, use_fgsel? col_fgSelItem : col_Headline, tw, wlist.get(), case_sns);
 			xp = rc.Left;
 			//param
 			UnicodeString prm = get_PrmStr(cmd_inf);
@@ -774,7 +778,7 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 				fg = use_fgsel? col_fgSelItem : col_Symbol;
 				out_TextEx(cv, xp, yp, "_", fg, col_None, 0, is_irreg);
 				rc.Left = xp;
-				RuledLnTextOut(prm, cv, rc, use_fgsel? col_fgSelItem : col_fgList, tw, wlist.get());
+				RuledLnTextOut(prm, cv, rc, use_fgsel? col_fgSelItem : col_fgList, tw, wlist.get(), case_sns);
 				xp = rc.Left + mgn * 2;
 			}
 			//カレントパス/ファイル名
@@ -788,11 +792,11 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 				}
 				if (ends_PathDlmtr(lbuf)) {
 					cv->Font->Color = use_fgsel? col_fgSelItem : col_Folder;
-					PathNameOut(lbuf, wlist.get(), cv, xp, yp);
+					PathNameOut(lbuf, wlist.get(), case_sns, cv, xp, yp);
 				}
 				else {
 					rc.Left = xp;
-					FileNameOut(cv, rc, lbuf, use_fgsel, true, wlist.get());
+					FileNameOut(cv, rc, lbuf, use_fgsel, true, wlist.get(), case_sns);
 				}
 			}
 			//30秒以上空いたら分割線
@@ -817,22 +821,22 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 		if (!fnam.IsEmpty()) {
 			if (is_dir) {
 				cv->Font->Color = use_fgsel? col_fgSelItem : col_Folder;
-				PathNameOut(fnam, wlist.get(), cv, xp, yp);
+				PathNameOut(fnam, wlist.get(), case_sns, cv, xp, yp);
 			}
 			else {
-				FileNameOut(cv, rc, fnam, use_fgsel, true, wlist.get());
+				FileNameOut(cv, rc, fnam, use_fgsel, true, wlist.get(), case_sns);
 			}
-			RuledLnTextOut(lbuf, cv, rc, use_fgsel? col_fgSelItem : col_fgList, tw, wlist.get());
+			RuledLnTextOut(lbuf, cv, rc, use_fgsel? col_fgSelItem : col_fgList, tw, wlist.get(), case_sns);
 		}
 		else {
 			cv->Font->Color = use_fgsel? col_fgSelItem : col_fgList;
-			PathNameOut(lbuf, wlist.get(), cv, xp, yp);
+			PathNameOut(lbuf, wlist.get(), case_sns, cv, xp, yp);
 		}
 	}
 	//ディレクトリ名一覧
 	else if (isDirs) {
 		cv->Font->Color = use_fgsel? col_fgSelItem : col_Folder;
-		PathNameOut(lbuf, wlist.get(), cv, xp, yp);
+		PathNameOut(lbuf, wlist.get(), case_sns, cv, xp, yp);
 	}
 	//ディレクトリツリー表示
 	else if (isTree) {
@@ -840,10 +844,10 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 		TColor fg = use_fgsel? col_fgSelItem : col_Folder;
 		if (Index==0) {
 			cv->Font->Color = fg;
-			PathNameOut(lbuf, wlist.get(), cv, xp, yp);
+			PathNameOut(lbuf, wlist.get(), case_sns, cv, xp, yp);
 		}
 		else {
-			RuledLnTextOut(lbuf, cv, rc, fg, tw, wlist.get());
+			RuledLnTextOut(lbuf, cv, rc, fg, tw, wlist.get(), case_sns);
 		}
 	}
 	//プレイリスト
@@ -857,12 +861,12 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 		if (FileName1stAction->Checked) {
 			xp = rc.Left;
 			RuledLnTextOut(ExtractFileName(lbuf),
-				cv, rc, use_fgsel? col_fgSelItem : get_ExtColor(get_extension(lbuf)), tw, wlist.get());
+				cv, rc, use_fgsel? col_fgSelItem : get_ExtColor(get_extension(lbuf)), tw, wlist.get(), case_sns);
 			rc.Left = xp + MaxNameWidth;
-			FileNameOut(cv, rc, ExtractFilePath(lbuf), use_fgsel, true, wlist.get());
+			FileNameOut(cv, rc, ExtractFilePath(lbuf), use_fgsel, true, wlist.get(), case_sns);
 		}
 		else {
-			FileNameOut(cv, rc, lbuf, use_fgsel, true, wlist.get());
+			FileNameOut(cv, rc, lbuf, use_fgsel, true, wlist.get(), case_sns);
 		}
 	}
 	//NyanFi 情報
@@ -875,10 +879,10 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 
 		if (EndsStr('\\', lbuf) && lbuf.Pos(':')>1) {
 			cv->Font->Color = fg;
-			PathNameOut(lbuf, wlist.get(), cv, xp, yp);
+			PathNameOut(lbuf, wlist.get(), case_sns, cv, xp, yp);
 		}
 		else {
-			PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get());
+			PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get(), case_sns);
 		}
 	}
 	//Git
@@ -892,17 +896,17 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 			UnicodeString s2 = (Index<(lp->Count - 1))? get_GitGraphStr(lp->Items->Strings[Index + 1]) : EmptyStr;
 			draw_GitGraph(s, s1, s2, cv, rc, get_in_paren(lbuf).Pos("HEAD -> "));
 		}
-		if (!lbuf.IsEmpty()) RuledLnTextOut(lbuf, cv, rc, fg, tw, wlist.get());
+		if (!lbuf.IsEmpty()) RuledLnTextOut(lbuf, cv, rc, fg, tw, wlist.get(), case_sns);
 	}
 	//見出し行
 	else if (!ptn_match_str(HdrLnStr, lbuf).IsEmpty()) {
 		TColor fg = use_fgsel? col_fgSelItem : col_Headline;
-		PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get());
+		PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get(), case_sns);
 	}
 	//コメント or 通常行
 	else {
 		TColor fg = use_fgsel? col_fgSelItem : col_fgList;
-		PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get(), FileName, (SortMode==0 && !isFiltered));
+		PrvTextOut(lp, Index, cv, rc, fg, tw, wlist.get(), case_sns, FileName, (SortMode==0 && !isFiltered));
 	}
 
 	//スクロール幅を設定

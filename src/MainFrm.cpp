@@ -3054,7 +3054,7 @@ void __fastcall TNyanFiForm::DrawDirPanel(TPanel *pp)
 				x += TabPinWidth;
 			}
 			//パス名
-			PathNameOut(lbuf, NULL, cv.get(), x, y, false);
+			PathNameOut(lbuf, NULL, false, cv.get(), x, y, false);
 		}
 		cv->Unlock();
 		::ReleaseDC(pp->Handle, hDc);
@@ -3690,7 +3690,7 @@ void __fastcall TNyanFiForm::WmDropped(TMessage &msg)
 						AddLog(tmp);
 						((tmp[1]=='E')? er_cnt : ok_cnt)++;
 					}
-					EndLog(_T("作成"), get_res_cnt_str(ok_cnt, er_cnt));
+					EndLog(_T("作成"), get_ResCntStr(ok_cnt, er_cnt));
 				}
 			}
 			//コピー or 移動
@@ -6006,7 +6006,7 @@ void __fastcall TNyanFiForm::TxtPrvListBoxDrawItem(TWinControl *Control, int Ind
 	else {
 		PrvTextOut(lp, Index, cv, rc,
 			((is_sel && col_fgSelItem!=col_None)? col_fgSelItem : col_fgTxtPrv),
-			lp->TabWidth, NULL, TxtPrvFile);
+			lp->TabWidth, NULL, false, TxtPrvFile);
 	}
 
 	//カーソル
@@ -6056,7 +6056,7 @@ void __fastcall TNyanFiForm::TxtTailListBoxDrawItem(TWinControl *Control, int In
 
 	PrvTextOut(lp, Index, cv, rc,
 		((is_sel && col_fgSelItem!=col_None)? col_fgSelItem : col_fgTxtPrv),
-		lp->TabWidth, NULL, TxtPrvFile);
+		lp->TabWidth, NULL, false, TxtPrvFile);
 
 	//カーソル
 	draw_ListCursor(lp, Rect, Index, State);
@@ -9997,7 +9997,7 @@ bool __fastcall TNyanFiForm::UnpackCopyCore(
 			}	//end of for
 
 			if (log_buf->Count>0) AddLogStrings(log_buf.get());
-			if (!gCopyCancel) EndLog(_T("コピー"), get_res_cnt_str(ok_cnt, er_cnt, sk_cnt));
+			if (!gCopyCancel) EndLog(_T("コピー"), get_ResCntStr(ok_cnt, er_cnt, sk_cnt));
 		}
 
 		//一時ファイルを削除
@@ -12759,6 +12759,7 @@ void __fastcall TNyanFiForm::AppListActionExecute(TObject *Sender)
 	AppListDlg->ToLauncher   = TEST_ActParam("FL");
 	AppListDlg->ToIncSea     = TEST_ActParam("FI") || TEST_ActParam("LI");
 	AppListDlg->isFuzzy      = TEST_ActParam("FZ");
+	AppListDlg->AddStart     = TEST_ActParam("AS");
 
 	int res = mrNone;
 	do {
@@ -12798,7 +12799,7 @@ void __fastcall TNyanFiForm::AppListActionExecute(TObject *Sender)
 					}
 					//一般
 					else {
-						Execute_ex(fnam);
+						if (!Execute_ex(fnam)) SetActionAbort(USTR_FaildExec);
 					}
 				}
 				//他アプリに切り替え
@@ -13943,7 +13944,7 @@ void __fastcall TNyanFiForm::CompareHashActionExecute(TObject *Sender)
 
 		CurWorking = false;
 		InvalidateFileList(OppListTag);
-		EndLog(_T("比較"), get_res_cnt_str(ok_cnt, er_cnt, 0, ng_cnt));
+		EndLog(_T("比較"), get_ResCntStr(ok_cnt, er_cnt, 0, ng_cnt));
 		EndWorkProgress();
 	}
 	catch (EAbort &e) {
@@ -14661,7 +14662,7 @@ void __fastcall TNyanFiForm::CreateDirsDlgActionExecute(TObject *Sender)
 			AddLog(msg);
 			((msg[1]=='E')? er_cnt : ok_cnt)++;
 		}
-		EndLog(_T("作成"), get_res_cnt_str(ok_cnt, er_cnt));
+		EndLog(_T("作成"), get_ResCntStr(ok_cnt, er_cnt));
 		cursor_Default();
 	}
 }
@@ -14752,7 +14753,7 @@ void __fastcall TNyanFiForm::CreateHardLinkActionExecute(TObject *Sender)
 		}
 		CurWorking = false;
 		ReloadList();
-		EndLog(_T("作成"), get_res_cnt_str(ok_cnt, er_cnt, sk_cnt));
+		EndLog(_T("作成"), get_ResCntStr(ok_cnt, er_cnt, sk_cnt));
 		if (er_cnt>0) UserAbort(USTR_FaildProc);
 	}
 	catch (EAbort &e) {
@@ -14808,7 +14809,7 @@ void __fastcall TNyanFiForm::CreateLinkCore(UnicodeString lnk_type)
 		}
 		CurWorking = false;
 		ReloadList();
-		EndLog(_T("作成"), get_res_cnt_str(ok_cnt, er_cnt));
+		EndLog(_T("作成"), get_ResCntStr(ok_cnt, er_cnt));
 		if (er_cnt>0) UserAbort(USTR_FaildProc);
 	}
 	catch (EAbort &e) {
@@ -14870,7 +14871,7 @@ void __fastcall TNyanFiForm::CreateShortcutActionExecute(TObject *Sender)
 		CurWorking = false;
 
 		ReloadList(OppListTag);
-		EndLog(_T("作成"), get_res_cnt_str(ok_cnt, er_cnt));
+		EndLog(_T("作成"), get_ResCntStr(ok_cnt, er_cnt));
 		if (er_cnt>0) UserAbort(USTR_FaildProc);
 	}
 	catch (EAbort &e) {
@@ -14927,7 +14928,7 @@ void __fastcall TNyanFiForm::CreateTestFileActionExecute(TObject *Sender)
 		CurWorking = false;
 
 		ReloadList();
-		EndLog(_T("作成"), get_res_cnt_str(ok_cnt, er_cnt));
+		EndLog(_T("作成"), get_ResCntStr(ok_cnt, er_cnt));
 		if (er_cnt>0) UserAbort(USTR_FaildProc);
 	}
 	catch (EAbort &e) {
@@ -16311,7 +16312,7 @@ void __fastcall TNyanFiForm::ExtractGifBmpActionExecute(TObject *Sender)
 			ReloadList(OppListTag);
 			if (EqualDirLR()) ReloadList(CurListTag); else RepaintList(CurListTag);
 			if (i_cnt==0)  UserAbort(USTR_NoObject);
-			EndLog(_T("抽出"), get_res_cnt_str(i_cnt, err_cnt));
+			EndLog(_T("抽出"), get_ResCntStr(i_cnt, err_cnt));
 			if (err_cnt>0) UserAbort(USTR_FaildProc);
 		}
 	}
@@ -16396,7 +16397,7 @@ void __fastcall TNyanFiForm::ExtractIconActionExecute(TObject *Sender)
 			ReloadList(OppListTag);
 			if (EqualDirLR()) ReloadList(CurListTag); else RepaintList(CurListTag);
 			if (i_cnt==0)  UserAbort(USTR_NoObject);
-			EndLog(_T("抽出"), get_res_cnt_str(i_cnt, err_cnt));
+			EndLog(_T("抽出"), get_ResCntStr(i_cnt, err_cnt));
 			if (err_cnt>0) UserAbort(USTR_FaildProc);
 		}
 	}
@@ -16455,7 +16456,7 @@ void __fastcall TNyanFiForm::ExtractMp3ImgActionExecute(TObject *Sender)
 			ReloadList(OppListTag);
 			if (EqualDirLR()) ReloadList(CurListTag); else RepaintList(CurListTag);
 			if (i_cnt==0) UserAbort(USTR_NoObject);
-			EndLog(_T("抽出"), get_res_cnt_str(i_cnt));
+			EndLog(_T("抽出"), get_ResCntStr(i_cnt));
 		}
 	}
 	catch (EAbort &e) {
@@ -16719,7 +16720,7 @@ void __fastcall TNyanFiForm::FilterActionExecute(TObject *Sender)
 	if (TEST_DEL_ActParam("CA")) ExeCommandAction("SelMask", "CA");
 
 	CurStt->is_Filter	= true;
-	CurStt->filter_sens = TEST_DEL_ActParam("CS");
+	CurStt->filter_csns = TEST_DEL_ActParam("CS");
 	CurStt->is_Fuzzy	= TEST_DEL_ActParam("FZ");
 
 	SaveToTmpBufList();	//現在のリストを待避
@@ -16770,8 +16771,8 @@ void __fastcall TNyanFiForm::FilterComboBoxChange(TObject *Sender)
 			if (!fp->is_up) {
 				UnicodeString lbuf = (!fp->alias.IsEmpty())? (fp->alias + fp->f_ext) : fp->n_name;
 				if (CurStt->find_TAG && FindTagsColumn) lbuf.cat_sprintf(_T("\t%s"), fp->tags.c_str());
-				fp->matched = CurStt->is_Fuzzy? contains_fuzzy_word(lbuf, kwd, CurStt->filter_sens)
-											  :	contains_word_and_or(lbuf, kwd, CurStt->filter_sens);
+				fp->matched = CurStt->is_Fuzzy? contains_fuzzy_word(lbuf, kwd, CurStt->filter_csns)
+											  :	contains_word_and_or(lbuf, kwd, CurStt->filter_csns);
 				if (fp->matched) {
 					sm_lst->Add(fp->f_name);
 					i++;
@@ -19126,7 +19127,7 @@ void __fastcall TNyanFiForm::JoinTextActionExecute(TObject *Sender)
 			CurWorking = false;
 			ClearAllAction->Execute();
 			AddLog(make_LogHdr(_T("SAVE"), onam));
-			EndLog(_T("結合"), get_res_cnt_str(JoinTextDlg->SrcFileListBox->Count));
+			EndLog(_T("結合"), get_ResCntStr(JoinTextDlg->SrcFileListBox->Count));
 			ReloadList(OppListTag);
 			if (EqualDirLR()) ReloadList(CurListTag); else RepaintList(CurListTag);
 			EndWorkProgress();
@@ -21027,7 +21028,7 @@ bool __fastcall TNyanFiForm::NameToUpLowCore(bool upper)
 	SetDirWatch(true);
 	CurWorking = false;
 	ReloadList(CurListTag);
-	EndLog(prestr, get_res_cnt_str(ok_cnt, er_cnt));
+	EndLog(prestr, get_ResCntStr(ok_cnt, er_cnt));
 	return (er_cnt==0);
 }
 
@@ -24095,7 +24096,7 @@ void __fastcall TNyanFiForm::SetArcTimeActionExecute(TObject *Sender)
 			AddLog(msg);
 		}
 		CurWorking = false;
-		EndLog(_T("設定"), get_res_cnt_str(ok_cnt, er_cnt));
+		EndLog(_T("設定"), get_ResCntStr(ok_cnt, er_cnt));
 		ReloadList(CurListTag);
 	}
 	catch (EAbort &e) {
@@ -24202,7 +24203,7 @@ void __fastcall TNyanFiForm::SetExifTimeActionExecute(TObject *Sender)
 		CurWorking = false;
 		ReloadList(CurListTag);
 		if (EqualDirLR()) ReloadList(OppListTag); else RepaintList(CurListTag);
-		AddLog(get_res_cnt_str(ok_cnt));
+		EndLog(_T("設定"), get_ResCntStr(ok_cnt));
 		EndWorkProgress();
 	}
 	catch (EAbort &e) {
@@ -25961,7 +25962,7 @@ void __fastcall TNyanFiForm::UndoRenameActionExecute(TObject *Sender)
 			AddLog(msg);
 		}
 
-		AddLog("アンドゥ終了" + get_res_cnt_str(ok_cnt, er_cnt), true);
+		AddLog("アンドゥ終了" + get_ResCntStr(ok_cnt, er_cnt), true);
 		if (er_cnt>0) throw EAbort(msg.sprintf(_T("%u個のファイルでアンドゥに失敗しました。"), er_cnt));
 		delete_File(ren_log);
 		CurWorking = false;
@@ -27540,7 +27541,7 @@ void __fastcall TNyanFiForm::DeleteActionExecute(TObject *Sender)
 			ChangeArcFileListEx(CurStt->arc_Name, CurStt->arc_SubPath, CurListTag);
 			IndexOfFileList(cur_fnam, CurListTag);
 			CurWorking = false;
-			EndLog(_T("削除"), get_res_cnt_str(ok_cnt, er_cnt));
+			EndLog(_T("削除"), get_ResCntStr(ok_cnt, er_cnt));
 		}
 		//-----------------------
 		//FTP
@@ -27582,7 +27583,7 @@ void __fastcall TNyanFiForm::DeleteActionExecute(TObject *Sender)
 			}
 			if (!ChangeFtpFileList()) GlobalAbort();
 			CurWorking = false;
-			EndLog(_T("削除"), get_res_cnt_str(ok_cnt, er_cnt));
+			EndLog(_T("削除"), get_ResCntStr(ok_cnt, er_cnt));
 		}
 		//-----------------------
 		//ワークリスト
@@ -27733,7 +27734,7 @@ void __fastcall TNyanFiForm::DeleteADSActionExecute(TObject *Sender)
 			}
 		}
 		CurWorking = false;
-		EndLog(_T("削除"), get_res_cnt_str(ok_cnt, er_cnt, sk_cnt));
+		EndLog(_T("削除"), get_ResCntStr(ok_cnt, er_cnt, sk_cnt));
 		SttWorkMsg(EmptyStr, CurListTag);
 		SetFileInf();
 		if (er_cnt>0) SttBarWarnUstr(USTR_FaildProc);
@@ -27993,7 +27994,7 @@ void __fastcall TNyanFiForm::ConvertDoc2TxtActionExecute(TObject *Sender)
 
 		RepaintList(CurListTag);
 		CurWorking = false;
-		EndLog(_T("変換"), get_res_cnt_str(ok_cnt, er_cnt));
+		EndLog(_T("変換"), get_ResCntStr(ok_cnt, er_cnt));
 		EndWorkProgress();
 	}
 	catch (EAbort &e) {
@@ -28068,7 +28069,7 @@ void __fastcall TNyanFiForm::ConvertHtm2TxtActionExecute(TObject *Sender)
 
 		RepaintList(CurListTag);
 		CurWorking = false;
-		EndLog(_T("変換"), get_res_cnt_str(ok_cnt, er_cnt));
+		EndLog(_T("変換"), get_ResCntStr(ok_cnt, er_cnt));
 		EndWorkProgress();
 	}
 	catch (EAbort &e) {
@@ -29506,6 +29507,7 @@ void __fastcall TNyanFiForm::ResultListBoxDrawItem(TWinControl *Control, int Ind
 			//フィルタ
 			if (GrepEmFilter && !GrepFilterEdit->Text.IsEmpty()) {
 				if (MigemoCheckBox->Checked) opt << soMigemo;
+				if (contains_upper(GrepFilterEdit->Text)) opt << soCaseSens;
 				get_MatchWordList(ln_str, GrepFilterEdit->Text, opt, wlist.get());
 			}
 			//検索語
@@ -29550,7 +29552,7 @@ void __fastcall TNyanFiForm::ResultListBoxDrawItem(TWinControl *Control, int Ind
 			}
 
 			//マッチ語の強調表示
-			EmphasisTextOut(s0, wlist.get(), tmp_cv, xp, yp, GrepCaseSenstive, false);
+			EmphasisTextOut(s0, wlist.get(), tmp_cv, xp, yp, opt.Contains(soCaseSens));
 
 			//次行表示
 			if (!s1.IsEmpty()) {
@@ -30391,6 +30393,7 @@ void __fastcall TNyanFiForm::GrepFilterEditChange(TObject *Sender)
 		SearchOption opt;
 		if (MigemoCheckBox->Checked) opt << soMigemo;
 		if (AndOrCheckBox->Checked)  opt << soAndOr;
+		if (contains_upper(GrepFilterEdit->Text)) opt << soCaseSens;
 		filter_List(ibuf.get(), rbuf.get(), GrepFilterEdit->Text, opt);
 
 		ResultListBox->Items->Assign(rbuf.get());
@@ -37068,7 +37071,7 @@ void __fastcall TNyanFiForm::FTPChmodActionExecute(TObject *Sender)
 		}
 		if (!ChangeFtpFileList()) GlobalAbort();
 		CurWorking = false;
-		EndLog(_T("設定"), get_res_cnt_str(ok_cnt, er_cnt));
+		EndLog(_T("設定"), get_ResCntStr(ok_cnt, er_cnt));
 		SetFileInf();
 	}
 	catch (EAbort &e) {

@@ -387,6 +387,31 @@ MsgBox_%..N%回目です
           <th>BufferLine</th>
           <td>Buffer の BufferIndex 行の内容 (%Buffer[BufferIndex]% でも参照可能)</td>
         </tr>
+        <tr>
+          <th>
+            LogOkCount<br>
+            LogErrCount<br>
+            LogSkipCount<br>
+            LogNgCount
+          </th>
+          <td>
+            コマンド終了時にログに出力される OK、ERR、SKIP、NG の数<br>
+            LogNgCount は、今のところ <a href="hid00005.htm#CompareHash">CompareHash</a> コマンドでの不一致数だけ<br>
+            <br><br>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            TaskOkCount<br>
+            TaskErrCount<br>
+            TaskSkipCount<br>
+          </th>
+          <td>
+            タスク終了時にログに出力される OK、ERR、SKIP 数<br>
+            <br><br>
+          </td>
+          <td></td>
+        </tr>
       </table>
     </div>
     <br>
@@ -1615,6 +1640,11 @@ IfFile: LoadBuffer_%FileName%: SetClipboard_%Buffer%: EndIf
     カレントで選択中のファイル名リストを指定ファイルに保存<br>
     <pre class="example_box">
 Set_Buffer=%SelFiles%: SaveBuffer_D:\filelist.txt
+</pre>
+
+    ハッシュを比較し、不一致ならメッセージ表示<br>
+    <pre class="example_box">
+CompareHash_MD5: Test_LogNgCount>0: IfTrue: MsgBox_一致しません: EndIf
 </pre>
 
     すべてのタスクが終了したら <b>Windows</b> を終了<br>

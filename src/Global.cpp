@@ -14,6 +14,7 @@
 #include "usr_xd2tx.h"
 #include "usr_highlight.h"
 #include "usr_swatch.h"
+#include "usr_excmd.h"
 #include "check_thread.h"
 #include "UserFunc.h"
 #include "UserMdl.h"
@@ -1278,7 +1279,7 @@ void InitializeGlobal()
 		sp->is_Migemo	  = false;
 		sp->is_Filter	  = false;
 		sp->is_Fuzzy	  = false;
-		sp->filter_sens   = false;
+		sp->filter_csns   = false;
 		clear_FindStt(sp);
 	}
 
@@ -2784,7 +2785,6 @@ void change_ComboBoxHistory(TComboBox *cp,
 //---------------------------------------------------------------------------
 //リストの絞り込み
 //  Objects 内容も設定 (0 なら リストのインデックスを設定)
-//  大小文字は区別しない
 //---------------------------------------------------------------------------
 void filter_List(
 	TStringList *i_lst, //対象リスト
@@ -2805,7 +2805,7 @@ void filter_List(
 				TStringDynArray and_lst = SplitString(lbuf, " ");
 				TStringList *sp = new TStringList();
 				for (int j=0; j<and_lst.Length; j++) {
-					UnicodeString  ptn = Trim(and_lst[j]);
+					UnicodeString ptn = Trim(and_lst[j]);
 					if (opt.Contains(soMigemo)) ptn = usr_Migemo->GetRegExPtn(true, ptn);
 					if (!ptn.IsEmpty()) sp->Add(ptn);
 				}
@@ -2815,7 +2815,6 @@ void filter_List(
 
 		//検索
 		if (ptn_lst->Count>0) {
-			TRegExOptions x_opt; x_opt << roIgnoreCase;
 			for (int i=0; i<i_lst->Count; i++) {
 				UnicodeString lbuf = i_lst->Strings[i];
 
@@ -2824,16 +2823,12 @@ void filter_List(
 					ok = true;
 				}
 				else {
-					UnicodeString sbuf = opt.Contains(soCSV)? get_csv_item(lbuf, 0) :
-							(opt.Contains(soTree) || opt.Contains(soTSV))? get_pre_tab(lbuf) : lbuf;
+					UnicodeString sbuf = get_SearchStr(lbuf, opt);
 					for (int j=0; j<ptn_lst->Count && !ok; j++) {
 						TStringList *sp = (TStringList *)ptn_lst->Objects[j];
 						if (sp->Count>0) {
 							bool and_ok = true;
-							for (int k=0; k<sp->Count && and_ok; k++) {
-								UnicodeString ptn = sp->Strings[k];
-								and_ok = opt.Contains(soMigemo)? TRegEx::IsMatch(sbuf, ptn, x_opt) : ContainsText(sbuf, ptn);
-							}
+							for (int k=0; k<sp->Count && and_ok; k++) and_ok = is_SearchMatch(sbuf, sp->Strings[k], opt);
 							ok = and_ok;
 						}
 					}
@@ -2854,16 +2849,9 @@ void filter_List(
 		if (!kwd.IsEmpty()) {
 			for (int i=0; i<i_lst->Count; i++) {
 				UnicodeString lbuf = i_lst->Strings[i];
-				bool ok = false;
-				if (opt.Contains(soTree) && i==0) {
-					ok = true;
-				}
-				else {
-					UnicodeString sbuf = opt.Contains(soCSV)? get_csv_item(lbuf, 0) :
-							(opt.Contains(soTree) || opt.Contains(soTSV))? get_pre_tab(lbuf) : lbuf;
-					ok = contains_fuzzy_word(sbuf, kwd, false);
-				}
-				if (ok) {
+				if ((opt.Contains(soTree) && i==0) ||
+					contains_fuzzy_word(get_SearchStr(lbuf, opt), kwd, opt.Contains(soCaseSens)))
+				{
 					int idx = (int)i_lst->Objects[i];
 					if (idx==0) idx = i;
 					o_lst->AddObject(lbuf, (TObject*)(NativeInt)idx);
@@ -2875,11 +2863,9 @@ void filter_List(
 	else {
 		UnicodeString ptn = opt.Contains(soMigemo)? usr_Migemo->GetRegExPtn(true, kwd) : kwd;
 		if (!ptn.IsEmpty()) {
-			TRegExOptions x_opt; x_opt << roIgnoreCase;
 			for (int i=0; i<i_lst->Count; i++) {
 				UnicodeString lbuf = i_lst->Strings[i];
-				UnicodeString sbuf = opt.Contains(soCSV)? get_csv_item(lbuf, 0) : lbuf;
-				if (opt.Contains(soMigemo)? TRegEx::IsMatch(sbuf, ptn, x_opt) : ContainsText(sbuf, ptn)) {
+				if ((opt.Contains(soTree) && i==0) || is_SearchMatch(get_SearchStr(lbuf, opt), ptn, opt)) {
 					int idx = (int)i_lst->Objects[i];
 					if (idx==0) idx = i;
 					o_lst->AddObject(lbuf, (TObject*)(NativeInt)idx);
@@ -11313,7 +11299,8 @@ void RuledLnTextOut(
 	TRect &rc,				//表示位置 (rc.Left 更新)
 	TColor fg,				//文字色
 	int tab_wd,				//タブ幅			(default = 8)
-	TStringList *kw_lst)	//強調語のリスト	(default = NULL)
+	TStringList *kw_lst,	//強調語のリスト	(default = NULL)
+	bool case_sns)			//大小文字を区別	(default = false)
 {
 	bool is_irreg = IsIrregularFont(cv->Font);
 
@@ -11388,7 +11375,7 @@ void RuledLnTextOut(
 	if (p0<=slen && xp<rc.Right) {
 		sbuf = s.SubString(p0, slen - p0 + 1);
 		cv->Font->Color = fg;
-		EmphasisTextOut(sbuf, kw_lst, cv, xp, yp);
+		EmphasisTextOut(sbuf, kw_lst, cv, xp, yp, case_sns);
 	}
 
 	rc.Left = std::min(xp, (int)rc.Right);
@@ -11404,6 +11391,7 @@ void PrvTextOut(
 	TColor fg,				//文字色
 	int tab_wd,				//タブ幅
 	TStringList *kw_lst,	//強調語のリスト			(default = NULL)
+	bool case_sns,			//大小文字を区別			(default = false)
 	UnicodeString fnam,		//コメント判定用ファイル名	(default = EmptyStr)
 	bool en_mlt)			//複数行コメントに対応		(default = true)
 {
@@ -11422,8 +11410,8 @@ void PrvTextOut(
 
 	//コメント有り
 	if (p>0 && p<=s.Length()) {
-		if (p>1) RuledLnTextOut(s.SubString(1, p - 1), cv, rc, fg, tab_wd, kw_lst);
-		RuledLnTextOut(s.SubString(p, s.Length() - p + 1), cv, rc, col_Comment, tab_wd, kw_lst);
+		if (p>1) RuledLnTextOut(s.SubString(1, p - 1), cv, rc, fg, tab_wd, kw_lst, case_sns);
+		RuledLnTextOut(s.SubString(p, s.Length() - p + 1), cv, rc, col_Comment, tab_wd, kw_lst, case_sns);
 	}
 	//コメント無し
 	else {
@@ -11439,7 +11427,7 @@ void PrvTextOut(
 			s = conv_DfmText(s);
 		}
 
-		RuledLnTextOut(s, cv, rc, fg, tab_wd, kw_lst);
+		RuledLnTextOut(s, cv, rc, fg, tab_wd, kw_lst, case_sns);
 	}
 }
 
@@ -11487,6 +11475,7 @@ void LineNoOut(TCanvas *cv, TRect &rc, int l_no)
 void PathNameOut(
 	UnicodeString s,		//表示文字列
 	TStringList *kw_lst,	//強調語のリスト (不要ならNULL)
+	bool case_sns,			//大小文字を区別
 	TCanvas *cv,
 	int &x, int y,			//表示位置 (x は更新)
 	bool mgn_sw)			//true = / の前後にマージンを入れる (default = true)
@@ -11510,7 +11499,7 @@ void PathNameOut(
 			int p1 = 0;	//見つかった語の末尾位置 + 1 の最後尾
 			for (int i=0; i<kw_lst->Count; i++) {
 				UnicodeString kwd = kw_lst->Strings[i];
-				int p = PosEx(kwd.UpperCase(), s.UpperCase(), ofs);
+				int p = case_sns ? PosEx(kwd, s, ofs) : PosEx(kwd.UpperCase(), s.UpperCase(), ofs);
 				if (p>0) {
 					int len = kwd.Length();
 					for (int j=0,k=p; j<len; j++,k++) {
@@ -11774,7 +11763,8 @@ void FileNameOut(
 	UnicodeString fnam,		//ファイル名
 	bool use_fgsel,			//選択色を使用
 	bool to_slash,			//\ を区切り文字に置換	(default = false)
-	TStringList *kw_lst)	//強調語のリスト		(default = NULL)
+	TStringList *kw_lst,	//強調語のリスト		(default = NULL)
+	bool case_sns)			//大小文字を区別		(default = false)
 {
 	UnicodeString dnam = ExtractFilePath(fnam);
 	//ディレクトリ名
@@ -11785,16 +11775,16 @@ void FileNameOut(
 			int xp = rc.Left + 2;
 			int yp = rc.Top + 1;
 			cv->Font->Color = fg;
-			PathNameOut(dnam, kw_lst, cv, xp, yp);
+			PathNameOut(dnam, kw_lst, case_sns, cv, xp, yp);
 			rc.Left = xp;
 		}
 		else {
-			RuledLnTextOut(dnam, cv, rc, fg, 8, kw_lst);
+			RuledLnTextOut(dnam, cv, rc, fg, 8, kw_lst, case_sns);
 		}
 	}
 
 	//ファイル名
-	RuledLnTextOut(fnam, cv, rc, use_fgsel? col_fgSelItem : get_ExtColor(get_extension(fnam)), 8, kw_lst);
+	RuledLnTextOut(fnam, cv, rc, use_fgsel? col_fgSelItem : get_ExtColor(get_extension(fnam)), 8, kw_lst, case_sns);
 }
 
 //---------------------------------------------------------------------------
@@ -13596,6 +13586,33 @@ void ExeErrLog(UnicodeString fnam, UnicodeString msg)
 {
 	UnicodeString lbuf = make_LogHdr(_T("EXEC"), fnam); lbuf[1] = 'E';
 	AddLog(lbuf + get_LogErrMsg(msg));
+}
+
+//---------------------------------------------------------------------------
+//結果カウントを文字列に
+//---------------------------------------------------------------------------
+UnicodeString get_ResCntStr(int ok_cnt, int er_cnt, int sk_cnt, int ng_cnt, 
+	bool is_task)	//タスクの結果	(default = false)
+{
+	UnicodeString ret_str;
+	if (ok_cnt>0) ret_str.cat_sprintf(_T("  OK:%u"),	ok_cnt);
+	if (ng_cnt>0) ret_str.cat_sprintf(_T("  NG:%u"),	ng_cnt);
+	if (er_cnt>0) ret_str.cat_sprintf(_T("  ERR:%u"),	er_cnt);
+	if (sk_cnt>0) ret_str.cat_sprintf(_T("  SKIP:%u"),	sk_cnt);
+
+	if (is_task) {
+		XCMD_set_Var(_T("TaskOkCount"),		ok_cnt);
+		XCMD_set_Var(_T("TaskErrCount"),	er_cnt);
+		XCMD_set_Var(_T("TaskSkipCount"),	sk_cnt);
+	}
+	else {
+		XCMD_set_Var(_T("LogOkCount"),		ok_cnt);
+		XCMD_set_Var(_T("LogNgCount"),		ng_cnt);
+		XCMD_set_Var(_T("LogErrCount"),		er_cnt);
+		XCMD_set_Var(_T("LogSkipCount"),	sk_cnt);
+	}
+
+	return ret_str;
 }
 
 //---------------------------------------------------------------------------

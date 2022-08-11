@@ -132,6 +132,8 @@ int pos_r_i(UnicodeString wd, UnicodeString s);
 int pos_r_q(UnicodeString wd, UnicodeString s);
 int pos_r_q_colon(UnicodeString s);
 
+bool contains_upper(UnicodeString s);
+
 bool contains_word_and_or(UnicodeString s, UnicodeString kwd, bool case_sw = false);
 bool contains_fuzzy_word(UnicodeString s, UnicodeString kwd, bool case_sw = false, UnicodeString sp = EmptyStr);
 

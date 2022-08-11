@@ -242,13 +242,15 @@ void __fastcall TFuncListDlg::UpdateList(
 	//ƒtƒBƒ‹ƒ^
 	UnicodeString ptn = (isFuzzy && !MigemoCheckBox->Checked)? FilterEdit->Text :
 							usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, FilterEdit->Text);
+	bool case_sns = contains_upper(FilterEdit->Text);
 	if (!ptn.IsEmpty()) {
 		TRegExOptions opt; opt << roIgnoreCase;
 		int i=0;
 		while (i<flst->Count) {
 			UnicodeString lbuf = flst->Strings[i];
 			if (NameOnlyCheckBox->Checked && ListMode==0 && !NamePtn.IsEmpty()) {
-				TRegExOptions opt; opt << roIgnoreCase;
+				TRegExOptions opt;
+				if (!case_sns) opt << roIgnoreCase;
 				TMatch mt = TRegEx::Match(lbuf, NamePtn, opt);
 				if (mt.Success) {
 					lbuf = mt.Value;
@@ -257,7 +259,7 @@ void __fastcall TFuncListDlg::UpdateList(
 				}
 			}
 			bool ok = (isFuzzy && !MigemoCheckBox->Checked)?
-						contains_fuzzy_word(lbuf, ptn) : TRegEx::IsMatch(lbuf, ptn, opt);
+						contains_fuzzy_word(lbuf, ptn, case_sns) : TRegEx::IsMatch(lbuf, ptn, opt);
 			if (!ok) flst->Delete(i); else i++;
 		}
 	}

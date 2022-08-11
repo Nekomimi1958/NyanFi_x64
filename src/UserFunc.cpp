@@ -409,19 +409,6 @@ int get_DateCond(UnicodeString prm, TDateTime &dt)
 }
 
 //---------------------------------------------------------------------------
-//結果カウントを文字列に
-//---------------------------------------------------------------------------
-UnicodeString get_res_cnt_str(int ok_cnt, int er_cnt, int sk_cnt, int ng_cnt)
-{
-	UnicodeString ret_str;
-	if (ok_cnt>0) ret_str.cat_sprintf(_T("  OK:%u"),	ok_cnt);
-	if (ng_cnt>0) ret_str.cat_sprintf(_T("  NG:%u"),	ng_cnt);
-	if (er_cnt>0) ret_str.cat_sprintf(_T("  ERR:%u"),	er_cnt);
-	if (sk_cnt>0) ret_str.cat_sprintf(_T("  SKIP:%u"),	sk_cnt);
-	return ret_str;
-}
-
-//---------------------------------------------------------------------------
 //結果リストの整形
 //  "ファイル名\t内容" --> "ファイル名   内容"
 //  内容に TAB が含まれていたら削除

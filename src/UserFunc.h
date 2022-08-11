@@ -68,8 +68,6 @@ UnicodeString format_DateTimeEx(UnicodeString fmt, TDateTime dt);
 
 int get_DateCond(UnicodeString prm, TDateTime &dt);
 
-UnicodeString get_res_cnt_str(int ok_cnt = 0, int er_cnt = 0, int sk_cnt = 0, int ng_cnt = 0);
-
 int  format_res_list(TStringList *lst, int mgn = 2, int min_wd = 16);
 
 void ShowPropertyDialog(UnicodeString fnam);

@@ -134,7 +134,7 @@ void __fastcall TDebugForm::PreviewListBoxDrawItem(TWinControl *Control, int Ind
 	cv->FillRect(rc);
 	PrvTextOut(lp, Index, cv, rc,
 		is_SelFgCol(State)? col_fgSelItem : col_fgView,
-		4, NULL, "*.nbt");
+		4, NULL, false, "*.nbt");
 
 	//ƒJ[ƒ\ƒ‹
 	if (lp->ItemIndex==Index) {

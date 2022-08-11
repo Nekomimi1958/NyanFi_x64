@@ -137,8 +137,9 @@ void __fastcall TAppListDlg::FormCreate(TObject *Sender)
 	AppInfoList = new TAppWinList();
 
 	LaunchFileList = new TStringList();
+	LaunchTopList  = new TStringList();
 
-	ToAppList = ToLauncher = ToIncSea = false;
+	ToAppList = ToLauncher = ToIncSea = AddStart = false;
 	isFuzzy = false;
 }
 
@@ -247,6 +248,7 @@ void __fastcall TAppListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 
 	AppInfoList->Clear();
 	LaunchFileList->Clear();
+	LaunchTopList->Clear();
 	clear_FileList(LaunchList);
 
 	if (OnlyLauncher) {
@@ -279,6 +281,7 @@ void __fastcall TAppListDlg::FormDestroy(TObject *Sender)
 {
 	delete AppInfoList;
 	delete LaunchFileList;
+	delete LaunchTopList;
 
 	delete AppScrPanel;
 	delete LaunchScrPanel;
@@ -388,28 +391,44 @@ void __fastcall TAppListDlg::SetIncSeaMode(bool sw)
 	IsIncSea = sw;
 	UserModule->SetBlinkTimer(NULL);
 
+	setup_Panel(DirPanel, DirInfFont);
+	DirPanel->Color 	  = col_bgDirInf;
+	DirPanel->Font->Color = col_fgDirInf;
+	DirPanel->BevelOuter  = FlatInfPanel? bvNone : bvRaised;
+	setup_Panel(InpPanel, ListFont);
+	InpPanel->Color 	  = col_bgList;
+	InpPanel->BevelOuter  = bvLowered;
+
 	//インクリメンタルサーチモード
 	if (IsIncSea) {
-		setup_Panel(DirPanel, ListFont);
-		DirPanel->Color 	 = col_bgList;
-		DirPanel->BevelOuter = bvLowered;
-		DirPanel->Caption	 = EmptyStr;
-		InpPaintBox->Visible = true;
+		InpPanel->Visible = true;
 		UserModule->SetBlinkTimer(InpPaintBox);
+
+		LaunchTopList->Clear();
+		LaunchTopList->Add(get_parent_path(LaunchPath));
 
 		IncSeaWord = EmptyStr;
 		LaunchFileList->Clear();
 		get_files(LaunchPath, _T("*.lnk"), LaunchFileList, true);
 		get_files(LaunchPath, _T("*.url"), LaunchFileList, true);
+
+		//スタートメニュー項目を追加
+		if (AddStart) {
+			std::unique_ptr<TStringList> st_lst(new TStringList());
+			usr_SH->AddKnownPath(FOLDERID_StartMenu,		st_lst.get());
+			usr_SH->AddKnownPath(FOLDERID_CommonStartMenu,	st_lst.get());
+			for (int i=0; i<st_lst->Count; i++) {
+				UnicodeString pnam = get_pre_tab(st_lst->Strings[i]);
+				LaunchTopList->Add(pnam);
+				get_files(pnam, _T("*.lnk"), LaunchFileList, true);
+				get_files(pnam, _T("*.url"), LaunchFileList, true);
+			}
+		}
 	}
 	//通常表示
 	else {
-		if (!l_fnam.IsEmpty()) CurLaunchPath = ExtractFilePath(l_fnam);
-		InpPaintBox->Visible  = false;
-		setup_Panel(DirPanel, DirInfFont);
-		DirPanel->Color 	  = col_bgDirInf;
-		DirPanel->Font->Color = col_fgDirInf;
-		DirPanel->BevelOuter  = FlatInfPanel? bvNone : bvRaised;
+		CurLaunchPath = StartsText(LaunchPath, l_fnam)? ExtractFilePath(l_fnam) : LaunchPath;
+		InpPanel->Visible = false;
 	}
 
 	UpdateLaunchList(l_fnam);
@@ -720,32 +739,61 @@ AppWinInf* __fastcall TAppListDlg::GetCurAppWinInf()
 }
 
 //---------------------------------------------------------------------------
+//ランチャー項目を作成
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::AddLnkFileRec(UnicodeString fnam, TStringList *lst,
+	UnicodeString rnam)		//編集距離取得のための基準名	(default = EmptyStr)
+{
+	file_rec *fp = cre_new_file_rec(fnam); 
+	if (fp) {
+		//fp->l_name = リンク先, fp->alias = コメント, fp->faild = リンク切れ
+		if (SortByRem && test_LnkExt(fp->f_ext)) {
+			usr_SH->get_LnkInf(fp->f_name, NULL, &fp->l_name, NULL, NULL, NULL, &fp->alias);
+			fp->failed = !fp->l_name.IsEmpty() && !StartsStr("::", fp->l_name) && !file_exists(fp->l_name);
+		}
+		//URL
+		else if (SortByRem && USAME_TI(fp->f_ext, ".url")) {
+			std::unique_ptr<UsrIniFile> url_file(new UsrIniFile(fnam));
+			fp->l_name = url_file->ReadString("InternetShortcut", "URL");
+		}
+		//編集距離
+		if (!rnam.IsEmpty()) {
+	 		fp->distance = get_NrmLevenshteinDistance(rnam, fp->b_name, true);
+		}
+		lst->AddObject(fp->f_name, (TObject*)fp);
+	}
+}
+
+//---------------------------------------------------------------------------
 //ランチャーリストの更新
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 {
 	if (IsIncSea) UserModule->RepaintBlink();
 
-	TStringList *lst = LaunchList;
-	clear_FileList(lst);
+	clear_FileList(LaunchList);
 
 	//インクリメンタルサーチ
 	if (IsIncSea) {
-		UnicodeString ptn =
-			contained_wd_i(_T("*|?| "), IncSeaWord)? UnicodeString(".+") : 
-							 (isFuzzy && !IsMigemo)? get_fuzzy_ptn(IncSeaWord) : 
-													 usr_Migemo->GetRegExPtn(IsMigemo, IncSeaWord);
+		bool is_all = contained_wd_i(_T("*|?| "), IncSeaWord);
+		UnicodeString ptn = is_all? UnicodeString(".+") : 
+		    (isFuzzy && !IsMigemo)? get_fuzzy_ptn(IncSeaWord) : 
+								 	usr_Migemo->GetRegExPtn(IsMigemo, IncSeaWord);
 		if (!ptn.IsEmpty()) {
-			TRegExOptions opt; opt << roIgnoreCase;
+			UnicodeString rnam = (!is_all && isFuzzy && !IsMigemo)? IncSeaWord : EmptyStr;
+			TRegExOptions opt; 
+			if (IncSeaWord.LowerCase()==IncSeaWord) opt << roIgnoreCase;
 			for (int i=0; i<LaunchFileList->Count; i++) {
 				UnicodeString fnam = LaunchFileList->Strings[i];
-				if (TRegEx::IsMatch(get_base_name(fnam), ptn, opt)) {
-					file_rec *fp = cre_new_file_rec(fnam);  if (!fp) continue;
-					lst->AddObject(fp->f_name, (TObject*)fp);
-				}
+				if (TRegEx::IsMatch(get_base_name(fnam), ptn, opt)) AddLnkFileRec(fnam, LaunchList, rnam);
 			}
-			lst->CustomSort(SortComp_LaunchS);
+			if (!rnam.IsEmpty())
+				LaunchList->CustomSort(SortComp_Distance);
+			else
+				LaunchList->CustomSort(SortComp_LaunchS);
 		}
+
+		DirPanel->Caption = EmptyStr;
 	}
 	//通常モード
 	else {
@@ -768,33 +816,23 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 				}
 
 				if (!USAME_TS(fnam, "..")) fnam = CurLaunchPath + fnam;
-				file_rec *fp = cre_new_file_rec(fnam);  if (!fp) continue;
-				//fp->l_name = リンク先, fp->alias = コメント
-				if (SortByRem && test_LnkExt(fp->f_ext)) {
-					usr_SH->get_LnkInf(fp->f_name, NULL, &fp->l_name, NULL, NULL, NULL, &fp->alias);
-				}
-				//URL
-				else if (SortByRem && USAME_TI(fp->f_ext, ".url")) {
-					std::unique_ptr<UsrIniFile> url_file(new UsrIniFile(fnam));
-					fp->l_name = url_file->ReadString("InternetShortcut", "URL");
-				}
-				lst->AddObject(fp->f_name, (TObject*)fp);
+				AddLnkFileRec(fnam, LaunchList);
 			} while(FindNext(sr)==0);
 			FindClose(sr);
 		}
-		lst->CustomSort(SortComp_Launch);
+		LaunchList->CustomSort(SortComp_Launch);
 	}
 
 	//リストボックスに割り当て(仮想)
 	TListBox *lp = LaunchListBox;
 	int idx =lp->ItemIndex;
-	lp->Count = lst->Count;
+	lp->Count = LaunchList->Count;
 	Application->ProcessMessages();
 
 	if (USAME_TS(lnam, ".."))
 		idx = 0;
 	else if (!lnam.IsEmpty())
-		idx = lst->IndexOf(lnam);
+		idx = LaunchList->IndexOf(lnam);
 
 	ListBoxSetIndex(lp, idx);
 	LaunchScrPanel->UpdateKnob();
@@ -810,14 +848,29 @@ void __fastcall TAppListDlg::UpdateLaunchSttBar()
 	if (cfp) {
 		msg = cfp->n_name;
 		if (!cfp->is_dir) {
-			if (!cfp->alias.IsEmpty())
-				msg.cat_sprintf(_T(" (%s)"),  cfp->alias.c_str());	//コメント
-			if (!cfp->l_name.IsEmpty())
-				msg.cat_sprintf(_T(" → %s"), yen_to_delimiter(cfp->l_name).c_str());	//リンク先
+			//コメント
+			if (!cfp->alias.IsEmpty()) msg.cat_sprintf(_T(" (%s)"),  cfp->alias.c_str());
+			//リンク先
+			if (!cfp->l_name.IsEmpty()) {
+				if (cfp->failed)
+					msg += " → リンク切れ";
+				else
+					msg.cat_sprintf(_T(" → %s"), yen_to_delimiter(cfp->l_name).c_str());
+			}
+		}
+
+		if (IsIncSea) {
+			UnicodeString pnam = cfp->p_name;
+			for (int i=0; i<LaunchTopList->Count; i++) {
+				if (remove_top_text(pnam, LaunchTopList->Strings[i])) break;
+			}
+			DirPanel->Caption = get_MiniPathName(pnam, DirPanel->ClientWidth, DirPanel->Font);
 		}
 	}
+
 	StatusBar1->Panels->Items[0]->Text = msg;
 	StatusBar1->Hint = msg;
+
 }
 
 //---------------------------------------------------------------------------
@@ -1523,8 +1576,9 @@ void __fastcall TAppListDlg::LaunchListBoxDrawItem(TWinControl *Control, int Ind
 	xp += ScaledInt(18, this);
 
 	//名前
-	cv->Font->Color = (lp->Focused() && is_SelFgCol(State))? col_fgSelItem :
-						fp->is_dir? col_Folder: get_ExtColor(fp->f_ext);
+	cv->Font->Color = fp->failed? col_Error :
+	   (lp->Focused() && is_SelFgCol(State))? col_fgSelItem :
+					  fp->is_dir? col_Folder: get_ExtColor(fp->f_ext);
 	cv->TextOut(xp, yp, fp->b_name);
 
 	//分割線

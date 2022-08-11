@@ -1934,7 +1934,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 				add_ComboBox_history(Mp3FmtComboBox);
 			}
 
-			AddLog(ModeStr + "終了" + get_res_cnt_str(ok_cnt, er_cnt, sk_cnt), true);
+			AddLog(ModeStr + "終了" + get_ResCntStr(ok_cnt, er_cnt, sk_cnt), true);
 			if (er_cnt>0) throw EAbort(msg.sprintf(_T("%u個のファイルで改名に失敗しました。"), er_cnt));
 		}
 

@@ -548,7 +548,8 @@ void get_PrmList(
 			_T("AO : 一覧のみ表示\n")
 			_T("LO : ランチャーのみ表示\n")
 			_T("LI : ランチャーのみ表示(INC.サーチ)\n")
-			_T("FZ : あいまい検索(INC.サーチ)\n"));
+			_T("FZ : あいまい検索(INC.サーチ)\n")
+			_T("AS : スタートメニュー項目を追加(INC.サーチ)\n"));
 	}
 	else if (USAME_TI(cmd, "BgImgMode")) {
 		params.sprintf(_T("%s"),
@@ -731,8 +732,7 @@ void get_PrmList(
 		params = "\nCP : カーソル位置のディレクトリが対象\n";
 	}
 	else if (USAME_TI(cmd, "Filter")) {
-		params = "\nCS : 大小文字を区別\nCA : 実行前に選択マスクを解除\n";
-		if (id_idx==0) params += "FZ : あいまい検索\n";
+		params = "\nCS : 大小文字を区別\nCA : 実行前に選択マスクを解除\nFZ : あいまい検索\n";
 	}
 	else if (USAME_TI(cmd, "FindDuplDlg")) {
 		params = "\nLR : 左右で検索して重複ファイルを選択\n";

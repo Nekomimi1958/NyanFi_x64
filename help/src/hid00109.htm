@@ -45,6 +45,15 @@
   </div>
 
   <dl>
+    <dt>V15.26 <span class="ver_date">(2022-08-11)</span></dt>
+    <dd>
+      ・AppList コマンドのパラメータに AS を追加。ランチャーのインクリメンタルサーチの対象にスタートメニュー下の全項目が追加されます。<br>
+      ・ランチャーで、インクリメンタルサーチ時にディレクトリ表示部を隠さないようにしました(カーソル項目のディレクトリを表示)。また、あいまい検索の結果は検索語からの編集距離でソートするようにしました。<br>
+      ・ランチャーで、リンク切れしている項目をエラー色で表示するようにしました。<br>
+      ・文字列検索(GREP)の結果、ランチャー、ディレクトリ履歴の全体検索、タグ名検索、各種一覧のフィルタなどで、検索語に大文字を入力すると、大小文字を区別するようにしました。<br>
+      ・ExeCommands コマンドの定義済み変数に、LogOkCount、LogErrCount、LogSkipCount、LogNgCount、TaskOkCount、TaskErrCount、TaskSkipCount を追加。コマンドやタスクの終了時にログに出力される OK、ERR、SKIP、NG の数を参照できます。<br>
+    </dd>
+
     <dt>V15.25 <span class="ver_date">(2022-08-09)</span></dt>
     <dd>
       ・InputCommands コマンド、AppList コマンド(ランチャー)、およびテキストビュアーの FunctionList コマンドのパラメータに FZ を追加。あいまい検索による絞り込みになります(Migemoモード時を除く)。<br>

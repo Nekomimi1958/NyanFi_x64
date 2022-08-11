@@ -689,6 +689,7 @@ __published:	// IDE で管理されるコンポーネント
 	TMenuItem *GrepOrgOrderItem;
 	TMenuItem *GrepReleaseItem;
 	TMenuItem *GrepSaveAsItem;
+	TMenuItem *GrepSelDirItem;
 	TMenuItem *GrepSelResItem;
 	TMenuItem *GrepShowItemNoItem;
 	TMenuItem *GrepShowSubDirItem;
@@ -1087,7 +1088,6 @@ __published:	// IDE で管理されるコンポーネント
 	TToolBar *ToolBarV;
 	TTrackBar *SeekBar;
 	TTrayIcon *TrayIcon1;
-	TMenuItem *GrepSelDirItem;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

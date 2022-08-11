@@ -1471,7 +1471,7 @@ struct flist_stt {
 	bool is_Migemo;				//Migemoモード
 	bool is_Filter;				//フィルタモード
 	bool is_Fuzzy;				//あいまいモード
-	bool filter_sens;			//フィルタで大小文字を区別
+	bool filter_csns;			//フィルタで大小文字を区別
 	UnicodeString incsea_Word;
 	UnicodeString incsea_Ptn;
 };
@@ -1569,6 +1569,21 @@ inline UnicodeString get_FExtMaxStr(int n = 0)
 {
 	return ("." + StringOfChar(_T('W'), (n>0)? n : FExtMaxWidth));
 }
+
+inline UnicodeString get_SearchStr(UnicodeString s, SearchOption opt)
+{
+	return (opt.Contains(soCSV)? get_csv_item(s, 0) : (opt.Contains(soTree) || opt.Contains(soTSV))? get_pre_tab(s) : s);
+}
+
+inline bool is_SearchMatch(UnicodeString s, UnicodeString ptn, SearchOption opt)
+{
+	TRegExOptions x_opt;
+	if (!opt.Contains(soCaseSens)) x_opt << roIgnoreCase;
+
+	return (opt.Contains(soMigemo)? TRegEx::IsMatch(s, ptn, x_opt) : 
+		  	   opt.Contains(soCaseSens)? ContainsStr(s, ptn) : ContainsText(s, ptn));
+}
+
 
 //---------------------------------------------------------------------------
 //ソートモード
@@ -2002,18 +2017,19 @@ void draw_CR(TCanvas *cv, int x, int y, int w, int h);
 void draw_Caret(TCanvas *cv, int x, int y);
 
 void TabCrTextOut(UnicodeString s, TCanvas *cv, int &x, int y, TColor fg = col_fgList, int max_x = 0);
-void RuledLnTextOut(UnicodeString s, TCanvas *cv, TRect &rc, TColor fg, int tab_wd = 8, TStringList *kw_lst = NULL);
+void RuledLnTextOut(UnicodeString s, TCanvas *cv, TRect &rc, TColor fg, int tab_wd = 8,
+	TStringList *kw_lst = NULL, bool case_sns = false);
 
 void PrvTextOut(TListBox *lp, int idx, TCanvas *cv, TRect &rc, TColor fg,
-	int tab_wd, TStringList *kw_lst = NULL, UnicodeString fnam = EmptyStr, bool en_mlt = true);
+	int tab_wd, TStringList *kw_lst = NULL, bool case_sns = false, UnicodeString fnam = EmptyStr, bool en_mlt = true);
 
 void LineNoOut(TCanvas *cv, TRect &rc, UnicodeString l_str);
 void LineNoOut(TCanvas *cv, TRect &rc, int l_no);
 
-void PathNameOut(UnicodeString s, TStringList *kw_lst, TCanvas *cv, int &x, int y, bool mgn_sw = true);
+void PathNameOut(UnicodeString s, TStringList *kw_lst, bool case_sns, TCanvas *cv, int &x, int y, bool mgn_sw = true);
 void PathNameOut(UnicodeString s, TCanvas *cv, int &x, int y, int max_w = 0);
 void FileNameOut(TCanvas *cv, TRect &rc, UnicodeString fnam, bool use_fgsel,
-	bool to_slash = false, TStringList *kw_lst = NULL);
+	bool to_slash = false, TStringList *kw_lst = NULL, bool case_sns = false);
 
 void RloPipeTextOut(UnicodeString s, TCanvas *cv, int &x, int y, TColor fg);
 void SpaceTextOut(UnicodeString s, TCanvas *cv, int &x, int y, TColor fg, bool force_nrm = false);
@@ -2113,6 +2129,8 @@ void EndLog(UnicodeString msg, UnicodeString inf = EmptyStr);
 void EndLog(const _TCHAR *msg, UnicodeString inf = EmptyStr);
 void EndLog(int id, UnicodeString inf = EmptyStr);
 void ExeErrLog(UnicodeString fnam, UnicodeString msg);
+
+UnicodeString get_ResCntStr(int ok_cnt = 0, int er_cnt = 0, int sk_cnt = 0, int ng_cnt = 0, bool is_task = false);
 
 void AddLog(UnicodeString msg, bool with_t = false, bool raw = false);
 void AddLog(const _TCHAR *msg, bool with_t = false);

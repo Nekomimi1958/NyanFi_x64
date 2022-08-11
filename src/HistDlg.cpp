@@ -94,6 +94,7 @@ void __fastcall TDirHistoryDlg::UpdateListBox(
 			std::unique_ptr<TStringList> f_lst(new TStringList());
 			SearchOption opt;  opt << soAndOr << soCSV;
 			if (IsMigemo) opt << soMigemo;
+			if (contains_upper(IncSeaWord)) opt << soCaseSens;
 			filter_List(AllDirHistory, f_lst.get(), slash_to_yen(IncSeaWord), opt);
 			ListBuff->Assign(f_lst.get());
 		}
@@ -206,11 +207,12 @@ void __fastcall TDirHistoryDlg::DirHistListBoxDrawItem(TWinControl *Control, int
 		std::unique_ptr<TStringList> wlist(new TStringList());
 		SearchOption opt;  opt << soAndOr;
 		if (IsMigemo) opt << soMigemo;
+		if (contains_upper(IncSeaWord)) opt << soCaseSens;
 		get_MatchWordList(lbuf, slash_to_yen(IncSeaWord), opt, wlist.get());
-		PathNameOut(lbuf, wlist.get(), cv, xp, yp);
+		PathNameOut(lbuf, wlist.get(), opt.Contains(soCaseSens), cv, xp, yp);
 	}
 	else {
-		PathNameOut(lbuf, NULL, cv, xp, yp);
+		PathNameOut(lbuf, NULL, false, cv, xp, yp);
 	}
 
 	//ƒJ[ƒ\ƒ‹

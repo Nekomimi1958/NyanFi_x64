@@ -1562,7 +1562,7 @@ void __fastcall TTaskThread::Task_BACKUP(UnicodeString prm)
 		}
 	}
 	if (TaskCancel) return;
-	AddLog("         コピー終了" + get_res_cnt_str(OkCount, ErrCount, SkipCount));
+	AddLog("         コピー終了" + get_ResCntStr(OkCount, ErrCount, SkipCount, 0, true));
 	SubCount = OkCount = SkipCount = ErrCount = 0;
 
 	//ミラーリング
@@ -1600,7 +1600,7 @@ void __fastcall TTaskThread::Task_BACKUP(UnicodeString prm)
 			}
 		}
 
-		AddLog("         ミラーリング終了" + get_res_cnt_str(OkCount, ErrCount, SkipCount));
+		AddLog("         ミラーリング終了" + get_ResCntStr(OkCount, ErrCount, SkipCount, 0, true));
 		SubCount = OkCount = SkipCount = ErrCount = 0;
 	}
 }
@@ -1814,7 +1814,7 @@ void __fastcall TTaskThread::FinishTask()
 	TFormatSettings fs = TFormatSettings::Create();
 	UnicodeString msg = FormatDateTime("hh:nn:ss ", Now(), fs);
 	msg.cat_sprintf(_T("%s終了 %5.1f秒"), TaskCmdList->Values[CmdName].c_str(), tcnt);
-	msg += get_res_cnt_str(OkCount, ErrCount, SkipCount);
+	msg += get_ResCntStr(OkCount, ErrCount, SkipCount, 0, true);
 	if (TaskCancel) {
 		msg.cat_sprintf(_T("  CANCELED:%u"), Config->TaskList->Count + 1);
 		Config->TaskList->Clear();

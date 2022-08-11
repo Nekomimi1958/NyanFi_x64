@@ -457,7 +457,9 @@ const UnicodeString XCMD_VarNames =
 	"CursorPosX|CursorPosY|Date|DirCount|DirName|DownloadName|ExePath|ExitCode|FileCount|FileName|FileSize|FileSizeF|"
 	"FileTime|FileTimeF|LastLogText|LastWatchLog|LineNo|LineText|MatchedStr|MenuIndex|MenuStr|ModalResult|NamePart|"
 	"OppPath|PageSize|ScrMode|SelCount|SelDirCount|SelFileCount|SelFiles|SelText|SortMode|TabGroup|TabNo|TaskCount|"
-	"ThisName|Time|TmpPath|UserName|VolumeLabel|WinHeight|WinWidth";
+	"ThisName|Time|TmpPath|UserName|VolumeLabel|WinHeight|WinWidth|"
+	"LogOkCount|LogNgCount|LogErrCount|LogSkipCount|"
+	"TaskOkCount|TaskErrCount|TaskSkipCount|";
 
 //---------------------------------------------------------------------------
 //ExeCommands の処理
@@ -530,6 +532,14 @@ void XCMD_Initialize(UnicodeString &opt)
 	XCMD_set_Var(_T("BufferIndex"),	0);
 	XCMD_set_Var(_T("ModalResult"),	(int)mrNone);
 	XCMD_set_Var(_T("TabGroup"),	get_base_name(TabGroupName));
+
+	XCMD_set_Var(_T("LogOkCount"),		0);
+	XCMD_set_Var(_T("LogNgCount"),		0);
+	XCMD_set_Var(_T("LogErrCount"),		0);
+	XCMD_set_Var(_T("LogSkipCount"),	0);
+	XCMD_set_Var(_T("TaskOkCount"),		0);
+	XCMD_set_Var(_T("TaskErrCount"),	0);
+	XCMD_set_Var(_T("TaskSkipCount"),	0);
 
 	//すでに実行中タスクの最大IDを取得
 	XCMD_last_task_id = -1;

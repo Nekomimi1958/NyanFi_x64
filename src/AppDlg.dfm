@@ -17,7 +17,6 @@ object AppListDlg: TAppListDlg
   OnKeyDown = FormKeyDown
   OnMouseWheel = FormMouseWheel
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 15
   object StatusBar1: TStatusBar
     Left = 0
@@ -67,7 +66,7 @@ object AppListDlg: TAppListDlg
       TabOrder = 1
       object DirPanel: TPanel
         Left = 0
-        Top = 0
+        Top = 22
         Width = 100
         Height = 22
         Align = alTop
@@ -76,20 +75,13 @@ object AppListDlg: TAppListDlg
         TabOrder = 0
         StyleElements = [seBorder]
         OnDblClick = DirPanelDblClick
-        object InpPaintBox: TPaintBox
-          Left = 1
-          Top = 1
-          Width = 98
-          Height = 20
-          Align = alClient
-          OnPaint = InpPaintBoxPaint
-        end
+        ExplicitTop = 0
       end
       object LaunchListBox: TListBox
         Left = 0
-        Top = 22
+        Top = 44
         Width = 100
-        Height = 248
+        Height = 226
         Style = lbVirtualOwnerDraw
         Align = alLeft
         Anchors = [akLeft, akTop, akRight, akBottom]
@@ -106,6 +98,24 @@ object AppListDlg: TAppListDlg
         OnDrawItem = LaunchListBoxDrawItem
         OnEnter = LaunchListBoxEnter
         OnKeyDown = LaunchListBoxKeyDown
+        ExplicitTop = 22
+        ExplicitHeight = 248
+      end
+      object InpPanel: TPanel
+        Left = 0
+        Top = 0
+        Width = 100
+        Height = 22
+        Align = alTop
+        TabOrder = 2
+        object InpPaintBox: TPaintBox
+          Left = 1
+          Top = 1
+          Width = 98
+          Height = 20
+          Align = alClient
+          OnPaint = InpPaintBoxPaint
+        end
       end
     end
     object AppPanel: TPanel

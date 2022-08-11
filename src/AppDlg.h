@@ -176,6 +176,7 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *AppListPanel;
 	TPanel *AppPanel;
 	TPanel *DirPanel;
+	TPanel *InpPanel;
 	TPanel *LaunchPanel;
 	TPanel *MainPanel;
 	TPanel *ViewPanel;
@@ -259,6 +260,7 @@ private:	// ユーザー宣言
 	bool IsMigemo;
 	UnicodeString IncSeaWord;
 	TStringList *LaunchFileList;
+	TStringList *LaunchTopList; 
 
 	UnicodeString ExcAppText;
 
@@ -294,6 +296,7 @@ private:	// ユーザー宣言
 	void __fastcall UpdateAppSttBar();
 	AppWinInf* __fastcall GetCurAppWinInf();
 
+	void __fastcall AddLnkFileRec(UnicodeString fnam, TStringList *lst, UnicodeString rnam = EmptyStr);
 	void __fastcall UpdateLaunchList(UnicodeString lnam = EmptyStr);
 	void __fastcall UpdateLaunchSttBar();
 
@@ -315,6 +318,7 @@ public:		// ユーザー宣言
 	bool OnlyLauncher;
 	bool ToAppList, ToLauncher, ToIncSea;
 	bool isFuzzy;
+	bool AddStart;
 
 	__fastcall TAppListDlg(TComponent* Owner);
 

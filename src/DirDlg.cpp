@@ -302,6 +302,7 @@ void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
 		SearchOption opt;
 		if (MigemoAction->Checked) opt << soMigemo;
 		if (AndOrAction->Checked)  opt << soAndOr;
+		if (contains_upper(FilterEdit->Text)) opt << soCaseSens;
 		filter_List(SpDirList, SpDirBuff, FilterEdit->Text, opt); 
 	}
 	else {
