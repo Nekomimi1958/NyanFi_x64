@@ -259,13 +259,13 @@ void __fastcall TAppListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		IniFile->WriteBoolGen(_T("AppListShowMonNo"),		ShowMonNoAction);
 		IniFile->WriteBoolGen(_T("AppListShowCmdParam"),	ShowCmdParamAction);
 		IniFile->WriteIntGen(_T("AppListThumbHi"),			ViewPanel->Height);
+		if (!OnlyAppList) {
+			IniFile->WriteIntGen(_T("AppListLaunchPos"),	(LaunchPanel->Align==alLeft)? 2 : 1);
+			IniFile->WriteIntGen( _T("AppListLaunchWd"),	LaunchPanel->Width);
+		}
 	}
 
-	if (!OnlyAppList && !OnlyLauncher)
-		IniFile->WriteIntGen(_T("AppListLaunchPos"),	(LaunchPanel->Align==alLeft)? 2 : 1);
-
 	if (!OnlyAppList) {
-		IniFile->WriteIntGen( _T("AppListLaunchWd"),		LaunchPanel->Width);
 		IniFile->WriteBoolGen(_T("AppListLaunchRemSort"),	SortByRem);
 		IniFile->WriteBoolGen(_T("AppListLaunchIconSort"),	SortByIcon);
 		IniFile->WriteStrGen( _T("AppListLaunchPath"),		LaunchPath);

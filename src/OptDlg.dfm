@@ -6620,7 +6620,7 @@ object OptionDlg: TOptionDlg
           Top = 48
           Width = 164
           Height = 23
-          Style = csDropDownList
+          DropDownCount = 12
           TabOrder = 6
         end
       end

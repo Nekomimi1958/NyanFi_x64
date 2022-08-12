@@ -389,10 +389,12 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		_T("\n")
 		_T("FA : 一覧側\n")
 		_T("FL : ランチャー側\n")
-		_T("FI : INC.サーチ\n")
+		_T("FI : ランチャー側(INC.)\n")
 		_T("AO : 一覧のみ表示\n")
 		_T("LO : ランチャーのみ表示\n")
-		_T("LI : ランチャーのみ(INC.)\n"));
+		_T("LI : ランチャーのみ(INC.)\n")
+		_T("FZ : あいまい検索(INC.)\n")
+		_T("AS : スタートメニュー追加\n"));
 
 	set_ComboBoxText(OpenByModeComboBox, _T("そのまま\nWindowsの関連付けで開く\n標準の Enter キー動作\n"));
 
@@ -976,8 +978,8 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	PinMarkEdit->Text	 = TabPinMark;
 
 	MaxTasksComboBox->ItemIndex = MaxTasks - 1;
-	AppPrmComboBox->ItemIndex	= idx_of_word_i(_T("|FA|FL|FI|AO|LO|LI"), AppListHotPrm);
-	ShowIconCheckBox->Checked	= IconMode>0;
+	AppPrmComboBox->Text        = AppListHotPrm;
+	ShowIconCheckBox->Checked   = IconMode>0;
 
 	for (int i=0; i<FontBufList->Count; i++) {
 		TFont *f = (TFont *)FontBufList->Objects[i];
@@ -4554,7 +4556,7 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 	TempPath = to_path_name(TempDirEdit->Text);
 	SetTempPathA(TempPath);
 	MaxTasks		 = MaxTasksComboBox->ItemIndex + 1;
-	AppListHotPrm	 = get_word_i_idx(_T("|FA|FL|FI|AO|LO|LI"), AppPrmComboBox->ItemIndex);
+	AppListHotPrm	 = get_tkn(AppPrmComboBox->Text, _T(" : "));
 	ViewTxtLimitSize = EditToInt(LimitTxtEdit) * 1024;
 	ViewBinLimitSize = std::max(StrToInt64Def(LimitBinEdit->Text, 0) * 1048576, 1048576LL);
 	DirDelimiter	 = DirDelimiter.IsEmpty()? UnicodeString("/") : DirDelimiter.SubString(1, 1);
@@ -4830,3 +4832,5 @@ void __fastcall TOptionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 	}
 }
 //---------------------------------------------------------------------------
+
+
