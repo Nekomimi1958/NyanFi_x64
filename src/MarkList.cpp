@@ -55,7 +55,7 @@ int __fastcall MarkList::SearchControl(TWinControl *ctrl, UnicodeString wd)
 		if (ContainsText(capstr, wd)) {
 			TShape *sp = new TShape(MarkOwner);
 			sp->Parent = NULL;
-			sp->Tag = (int)ctrl;
+			sp->Tag = (NativeInt)ctrl;
 			TRect rc = cp->BoundsRect;
 			int w = LOWORD(cp->Tag);
 			int h = HIWORD(cp->Tag);

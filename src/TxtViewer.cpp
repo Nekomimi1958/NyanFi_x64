@@ -4857,7 +4857,9 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		}
 		//カーソル位置の単語のヘルプ
 		else if (USAME_TI(cmd, "HelpCurWord")) {
-			HtmlHelpKeyword(prm, GetCurWord(false));
+			UnicodeString s = get_tkn(get_SelText(), _T("\r\n"));
+			if (s.IsEmpty()) s = GetCurWord();
+			HtmlHelpKeyword(prm, s);
 		}
 		//文字情報を表示
 		else if (USAME_TI(cmd, "CharInfo")) {

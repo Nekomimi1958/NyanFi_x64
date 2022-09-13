@@ -25,26 +25,26 @@ void __fastcall TGrepExOptDlg::FormCreate(TObject *Sender)
 	UserModule->SetUsrPopupMenu(this);
 
 	//コントロールのタグに、対応する変数のポインタを設定
-	OutFileEdit->Tag		= (int)&GrepFileName;
-	AppNameEdit->Tag		= (int)&GrepAppName;
-	AppParamEdit->Tag		= (int)&GrepAppParam;
-	AppDirEdit->Tag 		= (int)&GrepAppDir;
-	FileFmtEdit->Tag		= (int)&GrepFileFmt;
-	InsStrWEdit->Tag		= (int)&GrepInsStrW;
-	InsStrW2Edit->Tag		= (int)&GrepInsStrW2;
-	RepCrEdit->Tag			= (int)&GrepRepCrStr;
-	FExtBakEdit->Tag		= (int)&FExtRepBackup;
-	RepBakDirEdit->Tag		= (int)&RepBackupDir;
-	LogFileEdit->Tag		= (int)&ReplaceLogName;
-	AppEnabledCheckBox->Tag = (int)&GrepAppEnabled;
-	AppendCheckBox->Tag 	= (int)&GrepAppend;
-	TrimLeftCheckBox->Tag	= (int)&GrepTrimLeft;
-	RepTabCheckBox->Tag 	= (int)&GrepReplaceTab;
-	RepCrCheckBox->Tag		= (int)&GrepReplaceCr;
-	BakRepCheckBox->Tag 	= (int)&BackupReplace;
-	SaveLogCheckBox->Tag	= (int)&SaveReplaceLog;
-	AppendLogCheckBox->Tag	= (int)&ReplaceAppend;
-	OpenLogCheckBox->Tag	= (int)&OpenReplaceLog;
+	OutFileEdit->Tag		= (NativeInt)&GrepFileName;
+	AppNameEdit->Tag		= (NativeInt)&GrepAppName;
+	AppParamEdit->Tag		= (NativeInt)&GrepAppParam;
+	AppDirEdit->Tag 		= (NativeInt)&GrepAppDir;
+	FileFmtEdit->Tag		= (NativeInt)&GrepFileFmt;
+	InsStrWEdit->Tag		= (NativeInt)&GrepInsStrW;
+	InsStrW2Edit->Tag		= (NativeInt)&GrepInsStrW2;
+	RepCrEdit->Tag			= (NativeInt)&GrepRepCrStr;
+	FExtBakEdit->Tag		= (NativeInt)&FExtRepBackup;
+	RepBakDirEdit->Tag		= (NativeInt)&RepBackupDir;
+	LogFileEdit->Tag		= (NativeInt)&ReplaceLogName;
+	AppEnabledCheckBox->Tag = (NativeInt)&GrepAppEnabled;
+	AppendCheckBox->Tag 	= (NativeInt)&GrepAppend;
+	TrimLeftCheckBox->Tag	= (NativeInt)&GrepTrimLeft;
+	RepTabCheckBox->Tag 	= (NativeInt)&GrepReplaceTab;
+	RepCrCheckBox->Tag		= (NativeInt)&GrepReplaceCr;
+	BakRepCheckBox->Tag 	= (NativeInt)&BackupReplace;
+	SaveLogCheckBox->Tag	= (NativeInt)&SaveReplaceLog;
+	AppendLogCheckBox->Tag	= (NativeInt)&ReplaceAppend;
+	OpenLogCheckBox->Tag	= (NativeInt)&OpenReplaceLog;
 
 	//ドロップターゲットを設定
 	usr_SH->AddTargetList(this, AppNameEdit);

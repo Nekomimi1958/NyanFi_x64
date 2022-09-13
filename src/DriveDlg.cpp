@@ -506,7 +506,7 @@ void __fastcall TSelDriveDlg::EjectTrayActionExecute(TObject *Sender)
 
 	mci_prm.lpstrElementName = getCurDrvStr(_T(":")).c_str();
 
-	if (::mciSendCommand(0, MCI_OPEN, flag, (DWORD)&mci_prm) == 0) {
+	if (::mciSendCommand(0, MCI_OPEN, flag, (DWORD_PTR)&mci_prm) == 0) {
 		::mciSendCommand(mci_prm.wDeviceID, MCI_SET, MCI_SET_DOOR_OPEN, NULL);
 		::mciSendCommand(mci_prm.wDeviceID, MCI_CLOSE, MCI_WAIT, NULL);
 		UpdateDriveList();

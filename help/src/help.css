@@ -1,263 +1,259 @@
 /* óvëf */
-P, TD, caption {
-  padding-left: 0.5em;
-  line-height: 150%;
+P,
+TD,
+caption {
+    padding-left: 0.5em;
+    line-height: 150%;
 }
 
 DL {
-  line-height: 150%;
+    line-height: 150%;
 }
 
 DL.sub_item {
-  line-height: 150%;
-  border-style: none;
+    line-height: 150%;
+    border-style: none;
 }
 
 DT {
-  font-weight: bold;
-  padding: 1px 4px;
-  background-color: #ddf;
+    padding: 1px 4px;
+    background-color: #ddf;
+    font-weight: bold;
 }
 
 DT.no_bg {
-  font-weight: bold;
-  padding: 1px 0.5em;
-  background-color: transparent;
+    padding: 1px 0.5em;
+    background-color: transparent;
+    font-weight: bold;
 }
+
 DT.no_bg_indent1 {
-  font-weight: bold;
-  padding: 1px 1em;
-  background-color: transparent;
+    padding: 1px 1em;
+    background-color: transparent;
+    font-weight: bold;
 }
 
 DD {
-  font-weight: normal;
-  margin-bottom: 1em;
+    margin-bottom: 1em;
+    font-weight: normal;
 }
 
 LI {
-  margin-bottom: 0.25em;
+    margin-bottom: 0.25em;
 }
 
 H1 {
-  padding: 4px 10px;
-  background-color: #ddf;
-  border-style: solid;
-  border-width: 1px 2px 2px 1px;
-  border-color: #669;
-  font-size: large;
+    padding: 4px 10px;
+    background-color: #ddf;
+    border-style: solid;
+    border-width: 1px 2px 2px 1px;
+    border-color: #669;
+    font-size: large;
 }
 
 H2 {
-  padding: 4px 6px;
-  background-color: #ddf;
-  border-style: solid;
-  border-width: 1px 2px 2px 1px;
-  border-color: #669;
-  font-size: medium;
+    padding: 4px 6px;
+    background-color: #ddf;
+    border-style: solid;
+    border-width: 1px 2px 2px 1px;
+    border-color: #669;
+    font-size: medium;
 }
 
 H3 {
-  padding: 2px 4px;
-  background-color: #ddf;
-  border-style: none solid solid none;
-  border-width: 1px;
-  border-color: #669;
-  font-size: small;
+    padding: 2px 4px;
+    background-color: #ddf;
+    border-style: none solid solid none;
+    border-width: 1px;
+    border-color: #669;
+    font-size: small;
 }
 
 H4 {
-  padding: 2px 4px;
-  margin-top: 0px;
-  margin-bottom: 0.25em;
-  border-style: none none solid none;
-  border-width: 1px;
-  border-color: #669;
-  font-size: small;
+    padding: 2px 4px;
+    margin-top: 0px;
+    margin-bottom: 0.25em;
+    border-style: none none solid none;
+    border-width: 1px;
+    border-color: #669;
+    font-size: small;
 }
 
 
 A:hover {
-  background-color: #ddf;
+    background-color: #ddf;
 }
 
 A {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 PRE {
-  line-height: 125%;
-  padding-left: 1em;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-  margin-right: 2em;
+    line-height: 125%;
+    padding-left: 1em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-right: 2em;
 }
 
 /* è¸ÇË */
 .title_box {
-  padding: 20px 20px;
-  background-color: #ddf;
-  border-style: solid;
-  border-width: 1px 2px 2px 1px;
-  border-color: #669;
-  text-align: center;
-  letter-spacing: 0.25em;
-  font-weight: bold;
+    padding: 20px 20px;
+    background-color: #ddf;
+    border-style: solid;
+    border-width: 1px 2px 2px 1px;
+    border-color: #669;
+    text-align: center;
+    letter-spacing: 0.25em;
+    font-weight: bold;
 }
 
 .inf_box {
-  padding: 10px 20px;
-  border-style: solid;
-  border-width: 1px 2px 2px 1px;
-  border-color: #669;
+    padding: 10px 20px;
+    border-style: solid;
+    border-width: 1px 2px 2px 1px;
+    border-color: #669;
 }
 
 .inf_box_r {
-  padding: 10px 20px;
-  background-color: #fdd;
-  border-style: solid;
-  border-width: 1px 2px 2px 1px;
-  border-color: #669;
+    padding: 10px 20px;
+    background-color: #fdd;
+    border-style: solid;
+    border-width: 1px 2px 2px 1px;
+    border-color: #669;
 }
 
 .small {
-  font-size: smaller;
-  line-height: 125%;
+    font-size: smaller;
+    line-height: 125%;
 }
 
 .small_nrm {
-  font-size: smaller;
-  font-weight: normal;
+    font-size: smaller;
+    font-weight: normal;
 }
 
 .indent1 {
-  padding-left: 1em;
+    padding-left: 1em;
 }
 
 .indent2 {
-  padding-left: 2em;
+    padding-left: 2em;
 }
 
 .margin1 {
-  margin-left: 1em;
+    margin-left: 1em;
 }
 
 .mgn_btm_h {
-  margin-bottom: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 .note_text {
-  margin-Top: 0.25em;
-  padding-left: 0.5em;
-  background-color: #fee;
+    margin-Top: 0.25em;
+    padding-left: 0.5em;
+    background-color: #fee;
 }
 
 .info_text {
-  margin-Top: 0.25em;
-  background-color: #eff;
+    margin-Top: 0.25em;
+    background-color: #eff;
 }
 
 .tips {
-  margin-Right: 0.5em;
-  padding: 0px 0.2em;
-  color: #03f;
-  background-color: #cce;
-  font-weight: bold;
+    margin-Right: 0.5em;
+    padding: 0px 0.2em;
+    color: #03f;
+    background-color: #cce;
+    font-weight: bold;
 }
 
 .btn_frame {
-  margin-left: 0.25em;
-  margin-right: 0.25em;
-  padding: 0px 4px;
-  background-color: #ddd;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #aaa #666 #666 #aaa;
-  font-weight: bold;
-  font-size: 90%;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+    padding: 0px 4px;
+    background-color: #ddd;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #aaa #666 #666 #aaa;
+    font-weight: bold;
+    font-size: 90%;
 }
+
 .btn_frame_4 {
-  margin-left: 0.25em;
-  margin-right: 0.25em;
-  text-align: center;
-  width: 4.5em;
-  background-color: #ddd;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #aaa #666 #666 #aaa;
-  font-weight: bold;
-  font-size: 90%;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+    text-align: center;
+    width: 4.5em;
+    background-color: #ddd;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #aaa #666 #666 #aaa;
+    font-weight: bold;
+    font-size: 90%;
 }
+
 .tab_frame {
-  margin-left: 0.25em;
-  margin-right: 0.25em;
-  padding: 0px 8px;
-  background-color: #ddd;
-  border-style: solid solid none solid;
-  border-width: 1px;
-  border-color: #aaa #666 #666 #aaa;
-  font-weight: bold;
-  font-size: 90%;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+    padding: 0px 8px;
+    background-color: #ddd;
+    border-style: solid solid none solid;
+    border-width: 1px;
+    border-color: #aaa #666 #666 #aaa;
+    font-weight: bold;
+    font-size: 90%;
 }
 
 .pram_text {
-  color: #333;
-  font-family: monospace;
-  font-weight: normal;
+    color: #333;
+    font-family: monospace;
+    font-weight: normal;
 }
 
 .def_text {
-  color: #060;
-  font-weight: normal;
+    color: #060;
+    font-weight: normal;
 }
 
 .mono_text {
-  font-family: monospace;
+    font-family: monospace;
 }
 
 .ctrl_text {
-  color: #90f;
-  font-weight: normal;
+    color: #90f;
+    font-weight: normal;
 }
 
 .format_text {
-  padding: 0px 0.25em;
-  font-weight: normal;
-  background-color: #ddd;
+    padding: 0px 0.25em;
+    font-weight: normal;
+    background-color: #ddd;
 }
 
 .rem_text {
-  color: #080;
+    color: #080;
 }
 
 .al_right {
-  text-align: right;
-  margin-right: 2em;
+    text-align: right;
+    margin-right: 2em;
 }
 
 .link_box {
-  margin-left: 1em;
-  margin-right: 1em;
-  padding: 0.25em 1em;
-  background-color: #eef;
-  color: #999;
-  font-size: 90%;
-  margin-bottom: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-bottom: 1em;
+    padding: 0.25em 1em;
+    background-color: #eef;
+    color: #999;
+    font-size: 90%;
 }
 
 .scr_box {
-  padding: 1px 4px;
-  background-color: #aaa;
-  font-family: monospace;
-}
-
-.inp_box_l {
-  padding: 0px 40px 0px 4px;
-  background-color: #fff;
-  border-color: #666;
-  border-style: solid;
-  border-width: 1px;
-  font-size: 90%;
+    padding: 1px 4px;
+    background-color: #aaa;
+    font-family: monospace;
 }
 
 .inp_box {
@@ -270,25 +266,25 @@ PRE {
 }
 
 .example_box {
-  margin-top: 0.25em;
-  padding: 4px;
-  background-color: #ddd;
-  font-family: monospace;
-  line-height: 120%;
+    margin-top: 0.25em;
+    padding: 4px;
+    background-color: #ddd;
+    font-family: monospace;
+    line-height: 120%;
 }
 
 .spc_box {
-  margin: 0.6em 0px;
+    margin: 0.6em 0px;
 }
 
 .spc_box_p {
-  margin: 0.6em 0px;
-  padding-left: 0.5em;
-  line-height: 150%;
+    margin: 0.6em 0px;
+    padding-left: 0.5em;
+    line-height: 150%;
 }
 
 .ver_date {
-  padding-left: 1em;
-  font-weight: normal;
-  color: #333;
+    padding-left: 1em;
+    font-weight: normal;
+    color: #333;
 }

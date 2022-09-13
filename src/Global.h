@@ -56,7 +56,7 @@ extern UnicodeString RstBatName;
 
 //---------------------------------------------------------------------------
 //HTMLƒwƒ‹ƒv
-typedef HWND (WINAPI *FUNC_HtmlHelp)(HWND, LPCWSTR, UINT, DWORD);
+typedef HWND (WINAPI *FUNC_HtmlHelp)(HWND, LPCWSTR, UINT, DWORD_PTR);
 extern  HMODULE hHHctrl;
 extern  FUNC_HtmlHelp lpfHtmlHelp;
 extern  bool CancelHelp;

@@ -2235,15 +2235,17 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 
 	//ヘルプのキーメッセージ処理
 	if (lpfHtmlHelp) {
-		if (EscapeHelp && Msg.message==WM_KEYDOWN && GetForegroundWindow()==get_HelpWnd()) {
+		if (EscapeHelp && Msg.message==WM_KEYDOWN && (Msg.wParam==VK_ESCAPE || Msg.wParam==VK_F1)
+			&& GetForegroundWindow()==get_HelpWnd())
+		{
 			//ESCキーで閉じる
-			if ((WORD)Msg.wParam==VK_ESCAPE) {
+			if (Msg.wParam==VK_ESCAPE) {
 				HtmlHelpClose();
 				Handled = true;
 				return;
 			}
 			//F1キーでフォーカス切り替え
-			else if ((WORD)Msg.wParam==VK_F1) {
+			else if (Msg.wParam==VK_F1) {
 				HWND hWnd = get_ModalWnd();
 				if (!hWnd) hWnd = MainHandle;
 				::SetFocus(hWnd);
@@ -2254,7 +2256,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 
 		//その他のメッセージ処理
 		if (Msg.message==WM_KEYDOWN || Msg.message==WM_SYSKEYDOWN) {
-			Handled = (lpfHtmlHelp(NULL, NULL, HH_PRETRANSLATEMESSAGE, (DWORD)&Msg) != NULL);
+			Handled = (lpfHtmlHelp(NULL, NULL, HH_PRETRANSLATEMESSAGE, (DWORD_PTR)&Msg) != NULL);
 			if (Handled) return;
 		}
 	}
@@ -11237,7 +11239,7 @@ int __fastcall TNyanFiForm::set_IncSeaStt(
 				//タグ
 				if (!fp->matched && CurStt->find_TAG && FindTagsColumn) {
 					lbuf = fp->tags;
-					fp->matched = 
+					fp->matched =
 						CurStt->is_Migemo ? TRegEx::IsMatch(lbuf, CurStt->incsea_Ptn, opt) :
 						 	   IncSeaFuzzy? contains_fuzzy_word(lbuf, CurStt->incsea_Word, IncSeaCaseSens, ";")
 										  : contains_word_and_or(lbuf, CurStt->incsea_Word, IncSeaCaseSens);
@@ -13660,9 +13662,9 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 											h_flag = !SameStr(hash_c, hash_o);
 											if (!h_flag && cfp->f_size>FILE_RBUF_SIZE) {
 												cfp->hash = get_HashStr(fnam0, idstr, false, true);
-												if ((int)GetLastError()==E_ABORT) CancelAbort();
+												if (GetLastError()==E_ABORT) CancelAbort();
 												ofp->hash = get_HashStr(fnam1, idstr, false, true);
-												if ((int)GetLastError()==E_ABORT) CancelAbort();
+												if (GetLastError()==E_ABORT) CancelAbort();
 												if (cfp->hash.IsEmpty() || ofp->hash.IsEmpty()) EmptyAbort();
 												h_flag = !SameStr(cfp->hash, ofp->hash);
 											}
@@ -13672,9 +13674,9 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 											h_flag = SameStr(hash_c, hash_o);
 											if (h_flag && cfp->f_size>FILE_RBUF_SIZE) {
 												cfp->hash = get_HashStr(fnam0, idstr, false, true);
-												if ((int)GetLastError()==E_ABORT) CancelAbort();
+												if (GetLastError()==E_ABORT) CancelAbort();
 												ofp->hash = get_HashStr(fnam1, idstr, false, true);
-												if ((int)GetLastError()==E_ABORT) CancelAbort();
+												if (GetLastError()==E_ABORT) CancelAbort();
 												if (cfp->hash.IsEmpty() || ofp->hash.IsEmpty()) EmptyAbort();
 												h_flag = SameStr(cfp->hash, ofp->hash);
 											}
@@ -13866,7 +13868,7 @@ void __fastcall TNyanFiForm::CompareHashActionExecute(TObject *Sender)
 			}
 
 			UnicodeString hash0 = get_HashStr(fnam0, idstr, false, true);
-			if ((int)GetLastError()==E_ABORT) CancelAbort();
+			if (GetLastError()==E_ABORT) CancelAbort();
 			msg = make_LogHdr(idstr, fnam0, false, w_fn);
 			if (!hash0.IsEmpty()) {
 				fp0->hash = hash0;
@@ -13893,7 +13895,7 @@ void __fastcall TNyanFiForm::CompareHashActionExecute(TObject *Sender)
 			UnicodeString hash1;
 			if (!fnam1.IsEmpty()) {
 				hash1 = get_HashStr(fnam1, idstr, false, true);
-				if ((int)GetLastError()==E_ABORT) CancelAbort();
+				if (GetLastError()==E_ABORT) CancelAbort();
 				msg = make_LogHdr(idstr, fnam1, false, w_fn);
 				if (!hash1.IsEmpty()) {
 					fp1->hash = hash1;
@@ -15921,10 +15923,12 @@ void __fastcall TNyanFiForm::EjectActionExecute(TObject *Sender)
 		flag |= MCI_OPEN_ELEMENT;
 	}
 	//複数ならポップアップメニューで処理
-	else if (PopupDriveMenu(CurListTag, true)) return;
+	else if (PopupDriveMenu(CurListTag, true)) {
+		return;
+	}
 
 	//単独ならここで処理
-	if (::mciSendCommand(0, MCI_OPEN, flag, (DWORD)&mci_prm) == 0) {
+	if (::mciSendCommand(0, MCI_OPEN, flag, (DWORD_PTR)&mci_prm) == 0) {
 		::mciSendCommand(mci_prm.wDeviceID, MCI_SET, MCI_SET_DOOR_OPEN, NULL);
 		::mciSendCommand(mci_prm.wDeviceID, MCI_CLOSE, MCI_WAIT, NULL);
 	}
@@ -17262,13 +17266,13 @@ void __fastcall TNyanFiForm::FindDuplDlgActionExecute(TObject *Sender)
 					if (ps==0) {
 						UnicodeString fnam = f_lst->Strings[i];
 						f_lst->Strings[i]  = get_HashStr(fnam, idstr, true) + "\t" + fnam;
-						if ((int)GetLastError()==E_ABORT) CancelWork = true;
+						if (GetLastError()==E_ABORT) CancelWork = true;
 					}
 					//2パス目 全体チェック
 					else if (*sz>FILE_RBUF_SIZE) {
 						UnicodeString fnam = get_post_tab(f_lst->Strings[i]);
 						f_lst->Strings[i]  = get_HashStr(fnam, idstr, false, true) + "\t" + fnam;
-						if ((int)GetLastError()==E_ABORT) CancelWork = true;
+						if (GetLastError()==E_ABORT) CancelWork = true;
 					}
 				}
 				EndWorkProgress(EmptyStr, " ");
@@ -18710,7 +18714,7 @@ void __fastcall TNyanFiForm::CopyCmdNameActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::InputCommandsActionExecute(TObject *Sender)
 {
 	try {
-		InpCmdsDlg->isFuzzy = TEST_ActParam("FZ"); 
+		InpCmdsDlg->isFuzzy = TEST_ActParam("FZ");
 		if (InpCmdsDlg->ShowModal()==mrOk) {
 			UnicodeString cmds = InpCmdsDlg->CmdsComboBox->Text;
 			if (TEST_ActParam("EL")) ActionOptStr = ActionParam;

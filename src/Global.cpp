@@ -2140,7 +2140,7 @@ void InitializeGlobal()
 	hHHctrl = ::LoadLibrary(_T("hhctrl.ocx"));
 	if (hHHctrl) {
 		lpfHtmlHelp = (FUNC_HtmlHelp)::GetProcAddress(hHHctrl, "HtmlHelpW");
-		if (lpfHtmlHelp) lpfHtmlHelp(NULL, NULL, HH_INITIALIZE, (DWORD)&Cookie);
+		if (lpfHtmlHelp) lpfHtmlHelp(NULL, NULL, HH_INITIALIZE, (DWORD_PTR)&Cookie);
 	}
 
 	//非公開API
@@ -14566,11 +14566,11 @@ void HtmlHelpKeyword(
 	UnicodeString fnam,		//ヘルプファイル名
 	UnicodeString kwd)		//キーワード
 {
-	if (lpfHtmlHelp) {
+	if (lpfHtmlHelp && file_exists(fnam)) {
 		HH_AKLINK ak = {sizeof(HH_AKLINK)};
 		ak.pszKeywords	= kwd.c_str();
 		ak.fIndexOnFail = TRUE;
-		if (lpfHtmlHelp) lpfHtmlHelp(Screen->ActiveForm->Handle, fnam.c_str(), HH_KEYWORD_LOOKUP, (DWORD)&ak);
+		if (lpfHtmlHelp) lpfHtmlHelp(Screen->ActiveForm->Handle, fnam.c_str(), HH_KEYWORD_LOOKUP, (DWORD_PTR)&ak);
 	}
 }
 //---------------------------------------------------------------------------
