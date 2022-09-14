@@ -8,15 +8,13 @@ object GrepExOptDlg: TGrepExOptDlg
   ClientWidth = 514
   Color = clBtnFace
   ParentFont = True
-  OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poDesigned
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnHelp = FormHelp
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object PageControl1: TPageControl
     Left = 0
     Top = 0
@@ -35,13 +33,13 @@ object GrepExOptDlg: TGrepExOptDlg
         Left = 0
         Top = 0
         Width = 506
-        Height = 291
+        Height = 289
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
         DesignSize = (
           506
-          291)
+          289)
         object AppGroupBox: TGroupBox
           Left = 8
           Top = 158
@@ -67,26 +65,28 @@ object GrepExOptDlg: TGrepExOptDlg
             Left = 101
             Top = 48
             Width = 339
-            Height = 21
+            Height = 23
             Hint = '$F :'#20986#21147#12501#12449#12452#12523#21517'/  $L :'#36861#21152#34892#30058#21495
             Anchors = [akLeft, akTop, akRight]
-            EditLabel.Width = 44
-            EditLabel.Height = 13
+            EditLabel.Width = 49
+            EditLabel.Height = 23
             EditLabel.Caption = #12497#12521#12513#12540#12479
             LabelPosition = lpLeft
             TabOrder = 3
+            Text = ''
           end
           object AppDirEdit: TLabeledEdit
             Left = 101
             Top = 76
             Width = 339
-            Height = 21
+            Height = 23
             Anchors = [akLeft, akTop, akRight]
-            EditLabel.Width = 73
-            EditLabel.Height = 13
+            EditLabel.Width = 80
+            EditLabel.Height = 23
             EditLabel.Caption = #20316#26989#12487#12451#12524#12463#12488#12522
             LabelPosition = lpLeft
             TabOrder = 4
+            Text = ''
           end
           object RefDirBtn: TButton
             Left = 444
@@ -110,7 +110,7 @@ object GrepExOptDlg: TGrepExOptDlg
             Left = 101
             Top = 20
             Width = 339
-            Height = 21
+            Height = 23
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 1
           end
@@ -130,13 +130,14 @@ object GrepExOptDlg: TGrepExOptDlg
             Left = 101
             Top = 20
             Width = 339
-            Height = 21
+            Height = 23
             Anchors = [akLeft, akTop, akRight]
-            EditLabel.Width = 46
-            EditLabel.Height = 13
+            EditLabel.Width = 50
+            EditLabel.Height = 23
             EditLabel.Caption = #12501#12449#12452#12523#21517
             LabelPosition = lpLeft
             TabOrder = 0
+            Text = ''
           end
           object RefOutBtn: TButton
             Left = 444
@@ -204,7 +205,7 @@ object GrepExOptDlg: TGrepExOptDlg
         TabOrder = 0
         DesignSize = (
           506
-          291)
+          289)
         object BakGroupBox: TGroupBox
           Left = 8
           Top = 8
@@ -229,22 +230,24 @@ object GrepExOptDlg: TGrepExOptDlg
             Top = 37
             Width = 100
             Height = 21
-            EditLabel.Width = 36
-            EditLabel.Height = 13
+            EditLabel.Width = 39
+            EditLabel.Height = 21
             EditLabel.Caption = #25313#24373#23376
             LabelPosition = lpLeft
             TabOrder = 1
+            Text = ''
           end
           object RepBakDirEdit: TLabeledEdit
             Left = 64
             Top = 65
             Width = 377
             Height = 21
-            EditLabel.Width = 36
-            EditLabel.Height = 13
+            EditLabel.Width = 39
+            EditLabel.Height = 21
             EditLabel.Caption = #20445#23384#20808
             LabelPosition = lpLeft
             TabOrder = 2
+            Text = ''
           end
           object RefBakBtn: TButton
             Left = 445
@@ -273,11 +276,12 @@ object GrepExOptDlg: TGrepExOptDlg
             Top = 44
             Width = 344
             Height = 21
-            EditLabel.Width = 46
-            EditLabel.Height = 13
+            EditLabel.Width = 50
+            EditLabel.Height = 21
             EditLabel.Caption = #12501#12449#12452#12523#21517
             LabelPosition = lpLeft
             TabOrder = 1
+            Text = ''
           end
           object RefLogBtn: TButton
             Left = 445
@@ -323,23 +327,24 @@ object GrepExOptDlg: TGrepExOptDlg
         Left = 0
         Top = 0
         Width = 506
-        Height = 291
+        Height = 289
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitHeight = 291
         object Label1: TLabel
-          Left = 172
+          Left = 149
           Top = 33
-          Width = 321
-          Height = 13
+          Width = 344
+          Height = 15
           Alignment = taRightJustify
           Caption = '$F '#12501#12449#12452#12523#21517'/  $B '#12497#12473#28961#12375#12501#12449#12452#12523#21517'/  $L '#34892#30058#21495'/  \t '#12479#12502'/  \n '#25913#34892
         end
         object Label2: TLabel
           Left = 16
           Top = 158
-          Width = 62
-          Height = 13
+          Width = 68
+          Height = 15
           Caption = #12469#12531#12503#12523#34920#31034
         end
         object InsStrWEdit: TLabeledEdit
@@ -347,11 +352,12 @@ object GrepExOptDlg: TGrepExOptDlg
           Top = 59
           Width = 120
           Height = 21
-          EditLabel.Width = 131
-          EditLabel.Height = 13
+          EditLabel.Width = 143
+          EditLabel.Height = 21
           EditLabel.Caption = #12510#12483#12481#35486#21069#24460#12398#25407#20837#25991#23383#21015
           LabelPosition = lpLeft
           TabOrder = 1
+          Text = ''
           OnChange = SampleChange
         end
         object InsStrW2Edit: TLabeledEdit
@@ -359,11 +365,12 @@ object GrepExOptDlg: TGrepExOptDlg
           Top = 59
           Width = 120
           Height = 21
-          EditLabel.Width = 20
-          EditLabel.Height = 13
+          EditLabel.Width = 22
+          EditLabel.Height = 21
           EditLabel.Caption = #65374#12288
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
           OnChange = SampleChange
         end
         object FileFmtEdit: TLabeledEdit
@@ -371,11 +378,12 @@ object GrepExOptDlg: TGrepExOptDlg
           Top = 8
           Width = 381
           Height = 21
-          EditLabel.Width = 92
-          EditLabel.Height = 13
+          EditLabel.Width = 100
+          EditLabel.Height = 21
           EditLabel.Caption = #12501#12449#12452#12523#24773#22577#12398#26360#24335
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
           OnChange = SampleChange
         end
         object SampleMemo: TMemo

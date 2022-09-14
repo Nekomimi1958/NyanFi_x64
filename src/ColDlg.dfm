@@ -9,16 +9,14 @@ object ColorDlg: TColorDlg
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poDesigned
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnHelp = FormHelp
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object ColorListBox: TListBox
     Left = 0
     Top = 0

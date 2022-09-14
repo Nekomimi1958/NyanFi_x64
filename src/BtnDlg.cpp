@@ -165,8 +165,9 @@ void __fastcall TToolBtnDlg::RefCmdsBtnClick(TObject *Sender)
 		if (UserModule->OpenDlgToStr(fnam)) {
 			RefParamPath = ExtractFilePath(fnam);
 			if (contained_wd_i(_T("FileRun|OpenByWin"), cmd)) {
-				if (test_LnkExt(get_extension(fnam))) fnam = usr_SH->get_LnkName(fnam);
-				if (test_ExeExt(get_extension(fnam))) IconEdit->Text = fnam = exclude_env_path(fnam);
+				UnicodeString fext = get_extension(fnam);
+				if (SameText(cmd, "FileRun") && test_LnkExt(fext)) fnam = usr_SH->get_LnkName(fnam);
+				if (test_ExeExt(fext)) IconEdit->Text = fnam = exclude_env_path(fnam);
 			}
 			else if (contained_wd_i(_T("ExeMenuFile|LoadTabGroup|LoadWorkList"), cmd)) {
 				fnam = to_relative_name(fnam);

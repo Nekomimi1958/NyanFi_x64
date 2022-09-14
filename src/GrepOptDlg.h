@@ -13,6 +13,7 @@
 #include <Vcl.ComCtrls.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.Dialogs.hpp>
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 class TGrepExOptDlg : public TForm

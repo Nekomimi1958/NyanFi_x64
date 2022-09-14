@@ -14,6 +14,7 @@
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.ActnList.hpp>
 #include <Vcl.CheckLst.hpp>
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 class TRegSyncDlg : public TForm

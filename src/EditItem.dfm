@@ -7,7 +7,7 @@ object EditItemDlg: TEditItemDlg
   ClientWidth = 354
   Color = clBtnFace
   ParentFont = True
-  Position = poMainFormCenter
+  Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow

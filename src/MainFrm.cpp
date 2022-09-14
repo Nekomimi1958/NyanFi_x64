@@ -7623,7 +7623,7 @@ void __fastcall TNyanFiForm::SetFileInf()
 		lp_o->TopIndex = lp_c->TopIndex;
 		if (lp_o->ItemIndex!=lp_c->ItemIndex) {
 			lp_o->ItemIndex = lp_c->ItemIndex;
-			if (!has_KeyDownMsg()) lp_o->Repaint();
+			lp_o->Repaint();
 		}
 
 		SetDirCaption(OppListTag);
@@ -25651,7 +25651,7 @@ void __fastcall TNyanFiForm::ToOppItemCore(const _TCHAR *mode_str)
 				lp_o->ItemIndex = idx_o;
 				lp_o->TopIndex  = std::max(idx_o - pos_c, 0);
 				if (SyncLR && SyncItem) DrawOppCsr = 1; else DrawOppCsr++;
-				lp_o->Invalidate();
+				lp_o->Repaint();
 			}
 			//”½‘Î‘¤‚ÖˆÚ“®
 			else {

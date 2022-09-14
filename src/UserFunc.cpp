@@ -68,11 +68,10 @@ void set_window_pos_ex(HWND hWnd, TRect rc)
 //ダイアログを表示
 //	複数モニタにまたがる場合メインモニタの中央に移動
 //  それ以外は呼び出し元画面の中央
+//	対象は Position = poDesigned
 //---------------------------------------------------------------------------
 int show_ModalDlg(TForm *fp)
 {
-	fp->Position = poDesigned;
-	//※Position で切り替えると一部のダークモードが解除されてしまうので BoundsRect を変更
 	TRect dlg_rc = (Screen->ActiveForm && Screen->ActiveForm!=Application->MainForm)?
 						Screen->ActiveForm->BoundsRect.CenteredRect(fp->BoundsRect) :
 					 Application->MainForm->BoundsRect.CenteredRect(fp->BoundsRect);

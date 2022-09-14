@@ -8,11 +8,9 @@ object RegSyncDlg: TRegSyncDlg
   ClientWidth = 634
   Color = clBtnFace
   ParentFont = True
-  OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poDesigned
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object OptPanel: TPanel
     Left = 0
     Top = 213
@@ -84,13 +82,14 @@ object RegSyncDlg: TRegSyncDlg
       Left = 40
       Top = 7
       Width = 180
-      Height = 21
-      EditLabel.Width = 24
-      EditLabel.Height = 13
+      Height = 23
+      EditLabel.Width = 26
+      EditLabel.Height = 23
       EditLabel.Caption = #21517#21069
       LabelPosition = lpLeft
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 0
+      Text = ''
     end
     object SyncDelCheckBox: TCheckBox
       Left = 320
@@ -150,12 +149,12 @@ object RegSyncDlg: TRegSyncDlg
     Top = 0
     Width = 634
     Height = 213
-    OnClickCheck = RegListBoxClickCheck
     Align = alClient
     DragMode = dmAutomatic
     Style = lbOwnerDrawFixed
     TabOrder = 0
     OnClick = RegListBoxClick
+    OnClickCheck = RegListBoxClickCheck
     OnDrawItem = RegListBoxDrawItem
     OnKeyDown = SyncListBoxKeyDown
   end

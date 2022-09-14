@@ -33,7 +33,7 @@ UnicodeString RstBatName;	//再起動用バッチファイル名
 //！Vcl.HTMLHelpViewer は用いず、HtmlHelp API(動的リンク)で処理
 HMODULE		  hHHctrl	  = NULL;	//hhctrl.ocx
 FUNC_HtmlHelp lpfHtmlHelp = NULL;
-DWORD 		  Cookie	  = NULL;
+DWORD 		  Cookie	  = 0;
 bool 		  CancelHelp  = false;
 
 //---------------------------------------------------------------------------

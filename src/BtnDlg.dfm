@@ -8,8 +8,7 @@ object ToolBtnDlg: TToolBtnDlg
   ClientWidth = 694
   Color = clBtnFace
   ParentFont = True
-  OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poDesigned
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
@@ -19,8 +18,7 @@ object ToolBtnDlg: TToolBtnDlg
   DesignSize = (
     694
     611)
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object IcoImage: TImage
     Left = 8
     Top = 518
@@ -33,7 +31,7 @@ object ToolBtnDlg: TToolBtnDlg
     Left = 185
     Top = 500
     Width = 6
-    Height = 13
+    Height = 15
     Anchors = [akLeft, akBottom]
     Caption = '  '
   end
@@ -41,13 +39,14 @@ object ToolBtnDlg: TToolBtnDlg
     Left = 34
     Top = 518
     Width = 148
-    Height = 21
+    Height = 23
     Hint = '- '#12399#12475#12497#12524#12540#12479
     Anchors = [akLeft, akBottom]
-    EditLabel.Width = 110
-    EditLabel.Height = 13
+    EditLabel.Width = 120
+    EditLabel.Height = 15
     EditLabel.Caption = #12461#12515#12503#12471#12519#12531';'#12484#12540#12523#12498#12531#12488
     TabOrder = 1
+    Text = ''
   end
   object RefCmdsBtn: TButton
     Tag = 100
@@ -167,20 +166,21 @@ object ToolBtnDlg: TToolBtnDlg
     Left = 185
     Top = 546
     Width = 462
-    Height = 21
+    Height = 23
     Anchors = [akLeft, akRight, akBottom]
-    EditLabel.Width = 35
-    EditLabel.Height = 13
+    EditLabel.Width = 38
+    EditLabel.Height = 23
     EditLabel.Caption = #12450#12452#12467#12531
     LabelPosition = lpLeft
     TabOrder = 4
+    Text = ''
     OnChange = IconEditChange
   end
   object BtnCmdsComboBox: TComboBox
     Left = 185
     Top = 518
     Width = 462
-    Height = 21
+    Height = 23
     Anchors = [akLeft, akRight, akBottom]
     DropDownCount = 20
     TabOrder = 2

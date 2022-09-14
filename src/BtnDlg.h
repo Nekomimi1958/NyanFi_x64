@@ -13,6 +13,7 @@
 #include <Vcl.ActnList.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.Dialogs.hpp>
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 class TToolBtnDlg : public TForm

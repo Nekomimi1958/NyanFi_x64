@@ -15,6 +15,7 @@
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.Graphics.hpp>
 #include "usr_swatch.h"
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 class TDotNyanDlg : public TForm

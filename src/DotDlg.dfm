@@ -7,8 +7,7 @@ object DotNyanDlg: TDotNyanDlg
   ClientWidth = 678
   Color = clBtnFace
   ParentFont = True
-  OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poDesigned
   ShowHint = True
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -16,44 +15,43 @@ object DotNyanDlg: TDotNyanDlg
   DesignSize = (
     678
     582)
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object Label1: TLabel
-    Left = 38
+    Left = 33
     Top = 223
-    Width = 45
-    Height = 13
+    Width = 50
+    Height = 15
     Alignment = taRightJustify
     Caption = #12497#12473#12510#12473#12463
   end
   object TLabel
-    Left = 31
+    Left = 26
     Top = 252
-    Width = 52
-    Height = 13
+    Width = 57
+    Height = 15
     Alignment = taRightJustify
     Caption = 'GREP'#12510#12473#12463
   end
   object TLabel
     Left = 346
     Top = 177
-    Width = 11
-    Height = 13
+    Width = 10
+    Height = 15
     Caption = '%'
   end
   object TLabel
-    Left = 455
+    Left = 451
     Top = 552
-    Width = 38
-    Height = 13
+    Width = 42
+    Height = 15
     Alignment = taRightJustify
     Caption = #12377#12409#12390#12434
   end
   object InheritLabel: TLabel
-    Left = 499
+    Left = 495
     Top = 308
-    Width = 48
-    Height = 13
+    Width = 52
+    Height = 15
     Alignment = taRightJustify
     Caption = #32153#25215#21487#33021
   end
@@ -127,13 +125,14 @@ object DotNyanDlg: TDotNyanDlg
     Left = 87
     Top = 278
     Width = 580
-    Height = 21
+    Height = 23
     Anchors = [akLeft, akTop, akRight]
-    EditLabel.Width = 24
-    EditLabel.Height = 13
+    EditLabel.Width = 26
+    EditLabel.Height = 23
     EditLabel.Caption = #35500#26126
     LabelPosition = lpLeft
     TabOrder = 15
+    Text = ''
   end
   object IconRadioGroup: TRadioGroup
     Left = 207
@@ -161,7 +160,7 @@ object DotNyanDlg: TDotNyanDlg
     Left = 87
     Top = 249
     Width = 580
-    Height = 21
+    Height = 23
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 14
   end
@@ -169,7 +168,7 @@ object DotNyanDlg: TDotNyanDlg
     Left = 87
     Top = 220
     Width = 580
-    Height = 21
+    Height = 23
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 13
   end
@@ -204,7 +203,7 @@ object DotNyanDlg: TDotNyanDlg
       Left = 10
       Top = 18
       Width = 415
-      Height = 21
+      Height = 23
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
     end
@@ -247,14 +246,15 @@ object DotNyanDlg: TDotNyanDlg
     Left = 302
     Top = 174
     Width = 40
-    Height = 21
+    Height = 23
     Alignment = taRightJustify
-    EditLabel.Width = 80
-    EditLabel.Height = 13
+    EditLabel.Width = 88
+    EditLabel.Height = 23
     EditLabel.Caption = #12501#12449#12452#12523#12522#12473#12488#12398#24133
     LabelPosition = lpLeft
     NumbersOnly = True
     TabOrder = 11
+    Text = ''
   end
   object SyncRadioGroup: TRadioGroup
     Left = 443
@@ -284,7 +284,7 @@ object DotNyanDlg: TDotNyanDlg
       Left = 10
       Top = 18
       Width = 415
-      Height = 21
+      Height = 23
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 2
     end
@@ -338,13 +338,14 @@ object DotNyanDlg: TDotNyanDlg
       Left = 26
       Top = 18
       Width = 399
-      Height = 21
+      Height = 23
       Anchors = [akLeft, akTop, akRight]
-      EditLabel.Width = 10
-      EditLabel.Height = 13
+      EditLabel.Width = 11
+      EditLabel.Height = 23
       EditLabel.Caption = '@'
       LabelPosition = lpLeft
       TabOrder = 0
+      Text = ''
     end
     object InhCmdBtn: TButton
       Left = 489
