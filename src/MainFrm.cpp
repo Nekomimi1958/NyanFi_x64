@@ -7644,7 +7644,7 @@ void __fastcall TNyanFiForm::SetFileInf()
 	//ファイル情報
 	StatusBar1->Panels->Items[0]->Text = EmptyStr;
 
-	file_rec *cfp = cre_new_file_rec(GetCurFrecPtr(true, true));
+	file_rec *cfp = cre_new_file_rec(GetCurFrecPtr(true, true));	//※処理中に変化する可能性があるため
 	if (cfp) {
 		UserModule->CurFileName = (!cfp->is_up && !cfp->is_dummy)? cfp->f_name : EmptyStr;
 
@@ -7660,7 +7660,11 @@ void __fastcall TNyanFiForm::SetFileInf()
 		}
 
 		CurStt->git_checked = (!cfp->is_virtual && cfp->is_up && GitExists)? dir_exists(cfp->p_name + ".git") : false;
+
 		ViewFileInf(cfp);
+		//対象が変化していなかったら、取得した情報をキャシュとして戻す
+		file_rec *cfp2 = GetCurFrecPtr(true, true);
+		if (cfp2 && SameStr(cfp->f_name, cfp2->f_name)) copy_file_rec(cfp, cfp2);
 
 		//サブビュアー
 		if (SubViewer->Visible) {

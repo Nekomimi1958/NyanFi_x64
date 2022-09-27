@@ -1826,8 +1826,9 @@ bool UserShell::get_Thumbnail(UnicodeString fnam, Graphics::TBitmap *o_bmp, int 
 			SIZE size;
 			size.cx = o_size;
 			size.cy = o_size;
-			DWORD dwFlags = IEIFLAG_ORIGSIZE;
-			if (FAILED(pExtractImage->GetLocation(path, MAX_PATH, NULL, &size, 32, &dwFlags))) Abort();
+			DWORD dwPriority = 0;
+			DWORD dwFlags    = IEIFLAG_ORIGSIZE | IEIFLAG_ASPECT;
+			if (FAILED(pExtractImage->GetLocation(path, MAX_PATH, &dwPriority, &size, 32, &dwFlags))) Abort();
 			HBITMAP hBmp;
 			if (FAILED(pExtractImage->Extract(&hBmp))) Abort();
 			o_bmp->Handle = hBmp;

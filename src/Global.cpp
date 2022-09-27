@@ -4747,47 +4747,7 @@ file_rec* cre_new_file_rec(file_rec *copy_fp)
 	fp->failed	 = false;
 
 	if (copy_fp) {
-		fp->f_name	   = copy_fp->f_name;
-		fp->p_name	   = copy_fp->p_name;
-		fp->n_name	   = copy_fp->n_name;
-		fp->b_name	   = copy_fp->b_name;
-		fp->f_ext	   = copy_fp->f_ext;
-		fp->alias	   = copy_fp->alias;
-		fp->arc_name   = copy_fp->arc_name;
-		fp->tmp_name   = copy_fp->tmp_name;
-		fp->r_name	   = copy_fp->r_name;
-		fp->l_name	   = copy_fp->l_name;
-		fp->tags	   = copy_fp->tags;
-		fp->hash	   = copy_fp->hash;
-		fp->vctr	   = copy_fp->vctr;
-		fp->memo	   = copy_fp->memo;
-
-		fp->tag 	   = copy_fp->tag;
-		fp->is_up	   = copy_fp->is_up;
-		fp->is_dir	   = copy_fp->is_dir;
-		fp->is_sym	   = copy_fp->is_sym;
-		fp->is_jct	   = copy_fp->is_jct;
-		fp->is_virtual = copy_fp->is_virtual;
-		fp->is_ftp	   = copy_fp->is_ftp;
-		fp->is_ads	   = copy_fp->is_ads;
-		fp->is_dummy   = copy_fp->is_dummy;
-		fp->selected   = copy_fp->selected;
-		fp->f_size	   = copy_fp->f_size;
-		fp->f_attr	   = copy_fp->f_attr;
-		fp->attr_str   = copy_fp->attr_str;
-		fp->f_time	   = copy_fp->f_time;
-		fp->o_size	   = copy_fp->o_size;
-		fp->c_size	   = copy_fp->c_size;
-		fp->f_count    = copy_fp->f_count;
-		fp->d_count    = copy_fp->d_count;
-		fp->img_ori    = copy_fp->img_ori;
-		fp->distance   = copy_fp->distance;
-		fp->is_video   = copy_fp->is_video;
-		fp->inf_list->Assign(copy_fp->inf_list);
-		fp->prv_text   = copy_fp->prv_text;
-		fp->tail_text  = copy_fp->tail_text;
-		fp->code_page  = copy_fp->code_page;
-		fp->base_end_x = copy_fp->base_end_x;
+		copy_file_rec(copy_fp, fp);
 	}
 	else {
 		fp->tag 	   = -1;
@@ -4887,6 +4847,59 @@ file_rec* cre_new_up_rec(int tag)
 	fp->b_name	 = "..";
 	fp->attr_str = get_file_attr_str(fp->f_attr);
 	return fp;
+}
+
+//---------------------------------------------------------------------------
+// file_rec ‚ÌƒRƒs[
+//---------------------------------------------------------------------------
+void copy_file_rec(file_rec *s_fp, file_rec *d_fp)
+{
+	d_fp->f_name   = s_fp->f_name;
+	d_fp->p_name   = s_fp->p_name;
+	d_fp->n_name   = s_fp->n_name;
+	d_fp->b_name   = s_fp->b_name;
+	d_fp->f_ext    = s_fp->f_ext;
+	d_fp->attr_str = s_fp->attr_str;
+	d_fp->alias    = s_fp->alias;
+	d_fp->arc_name = s_fp->arc_name;
+	d_fp->tmp_name = s_fp->tmp_name;
+	d_fp->r_name   = s_fp->r_name;
+	d_fp->l_name   = s_fp->l_name;
+	d_fp->tags     = s_fp->tags;
+	d_fp->hash     = s_fp->hash;
+	d_fp->vctr     = s_fp->vctr;
+	d_fp->memo     = s_fp->memo;
+
+	d_fp->tag        = s_fp->tag;
+	d_fp->is_up      = s_fp->is_up;
+	d_fp->is_dir     = s_fp->is_dir;
+	d_fp->is_sym     = s_fp->is_sym;
+	d_fp->is_jct     = s_fp->is_jct;
+	d_fp->is_virtual = s_fp->is_virtual;
+	d_fp->is_ftp     = s_fp->is_ftp;
+	d_fp->is_ads     = s_fp->is_ads;
+	d_fp->is_dummy   = s_fp->is_dummy;
+	d_fp->selected   = s_fp->selected;
+	d_fp->failed     = s_fp->failed;
+
+	d_fp->f_size     = s_fp->f_size;
+	d_fp->o_size     = s_fp->o_size;
+	d_fp->c_size     = s_fp->c_size;
+
+	d_fp->f_attr     = s_fp->f_attr;
+	d_fp->f_time     = s_fp->f_time;
+	d_fp->f_count    = s_fp->f_count;
+	d_fp->d_count    = s_fp->d_count;
+	d_fp->img_ori    = s_fp->img_ori;
+	d_fp->distance   = s_fp->distance;
+	d_fp->is_video   = s_fp->is_video;
+
+	d_fp->base_end_x = s_fp->base_end_x;
+
+	d_fp->inf_list->Assign(s_fp->inf_list);
+	d_fp->prv_text   = s_fp->prv_text;
+	d_fp->tail_text  = s_fp->tail_text;
+	d_fp->code_page  = s_fp->code_page;
 }
 
 //---------------------------------------------------------------------------

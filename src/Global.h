@@ -1277,7 +1277,6 @@ struct file_rec {
 	bool is_ads;				//代替データストリーム
 	bool is_dummy;				//ダミー(空のドライブ、ワークリストのセパレータ、比較結果の不在項目など)
 	bool selected;				//選択中
-	bool matched;				//インクリメンタルでマッチ
 	bool failed;				//ファイラー: 一時解凍失敗/  イメージビュアー: 読込失敗
 
 	__int64 f_size;				//サイズ
@@ -1293,6 +1292,7 @@ struct file_rec {
 	bool is_video;				//動画
 
 	int  base_end_x;			//ファイル名主部の末尾位置(描画時に設定、マウス選択で利用)
+	bool matched;				//インクリメンタルでマッチ
 
 	TStringList *inf_list;		//情報リスト
 	UnicodeString prv_text;		//テキストプレビュー
@@ -1706,6 +1706,7 @@ file_rec* cre_new_file_rec(file_rec *copy_fp = NULL);
 file_rec* cre_new_file_rec(UnicodeString fnam, int tag = -1, bool force = false);
 file_rec* cre_new_up_rec(int tag);
 
+void copy_file_rec(file_rec *s_fp, file_rec *d_fp);
 void del_file_rec(file_rec *fp);
 void inv_file_rec(file_rec *fp);
 

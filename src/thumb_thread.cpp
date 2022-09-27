@@ -15,7 +15,7 @@
 //---------------------------------------------------------------------------
 __fastcall TThumbnailThread::TThumbnailThread(bool CreateSuspended) : TThread(CreateSuspended)
 {
-	Priority		= tpLower;
+	Priority		= tpLowest;
 	FreeOnTerminate = true;
 
 	TaskRWLock	  = new TMultiReadExclusiveWriteSynchronizer();

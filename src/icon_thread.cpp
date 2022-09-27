@@ -17,7 +17,7 @@
 //---------------------------------------------------------------------------
 __fastcall TGetIconThread::TGetIconThread(bool CreateSuspended) : TThread(CreateSuspended)
 {
-	Priority		= tpLower;
+	Priority		= tpLowest;
 	FreeOnTerminate = true;
 	CallbackWnd 	= NULL;
 }

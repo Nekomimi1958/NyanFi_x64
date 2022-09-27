@@ -9,7 +9,7 @@
 //---------------------------------------------------------------------------
 __fastcall TCheckPathThread::TCheckPathThread(bool CreateSuspended) : TThread(CreateSuspended)
 {
-	Priority		= tpLower;
+	Priority		= tpLowest;
 	FreeOnTerminate = true;
 
 	TaskRWLock = new TMultiReadExclusiveWriteSynchronizer();

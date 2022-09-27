@@ -19,7 +19,7 @@
 //---------------------------------------------------------------------------
 __fastcall TImgViewThread::TImgViewThread(bool CreateSuspended) : TThread(CreateSuspended)
 {
-	Priority = tpLower;
+	Priority		= tpLowest;
 	FreeOnTerminate = true;
 
 	TaskRWLock	= new TMultiReadExclusiveWriteSynchronizer();
@@ -758,9 +758,11 @@ void __fastcall TImgViewThread::Execute()
 			ReqVideo = false;
 			TaskBusy = false;
 		}
-		else Sleep(10);
+		else {
+			Sleep(10);
+		}
 	}
-
+	
 	delete ImgBuff;
 	delete ViewBuff;
 	delete ChgBuff;

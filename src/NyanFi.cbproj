@@ -78,10 +78,9 @@
         <SanitizedProjectName>NyanFi</SanitizedProjectName>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1041</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=15.2.9.0;InternalName=NyanFi;LegalCopyright=2019-2022 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=15.2.9.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=15.3.0.0;InternalName=NyanFi;LegalCopyright=2019-2022 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=15.3.0.0;Comments=</VerInfo_Keys>
         <VerInfo_MajorVer>15</VerInfo_MajorVer>
-        <VerInfo_MinorVer>2</VerInfo_MinorVer>
-        <VerInfo_Release>9</VerInfo_Release>
+        <VerInfo_MinorVer>3</VerInfo_MinorVer>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <PackageImports>adortl;appanalytics;bcbie;bcbsmp;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CodeSiteExpressPkg;CustomIPTransport;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXMySQLDriver;DBXSqliteDriver;dsnap;dsnapcon;dsnapxml;FireDACADSDriver;FireDACCommonODBC;FireDACMSAccDriver;FireDACMySQLDriver;FireDACPgDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inetdb;inetdbxpress;rtl;svn;Tee;TeeDB;TeeUI;tethering;vcl;vclactnband;vcldb;vcldsnap;vclFireDAC;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
@@ -132,7 +131,6 @@
         <ILINK_LibraryPath>$(BDSLIB)\$(PLATFORM)$(CC_SUFFIX)\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
-        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <FinalOutputDir>.</FinalOutputDir>
         <LinkPackageImports>rtl.bpi;vcl.bpi;vclimg.bpi;vclx.bpi;IndySystem.bpi;IndyProtocols.bpi;IndyCore.bpi;xmlrtl.bpi</LinkPackageImports>
         <Icon_MainIcon>NyanFi_Icon.ico</Icon_MainIcon>
