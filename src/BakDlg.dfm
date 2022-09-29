@@ -4,7 +4,7 @@ object BackupDlg: TBackupDlg
   HelpContext = 71
   BorderIcons = [biSystemMenu]
   Caption = #12496#12483#12463#12450#12483#12503
-  ClientHeight = 367
+  ClientHeight = 362
   ClientWidth = 492
   Color = clBtnFace
   Constraints.MaxHeight = 400
@@ -12,7 +12,6 @@ object BackupDlg: TBackupDlg
   Constraints.MinWidth = 500
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -21,9 +20,8 @@ object BackupDlg: TBackupDlg
   OnShow = FormShow
   DesignSize = (
     492
-    367)
-  PixelsPerInch = 96
-  TextHeight = 13
+    362)
+  TextHeight = 15
   object Label1: TLabel
     Left = 13
     Top = 77
@@ -41,6 +39,14 @@ object BackupDlg: TBackupDlg
     Alignment = taRightJustify
     AutoSize = False
     Caption = #38500#22806#12510#12473#12463
+  end
+  object SyncLabel: TLabel
+    Left = 331
+    Top = 235
+    Width = 141
+    Height = 15
+    AutoSize = False
+    Caption = '(  :   )'
   end
   object SubDirCheckBox: TCheckBox
     Left = 16
@@ -61,68 +67,76 @@ object BackupDlg: TBackupDlg
   object BakIncMaskComboBox: TComboBox
     Left = 88
     Top = 74
-    Width = 388
-    Height = 21
+    Width = 380
+    Height = 23
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 20
     TabOrder = 2
+    ExplicitWidth = 376
   end
   object BakSkipDirEdit: TLabeledEdit
     Left = 88
     Top = 163
-    Width = 388
+    Width = 380
     Height = 22
     Anchors = [akLeft, akTop, akRight]
     AutoSize = False
-    EditLabel.Width = 50
-    EditLabel.Height = 13
+    EditLabel.Width = 55
+    EditLabel.Height = 22
     EditLabel.Caption = #38500#22806#12510#12473#12463
     LabelPosition = lpLeft
     TabOrder = 5
+    Text = ''
+    ExplicitWidth = 376
   end
   object SrcDirEdit: TLabeledEdit
     Left = 88
     Top = 8
-    Width = 388
+    Width = 380
     Height = 21
     TabStop = False
     Anchors = [akLeft, akTop, akRight]
     BorderStyle = bsNone
-    EditLabel.Width = 62
-    EditLabel.Height = 13
+    EditLabel.Width = 69
+    EditLabel.Height = 21
     EditLabel.Caption = #12496#12483#12463#12450#12483#12503#20803
     LabelPosition = lpLeft
     ReadOnly = True
     TabOrder = 0
+    Text = ''
+    ExplicitWidth = 376
   end
   object DstDirEdit: TLabeledEdit
     Left = 88
     Top = 37
-    Width = 388
+    Width = 380
     Height = 21
     TabStop = False
     Anchors = [akLeft, akTop, akRight]
     BorderStyle = bsNone
-    EditLabel.Width = 62
-    EditLabel.Height = 13
+    EditLabel.Width = 69
+    EditLabel.Height = 21
     EditLabel.Caption = #12496#12483#12463#12450#12483#12503#20808
     LabelPosition = lpLeft
     ReadOnly = True
     TabOrder = 1
+    Text = ''
+    ExplicitWidth = 376
   end
   object BakExcMaskComboBox: TComboBox
     Left = 88
     Top = 103
-    Width = 388
-    Height = 21
+    Width = 380
+    Height = 23
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 20
     TabOrder = 3
+    ExplicitWidth = 376
   end
   object SyncCheckBox: TCheckBox
-    Left = 170
+    Left = 171
     Top = 235
-    Width = 176
+    Width = 158
     Height = 17
     Caption = #21516#26399#12496#12483#12463#12450#12483#12503#26377#21177
     TabOrder = 8
@@ -133,33 +147,36 @@ object BackupDlg: TBackupDlg
     Width = 150
     Height = 22
     AutoSize = False
-    EditLabel.Width = 48
-    EditLabel.Height = 13
+    EditLabel.Width = 52
+    EditLabel.Height = 22
     EditLabel.Caption = #26085#20184#26465#20214
     LabelPosition = lpLeft
     TabOrder = 6
+    Text = ''
   end
   object BottomPanel: TPanel
     Left = 0
-    Top = 267
+    Top = 262
     Width = 492
     Height = 100
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 9
+    ExplicitTop = 261
+    ExplicitWidth = 488
     DesignSize = (
       492
       100)
     object TLabel
-      Left = 28
+      Left = 26
       Top = 22
-      Width = 24
-      Height = 13
+      Width = 26
+      Height = 15
       Alignment = taRightJustify
       Caption = #35373#23450
     end
     object OkButton: TButton
-      Left = 304
+      Left = 296
       Top = 66
       Width = 80
       Height = 26
@@ -168,9 +185,10 @@ object BackupDlg: TBackupDlg
       Default = True
       TabOrder = 4
       OnClick = OkButtonClick
+      ExplicitLeft = 292
     end
     object CanButton: TButton
-      Left = 396
+      Left = 388
       Top = 66
       Width = 80
       Height = 26
@@ -179,21 +197,24 @@ object BackupDlg: TBackupDlg
       Caption = #12461#12515#12531#12475#12523
       ModalResult = 2
       TabOrder = 5
+      ExplicitLeft = 384
     end
     object SureCheckBox: TCheckBox
-      Left = 195
+      Left = 187
       Top = 70
       Width = 97
       Height = 17
       Anchors = [akRight, akBottom]
       Caption = #38283#22987#30906#35469
       TabOrder = 3
+      ExplicitLeft = 183
     end
     object SetupComboBox: TComboBox
       Left = 58
       Top = 19
       Width = 180
-      Height = 21
+      Height = 23
+      PopupMenu = SetupPopupMenu
       TabOrder = 0
       OnClick = SetupComboBoxClick
     end
@@ -216,33 +237,36 @@ object BackupDlg: TBackupDlg
     object BevelPanel1: TPanel
       Left = 8
       Top = 4
-      Width = 476
+      Width = 468
       Height = 2
       Anchors = [akLeft, akTop, akRight]
       BevelOuter = bvNone
       TabOrder = 6
+      ExplicitWidth = 464
       object Shape1: TShape
         Left = 0
         Top = 0
-        Width = 476
+        Width = 468
         Height = 1
         Align = alTop
         Brush.Style = bsClear
         Pen.Color = clBtnShadow
+        ExplicitWidth = 476
       end
       object Shape2: TShape
         Left = 0
         Top = 1
-        Width = 476
+        Width = 468
         Height = 1
         Align = alTop
         Brush.Style = bsClear
         Pen.Color = clBtnHighlight
+        ExplicitWidth = 476
       end
     end
   end
   object ActionList1: TActionList
-    Left = 376
+    Left = 424
     Top = 194
     object SaveSetupAction: TAction
       Caption = #20445#23384
@@ -253,6 +277,18 @@ object BackupDlg: TBackupDlg
       Caption = #12467#12510#12531#12489#12501#12449#12452#12523#12392#12375#12390#20445#23384'...'
       OnExecute = MakeNbtActionExecute
       OnUpdate = MakeNbtActionUpdate
+    end
+    object DelSetupAction: TAction
+      Caption = #12371#12398#38917#30446#12434#21066#38500'(&D)'
+      OnExecute = DelSetupActionExecute
+      OnUpdate = DelSetupActionUpdate
+    end
+  end
+  object SetupPopupMenu: TPopupMenu
+    Left = 80
+    Top = 310
+    object DelSetupItem: TMenuItem
+      Action = DelSetupAction
     end
   end
 end

@@ -20,6 +20,7 @@ __fastcall TBackupDlg::TBackupDlg(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TBackupDlg::FormCreate(TObject *Sender)
 {
+	SetupComboBox->Tag = CBTAG_HAS_POP;
 	UserModule->SetUsrPopupMenu(this);
 
 	BakIncMaskComboBox->Tag = CBTAG_HISTORY;
@@ -55,6 +56,16 @@ void __fastcall TBackupDlg::FormShow(TObject *Sender)
 
 	BakIncMaskComboBox->SetFocus();
 	BakIncMaskComboBox->SelStart = BakIncMaskComboBox->Text.Length();
+
+	std::unique_ptr<TStringList> dst_lst(new TStringList());
+	get_SyncDirList(DstDirEdit->Text, dst_lst.get());
+	UnicodeString s = "(同期ディレクトリ: ";
+	if (dst_lst->Count>1)
+		s += IntToStr(dst_lst->Count - 1);
+	else
+		s += "なし";
+	s += ")";
+	SyncLabel->Caption = s;
 
 	SetDarkWinTheme(this);
 	Shape1->Pen->Color = IsDarkMode? dcl_BtnShadow : scl_BtnShadow;
@@ -105,9 +116,10 @@ void __fastcall TBackupDlg::SetupComboBoxClick(TObject *Sender)
 void __fastcall TBackupDlg::SaveSetupActionExecute(TObject *Sender)
 {
 	TComboBox *cp = SetupComboBox;
+	UnicodeString snam = cp->Text;
 	UnicodeString lbuf;
 	lbuf.sprintf(_T("%s=%s,%s,%s,%s,%s,%s,%s"),
-		cp->Text.c_str(),
+		snam.c_str(),
 		make_csv_str(BakIncMaskComboBox->Text).c_str(),
 		make_csv_str(BakExcMaskComboBox->Text).c_str(),
 		make_csv_str(BakSkipDirEdit->Text).c_str(),
@@ -116,13 +128,15 @@ void __fastcall TBackupDlg::SaveSetupActionExecute(TObject *Sender)
 		make_csv_str(SyncCheckBox->Checked).c_str(),
 		make_csv_str(BakDateCondEdit->Text).c_str());
 
-	int idx = cp->Items->IndexOf(cp->Text);
+	int idx = cp->Items->IndexOf(snam);
 	if (idx!=-1) {
 		BakSetupList->Strings[idx] = lbuf;
+		cp->Items->Strings[idx] = snam;
+		cp->ItemIndex = idx;
 	}
 	else {
 		BakSetupList->Insert(0, lbuf);
-		cp->Items->Insert(0, cp->Text);
+		cp->Items->Insert(0, snam);
 	}
 }
 //---------------------------------------------------------------------------
@@ -131,6 +145,23 @@ void __fastcall TBackupDlg::SaveSetupActionUpdate(TObject *Sender)
 	((TAction*)Sender)->Enabled = !SetupComboBox->Text.IsEmpty();
 
 	BakSkipDirEdit->Enabled = SubDirCheckBox->Checked;
+}
+//---------------------------------------------------------------------------
+//この項目を削除
+//---------------------------------------------------------------------------
+void __fastcall TBackupDlg::DelSetupActionExecute(TObject *Sender)
+{
+	TComboBox *cp = SetupComboBox;
+	int idx = cp->Items->IndexOf(cp->Text);
+	if (idx!=-1) {
+		BakSetupList->Delete(idx);
+		cp->Items->Delete(idx);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TBackupDlg::DelSetupActionUpdate(TObject *Sender)
+{
+	((TAction*)Sender)->Enabled = (SetupComboBox->Items->IndexOf(SetupComboBox->Text) != -1);
 }
 
 //---------------------------------------------------------------------------
@@ -172,14 +203,19 @@ void __fastcall TBackupDlg::OkButtonClick(TObject *Sender)
 		UnicodeString msg = "バックアップを開始しますか?\r\n\r\n";
 		msg.cat_sprintf(_T("バックアップ元: %s\r\n"), SrcDirEdit->Text.c_str());
 		msg.cat_sprintf(_T("バックアップ先: %s\r\n"), DstDirEdit->Text.c_str());
-		msg.cat_sprintf(_T("設定: %s"), SetupComboBox->Text.c_str());
+		if (SyncCheckBox->Checked) {
+			std::unique_ptr<TStringList> dst_lst(new TStringList());
+			get_SyncDirList(DstDirEdit->Text, dst_lst.get());
+			for (int i=1; i<dst_lst->Count; i++) {
+				msg.cat_sprintf(_T("同期先%u: %s\r\n"), i, dst_lst->Strings[i].c_str());
+			}
+		}
 		if (msgbox_Sure(msg)) ModalResult = mrOk;
 	}
 	else {
 		ModalResult = mrOk;
 	}
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TBackupDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {

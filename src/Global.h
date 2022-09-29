@@ -1667,7 +1667,7 @@ UnicodeString get_NextSameName(TStringList *lst, int idx, bool only_text = false
 void get_LibraryList(UnicodeString fnam, TStringList *lst, bool get_info = false);
 UnicodeString get_LibFile_if_root();
 
-UnicodeString get_SyncDstList(UnicodeString dnam, TStringList *lst, bool del_sw = false, UnicodeString ex_dnam = EmptyStr);
+UnicodeString get_SyncDirList(UnicodeString dnam, TStringList *lst, bool del_sw = false, bool syn_sw = true);
 bool has_SyncDir(UnicodeString dnam, bool del_sw = false);
 UnicodeString is_SyncDir(UnicodeString dnam1, UnicodeString dnam2);
 

@@ -2426,7 +2426,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall SttBarWarnUstr(unsigned id);
 
 	void __fastcall DeleteSelFiles(TStringList *lst, bool use_sync, UnicodeString inf_str = EmptyStr);
-	void __fastcall DeleteFileP(file_rec *fp, bool use_sync, UnicodeString inf_str = EmptyStr);
+	void __fastcall DeleteFileP(file_rec *fp, bool use_sync);
 
 	bool __fastcall UnpackCopyCore(UnicodeString anam, UnicodeString snam, UnicodeString files, UnicodeString rnam,
 						UnicodeString dst_dir, TStringList *f_lst, TStringList *d_lst);

@@ -454,8 +454,10 @@ void __fastcall TUserModule::SetUsrPopupMenu(TForm *fp)
 		}
 		else if (class_is_ComboBox(cp)) {
 			TComboBox *bp = (TComboBox*)cp;
-			if (bp->Style==csDropDown) bp->PopupMenu = EditPopupMenuC;
-			if (bp->PopupMenu) bp->OnContextPopup = ComboBoxContextPopup;
+			if (bp->Tag != CBTAG_HAS_POP) {
+				if (bp->Style==csDropDown) bp->PopupMenu = EditPopupMenuC;
+				if (bp->PopupMenu) bp->OnContextPopup = ComboBoxContextPopup;
+			}
 		}
 	}
 }

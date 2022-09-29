@@ -4065,16 +4065,17 @@ UnicodeString get_LibFile_if_root()
 //同期対象リストを取得
 //  戻り値: オプション文字列(O,D)
 //---------------------------------------------------------------------------
-UnicodeString get_SyncDstList(
+UnicodeString get_SyncDirList(
 	UnicodeString dnam,		//ディレクトリ名
-	TStringList *lst,
+	TStringList *lst,		//[o] 同期対象リスト
 	bool del_sw, 			//同期削除			(default = false)
-	UnicodeString ex_dnam)	//除外ディレクトリ	(default = EmptyStr)
+	bool syn_sw)			//同期有効			(default = true)
 {
 	dnam = IncludeTrailingPathDelimiter(dnam);
 
 	lst->Clear();
 	lst->Add(dnam);
+	if (!syn_sw) return EmptyStr;
 
 	UnicodeString opt;
 	for (int i=0; i<SyncDirList->Count; i++) {
@@ -4101,7 +4102,7 @@ UnicodeString get_SyncDstList(
 		opt = syn_lst[2];
 		for (int j=3; j<syn_lst.Length; j++) {
 			UnicodeString pnam = syn_lst[j] + snam;
-			if (!SameText(dnam, pnam) && !SameText(ex_dnam, pnam) && dir_exists(pnam)) lst->Add(pnam);
+			if (!SameText(dnam, pnam) && dir_exists(pnam)) lst->Add(pnam);
 		}
 		break;
 	}
@@ -4117,7 +4118,7 @@ bool has_SyncDir(
 	bool del_sw)			//同期削除	(default = false)
 {
 	std::unique_ptr<TStringList> d_lst(new TStringList());
-	get_SyncDstList(dnam, d_lst.get(), del_sw);
+	get_SyncDirList(dnam, d_lst.get(), del_sw);
 	return (d_lst->Count>1);
 }
 
@@ -8312,7 +8313,7 @@ void GetFileInfList(
 
 				//同期先
 				std::unique_ptr<TStringList> syn_lst(new TStringList());
-				get_SyncDstList(fp->is_up? fp->p_name : fp->f_name, syn_lst.get());
+				get_SyncDirList(fp->is_up? fp->p_name : fp->f_name, syn_lst.get());
 				if (syn_lst->Count>1) {
 					i_list->Add(EmptyStr);
 					for (int i=1; i<syn_lst->Count; i++) {
@@ -13555,8 +13556,11 @@ void StartLog(
 		LogBufList->Add(EmptyStr);
 	}
 	else {
-		//前が空行でなければ、空行を挿入
-		if (LogBufList->Count>0 && !LogBufList->Strings[LogBufList->Count - 1].IsEmpty()) LogBufList->Add(EmptyStr);
+		//前が空行でなければ、空行を挿入(開始行は除く)
+		if (LogBufList->Count>0) {
+			UnicodeString s1 = LogBufList->Strings[LogBufList->Count - 1];
+			if (!s1.IsEmpty() && (s1.Pos(':')!=5 || !ContainsStr(s1, "開始"))) LogBufList->Add(EmptyStr);
+		}
 		//開始表示
 		UnicodeString s;
 		if (task_no>=0) s.sprintf(_T("%u>"), task_no + 1); else s = ">>";

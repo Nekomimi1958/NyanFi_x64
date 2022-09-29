@@ -3701,7 +3701,7 @@ void __fastcall TNyanFiForm::WmDropped(TMessage &msg)
 				cmd.sprintf(_T("%s"), (DroppedMode==DROPEFFECT_MOVE)? _T("MOV") : _T("CPY"));
 				UnicodeString cnam = GetCurPathStr(DroppedTag);
 				std::unique_ptr<TStringList> dir_lst(new TStringList());
-				if (USAME_TS(cmd, "CPY")) get_SyncDstList(cnam, dir_lst.get()); else dir_lst->Add(cnam);
+				get_SyncDirList(cnam, dir_lst.get(), false, USAME_TS(cmd, "CPY"));
 				for (int i=0; i<dir_lst->Count; i++) {
 					TaskConfig  *cp = NULL;
 					TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
@@ -3716,6 +3716,7 @@ void __fastcall TNyanFiForm::WmDropped(TMessage &msg)
 					cp->CmdStr	 = TaskCmdList->Values[cmd];
 					cp->DistPath = dnam;
 					cp->InfStr.sprintf(_T("DROP ---> %s"), dnam.c_str());
+					if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
 					ActivateTask(tp, cp);
 				}
 			}
@@ -9737,10 +9738,7 @@ void __fastcall TNyanFiForm::DeleteSelFiles(
 		if (inf_str.IsEmpty()) inf_str = dnam;
 
 		std::unique_ptr<TStringList> dir_lst(new TStringList());
-		if (use_sync)
-			get_SyncDstList(dnam, dir_lst.get(), true);
-		else
-			dir_lst->Add(dnam);
+		get_SyncDirList(dnam, dir_lst.get(), true, use_sync);
 
 		for (int i=0; i<dir_lst->Count; i++) {
 			std::unique_ptr<TStringList> t_buf(new TStringList());
@@ -9762,6 +9760,7 @@ void __fastcall TNyanFiForm::DeleteSelFiles(
 				cp->CmdStr	 = TaskCmdList->Values[cmd];
 				cp->DistPath = dnam;
 				cp->InfStr	 = inf_str;
+				if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
 				ActivateTask(tp, cp);
 			}
 		}
@@ -9771,29 +9770,22 @@ void __fastcall TNyanFiForm::DeleteSelFiles(
 //指定ファイルを削除
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::DeleteFileP(
-	file_rec *fp,
-	bool use_sync,
-	UnicodeString inf_str)		//	(default = EmptyStr);
+	file_rec *fp, bool use_sync)
 {
 	if (!fp || fp->is_dummy || fp->f_name.IsEmpty()) return;
 
 	UnicodeString cmd  = "DEL";
-
 	UnicodeString dnam = GetCurPathStr();
-	if (inf_str.IsEmpty()) inf_str = dnam;
 
 	std::unique_ptr<TStringList> dir_lst(new TStringList());
-	if (use_sync)
-		get_SyncDstList(dnam, dir_lst.get(), true);
-	else
-		dir_lst->Add(dnam);
+	get_SyncDirList(dnam, dir_lst.get(), true, use_sync);
 
 	for (int i=0; i<dir_lst->Count; i++) {
 		UnicodeString tprm;
 		tprm.sprintf(_T("%s\t%s"),
 				cmd.c_str(), (fp->is_dir? IncludeTrailingPathDelimiter(fp->f_name) : fp->f_name).c_str());
 
-		if (i>0) {
+		if (i>0) {	//同期削除
 			tprm = ReplaceText(tprm, "\t" + dnam, "\t" + dir_lst->Strings[i]);
 			if (!file_exists(ExcludeTrailingPathDelimiter(get_post_tab(tprm)))) continue;
 		}
@@ -9804,7 +9796,8 @@ void __fastcall TNyanFiForm::DeleteFileP(
 			cp->TaskList->Add(tprm);
 			cp->CmdStr	 = TaskCmdList->Values[cmd];
 			cp->DistPath = dnam;
-			cp->InfStr	 = inf_str;
+			cp->InfStr	 = dir_lst->Strings[i];
+			if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
 			ActivateTask(tp, cp);
 		}
 	}
@@ -26957,10 +26950,14 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 			std::unique_ptr<TStringList> tsk_lst(new TStringList());
 			std::unique_ptr<TStringList> dst_lst(new TStringList());
 			UnicodeString syn_opt;
-			if (IsCurFList() && IsOppFList())
-			 	syn_opt = get_SyncDstList(dst_dir, dst_lst.get(), false, src_dir);
-			else
+			if (IsCurFList() && IsOppFList()) {
+			 	syn_opt = get_SyncDirList(dst_dir, dst_lst.get());
+				int s_idx = dst_lst->IndexOf(src_dir);
+				if (s_idx>0) dst_lst->Delete(s_idx);
+			}
+			else {
 				dst_lst->Add(dst_dir);
+			}
 
 			UnicodeString cmd = "CPY";
 			UnicodeString tprm;
@@ -27038,6 +27035,8 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 					cp->DistPath = dnam;
 					cp->InfStr	 = msg.sprintf(_T("%s ---> %s"),
 									(CurStt->is_Work? ExtractFileName(WorkListName) : src_dir).c_str(), dnam.c_str());
+					if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
+
 					//日付条件
 					if (flt_cnd>0) {
 						cp->FilterMode = flt_cnd;
@@ -27833,31 +27832,29 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 		UnicodeString cur_path = CurPath[CurListTag];
 		UnicodeString opp_path = CurPath[OppListTag];
 
-		UnicodeString inf_str;
-		inf_str.cat_sprintf(_T("%s ---> %s"), cur_path.c_str(), opp_path.c_str());
-
 		//パラメータ指定で直ちに実行
 		if (!ActionParam.IsEmpty()) {
 			int idx = -1;
-			for (int i=0; i<BakSetupList->Count; i++)
+			for (int i=0; i<BakSetupList->Count; i++) {
 				if (SameText(ActionParam, BakSetupList->Names[i])) { idx = i; break; }
+			}
 			if (idx==-1) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("バックアップ設定")));
 			TStringDynArray set_buf = get_csv_array(BakSetupList->ValueFromIndex[idx], 7, true);
+
+			std::unique_ptr<TStringList> dst_lst(new TStringList());
+			get_SyncDirList(opp_path, dst_lst.get(), false, equal_1(set_buf[5]));
 
 			bool sure_bak = (ExeCmdsBusy && XCMD_MsgOff)? false : IniFile->ReadBoolGen(_T("BackupSureStart"), true);
 			if (sure_bak) {
 				UnicodeString msg = "バックアップを開始しますか?\r\n\r\n";
 				msg.cat_sprintf(_T("バックアップ元: %s\r\n"), cur_path.c_str());
 				msg.cat_sprintf(_T("バックアップ先: %s\r\n"), opp_path.c_str());
+				for (int i=1; i<dst_lst->Count; i++) {
+					msg.cat_sprintf(_T("同期先%u: %s\r\n"), i, dst_lst->Strings[i].c_str());
+				}
 				msg.cat_sprintf(_T("設定: %s"), ActionParam.c_str());
 				if (!msgbox_Sure(msg, true, true)) SkipAbort();
 			}
-
-			std::unique_ptr<TStringList> dst_lst(new TStringList());
-			if (equal_1(set_buf[5]))
-				get_SyncDstList(opp_path, dst_lst.get());
-			else
-				dst_lst->Add(opp_path);
 
 			TDateTime flt_dt;
 			int flt_cnd = get_DateCond(set_buf[6], flt_dt);
@@ -27874,7 +27871,7 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 				cp->CopyFmt  = AutoRenFmt;
 				cp->CmdStr	 = "バックアップ";
 				cp->DistPath = dnam;
-				cp->InfStr	 = inf_str.Insert(ActionParam + ": ", 1);
+				cp->InfStr.sprintf(_T("%s: %s ---> %s"), ActionParam.c_str(), cur_path.c_str(), dnam.c_str());
 
 				//日付条件
 				if (flt_cnd>0) {
@@ -27883,6 +27880,8 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 					cp->InfStr.cat_sprintf(_T(" (%s%s)"),
 								UnicodeString("<=>").SubString(flt_cnd, 1).c_str(), format_Date(flt_dt).c_str());
 				}
+
+				if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
 
 				cp->Bakup_inc_mask = set_buf[0];
 				cp->Bakup_exc_mask = set_buf[1];
@@ -27903,7 +27902,8 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 				if (flt_cnd==-1) UserAbort(USTR_IllegalDtCond);
 
 				std::unique_ptr<TStringList> dst_lst(new TStringList());
-				if (BackupDlg->SyncCheckBox->Checked) get_SyncDstList(opp_path, dst_lst.get()); else dst_lst->Add(opp_path);
+				get_SyncDirList(opp_path, dst_lst.get(), false, BackupDlg->SyncCheckBox->Checked);
+
 				for (int i=0; i<dst_lst->Count; i++) {
 					UnicodeString dnam = dst_lst->Strings[i];
 					if (i>0 && SameText(cur_path, dnam)) continue;
@@ -27915,7 +27915,7 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 					cp->CopyFmt  = AutoRenFmt;
 					cp->CmdStr	 = "バックアップ";
 					cp->DistPath = dnam;
-					cp->InfStr	 = inf_str;
+					cp->InfStr.sprintf(_T("%s ---> %s"), cur_path.c_str(), dnam.c_str());
 
 					//日付条件
 					if (flt_cnd>0) {
@@ -27924,6 +27924,8 @@ void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
 						cp->InfStr.cat_sprintf(_T(" (%s%s)"),
 									UnicodeString("<=>").SubString(flt_cnd, 1).c_str(), format_Date(flt_dt).c_str());
 					}
+
+					if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
 
 					cp->Bakup_inc_mask = BackupDlg->BakIncMaskComboBox->Text;
 					cp->Bakup_exc_mask = BackupDlg->BakExcMaskComboBox->Text;

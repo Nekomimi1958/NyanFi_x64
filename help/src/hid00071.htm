@@ -73,21 +73,22 @@
     </dd>
 
     <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 同期バックアップ有効</dt>
-    <dd>バックアップ先が同期ディレクトリとして登録されている場合、他のディレクトリにも同期してバックアップを行います(<a href="hid00005.htm#RegSyncDlg">→ RegSyncDlg</a>)。<br>
-      <br>
+    <dd>バックアップ先が同期ディレクトリとして登録されている場合、他のディレクトリにも同期してバックアップを行います(<a href="hid00005.htm#RegSyncDlg">→ RegSyncDlg</a>)。チェックボックスの右側には、バックアップ先に対する同期ディレクトリの有無が表示されます。<br>
+      なお、他の同期ディレクトリに対するミラーリング時の削除処理は、<a href="hid00074.htm">同期コピーの設定</a> - 「<b>同期削除</b>」の設定にかかわらず行われます。<br>
     </dd>
 
     <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> 開始確認</dt>
     <dd>
       <span class="btn_frame">開始</span>ボタンを押した時に、確認メッセージが出ます。<br>
-      なお、<b>Backup</b>_設定名 によってダイアログ非表示で実行したときにも、確認メッセージが出ます(<a href="hid00063.htm#MsgOff">MsgOff</a>
+      なお、<b>Backup</b><span class="pram_text">_設定名</span> によってダイアログ非表示で実行したときにも、確認メッセージが出ます(<a href="hid00063.htm#MsgOff">MsgOff</a>
       補助コマンドで確認メッセージの抑止可能)。<br>
       <br>
     </dd>
 
     <dt class="no_bg_indent1">設定 <img src="combobox.png" alt=""></dt>
     <dd>
-      現在の設定内容に名前を付けて、<span class="btn_frame">保存</span>ボタンで保存できます。<br>
+      現在の設定内容に名前を付けて、<span
+        class="btn_frame">保存</span>ボタンで保存できます。不要な設定項目の削除は、コンボボックスの右クリックメニュー「<b>この項目を削除</b>」で行ってください。<br>
       この名前を <b>Backup</b> コマンドのパラメータに指定すると、ダイアログを出さずに直ちにバックアップを実行することも可能です。<br>
       なお、保存されるのはバックアップ方法についてだけで、バックアップ元やバックアップ先は保存されません。<br>
       バックアップ元とバックアップ先は常に、<b>Backup</b> コマンドを実行したときのカレントパスと反対パスになります。<br>

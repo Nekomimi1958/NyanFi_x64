@@ -27,9 +27,10 @@ void __fastcall TRenameDlg::FormCreate(TObject *Sender)
 	org_SttBar1WndProc	   = StatusBar1->WindowProc;
 	StatusBar1->WindowProc = SttBar1WndProc;
 
+	SerFmtComboBox->Tag  = CBTAG_HAS_POP;
 	UserModule->SetUsrPopupMenu(this);
 
-	RenameEdit->Tag 	 = EDTAG_REF_CDIR;
+	RenameEdit->Tag      = EDTAG_REF_CDIR;
 	SrcStrComboBox->Tag  = CBTAG_HISTORY;
 	RepStrComboBox->Tag  = CBTAG_HISTORY;
 	Mp3FmtComboBox->Tag  = CBTAG_HISTORY;
@@ -1280,22 +1281,25 @@ void __fastcall TRenameDlg::Fmt_XT_BtnClick(TObject *Sender)
 void __fastcall TRenameDlg::SaveSerFmtActionExecute(TObject *Sender)
 {
 	TComboBox *cp = SerFmtComboBox;
+	UnicodeString snam = cp->Text;
 	UnicodeString lbuf;
 	lbuf.sprintf(_T("%s=%s,%s,%s,%s"),
-		cp->Text.c_str(),
+		snam.c_str(),
 		make_csv_str(PreNameEdit->Text).c_str(), make_csv_str(SerNoEdit->Text).c_str(),
 		make_csv_str(IncNoEdit->Text).c_str(),	 make_csv_str(PostNameEdit->Text).c_str());
 
 	if (FExtChanged && ExtEdit->Enabled && !ExtEdit->Text.IsEmpty())
 		lbuf.cat_sprintf(_T(",%s"), make_csv_str(ExtEdit->Text).c_str());
 
-	int idx = cp->Items->IndexOf(cp->Text);
+	int idx = cp->Items->IndexOf(snam);
 	if (idx!=-1) {
 		SerFormatList->Strings[idx] = lbuf;
+		cp->Items->Strings[idx] = snam;
+		cp->ItemIndex = idx;
 	}
 	else {
 		SerFormatList->Insert(0, lbuf);
-		cp->Items->Insert(0, cp->Text);
+		cp->Items->Insert(0, snam);
 	}
 }
 //---------------------------------------------------------------------------
@@ -1356,8 +1360,8 @@ void __fastcall TRenameDlg::DelItemActionExecute(TObject *Sender)
 void __fastcall TRenameDlg::DelItemActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled =
-		IsSerialSheet()? !SerFmtComboBox->Text.IsEmpty() :
-		   IsMp3Sheet()? !Mp3FmtComboBox->Text.IsEmpty() : false;
+		IsSerialSheet()? (SerFmtComboBox->Items->IndexOf(SerFmtComboBox->Text) != -1) :
+		   IsMp3Sheet()? (Mp3FmtComboBox->Items->IndexOf(Mp3FmtComboBox->Text) != -1) : false;
 }
 
 //---------------------------------------------------------------------------
