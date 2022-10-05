@@ -2073,6 +2073,7 @@ void InitializeGlobal()
 			"V:F=FindText\n"
 			"V:E=FileEdit\n"
 			"V:Q=Close\n"
+			"V:Ctrl+C=ClipCopy\n"
 			"I:C=ClipCopy\n"
 			"I:D=Delete\n"
 			"I:E=FileEdit\n"

@@ -495,9 +495,8 @@ file_rec *XCMD_cfp;
 UnicodeString XCMD_cur_f_name, XCMD_cur_r_name;
 UnicodeString XCMD_cur_fext, XCMD_cur_bnam, XCMD_cur_path;
 bool XCMD_is_dir, XCMD_is_file, XCMD_selected, XCMD_is_virtual, XCMD_is_img, XCMD_is_log;
-bool XCMD_is_bin, XCMD_is_htm;
-bool XCMD_matched, XCMD_found, XCMD_marked;
-bool XCMD_is_top, XCMD_is_end, XCMD_is_sel;
+bool XCMD_matched, XCMD_marked;
+bool XCMD_is_top, XCMD_is_end;
 bool XCMD_fromGrep;
 TModalResult XCMD_box_res;
 
@@ -741,40 +740,27 @@ file_rec *XCMD_set_cfp(UnicodeString fnam, UnicodeString cnam, file_rec *cfp)
 	XCMD_set_Var(_T("FileTime"),	format_DateTime(XCMD_f_time));
 	XCMD_set_Var(_T("FileTimeF"),	FormatDateTime(TimeStampFmt, XCMD_f_time));
 
-	XCMD_is_bin = XCMD_is_htm = false;
-	XCMD_found  = XCMD_marked = false;
-	XCMD_is_top = XCMD_is_end = XCMD_is_sel = false;
+	XCMD_marked = false;
+	XCMD_is_top = XCMD_is_end = false;
 	TListBox *lp  = FileListBox[CurListTag];
 
 	switch (ScrMode) {
 	case SCMD_FLIST:	//ファイラー
 		XCMD_is_top = (lp->ItemIndex == 0);
 		XCMD_is_end = (lp->ItemIndex == lp->Count-1);
-		XCMD_is_sel = (GetSelCount(GetCurList())>0);
-		if (XCMD_view_log)
-			XCMD_is_bin = false;
-		else
-			XCMD_is_bin = !XCMD_is_dir && (XCMD_is_virtual? test_NonTxtExt(XCMD_cur_fext) : !is_TextFile(XCMD_cur_f_name));
-		XCMD_found	= CurStt->is_Find;
 		XCMD_marked = IniFile->IsMarked(XCMD_cur_r_name);
 		break;
 	case SCMD_TVIEW:	//テキストビュアー
 		if (TxtViewer->isReady) {
 			XCMD_is_top	= (TxtViewer->CurPos.y == 0);
 			XCMD_is_end	= (TxtViewer->CurPos.y == TxtViewer->MaxDispLine-1);
-			XCMD_is_sel	= (TxtViewer->SelStart != TxtViewer->SelEnd);
-			XCMD_is_bin	= TxtViewer->isBinary;
-			XCMD_is_htm	= TxtViewer->isHtm2Txt;
 			XCMD_is_log = TxtViewer->isLog;
-			XCMD_found	= TxtViewer->LastFound;
 			XCMD_marked = TxtViewer->IsMarked();
 		}
 		break;
 	case SCMD_IVIEW:	//イメージビュアー
 		XCMD_is_top	= (v_idx == 0);
 		XCMD_is_end	= (v_idx == ViewFileList->Count-1);
-		XCMD_is_sel	= (GetSelCount(GetCurList())>0);
-		XCMD_is_bin = true;
 		XCMD_marked	= IniFile->IsMarked(ViewFileName);
 		break;
 	}
@@ -1078,7 +1064,14 @@ bool XCMD_Control()
 			case  3: cnd_res = XCMD_is_dir;								break;
 			case  4: cnd_res = XCMD_is_file;							break;
 			case  5: cnd_res = test_ArcExt(XCMD_cur_fext);				break;
-			case  6: cnd_res = XCMD_is_sel;								break;
+
+			case  6:	//IfSel
+				if (ScrMode==SCMD_TVIEW)
+					cnd_res	= TxtViewer->isReady && TxtViewer->SelStart!=TxtViewer->SelEnd;
+				else
+					cnd_res = (GetSelCount(GetCurList())>0);
+				break;
+
 			case  7: cnd_res = XCMD_is_top;								break;
 			case  8: cnd_res = XCMD_is_end;								break;
 			case  9: cnd_res = (CurListTag==0);							break;
@@ -1089,7 +1082,12 @@ bool XCMD_Control()
 			case 14: cnd_res = (get_drive_type(XCMD_cur_path)==DRIVE_REMOVABLE);	break;
 			case 15: cnd_res = CurStt->is_Arc;							break;
 			case 16: cnd_res = CurStt->is_Work;							break;
-			case 17: cnd_res = XCMD_found;								break;
+
+			case 17:	//IfFound
+			    cnd_res	= (ScrMode==SCMD_FLIST && CurStt->is_Find)
+							|| (ScrMode==SCMD_TVIEW && TxtViewer->LastFound);
+				break;
+
 			case 18: cnd_res = (XCMD_box_res==mrYes);					break;
 			case 19: cnd_res = (XCMD_box_res==mrNo);					break;
 			case 20: cnd_res = (XCMD_box_res==mrCancel);				break;
@@ -1097,9 +1095,32 @@ bool XCMD_Control()
 			case 22: cnd_res = !PathMask[CurListTag].IsEmpty();			break;
 			case 23: cnd_res = (get_BusyTaskCount()>0);					break;
 			case 24: cnd_res = RsvSuspended;							break;
-			case 25: cnd_res = XCMD_is_bin;								break;
+
+			case 25:	//IfBinary
+				switch (ScrMode) {
+				case SCMD_FLIST:
+					if (XCMD_view_log)
+						cnd_res = false;
+					else
+						cnd_res = !XCMD_is_dir && (XCMD_is_virtual? test_NonTxtExt(XCMD_cur_fext) : !is_TextFile(XCMD_cur_f_name));
+					break;
+				case SCMD_TVIEW:
+					cnd_res	= TxtViewer->isReady && TxtViewer->isBinary;
+					break;
+				case SCMD_IVIEW:
+					cnd_res = true;
+					break;
+				default:
+					cnd_res = false;
+				}
+				break;
+
 			case 26: cnd_res = XCMD_is_log;								break;
-			case 27: cnd_res = XCMD_is_htm;								break;
+
+			case 27:	//IfHtmTxt
+				cnd_res = (ScrMode==SCMD_TVIEW && TxtViewer->isReady && TxtViewer->isHtm2Txt);
+				break;
+
 			case 28: cnd_res = XCMD_marked;								break;
 			case 29: cnd_res = XCMD_is_img;								break;
 			case 30: cnd_res = is_KeyDown(VK_SHIFT);					break;
@@ -1112,14 +1133,16 @@ bool XCMD_Control()
 			case 37: cnd_res = CurStt->is_FTP;							break;
 			case 38: cnd_res = CurStt->is_ADS;							break;
 			case 39: cnd_res = !get_GitTopPath(XCMD_cur_path).IsEmpty();	break;
-			case 40:
+
+			case 40:	//IfTimeOut
 				if (XCMD_tim_cnt>0)
-					cnd_res = ((int)(GetTickCount()-XCMD_start_cnt) > XCMD_tim_cnt);
+					cnd_res = ((int)(GetTickCount() - XCMD_start_cnt) > XCMD_tim_cnt);
 				else if (XCMD_tim_t>TDateTime(0))
 					cnd_res = (CompareDateTime(Now(), XCMD_tim_t)==GreaterThanValue);
 				break;
 
-			default: UserAbort(USTR_SyntaxError);
+			default:
+				UserAbort(USTR_SyntaxError);
 			}
 
 			//否定
