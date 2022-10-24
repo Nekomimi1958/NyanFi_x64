@@ -10083,7 +10083,7 @@ void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
 				FinfSkipped = true;	//未処理のキー入力がある場合スキップ
 			}
 			else {
-				if (fp->is_up) {	//git status に対するの抑止
+				if (fp->is_up) {	//git status に対する抑止
 					SetDirWatch(false);
 					GetFileInfList(fp, force);
 					SetDirWatch(true);
@@ -10549,13 +10549,22 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 
 		TColor bg_name = IniFile->IsMarked(fp->r_name)? col_bgMark :
 							  (d_fp && d_fp->is_dummy)? col_DifferN : col_None;
-		if (bg_name!=col_None) {
+		bool is_cs = d_fp && !SameStr(fp->n_name, d_fp->n_name);
+		if (bg_name!=col_None || is_cs) {
 			TRect mrc  = tmp_rc;
 			mrc.Left   = x_base;
 			mrc.Right  = (HideSizeTime? lst_stt->lxp_right : lst_stt->lxp_size) - w_half;
-			mrc.Bottom = yp + tmp_cv->TextHeight("Q");
-			tmp_cv->Brush->Color = bg_name;	//マーク / 相違箇所
-			tmp_cv->FillRect(mrc);
+			//マーク / 相違
+			if (bg_name!=col_None) {
+				tmp_cv->Brush->Color = bg_name;
+				tmp_cv->FillRect(mrc);
+			}
+			//ファイル名の大小文字相違
+			if (is_cs) {
+				mrc.Top = mrc.Bottom - ScaledInt(4, this);
+				tmp_cv->Brush->Color = col_Differ;
+				tmp_cv->FillRect(mrc);
+			}
 			tmp_cv->Brush->Style = bsClear;
 		}
 
@@ -13432,7 +13441,14 @@ void __fastcall TNyanFiForm::CmdHistoryActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::CommandPromptActionExecute(TObject *Sender)
 {
-	if (!Execute_ex("cmd.exe", EmptyStr, CurPath[CurListTag], TEST_ActParam("RA")? "A" : "")) SetActionAbort(USTR_FaildExec);
+	if (TEST_ActParam("RC")) {
+		UnicodeString prm;
+		prm.sprintf(_T("/k cd /d \"%s\""), ExcludeTrailingPathDelimiter(CurPath[CurListTag]).c_str());
+		if (!Execute_ex("cmd.exe", prm, EmptyStr, "A")) SetActionAbort(USTR_FaildExec);
+	}
+	else if (!Execute_ex("cmd.exe", EmptyStr, CurPath[CurListTag], TEST_ActParam("RA")? "A" : "")) {
+		SetActionAbort(USTR_FaildExec);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -13462,23 +13478,26 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 	else
 		pnam1 = OppStt->is_Arc? OppStt->arc_Name : CurPath[OppListTag];
 
+	bool cs_sw = TEST_ActParam("CS");
+
 	//ダイアログを出さず、名前のみ比較
 	if (TEST_ActParam("NC")) {
-		StartLog(msg.sprintf(_T("比較開始  %s  |  %s"), pnam0.c_str(), pnam1.c_str()));
+		StartLog(msg.sprintf(_T("比較開始  %s\t%s"), pnam0.c_str(), pnam1.c_str()));
 		std::unique_ptr<TStringList> log_buf(new TStringList());
 		bool cmp_dir = IniFile->ReadBoolGen(_T("CompDir"));
-		int hit_cnt = 0;
+		int hit_cnt = 0, itm_cnt = 0;
 		for (int c_i=0; c_i<c_lst->Count; c_i++) {
 			file_rec *cfp = (file_rec*)c_lst->Objects[c_i];
 			if (!is_selectable(cfp)) continue;
 			cfp->selected = false;
 			if (cfp->is_dir && !cmp_dir) continue;
+			itm_cnt++;
 			for (int o_i=0; o_i<o_lst->Count; o_i++) {
 				file_rec *ofp = (file_rec*)o_lst->Objects[o_i];
 				if (!is_selectable(ofp)) continue;
 				if (ofp->is_dir && !cmp_dir) continue;
 				if (cfp->is_dir != ofp->is_dir) continue;
-				if (SameText(cfp->n_name, ofp->n_name)) {
+				if ((cs_sw && SameStr(cfp->n_name, ofp->n_name)) || (!cs_sw && SameText(cfp->n_name, ofp->n_name))) {
 					cfp->selected = true;
 					if (top_fnam.IsEmpty()) top_fnam = cfp->f_name;
 					hit_cnt++;
@@ -13489,7 +13508,7 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 		RepaintList(CurListTag);
 		IndexOfFileList(top_fnam);
 		AddLogStrings(log_buf.get());
-		AddLog(msg.sprintf(_T("比較終了  HIT: %u"), hit_cnt));
+		AddLog(msg.sprintf(_T("比較終了  HIT: %u/%u"), hit_cnt, itm_cnt));
 	}
 	//ダイアログで条件を指定して比較
 	else {
@@ -13505,6 +13524,7 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 		}
 
 		if (!FileCompDlg) FileCompDlg = new TFileCompDlg(this);	//初回に動的作成
+		FileCompDlg->Caption = cs_sw? "同名ファイルの比較 - 大文字・小文字を区別" : "同名ファイルの比較";
 		FileCompDlg->AllDirHasSize = alldir_has_size;
 		FileCompDlg->SelMaskCheckBox->Enabled = (IsCurFList() || CurStt->is_Arc);
 
@@ -13571,13 +13591,13 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 				}
 
 				std::unique_ptr<TStringList> log_buf(new TStringList());
-				int hit_cnt = 0, err_cnt = 0;
+				int hit_cnt = 0, itm_cnt = 0, err_cnt = 0;
 				for (int c_i=0; c_i<c_lst->Count; c_i++) {
 					file_rec *cfp = (file_rec*)c_lst->Objects[c_i];
 					if (!is_selectable(cfp)) continue;
 					if (cfp->is_dir && !cmp_dir) continue;
-
 					bool c_is_arc = !cfp->is_dir && test_ArcExt(cfp->f_ext);
+					itm_cnt++;
 					for (int o_i=0; o_i<o_lst->Count; o_i++) {
 						file_rec *ofp = (file_rec*)o_lst->Objects[o_i];
 						if (!is_selectable(ofp)) continue;
@@ -13593,7 +13613,8 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 						//同名
 						UnicodeString c_name = (c_is_arc && ofp->is_dir)? cfp->b_name : cfp->n_name;
 						UnicodeString o_name = (o_is_arc && cfp->is_dir)? ofp->b_name : ofp->n_name;
-						if (SameText(c_name, o_name)) {
+
+						if ((cs_sw && SameStr(c_name, o_name)) || (!cs_sw && SameText(c_name, o_name))) {
 							msg = make_LogHdr("COMP", cfp->f_name);
 							//タイムスタンプ
 							bool t_flag;
@@ -13716,9 +13737,7 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 				CurWorking = false;
 				SttWorkMsg(EmptyStr, CurListTag);
 				AddLogStrings(log_buf.get());
-				msg.sprintf(_T("比較終了  HIT: %u"), hit_cnt);
-				if (err_cnt>0) msg.cat_sprintf(_T("  ERR:%u"), err_cnt);
-				AddLog(msg, true);
+				msg.sprintf(_T("比較終了  HIT: %u/%u"), hit_cnt, itm_cnt);
 
 				//結果を反転
 				if (sel_rev) {
@@ -13738,6 +13757,9 @@ void __fastcall TNyanFiForm::CompareDlgActionExecute(TObject *Sender)
 						}
 					}
 				}
+
+				if (err_cnt>0) msg.cat_sprintf(_T("  ERR:%u"), err_cnt);
+				AddLog(msg, true);
 			}
 			catch (EAbort &e) {
 				SetActionAbort(e.Message);
@@ -15458,7 +15480,8 @@ void __fastcall TNyanFiForm::DiffDirActionExecute(TObject *Sender)
 		UnicodeString src_mask;
 		UnicodeString exc_mask;
 		UnicodeString exc_dir;
-		bool		  sub_sw;
+		bool sub_sw;
+		bool cs_sw = TEST_ActParam("CS");
 
 		if (TEST_ActParam("AL")) {
 			src_mask = "*.*";
@@ -15474,6 +15497,7 @@ void __fastcall TNyanFiForm::DiffDirActionExecute(TObject *Sender)
 		}
 		else {
 			if (!DiffDirDlg) DiffDirDlg = new TDiffDirDlg(this);	//初回に動的作成
+			DiffDirDlg->Caption = cs_sw? "ディレクトリの比較 - 大文字・小文字を区別" : "ディレクトリの比較";
 			DiffDirDlg->SrcDirEdit->Text = CurPath[CurListTag];
 			DiffDirDlg->DstDirEdit->Text = CurPath[OppListTag];
 			if (DiffDirDlg->ShowModal()!=mrOk) SkipAbort();
@@ -15492,9 +15516,12 @@ void __fastcall TNyanFiForm::DiffDirActionExecute(TObject *Sender)
 		ShowMessageHint("　対象取得中...\n　しばらくお持ちください。", col_bgHint, false, true);
 		AddLog(msg.sprintf(_T("  対象マスク: %s"), src_mask.c_str()));
 		AddLog(msg.sprintf(_T("  除外マスク: %s"), exc_mask.c_str()));
-		msg = "  サブディレクトリも対象";
-		if (!exc_dir.IsEmpty()) msg.cat_sprintf(_T(" (除外マスク: %s)"), exc_dir.c_str());
-		AddLog(msg);
+		if (sub_sw) {
+			msg = "  サブディレクトリも対象";
+			if (!exc_dir.IsEmpty()) msg.cat_sprintf(_T(" (除外マスク: %s)"), exc_dir.c_str());
+			AddLog(msg);
+		}
+		if (cs_sw) AddLog("  大文字・小文字を区別");
 
 		//結果リストの初期化
 		TStringList *r_lst_c = ResultList[CurListTag];	clear_FileList(r_lst_c);
@@ -15611,7 +15638,8 @@ void __fastcall TNyanFiForm::DiffDirActionExecute(TObject *Sender)
 
 				if (cfp->is_dummy || ofp->is_dummy
 					|| !WithinPastMilliSeconds(cfp->f_time, ofp->f_time, TimeTolerance)
-					|| cfp->f_size!=ofp->f_size)
+					|| cfp->f_size!=ofp->f_size
+					|| (cs_sw && !SameStr(cfp->n_name, ofp->n_name)))
 				{
 					i++;
 				}
@@ -22733,7 +22761,14 @@ void __fastcall TNyanFiForm::PowerOffActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::PowerShellActionExecute(TObject *Sender)
 {
-	if (!Execute_ex("powershell.exe", EmptyStr, CurPath[CurListTag], TEST_ActParam("RA")? "A" : "")) SetActionAbort(USTR_FaildExec);
+	if (TEST_ActParam("RC")) {
+		UnicodeString prm;
+		prm.sprintf(_T("-NoExit -Command \"Set-Location -path '%s'\""), ExcludeTrailingPathDelimiter(CurPath[CurListTag]).c_str());
+		if (!Execute_ex("powershell.exe", prm, EmptyStr, "A")) SetActionAbort(USTR_FaildExec);
+	}
+	else if (!Execute_ex("powershell.exe", EmptyStr, CurPath[CurListTag], TEST_ActParam("RA")? "A" : "")) {
+		SetActionAbort(USTR_FaildExec);
+	}
 }
 
 //---------------------------------------------------------------------------

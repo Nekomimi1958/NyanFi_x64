@@ -6218,10 +6218,14 @@ void assign_FileListBox(
 	int idx,				//インデックス (default = -1)
 	UsrScrollPanel *sp)		//シンプルスクロールバー (default = NULL)
 {
-	if (lp->Style==lbVirtualOwnerDraw)
+	if (lp->Style==lbVirtualOwnerDraw) {
 		lp->Count = lst->Count;
-	else
+	}
+	else {
+		lp->LockDrawing();
 		lp->Items->Assign(lst);
+		lp->UnlockDrawing();
+	}
 
 	if (idx>=0) ListBoxSetIndex(lp, idx);
 

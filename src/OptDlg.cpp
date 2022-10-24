@@ -56,7 +56,6 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	SplashHint = new UsrHintWindow(this);
 	SplashHint->Font->Assign(HintFont);
 	SplashHint->ActivateHintEx(_T("\r\nオプション設定の準備中...\r\n"), 320, 240, Application->MainForm, col_bgHint);
-
 	cursor_HourGlass();
 
 	//入力欄にポップアップメニューを設定
@@ -1249,20 +1248,12 @@ void __fastcall TOptionDlg::SetKeyComboBox()
 	if (KeyKeyLabel) KeyKeyLabel->Caption = kmd.sprintf(_T("キー (%s)"), is_JpKeybd()? _T("JP") : _T("US"));
 	KeyboardLabel->Caption = kmd.sprintf(_T("(%s)"), (::GetKeyboardType(0)==7)? _T("JP") : _T("US"));
 
-	make_KeyList(KeyComboBox->Items);
-	make_KeyList(Key2ComboBox->Items);
-	Key2ComboBox->Items->Insert(0, EmptyStr);
+	assign_KeyList(KeyComboBox);
+	assign_KeyList(Key2ComboBox, true);
 	Key2ComboBox->Enabled = false;
 
-	UnicodeString k = HotKeyComboBox->Text;
-	make_KeyList(HotKeyComboBox->Items);
-	HotKeyComboBox->Items->Insert(0, EmptyStr);
-	if (!k.IsEmpty()) HotKeyComboBox->ItemIndex = HotKeyComboBox->Items->IndexOf(k);
-
-	k = AppKeyComboBox->Text;
-	make_KeyList(AppKeyComboBox->Items);
-	AppKeyComboBox->Items->Insert(0, EmptyStr);
-	if (!k.IsEmpty()) AppKeyComboBox->ItemIndex = AppKeyComboBox->Items->IndexOf(k);
+	assign_KeyList(HotKeyComboBox, true);
+	assign_KeyList(AppKeyComboBox, true);
 }
 
 //---------------------------------------------------------------------------

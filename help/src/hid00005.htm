@@ -411,14 +411,18 @@ NyanFi.exe -XCalculator_CB
       <a href="hid00063.htm">→ ExeCommands コマンド</a>
     </dd>
 
-    <dt id="CommandPrompt">CommandPrompt<span class="pram_text">[_RA]</span></dt>
+    <dt id="CommandPrompt">CommandPrompt<span class="pram_text">[_{RA|RC}]</span></dt>
     <dd>コマンドプロンプトを起動します。作業ディレクトリはカレントパスになります。<br>
-      パラメータに <b>RA</b> を指定すると、管理者として実行します。<br>
+      パラメータに <b>RA</b> を指定すると、管理者として実行します。作業ディレクトリはシステムのデフォルト(%windir%\system32)になります。<br>
+      パラメータに <b>RC</b> を指定すると、管理者として起動後、作業ディレクトリをカレントに移動します。<br>
+      <div class="spc_box note_text">
+        管理者として実行している <b>NyanFi</b> で <b>CommandPrompt</b> コマンドを用いると、コマンドプロンプトも管理者として実行されます。この場合、作業ディレクトリはカレントになります。<br>
+      </div>
       <a href="#PowerShell">→ PowerShell</a>　<a href="#WinTerminal">→ WinTerminal</a>　<a href="#ExeCommandLine">→
         ExeCommandLine</a>　<a href="#FileRun">→ FileRun</a>
     </dd>
 
-    <dt id="CompareDlg">CompareDlg<span class="pram_text">[_NC]</span></dt>
+    <dt id="CompareDlg">CompareDlg<span class="pram_text">[_CS][;NC]</span></dt>
     <dd>「<b>同名ファイルの比較</b>」ダイアログを開きます。<br>
       反対パスと比較して、「タイムスタンプ」、「サイズ」、「ハッシュ」、「ボリュームシリアル番号/ファイルID」の条件に合うカレントパスのファイルを選択します。<br>
       「ハッシュ値」の比較は、「サイズ」が「一致」したファイルに対してのみ行われます(先頭32KBを事前チェック、アーカイブ内ファイルは一時解凍)。<br>
@@ -435,6 +439,7 @@ NyanFi.exe -XCalculator_CB
         「<b>結果を反転</b>」をチェックしていると、比較結果の選択状態を反転します(「<b>ディレクトリも比較</b>」、「<b>反対側も選択</b>」を考慮)。<br>
         「<b>選択項目だけを残す</b>」をチェックしていると、結果の選択項目だけを残して他を隠します(<b>選択マスク</b>)。<br>
       </div>
+      パラメータに <b>CS</b> を指定すると、ファイル名の大文字・小文字を区別します。<br>
       パラメータに <b>NC</b> を指定すると、ダイアログを出さず、名前のみの比較を行います。<br>
       なお、タイムスタンプを比較する場合、<a href="hid00009.htm#Tolerance">→ オプション設定 - 一般 - タイムスタンプの許容誤差</a> で設定されている範囲内なら同じとみなされます。<br>
       <a href="#SelOnlyCur">→ SelOnlyCur</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#FindDuplDlg">→
@@ -1002,12 +1007,13 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
         href="#TrimTagData">→ TrimTagData</a>
     </dd>
 
-    <dt id="DiffDir">DiffDir<span class="pram_text">[_{AL|DL}]</span></dt>
+    <dt id="DiffDir">DiffDir<span class="pram_text">[_CS][;{AL|DL}]</span></dt>
     <dd>「<b>ディレクトリの比較</b>」ダイアログを開き、左右のディレクトリ内容を比較します。<br>
       「<b>対象マスク</b>」欄で対象とするファイルのマスクを、「<b>除外マスク</b>」欄で除外しいたファイルのマスクを指定できます。マスクは <b>;</b> (セミコロン)で区切って複数指定可能。<br>
       「<b>サブディレクトリも対象とする</b>」をチェックしていると、すべてのサブディレクトリのファイルも比較対象になります。<br>
       この場合、「<b>除外</b>」欄で除外したいディレクトリを指定できます。マスクは <b>;</b> (セミコロン)で区切って複数指定可能。<br>
       <div class="spc_box">
+        パラメータに <b>CS</b> を指定すると、ファイル名の大文字・小文字を区別します。<br>
         パラメータに <b>AL</b> を指定すると、ダイアログを開かずに直ちに比較を開始します。この場合、マスクは <b>*.*</b> で、除外マスク無し、サブディレクトリも対象として比較を行います。<br>
         また <b>DL</b> を指定すると、前回ダイアログで指定した条件で、ダイアログを開かずに直ちに比較を開始します。<br>
       </div>
@@ -1018,6 +1024,7 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
         実行後は左右ともに結果リストになります。表示されるのは、サイズまたは更新日時が異なる同名ファイルと、一方にしかないファイルです。<br>
         左右の項目数は同じになっていて、相違箇所が「<b>結果リストの相違箇所背景色</b>」で、更新日時の新しい方は「<b>結果リストの注目箇所背景色</b>」)で強調されます。存在しないファイルは
         「<b>無効な項目の文字色</b>」で表示され(サイズと更新日時は空欄)、存在する側の名前が「<b>結果リストの注目箇所背景色</b>」で強調されます。<br>
+        パラメータ <b>CS</b> 指定時、大文字・小文字が異なっているファイル名には、「<b>結果リストの相違箇所背景色</b>」で太い下線が表示されます。<br>
         ソートは左右とも場所(パス付きファイル名)の昇順で固定となり、左右のファイルの対応が常に保たれます。<br>
       </div>
       <div class="spc_box">
@@ -2767,9 +2774,13 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       <a href="#Reboot">→ Reboot</a>
     </dd>
 
-    <dt id="PowerShell">PowerShell<span class="pram_text">[_RA]</span></dt>
+    <dt id="PowerShell">PowerShell<span class="pram_text">[_{RA|RC}]</span></dt>
     <dd><b>PowerShell</b> を起動します。作業ディレクトリはカレントパスになります。<br>
-      パラメータに <b>RA</b> を指定すると、管理者として実行します。<br>
+      パラメータに <b>RA</b> を指定すると、管理者として実行します。作業ディレクトリはシステムのデフォルト(%windir%\system32)になります。<br>
+      パラメータに <b>RC</b> を指定すると、管理者として起動後、作業ディレクトリをカレントに移動します。<br>
+      <div class="spc_box note_text">
+        管理者として実行している <b>NyanFi</b> で <b>PowerShell</b> コマンドを用いると、PowerShell も管理者として実行されます。この場合、作業ディレクトリはカレントになります。<br>
+      </div>
       <a href="#CommandPrompt">→ CommandPrompt</a>　<a href="#WinTerminal">→ WinTerminal</a>　<a href="#ExeCommandLine">→
         ExeCommandLine</a>　<a href="#FileRun">→ FileRun</a>
     </dd>

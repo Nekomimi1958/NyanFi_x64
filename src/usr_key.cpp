@@ -14,26 +14,36 @@ int KeyboardMode = 0;	//0=自動認識/ 1=JP/ 2=US
 //---------------------------------------------------------------------------
 //キーリストの作成
 //---------------------------------------------------------------------------
-void make_KeyList(TStrings *lst)
+void make_KeyList(TStringList *lst)
 {
-	std::unique_ptr<TStringList> klst(new TStringList());
-
 	UnicodeString itmbuf;
-	for (int i=0; i<26; i++) klst->Add(itmbuf.sprintf(_T("%c"), 'A' + i));	//英字
-	for (int i=0; i<10; i++) klst->Add(itmbuf.sprintf(_T("%c"), '0' + i));	//数字
+	for (int i=0; i<26; i++) lst->Add(itmbuf.sprintf(_T("%c"), 'A' + i));	//英字
+	for (int i=0; i<10; i++) lst->Add(itmbuf.sprintf(_T("%c"), '0' + i));	//数字
 
-	for (int i=0; i<12; i++) klst->Add(itmbuf.sprintf(_T("F%u"), i + 1));	//Fキー
-	klst->Text += "Del\nIns\nBkSp\nLeft\nRight\nUp\nDown\nPgUp\nPgDn\nHome\nEnd\nPause\nTab\nEsc\nEnter\nSpace\nApp\n";
+	for (int i=0; i<12; i++) lst->Add(itmbuf.sprintf(_T("F%u"), i + 1));	//Fキー
+	lst->Text += "Del\nIns\nBkSp\nLeft\nRight\nUp\nDown\nPgUp\nPgDn\nHome\nEnd\nPause\nTab\nEsc\nEnter\nSpace\nApp\n";
 
 	if (is_JpKeybd())
-		klst->Text += "-\n^\n\\\n@\n[\n;\n:\n]\n,\n.\n/\n＼\n";		//JP
+		lst->Text += "-\n^\n\\\n@\n[\n;\n:\n]\n,\n.\n/\n＼\n";		//JP
 	else
-		klst->Text += "`\n-\n＝\n[\n]\n\\\n;\n'\n,\n.\n/\n";		//US
+		lst->Text += "`\n-\n＝\n[\n]\n\\\n;\n'\n,\n.\n/\n";		//US
 
-	for (int i=0; i<10; i++) klst->Add(itmbuf.sprintf(_T("10Key_%u"), i));	//10キー
-	klst->Text += "10Key_*\n10Key_+\n10Key_-\n10Key_/\n10Key_.\n";
-
-	lst->Assign(klst.get());
+	for (int i=0; i<10; i++) lst->Add(itmbuf.sprintf(_T("10Key_%u"), i));	//10キー
+	lst->Text += "10Key_*\n10Key_+\n10Key_-\n10Key_/\n10Key_.\n";
+}
+//---------------------------------------------------------------------------
+void assign_KeyList(TComboBox *cp, 
+	bool ins_empty,		//正当に空項目を挿入	(default = false)
+	bool keep_item)		//現在の選択項目を維持	(default = false)
+{
+	UnicodeString k = cp->Text;
+	std::unique_ptr<TStringList> klst(new TStringList());
+	make_KeyList(klst.get());
+	cp->LockDrawing();
+	cp->Items->Assign(klst.get());
+	if (ins_empty) cp->Items->Insert(0, EmptyStr);
+	if (!k.IsEmpty()) cp->ItemIndex = cp->Items->IndexOf(k);
+	cp->UnlockDrawing();
 }
 
 //---------------------------------------------------------------------------

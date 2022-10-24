@@ -620,11 +620,14 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "Close") && id_idx==2) {
 		params = "\nAL : すべての別ウィンドウを閉じる\n";
 	}
-	else if (contained_wd_i(_T("CommandPrompt|PowerShell|WinTerminal"), cmd)) {
+	else if (contained_wd_i(_T("CommandPrompt|PowerShell"), cmd)) {
+		params = "\nRA : 管理者として実行(デフォルト)\nRC : 管理者として実行(カレント)\n";
+	}
+	else if (USAME_TI(cmd,"WinTerminal")) {
 		params = "\nRA : 管理者として実行\n";
 	}
 	else if (USAME_TI(cmd, "CompareDlg")) {
-		params = "\nNC : ダイアログを出さず、名前のみ比較\n";
+		params = "\nCS : 大文字・小文字を区別\nNC : ダイアログを出さず、名前のみ比較\n";
 	}
 	else if (contained_wd_i(_T("CompareHash|GetHash|ToOppSameHash"), cmd)) {
 		params.sprintf(_T("\n%s"), HASH_ALG_LIST);
@@ -689,6 +692,7 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "DiffDir")) {
 		params.sprintf(_T("%s"),
 			_T("\n")
+			_T("CS : 大文字・小文字を区別\n")
 			_T("AL : マスク *.*、サブディレクトリも対象として直ちに比較実行\n")
 			_T("DL : 前回の条件で直ちに比較実行\n"));
 	}

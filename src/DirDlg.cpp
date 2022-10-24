@@ -327,8 +327,10 @@ void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
 	sp->Items[1]->Width = n_wd + ScaledInt(24, this);
 	adjust_HeaderSecWidth(RegDirHeader, 2);
 
+	lp->LockDrawing();
 	lp->Items->Assign(SpDirBuff);
 	lp->ItemIndex = IndexOfDir(CurPathName);
+	lp->UnlockDrawing();
 }
 
 //---------------------------------------------------------------------------

@@ -13,7 +13,8 @@ extern UnicodeString KeyStr_Ctrl;
 extern UnicodeString KeyStr_Alt;
 extern int KeyboardMode;
 
-void make_KeyList(TStrings *lst);
+void make_KeyList(TStringList *lst);
+void assign_KeyList(TComboBox *cp, bool ins_empty = false, bool keep_item = false);
 
 bool is_KeyDown(WORD key);
 bool is_DialogKey(WORD Key);
