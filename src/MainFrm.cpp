@@ -11829,6 +11829,26 @@ UnicodeString __fastcall TNyanFiForm::ExceptActionParam(UnicodeString ex_list)
 }
 
 //---------------------------------------------------------------------------
+//ActionParam から対象ファイル名を取得
+//---------------------------------------------------------------------------
+UnicodeString __fastcall TNyanFiForm::GetFileNameFromActionParam(file_rec *fp)
+{
+	UnicodeString fnam = EmptyStr;
+	if (!fp) fp = GetCurFrecPtr(true, true);
+	TStringDynArray plst = split_strings_semicolon(ActionParam);
+	for (int i=0; i<plst.Length; i++) {
+		UnicodeString prm = exclude_quot(plst[i]);
+		if (remove_top_s(prm, '/')) {
+			prm = (fp && fp->is_dir)? fp->b_name + "\\" + prm : EmptyStr;
+		}
+		fnam = to_absolute_name(prm, CurPath[CurListTag]);
+		if (file_exists_wc(fnam)) break;
+		if (i == plst.Length - 1) fnam = EmptyStr;
+	}
+	return fnam;
+}
+
+//---------------------------------------------------------------------------
 //コマンドアクションの Abort 例外処理
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetActionAbort(UnicodeString msg)
@@ -15865,8 +15885,12 @@ void __fastcall TNyanFiForm::DriveListActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::DuplicateActionExecute(TObject *Sender)
 {
-	if (!Execute_ex(Application->ExeName, EmptyStr, ExePath, TEST_ActParam("RA")? "A" : ""))
+	if (TEST_ActParam("DM") && IsAdmin) {
+	 	if (!Execute_demote(Application->ExeName, EmptyStr, ExePath)) SetActionAbort(USTR_FaildExec);
+	}
+	else if (!Execute_ex(Application->ExeName, EmptyStr, ExePath, TEST_ActParam("RA")? "A" : "")) {
 		SetActionAbort(USTR_FaildExec);
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::DuplicateActionUpdate(TObject *Sender)
@@ -21281,24 +21305,53 @@ void __fastcall TNyanFiForm::OpenADSActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::OpenByAppActionExecute(TObject *Sender)
 {
 	try {
+		file_rec *cfp = GetCurFrecPtr(true, true);
+
+		//一般ユーザに降格して開く
+		if (TEST_DEL_ActParam("DM") && IsAdmin) {
+			do {
+				UnicodeString fnam;
+				if (!ActionParam.IsEmpty()) {
+					fnam = GetFileNameFromActionParam(cfp);
+					if (fnam.IsEmpty()) SysErrAbort(ERROR_FILE_NOT_FOUND);
+				}
+				else {
+					if (!IsCurFList() || !cfp || cfp->is_dummy || cfp->is_dir) break;
+					fnam = cfp->f_name;
+				}
+
+				UnicodeString app = get_MenuItemStr(get_AssociatedApps(get_extension(fnam)));
+				if (!app.IsEmpty()){
+					if (USAME_TS(app, "SKIP")) SkipAbort();
+					if (starts_AT(app) || remove_top_text(app, _T("ExeCommands_")) || starts_Dollar(app)) 
+						TextAbort(_T("アプリケーション以外の関連付けには対応していません。"));
+					if (!Execute_demote(app, add_quot_if_spc(cfp->f_name), cfp->p_name)) GlobalAbort();
+				}
+				else {
+					switch (OpenByMode) {
+					case 1:
+						ActionParam = "DM";
+						OpenByWinAction->Execute();
+						break;
+					case 2:
+						OpenStandardAction->Execute();
+						break;
+					default:
+						TextAbort(_T("関連付けられていません。"));
+					}
+				}
+				return;
+			} while (false);
+		}
+
 		//パラメータ指定
 		if (!ActionParam.IsEmpty()) {
-			TStringDynArray plst = split_strings_semicolon(ActionParam);
-			UnicodeString fnam = EmptyStr;
-			for (int i=0; i<plst.Length; i++) {
-				UnicodeString prm = plst[i];
-				if (remove_top_s(prm, '/')) {
-					file_rec *cfp = GetCurFrecPtr(true);
-					prm = (cfp && cfp->is_dir)? cfp->b_name + "\\" + prm : EmptyStr;
-				}
-				fnam = to_absolute_name(prm, CurPath[CurListTag]);
-				if (file_exists_wc(fnam)) break;
-				if (i == plst.Length - 1) SysErrAbort(ERROR_FILE_NOT_FOUND);
-			}
+			UnicodeString fnam = GetFileNameFromActionParam(cfp);
+			if (fnam.IsEmpty()) SysErrAbort(ERROR_FILE_NOT_FOUND);
 
 			UnicodeString app = get_MenuItemStr(get_AssociatedApps(get_extension(fnam)));
-			if (app.IsEmpty()) TextAbort(_T("関連付けられていません。"));
 			if (USAME_TS(app, "SKIP")) SkipAbort();
+			if (app.IsEmpty()) TextAbort(_T("関連付けられていません。"));
 			if (starts_AT(app) || remove_top_text(app, _T("ExeCommands_"))) {
 				ActionOptStr = "ListItemPos";
 				if (!ExeCommandsCore(app)) GlobalAbort();
@@ -21318,7 +21371,6 @@ void __fastcall TNyanFiForm::OpenByAppActionExecute(TObject *Sender)
 			TStringList *lst = GetCurList(true);
 			std::unique_ptr<TStringList> s_lst(new TStringList());
 			int sel_cnt   = (OpenOnlyCurApp || fromOpenStd)? 0 : GetSelCount(lst);
-			file_rec *cfp = GetCurFrecPtr(true, true);
 			file_rec *rfp = NULL;
 
 			bool opn_cfp = (sel_cnt==0) && cfp && !cfp->is_dummy;
@@ -21435,6 +21487,42 @@ void __fastcall TNyanFiForm::OpenByExpActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::OpenByWinActionExecute(TObject *Sender)
 {
 	try {
+		file_rec *cfp = GetCurFrecPtr(true, true);
+
+		//一般ユーザに降格して開く
+		if (TEST_DEL_ActParam("DM") && IsAdmin) {
+			do {
+				UnicodeString fnam;
+				if (!ActionParam.IsEmpty()) {
+					fnam = GetFileNameFromActionParam(cfp);
+					if (fnam.IsEmpty()) SysErrAbort(ERROR_FILE_NOT_FOUND);
+				}
+				else {
+					if (!IsCurFList() || !cfp || cfp->is_dummy || cfp->is_dir) break;
+					fnam = cfp->f_name;
+				}
+				UnicodeString fext = get_extension(fnam);
+
+				UnicodeString cmd, prm;
+				if (test_ExeExt(fext)) {
+					cmd = fnam;
+					prm = EmptyStr;
+				}
+				else if (USAME_TI(fext, ".bat")) {
+					cmd = "cmd.exe";
+					prm = "/c \"" + fnam + "\"";
+				}
+				else {
+					cmd = get_AssocExeName(fext);
+					if (cmd.IsEmpty()) TextAbort(_T("関連付けが取得できません。"));
+					prm = "\"" + fnam + "\"";
+				}
+
+				if (!Execute_demote(cmd, prm, CurPath[CurListTag])) GlobalAbort();
+				return;
+			} while (false);
+		}
+
 		//パラメータ指定
 		if (!ActionParam.IsEmpty()) {
 			UnicodeString fnam = EmptyStr;
@@ -21442,17 +21530,8 @@ void __fastcall TNyanFiForm::OpenByWinActionExecute(TObject *Sender)
 				fnam = ActionParam;
 			}
 			else {
-				TStringDynArray plst = split_strings_semicolon(ActionParam);
-				for (int i=0; i<plst.Length; i++) {
-					UnicodeString prm = plst[i];
-					if (remove_top_s(prm, '/')) {
-						file_rec *cfp = GetCurFrecPtr(true);
-						prm = (cfp && cfp->is_dir)? cfp->b_name + "\\" + prm : EmptyStr;
-					}
-					fnam = to_absolute_name(prm, CurPath[CurListTag]);
-					if (file_exists_wc(fnam)) break;
- 					if (i == plst.Length - 1) SysErrAbort(ERROR_FILE_NOT_FOUND);
-				}
+				fnam = GetFileNameFromActionParam(cfp);
+				if (fnam.IsEmpty()) SysErrAbort(ERROR_FILE_NOT_FOUND);
 			}
 			Execute_ex(fnam, EmptyStr, ExtractFilePath(fnam));
 		}
@@ -21463,7 +21542,6 @@ void __fastcall TNyanFiForm::OpenByWinActionExecute(TObject *Sender)
 			TStringList *lst = GetCurList(true);
 			int  sel_cnt  = (OpenOnlyCurWin || fromOpenStd)? 0 : GetSelCount(lst);
 			bool opn_cfp  = (sel_cnt==0 );
-			file_rec *cfp = GetCurFrecPtr(true, true);
 			if (opn_cfp && (!cfp || cfp->is_dummy || cfp->f_attr==faInvalid)) Abort();
 
 			//ディレクトリ
@@ -23168,32 +23246,30 @@ void __fastcall TNyanFiForm::RepositoryListActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::RestartActionExecute(TObject *Sender)
 {
 	try {
-		if (TEST_DEL_ActParam("DM")) {
+		//降格して再起動
+		if (TEST_DEL_ActParam("DM") && IsAdmin) {
 			TEST_DEL_ActParam("RA");
-			if (IsAdmin) {
-				//降格して再起動
-				NotSaveINI	= TEST_ActParam("NS");
-				ReqKeepDupl = false;
-				//再起動用バッチファイルを作成
-				UnicodeString cmd = "\'" + Application->ExeName + "\'";
-				if (!ActionParam.IsEmpty()) cmd.cat_sprintf(_T(" \'-I%s\'"), ActionParam.c_str());
+			NotSaveINI	= TEST_ActParam("NS");
+			ReqKeepDupl = false;
+			//再起動用バッチファイルを作成
+			UnicodeString cmd = "\'" + Application->ExeName + "\'";
+			if (!ActionParam.IsEmpty()) cmd.cat_sprintf(_T(" \'-I%s\'"), ActionParam.c_str());
 
-				std::unique_ptr<TStringList> fbuf(new TStringList());
-				fbuf->Text =
-					"TIMEOUT 1 /nobreak\r\n"
-					"schtasks /create /tn \"Domate_NyanFi\" /tr \"" + cmd + "\" /sc once /st 23:59\r\n"
-					"schtasks /run /tn \"Domate_NyanFi\"\r\n"
-					"schtasks /delete /f /tn \"Domate_NyanFi\"\r\n"
-					"EXIT\r\n";
+			std::unique_ptr<TStringList> fbuf(new TStringList());
+			fbuf->Text =
+				"TIMEOUT 1 /nobreak\r\n"
+				"schtasks /create /tn \"Demote_NyanFi\" /tr \"" + cmd + "\" /sc once /st 23:59\r\n"
+				"schtasks /run /tn \"Demote_NyanFi\"\r\n"
+				"schtasks /delete /f /tn \"Demote_NyanFi\"\r\n"
+				"EXIT\r\n";
 
-				UnicodeString bat_nam = ExePath + "demote.bat";
-				if (!saveto_TextFile(bat_nam, fbuf.get()))
-					throw EAbort(LoadUsrMsg(USTR_FaildSave, _T("バッチファイル")));
-				RstBatName = bat_nam;
+			UnicodeString bat_nam = ExePath + "demote.bat";
+			if (!saveto_TextFile(bat_nam, fbuf.get()))
+				throw EAbort(LoadUsrMsg(USTR_FaildSave, _T("バッチファイル")));
+			RstBatName = bat_nam;
 
-				Close();
-				return;
-			}
+			Close();
+			return;
 		}
 
 		UnicodeString prmstr = TEST_DEL_ActParam("NS")? "-q" : "-Q";

@@ -2489,6 +2489,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	bool __fastcall TestActionParam(const _TCHAR *prm);
 	bool __fastcall TestDelActionParam(const _TCHAR *prm);
 	UnicodeString __fastcall ExceptActionParam(UnicodeString ex_list);
+	UnicodeString __fastcall GetFileNameFromActionParam(file_rec *fp = NULL);
 
 	bool __fastcall ActionOptIsMousePos()	{ return USAME_TI(ActionOptStr, "MousePos"); }
 	bool __fastcall ActionOptIsButtonPos()	{ return USAME_TI(ActionOptStr, "ButtonPos"); }

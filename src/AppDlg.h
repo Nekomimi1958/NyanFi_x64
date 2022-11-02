@@ -62,6 +62,7 @@ public:
 	UnicodeString ClassName2;
 	UnicodeString FileName;
 	UnicodeString Caption;
+	UnicodeString ErrMsg;
 	UnicodeString CmdParam;
 	UnicodeString IconPng;
 
@@ -73,6 +74,7 @@ public:
 
 	bool isNyan;
 	bool isWow64;
+	bool isElevated;
 	bool isUWP;
 	bool topMost;
 	bool Exist;
@@ -252,6 +254,8 @@ private:	// ユーザー宣言
 	int MaxWd_f;		//名前の最大幅
 	TRect ThumbRect;
 	TRect LiveRect;
+
+	HICON hShieldIco;
 
 	int  LaunchPos;
 	bool SortByRem;

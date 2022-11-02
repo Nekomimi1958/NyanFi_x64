@@ -2492,3 +2492,20 @@ int get_ProcessingInf(
 	return ret_cnt;
 }
 //---------------------------------------------------------------------------
+//拡張子に関連付けられた実行ファイルを取得
+//---------------------------------------------------------------------------
+UnicodeString get_AssocExeName(UnicodeString fext)  
+{  
+	UnicodeString xnam;
+	_TCHAR pszFile[MAX_PATH*2];
+	DWORD dwOut = MAX_PATH*2;
+	if (::AssocQueryString(
+		ASSOCF_INIT_DEFAULTTOSTAR|ASSOCF_INIT_DEFAULTTOFOLDER,
+		ASSOCSTR_EXECUTABLE,
+		fext.c_str(), _T("open"), pszFile, &dwOut)==S_OK)
+	{
+		xnam = pszFile;
+	}
+    return xnam;    
+}
+//---------------------------------------------------------------------------

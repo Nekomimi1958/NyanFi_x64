@@ -2079,6 +2079,8 @@ bool Execute_ex(UnicodeString cmd, UnicodeString prm = EmptyStr, UnicodeString w
 		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL);
 bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir = EmptyStr,
 		UnicodeString opt = EmptyStr, DWORD *exit_code = NULL, TStringList *o_lst = NULL, TMemoryStream *o_ms = NULL);
+bool Execute_demote(UnicodeString cmd, UnicodeString prm = EmptyStr, UnicodeString wdir = EmptyStr);
+
 bool GitShellExe(UnicodeString prm, UnicodeString wdir, TStringList *o_lst,
 		DWORD *exit_cd = NULL, TStringList *w_lst = NULL);
 bool GitShellExe(UnicodeString prm, UnicodeString wdir, TMemoryStream *o_ms, DWORD *exit_cd = NULL);

@@ -1098,9 +1098,10 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
       <a href="#NextDrive">→ NextDrive</a>　<a href="#PrevDrive">→ PrevDrive</a>　<a href="#ChangeDrive">→ ChangeDrive</a>
     </dd>
 
-    <dt id="Duplicate">Duplicate<span class="pram_text">[_RA]</span></dt>
+    <dt id="Duplicate">Duplicate<span class="pram_text">[_{RA|DM}]</span></dt>
     <dd><a href="hid00017.htm#Duplicate">オプション設定 - 起動時</a> で二重起動が許可されている場合、新たに <b>NyanFi</b> を起動します。<br>
       パラメータに <b>RA</b> を指定すると、管理者として起動します。<br>
+      パラメータに <b>DM</b> を指定すると、<b>NyanFi</b> を管理者として実行している場合に、一般ユーザーに降格して起動します。<br>
       <a href="#ExitDupl">→ ExitDupl</a>　<a href="#NextNyanFi">→ NextNyanFi</a>　<a href="#PrevNyanFi">→ PrevNyanFi</a>
     </dd>
 
@@ -1291,7 +1292,7 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
 
     <dt id="ExtractChmSrc">ExtractChmSrc</dt>
     <dd>カーソル位置のHTMLヘルプファイル(<b>.chm</b>)からソースを抽出(デコンパイル)して反対パスに出力します。<br>
-      処理には Windows の <b>hh.exe</b> を利用し、バックグラウンド・タスクから起動します。<br>
+      処理には <b>Windows</b> の <b>hh.exe</b> を利用し、バックグラウンド・タスクから起動します。<br>
       <div class="note_text">
         hh.exe の仕様のため、出力パスの名前に半角空白が含まれていると処理できません。<br>
       </div>
@@ -1354,9 +1355,9 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
     </dd>
 
     <dt id="FileRun">FileRun<span class="pram_text">[_{ファイル名|URIスキーム}]</span></dt>
-    <dd>Windows の「<b>ファイル名を指定して実行</b>」ダイアログを開きます。<br>
+    <dd><b>Windows</b> の「<b>ファイル名を指定して実行</b>」ダイアログを開きます。<br>
       パラメータに<b>ファイル名</b>や<b>URIスキーム</b>を指定すると、ダイアログを開かずに直接実行します(start コマンドを利用)。<br>
-      パスが通っている場合、ファイル名のパスと拡張子を省略できます。<br>
+      パスが通っている場合、ファイル名のパスや拡張子を省略できます。<br>
       <div class="spc_box">
         <b>例</b>:<br>
         　FileRun_control<br>
@@ -2408,7 +2409,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
     <dt id="OpenADS">OpenADS</dt>
     <dd>カーソル位置の項目の代替データストリーム一覧を仮想リストとして開きます。<br>
       仮想リストに対しては、コピー、削除、閲覧、編集(アプリケーションが対応している場合)などの基本的な操作が可能ですが、移動や改名、実行、各種変換などはできません。<br>
-      また独自の関連付け(<a href="#OpenByApp">OpenByApp</a>)では開けますが、Windowsの関連付け(<a href="#OpenByWin">OpenByWin</a>)では開けません。<br>
+      また独自の関連付け(<a href="#OpenByApp">OpenByApp</a>)では開けますが、<b>Windows</b> の関連付け(<a href="#OpenByWin">OpenByWin</a>)では開けません。<br>
       テキストや通常の画像はプレビュー可能ですが、動画、アイコン、カーソル、フォントなどはプレビューできません。<br>
       <div class="note_text">
         代替データストリームは、<b>NTFS</b>でないと利用できません。他のファイルシステムにファイルをコピーすると、代替データストリームは失われます。<br>
@@ -2418,7 +2419,9 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       <a href="#DeleteADS">→ DeleteADS</a>
     </dd>
 
-    <dt id="OpenByApp">OpenByApp<span class="pram_text">[_ファイル名[;_ファイル名...]]</span></dt>
+    <dt id="OpenByApp">OpenByApp<span class="pram_text">[_ファイル名[;_ファイル名...]]</span><br>
+      OpenByApp<span class="pram_text">_DM[;ファイル名[;_ファイル名...]]</span>
+    </dt>
     <dd>選択中(無ければカーソル位置)の項目を、独自の関連付けで開きます。関連付けは、<a href="hid00013.htm">オプション設定 -
         関連付け</a>で行ってください。一つの拡張子に対して複数の関連付けが設定されていると、ポップアップメニューで選択できます。<br>
       アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
@@ -2436,7 +2439,10 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
         　OpenByApp_*.chm;README.*;index.htm*<br>
       </div>
 
-      パラメータに<b>ファイル名</b>を指定すると直接開けます。ドライブ名がない場合はカレントからの相対指定になります。<br>
+      <div class="spc_box">
+        パラメータに <b>DM</b> を指定すると、<b>NyanFi</b> を管理者として実行している場合に、一般ユーザに降格してファイルを開きます。対象は、通常のファイルリストにあるカーソル位置のファイル(選択状態は無視)、またはパラメータで指定したファイルになります。対応しているのは、<a href="hid00013.htm">オプション設定 - 関連付け</a> で<b>アプリケーション</b>が関連付けられているファイルだけです。<br>
+        管理者として実行していない場合や、カーソル位置が通常のファイルでない場合、このパラメータは無視され、通常の動作になります。
+      </div>
 
       <a href="hid00019.htm#OpenByApp">→ オプション設定 - コマンド</a><br>
       <a href="#OpenByWin">→ OpenByWin</a>　<a href="#OpenStandard">→ OpenStandard</a>
@@ -2467,9 +2473,10 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
     </dd>
 
     <dt id="OpenByWin">OpenByWin<span class="pram_text">[_ファイル名[;_ファイル名...]]</span><br>
-      OpenByWin<span class="pram_text">_{&quot;http://～&quot;|&quot;mailto:～&quot;}</span>
+      OpenByWin<span class="pram_text">_{&quot;http://～&quot;|&quot;mailto:～&quot;}</span><br>
+      OpenByWin<span class="pram_text">_DM[;ファイル名[;_ファイル名...]]</span>
     </dt>
-    <dd>選択中(無ければカーソル位置)の項目を、Windowsの関連付けで開きます。<br>
+    <dd>選択中(無ければカーソル位置)の項目を、<b>Windows</b> の関連付けで開きます。<br>
       アーカイブ内のファイルは、一時ディレクトリ下に解凍したものが開かれます。仮想ディレクトリから抜けると一時ディレクトリのファイルは削除されますので注意してください(排他的に開かれていると削除できず残ります)。<br>
       <div class="spc_box">
         パラメータで<b>ファイル名</b>を指定して開くこともできます。ドライブ名がない場合はカレントからの相対指定になります。<br>
@@ -2485,6 +2492,11 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
         <b>;</b> (セミコロン)で区切って複数のファイル名を指定すると、順番に調べて最初にマッチしたものが開かれます。<br>
         <b>例</b>: カレント、カーソル位置ディレクトリ、親ディレクトリを調べて *.code-workspace を開く<br>
         　OpenByWin_*.code-workspace;/*.code-workspace;..\*.code-workspace<br>
+      </div>
+
+      <div class="spc_box">
+        パラメータに <b>DM</b> を指定すると、<b>NyanFi</b> を管理者として実行している場合に、一般ユーザに降格してファイルを開きます。対象は、通常のファイルリストにあるカーソル位置のファイル(選択状態は無視)、またはパラメータで指定したファイルになります。対応しているのは、<b>Windows</b> の関連付けが取得できるファイル(ファイル情報の「プログラム」で確認可能)、および実行可能ファイル(<b>.exe</b>、<b>.bat</b>)です。<br>
+        管理者として実行していない場合や、カーソル位置が通常のファイルでない場合、このパラメータは無視され、通常の動作になります。
       </div>
 
       <a href="hid00019.htm#OpenByWin">→ オプション設定 - コマンド</a><br>

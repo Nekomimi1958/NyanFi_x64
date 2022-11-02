@@ -74,12 +74,15 @@ int __fastcall SortComp_LaunchS(TStringList *List, int Index1, int Index2)
 //---------------------------------------------------------------------------
 AppWinInf::AppWinInf()
 {
-	WinHandle = NULL;
-	toClose	  = false;
-	isNoRes	  = false;
-	Icon	  = new TIcon();
-	PngImg	  = new TPngImage();
-	hThumb	  = NULL;
+	WinHandle  = NULL;
+	isWow64    = false;
+	isElevated = false;
+	toClose    = false;
+	isNoRes    = false;
+	Icon       = new TIcon();
+	PngImg     = new TPngImage();
+	hThumb     = NULL;
+	StartTime  = (TDateTime)0;
 }
 //---------------------------------------------------------------------------
 AppWinInf::~AppWinInf()
@@ -141,6 +144,10 @@ void __fastcall TAppListDlg::FormCreate(TObject *Sender)
 
 	ToAppList = ToLauncher = ToIncSea = AddStart = false;
 	isFuzzy = false;
+
+    SHSTOCKICONINFO sii = {};
+    sii.cbSize = sizeof(sii);
+	hShieldIco = SUCCEEDED(::SHGetStockIconInfo(SIID_SHIELD, SHGSI_ICON|SHGSI_SMALLICON, &sii))? sii.hIcon : NULL;
 }
 
 //---------------------------------------------------------------------------
@@ -285,6 +292,8 @@ void __fastcall TAppListDlg::FormDestroy(TObject *Sender)
 
 	delete AppScrPanel;
 	delete LaunchScrPanel;
+
+	::DestroyIcon(hShieldIco);
 
 	if (hPsApi) ::FreeLibrary(hPsApi);
 }
@@ -477,6 +486,7 @@ void __fastcall TAppListDlg::UpdateAppList()
 			//テキスト
 			UnicodeString wtxt = get_WndText(hWnd);
 			if (wtxt.IsEmpty()) break;
+
 			//除外チェック
 			if (!ExcAppText.IsEmpty()) {
 				TStringDynArray exc_txt_lst = split_strings_semicolon(ExcAppText);
@@ -503,8 +513,9 @@ void __fastcall TAppListDlg::UpdateAppList()
 			//既存か?
 			AppWinInf *ap = NULL;
 			bool is_new = false;
-			for (int i=0; i<AppInfoList->Count && !ap; i++)
+			for (int i=0; i<AppInfoList->Count && !ap; i++) {
 				if (AppInfoList->Items[i]->WinHandle==hWnd) ap = AppInfoList->Items[i];
+			}
 
 			if (!ap) {
 				ap = new AppWinInf();
@@ -523,18 +534,18 @@ void __fastcall TAppListDlg::UpdateAppList()
 			ap->ClassName2 = cnam2;
 			ap->topMost    = (w_style & WS_EX_TOPMOST);
 			ap->win_xstyle = w_style;
-			ap->isWow64    = false;
 			ap->isUWP	   = is_uwp;
 			ap->win_wd	   = w_rect.Width();
 			ap->win_hi	   = w_rect.Height();
 			ap->win_left   = w_rect.Left;
 			ap->win_top    = w_rect.Top;
+
 			//表示モニタ
 			ap->mon_no = -1;
 			for (int i=0; i<Screen->MonitorCount; i++) {
 				TRect m_rc = Screen->Monitors[i]->BoundsRect;
 				TRect rc   = TRect::Intersect(m_rc, w_rect);
-				if ((rc.Width() * rc.Height()) > (ap->win_wd * ap->win_hi / 2)) {
+				if ((rc.Width() * rc.Height()) >= (ap->win_wd * ap->win_hi / 2)) {
 					ap->mon_no = i;
 					break;
 				}
@@ -549,8 +560,6 @@ void __fastcall TAppListDlg::UpdateAppList()
 			ap->mem_WS = ap->mem_pWS = ap->mem_PF = ap->mem_pPF = 0;
 			HANDLE hProcess = ::OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, ap->PID);
 			if (hProcess) {
-				BOOL wow64;
-				if (::IsWow64Process(hProcess, &wow64)) ap->isWow64 = wow64;
 				//メモリ情報
 				PROCESS_MEMORY_COUNTERS pmc = {0};
 				if (lpfGetProcessMemoryInfo && lpfGetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc))) {
@@ -559,43 +568,10 @@ void __fastcall TAppListDlg::UpdateAppList()
 					ap->mem_PF	= pmc.PagefileUsage;
 					ap->mem_pPF	= pmc.PeakPagefileUsage;
 				}
+
 				//作成時刻
 				FILETIME s_tm, x_tm, k_tm, u_tm, f_tm;
 				if (::GetProcessTimes(hProcess, &s_tm, &x_tm, &k_tm, &u_tm)) ap->StartTime = utc_to_DateTime(&s_tm);
-
-				//コマンドライン
-				HINSTANCE hNtDll = ::GetModuleHandle(_T("ntdll.dll"));
-				NTSTATUS (NTAPI* lpfNtQueryInformationProcess)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG) =
-					(NTSTATUS (NTAPI*)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG))::GetProcAddress(hNtDll, "NtQueryInformationProcess");
-				ULONG (NTAPI* lpfRtlNtStatusToDosError)(NTSTATUS) =
-					(ULONG (NTAPI*)(NTSTATUS))::GetProcAddress(hNtDll, "RtlNtStatusToDosError");
-
-				if (lpfNtQueryInformationProcess && lpfRtlNtStatusToDosError) {
-					PROCESS_BASIC_INFORMATION pbi;
-					ULONG len;
-					NTSTATUS status = lpfNtQueryInformationProcess(hProcess, ProcessBasicInformation, &pbi, sizeof(pbi), &len);
-					::SetLastError(lpfRtlNtStatusToDosError(status));
-					if(!NT_ERROR(status) && pbi.PebBaseAddress) {
-						SIZE_T bytesRead = 0;
-						PEB_INTERNAL peb;
-						if(::ReadProcessMemory(hProcess, pbi.PebBaseAddress, &peb, sizeof(peb), &bytesRead)) {
-							RTL_USER_PROCESS_PARAMETERS_I upp;
-							if(::ReadProcessMemory(hProcess, peb.ProcessParameters, &upp, sizeof(upp), &bytesRead)) {
-								if(upp.CommandLine.Length>0) {
-									DWORD need_len = (upp.CommandLine.Length + 1) / sizeof(wchar_t) + 1;
-									std::unique_ptr<_TCHAR[]> lpszCbuf(new _TCHAR[need_len]);
-									lpszCbuf[need_len - 1] = L'\0';
-									if(::ReadProcessMemory(hProcess, upp.CommandLine.Buffer,
-										lpszCbuf.get(), upp.CommandLine.Length, &bytesRead))
-									{
-										ap->CmdParam = lpszCbuf.get();
-										split_file_param(ap->CmdParam);
-									}
-								}
-							}
-						}
-					}
-				}
 
 				::CloseHandle(hProcess);
 			}
@@ -614,6 +590,7 @@ void __fastcall TAppListDlg::UpdateAppList()
 					ap->FileName = Application->ExeName;
 					ap->Caption	 = get_base_name(Application->ExeName);
 					ap->Icon->Assign(Application->Icon);
+					ap->isElevated = IsAdmin;
 				}
 				else {
 					if (!ap->isNoRes && !ap->isUWP) {
@@ -622,12 +599,67 @@ void __fastcall TAppListDlg::UpdateAppList()
 
 					hProcess = ::OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, ap->PID);
 					if (hProcess) {
+						BOOL wow64;
+						if (::IsWow64Process(hProcess, &wow64)) ap->isWow64 = wow64;
+
 						_TCHAR sbuf[MAX_PATH];
 						DWORD sz = MAX_PATH;
-						UnicodeString fnam = ::QueryFullProcessImageName(hProcess, 0, sbuf, &sz)? sbuf : _T("");
+						ap->FileName = ::QueryFullProcessImageName(hProcess, 0, sbuf, &sz)? sbuf : _T("");
+						ap->Caption	 = get_base_name(ap->FileName);
+
+						//コマンドライン
+						HINSTANCE hNtDll = ::GetModuleHandle(_T("ntdll.dll"));
+						NTSTATUS (NTAPI* lpfNtQueryInformationProcess)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG) =
+							(NTSTATUS (NTAPI*)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG))::GetProcAddress(hNtDll, "NtQueryInformationProcess");
+						ULONG (NTAPI* lpfRtlNtStatusToDosError)(NTSTATUS) =
+							(ULONG (NTAPI*)(NTSTATUS))::GetProcAddress(hNtDll, "RtlNtStatusToDosError");
+
+						if (lpfNtQueryInformationProcess && lpfRtlNtStatusToDosError) {
+							PROCESS_BASIC_INFORMATION pbi;
+							ULONG len;
+							NTSTATUS status = lpfNtQueryInformationProcess(hProcess, ProcessBasicInformation, &pbi, sizeof(pbi), &len);
+							::SetLastError(lpfRtlNtStatusToDosError(status));
+							if(!NT_ERROR(status) && pbi.PebBaseAddress) {
+								SIZE_T bytesRead = 0;
+								PEB_INTERNAL peb;
+								if(::ReadProcessMemory(hProcess, pbi.PebBaseAddress, &peb, sizeof(peb), &bytesRead)) {
+									RTL_USER_PROCESS_PARAMETERS_I upp;
+									if(::ReadProcessMemory(hProcess, peb.ProcessParameters, &upp, sizeof(upp), &bytesRead)) {
+										if(upp.CommandLine.Length>0) {
+											DWORD need_len = (upp.CommandLine.Length + 1) / sizeof(wchar_t) + 1;
+											std::unique_ptr<_TCHAR[]> lpszCbuf(new _TCHAR[need_len]);
+											lpszCbuf[need_len - 1] = L'\0';
+											if(::ReadProcessMemory(hProcess, upp.CommandLine.Buffer,
+												lpszCbuf.get(), upp.CommandLine.Length, &bytesRead))
+											{
+												ap->CmdParam = lpszCbuf.get();
+												split_file_param(ap->CmdParam);
+											}
+										}
+									}
+								}
+							}
+						}
+
+						//昇格
+						HANDLE hToken = NULL;
+						if (::OpenProcessToken(hProcess, TOKEN_QUERY, &hToken)) {
+							TOKEN_ELEVATION tokenEle;
+							DWORD dwRetLen = 0;
+							if (::GetTokenInformation(hToken, TokenElevation, &tokenEle, sizeof(tokenEle), &dwRetLen)) {
+								ap->isElevated = (dwRetLen==sizeof(tokenEle) && tokenEle.TokenIsElevated);
+							}
+							::CloseHandle(hToken);
+						}
+
 						::CloseHandle(hProcess);
-						ap->FileName = fnam;
-						ap->Caption	 = get_base_name(fnam);
+					}
+					else {
+						int err = GetLastError();
+						ap->FileName   = EmptyStr;
+						ap->Caption    = "????";
+						ap->ErrMsg     = SysErrorMessage(err);
+						ap->isElevated = (err==ERROR_ACCESS_DENIED);  //※アクセス拒否なら昇格されているとみなす
 					}
 
 					if (ap->isUWP) {
@@ -744,7 +776,7 @@ AppWinInf* __fastcall TAppListDlg::GetCurAppWinInf()
 void __fastcall TAppListDlg::AddLnkFileRec(UnicodeString fnam, TStringList *lst,
 	UnicodeString rnam)		//編集距離取得のための基準名	(default = EmptyStr)
 {
-	file_rec *fp = cre_new_file_rec(fnam); 
+	file_rec *fp = cre_new_file_rec(fnam);
 	if (fp) {
 		//fp->l_name = リンク先, fp->alias = コメント, fp->faild = リンク切れ
 		if (SortByRem && test_LnkExt(fp->f_ext)) {
@@ -776,12 +808,12 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 	//インクリメンタルサーチ
 	if (IsIncSea) {
 		bool is_all = contained_wd_i(_T("*|?| "), IncSeaWord);
-		UnicodeString ptn = is_all? UnicodeString(".+") : 
-		    (isFuzzy && !IsMigemo)? get_fuzzy_ptn(IncSeaWord) : 
+		UnicodeString ptn = is_all? UnicodeString(".+") :
+		    (isFuzzy && !IsMigemo)? get_fuzzy_ptn(IncSeaWord) :
 								 	usr_Migemo->GetRegExPtn(IsMigemo, IncSeaWord);
 		if (!ptn.IsEmpty()) {
 			UnicodeString rnam = (!is_all && isFuzzy && !IsMigemo)? IncSeaWord : EmptyStr;
-			TRegExOptions opt; 
+			TRegExOptions opt;
 			if (IncSeaWord.LowerCase()==IncSeaWord) opt << roIgnoreCase;
 			for (int i=0; i<LaunchFileList->Count; i++) {
 				UnicodeString fnam = LaunchFileList->Strings[i];
@@ -1063,15 +1095,25 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	}
 
 	//名前
-	TColor col_x = get_ExtColor(ExtractFileExt(ap->FileName));
+	TColor col_x = ap->FileName.IsEmpty()? col_Error : get_ExtColor(ExtractFileExt(ap->FileName));
 	cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : col_x;
 	cv->TextOut(xp, yp, ap->Caption);
 	if (ap->isWow64) cv->TextOut(xp + get_TextWidth(cv, ap->Caption, is_irreg), yp, ISWOW64_STR);
 	xp += MaxWd_f + ScaledInt(12, this);
+
+	//昇格アイコン
+	if (ap->isElevated) {
+		int s_16 = ScaledInt(16, this);
+		::DrawIconEx(cv->Handle, xp, Rect.Top + (Rect.Height() - s_16)/2, 
+						hShieldIco, s_16, s_16, 0, NULL, DI_NORMAL);
+	}
+	xp += ScaledInt(18, this);
+
 	//テキスト
 	UnicodeString s = yen_to_delimiter(ap->WinText);
 	cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : col_fgList;
 	cv->TextOut(xp, yp, s);
+
 	//コマンドラインパラメータ
 	if (ShowCmdParamAction->Checked && !ap->CmdParam.IsEmpty()) {
 		cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : AdjustColor(col_fgList, ADJCOL_LIGHT);
@@ -1482,6 +1524,7 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 
 		std::unique_ptr<TStringList> i_lst(new TStringList());
 		UnicodeString tmp;
+		if (!c_ap->ErrMsg.IsEmpty()) add_PropLine(_T("エラー"), c_ap->ErrMsg, i_lst.get(), LBFLG_ERR_FIF);
 		add_PropLine(_T("キャプション"),	c_ap->WinText,	i_lst.get());
 		tmp = ExtractFileName(c_ap->FileName);
 		if (c_ap->isWow64) tmp += "  (32-bit)"; else tmp += "  (64-bit)";
@@ -1859,8 +1902,9 @@ void __fastcall TAppListDlg::SortByRemActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::UpdateIcoItemClick(TObject *Sender)
 {
-	for (int i=0; i<LaunchList->Count; i++)
+	for (int i=0; i<LaunchList->Count; i++) {
 		del_CachedIcon(((file_rec*)LaunchList->Objects[i])->f_name);
+	}
 
 	UpdateLaunchList();
 }

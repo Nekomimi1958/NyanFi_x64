@@ -6,34 +6,34 @@
   <title>アプリケーション一覧</title>
   <link rel="stylesheet" type="text/css" href="help.css">
   <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
-	<param name="Keyword" value="AppList">
-	<param name="Keyword" value="ClearIncKeyword">
-	<param name="Keyword" value="CreateDir">
-	<param name="Keyword" value="Delete">
-	<param name="Keyword" value="ExeCommands">
-	<param name="Keyword" value="IncSearch">
-	<param name="Keyword" value="IncSearchDown">
-	<param name="Keyword" value="IncSearchExit">
-	<param name="Keyword" value="IncSearchUp">
-	<param name="Keyword" value="MigemoMode">
-	<param name="Keyword" value="Migomo">
-	<param name="Keyword" value="PropertyDlg">
-	<param name="Keyword" value="RenameDlg">
-	<param name="Keyword" value="ToLeft">
-	<param name="Keyword" value="ToParent">
-	<param name="Keyword" value="ToParentOnLeft">
-	<param name="Keyword" value="ToParentOnRight">
-	<param name="Keyword" value="ToRight">
-	<param name="Keyword" value="WinMaximize">
-	<param name="Keyword" value="WinMinimize">
-	<param name="Keyword" value="WinNormal">
-	<param name="Keyword" value="あいまい検索">
-	<param name="Keyword" value="アプリケーション一覧">
-	<param name="Keyword" value="インクリメンタルサーチ">
-	<param name="Keyword" value="ホットキー">
-	<param name="Keyword" value="ライブサムネイル">
-	<param name="Keyword" value="ランチャー">
-	<param name="Keyword" value="頭文字サーチ">
+    <param name="Keyword" value="AppList">
+    <param name="Keyword" value="ClearIncKeyword">
+    <param name="Keyword" value="CreateDir">
+    <param name="Keyword" value="Delete">
+    <param name="Keyword" value="ExeCommands">
+    <param name="Keyword" value="IncSearch">
+    <param name="Keyword" value="IncSearchDown">
+    <param name="Keyword" value="IncSearchExit">
+    <param name="Keyword" value="IncSearchUp">
+    <param name="Keyword" value="MigemoMode">
+    <param name="Keyword" value="Migomo">
+    <param name="Keyword" value="PropertyDlg">
+    <param name="Keyword" value="RenameDlg">
+    <param name="Keyword" value="ToLeft">
+    <param name="Keyword" value="ToParent">
+    <param name="Keyword" value="ToParentOnLeft">
+    <param name="Keyword" value="ToParentOnRight">
+    <param name="Keyword" value="ToRight">
+    <param name="Keyword" value="WinMaximize">
+    <param name="Keyword" value="WinMinimize">
+    <param name="Keyword" value="WinNormal">
+    <param name="Keyword" value="あいまい検索">
+    <param name="Keyword" value="アプリケーション一覧">
+    <param name="Keyword" value="インクリメンタルサーチ">
+    <param name="Keyword" value="ホットキー">
+    <param name="Keyword" value="ライブサムネイル">
+    <param name="Keyword" value="ランチャー">
+    <param name="Keyword" value="頭文字サーチ">
   </object>
 </head>
 
@@ -89,6 +89,9 @@
         一覧側にフォーカスがある場合、ステータスバーには、アプリケーションのプロセスID、ワーキングセット - 最大ワーキングセット、ページファイルサイズ -
         最大ページファイルサイズ、ウィンドウサイズ(モニタ番号)、開始日時(本日の場合は時刻のみ)が表示されます。なお、無応答のアプリケーションは、一覧でエラー色の枠で囲んで表示されます。
       </div>
+      <div class="spc_box">
+        一般のユーザ権限で実行している <b>NyanFi</b> の場合、情報の取得が制限されているアプリケーションには盾アイコンが表示されます(おそらく管理者として実行)。管理者として実行している <b>NyanFi</b> では、管理者としている実行されているアプリケーションに盾アイコンが表示されます。
+      </div>
     </dd>
   </dl>
   <br>
@@ -118,12 +121,15 @@
     <dt class="no_bg">インクリメンタルサーチ</dt>
     <dd>
       ファイラーで <a href="hid00005.htm#IncSearch">IncSearch</a> コマンドが割り当てられているキーを押すと、<a
-        href="hid00050.htm">インクリメンタルサーチ</a>モードで項目を絞り込み表示できます。大文字を入力すると、大小文字を区別します。<a href="hid00005.htm#AppList">AppList</a> コマンドのパラメータに <b>FZ</b> を指定すると、あいまい検索も可能(検索語からの編集距離に基づいてソート)。なお、パラメータに <b>AS</b> を指定していると、スタートメニュー下の全項目が検索対象に追加されます。<br>
-      インクリメンタルサーチではランチャー上部に入力欄が表示され、キーを入力するとキーワードが設定されます。IMEは使えませんが、<a
-        href="hid00050.htm#MigemoMode">MigemoMode</a> コマンドが割り当てられているキーで Migomo モードに切り替えられます。<span
-        class="btn_frame">BS</span>または<span class="btn_frame">Ctrl</span>+<span class="btn_frame">H</span>で一文字後退、 <a
+        href="hid00050.htm">インクリメンタルサーチ</a>モードで項目を絞り込み表示できます。大文字を入力すると、大小文字を区別します。<a
+        href="hid00005.htm#AppList">AppList</a> コマンドのパラメータに <b>FZ</b> を指定すると、あいまい検索も可能(検索語からの編集距離に基づいてソート)。なお、パラメータに
+      <b>AS</b> を指定していると、スタートメニュー下の全項目が検索対象に追加されます。<br>
+      インクリメンタルサーチではランチャー上部に入力欄が表示され、キーを入力するとキーワードが設定されます。IMEは使えませんが、<a href="hid00050.htm#MigemoMode">MigemoMode</a>
+      コマンドが割り当てられているキーで Migomo モードに切り替えられます。<span class="btn_frame">BS</span>または<span
+        class="btn_frame">Ctrl</span>+<span class="btn_frame">H</span>で一文字後退、 <a
         href="hid00050.htm#ClearIncKeyword">ClearIncKeyword</a> コマンドが割り当てられているキーでキーワードがクリアされます。<br>
-      キーワードが変化すると、ランチャーのトップディレクトリ以下にあるすべての項目からマッチするものをリストに一覧表示します(<a href="hid00005.htm#AppList">AppList</a>_AS でスタートメニュー下の全項目も検索対象に)。<br>
+      キーワードが変化すると、ランチャーのトップディレクトリ以下にあるすべての項目からマッチするものをリストに一覧表示します(<a href="hid00005.htm#AppList">AppList</a>_AS
+      でスタートメニュー下の全項目も検索対象に)。<br>
       なお、&quot;<b>*</b>&quot;、&quot;<b>?</b>&quot;、&quot;<b> </b>&quot; のいずれかを入力すると、すべての項目が表示されます。<br>
       マッチした項目が複数ある場合、<span class="btn_frame">↓</span>/<span class="btn_frame">↑</span>キー、または <a
         href="hid00050.htm#IncSearchDown">IncSearchDown</a>/ <a href="hid00050.htm#IncSearchUp">IncSearchUp</a>

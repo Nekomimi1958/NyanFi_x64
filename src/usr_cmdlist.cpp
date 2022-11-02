@@ -717,7 +717,7 @@ void get_PrmList(
 		params = "\nRS : カレント側に .nyanfi を再適用\n";
 	}
 	else if (USAME_TI(cmd, "Duplicate")) {
-		params = "\nRA : 管理者として二重起動\n";
+		params = "\nRA : 管理者として二重起動\nDM : 一般ユーザに降格して二重起動\n";
 	}
 	else if (contained_wd_i(_T("EditHistory|ViewHistory"), cmd)) {
 		params = "\nFF : フィルタ欄にフォーカス\nAC : 履歴をすべて消去\n";
@@ -877,6 +877,9 @@ void get_PrmList(
 	}
 	else if (USAME_TI(cmd, "NextNyanFi")) {
 		params = "\nDN : なければ二重起動\n";
+	}
+	else if (contained_wd_i(_T("OpenByApp|OpenByWin"), cmd)) {
+		params = "\nDM : 一般ユーザに降格して開く";
 	}
 	else if (USAME_TI(cmd, "OpenCtrlPanel")) {
 		params = "\nGM : GodModeで開く\n";

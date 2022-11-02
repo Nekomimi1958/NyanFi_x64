@@ -173,5 +173,7 @@ void get_ADS_Inf(UnicodeString fnam, TStringList *lst);
 //---------------------------------------------------------------------------
 int get_ProcessingInf(UnicodeString fnam, TStringList *lst = NULL, bool only_fnam = false);
 
+UnicodeString get_AssocExeName(UnicodeString fext);
+
 //---------------------------------------------------------------------------
 #endif

@@ -8753,13 +8753,10 @@ bool get_FileInfList(
 		//関連づけされているプログラム
 		//------------------------------------------
 		if (!test_FileExt(fext, FEXT_EXECUTE FEXT_APPINFO _T(".nbt.nwl"))) {
-			_TCHAR pszFile[MAX_PATH*2];
-			DWORD dwOut = MAX_PATH*2;
-			if (::AssocQueryString(ASSOCF_NOTRUNCATE, ASSOCSTR_EXECUTABLE,
-				fext.c_str(), _T("open"), pszFile, &dwOut)==S_OK)
-			{
+			UnicodeString xnam = get_AssocExeName(fext);
+			if (!xnam.IsEmpty()) {
 				lst->AddObject(
-					UnicodeString().sprintf(_T("%s%s"), get_PropTitle(_T("プログラム")).c_str(), pszFile),
+					UnicodeString().sprintf(_T("%s%s"), get_PropTitle(_T("プログラム")).c_str(), xnam.c_str()),
 					(TObject*)LBFLG_PATH_FIF);
 			}
 		}
@@ -12726,10 +12723,12 @@ bool Execute_ex(
 	}
 }
 //---------------------------------------------------------------------------
-bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
+bool Execute_cmdln(
+	UnicodeString cmdln,	//コマンドライン
+	UnicodeString wdir,		//作業ディレクトリ	(default = EmptyStr)
 	UnicodeString opt, DWORD *exit_code,
-	TStringList   *o_lst,	//出力リスト	(default = NULL)
-	TMemoryStream *o_ms)	//出力イメージ	(default = NULL)
+	TStringList   *o_lst,	//出力リスト		(default = NULL)
+	TMemoryStream *o_ms)	//出力イメージ		(default = NULL)
 {
 	GlobalErrMsg  = EmptyStr;
 	if (cmdln.IsEmpty()) return false;
@@ -12852,6 +12851,62 @@ bool Execute_cmdln(UnicodeString cmdln, UnicodeString wdir,
 		GlobalErrMsg = e.Message;
 		return false;
 	}
+}
+
+//---------------------------------------------------------------------------
+//一般ユーザに降格して実行
+//---------------------------------------------------------------------------
+bool Execute_demote(
+	UnicodeString cmd,		//コマンド
+	UnicodeString prm,		//パラメータ		(default = EmptyStr)
+	UnicodeString wdir)		//作業ディレクトリ	(default = EmptyStr)
+{
+	GlobalErrMsg = EmptyStr;
+
+	HWND hWnd = ::GetShellWindow();
+	DWORD pid = 0;
+	if (hWnd) ::GetWindowThreadProcessId(hWnd, &pid);
+	if (!hWnd || pid==0) {
+		GlobalErrMsg = LoadUsrMsg(USTR_FaildProc);
+		return false;
+	}
+
+	bool res = false;
+    HANDLE hShell = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
+    if (hShell) {
+		HANDLE hShToken;
+   		if (::OpenProcessToken(hShell, TOKEN_DUPLICATE, &hShToken)) {
+		    HANDLE hPriToken;
+			if (::DuplicateTokenEx(
+	            hShToken,
+				TOKEN_QUERY|TOKEN_ASSIGN_PRIMARY|TOKEN_DUPLICATE|TOKEN_ADJUST_DEFAULT|TOKEN_ADJUST_SESSIONID,
+				NULL, SecurityImpersonation, TokenPrimary, &hPriToken))
+			{
+				UnicodeString cmdln = add_quot_if_spc(cmd);
+				if (!prm.IsEmpty()) cmdln.cat_sprintf(_T(" %s"), prm.c_str());
+
+				STARTUPINFOW si = {sizeof(STARTUPINFOW)};
+				PROCESS_INFORMATION pi = {};
+    			if (::CreateProcessWithTokenW(
+						hPriToken, 0, NULL, cmdln.c_str(), 0, NULL, wdir.c_str(), &si, &pi))
+				{
+					::CloseHandle(pi.hProcess);
+					::CloseHandle(pi.hThread);
+					res = true;
+				}
+				else {
+					GlobalErrMsg = LoadUsrMsg(USTR_FaildExec);
+				}
+			    ::CloseHandle(hPriToken);
+			}
+		    ::CloseHandle(hShToken);
+		}
+    	::CloseHandle(hShell);
+	}
+
+	if (!res && GlobalErrMsg.IsEmpty()) GlobalErrMsg = LoadUsrMsg(USTR_FaildProc);
+
+	return res;
 }
 
 //---------------------------------------------------------------------------
@@ -14631,7 +14686,7 @@ bool OpenWebMaps(
 	UnicodeString tnam)	//テンプレートファイル名	(default = EmptyStr);
 {
 	try {
-		GlobalErrMsg  = EmptyStr;
+		GlobalErrMsg = EmptyStr;
 
 		UnicodeString lbuf;
 		//指定テンプレート

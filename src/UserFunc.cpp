@@ -337,10 +337,15 @@ UnicodeString format_DateTime(
 	TDateTime dt,	//“ú
 	bool omit)		//“¯“ú‚È‚ç“ú•t‚ğÈ—ª (default = false)
 {
-	if (omit && IsToday(dt))
-		return FormatDateTime("hh:nn:ss", dt);
-	else
-		return FormatDateTime("yyyy/mm/dd hh:nn:ss", dt);
+	if (dt==(TDateTime)0) {
+		return UnicodeString("???\?/?\?/?? ??:??:??");
+	}
+	else {
+		if (omit && IsToday(dt))
+			return FormatDateTime("hh:nn:ss", dt);
+		else
+			return FormatDateTime("yyyy/mm/dd hh:nn:ss", dt);
+	}
 }
 //---------------------------------------------------------------------------
 //“ú•t•¶š—ñ‚ğæ“¾
