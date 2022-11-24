@@ -248,6 +248,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ToPrimaryActionExecute(TObject *Sender);
 	void __fastcall ToPrimaryActionUpdate(TObject *Sender);
 	void __fastcall ExcAppTextItemClick(TObject *Sender);
+	void __fastcall ViewPanelMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
+	void __fastcall ViewPanelMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
+          int X, int Y);
 
 private:	// ユーザー宣言
 	TAppWinList *AppInfoList;
@@ -297,7 +301,7 @@ private:	// ユーザー宣言
 
 	void __fastcall SetIncSeaMode(bool sw);
 	void __fastcall UpdateAppList();
-	void __fastcall UpdateAppSttBar();
+	void __fastcall UpdateAppSttBar(bool force = false);
 	AppWinInf* __fastcall GetCurAppWinInf();
 
 	void __fastcall AddLnkFileRec(UnicodeString fnam, TStringList *lst, UnicodeString rnam = EmptyStr);

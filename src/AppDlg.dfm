@@ -37,6 +37,8 @@ object AppListDlg: TAppListDlg
     UseSystemFont = False
     StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
+    ExplicitTop = 269
+    ExplicitWidth = 386
   end
   object MainPanel: TPanel
     Left = 0
@@ -46,6 +48,8 @@ object AppListDlg: TAppListDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 386
+    ExplicitHeight = 269
     object LRSplitter: TSplitter
       Left = 285
       Top = 0
@@ -64,6 +68,8 @@ object AppListDlg: TAppListDlg
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitLeft = 286
+      ExplicitHeight = 269
       object DirPanel: TPanel
         Left = 0
         Top = 22
@@ -75,7 +81,6 @@ object AppListDlg: TAppListDlg
         TabOrder = 0
         StyleElements = [seBorder]
         OnDblClick = DirPanelDblClick
-        ExplicitTop = 0
       end
       object LaunchListBox: TListBox
         Left = 0
@@ -98,8 +103,7 @@ object AppListDlg: TAppListDlg
         OnDrawItem = LaunchListBoxDrawItem
         OnEnter = LaunchListBoxEnter
         OnKeyDown = LaunchListBoxKeyDown
-        ExplicitTop = 22
-        ExplicitHeight = 248
+        ExplicitHeight = 225
       end
       object InpPanel: TPanel
         Left = 0
@@ -126,6 +130,8 @@ object AppListDlg: TAppListDlg
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 281
+      ExplicitHeight = 269
       object ViewSplitter: TSplitter
         Left = 0
         Top = 160
@@ -147,6 +153,10 @@ object AppListDlg: TAppListDlg
         TabOrder = 0
         StyleElements = []
         OnDblClick = ViewPanelDblClick
+        OnMouseDown = ViewPanelMouseDown
+        OnMouseUp = ViewPanelMouseUp
+        ExplicitTop = 164
+        ExplicitWidth = 281
       end
       object AppListPanel: TPanel
         Left = 0
@@ -156,10 +166,12 @@ object AppListDlg: TAppListDlg
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 281
+        ExplicitHeight = 159
         object AppListBox: TListBox
           Left = 0
           Top = 0
-          Width = 285
+          Width = 277
           Height = 160
           Style = lbVirtualOwnerDraw
           Align = alLeft
@@ -176,6 +188,8 @@ object AppListDlg: TAppListDlg
           OnDrawItem = AppListBoxDrawItem
           OnEnter = AppListBoxEnter
           OnKeyDown = AppListBoxKeyDown
+          ExplicitWidth = 273
+          ExplicitHeight = 159
         end
       end
     end

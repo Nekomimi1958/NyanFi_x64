@@ -17,6 +17,7 @@
 #include <Vcl.Dialogs.hpp>
 #include <Vcl.AppEvnts.hpp>
 #include <Vcl.ComCtrls.hpp>
+#include <Vcl.Mask.hpp>
 #include "usr_scrpanel.h"
 
 //---------------------------------------------------------------------------

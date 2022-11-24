@@ -9,7 +9,6 @@ object FuncListDlg: TFuncListDlg
   Constraints.MinWidth = 400
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -17,8 +16,7 @@ object FuncListDlg: TFuncListDlg
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object UserDefPanel: TPanel
     Left = 0
     Top = 271
@@ -27,38 +25,42 @@ object FuncListDlg: TFuncListDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 270
+    ExplicitWidth = 480
     DesignSize = (
       484
       35)
     object UsrStrLabel: TLabel
-      Left = 25
+      Left = 22
       Top = 13
-      Width = 36
-      Height = 13
+      Width = 39
+      Height = 15
       Alignment = taRightJustify
       Caption = #25991#23383#21015
     end
     object UserDefComboBox: TComboBox
       Left = 66
       Top = 10
-      Width = 132
-      Height = 21
+      Width = 128
+      Height = 23
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
       OnClick = UserDefComboBoxClick
       OnEnter = UserDefComboBoxEnter
+      ExplicitWidth = 124
     end
     object UpdateBtn: TButton
-      Left = 402
+      Left = 398
       Top = 9
       Width = 75
       Height = 24
       Action = UpdUserDefAction
       Anchors = [akTop, akRight]
       TabOrder = 3
+      ExplicitLeft = 394
     end
     object RegExCheckBox: TCheckBox
-      Left = 204
+      Left = 200
       Top = 12
       Width = 100
       Height = 17
@@ -66,15 +68,17 @@ object FuncListDlg: TFuncListDlg
       Anchors = [akTop, akRight]
       Caption = #27491#35215#34920#29694'(&R)'
       TabOrder = 1
+      ExplicitLeft = 196
     end
     object RegHeaderBtn: TButton
-      Left = 308
+      Left = 304
       Top = 9
       Width = 90
       Height = 24
       Action = RegHeaderAction
       Anchors = [akTop, akRight]
       TabOrder = 2
+      ExplicitLeft = 300
     end
   end
   object BottomPanel: TPanel
@@ -85,6 +89,8 @@ object FuncListDlg: TFuncListDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 305
+    ExplicitWidth = 480
     object Opt1Panel: TPanel
       Left = 332
       Top = 0
@@ -94,6 +100,7 @@ object FuncListDlg: TFuncListDlg
       BevelOuter = bvNone
       TabOrder = 1
       TabStop = True
+      ExplicitLeft = 328
       object NameOnlyCheckBox: TCheckBox
         Left = 2
         Top = 9
@@ -113,6 +120,7 @@ object FuncListDlg: TFuncListDlg
       BevelOuter = bvNone
       TabOrder = 0
       TabStop = True
+      ExplicitWidth = 328
       DesignSize = (
         332
         35)
@@ -125,24 +133,27 @@ object FuncListDlg: TFuncListDlg
         Anchors = [akTop, akRight]
         Caption = '&Migemo'
         TabOrder = 1
+        ExplicitLeft = 247
       end
       object FilterEdit: TLabeledEdit
         Left = 66
         Top = 8
         Width = 177
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
-        EditLabel.Width = 47
-        EditLabel.Height = 13
+        EditLabel.Width = 50
+        EditLabel.Height = 23
         EditLabel.Caption = #12501#12451#12523#12479'(&F)'
         LabelPosition = lpLeft
         PopupMenu = UserModule.EditPopupMenuE
         TabOrder = 0
+        Text = ''
         OnChange = FilterEditChange
         OnEnter = FilterEditEnter
         OnExit = FilterEditExit
         OnKeyDown = FilterEditKeyDown
         OnKeyPress = FilterEditKeyPress
+        ExplicitWidth = 173
       end
     end
     object Opt2Panel: TPanel
@@ -154,6 +165,7 @@ object FuncListDlg: TFuncListDlg
       BevelOuter = bvNone
       TabOrder = 2
       TabStop = True
+      ExplicitLeft = 404
       object LinkCheckBox: TCheckBox
         Left = 2
         Top = 9
@@ -175,10 +187,12 @@ object FuncListDlg: TFuncListDlg
     DoubleBuffered = False
     ParentDoubleBuffered = False
     TabOrder = 2
+    ExplicitWidth = 480
+    ExplicitHeight = 270
     object FuncListBox: TListBox
       Left = 0
       Top = 0
-      Width = 484
+      Width = 480
       Height = 271
       Style = lbOwnerDrawFixed
       AutoComplete = False
@@ -202,6 +216,8 @@ object FuncListDlg: TFuncListDlg
       OnDrawItem = FuncListBoxDrawItem
       OnKeyDown = FuncListBoxKeyDown
       OnKeyPress = FuncListBoxKeyPress
+      ExplicitWidth = 476
+      ExplicitHeight = 270
     end
   end
   object ActionList1: TActionList

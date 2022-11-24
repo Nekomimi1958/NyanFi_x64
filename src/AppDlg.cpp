@@ -908,7 +908,7 @@ void __fastcall TAppListDlg::UpdateLaunchSttBar()
 //---------------------------------------------------------------------------
 //ステータスバーおよびライブサムネイルの更新
 //---------------------------------------------------------------------------
-void __fastcall TAppListDlg::UpdateAppSttBar()
+void __fastcall TAppListDlg::UpdateAppSttBar(bool force)
 {
 	TListBox *lp = AppListBox;
 	AppWinInf *c_ap = GetCurAppWinInf();
@@ -969,32 +969,76 @@ void __fastcall TAppListDlg::UpdateAppSttBar()
 			rc_thum.SetHeight(size.cy);
 		}
 
-		TRect rc_dest = ViewPanel->BoundsRect;
-		OffsetRect(rc_dest, AppPanel->Left, 0);
-		InflateRect(rc_dest, -16, -8);
-		if (size.cx>0 && size.cy>0 && rc_dest.Width()>0 && rc_dest.Height()>0
-			&& (rc_dest!=ThumbRect || LiveRect!=rc_thum))
+		TRect rc_dst = ViewPanel->BoundsRect;
+		OffsetRect(rc_dst, AppPanel->Left, 0);
+		InflateRect(rc_dst, -16, -8);
+		if (size.cx>0 && size.cy>0 && rc_dst.Width()>0 && rc_dst.Height()>0
+			&& (rc_dst!=ThumbRect || LiveRect!=rc_thum || force))
 		{
-			ThumbRect = rc_dest;
+			ThumbRect = rc_dst;
 			LiveRect  = rc_thum;
-			double dest_w = rc_dest.Width();
-			double dest_h = rc_dest.Height();
+			double dest_w = rc_dst.Width();
+			double dest_h = rc_dst.Height();
 			double size_w = size.cx;
 			double size_h = size.cy;
+			double dst_r = 1.0;
 			for (int i=0; (size_w>dest_w || size_h>dest_h) && i<2; i++) {
 				double r = (size_w>dest_w)? dest_w/size_w : dest_h/size_h;
 				size_w *= r;
 				size_h *= r;
+				dst_r = std::min(dst_r, r);
 			}
-			rc_dest.SetWidth((int)size_w);
-			rc_dest.SetHeight((int)size_h);
+			rc_dst.SetWidth((int)size_w);
+			rc_dst.SetHeight((int)size_h);
 
-			DWM_THUMBNAIL_PROPERTIES prop;
-			prop.dwFlags = DWM_TNP_RECTDESTINATION | DWM_TNP_VISIBLE | DWM_TNP_SOURCECLIENTAREAONLY;
+			DWM_THUMBNAIL_PROPERTIES prop = {};
+			prop.dwFlags = DWM_TNP_RECTDESTINATION | DWM_TNP_VISIBLE | DWM_TNP_RECTSOURCE | DWM_TNP_SOURCECLIENTAREAONLY;
 			prop.fSourceClientAreaOnly = FALSE;
 			prop.fVisible			   = TRUE;
 			prop.opacity			   = 255;
-			prop.rcDestination		   = rc_dest;
+
+			if (is_KeyDown(VK_LBUTTON) && dst_r>0 && dst_r<1.0) {
+				TPoint p = ViewPanel->ScreenToClient(Mouse->CursorPos);
+				p.x -= 16;
+				p.y -= 8;
+				p.x /= dst_r;
+				p.y /= dst_r;
+
+				int src_w = std::min((int)dest_w, (int)size.cx);
+				int src_h = std::min((int)dest_h, (int)size.cy);
+
+				TRect rc_src;
+				rc_src.Left   = p.x - src_w/2;
+				rc_src.Top    = p.y - src_h/2;
+				rc_src.Right  = rc_src.Left + src_w;
+				rc_src.Bottom = rc_src.Top + src_h;
+				if (rc_src.Left<0) {
+					rc_src.Left  = 0;
+					rc_src.Right = rc_src.Left + src_w;
+				}
+				else if (rc_src.Right>size.cx) {
+					rc_src.Right = size.cx;
+					rc_src.Left  = rc_src.Right - src_w;
+				}
+				if (rc_src.Top<0) {
+					rc_src.Top    = 0;
+					rc_src.Bottom = rc_src.Top + src_h;
+				}
+				else if (rc_src.Bottom>size.cy) {
+					rc_src.Bottom = size.cy;
+					rc_src.Top    = rc_src.Bottom - src_h;
+				}
+				prop.rcSource = rc_src;
+
+				if (rc_dst.Width()<src_w)  rc_dst.SetWidth(src_w);
+				if (rc_dst.Height()<src_h) rc_dst.SetHeight(src_h);
+				prop.rcDestination = rc_dst;
+			}
+			else {
+				prop.rcSource = rc_thum;
+				prop.rcDestination = rc_dst;
+			}
+
 			::DwmUpdateThumbnailProperties(c_ap->hThumb, &prop);
 		}
 	}
@@ -1104,7 +1148,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	//昇格アイコン
 	if (ap->isElevated) {
 		int s_16 = ScaledInt(16, this);
-		::DrawIconEx(cv->Handle, xp, Rect.Top + (Rect.Height() - s_16)/2, 
+		::DrawIconEx(cv->Handle, xp, Rect.Top + (Rect.Height() - s_16)/2,
 						hShieldIco, s_16, s_16, 0, NULL, DI_NORMAL);
 	}
 	xp += ScaledInt(18, this);
@@ -1217,6 +1261,18 @@ void __fastcall TAppListDlg::AppListBoxDblClick(TObject *Sender)
 	perform_Key_RETURN((TControl*)Sender);
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::ViewPanelMouseDown(TObject *Sender, TMouseButton Button,
+	TShiftState Shift, int X, int Y)
+{
+	UpdateAppSttBar(Button==mbLeft);
+}
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::ViewPanelMouseUp(TObject *Sender, TMouseButton Button,
+	TShiftState Shift, int X, int Y)
+{
+	UpdateAppSttBar(Button==mbLeft);
+}
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::ViewPanelDblClick(TObject *Sender)
 {

@@ -778,7 +778,7 @@ object NyanFiForm: TNyanFiForm
               Anchors = [akLeft, akTop, akRight]
               AutoSize = False
               EditLabel.Width = 36
-              EditLabel.Height = 15
+              EditLabel.Height = 22
               EditLabel.Caption = #12501#12451#12523#12479
               LabelPosition = lpLeft
               TabOrder = 0
@@ -903,7 +903,7 @@ object NyanFiForm: TNyanFiForm
               Anchors = [akLeft, akTop, akRight]
               AutoSize = False
               EditLabel.Width = 80
-              EditLabel.Height = 15
+              EditLabel.Height = 22
               EditLabel.Caption = #38500#22806#12487#12451#12524#12463#12488#12522
               LabelPosition = lpLeft
               TabOrder = 0

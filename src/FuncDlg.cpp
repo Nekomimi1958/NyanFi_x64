@@ -64,11 +64,11 @@ void __fastcall TFuncListDlg::FormShow(TObject *Sender)
 
 	SetDarkWinTheme(this);
 	FilterEdit->Color = get_WinColor(!ToFilter);
+	FilterEdit->Text  = EmptyStr;
 
 	if (!UnInitializing) InitializeList();
 
 	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)lp)->SetFocus();
-	FilterEdit->Text = EmptyStr;
 
 	ReqEdit = false;
 	DlgInitialized = true;
@@ -78,6 +78,7 @@ void __fastcall TFuncListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	UserDefStr = EmptyStr;
 	isFuzzy = false;
+	KeyHandled = false;		//¦KeyHandled = true ‚Å•Â‚¶‚Ä‚µ‚Ü‚¤ê‡‚ª‚ ‚é‚½‚ß
 
 	IniFile->SavePosInfo(this);
 
@@ -459,7 +460,7 @@ void __fastcall TFuncListDlg::FuncListBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::FilterEditChange(TObject *Sender)
 {
-	UpdateList(LinkCheckBox->Checked);
+	if (DlgInitialized) UpdateList(LinkCheckBox->Checked);
 }
 //---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::FilterEditEnter(TObject *Sender)

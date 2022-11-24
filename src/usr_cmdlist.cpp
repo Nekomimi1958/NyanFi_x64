@@ -848,14 +848,11 @@ void get_PrmList(
 			_T("ED : エディタ情報を追加\n")
 			_T("XT : 外部ツール情報を追加\n"));
 	}
-	else if (USAME_TI(cmd, "ListLog")) {
-		params = "\nEO : エラー箇所の絞り込み表示\n";
+	else if (contained_wd_i(_T("ListLog|ListText"), cmd)) {
+		params = "\nFF : フィルタ欄にフォーカス\nEO : エラー箇所の絞り込み表示\n";
 	}
 	else if (USAME_TI(cmd, "ListTail")) {
 		params = "\nTE : 最後尾に移動r\nFF : フィルタ欄にフォーカス\n";
-	}
-	else if (USAME_TI(cmd, "ListText")) {
-		params = "\nFF : フィルタ欄にフォーカス\nEO : エラー箇所の絞り込み表示\n";
 	}
 	else if (USAME_TI(cmd, "LockComputer")) {
 		params = "\nMO : ディスプレイの電源を切る\n";
