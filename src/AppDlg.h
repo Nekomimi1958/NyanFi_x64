@@ -301,7 +301,7 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 
 	void __fastcall SetIncSeaMode(bool sw);
 	void __fastcall UpdateAppList();
-	void __fastcall UpdateAppSttBar(bool force = false);
+	void __fastcall UpdateAppSttBar(bool force = false, bool actual = false);
 	AppWinInf* __fastcall GetCurAppWinInf();
 
 	void __fastcall AddLnkFileRec(UnicodeString fnam, TStringList *lst, UnicodeString rnam = EmptyStr);

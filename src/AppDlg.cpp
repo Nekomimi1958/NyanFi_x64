@@ -908,7 +908,9 @@ void __fastcall TAppListDlg::UpdateLaunchSttBar()
 //---------------------------------------------------------------------------
 //ステータスバーおよびライブサムネイルの更新
 //---------------------------------------------------------------------------
-void __fastcall TAppListDlg::UpdateAppSttBar(bool force)
+void __fastcall TAppListDlg::UpdateAppSttBar(
+	bool force,		//ライブサムネイルを強制的に更新	(default = false)
+	bool actual)	//ライブサムネイルを等倍表示		(default = false)
 {
 	TListBox *lp = AppListBox;
 	AppWinInf *c_ap = GetCurAppWinInf();
@@ -997,7 +999,8 @@ void __fastcall TAppListDlg::UpdateAppSttBar(bool force)
 			prop.fVisible			   = TRUE;
 			prop.opacity			   = 255;
 
-			if (is_KeyDown(VK_LBUTTON) && dst_r>0 && dst_r<1.0) {
+			//等倍
+			if (actual && dst_r>0 && dst_r<1.0) {
 				TPoint p = ViewPanel->ScreenToClient(Mouse->CursorPos);
 				p.x -= 16;
 				p.y -= 8;
@@ -1034,6 +1037,7 @@ void __fastcall TAppListDlg::UpdateAppSttBar(bool force)
 				if (rc_dst.Height()<src_h) rc_dst.SetHeight(src_h);
 				prop.rcDestination = rc_dst;
 			}
+			//通常
 			else {
 				prop.rcSource = rc_thum;
 				prop.rcDestination = rc_dst;
@@ -1265,13 +1269,13 @@ void __fastcall TAppListDlg::AppListBoxDblClick(TObject *Sender)
 void __fastcall TAppListDlg::ViewPanelMouseDown(TObject *Sender, TMouseButton Button,
 	TShiftState Shift, int X, int Y)
 {
-	UpdateAppSttBar(Button==mbLeft);
+	UpdateAppSttBar(true, Button==mbLeft);
 }
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::ViewPanelMouseUp(TObject *Sender, TMouseButton Button,
 	TShiftState Shift, int X, int Y)
 {
-	UpdateAppSttBar(Button==mbLeft);
+	UpdateAppSttBar(true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::ViewPanelDblClick(TObject *Sender)
