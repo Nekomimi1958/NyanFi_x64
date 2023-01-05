@@ -190,6 +190,7 @@ void __fastcall TThumbnailThread::MakeThumbnail(int idx)
 					//‰ñ“]
 					if (RotViewImg && img_ori>0) {
 						if		(img_ori==6) WIC_rotate_image(i_bp.get(), 1);
+						else if (img_ori==3) WIC_rotate_image(i_bp.get(), 2);
 						else if (img_ori==8) WIC_rotate_image(i_bp.get(), 3);
 					}
 

@@ -135,7 +135,7 @@ void __fastcall TSubViewer::DrawImage(UnicodeString fnam)
 						int ori = 0;
 						ex_str	= get_ExifInfStr(fnam, &ori);
 						//‰ñ“]
-						int rot = (ori==6)? 1 : (ori==8)? 3 : 0;
+						int rot = (ori==6)? 1 : (ori==3)? 2 : (ori==8)? 3 : 0;
 						if (RotViewImg && rot>0 && res!=LOADED_BY_WIC) WIC_rotate_image(bmp.get(), rot);
 					}
 					else if (test_PngExt(fext))

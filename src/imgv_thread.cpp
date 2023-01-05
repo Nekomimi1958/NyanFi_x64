@@ -212,8 +212,9 @@ void __fastcall TImgViewThread::DrawImage()
 				Img_rot_str.cat_sprintf(_T("%u"), Rotation);
 				Rotation = 0;
 			}
-			for (int i=1; i<=Img_rot_str.Length(); i++)
+			for (int i=1; i<=Img_rot_str.Length(); i++) {
 				WIC_rotate_image(ViewBuff, Img_rot_str.SubString(i, 1).ToIntDef(0));
+			}
 			//ç’·‚Èˆ——š—ð‚ðíœ
 			if (Img_rot_str.Length()>1)
 				Img_rot_str = replace_regex(Img_rot_str, _T("13|31|44|55|1111|3333"), null_TCHAR);
@@ -717,6 +718,7 @@ void __fastcall TImgViewThread::Execute()
 						else {
 							if (RotViewImg && ExifOri>0 && res!=LOADED_BY_WIC) {
 								if		(ExifOri==6) Rotation = 1;
+								else if (ExifOri==3) Rotation = 2;
 								else if (ExifOri==8) Rotation = 3;
 							}
 						}

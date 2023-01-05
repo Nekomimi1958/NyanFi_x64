@@ -439,7 +439,7 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 	if (idx!=-1) {
 		vstr = lst->Values[vnam];
 		if (!vstr.IsEmpty()) {
-			vstr = get_word_i_idx(_T("?|¶ãE‰¡(1)|?|?|?|?|¶ãEc(6)|?|¶‰ºEc(8)"), vstr.ToIntDef(0));
+			vstr = get_word_i_idx(_T("0 ?|1 ‰¡(‚»‚Ì‚Ü‚Ü)|2 ‰¡(¶‰E”½“])|3 ‰¡(180“x‰ñ“])|4 ‰¡(ã‰º”½“])|5 c(¶‰E”½“] + 270“x‰ñ“])|6 c(90“x‰ñ“])|7 c(¶‰E”½“] + 90“x‰ñ“])|8 c(270“x‰ñ“])"), vstr.ToIntDef(0));
 			lst->Add(tmp.sprintf(_T("%sL=%s"), vnam.c_str(), vstr.c_str()));
 		}
 	}
