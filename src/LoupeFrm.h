@@ -53,13 +53,13 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormHide(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall LoupeImageMouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
+	void __fastcall FormEndDock(TObject *Sender, TObject *Target, int X, int Y);
 	void __fastcall ToolBtnClick(TObject *Sender);
-	void __fastcall ShowBtnActionExecute(TObject *Sender);
-	void __fastcall ShowBtnActionUpdate(TObject *Sender);
+	void __fastcall LoupeImageMouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
 	void __fastcall MagActionExecute(TObject *Sender);
 	void __fastcall MagActionUpdate(TObject *Sender);
-	void __fastcall FormEndDock(TObject *Sender, TObject *Target, int X, int Y);
+	void __fastcall ShowBtnActionExecute(TObject *Sender);
+	void __fastcall ShowBtnActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	void __fastcall WmSysCommand(TWMSysCommand & SysCom)

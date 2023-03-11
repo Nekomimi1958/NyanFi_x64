@@ -107,6 +107,15 @@ void __fastcall TJsonViewer::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TJsonViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Alt+A"))
+		AutoAction->Execute();
+	else
+		SpecialKeyProc(this, Key, Shift);
+}
+//---------------------------------------------------------------------------
 //ツリービューに割り当て
 //	Data にJSON文字列を設定
 //---------------------------------------------------------------------------
@@ -672,16 +681,6 @@ void __fastcall TJsonViewer::FindEditKeyPress(TObject *Sender, System::WideChar 
 		KeyHandled = false;
 		Key = 0;
 	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TJsonViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+A"))
-		AutoAction->Execute();
-	else
-		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

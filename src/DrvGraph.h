@@ -45,19 +45,19 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
-	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall PaintBox1Paint(TObject *Sender);
 	void __fastcall FormResize(TObject *Sender);
-	void __fastcall PaintBox1MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
-	void __fastcall DriveComboBoxChange(TObject *Sender);
-	void __fastcall SizeComboBoxChange(TObject *Sender);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta, TPoint &MousePos, bool &Handled);
-	void __fastcall ToggleActionExecute(TObject *Sender);
-	void __fastcall SizeBtnClick(TObject *Sender);
+	void __fastcall PaintBox1Paint(TObject *Sender);
+	void __fastcall PaintBox1MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
+	void __fastcall DriveComboBoxChange(TObject *Sender);
+	void __fastcall OptComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall SizeComboBoxChange(TObject *Sender);
+	void __fastcall SizeBtnClick(TObject *Sender);
+	void __fastcall ToggleActionExecute(TObject *Sender);
 	void __fastcall HiddenEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall HiddenEditEnterExit(TObject *Sender);
-	void __fastcall OptComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

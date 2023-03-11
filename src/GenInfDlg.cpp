@@ -282,6 +282,11 @@ void __fastcall TGeneralInfoDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift, HelpContext);
+}
+//---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::GenListWndProc(TMessage &msg)
 {
 	if (msg.Msg==WM_VSCROLL || msg.Msg==WM_NYANFI_USCROLL) {
@@ -928,12 +933,6 @@ void __fastcall TGeneralInfoDlg::GenListBoxDataObject(TWinControl *Control, int 
 {
 	DataObject = (Index>=0 && Index<GenInfoBuff->Count)? GenInfoBuff->Objects[Index] : NULL;
 }
-//---------------------------------------------------------------------------
-void __fastcall TGeneralInfoDlg::GenListBoxExit(TObject *Sender)
-{
-	CancelKeySeq();
-	((TListBox*)Sender)->Repaint();
-}
 
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::GenListBoxClick(TObject *Sender)
@@ -1138,6 +1137,12 @@ void __fastcall TGeneralInfoDlg::GenListBoxDblClick(TObject *Sender)
 	perform_Key_RETURN((TControl*)Sender);
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TGeneralInfoDlg::GenListBoxExit(TObject *Sender)
+{
+	CancelKeySeq();
+	((TListBox*)Sender)->Repaint();
+}
 //---------------------------------------------------------------------------
 //ƒRƒs[
 //---------------------------------------------------------------------------
@@ -1595,12 +1600,6 @@ void __fastcall TGeneralInfoDlg::PlayActionUpdate(TObject *Sender)
 	TAction *ap = (TAction *)Sender;
 	ap->Visible = isPlayList;
 	ap->Enabled = isPlayList;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TGeneralInfoDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift, HelpContext);
 }
 //---------------------------------------------------------------------------
 

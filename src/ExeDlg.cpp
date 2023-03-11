@@ -87,6 +87,19 @@ void __fastcall TExeCmdDlg::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TExeCmdDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+L")) invert_CheckBox(LogStdOutCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CopyStdOutCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+D")) invert_CheckBox(ListStdOutCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+S")) invert_CheckBox(SaveStdOutCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+A")) invert_CheckBox(RunAsCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+E")) invert_CheckBox(UacDlgCheckBox);
+	else SpecialKeyProc(this, Key, Shift);
+}
+
+//---------------------------------------------------------------------------
 //çÄñ⁄ÇÃçÌèú
 //---------------------------------------------------------------------------
 void __fastcall TExeCmdDlg::DelItemActionExecute(TObject *Sender)
@@ -124,19 +137,6 @@ void __fastcall TExeCmdDlg::OkActionUpdate(TObject *Sender)
 
 	for (int i=0; i<OptGroupBox->ControlCount; i++)
 		OptGroupBox->Controls[i]->Enabled = !RunAsCheckBox->Checked && !UacDlgCheckBox->Checked;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TExeCmdDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+L")) invert_CheckBox(LogStdOutCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CopyStdOutCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+D")) invert_CheckBox(ListStdOutCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+S")) invert_CheckBox(SaveStdOutCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+A")) invert_CheckBox(RunAsCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+E")) invert_CheckBox(UacDlgCheckBox);
-	else SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

@@ -80,12 +80,15 @@ __published:	// IDE で管理されるコンポーネント
 	TStatusBar *FextInfBar;
 	TStatusBar *FileInfBar;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormResize(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall ListSplitterMoved(TObject *Sender);
+	void __fastcall FextInfBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
+	void __fastcall FileInfBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall FextHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
 			const TRect &Rect, bool Pressed);
 	void __fastcall FextInfHeaderSectionClick(THeaderControl *HeaderControl, THeaderSection *Section);
@@ -93,30 +96,27 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall InfoListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall InfoListBoxKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall InfoListBoxClick(TObject *Sender);
-	void __fastcall FextInfBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
-	void __fastcall FileInfBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
-	void __fastcall FileListHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
-	void __fastcall FileListHeaderSectionClick(THeaderControl *HeaderControl, THeaderSection *Section);
-	void __fastcall FileListBoxData(TWinControl *Control, int Index, UnicodeString &Data);
 	void __fastcall FileListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall FileListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall FileListBoxData(TWinControl *Control, int Index, UnicodeString &Data);
 	void __fastcall FileListBoxEnter(TObject *Sender);
 	void __fastcall FileListBoxExit(TObject *Sender);
+	void __fastcall FileListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FileListBoxClick(TObject *Sender);
+	void __fastcall FileListHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
+	void __fastcall FileListHeaderSectionClick(THeaderControl *HeaderControl, THeaderSection *Section);
 	void __fastcall FextClipCopyActionExecute(TObject *Sender);
 	void __fastcall FextLogOutActionExecute(TObject *Sender);
 	void __fastcall FextSaveActionExecute(TObject *Sender);
-	void __fastcall FextCsvActionUpdate(TObject *Sender);
 	void __fastcall FextOutActionUpdate(TObject *Sender);
-	void __fastcall SortFextActionUpdate(TObject *Sender);
-	void __fastcall SortFextActionExecute(TObject *Sender);
+	void __fastcall FextCsvActionUpdate(TObject *Sender);
 	void __fastcall FextMaskFindActionExecute(TObject *Sender);
+	void __fastcall SortFextActionExecute(TObject *Sender);
+	void __fastcall SortFextActionUpdate(TObject *Sender);
 	void __fastcall SortFileActionExecute(TObject *Sender);
 	void __fastcall SortFileActionUpdate(TObject *Sender);
-	void __fastcall PropertyActionUpdate(TObject *Sender);
-	void __fastcall PropertyActionExecute(TObject *Sender);
-	void __fastcall ListSplitterMoved(TObject *Sender);
 	void __fastcall ShowFileInfoActionExecute(TObject *Sender);
+	void __fastcall PropertyActionExecute(TObject *Sender);
+	void __fastcall PropertyActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TStringList *FextInfoList;

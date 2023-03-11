@@ -82,6 +82,12 @@ void __fastcall TInspectForm::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TInspectForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (Key==VK_ESCAPE) Close(); else Application->MainForm->SetFocus();
+}
+
+//---------------------------------------------------------------------------
 //ƒwƒbƒ_‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TInspectForm::InsStatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
@@ -339,12 +345,6 @@ void __fastcall TInspectForm::CopyItemClick(TObject *Sender)
 	}
 	copy_to_Clipboard(cpystr);
 	Application->MainForm->SetFocus();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TInspectForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (Key==VK_ESCAPE) Close(); else Application->MainForm->SetFocus();
 }
 
 //---------------------------------------------------------------------------

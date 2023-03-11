@@ -112,6 +112,11 @@ void __fastcall TFtpConnectDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TFtpConnectDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#FtpConnect"));
+}
+//---------------------------------------------------------------------------
 void __fastcall TFtpConnectDlg::PageControl1DrawTab(TCustomTabControl *Control,
 	int TabIndex, const TRect &Rect, bool Active)
 {
@@ -161,7 +166,6 @@ void __fastcall TFtpConnectDlg::HostListBoxKeyDown(TObject *Sender, WORD &Key, T
 {
 	if (UserModule->ListBoxOpeItem(get_KeyStr(Key, Shift))) Key = 0;
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TFtpConnectDlg::AnonyCheckBoxClick(TObject *Sender)
 {
@@ -244,13 +248,6 @@ void __fastcall TFtpConnectDlg::HostListBoxDblClick(TObject *Sender)
 	ConnectAction->Execute();
 	ModalResult = mrOk;
 }
-
-//---------------------------------------------------------------------------
-void __fastcall TFtpConnectDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#FtpConnect"));
-}
-
 //---------------------------------------------------------------------------
 void __fastcall TFtpConnectDlg::RefSoundBtnClick(TObject *Sender)
 {

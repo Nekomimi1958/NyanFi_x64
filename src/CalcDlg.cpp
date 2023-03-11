@@ -3,9 +3,9 @@
 //  電卓																//
 //----------------------------------------------------------------------//
 #include "UserFunc.h"
+#include "UserMdl.h"
 #include "Global.h"
 #include "CalcDlg.h"
-#include "UserMdl.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -100,6 +100,11 @@ void __fastcall TCalculator::FormDestroy(TObject *Sender)
 	delete FuncList;
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TCalculator::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
 //---------------------------------------------------------------------------
 //ユーザ定義の初期化
 //---------------------------------------------------------------------------
@@ -857,6 +862,11 @@ void __fastcall TCalculator::LineEditKeyDown(TObject *Sender, WORD &Key, TShiftS
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TCalculator::LineEditKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (Key==VK_RETURN) Key = 0;
+}
+//---------------------------------------------------------------------------
 //履歴欄でのキー操作
 //---------------------------------------------------------------------------
 void __fastcall TCalculator::HistComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -884,11 +894,6 @@ void __fastcall TCalculator::HistComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	else handled = false;
 
 	if (handled) Key = 0;
-}
-//---------------------------------------------------------------------------
-void __fastcall TCalculator::LineEditKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (Key==VK_RETURN) Key = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -1025,12 +1030,6 @@ void __fastcall TCalculator::AcBtnClick(TObject *Sender)
 		HistComboBox->Text = EmptyStr;
 	else
 		LineEdit->Text	   = EmptyStr;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TCalculator::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

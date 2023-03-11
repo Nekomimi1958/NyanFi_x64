@@ -24,13 +24,13 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *CanOutPanel;
 	TSpeedButton *CancelBtn;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall DummyBtnClick(TObject *Sender);
 	void __fastcall CancelBtnClick(TObject *Sender);
-	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall FormDestroy(TObject *Sender);
 
 private:	// ユーザー宣言
 	void __fastcall WmMenuChar(TMessage &msg)

@@ -34,10 +34,10 @@ __published:	// IDE で管理されるコンポーネント
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall FormatRadioGroupClick(TObject *Sender);
-	void __fastcall SfxCheckBoxClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall PerDirCheckBoxClick(TObject *Sender);
+	void __fastcall FormatRadioGroupClick(TObject *Sender);
+	void __fastcall SfxCheckBoxClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	void __fastcall WmMenuChar(TMessage &msg)

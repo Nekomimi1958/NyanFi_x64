@@ -44,15 +44,15 @@ __published:	// IDE で管理されるコンポーネント
 
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormHide(TObject *Sender);
-	void __fastcall InfoListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall CopyItemClick(TObject *Sender);
-	void __fastcall ChgFontItemClick(TObject *Sender);
 	void __fastcall Splitter1Moved(TObject *Sender);
-	void __fastcall SetColItemClick(TObject *Sender);
-	void __fastcall CopyUniChNameItemClick(TObject *Sender);
-	void __fastcall NumRefHexItemClick(TObject *Sender);
-	void __fastcall NumRefDecItemClick(TObject *Sender);
+	void __fastcall InfoListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall PopupMenu1Popup(TObject *Sender);
+	void __fastcall CopyItemClick(TObject *Sender);
+	void __fastcall CopyUniChNameItemClick(TObject *Sender);
+	void __fastcall NumRefDecItemClick(TObject *Sender);
+	void __fastcall NumRefHexItemClick(TObject *Sender);
+	void __fastcall ChgFontItemClick(TObject *Sender);
+	void __fastcall SetColItemClick(TObject *Sender);
 	void __fastcall FontNameItemClick(TObject *Sender);
 
 private:	// ユーザー宣言

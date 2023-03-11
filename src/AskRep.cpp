@@ -62,6 +62,12 @@ void __fastcall TAskRepDlg::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TAskRepDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TAskRepDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
 	const TRect &Rect)
 {
@@ -140,12 +146,6 @@ void __fastcall TAskRepDlg::RepListBoxDrawItem(TWinControl *Control,
 void __fastcall TAskRepDlg::RepListBoxEnter(TObject *Sender)
 {
 	OKBtn->SetFocus();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TAskRepDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

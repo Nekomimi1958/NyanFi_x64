@@ -14,8 +14,8 @@
 #include <Vcl.ActnList.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.Graphics.hpp>
-#include "usr_swatch.h"
 #include <Vcl.Mask.hpp>
+#include "usr_swatch.h"
 
 //---------------------------------------------------------------------------
 class TDotNyanDlg : public TForm
@@ -71,31 +71,31 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioGroup *SyncRadioGroup;
 	TRadioGroup *SysRadioGroup;
 
-	void __fastcall CreNyanActionExecute(TObject *Sender);
-	void __fastcall CreNyanActionUpdate(TObject *Sender);
-	void __fastcall DelNyanActionExecute(TObject *Sender);
-	void __fastcall DelNyanActionUpdate(TObject *Sender);
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
+	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall NoOderCheckBoxClick(TObject *Sender);
 	void __fastcall RefSndBtnClick(TObject *Sender);
 	void __fastcall TestSndBtnClick(TObject *Sender);
 	void __fastcall RefImgBtnClick(TObject *Sender);
-	void __fastcall RefCmdsBtnClick(TObject *Sender);
-	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall RefColBtnClick(TObject *Sender);
-	void __fastcall DisableColActionExecute(TObject *Sender);
-	void __fastcall DisableColActionUpdate(TObject *Sender);
 	void __fastcall ColorComboBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
 			TOwnerDrawState State);
-	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall RefColBtnClick(TObject *Sender);
 	void __fastcall SpuitImageMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall SpuitImageMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
+	void __fastcall DisableColActionExecute(TObject *Sender);
+	void __fastcall DisableColActionUpdate(TObject *Sender);
+	void __fastcall RefCmdsBtnClick(TObject *Sender);
 	void __fastcall CancelBtnClick(TObject *Sender);
-	void __fastcall InhColBtnClick(TObject *Sender);
-	void __fastcall InhImgBtnClick(TObject *Sender);
+	void __fastcall CreNyanActionExecute(TObject *Sender);
+	void __fastcall CreNyanActionUpdate(TObject *Sender);
 	void __fastcall InhSndBtnClick(TObject *Sender);
-	void __fastcall InheritBtnClick(TObject *Sender);
+	void __fastcall InhImgBtnClick(TObject *Sender);
+	void __fastcall InhColBtnClick(TObject *Sender);
 	void __fastcall InhCmdBtnClick(TObject *Sender);
-	void __fastcall NoOderCheckBoxClick(TObject *Sender);
+	void __fastcall InheritBtnClick(TObject *Sender);
+	void __fastcall DelNyanActionExecute(TObject *Sender);
+	void __fastcall DelNyanActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool NyanExists;

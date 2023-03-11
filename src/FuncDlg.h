@@ -59,6 +59,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FuncListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall FuncListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FuncListBoxKeyPress(TObject *Sender, System::WideChar &Key);
@@ -69,22 +70,21 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FilterEditExit(TObject *Sender);
 	void __fastcall FilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FilterEditKeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall RegExActionExecute(TObject *Sender);
+	void __fastcall UserDefComboBoxEnter(TObject *Sender);
+	void __fastcall UserDefComboBoxClick(TObject *Sender);
 	void __fastcall UpdUserDefActionExecute(TObject *Sender);
 	void __fastcall UpdUserDefActionUpdate(TObject *Sender);
-	void __fastcall UserDefComboBoxClick(TObject *Sender);
-	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall ReqEditActionExecute(TObject *Sender);
 	void __fastcall CloseListActionExecute(TObject *Sender);
+	void __fastcall ReqEditActionExecute(TObject *Sender);
 	void __fastcall CopyListActionExecute(TObject *Sender);
 	void __fastcall SaveListActionExecute(TObject *Sender);
 	void __fastcall ListActionUpdate(TObject *Sender);
 	void __fastcall RegHeaderActionExecute(TObject *Sender);
 	void __fastcall RegHeaderActionUpdate(TObject *Sender);
-	void __fastcall UserDefComboBoxEnter(TObject *Sender);
 	void __fastcall MigemoActionExecute(TObject *Sender);
 	void __fastcall NameOnlyActionExecute(TObject *Sender);
 	void __fastcall LinkActionExecute(TObject *Sender);
-	void __fastcall RegExActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	TStringList *FunctionList;

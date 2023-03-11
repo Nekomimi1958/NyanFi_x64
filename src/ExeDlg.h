@@ -37,15 +37,15 @@ __published:	// IDE で管理されるコンポーネント
 	TEdit *SaveNameEdit;
 	TGroupBox *OptGroupBox;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall ClrHistoryItemClick(TObject *Sender);
-	void __fastcall OkActionUpdate(TObject *Sender);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall DelItemActionExecute(TObject *Sender);
 	void __fastcall DelItemActionUpdate(TObject *Sender);
+	void __fastcall ClrHistoryItemClick(TObject *Sender);
 	void __fastcall OkActionExecute(TObject *Sender);
-	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall OkActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	void __fastcall WmMenuChar(TMessage &msg)

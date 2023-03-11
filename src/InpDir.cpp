@@ -100,6 +100,12 @@ void __fastcall TInpDirDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TInpDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#InputDir"));
+}
+
+//---------------------------------------------------------------------------
 //ŽQÆ
 //---------------------------------------------------------------------------
 void __fastcall TInpDirDlg::RefDirBtnClick(TObject *Sender)
@@ -307,12 +313,6 @@ void __fastcall TInpDirDlg::SubComboBoxCloseUp(TObject *Sender)
 void __fastcall TInpDirDlg::OkActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = !InpDirComboBox->Text.IsEmpty();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TInpDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#InputDir"));
 }
 //---------------------------------------------------------------------------
 

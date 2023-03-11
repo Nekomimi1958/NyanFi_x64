@@ -84,6 +84,15 @@ void __fastcall TColorPicker::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TColorPicker::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (Key==VK_ESCAPE)
+		Close();
+	else
+		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_IV) _T("#ColorPicker"));
+}
+
+//---------------------------------------------------------------------------
 //表示の更新
 //---------------------------------------------------------------------------
 void __fastcall TColorPicker::UpdateStt(int x, int y, float ratio)
@@ -287,15 +296,6 @@ void __fastcall TColorPicker::StartRepActionUpdate(TObject *Sender)
 	else if (Repeating)	stt_str.sprintf(_T("連続取得中...　あと %u 回"), RepCount);
 	else 				stt_str = "[開始]で連続取得が始まります。";
 	RepSttLabel->Caption = stt_str;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TColorPicker::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (Key==VK_ESCAPE)
-		Close();
-	else
-		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_IV) _T("#ColorPicker"));
 }
 //---------------------------------------------------------------------------
 

@@ -45,29 +45,29 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *ListPanel;
 	TPopupMenu *InfPopupMenu;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall FormResize(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall InfListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall InfListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall CopyInfoActionExecute(TObject *Sender);
-	void __fastcall CopyActionExecute(TObject *Sender);
-	void __fastcall CopyActionUpdate(TObject *Sender);
-	void __fastcall SelAllActionExecute(TObject *Sender);
-	void __fastcall PropertyDlgActionUpdate(TObject *Sender);
-	void __fastcall PropertyDlgActionExecute(TObject *Sender);
 	void __fastcall InfListBoxKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall InfListBoxDblClick(TObject *Sender);
-	void __fastcall FormDestroy(TObject *Sender);
-	void __fastcall FormResize(TObject *Sender);
+	void __fastcall CopyInfoActionExecute(TObject *Sender);
 	void __fastcall CopyValueActionExecute(TObject *Sender);
 	void __fastcall EmpItemActionExecute(TObject *Sender);
 	void __fastcall EmpItemActionUpdate(TObject *Sender);
-	void __fastcall ImgPreviewActionExecute(TObject *Sender);
-	void __fastcall ImgPreviewActionUpdate(TObject *Sender);
+	void __fastcall CopyActionExecute(TObject *Sender);
+	void __fastcall CopyActionUpdate(TObject *Sender);
+	void __fastcall SelAllActionExecute(TObject *Sender);
 	void __fastcall OpenLocActionExecute(TObject *Sender);
 	void __fastcall OpenLocActionUpdate(TObject *Sender);
+	void __fastcall PropertyDlgActionExecute(TObject *Sender);
+	void __fastcall PropertyDlgActionUpdate(TObject *Sender);
+	void __fastcall ImgPreviewActionExecute(TObject *Sender);
+	void __fastcall ImgPreviewActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

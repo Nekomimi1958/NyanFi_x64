@@ -65,6 +65,7 @@ __published:	// IDE で管理されるコンポーネント
 	TTreeView *XmlTreeView;
 	TXMLDocument *XMLDocument1;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
@@ -78,25 +79,24 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall ExpandItemClick(TObject *Sender);
 	void __fastcall CollapseItemClick(TObject *Sender);
-	void __fastcall FindEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall FindEditKeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall PopupMenu1Popup(TObject *Sender);
-	void __fastcall ViewModeItemClick(TObject *Sender);
-	void __fastcall OpenUrlActionExecute(TObject *Sender);
-	void __fastcall OpenUrlActionUpdate(TObject *Sender);
-	void __fastcall FindDownActionExecute(TObject *Sender);
-	void __fastcall FindActionUpdate(TObject *Sender);
-	void __fastcall FindUpActionExecute(TObject *Sender);
-	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall ExpandActionExecute(TObject *Sender);
-	void __fastcall CollapseActionExecute(TObject *Sender);
 	void __fastcall CopyActionExecute(TObject *Sender);
 	void __fastcall CopyActionUpdate(TObject *Sender);
-	void __fastcall CopyXPathActionExecute(TObject *Sender);
-	void __fastcall CopyXPathActionUpdate(TObject *Sender);
 	void __fastcall CopyXmlActionExecute(TObject *Sender);
 	void __fastcall CopyXmlActionUpdate(TObject *Sender);
+	void __fastcall CopyXPathActionExecute(TObject *Sender);
+	void __fastcall CopyXPathActionUpdate(TObject *Sender);
+	void __fastcall OpenUrlActionExecute(TObject *Sender);
+	void __fastcall OpenUrlActionUpdate(TObject *Sender);
+	void __fastcall PopupMenu1Popup(TObject *Sender);
+	void __fastcall ViewModeItemClick(TObject *Sender);
+	void __fastcall FindDownActionExecute(TObject *Sender);
+	void __fastcall FindUpActionExecute(TObject *Sender);
+	void __fastcall FindActionUpdate(TObject *Sender);
+	void __fastcall ExpandActionExecute(TObject *Sender);
+	void __fastcall CollapseActionExecute(TObject *Sender);
 	void __fastcall AutoActionExecute(TObject *Sender);
+	void __fastcall FindEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall FindEditKeyPress(TObject *Sender, System::WideChar &Key);
 
 private:	// ユーザー宣言
 	//ViewBusy プロパティ  ツリービュー処理中

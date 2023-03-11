@@ -185,15 +185,15 @@ void __fastcall TEditItemDlg::SortItemActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TEditItemDlg::ItemListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (UserModule->ListBoxOpeItem(get_KeyStr(Key, Shift))) Key = 0;
+}
+//---------------------------------------------------------------------------
 void __fastcall TEditItemDlg::ItemListBoxClick(TObject *Sender)
 {
 	TListBox *lp = (TListBox*)Sender;
 	if (lp->ItemIndex!=-1) ItemEdit->Text = lp->Items->Strings[lp->ItemIndex];
-}
-//---------------------------------------------------------------------------
-void __fastcall TEditItemDlg::ItemListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (UserModule->ListBoxOpeItem(get_KeyStr(Key, Shift))) Key = 0;
 }
 //---------------------------------------------------------------------------
 

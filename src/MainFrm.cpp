@@ -228,7 +228,6 @@ LRESULT CALLBACK MouseHookProc(int code, WPARAM wParam, LPARAM lParam)
 	return 1;
 }
 
-
 //---------------------------------------------------------------------------
 // TNfForm クラス
 //---------------------------------------------------------------------------
@@ -1267,14 +1266,197 @@ void __fastcall TNyanFiForm::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ActivateMainForm()
+//アクティブ化
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::FormActivate(TObject *Sender)
 {
-	if (::IsIconic(Handle)) this->Perform(WM_SYSCOMMAND, SC_RESTORE, (NativeInt)0);
-	::SetForegroundWindow(Handle);
-	if (StoreTaskTray) Show();
-	Application->Restore();
-	Application->BringToFront();
+	KeepCurCsr = 0;
 }
+//---------------------------------------------------------------------------
+//サイズ変更時の処理
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::FormResize(TObject *Sender)
+{
+	if (!Initialized || UnInitializing) return;
+
+	if (WindowState!=wsMinimized) {
+		KeepFileListRerio();
+		UpdateFKeyBtn();
+
+		//ステータスバー
+		StatusBar1->Panels->Items[0]->Width = ClientWidth
+			- set_SttBarPanelWidth(StatusBar1, 1, str_len_half(GetClockStr())) - ScaledThis(20);
+
+		//テキストビュアーヘッダ
+		TxtSttHeader->Panels->Items[0]->Width = ClientWidth
+			- set_SttBarPanelWidth(TxtSttHeader, 1, "UTF-16(BE) BOM付")
+			- set_SttBarPanelWidth(TxtSttHeader, 2, "CR/LF")
+			- set_SttBarPanelWidth(TxtSttHeader, 3, ".TXT:CLIPBOARD")
+			- set_SttBarPanelWidth(TxtSttHeader, 4, "00000行 0000桁 00列 0000字選択");
+
+		if (ScrMode==SCMD_TVIEW) {
+			TxtViewer->SetMetric(true);
+			TxtViewer->Repaint(true);
+		}
+
+		//イメージビュアー情報ヘッダ
+		TStatusPanels *pp = ImgSttHeader->Panels;
+		int p_wd = (ClientWidth - pp->Items[2]->Width - pp->Items[3]->Width - pp->Items[4]->Width) / 3;
+		pp->Items[0]->Width = p_wd;
+		pp->Items[1]->Width = p_wd * 2;
+
+		//Grep用ステータスバー
+		GrepSttSplitterMoved(GrepSttSplitter);
+		if (ScrMode==SCMD_GREP) ResultListBox->Invalidate();
+	}
+
+	//ウィンドウの状態が変化
+	if (LastWinState!=WindowState) {
+		switch (WindowState) {
+		case wsMaximized: ExeEventCommand(OnMaximized);	break;	//イベント: 最大化された
+		case wsMinimized: ExeEventCommand(OnMinimized);	break;	//イベント: 最小化された
+		case wsNormal:	  ExeEventCommand(OnRestored);	break;	//イベント: 元のサイズに戻った
+		}
+	}
+	LastWinState = WindowState;
+}
+
+//---------------------------------------------------------------------------
+//ビュアーでのキー操作
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (!Initialized || UnInitializing) return;
+
+	//--------------------------
+	//テキストビュアー
+	//--------------------------
+	if (ScrMode==SCMD_TVIEW) {
+		try {
+			bool hadled = true;
+			//インクリメンタルサーチ
+			if (TxtViewer->isIncSea) {
+				UnicodeString KeyStr = get_KeyStr(Key, Shift);		if (KeyStr.IsEmpty()) return;
+				TxtViewer->IncSearch(KeyStr);
+			}
+			//通常
+			else {
+				UnicodeString KeyStr = TwoStrokeSeq(Key, Shift);	if (KeyStr.IsEmpty()) return;
+				UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+				UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
+				if (cmd_V.IsEmpty()) cmd_V = TxtViewer->GetStdKeyCommand(KeyStr);
+				CancelHelp	= !cmd_V.IsEmpty() && EndsStr("F1", KeyStr);
+				ActionParam = EmptyStr;
+
+				//コマンド処理
+				if (ExeCommandV(cmd_V)) {
+					ClearKeyBuff(true);
+				}
+				//右クリックメニュー
+				else if (contained_wd_i(KeysStr_Popup, KeyStr) || StartsText("ContextMenu", cmd_F)) {
+					show_PopupMenu(ViewPopupMenu, TextPaintBox);
+				}
+				//補助画面(なければビュアー)を閉じる
+				else if (equal_ESC(KeyStr)) {
+					if (ExeCmdsBusy) {
+						if (msgbox_Sure(USTR_CancelCmdQ)) XCMD_Aborted = true;
+					}
+					else {
+						if (!TxtViewer->CloseAuxForm()) ExeCommandV(_T("Close"));
+					}
+				}
+				//ビュアーを閉じる
+				else if (equal_ENTER(KeyStr)) {
+					ExeCommandV(_T("Close"));
+				}
+				else hadled = false;
+			}
+
+			if (hadled) Key = 0;
+		}
+		catch (EAbort &e) {
+			SttBarWarn(e.Message);
+		}
+	}
+	//--------------------------
+	//イメージビュアー
+	//--------------------------
+	else if (ScrMode==SCMD_IVIEW && ImgViewPanel->Visible) {
+		UnicodeString KeyStr = TwoStrokeSeq(Key, Shift);	if (KeyStr.IsEmpty()) return;
+		UnicodeString CmdStr = KeyFuncList->Values["I:" + KeyStr];
+		if (CmdStr.IsEmpty() && !ThumbExtended) {
+			CmdStr = equal_UP(KeyStr)? "ScrollUp" :
+					 equal_DOWN(KeyStr)? "ScrollDown" :
+					 equal_LEFT(KeyStr)? "ScrollLeft" :
+					 equal_RIGHT(KeyStr)? "ScrollRight" :
+					 SameText(KeyStr, "PGUP")? "PrevPage" :
+					 SameText(KeyStr, "PGDN")? "NextPage" : "";
+		}
+		CancelHelp	= !CmdStr.IsEmpty() && EndsStr("F1", KeyStr);
+
+		//右綴じでNext/PrevFile入替
+		if (SeekSwapNxtPrv && DoublePage && RightBind && ShowSeekBar) {
+			if		(StartsText("NextFile", CmdStr)) CmdStr = ReplaceText(CmdStr, "NextFile", "PrevFile");
+			else if (StartsText("PrevFile", CmdStr)) CmdStr = ReplaceText(CmdStr, "PrevFile", "NextFile");
+		}
+
+		ActionParam = EmptyStr;
+
+		try {
+			bool hadled = true;
+			//コマンド処理
+			if (ExeCommandI(CmdStr)) {
+				if (!ActionOk) ActionAbort();
+			}
+			//閉じる
+			else if (equal_ESC(KeyStr)) {
+				if (ExeCmdsBusy) {
+					if (msgbox_Sure(USTR_CancelCmdQ)) XCMD_Aborted = true;
+				}
+				else if (IS_FullScr()) {
+					ExeCommandI("FullScreen", "OFF");
+				}
+				else if (ColorPicker->Visible) {
+					ColorPicker->Close();
+				}
+				else {
+					ExeCommandI("Close");
+				}
+			}
+			else if (equal_ENTER(KeyStr)) {
+				ExeCommandI("Close");
+			}
+			//カーソル移動
+			else if (!usr_ARC->Busy && Shift.Empty()) {
+				switch (Key) {
+				case VK_UP:		GridCursorUp(ThumbnailGrid);	break;
+				case VK_DOWN:	GridCursorDown(ThumbnailGrid);	break;
+				case VK_LEFT:	GridCursorLeft(ThumbnailGrid);	break;
+				case VK_RIGHT:	GridCursorRight(ThumbnailGrid);	break;
+				case VK_PRIOR:	ExeCommandI("PageUp");			break;
+				case VK_NEXT:	ExeCommandI("PageDown");		break;
+				}
+			}
+			else hadled = false;
+
+			if (hadled) Key = 0;
+		}
+		catch (EAbort &e) {
+			SttBarWarn(e.Message);
+			Key = 0;
+		}
+	}
+	//--------------------------
+	//その他
+	//--------------------------
+	else {
+		//Shift+F10キーの処理(エディット/コンボボックスのメニュー表示)
+		//※コンボボックスでデフォルトのメニューが出てしまう現象に対応
+		//　また、コントロールが隠れないように表示位置を変更
+		if (USAME_TI(get_KeyStr(Key, Shift), "Shift+F10") && UserModule->ShowPopupMenu()) Key = 0;
+	}
+}
+
 
 //---------------------------------------------------------------------------
 //FindBusy プロパティの設定
@@ -1349,41 +1531,57 @@ bool __fastcall TNyanFiForm::SureOtherActiv()
 }
 
 //---------------------------------------------------------------------------
-// LockKeyMouse コマンド実行中のキー処理
+//アクティブ/非アクティブ化の直前
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmNyanFiLockKey(TMessage &msg)
+void __fastcall TNyanFiForm::WmActivate(TMessage &msg)
 {
-	int key = msg.WParam;
-	bool ok = false;
+	bool inact = (LOWORD(msg.WParam)==WA_INACTIVE);
 
-	if (UnlockWord.IsEmpty()) {
-		ok = (key==VK_ESCAPE);
+	//ツールバー背景色
+	SetupToolBarColor(!inact, true);
+
+	//モーダル表示効果
+	if (inact) {
+		HWND hWnd = (HWND)msg.LParam;	//新たにアクティブになったウィンドウ
+		bool is_own = false;
+		if (hWnd) {
+			DWORD pid;
+			::GetWindowThreadProcessId(hWnd, &pid);
+			is_own = (pid==ProcessId);
+		}
+
+		if (is_own && !InhModalScr) {
+			TWinControl *wp = FindControl(hWnd);
+			if (wp && wp!=ModalScrForm && wp->InheritsFrom(__classid(TForm))) {
+				TForm *fp = (TForm*)wp;
+				if (fp->Floating && fp->BorderStyle!=bsNone && fp->FormStyle!=fsStayOnTop) LastModalForm = fp;
+			}
+
+			//モーダルスクリーンの表示
+			if (ModalScreen && ModalScrAlpha>0 && !UnInitializing && ScrMode==SCMD_FLIST
+				&& !usr_ARC->RarUnpacking && !(GitViewer && GitViewer->GitBusy))
+			{
+				if (!contained_wd_i(
+					_T("HH Parent|User32_ReaderMode|TApplication|TModalScrForm|TAppListDlg|")
+					_T("TOptionDlg|TGrepExOptDlg|TDotNyanDlg|TExTxtViewer|TSubViewer|TDebugForm"),
+					get_WndClassName(hWnd)))
+				{
+					ModalScrForm->Visible = true;
+				}
+			}
+		}
+
+		KeepCurCsr = 1;
+		InhModalScr   = false;
 	}
 	else {
-		UnicodeString KeyStr = get_AlNumChar(key);
-		if (!KeyStr.IsEmpty()) {
-			InputWord += KeyStr;
-			if (SameText(InputWord, UnlockWord))
-				ok = true;
-			else if (!StartsText(InputWord, UnlockWord))
-				InputWord = EmptyStr;
-		}
-		else {
-			InputWord = EmptyStr;
-		}
+		HWND hWnd = get_ModalWnd();
+		if (!KeepModalScr && !hWnd) ModalScrForm->Visible = false;
+		if (hWnd) ::SetFocus(hWnd);
 	}
 
-	if (ok) {
-		::UnhookWindowsHookEx(hKeyHook);
-		::UnhookWindowsHookEx(hMouseHook);
-
-		ModalScrForm->Visible = false;
-
-		//ロックが解除された
-		ExeEventCommand(OnUnlocked);
-	}
+	TForm::Dispatch(&msg);
 }
-
 //---------------------------------------------------------------------------
 //Windows終了時の処理
 //---------------------------------------------------------------------------
@@ -1619,6 +1817,81 @@ void __fastcall TNyanFiForm::WmMenuChar(TMessage &msg)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::WmSettingChange(TMessage &msg)
+{
+	if (msg.WParam==SPI_SETHIGHCONTRAST) SetupDesign(false);
+}
+//---------------------------------------------------------------------------
+// ドライブが変更された
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::WmDeviceChange(TMessage &msg)
+{
+	if (!Initialized || UnInitializing) return;
+
+	//ドライブ情報を取得
+	drive_info *new_dp = get_DriveInfoList();
+
+	//ドライブが追加された
+	if (new_dp) {
+		//追加ドライブをカレントで開く
+		if (OpenAddedDrive) {
+			if (WindowState==wsMinimized) Application->Restore();
+			Application->BringToFront();
+			if (file_exists(new_dp->drive_str)) {
+				UpdateCurDrive(new_dp->drive_str);
+				//イベント: 追加ドライブが開かれた
+				ExeEventCommand(OnNewDrive);
+			}
+		}
+	}
+	//パスの存在チェック
+	else {
+		for (int i=0; i<MAX_FILELIST; i++) {
+			UnicodeString dnam = CheckAvailablePath(CurPath[i], i);
+			if (!dnam.IsEmpty() && !SameText(CurPath[i], dnam)) {
+				CurPath[i] = dnam;
+				if (i==CurListTag) SetFileInf();
+			}
+		}
+	}
+
+	//ドライブ一覧を更新
+	if (SelDriveDlg && SelDriveDlg->Visible) SelDriveDlg->UpdateDriveList();
+
+	//ツールボタンの状態更新
+	UpdateToolDriveBtn();
+}
+//---------------------------------------------------------------------
+//サイズ変更/移動終了
+//---------------------------------------------------------------------
+void __fastcall TNyanFiForm::WmExitSizeMove(TMessage &msg)
+{
+	WndSizing = false;
+
+	SetFlItemWidth(GetFileList(0), 0);
+	SetFlItemWidth(GetFileList(1), 1);
+	UpdateBgImage(true);
+}
+//---------------------------------------------------------------------
+// 最大化情報を補正(タイトルバーとメニューを隠す)
+//---------------------------------------------------------------------
+void __fastcall TNyanFiForm::WmGetMinMaxInfo(TWMGetMinMaxInfo &msg)
+{
+	TForm::Dispatch(&msg);
+
+	if (HideTitleMenu && !IS_FullScr()) {
+		RECT rc;
+		::GetWindowRect(::GetDesktopWindow(), &rc);
+		::AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, TRUE);
+		rc.bottom -= 2;
+		rc.top	  += 2;
+		if (!ShowMainMenu) rc.top += ScaledThis(::GetSystemMetrics(SM_CYMENU));
+		msg.MinMaxInfo->ptMaxSize.y		 = rc.bottom - rc.top;
+		msg.MinMaxInfo->ptMaxTrackSize.y = rc.bottom - rc.top;
+		msg.MinMaxInfo->ptMaxPosition.y	 = rc.top;
+	}
+}
+//---------------------------------------------------------------------------
 //コンテキストメニュー
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::WmContextMnueProc(TMessage &msg)
@@ -1633,20 +1906,39 @@ void __fastcall TNyanFiForm::WmContextMnueProc(TMessage &msg)
 }
 
 //---------------------------------------------------------------------------
-//サムネイルの更新
+//デザイン/フォント・配色の適用
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmNyanFiThumbnail(TMessage &msg)
+void __fastcall TNyanFiForm::WmNyanFiAppearance(TMessage &msg)
 {
-	TStringGrid *gp = ThumbnailGrid;
-	if (gp->Visible) {
-		int idx = msg.LParam;
-		TRect rc = ThumbExtended? gp->CellRect(idx%gp->ColCount, idx/gp->ColCount) :
-				(ThumbnailPos<2)? gp->CellRect(idx, 0)
-								: gp->CellRect(0, idx);
-		if (!rc.IsEmpty()) ::InvalidateRect(gp->Handle, &rc, TRUE);
+	SetupFont();
+	SetupDesign((bool)msg.WParam);
+	Repaint();
+
+	TxtViewer->SetColor();
+
+	switch (ScrMode) {
+	case SCMD_FLIST:
+		SetCurStt(CurListTag);
+		ReloadList();
+		TxtPrvScrPanel->Repaint();
+		InfScrPanel->Repaint();
+		LogScrPanel->Repaint();
+		break;
+	case SCMD_TVIEW:
+		TxtViewer->UpdateScr();
+		break;
+	}
+
+	std::unique_ptr<TStringList> lst(new TStringList());
+	get_ExViewerList(lst.get());
+	for (int i=0; i<lst->Count; i++) {
+		TExTxtViewer *ex_tv = dynamic_cast<TExTxtViewer *>(lst->Objects[i]);
+		if (ex_tv) {
+			ex_tv->ExViewer->SetColor();
+			ex_tv->ExViewer->UpdateScr();
+		}
 	}
 }
-
 //---------------------------------------------------------------------------
 //クリップボードへのコピー情報をヒント表示
 //---------------------------------------------------------------------------
@@ -1682,39 +1974,56 @@ void __fastcall TNyanFiForm::WmNyanFiClpCopied(TMessage &msg)
 	//イベント: クリップボードにテキストをコピー
 	if (txt_cliped) ExeEventCommand(OnClipText);
 }
-
-//---------------------------------------------------------------------
-//サイズ変更/移動終了
-//---------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmExitSizeMove(TMessage &msg)
+//---------------------------------------------------------------------------
+//サムネイルの更新
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::WmNyanFiThumbnail(TMessage &msg)
 {
-	WndSizing = false;
-
-	SetFlItemWidth(GetFileList(0), 0);
-	SetFlItemWidth(GetFileList(1), 1);
-	UpdateBgImage(true);
-}
-
-//---------------------------------------------------------------------
-// 最大化情報を補正(タイトルバーとメニューを隠す)
-//---------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmGetMinMaxInfo(TWMGetMinMaxInfo &msg)
-{
-	TForm::Dispatch(&msg);
-
-	if (HideTitleMenu && !IS_FullScr()) {
-		RECT rc;
-		::GetWindowRect(::GetDesktopWindow(), &rc);
-		::AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, TRUE);
-		rc.bottom -= 2;
-		rc.top	  += 2;
-		if (!ShowMainMenu) rc.top += ScaledThis(::GetSystemMetrics(SM_CYMENU));
-		msg.MinMaxInfo->ptMaxSize.y		 = rc.bottom - rc.top;
-		msg.MinMaxInfo->ptMaxTrackSize.y = rc.bottom - rc.top;
-		msg.MinMaxInfo->ptMaxPosition.y	 = rc.top;
+	TStringGrid *gp = ThumbnailGrid;
+	if (gp->Visible) {
+		int idx = msg.LParam;
+		TRect rc = ThumbExtended? gp->CellRect(idx%gp->ColCount, idx/gp->ColCount) :
+				(ThumbnailPos<2)? gp->CellRect(idx, 0)
+								: gp->CellRect(0, idx);
+		if (!rc.IsEmpty()) ::InvalidateRect(gp->Handle, &rc, TRUE);
 	}
 }
 
+//---------------------------------------------------------------------------
+// LockKeyMouse コマンド実行中のキー処理
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::WmNyanFiLockKey(TMessage &msg)
+{
+	int key = msg.WParam;
+	bool ok = false;
+
+	if (UnlockWord.IsEmpty()) {
+		ok = (key==VK_ESCAPE);
+	}
+	else {
+		UnicodeString KeyStr = get_AlNumChar(key);
+		if (!KeyStr.IsEmpty()) {
+			InputWord += KeyStr;
+			if (SameText(InputWord, UnlockWord))
+				ok = true;
+			else if (!StartsText(InputWord, UnlockWord))
+				InputWord = EmptyStr;
+		}
+		else {
+			InputWord = EmptyStr;
+		}
+	}
+
+	if (ok) {
+		::UnhookWindowsHookEx(hKeyHook);
+		::UnhookWindowsHookEx(hMouseHook);
+
+		ModalScrForm->Visible = false;
+
+		//ロックが解除された
+		ExeEventCommand(OnUnlocked);
+	}
+}
 //---------------------------------------------------------------------
 //サウンド再生終了時の処理
 //---------------------------------------------------------------------
@@ -1738,284 +2047,219 @@ void __fastcall TNyanFiForm::MmMciNotify(TMessage &msg)
 }
 
 //---------------------------------------------------------------------------
-//サイズ変更時の処理
+//ファイルリストのドロップ受け入れ
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FormResize(TObject *Sender)
+void __fastcall TNyanFiForm::WmDropped(TMessage &msg)
 {
-	if (!Initialized || UnInitializing) return;
+	if (CurWorking || FindBusy) return;
 
-	if (WindowState!=wsMinimized) {
-		KeepFileListRerio();
-		UpdateFKeyBtn();
+	HWND hWnd = get_window_from_pos();
 
-		//ステータスバー
-		StatusBar1->Panels->Items[0]->Width = ClientWidth
-			- set_SttBarPanelWidth(StatusBar1, 1, str_len_half(GetClockStr())) - ScaledThis(20);
+	//テキストビュアー
+	if (hWnd==TxtScrollPanel->Handle) {
+		if (DroppedList->Count>0) {
+			TxtViewer->add_ViewHistory();
+			if (!SetAndOpenTxtViewer(DroppedList->Strings[0])) SttBarWarn(LoadUsrMsg(USTR_FileNotOpen));
+		}
+		DroppedList->Clear();
+		return;
+	}
 
-		//テキストビュアーヘッダ
-		TxtSttHeader->Panels->Items[0]->Width = ClientWidth
-			- set_SttBarPanelWidth(TxtSttHeader, 1, "UTF-16(BE) BOM付")
-			- set_SttBarPanelWidth(TxtSttHeader, 2, "CR/LF")
-			- set_SttBarPanelWidth(TxtSttHeader, 3, ".TXT:CLIPBOARD")
-			- set_SttBarPanelWidth(TxtSttHeader, 4, "00000行 0000桁 00列 0000字選択");
+	//ファイラー
+	try {
+		if (DroppedTag==-1) {
+			if		(hWnd==FileListBox[0]->Handle) DroppedTag = 0;
+			else if (hWnd==FileListBox[1]->Handle) DroppedTag = 1;
+		}
+		if (DroppedTag==-1 || DroppedTag==DragStartTag || DroppedList->Count==0 ) Abort();
 
-		if (ScrMode==SCMD_TVIEW) {
-			TxtViewer->SetMetric(true);
-			TxtViewer->Repaint(true);
+		flist_stt *cur_stt = &ListStt[DroppedTag];
+		if (ScrMode!=SCMD_FLIST || cur_stt->is_Arc || IsDiffList()) UserAbort(USTR_CantOperate);
+
+		//右ドラッグの場合、一旦メニューを出す
+		if (DroppedMode==(DROPEFFECT_COPY|DROPEFFECT_MOVE|DROPEFFECT_LINK)) {
+			DropPopupMenu->Popup(Mouse->CursorPos.x + 2, Mouse->CursorPos.y);
+			return;
+			//メニュー選択後、再度 WmDropped が呼ばれる
 		}
 
-		//イメージビュアー情報ヘッダ
-		TStatusPanels *pp = ImgSttHeader->Panels;
-		int p_wd = (ClientWidth - pp->Items[2]->Width - pp->Items[3]->Width - pp->Items[4]->Width) / 3;
-		pp->Items[0]->Width = p_wd;
-		pp->Items[1]->Width = p_wd * 2;
-
-		//Grep用ステータスバー
-		GrepSttSplitterMoved(GrepSttSplitter);
-		if (ScrMode==SCMD_GREP) ResultListBox->Invalidate();
-	}
-
-	//ウィンドウの状態が変化
-	if (LastWinState!=WindowState) {
-		switch (WindowState) {
-		case wsMaximized: ExeEventCommand(OnMaximized);	break;	//イベント: 最大化された
-		case wsMinimized: ExeEventCommand(OnMinimized);	break;	//イベント: 最小化された
-		case wsNormal:	  ExeEventCommand(OnRestored);	break;	//イベント: 元のサイズに戻った
-		}
-	}
-	LastWinState = WindowState;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ListPanelResize(TObject *Sender)
-{
-	if (!Initialized || UnInitializing) return;
-
-	RequestSlowTask();
-	UpdateTabWidth();
-	UpdateFileListRect();
-	KeepFileListRerio();
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TabControl1Resize(TObject *Sender)
-{
-	UpdateTabWidth();
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::LRSplitterCanResize(TObject *Sender, int &NewSize, bool &Accept)
-{
-	Accept = !FixListWidth;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::LRSplitterMoved(TObject *Sender)
-{
-	if (!Initialized || UnInitializing) return;
-
-	RequestSlowTask();
-	if (!DivFileListUD) {
-		SetDirCaption(0);
-		SetDirCaption(1);
-	}
-}
-
-//---------------------------------------------------------------------------
-//ファイルリストのスクリーン座標情報を更新
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::UpdateFileListRect()
-{
-	TPoint lt = ListPanel->ClientToScreen(Point(0, 0));
-	TPoint rb = ListPanel->ClientToScreen(Point(ListPanel->Width, ListPanel->Height));
-	UserModule->FileListRect = Rect(lt.x, lt.y, rb.x, rb.y);
-}
-
-//---------------------------------------------------------------------------
-//ファイルリスト幅の左右比率維持
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::KeepFileListRerio()
-{
-	if (KeepOnResize && ListPercent>0 && ListPercent<100) {
-		double r = ListPercent/100.0;
-		if (KeepCurListWidth && CurListTag==1) r = 1.0 - r;
-		if (DivFileListUD) {
-			int r_hi = LRSplitter->Height;
-			if (TabPanel->Visible) r_hi += TabPanel->Height;
-			if (HdrPanel->Visible) r_hi += HdrPanel->Height;
-			L_Panel->Height = (ListPanel->ClientHeight - r_hi) * r;
-			if (!DivDirInfUD) L_TopPanel->Width = (HdrPanel->Width - RelPanel->Width)/2;
-		}
-		else {
-			L_Panel->Width = (ListPanel->ClientWidth - LRSplitter->Width) * r;
-			L_TopPanel->Width = L_Panel->Width - (RelPanel->Width - LRSplitter->Width)/2;
-		}
-	}
-}
-
-//---------------------------------------------------------------------------
-//左/上側リストのサイズ変更
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::L_PanelResize(TObject *Sender)
-{
-	if (!Initialized || UnInitializing) return;
-
-	RequestSlowTask();
-
-	if (DivFileListUD) {
-		int r_hi = LRSplitter->Height;
-		if (TabPanel->Visible) r_hi += TabPanel->Height;
-		if (HdrPanel->Visible) r_hi += HdrPanel->Height;
-		CurListHeight = (CurListTag==0)? L_Panel->Height : (ListPanel->ClientHeight - L_Panel->Height - r_hi);
-		if (!DivDirInfUD) L_TopPanel->Width = (HdrPanel->Width - RelPanel->Width)/2;
-	}
-	else {
-		CurListWidth = (CurListTag==0)? L_Panel->Width : (ListPanel->ClientWidth - L_Panel->Width - LRSplitter->Width);
-		L_TopPanel->Width = L_Panel->Width - (RelPanel->Width - LRSplitter->Width)/2;
-	}
-
-	if (!WndSizing) SetFlItemWidth(GetFileList(0), 0);
-
-	UpdateBgImage(true);
-}
-//---------------------------------------------------------------------------
-//右/下側リストのサイズ変更
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::R_PanelResize(TObject *Sender)
-{
-	if (!Initialized || UnInitializing) return;
-
-	if (!WndSizing) SetFlItemWidth(GetFileList(1), 1);
-
-	UpdateBgImage(true);
-}
-
-//---------------------------------------------------------------------------
-//サブパネルのサイズ変更
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::SubPanelResize(TObject *Sender)
-{
-	if (!Initialized || UnInitializing) return;
-
-	if (LayoutMode==0 || LayoutMode==3)
-		IniFile->WriteIntGen(IsPrimary? _T("SubHeight") : _T("SubHeight2"),	SubPanel->Height);
-	else
-		IniFile->WriteIntGen(IsPrimary? _T("SubWidth")  : _T("SubWidth2"),	SubPanel->Width);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ImgInfSplitterMoved(TObject *Sender)
-{
-	if (!Initialized || UnInitializing) return;
-
-	if (PreviewPanel->Visible) {
-		if (LayoutMode==0 || LayoutMode==3) PreviewWidth = PreviewPanel->Width; else PreviewHeight = PreviewPanel->Height;
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::InfLogSplitterMoved(TObject *Sender)
-{
-	if (!Initialized || UnInitializing) return;
-
-	if (InfPanel->Visible) {
-		if (LayoutMode==0 || LayoutMode==3) InfPanelWidth = InfPanel->Width; else InfPanelHeight = InfPanel->Height;
-	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TxtPrvSplitterMoved(TObject *Sender)
-{
-	if (!Initialized || UnInitializing) return;
-
-	IniFile->WriteIntGen(IsPrimary? _T("TailHeight") : _T("TailHeight2"),	TxtTailListPanel->Height);
-}
-
-//---------------------------------------------------------------------------
-//分割境界線の描画
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::SplitterBgPaint(TObject *Sender)
-{
-	TSplitter *sp = (TSplitter*)Sender;
-	TCanvas *cv = sp->Canvas;
-	Graphics::TBitmap *ip = BgImgBuff[sp->Tag + 2];
-	if (!ip->Empty) {
-		std::unique_ptr<Graphics::TBitmap> bp(new Graphics::TBitmap());
-		std::unique_ptr<Graphics::TBitmap> vp(new Graphics::TBitmap());
-		bp->Assign(ip);
-		if ((sp->Align==alLeft || sp->Align==alRight) != (bp->Height>bp->Width)) {
-			WIC_rotate_image(bp.get(), 1);  WIC_rotate_image(bp.get(), 4);
-		}
-		WIC_resize_image(bp.get(), vp.get(), 0.0, sp->Width, sp->Height, WicScaleOpt);
-		cv->Draw(0, 0, vp.get());
-	}
-	else {
-		cv->Brush->Color = col_Splitter;
-		cv->FillRect(sp->ClientRect);
-	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TxtScrollPanelResize(TObject *Sender)
-{
-	if (ScrMode==SCMD_TVIEW) TxtViewer->SetMetric(true);
-}
-
-//---------------------------------------------------------------------------
-//アクティブ化
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FormActivate(TObject *Sender)
-{
-	KeepCurCsr = 0;
-}
-
-//---------------------------------------------------------------------------
-//アクティブ/非アクティブ化の直前
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmActivate(TMessage &msg)
-{
-	bool inact = (LOWORD(msg.WParam)==WA_INACTIVE);
-
-	//ツールバー背景色
-	SetupToolBarColor(!inact, true);
-
-	//モーダル表示効果
-	if (inact) {
-		HWND hWnd = (HWND)msg.LParam;	//新たにアクティブになったウィンドウ
-		bool is_own = false;
-		if (hWnd) {
-			DWORD pid;
-			::GetWindowThreadProcessId(hWnd, &pid);
-			is_own = (pid==ProcessId);
-		}
-
-		if (is_own && !InhModalScr) {
-			TWinControl *wp = FindControl(hWnd);
-			if (wp && wp!=ModalScrForm && wp->InheritsFrom(__classid(TForm))) {
-				TForm *fp = (TForm*)wp;
-				if (fp->Floating && fp->BorderStyle!=bsNone && fp->FormStyle!=fsStayOnTop) LastModalForm = fp;
+		//結果リスト
+		if (cur_stt->is_Find) {
+			if (!cur_stt->find_TAG && DroppedMode!=DROPEFFECT_COPY) UserAbort(USTR_CantOperate);
+			//タグ検索結果リスト(タグ追加)
+			for (int i=0; i<DroppedList->Count; i++) {
+				usr_TAG->AddTags(DroppedList->Strings[i], cur_stt->find_Keywd);
 			}
+			ReloadList(DroppedTag);
+		}
+		//ワークリスト
+		else if (cur_stt->is_Work) {
+			if (DroppedMode!=DROPEFFECT_COPY) UserAbort(USTR_CantOperate);
+			if (WorkListFiltered) UserAbort(USTR_WorkFiltered);
+			for (int i=0; i<DroppedList->Count; i++) {
+				UnicodeString fnam = DroppedList->Strings[i];
+				if (WorkList->IndexOf(fnam)!=-1) continue;
+				file_rec *fp = cre_new_file_rec(fnam);
+				if (fp) WorkList->AddObject(fp->f_name, (TObject*)fp);
+			}
+			ChangeWorkList(DroppedTag);
+			rqWorkListDirInf = !WorkListChanged;
+			WorkListChanged  = true;
+		}
+		//FTP (アップロード)
+		else if (cur_stt->is_FTP) {
+			if (DroppedMode!=DROPEFFECT_COPY) UserAbort(USTR_CantOperate);
+			StartLog(UnicodeString().sprintf(_T("アップロード開始  DROP\t%s"), yen_to_slash(CurFTPPath).c_str()));
+			BeginWorkProgress(LoadUsrMsg(USTR_Upload), EmptyStr, FileListBox[DroppedTag], true);
+			CurWorking	= true;
+			gCopyCancel = false;
+			int d_cnt = 0;
+			for (int i=0; i<DroppedList->Count; i++) {
+				UnicodeString fnam = DroppedList->Strings[i];
+				file_rec *fp = cre_new_file_rec(fnam);
+				if (fp->is_dir) d_cnt++; else UploadFtpCore(fp);
+				del_file_rec(fp);
+				if (gCopyCancel || CancelWork) break;
+			}
+			CurWorking = false;
 
-			//モーダルスクリーンの表示
-			if (ModalScreen && ModalScrAlpha>0 && !UnInitializing && ScrMode==SCMD_FLIST
-				&& !usr_ARC->RarUnpacking && !(GitViewer && GitViewer->GitBusy))
-			{
-				if (!contained_wd_i(
-					_T("HH Parent|User32_ReaderMode|TApplication|TModalScrForm|TAppListDlg|")
-					_T("TOptionDlg|TGrepExOptDlg|TDotNyanDlg|TExTxtViewer|TSubViewer|TDebugForm"),
-					get_WndClassName(hWnd)))
-				{
-					ModalScrForm->Visible = true;
+			if (gCopyCancel || CancelWork) {
+				EndWorkProgress(EmptyStr, LoadUsrMsg(USTR_Canceled));
+				AddLog(_T("アップロード中断"), true);
+			}
+			else {
+				EndWorkProgress();
+				EndLog(USTR_Upload);
+				if (!ChangeFtpFileList(DroppedTag)) GlobalAbort();
+			}
+			if (d_cnt>0) UserAbort(USTR_IncludeDir);
+		}
+		//代替データストリーム
+		else if (cur_stt->is_ADS) {
+			if (DroppedMode!=DROPEFFECT_COPY) UserAbort(USTR_CantOperate);
+			StartLog(UnicodeString().sprintf(_T("コピー開始  DROP\t%s:"), cur_stt->ads_Name.c_str()));
+
+			CurWorking = true;
+			CancelWork = false;
+			BeginWorkProgress(_T("代替データストリームへコピー"), EmptyStr, FileListBox[CurListTag], true);
+			bool ow_all = false, sk_all = false;
+			for (int i=0; i<DroppedList->Count && !CancelWork; i++) {
+				UnicodeString fnam = DroppedList->Strings[i];
+				UnicodeString dst_nam = cur_stt->ads_Name + ":" + ExtractFileName(fnam);
+				CopyAdsCore(fnam, dst_nam, ow_all, sk_all);
+			}
+			ChangeAdsList(cur_stt->ads_Name, DroppedTag);
+			CurWorking = false;
+
+			if (CancelWork) {
+				EndWorkProgress(EmptyStr, LoadUsrMsg(USTR_Canceled));
+				AddLog(_T("コピー中断"));
+			}
+			else {
+				EndWorkProgress();
+				EndLog(_T("コピー"));
+			}
+		}
+		//その他
+		else {
+			//ショートカット作成
+			if (DroppedMode==DROPEFFECT_LINK) {
+				UnicodeString dnam = GetCurPathStr(DroppedTag);
+				//.url
+				if (DroppedList->Count==1 && ContainsStr(DroppedList->Strings[0], "\t")) {
+					UnicodeString url  = DroppedList->Strings[0];
+					UnicodeString fnam = split_pre_tab(url);
+					UnicodeString bnam = get_base_name(fnam);
+					UnicodeString fext = get_extension(fnam);
+					bnam = replace_regex(bnam, _T("\\s{2,}"), _T(" "));		//連続空白の置換
+					bnam = ApplyCnvCharList(bnam);							//禁止文字の置換
+					fnam = dnam + bnam + fext;
+					if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) SkipAbort();
+					//画像
+					if (!USAME_TI(get_extension(fnam), ".url")) {
+						TModalResult mr = DownloadWorkProgress(url, fnam, FileListBox[DroppedTag]);
+						if (mr==mrCancel) SkipAbort();
+						if (mr!=mrOk) Abort();
+					}
+					//インターネットショートカット
+					else {
+						MakeUrlFile(fnam, url);
+					}
+				}
+				//.lnk
+				else {
+					UnicodeString tmp;
+					StartLog(tmp.sprintf(_T("ショートカット作成開始  DROP\t%s"), dnam.c_str()));
+					int ok_cnt = 0, er_cnt = 0;
+					for (int i=0; i<DroppedList->Count; i++) {
+						UnicodeString fnam = ExcludeTrailingPathDelimiter(DroppedList->Strings[i]);
+						UnicodeString lnam = dnam + ChangeFileExt(ExtractFileName(fnam), ".lnk");
+						tmp = make_LogHdr(_T("CREATE"), lnam);
+						if (!usr_SH->CreateShortCut(lnam, fnam)) tmp[1] = 'E';
+						AddLog(tmp);
+						((tmp[1]=='E')? er_cnt : ok_cnt)++;
+					}
+					EndLog(_T("作成"), get_ResCntStr(ok_cnt, er_cnt));
+				}
+			}
+			//コピー or 移動
+			else if (DroppedMode==DROPEFFECT_COPY || DroppedMode==DROPEFFECT_MOVE) {
+				UnicodeString cmd;
+				cmd.sprintf(_T("%s"), (DroppedMode==DROPEFFECT_MOVE)? _T("MOV") : _T("CPY"));
+				UnicodeString cnam = GetCurPathStr(DroppedTag);
+				std::unique_ptr<TStringList> dir_lst(new TStringList());
+				get_SyncDirList(cnam, dir_lst.get(), false, USAME_TS(cmd, "CPY"));
+				for (int i=0; i<dir_lst->Count; i++) {
+					TaskConfig  *cp = NULL;
+					TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
+					UnicodeString dnam = dir_lst->Strings[i];
+					UnicodeString tmp;
+					for (int j=0; j<DroppedList->Count; j++) {
+						cp->TaskList->Add(tmp.sprintf(_T("%s\t%s\t%s"),
+											cmd.c_str(), DroppedList->Strings[j].c_str(), dnam.c_str()));
+					}
+					cp->CopyMode = gCopyMode;
+					cp->CopyAll  = false;
+					cp->CmdStr	 = TaskCmdList->Values[cmd];
+					cp->DistPath = dnam;
+					cp->InfStr.sprintf(_T("DROP ---> %s"), dnam.c_str());
+					if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
+					ActivateTask(tp, cp);
 				}
 			}
 		}
 
-		KeepCurCsr = 1;
-		InhModalScr   = false;
+		if (CurListTag==DragStartTag) ClearAllAction->Execute();
 	}
-	else {
-		HWND hWnd = get_ModalWnd();
-		if (!KeepModalScr && !hWnd) ModalScrForm->Visible = false;
-		if (hWnd) ::SetFocus(hWnd);
+	catch (EAbort &e) {
+		if (!e.Message.IsEmpty() && !USAME_TI(e.Message, "SKIP")) SttBarWarn(e.Message);
 	}
 
-	TForm::Dispatch(&msg);
+	DroppedList->Clear();
+	DragStartTag = -1;
+	DroppedTag	 = -1;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::DropMenuItemClick(TObject *Sender)
+{
+	switch (((TMenuItem*)Sender)->Tag) {
+	case 0:  DroppedMode = DROPEFFECT_COPY; break;
+	case 1:  DroppedMode = DROPEFFECT_MOVE; break;
+	case 2:  DroppedMode = DROPEFFECT_LINK; break;
+	default: DroppedMode = DROPEFFECT_NONE;
+	}
+	if (DroppedMode!=DROPEFFECT_NONE) Perform(WM_FORM_DROPPED, 0, (NativeInt)0);
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ActivateMainForm()
+{
+	if (::IsIconic(Handle)) this->Perform(WM_SYSCOMMAND, SC_RESTORE, (NativeInt)0);
+	::SetForegroundWindow(Handle);
+	if (StoreTaskTray) Show();
+	Application->Restore();
+	Application->BringToFront();
+}
 //---------------------------------------------------------------------------
 //アクティブなフォームが変化
 //---------------------------------------------------------------------------
@@ -2025,6 +2269,90 @@ void __fastcall TNyanFiForm::ActiveFormChange(TObject *Sender)
 	UpdateFKeyBtn();
 }
 
+//---------------------------------------------------------------------------
+//ファイルリストの描画およびスクロール時処理
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ListWndProc(TMessage &msg, int tag)
+{
+	TListBox *lp = (tag==0)? L_ListBox : R_ListBox;
+
+	switch (msg.Msg) {
+	case WM_VSCROLL:
+	case WM_NYANFI_USCROLL:	//シンプルスクロールバーのノブドラッグ
+		ClearNopStt();
+		if (FlCursorVisible) {
+			if (IsDiffList()) {
+				//ディレクトリ比較結果の左右同期
+				TListBox *lp_c = FileListBox[CurListTag];
+				TListBox *lp_o = FileListBox[OppListTag];
+				if (tag==CurListTag) {
+					if (ListBoxCsrToVisible(lp)) {
+						SetFileInf();
+					}
+					else {
+						lp_o->TopIndex	= lp_c->TopIndex;
+						lp_o->ItemIndex = lp_c->ItemIndex;
+						lp_o->Invalidate();
+					}
+				}
+				else {
+					int idx0 = lp_c->ItemIndex;
+					lp_c->TopIndex	= lp_o->TopIndex;
+					lp_c->ItemIndex = lp_o->ItemIndex;
+					lp_c->Invalidate();
+					if (lp_c->ItemIndex!=idx0) SetFileInf();
+				}
+			}
+			else if (ListBoxCsrToVisible(lp)) {
+				if (tag==CurListTag) SetFileInf();
+			}
+		}
+
+		if (BgImgMode>0 && BgImgHideScr && !HideBgImg[tag]) {
+			HideBgImg[tag] = true;
+			lp->Invalidate();
+		}
+
+		if (msg.Msg==WM_VSCROLL) org_FileListWindowProc[tag](msg);
+		break;
+
+	case WM_NYANFI_UPDKNOB:
+		FlScrPanel[tag]->UpdateKnob();
+		msg.Result = 1;
+		break;
+
+	case WM_ERASEBKGND:
+		if (BgImgMode>0 && !HideBgImg[tag] && !BgBuff[tag]->Empty) {
+			//描画すべき領域がバッファになかったら更新
+			TRect rc;
+			if (!::GetUpdateRect(lp->Handle, &rc, FALSE))
+				rc = Rect(0, 0, (tag==0)? L_Panel->Width : R_Panel->Width, lp->Height);
+			HRGN rgn = ::CreateRectRgn(rc.Left, rc.Top, rc.Right, rc.Bottom);
+			::SelectClipRgn(lp->Canvas->Handle, rgn);
+			//描画すべき領域がバッファになかったら更新
+			rc.Right += 1; rc.Bottom += 1;
+			if (!rc.Contains(Rect(0, 0, BgBuff[tag]->Width, BgBuff[tag]->Height))) UpdateBgImage();
+			//背景を描画
+			lp->Canvas->Draw(0, 0, BgBuff[tag]);
+			//すぐに再描画要求
+			::RedrawWindow(lp->Handle, NULL, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW);
+			::DeleteObject(rgn);
+			msg.Result = 1;
+		}
+		else {
+			org_FileListWindowProc[tag](msg);
+		}
+		break;
+
+	case WM_PAINT:
+		FlScrPanel[tag]->Repaint();
+		org_FileListWindowProc[tag](msg);
+		break;
+
+	default:
+		org_FileListWindowProc[tag](msg);
+	}
+}
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ApplicationEvents1Activate(TObject *Sender)
 {
@@ -2081,151 +2409,6 @@ void __fastcall TNyanFiForm::ApplicationEvents1Deactivate(TObject *Sender)
 	if (!Initialized || UnInitializing) return;
 	CancelKeySeq();
 }
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ApplicationEvents1Minimize(TObject *Sender)
-{
-	if (StoreTaskTray && get_PrimNyanWnd()) Hide();
-}
-
-//---------------------------------------------------------------------------
-//モーダルフォームを開いた
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ApplicationEvents1ModalBegin(TObject *Sender)
-{
-	//ヘルプが開かれていたら閉じる
-	HtmlHelpClose();
-
-	XCMD_ModalResult = mrNone;
-}
-//---------------------------------------------------------------------------
-//モーダルフォームを閉じた
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ApplicationEvents1ModalEnd(TObject *Sender)
-{
-	if (LastModalForm) XCMD_ModalResult = LastModalForm->ModalResult;
-
-	if (lpfHtmlHelp && get_HelpWnd()) {
-		InhModalScr = true;
-		HtmlHelpClose();
-		::SetForegroundWindow(Handle);
-	}
-}
-
-//---------------------------------------------------------------------------
-//リスト/グリッドの内容が表示幅に収まらない場合のヒント表示
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, bool &CanShow, THintInfo &HintInfo)
-{
-	HintInfo.HintWindowClass = __classid(UsrTooltipWindow);
-
-	//リストボックス(ShowHint=true のみ)
-	if (class_is_ListBox(HintInfo.HintControl)) {
-		TListBox *lp = (TListBox*)HintInfo.HintControl;
-		TCanvas  *cv = lp->Canvas;
-		cv->Font->Assign(lp->Font);
-		int idx = lp->ItemAtPos(HintInfo.CursorPos, true);
-		if (lp->ShowHint && idx!=-1) {
-			UnicodeString lbuf = lp->Items->Strings[idx];
-			int lw = 0;
-			//Grep結果リスト
-			if (lp==ResultListBox) {
-				lbuf = get_post_tab(get_post_tab(lbuf)).TrimRight();
-				lbuf = ReplaceStr(lbuf, "\t", "  ");
-			}
-			//アプリケーション一覧
-			else if (SameText(lp->Name, "AppListBox")) {
-				lbuf = yen_to_delimiter(lbuf);
-				std::unique_ptr<TStringList> sbuf(new TStringList());
-				sbuf->Text = lbuf;
-				if (sbuf->Count==2) lw = cv->TextWidth(sbuf->Strings[1]);
-			}
-			else if (SameText(lp->Name, "RegDirListBox")) {
-				//特殊フォルダ一覧
-				if (RegDirDlg && RegDirDlg->IsSpecial) {
-					lbuf = yen_to_delimiter(get_pre_tab(lbuf));
-					//環境変数不使用時
-					if ((lp->Tag & LBTAG_OPT_SDIR)==0) lw = LOWORD(lp->Tag) + cv->TextWidth(lbuf);
-				}
-				//登録ディレクトリ
-				else {
-					lbuf = get_csv_item(lbuf, 2);
-					bool use_env = ContainsStr(lbuf, "%");
-					lbuf = yen_to_delimiter(cv_env_var(lbuf));
-					lw	 = use_env? 0 : LOWORD(lp->Tag) + cv->TextWidth(lbuf);
-				}
-			}
-			//その他
-			else {
-				//ファイル名一覧/ツリー表示
-				if (lp->Tag & LBTAG_TAB_FNAM) {
-					lbuf = yen_to_delimiter(get_post_tab(lbuf));
-				}
-				//ファイル情報
-				else if ((lp->Tag & (LBTAG_OPT_FIF1|LBTAG_OPT_FIF2))
-					&& (((int)lp->Items->Objects[idx] & LBFLG_STD_FINF)==0))
-				{
-					int w_max = LOWORD(lp->Tag);
-					UnicodeString inam = Trim(get_tkn(lbuf, ":"));
-					if (StartsStr('.', inam) && cv->TextWidth(inam)>w_max)
-						lw = 0;
-					else
-						lw = w_max + cv->TextWidth(get_tkn_r(lbuf, _T(": ")) + ": ");
-				}
-				//名前=値1;値2;…
-				else if (lp->Tag & LBTAG_VAR_LIST) {
-					TStringDynArray path_lst = split_strings_semicolon(lbuf);
-					if (path_lst.Length>1 && path_lst[0].Pos('=')>1 && lbuf.Pos(',')==0) {
-						for (int i=0; i<path_lst.Length; i++) {
-							if (i==0)
-								lbuf = ReplaceStr(path_lst[0], "=", "=\n") + "\n";
-							else
-								lbuf.cat_sprintf(_T("%s\n"), path_lst[i].c_str());
-						}
-					}
-				}
-				//通常
-				else {
-					lw = get_TabTextWidth(lbuf, cv, lp->TabWidth);
-					if (lp->Tag & LBTAG_OPT_LNNO) lw += get_CharWidth(cv, 6, 4);	//行番号有り " 99999"
-				}
-
-				lbuf = Trim(lbuf);
-			}
-
-			HintInfo.HintStr	   = lbuf;
-			HintInfo.CursorRect    = lp->ItemRect(idx);
-			HintInfo.ReshowTimeout = 1000;
-			if (lw==0) lw = lp->ClientWidth + 4;	//必ず表示
-			CanShow = (lw > lp->ClientWidth-2);
-		}
-		else {
-			CanShow = false;
-		}
-	}
-	//グリッド
-	else if (HintInfo.HintControl->ClassNameIs("TStringGrid")) {
-		TStringGrid *gp = (TStringGrid*)HintInfo.HintControl;
-		int col, row;
-		gp->MouseToCell(HintInfo.CursorPos.x, HintInfo.CursorPos.y, col, row);
-		if (col!=-1 && row!=-1) {
-			std::unique_ptr<TStringList> h_buf(new TStringList());
-			h_buf->Text = ReplaceStr(gp->Cells[col][row], "\t", "\r\n");
-			UnicodeString max_str;
-			for (int i=0; i<h_buf->Count; i++) {
-				if (gp->Canvas->TextWidth(h_buf->Strings[i]) > gp->Canvas->TextWidth(max_str))
-					max_str = h_buf->Strings[i];
-			}
-			HintInfo.HintStr	   = Trim(h_buf->Text);
-			HintInfo.CursorRect	   = gp->CellRect(col, row);
-			HintInfo.ReshowTimeout = 1000;
-			CanShow = gp->Canvas->TextWidth(max_str) > gp->ColWidths[col]-2;
-		}
-		else {
-			CanShow = false;
-		}
-	}
-}
-
 //---------------------------------------------------------------------------
 //特殊キー、ホイール、マウスボタンなどの処理
 //---------------------------------------------------------------------------
@@ -2885,23 +3068,147 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 	}
 }
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ApplicationEvents1Idle(TObject *Sender, bool &Done)
+void __fastcall TNyanFiForm::ApplicationEvents1Minimize(TObject *Sender)
 {
-	//ツールバーの状態を更新
-	//※テキスト/イメージビュアーだとうまく更新されないため(謎)
-	TToolBar *tp = (ScrMode==SCMD_TVIEW)? ToolBarV :
-				   (ScrMode==SCMD_IVIEW)? (ToolBarISide? ToolBarI2 : ToolBarI) : NULL;
-	if (tp) {
-		for (int i=0; i<tp->ButtonCount; i++) {
-			TToolButton *bp = tp->Buttons[i];
-			if (bp && bp->Action) bp->Action->Update();
+	if (StoreTaskTray && get_PrimNyanWnd()) Hide();
+}
+//---------------------------------------------------------------------------
+//モーダルフォームを開いた
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ApplicationEvents1ModalBegin(TObject *Sender)
+{
+	//ヘルプが開かれていたら閉じる
+	HtmlHelpClose();
+
+	XCMD_ModalResult = mrNone;
+}
+//---------------------------------------------------------------------------
+//モーダルフォームを閉じた
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ApplicationEvents1ModalEnd(TObject *Sender)
+{
+	if (LastModalForm) XCMD_ModalResult = LastModalForm->ModalResult;
+
+	if (lpfHtmlHelp && get_HelpWnd()) {
+		InhModalScr = true;
+		HtmlHelpClose();
+		::SetForegroundWindow(Handle);
+	}
+}
+//---------------------------------------------------------------------------
+//リスト/グリッドの内容が表示幅に収まらない場合のヒント表示
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, bool &CanShow, THintInfo &HintInfo)
+{
+	HintInfo.HintWindowClass = __classid(UsrTooltipWindow);
+
+	//リストボックス(ShowHint=true のみ)
+	if (class_is_ListBox(HintInfo.HintControl)) {
+		TListBox *lp = (TListBox*)HintInfo.HintControl;
+		TCanvas  *cv = lp->Canvas;
+		cv->Font->Assign(lp->Font);
+		int idx = lp->ItemAtPos(HintInfo.CursorPos, true);
+		if (lp->ShowHint && idx!=-1) {
+			UnicodeString lbuf = lp->Items->Strings[idx];
+			int lw = 0;
+			//Grep結果リスト
+			if (lp==ResultListBox) {
+				lbuf = get_post_tab(get_post_tab(lbuf)).TrimRight();
+				lbuf = ReplaceStr(lbuf, "\t", "  ");
+			}
+			//アプリケーション一覧
+			else if (SameText(lp->Name, "AppListBox")) {
+				lbuf = yen_to_delimiter(lbuf);
+				std::unique_ptr<TStringList> sbuf(new TStringList());
+				sbuf->Text = lbuf;
+				if (sbuf->Count==2) lw = cv->TextWidth(sbuf->Strings[1]);
+			}
+			else if (SameText(lp->Name, "RegDirListBox")) {
+				//特殊フォルダ一覧
+				if (RegDirDlg && RegDirDlg->IsSpecial) {
+					lbuf = yen_to_delimiter(get_pre_tab(lbuf));
+					//環境変数不使用時
+					if ((lp->Tag & LBTAG_OPT_SDIR)==0) lw = LOWORD(lp->Tag) + cv->TextWidth(lbuf);
+				}
+				//登録ディレクトリ
+				else {
+					lbuf = get_csv_item(lbuf, 2);
+					bool use_env = ContainsStr(lbuf, "%");
+					lbuf = yen_to_delimiter(cv_env_var(lbuf));
+					lw	 = use_env? 0 : LOWORD(lp->Tag) + cv->TextWidth(lbuf);
+				}
+			}
+			//その他
+			else {
+				//ファイル名一覧/ツリー表示
+				if (lp->Tag & LBTAG_TAB_FNAM) {
+					lbuf = yen_to_delimiter(get_post_tab(lbuf));
+				}
+				//ファイル情報
+				else if ((lp->Tag & (LBTAG_OPT_FIF1|LBTAG_OPT_FIF2))
+					&& (((int)lp->Items->Objects[idx] & LBFLG_STD_FINF)==0))
+				{
+					int w_max = LOWORD(lp->Tag);
+					UnicodeString inam = Trim(get_tkn(lbuf, ":"));
+					if (StartsStr('.', inam) && cv->TextWidth(inam)>w_max)
+						lw = 0;
+					else
+						lw = w_max + cv->TextWidth(get_tkn_r(lbuf, _T(": ")) + ": ");
+				}
+				//名前=値1;値2;…
+				else if (lp->Tag & LBTAG_VAR_LIST) {
+					TStringDynArray path_lst = split_strings_semicolon(lbuf);
+					if (path_lst.Length>1 && path_lst[0].Pos('=')>1 && lbuf.Pos(',')==0) {
+						for (int i=0; i<path_lst.Length; i++) {
+							if (i==0)
+								lbuf = ReplaceStr(path_lst[0], "=", "=\n") + "\n";
+							else
+								lbuf.cat_sprintf(_T("%s\n"), path_lst[i].c_str());
+						}
+					}
+				}
+				//通常
+				else {
+					lw = get_TabTextWidth(lbuf, cv, lp->TabWidth);
+					if (lp->Tag & LBTAG_OPT_LNNO) lw += get_CharWidth(cv, 6, 4);	//行番号有り " 99999"
+				}
+
+				lbuf = Trim(lbuf);
+			}
+
+			HintInfo.HintStr	   = lbuf;
+			HintInfo.CursorRect    = lp->ItemRect(idx);
+			HintInfo.ReshowTimeout = 1000;
+			if (lw==0) lw = lp->ClientWidth + 4;	//必ず表示
+			CanShow = (lw > lp->ClientWidth-2);
+		}
+		else {
+			CanShow = false;
 		}
 	}
-
-	//アクティブなコンボボックスの状態を保存
-	UserModule->SaveLastComboBox();
+	//グリッド
+	else if (HintInfo.HintControl->ClassNameIs("TStringGrid")) {
+		TStringGrid *gp = (TStringGrid*)HintInfo.HintControl;
+		int col, row;
+		gp->MouseToCell(HintInfo.CursorPos.x, HintInfo.CursorPos.y, col, row);
+		if (col!=-1 && row!=-1) {
+			std::unique_ptr<TStringList> h_buf(new TStringList());
+			h_buf->Text = ReplaceStr(gp->Cells[col][row], "\t", "\r\n");
+			UnicodeString max_str;
+			for (int i=0; i<h_buf->Count; i++) {
+				if (gp->Canvas->TextWidth(h_buf->Strings[i]) > gp->Canvas->TextWidth(max_str))
+					max_str = h_buf->Strings[i];
+			}
+			HintInfo.HintStr	   = Trim(h_buf->Text);
+			HintInfo.CursorRect	   = gp->CellRect(col, row);
+			HintInfo.ReshowTimeout = 1000;
+			CanShow = gp->Canvas->TextWidth(max_str) > gp->ColWidths[col]-2;
+		}
+		else {
+			CanShow = false;
+		}
+	}
 }
-
 //---------------------------------------------------------------------------
 //ヘルプ
 //---------------------------------------------------------------------------
@@ -2936,88 +3243,206 @@ bool __fastcall TNyanFiForm::ApplicationEvents1Help(WORD Command, NativeInt Data
 	}
 	return true;
 }
-
 //---------------------------------------------------------------------------
-//メインメニューの描画
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::MainMenuMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width, int &Height)
+void __fastcall TNyanFiForm::ApplicationEvents1Idle(TObject *Sender, bool &Done)
 {
-	TMenuItem *mp = (TMenuItem*)Sender;
-	Width = ACanvas->TextWidth(ReplaceStr(mp->Caption, "&", EmptyStr));
+	//ツールバーの状態を更新
+	//※テキスト/イメージビュアーだとうまく更新されないため(謎)
+	TToolBar *tp = (ScrMode==SCMD_TVIEW)? ToolBarV :
+				   (ScrMode==SCMD_IVIEW)? (ToolBarISide? ToolBarI2 : ToolBarI) : NULL;
+	if (tp) {
+		for (int i=0; i<tp->ButtonCount; i++) {
+			TToolButton *bp = tp->Buttons[i];
+			if (bp && bp->Action) bp->Action->Update();
+		}
+	}
+
+	//アクティブなコンボボックスの状態を保存
+	UserModule->SaveLastComboBox();
 }
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::MainMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
-	const TRect &ARect, TOwnerDrawState State)
+void __fastcall TNyanFiForm::TabControl1Resize(TObject *Sender)
 {
-	TMenuItem *mp = (TMenuItem*)Sender;
-	ACanvas->Brush->Color = (State.Contains(odSelected) || State.Contains(odHotLight))? col_htMenuBar : col_bgMenuBar;
-	ACanvas->Font->Color  = (State.Contains(odGrayed) || State.Contains(odDisabled))? clGray : col_fgMenuBar;
-	ACanvas->FillRect(ARect);
+	UpdateTabWidth();
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ListPanelResize(TObject *Sender)
+{
+	if (!Initialized || UnInitializing) return;
 
-	TRect rc = ARect;
-	rc.Top	+= (ARect.Height() - ACanvas->TextHeight("Q")) / 2;
-	rc.Left += (ARect.Width() - ACanvas->TextWidth(ReplaceStr(mp->Caption, "&", EmptyStr))) / 2;
-	UINT opt = DT_LEFT;  if (State.Contains(odNoAccel))  opt |= DT_HIDEPREFIX;
-	::DrawText(ACanvas->Handle, mp->Caption.c_str(), -1, &rc, opt);
+	RequestSlowTask();
+	UpdateTabWidth();
+	UpdateFileListRect();
+	KeepFileListRerio();
+}
 
-	if (SameText(mp->Name, "HelpMenu")) {
-		ACanvas->Brush->Color = col_bgMenuBar;
-		rc = ARect;
-		rc.Left  = rc.Right;
-		rc.Right = rc.Left + ClientWidth;
-		ACanvas->FillRect(rc);
+//---------------------------------------------------------------------------
+//ファイルリストのスクリーン座標情報を更新
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::UpdateFileListRect()
+{
+	TPoint lt = ListPanel->ClientToScreen(Point(0, 0));
+	TPoint rb = ListPanel->ClientToScreen(Point(ListPanel->Width, ListPanel->Height));
+	UserModule->FileListRect = Rect(lt.x, lt.y, rb.x, rb.y);
+}
+
+//---------------------------------------------------------------------------
+//ファイルリスト幅の左右比率維持
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::KeepFileListRerio()
+{
+	if (KeepOnResize && ListPercent>0 && ListPercent<100) {
+		double r = ListPercent/100.0;
+		if (KeepCurListWidth && CurListTag==1) r = 1.0 - r;
+		if (DivFileListUD) {
+			int r_hi = LRSplitter->Height;
+			if (TabPanel->Visible) r_hi += TabPanel->Height;
+			if (HdrPanel->Visible) r_hi += HdrPanel->Height;
+			L_Panel->Height = (ListPanel->ClientHeight - r_hi) * r;
+			if (!DivDirInfUD) L_TopPanel->Width = (HdrPanel->Width - RelPanel->Width)/2;
+		}
+		else {
+			L_Panel->Width = (ListPanel->ClientWidth - LRSplitter->Width) * r;
+			L_TopPanel->Width = L_Panel->Width - (RelPanel->Width - LRSplitter->Width)/2;
+		}
 	}
 }
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::PopMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
-	const TRect &ARect, TOwnerDrawState State)
-{
-	TMenuItem *mp = (TMenuItem*)Sender;
-	bool is_hl = (State.Contains(odSelected) || State.Contains(odHotLight));
-	ACanvas->Brush->Color = is_hl? (IsDarkMode? dcl_Highlight : scl_MenuSelect) : (IsDarkMode? dcl_Menu : scl_Menu);
-	ACanvas->Font->Color  = (State.Contains(odGrayed) || State.Contains(odDisabled))?
-								clGray : (IsDarkMode? dcl_MenuText : scl_MenuText);
-	ACanvas->FillRect(ARect);
 
-	//セパレータ
-	if (is_separator(mp->Caption)) {
-		draw_MenuSeparator(ACanvas, ARect);
+//---------------------------------------------------------------------------
+//左/上側リストのサイズ変更
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::L_PanelResize(TObject *Sender)
+{
+	if (!Initialized || UnInitializing) return;
+
+	RequestSlowTask();
+
+	if (DivFileListUD) {
+		int r_hi = LRSplitter->Height;
+		if (TabPanel->Visible) r_hi += TabPanel->Height;
+		if (HdrPanel->Visible) r_hi += HdrPanel->Height;
+		CurListHeight = (CurListTag==0)? L_Panel->Height : (ListPanel->ClientHeight - L_Panel->Height - r_hi);
+		if (!DivDirInfUD) L_TopPanel->Width = (HdrPanel->Width - RelPanel->Width)/2;
 	}
 	else {
-		//キャプション
-		TRect rc = ARect;
-		int hi = rc.Height();
-		rc.Left += (hi + ScaledThis(8));
-		int yp = ARect.Top + (hi - ACanvas->TextHeight("Q")) / 2;
-		rc.Top = yp;
-		UINT opt = DT_LEFT;  if (State.Contains(odNoAccel))  opt |= DT_HIDEPREFIX;
-		::DrawText(ACanvas->Handle, mp->Caption.c_str(), -1, &rc, opt);
+		CurListWidth = (CurListTag==0)? L_Panel->Width : (ListPanel->ClientWidth - L_Panel->Width - LRSplitter->Width);
+		L_TopPanel->Width = L_Panel->Width - (RelPanel->Width - LRSplitter->Width)/2;
+	}
 
-		//アイコン
-		int idx = mp->ImageIndex;
-		if (idx>=0 && idx<IconImgListP->Count) {
-			IconImgListP->Draw(ACanvas, ARect.Left + ScaledThis(4), yp, mp->ImageIndex);
-		}
-		//チェックボックス
-		else if (mp->Checked) {
-			ACanvas->Brush->Color = IsDarkMode? (is_hl? dcl_Highlight2 : dcl_Highlight)
-											  : (is_hl? scl_MenuSelect2 : scl_MenuSelect);
-			rc = ARect;
-			rc.Right = rc.Left + hi;
-			ACanvas->FillRect(rc);
-			UnicodeString chk = _T("\u2713");
-			ACanvas->TextOut(rc.Left + (hi - ACanvas->TextWidth(chk))/2, yp, chk);
-		}
+	if (!WndSizing) SetFlItemWidth(GetFileList(0), 0);
 
-		//サブメニュー・マーク背景
-		if (IsDarkMode && !is_hl && mp->Count>0) {
-			rc = ARect;
-			rc.Left  = rc.Right - ScaledThis(16);
-			ACanvas->Brush->Color = dcl_Highlight;
-			ACanvas->FillRect(rc);
-		}
+	UpdateBgImage(true);
+}
+//---------------------------------------------------------------------------
+//右/下側リストのサイズ変更
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::R_PanelResize(TObject *Sender)
+{
+	if (!Initialized || UnInitializing) return;
+
+	if (!WndSizing) SetFlItemWidth(GetFileList(1), 1);
+
+	UpdateBgImage(true);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::LRSplitterCanResize(TObject *Sender, int &NewSize, bool &Accept)
+{
+	Accept = !FixListWidth;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::LRSplitterMoved(TObject *Sender)
+{
+	if (!Initialized || UnInitializing) return;
+
+	RequestSlowTask();
+	if (!DivFileListUD) {
+		SetDirCaption(0);
+		SetDirCaption(1);
 	}
 }
+
+//---------------------------------------------------------------------------
+//サブパネルのサイズ変更
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SubPanelResize(TObject *Sender)
+{
+	if (!Initialized || UnInitializing) return;
+
+	if (LayoutMode==0 || LayoutMode==3)
+		IniFile->WriteIntGen(IsPrimary? _T("SubHeight") : _T("SubHeight2"),	SubPanel->Height);
+	else
+		IniFile->WriteIntGen(IsPrimary? _T("SubWidth")  : _T("SubWidth2"),	SubPanel->Width);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ListSubSplitterCanResize(TObject *Sender, int &NewSize, bool &Accept)
+{
+	int wd = PreviewPanel->ClientWidth;
+	int hi = PreviewPanel->ClientHeight;
+	if (((TSplitter*)Sender)->Align == alBottom) hi = NewSize; else wd = NewSize;
+	ShowPreviewSize(wd, hi);
+}
+//---------------------------------------------------------------------------
+//分割境界線の描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SplitterBgPaint(TObject *Sender)
+{
+	TSplitter *sp = (TSplitter*)Sender;
+	TCanvas *cv = sp->Canvas;
+	Graphics::TBitmap *ip = BgImgBuff[sp->Tag + 2];
+	if (!ip->Empty) {
+		std::unique_ptr<Graphics::TBitmap> bp(new Graphics::TBitmap());
+		std::unique_ptr<Graphics::TBitmap> vp(new Graphics::TBitmap());
+		bp->Assign(ip);
+		if ((sp->Align==alLeft || sp->Align==alRight) != (bp->Height>bp->Width)) {
+			WIC_rotate_image(bp.get(), 1);  WIC_rotate_image(bp.get(), 4);
+		}
+		WIC_resize_image(bp.get(), vp.get(), 0.0, sp->Width, sp->Height, WicScaleOpt);
+		cv->Draw(0, 0, vp.get());
+	}
+	else {
+		cv->Brush->Color = col_Splitter;
+		cv->FillRect(sp->ClientRect);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ImgInfSplitterCanResize(TObject *Sender, int &NewSize, bool &Accept)
+{
+	int wd = PreviewPanel->ClientWidth;
+	int hi = PreviewPanel->ClientHeight;
+	if (((TSplitter*)Sender)->Align == alLeft) wd = NewSize; else hi = NewSize;
+	ShowPreviewSize(wd, hi);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ImgInfSplitterMoved(TObject *Sender)
+{
+	if (!Initialized || UnInitializing) return;
+
+	if (PreviewPanel->Visible) {
+		if (LayoutMode==0 || LayoutMode==3) PreviewWidth = PreviewPanel->Width; else PreviewHeight = PreviewPanel->Height;
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::InfLogSplitterMoved(TObject *Sender)
+{
+	if (!Initialized || UnInitializing) return;
+
+	if (InfPanel->Visible) {
+		if (LayoutMode==0 || LayoutMode==3) InfPanelWidth = InfPanel->Width; else InfPanelHeight = InfPanel->Height;
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TxtPrvSplitterMoved(TObject *Sender)
+{
+	if (!Initialized || UnInitializing) return;
+
+	IniFile->WriteIntGen(IsPrimary? _T("TailHeight") : _T("TailHeight2"),	TxtTailListPanel->Height);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TxtScrollPanelResize(TObject *Sender)
+{
+	if (ScrMode==SCMD_TVIEW) TxtViewer->SetMetric(true);
+}
+
 
 //---------------------------------------------------------------------------
 //ディレクトリ情報の描画
@@ -3146,6 +3571,26 @@ void __fastcall TNyanFiForm::GrepStatusBarDrawPanel(TStatusBar *StatusBar, TStat
 	cv->TextOut(Rect.Left + ScaledThis(2), Rect.Top + (Rect.Height() - cv->TextHeight("Q")) / 2, Panel->Text);
 }
 
+//---------------------------------------------------------------------------
+//置換パネルのリサイズ
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::RepT1PanelResize(TObject *Sender)
+{
+	//検索・置換文字列入力欄の調整
+	int e_w = (RegExRCheckBox->Left - RepFindLabel->Width - RepStrLabel->Width - RepFindLabel->Left - 30) / 2;
+	RepFindComboBox->Width = e_w;
+	RepStrComboBox->Width  = e_w;
+	RepStrComboBox->Left   = RepFindComboBox->Left + RepFindComboBox->Width + RepStrLabel->Width + 10;
+	RepStrLabel->Left	   = RepStrComboBox->Left - RepStrLabel->Width - 4;
+}
+//---------------------------------------------------------------------------
+//Grepパネルのリサイズ
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepT11PanelResize(TObject *Sender)
+{
+	//※アンカーがずれる(?)現象の対策
+	GrepFindComboBox->Width = GrepT11Panel->Width - GrepFindComboBox->Left - 12;
+}
 //---------------------------------------------------------------------------
 //インターネットショートカットの作成
 //---------------------------------------------------------------------------
@@ -3407,348 +3852,7 @@ void __fastcall TNyanFiForm::RestoreBgImg()
 	}
 }
 
-//---------------------------------------------------------------------------
-//ファイルリストの描画およびスクロール時処理
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ListWndProc(TMessage &msg, int tag)
-{
-	TListBox *lp = (tag==0)? L_ListBox : R_ListBox;
 
-	switch (msg.Msg) {
-	case WM_VSCROLL:
-	case WM_NYANFI_USCROLL:	//シンプルスクロールバーのノブドラッグ
-		ClearNopStt();
-		if (FlCursorVisible) {
-			if (IsDiffList()) {
-				//ディレクトリ比較結果の左右同期
-				TListBox *lp_c = FileListBox[CurListTag];
-				TListBox *lp_o = FileListBox[OppListTag];
-				if (tag==CurListTag) {
-					if (ListBoxCsrToVisible(lp)) {
-						SetFileInf();
-					}
-					else {
-						lp_o->TopIndex	= lp_c->TopIndex;
-						lp_o->ItemIndex = lp_c->ItemIndex;
-						lp_o->Invalidate();
-					}
-				}
-				else {
-					int idx0 = lp_c->ItemIndex;
-					lp_c->TopIndex	= lp_o->TopIndex;
-					lp_c->ItemIndex = lp_o->ItemIndex;
-					lp_c->Invalidate();
-					if (lp_c->ItemIndex!=idx0) SetFileInf();
-				}
-			}
-			else if (ListBoxCsrToVisible(lp)) {
-				if (tag==CurListTag) SetFileInf();
-			}
-		}
-
-		if (BgImgMode>0 && BgImgHideScr && !HideBgImg[tag]) {
-			HideBgImg[tag] = true;
-			lp->Invalidate();
-		}
-
-		if (msg.Msg==WM_VSCROLL) org_FileListWindowProc[tag](msg);
-		break;
-
-	case WM_NYANFI_UPDKNOB:
-		FlScrPanel[tag]->UpdateKnob();
-		msg.Result = 1;
-		break;
-
-	case WM_ERASEBKGND:
-		if (BgImgMode>0 && !HideBgImg[tag] && !BgBuff[tag]->Empty) {
-			//描画すべき領域がバッファになかったら更新
-			TRect rc;
-			if (!::GetUpdateRect(lp->Handle, &rc, FALSE))
-				rc = Rect(0, 0, (tag==0)? L_Panel->Width : R_Panel->Width, lp->Height);
-			HRGN rgn = ::CreateRectRgn(rc.Left, rc.Top, rc.Right, rc.Bottom);
-			::SelectClipRgn(lp->Canvas->Handle, rgn);
-			//描画すべき領域がバッファになかったら更新
-			rc.Right += 1; rc.Bottom += 1;
-			if (!rc.Contains(Rect(0, 0, BgBuff[tag]->Width, BgBuff[tag]->Height))) UpdateBgImage();
-			//背景を描画
-			lp->Canvas->Draw(0, 0, BgBuff[tag]);
-			//すぐに再描画要求
-			::RedrawWindow(lp->Handle, NULL, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW);
-			::DeleteObject(rgn);
-			msg.Result = 1;
-		}
-		else {
-			org_FileListWindowProc[tag](msg);
-		}
-		break;
-
-	case WM_PAINT:
-		FlScrPanel[tag]->Repaint();
-		org_FileListWindowProc[tag](msg);
-		break;
-
-	default:
-		org_FileListWindowProc[tag](msg);
-	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ActionList1Execute(TBasicAction *Action, bool &Handled)
-{
-	if (CurWorking) Handled = true;
-}
-
-//---------------------------------------------------------------------------
-// ドライブが変更された
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmDeviceChange(TMessage &msg)
-{
-	if (!Initialized || UnInitializing) return;
-
-	//ドライブ情報を取得
-	drive_info *new_dp = get_DriveInfoList();
-
-	//ドライブが追加された
-	if (new_dp) {
-		//追加ドライブをカレントで開く
-		if (OpenAddedDrive) {
-			if (WindowState==wsMinimized) Application->Restore();
-			Application->BringToFront();
-			if (file_exists(new_dp->drive_str)) {
-				UpdateCurDrive(new_dp->drive_str);
-				//イベント: 追加ドライブが開かれた
-				ExeEventCommand(OnNewDrive);
-			}
-		}
-	}
-	//パスの存在チェック
-	else {
-		for (int i=0; i<MAX_FILELIST; i++) {
-			UnicodeString dnam = CheckAvailablePath(CurPath[i], i);
-			if (!dnam.IsEmpty() && !SameText(CurPath[i], dnam)) {
-				CurPath[i] = dnam;
-				if (i==CurListTag) SetFileInf();
-			}
-		}
-	}
-
-	//ドライブ一覧を更新
-	if (SelDriveDlg && SelDriveDlg->Visible) SelDriveDlg->UpdateDriveList();
-
-	//ツールボタンの状態更新
-	UpdateToolDriveBtn();
-}
-
-//---------------------------------------------------------------------------
-//ファイルリストのドロップ受け入れ
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmDropped(TMessage &msg)
-{
-	if (CurWorking || FindBusy) return;
-
-	HWND hWnd = get_window_from_pos();
-
-	//テキストビュアー
-	if (hWnd==TxtScrollPanel->Handle) {
-		if (DroppedList->Count>0) {
-			TxtViewer->add_ViewHistory();
-			if (!SetAndOpenTxtViewer(DroppedList->Strings[0])) SttBarWarn(LoadUsrMsg(USTR_FileNotOpen));
-		}
-		DroppedList->Clear();
-		return;
-	}
-
-	//ファイラー
-	try {
-		if (DroppedTag==-1) {
-			if		(hWnd==FileListBox[0]->Handle) DroppedTag = 0;
-			else if (hWnd==FileListBox[1]->Handle) DroppedTag = 1;
-		}
-		if (DroppedTag==-1 || DroppedTag==DragStartTag || DroppedList->Count==0 ) Abort();
-
-		flist_stt *cur_stt = &ListStt[DroppedTag];
-		if (ScrMode!=SCMD_FLIST || cur_stt->is_Arc || IsDiffList()) UserAbort(USTR_CantOperate);
-
-		//右ドラッグの場合、一旦メニューを出す
-		if (DroppedMode==(DROPEFFECT_COPY|DROPEFFECT_MOVE|DROPEFFECT_LINK)) {
-			DropPopupMenu->Popup(Mouse->CursorPos.x + 2, Mouse->CursorPos.y);
-			return;
-			//メニュー選択後、再度 WmDropped が呼ばれる
-		}
-
-		//結果リスト
-		if (cur_stt->is_Find) {
-			if (!cur_stt->find_TAG && DroppedMode!=DROPEFFECT_COPY) UserAbort(USTR_CantOperate);
-			//タグ検索結果リスト(タグ追加)
-			for (int i=0; i<DroppedList->Count; i++) {
-				usr_TAG->AddTags(DroppedList->Strings[i], cur_stt->find_Keywd);
-			}
-			ReloadList(DroppedTag);
-		}
-		//ワークリスト
-		else if (cur_stt->is_Work) {
-			if (DroppedMode!=DROPEFFECT_COPY) UserAbort(USTR_CantOperate);
-			if (WorkListFiltered) UserAbort(USTR_WorkFiltered);
-			for (int i=0; i<DroppedList->Count; i++) {
-				UnicodeString fnam = DroppedList->Strings[i];
-				if (WorkList->IndexOf(fnam)!=-1) continue;
-				file_rec *fp = cre_new_file_rec(fnam);
-				if (fp) WorkList->AddObject(fp->f_name, (TObject*)fp);
-			}
-			ChangeWorkList(DroppedTag);
-			rqWorkListDirInf = !WorkListChanged;
-			WorkListChanged  = true;
-		}
-		//FTP (アップロード)
-		else if (cur_stt->is_FTP) {
-			if (DroppedMode!=DROPEFFECT_COPY) UserAbort(USTR_CantOperate);
-			StartLog(UnicodeString().sprintf(_T("アップロード開始  DROP\t%s"), yen_to_slash(CurFTPPath).c_str()));
-			BeginWorkProgress(LoadUsrMsg(USTR_Upload), EmptyStr, FileListBox[DroppedTag], true);
-			CurWorking	= true;
-			gCopyCancel = false;
-			int d_cnt = 0;
-			for (int i=0; i<DroppedList->Count; i++) {
-				UnicodeString fnam = DroppedList->Strings[i];
-				file_rec *fp = cre_new_file_rec(fnam);
-				if (fp->is_dir) d_cnt++; else UploadFtpCore(fp);
-				del_file_rec(fp);
-				if (gCopyCancel || CancelWork) break;
-			}
-			CurWorking = false;
-
-			if (gCopyCancel || CancelWork) {
-				EndWorkProgress(EmptyStr, LoadUsrMsg(USTR_Canceled));
-				AddLog(_T("アップロード中断"), true);
-			}
-			else {
-				EndWorkProgress();
-				EndLog(USTR_Upload);
-				if (!ChangeFtpFileList(DroppedTag)) GlobalAbort();
-			}
-			if (d_cnt>0) UserAbort(USTR_IncludeDir);
-		}
-		//代替データストリーム
-		else if (cur_stt->is_ADS) {
-			if (DroppedMode!=DROPEFFECT_COPY) UserAbort(USTR_CantOperate);
-			StartLog(UnicodeString().sprintf(_T("コピー開始  DROP\t%s:"), cur_stt->ads_Name.c_str()));
-
-			CurWorking = true;
-			CancelWork = false;
-			BeginWorkProgress(_T("代替データストリームへコピー"), EmptyStr, FileListBox[CurListTag], true);
-			bool ow_all = false, sk_all = false;
-			for (int i=0; i<DroppedList->Count && !CancelWork; i++) {
-				UnicodeString fnam = DroppedList->Strings[i];
-				UnicodeString dst_nam = cur_stt->ads_Name + ":" + ExtractFileName(fnam);
-				CopyAdsCore(fnam, dst_nam, ow_all, sk_all);
-			}
-			ChangeAdsList(cur_stt->ads_Name, DroppedTag);
-			CurWorking = false;
-
-			if (CancelWork) {
-				EndWorkProgress(EmptyStr, LoadUsrMsg(USTR_Canceled));
-				AddLog(_T("コピー中断"));
-			}
-			else {
-				EndWorkProgress();
-				EndLog(_T("コピー"));
-			}
-		}
-		//その他
-		else {
-			//ショートカット作成
-			if (DroppedMode==DROPEFFECT_LINK) {
-				UnicodeString dnam = GetCurPathStr(DroppedTag);
-				//.url
-				if (DroppedList->Count==1 && ContainsStr(DroppedList->Strings[0], "\t")) {
-					UnicodeString url  = DroppedList->Strings[0];
-					UnicodeString fnam = split_pre_tab(url);
-					UnicodeString bnam = get_base_name(fnam);
-					UnicodeString fext = get_extension(fnam);
-					bnam = replace_regex(bnam, _T("\\s{2,}"), _T(" "));		//連続空白の置換
-					bnam = ApplyCnvCharList(bnam);							//禁止文字の置換
-					fnam = dnam + bnam + fext;
-					if (file_exists(fnam) && !msgbox_Sure(USTR_OverwriteQ)) SkipAbort();
-					//画像
-					if (!USAME_TI(get_extension(fnam), ".url")) {
-						TModalResult mr = DownloadWorkProgress(url, fnam, FileListBox[DroppedTag]);
-						if (mr==mrCancel) SkipAbort();
-						if (mr!=mrOk) Abort();
-					}
-					//インターネットショートカット
-					else {
-						MakeUrlFile(fnam, url);
-					}
-				}
-				//.lnk
-				else {
-					UnicodeString tmp;
-					StartLog(tmp.sprintf(_T("ショートカット作成開始  DROP\t%s"), dnam.c_str()));
-					int ok_cnt = 0, er_cnt = 0;
-					for (int i=0; i<DroppedList->Count; i++) {
-						UnicodeString fnam = ExcludeTrailingPathDelimiter(DroppedList->Strings[i]);
-						UnicodeString lnam = dnam + ChangeFileExt(ExtractFileName(fnam), ".lnk");
-						tmp = make_LogHdr(_T("CREATE"), lnam);
-						if (!usr_SH->CreateShortCut(lnam, fnam)) tmp[1] = 'E';
-						AddLog(tmp);
-						((tmp[1]=='E')? er_cnt : ok_cnt)++;
-					}
-					EndLog(_T("作成"), get_ResCntStr(ok_cnt, er_cnt));
-				}
-			}
-			//コピー or 移動
-			else if (DroppedMode==DROPEFFECT_COPY || DroppedMode==DROPEFFECT_MOVE) {
-				UnicodeString cmd;
-				cmd.sprintf(_T("%s"), (DroppedMode==DROPEFFECT_MOVE)? _T("MOV") : _T("CPY"));
-				UnicodeString cnam = GetCurPathStr(DroppedTag);
-				std::unique_ptr<TStringList> dir_lst(new TStringList());
-				get_SyncDirList(cnam, dir_lst.get(), false, USAME_TS(cmd, "CPY"));
-				for (int i=0; i<dir_lst->Count; i++) {
-					TaskConfig  *cp = NULL;
-					TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
-					UnicodeString dnam = dir_lst->Strings[i];
-					UnicodeString tmp;
-					for (int j=0; j<DroppedList->Count; j++) {
-						cp->TaskList->Add(tmp.sprintf(_T("%s\t%s\t%s"),
-											cmd.c_str(), DroppedList->Strings[j].c_str(), dnam.c_str()));
-					}
-					cp->CopyMode = gCopyMode;
-					cp->CopyAll  = false;
-					cp->CmdStr	 = TaskCmdList->Values[cmd];
-					cp->DistPath = dnam;
-					cp->InfStr.sprintf(_T("DROP ---> %s"), dnam.c_str());
-					if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
-					ActivateTask(tp, cp);
-				}
-			}
-		}
-
-		if (CurListTag==DragStartTag) ClearAllAction->Execute();
-	}
-	catch (EAbort &e) {
-		if (!e.Message.IsEmpty() && !USAME_TI(e.Message, "SKIP")) SttBarWarn(e.Message);
-	}
-
-	DroppedList->Clear();
-	DragStartTag = -1;
-	DroppedTag	 = -1;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::DropMenuItemClick(TObject *Sender)
-{
-	switch (((TMenuItem*)Sender)->Tag) {
-	case 0:  DroppedMode = DROPEFFECT_COPY; break;
-	case 1:  DroppedMode = DROPEFFECT_MOVE; break;
-	case 2:  DroppedMode = DROPEFFECT_LINK; break;
-	default: DroppedMode = DROPEFFECT_NONE;
-	}
-	if (DroppedMode!=DROPEFFECT_NONE) Perform(WM_FORM_DROPPED, 0, (NativeInt)0);
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmSettingChange(TMessage &msg)
-{
-	if (msg.WParam==SPI_SETHIGHCONTRAST) SetupDesign(false);
-}
 
 //---------------------------------------------------------------------------
 //タイマー処理 (タスク状態表示)
@@ -4990,6 +5094,88 @@ void __fastcall TNyanFiForm::SetFileListFontSize(
 }
 
 //---------------------------------------------------------------------------
+//メニューの描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::MainMenuMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width, int &Height)
+{
+	TMenuItem *mp = (TMenuItem*)Sender;
+	Width = ACanvas->TextWidth(ReplaceStr(mp->Caption, "&", EmptyStr));
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::MainMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
+	const TRect &ARect, TOwnerDrawState State)
+{
+	TMenuItem *mp = (TMenuItem*)Sender;
+	ACanvas->Brush->Color = (State.Contains(odSelected) || State.Contains(odHotLight))? col_htMenuBar : col_bgMenuBar;
+	ACanvas->Font->Color  = (State.Contains(odGrayed) || State.Contains(odDisabled))? clGray : col_fgMenuBar;
+	ACanvas->FillRect(ARect);
+
+	TRect rc = ARect;
+	rc.Top	+= (ARect.Height() - ACanvas->TextHeight("Q")) / 2;
+	rc.Left += (ARect.Width() - ACanvas->TextWidth(ReplaceStr(mp->Caption, "&", EmptyStr))) / 2;
+	UINT opt = DT_LEFT;  if (State.Contains(odNoAccel))  opt |= DT_HIDEPREFIX;
+	::DrawText(ACanvas->Handle, mp->Caption.c_str(), -1, &rc, opt);
+
+	if (SameText(mp->Name, "HelpMenu")) {
+		ACanvas->Brush->Color = col_bgMenuBar;
+		rc = ARect;
+		rc.Left  = rc.Right;
+		rc.Right = rc.Left + ClientWidth;
+		ACanvas->FillRect(rc);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::PopMenuAdvancedDrawItem(TObject *Sender, TCanvas *ACanvas,
+	const TRect &ARect, TOwnerDrawState State)
+{
+	TMenuItem *mp = (TMenuItem*)Sender;
+	bool is_hl = (State.Contains(odSelected) || State.Contains(odHotLight));
+	ACanvas->Brush->Color = is_hl? (IsDarkMode? dcl_Highlight : scl_MenuSelect) : (IsDarkMode? dcl_Menu : scl_Menu);
+	ACanvas->Font->Color  = (State.Contains(odGrayed) || State.Contains(odDisabled))?
+								clGray : (IsDarkMode? dcl_MenuText : scl_MenuText);
+	ACanvas->FillRect(ARect);
+
+	//セパレータ
+	if (is_separator(mp->Caption)) {
+		draw_MenuSeparator(ACanvas, ARect);
+	}
+	else {
+		//キャプション
+		TRect rc = ARect;
+		int hi = rc.Height();
+		rc.Left += (hi + ScaledThis(8));
+		int yp = ARect.Top + (hi - ACanvas->TextHeight("Q")) / 2;
+		rc.Top = yp;
+		UINT opt = DT_LEFT;  if (State.Contains(odNoAccel))  opt |= DT_HIDEPREFIX;
+		::DrawText(ACanvas->Handle, mp->Caption.c_str(), -1, &rc, opt);
+
+		//アイコン
+		int idx = mp->ImageIndex;
+		if (idx>=0 && idx<IconImgListP->Count) {
+			IconImgListP->Draw(ACanvas, ARect.Left + ScaledThis(4), yp, mp->ImageIndex);
+		}
+		//チェックボックス
+		else if (mp->Checked) {
+			ACanvas->Brush->Color = IsDarkMode? (is_hl? dcl_Highlight2 : dcl_Highlight)
+											  : (is_hl? scl_MenuSelect2 : scl_MenuSelect);
+			rc = ARect;
+			rc.Right = rc.Left + hi;
+			ACanvas->FillRect(rc);
+			UnicodeString chk = _T("\u2713");
+			ACanvas->TextOut(rc.Left + (hi - ACanvas->TextWidth(chk))/2, yp, chk);
+		}
+
+		//サブメニュー・マーク背景
+		if (IsDarkMode && !is_hl && mp->Count>0) {
+			rc = ARect;
+			rc.Left  = rc.Right - ScaledThis(16);
+			ACanvas->Brush->Color = dcl_Highlight;
+			ACanvas->FillRect(rc);
+		}
+	}
+}
+
+//---------------------------------------------------------------------------
 //ツールボタンの更新
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::UpdateToolBtn(int scr_mode)
@@ -5073,7 +5259,31 @@ void __fastcall TNyanFiForm::UpdateToolBtn(int scr_mode)
 	//ドライブボタンの状態更新
 	if (scr_mode==SCMD_FLIST) UpdateToolDriveBtn();
 }
-
+//---------------------------------------------------------------------------
+//ツールボタン(ChangeDrive)の状態更新
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::UpdateToolDriveBtn()
+{
+	if (ToolBarF->Visible) {
+		ToolBarF->LockDrawing();
+		for (int i=0; i<ToolBarF->ButtonCount; i++) {
+			TStringDynArray itm_buf = get_csv_array(ToolBtnList->Strings[i], 3, true);
+			UnicodeString dstr = itm_buf[1];
+			if (remove_top_text(dstr, _T("ChangeDrive_"))) {
+				TToolButton *bp = ToolBarF->Buttons[i];
+				bp->Visible = false;
+				bool found  = false;
+				for (int j=0; j<DriveInfoList->Count && !found; j++) {
+					drive_info *dp = (drive_info *)DriveInfoList->Objects[j];
+					found = dp->accessible && StartsText(dstr, dp->drive_str);
+				}
+				bp->Visible = found;
+				bp->Enabled = found;
+			}
+		}
+		ToolBarF->UnlockDrawing();
+	}
+}
 //---------------------------------------------------------------------------
 //ツールボタンの実行
 //---------------------------------------------------------------------------
@@ -5143,31 +5353,6 @@ void __fastcall TNyanFiForm::InitFKeyBtn()
 	}
 	tp->UnlockDrawing();
 }
-//---------------------------------------------------------------------------
-//ファンクションキーボタンの実行
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FKeyBtnClick(TObject *Sender)
-{
-	TToolButton *bp = (TToolButton *)Sender;
-	UnicodeString cmds = bp->Hint;
-
-	if (USAME_TS(cmds, "Help")) {
-		int idx = 4;
-		if (FileListBox[CurListTag]->Focused())
-			idx = (CurStt->is_Work? 60 : CurStt->is_IncSea? 50 : 4);
-		else if (ScrMode==SCMD_TVIEW)
-			idx = TxtViewer->isIncSea? 50 : 6;
-		else if (ScrMode==SCMD_IVIEW)
-			idx = 7;
-		HtmlHelpContext(idx);
-	}
-	else {
-		if (StartsText("ExeCommands_", cmds)) cmds = exclude_quot(get_PrmStr(cmds));
-		ActionOptStr = "MousePos";
-		if (!ExeAliasOrCommands(cmds)) SetActionAbort(GlobalErrMsg);
-	}
-}
-
 //---------------------------------------------------------------------------
 //ファンクションキーボタンの更新
 //---------------------------------------------------------------------------
@@ -5248,11 +5433,44 @@ void __fastcall TNyanFiForm::UpdateFKeyBtn()
 
 	if (FKeyBar->Visible) UpdateFKeyBtn(get_Shift(), true);
 }
+//---------------------------------------------------------------------------
+//ファンクションキーボタンの実行
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::FKeyBtnClick(TObject *Sender)
+{
+	TToolButton *bp = (TToolButton *)Sender;
+	UnicodeString cmds = bp->Hint;
+
+	if (USAME_TS(cmds, "Help")) {
+		int idx = 4;
+		if (FileListBox[CurListTag]->Focused())
+			idx = (CurStt->is_Work? 60 : CurStt->is_IncSea? 50 : 4);
+		else if (ScrMode==SCMD_TVIEW)
+			idx = TxtViewer->isIncSea? 50 : 6;
+		else if (ScrMode==SCMD_IVIEW)
+			idx = 7;
+		HtmlHelpContext(idx);
+	}
+	else {
+		if (StartsText("ExeCommands_", cmds)) cmds = exclude_quot(get_PrmStr(cmds));
+		ActionOptStr = "MousePos";
+		if (!ExeAliasOrCommands(cmds)) SetActionAbort(GlobalErrMsg);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::FKeyBtnMouseUp(TObject *Sender, TMouseButton Button,
+	TShiftState Shift, int X, int Y)
+{
+	if (Button==mbRight) {
+		ActionParam = ((TComponent *)Sender)->Tag;
+		FKeyRenameAction->Execute();
+	}
+}
 
 //---------------------------------------------------------------------------
 //ファンクションキー表示名の変更
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FK_RenameActionExecute(TObject *Sender)
+void __fastcall TNyanFiForm::FKeyRenameActionExecute(TObject *Sender)
 {
 	int idx = ActionParam.ToIntDef(-1);
 	if (idx>=0) {
@@ -5272,41 +5490,6 @@ void __fastcall TNyanFiForm::FK_RenameActionExecute(TObject *Sender)
 			if (InputExDlg->ShowModal()==mrOk) FKeyLabelList->Values[kstr] = InputExDlg->InputEdit->Text;
 			UpdateFKeyBtn();
 		}
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FKeyBtnMouseUp(TObject *Sender, TMouseButton Button,
-	TShiftState Shift, int X, int Y)
-{
-	if (Button==mbRight) {
-		ActionParam = ((TComponent *)Sender)->Tag;
-		FK_RenameAction->Execute();
-	}
-}
-
-//---------------------------------------------------------------------------
-//ツールボタン(ChangeDrive)の状態更新
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::UpdateToolDriveBtn()
-{
-	if (ToolBarF->Visible) {
-		ToolBarF->LockDrawing();
-		for (int i=0; i<ToolBarF->ButtonCount; i++) {
-			TStringDynArray itm_buf = get_csv_array(ToolBtnList->Strings[i], 3, true);
-			UnicodeString dstr = itm_buf[1];
-			if (remove_top_text(dstr, _T("ChangeDrive_"))) {
-				TToolButton *bp = ToolBarF->Buttons[i];
-				bp->Visible = false;
-				bool found  = false;
-				for (int j=0; j<DriveInfoList->Count && !found; j++) {
-					drive_info *dp = (drive_info *)DriveInfoList->Objects[j];
-					found = dp->accessible && StartsText(dstr, dp->drive_str);
-				}
-				bp->Visible = found;
-				bp->Enabled = found;
-			}
-		}
-		ToolBarF->UnlockDrawing();
 	}
 }
 
@@ -5974,157 +6157,6 @@ void __fastcall TNyanFiForm::NotConvertAbort(
 }
 
 //---------------------------------------------------------------------------
-//ファイル情報(FL/IV)の描画
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::InfListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-	TOwnerDrawState State)
-{
-	TListBox *lp = (TListBox*)Control;
-	draw_InfListBox(lp, Rect, Index, State);
-	draw_ListCursor(lp, Rect, Index, State);
-}
-//---------------------------------------------------------------------------
-//テキストプレビューの描画(仮想)
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TxtPrvListBoxDrawItem(TWinControl *Control, int Index,
-	TRect &Rect, TOwnerDrawState State)
-{
-	TListBox *lp = (TListBox*)Control;
-	TCanvas  *cv = lp->Canvas;
-	cv->Font->Assign(lp->Font);
-	TRect     rc = Rect;
-
-	//行番号
-	bool is_cnt = (Index==PrvTxtInfLn);
-	if (TxtPrvShowLineNo) LineNoOut(cv, rc, is_cnt? 0 : Index + 1);
-
-	//テキスト
-	bool is_sel = State.Contains(odSelected) && lp->Focused();
-	cv->Brush->Color = is_sel? col_selItem : col_bgTxtPrv;
-	cv->FillRect(rc);
-
-	if (is_cnt) {
-		RuledLnTextOut("……… 続く ………", cv, rc, col_LineNo, lp->TabWidth);
-	}
-	else {
-		PrvTextOut(lp, Index, cv, rc,
-			((is_sel && col_fgSelItem!=col_None)? col_fgSelItem : col_fgTxtPrv),
-			lp->TabWidth, NULL, false, TxtPrvFile);
-	}
-
-	//カーソル
-	bool is_focused = State.Contains(odFocused);
-	if (lp->ItemIndex==Index) {
-		int lw = is_focused? std::max(CursorWidth, 1) : 0;
-		if (lw>0) {
-			int yp = Rect.Bottom - lw;
-			draw_Line(cv, Rect.Left, yp, Rect.Right, yp, lw, col_Cursor, psSolid);
-		}
-	}
-	if (is_focused) cv->DrawFocusRect(Rect);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TxtPrvListBoxData(TWinControl *Control, int Index, UnicodeString &Data)
-{
-	Data = (Index>=0 && Index<TxtPrvBuff->Count)? TxtPrvBuff->Strings[Index] : EmptyStr;
-}
-//---------------------------------------------------------------------------
-//末尾プレビューの描画(仮想)
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TxtTailListBoxDrawItem(TWinControl *Control, int Index,
-	TRect &Rect, TOwnerDrawState State)
-{
-	TListBox *lp = (TListBox*)Control;
-	TCanvas  *cv = lp->Canvas;
-	TRect     rc = Rect;
-
-	if (TxtPrvShowLineNo) {
-		int lcnt = TxtPrvBuff->Count;
-		//最大行数以内
-		if (PrvTxtInfLn==0 || lcnt<=PrvTxtInfLn) {
-			LineNoOut(cv, rc, ((lcnt>PrvTxtTailLn)? lcnt - PrvTxtTailLn : 0) + Index + 1);
-		}
-		//最大行数超え
-		else {
-			int lno = TxtTailBuff->Count - Index - 1;
-			UnicodeString ln_str;
-			if (lno==0) ln_str = "END"; else ln_str.sprintf(_T("-%d"), lno);
-			LineNoOut(cv, rc, ln_str);
-		}
-	}
-
-	bool is_sel = State.Contains(odSelected) && lp->Focused();
-	cv->Brush->Color = is_sel? col_selItem : col_bgTxtPrv;
-	cv->FillRect(rc);
-
-	PrvTextOut(lp, Index, cv, rc,
-		((is_sel && col_fgSelItem!=col_None)? col_fgSelItem : col_fgTxtPrv),
-		lp->TabWidth, NULL, false, TxtPrvFile);
-
-	//カーソル
-	draw_ListCursor(lp, Rect, Index, State);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TxtTailListBoxData(TWinControl *Control, int Index, UnicodeString &Data)
-{
-	Data = (Index>=0 && Index<TxtTailBuff->Count)? TxtTailBuff->Strings[Index] : EmptyStr;
-}
-
-//---------------------------------------------------------------------------
-//ログの描画
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::LogListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-	TOwnerDrawState State)
-{
-	TListBox *lp = (TListBox*)Control;
-	TCanvas *cv = lp->Canvas;
-	cv->Brush->Color = (State.Contains(odSelected) && lp->Focused())? col_selItem : col_bgLog;
-	cv->FillRect(Rect);
-
-	cv->Font->Assign(lp->Font);
-	cv->Font->Color = (lp->Focused() && is_SelFgCol(State))? col_fgSelItem : col_fgLog;
-	bool is_irreg = IsIrregularFont(cv->Font);
-	int xp = Rect.Left + ScaledThis(2);
-	int yp = Rect.Top  + ScaledThis(1);
-
-	UnicodeString lbuf = yen_to_delimiter(lp->Items->Strings[Index]);
-
-	if (cv->Font->Color!=col_fgSelItem) {
-		cv->Font->Color = get_LogColor(lbuf);
-		UnicodeString cmd = Trim(lbuf.SubString(4, 8));
-		if (contained_wd_i(_T("LOAD|SAVE"), cmd)) {
-			out_TextEx(cv, xp, yp, lbuf.SubString(1, 11), col_None, col_None, 0, is_irreg);
-			lbuf.Delete(1, 11);
-			if (SameText(cmd, "LOAD") && EndsStr("  NOT USED", lbuf)) {
-				cv->Font->Color = AdjustColor(col_fgLog, ADJCOL_FGLIST);
-			}
-			else {
-				UnicodeString fnam;
-				if (lbuf.Pos('.')>1) {
-					fnam = split_tkn(lbuf, '.');
-					fnam += ("." + split_tkn(lbuf, ' '));
-				}
-				else {
-					fnam = split_tkn(lbuf, ' ');
-				}
-				out_TextEx(cv, xp, yp, fnam, get_ExtColor(get_extension(fnam), col_fgLog), col_None, 0, is_irreg);
-				if (!lbuf.IsEmpty()) lbuf.Insert(" ", 1);
-			}
-		}
-	}
-
-	EmphasisTextOut(lbuf, EmptyStr, cv, xp, yp);
-
-	//カーソル
-	draw_ListCursor(lp, Rect, Index, State);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::LogListBoxData(TWinControl *Control, int Index, UnicodeString &Data)
-{
-	Data = (Index>=0 && Index<LogBufList->Count)? LogBufList->Strings[Index] : EmptyStr;
-}
-
-//---------------------------------------------------------------------------
 //作業中表示
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SttWorkMsg(
@@ -6418,18 +6450,6 @@ void __fastcall TNyanFiForm::ShowHintAndStatus(unsigned id)
 	ShowHintAndStatus(LoadUsrMsg(id));
 }
 
-//---------------------------------------------------------------------------
-//ディレクトリ情報でのマウス操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::L_DirPanelClick(TObject *Sender)
-{
-	ExeCmdAction(ToLeftAction);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::R_DirPanelClick(TObject *Sender)
-{
-	ExeCmdAction(ToRightAction);
-}
 //---------------------------------------------------------------------------
 //ディレクトリ入力パネルの表示
 //---------------------------------------------------------------------------
@@ -6885,49 +6905,19 @@ void __fastcall TNyanFiForm::PopEjectItemClick(TObject *Sender)
 	remove_top_s(kstr, '&');
 	if (!ExeCmdAction(EjectAction, kstr.SubString(1, 1))) SetActionAbort();
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SelDrvBtnClick(TObject *Sender)
 {
 	int tag = ((TComponent*)Sender)->Tag;
-	ExeCmdAction((tag==0)? ToLeftAction : ToRightAction);
+	ExeCmdAction((tag==1)? ToRightAction : ToLeftAction);
 	PopupDriveMenu(tag, false, true);
 }
 
 //---------------------------------------------------------------------------
-//ドライブ情報でのマウス操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::L_StatPanelClick(TObject *Sender)
+void __fastcall TNyanFiForm::DirSttPanelClick(TObject *Sender)
 {
-	ExeCmdAction(ToLeftAction);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::R_StatPanelClick(TObject *Sender)
-{
-	ExeCmdAction(ToRightAction);
-}
-
-//---------------------------------------------------------------------------
-//情報欄/テキストプレビューでの操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::InfListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
-	UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
-	TListBox *lp = (TListBox*)Sender;
-
-	bool handled = true;
-	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))
-		;
-	else if (is_ToRightOpe(KeyStr, cmd_F))	ExeCmdAction(ToRightAction);
-	else if (is_ToLeftOpe(KeyStr, cmd_F))	ExeCmdAction(ToLeftAction);
-	else if (SameText(KeyStr, KeyStr_Copy)) ExeCmdListBox(lp, _T("ClipCopy"));
-	//右クリックメニュー
-	else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(lp);
-	else handled = false;
-
-	if (handled) Key = 0;
+	int tag = ((TComponent*)Sender)->Tag;
+	ExeCmdAction((tag==1)? ToRightAction : ToLeftAction);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SubListBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
@@ -7019,22 +7009,6 @@ void __fastcall TNyanFiForm::SetExtMenuItem(TMenuItem *m_item,
 	}
 
 	reduction_MenuLine(m_item);
-}
-
-//---------------------------------------------------------------------------
-//ステータスバーの描画
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::StatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect)
-{
-	TCanvas *cv = StatusBar->Canvas;
-	cv->Font->Assign(StatusBar->Font);
-	cv->Font->Color  = col_fgSttBar;
-	cv->Brush->Color = (StatusBar->Tag==SHOW_WARN_TAG && Panel->Index==0)? col_bgWarn : col_bgSttBar;
-	cv->FillRect(Rect);
-
-	UnicodeString lbuf = Panel->Text;
-	cv->TextOut(Rect.Left + ScaledThis(2), Rect.Top, split_pre_tab(lbuf));
-	if (!lbuf.IsEmpty()) cv->TextOut(Rect.Right - cv->TextWidth(lbuf) - ScaledThis(2), Rect.Top, lbuf);
 }
 
 //---------------------------------------------------------------------------
@@ -7159,55 +7133,6 @@ void __fastcall TNyanFiForm::SetDirRelation()
 	bool div_p = (DivFileListUD && DivDirInfUD);
 	(div_p? RelPaintBox2 : RelPaintBox)->Repaint();
 	(div_p? RelPanel2 : RelPanel)->Hint = Trim(msg);
-}
-//---------------------------------------------------------------------------
-//ディレクトリ関係の描画
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::RelPaintBoxPaint(TObject *Sender)
-{
-	TPaintBox *pp = (TPaintBox*)Sender;
-	TCanvas *cv = pp->Canvas;
-	TRect    rc = pp->ClientRect;
-
-	cv->Brush->Color = col_bgDirRel;
-	cv->FillRect(rc);
-	cv->Font->Assign(pp->Font);
-	cv->Font->Color = col_fgDirRel;
-	cv->Font->Style = cv->Font->Style >> fsItalic;
-
-	//関係記号
-	if (DirRelStr.Length()==3) {
-		int xp = (rc.Width()  - cv->TextWidth(DirRelStr[2]))/2;
-		int yp = (rc.Height() - cv->TextHeight(DirRelStr[2]))/2;
-		cv->TextOut(xp, yp, DirRelStr[2]);
-		cv->Font->Style = (cv->Font->Style >> fsBold);
-		if (DirRelStr[1]!=' ') cv->TextOut(xp - cv->TextWidth(DirRelStr[1]) - 3, yp, DirRelStr[1]);
-		if (DirRelStr[3]!=' ') cv->TextOut(xp + cv->TextWidth(DirRelStr[2]) + 3, yp, DirRelStr[3]);
-	}
-
-	//横線表示
-	cv->Pen->Width = ScaledThis(1);
-	cv->Pen->Style = psSolid;
-	cv->Pen->Color = AdjustColor(col_fgDirRel, ADJCOL_LIGHT);
-
-	//左右同ドライブ
-	if (((IsCurFList() && IsOppFList()) || IsDiffList())
-		&& SameText(ExtractFileDrive(CurPath[0]), ExtractFileDrive(CurPath[1])))
-	{
-		int mgn = pp->Width/4;
-		int yp = rc.Top + 3;
-		cv->MoveTo(rc.Left + mgn, yp);	cv->LineTo(rc.Right - mgn, yp);
-		yp = rc.Bottom - 4;
-		cv->MoveTo(rc.Left + mgn, yp);	cv->LineTo(rc.Right - mgn, yp);
-	}
-
-	//左右同期
-	if (SyncLR) {
-		int yp = rc.Top + 1;
-		cv->MoveTo(rc.Left + 4, yp);	cv->LineTo(rc.Right - 4, yp);
-		yp = rc.Bottom - 2;
-		cv->MoveTo(rc.Left + 4, yp);	cv->LineTo(rc.Right - 4, yp);
-	}
 }
 
 //---------------------------------------------------------------------------
@@ -7861,39 +7786,6 @@ void __fastcall TNyanFiForm::SetListHeader(int tag)
 		sp->Items[4]->Text = (lst_stt->is_Find && lst_stt->find_TAG && FindTagsColumn)? "タグ(場所)" : "場所";
 		hp->Invalidate();
 	}
-}
-//---------------------------------------------------------------------------
-//ファイルリストのヘッダを描画
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FL_HeaderControlDrawSection(THeaderControl *HeaderControl,
-		THeaderSection *Section, const TRect &Rect, bool Pressed)
-{
-	int s_mode;
-	switch (Section->Index) {
-	case 0: s_mode = 0; break;
-	case 1: s_mode = 1; break;
-	case 2: s_mode = 3; break;
-	case 3: s_mode = 2; break;
-	case 4: s_mode = 4; break;
-	}
-
-	int tag = HeaderControl->Tag;
-	flist_stt *lst_stt = &ListStt[tag];
-
-	int mk_mode = 0;
-	if (s_mode==4) {
-		if (lst_stt->is_Find && lst_stt->find_PathSort) mk_mode = FlOdrDscPath[tag]? -1 :  1;
-	}
-	else if ((!lst_stt->is_Find || !lst_stt->find_PathSort) && s_mode==SortMode[tag]) {
-		switch (Section->Index) {
-		case 0: mk_mode = FlOdrDscName[tag]? -1 :  1;	break;
-		case 1: mk_mode = FlOdrDscName[tag]? -1 :  1;	break;
-		case 2: mk_mode = FlOdrSmall[tag]?    1 : -1;	break;
-		case 3: mk_mode = FlOdrOld[tag]?      1 : -1;	break;
-		}
-	}
-
-	draw_SortHeader(HeaderControl, Section, Rect, mk_mode);
 }
 
 //---------------------------------------------------------------------------
@@ -10019,6 +9911,24 @@ bool __fastcall TNyanFiForm::UnpackCopyCore(
 }
 
 //---------------------------------------------------------------------------
+//プレビューのマウスポインタを設定
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SetPrvImgCursor(bool sw)
+{
+	if (sw) {
+		PreviewImage->Cursor = crTmpPrev;
+	}
+	else {
+		PreviewImage->Cursor = crDefault;
+		HCURSOR hCur = (HCURSOR)Screen->Cursors[crTmpPrev];
+		if (hCur && ::DestroyCursor(hCur)) Screen->Cursors[crTmpPrev] = NULL;
+	}
+
+	TPoint p = Mouse->CursorPos;
+	Mouse->CursorPos = Point(p.x+1, p.y+1);
+	Mouse->CursorPos = p;
+}
+//---------------------------------------------------------------------------
 //ファイル情報を表示
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ViewFileInf(file_rec *fp,
@@ -10351,6 +10261,39 @@ TPoint __fastcall TNyanFiForm::CurListItemPos()
 	return get_ListItemPos(FileListBox[CurListTag]);
 }
 
+//---------------------------------------------------------------------------
+//ファイルリストのヘッダを描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::FL_HeaderControlDrawSection(THeaderControl *HeaderControl,
+		THeaderSection *Section, const TRect &Rect, bool Pressed)
+{
+	int s_mode;
+	switch (Section->Index) {
+	case 0: s_mode = 0; break;
+	case 1: s_mode = 1; break;
+	case 2: s_mode = 3; break;
+	case 3: s_mode = 2; break;
+	case 4: s_mode = 4; break;
+	}
+
+	int tag = HeaderControl->Tag;
+	flist_stt *lst_stt = &ListStt[tag];
+
+	int mk_mode = 0;
+	if (s_mode==4) {
+		if (lst_stt->is_Find && lst_stt->find_PathSort) mk_mode = FlOdrDscPath[tag]? -1 :  1;
+	}
+	else if ((!lst_stt->is_Find || !lst_stt->find_PathSort) && s_mode==SortMode[tag]) {
+		switch (Section->Index) {
+		case 0: mk_mode = FlOdrDscName[tag]? -1 :  1;	break;
+		case 1: mk_mode = FlOdrDscName[tag]? -1 :  1;	break;
+		case 2: mk_mode = FlOdrSmall[tag]?    1 : -1;	break;
+		case 3: mk_mode = FlOdrOld[tag]?      1 : -1;	break;
+		}
+	}
+
+	draw_SortHeader(HeaderControl, Section, Rect, mk_mode);
+}
 //---------------------------------------------------------------------------
 //ファイルリストの描画
 //---------------------------------------------------------------------------
@@ -10693,7 +10636,6 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 	lp->Canvas->Draw(Rect.Left, Rect.Top, tmp_bmp.get());
 	if (State.Contains(odFocused)) lp->Canvas->DrawFocusRect(Rect);
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FileListBoxEnter(TObject *Sender)
 {
@@ -10738,7 +10680,6 @@ void __fastcall TNyanFiForm::FileListBoxExit(TObject *Sender)
 
 	CancelKeySeq();
 }
-
 //---------------------------------------------------------------------------
 //ファイルリストヘッダのマウス操作
 //---------------------------------------------------------------------------
@@ -11210,6 +11151,757 @@ void __fastcall TNyanFiForm::FileListBoxKeyUp(TObject *Sender, WORD &Key, TShift
 	if (IsDiffList() && !has_KeyDownMsg()) FileListBox[OppListTag]->Repaint();
 }
 
+//---------------------------------------------------------------------------
+//テキストプレビューの描画(仮想)
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TxtPrvListBoxDrawItem(TWinControl *Control, int Index,
+	TRect &Rect, TOwnerDrawState State)
+{
+	TListBox *lp = (TListBox*)Control;
+	TCanvas  *cv = lp->Canvas;
+	cv->Font->Assign(lp->Font);
+	TRect     rc = Rect;
+
+	//行番号
+	bool is_cnt = (Index==PrvTxtInfLn);
+	if (TxtPrvShowLineNo) LineNoOut(cv, rc, is_cnt? 0 : Index + 1);
+
+	//テキスト
+	bool is_sel = State.Contains(odSelected) && lp->Focused();
+	cv->Brush->Color = is_sel? col_selItem : col_bgTxtPrv;
+	cv->FillRect(rc);
+
+	if (is_cnt) {
+		RuledLnTextOut("……… 続く ………", cv, rc, col_LineNo, lp->TabWidth);
+	}
+	else {
+		PrvTextOut(lp, Index, cv, rc,
+			((is_sel && col_fgSelItem!=col_None)? col_fgSelItem : col_fgTxtPrv),
+			lp->TabWidth, NULL, false, TxtPrvFile);
+	}
+
+	//カーソル
+	bool is_focused = State.Contains(odFocused);
+	if (lp->ItemIndex==Index) {
+		int lw = is_focused? std::max(CursorWidth, 1) : 0;
+		if (lw>0) {
+			int yp = Rect.Bottom - lw;
+			draw_Line(cv, Rect.Left, yp, Rect.Right, yp, lw, col_Cursor, psSolid);
+		}
+	}
+	if (is_focused) cv->DrawFocusRect(Rect);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TxtPrvListBoxData(TWinControl *Control, int Index, UnicodeString &Data)
+{
+	Data = (Index>=0 && Index<TxtPrvBuff->Count)? TxtPrvBuff->Strings[Index] : EmptyStr;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TxtPrvListBoxEnter(TObject *Sender)
+{
+	UpdateFKeyBtn();
+}
+//---------------------------------------------------------------------------
+//末尾プレビューの描画(仮想)
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TxtTailListBoxDrawItem(TWinControl *Control, int Index,
+	TRect &Rect, TOwnerDrawState State)
+{
+	TListBox *lp = (TListBox*)Control;
+	TCanvas  *cv = lp->Canvas;
+	TRect     rc = Rect;
+
+	if (TxtPrvShowLineNo) {
+		int lcnt = TxtPrvBuff->Count;
+		//最大行数以内
+		if (PrvTxtInfLn==0 || lcnt<=PrvTxtInfLn) {
+			LineNoOut(cv, rc, ((lcnt>PrvTxtTailLn)? lcnt - PrvTxtTailLn : 0) + Index + 1);
+		}
+		//最大行数超え
+		else {
+			int lno = TxtTailBuff->Count - Index - 1;
+			UnicodeString ln_str;
+			if (lno==0) ln_str = "END"; else ln_str.sprintf(_T("-%d"), lno);
+			LineNoOut(cv, rc, ln_str);
+		}
+	}
+
+	bool is_sel = State.Contains(odSelected) && lp->Focused();
+	cv->Brush->Color = is_sel? col_selItem : col_bgTxtPrv;
+	cv->FillRect(rc);
+
+	PrvTextOut(lp, Index, cv, rc,
+		((is_sel && col_fgSelItem!=col_None)? col_fgSelItem : col_fgTxtPrv),
+		lp->TabWidth, NULL, false, TxtPrvFile);
+
+	//カーソル
+	draw_ListCursor(lp, Rect, Index, State);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TxtTailListBoxData(TWinControl *Control, int Index, UnicodeString &Data)
+{
+	Data = (Index>=0 && Index<TxtTailBuff->Count)? TxtTailBuff->Strings[Index] : EmptyStr;
+}
+
+//---------------------------------------------------------------------------
+//ファイル情報(FL/IV)の描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::InfListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
+	TOwnerDrawState State)
+{
+	TListBox *lp = (TListBox*)Control;
+	draw_InfListBox(lp, Rect, Index, State);
+	draw_ListCursor(lp, Rect, Index, State);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::InfListBoxEnter(TObject *Sender)
+{
+	UpdateFKeyBtn();
+}
+//---------------------------------------------------------------------------
+//情報欄/テキストプレビューでの操作
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::InfListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+	UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
+	TListBox *lp = (TListBox*)Sender;
+
+	bool handled = true;
+	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))
+		;
+	else if (is_ToRightOpe(KeyStr, cmd_F))	ExeCmdAction(ToRightAction);
+	else if (is_ToLeftOpe(KeyStr, cmd_F))	ExeCmdAction(ToLeftAction);
+	else if (SameText(KeyStr, KeyStr_Copy)) ExeCmdListBox(lp, _T("ClipCopy"));
+	//右クリックメニュー
+	else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(lp);
+	else handled = false;
+
+	if (handled) Key = 0;
+}
+
+//---------------------------------------------------------------------------
+//ログの描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::LogListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
+	TOwnerDrawState State)
+{
+	TListBox *lp = (TListBox*)Control;
+	TCanvas *cv = lp->Canvas;
+	cv->Brush->Color = (State.Contains(odSelected) && lp->Focused())? col_selItem : col_bgLog;
+	cv->FillRect(Rect);
+
+	cv->Font->Assign(lp->Font);
+	cv->Font->Color = (lp->Focused() && is_SelFgCol(State))? col_fgSelItem : col_fgLog;
+	bool is_irreg = IsIrregularFont(cv->Font);
+	int xp = Rect.Left + ScaledThis(2);
+	int yp = Rect.Top  + ScaledThis(1);
+
+	UnicodeString lbuf = yen_to_delimiter(lp->Items->Strings[Index]);
+
+	if (cv->Font->Color!=col_fgSelItem) {
+		cv->Font->Color = get_LogColor(lbuf);
+		UnicodeString cmd = Trim(lbuf.SubString(4, 8));
+		if (contained_wd_i(_T("LOAD|SAVE"), cmd)) {
+			out_TextEx(cv, xp, yp, lbuf.SubString(1, 11), col_None, col_None, 0, is_irreg);
+			lbuf.Delete(1, 11);
+			if (SameText(cmd, "LOAD") && EndsStr("  NOT USED", lbuf)) {
+				cv->Font->Color = AdjustColor(col_fgLog, ADJCOL_FGLIST);
+			}
+			else {
+				UnicodeString fnam;
+				if (lbuf.Pos('.')>1) {
+					fnam = split_tkn(lbuf, '.');
+					fnam += ("." + split_tkn(lbuf, ' '));
+				}
+				else {
+					fnam = split_tkn(lbuf, ' ');
+				}
+				out_TextEx(cv, xp, yp, fnam, get_ExtColor(get_extension(fnam), col_fgLog), col_None, 0, is_irreg);
+				if (!lbuf.IsEmpty()) lbuf.Insert(" ", 1);
+			}
+		}
+	}
+
+	EmphasisTextOut(lbuf, EmptyStr, cv, xp, yp);
+
+	//カーソル
+	draw_ListCursor(lp, Rect, Index, State);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::LogListBoxData(TWinControl *Control, int Index, UnicodeString &Data)
+{
+	Data = (Index>=0 && Index<LogBufList->Count)? LogBufList->Strings[Index] : EmptyStr;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::LogListBoxEnter(TObject *Sender)
+{
+	((TListBox*)Sender)->Repaint();
+
+	UpdateFKeyBtn();
+}
+//---------------------------------------------------------------------------
+//ログのマウス操作
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::LogListBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
+{
+	TListBox *lp = (TListBox*)Sender;
+	int idx = lp->ItemAtPos(Point(X, Y), true);
+	UnicodeString msg;
+	if (idx!=-1) {
+		UnicodeString lbuf = lp->Items->Strings[idx];
+		if (lp->Canvas->TextWidth(lbuf)>lp->ClientWidth) msg = lbuf;
+	}
+	if (lp->Hint!=msg) {
+		Application->CancelHint();
+		lp->Hint = msg;
+	}
+}
+//---------------------------------------------------------------------------
+//ログのキー操作
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::LogListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (CurWorking || FindBusy) return;
+
+	TListBox *lp = (TListBox*)Sender;
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	UnicodeString cmd_L  = KeyFuncList->Values["L:" + KeyStr];
+	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+
+	if		(!cmd_L.IsEmpty())				ExeCommandL(cmd_L);
+	else if (ExeCmdListBox(lp, cmd_F))		;
+	else if	(is_ToRightOpe(KeyStr, cmd_F))	ExeCmdAction(ToRightAction);
+	else if (is_ToLeftOpe(KeyStr, cmd_F))	ExeCmdAction(ToLeftAction);
+	else if (SameText(KeyStr, KeyStr_Copy)) Log_EditCopy->Execute();
+	//右クリックメニュー
+	else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(lp);
+	else return;
+
+	Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::LogListBoxKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TextPaintBoxPaint(TObject *Sender)
+{
+	TxtViewer->Repaint();
+}
+//---------------------------------------------------------------------------
+//テキストビュアーでのマウス操作
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TextPaintBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+	CancelKeySeq();
+
+	if (Button==mbLeft) TxtViewer->onMouseDown(X, Y);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TextPaintBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
+{
+	if (Shift.Contains(ssLeft)) TxtViewer->onMouseMove(X, Y);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TextPaintBoxMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+	TxtViewer->onMouseUp();
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TextPaintBoxDblClick(TObject *Sender)
+{
+	if (TxtViewer->ExtClicked) ExeCommandV(_T("Close")); else TxtViewer->onDblClick();
+}
+//---------------------------------------------------------------------------
+//ディレクトリ関係の描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::RelPaintBoxPaint(TObject *Sender)
+{
+	TPaintBox *pp = (TPaintBox*)Sender;
+	TCanvas *cv = pp->Canvas;
+	TRect    rc = pp->ClientRect;
+
+	cv->Brush->Color = col_bgDirRel;
+	cv->FillRect(rc);
+	cv->Font->Assign(pp->Font);
+	cv->Font->Color = col_fgDirRel;
+	cv->Font->Style = cv->Font->Style >> fsItalic;
+
+	//関係記号
+	if (DirRelStr.Length()==3) {
+		int xp = (rc.Width()  - cv->TextWidth(DirRelStr[2]))/2;
+		int yp = (rc.Height() - cv->TextHeight(DirRelStr[2]))/2;
+		cv->TextOut(xp, yp, DirRelStr[2]);
+		cv->Font->Style = (cv->Font->Style >> fsBold);
+		if (DirRelStr[1]!=' ') cv->TextOut(xp - cv->TextWidth(DirRelStr[1]) - 3, yp, DirRelStr[1]);
+		if (DirRelStr[3]!=' ') cv->TextOut(xp + cv->TextWidth(DirRelStr[2]) + 3, yp, DirRelStr[3]);
+	}
+
+	//横線表示
+	cv->Pen->Width = ScaledThis(1);
+	cv->Pen->Style = psSolid;
+	cv->Pen->Color = AdjustColor(col_fgDirRel, ADJCOL_LIGHT);
+
+	//左右同ドライブ
+	if (((IsCurFList() && IsOppFList()) || IsDiffList())
+		&& SameText(ExtractFileDrive(CurPath[0]), ExtractFileDrive(CurPath[1])))
+	{
+		int mgn = pp->Width/4;
+		int yp = rc.Top + 3;
+		cv->MoveTo(rc.Left + mgn, yp);	cv->LineTo(rc.Right - mgn, yp);
+		yp = rc.Bottom - 4;
+		cv->MoveTo(rc.Left + mgn, yp);	cv->LineTo(rc.Right - mgn, yp);
+	}
+
+	//左右同期
+	if (SyncLR) {
+		int yp = rc.Top + 1;
+		cv->MoveTo(rc.Left + 4, yp);	cv->LineTo(rc.Right - 4, yp);
+		yp = rc.Bottom - 2;
+		cv->MoveTo(rc.Left + 4, yp);	cv->LineTo(rc.Right - 4, yp);
+	}
+}
+//---------------------------------------------------------------------------
+//ステータスバーの描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::StatusBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect)
+{
+	TCanvas *cv = StatusBar->Canvas;
+	cv->Font->Assign(StatusBar->Font);
+	cv->Font->Color  = col_fgSttBar;
+	cv->Brush->Color = (StatusBar->Tag==SHOW_WARN_TAG && Panel->Index==0)? col_bgWarn : col_bgSttBar;
+	cv->FillRect(Rect);
+
+	UnicodeString lbuf = Panel->Text;
+	cv->TextOut(Rect.Left + ScaledThis(2), Rect.Top, split_pre_tab(lbuf));
+	if (!lbuf.IsEmpty()) cv->TextOut(Rect.Right - cv->TextWidth(lbuf) - ScaledThis(2), Rect.Top, lbuf);
+}
+//---------------------------------------------------------------------------
+//タスク表示部
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TaskPaintBoxPaint(TObject *Sender)
+{
+	TPaintBox *pp = (TPaintBox*)Sender;
+	TCanvas *cv = pp->Canvas;
+	cv->Font->Assign(pp->Font);
+	cv->Brush->Color = col_bgTask;
+	cv->FillRect(pp->ClientRect);
+
+	int h  = get_FontHeight(cv->Font) * 5/4 + ScaledThis(4);
+	int xp = 4;
+	int yp = 2;
+
+	cv->Font->Color = col_fgLog;
+	int fsz = cv->Font->Size;
+	cv->Font->Size = fsz * 9 / 10;
+	out_Text(cv, xp, yp, _T("タスク"));
+	cv->Font->Size = fsz;
+	yp += h;
+
+	UnicodeString tmp;
+	int maxn = get_MaxTaskCount();
+	for (int i=0; i<maxn; i++) {
+		cv->Brush->Color = col_bgTask;
+
+		TTaskThread *tp = TaskThread[i];
+		if (tp) {
+			cv->Font->Color = (tp->PreCount>0)? clGreen : tp->TaskPause? clRed : col_fgLog;
+			cv->TextOut(xp, yp, tmp.sprintf(_T("%u:%5u"), i + 1, tp->Config->TaskList->Count));
+			yp += h;
+			int n = (tp->PreCount>0)? tp->PreCount : (tp->SubCount>0)? tp->SubCount : 0;
+			if (n>0) cv->TextOut(xp, yp, tmp.sprintf(_T("%7u"), n));
+
+			//進捗表示
+			if (tp->CurProgress>=0) {
+				int x0 = xp + get_CharWidth(cv, 2);
+				int x1 = pp->Width - 4;
+				TRect rc_f = (tmp.IsEmpty())? Rect(x0, yp + 2, x1, yp + 4) : Rect(x0, yp + h - 4, x1, yp + h - 2);
+				draw_ProgressBar(cv, rc_f, tp->CurProgress);
+				//高速実行
+				if (tp->TaskIsFast) {
+					rc_f.Left -= 8;  rc_f.Right = rc_f.Left + 4;
+					InflateRect(rc_f, 0, 1);
+					cv->Brush->Color = clRed;
+					cv->FillRect(rc_f);
+				}
+			}
+			yp += h;
+		}
+		else {
+			cv->Font->Color = AdjustColor(col_fgLog, ADJCOL_FGLIST);
+			cv->TextOut(xp, yp, tmp.sprintf(_T("%u:_____"), i + 1));
+			yp += h * 2;
+		}
+	}
+
+	//予約タスク状態表示
+	cv->Brush->Color = col_bgTask;
+	cv->Font->Color  = col_fgLog;
+	yp += h/2;
+	if (TaskReserveList->Count>0) {
+		out_Text(cv, xp, yp, RsvSuspended? _T("保留中") : _T("待機中"));
+		yp += h;
+		cv->TextOut(xp, yp, tmp.sprintf(_T("  %4u"), TaskReserveList->Count));
+		yp += h;
+	}
+	else if (RsvSuspended) {
+		out_Text(cv, xp, yp, _T("保留中"));
+		yp += h * 2;
+	}
+
+	//ファイル監視表示
+	if (WatchTailList->Count>0) {
+		out_Text(cv, xp, yp, _T("監視中"));
+		yp += h;
+		cv->TextOut(xp, yp, tmp.sprintf(_T("  %4u"), WatchTailList->Count));
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TaskPaintBoxDblClick(TObject *Sender)
+{
+	ExeEventCommand(OnTskDClick);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TaskPaintBoxMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+	ClearNopStt();
+	if (Button==mbRight) ExeEventCommandMP(OnTskRClick);
+}
+//---------------------------------------------------------------------------
+//イメージビュアーでのマウス操作
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ViewerImageMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+	CancelKeySeq();
+	cursor_Default();
+
+	if (isViewAGif) return;
+
+	if (Button==mbLeft) {
+		DragCancel = false;
+
+		//カラーピッカー
+		if (ColorPicker->Visible) {
+			ColorPicker->CopyColor();
+		}
+		//その他
+		else if (!isViewIcon  && OnIvImgDClick.IsEmpty()) {
+			TControlScrollBar *hbar = ImgScrollBox->HorzScrollBar;
+			TControlScrollBar *vbar = ImgScrollBox->VertScrollBar;
+
+			if (ImgViewThread->Fitted && ImgViewThread->ZoomRatio<100) {
+				//イメージ上をクリック?
+				int vw = ImgViewThread->ViewBuff->Width;
+				int vh = ImgViewThread->ViewBuff->Height;
+				TRect rc = Rect(0, 0, vw, vh);
+				rc.Offset((ViewerImage->ClientWidth - vw)/2, (ViewerImage->ClientHeight - vh)/2);
+				if (rc.PtInRect(Point(X, Y))) {
+					//一時的に等倍表示に
+					EqualSizeAction->Execute();
+					//クリック位置へ移動
+					hbar->Position = (hbar->Range - ImgScrollBox->ClientWidth)  * 1.0 * (X - rc.Left)/rc.Width();
+					vbar->Position = (vbar->Range - ImgScrollBox->ClientHeight) * 1.0 * (Y - rc.Top)/rc.Height();
+					TmpEqualSize = true;
+					//ルーペを一時的に隠す
+					if (LoupeForm->Visible && LoupeForm->Floating) LoupeForm->Hide();
+				}
+			}
+
+			if (hbar->Range>ImgScrollBox->ClientWidth || vbar->Range>ImgScrollBox->ClientHeight) {
+				//イメージ移動開始をキャンセル
+				if (DragCancel) {
+					FittedSizeAction->Execute();
+					if (ShowLoupe && !LoupeForm->Visible) {
+						LoupeForm->Show();
+						SetFocus();
+					}
+				}
+				//イメージ移動開始
+				else {
+					LastP = Mouse->CursorPos;
+					ImgMoving = true;
+					Screen->Cursor = UserModule->crHandGrabR;
+				}
+			}
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ViewerImageMouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
+{
+	//カラーピッカー
+	if (ColorPicker->Visible) {
+		ColorPicker->UpdateStt(X, Y, ImgViewThread->ZoomRatioF);
+	}
+	//イメージ移動中
+	else if (ImgMoving) {
+		TPoint cur_pos = Mouse->CursorPos;
+		ImgScrollBox->HorzScrollBar->Position += (LastP.x - cur_pos.x);
+		ImgScrollBox->VertScrollBar->Position += (LastP.y - cur_pos.y);
+		LastP = cur_pos;
+	}
+
+	//ルーペ表示
+	UpdateLoupe();
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ViewerImageMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+	//左クリック
+	if (Button==mbLeft) {
+		if (ImgMoving) {
+			//イメージ移動終了
+			ImgMoving = false;
+			if (TmpEqualSize) {
+				TmpEqualSize = false;
+				FittedSizeAction->Execute();
+			}
+			cursor_Default();
+		}
+		else {
+			DragCancel = true;	//イメージ移動開始をキャンセル
+		}
+
+		if (ShowLoupe && !LoupeForm->Visible) {
+			LoupeForm->Show();
+			SetFocus();
+		}
+	}
+	//右クリック
+	else if (Button==mbRight) {
+		//イベント : 画像表示部を右クリック
+		ExeEventCommandMP(OnIvImgRClick);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ViewerImageDblClick(TObject *Sender)
+{
+	bool handled = false;
+	if (!OnIvImgDClick.IsEmpty() || !OnIvMgnDClick.IsEmpty()) {
+		//イメージ上をクリック?
+		int vw = ImgViewThread->ViewBuff->Width;
+		int vh = ImgViewThread->ViewBuff->Height;
+		TRect rc = Rect(0, 0, vw, vh);
+		rc.Offset((ViewerImage->ClientWidth - vw)/2, (ViewerImage->ClientHeight - vh)/2);
+		if (rc.PtInRect(ViewerImage->ScreenToClient(Mouse->CursorPos))) {
+			if (!OnIvImgDClick.IsEmpty()) {
+				ExeEventCommand(OnIvImgDClick); handled = true;
+			}
+		}
+		else {
+			if (!OnIvMgnDClick.IsEmpty()) {
+				ExeEventCommand(OnIvMgnDClick); handled = true;
+			}
+		}
+	}
+
+	if (!handled) ExeCommandI("Close");
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ViewerImageMouseLeave(TObject *Sender)
+{
+	ColorPicker->UpdateStt();
+}
+//---------------------------------------------------------------------------
+//サムネイルの描画
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ThumbnailGridDrawCell(TObject *Sender, int ACol, int ARow,
+		TRect &Rect, TGridDrawState State)
+{
+	if (ThumbnailThread->ReqClear) return;
+
+	TStringGrid *gp = (TStringGrid*)Sender;
+	TCanvas *cv = gp->Canvas;
+	cv->Font->Assign(ListFont);
+	cv->Font->Height = ScaledThis(12);
+	int s_16 = ScaledThis(16);
+	int s_14 = ScaledThis(14);
+	int s_8  = ScaledThis(8);
+	int s_2  = ScaledThis(2);
+
+	if (VListMaking) {	//ViewFileList 作成中...
+		cv->Brush->Color = col_bgImage;
+		out_Text(cv, Rect.Left + s_8, Rect.Top + s_8, _T("準備中..."), col_Teal);
+		return;
+	}
+
+	UnicodeString vfnam;
+	try {
+		int t_cnt = ThumbnailThread->Count;
+		if (t_cnt==0) Abort();
+
+		int v_idx = gp->ColCount * ARow + ACol;	if (v_idx>=ViewFileList->Count) Abort();
+		file_rec *vfp = (file_rec*)ViewFileList->Objects[v_idx];
+		vfnam = ViewFileList->Strings[v_idx];
+		UnicodeString fext = get_extension(vfnam);
+		bool is_forcus = gp->Col==ACol && gp->Row==ARow;
+		bool is_marked = IniFile->IsMarked(vfp->r_name);
+
+		//Exif情報を取得
+		UnicodeString exif_inf;
+		int t_idx = -1;
+		for (int i=0; i<t_cnt; i++) {
+			UnicodeString lbuf = ThumbnailThread->GetListItem(i);
+			if (SameText(split_pre_tab(lbuf), vfnam)) {
+				exif_inf = lbuf;
+				t_idx = i; break;
+			}
+		}
+		vfp->failed = (t_idx==-1);	//ThumbnailList にない場合、読み込みに失敗している
+
+		//背景
+		cv->Brush->Color = is_forcus?	  RatioCol(col_Cursor, 0.5) :
+						   vfp->selected? col_selItem :
+						   is_marked?	  col_bgMark  : col_bgImage;
+		cv->FillRect(Rect);
+
+		//ファイル名、Exif情報の背景を描画
+		if (ShowThumbName || ShowThumbExif || ShowThumbTags) {
+			cv->Brush->Color = is_marked? col_bgMark : vfp->selected? col_selItem : col_bgList;
+			TRect rc = Rect;
+			rc.Top = rc.Bottom;
+			if (ShowThumbName) rc.Top -= s_16;
+			if (ShowThumbExif) rc.Top -= s_16;
+			if (ShowThumbTags) rc.Top -= s_16;
+			cv->FillRect(rc);
+		}
+
+		//拡張子別カラーを取得
+		TColor col_ext = get_ExtColor(fext);
+		//ファイル名表示
+		if (ShowThumbName) {
+			UnicodeString tnam = minimize_str(ExtractFileName(vfnam), cv, ThumbnailSize - 4, true);
+			int yp = Rect.Bottom - s_14;
+			if (ShowThumbExif) yp -= s_14;
+			if (ShowThumbTags) yp -= s_14;
+			cv->Font->Color = vfp->failed? col_Error : col_ext;
+			cv->TextOut(Rect.Left + ThumbnailSize - cv->TextWidth(tnam), yp, tnam);
+		}
+
+		//Exif情報表示
+		if (ShowThumbExif) {
+			UnicodeString inf_str;
+			TStringDynArray i_lst = SplitString(exif_inf, " ");
+			for (int i=0; i<i_lst.Length; i++) {
+				if (cv->TextWidth(inf_str + i_lst[i]) > (ThumbnailSize - 4)) break;
+				inf_str.cat_sprintf(_T("%s "), i_lst[i].c_str());
+			}
+			inf_str = Trim(inf_str);
+			int wd = cv->TextWidth(inf_str);
+				int yp = Rect.Bottom - s_14;
+			if (ShowThumbTags) yp -= s_14;
+			cv->Font->Color = col_ThumbExif;
+			cv->TextOut(Rect.Left + ThumbnailSize - wd, yp, inf_str);
+		}
+
+		//タグ表示
+		if (ShowThumbTags) {
+			if (vfp->tags.IsEmpty()) vfp->tags = usr_TAG->GetTags(vfnam);
+			if (!vfp->tags.IsEmpty())
+				usr_TAG->DrawTags(vfp->tags, cv, Rect.Left + 4, Rect.Bottom - s_14,
+					RevTagCololr? cv->Brush->Color : col_None);
+		}
+
+		//サムネイル表示
+		if (!vfp->failed) {
+			Graphics::TBitmap *bp = ThumbnailThread->GetListBitmap(t_idx);
+			if (bp && !bp->Empty) {
+				int xp = Rect.Left + (ThumbnailSize - bp->Width)/2 + s_2;
+				int yp = Rect.Top  + (ThumbnailSize - bp->Height)/2 + s_2;
+				cv->Draw(xp, yp, bp);
+				//拡張子強調表示
+				if (ShowThumbFExt) {
+					cv->Pen->Width	 = 1;
+					cv->Pen->Style	 = psSolid;
+					cv->Pen->Color	 = col_ext;
+					cv->MoveTo(Rect.Left + s_2, Rect.Top + s_2);
+					cv->LineTo(Rect.Left + s_2, Rect.Top + cv->Font->Height + s_2);
+					cv->Brush->Color = col_ext;
+					cv->Font->Color  = col_bgList;
+					cv->Font->Style  = (cv->Font->Style << fsBold);
+					fext.Delete(1, 1);
+					cv->TextOut(Rect.Left + ScaledThis(3), Rect.Top + s_2, fext.UpperCase());
+				}
+			}
+			else {
+				cv->Brush->Color = col_bgImage;
+				out_Text(cv, Rect.Left + s_8, Rect.Top + s_8,
+					(vfp->is_virtual && NotThumbIfArc)? _T("未取得") : _T("読込中..."), col_Teal);
+			}
+		}
+		//読み込み失敗
+		else {
+			cv->Brush->Color = col_bgImage;
+			out_Text(cv, Rect.Left + s_8, Rect.Top + s_8, _T("読込失敗"), col_Error);
+		}
+	}
+	catch (EAbort &e) {
+		cv->Brush->Color = col_bgList;
+		cv->FillRect(Rect);
+	}
+
+	//カーソル枠
+	cv->Brush->Style = bsClear;
+	if ((gp->Col==ACol && gp->Row==ARow) || (DoublePage && !ThumbExtended && !vfnam.IsEmpty() && SameText(vfnam, ViewFileName2))) {
+		cv->Pen->Width = ScaledThis(2);
+		cv->Pen->Style = psSolid;
+		cv->Pen->Color = col_Cursor;
+		cv->Rectangle(Rect.Left + 1, Rect.Top + 1, Rect.Right, Rect.Bottom);
+	}
+
+	//境界線
+	int dw = gp->GridLineWidth/2;
+	cv->Pen->Width = gp->GridLineWidth;
+	cv->Pen->Style = psSolid;
+	cv->Pen->Color = col_bdrThumb;
+	cv->Rectangle(Rect.Left - dw - 1, Rect.Top - dw - 1, Rect.Right + dw + 1, Rect.Bottom + dw + 1);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ThumbnailGridSelectCell(TObject *Sender, int ACol, int ARow,
+		bool &CanSelect)
+{
+	CanSelect = (ViewFileList->Count>0) ? ((ARow * ThumbnailGrid->ColCount + ACol) < ViewFileList->Count)
+										: (ARow==0 && ACol==0);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ThumbnailGridMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+	//サムネイルがクリックされているか？
+	int col, row;
+	ThumbnailGrid->MouseToCell(X, Y, col, row);
+	int idx = (col!=-1 && row!=-1)? (ThumbnailGrid->ColCount * row) + col : -1;
+	if (idx>=ViewFileList->Count) idx = -1;
+	ThumbClicked = (idx!=-1);
+
+	MoveCnt = 1;
+}
+//---------------------------------------------------------------------------
+//サムネイル上のマウス操作
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ThumbnailGridClick(TObject *Sender)
+{
+	CancelKeySeq();
+	if (InhDrawImg>0 || usr_ARC->Busy) return;
+
+	OpenImgViewer(get_GridIndex(ThumbnailGrid, ViewFileList->Count));
+	SetViewFileIdx();
+}
+//---------------------------------------------------------------------------
+//サムネイル上のキー操作
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ThumbnailGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	FormKeyDown(Sender, Key, Shift);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::PreviewImageDblClick(TObject *Sender)
+{
+	//イベント: イメージプレビューをダブルクリック
+	ExeEventCommand(OnImgDClick);
+}
 //---------------------------------------------------------------------------
 //インクリメンタルサーチのマッチ数を取得/リストの絞り込み
 //---------------------------------------------------------------------------
@@ -11986,7 +12678,6 @@ void __fastcall TNyanFiForm::ClipSaveList(
 	}
 }
 
-
 //---------------------------------------------------------------------------
 //ExeCommands コマンドの実行
 //---------------------------------------------------------------------------
@@ -12623,62 +13314,7 @@ bool __fastcall TNyanFiForm::ExeCommandL(UnicodeString cmd, UnicodeString prm)
 
 	return res;
 }
-
 //---------------------------------------------------------------------------
-//ログのキー操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::LogListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (CurWorking || FindBusy) return;
-
-	TListBox *lp = (TListBox*)Sender;
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	UnicodeString cmd_L  = KeyFuncList->Values["L:" + KeyStr];
-	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
-
-	if		(!cmd_L.IsEmpty())				ExeCommandL(cmd_L);
-	else if (ExeCmdListBox(lp, cmd_F))		;
-	else if	(is_ToRightOpe(KeyStr, cmd_F))	ExeCmdAction(ToRightAction);
-	else if (is_ToLeftOpe(KeyStr, cmd_F))	ExeCmdAction(ToLeftAction);
-	else if (SameText(KeyStr, KeyStr_Copy)) Log_EditCopy->Execute();
-	//右クリックメニュー
-	else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(lp);
-	else return;
-
-	Key = 0;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::LogListBoxKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	Key = 0;
-}
-
-//---------------------------------------------------------------------------
-//ログのマウス操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::LogListBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
-{
-	TListBox *lp = (TListBox*)Sender;
-	int idx = lp->ItemAtPos(Point(X, Y), true);
-	UnicodeString msg;
-	if (idx!=-1) {
-		UnicodeString lbuf = lp->Items->Strings[idx];
-		if (lp->Canvas->TextWidth(lbuf)>lp->ClientWidth) msg = lbuf;
-	}
-	if (lp->Hint!=msg) {
-		Application->CancelHint();
-		lp->Hint = msg;
-	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::PreviewImageDblClick(TObject *Sender)
-{
-	//イベント: イメージプレビューをダブルクリック
-	ExeEventCommand(OnImgDClick);
-}
-//---------------------------------------------------------------------------
-
 
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 // ファイラーのアクション
@@ -12918,6 +13554,127 @@ void __fastcall TNyanFiForm::BackDirHistActionUpdate(TObject *Sender)
 	((TAction*)Sender)->Enabled =
 		(h_lst && h_ptr) ? (h_lst->Count>0 && *h_ptr<h_lst->Count-1 && !CurStt->is_Arc && !CurStt->is_Find && !CurStt->is_FTP)
 						 : false;
+}
+//---------------------------------------------------------------------------
+//バックアップ
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
+{
+	try {
+		if (!IsCurFList() || !IsOppFList())	UserAbort(USTR_CantOperate);
+		if (EqualDirLR())					UserAbort(USTR_SameCopyDest);
+
+		UnicodeString cur_path = CurPath[CurListTag];
+		UnicodeString opp_path = CurPath[OppListTag];
+
+		//パラメータ指定で直ちに実行
+		if (!ActionParam.IsEmpty()) {
+			int idx = -1;
+			for (int i=0; i<BakSetupList->Count; i++) {
+				if (SameText(ActionParam, BakSetupList->Names[i])) { idx = i; break; }
+			}
+			if (idx==-1) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("バックアップ設定")));
+			TStringDynArray set_buf = get_csv_array(BakSetupList->ValueFromIndex[idx], 7, true);
+
+			std::unique_ptr<TStringList> dst_lst(new TStringList());
+			get_SyncDirList(opp_path, dst_lst.get(), false, equal_1(set_buf[5]));
+
+			bool sure_bak = (ExeCmdsBusy && XCMD_MsgOff)? false : IniFile->ReadBoolGen(_T("BackupSureStart"), true);
+			if (sure_bak) {
+				UnicodeString msg = "バックアップを開始しますか?\r\n\r\n";
+				msg.cat_sprintf(_T("バックアップ元: %s\r\n"), cur_path.c_str());
+				msg.cat_sprintf(_T("バックアップ先: %s\r\n"), opp_path.c_str());
+				for (int i=1; i<dst_lst->Count; i++) {
+					msg.cat_sprintf(_T("同期先%u: %s\r\n"), i, dst_lst->Strings[i].c_str());
+				}
+				msg.cat_sprintf(_T("設定: %s"), ActionParam.c_str());
+				if (!msgbox_Sure(msg, true, true)) SkipAbort();
+			}
+
+			TDateTime flt_dt;
+			int flt_cnd = get_DateCond(set_buf[6], flt_dt);
+			if (flt_cnd==-1) UserAbort(USTR_IllegalDtCond);
+
+			for (int i=0; i<dst_lst->Count; i++) {
+				UnicodeString dnam = dst_lst->Strings[i];
+				if (i>0 &&SameText(cur_path, dnam)) continue;
+				TaskConfig  *cp = NULL;
+				TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
+				cp->TaskList->Text = UnicodeString().sprintf(_T("BACKUP\t%s\t%s\r\n"), cur_path.c_str(), dnam.c_str());
+				cp->CopyMode = CPYMD_NEW_BACKUP;	//最新ならバックアップ
+				cp->CopyAll  = true;
+				cp->CopyFmt  = AutoRenFmt;
+				cp->CmdStr	 = "バックアップ";
+				cp->DistPath = dnam;
+				cp->InfStr.sprintf(_T("%s: %s ---> %s"), ActionParam.c_str(), cur_path.c_str(), dnam.c_str());
+
+				//日付条件
+				if (flt_cnd>0) {
+					cp->FilterMode = flt_cnd;
+					cp->FilterTime = flt_dt;
+					cp->InfStr.cat_sprintf(_T(" (%s%s)"),
+								UnicodeString("<=>").SubString(flt_cnd, 1).c_str(), format_Date(flt_dt).c_str());
+				}
+
+				if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
+
+				cp->Bakup_inc_mask = set_buf[0];
+				cp->Bakup_exc_mask = set_buf[1];
+				cp->Bakup_skip_dir = set_buf[2];
+				cp->Bakup_sub_sw   = equal_1(set_buf[3]);
+				cp->Bakup_mirror   = equal_1(set_buf[4]);
+				ActivateTask(tp, cp);
+			}
+		}
+		//ダイアログで指定
+		else {
+			if (!BackupDlg) BackupDlg = new TBackupDlg(this);	//初回に動的作成
+			BackupDlg->SrcDirEdit->Text = cur_path;
+			BackupDlg->DstDirEdit->Text = opp_path;
+			if (BackupDlg->ShowModal()==mrOk) {
+				TDateTime flt_dt;
+				int flt_cnd = get_DateCond(BackupDlg->BakDateCondEdit->Text, flt_dt);
+				if (flt_cnd==-1) UserAbort(USTR_IllegalDtCond);
+
+				std::unique_ptr<TStringList> dst_lst(new TStringList());
+				get_SyncDirList(opp_path, dst_lst.get(), false, BackupDlg->SyncCheckBox->Checked);
+
+				for (int i=0; i<dst_lst->Count; i++) {
+					UnicodeString dnam = dst_lst->Strings[i];
+					if (i>0 && SameText(cur_path, dnam)) continue;
+					TaskConfig  *cp = NULL;
+					TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
+					cp->TaskList->Text = UnicodeString().sprintf(_T("BACKUP\t%s\t%s\r\n"), cur_path.c_str(), dnam.c_str());
+					cp->CopyMode = CPYMD_NEW_BACKUP;	//最新ならバックアップ
+					cp->CopyAll  = true;
+					cp->CopyFmt  = AutoRenFmt;
+					cp->CmdStr	 = "バックアップ";
+					cp->DistPath = dnam;
+					cp->InfStr.sprintf(_T("%s ---> %s"), cur_path.c_str(), dnam.c_str());
+
+					//日付条件
+					if (flt_cnd>0) {
+						cp->FilterMode = flt_cnd;
+						cp->FilterTime = flt_dt;
+						cp->InfStr.cat_sprintf(_T(" (%s%s)"),
+									UnicodeString("<=>").SubString(flt_cnd, 1).c_str(), format_Date(flt_dt).c_str());
+					}
+
+					if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
+
+					cp->Bakup_inc_mask = BackupDlg->BakIncMaskComboBox->Text;
+					cp->Bakup_exc_mask = BackupDlg->BakExcMaskComboBox->Text;
+					cp->Bakup_skip_dir = BackupDlg->BakSkipDirEdit->Text;
+					cp->Bakup_sub_sw   = BackupDlg->SubDirCheckBox->Checked;
+					cp->Bakup_mirror   = BackupDlg->MirrorCheckBox->Checked;
+					ActivateTask(tp, cp);
+				}
+			}
+		}
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
 }
 //---------------------------------------------------------------------------
 //履歴を進む
@@ -13433,6 +14190,152 @@ void __fastcall TNyanFiForm::ClearMaskActionExecute(TObject *Sender)
 	RefreshCurPath(fnam);
 }
 
+//---------------------------------------------------------------------------
+//クローン用タスクリストの作成
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::MakeCloneTaskList(
+	TStringList *src_lst,		//クローン元リスト(ディレクトリは末尾が\)
+	UnicodeString dst_path,		//クローン先ディレクトリ
+	UnicodeString fmt,			//改名書式
+	bool force,					//強制的にディレクトリをクローン化
+	TStringList *tsk_lst)		//タスクリスト
+{
+	UnicodeString tmp;
+	for (int i=0; i<src_lst->Count; i++) {
+		UnicodeString snam = src_lst->Strings[i];
+		//ディレクトリ
+		if (ends_PathDlmtr(snam)) {
+			UnicodeString src_path = snam;
+			UnicodeString src_dir  = ExcludeTrailingPathDelimiter(src_path);
+			//コピー
+			if (!force &&
+				!(SameText(ExtractFilePath(src_dir), dst_path) && file_exists(dst_path + ExtractFileName(src_dir))))
+			{
+				tsk_lst->Add(tmp.sprintf(_T("CPY\t%s\t%s"), src_path.c_str(), dst_path.c_str()));
+			}
+			//クローン化
+			else {
+				UnicodeString cln_path = IncludeTrailingPathDelimiter(
+											format_CloneName(fmt, src_path, dst_path, true));
+				UnicodeString sea_str = cv_ex_filename(src_path + "*.*");
+				TSearchRec sr;
+				int cnt = 0;
+				if (FindFirst(sea_str, faAnyFile, sr)==0) {
+					do {
+						UnicodeString fnam = sr.Name;
+						if (ContainsStr("..", fnam)) continue;
+						fnam = src_path + fnam;
+						if (sr.Attr & faDirectory) fnam = IncludeTrailingPathDelimiter(fnam);
+						tsk_lst->Add(tmp.sprintf(_T("CPY\t%s\t%s"), fnam.c_str(), cln_path.c_str()));
+						cnt++;
+					} while(FindNext(sr)==0);
+					FindClose(sr);
+				}
+				if (cnt==0) tsk_lst->Add(tmp.sprintf(_T("CPY\t%s\t%s"), cln_path.c_str(), dst_path.c_str()));
+			}
+		}
+		//ファイル
+		else {
+			tsk_lst->Add(tmp.sprintf(_T("CPY\t%s\t%s"), snam.c_str(), dst_path.c_str()));
+		}
+	}
+}
+//---------------------------------------------------------------------------
+//反対パスにクローン作成
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::CloneActionExecute(TObject *Sender)
+{
+	std::unique_ptr<TStringList> c_lst(new TStringList());
+
+	bool to_cur  = USAME_TI(ActionOptStr, "ToCurrent");
+	ActionOptStr = EmptyStr;
+
+	try {
+		if (!IsCurFList() || (!to_cur && !IsOppFList())) UserAbort(USTR_CantOperate);
+		UnicodeString dst_path = CurPath[to_cur? CurListTag : OppListTag];
+
+		TStringList *lst = GetCurList(true);
+		int sel_cnt 	 = GetSelCount(lst);
+		bool sure_copy	 = (ExeCmdsBusy && XCMD_MsgOff)? false : SureCopy;
+
+		//書式設定
+		UnicodeString fmt;
+		bool force_ren = false;
+		if (TEST_ActParam("IN")) {
+			UnicodeString defstr = "\\N";
+			if (sel_cnt<2) {
+				file_rec *cfp = GetCurFrecPtr();
+				if (cfp && !cfp->is_up) {
+					defstr = get_base_name(GetCurFileName());
+					force_ren = !cfp->is_dir;
+				}
+			}
+
+			InputExDlg->IpuntExMode = INPEX_CLONE;
+			InputExDlg->InputEdit->EditLabel->Caption = "名前/書式";
+			InputExDlg->InputEdit->Text = defstr;
+			fmt = (InputExDlg->ShowModal()==mrOk)? InputExDlg->InputEdit->Text : EmptyStr;
+			if (fmt.IsEmpty()) SkipAbort();
+		}
+		else if (!ActionParam.IsEmpty()) {
+			fmt = ActionParam;
+		}
+
+		if (fmt.IsEmpty()) fmt = FMT_AUTO_REN;
+
+		//選択項目
+		if (sel_cnt>0) {
+			if (msgbox_Sure(_T("選択項目のクローンを作成しますか?"), sure_copy)) {
+				for (int i=0; i<lst->Count; i++) {
+					file_rec *fp = (file_rec*)lst->Objects[i];
+					if (!fp->selected) continue;
+					fp->selected = false;
+					c_lst->Add(fp->is_dir? IncludeTrailingPathDelimiter(fp->f_name) : fp->f_name);
+				}
+				RepaintList(CurListTag);
+			}
+		}
+		//カーソル位置
+		else {
+			file_rec *cfp = GetCurFrecPtr();	if (!cfp) Abort();
+			UnicodeString msg;
+			if (msgbox_Sure(msg.sprintf(_T("%s のクローンを作成しますか?"), get_DispName(cfp).c_str()), sure_copy))
+				c_lst->Add(cfp->is_dir? IncludeTrailingPathDelimiter(cfp->f_name) : cfp->f_name);
+		}
+		if (c_lst->Count==0) SkipAbort();
+
+		//タスク登録
+		std::unique_ptr<TStringList> tsk_lst(new TStringList());
+		MakeCloneTaskList(c_lst.get(), dst_path, fmt, true, tsk_lst.get());
+
+		//タスク開始
+		if (tsk_lst->Count>0) {
+			TaskConfig  *cp = NULL;
+			TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
+			cp->TaskList->Assign(tsk_lst.get());
+			cp->CopyMode = force_ren? CPYMD_REN_CLONE : CPYMD_AUT_REN;
+			cp->CopyAll  = true;
+			cp->CopyFmt  = fmt;
+			cp->CmdStr	 = "クローン作成";
+			UnicodeString dst_dir = GetCurPathStr(to_cur? CurListTag : OppListTag);
+			cp->DistPath = dst_dir;
+			cp->InfStr.sprintf(_T("%s ---> %s"), GetCurPathStr().c_str(), dst_dir.c_str());
+			ActivateTask(tp, cp);
+		}
+	}
+	catch (EAbort &e) {
+		clear_FileList(c_lst.get());
+		SetActionAbort(e.Message);
+	}
+}
+//---------------------------------------------------------------------------
+//カレントにクローン作成
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::CloneToCurrActionExecute(TObject *Sender)
+{
+	ActionOptStr = "ToCurrent";
+	CloneAction->Execute();
+}
 //---------------------------------------------------------------------------
 //コマンドファイル一覧
 //---------------------------------------------------------------------------
@@ -22557,7 +23460,6 @@ void __fastcall TNyanFiForm::PopDirActionExecute(TObject *Sender)
 	if (!ok) SetActionAbort(_T("スタックが空です。"));
 }
 
-
 //---------------------------------------------------------------------------
 //メインメニューをポップアップ表示
 //---------------------------------------------------------------------------
@@ -22978,6 +23880,14 @@ void __fastcall TNyanFiForm::RegExCheckerActionExecute(TObject *Sender)
 	}
 }
 
+//---------------------------------------------------------------------------
+//同期コピー先の設定
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::RegSyncDlgActionExecute(TObject *Sender)
+{
+	if (!RegSyncDlg) RegSyncDlg = new TRegSyncDlg(this);	//初回に動的作成
+	show_ModalDlg(RegSyncDlg);
+}
 //---------------------------------------------------------------------------
 //ファイルリストを最新の情報に
 //---------------------------------------------------------------------------
@@ -25185,6 +26095,65 @@ void __fastcall TNyanFiForm::SubDirListActionExecute(TObject *Sender)
 	}
 }
 
+//---------------------------------------------------------------------------
+//サブビュアーの表示
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SubViewerActionExecute(TObject *Sender)
+{
+	if (SubViewer->Visible) {
+		if (TEST_ActParam("OFF") || ActionParam.IsEmpty()) {
+			if (ScrMode==SCMD_IVIEW) ShowSubViewer = false;
+			SubViewer->Visible = false;
+		}
+		else {
+			if (TEST_ActParam("CB")) {
+				SubViewer->isClip = true;
+				SubViewer->DrawImage();
+			}
+
+			if (TEST_ActParam("RL")) SubViewer->RotateImage(3);
+			if (TEST_ActParam("RR")) SubViewer->RotateImage(1);
+			if (TEST_ActParam("FH")) SubViewer->RotateImage(4);
+			if (TEST_ActParam("FV")) SubViewer->RotateImage(5);
+			if (TEST_ActParam("LK")) SubViewer->LockImage();
+			SetFocus();
+		}
+	}
+	else {
+		SubViewer->Visible = (ScrMode==SCMD_IVIEW)? SetToggleAction(ShowSubViewer) : !SubViewer->Visible;
+		//非表示->表示
+		if (SubViewer->Visible) {
+			SubViewer->isClip	 = TEST_ActParam("CB");
+			SubViewer->ImgLocked = false;
+			UnicodeString fnam;
+			if (!SubViewer->isClip) {
+				if (ScrMode==SCMD_IVIEW) {
+					fnam = ViewFileName;
+				}
+				else {
+					fnam = EmptyStr;
+					file_rec *cfp = GetCurFrecPtr(true);
+					if (cfp && !cfp->is_ftp  && !cfp->is_dir) {
+						if (!test_FileExt(cfp->f_ext, FExtNoIView) && (is_Viewable(cfp) || test_Mp3Ext(cfp->f_ext)))
+							fnam = cfp->f_name;
+					}
+				}
+			}
+			SubViewer->DrawImage(fnam);
+
+			if (TEST_ActParam("LK")) SubViewer->ImgLocked = true;
+			SetFocus();
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SubViewerActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = (ScrMode==SCMD_FLIST || ScrMode==SCMD_IVIEW);
+	ap->Enabled = ap->Visible;
+	ap->Checked = SubViewer->Visible;
+}
 //---------------------------------------------------------------------------
 //予約項目の保留
 //---------------------------------------------------------------------------
@@ -27444,152 +28413,6 @@ void __fastcall TNyanFiForm::PasteActionUpdate(TObject *Sender)
 						|| Clipboard()->HasFormat(CF_TEXT) || Clipboard()->HasFormat(CF_BITMAP));
 }
 
-//---------------------------------------------------------------------------
-//クローン用タスクリストの作成
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::MakeCloneTaskList(
-	TStringList *src_lst,		//クローン元リスト(ディレクトリは末尾が\)
-	UnicodeString dst_path,		//クローン先ディレクトリ
-	UnicodeString fmt,			//改名書式
-	bool force,					//強制的にディレクトリをクローン化
-	TStringList *tsk_lst)		//タスクリスト
-{
-	UnicodeString tmp;
-	for (int i=0; i<src_lst->Count; i++) {
-		UnicodeString snam = src_lst->Strings[i];
-		//ディレクトリ
-		if (ends_PathDlmtr(snam)) {
-			UnicodeString src_path = snam;
-			UnicodeString src_dir  = ExcludeTrailingPathDelimiter(src_path);
-			//コピー
-			if (!force &&
-				!(SameText(ExtractFilePath(src_dir), dst_path) && file_exists(dst_path + ExtractFileName(src_dir))))
-			{
-				tsk_lst->Add(tmp.sprintf(_T("CPY\t%s\t%s"), src_path.c_str(), dst_path.c_str()));
-			}
-			//クローン化
-			else {
-				UnicodeString cln_path = IncludeTrailingPathDelimiter(
-											format_CloneName(fmt, src_path, dst_path, true));
-				UnicodeString sea_str = cv_ex_filename(src_path + "*.*");
-				TSearchRec sr;
-				int cnt = 0;
-				if (FindFirst(sea_str, faAnyFile, sr)==0) {
-					do {
-						UnicodeString fnam = sr.Name;
-						if (ContainsStr("..", fnam)) continue;
-						fnam = src_path + fnam;
-						if (sr.Attr & faDirectory) fnam = IncludeTrailingPathDelimiter(fnam);
-						tsk_lst->Add(tmp.sprintf(_T("CPY\t%s\t%s"), fnam.c_str(), cln_path.c_str()));
-						cnt++;
-					} while(FindNext(sr)==0);
-					FindClose(sr);
-				}
-				if (cnt==0) tsk_lst->Add(tmp.sprintf(_T("CPY\t%s\t%s"), cln_path.c_str(), dst_path.c_str()));
-			}
-		}
-		//ファイル
-		else {
-			tsk_lst->Add(tmp.sprintf(_T("CPY\t%s\t%s"), snam.c_str(), dst_path.c_str()));
-		}
-	}
-}
-//---------------------------------------------------------------------------
-//反対パスにクローン作成
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::CloneActionExecute(TObject *Sender)
-{
-	std::unique_ptr<TStringList> c_lst(new TStringList());
-
-	bool to_cur  = USAME_TI(ActionOptStr, "ToCurrent");
-	ActionOptStr = EmptyStr;
-
-	try {
-		if (!IsCurFList() || (!to_cur && !IsOppFList())) UserAbort(USTR_CantOperate);
-		UnicodeString dst_path = CurPath[to_cur? CurListTag : OppListTag];
-
-		TStringList *lst = GetCurList(true);
-		int sel_cnt 	 = GetSelCount(lst);
-		bool sure_copy	 = (ExeCmdsBusy && XCMD_MsgOff)? false : SureCopy;
-
-		//書式設定
-		UnicodeString fmt;
-		bool force_ren = false;
-		if (TEST_ActParam("IN")) {
-			UnicodeString defstr = "\\N";
-			if (sel_cnt<2) {
-				file_rec *cfp = GetCurFrecPtr();
-				if (cfp && !cfp->is_up) {
-					defstr = get_base_name(GetCurFileName());
-					force_ren = !cfp->is_dir;
-				}
-			}
-
-			InputExDlg->IpuntExMode = INPEX_CLONE;
-			InputExDlg->InputEdit->EditLabel->Caption = "名前/書式";
-			InputExDlg->InputEdit->Text = defstr;
-			fmt = (InputExDlg->ShowModal()==mrOk)? InputExDlg->InputEdit->Text : EmptyStr;
-			if (fmt.IsEmpty()) SkipAbort();
-		}
-		else if (!ActionParam.IsEmpty()) {
-			fmt = ActionParam;
-		}
-
-		if (fmt.IsEmpty()) fmt = FMT_AUTO_REN;
-
-		//選択項目
-		if (sel_cnt>0) {
-			if (msgbox_Sure(_T("選択項目のクローンを作成しますか?"), sure_copy)) {
-				for (int i=0; i<lst->Count; i++) {
-					file_rec *fp = (file_rec*)lst->Objects[i];
-					if (!fp->selected) continue;
-					fp->selected = false;
-					c_lst->Add(fp->is_dir? IncludeTrailingPathDelimiter(fp->f_name) : fp->f_name);
-				}
-				RepaintList(CurListTag);
-			}
-		}
-		//カーソル位置
-		else {
-			file_rec *cfp = GetCurFrecPtr();	if (!cfp) Abort();
-			UnicodeString msg;
-			if (msgbox_Sure(msg.sprintf(_T("%s のクローンを作成しますか?"), get_DispName(cfp).c_str()), sure_copy))
-				c_lst->Add(cfp->is_dir? IncludeTrailingPathDelimiter(cfp->f_name) : cfp->f_name);
-		}
-		if (c_lst->Count==0) SkipAbort();
-
-		//タスク登録
-		std::unique_ptr<TStringList> tsk_lst(new TStringList());
-		MakeCloneTaskList(c_lst.get(), dst_path, fmt, true, tsk_lst.get());
-
-		//タスク開始
-		if (tsk_lst->Count>0) {
-			TaskConfig  *cp = NULL;
-			TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
-			cp->TaskList->Assign(tsk_lst.get());
-			cp->CopyMode = force_ren? CPYMD_REN_CLONE : CPYMD_AUT_REN;
-			cp->CopyAll  = true;
-			cp->CopyFmt  = fmt;
-			cp->CmdStr	 = "クローン作成";
-			UnicodeString dst_dir = GetCurPathStr(to_cur? CurListTag : OppListTag);
-			cp->DistPath = dst_dir;
-			cp->InfStr.sprintf(_T("%s ---> %s"), GetCurPathStr().c_str(), dst_dir.c_str());
-			ActivateTask(tp, cp);
-		}
-	}
-	catch (EAbort &e) {
-		clear_FileList(c_lst.get());
-		SetActionAbort(e.Message);
-	}
-}
-//---------------------------------------------------------------------------
-//カレントにクローン作成
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::CloneToCurrActionExecute(TObject *Sender)
-{
-	ActionOptStr = "ToCurrent";
-	CloneAction->Execute();
-}
 
 //---------------------------------------------------------------------------
 //削除
@@ -27924,128 +28747,6 @@ void __fastcall TNyanFiForm::CompleteDeleteActionExecute(TObject *Sender)
 			cp->DistPath = GetCurPathStr();
 			cp->InfStr	 = cp->DistPath;
 			ActivateTask(tp, cp);
-		}
-	}
-	catch (EAbort &e) {
-		SetActionAbort(e.Message);
-	}
-}
-
-//---------------------------------------------------------------------------
-//バックアップ
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::BackupActionExecute(TObject *Sender)
-{
-	try {
-		if (!IsCurFList() || !IsOppFList())	UserAbort(USTR_CantOperate);
-		if (EqualDirLR())					UserAbort(USTR_SameCopyDest);
-
-		UnicodeString cur_path = CurPath[CurListTag];
-		UnicodeString opp_path = CurPath[OppListTag];
-
-		//パラメータ指定で直ちに実行
-		if (!ActionParam.IsEmpty()) {
-			int idx = -1;
-			for (int i=0; i<BakSetupList->Count; i++) {
-				if (SameText(ActionParam, BakSetupList->Names[i])) { idx = i; break; }
-			}
-			if (idx==-1) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("バックアップ設定")));
-			TStringDynArray set_buf = get_csv_array(BakSetupList->ValueFromIndex[idx], 7, true);
-
-			std::unique_ptr<TStringList> dst_lst(new TStringList());
-			get_SyncDirList(opp_path, dst_lst.get(), false, equal_1(set_buf[5]));
-
-			bool sure_bak = (ExeCmdsBusy && XCMD_MsgOff)? false : IniFile->ReadBoolGen(_T("BackupSureStart"), true);
-			if (sure_bak) {
-				UnicodeString msg = "バックアップを開始しますか?\r\n\r\n";
-				msg.cat_sprintf(_T("バックアップ元: %s\r\n"), cur_path.c_str());
-				msg.cat_sprintf(_T("バックアップ先: %s\r\n"), opp_path.c_str());
-				for (int i=1; i<dst_lst->Count; i++) {
-					msg.cat_sprintf(_T("同期先%u: %s\r\n"), i, dst_lst->Strings[i].c_str());
-				}
-				msg.cat_sprintf(_T("設定: %s"), ActionParam.c_str());
-				if (!msgbox_Sure(msg, true, true)) SkipAbort();
-			}
-
-			TDateTime flt_dt;
-			int flt_cnd = get_DateCond(set_buf[6], flt_dt);
-			if (flt_cnd==-1) UserAbort(USTR_IllegalDtCond);
-
-			for (int i=0; i<dst_lst->Count; i++) {
-				UnicodeString dnam = dst_lst->Strings[i];
-				if (i>0 &&SameText(cur_path, dnam)) continue;
-				TaskConfig  *cp = NULL;
-				TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
-				cp->TaskList->Text = UnicodeString().sprintf(_T("BACKUP\t%s\t%s\r\n"), cur_path.c_str(), dnam.c_str());
-				cp->CopyMode = CPYMD_NEW_BACKUP;	//最新ならバックアップ
-				cp->CopyAll  = true;
-				cp->CopyFmt  = AutoRenFmt;
-				cp->CmdStr	 = "バックアップ";
-				cp->DistPath = dnam;
-				cp->InfStr.sprintf(_T("%s: %s ---> %s"), ActionParam.c_str(), cur_path.c_str(), dnam.c_str());
-
-				//日付条件
-				if (flt_cnd>0) {
-					cp->FilterMode = flt_cnd;
-					cp->FilterTime = flt_dt;
-					cp->InfStr.cat_sprintf(_T(" (%s%s)"),
-								UnicodeString("<=>").SubString(flt_cnd, 1).c_str(), format_Date(flt_dt).c_str());
-				}
-
-				if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
-
-				cp->Bakup_inc_mask = set_buf[0];
-				cp->Bakup_exc_mask = set_buf[1];
-				cp->Bakup_skip_dir = set_buf[2];
-				cp->Bakup_sub_sw   = equal_1(set_buf[3]);
-				cp->Bakup_mirror   = equal_1(set_buf[4]);
-				ActivateTask(tp, cp);
-			}
-		}
-		//ダイアログで指定
-		else {
-			if (!BackupDlg) BackupDlg = new TBackupDlg(this);	//初回に動的作成
-			BackupDlg->SrcDirEdit->Text = cur_path;
-			BackupDlg->DstDirEdit->Text = opp_path;
-			if (BackupDlg->ShowModal()==mrOk) {
-				TDateTime flt_dt;
-				int flt_cnd = get_DateCond(BackupDlg->BakDateCondEdit->Text, flt_dt);
-				if (flt_cnd==-1) UserAbort(USTR_IllegalDtCond);
-
-				std::unique_ptr<TStringList> dst_lst(new TStringList());
-				get_SyncDirList(opp_path, dst_lst.get(), false, BackupDlg->SyncCheckBox->Checked);
-
-				for (int i=0; i<dst_lst->Count; i++) {
-					UnicodeString dnam = dst_lst->Strings[i];
-					if (i>0 && SameText(cur_path, dnam)) continue;
-					TaskConfig  *cp = NULL;
-					TTaskThread *tp = CreTaskThread(&cp);	if (!cp) Abort();
-					cp->TaskList->Text = UnicodeString().sprintf(_T("BACKUP\t%s\t%s\r\n"), cur_path.c_str(), dnam.c_str());
-					cp->CopyMode = CPYMD_NEW_BACKUP;	//最新ならバックアップ
-					cp->CopyAll  = true;
-					cp->CopyFmt  = AutoRenFmt;
-					cp->CmdStr	 = "バックアップ";
-					cp->DistPath = dnam;
-					cp->InfStr.sprintf(_T("%s ---> %s"), cur_path.c_str(), dnam.c_str());
-
-					//日付条件
-					if (flt_cnd>0) {
-						cp->FilterMode = flt_cnd;
-						cp->FilterTime = flt_dt;
-						cp->InfStr.cat_sprintf(_T(" (%s%s)"),
-									UnicodeString("<=>").SubString(flt_cnd, 1).c_str(), format_Date(flt_dt).c_str());
-					}
-
-					if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
-
-					cp->Bakup_inc_mask = BackupDlg->BakIncMaskComboBox->Text;
-					cp->Bakup_exc_mask = BackupDlg->BakExcMaskComboBox->Text;
-					cp->Bakup_skip_dir = BackupDlg->BakSkipDirEdit->Text;
-					cp->Bakup_sub_sw   = BackupDlg->SubDirCheckBox->Checked;
-					cp->Bakup_mirror   = BackupDlg->MirrorCheckBox->Checked;
-					ActivateTask(tp, cp);
-				}
-			}
 		}
 	}
 	catch (EAbort &e) {
@@ -28476,11 +29177,15 @@ void __fastcall TNyanFiForm::DelJpgExifActionExecute(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 // メニュー処理
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ActionList1Execute(TBasicAction *Action, bool &Handled)
+{
+	if (CurWorking) Handled = true;
+}
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::MenuFActionUpdate(TObject *Sender)
 {
@@ -29167,7 +29872,6 @@ void __fastcall TNyanFiForm::UpdateFromArcActionExecute(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 // 文字列検索(GREP)
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -29196,335 +29900,6 @@ void __fastcall TNyanFiForm::GrepSttSplitterMoved(TObject *Sender)
 	GrepStatusBar->Panels->Items[1]->Width = stt_wd * 0.2;	//***
 	GrepFilterPanel->Repaint();
 	SetSttBarGrepDir();
-}
-//---------------------------------------------------------------------------
-//Grepパネルのリサイズ
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepT11PanelResize(TObject *Sender)
-{
-	//※アンカーがずれる(?)現象の対策
-	GrepFindComboBox->Width = GrepT11Panel->Width - GrepFindComboBox->Left - 12;
-}
-//---------------------------------------------------------------------------
-//置換パネルのリサイズ
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::RepT1PanelResize(TObject *Sender)
-{
-	//検索・置換文字列入力欄の調整
-	int e_w = (RegExRCheckBox->Left - RepFindLabel->Width - RepStrLabel->Width - RepFindLabel->Left - 30) / 2;
-	RepFindComboBox->Width = e_w;
-	RepStrComboBox->Width  = e_w;
-	RepStrComboBox->Left   = RepFindComboBox->Left + RepFindComboBox->Width + RepStrLabel->Width + 10;
-	RepStrLabel->Left	   = RepStrComboBox->Left - RepStrLabel->Width - 4;
-}
-//---------------------------------------------------------------------------
-//文字列検索/置換の準備
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::PrepareGrep()
-{
-	FindBusy	 = true;
-	GrepFiltered = false;
-	GrepLnSorted = false;
-
-	SttPrgBar->Begin(_T("準備中..."));
-	GrepResultList->Clear();
-	ResultListBox->Clear();
-	GrepFilterEdit->Text  = EmptyStr;
-	GrepFilterEdit->Color = IsDarkMode? col_DkInval : col_Invalid;
-	UpdateActions();
-
-	//マスクのリストを作成
-	TStringDynArray msk_lst = split_strings_semicolon(GrepMaskComboBox->Text);
-
-	bool sub_sw = SubDirCheckBox->Checked;
-	int  sub_n  = SubDirNCombo->ItemIndex;
-
-	GrepPathList->Clear();
-	GrepFileList->Clear();
-	TStringList *lst = GetCurList(true);
-	//選択あり
-	if (GetSelCount(lst)>0) {
-		for (int i=0; i<lst->Count; i++) {
-			file_rec *fp = (file_rec*)lst->Objects[i];
-			if (!fp->selected) continue;
-			(fp->is_dir? GrepPathList : GrepFileList)->Add(fp->f_name);
-		}
-	}
-	//選択なし
-	else {
-		TStringDynArray skip_dir_lst = split_strings_semicolon(SkipDirEdit->Text);
-		for (int i=0; i<lst->Count; i++) {
-			file_rec *fp = (file_rec*)lst->Objects[i];
-			if (!is_selectable(fp)) continue;
-			if (fp->is_dir) {
-				if (sub_sw && sub_n>0) {
-					bool skip = false;
-					for (int j=0; j<skip_dir_lst.Length && !skip; j++)
-						skip = str_match(skip_dir_lst[j], fp->n_name);
-					if (!skip) GrepPathList->Add(fp->f_name);
-				}
-			}
-			else {
-				for (int j=0; j<msk_lst.Length; j++) {
-					if (str_match(msk_lst[j], fp->n_name)) {
-						GrepFileList->Add(fp->f_name); break;
-					}
-				}
-			}
-		}
-	}
-
-	//サブディレクトリ
-	for (int i=0; i<GrepPathList->Count; i++) {
-		for (int j=0; j<msk_lst.Length; j++) {
-			get_all_files_ex(GrepPathList->Strings[i], msk_lst[j], GrepFileList,
-				sub_sw, sub_n - 1, SkipDirEdit->Text, ShowHideAtr, ShowSystemAtr);
-		}
-	}
-
-	UnicodeString msg;
-	msg.sprintf(_T("%u ファイルを%s中..."),
-					GrepFileList->Count, (GrepPageControl->ActivePage==FindSheet)? _T("検索") : _T("置換"));
-	SttPrgBar->Begin(msg.c_str());
-}
-
-//---------------------------------------------------------------------------
-//Grep結果リストでのキー操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ResultListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	try {
-		UnicodeString KeyStr = get_KeyStr(Key, Shift);
-		UnicodeString CmdStr = Key_to_CmdF(KeyStr);
-		UnicodeString prm	 = get_PrmStr(CmdStr);
-		CmdStr = get_CmdStr(CmdStr);
-
-		int cmd_id	= idx_of_word_i(_T("ReturnList|TextViewer|FileEdit|MenuBar|Delete|OpenByApp|OpenByWin"), CmdStr);
-		ActionParam = EmptyStr;
-
-		if (FindBusy) {
-			GrepFilterEdit->SetFocus();
-			UserAbort(USTR_ProcBusy);
-		}
-
-		TListBox *lp = (TListBox*)Sender;
-		if (lp->ItemIndex==-1) {
-			if (cmd_id==0) ExeCmdAction(ReturnListAction);
-		}
-		else {
-			UnicodeString lbuf = lp->Items->Strings[lp->ItemIndex];
-			UnicodeString fnam = split_pre_tab(lbuf);
-			int lno = get_pre_tab(lbuf).ToIntDef(0);
-
-			switch (cmd_id) {
-			case 0:	//リストに戻る
-				ExeCmdAction(ReturnListAction);
-				break;
-			case 1:	//閲覧
-				fromGrep = true;
-				if (test_HtmlExt(get_extension(fnam))) TxtViewer->isHtm2Txt = false;
-				//別ウィンドウ
-				if (USAME_TI(prm, "XW")) {
-					//イベント: テキストビュアーを開く直前
-					ExeEventCommand(OnTvOpen, EmptyStr, fnam);
-
-					TExTxtViewer *xtv = new TExTxtViewer(this);
-					xtv->FileName = xtv->OrgName = fnam;
-					xtv->LineNo   = lno;
-					xtv->Show();
-				}
-				//内部
-				else {
-					int idx = GrepWorkList? WorkList->IndexOf(fnam) : -1;
-					bool ok = (idx!=-1)?
-								OpenTxtViewer((file_rec*)WorkList->Objects[idx], false, 0, lno) :
-								SetAndOpenTxtViewer(fnam, lno);
-					if (!ok) UserAbort(USTR_FileNotOpen);
-				}
-				break;
-			case 2:	//編集
-				//バイナリ文書
-				if (xd2tx_TestExt(get_extension(fnam)))
-					ExeCommandAction("FileEdit", fnam);
-				//テキスト(タグジャンプ)
-				else {
-					if (!open_by_TextEditor(fnam, lno)) GlobalAbort();
-				}
-				break;
-			case 3:	//メニューバー
-				ExeCmdAction(MenuBarAction);
-				Application->ProcessMessages();
-				lp->SetFocus();
-				break;
-
-			case 5:	//独自の関連付けで開く
-				ExeCommandAction("OpenByApp", fnam);
-				break;
-			case 6:	//Windowsの関連付けで開く
-				ExeCommandAction("OpenByWin", fnam);
-				break;
-
-			default:
-				if (ExeCmdListBox(lp, CmdStr)) {
-					ResultListBoxClick(lp);
-				}
-				else if (equal_ENTER(KeyStr)) {
-					if (!JumpToList(CurListTag, fnam)) GlobalAbort();
-				}
-				//一時的に削除
-				else if (cmd_id==4 || equal_DEL(KeyStr)) {
-					int idx = lp->ItemIndex;
-					lp->Items->Delete(idx);
-					lp->ItemIndex = std::min(idx, lp->Count - 1);
-					SttPrgBar->End(UnicodeString().sprintf(_T("一時削除あり (%u/%u)"), lp->Count, GrepResultList->Count));
-					GrepFiltered = true;
-				}
-				//検索語へ
-				else if (equal_TAB(KeyStr) || USAME_TI(KeyStr, "Ctrl+S")) {
-					((GrepPageControl->ActivePage==FindSheet)? GrepFindComboBox : RepFindComboBox)->SetFocus();
-				}
-				//フィルタへ
-				else if (SameText(KeyStr, KeyStr_Filter)) {
-					GrepFilterEdit->SetFocus();
-				}
-				//右クリックメニュー
-				else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
-					show_PopupMenu(GrepPopupMenu, lp);
-				}
-			}
-		}
-
-		if (!is_DialogKey(Key)) Key = 0;
-	}
-	catch (EAbort &e) {
-		SttBarWarn(e.Message);
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ResultListBoxClick(TObject *Sender)
-{
-	if (FindBusy) {
-		GrepFilterEdit->SetFocus();	return;
-	}
-
-	TListBox *lp = ResultListBox;
-	if (lp->ItemIndex==-1) return;
-	UnicodeString fnam = get_pre_tab(lp->Items->Strings[lp->ItemIndex]);
-	SetSttBarGrepDir((GrepShowSubDir && !CurStt->is_Work)? GrepResultPath : ExtractFilePath(fnam));
-
-	if (ShowSttBar)
-		StatusBar1->Panels->Items[0]->Text = UnicodeString().sprintf(_T("%s  %s"), fnam.c_str(), get_FileInfStr(fnam).c_str());
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ResultListBoxDblClick(TObject *Sender)
-{
-	if (FindBusy) {
-		GrepFilterEdit->SetFocus();	return;
-	}
-
-	perform_Key_RETURN((TControl*)Sender);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ResultListBoxExit(TObject *Sender)
-{
-	SetSttBarGrepDir();
-}
-
-//---------------------------------------------------------------------------
-//検索履歴の入れ換え
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::RegExCheckBoxClick(TObject *Sender)
-{
-	if (Initialized)
-		change_ComboBoxHistory(GrepFindComboBox, _T("GrepFindHistory"), _T("GrepPtnHistory"), RegExCheckBox->Checked);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::RegExRCheckBoxClick(TObject *Sender)
-{
-	if (Initialized)
-		change_ComboBoxHistory(RepFindComboBox, _T("RepFindHistory"), _T("RepPtrnHisgory"), RegExRCheckBox->Checked);
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::NextLineCheckBoxClick(TObject *Sender)
-{
-	ResultListBox->Repaint();
-	GrepFilterEditChange(GrepFilterEdit);
-}
-
-//---------------------------------------------------------------------------
-//検索文字列欄でのキー操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepFindComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-
-	if (contained_wd_i(KeysStr_ToList, KeyStr) && ResultListBox->Count>0) {
-		ResultListBox->SetFocus();
-	}
-	else if (SameText(KeyStr, KeyStr_Filter)) {
-		GrepFilterEdit->SetFocus();
-	}
-	else return;
-
-	KeyHandled = true;
-	Key = 0;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepFindComboBoxKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (KeyHandled) {
-		KeyHandled = false;
-		Key = 0;
-	}
-}
-
-//---------------------------------------------------------------------------
-//フィルタでのキー操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepFilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	//一覧へ
-	if (contained_wd_i(KeysStr_ToList, KeyStr)) {
-		ResultListBox->SetFocus();
-	}
-	//検索語へ
-	else if (contained_wd_i(_T("Ctrl+F|Ctrl+S"), KeyStr)) {
-		((GrepPageControl->ActivePage==FindSheet)? GrepFindComboBox : RepFindComboBox)->SetFocus();
-	}
-	//Migemoモード切替
-	else if (SameText(KeyStr, KeyStr_Migemo)) {
-		MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
-	}
-	else return;
-
-	KeyHandled = true;
-	Key = 0;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepFilterEditKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (KeyHandled) {
-		KeyHandled = false;
-		Key = 0;
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepFilterEditEnter(TObject *Sender)
-{
-	GrepFilterEdit->Color = get_WinColor();
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepFilterEditExit(TObject *Sender)
-{
-	InvColIfEmpty(GrepFilterEdit);
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepFltOptCheckBoxClick(TObject *Sender)
-{
-	GrepFilterEditChange(GrepFilterEdit);
 }
 
 //---------------------------------------------------------------------------
@@ -29699,7 +30074,249 @@ void __fastcall TNyanFiForm::ResultListBoxDrawItem(TWinControl *Control, int Ind
 	lp->Canvas->Draw(Rect.Left, Rect.Top, tmp_bmp.get());
 	if (State.Contains(odFocused)) lp->Canvas->DrawFocusRect(Rect);
 }
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ResultListBoxExit(TObject *Sender)
+{
+	SetSttBarGrepDir();
+}
+//---------------------------------------------------------------------------
+//Grep結果リストでのキー操作
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ResultListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	try {
+		UnicodeString KeyStr = get_KeyStr(Key, Shift);
+		UnicodeString CmdStr = Key_to_CmdF(KeyStr);
+		UnicodeString prm	 = get_PrmStr(CmdStr);
+		CmdStr = get_CmdStr(CmdStr);
 
+		int cmd_id	= idx_of_word_i(_T("ReturnList|TextViewer|FileEdit|MenuBar|Delete|OpenByApp|OpenByWin"), CmdStr);
+		ActionParam = EmptyStr;
+
+		if (FindBusy) {
+			GrepFilterEdit->SetFocus();
+			UserAbort(USTR_ProcBusy);
+		}
+
+		TListBox *lp = (TListBox*)Sender;
+		if (lp->ItemIndex==-1) {
+			if (cmd_id==0) ExeCmdAction(ReturnListAction);
+		}
+		else {
+			UnicodeString lbuf = lp->Items->Strings[lp->ItemIndex];
+			UnicodeString fnam = split_pre_tab(lbuf);
+			int lno = get_pre_tab(lbuf).ToIntDef(0);
+
+			switch (cmd_id) {
+			case 0:	//リストに戻る
+				ExeCmdAction(ReturnListAction);
+				break;
+			case 1:	//閲覧
+				fromGrep = true;
+				if (test_HtmlExt(get_extension(fnam))) TxtViewer->isHtm2Txt = false;
+				//別ウィンドウ
+				if (USAME_TI(prm, "XW")) {
+					//イベント: テキストビュアーを開く直前
+					ExeEventCommand(OnTvOpen, EmptyStr, fnam);
+
+					TExTxtViewer *xtv = new TExTxtViewer(this);
+					xtv->FileName = xtv->OrgName = fnam;
+					xtv->LineNo   = lno;
+					xtv->Show();
+				}
+				//内部
+				else {
+					int idx = GrepWorkList? WorkList->IndexOf(fnam) : -1;
+					bool ok = (idx!=-1)?
+								OpenTxtViewer((file_rec*)WorkList->Objects[idx], false, 0, lno) :
+								SetAndOpenTxtViewer(fnam, lno);
+					if (!ok) UserAbort(USTR_FileNotOpen);
+				}
+				break;
+			case 2:	//編集
+				//バイナリ文書
+				if (xd2tx_TestExt(get_extension(fnam)))
+					ExeCommandAction("FileEdit", fnam);
+				//テキスト(タグジャンプ)
+				else {
+					if (!open_by_TextEditor(fnam, lno)) GlobalAbort();
+				}
+				break;
+			case 3:	//メニューバー
+				ExeCmdAction(MenuBarAction);
+				Application->ProcessMessages();
+				lp->SetFocus();
+				break;
+
+			case 5:	//独自の関連付けで開く
+				ExeCommandAction("OpenByApp", fnam);
+				break;
+			case 6:	//Windowsの関連付けで開く
+				ExeCommandAction("OpenByWin", fnam);
+				break;
+
+			default:
+				if (ExeCmdListBox(lp, CmdStr)) {
+					ResultListBoxClick(lp);
+				}
+				else if (equal_ENTER(KeyStr)) {
+					if (!JumpToList(CurListTag, fnam)) GlobalAbort();
+				}
+				//一時的に削除
+				else if (cmd_id==4 || equal_DEL(KeyStr)) {
+					int idx = lp->ItemIndex;
+					lp->Items->Delete(idx);
+					lp->ItemIndex = std::min(idx, lp->Count - 1);
+					SttPrgBar->End(UnicodeString().sprintf(_T("一時削除あり (%u/%u)"), lp->Count, GrepResultList->Count));
+					GrepFiltered = true;
+				}
+				//検索語へ
+				else if (equal_TAB(KeyStr) || USAME_TI(KeyStr, "Ctrl+S")) {
+					((GrepPageControl->ActivePage==FindSheet)? GrepFindComboBox : RepFindComboBox)->SetFocus();
+				}
+				//フィルタへ
+				else if (SameText(KeyStr, KeyStr_Filter)) {
+					GrepFilterEdit->SetFocus();
+				}
+				//右クリックメニュー
+				else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
+					show_PopupMenu(GrepPopupMenu, lp);
+				}
+			}
+		}
+
+		if (!is_DialogKey(Key)) Key = 0;
+	}
+	catch (EAbort &e) {
+		SttBarWarn(e.Message);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ResultListBoxClick(TObject *Sender)
+{
+	if (FindBusy) {
+		GrepFilterEdit->SetFocus();	return;
+	}
+
+	TListBox *lp = ResultListBox;
+	if (lp->ItemIndex==-1) return;
+	UnicodeString fnam = get_pre_tab(lp->Items->Strings[lp->ItemIndex]);
+	SetSttBarGrepDir((GrepShowSubDir && !CurStt->is_Work)? GrepResultPath : ExtractFilePath(fnam));
+
+	if (ShowSttBar)
+		StatusBar1->Panels->Items[0]->Text = UnicodeString().sprintf(_T("%s  %s"), fnam.c_str(), get_FileInfStr(fnam).c_str());
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ResultListBoxDblClick(TObject *Sender)
+{
+	if (FindBusy) {
+		GrepFilterEdit->SetFocus();	return;
+	}
+
+	perform_Key_RETURN((TControl*)Sender);
+}
+
+//---------------------------------------------------------------------------
+//検索履歴の入れ換え
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::RegExCheckBoxClick(TObject *Sender)
+{
+	if (Initialized)
+		change_ComboBoxHistory(GrepFindComboBox, _T("GrepFindHistory"), _T("GrepPtnHistory"), RegExCheckBox->Checked);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::RegExRCheckBoxClick(TObject *Sender)
+{
+	if (Initialized)
+		change_ComboBoxHistory(RepFindComboBox, _T("RepFindHistory"), _T("RepPtrnHisgory"), RegExRCheckBox->Checked);
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::NextLineCheckBoxClick(TObject *Sender)
+{
+	ResultListBox->Repaint();
+	GrepFilterEditChange(GrepFilterEdit);
+}
+
+//---------------------------------------------------------------------------
+//検索文字列欄でのキー操作
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepFindComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+
+	if (contained_wd_i(KeysStr_ToList, KeyStr) && ResultListBox->Count>0) {
+		ResultListBox->SetFocus();
+	}
+	else if (SameText(KeyStr, KeyStr_Filter)) {
+		GrepFilterEdit->SetFocus();
+	}
+	else return;
+
+	KeyHandled = true;
+	Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepFindComboBoxKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
+}
+
+//---------------------------------------------------------------------------
+//フィルタでのキー操作
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepFilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	//一覧へ
+	if (contained_wd_i(KeysStr_ToList, KeyStr)) {
+		ResultListBox->SetFocus();
+	}
+	//検索語へ
+	else if (contained_wd_i(_T("Ctrl+F|Ctrl+S"), KeyStr)) {
+		((GrepPageControl->ActivePage==FindSheet)? GrepFindComboBox : RepFindComboBox)->SetFocus();
+	}
+	//Migemoモード切替
+	else if (SameText(KeyStr, KeyStr_Migemo)) {
+		MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
+	}
+	else return;
+
+	KeyHandled = true;
+	Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepFilterEditKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepFilterEditEnter(TObject *Sender)
+{
+	GrepFilterEdit->Color = get_WinColor();
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepFilterEditExit(TObject *Sender)
+{
+	InvColIfEmpty(GrepFilterEdit);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepFltOptCheckBoxClick(TObject *Sender)
+{
+	GrepFilterEditChange(GrepFilterEdit);
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::GrepRepComboBoxEnter(TObject *Sender)
+{
+	UpdateActions();
+}
 //---------------------------------------------------------------------------
 //Grep 拡張設定
 //---------------------------------------------------------------------------
@@ -29832,6 +30449,76 @@ void __fastcall TNyanFiForm::MakeGrepOutList(
 	for (int i=0; i<ResultListBox->Count; i++) lst->Add(MakeGrepOutLine(i, rep_log));
 }
 
+//---------------------------------------------------------------------------
+//文字列検索/置換の準備
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::PrepareGrep()
+{
+	FindBusy	 = true;
+	GrepFiltered = false;
+	GrepLnSorted = false;
+
+	SttPrgBar->Begin(_T("準備中..."));
+	GrepResultList->Clear();
+	ResultListBox->Clear();
+	GrepFilterEdit->Text  = EmptyStr;
+	GrepFilterEdit->Color = IsDarkMode? col_DkInval : col_Invalid;
+	UpdateActions();
+
+	//マスクのリストを作成
+	TStringDynArray msk_lst = split_strings_semicolon(GrepMaskComboBox->Text);
+
+	bool sub_sw = SubDirCheckBox->Checked;
+	int  sub_n  = SubDirNCombo->ItemIndex;
+
+	GrepPathList->Clear();
+	GrepFileList->Clear();
+	TStringList *lst = GetCurList(true);
+	//選択あり
+	if (GetSelCount(lst)>0) {
+		for (int i=0; i<lst->Count; i++) {
+			file_rec *fp = (file_rec*)lst->Objects[i];
+			if (!fp->selected) continue;
+			(fp->is_dir? GrepPathList : GrepFileList)->Add(fp->f_name);
+		}
+	}
+	//選択なし
+	else {
+		TStringDynArray skip_dir_lst = split_strings_semicolon(SkipDirEdit->Text);
+		for (int i=0; i<lst->Count; i++) {
+			file_rec *fp = (file_rec*)lst->Objects[i];
+			if (!is_selectable(fp)) continue;
+			if (fp->is_dir) {
+				if (sub_sw && sub_n>0) {
+					bool skip = false;
+					for (int j=0; j<skip_dir_lst.Length && !skip; j++)
+						skip = str_match(skip_dir_lst[j], fp->n_name);
+					if (!skip) GrepPathList->Add(fp->f_name);
+				}
+			}
+			else {
+				for (int j=0; j<msk_lst.Length; j++) {
+					if (str_match(msk_lst[j], fp->n_name)) {
+						GrepFileList->Add(fp->f_name); break;
+					}
+				}
+			}
+		}
+	}
+
+	//サブディレクトリ
+	for (int i=0; i<GrepPathList->Count; i++) {
+		for (int j=0; j<msk_lst.Length; j++) {
+			get_all_files_ex(GrepPathList->Strings[i], msk_lst[j], GrepFileList,
+				sub_sw, sub_n - 1, SkipDirEdit->Text, ShowHideAtr, ShowSystemAtr);
+		}
+	}
+
+	UnicodeString msg;
+	msg.sprintf(_T("%u ファイルを%s中..."),
+					GrepFileList->Count, (GrepPageControl->ActivePage==FindSheet)? _T("検索") : _T("置換"));
+	SttPrgBar->Begin(msg.c_str());
+}
 //---------------------------------------------------------------------------
 //Grep 検索開始
 //---------------------------------------------------------------------------
@@ -30807,7 +31494,6 @@ void __fastcall TNyanFiForm::GrepCanBtnClick(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 // テキストビュアー
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -31095,11 +31781,6 @@ bool __fastcall TNyanFiForm::ViewClipText()
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TextPaintBoxPaint(TObject *Sender)
-{
-	TxtViewer->Repaint();
-}
-//---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TextMarginBoxPaint(TObject *Sender)
 {
 	TCanvas *cv = TextMarginBox->Canvas;
@@ -31113,30 +31794,6 @@ void __fastcall TNyanFiForm::TextScrollBarChange(TObject *Sender)
 	TxtViewScrPanel->Repaint();
 }
 
-//---------------------------------------------------------------------------
-//テキストビュアーでのマウス操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TextPaintBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
-{
-	CancelKeySeq();
-
-	if (Button==mbLeft) TxtViewer->onMouseDown(X, Y);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TextPaintBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
-{
-	if (Shift.Contains(ssLeft)) TxtViewer->onMouseMove(X, Y);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TextPaintBoxMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
-{
-	TxtViewer->onMouseUp();
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TextPaintBoxDblClick(TObject *Sender)
-{
-	if (TxtViewer->ExtClicked) ExeCommandV(_T("Close")); else TxtViewer->onDblClick();
-}
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TextScrollBoxDblClick(TObject *Sender)
 {
@@ -31898,7 +32555,20 @@ void __fastcall TNyanFiForm::Txt_EditSelectAllExecute(TObject *Sender)
 {
 	ListBoxSelectAll(TxtTailListBox->Focused()? TxtTailListBox : TxtPrvListBox);
 }
-
+//---------------------------------------------------------------------------
+//カーソル位置を維持
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::Txt_KeepIndexActionExecute(TObject *Sender)
+{
+	TxtPrvKeepIndex = !TxtPrvKeepIndex;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::Txt_KeepIndexActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = TxtPrvListBox->Focused() || TxtTailListBox->Focused();
+	ap->Checked = TxtPrvKeepIndex;
+}
 //---------------------------------------------------------------------------
 //URLを開く
 //---------------------------------------------------------------------------
@@ -31914,7 +32584,6 @@ void __fastcall TNyanFiForm::Txt_OpenUrlActionUpdate(TObject *Sender)
 	TListBox *lp = TxtTailListBox->Focused()? TxtTailListBox : TxtPrvListBox;
 	ap->Enabled  = ap->Visible && lp->Focused() && !ListBoxGetURL(lp).IsEmpty();
 }
-
 //---------------------------------------------------------------------------
 //行番号を表示
 //---------------------------------------------------------------------------
@@ -31928,20 +32597,6 @@ void __fastcall TNyanFiForm::Txt_ShowLnNoActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::Txt_ShowLnNoActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Checked = TxtPrvShowLineNo;
-}
-//---------------------------------------------------------------------------
-//カーソル位置を維持
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::Txt_KeepIndexActionExecute(TObject *Sender)
-{
-	TxtPrvKeepIndex = !TxtPrvKeepIndex;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::Txt_KeepIndexActionUpdate(TObject *Sender)
-{
-	TAction *ap = (TAction*)Sender;
-	ap->Visible = TxtPrvListBox->Focused() || TxtTailListBox->Focused();
-	ap->Checked = TxtPrvKeepIndex;
 }
 //---------------------------------------------------------------------------
 //末尾分割表示
@@ -32765,7 +33420,6 @@ void __fastcall TNyanFiForm::WebSearchActionUpdate(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 // イメージビュアー
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -33292,276 +33946,6 @@ void __fastcall TNyanFiForm::UpdateLoupe()
 	}
 }
 
-//---------------------------------------------------------------------------
-//ビュアーでのキー操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (!Initialized || UnInitializing) return;
-
-	//--------------------------
-	//テキストビュアー
-	//--------------------------
-	if (ScrMode==SCMD_TVIEW) {
-		try {
-			bool hadled = true;
-			//インクリメンタルサーチ
-			if (TxtViewer->isIncSea) {
-				UnicodeString KeyStr = get_KeyStr(Key, Shift);		if (KeyStr.IsEmpty()) return;
-				TxtViewer->IncSearch(KeyStr);
-			}
-			//通常
-			else {
-				UnicodeString KeyStr = TwoStrokeSeq(Key, Shift);	if (KeyStr.IsEmpty()) return;
-				UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
-				UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
-				if (cmd_V.IsEmpty()) cmd_V = TxtViewer->GetStdKeyCommand(KeyStr);
-				CancelHelp	= !cmd_V.IsEmpty() && EndsStr("F1", KeyStr);
-				ActionParam = EmptyStr;
-
-				//コマンド処理
-				if (ExeCommandV(cmd_V)) {
-					ClearKeyBuff(true);
-				}
-				//右クリックメニュー
-				else if (contained_wd_i(KeysStr_Popup, KeyStr) || StartsText("ContextMenu", cmd_F)) {
-					show_PopupMenu(ViewPopupMenu, TextPaintBox);
-				}
-				//補助画面(なければビュアー)を閉じる
-				else if (equal_ESC(KeyStr)) {
-					if (ExeCmdsBusy) {
-						if (msgbox_Sure(USTR_CancelCmdQ)) XCMD_Aborted = true;
-					}
-					else {
-						if (!TxtViewer->CloseAuxForm()) ExeCommandV(_T("Close"));
-					}
-				}
-				//ビュアーを閉じる
-				else if (equal_ENTER(KeyStr)) {
-					ExeCommandV(_T("Close"));
-				}
-				else hadled = false;
-			}
-
-			if (hadled) Key = 0;
-		}
-		catch (EAbort &e) {
-			SttBarWarn(e.Message);
-		}
-	}
-	//--------------------------
-	//イメージビュアー
-	//--------------------------
-	else if (ScrMode==SCMD_IVIEW && ImgViewPanel->Visible) {
-		UnicodeString KeyStr = TwoStrokeSeq(Key, Shift);	if (KeyStr.IsEmpty()) return;
-		UnicodeString CmdStr = KeyFuncList->Values["I:" + KeyStr];
-		if (CmdStr.IsEmpty() && !ThumbExtended) {
-			CmdStr = equal_UP(KeyStr)? "ScrollUp" :
-					 equal_DOWN(KeyStr)? "ScrollDown" :
-					 equal_LEFT(KeyStr)? "ScrollLeft" :
-					 equal_RIGHT(KeyStr)? "ScrollRight" :
-					 SameText(KeyStr, "PGUP")? "PrevPage" :
-					 SameText(KeyStr, "PGDN")? "NextPage" : "";
-		}
-		CancelHelp	= !CmdStr.IsEmpty() && EndsStr("F1", KeyStr);
-
-		//右綴じでNext/PrevFile入替
-		if (SeekSwapNxtPrv && DoublePage && RightBind && ShowSeekBar) {
-			if		(StartsText("NextFile", CmdStr)) CmdStr = ReplaceText(CmdStr, "NextFile", "PrevFile");
-			else if (StartsText("PrevFile", CmdStr)) CmdStr = ReplaceText(CmdStr, "PrevFile", "NextFile");
-		}
-
-		ActionParam = EmptyStr;
-
-		try {
-			bool hadled = true;
-			//コマンド処理
-			if (ExeCommandI(CmdStr)) {
-				if (!ActionOk) ActionAbort();
-			}
-			//閉じる
-			else if (equal_ESC(KeyStr)) {
-				if (ExeCmdsBusy) {
-					if (msgbox_Sure(USTR_CancelCmdQ)) XCMD_Aborted = true;
-				}
-				else if (IS_FullScr()) {
-					ExeCommandI("FullScreen", "OFF");
-				}
-				else if (ColorPicker->Visible) {
-					ColorPicker->Close();
-				}
-				else {
-					ExeCommandI("Close");
-				}
-			}
-			else if (equal_ENTER(KeyStr)) {
-				ExeCommandI("Close");
-			}
-			//カーソル移動
-			else if (!usr_ARC->Busy && Shift.Empty()) {
-				switch (Key) {
-				case VK_UP:		GridCursorUp(ThumbnailGrid);	break;
-				case VK_DOWN:	GridCursorDown(ThumbnailGrid);	break;
-				case VK_LEFT:	GridCursorLeft(ThumbnailGrid);	break;
-				case VK_RIGHT:	GridCursorRight(ThumbnailGrid);	break;
-				case VK_PRIOR:	ExeCommandI("PageUp");			break;
-				case VK_NEXT:	ExeCommandI("PageDown");		break;
-				}
-			}
-			else hadled = false;
-
-			if (hadled) Key = 0;
-		}
-		catch (EAbort &e) {
-			SttBarWarn(e.Message);
-			Key = 0;
-		}
-	}
-	//--------------------------
-	//その他
-	//--------------------------
-	else {
-		//Shift+F10キーの処理(エディット/コンボボックスのメニュー表示)
-		//※コンボボックスでデフォルトのメニューが出てしまう現象に対応
-		//　また、コントロールが隠れないように表示位置を変更
-		if (USAME_TI(get_KeyStr(Key, Shift), "Shift+F10") && UserModule->ShowPopupMenu()) Key = 0;
-	}
-}
-//---------------------------------------------------------------------------
-//イメージビュアーでのマウス操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ViewerImageMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
-{
-	CancelKeySeq();
-	cursor_Default();
-
-	if (isViewAGif) return;
-
-	if (Button==mbLeft) {
-		DragCancel = false;
-
-		//カラーピッカー
-		if (ColorPicker->Visible) {
-			ColorPicker->CopyColor();
-		}
-		//その他
-		else if (!isViewIcon  && OnIvImgDClick.IsEmpty()) {
-			TControlScrollBar *hbar = ImgScrollBox->HorzScrollBar;
-			TControlScrollBar *vbar = ImgScrollBox->VertScrollBar;
-
-			if (ImgViewThread->Fitted && ImgViewThread->ZoomRatio<100) {
-				//イメージ上をクリック?
-				int vw = ImgViewThread->ViewBuff->Width;
-				int vh = ImgViewThread->ViewBuff->Height;
-				TRect rc = Rect(0, 0, vw, vh);
-				rc.Offset((ViewerImage->ClientWidth - vw)/2, (ViewerImage->ClientHeight - vh)/2);
-				if (rc.PtInRect(Point(X, Y))) {
-					//一時的に等倍表示に
-					EqualSizeAction->Execute();
-					//クリック位置へ移動
-					hbar->Position = (hbar->Range - ImgScrollBox->ClientWidth)  * 1.0 * (X - rc.Left)/rc.Width();
-					vbar->Position = (vbar->Range - ImgScrollBox->ClientHeight) * 1.0 * (Y - rc.Top)/rc.Height();
-					TmpEqualSize = true;
-					//ルーペを一時的に隠す
-					if (LoupeForm->Visible && LoupeForm->Floating) LoupeForm->Hide();
-				}
-			}
-
-			if (hbar->Range>ImgScrollBox->ClientWidth || vbar->Range>ImgScrollBox->ClientHeight) {
-				//イメージ移動開始をキャンセル
-				if (DragCancel) {
-					FittedSizeAction->Execute();
-					if (ShowLoupe && !LoupeForm->Visible) {
-						LoupeForm->Show();
-						SetFocus();
-					}
-				}
-				//イメージ移動開始
-				else {
-					LastP = Mouse->CursorPos;
-					ImgMoving = true;
-					Screen->Cursor = UserModule->crHandGrabR;
-				}
-			}
-		}
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ViewerImageMouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
-{
-	//カラーピッカー
-	if (ColorPicker->Visible) {
-		ColorPicker->UpdateStt(X, Y, ImgViewThread->ZoomRatioF);
-	}
-	//イメージ移動中
-	else if (ImgMoving) {
-		TPoint cur_pos = Mouse->CursorPos;
-		ImgScrollBox->HorzScrollBar->Position += (LastP.x - cur_pos.x);
-		ImgScrollBox->VertScrollBar->Position += (LastP.y - cur_pos.y);
-		LastP = cur_pos;
-	}
-
-	//ルーペ表示
-	UpdateLoupe();
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ViewerImageMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
-{
-	//左クリック
-	if (Button==mbLeft) {
-		if (ImgMoving) {
-			//イメージ移動終了
-			ImgMoving = false;
-			if (TmpEqualSize) {
-				TmpEqualSize = false;
-				FittedSizeAction->Execute();
-			}
-			cursor_Default();
-		}
-		else {
-			DragCancel = true;	//イメージ移動開始をキャンセル
-		}
-
-		if (ShowLoupe && !LoupeForm->Visible) {
-			LoupeForm->Show();
-			SetFocus();
-		}
-	}
-	//右クリック
-	else if (Button==mbRight) {
-		//イベント : 画像表示部を右クリック
-		ExeEventCommandMP(OnIvImgRClick);
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ViewerImageDblClick(TObject *Sender)
-{
-	bool handled = false;
-	if (!OnIvImgDClick.IsEmpty() || !OnIvMgnDClick.IsEmpty()) {
-		//イメージ上をクリック?
-		int vw = ImgViewThread->ViewBuff->Width;
-		int vh = ImgViewThread->ViewBuff->Height;
-		TRect rc = Rect(0, 0, vw, vh);
-		rc.Offset((ViewerImage->ClientWidth - vw)/2, (ViewerImage->ClientHeight - vh)/2);
-		if (rc.PtInRect(ViewerImage->ScreenToClient(Mouse->CursorPos))) {
-			if (!OnIvImgDClick.IsEmpty()) {
-				ExeEventCommand(OnIvImgDClick); handled = true;
-			}
-		}
-		else {
-			if (!OnIvMgnDClick.IsEmpty()) {
-				ExeEventCommand(OnIvMgnDClick); handled = true;
-			}
-		}
-	}
-
-	if (!handled) ExeCommandI("Close");
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ViewerImageMouseLeave(TObject *Sender)
-{
-	ColorPicker->UpdateStt();
-}
 
 //---------------------------------------------------------------------------
 //イメージビュアーでのコマンド処理
@@ -34244,7 +34628,6 @@ void __fastcall TNyanFiForm::PageIActionUpdate(TObject *Sender)
 	ap->Enabled = ap->Visible && ThumbnailGrid->Visible && ViewFileList->Count>0;
 }
 
-
 //---------------------------------------------------------------------------
 //画像の印刷
 //---------------------------------------------------------------------------
@@ -34718,65 +35101,6 @@ void __fastcall TNyanFiForm::SetInterpolationActionExecute(TObject *Sender)
 		SetActionAbort(e.Message);
 	}
 }
-//---------------------------------------------------------------------------
-//サブビュアーの表示
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::SubViewerActionExecute(TObject *Sender)
-{
-	if (SubViewer->Visible) {
-		if (TEST_ActParam("OFF") || ActionParam.IsEmpty()) {
-			if (ScrMode==SCMD_IVIEW) ShowSubViewer = false;
-			SubViewer->Visible = false;
-		}
-		else {
-			if (TEST_ActParam("CB")) {
-				SubViewer->isClip = true;
-				SubViewer->DrawImage();
-			}
-
-			if (TEST_ActParam("RL")) SubViewer->RotateImage(3);
-			if (TEST_ActParam("RR")) SubViewer->RotateImage(1);
-			if (TEST_ActParam("FH")) SubViewer->RotateImage(4);
-			if (TEST_ActParam("FV")) SubViewer->RotateImage(5);
-			if (TEST_ActParam("LK")) SubViewer->LockImage();
-			SetFocus();
-		}
-	}
-	else {
-		SubViewer->Visible = (ScrMode==SCMD_IVIEW)? SetToggleAction(ShowSubViewer) : !SubViewer->Visible;
-		//非表示->表示
-		if (SubViewer->Visible) {
-			SubViewer->isClip	 = TEST_ActParam("CB");
-			SubViewer->ImgLocked = false;
-			UnicodeString fnam;
-			if (!SubViewer->isClip) {
-				if (ScrMode==SCMD_IVIEW) {
-					fnam = ViewFileName;
-				}
-				else {
-					fnam = EmptyStr;
-					file_rec *cfp = GetCurFrecPtr(true);
-					if (cfp && !cfp->is_ftp  && !cfp->is_dir) {
-						if (!test_FileExt(cfp->f_ext, FExtNoIView) && (is_Viewable(cfp) || test_Mp3Ext(cfp->f_ext)))
-							fnam = cfp->f_name;
-					}
-				}
-			}
-			SubViewer->DrawImage(fnam);
-
-			if (TEST_ActParam("LK")) SubViewer->ImgLocked = true;
-			SetFocus();
-		}
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::SubViewerActionUpdate(TObject *Sender)
-{
-	TAction *ap = (TAction*)Sender;
-	ap->Visible = (ScrMode==SCMD_FLIST || ScrMode==SCMD_IVIEW);
-	ap->Enabled = ap->Visible;
-	ap->Checked = SubViewer->Visible;
-}
 
 //---------------------------------------------------------------------------
 //サムネイルの表示
@@ -35116,234 +35440,6 @@ void __fastcall TNyanFiForm::SetViewFileList(
 }
 
 //---------------------------------------------------------------------------
-//デザイン/フォント・配色の適用
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::WmNyanFiAppearance(TMessage &msg)
-{
-	SetupFont();
-	SetupDesign((bool)msg.WParam);
-	Repaint();
-
-	TxtViewer->SetColor();
-
-	switch (ScrMode) {
-	case SCMD_FLIST:
-		SetCurStt(CurListTag);
-		ReloadList();
-		TxtPrvScrPanel->Repaint();
-		InfScrPanel->Repaint();
-		LogScrPanel->Repaint();
-		break;
-	case SCMD_TVIEW:
-		TxtViewer->UpdateScr();
-		break;
-	}
-
-	std::unique_ptr<TStringList> lst(new TStringList());
-	get_ExViewerList(lst.get());
-	for (int i=0; i<lst->Count; i++) {
-		TExTxtViewer *ex_tv = dynamic_cast<TExTxtViewer *>(lst->Objects[i]);
-		if (ex_tv) {
-			ex_tv->ExViewer->SetColor();
-			ex_tv->ExViewer->UpdateScr();
-		}
-	}
-}
-
-//---------------------------------------------------------------------------
-//サムネイルの描画
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ThumbnailGridDrawCell(TObject *Sender, int ACol, int ARow,
-		TRect &Rect, TGridDrawState State)
-{
-	if (ThumbnailThread->ReqClear) return;
-
-	TStringGrid *gp = (TStringGrid*)Sender;
-	TCanvas *cv = gp->Canvas;
-	cv->Font->Assign(ListFont);
-	cv->Font->Height = ScaledThis(12);
-	int s_16 = ScaledThis(16);
-	int s_14 = ScaledThis(14);
-	int s_8  = ScaledThis(8);
-	int s_2  = ScaledThis(2);
-
-	if (VListMaking) {	//ViewFileList 作成中...
-		cv->Brush->Color = col_bgImage;
-		out_Text(cv, Rect.Left + s_8, Rect.Top + s_8, _T("準備中..."), col_Teal);
-		return;
-	}
-
-	UnicodeString vfnam;
-	try {
-		int t_cnt = ThumbnailThread->Count;
-		if (t_cnt==0) Abort();
-
-		int v_idx = gp->ColCount * ARow + ACol;	if (v_idx>=ViewFileList->Count) Abort();
-		file_rec *vfp = (file_rec*)ViewFileList->Objects[v_idx];
-		vfnam = ViewFileList->Strings[v_idx];
-		UnicodeString fext = get_extension(vfnam);
-		bool is_forcus = gp->Col==ACol && gp->Row==ARow;
-		bool is_marked = IniFile->IsMarked(vfp->r_name);
-
-		//Exif情報を取得
-		UnicodeString exif_inf;
-		int t_idx = -1;
-		for (int i=0; i<t_cnt; i++) {
-			UnicodeString lbuf = ThumbnailThread->GetListItem(i);
-			if (SameText(split_pre_tab(lbuf), vfnam)) {
-				exif_inf = lbuf;
-				t_idx = i; break;
-			}
-		}
-		vfp->failed = (t_idx==-1);	//ThumbnailList にない場合、読み込みに失敗している
-
-		//背景
-		cv->Brush->Color = is_forcus?	  RatioCol(col_Cursor, 0.5) :
-						   vfp->selected? col_selItem :
-						   is_marked?	  col_bgMark  : col_bgImage;
-		cv->FillRect(Rect);
-
-		//ファイル名、Exif情報の背景を描画
-		if (ShowThumbName || ShowThumbExif || ShowThumbTags) {
-			cv->Brush->Color = is_marked? col_bgMark : vfp->selected? col_selItem : col_bgList;
-			TRect rc = Rect;
-			rc.Top = rc.Bottom;
-			if (ShowThumbName) rc.Top -= s_16;
-			if (ShowThumbExif) rc.Top -= s_16;
-			if (ShowThumbTags) rc.Top -= s_16;
-			cv->FillRect(rc);
-		}
-
-		//拡張子別カラーを取得
-		TColor col_ext = get_ExtColor(fext);
-		//ファイル名表示
-		if (ShowThumbName) {
-			UnicodeString tnam = minimize_str(ExtractFileName(vfnam), cv, ThumbnailSize - 4, true);
-			int yp = Rect.Bottom - s_14;
-			if (ShowThumbExif) yp -= s_14;
-			if (ShowThumbTags) yp -= s_14;
-			cv->Font->Color = vfp->failed? col_Error : col_ext;
-			cv->TextOut(Rect.Left + ThumbnailSize - cv->TextWidth(tnam), yp, tnam);
-		}
-
-		//Exif情報表示
-		if (ShowThumbExif) {
-			UnicodeString inf_str;
-			TStringDynArray i_lst = SplitString(exif_inf, " ");
-			for (int i=0; i<i_lst.Length; i++) {
-				if (cv->TextWidth(inf_str + i_lst[i]) > (ThumbnailSize - 4)) break;
-				inf_str.cat_sprintf(_T("%s "), i_lst[i].c_str());
-			}
-			inf_str = Trim(inf_str);
-			int wd = cv->TextWidth(inf_str);
-				int yp = Rect.Bottom - s_14;
-			if (ShowThumbTags) yp -= s_14;
-			cv->Font->Color = col_ThumbExif;
-			cv->TextOut(Rect.Left + ThumbnailSize - wd, yp, inf_str);
-		}
-
-		//タグ表示
-		if (ShowThumbTags) {
-			if (vfp->tags.IsEmpty()) vfp->tags = usr_TAG->GetTags(vfnam);
-			if (!vfp->tags.IsEmpty())
-				usr_TAG->DrawTags(vfp->tags, cv, Rect.Left + 4, Rect.Bottom - s_14,
-					RevTagCololr? cv->Brush->Color : col_None);
-		}
-
-		//サムネイル表示
-		if (!vfp->failed) {
-			Graphics::TBitmap *bp = ThumbnailThread->GetListBitmap(t_idx);
-			if (bp && !bp->Empty) {
-				int xp = Rect.Left + (ThumbnailSize - bp->Width)/2 + s_2;
-				int yp = Rect.Top  + (ThumbnailSize - bp->Height)/2 + s_2;
-				cv->Draw(xp, yp, bp);
-				//拡張子強調表示
-				if (ShowThumbFExt) {
-					cv->Pen->Width	 = 1;
-					cv->Pen->Style	 = psSolid;
-					cv->Pen->Color	 = col_ext;
-					cv->MoveTo(Rect.Left + s_2, Rect.Top + s_2);
-					cv->LineTo(Rect.Left + s_2, Rect.Top + cv->Font->Height + s_2);
-					cv->Brush->Color = col_ext;
-					cv->Font->Color  = col_bgList;
-					cv->Font->Style  = (cv->Font->Style << fsBold);
-					fext.Delete(1, 1);
-					cv->TextOut(Rect.Left + ScaledThis(3), Rect.Top + s_2, fext.UpperCase());
-				}
-			}
-			else {
-				cv->Brush->Color = col_bgImage;
-				out_Text(cv, Rect.Left + s_8, Rect.Top + s_8,
-					(vfp->is_virtual && NotThumbIfArc)? _T("未取得") : _T("読込中..."), col_Teal);
-			}
-		}
-		//読み込み失敗
-		else {
-			cv->Brush->Color = col_bgImage;
-			out_Text(cv, Rect.Left + s_8, Rect.Top + s_8, _T("読込失敗"), col_Error);
-		}
-	}
-	catch (EAbort &e) {
-		cv->Brush->Color = col_bgList;
-		cv->FillRect(Rect);
-	}
-
-	//カーソル枠
-	cv->Brush->Style = bsClear;
-	if ((gp->Col==ACol && gp->Row==ARow) || (DoublePage && !ThumbExtended && !vfnam.IsEmpty() && SameText(vfnam, ViewFileName2))) {
-		cv->Pen->Width = ScaledThis(2);
-		cv->Pen->Style = psSolid;
-		cv->Pen->Color = col_Cursor;
-		cv->Rectangle(Rect.Left + 1, Rect.Top + 1, Rect.Right, Rect.Bottom);
-	}
-
-	//境界線
-	int dw = gp->GridLineWidth/2;
-	cv->Pen->Width = gp->GridLineWidth;
-	cv->Pen->Style = psSolid;
-	cv->Pen->Color = col_bdrThumb;
-	cv->Rectangle(Rect.Left - dw - 1, Rect.Top - dw - 1, Rect.Right + dw + 1, Rect.Bottom + dw + 1);
-}
-
-//---------------------------------------------------------------------------
-//サムネイル上のキー操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ThumbnailGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	FormKeyDown(Sender, Key, Shift);
-}
-
-//---------------------------------------------------------------------------
-//サムネイル上のマウス操作
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ThumbnailGridClick(TObject *Sender)
-{
-	CancelKeySeq();
-	if (InhDrawImg>0 || usr_ARC->Busy) return;
-
-	OpenImgViewer(get_GridIndex(ThumbnailGrid, ViewFileList->Count));
-	SetViewFileIdx();
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ThumbnailGridSelectCell(TObject *Sender, int ACol, int ARow,
-		bool &CanSelect)
-{
-	CanSelect = (ViewFileList->Count>0) ? ((ARow * ThumbnailGrid->ColCount + ACol) < ViewFileList->Count)
-										: (ARow==0 && ACol==0);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ThumbnailGridMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
-{
-	//サムネイルがクリックされているか？
-	int col, row;
-	ThumbnailGrid->MouseToCell(X, Y, col, row);
-	int idx = (col!=-1 && row!=-1)? (ThumbnailGrid->ColCount * row) + col : -1;
-	if (idx>=ViewFileList->Count) idx = -1;
-	ThumbClicked = (idx!=-1);
-
-	MoveCnt = 1;
-}
-//---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ThumbnailGridMouseMove(TObject *Sender, TShiftState Shift,
 	int X, int Y)
 {
@@ -35489,22 +35585,6 @@ void __fastcall TNyanFiForm::ShowPreviewSize(int wd, int hi)
 	lp->Invalidate();
 	MsgHintTimer->Interval = MsgHintTime;
 	MsgHintTimer->Enabled  = true;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ImgInfSplitterCanResize(TObject *Sender, int &NewSize, bool &Accept)
-{
-	int wd = PreviewPanel->ClientWidth;
-	int hi = PreviewPanel->ClientHeight;
-	if (((TSplitter*)Sender)->Align == alLeft) wd = NewSize; else hi = NewSize;
-	ShowPreviewSize(wd, hi);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ListSubSplitterCanResize(TObject *Sender, int &NewSize, bool &Accept)
-{
-	int wd = PreviewPanel->ClientWidth;
-	int hi = PreviewPanel->ClientHeight;
-	if (((TSplitter*)Sender)->Align == alBottom) hi = NewSize; else wd = NewSize;
-	ShowPreviewSize(wd, hi);
 }
 //---------------------------------------------------------------------------
 //サイドパネルにドッキング
@@ -35670,14 +35750,6 @@ void __fastcall TNyanFiForm::ToolBarDlgActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//同期コピー先の設定
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::RegSyncDlgActionExecute(TObject *Sender)
-{
-	if (!RegSyncDlg) RegSyncDlg = new TRegSyncDlg(this);	//初回に動的作成
-	show_ModalDlg(RegSyncDlg);
-}
-//---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::RegSyncDlgActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
@@ -35685,7 +35757,6 @@ void __fastcall TNyanFiForm::RegSyncDlgActionUpdate(TObject *Sender)
 	ap->Enabled = ap->Visible && IsPrimary;
 }
 //---------------------------------------------------------------------------
-
 
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 // ファイラータブの処理
@@ -35709,7 +35780,6 @@ void __fastcall TNyanFiForm::SetTabStr(
 			TabControl1->Tabs->Strings[idx] = tit;
 	}
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::UpdateTabWidth()
 {
@@ -35719,7 +35789,6 @@ void __fastcall TNyanFiForm::UpdateTabWidth()
 	TabControl1->TabWidth = (TabList->Count>0)?
 		std::min(std::max((TabControl1->ClientWidth - mgn)/TabList->Count, FlTabWidth/2), FlTabWidth) : FlTabWidth;
 }
-
 //---------------------------------------------------------------------------
 //タブバーの更新
 //---------------------------------------------------------------------------
@@ -35744,7 +35813,6 @@ void __fastcall TNyanFiForm::UpdateTabBar(
 
 	if (TabBottomPaintBox->Visible) TabBottomPaintBox->Repaint();
 }
-
 //---------------------------------------------------------------------------
 //アクティブなタブを更新
 //---------------------------------------------------------------------------
@@ -35790,7 +35858,6 @@ void __fastcall TNyanFiForm::StoreTabStt(int tab_idx)
 		tp->sync_lr = SyncLR;
 	}
 }
-
 //---------------------------------------------------------------------------
 //タブを変更
 //---------------------------------------------------------------------------
@@ -36092,15 +36159,6 @@ void __fastcall TNyanFiForm::TabCtrlWindowProc(TMessage &msg)
 		org_TabCtrlWindowProc(msg);
 	}
 }
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TabControl1DrawTab(TCustomTabControl *Control, int TabIndex,
-	const TRect &Rect, bool Active)
-{
-	tab_info *tp = get_TabInfo(TabIndex);
-	if (tp) tp->rc = Rect;
-
-	if (TabBottomPaintBox->Visible) TabBottomPaintBox->Repaint();
-}
 
 //---------------------------------------------------------------------------
 //タブバー底辺の描画
@@ -36131,6 +36189,15 @@ void __fastcall TNyanFiForm::TabBottomPaintBoxPaint(TObject *Sender)
 	}
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TabControl1DrawTab(TCustomTabControl *Control, int TabIndex,
+	const TRect &Rect, bool Active)
+{
+	tab_info *tp = get_TabInfo(TabIndex);
+	if (tp) tp->rc = Rect;
+
+	if (TabBottomPaintBox->Visible) TabBottomPaintBox->Repaint();
+}
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TabControl1MouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
 {
@@ -36215,6 +36282,11 @@ void __fastcall TNyanFiForm::TabControl1MouseUp(TObject *Sender, TMouseButton Bu
 	}
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TabControl1MouseLeave(TObject *Sender)
+{
+	DelTabBtn->Visible = false;
+}
 //---------------------------------------------------------------------------
 //タブを追加
 //---------------------------------------------------------------------------
@@ -36429,11 +36501,6 @@ void __fastcall TNyanFiForm::DelTabBtnClick(TObject *Sender)
 		TabControl1Change(NULL);
 	}
 }
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TabControl1MouseLeave(TObject *Sender)
-{
-	DelTabBtn->Visible = false;
-}
 
 //---------------------------------------------------------------------------
 //タブの設定
@@ -36562,25 +36629,121 @@ void __fastcall TNyanFiForm::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatu
 {
 	TxtViewer->SttHeaderDrawPanel(StatusBar, Panel, Rect);
 }
-
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::LogListBoxEnter(TObject *Sender)
+//イベント: ファイルリストのシンプルスクロールバーを右クリック
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::FlScrPanelMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
 {
-	((TListBox*)Sender)->Repaint();
-
-	UpdateFKeyBtn();
+	if (Button==mbRight) ExeEventCommandMP(OnFScrRClick);
 }
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TxtPrvListBoxEnter(TObject *Sender)
+//デフォルトの構文強調表示定義をコピー
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::DefHighlightActionExecute(TObject *Sender)
 {
-	UpdateFKeyBtn();
+	UnicodeString fext = inputbox_ex(_T("デフォルトの構文強調表示定義をコピー"), _T("拡張子(単独指定)"), EmptyStr);
+	if (!fext.IsEmpty()) {
+		std::unique_ptr<TStringList> rbuf(new TStringList());
+		if (GetDefaultHighlight(fext, rbuf.get(), HeadlineList)) {
+			copy_to_Clipboard(rbuf->Text);
+		}
+		else msgbox_WARN("定義されていません。");
+	}
 }
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::InfListBoxEnter(TObject *Sender)
+//色見本定義ファイルの編集
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::EditSwatchItemClick(TObject *Sender)
 {
-	UpdateFKeyBtn();
+	try {
+		UnicodeString fnam = ExePath + SWATCH_FILE;
+		//なければ作成
+		if (!file_exists(fnam)) {
+			if (!SaveSwatchbook(fnam)) UserAbort(USTR_FaildSave);
+		}
+		//編集
+		UnicodeString cmd;
+		cmd.sprintf(_T("FileEdit_\"%s\""), fnam.c_str());
+		if (!ExeCommandsCore(cmd)) GlobalAbort();
+		//再読み込み
+		if (msgbox_Sure(_T("変更を反映するために再読み込みしますか?"), true, true)) {
+			UnicodeString msg = make_LogHdr(_T("LOAD"), fnam);
+			if (LoadSwatchbook(fnam)==0) msg[1] = 'E';
+			AddLog(msg);
+		}
+	}
+	catch (EAbort &e) {
+		msgbox_ERR(e.Message);
+	}
 }
+//---------------------------------------------------------------------------
+//フォントサンプル定義の編集
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::EditFontSmplItemClick(TObject *Sender)
+{
+	try {
+		//なければ作成
+		UnicodeString fnam = ExePath + FONTSMPL_FILE;
+		if (!file_exists(fnam) && !save_FontSample(fnam)) UserAbort(USTR_FaildSave);
 
+		//編集
+		UnicodeString cmd;
+		cmd.sprintf(_T("FileEdit_\"%s\""), fnam.c_str());
+		if (!ExeCommandsCore(cmd)) GlobalAbort();
+
+		//再読み込み
+		if (msgbox_Sure(_T("変更を反映するために再読み込みしますか?"), true, true)) {
+			if (load_FontSample(fnam)) SetFileInf();
+		}
+	}
+	catch (EAbort &e) {
+		msgbox_ERR(e.Message);
+	}
+}
+//---------------------------------------------------------------------------
+//イメージプレビューの右クリックメニュー
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::ImgPrvPopupMenuPopup(TObject *Sender)
+{
+	file_rec *cfp = GetCurFrecPtr(true);
+	PopEditFontSmplItem->Visible = (cfp && test_FontExt(cfp->f_ext));
+}
+//---------------------------------------------------------------------------
+//プレビュー内で、マウスポインタのホットスポットに十字線を表示
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::PreviewImageMouseDown(TObject *Sender, TMouseButton Button,
+	TShiftState Shift, int X, int Y)
+{
+	if (SetPrvCursor && Button==mbLeft && PreviewImage->Cursor!=crDefault) {
+		HotPosImage->Picture->Bitmap->SetSize(HotPosImage->ClientWidth, HotPosImage->ClientHeight);
+		TCanvas *cv = HotPosImage->Canvas;
+		cv->Brush->Color = col_bgImage;
+		TRect rc = HotPosImage->ClientRect;
+		cv->FillRect(rc);
+		//十字線
+		int p = HotPosImage->ClientWidth/2;
+		cv->Pen->Width = ScaledThis(1);
+		cv->Pen->Style = psSolid;
+		cv->Pen->Color = clRed;
+		cv->MoveTo(0, p);	cv->LineTo(rc.Right, p);
+		cv->MoveTo(p, 0);	cv->LineTo(p, rc.Bottom);
+		HotPosImage->Left = X - p;
+		HotPosImage->Top  = Y - p;
+		HotPosImage->Visible = true;
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::PreviewImageMouseMove(TObject *Sender, TShiftState Shift,
+	int X, int Y)
+{
+	HotPosImage->Visible = false;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::PreviewImageMouseUp(TObject *Sender, TMouseButton Button,
+	TShiftState Shift, int X, int Y)
+{
+	HotPosImage->Visible = false;
+}
 //---------------------------------------------------------------------------
 //FTPの(再)生成
 //  FTPが機能回復できない場合に、一旦破棄して再生成。
@@ -36646,125 +36809,6 @@ void __fastcall TNyanFiForm::add_FTPLogMsg(UnicodeString msg)
 }
 
 //---------------------------------------------------------------------------
-//FTP接続
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FTPConnectActionExecute(TObject *Sender)
-{
-	try {
-		if (IsDiffList()) UserAbort(USTR_CantOperate);
-
-		//パラメータでホスト指定
-		if (!ActionParam.IsEmpty()) {
-			std::unique_ptr<TStringList> lst(new TStringList());
-			IniFile->LoadListItems("FtpHostList", lst.get(), 20, false);
-			for (int i=0; i<lst->Count; i++) {
-				if (SameText(ActionParam, get_csv_item(lst->Strings[i], 0))) {
-					FTPHostItem = lst->Strings[i];  break;
-				}
-			}
-			if (FTPHostItem.IsEmpty()) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("ホスト設定")));
-		}
-		//ダイアログで指定
-		else {
-			if (!FtpConnectDlg) FtpConnectDlg = new TFtpConnectDlg(this);	//初回に動的作成
-			if (FtpConnectDlg->ShowModal()!=mrOk) SkipAbort();
-			FTPHostItem = FtpConnectDlg->HostItem;
-		}
-
-		if (!InternetConnected()) TextAbort(_T("インターネットに接続されていません。"));
-
-		cursor_HourGlass();
-		if (OppStt->is_FTP) RecoverFileList(OppListTag);
-		RecoverFileList();
-		if		(FTPRemoteSide==1 && CurListTag==1) ToLeftAction->Execute();
-		else if (FTPRemoteSide==2 && CurListTag==0) ToRightAction->Execute();
-
-		RecycleFTP();	//FTPを再生成
-
-		TStringDynArray itm_buf = get_csv_array(FTPHostItem, 7 + 2, true);
-		UnicodeString opt_str = itm_buf[6];
-		IdFTP1->Host	 = get_tkn(itm_buf[1], ":");
-		IdFTP1->Username = itm_buf[2];
-		IdFTP1->Password = uncipher(itm_buf[3]);
-		IdFTP1->Passive  = !ContainsText(opt_str, "PORT");
-		int port_no = get_tkn_r(itm_buf[1], ":").ToIntDef(0);	//標準以外のポート番号
-
-		//SSL暗号化
-		if (ContainsText(opt_str, "IMPLICIT")) {
-			IdFTP1->UseTLS = utUseImplicitTLS;
-			IdFTP1->DataPortProtection = ftpdpsPrivate;
-			IdFTP1->Port   = (port_no>0)? port_no : 990;
-		}
-		else if (ContainsText(opt_str, "EXPLICIT")) {
-			IdFTP1->UseTLS = utUseRequireTLS;
-			IdFTP1->DataPortProtection = ftpdpsPrivate;
-			IdFTP1->Port   = (port_no>0)? port_no : 21;
-		}
-		else {
-			IdFTP1->UseTLS = utNoTLSSupport;
-			IdFTP1->DataPortProtection = ftpdpsClear;
-			IdFTP1->Port   = (port_no>0)? port_no : 21;
-		}
-
-		FTPLastWorkCnt = FTPLastNoopCnt = GetTickCount();
-		CurFTPPath	   = EmptyStr;
-		FTPTryModTime  = true;
-
-		//接続開始
-		StartLog("FTP接続  " + itm_buf[1]);
-		IdFTP1->Connect();
-		AddLog("         " + IdFTP1->SystemDesc);
-		if (IdFTP1->UsingSFTP) AddLog(_T("         TLS接続が確立されました"));
-		InhFTPCheck = false;
-
-		//CHMOD コマンドに対応しているか?
-		FTPhasCHMOD = false;
-		try {
-			IdFTP1->Site("HELP");
-		}
-		catch (...) { ; }
-		if (USAME_TS(IdFTP1->LastCmdResult->Code, "214")) {
-			TRegExOptions opt; opt << roIgnoreCase;
-			for (int i=0; i<IdFTP1->LastCmdResult->Text->Count && !FTPhasCHMOD; i++)
-				FTPhasCHMOD = TRegEx::IsMatch(IdFTP1->LastCmdResult->Text->Strings[i], "\\bCHMOD\\b", opt);
-		}
-
-		TopFTPPath = itm_buf[4];
-		if		(TopFTPPath.IsEmpty())		  TopFTPPath = "/";
-		else if (!StartsStr('/', TopFTPPath)) TopFTPPath.Insert("/", 1);
-
-		//ローカル開始ディレクトリ
-		if (dir_exists(itm_buf[5])) UpdateOppPath(itm_buf[5]);
-		itm_buf[8] = PathMask[CurListTag];				//カレントのパスマスクを待避
-		PathMask[CurListTag] = PathMask[OppListTag];	//リモート側のパスマスクをローカル側に合わせる
-		//ホスト開始ディレクトリ
-		if (!ChangeFtpFileList(CurListTag, TopFTPPath, "..")) {
-			if (!ChangeFtpFileList()) GlobalAbort();
-		}
-		//ディレクトリ同期変更
-		if (ContainsText(opt_str, "SyncLR")) {
-			//切断時の復帰コマンドを設定
-			itm_buf[7]	= UnicodeString().sprintf(_T("SyncLR_%s"), SyncLR? _T("ON") : _T("OFF"));
-			FTPHostItem = make_csv_rec_str(itm_buf);
-			ExeCmdAction(SyncLRAction, "ON");
-		}
-
-		cursor_Default();
-		ClearTempArc(TempPathFTP);
-		play_sound(FTPSndConnect);
-		//イベント : FTPホストに接続した
-		ExeEventCommand(OnFTPConnect);
-	}
-	catch (EAbort &e) {
-		SetActionAbort(e.Message);
-	}
-	catch (...) {
-		UnicodeString msg = "接続に失敗しました";
-		add_FTPLogMsg(msg);
-		SetActionAbort(msg);
-	}
-}
-//---------------------------------------------------------------------------
 //FTP切断
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::DisconnectFTP()
@@ -36777,65 +36821,6 @@ void __fastcall TNyanFiForm::DisconnectFTP()
 		ExeCommandAction(itm_buf[7]);	//SyncLR の復帰
 	}
 	FTPHostItem = EmptyStr;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FTPDisconnectActionExecute(TObject *Sender)
-{
-	InhFTPCheck = true;
-	DisconnectFTP();
-	InhFTPCheck = false;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FTPDisconnectActionUpdate(TObject *Sender)
-{
-	TAction *ap = (TAction*)Sender;
-	ap->Visible = (ScrMode==SCMD_FLIST);
-	try {
-		ap->Enabled = ap->Visible && IdFTP1->Connected();
-	}
-	catch (...) {
-		ap->Enabled = false;
-	}
-}
-
-//---------------------------------------------------------------------------
-//切断した
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::IdFTP1Disconnected(TObject *Sender)
-{
-	ClearTempArc(TempPathFTP);
-
-	AddLog(_T("FTP切断"), true);
-	play_sound(FTPSndDiscon);
-
-	//イベント : FTPホストから切断した
-	ExeEventCommand(OnFTPDiscon);
-}
-//---------------------------------------------------------------------------
-//ダウンロード/アップロード進捗状況表示
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::IdFTP1Work(TObject *ASender, TWorkMode AWorkMode, __int64 AWorkCount)
-{
-	IdAntiFreeze1->Process();
-	PosWorkProgress(AWorkCount, FTPMaxCount);
-	FTPLastWorkCnt = GetTickCount();
-}
-//---------------------------------------------------------------------------
-//応答メッセージのログ表示
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::IdFTP1BannerAfterLogin(TObject *ASender, const UnicodeString AMsg)
-{
-	std::unique_ptr<TStringList> lst(new TStringList());
-	lst->Text = AMsg;
-	for (int i=0; i<lst->Count; i++) AddLog("     " + lst->Strings[i]);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::IdFTP1Status(TObject *ASender, const TIdStatus AStatus,
-		const UnicodeString AStatusText)
-{
-	if (FTPLogResponse && (AStatus==hsResolving || AStatus==hsConnecting || AStatus==hsStatusText)) {
-		AddLog("         " + AStatusText);
-	}
 }
 
 //---------------------------------------------------------------------------
@@ -37139,7 +37124,183 @@ bool __fastcall TNyanFiForm::UploadFtpCore(file_rec *fp)
 		return false;
 	}
 }
+//---------------------------------------------------------------------------
+//切断した
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::IdFTP1Disconnected(TObject *Sender)
+{
+	ClearTempArc(TempPathFTP);
 
+	AddLog(_T("FTP切断"), true);
+	play_sound(FTPSndDiscon);
+
+	//イベント : FTPホストから切断した
+	ExeEventCommand(OnFTPDiscon);
+}
+//---------------------------------------------------------------------------
+//ダウンロード/アップロード進捗状況表示
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::IdFTP1Work(TObject *ASender, TWorkMode AWorkMode, __int64 AWorkCount)
+{
+	IdAntiFreeze1->Process();
+	PosWorkProgress(AWorkCount, FTPMaxCount);
+	FTPLastWorkCnt = GetTickCount();
+}
+//---------------------------------------------------------------------------
+//応答メッセージのログ表示
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::IdFTP1BannerAfterLogin(TObject *ASender, const UnicodeString AMsg)
+{
+	std::unique_ptr<TStringList> lst(new TStringList());
+	lst->Text = AMsg;
+	for (int i=0; i<lst->Count; i++) AddLog("     " + lst->Strings[i]);
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::IdFTP1Status(TObject *ASender, const TIdStatus AStatus,
+		const UnicodeString AStatusText)
+{
+	if (FTPLogResponse && (AStatus==hsResolving || AStatus==hsConnecting || AStatus==hsStatusText)) {
+		AddLog("         " + AStatusText);
+	}
+}
+//---------------------------------------------------------------------------
+//FTP接続
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::FTPConnectActionExecute(TObject *Sender)
+{
+	try {
+		if (IsDiffList()) UserAbort(USTR_CantOperate);
+
+		//パラメータでホスト指定
+		if (!ActionParam.IsEmpty()) {
+			std::unique_ptr<TStringList> lst(new TStringList());
+			IniFile->LoadListItems("FtpHostList", lst.get(), 20, false);
+			for (int i=0; i<lst->Count; i++) {
+				if (SameText(ActionParam, get_csv_item(lst->Strings[i], 0))) {
+					FTPHostItem = lst->Strings[i];  break;
+				}
+			}
+			if (FTPHostItem.IsEmpty()) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("ホスト設定")));
+		}
+		//ダイアログで指定
+		else {
+			if (!FtpConnectDlg) FtpConnectDlg = new TFtpConnectDlg(this);	//初回に動的作成
+			if (FtpConnectDlg->ShowModal()!=mrOk) SkipAbort();
+			FTPHostItem = FtpConnectDlg->HostItem;
+		}
+
+		if (!InternetConnected()) TextAbort(_T("インターネットに接続されていません。"));
+
+		cursor_HourGlass();
+		if (OppStt->is_FTP) RecoverFileList(OppListTag);
+		RecoverFileList();
+		if		(FTPRemoteSide==1 && CurListTag==1) ToLeftAction->Execute();
+		else if (FTPRemoteSide==2 && CurListTag==0) ToRightAction->Execute();
+
+		RecycleFTP();	//FTPを再生成
+
+		TStringDynArray itm_buf = get_csv_array(FTPHostItem, 7 + 2, true);
+		UnicodeString opt_str = itm_buf[6];
+		IdFTP1->Host	 = get_tkn(itm_buf[1], ":");
+		IdFTP1->Username = itm_buf[2];
+		IdFTP1->Password = uncipher(itm_buf[3]);
+		IdFTP1->Passive  = !ContainsText(opt_str, "PORT");
+		int port_no = get_tkn_r(itm_buf[1], ":").ToIntDef(0);	//標準以外のポート番号
+
+		//SSL暗号化
+		if (ContainsText(opt_str, "IMPLICIT")) {
+			IdFTP1->UseTLS = utUseImplicitTLS;
+			IdFTP1->DataPortProtection = ftpdpsPrivate;
+			IdFTP1->Port   = (port_no>0)? port_no : 990;
+		}
+		else if (ContainsText(opt_str, "EXPLICIT")) {
+			IdFTP1->UseTLS = utUseRequireTLS;
+			IdFTP1->DataPortProtection = ftpdpsPrivate;
+			IdFTP1->Port   = (port_no>0)? port_no : 21;
+		}
+		else {
+			IdFTP1->UseTLS = utNoTLSSupport;
+			IdFTP1->DataPortProtection = ftpdpsClear;
+			IdFTP1->Port   = (port_no>0)? port_no : 21;
+		}
+
+		FTPLastWorkCnt = FTPLastNoopCnt = GetTickCount();
+		CurFTPPath	   = EmptyStr;
+		FTPTryModTime  = true;
+
+		//接続開始
+		StartLog("FTP接続  " + itm_buf[1]);
+		IdFTP1->Connect();
+		AddLog("         " + IdFTP1->SystemDesc);
+		if (IdFTP1->UsingSFTP) AddLog(_T("         TLS接続が確立されました"));
+		InhFTPCheck = false;
+
+		//CHMOD コマンドに対応しているか?
+		FTPhasCHMOD = false;
+		try {
+			IdFTP1->Site("HELP");
+		}
+		catch (...) { ; }
+		if (USAME_TS(IdFTP1->LastCmdResult->Code, "214")) {
+			TRegExOptions opt; opt << roIgnoreCase;
+			for (int i=0; i<IdFTP1->LastCmdResult->Text->Count && !FTPhasCHMOD; i++)
+				FTPhasCHMOD = TRegEx::IsMatch(IdFTP1->LastCmdResult->Text->Strings[i], "\\bCHMOD\\b", opt);
+		}
+
+		TopFTPPath = itm_buf[4];
+		if		(TopFTPPath.IsEmpty())		  TopFTPPath = "/";
+		else if (!StartsStr('/', TopFTPPath)) TopFTPPath.Insert("/", 1);
+
+		//ローカル開始ディレクトリ
+		if (dir_exists(itm_buf[5])) UpdateOppPath(itm_buf[5]);
+		itm_buf[8] = PathMask[CurListTag];				//カレントのパスマスクを待避
+		PathMask[CurListTag] = PathMask[OppListTag];	//リモート側のパスマスクをローカル側に合わせる
+		//ホスト開始ディレクトリ
+		if (!ChangeFtpFileList(CurListTag, TopFTPPath, "..")) {
+			if (!ChangeFtpFileList()) GlobalAbort();
+		}
+		//ディレクトリ同期変更
+		if (ContainsText(opt_str, "SyncLR")) {
+			//切断時の復帰コマンドを設定
+			itm_buf[7]	= UnicodeString().sprintf(_T("SyncLR_%s"), SyncLR? _T("ON") : _T("OFF"));
+			FTPHostItem = make_csv_rec_str(itm_buf);
+			ExeCmdAction(SyncLRAction, "ON");
+		}
+
+		cursor_Default();
+		ClearTempArc(TempPathFTP);
+		play_sound(FTPSndConnect);
+		//イベント : FTPホストに接続した
+		ExeEventCommand(OnFTPConnect);
+	}
+	catch (EAbort &e) {
+		SetActionAbort(e.Message);
+	}
+	catch (...) {
+		UnicodeString msg = "接続に失敗しました";
+		add_FTPLogMsg(msg);
+		SetActionAbort(msg);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::FTPDisconnectActionExecute(TObject *Sender)
+{
+	InhFTPCheck = true;
+	DisconnectFTP();
+	InhFTPCheck = false;
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::FTPDisconnectActionUpdate(TObject *Sender)
+{
+	TAction *ap = (TAction*)Sender;
+	ap->Visible = (ScrMode==SCMD_FLIST);
+	try {
+		ap->Enabled = ap->Visible && IdFTP1->Connected();
+	}
+	catch (...) {
+		ap->Enabled = false;
+	}
+}
 //---------------------------------------------------------------------------
 //パーミッションの設定
 //---------------------------------------------------------------------------
@@ -37210,242 +37371,6 @@ void __fastcall TNyanFiForm::FTPChmodActionUpdate(TObject *Sender)
 	ap->Enabled = ap->Visible;
 }
 
-//---------------------------------------------------------------------------
-//タスク表示部
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TaskPaintBoxPaint(TObject *Sender)
-{
-	TPaintBox *pp = (TPaintBox*)Sender;
-	TCanvas *cv = pp->Canvas;
-	cv->Font->Assign(pp->Font);
-	cv->Brush->Color = col_bgTask;
-	cv->FillRect(pp->ClientRect);
-
-	int h  = get_FontHeight(cv->Font) * 5/4 + ScaledThis(4);
-	int xp = 4;
-	int yp = 2;
-
-	cv->Font->Color = col_fgLog;
-	int fsz = cv->Font->Size;
-	cv->Font->Size = fsz * 9 / 10;
-	out_Text(cv, xp, yp, _T("タスク"));
-	cv->Font->Size = fsz;
-	yp += h;
-
-	UnicodeString tmp;
-	int maxn = get_MaxTaskCount();
-	for (int i=0; i<maxn; i++) {
-		cv->Brush->Color = col_bgTask;
-
-		TTaskThread *tp = TaskThread[i];
-		if (tp) {
-			cv->Font->Color = (tp->PreCount>0)? clGreen : tp->TaskPause? clRed : col_fgLog;
-			cv->TextOut(xp, yp, tmp.sprintf(_T("%u:%5u"), i + 1, tp->Config->TaskList->Count));
-			yp += h;
-			int n = (tp->PreCount>0)? tp->PreCount : (tp->SubCount>0)? tp->SubCount : 0;
-			if (n>0) cv->TextOut(xp, yp, tmp.sprintf(_T("%7u"), n));
-
-			//進捗表示
-			if (tp->CurProgress>=0) {
-				int x0 = xp + get_CharWidth(cv, 2);
-				int x1 = pp->Width - 4;
-				TRect rc_f = (tmp.IsEmpty())? Rect(x0, yp + 2, x1, yp + 4) : Rect(x0, yp + h - 4, x1, yp + h - 2);
-				draw_ProgressBar(cv, rc_f, tp->CurProgress);
-				//高速実行
-				if (tp->TaskIsFast) {
-					rc_f.Left -= 8;  rc_f.Right = rc_f.Left + 4;
-					InflateRect(rc_f, 0, 1);
-					cv->Brush->Color = clRed;
-					cv->FillRect(rc_f);
-				}
-			}
-			yp += h;
-		}
-		else {
-			cv->Font->Color = AdjustColor(col_fgLog, ADJCOL_FGLIST);
-			cv->TextOut(xp, yp, tmp.sprintf(_T("%u:_____"), i + 1));
-			yp += h * 2;
-		}
-	}
-
-	//予約タスク状態表示
-	cv->Brush->Color = col_bgTask;
-	cv->Font->Color  = col_fgLog;
-	yp += h/2;
-	if (TaskReserveList->Count>0) {
-		out_Text(cv, xp, yp, RsvSuspended? _T("保留中") : _T("待機中"));
-		yp += h;
-		cv->TextOut(xp, yp, tmp.sprintf(_T("  %4u"), TaskReserveList->Count));
-		yp += h;
-	}
-	else if (RsvSuspended) {
-		out_Text(cv, xp, yp, _T("保留中"));
-		yp += h * 2;
-	}
-
-	//ファイル監視表示
-	if (WatchTailList->Count>0) {
-		out_Text(cv, xp, yp, _T("監視中"));
-		yp += h;
-		cv->TextOut(xp, yp, tmp.sprintf(_T("  %4u"), WatchTailList->Count));
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TaskPaintBoxDblClick(TObject *Sender)
-{
-	ExeEventCommand(OnTskDClick);
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::TaskPaintBoxMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
-{
-	ClearNopStt();
-	if (Button==mbRight) ExeEventCommandMP(OnTskRClick);
-}
-
-//---------------------------------------------------------------------------
-//イベント: ファイルリストのシンプルスクロールバーを右クリック
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::FlScrPanelMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
-{
-	if (Button==mbRight) ExeEventCommandMP(OnFScrRClick);
-}
-
-//---------------------------------------------------------------------------
-//デフォルトの構文強調表示定義をコピー
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::DefHighlightActionExecute(TObject *Sender)
-{
-	UnicodeString fext = inputbox_ex(_T("デフォルトの構文強調表示定義をコピー"), _T("拡張子(単独指定)"), EmptyStr);
-	if (!fext.IsEmpty()) {
-		std::unique_ptr<TStringList> rbuf(new TStringList());
-		if (GetDefaultHighlight(fext, rbuf.get(), HeadlineList)) {
-			copy_to_Clipboard(rbuf->Text);
-		}
-		else msgbox_WARN("定義されていません。");
-	}
-}
-
-//---------------------------------------------------------------------------
-//色見本定義ファイルの編集
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::EditSwatchItemClick(TObject *Sender)
-{
-	try {
-		UnicodeString fnam = ExePath + SWATCH_FILE;
-		//なければ作成
-		if (!file_exists(fnam)) {
-			if (!SaveSwatchbook(fnam)) UserAbort(USTR_FaildSave);
-		}
-		//編集
-		UnicodeString cmd;
-		cmd.sprintf(_T("FileEdit_\"%s\""), fnam.c_str());
-		if (!ExeCommandsCore(cmd)) GlobalAbort();
-		//再読み込み
-		if (msgbox_Sure(_T("変更を反映するために再読み込みしますか?"), true, true)) {
-			UnicodeString msg = make_LogHdr(_T("LOAD"), fnam);
-			if (LoadSwatchbook(fnam)==0) msg[1] = 'E';
-			AddLog(msg);
-		}
-	}
-	catch (EAbort &e) {
-		msgbox_ERR(e.Message);
-	}
-}
-//---------------------------------------------------------------------------
-//フォントサンプル定義の編集
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::EditFontSmplItemClick(TObject *Sender)
-{
-	try {
-		//なければ作成
-		UnicodeString fnam = ExePath + FONTSMPL_FILE;
-		if (!file_exists(fnam) && !save_FontSample(fnam)) UserAbort(USTR_FaildSave);
-
-		//編集
-		UnicodeString cmd;
-		cmd.sprintf(_T("FileEdit_\"%s\""), fnam.c_str());
-		if (!ExeCommandsCore(cmd)) GlobalAbort();
-
-		//再読み込み
-		if (msgbox_Sure(_T("変更を反映するために再読み込みしますか?"), true, true)) {
-			if (load_FontSample(fnam)) SetFileInf();
-		}
-	}
-	catch (EAbort &e) {
-		msgbox_ERR(e.Message);
-	}
-}
-
-//---------------------------------------------------------------------------
-//イメージプレビューの右クリックメニュー
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ImgPrvPopupMenuPopup(TObject *Sender)
-{
-	file_rec *cfp = GetCurFrecPtr(true);
-	PopEditFontSmplItem->Visible = (cfp && test_FontExt(cfp->f_ext));
-}
-
-//---------------------------------------------------------------------------
-//プレビューのマウスポインタを設定
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::SetPrvImgCursor(bool sw)
-{
-	if (sw) {
-		PreviewImage->Cursor = crTmpPrev;
-	}
-	else {
-		PreviewImage->Cursor = crDefault;
-		HCURSOR hCur = (HCURSOR)Screen->Cursors[crTmpPrev];
-		if (hCur && ::DestroyCursor(hCur)) Screen->Cursors[crTmpPrev] = NULL;
-	}
-
-	TPoint p = Mouse->CursorPos;
-	Mouse->CursorPos = Point(p.x+1, p.y+1);
-	Mouse->CursorPos = p;
-}
-
-//---------------------------------------------------------------------------
-//プレビュー内で、マウスポインタのホットスポットに十字線を表示
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::PreviewImageMouseDown(TObject *Sender, TMouseButton Button,
-	TShiftState Shift, int X, int Y)
-{
-	if (SetPrvCursor && Button==mbLeft && PreviewImage->Cursor!=crDefault) {
-		HotPosImage->Picture->Bitmap->SetSize(HotPosImage->ClientWidth, HotPosImage->ClientHeight);
-		TCanvas *cv = HotPosImage->Canvas;
-		cv->Brush->Color = col_bgImage;
-		TRect rc = HotPosImage->ClientRect;
-		cv->FillRect(rc);
-		//十字線
-		int p = HotPosImage->ClientWidth/2;
-		cv->Pen->Width = ScaledThis(1);
-		cv->Pen->Style = psSolid;
-		cv->Pen->Color = clRed;
-		cv->MoveTo(0, p);	cv->LineTo(rc.Right, p);
-		cv->MoveTo(p, 0);	cv->LineTo(p, rc.Bottom);
-		HotPosImage->Left = X - p;
-		HotPosImage->Top  = Y - p;
-		HotPosImage->Visible = true;
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::PreviewImageMouseMove(TObject *Sender, TShiftState Shift,
-	int X, int Y)
-{
-	HotPosImage->Visible = false;
-}
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::PreviewImageMouseUp(TObject *Sender, TMouseButton Button,
-	TShiftState Shift, int X, int Y)
-{
-	HotPosImage->Visible = false;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::GrepRepComboBoxEnter(TObject *Sender)
-{
-	UpdateActions();
-}
 
 //---------------------------------------------------------------------------
 //IncSearch コマンドのオプション変更

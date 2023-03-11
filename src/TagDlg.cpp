@@ -225,6 +225,46 @@ void __fastcall TTagManDlg::WmDpiChanged(TMessage &msg)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TTagManDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+
+	if (equal_ENTER(KeyStr)) {
+		ModalResult = mrOk;
+	}
+	else if (equal_ESC(KeyStr)) {
+		if (UserModule->SpuitEnabled()) {
+			SwatchPanel->Visible = false;
+			UserModule->EndSpuit();
+			TagCheckListBox->Repaint();
+		}
+		else {
+			ModalResult = mrCancel;
+		}
+	}
+	else if (USAME_TI(KeyStr, "Alt+A")) {
+		AndAction->Execute();
+	}
+	else if (USAME_TI(KeyStr, "Alt+M")) {
+		SelMaskAction->Execute();
+	}
+	else if (USAME_TI(KeyStr, "Alt+H")) {
+		HideAction->Execute();
+	}
+	else if (USAME_TI(KeyStr, "Alt+R")) {
+		ResLinkAction->Execute();
+	}
+	else if (USAME_TI(KeyStr, "Alt+O")) {
+		ChgOptBtnClick(NULL);
+	}
+	else {
+		UnicodeString topic = HELPTOPIC_FL;
+		topic.cat_sprintf(_T("#%s"), CmdStr.c_str());
+		SpecialKeyProc(this, Key, Shift, topic.c_str());
+	}
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TTagManDlg::ListPanelResize(TObject *Sender)
 {
 	ListScrPanel->UpdateKnob();
@@ -363,6 +403,54 @@ void __fastcall TTagManDlg::TagEditKeyPress(TObject *Sender, System::WideChar &K
 }
 
 //---------------------------------------------------------------------------
+//一覧の描画
+//---------------------------------------------------------------------------
+void __fastcall TTagManDlg::TagCheckListBoxDrawItem(TWinControl *Control, int Index,
+	TRect &Rect, TOwnerDrawState State)
+{
+	TCheckListBox *lp = (TCheckListBox*)Control;
+	TCanvas  *cv = lp->Canvas;
+	cv->Font->Assign(lp->Font);
+	cv->Brush->Color = lp->Checked[Index]? col_selItem : col_bgList;
+	cv->FillRect(Rect);
+
+	int xp = Rect.Left + ScaledInt(4, this);
+	int yp = Rect.Top  + get_TopMargin(cv);
+
+	//フォルダアイコン
+	if (IsFolderIcon) {
+		UnicodeString inam = lp->Items->Strings[Index];
+		draw_SmallIcon2(inam, cv, xp, yp, this);
+		xp += ScaledInt(24, this);
+		cv->Font->Color = get_ExtColor(get_extension(inam));
+		cv->TextOut(xp, yp, get_base_name(inam));
+	}
+	//タグ
+	else {
+		if (RevTagCololr) yp += ScaledInt(2, this);
+		usr_TAG->DrawTags(lp->Items->Strings[Index], cv, xp, yp,
+			(RevTagCololr? col_bgList : col_None), UserModule->SpuitEnabled());
+	}
+
+	//使用数
+	int n = (int)lp->Items->Objects[Index];
+	if (n>0) {
+		cv->Font->Color = col_fgList;
+		UnicodeString lbuf = n;
+		xp += (MaxTagWidth + cv->TextWidth("99999999") - cv->TextWidth(lbuf));
+		cv->TextOut(xp, yp, lbuf);
+	}
+
+	//カーソル
+	if (Index==lp->ItemIndex) {
+		int lw = lp->Focused()? std::max(CursorWidth, 1) : 1;
+		int yp = Rect.Bottom - lw;
+		draw_Line(lp->Canvas, Rect.Left, yp, Rect.Right, yp, lw, col_Cursor, lp->Focused()? psSolid : psDot);
+	}
+
+	if (State.Contains(odFocused)) lp->Canvas->DrawFocusRect(Rect);
+}
+//---------------------------------------------------------------------------
 //タグ一覧での操作
 //---------------------------------------------------------------------------
 void __fastcall TTagManDlg::TagCheckListBoxClickCheck(TObject *Sender)
@@ -444,54 +532,6 @@ void __fastcall TTagManDlg::TagCheckListBoxKeyPress(TObject *Sender, System::Wid
 	Key = 0;
 }
 
-//---------------------------------------------------------------------------
-//一覧の描画
-//---------------------------------------------------------------------------
-void __fastcall TTagManDlg::TagCheckListBoxDrawItem(TWinControl *Control, int Index,
-	TRect &Rect, TOwnerDrawState State)
-{
-	TCheckListBox *lp = (TCheckListBox*)Control;
-	TCanvas  *cv = lp->Canvas;
-	cv->Font->Assign(lp->Font);
-	cv->Brush->Color = lp->Checked[Index]? col_selItem : col_bgList;
-	cv->FillRect(Rect);
-
-	int xp = Rect.Left + ScaledInt(4, this);
-	int yp = Rect.Top  + get_TopMargin(cv);
-
-	//フォルダアイコン
-	if (IsFolderIcon) {
-		UnicodeString inam = lp->Items->Strings[Index];
-		draw_SmallIcon2(inam, cv, xp, yp, this);
-		xp += ScaledInt(24, this);
-		cv->Font->Color = get_ExtColor(get_extension(inam));
-		cv->TextOut(xp, yp, get_base_name(inam));
-	}
-	//タグ
-	else {
-		if (RevTagCololr) yp += ScaledInt(2, this);
-		usr_TAG->DrawTags(lp->Items->Strings[Index], cv, xp, yp,
-			(RevTagCololr? col_bgList : col_None), UserModule->SpuitEnabled());
-	}
-
-	//使用数
-	int n = (int)lp->Items->Objects[Index];
-	if (n>0) {
-		cv->Font->Color = col_fgList;
-		UnicodeString lbuf = n;
-		xp += (MaxTagWidth + cv->TextWidth("99999999") - cv->TextWidth(lbuf));
-		cv->TextOut(xp, yp, lbuf);
-	}
-
-	//カーソル
-	if (Index==lp->ItemIndex) {
-		int lw = lp->Focused()? std::max(CursorWidth, 1) : 1;
-		int yp = Rect.Bottom - lw;
-		draw_Line(lp->Canvas, Rect.Left, yp, Rect.Right, yp, lw, col_Cursor, lp->Focused()? psSolid : psDot);
-	}
-
-	if (State.Contains(odFocused)) lp->Canvas->DrawFocusRect(Rect);
-}
 //---------------------------------------------------------------------------
 //タグ名の変更
 //---------------------------------------------------------------------------
@@ -697,46 +737,6 @@ void __fastcall TTagManDlg::CanButtonClick(TObject *Sender)
 	}
 	else {
 		ModalResult = mrCancel;
-	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TTagManDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-
-	if (equal_ENTER(KeyStr)) {
-		ModalResult = mrOk;
-	}
-	else if (equal_ESC(KeyStr)) {
-		if (UserModule->SpuitEnabled()) {
-			SwatchPanel->Visible = false;
-			UserModule->EndSpuit();
-			TagCheckListBox->Repaint();
-		}
-		else {
-			ModalResult = mrCancel;
-		}
-	}
-	else if (USAME_TI(KeyStr, "Alt+A")) {
-		AndAction->Execute();
-	}
-	else if (USAME_TI(KeyStr, "Alt+M")) {
-		SelMaskAction->Execute();
-	}
-	else if (USAME_TI(KeyStr, "Alt+H")) {
-		HideAction->Execute();
-	}
-	else if (USAME_TI(KeyStr, "Alt+R")) {
-		ResLinkAction->Execute();
-	}
-	else if (USAME_TI(KeyStr, "Alt+O")) {
-		ChgOptBtnClick(NULL);
-	}
-	else {
-		UnicodeString topic = HELPTOPIC_FL;
-		topic.cat_sprintf(_T("#%s"), CmdStr.c_str());
-		SpecialKeyProc(this, Key, Shift, topic.c_str());
 	}
 }
 //---------------------------------------------------------------------------

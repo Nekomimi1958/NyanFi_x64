@@ -114,8 +114,6 @@ void __fastcall TExpCsvDlg::RefOutNameBtnClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//マウス操作
-//---------------------------------------------------------------------------
 void __fastcall TExpCsvDlg::SrcListBoxDblClick(TObject *Sender)
 {
 	AddItemAction->Execute();
@@ -125,8 +123,6 @@ void __fastcall TExpCsvDlg::DstListBoxDblClick(TObject *Sender)
 {
 	UserModule->DelListItemAction->Execute();
 }
-//---------------------------------------------------------------------------
-//キー操作
 //---------------------------------------------------------------------------
 void __fastcall TExpCsvDlg::DstListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {

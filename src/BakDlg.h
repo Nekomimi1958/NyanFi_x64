@@ -52,14 +52,14 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall SetupComboBoxClick(TObject *Sender);
 	void __fastcall SaveSetupActionExecute(TObject *Sender);
 	void __fastcall SaveSetupActionUpdate(TObject *Sender);
-	void __fastcall SetupComboBoxClick(TObject *Sender);
+	void __fastcall DelSetupActionExecute(TObject *Sender);
+	void __fastcall DelSetupActionUpdate(TObject *Sender);
 	void __fastcall MakeNbtActionExecute(TObject *Sender);
 	void __fastcall MakeNbtActionUpdate(TObject *Sender);
 	void __fastcall OkButtonClick(TObject *Sender);
-	void __fastcall DelSetupActionExecute(TObject *Sender);
-	void __fastcall DelSetupActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 

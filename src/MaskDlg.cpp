@@ -81,17 +81,25 @@ void __fastcall TPathMaskDlg::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TPathMaskDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (USAME_TI(get_KeyStr(Key, Shift), "Alt+O"))
+		ChgOptBtnClick(NULL);
+	else
+		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#PathMaskDlg"));
+}
+//---------------------------------------------------------------------------
+void __fastcall TPathMaskDlg::PathMaskHeaderResize(TObject *Sender)
+{
+	adjust_HeaderSecWidth((THeaderControl *)Sender, 2);
+}
+//---------------------------------------------------------------------------
 //ヘッダの描画
 //---------------------------------------------------------------------------
 void __fastcall TPathMaskDlg::PathMaskHeaderDrawSection(THeaderControl *HeaderControl,
 	THeaderSection *Section, const TRect &Rect, bool Pressed)
 {
 	draw_SortHeader(HeaderControl, Section, Rect);
-}
-//---------------------------------------------------------------------------
-void __fastcall TPathMaskDlg::PathMaskHeaderResize(TObject *Sender)
-{
-	adjust_HeaderSecWidth((THeaderControl *)Sender, 2);
 }
 //---------------------------------------------------------------------------
 void __fastcall TPathMaskDlg::PathMaskHeaderSectionResize(THeaderControl *HeaderControl,
@@ -135,16 +143,6 @@ void __fastcall TPathMaskDlg::PathMaskListBoxDrawItem(TWinControl *Control, int 
 	draw_ListCursor2(lp, Rect, Index, State);
 }
 //---------------------------------------------------------------------------
-void __fastcall TPathMaskDlg::PathMaskListBoxClick(TObject *Sender)
-{
-	TListBox *lp = (TListBox*)Sender;
-	int idx = lp->ItemIndex;  if (idx==-1) return;
-	TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[idx], 3, true);
-	KeyEdit->Text  = itm_buf[0];
-	DescEdit->Text = itm_buf[1];
-	MaskEdit->Text = itm_buf[2];
-}
-//---------------------------------------------------------------------------
 //キー操作
 //---------------------------------------------------------------------------
 void __fastcall TPathMaskDlg::PathMaskListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -172,6 +170,16 @@ void __fastcall TPathMaskDlg::PathMaskListBoxKeyDown(TObject *Sender, WORD &Key,
 }
 //---------------------------------------------------------------------------
 //マウス操作
+//---------------------------------------------------------------------------
+void __fastcall TPathMaskDlg::PathMaskListBoxClick(TObject *Sender)
+{
+	TListBox *lp = (TListBox*)Sender;
+	int idx = lp->ItemIndex;  if (idx==-1) return;
+	TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[idx], 3, true);
+	KeyEdit->Text  = itm_buf[0];
+	DescEdit->Text = itm_buf[1];
+	MaskEdit->Text = itm_buf[2];
+}
 //---------------------------------------------------------------------------
 void __fastcall TPathMaskDlg::PathMaskListBoxDblClick(TObject *Sender)
 {
@@ -237,15 +245,6 @@ void __fastcall TPathMaskDlg::ChgOptBtnClick(TObject *Sender)
 	ListScrPanel->UpdateKnob();
 	SetOptBtn();
 	if (!OptPanel->Visible) PathMaskListBox->SetFocus();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TPathMaskDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (USAME_TI(get_KeyStr(Key, Shift), "Alt+O"))
-		ChgOptBtnClick(NULL);
-	else
-		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#PathMaskDlg"));
 }
 //---------------------------------------------------------------------------
 

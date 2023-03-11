@@ -72,24 +72,24 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
-	void __fastcall CreateActionExecute(TObject *Sender);
-	void __fastcall CreateActionUpdate(TObject *Sender);
 	void __fastcall AddSerActionExecute(TObject *Sender);
 	void __fastcall AddSerActionUpdate(TObject *Sender);
 	void __fastcall AddStrActionExecute(TObject *Sender);
 	void __fastcall AddStrActionUpdate(TObject *Sender);
-	void __fastcall UndoActionUpdate(TObject *Sender);
-	void __fastcall UndoActionExecute(TObject *Sender);
+	void __fastcall AddDateActionExecute(TObject *Sender);
+	void __fastcall AddDateActionUpdate(TObject *Sender);
+	void __fastcall AddEmptyItemClick(TObject *Sender);
 	void __fastcall GetSubDirItemClick(TObject *Sender);
+	void __fastcall RepCharItemClick(TObject *Sender);
+	void __fastcall UndoActionExecute(TObject *Sender);
+	void __fastcall UndoActionUpdate(TObject *Sender);
 	void __fastcall SaveListActionExecute(TObject *Sender);
 	void __fastcall SaveListActionUpdate(TObject *Sender);
 	void __fastcall LoadListActionExecute(TObject *Sender);
-	void __fastcall AddEmptyItemClick(TObject *Sender);
 	void __fastcall ClearListItemClick(TObject *Sender);
 	void __fastcall ListMemoKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall RepCharItemClick(TObject *Sender);
-	void __fastcall AddDateActionExecute(TObject *Sender);
-	void __fastcall AddDateActionUpdate(TObject *Sender);
+	void __fastcall CreateActionExecute(TObject *Sender);
+	void __fastcall CreateActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString UndoBuf;

@@ -59,26 +59,26 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
-	void __fastcall DriveHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
-	void __fastcall DriveGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
-	void __fastcall DriveGridDblClick(TObject *Sender);
-	void __fastcall DrivePropBtnClick(TObject *Sender);
-	void __fastcall OptCheckBoxClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall EjectDriveActionUpdate(TObject *Sender);
-	void __fastcall EjectDriveActionExecute(TObject *Sender);
-	void __fastcall EjectTrayActionUpdate(TObject *Sender);
-	void __fastcall EjectTrayActionExecute(TObject *Sender);
-	void __fastcall PropertyActionExecute(TObject *Sender);
-	void __fastcall ChgOptBtnClick(TObject *Sender);
 	void __fastcall FormResize(TObject *Sender);
-	void __fastcall DriveGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall OpenExpItemClick(TObject *Sender);
-	void __fastcall DriveGridMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
+	void __fastcall DriveHeaderResize(TObject *Sender);
+	void __fastcall DriveHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
 	void __fastcall DriveHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
 		const TRect &Rect, bool Pressed);
-	void __fastcall DriveHeaderResize(TObject *Sender);
 	void __fastcall ToRootCheckBoxClick(TObject *Sender);
+	void __fastcall DriveGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
+	void __fastcall DriveGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall DriveGridMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
+	void __fastcall DriveGridDblClick(TObject *Sender);
+	void __fastcall OptCheckBoxClick(TObject *Sender);
+	void __fastcall DrivePropBtnClick(TObject *Sender);
+	void __fastcall EjectDriveActionExecute(TObject *Sender);
+	void __fastcall EjectDriveActionUpdate(TObject *Sender);
+	void __fastcall EjectTrayActionExecute(TObject *Sender);
+	void __fastcall EjectTrayActionUpdate(TObject *Sender);
+	void __fastcall OpenExpItemClick(TObject *Sender);
+	void __fastcall PropertyActionExecute(TObject *Sender);
+	void __fastcall ChgOptBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	void __fastcall WmMenuChar(TMessage &msg)

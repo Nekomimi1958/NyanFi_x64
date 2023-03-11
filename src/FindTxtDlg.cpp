@@ -105,6 +105,21 @@ void __fastcall TFindTextDlg::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TFindTextDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CaseCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(RegExCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(MigemoCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+U")) UpRadioBtn->Checked 	   = true;
+	else if (USAME_TI(KeyStr, "Alt+D")) DownRadioBtn->Checked	   = true;
+	else if (USAME_TI(KeyStr, "Alt+B") && BinPanel->Visible)
+										invert_CheckBox(BytesCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+H")) invert_CheckBox(HighlightCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+X")) invert_CheckBox(CloseCheckBox);
+	else SpecialKeyProc(this, Key, Shift);
+}
+//---------------------------------------------------------------------------
 //オプションの変更
 //---------------------------------------------------------------------------
 void __fastcall TFindTextDlg::FindOptChangedClick(TObject *Sender)
@@ -151,45 +166,6 @@ void __fastcall TFindTextDlg::RegExCheckBoxClick(TObject *Sender)
 void __fastcall TFindTextDlg::SubOptClick(TObject *Sender)
 {
 	FindComboBox->SetFocus();
-}
-
-//---------------------------------------------------------------------------
-//検索文字列欄でのキー操作
-//---------------------------------------------------------------------------
-void __fastcall TFindTextDlg::FindComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	switch (idx_of_word_i(_T("Ctrl+N|Ctrl+D|Ctrl+P|Ctrl+U|Ctrl+M|Ctrl+R|Ctrl+B"), get_KeyStr(Key, Shift))) {
-	case 0: case 1:
-		DownRadioBtn->Checked = true;
-		Repaint();  FindNextAction->Execute();
-		break;
-	case 2: case 3:
-		UpRadioBtn->Checked = true;
-		Repaint();  FindNextAction->Execute();
-		break;
-	case 4:
-		if (MigemoCheckBox->Enabled) MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
-		break;
-	case 5:
-		RegExCheckBox->Checked = !RegExCheckBox->Checked;
-		break;
-	case 6:
-		if (BinPanel->Visible) BytesCheckBox->Checked = !BytesCheckBox->Checked;
-		break;
-	default:
-		return;
-	}
-
-	KeyHandled = true;
-	Key = 0;
-}
-//---------------------------------------------------------------------------
-void __fastcall TFindTextDlg::FindComboBoxKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (KeyHandled) {
-		KeyHandled = false;
-		Key = 0;
-	}
 }
 
 //---------------------------------------------------------------------------
@@ -266,6 +242,45 @@ void __fastcall TFindTextDlg::FindComboBoxChange(TObject *Sender)
 	set_ErrColor(FindComboBox, regex_ng);
 }
 //---------------------------------------------------------------------------
+//検索文字列欄でのキー操作
+//---------------------------------------------------------------------------
+void __fastcall TFindTextDlg::FindComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	switch (idx_of_word_i(_T("Ctrl+N|Ctrl+D|Ctrl+P|Ctrl+U|Ctrl+M|Ctrl+R|Ctrl+B"), get_KeyStr(Key, Shift))) {
+	case 0: case 1:
+		DownRadioBtn->Checked = true;
+		Repaint();  FindNextAction->Execute();
+		break;
+	case 2: case 3:
+		UpRadioBtn->Checked = true;
+		Repaint();  FindNextAction->Execute();
+		break;
+	case 4:
+		if (MigemoCheckBox->Enabled) MigemoCheckBox->Checked = !MigemoCheckBox->Checked;
+		break;
+	case 5:
+		RegExCheckBox->Checked = !RegExCheckBox->Checked;
+		break;
+	case 6:
+		if (BinPanel->Visible) BytesCheckBox->Checked = !BytesCheckBox->Checked;
+		break;
+	default:
+		return;
+	}
+
+	KeyHandled = true;
+	Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TFindTextDlg::FindComboBoxKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (KeyHandled) {
+		KeyHandled = false;
+		Key = 0;
+	}
+}
+
+//---------------------------------------------------------------------------
 //検索
 //---------------------------------------------------------------------------
 void __fastcall TFindTextDlg::FindNextActionExecute(TObject *Sender)
@@ -301,22 +316,6 @@ void __fastcall TFindTextDlg::FindNextActionUpdate(TObject *Sender)
 
 	FindComboBox->Tag
 		= CBTAG_HISTORY | (FindComboBox->Focused()? CBTAG_RGEX_V : 0) | (RegExCheckBox->Checked? CBTAG_RGEX_E : 0);
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TFindTextDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CaseCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(RegExCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(MigemoCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+U")) UpRadioBtn->Checked 	   = true;
-	else if (USAME_TI(KeyStr, "Alt+D")) DownRadioBtn->Checked	   = true;
-	else if (USAME_TI(KeyStr, "Alt+B") && BinPanel->Visible)
-										invert_CheckBox(BytesCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+H")) invert_CheckBox(HighlightCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+X")) invert_CheckBox(CloseCheckBox);
-	else SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

@@ -105,6 +105,11 @@ void __fastcall TFindTagForm::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TFindTagForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+//---------------------------------------------------------------------------
 void __fastcall TFindTagForm::WmDpiChanged(TMessage &msg)
 {
 	TForm::Dispatch(&msg);
@@ -309,15 +314,6 @@ void __fastcall TFindTagForm::InfoListBoxDrawItem(TWinControl *Control, int Inde
 	draw_ListCursor(lp, Rect, Index, State);
 }
 //---------------------------------------------------------------------------
-void __fastcall TFindTagForm::InfoListBoxDblClick(TObject *Sender)
-{
-	int idx = InfoListBox->ItemIndex;
-	if (idx>=0 && idx<InfoListBox->Count) {
-		TagInfo = InfoListBox->Items->Strings[idx];
-		ModalResult = !TagInfo.IsEmpty()? mrOk : mrCancel;
-	}
-}
-//---------------------------------------------------------------------------
 //ファイル名一覧でのキー操作
 //---------------------------------------------------------------------------
 void __fastcall TFindTagForm::InfoListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -347,6 +343,15 @@ void __fastcall TFindTagForm::InfoListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 
 	if (handled) Key = 0;
 }
+//---------------------------------------------------------------------------
+void __fastcall TFindTagForm::InfoListBoxDblClick(TObject *Sender)
+{
+	int idx = InfoListBox->ItemIndex;
+	if (idx>=0 && idx<InfoListBox->Count) {
+		TagInfo = InfoListBox->Items->Strings[idx];
+		ModalResult = !TagInfo.IsEmpty()? mrOk : mrCancel;
+	}
+}
 
 //---------------------------------------------------------------------------
 //ビュアーでダイレクトタグジャンプ
@@ -371,7 +376,6 @@ void __fastcall TFindTagForm::PopupItemUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = (TagsListBox->ItemIndex!=-1);
 }
-
 //---------------------------------------------------------------------------
 //コピー
 //---------------------------------------------------------------------------
@@ -395,12 +399,6 @@ void __fastcall TFindTagForm::CopyActionUpdate(TObject *Sender)
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = TagsListBox->Focused();
 	ap->Enabled = ap->Visible;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TFindTagForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

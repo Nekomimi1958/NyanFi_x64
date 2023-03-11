@@ -62,15 +62,15 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioButton *DecRadioBtn;
 	TRadioButton *HexRadioBtn;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall OptionClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall InputEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall OptionClick(TObject *Sender);
 	void __fastcall SelDefCheckBoxClick(TObject *Sender);
-	void __fastcall InputComboBoxChange(TObject *Sender);
+	void __fastcall InputEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall InputEditKeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall InputComboBoxChange(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString HelpTopic;

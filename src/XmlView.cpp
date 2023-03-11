@@ -124,6 +124,15 @@ void __fastcall TXmlViewer::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TXmlViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Alt+A"))
+		AutoAction->Execute();
+	else
+		SpecialKeyProc(this, Key, Shift);
+}
+//---------------------------------------------------------------------------
 //ViewBusy プロパティ
 //---------------------------------------------------------------------------
 void __fastcall TXmlViewer::SetViewBusy(bool Value)
@@ -475,11 +484,80 @@ void __fastcall TXmlViewer::XmlTreeViewChange(TObject *Sender, TTreeNode *Node)
 	StatusBar1->Panels->Items[0]->Text = !ErrMsg.IsEmpty()? ErrMsg : GetXPath(Node);
 }
 //---------------------------------------------------------------------------
+//キー操作
+//---------------------------------------------------------------------------
+void __fastcall TXmlViewer::XmlTreeViewKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
+	UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
+
+	TTreeNode *sp = XmlTreeView->Selected;
+	//移動
+	if		(USAME_TI(cmd_F, "CursorDown") || USAME_TI(cmd_V, "CursorDown"))	perform_Key(XmlTreeView, VK_DOWN);
+	else if (USAME_TI(cmd_F, "CursorUp")   || USAME_TI(cmd_V, "CursorUp"))		perform_Key(XmlTreeView, VK_UP);
+	else if (USAME_TI(cmd_F, "PageDown")   || USAME_TI(cmd_V, "PageDown"))		perform_Key(XmlTreeView, VK_NEXT);
+	else if (USAME_TI(cmd_F, "PageUp")	   || USAME_TI(cmd_V, "PageUp"))		perform_Key(XmlTreeView, VK_PRIOR);
+	else if (USAME_TI(cmd_F, "CursorTop")  || USAME_TI(cmd_V, "TextTop"))		perform_Key(XmlTreeView, VK_HOME);
+	else if (USAME_TI(cmd_F, "CursorEnd")  || USAME_TI(cmd_V, "TextEnd"))		perform_Key(XmlTreeView, VK_END);
+
+	//開閉
+	else if (equal_ENTER(KeyStr)) {
+		if (sp) {
+			if (sp->HasChildren) {
+				if (sp->Expanded) {
+					sp->Expanded = false;
+				}
+				else {
+					TTreeNode *pp = sp->Parent;
+					if (pp && XmlTreeView->AutoExpand) {
+						ViewBusy = true;
+						XmlTreeView->LockDrawing();
+						for (int i=0; i<pp->Count; i++) {
+							TTreeNode *ip = pp->Item[i];
+							ip->Expanded = (ip==sp);
+						}
+						XmlTreeView->UnlockDrawing();
+						ViewBusy = false;
+					}
+					else {
+						sp->Expanded = true;
+					}
+				}
+			}
+			else OpenUrlAction->Execute();
+		}
+	}
+	//検索
+	else if (USAME_TI(cmd_F, "FindDown") || USAME_TI(KeyStr, "F3")) {
+		FindDownAction->Execute();
+	}
+	else if (USAME_TI(cmd_F, "FindUp")) {
+		FindUpAction->Execute();
+	}
+	else if (StartsText("IncSearch", cmd_F) || contained_wd_i(KeyStr_Filter, KeyStr)) {
+		FindEdit->SetFocus();
+	}
+	//閉じる
+	else if (USAME_TI(cmd_F, "ReturnList")) {
+		ModalResult = mrCancel;
+	}
+	else return;
+
+	ClearKeyBuff(true);
+	Key = 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TXmlViewer::XmlTreeViewKeyPress(TObject *Sender, System::WideChar &Key)
+{
+	if (_istalnum(Key) || Key==VK_SPACE || Key==VK_RETURN || is_KeyDown(VK_CONTROL)) Key = 0;
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TXmlViewer::XmlTreeViewHint(TObject *Sender, TTreeNode * const Node, UnicodeString &Hint)
 {
 	Hint = EmptyStr;
 }
-
 //---------------------------------------------------------------------------
 //ステータスバーの描画
 //---------------------------------------------------------------------------
@@ -684,76 +762,6 @@ void __fastcall TXmlViewer::AutoActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//キー操作
-//---------------------------------------------------------------------------
-void __fastcall TXmlViewer::XmlTreeViewKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
-	UnicodeString cmd_V  = Key_to_CmdV(KeyStr);
-
-	TTreeNode *sp = XmlTreeView->Selected;
-	//移動
-	if		(USAME_TI(cmd_F, "CursorDown") || USAME_TI(cmd_V, "CursorDown"))	perform_Key(XmlTreeView, VK_DOWN);
-	else if (USAME_TI(cmd_F, "CursorUp")   || USAME_TI(cmd_V, "CursorUp"))		perform_Key(XmlTreeView, VK_UP);
-	else if (USAME_TI(cmd_F, "PageDown")   || USAME_TI(cmd_V, "PageDown"))		perform_Key(XmlTreeView, VK_NEXT);
-	else if (USAME_TI(cmd_F, "PageUp")	   || USAME_TI(cmd_V, "PageUp"))		perform_Key(XmlTreeView, VK_PRIOR);
-	else if (USAME_TI(cmd_F, "CursorTop")  || USAME_TI(cmd_V, "TextTop"))		perform_Key(XmlTreeView, VK_HOME);
-	else if (USAME_TI(cmd_F, "CursorEnd")  || USAME_TI(cmd_V, "TextEnd"))		perform_Key(XmlTreeView, VK_END);
-
-	//開閉
-	else if (equal_ENTER(KeyStr)) {
-		if (sp) {
-			if (sp->HasChildren) {
-				if (sp->Expanded) {
-					sp->Expanded = false;
-				}
-				else {
-					TTreeNode *pp = sp->Parent;
-					if (pp && XmlTreeView->AutoExpand) {
-						ViewBusy = true;
-						XmlTreeView->LockDrawing();
-						for (int i=0; i<pp->Count; i++) {
-							TTreeNode *ip = pp->Item[i];
-							ip->Expanded = (ip==sp);
-						}
-						XmlTreeView->UnlockDrawing();
-						ViewBusy = false;
-					}
-					else {
-						sp->Expanded = true;
-					}
-				}
-			}
-			else OpenUrlAction->Execute();
-		}
-	}
-	//検索
-	else if (USAME_TI(cmd_F, "FindDown") || USAME_TI(KeyStr, "F3")) {
-		FindDownAction->Execute();
-	}
-	else if (USAME_TI(cmd_F, "FindUp")) {
-		FindUpAction->Execute();
-	}
-	else if (StartsText("IncSearch", cmd_F) || contained_wd_i(KeyStr_Filter, KeyStr)) {
-		FindEdit->SetFocus();
-	}
-	//閉じる
-	else if (USAME_TI(cmd_F, "ReturnList")) {
-		ModalResult = mrCancel;
-	}
-	else return;
-
-	ClearKeyBuff(true);
-	Key = 0;
-}
-//---------------------------------------------------------------------------
-void __fastcall TXmlViewer::XmlTreeViewKeyPress(TObject *Sender, System::WideChar &Key)
-{
-	if (_istalnum(Key) || Key==VK_SPACE || Key==VK_RETURN || is_KeyDown(VK_CONTROL)) Key = 0;
-}
-
-//---------------------------------------------------------------------------
 void __fastcall TXmlViewer::FindEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
@@ -773,16 +781,6 @@ void __fastcall TXmlViewer::FindEditKeyPress(TObject *Sender, System::WideChar &
 		KeyHandled = false;
 		Key = 0;
 	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TXmlViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+A"))
-		AutoAction->Execute();
-	else
-		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

@@ -44,6 +44,12 @@ void __fastcall TLoupeForm::FormHide(TObject *Sender)
 	if (!Floating) ShowLoupe = false;
 }
 //---------------------------------------------------------------------------
+void __fastcall TLoupeForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	Application->MainForm->SetFocus();
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TLoupeForm::FormEndDock(TObject *Sender, TObject *Target, int X, int Y)
 {
 	SetToolWinBorder(this, Floating);
@@ -141,12 +147,5 @@ void __fastcall TLoupeForm::ShowBtnActionUpdate(TObject *Sender)
 {
 	((TAction *)Sender)->Checked = OptPanel->Visible;
 }
-
-//---------------------------------------------------------------------------
-void __fastcall TLoupeForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	Application->MainForm->SetFocus();
-}
-
 //---------------------------------------------------------------------------
 

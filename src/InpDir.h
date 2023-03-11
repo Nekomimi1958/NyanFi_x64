@@ -32,20 +32,20 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *RefBtnPanel;
 	TPanel *TopPanel;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall RefDirBtnClick(TObject *Sender);
-	void __fastcall OkActionUpdate(TObject *Sender);
+	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall SubComboBoxClick(TObject *Sender);
-	void __fastcall SubComboBoxCloseUp(TObject *Sender);
-	void __fastcall InpDirComboBoxChange(TObject *Sender);
+	void __fastcall RefDirBtnClick(TObject *Sender);
 	void __fastcall InpDirComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall InpDirComboBoxKeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall InpDirComboBoxChange(TObject *Sender);
 	void __fastcall InpDirComboBoxSelect(TObject *Sender);
-	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall SubComboBoxClick(TObject *Sender);
+	void __fastcall SubComboBoxCloseUp(TObject *Sender);
+	void __fastcall OkActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool isWebSea;

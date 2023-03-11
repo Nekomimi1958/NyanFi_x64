@@ -100,6 +100,18 @@ void __fastcall TFuncListDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TFuncListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	//チェックボックスの疑似アクセラレータ処理
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+L")) LinkAction->Execute();
+	else if (USAME_TI(KeyStr, "Alt+N")) NameOnlyAction->Execute();
+	else if (USAME_TI(KeyStr, "Alt+M")) MigemoAction->Execute();
+	else if (USAME_TI(KeyStr, "Alt+R")) RegExAction->Execute();
+	else if (USAME_TI(KeyStr, "Alt+E")) ReqEditAction->Execute();
+	else SpecialKeyProc(this, Key, Shift, HelpContext);
+}
+//---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::ClearList()
 {
 	FunctionList->Clear();
@@ -445,16 +457,16 @@ void __fastcall TFuncListDlg::FuncListBoxKeyPress(TObject *Sender, System::WideC
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TFuncListDlg::FuncListBoxDblClick(TObject *Sender)
-{
-	CloseListAction->Execute();
-}
-//---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::FuncListBoxClick(TObject *Sender)
 {
 	if (LinkCheckBox->Checked) ToLine();
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TFuncListDlg::FuncListBoxDblClick(TObject *Sender)
+{
+	CloseListAction->Execute();
+}
 //---------------------------------------------------------------------------
 //フィルタによる一覧の更新
 //---------------------------------------------------------------------------
@@ -707,19 +719,6 @@ void __fastcall TFuncListDlg::LinkActionExecute(TObject *Sender)
 {
 	TAction *ap = (TAction *)Sender;
 	ap->Checked = !ap->Checked;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TFuncListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	//チェックボックスの疑似アクセラレータ処理
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+L")) LinkAction->Execute();
-	else if (USAME_TI(KeyStr, "Alt+N")) NameOnlyAction->Execute();
-	else if (USAME_TI(KeyStr, "Alt+M")) MigemoAction->Execute();
-	else if (USAME_TI(KeyStr, "Alt+R")) RegExAction->Execute();
-	else if (USAME_TI(KeyStr, "Alt+E")) ReqEditAction->Execute();
-	else SpecialKeyProc(this, Key, Shift, HelpContext);
 }
 //---------------------------------------------------------------------------
 

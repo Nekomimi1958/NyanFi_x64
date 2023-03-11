@@ -1123,6 +1123,42 @@ void __fastcall TOptionDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+bool __fastcall TOptionDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
+{
+	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
+		if (PageControl1->ActivePage==KeySetSheet && (CmdComboBox->Focused() || PrmComboBox->Focused())) {
+			UnicodeString topic;
+			switch (KeyTabControl->TabIndex) {
+			case 0: topic = HELPTOPIC_FL;	break;	//ファイラー
+			case 1: topic = HELPTOPIC_IS;	break;	//INC.サーチ
+			case 2: topic = HELPTOPIC_TV;	break;	//テキストビュアー
+			case 3: topic = HELPTOPIC_IV;	break;	//イメージビュアー
+			case 4: topic = HELPTOPIC_CILW;	break;	//ログ
+			}
+
+			UnicodeString kwd = get_tkn(CmdComboBox->Text, ' ');
+			if (topic.Pos('#')==0 && !kwd.IsEmpty() && !starts_Dollar(kwd))
+				topic.cat_sprintf(_T("#%s"), kwd.c_str());
+
+			HtmlHelpTopic(topic.c_str());
+		}
+		else {
+			HtmlHelpContext(Data);
+		}
+		CallHelp = false;
+	}
+	return true;
+}
+//---------------------------------------------------------------------------
+void __fastcall TOptionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Ctrl+F")) {
+		FindEdit->SetFocus();
+		Key = 0;
+	}
+}
+//---------------------------------------------------------------------------
 void __fastcall TOptionDlg::InitializeOptListBox()
 {
 	set_ListBoxItemHi(OptColListBox);
@@ -4780,46 +4816,6 @@ void __fastcall TOptionDlg::CanButtonClick(TObject *Sender)
 	//閉じる
 	else {
 		ModalResult = mrCancel;
-	}
-}
-
-//---------------------------------------------------------------------------
-//ヘルプ
-//---------------------------------------------------------------------------
-bool __fastcall TOptionDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
-{
-	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
-		if (PageControl1->ActivePage==KeySetSheet && (CmdComboBox->Focused() || PrmComboBox->Focused())) {
-			UnicodeString topic;
-			switch (KeyTabControl->TabIndex) {
-			case 0: topic = HELPTOPIC_FL;	break;	//ファイラー
-			case 1: topic = HELPTOPIC_IS;	break;	//INC.サーチ
-			case 2: topic = HELPTOPIC_TV;	break;	//テキストビュアー
-			case 3: topic = HELPTOPIC_IV;	break;	//イメージビュアー
-			case 4: topic = HELPTOPIC_CILW;	break;	//ログ
-			}
-
-			UnicodeString kwd = get_tkn(CmdComboBox->Text, ' ');
-			if (topic.Pos('#')==0 && !kwd.IsEmpty() && !starts_Dollar(kwd))
-				topic.cat_sprintf(_T("#%s"), kwd.c_str());
-
-			HtmlHelpTopic(topic.c_str());
-		}
-		else {
-			HtmlHelpContext(Data);
-		}
-		CallHelp = false;
-	}
-	return true;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TOptionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Ctrl+F")) {
-		FindEdit->SetFocus();
-		Key = 0;
 	}
 }
 //---------------------------------------------------------------------------

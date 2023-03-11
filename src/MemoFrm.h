@@ -52,25 +52,25 @@ __published:	// IDE で管理されるコンポーネント
 	TSpeedButton *HideOptBtn;
 	TSpeedButton *ShowOptBtn;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall FormResize(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall WebSearchActionExecute(TObject *Sender);
-	void __fastcall WebSearchActionUpdate(TObject *Sender);
+	void __fastcall MemoBoxChange(TObject *Sender);
+	void __fastcall ChgOptBtnClick(TObject *Sender);
+	void __fastcall UndoActionExecute(TObject *Sender);
+	void __fastcall UndoActionUpdate(TObject *Sender);
 	void __fastcall PasteActionExecute(TObject *Sender);
 	void __fastcall PasteActionUpdate(TObject *Sender);
-	void __fastcall ChgOptBtnClick(TObject *Sender);
-	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall DelLineActionExecute(TObject *Sender);
+	void __fastcall DelLineActionUpdate(TObject *Sender);
+	void __fastcall WebSearchActionExecute(TObject *Sender);
+	void __fastcall WebSearchActionUpdate(TObject *Sender);
 	void __fastcall ColBgItemClick(TObject *Sender);
 	void __fastcall ColFgItemClick(TObject *Sender);
 	void __fastcall ColDefItemClick(TObject *Sender);
-	void __fastcall UndoActionExecute(TObject *Sender);
-	void __fastcall UndoActionUpdate(TObject *Sender);
-	void __fastcall FormDestroy(TObject *Sender);
-	void __fastcall DelLineActionExecute(TObject *Sender);
-	void __fastcall DelLineActionUpdate(TObject *Sender);
-	void __fastcall MemoBoxChange(TObject *Sender);
-	void __fastcall FormResize(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool OptVisible;		//ボタンパネルの表示状態

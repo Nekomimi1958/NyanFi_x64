@@ -43,25 +43,25 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *SpBtn3;
 	TToolButton *ToDecBtn;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall LineEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall LineEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall HistComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall ToHexDecActionExecute(TObject *Sender);
-	void __fastcall ToHexDecActionUpdate(TObject *Sender);
-	void __fastcall AcBtnClick(TObject *Sender);
-	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall FormDestroy(TObject *Sender);
-	void __fastcall RefDefBtnClick(TObject *Sender);
-	void __fastcall RefDefItemClick(TObject *Sender);
-	void __fastcall NowBtnClick(TObject *Sender);
-	void __fastcall NotActionExecute(TObject *Sender);
 	void __fastcall AngleActionExecute(TObject *Sender);
 	void __fastcall AngleActionUpdate(TObject *Sender);
-	void __fastcall NotActionUpdate(TObject *Sender);
+	void __fastcall RefDefBtnClick(TObject *Sender);
+	void __fastcall RefDefItemClick(TObject *Sender);
 	void __fastcall EditDefActionExecute(TObject *Sender);
+	void __fastcall NowBtnClick(TObject *Sender);
+	void __fastcall ToHexDecActionExecute(TObject *Sender);
+	void __fastcall ToHexDecActionUpdate(TObject *Sender);
+	void __fastcall NotActionExecute(TObject *Sender);
+	void __fastcall NotActionUpdate(TObject *Sender);
+	void __fastcall AcBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	TStringList *ConstList;

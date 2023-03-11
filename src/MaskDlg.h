@@ -47,20 +47,20 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormResize(TObject *Sender);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall PathMaskHeaderResize(TObject *Sender);
+	void __fastcall PathMaskHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
+		const TRect &Rect, bool Pressed);
 	void __fastcall PathMaskHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
+	void __fastcall PathMaskListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall PathMaskListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall PathMaskListBoxClick(TObject *Sender);
+	void __fastcall PathMaskListBoxDblClick(TObject *Sender);
 	void __fastcall EditItemActionExecute(TObject *Sender);
 	void __fastcall EditItemActionUpdate(TObject *Sender);
 	void __fastcall AddItemActionExecute(TObject *Sender);
 	void __fastcall AddItemActionUpdate(TObject *Sender);
-	void __fastcall PathMaskListBoxClick(TObject *Sender);
-	void __fastcall PathMaskListBoxDblClick(TObject *Sender);
-	void __fastcall PathMaskListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall PathMaskHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-		const TRect &Rect, bool Pressed);
-	void __fastcall PathMaskHeaderResize(TObject *Sender);
 	void __fastcall ChgOptBtnClick(TObject *Sender);
-	void __fastcall PathMaskListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 
 private:	// ユーザー宣言
 	void __fastcall WmDpiChanged(TMessage &msg)

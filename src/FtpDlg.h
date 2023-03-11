@@ -70,25 +70,25 @@ __published:	// IDE で管理されるコンポーネント
 	TTabSheet *HostSheet;
 	TTabSheet *OptionSheet;
 
-	void __fastcall AddHostActionExecute(TObject *Sender);
-	void __fastcall HostItemActionUpdate(TObject *Sender);
-	void __fastcall ChgHostActionExecute(TObject *Sender);
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall HostListBoxClick(TObject *Sender);
-	void __fastcall ConnectActionExecute(TObject *Sender);
-	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall PageControl1DrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 	void __fastcall HostListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall ConnectActionUpdate(TObject *Sender);
-	void __fastcall AnonyCheckBoxClick(TObject *Sender);
-	void __fastcall HostListBoxDblClick(TObject *Sender);
+	void __fastcall HostListBoxClick(TObject *Sender);
 	void __fastcall HostListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall AnonyCheckBoxClick(TObject *Sender);
+	void __fastcall AddHostActionExecute(TObject *Sender);
+	void __fastcall ChgHostActionExecute(TObject *Sender);
+	void __fastcall HostItemActionUpdate(TObject *Sender);
 	void __fastcall RefDirBtnClick(TObject *Sender);
+	void __fastcall ConnectActionExecute(TObject *Sender);
+	void __fastcall ConnectActionUpdate(TObject *Sender);
+	void __fastcall HostListBoxDblClick(TObject *Sender);
 	void __fastcall RefSoundBtnClick(TObject *Sender);
 	void __fastcall TestSoundBtnClick(TObject *Sender);
-	void __fastcall PageControl1DrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 
 private:	// ユーザー宣言
 	TStringList *HostList;

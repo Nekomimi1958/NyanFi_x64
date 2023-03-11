@@ -35,18 +35,18 @@ __published:	// IDE で管理されるコンポーネント
 	TListBox *ItemListBox;
 	TPanel *Panel1;
 
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall ItemListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall AddItemActionExecute(TObject *Sender);
 	void __fastcall AddItemActionUpdate(TObject *Sender);
 	void __fastcall ChgItemActionExecute(TObject *Sender);
 	void __fastcall ChgItemActionUpdate(TObject *Sender);
-	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall SortItemActionExecute(TObject *Sender);
 	void __fastcall SortItemActionUpdate(TObject *Sender);
 	void __fastcall ItemListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall ItemListBoxClick(TObject *Sender);
-	void __fastcall FormShow(TObject *Sender);
-	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall ItemListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 
 private:	// ユーザー宣言
 	UnicodeString ItemDelimiter;

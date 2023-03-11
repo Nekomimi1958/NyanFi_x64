@@ -61,38 +61,9 @@ void __fastcall TBitmapForm::FormHide(TObject *Sender)
 	IniFile->WriteIntGen(_T("BitmapFormMapWidth"),	MapWidth);
 }
 //---------------------------------------------------------------------------
-//ファイルマップの描画
-//---------------------------------------------------------------------------
-void __fastcall TBitmapForm::FileMapBoxPaint(TObject *Sender)
+void __fastcall TBitmapForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if (UnInitializing) return;
-
-	TPaintBox *pp = (TPaintBox*)Sender;
-	std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
-	bmp->SetSize(pp->ClientWidth, pp->ClientHeight);
-	TCanvas *cv = bmp->Canvas;
-	TRect rc = pp->ClientRect;
-	cv->Brush->Color = col_bgPrgBar;
-	cv->FillRect(rc);
-
-	__int64 f_size = TxtViewer->BinFileSize;
-	if (f_size>0) {
-		int hi	  = pp->ClientHeight;
-		rc.Top	  = hi * (1.0*TxtViewer->TopAddress/f_size);
-		rc.Bottom = rc.Top + hi * (1.0*TxtViewer->BinarySize/f_size);
-		cv->Brush->Color = clLime;
-		cv->FillRect(rc);
-
-		unsigned int p = MapScrBox->VertScrollBar->Position;
-		__int64 adr0 = TxtViewer->TopAddress + p * MapWidth;
-		__int64 adr1 = TxtViewer->TopAddress + (p + MapScrBox->ClientHeight) * MapWidth;
-		rc.Top	  = hi * (1.0*adr0/f_size);
-		rc.Bottom = hi * (1.0*adr1/f_size);
-		cv->Brush->Color = clRed;
-		cv->FrameRect(rc);
-	}
-
-	pp->Canvas->Draw(0, 0, bmp.get());
+	Application->MainForm->SetFocus();
 }
 
 //---------------------------------------------------------------------------
@@ -130,6 +101,86 @@ void __fastcall TBitmapForm::BitmapBoxPaint(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TBitmapForm::BitmapBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
+{
+	__int64 adr = TxtViewer->TopAddress + Y*MapWidth + X;
+	if (adr>=TxtViewer->BinFileSize) adr = -1;
+	SttPanel->Caption = (adr!=-1)? " " + get_AddrStr(adr) : EmptyStr;
+}
+//---------------------------------------------------------------------------
+void __fastcall TBitmapForm::BitmapBoxMouseDown(TObject *Sender, TMouseButton Button,
+		TShiftState Shift, int X, int Y)
+{
+	if (Shift.Contains(ssLeft)) {
+		TxtViewer->ToAddrR(Y*MapWidth + X);
+		Application->MainForm->SetFocus();
+	}
+}
+//---------------------------------------------------------------------------
+//ファイルマップの描画
+//---------------------------------------------------------------------------
+void __fastcall TBitmapForm::FileMapBoxPaint(TObject *Sender)
+{
+	if (UnInitializing) return;
+
+	TPaintBox *pp = (TPaintBox*)Sender;
+	std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
+	bmp->SetSize(pp->ClientWidth, pp->ClientHeight);
+	TCanvas *cv = bmp->Canvas;
+	TRect rc = pp->ClientRect;
+	cv->Brush->Color = col_bgPrgBar;
+	cv->FillRect(rc);
+
+	__int64 f_size = TxtViewer->BinFileSize;
+	if (f_size>0) {
+		int hi	  = pp->ClientHeight;
+		rc.Top	  = hi * (1.0*TxtViewer->TopAddress/f_size);
+		rc.Bottom = rc.Top + hi * (1.0*TxtViewer->BinarySize/f_size);
+		cv->Brush->Color = clLime;
+		cv->FillRect(rc);
+
+		unsigned int p = MapScrBox->VertScrollBar->Position;
+		__int64 adr0 = TxtViewer->TopAddress + p * MapWidth;
+		__int64 adr1 = TxtViewer->TopAddress + (p + MapScrBox->ClientHeight) * MapWidth;
+		rc.Top	  = hi * (1.0*adr0/f_size);
+		rc.Bottom = hi * (1.0*adr1/f_size);
+		cv->Brush->Color = clRed;
+		cv->FrameRect(rc);
+	}
+
+	pp->Canvas->Draw(0, 0, bmp.get());
+}
+//---------------------------------------------------------------------------
+__int64 __fastcall TBitmapForm::GetMapAddr(int X, int Y)
+{
+	__int64 adr = -1;
+	__int64 f_size = TxtViewer->BinFileSize;
+	if (f_size>0) {
+		adr = f_size * (1.0*Y/FileMapBox->ClientHeight);
+		adr -= adr%16;
+		if (adr>=f_size) adr = -1;
+	}
+	return adr;
+}
+//---------------------------------------------------------------------------
+void __fastcall TBitmapForm::FileMapBoxMouseDown(TObject *Sender, TMouseButton Button,
+		TShiftState Shift, int X, int Y)
+{
+	if (Shift.Contains(ssLeft)) {
+		__int64 adr = GetMapAddr(X, Y);
+		if (adr!=-1) {
+			TxtViewer->AssignBin(adr, true);
+			TxtViewer->ToAddrR(0);
+		}
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TBitmapForm::FileMapBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
+{
+	__int64 adr = GetMapAddr(X, Y);
+	SttPanel->Caption = (adr!=-1)? " " + get_AddrStr(adr) : EmptyStr;
+}
+//---------------------------------------------------------------------------
 //ビットマップ幅の変更
 //---------------------------------------------------------------------------
 void __fastcall TBitmapForm::MapWidthActionExecute(TObject *Sender)
@@ -142,7 +193,6 @@ void __fastcall TBitmapForm::MapWidthActionUpdate(TObject *Sender)
 	TAction *ap = (TAction*)Sender;
 	ap->Checked = (ap->Tag == MapWidth);
 }
-
 //---------------------------------------------------------------------------
 //ビットマップ幅を設定
 //---------------------------------------------------------------------------
@@ -161,7 +211,6 @@ void __fastcall TBitmapForm::SetMapWidth(int w)
 	BitmapBox->ClientHeight = TxtViewer->BinarySize/MapWidth + 1;
 	MapScrBox->VertScrollBar->Position = 0;
 }
-
 //---------------------------------------------------------------------------
 //先頭アドレスをファイルの先頭に
 //---------------------------------------------------------------------------
@@ -200,7 +249,6 @@ void __fastcall TBitmapForm::SetNextAdrActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = TxtViewer->isContinue;
 }
-
 //---------------------------------------------------------------------------
 //終端アドレスをファイルの最後に
 //---------------------------------------------------------------------------
@@ -212,62 +260,6 @@ void __fastcall TBitmapForm::SetEndAdrActionExecute(TObject *Sender)
 void __fastcall TBitmapForm::SetEndAdrActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = TxtViewer->isContinue;
-}
-
-//---------------------------------------------------------------------------
-//マウス操作
-//---------------------------------------------------------------------------
-__int64 __fastcall TBitmapForm::GetMapAddr(int X, int Y)
-{
-	__int64 adr = -1;
-	__int64 f_size = TxtViewer->BinFileSize;
-	if (f_size>0) {
-		adr = f_size * (1.0*Y/FileMapBox->ClientHeight);
-		adr -= adr%16;
-		if (adr>=f_size) adr = -1;
-	}
-	return adr;
-}
-//---------------------------------------------------------------------------
-void __fastcall TBitmapForm::FileMapBoxMouseDown(TObject *Sender, TMouseButton Button,
-		TShiftState Shift, int X, int Y)
-{
-	if (Shift.Contains(ssLeft)) {
-		__int64 adr = GetMapAddr(X, Y);
-		if (adr!=-1) {
-			TxtViewer->AssignBin(adr, true);
-			TxtViewer->ToAddrR(0);
-		}
-	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TBitmapForm::FileMapBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
-{
-	__int64 adr = GetMapAddr(X, Y);
-	SttPanel->Caption = (adr!=-1)? " " + get_AddrStr(adr) : EmptyStr;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TBitmapForm::BitmapBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y)
-{
-	__int64 adr = TxtViewer->TopAddress + Y*MapWidth + X;
-	if (adr>=TxtViewer->BinFileSize) adr = -1;
-	SttPanel->Caption = (adr!=-1)? " " + get_AddrStr(adr) : EmptyStr;
-}
-//---------------------------------------------------------------------------
-void __fastcall TBitmapForm::BitmapBoxMouseDown(TObject *Sender, TMouseButton Button,
-		TShiftState Shift, int X, int Y)
-{
-	if (Shift.Contains(ssLeft)) {
-		TxtViewer->ToAddrR(Y*MapWidth + X);
-		Application->MainForm->SetFocus();
-	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TBitmapForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	Application->MainForm->SetFocus();
 }
 //---------------------------------------------------------------------------
 

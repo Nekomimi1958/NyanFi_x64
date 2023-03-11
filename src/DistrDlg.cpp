@@ -205,6 +205,11 @@ void __fastcall TDistributionDlg::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TDistributionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+//---------------------------------------------------------------------------
 //ステータスバーの描画
 //---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::StatusBar1DrawPanel(TStatusBar *StatusBar,
@@ -262,7 +267,6 @@ bool __fastcall TDistributionDlg::SaveDistrFile()
 	return false;
 }
 
-
 //---------------------------------------------------------------------------
 //プレビューのヘッダ
 //---------------------------------------------------------------------------
@@ -272,19 +276,19 @@ void __fastcall TDistributionDlg::PrvListHeaderDrawSection(THeaderControl *Heade
 	draw_SortHeader(HeaderControl, Section, Rect, (Section->Index==PrvSortMode)?  1 : 0, true, IsDarkMode);
 }
 //---------------------------------------------------------------------------
+void __fastcall TDistributionDlg::PrvListHeaderSectionResize(THeaderControl *HeaderControl,
+	THeaderSection *Section)
+{
+	PrvListHeader->Sections->Items[1]->Width = ClientWidth - PrvListHeader->Sections->Items[0]->Width;
+	PrvListBox->Invalidate();
+}
+//---------------------------------------------------------------------------
 void __fastcall TDistributionDlg::PrvListHeaderSectionClick(THeaderControl *HeaderControl,
 		THeaderSection *Section)
 {
 	PrvSortMode = Section->Index;
 	PrvListHeader->Invalidate();
 	DistrList->CustomSort((PrvSortMode==1)? DistrCmp_Dest : DistrCmp_Name);
-	PrvListBox->Invalidate();
-}
-//---------------------------------------------------------------------------
-void __fastcall TDistributionDlg::PrvListHeaderSectionResize(THeaderControl *HeaderControl,
-	THeaderSection *Section)
-{
-	PrvListHeader->Sections->Items[1]->Width = ClientWidth - PrvListHeader->Sections->Items[0]->Width;
 	PrvListBox->Invalidate();
 }
 
@@ -997,12 +1001,6 @@ void __fastcall TDistributionDlg::PrvListActionExecute(TObject *Sender)
 		ListSplitter->Visible = false;
 		ListListBox->Visible  = false;
 	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TDistributionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

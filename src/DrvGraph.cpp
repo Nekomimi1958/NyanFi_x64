@@ -98,6 +98,36 @@ void __fastcall TDriveGraph::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TDriveGraph::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+
+//---------------------------------------------------------------------------
+//ホイール操作
+//---------------------------------------------------------------------------
+void __fastcall TDriveGraph::FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
+	TPoint &MousePos, bool &Handled)
+{
+	//ズーム
+	if (SameText(get_ShiftStr(Shift), KeyStr_Ctrl)) {
+		int last_sz = BarSize;
+		if (WheelDelta<0 && BarSize>1)  --BarSize;
+		if (WheelDelta>0 && BarSize<16) ++BarSize;
+		if (BarSize!=last_sz) {
+			SizeComboBox->ItemIndex = BarSize - 1;
+			SizeComboBoxChange(NULL);
+		}
+	}
+	//スクロール
+	else {
+		GraphScrollBox->VertScrollBar->Position -= Sign(WheelDelta) * (std::max(BarSize*4, 8));
+	}
+
+	Handled = true;
+}
+
+//---------------------------------------------------------------------------
 //描画
 //---------------------------------------------------------------------------
 void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
@@ -324,36 +354,6 @@ void __fastcall TDriveGraph::HiddenEditEnterExit(TObject *Sender)
 {
 	HiddenEdit->Text = EmptyStr;
 	PaintBox1->Invalidate();
-}
-
-//---------------------------------------------------------------------------
-//ホイール操作
-//---------------------------------------------------------------------------
-void __fastcall TDriveGraph::FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
-	TPoint &MousePos, bool &Handled)
-{
-	//ズーム
-	if (SameText(get_ShiftStr(Shift), KeyStr_Ctrl)) {
-		int last_sz = BarSize;
-		if (WheelDelta<0 && BarSize>1)  --BarSize;
-		if (WheelDelta>0 && BarSize<16) ++BarSize;
-		if (BarSize!=last_sz) {
-			SizeComboBox->ItemIndex = BarSize - 1;
-			SizeComboBoxChange(NULL);
-		}
-	}
-	//スクロール
-	else {
-		GraphScrollBox->VertScrollBar->Position -= Sign(WheelDelta) * (std::max(BarSize*4, 8));
-	}
-
-	Handled = true;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TDriveGraph::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

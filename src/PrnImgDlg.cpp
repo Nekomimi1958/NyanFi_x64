@@ -84,6 +84,12 @@ void __fastcall TPrintImgDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	delete StrFont;
 }
 //---------------------------------------------------------------------------
+void __fastcall TPrintImgDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_IV) _T("#Print"));
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TPrintImgDlg::PageControl1DrawTab(TCustomTabControl *Control,
 	int TabIndex, const TRect &Rect, bool Active)
 {
@@ -385,12 +391,6 @@ void __fastcall TPrintImgDlg::EndBtnClick(TObject *Sender)
 {
 	NyanFiForm->EndFileAction->Execute();
 	if (isViewIcon || isViewAGif) ClearPreview();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TPrintImgDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_IV) _T("#Print"));
 }
 //---------------------------------------------------------------------------
 

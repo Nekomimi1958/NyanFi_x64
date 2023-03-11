@@ -149,12 +149,13 @@ void __fastcall TCmdFileListDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//ヘッダの描画
-//---------------------------------------------------------------------------
-void __fastcall TCmdFileListDlg::CmdFileHeaderDrawSection(THeaderControl *HeaderControl,
-	THeaderSection *Section, const TRect &Rect, bool Pressed)
+void __fastcall TCmdFileListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	draw_SortHeader(HeaderControl, Section, Rect);
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Alt+E"))
+		ReqEditAction->Execute();
+	else
+		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::CmdFileHeaderResize(TObject *Sender)
@@ -169,6 +170,14 @@ void __fastcall TCmdFileListDlg::CmdFileHeaderSectionResize(THeaderControl *Head
 	GridScrPanel->UpdateKnob();
 }
 
+//---------------------------------------------------------------------------
+//ヘッダの描画
+//---------------------------------------------------------------------------
+void __fastcall TCmdFileListDlg::CmdFileHeaderDrawSection(THeaderControl *HeaderControl,
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
+{
+	draw_SortHeader(HeaderControl, Section, Rect);
+}
 //---------------------------------------------------------------------------
 //選択用に表示
 //---------------------------------------------------------------------------
@@ -599,20 +608,6 @@ void __fastcall TCmdFileListDlg::PreviewListBoxDrawItem(TWinControl *Control, in
 		4, NULL, false, "*.nbt");
 }
 //---------------------------------------------------------------------------
-void __fastcall TCmdFileListDlg::PreviewActionExecute(TObject *Sender)
-{
-	TAction *ap = (TAction *)Sender;
-	ap->Checked = !ap->Checked;
-	if (ap->Checked) {
-		PreviewSplitter->Align = alTop;
-		PreviewPanel->Align    = alBottom;
-		PreviewSplitter->Align = alBottom;
-	}
-	PreviewPanel->Visible	 = ap->Checked;
-	PreviewSplitter->Visible = ap->Checked;
-}
-
-//---------------------------------------------------------------------------
 //プレビュー/参照情報でのキー操作
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::PreviewListBoxKeyDown(TObject *Sender, WORD &Key,
@@ -630,6 +625,19 @@ void __fastcall TCmdFileListDlg::PreviewListBoxKeyDown(TObject *Sender, WORD &Ke
 	else if (contained_wd_i(KeysStr_ToList, KeyStr)) {
 		CmdFileGrid->SetFocus();
 	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TCmdFileListDlg::PreviewActionExecute(TObject *Sender)
+{
+	TAction *ap = (TAction *)Sender;
+	ap->Checked = !ap->Checked;
+	if (ap->Checked) {
+		PreviewSplitter->Align = alTop;
+		PreviewPanel->Align    = alBottom;
+		PreviewSplitter->Align = alBottom;
+	}
+	PreviewPanel->Visible	 = ap->Checked;
+	PreviewSplitter->Visible = ap->Checked;
 }
 
 //---------------------------------------------------------------------------
@@ -697,16 +705,6 @@ void __fastcall TCmdFileListDlg::ReqEditActionExecute(TObject *Sender)
 void __fastcall TCmdFileListDlg::ReqEditActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = !ToSelect;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TCmdFileListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+E"))
-		ReqEditAction->Execute();
-	else
-		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

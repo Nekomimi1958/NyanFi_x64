@@ -44,19 +44,19 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormHide(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
-	void __fastcall RecordHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
-	void __fastcall RecordGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
-	void __fastcall TopIsHeaderCheckBoxClick(TObject *Sender);
-	void __fastcall CopyItemClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall RecordHeaderResize(TObject *Sender);
+	void __fastcall RecordHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
 	void __fastcall RecordHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
 		const TRect &Rect, bool Pressed);
-	void __fastcall RecordHeaderResize(TObject *Sender);
-	void __fastcall CalcBtnClick(TObject *Sender);
+	void __fastcall RecordGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall RecordGridClick(TObject *Sender);
-	void __fastcall GraphBtnClick(TObject *Sender);
+	void __fastcall TopIsHeaderCheckBoxClick(TObject *Sender);
+	void __fastcall CopyItemClick(TObject *Sender);
 	void __fastcall OpenUrlActionExecute(TObject *Sender);
 	void __fastcall OpenUrlActionUpdate(TObject *Sender);
+	void __fastcall CalcBtnClick(TObject *Sender);
+	void __fastcall GraphBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString HeaderStr;

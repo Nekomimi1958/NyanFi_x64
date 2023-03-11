@@ -119,6 +119,21 @@ void __fastcall TNetShareDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TNetShareDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString topic = HELPTOPIC_FL;
+	if		(isShare)				topic += "#ShareList";
+	else if (isSelDir && isSelSub)	topic += "#SubDirList";
+	else if (isLibrary)				topic += "#Library";
+	else							topic = EmptyStr;
+
+	if (!topic.IsEmpty())
+		SpecialKeyProc(this, Key, Shift, topic.c_str());
+	else
+		SpecialKeyProc(this, Key, Shift);
+}
+
+//---------------------------------------------------------------------------
 //共有フォルダ一覧の取得
 //---------------------------------------------------------------------------
 NET_API_STATUS __fastcall TNetShareDlg::GetShareList(
@@ -562,21 +577,6 @@ void __fastcall TNetShareDlg::CopyPathAllActionUpdate(TObject *Sender)
 	TAction *ap = (TAction *)Sender;
 	ap->Visible = isSelSub;
 	ap->Enabled = ap->Visible && (ShareListBox->Count>0);
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TNetShareDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString topic = HELPTOPIC_FL;
-	if		(isShare)				topic += "#ShareList";
-	else if (isSelDir && isSelSub)	topic += "#SubDirList";
-	else if (isLibrary)				topic += "#Library";
-	else							topic = EmptyStr;
-
-	if (!topic.IsEmpty())
-		SpecialKeyProc(this, Key, Shift, topic.c_str());
-	else
-		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

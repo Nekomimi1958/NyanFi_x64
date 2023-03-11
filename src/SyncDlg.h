@@ -43,21 +43,21 @@ __published:	// IDE で管理されるコンポーネント
 	TPanel *OptPanel;
 
 	void __fastcall FormShow(TObject *Sender);
-	void __fastcall RegListBoxClick(TObject *Sender);
-	void __fastcall OkButtonClick(TObject *Sender);
 	void __fastcall RegListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall DirListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall RegListBoxClick(TObject *Sender);
+	void __fastcall SyncListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall RegListBoxClickCheck(TObject *Sender);
 	void __fastcall AddRegActionExecute(TObject *Sender);
 	void __fastcall AddRegActionUpdate(TObject *Sender);
-	void __fastcall DelRegActionExecute(TObject *Sender);
 	void __fastcall ChgRegActionExecute(TObject *Sender);
 	void __fastcall ChgRegActionUpdate(TObject *Sender);
+	void __fastcall DelRegActionExecute(TObject *Sender);
 	void __fastcall AddDirActionExecute(TObject *Sender);
 	void __fastcall DelDirActionExecute(TObject *Sender);
 	void __fastcall DelDirActionUpdate(TObject *Sender);
-	void __fastcall DirListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall RegListBoxClickCheck(TObject *Sender);
-	void __fastcall SyncListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall ClrDirActionExecute(TObject *Sender);
+	void __fastcall OkButtonClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString InitDir;

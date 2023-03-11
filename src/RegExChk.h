@@ -56,19 +56,19 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall ReferListBoxDblClick(TObject *Sender);
+	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall TestActionExecute(TObject *Sender);
 	void __fastcall TestActionUpdate(TObject *Sender);
 	void __fastcall ReplaceActionExecute(TObject *Sender);
 	void __fastcall ReplaceActionUpdate(TObject *Sender);
-	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall PasteActionExecute(TObject *Sender);
 	void __fastcall PasteActionUpdate(TObject *Sender);
 	void __fastcall CopyActionExecute(TObject *Sender);
 	void __fastcall CopyActionUpdate(TObject *Sender);
-	void __fastcall ResListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall ReferListBoxDblClick(TObject *Sender);
 	void __fastcall RefFileBtnClick(TObject *Sender);
+	void __fastcall ResListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 
 private:	// ユーザー宣言
 	int PtnSelStart;

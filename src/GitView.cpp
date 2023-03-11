@@ -122,6 +122,15 @@ void __fastcall TGitViewer::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TGitViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "F5"))
+		UpdateLogAction->Execute();
+	else
+		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_GIT) _T("#GitViewer"));
+}
+//---------------------------------------------------------------------------
 void __fastcall TGitViewer::BranchPanelResize(TObject *Sender)
 {
 	BranchScrPanel->UpdateKnob();
@@ -1043,6 +1052,11 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 	draw_ListCursor2(lp, Rect, Index, State);
 }
 //---------------------------------------------------------------------------
+void __fastcall TGitViewer::DiffListBoxEnter(TObject *Sender)
+{
+	DiffListBoxClick(NULL);
+}
+//---------------------------------------------------------------------------
 void __fastcall TGitViewer::DiffListBoxClick(TObject *Sender)
 {
 	TListBox *d_lp = DiffListBox;
@@ -1060,11 +1074,6 @@ void __fastcall TGitViewer::DiffListBoxClick(TObject *Sender)
 		if (!found) idx = LastDfListIdx;
 		d_lp->ItemIndex = LastDfListIdx = idx;
 	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TGitViewer::DiffListBoxEnter(TObject *Sender)
-{
-	DiffListBoxClick(NULL);
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -1331,6 +1340,11 @@ void __fastcall TGitViewer::ArchiveActionExecute(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
+void __fastcall TGitViewer::ArchiveActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Visible = !CommitID.IsEmpty();
+}
+//---------------------------------------------------------------------------
 //一時アーカイブとして開く
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::OpenTmpArcActionExecute(TObject *Sender)
@@ -1344,11 +1358,6 @@ void __fastcall TGitViewer::OpenTmpArcActionExecute(TObject *Sender)
 			ModalResult = mrOk;
 		}
 	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TGitViewer::ArchiveActionUpdate(TObject *Sender)
-{
-	((TAction *)Sender)->Visible = !CommitID.IsEmpty();
 }
 
 //---------------------------------------------------------------------------
@@ -1943,16 +1952,6 @@ void __fastcall TGitViewer::SelConsoleItemClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TGitViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "F5"))
-		UpdateLogAction->Execute();
-	else
-		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_GIT) _T("#GitViewer"));
-}
-
-//---------------------------------------------------------------------------
 //追加
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::AddActionExecute(TObject *Sender)
@@ -2037,6 +2036,21 @@ void __fastcall TGitViewer::ResetAllActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//コミット
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::CommitActionExecute(TObject *Sender)
+{
+	if (!SetGitTagDlg) SetGitTagDlg = new TSetGitTagDlg(this);	//初回に動的作成
+	SetGitTagDlg->IsCommit	 = true;
+	SetGitTagDlg->EditMsgFile = IncludeTrailingPathDelimiter(WorkDir) + ".git\\COMMIT_EDITMSG";
+	if (SetGitTagDlg->ShowModal() == mrOk) GitExeStr(SetGitTagDlg->GitParam);
+}
+//---------------------------------------------------------------------------
+void __fastcall TGitViewer::CommitActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Enabled = Staged;
+}
+//---------------------------------------------------------------------------
 //待避
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::StashActionExecute(TObject *Sender)
@@ -2093,22 +2107,6 @@ void __fastcall TGitViewer::StashPopActionUpdate(TObject *Sender)
 	TAction *ap = (TAction *)Sender;
 	ap->Visible = !StashName.IsEmpty();
 	ap->Enabled = ap->Visible;
-}
-
-//---------------------------------------------------------------------------
-//コミット
-//---------------------------------------------------------------------------
-void __fastcall TGitViewer::CommitActionExecute(TObject *Sender)
-{
-	if (!SetGitTagDlg) SetGitTagDlg = new TSetGitTagDlg(this);	//初回に動的作成
-	SetGitTagDlg->IsCommit	 = true;
-	SetGitTagDlg->EditMsgFile = IncludeTrailingPathDelimiter(WorkDir) + ".git\\COMMIT_EDITMSG";
-	if (SetGitTagDlg->ShowModal() == mrOk) GitExeStr(SetGitTagDlg->GitParam);
-}
-//---------------------------------------------------------------------------
-void __fastcall TGitViewer::CommitActionUpdate(TObject *Sender)
-{
-	((TAction *)Sender)->Enabled = Staged;
 }
 //---------------------------------------------------------------------------
 

@@ -71,12 +71,9 @@ void __fastcall TCsvRecForm::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//ƒwƒbƒ_‚Ì•`‰æ
-//---------------------------------------------------------------------------
-void __fastcall TCsvRecForm::RecordHeaderDrawSection(THeaderControl *HeaderControl,
-		THeaderSection *Section, const TRect &Rect, bool Pressed)
+void __fastcall TCsvRecForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	draw_SortHeader(HeaderControl, Section, Rect);
+	if (Key==VK_ESCAPE) Close(); else Application->MainForm->SetFocus();
 }
 //---------------------------------------------------------------------------
 void __fastcall TCsvRecForm::RecordHeaderResize(TObject *Sender)
@@ -88,6 +85,14 @@ void __fastcall TCsvRecForm::RecordHeaderSectionResize(THeaderControl *HeaderCon
 		THeaderSection *Section)
 {
 	set_GridFromHeader(RecordHeader, RecordGrid);
+}
+//---------------------------------------------------------------------------
+//ƒwƒbƒ_‚Ì•`‰æ
+//---------------------------------------------------------------------------
+void __fastcall TCsvRecForm::RecordHeaderDrawSection(THeaderControl *HeaderControl,
+		THeaderSection *Section, const TRect &Rect, bool Pressed)
+{
+	draw_SortHeader(HeaderControl, Section, Rect);
 }
 
 //---------------------------------------------------------------------------
@@ -256,12 +261,6 @@ void __fastcall TCsvRecForm::GraphBtnClick(TObject *Sender)
 	GraphForm->TopIsHeader = TopIsHeaderCheckBox->Checked;
 	GraphForm->CsvCol	   = ItemIndex;
 	GraphForm->ShowModal();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TCsvRecForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (Key==VK_ESCAPE) Close(); else Application->MainForm->SetFocus();
 }
 //---------------------------------------------------------------------------
 

@@ -50,15 +50,14 @@ void __fastcall TCvTxtEncDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	TitleInf = EmptyStr;
 }
 //---------------------------------------------------------------------------
-void __fastcall TCvTxtEncDlg::OutCodeComboBoxClick(TObject *Sender)
-{
-	BomCheckBox->Enabled = OutCodeComboBox->Text.Pos("UTF");
-}
-
-//---------------------------------------------------------------------------
 void __fastcall TCvTxtEncDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#ConvertTextEnc"));
+}
+//---------------------------------------------------------------------------
+void __fastcall TCvTxtEncDlg::OutCodeComboBoxClick(TObject *Sender)
+{
+	BomCheckBox->Enabled = OutCodeComboBox->Text.Pos("UTF");
 }
 //---------------------------------------------------------------------------
 

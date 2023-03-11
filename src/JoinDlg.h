@@ -41,13 +41,13 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall JoinActionUpdate(TObject *Sender);
-	void __fastcall SrcFileListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall SrcFileListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall SrcFileListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall RefTpltBtnClick(TObject *Sender);
 	void __fastcall EditTmpltActionExecute(TObject *Sender);
 	void __fastcall EditTmpltActionUpdate(TObject *Sender);
-	void __fastcall SrcFileListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall JoinActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	void __fastcall WmDpiChanged(TMessage &msg)

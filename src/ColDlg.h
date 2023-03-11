@@ -39,22 +39,22 @@ __published:	// IDE で管理されるコンポーネント
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
+	bool __fastcall FormHelp(WORD Command, NativeInt Data, bool &CallHelp);
 	void __fastcall ColorListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall RefColBtnClick(TObject *Sender);
+	void __fastcall SpuitImageMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
+	void __fastcall SpuitImageMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall InportBtnClick(TObject *Sender);
 	void __fastcall ExportBtnClick(TObject *Sender);
 	void __fastcall OptApplyBtnClick(TObject *Sender);
 	void __fastcall ApplyBtnClick(TObject *Sender);
-	void __fastcall SpuitImageMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
-	void __fastcall SpuitImageMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
-	void __fastcall CancelBtnClick(TObject *Sender);
 	void __fastcall OkActionExecute(TObject *Sender);
 	void __fastcall OkActionUpdate(TObject *Sender);
+	void __fastcall CancelBtnClick(TObject *Sender);
 	void __fastcall DisableColActionExecute(TObject *Sender);
 	void __fastcall DisableColActionUpdate(TObject *Sender);
-	bool __fastcall FormHelp(WORD Command, NativeInt Data, bool &CallHelp);
-	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 
 private:	// ユーザー宣言
 	TStringList *ColBufList;

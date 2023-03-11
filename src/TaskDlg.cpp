@@ -68,13 +68,11 @@ void __fastcall TTaskManDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//ƒwƒbƒ_‚Ì•`‰æ
-//---------------------------------------------------------------------------
-void __fastcall TTaskManDlg::TaskHeaderDrawSection(THeaderControl *HeaderControl,
-	THeaderSection *Section, const TRect &Rect, bool Pressed)
+void __fastcall TTaskManDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	draw_SortHeader(HeaderControl, Section, Rect);
+	SpecialKeyProc(this, Key, Shift);
 }
+
 //---------------------------------------------------------------------------
 void __fastcall TTaskManDlg::TaskHeaderResize(TObject *Sender)
 {
@@ -87,6 +85,14 @@ void __fastcall TTaskManDlg::TaskHeaderSectionResize(THeaderControl *HeaderContr
 	set_GridFromHeader(TaskHeader, TaskGrid);
 
 	GridScrPanel->UpdateKnob();
+}
+//---------------------------------------------------------------------------
+//ƒwƒbƒ_‚Ì•`‰æ
+//---------------------------------------------------------------------------
+void __fastcall TTaskManDlg::TaskHeaderDrawSection(THeaderControl *HeaderControl,
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
+{
+	draw_SortHeader(HeaderControl, Section, Rect);
 }
 
 //---------------------------------------------------------------------------
@@ -399,12 +405,6 @@ void __fastcall TTaskManDlg::ExtStartActionUpdate(TObject *Sender)
 {
 	int idx = TaskGrid->Row - get_MaxTaskCount();
 	((TAction*)Sender)->Enabled = has_EmptyTask(true) && idx>=0 && idx<TaskReserveList->Count;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TTaskManDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

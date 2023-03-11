@@ -45,8 +45,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormResize(TObject *Sender);
 	void __fastcall Image1Click(TObject *Sender);
 	void __fastcall FormClick(TObject *Sender);
-	void __fastcall BgColItemClick(TObject *Sender);
 	void __fastcall PopupMenu1Popup(TObject *Sender);
+	void __fastcall BgColItemClick(TObject *Sender);
 	void __fastcall LockItemClick(TObject *Sender);
 	void __fastcall RotateActionExecute(TObject *Sender);
 	void __fastcall RotateActionUpdate(TObject *Sender);

@@ -63,32 +63,32 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall CmdFileHeaderResize(TObject *Sender);
 	void __fastcall CmdFileHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
+	void __fastcall CmdFileHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
+		const TRect &Rect, bool Pressed);
+	void __fastcall CmdFileGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
+	void __fastcall FilterBtnClick(TObject *Sender);
 	void __fastcall FilterEditEnter(TObject *Sender);
 	void __fastcall FilterEditExit(TObject *Sender);
 	void __fastcall FilterEditChange(TObject *Sender);
 	void __fastcall FilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall CmdFileGridDblClick(TObject *Sender);
-	void __fastcall CmdFileGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall CmdFileGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall FilterEditKeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall OkBtnClick(TObject *Sender);
+	void __fastcall MigemoActionExecute(TObject *Sender);
+	void __fastcall CnfExeActionExecute(TObject *Sender);
+	void __fastcall CmdFileGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall CmdFileGridDblClick(TObject *Sender);
 	void __fastcall CmdFileGridClick(TObject *Sender);
 	void __fastcall PreviewListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall ReferListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall EditCopyActionExecute(TObject *Sender);
-	void __fastcall EditCopyActionUpdate(TObject *Sender);
-	void __fastcall EditSelectAllActionExecute(TObject *Sender);
 	void __fastcall PreviewListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall PreviewActionExecute(TObject *Sender);
+	void __fastcall ReferListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall OkBtnClick(TObject *Sender);
+	void __fastcall EditCopyActionExecute(TObject *Sender);
+	void __fastcall EditSelectAllActionExecute(TObject *Sender);
+	void __fastcall EditCopyActionUpdate(TObject *Sender);
 	void __fastcall ReqEditActionExecute(TObject *Sender);
 	void __fastcall ReqEditActionUpdate(TObject *Sender);
-	void __fastcall CmdFileHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-		const TRect &Rect, bool Pressed);
-	void __fastcall CmdFileHeaderResize(TObject *Sender);
-	void __fastcall MigemoActionExecute(TObject *Sender);
-	void __fastcall PreviewActionExecute(TObject *Sender);
-	void __fastcall CnfExeActionExecute(TObject *Sender);
-	void __fastcall FilterBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	TStringList *GridItemList;

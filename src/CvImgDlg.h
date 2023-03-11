@@ -55,12 +55,12 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CvFmtRadioGroupClick(TObject *Sender);
 	void __fastcall ImgQTrackBarChange(TObject *Sender);
-	void __fastcall ScaleModeComboBoxChange(TObject *Sender);
-	void __fastcall RefMgnColBtnClick(TObject *Sender);
-	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall GrayScaleCheckBoxClick(TObject *Sender);
+	void __fastcall RefMgnColBtnClick(TObject *Sender);
+	void __fastcall ScaleModeComboBoxChange(TObject *Sender);
 	void __fastcall ClipNameComboBoxChange(TObject *Sender);
 
 private:	// ユーザー宣言

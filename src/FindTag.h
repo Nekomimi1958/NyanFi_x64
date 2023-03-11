@@ -42,23 +42,23 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
-	void __fastcall TagsListBoxDblClick(TObject *Sender);
-	void __fastcall TagsListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall TagsListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall TagsListBoxKeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall TagsListBoxData(TWinControl *Control, int Index, UnicodeString &Data);
-	void __fastcall TagViewActionExecute(TObject *Sender);
-	void __fastcall PopupItemUpdate(TObject *Sender);
-	void __fastcall TagJumpActionExecute(TObject *Sender);
-	void __fastcall CopyActionExecute(TObject *Sender);
-	void __fastcall SelAllActionExecute(TObject *Sender);
 	void __fastcall InpPaintBoxPaint(TObject *Sender);
+	void __fastcall TagsListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall TagsListBoxData(TWinControl *Control, int Index, UnicodeString &Data);
 	void __fastcall TagsListBoxDataObject(TWinControl *Control, int Index, TObject *&DataObject);
 	void __fastcall TagsListBoxClick(TObject *Sender);
+	void __fastcall TagsListBoxDblClick(TObject *Sender);
+	void __fastcall TagsListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall TagsListBoxKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall InfoListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall InfoListBoxDblClick(TObject *Sender);
 	void __fastcall InfoListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall InfoListBoxDblClick(TObject *Sender);
+	void __fastcall TagViewActionExecute(TObject *Sender);
+	void __fastcall TagJumpActionExecute(TObject *Sender);
+	void __fastcall PopupItemUpdate(TObject *Sender);
+	void __fastcall CopyActionExecute(TObject *Sender);
+	void __fastcall SelAllActionExecute(TObject *Sender);
 	void __fastcall CopyActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言

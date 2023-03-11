@@ -42,26 +42,26 @@ __published:	// IDE で管理されるコンポーネント
 	TLabeledEdit *IconEdit;
 	TListBox *BtnListBox;
 
-	void __fastcall FormShow(TObject *Sender);
-	void __fastcall BtnListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall BtnListBoxClick(TObject *Sender);
-	void __fastcall RefCmdsBtnClick(TObject *Sender);
-	void __fastcall EditFileActionExecute(TObject *Sender);
-	void __fastcall EditFileActionUpdate(TObject *Sender);
-	void __fastcall AddBtnActionExecute(TObject *Sender);
-	void __fastcall AddBtnActionUpdate(TObject *Sender);
-	void __fastcall ChgBtnActionExecute(TObject *Sender);
-	void __fastcall ChgBtnActionUpdate(TObject *Sender);
-	void __fastcall OkButtonClick(TObject *Sender);
-	void __fastcall RefIconBtnClick(TObject *Sender);
-	void __fastcall IconEditChange(TObject *Sender);
-	void __fastcall BtnListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall InsBtnActionExecute(TObject *Sender);
-	void __fastcall BtnCmdsComboBoxChange(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormResize(TObject *Sender);
 	bool __fastcall FormHelp(WORD Command, NativeInt Data, bool &CallHelp);
+	void __fastcall OkButtonClick(TObject *Sender);
+	void __fastcall BtnCmdsComboBoxChange(TObject *Sender);
+	void __fastcall RefCmdsBtnClick(TObject *Sender);
+	void __fastcall RefIconBtnClick(TObject *Sender);
+	void __fastcall IconEditChange(TObject *Sender);
+	void __fastcall EditFileActionExecute(TObject *Sender);
+	void __fastcall EditFileActionUpdate(TObject *Sender);
+	void __fastcall BtnListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall BtnListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall BtnListBoxClick(TObject *Sender);
+	void __fastcall AddBtnActionExecute(TObject *Sender);
+	void __fastcall AddBtnActionUpdate(TObject *Sender);
+	void __fastcall InsBtnActionExecute(TObject *Sender);
+	void __fastcall ChgBtnActionExecute(TObject *Sender);
+	void __fastcall ChgBtnActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	void __fastcall WmDpiChanged(TMessage &msg)

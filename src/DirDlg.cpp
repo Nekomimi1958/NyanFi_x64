@@ -233,6 +233,17 @@ void __fastcall TRegDirDlg::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (!IsSpecial && USAME_TI(get_KeyStr(Key, Shift), "Alt+O")) {
+		ChgOptBtnClick(NULL);
+	}
+	else {
+		SpecialKeyProc(this, Key, Shift,
+			IsSpecial? _T(HELPTOPIC_FL) _T("#SpecialDirList") : _T("hid00054.htm"));
+	}
+}
+//---------------------------------------------------------------------------
 //特殊フォルダ一覧の更新
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
@@ -427,6 +438,148 @@ UnicodeString __fastcall TRegDirDlg::GetCurDirItem(
 }
 
 //---------------------------------------------------------------------------
+//項目の描画
+//---------------------------------------------------------------------------
+void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Index,
+	TRect &Rect, TOwnerDrawState State)
+{
+	if (ModalResult!=mrNone) return;
+
+	THeaderSections *sp = RegDirHeader->Sections;
+	TListBox *lp = (TListBox*)Control;
+	TCanvas  *cv = lp->Canvas;
+	cv->Font->Assign(lp->Font);
+	bool is_irreg  = IsIrregularFont(cv->Font);
+	TColor adj_col = AdjustColor(col_Folder, ADJCOL_LIGHT);
+
+	cv->Brush->Color = col_bgList;
+	cv->FillRect(Rect);
+
+	TRect rc = Rect;
+	if (ScrBarStyle>0) {
+		rc.SetWidth(ListScrPanel->ParentPanel->Width);
+		if (ListScrPanel->VisibleV) rc.Right -= (ListScrPanel->KnobWidth - 1);
+	}
+
+	UnicodeString lbuf = lp->Items->Strings[Index];
+	if (!lbuf.IsEmpty()) {
+		//特殊フォルダ
+		if (IsSpecial) {
+			TStringDynArray itm_buf = split_strings_tab(lbuf);
+			if (itm_buf.Length==2) {
+				int xp = rc.Left + ScaledInt(4, this);
+				int yp = rc.Top  + get_TopMargin2(cv);
+				//セパレータ
+				if (itm_buf[0].IsEmpty()) {
+					draw_Separator(cv, rc);
+					cv->Font->Color = col_Folder;
+					UnicodeString snam;
+					switch ((int)lp->Items->Objects[Index]) {
+					case  1: snam = lp->Focused()? "<All Users (&U)> " : "<All Users> "; break;
+					case  2: snam = lp->Focused()? "<仮想フォルダ (&V)> " : "<仮想フォルダ> "; break;
+					case  5: snam = lp->Focused()? "<NyanFi (&N)> " : "<NyanFi> "; break;
+					case  6: snam = lp->Focused()? "<エディタ (&E)> " : "<エディタ> "; break;
+					case  7: snam = lp->Focused()? "<外部ツール (&X)> " : "<外部ツール> "; break;
+					case  8: snam = lp->Focused()? "<&PATH> " : "<PATH> "; break;
+					default: snam = "";
+					}
+					if (!snam.IsEmpty()) {
+						TRect tmp_rc = rc; tmp_rc.Left = xp; tmp_rc.Top = yp;
+						::DrawText(cv->Handle, snam.c_str(), -1, &tmp_rc, DT_LEFT);
+					}
+				}
+				//項目
+				else {
+					UnicodeString dnam = itm_buf[0];
+					bool is_exe = ((int)lp->Items->Objects[Index]==SPITM_EXE);
+					//アイコン
+					if (is_exe && ShowIconAction->Checked) {
+						draw_SmallIconF(dnam, cv, xp, std::max(yp + (cv->TextHeight("Q") - ScaledInt(16, this))/2, 0), this);
+						xp += ScaledInt(20, this);
+					}
+					//名前
+					cv->Font->Color = col_fgList;
+					UnicodeString inam = itm_buf[1];
+					bool brk = remove_top_s(inam, '|');
+					cv->TextOut(xp, yp, inam);
+					xp = sp->Items[1]->Width + 1;
+					//場所
+					lp->Tag &= 0x7fff0000;
+					lp->Tag |= xp;			//表示位置を Tag に設定
+					if (is_exe) dnam = ExtractFilePath(dnam);
+					if (UseEnvVarAction->Checked) {
+						if (contained_wd_i(_T("TEMP|TMP"), itm_buf[1]))
+							dnam = "%" + itm_buf[1] + "%";
+						else
+							dnam = ExcludeTrailingPathDelimiter(replace_str_by_list(dnam, EnvVarList));
+						if (remove_top_s(dnam, '%')) {
+							UnicodeString envstr = "%" + split_tkn(dnam, '%') + "%";
+							cv->Font->Color = adj_col;
+							cv->TextOut(xp, yp, envstr);
+							xp += get_TextWidth(cv, envstr, is_irreg) + ScaledInt(2, this);
+						}
+					}
+					cv->Font->Color = (StartsStr("shell:", dnam))? adj_col : col_Folder;
+					PathNameOut(dnam, cv, xp, yp, rc.Right - xp - ScaledInt(4, this));
+					//区切り線
+					if (brk) draw_separateLine(cv, rc);
+				}
+			}
+		}
+		//登録ディレクトリ
+		else {
+			TStringDynArray itm_buf = get_csv_array(lbuf, REGDIR_CSVITMCNT, true);
+			//セパレータ
+			if (is_separator(itm_buf[1])) {
+				draw_Separator(cv, rc);
+			}
+			//項目
+			else {
+				//キー
+				cv->Font->Color = col_fgList;
+				cv->Font->Style = cv->Font->Style << fsBold;
+				int s_wd = cv->TextWidth(itm_buf[0]);
+				int c_wd = sp->Items[0]->Width - 4;
+				int xp = rc.Left + ScaledInt(2, this);
+				int yp = rc.Top  + get_TopMargin2(cv);
+				if (s_wd<c_wd) xp += (c_wd - s_wd)/2;	//センタリング
+				cv->TextOut(xp, yp, itm_buf[0]);
+				//名前
+				xp = sp->Items[0]->Width + 1;
+				cv->Font->Style = cv->Font->Style >> fsBold;
+				cv->TextOut(xp, yp, itm_buf[1]);
+				xp += sp->Items[1]->Width + 1;
+				//場所
+				lp->Tag &= 0x7fff0000;
+				lp->Tag |= xp;			//表示位置を Tag に設定
+				UnicodeString dnam = itm_buf[2];
+				if (StartsStr("#:", dnam)) {
+					cv->Font->Color = adj_col;
+					usr_TAG->DrawTags(dnam, cv, xp, yp, RevTagCololr? col_bgList : col_None);
+				}
+				else {
+					if (remove_top_s(dnam, '%')) {
+						UnicodeString envstr = "%" + split_tkn(dnam, '%') + "%";
+						cv->Font->Color = adj_col;
+						cv->TextOut(xp, yp, envstr);
+						xp += get_TextWidth(cv, envstr, is_irreg) + 2;
+					}
+					cv->Font->Color = (StartsStr("shell:", dnam))? adj_col : col_Folder;
+					PathNameOut(dnam, cv, xp, yp, rc.Right - xp - ScaledInt(4, this));
+					if (!itm_buf[3].IsEmpty()) {
+						out_TextEx(cv, xp, yp, " : ", adj_col);
+						cv->Font->Color = col_fgList;
+						cv->TextOut(xp, yp, itm_buf[3]);
+					}
+				}
+			}
+		}
+	}
+
+	//カーソル
+	draw_ListCursor2(lp, rc, Index, State);
+}
+//---------------------------------------------------------------------------
 //キー操作
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -595,14 +748,6 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyPress(TObject *Sender, System::WideC
 	if (IsSpecial && (_istalnum(Key) || Key==VK_SPACE || Key==VK_RETURN || is_KeyDown(VK_CONTROL))) Key = 0;
 }
 //---------------------------------------------------------------------------
-//マウス操作
-//---------------------------------------------------------------------------
-void __fastcall TRegDirDlg::RegDirListBoxDblClick(TObject *Sender)
-{
-	WideChar key = VK_RETURN;
-	RegDirListBoxKeyPress(Sender, key);
-}
-//---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::RegDirListBoxClick(TObject *Sender)
 {
 	if (IsSpecial || IsAddMode) return;
@@ -618,148 +763,11 @@ void __fastcall TRegDirDlg::RegDirListBoxClick(TObject *Sender)
 		DirEdit->Text  = itm_buf[2] + (!itm_buf[3].IsEmpty()? ":" + itm_buf[3] : EmptyStr);
 	}
 }
-
 //---------------------------------------------------------------------------
-//項目の描画
-//---------------------------------------------------------------------------
-void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Index,
-	TRect &Rect, TOwnerDrawState State)
+void __fastcall TRegDirDlg::RegDirListBoxDblClick(TObject *Sender)
 {
-	if (ModalResult!=mrNone) return;
-
-	THeaderSections *sp = RegDirHeader->Sections;
-	TListBox *lp = (TListBox*)Control;
-	TCanvas  *cv = lp->Canvas;
-	cv->Font->Assign(lp->Font);
-	bool is_irreg  = IsIrregularFont(cv->Font);
-	TColor adj_col = AdjustColor(col_Folder, ADJCOL_LIGHT);
-
-	cv->Brush->Color = col_bgList;
-	cv->FillRect(Rect);
-
-	TRect rc = Rect;
-	if (ScrBarStyle>0) {
-		rc.SetWidth(ListScrPanel->ParentPanel->Width);
-		if (ListScrPanel->VisibleV) rc.Right -= (ListScrPanel->KnobWidth - 1);
-	}
-
-	UnicodeString lbuf = lp->Items->Strings[Index];
-	if (!lbuf.IsEmpty()) {
-		//特殊フォルダ
-		if (IsSpecial) {
-			TStringDynArray itm_buf = split_strings_tab(lbuf);
-			if (itm_buf.Length==2) {
-				int xp = rc.Left + ScaledInt(4, this);
-				int yp = rc.Top  + get_TopMargin2(cv);
-				//セパレータ
-				if (itm_buf[0].IsEmpty()) {
-					draw_Separator(cv, rc);
-					cv->Font->Color = col_Folder;
-					UnicodeString snam;
-					switch ((int)lp->Items->Objects[Index]) {
-					case  1: snam = lp->Focused()? "<All Users (&U)> " : "<All Users> "; break;
-					case  2: snam = lp->Focused()? "<仮想フォルダ (&V)> " : "<仮想フォルダ> "; break;
-					case  5: snam = lp->Focused()? "<NyanFi (&N)> " : "<NyanFi> "; break;
-					case  6: snam = lp->Focused()? "<エディタ (&E)> " : "<エディタ> "; break;
-					case  7: snam = lp->Focused()? "<外部ツール (&X)> " : "<外部ツール> "; break;
-					case  8: snam = lp->Focused()? "<&PATH> " : "<PATH> "; break;
-					default: snam = "";
-					}
-					if (!snam.IsEmpty()) {
-						TRect tmp_rc = rc; tmp_rc.Left = xp; tmp_rc.Top = yp;
-						::DrawText(cv->Handle, snam.c_str(), -1, &tmp_rc, DT_LEFT);
-					}
-				}
-				//項目
-				else {
-					UnicodeString dnam = itm_buf[0];
-					bool is_exe = ((int)lp->Items->Objects[Index]==SPITM_EXE);
-					//アイコン
-					if (is_exe && ShowIconAction->Checked) {
-						draw_SmallIconF(dnam, cv, xp, std::max(yp + (cv->TextHeight("Q") - ScaledInt(16, this))/2, 0), this);
-						xp += ScaledInt(20, this);
-					}
-					//名前
-					cv->Font->Color = col_fgList;
-					UnicodeString inam = itm_buf[1];
-					bool brk = remove_top_s(inam, '|');
-					cv->TextOut(xp, yp, inam);
-					xp = sp->Items[1]->Width + 1;
-					//場所
-					lp->Tag &= 0x7fff0000;
-					lp->Tag |= xp;			//表示位置を Tag に設定
-					if (is_exe) dnam = ExtractFilePath(dnam);
-					if (UseEnvVarAction->Checked) {
-						if (contained_wd_i(_T("TEMP|TMP"), itm_buf[1]))
-							dnam = "%" + itm_buf[1] + "%";
-						else
-							dnam = ExcludeTrailingPathDelimiter(replace_str_by_list(dnam, EnvVarList));
-						if (remove_top_s(dnam, '%')) {
-							UnicodeString envstr = "%" + split_tkn(dnam, '%') + "%";
-							cv->Font->Color = adj_col;
-							cv->TextOut(xp, yp, envstr);
-							xp += get_TextWidth(cv, envstr, is_irreg) + ScaledInt(2, this);
-						}
-					}
-					cv->Font->Color = (StartsStr("shell:", dnam))? adj_col : col_Folder;
-					PathNameOut(dnam, cv, xp, yp, rc.Right - xp - ScaledInt(4, this));
-					//区切り線
-					if (brk) draw_separateLine(cv, rc);
-				}
-			}
-		}
-		//登録ディレクトリ
-		else {
-			TStringDynArray itm_buf = get_csv_array(lbuf, REGDIR_CSVITMCNT, true);
-			//セパレータ
-			if (is_separator(itm_buf[1])) {
-				draw_Separator(cv, rc);
-			}
-			//項目
-			else {
-				//キー
-				cv->Font->Color = col_fgList;
-				cv->Font->Style = cv->Font->Style << fsBold;
-				int s_wd = cv->TextWidth(itm_buf[0]);
-				int c_wd = sp->Items[0]->Width - 4;
-				int xp = rc.Left + ScaledInt(2, this);
-				int yp = rc.Top  + get_TopMargin2(cv);
-				if (s_wd<c_wd) xp += (c_wd - s_wd)/2;	//センタリング
-				cv->TextOut(xp, yp, itm_buf[0]);
-				//名前
-				xp = sp->Items[0]->Width + 1;
-				cv->Font->Style = cv->Font->Style >> fsBold;
-				cv->TextOut(xp, yp, itm_buf[1]);
-				xp += sp->Items[1]->Width + 1;
-				//場所
-				lp->Tag &= 0x7fff0000;
-				lp->Tag |= xp;			//表示位置を Tag に設定
-				UnicodeString dnam = itm_buf[2];
-				if (StartsStr("#:", dnam)) {
-					cv->Font->Color = adj_col;
-					usr_TAG->DrawTags(dnam, cv, xp, yp, RevTagCololr? col_bgList : col_None);
-				}
-				else {
-					if (remove_top_s(dnam, '%')) {
-						UnicodeString envstr = "%" + split_tkn(dnam, '%') + "%";
-						cv->Font->Color = adj_col;
-						cv->TextOut(xp, yp, envstr);
-						xp += get_TextWidth(cv, envstr, is_irreg) + 2;
-					}
-					cv->Font->Color = (StartsStr("shell:", dnam))? adj_col : col_Folder;
-					PathNameOut(dnam, cv, xp, yp, rc.Right - xp - ScaledInt(4, this));
-					if (!itm_buf[3].IsEmpty()) {
-						out_TextEx(cv, xp, yp, " : ", adj_col);
-						cv->Font->Color = col_fgList;
-						cv->TextOut(xp, yp, itm_buf[3]);
-					}
-				}
-			}
-		}
-	}
-
-	//カーソル
-	draw_ListCursor2(lp, rc, Index, State);
+	WideChar key = VK_RETURN;
+	RegDirListBoxKeyPress(Sender, key);
 }
 
 //---------------------------------------------------------------------------
@@ -1112,18 +1120,6 @@ void __fastcall TRegDirDlg::FilterEditKeyPress(TObject *Sender, System::WideChar
 	if (KeyHandled || Key==VK_RETURN || Key==VK_ESCAPE) {
 		KeyHandled = false;
 		Key = 0;
-	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TRegDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (!IsSpecial && USAME_TI(get_KeyStr(Key, Shift), "Alt+O")) {
-		ChgOptBtnClick(NULL);
-	}
-	else {
-		SpecialKeyProc(this, Key, Shift,
-			IsSpecial? _T(HELPTOPIC_FL) _T("#SpecialDirList") : _T("hid00054.htm"));
 	}
 }
 //---------------------------------------------------------------------------

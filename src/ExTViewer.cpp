@@ -150,12 +150,12 @@ void __fastcall TExTxtViewer::WmDropped(TMessage &msg)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TExTxtViewer::FormDeactivate(TObject *Sender)
+void __fastcall TExTxtViewer::FormActivate(TObject *Sender)
 {
 	ExViewer->Repaint();
 }
 //---------------------------------------------------------------------------
-void __fastcall TExTxtViewer::FormActivate(TObject *Sender)
+void __fastcall TExTxtViewer::FormDeactivate(TObject *Sender)
 {
 	ExViewer->Repaint();
 }
@@ -204,6 +204,71 @@ void __fastcall TExTxtViewer::FormResize(TObject *Sender)
 	ExViewer->Repaint(true);
 }
 
+//---------------------------------------------------------------------------
+//キー操作
+//---------------------------------------------------------------------------
+void __fastcall TExTxtViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	try {
+		bool hadled = true;
+		//インクリメンタルサーチ
+		if (ExViewer->isIncSea) {
+			UnicodeString KeyStr = get_KeyStr(Key, Shift);		if (KeyStr.IsEmpty()) return;
+			ExViewer->IncSearch(KeyStr);
+		}
+		//通常
+		else {
+			UnicodeString KeyStr = TwoStrokeSeq(Key, Shift);	if (KeyStr.IsEmpty()) return;
+			UnicodeString CmdStr = Key_to_CmdV(KeyStr);
+			if (CmdStr.IsEmpty()) CmdStr = ExViewer->GetStdKeyCommand(KeyStr);
+			CancelHelp	= !CmdStr.IsEmpty() && EndsStr("F1", KeyStr);
+			ActionParam = EmptyStr;
+
+			//コマンド処理
+			if (ExeCommandV(CmdStr)) {
+				if (!ActionOk) throw EAbort(ActionErrMsg);
+				ClearKeyBuff(true);
+			}
+			//右クリックメニュー
+			else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
+				show_PopupMenu(ViewPopupMenu, TextPaintBox);
+			}
+			//閉じる
+			else if (equal_ESC(KeyStr) || equal_ENTER(KeyStr)) {
+				ExeCommandV(_T("Close"));
+			}
+			//その他
+			else {
+				hadled = SpecialKeyProc(this, Key, Shift);
+				if (hadled && LastWidth!=Width) {
+					ExViewer->UpdateScr(ExViewer->get_CurLineNo());
+					LastWidth = Width;
+				}
+			}
+		}
+
+		if (hadled) Key = 0;
+	}
+	catch (EAbort &e) {
+		msgbox_ERR(e.Message);
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TExTxtViewer::FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
+	TPoint &MousePos, bool &Handled)
+{
+	ClearNopStt();
+
+	int kmd = 0;
+	if (Shift.Contains(ssCtrl))  kmd |= 1;
+	if (Shift.Contains(ssShift)) kmd |= 2;
+
+	UnicodeString cmd_V = WheelCmdV[kmd];
+	cmd_V = Trim((WheelDelta>0)? get_tkn(cmd_V, '/') : get_tkn_r(cmd_V, '/'));
+
+	CancelKeySeq();
+	Handled = ExeCommandV(cmd_V);
+}
 //---------------------------------------------------------------------------
 void __fastcall TExTxtViewer::TextPaintBoxPaint(TObject *Sender)
 {
@@ -671,22 +736,6 @@ bool __fastcall TExTxtViewer::ExeCommandV(const _TCHAR *cmd)
 	return ExeCommandV(UnicodeString(cmd));
 }
 
-//---------------------------------------------------------------------------
-void __fastcall TExTxtViewer::FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
-	TPoint &MousePos, bool &Handled)
-{
-	ClearNopStt();
-
-	int kmd = 0;
-	if (Shift.Contains(ssCtrl))  kmd |= 1;
-	if (Shift.Contains(ssShift)) kmd |= 2;
-
-	UnicodeString cmd_V = WheelCmdV[kmd];
-	cmd_V = Trim((WheelDelta>0)? get_tkn(cmd_V, '/') : get_tkn_r(cmd_V, '/'));
-
-	CancelKeySeq();
-	Handled = ExeCommandV(cmd_V);
-}
 
 //---------------------------------------------------------------------------
 //文字列検索
@@ -838,54 +887,5 @@ void __fastcall TExTxtViewer::SaveDumpActionUpdate(TObject *Sender)
 	ap->Enabled = ap->Visible;
 }
 
-//---------------------------------------------------------------------------
-//キー操作
-//---------------------------------------------------------------------------
-void __fastcall TExTxtViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	try {
-		bool hadled = true;
-		//インクリメンタルサーチ
-		if (ExViewer->isIncSea) {
-			UnicodeString KeyStr = get_KeyStr(Key, Shift);		if (KeyStr.IsEmpty()) return;
-			ExViewer->IncSearch(KeyStr);
-		}
-		//通常
-		else {
-			UnicodeString KeyStr = TwoStrokeSeq(Key, Shift);	if (KeyStr.IsEmpty()) return;
-			UnicodeString CmdStr = Key_to_CmdV(KeyStr);
-			if (CmdStr.IsEmpty()) CmdStr = ExViewer->GetStdKeyCommand(KeyStr);
-			CancelHelp	= !CmdStr.IsEmpty() && EndsStr("F1", KeyStr);
-			ActionParam = EmptyStr;
-
-			//コマンド処理
-			if (ExeCommandV(CmdStr)) {
-				if (!ActionOk) throw EAbort(ActionErrMsg);
-				ClearKeyBuff(true);
-			}
-			//右クリックメニュー
-			else if (contained_wd_i(KeysStr_Popup, KeyStr)) {
-				show_PopupMenu(ViewPopupMenu, TextPaintBox);
-			}
-			//閉じる
-			else if (equal_ESC(KeyStr) || equal_ENTER(KeyStr)) {
-				ExeCommandV(_T("Close"));
-			}
-			//その他
-			else {
-				hadled = SpecialKeyProc(this, Key, Shift);
-				if (hadled && LastWidth!=Width) {
-					ExViewer->UpdateScr(ExViewer->get_CurLineNo());
-					LastWidth = Width;
-				}
-			}
-		}
-
-		if (hadled) Key = 0;
-	}
-	catch (EAbort &e) {
-		msgbox_ERR(e.Message);
-	}
-}
 //---------------------------------------------------------------------------
 

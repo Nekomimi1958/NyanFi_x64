@@ -70,34 +70,34 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall JsonTreeViewCustomDrawItem(TCustomTreeView *Sender, TTreeNode *Node,
 		TCustomDrawState State, bool &DefaultDraw);
-	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall JsonTreeViewChange(TObject *Sender, TTreeNode *Node);
-	void __fastcall JsonTreeViewKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall JsonTreeViewHint(TObject *Sender, TTreeNode * const Node, UnicodeString &Hint);
-	void __fastcall JsonTreeViewKeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall JsonTreeViewDeletion(TObject *Sender, TTreeNode *Node);
+	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall ExpandItemClick(TObject *Sender);
 	void __fastcall CollapseItemClick(TObject *Sender);
-	void __fastcall FindEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall FindEditKeyPress(TObject *Sender, System::WideChar &Key);
-	void __fastcall OpenUrlActionExecute(TObject *Sender);
-	void __fastcall OpenUrlActionUpdate(TObject *Sender);
-	void __fastcall FindDownActionExecute(TObject *Sender);
-	void __fastcall FindActionUpdate(TObject *Sender);
-	void __fastcall FindUpActionExecute(TObject *Sender);
-	void __fastcall ExpandActionExecute(TObject *Sender);
-	void __fastcall CollapseActionExecute(TObject *Sender);
 	void __fastcall CopyActionExecute(TObject *Sender);
 	void __fastcall CopyActionUpdate(TObject *Sender);
-	void __fastcall CopyJsonPathActionExecute(TObject *Sender);
-	void __fastcall CopyJsonPathActionUpdate(TObject *Sender);
 	void __fastcall CopyJsonActionExecute(TObject *Sender);
 	void __fastcall CopyJsonActionUpdate(TObject *Sender);
+	void __fastcall CopyJsonPathActionExecute(TObject *Sender);
+	void __fastcall CopyJsonPathActionUpdate(TObject *Sender);
 	void __fastcall CopyFormatActionExecute(TObject *Sender);
-	void __fastcall AutoActionExecute(TObject *Sender);
-	void __fastcall JsonTreeViewDeletion(TObject *Sender, TTreeNode *Node);
 	void __fastcall CopyFormatActionUpdate(TObject *Sender);
+	void __fastcall OpenUrlActionExecute(TObject *Sender);
+	void __fastcall OpenUrlActionUpdate(TObject *Sender);
 	void __fastcall EditErrActionExecute(TObject *Sender);
 	void __fastcall EditErrActionUpdate(TObject *Sender);
+	void __fastcall FindDownActionExecute(TObject *Sender);
+	void __fastcall FindUpActionExecute(TObject *Sender);
+	void __fastcall FindActionUpdate(TObject *Sender);
+	void __fastcall ExpandActionExecute(TObject *Sender);
+	void __fastcall CollapseActionExecute(TObject *Sender);
+	void __fastcall AutoActionExecute(TObject *Sender);
+	void __fastcall JsonTreeViewKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall JsonTreeViewKeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall FindEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall FindEditKeyPress(TObject *Sender, System::WideChar &Key);
 
 private:	// ユーザー宣言
 	//ViewBusy プロパティ  ツリービュー処理中

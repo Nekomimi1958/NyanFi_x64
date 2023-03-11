@@ -30,16 +30,16 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall ModeTabControlChange(TObject *Sender);
+	void __fastcall ModeTabControlDrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
+	void __fastcall MigemoCheckBoxClick(TObject *Sender);
 	void __fastcall CmdsComboBoxChange(TObject *Sender);
 	void __fastcall CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CmdsComboBoxKeyPress(TObject *Sender, System::WideChar &Key);
+	void __fastcall CmdsComboBoxSelect(TObject *Sender);
 	void __fastcall SubComboBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall SubComboBoxClick(TObject *Sender);
-	void __fastcall MigemoCheckBoxClick(TObject *Sender);
 	void __fastcall SubComboBoxCloseUp(TObject *Sender);
-	void __fastcall CmdsComboBoxSelect(TObject *Sender);
-	void __fastcall ModeTabControlChange(TObject *Sender);
-	void __fastcall ModeTabControlDrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
 
 private:	// ユーザー宣言
 	TStringList *ItemList;		//候補リスト

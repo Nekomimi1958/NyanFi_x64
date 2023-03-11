@@ -56,12 +56,15 @@ __published:	// IDE で管理されるコンポーネント
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
+	void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall PreviewListBoxEnter(TObject *Sender);
 	void __fastcall PreviewListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
-	void __fastcall ReferListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall PreviewListBoxData(TWinControl *Control, int Index, UnicodeString &Data);
 	void __fastcall ReferListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall ReferListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall EditCopyActionExecute(TObject *Sender);
 	void __fastcall EditCopyActionUpdate(TObject *Sender);
 	void __fastcall StepActionExecute(TObject *Sender);
@@ -70,17 +73,14 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall GoActionUpdate(TObject *Sender);
 	void __fastcall BreakActionExecute(TObject *Sender);
 	void __fastcall BreakActionUpdate(TObject *Sender);
-	void __fastcall VarListActionExecute(TObject *Sender);
 	void __fastcall QuitActionExecute(TObject *Sender);
 	void __fastcall QuitActionUpdate(TObject *Sender);
 	void __fastcall ExitActionExecute(TObject *Sender);
 	void __fastcall ExitActionUpdate(TObject *Sender);
-	void __fastcall HelpActionExecute(TObject *Sender);
-	void __fastcall PreviewListBoxEnter(TObject *Sender);
-	void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);
-	void __fastcall PreviewListBoxData(TWinControl *Control, int Index, UnicodeString &Data);
+	void __fastcall VarListActionExecute(TObject *Sender);
 	void __fastcall EditActionExecute(TObject *Sender);
 	void __fastcall EditActionUpdate(TObject *Sender);
+	void __fastcall HelpActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	UsrScrollPanel *PrevScrPanel;	//シンプルスクロールバー

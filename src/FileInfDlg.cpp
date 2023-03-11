@@ -112,6 +112,14 @@ void __fastcall TFileInfoDlg::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TFileInfoDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (isCalcItem)
+		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_TV) _T("#CsvCalc"));
+	else
+		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#ShowFileInfo"));
+}
+//---------------------------------------------------------------------------
 //指定ファイルの情報表示 (前後移動禁止)
 //---------------------------------------------------------------------------
 int __fastcall TFileInfoDlg::ShowModalEx(UnicodeString fnam)
@@ -667,15 +675,6 @@ void __fastcall TFileInfoDlg::ImgPreviewActionUpdate(TObject *Sender)
 	ap->Visible = useImgPrv;
 	ap->Enabled = ap->Visible && FileRec;
 	ap->Checked = ap->Enabled && SubViewer->Visible;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TFileInfoDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (isCalcItem)
-		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_TV) _T("#CsvCalc"));
-	else
-		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#ShowFileInfo"));
 }
 //---------------------------------------------------------------------------
 

@@ -91,6 +91,17 @@ void __fastcall TColorDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//ƒwƒ‹ƒv
+//---------------------------------------------------------------------------
+bool __fastcall TColorDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
+{
+	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
+		HtmlHelpTopic(_T(HELPTOPIC_TV) _T("#SetColor"));
+		CallHelp = false;
+	}
+	return true;
+}
+//---------------------------------------------------------------------------
 //ˆê——‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TColorDlg::ColorListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
@@ -243,18 +254,6 @@ void __fastcall TColorDlg::DisableColActionUpdate(TObject *Sender)
 	TListBox *lp = ColorListBox;
 	UnicodeString col_id = (lp->ItemIndex!=-1)? lp->Items->Names[lp->ItemIndex] : EmptyStr;
 	((TAction*)Sender)->Enabled = contained_wd_i(_T("fgSelItem|bdrLine|bdrFold|bdrFixed"), col_id);
-}
-
-//---------------------------------------------------------------------------
-//ƒwƒ‹ƒv
-//---------------------------------------------------------------------------
-bool __fastcall TColorDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
-{
-	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
-		HtmlHelpTopic(_T(HELPTOPIC_TV) _T("#SetColor"));
-		CallHelp = false;
-	}
-	return true;
 }
 //---------------------------------------------------------------------------
 

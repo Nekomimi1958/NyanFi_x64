@@ -39,7 +39,6 @@ void __fastcall TAboutBox::SupportURLClick(TObject *Sender)
 {
 	Execute_ex(SupportURL->Caption);
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TAboutBox::ListNyanBtnClick(TObject *Sender)
 {

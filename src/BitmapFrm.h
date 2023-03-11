@@ -57,19 +57,19 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall BitmapBoxPaint(TObject *Sender);
 	void __fastcall BitmapBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
 	void __fastcall BitmapBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
-	void __fastcall MapWidthActionExecute(TObject *Sender);
-	void __fastcall MapWidthActionUpdate(TObject *Sender);
 	void __fastcall FileMapBoxPaint(TObject *Sender);
 	void __fastcall FileMapBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall FileMapBoxMouseMove(TObject *Sender, TShiftState Shift, int X, int Y);
+	void __fastcall MapWidthActionExecute(TObject *Sender);
+	void __fastcall MapWidthActionUpdate(TObject *Sender);
 	void __fastcall SetTopAdrActionExecute(TObject *Sender);
 	void __fastcall SetTopAdrActionUpdate(TObject *Sender);
-	void __fastcall SetEndAdrActionExecute(TObject *Sender);
-	void __fastcall SetEndAdrActionUpdate(TObject *Sender);
-	void __fastcall SetNextAdrActionExecute(TObject *Sender);
-	void __fastcall SetNextAdrActionUpdate(TObject *Sender);
 	void __fastcall SetPreAdrActionExecute(TObject *Sender);
 	void __fastcall SetPreAdrActionUpdate(TObject *Sender);
+	void __fastcall SetNextAdrActionExecute(TObject *Sender);
+	void __fastcall SetNextAdrActionUpdate(TObject *Sender);
+	void __fastcall SetEndAdrActionExecute(TObject *Sender);
+	void __fastcall SetEndAdrActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	TColor BitPallet[256];		//ビットマップビュー用パレット

@@ -81,6 +81,11 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall FormActivate(TObject *Sender);
+	void __fastcall FormDeactivate(TObject *Sender);
+	void __fastcall FormResize(TObject *Sender);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta, TPoint &MousePos, bool &Handled);
 	void __fastcall TextPaintBoxPaint(TObject *Sender);
 	void __fastcall TextScrollBarChange(TObject *Sender);
 	void __fastcall TextPaintBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
@@ -88,15 +93,14 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TextPaintBoxMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall TextPaintBoxDblClick(TObject *Sender);
 	void __fastcall TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
-	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall FormResize(TObject *Sender);
-	void __fastcall FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta, TPoint &MousePos, bool &Handled);
 	void __fastcall FindTextActionExecute(TObject *Sender);
 	void __fastcall CopyActionExecute(TObject *Sender);
+	void __fastcall AddCopyActionExecute(TObject *Sender);
 	void __fastcall CopyActionUpdate(TObject *Sender);
 	void __fastcall SelectAllActionExecute(TObject *Sender);
 	void __fastcall WebSearchActionExecute(TObject *Sender);
 	void __fastcall WebSearchActionUpdate(TObject *Sender);
+	void __fastcall PopWebSearchItemMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width, int &Height);
 	void __fastcall SortAscActionExecute(TObject *Sender);
 	void __fastcall SortDesActionExecute(TObject *Sender);
 	void __fastcall OrgOrderActionExecute(TObject *Sender);
@@ -105,14 +109,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CodePageActionUpdate(TObject *Sender);
 	void __fastcall CodePageActionExecute(TObject *Sender);
 	void __fastcall CP_xxx_ActionUpdate(TObject *Sender);
+	void __fastcall ExportCsvActionExecute(TObject *Sender);
+	void __fastcall ExportCsvActionUpdate(TObject *Sender);
 	void __fastcall SaveDumpActionExecute(TObject *Sender);
 	void __fastcall SaveDumpActionUpdate(TObject *Sender);
-	void __fastcall FormDeactivate(TObject *Sender);
-	void __fastcall FormActivate(TObject *Sender);
-	void __fastcall AddCopyActionExecute(TObject *Sender);
-	void __fastcall PopWebSearchItemMeasureItem(TObject *Sender, TCanvas *ACanvas, int &Width, int &Height);
-	void __fastcall ExportCsvActionUpdate(TObject *Sender);
-	void __fastcall ExportCsvActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	UsrScrollPanel *TxtViewScrPanel;	//独自スクロールバー

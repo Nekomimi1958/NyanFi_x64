@@ -290,6 +290,32 @@ void __fastcall TInputExDlg::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TInputExDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (equal_F1(KeyStr) && !HelpTopic.IsEmpty()) {
+		HtmlHelpTopic(HelpTopic.c_str());
+		Key = 0;
+	}
+	else {
+		if (CreDirPanel->Visible) {
+			if		(USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(DirChgCheckBox);
+			else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(CnvChCheckBox);
+		}
+		if (NewTextPanel->Visible) {
+			if		(USAME_TI(KeyStr, "Alt+P")) invert_CheckBox(ClipCheckBox);
+			else if (USAME_TI(KeyStr, "Alt+E")) invert_CheckBox(EditCheckBox);
+		}
+		if (IniSttPanel->Visible) {
+			if		(USAME_TI(KeyStr, "Alt+P")) invert_CheckBox(SelDefCheckBox);
+		}
+		if (NotationPanel) {
+			if		(USAME_TI(KeyStr, "Alt+H")) HexRadioBtn->Checked = true;
+			else if (USAME_TI(KeyStr, "Alt+D")) DecRadioBtn->Checked = true;
+		}
+	}
+}
+//---------------------------------------------------------------------------
 void __fastcall TInputExDlg::OptionClick(TObject *Sender)
 {
 	if		(InputEdit->Visible)	 InputEdit->SetFocus();
@@ -339,33 +365,6 @@ void __fastcall TInputExDlg::InputComboBoxChange(TObject *Sender)
 		UnicodeString tmp;
 		PathInfLabel->Caption = tmp.sprintf(_T("フルパス名の文字数 = %u"), p_len);
 		NameInfLabel->Caption = tmp.sprintf(_T("名前の文字数 = %u"), f_len);
-	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TInputExDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (equal_F1(KeyStr) && !HelpTopic.IsEmpty()) {
-		HtmlHelpTopic(HelpTopic.c_str());
-		Key = 0;
-	}
-	else {
-		if (CreDirPanel->Visible) {
-			if		(USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(DirChgCheckBox);
-			else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(CnvChCheckBox);
-		}
-		if (NewTextPanel->Visible) {
-			if		(USAME_TI(KeyStr, "Alt+P")) invert_CheckBox(ClipCheckBox);
-			else if (USAME_TI(KeyStr, "Alt+E")) invert_CheckBox(EditCheckBox);
-		}
-		if (IniSttPanel->Visible) {
-			if		(USAME_TI(KeyStr, "Alt+P")) invert_CheckBox(SelDefCheckBox);
-		}
-		if (NotationPanel) {
-			if		(USAME_TI(KeyStr, "Alt+H")) HexRadioBtn->Checked = true;
-			else if (USAME_TI(KeyStr, "Alt+D")) DecRadioBtn->Checked = true;
-		}
 	}
 }
 

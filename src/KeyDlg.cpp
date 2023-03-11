@@ -74,6 +74,16 @@ void __fastcall TKeyListDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TKeyListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Alt+M"))
+		MigemoAction->Execute();
+	else
+		SpecialKeyProc(this, Key, Shift);
+}
+
+//---------------------------------------------------------------------------
 //下部タブの描画
 //※テーマ利用時に下部タブが正しく描画されない不具合の対策
 //---------------------------------------------------------------------------
@@ -298,6 +308,18 @@ void __fastcall TKeyListDlg::MigemoActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TKeyListDlg::FilterEditEnter(TObject *Sender)
+{
+	FilterEdit->Color = get_WinColor();
+}
+//---------------------------------------------------------------------------
+void __fastcall TKeyListDlg::FilterEditExit(TObject *Sender)
+{
+	CloseIME(Handle);
+	InvColIfEmpty(FilterEdit);
+}
+
+//---------------------------------------------------------------------------
 //フィルタによる一覧の更新
 //---------------------------------------------------------------------------
 void __fastcall TKeyListDlg::FilterEditChange(TObject *Sender)
@@ -314,19 +336,6 @@ void __fastcall TKeyListDlg::FilterEditChange(TObject *Sender)
 		ModalResult = mrOk;
 	}
 }
-
-//---------------------------------------------------------------------------
-void __fastcall TKeyListDlg::FilterEditEnter(TObject *Sender)
-{
-	FilterEdit->Color = get_WinColor();
-}
-//---------------------------------------------------------------------------
-void __fastcall TKeyListDlg::FilterEditExit(TObject *Sender)
-{
-	CloseIME(Handle);
-	InvColIfEmpty(FilterEdit);
-}
-
 //---------------------------------------------------------------------------
 //フィルタ欄でのキー操作
 //---------------------------------------------------------------------------
@@ -535,16 +544,6 @@ void __fastcall TKeyListDlg::OptionItemClick(TObject *Sender)
 {
 	CommandStr	= "OptionDlg_KY";
 	ModalResult = mrOk;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TKeyListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+M"))
-		MigemoAction->Execute();
-	else
-		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

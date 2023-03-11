@@ -261,6 +261,11 @@ void __fastcall TFileExtensionDlg::FormResize(TObject *Sender)
 	FileListBox->Repaint();
 }
 //---------------------------------------------------------------------------
+void __fastcall TFileExtensionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+//---------------------------------------------------------------------------
 void __fastcall TFileExtensionDlg::ListSplitterMoved(TObject *Sender)
 {
 	InfoScrPanel->UpdateKnob();
@@ -605,36 +610,6 @@ void __fastcall TFileExtensionDlg::InfoListBoxDrawItem(TWinControl *Control, int
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TFileExtensionDlg::InfoListBoxClick(TObject *Sender)
-{
-	FileListBox->Clear();
-
-	int idx = InfoListBox->ItemIndex;
-	if (idx>=0 && idx<FextInfoList->Count) {
-		ext_inf_rec *ip = (ext_inf_rec*)FextInfoList->Objects[idx];
-		CurFileCount = ip->f_count;
-		FileItemList->Text = ip->f_names;
-		SortListF();
-		FileListBox->Count = FileItemList->Count + ((ip->f_count>MAX_FLIST_CNT)? 1 : 0);
-		FileListBox->ItemIndex = -1;
-		UnicodeString msg = FextInfoList->Strings[idx];
-		__int64 g_size = ip->oc_size - ip->f_size;
-		msg.cat_sprintf(_T("    ファイル数:%s  合計:%s  占有:%s"),
-			get_size_str_B(ip->f_count, 0).c_str(),
-			get_size_str_G(ip->f_size, 0, SizeDecDigits).c_str(),
-			get_size_str_G(ip->oc_size, 0, SizeDecDigits).c_str());
-		if (ip->oc_size>0) {
-			msg.cat_sprintf(_T("  ギャップ:%s(%.1f%%)"),
-				get_size_str_G(g_size, 0, SizeDecDigits).c_str(), 100.0 * g_size/ip->oc_size);
-		}
-		msg.cat_sprintf(_T("  平均:%s"), get_size_str_G(ip->av_size, 0, SizeDecDigits).c_str());
-		FileInfBar->Panels->Items[0]->Text = msg;
-	}
-
-	FileScrPanel->UpdateKnob();
-}
-
-//---------------------------------------------------------------------------
 //拡張子一覧: キー操作
 //---------------------------------------------------------------------------
 void __fastcall TFileExtensionDlg::InfoListBoxKeyDown(TObject *Sender, WORD &Key,
@@ -668,6 +643,35 @@ void __fastcall TFileExtensionDlg::InfoListBoxKeyPress(TObject *Sender, System::
 	Key = 0;
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TFileExtensionDlg::InfoListBoxClick(TObject *Sender)
+{
+	FileListBox->Clear();
+
+	int idx = InfoListBox->ItemIndex;
+	if (idx>=0 && idx<FextInfoList->Count) {
+		ext_inf_rec *ip = (ext_inf_rec*)FextInfoList->Objects[idx];
+		CurFileCount = ip->f_count;
+		FileItemList->Text = ip->f_names;
+		SortListF();
+		FileListBox->Count = FileItemList->Count + ((ip->f_count>MAX_FLIST_CNT)? 1 : 0);
+		FileListBox->ItemIndex = -1;
+		UnicodeString msg = FextInfoList->Strings[idx];
+		__int64 g_size = ip->oc_size - ip->f_size;
+		msg.cat_sprintf(_T("    ファイル数:%s  合計:%s  占有:%s"),
+			get_size_str_B(ip->f_count, 0).c_str(),
+			get_size_str_G(ip->f_size, 0, SizeDecDigits).c_str(),
+			get_size_str_G(ip->oc_size, 0, SizeDecDigits).c_str());
+		if (ip->oc_size>0) {
+			msg.cat_sprintf(_T("  ギャップ:%s(%.1f%%)"),
+				get_size_str_G(g_size, 0, SizeDecDigits).c_str(), 100.0 * g_size/ip->oc_size);
+		}
+		msg.cat_sprintf(_T("  平均:%s"), get_size_str_G(ip->av_size, 0, SizeDecDigits).c_str());
+		FileInfBar->Panels->Items[0]->Text = msg;
+	}
+
+	FileScrPanel->UpdateKnob();
+}
 //---------------------------------------------------------------------------
 //ファイル一覧の描画
 //---------------------------------------------------------------------------
@@ -952,12 +956,6 @@ void __fastcall TFileExtensionDlg::SortFileActionUpdate(TObject *Sender)
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = FileListBox->Focused();
 	ap->Checked = (ap->Tag==FileSortMode);
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TFileExtensionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 
 //---------------------------------------------------------------------------

@@ -370,6 +370,26 @@ void __fastcall TRenameDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TRenameDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (ActiveControl!=TimeMaskEdit && SpecialKeyProc(this, Key, Shift)) return;
+
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(ReadOnlyCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+H")) invert_CheckBox(HiddenCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+S")) invert_CheckBox(SysCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+A")) invert_CheckBox(ArcCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CmpCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(AutoPrvCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+T")) set_focus_GroupBox(TimeGroupBox);
+	else if (!IsOptionSheet()) {
+		if		(USAME_TI(KeyStr, "Alt+M")) set_focus_RadioGroup(FbaseRadioGroup);
+		else if (USAME_TI(KeyStr, "Alt+E")) set_focus_RadioGroup(FextRadioGroup);
+		else if (USAME_TI(KeyStr, "Alt+U")) invert_CheckBox(CnvCharCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+K")) invert_CheckBox(CnvKanaCheckBox);
+	}
+}
+//---------------------------------------------------------------------------
 void __fastcall TRenameDlg::FormResize(TObject *Sender)
 {
 	TStringGrid *gp = PreviewGrid;
@@ -2103,27 +2123,6 @@ void __fastcall TRenameDlg::EditListActionExecute(TObject *Sender)
 void __fastcall TRenameDlg::EditListActionUpdate(TObject *Sender)
 {
 	((TAction *)Sender)->Enabled = IsRenListSheet() && !RenListFile.IsEmpty();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TRenameDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (ActiveControl!=TimeMaskEdit && SpecialKeyProc(this, Key, Shift)) return;
-
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(ReadOnlyCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+H")) invert_CheckBox(HiddenCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+S")) invert_CheckBox(SysCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+A")) invert_CheckBox(ArcCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CmpCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(AutoPrvCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+T")) set_focus_GroupBox(TimeGroupBox);
-	else if (!IsOptionSheet()) {
-		if		(USAME_TI(KeyStr, "Alt+M")) set_focus_RadioGroup(FbaseRadioGroup);
-		else if (USAME_TI(KeyStr, "Alt+E")) set_focus_RadioGroup(FextRadioGroup);
-		else if (USAME_TI(KeyStr, "Alt+U")) invert_CheckBox(CnvCharCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+K")) invert_CheckBox(CnvKanaCheckBox);
-	}
 }
 //---------------------------------------------------------------------------
 

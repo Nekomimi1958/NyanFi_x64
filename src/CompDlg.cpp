@@ -58,6 +58,21 @@ void __fastcall TFileCompDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteBoolGen(_T("CompSelMask"), SelMaskCheckBox);
 }
 //---------------------------------------------------------------------------
+void __fastcall TFileCompDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+T")) set_focus_RadioGroup(TimeRadioGroup);
+	else if (USAME_TI(KeyStr, "Alt+S")) set_focus_RadioGroup(SizeRadioGroup);
+	else if (USAME_TI(KeyStr, "Alt+H")) set_focus_RadioGroup(HashRadioGroup);
+	else if (USAME_TI(KeyStr, "Alt+I")) set_focus_RadioGroup(IdRadioGroup);
+	else if (USAME_TI(KeyStr, "Alt+D")) invert_CheckBox(CmpDirCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+P")) invert_CheckBox(CmpArcCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+O")) invert_CheckBox(SelOppCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(ReverseCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(SelMaskCheckBox);
+	else SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#CompareDlg"));
+}
+//---------------------------------------------------------------------------
 void __fastcall TFileCompDlg::OptRadioGroupClick(TObject *Sender)
 {
 	TRadioGroup *rp = (TRadioGroup *)Sender;
@@ -84,22 +99,6 @@ void __fastcall TFileCompDlg::OkActionUpdate(TObject *Sender)
 	IdPanel->Color	 = get_PanelColor(!IdRadioGroup->Enabled   || IdRadioGroup->ItemIndex==0);
 
 	((TAction*)Sender)->Enabled = true;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TFileCompDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+T")) set_focus_RadioGroup(TimeRadioGroup);
-	else if (USAME_TI(KeyStr, "Alt+S")) set_focus_RadioGroup(SizeRadioGroup);
-	else if (USAME_TI(KeyStr, "Alt+H")) set_focus_RadioGroup(HashRadioGroup);
-	else if (USAME_TI(KeyStr, "Alt+I")) set_focus_RadioGroup(IdRadioGroup);
-	else if (USAME_TI(KeyStr, "Alt+D")) invert_CheckBox(CmpDirCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+P")) invert_CheckBox(CmpArcCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+O")) invert_CheckBox(SelOppCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(ReverseCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(SelMaskCheckBox);
-	else SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#CompareDlg"));
 }
 //---------------------------------------------------------------------------
 

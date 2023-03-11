@@ -67,6 +67,12 @@ void __fastcall TNewFileDlg::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TNewFileDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#NewFile"));
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TNewFileDlg::TplComboBoxDrawItem(TWinControl *Control, int Index,
 	TRect &Rect, TOwnerDrawState State)
 {
@@ -109,19 +115,12 @@ void __fastcall TNewFileDlg::TplComboBoxClick(TObject *Sender)
 	NewNameEdit->SelStart  = 0;
 	NewNameEdit->SelLength = p;
 }
-
 //---------------------------------------------------------------------------
 void __fastcall TNewFileDlg::OkActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction *)Sender;
 	ap->Enabled = !TplComboBox->Text.IsEmpty();
 	NewNameEdit->Enabled = ap->Enabled;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TNewFileDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#NewFile"));
 }
 //---------------------------------------------------------------------------
 

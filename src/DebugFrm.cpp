@@ -78,6 +78,29 @@ void __fastcall TDebugForm::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+//キー操作
+//---------------------------------------------------------------------------
+void __fastcall TDebugForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_XC) _T("#Debug"))) return;
+
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (KeyStr.Length()==1) {
+		switch (KeyStr[1]) {
+		case 'S': StepAction->Execute();	break;
+		case 'G': GoAction->Execute();		break;
+		case 'B': BreakAction->Execute();	break;
+		case 'Q': QuitAction->Execute();	break;
+		case 'X': ExitAction->Execute();	break;
+		case 'V': VarListAction->Execute();	break;
+		case 'E': EditAction->Execute();	break;
+		case 'H': HelpAction->Execute();	break;
+		}
+
+		UpdateToolBar();
+	}
+}
+//---------------------------------------------------------------------------
 void __fastcall TDebugForm::UpdateToolBar()
 {
 	for (int i=0; i<ToolBar1->ButtonCount; i++) {
@@ -111,12 +134,6 @@ void __fastcall TDebugForm::PreviewListBoxEnter(TObject *Sender)
 	ReferListBox->SetFocus();
 }
 //---------------------------------------------------------------------------
-void __fastcall TDebugForm::PreviewListBoxData(TWinControl *Control, int Index, UnicodeString &Data)
-{
-	Data = (Index>=0 && Index<ListBuff->Count)? ListBuff->Strings[Index] : EmptyStr;
-}
-
-//---------------------------------------------------------------------------
 //プレビューの描画
 //---------------------------------------------------------------------------
 void __fastcall TDebugForm::PreviewListBoxDrawItem(TWinControl *Control, int Index,
@@ -144,13 +161,11 @@ void __fastcall TDebugForm::PreviewListBoxDrawItem(TWinControl *Control, int Ind
 	}
 }
 //---------------------------------------------------------------------------
-//プレビュー/参照情報でのキー操作
-//---------------------------------------------------------------------------
-void __fastcall TDebugForm::ReferListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+void __fastcall TDebugForm::PreviewListBoxData(TWinControl *Control, int Index, UnicodeString &Data)
 {
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (SameText(KeyStr, KeyStr_Copy)) EditCopyAction->Execute();
+	Data = (Index>=0 && Index<ListBuff->Count)? ListBuff->Strings[Index] : EmptyStr;
 }
+
 //---------------------------------------------------------------------------
 //参照情報の描画
 //---------------------------------------------------------------------------
@@ -159,29 +174,13 @@ void __fastcall TDebugForm::ReferListBoxDrawItem(TWinControl *Control, int Index
 {
 	draw_InfListBox((TListBox*)Control, Rect, Index, State);
 }
-
 //---------------------------------------------------------------------------
-//キー操作
+//プレビュー/参照情報でのキー操作
 //---------------------------------------------------------------------------
-void __fastcall TDebugForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+void __fastcall TDebugForm::ReferListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if (SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_XC) _T("#Debug"))) return;
-
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (KeyStr.Length()==1) {
-		switch (KeyStr[1]) {
-		case 'S': StepAction->Execute();	break;
-		case 'G': GoAction->Execute();		break;
-		case 'B': BreakAction->Execute();	break;
-		case 'Q': QuitAction->Execute();	break;
-		case 'X': ExitAction->Execute();	break;
-		case 'V': VarListAction->Execute();	break;
-		case 'E': EditAction->Execute();	break;
-		case 'H': HelpAction->Execute();	break;
-		}
-
-		UpdateToolBar();
-	}
+	if (SameText(KeyStr, KeyStr_Copy)) EditCopyAction->Execute();
 }
 
 //---------------------------------------------------------------------------

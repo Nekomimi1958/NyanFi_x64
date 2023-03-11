@@ -81,14 +81,6 @@ void __fastcall TDiffDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TDiffDirDlg::StartActionUpdate(TObject *Sender)
-{
-	((TAction *)Sender)->Enabled = true;
-
-	DiffExcDirComboBox->Color = get_WinColor(!SubDirCheckBox->Checked);
-}
-
-//---------------------------------------------------------------------------
 void __fastcall TDiffDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
@@ -96,6 +88,14 @@ void __fastcall TDiffDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 		invert_CheckBox(SubDirCheckBox);
 	else
 		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#DiffDir"));
+}
+
+//---------------------------------------------------------------------------
+void __fastcall TDiffDirDlg::StartActionUpdate(TObject *Sender)
+{
+	((TAction *)Sender)->Enabled = true;
+
+	DiffExcDirComboBox->Color = get_WinColor(!SubDirCheckBox->Checked);
 }
 //---------------------------------------------------------------------------
 

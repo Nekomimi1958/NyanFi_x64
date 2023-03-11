@@ -85,6 +85,19 @@ void __fastcall TInpCmdsDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TInpCmdsDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (USAME_TI(KeyStr, "Alt+M")) {
+		invert_CheckBox(MigemoCheckBox);
+	}
+	else if (SpecialKeyProc(this, Key, Shift)) {
+		CmdsComboBox->DroppedDown = false;
+		SubComboBox->DroppedDown  = false;
+	}
+}
+
+//---------------------------------------------------------------------------
 //Œó•âƒŠƒXƒg‚ðÝ’è
 //---------------------------------------------------------------------------
 void __fastcall TInpCmdsDlg::SetList()
@@ -115,8 +128,22 @@ void __fastcall TInpCmdsDlg::SetList()
 	ItemList->Clear();
 	for (int i=0; i<CmdSetList->Count; i++) {
 		UnicodeString lbuf = CmdSetList->Strings[i];
-		if (StartsStr(IdChar, lbuf))
-			ItemList->Add(get_CmdDesc(get_tkn_r(lbuf, ':'), false,NULL,NULL, is_TV));
+		if (StartsStr(IdChar, lbuf)) {
+			UnicodeString cmd = get_tkn_r(lbuf, ':');
+			UnicodeString key;
+			for (int i=0; i<KeyFuncList->Count; i++) {
+				UnicodeString knam = KeyFuncList->Names[i];
+				if (StartsStr(IdChar, knam)) {
+					if (SameText(KeyFuncList->ValueFromIndex[i], cmd)) {
+						key = get_tkn_r(knam, ':');
+						break;
+					}
+				}
+			}
+			UnicodeString s = get_CmdDesc(cmd, false,NULL,NULL, is_TV);
+			if (!key.IsEmpty()) s.cat_sprintf(_T("\t%s"), key.c_str());
+			ItemList->Add(s);
+		}
 	}
 
 	if (!IsRef) {
@@ -166,6 +193,17 @@ void __fastcall TInpCmdsDlg::MigemoCheckBoxClick(TObject *Sender)
 	Filter();
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TInpCmdsDlg::CmdsComboBoxChange(TObject *Sender)
+{
+	if (CmdsComboBox->SelStart==CmdsComboBox->Text.Length()) {
+		Filter();
+	}
+	else {
+		CmdsComboBox->DroppedDown = false;
+		SubComboBox->DroppedDown  = false;
+	}
+}
 //---------------------------------------------------------------------------
 void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
@@ -296,17 +334,6 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyPress(TObject *Sender, System::WideC
 			Key = 0;
 }
 //---------------------------------------------------------------------------
-void __fastcall TInpCmdsDlg::CmdsComboBoxChange(TObject *Sender)
-{
-	if (CmdsComboBox->SelStart==CmdsComboBox->Text.Length()) {
-		Filter();
-	}
-	else {
-		CmdsComboBox->DroppedDown = false;
-		SubComboBox->DroppedDown  = false;
-	}
-}
-//---------------------------------------------------------------------------
 void __fastcall TInpCmdsDlg::CmdsComboBoxSelect(TObject *Sender)
 {
 	SubComboBox->Enabled = false;
@@ -325,8 +352,16 @@ void __fastcall TInpCmdsDlg::SubComboBoxDrawItem(TWinControl *Control, int Index
 	int y = Rect.Top  + get_TopMargin(cv);
 	UnicodeString lbuf = SubComboBox->Items->Strings[Index];
 	cv->TextOut(x, y, split_tkn(lbuf, ' '));
-	x += abs(cv->Font->Height) * ((SubComboBox->Tag==1)? 6 : 16);
-	cv->TextOut(x, y, Trim(lbuf));
+	if (!lbuf.IsEmpty()) {
+		x += abs(cv->Font->Height) * ((SubComboBox->Tag==1)? 6 : 16);
+		UnicodeString s = Trim(split_pre_tab(lbuf));
+		cv->TextOut(x, y, s);
+		if (!lbuf.IsEmpty()) {
+			x += cv->TextWidth(s);
+			int x1 = Rect.Right - cv->TextWidth(lbuf + " ");
+			if (x1>x) cv->TextOut(x1, y, lbuf);
+		}
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -388,8 +423,13 @@ void __fastcall TInpCmdsDlg::Filter()
 			usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, kwd, (SubComboBox->Tag==1)? 1 : 0);
 		if (!ptn.IsEmpty()) {
 			TRegExOptions opt; opt << roIgnoreCase;
-			int i=0;
-			while (i<lst->Count) if (!TRegEx::IsMatch(lst->Strings[i], ptn, opt)) lst->Delete(i); else i++;
+			int i = 0;
+			while (i<lst->Count) {
+				if (!TRegEx::IsMatch(get_pre_tab(lst->Strings[i]), ptn, opt))
+					lst->Delete(i);
+				else
+					i++;
+			}
 		}
 	}
 
@@ -421,19 +461,6 @@ void __fastcall TInpCmdsDlg::Filter()
 	if (!kwd.IsEmpty()) {
 		CmdsComboBox->SelLength = 0;
 		CmdsComboBox->SelStart  = CmdsComboBox->Text.Length();
-	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TInpCmdsDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+M")) {
-		invert_CheckBox(MigemoCheckBox);
-	}
-	else if (SpecialKeyProc(this, Key, Shift)) {
-		CmdsComboBox->DroppedDown = false;
-		SubComboBox->DroppedDown  = false;
 	}
 }
 //---------------------------------------------------------------------------

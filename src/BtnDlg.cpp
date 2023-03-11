@@ -108,6 +108,30 @@ void __fastcall TToolBtnDlg::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+bool __fastcall TToolBtnDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
+{
+	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
+		bool handled = false;
+		if (BtnCmdsComboBox->Focused() && !is_separator(CaptionEdit->Text)) {
+			UnicodeString kwd = get_tkn(get_CmdStr(BtnCmdsComboBox->Text), ':');
+			UnicodeString topic;
+			if (!kwd.IsEmpty() && !starts_AT(kwd) && !starts_Dollar(kwd)) {
+				if		(ScrMode==SCMD_TVIEW)	topic += HELPTOPIC_TV;
+				else if (ScrMode==SCMD_IVIEW)	topic += HELPTOPIC_IV;
+				else							topic += HELPTOPIC_FL;
+				topic.cat_sprintf(_T("#%s"), kwd.c_str());
+				HtmlHelpTopic(topic.c_str());
+				handled = true;
+			}
+		}
+
+		if (!handled) HtmlHelpContext(Data);
+		CallHelp = false;
+	}
+	return true;
+}
+
+//---------------------------------------------------------------------------
 //確定
 //---------------------------------------------------------------------------
 void __fastcall TToolBtnDlg::OkButtonClick(TObject *Sender)
@@ -255,6 +279,11 @@ void __fastcall TToolBtnDlg::BtnListBoxDrawItem(TWinControl *Control, int Index,
 	}
 }
 //---------------------------------------------------------------------------
+void __fastcall TToolBtnDlg::BtnListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (UserModule->ListBoxOpeItem(get_KeyStr(Key, Shift))) Key = 0;
+}
+//---------------------------------------------------------------------------
 void __fastcall TToolBtnDlg::BtnListBoxClick(TObject *Sender)
 {
 	TListBox *lp = (TListBox*)Sender;
@@ -269,11 +298,6 @@ void __fastcall TToolBtnDlg::BtnListBoxClick(TObject *Sender)
 	IconEdit->Text		  = itm_buf[2];
 
 	CmdLabel->Caption = is_separator(itm_buf[0])? "セパレータの幅 (省略時は4)" : "実行するコマンド (ExeCommands のパラメータ)";
-}
-//---------------------------------------------------------------------------
-void __fastcall TToolBtnDlg::BtnListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (UserModule->ListBoxOpeItem(get_KeyStr(Key, Shift))) Key = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -299,7 +323,6 @@ void __fastcall TToolBtnDlg::AddBtnActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = !CaptionEdit->Text.IsEmpty() || !IconEdit->Text.IsEmpty();
 }
-
 //---------------------------------------------------------------------------
 //挿入
 //---------------------------------------------------------------------------
@@ -321,32 +344,6 @@ void __fastcall TToolBtnDlg::ChgBtnActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled
 		= (!CaptionEdit->Text.IsEmpty() || !IconEdit->Text.IsEmpty()) && BtnListBox->ItemIndex!=-1;
-}
-
-//---------------------------------------------------------------------------
-//ヘルプ
-//---------------------------------------------------------------------------
-bool __fastcall TToolBtnDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
-{
-	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
-		bool handled = false;
-		if (BtnCmdsComboBox->Focused() && !is_separator(CaptionEdit->Text)) {
-			UnicodeString kwd = get_tkn(get_CmdStr(BtnCmdsComboBox->Text), ':');
-			UnicodeString topic;
-			if (!kwd.IsEmpty() && !starts_AT(kwd) && !starts_Dollar(kwd)) {
-				if		(ScrMode==SCMD_TVIEW)	topic += HELPTOPIC_TV;
-				else if (ScrMode==SCMD_IVIEW)	topic += HELPTOPIC_IV;
-				else							topic += HELPTOPIC_FL;
-				topic.cat_sprintf(_T("#%s"), kwd.c_str());
-				HtmlHelpTopic(topic.c_str());
-				handled = true;
-			}
-		}
-
-		if (!handled) HtmlHelpContext(Data);
-		CallHelp = false;
-	}
-	return true;
 }
 //---------------------------------------------------------------------------
 

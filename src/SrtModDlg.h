@@ -49,21 +49,21 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioGroup *SortModeRadioGroup;
 	TRadioGroup *SubModeRadioGroup;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall SortBothCheckBoxClick(TObject *Sender);
+	void __fastcall OptCheckBoxClick(TObject *Sender);
 	void __fastcall SortModeRadioGroupClick(TObject *Sender);
 	void __fastcall SortModeRadioGroupEnter(TObject *Sender);
 	void __fastcall SortModeRadioGroupExit(TObject *Sender);
-	void __fastcall SortBothCheckBoxClick(TObject *Sender);
-	void __fastcall OptCheckBoxClick(TObject *Sender);
-	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall AccDtoTCheckBoxClick(TObject *Sender);
-	void __fastcall PrimeComboBoxClick(TObject *Sender);
-	void __fastcall SubModeRadioGroupClick(TObject *Sender);
 	void __fastcall ExOptActionExecute(TObject *Sender);
 	void __fastcall ExOptActionUpdate(TObject *Sender);
 	void __fastcall OkActionUpdate(TObject *Sender);
+	void __fastcall PrimeComboBoxClick(TObject *Sender);
+	void __fastcall SubModeRadioGroupClick(TObject *Sender);
+	void __fastcall AccDtoTCheckBoxClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool Changed;

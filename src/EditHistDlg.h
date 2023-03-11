@@ -105,42 +105,42 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormResize(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall EditHistHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
+			const TRect &Rect, bool Pressed);
+	void __fastcall EditHistHeaderResize(TObject *Sender);
 	void __fastcall EditHistHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
+	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
+	void __fastcall ShowStatusBarActionExecute(TObject *Sender);
 	void __fastcall EditHistGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall EditHistGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall EditHistGridClick(TObject *Sender);
 	void __fastcall EditHistGridDblClick(TObject *Sender);
 	void __fastcall EditHistHeaderSectionClick(THeaderControl *HeaderControl, THeaderSection *Section);
 	void __fastcall ClrMemoItemClick(TObject *Sender);
 	void __fastcall DelMarkItemClick(TObject *Sender);
+	void __fastcall ClrAllMarkItemClick(TObject *Sender);
 	void __fastcall FilterEditChange(TObject *Sender);
 	void __fastcall FilterEditEnter(TObject *Sender);
 	void __fastcall FilterEditExit(TObject *Sender);
 	void __fastcall FilterEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FilterEditKeyPress(TObject *Sender, System::WideChar &Key);
 	void __fastcall FilterBtnClick(TObject *Sender);
-	void __fastcall EditHistHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-			const TRect &Rect, bool Pressed);
 	void __fastcall ClearAllItemClick(TObject *Sender);
 	void __fastcall NoHistItemClick(TObject *Sender);
-	void __fastcall EditHistHeaderResize(TObject *Sender);
-	void __fastcall ClrAllMarkItemClick(TObject *Sender);
-	void __fastcall ShowPropertyActionExecute(TObject *Sender);
 	void __fastcall ClrAllRecentActionExecute(TObject *Sender);
 	void __fastcall ClrAllRecentActionUpdate(TObject *Sender);
+	void __fastcall ClrBrkRecentActionExecute(TObject *Sender);
 	void __fastcall ShowUsedTimeActionExecute(TObject *Sender);
 	void __fastcall ShowFileInfoActionExecute(TObject *Sender);
 	void __fastcall ShowFileInfoActionUpdate(TObject *Sender);
-	void __fastcall ShowStatusBarActionExecute(TObject *Sender);
-	void __fastcall ClrBrkRecentActionExecute(TObject *Sender);
-	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
-	void __fastcall EditHistGridClick(TObject *Sender);
-	void __fastcall ToggleActionExecute(TObject *Sender);
+	void __fastcall ShowPropertyActionExecute(TObject *Sender);
 	void __fastcall MemoActionExecute(TObject *Sender);
 	void __fastcall OptModeActionExecute(TObject *Sender);
+	void __fastcall ToggleActionExecute(TObject *Sender);
 	void __fastcall UpdateGitInfActionExecute(TObject *Sender);
 	void __fastcall UpdateGitInfActionUpdate(TObject *Sender);
-	void __fastcall GitViewerActionExecute(TObject *Sender);
 	void __fastcall NoRepoItemClick(TObject *Sender);
+	void __fastcall GitViewerActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

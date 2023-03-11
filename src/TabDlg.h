@@ -38,14 +38,14 @@ __published:	// IDE で管理されるコンポーネント
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
-	void __fastcall RefIconBtnClick(TObject *Sender);
-	void __fastcall RefHomeBtnClick(TObject *Sender);
-	void __fastcall SetCurDirBtnClick(TObject *Sender);
-	void __fastcall OkButtonClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall RefIconBtnClick(TObject *Sender);
 	void __fastcall IconEditChange(TObject *Sender);
+	void __fastcall RefHomeBtnClick(TObject *Sender);
 	void __fastcall RefWorkBtnClick(TObject *Sender);
+	void __fastcall SetCurDirBtnClick(TObject *Sender);
 	void __fastcall WorkRadioBtnClick(TObject *Sender);
+	void __fastcall OkButtonClick(TObject *Sender);
 
 private:	// ユーザー宣言
 

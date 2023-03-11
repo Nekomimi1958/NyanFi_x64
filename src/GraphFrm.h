@@ -32,15 +32,15 @@ __published:	// IDE で管理されるコンポーネント
 	TPaintBox *PaintBox1;
 	TPopupMenu *PopupMenu1;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall PaintBox1Paint(TObject *Sender);
 	void __fastcall PaintBox1MouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
-	void __fastcall ShowInfActionExecute(TObject *Sender);
 	void __fastcall CopyImgItemClick(TObject *Sender);
+	void __fastcall ShowInfActionExecute(TObject *Sender);
 
 private:	// ユーザー宣言
 	long double MinItemValue;

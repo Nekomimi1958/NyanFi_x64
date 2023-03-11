@@ -78,6 +78,11 @@ void __fastcall TCreateDirsDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteStrGen(_T("CreDirsDlgRefDir"),	RefDir);
 }
 //---------------------------------------------------------------------------
+void __fastcall TCreateDirsDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+//---------------------------------------------------------------------------
 void __fastcall TCreateDirsDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
 	const TRect &Rect)
 {
@@ -324,12 +329,6 @@ void __fastcall TCreateDirsDlg::CreateActionUpdate(TObject *Sender)
 		StatusBar1->Panels->Items[0]->Text = EmptyStr;
 		StatusBar1->Panels->Items[1]->Text = "ì¬‚·‚é€–Ú‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B";
 	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TCreateDirsDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

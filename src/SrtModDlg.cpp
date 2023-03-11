@@ -110,6 +110,43 @@ void __fastcall TSortModeDlg::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TSortModeDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#SortDlg"))) return;
+
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	int idx = -1;
+	if		(contained_wd_i("F|Alt+F", KeyStr)) idx = 0;
+	else if (contained_wd_i("E|Alt+E", KeyStr)) idx = 1;
+	else if (AccDtoTCheckBox->Checked? contained_wd_i("T|Alt+T", KeyStr) : contained_wd_i("D|Alt+D", KeyStr)) idx = 2;
+	else if (contained_wd_i("S|Alt+S", KeyStr)) idx = 3;
+	else if (contained_wd_i("A|Alt+A", KeyStr)) idx = 4;
+	else if (contained_wd_i("U|Alt+U", KeyStr)) idx = 5;
+
+	if (idx!=-1) {
+		if (idx==SortModeRadioGroup->ItemIndex) {
+			SelByKey = true;	//現在のモードのキーが押された
+			Key = 0;
+			if (SameCloseCheckBox->Checked) {
+				Application->ProcessMessages();		//！これがないとフォーカスエラーになる
+				ModalResult = mrOk;
+			}
+		}
+		else {
+			SortModeRadioGroup->ItemIndex = idx;
+			Application->ProcessMessages();		//！これがないとフォーカスエラーになる
+		}
+	}
+	else {
+		if		(USAME_TI(KeyStr, "Alt+N")) invert_CheckBox(NaturalCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(DscNameCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+O")) invert_CheckBox(OldCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(SmallCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(DscAttrCheckBox);
+		else if (USAME_TI(KeyStr, "Alt+B")) invert_CheckBox(SortBothCheckBox);
+	}
+}
+//---------------------------------------------------------------------------
 //更新日時のアクセラレータを設定
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::SetAccDT()
@@ -144,6 +181,11 @@ void __fastcall TSortModeDlg::SortBothCheckBoxClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TSortModeDlg::OptCheckBoxClick(TObject *Sender)
+{
+	Changed = true;
+}
+//---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::SortModeRadioGroupClick(TObject *Sender)
 {
 	if (!DlgInitialized) return;
@@ -155,11 +197,6 @@ void __fastcall TSortModeDlg::SortModeRadioGroupClick(TObject *Sender)
 	else {
 		InhOk = false;
 	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TSortModeDlg::OptCheckBoxClick(TObject *Sender)
-{
-	Changed = true;
 }
 //---------------------------------------------------------------------------
 void __fastcall TSortModeDlg::SortModeRadioGroupEnter(TObject *Sender)
@@ -212,44 +249,6 @@ void __fastcall TSortModeDlg::SubModeRadioGroupClick(TObject *Sender)
 void __fastcall TSortModeDlg::AccDtoTCheckBoxClick(TObject *Sender)
 {
 	SetAccDT();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TSortModeDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#SortDlg"))) return;
-
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	int idx = -1;
-	if		(contained_wd_i("F|Alt+F", KeyStr)) idx = 0;
-	else if (contained_wd_i("E|Alt+E", KeyStr)) idx = 1;
-	else if (AccDtoTCheckBox->Checked? contained_wd_i("T|Alt+T", KeyStr) : contained_wd_i("D|Alt+D", KeyStr)) idx = 2;
-	else if (contained_wd_i("S|Alt+S", KeyStr)) idx = 3;
-	else if (contained_wd_i("A|Alt+A", KeyStr)) idx = 4;
-	else if (contained_wd_i("U|Alt+U", KeyStr)) idx = 5;
-
-	if (idx!=-1) {
-		if (idx==SortModeRadioGroup->ItemIndex) {
-			SelByKey = true;	//現在のモードのキーが押された
-			Key = 0;
-			if (SameCloseCheckBox->Checked) {
-				Application->ProcessMessages();		//！これがないとフォーカスエラーになる
-				ModalResult = mrOk;
-			}
-		}
-		else {
-			SortModeRadioGroup->ItemIndex = idx;
-			Application->ProcessMessages();		//！これがないとフォーカスエラーになる
-		}
-	}
-	else {
-		if		(USAME_TI(KeyStr, "Alt+N")) invert_CheckBox(NaturalCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(DscNameCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+O")) invert_CheckBox(OldCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(SmallCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(DscAttrCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+B")) invert_CheckBox(SortBothCheckBox);
-	}
 }
 //---------------------------------------------------------------------------
 

@@ -37,12 +37,12 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioGroup *SizeRadioGroup;
 	TRadioGroup *TimeRadioGroup;
 
+	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall OkActionUpdate(TObject *Sender);
 	void __fastcall OptRadioGroupClick(TObject *Sender);
+	void __fastcall OkActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	void __fastcall WmMenuChar(TMessage &msg)

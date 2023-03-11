@@ -39,10 +39,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall AllCheckBoxClick(TObject *Sender);
-	void __fastcall ModeBtnClick(TObject *Sender);
-	void __fastcall InfoListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall ModeBtnClick(TObject *Sender);
+	void __fastcall AllCheckBoxClick(TObject *Sender);
+	void __fastcall InfoListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall RenameEditKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall RenameEditKeyPress(TObject *Sender, System::WideChar &Key);
 

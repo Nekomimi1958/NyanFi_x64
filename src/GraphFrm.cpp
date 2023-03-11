@@ -120,6 +120,12 @@ void __fastcall TGraphForm::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TGraphForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_TV) _T("#CsvGraph"));
+}
+
+//---------------------------------------------------------------------------
 //ƒOƒ‰ƒt‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TGraphForm::PaintBox1Paint(TObject *Sender)
@@ -223,12 +229,6 @@ void __fastcall TGraphForm::ShowInfActionExecute(TObject *Sender)
 	TAction *ap = (TAction *)Sender;
 	ap->Checked = !ap->Checked;
 	PaintBox1->Repaint();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TGraphForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_TV) _T("#CsvGraph"));
 }
 //---------------------------------------------------------------------------
 

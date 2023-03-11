@@ -372,6 +372,37 @@ void __fastcall TFindFileDlg::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TFindFileDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (SpecialKeyProc(this, Key, Shift)) return;
+
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if		(USAME_TI(KeyStr, "Alt+D")) set_focus_GroupBox(DateGroupBox);
+	else if (USAME_TI(KeyStr, "Alt+S")) set_focus_GroupBox(SizeGroupBox);
+	else if (USAME_TI(KeyStr, "Alt+A")) set_focus_GroupBox(AttrGroupBox);
+	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(SubDirCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(ArcCheckBox);
+	else if (USAME_TI(KeyStr, "Alt+X")) invert_CheckBox(ExtraCheckBox);
+	else if (ExtPanel->Visible) {
+		if		(USAME_TI(KeyStr, "Alt+B")) set_focus_GroupBox(RateGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+C")) set_focus_GroupBox(CodeGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+E")) set_focus_GroupBox(ExifGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+F")) set_focus_GroupBox(FrmtGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+G")) set_focus_GroupBox(TagGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+I")) set_focus_GroupBox(PropGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+L")) set_focus_GroupBox(LCntGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+N")) set_focus_GroupBox(IconGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+O")) set_focus_GroupBox(OtherGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+P")) set_focus_GroupBox(FpsGroupBox);
+		else if (USAME_TI(KeyStr, "Alt+T")) {
+			if (!set_focus_GroupBox(TimeGroupBox)) set_focus_GroupBox(TextGroupBox);
+		}
+		else if (USAME_TI(KeyStr, "Alt+W")) {
+			if (!set_focus_GroupBox(FrSzGroupBox)) set_focus_GroupBox(ImgSzGroupBox);
+		}
+	}
+}
+//---------------------------------------------------------------------------
 //Šg’£ŒŸõ‚ðƒNƒŠƒA
 //---------------------------------------------------------------------------
 void __fastcall TFindFileDlg::ClearExtraCond()
@@ -705,38 +736,6 @@ void __fastcall TFindFileDlg::FindOkActionUpdate(TObject *Sender)
 		= CBTAG_HISTORY | (TxtKwdComboBox->Focused()? CBTAG_RGEX_V : 0) | (TxtRegExCheckBox->Checked? CBTAG_RGEX_E : 0);
 	PrpKwdEdit->Tag
 		= (PrpKwdEdit->Focused()? EDTAG_RGEX_V : 0) | (PrpRegExCheckBox->Checked? EDTAG_RGEX_E : 0);
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TFindFileDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (SpecialKeyProc(this, Key, Shift)) return;
-
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+D")) set_focus_GroupBox(DateGroupBox);
-	else if (USAME_TI(KeyStr, "Alt+S")) set_focus_GroupBox(SizeGroupBox);
-	else if (USAME_TI(KeyStr, "Alt+A")) set_focus_GroupBox(AttrGroupBox);
-	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(SubDirCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(ArcCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+X")) invert_CheckBox(ExtraCheckBox);
-	else if (ExtPanel->Visible) {
-		if		(USAME_TI(KeyStr, "Alt+B")) set_focus_GroupBox(RateGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+C")) set_focus_GroupBox(CodeGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+E")) set_focus_GroupBox(ExifGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+F")) set_focus_GroupBox(FrmtGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+G")) set_focus_GroupBox(TagGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+I")) set_focus_GroupBox(PropGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+L")) set_focus_GroupBox(LCntGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+N")) set_focus_GroupBox(IconGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+O")) set_focus_GroupBox(OtherGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+P")) set_focus_GroupBox(FpsGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+T")) {
-			if (!set_focus_GroupBox(TimeGroupBox)) set_focus_GroupBox(TextGroupBox);
-		}
-		else if (USAME_TI(KeyStr, "Alt+W")) {
-			if (!set_focus_GroupBox(FrSzGroupBox)) set_focus_GroupBox(ImgSzGroupBox);
-		}
-	}
 }
 //---------------------------------------------------------------------------
 

@@ -72,7 +72,6 @@ bool __fastcall TFindKeyDlg::IsFirstCmdKey(UnicodeString keystr)
 	if (res) KeyLabel->Caption = "2ストロークキー: " + KeyStr + "~";
 	return res;
 }
-
 //---------------------------------------------------------------------------
 //ENTER以外のキー処理
 //---------------------------------------------------------------------------
@@ -92,6 +91,7 @@ void __fastcall TFindKeyDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 
 	Key = 0;
 }
+
 //---------------------------------------------------------------------------
 //ENTERキーの処理 (DummyBtn で受け取る)
 //---------------------------------------------------------------------------

@@ -47,7 +47,11 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall TaskHeaderResize(TObject *Sender);
 	void __fastcall TaskHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
+	void __fastcall TaskHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
+			const TRect &Rect, bool Pressed);
 	void __fastcall Timer1Timer(TObject *Sender);
 	void __fastcall TaskGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall TaskGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
@@ -55,7 +59,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CancelTaskActionUpdate(TObject *Sender);
 	void __fastcall CanTaskAllActionExecute(TObject *Sender);
 	void __fastcall CanTaskAllActionUpdate(TObject *Sender);
-	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall PauseActionExecute(TObject *Sender);
 	void __fastcall PauseActionUpdate(TObject *Sender);
 	void __fastcall RestartActionExecute(TObject *Sender);
@@ -64,9 +67,6 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SuspendActionUpdate(TObject *Sender);
 	void __fastcall StartActionExecute(TObject *Sender);
 	void __fastcall StartActionUpdate(TObject *Sender);
-	void __fastcall TaskHeaderResize(TObject *Sender);
-	void __fastcall TaskHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
-			const TRect &Rect, bool Pressed);
 	void __fastcall ExtStartActionExecute(TObject *Sender);
 	void __fastcall ExtStartActionUpdate(TObject *Sender);
 

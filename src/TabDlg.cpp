@@ -58,6 +58,15 @@ void __fastcall TTabSetDlg::FormShow(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TTabSetDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (equal_F1(get_KeyStr(Key, Shift))) {
+		HtmlHelpTopic(_T(HELPTOPIC_FL) _T("#TabDlg"));
+		Key = 0;
+	}
+}
+
+//---------------------------------------------------------------------------
 //アイコンを参照
 //---------------------------------------------------------------------------
 void __fastcall TTabSetDlg::RefIconBtnClick(TObject *Sender)
@@ -117,15 +126,6 @@ void __fastcall TTabSetDlg::OkButtonClick(TObject *Sender)
 		itm_buf[6] = Work1RadioBtn->Checked? "1" : Work2RadioBtn->Checked? "2" : "0";
 		itm_buf[7] = Work2RadioBtn->Checked? WorkListEdit->Text : EmptyStr;
 		TabList->Strings[TabIndex] = make_csv_rec_str(itm_buf);
-	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TTabSetDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (equal_F1(get_KeyStr(Key, Shift))) {
-		HtmlHelpTopic(_T(HELPTOPIC_FL) _T("#TabDlg"));
-		Key = 0;
 	}
 }
 //---------------------------------------------------------------------------

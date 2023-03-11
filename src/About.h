@@ -25,8 +25,8 @@ __published:
 	TLabel *Version;
 	TPanel *Panel1;
 	void __fastcall FormCreate(TObject *Sender);
-	void __fastcall SupportURLClick(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
+	void __fastcall SupportURLClick(TObject *Sender);
 	void __fastcall ListNyanBtnClick(TObject *Sender);
 
 private:

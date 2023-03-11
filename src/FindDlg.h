@@ -150,19 +150,19 @@ __published:	// IDE で管理されるコンポーネント
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
-	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);
+	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
+	void __fastcall RegExCheckBoxClick(TObject *Sender);
+	void __fastcall TxtRegExCheckBoxClick(TObject *Sender);
+	void __fastcall ExtraCheckBoxClick(TObject *Sender);
+	void __fastcall ArcCheckBoxClick(TObject *Sender);
+	void __fastcall MaskComboBoxChange(TObject *Sender);
 	void __fastcall DateBtnClick(TObject *Sender);
 	void __fastcall AttrCheckBoxClick(TObject *Sender);
 	void __fastcall CondChangeUpdate(TObject *Sender);
 	void __fastcall FindOkActionExecute(TObject *Sender);
 	void __fastcall FindOkActionUpdate(TObject *Sender);
-	void __fastcall MaskComboBoxChange(TObject *Sender);
-	void __fastcall ExtraCheckBoxClick(TObject *Sender);
-	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall ArcCheckBoxClick(TObject *Sender);
-	void __fastcall RegExCheckBoxClick(TObject *Sender);
-	void __fastcall TxtRegExCheckBoxClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

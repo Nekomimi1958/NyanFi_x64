@@ -95,6 +95,12 @@ void __fastcall TBackupDlg::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TBackupDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TBackupDlg::SetupComboBoxClick(TObject *Sender)
 {
 	int idx = SetupComboBox->ItemIndex;
@@ -215,11 +221,6 @@ void __fastcall TBackupDlg::OkButtonClick(TObject *Sender)
 	else {
 		ModalResult = mrOk;
 	}
-}
-//---------------------------------------------------------------------------
-void __fastcall TBackupDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

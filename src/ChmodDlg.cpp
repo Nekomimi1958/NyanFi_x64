@@ -30,6 +30,12 @@ void __fastcall TFtpChmodDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->SavePosInfo(this);
 }
 //---------------------------------------------------------------------------
+void __fastcall TFtpChmodDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+
+//---------------------------------------------------------------------------
 void __fastcall TFtpChmodDlg::PrmCheckBoxClick(TObject *Sender)
 {
 	if (InhChange) return;
@@ -89,11 +95,5 @@ bool __fastcall TFtpChmodDlg::SetPermission(UnicodeString prm)
 	W3CheckBox->Checked = (prm[9]=='w');
 	X3CheckBox->Checked = (prm[10]=='x');
 	return true;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TFtpChmodDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------

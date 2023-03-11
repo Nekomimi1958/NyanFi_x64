@@ -63,6 +63,11 @@ void __fastcall TJoinTextDlg::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TJoinTextDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+//---------------------------------------------------------------------------
 void __fastcall TJoinTextDlg::SrcFileListBoxDrawItem(TWinControl *Control, int Index,
 	TRect &Rect, TOwnerDrawState State)
 {
@@ -113,12 +118,6 @@ void __fastcall TJoinTextDlg::JoinActionUpdate(TObject *Sender)
 
 	InvColIfEmpty(TemplateEdit);
 	BomCheckBox->Enabled = StartsStr("UTF-", OutCodeComboBox->Text);
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TJoinTextDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

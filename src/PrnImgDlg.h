@@ -68,18 +68,18 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-	void __fastcall PrnPropBtnClick(TObject *Sender);
-	void __fastcall OptionChanged(TObject *Sender);
-	void __fastcall OptionUpDownClick(TObject *Sender, TUDBtnType Button);
-	void __fastcall PrintActionExecute(TObject *Sender);
-	void __fastcall PrintActionUpdate(TObject *Sender);
-	void __fastcall RefFontBtnClick(TObject *Sender);
-	void __fastcall NextBtnClick(TObject *Sender);
-	void __fastcall PrevBtn_Click(TObject *Sender);
-	void __fastcall TopBtnClick(TObject *Sender);
-	void __fastcall EndBtnClick(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall PageControl1DrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);
+	void __fastcall OptionChanged(TObject *Sender);
+	void __fastcall OptionUpDownClick(TObject *Sender, TUDBtnType Button);
+	void __fastcall PrnPropBtnClick(TObject *Sender);
+	void __fastcall RefFontBtnClick(TObject *Sender);
+	void __fastcall PrintActionExecute(TObject *Sender);
+	void __fastcall PrintActionUpdate(TObject *Sender);
+	void __fastcall PrevBtn_Click(TObject *Sender);
+	void __fastcall NextBtnClick(TObject *Sender);
+	void __fastcall TopBtnClick(TObject *Sender);
+	void __fastcall EndBtnClick(TObject *Sender);
 
 private:	// ユーザー宣言
 	bool DlgInitialized;

@@ -99,6 +99,25 @@ void __fastcall TMemoForm::FormResize(TObject *Sender)
 	set_ControlRBCorner(MemoBox, BlankPanel);
 }
 //---------------------------------------------------------------------------
+void __fastcall TMemoForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	UnicodeString KeyStr = get_KeyStr(Key, Shift);
+	if (equal_ESC(KeyStr)) {
+		Key = 0;
+		ModalResult = mrCancel;
+	}
+	else if (USAME_TI(KeyStr, "Ctrl+ENTER")) {
+		Key = 0;
+		ModalResult = mrOk;
+	}
+	else if (USAME_TI(KeyStr, "Alt+O")) {
+		ChgOptBtnClick(NULL);
+	}
+	else {
+		SpecialKeyProc(this, Key, Shift);
+	}
+}
+//---------------------------------------------------------------------------
 void __fastcall TMemoForm::MemoBoxChange(TObject *Sender)
 {
 	set_ControlRBCorner(MemoBox, BlankPanel);
@@ -205,25 +224,4 @@ void __fastcall TMemoForm::ColDefItemClick(TObject *Sender)
 	ColorList->Values["bgEdBox"] = IntToStr((int)col_bgEdBox);
 	ColorList->Values["fgEdBox"] = IntToStr((int)col_fgEdBox);
 }
-
 //---------------------------------------------------------------------------
-void __fastcall TMemoForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (equal_ESC(KeyStr)) {
-		Key = 0;
-		ModalResult = mrCancel;
-	}
-	else if (USAME_TI(KeyStr, "Ctrl+ENTER")) {
-		Key = 0;
-		ModalResult = mrOk;
-	}
-	else if (USAME_TI(KeyStr, "Alt+O")) {
-		ChgOptBtnClick(NULL);
-	}
-	else {
-		SpecialKeyProc(this, Key, Shift);
-	}
-}
-//---------------------------------------------------------------------------
-

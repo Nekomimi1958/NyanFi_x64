@@ -71,6 +71,14 @@ void __fastcall TDirHistoryDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TDirHistoryDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	if (!FindBusy && Key==VK_ESCAPE)
+		Close();
+	else
+		SpecialKeyProc(this, Key, Shift);
+}
+//---------------------------------------------------------------------------
 void __fastcall TDirHistoryDlg::WmDpiChanged(TMessage &msg)
 {
 	TForm::Dispatch(&msg);
@@ -167,11 +175,6 @@ void __fastcall TDirHistoryDlg::UpdateListBox(
 	Caption = tit;
 }
 
-//---------------------------------------------------------------------------
-void __fastcall TDirHistoryDlg::DirHistListBoxData(TWinControl *Control, int Index, UnicodeString &Data)
-{
-	Data = (Index>=0 && Index<ListBuff->Count)? ListBuff->Strings[Index] : EmptyStr;
-}
 
 //---------------------------------------------------------------------------
 //€–Ú‚Ì•`‰æ
@@ -220,11 +223,9 @@ void __fastcall TDirHistoryDlg::DirHistListBoxDrawItem(TWinControl *Control, int
 }
 
 //---------------------------------------------------------------------------
-//“ü—Í—“‚Ì•`‰æ
-//---------------------------------------------------------------------------
-void __fastcall TDirHistoryDlg::InpPaintBoxPaint(TObject *Sender)
+void __fastcall TDirHistoryDlg::DirHistListBoxData(TWinControl *Control, int Index, UnicodeString &Data)
 {
-	draw_InputPaintBox((TPaintBox*)Sender, (IsMigemo? "Migemo: " : "") + IncSeaWord);
+	Data = (Index>=0 && Index<ListBuff->Count)? ListBuff->Strings[Index] : EmptyStr;
 }
 
 //---------------------------------------------------------------------------
@@ -361,6 +362,13 @@ void __fastcall TDirHistoryDlg::DirHistListBoxDblClick(TObject *Sender)
 	perform_Key_RETURN((TControl*)Sender);
 }
 
+//---------------------------------------------------------------------------
+//“ü—Í—“‚Ì•`‰æ
+//---------------------------------------------------------------------------
+void __fastcall TDirHistoryDlg::InpPaintBoxPaint(TObject *Sender)
+{
+	draw_InputPaintBox((TPaintBox*)Sender, (IsMigemo? "Migemo: " : "") + IncSeaWord);
+}
 //---------------------------------------------------------------------------
 //Žw’èƒfƒBƒŒƒNƒgƒŠˆÈ‰º‚ð‘S‘Ì—š—ð‚É’Ç‰Á
 //---------------------------------------------------------------------------
@@ -535,15 +543,6 @@ void __fastcall TDirHistoryDlg::PropertyActionExecute(TObject *Sender)
 void __fastcall TDirHistoryDlg::PropertyActionUpdate(TObject *Sender)
 {
 	((TAction*)Sender)->Enabled = DirHistListBox->ItemIndex!=-1;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TDirHistoryDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (!FindBusy && Key==VK_ESCAPE)
-		Close();
-	else
-		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

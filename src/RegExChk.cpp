@@ -155,6 +155,12 @@ void __fastcall TRegExChecker::FormDestroy(TObject *Sender)
 	delete MatchWdList;
 }
 //---------------------------------------------------------------------------
+void __fastcall TRegExChecker::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+
+//---------------------------------------------------------------------------
 //ƒeƒXƒg
 //---------------------------------------------------------------------------
 void __fastcall TRegExChecker::TestActionExecute(TObject *Sender)
@@ -439,12 +445,6 @@ void __fastcall TRegExChecker::ResListBoxDrawItem(TWinControl *Control, int Inde
 		cv->TextRect(rc, rc.Left, rc.Top, sbuf);
 		rc.Left += w;
 	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TRegExChecker::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

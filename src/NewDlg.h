@@ -31,10 +31,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
-	void __fastcall RefTplBtnClick(TObject *Sender);
-	void __fastcall OkActionUpdate(TObject *Sender);
 	void __fastcall TplComboBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
+	void __fastcall RefTplBtnClick(TObject *Sender);
 	void __fastcall TplComboBoxClick(TObject *Sender);
+	void __fastcall OkActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
 	UnicodeString TplRefDir;

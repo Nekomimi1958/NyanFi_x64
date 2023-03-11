@@ -80,22 +80,22 @@ void __fastcall TSelDriveDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//ヘッダの描画
-//---------------------------------------------------------------------------
-void __fastcall TSelDriveDlg::DriveHeaderDrawSection(THeaderControl *HeaderControl,
-	THeaderSection *Section, const TRect &Rect, bool Pressed)
+void __fastcall TSelDriveDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	draw_SortHeader(HeaderControl, Section, Rect);
-}
-//---------------------------------------------------------------------------
-void __fastcall TSelDriveDlg::DriveHeaderResize(TObject *Sender)
-{
-	set_HeaderFromGrid(DriveGrid, DriveHeader);
+	if (USAME_TI(get_KeyStr(Key, Shift), "Alt+O"))
+		ChgOptBtnClick(NULL);
+	else
+		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 void __fastcall TSelDriveDlg::FormResize(TObject *Sender)
 {
 	SetOptBtn();
+}
+//---------------------------------------------------------------------------
+void __fastcall TSelDriveDlg::DriveHeaderResize(TObject *Sender)
+{
+	set_HeaderFromGrid(DriveGrid, DriveHeader);
 }
 //---------------------------------------------------------------------------
 void __fastcall TSelDriveDlg::DriveHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section)
@@ -105,6 +105,14 @@ void __fastcall TSelDriveDlg::DriveHeaderSectionResize(THeaderControl *HeaderCon
 	SetOptBtn();
 }
 
+//---------------------------------------------------------------------------
+//ヘッダの描画
+//---------------------------------------------------------------------------
+void __fastcall TSelDriveDlg::DriveHeaderDrawSection(THeaderControl *HeaderControl,
+	THeaderSection *Section, const TRect &Rect, bool Pressed)
+{
+	draw_SortHeader(HeaderControl, Section, Rect);
+}
 //---------------------------------------------------------------------------
 void __fastcall TSelDriveDlg::SetOptBtn()
 {
@@ -192,12 +200,6 @@ void __fastcall TSelDriveDlg::UpdateDriveList()
 	gp->SetFocus();
 }
 
-//---------------------------------------------------------------------------
-void __fastcall TSelDriveDlg::OptCheckBoxClick(TObject *Sender)
-{
-	LargeIconCheckBox->Enabled = ShowIconCheckBox->Checked;
-	UpdateDriveList();
-}
 //---------------------------------------------------------------------------
 void __fastcall TSelDriveDlg::ToRootCheckBoxClick(TObject *Sender)
 {
@@ -423,6 +425,12 @@ void __fastcall TSelDriveDlg::DriveGridDblClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TSelDriveDlg::OptCheckBoxClick(TObject *Sender)
+{
+	LargeIconCheckBox->Enabled = ShowIconCheckBox->Checked;
+	UpdateDriveList();
+}
+//---------------------------------------------------------------------------
 //ドライブ使用率推移を表示
 //---------------------------------------------------------------------------
 void __fastcall TSelDriveDlg::ShowDriveGraph()
@@ -542,15 +550,6 @@ void __fastcall TSelDriveDlg::ChgOptBtnClick(TObject *Sender)
 	OptPanel->Visible	= !OptPanel->Visible;
 	BlankPanel->Visible = !OptPanel->Visible;
 	SetOptBtn();
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TSelDriveDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	if (USAME_TI(get_KeyStr(Key, Shift), "Alt+O"))
-		ChgOptBtnClick(NULL);
-	else
-		SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

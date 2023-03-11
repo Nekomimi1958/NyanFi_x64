@@ -297,6 +297,11 @@ void __fastcall TEditHistoryDlg::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TEditHistoryDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+//---------------------------------------------------------------------------
 //ヘッダの描画
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::EditHistHeaderDrawSection(THeaderControl *HeaderControl,
@@ -716,6 +721,20 @@ bool __fastcall TEditHistoryDlg::del_HistItem()
 		return false;
 	}
 }
+//---------------------------------------------------------------------------
+bool __fastcall TEditHistoryDlg::set_FileName(int idx)
+{
+	if (idx>=0 && idx<HistBufList->Count) {
+		file_rec *fp = (file_rec*)HistBufList->Objects[idx];
+		EditFileName = fp->f_name;
+		if (isTags) TagJumpInf = fp->alias;
+	}
+	else {
+		EditFileName = EmptyStr;
+	}
+
+	return !EditFileName.IsEmpty();
+}
 
 //---------------------------------------------------------------------------
 //セルの描画
@@ -894,22 +913,6 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 	//カーソル
 	draw_GridCursor(gp, Rect, ARow, State);
 }
-
-//---------------------------------------------------------------------------
-bool __fastcall TEditHistoryDlg::set_FileName(int idx)
-{
-	if (idx>=0 && idx<HistBufList->Count) {
-		file_rec *fp = (file_rec*)HistBufList->Objects[idx];
-		EditFileName = fp->f_name;
-		if (isTags) TagJumpInf = fp->alias;
-	}
-	else {
-		EditFileName = EmptyStr;
-	}
-
-	return !EditFileName.IsEmpty();
-}
-
 //---------------------------------------------------------------------------
 //キー操作
 //---------------------------------------------------------------------------
@@ -1021,9 +1024,6 @@ void __fastcall TEditHistoryDlg::EditHistGridClick(TObject *Sender)
 {
 	SetSttBar();
 }
-
-//---------------------------------------------------------------------------
-//マウス操作
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::EditHistGridDblClick(TObject *Sender)
 {
@@ -1152,11 +1152,6 @@ void __fastcall TEditHistoryDlg::FilterEditExit(TObject *Sender)
 	CloseIME(Handle);
 	InvColIfEmpty(FilterEdit);
 }
-//---------------------------------------------------------------------------
-void __fastcall TEditHistoryDlg::FilterBtnClick(TObject *Sender)
-{
-	FilterEdit->SetFocus();
-}
 
 //---------------------------------------------------------------------------
 //フィルタ欄でのキー操作
@@ -1189,6 +1184,11 @@ void __fastcall TEditHistoryDlg::FilterEditKeyPress(TObject *Sender, System::Wid
 	}
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TEditHistoryDlg::FilterBtnClick(TObject *Sender)
+{
+	FilterEdit->SetFocus();
+}
 //---------------------------------------------------------------------------
 //履歴をすべて削除
 //---------------------------------------------------------------------------
@@ -1397,12 +1397,6 @@ void __fastcall TEditHistoryDlg::GitViewerActionExecute(TObject *Sender)
 		CmdStr = "GitViewer";
 		ModalResult = mrClose;
 	}
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TEditHistoryDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
 

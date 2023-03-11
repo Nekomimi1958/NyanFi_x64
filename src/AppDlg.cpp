@@ -312,6 +312,28 @@ void __fastcall TAppListDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusP
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TAppListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	SpecialKeyProc(this, Key, Shift);
+}
+//---------------------------------------------------------------------------
+//ホイール操作
+//---------------------------------------------------------------------------
+void __fastcall TAppListDlg::FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
+	TPoint &MousePos, bool &Handled)
+{
+	if (AppListBox->Focused()) {
+		ExeCmdListBox(AppListBox, (WheelDelta<0)? _T("CursorDown") : _T("CursorUp"));
+		UpdateAppSttBar();
+		Handled = true;
+	}
+	else if (LaunchListBox->Focused()) {
+		ExeCmdListBox(LaunchListBox, (WheelDelta<0)? _T("CursorDown") : _T("CursorUp"));
+		UpdateLaunchSttBar();
+		Handled = true;
+	}
+}
+//---------------------------------------------------------------------------
 //ショートカットファイルのドロップ受け入れ
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::WMDropFiles(TWMDropFiles &msg)
@@ -375,16 +397,6 @@ UnicodeString __fastcall TAppListDlg::get_size_str_K(SIZE_T sz)
 	return szstr;
 }
 
-//---------------------------------------------------------------------------
-void __fastcall TAppListDlg::AppListBoxEnter(TObject *Sender)
-{
-	UpdateAppSttBar();
-}
-//---------------------------------------------------------------------------
-void __fastcall TAppListDlg::LaunchListBoxEnter(TObject *Sender)
-{
-	UpdateLaunchSttBar();
-}
 
 //---------------------------------------------------------------------------
 //インクリメンタルサーチモードの設定
@@ -1180,6 +1192,11 @@ void __fastcall TAppListDlg::AppListBoxData(TWinControl *Control, int Index, Uni
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TAppListDlg::AppListBoxEnter(TObject *Sender)
+{
+	UpdateAppSttBar();
+}
+//---------------------------------------------------------------------------
 //一覧のキー操作
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::AppListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -1699,6 +1716,11 @@ void __fastcall TAppListDlg::LaunchListBoxData(TWinControl *Control, int Index, 
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TAppListDlg::LaunchListBoxEnter(TObject *Sender)
+{
+	UpdateLaunchSttBar();
+}
+//---------------------------------------------------------------------------
 //ランチャーのキー操作
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -1981,29 +2003,7 @@ void __fastcall TAppListDlg::PropertyItemClick(TObject *Sender)
 	}
 }
 
-//---------------------------------------------------------------------------
-//ホイール操作
-//---------------------------------------------------------------------------
-void __fastcall TAppListDlg::FormMouseWheel(TObject *Sender, TShiftState Shift, int WheelDelta,
-	TPoint &MousePos, bool &Handled)
-{
-	if (AppListBox->Focused()) {
-		ExeCmdListBox(AppListBox, (WheelDelta<0)? _T("CursorDown") : _T("CursorUp"));
-		UpdateAppSttBar();
-		Handled = true;
-	}
-	else if (LaunchListBox->Focused()) {
-		ExeCmdListBox(LaunchListBox, (WheelDelta<0)? _T("CursorDown") : _T("CursorUp"));
-		UpdateLaunchSttBar();
-		Handled = true;
-	}
-}
 
-//---------------------------------------------------------------------------
-void __fastcall TAppListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
-{
-	SpecialKeyProc(this, Key, Shift);
-}
 
 //---------------------------------------------------------------------------
 //入力欄の描画

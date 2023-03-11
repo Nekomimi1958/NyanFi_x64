@@ -90,6 +90,20 @@ void __fastcall TGrepExOptDlg::FormClose(TObject *Sender, TCloseAction &Action)
 }
 
 //---------------------------------------------------------------------------
+//ヘルプ
+//---------------------------------------------------------------------------
+bool __fastcall TGrepExOptDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
+{
+	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
+		UnicodeString topic = (NyanFiForm->GrepPageControl->ActivePage==NyanFiForm->FindSheet)? HELPTOPIC_GR : HELPTOPIC_RP;
+		topic += "#Option";
+		HtmlHelpTopic(topic.c_str());
+		CallHelp = false;
+	}
+
+	return true;
+}
+//---------------------------------------------------------------------------
 void __fastcall TGrepExOptDlg::PageControl1DrawTab(TCustomTabControl *Control,
 	int TabIndex, const TRect &Rect, bool Active)
 {
@@ -206,21 +220,6 @@ void __fastcall TGrepExOptDlg::OkButtonClick(TObject *Sender)
 {
 	//コントロールのタグにしたがって変更を適用
 	ApplyOptionByTag((TForm *)this);
-}
-
-//---------------------------------------------------------------------------
-//ヘルプ
-//---------------------------------------------------------------------------
-bool __fastcall TGrepExOptDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
-{
-	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
-		UnicodeString topic = (NyanFiForm->GrepPageControl->ActivePage==NyanFiForm->FindSheet)? HELPTOPIC_GR : HELPTOPIC_RP;
-		topic += "#Option";
-		HtmlHelpTopic(topic.c_str());
-		CallHelp = false;
-	}
-
-	return true;
 }
 //---------------------------------------------------------------------------
 
