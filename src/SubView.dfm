@@ -8,7 +8,6 @@ object SubViewer: TSubViewer
   DoubleBuffered = True
   ParentFont = True
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
   PopupMenu = PopupMenu1
   Position = poDesigned
   OnClick = FormClick
@@ -16,8 +15,7 @@ object SubViewer: TSubViewer
   OnHide = FormHide
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object BorderShape1: TShape
     Left = 0
     Top = 0
@@ -49,8 +47,11 @@ object SubViewer: TSubViewer
     Height = 247
     Align = alClient
     BevelOuter = bvNone
+    ParentBackground = False
     TabOrder = 0
     StyleElements = []
+    ExplicitWidth = 300
+    ExplicitHeight = 235
     object Image1: TImage
       Left = 0
       Top = 0

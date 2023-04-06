@@ -6,7 +6,6 @@ object ExTxtViewer: TExTxtViewer
   ClientWidth = 624
   Color = clBtnFace
   ParentFont = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnActivate = FormActivate
@@ -18,8 +17,7 @@ object ExTxtViewer: TExTxtViewer
   OnMouseWheel = FormMouseWheel
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object TxtViewPanel: TPanel
     Left = 0
     Top = 0
@@ -29,9 +27,12 @@ object ExTxtViewer: TExTxtViewer
     Align = alClient
     BevelOuter = bvNone
     DoubleBuffered = True
+    ParentBackground = False
     ParentDoubleBuffered = False
     TabOrder = 0
     StyleElements = [seBorder]
+    ExplicitWidth = 620
+    ExplicitHeight = 560
     object ViewMemo: TRichEdit
       Left = 0
       Top = 0
@@ -54,7 +55,8 @@ object ExTxtViewer: TExTxtViewer
       TabOrder = 1
       Visible = False
       WantReturns = False
-      Zoom = 100
+      ExplicitWidth = 620
+      ExplicitHeight = 560
     end
     object TxtMainPanel: TPanel
       Left = 0
@@ -64,6 +66,8 @@ object ExTxtViewer: TExTxtViewer
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 620
+      ExplicitHeight = 560
       object TxtSttHeader: TStatusBar
         Left = 0
         Top = 0
@@ -100,6 +104,7 @@ object ExTxtViewer: TExTxtViewer
         UseSystemFont = False
         StyleElements = [seBorder]
         OnDrawPanel = TxtSttHeaderDrawPanel
+        ExplicitWidth = 620
       end
       object TxtScrollPanel: TPanel
         Left = 0
@@ -109,9 +114,12 @@ object ExTxtViewer: TExTxtViewer
         Align = alClient
         BevelOuter = bvNone
         DoubleBuffered = True
+        ParentBackground = False
         ParentDoubleBuffered = False
         TabOrder = 1
         StyleElements = [seBorder]
+        ExplicitWidth = 620
+        ExplicitHeight = 541
         object TextPaintBox: TPaintBox
           Left = 0
           Top = 16
@@ -153,6 +161,8 @@ object ExTxtViewer: TExTxtViewer
           TabOrder = 0
           TabStop = False
           OnChange = TextScrollBarChange
+          ExplicitLeft = 603
+          ExplicitHeight = 525
         end
         object TextCurColPanel: TPanel
           Left = 32

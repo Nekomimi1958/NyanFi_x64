@@ -66,13 +66,6 @@ private:	// ユーザー宣言
 
 	void __fastcall WmExitSizeMove(TMessage &msg) { Application->MainForm->SetFocus(); }
 
-	TWndMethod org_ImgPanelWndProc;
-	void __fastcall ImgPanelWndProc(TMessage &msg)
-	{
-		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-		org_ImgPanelWndProc(msg);
-	}
-
 	double __fastcall GetZoomRatio();
 
 public:		// ユーザー宣言

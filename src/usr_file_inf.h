@@ -143,7 +143,7 @@ bool get_AniInf(UnicodeString fnam, TStringList *lst);
 
 //---------------------------------------------------------------------------
 void get_AppInf(UnicodeString fnam, TStringList *lst, bool check = true);
-bool get_DllExpFunc(UnicodeString fnam, TStringList *lst);
+bool get_DllExpFunc(AnsiString fnam, TStringList *lst, int sort_mode = 0, int list_mode = 0);
 void get_BorlandInf(UnicodeString fnam, TStringList *lst);
 void get_TagsInf(UnicodeString fnam, TStringList *lst);
 

@@ -137,20 +137,6 @@ private:	// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall WmExitSizeMove(TMessage &msg);
 	void __fastcall WmDropped(TMessage &msg);
 
-	TWndMethod org_TvViewPanelWndProc;
-	void __fastcall TvViewPanelWndProc(TMessage &msg)
-	{
-		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-		org_TvViewPanelWndProc(msg);
-	}
-
-	TWndMethod org_TvScrlPanelWndProc;
-	void __fastcall TvScrlPanelWndProc(TMessage &msg)
-	{
-		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-		org_TvScrlPanelWndProc(msg);
-	}
-
 	TWndMethod org_TxtSttHdrWndProc;
 	void __fastcall TxtSttHdrWndProc(TMessage &msg)
 	{

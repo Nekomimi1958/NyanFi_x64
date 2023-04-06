@@ -839,6 +839,8 @@ void get_PrmList(
 	}
 	else if (contained_wd_i(_T("CountLines|ListArchive|ListDuration|ListExpFunc"), cmd)) {
 		params = "\nCC : 結果をクリップボードにコピー\nLS : 結果を一覧表示\n";
+		if (USAME_TI(cmd, "ListExpFunc"))
+			params += "SN : 名前順にソート\nSI : インデックス順にソート\nSR : RVA順にソート\n";
 	}
 	else if (USAME_TI(cmd, "ListNyanFi")) {
 		params.sprintf(_T("%s"),

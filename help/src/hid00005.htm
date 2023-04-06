@@ -1942,15 +1942,17 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       　ListDuration_..\\list_\C.txt<br>
     </dd>
 
-    <dt id="ListExpFunc">ListExpFunc<span class="pram_text">[_{CC|LS|ファイル名}]</span></dt>
+    <dt id="ListExpFunc">ListExpFunc<span class="pram_text">[_{CC|LS|ファイル名}][;{SN|SI|SR}]</span></dt>
     <dd>カーソル位置のファイル(DLLなど)のエクスポート関数一覧をログに表示します。<br>
       パラメータに <b>CC</b> を指定すると一覧をクリップボードにコピー、<b>LS</b> を指定すると<a href="hid00073.htm">一覧ダイアログ</a>で表示します。<br>
       またパラメータに<b>ファイル名</b>を指定すると一覧を保存できます。ドライブ名がない場合はカレントからの相対指定になります。ディレクトリ区切りを含む場合は <b>\\</b> を用いてください。<br>
       ファイル名の指定には、<a href="#ListArchive">ListArchive</a> コマンドと同じ書式文字列が使えます。<br>
-      <div class="note_text">
-        指定ファイルからパスを除いた名前の DLL がすでにリンクされている場合、そのファイルはロードせずに、マップされているモジュールから一覧を取得します。<br>
-        なお x86 のファイルには対応していません。<br>
+      ファイル名の拡張子に .csv/.tsv を指定すると、一覧のテーブル部分(見出しを含む、序数は10進のみ)が CSV/TSVファイルとして保存されます。この場合、ログには一覧が出力されません。<br>
+      <div class="spc_box">
+        パラメータに <b>SN</b> を指定すると名前順(Name)に、<b>SI</b> を指定するとインデックス順(Hint)に、<b>SR</b> を指定するとRVA順に一覧がソートされます。無指定の場合は序数順(Ordinal)になります。
       </div>
+      <b>例</b>: エクスポート関数一覧を名前順でCSVファイルとして保存<br>
+      　ListExpFunc_\N.csv;SN<br>
     </dd>
 
     <dt id="ListFileInfo">ListFileInfo</dt>
@@ -2940,8 +2942,8 @@ NyanFi.exe -XRegExChecker
         文字化け対策版(Ver.15.～)を使用している場合、カーソル位置のファイル/ディレクトリ名を変更できます。<br>
       </div>
 
-      <a href="#SetAlias">→ SetAlias</a>　<a href="#SwapName">→ SwapName</a>　<a href="#NameFromClip">→ NameFromClip</a>　<a href="#UndoRename">→ UndoRename</a>　<a
-        href="#SetArcTime">→ SetArcTime</a>　<a href="#SetDirTime">→ SetDirTime</a>
+      <a href="#SetAlias">→ SetAlias</a>　<a href="#SwapName">→ SwapName</a>　<a href="#NameFromClip">→
+        NameFromClip</a>　<a href="#UndoRename">→ UndoRename</a>　<a href="#SetArcTime">→ SetArcTime</a>　<a href="#SetDirTime">→ SetDirTime</a>
     </dd>
 
     <dt id="RepositoryList">RepositoryList<span class="pram_text">[_FF]</span></dt>
@@ -4176,7 +4178,7 @@ var marker = L.marker([$Latitude$, $Longitude$]).addTo(map);
 
     <dt id="HtmlToText">HtmlToText<span class="pram_text">_{ON|OFF}[;{MD|TX}]</span></dt>
     <dd>パラメータに <b>ON</b> を指定するとHTML→テキスト変換表示、<b>OFF</b> では通常表示(ソース)になります。<br>
-      さらに <b>MD</b> を指定すると、<a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー -「HTML→テキスト変換」</a> の 「<b>Markdown記法に変換</b>」オプションが有効に、また <b>TX</b> を指定するとオプションが無効になります。
+      さらに <b>MD</b> を指定すると、<a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー -「HTML→テキスト変換」</a> の「<b>Markdown記法に変換</b>」オプションが有効に、また <b>TX</b> を指定するとオプションが無効になります。
     </dd>
 
     <dt id="SetColor">SetColor<span class="pram_text">_ファイル名</span></dt>

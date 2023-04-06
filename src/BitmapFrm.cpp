@@ -20,9 +20,6 @@ __fastcall TBitmapForm::TBitmapForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TBitmapForm::FormCreate(TObject *Sender)
 {
-	org_SttPanelWndProc  = SttPanel->WindowProc;
-	SttPanel->WindowProc = SttPanelWndProc;
-
 	//ビットマップビュー用パレットの初期化
 	for (int i=0; i<256; i++) {
 		BitPallet[i] = (i==0)				? clBlack   :

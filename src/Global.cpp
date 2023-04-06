@@ -39,7 +39,7 @@ bool 		  CancelHelp  = false;
 //---------------------------------------------------------------------------
 //非公開API
 HMODULE hGdi32 = NULL;
-FUNC_GetFontResourceInfo	lpfGetFontResourceInfo = NULL;
+FUNC_GetFontResourceInfo lpfGetFontResourceInfo = NULL;
 
 //---------------------------------------------------------------------------
 TCursor crTmpPrev = (TCursor)10;	//カーソルのプレビュー用

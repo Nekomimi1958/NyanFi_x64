@@ -31,10 +31,6 @@ void __fastcall TExTxtViewer::FormCreate(TObject *Sender)
 	w_style |= WS_EX_APPWINDOW;
 	::SetWindowLongPtr(Handle, GWL_EXSTYLE, w_style);
 
-	org_TvViewPanelWndProc	   = TxtViewPanel->WindowProc;
-	TxtViewPanel->WindowProc   = TvViewPanelWndProc;
-	org_TvScrlPanelWndProc	   = TxtScrollPanel->WindowProc;
-	TxtScrollPanel->WindowProc = TvScrlPanelWndProc;
 	org_TxtSttHdrWndProc	   = TxtSttHeader->WindowProc;
 	TxtSttHeader->WindowProc   = TxtSttHdrWndProc;
 

@@ -31,6 +31,7 @@ extern bool USR_CsvTopIsHdr;
 int comp_NumStr(UnicodeString s1, UnicodeString s2);
 int __fastcall comp_CsvNaturalOrder(TStringList *List, int Index1, int Index2);
 int __fastcall comp_TsvNaturalOrder(TStringList *List, int Index1, int Index2);
+int __fastcall comp_TsvTextOrder(TStringList *List, int Index1, int Index2);
 
 //---------------------------------------------------------------------------
 //ˆø”‚ğ•¶š—ñƒŠƒeƒ‰ƒ‹‚Å“n‚·‚±‚Æ‚ª‘½‚¢ê‡A

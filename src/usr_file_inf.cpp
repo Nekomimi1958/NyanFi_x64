@@ -1660,56 +1660,47 @@ void get_AppInf(
 			std::unique_ptr<TFileStream> fs(new TFileStream(fnam, fmOpenRead | fmShareDenyNone));
 			if (fs->Size<=0x40) Abort();
 
-			unsigned short us_buf;
-			unsigned int   ui_buf;
-			fs->ReadBuffer(&us_buf, 2);
-			if (us_buf!=0x5a4d) {	//"MZ"
+			IMAGE_DOS_HEADER DOS_hdr;
+			fs->ReadBuffer(&DOS_hdr, sizeof(DOS_hdr));
+			if (DOS_hdr.e_magic!=IMAGE_DOS_SIGNATURE) {
 				if (test_AppInfExt(get_extension(fnam))) warn_msg = LoadUsrMsg(USTR_IllegalFormat);
 				Abort();
 			}
-
-			fs->Seek((int)0x18, soFromBeginning);
-			fs->ReadBuffer(&us_buf, 2);	//e_lfarlc
-			fs->Seek((int)0x3c, soFromBeginning);
-			fs->ReadBuffer(&ui_buf, 4);	//e_lfanew
-			if (us_buf<0x40 || fs->Size<(ui_buf + sizeof(IMAGE_FILE_HEADER))) {
+			if (DOS_hdr.e_lfarlc<0x40 || fs->Size<(DOS_hdr.e_lfanew + sizeof(IMAGE_FILE_HEADER))) {
 				warn_msg = "PE、NE、LE以外のフォーマットです。";
 				Abort();
 			}
 
-			fs->Seek((int)ui_buf, soFromBeginning);
-			fs->ReadBuffer(&us_buf, 2);
+			IMAGE_NT_HEADERS NT_hdr;
+			fs->Seek((int)DOS_hdr.e_lfanew, soFromBeginning);
+			fs->ReadBuffer(&NT_hdr, sizeof(NT_hdr));
 
-			switch (us_buf) {
-			case 0x4550:	//PE
-				fs->ReadBuffer(&us_buf, 2);
-				if (us_buf==0x0000) {
-					//Machine
-					fs->ReadBuffer(&us_buf, 2);
-					UnicodeString vstr =
-						(us_buf==IMAGE_FILE_MACHINE_I386)?  "x86" :
-						(us_buf==IMAGE_FILE_MACHINE_AMD64)? "x64" :
-						(us_buf==IMAGE_FILE_MACHINE_IA64)?  "Intel Itanium" :
-						(us_buf==0x01c0)? "arm" :
-						(us_buf==0x01c2)? "thumb" :
-						(us_buf==0x01c4)? "armnt" :
-						(us_buf==0xaa64)? "arm64" : "???";
-					//Characteristics
-					fs->Seek(16, soFromCurrent);
-					fs->ReadBuffer(&us_buf, 2);
-					if (USAME_TS(vstr, "x86") && (us_buf & 0x20)) vstr += " (Large Address Aware)";
-					add_PropLine(_T("マシン"), vstr, lst);
+			if (NT_hdr.Signature==IMAGE_NT_SIGNATURE) {
+				IMAGE_FILE_HEADER *fh = &NT_hdr.FileHeader; 
+				UnicodeString vstr =
+					(fh->Machine==IMAGE_FILE_MACHINE_I386)?  "x86" :
+					(fh->Machine==IMAGE_FILE_MACHINE_AMD64)? "x64" :
+					(fh->Machine==IMAGE_FILE_MACHINE_IA64)?  "Intel Itanium" :
+					(fh->Machine==0x01c0)? "arm" :
+					(fh->Machine==0x01c2)? "thumb" :
+					(fh->Machine==0x01c4)? "armnt" :
+					(fh->Machine==0xaa64)? "arm64" : "???";
+
+				if (USAME_TS(vstr, "x86") && (fh->Characteristics & 0x20)) vstr += " (Large Address Aware)";
+				add_PropLine(_T("マシン"), vstr, lst);
+			}
+			else {
+				switch (NT_hdr.Signature & 0x0000ffff) {
+				case IMAGE_OS2_SIGNATURE:		//NE
+					warn_msg = "NEフォーマット(Win16)です。";
+					Abort();
+				case IMAGE_OS2_SIGNATURE_LE:	//LE
+					warn_msg = "LEフォーマット(VXD)です。";
+					Abort();
+				default:
+					warn_msg = "PE、NE、LE以外のフォーマットです。";
+					Abort();
 				}
-				break;
-			case 0x454e:	//NE
-				warn_msg = "NEフォーマット(Win16)です。";
-				Abort();
-			case 0x454c:	//LE
-				warn_msg = "LEフォーマット(VXD)です。";
-				Abort();
-			default:
-				warn_msg = "PE、NE、LE以外のフォーマットです。";
-				Abort();
 			}
 		}
 		catch (...) {
@@ -1799,52 +1790,96 @@ void get_AppInf(
 //---------------------------------------------------------------------------
 //DLLのエクスポート関数一覧を取得
 //---------------------------------------------------------------------------
-bool get_DllExpFunc(UnicodeString fnam, TStringList *lst)
+bool get_DllExpFunc(
+	AnsiString fnam, 	//ファイル名
+	TStringList *lst,	//[o] 関数リスト
+	int sort_mode,		//0:序数順(default)/ 1:インデックス順/ 2: RVA順/ 3:名前順
+	int list_mode)		//0:表示用(default)/ 1:CSV/ 2:TSV
 {
-	bool loaded = false;
-	HMODULE hModule = ::GetModuleHandle(ExtractFileName(fnam).c_str());
-	if (!hModule) {
-		hModule = ::LoadLibrary(fnam.c_str());
-		loaded = true;
-	}
-	if (!hModule) return false;
+	bool ret = false;
 
-	ULONG nSize;
-	IMAGE_EXPORT_DIRECTORY *pImgExpDir
-		= (IMAGE_EXPORT_DIRECTORY*)::ImageDirectoryEntryToData(
-			(PVOID)hModule, TRUE, IMAGE_DIRECTORY_ENTRY_EXPORT, &nSize);
+    LOADED_IMAGE LoadedImage;
+    if (MapAndLoad(fnam.c_str(), NULL, &LoadedImage, TRUE, TRUE)) {
+		PVOID img_base = LoadedImage.MappedAddress;
+		ULONG nSize;
+		IMAGE_EXPORT_DIRECTORY *pImgExpDir =
+			(_IMAGE_EXPORT_DIRECTORY*)ImageDirectoryEntryToData(
+				img_base, FALSE, IMAGE_DIRECTORY_ENTRY_EXPORT, &nSize);
+		if (pImgExpDir) {
+			DWORD *dFuncRVAs = (DWORD *)ImageRvaToVa(
+					LoadedImage.FileHeader, img_base, pImgExpDir->AddressOfFunctions, NULL);
+			DWORD *dNameRVAs = (DWORD *)ImageRvaToVa(
+					LoadedImage.FileHeader, img_base, pImgExpDir->AddressOfNames, NULL);
+			WORD  *dOrdRVAs  = (WORD *)ImageRvaToVa(
+					LoadedImage.FileHeader, img_base, pImgExpDir->AddressOfNameOrdinals, NULL);
 
-	if (pImgExpDir) {
-		UnicodeString tmp = fnam;
-		if (!loaded) tmp += "  (Linked)";
-		lst->Add(tmp);
-		lst->Add("Ordinal        Finction");
-		UnicodeString hr_str = make_RuledLine(2, 14, 25);
-		lst->Add(hr_str);
+			UnicodeString tmp;
+			std::unique_ptr<TStringList> flst(new TStringList());
+			for (int i = 0; i < pImgExpDir->NumberOfNames; i++) {
+				//Hint [TAB] RVA [TAB] Name
+				UnicodeString name = (char *)ImageRvaToVa(LoadedImage.FileHeader, img_base, dNameRVAs[i], NULL);
+				tmp.sprintf(_T("%04X\t%08X\t%s"), i, dFuncRVAs[dOrdRVAs[i]], name.c_str());
+				flst->AddObject(tmp, (TObject*)(NativeInt)(dOrdRVAs[i] + pImgExpDir->Base));	//Obj=序数
+			}
 
-		DWORD *func_tbl = (DWORD*)(pImgExpDir->AddressOfNames + (BYTE*)hModule);
-		WORD  *num_tbl	= (WORD*)(pImgExpDir->AddressOfNameOrdinals + (BYTE*)hModule);
-		int f_cnt = 0;
-		for (unsigned int i = 0; i<pImgExpDir->NumberOfFunctions; i++) {
-			UnicodeString fnc_nam;
-			for (unsigned int j=0; j<pImgExpDir->NumberOfNames; j++) {
-				if (num_tbl[j]==(WORD)i) {
-					fnc_nam = UnicodeString((char*)(func_tbl[j] + (BYTE*)hModule));
-					break;
+			//ソート
+			USR_CsvTopIsHdr = false;
+			USR_CsvSortMode = 1;
+			switch (sort_mode) {
+			case 1:		//インデックス順
+				break;
+			case 2:		//RVA順
+				USR_CsvCol = 1;
+				flst->CustomSort(comp_TsvTextOrder);
+				break;
+			case 3:		//名前順
+				USR_CsvCol = 2;
+				flst->CustomSort(comp_TsvNaturalOrder);
+				break;
+			default:	//序数順
+				flst->CustomSort(comp_ObjectsOrder);
+			}
+
+			//CSV or TSV
+			if (list_mode==1 || list_mode==2) {
+				UnicodeString fmt = (list_mode==1)? "%d,%s,%s,\"%s\"" : "%d\t%s\t%s\t\"%s\""; 
+				for (int i=0; i<flst->Count; i++) {
+					TStringDynArray l_buf = split_strings_tab(flst->Strings[i]);
+					if (l_buf.Length!=3) continue;
+					int ordn = (int)flst->Objects[i];
+					flst->Strings[i] = tmp.sprintf(fmt.c_str(),
+										ordn, l_buf[0].c_str(), l_buf[1].c_str(), l_buf[2].c_str());
 				}
+				lst->Add((list_mode==1)? "Ordinal,Hint,RVA,Name" : "Ordinal\tHint\tRVA\tName");
+				lst->AddStrings(flst.get());
 			}
-			if (!fnc_nam.IsEmpty()) {
-				unsigned int ordn = pImgExpDir->Base + i;
-				lst->Add(tmp.sprintf(_T("%4d (0x%04x)  %s"), ordn, ordn, fnc_nam.c_str()));
-				f_cnt++;
+			//通常の一覧
+			else {
+				int max_w = 4;
+				for (int i=0; i<flst->Count; i++) {
+					TStringDynArray l_buf = split_strings_tab(flst->Strings[i]);
+					if (l_buf.Length!=3) continue;
+					int ordn = (int)flst->Objects[i];
+					flst->Strings[i] = tmp.sprintf(_T("%4d (%04X) %s %s %s"), ordn, ordn, 
+											l_buf[0].c_str(), l_buf[1].c_str(), l_buf[2].c_str());
+					max_w = std::max(l_buf[2].Length(), max_w);
+				}
+				lst->Add(fnam);
+				lst->Add(tmp.sprintf(_T("       Ordinal Base: %u"), pImgExpDir->Base));
+				lst->Add(tmp.sprintf(_T("Number of Functions: %u"), pImgExpDir->NumberOfFunctions));
+				lst->Add(tmp.sprintf(_T("    Number of Names: %u"), pImgExpDir->NumberOfNames));
+				lst->Add(EmptyStr);
+				lst->Add("Ordinal     Hint RVA      Name");
+				UnicodeString hr_str = make_RuledLine(4, 11,4,8,max_w);
+				lst->Add(hr_str);
+				lst->AddStrings(flst.get());
+				lst->Add(hr_str);
 			}
+			ret = true;
 		}
-		lst->Add(hr_str);
-		lst->Add(tmp.sprintf(_T("        Total  %4d functions"), f_cnt));
+		UnMapAndLoad(&LoadedImage);
 	}
-
-	if (loaded) ::FreeLibrary(hModule);
-	return true;
+	return ret;
 }
 
 //---------------------------------------------------------------------------

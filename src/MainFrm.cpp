@@ -322,18 +322,10 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 
 	TempRichEdit = ViewMemo;
 
-	org_MainContainerWndProc	= MainContainer->WindowProc;
-	MainContainer->WindowProc	= MainContainerWndProc;
-
 	org_TabPanelWndProc 		= TabPanel->WindowProc;
 	TabPanel->WindowProc		= TabPanelWndProc;
 	org_TabCtrlWindowProc		= TabControl1->WindowProc;
 	TabControl1->WindowProc 	= TabCtrlWindowProc;
-
-	org_RelPanelWndProc 		= RelPanel->WindowProc;
-	RelPanel->WindowProc		= RelPanelWndProc;
-	org_RelPanel2WndProc		= RelPanel2->WindowProc;
-	RelPanel2->WindowProc		= RelPanel2WndProc;
 
 	org_L_DirPanelWndProc		= L_DirPanel->WindowProc;
 	L_DirPanel->WindowProc		= L_DirPanelWndProc;
@@ -353,16 +345,6 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 	org_FileListWindowProc[1]	= R_ListBox->WindowProc;
 	L_ListBox->WindowProc		= L_ListWindowProc;
 	R_ListBox->WindowProc		= R_ListWindowProc;
-
-	org_TvViewPanelWndProc		= TxtViewPanel->WindowProc;
-	TxtViewPanel->WindowProc	= TvViewPanelWndProc;
-	org_TvScrlPanelWndProc		= TxtScrollPanel->WindowProc;
-	TxtScrollPanel->WindowProc	= TvScrlPanelWndProc;
-	org_LogPanelWndProc 		= LogPanel->WindowProc;
-	LogPanel->WindowProc		= LogPanelWndProc;
-
-	org_WorkBarPanelWndProc		= WorkPrgBarPanel->WindowProc;
-	WorkPrgBarPanel->WindowProc = WorkBarPanelWndProc;
 
 	org_SttBar1WndProc			= StatusBar1->WindowProc;
 	StatusBar1->WindowProc		= SttBar1WndProc;
@@ -12539,6 +12521,24 @@ UnicodeString __fastcall TNyanFiForm::GetFileNameFromActionParam(file_rec *fp)
 	}
 	return fnam;
 }
+//---------------------------------------------------------------------------
+//ActionParam に指定拡張子を持つ項目があるか?
+//---------------------------------------------------------------------------
+bool __fastcall TNyanFiForm::FextInActionParam(UnicodeString fext)
+{
+	bool ret = false;
+	if (!fext.IsEmpty()) {
+		TStringDynArray plst = split_strings_semicolon(ActionParam);
+		for (int i=0; i<plst.Length; i++) {
+			UnicodeString prm = exclude_quot(plst[i]);
+			if (EndsText(fext, prm)) {
+				ret = true;
+				break;
+			}
+		}
+	}
+	return ret;
+}
 
 //---------------------------------------------------------------------------
 //コマンドアクションの Abort 例外処理
@@ -12648,7 +12648,7 @@ void __fastcall TNyanFiForm::ClipSaveList(TStringList *lst, const _TCHAR *tit)
 		UnicodeString fnam = to_absolute_name(FormatParam(ActionParam), CurPath[CurListTag]);
 		if (!fnam.IsEmpty()) {
 			if (!saveto_TextUTF8(fnam, lst)) UserAbort(USTR_FaildSave);
-			AddLog("  SAVE " + fnam);
+			AddLog("    SAVE " + fnam);
 		}
 	}
 }
@@ -12673,7 +12673,7 @@ void __fastcall TNyanFiForm::ClipSaveList(
 		UnicodeString fnam = to_absolute_name(FormatParam(ActionParam), CurPath[CurListTag]);
 		if (!fnam.IsEmpty()) {
 			if (!saveto_TextUTF8(fnam, lst)) UserAbort(USTR_FaildSave);
-			AddLog("  SAVE " + fnam);
+			AddLog("    SAVE " + fnam);
 		}
 	}
 }
@@ -20666,7 +20666,7 @@ void __fastcall TNyanFiForm::ListDurationActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//DLL のエクスポート関数一覧
+//DLLエクスポート関数一覧
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ListExpFuncActionExecute(TObject *Sender)
 {
@@ -20681,12 +20681,20 @@ void __fastcall TNyanFiForm::ListExpFuncActionExecute(TObject *Sender)
 		UnicodeString msg = make_LogHdr(_T("LIST"), cfp);
 		//一覧を取得
 		std::unique_ptr<TStringList> r_lst(new TStringList());
-		bool ok = get_DllExpFunc(cfp->is_virtual? cfp->tmp_name : cfp->f_name, r_lst.get());
+		int sort_mode = TEST_DEL_ActParam("SI")? 1 :
+						TEST_DEL_ActParam("SR")? 2 :
+						TEST_DEL_ActParam("SN")? 3 : 0;
+
+		bool list_mode = FextInActionParam(".csv")? 1 : FextInActionParam(".tsv")? 2 : 0;
+		bool ok = get_DllExpFunc(cfp->is_virtual? cfp->tmp_name : cfp->f_name, 
+									r_lst.get(), sort_mode, list_mode);
 		if (!ok) set_LogErrMsg(msg);
 		AddLogCr(); AddLog(msg);
 		if (ok) {
-			AddLogStrings(r_lst.get());
-			AddLogCr();
+			if (list_mode==0) {
+				AddLogStrings(r_lst.get());
+				AddLogCr();
+			}
 			//コピー/一覧表示/ファイル出力
 			ClipSaveList(r_lst.get(), _T("エクスポート関数一覧"));
 		}

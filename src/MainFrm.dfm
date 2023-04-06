@@ -65,6 +65,7 @@ object NyanFiForm: TNyanFiForm
       Align = alClient
       BevelOuter = bvNone
       DoubleBuffered = True
+      ParentBackground = False
       ParentDoubleBuffered = False
       TabOrder = 2
       Visible = False
@@ -171,6 +172,7 @@ object NyanFiForm: TNyanFiForm
           Align = alClient
           BevelOuter = bvNone
           DoubleBuffered = True
+          ParentBackground = False
           ParentDoubleBuffered = False
           TabOrder = 1
           StyleElements = [seBorder]
@@ -1548,6 +1550,7 @@ object NyanFiForm: TNyanFiForm
                 Height = 18
                 Align = alRight
                 BevelOuter = bvLowered
+                ParentBackground = False
                 TabOrder = 1
                 StyleElements = [seBorder]
                 object RelPaintBox2: TPaintBox
@@ -1915,6 +1918,7 @@ object NyanFiForm: TNyanFiForm
               Height = 20
               Align = alLeft
               BevelOuter = bvLowered
+              ParentBackground = False
               TabOrder = 1
               StyleElements = [seBorder]
               object RelPaintBox: TPaintBox
@@ -2176,6 +2180,7 @@ object NyanFiForm: TNyanFiForm
             Align = alClient
             BevelOuter = bvNone
             DoubleBuffered = True
+            ParentBackground = False
             ParentDoubleBuffered = False
             TabOrder = 1
             ExplicitWidth = 371
@@ -2316,6 +2321,7 @@ object NyanFiForm: TNyanFiForm
       Anchors = [akLeft, akTop, akRight]
       BevelOuter = bvNone
       DoubleBuffered = True
+      ParentBackground = False
       ParentDoubleBuffered = False
       TabOrder = 0
       object WorkProgressBox: TPaintBox

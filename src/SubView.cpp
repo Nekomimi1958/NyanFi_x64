@@ -24,9 +24,6 @@ __fastcall TSubViewer::TSubViewer(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TSubViewer::FormCreate(TObject *Sender)
 {
-	org_ImgPanelWndProc  = ImgPanel->WindowProc;
-	ImgPanel->WindowProc = ImgPanelWndProc;
-
 	hasBitmap = false;
 }
 //---------------------------------------------------------------------------

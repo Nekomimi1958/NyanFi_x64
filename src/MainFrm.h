@@ -2109,13 +2109,6 @@ private:	// ユーザー宣言
 	void __fastcall ActivateMainForm();
 	void __fastcall ActiveFormChange(TObject *Sender);
 
-	TWndMethod org_MainContainerWndProc;
-	void __fastcall MainContainerWndProc(TMessage &msg)
-	{
-		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-		org_MainContainerWndProc(msg);
-	}
-
 	//タブ
 	TWndMethod org_TabCtrlWindowProc;
 	void __fastcall TabCtrlWindowProc(TMessage &msg);
@@ -2129,21 +2122,6 @@ private:	// ユーザー宣言
 
 	int __fastcall get_TopTabIndex();
 	int __fastcall get_EndTabIndex();
-
-	//ディレクトリ関係
-	TWndMethod org_RelPanelWndProc;
-	void __fastcall RelPanelWndProc(TMessage &msg)
-	{
-		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-		org_RelPanelWndProc(msg);
-	}
-
-	TWndMethod org_RelPanel2WndProc;
-	void __fastcall RelPanel2WndProc(TMessage &msg)
-	{
-		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-		org_RelPanel2WndProc(msg);
-	}
 
 	//ディレクトリ情報
 	void __fastcall DrawDirPanel(TPanel *pp);
@@ -2191,34 +2169,6 @@ private:	// ユーザー宣言
 		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
 		org_R_StatPanelWndProc(msg);
 		if (msg.Msg==WM_PAINT) DrawDrivePanel(R_StatPanel);
-	}
-
-	TWndMethod org_TvViewPanelWndProc;
-	void __fastcall TvViewPanelWndProc(TMessage &msg)
-	{
-		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-		org_TvViewPanelWndProc(msg);
-	}
-
-	TWndMethod org_TvScrlPanelWndProc;
-	void __fastcall TvScrlPanelWndProc(TMessage &msg)
-	{
-		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-		org_TvScrlPanelWndProc(msg);
-	}
-
-	TWndMethod org_LogPanelWndProc;
-	void __fastcall LogPanelWndProc(TMessage &msg)
-	{
-		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-		org_LogPanelWndProc(msg);
-	}
-
-	TWndMethod org_WorkBarPanelWndProc;
-	void __fastcall WorkBarPanelWndProc(TMessage &msg)
-	{
-		if (msg.Msg==WM_ERASEBKGND) { msg.Result = 1; return; }
-		org_WorkBarPanelWndProc(msg);
 	}
 
 	TWndMethod org_SttBar1WndProc;
@@ -2486,6 +2436,7 @@ private:	// ユーザー宣言
 	bool __fastcall TestDelActionParam(const _TCHAR *prm);
 	UnicodeString __fastcall ExceptActionParam(UnicodeString ex_list);
 	UnicodeString __fastcall GetFileNameFromActionParam(file_rec *fp = NULL);
+	bool __fastcall FextInActionParam(UnicodeString fext);
 
 	bool __fastcall ActionOptIsMousePos()	{ return USAME_TI(ActionOptStr, "MousePos"); }
 	bool __fastcall ActionOptIsButtonPos()	{ return USAME_TI(ActionOptStr, "ButtonPos"); }

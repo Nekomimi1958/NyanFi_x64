@@ -5,7 +5,7 @@ object BitmapForm: TBitmapForm
   BorderStyle = bsSizeToolWin
   Caption = #12499#12483#12488#12510#12483#12503#12499#12517#12540
   ClientHeight = 266
-  ClientWidth = 154
+  ClientWidth = 156
   Color = clBtnFace
   Constraints.MaxWidth = 164
   Constraints.MinHeight = 200
@@ -14,15 +14,13 @@ object BitmapForm: TBitmapForm
   ParentFont = True
   FormStyle = fsStayOnTop
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnCreate = FormCreate
   OnHide = FormHide
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object BorderShape1: TShape
     Left = 0
     Top = 0
@@ -32,29 +30,33 @@ object BitmapForm: TBitmapForm
     Pen.Color = clSilver
   end
   object BorderShape2: TShape
-    Left = 153
+    Left = 155
     Top = 0
     Width = 1
     Height = 265
     Align = alRight
     Pen.Color = clSilver
+    ExplicitLeft = 153
   end
   object BorderShape3: TShape
     Left = 0
     Top = 265
-    Width = 154
+    Width = 156
     Height = 1
     Align = alBottom
     Pen.Color = clSilver
+    ExplicitWidth = 154
   end
   object ClientPanel: TPanel
     Left = 1
     Top = 0
-    Width = 152
+    Width = 154
     Height = 265
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 146
+    ExplicitHeight = 253
     object FileMapPanel: TPanel
       Left = 0
       Top = 0
@@ -64,6 +66,7 @@ object BitmapForm: TBitmapForm
       BevelOuter = bvNone
       BorderWidth = 2
       TabOrder = 0
+      ExplicitHeight = 231
       object FileMapBox: TPaintBox
         Left = 2
         Top = 30
@@ -123,7 +126,7 @@ object BitmapForm: TBitmapForm
     object BorderPanel: TPanel
       Left = 20
       Top = 0
-      Width = 132
+      Width = 134
       Height = 243
       Align = alClient
       BevelOuter = bvNone
@@ -131,10 +134,12 @@ object BitmapForm: TBitmapForm
       Color = clAppWorkSpace
       ParentBackground = False
       TabOrder = 1
+      ExplicitWidth = 126
+      ExplicitHeight = 231
       object MapScrBox: TScrollBox
         Left = 4
         Top = 4
-        Width = 124
+        Width = 126
         Height = 235
         HorzScrollBar.Visible = False
         VertScrollBar.Tracking = True
@@ -146,6 +151,8 @@ object BitmapForm: TBitmapForm
         ParentColor = False
         PopupMenu = PopupMenu1
         TabOrder = 0
+        ExplicitWidth = 118
+        ExplicitHeight = 223
         object BitmapBox: TPaintBox
           Left = 0
           Top = 0
@@ -160,13 +167,16 @@ object BitmapForm: TBitmapForm
     object SttPanel: TPanel
       Left = 0
       Top = 243
-      Width = 152
+      Width = 154
       Height = 22
       Align = alBottom
       Alignment = taLeftJustify
       BevelOuter = bvNone
+      ParentBackground = False
       TabOrder = 2
       StyleElements = [seBorder]
+      ExplicitTop = 231
+      ExplicitWidth = 146
     end
   end
   object PopupMenu1: TPopupMenu

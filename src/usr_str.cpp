@@ -132,6 +132,27 @@ int __fastcall comp_TsvNaturalOrder(TStringList *List, int Index1, int Index2)
 	res *= USR_CsvSortMode;
 	return res;
 }
+//---------------------------------------------------------------------------
+//TSV 文字列順
+//---------------------------------------------------------------------------
+int __fastcall comp_TsvTextOrder(TStringList *List, int Index1, int Index2)
+{
+	if (USR_CsvTopIsHdr) {	//先頭行は項目名
+		if ((int)List->Objects[Index1]==0) return -1;
+		if ((int)List->Objects[Index2]==0) return  1;
+	}
+
+	UnicodeString s1 = List->Strings[Index1];
+	UnicodeString s2 = List->Strings[Index2];
+	if (USAME_TS(s1, TXLIMIT_MARK)) return 1;
+	if (USAME_TS(s2, TXLIMIT_MARK)) return -1;
+
+	TStringDynArray itm1 = SplitString(s1, "\t");
+	TStringDynArray itm2 = SplitString(s2, "\t");
+	s1  = (USR_CsvCol<itm1.Length)? itm1[USR_CsvCol] : EmptyStr;
+	s2  = (USR_CsvCol<itm2.Length)? itm2[USR_CsvCol] : EmptyStr;
+	return (CompareText(s1, s2) * USR_CsvSortMode);
+}
 
 //---------------------------------------------------------------------------
 //指定セパレータの前の文字列を取得
@@ -3032,7 +3053,6 @@ UnicodeString get_MemoryStrins(TMemoryStream *ms)
 	ms->Read(Bytes, ms->Size);
 
 	//エンコード
-	std::unique_ptr<TStringList> lst(new TStringList());
 	std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(code_page));
 	return enc->GetString(Bytes, 0, Bytes.Length);
 }

@@ -45,6 +45,13 @@
   </div>
 
   <dl>
+    <dt>V15.39 <span class="ver_date">(2023-04-06)</span></dt>
+    <dd>
+      ・ListExpFunc コマンドで、x86/x64 両方のDLLを扱えるようにしました(MapAndLoad でプリロード)。<br>
+      ・ListExpFunc コマンドで、一覧にインデックス(Hint)とRVAも表示するようにしました。これに伴い、パラメータに SN(名前順にソート)、SI(インデックス順にソート)、SA(RVA順にソート)を追加(デフォルトは序数順)。<br>
+      ・ListExpFunc コマンドのパラメータでファイル名の拡張子に .csv/.tsv を指定すると、一覧のテーブル部分がCSV/TSVファイルとして保存されるようにしました。
+    </dd>
+
     <dt>V15.38 <span class="ver_date">(2023-03-11)</span></dt>
     <dd>
       ・開発環境を C++Builder 11.3 にアップデート。<br>
