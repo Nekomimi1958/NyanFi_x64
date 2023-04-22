@@ -1935,6 +1935,7 @@ private:	// ユーザー宣言
 	bool WndSizing;
 	int  ViewInfCnt;					//ファイル情報の表示処理中
 	int  InhDrawImg;					//画像描画の抑止
+	bool NextDenied;					//次の画像に移れなかった
 	int  InhDirHist;					//ディレクトリ履歴追加の抑止
 	int  InhUpdBgImg;					//背景画像更新の抑止
 	bool HideBgImg[MAX_FILELIST];

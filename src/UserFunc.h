@@ -186,4 +186,7 @@ UnicodeString get_WebSeaCaption(UnicodeString kwd = EmptyStr, bool with_ak = tru
 bool exe_WebSearch(UnicodeString kwd);
 
 //---------------------------------------------------------------------------
+extern bool DebugOut;
+void OutDebugStr(UnicodeString s);
+//---------------------------------------------------------------------------
 #endif

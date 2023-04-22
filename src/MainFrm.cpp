@@ -255,6 +255,8 @@ __fastcall TNyanFiForm::TNyanFiForm(TComponent* Owner)
 	KeepCurCsr	 = 0;
 	ViewInfCnt	 = 0;
 
+	NextDenied   = false;
+
 	InhFTPCheck	 = false;
 	FTPhasCHMOD  = false;
 
@@ -5534,6 +5536,7 @@ void __fastcall TNyanFiForm::SetScrMode(
 		if (LoupeDockPanel->DockSite) LoupeDockPanel->DockManager->ResetBounds(true);
 		if (HistDockPanel->DockSite)  HistDockPanel->DockManager->ResetBounds(true);
 		BlinkTimer->Enabled   = WarnHighlight;
+		NextDenied = false;
 		break;
 
 	case SCMD_GREP:		//•¶Žš—ñŒŸõ(GREP)
@@ -24667,8 +24670,10 @@ void __fastcall TNyanFiForm::SelectActionExecute(TObject *Sender)
 		if (!isViewClip) {
 			int idx = GetCurIndex();
 			if (idx!=-1) {
-				file_rec *vfp = (file_rec*)ViewFileList->Objects[idx];
-				vfp->selected = !vfp->selected;
+				if (!NextDenied) {
+					file_rec *vfp = (file_rec*)ViewFileList->Objects[idx];
+					vfp->selected = !vfp->selected;
+				}
 				if (!TEST_ActParam("ND")) NextFileAction->Execute();
 				if (ThumbnailGrid->Visible) ThumbnailGrid->Repaint();
 			}
@@ -33746,14 +33751,16 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::OpenImgViewer(int idx)
 {
+	static bool handling = false;
+
+	if (handling) return true;
 	if (idx<0 || idx>=ViewFileList->Count) return false;
 
+	handling = true;
 	set_GridIndex(ThumbnailGrid, idx, ViewFileList->Count);
 	SetCurFrecPtr(GetFrecPtrFromViewList(idx));
 	file_rec *vfp = (file_rec*)ViewFileList->Objects[idx];
-	if (!OpenImgViewer(vfp)) return false;
-
-	if (NotThumbIfArc) {
+	if (OpenImgViewer(vfp) && NotThumbIfArc) {
 		if (vfp->is_virtual) {
 			ThumbnailThread->MakeIndex = idx;
 			ThumbnailThread->ReqMake   = true;
@@ -33769,6 +33776,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(int idx)
 			}
 		}
 	}
+	handling = false;
 	return true;
 }
 
@@ -34463,7 +34471,15 @@ void __fastcall TNyanFiForm::GrayScaleActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::NextPrevFileICore(bool is_next)
 {
-	if (usr_ARC->Busy || CurStt->is_FTP) return;
+	if (CurStt->is_FTP) return;
+
+	if (usr_ARC->Busy) {
+		if (is_next) NextDenied = true;
+		return;
+	}
+
+	NextDenied = false;
+
 	if (MinShowTime>0 && !ImgViewThread->IsReady()) return;
 
 	try {
@@ -37431,4 +37447,3 @@ void __fastcall TNyanFiForm::IS_Match1ActionUpdate(TObject *Sender)
 	ap->Enabled = !CurStt->is_Migemo && !CurStt->is_Filter;
 }
 //---------------------------------------------------------------------------
-

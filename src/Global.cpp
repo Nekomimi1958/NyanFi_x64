@@ -72,7 +72,7 @@ bool  IsMuted	 = false;		//音量ミュート
 
 int   ScrMode  = SCMD_FLIST;	//画面モード
 
-bool  NoRoundWin = false;		//角丸ウィンドウ抑止(隠し設定)
+bool NoRoundWin = false;		 //角丸ウィンドウ抑止(隠し設定)
 
 TRichEdit *TempRichEdit = NULL;
 
@@ -1835,6 +1835,7 @@ void InitializeGlobal()
 
 		{_T("NoCheckUncRPT=false"),			(TObject*)&NoCheckUncRPT},		//隠し設定
 		{_T("NoRoundWin=false"),			(TObject*)&NoRoundWin},			//隠し設定
+		{_T("DebugOut=false"),				(TObject*)&DebugOut},			//隠し設定
 
 		//[General] (prefix = U:)
 		{_T("U:LastCurTag=0"),				(TObject*)&LastCurTag},
@@ -8095,6 +8096,8 @@ void GetFileInfList(
 {
 	if (!fp) return;
 
+	OutDebugStr("#GetFileInfList: " + fp->n_name);
+
 	flist_stt *lst_stt = (fp->tag!=-1)? &ListStt[fp->tag] : NULL;
 	bool is_ads = lst_stt && lst_stt->is_ADS;
 	bool is_all = is_FindAll(lst_stt);
@@ -8714,6 +8717,8 @@ bool get_FileInfList(
 {
 	if (!fp) return false;
 
+	OutDebugStr("=> get_FileInfList: " + fp->n_name);
+
 	try {
 		lst->Clear();
 
@@ -8833,6 +8838,7 @@ bool get_FileInfList(
 		int lst_cnt = lst->Count;
 		//アプリケーション情報
 		if (test_AppInfExt(fext)) {
+			OutDebugStr("==> get_AppInf: " + ExtractFileName(fnam));
 			get_AppInf(fnam, lst);
 		}
 		//アイコン/カーソル
@@ -9150,6 +9156,7 @@ bool get_FileInfList(
 			del_file_rec(fp);
 		}
 
+		OutDebugStr("<= get_FileInfList");
 		return true;
 	}
 	catch (...) {
