@@ -3243,6 +3243,12 @@ void __fastcall TNyanFiForm::ApplicationEvents1Idle(TObject *Sender, bool &Done)
 
 	//アクティブなコンボボックスの状態を保存
 	UserModule->SaveLastComboBox();
+
+	//イメージビュアーで抑止されたカーソル移動の再試行
+	if (NextDenied && !usr_ARC->Busy) {
+		NextDenied = false;
+		NextFileAction->Execute();
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TabControl1Resize(TObject *Sender)
@@ -5556,6 +5562,7 @@ void __fastcall TNyanFiForm::SetScrMode(
 		Application->ProcessMessages();
 		if (!CurStt->is_Find && !CurStt->is_FTP) ReloadList(tag); else RepaintList();
 		FileListBox[CurListTag]->SetFocus();
+		SetDriveFileInfo(CurListTag);
 	}
 
 	CancelKeySeq();
@@ -37447,3 +37454,4 @@ void __fastcall TNyanFiForm::IS_Match1ActionUpdate(TObject *Sender)
 	ap->Enabled = !CurStt->is_Migemo && !CurStt->is_Filter;
 }
 //---------------------------------------------------------------------------
+

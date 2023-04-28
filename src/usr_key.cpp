@@ -24,7 +24,7 @@ void make_KeyList(TStringList *lst)
 	lst->Text += "Del\nIns\nBkSp\nLeft\nRight\nUp\nDown\nPgUp\nPgDn\nHome\nEnd\nPause\nTab\nEsc\nEnter\nSpace\nApp\n";
 
 	if (is_JpKeybd())
-		lst->Text += "-\n^\n\\\n@\n[\n;\n:\n]\n,\n.\n/\n_\n";		//JP
+		lst->Text += "-\n^\n\\\n@\n[\n;\n:\n]\n,\n.\n/\n_\n";	//JP
 	else
 		lst->Text += "`\n-\n\n[\n]\n\\\n;\n'\n,\n.\n/\n";		//US
 
@@ -270,8 +270,7 @@ UnicodeString WaitForKey()
 	while (Key==0) {
 		if (Application->Active) Sleep(0); else Application->ProcessMessages();
 		MSG msg;
-		if (::PeekMessage(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) && msg.message==WM_KEYUP)
-			Key = msg.wParam;
+		if (::PeekMessage(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE) && msg.message==WM_KEYUP) Key = msg.wParam;
 	}
 
 	return get_KeyStr(Key);
