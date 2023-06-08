@@ -53,6 +53,7 @@ UINT get_drive_type(UnicodeString dnam);
 int get_ClusterSize(UnicodeString dnam);
 
 UnicodeString get_base_name(UnicodeString fnam);
+
 UnicodeString get_extension(UnicodeString fnam);
 UnicodeString get_extension_if_file(UnicodeString fnam);
 

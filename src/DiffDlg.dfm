@@ -3,7 +3,7 @@ object DiffDirDlg: TDiffDirDlg
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = #12487#12451#12524#12463#12488#12522#12398#27604#36611
-  ClientHeight = 251
+  ClientHeight = 242
   ClientWidth = 492
   Color = clBtnFace
   Constraints.MaxHeight = 280
@@ -11,7 +11,6 @@ object DiffDirDlg: TDiffDirDlg
   Constraints.MinWidth = 500
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -20,9 +19,8 @@ object DiffDirDlg: TDiffDirDlg
   OnShow = FormShow
   DesignSize = (
     492
-    251)
-  PixelsPerInch = 96
-  TextHeight = 13
+    242)
+  TextHeight = 15
   object Label1: TLabel
     Left = 1
     Top = 77
@@ -61,54 +59,60 @@ object DiffDirDlg: TDiffDirDlg
   object IncMaskComboBox: TComboBox
     Left = 76
     Top = 74
-    Width = 398
-    Height = 21
+    Width = 394
+    Height = 23
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 20
     TabOrder = 2
+    ExplicitWidth = 390
   end
   object SrcDirEdit: TLabeledEdit
     Left = 76
     Top = 8
-    Width = 398
+    Width = 394
     Height = 21
     TabStop = False
     Anchors = [akLeft, akTop, akRight]
     BorderStyle = bsNone
-    EditLabel.Width = 36
-    EditLabel.Height = 13
+    EditLabel.Width = 39
+    EditLabel.Height = 21
     EditLabel.Caption = #27604#36611#20803
     LabelPosition = lpLeft
     ReadOnly = True
     TabOrder = 0
+    Text = ''
+    ExplicitWidth = 390
   end
   object DstDirEdit: TLabeledEdit
     Left = 76
     Top = 37
-    Width = 398
+    Width = 394
     Height = 21
     TabStop = False
     Anchors = [akLeft, akTop, akRight]
     BorderStyle = bsNone
-    EditLabel.Width = 36
-    EditLabel.Height = 13
+    EditLabel.Width = 39
+    EditLabel.Height = 21
     EditLabel.Caption = #27604#36611#20808
     LabelPosition = lpLeft
     ReadOnly = True
     TabOrder = 1
+    Text = ''
+    ExplicitWidth = 390
   end
   object DiffExcDirComboBox: TComboBox
     Left = 76
     Top = 165
-    Width = 398
-    Height = 21
+    Width = 394
+    Height = 23
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 20
     TabOrder = 5
+    ExplicitWidth = 390
   end
   object CanButton: TButton
-    Left = 394
-    Top = 213
+    Left = 390
+    Top = 209
     Width = 80
     Height = 26
     Anchors = [akRight, akBottom]
@@ -118,8 +122,8 @@ object DiffDirDlg: TDiffDirDlg
     TabOrder = 7
   end
   object OkButton: TButton
-    Left = 302
-    Top = 213
+    Left = 298
+    Top = 209
     Width = 80
     Height = 26
     Action = StartAction
@@ -131,11 +135,12 @@ object DiffDirDlg: TDiffDirDlg
   object ExcMaskComboBox: TComboBox
     Left = 76
     Top = 103
-    Width = 398
-    Height = 21
+    Width = 394
+    Height = 23
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 20
     TabOrder = 3
+    ExplicitWidth = 390
   end
   object ActionList1: TActionList
     Left = 216

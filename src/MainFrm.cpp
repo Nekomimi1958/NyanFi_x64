@@ -493,6 +493,7 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 			case 'F': StartFile = prmbuf;	break;	//カレントファイル
 			case 'X': StartCmds = prmbuf;	break;	//コマンド
 			case 'M': StartMsg  = prmbuf;	break;	//メッセージ
+			case 'U': UpdateMsg = prmbuf;	break;	//更新時メッセージ
 			}
 		}
 		//カレントファイル
@@ -919,6 +920,11 @@ void __fastcall TNyanFiForm::WmFormShowed(TMessage &msg)
 		if (WindowState==wsMinimized) Application->Restore();
 		::SetForegroundWindow(Handle);
 		CmdRequestList->Add(tmp.sprintf(_T("MsgBoxCenter_\"%s\""), StartMsg.c_str()));
+	}
+	if (!UpdateMsg.IsEmpty()) {
+		if (WindowState==wsMinimized) Application->Restore();
+		::SetForegroundWindow(Handle);
+		CmdRequestList->Add(tmp.sprintf(_T("MsgBoxUpdate_\"%s\""), UpdateMsg.c_str()));
 	}
 
 	//タスクトレイ
@@ -4089,6 +4095,25 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 			else if (USAME_TI(cmd, "MsgBoxCenter")) {
 				MsgPosCenter = true;
 				msgbox_OK(prm);
+				MsgPosCenter = false;
+			}
+			//更新時の確認
+			else if (USAME_TI(cmd, "MsgBoxUpdate")) {
+				TForm *MsgDlg = CreateMessageDialog(prm, mtConfirmation,
+									TMsgDlgButtons() << mbOK << mbCancel, mbOK);
+				TCheckBox *cp = new TCheckBox(MsgDlg);
+				MsgDlg->ClientHeight = MsgDlg->ClientHeight + cp->Height + 12;
+				cp->Caption = "変更履歴を表示(&H)";
+				cp->Parent	= MsgDlg;
+				cp->Left	= 20;
+				cp->Top		= MsgDlg->ClientHeight - cp->Height - 12;
+				cp->Width	= MsgDlg->ClientWidth - cp->Left;
+				cp->Checked = IniFile->ReadBoolGen(_T("ShowUpdHistory"),	true);
+				SetDarkWinTheme(MsgDlg);
+				MsgPosCenter = true;
+				if (MsgDlg->ShowModal()==mrOk && cp->Checked) HtmlHelpContext(109);
+				IniFile->WriteBoolGen(_T("ShowUpdHistory"),	cp);
+				delete MsgDlg;
 				MsgPosCenter = false;
 			}
 			//内部コマンド
@@ -8689,6 +8714,7 @@ void __fastcall TNyanFiForm::UpdateCurPath(
 	CurPath[CurListTag] = dir + "\t" + unam;
 	if (DirHistCsrPos && idx!=-1) ListBoxSetIndex(lp, idx);
 	lp->UnlockDrawing();
+	SetDriveInfo();
 	SetFileInf();
 
 	if (inh_hist) InhDirHist--;
@@ -8721,6 +8747,7 @@ void __fastcall TNyanFiForm::UpdateCurPath(
 		}
 	}
 	lp->UnlockDrawing();
+	SetDriveInfo();
 	SetFileInf();
 }
 //---------------------------------------------------------------------------
@@ -24639,34 +24666,61 @@ void __fastcall TNyanFiForm::SelectActionExecute(TObject *Sender)
 	case SCMD_FLIST:
 		{
 			TListBox *lp = FileListBox[CurListTag];
-			int idx0 = lp->ItemIndex;
-			int n = 1;
-			//繰り返し回数入力
-			if (TEST_ActParam("IN")) {
-				n = inputbox_ex_n(_T("Select"), _T("繰り返し回数"));
-			}
-			//繰り返し回数指定
-			else if (!ActionParam.IsEmpty() && !TEST_ActParam("ND")) {
-				n = ActionParam.ToIntDef(1);
-			}
-
-			//繰り返しあり
-			if (n>1) {
-				ListBoxCursorDown(lp, n);
-				int idx1 = lp->ItemIndex;
-				TStringList *lst = GetCurList();
-				for (int i=idx0,cnt=0; i<=idx1 && cnt<n; i++,cnt++) set_select_r((file_rec*)lst->Objects[i]);
+			int c_idx = lp->ItemIndex;
+			//範囲選択
+			if (TEST_ActParam("RG")) {
+				TStringList *lst = GetCurList(true);
+				int sel_cnt = GetSelCount(lst);
+				if (sel_cnt>0) {
+					int lst_idx = -1;
+					for (int i=c_idx; i>=0 && lst_idx==-1; i--) {
+						if (((file_rec*)lst->Objects[i])->selected) lst_idx = i;
+					}
+					for (int i=c_idx; i<lst->Count && lst_idx==-1; i++) {
+						if (((file_rec*)lst->Objects[i])->selected) lst_idx = i;
+					}
+					if (lst_idx<c_idx) {
+						for (int i=lst_idx; i<=c_idx; i++) set_select((file_rec*)lst->Objects[i]);
+					}
+					else {
+						for (int i=c_idx; i<=lst_idx; i++) set_select((file_rec*)lst->Objects[i]);
+					}
+				}
+				else {
+					set_select((file_rec*)lst->Objects[c_idx]);
+				}
 				InvalidateFileList();
 			}
-			//繰り返しなし
-			else if (n==1) {
-				set_select_r(GetFrecPtr(FileListBox[CurListTag], GetCurList(true)));
-				if (!TEST_ActParam("ND")) CursorDownAction->Execute();
-				if (lp->ItemIndex==idx0) InvalidateFileList();
-			}
 			else {
-				SetActionAbort(_T("SKIP"));
+				int n = 1;
+				//繰り返し回数入力
+				if (TEST_ActParam("IN")) {
+					n = inputbox_ex_n(_T("Select"), _T("繰り返し回数"));
+				}
+				//繰り返し回数指定
+				else if (!ActionParam.IsEmpty() && !TEST_ActParam("ND")) {
+					n = ActionParam.ToIntDef(1);
+				}
+
+				//繰り返しあり
+				if (n>1) {
+					ListBoxCursorDown(lp, n);
+					int idx1 = lp->ItemIndex;
+					TStringList *lst = GetCurList();
+					for (int i=c_idx,cnt=0; i<=idx1 && cnt<n; i++,cnt++) set_select_r((file_rec*)lst->Objects[i]);
+					InvalidateFileList();
+				}
+				//繰り返しなし
+				else if (n==1) {
+					set_select_r(GetFrecPtr(FileListBox[CurListTag], GetCurList(true)));
+					if (lp->ItemIndex==c_idx) InvalidateFileList();
+					if (!TEST_ActParam("ND")) CursorDownAction->Execute();
+				}
+				else {
+					SetActionAbort(_T("SKIP"));
+				}
 			}
+
 			//情報表示を更新
 			SetDriveInfo();
 			SetSttBarInf();
@@ -29730,7 +29784,7 @@ bool __fastcall TNyanFiForm::UpdateFromArc(
 			"IF EXIST NyanFi.chm GOTO L10\r\n"
 			"REN new_NyanFi.exe NyanFi.exe\r\n"
 			"REN new_NyanFi.chm NyanFi.chm\r\n"
-			"START NyanFi.exe -M" + msg + "\r\n"
+			"START NyanFi.exe -U" + msg + "\r\n"
 			"DEL /F \"%~dp0%~nx0\"\r\n"
 			"EXIT\r\n";
 
@@ -29761,47 +29815,21 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 	try {
 		cursor_HourGlass();
 		ClearTempDir();
-
-		//サイトをチェック
-		UnicodeString url = DOWNLOAD_URL;
-		UnicodeString tmp_name;  tmp_name.sprintf(_T("%snyanfi.htm"), TempPathA.c_str());
-		if (get_OnlineFile(url + "nyanfi.htm", tmp_name)<=0) TextAbort(_T("情報が取得できません。"));
+		//GitHub - Release チェック
+		UnicodeString zip_nam, dl_url;
+		UnicodeString tmp_name;  tmp_name.sprintf(_T("%slatest.json"), TempPathA.c_str());
+		if (get_OnlineFile(RELEASE_URL, tmp_name)<=0) TextAbort(_T("Release 情報を取得できません。"));
 		std::unique_ptr<TStringList> fbuf(new TStringList());
 		load_text_ex(tmp_name, fbuf.get());
-
-		UnicodeString zip_nam;
-		int new_vno = 0;
-		bool is_inf = false;
-		UnicodeString zip_ptn = is_X64()? "<a href=\"nyanfi64_[0-9]{4}\\.zip\">"
-										: "<a href=\"nyanfi[0-9]{4}\\.zip\">";
-		UnicodeString inf_str, ver_hdr;
-		for (int i=0; i<fbuf->Count; i++) {
-			UnicodeString lbuf = fbuf->Strings[i];
-			//ファイル名を取得
-			if (zip_nam.IsEmpty() && TRegEx::IsMatch(lbuf, zip_ptn)) {
-				zip_nam = get_tkn_m(lbuf, _T("<a href=\""), _T("\">"));
-				new_vno = extract_int_def(get_tkn_r(zip_nam, is_X64()? "nyanfi64_" : "nyanfi"), 0);
-				ver_hdr.sprintf(_T("<p><u><b>V%u.%02u</b></u>"), new_vno/100, new_vno%100);
-			}
-			//変更点を取得
-			else if (new_vno>0) {
-				if (!is_inf) {
-					if (ContainsText(lbuf, ver_hdr)) is_inf = true;
-				}
-				else {
-					if (ContainsText(lbuf, "p>")) break;
-					inf_str += (ReplaceText(lbuf, "<br>", "") + "\r\n");
-				}
-			}
-		}
-		if (zip_nam.IsEmpty()) TextAbort(_T("確認に失敗しました。"));
-
-		if (is_inf) {
-			//実体参照の解決
-			std::unique_ptr<HtmConv> htmcnv(new HtmConv());
-			inf_str = htmcnv->RefEntity(inf_str);
-		}
-
+		TJSONObject *obj = (TJSONObject*)TJSONObject::ParseJSONValue(fbuf->Text);
+		TJSONArray *assets = dynamic_cast<TJSONArray*>(obj->GetValue("assets"));
+		if (!assets || assets->Size()==0) TextAbort(_T("Assets 情報を取得できません。"));
+		TJSONObject *v0 = (TJSONObject*)assets->Items[0];
+		TJSONValue *v_nam = v0->GetValue("name");					if (v_nam) zip_nam = v_nam->Value();
+		TJSONValue *v_url = v0->GetValue("browser_download_url");	if (v_url) dl_url  = v_url->Value();
+		if (zip_nam.IsEmpty() || dl_url.IsEmpty()) TextAbort(_T("ダウンロード情報を取得できません。"));
+		int new_vno = extract_ver_no(zip_nam);
+		if (new_vno==0) TextAbort(_T("最新バージョンを取得できません。"));
 		cursor_Default();
 
 		//バージョンチェック
@@ -29810,7 +29838,6 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 		UnicodeString msg;
 		if (new_vno>VersionNo || force) {
 			msg.sprintf(_T("現バージョン [V%.2f] → 新バージョン [V%.2f] をダウンロードしますか?"), VersionNo/100.0, new_vno/100.0);
-			if (!inf_str.IsEmpty()) msg.cat_sprintf(_T("\r\n\r\n[変更点]\r\n%s\r\n"), inf_str.c_str());
 			if (no_conf || msgbox_Sure(msg, true, true)) {
 				UnicodeString fnam;
 				if (no_conf) {
@@ -29828,7 +29855,7 @@ void __fastcall TNyanFiForm::CheckUpdateActionExecute(TObject *Sender)
 						if (!UpdateFromArc(fnam)) GlobalAbort();
 					}
 					//ダウンロードファイルから更新
-					else if (DownloadWorkProgress(url + zip_nam, fnam)==mrOk) {
+					else if (DownloadWorkProgress(dl_url, fnam)==mrOk) {
 						msg.sprintf(_T("NyanFi (%s)　　　　　　\nV%.2f → V%.2f\n更新しますか?"),
 									(is_X64()? _T("x64") : _T("x86")), VersionNo/100.0, new_vno/100.0);
 						if (no_conf || msgbox_Sure(msg, true, true)) {
@@ -29869,11 +29896,16 @@ void __fastcall TNyanFiForm::UpdateFromArcActionExecute(TObject *Sender)
 	if (TEST_ActParam("UN")) {
 		std::unique_ptr<TStringList> flst(new TStringList());
 		get_files(DownloadPath, _T("nyanfi*.zip"), flst.get());
-		if (flst->Count>0) {
-			flst->CustomSort(comp_NaturalOrder);
-			int zip_vno = extract_int_def(ExtractFileName(flst->Strings[flst->Count - 1]), 0);
-			if (zip_vno>VersionNo) arc_name = flst->Strings[flst->Count - 1];
+		int zip_vno = 0;
+		for (int i=0; i<flst->Count; i++) {
+			UnicodeString fnam = flst->Strings[i];
+			int n = extract_ver_no(fnam);
+			if (n>zip_vno) {
+				zip_vno  = n;
+				arc_name = fnam;
+			}
 		}
+		if (zip_vno<=VersionNo) arc_name = EmptyStr;
 		if (arc_name.IsEmpty()) msgbox_OK("新しいアーカイブがありません。", "アーカイブから更新");
 	}
 	//アーカイブを選択

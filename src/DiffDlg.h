@@ -14,6 +14,7 @@
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.ActnList.hpp>
 #include <Vcl.Buttons.hpp>
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 class TDiffDirDlg : public TForm

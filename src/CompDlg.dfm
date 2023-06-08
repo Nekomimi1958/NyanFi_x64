@@ -8,7 +8,6 @@ object FileCompDlg: TFileCompDlg
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -18,10 +17,9 @@ object FileCompDlg: TFileCompDlg
   DesignSize = (
     434
     344)
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object CanButton: TButton
-    Left = 219
+    Left = 229
     Top = 310
     Width = 80
     Height = 26
@@ -38,7 +36,7 @@ object FileCompDlg: TFileCompDlg
     TabOrder = 10
   end
   object OkButton: TButton
-    Left = 114
+    Left = 124
     Top = 310
     Width = 80
     Height = 26
@@ -62,6 +60,7 @@ object FileCompDlg: TFileCompDlg
     Anchors = [akLeft, akBottom]
     Caption = #12487#12451#12524#12463#12488#12522#12418#27604#36611'(&D)'
     TabOrder = 4
+    ExplicitTop = 245
   end
   object TimePanel: TPanel
     Left = 0
@@ -72,13 +71,14 @@ object FileCompDlg: TFileCompDlg
     BevelOuter = bvNone
     TabOrder = 0
     StyleElements = []
+    ExplicitWidth = 430
     DesignSize = (
       434
       55)
     object TimeRadioGroup: TRadioGroup
       Left = 8
       Top = 6
-      Width = 418
+      Width = 414
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = #12479#12452#12512#12473#12479#12531#12503'(&T)'
@@ -91,6 +91,7 @@ object FileCompDlg: TFileCompDlg
         #26032#12375#12356
         #21476#12356)
       TabOrder = 0
+      ExplicitWidth = 410
     end
   end
   object SizePanel: TPanel
@@ -102,13 +103,14 @@ object FileCompDlg: TFileCompDlg
     BevelOuter = bvNone
     TabOrder = 1
     StyleElements = []
+    ExplicitWidth = 430
     DesignSize = (
       434
       55)
     object SizeRadioGroup: TRadioGroup
       Left = 9
       Top = 6
-      Width = 417
+      Width = 413
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = #12469#12452#12474'(&S)'
@@ -121,6 +123,7 @@ object FileCompDlg: TFileCompDlg
         #22823#12365#12356
         #23567#12373#12356)
       TabOrder = 0
+      ExplicitWidth = 409
     end
   end
   object HashPanel: TPanel
@@ -132,13 +135,14 @@ object FileCompDlg: TFileCompDlg
     BevelOuter = bvNone
     TabOrder = 2
     StyleElements = []
+    ExplicitWidth = 430
     DesignSize = (
       434
       67)
     object HashRadioGroup: TRadioGroup
       Left = 8
       Top = 6
-      Width = 418
+      Width = 414
       Height = 52
       Anchors = [akLeft, akTop, akRight]
       Caption = #12495#12483#12471#12517'(&H)'
@@ -150,12 +154,13 @@ object FileCompDlg: TFileCompDlg
         #19968#33268)
       TabOrder = 0
       OnClick = OptRadioGroupClick
+      ExplicitWidth = 410
     end
     object AlgComboBox: TComboBox
       Left = 263
       Top = 25
       Width = 150
-      Height = 21
+      Height = 23
       Style = csDropDownList
       TabOrder = 1
     end
@@ -168,6 +173,7 @@ object FileCompDlg: TFileCompDlg
     Anchors = [akLeft, akBottom]
     Caption = #21453#23550#20596#12418#36984#25246'(&O)'
     TabOrder = 6
+    ExplicitTop = 270
   end
   object ReverseCheckBox: TCheckBox
     Left = 144
@@ -177,6 +183,7 @@ object FileCompDlg: TFileCompDlg
     Anchors = [akLeft, akBottom]
     Caption = #32080#26524#12434#21453#36578'(&R)'
     TabOrder = 7
+    ExplicitTop = 270
   end
   object SelMaskCheckBox: TCheckBox
     Left = 263
@@ -186,6 +193,7 @@ object FileCompDlg: TFileCompDlg
     Anchors = [akLeft, akBottom]
     Caption = #36984#25246#38917#30446#12384#12369#12434#27531#12377'(&M)'
     TabOrder = 8
+    ExplicitTop = 270
   end
   object CmpArcCheckBox: TCheckBox
     Left = 172
@@ -195,6 +203,7 @@ object FileCompDlg: TFileCompDlg
     Anchors = [akLeft, akBottom]
     Caption = #12487#12451#12524#12463#12488#12522#12392#12450#12540#12459#12452#12502#12434#27604#36611'(&P)'
     TabOrder = 5
+    ExplicitTop = 245
   end
   object IdPanel: TPanel
     Left = 0
@@ -205,13 +214,14 @@ object FileCompDlg: TFileCompDlg
     BevelOuter = bvNone
     TabOrder = 3
     StyleElements = []
+    ExplicitWidth = 430
     DesignSize = (
       434
       55)
     object IdRadioGroup: TRadioGroup
       Left = 8
       Top = 6
-      Width = 418
+      Width = 414
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = #12508#12522#12517#12540#12512#12471#12522#12450#12523#30058#21495'/'#12501#12449#12452#12523'ID(&I)'
@@ -223,6 +233,7 @@ object FileCompDlg: TFileCompDlg
         #19968#33268)
       TabOrder = 0
       OnClick = OptRadioGroupClick
+      ExplicitWidth = 410
     end
   end
   object ActionList1: TActionList

@@ -953,7 +953,7 @@ void get_PrmList(
 	else if (USAME_TI(cmd, "Select") && (id_idx==0 || id_idx==3)) {
 		if (cp) cp->Style = csDropDown;
 		params = "\n";
-		if (id_idx==0) params += "IN : 繰り返し回数を入力\n";
+		if (id_idx==0) params += "IN : 繰り返し回数を入力\nRG : 前/後の選択項目まで範囲選択\n";
 		params += "ND : カーソルを移動しない\n";
 	}
 	else if (USAME_TI(cmd, "SelectFile")) {

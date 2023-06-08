@@ -24,9 +24,9 @@ bool DebugOut   = false;		//デバッグ文字列送信(隠し設定)
 //---------------------------------------------------------------------------
 //デバッグ文字列送信
 //---------------------------------------------------------------------------
-void OutDebugStr(UnicodeString msg)
+void OutDebugStr(UnicodeString s)
 {
-	if (DebugOut) OutputDebugString(msg.c_str());
+	if (DebugOut) OutputDebugString(s.c_str());
 }
 
 //---------------------------------------------------------------------------

@@ -15118,6 +15118,8 @@ void AddCmdHistory(
 {
 	if (SameText(cmd, "CmdHistory") || (InhCmdHistory && !SameStr(id, "-"))) return;
 
+	OutDebugStr("#AddCmdHistory: " + cmd);
+
 	UnicodeString lbuf = FormatDateTime("hh:nn:ss.zzz", Now());
 	lbuf.cat_sprintf(_T(" %s %s %s"), id.c_str(), (CurListTag==1)? _T("_R") : _T("L_"), cmd.c_str());
 	if (!prm.IsEmpty()) lbuf.cat_sprintf(_T("_%s"), prm.c_str());
@@ -15641,6 +15643,23 @@ UnicodeString get_GitDiffFile2(UnicodeString s)
 	UnicodeString fnam2;
 	UnicodeString fnam1 = get_GitDiffFiles(s, fnam2);
 	return !fnam2.IsEmpty()? fnam2 : fnam1;
+}
+
+//---------------------------------------------------------------------------
+//ファイル名からバージョン番号を取得(拡張子直前の数値)
+//---------------------------------------------------------------------------
+int extract_ver_no(UnicodeString fnam)
+{
+	UnicodeString s = get_base_name(fnam);
+	if (is_X64()) {
+		if (s.Pos("64_")==0) s = EmptyStr;
+	}
+	else {
+		if (s.Pos("64_")) s = EmptyStr;
+	}
+	int i = 1;
+	while (i<=s.Length()) if (!iswdigit(s[i])) s.Delete(1, i); else i++;
+	return s.ToIntDef(0);
 }
 
 //---------------------------------------------------------------------------

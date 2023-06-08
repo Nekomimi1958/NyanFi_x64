@@ -351,6 +351,7 @@ UnicodeString get_base_name(UnicodeString fnam)
 	if (fnam.IsEmpty()) return EmptyStr;
 	return StartsStr('.', fnam)? "." + ChangeFileExt(exclude_top(fnam), EmptyStr) : ChangeFileExt(fnam, EmptyStr);
 }
+
 //---------------------------------------------------------------------------
 //拡張子を取得 (ドットファイルを考慮)
 //---------------------------------------------------------------------------

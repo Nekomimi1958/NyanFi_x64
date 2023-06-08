@@ -1951,6 +1951,7 @@ private:	// ユーザー宣言
 	UnicodeString StartFile;			//起動時のカレントファイル
 	UnicodeString StartCmds;			//起動時の実行コマンド
 	UnicodeString InitialLog;			//起動時の追加ログ
+	UnicodeString UpdateMsg;			//更新時メッセージ
 
 	HANDLE hWatchDir[MAX_FILELIST];
 	UnicodeString WatchPath[MAX_FILELIST];	//監視ディレクトリ

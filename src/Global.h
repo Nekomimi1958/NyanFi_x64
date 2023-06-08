@@ -28,8 +28,13 @@
 #include "thumb_thread.h"
 
 //---------------------------------------------------------------------------
-#define SUPPORT_URL		"http://nekomimi.la.coocan.jp/"
-#define DOWNLOAD_URL	"http://nekomimi.la.coocan.jp/freesoft/"
+#define SUPPORT_URL	"http://nekomimi.la.coocan.jp/"
+
+#if defined(_WIN64)
+#define RELEASE_URL	"https://api.github.com/repos/Nekomimi1958/NyanFi_x64/releases/latest"
+#else
+#define RELEASE_URL	"https://api.github.com/repos/Nekomimi1958/NyanFi_x86/releases/latest"
+#endif
 
 //---------------------------------------------------------------------------
 #define WM_FORM_SHOWED		(WM_APP + 1)	//フォームが表示された
@@ -2221,6 +2226,8 @@ void draw_GitTag(TCanvas *cv, int &x, int y, UnicodeString tag, int mgn = 0);
 void get_GitInf(UnicodeString dnam, TStringList *lst, bool upd_sw = false, bool ext_sw = false);
 UnicodeString get_GitDiffFiles(UnicodeString s, UnicodeString &fnam2);
 UnicodeString get_GitDiffFile2(UnicodeString s);
+
+int extract_ver_no(UnicodeString fnam);
 
 //---------------------------------------------------------------------------
 // ツールチップ	(配色変更のためにサブクラス化)
