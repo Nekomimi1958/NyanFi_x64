@@ -4,12 +4,11 @@ object FtpConnectDlg: TFtpConnectDlg
   HelpContext = 80
   BorderStyle = bsDialog
   Caption = 'FTP'#25509#32154
-  ClientHeight = 373
-  ClientWidth = 594
+  ClientHeight = 397
+  ClientWidth = 612
   Color = clBtnFace
   ParentFont = True
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -17,51 +16,56 @@ object FtpConnectDlg: TFtpConnectDlg
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object PageControl1: TPageControl
     Left = 0
     Top = 0
-    Width = 594
-    Height = 373
+    Width = 612
+    Height = 397
     ActivePage = HostSheet
     Align = alClient
     OwnerDraw = True
     TabOrder = 0
     TabWidth = 100
     OnDrawTab = PageControl1DrawTab
+    ExplicitWidth = 608
+    ExplicitHeight = 396
     object HostSheet: TTabSheet
       Caption = #12507#12473#12488
       object HostPanel: TPanel
         Left = 0
         Top = 0
-        Width = 586
-        Height = 345
+        Width = 604
+        Height = 367
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitWidth = 600
+        ExplicitHeight = 366
         DesignSize = (
-          586
-          345)
+          604
+          367)
         object Label2: TLabel
-          Left = 403
+          Left = 395
           Top = 141
-          Width = 53
-          Height = 13
+          Width = 57
+          Height = 15
           Alignment = taRightJustify
           Caption = 'SSL'#26263#21495#21270
         end
         object AddMenuBtn: TButton
           Left = 9
-          Top = 313
+          Top = 338
           Width = 60
           Height = 24
           Action = AddHostAction
-          TabOrder = 12
+          Anchors = [akLeft, akBottom]
+          TabOrder = 13
+          ExplicitTop = 337
         end
         object AnonyCheckBox: TCheckBox
-          Left = 486
-          Top = 76
+          Left = 505
+          Top = 77
           Width = 89
           Height = 17
           Caption = 'anonymous'
@@ -69,101 +73,119 @@ object FtpConnectDlg: TFtpConnectDlg
           OnClick = AnonyCheckBoxClick
         end
         object CancelBtn: TButton
-          Left = 500
-          Top = 311
+          Left = 514
+          Top = 336
           Width = 80
           Height = 26
+          Anchors = [akLeft, akBottom]
           Cancel = True
           Caption = #12461#12515#12531#12475#12523
           ModalResult = 2
-          TabOrder = 18
+          TabOrder = 19
+          ExplicitTop = 335
         end
         object ChgMenuBtn: TButton
           Left = 73
-          Top = 313
+          Top = 338
           Width = 60
           Height = 24
           Action = ChgHostAction
-          TabOrder = 13
+          Anchors = [akLeft, akBottom]
+          TabOrder = 14
+          ExplicitTop = 337
         end
         object ConnectBtn: TButton
-          Left = 404
-          Top = 311
+          Left = 418
+          Top = 336
           Width = 80
           Height = 26
           Action = ConnectAction
+          Anchors = [akLeft, akBottom]
           Default = True
           ModalResult = 1
-          TabOrder = 17
+          TabOrder = 18
+          ExplicitTop = 335
         end
         object DelMenuBtn: TButton
           Left = 137
-          Top = 313
+          Top = 338
           Width = 60
           Height = 24
           Action = UserModule.DelListItemAction
-          TabOrder = 14
+          Anchors = [akLeft, akBottom]
+          TabOrder = 15
+          ExplicitTop = 337
         end
         object DowButton: TButton
           Left = 235
-          Top = 313
+          Top = 338
           Width = 30
           Height = 24
           Action = UserModule.DownListItemAction
-          TabOrder = 16
+          Anchors = [akLeft, akBottom]
+          TabOrder = 17
+          ExplicitTop = 337
         end
         object HostAddrEdit: TLabeledEdit
           Left = 264
           Top = 45
-          Width = 316
-          Height = 21
+          Width = 334
+          Height = 23
           Hint = ': '#12391#21306#20999#12387#12390#27161#28310#20197#22806#12398#12509#12540#12488#30058#21495#12434#25351#23450#21487#33021
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 36
-          EditLabel.Height = 13
+          EditLabel.Width = 39
+          EditLabel.Height = 23
           EditLabel.Caption = #12450#12489#12524#12473
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
+          ExplicitWidth = 330
         end
         object HostDirEdit: TLabeledEdit
           Left = 214
           Top = 190
-          Width = 366
-          Height = 21
+          Width = 384
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 100
-          EditLabel.Height = 13
+          EditLabel.Width = 110
+          EditLabel.Height = 15
           EditLabel.Caption = #12507#12473#12488#38283#22987#12487#12451#12524#12463#12488#12522
           TabOrder = 8
+          Text = ''
+          ExplicitWidth = 380
         end
         object UserIdEdit: TLabeledEdit
           Left = 264
           Top = 74
-          Width = 210
-          Height = 21
+          Width = 228
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 41
-          EditLabel.Height = 13
+          EditLabel.Width = 44
+          EditLabel.Height = 23
           EditLabel.Caption = #12518#12540#12470'ID'
           LabelPosition = lpLeft
           TabOrder = 3
+          Text = ''
+          ExplicitWidth = 224
         end
         object LocalDirEdit: TLabeledEdit
           Left = 214
           Top = 237
-          Width = 328
-          Height = 21
+          Width = 346
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 111
-          EditLabel.Height = 13
+          EditLabel.Width = 120
+          EditLabel.Height = 15
           EditLabel.Caption = #12525#12540#12459#12523#38283#22987#12487#12451#12524#12463#12488#12522
           TabOrder = 9
+          Text = ''
+          ExplicitWidth = 342
         end
         object HostListBox: TListBox
           Left = 8
           Top = 8
           Width = 190
-          Height = 295
+          Height = 317
           Style = lbOwnerDrawFixed
           Anchors = [akLeft, akTop, akBottom]
           DragMode = dmAutomatic
@@ -175,66 +197,74 @@ object FtpConnectDlg: TFtpConnectDlg
           OnDblClick = HostListBoxDblClick
           OnDrawItem = HostListBoxDrawItem
           OnKeyDown = HostListBoxKeyDown
+          ExplicitHeight = 316
         end
         object RefDirBtn: TButton
           Tag = 100
-          Left = 544
-          Top = 237
+          Left = 562
+          Top = 238
           Width = 36
           Height = 22
           Anchors = [akTop, akRight]
           Caption = '...'
           TabOrder = 10
           OnClick = RefDirBtnClick
+          ExplicitLeft = 558
         end
         object PassWdEdit: TLabeledEdit
           Left = 264
           Top = 107
-          Width = 210
-          Height = 21
+          Width = 228
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 47
-          EditLabel.Height = 13
+          EditLabel.Width = 51
+          EditLabel.Height = 23
           EditLabel.Caption = #12497#12473#12527#12540#12489
           LabelPosition = lpLeft
           PasswordChar = '*'
           TabOrder = 5
+          Text = ''
+          ExplicitWidth = 224
         end
         object SyncLRCheckBox: TCheckBox
-          Left = 264
-          Top = 268
-          Width = 177
+          Left = 214
+          Top = 274
+          Width = 182
           Height = 17
           Caption = #24038#21491#12487#12451#12524#12463#12488#12522#12398#21516#26399#22793#26356
           TabOrder = 11
         end
         object UpButton: TButton
           Left = 203
-          Top = 313
+          Top = 338
           Width = 30
           Height = 24
           Action = UserModule.UpListItemAction
-          TabOrder = 15
+          Anchors = [akLeft, akBottom]
+          TabOrder = 16
+          ExplicitTop = 337
         end
         object SSLComboBox: TComboBox
-          Left = 460
+          Left = 456
           Top = 138
-          Width = 120
-          Height = 21
+          Width = 142
+          Height = 23
           Style = csDropDownList
           TabOrder = 7
         end
         object HostNameEdit: TLabeledEdit
           Left = 264
           Top = 12
-          Width = 316
-          Height = 21
+          Width = 334
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 39
-          EditLabel.Height = 13
+          EditLabel.Width = 43
+          EditLabel.Height = 23
           EditLabel.Caption = #12507#12473#12488#21517
           LabelPosition = lpLeft
           TabOrder = 1
+          Text = ''
+          ExplicitWidth = 330
         end
         object PasvCheckBox: TCheckBox
           Left = 264
@@ -246,6 +276,14 @@ object FtpConnectDlg: TFtpConnectDlg
           State = cbChecked
           TabOrder = 6
         end
+        object LastDirCheckBox: TCheckBox
+          Left = 402
+          Top = 274
+          Width = 198
+          Height = 17
+          Caption = #20999#26029#26178#12398#12487#12451#12524#12463#12488#12522#12391#27425#22238#38283#22987
+          TabOrder = 12
+        end
       end
     end
     object OptionSheet: TTabSheet
@@ -254,26 +292,26 @@ object FtpConnectDlg: TFtpConnectDlg
       object OptPanel: TPanel
         Left = 0
         Top = 0
-        Width = 586
-        Height = 345
+        Width = 604
+        Height = 367
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
         DesignSize = (
-          586
-          345)
+          604
+          367)
         object SndFindGroupBox: TGroupBox
           Left = 12
           Top = 203
-          Width = 565
+          Width = 575
           Height = 108
           Caption = #36890#30693#38899
           TabOrder = 7
           DesignSize = (
-            565
+            575
             108)
           object RefSndConnectBtn: TButton
-            Left = 499
+            Left = 509
             Top = 18
             Width = 36
             Height = 22
@@ -282,9 +320,10 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '...'
             TabOrder = 1
             OnClick = RefSoundBtnClick
+            ExplicitLeft = 499
           end
           object TestSndConnectBtn: TButton
-            Left = 536
+            Left = 546
             Top = 18
             Width = 22
             Height = 22
@@ -293,32 +332,35 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '>'
             TabOrder = 2
             OnClick = TestSoundBtnClick
+            ExplicitLeft = 536
           end
           object SndConnectEdit: TLabeledEdit
             Left = 72
             Top = 18
             Width = 425
-            Height = 21
-            EditLabel.Width = 51
-            EditLabel.Height = 13
+            Height = 23
+            EditLabel.Width = 56
+            EditLabel.Height = 23
             EditLabel.Caption = #12507#12473#12488#25509#32154
             LabelPosition = lpLeft
             TabOrder = 0
+            Text = ''
           end
           object SndDisconEdit: TLabeledEdit
             Left = 72
             Top = 47
             Width = 425
-            Height = 21
-            EditLabel.Width = 51
-            EditLabel.Height = 13
+            Height = 23
+            EditLabel.Width = 56
+            EditLabel.Height = 23
             EditLabel.Caption = #12507#12473#12488#20999#26029
             LabelPosition = lpLeft
             TabOrder = 3
+            Text = ''
           end
           object TestSndDisconBtn: TButton
             Tag = 1
-            Left = 536
+            Left = 546
             Top = 47
             Width = 22
             Height = 22
@@ -327,10 +369,11 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '>'
             TabOrder = 5
             OnClick = TestSoundBtnClick
+            ExplicitLeft = 536
           end
           object RefSndDisconBtn: TButton
             Tag = 1
-            Left = 499
+            Left = 509
             Top = 47
             Width = 36
             Height = 22
@@ -339,21 +382,23 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '...'
             TabOrder = 4
             OnClick = RefSoundBtnClick
+            ExplicitLeft = 499
           end
           object SndTransferEdit: TLabeledEdit
             Left = 72
             Top = 76
             Width = 425
-            Height = 21
-            EditLabel.Width = 48
-            EditLabel.Height = 13
+            Height = 23
+            EditLabel.Width = 52
+            EditLabel.Height = 23
             EditLabel.Caption = #36578#36865#23436#20102
             LabelPosition = lpLeft
             TabOrder = 6
+            Text = ''
           end
           object TestSndTransferBtn: TButton
             Tag = 2
-            Left = 536
+            Left = 546
             Top = 76
             Width = 22
             Height = 22
@@ -362,10 +407,11 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '>'
             TabOrder = 8
             OnClick = TestSoundBtnClick
+            ExplicitLeft = 536
           end
           object RefSndTransferBtn: TButton
             Tag = 2
-            Left = 499
+            Left = 509
             Top = 76
             Width = 36
             Height = 22
@@ -374,18 +420,20 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '...'
             TabOrder = 7
             OnClick = RefSoundBtnClick
+            ExplicitLeft = 499
           end
         end
         object TextFExtEdit: TLabeledEdit
           Left = 20
           Top = 98
-          Width = 549
-          Height = 21
+          Width = 567
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 153
-          EditLabel.Height = 13
+          EditLabel.Width = 167
+          EditLabel.Height = 15
           EditLabel.Caption = #12486#12461#12473#12488#12514#12540#12489#12391#36578#36865#12377#12427#25313#24373#23376
           TabOrder = 2
+          Text = ''
         end
         object UpKeepTimeCheckBox: TCheckBox
           Left = 302
@@ -413,22 +461,23 @@ object FtpConnectDlg: TFtpConnectDlg
           object Label1: TLabel
             Left = 152
             Top = 23
-            Width = 12
-            Height = 13
+            Width = 13
+            Height = 15
             Caption = #31186
           end
           object DisconTimeEdit: TLabeledEdit
             Left = 88
             Top = 20
             Width = 60
-            Height = 21
+            Height = 23
             Alignment = taRightJustify
-            EditLabel.Width = 53
-            EditLabel.Height = 13
+            EditLabel.Width = 58
+            EditLabel.Height = 23
             EditLabel.Caption = #12479#12452#12512#12450#12454#12488
             LabelPosition = lpLeft
             NumbersOnly = True
             TabOrder = 0
+            Text = ''
           end
         end
         object LogResCheckBox: TCheckBox

@@ -435,6 +435,16 @@ UnicodeString get_parent_path(UnicodeString dnam)
 }
 
 //---------------------------------------------------------------------------
+//適切なFTPパスに変換
+//---------------------------------------------------------------------------
+UnicodeString nrm_ftp_path(UnicodeString pnam)
+{
+	if		(pnam.IsEmpty())		pnam = "/";
+	else if (!StartsStr('/', pnam)) pnam.Insert("/", 1);
+	return pnam;
+}
+
+//---------------------------------------------------------------------------
 //パスを分割
 //---------------------------------------------------------------------------
 TStringDynArray split_path(UnicodeString pnam, UnicodeString dlmt)
@@ -1057,7 +1067,7 @@ int get_all_files_ex(
 				if ((sr.Attr & faDirectory)==0) continue;
 				if (!inc_hide && (sr.Attr & faHidden))  continue;
 				if (!inc_sys  && (sr.Attr & faSysFile)) continue;
-		
+
 				UnicodeString dnam = sr.Name;
 				if (!ContainsStr("..", dnam)) {
 					//除外ディレクトリのチェック

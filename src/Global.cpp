@@ -1440,7 +1440,7 @@ void InitializeGlobal()
 		{_T("EmpBinPtn2=\"\""),						(TObject*)&EmpBinPtn2},
 		{_T("EmpBinPtn3=\"\""),						(TObject*)&EmpBinPtn3},
 		{_T("HtmInsHrCls=\"post\""),				(TObject*)&HtmInsHrCls},
-		{_T("HtmHdrStr=\"Å°;Åú;Åü;Å†;Åõ;Åû\""),		(TObject*)&HtmHdrStr},
+		{_T("HtmHdrStr=\"Å°;Åú;Åü;Å†;Åõ;Åû\""),	  (TObject*)&HtmHdrStr},
 		{_T("HtmDelBlkCls=\"\""),					(TObject*)&HtmDelBlkCls},
 		{_T("HtmDelBlkId=\"\""),					(TObject*)&HtmDelBlkId},
 		{_T("IniSeaShift=\"F:Ctrl+\""),				(TObject*)&IniSeaShift},

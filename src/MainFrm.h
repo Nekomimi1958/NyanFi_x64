@@ -2052,8 +2052,11 @@ private:	// ユーザー宣言
 	UnicodeString InputWord;
 
 	UnicodeString FTPHostItem;			//ホスト設定項目
+	int FTPHostIndex;
 	UnicodeString TopFTPPath;			//FTP開始ディレクトリ
 	UnicodeString CurFTPPath;			//FTP接続中のカレントパス
+	UnicodeString FTPRstMask;
+	UnicodeString FTPRstCmd;
 	bool FTPTryModTime;					//SetModTimeを試す
 	int  FTPLastWorkCnt;
 	int  FTPLastNoopCnt;

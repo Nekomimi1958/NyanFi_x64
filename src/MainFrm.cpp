@@ -36878,10 +36878,25 @@ void __fastcall TNyanFiForm::DisconnectFTP()
 {
 	int rmt_tag = CurStt->is_FTP? CurListTag : OppStt->is_FTP? OppListTag : -1;
 	if (rmt_tag!=-1) {
-		TStringDynArray itm_buf = get_csv_array(FTPHostItem, 7 + 2, true);
-		PathMask[rmt_tag] = itm_buf[8];	//パスマスクの復帰
+		if (FTPHostIndex!=-1) {
+			std::unique_ptr<TStringList> hlst(new TStringList());
+			IniFile->LoadListItems("FtpHostList", hlst.get(), 20, false);
+			UnicodeString h_item = hlst->Strings[FTPHostIndex];
+			TStringDynArray itm_buf = get_csv_array(h_item, 7, true);
+			if (ContainsText(itm_buf[6], "LastDir")) {
+				//切断時のディレクトリを次回の開始ディレクトリに設定
+				UnicodeString h_path = yen_to_slash(CurFTPPath);
+				remove_top_s(h_path, "/");
+				itm_buf[4] = h_path;						//ホスト開始ディレクトリ
+				itm_buf[5] = CurPath[(rmt_tag==0)? 1 : 0];	//ローカル開始ディレクトリ
+				hlst->Strings[FTPHostIndex] = make_csv_rec_str(itm_buf);
+				IniFile->SaveListItems("FtpHostList", hlst.get(), 20);
+			}
+		}
+
+		PathMask[rmt_tag] = FTPRstMask;	//パスマスクの復帰
 		RecoverFileList(rmt_tag);
-		ExeCommandAction(itm_buf[7]);	//SyncLR の復帰
+		ExeCommandAction(FTPRstCmd);	//SyncLR の復帰
 	}
 	FTPHostItem = EmptyStr;
 }
@@ -37235,12 +37250,15 @@ void __fastcall TNyanFiForm::FTPConnectActionExecute(TObject *Sender)
 		if (IsDiffList()) UserAbort(USTR_CantOperate);
 
 		//パラメータでホスト指定
+		FTPHostIndex = -1;
 		if (!ActionParam.IsEmpty()) {
 			std::unique_ptr<TStringList> lst(new TStringList());
 			IniFile->LoadListItems("FtpHostList", lst.get(), 20, false);
 			for (int i=0; i<lst->Count; i++) {
 				if (SameText(ActionParam, get_csv_item(lst->Strings[i], 0))) {
-					FTPHostItem = lst->Strings[i];  break;
+					FTPHostItem  = lst->Strings[i];
+					FTPHostIndex = i;
+					break;
 				}
 			}
 			if (FTPHostItem.IsEmpty()) throw EAbort(LoadUsrMsg(USTR_NotFound, _T("ホスト設定")));
@@ -37249,7 +37267,8 @@ void __fastcall TNyanFiForm::FTPConnectActionExecute(TObject *Sender)
 		else {
 			if (!FtpConnectDlg) FtpConnectDlg = new TFtpConnectDlg(this);	//初回に動的作成
 			if (FtpConnectDlg->ShowModal()!=mrOk) SkipAbort();
-			FTPHostItem = FtpConnectDlg->HostItem;
+			FTPHostItem  = FtpConnectDlg->HostItem;
+			FTPHostIndex = FtpConnectDlg->HostListBox->ItemIndex;
 		}
 
 		if (!InternetConnected()) TextAbort(_T("インターネットに接続されていません。"));
@@ -37310,23 +37329,20 @@ void __fastcall TNyanFiForm::FTPConnectActionExecute(TObject *Sender)
 				FTPhasCHMOD = TRegEx::IsMatch(IdFTP1->LastCmdResult->Text->Strings[i], "\\bCHMOD\\b", opt);
 		}
 
-		TopFTPPath = itm_buf[4];
-		if		(TopFTPPath.IsEmpty())		  TopFTPPath = "/";
-		else if (!StartsStr('/', TopFTPPath)) TopFTPPath.Insert("/", 1);
-
 		//ローカル開始ディレクトリ
 		if (dir_exists(itm_buf[5])) UpdateOppPath(itm_buf[5]);
-		itm_buf[8] = PathMask[CurListTag];				//カレントのパスマスクを待避
+		FTPRstMask = PathMask[CurListTag];				//カレントのパスマスクを待避
 		PathMask[CurListTag] = PathMask[OppListTag];	//リモート側のパスマスクをローカル側に合わせる
 		//ホスト開始ディレクトリ
+		TopFTPPath = nrm_ftp_path(itm_buf[4]);
 		if (!ChangeFtpFileList(CurListTag, TopFTPPath, "..")) {
 			if (!ChangeFtpFileList()) GlobalAbort();
 		}
 		//ディレクトリ同期変更
+		FTPRstCmd = EmptyStr;
 		if (ContainsText(opt_str, "SyncLR")) {
 			//切断時の復帰コマンドを設定
-			itm_buf[7]	= UnicodeString().sprintf(_T("SyncLR_%s"), SyncLR? _T("ON") : _T("OFF"));
-			FTPHostItem = make_csv_rec_str(itm_buf);
+			FTPRstCmd = UnicodeString().sprintf(_T("SyncLR_%s"), SyncLR? _T("ON") : _T("OFF"));
 			ExeCmdAction(SyncLRAction, "ON");
 		}
 

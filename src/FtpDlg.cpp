@@ -55,6 +55,7 @@ void __fastcall TFtpConnectDlg::FormShow(TObject *Sender)
 	PassWdEdit->Text	   = EmptyStr;
 	HostDirEdit->Text	   = EmptyStr;
 	LocalDirEdit->Text	   = EmptyStr;
+
 	PasvCheckBox->Checked  = true;
 	AnonyCheckBox->Checked = false;
 	SSLComboBox->ItemIndex = -1;
@@ -156,10 +157,11 @@ void __fastcall TFtpConnectDlg::HostListBoxClick(TObject *Sender)
 	HostDirEdit->Text  = itm_buf[4];
 	LocalDirEdit->Text = itm_buf[5];
 
-	SSLComboBox->ItemIndex  = ContainsText(itm_buf[6], "EXPLICIT")? 1 : ContainsText(itm_buf[6], "IMPLICIT")? 2 : 0;
-	SyncLRCheckBox->Checked = ContainsText(itm_buf[6], "SyncLR");
-	PasvCheckBox->Checked	= !ContainsText(itm_buf[6], "PORT");
-	AnonyCheckBox->Checked	= USAME_TI(UserIdEdit->Text, "anonymous");
+	SSLComboBox->ItemIndex   = ContainsText(itm_buf[6], "EXPLICIT")? 1 : ContainsText(itm_buf[6], "IMPLICIT")? 2 : 0;
+	LastDirCheckBox->Checked = ContainsText(itm_buf[6], "LastDir");
+	SyncLRCheckBox->Checked  = ContainsText(itm_buf[6], "SyncLR");
+	PasvCheckBox->Checked	 = !ContainsText(itm_buf[6], "PORT");
+	AnonyCheckBox->Checked	 = USAME_TI(UserIdEdit->Text, "anonymous");
 }
 //---------------------------------------------------------------------------
 void __fastcall TFtpConnectDlg::HostListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -181,7 +183,8 @@ UnicodeString __fastcall TFtpConnectDlg::MakeHostItem()
 	if		(SSLComboBox->ItemIndex==1) optstr += "EXPLICIT;";
 	else if (SSLComboBox->ItemIndex==2) optstr += "IMPLICIT;";
 
-	if (SyncLRCheckBox->Checked) optstr += "SyncLR;";
+	if (LastDirCheckBox->Checked) optstr += "LastDir;";
+	if (SyncLRCheckBox->Checked)  optstr += "SyncLR;";
 
 	return UnicodeString().sprintf(_T("%s,%s,%s,%s,%s,%s,%s"),
 			make_csv_str(HostNameEdit->Text).c_str(),

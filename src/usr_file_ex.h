@@ -66,6 +66,8 @@ UnicodeString to_path_name(UnicodeString dnam);
 UnicodeString get_dir_name(UnicodeString dnam);
 UnicodeString get_parent_path(UnicodeString dnam);
 
+UnicodeString nrm_ftp_path(UnicodeString pnam);
+
 TStringDynArray split_path(UnicodeString pnam, UnicodeString dlmt);
 TStringDynArray split_path(UnicodeString pnam);
 

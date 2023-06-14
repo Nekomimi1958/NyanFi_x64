@@ -14,6 +14,7 @@
 #include <Vcl.ActnList.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.ComCtrls.hpp>
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 class TFtpConnectDlg : public TForm
@@ -69,6 +70,7 @@ __published:	// IDE で管理されるコンポーネント
 	TRadioButton *RSide2Btn;
 	TTabSheet *HostSheet;
 	TTabSheet *OptionSheet;
+	TCheckBox *LastDirCheckBox;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
