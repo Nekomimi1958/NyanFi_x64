@@ -667,6 +667,7 @@ __published:	// IDE で管理されるコンポーネント
 	TLabeledEdit *TabXWdEdit;
 	TLabeledEdit *TempDirEdit;
 	TLabeledEdit *TextEditorFrmtEdit;
+	TLabeledEdit *TextEditorFrmt2Edit;
 	TLabeledEdit *TextInterLnEdit;
 	TLabeledEdit *ThumbBdrEdit;
 	TLabeledEdit *ThumbSizeEdit;

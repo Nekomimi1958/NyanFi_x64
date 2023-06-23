@@ -15945,7 +15945,7 @@ void __fastcall TNyanFiForm::CsrDirToOppActionExecute(TObject *Sender)
 			if (ExtractFileDrive(dnam).IsEmpty()) Abort();
 			UpdateOppPath(dnam);
 			//反対側へ
-			if (TEST_ActParam("TO")) ToOppositeAction->Execute();
+			if (TEST_DEL_ActParam("TO")) ToOppositeAction->Execute();
 			SkipAbort();
 		}
 
@@ -15989,7 +15989,7 @@ void __fastcall TNyanFiForm::CsrDirToOppActionExecute(TObject *Sender)
 		}
 
 		//反対側へ
-		if (TEST_ActParam("TO")) ToOppositeAction->Execute();
+		if (TEST_DEL_ActParam("TO")) ToOppositeAction->Execute();
 	}
 	catch (EAbort &e) {
 		if (!CsrDirToOppAction->Checked) SetActionAbort(e.Message);
@@ -16095,7 +16095,7 @@ void __fastcall TNyanFiForm::CurrToOppActionExecute(TObject *Sender)
 	SetCurTab(true);
 
 	//反対側へ
-	if (TEST_ActParam("TO")) ToOppositeAction->Execute();
+	if (TEST_DEL_ActParam("TO")) ToOppositeAction->Execute();
 }
 
 //---------------------------------------------------------------------------
@@ -17468,7 +17468,7 @@ void __fastcall TNyanFiForm::FileEditActionExecute(TObject *Sender)
 		UnicodeString dnam = CurPath[CurListTag];
 		std::unique_ptr<TStringList> s_lst(new TStringList());
 		std::unique_ptr<TStringList> o_lst(new TStringList());
-		bool is_os  = TEST_DEL_ActParam("OS") && !OpenOnlyCurEdit && !fromOpenStd;
+		bool is_os = TEST_DEL_ActParam("OS") && !OpenOnlyCurEdit && !fromOpenStd;
 		GlobalErrMsg = EmptyStr;
 
 		if (isViewClip) {
@@ -17514,14 +17514,12 @@ void __fastcall TNyanFiForm::FileEditActionExecute(TObject *Sender)
 		UnicodeString img_editor = get_actual_name(ImageEditor, true);
 		if (etc_lst.Length>0) {
 			if (test_FileExt(fext, FExtImgEidt)) add_dyn_array(etc_lst, img_editor, true);
-			if (test_FileExt(fext, FEXT_TEXT))   add_dyn_array(etc_lst, txt_editor,  true);
+			if (test_FileExt(fext, FEXT_TEXT))   add_dyn_array(etc_lst, txt_editor,	true);
 		}
 
 		UnicodeString editor = get_MenuItemStr(etc_lst);
 		//その他のエディタ
-		if (!editor.IsEmpty()
-			&& !SameText(editor, txt_editor) && !SameText(editor, img_editor))
-		{
+		if (!editor.IsEmpty() && !SameText(editor, txt_editor) && !SameText(editor, img_editor)) {
 			if (USAME_TS(editor, "SKIP")) SkipAbort();
 			if (starts_Dollar(editor) && !contains_PathDlmtr(editor)) {
 				ExeAlias(editor);
@@ -17551,16 +17549,15 @@ void __fastcall TNyanFiForm::FileEditActionExecute(TObject *Sender)
 		//テキストエディタ
 		else {
 			UnicodeString snam = fnam;
-			if (remove_top_s(snam, '\"'))
-				snam = get_tkn(snam, '\"');
-			else
-				snam = get_tkn(snam, ' ');
+			snam = remove_top_s(snam, '\"')? get_tkn(snam, '\"') : get_tkn(snam, ' ');
+			if (is_Processing(snam))		UserAbort(USTR_FileNotOpen);
+			if (!is_TextFile(snam))			UserAbort(USTR_NoEditor);
+			if (!file_exists(txt_editor))	UserAbort(USTR_AppNotFound);
 
-			if (is_Processing(snam)) UserAbort(USTR_FileNotOpen);
-			if (!is_TextFile(snam))  UserAbort(USTR_NoEditor);
-			if (!file_exists(txt_editor)) UserAbort(USTR_AppNotFound);
+			//起動パラメータ
+			UnicodeString prmstr = !TextEditorFrmt2.IsEmpty()? ReplaceStr(TextEditorFrmt2, "$F", fnam) : fnam;
 
-			ActionOk = Execute_ex(txt_editor, fnam, dnam);
+			ActionOk = Execute_ex(txt_editor, prmstr, dnam);
 			if (ActionOk && !CurStt->is_Arc) {
 				//編集履歴を更新
 				if ((s_lst->Count + o_lst->Count)>0) {
@@ -28150,7 +28147,9 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 					if (PreSameNemeDlg->ShowModal()!=mrOk) SkipAbort();
 					if (PreSameNemeDlg->PreMode>0) xCopyMode = PreSameNemeDlg->PreMode - 1;
 				}
-
+				//ディレクトリのタイムスタンプ維持
+				bool keep_time = TEST_DEL_ActParam("KT");
+				//日付条件
 				TDateTime flt_dt;
 				int flt_cnd = get_DateCond(ActionParam, flt_dt);
 				if (flt_cnd==-1) UserAbort(USTR_IllegalDtCond);
@@ -28189,6 +28188,7 @@ void __fastcall TNyanFiForm::CopyActionExecute(TObject *Sender)
 					cp->DistPath = dnam;
 					cp->InfStr	 = msg.sprintf(_T("%s ---> %s"),
 									(CurStt->is_Work? ExtractFileName(WorkListName) : src_dir).c_str(), dnam.c_str());
+					cp->KeepTime = keep_time;
 					if (i>0) cp->InfStr.cat_sprintf(_T("  同期先%u"), i);
 
 					//日付条件
@@ -28309,6 +28309,7 @@ void __fastcall TNyanFiForm::MoveActionExecute(TObject *Sender)
 			cp->InfStr.sprintf(_T("%s ---> %s"), src_dir.c_str(), dst_dir.c_str());
 			cp->UpdDirList->Add(src_dir);
 			cp->DstPosMode = TEST_DEL_ActParam("OP")? 1 : TEST_DEL_ActParam("OP2")? 2 : 0;
+			cp->KeepTime = TEST_DEL_ActParam("KT");
 			ActivateTask(tp, cp);
 		}
 	}

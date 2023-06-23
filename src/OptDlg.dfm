@@ -4577,17 +4577,31 @@ object OptionDlg: TOptionDlg
           OnClick = RefEditorBtnClick
         end
         object TextEditorFrmtEdit: TLabeledEdit
-          Left = 363
+          Left = 276
           Top = 47
-          Width = 477
+          Width = 240
           Height = 23
           Hint = '$F '#12501#12449#12452#12523#21517'/  $L '#34892#30058#21495
           Anchors = [akLeft, akTop, akRight]
-          EditLabel.Width = 272
+          EditLabel.Width = 232
           EditLabel.Height = 23
-          EditLabel.Caption = #12497#12521#12513#12540#12479' (GREP'#12420#12486#12461#12473#12488#12499#12517#12450#12540#12391#12398#12479#12464#12472#12515#12531#12503#29992')'
+          EditLabel.Caption = #12497#12521#12513#12540#12479' (GREP'#12420#12499#12517#12450#12540#12391#12398#12479#12464#12472#12515#12531#12503#29992')'
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
+        end
+        object TextEditorFrmt2Edit: TLabeledEdit
+          Left = 600
+          Top = 47
+          Width = 240
+          Height = 23
+          Hint = '$F '#12501#12449#12452#12523#21517'('#35079#25968#26178#12399#12381#12398#20006#12403')'
+          Anchors = [akLeft, akTop, akRight]
+          EditLabel.Width = 67
+          EditLabel.Height = 23
+          EditLabel.Caption = '('#12501#12449#12452#12521#12540#29992')'
+          LabelPosition = lpLeft
+          TabOrder = 3
           Text = ''
         end
       end

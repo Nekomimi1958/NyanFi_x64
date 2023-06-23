@@ -1172,6 +1172,7 @@ extern bool   FontSampleShowGrid;
 
 extern UnicodeString TextEditor;
 extern UnicodeString TextEditorFrmt;
+extern UnicodeString TextEditorFrmt2;
 extern UnicodeString ExtTxViewer;
 extern UnicodeString ExtTxViewerFrmt;
 

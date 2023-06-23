@@ -516,7 +516,7 @@ void get_PrmList(
 			_T("HelpCurWord|HtmlToText|ImageViewer|IncSearch|InputCommands|JumpIndex|JumpLine|JumpTo|")
 			_T("ListArchive|ListDuration|ListExpFunc|ListNyanFi|ListTail|ListText|ListTree|LoadBgImage|")
 			_T("LoadResultList|LoadTabGroup|LoadWorkList|LockKeyMouse|Mark|MaskFind|MaskSelect|MatchSelect|")
-			_T("MonitorOff|MoveTo|NameFromClip|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
+			_T("MonitorOff|Move|MoveTo|NameFromClip|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
 			_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|")
 			_T("ScrollCursorUp|ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|ScrollUpText|")
 			_T("SelByList|SetColor|SetDirTime|SetFontSize|SetInterpolation|SetMargin|SetPathMask|SetSttBarFmt|")
@@ -1125,7 +1125,7 @@ void get_PrmList(
 			 	_T("TO : 移動先を入力\nSD : 移動先を参照\nSS : カレントのサブディレクトリを選択\n"));
 		}
 		if (contained_wd_i(_T("Copy|Move"), cmd)) {
-			params += "PR : 同名時処理を事前に指定\n";
+			params += "PR : 同名時処理を事前に指定\nKT : ディレクトリのタイムスタンプを維持\n";
 		}
 	}
 	//トグル動作コマンド

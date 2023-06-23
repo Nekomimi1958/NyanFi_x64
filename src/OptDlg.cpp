@@ -477,6 +477,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	R_IniPatEdit->Tag			= (NativeInt)&InitialPath[1];
 	TextEditorEdit->Tag 		= (NativeInt)&TextEditor;
 	TextEditorFrmtEdit->Tag 	= (NativeInt)&TextEditorFrmt;
+	TextEditorFrmt2Edit->Tag 	= (NativeInt)&TextEditorFrmt2;
 	ExtTxViewerEdit->Tag		= (NativeInt)&ExtTxViewer;
 	ExtTxViewerFmtEdit->Tag 	= (NativeInt)&ExtTxViewerFrmt;
 	ImageEditorEdit->Tag		= (NativeInt)&ImageEditor;

@@ -565,7 +565,7 @@ NyanFi.exe -XCalculator_CB
       反対側がカレントと同じ場合、確認なしで上書きされます。<br>
     </dd>
 
-    <dt id="Copy">Copy<span class="pram_text">[_{SO|OP|OP2|TO|SD|SS|PR}[;日付条件]]</span></dt>
+    <dt id="Copy">Copy<span class="pram_text">[_SO][;{OP|OP2}][;{TO|SD|SS}][;PR][;KT][;日付条件]</span></dt>
     <dd>選択中(無ければカーソル位置)の項目を反対パスにコピーします。<br>
       <div class="spc_box">
         反対パスが<a href="hid00060.htm">ワークリスト</a>の場合、項目がリストに登録されます。<br>
@@ -595,6 +595,9 @@ NyanFi.exe -XCalculator_CB
         なお直前に <a href="hid00063.htm#SetCopyMode">SetCopyMode</a> 補助コマンドを実行することでも指定可能です。<br>
       </div>
       <div class="spc_box">
+        パラメータに <b>KT</b> を指定すると、ディレクトリをコピーする際にタイムスタンプを維持します。<br>
+      </div>
+      <div class="spc_box">
         パラメータで<b>日付条件</b>を指定すると、それに合うファイルだけがコピーされます。<br>
         他のパラメータとともに指定する場合は、<b>;</b> (セミコロン)で区切ってください。<br>
         以下のように、現在の日付からの相対指定と、絶対指定が可能です。
@@ -614,7 +617,7 @@ NyanFi.exe -XCalculator_CB
         Backup</a>　<a href="#DateSelect">→ DateSelect</a>　<a href="#RegSyncDlg">→ RegSyncDlg</a>
     </dd>
 
-    <dt id="CopyDir">CopyDir<span class="pram_text">[_{TO|KT|CC|LS}]</span></dt>
+    <dt id="CopyDir">CopyDir<span class="pram_text">[_TO][;KT][;{CC|LS}]</span></dt>
     <dd>選択中(無ければカーソル位置)のディレクトリの階層構造を反対パスにコピー(作成)します。中のファイルはコピーされません。またコピー先に同名ディレクトリがある場合はスキップします。<br>
       コピー(作成)処理はバックグラウンド・タスクで行われます。<br>
 
@@ -860,7 +863,7 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
       <a href="#CurrToOpp">→ CurrToOpp</a>
     </dd>
 
-    <dt id="CurrToOpp">CurrToOpp<span class="pram_text">[_{SL|TO}]</span></dt>
+    <dt id="CurrToOpp">CurrToOpp<span class="pram_text">[_SL][;TO]</span></dt>
     <dd>反対パスをカレントパスに合わせます。<br>
       カレントが検索結果リストまたは<a href="hid00060.htm">ワークリスト</a>の場合は、反対パスをカーソル位置のファイルのパス(ディレクトリの場合はそのもの)に変更します。ただし、(ファイル/)<a
         href="hid00053.htm">ディレクトリ名検索</a>ダイアログで「<b>ディレクトリ名を反映</b>」をチェックしていて、結果リストのカーソル位置がディレクトリ名の場合は、反対パスをその親ディレクトリにし、その中の当該ディレクトリに点線カーソルを表示します。<br>
@@ -2262,7 +2265,7 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       <a href="#LockComputer">→ LockComputer</a>　<a href="#LockKeyMouse">→ LockKeyMouse</a>
     </dd>
 
-    <dt id="Move">Move<span class="pram_text">[_{SO|OP|TO|SD|SS|PR}]</span></dt>
+    <dt id="Move">Move<span class="pram_text">[_SO][;{OP|OP2}][;{TO|SD|SS}][;PR][;KT]</span></dt>
     <dd>選択中(無ければカーソル位置)の項目を反対パスに移動します。<br>
       移動処理はバックグラウンド・タスクで行われます。<br>
 
@@ -2281,6 +2284,9 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       <div class="spc_box">
         パラメータに <b>PR</b> を指定すると、同名ファイルがあったときの処理(すべてに適用)をダイアログで事前に指定できます。<br>
         なお直前に <a href="hid00063.htm#SetCopyMode">SetCopyMode</a> 補助コマンドを実行することでも指定可能です。<br>
+      </div>
+      <div class="spc_box">
+        パラメータに <b>KT</b> を指定すると、別ドライブにディレクトリを移動する際にタイムスタンプを維持します。<br>
       </div>
       <a href="hid00009.htm#Copy">→ オプション設定 - 一般 - コピー動作</a><br>
       <a href="#MoveTo">→ MoveTo</a>　<a href="#Copy">→ Copy</a>　<a href="#CopyTo">→ CopyTo</a>

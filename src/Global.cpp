@@ -925,6 +925,7 @@ bool   FontSampleShowGrid = false;		//基準線を表示
 //外部ツール
 UnicodeString TextEditor;		//テキストエディタ
 UnicodeString TextEditorFrmt;	//パラメータ(Grep用)
+UnicodeString TextEditorFrmt2;	//パラメータ(ファラー用)
 
 UnicodeString ExtTxViewer;		//外部テキストビュアー
 UnicodeString ExtTxViewerFrmt;
@@ -1422,6 +1423,7 @@ void InitializeGlobal()
 		//String (デフォルト値を引用符で囲んで指定)
 		{_T("TextEditor=\"\""),						(TObject*)&TextEditor},
 		{_T("TextEditorFrmt=\"$F\""),				(TObject*)&TextEditorFrmt},
+		{_T("TextEditorFrmt2=\"$F\""),				(TObject*)&TextEditorFrmt2},
 		{_T("ExtTxViewer=\"\""),					(TObject*)&ExtTxViewer},
 		{_T("ExtTxViewerFrmt=\"$F\""),				(TObject*)&ExtTxViewerFrmt},
 		{_T("ImageEditor=\"\""),					(TObject*)&ImageEditor},

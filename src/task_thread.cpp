@@ -444,7 +444,7 @@ int __fastcall TTaskThread::GetFilesEx(
 					}
 				}
 				if (!ok) continue;
-	
+
 				//タイムスタンプによるフィルタリング
 				if (dateSW && Config->FilterMode>0) {
 					TValueRelationship res = System::Dateutils::CompareDate(sr.TimeStamp, Config->FilterTime);
@@ -806,6 +806,22 @@ void __fastcall TTaskThread::Task_CPY(
 			GetFiles(src_prm, "*.*", fbuf.get(), true, true);
 			PreCount = 0;
 
+			//ディレクトリのタイムスタンプを取得
+			std::unique_ptr<TStringList> tbuf(new TStringList());
+			if (Config->KeepTime) {
+				std::unique_ptr<TStringList> dbuf(new TStringList());
+				dbuf->Add(src_prm);
+				GetDirs(src_prm, dbuf.get());
+				for (int i=0; i<dbuf->Count; i++) {
+					UnicodeString dnam = dbuf->Strings[i];
+					TDateTime ft = get_file_age(dnam);
+					if ((int)ft>0) {
+						UnicodeString sub_path = get_tkn_r(dnam, org_path);
+						tbuf->Add(dst_path + sub_path + "\t" + format_DateTime(ft));
+					}
+				}
+			}
+
 			if (!TaskCancel) {
 				std::unique_ptr<TStringList> skip_lst(new TStringList());
 				//コピー
@@ -842,6 +858,14 @@ void __fastcall TTaskThread::Task_CPY(
 						if (skip_lst->IndexOf(dnam)==-1) skip_lst->Add(dnam);
 					}
 					AddLog(msg);
+				}
+
+				//タイムスタンプ
+				if (Config->KeepTime) {
+					for (int i=0; i<tbuf->Count; i++) {
+						UnicodeString dnam = get_pre_tab(tbuf->Strings[i]);
+						if (dir_exists(dnam)) set_file_age(dnam, TDateTime(get_post_tab(tbuf->Strings[i])));
+					}
 				}
 
 				//移動元のディレクトリ削除

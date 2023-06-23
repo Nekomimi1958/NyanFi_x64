@@ -43,15 +43,11 @@
   <dl>
     <dt id="TextEditor"><img src="grpbox.png" alt=""> テキストエディタ</dt>
     <dd>テキストファイルの編集に使用するテキストエディタです。<br>
-      また、<a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからエディタで開くときや、<a href="hid00006.htm">テキストビュアー</a>からタグジャンプ(<a
+      <b>パラメータ (GREPやビュアーでのタグジャンプ用)</b> <img src="edit.png" alt=""> <span class="def_text">(デフォルト: $F)</span> で、<a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからエディタで開くときや、<a href="hid00006.htm">テキストビュアー</a>からタグジャンプ(<a
         href="hid00006.htm#TagJump">TagJump</a>)や<a href="hid00083.htm">ダイレクトタグジャンプ</a>(<a
         href="hid00006.htm#TagJumpDirect">TagJumpDirect</a>)を行う際のパラメータを指定できます。<br>
-      パラメータでは以下の書式文字列を使えます。<br>
-      　<b>$F</b> : パス付ファイル名<br>
-      　<b>$L</b> : 行番号<br>
-      <div class="spc_box">
-        <b>例</b> <span class="inp_box">-g $F:$L </span><br>
-      </div>
+      パラメータでは書式文字列として <b>$F</b> : パス付ファイル名 と <b>$L</b> : 行番号 を使えます(<b>例</b> -g $F:$L)。<br>
+      また、<b>(ファイラー用)</b> <img src="edit.png" alt=""> <span class="def_text">(デフォルト: $F)</span> では、ファイラーで <a href="hid00005.htm#FileEdit">FileEdit</a> コマンドによってテキストファイルを開く際のパラメータを指定できます(書式文字列は <b>$F</b> のみ使用可)。<br>
       <br>
     </dd>
 
