@@ -814,10 +814,11 @@ void __fastcall TTaskThread::Task_CPY(
 				GetDirs(src_prm, dbuf.get());
 				for (int i=0; i<dbuf->Count; i++) {
 					UnicodeString dnam = dbuf->Strings[i];
+					file_rec *fp = cre_new_file_rec(dnam);
 					TDateTime ft = get_file_age(dnam);
-					if ((int)ft>0) {
+					if (ft>(TDateTime)0) {
 						UnicodeString sub_path = get_tkn_r(dnam, org_path);
-						tbuf->Add(dst_path + sub_path + "\t" + format_DateTime(ft));
+						tbuf->Add(dst_path + sub_path + "\t" + FormatDateTime("yyyymmddhhnnss", ft));
 					}
 				}
 			}
@@ -864,7 +865,28 @@ void __fastcall TTaskThread::Task_CPY(
 				if (Config->KeepTime) {
 					for (int i=0; i<tbuf->Count; i++) {
 						UnicodeString dnam = get_pre_tab(tbuf->Strings[i]);
-						if (dir_exists(dnam)) set_file_age(dnam, TDateTime(get_post_tab(tbuf->Strings[i])));
+						UnicodeString tstr = get_post_tab(tbuf->Strings[i]);
+						if (dir_exists(dnam) && is_match_regex(tstr, _T("^\\d{14}$"))) {
+							UnicodeString msg = make_LogHdr(_T("TIME"), dnam, true, 14);
+							try {
+								unsigned short y = tstr.SubString( 1, 4).ToIntDef(0);
+								unsigned short m = tstr.SubString( 5, 2).ToIntDef(0);
+								unsigned short d = tstr.SubString( 7, 2).ToIntDef(0);
+								unsigned short h = tstr.SubString( 9, 2).ToIntDef(0);
+								unsigned short n = tstr.SubString(11, 2).ToIntDef(0);
+								unsigned short s = tstr.SubString(13, 2).ToIntDef(0);
+								TDateTime dt = TDateTime(y, m, d, h, n, s, 0);
+								msg.cat_sprintf(_T("  %s"), format_DateTime(dt).c_str());
+								SetLastError(NO_ERROR);
+								AddDebugLog("Call SetFileTime");
+								if (!set_file_age(dnam, dt, ForceDel)) set_LogErrMsg(msg);
+								AddDebugLog("Return");
+							}
+							catch (EConvertError &e) {
+								AddDebugLog(LoadUsrMsg(USTR_IllegalDate));
+							}
+							AddLog(msg);
+						}
 					}
 				}
 
@@ -1235,7 +1257,7 @@ void __fastcall TTaskThread::Task_CPYDIR(UnicodeString prm)
 				//タイムスタンプ
 				if (Config->KeepTime) {
 					TDateTime ft = get_file_age(dnam);
-					if ((int)ft>0) set_file_age(dst_nam, ft);
+					if (ft>(TDateTime)0) set_file_age(dst_nam, ft);
 				}
 				OkCount++;
 			}
@@ -1482,7 +1504,7 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 				UserAbort(USTR_FaildSave);
 
 		//タイムスタンプを設定
-		if (!is_clip && Config->KeepTime && (int)ft>0) set_file_age(cv_nam, ft);
+		if (!is_clip && Config->KeepTime && ft>(TDateTime)0) set_file_age(cv_nam, ft);
 
 		OkCount++;
 	}

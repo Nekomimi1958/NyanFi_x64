@@ -3339,7 +3339,7 @@ int __fastcall SortComp_MarkTime(TStringList *List, int Index1, int Index2)
 		return SortComp_Ext(List, Index1, Index2);
 	}
 
-	if ((int)dt0==0 || (int)dt1==0) return ((int)dt0==0)? 1 : -1;
+	if (dt0==(TDateTime)0 || dt1==(TDateTime)0) return (dt0==(TDateTime)0)? 1 : -1;
 
 	return !OldOrder? ((dt0<dt1)? 1 : -1) : ((dt0>dt1)? 1 : -1);
 }
