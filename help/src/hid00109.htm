@@ -45,6 +45,12 @@
   </div>
 
   <dl>
+    <dt>V15.46 <span class="ver_date">(2023-07-10)</span></dt>
+    <dd>
+      ・SaveBuffer および AppendBuffer 補助コマンドのパラメータに NB を追加。Unicode ファイルをBOM無しで保存(AppendBuffer では新規作成)します。既存ファイルに対する AppendBuffer ではこのパラメータが効きませんので、ConvertTextEnc コマンドであらかじめBOM無しに変換しておいてください。<br>
+      ・SaveBuffer 補助コマンドで、ダイアログによってファイルを指定した場合、選択したエンコーディングが反映されなかったのを修正。
+    </dd>
+
     <dt>V15.45 <span class="ver_date">(2023-07-03)</span></dt>
     <dd>
       ・環境(?)によって、Copy_KT コマンド実行時にエラーが発生する場合があったのを修正。<br>

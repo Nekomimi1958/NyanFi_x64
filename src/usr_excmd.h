@@ -213,7 +213,7 @@ void XCMD_SetBuffer(UnicodeString s);
 void XCMD_FilterBuffer(UnicodeString prm);
 void XCMD_ReplaceBuffer(UnicodeString prm);
 void XCMD_LoadBuffer(UnicodeString prm);
-void XCMD_SaveBuffer(UnicodeString prm);
+void XCMD_SaveBuffer(UnicodeString prm, bool wtBOM = true);
 void XCMD_AppendBuffer(UnicodeString prm);
 
 int  XCMD_MsgBox(UnicodeString cmd, UnicodeString prm);

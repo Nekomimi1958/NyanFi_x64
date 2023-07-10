@@ -470,11 +470,11 @@ EndIf
         <a href="#Ins">→ Ins</a>　<a href="#Set">→ Set</a>
       </dd>
 
-      <dt id="AppendBuffer" class="no_bg">AppendBuffer<span class="pram_text">_ファイル名</span></dt>
+      <dt id="AppendBuffer" class="no_bg">AppendBuffer<span class="pram_text">_ファイル名[;NB]</span></dt>
       <dd>定義済み変数 <b>Buffer</b> の内容を指定したファイルに追記保存します。<br>
-        保存の際のコードページは、定義済み変数 <b>CodePage</b> が用いられます。ファイルが存在しない場合は新規作成します。<br>
         ファイル名にドライブ指定がない場合、ファイラーではカレント、ビュアーでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
-
+        保存の際のエンコーディングには、定義済み変数 <b>CodePage</b> が用いられます。ファイルが存在しない場合は新規作成します。<br>
+        パラメータに <b>NB</b> を指定すると、新規作成の場合に Unicode ファイルをBOM無しで保存します。既存ファイルに対する追記保存ではこのパラメータが効きませんので、<a href="hid00005.htm#ConvertTextEnc">ConvertTextEnc</a> コマンドであらかじめBOM無しに変換しておいてください。<br>
         <div class="spc_box">
           <b>例</b>: 現在の日付とファイル名を nyan.log に Shift-JIS で追記
           <pre class="example_box">
@@ -1038,17 +1038,16 @@ MsgBox_%Buffer%
         <a href="#Mid">→ Mid</a>
       </dd>
 
-      <dt id="SaveBuffer" class="no_bg">SaveBuffer<span class="pram_text">[_ファイル名]</span></dt>
-      <dd>定義済み変数 <b>Buffer</b> の内容を指定したファイル名で保存します。ファイル名を指定しないとダイアログが出ます。<br>
-        保存の際のコードページは、定義済み変数 <b>CodePage</b> が用いられます。改行コードは CR/LF になります。<br>
-        ファイル名にドライブ指定がない場合、ファイラーではカレント、ビュアーでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
-
+      <dt id="SaveBuffer" class="no_bg">SaveBuffer<span class="pram_text">[_ファイル名[;NB]]</span></dt>
+      <dd>定義済み変数 <b>Buffer</b> の内容を指定したファイル名で保存します。ファイル名にドライブ指定がない場合、ファイラーではカレント、ビュアーでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
+        ファイル名をパラメータで指定しない場合、ダイアログが表示されます。<br>
+        ファイル名をパラメータで指定した場合、エンコーディングには定義済み変数 <b>CodePage</b> が用いられます。また、パラメータに <b>NB</b> を追加指定すると、Unicode ファイルがBOM無しで保存されます。なお、改行コードは CR/LF になります。<br>
         <div class="spc_box">
-          <b>例</b>: カーソル位置のテキストファイルをUTF8(コードページ=65001)に変換<br>
+          <b>例</b>: カーソル位置のテキストファイルをUTF-8N(コードページ=65001、BOM無し)に変換<br>
           <pre class="example_box">
 LoadBuffer_%FileName%
 Set_CodePage=65001
-SaveBuffer_%FileName%
+SaveBuffer_%FileName%;NB
 </pre>
 
           <b>例</b>: クリップボードのテキスト内容をカーソル位置ファイルに代替データストリームとして保存<br>

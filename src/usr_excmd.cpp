@@ -1642,12 +1642,13 @@ void XCMD_LoadBuffer(UnicodeString prm)
 //---------------------------------------------------------------------------
 //SaveBuffer : バッファをファイルに保存
 //---------------------------------------------------------------------------
-void XCMD_SaveBuffer(UnicodeString prm)
+void XCMD_SaveBuffer(UnicodeString prm, bool wtBOM)
 {
 	try {
 		std::unique_ptr<TEncoding> enc(TEncoding::GetEncoding(XCMD_GetCodePage()));
 		std::unique_ptr<TStringList> f_buf(new TStringList());
 		f_buf->Text = XCMD_GetBuffer();
+		f_buf->WriteBOM = wtBOM;
 		f_buf->SaveToFile(prm, enc.get());
 	}
 	catch (...) {

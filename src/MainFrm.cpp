@@ -12954,7 +12954,6 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 				case XCMDID_Input:			XCMD_Input(XCMD_prm);							break;
 				case XCMDID_Edit:			XCMD_Edit(XCMD_prm);							break;
 				case XCMDID_ListVar:		XCMD_ListVar();									break;
-				case XCMDID_AppendBuffer:	XCMD_AppendBuffer(to_absolute_name(XCMD_prm, XCMD_cur_path));	break;
 				case XCMDID_FilterBuffer:	XCMD_FilterBuffer(XCMD_prm);					break;
 				case XCMDID_ReplaceBuffer:	XCMD_ReplaceBuffer(XCMD_prm);					break;
 				case XCMDID_SetClipboard: 	Clipboard()->AsText = XCMD_prm;					break;
@@ -13022,21 +13021,42 @@ bool __fastcall TNyanFiForm::ExeCommandsCore(
 
 				//Buffer を保存
 				case XCMDID_SaveBuffer:
-					if (XCMD_prm.IsEmpty()) {
-						UserModule->SaveTxtDlg->Title	   = LoadUsrMsg(USTR_SaveAs, _T("Buffer"));
-						UserModule->SaveTxtDlg->InitialDir = ExcludeTrailingPathDelimiter(SaveTxtPath);
-						unsigned int code_page = XCMD_GetCodePage();
-						for (int i=0; i<MAX_SAVE_CODEPAGES; i++) {
-							if (SaveCodePages[i].page==code_page) {
-								UserModule->SaveTxtDlg->EncodingIndex = i;  break;
+					{
+						bool wtBOM = !XCMD_TestDelParam("NB");
+						if (XCMD_prm.IsEmpty()) {
+							//ダイアログでファイル指定
+							UserModule->SaveTxtDlg->Title         = LoadUsrMsg(USTR_SaveAs, _T("Buffer"));
+							UserModule->SaveTxtDlg->InitialDir    = ExcludeTrailingPathDelimiter(SaveTxtPath);
+							UserModule->SaveTxtDlg->EncodingIndex = SaveEncIndex;
+							if (UserModule->SaveTxtDlg->Execute()) {
+								int enc_idx = UserModule->SaveTxtDlg->EncodingIndex;
+								if (enc_idx>=0 && enc_idx<MAX_SAVE_CODEPAGES) {
+									int code_page = SaveCodePages[enc_idx].page;
+									if (SameText(SaveCodePages[enc_idx].name, "UTF-8N")) wtBOM = false;
+									XCMD_set_Var(_T("CodePage"), code_page);
+								}
+								XCMD_prm = UserModule->SaveTxtDlg->FileName;
+								SaveTxtPath = ExtractFilePath(XCMD_prm);
+							}
+							else {
+								UserAbort(USTR_Canceled);
 							}
 						}
-						if (UserModule->SaveTxtDlg->Execute()) {
-							SaveTxtPath = ExtractFilePath(UserModule->SaveTxtDlg->FileName);
-							XCMD_prm = UserModule->SaveTxtDlg->FileName;
-						}
+						XCMD_SaveBuffer(to_absolute_name(XCMD_prm, XCMD_cur_path), wtBOM);
 					}
-					XCMD_SaveBuffer(to_absolute_name(XCMD_prm, XCMD_cur_path));
+					break;
+	
+				//Buffer を追記保存
+				case XCMDID_AppendBuffer:
+					{
+						bool wtBOM = !XCMD_TestDelParam("NB");
+						if (XCMD_prm.IsEmpty()) UserAbort(USTR_NoParameter);
+						UnicodeString fnam = to_absolute_name(XCMD_prm, XCMD_cur_path);
+						if (!file_exists(fnam))
+							XCMD_SaveBuffer(fnam, wtBOM);
+						else
+							XCMD_AppendBuffer(fnam);
+					}
 					break;
 
 				//Buffer をリスト表示
