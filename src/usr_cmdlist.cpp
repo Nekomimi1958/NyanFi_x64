@@ -510,9 +510,9 @@ void get_PrmList(
 
 		if (cp && contained_wd_i(
 			_T("AddTag|AppList|CalcDirSize|CalcDirSizeAll|Calculator|ChangeDir|ChangeOppDir|Clone|CloneToCurr|")
-			_T("ContextMenu|ConvertHtm2Txt|Copy|CopyTo|CountLines|CreateDir|CursorDown|CursorUp|DateSelect|")
-			_T("DebugCmdFile|Delete|DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|Filter|FindDown|")
-			_T("FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|FunctionList|GitDiff|GitViewer|Grep|")
+			_T("ContextMenu|ConvertHtm2Txt|Copy|CopyTo|CountLines|CreateDir|CursorDown|CursorUp|CursorTop|")
+			_T("DateSelect|DebugCmdFile|Delete|DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|Filter|")
+			_T("FindDown|FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|FunctionList|GitDiff|GitViewer|Grep|")
 			_T("HelpCurWord|HtmlToText|ImageViewer|IncSearch|InputCommands|JumpIndex|JumpLine|JumpTo|")
 			_T("ListArchive|ListDuration|ListExpFunc|ListNyanFi|ListTail|ListText|ListTree|LoadBgImage|")
 			_T("LoadResultList|LoadTabGroup|LoadWorkList|LockKeyMouse|Mark|MaskFind|MaskSelect|MatchSelect|")
@@ -568,6 +568,9 @@ void get_PrmList(
 				params += "SL : 選択項目へ\n";
 			}
 		}
+	}
+	else if (USAME_TI(cmd, "CursorTop")) {
+		params = "\r\nTF : 最初のファイルに移動\r\n";
 	}
 	else if (contained_wd_i(_T("CalcDirSize|CalcDirSizeAll"), cmd)) {
 		params.sprintf(_T("%s"),

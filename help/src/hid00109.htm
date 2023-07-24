@@ -45,6 +45,12 @@
   </div>
 
   <dl>
+    <dt>V15.47 <span class="ver_date">(2023-07-24)</span></dt>
+    <dd>
+      ・ファイラーの CursorTop コマンドのパラメータに TF を追加。最初のファイルに移動します(ファイルがない場合は最上行)。<br>
+      ・ファイラーのタブを、コマンドではなくマウスで切り替えた場合、ディレクトリ状態が適切に復元されないことがあったのを修正。<br>
+    </dd>
+
     <dt>V15.46 <span class="ver_date">(2023-07-10)</span></dt>
     <dd>
       ・SaveBuffer および AppendBuffer 補助コマンドのパラメータに NB を追加。Unicode ファイルをBOM無しで保存(AppendBuffer では新規作成)します。既存ファイルに対する AppendBuffer ではこのパラメータが効きませんので、ConvertTextEnc コマンドであらかじめBOM無しに変換しておいてください。<br>

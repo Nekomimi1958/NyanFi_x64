@@ -86,7 +86,7 @@
 
     <dt id="AddTab">AddTab<span class="pram_text">[_{NX|PR}]</span></dt>
     <dd>現在の左右ディレクトリの組み合わせをタブとして<b>タブバー</b>に追加します。<br>
-      タブは、ディレクトリの切り替えボタンとして機能します。ファイルリストの状態や検索結果リストの内容などは保持されませんが、ソート方法や選択状態については、タブ切り替え時に待避/復元されます。<br>
+      <b>タブ</b>は、一般的なタブ型ファイラーとは異なり、左右のディレクトリを組として切り替えるためのボタンとして機能します。ファイルリストの状態や検索結果リストの内容などは保持されませんが、ソート方法や選択状態については、タブ切り替え時に待避/復元されます。<br>
       <div class="spc_box">
         パラメータに <b>NX</b> を指定すると現在のタブの次に、 <b>PR</b> を指定すると現在のタブの前に、新しいタブが追加(挿入)されます。<br>
       </div>
@@ -897,8 +897,9 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
       <a href="#CursorTopSel">→ CursorTopSel</a>
     </dd>
 
-    <dt id="CursorTop">CursorTop</dt>
+    <dt id="CursorTop">CursorTop<span class="pram_text">[_TF]</span></dt>
     <dd>カーソルを最上行に移動します。<br>
+      パラメータに <b>TF</b> を指定すると、最初のファイルに移動します(ファイルがない場合は最上行)。<br>
       <a href="#CursorEnd">→ CursorEnd</a>
     </dd>
 
@@ -3433,7 +3434,7 @@ D:\Data\hoge.txt
     <dt id="ShowTabBar">ShowTabBar<span class="pram_text">[_{ON|OFF}]</span></dt>
     <dd>パラメータを指定しない場合、<b>タブバー</b>の表示/非表示をトグルで切り替えます。<br>
       パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
-      タブは、一般的なタブ型ファイラーとは異なり、左右のディレクトリを組として切り替えるためのボタンとして機能します。<br>
+      <b>タブ</b>は、一般的なタブ型ファイラーとは異なり、左右のディレクトリを組として切り替えるためのボタンとして機能します。<br>
       ファイルリストの状態や検索結果リストの内容などは保持されませんが、ソート方法や選択状態については、タブ切り替え時に待避/復元されます。<br>
       <a href="#AddTab">→ AddTab</a>　<a href="#DelTab">→ DelTab</a>　<a href="#MoveTab">→ MoveTab</a>　<a
         href="#SoloTab">→ SoloTab</a>　<a href="#TabDlg">→ TabDlg</a>

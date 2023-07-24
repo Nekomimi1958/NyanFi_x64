@@ -16194,6 +16194,16 @@ void __fastcall TNyanFiForm::CursorTopActionExecute(TObject *Sender)
 	TListBox *lp = FileListBox[CurListTag];
 	if (lp->Count>1) {
 		lp->ItemIndex = 0;
+		if (TEST_ActParam("TF")) {
+			TStringList *lst = GetFileList(CurListTag);
+			for (int i=0; i<lp->Count; i++) {
+				file_rec *fp = (file_rec*)lst->Objects[i];
+				if (!fp->is_dir && !fp->is_dummy) {
+					lp->ItemIndex = i;
+					break;
+				}
+			}
+		}
 		lp->Invalidate();
 		SetDriveFileInfo(CurListTag, false, false);
 	}
@@ -35947,6 +35957,7 @@ void __fastcall TNyanFiForm::StoreTabStt(int tab_idx)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TabControl1Changing(TObject *Sender, bool &AllowChange)
 {
+	SetCurTab();
 	StoreTabStt(TabControl1->TabIndex);
 }
 //---------------------------------------------------------------------------

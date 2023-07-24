@@ -96,9 +96,7 @@ void __fastcall TCharInfoForm::UpdateChar(
 		//欠損、改行のチェック
 		bool nc, is_cr;
 		if (c.Length()==1) {
-			AnsiString    c_a = c;
-			UnicodeString c_u = c_a;
-			nc	  = (!SameStr(c, c_u) && USAME_TS(c_u, "?"));
+			nc    = !SameStr(c, UnicodeString(AnsiString(c)));
 			is_cr = (c[1]=='\n');
 		}
 		else {
