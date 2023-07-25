@@ -781,7 +781,7 @@ bool UsrIniFile::FileMark(
 		for (int i=0; i<klist->Count && k_idx==-1; i++)
 			if (SameText(itm, get_pre_tab(klist->Strings[i]))) k_idx = i;
 
-		itm.cat_sprintf(_T("\t%s\t%s"), memo.c_str(), FormatDateTime("yyyy/mm/dd hh:nn:ss", Now()).c_str());
+		itm.cat_sprintf(_T("\t%s\t%s"), memo.c_str(), FormatDateTime("yyyy'/'mm'/'dd hh:nn:ss", Now()).c_str());
 		if (k_idx!=-1) {
 			klist->Strings[k_idx] = itm;
 		}

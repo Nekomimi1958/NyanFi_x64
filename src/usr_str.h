@@ -289,5 +289,7 @@ void		  conv_DfmText(TStringList *txt_lst);
 UnicodeString make_MenuAccStr(int idx, bool alp_sw = false);
 
 UnicodeString get_NextAlStr(UnicodeString s);
+
+TDateTime str_to_DateTime(UnicodeString ts, bool sw_dt = false);
 //---------------------------------------------------------------------------
 #endif

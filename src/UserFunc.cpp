@@ -330,10 +330,10 @@ TDate set_NormDay(unsigned short y, unsigned short m, unsigned short d)
 //---------------------------------------------------------------------------
 //ï∂éöóÒÇ TDateTime Ç…ïœä∑
 //---------------------------------------------------------------------------
-bool str_to_DateTime(UnicodeString s, TDateTime *dt)
+bool ToDateTime(UnicodeString s, TDateTime *dt)
 {
 	try {
-		*dt = VarToDateTime(to_HalfWidth(Trim(s)));
+		*dt = str_to_DateTime(to_HalfWidth(Trim(s)));
 		return true;
 	}
 	catch (...) {
@@ -355,7 +355,7 @@ UnicodeString format_DateTime(
 		if (omit && IsToday(dt))
 			return FormatDateTime("hh:nn:ss", dt);
 		else
-			return FormatDateTime("yyyy/mm/dd hh:nn:ss", dt);
+			return FormatDateTime("yyyy'/'mm'/'dd hh:nn:ss", dt);
 	}
 }
 //---------------------------------------------------------------------------
@@ -363,7 +363,7 @@ UnicodeString format_DateTime(
 //---------------------------------------------------------------------------
 UnicodeString format_Date(TDateTime dt)
 {
-	return FormatDateTime("yyyy/mm/dd", dt);
+	return FormatDateTime("yyyy'/'mm'/'dd", dt);
 }
 
 //---------------------------------------------------------------------------
@@ -373,6 +373,7 @@ UnicodeString format_Date(TDateTime dt)
 UnicodeString format_DateTimeEx(UnicodeString fmt, TDateTime dt)
 {
 	TFormatSettings fs = remove_text(fmt, _T("$EN"))? TFormatSettings::Create("en-US") : TFormatSettings::Create();
+	fmt = ReplaceStr(ReplaceStr(fmt, "\'/\'", "/"), "/", "\'/\'");
 	return FormatDateTime(fmt, dt, fs);
 }
 
@@ -395,7 +396,7 @@ int get_DateCond(UnicodeString prm, TDateTime &dt)
 				prm.Delete(1, 1);
 				//ê‚ëŒéwíË
 				if (prm.Length()==10 && prm[5]=='/' && prm[8]=='/') {
-					dt = TDate(prm);
+					dt = str_to_DateTime(prm);
 				}
 				//ëäëŒéwíË
 				else {

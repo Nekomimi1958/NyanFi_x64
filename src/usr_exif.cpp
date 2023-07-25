@@ -82,7 +82,7 @@ void CIFF_parse(TFileStream *fs, TStringList *lst, int ofs, int length, bool bsw
 				else if (tagID==0x180e) {
 					TDateTime dt = fsRead_int4(fs, bsw)/(24.0 * 60 * 60);
 					dt += (TDateTime(1970, 1, 1) - TDateTime(0));
-					lst->Add("36867=" + FormatDateTime("yyyy/mm/dd hh:nn:ss", dt));
+					lst->Add("36867=" + FormatDateTime("yyyy'/'mm'/'dd hh:nn:ss", dt));
 				}
 				//ShotInfo
 				else if (tagID==0x102a) {
@@ -937,7 +937,7 @@ bool EXIF_GetExifTime(UnicodeString fnam, TDateTime &dt)
 		UnicodeString tstr = taglst->Values["36867"];	// = ŽB‰e“úŽž
 		if (tstr.Length()==19) {
 			try {
-				dt	= TDateTime(tstr);
+				dt	= str_to_DateTime(tstr);
 				res = true;
 			}
 			catch (EConvertError &e) {
@@ -971,7 +971,7 @@ bool EXIF_SetExifTime(UnicodeString fnam)
 		if (tstr.Length()==19) {
 			TDateTime dt;
 			try {
-				dt	= TDateTime(tstr);
+				dt	= str_to_DateTime(tstr);
 				ret = set_file_age(fnam, dt);
 			}
 			catch (EConvertError &e) {

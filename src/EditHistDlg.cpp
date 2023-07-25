@@ -546,7 +546,7 @@ void __fastcall TEditHistoryDlg::UpdateList()
 					for (int j=0; j<ibuf.Length; j++) {
 						if (j==0) {
 							TDateTime dt;
-							if (str_to_DateTime(ibuf[0], &dt)) fp->f_time = dt;
+							if (ToDateTime(ibuf[0], &dt)) fp->f_time = dt;
 						}
 						else {
 							UnicodeString inam = get_tkn(ibuf[j], ": ");
@@ -645,7 +645,7 @@ void __fastcall TEditHistoryDlg::UpdateGrid()
 			}
 			//更新日時
 			gp->Cells[col++][i] = (isRecent && NoCheckRecentUnc && StartsStr("\\\\", fp->p_name))?
-									EmptyStr : FormatDateTime(TimeStampFmt, fp->f_time);
+									EmptyStr : get_TimeStampStr(fp->f_time);
 			//場所
 			UnicodeString lbuf = fp->p_name;
 			if (isTags) {
@@ -662,8 +662,8 @@ void __fastcall TEditHistoryDlg::UpdateGrid()
 			if (isMark) {
 				gp->Cells[col++][i] = get_pre_tab(fp->memo);
 				TDateTime dt;
-				if (!str_to_DateTime(get_post_tab(fp->memo), &dt)) dt = fp->f_time;
-				gp->Cells[col][i] = FormatDateTime(TimeStampFmt, dt);
+				if (!ToDateTime(get_post_tab(fp->memo), &dt)) dt = fp->f_time;
+				gp->Cells[col][i] = get_TimeStampStr(dt);
 			}
 			//コミット,状態
 			else if (isRepo) {
@@ -769,7 +769,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 			case 4: col_fg = col_Folder;								break;
 			case 6: {
 					TDateTime dt;
-					if (str_to_DateTime(lbuf, &dt)) col_fg = get_TimeColor(dt, col_fgList);
+					if (ToDateTime(lbuf, &dt)) col_fg = get_TimeColor(dt, col_fgList);
 				}
 				break;
 			}

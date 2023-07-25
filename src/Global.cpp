@@ -2289,13 +2289,13 @@ void SetupTimer()
 					if (StartsStr("??:", prm_lst[j])) {
 						UnicodeString mm = get_tkn_r(prm_lst[j], _T("??:"));
 						for (int h=0; h<24; h++) {
-							TDateTime dt = TTime(UnicodeString().sprintf(_T("%02u:%s"), h, mm.c_str())) + Date();
+							TDateTime dt = str_to_DateTime(UnicodeString().sprintf(_T("%02u:%s"), h, mm.c_str())) + Date();
 							if (Dateutils::CompareDateTime(Now(), dt)==GreaterThanValue) dt = IncDay(dt, 1);
 							Timer_AlarmList[i]->Add(format_DateTime(dt));
 						}
 					}
 					else {
-						TDateTime dt = TTime(prm_lst[j]) + Date();
+						TDateTime dt = str_to_DateTime(prm_lst[j]) + Date();
 						if (Dateutils::CompareDateTime(Now(), dt)==GreaterThanValue) dt = IncDay(dt, 1);
 						Timer_AlarmList[i]->Add(format_DateTime(dt));
 					}
@@ -3317,7 +3317,7 @@ int __fastcall SortComp_MarkTime(TStringList *List, int Index1, int Index2)
 	UnicodeString tstr0 = get_post_tab(fp0->memo);
 	if (!tstr0.IsEmpty()) {
 		try {
-			dt0 = VarToDateTime(tstr0);
+			dt0 = str_to_DateTime(tstr0);
 		}
 		catch (...) {
 			;
@@ -3327,7 +3327,7 @@ int __fastcall SortComp_MarkTime(TStringList *List, int Index1, int Index2)
 	UnicodeString tstr1 = get_post_tab(fp1->memo);
 	if (!tstr1.IsEmpty()) {
 		try {
-			dt1 = VarToDateTime(tstr1);
+			dt1 = str_to_DateTime(tstr1);
 		}
 		catch (...) {
 			;
@@ -5964,7 +5964,7 @@ void update_DriveLog(bool save)
 		for (int j=DriveLogList->Count-1; j>0; j--) {
 			UnicodeString ibuf = DriveLogList->Strings[j];
 			TDateTime dt;
-			if (str_to_DateTime(get_csv_item(ibuf, 0), &dt)) {
+			if (ToDateTime(get_csv_item(ibuf, 0), &dt)) {
 				TValueRelationship res = Dateutils::CompareDate(dt, Now());
 				if (res==LessThanValue) continue;
 				if (res==EqualsValue && SameText(get_csv_item(ibuf, 1), dstr)) {
@@ -5973,7 +5973,7 @@ void update_DriveLog(bool save)
 			}
 		}
 
-		UnicodeString lbuf = FormatDateTime("yyyy/mm/dd", Now());
+		UnicodeString lbuf = FormatDateTime("yyyy'/'mm'/'dd", Now());
 		lbuf.cat_sprintf(_T(",%s,%llu,%llu"), dp->drive_str.SubString(1, 1).c_str(), used_sz, free_sz);
 		if (idx!=-1)
 			DriveLogList->Strings[idx] = lbuf;
@@ -8559,7 +8559,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 	else if (flag & LBFLG_TIME_FIF) {
 		if (!use_fgsel) {
 			try {
-				cv->Font->Color = get_TimeColor(TDateTime(lbuf), col_fgInf);
+				cv->Font->Color = get_TimeColor(str_to_DateTime(lbuf), col_fgInf);
 			}
 			catch (EConvertError &e) {
 				;
@@ -8644,6 +8644,16 @@ void draw_InputPaintBox(TPaintBox *pp, UnicodeString s)
 
 	//キャレット
 	if (UserModule->BlinkTimer->Tag>0) draw_Caret(cv, xp, yp + ScaledInt(2));
+}
+
+//---------------------------------------------------------------------------
+//タイムスタンプ文字列を取得
+//---------------------------------------------------------------------------
+UnicodeString get_TimeStampStr(TDateTime dt)
+{
+	UnicodeString fmt = TimeStampFmt;
+	fmt = ReplaceStr(ReplaceStr(fmt, "\'/\'", "/"), "/", "\'/\'");
+	return FormatDateTime(fmt, dt);
 }
 
 //---------------------------------------------------------------------------
@@ -13235,7 +13245,7 @@ UnicodeString GetClockStr()
 				UnicodeString dstr = Trim(split_tkn(s, ';'));
 				//yyyy/mm/dd
 				if (is_match_regex(dstr + ";", _T("^\\d{4}/\\d{1,2}/\\d{1,2};"))) {
-					if (!str_to_DateTime(dstr, &dt)) Abort();
+					if (!ToDateTime(dstr, &dt)) Abort();
 				}
 				//省略あり
 				else {
@@ -15198,7 +15208,7 @@ UnicodeString get_GitUrl(file_rec *fp)
 			//キャッシュ情報あり
 			UnicodeString lbuf = GitCfgUrlList->ValueFromIndex[idx];
 			try {
-				if (!WithinPastMilliSeconds(get_file_age(cfg_nam), TDateTime(get_post_tab(lbuf)), TimeTolerance)) Abort();
+				if (!WithinPastMilliSeconds(get_file_age(cfg_nam), str_to_DateTime(get_post_tab(lbuf)), TimeTolerance)) Abort();
 				url = get_pre_tab(lbuf);
 			}
 			catch (...) {
@@ -15234,7 +15244,7 @@ UnicodeString get_GitUrl(file_rec *fp)
 			if (idx==-1) {
 				//URL対応情報をキャッシュ
 				GitCfgUrlList->Add(UnicodeString().sprintf(_T("%s=%s\t%s"), cfg_nam.c_str(), url.c_str(),
-									FormatDateTime("yyyy/mm/dd hh:nn:ss", get_file_age(cfg_nam)).c_str()));
+									FormatDateTime("yyyy'/'mm'/'dd hh:nn:ss", get_file_age(cfg_nam)).c_str()));
 			}
 
 			UnicodeString snam = IncludeTrailingPathDelimiter(fp->is_up? fp->p_name : fp->f_name);
@@ -15540,7 +15550,7 @@ void get_GitInf(
 			if (lst) {
 				TStringDynArray ibuf = get_csv_array(GitInfList->ValueFromIndex[idx], 3);
 				if (ibuf.Length==0) Abort();
-				if (!WithinPastMilliSeconds(xdt, VarToDateTime(ibuf[0]), TimeTolerance)) Abort();
+				if (!WithinPastMilliSeconds(xdt, str_to_DateTime(ibuf[0]), TimeTolerance)) Abort();
 				//既存情報を設定
 				for (int i=1; i<ibuf.Length; i++) {
 					UnicodeString inam = get_tkn(ibuf[i], ": ");
@@ -15557,7 +15567,7 @@ void get_GitInf(
 	if (!upd_sw && ext_sw) return;
 
 	TStringDynArray ibuf;
-	add_dyn_array(ibuf, FormatDateTime("yyyy/mm/dd hh:nn:ss", xdt));
+	add_dyn_array(ibuf, FormatDateTime("yyyy'/'mm'/'dd hh:nn:ss", xdt));
 
 	std::unique_ptr<TStringList> o_buf(new TStringList());
 	std::unique_ptr<TStringList> w_buf(new TStringList());

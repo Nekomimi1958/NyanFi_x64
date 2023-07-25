@@ -256,11 +256,11 @@ void __fastcall TFindFileDlg::FormCloseQuery(TObject *Sender, bool &CanClose)
 				FindDate	= 0;
 			}
 			else {
-				FindDate	= TDate(DateMaskEdit->Text);
+				FindDate	= str_to_DateTime(DateMaskEdit->Text);
 				FindDateStr = EmptyStr;
 			}
 
-			if (TimePanel->Visible) FindTime = TTime(TimeMaskEdit->Text);
+			if (TimePanel->Visible) FindTime = str_to_DateTime(TimeMaskEdit->Text);
 		}
 		catch (EConvertError &e) {
 			CanClose = false;
@@ -570,7 +570,7 @@ void __fastcall TFindFileDlg::DateBtnClick(TObject *Sender)
 	}
 	else {
 		try {
-			FindDate = TDate(DateMaskEdit->Text);
+			FindDate = str_to_DateTime(DateMaskEdit->Text);
 			switch (idx_of_word_i(_T("-1D|-7D|-1M|-1Y"), bp->Caption)) {
 			case 0: FindDate -= 1;						break;
 			case 1: FindDate -= 7;						break;
@@ -695,7 +695,7 @@ void __fastcall TFindFileDlg::FindOkActionUpdate(TObject *Sender)
 			}
 			else {
 				if (ContainsStr(dtstr, "?")) Abort();
-				FindDate = TDate(dtstr);
+				FindDate = str_to_DateTime(dtstr);
 			}
 		}
 	}
@@ -713,7 +713,7 @@ void __fastcall TFindFileDlg::FindOkActionUpdate(TObject *Sender)
 	bool time_ng = false;
 	if (TimePanel->Visible) {
 		try {
-			FindTime = TTime(TimeMaskEdit->Text);
+			FindTime = str_to_DateTime(TimeMaskEdit->Text);
 		}
 		catch (EConvertError &e) {
 			time_ng = true;
@@ -738,4 +738,3 @@ void __fastcall TFindFileDlg::FindOkActionUpdate(TObject *Sender)
 		= (PrpKwdEdit->Focused()? EDTAG_RGEX_V : 0) | (PrpRegExCheckBox->Checked? EDTAG_RGEX_E : 0);
 }
 //---------------------------------------------------------------------------
-

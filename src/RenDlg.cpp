@@ -1967,7 +1967,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 		//------------------------------------------
 		if (TimeChanged) {
 			TDateTime dt;
-			if (!str_to_DateTime(TimeMaskEdit->Text, &dt)) UserAbort(USTR_IllegalDate);
+			if (!ToDateTime(TimeMaskEdit->Text, &dt)) UserAbort(USTR_IllegalDate);
 			SttPrgBar->Begin(_T("ƒ^ƒCƒ€•ÏX..."));
 			int er_cnt = 0;
 			for (int i=0; i<ItemList->Count; i++) {

@@ -1221,7 +1221,7 @@ bool starts_ptn(
 //---------------------------------------------------------------------------
 //あいまい検索パターンを取得
 //---------------------------------------------------------------------------
-UnicodeString get_fuzzy_ptn(UnicodeString kwd, 
+UnicodeString get_fuzzy_ptn(UnicodeString kwd,
 	bool sep_sw)	//\s,\\,/ 区切りをまたがない	(default = false)
 {
 	UnicodeString ptn;
@@ -3328,5 +3328,47 @@ UnicodeString get_NextAlStr(UnicodeString s)
 	if (lo_sw) s = s.LowerCase();
 
 	return s;
+}
+
+//---------------------------------------------------------------------------
+//文字列を TDateTime に変換
+//！変換できない場合例外を送出
+//---------------------------------------------------------------------------
+TDateTime str_to_DateTime(
+	UnicodeString ts,
+	bool sw_dt)			//数字をに付けに変換	(default = false)
+{
+	if (is_match_regex(ts, _T("^\\d{4}[-/]\\d{2}[-/]\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\b"))) {
+		unsigned short y = ts.SubString(1, 4).ToIntDef(0);
+		unsigned short m = ts.SubString(6, 2).ToIntDef(0);
+		unsigned short d = ts.SubString(9, 2).ToIntDef(0);
+		unsigned short h = ts.SubString(12, 2).ToIntDef(0);
+		unsigned short n = ts.SubString(15, 2).ToIntDef(0);
+		unsigned short s = ts.SubString(18, 2).ToIntDef(0);
+		return TDateTime(y, m, d, h, n, s, 0);
+	}
+	else if (is_match_regex(ts, _T("^\\d{4}[-/]\\d{2}[-/]\\d{2}\\b"))) {
+		unsigned short y = ts.SubString(1, 4).ToIntDef(0);
+		unsigned short m = ts.SubString(6, 2).ToIntDef(0);
+		unsigned short d = ts.SubString(9, 2).ToIntDef(0);
+		return TDateTime(y, m, d);
+	}
+	else if (is_match_regex(ts, _T("^\\d{2}:\\d{2}:\\d{2}\\b"))) {
+		unsigned short h = ts.SubString(1, 2).ToIntDef(0);
+		unsigned short n = ts.SubString(4, 2).ToIntDef(0);
+		unsigned short s = ts.SubString(7, 2).ToIntDef(0);
+		return TDateTime(h, n, s, 0);
+	}
+	else if (is_match_regex(ts, _T("^\\d{2}:\\d{2}\\b"))) {
+		unsigned short h = ts.SubString(1, 2).ToIntDef(0);
+		unsigned short n = ts.SubString(4, 2).ToIntDef(0);
+		return TDateTime(h, n, 0, 0);
+	}
+	else if (sw_dt && is_match_regex(ts, _T("^\\d+$"))) {
+		return TDate(ts.ToIntDef(0));
+	}
+	else {
+		return TDateTime(ts);
+	}
 }
 //---------------------------------------------------------------------------

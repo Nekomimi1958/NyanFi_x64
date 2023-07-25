@@ -61,7 +61,7 @@ int  EditToInt(TLabeledEdit *ep, int def = 0);
 int  EditToInt(TEdit *ep, int def = 0);
 
 TDate set_NormDay(unsigned short y, unsigned short m, unsigned short d);
-bool str_to_DateTime(UnicodeString s, TDateTime *dt);
+bool ToDateTime(UnicodeString s, TDateTime *dt);
 UnicodeString format_DateTime(TDateTime dt, bool omit = false);
 UnicodeString format_Date(TDateTime dt);
 UnicodeString format_DateTimeEx(UnicodeString fmt, TDateTime dt);

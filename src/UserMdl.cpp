@@ -544,7 +544,7 @@ void __fastcall TUserModule::EditPaste1Execute(TObject *Sender)
 		TMaskEdit *ep = (TMaskEdit*)wp;
 		if (ep->SelText.Length()==ep->EditText.Length() || ep->SelText.Length()==0) {
 			TDateTime dt;
-			if (str_to_DateTime(s, &dt)) {
+			if (ToDateTime(s, &dt)) {
 				//タイムスタンプ
 				if (USAME_TI(ep->Name, "TimeMaskEdit"))
 					s = format_DateTime(dt);

@@ -40,6 +40,8 @@ object RenameDlg: TRenameDlg
       end>
     StyleElements = [seClient, seBorder]
     OnDrawPanel = StatusBar1DrawPanel
+    ExplicitTop = 408
+    ExplicitWidth = 536
   end
   object MainPanel: TPanel
     Left = 0
@@ -49,6 +51,8 @@ object RenameDlg: TRenameDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 536
+    ExplicitHeight = 408
     object CommonPanel: TPanel
       Left = 0
       Top = 258
@@ -57,6 +61,8 @@ object RenameDlg: TRenameDlg
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 257
+      ExplicitWidth = 536
       DesignSize = (
         540
         151)
@@ -185,12 +191,12 @@ object RenameDlg: TRenameDlg
         object TimeMaskEdit: TMaskEdit
           Left = 12
           Top = 20
-          Width = 162
+          Width = 160
           Height = 23
           EditMask = '!9999/99/99 !99:99:99;1;_'
           MaxLength = 19
           TabOrder = 0
-          Text = ' :  /  /     :  :  '
+          Text = '    /  /     :  :  '
           StyleElements = [seBorder]
           OnChange = TimeMaskEditChange
         end
@@ -241,7 +247,7 @@ object RenameDlg: TRenameDlg
         end
       end
       object OkButton: TButton
-        Left = 365
+        Left = 361
         Top = 118
         Width = 80
         Height = 26
@@ -249,9 +255,10 @@ object RenameDlg: TRenameDlg
         Anchors = [akRight, akBottom]
         Default = True
         TabOrder = 5
+        ExplicitLeft = 357
       end
       object CanButton: TButton
-        Left = 453
+        Left = 449
         Top = 118
         Width = 80
         Height = 26
@@ -260,9 +267,10 @@ object RenameDlg: TRenameDlg
         Caption = #12461#12515#12531#12475#12523
         ModalResult = 2
         TabOrder = 6
+        ExplicitLeft = 445
       end
       object AutoPrvCheckBox: TCheckBox
-        Left = 148
+        Left = 144
         Top = 122
         Width = 126
         Height = 17
@@ -270,9 +278,10 @@ object RenameDlg: TRenameDlg
         Caption = #33258#21205#12503#12524#12499#12517#12540'(&V)'
         TabOrder = 3
         OnClick = AutoPrvCheckBoxClick
+        ExplicitLeft = 140
       end
       object PreviewBtn: TButton
-        Left = 277
+        Left = 273
         Top = 118
         Width = 80
         Height = 26
@@ -280,6 +289,7 @@ object RenameDlg: TRenameDlg
         Caption = #12503#12524#12499#12517#12540
         TabOrder = 4
         OnClick = PreviewBtnClick
+        ExplicitLeft = 269
       end
       object KeepCsrCheckBox: TCheckBox
         Left = 20
@@ -303,6 +313,8 @@ object RenameDlg: TRenameDlg
       StyleElements = [seFont, seBorder]
       OnChange = NamePageControlChange
       OnDrawTab = RenPageControlDrawTab
+      ExplicitWidth = 536
+      ExplicitHeight = 257
       object NameSheet: TTabSheet
         Caption = #21517#21069'(&N)'
         object NameComPanel: TPanel
@@ -313,6 +325,8 @@ object RenameDlg: TRenameDlg
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
+          ExplicitWidth = 528
+          ExplicitHeight = 187
           DesignSize = (
             532
             188)
@@ -362,6 +376,8 @@ object RenameDlg: TRenameDlg
             StyleElements = [seBorder]
             OnDrawCell = PreviewGridDrawCell
             OnKeyDown = PreviewGridKeyDown
+            ExplicitWidth = 508
+            ExplicitHeight = 93
             ColWidths = (
               100
               100
@@ -427,6 +443,7 @@ object RenameDlg: TRenameDlg
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 0
+          ExplicitWidth = 528
           DesignSize = (
             532
             40)
@@ -441,6 +458,7 @@ object RenameDlg: TRenameDlg
             OnChange = RenameEditChange
             OnKeyDown = RenameEditKeyDown
             OnKeyPress = RenameEditKeyPress
+            ExplicitWidth = 508
           end
         end
       end
@@ -983,7 +1001,7 @@ object RenameDlg: TRenameDlg
                 Hint = '. '#12391#21306#20999#12387#12390#35079#25968#25351#23450#12375#12390#12367#12384#12373#12356
                 Anchors = [akLeft, akRight, akBottom]
                 EditLabel.Width = 39
-                EditLabel.Height = 15
+                EditLabel.Height = 23
                 EditLabel.Caption = #25313#24373#23376
                 LabelPosition = lpLeft
                 TabOrder = 0
@@ -1198,7 +1216,7 @@ object RenameDlg: TRenameDlg
                   Height = 23
                   Anchors = [akLeft, akTop, akRight]
                   EditLabel.Width = 39
-                  EditLabel.Height = 15
+                  EditLabel.Height = 23
                   EditLabel.Caption = #25351#23450#35486
                   LabelPosition = lpLeft
                   TabOrder = 1

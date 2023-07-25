@@ -47,7 +47,7 @@ void __fastcall TCreateDirsDlg::FormShow(TObject *Sender)
 		PreStrRadioBtn->Checked = true;
 
 	DtFmtEdit->Text    = IniFile->ReadStrGen(_T("CreDirsDlgDtFmt"));
-	DateMaskEdit->Text = IniFile->ReadStrGen(_T("CreDirsDlgDate"), FormatDateTime("yyyy/01/01", Now()));
+	DateMaskEdit->Text = IniFile->ReadStrGen(_T("CreDirsDlgDate"), FormatDateTime("yyyy'/'01'/'01", Now()));
 
 	if (IniFile->ReadIntGen(_T("CreDirsDlgDateMod"), 1)>0)
 		PstDateRadioBtn->Checked = true;
@@ -149,8 +149,8 @@ void __fastcall TCreateDirsDlg::AddStrActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TCreateDirsDlg::AddDateActionExecute(TObject *Sender)
 {
-	TDateTime dt;
-	if (str_to_DateTime(DateMaskEdit->Text, &dt)) {
+	try {
+		TDateTime dt = str_to_DateTime(DateMaskEdit->Text);
 		cursor_HourGlass();
 		UndoBuf = ListMemo->Lines->Text;
 		std::unique_ptr<TStringList> lst(new TStringList());
@@ -167,14 +167,16 @@ void __fastcall TCreateDirsDlg::AddDateActionExecute(TObject *Sender)
 		ListMemo->Lines->Assign(lst.get());
 		cursor_Default();
 	}
-	else msgbox_ERR(USTR_IllegalDate);
+	catch (...) {
+		msgbox_ERR(USTR_IllegalDate);
+	}
 }
 //---------------------------------------------------------------------------
 void __fastcall TCreateDirsDlg::AddDateActionUpdate(TObject *Sender)
 {
 	try {
 		if (DtFmtEdit->Text.IsEmpty()) Abort();
-		TDateTime(DateMaskEdit->Text);
+		str_to_DateTime(DateMaskEdit->Text);
 		DateMaskEdit->Color 	  = get_WinColor();
 		DateMaskEdit->Font->Color = get_TextColor();
 		((TAction*)Sender)->Enabled = true;

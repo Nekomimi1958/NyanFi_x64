@@ -738,7 +738,7 @@ file_rec *XCMD_set_cfp(UnicodeString fnam, UnicodeString cnam, file_rec *cfp)
 	XCMD_set_Var(_T("FileSize"),	XCMD_f_size);
 	XCMD_set_Var(_T("FileSizeF"),	get_FileSizeStr(XCMD_f_size));
 	XCMD_set_Var(_T("FileTime"),	format_DateTime(XCMD_f_time));
-	XCMD_set_Var(_T("FileTimeF"),	FormatDateTime(TimeStampFmt, XCMD_f_time));
+	XCMD_set_Var(_T("FileTimeF"),	get_TimeStampStr(XCMD_f_time));
 
 	XCMD_marked = false;
 	XCMD_is_top = XCMD_is_end = false;
@@ -1232,24 +1232,8 @@ void XCMD_Set(UnicodeString prm)
 		//ŽžŠÔ‰‰ŽZ
 		if (t_flag!=-1) {
 			try {
-				TDateTime vt;
-				if (t_flag==1)
-					vt = TDate(vstr);
-				else if (t_flag==2)
-					vt = TTime(vstr);
-				else
-					vt = TDateTime(vstr);
-
-				TDateTime nt;
-				if (is_match_regex(nstr, _T("\\d{4}/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2}")))
-					nt = TDateTime(nstr);
-				else if (is_match_regex(nstr, _T("\\d{4}/\\d{2}/\\d{2}")))
-					nt = TDate(nstr);
-				else if (is_match_regex(nstr, _T("\\d{2}:\\d{2}:\\d{2}")))
-					nt = TTime(nstr);
-				else
-					nt = TDate(nstr.ToIntDef(0));
-
+				TDateTime vt = str_to_DateTime(vstr);			//Œ³‚Ì•Ï”
+				TDateTime nt = str_to_DateTime(nstr, true);
 				//‰‰ŽZ
 				if		(USAME_TS(opstr, "+=")) vt += nt;
 				else if (USAME_TS(opstr, "-=")) vt -= nt;
@@ -1821,7 +1805,7 @@ void XCMD_Timer(UnicodeString prm)
 		//Žž
 		if (ContainsStr(prm, ":")) {
 			try {
-				XCMD_tim_t = TTime(prm);
+				XCMD_tim_t = str_to_DateTime(prm);
 			}
 			catch (EConvertError &e) {
 				XCMD_tim_t = 0;
@@ -1937,12 +1921,12 @@ void XCMD_SetFileTime(UnicodeString prm)
 {
 	TDateTime dt;
 	try {
-		if (is_match_regex(prm, _T("\\d{4}/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2}")))
-			dt = TDateTime(prm);
-		else if (is_match_regex(prm, _T("\\d{4}/\\d{2}/\\d{2}")))
-			dt = TDate(prm);
-		else if (is_match_regex(prm, _T("\\d{2}:\\d{2}:\\d{2}")))
-			dt = TDateTime(prm.Insert(XCMD_VarList->Values["FileTime"].SubString(1, 11), 1));
+		if (is_match_regex(prm, _T("^\\d{4}/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2}")))
+			dt = str_to_DateTime(prm);
+		else if (is_match_regex(prm, _T("^\\d{4}/\\d{2}/\\d{2}")))
+			dt = str_to_DateTime(prm);
+		else if (is_match_regex(prm, _T("^\\d{2}:\\d{2}:\\d{2}")))
+			dt = str_to_DateTime(prm.Insert(XCMD_VarList->Values["FileTime"].SubString(1, 11), 1));
 		else UserAbort(USTR_IllegalParam);
 	}
 	catch (EConvertError &e) {

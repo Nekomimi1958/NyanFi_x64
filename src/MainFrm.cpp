@@ -2378,9 +2378,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Activate(TObject *Sender)
 				UnicodeString msg;
 				msg = "ワークリストが更新されています\r\n";
 				msg.cat_sprintf(_T("%s → %s\r\n読み込み直しますか?"),
-					FormatDateTime(TimeStampFmt, WorkListTime).c_str(),
-					FormatDateTime(TimeStampFmt, dt).c_str());
-
+					get_TimeStampStr(WorkListTime).c_str(), get_TimeStampStr(dt).c_str());
 				if (msgbox_Sure(msg, SureWorkList || WorkListChanged, true)) {
 					if (!SetWorkList(EmptyStr, !CurStt->is_Work && !OppStt->is_Work))
 						SetActionAbort(USTR_WlistCantOpen);
@@ -4171,7 +4169,7 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 				try {
 					TStringList *sp = Timer_AlarmList[i];
 					for (int j=0; j<sp->Count; j++) {
-						TDateTime dt = TDateTime(sp->Strings[j]);
+						TDateTime dt = str_to_DateTime(sp->Strings[j]);
 						if (Dateutils::CompareDateTime(Now(), dt)==GreaterThanValue) {
 							sp->Strings[j] = IncDay(dt, 1);
 							StartLog(msg.sprintf(_T("ALARM %u"), i + 1));
@@ -5777,7 +5775,7 @@ void __fastcall TNyanFiForm::SetFlItemWidth(TStringList *lst, int tag)
 	lst_stt->lwd_size = get_TextWidth(cv, lbuf, is_irreg);
 
 	//タイムスタンプ
-	lst_stt->lwd_time = get_TextWidth(cv, FormatDateTime(TimeStampFmt, Now()), is_irreg);
+	lst_stt->lwd_time = get_TextWidth(cv, get_TimeStampStr(Now()), is_irreg);
 
 	int x_right = (tag==1)? R_Panel->ClientWidth : L_Panel->ClientWidth;
 	if (!HideScrBar) {
@@ -7752,7 +7750,7 @@ void __fastcall TNyanFiForm::SetSttBarInf(
 			else if (remove_top_s(fmt, 'M'))		{ if (fp_ok) stt_str += IniFile->GetMarkMemo(fp->r_name); }
 			else if (remove_top_s(fmt, 'Z'))		{ if (fp_ok) stt_str += get_FileSizeStr(fp->f_size); }
 			else if (remove_top_s(fmt, 'Y'))		{ if (fp_ok) stt_str += get_size_str_B(fp->f_size, 0); }
-			else if (remove_top_s(fmt, 'T'))		{ if (fp_ok) stt_str += FormatDateTime(TimeStampFmt, fp->f_time); }
+			else if (remove_top_s(fmt, 'T'))		{ if (fp_ok) stt_str += get_TimeStampStr(fp->f_time); }
 		}
 		else {
 			stt_str.cat_sprintf(_T("%c"), c);
@@ -9387,8 +9385,7 @@ void __fastcall TNyanFiForm::CheckChangeWorkList(int tag)
 			UnicodeString msg;
 			msg = "ワークリストが更新されています\r\n";
 			msg.cat_sprintf(_T("%s → %s\r\n読み込み直しますか?"),
-				FormatDateTime(TimeStampFmt, WorkListTime).c_str(),
-				FormatDateTime(TimeStampFmt, dt).c_str());
+				get_TimeStampStr(WorkListTime).c_str(), get_TimeStampStr(dt).c_str());
 			if (msgbox_Sure(msg, SureWorkList || WorkListChanged, true)) {
 				if (!load_WorkList(WorkListName)) SetActionAbort(USTR_WlistCantOpen);
 			}
@@ -10604,7 +10601,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 						}
 					}
 					tmp_cv->Font->Color = use_fgSel? col_fgSelItem : get_TimeColor(fp->f_time, col_f);
-					tmp_cv->TextOut(lst_stt->lxp_time, yp, FormatDateTime(TimeStampFmt, fp->f_time));
+					tmp_cv->TextOut(lst_stt->lxp_time, yp, get_TimeStampStr(fp->f_time));
 				}
 			}
 			//通常
@@ -10615,7 +10612,7 @@ void __fastcall TNyanFiForm::FileListDrawItem(TWinControl *Control, int Index, T
 				//タイムスタンプ
 				if (draw_time) {
 					tmp_cv->Font->Color = use_fgSel? col_fgSelItem : get_TimeColor(fp->f_time, col_f);
-					tmp_cv->TextOut(lst_stt->lxp_time, yp, FormatDateTime(TimeStampFmt, fp->f_time));
+					tmp_cv->TextOut(lst_stt->lxp_time, yp, get_TimeStampStr(fp->f_time));
 				}
 			}
 		}
@@ -15329,7 +15326,7 @@ UnicodeString __fastcall TNyanFiForm::GetCopyFileNames(
 					break;
 				case 'T':	//タイムスタンプ
 					if (fp->f_attr==faInvalid) break;
-					s = FormatDateTime(TimeStampFmt, fp->f_time);
+					s = get_TimeStampStr(fp->f_time);
 					break;
 				case 'D':	//タイムスタンプ(書式指定)
 					if (fp->f_attr==faInvalid) break;
@@ -20026,7 +20023,7 @@ UnicodeString __fastcall TNyanFiForm::ApplyTemplate(
 				//パス付ファイル名
 				case 'F': s = fnam;						break;
 				//タイムスタンプ
-				case 'T': s = FormatDateTime(TimeStampFmt, get_file_age(fnam));	break;
+				case 'T': s = get_TimeStampStr(get_file_age(fnam));	break;
 				//タイムスタンプ(書式指定)
 				case 'D': s = FormatDateTime(split_in_paren(t_buf), get_file_age(fnam));	break;
 				//インデックス番号

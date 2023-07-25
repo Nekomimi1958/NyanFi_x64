@@ -445,7 +445,7 @@ void __fastcall TGitViewer::UpdateCommitList(
 					}
 
 					try {
-						gp->f_time = VarToDateTime(ibuf[3]);
+						gp->f_time = str_to_DateTime(ibuf[3]);
 					}
 					catch (...) {
 						gp->f_time = 0;
@@ -875,8 +875,8 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 		}
 
 		//“úŽž
-		UnicodeString tmp = FormatDateTime(TimeStampFmt, gp->f_time);
-		out_TextEx(cv, xp, yp, tmp, get_TimeColor(gp->f_time, col_fgList), col_None, max_h_wd, is_irreg);
+		out_TextEx(cv, xp, yp, get_TimeStampStr(gp->f_time), get_TimeColor(gp->f_time, col_fgList), 
+			col_None, max_h_wd, is_irreg);
 
 		//ƒ^ƒO
 		if (!gp->tags.IsEmpty()) {

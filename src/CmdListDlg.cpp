@@ -302,7 +302,7 @@ void __fastcall TCmdFileListDlg::CmdFileGridDrawCell(TObject *Sender, int ACol, 
 			cv->Font->Color = get_SizeColor(fp->f_size, col_f);
 			break;
 		case 3:	//タイムスタンプ
-			cellstr = FormatDateTime(TimeStampFmt, fp->f_time);
+			cellstr = get_TimeStampStr(fp->f_time);
 			cv->Font->Color = get_TimeColor(fp->f_time, col_f);
 			break;
 		case 4:	//ディレクトリ

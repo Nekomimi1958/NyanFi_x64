@@ -744,8 +744,8 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 		bool is_brk = false;
 		if (Index>0) {
 			TDateTime idx_t, lst_t;
-			if (str_to_DateTime(get_tkn(s, '.'), &idx_t)
-				&& str_to_DateTime(get_tkn(lp->Items->Strings[Index - 1], '.'), &lst_t))
+			if (ToDateTime(get_tkn(s, '.'), &idx_t)
+				&& ToDateTime(get_tkn(lp->Items->Strings[Index - 1], '.'), &lst_t))
 			{
 				is_brk = (MilliSecondsBetween(idx_t, lst_t) > (30*1000));
 			}
