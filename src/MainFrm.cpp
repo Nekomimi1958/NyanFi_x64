@@ -684,26 +684,36 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 
 	//タブバーの初期化
 	int tab_idx = -1;
-	if (IniPathToTab1) {
-		//初期パスを先頭タブに
-		TStringDynArray itm_buf = get_csv_array((TabList->Count>0)? TabList->Strings[0] : EmptyStr, TABLIST_CSVITMCNT, true);
+	if (TabList->Count>0 && IniPathMode[0]==0 && IniPathMode[1]==0 && !IniPathToTab1) {
+		tab_idx = std::clamp(IniFile->ReadIntGen(_T("CurTabIndex"),	0), 0, TabList->Count - 1);
+		TStringDynArray itm_buf = get_csv_array(TabList->Strings[tab_idx], TABLIST_CSVITMCNT, true);
 		itm_buf[0] = CurPath[0];
 		itm_buf[1] = CurPath[1];
-		UnicodeString lbuf = make_csv_rec_str(itm_buf);
-		if (TabList->Count==0) add_TabList(lbuf); else TabList->Strings[0] = lbuf;
-		tab_idx = 0;
+		TabList->Strings[tab_idx] = make_csv_rec_str(itm_buf);
 	}
 	else {
-		for (int i=0; i<TabList->Count; i++) {
-			TStringDynArray itm_buf = get_csv_array(TabList->Strings[i], TABLIST_CSVITMCNT, true);
-			if (SameText(itm_buf[0], CurPath[0]) && SameText(itm_buf[1], CurPath[1])) {
-				tab_idx = i; break;
-			}
-		}
-		//なければ先頭に新規タブ挿入
-		if (tab_idx==-1) {
-			insert_TabList(0, make_csv_str(CurPath[0]) + "," + make_csv_str(CurPath[1]) + ",\"\",\"\"");
+		if (IniPathToTab1) {
+			//初期パスを先頭タブに
+			TStringDynArray itm_buf = get_csv_array((TabList->Count>0)? TabList->Strings[0] : EmptyStr, TABLIST_CSVITMCNT, true);
+			itm_buf[0] = CurPath[0];
+			itm_buf[1] = CurPath[1];
+			UnicodeString lbuf = make_csv_rec_str(itm_buf);
+			if (TabList->Count==0) add_TabList(lbuf); else TabList->Strings[0] = lbuf;
 			tab_idx = 0;
+		}
+		else {
+			//一致するタブを検索
+			for (int i=0; i<TabList->Count; i++) {
+				TStringDynArray itm_buf = get_csv_array(TabList->Strings[i], TABLIST_CSVITMCNT, true);
+				if (SameText(itm_buf[0], CurPath[0]) && SameText(itm_buf[1], CurPath[1])) {
+					tab_idx = i; break;
+				}
+			}
+			//なければ先頭に新規タブ挿入
+			if (tab_idx==-1) {
+				insert_TabList(0, make_csv_str(CurPath[0]) + "," + make_csv_str(CurPath[1]) + ",\"\",\"\"");
+				tab_idx = 0;
+			}
 		}
 	}
 
@@ -1081,6 +1091,7 @@ void __fastcall TNyanFiForm::FormClose(TObject *Sender, TCloseAction &Action)
 		IniFile->WriteStrGen(_T("CurPath1"),		CurPath[0]);
 		IniFile->WriteStrGen(_T("CurPath2"),		CurPath[1]);
 		IniFile->WriteStrGen(_T("WorkListName"),	WorkListName);
+		IniFile->WriteIntGen(_T("CurTabIndex"),		CurTabIndex);
 
 		for (int i=0; i<FontList->Count; i++)
 			IniFile->WriteFontInf(FontList->Names[i], (TFont*)FontList->Objects[i]);
@@ -5098,7 +5109,7 @@ void __fastcall TNyanFiForm::SetFileListFontSize(
 		int fsz = (sz==0)? ListFont->Size :
 					 r_sw? UnscaledInt(lp->Font->Size, lp) + std::max(std::min(sz, 12), -12) :
 				  (x_sw && lp->Font->Size==ScaledInt(sz, lp))? ListFont->Size : sz;
-		lp->Font->Size = ScaledInt(std::max(std::min(fsz, MAX_FNTZOOM_SZ), MIN_FNTZOOM_SZ), lp);
+		lp->Font->Size = ScaledInt(std::clamp(fsz, MIN_FNTZOOM_SZ, MAX_FNTZOOM_SZ), lp);
 		lp->ItemHeight = get_FontHeight(lp->Font, ListInterLn);
 		SetDarkWinTheme(lp);
 		FlScrPanel[i]->UpdateKnob();
@@ -34467,13 +34478,11 @@ void __fastcall TNyanFiForm::JumpIndexActionExecute(TObject *Sender)
 		//相対
 		if (rel_sig!=0) {
 			int cur_idx = ViewFileList->IndexOf(ViewFileName);
-			idx = cur_idx + rel_sig * idx;
-			if (idx<0 || idx>max_idx) Abort();
+			idx = std::clamp(cur_idx + rel_sig * idx, 0, max_idx);
 		}
 		//絶対
 		else {
-			idx--;
-			if (idx<0) idx = 0; else if (idx>max_idx) idx = max_idx;
+			idx = std::clamp(idx - 1, 0, max_idx);
 		}
 
 		set_GridIndex(ThumbnailGrid, idx, ViewFileList->Count);

@@ -1862,7 +1862,7 @@ void InitializeGlobal()
 		{_T("U:HomeWorkList=\"WORKLIST.nwl\""),	(TObject*)&HomeWorkList},
 		{_T("U:IniWinMode=0"),				(TObject*)&IniWinMode},
 		{_T("U:FixWinPos=false"),			(TObject*)&FixWinPos},
-		{_T("U:IniPathToTab1=true"),		(TObject*)&IniPathToTab1},
+		{_T("U:IniPathToTab1=false"),		(TObject*)&IniPathToTab1},
 		{_T("U:IniTabHomeAll=false"),		(TObject*)&IniTabHomeAll},
 		{_T("U:ShowSplash=true"),			(TObject*)&ShowSplash},
 		{_T("U:IniWinWidth=800"),			(TObject*)&IniWinWidth},
@@ -5085,44 +5085,6 @@ bool save_TagGroup(UnicodeString fnam)
 	save_DirHistory(tab_file.get());
 
 	return tab_file->UpdateFile(true);
-}
-
-//---------------------------------------------------------------------------
-//タブグループの読み込み
-//戻り値: タブインデックス(-1:失敗)
-//---------------------------------------------------------------------------
-int load_TagGroup(UnicodeString fnam)
-{
-	if (!file_exists(fnam)) return -1;
-
-	try {
-		UnicodeString msg = make_LogHdr(_T("LOAD"), fnam);
-		std::unique_ptr<UsrIniFile> tab_file(new UsrIniFile(fnam));
-		UnicodeString sct = "General";
-		int tab_idx = tab_file->ReadInteger(sct, "CurTabIndex", 0);
-
-		std::unique_ptr<TStringList> tab_lst(new TStringList());
-		tab_file->LoadListItems("TabList", tab_lst.get(), 30, false);
-		if (tab_lst->Count==0) TextAbort(_T("有効な項目がありません。"));
-
-		for (int i=0; i<TabList->Count; i++) del_tab_info((tab_info*)TabList->Objects[i]);
-		TabList->Assign(tab_lst.get());
-
-		for (int i=0; i<TabList->Count; i++) {
-			tab_info *tp = cre_tab_info(equal_1(get_csv_item(TabList->Strings[i], 8)));
-			for (int j=0; j<MAX_FILELIST; j++) {
-				tab_file->LoadListItems(sct.sprintf(_T("DirHistory%02u_%u"), i + 1, j), tp->dir_hist[j], 0, false);
-			}
-			TabList->Objects[i] = (TObject*)tp;
-		}
-
-		AddLog(msg);
-		return tab_idx;
-	}
-	catch (EAbort &e) {
-		GlobalErrMsg = e.Message;
-		return -1;
-	}
 }
 
 //---------------------------------------------------------------------------

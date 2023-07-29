@@ -1736,7 +1736,6 @@ void clear_DirHistory(int tab_idx = -1, int tag = CurListTag);
 UnicodeString get_TabWorkList(int tab_idx);
 void save_DirHistory(UsrIniFile *ini_file);
 bool save_TagGroup(UnicodeString fnam);
-int  load_TagGroup(UnicodeString fnam);
 
 void clear_FindStt(flist_stt *lst_stt);
 bool is_FindAll(flist_stt *lst_stt);

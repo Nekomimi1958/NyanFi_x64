@@ -740,16 +740,21 @@ TColor AdjustColor(
 
 	//–¾¨ˆÃ
 	if (GetLuminance(col)>0.5) {
-		r -= (adj * r / 255);  if (r<0) r = 0;
-		g -= (adj * g / 255);  if (g<0) g = 0;
-		b -= (adj * b / 255);  if (b<0) b = 0;
+		r -= (adj * r / 255);
+		g -= (adj * g / 255);
+		b -= (adj * b / 255);
 	}
 	//ˆÃ¨–¾
 	else {
-		r += (adj * (255 - r) / 255);  if (r>255) r = 255;
-		g += (adj * (255 - g) / 255);  if (g>255) g = 255;
-		b += (adj * (255 - b) / 255);  if (b>255) b = 255;
+		r += (adj * (255 - r) / 255);
+		g += (adj * (255 - g) / 255);
+		b += (adj * (255 - b) / 255);
 	}
+
+	r = std::clamp(r, 0, 255);
+	g = std::clamp(g, 0, 255);
+	b = std::clamp(b, 0, 255);
+
 	return TColor(RGB(r, g, b));
 }
 

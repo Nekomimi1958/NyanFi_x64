@@ -100,8 +100,8 @@
       <a href="hid00019.htm#AppList">→ オプション設定 - コマンド</a><br>
     </dd>
 
-    <dt id="Calculator">Calculator<span class="pram_text">_計算式</span></dt>
-    Calculator<span class="pram_text">_CB[;計算式]</span>
+    <dt id="Calculator">Calculator<span class="pram_text">_計算式</span><br>
+      Calculator<span class="pram_text">_CB[;計算式]</span></dt>
     <dd><a href="hid00087.htm">電卓</a>が開きます。<br>
       パラメータで<b>計算式</b>を指定すると、入力欄にそれを設定して開きます。<br>
       パラメータに <b>CB</b> を用いた書式については、ファイラーの同コマンドを参照してください(<a href="hid00005.htm#Calculator">→ ファイラー: Calculator</a>)。
@@ -281,8 +281,8 @@
     </dd>
 
     <dt id="JumpIndex">JumpIndex<span class="pram_text">[_[+|-]インデックス]</span></dt>
-    <dd>指定した<b>インデックス</b>のファイルに移動します。<br>
-      + または - を付けると、現在位置からの相対移動になります。<br>
+    <dd>指定した<b>インデックス</b>(1～)のファイルに移動します。<br>
+      + または - を付けると、現在位置からの相対移動になります。移動先が有効範囲外の場合は、先頭または最後に移動します。<br>
       パラメータを指定しない場合は入力ボックスが出ます。<br>
       <a href="#NextFile">→ NextFile</a>　<a href="#PrevFile">→ PrevFile</a>
     </dd>
