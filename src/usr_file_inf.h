@@ -161,6 +161,9 @@ UnicodeString get_CRC32_str(UnicodeString fnam, bool only_1blk = false, bool prc
 UnicodeString get_HashStr(UnicodeString fnam, ALG_ID algid, bool only_1blk = false, bool prc_msg = false);
 UnicodeString get_HashStr(UnicodeString fnam, UnicodeString idstr, bool only_1blk = false, bool prc_msg = false);
 
+UnicodeString get_TextHashStr(UnicodeString s, ALG_ID algid);
+UnicodeString get_TextHashStr(UnicodeString s, UnicodeString idstr);
+
 //---------------------------------------------------------------------------
 int  get_duration(UnicodeString fnam);
 

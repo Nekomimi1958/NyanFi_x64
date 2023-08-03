@@ -3336,7 +3336,7 @@ UnicodeString get_NextAlStr(UnicodeString s)
 //---------------------------------------------------------------------------
 TDateTime str_to_DateTime(
 	UnicodeString ts,
-	bool sw_dt)			//”š‚ğ‚É•t‚¯‚É•ÏŠ·	(default = false)
+	bool sw_dt)			//”š‚ğ“ú•t‚É•ÏŠ·	(default = false)
 {
 	if (is_match_regex(ts, _T("^\\d{4}[-/]\\d{2}[-/]\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\b"))) {
 		unsigned short y = ts.SubString(1, 4).ToIntDef(0);

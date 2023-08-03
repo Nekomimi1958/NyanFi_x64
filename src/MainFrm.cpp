@@ -21209,6 +21209,33 @@ void __fastcall TNyanFiForm::ListTreeActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GetHashActionExecute(TObject *Sender)
 {
+	//入力文字列のハッシュ値
+	if (TEST_DEL_ActParam("IN")) {
+		if (SameText(ActionParam, "CRC32")) {
+			SttBarWarn(_T("CRC32 には対応していません。"));
+			return;
+		}
+
+		UnicodeString s;
+		if (input_query_ex(_T("文字列のハッシュ値"), null_TCHAR, &s, 0, false,
+			"マルチバイト文字はUTF-8として処理") && !s.IsEmpty()) 
+		{
+			UnicodeString idstr = def_if_empty(ActionParam, "MD5");
+			UnicodeString msg   = make_LogHdr(idstr, "\"" + s + "\"");
+			UnicodeString hash  = get_TextHashStr(s, def_if_empty(ActionParam, "MD5"));
+			if (!hash.IsEmpty()) {
+				copy_to_Clipboard(hash);
+				msg.cat_sprintf(_T("  %s"), hash.c_str());
+			}
+			else {
+				set_LogErrMsg(msg);
+			}
+			AddLogCr(); AddLog(msg);
+		}
+		return;
+	}
+
+	//ファイルのハッシュ値
 	try {
 		if (TestCurIncDir()) UserAbort(USTR_IncludeDir);
 		if (TestCurIncFindVirtual() || CurStt->is_FTP) UserAbort(USTR_OpeNotSuported);
@@ -35916,7 +35943,8 @@ void __fastcall TNyanFiForm::UpdateTabBar(
 //---------------------------------------------------------------------------
 //アクティブなタブを更新
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::SetCurTab(bool redraw)
+void __fastcall TNyanFiForm::SetCurTab(
+	bool redraw)	//再描画	(default = false)
 {
 	CurTabIndex = TabControl1->TabIndex;
 	if (!TabPanel->Visible) return;
@@ -35956,6 +35984,12 @@ void __fastcall TNyanFiForm::StoreTabStt(int tab_idx)
 		}
 
 		tp->sync_lr = SyncLR;
+
+		TStringDynArray itm_buf = get_csv_array(TabList->Strings[tab_idx], TABLIST_CSVITMCNT, true);
+		itm_buf[0] = ListStt[0].is_Work? WorkListName : CurPath[0];
+		itm_buf[1] = ListStt[1].is_Work? WorkListName : CurPath[1];
+		itm_buf[8] = SyncLR? "1" : "0";
+		TabList->Strings[tab_idx] = make_csv_rec_str(itm_buf);
 	}
 }
 //---------------------------------------------------------------------------
@@ -35963,7 +35997,6 @@ void __fastcall TNyanFiForm::StoreTabStt(int tab_idx)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TabControl1Changing(TObject *Sender, bool &AllowChange)
 {
-	SetCurTab();
 	StoreTabStt(TabControl1->TabIndex);
 }
 //---------------------------------------------------------------------------

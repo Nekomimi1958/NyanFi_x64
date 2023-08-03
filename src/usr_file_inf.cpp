@@ -2284,6 +2284,68 @@ UnicodeString get_HashStr(
 	default: return EmptyStr;
 	}
 }
+//---------------------------------------------------------------------------
+//文字列のハッシュ文字列を取得
+//  マルチバイト文字はUTF-8として処理
+//---------------------------------------------------------------------------
+UnicodeString get_TextHashStr(
+	UnicodeString s,		//文字列
+	ALG_ID algid)			//アルゴリズム CALG_MD5/ CALG_SHA1/ CALG_SHA_256/384/512
+{
+	if (s.IsEmpty()) return EmptyStr;
+
+	HCRYPTPROV hProv;
+	HCRYPTHASH hHash;
+	if (!::CryptAcquireContext(&hProv, NULL, NULL,
+		(algid==CALG_SHA_256 || algid==CALG_SHA_384 || algid==CALG_SHA_512)? PROV_RSA_AES : PROV_RSA_FULL,
+			CRYPT_VERIFYCONTEXT))
+				return EmptyStr;
+	if (!::CryptCreateHash(hProv, algid, 0, 0, &hHash)) {
+		::CryptReleaseContext(hProv, 0);
+		return EmptyStr;
+	}
+
+	UnicodeString ret_str;
+	try {
+		try {	
+			int s_len = s.Length();
+			int b_len = ::WideCharToMultiByte(CP_UTF8, 0, s.c_str(), s_len, 0, NULL, NULL, NULL);
+			if (b_len==0) Abort();
+			std::unique_ptr<char[]> b_str(new char[b_len]);
+			if (::WideCharToMultiByte(CP_UTF8, 0, s.c_str(), s_len, b_str.get(), b_len, NULL, NULL)==0) Abort();
+			if (!::CryptHashData(hHash, (BYTE*)b_str.get(), b_len, 0)) Abort();
+			DWORD dwHashLen;
+			if (!::CryptGetHashParam(hHash, HP_HASHVAL, NULL, &dwHashLen, 0)) Abort();
+			std::unique_ptr<BYTE[]> pbHash(new BYTE[dwHashLen]);
+			if (!::CryptGetHashParam(hHash, HP_HASHVAL, pbHash.get(), &dwHashLen, 0)) Abort();
+			for (DWORD i=0; i<dwHashLen; i++) ret_str.cat_sprintf(_T("%02x"), pbHash[i]);
+		}
+		catch (...) {
+			ret_str = EmptyStr;
+		}
+	}
+	__finally {
+		::CryptDestroyHash(hHash);
+		::CryptReleaseContext(hProv, 0);
+	}
+
+	SetLastError(NO_ERROR);
+	return ret_str;
+}
+//---------------------------------------------------------------------------
+UnicodeString get_TextHashStr(
+	UnicodeString s,
+	UnicodeString idstr)	//アルゴリズム識別名
+{
+	switch (idx_of_word_i(HASH_ID_STR, idstr)) {
+	case  0: return get_TextHashStr(s, CALG_MD5);
+	case  1: return get_TextHashStr(s, CALG_SHA1);
+	case  2: return get_TextHashStr(s, CALG_SHA_256);
+	case  3: return get_TextHashStr(s, CALG_SHA_384);
+	case  4: return get_TextHashStr(s, CALG_SHA_512);
+	default: return EmptyStr;
+	}
+}
 
 //---------------------------------------------------------------------------
 //オーディオ/ビデオファイルの長さ(ms)を取得

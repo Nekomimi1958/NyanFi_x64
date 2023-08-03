@@ -1623,10 +1623,16 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
       <a href="#FTPConnect">→ FTPConnect</a>
     </dd>
 
-    <dt id="GetHash">GetHash<span class="pram_text">[_{MD5|SHA1|SHA256|SHA384|SHA512|CRC32}]</span></dt>
+    <dt id="GetHash">GetHash<span class="pram_text">[_{MD5|SHA1|SHA256|SHA384|SHA512|CRC32}]</span><br>
+      GetHash<span class="pram_text">_IN[;{MD5|SHA1|SHA256|SHA384|SHA512}]</span>
+    </dt>
     <dd>パラメータで指定したハッシュ値またはCRCを、カーソル位置のファイルから取得し、ログおよびファイル情報に表示、クリップボードにコピーします。<br>
       パラメータを省略した場合は MD5 とみなします。<br>
       複数ファイルのハッシュ値をコピーしたい場合は <a href="#CopyFileName">CopyFileName</a>_$G(～) コマンドを利用してください。<br>
+      <div class="spc_box">
+      パラメータに <b>IN</b> を指定すると、入力ボックスで指定した文字列のハッシュ値(CRCは除く)を取得し、ログに表示、クリップボードにコピーします。なお、マルチバイト文字は UTF-8 として処理します。<br>
+      複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。
+      </div>
       <a href="#CopyFileName">→ CopyFileName</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#ToOppSameHash">→
         ToOppSameHash</a>
     </dd>

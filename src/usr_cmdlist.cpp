@@ -634,6 +634,7 @@ void get_PrmList(
 	}
 	else if (contained_wd_i(_T("CompareHash|GetHash|ToOppSameHash"), cmd)) {
 		params.sprintf(_T("\n%s"), HASH_ALG_LIST);
+		if (USAME_TI(cmd, "GetHash"))		params += "IN : 入力文字列のハッシュ値を取得\n";
 		if (USAME_TI(cmd, "ToOppSameHash")) params += "NO : 反対側へ移動しない\n";
 		if (USAME_TI(cmd, "CompareHash"))   params += "OS : 不一致ファイルを反対側で選択\n";
 	}
