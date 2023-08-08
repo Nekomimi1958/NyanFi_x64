@@ -12,25 +12,25 @@
 #define DEFAULT_PPI	96
 
 //----------------------------------------------------------------------
+//現在のPPIを取得
+//----------------------------------------------------------------------
+inline int GetCurPPI(TControl *cp = NULL)
+{
+	return (			cp? cp->CurrentPPI : 
+		Screen->ActiveForm? Screen->ActiveForm->CurrentPPI
+						  : Application->MainForm->CurrentPPI);
+}
+
+//----------------------------------------------------------------------
 //スケーリングされた整数値を取得
+//----------------------------------------------------------------------
+#define SCALED_THIS(n)	((n) * CurrentPPI / DEFAULT_PPI)
+
 //----------------------------------------------------------------------
 inline int ScaledInt(int n, TControl *cp = NULL)
 {
-	int ppi = cp? cp->CurrentPPI : Screen->ActiveForm? Screen->ActiveForm->CurrentPPI : Application->MainForm->CurrentPPI;
-	return (n * ppi / DEFAULT_PPI);
+	return (n * GetCurPPI(cp) / DEFAULT_PPI);
 }
-//----------------------------------------------------------------------
-inline int UnscaledInt(int n, TControl *cp = NULL)
-{
-	int ppi = cp? cp->CurrentPPI : Screen->ActiveForm? Screen->ActiveForm->CurrentPPI : Application->MainForm->CurrentPPI;
-	return floor((n * 1.0 * DEFAULT_PPI / ppi) + 0.5);
-}
-
-//---------------------------------------------------------------------------
-//スケーリングされたフォントを割り当てる
-//----------------------------------------------------------------------
-void AssignScaledFont(TFont *dst, TFont *src, TControl *cp = NULL, TColor fg = Graphics::clNone);
-
 //---------------------------------------------------------------------------
 #endif
 

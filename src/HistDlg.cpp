@@ -188,7 +188,7 @@ void __fastcall TDirHistoryDlg::DirHistListBoxDrawItem(TWinControl *Control, int
 	cv->Brush->Color = col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4, this);
+	int xp = Rect.Left + SCALED_THIS(4);
 	int yp = Rect.Top  + get_TopMargin2(cv);
 
 	if (!IsFindDirHist) {

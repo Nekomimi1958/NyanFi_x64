@@ -6,6 +6,10 @@
 #define GlobalH
 
 //---------------------------------------------------------------------------
+#include <Vcl.BaseImageCollection.hpp>
+#include <Vcl.ImageCollection.hpp>
+#include <Vcl.VirtualImageList.hpp>
+
 #include <htmlhelp.h>
 #include <mmsystem.h>
 #include "usr_scale.h"
@@ -1771,7 +1775,6 @@ void set_StdListBox(TListBox      *lp, int tag = 0, TFont *font = NULL, bool wit
 void set_StdListBox(TCheckListBox *lp, int tag = 0, TFont *font = NULL, bool with_ico = false);
 
 void setup_ToolBar(TToolBar *tb, bool upd_sw = false);
-void setup_StatusBar(TStatusBar *sb, TFont *font = NULL);
 void setup_Panel(TPanel *sb, TFont *font = NULL);
 
 void set_UsrScrPanel(UsrScrollPanel *sp);
@@ -1804,6 +1807,7 @@ bool draw_SmallIcon(file_rec *fp, TCanvas *cv, int x, int y, bool force_cache = 
 bool draw_SmallIconF(UnicodeString fnam, TCanvas *cv, int x, int y, TControl *cp = NULL);
 bool draw_SmallIcon2(UnicodeString fnam, TCanvas *cv, int x, int y, TControl *cp = NULL);
 int  add_IconImage(UnicodeString fnam, TImageList *lst);
+int  add_IconImage(UnicodeString fnam, TVirtualImageList *lst);
 
 UnicodeString get_file_from_cmd(UnicodeString s);
 void SetExtNameToCtrl(UnicodeString fnam, TWinControl *cp, bool nbt_sw = false);

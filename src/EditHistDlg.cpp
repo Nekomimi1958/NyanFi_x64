@@ -51,7 +51,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 
 	FilterEdit->Width = IniFile->ReadIntGen(_T("EditHistFilterWidth"),	200);
 
-	setup_StatusBar(StatusBar1);
+	StatusBar1->Font->Assign(SttBarFont);
 	StatusBar1->Panels->Items[0]->Width = StatusBar1->ClientWidth;
 	StatusBar1->Visible = false;
 
@@ -342,7 +342,7 @@ void __fastcall TEditHistoryDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TSta
 	UnicodeString lbuf = Panel->Text;
 	cv->Font->Color = col_fgSttBar;
 	cv->TextOut(rc.Left + 2, rc.Top, split_pre_tab(lbuf));
-	if (!lbuf.IsEmpty()) cv->TextOut(rc.Right - cv->TextWidth(lbuf) - ScaledInt(20, this), rc.Top, lbuf);
+	if (!lbuf.IsEmpty()) cv->TextOut(rc.Right - cv->TextWidth(lbuf) - SCALED_THIS(20), rc.Top, lbuf);
 }
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::SetSttBar()
@@ -785,7 +785,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 		}
 		cv->Font->Color = col_fg;
 
-		int xp = Rect.Left + ScaledInt(4, this);
+		int xp = Rect.Left + SCALED_THIS(4);
 		int yp = Rect.Top + get_TopMargin2(cv);
 
 		TColor col_x = get_ExtColor(fp->f_ext);
@@ -795,14 +795,14 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 		if (ACol==1) {
 			//アイコン
 			if (IconMode==1 || (isRepo && IconMode>0)) {
-				draw_SmallIcon(fp, cv, xp, std::max(yp + (cv->TextHeight("Q") - ScaledInt(16, this))/2, 0), false, this);
-				xp += ScaledInt(20);
+				draw_SmallIcon(fp, cv, xp, std::max(yp + (cv->TextHeight("Q") - SCALED_THIS(16))/2, 0), false, this);
+				xp += SCALED_THIS(20);
 			}
 		}
 
 		//最近使ったファイル一覧/栞マーク一覧
 		if (isRecent || isMark) {
-			int mgn = ScaledInt(4);
+			int mgn = SCALED_THIS(4);
 			//ファイル名
 			if (ACol==1) {
 				cv->Font->Color = col_f;
@@ -826,7 +826,7 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 			}
 			//場所
 			else if (ACol==4) {
-				PathNameOut(lbuf, cv, xp, yp, gp->ColWidths[ACol] - ScaledInt(8));
+				PathNameOut(lbuf, cv, xp, yp, gp->ColWidths[ACol] - SCALED_THIS(8));
 			}
 			else {
 				cv->TextRect(Rect, xp, yp, lbuf);
@@ -836,12 +836,12 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 		else if	(isRepo) {
 			if (ACol==1) {
 				cv->Font->Color = col_f;
-				UnicodeString bnam = minimize_str(fp->b_name, cv, Rect.Right - xp - ScaledInt(4), OmitEndOfName);
+				UnicodeString bnam = minimize_str(fp->b_name, cv, Rect.Right - xp - SCALED_THIS(4), OmitEndOfName);
 				cv->TextOut(xp, yp, bnam);
 			}
 			//場所
 			else if (ACol==3) {
-				PathNameOut(lbuf, cv, xp, yp, gp->ColWidths[ACol] - ScaledInt(8));
+				PathNameOut(lbuf, cv, xp, yp, gp->ColWidths[ACol] - SCALED_THIS(8));
 			}
 			//コミット
 			else if (ACol==4) {
@@ -852,16 +852,16 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 					for (int i=0; i<b_buf.Length; i++) {
 						UnicodeString ss = Trim(b_buf[i]);
 						if (remove_top_text(ss, "tag: ")) {
-							draw_GitTag(cv, xp, yp, ss, ScaledInt(4));
+							draw_GitTag(cv, xp, yp, ss, SCALED_THIS(4));
 						}
 						else {
 							if (remove_top_text(ss, HEAD_Mark)) out_TextEx(cv, xp, yp, HEAD_Mark, col_GitHEAD);
-							out_TextEx(cv, xp, yp, ss, col_bgList, col_GitBra, ScaledInt(8));
+							out_TextEx(cv, xp, yp, ss, col_bgList, col_GitBra, SCALED_THIS(8));
 						}
 					}
 				}
 				TRect rc = Rect; rc.Left = xp;
-				cv->TextRect(rc, xp, yp, minimize_str(lbuf, cv, rc.Width() - ScaledInt(4), true));
+				cv->TextRect(rc, xp, yp, minimize_str(lbuf, cv, rc.Width() - SCALED_THIS(4), true));
 			}
 			else {
 				cv->TextRect(Rect, xp, yp, lbuf);

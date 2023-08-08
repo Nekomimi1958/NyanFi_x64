@@ -67,7 +67,7 @@ void __fastcall TExTxtViewer::FormShow(TObject *Sender)
 
 	//î•ñƒwƒbƒ_
 	TxtSttHeader->Align = TxtSttIsBottom? alBottom : alTop;
-	setup_StatusBar(TxtSttHeader, ViewHdrFont);
+	TxtSttHeader->Font->Assign(ViewHdrFont);
 
 	set_UsrScrPanel(TxtViewScrPanel);
 
@@ -174,7 +174,7 @@ void __fastcall TExTxtViewer::AdjustHdrWidth()
 {
 	TCanvas *cv = TxtSttHeader->Canvas;
 	cv->Font->Assign(TxtSttHeader->Font);
-	int s_12 = ScaledInt(12, this);
+	int s_12 = SCALED_THIS(12);
 	TxtSttHeader->Panels->Items[1]->Width = cv->TextWidth(TxtSttHeader->Panels->Items[1]->Text) + s_12;
 	TxtSttHeader->Panels->Items[2]->Width = cv->TextWidth(TxtSttHeader->Panels->Items[2]->Text) + s_12;
 	TxtSttHeader->Panels->Items[3]->Width = cv->TextWidth(TxtSttHeader->Panels->Items[3]->Text) + s_12;
@@ -786,7 +786,7 @@ void __fastcall TExTxtViewer::WebSearchActionUpdate(TObject *Sender)
 void __fastcall TExTxtViewer::PopWebSearchItemMeasureItem(TObject *Sender, TCanvas *ACanvas,
 	int &Width, int &Height)
 {
-	Width = ACanvas->TextWidth(PopWebSearchItem->Caption) + ScaledInt(32, this);
+	Width = ACanvas->TextWidth(PopWebSearchItem->Caption) + SCALED_THIS(32);
 }
 
 //---------------------------------------------------------------------------

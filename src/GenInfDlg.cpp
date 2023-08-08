@@ -209,7 +209,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)lp)->SetFocus();
 
 	//ステータスバー
-	setup_StatusBar(StatusBar1);
+	StatusBar1->Font->Assign(SttBarFont);
 	set_SttBarPanelWidth(StatusBar1, 0, 21 + IntToStr(GenInfoList->Count).Length() * 3);
 												//"項目: nnn  -  nnn    選択: nnn"
 	set_SttBarPanelWidth(StatusBar1, 1, "UTF-16(BE) BOM付");
@@ -598,8 +598,8 @@ void __fastcall TGeneralInfoDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TSta
 	UnicodeString lbuf = Panel->Text;
 	int yp = (Rect.Height() - abs(cv->Font->Height)) / 2;
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + ScaledInt(2, this), yp, split_pre_tab(lbuf));
-	if (!lbuf.IsEmpty()) cv->TextOut(Rect.Right - cv->TextWidth(lbuf) - ScaledInt(4, this), yp, lbuf);
+	cv->TextOut(Rect.Left + SCALED_THIS(2), yp, split_pre_tab(lbuf));
+	if (!lbuf.IsEmpty()) cv->TextOut(Rect.Right - cv->TextWidth(lbuf) - SCALED_THIS(4), yp, lbuf);
 }
 
 //---------------------------------------------------------------------------

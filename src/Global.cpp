@@ -2721,7 +2721,6 @@ void InitializeListGrid(TStringGrid *gp,
 {
 	gp->Color = col_bgList;
 	gp->Font->Assign(font? font : ListFont);
-	gp->Font->Size = ScaledInt(gp->Font->Size, gp);
 	gp->DefaultRowHeight = get_FontHeight(gp->Font, ListInterLn);
 }
 //---------------------------------------------------------------------------
@@ -2733,7 +2732,6 @@ void InitializeListHeader(THeaderControl *hp,
 {
 	hp->DoubleBuffered = true;
 	hp->Font->Assign(font? font : LstHdrFont);
-	hp->Font->Size = ScaledInt(hp->Font->Size, hp);
 	hp->Height = get_FontHeight(hp->Font, 6);
 
 	UnicodeString s = hdr;
@@ -5966,7 +5964,7 @@ void set_ListBoxItemHi(
 	TFont *font,	//フォント			(default = NULL : Application->DefaultFont)
 	bool with_ico)	//アイコンを表示	(default = false)
 {
-	AssignScaledFont(lp->Font, (font? font : Application->DefaultFont), lp);
+	lp->Font->Assign(font? font : Application->DefaultFont);
 	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
 }
@@ -5976,7 +5974,7 @@ void set_ListBoxItemHi(
 	TFont *font,	//フォント			(default = NULL : Application->DefaultFont)
 	bool with_ico)	//アイコンを表示	(default = false)
 {
-	AssignScaledFont(lp->Font, (font? font : Application->DefaultFont), lp);
+	lp->Font->Assign(font? font : Application->DefaultFont);
 	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
 }
@@ -5993,7 +5991,6 @@ void set_StdListBox(
 	if (tag!=0) lp->Tag = tag;
 	lp->Color = col_bgList;
 	lp->Font->Assign(font? font : ListFont);
-	lp->Font->Size = ScaledInt(lp->Font->Size, lp);
 	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
 }
@@ -6007,7 +6004,6 @@ void set_StdListBox(
 	if (tag!=0) lp->Tag = tag;
 	lp->Color = col_bgList;
 	lp->Font->Assign(font? font : ListFont);
-	lp->Font->Size = ScaledInt(lp->Font->Size, lp);
 	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
 }
@@ -6020,7 +6016,6 @@ void setup_ToolBar(
 	bool upd_sw)	//true = ボタンアクションを更新	(default = false)
 {
 	tb->Font->Assign(ToolBarFont);
-	tb->Font->Size = ScaledInt(ToolBarFont->Size, tb);
 	tb->Font->Color 	   = col_fgTlBar;
 	tb->GradientStartColor = col_bgTlBar1;
 	tb->GradientEndColor   = col_bgTlBar2;
@@ -6031,13 +6026,11 @@ void setup_ToolBar(
 		if (class_is_Edit(cp)) {
 			TEdit *ep = (TEdit*)cp;
 			ep->Font->Assign(DialogFont);
-			ep->Font->Size = ScaledInt(ep->Font->Size, cp);
 			ep->Text = EmptyStr;
 		}
 		else if (class_is_ComboBox(cp)) {
 			TComboBox *bp = (TComboBox*)cp;
 			bp->Font->Assign(DialogFont);
-			bp->Font->Size = ScaledInt(bp->Font->Size, cp);
 		}
 		else if (cp->ClassNameIs("TSplitter")) {
 			((TSplitter*)cp)->Color = Mix2Colors(col_bgTlBar1, col_bgTlBar2);
@@ -6049,18 +6042,6 @@ void setup_ToolBar(
 }
 
 //---------------------------------------------------------------------------
-//ステータスバーの設定
-//---------------------------------------------------------------------------
-void setup_StatusBar(
-	TStatusBar *sb,
-	TFont *font)	//フォント	(default = NULL : SttBarFont)
-{
-	sb->Font->Assign(font? font : SttBarFont);
-	sb->Font->Size	 = ScaledInt(sb->Font->Size, sb);
-	sb->ClientHeight = get_FontHeight(sb->Font, 4, 4);
-}
-
-//---------------------------------------------------------------------------
 //パネルの設定
 //---------------------------------------------------------------------------
 void setup_Panel(
@@ -6068,7 +6049,6 @@ void setup_Panel(
 	TFont *font)	//フォント	(default = NULL : DialogFont)
 {
 	pp->Font->Assign(font? font : DialogFont);
-	pp->Font->Size   = ScaledInt(pp->Font->Size, pp);
 	pp->ClientHeight = get_FontHeight(pp->Font, 4, 4);
 }
 
@@ -6077,7 +6057,7 @@ void setup_Panel(
 //---------------------------------------------------------------------------
 void set_UsrScrPanel(UsrScrollPanel *sp)
 {
-	int std_wd	= ScaledInt(::GetSystemMetrics(SM_CXVSCROLL), sp->ParentPanel);
+	int std_wd  = ::GetSystemMetricsForDpi(SM_CXVSCROLL, sp->ParentPanel->CurrentPPI);
 	int knob_wd = std_wd;
 
 	sp->KnobImgBuffV = NULL;
@@ -7109,6 +7089,44 @@ int add_IconImage(
 	}
 
 	return (icon? lst->AddIcon(icon) : -1);
+}
+
+//---------------------------------------------------------------------------
+int add_IconImage(
+	UnicodeString fnam,		//ファイル名[,インデックス]  (環境パスに対応)
+	TVirtualImageList *lst)
+{
+	if (fnam.IsEmpty()) return -1;
+
+	TIcon *icon = NULL;
+	fnam = to_absolute_name(get_actual_name(fnam));
+	if (file_exists_ico(fnam)) {
+		int usr_idx = UsrIcoList->IndexOf(fnam);
+		if (usr_idx==-1) {
+			HICON hIcon = get_file_SmallIcon(fnam);
+			if (hIcon) {
+				icon = new TIcon();
+				icon->Handle = hIcon;
+				UsrIcoList->AddObject(fnam, (TObject*)icon);
+			}
+		}
+		else {
+			icon = (TIcon*)UsrIcoList->Objects[usr_idx];
+		}
+	}
+
+	if (icon) {
+		TImageCollection *cp = (TImageCollection *)lst->ImageCollection;
+		TImageCollectionItem *ip = cp->Images->Add();
+		std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
+		bmp->Assign(icon);
+		TImageCollectionSourceItem *sp = ip->SourceImages->Add();
+        sp->Image->Assign(bmp.get());
+		return cp->Images->Count - 1;
+	}
+	else {
+		return -1;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -14185,9 +14203,9 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 	//ズーム
 	else if ((lp->Tag & LBTAG_OPT_ZOOM) && contained_wd_i(_T("ZoomIn|ZoomOut"), cmd)) {
 		int d_sz = std::min(prm.ToIntDef(1), 12);
-		int z_sz = USAME_TI(cmd, "ZoomIn") ? std::min(UnscaledInt(lp->Font->Size, lp) + d_sz, MAX_FNTZOOM_SZ)
-										   : std::max(UnscaledInt(lp->Font->Size, lp) - d_sz, MIN_FNTZOOM_SZ);
-		lp->Font->Size = ScaledInt(z_sz, lp);
+		int z_sz = USAME_TI(cmd, "ZoomIn") ? std::min(lp->Font->Size + d_sz, MAX_FNTZOOM_SZ)
+										   : std::max(lp->Font->Size - d_sz, MIN_FNTZOOM_SZ);
+		lp->Font->Size = z_sz;
 		lp->ItemHeight = get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
 		zoomed = true;
 	}
@@ -14200,7 +14218,7 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 		bool x_sw = remove_top_s(prm, '^');
 		if (!prm.IsEmpty()) {
 			int f_sz = std::max(std::min(prm.ToIntDef(l_font->Size), MAX_FNTZOOM_SZ), MIN_FNTZOOM_SZ);
-			lp->Font->Size = ScaledInt((x_sw && lp->Font->Size==ScaledInt(f_sz))? l_font->Size : f_sz, lp);
+			lp->Font->Size = (x_sw && lp->Font->Size==f_sz)? l_font->Size : f_sz;
 			lp->ItemHeight = get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
 			zoomed = true;
 		}

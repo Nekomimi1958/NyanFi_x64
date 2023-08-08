@@ -59,7 +59,7 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 	BranchPanel->Width = IniFile->ReadIntGen(_T("GitViewBranchWidth"),	200);
 	RL_Panel->Height   = IniFile->ReadIntGen(_T("GitViewDiffHeight"),	120);
 
-	AssignScaledFont(FindCommitEdit->Font, DialogFont, this);
+	FindCommitEdit->Font->Assign(DialogFont);
 	FindCommitEdit->Width = IniFile->ReadIntGen(_T("GitViewFindWidth"),	200);
 
 	ShowRBranchAction->Checked  = IniFile->ReadBoolGen(_T("GitViewShowRBranch"),true);
@@ -697,8 +697,8 @@ void __fastcall TGitViewer::BranchListBoxDrawItem(TWinControl *Control, int Inde
 	cv->FillRect(Rect);
 	if (flag & GIT_FLAG_BLANK) return;
 
-	int xp = Rect.Left + ScaledInt(4, this);
-	int yp = Rect.Top  + ScaledInt(2, this);
+	int xp = Rect.Left + SCALED_THIS(4);
+	int yp = Rect.Top  + SCALED_THIS(2);
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	//ƒwƒbƒ_
 	if (flag & GIT_FLAG_HDRLN) {
@@ -811,12 +811,12 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 		max_h_wd = std::max(max_h_wd, get_TextWidth(cv, UnicodeString().sprintf(_T("%x"), i), is_irreg));
 	}
 
-	int s_4 = ScaledInt(4, this);
-	int s_8 = ScaledInt(8, this);
+	int s_4 = SCALED_THIS(4);
+	int s_8 = SCALED_THIS(8);
 
 	git_rec *gp = (git_rec *)lp->Items->Objects[Index];
 	int xp = Rect.Left + s_4;
-	int yp = Rect.Top  + ScaledInt(2, this);
+	int yp = Rect.Top  + SCALED_THIS(2);
 
 	if (USAME_TS(gp->graph, "#")) {
 		cv->Font->Color = col_LineNo;
@@ -961,8 +961,8 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 	cv->Brush->Color = lp->Color;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4, this);
-	int yp = Rect.Top  + ScaledInt(2, this);
+	int xp = Rect.Left + SCALED_THIS(4);
+	int yp = Rect.Top  + SCALED_THIS(2);
 	bool is_irreg = IsIrregularFont(cv->Font);
 
 	UnicodeString lbuf = lp->Items->Strings[Index];

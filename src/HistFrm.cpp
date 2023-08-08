@@ -42,7 +42,7 @@ void __fastcall THistForm::FormHide(TObject *Sender)
 		pp->Constraints->MinHeight = 1;
 		pp->Constraints->MaxHeight = 1;
 		NyanFiForm->SideDockPanel->Height	 = NyanFiForm->SideDockPanel->Height - CLHI_HISTOGRAM;
-		NyanFiForm->SideDockSplitter->Height = (LoupeForm->Visible && !LoupeForm->Floating)? ScaledInt(SplitterWidth2, this) : 0;
+		NyanFiForm->SideDockSplitter->Height = (LoupeForm->Visible && !LoupeForm->Floating)? SCALED_THIS(SplitterWidth2) : 0;
 		ShowHistogram = false;
 	}
 }

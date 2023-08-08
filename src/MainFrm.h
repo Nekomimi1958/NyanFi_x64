@@ -46,6 +46,9 @@
 #include "usr_hintwin.h"
 #include "Global.h"
 #include "task_thread.h"
+#include <Vcl.BaseImageCollection.hpp>
+#include <Vcl.ImageCollection.hpp>
+#include <Vcl.VirtualImageList.hpp>
 
 //---------------------------------------------------------------------------
 #define EXTMENU_BASE	1000
@@ -2557,11 +2560,6 @@ private:	// ユーザー宣言
 	void __fastcall add_FTPLogMsg(UnicodeString msg = EmptyStr);
 	UnicodeString __fastcall DownloadFtpCore(file_rec *fp, UnicodeString dst_dir = EmptyStr);
 	bool __fastcall UploadFtpCore(file_rec *fp);
-
-	int  __fastcall ScaledThis(int n)
-	{
-		return (n * CurrentPPI / DEFAULT_PPI);
-	}
 
 public:		// ユーザー宣言
 	//CurPath プロパティ

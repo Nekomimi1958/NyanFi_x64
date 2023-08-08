@@ -35,7 +35,7 @@ void __fastcall TAskRepDlg::FormShow(TObject *Sender)
 	RepListBox->Color = col_bgList;
 	ListScrPanel->UpdateKnob();
 
-	setup_StatusBar(StatusBar1, ViewHdrFont);
+	StatusBar1->Font->Assign(ViewHdrFont);
 	StatusBar1->Panels->Items[0]->Text = yen_to_delimiter(FileName).cat_sprintf(_T(" - %uçs %uåÖ"), FoundLine, FoundPos);
 	StatusBar1->Panels->Items[1]->Text = UnicodeString().sprintf(_T(" File %u/%u"), FileIndex + 1, FileCount);
 
@@ -58,7 +58,7 @@ void __fastcall TAskRepDlg::FormDestroy(TObject *Sender)
 void __fastcall TAskRepDlg::FormResize(TObject *Sender)
 {
 	RepListBox->Invalidate();
-	StatusBar1->Panels->Items[0]->Width = ClientWidth - ScaledInt(120);
+	StatusBar1->Panels->Items[0]->Width = ClientWidth - SCALED_THIS(120);
 }
 
 //---------------------------------------------------------------------------
@@ -76,7 +76,7 @@ void __fastcall TAskRepDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPa
 	cv->Brush->Color = col_bgInfHdr;
 	cv->FillRect(Rect);
 	cv->Font->Color  = col_fgInfHdr;
-	cv->TextOut(Rect.Left + ScaledInt(2), Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + SCALED_THIS(2), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -92,7 +92,7 @@ void __fastcall TAskRepDlg::RepListBoxDrawItem(TWinControl *Control,
 	cv->FillRect(Rect);
 
 	UnicodeString itmstr = lp->Items->Strings[Index];
-	int xp = Rect.Left + ScaledInt(2);
+	int xp = Rect.Left + SCALED_THIS(2);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	//çsî‘çÜ

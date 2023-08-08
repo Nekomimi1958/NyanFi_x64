@@ -11,12 +11,10 @@ object SplashForm: TSplashForm
   ParentFont = True
   FormStyle = fsStayOnTop
   Position = poScreenCenter
-  Scaled = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnPaint = FormPaint
-  PixelsPerInch = 96
   TextHeight = 15
   object MsgLabel: TLabel
     Left = 10

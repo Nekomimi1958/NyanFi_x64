@@ -33,7 +33,7 @@ void __fastcall TFindDuplDlg::FormShow(TObject *Sender)
 	ExcSymCheckBox->Checked	 = IniFile->ReadBoolGen(_T("FindDuplExcSym"),	true);
 	ResLinkCheckBox->Checked = IniFile->ReadBoolGen(_T("FindDuplResLink"));
 
-	ClientHeight = TopPanel->Height + (OptPanel->Visible? OptPanel->Height : ScaledInt(16, this)) + BottomPanel->Height;
+	ClientHeight = TopPanel->Height + (OptPanel->Visible? OptPanel->Height : SCALED_THIS(16)) + BottomPanel->Height;
 
 	Caption = OptPanel->Visible? "重複ファイルの検索" : "重複ファイルの検索 (左右 - 選択)";
 

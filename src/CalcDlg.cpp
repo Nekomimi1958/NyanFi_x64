@@ -63,9 +63,9 @@ void __fastcall TCalculator::FormShow(TObject *Sender)
 	SetDarkWinTheme(this);
 
 	CalcFont->Color = get_TextColor();
-	AssignScaledFont(LineEdit->Font,	 CalcFont,	  this);
-	AssignScaledFont(HistComboBox->Font, CalcFont,	  this);
-	AssignScaledFont(ToolBar1->Font,	 ToolBarFont, this);
+	LineEdit->Font->Assign(CalcFont);
+	HistComboBox->Font->Assign(CalcFont);
+	ToolBar1->Font->Assign(ToolBarFont);
 
 	int hi = LineEdit->Height + HistComboBox->Height + ToolBar1->Height;
 	Constraints->MinHeight = hi + Height - ClientHeight;

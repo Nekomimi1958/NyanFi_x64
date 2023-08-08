@@ -76,7 +76,7 @@ void __fastcall TJoinTextDlg::SrcFileListBoxDrawItem(TWinControl *Control, int I
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 	cv->Font->Color = get_TextColor(State.Contains(odSelected));
-	cv->TextOut(Rect.Left + ScaledInt(4, this), Rect.Top  + get_TopMargin(cv), lp->Items->Strings[Index]);
+	cv->TextOut(Rect.Left + SCALED_THIS(4), Rect.Top  + get_TopMargin(cv), lp->Items->Strings[Index]);
 }
 
 //---------------------------------------------------------------------------

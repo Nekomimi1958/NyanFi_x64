@@ -39,7 +39,7 @@ void __fastcall TInspectForm::FormShow(TObject *Sender)
 	UnsignedAction->Checked  = IniFile->ReadBoolGen(_T("InspectUnsigned"));
 	BigEndianAction->Checked = IniFile->ReadBoolGen(_T("InspectBigEndian"));
 
-	setup_StatusBar(InsStatusBar,ViewerFont);
+	InsStatusBar->Font->Assign(ViewerFont);
 
 	TStringGrid *gp = InspectGrid;
 	InitializeListGrid(gp, ViewerFont);
@@ -97,7 +97,7 @@ void __fastcall TInspectForm::InsStatusBarDrawPanel(TStatusBar *StatusBar, TStat
 	cv->Brush->Color = col_bgInfHdr;
 	cv->FillRect(Rect);
 	cv->Font->Color = col_fgInfHdr;
-	cv->TextOut(Rect.Left + ScaledInt(2, this), Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + SCALED_THIS(2), Rect.Top, Panel->Text);
 }
 //---------------------------------------------------------------------------
 void __fastcall TInspectForm::InspectHeaderDrawSection(THeaderControl *HeaderControl,
@@ -288,7 +288,7 @@ void __fastcall TInspectForm::InspectGridDrawCell(TObject *Sender, int ACol, int
 	TStringGrid *gp = (TStringGrid*)Sender;
 	TCanvas *cv = gp->Canvas;
 	cv->Font->Assign(gp->Font);
-	int xp = Rect.Left + ScaledInt(4, this);
+	int xp = Rect.Left + SCALED_THIS(4);
 	int yp = Rect.Top  + get_TopMargin2(cv);
 	UnicodeString cellstr = gp->Cells[ACol][ARow];
 
@@ -321,7 +321,7 @@ void __fastcall TInspectForm::InspectGridDrawCell(TObject *Sender, int ACol, int
 	}
 
 	//‹æØ‚èü
-	cv->Pen->Width = ScaledInt(1, this);
+	cv->Pen->Width = SCALED_THIS(1);
 	cv->Pen->Color = SelectWorB(cv->Brush->Color, 0.3);
 	cv->MoveTo(Rect.Right, Rect.Top);  cv->LineTo(Rect.Right, Rect.Bottom);
 }

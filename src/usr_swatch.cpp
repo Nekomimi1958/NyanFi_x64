@@ -2,6 +2,7 @@
 // スウォッチブック・パネル												//
 //																		//
 //----------------------------------------------------------------------//
+#include "usr_scale.h"
 #include "usr_str.h"
 #include "usr_file_ex.h"
 #include "usr_file_inf.h"
@@ -118,13 +119,14 @@ void DrawSwatchbook(
 	cv->Brush->Color = TColor(RGB(64,64,64));
 	cv->FillRect(rc);
 
-	int wd = (rc.Width() - 20) / 16;
-	int hi = (rc.Height() - 16) / 8;
+	int wd = ((rc.Width() - ScaledInt(8)) / 16) - 1;
+	int hi = ((rc.Height() - ScaledInt(8)) / 8) - 1;
+	int s_4 = ScaledInt(4);
 
 	TRect trc = Rect(0,0, wd, hi);
 	for (int i=0; i<MAX_SWATCH_COLOR; i++) {
-		int x = rc.Left + 4 + (wd + 1) * (i%16);
-		int y = rc.Top  + 4 + (hi + 1) * (i/16);
+		int x = rc.Left + s_4 + (wd + 1) * (i%16);
+		int y = rc.Top  + s_4 + (hi + 1) * (i/16);
 		trc.Location = Point(x, y);
 		cv->Brush->Color = (TColor)(tmp_sw? SWATCH_ColBuff[i] : SWATCH_ColTable[i]);
 		cv->FillRect(trc);
@@ -140,7 +142,6 @@ __fastcall UsrSwatchPanel::UsrSwatchPanel(TComponent* Owner) : TPanel(Owner)
 	Align	   = alNone;
 	Width	   = 248;
 	Height	   = 128;
-
 	BevelOuter = bvNone;
 
 	StyleElements >> seClient;
@@ -169,7 +170,7 @@ void __fastcall UsrSwatchPanel::SetPanelSize16x8(int tile_size)
 	Anchors.Clear();
 	Anchors << akRight << akBottom;
 
-	ClientWidth  = (tile_size + 1) * 16 + 8;
-	ClientHeight = (tile_size + 1) * 8  + 8;
+	ClientWidth  = ScaledInt(tile_size * 16 + 8, this) + 16;
+	ClientHeight = ScaledInt(tile_size * 8  + 8, this) + 8;
 }
 //---------------------------------------------------------------------------

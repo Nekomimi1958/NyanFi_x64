@@ -199,8 +199,8 @@ void __fastcall TBitmapForm::SetMapWidth(int w)
 	MapWidth = w;
 
 	Constraints->MinWidth
-		= FileMapPanel->Width + MapWidth + (Width - ClientWidth) + ScaledInt(::GetSystemMetrics(SM_CXVSCROLL), this)
-			+ (BorderShape1->Visible? TlWinBorderWidth * 2 : 0) + 12;
+		= FileMapPanel->Width + MapWidth + (Width - ClientWidth) + ::GetSystemMetricsForDpi(SM_CXVSCROLL, CurrentPPI)
+			+ (BorderShape1->Visible? TlWinBorderWidth * 2 : 0) + SCALED_THIS(12);
 
 	Constraints->MaxWidth = Constraints->MinWidth;
 
@@ -259,4 +259,3 @@ void __fastcall TBitmapForm::SetEndAdrActionUpdate(TObject *Sender)
 	((TAction*)Sender)->Enabled = TxtViewer->isContinue;
 }
 //---------------------------------------------------------------------------
-

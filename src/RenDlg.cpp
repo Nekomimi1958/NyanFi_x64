@@ -143,7 +143,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	FbaseRadioGroup->ItemIndex = KeepBsExtCheckBox->Checked? IniFile->ReadIntGen(_T("RenameDlgBaseCh")) : 0;
 	FextRadioGroup->ItemIndex  = KeepBsExtCheckBox->Checked? IniFile->ReadIntGen(_T("RenameDlgExtCh")) : 0;
 
-	setup_StatusBar(StatusBar1);
+	StatusBar1->Font->Assign(SttBarFont);
 
 	if (UnInitializing) return;
 
@@ -394,7 +394,7 @@ void __fastcall TRenameDlg::FormResize(TObject *Sender)
 {
 	TStringGrid *gp = PreviewGrid;
 	gp->ColWidths[1] = 20;
-	int s_wd = ScaledInt(::GetSystemMetrics(SM_CXVSCROLL) + 2, this);	//スクロールバー幅
+	int s_wd = ::GetSystemMetricsForDpi(SM_CXVSCROLL, CurrentPPI) + SCALED_THIS(2);	//スクロールバー幅
 	int wd	 = (gp->ClientWidth - s_wd - gp->ColWidths[1])/2;
 	gp->ColWidths[0] = wd;
 	gp->ColWidths[2] = wd;
@@ -425,7 +425,7 @@ void __fastcall TRenameDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPa
 	cv->Brush->Color = IsDarkMode? col_bgSttBar : scl_BtnFace;
 	cv->FillRect(Rect);
 	cv->Font->Color = (ExistErr && Panel->Index==0)? col_Error : IsDarkMode? col_fgSttBar : scl_BtnText;
-	cv->TextOut(Rect.Left + ScaledInt(2, this), Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + SCALED_THIS(2), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -1441,10 +1441,10 @@ void __fastcall TRenameDlg::PreviewGridDrawCell(TObject *Sender, int ACol, int A
 		else if (rel_str.IsEmpty() || USAME_TS(rel_str, "×"))
 			cv->Font->Color = col_Error;
 	}
-	cell_str = minimize_str(cell_str, cv, Rect.Width() - ScaledInt(4, this), OmitEndOfName);
+	cell_str = minimize_str(cell_str, cv, Rect.Width() - SCALED_THIS(4), OmitEndOfName);
 
 	cv->FillRect(Rect);
-	cv->TextRect(Rect, Rect.Left + ScaledInt(2, this), Rect.Top + ScaledInt(2, this), cell_str);
+	cv->TextRect(Rect, Rect.Left + SCALED_THIS(2), Rect.Top + SCALED_THIS(2), cell_str);
 
 	if(State.Contains(gdFocused)) cv->DrawFocusRect(Rect);
 }
@@ -1486,7 +1486,7 @@ void __fastcall TRenameDlg::CnvCharListBoxDrawItem(TWinControl *Control, int Ind
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int x = Rect.Left + ScaledInt(4, this);
+	int x = Rect.Left + SCALED_THIS(4);
 	int y = Rect.Top  + get_TopMargin(cv);
 
 	SetHighlight(cv, State.Contains(odSelected));
@@ -1595,7 +1595,7 @@ void __fastcall TRenameDlg::AssRenListBoxDrawItem(TWinControl *Control, int Inde
 	TCheckListBox *lp = (TCheckListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + ScaledInt(2, this);
+	int xp = Rect.Left + SCALED_THIS(2);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	int w_x = 50;

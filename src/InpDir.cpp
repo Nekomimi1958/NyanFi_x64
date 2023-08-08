@@ -34,7 +34,7 @@ void __fastcall TInpDirDlg::FormShow(TObject *Sender)
 	ClientHeight = TopPanel->Height + BottomPanel->Height;
 	Constraints->MaxHeight = Height;
 	Constraints->MinHeight = Height;
-	Constraints->MinWidth  = ScaledInt(360, this);
+	Constraints->MinWidth  = SCALED_THIS(360);
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 	CmpByKeyCheckBox->Checked = IniFile->ReadBoolGen(_T("InpDirDlgCmpByKey"));

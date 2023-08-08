@@ -3,6 +3,7 @@
 //  グローバル(ダークモード対応)										//
 //----------------------------------------------------------------------//
 #include "usr_scale.h"
+#include "usr_str.h"
 #include "usr_msg.h"
 #include "GlobalDark.h"
 
@@ -234,7 +235,7 @@ void SetDarkWinTheme(
 	TColor fg_txt   = get_TextColor();
 
 	std::unique_ptr<TFont> def_font(new TFont());
-	AssignScaledFont(def_font.get(), Application->DefaultFont, wp);
+	def_font->Assign(Application->DefaultFont);
 	TWinControl *pp = wp->Parent;
 	if (pp && pp->ClassNameIs("TToolBar") && (wp->ClassNameIs("TComboBox") || wp->ClassNameIs("TEdit"))) {
 		def_font->Size = ((TToolBar*)pp)->Font->Size;
@@ -296,7 +297,7 @@ void SetDarkWinTheme(
 						lp->Font->Color = fg_label;
 						lp->Caption = cp->Caption;
 						cp->Caption = EmptyStr;
-						lp->Left	= cp->Left + 16;
+						lp->Left	= cp->Left + ScaledInt(16, wp);
 						lp->Top 	= cp->Top + (cp->Height - lp->Height)/2;
 						gp->Items->Strings[i] = EmptyStr;
 						cp->Caption = EmptyStr;
@@ -657,17 +658,19 @@ void draw_SortMark(TCanvas *cv, int x, int y,
 	TColor fg)		//マーク色
 {
 	TPoint mrk[3];
+	int s_3 = ScaledInt(3);
+	int s_6 = s_3 * 2;
 	//▲
 	if (is_asc) {
-		mrk[0] = Point(x,	  y + 3);
-		mrk[1] = Point(x + 6, y + 3);
-		mrk[2] = Point(x + 3, y);
+		mrk[0] = Point(x,	    y + s_3);
+		mrk[1] = Point(x + s_6, y + s_3);
+		mrk[2] = Point(x + s_3, y);
 	}
 	//▼
 	else {
-		mrk[0] = Point(x,	  y);
-		mrk[1] = Point(x + 6, y);
-		mrk[2] = Point(x + 3, y + 3);
+		mrk[0] = Point(x,	    y);
+		mrk[1] = Point(x + s_6, y);
+		mrk[2] = Point(x + s_3, y + s_3);
 	}
 	cv->Pen->Style   = psSolid;
 	cv->Pen->Color	 = fg;
@@ -678,6 +681,23 @@ void draw_SortMark(TCanvas *cv, int x, int y,
 
 //---------------------------------------------------------------------------
 //ボタンにマークを設定
+//---------------------------------------------------------------------------
+void draw_ScaledLine(TCanvas *cv, UnicodeString cmds)
+{
+	TStringDynArray cmdlst = split_strings_semicolon(cmds);
+	for (int i=0; i<cmdlst.Length; i++) {
+        UnicodeString s = cmdlst[i];
+        if (s.IsEmpty()) continue;
+   		WideChar c = split_top_wch(s);
+        int p0 = ScaledInt(get_tkn(s, ",").ToIntDef(0));
+        int p1 = ScaledInt(get_tkn_r(s, ",").ToIntDef(0));
+        switch (c) {
+        case 'W': cv->Pen->Width = p0;  break;
+        case 'M': cv->MoveTo(p0, p1);   break;
+        case 'L': cv->LineTo(p0, p1);   break;
+        }
+    }
+}
 //---------------------------------------------------------------------------
 void set_ButtonMark(TSpeedButton *bp,
 	int id,		//識別子	(default = UBMK_DOWN)
@@ -706,78 +726,20 @@ void set_ButtonMark(TSpeedButton *bp,
 	cv->Pen->Color = fg;
 
 	switch (id) {
-	case UBMK_UP:
-		draw_SortMark(cv, 0, 2, true,  fg);	break;
-	case UBMK_DOWN:
-		draw_SortMark(cv, 0, 2, false, fg);	break;
-
-	case UBMK_BUP:
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 5);  cv->LineTo(4, 2);
-		cv->MoveTo(7, 5);  cv->LineTo(4, 2);
-		break;
-	case UBMK_BDOWN:
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 2);  cv->LineTo(4, 5);
-		cv->MoveTo(7, 2);  cv->LineTo(4, 5);
-		break;
-
-	case UBMK_VUP:
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 7);  cv->LineTo(4, 4);
-		cv->MoveTo(7, 7);  cv->LineTo(4, 4);
-		break;
-	case UBMK_VDOWN:
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 2);  cv->LineTo(4, 5);
-		cv->MoveTo(7, 2);  cv->LineTo(4, 5);
-		break;
-
-	case UBMK_VTOP:
-		cv->Pen->Width = 1;
-		cv->MoveTo(0, 2);  cv->LineTo(9, 2);
-		cv->MoveTo(0, 3);  cv->LineTo(9, 3);
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 7);  cv->LineTo(4, 4);
-		cv->MoveTo(7, 7);  cv->LineTo(4, 4);
-		break;
-	case UBMK_VEND:
-		cv->Pen->Width = 1;
-		cv->MoveTo(0, 7);  cv->LineTo(9, 7);
-		cv->MoveTo(0, 6);  cv->LineTo(9, 6);
-		cv->Pen->Width = 2;
-		cv->MoveTo(1, 2);  cv->LineTo(4, 5);
-		cv->MoveTo(7, 2);  cv->LineTo(4, 5);
-		break;
-
-	case UBMK_HTOP:
-		cv->Pen->Width = 1;
-		cv->MoveTo(4, 1);  cv->LineTo( 4, 14);
-		cv->Pen->Width = 2;
-		cv->MoveTo(6, 7);  cv->LineTo(11,  2);
-		cv->MoveTo(6, 7);  cv->LineTo(11, 12);
-		break;
-	case UBMK_HEND:
-		cv->Pen->Width = 1;
-		cv->MoveTo(11, 1);  cv->LineTo(11, 14);
-		cv->Pen->Width = 2;
-		cv->MoveTo(9, 7);  cv->LineTo(4,  2);
-		cv->MoveTo(9, 7);  cv->LineTo(4, 12);
-		break;
-	case UBMK_LEFT:
-		cv->Pen->Width = 2;
-		cv->MoveTo(6, 7);  cv->LineTo(11,  2);
-		cv->MoveTo(6, 7);  cv->LineTo(11, 12);
-		break;
-	case UBMK_RIGHT:
-		cv->Pen->Width = 2;
-		cv->MoveTo(9, 7);  cv->LineTo(4,  2);
-		cv->MoveTo(9, 7);  cv->LineTo(4, 12);
-		break;
+	case UBMK_UP:	 draw_SortMark(cv, 0, 2, true,  fg);	break;
+	case UBMK_DOWN:	 draw_SortMark(cv, 0, 2, false, fg);	break;
+	case UBMK_BUP:	 draw_ScaledLine(cv, "W2;M1,5;L4,2;M7,5;L4,2");	break;
+	case UBMK_BDOWN: draw_ScaledLine(cv, "W2;M1,2;L4,5;M7,2;L4,5");	break;
+	case UBMK_VUP:	 draw_ScaledLine(cv, "W2;M1,7;L4,4;M7,7;L4,4");	break;
+	case UBMK_VDOWN: draw_ScaledLine(cv, "W2;M1,2;L4,5;M7,2;L4,5");	break;
+	case UBMK_VTOP:	 draw_ScaledLine(cv, "W1;M0,2;L9,2;M0,3;L9,3;W2;M1,7;L4,4;M7,7;L4,4");	break;
+	case UBMK_VEND:	 draw_ScaledLine(cv, "W1;M0,7;L9,7;M0,6;L9,6;W2;M1,2;L4,5;M7,2;L4,5");	break;
+	case UBMK_HTOP:	 draw_ScaledLine(cv, "W1;M4,1;L4,14;W2;M6,7;L11,2;M6,7;L11,12");		break;
+	case UBMK_HEND:	 draw_ScaledLine(cv, "W1;M11,1;L11,14;W2;M9,7;L4,2;M9,7;L4,12");		break;
+	case UBMK_LEFT:	 draw_ScaledLine(cv, "W2;M6,7;L11,2;M6,7;L11,12");	break;
+	case UBMK_RIGHT: draw_ScaledLine(cv, "W2;M9,7;L4,2;M9,7;L4,12");	break;
 	}
 }
-//---------------------------------------------------------------------------
-//ボタンにマークを設定
 //---------------------------------------------------------------------------
 void set_BtnMarkDark(TSpeedButton *bp, int id)
 {
@@ -828,7 +790,7 @@ void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool act
 void draw_MenuSeparator(TCanvas *cv, TRect rc)
 {
 	int yp = rc.Top + rc.Height()/2;
-	int x0 = rc.Left + ScaledInt(::GetSystemMetrics(SM_CYMENU) + 4);
+	int x0 = rc.Left + ::GetSystemMetricsForDpi(SM_CYMENU, GetCurPPI()) + ScaledInt(4);
 	int x1 = rc.Right;
 	cv->Pen->Style = psSolid;
 	cv->Pen->Mode  = pmCopy;

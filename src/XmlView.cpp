@@ -41,9 +41,9 @@ void __fastcall TXmlViewer::FormShow(TObject *Sender)
 
 	XmlTreeView->Items->Clear();
 	XmlTreeView->Color = col_bgList;
-	AssignScaledFont(XmlTreeView->Font, ListFont, this);
+	XmlTreeView->Font->Assign(ListFont);
 
-	setup_StatusBar(StatusBar1);
+	StatusBar1->Font->Assign(SttBarFont);
 
 	Caption = yen_to_delimiter(FileName) + " - XMLビュアー";
 
@@ -424,7 +424,7 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	cv->Pen->Width = 1;
 	cv->Pen->Color = col_HR;
 	rc_s.Right = rc_t.Left;
-	int l_ofs  = rc_s.Left + ScaledInt(11, this);
+	int l_ofs  = rc_s.Left + SCALED_THIS(11);
 	TTreeNode *pp = Node->Parent;
 	while (pp) {
 		if (pp->getNextSibling()) {
@@ -442,8 +442,8 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	if (Node->HasChildren) {
 		cv->Pen->Color	 = col_HR;
 		cv->Brush->Color = col_HR;
-		int w_btn = ScaledInt(11, this);	//ボタンサイズ
-		int xp = rc_s.Right - ScaledInt(w_btn + 5, this);
+		int w_btn = SCALED_THIS(11);	//ボタンサイズ
+		int xp = rc_s.Right - SCALED_THIS(w_btn + 5);
 		int yp = rc_s.Top + (rc_s.Height() - w_btn)/2;
 		if ((xp + w_btn)>=0) {
 			//枠
@@ -462,7 +462,7 @@ void __fastcall TXmlViewer::XmlTreeViewCustomDrawItem(TCustomTreeView *Sender, T
 	else if (Node->Level>0) {
 		cv->Pen->Color = col_HR;
 		int xl = XmlTreeView->Indent * Node->Level + l_ofs - scr_p;
-		int x2 = xl + ScaledInt(8, this);
+		int x2 = xl + SCALED_THIS(8);
 		if (x2>=0) {
 			if (Node->getNextSibling()) {
 				cv->MoveTo(xl, rc_s.Top);
@@ -568,7 +568,7 @@ void __fastcall TXmlViewer::StatusBar1DrawPanel(TStatusBar *StatusBar,
 	cv->Brush->Color = col_bgSttBar;
 	cv->FillRect(Rect);
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + ScaledInt(2, this), Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + SCALED_THIS(2), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------

@@ -264,7 +264,7 @@ void __fastcall TTxtViewer::Clear()
 	MaxLine = 0;
 	ClearDispLine();
 
-	AssignScaledFont(ViewBox->Font, ViewerFont, OwnerForm);
+	ViewBox->Font->Assign(ViewerFont);
 	useFontName = ViewBox->Font->Name;
 	useFontSize = ViewBox->Font->Size;
 
@@ -781,8 +781,8 @@ void __fastcall TTxtViewer::UpdateScr(
 	//ƒtƒHƒ“ƒg
 	useFontName = usr_hl? UserHighlight->ReadKeyStr(_T("FontName")) : ViewerFont->Name;
 	if (useFontName.IsEmpty()) useFontName = ViewerFont->Name;
-	useFontSize = ScaledInt(usr_hl? UserHighlight->ReadKeyInt(_T("FontSize")) : ViewerFont->Size, OwnerForm);;
-	if (useFontSize==0) useFontSize = ScaledInt(ViewerFont->Size, OwnerForm);
+	useFontSize = usr_hl? UserHighlight->ReadKeyInt(_T("FontSize")) : ViewerFont->Size;
+	if (useFontSize==0) useFontSize = ViewerFont->Size;
 	ViewBox->Font->Assign(ViewerFont);
 	ViewBox->Font->Name = useFontName;
 	ViewBox->Font->Size = useFontSize;
@@ -2229,7 +2229,6 @@ void __fastcall TTxtViewer::onRulerPaint(TObject *Sender)
 	cv->Pen->Color = color_fgRuler;
 	cv->Pen->Width = 1;
 	cv->Font->Assign(DialogFont);
-	cv->Font->Size	= ScaledInt(DialogFont->Size, OwnerForm);
 	cv->Font->Color = color_fgRuler;
 	int xp = TopXpos - 1;
 
@@ -4708,7 +4707,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		bool x_sw = remove_top_s(prm, '^');
 		if (!prm.IsEmpty()) {
 			int f_sz = prm.ToIntDef(ViewBox->Font->Size);
-			f_sz = std::max(std::min(f_sz, MAX_FNTZOOM_SZ), MIN_FNTZOOM_SZ);
+			f_sz = std::clamp(f_sz, MIN_FNTZOOM_SZ, MAX_FNTZOOM_SZ);
 			ViewBox->Font->Size = (x_sw && ViewBox->Font->Size==f_sz)? useFontSize : f_sz;
 			SetMetric(true);
 		}

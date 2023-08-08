@@ -69,7 +69,7 @@
         <ProjectType>CppVCLApplication</ProjectType>
         <PackageImports>CloudService;FireDAC;FireDACCommon;FireDACCommonDriver;FireDACIBDriver;FireDACSqliteDriver;inet;RESTBackendComponents;RESTComponents;soapmidas;soaprtl;soapserver;$(PackageImports)</PackageImports>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-        <AllPackageLibs>rtl.lib;vcl.lib;vclimg.lib;vclx.lib;IndySystem.lib;IndyProtocols.lib;IndyCore.lib;xmlrtl.lib</AllPackageLibs>
+        <AllPackageLibs>rtl.lib;vcl.lib;vclimg.lib;vclx.lib;IndySystem.lib;IndyProtocols.lib;IndyCore.lib;xmlrtl.lib;vclwinx.lib;bindengine.lib</AllPackageLibs>
         <_TCHARMapping>wchar_t</_TCHARMapping>
         <Multithreaded>true</Multithreaded>
         <Icon_MainIcon>$(BDS)\bin\cbuilder_PROJECTICON.ico</Icon_MainIcon>
@@ -78,9 +78,10 @@
         <SanitizedProjectName>NyanFi</SanitizedProjectName>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1041</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=15.5.0.0;InternalName=NyanFi;LegalCopyright=2019-2023 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=15.5.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=2画面ファイラー NyanFi (x64);FileVersion=15.5.1.0;InternalName=NyanFi;LegalCopyright=2019-2023 by Nekomimi;LegalTrademarks=;OriginalFilename=NyanFi.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=NyanFi;ProductVersion=15.5.1.0;Comments=</VerInfo_Keys>
         <VerInfo_MajorVer>15</VerInfo_MajorVer>
         <VerInfo_MinorVer>5</VerInfo_MinorVer>
+        <VerInfo_Release>1</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <PackageImports>adortl;appanalytics;bcbie;bcbsmp;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CodeSiteExpressPkg;CustomIPTransport;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXMySQLDriver;DBXSqliteDriver;dsnap;dsnapcon;dsnapxml;FireDACADSDriver;FireDACCommonODBC;FireDACMSAccDriver;FireDACMySQLDriver;FireDACPgDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inetdb;inetdbxpress;rtl;svn;Tee;TeeDB;TeeUI;tethering;vcl;vclactnband;vcldb;vcldsnap;vclFireDAC;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
@@ -132,7 +133,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <FinalOutputDir>.</FinalOutputDir>
-        <LinkPackageImports>rtl.bpi;vcl.bpi;vclimg.bpi;vclx.bpi;IndySystem.bpi;IndyProtocols.bpi;IndyCore.bpi;xmlrtl.bpi</LinkPackageImports>
+        <LinkPackageImports>rtl.bpi;vcl.bpi;vclimg.bpi;vclx.bpi;IndySystem.bpi;IndyProtocols.bpi;IndyCore.bpi;xmlrtl.bpi;vclwinx.bpi;bindengine.bpi</LinkPackageImports>
         <Icon_MainIcon>NyanFi_Icon.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -148,7 +149,7 @@
         <Icon_MainIcon>NyanFi_Icon.ico</Icon_MainIcon>
         <DynamicRTL>false</DynamicRTL>
         <UsePackages>false</UsePackages>
-        <LinkPackageStatics>rtl.lib;vcl.lib;vclimg.lib;vclx.lib;IndySystem.lib;IndyProtocols.lib;IndyCore.lib;xmlrtl.lib</LinkPackageStatics>
+        <LinkPackageStatics>rtl.lib;vcl.lib;vclimg.lib;vclx.lib;IndySystem.lib;IndyProtocols.lib;IndyCore.lib;xmlrtl.lib;vclwinx.lib;bindengine.lib</LinkPackageStatics>
         <Debugger_RunParams>-LD: -RE:\Music</Debugger_RunParams>
     </PropertyGroup>
     <ItemGroup>
@@ -706,9 +707,6 @@
         <CppCompile Include="usr_msg.cpp">
             <BuildOrder>92</BuildOrder>
         </CppCompile>
-        <CppCompile Include="usr_scale.cpp">
-            <BuildOrder>115</BuildOrder>
-        </CppCompile>
         <CppCompile Include="usr_scrpanel.cpp">
             <BuildOrder>93</BuildOrder>
         </CppCompile>
@@ -919,10 +917,34 @@
                 </DeployFile>
                 <DeployFile LocalName=".\NyanFi.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName=".\NyanFi.exe" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\NyanFi.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>NyanFi.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName=".\Win32\Debug\NyanFi.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="HNDPIC_R.CUR" Configuration="Release" Class="ProjectFile"/>
+                <DeployFile LocalName="HNDPIC_R.CUR" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="NyanFi_Icon.ico" Configuration="Release" Class="ProjectFile"/>
+                <DeployFile LocalName="NyanFi_Icon.ico" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="SPUIT_TOOL.CUR" Configuration="Release" Class="ProjectFile"/>
+                <DeployFile LocalName="SPUIT_TOOL.CUR" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>

@@ -237,7 +237,7 @@ void __fastcall TTaskManDlg::TaskGridDrawCell(TObject *Sender, int ACol, int ARo
 	cv->Brush->Color = State.Contains(gdSelected)? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4);
+	int xp = Rect.Left + SCALED_THIS(4);
 	int yp = Rect.Top  + get_TopMargin2(cv);
 	int l_hi = get_FontHeight(gp->Font, ListInterLn);
 

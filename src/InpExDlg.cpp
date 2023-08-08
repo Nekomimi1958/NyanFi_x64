@@ -59,7 +59,7 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 	InputComboBox->Tag	   = (IpuntExMode==INPEX_CRE_DIR || IpuntExMode==INPEX_NEW_TEXTFILE)? EDTAG_REF_CDIR : 0;
 	InputComboBox->Visible = false;
 	NameLabel->Visible	   = false;
-	int r_mgn = ScaledInt(8, this);
+	int r_mgn = SCALED_THIS(8);
 
 	//ComboBox
 	if (IpuntExMode==INPEX_CRE_DIR || IpuntExMode==INPEX_NEW_TEXTFILE || IpuntExMode==INPEX_CLIP_PASTE
@@ -92,16 +92,16 @@ void __fastcall TInputExDlg::FormShow(TObject *Sender)
 	//Edit
 	else {
 		InputEdit->Visible = true;
-		int c_wd = ScaledInt((CustomWidth>0)? CustomWidth : InputEdit->NumbersOnly? 260 : 480, this);
+		int c_wd = SCALED_THIS((CustomWidth>0)? CustomWidth : InputEdit->NumbersOnly? 260 : 480);
 		int l_wd = Canvas->TextWidth(InputEdit->EditLabel->Caption);
-		ClientWidth = std::max(c_wd, l_wd + ScaledInt(70, this));
-		InputEdit->Left  = l_wd + ScaledInt(12, this);
+		ClientWidth = std::max(c_wd, l_wd + SCALED_THIS(70));
+		InputEdit->Left  = l_wd + SCALED_THIS(12);
 		InputEdit->Width = ClientWidth - InputEdit->Left - r_mgn;
 	}
 
 	//表示位置を調整
 	TPoint p;
-	TRect tmp_rc = BoundsRect; tmp_rc.SetHeight(ScaledInt(120, this));
+	TRect tmp_rc = BoundsRect; tmp_rc.SetHeight(SCALED_THIS(120));
 	if (Screen->ActiveForm==Application->MainForm && StartsText("ファンクションキー", Caption)) {
 		int idx = (extract_int_def(InputEdit->EditLabel->Caption, 1) - 1) / 4;
 		TControl *cp = Application->MainForm;

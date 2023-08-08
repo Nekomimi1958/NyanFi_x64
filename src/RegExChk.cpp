@@ -69,7 +69,7 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 	ttFont->Assign(ViewerFont);
 	ttFont->Size  = DialogFont->Size;
 	ttFont->Color = col_fgList;
-	AssignScaledFont(ObjMemo->Font, ttFont.get(), this);
+	ObjMemo->Font->Assign(ttFont.get());
 	set_ListBoxItemHi(ResListBox,	ttFont.get());
 	set_ListBoxItemHi(ReferListBox, ttFont.get());
 

@@ -124,7 +124,7 @@ void __fastcall TDistributionDlg::FormShow(TObject *Sender)
 	PrvSortMode = IniFile->ReadIntGen(_T("DistrDlgSortMode"));
 	LastDistDir = IniFile->ReadStrGen(_T("DistrDlgLastDir"),	CurPathName);
 
-	setup_StatusBar(StatusBar1);
+	StatusBar1->Font->Assign(SttBarFont);
 
 	UserModule->InitializeListBox(RegListBox);
 	AssignRegListBox();
@@ -219,7 +219,7 @@ void __fastcall TDistributionDlg::StatusBar1DrawPanel(TStatusBar *StatusBar,
 	cv->Brush->Color = IsDarkMode? col_bgSttBar : scl_BtnFace;
 	cv->FillRect(Rect);
 	cv->Font->Color = IsDarkMode? col_fgSttBar : scl_BtnText;
-	cv->TextOut(Rect.Left + ScaledInt(2, this), Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + SCALED_THIS(2), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -449,7 +449,7 @@ void __fastcall TDistributionDlg::RegListBoxDrawItem(TWinControl *Control, int I
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4, this);
+	int xp = Rect.Left + SCALED_THIS(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 	cv->Font->Color = get_TextColor(State.Contains(odSelected));
 	cv->TextOut(xp, yp, cur_buf[0]);	xp += w_tit + 8;
@@ -567,7 +567,7 @@ void __fastcall TDistributionDlg::ListListBoxDrawItem(TWinControl *Control, int 
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4, this);
+	int xp = Rect.Left + SCALED_THIS(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	cv->Font->Color = get_TextColor(State.Contains(odSelected));
@@ -600,7 +600,7 @@ void __fastcall TDistributionDlg::PrvListBoxDrawItem(TWinControl *Control, int I
 	TListBox *lp = (TListBox*)Control;
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
-	int xp = Rect.Left + ScaledInt(4, this);
+	int xp = Rect.Left + SCALED_THIS(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	SetHighlight(cv, State.Contains(odSelected));

@@ -91,7 +91,7 @@ void __fastcall UsrScrollPanel::InitializePanel()
 
 	OnRButtonUp  = NULL;
 
-	KnobWidth = ScaledInt(::GetSystemMetrics(SM_CXVSCROLL), ParentPanel);
+	KnobWidth = ::GetSystemMetricsForDpi(SM_CXVSCROLL, ParentPanel->CurrentPPI);
 
 	ListCsrVisible = false;
 
@@ -282,7 +282,7 @@ void __fastcall UsrScrollPanel::UpdateKnob()
 			ScrPanelH->Top		 = ParentPanel->ClientHeight - ScrPanelH->Height;
 			ScrPaintBoxH->Height = ScrPanelH->ClientHeight;
 		}
-		int s_hi = ScaledInt(::GetSystemMetrics(SM_CYHSCROLL), ParentPanel);	//水平スクロールバーの幅を取得
+		int s_hi = ::GetSystemMetricsForDpi(SM_CYHSCROLL, ParentPanel->CurrentPPI);	//水平スクロールバーの幅を取得
 
 		//リストボックス
 		if (AssoListBox) {

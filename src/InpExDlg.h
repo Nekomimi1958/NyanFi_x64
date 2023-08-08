@@ -11,8 +11,8 @@
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
 #include <Vcl.ExtCtrls.hpp>
-#include "Global.h"
 #include <Vcl.Mask.hpp>
+#include "Global.h"
 
 //---------------------------------------------------------------------------
 //ägí£ÉÇÅ[Éh

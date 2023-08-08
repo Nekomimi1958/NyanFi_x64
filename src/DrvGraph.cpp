@@ -40,7 +40,7 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 	MinMaxAction->Checked = IniFile->ReadBoolGen(_T("DrvGraphMinMax"));
 	CursorAction->Checked = IniFile->ReadBoolGen(_T("DrvGraphCursor"));
 
-	setup_StatusBar(StatusBar1);
+	StatusBar1->Font->Assign(SttBarFont);
 
 	BarSize = IniFile->ReadIntGen( _T("DrvGraphBarSize"), 8);
 	if (BarSize<1 || BarSize>16) BarSize = 8;
@@ -153,7 +153,7 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 		}
 
 		TColor col_grid = AdjustColor(col_bgPrgBar, 32);
-		cv->Pen->Width	= ScaledInt(1, this);
+		cv->Pen->Width	= SCALED_THIS(1);
 		cv->Font->Assign(Font);
 
 		int yt	= 0;

@@ -188,7 +188,7 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 
 	ExcAppText = IniFile->ReadStrGen(_T("AppListExcAppText"));
 
-	setup_StatusBar(StatusBar1);
+	StatusBar1->Font->Assign(SttBarFont);
 
 	LaunchPath = IncludeTrailingPathDelimiter(IniFile->ReadStrGen(_T("AppListLaunchPath"), ExePath));
 	if (!dir_exists(LaunchPath)) LaunchPath = ExePath;
@@ -201,7 +201,7 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 	TListBox *lp = AppListBox;
 	set_StdListBox(lp, LBTAG_OPT_LOOP);
 	set_UsrScrPanel(AppScrPanel);
-	int min_hi = ScaledInt(36, this);
+	int min_hi = SCALED_THIS(36);
 	if (lp->ItemHeight<min_hi) lp->ItemHeight = min_hi;
 	lp->Count = 0;
 	lp->ItemIndex = -1;
@@ -308,7 +308,7 @@ void __fastcall TAppListDlg::StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusP
 	cv->Brush->Color = col_bgSttBar;
 	cv->FillRect(Rect);
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(Rect.Left + ScaledInt(2, this), Rect.Top, Panel->Text);
+	cv->TextOut(Rect.Left + SCALED_THIS(2), Rect.Top, Panel->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -1084,13 +1084,13 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 																: col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4, this);
+	int xp = Rect.Left + SCALED_THIS(4);
 
 	//無応答表示
 	if (ap->isNoRes) {
 		TRect rc = Rect;
-		rc.Left	 = xp + ScaledInt(36, this);
-		rc.Right = xp + ScaledInt(44, this) + MaxWd_f + get_CharWidth(cv, 2);
+		rc.Left	 = xp + SCALED_THIS(36);
+		rc.Right = xp + SCALED_THIS(44) + MaxWd_f + get_CharWidth(cv, 2);
 		InflateRect(rc, 0, -2);
 		TColor br_col	 = cv->Brush->Color;
 		cv->Brush->Color = col_Error;
@@ -1099,7 +1099,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	}
 
 	//アイコン
-	int s_32 = ScaledInt(32, this);
+	int s_32 = SCALED_THIS(32);
 	if (!ap->PngImg->Empty) {
 		TRect rc = Rect;
 		rc.Left = xp; rc.Top += 2;
@@ -1112,14 +1112,14 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 
 	//最小化マーク
 	if (::IsIconic(ap->WinHandle)) {
-		TRect rc(xp + ScaledInt(22, this), Rect.Top + ScaledInt(24, this),
-				 xp + ScaledInt(34, this), Rect.Top + ScaledInt(36, this));
+		TRect rc(xp + SCALED_THIS(22), Rect.Top + SCALED_THIS(24),
+				 xp + SCALED_THIS(34), Rect.Top + SCALED_THIS(36));
 		cv->Brush->Color = scl_BtnFace;
 		cv->FillRect(rc);
 		draw_Line(cv, rc.Left + 2, rc.Bottom - 3, rc.Right -2, rc.Bottom - 3, 2, scl_BtnText);
 		::DrawEdge(cv->Handle, &rc, BDR_RAISEDOUTER, BF_RECT);
 	}
-	xp += ScaledInt(40, this);
+	xp += SCALED_THIS(40);
 	cv->Brush->Style = bsClear;
 
 	bool use_fgsel = is_SelFgCol(State);
@@ -1159,15 +1159,15 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	cv->Font->Color = (lp->Focused() && use_fgsel)? col_fgSelItem : col_x;
 	cv->TextOut(xp, yp, ap->Caption);
 	if (ap->isWow64) cv->TextOut(xp + get_TextWidth(cv, ap->Caption, is_irreg), yp, ISWOW64_STR);
-	xp += MaxWd_f + ScaledInt(12, this);
+	xp += MaxWd_f + SCALED_THIS(12);
 
 	//昇格アイコン
 	if (ap->isElevated) {
-		int s_16 = ScaledInt(16, this);
+		int s_16 = SCALED_THIS(16);
 		::DrawIconEx(cv->Handle, xp, Rect.Top + (Rect.Height() - s_16)/2,
 						hShieldIco, s_16, s_16, 0, NULL, DI_NORMAL);
 	}
-	xp += ScaledInt(18, this);
+	xp += SCALED_THIS(18);
 
 	//テキスト
 	UnicodeString s = yen_to_delimiter(ap->WinText);
@@ -1687,13 +1687,13 @@ void __fastcall TAppListDlg::LaunchListBoxDrawItem(TWinControl *Control, int Ind
 	cv->Brush->Color = (lp->Focused() && State.Contains(odSelected))? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4, this);
-	int yp = Rect.Top  + ScaledInt(2, this);
+	int xp = Rect.Left + SCALED_THIS(4);
+	int yp = Rect.Top  + SCALED_THIS(2);
 
 	file_rec *fp = (file_rec*)LaunchList->Objects[Index];
 	//アイコン
-	draw_SmallIcon(fp, cv, xp, Rect.Top + (Rect.Height() - ScaledInt(16, this))/2, true, this);
-	xp += ScaledInt(18, this);
+	draw_SmallIcon(fp, cv, xp, Rect.Top + (Rect.Height() - SCALED_THIS(16))/2, true, this);
+	xp += SCALED_THIS(18);
 
 	//名前
 	cv->Font->Color = fp->failed? col_Error :

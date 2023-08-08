@@ -1013,11 +1013,6 @@ private:	// ユーザー宣言
 		UserModule->InitializeListBox(GetCurListBox());
 	}
 
-	int  __fastcall ScaledThis(int n)
-	{
-		return (n * CurrentPPI / DEFAULT_PPI);
-	}
-
 public:		// ユーザー宣言
 	bool KeySetOnly;		//キー設定のみ表示
 

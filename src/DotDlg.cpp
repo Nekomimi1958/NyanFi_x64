@@ -60,7 +60,7 @@ void __fastcall TDotNyanDlg::FormShow(TObject *Sender)
 		hFont = ::CreateFontIndirect(&nc_metrics.lfCaptionFont);
 	std::unique_ptr<TFont> titFont(new TFont());
 	if (hFont) titFont->Handle = hFont; else titFont->Assign(DialogFont);
-	Caption = get_MiniPathName(DotNyanName + " ‚ÌÝ’è", ClientWidth - ScaledInt(48, this), titFont.get());
+	Caption = get_MiniPathName(DotNyanName + " ‚ÌÝ’è", ClientWidth - SCALED_THIS(48), titFont.get());
 
 	IniFile->LoadComboBoxItems(PathMaskComboBox, _T("DotMaskHistory"));
 	IniFile->LoadComboBoxItems(GrepMaskComboBox, _T("GrepMaskHistory"));
@@ -233,10 +233,10 @@ void __fastcall TDotNyanDlg::ColorComboBoxDrawItem(TWinControl *Control, int Ind
 
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
-	cv->TextOut(Rect.Left + ScaledInt(34, this), yp, vbuf);
+	cv->TextOut(Rect.Left + SCALED_THIS(34), yp, vbuf);
 
 	//ƒJƒ‰[
-	TRect rc = Rect;  rc.Right = rc.Left + ScaledInt(30, this);
+	TRect rc = Rect;  rc.Right = rc.Left + SCALED_THIS(30);
 	cv->Brush->Color = (TColor)ColBufList->Values[col_nam].ToIntDef(col_None);
 	if (cv->Brush->Color!=col_None) {
 		cv->FillRect(rc);
@@ -244,7 +244,7 @@ void __fastcall TDotNyanDlg::ColorComboBoxDrawItem(TWinControl *Control, int Ind
 	else {
 		cv->Brush->Color = get_PanelColor();
 		cv->FillRect(rc);
-		out_Text(cv, rc.Left + ScaledInt(2, this), yp, _T("–³Œø"), get_LabelColor());
+		out_Text(cv, rc.Left + SCALED_THIS(2), yp, _T("–³Œø"), get_LabelColor());
 	}
 }
 //---------------------------------------------------------------------------

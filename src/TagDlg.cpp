@@ -51,7 +51,7 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 
 	TCheckListBox *lp = TagCheckListBox;
 	set_StdListBox(lp);
-	if (!IsFolderIcon && RevTagCololr) lp->ItemHeight = lp->ItemHeight + ScaledInt(2, this);
+	if (!IsFolderIcon && RevTagCololr) lp->ItemHeight = lp->ItemHeight + SCALED_THIS(2);
 
 	if (IsFolderIcon) {
 		std::unique_ptr<TStringList> lst(new TStringList());
@@ -61,10 +61,10 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 		for (int i=0; i<lst->Count; i++) {
 			MaxTagWidth = std::max(MaxTagWidth, lp->Canvas->TextWidth(get_base_name(lp->Items->Strings[i])));
 		}
-		MaxTagWidth += ScaledInt(32, this);
+		MaxTagWidth += SCALED_THIS(32);
 	}
 	else {
-		MaxTagWidth = usr_TAG->IniCheckList(TagCheckListBox) + ScaledInt(32, this);
+		MaxTagWidth = usr_TAG->IniCheckList(TagCheckListBox) + SCALED_THIS(32);
 	}
 
 	set_UsrScrPanel(ListScrPanel);
@@ -147,7 +147,8 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 
 	SetOptBtn();
 
-	AssignScaledFont(TagEdit->Font, ListFont, this, get_TextColor());
+	TagEdit->Font->Assign(ListFont);
+	TagEdit->Font->Color = get_TextColor();
 	InpPanel->Color   = col_bgList;
 	InpPanel->Visible = HidePanel->Visible && !HideCheckBox->Checked;
 
@@ -221,7 +222,8 @@ void __fastcall TTagManDlg::WmDpiChanged(TMessage &msg)
 {
 	TForm::Dispatch(&msg);
 	SetDarkWinTheme(this);
-	AssignScaledFont(TagEdit->Font, ListFont, this, get_TextColor());
+	TagEdit->Font->Assign(ListFont);
+	TagEdit->Font->Color = get_TextColor();
 }
 
 //---------------------------------------------------------------------------
@@ -414,20 +416,20 @@ void __fastcall TTagManDlg::TagCheckListBoxDrawItem(TWinControl *Control, int In
 	cv->Brush->Color = lp->Checked[Index]? col_selItem : col_bgList;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(4, this);
+	int xp = Rect.Left + SCALED_THIS(4);
 	int yp = Rect.Top  + get_TopMargin(cv);
 
 	//フォルダアイコン
 	if (IsFolderIcon) {
 		UnicodeString inam = lp->Items->Strings[Index];
 		draw_SmallIcon2(inam, cv, xp, yp, this);
-		xp += ScaledInt(24, this);
+		xp += SCALED_THIS(24);
 		cv->Font->Color = get_ExtColor(get_extension(inam));
 		cv->TextOut(xp, yp, get_base_name(inam));
 	}
 	//タグ
 	else {
-		if (RevTagCololr) yp += ScaledInt(2, this);
+		if (RevTagCololr) yp += SCALED_THIS(2);
 		usr_TAG->DrawTags(lp->Items->Strings[Index], cv, xp, yp,
 			(RevTagCololr? col_bgList : col_None), UserModule->SpuitEnabled());
 	}
