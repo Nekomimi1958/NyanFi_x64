@@ -2382,6 +2382,9 @@ void LoadOptions()
 		}
 	}
 
+	//V14.92 でのデフォルトのままだったら削除
+	if (SameStr(SortSymList, " -'!#$%&(),.;@[]^_`{}~\\+=")) SortSymList = EmptyStr;
+
 	//マークのデフォルト設定
 	if (TabPinMark.IsEmpty()) TabPinMark = u"\U0001F4CD";
 	if (HEAD_Mark.IsEmpty())  HEAD_Mark  = _T("\u25b6");
@@ -2895,21 +2898,15 @@ int __fastcall CompLogical(UnicodeString s0, UnicodeString s1, bool natural_sw)
 			if (p0>0 && p1>0) return (p0 - p1);
 			if (p0>0) return -1;
 			if (p1>0) return 1;
-			UnicodeString ss0 = s0.SubString(i, n0 - i + 1);
-			UnicodeString ss1 = s1.SubString(i, n1 - i + 1);
-			if (natural_sw)
-				return StrCmpLogicalW(ss0.c_str(), ss1.c_str());
-			else
-				return (CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, ss0.c_str(), -1, ss1.c_str(), -1) - CSTR_EQUAL);
+			break;
 		}
-		return (n0 - n1);
 	}
-	else {
-		if (natural_sw)
-			return StrCmpLogicalW(s0.c_str(), s1.c_str());
-		else
-			return (CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, s0.c_str(), -1, s1.c_str(), -1) - CSTR_EQUAL);
-	}
+
+	if (natural_sw)
+		return StrCmpLogicalW(s0.c_str(), s1.c_str());
+	else
+		return (CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, s0.c_str(), -1, s1.c_str(), -1) - CSTR_EQUAL);
+
 }
 //---------------------------------------------------------------------------
 //ファイル名比較関数
@@ -2918,7 +2915,7 @@ int __fastcall CompNameFN(UnicodeString s0, UnicodeString s1)
 {
 	if (DscNameOrder) std::swap(s0, s1);	//名前用
 
-	return NaturalOrder? CompLogical(s0.c_str(), s1.c_str(), true) :
+	return NaturalOrder? CompLogical(s0, s1, true) :
 			SortLogical? CompLogical(s0, s1, false)
 					   : CompareText(s0, s1);
 }
@@ -2927,7 +2924,7 @@ int __fastcall CompNameLN(UnicodeString s0, UnicodeString s1)
 {
 	if (DscPathOrder) std::swap(s0, s1);	//場所用
 
-	return NaturalOrder? CompLogical(s0.c_str(), s1.c_str(), true) :
+	return NaturalOrder? CompLogical(s0, s1, true) :
 			SortLogical? CompLogical(s0, s1, false)
 					   : CompareText(s0, s1);
 }
