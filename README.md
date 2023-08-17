@@ -1,10 +1,16 @@
-# NyanFi_x64
+﻿# NyanFi_x64
 
 ![Screenshot](screenshot.png)
 
-NyanFi is a dual pane file manager for Windows.  
-Supported language is Japanese only.  
+## 概要
 
-## Development Environment
+キーボード操作主体の2画面ファイラーです(マウス操作も可能)。  
+Windows Vista ～ Windows 11 で動作します。  
+ダークモードにも擬似的に対応。  
+
+[スクリーンショット](doc/screenshot.md)
+
+
+## 開発環境
 
 C++Builder 11.3 (BCC64)
