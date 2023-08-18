@@ -6054,7 +6054,7 @@ void setup_Panel(
 //---------------------------------------------------------------------------
 void set_UsrScrPanel(UsrScrollPanel *sp)
 {
-	int std_wd  = ::GetSystemMetricsForDpi(SM_CXVSCROLL, sp->ParentPanel->CurrentPPI);
+	int std_wd  = get_SysMetricsForPPI(SM_CXVSCROLL, sp->ParentPanel->CurrentPPI);
 	int knob_wd = std_wd;
 
 	sp->KnobImgBuffV = NULL;
@@ -7086,44 +7086,6 @@ int add_IconImage(
 	}
 
 	return (icon? lst->AddIcon(icon) : -1);
-}
-
-//---------------------------------------------------------------------------
-int add_IconImage(
-	UnicodeString fnam,		//ファイル名[,インデックス]  (環境パスに対応)
-	TVirtualImageList *lst)
-{
-	if (fnam.IsEmpty()) return -1;
-
-	TIcon *icon = NULL;
-	fnam = to_absolute_name(get_actual_name(fnam));
-	if (file_exists_ico(fnam)) {
-		int usr_idx = UsrIcoList->IndexOf(fnam);
-		if (usr_idx==-1) {
-			HICON hIcon = get_file_SmallIcon(fnam);
-			if (hIcon) {
-				icon = new TIcon();
-				icon->Handle = hIcon;
-				UsrIcoList->AddObject(fnam, (TObject*)icon);
-			}
-		}
-		else {
-			icon = (TIcon*)UsrIcoList->Objects[usr_idx];
-		}
-	}
-
-	if (icon) {
-		TImageCollection *cp = (TImageCollection *)lst->ImageCollection;
-		TImageCollectionItem *ip = cp->Images->Add();
-		std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
-		bmp->Assign(icon);
-		TImageCollectionSourceItem *sp = ip->SourceImages->Add();
-        sp->Image->Assign(bmp.get());
-		return cp->Images->Count - 1;
-	}
-	else {
-		return -1;
-	}
 }
 
 //---------------------------------------------------------------------------

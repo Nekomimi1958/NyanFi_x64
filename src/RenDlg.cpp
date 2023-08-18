@@ -394,7 +394,7 @@ void __fastcall TRenameDlg::FormResize(TObject *Sender)
 {
 	TStringGrid *gp = PreviewGrid;
 	gp->ColWidths[1] = 20;
-	int s_wd = ::GetSystemMetricsForDpi(SM_CXVSCROLL, CurrentPPI) + SCALED_THIS(2);	//スクロールバー幅
+	int s_wd = get_SysMetricsForPPI(SM_CXVSCROLL, CurrentPPI) + SCALED_THIS(2);	//スクロールバー幅
 	int wd	 = (gp->ClientWidth - s_wd - gp->ColWidths[1])/2;
 	gp->ColWidths[0] = wd;
 	gp->ColWidths[2] = wd;

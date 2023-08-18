@@ -31,6 +31,17 @@ inline int ScaledInt(int n, TControl *cp = NULL)
 {
 	return (n * GetCurPPI(cp) / DEFAULT_PPI);
 }
+
+//----------------------------------------------------------------------
+//システム・メトリックの取得
+//----------------------------------------------------------------------
+inline int get_SysMetricsForPPI(int idx, int ppi)
+{
+	if (IsWindows10OrGreater())
+		return GetSystemMetricsForDpi(idx, ppi);
+	else
+		return GetSystemMetrics(idx);
+}
 //---------------------------------------------------------------------------
 #endif
 

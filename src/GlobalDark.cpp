@@ -790,7 +790,7 @@ void draw_OwnerTab(TCustomTabControl *Control, int idx, const TRect rc, bool act
 void draw_MenuSeparator(TCanvas *cv, TRect rc)
 {
 	int yp = rc.Top + rc.Height()/2;
-	int x0 = rc.Left + ::GetSystemMetricsForDpi(SM_CYMENU, GetCurPPI()) + ScaledInt(4);
+	int x0 = rc.Left + get_SysMetricsForPPI(SM_CYMENU, GetCurPPI()) + ScaledInt(4);
 	int x1 = rc.Right;
 	cv->Pen->Style = psSolid;
 	cv->Pen->Mode  = pmCopy;

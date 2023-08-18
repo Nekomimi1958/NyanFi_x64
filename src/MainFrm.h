@@ -46,9 +46,6 @@
 #include "usr_hintwin.h"
 #include "Global.h"
 #include "task_thread.h"
-#include <Vcl.BaseImageCollection.hpp>
-#include <Vcl.ImageCollection.hpp>
-#include <Vcl.VirtualImageList.hpp>
 
 //---------------------------------------------------------------------------
 #define EXTMENU_BASE	1000

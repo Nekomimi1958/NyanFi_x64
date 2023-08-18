@@ -475,7 +475,7 @@ bool __fastcall TUserModule::ShowPopupMenu()
 	if (!mp) return false;
 
 	TPoint p = wp->ClientToScreen(Point(0, wp->ClientHeight));
-	if ((p.y + ::GetSystemMetricsForDpi(SM_CYMENU, wp->CurrentPPI) * mp->Items->Count)>Screen->Height) {
+	if ((p.y + get_SysMetricsForPPI(SM_CYMENU, wp->CurrentPPI) * mp->Items->Count)>Screen->Height) {
 		p.y -= wp->ClientHeight;
 	}
 	mp->Popup(p.x, p.y);

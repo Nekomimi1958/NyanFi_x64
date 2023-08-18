@@ -199,7 +199,7 @@ void __fastcall TBitmapForm::SetMapWidth(int w)
 	MapWidth = w;
 
 	Constraints->MinWidth
-		= FileMapPanel->Width + MapWidth + (Width - ClientWidth) + ::GetSystemMetricsForDpi(SM_CXVSCROLL, CurrentPPI)
+		= FileMapPanel->Width + MapWidth + (Width - ClientWidth) + get_SysMetricsForPPI(SM_CXVSCROLL, CurrentPPI)
 			+ (BorderShape1->Visible? TlWinBorderWidth * 2 : 0) + SCALED_THIS(12);
 
 	Constraints->MaxWidth = Constraints->MinWidth;

@@ -894,7 +894,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	int w0 = cv->TextWidth("Shift+Ctrl+Alt+Space ");
 	int w1 = get_CharWidth(cv, 40);
 	int w2 = KeyHeaderControl->ClientWidth - w0 - w1 - get_CharWidth(cv, 16)
-				- (::GetSystemMetricsForDpi(SM_CXVSCROLL, CurrentPPI) - SCALED_THIS(4));
+				- (get_SysMetricsForPPI(SM_CXVSCROLL, CurrentPPI) - SCALED_THIS(4));
 	set_HeaderSecWidth(KeyHeaderControl, 3, w0, w1, w2);
 
 	KeySortMode = IniFile->ReadIntGen(_T("OptKeySortMode"),	0);

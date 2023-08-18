@@ -1886,7 +1886,7 @@ void __fastcall TNyanFiForm::WmGetMinMaxInfo(TWMGetMinMaxInfo &msg)
 		::AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, TRUE);
 		rc.bottom -= 2;
 		rc.top	  += 2;
-		if (!ShowMainMenu) rc.top += ::GetSystemMetricsForDpi(SM_CYMENU, CurrentPPI);
+		if (!ShowMainMenu) rc.top += get_SysMetricsForPPI(SM_CYMENU, CurrentPPI);
 		msg.MinMaxInfo->ptMaxSize.y		 = rc.bottom - rc.top;
 		msg.MinMaxInfo->ptMaxTrackSize.y = rc.bottom - rc.top;
 		msg.MinMaxInfo->ptMaxPosition.y	 = rc.top;
@@ -4597,13 +4597,13 @@ void __fastcall TNyanFiForm::SetupThumbnail(
 	else if (ThumbnailPos<2) {
 		gp->RowCount = 1;
 		gp->ColCount = ViewFileList->Count;
-		gp->Height	 = gp->DefaultRowHeight + (ShowThumbScroll? ::GetSystemMetricsForDpi(SM_CXHSCROLL, CurrentPPI) : 0) + 2;
+		gp->Height	 = gp->DefaultRowHeight + (ShowThumbScroll? get_SysMetricsForPPI(SM_CXHSCROLL, CurrentPPI) : 0) + 2;
 	}
 	//’Êí•\Ž¦(c)
 	else {
 		gp->ColCount = 1;
 		gp->RowCount = ViewFileList->Count;
-		gp->Width	 = gp->DefaultColWidth + (ShowThumbScroll? ::GetSystemMetricsForDpi(SM_CXVSCROLL, CurrentPPI) : 0) + 2;
+		gp->Width	 = gp->DefaultColWidth + (ShowThumbScroll? get_SysMetricsForPPI(SM_CXVSCROLL, CurrentPPI) : 0) + 2;
 	}
 
 	SetDarkWinTheme(gp);
@@ -5789,7 +5789,7 @@ void __fastcall TNyanFiForm::SetFlItemWidth(TStringList *lst, int tag)
 		if (ScrBarStyle>0)
 			x_right -= FlScrPanel[tag]->KnobWidth;
 		else
-			x_right -= ::GetSystemMetricsForDpi(SM_CXVSCROLL, CurrentPPI);
+			x_right -= get_SysMetricsForPPI(SM_CXVSCROLL, CurrentPPI);
 	}
 
 	//êŠ(ŒŸõ)
@@ -33624,7 +33624,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 
 		//•K—vƒTƒCƒY‚ðŠTŽZ
 		int fh	 = get_FontHeight(cv->Font, 4);
-		int v_wd = std::max(600, ImgScrollPanel->ClientWidth - ::GetSystemMetricsForDpi(SM_CXVSCROLL, CurrentPPI));
+		int v_wd = std::max(600, ImgScrollPanel->ClientWidth - get_SysMetricsForPPI(SM_CXVSCROLL, CurrentPPI));
 		int v_hi = 8 + 256 + fh + 20;
 		int ixn  = (int)::ExtractIcon(HInstance, ViewFileName.c_str(), -1);
 		if (ixn>1) {
