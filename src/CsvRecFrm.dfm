@@ -4,13 +4,16 @@ object CsvRecForm: TCsvRecForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSizeToolWin
   ClientHeight = 283
-  ClientWidth = 310
+  ClientWidth = 312
   Color = clBtnFace
   Constraints.MinWidth = 320
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   FormStyle = fsStayOnTop
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnCreate = FormCreate
@@ -18,8 +21,7 @@ object CsvRecForm: TCsvRecForm
   OnHide = FormHide
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object BorderShape1: TShape
     Left = 0
     Top = 0
@@ -29,39 +31,45 @@ object CsvRecForm: TCsvRecForm
     Pen.Color = clSilver
   end
   object BorderShape2: TShape
-    Left = 309
+    Left = 311
     Top = 0
     Width = 1
     Height = 282
     Align = alRight
     Pen.Color = clSilver
+    ExplicitLeft = 309
   end
   object BorderShape3: TShape
     Left = 0
     Top = 282
-    Width = 310
+    Width = 312
     Height = 1
     Align = alBottom
     Pen.Color = clSilver
+    ExplicitWidth = 310
   end
   object ClientPanel: TPanel
     Left = 1
     Top = 0
-    Width = 308
+    Width = 310
     Height = 282
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 302
+    ExplicitHeight = 270
     object OptPanel: TPanel
       Left = 0
       Top = 250
-      Width = 308
+      Width = 310
       Height = 32
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitTop = 238
+      ExplicitWidth = 302
       DesignSize = (
-        308
+        310
         32)
       object TopIsHeaderCheckBox: TCheckBox
         Left = 12
@@ -73,7 +81,7 @@ object CsvRecForm: TCsvRecForm
         OnClick = TopIsHeaderCheckBoxClick
       end
       object CalcBtn: TButton
-        Left = 151
+        Left = 153
         Top = 4
         Width = 75
         Height = 25
@@ -81,9 +89,10 @@ object CsvRecForm: TCsvRecForm
         Caption = #38598#35336
         TabOrder = 1
         OnClick = CalcBtnClick
+        ExplicitLeft = 145
       end
       object GraphBtn: TButton
-        Left = 229
+        Left = 231
         Top = 4
         Width = 75
         Height = 25
@@ -91,23 +100,26 @@ object CsvRecForm: TCsvRecForm
         Caption = #12464#12521#12501
         TabOrder = 2
         OnClick = GraphBtnClick
+        ExplicitLeft = 223
       end
     end
     object GridPanel: TPanel
       Left = 0
       Top = 20
-      Width = 308
+      Width = 310
       Height = 230
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 302
+      ExplicitHeight = 218
       DesignSize = (
-        308
+        310
         230)
       object RecordGrid: TStringGrid
         Left = 0
         Top = 0
-        Width = 308
+        Width = 310
         Height = 232
         Anchors = [akLeft, akTop, akRight, akBottom]
         BorderStyle = bsNone
@@ -123,6 +135,8 @@ object CsvRecForm: TCsvRecForm
         StyleElements = []
         OnClick = RecordGridClick
         OnDrawCell = RecordGridDrawCell
+        ExplicitWidth = 302
+        ExplicitHeight = 220
         ColWidths = (
           100
           100)
@@ -137,7 +151,7 @@ object CsvRecForm: TCsvRecForm
     object RecordHeader: THeaderControl
       Left = 0
       Top = 0
-      Width = 308
+      Width = 310
       Height = 20
       Sections = <
         item
@@ -161,6 +175,7 @@ object CsvRecForm: TCsvRecForm
       OnDrawSection = RecordHeaderDrawSection
       OnSectionResize = RecordHeaderSectionResize
       OnResize = RecordHeaderResize
+      ExplicitWidth = 302
     end
   end
   object PopupMenu1: TPopupMenu

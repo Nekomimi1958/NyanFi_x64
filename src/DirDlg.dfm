@@ -7,7 +7,11 @@ object RegDirDlg: TRegDirDlg
   ClientWidth = 450
   Color = clBtnFace
   Constraints.MinWidth = 460
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -27,17 +31,20 @@ object RegDirDlg: TRegDirDlg
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
+    ExplicitTop = 249
+    ExplicitWidth = 446
     DesignSize = (
       450
       70)
     object HideOptBtn: TSpeedButton
-      Left = 432
+      Left = 428
       Top = 54
       Width = 18
       Height = 16
       Anchors = [akTop, akRight]
       Flat = True
       OnClick = ChgOptBtnClick
+      ExplicitLeft = 432
     end
     object UpButton: TButton
       Left = 224
@@ -91,15 +98,16 @@ object RegDirDlg: TRegDirDlg
     object DirEdit: TEdit
       Left = 224
       Top = 8
-      Width = 128
+      Width = 124
       Height = 23
       Hint = #29872#22659#22793#25968#12418#20351#29992#21487#12289'UNC'#12398#22580#21512' : '#12391#21306#20999#12387#12390#12518#12540#12470#21517#25351#23450#21487
       Anchors = [akLeft, akTop, akRight]
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 2
+      ExplicitWidth = 120
     end
     object RefDirBtn: TButton
-      Left = 354
+      Left = 350
       Top = 8
       Width = 36
       Height = 22
@@ -107,6 +115,7 @@ object RegDirDlg: TRegDirDlg
       Caption = '...'
       TabOrder = 3
       OnClick = RefDirBtnClick
+      ExplicitLeft = 346
     end
     object KeyEdit: TEdit
       Left = 16
@@ -126,7 +135,7 @@ object RegDirDlg: TRegDirDlg
       TabOrder = 10
     end
     object RefSpBtn: TButton
-      Left = 391
+      Left = 387
       Top = 8
       Width = 55
       Height = 22
@@ -134,6 +143,7 @@ object RegDirDlg: TRegDirDlg
       Caption = #29305#27530'...'
       TabOrder = 4
       OnClick = RefSpBtnClick
+      ExplicitLeft = 383
     end
     object CursorTopCheckBox: TCheckBox
       Left = 453
@@ -153,6 +163,8 @@ object RegDirDlg: TRegDirDlg
     Cancel = True
     ModalResult = 2
     TabOrder = 1
+    ExplicitTop = 249
+    ExplicitWidth = 446
   end
   object RegDirHeader: THeaderControl
     Left = 0
@@ -183,6 +195,7 @@ object RegDirDlg: TRegDirDlg
     OnDrawSection = RegDirHeaderDrawSection
     OnSectionResize = RegDirHeaderSectionResize
     OnResize = RegDirHeaderResize
+    ExplicitWidth = 446
   end
   object ListPanel: TPanel
     Left = 0
@@ -192,13 +205,15 @@ object RegDirDlg: TRegDirDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitWidth = 446
+    ExplicitHeight = 229
     DesignSize = (
       450
       230)
     object RegDirListBox: TListBox
       Left = 0
       Top = 0
-      Width = 450
+      Width = 446
       Height = 230
       Style = lbOwnerDrawFixed
       AutoComplete = False
@@ -225,9 +240,11 @@ object RegDirDlg: TRegDirDlg
       OnDrawItem = RegDirListBoxDrawItem
       OnKeyDown = RegDirListBoxKeyDown
       OnKeyPress = RegDirListBoxKeyPress
+      ExplicitWidth = 442
+      ExplicitHeight = 229
     end
     object BlankPanel: TPanel
-      Left = 432
+      Left = 428
       Top = 214
       Width = 18
       Height = 16
@@ -239,6 +256,8 @@ object RegDirDlg: TRegDirDlg
       TabOrder = 1
       Visible = False
       StyleElements = [seBorder]
+      ExplicitLeft = 424
+      ExplicitTop = 213
       object ShowOptBtn: TSpeedButton
         Left = 0
         Top = 0
@@ -263,6 +282,8 @@ object RegDirDlg: TRegDirDlg
     ShowCaptions = True
     AllowTextButtons = True
     TabOrder = 4
+    ExplicitTop = 319
+    ExplicitWidth = 446
     object FilterBtn: TToolButton
       Left = 0
       Top = 0

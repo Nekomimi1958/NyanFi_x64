@@ -1763,13 +1763,13 @@ HICON UserShell::get_SmallIcon(UnicodeString fnam)
 //---------------------------------------------------------------------------
 //スモールアイコンを描画
 //---------------------------------------------------------------------------
-bool UserShell::draw_SmallIcon(UnicodeString fnam, TCanvas *cv, int x, int y)
+bool UserShell::draw_SmallIcon(UnicodeString fnam, TCanvas *cv, int x, int y, TControl *cp)
 {
 	if (fnam.IsEmpty()) return false;
 
 	HICON hIcon = get_SmallIcon(fnam);
 	if (hIcon) {
-		int s_16 = ScaledInt(16);
+		int s_16 = ScaledInt(16, cp);
 		::DrawIconEx(cv->Handle, x, y, hIcon, s_16, s_16, 0, NULL, DI_NORMAL);
 		::DestroyIcon(hIcon);
 		return true;
@@ -1778,13 +1778,13 @@ bool UserShell::draw_SmallIcon(UnicodeString fnam, TCanvas *cv, int x, int y)
 	return false;
 }
 //---------------------------------------------------------------------------
-bool UserShell::draw_SmallIcon(UnicodeString fnam, TImage *ip, TColor bg)
+bool UserShell::draw_SmallIcon(UnicodeString fnam, TImage *ip, TColor bg, TControl *cp)
 {
 	ip->Picture->Bitmap->SetSize(ip->ClientWidth, ip->ClientHeight);
 	TCanvas *cv = ip->Picture->Bitmap->Canvas;
 	cv->Brush->Color = bg;
 	cv->FillRect(ip->ClientRect);
-	int s_16 = ScaledInt(16);
+	int s_16 = ScaledInt(16, cp);
 	return draw_SmallIcon(fnam, cv, (ip->ClientWidth - s_16) / 2, (ip->ClientHeight - s_16) / 2);
 }
 

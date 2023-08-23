@@ -18,6 +18,7 @@
 #include <Vcl.ActnList.hpp>
 #include <Vcl.ImgList.hpp>
 #include <Vcl.Buttons.hpp>
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 class TPrintImgDlg : public TForm

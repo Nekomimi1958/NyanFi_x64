@@ -8,9 +8,12 @@ object KeyListDlg: TKeyListDlg
   ClientWidth = 470
   Color = clBtnFace
   Constraints.MinWidth = 480
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -18,8 +21,7 @@ object KeyListDlg: TKeyListDlg
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object KeyTabControl: TTabControl
     Left = 0
     Top = 381
@@ -39,34 +41,39 @@ object KeyListDlg: TKeyListDlg
     TabWidth = 120
     OnChange = KeyTabControlChange
     OnDrawTab = KeyTabControlDrawTab
+    ExplicitTop = 380
+    ExplicitWidth = 466
     object OpePanel: TPanel
       Left = 4
       Top = 4
       Width = 462
-      Height = 34
+      Height = 32
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 458
       DesignSize = (
         462
-        34)
+        32)
       object FilterEdit: TLabeledEdit
         Left = 72
         Top = 6
         Width = 57
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
-        EditLabel.Width = 33
-        EditLabel.Height = 13
+        EditLabel.Width = 36
+        EditLabel.Height = 23
         EditLabel.Caption = #12501#12451#12523#12479
         LabelPosition = lpLeft
         PopupMenu = UserModule.EditPopupMenuE
         TabOrder = 0
+        Text = ''
         OnChange = FilterEditChange
         OnEnter = FilterEditEnter
         OnExit = FilterEditExit
         OnKeyDown = FilterEditKeyDown
         OnKeyPress = FilterEditKeyPress
+        ExplicitWidth = 53
       end
       object MigemoCheckBox: TCheckBox
         Left = 137
@@ -77,6 +84,7 @@ object KeyListDlg: TKeyListDlg
         Anchors = [akTop, akRight]
         Caption = '&Migemo'
         TabOrder = 1
+        ExplicitLeft = 133
       end
       object CnfExeCheckBox: TCheckBox
         Left = 374
@@ -86,6 +94,7 @@ object KeyListDlg: TKeyListDlg
         Anchors = [akTop, akRight]
         Caption = #30906#23450#21363#23455#34892
         TabOrder = 2
+        ExplicitLeft = 370
       end
       object ShowAllCmdCheckBox: TCheckBox
         Left = 213
@@ -96,6 +105,7 @@ object KeyListDlg: TKeyListDlg
         Anchors = [akTop, akRight]
         Caption = #26410#30331#37682#12467#12510#12531#12489#12418#34920#31034
         TabOrder = 3
+        ExplicitLeft = 209
       end
     end
   end
@@ -108,6 +118,8 @@ object KeyListDlg: TKeyListDlg
     Cancel = True
     ModalResult = 2
     TabOrder = 3
+    ExplicitTop = 380
+    ExplicitWidth = 466
   end
   object KeyListHeader: THeaderControl
     Left = 0
@@ -139,6 +151,7 @@ object KeyListDlg: TKeyListDlg
     OnSectionClick = KeyListHeaderSectionClick
     OnSectionResize = KeyListHeaderSectionResize
     OnResize = KeyListHeaderResize
+    ExplicitWidth = 466
   end
   object GridPanel: TPanel
     Left = 0
@@ -148,13 +161,15 @@ object KeyListDlg: TKeyListDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 466
+    ExplicitHeight = 360
     DesignSize = (
       470
       361)
     object KeyListGrid: TStringGrid
       Left = 0
       Top = 0
-      Width = 470
+      Width = 466
       Height = 363
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
@@ -177,6 +192,8 @@ object KeyListDlg: TKeyListDlg
       OnDblClick = KeyListGridDblClick
       OnDrawCell = KeyListGridDrawCell
       OnKeyDown = KeyListGridKeyDown
+      ExplicitWidth = 462
+      ExplicitHeight = 362
       ColWidths = (
         64
         64

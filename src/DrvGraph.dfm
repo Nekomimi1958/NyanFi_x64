@@ -9,9 +9,12 @@ object DriveGraph: TDriveGraph
   Color = clBtnFace
   Constraints.MinWidth = 400
   DoubleBuffered = True
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -21,8 +24,7 @@ object DriveGraph: TDriveGraph
   OnMouseWheel = FormMouseWheel
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object HiddenCanBtn: TButton
     Left = 0
     Top = 270
@@ -33,12 +35,14 @@ object DriveGraph: TDriveGraph
     ModalResult = 2
     TabOrder = 0
     TabStop = False
+    ExplicitTop = 269
+    ExplicitWidth = 386
   end
   object GraphScrollBox: TScrollBox
     Left = 0
-    Top = 19
+    Top = 21
     Width = 390
-    Height = 251
+    Height = 249
     HorzScrollBar.Visible = False
     VertScrollBar.Tracking = True
     Align = alClient
@@ -46,21 +50,25 @@ object DriveGraph: TDriveGraph
     BevelOuter = bvNone
     BorderStyle = bsNone
     TabOrder = 2
+    ExplicitTop = 19
+    ExplicitWidth = 386
+    ExplicitHeight = 250
     object PaintBox1: TPaintBox
       Left = 0
       Top = 0
       Width = 390
-      Height = 251
+      Height = 249
       Align = alClient
       OnMouseDown = PaintBox1MouseDown
       OnPaint = PaintBox1Paint
       ExplicitWidth = 392
+      ExplicitHeight = 251
     end
     object HiddenEdit: TEdit
       Left = 0
       Top = 0
       Width = 0
-      Height = 21
+      Height = 23
       PopupMenu = PopupMenu1
       ReadOnly = True
       TabOrder = 0
@@ -81,25 +89,29 @@ object DriveGraph: TDriveGraph
       end>
     StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
+    ExplicitTop = 269
+    ExplicitWidth = 386
   end
   object OptToolBar: TToolBar
     Left = 0
     Top = 0
     Width = 390
-    Height = 19
+    Height = 21
     AutoSize = True
-    ButtonHeight = 19
-    ButtonWidth = 52
+    ButtonHeight = 21
+    ButtonWidth = 61
     Caption = 'OptToolBar'
     DrawingStyle = dsGradient
     List = True
     AllowTextButtons = True
     TabOrder = 1
+    ExplicitWidth = 386
+    ExplicitHeight = 60
     object DriveComboBox: TComboBox
       Left = 0
       Top = 0
       Width = 120
-      Height = 21
+      Height = 23
       Align = alLeft
       Style = csDropDownList
       TabOrder = 0
@@ -110,7 +122,7 @@ object DriveGraph: TDriveGraph
       Left = 120
       Top = 0
       Width = 4
-      Height = 19
+      Height = 21
     end
     object SizeBtn: TToolButton
       Left = 124
@@ -121,10 +133,10 @@ object DriveGraph: TDriveGraph
       OnClick = SizeBtnClick
     end
     object SizeComboBox: TComboBox
-      Left = 164
+      Left = 166
       Top = 0
       Width = 50
-      Height = 21
+      Height = 23
       Align = alRight
       Style = csDropDownList
       DropDownCount = 16
@@ -133,27 +145,27 @@ object DriveGraph: TDriveGraph
       OnKeyDown = OptComboBoxKeyDown
     end
     object ToolButton3: TToolButton
-      Left = 214
+      Left = 216
       Top = 0
       Width = 18
       ImageIndex = 2
       Style = tbsSeparator
     end
     object ToolButton4: TToolButton
-      Left = 232
+      Left = 234
       Top = 0
       Action = OldOdrAction
       Style = tbsTextButton
     end
     object ToolButton5: TToolButton
-      Left = 277
+      Left = 282
       Top = 0
       Action = MinMaxAction
       Caption = '&Min/Max'
       Style = tbsTextButton
     end
     object ToolButton1: TToolButton
-      Left = 328
+      Left = 342
       Top = 0
       Action = CursorAction
       Caption = '&Cursor'
@@ -179,7 +191,7 @@ object DriveGraph: TDriveGraph
     end
   end
   object PopupMenu1: TPopupMenu
-    Left = 112
+    Left = 128
     Top = 35
   end
 end

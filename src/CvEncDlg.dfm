@@ -7,17 +7,19 @@ object CvTxtEncDlg: TCvTxtEncDlg
   ClientHeight = 95
   ClientWidth = 394
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object Label2: TLabel
     Left = 253
     Top = 11
@@ -54,7 +56,7 @@ object CvTxtEncDlg: TCvTxtEncDlg
     Left = 310
     Top = 8
     Width = 75
-    Height = 21
+    Height = 23
     Style = csDropDownList
     TabOrder = 1
   end
@@ -62,7 +64,7 @@ object CvTxtEncDlg: TCvTxtEncDlg
     Left = 95
     Top = 8
     Width = 145
-    Height = 21
+    Height = 23
     Style = csDropDownList
     TabOrder = 0
     OnClick = OutCodeComboBoxClick

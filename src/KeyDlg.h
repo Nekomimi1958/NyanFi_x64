@@ -18,6 +18,7 @@
 #include <Vcl.Menus.hpp>
 #include <Vcl.Dialogs.hpp>
 #include "usr_scrpanel.h"
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 class TKeyListDlg : public TForm

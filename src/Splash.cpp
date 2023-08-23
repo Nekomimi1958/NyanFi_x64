@@ -16,21 +16,6 @@ __fastcall TSplashForm::TSplashForm(TComponent* Owner)
 {
 }
 //---------------------------------------------------------------------------
-void __fastcall TSplashForm::FormCreate(TObject *Sender)
-{
-	TitleLabel->Font->Assign(Application->DefaultFont);
-	TitleLabel->Font->Size	= 22;
-	TitleLabel->Font->Color = clBlack;
-
-	VerLabel->Font->Assign(Application->DefaultFont);
-	VerLabel->Font->Size  = 9;
-	VerLabel->Font->Color = clBlack;
-
-	MsgLabel->Font->Assign(Application->DefaultFont);
-	MsgLabel->Font->Size  = 9;
-	MsgLabel->Font->Color = clBlack;
-}
-//---------------------------------------------------------------------------
 void __fastcall TSplashForm::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	Action = caFree;

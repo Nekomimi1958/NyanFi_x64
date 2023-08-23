@@ -234,15 +234,10 @@ void SetDarkWinTheme(
 	TColor bg_win	= get_WinColor();
 	TColor fg_txt   = get_TextColor();
 
-	std::unique_ptr<TFont> def_font(new TFont());
-	def_font->Assign(Application->DefaultFont);
-	TWinControl *pp = wp->Parent;
-	if (pp && pp->ClassNameIs("TToolBar") && (wp->ClassNameIs("TComboBox") || wp->ClassNameIs("TEdit"))) {
-		def_font->Size = ((TToolBar*)pp)->Font->Size;
-	}
-
 	if (wp->InheritsFrom(__classid(TForm))) {
 		TForm *fp = (TForm*)wp;
+		GetScaledFont(fp->Font, Application->DefaultFont, wp);
+
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
 		BOOL is_dk = IsDarkMode;
 		::DwmSetWindowAttribute(wp->Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, &is_dk, sizeof(is_dk));
@@ -252,7 +247,6 @@ void SetDarkWinTheme(
 			TControl *cp = wp->Controls[i];
 			if (cp->ClassNameIs("TLabel")) {
 				TLabel *lp = (TLabel *)cp;
-				lp->Font->Assign(def_font.get());
 				lp->Font->Color = fg_label;
 				lp->Color		= bg_panel;
 			}
@@ -273,7 +267,6 @@ void SetDarkWinTheme(
 		if (wp->ClassNameIs("TPanel")) {
 			TPanel *pp = (TPanel *)wp;
 			pp->StyleElements.Clear();
-			pp->Font->Assign(def_font.get());
 			pp->Font->Color = fg_label;
 			pp->Color		= bg_panel;
 		}
@@ -292,7 +285,6 @@ void SetDarkWinTheme(
 						TLabel *lp = new TLabel(cp->Parent);
 						lp->Tag		= (18 << 16) + cp->Width - 8;	//検索マーク用 ***
 						lp->Parent	= cp->Parent;
-						lp->Font->Assign(def_font.get());
 						lp->Color		= bg_panel;
 						lp->Font->Color = fg_label;
 						lp->Caption = cp->Caption;
@@ -310,7 +302,6 @@ void SetDarkWinTheme(
 				TControl *cp = wp->Controls[i];
 				if (cp->ClassNameIs("TLabel")) {
 					TLabel *lp = (TLabel *)cp;
-					lp->Font->Assign(def_font.get());
 					lp->Font->Color = fg_label;
 					lp->Color		= bg_panel;
 				}
@@ -322,7 +313,6 @@ void SetDarkWinTheme(
 				TControl *cp = wp->Controls[i];
 				if (cp->ClassNameIs("TLabel")) {
 					TLabel *lp = (TLabel *)cp;
-					lp->Font->Assign(def_font.get());
 					lp->Font->Color = fg_label;
 					lp->Color		= bg_panel;
 				}
@@ -335,20 +325,17 @@ void SetDarkWinTheme(
 	//以下は単独の子コントロール
 	else if (wp->ClassNameIs("TEdit")) {
 		TEdit *ep = (TEdit *)wp;
-		ep->Font->Assign(def_font.get());
 		ep->Font->Color = fg_txt;
 		ep->Color		= bg_win;
 	}
 	else if (wp->ClassNameIs("TLabeledEdit")) {
 		TLabeledEdit *ep = (TLabeledEdit *)wp;
-		ep->Font->Assign(def_font.get());
 		ep->Font->Color = fg_txt;
 		ep->Color		= bg_win;
 		ep->EditLabel->Font->Color = fg_label;
 	}
 	else if (wp->ClassNameIs("TMaskEdit")) {
 		TMaskEdit *ep = (TMaskEdit *)wp;
-		ep->Font->Assign(def_font.get());
 		ep->Font->Color = fg_txt;
 		ep->Color		= bg_win;
 	}
@@ -359,7 +346,6 @@ void SetDarkWinTheme(
 		TComboBox *cp = (TComboBox *)wp;
 		UnicodeString s = cp->Text;
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_CFD") : NULL, NULL);
-		cp->Font->Assign(def_font.get());
 		cp->Font->Color = fg_txt;
 		cp->Color		= bg_win;
 		cp->Text		= s;
@@ -372,9 +358,8 @@ void SetDarkWinTheme(
 				TLabel *lp = new TLabel(cp->Parent);
 				lp->Tag		= (cp->Height << 16) + cp->Width;	//検索マーク用
 				lp->Parent	= cp->Parent;
-				lp->Font->Assign(def_font.get());
 				lp->Font->Color = fg_label;
-				lp->Color		= bg_panel;
+				lp->Color	= bg_panel;
 				lp->Caption = cp->Caption;
 				lp->Anchors = cp->Anchors;
 				lp->Left	= cp->Left + ScaledInt(16, wp);
@@ -392,7 +377,6 @@ void SetDarkWinTheme(
 				TLabel *lp = new TLabel(cp->Parent);
 				lp->Tag		= (cp->Height << 16) + cp->Width;	//検索マーク用
 				lp->Parent	= cp->Parent;
-				lp->Font->Assign(def_font.get());
 				lp->Font->Color = fg_label;
 				lp->Color		= bg_panel;
 				lp->Caption = cp->Caption;
@@ -406,16 +390,11 @@ void SetDarkWinTheme(
 	else if (wp->ClassNameIs("TColorBox")) {
 		TColorBox *cp = (TColorBox *)wp;
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_CFD") : NULL, NULL);
-		cp->Font->Assign(def_font.get());
 		cp->Font->Color = fg_txt;
 		cp->Color		= bg_win;
 	}
 	else {
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
-		if (wp->ClassNameIs("TButton")) {
-			((TButton *)wp)->Font->Assign(def_font.get());
-		}
-
 		if (std_col) {
 			if		(wp->ClassNameIs("TListBox"))		((TListBox *)wp)->Color 	 = bg_win;
 			else if (wp->ClassNameIs("TCheckListBox"))	((TCheckListBox *)wp)->Color = bg_win;
@@ -434,6 +413,7 @@ TLabel* AttachLabelToGroup(
 
 	TWinControl *parent;
 	UnicodeString cap_str;
+	int s_1 = ScaledInt(1, wp);
 	int s_8 = ScaledInt(8, wp);
 	int xp, yp;
 
@@ -441,7 +421,7 @@ TLabel* AttachLabelToGroup(
 		TGroupBox *gp = (TGroupBox *)wp;
 		parent = gp->Parent;
 		xp = gp->Left + s_8;
-		yp = gp->Top - 1;
+		yp = gp->Top - s_1;
 		gp->Color		= get_PanelColor();
 		gp->Font->Color = get_LabelColor();
 		if (s.IsEmpty()) s = gp->Caption;
@@ -451,7 +431,7 @@ TLabel* AttachLabelToGroup(
 		TRadioGroup *gp = (TRadioGroup *)wp;
 		parent = gp->Parent;
 		xp = gp->Left + s_8;
-		yp = gp->Top - 1;
+		yp = gp->Top - s_1;
 		gp->Color		= get_PanelColor();
 		gp->Font->Color = get_LabelColor();
 		if (s.IsEmpty()) s = gp->Caption;
@@ -465,7 +445,7 @@ TLabel* AttachLabelToGroup(
 		ret_p		= new TLabel(parent);
 		TPanel *pp	= new TPanel(parent);
 		pp->Parent	= parent;
-		ret_p->Font->Assign(Application->DefaultFont);
+		ret_p->Parent	   = pp;
 		ret_p->Font->Color = get_LabelColor();
 		ret_p->Color	   = get_PanelColor();
 		pp->Left		   = xp;
@@ -476,7 +456,6 @@ TLabel* AttachLabelToGroup(
 		pp->BevelOuter	   = bvNone;
 		pp->StyleElements.Clear();
 		ret_p->Caption	   = s;
-		ret_p->Parent	   = pp;
 		pp->AutoSize	   = true;
 		pp->BringToFront();
 	}

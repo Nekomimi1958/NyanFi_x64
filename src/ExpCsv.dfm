@@ -9,9 +9,12 @@ object ExpCsvDlg: TExpCsvDlg
   Color = clBtnFace
   Constraints.MinHeight = 360
   Constraints.MinWidth = 400
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -19,8 +22,7 @@ object ExpCsvDlg: TExpCsvDlg
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object SrcListBox: TListBox
     Left = 0
     Top = 0
@@ -32,6 +34,7 @@ object ExpCsvDlg: TExpCsvDlg
     TabOrder = 0
     OnDblClick = SrcListBoxDblClick
     OnDrawItem = ItemListBoxDrawItem
+    ExplicitHeight = 252
   end
   object DstListBox: TListBox
     Left = 283
@@ -46,6 +49,8 @@ object ExpCsvDlg: TExpCsvDlg
     OnDblClick = DstListBoxDblClick
     OnDrawItem = ItemListBoxDrawItem
     OnKeyDown = DstListBoxKeyDown
+    ExplicitWidth = 177
+    ExplicitHeight = 252
   end
   object OpePanel: TPanel
     Left = 0
@@ -55,19 +60,21 @@ object ExpCsvDlg: TExpCsvDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitTop = 252
+    ExplicitWidth = 460
     DesignSize = (
       464
       108)
     object Label1: TLabel
-      Left = 57
+      Left = 53
       Top = 51
-      Width = 48
-      Height = 13
+      Width = 52
+      Height = 15
       Alignment = taRightJustify
       Caption = #20986#21147#24418#24335
     end
     object CanButton: TButton
-      Left = 379
+      Left = 375
       Top = 78
       Width = 80
       Height = 26
@@ -76,9 +83,10 @@ object ExpCsvDlg: TExpCsvDlg
       Caption = #12461#12515#12531#12475#12523
       ModalResult = 2
       TabOrder = 6
+      ExplicitLeft = 371
     end
     object OkButton: TButton
-      Left = 283
+      Left = 279
       Top = 78
       Width = 80
       Height = 26
@@ -86,18 +94,21 @@ object ExpCsvDlg: TExpCsvDlg
       Anchors = [akTop, akRight]
       Default = True
       TabOrder = 5
+      ExplicitLeft = 275
     end
     object OutNameEdit: TLabeledEdit
       Left = 108
       Top = 14
-      Width = 313
-      Height = 21
+      Width = 309
+      Height = 23
       Anchors = [akLeft, akTop, akRight]
-      EditLabel.Width = 86
-      EditLabel.Height = 13
+      EditLabel.Width = 93
+      EditLabel.Height = 23
       EditLabel.Caption = #20986#21147#12501#12449#12452#12523#21517'(&O)'
       LabelPosition = lpLeft
       TabOrder = 0
+      Text = ''
+      ExplicitWidth = 305
     end
     object QuotCheckBox: TCheckBox
       Left = 249
@@ -124,7 +135,7 @@ object ExpCsvDlg: TExpCsvDlg
       TabOrder = 3
     end
     object RefOutNameBtn: TButton
-      Left = 423
+      Left = 419
       Top = 14
       Width = 36
       Height = 22
@@ -132,6 +143,7 @@ object ExpCsvDlg: TExpCsvDlg
       Caption = '...'
       TabOrder = 1
       OnClick = RefOutNameBtnClick
+      ExplicitLeft = 415
     end
   end
   object MidPanel: TPanel
@@ -142,6 +154,7 @@ object ExpCsvDlg: TExpCsvDlg
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitHeight = 252
     DesignSize = (
       90
       253)
@@ -153,6 +166,7 @@ object ExpCsvDlg: TExpCsvDlg
       Action = UserModule.DelListItemAction
       Anchors = [akRight, akBottom]
       TabOrder = 4
+      ExplicitTop = 178
     end
     object DownItemBtn: TButton
       Left = 35
@@ -162,6 +176,7 @@ object ExpCsvDlg: TExpCsvDlg
       Action = UserModule.DownListItemAction
       Anchors = [akRight, akBottom]
       TabOrder = 3
+      ExplicitTop = 148
     end
     object UpItemBtn: TButton
       Left = 35
@@ -171,6 +186,7 @@ object ExpCsvDlg: TExpCsvDlg
       Action = UserModule.UpListItemAction
       Anchors = [akRight, akBottom]
       TabOrder = 2
+      ExplicitTop = 118
     end
     object AddBtn: TButton
       Left = 5
@@ -198,6 +214,7 @@ object ExpCsvDlg: TExpCsvDlg
       Action = UserModule.ClrListItemAction
       Anchors = [akRight, akBottom]
       TabOrder = 5
+      ExplicitTop = 218
     end
   end
   object ActionList1: TActionList

@@ -6,7 +6,11 @@ object FileInfoDlg: TFileInfoDlg
   ClientWidth = 470
   Color = clBtnFace
   Constraints.MinWidth = 320
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -16,7 +20,6 @@ object FileInfoDlg: TFileInfoDlg
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 15
   object ListPanel: TPanel
     Left = 0
@@ -26,10 +29,12 @@ object FileInfoDlg: TFileInfoDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 466
+    ExplicitHeight = 447
     object InfListBox: TListBox
       Left = 0
       Top = 0
-      Width = 470
+      Width = 466
       Height = 448
       Style = lbOwnerDrawFixed
       Align = alLeft
@@ -48,6 +53,8 @@ object FileInfoDlg: TFileInfoDlg
       OnDrawItem = InfListBoxDrawItem
       OnKeyDown = InfListBoxKeyDown
       OnKeyPress = InfListBoxKeyPress
+      ExplicitWidth = 462
+      ExplicitHeight = 447
     end
   end
   object InfPopupMenu: TPopupMenu

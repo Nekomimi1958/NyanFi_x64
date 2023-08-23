@@ -7,9 +7,12 @@ object TagManDlg: TTagManDlg
   Color = clBtnFace
   Constraints.MinHeight = 320
   Constraints.MinWidth = 320
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -17,26 +20,24 @@ object TagManDlg: TTagManDlg
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object ListPanel: TPanel
     Left = 0
-    Top = 21
+    Top = 23
     Width = 310
-    Height = 160
+    Height = 158
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     OnResize = ListPanelResize
     DesignSize = (
       310
-      160)
+      158)
     object TagCheckListBox: TCheckListBox
       Left = 0
       Top = 0
-      Width = 310
-      Height = 160
-      OnClickCheck = TagCheckListBoxClickCheck
+      Width = 306
+      Height = 158
       Align = alLeft
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
@@ -46,14 +47,15 @@ object TagManDlg: TTagManDlg
       Style = lbOwnerDrawFixed
       TabOrder = 0
       OnClick = TagCheckListBoxClick
+      OnClickCheck = TagCheckListBoxClickCheck
       OnDblClick = TagCheckListBoxDblClick
       OnDrawItem = TagCheckListBoxDrawItem
       OnKeyDown = TagCheckListBoxKeyDown
       OnKeyPress = TagCheckListBoxKeyPress
     end
     object BlankPanel: TPanel
-      Left = 294
-      Top = 144
+      Left = 290
+      Top = 142
       Width = 14
       Height = 14
       Anchors = [akRight, akBottom]
@@ -212,7 +214,7 @@ object TagManDlg: TTagManDlg
     Left = 0
     Top = 0
     Width = 310
-    Height = 21
+    Height = 23
     Align = alTop
     AutoSize = True
     BevelOuter = bvNone
@@ -221,7 +223,7 @@ object TagManDlg: TTagManDlg
       Left = 0
       Top = 0
       Width = 310
-      Height = 21
+      Height = 23
       Align = alTop
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 0
@@ -266,15 +268,15 @@ object TagManDlg: TTagManDlg
         Align = alClient
         Center = True
         Picture.Data = {
-          07544269746D6170F6000000424DF60000000000000076000000280000001000
-          000010000000010004000000000080000000C30E0000C30E0000100000001000
-          000000000000000080000080000000808000800000008000800080800000C0C0
-          C000808080000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFF
-          FF003333333333333333300333333333333330F033333333333330FF03333333
-          3333330FF033333333333330FF033333333333330FF033333333333330FF0333
-          33333333330FF033333333333330FF0033333333333300003333333333333000
-          0033333333333300000333333333330000033333333333300033333333333333
-          3333}
+          0954506E67496D61676589504E470D0A1A0A0000000D49484452000000140000
+          001408060000008D891D0D0000000774494D4507E708170A351F1885EFE80000
+          00097048597300000EC300000EC301C76FA8640000000467414D410000B18F0B
+          FC6105000000674944415478DAD5D4310EC0200C03C0FAE7FC9C06D1214211D8
+          5009F0C4109F92053C3F0777812971259BCBEE0DDF93418F458BED05236CFAE4
+          162B50D4A3C082596A0158035BCC4332C86034C86214A8604350C5BAA045C628
+          50C186E03720FD423D7039E7832F4C325415354458800000000049454E44AE42
+          6082}
+        Stretch = True
         Transparent = True
         OnMouseDown = SpuitImageMouseDown
         OnMouseUp = SpuitImageMouseUp

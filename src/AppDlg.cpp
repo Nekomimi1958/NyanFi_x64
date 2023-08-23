@@ -153,8 +153,6 @@ void __fastcall TAppListDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TAppListDlg::FormShow(TObject *Sender)
 {
-	SetDarkWinTheme(this);
-
 	if (OnlyLauncher) {
 		set_FormTitle(this, _T("ランチャー"));
 		AppPanel->Visible	= false;
@@ -186,9 +184,11 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 		}
 	}
 
+	SetDarkWinTheme(this);
+
 	ExcAppText = IniFile->ReadStrGen(_T("AppListExcAppText"));
 
-	StatusBar1->Font->Assign(SttBarFont);
+	AssignScaledFont(StatusBar1, SttBarFont);
 
 	LaunchPath = IncludeTrailingPathDelimiter(IniFile->ReadStrGen(_T("AppListLaunchPath"), ExePath));
 	if (!dir_exists(LaunchPath)) LaunchPath = ExePath;
@@ -2003,8 +2003,6 @@ void __fastcall TAppListDlg::PropertyItemClick(TObject *Sender)
 	}
 }
 
-
-
 //---------------------------------------------------------------------------
 //入力欄の描画
 //---------------------------------------------------------------------------
@@ -2013,4 +2011,3 @@ void __fastcall TAppListDlg::InpPaintBoxPaint(TObject *Sender)
 	draw_InputPaintBox((TPaintBox*)Sender, (IsMigemo? "Migemo: " : "フィルタ: ") + IncSeaWord);
 }
 //---------------------------------------------------------------------------
-

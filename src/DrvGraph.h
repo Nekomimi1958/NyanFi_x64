@@ -67,17 +67,17 @@ private:	// ƒ†[ƒU[éŒ¾
 	int  SttIndex;
 	double MinUsed, MaxUsed;
 
-	void __fastcall WmDpiChanged(TMessage &msg)
-	{
-		TForm::Dispatch(&msg);
-		SetDarkWinTheme(this);
-	}
-
 	TWndMethod org_SttBar1WndProc;
 	void __fastcall SttBar1WndProc(TMessage &msg)
 	{
 		if (msg.Msg==WM_ERASEBKGND && draw_SttBarBg(StatusBar1, msg)) return;
 		org_SttBar1WndProc(msg);
+	}
+
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		GraphTopX = Canvas->TextWidth("9999/99/99 ") + SCALED_THIS(4);
 	}
 
 	void __fastcall SetStatus(int idx);

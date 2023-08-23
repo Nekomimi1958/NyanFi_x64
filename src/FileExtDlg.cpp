@@ -138,7 +138,7 @@ void __fastcall TFileExtensionDlg::FormShow(TObject *Sender)
 	THeaderSections *sp = FextInfHeader->Sections;
 	for (int i=0; i<sp->Count; i++) FextInfBar->Panels->Items[i]->Width = sp->Items[i]->Width;
 
-	FextInfBar->Font->Assign(ListFont);
+	AssignScaledFont(FextInfBar, ListFont);
 	for (int i=0; i<FextInfBar->Panels->Count; i++) FextInfBar->Panels->Items[i]->Text = EmptyStr;
 
 	//ファイル一覧の初期化
@@ -151,7 +151,7 @@ void __fastcall TFileExtensionDlg::FormShow(TObject *Sender)
 	set_StdListBox(FileListBox);
 	set_UsrScrPanel(FileScrPanel);
 
-	FileInfBar->Font->Assign(SttBarFont);
+	AssignScaledFont(FileInfBar, SttBarFont);
 	FileInfBar->Panels->Items[0]->Text = EmptyStr;
 
 	ListSplitter->Color = col_Splitter;
@@ -168,7 +168,8 @@ void __fastcall TFileExtensionDlg::WmFormShowed(TMessage &msg)
 	Repaint();
 
 	//検索中ヒント表示の設定
-	HintLabel->Font->Assign(HintFont);
+	AssignScaledFont(HintLabel, HintFont);
+	
 	HintLabel->Caption	  = LoadUsrMsg(USTR_SearchingESC);
 	HintLabel->BoundsRect = HintPanel->ClientRect.CenteredRect(HintLabel->ClientRect);
 	HintPanel->Color	  = col_bgHint;

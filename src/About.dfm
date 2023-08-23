@@ -6,13 +6,15 @@ object AboutBox: TAboutBox
   ClientHeight = 222
   ClientWidth = 354
   Color = clBtnFace
-  ParentFont = True
-  OldCreateOrder = False
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   Position = poMainFormCenter
   OnCreate = FormCreate
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object Panel1: TPanel
     Left = 8
     Top = 8
@@ -22,14 +24,6 @@ object AboutBox: TAboutBox
     BevelOuter = bvLowered
     ParentColor = True
     TabOrder = 0
-    object ProgramIcon: TImage
-      Left = 16
-      Top = 16
-      Width = 64
-      Height = 64
-      Stretch = True
-      IsControl = True
-    end
     object ProductName: TLabel
       Left = 79
       Top = 20
@@ -40,8 +34,8 @@ object AboutBox: TAboutBox
       Caption = 'NyanFi'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -27
-      Font.Name = 'Tahoma'
+      Font.Height = -29
+      Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
       IsControl = True
@@ -78,11 +72,21 @@ object AboutBox: TAboutBox
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clNavy
       Font.Height = -12
-      Font.Name = 'Tahoma'
-      Font.Style = [fsUnderline]
+      Font.Name = 'Segoe UI'
+      Font.Style = []
       ParentFont = False
       OnClick = SupportURLClick
       IsControl = True
+    end
+    object VirtualImage1: TVirtualImage
+      Left = 16
+      Top = 16
+      Width = 64
+      Height = 64
+      ImageCollection = ImageCollection1
+      ImageWidth = 0
+      ImageHeight = 0
+      ImageIndex = -1
     end
   end
   object OKButton: TButton
@@ -113,5 +117,10 @@ object AboutBox: TAboutBox
     Caption = #35443#32048#19968#35239'(&L)'
     TabOrder = 2
     OnClick = ListNyanBtnClick
+  end
+  object ImageCollection1: TImageCollection
+    Images = <>
+    Left = 56
+    Top = 96
   end
 end

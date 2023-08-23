@@ -147,7 +147,7 @@ void __fastcall TGraphForm::PaintBox1Paint(TObject *Sender)
 	cv->Pen->Width = SCALED_THIS(1);
 	cv->Pen->Color = col_GrGrid;
 	cv->Font->Assign(ListFont);
-	cv->Font->Height = SCALED_THIS(12);
+	cv->Font->Height = SCALED_THIS(-12);
 	cv->Font->Color  = col_GrText;
 	cv->Brush->Style = bsClear;
 

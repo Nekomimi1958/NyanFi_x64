@@ -7,9 +7,12 @@ object AskRepDlg: TAskRepDlg
   ClientHeight = 144
   ClientWidth = 528
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -18,8 +21,7 @@ object AskRepDlg: TAskRepDlg
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object ListPanel: TPanel
     Left = 0
     Top = 19
@@ -28,10 +30,12 @@ object AskRepDlg: TAskRepDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 524
+    ExplicitHeight = 88
     object RepListBox: TListBox
       Left = 0
       Top = 0
-      Width = 528
+      Width = 524
       Height = 89
       TabStop = False
       Style = lbOwnerDrawFixed
@@ -50,6 +54,8 @@ object AskRepDlg: TAskRepDlg
       StyleElements = [seBorder]
       OnDrawItem = RepListBoxDrawItem
       OnEnter = RepListBoxEnter
+      ExplicitWidth = 520
+      ExplicitHeight = 88
     end
   end
   object StatusBar1: TStatusBar
@@ -75,6 +81,7 @@ object AskRepDlg: TAskRepDlg
       end>
     UseSystemFont = False
     OnDrawPanel = StatusBar1DrawPanel
+    ExplicitWidth = 524
   end
   object OpPanel: TPanel
     Left = 0
@@ -84,6 +91,8 @@ object AskRepDlg: TAskRepDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitTop = 107
+    ExplicitWidth = 524
     DesignSize = (
       528
       36)
@@ -119,7 +128,7 @@ object AskRepDlg: TAskRepDlg
       TabOrder = 2
     end
     object CanBtn: TButton
-      Left = 430
+      Left = 426
       Top = 5
       Width = 90
       Height = 26
@@ -128,6 +137,7 @@ object AskRepDlg: TAskRepDlg
       Caption = #20013#26029
       ModalResult = 3
       TabOrder = 3
+      ExplicitLeft = 422
     end
   end
 end

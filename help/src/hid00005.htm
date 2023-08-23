@@ -617,17 +617,19 @@ NyanFi.exe -XCalculator_CB
         Backup</a>　<a href="#DateSelect">→ DateSelect</a>　<a href="#RegSyncDlg">→ RegSyncDlg</a>
     </dd>
 
-    <dt id="CopyDir">CopyDir<span class="pram_text">[_TO][;KT][;{CC|LS}]</span></dt>
+    <dt id="CopyDir">CopyDir<span class="pram_text">[_TO][;KT][;NS]</span><br>
+      CopyDir<span class="pram_text">_{CC|LS}</span>
+    </dt>
     <dd>選択中(無ければカーソル位置)のディレクトリの階層構造を反対パスにコピー(作成)します。中のファイルはコピーされません。またコピー先に同名ディレクトリがある場合はスキップします。<br>
       コピー(作成)処理はバックグラウンド・タスクで行われます。<br>
 
       <div class="spc_box">
         パラメータに <b>TO</b> を指定すると、反対パスではなく、入力ボックス(<a href="#InputDir">→ InputDir</a>)で指定したディレクトリがコピー先になります。<br>
         パラメータに <b>KT</b> を指定すると、コピーの際にディレクトリのタイムスタンプ(更新日時)を維持します。<br>
+        パラメータに <b>NS</b> を指定すると、サブディレクトリをコピー(作成)しません。<br>
       </div>
       <div class="spc_box">
-        パラメータに <b>CC</b> を指定すると、対象となるディレクトリ名の一覧をクリップボードにコピー、<b>LS</b> を指定すると<a
-          href="hid00073.htm">一覧ダイアログ</a>で表示します。ディレクトリのコピー(作成)は行いません。<br>
+        パラメータに <b>CC</b> を指定すると、対象となるディレクトリ名の一覧をクリップボードにコピーします。また、<b>LS</b> を指定すると<a href="hid00073.htm">一覧ダイアログ</a>で表示します。これらの場合、ディレクトリのコピー(作成)は行いません。<br>
       </div>
       <a href="#CreateDir">→ CreateDir</a>　<a href="#CreateDirsDlg">→ CreateDirsDlg</a>
     </dd>

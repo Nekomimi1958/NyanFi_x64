@@ -8,9 +8,12 @@ object Calculator: TCalculator
   ClientWidth = 392
   Color = clBtnFace
   Constraints.MinWidth = 320
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   StyleElements = []
@@ -19,13 +22,12 @@ object Calculator: TCalculator
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object LineEdit: TEdit
     Left = 0
     Top = 0
     Width = 392
-    Height = 21
+    Height = 23
     Align = alTop
     PopupMenu = UserModule.EditPopupMenuE
     TabOrder = 0
@@ -34,9 +36,9 @@ object Calculator: TCalculator
   end
   object HistComboBox: TComboBox
     Left = 0
-    Top = 21
+    Top = 23
     Width = 392
-    Height = 21
+    Height = 23
     Align = alTop
     DropDownCount = 12
     TabOrder = 1
@@ -45,7 +47,7 @@ object Calculator: TCalculator
   end
   object HiddenCanBtn: TButton
     Left = 0
-    Top = 50
+    Top = 48
     Width = 392
     Height = 0
     Align = alBottom
@@ -53,21 +55,23 @@ object Calculator: TCalculator
     ModalResult = 2
     TabOrder = 2
     TabStop = False
+    ExplicitTop = 50
   end
   object ToolBar1: TToolBar
     Left = 0
-    Top = 50
+    Top = 48
     Width = 392
-    Height = 19
+    Height = 21
     Align = alBottom
     AutoSize = True
-    ButtonHeight = 19
-    ButtonWidth = 48
+    ButtonHeight = 21
+    ButtonWidth = 50
     DrawingStyle = dsGradient
     List = True
     AllowTextButtons = True
     TabOrder = 3
     StyleElements = []
+    ExplicitTop = 50
     object DegBtn: TToolButton
       Left = 0
       Top = 0
@@ -75,14 +79,14 @@ object Calculator: TCalculator
       Style = tbsTextButton
     end
     object SpBtn1: TToolButton
-      Left = 31
+      Left = 33
       Top = 0
       Width = 12
       ImageIndex = 0
       Style = tbsSeparator
     end
     object RefDefBtn: TToolButton
-      Left = 43
+      Left = 45
       Top = 0
       Hint = #23450#25968#12434#21442#29031
       Caption = '&DEFINE'
@@ -91,7 +95,7 @@ object Calculator: TCalculator
       OnClick = RefDefBtnClick
     end
     object NowBtn: TToolButton
-      Left = 95
+      Left = 99
       Top = 0
       Hint = #29694#22312#26178#21051
       Caption = 'N&OW'
@@ -100,7 +104,7 @@ object Calculator: TCalculator
       OnClick = NowBtnClick
     end
     object SpBtn2: TToolButton
-      Left = 136
+      Left = 144
       Top = 0
       Width = 16
       Caption = 'SpBtn2'
@@ -108,19 +112,19 @@ object Calculator: TCalculator
       Style = tbsSeparator
     end
     object ToDecBtn: TToolButton
-      Left = 152
+      Left = 160
       Top = 0
       Action = ToHexDecAction
       Style = tbsTextButton
     end
     object NotBtn: TToolButton
-      Left = 182
+      Left = 193
       Top = 0
       Action = NotAction
       Style = tbsTextButton
     end
     object SpBtn3: TToolButton
-      Left = 214
+      Left = 227
       Top = 0
       Width = 16
       Caption = 'SpBtn3'
@@ -128,7 +132,7 @@ object Calculator: TCalculator
       Style = tbsSeparator
     end
     object AcBtn: TToolButton
-      Left = 230
+      Left = 243
       Top = 0
       Hint = #20837#21147#27396#12434#12463#12522#12450
       Caption = '&AC'

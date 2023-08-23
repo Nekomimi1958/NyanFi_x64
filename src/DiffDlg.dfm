@@ -9,7 +9,11 @@ object DiffDirDlg: TDiffDirDlg
   Constraints.MaxHeight = 280
   Constraints.MinHeight = 280
   Constraints.MinWidth = 500
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -59,17 +63,17 @@ object DiffDirDlg: TDiffDirDlg
   object IncMaskComboBox: TComboBox
     Left = 76
     Top = 74
-    Width = 394
+    Width = 390
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 20
     TabOrder = 2
-    ExplicitWidth = 390
+    ExplicitWidth = 386
   end
   object SrcDirEdit: TLabeledEdit
     Left = 76
     Top = 8
-    Width = 394
+    Width = 390
     Height = 21
     TabStop = False
     Anchors = [akLeft, akTop, akRight]
@@ -81,12 +85,12 @@ object DiffDirDlg: TDiffDirDlg
     ReadOnly = True
     TabOrder = 0
     Text = ''
-    ExplicitWidth = 390
+    ExplicitWidth = 386
   end
   object DstDirEdit: TLabeledEdit
     Left = 76
     Top = 37
-    Width = 394
+    Width = 390
     Height = 21
     TabStop = False
     Anchors = [akLeft, akTop, akRight]
@@ -98,20 +102,20 @@ object DiffDirDlg: TDiffDirDlg
     ReadOnly = True
     TabOrder = 1
     Text = ''
-    ExplicitWidth = 390
+    ExplicitWidth = 386
   end
   object DiffExcDirComboBox: TComboBox
     Left = 76
     Top = 165
-    Width = 394
+    Width = 390
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 20
     TabOrder = 5
-    ExplicitWidth = 390
+    ExplicitWidth = 386
   end
   object CanButton: TButton
-    Left = 390
+    Left = 386
     Top = 209
     Width = 80
     Height = 26
@@ -120,9 +124,11 @@ object DiffDirDlg: TDiffDirDlg
     Caption = #12461#12515#12531#12475#12523
     ModalResult = 2
     TabOrder = 7
+    ExplicitLeft = 382
+    ExplicitTop = 208
   end
   object OkButton: TButton
-    Left = 298
+    Left = 294
     Top = 209
     Width = 80
     Height = 26
@@ -131,16 +137,18 @@ object DiffDirDlg: TDiffDirDlg
     Default = True
     ModalResult = 1
     TabOrder = 6
+    ExplicitLeft = 290
+    ExplicitTop = 208
   end
   object ExcMaskComboBox: TComboBox
     Left = 76
     Top = 103
-    Width = 394
+    Width = 390
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 20
     TabOrder = 3
-    ExplicitWidth = 390
+    ExplicitWidth = 386
   end
   object ActionList1: TActionList
     Left = 216

@@ -9,15 +9,17 @@ object CharInfoForm: TCharInfoForm
   ClientWidth = 274
   Color = clBtnFace
   DoubleBuffered = True
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
   PopupMenu = PopupMenu1
   Position = poDesigned
   OnHide = FormHide
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object BorderShape1: TShape
     Left = 0
     Top = 0
@@ -50,6 +52,8 @@ object CharInfoForm: TCharInfoForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 264
+    ExplicitHeight = 305
     object Splitter1: TSplitter
       Left = 0
       Top = 160
@@ -72,6 +76,8 @@ object CharInfoForm: TCharInfoForm
       Enabled = False
       PopupMenu = PopupMenu1
       TabOrder = 0
+      ExplicitWidth = 264
+      ExplicitHeight = 141
       object InfoListBox: TListBox
         Left = 0
         Top = 0
@@ -90,6 +96,8 @@ object CharInfoForm: TCharInfoForm
         TabOrder = 0
         StyleElements = [seBorder]
         OnDrawItem = InfoListBoxDrawItem
+        ExplicitWidth = 264
+        ExplicitHeight = 141
       end
     end
     object SamplePanel: TPanel
@@ -100,6 +108,7 @@ object CharInfoForm: TCharInfoForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 264
       object CharPanel: TPanel
         Left = 0
         Top = 0
@@ -118,6 +127,7 @@ object CharInfoForm: TCharInfoForm
         PopupMenu = PopupMenu1
         TabOrder = 0
         StyleElements = []
+        ExplicitWidth = 264
       end
       object FontNamePanel: TPanel
         Left = 0
@@ -129,6 +139,7 @@ object CharInfoForm: TCharInfoForm
         PopupMenu = PopupMenu1
         TabOrder = 1
         StyleElements = []
+        ExplicitWidth = 264
       end
     end
   end

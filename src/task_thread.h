@@ -22,6 +22,7 @@ public:
 	UnicodeString CopyFmt;
 	int  DstPosMode;
 	bool KeepTime;
+	bool NoSubDir;
 
 	TDateTime FilterTime;
 	int  FilterMode;

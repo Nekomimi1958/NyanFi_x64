@@ -8,13 +8,15 @@ object ModalScrForm: TModalScrForm
   ClientWidth = 400
   Color = clBlack
   Enabled = False
-  ParentFont = True
-  OldCreateOrder = False
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   Position = poDesigned
   StyleElements = [seFont, seBorder]
   OnActivate = FormActivate
   OnHide = FormHide
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
 end

@@ -8,10 +8,13 @@ object InspectForm: TInspectForm
   ClientWidth = 392
   Color = clBtnFace
   DoubleBuffered = True
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   FormStyle = fsStayOnTop
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnCreate = FormCreate
@@ -19,8 +22,7 @@ object InspectForm: TInspectForm
   OnHide = FormHide
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object BorderShape1: TShape
     Left = 0
     Top = 0
@@ -53,6 +55,8 @@ object InspectForm: TInspectForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 382
+    ExplicitHeight = 356
     object GridSplitter: TSplitter
       Left = 0
       Top = 217
@@ -83,6 +87,7 @@ object InspectForm: TInspectForm
       UseSystemFont = False
       StyleElements = [seFont, seBorder]
       OnDrawPanel = InsStatusBarDrawPanel
+      ExplicitWidth = 382
     end
     object InspectHeader: THeaderControl
       Left = 0
@@ -111,6 +116,7 @@ object InspectForm: TInspectForm
       OnDrawSection = InspectHeaderDrawSection
       OnSectionResize = InspectHeaderSectionResize
       OnResize = InspectHeaderResize
+      ExplicitWidth = 382
     end
     object GridPanel: TPanel
       Left = 0
@@ -120,6 +126,7 @@ object InspectForm: TInspectForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitWidth = 382
       object InspectPanel: TPanel
         Left = 0
         Top = 0
@@ -128,6 +135,7 @@ object InspectForm: TInspectForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitWidth = 382
         DesignSize = (
           390
           178)
@@ -149,6 +157,7 @@ object InspectForm: TInspectForm
           TabOrder = 0
           StyleElements = [seBorder]
           OnDrawCell = InspectGridDrawCell
+          ExplicitWidth = 382
           ColWidths = (
             100
             100)
@@ -161,17 +170,19 @@ object InspectForm: TInspectForm
         end
         object OptToolBar: TToolBar
           Left = 0
-          Top = 159
+          Top = 157
           Width = 390
-          Height = 19
+          Height = 21
           Align = alBottom
           AutoSize = True
-          ButtonHeight = 19
-          ButtonWidth = 61
+          ButtonHeight = 21
+          ButtonWidth = 68
           DrawingStyle = dsGradient
           List = True
           AllowTextButtons = True
           TabOrder = 1
+          ExplicitTop = 159
+          ExplicitWidth = 382
           object UsButton: TToolButton
             Left = 0
             Top = 0
@@ -179,7 +190,7 @@ object InspectForm: TInspectForm
             Style = tbsTextButton
           end
           object BeButton: TToolButton
-            Left = 55
+            Left = 61
             Top = 0
             Action = BigEndianAction
             Style = tbsTextButton
@@ -214,6 +225,7 @@ object InspectForm: TInspectForm
       OnDrawSection = CodePageHeaderDrawSection
       OnSectionResize = CodePageHeaderSectionResize
       OnResize = CodePageHeaderResize
+      ExplicitWidth = 382
     end
     object CodePanel: TPanel
       Left = 0
@@ -223,6 +235,8 @@ object InspectForm: TInspectForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 4
+      ExplicitWidth = 382
+      ExplicitHeight = 115
       DesignSize = (
         390
         127)
@@ -245,6 +259,8 @@ object InspectForm: TInspectForm
         TabOrder = 0
         StyleElements = [seBorder]
         OnDrawCell = InspectGridDrawCell
+        ExplicitWidth = 382
+        ExplicitHeight = 115
         ColWidths = (
           100
           100)

@@ -25,6 +25,9 @@
 #include <Vcl.ToolWin.hpp>
 #include <Vcl.ImgList.hpp>
 #include <Vcl.Mask.hpp>
+#include <Vcl.BaseImageCollection.hpp>
+#include <Vcl.ImageCollection.hpp>
+#include <Vcl.VirtualImageList.hpp>
 #include <IdBaseComponent.hpp>
 #include <IdComponent.hpp>
 #include <IdExplicitTLSClientServerBase.hpp>
@@ -574,10 +577,6 @@ __published:	// IDE で管理されるコンポーネント
 	TImage *HotPosImage;
 	TImage *PreviewImage;
 	TImage *ViewerImage;
-	TImageList *IconImgList;
-	TImageList *IconImgListI;
-	TImageList *IconImgListP;
-	TImageList *IconImgListV;
 	TLabel *GrepFindLabel;
 	TLabel *PreviewSizeLabel;
 	TLabel *PreviewSttLabel;
@@ -1088,6 +1087,16 @@ __published:	// IDE で管理されるコンポーネント
 	TToolBar *ToolBarV;
 	TTrackBar *SeekBar;
 	TTrayIcon *TrayIcon1;
+	TVirtualImageList *IconVImgListF;
+	TVirtualImageList *IconVImgListV;
+	TVirtualImageList *IconVImgListI;
+	TVirtualImageList *BtnVImgList;
+	TImageCollection *ImgCollectionF;
+	TImageCollection *ImgCollectionV;
+	TImageCollection *ImgCollectionI;
+	TVirtualImageList *IconVImgListP;
+	TImageCollection *ImgCollectionP;
+	TImageCollection *BtnImgCollection;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -2062,6 +2071,13 @@ private:	// ユーザー宣言
 	int  FTPLastNoopCnt;
 
 	void __fastcall WmFormShowed(TMessage &msg);
+
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		UpdateFKeyBtn();
+	}
+
 	void __fastcall WmActivate(TMessage &msg);
 	void __fastcall WmQueryEndSession(TMessage &msg);
 
@@ -2079,12 +2095,6 @@ private:	// ユーザー宣言
 	void __fastcall WmEnterSizeMove(TMessage &msg)
 	{
 		WndSizing = true;
-	}
-
-	void __fastcall WmDpiChanged(TMessage &msg)
-	{
-		TForm::Dispatch(&msg);
-		SetDarkWinTheme(this);
 	}
 
 	void __fastcall WmSettingChange(TMessage &msg);
@@ -2649,10 +2659,10 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED, 	TMessage,			WmFormShowed)
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,		TMessage,			WmDpiChanged)
 		VCL_MESSAGE_HANDLER(WM_ACTIVATE,		TMessage,			WmActivate)
 		VCL_MESSAGE_HANDLER(WM_QUERYENDSESSION, TMessage,			WmQueryEndSession)
 		VCL_MESSAGE_HANDLER(WM_SYSCOMMAND, 		TWMSysCommand, 		WmSysCommand)
-		VCL_MESSAGE_HANDLER(WM_DPICHANGED,		TMessage,			WmDpiChanged)
 		VCL_MESSAGE_HANDLER(WM_FORM_DROPPED,	TMessage,			WmDropped)
 		VCL_MESSAGE_HANDLER(WM_SETTINGCHANGE,	TMessage,			WmSettingChange)
 		VCL_MESSAGE_HANDLER(WM_DEVICECHANGE, 	TMessage,			WmDeviceChange)

@@ -16,6 +16,7 @@
 #include <Vcl.Graphics.hpp>
 #include <Vcl.Mask.hpp>
 #include "usr_swatch.h"
+#include <Vcl.Imaging.pngimage.hpp>
 
 //---------------------------------------------------------------------------
 class TDotNyanDlg : public TForm
@@ -78,8 +79,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall RefSndBtnClick(TObject *Sender);
 	void __fastcall TestSndBtnClick(TObject *Sender);
 	void __fastcall RefImgBtnClick(TObject *Sender);
-	void __fastcall ColorComboBoxDrawItem(TWinControl *Control, int Index, TRect &Rect,
-			TOwnerDrawState State);
+	void __fastcall ColorComboBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall RefColBtnClick(TObject *Sender);
 	void __fastcall SpuitImageMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall SpuitImageMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);

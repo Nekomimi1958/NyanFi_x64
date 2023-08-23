@@ -6,7 +6,11 @@ object FindKeyDlg: TFindKeyDlg
   ClientHeight = 122
   ClientWidth = 270
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poOwnerFormCenter
   OnClose = FormClose
@@ -39,6 +43,8 @@ object FindKeyDlg: TFindKeyDlg
     Default = True
     TabOrder = 0
     OnClick = DummyBtnClick
+    ExplicitTop = 121
+    ExplicitWidth = 266
   end
   object CanOutPanel: TPanel
     Left = 94

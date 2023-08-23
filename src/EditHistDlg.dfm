@@ -6,7 +6,11 @@ object EditHistoryDlg: TEditHistoryDlg
   ClientHeight = 341
   ClientWidth = 630
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -26,6 +30,8 @@ object EditHistoryDlg: TEditHistoryDlg
     Cancel = True
     ModalResult = 2
     TabOrder = 0
+    ExplicitTop = 259
+    ExplicitWidth = 626
   end
   object EditHistHeader: THeaderControl
     Left = 0
@@ -38,6 +44,7 @@ object EditHistoryDlg: TEditHistoryDlg
     OnSectionClick = EditHistHeaderSectionClick
     OnSectionResize = EditHistHeaderSectionResize
     OnResize = EditHistHeaderResize
+    ExplicitWidth = 626
   end
   object GridPanel: TPanel
     Left = 0
@@ -47,13 +54,15 @@ object EditHistoryDlg: TEditHistoryDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 626
+    ExplicitHeight = 242
     DesignSize = (
       630
       243)
     object EditHistGrid: TStringGrid
       Left = 0
       Top = 0
-      Width = 630
+      Width = 626
       Height = 260
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
@@ -75,6 +84,8 @@ object EditHistoryDlg: TEditHistoryDlg
       OnDblClick = EditHistGridDblClick
       OnDrawCell = EditHistGridDrawCell
       OnKeyDown = EditHistGridKeyDown
+      ExplicitWidth = 622
+      ExplicitHeight = 259
       ColWidths = (
         64
         64
@@ -100,6 +111,8 @@ object EditHistoryDlg: TEditHistoryDlg
       end>
     StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
+    ExplicitTop = 259
+    ExplicitWidth = 626
   end
   object OpeToolBar: TToolBar
     Left = 0
@@ -116,6 +129,8 @@ object EditHistoryDlg: TEditHistoryDlg
     ShowCaptions = True
     AllowTextButtons = True
     TabOrder = 3
+    ExplicitTop = 278
+    ExplicitWidth = 626
     object FilterBtn: TToolButton
       Left = 0
       Top = 0

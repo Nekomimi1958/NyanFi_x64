@@ -14,16 +14,18 @@ object LoupeForm: TLoupeForm
   DoubleBuffered = True
   DragKind = dkDock
   DragMode = dmAutomatic
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
   Position = poDesigned
   OnEndDock = FormEndDock
   OnHide = FormHide
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object BorderShape1: TShape
     Left = 0
     Top = 0
@@ -56,45 +58,53 @@ object LoupeForm: TLoupeForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 186
+    ExplicitHeight = 173
     object ImgPanel: TPanel
       Left = 0
       Top = 0
       Width = 194
-      Height = 166
+      Height = 164
       Align = alClient
       BevelOuter = bvNone
       Color = clBlack
       ParentBackground = False
       TabOrder = 0
+      ExplicitWidth = 186
+      ExplicitHeight = 154
       object LoupeImage: TImage
         Left = 0
         Top = 0
         Width = 194
-        Height = 166
+        Height = 164
         Align = alClient
         Center = True
         PopupMenu = PopupMenu1
         OnMouseMove = LoupeImageMouseMove
+        ExplicitHeight = 166
       end
     end
     object OptPanel: TPanel
       Left = 0
-      Top = 166
+      Top = 164
       Width = 194
-      Height = 19
+      Height = 21
       Align = alBottom
       AutoSize = True
       BevelOuter = bvNone
       TabOrder = 1
       OnMouseMove = LoupeImageMouseMove
+      ExplicitTop = 154
+      ExplicitWidth = 186
+      ExplicitHeight = 19
       object MagToolBar: TToolBar
         Left = 0
         Top = 0
         Width = 194
-        Height = 19
+        Height = 21
         Align = alBottom
         AutoSize = True
-        ButtonHeight = 19
+        ButtonHeight = 21
         ButtonWidth = 26
         DrawingStyle = dsGradient
         List = True
@@ -102,6 +112,7 @@ object LoupeForm: TLoupeForm
         ShowCaptions = True
         TabOrder = 0
         StyleElements = []
+        ExplicitWidth = 186
         object ToolButton1: TToolButton
           Tag = 1
           Left = 0

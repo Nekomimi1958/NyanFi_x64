@@ -3,12 +3,15 @@ object PathMaskDlg: TPathMaskDlg
   Top = 0
   BorderIcons = [biSystemMenu]
   Caption = #12497#12473#12510#12473#12463
-  ClientHeight = 341
-  ClientWidth = 564
+  ClientHeight = 340
+  ClientWidth = 560
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -17,12 +20,11 @@ object PathMaskDlg: TPathMaskDlg
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object HiddenCanBtn: TButton
     Left = 0
-    Top = 271
-    Width = 564
+    Top = 270
+    Width = 560
     Height = 0
     Align = alBottom
     Cancel = True
@@ -31,8 +33,8 @@ object PathMaskDlg: TPathMaskDlg
   end
   object OptPanel: TPanel
     Left = 0
-    Top = 271
-    Width = 564
+    Top = 270
+    Width = 560
     Height = 70
     Align = alBottom
     BevelOuter = bvNone
@@ -40,16 +42,17 @@ object PathMaskDlg: TPathMaskDlg
     ShowHint = True
     TabOrder = 1
     DesignSize = (
-      564
+      560
       70)
     object HideOptBtn: TSpeedButton
-      Left = 546
+      Left = 538
       Top = 54
       Width = 18
       Height = 16
       Anchors = [akTop, akRight]
       Flat = True
       OnClick = ChgOptBtnClick
+      ExplicitLeft = 546
     end
     object UpButton: TButton
       Left = 232
@@ -95,15 +98,15 @@ object PathMaskDlg: TPathMaskDlg
       Left = 59
       Top = 8
       Width = 163
-      Height = 21
+      Height = 23
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 1
     end
     object MaskEdit: TEdit
       Left = 224
       Top = 8
-      Width = 332
-      Height = 21
+      Width = 324
+      Height = 23
       Hint = '; '#12391#21306#20999#12387#12390#35079#25968#25351#23450#21487#33021#12289'!'#12399#21542#23450
       Anchors = [akLeft, akTop, akRight]
       PopupMenu = UserModule.EditPopupMenuE
@@ -113,7 +116,7 @@ object PathMaskDlg: TPathMaskDlg
       Left = 16
       Top = 8
       Width = 41
-      Height = 21
+      Height = 23
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 0
     end
@@ -121,7 +124,7 @@ object PathMaskDlg: TPathMaskDlg
   object PathMaskHeader: THeaderControl
     Left = 0
     Top = 0
-    Width = 564
+    Width = 560
     Height = 17
     Sections = <
       item
@@ -151,19 +154,19 @@ object PathMaskDlg: TPathMaskDlg
   object ListPanel: TPanel
     Left = 0
     Top = 17
-    Width = 564
-    Height = 254
+    Width = 560
+    Height = 253
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     DesignSize = (
-      564
-      254)
+      560
+      253)
     object PathMaskListBox: TListBox
       Left = 0
       Top = 0
-      Width = 564
-      Height = 254
+      Width = 556
+      Height = 253
       Style = lbOwnerDrawFixed
       AutoComplete = False
       Align = alLeft
@@ -187,8 +190,8 @@ object PathMaskDlg: TPathMaskDlg
       OnKeyDown = PathMaskListBoxKeyDown
     end
     object BlankPanel: TPanel
-      Left = 546
-      Top = 235
+      Left = 538
+      Top = 234
       Width = 18
       Height = 16
       Anchors = [akRight, akBottom]

@@ -40,12 +40,11 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 	MinMaxAction->Checked = IniFile->ReadBoolGen(_T("DrvGraphMinMax"));
 	CursorAction->Checked = IniFile->ReadBoolGen(_T("DrvGraphCursor"));
 
-	StatusBar1->Font->Assign(SttBarFont);
+	AssignScaledFont(StatusBar1, SttBarFont);
 
 	BarSize = IniFile->ReadIntGen( _T("DrvGraphBarSize"), 8);
 	if (BarSize<1 || BarSize>16) BarSize = 8;
 	SizeComboBox->ItemIndex = BarSize - 1;
-	GraphTopX = Canvas->TextWidth("9999/99/99 ") + 4;
 
 	DriveName = DriveName.SubString(1, 1);
 	DriveComboBox->Clear();
@@ -68,6 +67,7 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 	}
 
 	SetDarkWinTheme(this);
+	GraphTopX = Canvas->TextWidth("9999/99/99 ") + SCALED_THIS(4);
 
 	DlgInitialized = true;
 
@@ -164,7 +164,7 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 			//“ú•t
 			if (yp>=yt) {
 				cv->Font->Color = col_fgList;
-				cv->TextOut(4, yp, get_csv_item(lbuf, 0));
+				cv->TextOut(SCALED_THIS(4), yp, get_csv_item(lbuf, 0));
 				yt = yp + ym;
 			}
 			//ƒOƒ‰ƒt

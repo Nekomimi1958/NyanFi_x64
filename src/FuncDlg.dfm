@@ -7,7 +7,11 @@ object FuncListDlg: TFuncListDlg
   ClientWidth = 484
   Color = clBtnFace
   Constraints.MinWidth = 400
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -41,26 +45,26 @@ object FuncListDlg: TFuncListDlg
     object UserDefComboBox: TComboBox
       Left = 66
       Top = 10
-      Width = 128
+      Width = 124
       Height = 23
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
       OnClick = UserDefComboBoxClick
       OnEnter = UserDefComboBoxEnter
-      ExplicitWidth = 124
+      ExplicitWidth = 120
     end
     object UpdateBtn: TButton
-      Left = 398
+      Left = 394
       Top = 9
       Width = 75
       Height = 24
       Action = UpdUserDefAction
       Anchors = [akTop, akRight]
       TabOrder = 3
-      ExplicitLeft = 394
+      ExplicitLeft = 390
     end
     object RegExCheckBox: TCheckBox
-      Left = 200
+      Left = 196
       Top = 12
       Width = 100
       Height = 17
@@ -68,17 +72,17 @@ object FuncListDlg: TFuncListDlg
       Anchors = [akTop, akRight]
       Caption = #27491#35215#34920#29694'(&R)'
       TabOrder = 1
-      ExplicitLeft = 196
+      ExplicitLeft = 192
     end
     object RegHeaderBtn: TButton
-      Left = 304
+      Left = 300
       Top = 9
       Width = 90
       Height = 24
       Action = RegHeaderAction
       Anchors = [akTop, akRight]
       TabOrder = 2
-      ExplicitLeft = 300
+      ExplicitLeft = 296
     end
   end
   object BottomPanel: TPanel
@@ -192,7 +196,7 @@ object FuncListDlg: TFuncListDlg
     object FuncListBox: TListBox
       Left = 0
       Top = 0
-      Width = 480
+      Width = 476
       Height = 271
       Style = lbOwnerDrawFixed
       AutoComplete = False
@@ -216,7 +220,7 @@ object FuncListDlg: TFuncListDlg
       OnDrawItem = FuncListBoxDrawItem
       OnKeyDown = FuncListBoxKeyDown
       OnKeyPress = FuncListBoxKeyPress
-      ExplicitWidth = 476
+      ExplicitWidth = 472
       ExplicitHeight = 270
     end
   end

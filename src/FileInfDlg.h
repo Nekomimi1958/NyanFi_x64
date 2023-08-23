@@ -78,7 +78,6 @@ private:	// ユーザー宣言
 	int MaxColWd2;
 	int FreqIndex;
 
-	void __fastcall WmDpiChanged(TMessage &msg);
 	bool __fastcall UpdateInfo();
 
 public:		// ユーザー宣言
@@ -103,10 +102,6 @@ public:		// ユーザー宣言
 
 	__fastcall TFileInfoDlg(TComponent* Owner);
 	int __fastcall ShowModalEx(UnicodeString fnam);
-
-	BEGIN_MESSAGE_MAP
-		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
-	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFileInfoDlg *FileInfoDlg;

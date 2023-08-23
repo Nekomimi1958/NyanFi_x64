@@ -10,14 +10,16 @@ object HistForm: THistForm
   Color = clBtnFace
   DragKind = dkDock
   DragMode = dmAutomatic
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   FormStyle = fsStayOnTop
-  OldCreateOrder = False
   Position = poDesigned
   OnHide = FormHide
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object HistPanel: TPanel
     Left = 0
     Top = 0
@@ -30,6 +32,8 @@ object HistForm: THistForm
     ParentBackground = False
     ParentDoubleBuffered = False
     TabOrder = 0
+    ExplicitWidth = 249
+    ExplicitHeight = 119
     object HistImage: TImage
       Left = 0
       Top = 0

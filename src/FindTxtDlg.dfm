@@ -7,7 +7,11 @@ object FindTextDlg: TFindTextDlg
   ClientHeight = 126
   ClientWidth = 524
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -31,16 +35,17 @@ object FindTextDlg: TFindTextDlg
   object FindComboBox: TComboBox
     Left = 74
     Top = 8
-    Width = 339
+    Width = 335
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 0
     OnChange = FindComboBoxChange
     OnKeyDown = FindComboBoxKeyDown
     OnKeyPress = FindComboBoxKeyPress
+    ExplicitWidth = 331
   end
   object FindBtn: TButton
-    Left = 421
+    Left = 417
     Top = 7
     Width = 97
     Height = 26
@@ -48,9 +53,10 @@ object FindTextDlg: TFindTextDlg
     Anchors = [akTop, akRight]
     Default = True
     TabOrder = 1
+    ExplicitLeft = 413
   end
   object CalcelBtn: TButton
-    Left = 421
+    Left = 417
     Top = 48
     Width = 97
     Height = 26
@@ -59,6 +65,7 @@ object FindTextDlg: TFindTextDlg
     Caption = #12461#12515#12531#12475#12523
     ModalResult = 2
     TabOrder = 2
+    ExplicitLeft = 413
   end
   object CaseCheckBox: TCheckBox
     Left = 12
@@ -128,6 +135,7 @@ object FindTextDlg: TFindTextDlg
     Anchors = [akLeft, akBottom]
     BevelOuter = bvNone
     TabOrder = 7
+    ExplicitTop = 90
     object BytesCheckBox: TCheckBox
       Left = 12
       Top = 4

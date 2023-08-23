@@ -11,7 +11,11 @@ object BitmapForm: TBitmapForm
   Constraints.MinHeight = 200
   Constraints.MinWidth = 164
   DoubleBuffered = True
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   FormStyle = fsStayOnTop
   KeyPreview = True
   Position = poDesigned

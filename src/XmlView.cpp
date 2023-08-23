@@ -41,9 +41,9 @@ void __fastcall TXmlViewer::FormShow(TObject *Sender)
 
 	XmlTreeView->Items->Clear();
 	XmlTreeView->Color = col_bgList;
-	XmlTreeView->Font->Assign(ListFont);
 
-	StatusBar1->Font->Assign(SttBarFont);
+	AssignScaledFont(XmlTreeView, ListFont);
+	AssignScaledFont(StatusBar1, SttBarFont);
 
 	Caption = yen_to_delimiter(FileName) + " - XMLÉrÉÖÉAÅ[";
 

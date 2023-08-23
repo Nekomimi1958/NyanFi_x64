@@ -13,6 +13,7 @@
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
 #include <Vcl.ExtCtrls.hpp>
+#include <Vcl.Mask.hpp>
 
 //-----------------------------------------------------
 class TJoinTextDlg : public TForm
@@ -50,18 +51,9 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall JoinActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
-	void __fastcall WmDpiChanged(TMessage &msg)
-	{
-		TForm::Dispatch(&msg);
-		SetDarkWinTheme(this, true);
-	}
 
 public:		// ユーザー宣言
 	__fastcall TJoinTextDlg(TComponent* Owner);
-
-	BEGIN_MESSAGE_MAP
-		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
-	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TJoinTextDlg *JoinTextDlg;

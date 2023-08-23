@@ -20,6 +20,7 @@
 #include <Vcl.Graphics.hpp>
 #include "usr_swatch.h"
 #include "usr_scrpanel.h"
+#include <Vcl.Imaging.pngimage.hpp>
 
 //---------------------------------------------------------------------------
 class TTagManDlg : public TForm
@@ -133,7 +134,6 @@ private:	// ユーザー宣言
 	UsrSwatchPanel *SwatchPanel;
 
 	void __fastcall WmFormShowed(TMessage &msg);
-	void __fastcall WmDpiChanged(TMessage &msg);
 
 	void __fastcall WmMenuChar(TMessage &msg)
 	{
@@ -152,7 +152,6 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
-		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
 		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
 	END_MESSAGE_MAP(TForm)
 };

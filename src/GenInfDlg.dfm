@@ -7,7 +7,11 @@ object GeneralInfoDlg: TGeneralInfoDlg
   ClientWidth = 530
   Color = clBtnFace
   Constraints.MinWidth = 320
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -50,6 +54,8 @@ object GeneralInfoDlg: TGeneralInfoDlg
     UseSystemFont = False
     StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
+    ExplicitTop = 491
+    ExplicitWidth = 526
   end
   object MianPanel: TPanel
     Left = 0
@@ -59,6 +65,8 @@ object GeneralInfoDlg: TGeneralInfoDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 526
+    ExplicitHeight = 491
     object ListPanel: TPanel
       Left = 0
       Top = 0
@@ -69,13 +77,15 @@ object GeneralInfoDlg: TGeneralInfoDlg
       DoubleBuffered = False
       ParentDoubleBuffered = False
       TabOrder = 0
+      ExplicitWidth = 526
+      ExplicitHeight = 449
       DesignSize = (
         530
         450)
       object GenListBox: TListBox
         Left = 0
         Top = 0
-        Width = 530
+        Width = 526
         Height = 450
         Style = lbVirtualOwnerDraw
         Anchors = [akLeft, akTop, akRight, akBottom]
@@ -97,6 +107,8 @@ object GeneralInfoDlg: TGeneralInfoDlg
         OnExit = GenListBoxExit
         OnKeyDown = GenListBoxKeyDown
         OnKeyPress = GenListBoxKeyPress
+        ExplicitWidth = 522
+        ExplicitHeight = 449
       end
     end
     object OpeToolBar: TToolBar
@@ -113,6 +125,8 @@ object GeneralInfoDlg: TGeneralInfoDlg
       ShowCaptions = True
       AllowTextButtons = True
       TabOrder = 1
+      ExplicitTop = 449
+      ExplicitWidth = 526
       object FilterBtn: TToolButton
         Left = 0
         Top = 0

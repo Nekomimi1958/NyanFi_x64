@@ -6,9 +6,12 @@ object PackArcDlg: TPackArcDlg
   ClientHeight = 395
   ClientWidth = 444
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -17,13 +20,12 @@ object PackArcDlg: TPackArcDlg
   DesignSize = (
     444
     395)
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object FextLabel: TLabel
     Left = 404
     Top = 11
-    Width = 17
-    Height = 13
+    Width = 18
+    Height = 15
     Caption = '.zip'
   end
   object OkButton: TButton
@@ -39,15 +41,17 @@ object PackArcDlg: TPackArcDlg
   object ArcNameEdit: TLabeledEdit
     Left = 106
     Top = 8
-    Width = 294
-    Height = 21
+    Width = 290
+    Height = 23
     Anchors = [akLeft, akTop, akRight]
-    EditLabel.Width = 73
-    EditLabel.Height = 13
+    EditLabel.Width = 78
+    EditLabel.Height = 23
     EditLabel.Caption = #12450#12540#12459#12452#12502#21517'(&A)'
     LabelPosition = lpLeft
     PopupMenu = UserModule.EditPopupMenuE
     TabOrder = 0
+    Text = ''
+    ExplicitWidth = 286
   end
   object CanButton: TButton
     Left = 230
@@ -62,7 +66,7 @@ object PackArcDlg: TPackArcDlg
   object FormatRadioGroup: TRadioGroup
     Left = 8
     Top = 74
-    Width = 428
+    Width = 424
     Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #12501#12457#12540#12510#12483#12488'(&F)'
@@ -76,49 +80,55 @@ object PackArcDlg: TPackArcDlg
       'TAR')
     TabOrder = 3
     OnClick = FormatRadioGroupClick
+    ExplicitWidth = 420
   end
   object OptionGroupBox: TGroupBox
     Left = 8
     Top = 134
-    Width = 428
+    Width = 424
     Height = 143
     Anchors = [akLeft, akTop, akRight]
     Caption = #12458#12503#12471#12519#12531'(&O)'
     TabOrder = 4
+    ExplicitWidth = 420
     DesignSize = (
-      428
+      424
       143)
     object Label1: TLabel
-      Left = 46
+      Left = 38
       Top = 21
-      Width = 48
-      Height = 13
+      Width = 52
+      Height = 15
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
       Caption = #22311#32302#24418#24335
+      ExplicitLeft = 42
     end
     object PasswordEdit: TLabeledEdit
       Left = 98
       Top = 109
-      Width = 319
-      Height = 21
+      Width = 315
+      Height = 23
       Anchors = [akLeft, akTop, akRight]
-      EditLabel.Width = 61
-      EditLabel.Height = 13
+      EditLabel.Width = 66
+      EditLabel.Height = 23
       EditLabel.Caption = #12497#12473#12527#12540#12489'(&P)'
       LabelPosition = lpLeft
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 3
+      Text = ''
       StyleElements = [seBorder]
+      ExplicitWidth = 311
     end
     object ParamComboBox: TComboBox
       Left = 98
       Top = 18
-      Width = 319
-      Height = 21
+      Width = 315
+      Height = 23
       Style = csDropDownList
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
+      ExplicitWidth = 311
     end
     object SfxCheckBox: TCheckBox
       Left = 98
@@ -132,16 +142,18 @@ object PackArcDlg: TPackArcDlg
     object ExSwEdit: TLabeledEdit
       Left = 98
       Top = 47
-      Width = 319
-      Height = 21
+      Width = 315
+      Height = 23
       Anchors = [akLeft, akTop, akRight]
-      EditLabel.Width = 58
-      EditLabel.Height = 13
+      EditLabel.Width = 63
+      EditLabel.Height = 23
       EditLabel.Caption = #36861#21152#12473#12452#12483#12481
       LabelPosition = lpLeft
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 1
+      Text = ''
       StyleElements = [seBorder]
+      ExplicitWidth = 311
     end
   end
   object PerDirCheckBox: TCheckBox
@@ -165,7 +177,7 @@ object PackArcDlg: TPackArcDlg
   object SameRadioGroup: TRadioGroup
     Left = 8
     Top = 289
-    Width = 428
+    Width = 424
     Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #21516#21517#12450#12540#12459#12452#12502#12364#12354#12427#22580#21512#12398#20966#29702
@@ -176,6 +188,7 @@ object PackArcDlg: TPackArcDlg
       #21066#38500#12375#12390#26032#35215#20316#25104)
     TabOrder = 5
     OnClick = FormatRadioGroupClick
+    ExplicitWidth = 420
   end
   object SureSameCheckBox: TCheckBox
     Left = 346

@@ -78,7 +78,7 @@ public:		// ÉÜÅ[ÉUÅ[êÈåæ
 	void __fastcall UpdateRecord(TStringList *lst = NULL, int r_idx = -1, int i_idx = -1);
 
 	BEGIN_MESSAGE_MAP
-		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,		WmFormShowed)
+		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

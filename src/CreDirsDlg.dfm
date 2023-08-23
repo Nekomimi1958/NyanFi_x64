@@ -9,17 +9,19 @@ object CreateDirsDlg: TCreateDirsDlg
   Color = clBtnFace
   Constraints.MinHeight = 400
   Constraints.MinWidth = 420
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object StatusBar1: TStatusBar
     Left = 0
     Top = 351
@@ -91,25 +93,27 @@ object CreateDirsDlg: TCreateDirsDlg
           Left = 8
           Top = 32
           Width = 100
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 36
-          EditLabel.Height = 13
+          EditLabel.Width = 39
+          EditLabel.Height = 15
           EditLabel.Caption = #38283#22987#20516
           NumbersOnly = True
           TabOrder = 0
+          Text = ''
         end
         object IncEdit: TLabeledEdit
           Left = 112
           Top = 32
           Width = 90
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 24
-          EditLabel.Height = 13
+          EditLabel.Width = 26
+          EditLabel.Height = 15
           EditLabel.Caption = #22679#20998
           NumbersOnly = True
           TabOrder = 1
+          Text = ''
         end
         object AddSerBtn: TButton
           Left = 334
@@ -180,7 +184,7 @@ object CreateDirsDlg: TCreateDirsDlg
           Left = 8
           Top = 18
           Width = 194
-          Height = 21
+          Height = 23
           TabOrder = 0
         end
       end
@@ -197,8 +201,8 @@ object CreateDirsDlg: TCreateDirsDlg
         object Label1: TLabel
           Left = 112
           Top = 15
-          Width = 36
-          Height = 13
+          Width = 39
+          Height = 15
           Caption = #38283#22987#26085
         end
         object AddDateBtn: TButton
@@ -232,17 +236,18 @@ object CreateDirsDlg: TCreateDirsDlg
           Left = 8
           Top = 34
           Width = 100
-          Height = 21
-          EditLabel.Width = 24
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 26
+          EditLabel.Height = 15
           EditLabel.Caption = #26360#24335
           TabOrder = 0
+          Text = ''
         end
         object DateMaskEdit: TMaskEdit
           Left = 112
           Top = 34
           Width = 90
-          Height = 21
+          Height = 23
           EditMask = '!9999/99/99;1;_'
           MaxLength = 10
           PopupMenu = UserModule.EditPopupMenuE

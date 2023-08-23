@@ -7,7 +7,11 @@ object GrepExOptDlg: TGrepExOptDlg
   ClientHeight = 365
   ClientWidth = 514
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -26,6 +30,8 @@ object GrepExOptDlg: TGrepExOptDlg
     TabOrder = 0
     TabWidth = 100
     OnDrawTab = PageControl1DrawTab
+    ExplicitWidth = 510
+    ExplicitHeight = 318
     object OutModeSheet: TTabSheet
       Caption = #20986#21147#26041#27861
       ImageIndex = -1
@@ -37,6 +43,8 @@ object GrepExOptDlg: TGrepExOptDlg
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitWidth = 502
+        ExplicitHeight = 288
         DesignSize = (
           506
           289)
@@ -48,6 +56,7 @@ object GrepExOptDlg: TGrepExOptDlg
           Anchors = [akLeft, akTop, akRight]
           Caption = #36215#21205#12450#12503#12522#12465#12540#12471#12519#12531
           TabOrder = 2
+          ExplicitWidth = 484
           DesignSize = (
             488
             110)
@@ -60,6 +69,7 @@ object GrepExOptDlg: TGrepExOptDlg
             Caption = '...'
             TabOrder = 2
             OnClick = RefAppBtnClick
+            ExplicitLeft = 440
           end
           object AppParamEdit: TLabeledEdit
             Left = 101
@@ -74,6 +84,7 @@ object GrepExOptDlg: TGrepExOptDlg
             LabelPosition = lpLeft
             TabOrder = 3
             Text = ''
+            ExplicitWidth = 335
           end
           object AppDirEdit: TLabeledEdit
             Left = 101
@@ -87,6 +98,7 @@ object GrepExOptDlg: TGrepExOptDlg
             LabelPosition = lpLeft
             TabOrder = 4
             Text = ''
+            ExplicitWidth = 335
           end
           object RefDirBtn: TButton
             Left = 444
@@ -97,6 +109,7 @@ object GrepExOptDlg: TGrepExOptDlg
             Caption = '...'
             TabOrder = 5
             OnClick = RefDirBtnClick
+            ExplicitLeft = 440
           end
           object AppEnabledCheckBox: TCheckBox
             Left = 12
@@ -113,6 +126,7 @@ object GrepExOptDlg: TGrepExOptDlg
             Height = 23
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 1
+            ExplicitWidth = 335
           end
         end
         object FileGroupBox: TGroupBox
@@ -123,6 +137,7 @@ object GrepExOptDlg: TGrepExOptDlg
           Anchors = [akLeft, akTop, akRight]
           Caption = #20986#21147#12501#12449#12452#12523
           TabOrder = 1
+          ExplicitWidth = 484
           DesignSize = (
             488
             77)
@@ -138,6 +153,7 @@ object GrepExOptDlg: TGrepExOptDlg
             LabelPosition = lpLeft
             TabOrder = 0
             Text = ''
+            ExplicitWidth = 335
           end
           object RefOutBtn: TButton
             Left = 444
@@ -148,6 +164,7 @@ object GrepExOptDlg: TGrepExOptDlg
             Caption = '...'
             TabOrder = 1
             OnClick = RefOutBtnClick
+            ExplicitLeft = 440
           end
           object AppendCheckBox: TCheckBox
             Left = 101
@@ -446,6 +463,8 @@ object GrepExOptDlg: TGrepExOptDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 318
+    ExplicitWidth = 510
     object CanButton: TButton
       Left = 269
       Top = 10

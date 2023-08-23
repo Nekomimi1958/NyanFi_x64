@@ -6,16 +6,18 @@ object FindDuplDlg: TFindDuplDlg
   ClientHeight = 224
   ClientWidth = 314
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object OptPanel: TPanel
     Left = 0
     Top = 59
@@ -24,6 +26,7 @@ object FindDuplDlg: TFindDuplDlg
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 310
     object ExcSymCheckBox: TCheckBox
       Left = 16
       Top = 58
@@ -65,6 +68,8 @@ object FindDuplDlg: TFindDuplDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitTop = 175
+    ExplicitWidth = 310
     DesignSize = (
       314
       48)
@@ -99,25 +104,26 @@ object FindDuplDlg: TFindDuplDlg
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 310
     object Label1: TLabel
       Left = 266
       Top = 34
-      Width = 14
-      Height = 13
+      Width = 18
+      Height = 15
       Caption = 'MB'
     end
     object Label2: TLabel
       Left = 12
       Top = 12
-      Width = 96
-      Height = 13
+      Width = 107
+      Height = 15
       Caption = #12495#12483#12471#12517#12539#12450#12523#12468#12522#12474#12512
     end
     object AlgComboBox: TComboBox
       Left = 12
       Top = 31
       Width = 150
-      Height = 21
+      Height = 23
       Style = csDropDownList
       TabOrder = 0
     end
@@ -125,13 +131,14 @@ object FindDuplDlg: TFindDuplDlg
       Left = 204
       Top = 31
       Width = 60
-      Height = 21
+      Height = 23
       Alignment = taRightJustify
-      EditLabel.Width = 53
-      EditLabel.Height = 13
+      EditLabel.Width = 57
+      EditLabel.Height = 15
       EditLabel.Caption = #26368#22823#12469#12452#12474
       NumbersOnly = True
       TabOrder = 1
+      Text = ''
     end
   end
 end

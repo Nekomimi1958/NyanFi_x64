@@ -5,7 +5,11 @@ object InputExDlg: TInputExDlg
   ClientHeight = 232
   ClientWidth = 594
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -22,6 +26,7 @@ object InputExDlg: TInputExDlg
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 590
     object NameLabel: TLabel
       Left = 16
       Top = 13
@@ -36,7 +41,7 @@ object InputExDlg: TInputExDlg
       Width = 341
       Height = 23
       EditLabel.Width = 26
-      EditLabel.Height = 15
+      EditLabel.Height = 23
       EditLabel.Caption = #21517#21069
       LabelPosition = lpLeft
       PopupMenu = UserModule.EditPopupMenuE
@@ -64,6 +69,7 @@ object InputExDlg: TInputExDlg
     BevelOuter = bvNone
     TabOrder = 1
     Visible = False
+    ExplicitWidth = 590
     object CodePageLabel: TLabel
       Left = 228
       Top = 2
@@ -118,6 +124,7 @@ object InputExDlg: TInputExDlg
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 590
     object CnvChCheckBox: TCheckBox
       Left = 203
       Top = 26
@@ -146,6 +153,7 @@ object InputExDlg: TInputExDlg
       DoubleBuffered = True
       ParentDoubleBuffered = False
       TabOrder = 2
+      ExplicitWidth = 590
       DesignSize = (
         594
         20)
@@ -177,11 +185,13 @@ object InputExDlg: TInputExDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 4
+    ExplicitTop = 190
+    ExplicitWidth = 590
     DesignSize = (
       594
       41)
     object CancelBtn: TButton
-      Left = 511
+      Left = 507
       Top = 8
       Width = 75
       Height = 26
@@ -190,9 +200,10 @@ object InputExDlg: TInputExDlg
       Caption = #12461#12515#12531#12475#12523
       ModalResult = 2
       TabOrder = 2
+      ExplicitLeft = 503
     end
     object OkBtn: TButton
-      Left = 420
+      Left = 416
       Top = 8
       Width = 75
       Height = 26
@@ -201,6 +212,7 @@ object InputExDlg: TInputExDlg
       Default = True
       ModalResult = 1
       TabOrder = 1
+      ExplicitLeft = 412
     end
     object NotationPanel: TPanel
       Left = 200
@@ -258,6 +270,7 @@ object InputExDlg: TInputExDlg
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitWidth = 590
     object TestSizeEdit: TLabeledEdit
       Left = 95
       Top = 6
@@ -265,7 +278,7 @@ object InputExDlg: TInputExDlg
       Height = 23
       Alignment = taRightJustify
       EditLabel.Width = 31
-      EditLabel.Height = 15
+      EditLabel.Height = 23
       EditLabel.Caption = #12469#12452#12474
       LabelPosition = lpLeft
       TabOrder = 0
@@ -278,7 +291,7 @@ object InputExDlg: TInputExDlg
       Height = 23
       Alignment = taRightJustify
       EditLabel.Width = 26
-      EditLabel.Height = 15
+      EditLabel.Height = 23
       EditLabel.Caption = #20491#25968
       LabelPosition = lpLeft
       NumbersOnly = True

@@ -70,7 +70,6 @@ private:	// ユーザー宣言
 
 	int MaxTagWidth;
 
-	void __fastcall WmDpiChanged(TMessage &msg);
 	void __fastcall ClearTagList();
 	void __fastcall UpdateList();
 
@@ -85,10 +84,6 @@ public:		// ユーザー宣言
 	UsrScrollPanel *InfoScrPanel;
 
 	__fastcall TFindTagForm(TComponent* Owner);
-
-	BEGIN_MESSAGE_MAP
-		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
-	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFindTagForm *FindTagForm;

@@ -2,15 +2,18 @@ object MaskSelectDlg: TMaskSelectDlg
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu]
-  ClientHeight = 77
+  ClientHeight = 72
   ClientWidth = 312
   Color = clBtnFace
   Constraints.MaxHeight = 110
   Constraints.MinHeight = 110
   Constraints.MinWidth = 320
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -19,20 +22,20 @@ object MaskSelectDlg: TMaskSelectDlg
   OnShow = FormShow
   DesignSize = (
     312
-    77)
-  PixelsPerInch = 96
-  TextHeight = 13
+    72)
+  TextHeight = 15
   object MaskSelComboBox: TComboBox
     Left = 8
     Top = 8
-    Width = 298
-    Height = 21
+    Width = 294
+    Height = 23
     Anchors = [akLeft, akTop, akRight]
     PopupMenu = UserModule.EditPopupMenuC
     TabOrder = 0
+    ExplicitWidth = 290
   end
   object OkButton: TButton
-    Left = 130
+    Left = 126
     Top = 43
     Width = 80
     Height = 26
@@ -41,9 +44,10 @@ object MaskSelectDlg: TMaskSelectDlg
     Default = True
     ModalResult = 1
     TabOrder = 1
+    ExplicitLeft = 122
   end
   object CanButton: TButton
-    Left = 226
+    Left = 222
     Top = 43
     Width = 80
     Height = 26
@@ -52,5 +56,6 @@ object MaskSelectDlg: TMaskSelectDlg
     Caption = #12461#12515#12531#12475#12523
     ModalResult = 2
     TabOrder = 2
+    ExplicitLeft = 218
   end
 end

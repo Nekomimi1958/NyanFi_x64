@@ -6,17 +6,19 @@ object PrintImgDlg: TPrintImgDlg
   ClientHeight = 372
   ClientWidth = 634
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object PrviewPanel: TPanel
     Left = 294
     Top = 0
@@ -28,6 +30,8 @@ object PrintImgDlg: TPrintImgDlg
     ParentBackground = False
     TabOrder = 1
     StyleElements = []
+    ExplicitLeft = 290
+    ExplicitHeight = 371
     object SizeLabel: TLabel
       Left = 0
       Top = 336
@@ -54,6 +58,8 @@ object PrintImgDlg: TPrintImgDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 290
+    ExplicitHeight = 371
     DesignSize = (
       294
       372)
@@ -67,6 +73,7 @@ object PrintImgDlg: TPrintImgDlg
       Caption = #38281#12376#12427
       ModalResult = 1
       TabOrder = 7
+      ExplicitTop = 339
     end
     object PageControl1: TPageControl
       Left = 8
@@ -84,7 +91,7 @@ object PrintImgDlg: TPrintImgDlg
           Left = 0
           Top = 0
           Width = 273
-          Height = 184
+          Height = 182
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
@@ -115,10 +122,10 @@ object PrintImgDlg: TPrintImgDlg
             Left = 205
             Top = 120
             Width = 40
-            Height = 21
+            Height = 23
             Alignment = taRightJustify
-            EditLabel.Width = 6
-            EditLabel.Height = 13
+            EditLabel.Width = 7
+            EditLabel.Height = 23
             EditLabel.Caption = 'Y'
             LabelPosition = lpLeft
             NumbersOnly = True
@@ -130,10 +137,10 @@ object PrintImgDlg: TPrintImgDlg
             Left = 133
             Top = 120
             Width = 40
-            Height = 21
+            Height = 23
             Alignment = taRightJustify
-            EditLabel.Width = 51
-            EditLabel.Height = 13
+            EditLabel.Width = 57
+            EditLabel.Height = 23
             EditLabel.Caption = #12458#12501#12475#12483#12488' X'
             LabelPosition = lpLeft
             NumbersOnly = True
@@ -145,10 +152,10 @@ object PrintImgDlg: TPrintImgDlg
             Left = 133
             Top = 90
             Width = 40
-            Height = 21
+            Height = 23
             Alignment = taRightJustify
-            EditLabel.Width = 38
-            EditLabel.Height = 13
+            EditLabel.Width = 42
+            EditLabel.Height = 23
             EditLabel.Caption = #12473#12465#12540#12523
             LabelPosition = lpLeft
             NumbersOnly = True
@@ -160,7 +167,7 @@ object PrintImgDlg: TPrintImgDlg
             Left = 173
             Top = 120
             Width = 16
-            Height = 21
+            Height = 23
             Associate = OfsXEdit
             Max = 99
             TabOrder = 4
@@ -170,7 +177,7 @@ object PrintImgDlg: TPrintImgDlg
             Left = 245
             Top = 120
             Width = 16
-            Height = 21
+            Height = 23
             Associate = OfsYEdit
             Max = 99
             TabOrder = 6
@@ -180,7 +187,7 @@ object PrintImgDlg: TPrintImgDlg
             Left = 173
             Top = 90
             Width = 16
-            Height = 21
+            Height = 23
             Associate = ScaleEdit
             Min = 1
             Position = 100
@@ -205,11 +212,12 @@ object PrintImgDlg: TPrintImgDlg
             Top = 103
             Width = 258
             Height = 21
-            EditLabel.Width = 24
-            EditLabel.Height = 13
+            EditLabel.Width = 26
+            EditLabel.Height = 15
             EditLabel.Caption = #26360#24335
             PopupMenu = UserModule.EditPopupMenuE
             TabOrder = 5
+            Text = ''
             OnChange = OptionChanged
           end
           object RefFontBtn: TButton
@@ -229,11 +237,12 @@ object PrintImgDlg: TPrintImgDlg
             TabStop = False
             BorderStyle = bsNone
             Color = clSilver
-            EditLabel.Width = 33
-            EditLabel.Height = 13
+            EditLabel.Width = 37
+            EditLabel.Height = 15
             EditLabel.Caption = #12501#12457#12531#12488
             ReadOnly = True
             TabOrder = 6
+            Text = ''
           end
           object StrCheckBox: TCheckBox
             Left = 8
@@ -250,8 +259,8 @@ object PrintImgDlg: TPrintImgDlg
             Width = 40
             Height = 21
             Alignment = taRightJustify
-            EditLabel.Width = 38
-            EditLabel.Height = 13
+            EditLabel.Width = 42
+            EditLabel.Height = 21
             EditLabel.Caption = #12510#12540#12472#12531
             LabelPosition = lpLeft
             NumbersOnly = True
@@ -308,6 +317,7 @@ object PrintImgDlg: TPrintImgDlg
       Anchors = [akLeft, akBottom]
       Default = True
       TabOrder = 2
+      ExplicitTop = 339
     end
     object PrnGroupBox: TGroupBox
       Left = 8
@@ -320,7 +330,7 @@ object PrintImgDlg: TPrintImgDlg
         Left = 8
         Top = 20
         Width = 3
-        Height = 13
+        Height = 15
       end
       object PrnPropBtn: TButton
         Left = 12
@@ -335,7 +345,7 @@ object PrintImgDlg: TPrintImgDlg
         Left = 100
         Top = 75
         Width = 16
-        Height = 21
+        Height = 23
         Associate = PrnCpsEdit
         Min = 1
         Position = 1
@@ -345,10 +355,10 @@ object PrintImgDlg: TPrintImgDlg
         Left = 60
         Top = 75
         Width = 40
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 39
-        EditLabel.Height = 13
+        EditLabel.Width = 42
+        EditLabel.Height = 23
         EditLabel.Caption = #37096#25968'(&C)'
         LabelPosition = lpLeft
         NumbersOnly = True

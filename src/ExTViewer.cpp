@@ -67,7 +67,7 @@ void __fastcall TExTxtViewer::FormShow(TObject *Sender)
 
 	//î•ñƒwƒbƒ_
 	TxtSttHeader->Align = TxtSttIsBottom? alBottom : alTop;
-	TxtSttHeader->Font->Assign(ViewHdrFont);
+	AssignScaledFont(TxtSttHeader, ViewHdrFont);
 
 	set_UsrScrPanel(TxtViewScrPanel);
 

@@ -5,7 +5,11 @@ object SameNameDlg: TSameNameDlg
   ClientHeight = 400
   ClientWidth = 394
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -40,13 +44,14 @@ object SameNameDlg: TSameNameDlg
   object ModeGroupBox: TGroupBox
     Left = 8
     Top = 8
-    Width = 378
+    Width = 374
     Height = 204
     Anchors = [akLeft, akTop, akRight]
     Caption = #20966#29702#26041#27861
     TabOrder = 0
+    ExplicitWidth = 370
     DesignSize = (
-      378
+      374
       204)
     object Mode0Label: TLabel
       Left = 28
@@ -118,13 +123,14 @@ object SameNameDlg: TSameNameDlg
     object RenameEdit: TEdit
       Left = 30
       Top = 142
-      Width = 337
+      Width = 333
       Height = 23
       Anchors = [akLeft, akTop, akRight]
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 5
       OnKeyDown = RenameEditKeyDown
       OnKeyPress = RenameEditKeyPress
+      ExplicitWidth = 329
     end
     object Mode3Btn: TRadioButton
       Left = 11
@@ -148,23 +154,25 @@ object SameNameDlg: TSameNameDlg
   object InfoPanel: TPanel
     Left = 8
     Top = 218
-    Width = 378
+    Width = 374
     Height = 143
     Anchors = [akLeft, akTop, akRight]
     BevelOuter = bvNone
     BorderWidth = 2
     Enabled = False
     TabOrder = 1
+    ExplicitWidth = 370
     object InfoListBox: TListBox
       Left = 2
       Top = 2
-      Width = 374
+      Width = 370
       Height = 139
       Style = lbOwnerDrawFixed
       Align = alClient
       BorderStyle = bsNone
       TabOrder = 0
       OnDrawItem = InfoListBoxDrawItem
+      ExplicitWidth = 366
     end
   end
 end

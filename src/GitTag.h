@@ -13,6 +13,7 @@
 #include <Vcl.Forms.hpp>
 #include <Vcl.ExtCtrls.hpp>
 #include <Vcl.ActnList.hpp>
+#include <Vcl.Mask.hpp>
 
 //---------------------------------------------------------------------------
 class TSetGitTagDlg : public TForm
@@ -43,7 +44,6 @@ public:		// ユーザー宣言
 	UnicodeString CommitID;
 	UnicodeString EditMsgFile;	//メッセージ編集用ファイル
 	UnicodeString GitParam;		//[o] git実行用パラメータ
-
 
 	__fastcall TSetGitTagDlg(TComponent* Owner);
 };

@@ -54,8 +54,9 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	DlgInitialized = false;
 
 	SplashHint = new UsrHintWindow(this);
-	SplashHint->Font->Assign(HintFont);
+	GetScaledFont(SplashHint->Font, HintFont, this);
 	SplashHint->ActivateHintEx(_T("\r\nオプション設定の準備中...\r\n"), 320, 240, Application->MainForm, col_bgHint);
+
 	cursor_HourGlass();
 
 	//入力欄にポップアップメニューを設定
@@ -1090,7 +1091,7 @@ void __fastcall TOptionDlg::FormClose(TObject *Sender, TCloseAction &Action)
 
 	UserModule->CmdParamList->Clear();
 
-	IconImgListP->Clear();
+	IconVImgListP->Clear();
 	UserModule->UninitializeListBox();
 
 	THeaderSections *sp = ExtMenuHeader->Sections;
@@ -1385,6 +1386,8 @@ void __fastcall TOptionDlg::UpdateMaxItemWidth()
 {
 	TCanvas *cv = AssociateListBox->Canvas;
 	cv->Font->Assign(DialogFont);
+	cv->Font->Height = SCALED_THIS(-cv->Font->Size*DEFAULT_PPI/72);
+
 	MaxWd_AssExt = 0;
 	for (int i=0; i<AssociateListBox->Count; i++)
 		MaxWd_AssExt = std::max(cv->TextWidth(AssociateListBox->Items->Names[i]), MaxWd_AssExt);
@@ -2744,17 +2747,19 @@ void __fastcall TOptionDlg::AssociateListBoxMouseUp(TObject *Sender, TMouseButto
 		//テストメニューを作成
 		TestPopupMenu->Items->Clear();
 		TestPopupMenu->AutoHotkeys = AutoHotkeyCheckBox->Checked? maAutomatic : maManual;
-		IconImgListP->Clear();
+		IconVImgListP->AutoFill = false;
+		IconVImgListP->Clear();
 		for (int i=0; i<m_lst->Count; i++) {
 			TStringDynArray m_buf = split_strings_tab(Trim(m_lst->Strings[i]));
 			if (m_buf.Length>0) {
 				TMenuItem *mp  = new TMenuItem(TestPopupMenu);
 				mp->Caption    = m_buf[0];
-				mp->ImageIndex = (m_buf.Length==3)? add_IconImage(m_buf[2], IconImgListP) : -1;
+				mp->ImageIndex = (m_buf.Length==3)? add_IconImage(m_buf[2], IconVImgListP) : -1;
 				mp->OnAdvancedDrawItem = TestAdvancedDrawItem;
 				TestPopupMenu->Items->Add(mp);
 			}
 		}
+		IconVImgListP->AutoFill = true;
 		//テストメニューを表示
 		TestPopupMenu->Popup(Mouse->CursorPos.x, Mouse->CursorPos.y);
 	}
@@ -2788,8 +2793,8 @@ void __fastcall TOptionDlg::TestAdvancedDrawItem(TObject *Sender, TCanvas *ACanv
 
 		//アイコン
 		int idx = mp->ImageIndex;
-		if (idx>=0 && idx<IconImgListP->Count) {
-			IconImgListP->Draw(ACanvas, ARect.Left + SCALED_THIS(4), yp, mp->ImageIndex);
+		if (idx>=0 && idx<IconVImgListP->Count) {
+			IconVImgListP->Draw(ACanvas, ARect.Left + SCALED_THIS(4), yp, mp->ImageIndex);
 		}
 	}
 }
@@ -3143,7 +3148,6 @@ void __fastcall TOptionDlg::KeyHeaderControlDrawSection(THeaderControl *HeaderCo
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::ExtHeaderDrawSection(THeaderControl *HeaderControl,
 	THeaderSection *Section, const TRect &Rect, bool Pressed)
-
 {
 	draw_SortHeader(HeaderControl, Section, Rect, 0, true, IsDarkMode);
 }
@@ -4821,3 +4825,4 @@ void __fastcall TOptionDlg::CanButtonClick(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
+

@@ -134,12 +134,6 @@ private:	// ユーザー宣言
 
 	void __fastcall WmFormShowed(TMessage &msg);
 
-	void __fastcall WmDpiChanged(TMessage &msg)
-	{
-		TForm::Dispatch(&msg);
-		SetDarkWinTheme(this);
-	}
-
 	TWndMethod org_FextInfBarWndProc;
 	void __fastcall FextInfBarWndProc(TMessage &msg)
 	{
@@ -173,7 +167,6 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
-		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

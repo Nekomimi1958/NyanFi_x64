@@ -27,6 +27,7 @@ TaskConfig::TaskConfig()
 	CopyMode   = 0;
 	DstPosMode = 0;
 	KeepTime   = false;
+	NoSubDir   = false;
 	FilterMode = 0;
 
 	CvImg_f_ext 	   = ".jpg";
@@ -1235,9 +1236,11 @@ void __fastcall TTaskThread::Task_CPYDIR(UnicodeString prm)
 	//éÊìæ
 	std::unique_ptr<TStringList> dbuf(new TStringList());
 	dbuf->Add(src_prm);
-	PreCount = 1;
-	GetDirs(src_prm, dbuf.get());
-	PreCount = 0;
+	if (!Config->NoSubDir) {
+		PreCount = 1;
+		GetDirs(src_prm, dbuf.get());
+		PreCount = 0;
+	}
 
 	//ÉRÉsÅ[(çÏê¨)
 	UnicodeString org_path = get_parent_path(src_prm);

@@ -7,7 +7,11 @@ object OptionDlg: TOptionDlg
   ClientHeight = 671
   ClientWidth = 914
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -474,7 +478,7 @@ object OptionDlg: TOptionDlg
       object MigemoDirEdit: TLabeledEdit
         Left = 120
         Top = 41
-        Width = 285
+        Width = 278
         Height = 23
         EditLabel.Width = 102
         EditLabel.Height = 23
@@ -572,7 +576,7 @@ object OptionDlg: TOptionDlg
         end
       end
       object RefMigemoBtn: TButton
-        Left = 408
+        Left = 400
         Top = 41
         Width = 36
         Height = 22
@@ -582,7 +586,7 @@ object OptionDlg: TOptionDlg
         OnClick = RefMigemoBtnClick
       end
       object RefTmpDirBtn: TButton
-        Left = 408
+        Left = 400
         Top = 12
         Width = 36
         Height = 22
@@ -618,7 +622,7 @@ object OptionDlg: TOptionDlg
       object TempDirEdit: TLabeledEdit
         Left = 120
         Top = 12
-        Width = 285
+        Width = 278
         Height = 23
         EditLabel.Width = 80
         EditLabel.Height = 23
@@ -2885,7 +2889,7 @@ object OptionDlg: TOptionDlg
           Width = 413
           Height = 159
           Style = lbOwnerDrawFixed
-          Anchors = [akLeft, akTop, akRight, akBottom]
+          Anchors = [akLeft, akTop, akRight]
           DragMode = dmAutomatic
           ItemHeight = 12
           TabOrder = 0
@@ -2898,7 +2902,7 @@ object OptionDlg: TOptionDlg
           Top = 185
           Width = 22
           Height = 22
-          Anchors = [akRight, akBottom]
+          Anchors = [akTop, akRight]
           BevelOuter = bvLowered
           TabOrder = 2
           StyleElements = [seBorder]
@@ -2909,7 +2913,7 @@ object OptionDlg: TOptionDlg
           Top = 186
           Width = 36
           Height = 22
-          Anchors = [akRight, akBottom]
+          Anchors = [akTop, akRight]
           Caption = '...'
           TabOrder = 4
           OnClick = RefExtColBtnClick
@@ -2919,7 +2923,6 @@ object OptionDlg: TOptionDlg
           Top = 186
           Width = 280
           Height = 23
-          Anchors = [akLeft, akRight, akBottom]
           EditLabel.Width = 39
           EditLabel.Height = 23
           EditLabel.Caption = #25313#24373#23376
@@ -2933,7 +2936,6 @@ object OptionDlg: TOptionDlg
           Width = 60
           Height = 24
           Action = AddExtColAction
-          Anchors = [akLeft, akBottom]
           TabOrder = 5
         end
         object ChgColBtn: TButton
@@ -2942,7 +2944,6 @@ object OptionDlg: TOptionDlg
           Width = 60
           Height = 24
           Action = ChgExtColAction
-          Anchors = [akLeft, akBottom]
           TabOrder = 6
         end
         object DelColBtn: TButton
@@ -2951,7 +2952,6 @@ object OptionDlg: TOptionDlg
           Width = 60
           Height = 24
           Action = UserModule.DelListItemAction
-          Anchors = [akLeft, akBottom]
           TabOrder = 7
         end
         object UpColBtn: TButton
@@ -2960,7 +2960,6 @@ object OptionDlg: TOptionDlg
           Width = 30
           Height = 24
           Action = UserModule.UpListItemAction
-          Anchors = [akLeft, akBottom]
           TabOrder = 8
         end
         object DowColBtn: TButton
@@ -2969,7 +2968,6 @@ object OptionDlg: TOptionDlg
           Width = 30
           Height = 24
           Action = UserModule.DownListItemAction
-          Anchors = [akLeft, akBottom]
           TabOrder = 9
         end
         object PriFExtColCheckBox: TCheckBox
@@ -2977,7 +2975,6 @@ object OptionDlg: TOptionDlg
           Top = 250
           Width = 201
           Height = 17
-          Anchors = [akLeft, akBottom]
           Caption = #25313#24373#23376#37096#20998#12399#23646#24615#33394#12424#12426#20778#20808
           TabOrder = 12
         end
@@ -2986,7 +2983,6 @@ object OptionDlg: TOptionDlg
           Top = 185
           Width = 22
           Height = 22
-          Anchors = [akLeft, akBottom]
           BevelOuter = bvLowered
           TabOrder = 3
           StyleElements = [seBorder]
@@ -2999,15 +2995,15 @@ object OptionDlg: TOptionDlg
             Align = alClient
             Center = True
             Picture.Data = {
-              07544269746D6170F6000000424DF60000000000000076000000280000001000
-              000010000000010004000000000080000000C30E0000C30E0000100000001000
-              000000000000000080000080000000808000800000008000800080800000C0C0
-              C000808080000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFF
-              FF003333333333333333300333333333333330F033333333333330FF03333333
-              3333330FF033333333333330FF033333333333330FF033333333333330FF0333
-              33333333330FF033333333333330FF0033333333333300003333333333333000
-              0033333333333300000333333333330000033333333333300033333333333333
-              3333}
+              0954506E67496D61676589504E470D0A1A0A0000000D49484452000000140000
+              001408060000008D891D0D0000000774494D4507E708170A351F1885EFE80000
+              00097048597300000EC300000EC301C76FA8640000000467414D410000B18F0B
+              FC6105000000674944415478DAD5D4310EC0200C03C0FAE7FC9C06D1214211D8
+              5009F0C4109F92053C3F0777812971259BCBEE0DDF93418F458BED05236CFAE4
+              162B50D4A3C082596A0158035BCC4332C86034C86214A8604350C5BAA045C628
+              50C186E03720FD423D7039E7832F4C325415354458800000000049454E44AE42
+              6082}
+            Stretch = True
             Transparent = True
             OnMouseDown = SpuitImageMouseDown
             OnMouseUp = SpuitImageMouseUp
@@ -3018,7 +3014,6 @@ object OptionDlg: TOptionDlg
           Top = 250
           Width = 182
           Height = 17
-          Anchors = [akLeft, akBottom]
           Caption = #25313#24373#23376#37096#20998#12398#12415#12395#36969#29992
           TabOrder = 11
         end
@@ -3027,7 +3022,6 @@ object OptionDlg: TOptionDlg
           Top = 273
           Width = 263
           Height = 17
-          Anchors = [akLeft, akBottom]
           Caption = #12501#12449#12452#12523#21517#20027#37096#12395#12471#12531#12508#12522#12483#12463#12522#12531#12463#33394#12434#36969#29992
           TabOrder = 13
         end
@@ -3036,7 +3030,6 @@ object OptionDlg: TOptionDlg
           Top = 216
           Width = 82
           Height = 23
-          Anchors = [akLeft, akBottom]
           EditLabel.Width = 26
           EditLabel.Height = 23
           EditLabel.Caption = #26908#32034
@@ -3062,7 +3055,6 @@ object OptionDlg: TOptionDlg
           Width = 377
           Height = 22
           Style = csOwnerDrawFixed
-          Anchors = [akLeft, akTop, akRight]
           DropDownCount = 20
           TabOrder = 0
           OnDrawItem = FontComboBoxDrawItem
@@ -3133,15 +3125,15 @@ object OptionDlg: TOptionDlg
             Align = alClient
             Center = True
             Picture.Data = {
-              07544269746D6170F6000000424DF60000000000000076000000280000001000
-              000010000000010004000000000080000000C30E0000C30E0000100000001000
-              000000000000000080000080000000808000800000008000800080800000C0C0
-              C000808080000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFF
-              FF003333333333333333300333333333333330F033333333333330FF03333333
-              3333330FF033333333333330FF033333333333330FF033333333333330FF0333
-              33333333330FF033333333333330FF0033333333333300003333333333333000
-              0033333333333300000333333333330000033333333333300033333333333333
-              3333}
+              0954506E67496D61676589504E470D0A1A0A0000000D49484452000000140000
+              001408060000008D891D0D0000000774494D4507E708170A351F1885EFE80000
+              00097048597300000EC300000EC301C76FA8640000000467414D410000B18F0B
+              FC6105000000674944415478DAD5D4310EC0200C03C0FAE7FC9C06D1214211D8
+              5009F0C4109F92053C3F0777812971259BCBEE0DDF93418F458BED05236CFAE4
+              162B50D4A3C082596A0158035BCC4332C86034C86214A8604350C5BAA045C628
+              50C186E03720FD423D7039E7832F4C325415354458800000000049454E44AE42
+              6082}
+            Stretch = True
             Transparent = True
             OnMouseDown = SpuitImageMouseDown
             OnMouseUp = SpuitImageMouseUp
@@ -3236,15 +3228,15 @@ object OptionDlg: TOptionDlg
             Align = alClient
             Center = True
             Picture.Data = {
-              07544269746D6170F6000000424DF60000000000000076000000280000001000
-              000010000000010004000000000080000000C30E0000C30E0000100000001000
-              000000000000000080000080000000808000800000008000800080800000C0C0
-              C000808080000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFF
-              FF003333333333333333300333333333333330F033333333333330FF03333333
-              3333330FF033333333333330FF033333333333330FF033333333333330FF0333
-              33333333330FF033333333333330FF0033333333333300003333333333333000
-              0033333333333300000333333333330000033333333333300033333333333333
-              3333}
+              0954506E67496D61676589504E470D0A1A0A0000000D49484452000000140000
+              001408060000008D891D0D0000000774494D4507E708170A351F1885EFE80000
+              00097048597300000EC300000EC301C76FA8640000000467414D410000B18F0B
+              FC6105000000674944415478DAD5D4310EC0200C03C0FAE7FC9C06D1214211D8
+              5009F0C4109F92053C3F0777812971259BCBEE0DDF93418F458BED05236CFAE4
+              162B50D4A3C082596A0158035BCC4332C86034C86214A8604350C5BAA045C628
+              50C186E03720FD423D7039E7832F4C325415354458800000000049454E44AE42
+              6082}
+            Stretch = True
             Transparent = True
             OnMouseDown = SpuitImageMouseDown
             OnMouseUp = SpuitImageMouseUp
@@ -3316,15 +3308,15 @@ object OptionDlg: TOptionDlg
             Align = alClient
             Center = True
             Picture.Data = {
-              07544269746D6170F6000000424DF60000000000000076000000280000001000
-              000010000000010004000000000080000000C30E0000C30E0000100000001000
-              000000000000000080000080000000808000800000008000800080800000C0C0
-              C000808080000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFF
-              FF003333333333333333300333333333333330F033333333333330FF03333333
-              3333330FF033333333333330FF033333333333330FF033333333333330FF0333
-              33333333330FF033333333333330FF0033333333333300003333333333333000
-              0033333333333300000333333333330000033333333333300033333333333333
-              3333}
+              0954506E67496D61676589504E470D0A1A0A0000000D49484452000000140000
+              001408060000008D891D0D0000000774494D4507E708170A351F1885EFE80000
+              00097048597300000EC300000EC301C76FA8640000000467414D410000B18F0B
+              FC6105000000674944415478DAD5D4310EC0200C03C0FAE7FC9C06D1214211D8
+              5009F0C4109F92053C3F0777812971259BCBEE0DDF93418F458BED05236CFAE4
+              162B50D4A3C082596A0158035BCC4332C86034C86214A8604350C5BAA045C628
+              50C186E03720FD423D7039E7832F4C325415354458800000000049454E44AE42
+              6082}
+            Stretch = True
             Transparent = True
             OnMouseDown = SpuitImageMouseDown
             OnMouseUp = SpuitImageMouseUp
@@ -3442,13 +3434,13 @@ object OptionDlg: TOptionDlg
       object EmpGroupBox: TGroupBox
         Left = 10
         Top = 409
-        Width = 433
+        Width = 425
         Height = 162
         Anchors = [akLeft, akTop, akRight]
         Caption = #24375#35519#34920#31034
         TabOrder = 20
         DesignSize = (
-          433
+          425
           162)
         object EmRemCheckBox: TCheckBox
           Left = 10
@@ -3493,7 +3485,7 @@ object OptionDlg: TOptionDlg
         object EmpBin1Edit: TLabeledEdit
           Left = 89
           Top = 75
-          Width = 331
+          Width = 330
           Height = 21
           Hint = #27491#35215#34920#29694#21487
           AutoSize = False
@@ -3507,7 +3499,7 @@ object OptionDlg: TOptionDlg
         object EmpBin2Edit: TLabeledEdit
           Left = 89
           Top = 102
-          Width = 331
+          Width = 330
           Height = 21
           Hint = #27491#35215#34920#29694#21487
           AutoSize = False
@@ -3537,7 +3529,7 @@ object OptionDlg: TOptionDlg
         object EmpBin3Edit: TLabeledEdit
           Left = 89
           Top = 129
-          Width = 331
+          Width = 326
           Height = 21
           Hint = #27491#35215#34920#29694#21487
           Anchors = [akLeft, akTop, akRight]
@@ -3553,7 +3545,7 @@ object OptionDlg: TOptionDlg
       object ExtTxViewerGroupBox: TGroupBox
         Left = 460
         Top = 495
-        Width = 433
+        Width = 425
         Height = 76
         Anchors = [akLeft, akTop, akRight]
         Caption = #22806#37096#12499#12517#12450#12540
@@ -3642,7 +3634,7 @@ object OptionDlg: TOptionDlg
       object H2TGroupBox: TGroupBox
         Left = 460
         Top = 10
-        Width = 433
+        Width = 425
         Height = 283
         Anchors = [akLeft, akTop, akRight]
         Caption = 'HTML'#8594#12486#12461#12473#12488#22793#25563
@@ -3650,7 +3642,7 @@ object OptionDlg: TOptionDlg
         object InsHrClsEdit: TLabeledEdit
           Left = 10
           Top = 190
-          Width = 414
+          Width = 410
           Height = 23
           EditLabel.Width = 177
           EditLabel.Height = 15
@@ -3705,7 +3697,7 @@ object OptionDlg: TOptionDlg
         object DelBlkClsEdit: TLabeledEdit
           Left = 10
           Top = 88
-          Width = 414
+          Width = 410
           Height = 23
           EditLabel.Width = 148
           EditLabel.Height = 15
@@ -3716,7 +3708,7 @@ object OptionDlg: TOptionDlg
         object DelBlkIdEdit: TLabeledEdit
           Left = 10
           Top = 135
-          Width = 414
+          Width = 410
           Height = 23
           EditLabel.Width = 131
           EditLabel.Height = 15
@@ -3885,9 +3877,8 @@ object OptionDlg: TOptionDlg
       object ViewTab4Edit: TLabeledEdit
         Left = 16
         Top = 197
-        Width = 414
+        Width = 410
         Height = 23
-        Anchors = [akLeft, akTop, akRight]
         EditLabel.Width = 112
         EditLabel.Height = 15
         EditLabel.Caption = #12479#12502#12473#12488#12483#12503'4'#12398#25313#24373#23376
@@ -3897,9 +3888,8 @@ object OptionDlg: TOptionDlg
       object ViewTabXEdit: TLabeledEdit
         Left = 74
         Top = 244
-        Width = 356
+        Width = 352
         Height = 23
-        Anchors = [akLeft, akTop, akRight]
         EditLabel.Width = 39
         EditLabel.Height = 15
         EditLabel.Caption = #25313#24373#23376
@@ -3937,13 +3927,14 @@ object OptionDlg: TOptionDlg
         Caption = 'px'
       end
       object TLabel
-        Left = 23
+        Left = 15
         Top = 19
         Width = 120
         Height = 15
         Alignment = taRightJustify
         Anchors = [akTop, akRight]
         Caption = #32302#23567#12539#25313#22823#12450#12523#12468#12522#12474#12512
+        ExplicitLeft = 23
       end
       object TLabel
         Left = 199
@@ -3978,9 +3969,8 @@ object OptionDlg: TOptionDlg
       object FExtNoIViewEdit: TLabeledEdit
         Left = 470
         Top = 181
-        Width = 414
+        Width = 410
         Height = 23
-        Anchors = [akLeft, akTop, akRight]
         EditLabel.Width = 144
         EditLabel.Height = 15
         EditLabel.Caption = #34920#31034#12375#12394#12356#12501#12449#12452#12523#12398#25313#24373#23376
@@ -4125,9 +4115,6 @@ object OptionDlg: TOptionDlg
         Height = 139
         Caption = #38281#12376#12383#26178#12395#26654#12510#12540#12463#12434#35373#23450
         TabOrder = 21
-        DesignSize = (
-          434
-          139)
         object MarkImgCheckBox: TCheckBox
           Left = 10
           Top = 20
@@ -4163,7 +4150,6 @@ object OptionDlg: TOptionDlg
           Top = 60
           Width = 414
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 161
           EditLabel.Height = 15
           EditLabel.Caption = #36969#29992#12377#12427#12487#12451#12524#12463#12488#12522'('#21069#26041#19968#33268')'
@@ -4359,17 +4345,17 @@ object OptionDlg: TOptionDlg
       object BinEditGroupBox: TGroupBox
         Left = 10
         Top = 184
-        Width = 886
+        Width = 878
         Height = 50
         Anchors = [akLeft, akTop, akRight]
         Caption = #12496#12452#12490#12522#12456#12487#12451#12479
         TabOrder = 2
         DesignSize = (
-          886
+          878
           50)
         object RefBinEdtBtn: TButton
           Tag = 2
-          Left = 842
+          Left = 834
           Top = 17
           Width = 36
           Height = 22
@@ -4381,26 +4367,25 @@ object OptionDlg: TOptionDlg
         object BinaryEditorEdit: TEdit
           Left = 10
           Top = 18
-          Width = 830
+          Width = 826
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
       end
       object EtcEditGroupBox: TGroupBox
         Left = 10
         Top = 246
-        Width = 886
+        Width = 878
         Height = 324
         Anchors = [akLeft, akTop, akRight]
         Caption = #12381#12398#20182#12398#12456#12487#12451#12479
         TabOrder = 3
         DesignSize = (
-          886
+          878
           324)
         object RefEtcEdt1Btn: TButton
           Tag = 3
-          Left = 842
+          Left = 834
           Top = 258
           Width = 36
           Height = 22
@@ -4425,7 +4410,7 @@ object OptionDlg: TOptionDlg
         object EtcEditorEdit: TLabeledEdit
           Left = 276
           Top = 259
-          Width = 564
+          Width = 556
           Height = 23
           Anchors = [akLeft, akRight, akBottom]
           EditLabel.Width = 37
@@ -4438,7 +4423,7 @@ object OptionDlg: TOptionDlg
         object EtcEditorListBox: TListBox
           Left = 10
           Top = 18
-          Width = 865
+          Width = 857
           Height = 233
           Style = lbOwnerDrawFixed
           Anchors = [akLeft, akTop, akRight, akBottom]
@@ -4498,17 +4483,17 @@ object OptionDlg: TOptionDlg
       object ImgEditGroupBox: TGroupBox
         Left = 10
         Top = 96
-        Width = 886
+        Width = 878
         Height = 80
         Anchors = [akLeft, akTop, akRight]
         Caption = #12452#12513#12540#12472#12456#12487#12451#12479
         TabOrder = 1
         DesignSize = (
-          886
+          878
           80)
         object RefImgEdtBtn: TButton
           Tag = 1
-          Left = 842
+          Left = 834
           Top = 17
           Width = 36
           Height = 22
@@ -4520,9 +4505,8 @@ object OptionDlg: TOptionDlg
         object FExtImgEdit: TLabeledEdit
           Left = 95
           Top = 49
-          Width = 578
+          Width = 574
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 65
           EditLabel.Height = 23
           EditLabel.Caption = #23550#35937#25313#24373#23376
@@ -4533,7 +4517,7 @@ object OptionDlg: TOptionDlg
         object ImageEditorEdit: TEdit
           Left = 10
           Top = 18
-          Width = 830
+          Width = 822
           Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
@@ -4550,24 +4534,23 @@ object OptionDlg: TOptionDlg
       object TxtEditGroupBox: TGroupBox
         Left = 10
         Top = 10
-        Width = 886
+        Width = 878
         Height = 78
         Anchors = [akLeft, akTop, akRight]
         Caption = #12486#12461#12473#12488#12456#12487#12451#12479
         TabOrder = 0
         DesignSize = (
-          886
+          878
           78)
         object TextEditorEdit: TEdit
           Left = 10
           Top = 18
-          Width = 830
+          Width = 826
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
         object RefTxtEditBtn: TButton
-          Left = 842
+          Left = 834
           Top = 17
           Width = 36
           Height = 22
@@ -4579,10 +4562,9 @@ object OptionDlg: TOptionDlg
         object TextEditorFrmtEdit: TLabeledEdit
           Left = 276
           Top = 47
-          Width = 240
+          Width = 226
           Height = 23
           Hint = '$F '#12501#12449#12452#12523#21517'/  $L '#34892#30058#21495
-          Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 232
           EditLabel.Height = 23
           EditLabel.Caption = #12497#12521#12513#12540#12479' (GREP'#12420#12499#12517#12450#12540#12391#12398#12479#12464#12472#12515#12531#12503#29992')'
@@ -4591,12 +4573,11 @@ object OptionDlg: TOptionDlg
           Text = ''
         end
         object TextEditorFrmt2Edit: TLabeledEdit
-          Left = 600
+          Left = 610
           Top = 47
-          Width = 240
+          Width = 226
           Height = 23
           Hint = '$F '#12501#12449#12452#12523#21517'('#35079#25968#26178#12399#12381#12398#20006#12403')'
-          Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 67
           EditLabel.Height = 23
           EditLabel.Caption = '('#12501#12449#12452#12521#12540#29992')'
@@ -4822,22 +4803,23 @@ object OptionDlg: TOptionDlg
         object KeyCmdGroupBox: TGroupBox
           Left = 211
           Top = 12
-          Width = 691
+          Width = 683
           Height = 79
           Anchors = [akLeft, akTop, akRight]
           Caption = #12467#12510#12531#12489
           TabOrder = 1
           DesignSize = (
-            691
+            683
             79)
           object TLabel
-            Left = 159
+            Left = 151
             Top = 51
             Width = 49
             Height = 15
             Alignment = taRightJustify
             Anchors = [akTop, akRight]
             Caption = #12497#12521#12513#12540#12479
+            ExplicitLeft = 159
           end
           object CmdComboBox: TComboBox
             Left = 8
@@ -4862,16 +4844,15 @@ object OptionDlg: TOptionDlg
           object PrmComboBox: TComboBox
             Left = 216
             Top = 47
-            Width = 428
+            Width = 420
             Height = 22
             Hint = #12497#12521#12513#12540#12479
             Style = csOwnerDrawFixed
-            Anchors = [akLeft, akTop, akRight]
             DropDownCount = 16
             TabOrder = 4
           end
           object RefCmdPrmBtn: TButton
-            Left = 647
+            Left = 639
             Top = 47
             Width = 36
             Height = 22
@@ -4882,7 +4863,7 @@ object OptionDlg: TOptionDlg
             OnClick = RefCmdPrmBtnClick
           end
           object MigemoCheckBox: TCheckBox
-            Left = 617
+            Left = 609
             Top = 20
             Width = 70
             Height = 17
@@ -4891,7 +4872,7 @@ object OptionDlg: TOptionDlg
             TabOrder = 2
           end
           object KeyFilterEdit: TLabeledEdit
-            Left = 497
+            Left = 493
             Top = 18
             Width = 114
             Height = 23
@@ -5142,7 +5123,6 @@ object OptionDlg: TOptionDlg
           Top = 62
           Width = 673
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 49
           EditLabel.Height = 23
           EditLabel.Caption = #12497#12521#12513#12540#12479
@@ -5205,7 +5185,6 @@ object OptionDlg: TOptionDlg
           Top = 8
           Width = 205
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 47
           EditLabel.Height = 23
           EditLabel.Caption = #12456#12452#12522#12450#12473
@@ -5227,7 +5206,6 @@ object OptionDlg: TOptionDlg
           Top = 89
           Width = 673
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 38
           EditLabel.Height = 23
           EditLabel.Caption = #12450#12452#12467#12531
@@ -5349,7 +5327,6 @@ object OptionDlg: TOptionDlg
           Top = 35
           Width = 764
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 63
           EditLabel.Height = 23
           EditLabel.Caption = #23455#34892#12501#12449#12452#12523
@@ -5362,7 +5339,6 @@ object OptionDlg: TOptionDlg
           Top = 62
           Width = 764
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 49
           EditLabel.Height = 23
           EditLabel.Caption = #12497#12521#12513#12540#12479
@@ -5435,7 +5411,6 @@ object OptionDlg: TOptionDlg
           Top = 89
           Width = 764
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 80
           EditLabel.Height = 23
           EditLabel.Caption = #20316#26989#12487#12451#12524#12463#12488#12522
@@ -5448,7 +5423,6 @@ object OptionDlg: TOptionDlg
           Top = 8
           Width = 205
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 47
           EditLabel.Height = 23
           EditLabel.Caption = #12456#12452#12522#12450#12473
@@ -5550,7 +5524,7 @@ object OptionDlg: TOptionDlg
       object IniWinSizeGroupBox: TGroupBox
         Left = 10
         Top = 243
-        Width = 884
+        Width = 876
         Height = 75
         Anchors = [akLeft, akTop, akRight]
         Caption = #12454#12451#12531#12489#12454#12469#12452#12474
@@ -5669,13 +5643,13 @@ object OptionDlg: TOptionDlg
       object IniWorkListGroupBox: TGroupBox
         Left = 10
         Top = 330
-        Width = 884
+        Width = 876
         Height = 50
         Anchors = [akLeft, akTop, akRight]
         Caption = #36215#21205#26178#12395#35501#12415#36796#12416#12527#12540#12463#12522#12473#12488
         TabOrder = 5
         DesignSize = (
-          884
+          876
           50)
         object IniWork0RadioBtn: TRadioButton
           Left = 15
@@ -5698,13 +5672,13 @@ object OptionDlg: TOptionDlg
         object HomeWorkListEdit: TEdit
           Left = 375
           Top = 18
-          Width = 463
+          Width = 455
           Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 2
         end
         object RefHomeWorkBtn: TButton
-          Left = 839
+          Left = 831
           Top = 17
           Width = 36
           Height = 22
@@ -6205,7 +6179,6 @@ object OptionDlg: TOptionDlg
           Top = 18
           Width = 356
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
         object RefSndFindFinBtn: TButton
@@ -6255,7 +6228,6 @@ object OptionDlg: TOptionDlg
           Top = 18
           Width = 356
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
         object RefSndTaskFinBtn: TButton
@@ -6347,7 +6319,6 @@ object OptionDlg: TOptionDlg
           Top = 18
           Width = 356
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
         object RefSndWarnBtn: TButton
@@ -6416,7 +6387,6 @@ object OptionDlg: TOptionDlg
           Top = 18
           Width = 356
           Height = 23
-          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
         object RefSndWatchBtn: TButton
@@ -6943,7 +6913,6 @@ object OptionDlg: TOptionDlg
           Top = 201
           Width = 331
           Height = 23
-          Anchors = [akRight, akBottom]
           EditLabel.Width = 65
           EditLabel.Height = 23
           EditLabel.Caption = #23550#35937#25313#24373#23376
@@ -6957,7 +6926,6 @@ object OptionDlg: TOptionDlg
           Width = 331
           Height = 23
           Style = csDropDownList
-          Anchors = [akRight, akBottom]
           TabOrder = 2
           OnChange = StdCmdComboBoxChange
         end
@@ -7042,7 +7010,6 @@ object OptionDlg: TOptionDlg
           Top = 255
           Width = 291
           Height = 23
-          Anchors = [akRight, akBottom]
           EditLabel.Width = 49
           EditLabel.Height = 23
           EditLabel.Caption = #12497#12521#12513#12540#12479
@@ -7057,7 +7024,6 @@ object OptionDlg: TOptionDlg
           Top = 255
           Width = 38
           Height = 22
-          Anchors = [akRight, akBottom]
           Caption = '...'
           TabOrder = 4
           OnClick = RefStdCmdPrmBtnClick
@@ -7177,7 +7143,7 @@ object OptionDlg: TOptionDlg
         906
         580)
       object EvEditBtn: TButton
-        Left = 797
+        Left = 789
         Top = 438
         Width = 90
         Height = 24
@@ -7188,7 +7154,7 @@ object OptionDlg: TOptionDlg
       object EventCmdsEdit: TLabeledEdit
         Left = 12
         Top = 439
-        Width = 740
+        Width = 732
         Height = 23
         Anchors = [akLeft, akTop, akRight]
         EditLabel.Width = 327
@@ -7213,7 +7179,7 @@ object OptionDlg: TOptionDlg
         OnKeyDown = OptListBoxKeyDown
       end
       object FindDownEvBtn: TButton
-        Left = 754
+        Left = 746
         Top = 410
         Width = 26
         Height = 24
@@ -7221,7 +7187,7 @@ object OptionDlg: TOptionDlg
         TabOrder = 2
       end
       object FindEvEdit: TLabeledEdit
-        Left = 592
+        Left = 584
         Top = 411
         Width = 160
         Height = 23
@@ -7235,7 +7201,7 @@ object OptionDlg: TOptionDlg
         OnKeyDown = FindEvEditKeyDown
       end
       object FindUpEvBtn: TButton
-        Left = 782
+        Left = 774
         Top = 410
         Width = 26
         Height = 24
@@ -7244,7 +7210,7 @@ object OptionDlg: TOptionDlg
       end
       object RefCmdsBtn: TButton
         Tag = 100
-        Left = 754
+        Left = 746
         Top = 439
         Width = 38
         Height = 22
@@ -7256,18 +7222,18 @@ object OptionDlg: TOptionDlg
       object TimerGroupBox: TGroupBox
         Left = 10
         Top = 480
-        Width = 886
+        Width = 878
         Height = 91
         Anchors = [akLeft, akTop, akRight]
         Caption = #12479#12452#12510#12540#12452#12505#12531#12488
         TabOrder = 7
         DesignSize = (
-          886
+          878
           91)
         object TimerCmd1Edit: TLabeledEdit
           Left = 234
           Top = 32
-          Width = 508
+          Width = 500
           Height = 23
           Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 38
@@ -7278,7 +7244,7 @@ object OptionDlg: TOptionDlg
         end
         object RefCmdsT1Btn: TButton
           Tag = 101
-          Left = 744
+          Left = 736
           Top = 31
           Width = 38
           Height = 22
@@ -7289,7 +7255,7 @@ object OptionDlg: TOptionDlg
         end
         object EvEditT1Btn: TButton
           Tag = 1
-          Left = 787
+          Left = 779
           Top = 30
           Width = 90
           Height = 24
@@ -7310,7 +7276,7 @@ object OptionDlg: TOptionDlg
         end
         object EvEditT2Btn: TButton
           Tag = 2
-          Left = 787
+          Left = 779
           Top = 58
           Width = 90
           Height = 24
@@ -7320,7 +7286,7 @@ object OptionDlg: TOptionDlg
         end
         object RefCmdsT2Btn: TButton
           Tag = 102
-          Left = 744
+          Left = 736
           Top = 59
           Width = 38
           Height = 22
@@ -7339,7 +7305,7 @@ object OptionDlg: TOptionDlg
         object TimerCmd2Edit: TEdit
           Left = 234
           Top = 60
-          Width = 508
+          Width = 500
           Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 5
@@ -7519,7 +7485,7 @@ object OptionDlg: TOptionDlg
     end
   end
   object ToolPopupMenu: TPopupMenu
-    Left = 91
+    Left = 107
     Top = 621
     object Frmt_F_Item: TMenuItem
       Caption = '$F '#12459#12524#12531#12488#12391#36984#25246#20013#12398#12497#12473#20184#12501#12449#12452#12523#21517
@@ -7561,15 +7527,22 @@ object OptionDlg: TOptionDlg
   object TestPopupMenu: TPopupMenu
     AutoHotkeys = maManual
     AutoPopup = False
-    Images = IconImgListP
+    Images = IconVImgListP
     OwnerDraw = True
     OnPopup = TestPopupMenuPopup
-    Left = 172
+    Left = 204
     Top = 622
   end
-  object IconImgListP: TImageList
-    ColorDepth = cd32Bit
-    Left = 246
-    Top = 621
+  object IconVImgListP: TVirtualImageList
+    AutoFill = True
+    Images = <>
+    ImageCollection = ImgCollectionP
+    Left = 252
+    Top = 622
+  end
+  object ImgCollectionP: TImageCollection
+    Images = <>
+    Left = 292
+    Top = 622
   end
 end

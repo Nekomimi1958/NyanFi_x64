@@ -4,9 +4,12 @@ object MemoForm: TMemoForm
   ClientHeight = 367
   ClientWidth = 590
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -18,8 +21,7 @@ object MemoForm: TMemoForm
   DesignSize = (
     590
     367)
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object OptPanel: TPanel
     Left = 0
     Top = 326
@@ -28,11 +30,13 @@ object MemoForm: TMemoForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 325
+    ExplicitWidth = 586
     DesignSize = (
       590
       41)
     object CancelBtn: TButton
-      Left = 489
+      Left = 485
       Top = 8
       Width = 80
       Height = 26
@@ -41,9 +45,10 @@ object MemoForm: TMemoForm
       Caption = #12461#12515#12531#12475#12523
       ModalResult = 2
       TabOrder = 1
+      ExplicitLeft = 481
     end
     object OkBtn: TButton
-      Left = 393
+      Left = 389
       Top = 8
       Width = 80
       Height = 26
@@ -52,6 +57,7 @@ object MemoForm: TMemoForm
       Default = True
       ModalResult = 1
       TabOrder = 0
+      ExplicitLeft = 385
     end
     object BtnPanel: TPanel
       Left = 572
@@ -62,6 +68,7 @@ object MemoForm: TMemoForm
       AutoSize = True
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitLeft = 568
       DesignSize = (
         18
         41)
@@ -77,7 +84,7 @@ object MemoForm: TMemoForm
     end
   end
   object BlankPanel: TPanel
-    Left = 576
+    Left = 572
     Top = 353
     Width = 14
     Height = 14
@@ -89,6 +96,8 @@ object MemoForm: TMemoForm
     TabOrder = 2
     Visible = False
     StyleElements = [seBorder]
+    ExplicitLeft = 568
+    ExplicitTop = 352
     object ShowOptBtn: TSpeedButton
       Left = 0
       Top = 0
@@ -116,8 +125,9 @@ object MemoForm: TMemoForm
     ScrollBars = ssVertical
     TabOrder = 0
     WantTabs = True
-    Zoom = 100
     OnChange = MemoBoxChange
+    ExplicitWidth = 586
+    ExplicitHeight = 325
   end
   object PopupMenu1: TPopupMenu
     Left = 48

@@ -7,9 +7,12 @@ object FindFileDlg: TFindFileDlg
   ClientHeight = 1371
   ClientWidth = 768
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -17,8 +20,7 @@ object FindFileDlg: TFindFileDlg
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object Bevel2: TBevel
     Left = 402
     Top = 0
@@ -37,6 +39,7 @@ object FindFileDlg: TFindFileDlg
     BorderWidth = 2
     ParentBackground = False
     TabOrder = 0
+    ExplicitHeight = 1370
     object AttrPanel: TPanel
       Left = 2
       Top = 309
@@ -186,7 +189,7 @@ object FindFileDlg: TFindFileDlg
           Left = 12
           Top = 20
           Width = 87
-          Height = 21
+          Height = 23
           EditMask = '!9999/99/99;1;_'
           MaxLength = 10
           TabOrder = 0
@@ -268,10 +271,10 @@ object FindFileDlg: TFindFileDlg
         396
         60)
       object KwdLabel: TLabel
-        Left = 13
+        Left = 9
         Top = 7
-        Width = 50
-        Height = 13
+        Width = 54
+        Height = 15
         Alignment = taRightJustify
         Caption = #26908#32034#35486'(&K)'
         FocusControl = KeywordComboBox
@@ -280,7 +283,7 @@ object FindFileDlg: TFindFileDlg
         Left = 67
         Top = 4
         Width = 323
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
       end
@@ -326,10 +329,10 @@ object FindFileDlg: TFindFileDlg
         396
         35)
       object TLabel
-        Left = 21
+        Left = 15
         Top = 11
-        Width = 42
-        Height = 13
+        Width = 48
+        Height = 15
         Alignment = taRightJustify
         Caption = #12510#12473#12463'(&M)'
         FocusControl = MaskComboBox
@@ -338,7 +341,7 @@ object FindFileDlg: TFindFileDlg
         Left = 67
         Top = 8
         Width = 323
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = MaskComboBoxChange
@@ -466,7 +469,7 @@ object FindFileDlg: TFindFileDlg
           Left = 12
           Top = 20
           Width = 87
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
           NumbersOnly = True
           TabOrder = 0
@@ -514,6 +517,7 @@ object FindFileDlg: TFindFileDlg
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitHeight = 1370
     object PanelSpacer: TBevel
       Left = 0
       Top = 1132
@@ -546,7 +550,7 @@ object FindFileDlg: TFindFileDlg
           Left = 12
           Top = 23
           Width = 73
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
           EditMask = '!99:99:99;1;_'
           MaxLength = 8
@@ -612,13 +616,14 @@ object FindFileDlg: TFindFileDlg
           Left = 12
           Top = 25
           Width = 59
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 14
+          EditLabel.Height = 23
           EditLabel.Caption = 'Hz'
           LabelPosition = lpRight
           TabOrder = 0
+          Text = ''
         end
         object BitRadioGroup: TRadioGroup
           Left = 12
@@ -699,13 +704,14 @@ object FindFileDlg: TFindFileDlg
           Left = 12
           Top = 23
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 22
-          EditLabel.Height = 13
+          EditLabel.Width = 25
+          EditLabel.Height = 23
           EditLabel.Caption = 'kbps'
           LabelPosition = lpRight
           TabOrder = 0
+          Text = ''
         end
       end
     end
@@ -750,13 +756,14 @@ object FindFileDlg: TFindFileDlg
           Left = 12
           Top = 23
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 15
-          EditLabel.Height = 13
+          EditLabel.Width = 16
+          EditLabel.Height = 23
           EditLabel.Caption = 'fps'
           LabelPosition = lpRight
           TabOrder = 0
+          Text = ''
         end
       end
     end
@@ -800,13 +807,14 @@ object FindFileDlg: TFindFileDlg
           Left = 29
           Top = 23
           Width = 58
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 23
           EditLabel.Caption = #24133
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
         end
         object FrHiRadioGroup: TRadioGroup
           Left = 100
@@ -829,13 +837,14 @@ object FindFileDlg: TFindFileDlg
           Left = 29
           Top = 65
           Width = 58
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 23
           EditLabel.Caption = #39640
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
         end
       end
     end
@@ -879,13 +888,14 @@ object FindFileDlg: TFindFileDlg
           Left = 29
           Top = 23
           Width = 58
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 23
           EditLabel.Caption = #24133
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
         end
         object ImgHiRadioGroup: TRadioGroup
           Left = 100
@@ -908,13 +918,14 @@ object FindFileDlg: TFindFileDlg
           Left = 29
           Top = 65
           Width = 58
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 23
           EditLabel.Caption = #39640
           LabelPosition = lpLeft
           TabOrder = 2
+          Text = ''
         end
         object ImgMaxCheckBox: TCheckBox
           Left = 29
@@ -976,12 +987,13 @@ object FindFileDlg: TFindFileDlg
           Left = 82
           Top = 18
           Width = 249
-          Height = 21
-          EditLabel.Width = 60
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 65
+          EditLabel.Height = 23
           EditLabel.Caption = #26908#32034#25991#23383#21015
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
           OnChange = CondChangeUpdate
         end
       end
@@ -1027,13 +1039,14 @@ object FindFileDlg: TFindFileDlg
           Left = 12
           Top = 23
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
-          EditLabel.Width = 12
-          EditLabel.Height = 13
+          EditLabel.Width = 13
+          EditLabel.Height = 23
           EditLabel.Caption = #20491
           LabelPosition = lpRight
           TabOrder = 0
+          Text = ''
         end
       end
     end
@@ -1087,12 +1100,13 @@ object FindFileDlg: TFindFileDlg
           Left = 82
           Top = 20
           Width = 249
-          Height = 21
-          EditLabel.Width = 60
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 65
+          EditLabel.Height = 23
           EditLabel.Caption = #26908#32034#25991#23383#21015
           LabelPosition = lpLeft
           TabOrder = 0
+          Text = ''
           OnChange = CondChangeUpdate
         end
         object GpsGroupBox: TGroupBox
@@ -1103,32 +1117,32 @@ object FindFileDlg: TFindFileDlg
           Caption = 'GPS'#24773#22577'(&G)'
           TabOrder = 4
           object TLabel
-            Left = 14
+            Left = 11
             Top = 21
-            Width = 52
-            Height = 13
+            Width = 55
+            Height = 15
             Alignment = taRightJustify
             Caption = #32239#24230','#32076#24230
           end
           object TLabel
             Left = 154
             Top = 50
-            Width = 8
-            Height = 13
+            Width = 11
+            Height = 15
             Caption = 'm'
           end
           object KmLabel: TLabel
             Left = 194
             Top = 50
-            Width = 13
-            Height = 13
+            Width = 17
+            Height = 15
             Caption = 'km'
           end
           object LatLngComboBox: TComboBox
             Left = 70
             Top = 18
             Width = 235
-            Height = 21
+            Height = 23
             TabOrder = 0
             OnChange = CondChangeUpdate
           end
@@ -1136,14 +1150,15 @@ object FindFileDlg: TFindFileDlg
             Left = 70
             Top = 47
             Width = 80
-            Height = 21
+            Height = 23
             Alignment = taRightJustify
-            EditLabel.Width = 24
-            EditLabel.Height = 13
+            EditLabel.Width = 26
+            EditLabel.Height = 23
             EditLabel.Caption = #31684#22258
             LabelPosition = lpLeft
             NumbersOnly = True
             TabOrder = 1
+            Text = ''
             OnChange = CondChangeUpdate
           end
         end
@@ -1169,7 +1184,7 @@ object FindFileDlg: TFindFileDlg
           Left = 237
           Top = 23
           Width = 94
-          Height = 21
+          Height = 23
           Style = csDropDownList
           TabOrder = 1
           OnChange = CondChangeUpdate
@@ -1178,7 +1193,7 @@ object FindFileDlg: TFindFileDlg
           Left = 12
           Top = 23
           Width = 217
-          Height = 21
+          Height = 23
           Style = csDropDownList
           DropDownCount = 20
           TabOrder = 0
@@ -1221,10 +1236,10 @@ object FindFileDlg: TFindFileDlg
           344
           74)
         object Label1: TLabel
-          Left = 18
+          Left = 13
           Top = 21
-          Width = 60
-          Height = 13
+          Width = 65
+          Height = 15
           Alignment = taRightJustify
           Caption = #26908#32034#25991#23383#21015
           FocusControl = KeywordComboBox
@@ -1261,7 +1276,7 @@ object FindFileDlg: TFindFileDlg
           Left = 82
           Top = 18
           Width = 250
-          Height = 21
+          Height = 23
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
           OnChange = CondChangeUpdate
@@ -1309,13 +1324,14 @@ object FindFileDlg: TFindFileDlg
           Left = 12
           Top = 27
           Width = 50
-          Height = 21
+          Height = 23
           Alignment = taRightJustify
           EditLabel.Width = 3
-          EditLabel.Height = 13
+          EditLabel.Height = 23
           EditLabel.Caption = ' '
           LabelPosition = lpRight
           TabOrder = 0
+          Text = ''
         end
       end
     end
@@ -1343,7 +1359,7 @@ object FindFileDlg: TFindFileDlg
           Left = 12
           Top = 20
           Width = 320
-          Height = 21
+          Height = 23
           Hint = #35079#25968#25351#23450#21487#33021'( ; '#21306#20999#12426#12391'AND'#12289#65372#21306#20999#12426#12391'OR)'
           Anchors = [akLeft, akTop, akRight]
           DropDownCount = 12
@@ -1412,6 +1428,7 @@ object FindFileDlg: TFindFileDlg
     AutoSize = True
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitHeight = 1370
     object Shape1: TShape
       Left = 0
       Top = 0

@@ -19,16 +19,18 @@ void __fastcall TAboutBox::FormCreate(TObject *Sender)
 {
 	std::unique_ptr<Graphics::TIcon> ico(new Graphics::TIcon());
 	ico->Handle = (HICON)::LoadImage(HInstance, _T("NYANFI_ICO"), IMAGE_ICON, 48, 48, LR_SHARED);
-
-	ProgramIcon->Picture->Assign(ico.get());
+	std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
+	bmp->Assign(ico.get());
+	TImageCollectionItem *ip = ImageCollection1->Images->Add();
+	TImageCollectionSourceItem *sp = ip->SourceImages->Add();
+	sp->Image->Assign(bmp.get());
+	VirtualImage1->ImageIndex = ImageCollection1->Images->Count - 1;
 }
 //---------------------------------------------------------------------------
 void __fastcall TAboutBox::FormShow(TObject *Sender)
 {
 	SetDarkWinTheme(this);
 
-	ProductName->Font->Assign(Application->DefaultFont);
-	ProductName->Font->Size  = 20;
 	ProductName->Font->Color = get_TextColor();
 	SupportURL->Font->Color  = IsDarkMode? TColor(RGB(0x66, 0x99, 0xFF)) : clNavy;
 	ListNyanBtn->Enabled	 = ScrMode==SCMD_FLIST;
@@ -55,4 +57,3 @@ void __fastcall TAboutBox::ListNyanBtnClick(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
-

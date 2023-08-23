@@ -7,17 +7,19 @@ object GraphForm: TGraphForm
   ClientWidth = 426
   Color = clBtnFace
   DoubleBuffered = True
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   StyleElements = [seFont, seBorder]
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object PaintBox1: TPaintBox
     Left = 0
     Top = 0
@@ -37,6 +39,8 @@ object GraphForm: TGraphForm
     Cancel = True
     ModalResult = 2
     TabOrder = 0
+    ExplicitTop = 288
+    ExplicitWidth = 422
   end
   object PopupMenu1: TPopupMenu
     Left = 64

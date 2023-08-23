@@ -7,8 +7,11 @@ object FindTagForm: TFindTagForm
   ClientWidth = 264
   Color = clBtnFace
   DoubleBuffered = True
-  ParentFont = True
-  OldCreateOrder = False
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -16,8 +19,7 @@ object FindTagForm: TFindTagForm
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object ListSplitter: TSplitter
     Left = 0
     Top = 177
@@ -34,6 +36,8 @@ object FindTagForm: TFindTagForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 260
+    ExplicitHeight = 176
     object InpPanel: TPanel
       Left = 0
       Top = 0
@@ -44,6 +48,7 @@ object FindTagForm: TFindTagForm
       BevelOuter = bvLowered
       TabOrder = 0
       StyleElements = [seBorder]
+      ExplicitWidth = 260
       object InpPaintBox: TPaintBox
         Left = 1
         Top = 1
@@ -56,7 +61,7 @@ object FindTagForm: TFindTagForm
     object TagsListBox: TListBox
       Left = 0
       Top = 22
-      Width = 264
+      Width = 260
       Height = 155
       Style = lbVirtualOwnerDraw
       Align = alLeft
@@ -76,6 +81,8 @@ object FindTagForm: TFindTagForm
       OnDrawItem = TagsListBoxDrawItem
       OnKeyDown = TagsListBoxKeyDown
       OnKeyPress = TagsListBoxKeyPress
+      ExplicitWidth = 256
+      ExplicitHeight = 154
     end
   end
   object InfoPanel: TPanel
@@ -86,10 +93,12 @@ object FindTagForm: TFindTagForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 180
+    ExplicitWidth = 260
     object InfoListBox: TListBox
       Left = 0
       Top = 0
-      Width = 264
+      Width = 260
       Height = 100
       Style = lbOwnerDrawFixed
       Align = alLeft
@@ -105,6 +114,7 @@ object FindTagForm: TFindTagForm
       OnDblClick = InfoListBoxDblClick
       OnDrawItem = InfoListBoxDrawItem
       OnKeyDown = InfoListBoxKeyDown
+      ExplicitWidth = 256
     end
   end
   object PopupMenu1: TPopupMenu

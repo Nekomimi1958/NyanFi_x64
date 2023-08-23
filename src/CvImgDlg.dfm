@@ -7,17 +7,19 @@ object CvImageDlg: TCvImageDlg
   ClientHeight = 552
   ClientWidth = 394
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object MainPanel: TPanel
     Left = 0
     Top = 0
@@ -26,13 +28,14 @@ object CvImageDlg: TCvImageDlg
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 390
     DesignSize = (
       394
       289)
     object CvFmtRadioGroup: TRadioGroup
       Left = 8
       Top = 8
-      Width = 378
+      Width = 374
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = #22793#25563#24418#24335
@@ -46,16 +49,18 @@ object CvImageDlg: TCvImageDlg
         '&HDP')
       TabOrder = 0
       OnClick = CvFmtRadioGroupClick
+      ExplicitWidth = 370
     end
     object SubOptGroupBox: TGroupBox
       Left = 8
       Top = 52
-      Width = 378
+      Width = 374
       Height = 47
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 1
+      ExplicitWidth = 370
       DesignSize = (
-        378
+        374
         47)
       object ImgQLabel: TLabel
         Left = 16
@@ -87,7 +92,7 @@ object CvImageDlg: TCvImageDlg
       object ImgQTrackBar: TTrackBar
         Left = 94
         Top = 12
-        Width = 120
+        Width = 116
         Height = 32
         Anchors = [akLeft, akTop, akRight]
         Max = 100
@@ -95,12 +100,13 @@ object CvImageDlg: TCvImageDlg
         Position = 50
         TabOrder = 0
         OnChange = ImgQTrackBarChange
+        ExplicitWidth = 112
       end
       object CmpModeComboBox: TComboBox
         Left = 101
         Top = 13
         Width = 133
-        Height = 21
+        Height = 23
         Style = csDropDownList
         TabOrder = 1
       end
@@ -108,7 +114,7 @@ object CvImageDlg: TCvImageDlg
         Left = 274
         Top = 13
         Width = 90
-        Height = 21
+        Height = 23
         Style = csDropDownList
         TabOrder = 2
       end
@@ -125,11 +131,12 @@ object CvImageDlg: TCvImageDlg
     object ScaleGroupBox: TGroupBox
       Left = 8
       Top = 143
-      Width = 378
+      Width = 374
       Height = 139
       Anchors = [akLeft, akTop, akRight]
       Caption = #32302#23567#12539#25313#22823
       TabOrder = 3
+      ExplicitWidth = 370
       object TLabel
         Left = 14
         Top = 112
@@ -152,7 +159,7 @@ object CvImageDlg: TCvImageDlg
         Left = 12
         Top = 20
         Width = 352
-        Height = 21
+        Height = 23
         Style = csDropDownList
         DropDownCount = 10
         TabOrder = 0
@@ -162,33 +169,35 @@ object CvImageDlg: TCvImageDlg
         Left = 101
         Top = 49
         Width = 75
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 50
-        EditLabel.Height = 13
+        EditLabel.Width = 55
+        EditLabel.Height = 23
         EditLabel.Caption = #12497#12521#12513#12540#12479'1'
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 1
+        Text = ''
       end
       object ScalePrm2Edit: TLabeledEdit
         Left = 271
         Top = 49
         Width = 75
-        Height = 21
+        Height = 23
         Alignment = taRightJustify
-        EditLabel.Width = 50
-        EditLabel.Height = 13
+        EditLabel.Width = 55
+        EditLabel.Height = 23
         EditLabel.Caption = #12497#12521#12513#12540#12479'2'
         LabelPosition = lpLeft
         NumbersOnly = True
         TabOrder = 2
+        Text = ''
       end
       object ScaleOptComboBox: TComboBox
         Left = 101
         Top = 109
         Width = 263
-        Height = 21
+        Height = 23
         Style = csDropDownList
         TabOrder = 5
       end
@@ -220,6 +229,7 @@ object CvImageDlg: TCvImageDlg
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 390
     DesignSize = (
       394
       122)
@@ -242,16 +252,17 @@ object CvImageDlg: TCvImageDlg
     object RenGroupBox: TGroupBox
       Left = 8
       Top = 41
-      Width = 378
+      Width = 374
       Height = 50
       Anchors = [akLeft, akTop, akRight]
       Caption = #12501#12449#12452#12523#21517#12398#22793#26356
       TabOrder = 2
+      ExplicitWidth = 370
       object ChgNameComboBox: TComboBox
         Left = 12
         Top = 20
         Width = 257
-        Height = 21
+        Height = 23
         Style = csDropDownList
         TabOrder = 0
       end
@@ -259,7 +270,7 @@ object CvImageDlg: TCvImageDlg
         Left = 275
         Top = 20
         Width = 89
-        Height = 21
+        Height = 23
         PopupMenu = UserModule.EditPopupMenuE
         TabOrder = 1
       end
@@ -273,6 +284,8 @@ object CvImageDlg: TCvImageDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitTop = 509
+    ExplicitWidth = 390
     object CanButton: TButton
       Left = 210
       Top = 8
@@ -302,6 +315,7 @@ object CvImageDlg: TCvImageDlg
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 390
     object NameGroupBox: TGroupBox
       Left = 8
       Top = 8
@@ -312,8 +326,8 @@ object CvImageDlg: TCvImageDlg
       object FextLabel: TLabel
         Left = 336
         Top = 23
-        Width = 24
-        Height = 13
+        Width = 28
+        Height = 15
         Caption = '.bmp'
       end
       object SttLabel: TLabel
@@ -329,7 +343,7 @@ object CvImageDlg: TCvImageDlg
         Left = 12
         Top = 20
         Width = 320
-        Height = 21
+        Height = 23
         TabOrder = 0
         OnChange = ClipNameComboBoxChange
       end

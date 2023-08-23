@@ -369,8 +369,8 @@ void __fastcall TInpCmdsDlg::SubComboBoxClick(TObject *Sender)
 {
 	UnicodeString wd = get_tkn(SubComboBox->Text, ' ');
 	UnicodeString lbuf = CmdsComboBox->Text;
-	int p = pos_r_q_colon(lbuf);
-	lbuf = (p>0)? (lbuf.SubString(1, p) + " ") : EmptyStr;
+	int p = pos_r_q("_", lbuf);
+	lbuf = (p>0)? lbuf.SubString(1, p) : EmptyStr;
 	lbuf += wd;
 
 	CmdsComboBox->SetFocus();
@@ -464,4 +464,3 @@ void __fastcall TInpCmdsDlg::Filter()
 	}
 }
 //---------------------------------------------------------------------------
-

@@ -40,7 +40,6 @@ void __fastcall TCmdFileListDlg::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter);
 
 	setup_ToolBar(OpeToolBar);
-	OkBtn->Font->Assign(DialogFont);
 	OpePanel->ClientHeight = std::max(OpeToolBar->Height, SCALED_THIS(22));
 	FilterEdit->Width = IniFile->ReadIntGen(_T("CmdFileListFilterWidth"),	200);
 

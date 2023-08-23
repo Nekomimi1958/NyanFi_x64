@@ -17,6 +17,7 @@
 #include <Vcl.ActnList.hpp>
 #include "usr_swatch.h"
 #include "TxtViewer.h"
+#include <Vcl.Imaging.pngimage.hpp>
 
 //---------------------------------------------------------------------------
 class TColorDlg : public TForm
@@ -60,21 +61,11 @@ private:	// ユーザー宣言
 	TStringList *ColBufList;
 	UsrSwatchPanel *SwatchPanel;
 
-	void __fastcall WmDpiChanged(TMessage &msg)
-	{
-		TForm::Dispatch(&msg);
-		SetDarkWinTheme(this, true);
-	}
-
 public:		// ユーザー宣言
 	TTxtViewer *ObjViewer;
 	UnicodeString FileName;
 
 	__fastcall TColorDlg(TComponent* Owner);
-
-	BEGIN_MESSAGE_MAP
-		VCL_MESSAGE_HANDLER(WM_DPICHANGED,		TMessage,		WmDpiChanged)
-	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TColorDlg *ColorDlg;

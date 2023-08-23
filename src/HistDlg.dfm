@@ -7,9 +7,12 @@ object DirHistoryDlg: TDirHistoryDlg
   ClientHeight = 387
   ClientWidth = 415
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -17,8 +20,7 @@ object DirHistoryDlg: TDirHistoryDlg
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object ListPanel: TPanel
     Left = 0
     Top = 0
@@ -27,10 +29,12 @@ object DirHistoryDlg: TDirHistoryDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 411
+    ExplicitHeight = 386
     object DirHistListBox: TListBox
       Left = 0
       Top = 22
-      Width = 415
+      Width = 411
       Height = 365
       Style = lbVirtualOwnerDraw
       AutoComplete = False
@@ -49,6 +53,8 @@ object DirHistoryDlg: TDirHistoryDlg
       OnDrawItem = DirHistListBoxDrawItem
       OnKeyDown = DirHistListBoxKeyDown
       OnKeyPress = DirHistListBoxKeyPress
+      ExplicitWidth = 407
+      ExplicitHeight = 364
     end
     object InpPanel: TPanel
       Left = 0
@@ -60,6 +66,7 @@ object DirHistoryDlg: TDirHistoryDlg
       BevelOuter = bvLowered
       TabOrder = 0
       StyleElements = [seBorder]
+      ExplicitWidth = 411
       object InpPaintBox: TPaintBox
         Left = 1
         Top = 1

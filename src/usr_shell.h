@@ -206,8 +206,8 @@ public:
 	HICON get_ico_f(UnicodeString fnam, int size, bool force = false);
 	HICON get_Icon(UnicodeString fnam, int &size, bool chk_sz = true);
 	HICON get_SmallIcon(UnicodeString fnam);
-	bool  draw_SmallIcon(UnicodeString fnam, TCanvas *cv, int x, int y);
-	bool  draw_SmallIcon(UnicodeString fnam, TImage *ip, TColor bg = clBtnFace);
+	bool  draw_SmallIcon(UnicodeString fnam, TCanvas *cv, int x, int y,TControl *cp = NULL);
+	bool  draw_SmallIcon(UnicodeString fnam, TImage *ip, TColor bg = clBtnFace, TControl *cp = NULL);
 	bool  get_Thumbnail(UnicodeString fnam, Graphics::TBitmap *o_bmp, int o_size);
 
 	UnicodeString KnownGuidStrToPath(UnicodeString s);

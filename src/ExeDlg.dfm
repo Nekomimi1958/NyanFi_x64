@@ -7,9 +7,12 @@ object ExeCmdDlg: TExeCmdDlg
   ClientHeight = 187
   ClientWidth = 490
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -19,10 +22,9 @@ object ExeCmdDlg: TExeCmdDlg
   DesignSize = (
     490
     187)
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object CanButton: TButton
-    Left = 402
+    Left = 398
     Top = 152
     Width = 80
     Height = 26
@@ -31,9 +33,10 @@ object ExeCmdDlg: TExeCmdDlg
     Caption = #12461#12515#12531#12475#12523
     ModalResult = 2
     TabOrder = 5
+    ExplicitLeft = 394
   end
   object OkButton: TButton
-    Left = 316
+    Left = 312
     Top = 152
     Width = 80
     Height = 26
@@ -42,27 +45,30 @@ object ExeCmdDlg: TExeCmdDlg
     Default = True
     ModalResult = 1
     TabOrder = 4
+    ExplicitLeft = 308
   end
   object ExeComboBox: TComboBox
     Left = 8
     Top = 8
-    Width = 474
-    Height = 21
+    Width = 470
+    Height = 23
     Hint = #12467#12510#12531#12489#12521#12452#12531
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 16
     TabOrder = 0
+    ExplicitWidth = 466
   end
   object OptGroupBox: TGroupBox
     Left = 8
     Top = 38
-    Width = 474
+    Width = 470
     Height = 76
     Anchors = [akLeft, akTop, akRight]
     Caption = #12467#12531#12477#12540#12523#12450#12503#12522#12398#20986#21147
     TabOrder = 1
+    ExplicitWidth = 466
     DesignSize = (
-      474
+      470
       76)
     object LogStdOutCheckBox: TCheckBox
       Left = 10
@@ -89,22 +95,24 @@ object ExeCmdDlg: TExeCmdDlg
       TabOrder = 3
     end
     object RefOutBtn: TButton
-      Left = 432
+      Left = 428
       Top = 45
       Width = 36
       Height = 22
       Anchors = [akTop, akRight]
       Caption = '...'
       TabOrder = 5
+      ExplicitLeft = 424
     end
     object SaveNameEdit: TEdit
       Left = 135
       Top = 45
-      Width = 295
-      Height = 21
+      Width = 291
+      Height = 23
       Anchors = [akLeft, akTop, akRight]
       PopupMenu = UserModule.EditPopupMenuE
       TabOrder = 4
+      ExplicitWidth = 287
     end
     object ListStdOutCheckBox: TCheckBox
       Left = 310

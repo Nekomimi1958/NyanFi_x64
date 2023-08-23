@@ -6,10 +6,13 @@ object ColorPicker: TColorPicker
   ClientHeight = 201
   ClientWidth = 324
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   FormStyle = fsStayOnTop
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
@@ -18,27 +21,26 @@ object ColorPicker: TColorPicker
   DesignSize = (
     324
     201)
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object ColLabel: TLabel
     Left = 8
     Top = 4
-    Width = 13
-    Height = 13
+    Width = 3
+    Height = 15
     Anchors = [akLeft, akTop, akRight]
   end
   object ColEdit: TEdit
-    Left = 119
+    Left = 122
     Top = 84
-    Width = 146
-    Height = 21
+    Width = 134
+    Height = 23
     TabStop = False
     Anchors = [akLeft, akTop, akRight]
     ReadOnly = True
     TabOrder = 6
   end
   object ColPanel: TPanel
-    Left = 270
+    Left = 262
     Top = 4
     Width = 50
     Height = 50
@@ -58,13 +60,13 @@ object ColorPicker: TColorPicker
     Left = 8
     Top = 84
     Width = 109
-    Height = 21
+    Height = 23
     Style = csDropDownList
     DropDownCount = 12
     TabOrder = 5
   end
   object Col2Panel: TPanel
-    Left = 270
+    Left = 262
     Top = 58
     Width = 50
     Height = 50
@@ -100,13 +102,13 @@ object ColorPicker: TColorPicker
   object RepeatGroupBox: TGroupBox
     Left = 8
     Top = 122
-    Width = 308
+    Width = 300
     Height = 71
     Anchors = [akLeft, akTop, akRight]
     Caption = #36899#32154#21462#24471
     TabOrder = 7
     DesignSize = (
-      308
+      300
       71)
     object RepSttLabel: TLabel
       Left = 16
@@ -120,20 +122,21 @@ object ColorPicker: TColorPicker
       Left = 48
       Top = 20
       Width = 61
-      Height = 21
+      Height = 23
       Alignment = taRightJustify
-      EditLabel.Width = 24
-      EditLabel.Height = 13
+      EditLabel.Width = 26
+      EditLabel.Height = 23
       EditLabel.Caption = #22238#25968
       LabelPosition = lpLeft
       NumbersOnly = True
       TabOrder = 0
+      Text = ''
     end
     object RepComboBox: TComboBox
-      Left = 111
+      Left = 113
       Top = 20
-      Width = 134
-      Height = 21
+      Width = 126
+      Height = 23
       Style = csDropDownList
       Anchors = [akTop, akRight]
       TabOrder = 1
@@ -144,7 +147,7 @@ object ColorPicker: TColorPicker
         #34892#36861#21152)
     end
     object ExeRepBtn: TButton
-      Left = 251
+      Left = 243
       Top = 19
       Width = 50
       Height = 24

@@ -23,11 +23,15 @@
 #include <Vcl.Graphics.hpp>
 #include <Vcl.ImgList.hpp>
 #include <Vcl.Mask.hpp>
+#include <Vcl.BaseImageCollection.hpp>
+#include <Vcl.ImageCollection.hpp>
+#include <Vcl.VirtualImageList.hpp>
 #include "usr_scale.h"
 #include "usr_swatch.h"
 #include "usr_hintwin.h"
 #include "MarkList.h"
 #include "UserMdl.h"
+#include <Vcl.Imaging.pngimage.hpp>
 
 //---------------------------------------------------------------------------
 #define MAX_KEYTABS	5
@@ -548,7 +552,6 @@ __published:	// IDE で管理されるコンポーネント
 	TImage *SpuitImage2;
 	TImage *SpuitImage3;
 	TImage *SpuitImage4;
-	TImageList *IconImgListP;
 	TLabel *DlgMoveLabel;
 	TLabel *DlgSizeLabel;
 	TLabel *KeyboardLabel;
@@ -765,6 +768,8 @@ __published:	// IDE で管理されるコンポーネント
 	TTabSheet *NotifySheet;
 	TTabSheet *StartupSheet;
 	TTabSheet *TxtViewerSheet;
+	TVirtualImageList *IconVImgListP;
+	TImageCollection *ImgCollectionP;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -964,7 +969,7 @@ private:	// ユーザー宣言
 	void __fastcall WmDpiChanged(TMessage &msg)
 	{
 		TForm::Dispatch(&msg);
-		if (DlgInitialized) SetDarkWinTheme(this, true);
+		UpdateMaxItemWidth();
 	}
 
 	void __fastcall InitializeOptListBox();

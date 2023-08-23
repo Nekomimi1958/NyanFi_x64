@@ -5,9 +5,12 @@ object InpDirDlg: TInpDirDlg
   ClientHeight = 84
   ClientWidth = 342
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -16,8 +19,7 @@ object InpDirDlg: TInpDirDlg
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object TopPanel: TPanel
     Left = 0
     Top = 0
@@ -26,6 +28,7 @@ object InpDirDlg: TInpDirDlg
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 338
     object RefBtnPanel: TPanel
       Left = 298
       Top = 0
@@ -34,6 +37,7 @@ object InpDirDlg: TInpDirDlg
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitLeft = 294
       object RefDirBtn: TButton
         Left = 0
         Top = 6
@@ -52,6 +56,7 @@ object InpDirDlg: TInpDirDlg
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 294
       DesignSize = (
         298
         36)
@@ -60,7 +65,7 @@ object InpDirDlg: TInpDirDlg
         Left = 4
         Top = 6
         Width = 290
-        Height = 21
+        Height = 23
         AutoComplete = False
         Style = csDropDownList
         Anchors = [akLeft, akTop, akRight]
@@ -69,12 +74,13 @@ object InpDirDlg: TInpDirDlg
         TabStop = False
         OnClick = SubComboBoxClick
         OnCloseUp = SubComboBoxCloseUp
+        ExplicitWidth = 286
       end
       object InpDirComboBox: TComboBox
         Left = 4
         Top = 6
         Width = 290
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
         DropDownCount = 20
         TabOrder = 0
@@ -82,6 +88,7 @@ object InpDirDlg: TInpDirDlg
         OnKeyDown = InpDirComboBoxKeyDown
         OnKeyPress = InpDirComboBoxKeyPress
         OnSelect = InpDirComboBoxSelect
+        ExplicitWidth = 286
       end
     end
   end
@@ -93,11 +100,13 @@ object InpDirDlg: TInpDirDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 38
+    ExplicitWidth = 338
     DesignSize = (
       342
       45)
     object CanButton: TButton
-      Left = 254
+      Left = 250
       Top = 10
       Width = 80
       Height = 26
@@ -106,9 +115,10 @@ object InpDirDlg: TInpDirDlg
       Caption = #12461#12515#12531#12475#12523
       ModalResult = 2
       TabOrder = 2
+      ExplicitLeft = 246
     end
     object OkButton: TButton
-      Left = 160
+      Left = 156
       Top = 10
       Width = 80
       Height = 26
@@ -117,6 +127,7 @@ object InpDirDlg: TInpDirDlg
       Default = True
       ModalResult = 1
       TabOrder = 1
+      ExplicitLeft = 152
     end
     object CmpByKeyPanel: TPanel
       Left = 12

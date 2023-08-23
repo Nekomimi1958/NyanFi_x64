@@ -31,7 +31,7 @@ void __fastcall TGitViewer::FormCreate(TObject *Sender)
 	DiffScrPanel   = new UsrScrollPanel(DiffPanel,   DiffListBox,   USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
 
 	MsgHint = new UsrHintWindow(this);
-	MsgHint->Font->Assign(HintFont);
+	GetScaledFont(MsgHint->Font, HintFont, this);
 
 	WarnList   = new TStringList();
 	StatusList = new TStringList();
@@ -59,7 +59,6 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 	BranchPanel->Width = IniFile->ReadIntGen(_T("GitViewBranchWidth"),	200);
 	RL_Panel->Height   = IniFile->ReadIntGen(_T("GitViewDiffHeight"),	120);
 
-	FindCommitEdit->Font->Assign(DialogFont);
 	FindCommitEdit->Width = IniFile->ReadIntGen(_T("GitViewFindWidth"),	200);
 
 	ShowRBranchAction->Checked  = IniFile->ReadBoolGen(_T("GitViewShowRBranch"),true);

@@ -9,7 +9,11 @@ object RenameDlg: TRenameDlg
   Color = clBtnFace
   Constraints.MinHeight = 460
   Constraints.MinWidth = 550
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -247,7 +251,7 @@ object RenameDlg: TRenameDlg
         end
       end
       object OkButton: TButton
-        Left = 361
+        Left = 357
         Top = 118
         Width = 80
         Height = 26
@@ -255,10 +259,10 @@ object RenameDlg: TRenameDlg
         Anchors = [akRight, akBottom]
         Default = True
         TabOrder = 5
-        ExplicitLeft = 357
+        ExplicitLeft = 353
       end
       object CanButton: TButton
-        Left = 449
+        Left = 445
         Top = 118
         Width = 80
         Height = 26
@@ -267,10 +271,10 @@ object RenameDlg: TRenameDlg
         Caption = #12461#12515#12531#12475#12523
         ModalResult = 2
         TabOrder = 6
-        ExplicitLeft = 445
+        ExplicitLeft = 441
       end
       object AutoPrvCheckBox: TCheckBox
-        Left = 144
+        Left = 140
         Top = 122
         Width = 126
         Height = 17
@@ -278,10 +282,10 @@ object RenameDlg: TRenameDlg
         Caption = #33258#21205#12503#12524#12499#12517#12540'(&V)'
         TabOrder = 3
         OnClick = AutoPrvCheckBoxClick
-        ExplicitLeft = 140
+        ExplicitLeft = 136
       end
       object PreviewBtn: TButton
-        Left = 273
+        Left = 269
         Top = 118
         Width = 80
         Height = 26
@@ -289,7 +293,7 @@ object RenameDlg: TRenameDlg
         Caption = #12503#12524#12499#12517#12540
         TabOrder = 4
         OnClick = PreviewBtnClick
-        ExplicitLeft = 269
+        ExplicitLeft = 265
       end
       object KeepCsrCheckBox: TCheckBox
         Left = 20

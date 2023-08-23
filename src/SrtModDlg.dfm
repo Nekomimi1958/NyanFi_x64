@@ -7,7 +7,11 @@ object SortModeDlg: TSortModeDlg
   ClientHeight = 351
   ClientWidth = 506
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -24,6 +28,7 @@ object SortModeDlg: TSortModeDlg
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitHeight = 350
     object BtnPanel: TPanel
       Left = 0
       Top = 309
@@ -32,6 +37,7 @@ object SortModeDlg: TSortModeDlg
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitTop = 308
       object OkButton: TButton
         Left = 40
         Top = 9
@@ -187,6 +193,8 @@ object SortModeDlg: TSortModeDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 248
+    ExplicitHeight = 350
     object AccDtoTCheckBox: TCheckBox
       Left = 8
       Top = 236

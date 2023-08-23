@@ -10,7 +10,11 @@ object BackupDlg: TBackupDlg
   Constraints.MaxHeight = 400
   Constraints.MinHeight = 400
   Constraints.MinWidth = 500
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -67,17 +71,17 @@ object BackupDlg: TBackupDlg
   object BakIncMaskComboBox: TComboBox
     Left = 88
     Top = 74
-    Width = 380
+    Width = 376
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 20
     TabOrder = 2
-    ExplicitWidth = 376
+    ExplicitWidth = 372
   end
   object BakSkipDirEdit: TLabeledEdit
     Left = 88
     Top = 163
-    Width = 380
+    Width = 376
     Height = 22
     Anchors = [akLeft, akTop, akRight]
     AutoSize = False
@@ -87,12 +91,12 @@ object BackupDlg: TBackupDlg
     LabelPosition = lpLeft
     TabOrder = 5
     Text = ''
-    ExplicitWidth = 376
+    ExplicitWidth = 372
   end
   object SrcDirEdit: TLabeledEdit
     Left = 88
     Top = 8
-    Width = 380
+    Width = 376
     Height = 21
     TabStop = False
     Anchors = [akLeft, akTop, akRight]
@@ -104,12 +108,12 @@ object BackupDlg: TBackupDlg
     ReadOnly = True
     TabOrder = 0
     Text = ''
-    ExplicitWidth = 376
+    ExplicitWidth = 372
   end
   object DstDirEdit: TLabeledEdit
     Left = 88
     Top = 37
-    Width = 380
+    Width = 376
     Height = 21
     TabStop = False
     Anchors = [akLeft, akTop, akRight]
@@ -121,17 +125,17 @@ object BackupDlg: TBackupDlg
     ReadOnly = True
     TabOrder = 1
     Text = ''
-    ExplicitWidth = 376
+    ExplicitWidth = 372
   end
   object BakExcMaskComboBox: TComboBox
     Left = 88
     Top = 103
-    Width = 380
+    Width = 376
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 20
     TabOrder = 3
-    ExplicitWidth = 376
+    ExplicitWidth = 372
   end
   object SyncCheckBox: TCheckBox
     Left = 171
@@ -176,7 +180,7 @@ object BackupDlg: TBackupDlg
       Caption = #35373#23450
     end
     object OkButton: TButton
-      Left = 296
+      Left = 292
       Top = 66
       Width = 80
       Height = 26
@@ -185,10 +189,10 @@ object BackupDlg: TBackupDlg
       Default = True
       TabOrder = 4
       OnClick = OkButtonClick
-      ExplicitLeft = 292
+      ExplicitLeft = 288
     end
     object CanButton: TButton
-      Left = 388
+      Left = 384
       Top = 66
       Width = 80
       Height = 26
@@ -197,17 +201,17 @@ object BackupDlg: TBackupDlg
       Caption = #12461#12515#12531#12475#12523
       ModalResult = 2
       TabOrder = 5
-      ExplicitLeft = 384
+      ExplicitLeft = 380
     end
     object SureCheckBox: TCheckBox
-      Left = 187
+      Left = 183
       Top = 70
       Width = 97
       Height = 17
       Anchors = [akRight, akBottom]
       Caption = #38283#22987#30906#35469
       TabOrder = 3
-      ExplicitLeft = 183
+      ExplicitLeft = 179
     end
     object SetupComboBox: TComboBox
       Left = 58
@@ -237,16 +241,16 @@ object BackupDlg: TBackupDlg
     object BevelPanel1: TPanel
       Left = 8
       Top = 4
-      Width = 468
+      Width = 464
       Height = 2
       Anchors = [akLeft, akTop, akRight]
       BevelOuter = bvNone
       TabOrder = 6
-      ExplicitWidth = 464
+      ExplicitWidth = 460
       object Shape1: TShape
         Left = 0
         Top = 0
-        Width = 468
+        Width = 464
         Height = 1
         Align = alTop
         Brush.Style = bsClear
@@ -256,7 +260,7 @@ object BackupDlg: TBackupDlg
       object Shape2: TShape
         Left = 0
         Top = 1
-        Width = 468
+        Width = 464
         Height = 1
         Align = alTop
         Brush.Style = bsClear

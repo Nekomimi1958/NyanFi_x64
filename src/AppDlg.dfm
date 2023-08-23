@@ -7,7 +7,11 @@ object AppListDlg: TAppListDlg
   ClientWidth = 390
   Color = clBtnFace
   DoubleBuffered = True
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -171,7 +175,7 @@ object AppListDlg: TAppListDlg
         object AppListBox: TListBox
           Left = 0
           Top = 0
-          Width = 277
+          Width = 273
           Height = 160
           Style = lbVirtualOwnerDraw
           Align = alLeft
@@ -188,7 +192,7 @@ object AppListDlg: TAppListDlg
           OnDrawItem = AppListBoxDrawItem
           OnEnter = AppListBoxEnter
           OnKeyDown = AppListBoxKeyDown
-          ExplicitWidth = 273
+          ExplicitWidth = 269
           ExplicitHeight = 159
         end
       end

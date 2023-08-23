@@ -9,9 +9,12 @@ object TaskManDlg: TTaskManDlg
   Color = clBtnFace
   Constraints.MinWidth = 624
   DoubleBuffered = True
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -19,8 +22,7 @@ object TaskManDlg: TTaskManDlg
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object TaskHeader: THeaderControl
     Left = 0
     Top = 0
@@ -72,6 +74,7 @@ object TaskManDlg: TTaskManDlg
     OnDrawSection = TaskHeaderDrawSection
     OnSectionResize = TaskHeaderSectionResize
     OnResize = TaskHeaderResize
+    ExplicitWidth = 612
   end
   object OpePanel: TPanel
     Left = 0
@@ -81,6 +84,8 @@ object TaskManDlg: TTaskManDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 199
+    ExplicitWidth = 612
     object btnStartAction: TButton
       Left = 442
       Top = 8
@@ -115,6 +120,7 @@ object TaskManDlg: TTaskManDlg
       Cancel = True
       ModalResult = 2
       TabOrder = 0
+      ExplicitLeft = 612
     end
     object PauseBtn: TButton
       Left = 188
@@ -157,13 +163,15 @@ object TaskManDlg: TTaskManDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 612
+    ExplicitHeight = 182
     DesignSize = (
       616
       183)
     object TaskGrid: TStringGrid
       Left = 0
       Top = 0
-      Width = 616
+      Width = 612
       Height = 185
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
@@ -183,6 +191,8 @@ object TaskManDlg: TTaskManDlg
       StyleElements = [seBorder]
       OnDrawCell = TaskGridDrawCell
       OnKeyDown = TaskGridKeyDown
+      ExplicitWidth = 608
+      ExplicitHeight = 184
       ColWidths = (
         64
         64

@@ -8,11 +8,14 @@ object SplashForm: TSplashForm
   ClientHeight = 240
   ClientWidth = 320
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   FormStyle = fsStayOnTop
   Position = poScreenCenter
   OnClose = FormClose
-  OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnPaint = FormPaint
   TextHeight = 15
@@ -23,12 +26,6 @@ object SplashForm: TSplashForm
     Height = 24
     Alignment = taCenter
     AutoSize = False
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlack
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
   end
   object TitleLabel: TLabel
     Left = 10
@@ -39,9 +36,9 @@ object SplashForm: TSplashForm
     AutoSize = False
     Caption = 'NyanFi'
     Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlack
+    Font.Color = clWindowText
     Font.Height = -29
-    Font.Name = 'Tahoma'
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
   end
@@ -52,11 +49,5 @@ object SplashForm: TSplashForm
     Height = 24
     Alignment = taCenter
     AutoSize = False
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlack
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
   end
 end

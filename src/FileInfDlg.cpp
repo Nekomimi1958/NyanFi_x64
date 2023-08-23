@@ -95,17 +95,6 @@ void __fastcall TFileInfoDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TFileInfoDlg::WmDpiChanged(TMessage &msg)
-{
-	TForm::Dispatch(&msg);
-
-	if (DlgInitialized) {
-		SetDarkWinTheme(this);
-		UpdateInfo();
-	}
-}
-
-//---------------------------------------------------------------------------
 void __fastcall TFileInfoDlg::FormResize(TObject *Sender)
 {
 	if (isCalcItem) InfListBox->Invalidate();

@@ -6,7 +6,11 @@ object EditItemDlg: TEditItemDlg
   ClientHeight = 395
   ClientWidth = 354
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
@@ -25,6 +29,8 @@ object EditItemDlg: TEditItemDlg
     OnClick = ItemListBoxClick
     OnDrawItem = ItemListBoxDrawItem
     OnKeyDown = ItemListBoxKeyDown
+    ExplicitWidth = 350
+    ExplicitHeight = 274
   end
   object Panel1: TPanel
     Left = 0
@@ -34,6 +40,8 @@ object EditItemDlg: TEditItemDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 274
+    ExplicitWidth = 350
     DesignSize = (
       354
       120)

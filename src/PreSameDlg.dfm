@@ -6,15 +6,17 @@ object PreSameNemeDlg: TPreSameNemeDlg
   ClientHeight = 228
   ClientWidth = 394
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   OnClose = FormClose
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object PreModeRadioGroup: TRadioGroup
     Left = 8
     Top = 8

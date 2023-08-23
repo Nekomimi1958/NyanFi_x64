@@ -35,7 +35,7 @@ void __fastcall TMemoForm::FormShow(TObject *Sender)
 	HideOptBtn->Hint = LoadUsrMsg(USTR_HideOptPanel);
 	ShowOptBtn->Hint = LoadUsrMsg(USTR_ShowOptPanel);
 
-	MemoBox->Font->Assign(ViewerFont);
+	AssignScaledFont(MemoBox, ViewerFont);
 	//¦“ü—Í‚ÌÛ‚ÉƒtƒHƒ“ƒg‚ª•Ï‚í‚Á‚Ä‚µ‚Ü‚¤‚Ì‚ð—}§
 	DWORD lParam = ::SendMessage(MemoBox->Handle, EM_GETLANGOPTIONS, 0, 0);
 	lParam &= ~IMF_DUALFONT;

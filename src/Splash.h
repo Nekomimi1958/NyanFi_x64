@@ -19,8 +19,6 @@ __published:	// IDE 管理のコンポーネント
 	TLabel *MsgLabel;
 	TLabel *TitleLabel;
 	TLabel *VerLabel;
-
-	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
 	void __fastcall FormPaint(TObject *Sender);

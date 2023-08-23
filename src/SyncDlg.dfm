@@ -7,7 +7,11 @@ object RegSyncDlg: TRegSyncDlg
   ClientHeight = 453
   ClientWidth = 634
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   Position = poDesigned
   OnShow = FormShow
   TextHeight = 15
@@ -19,13 +23,15 @@ object RegSyncDlg: TRegSyncDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 212
+    ExplicitWidth = 630
     DesignSize = (
       634
       240)
     object DirListBox: TListBox
       Left = 40
       Top = 36
-      Width = 586
+      Width = 582
       Height = 165
       Style = lbOwnerDrawFixed
       Anchors = [akLeft, akTop, akRight]
@@ -36,6 +42,7 @@ object RegSyncDlg: TRegSyncDlg
       TabOrder = 6
       OnDrawItem = DirListBoxDrawItem
       OnKeyDown = SyncListBoxKeyDown
+      ExplicitWidth = 578
     end
     object OkButton: TButton
       Left = 458
@@ -157,6 +164,8 @@ object RegSyncDlg: TRegSyncDlg
     OnClickCheck = RegListBoxClickCheck
     OnDrawItem = RegListBoxDrawItem
     OnKeyDown = SyncListBoxKeyDown
+    ExplicitWidth = 630
+    ExplicitHeight = 212
   end
   object ActionList1: TActionList
     Left = 43

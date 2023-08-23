@@ -7,6 +7,8 @@
 
 //---------------------------------------------------------------------------
 #include <Vcl.ComCtrls.hpp>
+#include <Vcl.CheckLst.hpp>
+#include <Vcl.Grids.hpp>
 
 //---------------------------------------------------------------------------
 #define DEFAULT_PPI	96
@@ -24,12 +26,12 @@ inline int GetCurPPI(TControl *cp = NULL)
 //----------------------------------------------------------------------
 //スケーリングされた整数値を取得
 //----------------------------------------------------------------------
-#define SCALED_THIS(n)	((n) * CurrentPPI / DEFAULT_PPI)
+#define SCALED_THIS(n)	MulDiv(n, CurrentPPI, DEFAULT_PPI)
 
 //----------------------------------------------------------------------
 inline int ScaledInt(int n, TControl *cp = NULL)
 {
-	return (n * GetCurPPI(cp) / DEFAULT_PPI);
+	return MulDiv(n, GetCurPPI(cp), DEFAULT_PPI);
 }
 
 //----------------------------------------------------------------------
@@ -42,6 +44,13 @@ inline int get_SysMetricsForPPI(int idx, int ppi)
 	else
 		return GetSystemMetrics(idx);
 }
+
+//---------------------------------------------------------------------------
+void GetScaledFont(TFont *s_font, TFont *font, TControl *cp);
+void AssignScaledFont(TWinControl *cp, TFont *font = NULL);
+void AssignScaledFont(TLabel *lp, TFont *font = NULL);
+void AssignScaledFont(TPaintBox *pp, TFont *font = NULL);
+
 //---------------------------------------------------------------------------
 #endif
 

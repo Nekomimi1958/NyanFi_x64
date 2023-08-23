@@ -6,7 +6,11 @@ object SubViewer: TSubViewer
   ClientWidth = 310
   Color = clBtnFace
   DoubleBuffered = True
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   FormStyle = fsStayOnTop
   PopupMenu = PopupMenu1
   Position = poDesigned

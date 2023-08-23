@@ -6,10 +6,13 @@ object DebugForm: TDebugForm
   ClientHeight = 441
   ClientWidth = 384
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   FormStyle = fsStayOnTop
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -18,8 +21,7 @@ object DebugForm: TDebugForm
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object BorderShape1: TShape
     Left = 0
     Top = 0
@@ -52,34 +54,42 @@ object DebugForm: TDebugForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 374
+    ExplicitHeight = 428
     object DebugPanel: TPanel
       Left = 0
-      Top = 19
+      Top = 21
       Width = 382
-      Height = 421
+      Height = 419
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitTop = 19
+      ExplicitWidth = 374
+      ExplicitHeight = 409
       object ReferSplitter: TSplitter
         Left = 0
-        Top = 224
+        Top = 222
         Width = 382
         Height = 4
         Cursor = crVSplit
         Align = alBottom
+        ExplicitTop = 224
       end
       object ReferPanel: TPanel
         Left = 0
-        Top = 228
+        Top = 226
         Width = 382
         Height = 193
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 0
+        ExplicitTop = 216
+        ExplicitWidth = 374
         object ReferListBox: TListBox
           Left = 0
           Top = 0
-          Width = 382
+          Width = 374
           Height = 193
           Style = lbOwnerDrawFixed
           Align = alLeft
@@ -91,21 +101,24 @@ object DebugForm: TDebugForm
           StyleElements = [seBorder]
           OnDrawItem = ReferListBoxDrawItem
           OnKeyDown = ReferListBoxKeyDown
+          ExplicitWidth = 366
         end
       end
       object PrevPanel: TPanel
         Left = 0
         Top = 0
         Width = 382
-        Height = 224
+        Height = 222
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
+        ExplicitWidth = 374
+        ExplicitHeight = 212
         object PreviewListBox: TListBox
           Left = 0
           Top = 0
-          Width = 382
-          Height = 224
+          Width = 374
+          Height = 222
           Style = lbVirtualOwnerDraw
           Align = alLeft
           Anchors = [akLeft, akTop, akRight, akBottom]
@@ -117,6 +130,8 @@ object DebugForm: TDebugForm
           OnData = PreviewListBoxData
           OnDrawItem = PreviewListBoxDrawItem
           OnEnter = PreviewListBoxEnter
+          ExplicitWidth = 366
+          ExplicitHeight = 212
         end
       end
     end
@@ -124,42 +139,45 @@ object DebugForm: TDebugForm
       Left = 0
       Top = 0
       Width = 382
-      Height = 19
+      Height = 21
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 374
+      ExplicitHeight = 19
       object ToolBar1: TToolBar
         Left = 0
         Top = 0
         Width = 382
-        Height = 19
+        Height = 21
         AutoSize = True
-        ButtonHeight = 19
-        ButtonWidth = 20
+        ButtonHeight = 21
+        ButtonWidth = 21
         Caption = 'ToolBar1'
         DrawingStyle = dsGradient
         List = True
         ShowCaptions = True
         TabOrder = 0
         StyleElements = []
+        ExplicitWidth = 374
         object ToolButton1: TToolButton
           Left = 0
           Top = 0
           Action = StepAction
         end
         object ToolButton2: TToolButton
-          Left = 20
+          Left = 21
           Top = 0
           Action = GoAction
         end
         object ToolButton3: TToolButton
-          Left = 40
+          Left = 42
           Top = 0
           Action = BreakAction
         end
         object SepBtn1: TToolButton
-          Left = 60
+          Left = 63
           Top = 0
           Width = 12
           Caption = 'SepBtn1'
@@ -167,17 +185,17 @@ object DebugForm: TDebugForm
           Style = tbsSeparator
         end
         object ToolButton4: TToolButton
-          Left = 72
+          Left = 75
           Top = 0
           Action = QuitAction
         end
         object ToolButton5: TToolButton
-          Left = 92
+          Left = 96
           Top = 0
           Action = ExitAction
         end
         object SepBtn2: TToolButton
-          Left = 112
+          Left = 117
           Top = 0
           Width = 12
           Caption = 'SepBtn2'
@@ -185,17 +203,17 @@ object DebugForm: TDebugForm
           Style = tbsSeparator
         end
         object ToolButton6: TToolButton
-          Left = 124
+          Left = 129
           Top = 0
           Action = VarListAction
         end
         object ToolButton7: TToolButton
-          Left = 144
+          Left = 150
           Top = 0
           Action = EditAction
         end
         object SepBtn3: TToolButton
-          Left = 164
+          Left = 171
           Top = 0
           Width = 12
           Caption = 'SepBtn3'
@@ -203,7 +221,7 @@ object DebugForm: TDebugForm
           Style = tbsSeparator
         end
         object ToolButton8: TToolButton
-          Left = 176
+          Left = 183
           Top = 0
           Action = HelpAction
         end

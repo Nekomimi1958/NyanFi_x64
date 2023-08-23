@@ -109,13 +109,6 @@ void __fastcall TFindTagForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftStat
 {
 	SpecialKeyProc(this, Key, Shift);
 }
-//---------------------------------------------------------------------------
-void __fastcall TFindTagForm::WmDpiChanged(TMessage &msg)
-{
-	TForm::Dispatch(&msg);
-	SetDarkWinTheme(this);
-	setup_Panel(InpPanel, ListFont);
-}
 
 //---------------------------------------------------------------------------
 void __fastcall TFindTagForm::ClearTagList()

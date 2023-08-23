@@ -147,7 +147,7 @@ void __fastcall TTagManDlg::FormShow(TObject *Sender)
 
 	SetOptBtn();
 
-	TagEdit->Font->Assign(ListFont);
+	AssignScaledFont(TagEdit, ListFont);
 	TagEdit->Font->Color = get_TextColor();
 	InpPanel->Color   = col_bgList;
 	InpPanel->Visible = HidePanel->Visible && !HideCheckBox->Checked;
@@ -215,15 +215,6 @@ void __fastcall TTagManDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TTagManDlg::FormDestroy(TObject *Sender)
 {
 	delete ListScrPanel;
-}
-
-//---------------------------------------------------------------------------
-void __fastcall TTagManDlg::WmDpiChanged(TMessage &msg)
-{
-	TForm::Dispatch(&msg);
-	SetDarkWinTheme(this);
-	TagEdit->Font->Assign(ListFont);
-	TagEdit->Font->Color = get_TextColor();
 }
 
 //---------------------------------------------------------------------------

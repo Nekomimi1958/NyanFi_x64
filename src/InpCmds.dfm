@@ -8,9 +8,12 @@ object InpCmdsDlg: TInpCmdsDlg
   Color = clBtnFace
   Constraints.MaxHeight = 140
   Constraints.MinHeight = 70
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -18,8 +21,7 @@ object InpCmdsDlg: TInpCmdsDlg
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object CancelBtn: TButton
     Left = 432
     Top = 36
@@ -29,6 +31,8 @@ object InpCmdsDlg: TInpCmdsDlg
     Cancel = True
     ModalResult = 2
     TabOrder = 2
+    ExplicitLeft = 428
+    ExplicitHeight = 4
   end
   object ModePanel: TPanel
     Left = 0
@@ -40,6 +44,8 @@ object InpCmdsDlg: TInpCmdsDlg
     BevelOuter = bvNone
     BorderWidth = 6
     TabOrder = 1
+    ExplicitTop = 40
+    ExplicitWidth = 428
     object ModeTabControl: TTabControl
       Left = 6
       Top = 6
@@ -57,6 +63,7 @@ object InpCmdsDlg: TInpCmdsDlg
       TabIndex = 0
       OnChange = ModeTabControlChange
       OnDrawTab = ModeTabControlDrawTab
+      ExplicitWidth = 416
     end
   end
   object MainPanel: TPanel
@@ -68,6 +75,7 @@ object InpCmdsDlg: TInpCmdsDlg
     BevelOuter = bvNone
     BorderWidth = 6
     TabOrder = 0
+    ExplicitWidth = 428
     DesignSize = (
       432
       36)
@@ -75,7 +83,7 @@ object InpCmdsDlg: TInpCmdsDlg
       Tag = 1
       Left = 8
       Top = 7
-      Width = 330
+      Width = 326
       Height = 21
       AutoComplete = False
       Style = csOwnerDrawFixed
@@ -87,9 +95,10 @@ object InpCmdsDlg: TInpCmdsDlg
       OnClick = SubComboBoxClick
       OnCloseUp = SubComboBoxCloseUp
       OnDrawItem = SubComboBoxDrawItem
+      ExplicitWidth = 322
     end
     object MigemoCheckBox: TCheckBox
-      Left = 352
+      Left = 348
       Top = 9
       Width = 76
       Height = 17
@@ -97,12 +106,13 @@ object InpCmdsDlg: TInpCmdsDlg
       Caption = '&Migemo'
       TabOrder = 2
       OnClick = MigemoCheckBoxClick
+      ExplicitLeft = 344
     end
     object CmdsComboBox: TComboBox
       Left = 8
       Top = 7
-      Width = 330
-      Height = 21
+      Width = 326
+      Height = 23
       AutoComplete = False
       Anchors = [akLeft, akTop, akRight]
       DropDownCount = 16
@@ -112,6 +122,7 @@ object InpCmdsDlg: TInpCmdsDlg
       OnKeyDown = CmdsComboBoxKeyDown
       OnKeyPress = CmdsComboBoxKeyPress
       OnSelect = CmdsComboBoxSelect
+      ExplicitWidth = 322
     end
   end
 end

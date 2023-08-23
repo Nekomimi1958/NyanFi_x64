@@ -51,7 +51,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 
 	FilterEdit->Width = IniFile->ReadIntGen(_T("EditHistFilterWidth"),	200);
 
-	StatusBar1->Font->Assign(SttBarFont);
+	AssignScaledFont(StatusBar1, SttBarFont);
 	StatusBar1->Panels->Items[0]->Width = StatusBar1->ClientWidth;
 	StatusBar1->Visible = false;
 

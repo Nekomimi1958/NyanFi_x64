@@ -6,7 +6,11 @@ object NyanFiForm: TNyanFiForm
   ClientHeight = 520
   ClientWidth = 720
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Menu = MainMenu1
   Position = poDesigned
@@ -43,6 +47,8 @@ object NyanFiForm: TNyanFiForm
     UseSystemFont = False
     StyleElements = [seBorder]
     OnDrawPanel = StatusBarDrawPanel
+    ExplicitTop = 499
+    ExplicitWidth = 716
   end
   object MainContainer: TPanel
     Left = 0
@@ -103,7 +109,7 @@ object NyanFiForm: TNyanFiForm
         AutoSize = True
         ButtonWidth = 70
         DrawingStyle = dsGradient
-        Images = IconImgListV
+        Images = IconVImgListV
         List = True
         ShowCaptions = True
         AllowTextButtons = True
@@ -111,6 +117,7 @@ object NyanFiForm: TNyanFiForm
         Visible = False
         StyleElements = []
         OnDblClick = ToolBarDblClick
+        ExplicitWidth = 716
       end
       object TxtMainPanel: TPanel
         Left = 0
@@ -159,6 +166,7 @@ object NyanFiForm: TNyanFiForm
           UseSystemFont = False
           StyleElements = []
           OnDrawPanel = TxtSttHeaderDrawPanel
+          ExplicitWidth = 716
         end
         object TxtScrollPanel: TPanel
           Left = 0
@@ -271,13 +279,14 @@ object NyanFiForm: TNyanFiForm
         AutoSize = True
         ButtonWidth = 70
         DrawingStyle = dsGradient
-        Images = IconImgListI
+        Images = IconVImgListI
         List = True
         ShowCaptions = True
         AllowTextButtons = True
         TabOrder = 0
         StyleElements = []
         OnDblClick = ToolBarDblClick
+        ExplicitWidth = 716
       end
       object SeekPanel: TPanel
         Left = 0
@@ -422,6 +431,7 @@ object NyanFiForm: TNyanFiForm
           UseSystemFont = False
           StyleElements = []
           OnDrawPanel = ImgSttHeaderDrawPanel
+          ExplicitWidth = 716
         end
         object ImgScrollPanel: TPanel
           Left = 189
@@ -489,7 +499,7 @@ object NyanFiForm: TNyanFiForm
             AutoSize = True
             ButtonWidth = 85
             DrawingStyle = dsGradient
-            Images = IconImgListI
+            Images = IconVImgListI
             List = True
             ShowCaptions = True
             AllowTextButtons = True
@@ -539,6 +549,7 @@ object NyanFiForm: TNyanFiForm
               UseSystemFont = False
               StyleElements = []
               OnDrawPanel = StatusBarDrawPanel
+              ExplicitTop = 361
             end
             object SideDockPanel: TPanel
               Left = 0
@@ -703,6 +714,8 @@ object NyanFiForm: TNyanFiForm
       ShowCaptions = True
       TabOrder = 4
       StyleElements = []
+      ExplicitTop = 477
+      ExplicitWidth = 716
     end
     object GrepPanel: TPanel
       Left = 0
@@ -805,6 +818,7 @@ object NyanFiForm: TNyanFiForm
             ParentFont = True
             UseSystemFont = False
             OnDrawPanel = GrepStatusBarDrawPanel
+            ExplicitWidth = 432
           end
           object GrepFilterPanel: TPanel
             Left = 440
@@ -1315,7 +1329,7 @@ object NyanFiForm: TNyanFiForm
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = []
-        Images = IconImgList
+        Images = IconVImgListF
         List = True
         ParentDoubleBuffered = False
         ParentFont = False
@@ -1325,6 +1339,7 @@ object NyanFiForm: TNyanFiForm
         Transparent = True
         StyleElements = []
         OnDblClick = ToolBarDblClick
+        ExplicitWidth = 716
       end
       object MainPanel2: TPanel
         Left = 0
@@ -1768,47 +1783,10 @@ object NyanFiForm: TNyanFiForm
                   Top = 6
                   Width = 14
                   Height = 14
+                  ImageIndex = 0
+                  ImageName = 'tab_x_btn'
+                  Images = BtnVImgList
                   Flat = True
-                  Glyph.Data = {
-                    C6040000424DC60400000000000036040000280000000C0000000C0000000100
-                    08000000000090000000C30E0000C30E000000010000000000001C24AC00232A
-                    A900252DBF002B33BF002C34BD002D35BD002C34BF002E35BE002E36BE00262E
-                    C000262EC100252EC200262FC9002730C0002F37C900212BD800232DD800252F
-                    D9002630D9002731D9002831D9002932D9002933D9002832DA002A34D9002A34
-                    DA002B34DA002B35DA002D36D9002C36DA002D36DA002F38D8002E38DA002F38
-                    DA002F39DA002F39DC00313ADA00313ADB00323BDB00333CDB00353EDB003039
-                    DD00323BDC00313ADE00323CDD00333CDD00353FDC00363FDC00343EDE00353E
-                    DE00363FDE003740DD003641DF003840DA003841DC003A43DC003841DE003842
-                    DE003943DE003B44DC003F47DD003F48DD00414ADD005058E000545CE100565E
-                    E100585FE2005B63E2005D64E2007077E7007177E700747BE7007980E7007B81
-                    EB007C82EB007F85E9007E84EC007F85EC007E84ED0000C0C0008187E9008086
-                    EC00848AE900888DEA00898FEA008C91EB008E93EB00969BED009B9FEE00999E
-                    F1009EA3EE00A0A5EE00A0A4F200A8ADF000B9BDF300C2C6F500C9CCF600CACC
-                    F600D3D5F700D6D8F800D8DAF800F3F4FD00F4F5FD00F5F5FD00F7F7FD00F7F7
-                    FE00F9FAFE00FBFBFE00FFFFFF00000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    0000000000000000000000000000000000000000000000000000000000000000
-                    00000000000000000000000000000000000000000000000000004F0E03040707
-                    07080506014F461F2A292D383833232B35004E17475F3C223614565E340A4D19
-                    446A62370F536C5D2C094D271A426661546C5B1A320D4D2636163F696C5A102F
-                    390D4D262E14526B68603B203A0D4D261D556C573F65643D2D0D4C12486C5818
-                    154067633002511E41502128361B434B310B5C3E1C11252626261A13240C4F59
-                    4C494A4A4A4A4A4A454F}
                   Visible = False
                   OnClick = DelTabBtnClick
                   OnMouseLeave = DelTabBtnMouseLeave
@@ -2203,6 +2181,7 @@ object NyanFiForm: TNyanFiForm
               UseSystemFont = False
               StyleElements = []
               OnDrawPanel = StatusBarDrawPanel
+              ExplicitWidth = 371
             end
             object LogSplitPanel: TPanel
               Left = 60
@@ -2482,7 +2461,7 @@ object NyanFiForm: TNyanFiForm
     object EditMenu: TMenuItem
       AutoHotkeys = maAutomatic
       Caption = #32232#38598'(&E)'
-      SubMenuImages = IconImgListP
+      SubMenuImages = IconVImgListP
       OnClick = ExtMenuClick
       OnAdvancedDrawItem = MainMenuAdvancedDrawItem
       OnMeasureItem = MainMenuMeasureItem
@@ -2938,7 +2917,7 @@ object NyanFiForm: TNyanFiForm
     object ToolMenu: TMenuItem
       AutoHotkeys = maAutomatic
       Caption = #12484#12540#12523'(&T)'
-      SubMenuImages = IconImgListP
+      SubMenuImages = IconVImgListP
       OnClick = ExtMenuClick
       OnAdvancedDrawItem = MainMenuAdvancedDrawItem
       OnMeasureItem = MainMenuMeasureItem
@@ -5752,7 +5731,7 @@ object NyanFiForm: TNyanFiForm
     Interval = 200
     OnTimer = TaskSttTimerTimer
     Left = 376
-    Top = 135
+    Top = 87
   end
   object ViewPopupMenu: TPopupMenu
     OnPopup = ViewPopupMenuPopup
@@ -5884,11 +5863,11 @@ object NyanFiForm: TNyanFiForm
     Interval = 200
     OnTimer = UpdLogTimerTimer
     Left = 460
-    Top = 135
+    Top = 87
   end
   object ExPopupMenu: TPopupMenu
     AutoPopup = False
-    Images = IconImgListP
+    Images = IconVImgListP
     OwnerDraw = True
     OnPopup = OdPopupMenuPopup
     Left = 147
@@ -5899,20 +5878,20 @@ object NyanFiForm: TNyanFiForm
     Interval = 500
     OnTimer = WatchDirTimerTimer
     Left = 544
-    Top = 135
+    Top = 87
   end
   object MsgHintTimer: TTimer
     Enabled = False
     Interval = 500
     OnTimer = MsgHintTimerTimer
     Left = 372
-    Top = 199
+    Top = 151
   end
   object KeyHintTimer: TTimer
     Enabled = False
     OnTimer = KeyHintTimerTimer
     Left = 456
-    Top = 199
+    Top = 151
   end
   object DropPopupMenu: TPopupMenu
     AutoHotkeys = maManual
@@ -5998,7 +5977,7 @@ object NyanFiForm: TNyanFiForm
     Interval = 500
     OnTimer = BlinkTimerTimer
     Left = 544
-    Top = 197
+    Top = 149
   end
   object DrivePopupMenu: TPopupMenu
     OwnerDraw = True
@@ -6067,26 +6046,6 @@ object NyanFiForm: TNyanFiForm
     object LockTxPreviewItem: TMenuItem
       Action = LockTextPreviewAction
     end
-  end
-  object IconImgList: TImageList
-    ColorDepth = cd32Bit
-    Left = 376
-    Top = 267
-  end
-  object IconImgListV: TImageList
-    ColorDepth = cd32Bit
-    Left = 456
-    Top = 267
-  end
-  object IconImgListI: TImageList
-    ColorDepth = cd32Bit
-    Left = 544
-    Top = 267
-  end
-  object IconImgListP: TImageList
-    ColorDepth = cd32Bit
-    Left = 632
-    Top = 266
   end
   object GrepPopupMenu: TPopupMenu
     AutoLineReduction = maManual
@@ -6214,7 +6173,7 @@ object NyanFiForm: TNyanFiForm
     Enabled = False
     OnTimer = WatchTailTimerTimer
     Left = 635
-    Top = 135
+    Top = 87
   end
   object TrayIcon1: TTrayIcon
     Icon.Data = {
@@ -6280,5 +6239,97 @@ object NyanFiForm: TNyanFiForm
     object IS_Match1Item: TMenuItem
       Action = IS_Match1Action
     end
+  end
+  object IconVImgListF: TVirtualImageList
+    AutoFill = True
+    Images = <>
+    ImageCollection = ImgCollectionF
+    Left = 372
+    Top = 218
+  end
+  object ImgCollectionF: TImageCollection
+    Images = <>
+    Left = 374
+    Top = 269
+  end
+  object IconVImgListV: TVirtualImageList
+    AutoFill = True
+    Images = <>
+    ImageCollection = ImgCollectionV
+    Left = 466
+    Top = 219
+  end
+  object IconVImgListI: TVirtualImageList
+    AutoFill = True
+    Images = <>
+    ImageCollection = ImgCollectionI
+    Left = 562
+    Top = 219
+  end
+  object ImgCollectionV: TImageCollection
+    Images = <>
+    Left = 470
+    Top = 269
+  end
+  object ImgCollectionI: TImageCollection
+    Images = <>
+    Left = 566
+    Top = 269
+  end
+  object IconVImgListP: TVirtualImageList
+    AutoFill = True
+    Images = <>
+    ImageCollection = ImgCollectionP
+    Left = 658
+    Top = 219
+  end
+  object ImgCollectionP: TImageCollection
+    Images = <>
+    Left = 658
+    Top = 269
+  end
+  object BtnVImgList: TVirtualImageList
+    AutoFill = True
+    Images = <
+      item
+        CollectionIndex = 0
+        CollectionName = 'tab_x_btn'
+        Name = 'tab_x_btn'
+      end>
+    ImageCollection = BtnImgCollection
+    Width = 12
+    Height = 12
+    Left = 528
+    Top = 8
+  end
+  object BtnImgCollection: TImageCollection
+    Images = <
+      item
+        Name = 'tab_x_btn'
+        SourceImages = <
+          item
+            Image.Data = {
+              89504E470D0A1A0A0000000D494844520000000C0000000C080600000056755C
+              E70000000774494D4507E70817063936FF98C1EC000000097048597300000EC3
+              00000EC301C76FA8640000000467414D410000B18F0BFC6105000001C1494441
+              5478DA6D92CF6B134114C73F33D9241B2318B1690EED490F5A15D2E25FE159C1
+              1E7AF12482485AC1ED45C1AB1E2A1E8A4AC1148AFF80E041502B9E84E2A11244
+              45116DD2A8D11237BFB6D9DDF1CD562D8203EF30CCF7BDEF8F376A7515A63EDC
+              31C3461D1345A014FF3B61B7C39B933795FAB95235DFEE2F13B65A100CD0F9BD
+              FF3499209041212AB787AD6E17BDFDE9239180DD231314A66730710CA9142A93
+              C16C07B8E5490AA7A7711C87C0183402B00F998387189DBFCAC8B90BC4BD2E51
+              BB4DF6F00463B7EEB2EFD419CB4564C0B1F45686FFF001CEFE038C5CBC840987
+              F88F1F317EFB1EC3FA67EA95F3101B544A4BC3EFA373397E549788C54771D6A3
+              307396A0B64E637E8EB8E3E3E4F3D011DC5F773A25A5E8BF5C934842B4EB3278
+              5D23FCD244675D516412D80E83C88A7D9FDCF132638B4B0C6AAFE83C7F4AB172
+              5986685A0B3744767EB7C10CFAB89327181770F0EE2D0DAF42D8DC4C7417E7BC
+              84EDFBC2F5E4EE284B2549A54B25FA6B2F685EBB92A4E48C96D85AA926F1BA47
+              8FA1D3928F15B3E9CD9AF6B3273836FB3F3B48A7779626C38C5DA6D284992CEB
+              1B1B28FB35725ED9F4C4682C5E94DACDC18EB44D5AEA6BAF4F69F1BDFA0581C7
+              C0B3737834230000000049454E44AE426082}
+          end>
+      end>
+    Left = 616
+    Top = 8
   end
 end

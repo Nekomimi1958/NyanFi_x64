@@ -2722,9 +2722,9 @@ void SetToolWinBorder(TForm *fp, bool sw)
 void InitializeListGrid(TStringGrid *gp,
 	TFont *font)	//フォント	(default = NULL : ListFont)
 {
-	gp->Color = col_bgList;
-	gp->Font->Assign(font? font : ListFont);
+	AssignScaledFont(gp, font? font : ListFont);
 	gp->DefaultRowHeight = get_FontHeight(gp->Font, ListInterLn);
+	gp->Color = col_bgList;
 }
 //---------------------------------------------------------------------------
 //一覧用ヘッダの初期化
@@ -2733,9 +2733,9 @@ void InitializeListHeader(THeaderControl *hp,
 	const _TCHAR *hdr,	//見出し	("|" 区切り)
 	TFont *font)		//フォント	(default = NULL : LstHdrFont)
 {
-	hp->DoubleBuffered = true;
-	hp->Font->Assign(font? font : LstHdrFont);
+	AssignScaledFont(hp, font? font : LstHdrFont);
 	hp->Height = get_FontHeight(hp->Font, 6);
+	hp->DoubleBuffered = true;
 
 	UnicodeString s = hdr;
 	for (int i=0; i<hp->Sections->Count && !s.IsEmpty(); i++)
@@ -5961,7 +5961,7 @@ void set_ListBoxItemHi(
 	TFont *font,	//フォント			(default = NULL : Application->DefaultFont)
 	bool with_ico)	//アイコンを表示	(default = false)
 {
-	lp->Font->Assign(font? font : Application->DefaultFont);
+	AssignScaledFont(lp, font);
 	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
 }
@@ -5971,7 +5971,7 @@ void set_ListBoxItemHi(
 	TFont *font,	//フォント			(default = NULL : Application->DefaultFont)
 	bool with_ico)	//アイコンを表示	(default = false)
 {
-	lp->Font->Assign(font? font : Application->DefaultFont);
+	AssignScaledFont(lp, font);
 	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
 }
@@ -5987,7 +5987,8 @@ void set_StdListBox(
 {
 	if (tag!=0) lp->Tag = tag;
 	lp->Color = col_bgList;
-	lp->Font->Assign(font? font : ListFont);
+
+	AssignScaledFont(lp, font? font : ListFont);
 	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
 }
@@ -6000,7 +6001,8 @@ void set_StdListBox(
 {
 	if (tag!=0) lp->Tag = tag;
 	lp->Color = col_bgList;
-	lp->Font->Assign(font? font : ListFont);
+
+	AssignScaledFont(lp, font? font : ListFont);
 	lp->Canvas->Font->Assign(lp->Font);
 	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
 }
@@ -6012,7 +6014,7 @@ void setup_ToolBar(
 	TToolBar *tb,
 	bool upd_sw)	//true = ボタンアクションを更新	(default = false)
 {
-	tb->Font->Assign(ToolBarFont);
+	AssignScaledFont(tb, ToolBarFont);
 	tb->Font->Color 	   = col_fgTlBar;
 	tb->GradientStartColor = col_bgTlBar1;
 	tb->GradientEndColor   = col_bgTlBar2;
@@ -7086,6 +7088,43 @@ int add_IconImage(
 	}
 
 	return (icon? lst->AddIcon(icon) : -1);
+}
+//---------------------------------------------------------------------------
+int add_IconImage(
+	UnicodeString fnam,		//ファイル名[,インデックス]  (環境パスに対応)
+	TVirtualImageList *lst)
+{
+	if (fnam.IsEmpty()) return -1;
+
+	TIcon *icon = NULL;
+	fnam = to_absolute_name(get_actual_name(fnam));
+	if (file_exists_ico(fnam)) {
+		int usr_idx = UsrIcoList->IndexOf(fnam);
+		if (usr_idx==-1) {
+			HICON hIcon = get_file_SmallIcon(fnam);
+			if (hIcon) {
+				icon = new TIcon();
+				icon->Handle = hIcon;
+				UsrIcoList->AddObject(fnam, (TObject*)icon);
+			}
+		}
+		else {
+			icon = (TIcon*)UsrIcoList->Objects[usr_idx];
+		}
+	}
+
+	if (icon) {
+		TImageCollection *cp = (TImageCollection *)lst->ImageCollection;
+		TImageCollectionItem *ip = cp->Images->Add();
+		std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
+		bmp->Assign(icon);
+		TImageCollectionSourceItem *sp = ip->SourceImages->Add();
+        sp->Image->Assign(bmp.get());
+		return cp->Images->Count - 1;
+	}
+	else {
+		return -1;
+	}
 }
 
 //---------------------------------------------------------------------------

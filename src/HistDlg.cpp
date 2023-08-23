@@ -78,13 +78,6 @@ void __fastcall TDirHistoryDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftSt
 	else
 		SpecialKeyProc(this, Key, Shift);
 }
-//---------------------------------------------------------------------------
-void __fastcall TDirHistoryDlg::WmDpiChanged(TMessage &msg)
-{
-	TForm::Dispatch(&msg);
-	SetDarkWinTheme(this);
-	setup_Panel(InpPanel, ListFont);
-}
 
 //---------------------------------------------------------------------------
 //一覧の更新
@@ -412,8 +405,8 @@ void __fastcall TDirHistoryDlg::AddDirsActionExecute(TObject *Sender)
 		FindAborted = false;
 
 		//検索中ヒント表示の設定
-		HintLabel1->Font->Assign(HintFont);
-		HintLabel2->Font->Assign(HintFont);
+		AssignScaledFont(HintLabel1, HintFont);
+		AssignScaledFont(HintLabel2, HintFont);
 		HintLabel1->Caption   = "検索中...　ESCキーで中断";
 		HintLabel2->Caption   = EmptyStr;
 		HintPanel->Color	  = col_bgHint;

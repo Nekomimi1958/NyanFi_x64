@@ -7,9 +7,12 @@ object SelDriveDlg: TSelDriveDlg
   ClientHeight = 341
   ClientWidth = 644
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -18,8 +21,7 @@ object SelDriveDlg: TSelDriveDlg
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object HiddenCanBtn: TButton
     Left = 0
     Top = 309
@@ -30,6 +32,8 @@ object SelDriveDlg: TSelDriveDlg
     ModalResult = 2
     TabOrder = 1
     TabStop = False
+    ExplicitTop = 308
+    ExplicitWidth = 640
   end
   object OptPanel: TPanel
     Left = 0
@@ -39,17 +43,20 @@ object SelDriveDlg: TSelDriveDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 308
+    ExplicitWidth = 640
     DesignSize = (
       644
       32)
     object HideOptBtn: TSpeedButton
-      Left = 626
+      Left = 622
       Top = 16
       Width = 18
       Height = 16
       Anchors = [akTop, akRight]
       Flat = True
       OnClick = ChgOptBtnClick
+      ExplicitLeft = 626
     end
     object OnlyAccCheckBox: TCheckBox
       Left = 186
@@ -177,6 +184,7 @@ object SelDriveDlg: TSelDriveDlg
     OnDrawSection = DriveHeaderDrawSection
     OnSectionResize = DriveHeaderSectionResize
     OnResize = DriveHeaderResize
+    ExplicitWidth = 640
   end
   object GridPanel: TPanel
     Left = 0
@@ -186,13 +194,15 @@ object SelDriveDlg: TSelDriveDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitWidth = 640
+    ExplicitHeight = 288
     DesignSize = (
       644
       289)
     object DriveGrid: TStringGrid
       Left = 0
       Top = 0
-      Width = 644
+      Width = 640
       Height = 287
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
@@ -216,6 +226,8 @@ object SelDriveDlg: TSelDriveDlg
       OnDrawCell = DriveGridDrawCell
       OnKeyDown = DriveGridKeyDown
       OnMouseUp = DriveGridMouseUp
+      ExplicitWidth = 636
+      ExplicitHeight = 286
       ColWidths = (
         60
         60
@@ -232,7 +244,7 @@ object SelDriveDlg: TSelDriveDlg
         22)
     end
     object BlankPanel: TPanel
-      Left = 630
+      Left = 626
       Top = 273
       Width = 14
       Height = 14
@@ -244,6 +256,8 @@ object SelDriveDlg: TSelDriveDlg
       TabOrder = 1
       Visible = False
       StyleElements = [seBorder]
+      ExplicitLeft = 622
+      ExplicitTop = 272
       object ShowOptBtn: TSpeedButton
         Left = 0
         Top = 0

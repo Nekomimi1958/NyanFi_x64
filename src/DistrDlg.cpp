@@ -124,7 +124,7 @@ void __fastcall TDistributionDlg::FormShow(TObject *Sender)
 	PrvSortMode = IniFile->ReadIntGen(_T("DistrDlgSortMode"));
 	LastDistDir = IniFile->ReadStrGen(_T("DistrDlgLastDir"),	CurPathName);
 
-	StatusBar1->Font->Assign(SttBarFont);
+	AssignScaledFont(StatusBar1, SttBarFont);
 
 	UserModule->InitializeListBox(RegListBox);
 	AssignRegListBox();

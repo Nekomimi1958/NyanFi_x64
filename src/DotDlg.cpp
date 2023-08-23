@@ -330,7 +330,9 @@ void __fastcall TDotNyanDlg::CancelBtnClick(TObject *Sender)
 		SpuitImage->Visible = true;
 	}
 	//•Â‚¶‚é
-	else ModalResult = mrCancel;
+	else {
+		ModalResult = mrCancel;
+	}
 }
 
 //---------------------------------------------------------------------------

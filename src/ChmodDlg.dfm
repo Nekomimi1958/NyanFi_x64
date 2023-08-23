@@ -6,20 +6,22 @@ object FtpChmodDlg: TFtpChmodDlg
   ClientHeight = 203
   ClientWidth = 281
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   OnClose = FormClose
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object Label1: TLabel
-    Left = 64
+    Left = 61
     Top = 131
-    Width = 42
-    Height = 13
+    Width = 45
+    Height = 15
     Alignment = taRightJustify
     Caption = '8'#36914#25968#20516
   end
@@ -152,7 +154,7 @@ object FtpChmodDlg: TFtpChmodDlg
     Left = 110
     Top = 128
     Width = 60
-    Height = 21
+    Height = 23
     Alignment = taRightJustify
     EditMask = '!999;1;0'
     MaxLength = 3

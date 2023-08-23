@@ -39,7 +39,7 @@ void __fastcall TInspectForm::FormShow(TObject *Sender)
 	UnsignedAction->Checked  = IniFile->ReadBoolGen(_T("InspectUnsigned"));
 	BigEndianAction->Checked = IniFile->ReadBoolGen(_T("InspectBigEndian"));
 
-	InsStatusBar->Font->Assign(ViewerFont);
+	AssignScaledFont(InsStatusBar, ViewerFont);
 
 	TStringGrid *gp = InspectGrid;
 	InitializeListGrid(gp, ViewerFont);

@@ -5,7 +5,11 @@ object GitViewer: TGitViewer
   ClientHeight = 448
   ClientWidth = 710
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
   Position = poDesigned
   ShowHint = True
@@ -29,6 +33,8 @@ object GitViewer: TGitViewer
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 517
+    ExplicitHeight = 447
     object DiffSplitter: TSplitter
       Left = 0
       Top = 251
@@ -45,6 +51,8 @@ object GitViewer: TGitViewer
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitTop = 254
+      ExplicitWidth = 517
       object DiffPanel: TPanel
         Left = 0
         Top = 0
@@ -54,6 +62,7 @@ object GitViewer: TGitViewer
         BevelOuter = bvNone
         TabOrder = 0
         OnResize = DiffPanelResize
+        ExplicitWidth = 517
         object DiffListBox: TListBox
           Left = 0
           Top = 0
@@ -73,6 +82,7 @@ object GitViewer: TGitViewer
           OnKeyDown = DiffListBoxKeyDown
           OnKeyPress = GitListBoxKeyPress
           OnMouseDown = GitListBoxMouseDown
+          ExplicitWidth = 517
         end
       end
       object DiffBar: TToolBar
@@ -89,6 +99,7 @@ object GitViewer: TGitViewer
         List = True
         AllowTextButtons = True
         TabOrder = 1
+        ExplicitWidth = 517
         object AddBtn: TToolButton
           Left = 0
           Top = 0
@@ -172,6 +183,8 @@ object GitViewer: TGitViewer
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 517
+      ExplicitHeight = 250
       object CommitPanel: TPanel
         Left = 0
         Top = 0
@@ -181,6 +194,8 @@ object GitViewer: TGitViewer
         BevelOuter = bvNone
         TabOrder = 0
         OnResize = CommitPanelResize
+        ExplicitWidth = 517
+        ExplicitHeight = 229
         object CommitListBox: TListBox
           Left = 0
           Top = 0
@@ -203,6 +218,8 @@ object GitViewer: TGitViewer
           OnKeyDown = CommitListBoxKeyDown
           OnKeyPress = GitListBoxKeyPress
           OnMouseDown = GitListBoxMouseDown
+          ExplicitWidth = 517
+          ExplicitHeight = 229
         end
       end
       object FindBar: TToolBar
@@ -220,6 +237,8 @@ object GitViewer: TGitViewer
         ShowCaptions = True
         AllowTextButtons = True
         TabOrder = 1
+        ExplicitTop = 229
+        ExplicitWidth = 517
         object FindBtn: TToolButton
           Left = 0
           Top = 0
@@ -313,6 +332,8 @@ object GitViewer: TGitViewer
     ModalResult = 2
     TabOrder = 1
     TabStop = False
+    ExplicitLeft = 706
+    ExplicitHeight = 447
   end
   object BranchPanel: TPanel
     Left = 0
@@ -323,6 +344,7 @@ object GitViewer: TGitViewer
     BevelOuter = bvNone
     TabOrder = 2
     OnResize = BranchPanelResize
+    ExplicitHeight = 447
     object BranchListBox: TListBox
       Left = 0
       Top = 0
@@ -343,6 +365,7 @@ object GitViewer: TGitViewer
       OnKeyDown = BranchListBoxKeyDown
       OnKeyPress = GitListBoxKeyPress
       OnMouseDown = GitListBoxMouseDown
+      ExplicitHeight = 447
     end
   end
   object BrPopupMenu: TPopupMenu

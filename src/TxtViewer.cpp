@@ -264,7 +264,7 @@ void __fastcall TTxtViewer::Clear()
 	MaxLine = 0;
 	ClearDispLine();
 
-	ViewBox->Font->Assign(ViewerFont);
+	AssignScaledFont(ViewBox, ViewerFont);
 	useFontName = ViewBox->Font->Name;
 	useFontSize = ViewBox->Font->Size;
 
@@ -783,9 +783,13 @@ void __fastcall TTxtViewer::UpdateScr(
 	if (useFontName.IsEmpty()) useFontName = ViewerFont->Name;
 	useFontSize = usr_hl? UserHighlight->ReadKeyInt(_T("FontSize")) : ViewerFont->Size;
 	if (useFontSize==0) useFontSize = ViewerFont->Size;
-	ViewBox->Font->Assign(ViewerFont);
-	ViewBox->Font->Name = useFontName;
-	ViewBox->Font->Size = useFontSize;
+
+	std::unique_ptr<TFont> s_font(new TFont());
+	s_font->Assign(ViewerFont);
+	s_font->Name = useFontName;
+	s_font->Size = useFontSize;
+	AssignScaledFont(ViewBox, s_font.get());
+	useFontSize = ViewBox->Font->Size;
 
 	if (!isBinary) {
 		if (usr_hl) {
@@ -2239,18 +2243,18 @@ void __fastcall TTxtViewer::onRulerPaint(TObject *Sender)
 		for (int i=0; i<FixWdList.Length; i++) {
 			if (i==0) {
 				xp -= (HchWidth - 1);
-				cv->MoveTo(xp, rc.Top + 2);
+				cv->MoveTo(xp, rc.Top + ScaledInt(2, OwnerForm));
 				cv->LineTo(xp, rc.Bottom - 1);
 			}
 			al_str = al_str.IsEmpty()? UnicodeString("A") : get_NextAlStr(al_str);
-			cv->TextOut(xp + 4, rc.Top, al_str);
+			cv->TextOut(xp + ScaledInt(4, OwnerForm), rc.Top, al_str);
 			xp += ((FixWdList[i] + 2) * HchWidth);
-			cv->MoveTo(xp, rc.Top + 2);
+			cv->MoveTo(xp, rc.Top + ScaledInt(2, OwnerForm));
 			cv->LineTo(xp, rc.Bottom - 1);
 		}
 
 		//固定長表示のセル背景アルファ
-		if (CellAlpha>0) AlphaBlendCsvCol(cv, rc.Right, rc.Top + 2, rc.Height() - 2);
+		if (CellAlpha>0) AlphaBlendCsvCol(cv, rc.Right, rc.Top + 1, rc.Height() - 2);
 	}
 	//バイナリ
 	else if (isBinary) {
@@ -2272,16 +2276,16 @@ void __fastcall TTxtViewer::onRulerPaint(TObject *Sender)
 	}
 	//通常表示
 	else {
-		cv->Font->Height = ScaledInt(10, OwnerForm);
+		cv->Font->Height = ScaledInt(-10, OwnerForm);
 		//目盛
 		for (int i=0; i<MaxFoldWd; i++) {
 			if (i%10==0) {
-				cv->MoveTo(xp, rc.Top + 2);
+				cv->MoveTo(xp, rc.Top + ScaledInt(2, OwnerForm));
 				cv->LineTo(xp, rc.Bottom - 1);
-				cv->TextOut(xp + 2, rc.Top, i);
+				cv->TextOut(xp + ScaledInt(2, OwnerForm), rc.Top, i);
 			}
 			else {
-				cv->MoveTo(xp, rc.Bottom - 4);
+				cv->MoveTo(xp, rc.Bottom - ScaledInt(4, OwnerForm));
 				cv->LineTo(xp, rc.Bottom - 1);
 			}
 			xp += HchWidth;
@@ -2291,7 +2295,9 @@ void __fastcall TTxtViewer::onRulerPaint(TObject *Sender)
 	//折り返し位置
 	if (!isFitWin && !isBinary) {
 		xp = TopXpos + ViewFoldWidth * HchWidth - 1;
-		TPoint mkp[3] = {Point(xp, rc.Bottom - 1), Point(xp - 3, rc.Bottom - 6), Point(xp + 3, rc.Bottom - 6)};
+		TPoint mkp[3] = {Point(xp, rc.Bottom - ScaledInt(1, OwnerForm)),
+						 Point(xp - ScaledInt(3, OwnerForm), rc.Bottom - ScaledInt(6, OwnerForm)),
+						 Point(xp + ScaledInt(3, OwnerForm), rc.Bottom - ScaledInt(6, OwnerForm))};
 		cv->Brush->Style = bsSolid;
 		cv->Brush->Color = color_fgRuler;
 		cv->Polygon(mkp, 2);
@@ -2300,7 +2306,7 @@ void __fastcall TTxtViewer::onRulerPaint(TObject *Sender)
 	//カーソル位置
 	if (!isCSV || !isFixedLen || CellAlpha==0) {
 		xp = TopXpos + cv_PosX_to_HchX(CurPos.x) * HchWidth - 1;
-		draw_Line(cv, xp, rc.Top + 1, xp, rc.Bottom, 2, color_fgRuler);
+		draw_Line(cv, xp, rc.Top + ScaledInt(1, OwnerForm), xp, rc.Bottom, ScaledInt(2, OwnerForm), color_fgRuler);
 	}
 }
 

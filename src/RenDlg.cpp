@@ -143,7 +143,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	FbaseRadioGroup->ItemIndex = KeepBsExtCheckBox->Checked? IniFile->ReadIntGen(_T("RenameDlgBaseCh")) : 0;
 	FextRadioGroup->ItemIndex  = KeepBsExtCheckBox->Checked? IniFile->ReadIntGen(_T("RenameDlgExtCh")) : 0;
 
-	StatusBar1->Font->Assign(SttBarFont);
+	AssignScaledFont(StatusBar1, SttBarFont);
 
 	if (UnInitializing) return;
 
@@ -282,6 +282,9 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::WmFormShowed(TMessage &msg)
 {
+	OutDebugStr(UnicodeString().sprintf(_T("Sz:%d Hi:%d PPI:%d"), 
+		Application->DefaultFont->Size, Application->DefaultFont->Height, CurrentPPI));
+
 	Repaint();
 	UserModule->RenInsNameAction->Update();
 

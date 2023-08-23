@@ -75,6 +75,14 @@ private:	// ユーザー宣言
 	bool isError;
 	UnicodeString ErrMsg;
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		int hi = LineEdit->Height + HistComboBox->Height + ToolBar1->Height;
+		Constraints->MinHeight = hi + Height - ClientHeight;
+		Constraints->MaxHeight = hi + Height - ClientHeight;
+	}
+
 	void __fastcall InitUsrDef();
 
 	bool __fastcall IsTimeStr(UnicodeString s);
@@ -105,6 +113,10 @@ public:		// ユーザー宣言
 
 	__fastcall TCalculator(TComponent* Owner);
 	void __fastcall CalcLine(UnicodeString s, bool use_cb = false);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TCalculator *Calculator;

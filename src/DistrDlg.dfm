@@ -9,9 +9,12 @@ object DistributionDlg: TDistributionDlg
   Color = clBtnFace
   Constraints.MinHeight = 400
   Constraints.MinWidth = 640
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -20,8 +23,7 @@ object DistributionDlg: TDistributionDlg
   OnKeyDown = FormKeyDown
   OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object PrvSplitter: TSplitter
     Left = 0
     Top = 250
@@ -40,6 +42,7 @@ object DistributionDlg: TDistributionDlg
     BevelOuter = bvNone
     Constraints.MinHeight = 220
     TabOrder = 0
+    ExplicitWidth = 628
     object RegPanel: TPanel
       Left = 0
       Top = 88
@@ -48,6 +51,7 @@ object DistributionDlg: TDistributionDlg
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 628
       DesignSize = (
         632
         118)
@@ -101,41 +105,47 @@ object DistributionDlg: TDistributionDlg
         Left = 96
         Top = 6
         Width = 530
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
         BevelEdges = [beLeft, beTop, beRight]
-        EditLabel.Width = 35
-        EditLabel.Height = 13
+        EditLabel.Width = 38
+        EditLabel.Height = 23
         EditLabel.Caption = #12479#12452#12488#12523
         LabelPosition = lpLeft
         TabOrder = 1
+        Text = ''
+        ExplicitWidth = 526
       end
       object DistrDirEdit: TLabeledEdit
         Left = 96
         Top = 60
         Width = 492
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akTop, akRight]
         BevelEdges = [beLeft, beTop, beRight]
-        EditLabel.Width = 54
-        EditLabel.Height = 13
+        EditLabel.Width = 58
+        EditLabel.Height = 23
         EditLabel.Caption = #25391#12426#20998#12369#20808
         LabelPosition = lpLeft
         TabOrder = 4
+        Text = ''
+        ExplicitWidth = 488
       end
       object DistrMaskEdit: TLabeledEdit
         Left = 96
         Top = 33
         Width = 492
-        Height = 21
+        Height = 23
         Hint = '/ '#65374' / '#12391#22258#12416#12392#27491#35215#34920#29694#12497#12479#12540#12531#13#10'@'#12391#22987#12414#12427#22580#21512#12399#12522#12473#12488#12501#12449#12452#12523#21517
         Anchors = [akLeft, akTop, akRight]
         BevelEdges = [beLeft, beTop, beRight]
-        EditLabel.Width = 67
-        EditLabel.Height = 13
+        EditLabel.Width = 75
+        EditLabel.Height = 23
         EditLabel.Caption = #12510#12473#12463'/'#12497#12479#12540#12531
         LabelPosition = lpLeft
         TabOrder = 2
+        Text = ''
+        ExplicitWidth = 488
       end
       object RefDirButton: TButton
         Left = 590
@@ -146,6 +156,7 @@ object DistributionDlg: TDistributionDlg
         Caption = '...'
         TabOrder = 5
         OnClick = RefDirButtonClick
+        ExplicitLeft = 586
       end
       object AddItemBtn: TButton
         Left = 8
@@ -160,15 +171,17 @@ object DistributionDlg: TDistributionDlg
         Left = 295
         Top = 89
         Width = 277
-        Height = 21
+        Height = 23
         Anchors = [akLeft, akRight, akBottom]
-        EditLabel.Width = 24
-        EditLabel.Height = 13
+        EditLabel.Width = 26
+        EditLabel.Height = 23
         EditLabel.Caption = #26908#32034
         LabelPosition = lpLeft
         TabOrder = 11
+        Text = ''
         OnChange = FindEditChange
         OnKeyDown = FindEditKeyDown
+        ExplicitWidth = 273
       end
       object RefListBtn: TButton
         Left = 590
@@ -180,6 +193,7 @@ object DistributionDlg: TDistributionDlg
         Caption = '...'
         TabOrder = 3
         OnClick = RefListBtnClick
+        ExplicitLeft = 586
       end
       object Button1: TButton
         Left = 574
@@ -189,6 +203,7 @@ object DistributionDlg: TDistributionDlg
         Action = FindDownAction
         Anchors = [akTop, akRight]
         TabOrder = 12
+        ExplicitLeft = 570
       end
       object FindUpBtn: TButton
         Left = 601
@@ -198,6 +213,7 @@ object DistributionDlg: TDistributionDlg
         Action = FindUpAction
         Anchors = [akTop, akRight]
         TabOrder = 13
+        ExplicitLeft = 597
       end
     end
     object ExePanel: TPanel
@@ -208,14 +224,15 @@ object DistributionDlg: TDistributionDlg
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitWidth = 628
       DesignSize = (
         632
         44)
       object Label1: TLabel
-        Left = 212
+        Left = 206
         Top = 15
-        Width = 70
-        Height = 13
+        Width = 76
+        Height = 15
         Alignment = taRightJustify
         Anchors = [akTop, akRight]
         Caption = #21516#21517#26178#12398#20966#29702
@@ -229,6 +246,7 @@ object DistributionDlg: TDistributionDlg
         Anchors = [akTop, akRight]
         Default = True
         TabOrder = 3
+        ExplicitLeft = 547
       end
       object CopyBtn: TButton
         Left = 468
@@ -238,15 +256,17 @@ object DistributionDlg: TDistributionDlg
         Action = ExeCopyAction
         Anchors = [akTop, akRight]
         TabOrder = 2
+        ExplicitLeft = 464
       end
       object SameNameComboBox: TComboBox
         Left = 286
         Top = 12
         Width = 156
-        Height = 21
+        Height = 23
         Style = csDropDownList
         Anchors = [akTop, akRight]
         TabOrder = 1
+        ExplicitLeft = 282
       end
       object CreDistrDirCheckBox: TCheckBox
         Left = 16
@@ -257,6 +277,7 @@ object DistributionDlg: TDistributionDlg
         Caption = #25391#12426#20998#12369#20808#12434#33258#21205#20316#25104
         TabOrder = 0
         OnClick = CreDistrDirCheckBoxClick
+        ExplicitLeft = 12
       end
       object BevelPanel1: TPanel
         Left = 0
@@ -266,6 +287,7 @@ object DistributionDlg: TDistributionDlg
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 4
+        ExplicitWidth = 628
         object Shape1: TShape
           Left = 0
           Top = 0
@@ -294,6 +316,7 @@ object DistributionDlg: TDistributionDlg
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 628
       object ListSplitter: TSplitter
         Left = 477
         Top = 0
@@ -306,7 +329,6 @@ object DistributionDlg: TDistributionDlg
         Top = 0
         Width = 477
         Height = 88
-        OnClickCheck = RegListBoxClickCheck
         Align = alClient
         BorderStyle = bsNone
         DoubleBuffered = True
@@ -317,8 +339,10 @@ object DistributionDlg: TDistributionDlg
         Style = lbOwnerDrawFixed
         TabOrder = 0
         OnClick = RegListBoxClick
+        OnClickCheck = RegListBoxClickCheck
         OnDrawItem = RegListBoxDrawItem
         OnKeyDown = RegListBoxKeyDown
+        ExplicitWidth = 473
       end
       object ListListBox: TListBox
         Left = 482
@@ -332,6 +356,7 @@ object DistributionDlg: TDistributionDlg
         TabOrder = 1
         OnDrawItem = ListListBoxDrawItem
         OnKeyDown = ListListBoxKeyDown
+        ExplicitLeft = 478
       end
     end
   end
@@ -343,6 +368,8 @@ object DistributionDlg: TDistributionDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 628
+    ExplicitHeight = 95
     object PrvListBox: TListBox
       Left = 0
       Top = 19
@@ -356,6 +383,8 @@ object DistributionDlg: TDistributionDlg
       OnData = PrvListBoxData
       OnDblClick = PrvListBoxDblClick
       OnDrawItem = PrvListBoxDrawItem
+      ExplicitWidth = 628
+      ExplicitHeight = 76
     end
     object PrvListHeader: THeaderControl
       Tag = 1
@@ -377,6 +406,7 @@ object DistributionDlg: TDistributionDlg
       OnDrawSection = PrvListHeaderDrawSection
       OnSectionClick = PrvListHeaderSectionClick
       OnSectionResize = PrvListHeaderSectionResize
+      ExplicitWidth = 628
     end
     object BevelPanel2: TPanel
       Left = 0
@@ -386,6 +416,7 @@ object DistributionDlg: TDistributionDlg
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 2
+      ExplicitWidth = 628
       object Shape3: TShape
         Left = 0
         Top = 0
@@ -429,6 +460,8 @@ object DistributionDlg: TDistributionDlg
         Width = 50
       end>
     OnDrawPanel = StatusBar1DrawPanel
+    ExplicitTop = 350
+    ExplicitWidth = 628
   end
   object HiddenCanBtn: TButton
     Left = 0
@@ -440,6 +473,8 @@ object DistributionDlg: TDistributionDlg
     ModalResult = 2
     TabOrder = 3
     TabStop = False
+    ExplicitTop = 350
+    ExplicitWidth = 628
   end
   object ActionList1: TActionList
     Left = 40

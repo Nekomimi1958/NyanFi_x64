@@ -209,7 +209,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 	(ToFilter? (TWinControl*)FilterEdit : (TWinControl*)lp)->SetFocus();
 
 	//ステータスバー
-	StatusBar1->Font->Assign(SttBarFont);
+	AssignScaledFont(StatusBar1, SttBarFont);
 	set_SttBarPanelWidth(StatusBar1, 0, 21 + IntToStr(GenInfoList->Count).Length() * 3);
 												//"項目: nnn  -  nnn    選択: nnn"
 	set_SttBarPanelWidth(StatusBar1, 1, "UTF-16(BE) BOM付");

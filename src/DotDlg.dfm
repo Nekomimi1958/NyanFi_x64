@@ -6,7 +6,11 @@ object DotNyanDlg: TDotNyanDlg
   ClientHeight = 582
   ClientWidth = 678
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   Position = poDesigned
   ShowHint = True
   OnCreate = FormCreate
@@ -124,7 +128,7 @@ object DotNyanDlg: TDotNyanDlg
   object DescEdit: TLabeledEdit
     Left = 87
     Top = 278
-    Width = 580
+    Width = 576
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     EditLabel.Width = 26
@@ -159,7 +163,7 @@ object DotNyanDlg: TDotNyanDlg
   object GrepMaskComboBox: TComboBox
     Left = 87
     Top = 249
-    Width = 580
+    Width = 576
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 14
@@ -167,7 +171,7 @@ object DotNyanDlg: TDotNyanDlg
   object PathMaskComboBox: TComboBox
     Left = 87
     Top = 220
-    Width = 580
+    Width = 576
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 13
@@ -191,25 +195,25 @@ object DotNyanDlg: TDotNyanDlg
   object SndGroupBox: TGroupBox
     Left = 10
     Top = 434
-    Width = 544
+    Width = 540
     Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #12469#12454#12531#12489
     TabOrder = 18
     DesignSize = (
-      544
+      540
       48)
     object SoundEdit: TEdit
       Left = 10
       Top = 18
-      Width = 415
+      Width = 411
       Height = 23
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
     end
     object RefSndBtn: TButton
       Tag = 2
-      Left = 428
+      Left = 424
       Top = 17
       Width = 36
       Height = 22
@@ -221,7 +225,7 @@ object DotNyanDlg: TDotNyanDlg
     end
     object TestSndBtn: TButton
       Tag = 2
-      Left = 465
+      Left = 461
       Top = 17
       Width = 22
       Height = 22
@@ -232,7 +236,7 @@ object DotNyanDlg: TDotNyanDlg
       OnClick = TestSndBtnClick
     end
     object InhSndBtn: TButton
-      Left = 489
+      Left = 485
       Top = 17
       Width = 48
       Height = 22
@@ -272,25 +276,25 @@ object DotNyanDlg: TDotNyanDlg
   object ImgGroupBox: TGroupBox
     Left = 10
     Top = 378
-    Width = 544
+    Width = 540
     Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #32972#26223#30011#20687
     TabOrder = 17
     DesignSize = (
-      544
+      540
       48)
     object BgImgEdit: TEdit
       Left = 10
       Top = 18
-      Width = 415
+      Width = 411
       Height = 23
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 2
     end
     object RefImgBtn: TButton
       Tag = 2
-      Left = 428
+      Left = 424
       Top = 17
       Width = 36
       Height = 22
@@ -301,7 +305,7 @@ object DotNyanDlg: TDotNyanDlg
       OnClick = RefImgBtnClick
     end
     object InhImgBtn: TButton
-      Left = 489
+      Left = 485
       Top = 17
       Width = 48
       Height = 22
@@ -314,17 +318,17 @@ object DotNyanDlg: TDotNyanDlg
   object CmdsGroupBox: TGroupBox
     Left = 10
     Top = 490
-    Width = 544
+    Width = 540
     Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #12467#12510#12531#12489#12501#12449#12452#12523
     TabOrder = 19
     DesignSize = (
-      544
+      540
       48)
     object RefCmdsBtn: TButton
       Tag = 2
-      Left = 428
+      Left = 424
       Top = 18
       Width = 36
       Height = 22
@@ -337,7 +341,7 @@ object DotNyanDlg: TDotNyanDlg
     object ExeCmdsEdit: TLabeledEdit
       Left = 26
       Top = 18
-      Width = 399
+      Width = 395
       Height = 23
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 11
@@ -348,7 +352,7 @@ object DotNyanDlg: TDotNyanDlg
       Text = ''
     end
     object InhCmdBtn: TButton
-      Left = 489
+      Left = 485
       Top = 18
       Width = 48
       Height = 22
@@ -369,16 +373,16 @@ object DotNyanDlg: TDotNyanDlg
   object ColGroupBox: TGroupBox
     Left = 10
     Top = 322
-    Width = 544
+    Width = 540
     Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #37197#33394
     TabOrder = 16
     DesignSize = (
-      544
+      540
       48)
     object RefColBtn: TButton
-      Left = 401
+      Left = 397
       Top = 18
       Width = 36
       Height = 22
@@ -388,7 +392,7 @@ object DotNyanDlg: TDotNyanDlg
       OnClick = RefColBtnClick
     end
     object DisableBtn: TButton
-      Left = 439
+      Left = 435
       Top = 18
       Width = 48
       Height = 22
@@ -399,7 +403,7 @@ object DotNyanDlg: TDotNyanDlg
     object ColorComboBox: TComboBox
       Left = 10
       Top = 18
-      Width = 363
+      Width = 359
       Height = 22
       Style = csOwnerDrawFixed
       Anchors = [akLeft, akTop, akRight]
@@ -407,7 +411,7 @@ object DotNyanDlg: TDotNyanDlg
       OnDrawItem = ColorComboBoxDrawItem
     end
     object SpuitPanel: TPanel
-      Left = 377
+      Left = 373
       Top = 18
       Width = 22
       Height = 22
@@ -423,22 +427,22 @@ object DotNyanDlg: TDotNyanDlg
         Align = alClient
         Center = True
         Picture.Data = {
-          07544269746D6170F6000000424DF60000000000000076000000280000001000
-          000010000000010004000000000080000000C30E0000C30E0000100000001000
-          000000000000000080000080000000808000800000008000800080800000C0C0
-          C000808080000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFF
-          FF003333333333333333300333333333333330F033333333333330FF03333333
-          3333330FF033333333333330FF033333333333330FF033333333333330FF0333
-          33333333330FF033333333333330FF0033333333333300003333333333333000
-          0033333333333300000333333333330000033333333333300033333333333333
-          3333}
+          0954506E67496D61676589504E470D0A1A0A0000000D49484452000000140000
+          001408060000008D891D0D0000000774494D4507E708170A351F1885EFE80000
+          00097048597300000EC300000EC301C76FA8640000000467414D410000B18F0B
+          FC6105000000674944415478DAD5D4310EC0200C03C0FAE7FC9C06D1214211D8
+          5009F0C4109F92053C3F0777812971259BCBEE0DDF93418F458BED05236CFAE4
+          162B50D4A3C082596A0158035BCC4332C86034C86214A8604350C5BAA045C628
+          50C186E03720FD423D7039E7832F4C325415354458800000000049454E44AE42
+          6082}
+        Stretch = True
         Transparent = True
         OnMouseDown = SpuitImageMouseDown
         OnMouseUp = SpuitImageMouseUp
       end
     end
     object InhColBtn: TButton
-      Left = 489
+      Left = 485
       Top = 18
       Width = 48
       Height = 22

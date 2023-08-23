@@ -5,9 +5,12 @@ object NetShareDlg: TNetShareDlg
   ClientHeight = 322
   ClientWidth = 232
   Color = clBtnFace
-  ParentFont = True
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
   ShowHint = True
   OnClose = FormClose
@@ -15,8 +18,7 @@ object NetShareDlg: TNetShareDlg
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object ListPanel: TPanel
     Left = 0
     Top = 29
@@ -25,10 +27,12 @@ object NetShareDlg: TNetShareDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 228
+    ExplicitHeight = 292
     object ShareListBox: TListBox
       Left = 0
       Top = 0
-      Width = 232
+      Width = 228
       Height = 293
       Style = lbOwnerDrawFixed
       Align = alLeft
@@ -40,6 +44,8 @@ object NetShareDlg: TNetShareDlg
       OnDrawItem = ShareListBoxDrawItem
       OnKeyDown = ShareListBoxKeyDown
       OnKeyPress = ShareListBoxKeyPress
+      ExplicitWidth = 224
+      ExplicitHeight = 292
     end
   end
   object HiddenCanBtn: TButton
@@ -52,6 +58,8 @@ object NetShareDlg: TNetShareDlg
     ModalResult = 2
     TabOrder = 2
     TabStop = False
+    ExplicitTop = 321
+    ExplicitWidth = 228
   end
   object PathTabControl: TTabControl
     Left = 0
@@ -67,6 +75,7 @@ object NetShareDlg: TNetShareDlg
     TabStop = False
     OnChange = PathTabControlChange
     OnDrawTab = PathTabControlDrawTab
+    ExplicitWidth = 228
   end
   object PopupMenu1: TPopupMenu
     Left = 24

@@ -37,8 +37,9 @@ void __fastcall TJsonViewer::FormShow(TObject *Sender)
 
 	JsonTreeView->Items->Clear();
 	JsonTreeView->Color = col_bgList;
-	JsonTreeView->Font->Assign(ListFont);
-	StatusBar1->Font->Assign(SttBarFont);
+
+	AssignScaledFont(JsonTreeView, ListFont);
+	AssignScaledFont(StatusBar1, SttBarFont);
 
 	Caption = (isClip? UnicodeString("クリップボード") : yen_to_delimiter(FileName)) + " - JSONビュアー";
 
