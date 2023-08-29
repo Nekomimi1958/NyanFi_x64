@@ -101,7 +101,16 @@
 
     <dt class="no_bg_indent1">　<img src="chkbox.png" alt=""> カレントパス</dt>
     <dd>タイトルバーに、カレント側のフルパス名を表示します。<br>
-      <br>
+    </dd>
+
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ダイアログをメイン画面の中央に表示</dt>
+    <dd>各種ダイアログを <b>NyanFi</b> メイン画面の中央に表示します(テキストビュアーの文字情報とインスペクタは除く)。手動で表示位置を移動しても、再度開いたときには画面中央になります。<br>
+    なお、メイン画面が表示されているモニタからダイアログがはみ出した場合は、モニタ内に収まるようにダイアログ位置が調整されます。
+      <div class="info_text">
+        元々はマルチディスプレイ環境対策のために追加したオプションですが、現在では、二重起動された <b>NyanFi</b> でダイアログを開いた場合、メインの <b>NyanFi</b>
+        との位置差を相殺して表示しているため、不要かもしれません。
+        二重起動された <b>NyanFi</b> での位置調整は、メインの <b>NyanFi</b> に対する交差面積が1/2以下の場合に適用されます。
+      </div>
     </dd>
 
     <dt id="Operation"><img src="grpbox.png" alt=""> 操作</dt>
@@ -122,24 +131,15 @@
       </div>
     </dd>
 
-    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> ダイアログをメイン画面の中央に表示</dt>
-    <dd>各種ダイアログをメイン画面の中央に表示します。手動で表示位置を移動しても、再度開いたときには画面中央になります。<br>
-      <div class="info_text">
-        元々はマルチディスプレイ環境対策のために追加したオプションですが、現在では、二重起動された <b>NyanFi</b> でダイアログを開いた場合、メインの <b>NyanFi</b>
-        との位置差を相殺して表示しているため、不要かもしれません。
-        二重起動された <b>NyanFi</b> での位置調整は、メインの <b>NyanFi</b> に対する交差面積が1/2以下の場合に適用されます。
-      </div>
-    </dd>
-
-    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> アクセラレータキー自動調整</dt>
-    <dd>メインメニューやポップアップメニュー(コンテキストメニューは除く)で、重複することなくアクセラレータキーが付くよう自動的に調整します。</dd>
-
     <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> Altキーでメニューに移らない</dt>
     <dd>チェックすると、<span class="btn_frame">Alt</span>キーを押したときにメニューにフォーカスが移らなくなります。<span
         class="btn_frame">Alt</span>+英字によるメニューアクセスは可能です。<br>
       キー割り当てやファンクションキーバーの修飾キーとして<span class="btn_frame">Alt</span>キー用いる場合にチェックしてください。<br>
       なお、メニューバーが非表示の場合は不要です。<br>
     </dd>
+
+    <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> アクセラレータキー自動調整</dt>
+    <dd>メインメニューやポップアップメニュー(コンテキストメニューは除く)で、重複することなくアクセラレータキーが付くよう自動的に調整します。</dd>
 
     <dt class="no_bg_indent1"><img src="chkbox.png" alt=""> コンボボックスの自動補完</dt>
     <dd>

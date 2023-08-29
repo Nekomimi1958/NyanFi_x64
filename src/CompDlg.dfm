@@ -30,13 +30,7 @@ object FileCompDlg: TFileCompDlg
     Anchors = [akLeft, akBottom]
     Cancel = True
     Caption = #12461#12515#12531#12475#12523
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Tahoma'
-    Font.Style = []
     ModalResult = 2
-    ParentFont = False
     TabOrder = 10
     ExplicitTop = 309
   end
@@ -48,13 +42,7 @@ object FileCompDlg: TFileCompDlg
     Action = OkAction
     Anchors = [akLeft, akBottom]
     Default = True
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Tahoma'
-    Font.Style = []
     ModalResult = 1
-    ParentFont = False
     TabOrder = 9
     ExplicitTop = 309
   end
@@ -84,7 +72,7 @@ object FileCompDlg: TFileCompDlg
     object TimeRadioGroup: TRadioGroup
       Left = 8
       Top = 6
-      Width = 410
+      Width = 406
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = #12479#12452#12512#12473#12479#12531#12503'(&T)'
@@ -97,7 +85,7 @@ object FileCompDlg: TFileCompDlg
         #26032#12375#12356
         #21476#12356)
       TabOrder = 0
-      ExplicitWidth = 406
+      ExplicitWidth = 402
     end
   end
   object SizePanel: TPanel
@@ -116,7 +104,7 @@ object FileCompDlg: TFileCompDlg
     object SizeRadioGroup: TRadioGroup
       Left = 9
       Top = 6
-      Width = 409
+      Width = 405
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = #12469#12452#12474'(&S)'
@@ -129,7 +117,7 @@ object FileCompDlg: TFileCompDlg
         #22823#12365#12356
         #23567#12373#12356)
       TabOrder = 0
-      ExplicitWidth = 405
+      ExplicitWidth = 401
     end
   end
   object HashPanel: TPanel
@@ -148,7 +136,7 @@ object FileCompDlg: TFileCompDlg
     object HashRadioGroup: TRadioGroup
       Left = 8
       Top = 6
-      Width = 410
+      Width = 406
       Height = 52
       Anchors = [akLeft, akTop, akRight]
       Caption = #12495#12483#12471#12517'(&H)'
@@ -160,7 +148,7 @@ object FileCompDlg: TFileCompDlg
         #19968#33268)
       TabOrder = 0
       OnClick = OptRadioGroupClick
-      ExplicitWidth = 406
+      ExplicitWidth = 402
     end
     object AlgComboBox: TComboBox
       Left = 263
@@ -227,7 +215,7 @@ object FileCompDlg: TFileCompDlg
     object IdRadioGroup: TRadioGroup
       Left = 8
       Top = 6
-      Width = 410
+      Width = 406
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = #12508#12522#12517#12540#12512#12471#12522#12450#12523#30058#21495'/'#12501#12449#12452#12523'ID(&I)'
@@ -239,7 +227,7 @@ object FileCompDlg: TFileCompDlg
         #19968#33268)
       TabOrder = 0
       OnClick = OptRadioGroupClick
-      ExplicitWidth = 406
+      ExplicitWidth = 402
     end
   end
   object ActionList1: TActionList

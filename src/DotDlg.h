@@ -103,6 +103,12 @@ private:	// ユーザー宣言
 	TStringList *InheritList;
 	UsrSwatchPanel *SwatchPanel;
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
+	}
+
 	void __fastcall SetOderOption(TStringList *lst);
 	void __fastcall SetColorOption(TStringList *lst);
 
@@ -110,6 +116,10 @@ public:		// ユーザー宣言
 	UnicodeString DotNyanName;
 
 	__fastcall TDotNyanDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TDotNyanDlg *DotNyanDlg;

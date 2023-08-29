@@ -76,21 +76,37 @@ void set_window_pos_ex(HWND hWnd, TRect rc)
 }
 
 //---------------------------------------------------------------------------
-//ダイアログを表示
-//	複数モニタにまたがる場合メインモニタの中央に移動
-//  それ以外は呼び出し元画面の中央
+//フォームが表示モニタからはみ出していたら収まるように調整
+//---------------------------------------------------------------------------
+void adjust_form_pos(TForm *frm)
+{
+    TRect frm_rc = frm->BoundsRect;
+    TRect mon_rc = frm->Monitor->BoundsRect;
+    int dx = 0, dy = 0;
+    if (frm_rc.Right > mon_rc.Right)	dx = mon_rc.Right - frm_rc.Right;
+    if (frm_rc.Bottom > mon_rc.Bottom)	dy = mon_rc.Bottom - frm_rc.Bottom;
+    if (frm_rc.Left < mon_rc.Left)		dx = mon_rc.Left - frm_rc.Left;
+    if (frm_rc.Top < mon_rc.Top)		dy = mon_rc.Top - frm_rc.Top;
+    if (dx!=0 || dy!=0) {
+        OffsetRect(frm_rc, dx, dy);
+        frm->BoundsRect = frm_rc;
+    }
+}
+
+//---------------------------------------------------------------------------
+//ダイアログを呼び出し元フォームの中央に表示
+//	モニタからはみ出したら収まるように調整
 //	対象は Position = poDesigned
 //---------------------------------------------------------------------------
-int show_ModalDlg(TForm *fp)
+int show_ModalDlg(TForm *dlg)
 {
-	TRect dlg_rc = (Screen->ActiveForm && Screen->ActiveForm!=Application->MainForm)?
-						Screen->ActiveForm->BoundsRect.CenteredRect(fp->BoundsRect) :
-					 Application->MainForm->BoundsRect.CenteredRect(fp->BoundsRect);
-	TRect mon_rc = Application->MainForm->Monitor->BoundsRect;
-	if (!mon_rc.Contains(dlg_rc)) dlg_rc = mon_rc.CenteredRect(dlg_rc);
-	fp->BoundsRect = dlg_rc;
-
-	return fp->ShowModal();
+	TForm *frm = (Screen->ActiveForm && Screen->ActiveForm!=Application->MainForm)?
+						Screen->ActiveForm : Application->MainForm;
+	dlg->Left = frm->Left;
+	dlg->Top  = frm->Top;
+	dlg->BoundsRect = frm->BoundsRect.CenteredRect(dlg->BoundsRect);
+	adjust_form_pos(dlg);
+	return dlg->ShowModal();
 }
 
 //---------------------------------------------------------------------------

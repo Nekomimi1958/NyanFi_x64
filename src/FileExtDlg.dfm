@@ -39,8 +39,6 @@ object FileExtensionDlg: TFileExtensionDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 586
-    ExplicitHeight = 298
     object FextInfHeader: THeaderControl
       Left = 0
       Top = 0
@@ -74,7 +72,6 @@ object FileExtensionDlg: TFileExtensionDlg
         end>
       OnDrawSection = FextHeaderDrawSection
       OnSectionClick = FextInfHeaderSectionClick
-      ExplicitWidth = 586
     end
     object FextInfBar: TStatusBar
       Left = 0
@@ -84,9 +81,8 @@ object FileExtensionDlg: TFileExtensionDlg
       DoubleBuffered = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Pitch = fpVariable
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
       Font.Style = []
       Panels = <
         item
@@ -115,8 +111,6 @@ object FileExtensionDlg: TFileExtensionDlg
       UseSystemFont = False
       StyleElements = [seBorder]
       OnDrawPanel = FextInfBarDrawPanel
-      ExplicitTop = 279
-      ExplicitWidth = 586
     end
     object ListPanel: TPanel
       Left = 0
@@ -126,8 +120,6 @@ object FileExtensionDlg: TFileExtensionDlg
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 3
-      ExplicitWidth = 586
-      ExplicitHeight = 262
       object InfoListBox: TListBox
         Left = 0
         Top = 0
@@ -148,8 +140,6 @@ object FileExtensionDlg: TFileExtensionDlg
         OnDrawItem = InfoListBoxDrawItem
         OnKeyDown = InfoListBoxKeyDown
         OnKeyPress = InfoListBoxKeyPress
-        ExplicitWidth = 582
-        ExplicitHeight = 262
       end
     end
     object HintPanel: TPanel
@@ -180,8 +170,6 @@ object FileExtensionDlg: TFileExtensionDlg
     BevelOuter = bvNone
     Constraints.MinHeight = 50
     TabOrder = 1
-    ExplicitTop = 302
-    ExplicitWidth = 586
     object FileInfBar: TStatusBar
       Left = 0
       Top = 125
@@ -190,9 +178,8 @@ object FileExtensionDlg: TFileExtensionDlg
       DoubleBuffered = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Pitch = fpVariable
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
       Font.Style = []
       Panels = <
         item
@@ -204,7 +191,6 @@ object FileExtensionDlg: TFileExtensionDlg
       UseSystemFont = False
       StyleElements = [seBorder]
       OnDrawPanel = FileInfBarDrawPanel
-      ExplicitWidth = 586
     end
     object FileListBox: TListBox
       Tag = 1
@@ -229,7 +215,6 @@ object FileExtensionDlg: TFileExtensionDlg
       OnEnter = FileListBoxEnter
       OnExit = FileListBoxExit
       OnKeyDown = FileListBoxKeyDown
-      ExplicitWidth = 582
     end
     object HiddenCanBtn: TButton
       Left = 0
@@ -241,7 +226,6 @@ object FileExtensionDlg: TFileExtensionDlg
       ModalResult = 2
       TabOrder = 3
       TabStop = False
-      ExplicitWidth = 586
     end
     object FileListHeader: THeaderControl
       Tag = 1
@@ -263,7 +247,6 @@ object FileExtensionDlg: TFileExtensionDlg
       OnDrawSection = FextHeaderDrawSection
       OnSectionClick = FileListHeaderSectionClick
       OnSectionResize = FileListHeaderSectionResize
-      ExplicitWidth = 586
     end
   end
   object PopupMenu1: TPopupMenu

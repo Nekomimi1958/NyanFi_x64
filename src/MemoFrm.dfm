@@ -30,8 +30,6 @@ object MemoForm: TMemoForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 325
-    ExplicitWidth = 586
     DesignSize = (
       590
       41)
@@ -45,7 +43,6 @@ object MemoForm: TMemoForm
       Caption = #12461#12515#12531#12475#12523
       ModalResult = 2
       TabOrder = 1
-      ExplicitLeft = 481
     end
     object OkBtn: TButton
       Left = 389
@@ -57,7 +54,6 @@ object MemoForm: TMemoForm
       Default = True
       ModalResult = 1
       TabOrder = 0
-      ExplicitLeft = 385
     end
     object BtnPanel: TPanel
       Left = 572
@@ -68,7 +64,6 @@ object MemoForm: TMemoForm
       AutoSize = True
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitLeft = 568
       DesignSize = (
         18
         41)
@@ -96,8 +91,6 @@ object MemoForm: TMemoForm
     TabOrder = 2
     Visible = False
     StyleElements = [seBorder]
-    ExplicitLeft = 568
-    ExplicitTop = 352
     object ShowOptBtn: TSpeedButton
       Left = 0
       Top = 0
@@ -114,10 +107,10 @@ object MemoForm: TMemoForm
     Height = 326
     Align = alClient
     BorderStyle = bsNone
-    Font.Charset = SHIFTJIS_CHARSET
+    Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
     PlainText = True
@@ -126,8 +119,6 @@ object MemoForm: TMemoForm
     TabOrder = 0
     WantTabs = True
     OnChange = MemoBoxChange
-    ExplicitWidth = 586
-    ExplicitHeight = 325
   end
   object PopupMenu1: TPopupMenu
     Left = 48

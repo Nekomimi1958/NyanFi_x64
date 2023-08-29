@@ -27,9 +27,8 @@ object XmlViewer: TXmlViewer
     Height = 20
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Pitch = fpVariable
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Panels = <
       item
@@ -40,8 +39,6 @@ object XmlViewer: TXmlViewer
     UseSystemFont = False
     StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
-    ExplicitTop = 350
-    ExplicitWidth = 588
   end
   object Button1: TButton
     Left = 0
@@ -53,8 +50,6 @@ object XmlViewer: TXmlViewer
     ModalResult = 2
     TabOrder = 1
     TabStop = False
-    ExplicitTop = 350
-    ExplicitWidth = 588
   end
   object ViewPanel: TPanel
     Left = 0
@@ -64,8 +59,6 @@ object XmlViewer: TXmlViewer
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 588
-    ExplicitHeight = 350
     object XmlTreeView: TTreeView
       Left = 0
       Top = 0
@@ -79,8 +72,8 @@ object XmlViewer: TXmlViewer
       DoubleBuffered = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
       Font.Style = []
       Indent = 19
       ParentDoubleBuffered = False
@@ -97,8 +90,6 @@ object XmlViewer: TXmlViewer
       OnHint = XmlTreeViewHint
       OnKeyDown = XmlTreeViewKeyDown
       OnKeyPress = XmlTreeViewKeyPress
-      ExplicitWidth = 584
-      ExplicitHeight = 306
     end
     object OpePanel: TPanel
       Left = 0
@@ -108,8 +99,6 @@ object XmlViewer: TXmlViewer
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 306
-      ExplicitWidth = 588
       DesignSize = (
         592
         44)
@@ -127,7 +116,6 @@ object XmlViewer: TXmlViewer
         Text = ''
         OnKeyDown = FindEditKeyDown
         OnKeyPress = FindEditKeyPress
-        ExplicitWidth = 157
       end
       object AutoCheckBox: TCheckBox
         Left = 70
@@ -146,7 +134,6 @@ object XmlViewer: TXmlViewer
         Anchors = [akTop, akRight]
         Caption = #21517
         TabOrder = 4
-        ExplicitLeft = 401
       end
       object ValCheckBox: TCheckBox
         Left = 491
@@ -156,7 +143,6 @@ object XmlViewer: TXmlViewer
         Anchors = [akTop, akRight]
         Caption = #20516
         TabOrder = 6
-        ExplicitLeft = 487
       end
       object AtrCheckBox: TCheckBox
         Left = 448
@@ -166,7 +152,6 @@ object XmlViewer: TXmlViewer
         Anchors = [akTop, akRight]
         Caption = #23646
         TabOrder = 5
-        ExplicitLeft = 444
       end
       object ExpBtn: TButton
         Left = 10
@@ -192,7 +177,6 @@ object XmlViewer: TXmlViewer
         Action = FindDownAction
         Anchors = [akTop, akRight]
         TabOrder = 7
-        ExplicitLeft = 525
       end
       object FindUpBtn: TButton
         Left = 556
@@ -202,7 +186,6 @@ object XmlViewer: TXmlViewer
         Action = FindUpAction
         Anchors = [akTop, akRight]
         TabOrder = 8
-        ExplicitLeft = 552
       end
     end
   end

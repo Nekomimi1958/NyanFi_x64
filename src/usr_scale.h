@@ -26,12 +26,18 @@ inline int GetCurPPI(TControl *cp = NULL)
 //----------------------------------------------------------------------
 //スケーリングされた整数値を取得
 //----------------------------------------------------------------------
-#define SCALED_THIS(n)	MulDiv(n, CurrentPPI, DEFAULT_PPI)
+#define SCALED_THIS(n)		MulDiv(n, CurrentPPI, DEFAULT_PPI)
+#define UNSCALED_THIS(n)	MulDiv(n, DEFAULT_PPI, CurrentPPI)
 
 //----------------------------------------------------------------------
 inline int ScaledInt(int n, TControl *cp = NULL)
 {
 	return MulDiv(n, GetCurPPI(cp), DEFAULT_PPI);
+}
+//----------------------------------------------------------------------
+inline int UnscaledInt(int n, TControl *cp = NULL)
+{
+	return MulDiv(n, DEFAULT_PPI, GetCurPPI(cp));
 }
 
 //----------------------------------------------------------------------

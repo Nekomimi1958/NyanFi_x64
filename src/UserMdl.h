@@ -99,7 +99,6 @@ __published:	// IDE で管理されるコンポーネント
 	TEditPaste *EditPaste1;
 	TEditSelectAll *EditSelectAll1;
 	TEditUndo *EditUndo1;
-	TFontDialog *FontDlg;
 	TMenuItem *CalculatorEItem;
 	TMenuItem *CalculatorItem;
 	TMenuItem *ClrHistItem;
@@ -170,6 +169,7 @@ __published:	// IDE で管理されるコンポーネント
 	TTimer *BlinkTimer;
 	TTimer *ScrollTimer;
 	TTimer *SpuitTimer;
+	TFontDialog *FontDlg;
 
 	void __fastcall DataModuleCreate(TObject *Sender);
 	void __fastcall DataModuleDestroy(TObject *Sender);

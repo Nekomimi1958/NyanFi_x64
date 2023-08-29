@@ -63,10 +63,20 @@ private:	// ユーザー宣言
 	bool isTSV;
 	bool ExpBusy;
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
+	}
+
 public:		// ユーザー宣言
 	TTxtViewer *Viewer;
 
 	__fastcall TExpCsvDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TExpCsvDlg *ExpCsvDlg;

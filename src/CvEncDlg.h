@@ -32,11 +32,20 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall OutCodeComboBoxClick(TObject *Sender);
 
 private:	// ユーザー宣言
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
+	}
 
 public:		// ユーザー宣言
 	UnicodeString TitleInf;
 
 	__fastcall TCvTxtEncDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TCvTxtEncDlg *CvTxtEncDlg;

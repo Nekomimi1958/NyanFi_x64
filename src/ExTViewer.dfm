@@ -35,8 +35,6 @@ object ExTxtViewer: TExTxtViewer
     ParentDoubleBuffered = False
     TabOrder = 0
     StyleElements = [seBorder]
-    ExplicitWidth = 620
-    ExplicitHeight = 560
     object ViewMemo: TRichEdit
       Left = 0
       Top = 0
@@ -47,20 +45,12 @@ object ExTxtViewer: TExTxtViewer
       BevelInner = bvNone
       BevelOuter = bvNone
       BorderStyle = bsNone
-      Font.Charset = SHIFTJIS_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
       ParentShowHint = False
       ReadOnly = True
       ShowHint = False
       TabOrder = 1
       Visible = False
       WantReturns = False
-      ExplicitWidth = 620
-      ExplicitHeight = 560
     end
     object TxtMainPanel: TPanel
       Left = 0
@@ -70,8 +60,6 @@ object ExTxtViewer: TExTxtViewer
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 620
-      ExplicitHeight = 560
       object TxtSttHeader: TStatusBar
         Left = 0
         Top = 0
@@ -79,10 +67,9 @@ object ExTxtViewer: TExTxtViewer
         Height = 19
         Align = alTop
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBtnText
+        Font.Color = clWindowText
         Font.Height = -12
-        Font.Name = 'MS UI Gothic'
-        Font.Pitch = fpVariable
+        Font.Name = 'Segoe UI'
         Font.Style = []
         Panels = <
           item
@@ -108,7 +95,6 @@ object ExTxtViewer: TExTxtViewer
         UseSystemFont = False
         StyleElements = [seBorder]
         OnDrawPanel = TxtSttHeaderDrawPanel
-        ExplicitWidth = 620
       end
       object TxtScrollPanel: TPanel
         Left = 0
@@ -122,8 +108,6 @@ object ExTxtViewer: TExTxtViewer
         ParentDoubleBuffered = False
         TabOrder = 1
         StyleElements = [seBorder]
-        ExplicitWidth = 620
-        ExplicitHeight = 541
         object TextPaintBox: TPaintBox
           Left = 0
           Top = 16
@@ -131,10 +115,10 @@ object ExTxtViewer: TExTxtViewer
           Height = 526
           Align = alClient
           Color = clBtnFace
-          Font.Charset = ANSI_CHARSET
+          Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
-          Font.Height = -15
-          Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
+          Font.Height = -12
+          Font.Name = 'Segoe UI'
           Font.Style = []
           ParentColor = False
           ParentFont = False
@@ -165,8 +149,6 @@ object ExTxtViewer: TExTxtViewer
           TabOrder = 0
           TabStop = False
           OnChange = TextScrollBarChange
-          ExplicitLeft = 603
-          ExplicitHeight = 525
         end
         object TextCurColPanel: TPanel
           Left = 32

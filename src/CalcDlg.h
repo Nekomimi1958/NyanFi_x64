@@ -81,6 +81,7 @@ private:	// ƒ†[ƒU[éŒ¾
 		int hi = LineEdit->Height + HistComboBox->Height + ToolBar1->Height;
 		Constraints->MinHeight = hi + Height - ClientHeight;
 		Constraints->MaxHeight = hi + Height - ClientHeight;
+		RefreshDarkMode(this);
 	}
 
 	void __fastcall InitUsrDef();

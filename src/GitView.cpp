@@ -44,7 +44,7 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 {
 	Caption = yen_to_delimiter(WorkDir) + " - Gitƒrƒ…ƒA[";
 
-	IniFile->LoadPosInfo(this);
+	IniFile->LoadPosInfo(this, DialogCenter);
 
 	setup_ToolBar(FindBar);
 	setup_ToolBar(DiffBar);

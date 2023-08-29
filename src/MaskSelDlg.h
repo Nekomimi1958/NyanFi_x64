@@ -27,10 +27,20 @@ __published:	// IDE で管理されるコンポーネント
 private:	// ユーザー宣言
 	bool IsMask;
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
+	}
+
 public:		// ユーザー宣言
 	UnicodeString CmdName;
 
 	__fastcall TMaskSelectDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMaskSelectDlg *MaskSelectDlg;

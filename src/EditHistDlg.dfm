@@ -62,7 +62,7 @@ object EditHistoryDlg: TEditHistoryDlg
     object EditHistGrid: TStringGrid
       Left = 0
       Top = 0
-      Width = 626
+      Width = 622
       Height = 260
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
@@ -73,8 +73,8 @@ object EditHistoryDlg: TEditHistoryDlg
       FixedRows = 0
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
       Font.Style = []
       Options = [goFixedVertLine, goColSizing, goRowSelect, goThumbTracking]
       ParentFont = False
@@ -84,7 +84,7 @@ object EditHistoryDlg: TEditHistoryDlg
       OnDblClick = EditHistGridDblClick
       OnDrawCell = EditHistGridDrawCell
       OnKeyDown = EditHistGridKeyDown
-      ExplicitWidth = 622
+      ExplicitWidth = 618
       ExplicitHeight = 259
       ColWidths = (
         64

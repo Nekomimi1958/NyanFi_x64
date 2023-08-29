@@ -401,6 +401,25 @@ void SetDarkWinTheme(
 		}
 	}
 }
+//---------------------------------------------------------------------------
+void RefreshDarkMode(TForm *frm)
+{
+	if (IsDarkMode) {
+		for (int i=0; i<frm->ComponentCount; i++) {
+			TComponent *cp = frm->Components[i];
+			if (cp->InheritsFrom(__classid(TWinControl))) {
+				TWinControl *wp = (TWinControl *)cp; 
+				if (wp->ClassNameIs("TListbox")) {
+					::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
+				}
+				else if (wp->ClassNameIs("TComboBox")) {
+					TComboBox *cp = (TComboBox *)wp;
+					::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_CFD") : NULL, NULL);
+				}
+			}
+		}
+	}
+}
 
 //---------------------------------------------------------------------------
 //TGroupBox/TRadioGroup にキャプション疑似表示用のラベルを追加

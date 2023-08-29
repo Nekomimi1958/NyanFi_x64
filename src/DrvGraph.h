@@ -77,6 +77,7 @@ private:	// ƒ†[ƒU[éŒ¾
 	void __fastcall WmDpiChanged(TMessage &msg)
 	{
 		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
 		GraphTopX = Canvas->TextWidth("9999/99/99 ") + SCALED_THIS(4);
 	}
 

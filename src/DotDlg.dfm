@@ -128,7 +128,7 @@ object DotNyanDlg: TDotNyanDlg
   object DescEdit: TLabeledEdit
     Left = 87
     Top = 278
-    Width = 576
+    Width = 572
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     EditLabel.Width = 26
@@ -137,6 +137,7 @@ object DotNyanDlg: TDotNyanDlg
     LabelPosition = lpLeft
     TabOrder = 15
     Text = ''
+    ExplicitWidth = 568
   end
   object IconRadioGroup: TRadioGroup
     Left = 207
@@ -163,18 +164,20 @@ object DotNyanDlg: TDotNyanDlg
   object GrepMaskComboBox: TComboBox
     Left = 87
     Top = 249
-    Width = 576
+    Width = 572
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 14
+    ExplicitWidth = 568
   end
   object PathMaskComboBox: TComboBox
     Left = 87
     Top = 220
-    Width = 576
+    Width = 572
     Height = 23
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 13
+    ExplicitWidth = 568
   end
   object SortRadioGroup: TRadioGroup
     Left = 10
@@ -195,25 +198,25 @@ object DotNyanDlg: TDotNyanDlg
   object SndGroupBox: TGroupBox
     Left = 10
     Top = 434
-    Width = 540
+    Width = 536
     Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #12469#12454#12531#12489
     TabOrder = 18
+    ExplicitWidth = 532
     DesignSize = (
-      540
+      536
       48)
     object SoundEdit: TEdit
       Left = 10
       Top = 18
-      Width = 411
+      Width = 405
       Height = 23
-      Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
     end
     object RefSndBtn: TButton
       Tag = 2
-      Left = 424
+      Left = 420
       Top = 17
       Width = 36
       Height = 22
@@ -222,10 +225,11 @@ object DotNyanDlg: TDotNyanDlg
       Caption = '...'
       TabOrder = 0
       OnClick = RefSndBtnClick
+      ExplicitLeft = 416
     end
     object TestSndBtn: TButton
       Tag = 2
-      Left = 461
+      Left = 457
       Top = 17
       Width = 22
       Height = 22
@@ -234,9 +238,10 @@ object DotNyanDlg: TDotNyanDlg
       Caption = '>'
       TabOrder = 1
       OnClick = TestSndBtnClick
+      ExplicitLeft = 453
     end
     object InhSndBtn: TButton
-      Left = 485
+      Left = 481
       Top = 17
       Width = 48
       Height = 22
@@ -244,6 +249,7 @@ object DotNyanDlg: TDotNyanDlg
       Caption = #32153#25215
       TabOrder = 2
       OnClick = InhSndBtnClick
+      ExplicitLeft = 477
     end
   end
   object ListWdEdit: TLabeledEdit
@@ -276,25 +282,25 @@ object DotNyanDlg: TDotNyanDlg
   object ImgGroupBox: TGroupBox
     Left = 10
     Top = 378
-    Width = 540
+    Width = 536
     Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #32972#26223#30011#20687
     TabOrder = 17
+    ExplicitWidth = 532
     DesignSize = (
-      540
+      536
       48)
     object BgImgEdit: TEdit
       Left = 10
       Top = 18
-      Width = 411
+      Width = 405
       Height = 23
-      Anchors = [akLeft, akTop, akRight]
       TabOrder = 2
     end
     object RefImgBtn: TButton
       Tag = 2
-      Left = 424
+      Left = 420
       Top = 17
       Width = 36
       Height = 22
@@ -303,9 +309,10 @@ object DotNyanDlg: TDotNyanDlg
       Caption = '...'
       TabOrder = 0
       OnClick = RefImgBtnClick
+      ExplicitLeft = 416
     end
     object InhImgBtn: TButton
-      Left = 485
+      Left = 481
       Top = 17
       Width = 48
       Height = 22
@@ -313,22 +320,24 @@ object DotNyanDlg: TDotNyanDlg
       Caption = #32153#25215
       TabOrder = 1
       OnClick = InhImgBtnClick
+      ExplicitLeft = 477
     end
   end
   object CmdsGroupBox: TGroupBox
     Left = 10
     Top = 490
-    Width = 540
+    Width = 536
     Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #12467#12510#12531#12489#12501#12449#12452#12523
     TabOrder = 19
+    ExplicitWidth = 532
     DesignSize = (
-      540
+      536
       48)
     object RefCmdsBtn: TButton
       Tag = 2
-      Left = 424
+      Left = 420
       Top = 18
       Width = 36
       Height = 22
@@ -337,13 +346,13 @@ object DotNyanDlg: TDotNyanDlg
       Caption = '...'
       TabOrder = 1
       OnClick = RefCmdsBtnClick
+      ExplicitLeft = 416
     end
     object ExeCmdsEdit: TLabeledEdit
       Left = 26
       Top = 18
-      Width = 395
+      Width = 389
       Height = 23
-      Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 11
       EditLabel.Height = 23
       EditLabel.Caption = '@'
@@ -352,7 +361,7 @@ object DotNyanDlg: TDotNyanDlg
       Text = ''
     end
     object InhCmdBtn: TButton
-      Left = 485
+      Left = 481
       Top = 18
       Width = 48
       Height = 22
@@ -360,6 +369,7 @@ object DotNyanDlg: TDotNyanDlg
       Caption = #32153#25215
       TabOrder = 2
       OnClick = InhCmdBtnClick
+      ExplicitLeft = 477
     end
   end
   object HideCheckBox: TCheckBox
@@ -373,16 +383,17 @@ object DotNyanDlg: TDotNyanDlg
   object ColGroupBox: TGroupBox
     Left = 10
     Top = 322
-    Width = 540
+    Width = 536
     Height = 48
     Anchors = [akLeft, akTop, akRight]
     Caption = #37197#33394
     TabOrder = 16
+    ExplicitWidth = 532
     DesignSize = (
-      540
+      536
       48)
     object RefColBtn: TButton
-      Left = 397
+      Left = 393
       Top = 18
       Width = 36
       Height = 22
@@ -390,28 +401,29 @@ object DotNyanDlg: TDotNyanDlg
       Caption = '...'
       TabOrder = 2
       OnClick = RefColBtnClick
+      ExplicitLeft = 389
     end
     object DisableBtn: TButton
-      Left = 435
+      Left = 431
       Top = 18
       Width = 48
       Height = 22
       Action = DisableColAction
       Anchors = [akTop, akRight]
       TabOrder = 3
+      ExplicitLeft = 427
     end
     object ColorComboBox: TComboBox
       Left = 10
       Top = 18
-      Width = 359
+      Width = 351
       Height = 22
       Style = csOwnerDrawFixed
-      Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
       OnDrawItem = ColorComboBoxDrawItem
     end
     object SpuitPanel: TPanel
-      Left = 373
+      Left = 369
       Top = 18
       Width = 22
       Height = 22
@@ -419,6 +431,7 @@ object DotNyanDlg: TDotNyanDlg
       BevelOuter = bvLowered
       TabOrder = 1
       StyleElements = [seBorder]
+      ExplicitLeft = 365
       object SpuitImage: TImage
         Left = 1
         Top = 1
@@ -442,7 +455,7 @@ object DotNyanDlg: TDotNyanDlg
       end
     end
     object InhColBtn: TButton
-      Left = 485
+      Left = 481
       Top = 18
       Width = 48
       Height = 22
@@ -450,6 +463,7 @@ object DotNyanDlg: TDotNyanDlg
       Caption = #32153#25215
       TabOrder = 4
       OnClick = InhColBtnClick
+      ExplicitLeft = 477
     end
   end
   object InheritBtn: TButton

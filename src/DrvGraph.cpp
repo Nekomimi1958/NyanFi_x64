@@ -149,7 +149,9 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 			UnicodeString lbuf = DataList->Strings[SttIndex];
 			__int64 used_sz = StrToInt64Def(get_csv_item(lbuf, 2), -1);
 			__int64 free_sz = StrToInt64Def(get_csv_item(lbuf, 3), -1);
-			if (used_sz>=0 && free_sz>=0) x_cur = GraphTopX + xw * (1.0 * used_sz / (used_sz + free_sz));
+			if (used_sz>=0 && free_sz>=0 && (used_sz + free_sz)>0) {
+				x_cur = GraphTopX + xw * (1.0 * used_sz / (used_sz + free_sz));
+			}
 		}
 
 		TColor col_grid = AdjustColor(col_bgPrgBar, 32);
@@ -170,7 +172,7 @@ void __fastcall TDriveGraph::PaintBox1Paint(TObject *Sender)
 			//ƒOƒ‰ƒt
 			__int64 used_sz = StrToInt64Def(get_csv_item(lbuf, 2), -1);
 			__int64 free_sz = StrToInt64Def(get_csv_item(lbuf, 3), -1);
-			if (used_sz>=0 && free_sz>=0) {
+			if (used_sz>=0 && free_sz>=0 && (used_sz + free_sz)>0) {
 				double r = 1.0 * used_sz / (used_sz + free_sz);
 				draw_BarGraph(cv, Rect(GraphTopX, yp, GraphTopX + xw, yp + BarSize), r);
 			}

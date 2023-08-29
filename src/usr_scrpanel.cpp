@@ -2,7 +2,6 @@
 // シンプルスクロールバー・パネル										//
 //																		//
 //----------------------------------------------------------------------//
-#include "usr_scale.h"
 #include "usr_scrpanel.h"
 
 //---------------------------------------------------------------------------
@@ -271,6 +270,8 @@ int __fastcall UsrScrollPanel::GetKnobPosH()
 void __fastcall UsrScrollPanel::UpdateKnob()
 {
 	if (Visible) {
+		if (LastPPI!=ParentPanel->CurrentPPI) KnobWidth = ScaledInt(UsKnobWidth, ParentPanel);
+
 		ScrKnobRectV = Rect(0, 0, 0, 0);
 		ScrKnobRectH = Rect(0, 0, 0, 0);
 		ScrPanelV->Width	= KnobWidth;

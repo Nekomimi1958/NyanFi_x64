@@ -61,11 +61,21 @@ private:	// ユーザー宣言
 	TStringList *ColBufList;
 	UsrSwatchPanel *SwatchPanel;
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
+	}
+
 public:		// ユーザー宣言
 	TTxtViewer *ObjViewer;
 	UnicodeString FileName;
 
 	__fastcall TColorDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TColorDlg *ColorDlg;

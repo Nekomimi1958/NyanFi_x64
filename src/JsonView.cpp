@@ -29,7 +29,7 @@ void __fastcall TJsonViewer::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TJsonViewer::FormShow(TObject *Sender)
 {
-	IniFile->LoadPosInfo(this);
+	IniFile->LoadPosInfo(this, DialogCenter);
 
 	AutoCheckBox->Checked = IniFile->ReadBoolGen(_T("JsonViewAutoExp"));
 	NamCheckBox->Checked  = IniFile->ReadBoolGen(_T("JsonViewFindName"),	true);

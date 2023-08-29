@@ -5882,13 +5882,13 @@ void get_DriveLogList(
 		for (int i=1; i<DriveLogList->Count; i++) {
 			UnicodeString lbuf = DriveLogList->Strings[i];
 			if (SameText(get_csv_item(lbuf, 1), dstr)) {
-				lst->Add(lbuf);
 				__int64 used_sz = StrToInt64Def(get_csv_item(lbuf, 2), -1);
 				__int64 free_sz = StrToInt64Def(get_csv_item(lbuf, 3), -1);
-				if (used_sz>=0 && free_sz>=0) {
+				if (used_sz>=0 && free_sz>=0 && (used_sz + free_sz)>0) {
 					double r = 1.0 * used_sz / (used_sz + free_sz);
 					r_min = (r_min<0)? r : std::min(r_min, r);
 					r_max = (r_max<0)? r : std::max(r_max, r);
+					lst->Add(lbuf);
 				}
 			}
 		}

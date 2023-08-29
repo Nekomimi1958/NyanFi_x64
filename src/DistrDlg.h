@@ -148,6 +148,13 @@ private:	// ユーザー宣言
 	}
 
 	void __fastcall WmFormShowed(TMessage &msg);
+
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
+	}
+
 	void __fastcall AssignRegListBox();
 	bool __fastcall LoadDistrFile();
 	bool __fastcall SaveDistrFile();
@@ -169,6 +176,7 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,	TMessage,	WmFormShowed)
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
 	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------

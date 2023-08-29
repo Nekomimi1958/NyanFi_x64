@@ -9,6 +9,7 @@
 //---------------------------------------------------------------------------
 #include <Vcl.CheckLst.hpp>
 #include <Vcl.Grids.hpp>
+#include "usr_scale.h"
 
 //---------------------------------------------------------------------------
 //Flag
@@ -48,6 +49,9 @@ private:
 	int   ScrCatchYp;
 	int   ScrCatchXp;
 	int   ScrPage;
+
+	int   UsKnobWidth;				//スケーリング100%時のノブ幅
+	int   LastPPI;
 
 	TWndMethod org_ParentPanelWndProc;
 	void __fastcall ParentPanelWndProc(TMessage &msg)
@@ -114,7 +118,15 @@ public:
 	TScrollBar		*AssoScrollBar;		//関連スクロールバー
 
 	int Flag;							//設定フラグ
-	int KnobWidth;
+
+	int FKnobWidth;						//ノブ幅
+	void __fastcall SetKnobWidth(int Value)
+	{
+		FKnobWidth  = Value;
+		UsKnobWidth = UnscaledInt(Value, ParentPanel);
+		LastPPI     = ParentPanel->CurrentPPI;
+	}
+	__property int KnobWidth = {read = FKnobWidth,  write = SetKnobWidth};
 
 	Graphics::TBitmap *KnobImgBuffV;	//垂直ノブ画像
 	Graphics::TBitmap *KnobImgBuffH;	//水平ノブ画像

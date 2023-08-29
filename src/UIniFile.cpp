@@ -5,6 +5,7 @@
 #include "usr_scale.h"
 #include "usr_str.h"
 #include "usr_file_ex.h"
+#include "UserFunc.h"
 #include "UIniFile.h"
 
 //---------------------------------------------------------------------------
@@ -443,14 +444,8 @@ void UsrIniFile::LoadFormPos(
 
 	int ww = ReadInteger(SCT_General, prfx + "Width",	w);
 	int hh = ReadInteger(SCT_General, prfx + "Height",	h);
-	if (frm->Scaled) {
-		frm->Width	= ww * frm->CurrentPPI / DEFAULT_PPI;
-		frm->Height = hh * frm->CurrentPPI / DEFAULT_PPI;
-	}
-	else {
-		frm->Width	= ww;
-		frm->Height = hh;
-	}
+	frm->Width	= frm->Scaled? ScaledInt(ww, frm) : ww;
+	frm->Height = frm->Scaled? ScaledInt(hh, frm) : hh;
 
 	//1画面の場合、画面外に出ないように
 	if (Screen->MonitorCount==1) {
@@ -474,15 +469,8 @@ void UsrIniFile::SaveFormPos(TForm *frm)
 
 	WriteIntGen(_T("WinLeft"),	frm->Left);
 	WriteIntGen(_T("WinTop"),	frm->Top);
-
-	if (frm->Scaled) {
-		WriteIntGen(_T("WinWidth"),		frm->Width  * DEFAULT_PPI / frm->CurrentPPI);
-		WriteIntGen(_T("WinHeight"),	frm->Height * DEFAULT_PPI / frm->CurrentPPI);
-	}
-	else {
-		WriteIntGen(_T("WinWidth"),		frm->Width);
-		WriteIntGen(_T("WinHeight"),	frm->Height);
-	}
+	WriteIntGen(_T("WinWidth"),	frm->Scaled? UnscaledInt(frm->Width,  frm) : frm->Width);
+	WriteIntGen(_T("WinHeight"),frm->Scaled? UnscaledInt(frm->Height, frm) : frm->Height);
 }
 
 //---------------------------------------------------------------------------
@@ -498,14 +486,8 @@ void UsrIniFile::LoadPosInfo(TForm *frm, int x, int y, int w, int h, UnicodeStri
 	if ((frm->BorderStyle==bsSizeable || frm->BorderStyle==bsSizeToolWin) && w>0 && h>0) {
 		int ww = ReadInteger(SCT_General, key + "Width",  w);
 		int hh = ReadInteger(SCT_General, key + "Height", h);
-		if (frm->Scaled) {
-			frm->Width	= ww * frm->CurrentPPI / DEFAULT_PPI;
-			frm->Height = hh * frm->CurrentPPI / DEFAULT_PPI;
-		}
-		else {
-			frm->Width	= ww;
-			frm->Height = hh;
-		}
+		frm->Width	= frm->Scaled? ScaledInt(ww, frm) : ww;
+		frm->Height = frm->Scaled? ScaledInt(hh, frm) : hh;
 	}
 
 	//1画面の場合、半分以上が画面外だったら中央に戻す
@@ -533,6 +515,8 @@ void UsrIniFile::LoadPosInfo(TForm *frm, bool dlg_center, UnicodeString key)
 		frm->Top  = frm->Top  + PosOffsetTop;
 		if (OfsDlgList->IndexOf(frm->Name)==-1) OfsDlgList->Add(frm->Name);
 	}
+
+	adjust_form_pos(frm);
 }
 
 //---------------------------------------------------------------------------
@@ -547,14 +531,8 @@ void UsrIniFile::SavePosInfo(TForm *frm, UnicodeString key)
 	WriteInteger(SCT_General, key + "Top",  frm->Top  - (ofs? PosOffsetTop  : 0));
 
 	if (frm->BorderStyle!=bsDialog) {
-		if (frm->Scaled) {
-			WriteInteger(SCT_General, key + "Width",  frm->Width  * DEFAULT_PPI / frm->CurrentPPI);
-			WriteInteger(SCT_General, key + "Height", frm->Height * DEFAULT_PPI / frm->CurrentPPI);
-		}
-		else {
-			WriteInteger(SCT_General, key + "Width",  frm->Width);
-			WriteInteger(SCT_General, key + "Height", frm->Height);
-		}
+		WriteInteger(SCT_General, key + "Width",  frm->Scaled? UnscaledInt(frm->Width, frm) : frm->Width);
+		WriteInteger(SCT_General, key + "Height", frm->Scaled? UnscaledInt(frm->Height, frm) : frm->Height);
 	}
 }
 

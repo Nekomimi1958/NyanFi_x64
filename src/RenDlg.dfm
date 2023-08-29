@@ -29,6 +29,11 @@ object RenameDlg: TRenameDlg
     Top = 409
     Width = 540
     Height = 20
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
     Panels = <
       item
         Style = psOwnerDraw
@@ -42,10 +47,9 @@ object RenameDlg: TRenameDlg
         Style = psOwnerDraw
         Width = 50
       end>
+    UseSystemFont = False
     StyleElements = [seClient, seBorder]
     OnDrawPanel = StatusBar1DrawPanel
-    ExplicitTop = 408
-    ExplicitWidth = 536
   end
   object MainPanel: TPanel
     Left = 0
@@ -55,8 +59,6 @@ object RenameDlg: TRenameDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 536
-    ExplicitHeight = 408
     object CommonPanel: TPanel
       Left = 0
       Top = 258
@@ -65,8 +67,6 @@ object RenameDlg: TRenameDlg
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 257
-      ExplicitWidth = 536
       DesignSize = (
         540
         151)
@@ -259,7 +259,6 @@ object RenameDlg: TRenameDlg
         Anchors = [akRight, akBottom]
         Default = True
         TabOrder = 5
-        ExplicitLeft = 353
       end
       object CanButton: TButton
         Left = 445
@@ -271,7 +270,6 @@ object RenameDlg: TRenameDlg
         Caption = #12461#12515#12531#12475#12523
         ModalResult = 2
         TabOrder = 6
-        ExplicitLeft = 441
       end
       object AutoPrvCheckBox: TCheckBox
         Left = 140
@@ -282,7 +280,6 @@ object RenameDlg: TRenameDlg
         Caption = #33258#21205#12503#12524#12499#12517#12540'(&V)'
         TabOrder = 3
         OnClick = AutoPrvCheckBoxClick
-        ExplicitLeft = 136
       end
       object PreviewBtn: TButton
         Left = 269
@@ -293,7 +290,6 @@ object RenameDlg: TRenameDlg
         Caption = #12503#12524#12499#12517#12540
         TabOrder = 4
         OnClick = PreviewBtnClick
-        ExplicitLeft = 265
       end
       object KeepCsrCheckBox: TCheckBox
         Left = 20
@@ -309,7 +305,7 @@ object RenameDlg: TRenameDlg
       Top = 0
       Width = 540
       Height = 258
-      ActivePage = NameSheet
+      ActivePage = RenListSheet
       Align = alClient
       OwnerDraw = True
       TabOrder = 0
@@ -317,8 +313,6 @@ object RenameDlg: TRenameDlg
       StyleElements = [seFont, seBorder]
       OnChange = NamePageControlChange
       OnDrawTab = RenPageControlDrawTab
-      ExplicitWidth = 536
-      ExplicitHeight = 257
       object NameSheet: TTabSheet
         Caption = #21517#21069'(&N)'
         object NameComPanel: TPanel
@@ -329,8 +323,6 @@ object RenameDlg: TRenameDlg
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
-          ExplicitWidth = 528
-          ExplicitHeight = 187
           DesignSize = (
             532
             188)
@@ -380,8 +372,6 @@ object RenameDlg: TRenameDlg
             StyleElements = [seBorder]
             OnDrawCell = PreviewGridDrawCell
             OnKeyDown = PreviewGridKeyDown
-            ExplicitWidth = 508
-            ExplicitHeight = 93
             ColWidths = (
               100
               100
@@ -447,7 +437,6 @@ object RenameDlg: TRenameDlg
           Align = alTop
           BevelOuter = bvNone
           TabOrder = 0
-          ExplicitWidth = 528
           DesignSize = (
             532
             40)
@@ -462,7 +451,6 @@ object RenameDlg: TRenameDlg
             OnChange = RenameEditChange
             OnKeyDown = RenameEditKeyDown
             OnKeyPress = RenameEditKeyPress
-            ExplicitWidth = 508
           end
         end
       end
@@ -783,12 +771,6 @@ object RenameDlg: TRenameDlg
             Width = 264
             Height = 13
             AutoSize = False
-            Font.Charset = DEFAULT_CHARSET
-            Font.Color = clWindowText
-            Font.Height = -11
-            Font.Name = 'Tahoma'
-            Font.Style = []
-            ParentFont = False
           end
           object RenListComboBox: TComboBox
             Left = 10

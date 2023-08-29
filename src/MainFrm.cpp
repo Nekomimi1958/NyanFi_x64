@@ -1141,8 +1141,8 @@ void __fastcall TNyanFiForm::FormClose(TObject *Sender, TCloseAction &Action)
 			if (WindowState==wsMaximized) WindowState = wsNormal;
 			win2data->WinLeft	 = Left;
 			win2data->WinTop 	 = Top;
-			win2data->WinWidth	 = Width  * DEFAULT_PPI / CurrentPPI;
-			win2data->WinHeight	 = Height * DEFAULT_PPI / CurrentPPI;
+			win2data->WinWidth	 = UNSCALED_THIS(Width);
+			win2data->WinHeight	 = UNSCALED_THIS(Height);
 			win2data->SubHeight	 = SubPanel->Height;
 			win2data->SubWidth	 = SubPanel->Width;
 			win2data->InfWidth	 = InfPanelWidth;

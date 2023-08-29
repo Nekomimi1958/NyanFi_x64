@@ -1385,8 +1385,7 @@ TCustomListBox* __fastcall TOptionDlg::GetCurListBox()
 void __fastcall TOptionDlg::UpdateMaxItemWidth()
 {
 	TCanvas *cv = AssociateListBox->Canvas;
-	cv->Font->Assign(DialogFont);
-	cv->Font->Height = SCALED_THIS(-cv->Font->Size*DEFAULT_PPI/72);
+	GetScaledFont(cv->Font, DialogFont, this);
 
 	MaxWd_AssExt = 0;
 	for (int i=0; i<AssociateListBox->Count; i++)

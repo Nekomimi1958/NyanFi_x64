@@ -22,20 +22,11 @@ object UserModule: TUserModule
     Left = 16
     Top = 80
   end
-  object FontDlg: TFontDialog
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    Left = 72
-    Top = 80
-  end
   object SpuitTimer: TTimer
     Enabled = False
     Interval = 100
     OnTimer = SpuitTimerTimer
-    Left = 152
+    Left = 144
     Top = 80
   end
   object CommonActList: TActionList
@@ -224,7 +215,7 @@ object UserModule: TUserModule
   end
   object EditPopupMenuC: TPopupMenu
     OnPopup = EditPopupMenuCPopup
-    Left = 123
+    Left = 139
     Top = 150
     object GrepCutItem: TMenuItem
       Action = CutComboAction
@@ -298,7 +289,7 @@ object UserModule: TUserModule
   end
   object EditPopupMenuE: TPopupMenu
     OnPopup = EditPopupMenuEPopup
-    Left = 216
+    Left = 248
     Top = 152
     object PopUndoItem: TMenuItem
       Action = EditUndo1
@@ -448,7 +439,16 @@ object UserModule: TUserModule
     Enabled = False
     Interval = 500
     OnTimer = BlinkTimerTimer
-    Left = 272
+    Left = 288
+    Top = 80
+  end
+  object FontDlg: TFontDialog
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    Left = 80
     Top = 80
   end
 end

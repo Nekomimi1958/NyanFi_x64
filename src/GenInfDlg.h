@@ -193,6 +193,13 @@ private:	// ユーザー宣言
 	bool Found;					//検索結果
 
 	void __fastcall WmFormShowed(TMessage &msg);
+
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
+	}
+
 	void __fastcall WmNyanFiPlayList(TMessage &msg);
 
 	void __fastcall WmMenuChar(TMessage &msg)
@@ -265,6 +272,7 @@ public:		// ユーザー宣言
 
 	BEGIN_MESSAGE_MAP
 		VCL_MESSAGE_HANDLER(WM_FORM_SHOWED,		TMessage,	WmFormShowed)
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,		TMessage,	WmDpiChanged)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_PLAYLIST, TMessage,	WmNyanFiPlayList)
 		VCL_MESSAGE_HANDLER(WM_MENUCHAR,		TMessage,	WmMenuChar)
 	END_MESSAGE_MAP(TForm)

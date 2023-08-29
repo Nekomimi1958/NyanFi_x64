@@ -49,12 +49,22 @@ private:
 	UnicodeString RepCopyBuff;
 	UnicodeString DefColCaption;
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
+	}
+
 public:		// ÉÜÅ[ÉUÅ[êÈåæ
 	TImage *ViewImage;
 
 	__fastcall TColorPicker(TComponent* Owner);
 	void __fastcall UpdateStt(int x = 0, int y = 0, float ratio = 1.0);
 	void __fastcall CopyColor();
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TColorPicker *ColorPicker;

@@ -64,6 +64,12 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ChgBtnActionUpdate(TObject *Sender);
 
 private:	// ユーザー宣言
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
+	}
+
 	void __fastcall WmDropped(TMessage &msg);
 	void __fastcall WmNyanFiFlIcon(TMessage &msg) { BtnListBox->Invalidate(); }
 
@@ -76,6 +82,7 @@ public:		// ユーザー宣言
 	__fastcall TToolBtnDlg(TComponent* Owner);
 
 	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,		TMessage,	WmDpiChanged)
 		VCL_MESSAGE_HANDLER(WM_FORM_DROPPED,	TMessage,	WmDropped)
 		VCL_MESSAGE_HANDLER(WM_NYANFI_FLICON,	TMessage,	WmNyanFiFlIcon)
 	END_MESSAGE_MAP(TForm)

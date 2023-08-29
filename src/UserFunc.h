@@ -29,7 +29,8 @@ bool is_SnapToDefBtn();
 HWND get_window_from_pos();
 TRect get_window_rect(HWND hWnd);
 void set_window_pos_ex(HWND hWnd, TRect rc);
-int  show_ModalDlg(TForm *fp);
+void adjust_form_pos(TForm *frm);
+int  show_ModalDlg(TForm *dlg);
 
 void show_PopupMenu(TPopupMenu *mp, TControl *cp);
 void show_PopupMenu(TListBox *cp);

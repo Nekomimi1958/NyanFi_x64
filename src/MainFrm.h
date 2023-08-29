@@ -2075,6 +2075,7 @@ private:	// ƒ†[ƒU[éŒ¾
 	void __fastcall WmDpiChanged(TMessage &msg)
 	{
 		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
 		UpdateFKeyBtn();
 	}
 

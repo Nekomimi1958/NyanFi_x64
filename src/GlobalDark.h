@@ -80,6 +80,7 @@ void EndDarkMode();
 bool ApplyDarkMode(HWND);
 
 void SetDarkWinTheme(TWinControl *wp, bool std_col = false);
+void RefreshDarkMode(TForm *frm);
 TLabel* AttachLabelToGroup(TWinControl *wp, UnicodeString s = EmptyStr);
 
 TColor get_WinColor(bool is_inv = false);

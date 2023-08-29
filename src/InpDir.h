@@ -56,6 +56,12 @@ private:	// ユーザー宣言
 
 	UnicodeString CurSeaPath;
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
+	}
+
 	UnicodeString __fastcall GetInpWord(bool path_sw = false);
 	void __fastcall SetList();
 	void __fastcall Filter();
@@ -65,6 +71,10 @@ public:		// ユーザー宣言
 	UnicodeString CommandStr;
 
 	__fastcall TInpDirDlg(TComponent* Owner);
+
+	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TInpDirDlg *InpDirDlg;

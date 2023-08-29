@@ -29,9 +29,8 @@ object GeneralInfoDlg: TGeneralInfoDlg
     DoubleBuffered = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Pitch = fpVariable
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Panels = <
       item
@@ -54,8 +53,6 @@ object GeneralInfoDlg: TGeneralInfoDlg
     UseSystemFont = False
     StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
-    ExplicitTop = 491
-    ExplicitWidth = 526
   end
   object MianPanel: TPanel
     Left = 0
@@ -65,8 +62,6 @@ object GeneralInfoDlg: TGeneralInfoDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 526
-    ExplicitHeight = 491
     object ListPanel: TPanel
       Left = 0
       Top = 0
@@ -77,8 +72,6 @@ object GeneralInfoDlg: TGeneralInfoDlg
       DoubleBuffered = False
       ParentDoubleBuffered = False
       TabOrder = 0
-      ExplicitWidth = 526
-      ExplicitHeight = 449
       DesignSize = (
         530
         450)
@@ -107,8 +100,6 @@ object GeneralInfoDlg: TGeneralInfoDlg
         OnExit = GenListBoxExit
         OnKeyDown = GenListBoxKeyDown
         OnKeyPress = GenListBoxKeyPress
-        ExplicitWidth = 522
-        ExplicitHeight = 449
       end
     end
     object OpeToolBar: TToolBar
@@ -125,8 +116,6 @@ object GeneralInfoDlg: TGeneralInfoDlg
       ShowCaptions = True
       AllowTextButtons = True
       TabOrder = 1
-      ExplicitTop = 449
-      ExplicitWidth = 526
       object FilterBtn: TToolButton
         Left = 0
         Top = 0

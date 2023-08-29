@@ -94,6 +94,12 @@ private:	// ユーザー宣言
 	bool DlgInitialized;
 	bool KeyHandled;
 
+	void __fastcall WmDpiChanged(TMessage &msg)
+	{
+		TForm::Dispatch(&msg);
+		RefreshDarkMode(this);
+	}
+
 	void __fastcall WmMenuChar(TMessage &msg)
 	{
 		if (msg.WParamHi==MF_POPUP) TForm::Dispatch(&msg); else msg.Result = (MNC_CLOSE << 16);
@@ -121,6 +127,7 @@ public:		// ユーザー宣言
 	void __fastcall ClearList();
 
 	BEGIN_MESSAGE_MAP
+		VCL_MESSAGE_HANDLER(WM_DPICHANGED,	TMessage,	WmDpiChanged)
 		VCL_MESSAGE_HANDLER(WM_MENUCHAR,	TMessage,	WmMenuChar)
 	END_MESSAGE_MAP(TForm)
 };
