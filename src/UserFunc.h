@@ -55,7 +55,8 @@ void pos_ListBoxItem(TListBox *lp, int xp = 0);
 
 //---------------------------------------------------------------------------
 bool has_Leading(TCanvas *cv);
-int  get_FontHeight(TFont *font, int mgn = 0, int min_mgn = 2);
+int  get_FontHeightMgn(TFont *font, int mgn = 0, int min_mgn = 2);
+int  get_FontHeightMgnS(TFont *font, int mgn = 0, int min_mgn = 2);
 int  get_CharWidth_Font(TFont *font, int n);
 
 int  EditToInt(TLabeledEdit *ep, int def = 0);

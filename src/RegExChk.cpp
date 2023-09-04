@@ -56,10 +56,9 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 
-	int mp_wd = IniFile->ReadIntGen( _T("RegExMainWidth"),	MainPanel->Constraints->MinWidth);
+	int mp_wd = IniFile->ReadScaledIntGen( _T("RegExMainWidth"), 380, this);
 	ReferPanel->Width     = ClientWidth - mp_wd - Splitter1->Width;
-	MainPanel->Width      = IniFile->ReadIntGen( _T("RegExMainWidth"),	MainPanel->Constraints->MinWidth);
-	OpePanel->Height      = IniFile->ReadIntGen( _T("RegExOpeHeight"),	OpePanel->Constraints->MinHeight);
+	OpePanel->Height      = IniFile->ReadScaledIntGen( _T("RegExOpeHeight"), 240, this);
 	ReplaceEdit->Text     = IniFile->ReadStrGen( _T("RegExChkRepStr"));
 	CaseCheckBox->Checked = IniFile->ReadBoolGen(_T("RegExChkCase"),	false);
 	UpdtCheckBox->Checked = IniFile->ReadBoolGen(_T("RegExChkUpdate"),	false);
@@ -69,7 +68,7 @@ void __fastcall TRegExChecker::FormShow(TObject *Sender)
 	ttFont->Assign(ViewerFont);
 	ttFont->Size  = DialogFont->Size;
 	ttFont->Color = col_fgList;
-	ObjMemo->Font->Assign(ttFont.get());
+	AssignScaledFont(ObjMemo, 		ttFont.get());
 	set_ListBoxItemHi(ResListBox,	ttFont.get());
 	set_ListBoxItemHi(ReferListBox, ttFont.get());
 
@@ -141,8 +140,8 @@ void __fastcall TRegExChecker::FormClose(TObject *Sender, TCloseAction &Action)
 		if (!saveto_TextFile(fnam, ObjMemo->Lines)) msgbox_ERR(USTR_FaildSave);
 	}
 
-	IniFile->WriteIntGen( _T("RegExMainWidth"),	MainPanel->Width);
-	IniFile->WriteIntGen( _T("RegExOpeHeight"),	OpePanel->Height);
+	IniFile->WriteScaledIntGen( _T("RegExMainWidth"), MainPanel->Width, this);
+	IniFile->WriteScaledIntGen( _T("RegExOpeHeight"), OpePanel->Height, this);
 	IniFile->WriteStrGen( _T("RegExChkRepStr"),	ReplaceEdit->Text);
 	IniFile->WriteBoolGen(_T("RegExChkCase"),	CaseCheckBox->Checked);
 	IniFile->WriteBoolGen(_T("RegExChkUpdate"),	UpdtCheckBox->Checked);

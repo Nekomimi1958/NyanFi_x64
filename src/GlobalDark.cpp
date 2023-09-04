@@ -236,7 +236,7 @@ void SetDarkWinTheme(
 
 	if (wp->InheritsFrom(__classid(TForm))) {
 		TForm *fp = (TForm*)wp;
-		GetScaledFont(fp->Font, Application->DefaultFont, wp);
+		AssignScaledFont(fp->Font, Application->DefaultFont, wp);
 
 		::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
 		BOOL is_dk = IsDarkMode;

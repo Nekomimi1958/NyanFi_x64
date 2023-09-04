@@ -253,9 +253,32 @@ int UsrIniFile::ReadInteger(UnicodeString sct, UnicodeString key,
 	return StrToIntDef(ReadString(sct, key, EmptyStr), def);
 }
 //---------------------------------------------------------------------------
+int UsrIniFile::ReadScaledInteger(UnicodeString sct, UnicodeString key,
+	int def,		//デフォルト値	(default = 0)
+	TControl *cp)	//	(default = NULL : Application->MainForm) 
+{
+	if (!cp) cp = Application->MainForm;
+	if (!KeyExists(sct, key)) WriteBool(sct, key + "_Scaled", true);
+	if (ReadBool(sct, key + "_Scaled"))
+		return ScaledInt(ReadInteger(sct, key, def), cp);
+	else
+		return ReadInteger(sct, key, def);
+}
+//---------------------------------------------------------------------------
 int UsrIniFile::ReadIntGen(const _TCHAR *key, int def)
 {
 	return StrToIntDef(ReadString(SCT_General, key, EmptyStr), def);
+}
+//---------------------------------------------------------------------------
+int UsrIniFile::ReadScaledIntGen(const _TCHAR *key, int def,
+	TControl *cp)	//	(default = NULL : Application->MainForm) 
+{
+	if (!cp) cp = Application->MainForm;
+	if (!KeyExists(SCT_General, key)) WriteBool(SCT_General, UnicodeString(key) + "_Scaled", true);
+	if (ReadBoolGen((UnicodeString(key) + "_Scaled").c_str()))
+		return ScaledInt(ReadIntGen(key, def), cp);
+	else
+		return ReadIntGen(key, def);
 }
 
 //---------------------------------------------------------------------------
@@ -376,7 +399,14 @@ void UsrIniFile::WriteInteger(UnicodeString sct, UnicodeString key, TRadioGroup 
 {
 	WriteString(sct, key, UnicodeString(rp->ItemIndex));
 }
-
+//---------------------------------------------------------------------------
+void UsrIniFile::WriteScaledInteger(UnicodeString sct, UnicodeString key, int v,
+	TControl *cp)	//	(default = NULL : Application->MainForm)
+{
+	if (!cp) cp = Application->MainForm;
+	WriteBool(sct, key + "_Scaled", true);
+	WriteInteger(sct, key, UnscaledInt(v, cp));
+}
 //---------------------------------------------------------------------------
 void UsrIniFile::WriteIntGen(const _TCHAR *key, int v)
 {
@@ -391,6 +421,14 @@ void UsrIniFile::WriteIntGen(const _TCHAR *key, TComboBox *cp)
 void UsrIniFile::WriteIntGen(const _TCHAR *key, TRadioGroup *rp)
 {
 	WriteString(SCT_General, key, UnicodeString(rp->ItemIndex));
+}
+//---------------------------------------------------------------------------
+void UsrIniFile::WriteScaledIntGen(const _TCHAR *key, int v,
+	TControl *cp)	//	(default = NULL : Application->MainForm)
+{
+	if (!cp) cp = Application->MainForm;
+	WriteBool(SCT_General, UnicodeString(key) + "_Scaled", true);
+	WriteIntGen(key, UnscaledInt(v, cp));
 }
 
 //---------------------------------------------------------------------------
@@ -438,14 +476,12 @@ void UsrIniFile::LoadFormPos(
 {
 	if (prfx.IsEmpty()) prfx = "Win";
 
-	frm->Left = ReadInteger(SCT_General, prfx + "Left", (Screen->Width  - w)/2);
-	frm->Top  = ReadInteger(SCT_General, prfx + "Top",  (Screen->Height - h)/2);
+	frm->Left = ReadInteger(SCT_General, prfx + "Left", (Screen->Width  - ScaledInt(w, frm))/2);
+	frm->Top  = ReadInteger(SCT_General, prfx + "Top",  (Screen->Height - ScaledInt(h, frm))/2);
 	//Left, Top よって CurrentPPI が変化
 
-	int ww = ReadInteger(SCT_General, prfx + "Width",	w);
-	int hh = ReadInteger(SCT_General, prfx + "Height",	h);
-	frm->Width	= frm->Scaled? ScaledInt(ww, frm) : ww;
-	frm->Height = frm->Scaled? ScaledInt(hh, frm) : hh;
+	frm->Width	= ScaledInt(ReadInteger(SCT_General, prfx + "Width",  w), frm);
+	frm->Height = ScaledInt(ReadInteger(SCT_General, prfx + "Height", h), frm);
 
 	//1画面の場合、画面外に出ないように
 	if (Screen->MonitorCount==1) {
@@ -464,13 +500,14 @@ void UsrIniFile::LoadFormPos(
 void UsrIniFile::SaveFormPos(TForm *frm)
 {
 	if (frm->WindowState==wsMinimized) frm->WindowState = wsNormal;
-	WriteIntGen(_T("WinState"),		(int)frm->WindowState);
+	WriteIntGen(_T("WinState"),	(int)frm->WindowState);
 	if (frm->WindowState==wsMaximized) frm->WindowState = wsNormal;
 
 	WriteIntGen(_T("WinLeft"),	frm->Left);
 	WriteIntGen(_T("WinTop"),	frm->Top);
-	WriteIntGen(_T("WinWidth"),	frm->Scaled? UnscaledInt(frm->Width,  frm) : frm->Width);
-	WriteIntGen(_T("WinHeight"),frm->Scaled? UnscaledInt(frm->Height, frm) : frm->Height);
+	WriteIntGen(_T("WinWidth"),	UnscaledInt(frm->Width,  frm));
+	WriteIntGen(_T("WinHeight"),UnscaledInt(frm->Height, frm));
+	WriteIntGen(_T("WinPPI"),	frm->CurrentPPI);
 }
 
 //---------------------------------------------------------------------------
@@ -484,10 +521,8 @@ void UsrIniFile::LoadPosInfo(TForm *frm, int x, int y, int w, int h, UnicodeStri
 	frm->Top  = ReadInteger(SCT_General, key + "Top",  y);
 
 	if ((frm->BorderStyle==bsSizeable || frm->BorderStyle==bsSizeToolWin) && w>0 && h>0) {
-		int ww = ReadInteger(SCT_General, key + "Width",  w);
-		int hh = ReadInteger(SCT_General, key + "Height", h);
-		frm->Width	= frm->Scaled? ScaledInt(ww, frm) : ww;
-		frm->Height = frm->Scaled? ScaledInt(hh, frm) : hh;
+		frm->Width	= ScaledInt(ReadInteger(SCT_General, key + "Width",  w), frm);
+		frm->Height = ScaledInt(ReadInteger(SCT_General, key + "Height", h), frm);
 	}
 
 	//1画面の場合、半分以上が画面外だったら中央に戻す
@@ -531,37 +566,47 @@ void UsrIniFile::SavePosInfo(TForm *frm, UnicodeString key)
 	WriteInteger(SCT_General, key + "Top",  frm->Top  - (ofs? PosOffsetTop  : 0));
 
 	if (frm->BorderStyle!=bsDialog) {
-		WriteInteger(SCT_General, key + "Width",  frm->Scaled? UnscaledInt(frm->Width, frm) : frm->Width);
-		WriteInteger(SCT_General, key + "Height", frm->Scaled? UnscaledInt(frm->Height, frm) : frm->Height);
+		WriteInteger(SCT_General, key + "Width",  UnscaledInt(frm->Width,  frm));
+		WriteInteger(SCT_General, key + "Height", UnscaledInt(frm->Height, frm));
 	}
 }
 
 //---------------------------------------------------------------------------
-//グリッドのカラム幅設定
-//可変個引数に、cnt個の整数値を
+//グリッドのカラム幅設定 (スケーリングを考慮)
 //---------------------------------------------------------------------------
 void UsrIniFile::LoadGridColWidth(TStringGrid *gp, int cnt, ...)
 {
+	bool is_scaled = ReadBool(gp->Name, "ColWidth_Scaled");
+
 	va_list ap;
 	va_start(ap, cnt);
 	UnicodeString key;
 	for (int i=0; i<cnt; i++) {
 		int arg = va_arg(ap, int);
+		int wd = 0;
 		if (i<gp->FixedCols)
-			gp->ColWidths[i] = arg;
+			wd = arg;
 		else if (i<gp->ColCount && arg>0 && arg<1200)
-			gp->ColWidths[i] = ReadInteger(gp->Name, key.sprintf(_T("ColWidth%u"), i), arg);
+			wd = ReadInteger(gp->Name, key.sprintf(_T("ColWidth%u"), i), arg);
+
+		if (wd>0) {
+			if (is_scaled) wd = ScaledInt(wd, gp);
+			gp->ColWidths[i] = wd;
+		}
 	}
 	va_end(ap);
 }
 //---------------------------------------------------------------------------
-//グリッドのカラム幅保存
+//グリッドのカラム幅保存 (スケーリングを考慮)
 //---------------------------------------------------------------------------
 void UsrIniFile::SaveGridColWidth(TStringGrid *gp)
 {
 	UnicodeString key;
-	for (int i=0; i<gp->ColCount; i++)
-		WriteInteger(gp->Name, key.sprintf(_T("ColWidth%u"), i), gp->ColWidths[i]);
+	for (int i=0; i<gp->ColCount; i++) {
+		WriteInteger(gp->Name, key.sprintf(_T("ColWidth%u"), i), UnscaledInt(gp->ColWidths[i]));
+	}
+
+	WriteBool(gp->Name, "ColWidth_Scaled", true);
 }
 
 //---------------------------------------------------------------------------

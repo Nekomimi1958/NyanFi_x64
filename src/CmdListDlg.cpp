@@ -41,7 +41,7 @@ void __fastcall TCmdFileListDlg::FormShow(TObject *Sender)
 
 	setup_ToolBar(OpeToolBar);
 	OpePanel->ClientHeight = std::max(OpeToolBar->Height, SCALED_THIS(22));
-	FilterEdit->Width = IniFile->ReadIntGen(_T("CmdFileListFilterWidth"),	200);
+	FilterEdit->Width = IniFile->ReadScaledIntGen(_T("CmdFileListFilterWidth"), 200, this);
 
 	set_MigemoAction(MigemoAction, _T("CmdFileListMigemo"));
 
@@ -74,8 +74,8 @@ void __fastcall TCmdFileListDlg::FormShow(TObject *Sender)
 	ReferListBox->Color		  = col_bgInf;
 	ReferListBox->Font->Color = col_fgInf;
 
-	PreviewPanel->Height = IniFile->ReadIntGen(_T("CmdFileListPrevHeight"), 200);
-	ReferPanel->Width	 = IniFile->ReadIntGen(_T("CmdFileListReferWidth"), 200);
+	PreviewPanel->Height = IniFile->ReadScaledIntGen(_T("CmdFileListPrevHeight"), 200, this);
+	ReferPanel->Width	 = IniFile->ReadScaledIntGen(_T("CmdFileListReferWidth"), 200, this);
 
 	PreviewAction->Checked = IniFile->ReadBoolGen(_T("CmdFileListPreview"));
 	if (PreviewAction->Checked) {
@@ -125,13 +125,13 @@ void __fastcall TCmdFileListDlg::FormClose(TObject *Sender, TCloseAction &Action
 {
 	IniFile->SavePosInfo(this);
 	IniFile->SaveGridColWidth(CmdFileGrid);
+	IniFile->WriteScaledIntGen(_T("CmdFileListPrevHeight"), PreviewPanel->Height, this);
+	IniFile->WriteScaledIntGen(_T("CmdFileListReferWidth"), ReferPanel->Width, this);
+	IniFile->WriteScaledIntGen(_T("CmdFileListFilterWidth"),FilterEdit->Width, this);
 
-	IniFile->WriteIntGen( _T("CmdFileListFilterWidth"),	FilterEdit->Width);
-	IniFile->WriteBoolGen(_T("CmdFileListMigemo"),		MigemoAction);
-	IniFile->WriteBoolGen(_T("CmdFileListCnfExe"),		CnfExeAction);
-	IniFile->WriteBoolGen(_T("CmdFileListPreview"),		PreviewAction);
-	IniFile->WriteIntGen( _T("CmdFileListPrevHeight"),	PreviewPanel->Height);
-	IniFile->WriteIntGen( _T("CmdFileListReferWidth"),	ReferPanel->Width);
+	IniFile->WriteBoolGen(_T("CmdFileListMigemo"),	MigemoAction);
+	IniFile->WriteBoolGen(_T("CmdFileListCnfExe"),	CnfExeAction);
+	IniFile->WriteBoolGen(_T("CmdFileListPreview"),	PreviewAction);
 
 	clear_FileList(cmdfile_List);
 	ToSelect  = false;

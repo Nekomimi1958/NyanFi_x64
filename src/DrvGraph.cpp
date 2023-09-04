@@ -35,7 +35,7 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter);
 
 	setup_ToolBar(OptToolBar);
-	DriveComboBox->Width  = IniFile->ReadIntGen( _T("DrvGraphSlctrWidth"),	120);
+	DriveComboBox->Width  = IniFile->ReadScaledIntGen( _T("DrvGraphSlctrWidth"), 120, this);
 	OldOdrAction->Checked = IniFile->ReadBoolGen(_T("DrvGraphOldOdr"));
 	MinMaxAction->Checked = IniFile->ReadBoolGen(_T("DrvGraphMinMax"));
 	CursorAction->Checked = IniFile->ReadBoolGen(_T("DrvGraphCursor"));
@@ -78,7 +78,7 @@ void __fastcall TDriveGraph::FormShow(TObject *Sender)
 void __fastcall TDriveGraph::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	IniFile->SavePosInfo(this);
-	IniFile->WriteIntGen( _T("DrvGraphSlctrWidth"),	DriveComboBox->Width);
+	IniFile->WriteScaledIntGen( _T("DrvGraphSlctrWidth"), DriveComboBox->Width, this);
 	IniFile->WriteBoolGen(_T("DrvGraphOldOdr"),		OldOdrAction);
 	IniFile->WriteBoolGen(_T("DrvGraphMinMax"),		MinMaxAction);
 	IniFile->WriteBoolGen(_T("DrvGraphCursor"),		CursorAction);

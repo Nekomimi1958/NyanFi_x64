@@ -123,6 +123,7 @@ object PrintImgDlg: TPrintImgDlg
             Top = 120
             Width = 40
             Height = 23
+            Hint = '0'#65374'99%'
             Alignment = taRightJustify
             EditLabel.Width = 7
             EditLabel.Height = 23
@@ -131,13 +132,14 @@ object PrintImgDlg: TPrintImgDlg
             NumbersOnly = True
             TabOrder = 5
             Text = '0'
-            OnClick = OptionChanged
+            OnChange = OptionChanged
           end
           object OfsXEdit: TLabeledEdit
             Left = 133
             Top = 120
             Width = 40
             Height = 23
+            Hint = '0'#65374'99%'
             Alignment = taRightJustify
             EditLabel.Width = 57
             EditLabel.Height = 23
@@ -146,6 +148,7 @@ object PrintImgDlg: TPrintImgDlg
             NumbersOnly = True
             TabOrder = 3
             Text = '0'
+            OnChange = OptionChanged
             OnClick = OptionChanged
           end
           object ScaleEdit: TLabeledEdit
@@ -153,6 +156,7 @@ object PrintImgDlg: TPrintImgDlg
             Top = 90
             Width = 40
             Height = 23
+            Hint = '1'#65374'100%'
             Alignment = taRightJustify
             EditLabel.Width = 42
             EditLabel.Height = 23
@@ -161,6 +165,7 @@ object PrintImgDlg: TPrintImgDlg
             NumbersOnly = True
             TabOrder = 1
             Text = '100'
+            OnChange = OptionChanged
             OnClick = OptionChanged
           end
           object OfsXUpDown: TUpDown
@@ -188,6 +193,7 @@ object PrintImgDlg: TPrintImgDlg
             Top = 90
             Width = 16
             Height = 23
+            Hint = '1'#65374'100%'
             Associate = ScaleEdit
             Min = 1
             Position = 100
@@ -203,7 +209,7 @@ object PrintImgDlg: TPrintImgDlg
           Left = 0
           Top = 0
           Width = 273
-          Height = 184
+          Height = 182
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
@@ -211,7 +217,7 @@ object PrintImgDlg: TPrintImgDlg
             Left = 8
             Top = 103
             Width = 258
-            Height = 21
+            Height = 23
             EditLabel.Width = 26
             EditLabel.Height = 15
             EditLabel.Caption = #26360#24335
@@ -257,10 +263,10 @@ object PrintImgDlg: TPrintImgDlg
             Left = 210
             Top = 8
             Width = 40
-            Height = 21
+            Height = 23
             Alignment = taRightJustify
             EditLabel.Width = 42
-            EditLabel.Height = 21
+            EditLabel.Height = 23
             EditLabel.Caption = #12510#12540#12472#12531
             LabelPosition = lpLeft
             NumbersOnly = True
@@ -299,7 +305,7 @@ object PrintImgDlg: TPrintImgDlg
             Left = 250
             Top = 8
             Width = 16
-            Height = 21
+            Height = 23
             Associate = StrMgnEdit
             Max = 99
             TabOrder = 2

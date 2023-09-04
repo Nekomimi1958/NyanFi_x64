@@ -30,7 +30,7 @@ void __fastcall TFindTagForm::FormCreate(TObject *Sender)
 void __fastcall TFindTagForm::FormShow(TObject *Sender)
 {
 	IniFile->LoadPosInfo(this, DialogCenter);
-	InfoPanel->Height = IniFile->ReadIntGen(_T("FintTagInfHi"), 100);
+	InfoPanel->Height = IniFile->ReadScaledIntGen(_T("FindTagInfHi"), 100, this);
 	IsMigemo = IniFile->ReadBoolGen(_T("FindTagMigemo"));
 
 	set_StdListBox(TagsListBox, LBTAG_OPT_LCPY);
@@ -90,7 +90,7 @@ void __fastcall TFindTagForm::FormClose(TObject *Sender, TCloseAction &Action)
 	ClearTagList();
 
 	IniFile->SavePosInfo(this);
-	IniFile->WriteIntGen(_T("FintTagInfHi"),	InfoPanel->Height);
+	IniFile->WriteScaledIntGen(_T("FindTagInfHi"),	InfoPanel->Height, this);
 	IniFile->WriteBoolGen(_T("FindTagMigemo"),	IsMigemo);
 }
 //---------------------------------------------------------------------------
@@ -394,4 +394,3 @@ void __fastcall TFindTagForm::CopyActionUpdate(TObject *Sender)
 	ap->Enabled = ap->Visible;
 }
 //---------------------------------------------------------------------------
-

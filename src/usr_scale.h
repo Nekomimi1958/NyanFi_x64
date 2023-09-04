@@ -28,6 +28,7 @@ inline int GetCurPPI(TControl *cp = NULL)
 //----------------------------------------------------------------------
 #define SCALED_THIS(n)		MulDiv(n, CurrentPPI, DEFAULT_PPI)
 #define UNSCALED_THIS(n)	MulDiv(n, DEFAULT_PPI, CurrentPPI)
+#define SCALED_MAIN(n)		MulDiv(n, Application->MainForm->CurrentPPI, DEFAULT_PPI)
 
 //----------------------------------------------------------------------
 inline int ScaledInt(int n, TControl *cp = NULL)
@@ -52,10 +53,12 @@ inline int get_SysMetricsForPPI(int idx, int ppi)
 }
 
 //---------------------------------------------------------------------------
-void GetScaledFont(TFont *s_font, TFont *font, TControl *cp);
+void AssignScaledFont(TFont *s_font, TFont *font, TControl *cp, int size = 0, TColor bg = Graphics::clNone);
 void AssignScaledFont(TWinControl *cp, TFont *font = NULL);
 void AssignScaledFont(TLabel *lp, TFont *font = NULL);
 void AssignScaledFont(TPaintBox *pp, TFont *font = NULL);
+
+int  ScaledFontHeight(int sz, TControl *cp);
 
 //---------------------------------------------------------------------------
 #endif

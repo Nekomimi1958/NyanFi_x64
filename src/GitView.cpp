@@ -31,7 +31,7 @@ void __fastcall TGitViewer::FormCreate(TObject *Sender)
 	DiffScrPanel   = new UsrScrollPanel(DiffPanel,   DiffListBox,   USCRPNL_FLAG_P_WP | USCRPNL_FLAG_L_WP);
 
 	MsgHint = new UsrHintWindow(this);
-	GetScaledFont(MsgHint->Font, HintFont, this);
+	AssignScaledFont(MsgHint->Font, HintFont, this);
 
 	WarnList   = new TStringList();
 	StatusList = new TStringList();
@@ -56,10 +56,9 @@ void __fastcall TGitViewer::FormShow(TObject *Sender)
 	set_ListBoxItemHi(DiffListBox,	 ListFont);
 	set_UsrScrPanel(DiffScrPanel);
 
-	BranchPanel->Width = IniFile->ReadIntGen(_T("GitViewBranchWidth"),	200);
-	RL_Panel->Height   = IniFile->ReadIntGen(_T("GitViewDiffHeight"),	120);
-
-	FindCommitEdit->Width = IniFile->ReadIntGen(_T("GitViewFindWidth"),	200);
+	BranchPanel->Width    = IniFile->ReadScaledIntGen(_T("GitViewBranchWidth"), 200, this);
+	RL_Panel->Height      = IniFile->ReadScaledIntGen(_T("GitViewDiffHeight"),	120, this);
+	FindCommitEdit->Width = IniFile->ReadScaledIntGen(_T("GitViewFindWidth"),	200, this);
 
 	ShowRBranchAction->Checked  = IniFile->ReadBoolGen(_T("GitViewShowRBranch"),true);
 	ShowTagAction->Checked      = IniFile->ReadBoolGen(_T("GitViewShowTag"),	true);
@@ -100,9 +99,9 @@ void __fastcall TGitViewer::FormClose(TObject *Sender, TCloseAction &Action)
 	HistoryLimit = GIT_DEF_HISTLIMIT;
 
 	IniFile->SavePosInfo(this);
-	IniFile->WriteIntGen(_T("GitViewBranchWidth"),		BranchPanel->Width);
-	IniFile->WriteIntGen(_T("GitViewDiffHeight"),		RL_Panel->Height);
-	IniFile->WriteIntGen(_T("GitViewFindWidth"),		FindCommitEdit->Width);
+	IniFile->WriteScaledIntGen(_T("GitViewBranchWidth"),	BranchPanel->Width, this);
+	IniFile->WriteScaledIntGen(_T("GitViewDiffHeight"),		RL_Panel->Height, this);
+	IniFile->WriteScaledIntGen(_T("GitViewFindWidth"),		FindCommitEdit->Width, this);
 	IniFile->WriteBoolGen(_T("GitViewShowRBranch"),		ShowRBranchAction);
 	IniFile->WriteBoolGen(_T("GitViewShowTag"),			ShowTagAction);
 	IniFile->WriteBoolGen(_T("GitViewShowBranches"),	ShowBranchesAction);

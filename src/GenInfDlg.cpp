@@ -54,7 +54,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 {
 	setup_ToolBar(OpeToolBar, true);
 
-	FilterEdit->Width = IniFile->ReadIntGen(_T("GenInfoFilterWidth"),	200);
+	FilterEdit->Width = IniFile->ReadScaledIntGen(_T("GenInfoFilterWidth"), 200, this);
 
 	RetStr = EmptyStr;
 	GenSelList->Clear();
@@ -237,7 +237,7 @@ void __fastcall TGeneralInfoDlg::FormClose(TObject *Sender, TCloseAction &Action
 	Timer1->Enabled = false;
 
 	IniFile->SavePosInfo(this);
-	IniFile->WriteIntGen( _T("GenInfoFilterWidth"),	FilterEdit->Width);
+	IniFile->WriteScaledIntGen(_T("GenInfoFilterWidth"), FilterEdit->Width, this);
 	IniFile->WriteBoolGen(_T("GenInfoShowLnNo"),	ShowLineNoAction);
 	IniFile->WriteBoolGen(_T("GenInfoKeepIndex"),	KeepIndexAction);
 	IniFile->WriteBoolGen(_T("GenInfoFileName1st"),	FileName1stAction);

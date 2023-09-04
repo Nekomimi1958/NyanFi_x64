@@ -45,7 +45,7 @@ void __fastcall TFtpConnectDlg::FormShow(TObject *Sender)
 	HostList->Clear();
 	IniFile->LoadListItems("FtpHostList", HostList, 20, false);
 	lp->Items->Assign(HostList);
-	if (lp->Count>0) lp->ItemIndex = IniFile->ReadIntGen(_T("FtpDlgHostIdx"),	0);
+	if (lp->Count>0) lp->ItemIndex = IniFile->ReadIntGen(_T("FtpDlgHostIdx"), 0);
 
 	UserModule->InitializeListBox(lp);
 

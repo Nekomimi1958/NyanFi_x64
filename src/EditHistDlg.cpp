@@ -49,7 +49,7 @@ void __fastcall TEditHistoryDlg::FormShow(TObject *Sender)
 	IniFile->LoadPosInfo(this, DialogCenter,
 		isRecent? "RecentListDlg" : isMark? "MarkListDlg" : isRepo? "RepoListDlg" : isTags? "TagJumpDlg" : "");
 
-	FilterEdit->Width = IniFile->ReadIntGen(_T("EditHistFilterWidth"),	200);
+	FilterEdit->Width = IniFile->ReadScaledIntGen(_T("EditHistFilterWidth"), 200, this);
 
 	AssignScaledFont(StatusBar1, SttBarFont);
 	StatusBar1->Panels->Items[0]->Width = StatusBar1->ClientWidth;
@@ -240,7 +240,7 @@ void __fastcall TEditHistoryDlg::FormClose(TObject *Sender, TCloseAction &Action
 	IniFile->WriteIntGen(_T("EditHistOptMode"),
 							(OptMode2Action->Checked? 2 : OptMode1Action->Checked? 1 : 0));
 
-	IniFile->WriteIntGen(_T("EditHistFilterWidth"),	FilterEdit->Width);
+	IniFile->WriteScaledIntGen(_T("EditHistFilterWidth"), FilterEdit->Width, this);
 
 	if (isRecent) {
 		IniFile->WriteIntGen(_T("RecentListSortMode"),	ListSortMode);

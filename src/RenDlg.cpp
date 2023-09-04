@@ -91,12 +91,12 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	//Ý’è‚Ì“Çž
 	IniFile->LoadPosInfo(this, DialogCenter);
 
+	SerLeftPanel->Width 	   = IniFile->ReadScaledIntGen(_T("RenameDlgSerLWidth"), 280, this);
 	IniSttComboBox->ItemIndex  = IniFile->ReadIntGen(_T("RenameDlgIniStt"));
 	IniSttWdEdit->Text		   = IniFile->ReadStrGen(_T("RenameDlgIniSttWd"));
 	IniStt2ComboBox->ItemIndex = IniFile->ReadIntGen(_T("RenameDlgIniStt2"));
-	SerLeftPanel->Width 	   = IniFile->ReadIntGen(_T("RenameDlgSerLWidth"),	280);
-	SerNoEdit->Text 		   = IniFile->ReadStrGen(_T("RenameDlgSerNo"),		"01");
-	IncNoEdit->Text 		   = IniFile->ReadStrGen(_T("RenameDlgIncNo"),		"1");
+	SerNoEdit->Text 		   = IniFile->ReadStrGen(_T("RenameDlgSerNo"),	"01");
+	IncNoEdit->Text 		   = IniFile->ReadStrGen(_T("RenameDlgIncNo"),	"1");
 	CaseCheckBox->Checked	   = IniFile->ReadBoolGen(_T("RenameDlgCase"));
 	Case2CheckBox->Checked	   = CaseCheckBox->Checked;
 	RegExCheckBox->Checked	   = IniFile->ReadBoolGen(_T("RenameDlgRegEx"));
@@ -314,10 +314,10 @@ void __fastcall TRenameDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	IniFile->SavePosInfo(this);
 
+	IniFile->WriteScaledIntGen(_T("RenameDlgSerLWidth"), SerLeftPanel->Width, this);
 	IniFile->WriteIntGen(_T("RenameDlgIniStt"),		IniSttComboBox);
 	IniFile->WriteStrGen(_T("RenameDlgIniSttWd"),	IniSttWdEdit);
 	IniFile->WriteIntGen(_T("RenameDlgIniStt2"),	IniStt2ComboBox);
-	IniFile->WriteIntGen(_T("RenameDlgSerLWidth"),	SerLeftPanel->Width);
 	IniFile->WriteStrGen(_T("RenameDlgSerNo"),		SerNoEdit);
 	IniFile->WriteStrGen(_T("RenameDlgIncNo"),		IncNoEdit);
 	IniFile->WriteBoolGen(_T("RenameDlgCase"),		IsRenListSheet()? Case2CheckBox : CaseCheckBox);
@@ -444,7 +444,7 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 	if (!IsOptionSheet()) {
 		TStringGrid *gp = PreviewGrid;
 		gp->Color = bg_inv;
-		gp->DefaultRowHeight   = get_FontHeight(gp->Font, 4);
+		gp->DefaultRowHeight   = get_FontHeightMgnS(gp->Font, 4);
 		NameComPanel->Parent   = NamePageControl->ActivePage;
 		PathInfMLabel->Caption = EmptyStr;
 		NameInfMLabel->Caption = EmptyStr;

@@ -287,13 +287,10 @@ bool has_Leading(TCanvas *cv)
 //---------------------------------------------------------------------------
 //指定フォントの描画高を取得
 //---------------------------------------------------------------------------
-int get_FontHeight(TFont *font,
-	int mgn,		//	(default = 0)
-	int min_mgn)	//	(default = 2)
+int get_FontHeightMgn(TFont *font,
+	int mgn,		//	マージン		(default = 0)
+	int min_mgn)	//	最小マージン	(default = 2)
 {
-	mgn 	= ScaledInt(mgn);
-	min_mgn = ScaledInt(min_mgn);
-
 	std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
 	TCanvas *cv = bmp->Canvas;
 	cv->Font->Assign(font);
@@ -308,10 +305,19 @@ int get_FontHeight(TFont *font,
 	return fh;
 }
 //---------------------------------------------------------------------------
+int get_FontHeightMgnS(TFont *font,
+	int mgn,		//	マージン		(default = 0)
+	int min_mgn)	//	最小マージン	(default = 2)
+{
+	return get_FontHeightMgn(font, ScaledInt(mgn), ScaledInt(min_mgn));
+}
+
+//---------------------------------------------------------------------------
 //指定フォントによる描画幅を取得
 //---------------------------------------------------------------------------
-int get_CharWidth_Font(TFont *font,
-	int n)	//半角単位の文字数
+int get_CharWidth_Font(
+	TFont *font,
+	int n)			//半角単位の文字数
 {
 	std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
 	TCanvas *cv = bmp->Canvas;

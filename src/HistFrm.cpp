@@ -92,19 +92,19 @@ void __fastcall THistForm::DrawHistogram(Graphics::TBitmap *i_bmp)
 	cv->Pen->Color = TColor(RGB(255, 0, 0));
 	int x = H_LR_MARGIN;
 	for (int i=0; i<256; i++,x++) {
-		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - (1.0 * h_hi * r_buf[i]/v_max));
+		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - MulDiv(h_hi, r_buf[i], v_max));
 	}
 	//G
 	cv->Pen->Color = TColor(RGB(0, 255, 0));
 	x = H_LR_MARGIN;
 	for (int i=0; i<256; i++,x++) {
-		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - (1.0 * h_hi * g_buf[i]/v_max));
+		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - MulDiv(h_hi, g_buf[i], v_max));
 	}
 	//B
 	cv->Pen->Color = TColor(RGB(0, 0, 255));
 	x = H_LR_MARGIN;
 	for (int i=0; i<256; i++,x++) {
-		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - (1.0 * h_hi * b_buf[i]/v_max));
+		cv->MoveTo(x, y0);	cv->LineTo(x, y0 - MulDiv(h_hi, b_buf[i], v_max));
 	}
 
 	//ƒOƒŠƒbƒh

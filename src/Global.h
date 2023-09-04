@@ -101,6 +101,10 @@ enum SeaOpt {soMigemo, soRegEx, soAndOr, soFuzzy, soCaseSens, soCSV, soTSV, soTr
 typedef Set <SeaOpt, soMigemo, soTree> SearchOption;
 
 //---------------------------------------------------------------------------
+#define DEF_WIN_WIDTH	800
+#define DEF_WIN_HEIGHT	600
+
+//---------------------------------------------------------------------------
 //画面モード(ScrMode)
 #define SCMD_FLIST	1					//ファイラー
 #define SCMD_TVIEW	2					//テキストビュアー
@@ -204,6 +208,7 @@ struct win_dat {
 	int WinWidth;
 	int WinHeight;
 	TWindowState WinState;
+	int WinPPI;
 //サブパネル
 	int SubHeight;
 	int SubWidth;
@@ -644,6 +649,7 @@ extern UnicodeString GitGuiExe;
 extern int VersionNo;
 extern UnicodeString VersionStr;
 extern UnicodeString OSVerInfStr;
+extern bool IsWin11;
 
 extern UnicodeString DirBraStr;
 extern UnicodeString DirKetStr;

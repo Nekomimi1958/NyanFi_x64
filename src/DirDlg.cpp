@@ -49,7 +49,7 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 
 	if (IsSpecial) {
 		setup_ToolBar(OpeToolBar);
-		FilterEdit->Width = IniFile->ReadIntGen(_T("SpecialDirFilterWidth"),	200);
+		FilterEdit->Width = IniFile->ReadScaledIntGen(_T("SpecialDirFilterWidth"), 200, this);
 
 		set_MigemoAction(MigemoAction, _T("SpecialDirMigemo"));
 		AndOrAction->Checked	= IniFile->ReadBoolGen(_T("SpecialDirFltAndOr"));
@@ -110,8 +110,8 @@ void __fastcall TRegDirDlg::FormShow(TObject *Sender)
 		OptPanel->Visible		   = IniFile->ReadBoolGen(_T("RegDirDlgShowOpt"),	true);
 		BlankPanel->Visible 	   = !OptPanel->Visible;
 
-		sp->Items[0]->Width = IniFile->ReadInteger("RegDirGrid", "ColWidth0",	40);
-		sp->Items[1]->Width = IniFile->ReadInteger("RegDirGrid", "ColWidth1",	200);
+		sp->Items[0]->Width = IniFile->ReadScaledInteger("RegDirGrid", "ColWidth0",	 40, this);
+		sp->Items[1]->Width = IniFile->ReadScaledInteger("RegDirGrid", "ColWidth1",	200, this);
 		adjust_HeaderSecWidth(RegDirHeader, 2);
 
 		lp->Items->Assign(RegDirList);
@@ -169,7 +169,7 @@ void __fastcall TRegDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	UserModule->UninitializeListBox();
 
 	if (IsSpecial) {
-		IniFile->WriteIntGen( _T("SpecialDirFilterWidth"),	FilterEdit->Width);
+		IniFile->WriteScaledIntGen( _T("SpecialDirFilterWidth"), FilterEdit->Width, this);
 		IniFile->WriteBoolGen(_T("SpecialDirMigemo"),		MigemoAction);
 		IniFile->WriteBoolGen(_T("SpecialDirFltAndOr"),		AndOrAction);
 		IniFile->WriteBoolGen(_T("SpecialDirShowIcon"),		ShowIconAction);
@@ -203,8 +203,8 @@ void __fastcall TRegDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		IniFile->WriteBoolGen(_T("RegDirDlgShowOpt"),	OptPanel->Visible);
 
 		THeaderSections *sp = RegDirHeader->Sections;
-		IniFile->WriteInteger("RegDirGrid", "ColWidth0",	sp->Items[0]->Width);
-		IniFile->WriteInteger("RegDirGrid", "ColWidth1",	sp->Items[1]->Width);
+		IniFile->WriteScaledInteger("RegDirGrid", "ColWidth0",	sp->Items[0]->Width, this);
+		IniFile->WriteScaledInteger("RegDirGrid", "ColWidth1",	sp->Items[1]->Width, this);
 	}
 
 	IniFile->SavePosInfo(this, (IsSpecial? (IsSelect? "SelSpecialDir" : "SpecialDirList") : ""));

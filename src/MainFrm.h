@@ -2071,14 +2071,7 @@ private:	// ユーザー宣言
 	int  FTPLastNoopCnt;
 
 	void __fastcall WmFormShowed(TMessage &msg);
-
-	void __fastcall WmDpiChanged(TMessage &msg)
-	{
-		TForm::Dispatch(&msg);
-		RefreshDarkMode(this);
-		UpdateFKeyBtn();
-	}
-
+	void __fastcall WmDpiChanged(TMessage &msg);
 	void __fastcall WmActivate(TMessage &msg);
 	void __fastcall WmQueryEndSession(TMessage &msg);
 
@@ -2611,6 +2604,8 @@ public:		// ユーザー宣言
 	int CurListWidth, CurListHeight;
 	int PreviewWidth, PreviewHeight;
 	int InfPanelWidth, InfPanelHeight;
+
+	int useFontSize;							//ファイルリストの通常フォントサイズ
 
 	__fastcall TNyanFiForm(TComponent* Owner);
 

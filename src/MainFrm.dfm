@@ -33,6 +33,7 @@ object NyanFiForm: TNyanFiForm
     Font.Color = clWindowText
     Font.Height = -12
     Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
     Font.Style = []
     Panels = <
       item
@@ -79,6 +80,12 @@ object NyanFiForm: TNyanFiForm
         BevelInner = bvNone
         BevelOuter = bvNone
         BorderStyle = bsNone
+        Font.Charset = SHIFTJIS_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
         ParentShowHint = False
         ReadOnly = True
         ShowHint = False
@@ -2077,6 +2084,7 @@ object NyanFiForm: TNyanFiForm
               Font.Color = clWindowText
               Font.Height = -12
               Font.Name = 'Segoe UI'
+              Font.Pitch = fpVariable
               Font.Style = []
               Panels = <
                 item

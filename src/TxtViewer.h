@@ -59,6 +59,7 @@ private:
 	bool SelSkip;
 	bool inh_Repaint;
 
+	TFont *UseFont;					//使用フォント
 	UnicodeString useFontName;		//使用フォント名
 	int  useFontSize;				//使用フォントサイズ(リセット値)
 

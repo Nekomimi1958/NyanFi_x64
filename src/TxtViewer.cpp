@@ -80,6 +80,8 @@ TTxtViewer::TTxtViewer(
 
 	MMF = new MemMapFile();
 
+	UseFont = new TFont();
+
 	SetColor();
 
 	BinarySize	= 0;
@@ -166,6 +168,7 @@ TTxtViewer::~TTxtViewer()
 	delete RemEndList;
 	delete PairPtnList;
 	delete MMF;
+	delete UseFont;
 }
 
 //---------------------------------------------------------------------------
@@ -433,7 +436,7 @@ void __fastcall TTxtViewer::SetMetric(bool set_hi)
 
 	//ズーム時の行間調整
 	int zm_InterLn = ViewTxtInterLn;
-	if (ViewBox->Font->Size != useFontSize) zm_InterLn *= (1.0 * ViewBox->Font->Size/useFontSize);
+	if (ViewBox->Font->Size != useFontSize) zm_InterLn = MulDiv(ViewTxtInterLn, ViewBox->Font->Size, useFontSize);
 	ViewCanvas->Font->Assign(ViewBox->Font);
 	FontHeight = abs(ViewCanvas->Font->Height);
 	LineHeight = FontHeight + ScaledInt(zm_InterLn, OwnerForm);
@@ -784,11 +787,10 @@ void __fastcall TTxtViewer::UpdateScr(
 	useFontSize = usr_hl? UserHighlight->ReadKeyInt(_T("FontSize")) : ViewerFont->Size;
 	if (useFontSize==0) useFontSize = ViewerFont->Size;
 
-	std::unique_ptr<TFont> s_font(new TFont());
-	s_font->Assign(ViewerFont);
-	s_font->Name = useFontName;
-	s_font->Size = useFontSize;
-	AssignScaledFont(ViewBox, s_font.get());
+	UseFont->Assign(ViewerFont);
+	UseFont->Name = useFontName;
+	UseFont->Size = useFontSize;
+	AssignScaledFont(ViewBox, UseFont);
 	useFontSize = ViewBox->Font->Size;
 
 	if (!isBinary) {
@@ -4705,16 +4707,20 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		SetMetric(true);
 	}
 	else if (USAME_TI(cmd, "ZoomReset")) {
-		ViewBox->Font->Size = useFontSize;
+		AssignScaledFont(ViewBox, UseFont);
 		SetMetric(true);
 	}
 	//フォントサイズ変更
 	else if (USAME_TI(cmd, "SetFontSize")) {
 		bool x_sw = remove_top_s(prm, '^');
 		if (!prm.IsEmpty()) {
-			int f_sz = prm.ToIntDef(ViewBox->Font->Size);
-			f_sz = std::clamp(f_sz, MIN_FNTZOOM_SZ, MAX_FNTZOOM_SZ);
-			ViewBox->Font->Size = (x_sw && ViewBox->Font->Size==f_sz)? useFontSize : f_sz;
+			//※起動後にスケーリングが変化しても Font->PixelsPerInch が変わらないため変換が必要
+			int fsz_set = MulDiv(prm.ToIntDef(useFontSize), GetCurPPI(), ViewBox->Font->PixelsPerInch);
+				fsz_set = std::clamp(fsz_set, MIN_FNTZOOM_SZ, MAX_FNTZOOM_SZ);
+			if (x_sw && ViewBox->Font->Size==fsz_set)
+				AssignScaledFont(ViewBox, UseFont);
+			else
+				ViewBox->Font->Size = fsz_set;
 			SetMetric(true);
 		}
 	}

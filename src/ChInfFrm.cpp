@@ -27,7 +27,7 @@ void __fastcall TCharInfoForm::FormShow(TObject *Sender)
 	Splitter1->MinSize = FontNamePanel->Height * 2;
 
 	SetToolWinBorder(this);
-	SamplePanel->Height  = std::max(IniFile->ReadIntGen(_T("CharInfoCharHeight"), 180), Splitter1->MinSize);
+	SamplePanel->Height  = std::max(IniFile->ReadScaledIntGen(_T("CharInfoCharHeight"), 180, this), Splitter1->MinSize);
 
 	TListBox *lp = InfoListBox;
 	lp->Color = col_bgInf;
@@ -46,8 +46,8 @@ void __fastcall TCharInfoForm::FormHide(TObject *Sender)
 {
 	IniFile->SavePosInfo(this);
 
-	IniFile->WriteIntGen(_T("CharInfoCharHeight"),		SamplePanel->Height);
-	IniFile->WriteBoolGen(_T("CharInfoShowFontName"),	FontNamePanel->Visible);
+	IniFile->WriteScaledIntGen(_T("CharInfoCharHeight"), SamplePanel->Height, this);
+	IniFile->WriteBoolGen(_T("CharInfoShowFontName"),	 FontNamePanel->Visible);
 }
 
 //---------------------------------------------------------------------------
@@ -66,7 +66,7 @@ void __fastcall TCharInfoForm::SetInfoHeight()
 void __fastcall TCharInfoForm::SetCharFont()
 {
 	CharPanel->Font->Assign(CharInfFont);
-	CharPanel->Font->Height = CharPanel->ClientHeight * 4 / 5;
+	CharPanel->Font->Height = MulDiv(CharPanel->ClientHeight, 4, 5);
 	CharPanel->Font->Color	= col_fgChInf;
 	CharPanel->Color		= col_bgChInf;
 

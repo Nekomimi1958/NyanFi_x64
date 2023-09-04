@@ -168,7 +168,7 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 		IniFile->LoadPosInfo(this, DialogCenter);
 		ShowMonNoAction->Checked	= IniFile->ReadBoolGen(_T("AppListShowMonNo"));
 		ShowCmdParamAction->Checked = IniFile->ReadBoolGen(_T("AppListShowCmdParam"));
-		ViewPanel->Height	= IniFile->ReadIntGen(_T("AppListThumbHi"), 100);
+		ViewPanel->Height	= IniFile->ReadScaledIntGen(_T("AppListThumbHi"), 100, this);
 		ViewPanel->Color	= col_bgImage;
 		ViewSplitter->Color = col_Splitter;
 		if (OnlyAppList) {
@@ -179,7 +179,7 @@ void __fastcall TAppListDlg::FormShow(TObject *Sender)
 			LRSplitter->Visible  = true;
 			LaunchPanel->Visible = true;
 			set_PanelAlign(LaunchPanel, LRSplitter, IniFile->ReadIntGen(_T("AppListLaunchPos"), 1), 5);
-			LaunchPanel->Width = IniFile->ReadIntGen(_T("AppListLaunchWd"), 120);
+			LaunchPanel->Width = IniFile->ReadScaledIntGen(_T("AppListLaunchWd"), 120, this);
 			LRSplitter->Color  = col_Splitter;
 		}
 	}
@@ -265,10 +265,10 @@ void __fastcall TAppListDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		IniFile->SavePosInfo(this);
 		IniFile->WriteBoolGen(_T("AppListShowMonNo"),		ShowMonNoAction);
 		IniFile->WriteBoolGen(_T("AppListShowCmdParam"),	ShowCmdParamAction);
-		IniFile->WriteIntGen(_T("AppListThumbHi"),			ViewPanel->Height);
+		IniFile->WriteScaledIntGen(_T("AppListThumbHi"),	ViewPanel->Height, this);
 		if (!OnlyAppList) {
 			IniFile->WriteIntGen(_T("AppListLaunchPos"),	(LaunchPanel->Align==alLeft)? 2 : 1);
-			IniFile->WriteIntGen( _T("AppListLaunchWd"),	LaunchPanel->Width);
+			IniFile->WriteScaledIntGen( _T("AppListLaunchWd"),	LaunchPanel->Width, this);
 		}
 	}
 

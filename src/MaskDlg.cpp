@@ -39,8 +39,8 @@ void __fastcall TPathMaskDlg::FormShow(TObject *Sender)
 	SetDarkWinTheme(this);
 
 	InitializeListHeader(PathMaskHeader, _T("キー|名前|マスク"));
-	PathMaskHeader->Sections->Items[0]->Width = IniFile->ReadInteger("PathMaskGrid", "ColWidth0",	40);
-	PathMaskHeader->Sections->Items[1]->Width = IniFile->ReadInteger("PathMaskGrid", "ColWidth1",	200);
+	PathMaskHeader->Sections->Items[0]->Width = IniFile->ReadScaledInteger("PathMaskGrid", "ColWidth0",	 40, this);
+	PathMaskHeader->Sections->Items[1]->Width = IniFile->ReadScaledInteger("PathMaskGrid", "ColWidth1",	200, this);
 	adjust_HeaderSecWidth(PathMaskHeader, 2);
 
 	TListBox *lp = PathMaskListBox;
@@ -65,8 +65,8 @@ void __fastcall TPathMaskDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->SavePosInfo(this);
 	IniFile->WriteBoolGen(_T("PathMaskDlgShowOpt"),	OptPanel->Visible);
 
-	IniFile->WriteInteger("PathMaskGrid", "ColWidth0",	PathMaskHeader->Sections->Items[0]->Width);
-	IniFile->WriteInteger("PathMaskGrid", "ColWidth1",	PathMaskHeader->Sections->Items[1]->Width);
+	IniFile->WriteScaledInteger("PathMaskGrid", "ColWidth0",	PathMaskHeader->Sections->Items[0]->Width, this);
+	IniFile->WriteScaledInteger("PathMaskGrid", "ColWidth1",	PathMaskHeader->Sections->Items[1]->Width, this);
 }
 //---------------------------------------------------------------------------
 void __fastcall TPathMaskDlg::FormDestroy(TObject *Sender)

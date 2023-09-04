@@ -57,7 +57,7 @@ void __fastcall TNetShareDlg::FormShow(TObject *Sender)
 
 	//ƒpƒ“‚­‚¸ƒŠƒXƒg
 	PathTabControl->Visible = false;
-	PathTabControl->Height = get_FontHeight(PathTabControl->Font, 8, 8) + 2;
+	PathTabControl->Height = get_FontHeightMgnS(PathTabControl->Font, 8, 8) + 2;
 	if (isSelDir && isSelSub) {
 		PathTabControl->Tabs->Clear();
 		PathTabControl->Style = IsDarkMode? tsButtons : tsFlatButtons;

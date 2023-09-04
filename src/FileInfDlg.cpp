@@ -453,7 +453,7 @@ void __fastcall TFileInfoDlg::InfListBoxDrawItem(TWinControl *Control, int Index
 				rc.Right = ListPanel->ClientWidth;
 				if (ListScrPanel->VisibleV) rc.Right -= ListScrPanel->KnobWidth;
 			}
-			rc.Right -= 2;
+			rc.Right -= SCALED_THIS(2);
 			cv->Brush->Color = col_bgPrgBar;
 			cv->FillRect(rc);
 			if (Max_freq>0) {

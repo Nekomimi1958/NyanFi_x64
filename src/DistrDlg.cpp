@@ -92,10 +92,10 @@ void __fastcall TDistributionDlg::FormShow(TObject *Sender)
 	Caption = tit;
 	ListListBox->Clear();
 
-	MainPanel->Height			 = IniFile->ReadIntGen( _T("DistrDlgPanelHeight"),	260);
-	ListListBox->Width			 = IniFile->ReadIntGen( _T("DistrDlgPrvLstWidth"),	150);
+	MainPanel->Height			 = IniFile->ReadScaledIntGen( _T("DistrDlgPanelHeight"), 260, this);
+	ListListBox->Width			 = IniFile->ReadScaledIntGen( _T("DistrDlgPrvLstWidth"), 150, this);
 	SameNameComboBox->ItemIndex  = IniFile->ReadIntGen( _T("DistrDlgCopyMode"));
-	CreDistrDirCheckBox->Checked = IniFile->ReadBoolGen(_T("DistrDlgCreDir"),		true);
+	CreDistrDirCheckBox->Checked = IniFile->ReadBoolGen(_T("DistrDlgCreDir"),	true);
 	GroupCheckAction->Checked	 = IniFile->ReadBoolGen(_T("DistrDlgGroupChek"));
 	PrvListAction->Checked		 = IniFile->ReadBoolGen(_T("DistrDlgPrvLstFile"));
 
@@ -119,7 +119,7 @@ void __fastcall TDistributionDlg::FormShow(TObject *Sender)
 	}
 
 	InitializeListHeader(PrvListHeader, _T("ƒtƒ@ƒCƒ‹–¼|U‚è•ª‚¯æ"));
-	PrvListHeader->Sections->Items[0]->Width = IniFile->ReadIntGen(_T("DistrDlgPrvHdrW0"), ClientWidth/2);
+	PrvListHeader->Sections->Items[0]->Width = IniFile->ReadScaledIntGen(_T("DistrDlgPrvHdrW0"), 300, this);
 	PrvListHeader->Sections->Items[1]->Width = ClientWidth - PrvListHeader->Sections->Items[0]->Width;
 	PrvSortMode = IniFile->ReadIntGen(_T("DistrDlgSortMode"));
 	LastDistDir = IniFile->ReadStrGen(_T("DistrDlgLastDir"),	CurPathName);
@@ -168,13 +168,13 @@ void __fastcall TDistributionDlg::FormClose(TObject *Sender, TCloseAction &Actio
 
 	IniFile->SavePosInfo(this);
 
-	IniFile->WriteIntGen( _T("DistrDlgPanelHeight"),	MainPanel->Height);
-	IniFile->WriteIntGen( _T("DistrDlgPrvLstWidth"),	ListListBox->Width);
+	IniFile->WriteScaledIntGen( _T("DistrDlgPanelHeight"),	MainPanel->Height, this);
+	IniFile->WriteScaledIntGen( _T("DistrDlgPrvLstWidth"),	ListListBox->Width, this);
 	IniFile->WriteIntGen( _T("DistrDlgCopyMode"),		SameNameComboBox);
 	IniFile->WriteBoolGen(_T("DistrDlgCreDir"),			CreDistrDirCheckBox);
 	IniFile->WriteBoolGen(_T("DistrDlgGroupChek"),		GroupCheckAction);
 	IniFile->WriteBoolGen(_T("DistrDlgPrvLstFile"),		PrvListAction);
-	IniFile->WriteIntGen( _T("DistrDlgPrvHdrW0"),		PrvListHeader->Sections->Items[0]->Width);
+	IniFile->WriteScaledIntGen(_T("DistrDlgPrvHdrW0"),	PrvListHeader->Sections->Items[0]->Width, this);
 	IniFile->WriteIntGen( _T("DistrDlgSortMode"),		PrvSortMode);
 	IniFile->WriteStrGen( _T("DistrDlgLastDir"),		LastDistDir);
 

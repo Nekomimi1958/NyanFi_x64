@@ -115,10 +115,10 @@ LRESULT CALLBACK DlgHookProc(int code, WPARAM wParam, LPARAM lParam)
 			HWND  hWnd = sp->hwnd;
 
 			//角丸フォームの抑止
-			if (NoRoundWin) {
+			if (IsWin11) {
 				for (int i=0; i<Screen->FormCount; i++) {
 					if (Screen->Forms[i]->Handle==hWnd) {
-						unsigned int preference = 1;	//DONOTROUND
+						unsigned int preference = NoRoundWin? 1 : 0;	//DONOTROUND : DWMWCP_DEFAULT
 						DwmSetWindowAttribute(hWnd, 33, &preference, sizeof(preference));
 						break;
 					}
@@ -766,12 +766,12 @@ void __fastcall TNyanFiForm::FormShow(TObject *Sender)
 		}
 		//前回のサイズ
 		else {
-			IniFile->LoadFormPos(this, 800,600);
+			IniFile->LoadFormPos(this, DEF_WIN_WIDTH, DEF_WIN_HEIGHT);
 		}
 	}
 	//二重起動
 	else {
-		IniFile->LoadFormPos(this, 800,600, "Win2");
+		IniFile->LoadFormPos(this, DEF_WIN_WIDTH, DEF_WIN_HEIGHT, "Win2");
 
 		//メインの位置を取得
 		TRect rc;
@@ -782,10 +782,11 @@ void __fastcall TNyanFiForm::FormShow(TObject *Sender)
 			rc.SetHeight(IniWinHeight);
 		}
 		else {
+			int ppi = IniFile->ReadInteger(SCT_General, "WinPPI",	CurrentPPI);
 			rc.Left = IniFile->ReadInteger(SCT_General, "WinLeft",	0);
 			rc.Top	= IniFile->ReadInteger(SCT_General, "WinTop",	0);
-			rc.SetWidth( IniFile->ReadInteger(SCT_General, "WinWidth",	0));
-			rc.SetHeight(IniFile->ReadInteger(SCT_General, "WinHeight",	0));
+			rc.SetWidth( MulDiv(IniFile->ReadInteger(SCT_General, "WinWidth",  DEF_WIN_WIDTH),  ppi, DEFAULT_PPI));
+			rc.SetHeight(MulDiv(IniFile->ReadInteger(SCT_General, "WinHeight", DEF_WIN_HEIGHT), ppi, DEFAULT_PPI));
 		}
 
 		//交差面積が半分以下ならオフセットを設定
@@ -937,6 +938,30 @@ void __fastcall TNyanFiForm::WmFormShowed(TMessage &msg)
 }
 
 //---------------------------------------------------------------------------
+//DPIが変化
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::WmDpiChanged(TMessage &msg)
+{
+	TForm::Dispatch(&msg);
+	RefreshDarkMode(this);
+	UpdateFKeyBtn();
+	if (LayoutMode==0 || LayoutMode==3) {
+		InfPanelWidth  = InfPanel->Width;
+		if (PreviewPanel->Align==alLeft)
+			PreviewWidth = PreviewPanel->Width;
+		else
+			PreviewWidth = InfPanel->Width - InfListBox->Width;
+	}
+	else {
+		InfPanelHeight = InfPanel->Height;
+		if (PreviewPanel->Align==alTop)
+			PreviewHeight = PreviewPanel->Height;
+		else
+			PreviewHeight = InfPanel->Height - InfListBox->Height;
+	}
+}
+
+//---------------------------------------------------------------------------
 //終了確認
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FormCloseQuery(TObject *Sender, bool &CanClose)
@@ -1056,29 +1081,29 @@ void __fastcall TNyanFiForm::FormClose(TObject *Sender, TCloseAction &Action)
 
 		IniFile->WriteBoolGen(_T("DockIsTop"),	SideDockPanel->Align==alTop);
 		if (LayoutMode==0 || LayoutMode==3) {
-			IniFile->WriteIntGen(_T("SubHeight"),	SubPanel->Height);
-			IniFile->WriteIntGen(_T("InfWidth"),	InfPanelWidth);
-			IniFile->WriteIntGen(_T("ImageWidth"),	PreviewWidth);
+			IniFile->WriteScaledIntGen(_T("SubHeight"), 	SubPanel->Height);
+			IniFile->WriteScaledIntGen(_T("InfWidth"),		InfPanelWidth);
+			IniFile->WriteScaledIntGen(_T("ImageWidth"),	PreviewWidth);
 		}
 		else {
-			IniFile->WriteIntGen(_T("SubWidth"),	SubPanel->Width);
-			IniFile->WriteIntGen(_T("InfHeight"),	InfPanelHeight);
-			IniFile->WriteIntGen(_T("ImageHeight"),	PreviewHeight);
+			IniFile->WriteScaledIntGen(_T("SubWidth"),		SubPanel->Width);
+			IniFile->WriteScaledIntGen(_T("InfHeight"),		InfPanelHeight);
+			IniFile->WriteScaledIntGen(_T("ImageHeight"),	PreviewHeight);
 		}
 
-		IniFile->WriteIntGen(_T("TailHeight"),	TxtTailListPanel->Height);
+		IniFile->WriteScaledIntGen(_T("TailHeight"), TxtTailListPanel->Height);
 
 		if (DivFileListUD)
-			IniFile->WriteIntGen(_T("L_Height"),	L_Panel->Height);
+			IniFile->WriteScaledIntGen(_T("L_Height"),	L_Panel->Height);
 		else
-			IniFile->WriteIntGen(_T("L_Width"),		L_Panel->Width);
+			IniFile->WriteScaledIntGen(_T("L_Width"),	L_Panel->Width);
 
-		IniFile->WriteIntGen(_T("GrepTR_Width"),	GrepT2Panel->Width);
-		IniFile->WriteIntGen(_T("RepTR_Width"),		RepT2Panel->Width);
-		IniFile->WriteIntGen(_T("GrepLL_Width"),	GrepM1Panel->Width);
-		IniFile->WriteIntGen(_T("GrepFilterWidth"),	GrepFilterPanel->Width);
+		IniFile->WriteScaledIntGen(_T("GrepTR_Width"),		GrepT2Panel->Width);
+		IniFile->WriteScaledIntGen(_T("RepTR_Width"),		RepT2Panel->Width);
+		IniFile->WriteScaledIntGen(_T("GrepLL_Width"),		GrepM1Panel->Width);
+		IniFile->WriteScaledIntGen(_T("GrepFilterWidth"),	GrepFilterPanel->Width);
+		IniFile->WriteScaledIntGen(_T("ImgSidebarWidth"),	ImgSidePanel->Width);
 		IniFile->WriteBoolGen(_T("ShowThumbnail"),	ThumbnailGrid->Visible);
-		IniFile->WriteIntGen(_T("ImgSidebarWidth"),	ImgSidePanel->Width);
 
 		IniFile->SaveFormPos(this);
 
@@ -1139,17 +1164,18 @@ void __fastcall TNyanFiForm::FormClose(TObject *Sender, TCloseAction &Action)
 			if (WindowState==wsMinimized) WindowState = wsNormal;
 			win2data->WinState = WindowState;
 			if (WindowState==wsMaximized) WindowState = wsNormal;
-			win2data->WinLeft	 = Left;
-			win2data->WinTop 	 = Top;
-			win2data->WinWidth	 = UNSCALED_THIS(Width);
-			win2data->WinHeight	 = UNSCALED_THIS(Height);
-			win2data->SubHeight	 = SubPanel->Height;
-			win2data->SubWidth	 = SubPanel->Width;
-			win2data->InfWidth	 = InfPanelWidth;
-			win2data->InfHeight	 = InfPanelHeight;
-			win2data->ImageWidth  = PreviewWidth;
-			win2data->ImageHeight = PreviewHeight;
-			win2data->TailHeight	 = TxtTailListPanel->Height;
+			win2data->WinLeft     = Left;
+			win2data->WinTop      = Top;
+			win2data->WinWidth    = UNSCALED_THIS(Width);
+			win2data->WinHeight   = UNSCALED_THIS(Height);
+			win2data->WinPPI      = CurrentPPI;
+			win2data->SubHeight   = UNSCALED_THIS(SubPanel->Height);
+			win2data->SubWidth    = UNSCALED_THIS(SubPanel->Width);
+			win2data->InfWidth    = UNSCALED_THIS(InfPanelWidth);
+			win2data->InfHeight   = UNSCALED_THIS(InfPanelHeight);
+			win2data->ImageWidth  = UNSCALED_THIS(PreviewWidth);
+			win2data->ImageHeight = UNSCALED_THIS(PreviewHeight);
+			win2data->TailHeight  = UNSCALED_THIS(TxtTailListPanel->Height);
 			win2data->ShowFileListOnly = IsPrimary? ShowFileListOnly : ShowFileListOnly2;
 			COPYDATASTRUCT cd;
 			cd.dwData = CPYDTID_DPL_INF;
@@ -1710,22 +1736,29 @@ void __fastcall TNyanFiForm::WmCopyData(TMessage& msg)
 	//二重起動側の画面情報を保存
 	else if (cd->dwData==CPYDTID_DPL_INF) {
 		win_dat *dp = (win_dat*)cd->lpData;
-		IniFile->WriteIntGen(_T("Win2State"),			(int)dp->WinState);
-		IniFile->WriteIntGen(_T("Win2Left"),			dp->WinLeft);
-		IniFile->WriteIntGen(_T("Win2Top"),				dp->WinTop);
-		IniFile->WriteIntGen(_T("Win2Width"),			dp->WinWidth);
-		IniFile->WriteIntGen(_T("Win2Height"),			dp->WinHeight);
+		IniFile->WriteIntGen(_T("Win2State"),	(int)dp->WinState);
+		IniFile->WriteIntGen(_T("Win2Left"),	dp->WinLeft);
+		IniFile->WriteIntGen(_T("Win2Top"),		dp->WinTop);
+		IniFile->WriteIntGen(_T("Win2Width"),	dp->WinWidth);
+		IniFile->WriteIntGen(_T("Win2Height"),	dp->WinHeight);
+		IniFile->WriteIntGen(_T("Win2PPI"),		dp->WinPPI);
 		IniFile->WriteBoolGen(_T("ShowFileListOnly2"),	(ShowFileListOnly2 = dp->ShowFileListOnly));
 
 		if (LayoutMode==0 || LayoutMode==3) {
-			IniFile->WriteIntGen(_T("SubHeight2"),		dp->SubHeight);
-			IniFile->WriteIntGen(_T("InfWidth2"),		dp->InfWidth);
-			IniFile->WriteIntGen(_T("ImageWidth2"),		dp->ImageWidth);
+			IniFile->WriteIntGen( _T("SubHeight2"),	dp->SubHeight);
+			IniFile->WriteBoolGen(_T("SubHeight2_Scaled"),	true);
+			IniFile->WriteIntGen( _T("InfWidth2"),	dp->InfWidth);
+			IniFile->WriteBoolGen(_T("InfWidth2_Scaled"),	true);
+			IniFile->WriteIntGen( _T("ImageWidth2"),dp->ImageWidth);
+			IniFile->WriteBoolGen(_T("ImageWidth2_Scaled"),	true);
 		}
 		else {
-			IniFile->WriteIntGen(_T("SubWidth2"),		dp->SubWidth);
-			IniFile->WriteIntGen(_T("InfHeight2"),		dp->InfHeight);
-			IniFile->WriteIntGen(_T("ImageHeight2"),	dp->ImageHeight);
+			IniFile->WriteIntGen( _T("SubWidth2"),	dp->SubWidth);
+			IniFile->WriteBoolGen(_T("SubWidth2_Scaled"),	true);
+			IniFile->WriteIntGen( _T("InfHeight2"),	dp->InfHeight);
+			IniFile->WriteBoolGen(_T("InfHeight2_Scaled"),	true);
+			IniFile->WriteIntGen( _T("ImageHeight2"),dp->ImageHeight);
+			IniFile->WriteBoolGen(_T("ImageHeight2_Scaled"),true);
 		}
 
 		IniFile->WriteIntGen(_T("TailHeight2"),	dp->TailHeight);
@@ -1959,7 +1992,7 @@ void __fastcall TNyanFiForm::WmNyanFiClpCopied(TMessage &msg)
 	if (ShowCopyHint && !lbuf.IsEmpty()) {
 		TWinControl *cp = Screen->ActiveControl;
 		if (ScrMode==SCMD_IVIEW) cp = ImgScrollPanel; else if (!cp) cp = ListPanel;
-		MsgHint->ActivateHintEx(lbuf, SCALED_THIS(480), SCALED_THIS(240), cp, col_bgHint);
+		MsgHint->ActivateHintEx(lbuf, 480, 240, cp, col_bgHint);
 		MsgHintTimer->Interval = MsgHintTime;
 		MsgHintTimer->Enabled  = true;
 	}
@@ -3368,9 +3401,9 @@ void __fastcall TNyanFiForm::SubPanelResize(TObject *Sender)
 	if (!Initialized || UnInitializing) return;
 
 	if (LayoutMode==0 || LayoutMode==3)
-		IniFile->WriteIntGen(IsPrimary? _T("SubHeight") : _T("SubHeight2"),	SubPanel->Height);
+		IniFile->WriteScaledIntGen(IsPrimary? _T("SubHeight") : _T("SubHeight2"), SubPanel->Height);
 	else
-		IniFile->WriteIntGen(IsPrimary? _T("SubWidth")  : _T("SubWidth2"),	SubPanel->Width);
+		IniFile->WriteScaledIntGen(IsPrimary? _T("SubWidth") : _T("SubWidth2"), SubPanel->Width);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ListSubSplitterCanResize(TObject *Sender, int &NewSize, bool &Accept)
@@ -3434,7 +3467,7 @@ void __fastcall TNyanFiForm::TxtPrvSplitterMoved(TObject *Sender)
 {
 	if (!Initialized || UnInitializing) return;
 
-	IniFile->WriteIntGen(IsPrimary? _T("TailHeight") : _T("TailHeight2"),	TxtTailListPanel->Height);
+	IniFile->WriteScaledIntGen(IsPrimary? _T("TailHeight") : _T("TailHeight2"), TxtTailListPanel->Height);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TxtScrollPanelResize(TObject *Sender)
@@ -4389,8 +4422,8 @@ void __fastcall TNyanFiForm::KeyHintTimerTimer(TObject *Sender)
 		cmd_lst->Add(cmd);
 		max_w_c = std::max(cv->TextWidth(cmd), max_w_c);
 	}
-	max_w_k += 20;
-	max_w_c += 20;
+	max_w_k += SCALED_THIS(20);
+	max_w_c += SCALED_THIS(20);
 
 	UnicodeString tmp;
 	//表示位置を揃えるために空白を付加して調整
@@ -4405,7 +4438,7 @@ void __fastcall TNyanFiForm::KeyHintTimerTimer(TObject *Sender)
 	//表示
 	tmp = key_lst->Text;
 	remove_end_s(tmp, "\r\n");
-	KeyHint->ActivateHintEx(tmp, SCALED_THIS(600), SCALED_THIS(400), GetCurControl(), col_bgHint);
+	KeyHint->ActivateHintEx(tmp, 600, 400, GetCurControl(), col_bgHint);
 }
 
 //---------------------------------------------------------------------------
@@ -4449,10 +4482,10 @@ void __fastcall TNyanFiForm::SetSubLayout(
 	InfLogSplitter->Visible = (InfPanel->Visible && LogPanel->Visible);
 
 	if (initial) {
-		PreviewHeight  = IniFile->ReadIntGen(IsPrimary? _T("ImageHeight") : _T("ImageHeight2"),	150);
-		PreviewWidth   = IniFile->ReadIntGen(IsPrimary? _T("ImageWidth")  : _T("ImageWidth2"),	150);
-		InfPanelHeight = IniFile->ReadIntGen(IsPrimary? _T("InfHeight")   : _T("InfHeight2"),	Height/2);
-		InfPanelWidth  = IniFile->ReadIntGen(IsPrimary? _T("InfWidth")    : _T("InfWidth2"),	Width/2);
+		PreviewHeight  = IniFile->ReadScaledIntGen(IsPrimary? _T("ImageHeight") : _T("ImageHeight2"),	150);
+		PreviewWidth   = IniFile->ReadScaledIntGen(IsPrimary? _T("ImageWidth")  : _T("ImageWidth2"),	150);
+		InfPanelHeight = IniFile->ReadScaledIntGen(IsPrimary? _T("InfHeight")   : _T("InfHeight2"),		DEF_WIN_HEIGHT/2);
+		InfPanelWidth  = IniFile->ReadScaledIntGen(IsPrimary? _T("InfWidth")    : _T("InfWidth2"),		DEF_WIN_WIDTH/2);
 	}
 
 	//サブパネルが下/上
@@ -4460,7 +4493,7 @@ void __fastcall TNyanFiForm::SetSubLayout(
 		set_PanelAlign(InfPanel, InfLogSplitter, alLeft, SplitterWidth2);
 		if (!LogPanel->Visible) InfPanel->Align = alClient;
 
-		SubPanel->Height = IniFile->ReadIntGen(IsPrimary? _T("SubHeight") : _T("SubHeight2"),	100);
+		SubPanel->Height = IniFile->ReadScaledIntGen(IsPrimary? _T("SubHeight") : _T("SubHeight2"), 100);
 		InfPanel->Width  = InfPanelWidth;
 		//プレビュー/ファイル情報
 		ImgInfSplitter->Align = alRight;
@@ -4476,7 +4509,7 @@ void __fastcall TNyanFiForm::SetSubLayout(
 		set_PanelAlign(InfPanel, InfLogSplitter, alTop, SplitterWidth2);
 		if (!LogPanel->Visible) InfPanel->Align = alClient;
 
-		SubPanel->Width  = IniFile->ReadIntGen(IsPrimary? _T("SubWidth") : _T("SubWidth2"),	200);
+		SubPanel->Width  = IniFile->ReadScaledIntGen(IsPrimary? _T("SubWidth") : _T("SubWidth2"), 200);
 		InfPanel->Height = InfPanelHeight;
 		if (LogPanel->Visible && InfPanel->Height>=SubPanel->Height) InfPanel->Height = Height/2;
 
@@ -4490,7 +4523,7 @@ void __fastcall TNyanFiForm::SetSubLayout(
 		ImgInfSplitter->Align = alTop;
 	}
 
-	TxtTailListPanel->Height = IniFile->ReadIntGen(IsPrimary? _T("TailHeight") : _T("TailHeight2"),	36);	//***
+	TxtTailListPanel->Height = IniFile->ReadScaledIntGen(IsPrimary? _T("TailHeight") : _T("TailHeight2"), 36);
 
 	if (PreviewPanel->Visible) {
 		if (PreviewPanel->Align==alTop)  PreviewHeight = PreviewPanel->Height;
@@ -4509,6 +4542,8 @@ void __fastcall TNyanFiForm::SetupFont()
 	Screen->MessageFont->Assign(Application->DefaultFont);
 
 	for (int i=0; i<MAX_FILELIST; i++) set_StdListBox(FileListBox[i]);
+	useFontSize = FileListBox[0]->Font->Size;
+
 	set_StdListBox(ResultListBox, 0, GrepResFont);
 
 	set_ListBoxItemHi(InfListBox,	  FileInfFont);
@@ -4520,8 +4555,8 @@ void __fastcall TNyanFiForm::SetupFont()
 	setup_Panel(LockTxtPanel, TxtPrvFont);
 
 	HintFont->Color = col_fgHint;
-	GetScaledFont(MsgHint->Font, HintFont, this);
-	GetScaledFont(KeyHint->Font, HintFont, this);
+	AssignScaledFont(MsgHint->Font, HintFont, this);
+	AssignScaledFont(KeyHint->Font, HintFont, this);
 
 	AssignScaledFont(StatusBar1, SttBarFont);
 	StatusBar1->Panels->Items[0]->Width = ClientWidth
@@ -4702,8 +4737,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	//タブバー
 	TabPanel->Color 	   = col_bgTabBar;
 	TabControl1->Style	   = (FlTabStyle==2)? tsButtons : (FlTabStyle==3)? tsFlatButtons : tsTabs;
-	int tab_h = get_FontHeight(TabControl1->Font, SCALED_THIS(8), SCALED_THIS(8))
-					+ ((TabControl1->Style==tsTabs)? 0 : SCALED_THIS(4));
+	int tab_h = get_FontHeightMgnS(TabControl1->Font, 8, 8) + ((TabControl1->Style==tsTabs)? 0 : SCALED_THIS(4));
 	TabControl1->Height	   = std::max(tab_h, SCALED_THIS(18));
 	TabControl1->TabWidth  = SCALED_THIS(FlTabWidth);
 	TabControl1->Top	   = SCALED_THIS(2);
@@ -4755,11 +4789,11 @@ void __fastcall TNyanFiForm::SetupDesign(
 
 	std::unique_ptr<TFont> s_font(new TFont());
 	//ディレクトリ表示部
-	GetScaledFont(s_font.get(), DirInfFont, this);
+	AssignScaledFont(s_font.get(), DirInfFont, this);
 	s_font->Color = col_fgDirInf;
 	for (int i=0; i<3; i++) {
 		TPanel *pp = (i==1)? L_HdrPanel : (i==2)? R_HdrPanel : HdrPanel;
-		pp->Height = get_FontHeight(s_font.get(), 8, FlatInfPanel? 8 : 10);
+		pp->Height = get_FontHeightMgnS(s_font.get(), 8, FlatInfPanel? 8 : 10);
 		pp->Color  = col_bgDirInf;
 	}
 	L_DirPanel->Font->Assign(s_font.get());
@@ -4788,11 +4822,11 @@ void __fastcall TNyanFiForm::SetupDesign(
 	RelPanel2->Color 	   = col_bgDirRel;
 
 	//ドライブ表示
-	GetScaledFont(s_font.get(), DrvInfFont, this);
+	AssignScaledFont(s_font.get(), DrvInfFont, this);
 	for (int i=0; i<2; i++) {
 		TPanel *pp = (i==0)? L_StatPanel : R_StatPanel;
 		pp->Font->Assign(s_font.get());
-		pp->ClientHeight = get_FontHeight(s_font.get(), 4) + SCALED_THIS(2);
+		pp->ClientHeight = get_FontHeightMgnS(s_font.get(), 4) + SCALED_THIS(2);
 		pp->Color		 = col_bgDrvInf;
 		pp->Font->Color  = col_fgDrvInf;
 		pp->BevelKind	 = FlatInfPanel? bkNone : bkFlat;
@@ -4801,8 +4835,8 @@ void __fastcall TNyanFiForm::SetupDesign(
 	FilterComboBox->Font->Assign(s_font.get());
 
 	//情報ヘッダ
-	GetScaledFont(s_font.get(), ViewHdrFont, this);
-	int hdr_hi = get_FontHeight(s_font.get(), 4, 4);
+	AssignScaledFont(s_font.get(), ViewHdrFont, this);
+	int hdr_hi = get_FontHeightMgnS(s_font.get(), 4, 4);
 	ImgSttHeader->Align = ImgSttIsBottom? alBottom : alTop;
 	ImgSttHeader->ClientHeight = hdr_hi;
 	ImgSttHeader->Font->Assign(s_font.get());
@@ -4831,7 +4865,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	//タスク表示部
 	TPaintBox *pp = TaskPaintBox;
 	pp->Color = col_bgTask;
-	GetScaledFont(s_font.get(), LogFont, this);
+	AssignScaledFont(s_font.get(), LogFont, this);
 	pp->Font->Assign(s_font.get());
 	pp->Canvas->Font->Assign(pp->Font);
 	TaskPaintBox->Width = get_CharWidth(pp->Canvas,  9);
@@ -4849,7 +4883,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 		SetSubLayout(initial);
 
 		if (initial) {
-			L_Panel->Width	  = IniFile->ReadIntGen(_T("L_Width"), (ListPanel->ClientWidth + LRSplitter->Width)/2);
+			L_Panel->Width	  = IniFile->ReadScaledIntGen(_T("L_Width"), UNSCALED_THIS((ListPanel->ClientWidth + LRSplitter->Width)/2));
 			L_TopPanel->Width = L_Panel->Width - (RelPanel->Width - LRSplitter->Width)/2;
 		}
 	}
@@ -4875,13 +4909,13 @@ void __fastcall TNyanFiForm::SetupDesign(
 			int h = ListPanel->ClientHeight - LRSplitter->Height;
 			if (TabPanel->Visible) h -= TabPanel->Height;
 			if (HdrPanel->Visible) h -= HdrPanel->Height;
-			L_Panel->Height = IniFile->ReadIntGen(_T("L_Height"), h/2);
+			L_Panel->Height = IniFile->ReadScaledIntGen(_T("L_Height"), UNSCALED_THIS(h/2));
 		}
 	}
 	//左右分割
 	else {
 		if (L_Panel->Align!=alLeft) set_PanelAlign(L_Panel, LRSplitter, alLeft, SplitterWidth);
-		if (initial) L_Panel->Width = IniFile->ReadIntGen(_T("L_Width"), (ListPanel->ClientWidth - LRSplitter->Width)/2);
+		if (initial) L_Panel->Width = IniFile->ReadScaledIntGen(_T("L_Width"), UNSCALED_THIS((ListPanel->ClientWidth - LRSplitter->Width)/2));
 		L_TopPanel->Width = L_Panel->Width - (RelPanel->Width - LRSplitter->Width)/2;
 		HdrPanel->Visible	= true;
 		L_HdrPanel->Visible = false;
@@ -4891,10 +4925,10 @@ void __fastcall TNyanFiForm::SetupDesign(
 	KeepFileListRerio();
 
 	if (initial) {
-		GrepT2Panel->Width	   = IniFile->ReadIntGen(_T("GrepTR_Width"),	50);
-		RepT2Panel->Width	   = IniFile->ReadIntGen(_T("RepTR_Width"),		50);
-		GrepM1Panel->Width	   = std::max(IniFile->ReadIntGen(_T("GrepLL_Width"), ClientWidth/2), GrepM1Panel->Constraints->MinWidth);
-		GrepFilterPanel->Width = std::max(IniFile->ReadIntGen(_T("GrepFilterWidth"), 200), GrepFilterPanel->Constraints->MinWidth);
+		GrepT2Panel->Width	   = IniFile->ReadScaledIntGen(_T("GrepTR_Width"),		50);
+		RepT2Panel->Width	   = IniFile->ReadScaledIntGen(_T("RepTR_Width"),		50);
+		GrepM1Panel->Width	   = IniFile->ReadScaledIntGen(_T("GrepLL_Width"),	   400);
+		GrepFilterPanel->Width = IniFile->ReadScaledIntGen(_T("GrepFilterWidth"),  200);
 	}
 
 	//メニューバー
@@ -4989,7 +5023,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	//---------------------------------------
 	if (initial) {
 		ImgSidePanel->Visible = ShowImgSidebar;
-		ImgSidePanel->Width   = IniFile->ReadIntGen(_T("ImgSidebarWidth"),	200);
+		ImgSidePanel->Width   = IniFile->ReadScaledIntGen(_T("ImgSidebarWidth"), 200);
 		//ルーペのドッキング
 		if (!IniFile->ReadBoolGen(_T("LoupeFloating"), true)) {
 			DockSideCtrl(LoupeForm, LoupeDockPanel, IniFile->ReadBoolGen(_T("DockIsTop"), true));
@@ -4997,7 +5031,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 			if (LoupeForm->Visible) {
 				LoupeDockPanel->Constraints->MinHeight = MINHI_LOUPE;
 				LoupeDockPanel->Constraints->MaxHeight = 0;
-				SideDockPanel->Height = HistDockPanel->Height + IniFile->ReadIntGen(_T("LoupeHeight"),	200);
+				SideDockPanel->Height = HistDockPanel->Height + IniFile->ReadScaledIntGen(_T("LoupeHeight"), 200);
 				if (initial) {
 					//※イメージビュアーを一旦表示状態にしないと倍率ボタンが表示されない
 					ImgViewPanel->Visible = true;
@@ -5095,11 +5129,17 @@ void __fastcall TNyanFiForm::SetFileListFontSize(
 {
 	for (int i=0; i<MAX_FILELIST; i++) {
 		TListBox *lp = FileListBox[i];
-		int fsz = (sz==0)? ListFont->Size :
-					 r_sw? lp->Font->Size + std::clamp(sz, -12, 12) :
-				  (x_sw && lp->Font->Size==sz)? ListFont->Size : sz;
-		lp->Font->Size = std::clamp(fsz, MIN_FNTZOOM_SZ, MAX_FNTZOOM_SZ);
-		lp->ItemHeight = get_FontHeight(lp->Font, ListInterLn);
+		//※起動後にスケーリングが変化しても Font->PixelsPerInch が変わらないため変換が必要
+		int fsz_set = MulDiv(sz, CurrentPPI, lp->Font->PixelsPerInch);
+			fsz_set = std::clamp(fsz_set, MIN_FNTZOOM_SZ, MAX_FNTZOOM_SZ);
+		if (sz==0 || (x_sw && lp->Font->Size==fsz_set)) {
+			AssignScaledFont(lp, ListFont);
+		}
+		else {
+			int fsz = r_sw? lp->Font->Size + std::clamp(sz, -12, 12) : fsz_set;
+			lp->Font->Size = std::clamp(fsz, MIN_FNTZOOM_SZ, MAX_FNTZOOM_SZ);
+		}
+		lp->ItemHeight = get_FontHeightMgnS(lp->Font, ListInterLn);
 		SetDarkWinTheme(lp);
 		FlScrPanel[i]->UpdateKnob();
 		SetFlItemWidth(GetFileList(i), i);
@@ -6430,9 +6470,7 @@ void __fastcall TNyanFiForm::ShowMessageHint(
 	}
 
 	//表示位置を設定
-	MsgHint->ActivateHintEx(
-		UnicodeString().sprintf(_T("\r\n%s\r\n"), msg.c_str()),
-		SCALED_THIS(480), SCALED_THIS(240), GetCurControl(center), col);
+	MsgHint->ActivateHintEx(UnicodeString().sprintf(_T("\r\n%s\r\n"), msg.c_str()), 480, 240, GetCurControl(center), col);
 
 	if (beep) beep_Warn();
 
@@ -11509,13 +11547,13 @@ void __fastcall TNyanFiForm::TaskPaintBoxPaint(TObject *Sender)
 	cv->Brush->Color = col_bgTask;
 	cv->FillRect(pp->ClientRect);
 
-	int h  = get_FontHeight(cv->Font) * 5/4 + SCALED_THIS(4);
-	int xp = 4;
-	int yp = 2;
+	int h  = MulDiv(get_FontHeightMgnS(cv->Font), 5, 4) + SCALED_THIS(4);
+	int xp = SCALED_THIS(4);
+	int yp = SCALED_THIS(2);
 
 	cv->Font->Color = col_fgLog;
 	int fsz = cv->Font->Size;
-	cv->Font->Size = fsz * 9 / 10;
+	cv->Font->Size = MulDiv(fsz, 9, 10);
 	out_Text(cv, xp, yp, _T("タスク"));
 	cv->Font->Size = fsz;
 	yp += h;
@@ -11537,11 +11575,13 @@ void __fastcall TNyanFiForm::TaskPaintBoxPaint(TObject *Sender)
 			if (tp->CurProgress>=0) {
 				int x0 = xp + get_CharWidth(cv, 2);
 				int x1 = pp->Width - 4;
-				TRect rc_f = (tmp.IsEmpty())? Rect(x0, yp + 2, x1, yp + 4) : Rect(x0, yp + h - 4, x1, yp + h - 2);
+				TRect rc_f = (tmp.IsEmpty())? Rect(x0, yp + SCALED_THIS(2), x1, yp + SCALED_THIS(4)) :
+											  Rect(x0, yp + h - SCALED_THIS(4), x1, yp + h - SCALED_THIS(2));
 				draw_ProgressBar(cv, rc_f, tp->CurProgress);
 				//高速実行
 				if (tp->TaskIsFast) {
-					rc_f.Left -= 8;  rc_f.Right = rc_f.Left + 4;
+					rc_f.Left -= SCALED_THIS(8);
+					rc_f.Right = rc_f.Left + SCALED_THIS(4);
 					InflateRect(rc_f, 0, 1);
 					cv->Brush->Color = clRed;
 					cv->FillRect(rc_f);
@@ -11734,8 +11774,8 @@ void __fastcall TNyanFiForm::ThumbnailGridDrawCell(TObject *Sender, int ACol, in
 
 	TStringGrid *gp = (TStringGrid*)Sender;
 	TCanvas *cv = gp->Canvas;
-	cv->Font->Assign(ListFont);
-	cv->Font->Height = SCALED_THIS(-12);
+	AssignScaledFont(cv->Font, ListFont, this, 8);
+
 	int s_16 = SCALED_THIS(16);
 	int s_14 = SCALED_THIS(14);
 	int s_8  = SCALED_THIS(8);
@@ -11865,7 +11905,7 @@ void __fastcall TNyanFiForm::ThumbnailGridDrawCell(TObject *Sender, int ACol, in
 	//カーソル枠
 	cv->Brush->Style = bsClear;
 	if ((gp->Col==ACol && gp->Row==ARow) || (DoublePage && !ThumbExtended && !vfnam.IsEmpty() && SameText(vfnam, ViewFileName2))) {
-		cv->Pen->Width = SCALED_THIS(2);
+		cv->Pen->Width = s_2;
 		cv->Pen->Style = psSolid;
 		cv->Pen->Color = col_Cursor;
 		cv->Rectangle(Rect.Left + 1, Rect.Top + 1, Rect.Right, Rect.Bottom);
@@ -17768,7 +17808,7 @@ void __fastcall TNyanFiForm::FilterActionExecute(TObject *Sender)
 	cp->Visible = true;
 	cp->SetFocus();
 	SetDarkWinTheme(cp);
-	pp->ClientHeight = std::max(get_FontHeight(DrvInfFont, 4) + SCALED_THIS(2), cp->Height + 1);
+	pp->ClientHeight = std::max(get_FontHeightMgnS(DrvInfFont, 4) + SCALED_THIS(2), cp->Height + 1);
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FilterComboBoxExit(TObject *Sender)
@@ -19404,7 +19444,7 @@ void __fastcall TNyanFiForm::CopyEnvInfItemClick(TObject *Sender)
 	infstr.cat_sprintf(_T(" %u×%u %u%%"),w_rc.Width(), w_rc.Height(), SCALED_THIS(100));
 	if (Screen->MonitorCount>1) infstr.cat_sprintf(_T(" (Monitor:%u/%u)"), this->Monitor->MonitorNum + 1, Screen->MonitorCount);
 	//OSバージョン情報
-	infstr += ("  OS" + get_OsVerInfStr());
+	infstr += ("  OS" + OSVerInfStr);
 	//物理メモリ
 	MEMORYSTATUSEX stt_ex = {sizeof(MEMORYSTATUSEX)};
 	if (::GlobalMemoryStatusEx(&stt_ex))
@@ -19680,7 +19720,7 @@ void __fastcall TNyanFiForm::ExitIncSearch()
 	if (is_filter) {
 		CloseIME(Handle);
 		FilterComboBox->Visible = false;
-		GetCurSttPanel()->ClientHeight = get_FontHeight(DrvInfFont, 4) + SCALED_THIS(2);
+		GetCurSttPanel()->ClientHeight = get_FontHeightMgnS(DrvInfFont, 4) + SCALED_THIS(2);
 	}
 
 	FlScrPanel[CurListTag]->KeyWordChanged(EmptyStr, 0);
@@ -20864,7 +20904,7 @@ void __fastcall TNyanFiForm::ListNyanFiActionExecute(TObject *Sender)
 		add_PropLine(_T("モニタ数"),	Screen->MonitorCount, i_lst);
 	}
 
-	add_PropLine(_T("OSバージョン"), get_OsVerInfStr(), i_lst);
+	add_PropLine(_T("OSバージョン"), OSVerInfStr, i_lst);
 	i_lst->Add(EmptyStr);
 
 	//アーカイバDLL情報
@@ -23044,7 +23084,12 @@ void __fastcall TNyanFiForm::OptionDlgActionExecute(TObject *Sender)
 		if (!is_kyo) {
 			if (OptionDlg->WinSizeChanged && IniWinMode==1) {
 				WindowState = wsNormal;
-				SetBounds(IniWinLeft, IniWinTop, SCALED_THIS(IniWinWidth), SCALED_THIS(IniWinHeight));
+				SetBounds(IniWinLeft, IniWinTop, IniWinWidth, IniWinHeight);
+			}
+
+			if (IsWin11) {
+				unsigned int preference = NoRoundWin? 1 : 0;	//DONOTROUND : DWMWCP_DEFAULT
+				DwmSetWindowAttribute(Handle, 33, &preference, sizeof(preference));
 			}
 
 			//デザイン、フォント、配色
@@ -23741,8 +23786,8 @@ void __fastcall TNyanFiForm::ExePopMenuList(
 			mp->OnAdvancedDrawItem = PopMenuAdvancedDrawItem;
 			pp->Add(mp);
 		}
-		IconVImgListP->AutoFill = true;
 	}
+	IconVImgListP->AutoFill = true;
 
 	//メニュー表示
 	TPoint mp = (cp==L_StatPanel || cp==R_StatPanel)?
@@ -27513,14 +27558,14 @@ void __fastcall TNyanFiForm::WinPosActionExecute(TObject *Sender)
 		if (IsPrimary) {
 			if (IniWinMode==1) {
 				WindowState = wsNormal;
-				SetBounds(IniWinLeft, IniWinTop, SCALED_THIS(IniWinWidth), SCALED_THIS(IniWinHeight));
+				SetBounds(IniWinLeft, IniWinTop, IniWinWidth, IniWinHeight);
 			}
 			else {
-				IniFile->LoadFormPos(this, 800,600);
+				IniFile->LoadFormPos(this, DEF_WIN_WIDTH, DEF_WIN_HEIGHT);
 			}
 		}
 		else {
-			IniFile->LoadFormPos(this, 800,600, "Win2");
+			IniFile->LoadFormPos(this, DEF_WIN_WIDTH, DEF_WIN_HEIGHT, "Win2");
 		}
 	}
 
@@ -33632,12 +33677,10 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 
 		std::unique_ptr<Graphics::TBitmap> bg_bmp(new Graphics::TBitmap());
 		TCanvas *cv = bg_bmp->Canvas;
-		cv->Font->Assign(FileInfFont);
-		cv->Font->Size	= 9;
-		cv->Font->Color = SelectWorB(col_bgImage);
+		AssignScaledFont(cv->Font, FileInfFont, this, 9, SelectWorB(col_bgImage));
 
 		//必要サイズを概算
-		int fh	 = get_FontHeight(cv->Font, 4);
+		int fh	 = get_FontHeightMgnS(cv->Font, 4);
 		int v_wd = std::max(600, ImgScrollPanel->ClientWidth - get_SysMetricsForPPI(SM_CXVSCROLL, CurrentPPI));
 		int v_hi = 8 + 256 + fh + 20;
 		int ixn  = (int)::ExtractIcon(HInstance, ViewFileName.c_str(), -1);
@@ -34539,7 +34582,7 @@ void __fastcall TNyanFiForm::LoupeActionExecute(TObject *Sender)
 		if (!LoupeForm->Floating) {
 			LoupeDockPanel->Constraints->MinHeight = MINHI_LOUPE;
 			LoupeDockPanel->Constraints->MaxHeight = 0;
-			SideDockPanel->Height	 = HistDockPanel->Height + IniFile->ReadIntGen(_T("LoupeHeight"),	200);
+			SideDockPanel->Height	 = HistDockPanel->Height + IniFile->ReadScaledIntGen(_T("LoupeHeight"),	200);
 			SideDockSplitter->Height = SCALED_THIS(SplitterWidth2);
 		}
 		else {
@@ -35752,7 +35795,7 @@ void __fastcall TNyanFiForm::SidePanelDockDrop(TObject *Sender, TDragDockObject 
 	if (Source->Control==LoupeForm) {
 		LoupeDockPanel->Constraints->MinHeight = MINHI_LOUPE;
 		LoupeDockPanel->Constraints->MaxHeight = 0;
-		dh += IniFile->ReadIntGen(_T("LoupeHeight"),	200);
+		dh += IniFile->ReadScaledIntGen(_T("LoupeHeight"),	200);
 	}
 	else if (Source->Control==HistForm) {
 		HistForm->BorderWidth = 2;

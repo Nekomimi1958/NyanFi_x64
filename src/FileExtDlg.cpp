@@ -142,9 +142,9 @@ void __fastcall TFileExtensionDlg::FormShow(TObject *Sender)
 	for (int i=0; i<FextInfBar->Panels->Count; i++) FextInfBar->Panels->Items[i]->Text = EmptyStr;
 
 	//ファイル一覧の初期化
-	FilePanel->Height = IniFile->ReadIntGen(_T("FileExtListHeight"), 150);
+	FilePanel->Height = IniFile->ReadScaledIntGen(_T("FileExtListHeight"), 150, this);
 	InitializeListHeader(FileListHeader, _T("ファイル名|場所"));
-	FileListHeader->Sections->Items[0]->Width = IniFile->ReadIntGen(_T("FileExtFileHdrW0"),	200);
+	FileListHeader->Sections->Items[0]->Width = IniFile->ReadScaledIntGen(_T("FileExtFileHdrW0"), 200, this);
 	FileListHeader->Sections->Items[1]->Width = ClientWidth - FileListHeader->Sections->Items[0]->Width;
 
 	FileListBox->Tag = LBTAG_OPT_LCPY;
@@ -220,8 +220,8 @@ void __fastcall TFileExtensionDlg::WmFormShowed(TMessage &msg)
 void __fastcall TFileExtensionDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	IniFile->SavePosInfo(this);
-
-	IniFile->WriteIntGen(_T("FileExtFileHdrW0"),	FileListHeader->Sections->Items[0]->Width);
+	IniFile->WriteScaledIntGen(_T("FileExtListHeight"),	FilePanel->Height, this);
+	IniFile->WriteScaledIntGen(_T("FileExtFileHdrW0"),	FileListHeader->Sections->Items[0]->Width, this);
 
 	IniFile->WriteIntGen(_T("FileExtSortModeX"),	ExtSortMode);
 	IniFile->WriteIntGen(_T("FileExtSortOdrX0"),	ExtSortOdr[0]);
@@ -232,8 +232,6 @@ void __fastcall TFileExtensionDlg::FormClose(TObject *Sender, TCloseAction &Acti
 	IniFile->WriteIntGen(_T("FileExtSortModeF"),	FileSortMode);
 	IniFile->WriteIntGen(_T("FileExtSortOdrF0"),	FileSortOdr[0]);
 	IniFile->WriteIntGen(_T("FileExtSortOdrF1"),	FileSortOdr[1]);
-
-	IniFile->WriteIntGen(_T("FileExtListHeight"),	FilePanel->Height);
 
 	InfoListBox->Count = 0;
 	for (int i=0; i<FextInfoList->Count; i++) delete (ext_inf_rec*)FextInfoList->Objects[i];

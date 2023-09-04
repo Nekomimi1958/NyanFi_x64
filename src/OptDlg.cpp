@@ -54,7 +54,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	DlgInitialized = false;
 
 	SplashHint = new UsrHintWindow(this);
-	GetScaledFont(SplashHint->Font, HintFont, this);
+	AssignScaledFont(SplashHint->Font, HintFont, this);
 	SplashHint->ActivateHintEx(_T("\r\nオプション設定の準備中...\r\n"), 320, 240, Application->MainForm, col_bgHint);
 
 	cursor_HourGlass();
@@ -695,6 +695,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	TileIfCheckBox->Tag 		= (NativeInt)&BgImgTileIf;
 	ModalScrCheckBox->Tag		= (NativeInt)&ModalScreen;
 	DlgCenterCheckBox->Tag		= (NativeInt)&DialogCenter;
+	NoRoundWinCheckBox->Tag		= (NativeInt)&NoRoundWin;	NoRoundWinCheckBox->Enabled = IsWin11;
 	ShowLnNoCheckBox->Tag		= (NativeInt)&ShowLineNo;
 	ShowLnCsrCheckBox->Tag		= (NativeInt)&ShowLineCursor;
 	ShowTabCheckBox->Tag		= (NativeInt)&ShowTAB;
@@ -943,14 +944,14 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 
 	InitializeListHeader(ExtMenuHeader, _T("キャプション|エイリアス|設定"), Font);
 	THeaderSections *sp = ExtMenuHeader->Sections;
-	sp->Items[0]->Width = IniFile->ReadIntGen(_T("ExtMenuColWidth0"),	200);
-	sp->Items[1]->Width = IniFile->ReadIntGen(_T("ExtMenuColWidth1"),	120);
+	sp->Items[0]->Width = IniFile->ReadScaledIntGen(_T("ExtMenuColWidth0"),	200, this);
+	sp->Items[1]->Width = IniFile->ReadScaledIntGen(_T("ExtMenuColWidth1"),	120, this);
 	adjust_HeaderSecWidth(ExtMenuHeader, 2);
 
 	InitializeListHeader(ExtToolHeader, _T("キャプション|エイリアス|設定"), Font);
 	sp = ExtToolHeader->Sections;
-	sp->Items[0]->Width = IniFile->ReadIntGen(_T("ExtToolColWidth0"),	200);
-	sp->Items[1]->Width = IniFile->ReadIntGen(_T("ExtToolColWidth1"),	120);
+	sp->Items[0]->Width = IniFile->ReadScaledIntGen(_T("ExtToolColWidth0"),	200, this);
+	sp->Items[1]->Width = IniFile->ReadScaledIntGen(_T("ExtToolColWidth1"),	120, this);
 	adjust_HeaderSecWidth(ExtToolHeader, 2);
 
 	L_IniMaskComboBox->Clear();
@@ -1095,16 +1096,16 @@ void __fastcall TOptionDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	UserModule->UninitializeListBox();
 
 	THeaderSections *sp = ExtMenuHeader->Sections;
-	IniFile->WriteIntGen(_T("ExtMenuColWidth0"),	sp->Items[0]->Width);
-	IniFile->WriteIntGen(_T("ExtMenuColWidth1"),	sp->Items[1]->Width);
+	IniFile->WriteScaledIntGen(_T("ExtMenuColWidth0"),	sp->Items[0]->Width, this);
+	IniFile->WriteScaledIntGen(_T("ExtMenuColWidth1"),	sp->Items[1]->Width, this);
 	sp = ExtToolHeader->Sections;
-	IniFile->WriteIntGen(_T("ExtToolColWidth0"),	sp->Items[0]->Width);
-	IniFile->WriteIntGen(_T("ExtToolColWidth1"),	sp->Items[1]->Width);
+	IniFile->WriteScaledIntGen(_T("ExtToolColWidth0"),	sp->Items[0]->Width, this);
+	IniFile->WriteScaledIntGen(_T("ExtToolColWidth1"),	sp->Items[1]->Width, this);
 
-	IniFile->WriteIntGen(_T("OptKeySortMode"),		KeySortMode);
-	IniFile->WriteBoolGen(_T("OptKeyMigemo"),		MigemoCheckBox);
-	IniFile->WriteBoolGen(_T("OptUnregCmd"),		UnRegCmdCheckBox);
-	IniFile->WriteBoolGen(_T("OptAsoSort"),			AsoSortCheckBox);
+	IniFile->WriteIntGen(_T("OptKeySortMode"),	KeySortMode);
+	IniFile->WriteBoolGen(_T("OptKeyMigemo"),	MigemoCheckBox);
+	IniFile->WriteBoolGen(_T("OptUnregCmd"),	UnRegCmdCheckBox);
+	IniFile->WriteBoolGen(_T("OptAsoSort"),		AsoSortCheckBox);
 
 	KeySetOnly = false;
 
@@ -1385,7 +1386,7 @@ TCustomListBox* __fastcall TOptionDlg::GetCurListBox()
 void __fastcall TOptionDlg::UpdateMaxItemWidth()
 {
 	TCanvas *cv = AssociateListBox->Canvas;
-	GetScaledFont(cv->Font, DialogFont, this);
+	AssignScaledFont(cv->Font, DialogFont, this);
 
 	MaxWd_AssExt = 0;
 	for (int i=0; i<AssociateListBox->Count; i++)

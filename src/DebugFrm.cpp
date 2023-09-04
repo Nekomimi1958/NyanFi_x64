@@ -49,7 +49,7 @@ void __fastcall TDebugForm::FormShow(TObject *Sender)
 	ReferListBox->Color		    = col_bgInf;
 	ReferListBox->Font->Color   = col_fgInf;
 
-	ReferPanel->Height = IniFile->ReadIntGen(_T("DebugReferHeight"), 200);
+	ReferPanel->Height = IniFile->ReadScaledIntGen(_T("DebugReferHeight"), 200, this);
 
 	setup_ToolBar(ToolBar1);
 
@@ -65,7 +65,7 @@ void __fastcall TDebugForm::FormCloseQuery(TObject *Sender, bool &CanClose)
 void __fastcall TDebugForm::FormClose(TObject *Sender, TCloseAction &Action)
 {
 	IniFile->SavePosInfo(this);
-	IniFile->WriteIntGen(_T("DebugReferHeight"),	ReferPanel->Height);
+	IniFile->WriteScaledIntGen(_T("DebugReferHeight"), ReferPanel->Height, this);
 
 	ExitAction->Execute();
 }

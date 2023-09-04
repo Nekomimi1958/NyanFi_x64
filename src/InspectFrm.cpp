@@ -35,7 +35,7 @@ void __fastcall TInspectForm::FormShow(TObject *Sender)
 	SetToolWinBorder(this);
 	setup_ToolBar(OptToolBar);
 
-	GridPanel->Height		 = IniFile->ReadIntGen(_T("InspectGridHeight"),	200);
+	GridPanel->Height		 = IniFile->ReadScaledIntGen(_T("InspectGridHeight"), 200, this);
 	UnsignedAction->Checked  = IniFile->ReadBoolGen(_T("InspectUnsigned"));
 	BigEndianAction->Checked = IniFile->ReadBoolGen(_T("InspectBigEndian"));
 
@@ -70,7 +70,7 @@ void __fastcall TInspectForm::FormHide(TObject *Sender)
 	IniFile->SaveGridColWidth(InspectGrid);
 	IniFile->SaveGridColWidth(CodePageGrid);
 
-	IniFile->WriteIntGen(_T("InspectGridHeight"),	GridPanel->Height);
+	IniFile->WriteScaledIntGen(_T("InspectGridHeight"), GridPanel->Height, this);
 	IniFile->WriteBoolGen(_T("InspectUnsigned"),	UnsignedAction);
 	IniFile->WriteBoolGen(_T("InspectBigEndian"),	BigEndianAction);
 }

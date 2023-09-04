@@ -36,9 +36,9 @@ void __fastcall TTaskManDlg::FormShow(TObject *Sender)
 	set_HeaderFromGrid(gp, TaskHeader);
 	set_UsrScrPanel(GridScrPanel);
 
-	RsrCellHi = get_FontHeight(gp->Font, ListInterLn);
+	RsrCellHi = get_FontHeightMgnS(gp->Font, ListInterLn);
 	int maxn  = get_MaxTaskCount();
-	gp->DefaultRowHeight = RsrCellHi * 2 + 4;
+	gp->DefaultRowHeight = RsrCellHi * 2 + SCALED_THIS(4);
 	gp->RowCount = maxn + TaskReserveList->Count;
 	for (int i=0; i<gp->RowCount; i++) if (i>=maxn) gp->RowHeights[i] = RsrCellHi;
 	gp->SetFocus();
@@ -239,7 +239,7 @@ void __fastcall TTaskManDlg::TaskGridDrawCell(TObject *Sender, int ACol, int ARo
 
 	int xp = Rect.Left + SCALED_THIS(4);
 	int yp = Rect.Top  + get_TopMargin2(cv);
-	int l_hi = get_FontHeight(gp->Font, ListInterLn);
+	int l_hi = get_FontHeightMgnS(gp->Font, ListInterLn);
 
 	TRect rc = Rect;
 	UnicodeString cellstr;

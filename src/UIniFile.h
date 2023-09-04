@@ -27,7 +27,6 @@ public:
 	TStringList *SectionList;
 	TStringList *MarkIdxList;
 	bool Modified;
-
 	int PosOffsetLeft;
 	int PosOffsetTop;
 
@@ -50,7 +49,9 @@ public:
 	UnicodeString ReadStrGen(const _TCHAR *key, UnicodeString def = EmptyStr, bool del_quot = true);
 
 	int  ReadInteger(UnicodeString sct, UnicodeString key, int def = 0);
+	int  ReadScaledInteger(UnicodeString sct, UnicodeString key, int def = 0, TControl *cp = NULL);
 	int  ReadIntGen(const _TCHAR *key, int def = 0);
+	int  ReadScaledIntGen(const _TCHAR *key, int def, TControl *cp = NULL);
 
 	bool ReadBool(UnicodeString sct, UnicodeString key, bool def = false);
 	bool ReadBoolGen(const _TCHAR *key, bool def = false);
@@ -70,9 +71,11 @@ public:
 	void WriteInteger(UnicodeString sct, UnicodeString key, int v);
 	void WriteInteger(UnicodeString sct, UnicodeString key, TComboBox *cp);
 	void WriteInteger(UnicodeString sct, UnicodeString key, TRadioGroup *rp);
+	void WriteScaledInteger(UnicodeString sct, UnicodeString key, int v, TControl *cp = NULL);
 	void WriteIntGen(const _TCHAR *key, int v);
 	void WriteIntGen(const _TCHAR *key, TComboBox *cp);
 	void WriteIntGen(const _TCHAR *key, TRadioGroup *rp);
+	void WriteScaledIntGen(const _TCHAR *key, int v, TControl *cp = NULL);
 
 	void WriteBool(UnicodeString sct, UnicodeString key, bool v);
 	void WriteBool(UnicodeString sct, UnicodeString key, TCheckBox *cp);

@@ -55,8 +55,6 @@ void __fastcall TColorPicker::FormShow(TObject *Sender)
 	Repeating = false;
 	RepCount  = 0;
 	RepSttLabel->Caption = EmptyStr;
-
-	ColLabel->Font->Size = 9;
 	ColLabel->Caption	 = DefColCaption;
 
 	ColImage->Picture->Bitmap->SetSize(ColImage->Width, ColImage->Width);
@@ -97,7 +95,7 @@ void __fastcall TColorPicker::FormKeyDown(TObject *Sender, WORD &Key, TShiftStat
 //---------------------------------------------------------------------------
 void __fastcall TColorPicker::UpdateStt(int x, int y, float ratio)
 {
-	ColLabel->Color		= get_PanelColor();
+	ColLabel->Color		  = get_PanelColor();
 	ColLabel->Font->Color = IsDarkMode? dcl_BtnText : scl_BtnText;
 
 	if (!ViewImage || isViewAGif) {

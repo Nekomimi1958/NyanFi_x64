@@ -65,11 +65,11 @@ void __fastcall TLoupeForm::SaveOption()
 	int n = 1;
 	for (int i=0; i<MagToolBar->ButtonCount; i++)
 		if (MagToolBar->Buttons[i]->Down) n = MagToolBar->Buttons[i]->Tag;
-	IniFile->WriteIntGen(_T("LoupeMag"),	n);
+	IniFile->WriteIntGen(_T("LoupeMag"), n);
 
 	if (!Floating) {
 		TPanel *pp = NyanFiForm->LoupeDockPanel;
-		IniFile->WriteIntGen(_T("LoupeHeight"),	pp->Height);
+		IniFile->WriteScaledIntGen(_T("LoupeHeight"), pp->Height, this);
 		pp->Constraints->MinHeight = 1;
 		pp->Constraints->MaxHeight = 1;
 		NyanFiForm->SideDockPanel->Height = NyanFiForm->HistDockPanel->Height;

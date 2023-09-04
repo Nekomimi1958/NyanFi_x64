@@ -141,7 +141,7 @@ void __fastcall TSelDriveDlg::UpdateDriveList()
 	int icon_md = ShowIconCheckBox->Checked? (LargeIconCheckBox->Checked? 2 : 1) : 0;
 	int icon_sz = SCALED_THIS((icon_md==2)? 32 : (icon_md==1)? 16 : 0);
 	int s_4 = SCALED_THIS(4);
-	gp->DefaultRowHeight = get_FontHeight(gp->Font, ListInterLn) + std::max(8 - ListInterLn/2, 0);
+	gp->DefaultRowHeight = get_FontHeightMgnS(gp->Font, ListInterLn) + std::max(8 - ListInterLn/2, 0);
 	if (icon_md==2 && gp->DefaultRowHeight<(icon_sz + s_4)) gp->DefaultRowHeight = icon_sz + s_4;
 
 	//表示ドライブを抽出
@@ -225,7 +225,7 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 		int xp = rc.Left + SCALED_THIS(4);
 		int yp = rc.Top;
 		if (ShowIconCheckBox->Checked && LargeIconCheckBox->Checked)
-			yp += std::max(get_TopMargin2(cv), (rc.Height() - ListInterLn -get_FontHeight(cv->Font))/2);
+			yp += std::max(get_TopMargin2(cv), (rc.Height() - ListInterLn -get_FontHeightMgnS(cv->Font))/2);
 		else
 			yp += get_TopMargin2(cv);
 

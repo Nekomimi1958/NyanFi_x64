@@ -50,7 +50,7 @@ void __fastcall TPrintImgDlg::FormShow(TObject *Sender)
 	GrayCheckBox->Checked		= IniFile->ReadBoolGen(_T("PrintImgGray"));
 	StrCheckBox->Checked		= IniFile->ReadBoolGen(_T("PrintImgStr"));
 	StrFont->Color				= IniFile->ReadColGen(_T("PrintImgStrCol"),	clBlack);
-	StrFmtEdit->Text			= IniFile->ReadStrGen(_T("PrintImgStrFmt"),	"\\XT(yy/mm/dd)");
+	StrFmtEdit->Text			= IniFile->ReadStrGen(_T("PrintImgStrFmt"),	"$XT(yy/mm/dd)");
 	StrPosRadioGroup->ItemIndex = IniFile->ReadIntGen(_T("PrintImgStrPos"),	1);
 	StrAlRadioGroup->ItemIndex	= IniFile->ReadIntGen(_T("PrintImgStrAl"),	2);
 
@@ -243,8 +243,8 @@ void __fastcall TPrintImgDlg::DrawImage(TCanvas *cv)
 	//オフセット
 	int x, y;
 	if (OptRadioGroup->ItemIndex==3) {
-		x = d_wd * EditToInt(OfsXEdit) / 100.0;
-		y = d_hi * EditToInt(OfsYEdit) / 100.0;
+		x = MulDiv(d_wd, EditToInt(OfsXEdit), 100);
+		y = MulDiv(d_hi, EditToInt(OfsYEdit), 100);
 	}
 	else {
 		x = (d_wd - i_wd)/2;
@@ -393,4 +393,3 @@ void __fastcall TPrintImgDlg::EndBtnClick(TObject *Sender)
 	if (isViewIcon || isViewAGif) ClearPreview();
 }
 //---------------------------------------------------------------------------
-

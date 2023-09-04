@@ -445,10 +445,8 @@ void __fastcall TImgViewThread::Execute()
 					TCanvas *cv = bg_bmp->Canvas;
 					cv->Lock();
 					try {
-						cv->Font->Assign(FileInfFont);
-						cv->Font->Size	= 9;
-						cv->Font->Color = SelectWorB(col_bgImage);
-						int fh = cv->TextHeight("Q") + 2;
+						AssignScaledFont(cv->Font, FileInfFont, Application->MainForm, 9, SelectWorB(col_bgImage));
+						int fh = cv->TextHeight("Q") + SCALED_MAIN(2);
 
 						//背景
 						cv->Brush->Color = col_bgImage;
@@ -466,7 +464,7 @@ void __fastcall TImgViewThread::Execute()
 								if (FontSampleFgCol!=col_None) cv->Font->Color = FontSampleFgCol;
 
 								//フォント名
-								cv->TextOut(2, 2, fnt_name);
+								cv->TextOut(SCALED_MAIN(2), SCALED_MAIN(2), fnt_name);
 
 								bool tmp_flag = (Screen->Fonts->IndexOf(fnt_name)==-1)?
 												(::AddFontResourceEx(fnam.c_str(), FR_PRIVATE, NULL)>0) : false;
@@ -474,14 +472,14 @@ void __fastcall TImgViewThread::Execute()
 								//サンプル表示
 								std::unique_ptr<TFont> tmp_font(new TFont());
 								tmp_font->Name	= fnt_name;
-								tmp_font->Size	= FontSampleSize;
 								tmp_font->Color = cv->Font->Color;
-								cv->Font->Assign(tmp_font.get());
+								AssignScaledFont(cv->Font, tmp_font.get(), Application->MainForm, FontSampleSize);
 
 								TEXTMETRIC tm;
 								if (::GetTextMetrics(cv->Handle, &tm)) {
 									TRect rc = Rect(0, 0, bg_bmp->Width, bg_bmp->Height);
-									rc.Left = 2; rc.Top = 4 + fh;
+									rc.Left = SCALED_MAIN(2);
+									rc.Top  = SCALED_MAIN(4) + fh;
 									//文字/シンボル
 									UnicodeString lbuf = (tm.tmCharSet==SYMBOL_CHARSET)? FontSampleSym : FontSampleTxt;
 									::DrawText(cv->Handle, lbuf.c_str(), -1, &rc, DT_LEFT);
@@ -517,7 +515,9 @@ void __fastcall TImgViewThread::Execute()
 						}
 						//アイコン
 						else {
-							int x = 2, y = 2, h = 0;
+							int x = SCALED_MAIN(2);
+							int y = SCALED_MAIN(2);
+							int h = 0;
 
 							if (!test_FontExt(fext)) {
 								int size_lst[5] = {128, 64, 48, 32, 16};
@@ -526,7 +526,7 @@ void __fastcall TImgViewThread::Execute()
 									int size = size_lst[i];
 									HICON hIcon = usr_SH->get_Icon(Img_f_name, size);
 									if (hIcon && size==size_lst[i]) {
-										cv->TextOut(x + 2, y, size);
+										cv->TextOut(x + SCALED_MAIN(2), y, size);
 										::DrawIconEx(cv->Handle, x, y + fh, hIcon, size, size, 0, NULL, DI_NORMAL);
 										::DestroyIcon(hIcon);
 										if (size+fh > h) h = size + fh;
@@ -539,15 +539,15 @@ void __fastcall TImgViewThread::Execute()
 							if (test_FileExt(fext, FEXT_ICONVIEW)) {
 								int ixn = (int)::ExtractIcon(HInstance, Img_f_name.c_str(), -1);
 								if (ixn>1) {
-									x = 2;
-									if (h>0) y = h + 12;
+									x = SCALED_MAIN(2);
+									if (h>0) y = h + SCALED_MAIN(12);
 									for (int i=0; i<ixn; i++) {
 										HICON hIcon = ::ExtractIcon(HInstance, fnam.c_str(), i);
 										if (!hIcon) continue;
 										::DrawIconEx(cv->Handle, x, y, hIcon, 32, 32, 0, NULL, DI_NORMAL);
 										::DestroyIcon(hIcon);
 										if ((x + 2*32) > bg_bmp->Width) {
-											x = 2;  y += 34;
+											x = SCALED_MAIN(2);  y += 34;
 										}
 										else {
 											x += 34;

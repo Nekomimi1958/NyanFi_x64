@@ -464,6 +464,7 @@ UnicodeString CmdFilePath;		//コマンドファイル参照パス
 int VersionNo;
 UnicodeString VersionStr;		//バージョン表示
 UnicodeString OSVerInfStr;		//OSバージョン情報
+bool IsWin11 = false;			//Windows 11 か?
 
 UnicodeString DirBraStr;		//ディレクトリ括弧文字
 UnicodeString DirKetStr;
@@ -1181,6 +1182,9 @@ void InitializeGlobal()
 	VersionNo = GetProductVersion(Application->ExeName, mj, mi, bl)? mj*100 + mi*10 + bl : 0;
 	VersionStr.sprintf(_T("V%.2f"), VersionNo/100.0);
 
+	//OS
+	OSVerInfStr = get_OsVerInfStr();
+
 	//ユーザ名
 	_TCHAR szName[256];
 	DWORD size = 256;
@@ -1204,10 +1208,9 @@ void InitializeGlobal()
 	mute_Volume("GET");	//ミュート状態を取得
 
 	//廃止セクション、キーの削除、修正
-	IniFile->DeleteKey( SCT_Option,  "TabFocusSubWin");				//v15.20
-	IniFile->DeleteKey( SCT_Option,  "RestoreComboBox");			//v15.10
-	IniFile->ReplaceKey(SCT_General, "SortSymbol", "SortLogical");	//v14.93
-	IniFile->ReplaceKey(SCT_General, "DrvGrpah", "DrvGraph");		//v14.77
+	IniFile->ReplaceKey(SCT_General, "FintTagInfHi", "FindTagInfHi");	//v15.56
+	IniFile->DeleteKey( SCT_Option,  "TabFocusSubWin");					//v15.20
+	IniFile->DeleteKey( SCT_Option,  "RestoreComboBox");				//v15.10
 
 	CurStt = &ListStt[CurListTag];
 	OppStt = &ListStt[OppListTag];
@@ -1834,9 +1837,9 @@ void InitializeGlobal()
 		{_T("FindPathColumn=false"),		(TObject*)&FindPathColumn},
 		{_T("FindTagsColumn=false"),		(TObject*)&FindTagsColumn},
 		{_T("FindTagsSort=false"),			(TObject*)&usr_TAG->SortTags},
-
+		{_T("NoRoundWin=false"),			(TObject*)&NoRoundWin},
+	
 		{_T("NoCheckUncRPT=false"),			(TObject*)&NoCheckUncRPT},		//隠し設定
-		{_T("NoRoundWin=false"),			(TObject*)&NoRoundWin},			//隠し設定
 		{_T("DebugOut=false"),				(TObject*)&DebugOut},			//隠し設定
 
 		//[General] (prefix = U:)
@@ -2235,38 +2238,49 @@ void EndGlobal()
 //---------------------------------------------------------------------------
 UnicodeString get_OsVerInfStr()
 {
-	if (OSVerInfStr.IsEmpty()) {
-		std::unique_ptr<TStringList> o_lst(new TStringList());
-		if (Execute_cmdln("cmd /c ver", ExePath, "HO", NULL, o_lst.get())) {
-			for (int i=0; i<o_lst->Count; i++) {
-				UnicodeString lbuf = o_lst->Strings[i];
-				lbuf = Trim(get_tkn(get_tkn_r(lbuf, "[Version"), "]"));
-				if (!lbuf.IsEmpty()) {
-					OSVerInfStr = lbuf + " ";
-					break;
-				}
+	UnicodeString ret_str;
+
+	std::unique_ptr<TStringList> o_lst(new TStringList());
+	if (Execute_cmdln("cmd /c ver", ExePath, "HO", NULL, o_lst.get())) {
+		for (int i=0; i<o_lst->Count; i++) {
+			UnicodeString lbuf = o_lst->Strings[i];
+			lbuf = Trim(get_tkn(get_tkn_r(lbuf, "[Version"), "]"));
+			if (!lbuf.IsEmpty()) {
+				ret_str = lbuf + " ";
+				break;
 			}
 		}
-
-		if (OSVerInfStr.IsEmpty()) {
-			OSVerInfStr.sprintf(_T("%u.%u.%u "), TOSVersion::Major, TOSVersion::Minor, TOSVersion::Build);
-		}
-
-		if (IsWindows10OrGreater()) {
-			std::unique_ptr<TRegistry> reg(new TRegistry());
-			reg->RootKey = HKEY_LOCAL_MACHINE;
-			if (reg->OpenKeyReadOnly("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion")) {
-				UnicodeString s = reg->ReadString("ReleaseId");
-				if (!s.IsEmpty()) {
-					if (s.ToIntDef(0)>=2009) s = reg->ReadString("DisplayVersion");	//※20H2以降に対応
-					if (!s.IsEmpty()) OSVerInfStr.cat_sprintf(_T("(%s) "), s.c_str());
-				}
-			}
-		}
-		if (::IsWindowsServer()) OSVerInfStr += "Server ";
 	}
 
-	return OSVerInfStr;
+	if (ret_str.IsEmpty()) {
+		ret_str.sprintf(_T("%u.%u.%u "), TOSVersion::Major, TOSVersion::Minor, TOSVersion::Build);
+	}
+
+	//Windows 11 か？
+	TMatch mt = TRegEx::Match(ret_str, "(\\d+)\\.(\\d+)\\.(\\d{5})\\.");
+	if (mt.Success && mt.Groups.Count==4) {
+		IsWin11 = (mt.Groups.Item[1].Value.ToIntDef(-1)>=10)
+					&& (mt.Groups.Item[2].Value.ToIntDef(-1)>=0)
+					&& (mt.Groups.Item[3].Value.ToIntDef(-1)>=22000);
+	}
+	else {
+		IsWin11 = false;
+	}
+
+	if (IsWindows10OrGreater()) {
+		std::unique_ptr<TRegistry> reg(new TRegistry());
+		reg->RootKey = HKEY_LOCAL_MACHINE;
+		if (reg->OpenKeyReadOnly("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion")) {
+			UnicodeString s = reg->ReadString("ReleaseId");
+			if (!s.IsEmpty()) {
+				if (s.ToIntDef(0)>=2009) s = reg->ReadString("DisplayVersion");	//※20H2以降に対応
+				if (!s.IsEmpty()) ret_str.cat_sprintf(_T("(%s) "), s.c_str());
+			}
+		}
+	}
+	if (::IsWindowsServer()) ret_str += "Server ";
+
+	return ret_str;
 }
 
 //---------------------------------------------------------------------------
@@ -2723,7 +2737,7 @@ void InitializeListGrid(TStringGrid *gp,
 	TFont *font)	//フォント	(default = NULL : ListFont)
 {
 	AssignScaledFont(gp, font? font : ListFont);
-	gp->DefaultRowHeight = get_FontHeight(gp->Font, ListInterLn);
+	gp->DefaultRowHeight = get_FontHeightMgnS(gp->Font, ListInterLn);
 	gp->Color = col_bgList;
 }
 //---------------------------------------------------------------------------
@@ -2734,7 +2748,7 @@ void InitializeListHeader(THeaderControl *hp,
 	TFont *font)		//フォント	(default = NULL : LstHdrFont)
 {
 	AssignScaledFont(hp, font? font : LstHdrFont);
-	hp->Height = get_FontHeight(hp->Font, 6);
+	hp->Height = get_FontHeightMgnS(hp->Font, 6);
 	hp->DoubleBuffered = true;
 
 	UnicodeString s = hdr;
@@ -5963,7 +5977,7 @@ void set_ListBoxItemHi(
 {
 	AssignScaledFont(lp, font);
 	lp->Canvas->Font->Assign(lp->Font);
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
+	lp->ItemHeight = std::max(get_FontHeightMgn(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
 }
 //---------------------------------------------------------------------------
 void set_ListBoxItemHi(
@@ -5973,7 +5987,7 @@ void set_ListBoxItemHi(
 {
 	AssignScaledFont(lp, font);
 	lp->Canvas->Font->Assign(lp->Font);
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
+	lp->ItemHeight = std::max(get_FontHeightMgn(lp->Font, abs(lp->Font->Height) / 3.0 + 1), with_ico? ScaledInt(20, lp) : 0);
 }
 
 //---------------------------------------------------------------------------
@@ -5990,7 +6004,7 @@ void set_StdListBox(
 
 	AssignScaledFont(lp, font? font : ListFont);
 	lp->Canvas->Font->Assign(lp->Font);
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
+	lp->ItemHeight = std::max(get_FontHeightMgnS(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
 }
 //---------------------------------------------------------------------------
 void set_StdListBox(
@@ -6004,7 +6018,7 @@ void set_StdListBox(
 
 	AssignScaledFont(lp, font? font : ListFont);
 	lp->Canvas->Font->Assign(lp->Font);
-	lp->ItemHeight = std::max(get_FontHeight(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
+	lp->ItemHeight = std::max(get_FontHeightMgnS(lp->Font, ListInterLn), with_ico? ScaledInt(20, lp) : 0);
 }
 
 //---------------------------------------------------------------------------
@@ -6048,7 +6062,7 @@ void setup_Panel(
 	TFont *font)	//フォント	(default = NULL : DialogFont)
 {
 	pp->Font->Assign(font? font : DialogFont);
-	pp->ClientHeight = get_FontHeight(pp->Font, 4, 4);
+	pp->ClientHeight = get_FontHeightMgnS(pp->Font, 4, 4);
 }
 
 //---------------------------------------------------------------------------
@@ -8476,8 +8490,8 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 	cv->Brush->Color = (State.Contains(odSelected) && lp->Focused())? col_selItem : col_bgInf;
 	cv->FillRect(Rect);
 
-	int xp = Rect.Left + ScaledInt(2);
-	int yp = Rect.Top  + ScaledInt(1);
+	int xp = Rect.Left + ScaledInt(2, lp);
+	int yp = Rect.Top  + ScaledInt(1, lp);
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	bool use_fgsel = lp->Focused() && is_SelFgCol(State);
 
@@ -8505,7 +8519,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 		fext = inam;
 		inam = minimize_str(inam, cv, w_max, true);
 	}
-	xp = Rect.Left + ScaledInt(2) + w_max - get_TextWidth(cv, inam, is_irreg);
+	xp = Rect.Left + ScaledInt(2, lp) + w_max - get_TextWidth(cv, inam, is_irreg);
 	if (!inam.IsEmpty()) {
 		cv->Font->Color = use_fgsel? col_fgSelItem :
 			(flag & LBFLG_FEXT_FIF)? get_ExtColor(fext) :
@@ -8558,7 +8572,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 			int p = 0;
 			for (int i=1; i<=lbuf.Length() && !p; i++) if (lbuf.IsDelimiter("~^", i)) p = i;
 			UnicodeString tag = (p>1)? lbuf.SubString(1, p - 1) : lbuf;
-			draw_GitTag(cv, xp, yp, tag, ScaledInt(4));
+			draw_GitTag(cv, xp, yp, tag, ScaledInt(4, lp));
 			if (p>1) out_TextEx(cv, xp, yp, lbuf.Delete(1, p - 1));
 		}
 		else {
@@ -8585,17 +8599,17 @@ void draw_ColorListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState Sta
 
 	SetHighlight(cv, State.Contains(odSelected));
 	cv->FillRect(Rect);
-	cv->TextOut(Rect.Left + ScaledInt(34), yp, vbuf);
+	cv->TextOut(Rect.Left + ScaledInt(34, lp), yp, vbuf);
 
 	//カラー
-	TRect rc = Rect;  rc.Right = rc.Left + ScaledInt(30);
+	TRect rc = Rect;  rc.Right = rc.Left + ScaledInt(30, lp);
 	cv->Brush->Color = (TColor)col_lst->Values[col_nam].ToIntDef(clBlack);
 	if (cv->Brush->Color!=col_None)
 		cv->FillRect(rc);
 	else {
 		cv->Brush->Color = get_PanelColor();
 		cv->FillRect(rc);
-		out_Text(cv, rc.Left + ScaledInt(2), yp, _T("無効"), get_TextColor());
+		out_Text(cv, rc.Left + ScaledInt(2, lp), yp, _T("無効"), get_TextColor());
 	}
 
 	//境界線
@@ -11811,7 +11825,7 @@ void draw_SttBarPanel(TStatusBar *sp, TStatusPanel *pp, TRect rc)
 	cv->FillRect(rc);
 
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(rc.Left + ScaledInt(4), rc.Top, pp->Text);
+	cv->TextOut(rc.Left + ScaledInt(4, sp), rc.Top, pp->Text);
 }
 
 //---------------------------------------------------------------------------
@@ -11829,7 +11843,7 @@ bool draw_SttBarBg(
 	cv->FillRect(sp->ClientRect);
 	//上端境界
 	cv->Pen->Color = SelectWorB(bg, 0.33);	//***
-	cv->Pen->Width = ScaledInt(1);
+	cv->Pen->Width = ScaledInt(1, sp);
 	cv->Pen->Style = psSolid;
 	cv->MoveTo(0, 0);
 	cv->LineTo(sp->ClientWidth, 0);
@@ -11880,7 +11894,7 @@ void draw_SortHeader(
 	//区切り線
 	if (sp->Index < hp->Sections->Count-1) {
 		cv->Pen->Style = psSolid;
-		cv->Pen->Width = ScaledInt(1);
+		cv->Pen->Width = ScaledInt(1, hp);
 		cv->Pen->Color = SelectWorB(cv->Brush->Color, 0.25);
 		cv->MoveTo(rc.Right - 2, rc.Top);  cv->LineTo(rc.Right - 2, rc.Bottom);
 	}
@@ -14204,7 +14218,7 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 		int z_sz = USAME_TI(cmd, "ZoomIn") ? std::min(lp->Font->Size + d_sz, MAX_FNTZOOM_SZ)
 										   : std::max(lp->Font->Size - d_sz, MIN_FNTZOOM_SZ);
 		lp->Font->Size = z_sz;
-		lp->ItemHeight = get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
+		lp->ItemHeight = get_FontHeightMgn(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
 		zoomed = true;
 	}
 	else if ((lp->Tag & LBTAG_OPT_ZOOM) && USAME_TI(cmd, "ZoomReset")) {
@@ -14217,7 +14231,7 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 		if (!prm.IsEmpty()) {
 			int f_sz = std::max(std::min(prm.ToIntDef(l_font->Size), MAX_FNTZOOM_SZ), MIN_FNTZOOM_SZ);
 			lp->Font->Size = (x_sw && lp->Font->Size==f_sz)? l_font->Size : f_sz;
-			lp->ItemHeight = get_FontHeight(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
+			lp->ItemHeight = get_FontHeightMgn(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
 			zoomed = true;
 		}
 	}
@@ -15416,7 +15430,7 @@ void draw_GitGraph(
 {
 	if (s.IsEmpty()) return;
 
-	int xp = rc.Left + 2;
+	int xp = rc.Left + ScaledInt(2);
 	int w  = rc.Height()/3;
 	int w2 = w/2;
 	int r  = rc.Height()/5;
@@ -15494,7 +15508,7 @@ void draw_GitTag(
 	TColor org_bg = cv->Brush->Color;
 	int mk_h = cv->TextHeight("Q");
 	int mk_w = mk_h/4;
-	x += 2;
+	x += ScaledInt(2);
 	TPoint shape[3]  = {Point(x, y + mk_h/2), Point(x + mk_w, y), Point(x + mk_w, y + mk_h - 1)};
 	cv->Pen->Style	 = psSolid;
 	cv->Pen->Color	 = col_GitTag;

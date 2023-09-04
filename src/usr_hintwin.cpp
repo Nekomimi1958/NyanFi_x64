@@ -3,6 +3,7 @@
 //  背景色変更のためにサブクラス化										//
 //----------------------------------------------------------------------//
 #include "usr_str.h"
+#include "usr_scale.h"
 #include "usr_hintwin.h"
 
 //---------------------------------------------------------------------------
@@ -39,8 +40,12 @@ void __fastcall UsrHintWindow::ActivateHintEx(
 {
 	if (!cp) return;
 
+	max_w = SCALED_THIS(max_w);
+	min_w = SCALED_THIS(min_w);
+
 	Screen->HintFont->Assign(Font);
-	TRect rc = CalcHintRect(max_w, msg, NULL);  rc.Right += 8;
+	TRect rc = CalcHintRect(max_w, msg, NULL);
+	rc.Right += SCALED_THIS(8);
 	if (rc.Width()<min_w) rc.SetWidth(min_w);
 
 	TPoint p = cp->ClientToScreen(cp->ClientRect.CenteredRect(rc).Location);
