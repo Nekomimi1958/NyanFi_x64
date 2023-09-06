@@ -282,9 +282,6 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::WmFormShowed(TMessage &msg)
 {
-	OutDebugStr(UnicodeString().sprintf(_T("Sz:%d Hi:%d PPI:%d"), 
-		Application->DefaultFont->Size, Application->DefaultFont->Height, CurrentPPI));
-
 	Repaint();
 	UserModule->RenInsNameAction->Update();
 
@@ -630,6 +627,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	if (Previewing || ModalResult!=mrNone) return;
 
 	//フォーカス状態を待避
+	Application->ProcessMessages();
 	TWinControl *last_cp = Screen->ActiveControl;
 	TCustomEdit *last_ep = class_is_CustomEdit(last_cp)? (TCustomEdit *)last_cp : NULL;
 	TComboBox	*last_bp = class_is_ComboBox(last_cp)? (TComboBox *)last_cp : NULL;
@@ -675,7 +673,6 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 	ListErrLabel->Caption = EmptyStr;
 
 	bool show_prg = (!AutoPrvCheckBox->Checked || ItemList->Count>1000);	//***
-
 	ChangeCount = 0;
 	UnicodeString pre_alstr, post_alstr;
 	for (int i=0; i<ItemList->Count; i++) {
@@ -2128,4 +2125,3 @@ void __fastcall TRenameDlg::EditListActionUpdate(TObject *Sender)
 	((TAction *)Sender)->Enabled = IsRenListSheet() && !RenListFile.IsEmpty();
 }
 //---------------------------------------------------------------------------
-

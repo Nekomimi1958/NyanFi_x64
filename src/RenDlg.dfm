@@ -33,6 +33,7 @@ object RenameDlg: TRenameDlg
     Font.Color = clWindowText
     Font.Height = -12
     Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
     Font.Style = []
     Panels = <
       item
@@ -305,7 +306,7 @@ object RenameDlg: TRenameDlg
       Top = 0
       Width = 540
       Height = 258
-      ActivePage = RenListSheet
+      ActivePage = NameSheet
       Align = alClient
       OwnerDraw = True
       TabOrder = 0
