@@ -79,9 +79,9 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 
 	set_ComboBox_AutoComp(this);
 
-	Previewing	   = Previewed = false;
-	ExistErr	   = false;
-	ChangeCount    = 0;
+	Previewing  = Previewed = false;
+	ExistErr    = false;
+	ChangeCount = 0;
 
 	IsMulti = (ItemList->Count>1);
 
@@ -105,6 +105,7 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	CnvCharCheckBox->Checked   = IniFile->ReadBoolGen(_T("RenameDlgCnvChar"));
 	CnvKanaCheckBox->Checked   = IniFile->ReadBoolGen(_T("RenameDlgCnvKana"));
 	AutoPrvCheckBox->Checked   = IniFile->ReadBoolGen(_T("RenameDlgAutoPrv"),	true);
+	PrvWaitEdit->Text		   = IniFile->ReadStrGen( _T("RenameDlgPrvWait"),	"100");
 	EndMatchCheckBox->Checked  = IniFile->ReadBoolGen(_T("RenameDlgEndMatch"));
 	KeepBsExtCheckBox->Checked = IniFile->ReadBoolGen(_T("RenameDlgKeepBsExt"));
 	NoRenLogCheckBox->Checked  = IniFile->ReadBoolGen(_T("RenameDlgNoRenLog"));
@@ -309,6 +310,8 @@ void __fastcall TRenameDlg::WmFormShowed(TMessage &msg)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::FormClose(TObject *Sender, TCloseAction &Action)
 {
+	Timer1->Enabled = false;
+
 	IniFile->SavePosInfo(this);
 
 	IniFile->WriteScaledIntGen(_T("RenameDlgSerLWidth"), SerLeftPanel->Width, this);
@@ -323,6 +326,7 @@ void __fastcall TRenameDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	IniFile->WriteBoolGen(_T("RenameDlgCnvChar"),	CnvCharCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgCnvKana"),	CnvKanaCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgAutoPrv"),	AutoPrvCheckBox);
+	IniFile->WriteStrGen( _T("RenameDlgPrvWait"),	PrvWaitEdit);
 	IniFile->WriteBoolGen(_T("RenameDlgEndMatch"),	EndMatchCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgKeepBsExt"),	KeepBsExtCheckBox);
 	IniFile->WriteBoolGen(_T("RenameDlgNoRenLog"),	NoRenLogCheckBox);
@@ -369,6 +373,12 @@ void __fastcall TRenameDlg::FormDestroy(TObject *Sender)
 	delete SttPrgBar;
 }
 
+//---------------------------------------------------------------------------
+void __fastcall TRenameDlg::Timer1Timer(TObject *Sender)
+{
+	Timer1->Enabled = false;
+	UpdateNewNameList();
+}
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
@@ -1013,7 +1023,20 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::UpdatePreview()
 {
-	if (DlgInitialized && (AutoPrvCheckBox->Checked || !IsMulti)) UpdateNewNameList(); else Previewed = false;
+	if (DlgInitialized && (AutoPrvCheckBox->Checked || !IsMulti)) {
+		int wt = EditToInt(PrvWaitEdit);
+		if (wt>0) {
+			Timer1->Enabled  = false;
+			Timer1->Interval = wt;
+			Timer1->Enabled  = true;
+		}
+		else {
+			UpdateNewNameList();
+		}
+	}
+	else {
+		Previewed = false;
+	}
 }
 
 //---------------------------------------------------------------------------

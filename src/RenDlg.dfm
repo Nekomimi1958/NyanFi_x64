@@ -4,10 +4,10 @@ object RenameDlg: TRenameDlg
   HelpContext = 51
   BorderIcons = [biSystemMenu]
   Caption = #21517#21069#12398#22793#26356
-  ClientHeight = 429
+  ClientHeight = 465
   ClientWidth = 540
   Color = clBtnFace
-  Constraints.MinHeight = 460
+  Constraints.MinHeight = 500
   Constraints.MinWidth = 550
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -26,7 +26,7 @@ object RenameDlg: TRenameDlg
   TextHeight = 15
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 409
+    Top = 445
     Width = 540
     Height = 20
     Font.Charset = DEFAULT_CHARSET
@@ -56,13 +56,13 @@ object RenameDlg: TRenameDlg
     Left = 0
     Top = 0
     Width = 540
-    Height = 409
+    Height = 445
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
     object CommonPanel: TPanel
       Left = 0
-      Top = 258
+      Top = 294
       Width = 540
       Height = 151
       Align = alBottom
@@ -252,7 +252,7 @@ object RenameDlg: TRenameDlg
         end
       end
       object OkButton: TButton
-        Left = 357
+        Left = 351
         Top = 118
         Width = 80
         Height = 26
@@ -262,7 +262,7 @@ object RenameDlg: TRenameDlg
         TabOrder = 5
       end
       object CanButton: TButton
-        Left = 445
+        Left = 439
         Top = 118
         Width = 80
         Height = 26
@@ -273,7 +273,7 @@ object RenameDlg: TRenameDlg
         TabOrder = 6
       end
       object AutoPrvCheckBox: TCheckBox
-        Left = 140
+        Left = 134
         Top = 122
         Width = 126
         Height = 17
@@ -283,7 +283,7 @@ object RenameDlg: TRenameDlg
         OnClick = AutoPrvCheckBoxClick
       end
       object PreviewBtn: TButton
-        Left = 269
+        Left = 263
         Top = 118
         Width = 80
         Height = 26
@@ -305,7 +305,7 @@ object RenameDlg: TRenameDlg
       Left = 0
       Top = 0
       Width = 540
-      Height = 258
+      Height = 294
       ActivePage = NameSheet
       Align = alClient
       OwnerDraw = True
@@ -320,45 +320,48 @@ object RenameDlg: TRenameDlg
           Left = 0
           Top = 40
           Width = 532
-          Height = 188
+          Height = 224
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 1
           DesignSize = (
             532
-            188)
+            224)
           object NameInfMLabel: TLabel
             Left = 212
-            Top = 174
+            Top = 210
             Width = 160
             Height = 18
             Anchors = [akLeft, akBottom]
             AutoSize = False
             Caption = #21517#21069#12398#26368#22823#25991#23383#25968' = '
+            ExplicitTop = 174
           end
           object PathInfMLabel: TLabel
             Left = 13
-            Top = 174
+            Top = 210
             Width = 195
             Height = 18
             Anchors = [akLeft, akBottom]
             AutoSize = False
             Caption = #12501#12523#12497#12473#21517#12398#26368#22823#25991#23383#25968' = '
+            ExplicitTop = 174
           end
           object SttInfLabel: TLabel
             Left = 378
-            Top = 174
+            Top = 210
             Width = 144
             Height = 18
             Alignment = taRightJustify
             Anchors = [akLeft, akRight, akBottom]
             AutoSize = False
+            ExplicitTop = 174
           end
           object PreviewGrid: TStringGrid
             Left = 10
             Top = 74
             Width = 512
-            Height = 94
+            Height = 130
             Anchors = [akLeft, akTop, akRight, akBottom]
             ColCount = 3
             DefaultColWidth = 100
@@ -932,7 +935,7 @@ object RenameDlg: TRenameDlg
           Left = 0
           Top = 0
           Width = 532
-          Height = 228
+          Height = 264
           ActivePage = AssRenSheet
           Align = alClient
           OwnerDraw = True
@@ -944,7 +947,7 @@ object RenameDlg: TRenameDlg
             Caption = #38306#36899#12501#12449#12452#12523#12398#21516#26178#25913#21517
             object Opt1BtmPanel: TPanel
               Left = 0
-              Top = 136
+              Top = 172
               Width = 524
               Height = 62
               Align = alBottom
@@ -1026,18 +1029,18 @@ object RenameDlg: TRenameDlg
               Left = 0
               Top = 0
               Width = 524
-              Height = 136
+              Height = 172
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
               DesignSize = (
                 524
-                136)
+                172)
               object AssRenListBox: TCheckListBox
                 Left = 8
                 Top = 4
                 Width = 505
-                Height = 126
+                Height = 162
                 Anchors = [akLeft, akTop, akRight, akBottom]
                 DragMode = dmAutomatic
                 ItemHeight = 13
@@ -1057,19 +1060,19 @@ object RenameDlg: TRenameDlg
               Left = 0
               Top = 0
               Width = 266
-              Height = 198
+              Height = 234
               Align = alClient
               BevelOuter = bvNone
               TabOrder = 0
               OnResize = Opt2MainPanelResize
               DesignSize = (
                 266
-                198)
+                234)
               object CnvCharGroupBox: TGroupBox
                 Left = 4
                 Top = 4
                 Width = 252
-                Height = 191
+                Height = 227
                 Anchors = [akLeft, akTop, akRight, akBottom]
                 Caption = #12501#12449#12452#12523#21517#20027#37096#12398#25991#23383#32622#25563
                 TabOrder = 0
@@ -1077,18 +1080,18 @@ object RenameDlg: TRenameDlg
                   Left = 2
                   Top = 17
                   Width = 130
-                  Height = 172
+                  Height = 208
                   Align = alLeft
                   BevelOuter = bvNone
                   TabOrder = 0
                   DesignSize = (
                     130
-                    172)
+                    208)
                   object CnvCharListBox: TListBox
                     Left = 10
                     Top = 7
                     Width = 112
-                    Height = 162
+                    Height = 198
                     Style = lbOwnerDrawFixed
                     Anchors = [akLeft, akTop, akRight, akBottom]
                     Font.Charset = ANSI_CHARSET
@@ -1107,7 +1110,7 @@ object RenameDlg: TRenameDlg
                   Left = 132
                   Top = 17
                   Width = 118
-                  Height = 172
+                  Height = 208
                   Align = alClient
                   BevelOuter = bvNone
                   TabOrder = 1
@@ -1164,23 +1167,30 @@ object RenameDlg: TRenameDlg
               Left = 266
               Top = 0
               Width = 258
-              Height = 198
+              Height = 234
               Align = alRight
               BevelOuter = bvNone
               TabOrder = 1
+              object Label1: TLabel
+                Left = 168
+                Top = 205
+                Width = 24
+                Height = 15
+                Caption = 'm'#31186
+              end
               object IniSttGroupBox: TGroupBox
                 Left = 4
                 Top = 4
                 Width = 247
-                Height = 140
+                Height = 138
                 Caption = #21517#21069#20837#21147#27396#12398#21021#26399#29366#24907
                 TabOrder = 0
                 DesignSize = (
                   247
-                  140)
+                  138)
                 object TLabel
                   Left = 12
-                  Top = 111
+                  Top = 109
                   Width = 39
                   Height = 15
                   Alignment = taRightJustify
@@ -1211,7 +1221,7 @@ object RenameDlg: TRenameDlg
                 end
                 object IniStt2ComboBox: TComboBox
                   Left = 55
-                  Top = 108
+                  Top = 106
                   Width = 185
                   Height = 23
                   Style = csDropDownList
@@ -1230,7 +1240,7 @@ object RenameDlg: TRenameDlg
               end
               object KeepBsExtCheckBox: TCheckBox
                 Left = 8
-                Top = 155
+                Top = 151
                 Width = 233
                 Height = 17
                 Caption = #20027#37096'/'#25313#24373#23376#12398#25991#23383#31278#35373#23450#12434#35352#25014
@@ -1238,11 +1248,25 @@ object RenameDlg: TRenameDlg
               end
               object NoRenLogCheckBox: TCheckBox
                 Left = 8
-                Top = 176
+                Top = 172
                 Width = 233
                 Height = 17
                 Caption = #25913#21517#12525#12464#12434#20316#25104#12375#12394#12356
                 TabOrder = 2
+              end
+              object PrvWaitEdit: TLabeledEdit
+                Left = 104
+                Top = 202
+                Width = 60
+                Height = 23
+                Alignment = taRightJustify
+                EditLabel.Width = 75
+                EditLabel.Height = 23
+                EditLabel.Caption = #36933#24310#12503#12524#12499#12517#12540
+                LabelPosition = lpLeft
+                NumbersOnly = True
+                TabOrder = 3
+                Text = ''
               end
             end
           end
@@ -1320,5 +1344,11 @@ object RenameDlg: TRenameDlg
     object DelItemItem: TMenuItem
       Action = DelItemAction
     end
+  end
+  object Timer1: TTimer
+    Enabled = False
+    OnTimer = Timer1Timer
+    Left = 148
+    Top = 154
   end
 end

@@ -158,11 +158,15 @@ __published:	// IDE で管理されるコンポーネント
 	TTabSheet *RenListSheet;
 	TTabSheet *ReplaceSheet;
 	TTabSheet *SerialSheet;
+	TTimer *Timer1;
+	TLabeledEdit *PrvWaitEdit;
+	TLabel *Label1;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
+	void __fastcall Timer1Timer(TObject *Sender);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall FormResize(TObject *Sender);
 	void __fastcall Opt2MainPanelResize(TObject *Sender);
