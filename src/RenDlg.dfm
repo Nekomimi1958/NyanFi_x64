@@ -259,7 +259,7 @@ object RenameDlg: TRenameDlg
         Action = RenOkAction
         Anchors = [akRight, akBottom]
         Default = True
-        TabOrder = 5
+        TabOrder = 4
       end
       object CanButton: TButton
         Left = 439
@@ -270,35 +270,50 @@ object RenameDlg: TRenameDlg
         Cancel = True
         Caption = #12461#12515#12531#12475#12523
         ModalResult = 2
-        TabOrder = 6
+        TabOrder = 5
       end
-      object AutoPrvCheckBox: TCheckBox
-        Left = 134
-        Top = 122
-        Width = 126
-        Height = 17
+      object PreviewPanel: TPanel
+        Left = 129
+        Top = 114
+        Width = 216
+        Height = 34
         Anchors = [akTop, akRight]
-        Caption = #33258#21205#12503#12524#12499#12517#12540'(&V)'
+        BevelOuter = bvNone
         TabOrder = 3
-        OnClick = AutoPrvCheckBoxClick
+        object PreviewBtn: TButton
+          Left = 132
+          Top = 4
+          Width = 80
+          Height = 26
+          Caption = #12503#12524#12499#12517#12540
+          TabOrder = 0
+          OnClick = PreviewBtnClick
+        end
+        object AutoPrvCheckBox: TCheckBox
+          Left = 4
+          Top = 8
+          Width = 125
+          Height = 17
+          Caption = #33258#21205#12503#12524#12499#12517#12540'(&V)'
+          TabOrder = 1
+          OnClick = AutoPrvCheckBoxClick
+        end
       end
-      object PreviewBtn: TButton
-        Left = 263
-        Top = 118
-        Width = 80
-        Height = 26
-        Anchors = [akTop, akRight]
-        Caption = #12503#12524#12499#12517#12540
-        TabOrder = 4
-        OnClick = PreviewBtnClick
-      end
-      object KeepCsrCheckBox: TCheckBox
-        Left = 20
-        Top = 122
-        Width = 105
-        Height = 17
-        Caption = #12459#12540#12477#12523#20445#25345
+      object SglOpPanel: TPanel
+        Left = 0
+        Top = 114
+        Width = 128
+        Height = 34
+        BevelOuter = bvNone
         TabOrder = 2
+        object KeepCsrCheckBox: TCheckBox
+          Left = 16
+          Top = 8
+          Width = 109
+          Height = 17
+          Caption = #12459#12540#12477#12523#20445#25345
+          TabOrder = 0
+        end
       end
     end
     object NamePageControl: TPageControl

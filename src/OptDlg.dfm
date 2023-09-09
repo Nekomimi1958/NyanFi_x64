@@ -782,13 +782,20 @@ object OptionDlg: TOptionDlg
         Height = 15
         Caption = '(JP)'
       end
+      object TLabel
+        Left = 244
+        Top = 551
+        Width = 24
+        Height = 15
+        Caption = 'm'#31186
+      end
       object DlgKeyGroupBox: TGroupBox
         Left = 460
         Top = 209
         Width = 434
         Height = 77
         Caption = #12461#12540#12395#12424#12427#12480#12452#12450#12525#12464#12398#31227#21205'/'#12469#12452#12474#22793#26356
-        TabOrder = 7
+        TabOrder = 8
         object DlgMoveLabel: TLabel
           Left = 170
           Top = 21
@@ -876,7 +883,7 @@ object OptionDlg: TOptionDlg
         Width = 434
         Height = 211
         Caption = #12381#12398#20182
-        TabOrder = 10
+        TabOrder = 11
         object PermitCmdsCheckBox: TCheckBox
           Left = 10
           Top = 78
@@ -1011,7 +1018,7 @@ object OptionDlg: TOptionDlg
         Width = 434
         Height = 50
         Caption = 'NyanFi  '#21628#12403#20986#12375#12507#12483#12488#12461#12540
-        TabOrder = 6
+        TabOrder = 7
         object HotAltCheckBox: TCheckBox
           Left = 120
           Top = 20
@@ -1145,7 +1152,7 @@ object OptionDlg: TOptionDlg
           #33258#21205
           'JP'
           'US')
-        TabOrder = 8
+        TabOrder = 9
         OnClick = KeybdRadioGroupClick
       end
       object LogGroupBox: TGroupBox
@@ -1154,9 +1161,9 @@ object OptionDlg: TOptionDlg
         Width = 434
         Height = 127
         Caption = #12525#12464
-        TabOrder = 5
+        TabOrder = 6
         object TLabel
-          Left = 126
+          Left = 128
           Top = 19
           Width = 24
           Height = 15
@@ -1276,7 +1283,7 @@ object OptionDlg: TOptionDlg
         Width = 181
         Height = 50
         Caption = #12469#12454#12531#12489#20877#29983
-        TabOrder = 9
+        TabOrder = 10
         object TLabel
           Left = 138
           Top = 21
@@ -1368,19 +1375,33 @@ object OptionDlg: TOptionDlg
       end
       object ViewArcInfCheckBox: TCheckBox
         Left = 20
-        Top = 524
-        Width = 371
+        Top = 522
+        Width = 237
         Height = 17
-        Caption = #12450#12540#12459#12452#12502#20869#12398#12501#12449#12452#12523#24773#22577'/'#12503#12524#12499#12517#12540#12434#34920#31034'('#19968#26178#35299#20941')'
+        Caption = #12450#12540#12459#12452#12502#20869#12398#24773#22577#34920#31034'('#19968#26178#35299#20941')'
         TabOrder = 3
       end
       object CheckTSCheckBox: TCheckBox
-        Left = 20
-        Top = 549
-        Width = 371
+        Left = 269
+        Top = 522
+        Width = 175
         Height = 17
-        Caption = #25313#24373#23376' .ts (MPEG2-TS/TypeScript)'#12398#21028#21029#12434#34892#12358
+        Caption = #25313#24373#23376' .ts '#12398#21028#21029#12434#34892#12358
         TabOrder = 4
+      end
+      object InfPrvWaitEdit: TLabeledEdit
+        Left = 183
+        Top = 548
+        Width = 58
+        Height = 23
+        Alignment = taRightJustify
+        EditLabel.Width = 143
+        EditLabel.Height = 23
+        EditLabel.Caption = #24773#22577#21462#24471'/'#12503#12524#12499#12517#12540#12398#36933#24310
+        LabelPosition = lpLeft
+        NumbersOnly = True
+        TabOrder = 5
+        Text = ''
       end
     end
     object MouseSheet: TTabSheet

@@ -1097,6 +1097,7 @@ __published:	// IDE で管理されるコンポーネント
 	TVirtualImageList *IconVImgListP;
 	TImageCollection *ImgCollectionP;
 	TImageCollection *BtnImgCollection;
+	TTimer *WaitTimer;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -1926,6 +1927,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall IS_LoopActionUpdate(TObject *Sender);
 	void __fastcall IS_Match1ActionExecute(TObject *Sender);
 	void __fastcall IS_Match1ActionUpdate(TObject *Sender);
+	void __fastcall WaitTimerTimer(TObject *Sender);
 
 private:	// ユーザー宣言
 	TIdFTP *IdFTP1;
@@ -2359,6 +2361,7 @@ private:	// ユーザー宣言
 	void __fastcall SetDriveInfo(int tag = CurListTag, bool drv_upd = true, bool sel_upd = true);
 	void __fastcall SetScrSelLines(int tag);
 	void __fastcall SetFileInf();
+	void __fastcall SetFileInfCore();
 	void __fastcall SetDriveFileInfo(int tag, bool drv_upd = true, bool sel_upd = true);
 
 	bool __fastcall SetTxtPreview(UnicodeString fnam, UnicodeString text, UnicodeString tail = EmptyStr,

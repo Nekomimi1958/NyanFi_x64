@@ -162,8 +162,10 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 	gp->RowCount = ItemList->Count;
 	for (int i=0; i<gp->RowCount; i++) clear_GridRow(gp, i);
 	AutoPrvCheckBox->Enabled = IsMulti;
+	PreviewPanel->Visible    = IsMulti;
 
 	KeepCsrCheckBox->Enabled = !IsMulti;
+	SglOpPanel->Visible      = !IsMulti;
 
 	//‘®«‚Ì‰Šú‰»
 	int atr = file_GetAttr(ItemList->Strings[0]);
@@ -1023,8 +1025,11 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::UpdatePreview()
 {
-	if (DlgInitialized && (AutoPrvCheckBox->Checked || !IsMulti)) {
-		int wt = EditToInt(PrvWaitEdit);
+	Previewed = false;
+	if (!DlgInitialized) return;
+
+	if (AutoPrvCheckBox->Checked || !IsMulti) {
+		int wt = IsMulti? EditToInt(PrvWaitEdit) : REPEAT_WAIT;
 		if (wt>0) {
 			Timer1->Enabled  = false;
 			Timer1->Interval = wt;
@@ -1033,9 +1038,6 @@ void __fastcall TRenameDlg::UpdatePreview()
 		else {
 			UpdateNewNameList();
 		}
-	}
-	else {
-		Previewed = false;
 	}
 }
 
@@ -1766,6 +1768,8 @@ void __fastcall TRenameDlg::AutoPrvCheckBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 {
+	Timer1->Enabled = false;
+
 	if (!Previewed) {
 		UpdateNewNameList();
 		if (ExistErr) return;
@@ -2109,6 +2113,7 @@ void __fastcall TRenameDlg::RenOkActionUpdate(TObject *Sender)
 		CBTAG_HISTORY | (SrcStrComboBox->Focused()? CBTAG_RGEX_V : 0) | (RegExCheckBox->Checked? CBTAG_RGEX_E : 0);
 
 	PreviewBtn->Enabled = (!Previewed && !IsOptionSheet());
+	PrvWaitEdit->Color  = get_WinColor(EditToInt(PrvWaitEdit)==0);
 }
 
 //---------------------------------------------------------------------------

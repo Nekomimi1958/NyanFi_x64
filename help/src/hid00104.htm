@@ -35,7 +35,8 @@
     <dd>
       ファイル情報やプレビューを表示していると、ファイルの種類やサイズによっては内容の取得に時間がかかり、ファイラーの操作に影響します。<br>
       <a href="hid00024.htm">オプション設定 - 一般2</a>
-      の「ファイル情報」や「イメージプレビュー」で、アクセスの遅いドライブや、情報が不要なファイルを取得対象から除外すると改善されます。あるいは、ファイル情報の画面そのものを非表示にして、必要なときだけ <a
+      の「ファイル情報」や「イメージプレビュー」で、アクセスの遅いドライブや、情報が不要なファイルを取得対象から除外すると改善されます。また、「情報取得/プレビューの遅延」にキーリピートの間隔よりも長い値を設定しておくと、カーソル移動がスムーズになります。<br>
+      あるいは、ファイル情報の画面そのものを非表示にして、必要なときだけ <a
         href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> コマンドでダイアログ表示させることもできます。<br>
     </dd>
 
@@ -45,10 +46,12 @@
       また <a href="hid00063.htm">ExeCommands コマンド</a>を用いると、複数のコマンドを組み合わせたり、コマンドファイルを書くことによって、より複雑な処理も可能です。<br>
     </dd>
 
-    <dt>Q. 逆カーソルで親ディレクトリに移動したいのですが。</dt>
+    <dt>Q. 左右逆カーソルで親ディレクトリに移動したいのですが。</dt>
     <dd>デフォルトの<span class="btn_frame">←</span>=<b>ToLeft</b>、<span class="btn_frame">→</span>=<b>ToRight</b>
-      というキー設定を、<span class="btn_frame">←</span>=<a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a>、<span
-        class="btn_frame">→</span>=<a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a> に変更してください。<br>
+      というキー設定を、<span class="btn_frame">←</span>=<b>ToLeft_RP</b>、<span class="btn_frame">→</span>=<b>ToRight_RP</b> に変更してください。<br>
+      <span class="btn_frame">←</span>=<a href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a>、<span
+        class="btn_frame">→</span>=<a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a> に設定しても同じです。<br>
+      またパラメータの追加指定によって、カレントがルートだった場合にドライブ一覧などを表示されること可能です。詳しくは <a href="hid00005.htm#ToLeft">ToLeft</a> / <a href="hid00005.htm#ToRight">ToRight</a> を参照してください。
     </dd>
 
     <dt>Q. マクロのような機能はありますか？</dt>

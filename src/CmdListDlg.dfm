@@ -29,8 +29,6 @@ object CmdFileListDlg: TCmdFileListDlg
     Cancel = True
     ModalResult = 2
     TabOrder = 1
-    ExplicitTop = 349
-    ExplicitWidth = 577
   end
   object MainPanel: TPanel
     Left = 0
@@ -40,8 +38,6 @@ object CmdFileListDlg: TCmdFileListDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 577
-    ExplicitHeight = 349
     object PreviewSplitter: TSplitter
       Left = 0
       Top = 168
@@ -59,8 +55,6 @@ object CmdFileListDlg: TCmdFileListDlg
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitTop = 171
-      ExplicitWidth = 577
       object ReferSplitter: TSplitter
         Left = 384
         Top = 0
@@ -76,7 +70,6 @@ object CmdFileListDlg: TCmdFileListDlg
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitLeft = 384
         object ReferListBox: TListBox
           Left = 0
           Top = 0
@@ -103,7 +96,6 @@ object CmdFileListDlg: TCmdFileListDlg
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitWidth = 380
         object PreviewListBox: TListBox
           Left = 0
           Top = 0
@@ -120,7 +112,6 @@ object CmdFileListDlg: TCmdFileListDlg
           StyleElements = [seBorder]
           OnDrawItem = PreviewListBoxDrawItem
           OnKeyDown = PreviewListBoxKeyDown
-          ExplicitWidth = 380
         end
       end
     end
@@ -174,7 +165,6 @@ object CmdFileListDlg: TCmdFileListDlg
       OnDrawSection = CmdFileHeaderDrawSection
       OnSectionResize = CmdFileHeaderSectionResize
       OnResize = CmdFileHeaderResize
-      ExplicitWidth = 577
     end
     object GridPanel: TPanel
       Left = 0
@@ -184,8 +174,6 @@ object CmdFileListDlg: TCmdFileListDlg
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 577
-      ExplicitHeight = 150
       DesignSize = (
         581
         151)
@@ -217,8 +205,6 @@ object CmdFileListDlg: TCmdFileListDlg
         OnDblClick = CmdFileGridDblClick
         OnDrawCell = CmdFileGridDrawCell
         OnKeyDown = CmdFileGridKeyDown
-        ExplicitWidth = 577
-        ExplicitHeight = 150
         ColWidths = (
           64
           64
@@ -244,8 +230,6 @@ object CmdFileListDlg: TCmdFileListDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitTop = 349
-    ExplicitWidth = 577
     object OkBtn: TButton
       Left = 501
       Top = 0
@@ -256,7 +240,6 @@ object CmdFileListDlg: TCmdFileListDlg
       Default = True
       TabOrder = 0
       OnClick = OkBtnClick
-      ExplicitLeft = 497
     end
     object ToolPanel: TPanel
       Left = 0
@@ -266,7 +249,6 @@ object CmdFileListDlg: TCmdFileListDlg
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 497
       object OpeToolBar: TToolBar
         Left = 0
         Top = 0
@@ -280,7 +262,6 @@ object CmdFileListDlg: TCmdFileListDlg
         ShowCaptions = True
         AllowTextButtons = True
         TabOrder = 0
-        ExplicitWidth = 497
         object FilterBtn: TToolButton
           Left = 0
           Top = 0
@@ -375,5 +356,11 @@ object CmdFileListDlg: TCmdFileListDlg
       Caption = #30906#23450#21363#23455#34892'(&X)'
       OnExecute = CnfExeActionExecute
     end
+  end
+  object WaitTimer: TTimer
+    Enabled = False
+    OnTimer = WaitTimerTimer
+    Left = 264
+    Top = 220
   end
 end

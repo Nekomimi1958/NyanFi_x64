@@ -1233,6 +1233,7 @@ extern bool ShowTailPreview;
 extern int  PrvTxtTailLn;
 extern int  PrvActTailLn;
 extern int  WatchInterval;
+extern int  InfPrvWait;
 extern int  LogInterval;
 extern int  ListInterLn;
 extern int  CursorWidth;

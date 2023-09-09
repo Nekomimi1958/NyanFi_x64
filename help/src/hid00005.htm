@@ -116,7 +116,8 @@
       アプリケーションの切り替え、終了、ウィンドウ操作、実行ファイル情報のコピーなどが可能です。<br>
       <div class="spc_box">
         また、指定ディレクトリ下に置かれたショートカットを一覧表示する簡易ランチャーも備えています。<br>
-        パラメータに <b>AS</b> を指定すると、インクリメンタルサーチの対象にスタートメニュー下の全項目が追加されます。あるいは、指定ディレクトリ下に <b>%APPDATA%\Microsoft\Windows\Start Menu</b> と <b>%PROGRAMDATA%\Microsoft\Windows\Start Menu</b> の内容を合わせてコピーしてもよいかもしれません。<br>
+        パラメータに <b>AS</b> を指定すると、インクリメンタルサーチの対象にスタートメニュー下の全項目が追加されます。あるいは、指定ディレクトリ下に <b>%APPDATA%\Microsoft\Windows\Start
+          Menu</b> と <b>%PROGRAMDATA%\Microsoft\Windows\Start Menu</b> の内容を合わせてコピーしてもよいかもしれません。<br>
       </div>
 
       <div class="spc_box">
@@ -311,8 +312,8 @@ NyanFi.exe -XCalculator_CB
       「更新しますか?」の確認後、<b>NyanFi.exe</b> と <b>NyanFi.chm</b> が最新版に更新され再起動します。<br>
       更新後の確認ダイアログで「<b>変更履歴を表示</b>」をチェックしていると、ヘルプの「変更履歴」トピックが開きます。<br>
       <div class="spc_box">
-      更新ファイルの保存場所は記憶され、次回選択する際の初期ディレクトリとして用いられます。<br>
-      パラメータに <b>NC</b> を指定すると、最新版があった場合、確認なしで前回の保存場所にダウンロードし、完了したらそのまま更新を行います。また、最新版がすでに保存場所にある場合は、そのアーカイブから更新します。<br>
+        更新ファイルの保存場所は記憶され、次回選択する際の初期ディレクトリとして用いられます。<br>
+        パラメータに <b>NC</b> を指定すると、最新版があった場合、確認なしで前回の保存場所にダウンロードし、完了したらそのまま更新を行います。また、最新版がすでに保存場所にある場合は、そのアーカイブから更新します。<br>
       </div>
       <div class="spc_box note_text">
         このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
@@ -629,7 +630,8 @@ NyanFi.exe -XCalculator_CB
         パラメータに <b>NS</b> を指定すると、サブディレクトリをコピー(作成)しません。<br>
       </div>
       <div class="spc_box">
-        パラメータに <b>CC</b> を指定すると、対象となるディレクトリ名の一覧をクリップボードにコピーします。また、<b>LS</b> を指定すると<a href="hid00073.htm">一覧ダイアログ</a>で表示します。これらの場合、ディレクトリのコピー(作成)は行いません。<br>
+        パラメータに <b>CC</b> を指定すると、対象となるディレクトリ名の一覧をクリップボードにコピーします。また、<b>LS</b> を指定すると<a
+          href="hid00073.htm">一覧ダイアログ</a>で表示します。これらの場合、ディレクトリのコピー(作成)は行いません。<br>
       </div>
       <a href="#CreateDir">→ CreateDir</a>　<a href="#CreateDirsDlg">→ CreateDirsDlg</a>
     </dd>
@@ -1632,8 +1634,8 @@ nyanfi_imgview.jpg 129,806 800 × 600  (4 : 3)
       パラメータを省略した場合は MD5 とみなします。<br>
       複数ファイルのハッシュ値をコピーしたい場合は <a href="#CopyFileName">CopyFileName</a>_$G(～) コマンドを利用してください。<br>
       <div class="spc_box">
-      パラメータに <b>IN</b> を指定すると、入力ボックスで指定した文字列のハッシュ値(CRCは除く)を取得し、ログに表示、クリップボードにコピーします。なお、マルチバイト文字は UTF-8 として処理します。<br>
-      複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。
+        パラメータに <b>IN</b> を指定すると、入力ボックスで指定した文字列のハッシュ値(CRCは除く)を取得し、ログに表示、クリップボードにコピーします。なお、マルチバイト文字は UTF-8 として処理します。<br>
+        複数のパラメータを指定する場合は <b>;</b> (セミコロン)で区切ってください。
       </div>
       <a href="#CopyFileName">→ CopyFileName</a>　<a href="#CompareHash">→ CompareHash</a>　<a href="#ToOppSameHash">→
         ToOppSameHash</a>
@@ -1822,7 +1824,8 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
           class="btn_frame">...</span>ボタンを押した状態と同じです。<br>
       </div>
       <div class="spc_box">
-        パラメータに <b>CB</b> を指定すると、ダイアログを出さずに、クリップボードのテキスト内容からディレクトリ[\ファイル名]を取得してカレントを変更します。内容が複数行の場合は空でない最初の行内容を取得し、前後の制御文字や空白、引用符などは削除して用います。
+        パラメータに <b>CB</b>
+        を指定すると、ダイアログを出さずに、クリップボードのテキスト内容からディレクトリ[\ファイル名]を取得してカレントを変更します。内容が複数行の場合は空でない最初の行内容を取得し、前後の制御文字や空白、引用符などは削除して用います。
       </div>
       <a href="#ChangeDir">→ ChangeDir</a>　<a href="#ChangeRegDir">→ ChangeRegDir</a>　<a href="#RegDirDlg">→
         RegDirDlg</a>　<a href="#RegDirPopup">→ RegDirPopup</a>　<a href="#SubDirList">→ SubDirList</a>　<a
@@ -1967,7 +1970,8 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       ファイル名の指定には、<a href="#ListArchive">ListArchive</a> コマンドと同じ書式文字列が使えます。<br>
       ファイル名の拡張子に .csv/.tsv を指定すると、一覧のテーブル部分(見出しを含む、序数は10進のみ)が CSV/TSVファイルとして保存されます。この場合、ログには一覧が出力されません。<br>
       <div class="spc_box">
-        パラメータに <b>SN</b> を指定すると名前順(Name)に、<b>SI</b> を指定するとインデックス順(Hint)に、<b>SR</b> を指定するとRVA順に一覧がソートされます。無指定の場合は序数順(Ordinal)になります。
+        パラメータに <b>SN</b> を指定すると名前順(Name)に、<b>SI</b> を指定するとインデックス順(Hint)に、<b>SR</b>
+        を指定するとRVA順に一覧がソートされます。無指定の場合は序数順(Ordinal)になります。
       </div>
       <b>例</b>: エクスポート関数一覧を名前順でCSVファイルとして保存<br>
       　ListExpFunc_\N.csv;SN<br>
@@ -2432,7 +2436,8 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
     <dt id="OpenADS">OpenADS</dt>
     <dd>カーソル位置の項目の代替データストリーム一覧を仮想リストとして開きます。<br>
       仮想リストに対しては、コピー、削除、閲覧、編集(アプリケーションが対応している場合)などの基本的な操作が可能ですが、移動や改名、実行、各種変換などはできません。<br>
-      また独自の関連付け(<a href="#OpenByApp">OpenByApp</a>)では開けますが、<b>Windows</b> の関連付け(<a href="#OpenByWin">OpenByWin</a>)では開けません。<br>
+      また独自の関連付け(<a href="#OpenByApp">OpenByApp</a>)では開けますが、<b>Windows</b> の関連付け(<a
+        href="#OpenByWin">OpenByWin</a>)では開けません。<br>
       テキストや通常の画像はプレビュー可能ですが、動画、アイコン、カーソル、フォントなどはプレビューできません。<br>
       <div class="note_text">
         代替データストリームは、<b>NTFS</b>でないと利用できません。他のファイルシステムにファイルをコピーすると、代替データストリームは失われます。<br>
@@ -2463,7 +2468,9 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       </div>
 
       <div class="spc_box">
-        パラメータに <b>DM</b> を指定すると、<b>NyanFi</b> を管理者として実行している場合に、一般ユーザに降格してファイルを開きます。対象は、通常のファイルリストにあるカーソル位置のファイル(選択状態は無視)、またはパラメータで指定したファイルになります。対応しているのは、<a href="hid00013.htm">オプション設定 - 関連付け</a> で<b>アプリケーション</b>が関連付けられているファイルだけです。<br>
+        パラメータに <b>DM</b> を指定すると、<b>NyanFi</b>
+        を管理者として実行している場合に、一般ユーザに降格してファイルを開きます。対象は、通常のファイルリストにあるカーソル位置のファイル(選択状態は無視)、またはパラメータで指定したファイルになります。対応しているのは、<a
+          href="hid00013.htm">オプション設定 - 関連付け</a> で<b>アプリケーション</b>が関連付けられているファイルだけです。<br>
         管理者として実行していない場合や、カーソル位置が通常のファイルでない場合、このパラメータは無視され、通常の動作になります。
       </div>
 
@@ -2518,7 +2525,9 @@ NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
       </div>
 
       <div class="spc_box">
-        パラメータに <b>DM</b> を指定すると、<b>NyanFi</b> を管理者として実行している場合に、一般ユーザに降格してファイルを開きます。対象は、通常のファイルリストにあるカーソル位置のファイル(選択状態は無視)、またはパラメータで指定したファイルになります。対応しているのは、<b>Windows</b> の関連付けが取得できるファイル(ファイル情報の「プログラム」で確認可能)、および実行可能ファイル(<b>.exe</b>、<b>.bat</b>)です。<br>
+        パラメータに <b>DM</b> を指定すると、<b>NyanFi</b>
+        を管理者として実行している場合に、一般ユーザに降格してファイルを開きます。対象は、通常のファイルリストにあるカーソル位置のファイル(選択状態は無視)、またはパラメータで指定したファイルになります。対応しているのは、<b>Windows</b>
+        の関連付けが取得できるファイル(ファイル情報の「プログラム」で確認可能)、および実行可能ファイル(<b>.exe</b>、<b>.bat</b>)です。<br>
         管理者として実行していない場合や、カーソル位置が通常のファイルでない場合、このパラメータは無視され、通常の動作になります。
       </div>
 
@@ -2964,7 +2973,8 @@ NyanFi.exe -XRegExChecker
       </div>
 
       <a href="#SetAlias">→ SetAlias</a>　<a href="#SwapName">→ SwapName</a>　<a href="#NameFromClip">→
-        NameFromClip</a>　<a href="#UndoRename">→ UndoRename</a>　<a href="#SetArcTime">→ SetArcTime</a>　<a href="#SetDirTime">→ SetDirTime</a>
+        NameFromClip</a>　<a href="#UndoRename">→ UndoRename</a>　<a href="#SetArcTime">→ SetArcTime</a>　<a
+        href="#SetDirTime">→ SetDirTime</a>
     </dd>
 
     <dt id="RepositoryList">RepositoryList<span class="pram_text">[_FF]</span></dt>
@@ -3521,7 +3531,9 @@ D:\Data\hoge.txt
         ダイアログで<span class="btn_frame">拡張設定</span>ボタンを押すと右側に設定画面が開きます。<br>
         ここでは、各ソート方法に対する<b>第2ソート方法</b>を指定できます。ただし「名前」に対する第2ソート方法は常に「なし」になり、結果リストで同名ファイルがあった場合はフルパス名でソートされます。また第2ソート方法が「拡張子」で同じだった場合は、内部的に「名前」で第3ソートされます。なおソート順は第1ソート方法の設定にしたがいます。<br>
         「<b>自然順無効時に論理ソート</b>」をチェックすると、自然順ではない場合も、数値による並べ替えを無効にしたエクスプローラと同じ並びにできます。<br>
-        ソート方法が「拡張子」の場合、<b>拡張子順で優先する拡張子</b> <img src="edit.png" alt=""> を指定すると、それらが優先され指定順で上に集められます(降順では逆)。拡張子は、<b>.</b> (ピリオド)で区切って複数指定できます(例: .code-workspace.exe.chm.md)。右クリックメニューで「<b>設定項目の編集</b>」を選ぶと、設定内容が一覧で表示され、項目の追加、編集、削除、並べ替えなどを行えます。<br>
+        ソート方法が「拡張子」の場合、<b>拡張子順で優先する拡張子</b> <img src="edit.png" alt=""> を指定すると、それらが優先され指定順で上に集められます(降順では逆)。拡張子は、<b>.</b>
+        (ピリオド)で区切って複数指定できます(例:
+        .code-workspace.exe.chm.md)。右クリックメニューで「<b>設定項目の編集</b>」を選ぶと、設定内容が一覧で表示され、項目の追加、編集、削除、並べ替えなどを行えます。<br>
         その他のオプションとして「<b>更新日時のアクセラレータを T に変更</b>」、「<b>現モードのキーを押したときも閉じる</b>」、「<b>拡張設定を常に表示</b>」があります。<br>
       </div>
       <div class="spc_box">
@@ -3534,7 +3546,8 @@ D:\Data\hoge.txt
         ファイル(上位からの継承を含む)でソート方法に「<b>そのまま</b>」以外を指定していると優先的に適用されます。<br>
       </div>
       <div class="spc_box">
-        <a href="hid00091.htm">INIファイルの隠しオプション</a> [Option] <b>SortSymList</b> に文字並びを指定していると、自然順が有効な場合、あるいは「拡張設定」の「自然順無効時に論理ソート」が有効な場合に、指定した文字がその順序に基づいて先頭に集められます(降順では逆)。
+        <a href="hid00091.htm">INIファイルの隠しオプション</a> [Option] <b>SortSymList</b>
+        に文字並びを指定していると、自然順が有効な場合、あるいは「拡張設定」の「自然順無効時に論理ソート」が有効な場合に、指定した文字がその順序に基づいて先頭に集められます(降順では逆)。
       </div>
       <a href="#SetFolderIcon">→ SetFolderIcon</a>　<a href="#SimilarSort">→ SimilarSort</a>
     </dd>
@@ -3634,7 +3647,8 @@ D:\Data\hoge.txt
     <dd>選択している2項目の名前を入れ替えます。<span class="note_text">対象がファイルの場合、拡張子はそのままです。</span><br>
       パラメータに <b>LR</b>
       を指定すると、左右のファイルリストで一つずつ選択している項目の名前を入れ替えます。これは、左右とも通常のファイルリストの場合のみ可能です。また左右が親子関係にあって、一方のパスが改名される場合には対応していません。<br>
-      <a href="#RenameDlg">→ RenameDlg</a>　<a href="#NameFromClip">→ NameFromClip</a>　<a href="#UndoRename">→ UndoRename</a>
+      <a href="#RenameDlg">→ RenameDlg</a>　<a href="#NameFromClip">→ NameFromClip</a>　<a href="#UndoRename">→
+        UndoRename</a>
     </dd>
 
     <dt id="SyncLR">SyncLR<span class="pram_text">[_{ON|OFF}]</span></dt>
@@ -3753,12 +3767,19 @@ D:\Data\hoge.txt
       <a href="#TextViewer">→ TextViewer</a>
     </dd>
 
-    <dt id="ToLeft">ToLeft</dt>
+    <dt id="ToLeft">ToLeft<span class="pram_text">[_RP[;{DL|DP}]]</span></dt>
     <dd>左ファイルリストへ移動します。<br>
-      逆カーソルで親ディレクトリに移動したい場合は、<span class="btn_frame">←</span>キーに対して <b>ToLeft</b> の代わりに <a
-        href="#ToParentOnLeft">ToParentOnLeft</a> コマンドを割り当ててください。<br>
+      <div class="spc_box">
+        パラメータに <b>RP</b> を指定すると、カレントが左ファイルリストの場合、親ディレクトリ(一つ上の階層)へ移ります。<span
+          class="btn_frame">←</span>キーに割り当てていれば、「逆カーソルで親ディレクトリに移動」になります(= <a
+          href="#ToParentOnLeft">ToParentOnLeft</a>)。<br>
+        さらに、<b>DL</b> を追加指定すると、左側がルートディレクトリだった場合は<a href="hid00064.htm">ドライブ一覧</a>を、UNCパスのルートレベルだった場合は共有フォルダ一覧(<a
+          href="#ShareList">ShareList</a>)を表示します。また、<b>DP</b> を追加指定すると、左側がルートディレクトリだった場合にドライブ選択ポップアップメニューを表示します。<br>
+        <b>例</b>: ToLeft_RP;DL<br>
+      </div>
       <a href="#ToRight">→ ToRight</a>　<a href="#ToOpposite">→ ToOpposite</a>　<a href="#ToParentOnLeft">→
-        ToParentOnLeft</a>　<a href="#ToPrevOnLeft">→ ToPrevOnLeft</a>
+        ToParentOnLeft</a>　<a href="#ToParent">→ ToParent</a>　<a href="#DriveList">→ DriveList</a>　<a
+        href="#ToPrevOnLeft">→ ToPrevOnLeft</a>
     </dd>
 
     <dt id="ToLog">ToLog</dt>
@@ -3822,8 +3843,7 @@ D:\Data\hoge.txt
     </dd>
 
     <dt id="ToParentOnLeft">ToParentOnLeft<span class="pram_text">[_{DL|DP}]</span></dt>
-    <dd>カレントが左ファイルリストの場合、親ディレクトリ(一つ上の階層)へ移ります。右ファイルリストの場合は左ファイルリストへ移動します(=<a href="#ToLeft">ToLeft</a>)。<br>
-      したがって<span class="btn_frame">←</span>キーに割り当てれば、「逆カーソルで親ディレクトリに移動」という動作になります。<br>
+    <dd><a href="#ToLeft">ToLeft</a>_RP と同じです。カレントが左ファイルリストの場合、親ディレクトリ(一つ上の階層)へ移ります。右ファイルリストの場合は左ファイルリストへ移動します。<br>
       <div class="spc_box">
         パラメータに <b>DL</b> を指定すると、左側がルートディレクトリだった場合は<a href="hid00064.htm">ドライブ一覧</a>を、UNCパスのルートレベルだった場合は、共有フォルダ一覧(<a
           href="#ShareList">ShareList</a>)を表示します<br>
@@ -3833,8 +3853,7 @@ D:\Data\hoge.txt
     </dd>
 
     <dt id="ToParentOnRight">ToParentOnRight<span class="pram_text">[_{DL|DP}]</span></dt>
-    <dd>カレントが右ファイルリストの場合、親ディレクトリ(一つ上の階層)へ移ります。左ファイルリストの場合は右ファイルリストへ移動します(=<a href="#ToRight">ToRight</a>)。<br>
-      したがって<span class="btn_frame">→</span>キーに割り当てれば、「逆カーソルで親ディレクトリに移動」という動作になります。<br>
+    <dd><a href="#ToRight">ToRight</a>_RP と同じです。カレントが右ファイルリストの場合、親ディレクトリ(一つ上の階層)へ移ります。左ファイルリストの場合は右ファイルリストへ移動します。<br>
       <div class="spc_box">
         パラメータに <b>DL</b> を指定すると、右側がルートディレクトリだった場合は<a href="hid00064.htm">ドライブ一覧</a>を、UNCパスのルートレベルだった場合は、共有フォルダ一覧(<a
           href="#ShareList">ShareList</a>)を表示します<br>
@@ -3850,12 +3869,21 @@ D:\Data\hoge.txt
         PrevNyanFi</a>
     </dd>
 
-    <dt id="ToRight">ToRight</dt>
+    <dt id="ToRight">ToRight<span class="pram_text">[_RP[;{DL|DP}]]</span></dt>
     <dd>右ファイルリストへ移動します。<br>
-      逆カーソルで親ディレクトリに移動したい場合は、<span class="btn_frame">→</span>キーに対して <b>ToRight</b> の代わりに <a
-        href="#ToParentOnRight">ToParentOnRight</a> コマンドを割り当ててください。<br>
+
+      <div class="spc_box">
+        パラメータに <b>RP</b> を指定すると、カレントが右ファイルリストの場合、親ディレクトリ(一つ上の階層)へ移ります。<span
+          class="btn_frame">→</span>キーに割り当てていれば、「逆カーソルで親ディレクトリに移動」になります(= <a
+          href="#ToParentOnRight">ToParentOnRight</a>)。<br>
+        さらに、<b>DL</b> を追加指定すると、右側がルートディレクトリだった場合は<a href="hid00064.htm">ドライブ一覧</a>を、UNCパスのルートレベルだった場合は共有フォルダ一覧(<a
+          href="#ShareList">ShareList</a>)を表示します。また、<b>DP</b> を追加指定すると、右側がルートディレクトリだった場合にドライブ選択ポップアップメニューを表示します。<br>
+      </div>
+
       <a href="#ToLeft">→ ToLeft</a>　<a href="#ToOpposite">→ ToOpposite</a>　<a href="#ToParentOnRight">→
-        ToParentOnRight</a>　<a href="#ToNextOnRight">→ ToNextOnRight</a>
+        ToParentOnRight</a>
+      　<a href="#ToParent">→ ToParent</a>　<a href="#DriveList">→ DriveList</a>　<a href="#ToNextOnRight">→
+        ToNextOnRight</a>
     </dd>
 
     <dt id="ToRoot">ToRoot</dt>
@@ -3890,7 +3918,8 @@ D:\Data\hoge.txt
     </dd>
 
     <dt id="UndoRename">UndoRename</dt>
-    <dd>直前の <a href="#RenameDlg">RenameDlg</a>、<a href="#SwapName">SwapName</a>、または <a href="#NameFromClip">NameFromClip</a> コマンドで変更したファイル名を元に戻します。<br>
+    <dd>直前の <a href="#RenameDlg">RenameDlg</a>、<a href="#SwapName">SwapName</a>、または <a
+        href="#NameFromClip">NameFromClip</a> コマンドで変更したファイル名を元に戻します。<br>
       改名を行うと、<b>NyanFi</b> ディレクトリに &quot;<b>renamelog.txt</b>&quot;
       という改名ログが作成されます。アンドゥはこのログファイルに基づいて行われ、実行後には削除されます。<br>
       なお、「<a href="hid00051.htm">名前の変更</a>」ダイアログの 設定 - その他 で「<b>改名ログを作成しない</b>」をチェックしていると、改名ログが作成されませんので注意してください。<br>
@@ -4203,7 +4232,8 @@ var marker = L.marker([$Latitude$, $Longitude$]).addTo(map);
 
     <dt id="HtmlToText">HtmlToText<span class="pram_text">_{ON|OFF}[;{MD|TX}]</span></dt>
     <dd>パラメータに <b>ON</b> を指定するとHTML→テキスト変換表示、<b>OFF</b> では通常表示(ソース)になります。<br>
-      さらに <b>MD</b> を指定すると、<a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー -「HTML→テキスト変換」</a> の「<b>Markdown記法に変換</b>」オプションが有効に、また <b>TX</b> を指定するとオプションが無効になります。
+      さらに <b>MD</b> を指定すると、<a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー -「HTML→テキスト変換」</a>
+      の「<b>Markdown記法に変換</b>」オプションが有効に、また <b>TX</b> を指定するとオプションが無効になります。
     </dd>
 
     <dt id="SetColor">SetColor<span class="pram_text">_ファイル名</span></dt>

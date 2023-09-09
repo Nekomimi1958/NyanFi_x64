@@ -563,10 +563,11 @@ void __fastcall TCmdFileListDlg::CmdFileGridDblClick(TObject *Sender)
 {
 	perform_Key_RETURN((TControl*)Sender);
 }
+
 //---------------------------------------------------------------------------
-void __fastcall TCmdFileListDlg::CmdFileGridClick(TObject *Sender)
+void __fastcall TCmdFileListDlg::WaitTimerTimer(TObject *Sender)
 {
-	if (!PreviewPanel->Visible) return;
+	WaitTimer->Enabled = false;
 
 	int idx = GetGridIndex();
 	if (idx!=-1) {
@@ -589,6 +590,15 @@ void __fastcall TCmdFileListDlg::CmdFileGridClick(TObject *Sender)
 		get_FileInfList(fp, inf_lst.get());
 		assign_InfListBox(ReferListBox, inf_lst.get(), ReferScrPanel);
 	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TCmdFileListDlg::CmdFileGridClick(TObject *Sender)
+{
+	if (!PreviewPanel->Visible) return;
+
+	WaitTimer->Enabled  = false;
+	WaitTimer->Interval = REPEAT_WAIT;
+	WaitTimer->Enabled  = true;
 }
 
 //---------------------------------------------------------------------------
@@ -643,7 +653,7 @@ void __fastcall TCmdFileListDlg::PreviewActionExecute(TObject *Sender)
 //ŽQÆî•ñ‚Ì•`‰æ
 //---------------------------------------------------------------------------
 void __fastcall TCmdFileListDlg::ReferListBoxDrawItem(TWinControl *Control, int Index,
-		TRect &Rect, TOwnerDrawState State)
+	TRect &Rect, TOwnerDrawState State)
 {
 	draw_InfListBox((TListBox*)Control, Rect, Index, State);
 }
@@ -706,4 +716,3 @@ void __fastcall TCmdFileListDlg::ReqEditActionUpdate(TObject *Sender)
 	((TAction*)Sender)->Enabled = !ToSelect;
 }
 //---------------------------------------------------------------------------
-

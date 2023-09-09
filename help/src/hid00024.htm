@@ -184,14 +184,20 @@
       <br><br>
     </dd>
 
-    <dt class="no_bg"><img src="chkbox.png" alt=""> アーカイブ内のファイル情報/プレビューを表示(一時解凍)</dt>
+    <dt class="no_bg"><img src="chkbox.png" alt=""> アーカイブ内の情報表示(一時解凍)</dt>
     <dd>
       アーカイブ内のファイルについても、上述の設定にしたがってファイル情報やプレビューの表示を行います。そのために、ファイルを一時ディレクトリ下に解凍します。一時解凍したファイルは、アーカイブの仮想ディレクトリから抜けるときに削除されます。<br>
       なお <a href="hid00005.htm#ShowFileInfo">ShowFileInfo</a> コマンド実行時には、この設定はかかわらず強制的にファイル情報やプレビューが表示されます。<br>
     </dd>
 
-    <dt class="no_bg"><img src="chkbox.png" alt=""> 拡張子 .ts (MPEG2-TS/TypeScript)の判別を行う</dt>
+    <dt class="no_bg"><img src="chkbox.png" alt=""> 拡張子 .ts の判別を行う</dt>
     <dd><b>.ts</b> ファイルが、「MPEG2-TS ビデオ」か「TypeScript ソースファイル」かを判別します。チェックを外すと、TypeScript はテキストファイルとして扱われなくなります。<br>
+    </dd>
+
+    <dt class="no_bg">情報取得/プレビューの遅延 <img src="edit.png" alt="">　<span class="def_text">(デフォルト: 50m秒)</span></dt>
+    <dd>
+      カーソル位置項目のファイル情報取得やプレビュー処理に対する待機時間をm秒単位で設定できます。<br>
+      0より大きな値にすると、対象が変化したとき、処理を直ちに行わずに設定時間だけ待機します。待機中にさらに対象が変わると、そのたびに遅延されます。キーリピートの間隔よりも長い値を設定しておくと、カーソル移動がスムーズになります。
       <br><br>
     </dd>
 

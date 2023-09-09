@@ -161,6 +161,8 @@ __published:	// IDE で管理されるコンポーネント
 	TTimer *Timer1;
 	TLabeledEdit *PrvWaitEdit;
 	TLabel *Label1;
+	TPanel *PreviewPanel;
+	TPanel *SglOpPanel;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);

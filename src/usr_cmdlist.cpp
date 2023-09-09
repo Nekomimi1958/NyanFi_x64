@@ -510,23 +510,22 @@ void get_PrmList(
 
 		if (cp && contained_wd_i(
 			_T("AddTag|AppList|CalcDirSize|CalcDirSizeAll|Calculator|ChangeDir|ChangeOppDir|Clone|CloneToCurr|")
-			_T("ContextMenu|ConvertHtm2Txt|Copy|CopyTo|CountLines|CreateDir|CursorDown|CursorUp|CursorTop|")
-			_T("DateSelect|DebugCmdFile|Delete|DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|Filter|")
-			_T("FindDown|FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|FunctionList|GitDiff|GitViewer|Grep|")
-			_T("HelpCurWord|HtmlToText|ImageViewer|IncSearch|InputCommands|JumpIndex|JumpLine|JumpTo|")
-			_T("ListArchive|ListDuration|ListExpFunc|ListNyanFi|ListTail|ListText|ListTree|LoadBgImage|")
-			_T("LoadResultList|LoadTabGroup|LoadWorkList|LockKeyMouse|Mark|MaskFind|MaskSelect|MatchSelect|")
-			_T("MonitorOff|Move|MoveTo|NameFromClip|NewTextFile|OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|")
-			_T("Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|Restart|SaveAsTabGroup|ScrollCursorDown|")
-			_T("ScrollCursorUp|ScrollDown|ScrollDownLog|ScrollDownText|ScrollUp|ScrollUpLog|ScrollUpText|")
-			_T("SelByList|SetColor|SetDirTime|SetFontSize|SetInterpolation|SetMargin|SetPathMask|SetSttBarFmt|")
-			_T("SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|ShareList|SimilarImage|SimilarSort|SortDlg|")
-			_T("SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToOppSameHash|ToTab|UnPack|")
-			_T("UnPackToCurr|ViewTail|WatchTail|WidenCurList|WinPos"),
+			_T("ContextMenu|ConvertHtm2Txt|Copy|CopyTo|CountLines|CreateDir|CursorDown|CursorTop|CursorUp|DateSelect|")
+			_T("DebugCmdFile|Delete|DistributionDlg|ExeCommands|ExeMenuFile|FileEdit|FileRun|Filter|FindDown|")
+			_T("FindFileDirDlg|FindFileDlg|FindTag|FindUp|FTPChmod|FunctionList|GitDiff|GitViewer|Grep|HelpCurWord|")
+			_T("HtmlToText|IncSearch|InputCommands|JumpIndex|JumpLine|JumpTo|ListArchive|ListDuration|ListExpFunc|")
+			_T("ListNyanFi|ListTail|ListText|ListTree|LoadBgImage|LoadResultList|LoadTabGroup|LoadWorkList|")
+			_T("LockKeyMouse|Mark|MaskFind|MaskSelect|MatchSelect|MonitorOff|Move|MoveTo|NameFromClip|NewTextFile|")
+			_T("OpenByApp|OpenByExp|OpenByWin|OpenStandard|OpenURL|Pack|PackToCurr|PlayList|PropertyDlg|RegExChecker|")
+			_T("Restart|SaveAsTabGroup|ScrollCursorDown|ScrollCursorUp|ScrollDown|ScrollDownLog|ScrollDownText|")
+			_T("ScrollUp|ScrollUpLog|ScrollUpText|SelByList|SetColor|SetDirTime|SetFontSize|SetInterpolation|")
+			_T("SetMargin|SetPathMask|SetSttBarFmt|SetSubSize|SetTab|SetTag|SetUserDefStr|SetWidth|ShareList|")
+			_T("SimilarImage|SimilarSort|SortDlg|SubDirList|TagJumpDirect|TagSelect|TagViewDirect|TextViewer|ToLeft|")
+			_T("ToOppSameHash|ToRight|ToTab|UnPack|UnPackToCurr|ViewTail|WatchTail|WidenCurList|WinPos"),
 			cmd))
 		{
+			cp->Style	= csDropDown;
 			cp->Enabled = true;
-			cp->Style	= USAME_TI(cmd, "ImageViewer")? csDropDownList : csDropDown;
 		}
 	}
 
@@ -1070,6 +1069,20 @@ void get_PrmList(
 	else if (contained_wd_i(_T("TextViewer|ImageViewer"), cmd)) {
 		params = "\nCB : クリップボードの内容を表示\nNN : 次のNyanFiで表示\n";
 		if (USAME_TI(cmd, "TextViewer")) params += "XW : 別ウィンドウで表示\n";
+	}
+	else if (USAME_TI(cmd, "ToLeft")) {
+		params.sprintf(_T("%s"),
+			_T("\n")
+			_T("RP : 左側なら親ディレクトリへ\n")
+			_T("DL : ルートならドライブ/共有フォルダ一覧を表示\n")
+			_T("DP : ルートならドライブ選択メニューを表示\n"));
+	}
+	else if (USAME_TI(cmd, "ToRight")) {
+		params.sprintf(_T("%s"),
+			_T("\n")
+			_T("RP : 左側なら親ディレクトリへ\n")
+			_T("DL : ルートならドライブ/共有フォルダ一覧を表示\n")
+			_T("DP : ルートならドライブ選択メニューを表示\n"));
 	}
 	else if (USAME_TI(cmd, "ToOppSameItem")) {
 		params = "\nNO : 反対側へ移動しない\n";

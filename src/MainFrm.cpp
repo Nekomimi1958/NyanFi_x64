@@ -3884,8 +3884,6 @@ void __fastcall TNyanFiForm::RestoreBgImg()
 	}
 }
 
-
-
 //---------------------------------------------------------------------------
 //タイマー処理 (タスク状態表示)
 // インターバル = 200ms
@@ -4257,6 +4255,15 @@ void __fastcall TNyanFiForm::TaskSttTimerTimer(TObject *Sender)
 	}
 
 	TaskSttTimer->Tag = 0;
+}
+
+//---------------------------------------------------------------------------
+//ファイル情報
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::WaitTimerTimer(TObject *Sender)
+{
+	WaitTimer->Enabled = false;
+	SetFileInfCore();
 }
 
 //---------------------------------------------------------------------------
@@ -7615,17 +7622,42 @@ void __fastcall TNyanFiForm::SetFileInf()
 		ExeCommandAction("ToOppSameItem", "NO");
 	}
 
-	InfPanel->Visible = (PreviewPanel->Visible || InfListPanel->Visible);
-
 	//検索情報
 	if (CurStt->is_Find) SetDirCaption(CurListTag);
 
 	//関係表示
 	SetDirRelation();
 
-	//ファイル情報
-	StatusBar1->Panels->Items[0]->Text = EmptyStr;
+	if (InfPrvWait>0) {
+		if (WaitTimer->Enabled) {
+			WaitTimer->Enabled = false;
+			//テキストプレビュー/ファイル情報をクリア
+			if (ScrMode==SCMD_FLIST) {
+				assign_InfListBox(InfListBox, NULL, InfScrPanel);
+				if (PreviewPanel->Visible && !LockTxtPrv) {
+					assign_FileListBox(TxtPrvListBox,  NULL, -1, TxtPrvScrPanel);
+					assign_FileListBox(TxtTailListBox, NULL, -1, TxtTailScrPanel);
+				}
+			}
+			StatusBar1->Panels->Items[0]->Text = EmptyStr;
+		}
 
+		//遅延タイマー開始
+		WaitTimer->Interval = InfPrvWait;
+		WaitTimer->Enabled  = true;
+	}
+	else {
+		SetFileInfCore();
+	}
+}
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SetFileInfCore()
+{
+	if (!Initialized || UnInitializing || ScrMode!=SCMD_FLIST || CurWorking) return;
+
+	InfPanel->Visible = (PreviewPanel->Visible || InfListPanel->Visible);
+
+	//ファイル情報
 	file_rec *cfp = cre_new_file_rec(GetCurFrecPtr(true, true));	//※処理中に変化する可能性があるため
 	if (cfp) {
 		UserModule->CurFileName = (!cfp->is_up && !cfp->is_dummy)? cfp->f_name : EmptyStr;
@@ -26823,12 +26855,17 @@ void __fastcall TNyanFiForm::ToExViewerActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ToLeftActionExecute(TObject *Sender)
 {
-	bool changed = (CurListTag==1);
-	InvalidateFileList(1);
-	FileListBox[0]->SetFocus();
-	if (GetSelCount(GetCurList())>0) InvalidateFileList(0);
-	ListBoxSetIndex(FileListBox[0], FileListBox[0]->ItemIndex);
-	if (changed) SetFileInf();
+	if (TEST_DEL_ActParam("RP") && (CurListTag==0)) {
+		ToParentAction->Execute();
+	}
+	else {
+		bool changed = (CurListTag==1);
+		InvalidateFileList(1);
+		FileListBox[0]->SetFocus();
+		if (GetSelCount(GetCurList())>0) InvalidateFileList(0);
+		ListBoxSetIndex(FileListBox[0], FileListBox[0]->ItemIndex);
+		if (changed) SetFileInf();
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -27094,12 +27131,17 @@ void __fastcall TNyanFiForm::ToNextOnRightActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ToRightActionExecute(TObject *Sender)
 {
-	bool changed = (CurListTag==0);
-	InvalidateFileList(0);
-	FileListBox[1]->SetFocus();
-	if (GetSelCount(GetCurList())>0) InvalidateFileList(1);
-	ListBoxSetIndex(FileListBox[1], FileListBox[1]->ItemIndex);
-	if (changed) SetFileInf();
+	if (TEST_DEL_ActParam("RP") && (CurListTag==1)) {
+		ToParentAction->Execute();
+	}
+	else {
+		bool changed = (CurListTag==0);
+		InvalidateFileList(0);
+		FileListBox[1]->SetFocus();
+		if (GetSelCount(GetCurList())>0) InvalidateFileList(1);
+		ListBoxSetIndex(FileListBox[1], FileListBox[1]->ItemIndex);
+		if (changed) SetFileInf();
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -37627,4 +37669,3 @@ void __fastcall TNyanFiForm::IS_Match1ActionUpdate(TObject *Sender)
 	ap->Enabled = !CurStt->is_Migemo && !CurStt->is_Filter;
 }
 //---------------------------------------------------------------------------
-

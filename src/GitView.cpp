@@ -190,7 +190,6 @@ UnicodeString __fastcall TGitViewer::GitExeStr(UnicodeString prm)
 						}
 					}
 					c_lp->Invalidate();
-
 					UpdateDiffList(true);
 				}
 			}
@@ -583,6 +582,12 @@ void __fastcall TGitViewer::UpdateBranchList()
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TGitViewer::WaitTimerTimer(TObject *Sender)
+{
+	WaitTimer->Enabled = false;
+	UpdateDiffList();
+}
+//---------------------------------------------------------------------------
 void __fastcall TGitViewer::UpdateDiffList(
 	bool keep_idx)	//ItemIndex を維持	(default = false);
 {
@@ -593,68 +598,68 @@ void __fastcall TGitViewer::UpdateDiffList(
 
 	TListBox *c_lp = CommitListBox;
 	git_rec *gp = (git_rec *)c_lp->Items->Objects[c_lp->ItemIndex];
-	if (!gp->is_stash && !gp->is_work && !gp->is_index && gp->hash.IsEmpty()) return;
-
-	std::unique_ptr<TStringList> o_lst(new TStringList());
-	if (!gp->stash.IsEmpty()) {
-		StashName = gp->stash;
-		UnicodeString prm = "stash show " + gp->stash;
-		GitBusy = true;
-		if (GitShellExe(prm, WorkDir, o_lst.get(), NULL, WarnList) && o_lst->Count>0)
-			gp->diff_inf = o_lst->Text;
-		GitBusy = false;
-	}
-	else {
-		CommitID   = gp->hash;
-		ParentID   = gp->parent;
-		BranchName = gp->branch;
-		TagNames   = gp->tags;
-
-		if (gp->diff_inf.IsEmpty()) {
-			UnicodeString prm = "diff --stat-width=120 ";
-			UnicodeString parent = get_tkn(ParentID, ' ');
-			if (parent.IsEmpty()) parent = GIT_NULL_ID;
-
-			if		(gp->is_work)	;
-			else if (gp->is_index)	prm += "--cached";
-			else					prm += (parent + " " + CommitID);
-
-			if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" -- \"%s\""), FilterName.c_str());
+	if (gp->is_stash || gp->is_work || gp->is_index || !gp->hash.IsEmpty()) {
+		std::unique_ptr<TStringList> o_lst(new TStringList());
+		if (!gp->stash.IsEmpty()) {
+			StashName = gp->stash;
+			UnicodeString prm = "stash show " + gp->stash;
 			GitBusy = true;
 			if (GitShellExe(prm, WorkDir, o_lst.get(), NULL, WarnList) && o_lst->Count>0)
 				gp->diff_inf = o_lst->Text;
 			GitBusy = false;
 		}
 		else {
-			o_lst->Text = gp->diff_inf;
-		}
-	}
+			CommitID   = gp->hash;
+			ParentID   = gp->parent;
+			BranchName = gp->branch;
+			TagNames   = gp->tags;
 
-	//作業ツリーに ? ファイルを追加
-	if (gp->is_work && StatusList->Text.Pos('?')) {
-		o_lst->Add(EmptyStr);
-		o_lst->Add("-");
-		o_lst->Add("*追跡されていないファイル");
-		std::unique_ptr<TStringList> u_lst(new TStringList());
-		for (int i=0; i<StatusList->Count; i++) {
-			UnicodeString lbuf = StatusList->Strings[i];
-			if (lbuf[2]=='?') o_lst->Add(lbuf);
-		}
-	}
+			if (gp->diff_inf.IsEmpty()) {
+				UnicodeString prm = "diff --stat-width=120 ";
+				UnicodeString parent = get_tkn(ParentID, ' ');
+				if (parent.IsEmpty()) parent = GIT_NULL_ID;
 
-	//リストボックスに割り当て
-	TListBox *d_lp = DiffListBox;
-	bool is_irreg = IsIrregularFont(d_lp->Canvas->Font);
-	int max_fwd = 0;
-	for (int i=0; i<o_lst->Count; i++) {
-		UnicodeString lbuf = o_lst->Strings[i];
-		if (lbuf.Pos(" | "))
-			max_fwd = std::max(max_fwd, get_TextWidth(d_lp->Canvas, get_tkn(lbuf, " | ") + " ", is_irreg));
+				if		(gp->is_work)	;
+				else if (gp->is_index)	prm += "--cached";
+				else					prm += (parent + " " + CommitID);
+
+				if (!FilterName.IsEmpty()) prm.cat_sprintf(_T(" -- \"%s\""), FilterName.c_str());
+				GitBusy = true;
+				if (GitShellExe(prm, WorkDir, o_lst.get(), NULL, WarnList) && o_lst->Count>0)
+					gp->diff_inf = o_lst->Text;
+				GitBusy = false;
+			}
+			else {
+				o_lst->Text = gp->diff_inf;
+			}
+		}
+
+		//作業ツリーに ? ファイルを追加
+		if (gp->is_work && StatusList->Text.Pos('?')) {
+			o_lst->Add(EmptyStr);
+			o_lst->Add("-");
+			o_lst->Add("*追跡されていないファイル");
+			std::unique_ptr<TStringList> u_lst(new TStringList());
+			for (int i=0; i<StatusList->Count; i++) {
+				UnicodeString lbuf = StatusList->Strings[i];
+				if (lbuf[2]=='?') o_lst->Add(lbuf);
+			}
+		}
+
+		//リストボックスに割り当て
+		TListBox *d_lp = DiffListBox;
+		bool is_irreg = IsIrregularFont(d_lp->Canvas->Font);
+		int max_fwd = 0;
+		for (int i=0; i<o_lst->Count; i++) {
+			UnicodeString lbuf = o_lst->Strings[i];
+			if (lbuf.Pos(" | "))
+				max_fwd = std::max(max_fwd, get_TextWidth(d_lp->Canvas, get_tkn(lbuf, " | ") + " ", is_irreg));
+		}
+		MaxDfWidth = max_fwd;
+		d_lp->Items->Assign(o_lst.get());
+		d_lp->ItemIndex = keep_idx? std::min(org_idx, d_lp->Count - 1) : 0;
+		DiffScrPanel->UpdateKnob();
 	}
-	MaxDfWidth = max_fwd;
-	d_lp->Items->Assign(o_lst.get());
-	d_lp->ItemIndex = keep_idx? std::min(org_idx, d_lp->Count - 1) : 0;
-	DiffScrPanel->UpdateKnob();
 }
 
 //---------------------------------------------------------------------------
@@ -924,7 +929,9 @@ void __fastcall TGitViewer::CommitListBoxClick(TObject *Sender)
 		c_lp->ItemIndex = LastCmListIdx = idx;
 	}
 
-	UpdateDiffList();
+	WaitTimer->Enabled  = false;
+	WaitTimer->Interval = REPEAT_WAIT;
+	WaitTimer->Enabled  = true;
 }
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::CommitListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
@@ -2107,4 +2114,3 @@ void __fastcall TGitViewer::StashPopActionUpdate(TObject *Sender)
 	ap->Enabled = ap->Visible;
 }
 //---------------------------------------------------------------------------
-

@@ -52,6 +52,7 @@ __published:	// IDE で管理されるコンポーネント
 	TSplitter *PreviewSplitter;
 	TSplitter *ReferSplitter;
 	TStringGrid *CmdFileGrid;
+	TTimer *WaitTimer;
 	TToolBar *OpeToolBar;
 	TToolButton *CnfExeBtn;
 	TToolButton *FilterBtn;
@@ -78,6 +79,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CnfExeActionExecute(TObject *Sender);
 	void __fastcall CmdFileGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CmdFileGridDblClick(TObject *Sender);
+	void __fastcall WaitTimerTimer(TObject *Sender);
 	void __fastcall CmdFileGridClick(TObject *Sender);
 	void __fastcall PreviewListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall PreviewListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);

@@ -8,6 +8,8 @@
 //---------------------------------------------------------------------------
 #define ESC_INTERVAL	256
 
+#define REPEAT_WAIT		50
+
 extern UnicodeString KeyStr_Shift;
 extern UnicodeString KeyStr_Ctrl;
 extern UnicodeString KeyStr_Alt;

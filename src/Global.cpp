@@ -982,6 +982,7 @@ bool ShowTailPreview;			//末尾プレビューを表示
 int  PrvTxtTailLn;				//末尾プレビュー行数
 int  PrvActTailLn;				//末尾プレビューを有効にする行数
 int  WatchInterval;				//ディレクトリ監視間隔
+int  InfPrvWait;				//情報取得/プレビューの遅延
 int  LogInterval;				//ログの更新間隔
 int  ListInterLn;				//ファイルリストの行間
 int  CursorWidth;				//カーソル線の幅
@@ -1570,6 +1571,7 @@ void InitializeGlobal()
 		{_T("PrvTxtTailLn=100"),			(TObject*)&PrvTxtTailLn},
 		{_T("PrvActTailLn=0"),				(TObject*)&PrvActTailLn},
 		{_T("WatchInterval=1000"),			(TObject*)&WatchInterval},
+		{_T("InfPrvWait=50"),				(TObject*)&InfPrvWait},
 		{_T("LogInterval=250"),				(TObject*)&LogInterval},
 		{_T("InitialModeI=0"),				(TObject*)&InitialModeI},
 		{_T("LastZoomRatio=100"),			(TObject*)&LastZoomRatio},
@@ -6177,11 +6179,11 @@ void assign_FileListBox(
 	UsrScrollPanel *sp)		//シンプルスクロールバー (default = NULL)
 {
 	if (lp->Style==lbVirtualOwnerDraw) {
-		lp->Count = lst->Count;
+		lp->Count = lst? lst->Count : 0;
 	}
 	else {
 		lp->LockDrawing();
-		lp->Items->Assign(lst);
+		if (lst) lp->Items->Assign(lst); else lp->Clear();
 		lp->UnlockDrawing();
 	}
 
@@ -8461,20 +8463,25 @@ void assign_InfListBox(
 	TStringList *i_lst,		//ファイル情報リスト
 	UsrScrollPanel *sp)		//シンプルスクロールバー (default = NULL)
 {
-	TCanvas *cv = lp->Canvas;
-	cv->Font->Assign(lp->Font);
+	if (i_lst) {
+		TCanvas *cv = lp->Canvas;
+		cv->Font->Assign(lp->Font);
 
-	bool is_irreg = IsIrregularFont(cv->Font);
-	int w_max = 0;
-	for (int i=((lp->Tag & LBTAG_OPT_FIF1)? 3: 0); i<i_lst->Count; i++) {
-		if ((int)i_lst->Objects[i] & LBFLG_FEXT_FIF) continue;
-		UnicodeString lbuf = i_lst->Strings[i];
-		if (lbuf.Pos(": ")>1) w_max = std::max(w_max, get_TextWidth(cv, get_tkn(lbuf, _T(": ")), is_irreg));
+		bool is_irreg = IsIrregularFont(cv->Font);
+		int w_max = 0;
+		for (int i=((lp->Tag & LBTAG_OPT_FIF1)? 3: 0); i<i_lst->Count; i++) {
+			if ((int)i_lst->Objects[i] & LBFLG_FEXT_FIF) continue;
+			UnicodeString lbuf = i_lst->Strings[i];
+			if (lbuf.Pos(": ")>1) w_max = std::max(w_max, get_TextWidth(cv, get_tkn(lbuf, _T(": ")), is_irreg));
+		}
+
+		lp->Tag &= 0x7fff0000;
+		lp->Tag |= w_max;
+		lp->Items->Assign(i_lst);
 	}
-
-	lp->Tag &= 0x7fff0000;
-	lp->Tag |= w_max;
-	lp->Items->Assign(i_lst);
+	else {
+		lp->Clear();
+	}
 	if (sp) sp->UpdateKnob();
 }
 
@@ -10317,12 +10324,12 @@ UnicodeString Key_to_CmdV(UnicodeString key)
 //---------------------------------------------------------------------------
 bool is_ToLeftOpe(UnicodeString keystr, UnicodeString cmdstr)
 {
-	return (equal_LEFT(keystr) || contained_wd_i(_T("ToLeft|ToParentOnLeft|PrevTab"), cmdstr));
+	return (equal_LEFT(keystr) || contained_wd_i(_T("ToLeft|ToParentOnLeft|PrevTab"), get_CmdStr(cmdstr)));
 }
 //---------------------------------------------------------------------------
 bool is_ToRightOpe(UnicodeString keystr, UnicodeString cmdstr)
 {
-	return (equal_RIGHT(keystr) || contained_wd_i(_T("ToRight|ToParentOnRight|NextTab"), cmdstr));
+	return (equal_RIGHT(keystr) || contained_wd_i(_T("ToRight|ToParentOnRight|NextTab"), get_CmdStr(cmdstr)));
 
 }
 

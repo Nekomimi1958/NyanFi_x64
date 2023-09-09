@@ -173,8 +173,8 @@ __published:	// IDE で管理されるコンポーネント
 	TToolButton *FindUpBtn;
 	TToolButton *GuiBtn;
 	TToolButton *ResetBtn;
-
-	TToolButton *ToolButton2;TToolButton *ToolButton1;
+	TToolButton *ToolButton1;
+	TToolButton *ToolButton2;
 	TToolButton *UpdateBtn;
 	TAction *StashAction;
 	TToolButton *FindSpcBtn2;
@@ -190,6 +190,7 @@ __published:	// IDE で管理されるコンポーネント
 	TAction *CopyPathAction;
 	TMenuItem *CopyPathItem;
 	TMenuItem *Sep_d_3;
+	TTimer *WaitTimer;
 
 	void __fastcall FormCreate(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -199,6 +200,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall BranchPanelResize(TObject *Sender);
 	void __fastcall CommitPanelResize(TObject *Sender);
 	void __fastcall DiffPanelResize(TObject *Sender);
+	void __fastcall WaitTimerTimer(TObject *Sender);
 	void __fastcall BranchListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall BranchListBoxClick(TObject *Sender);
 	void __fastcall BranchListBoxDblClick(TObject *Sender);

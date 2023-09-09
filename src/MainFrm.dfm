@@ -6237,4 +6237,10 @@ object NyanFiForm: TNyanFiForm
     Left = 616
     Top = 8
   end
+  object WaitTimer: TTimer
+    Enabled = False
+    OnTimer = WaitTimerTimer
+    Left = 634
+    Top = 147
+  end
 end

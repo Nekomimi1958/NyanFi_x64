@@ -574,6 +574,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	PrvActTailLnEdit->Tag		= (NativeInt)&PrvActTailLn;
 	WatchIntervalEdit->Tag		= (NativeInt)&WatchInterval;
 	LimitSndEdit->Tag			= (NativeInt)&PlaySndLimitTime;
+	InfPrvWaitEdit->Tag			= (NativeInt)&InfPrvWait;
 	LogIntervalEdit->Tag		= (NativeInt)&LogInterval;
 	IniWinWdEdit->Tag			= (NativeInt)&IniWinWidth;
 	IniWinHiEdit->Tag			= (NativeInt)&IniWinHeight;
@@ -4744,6 +4745,8 @@ void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 	PrvTxtTailLnEdit->Color		  = get_WinColor(!flag);
 	PrvActTailLnEdit->Color		  = get_WinColor(!flag);
 
+	InfPrvWaitEdit->Color		  = get_WinColor(EditToInt(InfPrvWaitEdit)==0);
+
 	AppendLogCheckBox->Enabled	  = SaveLogCheckBox->Checked;
 	MaxLogFilesEdit->Enabled	  = SaveLogCheckBox->Checked;
 	BeepTopEndCheckBox->Enabled   = HintTopEndCheckBox->Checked;
@@ -4825,4 +4828,3 @@ void __fastcall TOptionDlg::CanButtonClick(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
-
