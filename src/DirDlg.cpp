@@ -235,7 +235,7 @@ void __fastcall TRegDirDlg::FormResize(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TRegDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if (!IsSpecial && USAME_TI(get_KeyStr(Key, Shift), "Alt+O")) {
+	if (!IsSpecial && SameText(get_KeyStr(Key, Shift), "Alt+O")) {
 		ChgOptBtnClick(NULL);
 	}
 	else {
@@ -314,7 +314,7 @@ void __fastcall TRegDirDlg::UpdateSpDirList(bool reload)
 		if (MigemoAction->Checked) opt << soMigemo;
 		if (AndOrAction->Checked)  opt << soAndOr;
 		if (contains_upper(FilterEdit->Text)) opt << soCaseSens;
-		filter_List(SpDirList, SpDirBuff, FilterEdit->Text, opt); 
+		filter_List(SpDirList, SpDirBuff, FilterEdit->Text, opt);
 	}
 	else {
 		SpDirBuff->Assign(SpDirList);
@@ -420,7 +420,7 @@ UnicodeString __fastcall TRegDirDlg::GetCurDirItem(
 					dnam = ExtractFilePath(dnam);
 				}
 				if (dsp_sw && UseEnvVarAction->Checked) {
-					if (contained_wd_i(_T("TEMP|TMP"), itm_buf[1]))
+					if (contained_wd_i("TEMP|TMP", itm_buf[1]))
 						dnam = "%" + itm_buf[1] + "%";
 					else
 						dnam = ExcludeTrailingPathDelimiter(replace_str_by_list(dnam, EnvVarList));
@@ -508,7 +508,7 @@ void __fastcall TRegDirDlg::RegDirListBoxDrawItem(TWinControl *Control, int Inde
 					lp->Tag |= xp;			//表示位置を Tag に設定
 					if (is_exe) dnam = ExtractFilePath(dnam);
 					if (UseEnvVarAction->Checked) {
-						if (contained_wd_i(_T("TEMP|TMP"), itm_buf[1]))
+						if (contained_wd_i("TEMP|TMP", itm_buf[1]))
 							dnam = "%" + itm_buf[1] + "%";
 						else
 							dnam = ExcludeTrailingPathDelimiter(replace_str_by_list(dnam, EnvVarList));
@@ -623,7 +623,7 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		FilterEdit->SetFocus();
 	}
 	//プロパティ
-	else if (USAME_TI(cmd_F, "PropertyDlg")) {
+	else if (SameText(cmd_F, "PropertyDlg")) {
 		UnicodeString dnam = GetCurDirItem();
 		if (!dnam.IsEmpty() && !StartsText("shell:", dnam) && !StartsText("#:", dnam)) {
 			pos_ListBoxItem(lp);
@@ -631,18 +631,18 @@ void __fastcall TRegDirDlg::RegDirListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		}
 	}
 	//エクスプローラで開く
-	else if (USAME_TI(cmd_F, "OpenByExp")) {
+	else if (SameText(cmd_F, "OpenByExp")) {
 		ClearKeyBuff(true);		//OnKeyPress を抑止
 		OpenByExpAction->Execute();
 	}
 	//アクセラレータで移動
 	else if (IsSpecial) {
-		int s_idx = USAME_TI(KeyStr, "Alt+U")? 1 :
-					USAME_TI(KeyStr, "Alt+V")? 2 :
-					USAME_TI(KeyStr, "Alt+N")? 5 :
-					USAME_TI(KeyStr, "Alt+E")? 6 :
-					USAME_TI(KeyStr, "Alt+X")? 7 :
-					USAME_TI(KeyStr, "Alt+P")? 8 : 0;
+		int s_idx = SameText(KeyStr, "Alt+U")? 1 :
+					SameText(KeyStr, "Alt+V")? 2 :
+					SameText(KeyStr, "Alt+N")? 5 :
+					SameText(KeyStr, "Alt+E")? 6 :
+					SameText(KeyStr, "Alt+X")? 7 :
+					SameText(KeyStr, "Alt+P")? 8 : 0;
 		if (s_idx>0) {
 			for (int i=0; i<lp->Count; i++) {
 				if ((int)lp->Items->Objects[i]==s_idx) {

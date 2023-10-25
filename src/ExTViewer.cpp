@@ -547,11 +547,11 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 		handled = true;
 
 		//クリップボードにコピー
-		if (USAME_TI(cmd, "ClipCopy")) {
-			ExViewer->ClipCopy(USAME_TI(ActionParam, "AD"));
+		if (SameText(cmd, "ClipCopy")) {
+			ExViewer->ClipCopy(SameText(ActionParam, "AD"));
 		}
 		//前/次のウィンドウを表示
-		else if (contained_wd_i(_T("PrevFile|NextFile"), cmd)) {
+		else if (contained_wd_i("PrevFile|NextFile", cmd)) {
 			std::unique_ptr<TStringList> lst(new TStringList());
 			get_ExViewerList(lst.get());
 
@@ -559,7 +559,7 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 			for (int i=0; i<lst->Count; i++) if ((TForm *)lst->Objects[i]==this) idx = i;
 
 			if (lst->Count>1 && idx!=-1) {
-				if (USAME_TI(cmd, "PrevFile")) {
+				if (SameText(cmd, "PrevFile")) {
 					idx--; if (idx<0) idx = lst->Count -1;
 				}
 				else {
@@ -569,11 +569,11 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 			}
 		}
 		//ファイルの再読み込み
-		else if (USAME_TI(cmd, "ReloadFile")) {
+		else if (SameText(cmd, "ReloadFile")) {
 			if (!OpenViewer(ExViewer->isBinary)) GlobalAbort();
 		}
 		//テキスト/バイナリ表示の切り換え
-		else if (USAME_TI(cmd, "ChangeViewMode")) {
+		else if (SameText(cmd, "ChangeViewMode")) {
 			//バイナリ表示
 			if (isXDoc2Txt || isRichText || isViewText) {
 				if (!OpenViewer(true)) GlobalAbort();
@@ -584,30 +584,30 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 			}
 		}
 		//文字コード変更
-		else if (USAME_TI(cmd, "ChangeCodePage")) {
+		else if (SameText(cmd, "ChangeCodePage")) {
 			if (ExViewer->isXDoc2Txt || ExViewer->isBinary) UserAbort(USTR_InvalidCmd);
 			int code_page = ExViewer->change_CodePage(ActionParam);
 			if (code_page==0) UserAbort(USTR_IllegalParam);
 			if (!OpenViewer(false, code_page, 0, true)) GlobalAbort();
 		}
 		//編集
-		else if (USAME_TI(cmd, "FileEdit")) {
+		else if (SameText(cmd, "FileEdit")) {
 			if (isXDoc2Txt || !ActionParam.IsEmpty()) UserAbort(USTR_OpeNotSuported);
 			req_tEdit = true;
 			req_close = true;
 		}
 		//バイナリ編集
-		else if (USAME_TI(cmd, "BinaryEdit")) {
+		else if (SameText(cmd, "BinaryEdit")) {
 			if (!file_exists(get_actual_path(BinaryEditor))) UserAbort(USTR_AppNotFound);
 			req_bEdit = true;
 			req_close = true;
 		}
 		//ダンプリストをファイルに保存
-		else if (USAME_TI(cmd, "SaveDump"))	{
+		else if (SameText(cmd, "SaveDump"))	{
 			SaveDumpAction->Execute();
 		}
 		//タグジャンプ
-		else if (contained_wd_i(_T("TagJump|TagView"), cmd)) {
+		else if (contained_wd_i("TagJump|TagView", cmd)) {
 			if (ExViewer->isBinary) UserAbort(USTR_InvalidCmd);
 
 			int lno = 1, pos = 0;
@@ -628,57 +628,57 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 					if (!OpenViewer(fnam, false, 0, lno)) GlobalAbort();
 				}
 			}
-			else if (USAME_TI(ActionParam, "DJ")) {
+			else if (SameText(ActionParam, "DJ")) {
 				DirectTagJumpCore(is_edit);
 			}
 			else GlobalAbort();
 		}
 		//ダイレクトタグジャンプ
-		else if (contained_wd_i(_T("TagJumpDirect|TagViewDirect"), cmd)) {
+		else if (contained_wd_i("TagJumpDirect|TagViewDirect", cmd)) {
 			DirectTagJumpCore(ContainsText(cmd, "Jump"), ActionParam);
 		}
 		//ビュアーの履歴を戻る
-		else if (USAME_TI(cmd, "BackViewHist")) {
+		else if (SameText(cmd, "BackViewHist")) {
 			if (TextViewHistory->Count==0) Abort();
 			TStringDynArray itm_buf = get_csv_array(TextViewHistory->Strings[0], 2, true);
 			TextViewHistory->Delete(0);
 			if (!OpenViewer(itm_buf[0], false, 0, itm_buf[1].ToIntDef(0))) GlobalAbort();
 		}
 		//ファイル名主部が同じ次のファイルに切り替え
-		else if (USAME_TI(cmd, "SwitchSameName")) {
+		else if (SameText(cmd, "SwitchSameName")) {
 			UnicodeString fnam = get_NextSameName(ExViewer->FileName, true);
 			if (fnam.IsEmpty()) SysErrAbort(ERROR_FILE_NOT_FOUND);
 			ExViewer->add_ViewHistory();
 			if (!OpenViewer(fnam)) GlobalAbort();
 		}
 		//ソース／ヘッダの切り換え
-		else if (USAME_TI(cmd, "SwitchSrcHdr")) {
+		else if (SameText(cmd, "SwitchSrcHdr")) {
 			UnicodeString fnam = get_SrcHdrName(ExViewer->FileName);
 			if (fnam.IsEmpty()) SysErrAbort(ERROR_FILE_NOT_FOUND);
 			ExViewer->add_ViewHistory();
 			if (!OpenViewer(fnam)) GlobalAbort();
 		}
 		//文字列検索
-		else if (USAME_TI(cmd, "FindText")) {
+		else if (SameText(cmd, "FindText")) {
 			FindTextAction->Execute();
 		}
 		//インクリメンタルサーチへ
-		else if (USAME_TI(cmd, "IncSearch")) {
-			if (USAME_TI(ActionParam, "MM") && usr_Migemo->DictReady)
+		else if (SameText(cmd, "IncSearch")) {
+			if (SameText(ActionParam, "MM") && usr_Migemo->DictReady)
 				ExViewer->isIncMigemo = true;
-			else if (USAME_TI(ActionParam, "NM"))
+			else if (SameText(ActionParam, "NM"))
 				ExViewer->isIncMigemo = false;
 			ExViewer->IncSeaWord = EmptyStr;
 			ExViewer->isIncSea   = true;
 			ExViewer->SetSttInf();
 		}
 		//テキストビュアーを閉じる
-		else if (USAME_TI(cmd, "Close")) {
+		else if (SameText(cmd, "Close")) {
 			req_close = true;
-			if (USAME_TI(ActionParam, "AL")) close_all_ExViewer(this);
+			if (SameText(ActionParam, "AL")) close_all_ExViewer(this);
 		}
 		//メインフォームでのコマンド実行
-		else if (contained_wd_i(_T("AppList|Calculator|OptionDLg|RegExChecker"), cmd)) {
+		else if (contained_wd_i("AppList|Calculator|OptionDLg|RegExChecker", cmd)) {
 			UnicodeString cmds = cmd;
 			if (!ActionParam.IsEmpty()) cmds.cat_sprintf(_T("_%s"), ActionParam.c_str());
 			COPYDATASTRUCT cd;
@@ -715,7 +715,7 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 	}
 	catch (EAbort &e) {
 		UnicodeString msg = e.Message;
-		if (!contained_wd_i(_T("SKIP|HANDLED"), msg)) {
+		if (!contained_wd_i("SKIP|HANDLED", msg)) {
 			if (StartsText("Abort", msg)) msg = EmptyStr;
 			ActionErrMsg = msg;
 			ActionOk	 = false;
@@ -731,7 +731,6 @@ bool __fastcall TExTxtViewer::ExeCommandV(const _TCHAR *cmd)
 {
 	return ExeCommandV(UnicodeString(cmd));
 }
-
 
 //---------------------------------------------------------------------------
 //文字列検索

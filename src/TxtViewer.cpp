@@ -200,7 +200,7 @@ line_rec* __fastcall TTxtViewer::AddDispLine(UnicodeString s, int lno, int lidx)
 	line_rec *lp = new line_rec;
 	lp->LineNo	 = lno;
 	lp->LineIdx  = lidx;
-	lp->hasCR	 = ends_tchs(_T("\n\r"), s);
+	lp->hasCR	 = ends_tchs("\n\r", s);
 	lp->topQch	 = '\0';
 	lp->RemPos0  = 0;
 	lp->RemPos1  = 0;
@@ -369,7 +369,7 @@ void __fastcall TTxtViewer::SetColor(UnicodeString prm)
 {
 	ColBufList->Clear();
 
-	if (!USAME_TI(prm, "RS")) {
+	if (!SameText(prm, "RS")) {
 		UnicodeString fnam = to_absolute_name(prm);
 		if (file_exists(fnam)) {
 			std::unique_ptr<UsrIniFile> inp_file(new UsrIniFile(fnam));
@@ -545,7 +545,7 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 	//２行目以降
 	for (int i=1; i<txt_lst->Count; i++) {
 		UnicodeString lbuf = txt_lst->Strings[i];
-		if (i==txt_lst->Count-1 && USAME_TS(lbuf, TXLIMIT_MARK)) break;
+		if (i==txt_lst->Count-1 && SameStr(lbuf, TXLIMIT_MARK)) break;
 
 		TStringDynArray itm_buf = is_tsv? split_strings_tab(lbuf) : get_csv_array(lbuf, c_cnt, true);
 		itm_buf.Length = c_cnt;
@@ -608,7 +608,7 @@ void __fastcall TTxtViewer::FormatFixed(TStringList *txt_lst)
 	for (int i=0; i<txt_lst->Count; i++) {
 		UnicodeString lbuf = txt_lst->Strings[i];
 		if (i==txt_lst->Count-2 && lbuf.IsEmpty()) continue;
-		if (i==txt_lst->Count-1 && USAME_TS(lbuf, TXLIMIT_MARK)) break;
+		if (i==txt_lst->Count-1 && SameStr(lbuf, TXLIMIT_MARK)) break;
 
 		UnicodeString nbuf;
 		for (int j=0; j<c_cnt; j++) {
@@ -687,7 +687,7 @@ void __fastcall TTxtViewer::UpdateScr(
 		is_xml = (StartsText("<?xml ", TxtBufList->Strings[0]) || test_FileExt(fext, FEXT_XML));
 
 	//青空文庫か？
-	isAozora = ChkAozora && test_FileExt(fext, ".txt") && is_match_regex(TxtBufList->Text, _T("［＃.*?］"));
+	isAozora = ChkAozora && test_FileExt(fext, ".txt") && TRegEx::IsMatch(TxtBufList->Text, "［＃.*?］");
 
 	isIniFmt = isAwstats = isNyanTxt = false;
 	if (!isBinary && !isLog && !is_xml && !isAozora) {
@@ -704,7 +704,7 @@ void __fastcall TTxtViewer::UpdateScr(
 		//NyanFi用テキストか？
 		if (!isIniFmt) {
 			UnicodeString lbuf = get_top_line(FileName);
-			isNyanTxt = USAME_TI(lbuf, ";[MenuFile]") || USAME_TI(lbuf, ";[ResultList]");
+			isNyanTxt = SameText(lbuf, ";[MenuFile]") || SameText(lbuf, ";[ResultList]");
 		}
 	}
 
@@ -1067,15 +1067,15 @@ void __fastcall TTxtViewer::UpdateScr(
 				UnicodeString lbuf = txt_buf->Strings[i];
 				if (StartsStr("［＃", lbuf)) {
 					//１行字下げ
-					if (is_match_regex(lbuf, _T("［＃[１-９]+字下げ］"))) {
-						lbuf  = replace_regex(lbuf, _T("［＃([１-９]+)字下げ］"), _T("\\1\t"));
+					if (TRegEx::IsMatch(lbuf, "［＃[１-９]+字下げ］")) {
+						lbuf  = TRegEx::Replace(lbuf, "［＃([１-９]+)字下げ］", "\\1\t");
 						ind_n = to_HalfWidth(get_pre_tab(lbuf)).ToIntDef(0);
 						if (ind_n>0)
 							txt_buf->Strings[i] = StringOfChar(_T('　'), ind_n) + get_post_tab(lbuf);
 					}
 					//字上げ
-					else if (is_match_regex(lbuf, _T("［＃地から[１-９]+字上げ］"))) {
-						lbuf  = replace_regex(lbuf, _T("［＃地から([１-９]+)字上げ］"), _T("\\1\t"));
+					else if (TRegEx::IsMatch(lbuf, "［＃地から[１-９]+字上げ］")) {
+						lbuf  = TRegEx::Replace(lbuf, "［＃地から([１-９]+)字上げ］", "\\1\t");
 						ind_n = to_HalfWidth(get_pre_tab(lbuf)).ToIntDef(0);
 						if (ind_n>0) {
 							lbuf  = get_post_tab(lbuf);
@@ -1084,19 +1084,19 @@ void __fastcall TTxtViewer::UpdateScr(
 						}
 					}
 					//地付き
-					else if (USAME_TS(lbuf, "［＃地付き］")) {
+					else if (SameStr(lbuf, "［＃地付き］")) {
 						lbuf.Delete(1, 6);
 						ind_n = MaxHchX/2 - lbuf.Length();
 						if (ind_n>0) txt_buf->Strings[i] = StringOfChar(_T('　'), ind_n) + lbuf;
 					}
 					//改丁、改ページ
-					else if (USAME_TS(lbuf, "［＃改丁］") || USAME_TS(lbuf, "［＃改ページ］")) {
+					else if (SameStr(lbuf, "［＃改丁］") || SameStr(lbuf, "［＃改ページ］")) {
 						txt_buf->Strings[i] = StringOfChar(_T('─'), MaxHchX/2);
 					}
 				}
 				//罫線
 				else {
-					if (i<30 && is_match_regex(lbuf, _T("^-{10,}$")))
+					if (i<30 && TRegEx::IsMatch(lbuf, "^-{10,}$"))
 						txt_buf->Strings[i] = StringOfChar(_T('─'), MaxHchX/2);
 				}
 			}
@@ -1161,17 +1161,17 @@ void __fastcall TTxtViewer::UpdateScr(
 				bool ok = false;
 				if (RemLnList->Count>0) {
 					ok = true;
-					if (USAME_TS(RemLnList->Strings[0], "$BAT")) {
+					if (SameStr(RemLnList->Strings[0], "$BAT")) {
 						if (StartsText("REM", tbuf) || StartsText("@REM",tbuf) || StartsStr("::", tbuf)) {
 							RemPos0 = 1;  RemPos1 = lbuf_len;
 						}
 					}
-					else if (USAME_TS(RemLnList->Strings[0], "$QBT")) {
+					else if (SameStr(RemLnList->Strings[0], "$QBT")) {
 						if (StartsText("REM", tbuf) || StartsStr(';', tbuf)) {
 							RemPos0 = 1;  RemPos1 = lbuf_len;
 						}
 					}
-					else if (USAME_TS(RemLnList->Strings[0], "$INI")) {
+					else if (SameStr(RemLnList->Strings[0], "$INI")) {
 						if (StartsStr(';', lbuf)) {
 							RemPos0 = 1;  RemPos1 = lbuf_len;
 						}
@@ -1275,40 +1275,40 @@ void __fastcall TTxtViewer::UpdateScr(
 			if (isAozora) {
 				if (StartsStr("［＃", lbuf)) {
 					//字下げ
-					if (is_match_regex(lbuf, _T("［＃ここから[１-９]+字下げ］"))) {
+					if (TRegEx::IsMatch(lbuf, "［＃ここから[１-９]+字下げ］")) {
 						UnicodeString nbuf = to_HalfWidth(
-							replace_regex(lbuf, _T("［＃ここから([１-９]+)字下げ］"), _T("\\1")));
+							TRegEx::Replace(lbuf, "［＃ここから([１-９]+)字下げ］", "\\1"));
 						ind_n = nbuf.ToIntDef(0);
 						lbuf  = EmptyStr;
 					}
-					else if (is_match_regex(lbuf, _T("［＃ここから[１-９]+字下げ、折り返して[１-９]+字下げ］"))) {
+					else if (TRegEx::IsMatch(lbuf, "［＃ここから[１-９]+字下げ、折り返して[１-９]+字下げ］")) {
 						UnicodeString nbuf = to_HalfWidth(
-							replace_regex(lbuf, _T("［＃ここから([１-９]+)字下げ、折り返して([１-９]+)字下げ］"), _T("\\1,\\2")));
+							TRegEx::Replace(lbuf, "［＃ここから([１-９]+)字下げ、折り返して([１-９]+)字下げ］", "\\1,\\2"));
 						ind_n  = split_tkn(nbuf, ',').ToIntDef(0);
 						ind_n2 = nbuf.ToIntDef(0);
 						lbuf   = EmptyStr;
 					}
-					else if (USAME_TS(lbuf, "［＃ここで字下げ終わり］")) {
+					else if (SameStr(lbuf, "［＃ここで字下げ終わり］")) {
 						ind_n = ind_n2 = -1;
 						lbuf  = EmptyStr;
 					}
 					//地付き
-					else if (USAME_TS(lbuf, "［＃ここから地付き］")) {
+					else if (SameStr(lbuf, "［＃ここから地付き］")) {
 						alr_n = 0;
 						lbuf  = EmptyStr;
 					}
-					else if (USAME_TS(lbuf, "［＃ここで地付き終わり］")) {
+					else if (SameStr(lbuf, "［＃ここで地付き終わり］")) {
 						alr_n = -1;
 						lbuf  = EmptyStr;
 					}
 					//字上げ
-					else if (is_match_regex(lbuf, _T("［＃ここから地から[１-９]+字上げ］"))) {
+					else if (TRegEx::IsMatch(lbuf, "［＃ここから地から[１-９]+字上げ］")) {
 						UnicodeString nbuf = to_HalfWidth(
-							replace_regex(lbuf, _T("［＃ここから地から([１-９]+)字上げ］"), _T("\\1")));
+							TRegEx::Replace(lbuf, "［＃ここから地から([１-９]+)字上げ］", "\\1"));
 						alr_n = nbuf.ToIntDef(0);
 						lbuf  = EmptyStr;
 					}
-					else if (USAME_TS(lbuf, "［＃ここで字上げ終わり］")) {
+					else if (SameStr(lbuf, "［＃ここで字上げ終わり］")) {
 						alr_n = -1;
 						lbuf  = EmptyStr;
 					}
@@ -1327,7 +1327,7 @@ void __fastcall TTxtViewer::UpdateScr(
 			if (lbuf.IsEmpty()) {
 				AddDispLine("\n", org_lno);
 			}
-			else if ((i==MaxLine-1) && USAME_TS(lbuf, TXLIMIT_MARK)) {
+			else if ((i==MaxLine-1) && SameStr(lbuf, TXLIMIT_MARK)) {
 				isLimited = isContinue = true;
 				AddDispLine(EmptyStr, org_lno);
 			}
@@ -1500,7 +1500,7 @@ bool __fastcall TTxtViewer::AssignBin(
 //---------------------------------------------------------------------------
 bool __fastcall TTxtViewer::has_CR(UnicodeString s)
 {
-	return ends_tchs(_T("\n\r"), s);
+	return ends_tchs("\n\r", s);
 }
 
 //---------------------------------------------------------------------------
@@ -2592,7 +2592,7 @@ void __fastcall TTxtViewer::SetSttInf(UnicodeString msg)
 			UnicodeString sct = UserHighlight->CurSection;
 			if (!sct.IsEmpty()) {
 				if (sct.Pos(':')) {
-					sct = get_tkn_r(sct, ":");
+					sct = get_tkn_r(sct, ':');
 					if (sct.IsEmpty()) sct = "*";
 				}
 				sttstr.cat_sprintf(_T(":%s"), sct.c_str());
@@ -2792,7 +2792,7 @@ void __fastcall TTxtViewer::SttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPan
 //---------------------------------------------------------------------------
 bool __fastcall TTxtViewer::SetToggleSw(bool &sw, UnicodeString prm)
 {
-	sw = USAME_TI(prm, "ON")? true : USAME_TI(prm, "OFF")? false : !sw;
+	sw = SameText(prm, "ON")? true : SameText(prm, "OFF")? false : !sw;
 	return sw;
 }
 //---------------------------------------------------------------------------
@@ -3676,7 +3676,7 @@ int __fastcall TTxtViewer::change_CodePage(UnicodeString prm)
 UnicodeString __fastcall TTxtViewer::GetCurImgFile()
 {
 	UnicodeString fnam = GetCurWord(false, "[^\"(=*?<>|（ ]+\\.\\w+\\b");
-	remove_top_text(fnam, _T("file:///"));
+	remove_top_text(fnam, "file:///");
 	fnam = slash_to_yen(fnam);
 	fnam = to_absolute_name(fnam, ExtractFilePath(FileName));
 	UnicodeString fext = get_extension(fnam);
@@ -3691,7 +3691,7 @@ int __fastcall TTxtViewer::get_MovePrm(UnicodeString prm)
 {
 	int n = 1;
 	if (!prm.IsEmpty()) {
-		switch (idx_of_word_i(_T("HP|FP|MW"), prm)) {
+		switch (idx_of_word_i("HP|FP|MW", prm)) {
 		case  0: n = (LineCount + 1)/2;	break;
 		case  1: n = LineCount + 1;		break;
 		case  2: n = ViewWheelScrLn;	break;
@@ -4153,7 +4153,7 @@ bool __fastcall TTxtViewer::SearchPair(
 		if (!tag_str.IsEmpty()) {
 			//開始 → 終了タグ
 			if (tag_str[2]!='/') {
-				UnicodeString b_str = get_tkn(get_tkn(tag_str, ">"), " ");
+				UnicodeString b_str = get_tkn(get_tkn(tag_str, '>'), ' ');
 				UnicodeString e_str = b_str + ">";	e_str.Insert("/", 2);
 				int lvl = 0;
 				for (int i=CurPos.y; !found && i<MaxDispLine; i++) {
@@ -4162,9 +4162,9 @@ bool __fastcall TTxtViewer::SearchPair(
 					for (int j=p; !found && j<lbuf.Length(); j++) {
 						UnicodeString s = lbuf.SubString(j, lbuf.Length() - j + 1);
 						if (!has_CR(lbuf) && StartsStr("<", s) && !s.Pos(">") && i<(MaxDispLine - 1)) {
-							UnicodeString tmp = get_tkn(get_DispLine(i + 1), "<");
+							UnicodeString tmp = get_tkn(get_DispLine(i + 1), '<');
 							int q = tmp.Pos(">");
-							s += (q>0)? tmp.SubString(1, q) : get_tkn(tmp, " ");
+							s += (q>0)? tmp.SubString(1, q) : get_tkn(tmp, ' ');
 						}
 
 						if (StartsText(e_str, s)) {
@@ -4340,10 +4340,10 @@ void __fastcall TTxtViewer::JumpLine(UnicodeString ln_str)
 				ln_str = (InputExDlg->ShowModal()==mrOk)? InputExDlg->InputEdit->Text : EmptyStr;
 			}
 
-			remove_text(ln_str, _T(":"));
+			remove_text(ln_str, ":");
 			if (ln_str.IsEmpty()) throw EAbort(EmptyStr);	//キャンセル
 
-			bool is_rel = starts_tchs(_T("+-"), ln_str);	//相対指定か?
+			bool is_rel = starts_tchs("+-", ln_str);	//相対指定か?
 			int rel_sig = 0;
 			if (is_rel) {
 				rel_sig = (ln_str[1]=='-')? -1 : 1;
@@ -4360,7 +4360,7 @@ void __fastcall TTxtViewer::JumpLine(UnicodeString ln_str)
 			InputExDlg->InputEdit->EditLabel->Caption = msg.sprintf(_T("行番号(1～%u)"), MaxLine);
 			ln_str = (InputExDlg->ShowModal()==mrOk)? InputExDlg->InputEdit->Text : EmptyStr;
 			if (ln_str.IsEmpty()) throw EAbort(EmptyStr);	//キャンセル
-			if (contains_wd_i(ln_str, _T("+|="))) throw EAbort(EmptyStr);
+			if (contains_wd_i(ln_str, "+|=")) throw EAbort(EmptyStr);
 
 			int inp_n = ln_str.ToIntDef(-1);
 			if (inp_n==-1)				   UserAbort(USTR_IllegalParam);
@@ -4485,23 +4485,23 @@ void __fastcall TTxtViewer::IncSearch(UnicodeString keystr)
 	bool chg_wd = false;
 
 	//サーチモードから抜ける
-	if (USAME_TI(CmdStr, "IncSearchExit") || equal_ESC(keystr)) {
+	if (SameText(CmdStr, "IncSearchExit") || equal_ESC(keystr)) {
 		isIncSea   = false;
 		IncSeaWord = EmptyStr;
 		UserModule->SetBlinkTimer(NULL);
 	}
 	//キーワードをクリア
-	else if (USAME_TI(CmdStr, "ClearIncKeyword")) {
+	else if (SameText(CmdStr, "ClearIncKeyword")) {
 		IncSeaWord = EmptyStr;
 		chg_wd = true;
 	}
 	//Migemoモード切替
-	else if (USAME_TI(CmdStr, "MigemoMode")) {
+	else if (SameText(CmdStr, "MigemoMode")) {
 		isIncMigemo = (!isIncMigemo && usr_Migemo->DictReady);
 		IncSeaWord	= EmptyStr;
 		chg_wd = true;
 	}
-	else if (USAME_TI(CmdStr, "NormalMode")) {
+	else if (SameText(CmdStr, "NormalMode")) {
 		isIncMigemo = false;
 		IncSeaWord	= EmptyStr;
 		chg_wd = true;
@@ -4515,9 +4515,9 @@ void __fastcall TTxtViewer::IncSearch(UnicodeString keystr)
 
 	bool found = false;
 	if (isIncSea && !RegExPtn.IsEmpty()) {
-		bool csr_up   = (USAME_TI(CmdStr, "IncSearchUp")   || equal_UP(keystr));
-		bool csr_down = (contained_wd_i(_T("IncSearchDown|IncSearchTop"), CmdStr) || equal_DOWN(keystr));
-		if (USAME_TI(CmdStr, "IncSearchTop")) TextTop();
+		bool csr_up   = (SameText(CmdStr, "IncSearchUp")   || equal_UP(keystr));
+		bool csr_down = (contained_wd_i("IncSearchDown|IncSearchTop", CmdStr) || equal_DOWN(keystr));
+		if (SameText(CmdStr, "IncSearchTop")) TextTop();
 
 		//下方向へサーチ
 		if (chg_wd || csr_down) {
@@ -4580,10 +4580,10 @@ UnicodeString __fastcall TTxtViewer::GetStdKeyCommand(UnicodeString keystr)
 int __fastcall TTxtViewer::GetComCmdIndex(UnicodeString cmd)
 {
 	return idx_of_word_i(
-		_T("CursorDown|CursorDownSel|CursorUp|CursorUpSel|PageDown|PageDownSel|PageUp|PageUpSel|CursorLeft|CursorLeftSel|")	  // 0～ 9
-		_T("CursorRight|CursorRightSel|LineTop|LineTopSel|LineEnd|LineEndSel|TextTop|TextTopSel|TextEnd|TextEndSel|")		  //10～19
-		_T("WordLeft|WordRight|ScrollUp|ScrollDown|ScrollCursorUp|ScrollCursorDown|SearchPair|SelCurWord|SelLine|SelLineCR|") //20～29
-		_T("SelectAll|JumpLine|SelectMode|FindSelDown|FindSelUp"), cmd);													  //30～34
+		"CursorDown|CursorDownSel|CursorUp|CursorUpSel|PageDown|PageDownSel|PageUp|PageUpSel|CursorLeft|CursorLeftSel|"	  // 0～ 9
+		"CursorRight|CursorRightSel|LineTop|LineTopSel|LineEnd|LineEndSel|TextTop|TextTopSel|TextEnd|TextEndSel|"		  //10～19
+		"WordLeft|WordRight|ScrollUp|ScrollDown|ScrollCursorUp|ScrollCursorDown|SearchPair|SelCurWord|SelLine|SelLineCR|" //20～29
+		"SelectAll|JumpLine|SelectMode|FindSelDown|FindSelUp", cmd);													  //30～34
 }
 
 //---------------------------------------------------------------------------
@@ -4648,12 +4648,12 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		case 30: SelectAll();					break;
 		case 31: JumpLine(prm);					break;
 		case 32: isSelMode = !isSelMode;		break;
-		case 33: SearchSel(false, USAME_TI(prm, "EM"));	break;
-		case 34: SearchSel(true,  USAME_TI(prm, "EM"));	break;
+		case 33: SearchSel(false, SameText(prm, "EM"));	break;
+		case 34: SearchSel(true,  SameText(prm, "EM"));	break;
 		}
 	}
 	//配色の設定
-	else if (USAME_TI(cmd, "SetColor")) {
+	else if (SameText(cmd, "SetColor")) {
 		if (!prm.IsEmpty()) {
 			SetColor(prm);
 		}
@@ -4676,7 +4676,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		Repaint(true);
 	}
 	//ルーラを表示
-	else if (USAME_TI(cmd, "ShowRuler")) {
+	else if (SameText(cmd, "ShowRuler")) {
 		if (RulerBox) {
 			RulerBox->Visible = SetToggleSw(ShowTextRuler, prm);
 			Application->ProcessMessages();
@@ -4684,34 +4684,34 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		}
 	}
 	//行番号を表示
-	else if (USAME_TI(cmd, "ShowLineNo")) {
+	else if (SameText(cmd, "ShowLineNo")) {
 		SetToggleSw(ShowLineNo, prm);
 		SetMetric(true);
 	}
 	//タブを表示
-	else if (USAME_TI(cmd, "ShowTAB")) {
+	else if (SameText(cmd, "ShowTAB")) {
 		SetToggleSw(ShowTAB, prm);
 		Repaint(true);
 	}
 	//改行を表示
-	else if (USAME_TI(cmd, "ShowCR")) {
+	else if (SameText(cmd, "ShowCR")) {
 		SetToggleSw(ShowCR, prm);
 		Repaint(true);
 	}
 	//ズーム
-	else if (contained_wd_i(_T("ZoomIn|ZoomOut"), cmd)) {
+	else if (contained_wd_i("ZoomIn|ZoomOut", cmd)) {
 		int d_sz = std::min(prm.ToIntDef(1), 12);
 		ViewBox->Font->Size =
-			USAME_TI(cmd, "ZoomIn") ? std::min(ViewBox->Font->Size + d_sz, MAX_FNTZOOM_SZ)
+			SameText(cmd, "ZoomIn") ? std::min(ViewBox->Font->Size + d_sz, MAX_FNTZOOM_SZ)
 									: std::max(ViewBox->Font->Size - d_sz, MIN_FNTZOOM_SZ);
 		SetMetric(true);
 	}
-	else if (USAME_TI(cmd, "ZoomReset")) {
+	else if (SameText(cmd, "ZoomReset")) {
 		AssignScaledFont(ViewBox, UseFont);
 		SetMetric(true);
 	}
 	//フォントサイズ変更
-	else if (USAME_TI(cmd, "SetFontSize")) {
+	else if (SameText(cmd, "SetFontSize")) {
 		bool x_sw = remove_top_s(prm, '^');
 		if (!prm.IsEmpty()) {
 			//※起動後にスケーリングが変化しても Font->PixelsPerInch が変わらないため変換が必要
@@ -4724,16 +4724,16 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 			SetMetric(true);
 		}
 	}
-	else if (USAME_TI(cmd, "BoxSelMode")) {
+	else if (SameText(cmd, "BoxSelMode")) {
 		isBoxMode = !isBoxMode;
 		isSelMode = isBoxMode;
 	}
-	else if (USAME_TI(cmd, "Highlight")) {
+	else if (SameText(cmd, "Highlight")) {
 		SetToggleSw(Highlight, prm);
 		Repaint(true);
 	}
 	//再検索
-	else if (contained_wd_i(_T("FindDown|FindUp"), cmd)) {
+	else if (contained_wd_i("FindDown|FindUp", cmd)) {
 		if (!prm.IsEmpty()) {
 			UnicodeString ptn;
 			if (is_regex_slash(prm)) {
@@ -4751,21 +4751,21 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 			Repaint(true);
 		}
 
-		if (USAME_TI(cmd, "FindDown"))
+		if (SameText(cmd, "FindDown"))
 			SearchDown((isRegEx||isMigemo)? RegExPtn : FindWord, isCase, isRegEx||isMigemo, isBytes);
 		else
 			SearchUp((isRegEx||isMigemo)? RegExPtn : FindWord, isCase, isRegEx||isMigemo, isBytes);
 	}
 	//マーク
-	else if (USAME_TI(cmd, "Mark")) {
+	else if (SameText(cmd, "Mark")) {
 		MarkLine(cur_lno);
 	}
-	else if (USAME_TI(cmd, "ClearMark")) {
+	else if (SameText(cmd, "ClearMark")) {
 		MarkListStr = EmptyStr;
 		Repaint(true);
 	}
 	//マークを検索
-	else if (USAME_TI(cmd, "FindMarkDown")) {
+	else if (SameText(cmd, "FindMarkDown")) {
 		TStringDynArray m_lst = split_strings_semicolon(MarkListStr);
 		int f_lno = 0;
 		for (int i=0; i<m_lst.Length; i++) {
@@ -4781,7 +4781,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		}
 		else if (!XCMD_IsBusy) beep_Warn();
 	}
-	else if (USAME_TI(cmd, "FindMarkUp")) {
+	else if (SameText(cmd, "FindMarkUp")) {
 		TStringDynArray m_lst = split_strings_semicolon(MarkListStr);
 		int f_lno = 0;
 		for (int i=0; i<m_lst.Length; i++) {
@@ -4802,13 +4802,13 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 	//-------------------------------
 	else if (isText) {
 		//HTML→テキスト変換
-		if (USAME_TI(cmd, "HtmlToText")) {
+		if (SameText(cmd, "HtmlToText")) {
 			SetHtmlToText(prm);
 			if (isExtWnd) TxtViewer->isHtm2Txt = isHtm2Txt;		//内部ビュアーに反映
 			AssignText();
 		}
 		//CSV/TSVを固定長表示
-		else if (USAME_TI(cmd, "FixedLen")) {
+		else if (SameText(cmd, "FixedLen")) {
 			int lmt = extract_int_def(prm);
 			if (lmt>0) {
 				ViewFixedLimit = std::max(lmt, 4);
@@ -4819,32 +4819,32 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 			AssignText(NULL, cur_lno);
 		}
 		//ルビを表示
-		else if (USAME_TI(cmd, "ShowRuby")) {
+		else if (SameText(cmd, "ShowRuby")) {
 			SetToggleSw(ShowRuby, prm);
 			AssignText();
 		}
 		//ソート
-		else if (USAME_TI(cmd, "Sort")) {
+		else if (SameText(cmd, "Sort")) {
 			int xp = CurPos.x;
 			int yi = get_LineRec(CurPos.y)->LineIdx;
-			AssignText(NULL, cur_lno, USAME_TI(prm, "AO")? 1 : USAME_TI(prm, "DO")? -1 : 0);
+			AssignText(NULL, cur_lno, SameText(prm, "AO")? 1 : SameText(prm, "DO")? -1 : 0);
 			CurPos.x = xp;
 			CurPos.y += yi;
 			CurHchX  = cv_PosX_to_HchX(CurPos.x);
 			UpdatePos();
 		}
 		//リンク先を検索
-		else if (USAME_TI(cmd, "FindLinkDown")) {
+		else if (SameText(cmd, "FindLinkDown")) {
 			SearchDown(LINK_MATCH_PTN, false, true);
 		}
-		else if (USAME_TI(cmd, "FindLinkUp")) {
+		else if (SameText(cmd, "FindLinkUp")) {
 			SearchUp(LINK_MATCH_PTN, false, true);
 		}
-		else if (USAME_TI(cmd, "SetUserDefStr")) {
+		else if (SameText(cmd, "SetUserDefStr")) {
 			FuncListDlg->UserDefStr = prm;
 		}
 		//URLを開く
-		else if (USAME_TI(cmd, "OpenURL")) {
+		else if (SameText(cmd, "OpenURL")) {
 			UnicodeString url;
 			if (!prm.IsEmpty()) {
 				try {
@@ -4860,25 +4860,25 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 			if (!url.IsEmpty()) Execute_ex(url); else GlobalErrMsg = LoadUsrMsg(USTR_NotFound, _T("URL"));
 		}
 		//Web で検索
-		else if (USAME_TI(cmd, "WebSearch")) {
-			UnicodeString kwd = USAME_TI(prm, "CB")? GetClipboardText(true) :
-													 get_tkn(def_if_empty(prm, get_SelText()), _T("\r\n"));
+		else if (SameText(cmd, "WebSearch")) {
+			UnicodeString kwd = SameText(prm, "CB")? GetClipboardText(true) :
+													 get_tkn(def_if_empty(prm, get_SelText()), "\r\n");
 			if (kwd.IsEmpty()) kwd = inputbox_dir(get_WebSeaCaption().c_str(), _T("WebSearch"));
 			if (!kwd.IsEmpty() && !exe_WebSearch(kwd)) GlobalErrMsg = LoadUsrMsg(USTR_FaildProc);
 		}
 		//カーソル位置の単語のヘルプ
-		else if (USAME_TI(cmd, "HelpCurWord")) {
-			UnicodeString s = get_tkn(get_SelText(), _T("\r\n"));
+		else if (SameText(cmd, "HelpCurWord")) {
+			UnicodeString s = get_tkn(get_SelText(), "\r\n");
 			if (s.IsEmpty()) s = GetCurWord();
 			HtmlHelpKeyword(prm, s);
 		}
 		//文字情報を表示
-		else if (USAME_TI(cmd, "CharInfo")) {
+		else if (SameText(cmd, "CharInfo")) {
 			bool sw = CharInfoForm->Visible;
 			CharInfoForm->Visible = SetToggleSw(sw, prm);
 		}
 		//CSV/TSV項目の集計
-		else if (USAME_TI(cmd, "CsvCalc")) {
+		else if (SameText(cmd, "CsvCalc")) {
 			FileInfoDlg->isCalcItem  = true;
 			FileInfoDlg->DataList	 = TxtBufList;
 			FileInfoDlg->TopIsHeader = TopIsHeader;
@@ -4886,20 +4886,20 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 			FileInfoDlg->ShowModal();
 		}
 		//CSV/TSV項目のグラフ
-		else if (USAME_TI(cmd, "CsvGraph")) {
+		else if (SameText(cmd, "CsvGraph")) {
 			GraphForm->DataList    = TxtBufList;
 			GraphForm->TopIsHeader = TopIsHeader;
 			GraphForm->CsvCol	   = CsvCol;
 			GraphForm->ShowModal();
 		}
 		//CSV/TSVレコード表示
-		else if (USAME_TI(cmd, "CsvRecord")) {
+		else if (SameText(cmd, "CsvRecord")) {
 			bool sw = CsvRecForm->Visible;
 			CsvRecForm->Visible = SetToggleSw(sw, prm);
 			if (CsvRecForm->Visible && get_LineRec(CurPos.y)->LineIdx>0) ToLine(get_CurLineNo());
 		}
 		//イメージプレビュー
-		else if (USAME_TI(cmd, "ImgPreview")) {
+		else if (SameText(cmd, "ImgPreview")) {
 			UnicodeString fnam = GetCurImgFile();
 			if (!SubViewer->Visible && !fnam.IsEmpty()) {
 				SubViewer->Show();
@@ -4914,14 +4914,14 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 			}
 		}
 		//エラー検索
-		else if (contained_wd_i(_T("NextErr|PrevErr"), cmd)) {
+		else if (contained_wd_i("NextErr|PrevErr", cmd)) {
 			if (isLog) {
 				UnicodeString ptn = "^.>([ECW]|(     [45]\\d{2})) .*";
-				if (USAME_TI(cmd, "NextErr")) SearchDown(ptn, true, true); else SearchUp(ptn, true, true);
+				if (SameText(cmd, "NextErr")) SearchDown(ptn, true, true); else SearchUp(ptn, true, true);
 			}
 		}
 		//無効
-		else if (contained_wd_i(_T("BitmapView|Inspector"), cmd)) {
+		else if (contained_wd_i("BitmapView|Inspector", cmd)) {
 			GlobalErrMsg = LoadUsrMsg(USTR_InvalidCmd);
 		}
 		else handled = false;
@@ -4931,17 +4931,17 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 	//-------------------------------
 	else if (isBinary) {
 		//ビットマップビュー
-		if (USAME_TI(cmd, "BitmapView")) {
+		if (SameText(cmd, "BitmapView")) {
 			bool sw = BitmapForm->Visible;
 			BitmapForm->Visible = SetToggleSw(sw, prm);
 		}
 		//インスペクタ
-		else if (USAME_TI(cmd, "Inspector")) {
+		else if (SameText(cmd, "Inspector")) {
 			bool sw = InspectForm->Visible;
 			InspectForm->Visible = SetToggleSw(sw, prm);
 		}
 		//無効
-		else if (contained_wd_i(_T("HtmlToText|ShowRuby|FindLinkDown|FindLinkUp|OpenURL|CharInfo"), cmd)) {
+		else if (contained_wd_i("HtmlToText|ShowRuby|FindLinkDown|FindLinkUp|OpenURL|CharInfo", cmd)) {
 			GlobalErrMsg = LoadUsrMsg(USTR_InvalidCmd);
 		}
 		else handled = false;
@@ -4963,16 +4963,16 @@ bool __fastcall TTxtViewer::IsCmdAvailable(UnicodeString cmd)
 	if (isExtWnd) {
 		//有効
 		if (contained_wd_i(
-			_T("AppList|BackViewHist|BinaryEdit|Calculator|ChangeCodePage|ChangeViewMode|ClipCopy|Close|")
-			_T("FileEdit|FindText|IncSearch|NextFile|OptionDlg|PrevFile|RegExChecker|ReloadFile|SaveDump|")
-			_T("SwitchSameName|SwitchSrcHdr|TagJump|TagJumpDirect|TagView|TagViewDirect"), cmd))
+			"AppList|BackViewHist|BinaryEdit|Calculator|ChangeCodePage|ChangeViewMode|ClipCopy|Close|"
+			"FileEdit|FindText|IncSearch|NextFile|OptionDlg|PrevFile|RegExChecker|ReloadFile|SaveDump|"
+			"SwitchSameName|SwitchSrcHdr|TagJump|TagJumpDirect|TagView|TagViewDirect", cmd))
 		{
 			return true;
 		}
 		//無効
 		if (contained_wd_i(
-			_T("BitmapView|CharInfo|CsvCalc|CsvGraph|CsvRecord|Inspector|ImgPreview||")
-			_T("ListFileInfo|ShowFileInfo "), cmd))
+			"BitmapView|CharInfo|CsvCalc|CsvGraph|CsvRecord|Inspector|ImgPreview||"
+			"ListFileInfo|ShowFileInfo ", cmd))
 		{
 			return false;
 		}
@@ -4982,8 +4982,8 @@ bool __fastcall TTxtViewer::IsCmdAvailable(UnicodeString cmd)
 	if (GetComCmdIndex(cmd)!=-1) return true;
 
 	if (contained_wd_i(
-		_T("BoxSelMode|ClearMark|FindDown|FindUp|FindMarkDown|FindMarkUp|Highlight|Mark|SetColor|SetFontSize|")
-		_T("ShowCR|ShowLineNo|ShowRuler|ShowTAB|ZoomIn|ZoomOut|ZoomReset"), cmd))
+		"BoxSelMode|ClearMark|FindDown|FindUp|FindMarkDown|FindMarkUp|Highlight|Mark|SetColor|SetFontSize|"
+		"ShowCR|ShowLineNo|ShowRuler|ShowTAB|ZoomIn|ZoomOut|ZoomReset", cmd))
 	{
 		return true;
 	}
@@ -4991,13 +4991,13 @@ bool __fastcall TTxtViewer::IsCmdAvailable(UnicodeString cmd)
 	//テキスト表示のみのコマンド
 	if (isText) {
 		return(contained_wd_i(
-			_T("CharInfo|CsvCalc|CsvGraph|CsvRecord|FindLinkDown|FindLinkUp|FixedLen|HelpCurWord|HtmlToText|ImgPreview|")
-			_T("OpenURL|SetUserDefStr|ShowRuby|Sort|WebSearch"), cmd));
+			"CharInfo|CsvCalc|CsvGraph|CsvRecord|FindLinkDown|FindLinkUp|FixedLen|HelpCurWord|HtmlToText|ImgPreview|"
+			"OpenURL|SetUserDefStr|ShowRuby|Sort|WebSearch", cmd));
 	}
 
 	//バイナリのみのコマンド
 	if (isBinary) {
-		return(contained_wd_i(_T("BitmapView|Inspector"), cmd));
+		return(contained_wd_i("BitmapView|Inspector", cmd));
 	}
 
 	return false;
@@ -5012,13 +5012,13 @@ bool __fastcall TTxtViewer::IsCmdInhibited(UnicodeString cmd)
 
 	if (isBinary) {
 		return(contained_wd_i(
-			_T("ChangeCodePage|CharInfo|CsvCalc|CsvGraph|CsvRecord|FindLinkDown|FindLinkUp|FixedLen|")
-			_T("HelpCurWord|HtmlToText|ImgPreview|OpenURL|SetUserDefStr|ShowRuby|Sort|WebSearch|")
-			_T("FunctionList|UserDefList|MarkList|TagJump|TagJumpDirect|TagView|TagViewDirect"), cmd));
+			"ChangeCodePage|CharInfo|CsvCalc|CsvGraph|CsvRecord|FindLinkDown|FindLinkUp|FixedLen|"
+			"HelpCurWord|HtmlToText|ImgPreview|OpenURL|SetUserDefStr|ShowRuby|Sort|WebSearch|"
+			"FunctionList|UserDefList|MarkList|TagJump|TagJumpDirect|TagView|TagViewDirect", cmd));
 	}
 
 	if (isText) {
-		return(contained_wd_i(_T("BitmapView|Inspector|SaveDump"), cmd));
+		return(contained_wd_i("BitmapView|Inspector|SaveDump", cmd));
 	}
 
 	return false;

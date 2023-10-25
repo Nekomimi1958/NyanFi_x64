@@ -40,10 +40,10 @@ void HighlightFile::CheckValues()
 			UnicodeString vstr = klist->ValueFromIndex[j];
 
 			bool err = false;
-			if (is_match_regex_i(key, _T("Ptn\\d*$")))
+			if (TRegEx::IsMatch(key, "Ptn\\d*$"))
 				 err = !chk_RegExPtn(vstr);
 			else if (EndsText("Col", key))
-				err = !is_match_regex(vstr, _T("^[0-9a-fA-F]{6}"));
+				err = !TRegEx::IsMatch(vstr, "^[0-9a-fA-F]{6}");
 			else if (EndsText("File",key))
 				err = !file_exists(to_absolute_name(vstr));
 
@@ -89,9 +89,9 @@ bool HighlightFile::GetSection(
 
 	for (int i=0; i<SectionList->Count; i++) {
 		UnicodeString sct = SectionList->Strings[i];
-		if (   (is_clip && USAME_TI(sct, "CLIPBOARD"))
-			|| (is_log  && USAME_TI(sct, "TASKLOG"))
-			|| (is_h2t  && test_FileExt(fext, FEXT_HTML) && USAME_TI(sct, "HTML2TEXT"))
+		if (   (is_clip && SameText(sct, "CLIPBOARD"))
+			|| (is_log  && SameText(sct, "TASKLOG"))
+			|| (is_h2t  && test_FileExt(fext, FEXT_HTML) && SameText(sct, "HTML2TEXT"))
 			|| (fext.IsEmpty() && get_tkn(sct, ':')=='.')
 			|| (test_FileExt(fext, get_tkn(sct, ':'))))
 		{
@@ -184,7 +184,7 @@ TColor HighlightFile::ReadColorRGB6H(const _TCHAR *key,
 	TColor def)	//デフォルト値	(default = clBlack)
 {
 	UnicodeString s = ReadString(CurSection, key, EmptyStr);
-	return is_match_regex(s, _T("^[0-9a-fA-F]{6}"))? xRRGGBB_to_col(s) : def;
+	return TRegEx::IsMatch(s, "^[0-9a-fA-F]{6}")? xRRGGBB_to_col(s) : def;
 }
 
 //---------------------------------------------------------------------------

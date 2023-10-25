@@ -203,10 +203,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall AppListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall AppListBoxClick(TObject *Sender);
 	void __fastcall AppListBoxDblClick(TObject *Sender);
-	void __fastcall ViewPanelMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift,
-          int X, int Y);
-	void __fastcall ViewPanelMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift,
-          int X, int Y);
+	void __fastcall ViewPanelMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
+	void __fastcall ViewPanelMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall ViewPanelDblClick(TObject *Sender);
 	void __fastcall PopupMenu1Popup(TObject *Sender);
 	void __fastcall PopupMenu2Popup(TObject *Sender);
@@ -268,7 +266,7 @@ private:	// ユーザー宣言
 	bool IsMigemo;
 	UnicodeString IncSeaWord;
 	TStringList *LaunchFileList;
-	TStringList *LaunchTopList; 
+	TStringList *LaunchTopList;
 
 	UnicodeString ExcAppText;
 

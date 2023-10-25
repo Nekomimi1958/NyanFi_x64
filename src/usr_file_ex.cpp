@@ -173,16 +173,16 @@ UnicodeString to_absolute_name(
 
 	//.. を含むパスを正規化
 	if (!ExtractFileDrive(fnam).IsEmpty()) {
-		const _TCHAR *ptn = _T("\\\\[^\\\\\\.]+\\\\\\.\\.\\\\");
-		while (is_match_regex(fnam, ptn)) fnam = replace_regex(fnam, ptn, _T("\\"));
+		UnicodeString ptn = "\\\\[^\\\\\\.]+\\\\\\.\\.\\\\";
+		while (TRegEx::IsMatch(fnam, ptn)) fnam = TRegEx::Replace(fnam, ptn, "\\");
 		return fnam;
 	}
 
 	//相対パスから絶対パスへ
 	if (rnam.IsEmpty()) rnam = ExePath;
 	for (;;) {
-		if (remove_top_text(fnam, _T(".\\"))) continue;
-		if (!remove_top_text(fnam, _T("..\\"))) break;
+		if (remove_top_text(fnam, ".\\")) continue;
+		if (!remove_top_text(fnam, "..\\")) break;
 		rnam = get_parent_path(rnam);
 	}
 
@@ -234,7 +234,7 @@ bool is_same_file(UnicodeString fnam1, UnicodeString fnam2,
 UnicodeString get_root_name(UnicodeString pnam)
 {
 	UnicodeString rstr = pnam;
-	if (remove_top_text(rstr, _T("\\\\")))
+	if (remove_top_text(rstr, "\\\\"))
 		rstr = "\\\\" + get_tkn(rstr, '\\');
 	else
 		rstr = ExtractFileDrive(rstr);
@@ -252,7 +252,7 @@ UnicodeString get_case_name(UnicodeString fnam)
 	TStringDynArray plst = split_path(fnam);
 	for (int i=0; i<plst.Length-1; i++) {
 		pnam += plst[i] + "\\";
-		if (USAME_TS(pnam, "\\") || USAME_TS(pnam, "\\\\")) continue;
+		if (SameStr(pnam, "\\") || SameStr(pnam, "\\\\")) continue;
 		UnicodeString sea_str = pnam + plst[i + 1];
 		if (SameText(IncludeTrailingPathDelimiter(sea_str), drv_nam)) continue;
 		if (sea_str.Length()>=MAX_PATH) sea_str.Insert("\\\\?\\", 1);
@@ -276,7 +276,7 @@ UnicodeString get_case_name(UnicodeString fnam)
 //---------------------------------------------------------------------------
 bool is_root_dir(UnicodeString dnam)
 {
-	if (remove_top_s(dnam, _T("\\\\")))
+	if (remove_top_s(dnam, "\\\\"))
 		return !contains_PathDlmtr(ExcludeTrailingPathDelimiter(get_tkn_r(dnam, '\\')));
 	else
 		return !contains_PathDlmtr(ExcludeTrailingPathDelimiter(dnam));
@@ -284,7 +284,7 @@ bool is_root_dir(UnicodeString dnam)
 //---------------------------------------------------------------------------
 bool is_root_unc(UnicodeString dnam)
 {
-	if (remove_top_s(dnam, _T("\\\\")))
+	if (remove_top_s(dnam, "\\\\"))
 		return !contains_PathDlmtr(ExcludeTrailingPathDelimiter(get_tkn_r(dnam, '\\')));
 	else
 		return false;
@@ -382,15 +382,11 @@ UnicodeString nrm_FileExt(UnicodeString fext)
 //---------------------------------------------------------------------------
 bool test_FileExt(UnicodeString fext, UnicodeString list)
 {
-	if (list.IsEmpty() || fext.IsEmpty() || USAME_TS(fext, ".")) return false;
-	if (USAME_TS(list, "*") || USAME_TS(list, ".*")) return true;
+	if (list.IsEmpty() || fext.IsEmpty() || SameStr(fext, ".")) return false;
+	if (SameStr(list, "*") || SameStr(list, ".*")) return true;
 	return ContainsText(nrm_FileExt(list), nrm_FileExt(fext));
 }
-//---------------------------------------------------------------------------
-bool test_FileExt(UnicodeString fext, const _TCHAR *list)
-{
-	return test_FileExt(fext, UnicodeString(list));
-}
+
 //---------------------------------------------------------------------------
 //拡張子のチェック(サイズ制限対応)
 //---------------------------------------------------------------------------
@@ -400,10 +396,10 @@ bool test_FileExtSize(UnicodeString fext, UnicodeString list, __int64 size)
 	TStringDynArray xlst = SplitString(list, ".");
 	UnicodeString xstr;
 	for (int i=0; i<xlst.Length; i++) {
-		if (test_FileExt(fext, get_tkn(xlst[i], ":"))) xstr =xlst[i];
+		if (test_FileExt(fext, get_tkn(xlst[i], ':'))) xstr =xlst[i];
 	}
 	if (!xstr.IsEmpty()) {
-		__int64 sz = get_tkn_r(xstr, ":").ToIntDef(0) * 1048576ul;	//MB
+		__int64 sz = get_tkn_r(xstr, ':').ToIntDef(0) * 1048576ul;	//MB
 		ret = (size>=sz);
 	}
 
@@ -462,7 +458,6 @@ TStringDynArray split_path(UnicodeString pnam)
 {
 	pnam = ExcludeTrailingPathDelimiter(pnam);
 	const _TCHAR *top_s = remove_top_s(pnam, "\\\\")? _T("\\\\") : NULL;
-
 	TStringDynArray ret_array = SplitString(pnam, "\\");
 	if (top_s && ret_array.Length>0) ret_array[0] = top_s + ret_array[0];
 
@@ -487,7 +482,7 @@ UnicodeString split_user_name(UnicodeString &dnam)
 //---------------------------------------------------------------------------
 bool is_computer_name(UnicodeString pnam)
 {
-	if (!remove_top_s(pnam, _T("\\\\"))) return false;
+	if (!remove_top_s(pnam, "\\\\")) return false;
 	return (ExcludeTrailingPathDelimiter(pnam).Pos('\\')==0);
 }
 
@@ -700,7 +695,7 @@ bool file_exists_ico(UnicodeString fnam)
 {
 	if (fnam.IsEmpty()) return false;
 
-	int ico_idx = get_tkn_r(fnam, ",").ToIntDef(-1);
+	int ico_idx = get_tkn_r(fnam, ',').ToIntDef(-1);
 	if (ico_idx!=-1) fnam = get_tkn(fnam, ",");
 
 	return (file_GetAttr(fnam) != faInvalid);
@@ -716,7 +711,7 @@ bool file_exists_wc(
 	UnicodeString mask = ExtractFileName(fnam);
 	if (mask.Pos('*') || mask.Pos('?')) {
 		std::unique_ptr<TStringList> lst(new TStringList());
-		get_files(ExtractFilePath(fnam), mask.c_str(), lst.get());
+		get_files(ExtractFilePath(fnam), mask, lst.get());
 		fnam = (lst->Count>0)? lst->Strings[0] : EmptyStr;
 	}
 	return file_exists(fnam);
@@ -1005,7 +1000,7 @@ UnicodeString get_file_attr_str(int atr)
 //---------------------------------------------------------------------------
 void get_files(
 	UnicodeString pnam,	//ディレクトリ名
-	const _TCHAR *mask,	//マスク
+	UnicodeString mask,	//マスク
 	TStrings *lst,		//結果格納リスト
 	bool subSW)			//サブディレクトリも	 (default = false)
 {
@@ -1013,7 +1008,7 @@ void get_files(
 
 	pnam = IncludeTrailingPathDelimiter(pnam);
 
-	UnicodeString mask_u = def_if_empty(mask, _T("*.*"));
+	UnicodeString mask_u = def_if_empty(mask, "*.*");
 
 	//サブディレクトリを検索
 	TSearchRec sr;
@@ -1135,7 +1130,7 @@ bool create_ForceDirs(UnicodeString dnam)
 	UnicodeString pnam;
 	for (int i=0; i<plst.Length; i++) {
 		pnam += IncludeTrailingPathDelimiter(plst[i]);
-		if (USAME_TS(pnam, "\\") || USAME_TS(pnam, "\\\\") || SameStr(pnam, rnam)) continue;
+		if (SameStr(pnam, "\\") || SameStr(pnam, "\\\\") || SameStr(pnam, rnam)) continue;
 		if (dir_exists(pnam)) continue;
 		if (!create_Dir(pnam)) return false;
 	}
@@ -1218,7 +1213,7 @@ bool rename_Path(UnicodeString old_nam, UnicodeString new_nam)
 	for (int i=0; i<o_plst.Length && ok; i++) {
 		o_pnam += IncludeTrailingPathDelimiter(o_plst[i]);
 		n_pnam += IncludeTrailingPathDelimiter(n_plst[i]);
-		if (USAME_TS(o_pnam, "\\") || USAME_TS(o_pnam, "\\\\") || USAME_TS(n_pnam, "\\") || USAME_TS(n_pnam, "\\\\")) continue;
+		if (SameStr(o_pnam, "\\") || SameStr(o_pnam, "\\\\") || SameStr(n_pnam, "\\") || SameStr(n_pnam, "\\\\")) continue;
 		if (!SameText(o_plst[i], n_plst[i])) {
 			SetCurrentDir(get_parent_path(o_pnam));
 			ok = rename_File(o_pnam, n_pnam);

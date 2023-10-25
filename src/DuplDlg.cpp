@@ -56,11 +56,11 @@ void __fastcall TFindDuplDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TFindDuplDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+O") && OppPathCheckBox->Enabled)
+	if		(SameText(KeyStr, "Alt+O") && OppPathCheckBox->Enabled)
 										invert_CheckBox(OppPathCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(SubDirCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+S")) invert_CheckBox(ExcSymCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+L")) invert_CheckBox(ResLinkCheckBox);
+	else if (SameText(KeyStr, "Alt+R")) invert_CheckBox(SubDirCheckBox);
+	else if (SameText(KeyStr, "Alt+S")) invert_CheckBox(ExcSymCheckBox);
+	else if (SameText(KeyStr, "Alt+L")) invert_CheckBox(ResLinkCheckBox);
 	else	SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#FindDuplDlg"));
 }
 //---------------------------------------------------------------------------

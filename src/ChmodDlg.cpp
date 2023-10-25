@@ -83,7 +83,7 @@ void __fastcall TFtpChmodDlg::OctalEditChange(TObject *Sender)
 //---------------------------------------------------------------------------
 bool __fastcall TFtpChmodDlg::SetPermission(UnicodeString prm)
 {
-	if (!is_match_regex(prm, _T("^[-dl][-rwx]{9}"))) return false;
+	if (!TRegEx::IsMatch(prm, "^[-dl][-rwx]{9}")) return false;
 
 	R1CheckBox->Checked = (prm[2]=='r');
 	W1CheckBox->Checked = (prm[3]=='w');

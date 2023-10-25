@@ -119,5 +119,3 @@ void __fastcall TFindKeyDlg::CancelBtnClick(TObject *Sender)
 	ModalResult = mrCancel;
 }
 //---------------------------------------------------------------------------
-
-

@@ -87,7 +87,7 @@ void __fastcall TDotNyanDlg::FormShow(TObject *Sender)
 		UnicodeString tmp		 = cfg_lst->Values["ExeCommands"];
 		remove_top_AT(tmp);
 		ExeCmdsEdit->Text		 = tmp;
-		HandledCheckBox->Checked = ListVal_equal_1(cfg_lst.get(), _T("Handled"));
+		HandledCheckBox->Checked = ListVal_equal_1(cfg_lst.get(), "Handled");
 		HideCheckBox->Checked    = (file_GetAttr(DotNyanName) & faHidden);
 	}
 	else {
@@ -134,27 +134,27 @@ void __fastcall TDotNyanDlg::FormDestroy(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TDotNyanDlg::SetOderOption(TStringList *lst)
 {
-	NoOderCheckBox->Checked = ListVal_is_empty(lst, _T("NaturalOrder")) &&
-							  ListVal_is_empty(lst, _T("DscNameOrder")) &&
-							  ListVal_is_empty(lst, _T("SmallOrder")) &&
-							  ListVal_is_empty(lst, _T("OldOrder")) &&
-							  ListVal_is_empty(lst, _T("DscAttrOrder"));
+	NoOderCheckBox->Checked = ListVal_is_empty(lst, "NaturalOrder") &&
+							  ListVal_is_empty(lst, "DscNameOrder") &&
+							  ListVal_is_empty(lst, "SmallOrder") &&
+							  ListVal_is_empty(lst, "OldOrder") &&
+							  ListVal_is_empty(lst, "DscAttrOrder");
 	NoOderCheckBoxClick(NULL);
 	if (!NoOderCheckBox->Checked) {
-		NaturalCheckBox->Checked = ListVal_equal_1(lst, _T("NaturalOrder"));
-		DscNameCheckBox->Checked = ListVal_equal_1(lst, _T("DscNameOrder"));
-		SmallCheckBox->Checked	 = ListVal_equal_1(lst, _T("SmallOrder"));
-		OldCheckBox->Checked	 = ListVal_equal_1(lst, _T("OldOrder"));
-		DscAttrCheckBox->Checked = ListVal_equal_1(lst, _T("DscAttrOrder"));
+		NaturalCheckBox->Checked = ListVal_equal_1(lst, "NaturalOrder");
+		DscNameCheckBox->Checked = ListVal_equal_1(lst, "DscNameOrder");
+		SmallCheckBox->Checked	 = ListVal_equal_1(lst, "SmallOrder");
+		OldCheckBox->Checked	 = ListVal_equal_1(lst, "OldOrder");
+		DscAttrCheckBox->Checked = ListVal_equal_1(lst, "DscAttrOrder");
 	}
 
 	int n;
-	n = get_ListIntVal(lst, _T("ShowHideAtr"),   -1);	HideRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
-	n = get_ListIntVal(lst, _T("ShowHideAtr"),   -1);	HideRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
-	n = get_ListIntVal(lst, _T("ShowSystemAtr"), -1);	SysRadioGroup->ItemIndex  = (n==1)? 1 : (n==0)? 2 : 0;
-	n = get_ListIntVal(lst, _T("ShowByteSize"),  -1);	SizeRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
-	n = get_ListIntVal(lst, _T("ShowIcon"),		 -1);	IconRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : (n==2)? 3 : 0;
-	n = get_ListIntVal(lst, _T("SyncLR"),		 -1);	SyncRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
+	n = get_ListIntVal(lst, "ShowHideAtr",   -1);	HideRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
+	n = get_ListIntVal(lst, "ShowHideAtr",   -1);	HideRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
+	n = get_ListIntVal(lst, "ShowSystemAtr", -1);	SysRadioGroup->ItemIndex  = (n==1)? 1 : (n==0)? 2 : 0;
+	n = get_ListIntVal(lst, "ShowByteSize",  -1);	SizeRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
+	n = get_ListIntVal(lst, "ShowIcon",		 -1);	IconRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : (n==2)? 3 : 0;
+	n = get_ListIntVal(lst, "SyncLR",		 -1);	SyncRadioGroup->ItemIndex = (n==1)? 1 : (n==0)? 2 : 0;
 
 	PathMaskComboBox->Text = lst->Values["PathMask"];
 	GrepMaskComboBox->Text = lst->Values["GrepMask"];

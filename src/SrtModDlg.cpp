@@ -138,12 +138,12 @@ void __fastcall TSortModeDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftStat
 		}
 	}
 	else {
-		if		(USAME_TI(KeyStr, "Alt+N")) invert_CheckBox(NaturalCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(DscNameCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+O")) invert_CheckBox(OldCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(SmallCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(DscAttrCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+B")) invert_CheckBox(SortBothCheckBox);
+		if		(SameText(KeyStr, "Alt+N")) invert_CheckBox(NaturalCheckBox);
+		else if (SameText(KeyStr, "Alt+R")) invert_CheckBox(DscNameCheckBox);
+		else if (SameText(KeyStr, "Alt+O")) invert_CheckBox(OldCheckBox);
+		else if (SameText(KeyStr, "Alt+M")) invert_CheckBox(SmallCheckBox);
+		else if (SameText(KeyStr, "Alt+V")) invert_CheckBox(DscAttrCheckBox);
+		else if (SameText(KeyStr, "Alt+B")) invert_CheckBox(SortBothCheckBox);
 	}
 }
 //---------------------------------------------------------------------------

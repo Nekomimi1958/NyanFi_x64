@@ -146,8 +146,8 @@ typedef Set <SeaOpt, soMigemo, soTree> SearchOption;
 #define RENLIST_FILE  "renamelist.txt"	//改名リスト
 #define CLIP_BMP_FILE "CLIPBOARD.BMP"	//クリップボードの一時保存
 
-#define WEBMAP_FILE	  "$~WEBMAP.HTM"	//Googleマップ表示用ファイル
-#define WEBMAP_TPLT	  "WEBMAP.HTM"		//Googleマップ表示用テンプレート
+#define WEBMAP_FILE	  "$~WEBMAP.HTM"	//Webマップ表示用ファイル
+#define WEBMAP_TPLT	  "WEBMAP.HTM"		//Webマップ表示用テンプレート
 
 #define RESPONSE_FILE "$~LISTFILE.TXT"	//レスポンスファイル名
 #define RESPONSE_ERR  "ERROR"
@@ -699,7 +699,6 @@ extern TPanel	*FileListPanel[MAX_FILELIST];
 extern UnicodeString ViewFileName;
 extern UnicodeString ViewFileName2;
 extern bool ViewFromArc;
-
 
 //---------------------------------------------------------------------------
 #define GENLST_FILELIST	1
@@ -1548,8 +1547,6 @@ extern TStringList *CmdFileList;
 extern TStringList *XCMD_VarList;
 
 //---------------------------------------------------------------------------
-//インライン関数
-//---------------------------------------------------------------------------
 inline void InvalidateFileList(int tag = CurListTag)
 {
 	FileListBox[tag]->Invalidate();
@@ -1600,7 +1597,6 @@ inline bool is_SearchMatch(UnicodeString s, UnicodeString ptn, SearchOption opt)
 	return (opt.Contains(soMigemo)? TRegEx::IsMatch(s, ptn, x_opt) : 
 		  	   opt.Contains(soCaseSens)? ContainsStr(s, ptn) : ContainsText(s, ptn));
 }
-
 
 //---------------------------------------------------------------------------
 //ソートモード
@@ -1990,7 +1986,6 @@ UnicodeString get_CmdDesc(UnicodeString cmd, bool only_inf = false,
 
 UnicodeString ApplyCnvCharList(UnicodeString s);
 
-void   init_ColorList(UnicodeString key, UnicodeString def);
 TColor read_ColorList(UnicodeString key, TColor def, TStringList *lst = NULL);
 TColor read_ColorList(const _TCHAR *key, TColor def, TStringList *lst = NULL);
 void set_col_from_ColorList();

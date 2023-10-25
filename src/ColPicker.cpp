@@ -231,7 +231,7 @@ void __fastcall TColorPicker::CopyColor()
 {
 	UnicodeString fmt = FmtComboBox->Text;
 	//ビットマップ
-	if (remove_top_s(fmt, _T("BITMAP("))) {
+	if (remove_top_s(fmt, "BITMAP(")) {
 		int size = get_tkn(fmt, ')').ToIntDef(32);
 		std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
 		bmp->SetSize(size, size);

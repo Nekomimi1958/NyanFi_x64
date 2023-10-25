@@ -12,10 +12,6 @@
 extern const _TCHAR *null_TCHAR;
 
 //---------------------------------------------------------------------------
-#define USAME_TI(s1,s2)	same_ut_i(s1, _T(s2))
-#define USAME_TS(s1,s2)	same_ut_s(s1, _T(s2))
-
-//---------------------------------------------------------------------------
 int __fastcall comp_NaturalOrder(TStringList *List, int Index1, int Index2);
 int __fastcall comp_AscendOrder(TStringList *List, int Index1, int Index2);
 int __fastcall comp_DescendOrder(TStringList *List, int Index1, int Index2);
@@ -34,19 +30,9 @@ int __fastcall comp_TsvNaturalOrder(TStringList *List, int Index1, int Index2);
 int __fastcall comp_TsvTextOrder(TStringList *List, int Index1, int Index2);
 
 //---------------------------------------------------------------------------
-//引数を文字列リテラルで渡すことが多い場合、
-//UnicodeString より _TCHAR にした方が、呼び出し側でのサイズが小さくなる
-
 UnicodeString get_tkn(UnicodeString s, UnicodeString sp);
-UnicodeString get_tkn(UnicodeString s, const _TCHAR *sp);
-UnicodeString get_tkn(UnicodeString s, WideChar sp);
-
 UnicodeString get_tkn_r(UnicodeString s, UnicodeString sp);
-UnicodeString get_tkn_r(UnicodeString s, const _TCHAR *sp);
-UnicodeString get_tkn_r(UnicodeString s, WideChar sp);
-
-UnicodeString get_tkn_m(UnicodeString s, const _TCHAR *sp1, const _TCHAR *sp2);
-UnicodeString get_tkn_m(UnicodeString s, WideChar sp1, WideChar sp2);
+UnicodeString get_tkn_m(UnicodeString s, UnicodeString sp1, UnicodeString sp2);
 
 UnicodeString get_pre_tab(UnicodeString s);
 UnicodeString get_post_tab(UnicodeString s);
@@ -58,8 +44,6 @@ UnicodeString split_in_paren(UnicodeString &s);
 UnicodeString get_norm_str(UnicodeString s, bool trim_sw = false);
 
 UnicodeString split_tkn(UnicodeString &s, UnicodeString sp);
-UnicodeString split_tkn(UnicodeString &s, const _TCHAR *sp);
-UnicodeString split_tkn(UnicodeString &s, WideChar sp);
 UnicodeString split_tkn_spc(UnicodeString &s);
 
 UnicodeString split_pre_tab(UnicodeString &s);
@@ -74,22 +58,14 @@ TStringDynArray split_strings_tab(UnicodeString s);
 TStringDynArray split_strings_semicolon(UnicodeString s);
 
 bool remove_text(UnicodeString &s, UnicodeString w);
-bool remove_text(UnicodeString &s, const _TCHAR *w);
-
 bool remove_top_text(UnicodeString &s, UnicodeString w);
-bool remove_top_text(UnicodeString &s, const _TCHAR *w);
-
 bool remove_top_s(UnicodeString &s, UnicodeString w);
-bool remove_top_s(UnicodeString &s, const _TCHAR *w);
-bool remove_top_s(UnicodeString &s, WideChar w);
 
 bool remove_top_AT(UnicodeString &s);
 bool remove_top_Dollar(UnicodeString &s);
 
 bool remove_end_text(UnicodeString &s, UnicodeString w);
-
 bool remove_end_s(UnicodeString &s, UnicodeString w);
-bool remove_end_s(UnicodeString &s, WideChar w);
 
 void delete_end(UnicodeString &s);
 
@@ -98,7 +74,6 @@ UnicodeString exclude_top_end(UnicodeString s);
 
 UnicodeString trim_ex(UnicodeString s);
 
-UnicodeString replace_regex(UnicodeString s, const _TCHAR *o, const _TCHAR *r);
 UnicodeString replace_regex_2(UnicodeString s, UnicodeString ptn, UnicodeString rep, TRegExOptions opt);
 UnicodeString replace_str_by_list(UnicodeString s, TStringList *lst);
 
@@ -107,7 +82,6 @@ void cat_str_semicolon(UnicodeString &s, UnicodeString t);
 UnicodeString ins_spc_length(UnicodeString s, int len);
 
 UnicodeString def_if_empty(UnicodeString s, UnicodeString def);
-UnicodeString def_if_empty(UnicodeString s, const _TCHAR *def);
 
 NativeInt str_to_NativeInt(UnicodeString s);
 int extract_int(UnicodeString s);
@@ -126,9 +100,7 @@ TColor xRRGGBB_to_col(UnicodeString s);
 UnicodeString col_to_xRRGGBB(TColor col);
 
 int pos_i(UnicodeString wd, UnicodeString s);
-int pos_i(const _TCHAR *wd, UnicodeString s);
 int pos_r(UnicodeString wd, UnicodeString s);
-int pos_r(const _TCHAR *wd, UnicodeString s);
 int pos_r_i(UnicodeString wd, UnicodeString s);
 int pos_r_q(UnicodeString wd, UnicodeString s);
 int pos_r_q_colon(UnicodeString s);
@@ -139,20 +111,15 @@ bool contains_word_and_or(UnicodeString s, UnicodeString kwd, bool case_sw = fal
 bool contains_fuzzy_word(UnicodeString s, UnicodeString kwd, bool case_sw = false, UnicodeString sp = EmptyStr);
 
 bool contained_wd_i(UnicodeString lst, UnicodeString wd);
-bool contained_wd_i(const _TCHAR *lst, UnicodeString wd);
+bool contains_wd_i(UnicodeString s, UnicodeString lst);
 
-bool contains_wd_i(UnicodeString s, const _TCHAR *lst);
-
-UnicodeString get_word_i_idx(const _TCHAR *lst, int idx);
-int idx_of_word_i(const _TCHAR *lst, UnicodeString wd);
+UnicodeString get_word_i_idx(UnicodeString lst, int idx);
+int idx_of_word_i(UnicodeString lst, UnicodeString wd);
 bool test_word_i(UnicodeString w, UnicodeString list);
 
 bool str_match(UnicodeString ptn, UnicodeString s);
 
 bool chk_RegExPtn(UnicodeString ptn);
-bool is_match_regex(UnicodeString s, const _TCHAR *ptn);
-bool is_match_regex_i(UnicodeString s, const _TCHAR *ptn);
-UnicodeString get_match_regex(UnicodeString s, const _TCHAR *ptn);
 UnicodeString extract_prm_RegExPtn(UnicodeString &s);
 UnicodeString ptn_match_str(UnicodeString ptn, UnicodeString s);
 bool starts_ptn(UnicodeString ptn, UnicodeString s);
@@ -182,9 +149,6 @@ UnicodeString yen_to_slash(UnicodeString s);
 UnicodeString slash_to_yen(UnicodeString s);
 UnicodeString sha1_to_short(UnicodeString s);
 
-bool same_ut_i(UnicodeString s, const _TCHAR *t);
-bool same_ut_s(UnicodeString s, const _TCHAR *t);
-
 bool equal_1(UnicodeString s);
 bool equal_0(UnicodeString s);
 bool equal_ENTER(UnicodeString s);
@@ -202,8 +166,8 @@ bool equal_F1(UnicodeString s);
 bool is_separator(UnicodeString s);
 bool is_alnum_str(UnicodeString s);
 
-bool starts_tchs(const _TCHAR *lst, UnicodeString s);
-bool ends_tchs(const _TCHAR *lst, UnicodeString s);
+bool starts_tchs(UnicodeString lst, UnicodeString s);
+bool ends_tchs(UnicodeString lst, UnicodeString s);
 
 bool starts_AT(UnicodeString s);
 bool starts_Dollar(UnicodeString s);
@@ -221,9 +185,9 @@ bool is_quot(UnicodeString s);
 UnicodeString add_quot_if_spc(UnicodeString s);
 UnicodeString exclude_quot(UnicodeString s);
 
-int  get_ListIntVal(TStringList *lst, const _TCHAR *name, int def = 0);
-bool ListVal_is_empty(TStringList *lst, const _TCHAR *name);
-bool ListVal_equal_1(TStringList *lst, const _TCHAR *name);
+int  get_ListIntVal(TStringList *lst, UnicodeString name, int def = 0);
+bool ListVal_is_empty(TStringList *lst, UnicodeString name);
+bool ListVal_equal_1(TStringList *lst, UnicodeString name);
 
 UnicodeString __fastcall mSecToTStr(unsigned int ms, bool cs = true);
 int param_to_mSec(UnicodeString prm);

@@ -205,7 +205,7 @@ void __fastcall TInputExDlg::WmFormShowed(TMessage &msg)
 		InputEdit->SetFocus();
 		if (!InputEdit->Text.IsEmpty()) {
 			if (SameText(Caption, LoadUsrMsg(USTR_Rename))) {
-				int p = pos_r(_T("."), InputEdit->Text) - 1;
+				int p = pos_r(".", InputEdit->Text) - 1;
 				if (p<0) p = InputEdit->Text.Length();
 				switch (IniFile->ReadIntGen(_T("RenameDlgIniStt"))) {
 				case 1:
@@ -270,7 +270,7 @@ void __fastcall TInputExDlg::FormClose(TObject *Sender, TCloseAction &Action)
 		UnicodeString lbuf = Trim(InputEdit->Text);
 		if (HexRadioBtn->Checked) {
 			//16i‚Ìê‡A0x ‚ð•t‰Á
-			if (!lbuf.IsEmpty()) lbuf.Insert("0x", starts_tchs(_T("+-"), lbuf)? 2 : 1);
+			if (!lbuf.IsEmpty()) lbuf.Insert("0x", starts_tchs("+-", lbuf)? 2 : 1);
 		}
 		InputEdit->Text = lbuf;
 	}
@@ -299,19 +299,19 @@ void __fastcall TInputExDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 	}
 	else {
 		if (CreDirPanel->Visible) {
-			if		(USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(DirChgCheckBox);
-			else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(CnvChCheckBox);
+			if		(SameText(KeyStr, "Alt+C")) invert_CheckBox(DirChgCheckBox);
+			else if (SameText(KeyStr, "Alt+R")) invert_CheckBox(CnvChCheckBox);
 		}
 		if (NewTextPanel->Visible) {
-			if		(USAME_TI(KeyStr, "Alt+P")) invert_CheckBox(ClipCheckBox);
-			else if (USAME_TI(KeyStr, "Alt+E")) invert_CheckBox(EditCheckBox);
+			if		(SameText(KeyStr, "Alt+P")) invert_CheckBox(ClipCheckBox);
+			else if (SameText(KeyStr, "Alt+E")) invert_CheckBox(EditCheckBox);
 		}
 		if (IniSttPanel->Visible) {
-			if		(USAME_TI(KeyStr, "Alt+P")) invert_CheckBox(SelDefCheckBox);
+			if		(SameText(KeyStr, "Alt+P")) invert_CheckBox(SelDefCheckBox);
 		}
 		if (NotationPanel) {
-			if		(USAME_TI(KeyStr, "Alt+H")) HexRadioBtn->Checked = true;
-			else if (USAME_TI(KeyStr, "Alt+D")) DecRadioBtn->Checked = true;
+			if		(SameText(KeyStr, "Alt+H")) HexRadioBtn->Checked = true;
+			else if (SameText(KeyStr, "Alt+D")) DecRadioBtn->Checked = true;
 		}
 	}
 }

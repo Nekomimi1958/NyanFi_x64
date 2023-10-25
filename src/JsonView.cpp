@@ -111,7 +111,7 @@ void __fastcall TJsonViewer::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TJsonViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+A"))
+	if (SameText(KeyStr, "Alt+A"))
 		AutoAction->Execute();
 	else
 		SpecialKeyProc(this, Key, Shift);
@@ -599,12 +599,12 @@ void __fastcall TJsonViewer::JsonTreeViewKeyDown(TObject *Sender, WORD &Key, TSh
 
 	TTreeNode *sp = JsonTreeView->Selected;
 	//ˆÚ“®
-	if		(USAME_TI(cmd_F, "CursorDown") || USAME_TI(cmd_V, "CursorDown"))	perform_Key(JsonTreeView, VK_DOWN);
-	else if (USAME_TI(cmd_F, "CursorUp")   || USAME_TI(cmd_V, "CursorUp"))		perform_Key(JsonTreeView, VK_UP);
-	else if (USAME_TI(cmd_F, "PageDown")   || USAME_TI(cmd_V, "PageDown"))		perform_Key(JsonTreeView, VK_NEXT);
-	else if (USAME_TI(cmd_F, "PageUp")	   || USAME_TI(cmd_V, "PageUp"))		perform_Key(JsonTreeView, VK_PRIOR);
-	else if (USAME_TI(cmd_F, "CursorTop")  || USAME_TI(cmd_V, "TextTop"))		perform_Key(JsonTreeView, VK_HOME);
-	else if (USAME_TI(cmd_F, "CursorEnd")  || USAME_TI(cmd_V, "TextEnd"))		perform_Key(JsonTreeView, VK_END);
+	if		(SameText(cmd_F, "CursorDown") || SameText(cmd_V, "CursorDown"))	perform_Key(JsonTreeView, VK_DOWN);
+	else if (SameText(cmd_F, "CursorUp")   || SameText(cmd_V, "CursorUp"))		perform_Key(JsonTreeView, VK_UP);
+	else if (SameText(cmd_F, "PageDown")   || SameText(cmd_V, "PageDown"))		perform_Key(JsonTreeView, VK_NEXT);
+	else if (SameText(cmd_F, "PageUp")	   || SameText(cmd_V, "PageUp"))		perform_Key(JsonTreeView, VK_PRIOR);
+	else if (SameText(cmd_F, "CursorTop")  || SameText(cmd_V, "TextTop"))		perform_Key(JsonTreeView, VK_HOME);
+	else if (SameText(cmd_F, "CursorEnd")  || SameText(cmd_V, "TextEnd"))		perform_Key(JsonTreeView, VK_END);
 
 	//ŠJ•Â
 	else if (equal_ENTER(KeyStr)) {
@@ -634,17 +634,17 @@ void __fastcall TJsonViewer::JsonTreeViewKeyDown(TObject *Sender, WORD &Key, TSh
 		}
 	}
 	//ŒŸõ
-	else if (USAME_TI(cmd_F, "FindDown") || USAME_TI(KeyStr, "F3")) {
+	else if (SameText(cmd_F, "FindDown") || SameText(KeyStr, "F3")) {
 		FindDownAction->Execute();
 	}
-	else if (USAME_TI(cmd_F, "FindUp")) {
+	else if (SameText(cmd_F, "FindUp")) {
 		FindUpAction->Execute();
 	}
 	else if (StartsText("IncSearch", cmd_F) || contained_wd_i(KeyStr_Filter, KeyStr)) {
 		FindEdit->SetFocus();
 	}
 	//•Â‚¶‚é
-	else if (USAME_TI(cmd_F, "ReturnList")) {
+	else if (SameText(cmd_F, "ReturnList")) {
 		ModalResult = mrCancel;
 	}
 	else return;

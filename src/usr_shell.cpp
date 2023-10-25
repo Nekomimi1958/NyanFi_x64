@@ -236,7 +236,7 @@ DWORD get_DropMode(IDataObject *pDataObj, DWORD grfKeyState, POINTL pt)
 	}
 	//その他
 	else if (hWnd) {
-		if (USAME_TI(get_WndClassName(hWnd), "EDIT")) hWnd = ::GetParent(hWnd);	//コンボボックス対策
+		if (SameText(get_WndClassName(hWnd), "EDIT")) hWnd = ::GetParent(hWnd);	//コンボボックス対策
 
 		TPoint mp = Mouse->CursorPos;
 		for (int i=0; i<TargetList->Count; i++) {
@@ -708,14 +708,14 @@ UnicodeString UserShell::ShowContextMenu(
 						UnicodeString lbuf = Trim(ex_item->Strings[i]);
 						if (lbuf.IsEmpty() || StartsStr(';', lbuf)) continue;
 
-						if (USAME_TS(lbuf, "!")) {
+						if (SameStr(lbuf, "!")) {
 							ins_top = true;
 							pos_top = 0;
 							continue;
 						}
 
 						int pos_last = std::max(::GetMenuItemCount(hMP) - ((s_lst->Count==1)? 2 : 0), 0);
-						int pos = (!ins_top || (i==0 && USAME_TI(lbuf, "名前の変更(&M)\tRenameDlg")))? pos_last : pos_top;
+						int pos = (!ins_top || (i==0 && SameText(lbuf, "名前の変更(&M)\tRenameDlg")))? pos_last : pos_top;
 
 						//サブメニュー
 						if (remove_top_s(lbuf, '>')) {
@@ -1084,20 +1084,20 @@ UnicodeString UserShell::get_PropInf(
 			//「認識された種類」を取得
 			SHELLDETAILS details;
 			_TCHAR szBuf[256];
-			int idx = get_ListIntVal(PropertyList, _T("認識された種類"), -1);
+			int idx = get_ListIntVal(PropertyList, "認識された種類", -1);
 			if (idx!=-1) {
 				if (SUCCEEDED(targetFolder->GetDetailsOf(object, idx, &details))) {
 					StrRetToBuf(&details.str, NULL, szBuf, sizeof(szBuf)/sizeof(_TCHAR));
 					typ_str = szBuf;
-					if (USAME_TI(typ_str, "未指定")) {
-						if (USAME_TI(ExtractFileExt(fnam), ".ts")) typ_str = "ビデオ";
+					if (SameText(typ_str, "未指定")) {
+						if (SameText(ExtractFileExt(fnam), ".ts")) typ_str = "ビデオ";
 					}
 				}
 			}
 
 			if (idx_str.IsEmpty()) {
 				//「認識された種類」にしたがって取得項目を選択
-				switch (idx_of_word_i(_T("ビデオ|オーディオ|イメージ|アプリケーション|ドキュメント|未指定"), typ_str)) {
+				switch (idx_of_word_i("ビデオ|オーディオ|イメージ|アプリケーション|ドキュメント|未指定", typ_str)) {
 				case 0:
 					idx_str = "タイトル,長さ,フレーム幅,フレーム高,$R,データ速度,総ビット レート,フレーム率,$A,著作権";
 					break;
@@ -1106,7 +1106,7 @@ UnicodeString UserShell::get_PropInf(
 					break;
 				case 2:
 					idx_str = "ビットの深さ";
-					if (!USAME_TI(ExtractFileExt(fnam), ".png")) idx_str += ",水平方向の解像度,垂直方向の解像度";
+					if (!SameText(ExtractFileExt(fnam), ".png")) idx_str += ",水平方向の解像度,垂直方向の解像度";
 					idx_str += ",プログラム名";
 					break;
 				case 3:
@@ -1135,8 +1135,8 @@ UnicodeString UserShell::get_PropInf(
 					StrRetToBuf(&details.str, NULL, szBuf, sizeof(szBuf)/sizeof(_TCHAR));
 					UnicodeString vstr = szBuf;	if (vstr.IsEmpty()) continue;
 
-					if		(USAME_TS(inam, "フレーム幅")) f_wd = extract_int(vstr);
-					else if (USAME_TS(inam, "フレーム高")) f_hi = extract_int(vstr);
+					if		(SameStr(inam, "フレーム幅")) f_wd = extract_int(vstr);
+					else if (SameStr(inam, "フレーム高")) f_hi = extract_int(vstr);
 
 					if (lst_sw)
 						lst->Add(tmp.sprintf(_T("%s=%s"), inam.c_str(), vstr.c_str()));
@@ -1365,7 +1365,7 @@ UnicodeString UserShell::get_FileTypeStr(UnicodeString fnam)
 			if (typ_str.IsEmpty() && remove_top_s(fext, '.')) typ_str.sprintf(_T("%s ファイル"), fext.UpperCase().c_str());
 		}
 	}
-	else if (USAME_TI(get_tkn(ExtractFileName(fnam), '_'), ".nyanfi")) {
+	else if (SameText(get_tkn(ExtractFileName(fnam), '_'), ".nyanfi")) {
 		typ_str = ".nyanfi ファイル";
 	}
 	else {
@@ -1642,7 +1642,7 @@ HICON UserShell::get_Icon(
 	UnicodeString fext = get_extension(fnam);
 
 	//インデックス指定
-	int idx = get_tkn_r(fnam, ",").ToIntDef(-1);
+	int idx = get_tkn_r(fnam, ',').ToIntDef(-1);
 	if (idx!=-1) {
 		HICON icons[1];
 		bool get_small = (size<=16);
@@ -1660,13 +1660,13 @@ HICON UserShell::get_Icon(
 	}
 
 	//インターネットショートカット(:favicon)
-	if (USAME_TI(fext, ".url")) {
+	if (SameText(fext, ".url")) {
 		hIcon = get_ico_f(fnam + FAVICON_ADS, 16);
 		if (hIcon) return hIcon;
 	}
 
 	//マウスポインタ
-	if (USAME_TI(fext, ".cur")) {
+	if (SameText(fext, ".cur")) {
 		if (size>32) return NULL;
 		//ラージまたはスモールアイコンを取得
 		SHFILEINFO sif;

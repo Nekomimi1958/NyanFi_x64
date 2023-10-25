@@ -141,7 +141,7 @@ bool ExeCmdsList::Preproc(UnicodeString &cmd, UnicodeString &prm)
 {
 	CmdStr = CmdList->Strings[PC];
 	//行番号
-	if (remove_top_s(CmdStr, _T('＃'))) {
+	if (remove_top_s(CmdStr, "＃")) {
 		LineNo = CmdStr.ToIntDef(0);
 		IncPC();
 		return false;
@@ -156,9 +156,9 @@ bool ExeCmdsList::Preproc(UnicodeString &cmd, UnicodeString &prm)
 	//コマンド、パラメータ
 	cmd = get_CmdStr(CmdStr);
 	prm = get_PrmStr(CmdStr);
-	if (!USAME_TI(cmd, "ReplaceBuffer")) prm = exclude_quot(prm);
+	if (!SameText(cmd, "ReplaceBuffer")) prm = exclude_quot(prm);
 
-	if (USAME_TI(cmd, "Exit")) EndOfCmds = true;
+	if (SameText(cmd, "Exit")) EndOfCmds = true;
 
 	return !EndOfCmds;
 }
@@ -180,7 +180,7 @@ bool ExeCmdsList::proc_Repeat(UnicodeString cmd, UnicodeString prm)
 	bool handled = true;
 
 	try {
-		int idx = idx_of_word_i(_T("Repeat|EndRepeat|Break|Continue"), cmd);
+		int idx = idx_of_word_i("Repeat|EndRepeat|Break|Continue", cmd);
 		bool to_brk = false;
 		switch (idx) {
 		case 0:	//Repeat
@@ -189,11 +189,11 @@ bool ExeCmdsList::proc_Repeat(UnicodeString cmd, UnicodeString prm)
 			if (prm.IsEmpty()) {
 				RepCnt[RepLevel] = -2;
 			}
-			else if (USAME_TI(prm, "YN")) {
+			else if (SameText(prm, "YN")) {
 				RepCnt[RepLevel] = -1;
 			}
 			else {
-				if (USAME_TI(prm, "IN")) prm = inputbox_ex(_T("Repeat"), _T("繰り返し回数"), EmptyStr, true);
+				if (SameText(prm, "IN")) prm = inputbox_ex(_T("Repeat"), _T("繰り返し回数"), EmptyStr, true);
 				RepCnt[RepLevel] = prm.ToIntDef(0);
 				to_brk = (RepCnt[RepLevel]==0);
 			}
@@ -246,10 +246,10 @@ bool ExeCmdsList::search_EndRepeat()
 	int level  = 0;
 	for (int i=PC; i<CmdList->Count; i++) {
 		UnicodeString cmd = get_CmdStr(CmdList->Strings[i]);
-		if (USAME_TI(cmd, "Repeat")) {
+		if (SameText(cmd, "Repeat")) {
 			level++;
 		}
-		else if (USAME_TI(cmd, "EndRepeat")) {
+		else if (SameText(cmd, "EndRepeat")) {
 			if (level==0) {
 				end_pc = i; break;
 			}
@@ -286,13 +286,13 @@ bool ExeCmdsList::proc_IfCnd(bool cnd, UnicodeString prm)
 		if (cnd) {
 			//パラメータあり
 			if (!prm.IsEmpty()) {
-				if (USAME_TI(prm, "Exit")) {
+				if (SameText(prm, "Exit")) {
 					EndOfCmds = true;
 				}
 				else if (contained_wd_i(_T("Break|Continue"), prm)) {
 					if (RepLevel==-1) UserAbort(USTR_BadStatmet);
 					if (!search_EndRepeat()) UserAbort(USTR_BadStatmet);
-					if (USAME_TI(prm, "Break")) {
+					if (SameText(prm, "Break")) {
 						RepLevel--;  IncPC();
 					}
 				}
@@ -321,7 +321,7 @@ bool ExeCmdsList::proc_IfCnd(bool cnd, UnicodeString prm)
 						if (if_lvl==0) {
 							if (contained_wd_i(_T("Else|EndIf"), lbuf)) break;
 						}
-						else if (USAME_TI(lbuf, "EndIf")) {
+						else if (SameText(lbuf, "EndIf")) {
 							if_lvl--;
 						}
 					}
@@ -341,7 +341,7 @@ bool ExeCmdsList::proc_IfCnd(bool cnd, UnicodeString prm)
 //---------------------------------------------------------------------------
 bool ExeCmdsList::proc_IfElseEnd(UnicodeString cmd)
 {
-	if (USAME_TI(cmd, "Else")) {
+	if (SameText(cmd, "Else")) {
 		if (IfCnt==0) UserAbort(USTR_BadStatmet);
 		IncPC();
 		int if_lvl = 0;
@@ -350,7 +350,7 @@ bool ExeCmdsList::proc_IfElseEnd(UnicodeString cmd)
 			if (StartsText("If", lbuf) && !ContainsStr(lbuf, "_")) {
 				if_lvl++;
 			}
-			else if (USAME_TI(lbuf, "EndIf")) {
+			else if (SameText(lbuf, "EndIf")) {
 				if (if_lvl==0) break;
 				if_lvl--;
 			}
@@ -359,7 +359,7 @@ bool ExeCmdsList::proc_IfElseEnd(UnicodeString cmd)
 		if (EndOfCmds) UserAbort(USTR_BadStatmet);
 		IncPC();
 	}
-	else if (USAME_TI(cmd, "EndIf")) {
+	else if (SameText(cmd, "EndIf")) {
 		if (IfCnt==0) UserAbort(USTR_BadStatmet);
 		IfCnt--;  IncPC();
 	}
@@ -555,15 +555,15 @@ void XCMD_Initialize(UnicodeString &opt)
 	XCMD_f_size		= -1;
 	XCMD_f_time		= 0;
 
-	if (USAME_TI(opt, "EL")) {
+	if (SameText(opt, "EL")) {
 		XCMD_echo_on = true;  XCMD_echo_lno = true;
 		opt = EmptyStr;
 	}
-	else if (USAME_TI(opt, "ViewLog")) {
+	else if (SameText(opt, "ViewLog")) {
 		XCMD_view_log = true;
 		opt = EmptyStr;
 	}
-	else if (USAME_TI(opt, "ViewClip")) {
+	else if (SameText(opt, "ViewClip")) {
 		XCMD_view_clip = true;
 		opt = EmptyStr;
 	}
@@ -881,7 +881,7 @@ void XCMD_upd_Var()
 	}
 
 	//ソートモード
-	XCMD_set_Var(_T("SortMode"), get_word_i_idx(_T("F|E|D|S|A|U|L"), CurSortMode()));
+	XCMD_set_Var(_T("SortMode"), get_word_i_idx("F|E|D|S|A|U|L", CurSortMode()));
 
 	//タスク数
 	XCMD_set_Var(_T("TaskCount"), get_BusyTaskCount());
@@ -907,7 +907,7 @@ void XCMD_upd_Var()
 		b_buf->Text = XCMD_GetBuffer();
 		XCMD_set_Var(_T("BufferCount"),  b_buf->Count);
 		XCMD_set_Var(_T("BufferLength"), b_buf->Text.Length());
-		int idx = get_ListIntVal(XCMD_VarList, _T("BufferIndex"), -1);
+		int idx = get_ListIntVal(XCMD_VarList, "BufferIndex", -1);
 		XCMD_set_Var(_T("BufferLine"),   (idx>=0 && idx<b_buf->Count)? b_buf->Strings[idx] : EmptyStr);
 		XCMD_BufChanged = false;
 	}
@@ -1036,26 +1036,26 @@ bool XCMD_EvalCnd(TStringDynArray lst)
 bool XCMD_Control()
 {
 	//If文
-	if (remove_top_text(XCMD_cmd, _T("If"))) {
+	if (remove_top_text(XCMD_cmd, "If")) {
 		TStringDynArray cnd_lst = SplitString(XCMD_cmd, ".");
 		if (cnd_lst.Length%2==0) UserAbort(USTR_SyntaxError);
 
 		for (int i=0; i<cnd_lst.Length; i++) {
 			UnicodeString cnd = cnd_lst[i];
-			if (USAME_TI(cnd, "and") || USAME_TI(cnd, "or")) {
+			if (SameText(cnd, "and") || SameText(cnd, "or")) {
 				cnd_lst[i] = cnd.LowerCase();
 				continue;
 			}
 
-			bool if_not = remove_top_text(cnd, _T("Not")) || remove_top_s(cnd, '!');
+			bool if_not = remove_top_text(cnd, "Not") || remove_top_s(cnd, '!');
 			bool cnd_res = false;
 
 			switch (idx_of_word_i(
-				_T("True|False|Selected|Dir|File|Arc|Sel|Top|End|Left|")					//0～9
-				_T("Right|Empty|Root|Remote|Removable|Virtual|Work|Found|Yes|No|")			//10～19
-				_T("Cancel|SelMask|PathMask|Task|Suspend|Binary|Log|HtmTxt|Marked|Image|")	//20～29
-				_T("Shift|Ctrl|Alt|Grep|Connected|Primary|Duplicated|FTP|ADS|Git|")			//30～39
-				_T("TimeOut"),																//40～
+				"True|False|Selected|Dir|File|Arc|Sel|Top|End|Left|"					//0～9
+				"Right|Empty|Root|Remote|Removable|Virtual|Work|Found|Yes|No|"			//10～19
+				"Cancel|SelMask|PathMask|Task|Suspend|Binary|Log|HtmTxt|Marked|Image|"	//20～29
+				"Shift|Ctrl|Alt|Grep|Connected|Primary|Duplicated|FTP|ADS|Git|"			//30～39
+				"TimeOut",																//40～
 				cnd))
 			{
 			case  0: cnd_res = XCMD_matched;							break;
@@ -1161,7 +1161,7 @@ bool XCMD_Control()
 		if (!XCMD_xlp->ErrMsg.IsEmpty()) throw EAbort(XCMD_xlp->ErrMsg);
 	}
 	//Goto文
-	else if (USAME_TI(XCMD_cmd, "Goto")) {
+	else if (SameText(XCMD_cmd, "Goto")) {
 		if (!XCMD_xlp->proc_Goto(XCMD_prm)) throw EAbort(XCMD_xlp->ErrMsg);
 	}
 	else {
@@ -1177,7 +1177,7 @@ bool XCMD_Control()
 void XCMD_match_Str(UnicodeString prm, UnicodeString s)
 {
 	XCMD_set_Var(_T("MatchedStr"), ptn_match_str(prm, s));
-	XCMD_matched = !ListVal_is_empty(XCMD_VarList, _T("MatchedStr"));
+	XCMD_matched = !ListVal_is_empty(XCMD_VarList, "MatchedStr");
 }
 //---------------------------------------------------------------------------
 void XCMD_match_Buffer(UnicodeString prm)
@@ -1219,24 +1219,19 @@ void XCMD_Set(UnicodeString prm)
 	UnicodeString nstr	= exclude_quot(get_tkn_r(prm, opstr));
 	UnicodeString rstr;
 	//複合演算子
-	if (!USAME_TS(opstr, "=")) {
+	if (!SameStr(opstr, "=")) {
 		//元の変数の書式をチェック
-		int t_flag = -1;
-		if (is_match_regex(vstr, _T("\\d{4}/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2}")))
-			t_flag = 0;
-		else if (is_match_regex(vstr, _T("\\d{4}/\\d{2}/\\d{2}")))
-			t_flag = 1;
-		else if (is_match_regex(vstr, _T("\\d{2}:\\d{2}:\\d{2}")))
-			t_flag = 2;
-
+		int t_flag = TRegEx::IsMatch(vstr, "\\d{4}/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2}")? 0 :
+											TRegEx::IsMatch(vstr, "\\d{4}/\\d{2}/\\d{2}")? 1 :
+											TRegEx::IsMatch(vstr, "\\d{2}:\\d{2}:\\d{2}")? 2 : -1;
 		//時間演算
 		if (t_flag!=-1) {
 			try {
 				TDateTime vt = str_to_DateTime(vstr);			//元の変数
 				TDateTime nt = str_to_DateTime(nstr, true);
 				//演算
-				if		(USAME_TS(opstr, "+=")) vt += nt;
-				else if (USAME_TS(opstr, "-=")) vt -= nt;
+				if		(SameStr(opstr, "+=")) vt += nt;
+				else if (SameStr(opstr, "-=")) vt -= nt;
 				else UserAbort(USTR_SyntaxError);
 
 				//結果の設定
@@ -1255,9 +1250,9 @@ void XCMD_Set(UnicodeString prm)
 				if (!vstr.IsEmpty() && !nstr.IsEmpty()) {
 					int v = vstr.ToInt();
 					int n = nstr.ToInt();
-					if (USAME_TS(opstr, "/=") && n==0) SysErrAbort(DISP_E_DIVBYZERO);
+					if (SameStr(opstr, "/=") && n==0) SysErrAbort(DISP_E_DIVBYZERO);
 
-					switch (idx_of_word_i(_T("+=|-=|*=|/=|%="), opstr)) {
+					switch (idx_of_word_i("+=|-=|*=|/=|%=", opstr)) {
 					case 0: v += n; break;
 					case 1: v -= n; break;
 					case 2: v *= n; break;
@@ -1267,12 +1262,12 @@ void XCMD_Set(UnicodeString prm)
 
 					rstr.sprintf(_T("%0*d"), vstr.Length(), v);
 				}
-				else if (USAME_TS(opstr, "+=")) {
+				else if (SameStr(opstr, "+=")) {
 					rstr = vstr + nstr;
 				}
 			}
 			catch (EConvertError &e) {
-				if (USAME_TS(opstr, "+="))
+				if (SameStr(opstr, "+="))
 					rstr = vstr + nstr;
 				else
 					UserAbort(USTR_SyntaxError);
@@ -1286,16 +1281,16 @@ void XCMD_Set(UnicodeString prm)
 
 	//変数更新
 	XCMD_VarList->Values[vnam] = rstr;
-	if (USAME_TI(vnam, "CodePage")) XCMD_chg_CodePage = true;
+	if (SameText(vnam, "CodePage")) XCMD_chg_CodePage = true;
 
 	//Buffer更新
 	if (contained_wd_i(_T("Buffer|BufferIndex"), vnam)) {
 		XCMD_BufChanged = true;
 	}
-	else if (USAME_TI(vnam, "BufferLine")) {
+	else if (SameText(vnam, "BufferLine")) {
 		std::unique_ptr<TStringList> b_buf(new TStringList());
 		b_buf->Text = XCMD_GetBuffer();
-		int idx = get_ListIntVal(XCMD_VarList, _T("BufferIndex"), -1);
+		int idx = get_ListIntVal(XCMD_VarList, "BufferIndex", -1);
 		if (idx>=0 && idx<b_buf->Count) {
 			b_buf->Strings[idx] = rstr;
 			XCMD_BufChanged = true;
@@ -1310,14 +1305,14 @@ void XCMD_Add(UnicodeString prm)
 {
 	if (!ContainsStr(prm, "<<")) UserAbort(USTR_SyntaxError);
 	std::unique_ptr<TStringList> v_buf(new TStringList());
-	UnicodeString vnam = get_tkn(prm, _T("<<"));
+	UnicodeString vnam = get_tkn(prm, "<<");
 	if (vnam.IsEmpty()) UserAbort(USTR_SyntaxError);
 	v_buf->Text = XCMD_VarList->Values[vnam];
-	UnicodeString lbuf = exclude_quot(get_tkn_r(prm, _T("<<")));
-	while (ends_tchs(_T("\r\n"), lbuf)) delete_end(lbuf);
+	UnicodeString lbuf = exclude_quot(get_tkn_r(prm, "<<"));
+	while (ends_tchs("\r\n", lbuf)) delete_end(lbuf);
 	v_buf->Add(lbuf);
 	XCMD_VarList->Values[vnam] = v_buf->Text;
-	if (USAME_TI(vnam, "Buffer")) XCMD_BufChanged = true;
+	if (SameText(vnam, "Buffer")) XCMD_BufChanged = true;
 }
 //---------------------------------------------------------------------------
 //Ins : 変数の先頭に行挿入
@@ -1326,14 +1321,14 @@ void XCMD_Ins(UnicodeString prm)
 {
 	if (!ContainsStr(prm, "<<")) UserAbort(USTR_SyntaxError);
 	std::unique_ptr<TStringList> v_buf(new TStringList());
-	UnicodeString vnam = get_tkn(prm, _T("<<"));
+	UnicodeString vnam = get_tkn(prm, "<<");
 	if (vnam.IsEmpty()) UserAbort(USTR_SyntaxError);
 	v_buf->Text = XCMD_VarList->Values[vnam];
-	UnicodeString lbuf = exclude_quot(get_tkn_r(prm, _T("<<")));
-	while (ends_tchs(_T("\r\n"), lbuf)) delete_end(lbuf);
+	UnicodeString lbuf = exclude_quot(get_tkn_r(prm, "<<"));
+	while (ends_tchs("\r\n", lbuf)) delete_end(lbuf);
 	v_buf->Insert(0, lbuf);
 	XCMD_VarList->Values[vnam] = v_buf->Text;
-	if (USAME_TI(vnam, "Buffer")) XCMD_BufChanged = true;
+	if (SameText(vnam, "Buffer")) XCMD_BufChanged = true;
 }
 
 //---------------------------------------------------------------------------
@@ -1360,7 +1355,7 @@ void XCMD_Mid(UnicodeString prm)
 		}
 		vstr = vstr.SubString(n1, n2);
 		XCMD_VarList->Values[vnam] = vstr;
-		if (USAME_TI(vnam, "Buffer")) XCMD_BufChanged = true;
+		if (SameText(vnam, "Buffer")) XCMD_BufChanged = true;
 	}
 }
 //---------------------------------------------------------------------------
@@ -1378,7 +1373,7 @@ void XCMD_Right(UnicodeString prm)
 	if (n1>1) {
 		vstr = vstr.SubString(n1, n2);
 		XCMD_VarList->Values[vnam] = vstr;
-		if (USAME_TI(vnam, "Buffer")) XCMD_BufChanged = true;
+		if (SameText(vnam, "Buffer")) XCMD_BufChanged = true;
 	}
 }
 //---------------------------------------------------------------------------
@@ -1387,7 +1382,7 @@ void XCMD_Trim(UnicodeString prm)
 	UnicodeString vnam = prm;
 	if (vnam.IsEmpty()) UserAbort(USTR_SyntaxError);
 	XCMD_VarList->Values[vnam] = Trim(XCMD_VarList->Values[vnam]);
-	if (USAME_TI(vnam, "Buffer")) XCMD_BufChanged = true;
+	if (SameText(vnam, "Buffer")) XCMD_BufChanged = true;
 }
 
 //---------------------------------------------------------------------------
@@ -1412,7 +1407,7 @@ void XCMD_Input(UnicodeString prm)
 
 	UnicodeString vstr = XCMD_VarList->Values[vnam];
 
-	if (input_query_ex(def_if_empty(tit, _T("ユーザ定義変数の入力")).c_str(), msg.c_str(), &vstr)) {
+	if (input_query_ex(def_if_empty(tit, "ユーザ定義変数の入力").c_str(), msg.c_str(), &vstr)) {
 		XCMD_VarList->Values[vnam] = vstr;
 		XCMD_box_res = mrYes;
 	}
@@ -1420,7 +1415,7 @@ void XCMD_Input(UnicodeString prm)
 		XCMD_box_res = mrCancel;
 	}
 
-	if (USAME_TI(vnam, "Buffer")) XCMD_BufChanged = true;
+	if (SameText(vnam, "Buffer")) XCMD_BufChanged = true;
 }
 //---------------------------------------------------------------------------
 //Edit : ユーザ定義変数の編集
@@ -1441,7 +1436,7 @@ void XCMD_Edit(UnicodeString prm)
 	if (vnam.IsEmpty()) UserAbort(USTR_SyntaxError);
 
 	if (!MemoForm) MemoForm = new TMemoForm(Application->MainForm);	//初回に動的作成
-	MemoForm->Caption = def_if_empty(tit, _T("ユーザ定義変数の編集"));
+	MemoForm->Caption = def_if_empty(tit, "ユーザ定義変数の編集");
 	MemoForm->LinesBuff->Text = XCMD_VarList->Values[vnam];
 	if (MemoForm->ShowModal()==mrOk) {
 		XCMD_VarList->Values[vnam] = MemoForm->LinesBuff->Text;
@@ -1451,7 +1446,7 @@ void XCMD_Edit(UnicodeString prm)
 		XCMD_box_res = mrCancel;
 	}
 
-	if (USAME_TI(vnam, "Buffer")) XCMD_BufChanged = true;
+	if (SameText(vnam, "Buffer")) XCMD_BufChanged = true;
 }
 
 //---------------------------------------------------------------------------
@@ -1512,7 +1507,7 @@ bool XCMD_Test(UnicodeString prm)
 	int res = StrCmpLogicalW(vstr.c_str(), nstr.c_str());
 
 	bool match = false;
-	switch (idx_of_word_i(_T("==|!=|<=|>=|<|>"), opstr)) {
+	switch (idx_of_word_i("==|!=|<=|>=|<|>", opstr)) {
 	case 0: match = (res==0);	break;
 	case 1: match = (res!=0);	break;
 	case 2: match = (res<=0);	break;
@@ -1526,7 +1521,7 @@ bool XCMD_Test(UnicodeString prm)
 //---------------------------------------------------------------------------
 int XCMD_GetCodePage()
 {
-	return get_ListIntVal(XCMD_VarList, _T("CodePage"), 932);
+	return get_ListIntVal(XCMD_VarList, "CodePage", 932);
 }
 //---------------------------------------------------------------------------
 UnicodeString XCMD_GetBuffer()
@@ -1694,8 +1689,8 @@ int XCMD_MsgBox(UnicodeString cmd, UnicodeString prm)
 	prm = lbuf;
 
 	if		(opt.IsEmpty()) msgbox_OK(prm, tit);
-	else if (USAME_TI(opt, "YN"))  XCMD_box_res = msgbox_Y_N(prm, tit)? mrYes : mrNo;
-	else if (USAME_TI(opt, "YNC")) XCMD_box_res = msgbox_Y_N_C(prm, tit);
+	else if (SameText(opt, "YN"))  XCMD_box_res = msgbox_Y_N(prm, tit)? mrYes : mrNo;
+	else if (SameText(opt, "YNC")) XCMD_box_res = msgbox_Y_N_C(prm, tit);
 	else UserAbort(USTR_SyntaxError);
 
 	return XCMD_box_res;
@@ -1921,11 +1916,11 @@ void XCMD_SetFileTime(UnicodeString prm)
 {
 	TDateTime dt;
 	try {
-		if (is_match_regex(prm, _T("^\\d{4}/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2}")))
+		if (TRegEx::IsMatch(prm, "^\\d{4}/\\d{2}/\\d{2}\\s\\d{2}:\\d{2}:\\d{2}"))
 			dt = str_to_DateTime(prm);
-		else if (is_match_regex(prm, _T("^\\d{4}/\\d{2}/\\d{2}")))
+		else if (TRegEx::IsMatch(prm, "^\\d{4}/\\d{2}/\\d{2}"))
 			dt = str_to_DateTime(prm);
-		else if (is_match_regex(prm, _T("^\\d{2}:\\d{2}:\\d{2}")))
+		else if (TRegEx::IsMatch(prm, "^\\d{2}:\\d{2}:\\d{2}"))
 			dt = str_to_DateTime(prm.Insert(XCMD_VarList->Values["FileTime"].SubString(1, 11), 1));
 		else UserAbort(USTR_IllegalParam);
 	}
@@ -1967,10 +1962,10 @@ bool XCMD_ShellExe(UnicodeString cmd, UnicodeString prm, UnicodeString wdir,
 	std::unique_ptr<TStringList> o_lst(new TStringList());
 	if (!Execute_ex(cmd, prm, wdir, opt, &exit_code, o_lst.get())) return false;
 
-	if (contains_wd_i(opt, _T("W|O|L"))) {
+	if (contains_wd_i(opt, "W|O|L")) {
 		XCMD_set_Var(_T("ExitCode"), (int)exit_code);
 		if (ContainsStr(opt, "O")) {
-			if (USAME_TI(ExtractFileName(cmd), "git.exe")) {
+			if (SameText(ExtractFileName(cmd), "git.exe")) {
 				o_lst->Insert(0, "$ git " + prm);
 			}
 			if (o_lst->Count>0) {
@@ -2030,10 +2025,10 @@ void XCMD_Redraw(UnicodeString prm)
 	if (ScrMode!=SCMD_FLIST) return;
 
 	int tag = -1;
-	if		(remove_top_text(prm, _T("L"))) tag = 0;
-	else if (remove_top_text(prm, _T("R"))) tag = 1;
+	if		(remove_top_text(prm, "L")) tag = 0;
+	else if (remove_top_text(prm, "R")) tag = 1;
 
-	switch (idx_of_word_i(_T("ON|OFF"), prm)) {
+	switch (idx_of_word_i("ON|OFF", prm)) {
 	case 0:
 		if (tag==-1 || tag==0) FileListPanel[0]->UnlockDrawing();
 		if (tag==-1 || tag==1) FileListPanel[1]->UnlockDrawing();

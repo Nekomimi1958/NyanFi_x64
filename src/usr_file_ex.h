@@ -20,7 +20,6 @@ typedef struct _FILE_RENAME_INFORMATION {
 
 typedef LONG (WINAPI *FUNC_NtSetInformationFile)(HANDLE, PIO_STATUS_BLOCK, PVOID, ULONG, FILE_INFORMATION_CLASS);
 
-
 //---------------------------------------------------------------------------
 extern UnicodeString ExePath;
 
@@ -59,7 +58,6 @@ UnicodeString get_extension_if_file(UnicodeString fnam);
 
 UnicodeString nrm_FileExt(UnicodeString fext);
 bool test_FileExt(UnicodeString fext, UnicodeString list);
-bool test_FileExt(UnicodeString fext, const _TCHAR *list);
 bool test_FileExtSize(UnicodeString fext, UnicodeString list, __int64 size);
 
 UnicodeString to_path_name(UnicodeString dnam);
@@ -113,7 +111,7 @@ bool is_EmptyDir(UnicodeString dnam, bool no_file = false);
 int  get_available_drive_list(TStringList *lst);
 UnicodeString get_file_attr_str(int atr);
 
-void get_files(UnicodeString pnam, const _TCHAR *mask, TStrings *lst, bool subSW = false);
+void get_files(UnicodeString pnam, UnicodeString mask, TStrings *lst, bool subSW = false);
 
 int  get_all_files_ex(UnicodeString pnam, UnicodeString mask, TStrings *lst,
 	bool sub_sw = false, int sub_n = 99, UnicodeString skip_dir = EmptyStr,
@@ -175,9 +173,6 @@ UnicodeString fsRead_char(TFileStream *fs, int size);
 UnicodeString fsRead_comment_utf8(TFileStream *fs);
 bool fsRead_check_char(TFileStream *fs, const char *s);
 
-
-//---------------------------------------------------------------------------
-//ÉCÉìÉâÉCÉìä÷êî
 //---------------------------------------------------------------------------
 inline UnicodeString warn_filename_RLO(UnicodeString fnam)
 {
@@ -190,4 +185,3 @@ inline UnicodeString warn_pathname_RLO(UnicodeString pnam)
 }
 //---------------------------------------------------------------------------
 #endif
-

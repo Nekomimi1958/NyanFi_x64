@@ -139,21 +139,24 @@ void __fastcall TCalculator::InitUsrDef()
 //---------------------------------------------------------------------------
 bool __fastcall TCalculator::IsTimeStr(UnicodeString s)
 {
-	return is_match_regex_i(s, _T("^(\\+|-)?(\\d+(:[0-5][0-9]){1,2}|Now)$"));
+	TRegExOptions opt; opt << roIgnoreCase;
+	return TRegEx::IsMatch(s, "^(\\+|-)?(\\d+(:[0-5][0-9]){1,2}|Now)$", opt);
 }
 //---------------------------------------------------------------------------
 //ï∂éöóÒÇ™16êiêîÇ©?
 //---------------------------------------------------------------------------
 bool __fastcall TCalculator::IsHexStr(UnicodeString s)
 {
-	return is_match_regex_i(s, _T("^0x[0-9a-f]+$"));
+	TRegExOptions opt; opt << roIgnoreCase;
+	return TRegEx::IsMatch(s, "^0x[0-9a-f]+$", opt);
 }
 //---------------------------------------------------------------------------
 //ï∂éöóÒÇ™16êi/10êiêÆêîÇ©?
 //---------------------------------------------------------------------------
 bool __fastcall TCalculator::IsHexOrInt(UnicodeString s)
 {
-	return is_match_regex_i(s, _T("^((0x[0-9a-f]+)|((\\+|-)?[0-9][0-9,]*))$"));
+	TRegExOptions opt; opt << roIgnoreCase;
+	return TRegEx::IsMatch(s, "^((0x[0-9a-f]+)|((\\+|-)?[0-9][0-9,]*))$", opt);
 }
 
 //---------------------------------------------------------------------------
@@ -221,7 +224,7 @@ long double __fastcall TCalculator::EvalNumStr(UnicodeString s)
 		UnicodeString c = ConstList->Values[s];
 		if (!c.IsEmpty()) {
 			s = get_pre_tab(c);
-			if (USAME_TI(s, "hh:nn:ss")) s = FormatDateTime("hh:nn:ss", Now());
+			if (SameText(s, "hh:nn:ss")) s = FormatDateTime("hh:nn:ss", Now());
 		}
 		s = ReplaceStr(s, ",", "");
 
@@ -293,31 +296,31 @@ long double __fastcall TCalculator::EvalFunc(UnicodeString s)
 
 			bool handled = true;
 			//éOäpä÷êî
-			if (contained_wd_i(_T("SIN|COS|TAN"), func)) {
+			if (contained_wd_i("SIN|COS|TAN", func)) {
 				regA = (AngleMode==0)? regA/180*M_PI : (AngleMode==2)? regA /200*M_PI : regA;
-				if		(USAME_TI(func, "SIN")) ans = sinl(regA);
-				else if (USAME_TI(func, "COS")) ans = cosl(regA);
-				else if (USAME_TI(func, "TAN")) ans = tanl(regA);
+				if		(SameText(func, "SIN")) ans = sinl(regA);
+				else if (SameText(func, "COS")) ans = cosl(regA);
+				else if (SameText(func, "TAN")) ans = tanl(regA);
 				else handled = false;
 			}
-			else if (contained_wd_i(_T("ASIN|ACOS|ATAN"), func)) {
-				if		(USAME_TI(func, "ASIN")) ans = asinl(regA);
-				else if (USAME_TI(func, "ACOS")) ans = acosl(regA);
-				else if (USAME_TI(func, "ATAN")) ans = atanl(regA);
+			else if (contained_wd_i("ASIN|ACOS|ATAN", func)) {
+				if		(SameText(func, "ASIN")) ans = asinl(regA);
+				else if (SameText(func, "ACOS")) ans = acosl(regA);
+				else if (SameText(func, "ATAN")) ans = atanl(regA);
 				else handled = false;
 				ans = (AngleMode==0)? ans/M_PI*180 : (AngleMode==2)? ans/M_PI*100 : ans;
 			}
 			//ëoã»ê¸ä÷êî
-			else if (USAME_TI(func ,"SINH")) ans = sinhl(regA);
-			else if (USAME_TI(func ,"COSH")) ans = coshl(regA);
-			else if (USAME_TI(func ,"TANH")) ans = tanhl(regA);
+			else if (SameText(func ,"SINH")) ans = sinhl(regA);
+			else if (SameText(func ,"COSH")) ans = coshl(regA);
+			else if (SameText(func ,"TANH")) ans = tanhl(regA);
 			//ëŒêî
-			else if (USAME_TI(func, "LN"))  ans = logl(regA);
-			else if (USAME_TI(func, "LOG")) ans = log10l(regA);
+			else if (SameText(func, "LN"))  ans = logl(regA);
+			else if (SameText(func, "LOG")) ans = log10l(regA);
 			//ÇªÇÃëº
-			else if (USAME_TI(func, "ABS"))   ans = fabsl(regA);
-			else if (USAME_TI(func, "CEIL"))  ans = Ceil(regA);
-			else if (USAME_TI(func, "FLOOR")) ans = Floor(regA);
+			else if (SameText(func, "ABS"))   ans = fabsl(regA);
+			else if (SameText(func, "CEIL"))  ans = Ceil(regA);
+			else if (SameText(func, "FLOOR")) ans = Floor(regA);
 			else handled = false;
 
 			if (!handled) {
@@ -375,35 +378,35 @@ void __fastcall TCalculator::EvalOpeItem(
 	bool is_t  = false;
 
 	try {
-		if (ope=="+") {
+		if (SameStr(ope, "+")) {
 			ans  = regA + regB;
 			is_t = is_tA || is_tB;
 		}
-		else if (ope=="-") {
+		else if (SameStr(ope, "-")) {
 			ans = regA - regB;
 			is_t = is_tA || is_tB;
 		}
-		else if (ope=="*") {
+		else if (SameStr(ope, "*")) {
 			ans = regA * regB;
 			is_t = (is_tA && !is_tB) || (!is_tA && is_tB);
 		}
-		else if (ope=="/") {
+		else if (SameStr(ope, "/")) {
 			if (regB==0) {
 				ErrMsg = "0Ç…ÇÊÇÈäÑÇËéZ";  Abort();
 			}
 			ans = regA / regB;
 			is_t = is_tA && !is_tB;
 		}
-		else if (ope=="%") {
+		else if (SameStr(ope, "%")) {
 			ans = fmodl(regA, regB);
 		}
-		else if (ope=="^") {
+		else if (SameStr(ope, "^")) {
 			if ((regA<0 && !DoubleIsInt(regB)) || (regA==0 && regB<=0)) {
 				ErrMsg = "íËã`àÊÉGÉâÅ[";  Abort();
 			}
 			ans = powl(regA, regB);
 		}
-		else if (ope=="&" || ope=="|" || ope=="ÅO" || ope=="Çf" || ope=="Çk") {
+		else if (ope.IsDelimiter("&|ÅOÇfÇk", 1)) {
 			long double ipA, ipB;
 			if (!DoubleIsInt(regA, ipA) || !DoubleIsInt(regB, ipB)) {
 				ErrMsg = "ílÇ™êÆêîÇ≈Ç»Ç¢Ç©ÉIÅ[ÉoÅ[ÉtÉçÅ[";  Abort();
@@ -411,7 +414,7 @@ void __fastcall TCalculator::EvalOpeItem(
 			int iA = (int)ipA;
 			int iB = (int)ipB;
 			//ç≈ëÂåˆñÒêî/ç≈è¨åˆî{êî
-			if (ope=="Çf" || ope=="Çk") {
+			if (SameStr(ope, "Çf") || SameStr(ope, "Çk")) {
 				if (iA==0 || iB==0) {
 					ErrMsg = "íËã`àÊÉGÉâÅ[";  Abort();
 				}
@@ -425,11 +428,11 @@ void __fastcall TCalculator::EvalOpeItem(
 				}
 				ans = b;	//GCD
 
-				if (ope=="Çk") ans = (iA * iB)/ans;	//LCM
+				if (SameStr(ope, "Çk")) ans = (iA * iB)/ans;	//LCM
 			}
 			//ÉrÉbÉgââéZ
 			else {
-				ans = (ope=="&")? (iA & iB) : (ope=="ÅO")? (iA ^ iB) : (iA | iB);
+				ans = SameStr(ope, "&")? (iA & iB) : SameStr(ope, "ÅO")? (iA ^ iB) : (iA | iB);
 			}
 		}
 
@@ -477,7 +480,7 @@ UnicodeString __fastcall TCalculator::EvalExpr(UnicodeString s)
 				UnicodeString tmp = Trim(mbuf);
 				if (StartsStr("+", tmp) || StartsStr("-", tmp)) tmp = Trim(tmp.Delete(1, 1));
 
-				if (contained_wd_i(_T("SIN|COS|TAN|ASIN|ACOS|ATAN|SINH|COSH|TANH|LOG|LN|ABS|CEIL|FLOOR"), tmp)) {
+				if (contained_wd_i("SIN|COS|TAN|ASIN|ACOS|ATAN|SINH|COSH|TANH|LOG|LN|ABS|CEIL|FLOOR", tmp)) {
 					flag = 2;
 				}
 				else {
@@ -705,13 +708,13 @@ void __fastcall TCalculator::CalcLine(
 		Calculating = true;
 		isError = false;
 		try {
-			if (is_match_regex(exline, _T("[^\\-^+*/%&ÅO|ÇfÇk:()!,.\\w\\s]"))) {
+			if (TRegEx::IsMatch(exline, "[^\\-^+*/%&ÅO|ÇfÇk:()!,.\\w\\s]")) {
 				ErrMsg = "ïsê≥Ç»ï∂éö";
 				Abort();
 			}
 
 			//åªç›éûçè
-			if (USAME_TI(exline, "Now"))
+			if (SameText(exline, "Now"))
 				answer = FormatDateTime("hh:nn:ss", Now());
 			//íPì∆ÇÃêÆêî (16êi/10êiïœä∑)
 			else if (IsHexOrInt(exline))
@@ -853,7 +856,7 @@ void __fastcall TCalculator::LineEditKeyDown(TObject *Sender, WORD &Key, TShiftS
 
 	bool handled = true;
 	if		(equal_ENTER(KeyStr))		CalcLine(Trim(LineEdit->Text));
-	else if (USAME_TI(KeyStr, "DOWN"))	HistComboBox->SetFocus();
+	else if (SameText(KeyStr, "DOWN"))	HistComboBox->SetFocus();
 	else handled = false;
 
 	if (handled) Key = 0;
@@ -881,7 +884,7 @@ void __fastcall TCalculator::HistComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	else if (contained_wd_i(KeysStr_CsrDown, KeyStr) && !HistComboBox->DroppedDown) {
 		HistComboBox->DroppedDown = true;
 	}
-	else if (USAME_TI(KeyStr, "BKSP")) {
+	else if (SameText(KeyStr, "BKSP")) {
 		UnicodeString lbuf = HistComboBox->Text;
 		if (lbuf.Pos('=')) {
 			lbuf = Trim(get_tkn(lbuf, '=')) + " ";

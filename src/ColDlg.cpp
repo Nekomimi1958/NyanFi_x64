@@ -253,7 +253,6 @@ void __fastcall TColorDlg::DisableColActionUpdate(TObject *Sender)
 {
 	TListBox *lp = ColorListBox;
 	UnicodeString col_id = (lp->ItemIndex!=-1)? lp->Items->Names[lp->ItemIndex] : EmptyStr;
-	((TAction*)Sender)->Enabled = contained_wd_i(_T("fgSelItem|bdrLine|bdrFold|bdrFixed"), col_id);
+	((TAction*)Sender)->Enabled = contained_wd_i("fgSelItem|bdrLine|bdrFold|bdrFixed", col_id);
 }
 //---------------------------------------------------------------------------
-

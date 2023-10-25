@@ -50,42 +50,42 @@ bool test_FontExt(UnicodeString fext)
 //---------------------------------------------------------------------------
 bool test_LibExt(UnicodeString fext)
 {
-	return USAME_TI(fext, ".library-ms");
+	return SameText(fext, ".library-ms");
 }
 //---------------------------------------------------------------------------
 //.exe か?
 //---------------------------------------------------------------------------
 bool test_ExeExt(UnicodeString fext)
 {
-	return USAME_TI(fext, ".exe");
+	return SameText(fext, ".exe");
 }
 //---------------------------------------------------------------------------
 //ショートカットの拡張子か?
 //---------------------------------------------------------------------------
 bool test_LnkExt(UnicodeString fext)
 {
-	return USAME_TI(fext, ".lnk");
+	return SameText(fext, ".lnk");
 }
 //---------------------------------------------------------------------------
 //アイコンの拡張子か?
 //---------------------------------------------------------------------------
 bool test_IcoExt(UnicodeString fext)
 {
-	return USAME_TI(fext, ".ico");
+	return SameText(fext, ".ico");
 }
 //---------------------------------------------------------------------------
 //カーソルの拡張子か?
 //---------------------------------------------------------------------------
 bool test_CurExt(UnicodeString fext)
 {
-	return USAME_TI(fext, ".cur");
+	return SameText(fext, ".cur");
 }
 //---------------------------------------------------------------------------
 //アニメーションカーソルの拡張子か?
 //---------------------------------------------------------------------------
 bool test_AniExt(UnicodeString fext)
 {
-	return USAME_TI(fext, ".ani");
+	return SameText(fext, ".ani");
 }
 //---------------------------------------------------------------------------
 //Jpegの拡張子か?
@@ -99,14 +99,14 @@ bool test_JpgExt(UnicodeString fext)
 //---------------------------------------------------------------------------
 bool test_GifExt(UnicodeString fext)
 {
-	return USAME_TI(fext, ".gif");
+	return SameText(fext, ".gif");
 }
 //---------------------------------------------------------------------------
 //PNGの拡張子か?
 //---------------------------------------------------------------------------
 bool test_PngExt(UnicodeString fext)
 {
-	return USAME_TI(fext, ".png");
+	return SameText(fext, ".png");
 }
 //---------------------------------------------------------------------------
 //PSPの拡張子か?
@@ -127,14 +127,14 @@ bool test_MetaExt(UnicodeString fext)
 //---------------------------------------------------------------------------
 bool test_Mp3Ext(UnicodeString fext)
 {
-	return USAME_TI(fext, ".mp3");
+	return SameText(fext, ".mp3");
 }
 //---------------------------------------------------------------------------
 //FLACの拡張子か?
 //---------------------------------------------------------------------------
 bool test_FlacExt(UnicodeString fext)
 {
-	return USAME_TI(fext, ".flac");
+	return SameText(fext, ".flac");
 }
 //---------------------------------------------------------------------------
 //MSI対応サウンドの拡張子か?
@@ -149,14 +149,14 @@ bool test_MciSndExt(UnicodeString fext)
 //---------------------------------------------------------------------------
 bool test_NbtExt(UnicodeString fext)
 {
-	return USAME_TI(fext, ".nbt");
+	return SameText(fext, ".nbt");
 }
 //---------------------------------------------------------------------------
 //ワークリストの拡張子か?
 //---------------------------------------------------------------------------
 bool test_NwlExt(UnicodeString fext)
 {
-	return USAME_TI(fext, ".nwl");
+	return SameText(fext, ".nwl");
 }
 
 //---------------------------------------------------------------------------
@@ -325,7 +325,7 @@ void get_WavInf(
 		if (!file_exists(fnam)) Abort();
 		std::unique_ptr<TFileStream> fs(new TFileStream(fnam, fmOpenRead | fmShareDenyNone));
 
-		if (!USAME_TS(get_chunk_hdr(fs.get()), "RIFF") || !fsRead_check_char(fs.get(), "WAVE")) UserAbort(USTR_IllegalFormat);
+		if (!SameStr(get_chunk_hdr(fs.get()), "RIFF") || !fsRead_check_char(fs.get(), "WAVE")) UserAbort(USTR_IllegalFormat);
 		if (!sea_chunk(fs.get(),  "fmt "))	UserAbort(USTR_IllegalFormat);
 
 		DWORD dwBuf;
@@ -427,7 +427,7 @@ void get_OpusInf(
 		int n = fsRead_int4(fs.get());
 		for (int i=0; i<n; i++) {
 			UnicodeString lbuf = fsRead_comment_utf8(fs.get());
-			if (lbuf.Pos("=")) add_PropLine(get_tkn(lbuf, "="), get_tkn_r(lbuf, "="), lst);
+			if (lbuf.Pos("=")) add_PropLine(get_tkn(lbuf, '='), get_tkn_r(lbuf, '='), lst);
 		}
 	}
 	catch (EAbort &e) {
@@ -454,7 +454,7 @@ bool get_CdaInf(
 		if (!file_exists(fnam)) Abort();
 		std::unique_ptr<TFileStream> fs(new TFileStream(fnam, fmOpenRead | fmShareDenyNone));
 
-		if (!USAME_TS(get_chunk_hdr(fs.get()), "RIFF") || !fsRead_check_char(fs.get(), "CDDA")) Abort();
+		if (!SameStr(get_chunk_hdr(fs.get()), "RIFF") || !fsRead_check_char(fs.get(), "CDDA")) Abort();
 		if (!sea_chunk(fs.get(), "fmt ")) Abort();
 		if (fsRead_int4(fs.get())!=24) Abort();
 		fs->Seek(2, soFromCurrent);
@@ -552,7 +552,7 @@ bool get_FlacInf(
 							if (id_min)
 								lst->Add(lbuf);
 							else
-								add_PropLine(get_tkn(lbuf, "="), get_tkn_r(lbuf, "="), lst);
+								add_PropLine(get_tkn(lbuf, '='), get_tkn_r(lbuf, '='), lst);
 						}
 					}
 				}
@@ -806,7 +806,7 @@ bool get_ExifInf(
 	for (int i=0; i<d_lst->Count; i++)
 		add_PropLine_if(d_lst->ValueFromIndex[i].c_str(), i_lst->Values[d_lst->Names[i]], lst);
 
-	if (ori) *ori = get_ListIntVal(i_lst.get(), _T("274"));
+	if (ori) *ori = get_ListIntVal(i_lst.get(), "274");
 
 	return (lst->Count>lst_cnt);
 }
@@ -841,7 +841,7 @@ UnicodeString get_ExifInfStr(
 		if (!vstr.IsEmpty()) ret_str.cat_sprintf(inf_list[i].fmt, vstr.c_str());
 	}
 
-	if (ori) *ori = get_ListIntVal(i_lst.get(), _T("274"));
+	if (ori) *ori = get_ListIntVal(i_lst.get(), "274");
 	return ret_str;
 }
 
@@ -870,7 +870,7 @@ UnicodeString get_ExifInfThumb(
 	}
 
 	//方向
-	if (ori) *ori = get_ListIntVal(i_lst.get(), _T("274"));
+	if (ori) *ori = get_ListIntVal(i_lst.get(), "274");
 
 	return ret_str;
 }
@@ -959,9 +959,9 @@ bool get_PngInf(
 		for (;;) {
 			int size = fsRead_int4(fs.get(), true);
 			UnicodeString name = get_id_str4(fs.get());
-			if (USAME_TS(name, "IEND")) break;
+			if (SameStr(name, "IEND")) break;
 			//イメージヘッダ
-			if (USAME_TS(name, "IHDR")) {
+			if (SameStr(name, "IHDR")) {
 				//サイズ
 				int iw = fsRead_int4(fs.get(), true);
 				int ih = fsRead_int4(fs.get(), true);
@@ -984,7 +984,7 @@ bool get_PngInf(
 				fs->Seek(3, soFromCurrent);
 			}
 			//テキスト
-			else if (USAME_TS(name, "tEXt")) {
+			else if (SameStr(name, "tEXt")) {
 				std::unique_ptr<BYTE[]> sbuf(new BYTE[size + 2]);
 				fs->ReadBuffer(sbuf.get(), size);
 				int p = -1;
@@ -997,18 +997,18 @@ bool get_PngInf(
 					while (i<vlst->Count) if (Trim(vlst->Strings[i]).IsEmpty()) vlst->Delete(i); else i++;
 					UnicodeString s = Trim(vlst->Text);
 					if (SameText((char*)&sbuf[0], "Creation Time")) {
-						s = replace_regex(get_tkn(s, '\n'), _T("[^\\d\\w\\s/:,+\\-]+"), null_TCHAR);
+						s = TRegEx::Replace(get_tkn(s, '\n'), "[^\\d\\w\\s/:,+\\-]+", EmptyStr);
 					}
 					add_PropLine((char*)&sbuf[0], s, lst);
 				}
 			}
 			//イメージガンマ
-			else if (USAME_TS(name, "gAMA")) {
+			else if (SameStr(name, "gAMA")) {
 				lst->Add(get_PropTitle(_T("イメージガンマ")).cat_sprintf(
 										_T("%-7.6g"), fsRead_int4(fs.get(), true)/100000.0));
 			}
 			//ICCプロファイル
-			else if (USAME_TS(name, "iCCP")) {
+			else if (SameStr(name, "iCCP")) {
 				std::unique_ptr<BYTE[]> sbuf(new BYTE[size]);
 				fs->ReadBuffer(sbuf.get(), size);
 				add_PropLine(_T("ICCプロファイル"), (char*)&sbuf[0], lst);
@@ -1182,7 +1182,7 @@ bool get_WebpInf(
 		if (!file_exists(fnam)) Abort();
 		std::unique_ptr<TFileStream> fs(new TFileStream(fnam, fmOpenRead | fmShareDenyNone));
 
-		if (!USAME_TS(get_chunk_hdr(fs.get()), "RIFF") || !fsRead_check_char(fs.get(), "WEBP")) Abort();
+		if (!SameStr(get_chunk_hdr(fs.get()), "RIFF") || !fsRead_check_char(fs.get(), "WEBP")) Abort();
 
 		std::unique_ptr<BYTE[]> buf(new BYTE[16]);
 		unsigned int iw = 0, ih = 0, i_cnt = 0, t_cnt = 0;
@@ -1198,7 +1198,7 @@ bool get_WebpInf(
 			if (chunk.IsEmpty()) Abort();
 			int p = fs->Seek(0, soFromCurrent);
 
-			if (USAME_TI(chunk, "VP8 ")) {
+			if (SameText(chunk, "VP8 ")) {
 				fmt = "ロッシー";
 				fs->Seek(6, soFromCurrent);
 				if (iw==0) {
@@ -1207,7 +1207,7 @@ bool get_WebpInf(
 					ih = ((ui_buf >> 16) & 0x3fff);
 				}
 			}
-			else if (USAME_TI(chunk, "VP8L")) {
+			else if (SameText(chunk, "VP8L")) {
 				fmt = "ロスレス";
 				fs->ReadBuffer(buf.get(), 1);
 				if (buf[0]!=0x2f) Abort();
@@ -1217,7 +1217,7 @@ bool get_WebpInf(
 					ih = ((ui_buf >> 14) & 0x3fff) + 1;
 				}
 			}
-			else if (USAME_TI(chunk, "VP8X")) {
+			else if (SameText(chunk, "VP8X")) {
 				fs->Seek(4, soFromCurrent);
 				if (iw==0) {
 					fs->ReadBuffer(buf.get(), 6);
@@ -1225,10 +1225,10 @@ bool get_WebpInf(
 					ih = (buf[3] | (buf[4] << 8) | (buf[5] << 16)) + 1;
 				}
 			}
-			else if (USAME_TI(chunk, "ICCP")) {
+			else if (SameText(chunk, "ICCP")) {
 				lst->Add(get_PropTitle(_T("ICCP")) + "有り");
 			}
-			else if (USAME_TI(chunk, "ALPH")) {
+			else if (SameText(chunk, "ALPH")) {
 				has_alph = true;
 				/* ※仕様と合わない?
 				fs->ReadBuffer(buf.get(), 4);
@@ -1247,7 +1247,7 @@ bool get_WebpInf(
 				add_PropLine(_T("α圧縮"), tmp, lst);
 				*/
 			}
-			else if (USAME_TI(chunk, "ANIM")) {
+			else if (SameText(chunk, "ANIM")) {
 				fmt = "アニメーション";
 				fs->ReadBuffer(buf.get(), 4);
 				lst->Add(get_PropTitle(_T("背景色")).cat_sprintf(_T("R%u G%u B%u A%u"), buf[2], buf[1], buf[0], buf[3]));
@@ -1258,17 +1258,17 @@ bool get_WebpInf(
 				else
 					lst->Add(tmp.cat_sprintf(_T("%u"), us_buf));
 			}
-			else if (USAME_TI(chunk, "ANMF")) {
+			else if (SameText(chunk, "ANMF")) {
 				fs->Seek(12, soFromCurrent);
 				fs->ReadBuffer(buf.get(), 3);
 				t_cnt += (buf[0] | (buf[1] << 8) | (buf[2] << 16));
 				i_cnt++;
 			}
-			else if (USAME_TI(chunk, "EXIF")) {
+			else if (SameText(chunk, "EXIF")) {
 				if (!meta.IsEmpty()) meta += ",";
 				meta += "EXIF";
 			}
-			else if (USAME_TI(chunk, "XMP ")) {
+			else if (SameText(chunk, "XMP ")) {
 				if (!meta.IsEmpty()) meta += ",";
 				meta += "XMP";
 	 		}
@@ -1577,9 +1577,9 @@ bool get_AniInf(
 		if (!file_exists(fnam)) Abort();
 		std::unique_ptr<TFileStream> fs(new TFileStream(fnam, fmOpenRead | fmShareDenyNone));
 
-		if (!USAME_TS(get_id_str4(fs.get()), "RIFF")) UserAbort(USTR_IllegalFormat);
+		if (!SameStr(get_id_str4(fs.get()), "RIFF")) UserAbort(USTR_IllegalFormat);
 		fs->Seek(4, soFromCurrent);		//データ長
-		if (!USAME_TS(get_id_str4(fs.get()), "ACON")) UserAbort(USTR_IllegalFormat);
+		if (!SameStr(get_id_str4(fs.get()), "ACON")) UserAbort(USTR_IllegalFormat);
 
 		for (;;) {
 			UnicodeString id_str = get_id_str4(fs.get());
@@ -1588,17 +1588,17 @@ bool get_AniInf(
 			int d_size = fsRead_int4(fs.get());
 			int next_p = fs->Seek(0, soFromCurrent) + d_size + (d_size%2);
 
-			if (USAME_TS(id_str, "LIST")) {
+			if (SameStr(id_str, "LIST")) {
 				id_str = get_id_str4(fs.get());
-				if (USAME_TS(id_str, "INFO")) {
+				if (SameStr(id_str, "INFO")) {
 					id_str = get_id_str4(fs.get());
-					if (USAME_TS(id_str, "INAM")) {
+					if (SameStr(id_str, "INAM")) {
 						d_size = fsRead_int4(fs.get());
 						UnicodeString lbuf = fsRead_char(fs.get(), d_size);
 						if (!lbuf.IsEmpty()) add_PropLine(_T("タイトル"), lbuf, lst);
 						fs->Seek(d_size%2, soFromCurrent);	//パディング
 						id_str = get_id_str4(fs.get());
-						if (USAME_TS(id_str, "IART")) {
+						if (SameStr(id_str, "IART")) {
 							d_size = fsRead_int4(fs.get());
 							UnicodeString lbuf = fsRead_char(fs.get(), d_size);
 							if (!lbuf.IsEmpty()) add_PropLine(_T("作成者"), lbuf, lst);
@@ -1606,7 +1606,7 @@ bool get_AniInf(
 					}
 				}
 			}
-			else if (USAME_TS(id_str, "anih")) {
+			else if (SameStr(id_str, "anih")) {
 				struct tagANIHeader {
 					DWORD cbSizeOf;
 					DWORD cFrames;
@@ -1676,7 +1676,7 @@ void get_AppInf(
 			fs->ReadBuffer(&NT_hdr, sizeof(NT_hdr));
 
 			if (NT_hdr.Signature==IMAGE_NT_SIGNATURE) {
-				IMAGE_FILE_HEADER *fh = &NT_hdr.FileHeader; 
+				IMAGE_FILE_HEADER *fh = &NT_hdr.FileHeader;
 				UnicodeString vstr =
 					(fh->Machine==IMAGE_FILE_MACHINE_I386)?  "x86" :
 					(fh->Machine==IMAGE_FILE_MACHINE_AMD64)? "x64" :
@@ -1686,7 +1686,7 @@ void get_AppInf(
 					(fh->Machine==0x01c4)? "armnt" :
 					(fh->Machine==0xaa64)? "arm64" : "???";
 
-				if (USAME_TS(vstr, "x86") && (fh->Characteristics & 0x20)) vstr += " (Large Address Aware)";
+				if (SameStr(vstr, "x86") && (fh->Characteristics & 0x20)) vstr += " (Large Address Aware)";
 				add_PropLine(_T("マシン"), vstr, lst);
 			}
 			else {
@@ -1798,8 +1798,8 @@ bool get_DllExpFunc(
 {
 	bool ret = false;
 
-    LOADED_IMAGE LoadedImage;
-    if (MapAndLoad(fnam.c_str(), NULL, &LoadedImage, TRUE, TRUE)) {
+	LOADED_IMAGE LoadedImage;
+	if (MapAndLoad(fnam.c_str(), NULL, &LoadedImage, TRUE, TRUE)) {
 		PVOID img_base = LoadedImage.MappedAddress;
 		ULONG nSize;
 		IMAGE_EXPORT_DIRECTORY *pImgExpDir =
@@ -1842,7 +1842,7 @@ bool get_DllExpFunc(
 
 			//CSV or TSV
 			if (list_mode==1 || list_mode==2) {
-				UnicodeString fmt = (list_mode==1)? "%d,%s,%s,\"%s\"" : "%d\t%s\t%s\t\"%s\""; 
+				UnicodeString fmt = (list_mode==1)? "%d,%s,%s,\"%s\"" : "%d\t%s\t%s\t\"%s\"";
 				for (int i=0; i<flst->Count; i++) {
 					TStringDynArray l_buf = split_strings_tab(flst->Strings[i]);
 					if (l_buf.Length!=3) continue;
@@ -1907,7 +1907,7 @@ void get_BorlandInf(
 			else {
 				if (ContainsText(lbuf, "</PropertyGroup>")) break;
 
-				UnicodeString vstr = get_tkn_m(lbuf, _T(">"), _T("</"));
+				UnicodeString vstr = get_tkn_m(lbuf, ">", "</");
 				if (ContainsText(lbuf, "<FrameworkType>"))
 					add_PropLine(_T("FrameworkType"),	vstr, lst);
 				else if (ContainsText(lbuf, "<AppType>"))
@@ -1940,9 +1940,9 @@ void get_BorlandInf(
 					add_PropLine(_T("Form Name"), get_tkn_m(lbuf, ' ', ':'), ibuf.get());
 				}
 				else {
-					UnicodeString vnam = split_tkn(lbuf, _T(" = "));
+					UnicodeString vnam = split_tkn(lbuf, " = ");
 					UnicodeString vstr = exclude_quot(lbuf);
-					if (USAME_TI(vnam, "Caption")) {
+					if (SameText(vnam, "Caption")) {
 						UnicodeString cap_str;
 						while (!vstr.IsEmpty()) {
 							if (remove_top_s(vstr, '\'')) {
@@ -1997,7 +1997,7 @@ void get_TagsInf(
 			flag = true;
 			if (remove_top_s(lbuf, "PROGRAM_") || remove_top_s(lbuf, "FILE_")) {
 				UnicodeString vnam = split_pre_tab(lbuf);
-				if (!USAME_TI(vnam, "ENCODING")) {
+				if (!SameText(vnam, "ENCODING")) {
 					UnicodeString vstr = ReplaceStr(ReplaceStr(lbuf, "\t//", ""), "\t"," ");
 					add_PropLine(vnam, vstr, lst);
 				}
@@ -2046,7 +2046,7 @@ UnicodeString get_html_header(UnicodeString fnam, int code_page)
 			fbuf->LoadFromFile(fnam);
 		}
 
-		int p = pos_i(_T("</HEAD>"), fbuf->Text);
+		int p = pos_i("</HEAD>", fbuf->Text);
 		if (p>0) headstr = fbuf->Text.SubString(1, p + 6);
 	}
 	catch (...) {
@@ -2071,17 +2071,17 @@ void get_HtmlInf(
 		UnicodeString itmbuf;
 
 		//文書型宣言
-		UnicodeString dtd_str = get_tkn(get_tkn_r(headstr, _T("<!DOCTYPE ")), '>');
-		int p = pos_i(_T("//DTD "),  dtd_str);
-		if (p>0) dtd_str = get_tkn_m(dtd_str, _T("//DTD "), _T("//"));
+		UnicodeString dtd_str = get_tkn(get_tkn_r(headstr, "<!DOCTYPE "), '>');
+		int p = pos_i("//DTD ",  dtd_str);
+		if (p>0) dtd_str = get_tkn_m(dtd_str, "//DTD ", "//");
 		if (!dtd_str.IsEmpty()) {
-			if (USAME_TI(dtd_str, "html")) dtd_str = "HTML5";
+			if (SameText(dtd_str, "html")) dtd_str = "HTML5";
 			lst->Add(itmbuf.sprintf(_T("%*s: %s"), FPRP_NAM_WD, _T("DOCTYPE"), dtd_str.c_str()));
 		}
 
 		//charset をチェック
 		UnicodeString charset;
-		p = pos_i(_T("charset"), headstr);
+		p = pos_i("charset", headstr);
 		if (p>0) {
 			UnicodeString tmp = headstr.SubString(p, headstr.Length() - p + 1);
 			tmp = get_tkn(get_tkn_m(tmp, '=', '>'), '/');
@@ -2111,8 +2111,8 @@ void get_HtmlInf(
 		}
 
 		//タイトル
-		p0 = pos_i(_T("<TITLE>"),  headstr);
-		p1 = pos_i(_T("</TITLE>"), headstr);
+		p0 = pos_i("<TITLE>",  headstr);
+		p1 = pos_i("</TITLE>", headstr);
 		if (p0>0 && p1>p0) {
 			UnicodeString tit = headstr.SubString(p0 + 7, p1 - p0 - 7);
 			if (!tit.IsEmpty()) lst->Add(itmbuf.sprintf(_T("%*s: %s"), FPRP_NAM_WD, _T("title"), tit.c_str()));
@@ -2446,7 +2446,7 @@ int get_ADS_count(UnicodeString fnam)
 	HANDLE hFS = ::FindFirstStreamW(cv_ex_filename(fnam).c_str(), FindStreamInfoStandard, &sd, 0);
 	if (hFS!=INVALID_HANDLE_VALUE) {
 		do {
-			if (!USAME_TS(sd.cStreamName, "::$DATA")) cnt++;
+			if (!SameStr(sd.cStreamName, "::$DATA")) cnt++;
 		} while (::FindNextStreamW(hFS, &sd));
 		::FindClose(hFS);
 	}
@@ -2473,7 +2473,7 @@ void get_ADS_Inf(UnicodeString fnam, TStringList *lst)
 				UnicodeString lbuf = get_PropTitle(UnicodeString().sprintf(_T("ストリーム%u"), ++cnt));
 				lst->Add(lbuf.cat_sprintf(_T("%-18s  (%s)"), snam.c_str(), FormatFloat(",0", (double)sz).c_str()));
 				//Zone.Identifier の内容
-				if (USAME_TI(snam, "Zone.Identifier")) {
+				if (SameText(snam, "Zone.Identifier")) {
 					try {
 						std::unique_ptr<TFileStream>   fs(new TFileStream(fnam + ":" + snam, fmOpenRead | fmShareDenyNone));
 						std::unique_ptr<TMemoryStream> ms(new TMemoryStream());
@@ -2491,11 +2491,11 @@ void get_ADS_Inf(UnicodeString fnam, TStringList *lst)
 						;
 					}
 				}
-				else if (USAME_TI(":" + snam, THUMB_TXT_ADS)) {
+				else if (SameText(":" + snam, THUMB_TXT_ADS)) {
 					UnicodeString lbuf = get_top_line(fnam + THUMB_TXT_ADS, 65001);
 					if (!lbuf.IsEmpty()) add_PropLine(null_TCHAR, lbuf, lst);
 				}
-				else if (USAME_TI(":" + snam, NYANFIDEF_ADS)) {
+				else if (SameText(":" + snam, NYANFIDEF_ADS)) {
 					std::unique_ptr<TStringList> fbuf(new TStringList());
 					UnicodeString anam = fnam + NYANFIDEF_ADS;
 					if (file_exists(anam)) {
@@ -2603,6 +2603,6 @@ UnicodeString get_AssocExeName(UnicodeString fext)
 	{
 		xnam = pszFile;
 	}
-    return xnam;    
+	return xnam;    
 }
 //---------------------------------------------------------------------------

@@ -127,19 +127,19 @@ void __fastcall TSameNameDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TSameNameDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+O") && Mode0Btn->Enabled) Mode0Btn->Checked = true;
-	else if (USAME_TI(KeyStr, "Alt+N") && Mode1Btn->Enabled) Mode1Btn->Checked = true;
-	else if (USAME_TI(KeyStr, "Alt+S") && Mode2Btn->Enabled) Mode2Btn->Checked = true;
-	else if (USAME_TI(KeyStr, "Alt+U") && Mode3Btn->Enabled) Mode3Btn->Checked = true;
-	else if (USAME_TI(KeyStr, "Alt+R") && Mode4Btn->Enabled) Mode4Btn->Checked = true;
-	else if (USAME_TI(KeyStr, "Alt+A")) invert_CheckBox(AllCheckBox);
+	if		(SameText(KeyStr, "Alt+O") && Mode0Btn->Enabled) Mode0Btn->Checked = true;
+	else if (SameText(KeyStr, "Alt+N") && Mode1Btn->Enabled) Mode1Btn->Checked = true;
+	else if (SameText(KeyStr, "Alt+S") && Mode2Btn->Enabled) Mode2Btn->Checked = true;
+	else if (SameText(KeyStr, "Alt+U") && Mode3Btn->Enabled) Mode3Btn->Checked = true;
+	else if (SameText(KeyStr, "Alt+R") && Mode4Btn->Enabled) Mode4Btn->Checked = true;
+	else if (SameText(KeyStr, "Alt+A")) invert_CheckBox(AllCheckBox);
 	else if (!RenameEdit->Focused()) {
-		if		(USAME_TI(KeyStr, "O") && Mode0Btn->Enabled) Mode0Btn->Checked = true;
-		else if (USAME_TI(KeyStr, "N") && Mode1Btn->Enabled) Mode1Btn->Checked = true;
-		else if (USAME_TI(KeyStr, "S") && Mode2Btn->Enabled) Mode2Btn->Checked = true;
-		else if (USAME_TI(KeyStr, "U") && Mode3Btn->Enabled) Mode3Btn->Checked = true;
-		else if (USAME_TI(KeyStr, "R") && Mode4Btn->Enabled) Mode4Btn->Checked = true;
-		else if (USAME_TI(KeyStr, "A")) invert_CheckBox(AllCheckBox);
+		if		(SameText(KeyStr, "O") && Mode0Btn->Enabled) Mode0Btn->Checked = true;
+		else if (SameText(KeyStr, "N") && Mode1Btn->Enabled) Mode1Btn->Checked = true;
+		else if (SameText(KeyStr, "S") && Mode2Btn->Enabled) Mode2Btn->Checked = true;
+		else if (SameText(KeyStr, "U") && Mode3Btn->Enabled) Mode3Btn->Checked = true;
+		else if (SameText(KeyStr, "R") && Mode4Btn->Enabled) Mode4Btn->Checked = true;
+		else if (SameText(KeyStr, "A")) invert_CheckBox(AllCheckBox);
 	}
 	else {
 		SpecialKeyProc(this, Key, Shift);
@@ -174,7 +174,7 @@ void __fastcall TSameNameDlg::ModeBtnClick(TObject *Sender)
 		SameNameDlg->AllCheckBox->Checked = CopyAll = false;
 		RenameEdit->Enabled = true;
 		RenameEdit->SetFocus();
-		int p = pos_r(_T("."), RenameEdit->Text) - 1;
+		int p = pos_r(".", RenameEdit->Text) - 1;
 		if (p<0) p = RenameEdit->Text.Length();
 		RenameEdit->SelStart = p;
 	}

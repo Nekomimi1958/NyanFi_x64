@@ -82,7 +82,7 @@ void __fastcall TSelDriveDlg::FormDestroy(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TSelDriveDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if (USAME_TI(get_KeyStr(Key, Shift), "Alt+O"))
+	if (SameText(get_KeyStr(Key, Shift), "Alt+O"))
 		ChgOptBtnClick(NULL);
 	else
 		SpecialKeyProc(this, Key, Shift);
@@ -293,9 +293,9 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 			UnicodeString cellstr = gp->Cells[ACol][ARow];
 			if (ACol==2) {
 				if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) {
-					remove_text(cellstr, _T("・メディア"));
-					remove_text(cellstr, _T("・ドライブ"));
-					remove_text(cellstr, _T("ドライブ"));
+					remove_text(cellstr, "・メディア");
+					remove_text(cellstr, "・ドライブ");
+					remove_text(cellstr, "ドライブ");
 				}
 				if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) {
 					cellstr = ReplaceStr(cellstr, "CD-ROM",				"CD");
@@ -303,9 +303,9 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 					cellstr = ReplaceStr(cellstr, "ソリッドステート",	"SSD");
 					cellstr = ReplaceStr(cellstr, "リムーバブル",		"RM");
 					cellstr = ReplaceStr(cellstr, "ネットワーク",		"NET");
-					remove_text(cellstr, _T("ディスク"));
+					remove_text(cellstr, "ディスク");
 				}
-				if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) cellstr = get_tkn(cellstr, _T(" ("));
+				if (get_TextWidth(cv, cellstr, is_irreg)>c_wd) cellstr = get_tkn(cellstr, " (");
 				//接続I/F を右寄せ
 				int p = cellstr.Pos(" (");
 				if (p>0) while (get_TextWidth(cv, cellstr + " ", is_irreg) < c_wd) cellstr.Insert(" ", p);
@@ -314,13 +314,13 @@ void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int A
 			else if (ACol==3) {
 				int w = 0;
 				for (int i=1; i<gp->RowCount; i++) w = std::max(w, get_TextWidth(cv, gp->Cells[3][i], is_irreg));
-				if (w>c_wd) cellstr = get_tkn(cellstr, _T(" ("));
+				if (w>c_wd) cellstr = get_tkn(cellstr, " (");
 			}
 			//空き容量
 			else if (ACol==4) {
 				int w = 0;
 				for (int i=1; i<gp->RowCount; i++) w = std::max(w, get_TextWidth(cv, gp->Cells[4][i], is_irreg));
-				if (w>c_wd) cellstr = get_tkn(cellstr, _T(" ("));
+				if (w>c_wd) cellstr = get_tkn(cellstr, " (");
 			}
 
 			int s_wd = get_TextWidth(cv, cellstr, is_irreg);
@@ -465,12 +465,12 @@ void __fastcall TSelDriveDlg::ShowDriveMenu()
 	UnicodeString res_str = usr_SH->DriveContextMenu(Handle, drvnam, ex_item.get());
 	TStringDynArray m_buf = split_strings_tab(res_str);
 	if (m_buf.Length>1) {
-		if		(USAME_TI(m_buf[1], "NetConnect"))		NyanFiForm->NetConnectAction->Execute();
-		else if (USAME_TI(m_buf[1], "NetDisConnect"))	NyanFiForm->NetDisconnectAction->Execute();
-		else if (USAME_TI(m_buf[1], "EjectTray"))		EjectTrayAction->Execute();
-		else if (USAME_TI(m_buf[1], "ReloadList"))		UpdateDriveList();
-		else if (USAME_TI(m_buf[1], "DriveGraph"))		ShowDriveGraph();
-		else if (USAME_TI(m_buf[1], "Rename")) {
+		if		(SameText(m_buf[1], "NetConnect"))		NyanFiForm->NetConnectAction->Execute();
+		else if (SameText(m_buf[1], "NetDisConnect"))	NyanFiForm->NetDisconnectAction->Execute();
+		else if (SameText(m_buf[1], "EjectTray"))		EjectTrayAction->Execute();
+		else if (SameText(m_buf[1], "ReloadList"))		UpdateDriveList();
+		else if (SameText(m_buf[1], "DriveGraph"))		ShowDriveGraph();
+		else if (SameText(m_buf[1], "Rename")) {
 			UnicodeString new_name = get_VolumeInfo(drvnam);
 			if (input_query_ex(USTR_Rename, _T("名前"), &new_name)) {
 				if (::SetVolumeLabel(drvnam.c_str(), new_name.c_str())) UpdateDriveList();

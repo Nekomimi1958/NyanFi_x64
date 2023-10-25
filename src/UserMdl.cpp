@@ -337,7 +337,7 @@ void __fastcall TUserModule::ScrollTimerTimer(TObject *Sender)
 //---------------------------------------------------------------------------
 bool __fastcall TUserModule::ListBoxOpeItem(UnicodeString keystr)
 {
-	switch (idx_of_word_i(_T("Shift+Ctrl+DOWN|Shift+Ctrl+UP|DEL"), keystr)) {
+	switch (idx_of_word_i("Shift+Ctrl+DOWN|Shift+Ctrl+UP|DEL", keystr)) {
 	case  0: DownListItemAction->Execute();	break;
 	case  1: UpListItemAction->Execute();	break;
 	case  2: DelListItemAction->Execute();	break;
@@ -540,7 +540,7 @@ void __fastcall TUserModule::EditPaste1Execute(TObject *Sender)
 	TWinControl *wp = Screen->ActiveControl;	if (!wp) return;
 
 	UnicodeString s = get_norm_str(GetClipboardText());
-	if (USAME_TI(wp->Name, "DistrDirEdit") && dir_exists(s)) s = ReplaceStr(s, "\\", "\\\\");
+	if (SameText(wp->Name, "DistrDirEdit") && dir_exists(s)) s = ReplaceStr(s, "\\", "\\\\");
 
 	if (class_is_MaskEdit(wp)) {
 		TMaskEdit *ep = (TMaskEdit*)wp;
@@ -548,10 +548,10 @@ void __fastcall TUserModule::EditPaste1Execute(TObject *Sender)
 			TDateTime dt;
 			if (ToDateTime(s, &dt)) {
 				//タイムスタンプ
-				if (USAME_TI(ep->Name, "TimeMaskEdit"))
+				if (SameText(ep->Name, "TimeMaskEdit"))
 					s = format_DateTime(dt);
 				//日付
-				else if(USAME_TI(ep->Name, "DateMaskEdit"))
+				else if(SameText(ep->Name, "DateMaskEdit"))
 					s = format_Date(dt);
 				ep->Text	  = s;
 				ep->SelStart  = 0;
@@ -691,7 +691,7 @@ void __fastcall TUserModule::RefCurPNameActionExecute(TObject *Sender)
 void __fastcall TUserModule::RefCurPNameActionUpdate(TObject *Sender)
 {
 	TWinControl *wp = Screen->ActiveControl;
-	((TAction*)Sender)->Visible = (wp && USAME_TI(wp->Name, "ExeComboBox"));
+	((TAction*)Sender)->Visible = (wp && SameText(wp->Name, "ExeComboBox"));
 }
 
 //---------------------------------------------------------------------------
@@ -804,7 +804,7 @@ void __fastcall TUserModule::EditPopupMenuEPopup(TObject *Sender)
 	RegExpEItem->Visible	 = (tag & EDTAG_RGEX_V);
 	RegExpEItem->Enabled	 = (tag & EDTAG_RGEX_E);
 
-	bool dd_sw = wp && USAME_TI(wp->Name, "DirDelimiterEdit");
+	bool dd_sw = wp && SameText(wp->Name, "DirDelimiterEdit");
 	PopRefDlmtItem->Visible  = dd_sw;
 	PopRefDlmtItem->Enabled  = dd_sw;
 
@@ -845,7 +845,7 @@ void __fastcall TUserModule::EditPopupMenuEPopup(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TUserModule::CmdParamItemClick(TObject *Sender)
 {
-	UnicodeString lbuf = get_tkn(((TMenuItem*)Sender)->Caption, _T(" : "));
+	UnicodeString lbuf = get_tkn(((TMenuItem*)Sender)->Caption, " : ");
 	TComboBox *cp = GetActiveComboBox();
 	if (cp) cp->SelText = lbuf;
 }

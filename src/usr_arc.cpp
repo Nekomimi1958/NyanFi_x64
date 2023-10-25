@@ -34,14 +34,14 @@ UserArcUnit::UserArcUnit(HWND hWnd)
 		fp->Available = false;
 		fp->FileName  = EmptyStr;
 		fp->VerStr	  = EmptyStr;
-		fp->Prefix	  = get_word_i_idx(_T("SevenZip|Unlha|Cab|Tar|Unrar|UnIso"), i);
+		fp->Prefix	  = get_word_i_idx("SevenZip|Unlha|Cab|Tar|Unrar|UnIso", i);
 		fp->dll7zName = EmptyStr;
 
 #if defined(_WIN64)
-		fp->DllName = get_word_i_idx(_T("7-zip64.dll|unlha64.dll|cab64.dll|tar64.dll|unrar64j.dll|uniso64.dll"), i);
+		fp->DllName = get_word_i_idx("7-zip64.dll|unlha64.dll|cab64.dll|tar64.dll|unrar64j.dll|uniso64.dll", i);
 		//unlha64.dll cab64.dll uniso64.dll は現存しない
 #else
-		fp->DllName = get_word_i_idx(_T("7-zip32.dll|unlha32.dll|cab32.dll|tar32.dll|unrar32.dll|uniso32.dll"), i);
+		fp->DllName = get_word_i_idx("7-zip32.dll|unlha32.dll|cab32.dll|tar32.dll|unrar32.dll|uniso32.dll", i);
 #endif
 		fp->hDll = ::LoadLibrary(fp->DllName.c_str());
 		if (fp->hDll) {
@@ -1089,7 +1089,6 @@ bool UserArcUnit::HasZipImg(
 	}
 	return ret;
 }
-
 
 //---------------------------------------------------------------------------
 //アーカイブ情報の取得

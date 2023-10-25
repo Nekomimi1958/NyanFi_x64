@@ -1569,7 +1569,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall WinMinimizeActionExecute(TObject *Sender);
 	void __fastcall WinNormalActionExecute(TObject *Sender);
 	void __fastcall WinPosActionExecute(TObject *Sender);
-	void __fastcall WorkListActionExecute(TObject *Sender);	
+	void __fastcall WorkListActionExecute(TObject *Sender);
 	void __fastcall WorkItemDownActionExecute(TObject *Sender);
 	void __fastcall WorkItemUpActionExecute(TObject *Sender);
 	void __fastcall WorkItemMoveActionExecute(TObject *Sender);
@@ -2450,8 +2450,8 @@ private:	// ユーザー宣言
 	UnicodeString __fastcall GetFileNameFromActionParam(file_rec *fp = NULL);
 	bool __fastcall FextInActionParam(UnicodeString fext);
 
-	bool __fastcall ActionOptIsMousePos()	{ return USAME_TI(ActionOptStr, "MousePos"); }
-	bool __fastcall ActionOptIsButtonPos()	{ return USAME_TI(ActionOptStr, "ButtonPos"); }
+	bool __fastcall ActionOptIsMousePos()	{ return SameText(ActionOptStr, "MousePos"); }
+	bool __fastcall ActionOptIsButtonPos()	{ return SameText(ActionOptStr, "ButtonPos"); }
 	bool __fastcall SetToggleAction(bool &sw);
 	UnicodeString __fastcall FormatParam(UnicodeString fmt);
 	void __fastcall ClipSaveList(TStringList *lst, const _TCHAR *tit);

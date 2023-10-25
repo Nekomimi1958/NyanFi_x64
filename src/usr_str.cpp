@@ -95,8 +95,8 @@ int __fastcall comp_CsvNaturalOrder(TStringList *List, int Index1, int Index2)
 
 	UnicodeString s1 = List->Strings[Index1];
 	UnicodeString s2 = List->Strings[Index2];
-	if (USAME_TS(s1, TXLIMIT_MARK)) return 1;
-	if (USAME_TS(s2, TXLIMIT_MARK)) return -1;
+	if (SameStr(s1, TXLIMIT_MARK)) return 1;
+	if (SameStr(s2, TXLIMIT_MARK)) return -1;
 
 	s1 = get_csv_item(s1, USR_CsvCol);
 	s2 = get_csv_item(s2, USR_CsvCol);
@@ -119,8 +119,8 @@ int __fastcall comp_TsvNaturalOrder(TStringList *List, int Index1, int Index2)
 
 	UnicodeString s1 = List->Strings[Index1];
 	UnicodeString s2 = List->Strings[Index2];
-	if (USAME_TS(s1, TXLIMIT_MARK)) return 1;
-	if (USAME_TS(s2, TXLIMIT_MARK)) return -1;
+	if (SameStr(s1, TXLIMIT_MARK)) return 1;
+	if (SameStr(s2, TXLIMIT_MARK)) return -1;
 
 	TStringDynArray itm1 = SplitString(s1, "\t");
 	TStringDynArray itm2 = SplitString(s2, "\t");
@@ -144,8 +144,8 @@ int __fastcall comp_TsvTextOrder(TStringList *List, int Index1, int Index2)
 
 	UnicodeString s1 = List->Strings[Index1];
 	UnicodeString s2 = List->Strings[Index2];
-	if (USAME_TS(s1, TXLIMIT_MARK)) return 1;
-	if (USAME_TS(s2, TXLIMIT_MARK)) return -1;
+	if (SameStr(s1, TXLIMIT_MARK)) return 1;
+	if (SameStr(s2, TXLIMIT_MARK)) return -1;
 
 	TStringDynArray itm1 = SplitString(s1, "\t");
 	TStringDynArray itm2 = SplitString(s2, "\t");
@@ -164,19 +164,6 @@ UnicodeString get_tkn(UnicodeString s, UnicodeString sp)
 	return (p==0)? s : s.SubString(1, p - 1);
 }
 //---------------------------------------------------------------------------
-UnicodeString get_tkn(UnicodeString s, const _TCHAR *sp)
-{
-	int p = s.Pos(sp);
-	return (p==0)? s : s.SubString(1, p - 1);
-}
-//---------------------------------------------------------------------------
-UnicodeString get_tkn(UnicodeString s, WideChar sp)
-{
-	int p = s.Pos(sp);
-	return (p==0)? s : s.SubString(1, p - 1);
-}
-
-//---------------------------------------------------------------------------
 //指定セパレータの後の文字列を取得
 //  セパレータが見つからない場合は、EmptyStr を返す
 //---------------------------------------------------------------------------
@@ -185,29 +172,12 @@ UnicodeString get_tkn_r(UnicodeString s, UnicodeString sp)
 	int p = s.Pos(sp);
 	return (p==0)? EmptyStr : s.SubString(p + sp.Length(),  s.Length() - (p - sp.Length() + 1));
 }
-//---------------------------------------------------------------------------
-UnicodeString get_tkn_r(UnicodeString s, const _TCHAR *sp)
-{
-	int p = s.Pos(sp);
-	return (p==0)? EmptyStr : s.SubString(p + _tcslen(sp),  s.Length() - (p - _tcslen(sp) + 1));
-}
-//---------------------------------------------------------------------------
-UnicodeString get_tkn_r(UnicodeString s, WideChar sp)
-{
-	int p = s.Pos(sp);
-	return (p==0)? EmptyStr : s.SubString(p + 1,  s.Length() - p);
-}
 
 //---------------------------------------------------------------------------
 //指定セパレータ間の文字列を取得
 //  後セパレータが見つからない場合は、前セパレータ以降の文字列を返す
 //---------------------------------------------------------------------------
-UnicodeString get_tkn_m(UnicodeString s, const _TCHAR *sp1, const _TCHAR *sp2)
-{
-	return get_tkn(get_tkn_r(s, sp1), sp2);
-}
-//---------------------------------------------------------------------------
-UnicodeString get_tkn_m(UnicodeString s, WideChar sp1, WideChar sp2)
+UnicodeString get_tkn_m(UnicodeString s, UnicodeString sp1, UnicodeString sp2)
 {
 	return get_tkn(get_tkn_r(s, sp1), sp2);
 }
@@ -276,8 +246,8 @@ UnicodeString get_norm_str(UnicodeString s,
 			ret_str = Trim(ret_str);
 		}
 		else {
-			ret_str = replace_regex(ret_str, _T("^\\t+"), null_TCHAR);
-			ret_str = replace_regex(ret_str, _T("\\t+$"), null_TCHAR);
+			ret_str = TRegEx::Replace(ret_str, "^\\t+", EmptyStr);
+			ret_str = TRegEx::Replace(ret_str, "\\t+$", EmptyStr);
 		}
 		if (!ret_str.IsEmpty()) break;
 	}
@@ -303,27 +273,6 @@ UnicodeString split_tkn(UnicodeString &s, UnicodeString sp)
 	return r;
 }
 //---------------------------------------------------------------------------
-UnicodeString split_tkn(UnicodeString &s, const _TCHAR *sp)
-{
-	return split_tkn(s, UnicodeString(sp));
-}
-//---------------------------------------------------------------------------
-UnicodeString split_tkn(UnicodeString &s, WideChar sp)
-{
-	UnicodeString r;
-	int p = s.Pos(sp);
-	if (p==0) {
-		r = s;
-		s = EmptyStr;
-	}
-	else {
-		r = s.SubString(1, p - 1);
-		s = s.SubString(p + 1, s.Length() - p);
-	}
-	return r;
-}
-
-//---------------------------------------------------------------------------
 //空白区切り前の文字列を分離して取得(先頭部分の空白を考慮)
 //---------------------------------------------------------------------------
 UnicodeString split_tkn_spc(UnicodeString &s)
@@ -336,7 +285,6 @@ UnicodeString split_tkn_spc(UnicodeString &s)
 	if (!r.IsEmpty()) s.Delete(1, r.Length());
 	return (r + split_tkn(s, ' '));
 }
-
 //---------------------------------------------------------------------------
 //タブ前の文字列を分離して取得
 //  タブがない場合は、文字列をそのまま返し、元文字列は空に
@@ -345,7 +293,6 @@ UnicodeString split_pre_tab(UnicodeString &s)
 {
 	return split_tkn(s, '\t');
 }
-
 //---------------------------------------------------------------------------
 //文字列から説明部分(^:～:)を分離し取得
 //---------------------------------------------------------------------------
@@ -462,11 +409,6 @@ bool remove_text(UnicodeString &s, UnicodeString w)
 		return false;
 	}
 }
-//---------------------------------------------------------------------------
-bool remove_text(UnicodeString &s, const _TCHAR *w)
-{
-	return remove_text(s, UnicodeString(w));
-}
 
 //---------------------------------------------------------------------------
 //文字列の先頭に指定語があったら削除 (大小文字を無視)
@@ -478,11 +420,6 @@ bool remove_top_text(UnicodeString &s, UnicodeString w)
 	s.Delete(1, w.Length());
 	return true;
 }
-//---------------------------------------------------------------------------
-bool remove_top_text(UnicodeString &s, const _TCHAR *w)
-{
-	return remove_top_text(s, UnicodeString(w));
-}
 
 //---------------------------------------------------------------------------
 //文字列の先頭に指定語があったら削除 (大小文字を区別)
@@ -492,20 +429,6 @@ bool remove_top_s(UnicodeString &s, UnicodeString w)
 {
 	if (!StartsStr(w, s)) return false;
 	s.Delete(1, w.Length());
-	return true;
-}
-//---------------------------------------------------------------------------
-bool remove_top_s(UnicodeString &s, const _TCHAR *w)
-{
-	if (!StartsStr(w, s)) return false;
-	s.Delete(1, _tcslen(w));
-	return true;
-}
-//---------------------------------------------------------------------------
-bool remove_top_s(UnicodeString &s, WideChar w)
-{
-	if (!StartsStr(w, s)) return false;
-	s.Delete(1, 1);
 	return true;
 }
 
@@ -544,13 +467,6 @@ bool remove_end_s(UnicodeString &s, UnicodeString w)
 {
 	if (!EndsStr(w, s)) return false;
 	s.Delete(s.Length() - w.Length() + 1, w.Length());
-	return true;
-}
-//---------------------------------------------------------------------------
-bool remove_end_s(UnicodeString &s, WideChar w)
-{
-	if (!EndsStr(w, s)) return false;
-	s.Delete(s.Length(), 1);
 	return true;
 }
 
@@ -598,13 +514,6 @@ UnicodeString trim_ex(UnicodeString s)
 	return Trim(s);
 }
 
-//---------------------------------------------------------------------------
-//正規表現による置換
-//---------------------------------------------------------------------------
-UnicodeString replace_regex(UnicodeString s, const _TCHAR *o, const _TCHAR *r)
-{
-	return TRegEx::Replace(s, o, r);
-}
 //---------------------------------------------------------------------------
 //※ ^ による先頭の連続削除を回避した置換
 //---------------------------------------------------------------------------
@@ -673,11 +582,6 @@ UnicodeString ins_spc_length(UnicodeString s, int len)
 UnicodeString def_if_empty(UnicodeString s, UnicodeString def)
 {
 	return s.IsEmpty()? def : s;
-}
-//---------------------------------------------------------------------------
-UnicodeString def_if_empty(UnicodeString s, const _TCHAR *def)
-{
-	return s.IsEmpty()? UnicodeString(def) : s;
 }
 
 //---------------------------------------------------------------------------
@@ -855,11 +759,6 @@ int pos_i(
 	if (wd.IsEmpty()) return 0;
 	return s.UpperCase().Pos(wd.UpperCase());
 }
-//---------------------------------------------------------------------------
-int pos_i(const _TCHAR *wd, UnicodeString s)
-{
-	return pos_i(UnicodeString(wd), s);
-}
 
 //---------------------------------------------------------------------------
 //文字列が最後に現れる位置を取得
@@ -880,11 +779,6 @@ int pos_r(
 	}
 
 	return p;
-}
-//---------------------------------------------------------------------------
-int pos_r(const _TCHAR *wd, UnicodeString s)
-{
-	return pos_r(UnicodeString(wd), s);
 }
 
 //---------------------------------------------------------------------------
@@ -1030,16 +924,11 @@ bool contained_wd_i(UnicodeString lst, UnicodeString wd)
 	if (!EndsStr("|", lst))   lst += "|";
 	return ContainsText(lst, "|" + wd + "|");
 }
-//---------------------------------------------------------------------------
-bool contained_wd_i(const _TCHAR *lst, UnicodeString wd)
-{
-	return contained_wd_i(UnicodeString(lst), wd);
-}
 
 //---------------------------------------------------------------------------
 // | 区切りリストの語を含んでいるか？
 //---------------------------------------------------------------------------
-bool contains_wd_i(UnicodeString s, const _TCHAR *lst)
+bool contains_wd_i(UnicodeString s, UnicodeString lst)
 {
 	TStringDynArray w_lst = SplitString(lst, "|");
 	for (int i=0; i<w_lst.Length; i++) if (ContainsText(s, w_lst[i])) return true;
@@ -1049,7 +938,7 @@ bool contains_wd_i(UnicodeString s, const _TCHAR *lst)
 //---------------------------------------------------------------------------
 // | 区切りリストから指定インデックスの語を取得
 //---------------------------------------------------------------------------
-UnicodeString get_word_i_idx(const _TCHAR *lst, int idx)
+UnicodeString get_word_i_idx(UnicodeString lst, int idx)
 {
 	TStringDynArray w_lst = SplitString(lst, "|");
 	return (idx>=0 && idx<w_lst.Length)? w_lst[idx] : EmptyStr;
@@ -1057,7 +946,7 @@ UnicodeString get_word_i_idx(const _TCHAR *lst, int idx)
 //---------------------------------------------------------------------------
 // | 区切りリストから指定語のインデックスを取得
 //---------------------------------------------------------------------------
-int idx_of_word_i(const _TCHAR *lst, UnicodeString wd)
+int idx_of_word_i(UnicodeString lst, UnicodeString wd)
 {
 	TStringDynArray w_lst = SplitString(lst, "|");
 	int idx = -1;
@@ -1107,25 +996,6 @@ bool chk_RegExPtn(UnicodeString ptn)
 	catch (...) {
 		return false;
 	}
-}
-//---------------------------------------------------------------------------
-//正規表現によるマッチ
-//---------------------------------------------------------------------------
-bool is_match_regex(UnicodeString s, const _TCHAR *ptn)
-{
-	return TRegEx::IsMatch(s, ptn);
-}
-//---------------------------------------------------------------------------
-bool is_match_regex_i(UnicodeString s, const _TCHAR *ptn)
-{
-	TRegExOptions opt; opt << roIgnoreCase;
-	return TRegEx::IsMatch(s, ptn, opt);
-}
-//---------------------------------------------------------------------------
-UnicodeString get_match_regex(UnicodeString s, const _TCHAR *ptn)
-{
-	TMatch mt = TRegEx::Match(s, ptn);
-	return mt.Success? mt.Value : EmptyStr;
 }
 
 //---------------------------------------------------------------------------
@@ -1476,22 +1346,7 @@ UnicodeString slash_to_yen(UnicodeString s)
 //---------------------------------------------------------------------------
 UnicodeString sha1_to_short(UnicodeString s)
 {
-	return replace_regex(s, _T("\\b([0-9a-f]{7})[0-9a-f]{33}\\b"), _T("\\1"));
-}
-
-//---------------------------------------------------------------------------
-//文字列を大小文字を区別せずに比較
-//---------------------------------------------------------------------------
-bool same_ut_i(UnicodeString s, const _TCHAR *t)
-{
-	return (_tcsicmp(s.c_str(), t)==0);
-}
-//---------------------------------------------------------------------------
-//文字列を大小文字を区別してに比較
-//---------------------------------------------------------------------------
-bool same_ut_s(UnicodeString s, const _TCHAR *t)
-{
-	return (_tcscmp(s.c_str(), t)==0);
+	return TRegEx::Replace(s, "\\b([0-9a-f]{7})[0-9a-f]{33}\\b", "\\1");
 }
 
 //---------------------------------------------------------------------------
@@ -1585,12 +1440,12 @@ bool is_separator(UnicodeString s)
 }
 
 //---------------------------------------------------------------------------
-bool starts_tchs(const _TCHAR *lst, UnicodeString s)
+bool starts_tchs(UnicodeString lst, UnicodeString s)
 {
 	return s.IsDelimiter(lst, 1);
 }
 //---------------------------------------------------------------------------
-bool ends_tchs(const _TCHAR *lst, UnicodeString s)
+bool ends_tchs(UnicodeString lst, UnicodeString s)
 {
 	return s.IsDelimiter(lst, s.Length());
 }
@@ -1678,23 +1533,23 @@ UnicodeString exclude_quot(UnicodeString s)
 //---------------------------------------------------------------------------
 //TStringList Vlues[name] の整数値を取得
 //---------------------------------------------------------------------------
-int get_ListIntVal(TStringList *lst, const _TCHAR *name, int def)
+int get_ListIntVal(TStringList *lst, UnicodeString name, int def)
 {
 	return lst->Values[name].ToIntDef(def);
 }
 //---------------------------------------------------------------------------
 //TStringList Vlues[name] が空か?
 //---------------------------------------------------------------------------
-bool ListVal_is_empty(TStringList *lst, const _TCHAR *name)
+bool ListVal_is_empty(TStringList *lst, UnicodeString name)
 {
 	return lst->Values[name].IsEmpty();
 }
 //---------------------------------------------------------------------------
 //TStringList Vlues[name]=="1"?
 //---------------------------------------------------------------------------
-bool ListVal_equal_1(TStringList *lst, const _TCHAR *name)
+bool ListVal_equal_1(TStringList *lst, UnicodeString name)
 {
-	return (_tcscmp(lst->Values[name].c_str(), _T("1"))==0);
+	return SameStr(lst->Values[name], "1");
 }
 
 //---------------------------------------------------------------------------
@@ -2535,8 +2390,8 @@ UnicodeString UnicodePointToStr(int uc)
 	UnicodeString c;
 	int plane = uc >> 16;
 	if (plane>0) {
-  		int ld2 = ((uc >> 10) & 0x3F) + 0xd800 + 0x0040 * (plane - 1);
-  		int tl2 = (uc & 0x3ff) + 0xdc00;
+		int ld2 = ((uc >> 10) & 0x3F) + 0xd800 + 0x0040 * (plane - 1);
+		int tl2 = (uc & 0x3ff) + 0xdc00;
 		c.sprintf(_T("%c%c"), ld2, tl2);
 	}
 	else {
@@ -3122,8 +2977,8 @@ int get_NrmLevenshteinDistance(UnicodeString s1, UnicodeString s2,
 	}
 
 	if (ig_num) {
-		s1 = replace_regex(s1, _T("\\d"), null_TCHAR);
-		s2 = replace_regex(s2, _T("\\d"), null_TCHAR);
+		s1 = TRegEx::Replace(s1, "\\d", EmptyStr);
+		s2 = TRegEx::Replace(s2, "\\d", EmptyStr);
 	}
 
 	if (ig_fh) {
@@ -3265,16 +3120,15 @@ UnicodeString conv_DfmText(UnicodeString s)
 	if (lbuf.Pos('=')) {
 		UnicodeString nbuf = split_tkn(lbuf, '=') + "= ";
 		lbuf = TrimLeft(lbuf);
-		if (starts_tchs(_T("\'#"), lbuf)) {
+		if (starts_tchs("\'#", lbuf)) {
 			s = nbuf + decode_TxtVal(lbuf, true);
 		}
 	}
 	else {
 		lbuf = TrimLeft(lbuf);
-		if (starts_tchs(_T("\'#"), lbuf)) {
+		if (starts_tchs("\'#", lbuf)) {
 			UnicodeString end_s = remove_end_s(lbuf, ')')? ")" : "";
-			s = StringOfChar(_T(' '), s.Length() - TrimLeft(s).Length())
-					+ decode_TxtVal(lbuf, true) + end_s;
+			s = StringOfChar(_T(' '), s.Length() - TrimLeft(s).Length()) + decode_TxtVal(lbuf, true) + end_s;
 		}
 	}
 	return s;
@@ -3338,7 +3192,7 @@ TDateTime str_to_DateTime(
 	UnicodeString ts,
 	bool sw_dt)			//数字を日付に変換	(default = false)
 {
-	if (is_match_regex(ts, _T("^\\d{4}[-/]\\d{2}[-/]\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\b"))) {
+	if (TRegEx::IsMatch(ts, "^\\d{4}[-/]\\d{2}[-/]\\d{2}\\s\\d{2}:\\d{2}:\\d{2}\\b")) {
 		unsigned short y = ts.SubString(1, 4).ToIntDef(0);
 		unsigned short m = ts.SubString(6, 2).ToIntDef(0);
 		unsigned short d = ts.SubString(9, 2).ToIntDef(0);
@@ -3347,24 +3201,24 @@ TDateTime str_to_DateTime(
 		unsigned short s = ts.SubString(18, 2).ToIntDef(0);
 		return TDateTime(y, m, d, h, n, s, 0);
 	}
-	else if (is_match_regex(ts, _T("^\\d{4}[-/]\\d{2}[-/]\\d{2}\\b"))) {
+	else if (TRegEx::IsMatch(ts, "^\\d{4}[-/]\\d{2}[-/]\\d{2}\\b")) {
 		unsigned short y = ts.SubString(1, 4).ToIntDef(0);
 		unsigned short m = ts.SubString(6, 2).ToIntDef(0);
 		unsigned short d = ts.SubString(9, 2).ToIntDef(0);
 		return TDateTime(y, m, d);
 	}
-	else if (is_match_regex(ts, _T("^\\d{2}:\\d{2}:\\d{2}\\b"))) {
+	else if (TRegEx::IsMatch(ts, "^\\d{2}:\\d{2}:\\d{2}\\b")) {
 		unsigned short h = ts.SubString(1, 2).ToIntDef(0);
 		unsigned short n = ts.SubString(4, 2).ToIntDef(0);
 		unsigned short s = ts.SubString(7, 2).ToIntDef(0);
 		return TDateTime(h, n, s, 0);
 	}
-	else if (is_match_regex(ts, _T("^\\d{2}:\\d{2}\\b"))) {
+	else if (TRegEx::IsMatch(ts, "^\\d{2}:\\d{2}\\b")) {
 		unsigned short h = ts.SubString(1, 2).ToIntDef(0);
 		unsigned short n = ts.SubString(4, 2).ToIntDef(0);
 		return TDateTime(h, n, 0, 0);
 	}
-	else if (sw_dt && is_match_regex(ts, _T("^\\d+$"))) {
+	else if (sw_dt && TRegEx::IsMatch(ts, "^\\d+$")) {
 		return TDate(ts.ToIntDef(0));
 	}
 	else {

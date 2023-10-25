@@ -812,7 +812,9 @@ void __fastcall TTaskThread::Task_CPY(
 			if (Config->KeepTime) {
 				std::unique_ptr<TStringList> dbuf(new TStringList());
 				dbuf->Add(src_prm);
+				PreCount = 1;
 				GetDirs(src_prm, dbuf.get());
+				PreCount = 0;
 				for (int i=0; i<dbuf->Count; i++) {
 					UnicodeString dnam = dbuf->Strings[i];
 					file_rec *fp = cre_new_file_rec(dnam);
@@ -867,7 +869,7 @@ void __fastcall TTaskThread::Task_CPY(
 					for (int i=0; i<tbuf->Count; i++) {
 						UnicodeString dnam = get_pre_tab(tbuf->Strings[i]);
 						UnicodeString tstr = get_post_tab(tbuf->Strings[i]);
-						if (dir_exists(dnam) && is_match_regex(tstr, _T("^\\d{14}$"))) {
+						if (dir_exists(dnam) && TRegEx::IsMatch(tstr, "^\\d{14}$")) {
 							UnicodeString msg = make_LogHdr(_T("TIME"), dnam, true, 14);
 							try {
 								unsigned short y = tstr.SubString( 1, 4).ToIntDef(0);
@@ -987,7 +989,7 @@ void __fastcall TTaskThread::DEL_core(
 
 		UnicodeString snam = fnam;
 		UnicodeString lnam = split_ADS_name(snam);
-		if (USAME_TI(get_extension(lnam), ".url") && ContainsText(snam, FAVICON_ADS)) del_CachedIcon(lnam);
+		if (SameText(get_extension(lnam), ".url") && ContainsText(snam, FAVICON_ADS)) del_CachedIcon(lnam);
 
 		OkCount++;
 	}
@@ -1904,7 +1906,7 @@ void __fastcall TTaskThread::Execute()
 					if (!CmdName.IsEmpty() && !prmstr.IsEmpty()) {
 						AddDebugLog("Start:", CmdName);
 
-						switch (idx_of_word_i(_T("CPY|MOV|DEL|CPYDIR|CMPDEL|CVIMG|DLEXIF|EXTCHM|BACKUP|DTIME|DCOMP"), CmdName)) {
+						switch (idx_of_word_i("CPY|MOV|DEL|CPYDIR|CMPDEL|CVIMG|DLEXIF|EXTCHM|BACKUP|DTIME|DCOMP", CmdName)) {
 						case  0: Task_CPY(prmstr);			break;
 						case  1: Task_CPY(prmstr, true);	break;
 						case  2: Task_DEL(prmstr);			break;

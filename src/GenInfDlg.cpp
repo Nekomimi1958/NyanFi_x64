@@ -91,7 +91,7 @@ void __fastcall TGeneralInfoDlg::FormShow(TObject *Sender)
 		Caption = cap_str;
 	}
 
-	isDirs = USAME_TI(Caption, "ディレクトリ名一覧");
+	isDirs = SameText(Caption, "ディレクトリ名一覧");
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 
@@ -875,10 +875,10 @@ void __fastcall TGeneralInfoDlg::GenListBoxDrawItem(TWinControl *Control, int In
 		}
 	}
 	//NyanFi 情報
-	else if (USAME_TS(Caption, "NyanFi 情報")) {
+	else if (SameStr(Caption, "NyanFi 情報")) {
 		TColor fg =
 			use_fgsel? col_fgSelItem :
-			is_match_regex(lbuf, _T("^([^ :.]{2,}\\.(exe|dll|spi)|\\.|WIC)"))? col_Headline :
+			TRegEx::IsMatch(lbuf, "^([^ :.]{2,}\\.(exe|dll|spi)|\\.|WIC)")? col_Headline :
 			StartsStr("         エラー:", lbuf)? col_Error :
 			StartsStr('[', lbuf)? col_Comment : col_fgList;
 
@@ -995,26 +995,26 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 		FilterEdit->SetFocus();
 	}
 	//ソート
-	else if (USAME_TI(cmd_V, "Sort_AO")) {
+	else if (SameText(cmd_V, "Sort_AO")) {
 		SortAscAction->Execute();
 	}
-	else if (USAME_TI(cmd_V, "Sort_DO")) {
+	else if (SameText(cmd_V, "Sort_DO")) {
 		SortDesAction->Execute();
 	}
-	else if (USAME_TI(cmd_V, "Sort")) {
+	else if (SameText(cmd_V, "Sort")) {
 		OrgOrderAction->Execute();
 	}
 	//検索
-	else if (USAME_TI(cmd_V, "FindText")) {
+	else if (SameText(cmd_V, "FindText")) {
 		FindTextDlg->ShowModal();
 	}
-	else if (contained_wd_i(_T("FindDown|FindUp"), cmd_V)) {
-		FindText(USAME_TI(cmd_V, "FindDown"));
+	else if (contained_wd_i("FindDown|FindUp", cmd_V)) {
+		FindText(SameText(cmd_V, "FindDown"));
 	}
 	//エラー検索
-	else if (contained_wd_i(_T("NextErr|PrevErr"), cmd_V)) {
+	else if (contained_wd_i("NextErr|PrevErr", cmd_V)) {
 		if (isLog) {
-			bool down = USAME_TI(cmd_V, "NextErr");
+			bool down = SameText(cmd_V, "NextErr");
 			cursor_HourGlass();
 			int idx0 = lp->ItemIndex;
 			if (idx0==-1) idx0 = 0;
@@ -1032,26 +1032,26 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 	}
 	//前後のファイルへ切り替え
 	else if (!isPlayList && !isFTP && !FileName.IsEmpty()
-		&& contained_wd_i(_T("PrevFile|NextFile"), cmd_V))
+		&& contained_wd_i("PrevFile|NextFile", cmd_V))
 	{
 		RetStr = cmd_V;
 		this->Perform(WM_SETREDRAW, 0, (NativeInt)0);	//画面を消さずに残す
 		ModalResult = mrRetry;
 	}
 	//閲覧
-	else if (USAME_TI(cmd_F, "TextViewer")) {
+	else if (SameText(cmd_F, "TextViewer")) {
 		if (ViewFileAction->Enabled) ViewFileAction->Execute(); else ViewListAction->Execute();
 	}
 	//編集
-	else if (USAME_TI(cmd_F, "FileEdit")) {
+	else if (SameText(cmd_F, "FileEdit")) {
 		EditFileAction->Execute();
 	}
 	//ファイル情報
-	else if (USAME_TI(cmd_F, "ListFileInfo") || StartsText("ShowFileInfo", cmd_F)) {
+	else if (SameText(cmd_F, "ListFileInfo") || StartsText("ShowFileInfo", cmd_F)) {
 		ShowFileInfoAction->Execute();
 	}
 	//プロパティ
-	else if (USAME_TI(cmd_F, "PropertyDlg")) {
+	else if (SameText(cmd_F, "PropertyDlg")) {
 		PropertyAction->Execute();
 	}
 	//キー
@@ -1114,7 +1114,7 @@ void __fastcall TGeneralInfoDlg::GenListBoxKeyDown(TObject *Sender, WORD &Key, T
 		show_PopupMenu(lp);
 	}
 	//閉じる
-	else if (USAME_TI(cmd_V, "Close") || equal_ESC(KeyStr)) {
+	else if (SameText(cmd_V, "Close") || equal_ESC(KeyStr)) {
 		ModalResult = mrCancel;
 	}
 	else {

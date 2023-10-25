@@ -241,12 +241,12 @@ void __fastcall TRenameDlg::FormShow(TObject *Sender)
 		mp3fextLabel->Caption	 = cmnFext;
 		if (!EditedList && (isMp3 || isFlac)) {
 			NamePageControl->ActivePage =
-				USAME_TI(lastMp3Sheet, "Mp3")? Mp3Sheet : (USAME_TI(lastMp3Sheet, "Replace")? ReplaceSheet : SerialSheet);
+				SameText(lastMp3Sheet, "Mp3")? Mp3Sheet : (SameText(lastMp3Sheet, "Replace")? ReplaceSheet : SerialSheet);
 		}
 		else {
 			NamePageControl->ActivePage =
-				(EditedList || USAME_TI(lastSheet, "RenList"))? RenListSheet :
-							   USAME_TI(lastSheet, "Replace") ? ReplaceSheet : SerialSheet;
+				(EditedList || SameText(lastSheet, "RenList"))? RenListSheet :
+							   SameText(lastSheet, "Replace") ? ReplaceSheet : SerialSheet;
 		}
 	}
 
@@ -387,18 +387,18 @@ void __fastcall TRenameDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 	if (ActiveControl!=TimeMaskEdit && SpecialKeyProc(this, Key, Shift)) return;
 
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(ReadOnlyCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+H")) invert_CheckBox(HiddenCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+S")) invert_CheckBox(SysCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+A")) invert_CheckBox(ArcCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CmpCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(AutoPrvCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+T")) set_focus_GroupBox(TimeGroupBox);
+	if		(SameText(KeyStr, "Alt+R")) invert_CheckBox(ReadOnlyCheckBox);
+	else if (SameText(KeyStr, "Alt+H")) invert_CheckBox(HiddenCheckBox);
+	else if (SameText(KeyStr, "Alt+S")) invert_CheckBox(SysCheckBox);
+	else if (SameText(KeyStr, "Alt+A")) invert_CheckBox(ArcCheckBox);
+	else if (SameText(KeyStr, "Alt+C")) invert_CheckBox(CmpCheckBox);
+	else if (SameText(KeyStr, "Alt+V")) invert_CheckBox(AutoPrvCheckBox);
+	else if (SameText(KeyStr, "Alt+T")) set_focus_GroupBox(TimeGroupBox);
 	else if (!IsOptionSheet()) {
-		if		(USAME_TI(KeyStr, "Alt+M")) set_focus_RadioGroup(FbaseRadioGroup);
-		else if (USAME_TI(KeyStr, "Alt+E")) set_focus_RadioGroup(FextRadioGroup);
-		else if (USAME_TI(KeyStr, "Alt+U")) invert_CheckBox(CnvCharCheckBox);
-		else if (USAME_TI(KeyStr, "Alt+K")) invert_CheckBox(CnvKanaCheckBox);
+		if		(SameText(KeyStr, "Alt+M")) set_focus_RadioGroup(FbaseRadioGroup);
+		else if (SameText(KeyStr, "Alt+E")) set_focus_RadioGroup(FextRadioGroup);
+		else if (SameText(KeyStr, "Alt+U")) invert_CheckBox(CnvCharCheckBox);
+		else if (SameText(KeyStr, "Alt+K")) invert_CheckBox(CnvKanaCheckBox);
 	}
 }
 //---------------------------------------------------------------------------
@@ -477,7 +477,7 @@ void __fastcall TRenameDlg::NamePageControlChange(TObject *Sender)
 		RenameEdit->SetFocus();
 
 		//初期状態の設定
-		int p = !is_dir? (pos_r(_T("."), RenameEdit->Text) - 1) : -1;
+		int p = !is_dir? (pos_r(".", RenameEdit->Text) - 1) : -1;
 		if (p<0) p = RenameEdit->Text.Length();
 
 		int idx = IniSttComboBox->ItemIndex;
@@ -819,9 +819,9 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 							if (istr.Length()>3 && StartsStr("TRK",istr)) {
 								int trkn = get_tkn(vstr, '/').ToIntDef(0);
 								UnicodeString nstr = istr.SubString(4, 1);
-								if		(USAME_TS(nstr, "1")) vstr.sprintf(_T("%1u"), trkn);
-								else if (USAME_TS(nstr, "2")) vstr.sprintf(_T("%02u"),trkn);
-								else if (USAME_TS(nstr, "3")) vstr.sprintf(_T("%03u"),trkn);
+								if		(SameStr(nstr, "1")) vstr.sprintf(_T("%1u"), trkn);
+								else if (SameStr(nstr, "2")) vstr.sprintf(_T("%02u"),trkn);
+								else if (SameStr(nstr, "3")) vstr.sprintf(_T("%03u"),trkn);
 							}
 							new_name += vstr;
 						}
@@ -858,9 +858,9 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 							UnicodeString nstr = get_tkn_r(istr, '_');
 							if (!nstr.IsEmpty()) {
 								int trkn = get_tkn(vstr, '/').ToIntDef(0);
-								if		(USAME_TS(nstr, "1")) vstr.sprintf(_T("%1u"), trkn);
-								else if (USAME_TS(nstr, "2")) vstr.sprintf(_T("%02u"),trkn);
-								else if (USAME_TS(nstr, "3")) vstr.sprintf(_T("%03u"),trkn);
+								if		(SameStr(nstr, "1")) vstr.sprintf(_T("%1u"), trkn);
+								else if (SameStr(nstr, "2")) vstr.sprintf(_T("%02u"),trkn);
+								else if (SameStr(nstr, "3")) vstr.sprintf(_T("%03u"),trkn);
 							}
 							new_name += vstr;
 						}
@@ -924,7 +924,7 @@ void __fastcall TRenameDlg::UpdateNewNameList()
 					gp->Cells[2][i] = "(empty)";  Abort();
 				}
 
-				if (USAME_TS(new_name, " ")) Abort();
+				if (SameStr(new_name, " ")) Abort();
 
 				//禁止文字
 				UnicodeString ngstr = "\\/:*?\"<>|";
@@ -1126,7 +1126,7 @@ void __fastcall TRenameDlg::RefFmtBtnClick(TObject *Sender)
 	}
 
 	Mp3FmtComboBox->SelText = get_word_i_idx(
-		_T("\\ID3(TP1)|\\ID3(TAL)|\\ID3(TT2)|\\ID3(TRK)|\\ID3(TYE)"), ((TComponent*)Sender)->Tag);
+		"\\ID3(TP1)|\\ID3(TAL)|\\ID3(TT2)|\\ID3(TRK)|\\ID3(TYE)", ((TComponent*)Sender)->Tag);
 }
 
 //---------------------------------------------------------------------------
@@ -1243,7 +1243,7 @@ void __fastcall TRenameDlg::set_FmtEdit(const _TCHAR *s)
 		PostNameEdit->SetSelTextBuf(sbuf.c_str());
 	}
 	else if (ExtEdit->Focused()) {
-		if (USAME_TS(sbuf, "\\E")) ExtEdit->SetSelTextBuf(sbuf.c_str()); else beep_Warn();
+		if (SameStr(sbuf, "\\E")) ExtEdit->SetSelTextBuf(sbuf.c_str()); else beep_Warn();
 	}
 }
 //---------------------------------------------------------------------------
@@ -1461,9 +1461,9 @@ void __fastcall TRenameDlg::PreviewGridDrawCell(TObject *Sender, int ACol, int A
 	UnicodeString cell_str = gp->Cells[ACol][ARow];
 	UnicodeString rel_str  = gp->Cells[1][ARow];
 	if (ACol==1 || ACol==2) {
-		if (USAME_TS(rel_str, "＝"))
+		if (SameStr(rel_str, "＝"))
 			cv->Font->Color = clGray;
-		else if (rel_str.IsEmpty() || USAME_TS(rel_str, "×"))
+		else if (rel_str.IsEmpty() || SameStr(rel_str, "×"))
 			cv->Font->Color = col_Error;
 	}
 	cell_str = minimize_str(cell_str, cv, Rect.Width() - SCALED_THIS(4), OmitEndOfName);
@@ -1480,7 +1480,7 @@ void __fastcall TRenameDlg::PreviewGridKeyDown(TObject *Sender, WORD &Key, TShif
 {
 	TStringGrid *gp = (TStringGrid*)Sender;
 
-	switch (idx_of_word_i(_T("Shift+Ctrl+DOWN|Shift+Ctrl+UP"), get_KeyStr(Key, Shift))) {
+	switch (idx_of_word_i("Shift+Ctrl+DOWN|Shift+Ctrl+UP", get_KeyStr(Key, Shift))) {
 	case 0:	//項目を下に移動
 		if (AutoPrvCheckBox->Checked) {
 			int idx = down_StrListItem(ItemList, gp->Row);
@@ -1808,7 +1808,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 					UnicodeString pnam	= ExtractFilePath(fnam0);
 					UnicodeString mask	= "*" + get_base_name(fnam0) + "*.*";
 					std::unique_ptr<TStringList> lst(new TStringList());
-					get_files(pnam, mask.c_str(), lst.get());
+					get_files(pnam, mask, lst.get());
 
 					for (int j=0; j<lst->Count; j++) {
 						UnicodeString fnam1 = lst->Strings[j];
@@ -1872,7 +1872,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 
 			//改名開始
 			int ok_cnt = 0, er_cnt = 0, sk_cnt = 0;
-			UnicodeString ModeStr = get_word_i_idx(_T("|連番|置換|MP3"), NamePageControl->ActivePageIndex) + "改名";
+			UnicodeString ModeStr = get_word_i_idx("|連番|置換|MP3", NamePageControl->ActivePageIndex) + "改名";
 			StartLog(msg.sprintf(_T("%s開始  %s"), ModeStr.c_str(), CurPathName.c_str()));
 			Application->ProcessMessages();
 
@@ -1885,7 +1885,7 @@ void __fastcall TRenameDlg::RenOkActionExecute(TObject *Sender)
 				SttPrgBar->Begin(_T("中間処理..."));
 				//一時ファイルが残っていないかチェック
 				std::unique_ptr<TStringList> t_lst(new TStringList());
-				get_files(ExtractFilePath(ItemList->Strings[0]), _T("$~NF*.~TMP"), t_lst.get());
+				get_files(ExtractFilePath(ItemList->Strings[0]), "$~NF*.~TMP", t_lst.get());
 				if (t_lst->Count>0 &&
 					msgbox_Sure(_T("一時ファイル($~NF*.~TMP)が残っていますが、削除してもよいですか?")))
 						for (int i=0; i<t_lst->Count; i++) DeleteFile(t_lst->Strings[i]);

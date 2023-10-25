@@ -42,7 +42,7 @@ void __fastcall TEditItemDlg::FormClose(TObject *Sender, TCloseAction &Action)
 	if (ModalResult==mrOk) {
 		UnicodeString tit = ItemEdit->EditLabel->Caption;
 		if (remove_top_s(tit, "パスマスク")) {
-			UnicodeString dsc = get_tkn(get_tkn_r(tit, ":"), ":");
+			UnicodeString dsc = get_tkn(get_tkn_r(tit, ':'), ':');
 			if (!dsc.IsEmpty()) RetStr.cat_sprintf(_T(":%s:"), dsc.c_str());
 		}
 
@@ -50,7 +50,7 @@ void __fastcall TEditItemDlg::FormClose(TObject *Sender, TCloseAction &Action)
 			if (i>0) RetStr += ItemDelimiter;
 			RetStr += ItemListBox->Items->Strings[i];
 		}
-		if (USAME_TS(ItemDelimiter, ".")) RetStr.Insert(".", 1);
+		if (SameStr(ItemDelimiter, ".")) RetStr.Insert(".", 1);
 	}
 
 	if (OptionDlg && OptionDlg->Visible) ::PostMessage(OptionDlg->Handle, WM_NYANFI_CLSEDITM, 0, 0);

@@ -80,17 +80,17 @@ void set_window_pos_ex(HWND hWnd, TRect rc)
 //---------------------------------------------------------------------------
 void adjust_form_pos(TForm *frm)
 {
-    TRect frm_rc = frm->BoundsRect;
-    TRect mon_rc = frm->Monitor->BoundsRect;
-    int dx = 0, dy = 0;
-    if (frm_rc.Right > mon_rc.Right)	dx = mon_rc.Right - frm_rc.Right;
-    if (frm_rc.Bottom > mon_rc.Bottom)	dy = mon_rc.Bottom - frm_rc.Bottom;
-    if (frm_rc.Left < mon_rc.Left)		dx = mon_rc.Left - frm_rc.Left;
-    if (frm_rc.Top < mon_rc.Top)		dy = mon_rc.Top - frm_rc.Top;
-    if (dx!=0 || dy!=0) {
-        OffsetRect(frm_rc, dx, dy);
-        frm->BoundsRect = frm_rc;
-    }
+	TRect frm_rc = frm->BoundsRect;
+	TRect mon_rc = frm->Monitor->BoundsRect;
+	int dx = 0, dy = 0;
+	if (frm_rc.Right > mon_rc.Right)	dx = mon_rc.Right - frm_rc.Right;
+	if (frm_rc.Bottom > mon_rc.Bottom)	dy = mon_rc.Bottom - frm_rc.Bottom;
+	if (frm_rc.Left < mon_rc.Left)		dx = mon_rc.Left - frm_rc.Left;
+	if (frm_rc.Top < mon_rc.Top)		dy = mon_rc.Top - frm_rc.Top;
+	if (dx!=0 || dy!=0) {
+		OffsetRect(frm_rc, dx, dy);
+		frm->BoundsRect = frm_rc;
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -394,7 +394,7 @@ UnicodeString format_Date(TDateTime dt)
 //---------------------------------------------------------------------------
 UnicodeString format_DateTimeEx(UnicodeString fmt, TDateTime dt)
 {
-	TFormatSettings fs = remove_text(fmt, _T("$EN"))? TFormatSettings::Create("en-US") : TFormatSettings::Create();
+	TFormatSettings fs = remove_text(fmt, "$EN")? TFormatSettings::Create("en-US") : TFormatSettings::Create();
 	fmt = ReplaceStr(ReplaceStr(fmt, "\'/\'", "/"), "/", "\'/\'");
 	return FormatDateTime(fmt, dt, fs);
 }
@@ -428,7 +428,7 @@ int get_DateCond(UnicodeString prm, TDateTime &dt)
 					dt = Date();
 					int dn = prm.ToIntDef(0);
 					if (dn!=0) {
-						switch (idx_of_word_i(_T("D|M|Y"), ut_str)) {
+						switch (idx_of_word_i("D|M|Y", ut_str)) {
 						case 0: dt = IncDay(  dt, dn); break;
 						case 1: dt = IncMonth(dt, dn); break;
 						case 2: dt = IncYear( dt, dn); break;
@@ -1112,7 +1112,7 @@ void ListBoxScrollDown(TListBox *lp, UnicodeString prm)
 	if (!prm.IsEmpty()) {
 		int pn = lp->ClientHeight/lp->ItemHeight;
 
-		switch (idx_of_word_i(_T("HP|FP|ED"), prm)) {
+		switch (idx_of_word_i("HP|FP|ED", prm)) {
 		case 0:  ListBoxScrollDown(lp, pn/2);					break;
 		case 1:  ListBoxScrollDown(lp, pn);						break;
 		case 2:  lp->TopIndex = std::max(lp->Count - pn, 0);	break;
@@ -1136,7 +1136,7 @@ void ListBoxScrollUp(TListBox *lp, UnicodeString prm)
 	if (!prm.IsEmpty()) {
 		int pn = lp->ClientHeight/lp->ItemHeight;
 
-		switch (idx_of_word_i(_T("HP|FP|TP"), prm)) {
+		switch (idx_of_word_i("HP|FP|TP", prm)) {
 		case 0:  ListBoxScrollUp(lp, pn/2);	break;
 		case 1:  ListBoxScrollUp(lp, pn);	break;
 		case 2:  lp->TopIndex = 0;			break;
@@ -1186,7 +1186,7 @@ UnicodeString InfListBoxGetDir(TListBox *lp)
 {
 	int idx = lp->ItemIndex;
 	return (idx!=-1 && ((int)lp->Items->Objects[idx] & LBFLG_PATH_FIF))?
-						  get_tkn_r(lp->Items->Strings[idx], _T(": ")) : EmptyStr;
+						  get_tkn_r(lp->Items->Strings[idx], ": ") : EmptyStr;
 }
 //---------------------------------------------------------------------------
 //ListBox の現在行からURLを取得
@@ -1195,7 +1195,6 @@ UnicodeString ListBoxGetURL(TListBox *lp)
 {
 	return (lp->ItemIndex!=-1)? extract_URL(lp->Items->Strings[lp->ItemIndex]) : EmptyStr;
 }
-
 
 //---------------------------------------------------------------------------
 //ListBox の Objects を整数値としてチェックし、項目連番を設定
@@ -1265,7 +1264,7 @@ void GridPageUp(TStringGrid *gp)
 //---------------------------------------------------------------------------
 bool GridCursorMove(UnicodeString cmd , TStringGrid *gp)
 {
-	switch (idx_of_word_i(_T("CursorDown|CursorUp|PageDown|PageUp"), cmd)) {
+	switch (idx_of_word_i("CursorDown|CursorUp|PageDown|PageUp", cmd)) {
 	case  0: GridCursorDown(gp);	break;
 	case  1: GridCursorUp(gp);		break;
 	case  2: GridPageDown(gp);		break;
@@ -1746,7 +1745,7 @@ void reduction_MenuLine(TMenuItem *mp)
 	for (int i=0; i<mp->Count; i++) {
 		TMenuItem *ip = mp->Items[i];
 		if (ip->Action) ip->Action->Update();
-		if (USAME_TS(ip->Caption, "-")) {
+		if (SameStr(ip->Caption, "-")) {
 			ip->Visible = !is_sp;
 			is_sp = true;
 		}
@@ -1760,8 +1759,8 @@ void reduction_MenuLine(TMenuItem *mp)
 		}
 	}
 
-	if (ip_0 && USAME_TS(ip_0->Caption, "-")) ip_0->Visible = false;
-	if (ip_1 && USAME_TS(ip_1->Caption, "-")) ip_1->Visible = false;
+	if (ip_0 && SameStr(ip_0->Caption, "-")) ip_0->Visible = false;
+	if (ip_1 && SameStr(ip_1->Caption, "-")) ip_1->Visible = false;
 }
 
 //---------------------------------------------------------------------------
@@ -1784,8 +1783,8 @@ UnicodeString get_WebSeaCaption(
 		if (!kwd.IsEmpty()) ret_str.sprintf(_T("「%s」を "), kwd.c_str());
 	}
 
-	UnicodeString url = get_tkn_m(WebSeaUrl, _T("//"), _T("/"));
-	remove_top_text(url, _T("www."));
+	UnicodeString url = get_tkn_m(WebSeaUrl, "//", "/");
+	remove_top_text(url, "www.");
 	if (url.IsEmpty()) url = "Web";
 	ret_str.cat_sprintf(_T("%s で検索"), url.c_str());
 	if (with_ak) ret_str += "(&S)";

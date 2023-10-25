@@ -137,7 +137,7 @@ void __fastcall TSubViewer::DrawImage(UnicodeString fnam)
 					}
 					else if (test_PngExt(fext))
 						ex_str = get_PngInfStr(fnam);
-					else if (USAME_TI(fext, ".webp"))
+					else if (SameText(fext, ".webp"))
 						ex_str = get_WebpInfStr(ViewFileName);
 
 				}

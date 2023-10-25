@@ -145,8 +145,8 @@ void __fastcall TAppListDlg::FormCreate(TObject *Sender)
 	ToAppList = ToLauncher = ToIncSea = AddStart = false;
 	isFuzzy = false;
 
-    SHSTOCKICONINFO sii = {};
-    sii.cbSize = sizeof(sii);
+	SHSTOCKICONINFO sii = {};
+	sii.cbSize = sizeof(sii);
 	hShieldIco = SUCCEEDED(::SHGetStockIconInfo(SIID_SHIELD, SHGSI_ICON|SHGSI_SMALLICON, &sii))? sii.hIcon : NULL;
 }
 
@@ -397,7 +397,6 @@ UnicodeString __fastcall TAppListDlg::get_size_str_K(SIZE_T sz)
 	return szstr;
 }
 
-
 //---------------------------------------------------------------------------
 //インクリメンタルサーチモードの設定
 //---------------------------------------------------------------------------
@@ -430,8 +429,8 @@ void __fastcall TAppListDlg::SetIncSeaMode(bool sw)
 
 		IncSeaWord = EmptyStr;
 		LaunchFileList->Clear();
-		get_files(LaunchPath, _T("*.lnk"), LaunchFileList, true);
-		get_files(LaunchPath, _T("*.url"), LaunchFileList, true);
+		get_files(LaunchPath, "*.lnk", LaunchFileList, true);
+		get_files(LaunchPath, "*.url", LaunchFileList, true);
 
 		//スタートメニュー項目を追加
 		if (AddStart) {
@@ -441,8 +440,8 @@ void __fastcall TAppListDlg::SetIncSeaMode(bool sw)
 			for (int i=0; i<st_lst->Count; i++) {
 				UnicodeString pnam = get_pre_tab(st_lst->Strings[i]);
 				LaunchTopList->Add(pnam);
-				get_files(pnam, _T("*.lnk"), LaunchFileList, true);
-				get_files(pnam, _T("*.url"), LaunchFileList, true);
+				get_files(pnam, "*.lnk", LaunchFileList, true);
+				get_files(pnam, "*.url", LaunchFileList, true);
 			}
 		}
 	}
@@ -701,7 +700,7 @@ void __fastcall TAppListDlg::UpdateAppList()
 								UnicodeString pnam = IncludeTrailingPathDelimiter(pth_buf.get());
 								std::unique_ptr<TStringList> fbuf(new TStringList());
 								if (load_text_ex(pnam + "AppxManifest.xml", fbuf.get())==0) Abort();
-								UnicodeString snam = get_tkn(get_tkn_r(fbuf->Text, "Square44x44Logo=\""), "\"");
+								UnicodeString snam = get_tkn(get_tkn_r(fbuf->Text, "Square44x44Logo=\""), '\"');
 								if (!snam.IsEmpty()) {
 									UnicodeString fext = get_extension(snam);
 									UnicodeString bnam = get_base_name(snam);
@@ -738,17 +737,17 @@ void __fastcall TAppListDlg::UpdateAppList()
 	while(i < AppInfoList->Count) {
 		AppWinInf *ap = AppInfoList->Items[i];
 		if (!ap->Exist) {
-			req_upd = USAME_TI(ap->Caption, "NyanFi");
+			req_upd = SameText(ap->Caption, "NyanFi");
 			AppInfoList->Delete(i);
 			changed = true;
 		}
 		else i++;
 	}
 
+	//キャプションの最大幅を更新
 	TCanvas *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
 	bool is_irreg = IsIrregularFont(cv->Font);
-
 	for (int i=0; i<AppInfoList->Count; i++) {
 		AppWinInf *ap = AppInfoList->Items[i];
 		int wd = get_TextWidth(cv, ap->Caption, is_irreg);
@@ -796,7 +795,7 @@ void __fastcall TAppListDlg::AddLnkFileRec(UnicodeString fnam, TStringList *lst,
 			fp->failed = !fp->l_name.IsEmpty() && !StartsStr("::", fp->l_name) && !file_exists(fp->l_name);
 		}
 		//URL
-		else if (SortByRem && USAME_TI(fp->f_ext, ".url")) {
+		else if (SortByRem && SameText(fp->f_ext, ".url")) {
 			std::unique_ptr<UsrIniFile> url_file(new UsrIniFile(fnam));
 			fp->l_name = url_file->ReadString("InternetShortcut", "URL");
 		}
@@ -819,7 +818,7 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 
 	//インクリメンタルサーチ
 	if (IsIncSea) {
-		bool is_all = contained_wd_i(_T("*|?| "), IncSeaWord);
+		bool is_all = contained_wd_i("*|?| ", IncSeaWord);
 		UnicodeString ptn = is_all? UnicodeString(".+") :
 		    (isFuzzy && !IsMigemo)? get_fuzzy_ptn(IncSeaWord) :
 								 	usr_Migemo->GetRegExPtn(IsMigemo, IncSeaWord);
@@ -846,9 +845,9 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 		TSearchRec sr;
 		if (FindFirst(CurLaunchPath + "*.*", faAnyFile, sr)==0) {
 			do {
-				UnicodeString fnam = sr.Name;	if (USAME_TS(fnam, ".")) continue;
+				UnicodeString fnam = sr.Name;	if (SameStr(fnam, ".")) continue;
 				if (sr.Attr & faDirectory) {
-					if (USAME_TS(fnam, "..")) {
+					if (SameStr(fnam, "..")) {
 						if (SameText(CurLaunchPath, LaunchPath)) continue;
 					}
 					else {
@@ -859,7 +858,7 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 					continue;
 				}
 
-				if (!USAME_TS(fnam, "..")) fnam = CurLaunchPath + fnam;
+				if (!SameStr(fnam, "..")) fnam = CurLaunchPath + fnam;
 				AddLnkFileRec(fnam, LaunchList);
 			} while(FindNext(sr)==0);
 			FindClose(sr);
@@ -873,7 +872,7 @@ void __fastcall TAppListDlg::UpdateLaunchList(UnicodeString lnam)
 	lp->Count = LaunchList->Count;
 	Application->ProcessMessages();
 
-	if (USAME_TS(lnam, ".."))
+	if (SameStr(lnam, ".."))
 		idx = 0;
 	else if (!lnam.IsEmpty())
 		idx = LaunchList->IndexOf(lnam);
@@ -1077,6 +1076,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
 	bool is_irreg = IsIrregularFont(cv->Font);
+	bool show_mon_no = (Screen->MonitorCount>1 && ShowMonNoAction->Checked);
 
 	//背景
 	cv->Brush->Color = ap->toClose ? clMaroon
@@ -1090,7 +1090,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	if (ap->isNoRes) {
 		TRect rc = Rect;
 		rc.Left	 = xp + SCALED_THIS(36);
-		rc.Right = xp + SCALED_THIS(44) + MaxWd_f + get_CharWidth(cv, 2);
+		rc.Right = xp + SCALED_THIS(44) + MaxWd_f + get_CharWidth(cv, 2 + (show_mon_no? 3 : 0));
 		InflateRect(rc, 0, -2);
 		TColor br_col	 = cv->Brush->Color;
 		cv->Brush->Color = col_Error;
@@ -1135,7 +1135,7 @@ void __fastcall TAppListDlg::AppListBoxDrawItem(TWinControl *Control, int Index,
 	xp += get_CharWidth(cv, 2);
 
 	//モニタ番号
-	if (Screen->MonitorCount>1 && ShowMonNoAction->Checked) {
+	if (show_mon_no) {
 		xp += get_CharWidth(cv, 1);
 		if (::IsIconic(ap->WinHandle)) {
 			cv->Font->Color = col_InvItem;
@@ -1234,16 +1234,16 @@ void __fastcall TAppListDlg::AppListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 		LaunchListBox->SetFocus();
 	}
 	//ウィンドウ操作
-	else if (USAME_TI(CmdStr, "WinMinimize")) {
+	else if (SameText(CmdStr, "WinMinimize")) {
 		MinimizeAction->Execute();
 	}
-	else if (USAME_TI(CmdStr, "WinMaximize")) {
+	else if (SameText(CmdStr, "WinMaximize")) {
 		MaximizeAction->Execute();
 	}
-	else if (USAME_TI(CmdStr, "WinNormal")) {
+	else if (SameText(CmdStr, "WinNormal")) {
 		RestoreAction->Execute();
 	}
-	else if (USAME_TI(CmdStr, "Delete")) {
+	else if (SameText(CmdStr, "Delete")) {
 		CloseItem->Click();
 	}
 	else if (ExeCmdListBox(lp, CmdStr)) {
@@ -1261,7 +1261,7 @@ void __fastcall TAppListDlg::AppListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 		ModalResult = mrCancel;
 	}
 	//アプリケーション情報
-	else if (StartsText("ShowFileInfo", CmdStr) || USAME_TI(CmdStr, "ListFileInfo")) {
+	else if (StartsText("ShowFileInfo", CmdStr) || SameText(CmdStr, "ListFileInfo")) {
 		AppInfoAction->Execute();
 	}
 	else handled = false;
@@ -1633,7 +1633,7 @@ void __fastcall TAppListDlg::AppInfoActionExecute(TObject *Sender)
 		if (c_ap->win_xstyle & WS_EX_APPWINDOW) 	tmp2 += ", APPWINDOW";
 		if (c_ap->win_xstyle & WS_EX_LAYERED)		tmp2 += ", LAYERED";
 		if (!tmp2.IsEmpty()) {
-			remove_top_s(tmp2, _T(", "));
+			remove_top_s(tmp2, ", ");
 			tmp.cat_sprintf(_T(" (%s)"), tmp2.c_str());
 		}
 		add_PropLine(_T("拡張スタイル"),	tmp,	i_lst.get());
@@ -1776,16 +1776,16 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 	}
 	//インクリメンタルサーチモード
 	else if (StartsText("IncSearch", CmdStr)) {
-		SetIncSeaMode(!USAME_TI(CmdStr, "IncSearchExit"));
+		SetIncSeaMode(!SameText(CmdStr, "IncSearchExit"));
 	}
 	//キーワードクリア
-	else if (USAME_TI(CmdStr, "ClearIncKeyword")) {
+	else if (SameText(CmdStr, "ClearIncKeyword")) {
 		IncSeaWord = EmptyStr;
 		UpdateLaunchList();
 	}
 	//Migemoモード切替
-	else if (contained_wd_i(_T("MigemoMode|NormalMode"), CmdStr)) {
-		IsMigemo = USAME_TI(CmdStr, "MigemoMode")? (!IsMigemo && usr_Migemo->DictReady) : false;
+	else if (contained_wd_i("MigemoMode|NormalMode", CmdStr)) {
+		IsMigemo = SameText(CmdStr, "MigemoMode")? (!IsMigemo && usr_Migemo->DictReady) : false;
 		UpdateLaunchList();
 	}
 	//インクリメンタルサーチ
@@ -1793,7 +1793,7 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 		UpdateLaunchList();
 	}
 	//名前の変更
-	else if (USAME_TI(CmdStr, "RenameDlg")) {
+	else if (SameText(CmdStr, "RenameDlg")) {
 		if (cfp) {
 			UnicodeString new_name = cfp->b_name;
 			if (input_query_ex(USTR_Rename, _T("名前"), &new_name)) {
@@ -1807,7 +1807,7 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 		}
 	}
 	//削除
-	else if (USAME_TI(CmdStr, "Delete")) {
+	else if (SameText(CmdStr, "Delete")) {
 		if (cfp && !cfp->is_up) {
 			try {
 				if (msgbox_Sure(LoadUsrMsg(USTR_DeleteQ,
@@ -1830,7 +1830,7 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 		}
 	}
 	//ディレクトリの作成
-	else if (USAME_TI(CmdStr, "CreateDir")) {
+	else if (SameText(CmdStr, "CreateDir")) {
 		InputExDlg->IpuntExMode = INPEX_CRE_DIR;
 		InputExDlg->InputComboBox->Text = EmptyStr;
 		UnicodeString inpstr = (InputExDlg->ShowModal()==mrOk)? InputExDlg->InputComboBox->Text : EmptyStr;
@@ -1843,11 +1843,11 @@ void __fastcall TAppListDlg::LaunchListBoxKeyDown(TObject *Sender, WORD &Key, TS
 		}
 	}
 	//プロパティ
-	else if (USAME_TI(CmdStr, "PropertyDlg")) {
+	else if (SameText(CmdStr, "PropertyDlg")) {
 		PropertyItem->Click();
 	}
 	//親ディレクトリへ
-	else if (USAME_TI(get_CmdStr(CmdStr), "ToParent")) {
+	else if (SameText(get_CmdStr(CmdStr), "ToParent")) {
 		if (!SameText(CurLaunchPath, LaunchPath)) {
 			UnicodeString l_fnam = ExcludeTrailingPathDelimiter(CurLaunchPath);
 			CurLaunchPath = get_parent_path(CurLaunchPath);

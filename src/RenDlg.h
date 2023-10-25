@@ -268,7 +268,6 @@ private:	// ƒ†[ƒU[éŒ¾
 		org_SttBar1WndProc(msg);
 	}
 
-
 	void __fastcall WmFormShowed(TMessage &msg);
 
 	void __fastcall WmDpiChanged(TMessage &msg)

@@ -377,27 +377,27 @@ void __fastcall TFindFileDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftStat
 	if (SpecialKeyProc(this, Key, Shift)) return;
 
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+D")) set_focus_GroupBox(DateGroupBox);
-	else if (USAME_TI(KeyStr, "Alt+S")) set_focus_GroupBox(SizeGroupBox);
-	else if (USAME_TI(KeyStr, "Alt+A")) set_focus_GroupBox(AttrGroupBox);
-	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(SubDirCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+V")) invert_CheckBox(ArcCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+X")) invert_CheckBox(ExtraCheckBox);
+	if		(SameText(KeyStr, "Alt+D")) set_focus_GroupBox(DateGroupBox);
+	else if (SameText(KeyStr, "Alt+S")) set_focus_GroupBox(SizeGroupBox);
+	else if (SameText(KeyStr, "Alt+A")) set_focus_GroupBox(AttrGroupBox);
+	else if (SameText(KeyStr, "Alt+R")) invert_CheckBox(SubDirCheckBox);
+	else if (SameText(KeyStr, "Alt+V")) invert_CheckBox(ArcCheckBox);
+	else if (SameText(KeyStr, "Alt+X")) invert_CheckBox(ExtraCheckBox);
 	else if (ExtPanel->Visible) {
-		if		(USAME_TI(KeyStr, "Alt+B")) set_focus_GroupBox(RateGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+C")) set_focus_GroupBox(CodeGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+E")) set_focus_GroupBox(ExifGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+F")) set_focus_GroupBox(FrmtGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+G")) set_focus_GroupBox(TagGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+I")) set_focus_GroupBox(PropGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+L")) set_focus_GroupBox(LCntGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+N")) set_focus_GroupBox(IconGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+O")) set_focus_GroupBox(OtherGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+P")) set_focus_GroupBox(FpsGroupBox);
-		else if (USAME_TI(KeyStr, "Alt+T")) {
+		if		(SameText(KeyStr, "Alt+B")) set_focus_GroupBox(RateGroupBox);
+		else if (SameText(KeyStr, "Alt+C")) set_focus_GroupBox(CodeGroupBox);
+		else if (SameText(KeyStr, "Alt+E")) set_focus_GroupBox(ExifGroupBox);
+		else if (SameText(KeyStr, "Alt+F")) set_focus_GroupBox(FrmtGroupBox);
+		else if (SameText(KeyStr, "Alt+G")) set_focus_GroupBox(TagGroupBox);
+		else if (SameText(KeyStr, "Alt+I")) set_focus_GroupBox(PropGroupBox);
+		else if (SameText(KeyStr, "Alt+L")) set_focus_GroupBox(LCntGroupBox);
+		else if (SameText(KeyStr, "Alt+N")) set_focus_GroupBox(IconGroupBox);
+		else if (SameText(KeyStr, "Alt+O")) set_focus_GroupBox(OtherGroupBox);
+		else if (SameText(KeyStr, "Alt+P")) set_focus_GroupBox(FpsGroupBox);
+		else if (SameText(KeyStr, "Alt+T")) {
 			if (!set_focus_GroupBox(TimeGroupBox)) set_focus_GroupBox(TextGroupBox);
 		}
-		else if (USAME_TI(KeyStr, "Alt+W")) {
+		else if (SameText(KeyStr, "Alt+W")) {
 			if (!set_focus_GroupBox(FrSzGroupBox)) set_focus_GroupBox(ImgSzGroupBox);
 		}
 	}
@@ -541,7 +541,7 @@ void __fastcall TFindFileDlg::MaskComboBoxChange(TObject *Sender)
 				test_HtmlExt(fext)?		"ヘッダ情報(&I)" :
 				hasExif?				"Exif情報(&I)" :
 				test_Mp3Ext(fext)?		"ID3タグ情報(&I)" :
-				(test_FlacExt(fext) || USAME_TI(fext, ".opus"))?
+				(test_FlacExt(fext) || SameText(fext, ".opus"))?
 										"コメント情報(&I)" :
 				test_LnkExt(fext)?		"ショートカット情報(&I)" :
 				test_IcoExt(fext)?		"アイコン情報(&I)" :
@@ -565,13 +565,13 @@ void __fastcall TFindFileDlg::DateBtnClick(TObject *Sender)
 {
 	TButton *bp = (TButton*)Sender;
 
-	if (USAME_TS(bp->Caption, "本日")) {
+	if (SameStr(bp->Caption, "本日")) {
 		FindDate = Date();
 	}
 	else {
 		try {
 			FindDate = str_to_DateTime(DateMaskEdit->Text);
-			switch (idx_of_word_i(_T("-1D|-7D|-1M|-1Y"), bp->Caption)) {
+			switch (idx_of_word_i("-1D|-7D|-1M|-1Y", bp->Caption)) {
 			case 0: FindDate -= 1;						break;
 			case 1: FindDate -= 7;						break;
 			case 2: FindDate = IncMonth(FindDate, -1);	break;

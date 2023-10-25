@@ -108,15 +108,15 @@ void __fastcall TFindTextDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TFindTextDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CaseCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(RegExCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(MigemoCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+U")) UpRadioBtn->Checked 	   = true;
-	else if (USAME_TI(KeyStr, "Alt+D")) DownRadioBtn->Checked	   = true;
-	else if (USAME_TI(KeyStr, "Alt+B") && BinPanel->Visible)
+	if		(SameText(KeyStr, "Alt+C")) invert_CheckBox(CaseCheckBox);
+	else if (SameText(KeyStr, "Alt+R")) invert_CheckBox(RegExCheckBox);
+	else if (SameText(KeyStr, "Alt+M")) invert_CheckBox(MigemoCheckBox);
+	else if (SameText(KeyStr, "Alt+U")) UpRadioBtn->Checked 	   = true;
+	else if (SameText(KeyStr, "Alt+D")) DownRadioBtn->Checked	   = true;
+	else if (SameText(KeyStr, "Alt+B") && BinPanel->Visible)
 										invert_CheckBox(BytesCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+H")) invert_CheckBox(HighlightCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+X")) invert_CheckBox(CloseCheckBox);
+	else if (SameText(KeyStr, "Alt+H")) invert_CheckBox(HighlightCheckBox);
+	else if (SameText(KeyStr, "Alt+X")) invert_CheckBox(CloseCheckBox);
 	else SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------
@@ -246,7 +246,7 @@ void __fastcall TFindTextDlg::FindComboBoxChange(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TFindTextDlg::FindComboBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	switch (idx_of_word_i(_T("Ctrl+N|Ctrl+D|Ctrl+P|Ctrl+U|Ctrl+M|Ctrl+R|Ctrl+B"), get_KeyStr(Key, Shift))) {
+	switch (idx_of_word_i("Ctrl+N|Ctrl+D|Ctrl+P|Ctrl+U|Ctrl+M|Ctrl+R|Ctrl+B", get_KeyStr(Key, Shift))) {
 	case 0: case 1:
 		DownRadioBtn->Checked = true;
 		Repaint();  FindNextAction->Execute();

@@ -61,15 +61,15 @@ void __fastcall TFileCompDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TFileCompDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+T")) set_focus_RadioGroup(TimeRadioGroup);
-	else if (USAME_TI(KeyStr, "Alt+S")) set_focus_RadioGroup(SizeRadioGroup);
-	else if (USAME_TI(KeyStr, "Alt+H")) set_focus_RadioGroup(HashRadioGroup);
-	else if (USAME_TI(KeyStr, "Alt+I")) set_focus_RadioGroup(IdRadioGroup);
-	else if (USAME_TI(KeyStr, "Alt+D")) invert_CheckBox(CmpDirCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+P")) invert_CheckBox(CmpArcCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+O")) invert_CheckBox(SelOppCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+R")) invert_CheckBox(ReverseCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+M")) invert_CheckBox(SelMaskCheckBox);
+	if		(SameText(KeyStr, "Alt+T")) set_focus_RadioGroup(TimeRadioGroup);
+	else if (SameText(KeyStr, "Alt+S")) set_focus_RadioGroup(SizeRadioGroup);
+	else if (SameText(KeyStr, "Alt+H")) set_focus_RadioGroup(HashRadioGroup);
+	else if (SameText(KeyStr, "Alt+I")) set_focus_RadioGroup(IdRadioGroup);
+	else if (SameText(KeyStr, "Alt+D")) invert_CheckBox(CmpDirCheckBox);
+	else if (SameText(KeyStr, "Alt+P")) invert_CheckBox(CmpArcCheckBox);
+	else if (SameText(KeyStr, "Alt+O")) invert_CheckBox(SelOppCheckBox);
+	else if (SameText(KeyStr, "Alt+R")) invert_CheckBox(ReverseCheckBox);
+	else if (SameText(KeyStr, "Alt+M")) invert_CheckBox(SelMaskCheckBox);
 	else SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#CompareDlg"));
 }
 //---------------------------------------------------------------------------

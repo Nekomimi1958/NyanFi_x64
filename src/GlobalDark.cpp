@@ -408,7 +408,7 @@ void RefreshDarkMode(TForm *frm)
 		for (int i=0; i<frm->ComponentCount; i++) {
 			TComponent *cp = frm->Components[i];
 			if (cp->InheritsFrom(__classid(TWinControl))) {
-				TWinControl *wp = (TWinControl *)cp; 
+				TWinControl *wp = (TWinControl *)cp;
 				if (wp->ClassNameIs("TListbox")) {
 					::SetWindowTheme(wp->Handle, IsDarkMode? _T("DarkMode_Explorer") : NULL, NULL);
 				}
@@ -684,17 +684,17 @@ void draw_ScaledLine(TCanvas *cv, UnicodeString cmds)
 {
 	TStringDynArray cmdlst = split_strings_semicolon(cmds);
 	for (int i=0; i<cmdlst.Length; i++) {
-        UnicodeString s = cmdlst[i];
-        if (s.IsEmpty()) continue;
-   		WideChar c = split_top_wch(s);
-        int p0 = ScaledInt(get_tkn(s, ",").ToIntDef(0));
-        int p1 = ScaledInt(get_tkn_r(s, ",").ToIntDef(0));
-        switch (c) {
-        case 'W': cv->Pen->Width = p0;  break;
-        case 'M': cv->MoveTo(p0, p1);   break;
-        case 'L': cv->LineTo(p0, p1);   break;
-        }
-    }
+		UnicodeString s = cmdlst[i];
+		if (s.IsEmpty()) continue;
+		WideChar c = split_top_wch(s);
+		int p0 = ScaledInt(get_tkn(s, ',').ToIntDef(0));
+		int p1 = ScaledInt(get_tkn_r(s, ',').ToIntDef(0));
+		switch (c) {
+		case 'W': cv->Pen->Width = p0;  break;
+		case 'M': cv->MoveTo(p0, p1);   break;
+		case 'L': cv->LineTo(p0, p1);   break;
+		}
+	}
 }
 //---------------------------------------------------------------------------
 void set_ButtonMark(TSpeedButton *bp,

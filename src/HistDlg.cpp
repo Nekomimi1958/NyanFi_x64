@@ -109,7 +109,7 @@ void __fastcall TDirHistoryDlg::UpdateListBox(
 		if (!dnam.IsEmpty()) {
 			std::unique_ptr<TStringList> i_lst(new TStringList());
 			std::unique_ptr<TStringList> lnk_lst(new TStringList());
-			get_files(dnam, _T("*.lnk"), lnk_lst.get());
+			get_files(dnam, "*.lnk", lnk_lst.get());
 			for (int i=0; i<lnk_lst->Count; i++) {
 				UnicodeString fnam = lnk_lst->Strings[i];
 				UnicodeString lnam = usr_SH->get_LnkName(fnam);
@@ -167,7 +167,6 @@ void __fastcall TDirHistoryDlg::UpdateListBox(
 	}
 	Caption = tit;
 }
-
 
 //---------------------------------------------------------------------------
 //項目の描画
@@ -278,21 +277,21 @@ void __fastcall TDirHistoryDlg::DirHistListBoxKeyDown(TObject *Sender, WORD &Key
 		else if (IsFindDirHist && update_IncSeaWord(IncSeaWord, KeyStr)) {
 			UpdateListBox();
 		}
-		else if (USAME_TI(cmd_S, "ClearIncKeyword")) {
+		else if (SameText(cmd_S, "ClearIncKeyword")) {
 			IncSeaWord = EmptyStr;
 			UpdateListBox();
 		}
-		else if (contained_wd_i(_T("MigemoMode|NormalMode"), cmd_S)) {
-			IsMigemo = USAME_TI(cmd_S, "MigemoMode")? (!IsMigemo && usr_Migemo->DictReady) : false;
+		else if (contained_wd_i("MigemoMode|NormalMode", cmd_S)) {
+			IsMigemo = SameText(cmd_S, "MigemoMode")? (!IsMigemo && usr_Migemo->DictReady) : false;
 			UpdateListBox();
 		}
 		//カーソル移動
-		else if (USAME_TI(cmd_S, "IncSearchUp"))	ListBoxCursorUp(lp);
-		else if (USAME_TI(cmd_S, "IncSearchDown"))	ListBoxCursorDown(lp);
+		else if (SameText(cmd_S, "IncSearchUp"))	ListBoxCursorUp(lp);
+		else if (SameText(cmd_S, "IncSearchDown"))	ListBoxCursorDown(lp);
 		else if (MovListBoxFromFilter(lp, KeyStr))	;
 		else if	(ExeCmdListBox(lp, cmd_F))			;
 		//履歴項目の削除
-		else if (equal_DEL(KeyStr) || USAME_TI(cmd_F, "Delete")) {
+		else if (equal_DEL(KeyStr) || SameText(cmd_F, "Delete")) {
 			if (lp->ItemIndex==-1) SkipAbort();
 			if (IsFindDirHist) {
 				for (;;) {
@@ -326,16 +325,16 @@ void __fastcall TDirHistoryDlg::DirHistListBoxKeyDown(TObject *Sender, WORD &Key
 			}
 		}
 		//プロパティ
-		else if (USAME_TI(cmd_F, "PropertyDlg"))		PropertyAction->Execute();
+		else if (SameText(cmd_F, "PropertyDlg"))		PropertyAction->Execute();
 		//右クリックメニュー
 		else if (contained_wd_i(KeysStr_Popup, KeyStr))	show_PopupMenu(lp);
 		//閉じる
-		else if (USAME_TI(cmd_F, "ReturnList")) ModalResult = mrCancel;
+		else if (SameText(cmd_F, "ReturnList")) ModalResult = mrCancel;
 		else handled = false;
 	}
 	catch (EAbort &e) {
 		UnicodeString msg = e.Message;
-		if (USAME_TI(msg, "SKIP") || StartsText("Abort", msg)) msg = EmptyStr;
+		if (SameText(msg, "SKIP") || StartsText("Abort", msg)) msg = EmptyStr;
 		if (!msg.IsEmpty()) msgbox_WARN(msg); else beep_Warn();
 	}
 

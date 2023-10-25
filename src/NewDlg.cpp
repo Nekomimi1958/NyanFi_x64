@@ -110,7 +110,7 @@ void __fastcall TNewFileDlg::TplComboBoxClick(TObject *Sender)
 	UnicodeString fnam = TplComboBox->Text;
 	NewNameEdit->Text  = ExtractFileName(fnam);
 	NewNameEdit->SetFocus();
-	int p = pos_r(_T("."), NewNameEdit->Text) - 1;
+	int p = pos_r(".", NewNameEdit->Text) - 1;
 	if (p<0) p = NewNameEdit->Text.Length();
 	NewNameEdit->SelStart  = 0;
 	NewNameEdit->SelLength = p;

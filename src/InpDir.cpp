@@ -29,7 +29,7 @@ void __fastcall TInpDirDlg::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TInpDirDlg::FormShow(TObject *Sender)
 {
-	isWebSea = USAME_TI(CommandStr, "WebSearch");
+	isWebSea = SameText(CommandStr, "WebSearch");
 
 	ClientHeight = TopPanel->Height + BottomPanel->Height;
 	Constraints->MaxHeight = Height;
@@ -123,7 +123,7 @@ UnicodeString __fastcall TInpDirDlg::GetInpWord(bool path_sw)
 	wd = to_absolute_name(cv_env_str(slash_to_yen(wd)), InitialPath);
 	if (wd.IsEmpty()) wd = InitialPath;
 
-	if (ExtractFileDrive(wd).IsEmpty() || USAME_TS(wd, "\\\\")) wd = EmptyStr;
+	if (ExtractFileDrive(wd).IsEmpty() || SameStr(wd, "\\\\")) wd = EmptyStr;
 	if (path_sw && !wd.IsEmpty()) wd = IncludeTrailingPathDelimiter(ExtractFilePath(wd));
 
 	return wd;

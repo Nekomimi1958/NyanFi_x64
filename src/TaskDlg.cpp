@@ -165,7 +165,7 @@ void __fastcall TTaskManDlg::Timer1Timer(TObject *Sender)
 				cell_str = mSecToTStr(::GetTickCount() - tp->StartCount, false);
 				if (tp->RemCount>0) {
 					UnicodeString rt_str = mSecToTStr(tp->RemCount, false);
-					remove_top_text(rt_str, _T("00:"));
+					remove_top_text(rt_str, "00:");
 					cell_str.cat_sprintf(_T("\t(残り %s)"), rt_str.c_str());
 				}
 				gp->Cells[5][i] = cell_str;
@@ -283,9 +283,9 @@ void __fastcall TTaskManDlg::TaskGridKeyDown(TObject *Sender, WORD &Key, TShiftS
 	//カーソル移動
 	if (GridCursorMove(CmdStr, gp))	;
 	//閉じる
-	else if (USAME_TI(CmdStr, "ReturnList")) ModalResult = mrCancel;
+	else if (SameText(CmdStr, "ReturnList")) ModalResult = mrCancel;
 	//中止
-	else if (equal_DEL(KeyStr) || USAME_TI(CmdStr, "Delete")) CancelTaskAction->Execute();
+	else if (equal_DEL(KeyStr) || SameText(CmdStr, "Delete")) CancelTaskAction->Execute();
 
 	if (!is_DialogKey(Key)) Key = 0;
 }

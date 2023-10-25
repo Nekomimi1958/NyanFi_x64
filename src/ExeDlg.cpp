@@ -90,12 +90,12 @@ void __fastcall TExeCmdDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TExeCmdDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+L")) invert_CheckBox(LogStdOutCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+C")) invert_CheckBox(CopyStdOutCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+D")) invert_CheckBox(ListStdOutCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+S")) invert_CheckBox(SaveStdOutCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+A")) invert_CheckBox(RunAsCheckBox);
-	else if (USAME_TI(KeyStr, "Alt+E")) invert_CheckBox(UacDlgCheckBox);
+	if		(SameText(KeyStr, "Alt+L")) invert_CheckBox(LogStdOutCheckBox);
+	else if (SameText(KeyStr, "Alt+C")) invert_CheckBox(CopyStdOutCheckBox);
+	else if (SameText(KeyStr, "Alt+D")) invert_CheckBox(ListStdOutCheckBox);
+	else if (SameText(KeyStr, "Alt+S")) invert_CheckBox(SaveStdOutCheckBox);
+	else if (SameText(KeyStr, "Alt+A")) invert_CheckBox(RunAsCheckBox);
+	else if (SameText(KeyStr, "Alt+E")) invert_CheckBox(UacDlgCheckBox);
 	else SpecialKeyProc(this, Key, Shift);
 }
 

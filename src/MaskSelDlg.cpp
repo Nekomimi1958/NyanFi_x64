@@ -29,10 +29,10 @@ void __fastcall TMaskSelectDlg::FormShow(TObject *Sender)
 
 	set_ComboBox_AutoComp(this);
 
-	Caption = get_word_i_idx(_T("パスマスク|マスク選択|マッチ選択"),
-				idx_of_word_i(_T("InputPathMask|MaskSelect|MatchSelect"), CmdName));
+	Caption = get_word_i_idx("パスマスク|マスク選択|マッチ選択",
+				idx_of_word_i("InputPathMask|MaskSelect|MatchSelect", CmdName));
 
-	IsMask = !USAME_TI(CmdName, "MatchSelect");
+	IsMask = !SameText(CmdName, "MatchSelect");
 	IniFile->LoadComboBoxItems(MaskSelComboBox, IsMask? _T("MaskSelHistory") : _T("MatchSelHistory"));
 	MaskSelComboBox->Tag  = CBTAG_HISTORY | (!IsMask? CBTAG_RGEX_V|CBTAG_RGEX_E : 0);
 	MaskSelComboBox->Hint = IsMask? "; で区切って複数指定可能" : "; で区切って複数指定可能、/～/ は正規表現";

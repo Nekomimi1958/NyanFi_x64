@@ -83,7 +83,7 @@ void __fastcall TPathMaskDlg::FormResize(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TPathMaskDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
-	if (USAME_TI(get_KeyStr(Key, Shift), "Alt+O"))
+	if (SameText(get_KeyStr(Key, Shift), "Alt+O"))
 		ChgOptBtnClick(NULL);
 	else
 		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#PathMaskDlg"));

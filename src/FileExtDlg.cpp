@@ -139,6 +139,7 @@ void __fastcall TFileExtensionDlg::FormShow(TObject *Sender)
 	for (int i=0; i<sp->Count; i++) FextInfBar->Panels->Items[i]->Width = sp->Items[i]->Width;
 
 	AssignScaledFont(FextInfBar, ListFont);
+	FextInfBar->Height = get_FontHeightMgnS(FextInfBar->Font, 6);
 	for (int i=0; i<FextInfBar->Panels->Count; i++) FextInfBar->Panels->Items[i]->Text = EmptyStr;
 
 	//ファイル一覧の初期化
@@ -461,8 +462,8 @@ void __fastcall TFileExtensionDlg::IniSearchList(TListBox *lp, UnicodeString ptn
 	int idx0=-1, idx1=-1;
 	for (int i=0; i<lst->Count && idx1==-1; i++) {
 		if (i<=idx && idx0!=-1) continue;
-		UnicodeString lbuf = (lp->Tag==0) ? get_tkn_r(lst->Strings[i], '.')
-										  : ExtractFileName(lst->Strings[i]);
+		UnicodeString lbuf = (lp->Tag==0)? get_tkn_r(lst->Strings[i], '.')
+										 : ExtractFileName(lst->Strings[i]);
 		if (TRegEx::IsMatch(lbuf, ptn, opt)) ((i<=idx)? idx0 : idx1) = i;
 	}
 	idx = (idx1!=-1)? idx1 : idx0;
@@ -498,8 +499,9 @@ void __fastcall TFileExtensionDlg::FextInfBarDrawPanel(TStatusBar *StatusBar, TS
 	UnicodeString lbuf = Panel->Text;
 	int xp = ((Panel->Index==2)? Rect.Left + SizeSctWd - SCALED_THIS(4) : Rect.Right)
 				- cv->TextWidth(lbuf) - SCALED_THIS(4);
+	int yp = Rect.Top + (Rect.Height() - cv->TextHeight(lbuf)) / 2;
 	cv->Font->Color = col_fgSttBar;
-	cv->TextOut(xp, Rect.Top, lbuf);
+	cv->TextOut(xp, yp, lbuf);
 }
 //---------------------------------------------------------------------------
 void __fastcall TFileExtensionDlg::FileInfBarDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel,
@@ -621,7 +623,7 @@ void __fastcall TFileExtensionDlg::InfoListBoxKeyDown(TObject *Sender, WORD &Key
 
 	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V))
 		InfoListBoxClick(NULL);
-	else if (USAME_TI(cmd_F, "ReturnList"))
+	else if (SameText(cmd_F, "ReturnList"))
 		ModalResult = mrCancel;
 	else if (is_ToRightOpe(KeyStr, cmd_F) || equal_ENTER(KeyStr))
 		FileListBox->SetFocus();
@@ -770,15 +772,15 @@ void __fastcall TFileExtensionDlg::FileListBoxKeyDown(TObject *Sender, WORD &Key
 	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V)) {
 		FileListBoxClick(NULL);
 	}
-	else if (contained_wd_i(_T("Mark|Mark_ND"), cmd_F)) {
+	else if (contained_wd_i("Mark|Mark_ND", cmd_F)) {
 		if (!fnam.IsEmpty()) {
 			IniFile->FileMark(fnam, -1);
-			if (USAME_TI(cmd_F, "Mark")) ListBoxCursorDown(lp);
+			if (SameText(cmd_F, "Mark")) ListBoxCursorDown(lp);
 			lp->Invalidate();
 		}
 		else beep_Warn();
 	}
-	else if (USAME_TI(cmd_F, "ReturnList")) {
+	else if (SameText(cmd_F, "ReturnList")) {
 		ModalResult = mrCancel;
 	}
 	else if (is_ToLeftOpe(KeyStr, cmd_F)) {
@@ -799,7 +801,7 @@ void __fastcall TFileExtensionDlg::FileListBoxKeyDown(TObject *Sender, WORD &Key
 		ShowFileInfoAction->Execute();
 	}
 	//プロパティ
-	else if (USAME_TI(cmd_F, "PropertyDlg")) {
+	else if (SameText(cmd_F, "PropertyDlg")) {
 		PropertyAction->Execute();
 	}
 	//右クリックメニュー

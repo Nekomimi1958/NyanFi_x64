@@ -104,11 +104,11 @@ void __fastcall TFuncListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftStat
 {
 	//チェックボックスの疑似アクセラレータ処理
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(USAME_TI(KeyStr, "Alt+L")) LinkAction->Execute();
-	else if (USAME_TI(KeyStr, "Alt+N")) NameOnlyAction->Execute();
-	else if (USAME_TI(KeyStr, "Alt+M")) MigemoAction->Execute();
-	else if (USAME_TI(KeyStr, "Alt+R")) RegExAction->Execute();
-	else if (USAME_TI(KeyStr, "Alt+E")) ReqEditAction->Execute();
+	if		(SameText(KeyStr, "Alt+L")) LinkAction->Execute();
+	else if (SameText(KeyStr, "Alt+N")) NameOnlyAction->Execute();
+	else if (SameText(KeyStr, "Alt+M")) MigemoAction->Execute();
+	else if (SameText(KeyStr, "Alt+R")) RegExAction->Execute();
+	else if (SameText(KeyStr, "Alt+E")) ReqEditAction->Execute();
 	else SpecialKeyProc(this, Key, Shift, HelpContext);
 }
 //---------------------------------------------------------------------------
@@ -229,7 +229,7 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 				if (non_tab && (StartsStr('\t', lbuf) || StartsStr(' ', lbuf))) continue;
 				if (has_par && (!ContainsStr(lbuf, "(") || ContainsStr(lbuf, "="))) continue;
 				if (TRegEx::IsMatch(lbuf, fnc_ptn, opt)) {
-					if (TxtViewer->isAozora) lbuf = replace_regex(lbuf, _T("［＃「.*?」は((中|大)見出し)］"), null_TCHAR);
+					if (TxtViewer->isAozora) lbuf = TRegEx::Replace(lbuf, "［＃「.*?」は((中|大)見出し)］", EmptyStr);
 					FunctionList->AddObject(lbuf, (TObject*)(NativeInt)rp->LineNo);
 				}
 			}
@@ -365,7 +365,7 @@ void __fastcall TFuncListDlg::FuncListBoxDrawItem(TWinControl *Control, int Inde
 			TMatch mt = TRegEx::Match(lbuf, NamePtn, opt);
 			if (mt.Success) {
 				UnicodeString wd = Trim(mt.Value);
-				if (ends_tchs(_T("{([:"), wd)) delete_end(wd);
+				if (ends_tchs("{([:", wd)) delete_end(wd);
 				elist->Add(wd);
 				if (NameOnlyCheckBox->Checked) lbuf = wd;
 				lbuf.Insert(pre_str, 1);
@@ -401,23 +401,23 @@ void __fastcall TFuncListDlg::FuncListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		if (equal_ENTER(KeyStr)) {
 			CloseListAction->Execute();
 		}
-		else if	(equal_ESC(KeyStr) || USAME_TI(cmd_F, "ReturnList")) {
+		else if	(equal_ESC(KeyStr) || SameText(cmd_F, "ReturnList")) {
 			ModalResult = mrCancel;
 		}
-		else if (USAME_TI(cmd_F, "FileEdit") || USAME_TI(cmd_V, "FileEdit")) {
+		else if (SameText(cmd_F, "FileEdit") || SameText(cmd_V, "FileEdit")) {
 			ReqEditAction->Execute();
 		}
-		else if (USAME_TI(cmd_V, "FunctionList")) {
+		else if (SameText(cmd_V, "FunctionList")) {
 			InitializeList(0);	//関数一覧
 		}
-		else if (USAME_TI(cmd_V, "UserDefList")) {
+		else if (SameText(cmd_V, "UserDefList")) {
 			InitializeList(1);	//ユーザ定義文字列一覧
 		}
-		else if (USAME_TI(cmd_V, "MarkList")) {
+		else if (SameText(cmd_V, "MarkList")) {
 			InitializeList(2);	//マーク行一覧
 		}
 		//マーク
-		else if (USAME_TI(cmd_V, "Mark")) {
+		else if (SameText(cmd_V, "Mark")) {
 			if (ListMode!=2 && idx>=0 && idx<lp->Count) {
 				TxtViewer->MarkLine((int)lp->Items->Objects[idx]);
 				lp->Repaint();
@@ -430,7 +430,7 @@ void __fastcall TFuncListDlg::FuncListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		else if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V)) {
 			;
 		}
-		else if (contained_wd_i(_T("S|Ctrl+S"), KeyStr) && ListMode==1) {
+		else if (contained_wd_i("S|Ctrl+S", KeyStr) && ListMode==1) {
 			UserDefComboBox->SetFocus();
 		}
 		else if (contained_wd_i(KeyStr_Filter, KeyStr)) {
@@ -627,7 +627,7 @@ void __fastcall TFuncListDlg::GetStrList(TStringList *lst)
 			TMatch mt = TRegEx::Match(lbuf, NamePtn, opt);
 			if (mt.Success) {
 				lbuf = mt.Value;
-				if (ends_tchs(_T("([:"), lbuf)) delete_end(lbuf);
+				if (ends_tchs("([:", lbuf)) delete_end(lbuf);
 			}
 		}
 

@@ -77,7 +77,7 @@ void __fastcall TKeyListDlg::FormDestroy(TObject *Sender)
 void __fastcall TKeyListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+M"))
+	if (SameText(KeyStr, "Alt+M"))
 		MigemoAction->Execute();
 	else
 		SpecialKeyProc(this, Key, Shift);
@@ -147,7 +147,7 @@ void __fastcall TKeyListDlg::KeyTabControlChange(TObject *Sender)
 			int i=0;
 			while (i<CurList->Count) {
 				UnicodeString lbuf = get_tkn_r(CurList->Strings[i], ':');
-				UnicodeString desc = get_CmdDesc(get_CmdStr(get_tkn_r(lbuf, '=')), true, NULL,NULL, USAME_TI(id_str, "V:"));
+				UnicodeString desc = get_CmdDesc(get_CmdStr(get_tkn_r(lbuf, '=')), true, NULL,NULL, SameText(id_str, "V:"));
 				lbuf.cat_sprintf(_T(" %s"), desc.c_str());
 				if (!TRegEx::IsMatch(lbuf, ptn, opt)) CurList->Delete(i); else i++;
 			}
@@ -188,7 +188,7 @@ void __fastcall TKeyListDlg::KeyTabControlChange(TObject *Sender)
 			}
 			gp->Cells[0][i] = kbuf;
 			UnicodeString cmd = CurList->ValueFromIndex[i];
-			gp->Cells[2][i] = get_CmdDesc(cmd, true, NULL,NULL, USAME_TI(id_str, "V:"));
+			gp->Cells[2][i] = get_CmdDesc(cmd, true, NULL,NULL, SameText(id_str, "V:"));
 			gp->Cells[1][i] = del_CmdDesc(cmd);
 		}
 	}
@@ -404,7 +404,7 @@ void __fastcall TKeyListDlg::KeyListGridKeyDown(TObject *Sender, WORD &Key, TShi
 		FilterEdit->SetFocus();
 	}
 	//閉じる
-	else if (USAME_TI(cmd_F, "ReturnList")) {
+	else if (SameText(cmd_F, "ReturnList")) {
 		ModalResult = mrCancel;
 	}
 	//タブ切り換え
@@ -418,7 +418,7 @@ void __fastcall TKeyListDlg::KeyListGridKeyDown(TObject *Sender, WORD &Key, TShi
 		KeyTabControlChange(NULL);
 	}
 	//行コピー
-	else if (USAME_TI(cmd_V, "ClipCopy")) {
+	else if (SameText(cmd_V, "ClipCopy")) {
 		UnicodeString ibuf = get_tkn_r(CurList->Names[gp->Row], ':');
 		UnicodeString cmd  = CurList->ValueFromIndex[gp->Row];
 		UnicodeString dsc  = get_CmdDesc(cmd, true);

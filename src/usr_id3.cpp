@@ -176,7 +176,7 @@ bool ID3_GetInf(
 			char *sp = sbuf.get();
 			UnicodeString tmp;
 			char *s = &fbuf[0]; memcpy(sp, s, 3); sp[ 3] = '\0'; tmp = sp;
-			if (USAME_TI(tmp, "TAG")) {
+			if (SameText(tmp, "TAG")) {
 				add_PropLine(_T("ID3バージョン"), "1", lst);
 				s = &fbuf[ 3]; memcpy(sp, s, 30); sp[30] = '\0'; tmp = sp;
 				lst->Add((id_min? UnicodeString("TT2=") : get_PropTitle(_T("トラック名"))) + tmp);

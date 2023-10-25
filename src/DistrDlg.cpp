@@ -543,7 +543,7 @@ void __fastcall TDistributionDlg::RegListBoxKeyDown(TObject *Sender, WORD &Key, 
 	int last_idx = lp->ItemIndex;
 	bool handled = true;
 	if		(ExeCmdListBox(lp, cmd_F))				;
-	else if (USAME_TI(cmd_F, "FileEdit"))			EditListAction->Execute();
+	else if (SameText(cmd_F, "FileEdit"))			EditListAction->Execute();
 	else if (equal_DEL(KeyStr)) 					DelRegAction->Execute();
 	else if (UserModule->ListBoxOpeItem(KeyStr))	;
 	else if (ListListBox->Visible && is_ToRightOpe(KeyStr, cmd_F))
@@ -584,7 +584,7 @@ void __fastcall TDistributionDlg::ListListBoxKeyDown(TObject *Sender, WORD &Key,
 
 	bool handled = true;
 	if		(ExeCmdListBox(lp, cmd_F))		;
-	else if (USAME_TI(cmd_F, "FileEdit"))	EditListAction->Execute();
+	else if (SameText(cmd_F, "FileEdit"))	EditListAction->Execute();
 	else if (is_ToLeftOpe(KeyStr, cmd_F))	RegListBox->SetFocus();
 	else handled = false;
 

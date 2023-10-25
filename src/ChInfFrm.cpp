@@ -91,7 +91,7 @@ void __fastcall TCharInfoForm::UpdateChar(
 	}
 
 	if (!c.IsEmpty()) {
-		CharPanel->Caption = SameStr(c, '&')? _T("&&") : c.c_str();
+		CharPanel->Caption = SameStr(c, "&")? _T("&&") : c.c_str();
 
 		//欠損、改行のチェック
 		bool nc, is_cr;
@@ -131,7 +131,7 @@ void __fastcall TCharInfoForm::UpdateChar(
 				if		(k>=16 && k<=47) tp_str += "第一水準漢字";
 				else if (k>=48 && k<=84) tp_str += "第二水準漢字";
 				else tp_str += get_word_i_idx(
-						_T("|記号|記号|英数字|ひらがな|カタカナ|ギリシア文字|キリル文字|罫線素片"), k);
+						"|記号|記号|英数字|ひらがな|カタカナ|ギリシア文字|キリル文字|罫線素片", k);
 			}
 			else if (byt_jis.Length==9 && byt_jis[3]=='D') {
 				cd_str.cat_sprintf(_T("%02X%02X (X0212)"), byt_jis[4], byt_jis[5]);

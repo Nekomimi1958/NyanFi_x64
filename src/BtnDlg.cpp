@@ -159,7 +159,7 @@ void __fastcall TToolBtnDlg::BtnCmdsComboBoxChange(TObject *Sender)
 
 		if (!inam.IsEmpty()) IconEdit->Text = inam;
 	}
-	else if (remove_top_text(s, _T("PopupMainMenu_")) && s.Length()==1 && CaptionEdit->Text.IsEmpty()) {
+	else if (remove_top_text(s, "PopupMainMenu_") && s.Length()==1 && CaptionEdit->Text.IsEmpty()) {
 		int idx = pos_i(s[1], "FESVLTOH") - 1;
 		if (idx>=0 && idx<NyanFiForm->MainMenu1->Items->Count) {
 			CaptionEdit->Text = NyanFiForm->MainMenu1->Items->Items[idx]->Caption;
@@ -175,25 +175,25 @@ void __fastcall TToolBtnDlg::RefCmdsBtnClick(TObject *Sender)
 	UnicodeString cmd = get_CmdStr(BtnCmdsComboBox->Text);
 
 	//ディレクトリ
-	if (contained_wd_i(_T("ChangeDir|ChangeOppDir|CopyTo|MoveTo|OpenByExp|PlayList|SubDirList"), cmd)) {
+	if (contained_wd_i("ChangeDir|ChangeOppDir|CopyTo|MoveTo|OpenByExp|PlayList|SubDirList", cmd)) {
 		UnicodeString dnam;
 		if (UserModule->SelectDirEx(_T("コマンドパラメータの指定"), dnam)) {
 			BtnCmdsComboBox->Text = UnicodeString().sprintf(_T("%s_\"%s\""), cmd.c_str(), dnam.c_str());
 		}
 	}
 	//ファイル
-	else if (contained_wd_i(_T("ExeMenuFile|FileEdit|FileRun|LoadTabGroup|LoadWorkList|OpenByApp|OpenByWin|TextViewer"), cmd)) {
+	else if (contained_wd_i("ExeMenuFile|FileEdit|FileRun|LoadTabGroup|LoadWorkList|OpenByApp|OpenByWin|TextViewer", cmd)) {
 		UserModule->PrepareOpenDlg(_T("コマンドパラメータの指定"), F_FILTER_ALL, NULL, RefParamPath);
 
 		UnicodeString fnam;
 		if (UserModule->OpenDlgToStr(fnam)) {
 			RefParamPath = ExtractFilePath(fnam);
-			if (contained_wd_i(_T("FileRun|OpenByWin"), cmd)) {
+			if (contained_wd_i("FileRun|OpenByWin", cmd)) {
 				UnicodeString fext = get_extension(fnam);
 				if (SameText(cmd, "FileRun") && test_LnkExt(fext)) fnam = usr_SH->get_LnkName(fnam);
 				if (test_ExeExt(fext)) IconEdit->Text = fnam = exclude_env_path(fnam);
 			}
-			else if (contained_wd_i(_T("ExeMenuFile|LoadTabGroup|LoadWorkList"), cmd)) {
+			else if (contained_wd_i("ExeMenuFile|LoadTabGroup|LoadWorkList", cmd)) {
 				fnam = to_relative_name(fnam);
 			}
 

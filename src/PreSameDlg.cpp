@@ -36,11 +36,11 @@ void __fastcall TPreSameNemeDlg::FormClose(TObject *Sender, TCloseAction &Action
 void __fastcall TPreSameNemeDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if		(contained_wd_i(_T("R|Alt+R"), KeyStr)) set_focus_RadioGroup(PreModeRadioGroup, 0);
-	else if (contained_wd_i(_T("O|Alt+O"), KeyStr)) set_focus_RadioGroup(PreModeRadioGroup, 1);
-	else if (contained_wd_i(_T("N|Alt+N"), KeyStr)) set_focus_RadioGroup(PreModeRadioGroup, 2);
-	else if (contained_wd_i(_T("S|Alt+S"), KeyStr)) set_focus_RadioGroup(PreModeRadioGroup, 3);
-	else if (contained_wd_i(_T("U|Alt+U"), KeyStr)) set_focus_RadioGroup(PreModeRadioGroup, 4);
-	else											SpecialKeyProc(this, Key, Shift);
+	if		(contained_wd_i("R|Alt+R", KeyStr)) set_focus_RadioGroup(PreModeRadioGroup, 0);
+	else if (contained_wd_i("O|Alt+O", KeyStr)) set_focus_RadioGroup(PreModeRadioGroup, 1);
+	else if (contained_wd_i("N|Alt+N", KeyStr)) set_focus_RadioGroup(PreModeRadioGroup, 2);
+	else if (contained_wd_i("S|Alt+S", KeyStr)) set_focus_RadioGroup(PreModeRadioGroup, 3);
+	else if (contained_wd_i("U|Alt+U", KeyStr)) set_focus_RadioGroup(PreModeRadioGroup, 4);
+	else										SpecialKeyProc(this, Key, Shift);
 }
 //---------------------------------------------------------------------------

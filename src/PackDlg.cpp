@@ -115,12 +115,12 @@ void __fastcall TPackArcDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TPackArcDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+F"))	{
+	if (SameText(KeyStr, "Alt+F"))	{
 		FormatRadioGroup->SetFocus();
 		if (FormatRadioGroup->ItemIndex!=-1)
 			FormatRadioGroup->Buttons[FormatRadioGroup->ItemIndex]->SetFocus();
 	}
-	else if (USAME_TI(KeyStr, "Alt+O"))	{
+	else if (SameText(KeyStr, "Alt+O"))	{
 		ParamComboBox->SetFocus();
 	}
 	else {

@@ -95,7 +95,7 @@ UnicodeString LoadUsrMsg(int id, UnicodeString s)
 		"1103=ダウンロード\n";									//USTR_Download
 
 	UnicodeString ret_str = ReplaceStr(msg_lst->Values[IntToStr(id)], "／", "\r\n");
-	ret_str = s.IsEmpty()? replace_regex(ret_str, _T("%s[のをがに]?"), null_TCHAR) : ReplaceStr(ret_str, "%s", s);
+	ret_str = s.IsEmpty()? TRegEx::Replace(ret_str, "%s[のをがに]?", EmptyStr) : ReplaceStr(ret_str, "%s", s);
 	return ret_str;
 }
 //---------------------------------------------------------------------------

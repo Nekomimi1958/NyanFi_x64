@@ -151,7 +151,7 @@ void __fastcall TCmdFileListDlg::FormDestroy(TObject *Sender)
 void __fastcall TCmdFileListDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+E"))
+	if (SameText(KeyStr, "Alt+E"))
 		ReqEditAction->Execute();
 	else
 		SpecialKeyProc(this, Key, Shift);
@@ -198,7 +198,7 @@ void __fastcall TCmdFileListDlg::UpdateList()
 	//コマンドファイルの一覧を取得
 	clear_FileList(cmdfile_List);
 	std::unique_ptr<TStringList> f_lst(new TStringList());
-	get_files(ExePath, _T("*.nbt"), f_lst.get(), true);
+	get_files(ExePath, "*.nbt", f_lst.get(), true);
 
 	for (int i=0; i<f_lst->Count; i++) {
 		UnicodeString fnam = f_lst->Strings[i];
@@ -464,7 +464,7 @@ void __fastcall TCmdFileListDlg::CmdFileGridKeyDown(TObject *Sender, WORD &Key, 
 	TStringGrid *gp = (TStringGrid*)Sender;
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 	UnicodeString CmdStr = get_CmdStr(Key_to_CmdF(KeyStr));
-	int cmd_id = idx_of_word_i(_T("ReturnList|IncSearch|RenameDlg|Delete|FileEdit|TextViewer"), CmdStr);
+	int cmd_id = idx_of_word_i("ReturnList|IncSearch|RenameDlg|Delete|FileEdit|TextViewer", CmdStr);
 
 	int idx = GetGridIndex();
 	file_rec *cfp = (idx!=-1)? (file_rec*)GridItemList->Objects[idx] : NULL;

@@ -181,9 +181,9 @@ bool CIFF_GetInf(
 		CIFF_parse(fs.get(), lst, hlen, p - hlen, BigEndian);
 
 		//ISO
-		int iso   = get_ListIntVal(lst, _T("CameraISO"));
-		int a_iso = get_ListIntVal(lst, _T("AutoISO"));
-		int b_iso = get_ListIntVal(lst, _T("BaseISO"));
+		int iso   = get_ListIntVal(lst, "CameraISO");
+		int a_iso = get_ListIntVal(lst, "AutoISO");
+		int b_iso = get_ListIntVal(lst, "BaseISO");
 		if (iso==0) iso = b_iso * a_iso / 100;
 		if (iso==0) iso = b_iso;
 		if (iso>0) lst->Add(UnicodeString().sprintf(_T("34855=%u"), iso));
@@ -306,13 +306,13 @@ void EXIF_get_idf_inf(
 					if (i>0) val_str += ",";
 					unsigned int n0 = (unsigned int)fsRead_int4(fs, bsw);
 					unsigned int n1 = (unsigned int)fsRead_int4(fs, bsw);
-					if (USAME_TS(id, "GPS:"))	//GPS
+					if (SameStr(id, "GPS:"))	//GPS
 						val_str.cat_sprintf(_T("%.8f"), (n0>0 && n1>0)? 1.0*n0/n1 : 0.0);
 					else if (tag==33437)		//F
 						val_str.cat_sprintf(_T("%.1f"), (n0>0 && n1>0)? 1.0*n0/n1 : 0.0);
 					else if (tag==37386)		//焦点距離
 						val_str.cat_sprintf(_T("%umm"), (n0>0 && n1>0)? (int)((1.0*n0/n1) + 0.5) : 0);
-					else if (USAME_TS(id, "NK:") && tag==132) {	//レンズ
+					else if (SameStr(id, "NK:") && tag==132) {	//レンズ
 						if (n0>0 && n1>0) {
 							if (i<2)
 								val_str.cat_sprintf(_T("%u"), (n0>0 && n1>0)? (int)((1.0*n0/n1)+0.5) : 0);	//焦点距離
@@ -439,7 +439,7 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 	if (idx!=-1) {
 		vstr = lst->Values[vnam];
 		if (!vstr.IsEmpty()) {
-			vstr = get_word_i_idx(_T("0 ?|1 横(そのまま)|2 横(左右反転)|3 横(180度回転)|4 横(上下反転)|5 縦(左右反転 + 270度回転)|6 縦(90度回転)|7 縦(左右反転 + 90度回転)|8 縦(270度回転)"), vstr.ToIntDef(0));
+			vstr = get_word_i_idx("0 ?|1 横(そのまま)|2 横(左右反転)|3 横(180度回転)|4 横(上下反転)|5 縦(左右反転 + 270度回転)|6 縦(90度回転)|7 縦(左右反転 + 90度回転)|8 縦(270度回転)", vstr.ToIntDef(0));
 			lst->Add(tmp.sprintf(_T("%sL=%s"), vnam.c_str(), vstr.c_str()));
 		}
 	}
@@ -450,7 +450,7 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 	idx  = lst->IndexOfName(vnam);
 	if (test_FileExt(fext, ".rw2")) vstr = lst->Values["23"];
 	if (vstr.IsEmpty()) vstr = lst->Values[vnam];
-	if (vstr.IsEmpty() || USAME_TS(vstr, "0")) vstr = get_tkn_r(lst->Values["NK:2"], ',');
+	if (vstr.IsEmpty() || SameStr(vstr, "0")) vstr = get_tkn_r(lst->Values["NK:2"], ',');
 	if (!vstr.IsEmpty()) {
 		if (idx!=-1) lst->ValueFromIndex[idx] = vstr;
 		else		 lst->Add(tmp.sprintf(_T("%s=%s"), vnam.c_str(), vstr.c_str()));
@@ -469,7 +469,7 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 		if (!vstr.IsEmpty()) {
 			int n = vstr.ToIntDef(0);
 			vstr = get_word_i_idx(
-				_T("不明|マニュアル|ノーマル|絞り優先|シャッター優先|Creative|Action|ポートレート|ランドスケープ"), n);
+				"不明|マニュアル|ノーマル|絞り優先|シャッター優先|Creative|Action|ポートレート|ランドスケープ", n);
 			if (vstr.IsEmpty()) vstr = "不明";
 			lst->Add(tmp.sprintf(_T("%sL=%s"), vnam.c_str(), vstr.c_str()));
 		}
@@ -486,7 +486,7 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 				vstr = "その他";
 			}
 			else {
-				vstr = get_word_i_idx(_T("不明|平均|中央重視|スポット|マルチスポット|分割測光|部分測光"), n);
+				vstr = get_word_i_idx("不明|平均|中央重視|スポット|マルチスポット|分割測光|部分測光", n);
 				if (vstr.IsEmpty()) vstr = "不明";
 			}
 			lst->ValueFromIndex[idx] = vstr;
@@ -511,7 +511,7 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 		vstr = lst->ValueFromIndex[idx];
 		if (!vstr.IsEmpty()) {
 			vstr = get_word_i_idx(
-				_T("Auto|Sunny|Cloudy|Tungsten|Fluorescent|Flash|Custom|Black & White|Shade|Manual"), vstr.ToIntDef(-1));
+				"Auto|Sunny|Cloudy|Tungsten|Fluorescent|Flash|Custom|Black & White|Shade|Manual", vstr.ToIntDef(-1));
 			lst->ValueFromIndex[idx] = vstr;
 		}
 	}
@@ -525,9 +525,9 @@ void EXIF_format_inf(UnicodeString fext, TStringList *lst)
 			//Canon (焦点距離のみ)
 			vstr = lst->Values["CN:1.23"];
 			if (!vstr.IsEmpty()) {
-				int t = vstr.ToIntDef(0);					//T端
-				int w = get_ListIntVal(lst, _T("CN:1.24"));	//W端
-				int u = get_ListIntVal(lst, _T("CN:1.25"));	//換算単位
+				int t = vstr.ToIntDef(0);				//T端
+				int w = get_ListIntVal(lst, "CN:1.24");	//W端
+				int u = get_ListIntVal(lst, "CN:1.25");	//換算単位
 				if (t>0 && w>0 && u>0) {
 					t /=u; w /= u;
 					vstr = w;
@@ -732,9 +732,9 @@ bool EXIF_GetInf(
 					fs->Seek(top + idf_ofs, soFromBeginning);
 					EXIF_get_idf_inf(fsp, top, BigEndian, lst, "S0:");
 					//プレビュー画像情報
-					int typ  = get_ListIntVal(lst, _T("S0:259"));
-					int ptr  = get_ListIntVal(lst, _T("S0:513"));
-					int size = get_ListIntVal(lst, _T("S0:514"));
+					int typ  = get_ListIntVal(lst, "S0:259");
+					int ptr  = get_ListIntVal(lst, "S0:513");
+					int size = get_ListIntVal(lst, "S0:514");
 					if (typ==6 && ptr>0 && size>0) {
 						fs->Seek(ptr, soFromBeginning);
 						for (;;) {
@@ -857,9 +857,9 @@ bool Exif_GetImgSize(TStringList *lst, UnicodeString fext, unsigned int *w, unsi
 	//RW2
 	if (test_FileExt(fext, ".rw2.raw") && !lst->Values["4"].IsEmpty()) {
 		w_str = lst->Values["2"]; h_str = lst->Values["3"];
-		int s_w = get_ListIntVal(lst, _T("7")) - get_ListIntVal(lst, _T("5"));
+		int s_w = get_ListIntVal(lst, "7") - get_ListIntVal(lst, "5");
 		if (s_w>0) w_str = s_w;
-		int s_h = get_ListIntVal(lst, _T("6")) - get_ListIntVal(lst, _T("4"));
+		int s_h = get_ListIntVal(lst, "6") - get_ListIntVal(lst, "4");
 		if (s_h>0) h_str = s_h;
 	}
 	//X3F
@@ -872,27 +872,27 @@ bool Exif_GetImgSize(TStringList *lst, UnicodeString fext, unsigned int *w, unsi
 	}
 	else {
 		int wd = 0, hi = 0;
-		if (!ListVal_is_empty(lst, _T("40962"))) {
-			wd = get_ListIntVal(lst, _T("40962"));
-			hi = get_ListIntVal(lst, _T("40963"));
+		if (!ListVal_is_empty(lst, "40962")) {
+			wd = get_ListIntVal(lst, "40962");
+			hi = get_ListIntVal(lst, "40963");
 		}
 
 		if (!test_FileExt(fext, ".jpg.jpeg.jpe") || wd==0 || hi==0) {
-			if (!ListVal_is_empty(lst, _T("S2:256"))) {
-				wd = std::max(get_ListIntVal(lst, _T("S2:256")), wd);
-				hi = std::max(get_ListIntVal(lst, _T("S2:257")), hi);
+			if (!ListVal_is_empty(lst, "S2:256")) {
+				wd = std::max(get_ListIntVal(lst, "S2:256"), wd);
+				hi = std::max(get_ListIntVal(lst, "S2:257"), hi);
 			}
-			if (!ListVal_is_empty(lst, _T("S1:256"))) {
-				wd = std::max(get_ListIntVal(lst, _T("S1:256")), wd);
-				hi = std::max(get_ListIntVal(lst, _T("S1:257")), hi);
+			if (!ListVal_is_empty(lst, "S1:256")) {
+				wd = std::max(get_ListIntVal(lst, "S1:256"), wd);
+				hi = std::max(get_ListIntVal(lst, "S1:257"), hi);
 			}
-			if (!ListVal_is_empty(lst, _T("S0:256"))) {
-				wd = std::max(get_ListIntVal(lst, _T("S0:256")), wd);
-				hi = std::max(get_ListIntVal(lst, _T("S0:257")), hi);
+			if (!ListVal_is_empty(lst, "S0:256")) {
+				wd = std::max(get_ListIntVal(lst, "S0:256"), wd);
+				hi = std::max(get_ListIntVal(lst, "S0:257"), hi);
 			}
-			if (!ListVal_is_empty(lst, _T("256"))) {
-				wd = std::max(get_ListIntVal(lst, _T("256")), wd);
-				hi = std::max(get_ListIntVal(lst, _T("257")), hi);
+			if (!ListVal_is_empty(lst, "256")) {
+				wd = std::max(get_ListIntVal(lst, "256"), wd);
+				hi = std::max(get_ListIntVal(lst, "257"), hi);
 			}
 		}
 
@@ -906,9 +906,9 @@ bool Exif_GetImgSize(TStringList *lst, UnicodeString fext, unsigned int *w, unsi
 
 	//NEF,NRW
 	//実効サイズとサムネイルサイズを比較して画像サイズを設定
-	if (test_FileExt(fext, _T(".nef.nrw")) && !ListVal_is_empty(lst, _T("SOF:256"))) {
+	if (test_FileExt(fext, ".nef.nrw") && !ListVal_is_empty(lst, "SOF:256")) {
 		float s0 = w_str.ToIntDef(0) * h_str.ToIntDef(0);
-		float s1 = get_ListIntVal(lst, _T("SOF:256")) * get_ListIntVal(lst, _T("SOF:257"));
+		float s1 = get_ListIntVal(lst, "SOF:256") * get_ListIntVal(lst, "SOF:257");
 		if (fabs(s0/s1 - 1.0)<0.05) {	//***
 			w_str = lst->Values["SOF:256"];
 			h_str = lst->Values["SOF:257"];
@@ -917,7 +917,7 @@ bool Exif_GetImgSize(TStringList *lst, UnicodeString fext, unsigned int *w, unsi
 
 	//方向
 	if (!test_FileExt(fext, ".3fr")) {
-		int ori = get_ListIntVal(lst, _T("274"));
+		int ori = get_ListIntVal(lst, "274");
 		if (ori==6 || ori==8) std::swap(w_str, h_str);
 	}
 
@@ -1036,10 +1036,10 @@ int EXIF_DelJpgExif(
 
 		//解像度を取得
 		int rm = 2, rx = 72, ry = 72;	//デフォルト 72dpi
-		if (!ListVal_is_empty(i_lst.get(), _T("296"))) {
-			rm = get_ListIntVal(i_lst.get(), _T("296"), 2);	//dpi
-			rx = get_ListIntVal(i_lst.get(), _T("282"), 72);
-			ry = get_ListIntVal(i_lst.get(), _T("283"), 72);
+		if (!ListVal_is_empty(i_lst.get(), "296")) {
+			rm = get_ListIntVal(i_lst.get(), "296", 2);	//dpi
+			rx = get_ListIntVal(i_lst.get(), "282", 72);
+			ry = get_ListIntVal(i_lst.get(), "283", 72);
 		}
 		if (rm==3) rm = 2; else rm = 1;	//APP1用に変換
 
@@ -1079,7 +1079,7 @@ int EXIF_DelJpgExif(
 		return 0;
 	}
 	catch (EAbort &e) {
-		return USAME_TI(e.Message, "NoExif")? 1 : -1;
+		return SameText(e.Message, "NoExif")? 1 : -1;
 	}
 	catch (...) {
 		//エラー

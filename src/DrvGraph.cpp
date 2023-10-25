@@ -321,9 +321,9 @@ void __fastcall TDriveGraph::HiddenEditKeyDown(TObject *Sender, WORD &Key, TShif
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
 	UnicodeString cmd_F  = Key_to_CmdF(KeyStr);
 
-	if (contained_wd_i(_T("NextDrive|PrevDrive"), cmd_F) && DriveComboBox->Items->Count>1) {
+	if (contained_wd_i("NextDrive|PrevDrive", cmd_F) && DriveComboBox->Items->Count>1) {
 		int idx = DriveComboBox->ItemIndex;
-		if (USAME_TI(cmd_F, "NextDrive"))
+		if (SameText(cmd_F, "NextDrive"))
 			idx = (idx<DriveComboBox->Items->Count-1)? idx + 1 : 0;
 		else
 			idx = (idx>0)? idx - 1 : DriveComboBox->Items->Count-1;
@@ -334,16 +334,16 @@ void __fastcall TDriveGraph::HiddenEditKeyDown(TObject *Sender, WORD &Key, TShif
 	}
 
 	bool is_old  = OldOdrAction->Checked;
-	bool is_down = USAME_TI(cmd_F, "CursorDown") || contained_wd_i(KeysStr_CsrDown, KeyStr);
-	bool is_up	 = USAME_TI(cmd_F, "CursorUp")   || contained_wd_i(KeysStr_CsrUp,   KeyStr);
+	bool is_down = SameText(cmd_F, "CursorDown") || contained_wd_i(KeysStr_CsrDown, KeyStr);
+	bool is_up	 = SameText(cmd_F, "CursorUp")   || contained_wd_i(KeysStr_CsrUp,   KeyStr);
 	bool is_inc  =  is_old? is_down : is_up;
 	bool is_dec  = !is_old? is_down : is_up;
 	int  max_idx = DataList->Count - 1;
 
 	int idx = (is_dec && SttIndex>0)? SttIndex - 1 :
 		(is_inc && SttIndex<max_idx)? SttIndex + 1 :
-		(USAME_TI(cmd_F, "CursorTop") || equal_HOME(KeyStr))? ( is_old? 0 : max_idx) :
-		(USAME_TI(cmd_F, "CursorEnd") ||  equal_END(KeyStr))? (!is_old? 0 : max_idx) : -1;
+		(SameText(cmd_F, "CursorTop") || equal_HOME(KeyStr))? ( is_old? 0 : max_idx) :
+		(SameText(cmd_F, "CursorEnd") ||  equal_END(KeyStr))? (!is_old? 0 : max_idx) : -1;
 
 	if (idx!=-1) {
 		SetStatus(idx);
@@ -358,5 +358,3 @@ void __fastcall TDriveGraph::HiddenEditEnterExit(TObject *Sender)
 	PaintBox1->Invalidate();
 }
 //---------------------------------------------------------------------------
-
-

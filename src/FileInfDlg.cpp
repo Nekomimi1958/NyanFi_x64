@@ -486,17 +486,17 @@ void __fastcall TFileInfoDlg::InfListBoxKeyDown(TObject *Sender, WORD &Key, TShi
 		;
 	}
 	//前後のファイルへ切り替え
-	else if (FileRec && !FileRec->is_ftp && !inhNxtPre && contained_wd_i(_T("PrevFile|NextFile"), cmd_V)) {
+	else if (FileRec && !FileRec->is_ftp && !inhNxtPre && contained_wd_i("PrevFile|NextFile", cmd_V)) {
 		CmdStr = cmd_V;
 		//画面を消さずに残す
 		this->Perform(WM_SETREDRAW, 0, (NativeInt)0);
 		if (SubViewer->Visible) SubViewer->Perform(WM_SETREDRAW, 0, (NativeInt)0);
 		ModalResult = mrRetry;
 	}
-	else if (USAME_TI(cmd_F, "PropertyDlg")) {
+	else if (SameText(cmd_F, "PropertyDlg")) {
 		PropertyDlgAction->Execute();
 	}
-	else if (USAME_TI(cmd_F, "ShowPreview") || USAME_TI(cmd_V, "ImgPreview")) {
+	else if (SameText(cmd_F, "ShowPreview") || SameText(cmd_V, "ImgPreview")) {
 		ImgPreviewAction->Execute();
 	}
 	else if (SameText(KeyStr, KeyStr_Copy)) {

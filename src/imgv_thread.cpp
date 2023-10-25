@@ -70,7 +70,7 @@ bool __fastcall TImgViewThread::IsWaiting()
 	if (!ret) {
 		for (int i=0; i<RequestList->Count && !ret; i++) {
 			UnicodeString cmd = get_pre_tab(RequestList->Strings[i]);
-			ret = contains_wd_i(cmd, _T("REDRAW|RELOAD|CLEAR"));
+			ret = contains_wd_i(cmd, "REDRAW|RELOAD|CLEAR");
 		}
 	}
 	TaskRWLock->EndRead();
@@ -162,7 +162,7 @@ void __fastcall TImgViewThread::DrawImage()
 
 	if (!v_img) return;
 
-	bool is_viewer = USAME_TS(v_img->Name, "ViewerImage");
+	bool is_viewer = SameStr(v_img->Name, "ViewerImage");
 
 	//‰ñ“]
 	if (!ImgBuff->Empty && Rotation>0) {
@@ -217,7 +217,7 @@ void __fastcall TImgViewThread::DrawImage()
 			}
 			//ç’·‚Èˆ——š—ð‚ðíœ
 			if (Img_rot_str.Length()>1)
-				Img_rot_str = replace_regex(Img_rot_str, _T("13|31|44|55|1111|3333"), null_TCHAR);
+				Img_rot_str = TRegEx::Replace(Img_rot_str, "13|31|44|55|1111|3333", EmptyStr);
 		}
 		//‰æ‘œƒtƒ@ƒCƒ‹
 		else {
@@ -376,24 +376,24 @@ void __fastcall TImgViewThread::Execute()
 			RequestList->Delete(0);
 			if (r_buf.Length>0) {
 				UnicodeString cmd = r_buf[0];
-				if		(USAME_TS(cmd, "CLEAR"))  ReqClear	= true;
-				else if (USAME_TS(cmd, "REDRAW")) ReqRedraw = true;
-				else if (USAME_TS(cmd, "RELOAD")) ReqReload = true;
-				else if (USAME_TS(cmd, "WAIT"))   ReqWait	= true;
-				else if (USAME_TS(cmd, "EMPTY"))  FileName	= FileName2 = EmptyStr;
-				else if (contains_wd_i(cmd, _T("FILE|VIDEO|USEBUF"))) {
-					ReqVideo	= USAME_TS(cmd, "VIDEO");
-					UseViewBuff = USAME_TS(cmd, "USEBUF");
+				if		(SameStr(cmd, "CLEAR"))  ReqClear	= true;
+				else if (SameStr(cmd, "REDRAW")) ReqRedraw = true;
+				else if (SameStr(cmd, "RELOAD")) ReqReload = true;
+				else if (SameStr(cmd, "WAIT"))   ReqWait	= true;
+				else if (SameStr(cmd, "EMPTY"))  FileName	= FileName2 = EmptyStr;
+				else if (contains_wd_i(cmd, "FILE|VIDEO|USEBUF")) {
+					ReqVideo	= SameStr(cmd, "VIDEO");
+					UseViewBuff = SameStr(cmd, "USEBUF");
 					if (r_buf.Length>1) FileName  = r_buf[1];
 					FileName2 = (r_buf.Length>2)? r_buf[2] : EmptyStr;
 				}
 				else if (r_buf.Length>1) {
-					if		(USAME_TS(cmd, "FITTED"))	Fitted	   = USAME_TS(r_buf[1], "1");
-					else if (USAME_TS(cmd, "GRAY"))		GrayScaled = USAME_TS(r_buf[1], "1");
-					else if (USAME_TS(cmd, "GRID"))		ShowGrid   = USAME_TS(r_buf[1], "1");
-					else if (USAME_TS(cmd, "ZOOM"))		ZoomRatio  = r_buf[1].ToIntDef(100);
-					else if (USAME_TS(cmd, "ROTATION"))	Rotation   = r_buf[1].ToIntDef(0);
-					else if (USAME_TS(cmd, "EXIFORI"))	ExifOri    = r_buf[1].ToIntDef(0);
+					if		(SameStr(cmd, "FITTED"))	Fitted	   = SameStr(r_buf[1], "1");
+					else if (SameStr(cmd, "GRAY"))		GrayScaled = SameStr(r_buf[1], "1");
+					else if (SameStr(cmd, "GRID"))		ShowGrid   = SameStr(r_buf[1], "1");
+					else if (SameStr(cmd, "ZOOM"))		ZoomRatio  = r_buf[1].ToIntDef(100);
+					else if (SameStr(cmd, "ROTATION"))	Rotation   = r_buf[1].ToIntDef(0);
+					else if (SameStr(cmd, "EXIFORI"))	ExifOri    = r_buf[1].ToIntDef(0);
 				}
 			}
 		}

@@ -84,7 +84,7 @@ void __fastcall TDiffDirDlg::FormClose(TObject *Sender, TCloseAction &Action)
 void __fastcall TDiffDirDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+S"))
+	if (SameText(KeyStr, "Alt+S"))
 		invert_CheckBox(SubDirCheckBox);
 	else
 		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_FL) _T("#DiffDir"));

@@ -127,7 +127,7 @@ void __fastcall TXmlViewer::FormDestroy(TObject *Sender)
 void __fastcall TXmlViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+A"))
+	if (SameText(KeyStr, "Alt+A"))
 		AutoAction->Execute();
 	else
 		SpecialKeyProc(this, Key, Shift);
@@ -183,7 +183,7 @@ void __fastcall TXmlViewer::AssignView(TTreeNode *TreeNode, _di_IXMLNode XMLNode
 				lbuf = XMLNode->NodeName;
 			}
 			else {
-				lbuf = get_tkn(XMLNode->XML, _T("\r\n"));
+				lbuf = get_tkn(XMLNode->XML, "\r\n");
 				if (lbuf.Pos('>')) lbuf = get_tkn(lbuf, '>') + ">";
 				//不要な xmlns を削除
 				if (XmlnsList->Count>0 && TreeNode && TreeNode->Level>0) {
@@ -218,7 +218,7 @@ UnicodeString __fastcall TXmlViewer::GetXPath(TTreeNode *Node)
 				nnam = get_tkn(nnam, ' ');
 			}
 			else {
-				nnam = get_tkn(nnam, _T(" ["));
+				nnam = get_tkn(nnam, " [");
 			}
 			ret_str.Insert("/" + nnam, 1);
 			Node = Node->Parent;
@@ -267,13 +267,13 @@ bool __fastcall TXmlViewer::MatchNode(TTreeNode *Node)
 			if (ViewMode==2)
 				s = get_tkn(lbuf, ' ');
 			else
-				s = get_tkn(lbuf, _T(" ["));
+				s = get_tkn(lbuf, " [");
 		}
 		if (AtrCheckBox->Checked) {
 			if (ViewMode==2)
 				s += get_tkn_r(lbuf, ' ');
 			else
-				s.cat_sprintf(_T(" %s"), get_tkn_r(lbuf, _T(" [")).c_str());
+				s.cat_sprintf(_T(" %s"), get_tkn_r(lbuf, " [").c_str());
 		}
 	}
 	//値
@@ -494,12 +494,12 @@ void __fastcall TXmlViewer::XmlTreeViewKeyDown(TObject *Sender, WORD &Key, TShif
 
 	TTreeNode *sp = XmlTreeView->Selected;
 	//移動
-	if		(USAME_TI(cmd_F, "CursorDown") || USAME_TI(cmd_V, "CursorDown"))	perform_Key(XmlTreeView, VK_DOWN);
-	else if (USAME_TI(cmd_F, "CursorUp")   || USAME_TI(cmd_V, "CursorUp"))		perform_Key(XmlTreeView, VK_UP);
-	else if (USAME_TI(cmd_F, "PageDown")   || USAME_TI(cmd_V, "PageDown"))		perform_Key(XmlTreeView, VK_NEXT);
-	else if (USAME_TI(cmd_F, "PageUp")	   || USAME_TI(cmd_V, "PageUp"))		perform_Key(XmlTreeView, VK_PRIOR);
-	else if (USAME_TI(cmd_F, "CursorTop")  || USAME_TI(cmd_V, "TextTop"))		perform_Key(XmlTreeView, VK_HOME);
-	else if (USAME_TI(cmd_F, "CursorEnd")  || USAME_TI(cmd_V, "TextEnd"))		perform_Key(XmlTreeView, VK_END);
+	if		(SameText(cmd_F, "CursorDown") || SameText(cmd_V, "CursorDown"))	perform_Key(XmlTreeView, VK_DOWN);
+	else if (SameText(cmd_F, "CursorUp")   || SameText(cmd_V, "CursorUp"))		perform_Key(XmlTreeView, VK_UP);
+	else if (SameText(cmd_F, "PageDown")   || SameText(cmd_V, "PageDown"))		perform_Key(XmlTreeView, VK_NEXT);
+	else if (SameText(cmd_F, "PageUp")	   || SameText(cmd_V, "PageUp"))		perform_Key(XmlTreeView, VK_PRIOR);
+	else if (SameText(cmd_F, "CursorTop")  || SameText(cmd_V, "TextTop"))		perform_Key(XmlTreeView, VK_HOME);
+	else if (SameText(cmd_F, "CursorEnd")  || SameText(cmd_V, "TextEnd"))		perform_Key(XmlTreeView, VK_END);
 
 	//開閉
 	else if (equal_ENTER(KeyStr)) {
@@ -529,17 +529,17 @@ void __fastcall TXmlViewer::XmlTreeViewKeyDown(TObject *Sender, WORD &Key, TShif
 		}
 	}
 	//検索
-	else if (USAME_TI(cmd_F, "FindDown") || USAME_TI(KeyStr, "F3")) {
+	else if (SameText(cmd_F, "FindDown") || SameText(KeyStr, "F3")) {
 		FindDownAction->Execute();
 	}
-	else if (USAME_TI(cmd_F, "FindUp")) {
+	else if (SameText(cmd_F, "FindUp")) {
 		FindUpAction->Execute();
 	}
 	else if (StartsText("IncSearch", cmd_F) || contained_wd_i(KeyStr_Filter, KeyStr)) {
 		FindEdit->SetFocus();
 	}
 	//閉じる
-	else if (USAME_TI(cmd_F, "ReturnList")) {
+	else if (SameText(cmd_F, "ReturnList")) {
 		ModalResult = mrCancel;
 	}
 	else return;

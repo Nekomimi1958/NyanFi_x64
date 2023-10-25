@@ -66,7 +66,7 @@ UnicodeString HtmConv::rel_to_abs(
 
 	for (;;) {
 		if (!StartsStr("..\\", fnam)) break;
-		int p = pos_r(_T("\\"), dnam); if (p==0) break;
+		int p = pos_r("\\", dnam); if (p==0) break;
 		dnam = dnam.SubString(1, p - 1);
 		fnam.Delete(1, 3);
 	}
@@ -181,7 +181,7 @@ void HtmConv::DelAtrBlock(TStringList *lst, UnicodeString anam, UnicodeString av
 		UnicodeString s = lst->Strings[i];
 		if (!del_sw) {
 			UnicodeString tnam = GetTag(s);
-			if (contained_wd_i(_T("DIV|SECTION|ARTICLE|NAV|TABLE|UL|OL|DL"), tnam)) {
+			if (contained_wd_i("DIV|SECTION|ARTICLE|NAV|TABLE|UL|OL|DL", tnam)) {
 				if (SameStr(GetTagAtr(s, tnam, anam.c_str()), aval)) {
 					tag = tnam;
 					t_level = 1;
@@ -511,7 +511,7 @@ void HtmConv::Convert()
 			i++;
 		}
 		else {
-			if (USAME_TS(s, "</>")) {
+			if (SameStr(s, "</>")) {
 				tmp_buf->Delete(i);
 			}
 			else {
@@ -531,16 +531,16 @@ void HtmConv::Convert()
 		UnicodeString s = tmp_buf->Strings[i];
 		UnicodeString tag = GetTag(s);
 		if (fPRE) {
-			if (USAME_TS(tag, "/PRE")) fPRE = false;
+			if (SameStr(tag, "/PRE")) fPRE = false;
 			i++;
 		}
 		else if (fXMP) {
-			if (USAME_TS(tag, "/XMP")) fXMP = false;
+			if (SameStr(tag, "/XMP")) fXMP = false;
 			i++;
 		}
 		else if (!tag.IsEmpty()) {
-			if		(USAME_TS(tag, "PRE")) fPRE = true;
-			else if (USAME_TS(tag, "XMP")) fXMP = true;
+			if		(SameStr(tag, "PRE")) fPRE = true;
+			else if (SameStr(tag, "XMP")) fXMP = true;
 			tmp_buf->Strings[i++] = Trim(s);
 		}
 		else {
@@ -606,7 +606,7 @@ void HtmConv::Convert()
 		}
 		else {
 			//<P> がブレークされたか？
-			if (fP_al>0 && contained_wd_i(_T("H1|H2|H3|H4|H5|H6|P|HR|DIV|CENTER|BLOCKQUOTE|TABLE|TR|TH|TD|UL|OL|DL|LI|PRE|XMP"), tag)) {
+			if (fP_al>0 && contained_wd_i("H1|H2|H3|H4|H5|H6|P|HR|DIV|CENTER|BLOCKQUOTE|TABLE|TR|TH|TD|UL|OL|DL|LI|PRE|XMP", tag)) {
 				FlushText();
 				fP_al--;
 			}
@@ -618,10 +618,10 @@ void HtmConv::Convert()
 				n = ((LI_level>0)? LI_level - 1 : 0) + ((DL_level>0)? DL_level - 1 : 0);
 				n *= 4;
 				indent_str = StringOfChar(_T(' '), n);
-				if (USAME_TS(tag, "DD")) indent_str += ":   ";
+				if (SameStr(tag, "DD")) indent_str += ":   ";
 			}
 			else {
-				if (USAME_TS(tag, "DT"))
+				if (SameStr(tag, "DT"))
 					n = (DL_level>0)? LI_level + DL_level - 1 : 0;
 				else
 					n = LI_level + DL_level;
@@ -630,41 +630,41 @@ void HtmConv::Convert()
 			}
 
 			//要素
-			if (USAME_TS(tag, "/")) {
+			if (SameStr(tag, "/")) {
 				if (fPRE || fXMP) {
 					UnicodeString s = trim_ex(TxtLineBuf);
 					if (s.IsEmpty() && !ToMarkdown) TxtBuf->Add(TxtLineBuf); else FlushText();
 				}
 			}
-			else if (USAME_TS(tag, "/XMP")) {
+			else if (SameStr(tag, "/XMP")) {
 				FlushText();	fXMP = false;
 			}
 			else if (fXMP) {
 				TxtLineBuf += lbuf;
 			}
-			else if (USAME_TS(tag, "P")) {
+			else if (SameStr(tag, "P")) {
 				FlushText();
 				TxtBuf->Add(EmptyStr);
 				fP_al++;
 			}
-			else if (USAME_TS(tag, "/P")) {
+			else if (SameStr(tag, "/P")) {
 				FlushText();
 				if (fP_al>0) fP_al--;
 			}
-			else if (USAME_TS(tag, "BLOCKQUOTE")) {
+			else if (SameStr(tag, "BLOCKQUOTE")) {
 				FlushText();
 				if (ToMarkdown && BQ_level==0) TxtBuf->Add(EmptyStr);
 				BQ_level++;
 			}
-			else if (USAME_TS(tag, "/BLOCKQUOTE")) {
+			else if (SameStr(tag, "/BLOCKQUOTE")) {
 				FlushText();
 				DecLevel(BQ_level);
 			}
-			else if (contained_wd_i(_T("BR|BR/|BR /"), tag)) {
+			else if (contained_wd_i("BR|BR/|BR /", tag)) {
 				if (!TxtLineBuf.IsEmpty()) FlushText(); else TxtBuf->Add(EmptyStr);
 				TxtLineBuf += indent_str;
 			}
-			else if (USAME_TS(tag, "PRE")) {
+			else if (SameStr(tag, "PRE")) {
 				FlushText();
 				if (ToMarkdown) {
 					TxtBuf->Add(EmptyStr);
@@ -672,7 +672,7 @@ void HtmConv::Convert()
 				}
 				fPRE = true;
 			}
-			else if (USAME_TS(tag, "/PRE")) {
+			else if (SameStr(tag, "/PRE")) {
 				FlushText();
 				if (ToMarkdown) {
 					TxtBuf->Add("```");
@@ -680,31 +680,31 @@ void HtmConv::Convert()
 				}
 				fPRE = false;
 			}
-			else if (USAME_TS(tag, "XMP")) {
+			else if (SameStr(tag, "XMP")) {
 				FlushText();
 				fXMP = true;
 			}
-			else if (contained_wd_i(_T("CENTER|/CENTER"), tag)) {
+			else if (contained_wd_i("CENTER|/CENTER", tag)) {
 				FlushText();
 			}
-			else if (contained_wd_i(_T("DIV|/DIV"), tag)) {
+			else if (contained_wd_i("DIV|/DIV", tag)) {
 				FlushText();
 				//指定クラスの前に罫線挿入
-				if (USAME_TS(tag, "DIV") && !InsHrClass.IsEmpty()) {
+				if (SameStr(tag, "DIV") && !InsHrClass.IsEmpty()) {
 					UnicodeString cnam = GetTagAtr(lbuf, tag, _T("CLASS"));
 					if (!cnam.IsEmpty() && ContainsText(";" + InsHrClass + ";", ";" + cnam + ";")) AddHR();
 				}
 			}
-			else if (contained_wd_i(_T("SECTION|/SECTION"), tag)) {
-				FlushText();	if (USAME_TS(tag, "SECTION") && InsHrSection) AddHR();
+			else if (contained_wd_i("SECTION|/SECTION", tag)) {
+				FlushText();	if (SameStr(tag, "SECTION") && InsHrSection) AddHR();
 			}
-			else if (contained_wd_i(_T("ARTICLE|/ARTICLE"), tag)) {
-				FlushText();	if (USAME_TS(tag, "ARTICLE") && InsHrArticle) AddHR();
+			else if (contained_wd_i("ARTICLE|/ARTICLE", tag)) {
+				FlushText();	if (SameStr(tag, "ARTICLE") && InsHrArticle) AddHR();
 			}
-			else if (contained_wd_i(_T("NAV|/NAV"), tag)) {
-				FlushText();	if (USAME_TS(tag, "NAV") && InsHrNav) AddHR();
+			else if (contained_wd_i("NAV|/NAV", tag)) {
+				FlushText();	if (SameStr(tag, "NAV") && InsHrNav) AddHR();
 			}
-			else if (contained_wd_i(_T("H1|H2|H3|H4|H5|H6"), tag)) {
+			else if (contained_wd_i("H1|H2|H3|H4|H5|H6", tag)) {
 				FlushText();
 				if (TxtBuf->Count>0) TxtBuf->Add(EmptyStr);
 				//見出し文字
@@ -713,32 +713,32 @@ void HtmConv::Convert()
 				TxtLineBuf = (idx<hlst.Length)? hlst[idx] : EmptyStr;
 				noSPC = true;
 			}
-			else if (contained_wd_i(_T("/H1|/H2|/H3|/H4|/H5|/H6"), tag)) {
+			else if (contained_wd_i("/H1|/H2|/H3|/H4|/H5|/H6", tag)) {
 				FlushText();
 				if (ToMarkdown) TxtBuf->Add(EmptyStr);
 			}
-			else if (USAME_TS(tag, "HR")) {
+			else if (SameStr(tag, "HR")) {
 				FlushText();  AddHR();
 			}
 			//箇条書き
-			else if (USAME_TS(tag, "UL")) {
+			else if (SameStr(tag, "UL")) {
 				FlushText();
 				if (LI_level==0 && ToMarkdown) TxtBuf->Add(EmptyStr);
 				LI_No[++LI_level] = -1;
 			}
-			else if (USAME_TS(tag, "OL")) {
+			else if (SameStr(tag, "OL")) {
 				FlushText();
 				if (LI_level==0 && ToMarkdown) TxtBuf->Add(EmptyStr);
 				LI_No[++LI_level] = GetTagAtr(lbuf, tag, _T("START")).ToIntDef(1);
 				tmpstr = GetTagAtr(lbuf, tag, _T("TYPE"));
 				if (tmpstr.IsEmpty()) OL_type[LI_level] = '1'; else OL_type[LI_level] = tmpstr[1];
 			}
-			else if (contained_wd_i(_T("/UL|/OL"), tag)) {
+			else if (contained_wd_i("/UL|/OL", tag)) {
 				FlushText();
 				DecLevel(LI_level);
 				if (LI_level==0 && ToMarkdown) TxtBuf->Add(EmptyStr);
 			}
-			else if (USAME_TS(tag, "LI")) {
+			else if (SameStr(tag, "LI")) {
 				FlushText();
 				if (LI_level>0) {
 					//順序付きリスト
@@ -764,33 +764,33 @@ void HtmConv::Convert()
 					noSPC = true;
 				}
 			}
-			else if (USAME_TS(tag, "DL")) {
+			else if (SameStr(tag, "DL")) {
 				FlushText();
 				if (DL_level==0 && ToMarkdown) TxtBuf->Add(EmptyStr);
 				DL_level++;
 			}
-			else if (USAME_TS(tag, "/DL")) {
+			else if (SameStr(tag, "/DL")) {
 				FlushText();
 				DecLevel(DL_level);
 			}
-			else if (USAME_TS(tag, "DT")) {
+			else if (SameStr(tag, "DT")) {
 				FlushText();
 				TxtLineBuf += indent_str;
 			}
-			else if (USAME_TS(tag, "DD")) {
+			else if (SameStr(tag, "DD")) {
 				if (DL_level>0) {
 					FlushText();
 					TxtLineBuf += indent_str;
 				}
 			}
 			//テーブル
-			else if (USAME_TS(tag, "TABLE")) {
+			else if (SameStr(tag, "TABLE")) {
 				tr_list->Clear();
 				FlushText();
 				TxtBuf->Add(EmptyStr);
 				fTABLE++;
 			}
-			else if (USAME_TS(tag, "/TABLE")) {
+			else if (SameStr(tag, "/TABLE")) {
 				tr_list->Add(TxtLineBuf);
 				if (ToMarkdown && tr_list->Count>0) {
 					//セル幅を設定
@@ -825,13 +825,13 @@ void HtmConv::Convert()
 				for (int j=0; j<tr_list->Count; j++) FlushText(tr_list->Strings[j]);
 				if (fTABLE>0) fTABLE--;
 			}
-			else if (contained_wd_i(_T("CAPTION|/CAPTION"), tag)) {
+			else if (contained_wd_i("CAPTION|/CAPTION", tag)) {
 				FlushText();
 			}
-			else if (contained_wd_i(_T("TD|TH"), tag)) {
+			else if (contained_wd_i("TD|TH", tag)) {
 				if (fTR>0) fTR = 0; else TxtLineBuf += "\t";
 			}
-			else if (USAME_TS(tag, "TR")) {
+			else if (SameStr(tag, "TR")) {
 				if (!TxtLineBuf.IsEmpty()) {
 					tr_list->Add(TxtLineBuf);
 					TxtLineBuf = EmptyStr;
@@ -839,25 +839,25 @@ void HtmConv::Convert()
 				fTR = 1;
 			}
 			//ルビ
-			else if (USAME_TS(tag, "RUBY")) {
+			else if (SameStr(tag, "RUBY")) {
 				fRUBY = true;
 				fRP   = fRT = false;
 			}
-			else if (USAME_TS(tag, "/RUBY")) {
+			else if (SameStr(tag, "/RUBY")) {
 				fRUBY = false;
 			}
-			else if (USAME_TS(tag, "RP")) {
+			else if (SameStr(tag, "RP")) {
 				fRP   = true;
 			}
-			else if (USAME_TS(tag, "RT")) {
+			else if (SameStr(tag, "RT")) {
 				fRT = true;
 				if (!fRP) TxtLineBuf += "(";
 			}
-			else if (USAME_TS(tag, "/RT")) {
+			else if (SameStr(tag, "/RT")) {
 				if (!fRP) TxtLineBuf += ")";
 			}
 			//リンク
-			else if (USAME_TS(tag, "A")) {
+			else if (SameStr(tag, "A")) {
 				HrefStr = ToAbsUrl(GetTagAtr(lbuf, tag, _T("HREF")));
 				if (is_rel_url(HrefStr) && !FileName.IsEmpty()) {
 					UnicodeString fnam = ReplaceStr(get_tkn(HrefStr, '#'), "/", "\\");
@@ -871,7 +871,7 @@ void HtmConv::Convert()
 				if (ToMarkdown && !HrefStr.IsEmpty()) TxtLineBuf += "[";
 				noSPC = true;
 			}
-			else if (USAME_TS(tag, "/A")) {
+			else if (SameStr(tag, "/A")) {
 				if (!HrefStr.IsEmpty()) {
 					if (ToMarkdown)
 						TxtLineBuf.cat_sprintf(_T("](%s)"), HrefStr.c_str());
@@ -881,20 +881,20 @@ void HtmConv::Convert()
 				HrefStr = EmptyStr;
 			}
 
-			else if (USAME_TS(tag, "HEAD")) {
+			else if (SameStr(tag, "HEAD")) {
 				Skip = true;
 			}
-			else if (contained_wd_i(_T("/HEAD|BODY"), tag)) {
+			else if (contained_wd_i("/HEAD|BODY", tag)) {
 				Skip   = false;
 				fTITLE = 0;
 			}
-			else if (USAME_TS(tag, "TITLE")) {
+			else if (SameStr(tag, "TITLE")) {
 				fTITLE ++;
 			}
-			else if (USAME_TS(tag, "/TITLE")) {
+			else if (SameStr(tag, "/TITLE")) {
 				fTITLE = 0;
 			}
-			else if (tag=="BASE") {
+			else if (SameStr(tag, "BASE")) {
 				tmpstr = GetTagAtr(lbuf, tag, _T("HREF"));
 				if (!tmpstr.IsEmpty()) {
 					if (!EndsStr("/", tmpstr)) tmpstr += "/";
@@ -903,30 +903,30 @@ void HtmConv::Convert()
 					Scheme   = get_tkn(TopLevel, "//");
 				}
 			}
-			else if (USAME_TS(tag, "META")) {
+			else if (SameStr(tag, "META")) {
 				UnicodeString mnam = GetTagAtr(lbuf, tag, _T("NAME"));
 				UnicodeString cont = GetTagAtr(lbuf, tag, _T("CONTENT"));
-				if 		(USAME_TI(mnam, "description"))	Description = cont;
-				else if (USAME_TI(mnam, "Keywords"))	Keywords	= cont;
+				if 		(SameText(mnam, "description"))	Description = cont;
+				else if (SameText(mnam, "Keywords"))	Keywords	= cont;
 			}
 
 			//Markdown の場合のみ
 			else if (ToMarkdown) {
-				if (contained_wd_i(_T("B|/B|STRONG|/STRONG"), tag)) {
+				if (contained_wd_i("B|/B|STRONG|/STRONG", tag)) {
 					TxtLineBuf += "**";
 					noSPC = true;
 				}
-				else if (contained_wd_i(_T("I|/I|EM|/EM"), tag)) {
+				else if (contained_wd_i("I|/I|EM|/EM", tag)) {
 					TxtLineBuf += "*";
 					noSPC = true;
 				}
-				else if (contained_wd_i(_T("S|/S|DEL|/DEL"), tag)) {
+				else if (contained_wd_i("S|/S|DEL|/DEL", tag)) {
 					TxtLineBuf += "~~";
 					noSPC = true;
 				}
 				//画像
-				else if (USAME_TS(tag, "IMG")) {
-					UnicodeString alt_str = def_if_empty(GetTagAtr(lbuf, tag, _T("ALT")), _T("画像"));
+				else if (SameStr(tag, "IMG")) {
+					UnicodeString alt_str = def_if_empty(GetTagAtr(lbuf, tag, _T("ALT")), "画像");
 					UnicodeString src_str = ToAbsUrl(GetTagAtr(lbuf, tag, _T("SRC")));
 					TxtLineBuf.cat_sprintf(_T("![%s](%s)"), alt_str.c_str(), src_str.c_str());
 				}

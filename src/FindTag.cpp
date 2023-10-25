@@ -245,30 +245,30 @@ void __fastcall TFindTagForm::TagsListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 		ModalResult = mrCancel;
 	else if (update_IncSeaWord(IncSeaWord, KeyStr))
 		UpdateList();
-	else if (USAME_TI(cmd_S, "ClearIncKeyword")) {
+	else if (SameText(cmd_S, "ClearIncKeyword")) {
 		IncSeaWord = EmptyStr;
 		UpdateList();
 	}
-	else if (USAME_TI(cmd_S, "MigemoMode")) {
+	else if (SameText(cmd_S, "MigemoMode")) {
 		IsMigemo = (!IsMigemo && usr_Migemo->DictReady);
 		UpdateList();
 	}
-	else if (USAME_TI(cmd_F, "TextViewer")) {
+	else if (SameText(cmd_F, "TextViewer")) {
 		TagCmd = "VIEW";
 		TagsListBoxDblClick(Sender);
 	}
-	else if (USAME_TI(cmd_F, "FileEdit") || USAME_TI(cmd_V, "FileEdit")) {
+	else if (SameText(cmd_F, "FileEdit") || SameText(cmd_V, "FileEdit")) {
 		TagCmd = "EDIT";
 		TagsListBoxDblClick(Sender);
 	}
 	else if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, cmd_V)) {
-		if (USAME_TI(cmd_V, "ClipCopy")) {
+		if (SameText(cmd_V, "ClipCopy")) {
 			TagCmd = "COPY";
 			ModalResult = mrOk;
 		}
 	}
-	else if (USAME_TI(cmd_S, "IncSearchUp"))	ListBoxCursorUp(lp);
-	else if (USAME_TI(cmd_S, "IncSearchDown"))	ListBoxCursorDown(lp);
+	else if (SameText(cmd_S, "IncSearchUp"))	ListBoxCursorUp(lp);
+	else if (SameText(cmd_S, "IncSearchDown"))	ListBoxCursorDown(lp);
 	else if (MovListBoxFromFilter(lp, KeyStr))	;
 	else if (contained_wd_i(KeysStr_Popup, KeyStr)) show_PopupMenu(lp);
 	else handled = false;
@@ -323,11 +323,11 @@ void __fastcall TFindTagForm::InfoListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	else if (equal_ESC(KeyStr)) {
 		ModalResult = mrCancel;
 	}
-	else if (USAME_TI(cmd_F, "TextViewer")) {
+	else if (SameText(cmd_F, "TextViewer")) {
 		TagCmd = "VIEW";
 		InfoListBoxDblClick(Sender);
 	}
-	else if (USAME_TI(cmd_F, "FileEdit") || USAME_TI(cmd_V, "FileEdit")) {
+	else if (SameText(cmd_F, "FileEdit") || SameText(cmd_V, "FileEdit")) {
 		TagCmd = "EDIT";
 		InfoListBoxDblClick(Sender);
 	}

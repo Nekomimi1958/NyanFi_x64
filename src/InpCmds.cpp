@@ -88,7 +88,7 @@ void __fastcall TInpCmdsDlg::FormDestroy(TObject *Sender)
 void __fastcall TInpCmdsDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Alt+M")) {
+	if (SameText(KeyStr, "Alt+M")) {
 		invert_CheckBox(MigemoCheckBox);
 	}
 	else if (SpecialKeyProc(this, Key, Shift)) {
@@ -149,7 +149,7 @@ void __fastcall TInpCmdsDlg::SetList()
 	if (!IsRef) {
 		//コマンドファイル
 		std::unique_ptr<TStringList> f_lst(new TStringList());
-		get_files(ExePath, _T("*.nbt"), f_lst.get(), true);
+		get_files(ExePath, "*.nbt", f_lst.get(), true);
 		for (int i=0; i<f_lst->Count; i++) ItemList->Add("@" + to_relative_name(f_lst->Strings[i]));
 
 		//エイリアス
@@ -417,7 +417,7 @@ void __fastcall TInpCmdsDlg::Filter()
 	}
 
 	//絞り込み
-	if (lst->Count>0 && !contained_wd_i(_T("*|?| "), kwd)) {
+	if (lst->Count>0 && !contained_wd_i("*|?| ", kwd)) {
 		UnicodeString ptn = (isFuzzy && !MigemoCheckBox->Checked)?
 			get_fuzzy_ptn(kwd, true) :
 			usr_Migemo->GetRegExPtn(MigemoCheckBox->Checked, kwd, (SubComboBox->Tag==1)? 1 : 0);

@@ -161,7 +161,7 @@ void __fastcall TFtpConnectDlg::HostListBoxClick(TObject *Sender)
 	LastDirCheckBox->Checked = ContainsText(itm_buf[6], "LastDir");
 	SyncLRCheckBox->Checked  = ContainsText(itm_buf[6], "SyncLR");
 	PasvCheckBox->Checked	 = !ContainsText(itm_buf[6], "PORT");
-	AnonyCheckBox->Checked	 = USAME_TI(UserIdEdit->Text, "anonymous");
+	AnonyCheckBox->Checked	 = SameText(UserIdEdit->Text, "anonymous");
 }
 //---------------------------------------------------------------------------
 void __fastcall TFtpConnectDlg::HostListBoxKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)

@@ -235,19 +235,19 @@ void __fastcall TTagManDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState 
 			ModalResult = mrCancel;
 		}
 	}
-	else if (USAME_TI(KeyStr, "Alt+A")) {
+	else if (SameText(KeyStr, "Alt+A")) {
 		AndAction->Execute();
 	}
-	else if (USAME_TI(KeyStr, "Alt+M")) {
+	else if (SameText(KeyStr, "Alt+M")) {
 		SelMaskAction->Execute();
 	}
-	else if (USAME_TI(KeyStr, "Alt+H")) {
+	else if (SameText(KeyStr, "Alt+H")) {
 		HideAction->Execute();
 	}
-	else if (USAME_TI(KeyStr, "Alt+R")) {
+	else if (SameText(KeyStr, "Alt+R")) {
 		ResLinkAction->Execute();
 	}
-	else if (USAME_TI(KeyStr, "Alt+O")) {
+	else if (SameText(KeyStr, "Alt+O")) {
 		ChgOptBtnClick(NULL);
 	}
 	else {
@@ -482,11 +482,11 @@ void __fastcall TTagManDlg::TagCheckListBoxKeyDown(TObject *Sender, WORD &Key, T
 		Key = VK_UP;
 	}
 	//タグの改名
-	else if (USAME_TI(cmd_F, "RenameDlg")) {
+	else if (SameText(cmd_F, "RenameDlg")) {
 		RenTagAction->Execute();
 	}
 	//タグの削除
-	else if (USAME_TI(cmd_F, "Delete")) {
+	else if (SameText(cmd_F, "Delete")) {
 		DelTagAction->Execute();
 	}
 	//全チェック/解除

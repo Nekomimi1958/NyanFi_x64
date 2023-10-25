@@ -123,7 +123,7 @@ void __fastcall TGitViewer::FormDestroy(TObject *Sender)
 void __fastcall TGitViewer::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "F5"))
+	if (SameText(KeyStr, "F5"))
 		UpdateLogAction->Execute();
 	else
 		SpecialKeyProc(this, Key, Shift, _T(HELPTOPIC_GIT) _T("#GitViewer"));
@@ -151,7 +151,7 @@ void __fastcall TGitViewer::DiffPanelResize(TObject *Sender)
 UnicodeString __fastcall TGitViewer::GitExeStr(UnicodeString prm)
 {
 	GitBusy  = true;
-	UnicodeString cmd = get_tkn(prm, " ");
+	UnicodeString cmd = get_tkn(prm, ' ');
 	if (SameText("archive", cmd)) CommitListBox->Invalidate();
 	std::unique_ptr<TStringList> o_lst(new TStringList());
 	DWORD exit_code;
@@ -166,7 +166,7 @@ UnicodeString __fastcall TGitViewer::GitExeStr(UnicodeString prm)
 		else {
 			ret_str = o_lst->Text;
 			//状態を更新
-			if (StartsText("reset HEAD", prm) || contained_wd_i(_T("add|rm"), cmd)) {
+			if (StartsText("reset HEAD", prm) || contained_wd_i("add|rm", cmd)) {
 				GitBusy = true;
 				UnicodeString stt_str = get_post_tab(UpdateStatusList());
 				GitBusy = false;
@@ -194,7 +194,7 @@ UnicodeString __fastcall TGitViewer::GitExeStr(UnicodeString prm)
 				}
 			}
 			//コミット履歴を更新
-			else if (!contained_wd_i(_T("archive|cat-file|config|difftool|gui|rev-parse|show"), cmd)) {
+			else if (!contained_wd_i("archive|cat-file|config|difftool|gui|rev-parse|show", cmd)) {
 				UpdateCommitList();
 			}
 		}
@@ -435,7 +435,7 @@ void __fastcall TGitViewer::UpdateCommitList(
 							if (!EndsStr("/HEAD", ss)) gp->branch_r = ss;
 						}
 						else {
-							gp->is_head |= StartsStr("HEAD -> ", ss) || USAME_TS(ss, "HEAD");
+							gp->is_head |= StartsStr("HEAD -> ", ss) || SameStr(ss, "HEAD");
 							if (!gp->branch.IsEmpty()) gp->branch += ",";
 							gp->branch += ss;
 						}
@@ -786,8 +786,8 @@ void __fastcall TGitViewer::BranchListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, Key_to_CmdV(KeyStr)))
 												BranchListBoxClick(BranchListBox);
 	else if (is_ToRightOpe(KeyStr, cmd_F))		CommitListBox->SetFocus();
-	else if (USAME_TI(cmd_F, "ReturnList"))		ModalResult = mrCancel;
-	else if (USAME_TI(cmd_F, "RenameDlg")) 		RenBranchAction->Execute();
+	else if (SameText(cmd_F, "ReturnList"))		ModalResult = mrCancel;
+	else if (SameText(cmd_F, "RenameDlg")) 		RenBranchAction->Execute();
 	else if (equal_ENTER(KeyStr)) 				ChckoutAction->Execute();
 	else return;
 
@@ -821,23 +821,23 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 	int xp = Rect.Left + s_4;
 	int yp = Rect.Top  + SCALED_THIS(2);
 
-	if (USAME_TS(gp->graph, "#")) {
+	if (SameStr(gp->graph, "#")) {
 		cv->Font->Color = col_LineNo;
 		out_TextEx(cv, xp, yp, gp->msg);
 	}
-	if (USAME_TS(gp->graph, "...")) {
+	if (SameStr(gp->graph, "...")) {
 		cv->Font->Color = col_LineNo;
 		out_TextEx(cv, xp, yp, "……");
 	}
 	//セパレータ
-	else if (USAME_TS(gp->graph, "-")) {
+	else if (SameStr(gp->graph, "-")) {
 		draw_Separator(cv, Rect);
 	}
 	//グラフ
 	else if (!gp->graph.IsEmpty()) {
 		git_rec *gp1 = (Index>0)? (git_rec *)lp->Items->Objects[Index - 1] : NULL;
 		git_rec *gp2 = (Index<(lp->Count - 1))? (git_rec *)lp->Items->Objects[Index + 1] : NULL;
-		UnicodeString s1 = (!gp->is_stash && gp1 && !USAME_TS(gp1->graph, "-"))? gp1->graph : EmptyStr;
+		UnicodeString s1 = (!gp->is_stash && gp1 && !SameStr(gp1->graph, "-"))? gp1->graph : EmptyStr;
 		UnicodeString s2 = (!gp->is_stash && !gp->is_index && gp2)? gp2->graph : EmptyStr;
 		TRect rc = Rect; rc.Left = xp;
 		draw_GitGraph(gp->graph, s1, s2, cv, rc, gp->is_head, (gp->is_stash || gp->is_work || gp->is_index));
@@ -848,8 +848,7 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 		out_TextEx(cv, xp, yp, gp->stash, col_Folder, col_None, s_8, is_irreg);
 		UnicodeString s = gp->msg;
 		out_TextEx(cv, xp, yp, split_tkn(s, ": "), col_GitBra, col_None, s_8, is_irreg);
-		if (is_match_regex(s, _T("^[0-9a-f]{7}\\s")))
-			out_TextEx(cv, xp, yp, split_tkn(s, ' '), col_GitHash, col_None, s_8);
+		if (TRegEx::IsMatch(s, "^[0-9a-f]{7}\\s")) out_TextEx(cv, xp, yp, split_tkn(s, ' '), col_GitHash, col_None, s_8);
 		out_TextEx(cv, xp, yp, s, col_fgList, col_None);
 	}
 	if (gp->is_work || gp->is_index) {
@@ -893,7 +892,7 @@ void __fastcall TGitViewer::CommitListBoxDrawItem(TWinControl *Control, int Inde
 			TStringDynArray b_buf = SplitString(gp->branch, ",");
 			for (int i=0; i<b_buf.Length; i++) {
 				UnicodeString ss = b_buf[i];
-				if (remove_top_s(ss, "HEAD -> ") || USAME_TS(ss, "HEAD"))
+				if (remove_top_s(ss, "HEAD -> ") || SameStr(ss, "HEAD"))
 					out_TextEx(cv, xp, yp, HEAD_Mark, col_GitHEAD, col_None, 0, is_irreg);
 				out_TextEx(cv, xp, yp, ss, col_bgList, col_GitBra, s_4, is_irreg);
 				xp += s_4;
@@ -944,11 +943,11 @@ void __fastcall TGitViewer::CommitListBoxKeyDown(TObject *Sender, WORD &Key, TSh
 												CommitListBoxClick(NULL);
 	else if (is_ToRightOpe(KeyStr, cmd_F))		DiffListBox->SetFocus();
 	else if (is_ToLeftOpe(KeyStr, cmd_F))		BranchListBox->SetFocus();
-	else if (USAME_TI(cmd_F, "ReturnList"))		ModalResult = mrCancel;
-	else if (USAME_TI(cmd_F, "IncSearch"))		FindCommitEdit->SetFocus();
-	else if (USAME_TI(cmd_F, "ShowFileInfo") || equal_ENTER(KeyStr))
+	else if (SameText(cmd_F, "ReturnList"))		ModalResult = mrCancel;
+	else if (SameText(cmd_F, "IncSearch"))		FindCommitEdit->SetFocus();
+	else if (SameText(cmd_F, "ShowFileInfo") || equal_ENTER(KeyStr))
 												CommitInfoAction->Execute();
-	else if (USAME_TI(get_CmdStr(cmd_F), "Pack"))
+	else if (SameText(get_CmdStr(cmd_F), "Pack"))
 												ArchiveAction->Execute();
 	else return;
 
@@ -1034,7 +1033,7 @@ void __fastcall TGitViewer::DiffListBoxDrawItem(TWinControl *Control, int Index,
 		out_TextEx(cv, xp, yp, ReplaceStr(lbuf, "*", "?"), col_Headline);
 	}
 	//? ファイル
-	else if (SameStr(lbuf.SubString(2, 1), '?')) {
+	else if (SameStr(lbuf.SubString(2, 1), "?")) {
 		lbuf.Delete(1, 2);
 		out_TextEx(cv, xp, yp, lbuf, get_ExtColor(get_extension(Trim(lbuf)), col_fgList));
 	}
@@ -1089,12 +1088,12 @@ void __fastcall TGitViewer::DiffListBoxKeyDown(TObject *Sender, WORD &Key, TShif
 
 	if (ExeCmdListBox(lp, cmd_F) || ExeCmdListBox(lp, Key_to_CmdV(KeyStr)))
 												DiffListBoxClick(NULL);
-	else if (USAME_TI(cmd_F, "ReturnList")) 	ModalResult = mrCancel;
+	else if (SameText(cmd_F, "ReturnList")) 	ModalResult = mrCancel;
 	else if (is_ToLeftOpe(KeyStr, cmd_F))		BranchListBox->SetFocus();
 	else if (is_ToRightOpe(KeyStr, cmd_F))		CommitListBox->SetFocus();
-	else if (USAME_TI(cmd_F, "FileEdit"))		EditFileAction->Execute();
-	else if (USAME_TI(cmd_F, "TextViewer"))		ViewFileAction->Execute();
-	else if (USAME_TI(cmd_F, "ShowFileInfo") || equal_ENTER(KeyStr))
+	else if (SameText(cmd_F, "FileEdit"))		EditFileAction->Execute();
+	else if (SameText(cmd_F, "TextViewer"))		ViewFileAction->Execute();
+	else if (SameText(cmd_F, "ShowFileInfo") || equal_ENTER(KeyStr))
 												DiffDetailAction->Execute();
 	else return;
 
@@ -1388,7 +1387,7 @@ void __fastcall TGitViewer::BlameActionExecute(TObject *Sender)
 		fnam = get_GitDiffFile2(fnam);
 
 		UnicodeString prm;
-		prm.sprintf(_T("gui blame %s %s"), get_tkn(ParentID, " ").c_str(), fnam.c_str());
+		prm.sprintf(_T("gui blame %s %s"), get_tkn(ParentID, ' ').c_str(), fnam.c_str());
 		GitExeStr(prm);
 	}
 }
@@ -1427,7 +1426,7 @@ void __fastcall TGitViewer::CommitInfoActionExecute(TObject *Sender)
 				i_lst->Add(EmptyStr);
 			}
 			else {
-				UnicodeString vstr = get_tkn_r(r_buf[i], "=");
+				UnicodeString vstr = get_tkn_r(r_buf[i], '=');
 				if (vstr.IsEmpty()) continue;
 				int flag = (i<3)? LBFLG_GIT_HASH : EndsStr("日付", nstr)? LBFLG_TIME_FIF : 0;
 				if (SameText(nstr, "親")) {
@@ -1501,7 +1500,7 @@ void __fastcall TGitViewer::CommitInfoActionExecute(TObject *Sender)
 					}
 					else if (cnt>0) {
 						if (lbuf.IsEmpty()) break;
-						if (StartsStr(get_tkn(lbuf, " "), CommitID)) continue;
+						if (StartsStr(get_tkn(lbuf, ' '), CommitID)) continue;
 						add_PropLine(" ", lbuf, i_lst.get());
 						cnt++;
 					}

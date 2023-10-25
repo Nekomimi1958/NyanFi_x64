@@ -106,7 +106,7 @@ void __fastcall TSetGitTagDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftSta
 		Key = 0;
 		ModalResult = mrCancel;
 	}
-	else if (USAME_TI(KeyStr, "Ctrl+ENTER")) {
+	else if (SameText(KeyStr, "Ctrl+ENTER")) {
 		Key = 0;
 		OkAction->Execute();
 		ModalResult = mrOk;

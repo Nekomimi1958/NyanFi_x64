@@ -69,7 +69,7 @@ UnicodeString MigemoUnit::Query(UnicodeString qstr)
 			ret_str = UnicodeString((char*)qp);
 			f_migemo_release(MigemoObj, qp);
 			//※エスケープされていない "+" が含まれている場合に対する対処
-			ret_str = replace_regex(ret_str, _T("([^\\\\])\\+"), _T("\\1\\\\+"));
+			ret_str = TRegEx::Replace(ret_str, "([^\\\\])\\+", "\\1\\\\+");
 		}
 	}
 	return ret_str;

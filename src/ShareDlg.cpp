@@ -85,7 +85,7 @@ void __fastcall TNetShareDlg::WmFormShowed(TMessage &msg)
 	else if (isLibrary) {
 		set_FormTitle(this, _T("ライブラリ"));
 		std::unique_ptr<TStringList> l_lst(new TStringList());
-		get_files(LibraryPath, _T("*.library-ms"), l_lst.get());
+		get_files(LibraryPath, "*.library-ms", l_lst.get());
 		ShareListBox->Items->Assign(l_lst.get());
 		ListBoxSetIndex(ShareListBox, 0);
 	}
@@ -220,7 +220,7 @@ void __fastcall TNetShareDlg::UpdatePathList(
 		}
 		//ライブラリ
 		std::unique_ptr<TStringList> l_lst(new TStringList());
-		get_files(LibraryPath, _T("*.library-ms"), l_lst.get());
+		get_files(LibraryPath, "*.library-ms", l_lst.get());
 		if (l_lst->Count>0) {
 			d_lst->Add("-");
 			LibIdxBase = d_lst->Count;
@@ -311,7 +311,7 @@ void __fastcall TNetShareDlg::ShareListBoxDrawItem(TWinControl *Control, int Ind
 	cv->FillRect(Rect);
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
-	if (USAME_TS(lbuf, "-")) {
+	if (SameStr(lbuf, "-")) {
 		draw_Separator(cv, Rect, col_bgList);
 	}
 	else {
@@ -426,7 +426,7 @@ void __fastcall TNetShareDlg::ShareListBoxKeyDown(TObject *Sender, WORD &Key, TS
 
 		if (idx!=-1) {
 			UnicodeString lbuf = lp->Items->Strings[idx];
-			if (!USAME_TS(lbuf, "-")) {
+			if (!SameStr(lbuf, "-")) {
 				//ライブラリ
 				if (isLibrary || (isPC && idx>=LibIdxBase)) {
 					NyanFiForm->PopSelLibrary(lbuf, CurListTag, lp);
@@ -435,7 +435,7 @@ void __fastcall TNetShareDlg::ShareListBoxKeyDown(TObject *Sender, WORD &Key, TS
 				else if (isSelDir) {
 					UnicodeString pnam;
 					pnam = lp->Items->Strings[idx];
-					if (USAME_TS(ExtractFileName(pnam), "..")) pnam = get_parent_path(ExtractFilePath(pnam));
+					if (SameStr(ExtractFileName(pnam), "..")) pnam = get_parent_path(ExtractFilePath(pnam));
 					pnam = IncludeTrailingPathDelimiter(pnam);
 					if (rqRetPath) {
 						PathName = pnam;
@@ -465,7 +465,7 @@ void __fastcall TNetShareDlg::ShareListBoxKeyDown(TObject *Sender, WORD &Key, TS
 			PathTabControlChange(PathTabControl);
 		}
 	}
-	else if (PathTabControl->Visible && (is_ToLeftOpe(KeyStr, cmd_F) || USAME_TI(get_CmdStr(cmd_F), "ToParent"))) {
+	else if (PathTabControl->Visible && (is_ToLeftOpe(KeyStr, cmd_F) || SameText(get_CmdStr(cmd_F), "ToParent"))) {
 		int idx = PathTabControl->TabIndex;
 		if (idx>0) {
 			PathTabControl->TabIndex = idx -1;
@@ -481,7 +481,7 @@ void __fastcall TNetShareDlg::ShareListBoxKeyDown(TObject *Sender, WORD &Key, TS
 		ListBoxInitialSearch(lp, KeyStr, true);
 	}
 	//閉じる
-	else if (USAME_TI(cmd_F, "ReturnList")) {
+	else if (SameText(cmd_F, "ReturnList")) {
 		ModalResult = mrCancel;
 	}
 	else {

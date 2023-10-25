@@ -83,7 +83,6 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	set_ComboBoxText(ScrBarStyleComboBox,
 		_T("標準\nシンプル\nシンプル(3/4幅)\nシンプル(1/2幅)\nシンプル(画像)\n"));
 
-
 	FontBufList = new TStringList();
 	for (int i=0; i<FontList->Count-1; i++) {
 		TFont *f = new TFont();
@@ -958,7 +957,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	L_IniMaskComboBox->Clear();
 	for (int i=0; i<PathMaskList->Count; i++) {
 		TStringDynArray itm_buf = get_csv_array(PathMaskList->Strings[i], 3, true);
-		if (itm_buf[2].IsEmpty() || USAME_TS(itm_buf[2], "*")) continue;
+		if (itm_buf[2].IsEmpty() || SameStr(itm_buf[2], "*")) continue;
 		UnicodeString lbuf;
 		if (!itm_buf[1].IsEmpty()) lbuf.sprintf(_T(":%s:"), itm_buf[1].c_str());
 		L_IniMaskComboBox->Items->Add(lbuf + itm_buf[2]);
@@ -991,7 +990,7 @@ void __fastcall TOptionDlg::FormShow(TObject *Sender)
 	}
 
 	ColBufList->Assign(ColorList);
-	ModalColorBox->Selected = (TColor)get_ListIntVal(ColBufList, _T("ModalScr"), clBlack);
+	ModalColorBox->Selected = (TColor)get_ListIntVal(ColBufList, "ModalScr", clBlack);
 
 	AssociateListBox->Items->Assign(AssociateList);
 	EtcEditorListBox->Items->Assign(EtcEditorList);
@@ -1158,7 +1157,7 @@ bool __fastcall TOptionDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHel
 void __fastcall TOptionDlg::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	UnicodeString KeyStr = get_KeyStr(Key, Shift);
-	if (USAME_TI(KeyStr, "Ctrl+F")) {
+	if (SameText(KeyStr, "Ctrl+F")) {
 		FindEdit->SetFocus();
 		Key = 0;
 	}
@@ -1459,7 +1458,7 @@ void __fastcall TOptionDlg::SetSheet(UnicodeString prm)
 		PageControl1->ActivePage = KeySetSheet;
 	}
 	else {
-		int idx = idx_of_word_i(_T("GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV"), prm);
+		int idx = idx_of_word_i("GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV", prm);
 		if (idx!=-1) {
 			PageControl1->ActivePageIndex = idx;
 		}
@@ -1549,7 +1548,7 @@ void __fastcall TOptionDlg::RefEditorBtnClick(TObject *Sender)
 {
 	int tag = ((TComponent*)Sender)->Tag;
 	UnicodeString tit = get_word_i_idx(
-		_T("テキストエディタ|イメージエディタ|バイナリエディタ|その他のエディタ|外部テキストビュアー"), tag);
+		"テキストエディタ|イメージエディタ|バイナリエディタ|その他のエディタ|外部テキストビュアー", tag);
 	UserModule->PrepareOpenDlg(tit.c_str(), F_FILTER_EXE2);
 	UnicodeString fnam;
 	if (UserModule->OpenDlgToStr(fnam)) {
@@ -1691,11 +1690,11 @@ void __fastcall TOptionDlg::RefFontBtnClick(TObject *Sender)
 	if (idx>=0 && idx<FontComboBox->Items->Count && idx<FontBufList->Count) {
 		TFont *f = (TFont*)FontBufList->Objects[idx];
 		UserModule->FontDlg->Options.Clear();
-		if (USAME_TI(FontBufList->ValueFromIndex[idx], "テキストビュアー"))
+		if (SameText(FontBufList->ValueFromIndex[idx], "テキストビュアー"))
 			UserModule->FontDlg->Options << fdFixedPitchOnly;	//テキストビュアーは等幅
 
 		if (UserModule->FontDlgToFont(f)) {
-			if (USAME_TI(FontBufList->ValueFromIndex[idx], "ダイアログ")) {
+			if (SameText(FontBufList->ValueFromIndex[idx], "ダイアログ")) {
 				if (f->Size>10) f->Size = 10;
 				DlgFontChanged = true;
 			}
@@ -1724,7 +1723,7 @@ void __fastcall TOptionDlg::RefColBtnClick(TObject *Sender)
 		ColBufList->Values[col_nam] = IntToStr(UserModule->ColorDlg->Color);
 		lp->Repaint();
 		TagColListBox->Invalidate();
-		if (contained_wd_i(_T("bgTlBar1|bgTlBar2"), col_nam)) TlBarColChanged = true;
+		if (contained_wd_i("bgTlBar1|bgTlBar2", col_nam)) TlBarColChanged = true;
 	}
 }
 //---------------------------------------------------------------------------
@@ -1752,8 +1751,8 @@ void __fastcall TOptionDlg::DisableColActionUpdate(TObject *Sender)
 
 	((TAction*)Sender)->Enabled
 		= contained_wd_i(
-			_T("bgList2|fgSelItem|Protect|Compress|frScrKnob|bgActKnob|")
-			_T("lnScrHit|lnScrSel|frmTab|bdrLine|bdrFold|bdrFixed|TlBorder|DkPanel"),
+			"bgList2|fgSelItem|Protect|Compress|frScrKnob|bgActKnob|"
+			"lnScrHit|lnScrSel|frmTab|bdrLine|bdrFold|bdrFixed|TlBorder|DkPanel",
 			col_id);
 }
 //---------------------------------------------------------------------------
@@ -1831,7 +1830,7 @@ void __fastcall TOptionDlg::SpuitImageMouseUp(TObject *Sender, TMouseButton Butt
 				else {
 					UnicodeString col_nam = lp->Items->Names[lp->ItemIndex];
 					ColBufList->Values[col_nam] = IntToStr(col);
-					if (contained_wd_i(_T("bgTlBar1|bgTlBar2"), col_nam)) TlBarColChanged = true;
+					if (contained_wd_i("bgTlBar1|bgTlBar2", col_nam)) TlBarColChanged = true;
 				}
 				lp->Repaint();
 				if (SpuitTag!=3) TagColListBox->Invalidate();
@@ -1873,7 +1872,7 @@ void __fastcall TOptionDlg::ExtColListBoxDrawItem(TWinControl *Control, int Inde
 
 	UnicodeString lbuf = lp->Items->Strings[Index];
 	cv->Font->Color = (TColor)split_tkn(lbuf, ',').ToIntDef(col_None);
-	bool is_dot = USAME_TS(lbuf, ".");
+	bool is_dot = SameStr(lbuf, ".");
 	UnicodeString ext = ReplaceStr(lbuf, ".", " .");
 	cv->Brush->Color = col_bgList;
 
@@ -1906,10 +1905,10 @@ bool __fastcall TOptionDlg::CheckDuplExt(
 	std::unique_ptr<TStringList> dpl_lst(new TStringList());
 	TListBox *lp = ExtColListBox;
 
-	if (USAME_TS(ExtColorEdit->Text, ".")) {
+	if (SameStr(ExtColorEdit->Text, ".")) {
 		for (int i=0,idx=-1; i<lp->Count; i++) {
 			if (i==skip_idx) continue;
-			if (USAME_TS(get_tkn_r(lp->Items->Strings[i], ","), ".")) {
+			if (SameStr(get_tkn_r(lp->Items->Strings[i], ','), ".")) {
 				dpl_lst->Add(".");
 				if (idx==-1 && skip_idx==-1) lp->ItemIndex = idx = i;
 			}
@@ -1919,7 +1918,7 @@ bool __fastcall TOptionDlg::CheckDuplExt(
 		TStringDynArray x_lst = SplitString(ExtColorEdit->Text, ".");
 		for (int i=0,idx=-1; i<lp->Count; i++) {
 			if (i==skip_idx) continue;
-			UnicodeString lbuf = get_tkn_r(lp->Items->Strings[i], ",");
+			UnicodeString lbuf = get_tkn_r(lp->Items->Strings[i], ',');
 			for (int j=0; j<x_lst.Length; j++) {
 				UnicodeString fext = x_lst[j];
 				if (test_FileExt(fext, lbuf) && dpl_lst->IndexOf(fext)==-1) {
@@ -1935,7 +1934,7 @@ bool __fastcall TOptionDlg::CheckDuplExt(
 		for (int i=0; i<dpl_lst->Count; i++) {
 			if (!msg.IsEmpty()) msg += " ";
 			UnicodeString fext = dpl_lst->Strings[i];
-			if (USAME_TS(fext, "."))
+			if (SameStr(fext, "."))
 				msg += fext;
 			else
 				msg.cat_sprintf(_T(".%s"), fext.c_str());
@@ -1991,13 +1990,13 @@ void __fastcall TOptionDlg::FindXColEditChange(TObject *Sender)
 	TListBox *lp = ExtColListBox;
 	lp->ItemIndex = -1;
 	int idx = -1;
-	if (USAME_TS(kwd, ".")) {
+	if (SameStr(kwd, ".")) {
 		for (int i=0; i<lp->Count && idx==-1; i++)
-			if (USAME_TS(get_tkn_r(lp->Items->Strings[i], ","), ".")) idx = i;
+			if (SameStr(get_tkn_r(lp->Items->Strings[i], ','), ".")) idx = i;
 	}
 	else {
 		for (int i=0; i<lp->Count && idx==-1; i++)
-			if (test_FileExt(kwd, get_tkn_r(lp->Items->Strings[i], ","))) idx = i;
+			if (test_FileExt(kwd, get_tkn_r(lp->Items->Strings[i], ','))) idx = i;
 	}
 
 	lp->ItemIndex = idx;
@@ -2325,7 +2324,7 @@ UnicodeString __fastcall TOptionDlg::get_AliasInfo(UnicodeString alias)
 		UnicodeString vbuf = exclude_quot(lp->Items->ValueFromIndex[i]);
 		if (!remove_top_Dollar(vbuf)) continue;
 		if (!SameText(alias, vbuf))   continue;
-		if (USAME_TS(fext, "..")) a_inf += "[..]"; else a_inf.cat_sprintf(_T(".%s"), fext.c_str());
+		if (SameStr(fext, "..")) a_inf += "[..]"; else a_inf.cat_sprintf(_T(".%s"), fext.c_str());
 	}
 
 	UnicodeString ret_str = k_inf;
@@ -2397,11 +2396,11 @@ void __fastcall TOptionDlg::ExtToolListBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::ToolTitEditChange(TObject *Sender)
 {
-	if (starts_tchs(_T("-<>"), ToolTitEdit->Text)) {
+	if (starts_tchs("-<>", ToolTitEdit->Text)) {
 		ToolExeEdit->Text = EmptyStr;
 		ToolPrmEdit->Text = EmptyStr;
 		ToolDirEdit->Text = EmptyStr;
-		if (starts_tchs(_T("-<"), ToolTitEdit->Text)) {
+		if (starts_tchs("-<", ToolTitEdit->Text)) {
 			ToolTitEdit->Text	= ToolTitEdit->Text.SubString(1, 1);
 			ToolAliasEdit->Text = EmptyStr;
 		}
@@ -2480,9 +2479,9 @@ void __fastcall TOptionDlg::ChgToolActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::ChgToolActionUpdate(TObject *Sender)
 {
-	bool is_special = starts_tchs(_T("-<>"), ToolTitEdit->Text);
+	bool is_special = starts_tchs("-<>", ToolTitEdit->Text);
 	((TAction*)Sender)->Enabled = is_special || (!ToolTitEdit->Text.IsEmpty() && !ToolExeEdit->Text.IsEmpty());
-	ToolAliasEdit->Enabled = !starts_tchs(_T("-<"), ToolTitEdit->Text);
+	ToolAliasEdit->Enabled = !starts_tchs("-<", ToolTitEdit->Text);
 	ToolExeEdit->Enabled   = !is_special;
 	ToolPrmEdit->Enabled   = !is_special;
 	ToolDirEdit->Enabled   = !is_special;
@@ -2531,7 +2530,7 @@ void __fastcall TOptionDlg::ExtMenuListBoxClick(TObject *Sender)
 	if (lp->ItemIndex!=-1) {
 		TStringDynArray itm_buf = get_csv_array(lp->Items->Strings[lp->ItemIndex], EXTMENU_CSVITMCNT, true);
 		MenuTitEdit->Text = itm_buf[0];
-		if (starts_tchs(_T("-<"), MenuTitEdit->Text)) {
+		if (starts_tchs("-<", MenuTitEdit->Text)) {
 			MenuAliasEdit->Text 	   = EmptyStr;
 			MenuAliasLabel->Caption    = EmptyStr;
 			MenuCmdComboBox->ItemIndex = -1;
@@ -2560,21 +2559,21 @@ void __fastcall TOptionDlg::ExtMenuListBoxClick(TObject *Sender)
 		MenuIconEdit->Text		   = EmptyStr;
 	}
 
-	RefMenuPrmBtn->Enabled = USAME_TI(get_tkn(MenuCmdComboBox->Text, ' '), "ExeCommands");
+	RefMenuPrmBtn->Enabled = SameText(get_tkn(MenuCmdComboBox->Text, ' '), "ExeCommands");
 }
 
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::MenuCmdComboBoxChange(TObject *Sender)
 {
-	RefMenuPrmBtn->Enabled = USAME_TI(get_tkn(MenuCmdComboBox->Text, ' '), "ExeCommands");
+	RefMenuPrmBtn->Enabled = SameText(get_tkn(MenuCmdComboBox->Text, ' '), "ExeCommands");
 }
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::MenuTitEditChange(TObject *Sender)
 {
-	if (starts_tchs(_T("-<>"), MenuTitEdit->Text)) {
+	if (starts_tchs("-<>", MenuTitEdit->Text)) {
 		MenuCmdComboBox->ItemIndex = -1;
 		MenuPrmEdit->Text	= EmptyStr;
-		if (starts_tchs(_T("-<"), MenuTitEdit->Text)) {
+		if (starts_tchs("-<", MenuTitEdit->Text)) {
 			MenuTitEdit->Text	= MenuTitEdit->Text.SubString(1, 1);
 			MenuAliasEdit->Text = EmptyStr;
 		}
@@ -2627,10 +2626,10 @@ void __fastcall TOptionDlg::ChgMenuActionExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::ChgMenuActionUpdate(TObject *Sender)
 {
-	bool is_special = starts_tchs(_T("-<>"), MenuTitEdit->Text);
+	bool is_special = starts_tchs("-<>", MenuTitEdit->Text);
 	((TAction*)Sender)->Enabled = is_special ||
 		(!MenuTitEdit->Text.IsEmpty() && !MenuCmdComboBox->Text.IsEmpty() && !MenuPrmEdit->Text.IsEmpty());
-	MenuAliasEdit->Enabled   = !starts_tchs(_T("-<"), MenuTitEdit->Text);
+	MenuAliasEdit->Enabled   = !starts_tchs("-<", MenuTitEdit->Text);
 	MenuCmdComboBox->Enabled = !is_special;
 	MenuPrmEdit->Enabled	 = !is_special;
 }
@@ -2655,7 +2654,7 @@ void __fastcall TOptionDlg::RefCmdsBtnClick(TObject *Sender)
 
 	//通常ファイルの選択
 	if (contained_wd_i(
-		_T("ContextMenu|ExeMenuFile|FileEdit|LoadWorkList|OpenByApp|OpenByWin|OpenStandard|SelByList|SetFolderIcon|TextViewer"),
+		"ContextMenu|ExeMenuFile|FileEdit|LoadWorkList|OpenByApp|OpenByWin|OpenStandard|SelByList|SetFolderIcon|TextViewer",
 			cmd))
 	{
 		UnicodeString tit = "パラメータの指定" + subtit;
@@ -2663,7 +2662,7 @@ void __fastcall TOptionDlg::RefCmdsBtnClick(TObject *Sender)
 		UnicodeString fnam;
 		if (UserModule->OpenDlgToStr(fnam)) {
 			RefParamPath = ExtractFilePath(fnam);
-			if (contained_wd_i(_T("ContextMenu|ExeMenuFile|LoadWorkList|SelByList|SetFolderIcon"), cmd))
+			if (contained_wd_i("ContextMenu|ExeMenuFile|LoadWorkList|SelByList|SetFolderIcon", cmd))
 				fnam = to_relative_name(fnam);
 			else if (remove_top_text(fnam, ExePath))
 				fnam.Insert("%ExePath%", 1);
@@ -2851,7 +2850,7 @@ void __fastcall TOptionDlg::ChangeAssociateList(bool add)
 	if (AsoExtEdit->Text.IsEmpty() || AsoAppComboBox->Text.IsEmpty()) return;
 
 	UnicodeString s = AsoExtEdit->Text.LowerCase();
-	if (!USAME_TS(s, "..")) remove_top_s(s, '.');
+	if (!SameStr(s, "..")) remove_top_s(s, '.');
 	s.cat_sprintf(_T("=\"%s\""), AsoAppComboBox->Text.c_str());
 
 	//追加
@@ -2880,7 +2879,7 @@ void __fastcall TOptionDlg::AsoAppComboBoxDropDown(TObject *Sender)
 	std::unique_ptr<TStringList> cmd_lst(new TStringList());
 	for (int i=0; i<AssociateListBox->Count; i++) {
 		UnicodeString lbuf = exclude_quot(AssociateListBox->Items->ValueFromIndex[i]);
-		if (!StartsStr('$', lbuf) && !USAME_TS(lbuf, "-")) cmd_lst->Add(lbuf);
+		if (!StartsStr('$', lbuf) && !SameStr(lbuf, "-")) cmd_lst->Add(lbuf);
 	}
 	cmd_lst->Sort();
 
@@ -2953,7 +2952,7 @@ void __fastcall TOptionDlg::OptListBoxDrawItem(TWinControl *Control, int Index,
 	TCanvas  *cv = lp->Canvas;
 	cv->Font->Assign(lp->Font);
 
-	if (lp==EventListBox && USAME_TI(EventCmdList[Index].key, "OnNewDrive") && !State.Contains(odSelected)) {
+	if (lp==EventListBox && SameText(EventCmdList[Index].key, "OnNewDrive") && !State.Contains(odSelected)) {
 		cv->Brush->Color = get_WinColor(!OpenAddDrvCheckBox->Checked);
 		cv->Font->Color  = get_TextColor();
 	}
@@ -3053,7 +3052,7 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 		UnicodeString itm = get_csv_item(lp->Items->Strings[i], 0);
 		if (i<Index && StartsStr('>', itm))
 			sub_lvl++;
-		else if (USAME_TS(itm, "<") && sub_lvl>0)
+		else if (SameStr(itm, "<") && sub_lvl>0)
 			sub_lvl--;
 	}
 
@@ -3083,11 +3082,11 @@ void __fastcall TOptionDlg::OptMenuListBoxDrawItem(TWinControl *Control, int Ind
 		UnicodeString lbuf = minimize_str(itm_buf[0], cv, sp->Items[0]->Width - xp, true);
 		cv->TextOut(xp, yp, lbuf);
 		//エイリアス
-		if (!starts_tchs(_T("-<"), lbuf)) {
+		if (!starts_tchs("-<", lbuf)) {
 			cv->TextOut(sp->Items[0]->Width, yp, minimize_str(itm_buf[is_tool? 4 : 3], cv, sp->Items[1]->Width, true));
 		}
 		//設定
-		if (!starts_tchs(_T("-<>"), lbuf)) {
+		if (!starts_tchs("-<>", lbuf)) {
 			lbuf = EmptyStr;
 			for (int i=1; i<(is_tool? 4 : 3); i++) {
 				if (i>1) lbuf += ", ";
@@ -3240,7 +3239,7 @@ void __fastcall TOptionDlg::SetCmdCombo(
 	}
 
 	//フィルタ
-	bool is_TV = USAME_TI(modstr, "V:");
+	bool is_TV = SameText(modstr, "V:");
 	if (!kwd.IsEmpty()) {
 		std::unique_ptr<TStringList> lst(new TStringList());
 		lst->Assign(cmd_lst.get());
@@ -3286,7 +3285,7 @@ void __fastcall TOptionDlg::CmdComboBoxDrawItem(TWinControl *Control, int Index,
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::CmdComboBoxChange(TObject *Sender)
 {
-	UnicodeString cmd = get_tkn(CmdComboBox->Text," ");
+	UnicodeString cmd = get_tkn(CmdComboBox->Text, ' ');
 
 	//パラメータ項目を設定
 	std::unique_ptr<TStringList> p_list(new TStringList());
@@ -3294,22 +3293,22 @@ void __fastcall TOptionDlg::CmdComboBoxChange(TObject *Sender)
 
 	//動的な項目を設定
 	UnicodeString tmp;
-	if (contained_wd_i(_T("ChangeRegDir|ChangeOppRegDir"), cmd)) {
+	if (contained_wd_i("ChangeRegDir|ChangeOppRegDir", cmd)) {
 		for (int i=0; i<RegDirList->Count; i++) {
 			TStringDynArray itm_buf = get_csv_array(RegDirList->Strings[i], 3);
 			if (itm_buf.Length!=3 || itm_buf[0].IsEmpty()) continue;
 			p_list->Add(tmp.sprintf(_T("%s : %s"), itm_buf[0].UpperCase().c_str(), itm_buf[1].c_str()));
 		}
 	}
-	else if (USAME_TI(cmd, "Eject")) {
+	else if (SameText(cmd, "Eject")) {
 		p_list->Add(EmptyStr);
 		for (int i=0; i<DriveInfoList->Count; i++) {
 			drive_info *dp = (drive_info *)DriveInfoList->Objects[i];
 			if (dp->drv_type==DRIVE_CDROM) p_list->Add(get_tkn(dp->drive_str, ':'));
 		}
 	}
-	else if (contained_wd_i(_T("ExeExtMenu|ExeExtTool"), cmd)) {
-		TStringList *lst = USAME_TI(cmd, "ExeExtMenu")? ExtMenuList : ExtToolList;
+	else if (contained_wd_i("ExeExtMenu|ExeExtTool", cmd)) {
+		TStringList *lst = SameText(cmd, "ExeExtMenu")? ExtMenuList : ExtToolList;
 		for (int i=0; i<lst->Count; i++) {
 			UnicodeString itm = get_csv_item(lst->Strings[i], 0);
 			if (!ContainsStr(itm, "&")) continue;
@@ -3318,7 +3317,7 @@ void __fastcall TOptionDlg::CmdComboBoxChange(TObject *Sender)
 			p_list->Add(tmp.sprintf(_T("%s : %s"), ak.UpperCase().c_str(), itm.c_str()));
 		}
 	}
-	else if (USAME_TI(cmd, "ExeToolBtn")) {
+	else if (SameText(cmd, "ExeToolBtn")) {
 		TStringList *lst= ToolBtnList;
 		for (int i=0; i<lst->Count; i++) {
 			TStringDynArray itm_buf = get_csv_array(lst->Strings[i], 2, true);
@@ -3326,7 +3325,7 @@ void __fastcall TOptionDlg::CmdComboBoxChange(TObject *Sender)
 			p_list->Add(tmp.sprintf(_T("%u : %s"), i + 1, (!itm_buf[0].IsEmpty()? itm_buf[0] : itm_buf[1]).c_str()));
 		}
 	}
-	else if (USAME_TI(cmd, "ToTab")) {
+	else if (SameText(cmd, "ToTab")) {
 		p_list->Add(EmptyStr);
 		for (int i=0; i<TabList->Count; i++) {
 			UnicodeString s = get_csv_item(TabList->Strings[i], 2);
@@ -3439,7 +3438,7 @@ void __fastcall TOptionDlg::KeyListBoxDblClick(TObject *Sender)
 		UnicodeString lbl  = FKeyLabelBuf->Values[kstr];
 		UnicodeString tit = "ファンクションキー表示名の変更";
 		tit.cat_sprintf(_T(" - %s"), KeyListBuf[KeyTabControl->TabIndex]->Values[kstr].c_str());
-		UnicodeString prm;  prm.sprintf(_T("[%s]"), get_tkn_r(kstr, ":").c_str());
+		UnicodeString prm;  prm.sprintf(_T("[%s]"), get_tkn_r(kstr, ':').c_str());
 		if (input_query_ex(tit.c_str(), prm.c_str(), &lbl)) {
 			FKeyLabelBuf->Values[kstr] = lbl;
 			lp->Invalidate();
@@ -3572,7 +3571,7 @@ bool __fastcall TOptionDlg::MatchKeyItem(int idx)
 	if (!kwd.IsEmpty() && idx>=0 && idx<lp->Count) {
 		UnicodeString dsc = get_CmdDesc(lp->Items->ValueFromIndex[idx],
 								false, ExtMenuListBox->Items, ExtToolListBox->Items,
-								USAME_TI(GetCmdModeStr(), "V:"));
+								SameText(GetCmdModeStr(), "V:"));
 		found = ContainsText(dsc, kwd);
 	}
 	return found;
@@ -3680,7 +3679,7 @@ void __fastcall TOptionDlg::KeyListBoxDrawItem(TWinControl *Control, int Index, 
 	xp += cv->TextWidth("Shift+Ctrl+Alt+Space ");
 
 	UnicodeString dsc = get_CmdDesc(cmd, true,
-							ExtMenuListBox->Items, ExtToolListBox->Items, USAME_TI(GetCmdModeStr(), "V:"));
+							ExtMenuListBox->Items, ExtToolListBox->Items, SameText(GetCmdModeStr(), "V:"));
 
 	int w_cmd = get_CharWidth(cv, 40);
 	cmd = minimize_str(del_CmdDesc(cmd), cv, w_cmd - 8, true);
@@ -3733,7 +3732,7 @@ void __fastcall TOptionDlg::ChangeKeyList(bool add)
 			UnicodeString ibuf = GetCmdKeyStr();
 			UnicodeString cmd  = get_tkn(CmdComboBox->Text, ' ');
 			if (PrmComboBox->Enabled && !PrmComboBox->Text.IsEmpty())
-				cmd.cat_sprintf(_T("_%s"), get_tkn(PrmComboBox->Text, _T(" : ")).c_str());
+				cmd.cat_sprintf(_T("_%s"), get_tkn(PrmComboBox->Text, " : ").c_str());
 
 			TListBox *lp = KeyListBox;
 			//追加
@@ -3773,26 +3772,26 @@ void __fastcall TOptionDlg::RefCmdPrmBtnClick(TObject *Sender)
 {
 	UnicodeString cmd = get_tkn(CmdComboBox->Text, ' ');
 	//ディレクトリ
-	if (contained_wd_i(_T("ChangeDir|ChangeOppDir|CopyTo|ListTree|MoveTo|OpenByExp|PlayList|SubDirList"), cmd)) {
+	if (contained_wd_i("ChangeDir|ChangeOppDir|CopyTo|ListTree|MoveTo|OpenByExp|PlayList|SubDirList", cmd)) {
 		UnicodeString dnam = PrmComboBox->Text;
 		if (UserModule->SelectDirEx(_T("パラメータ指定 : ディレクトリ"), dnam)) PrmComboBox->Text = dnam;
 	}
 	//ファイル
 	else {
-		if (contained_wd_i(_T("DebugCmdFile|ExeCommands"), cmd)) {
+		if (contained_wd_i("DebugCmdFile|ExeCommands", cmd)) {
 			if (CmdFileListDlg->ShowToSelect()==mrOk) {
 				PrmComboBox->Text = "@" + to_relative_name(CmdFileListDlg->CmdFileName);
 			}
 		}
 		else {
 			UnicodeString fmsk =
-				USAME_TI(cmd, "LoadWorkList")? "*.nwl" :
-				USAME_TI(cmd, "HelpCurWord") ? "*.chm" :
-				contained_wd_i(_T("DistributionDlg|LoadTabGroup|Restart|SetColor"), cmd)? "*.ini" :
-				contained_wd_i(_T("ContextMenu|ExeMenuFile|FindFileDlg|LoadResultList|PlayList|SelByList"), cmd)? "*.txt"
+				SameText(cmd, "LoadWorkList")? "*.nwl" :
+				SameText(cmd, "HelpCurWord") ? "*.chm" :
+				contained_wd_i("DistributionDlg|LoadTabGroup|Restart|SetColor", cmd)? "*.ini" :
+				contained_wd_i("ContextMenu|ExeMenuFile|FindFileDlg|LoadResultList|PlayList|SelByList", cmd)? "*.txt"
 											 : "*.*";
 			UnicodeString pnam =
-				contained_wd_i(_T("DistributionDlg|Restart|SetColor"), cmd)? ExePath : RefParamPath;
+				contained_wd_i("DistributionDlg|Restart|SetColor", cmd)? ExePath : RefParamPath;
 
 			UserModule->PrepareOpenDlg(_T("パラメータ指定 : ファイル"), NULL, fmsk.c_str(), pnam);
 
@@ -3800,7 +3799,7 @@ void __fastcall TOptionDlg::RefCmdPrmBtnClick(TObject *Sender)
 			if (UserModule->OpenDlgToStr(fnam)) {
 				RefParamPath = ExtractFilePath(fnam);
 				//実行ファイル
-				if (USAME_TI(cmd, "FileRun")) {
+				if (SameText(cmd, "FileRun")) {
 					TStringDynArray plst = split_strings_semicolon(GetEnvironmentVariable("PATH"));
 					for (int i=0; i<plst.Length; i++) {
 						if (SameText(IncludeTrailingPathDelimiter(plst[i]), RefParamPath)) {
@@ -3810,8 +3809,8 @@ void __fastcall TOptionDlg::RefCmdPrmBtnClick(TObject *Sender)
 				}
 				//NyanFi 相対
 				else if (contained_wd_i(
-					_T("ContextMenu|DistributionDlg|ExeMenuFile|FindFileDlg|LoadBgImage|LoadResultList|")
-					_T("LoadTabGroup|LoadWorkList|PlayList|Restart|SaveAsTabGroup|SetColor"), cmd))
+					"ContextMenu|DistributionDlg|ExeMenuFile|FindFileDlg|LoadBgImage|LoadResultList|"
+					"LoadTabGroup|LoadWorkList|PlayList|Restart|SaveAsTabGroup|SetColor", cmd))
 				{
 					fnam = to_relative_name(fnam);
 				}
@@ -3826,7 +3825,7 @@ bool __fastcall TOptionDlg::CheckKeyAction(bool ok, bool add)
 	if (ok && PrmComboBox->Enabled) {
 		if (PrmComboBox->Style==csDropDownList)
 			ok = (PrmComboBox->ItemIndex!=-1);
-		else if (contained_wd_i(_T("ChangeDir|ChangeOppDir|ExeCommands|MaskFind"), get_tkn(CmdComboBox->Text, ' ')))
+		else if (contained_wd_i("ChangeDir|ChangeOppDir|ExeCommands|MaskFind", get_tkn(CmdComboBox->Text, ' ')))
 			ok = !PrmComboBox->Text.IsEmpty();
 	}
 
@@ -4464,7 +4463,7 @@ void __fastcall TOptionDlg::AppColorBtnClick(TObject *Sender)
 		TFont *f = (TFont *)FontList->Objects[i];
 		f->Assign((TFont *)FontBufList->Objects[i]);
 
-		if (USAME_TI(FontBufList->ValueFromIndex[i], "ダイアログ")) {
+		if (SameText(FontBufList->ValueFromIndex[i], "ダイアログ")) {
 			Application->DefaultFont->Assign(f);
 			UpdateMaxItemWidth();
 		}
@@ -4590,7 +4589,7 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 	TempPath = to_path_name(TempDirEdit->Text);
 	SetTempPathA(TempPath);
 	MaxTasks		 = MaxTasksComboBox->ItemIndex + 1;
-	AppListHotPrm	 = get_tkn(AppPrmComboBox->Text, _T(" : "));
+	AppListHotPrm	 = get_tkn(AppPrmComboBox->Text, " : ");
 	ViewTxtLimitSize = EditToInt(LimitTxtEdit) * 1024;
 	ViewBinLimitSize = std::max(StrToInt64Def(LimitBinEdit->Text, 0) * 1048576, 1048576LL);
 	DirDelimiter	 = DirDelimiter.IsEmpty()? UnicodeString("/") : DirDelimiter.SubString(1, 1);
@@ -4637,7 +4636,7 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 		TFont *f = (TFont *)FontList->Objects[i];
 		f->Assign((TFont *)FontBufList->Objects[i]);
 
-		if (USAME_TI(FontBufList->ValueFromIndex[i], "ダイアログ")) {
+		if (SameText(FontBufList->ValueFromIndex[i], "ダイアログ")) {
 			Application->DefaultFont->Assign(f);
 		}
 	}
@@ -4707,7 +4706,6 @@ void __fastcall TOptionDlg::OkActionExecute(TObject *Sender)
 void __fastcall TOptionDlg::OkActionUpdate(TObject *Sender)
 {
 	if (KeySetOnly) return;
-
 
 	HotKeyComboBox->Enabled =
 		(HotShiftCheckBox->Checked || HotCtrlCheckBox->Checked || HotAltCheckBox->Checked || HotWinCheckBox->Checked);

@@ -411,7 +411,7 @@ void __fastcall TEditHistoryDlg::UpdateList()
 		UnicodeString dnam = usr_SH->KnownGuidToPath(FOLDERID_Recent);
 		if (!dnam.IsEmpty()) {
 			std::unique_ptr<TStringList> lnk_lst(new TStringList());
-			get_files(dnam, _T("*.lnk"), lnk_lst.get());
+			get_files(dnam, "*.lnk", lnk_lst.get());
 			for (int i=0; i<lnk_lst->Count; i++) {
 				UnicodeString fnam = lnk_lst->Strings[i];
 				UnicodeString lnam = usr_SH->get_LnkName(fnam);
@@ -847,8 +847,8 @@ void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol,
 			else if (ACol==4) {
 				UnicodeString s = get_in_paren(lbuf);
 				if (!s.IsEmpty()) {
-					lbuf = Trim(get_tkn_r(lbuf, ")"));
-					TStringDynArray b_buf = SplitString(s, ",");
+					lbuf = Trim(get_tkn_r(lbuf, ')'));
+					TStringDynArray b_buf = SplitString(s, ',');
 					for (int i=0; i<b_buf.Length; i++) {
 						UnicodeString ss = Trim(b_buf[i]);
 						if (remove_top_text(ss, "tag: ")) {
@@ -949,7 +949,7 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 			FilterEdit->SetFocus();
 		}
 		//閉じる
-		else if (USAME_TI(CmdStr, "ReturnList")) {
+		else if (SameText(CmdStr, "ReturnList")) {
 			ModalResult = mrCancel;
 		}
 		//カーソル移動
@@ -957,21 +957,21 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 			;
 		}
 		//項目削除/マーク解除
-		else if (equal_DEL(KeyStr) || USAME_TI(CmdStr, "Delete")) {
+		else if (equal_DEL(KeyStr) || SameText(CmdStr, "Delete")) {
 			if (!del_HistItem()) Abort();
 		}
 		//メモ入力
-		else if (isMark && USAME_TI(CmdStr, "Mark_IM")) {
+		else if (isMark && SameText(CmdStr, "Mark_IM")) {
 			MemoAction->Execute();
 		}
 		//コマンド
-		else if (isRepo && contained_wd_i(_T("GitViewer|TextViewer"), CmdStr)) {
+		else if (isRepo && contained_wd_i("GitViewer|TextViewer", CmdStr)) {
 			if (!set_FileName(gp->Row)) Abort();
 			CmdStr = "GitViewer";
 			ModalResult = mrOk;
 		}
 		else if (!isTags && !isRepo
-			&& contained_wd_i(_T("FileEdit|TextViewer|ImageViewer|OpenByApp|OpenByWin|OpenByExp"), CmdStr))
+			&& contained_wd_i("FileEdit|TextViewer|ImageViewer|OpenByApp|OpenByWin|OpenByExp", CmdStr))
 		{
 			if (!set_FileName(gp->Row)) Abort();
 			ModalResult = mrOk;
@@ -981,11 +981,11 @@ void __fastcall TEditHistoryDlg::EditHistGridKeyDown(TObject *Sender, WORD &Key,
 			ShowFileInfoAction->Execute();
 		}
 		//プロパティ
-		else if (!isTags && USAME_TI(CmdStr, "PropertyDlg")) {
+		else if (!isTags && SameText(CmdStr, "PropertyDlg")) {
 			ShowPropertyAction->Execute();
 		}
 		//ステータスバー
-		else if (!isTags && USAME_TI(CmdStr, "ShowStatusBar")) {
+		else if (!isTags && SameText(CmdStr, "ShowStatusBar")) {
 			ShowStatusBarAction->Execute();
 		}
 		//右クリックメニュー
@@ -1250,7 +1250,7 @@ void __fastcall TEditHistoryDlg::ClrBrkRecentActionExecute(TObject *Sender)
 	if (!dnam.IsEmpty()) {
 		std::unique_ptr<TStringList> lnk_lst(new TStringList());
 		std::unique_ptr<TStringList> brk_lst(new TStringList());
-		get_files(dnam, _T("*.lnk"), lnk_lst.get());
+		get_files(dnam, "*.lnk", lnk_lst.get());
 		for (int i=0; i<lnk_lst->Count; i++) {
 			UnicodeString fnam = lnk_lst->Strings[i];
 			UnicodeString lnam = usr_SH->get_LnkName(fnam);

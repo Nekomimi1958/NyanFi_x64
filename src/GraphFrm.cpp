@@ -229,6 +229,3 @@ void __fastcall TGraphForm::ShowInfActionExecute(TObject *Sender)
 	PaintBox1->Repaint();
 }
 //---------------------------------------------------------------------------
-
-
-

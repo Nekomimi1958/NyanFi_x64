@@ -1840,7 +1840,7 @@ void InitializeGlobal()
 		{_T("FindTagsColumn=false"),		(TObject*)&FindTagsColumn},
 		{_T("FindTagsSort=false"),			(TObject*)&usr_TAG->SortTags},
 		{_T("NoRoundWin=false"),			(TObject*)&NoRoundWin},
-	
+
 		{_T("NoCheckUncRPT=false"),			(TObject*)&NoCheckUncRPT},		//隠し設定
 		{_T("DebugOut=false"),				(TObject*)&DebugOut},			//隠し設定
 
@@ -2246,7 +2246,7 @@ UnicodeString get_OsVerInfStr()
 	if (Execute_cmdln("cmd /c ver", ExePath, "HO", NULL, o_lst.get())) {
 		for (int i=0; i<o_lst->Count; i++) {
 			UnicodeString lbuf = o_lst->Strings[i];
-			lbuf = Trim(get_tkn(get_tkn_r(lbuf, "[Version"), "]"));
+			lbuf = Trim(get_tkn(get_tkn_r(lbuf, "[Version"), ']'));
 			if (!lbuf.IsEmpty()) {
 				ret_str = lbuf + " ";
 				break;
@@ -2303,7 +2303,7 @@ void SetupTimer()
 				if (prm_lst[j].IsEmpty()) continue;
 				try {
 					if (StartsStr("??:", prm_lst[j])) {
-						UnicodeString mm = get_tkn_r(prm_lst[j], _T("??:"));
+						UnicodeString mm = get_tkn_r(prm_lst[j], "??:");
 						for (int h=0; h<24; h++) {
 							TDateTime dt = str_to_DateTime(UnicodeString().sprintf(_T("%02u:%s"), h, mm.c_str())) + Date();
 							if (Dateutils::CompareDateTime(Now(), dt)==GreaterThanValue) dt = IncDay(dt, 1);
@@ -2367,30 +2367,30 @@ void LoadOptions()
 		UnicodeString key  = lp->Names[i];
 		UnicodeString vbuf = lp->ValueFromIndex[i];
 		//Section
-		if (remove_top_text(key, _T("S:"))) {
+		if (remove_top_text(key, "S:")) {
 			IniFile->ReadSection(key, (TStringList*)lp->Objects[i]);
 		}
 		//List
-		else if (remove_top_text(key, _T("L:"))) {
+		else if (remove_top_text(key, "L:")) {
 			int  n = split_tkn(vbuf, ',').ToIntDef(20);
-			bool q = USAME_TI(vbuf, "true");
+			bool q = SameText(vbuf, "true");
 			IniFile->LoadListItems(key, (TStringList*)lp->Objects[i], n, q);
 		}
 		else {
-			sct = remove_top_text(key, _T("U:"))? SCT_General :
-				  remove_top_text(key, _T("G:"))? UnicodeString("Grep") : SCT_Option;
+			sct = remove_top_text(key, "U:")? SCT_General :
+				  remove_top_text(key, "G:")? UnicodeString("Grep") : SCT_Option;
 			if (is_quot(vbuf)) {
 				//UnicodeString
 				vbuf = exclude_quot(vbuf);
-				if (USAME_TI(vbuf, "%ExePath%"))
+				if (SameText(vbuf, "%ExePath%"))
 					*((UnicodeString*)lp->Objects[i]) = to_path_name(IniFile->ReadString(sct, key, ExePath));
 				else
 					*((UnicodeString*)lp->Objects[i]) = IniFile->ReadString(sct, key, vbuf);
 			}
 			else {
 				//bool
-				if (contained_wd_i(_T("true|false"), vbuf))
-					*((bool*)lp->Objects[i]) = IniFile->ReadBool(sct, key, USAME_TI(vbuf, "true"));
+				if (contained_wd_i("true|false", vbuf))
+					*((bool*)lp->Objects[i]) = IniFile->ReadBool(sct, key, SameText(vbuf, "true"));
 				//int
 				else
 					*((int*)lp->Objects[i])  = IniFile->ReadInteger(sct, key, vbuf.ToIntDef(0));
@@ -2432,7 +2432,7 @@ void LoadOptions()
 					}
 					//キー (項目番号は無視)
 					else if (tag==1 && StartsText("Item", lbuf)) {
-						lbuf = get_tkn_r(lbuf, "=");
+						lbuf = get_tkn_r(lbuf, '=');
 						if (!lbuf.IsEmpty()) AllDirHistory->Add(lbuf);
 					}
 				}
@@ -2493,23 +2493,23 @@ void SaveOptions()
 		UnicodeString key  = lp->Names[i];
 		UnicodeString vbuf = lp->ValueFromIndex[i];
 		//Section
-		if (remove_top_text(key, _T("S:"))) {
+		if (remove_top_text(key, "S:")) {
 			IniFile->AssignSection(key, (TStringList*)lp->Objects[i]);
 		}
 		//List
-		else if (remove_top_text(key, _T("L:"))) {
+		else if (remove_top_text(key, "L:")) {
 			IniFile->SaveListItems(key, (TStringList*)lp->Objects[i], get_tkn(vbuf, ',').ToIntDef(20));
 		}
 		else {
-			sct = remove_top_text(key, _T("U:"))? SCT_General :
-				  remove_top_text(key, _T("G:"))? UnicodeString("Grep") : SCT_Option;
+			sct = remove_top_text(key, "U:")? SCT_General :
+				  remove_top_text(key, "G:")? UnicodeString("Grep") : SCT_Option;
 			if (is_quot(vbuf)) {
 				//UnicodeString
 				IniFile->WriteString(sct, key,	*((UnicodeString*)lp->Objects[i]));
 			}
 			else {
 				//bool
-				if (contained_wd_i(_T("true|false"), vbuf))
+				if (contained_wd_i("true|false", vbuf))
 					IniFile->WriteBool(sct, key,	*((bool*)lp->Objects[i]));
 				//int
 				else
@@ -3702,7 +3702,7 @@ UnicodeString get_cmdfile(UnicodeString s)
 UnicodeString get_cmds_prm_file(UnicodeString prm)
 {
 	if (remove_top_AT(prm))	return to_absolute_name(prm);
-	if (remove_top_text(prm, _T("ExeMenuFile_")))
+	if (remove_top_text(prm, "ExeMenuFile_"))
 							return to_absolute_name(exclude_quot(prm));
 	return EmptyStr;
 }
@@ -3810,7 +3810,7 @@ UnicodeString format_CloneName(
 	int sn = 0;
 	for (int i=0; ; i++) {
 		ret_str = dst_dir;
-		UnicodeString fmt_str = (i==0)? get_tkn(fmt, _T("\\-")) : ReplaceStr(fmt, "\\-", "");
+		UnicodeString fmt_str = (i==0)? get_tkn(fmt, "\\-") : ReplaceStr(fmt, "\\-", "");
 
 		UnicodeString tmp = fmt_str;
 		while (!tmp.IsEmpty()) {
@@ -3958,7 +3958,7 @@ UnicodeString get_NextSameName(
 	bool only_text)			//true = テキストのみ (default = false)
 {
 	std::unique_ptr<TStringList> l_lst(new TStringList());
-	get_files(ExtractFilePath(fnam), (get_base_name(fnam) + ".*").c_str(), l_lst.get());
+	get_files(ExtractFilePath(fnam), get_base_name(fnam) + ".*", l_lst.get());
 	if (l_lst->Count<2) return EmptyStr;
 
 	int idx = l_lst->IndexOf(fnam);
@@ -4010,7 +4010,7 @@ void get_LibraryList(
 	try {
 		std::unique_ptr<TStringList> l_lst(new TStringList());
 		if (ends_PathDlmtr(fnam)) {
-			get_files(fnam, _T("*.library-ms"), l_lst.get());
+			get_files(fnam, "*.library-ms", l_lst.get());
 		}
 		else {
 			if (!file_exists(fnam)) Abort();
@@ -4033,7 +4033,7 @@ void get_LibraryList(
 					break;
 				case 2:
 					if (ContainsText(lbuf, "<url>") && ContainsText(lbuf, "</url>")) {
-						UnicodeString url = get_tkn_m(lbuf, _T("<url>"), _T("</url>"));
+						UnicodeString url = get_tkn_m(lbuf, "<url>", "</url>");
 						if (StartsText("knownfolder:", url)) {
 							url = usr_SH->KnownGuidStrToPath(get_tkn_r(url, ':'));
 						}
@@ -4196,7 +4196,7 @@ void ClearTempDir(UnicodeString dnam)
 {
 	if (!is_EmptyDir(TempPathA + dnam)) {
 		std::unique_ptr<TStringList> fbuf(new TStringList());
-		get_files(TempPathA + dnam, _T("*.*"), fbuf.get(), true);
+		get_files(TempPathA + dnam, "*.*", fbuf.get(), true);
 		for (int i=0; i<fbuf->Count; i++) {
 			UnicodeString fnam = fbuf->Strings[i];
 			if (set_FileWritable(fnam)) {
@@ -4219,7 +4219,7 @@ void ClearTempArc(
 			if ((sr.Attr & faDirectory)==0) continue;
 			UnicodeString snam = TempPathA + sr.Name;
 			std::unique_ptr<TStringList> fbuf(new TStringList());
-			get_files(snam, _T("*.*"), fbuf.get(), true);
+			get_files(snam, "*.*", fbuf.get(), true);
 			for (int i=0; i<fbuf->Count; i++) {
 				UnicodeString fnam = fbuf->Strings[i];
 				if (set_FileWritable(fnam)) {
@@ -4390,7 +4390,7 @@ void add_PackItem(file_rec *fp, int arc_t, UnicodeString src_dir, TStringList *l
 		if (arc_t==UARCTYP_CAB) {
 			//cabXX.dll の -r の代替策
 			std::unique_ptr<TStringList> fbuf(new TStringList());
-			get_files(fp->f_name, _T("*.*"), fbuf.get(), true);
+			get_files(fp->f_name, "*.*", fbuf.get(), true);
 			for (int i=0; i<fbuf->Count; i++) {
 				UnicodeString lbuf = fbuf->Strings[i];
 				lst->Add(lbuf.Delete(1, src_dir.Length()));
@@ -4810,7 +4810,7 @@ file_rec* cre_new_file_rec(
 		fp->alias	 = "-";
 		fp->is_dummy = true;
 	}
-	else if (USAME_TS(fnam, "..")) {
+	else if (SameStr(fnam, "..")) {
 		fp->is_up  = true;
 		fp->is_dir = true;
 		fp->f_name = "..";
@@ -5282,7 +5282,7 @@ bool check_file_ex(UnicodeString fnam, flist_stt *lst_stt)
 
 	//タグ
 	if (!lst_stt->find_Tags.IsEmpty()) {
-		if (USAME_TS(lst_stt->find_Tags, "*")) {
+		if (SameStr(lst_stt->find_Tags, "*")) {
 			if (!usr_TAG->HasTag(fnam)) return false;
 		}
 		else {
@@ -5301,7 +5301,7 @@ bool check_file_ex(UnicodeString fnam, flist_stt *lst_stt)
 		if (lst_stt->find_codepage!=-1 && code_page!=lst_stt->find_codepage) return false;
 		//改行コード
 		if (!lst_stt->find_LineBrk.IsEmpty()) {
-			if (USAME_TS(lst_stt->find_LineBrk, "混在")) {
+			if (SameStr(lst_stt->find_LineBrk, "混在")) {
 				std::unique_ptr<TFileStream> fs(new TFileStream(fnam, fmOpenRead | fmShareDenyNone));
 				std::unique_ptr<TMemoryStream> ms(new TMemoryStream());
 				ms->CopyFrom(ms.get(), 0);
@@ -5327,12 +5327,12 @@ bool check_file_ex(UnicodeString fnam, flist_stt *lst_stt)
 			std::unique_ptr<TStringList> lst(new TStringList());
 			if (test_FlacExt(fext)) get_FlacInf(fnam, lst.get()); else get_WavInf(fnam, lst.get());
 			if (!ContainsStr(lst->Text, " 形式: ")) Abort();
-			UnicodeString frmt = get_tkn_m(lst->Text, _T("形式: "), _T("\r\n"));
+			UnicodeString frmt = get_tkn_m(lst->Text, "形式: ", "\r\n");
 			//サンプリング
-			int sp = split_tkn(frmt, _T("Hz ")).ToInt();
+			int sp = split_tkn(frmt, "Hz ").ToInt();
 			if (!check_int(sp, lst_stt->find_SR_value, lst_stt->find_SR_mode)) Abort();
 			//ビット
-			int bt = split_tkn(frmt, _T("bit ")).ToInt();
+			int bt = split_tkn(frmt, "bit ").ToInt();
 			switch (lst_stt->find_BT_mode) {
 			case 1: if (bt!=8)	Abort(); break;
 			case 2: if (bt!=16)	Abort(); break;
@@ -5341,11 +5341,11 @@ bool check_file_ex(UnicodeString fnam, flist_stt *lst_stt)
 			}
 			//チャンネル
 			switch (lst_stt->find_CH_mode) {
-			case 1: if (!USAME_TI(frmt, "モノ"))		Abort(); break;
-			case 2: if (!USAME_TI(frmt, "ステレオ"))	Abort(); break;
-			case 3: if (!USAME_TI(frmt, "4ch"))			Abort(); break;
-			case 4: if (!USAME_TI(frmt, "6ch"))			Abort(); break;
-			case 5: if (!USAME_TI(frmt, "8ch"))			Abort(); break;
+			case 1: if (!SameText(frmt, "モノ"))		Abort(); break;
+			case 2: if (!SameText(frmt, "ステレオ"))	Abort(); break;
+			case 3: if (!SameText(frmt, "4ch"))			Abort(); break;
+			case 4: if (!SameText(frmt, "6ch"))			Abort(); break;
+			case 5: if (!SameText(frmt, "8ch"))			Abort(); break;
 			}
 		}
 		catch (...) {
@@ -5413,11 +5413,11 @@ bool check_file_ex(UnicodeString fnam, flist_stt *lst_stt)
 		else if (test_FontExt(fext))		get_FontInf(fnam, i_lst);
 		else if (test_Mp3Ext(fext))			ID3_GetInf(fnam,  i_lst);
 		else if (test_FlacExt(fext))		get_FlacInf(fnam, i_lst);
-		else if (USAME_TI(fext, ".opus"))	get_OpusInf(fnam, i_lst);
+		else if (SameText(fext, ".opus"))	get_OpusInf(fnam, i_lst);
 		else if (test_PngExt(fext))			get_PngInf(fnam,  i_lst);
 		else if (test_GifExt(fext))			get_GifInf(fnam,  i_lst);
 		else if (test_PspExt(fext))			get_PspInf(fnam,  i_lst);
-		else if (USAME_TI(fext, ".webp"))	get_WebpInf(fnam, i_lst);
+		else if (SameText(fext, ".webp"))	get_WebpInf(fnam, i_lst);
 		else if (test_IcoExt(fext) || test_CurExt(fext))
 											get_IconInf(fnam, i_lst);
 		else if (test_AniExt(fext))			get_AniInf(fnam, i_lst);
@@ -5629,7 +5629,7 @@ drive_info *get_DriveInfoList()
 		else
 			dp->volume = dp->f_system = EmptyStr;
 
-		dp->is_NTFS = USAME_TI(dp->f_system, "NTFS");
+		dp->is_NTFS = SameText(dp->f_system, "NTFS");
 
 		dp->bus_type = EmptyStr;
 		dp->is_SSD	 = dp->is_RAM = false;
@@ -5673,7 +5673,7 @@ drive_info *get_DriveInfoList()
 					default:
 						;
 					}
-					dp->bus_type = get_word_i_idx(_T("SCSI|ATAPI|ATA|IEEE1394|SSA|Fibre|USB|RAID|iSCSI|SAS|SATA|SD|MMC|SPACE"), ix);
+					dp->bus_type = get_word_i_idx("SCSI|ATAPI|ATA|IEEE1394|SSA|Fibre|USB|RAID|iSCSI|SAS|SATA|SD|MMC|SPACE", ix);
 
 					//SSDの判別 (Windows 7 以降)
 					if (dp->accessible && IsWindows7OrGreater()) {
@@ -5685,7 +5685,7 @@ drive_info *get_DriveInfoList()
 								pcbData.get(), sizeof(DEVICE_SEEK_PENALTY_DESCRIPTOR), &dwRet, NULL))
 						{
 							DEVICE_SEEK_PENALTY_DESCRIPTOR *pDescriptor = (DEVICE_SEEK_PENALTY_DESCRIPTOR*)pcbData.get();
-							dp->is_SSD = !pDescriptor->IncursSeekPenalty && !USAME_TI(dp->bus_type, "SD");
+							dp->is_SSD = !pDescriptor->IncursSeekPenalty && !SameText(dp->bus_type, "SD");
 							if (dp->is_SSD) dp->type_str = "ソリッドステート";
 						}
 						else {
@@ -5967,7 +5967,6 @@ bool save_RenLog(TStringList *lst)
 {
 	return saveto_TextUTF8(ExePath + RENLOG_FILE, lst);
 }
-
 
 //---------------------------------------------------------------------------
 //汎用リストの項目高を設定 (行間 = 1/3)
@@ -6356,7 +6355,7 @@ void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 				if (usr_ARC->OpenArc(anam)) {
 					int add_cnt = 0;
 					arc_find_inf inf;
-					UnicodeString arc_mask = USAME_TS(lst_stt->find_Mask, "*.*")? UnicodeString("*") : lst_stt->find_Mask;
+					UnicodeString arc_mask = SameStr(lst_stt->find_Mask, "*.*")? UnicodeString("*") : lst_stt->find_Mask;
 					if (usr_ARC->FindFirstEx(EmptyStr, &inf, true)) {
 						do {
 							if (!lst_stt->find_Both && inf.is_dir) continue;
@@ -6409,7 +6408,7 @@ void get_FindListF(UnicodeString pnam, flist_stt *lst_stt, TStrings *lst, int ta
 
 			//※FindFirst での誤マッチを除外
 			//  例: システム内で *.asp が *.aspx にマッチ (謎)
-			if ((!is_dir || !USAME_TS(lst_stt->find_Mask, "*.*")) && !str_match(lst_stt->find_Mask, fnam)) continue;
+			if ((!is_dir || !SameStr(lst_stt->find_Mask, "*.*")) && !str_match(lst_stt->find_Mask, fnam)) continue;
 
 			//標準検索
 			TDateTime f_tm = sr.TimeStamp;
@@ -6643,7 +6642,7 @@ UnicodeString get_ReparsePointTarget(
 						+ rp_buf->SymbolicLinkReparseBuffer.SubstituteNameOffset/sizeof(WCHAR);
 				break;
 			}
-			remove_top_s(rnam, _T("\\??\\"));
+			remove_top_s(rnam, "\\??\\");
 		}
 	}
 
@@ -6799,13 +6798,11 @@ HICON get_file_SmallIcon(
 	HICON hIcon = NULL;
 
 	//インデックス指定
-	int ico_idx = get_tkn_r(fnam, ",").ToIntDef(-1);
+	int ico_idx = get_tkn_r(fnam, ',').ToIntDef(-1);
 	if (ico_idx!=-1) {
-		fnam = get_tkn(fnam, ",");
+		fnam = get_tkn(fnam, ',');
 		HICON icons[1];
-		if (::ExtractIconEx(fnam.c_str(), ico_idx, NULL, icons, 1)==1) {
-			hIcon = icons[0];
-		}
+		if (::ExtractIconEx(fnam.c_str(), ico_idx, NULL, icons, 1)==1) hIcon = icons[0];
 	}
 	//ファイル名指定
 	else {
@@ -7030,7 +7027,7 @@ bool draw_SmallIcon2(
 	HICON hIcon;
 
 	//インデックス指定
-	int idx = get_tkn_r(fnam, ",").ToIntDef(-1);
+	int idx = get_tkn_r(fnam, ',').ToIntDef(-1);
 	if (idx!=-1) {
 		hIcon = usr_SH->get_SmallIcon(fnam);
 	}
@@ -7135,7 +7132,7 @@ int add_IconImage(
 		std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
 		bmp->Assign(icon);
 		TImageCollectionSourceItem *sp = ip->SourceImages->Add();
-        sp->Image->Assign(bmp.get());
+		sp->Image->Assign(bmp.get());
 		return cp->Images->Count - 1;
 	}
 	else {
@@ -7174,21 +7171,21 @@ UnicodeString get_file_from_cmd(UnicodeString s)
 	cmd = Trim(ReplaceStr(cmd, "\f", ":\\"));
 
 	//ファイル名を取得
-	if		(USAME_TI(cmd, "PowerShell"))  cmd = "FileRun_powershell";
-	else if (USAME_TI(cmd, "WinTerminal")) cmd = "FileRun_wt";
+	if		(SameText(cmd, "PowerShell"))  cmd = "FileRun_powershell";
+	else if (SameText(cmd, "WinTerminal")) cmd = "FileRun_wt";
 	UnicodeString fnam;
-	if (remove_top_text(cmd, _T("OpenByWin_")) || remove_top_text(cmd, _T("SetExeFile_"))
-		|| remove_top_text(cmd, _T("FileRun_")) || remove_top_text(cmd, _T("FileEdit_")))
+	if (remove_top_text(cmd, "OpenByWin_") || remove_top_text(cmd, "SetExeFile_")
+		|| remove_top_text(cmd, "FileRun_") || remove_top_text(cmd, "FileEdit_"))
 	{
 		fnam = get_actual_name(exclude_quot(cmd));
 	}
-	else if (remove_top_text(cmd, _T("SetFolderIcon_"))) {
+	else if (remove_top_text(cmd, "SetFolderIcon_")) {
 		fnam = to_absolute_name(get_actual_name(exclude_quot(cmd)));
 	}
-	else if (USAME_TI(cmd, "CommandPrompt")) {
+	else if (SameText(cmd, "CommandPrompt")) {
 		fnam = "%ComSpec%";
 	}
-	else if (USAME_TI(cmd, "OpenByExp")) {
+	else if (SameText(cmd, "OpenByExp")) {
 		fnam = "%windir%\\explorer.exe";
 	}
 	else {
@@ -7275,7 +7272,7 @@ bool load_MenuFile(UnicodeString fnam, TStringList *lst)
 			//一行コマンド
 			else {
 				//EditMenuFile コマンド
-				if (m_buf.Length>1 && USAME_TI(m_buf[1], "EditMenuFile")) m_buf[1].sprintf(_T("FileEdit_\"%s\""), fnam.c_str());
+				if (m_buf.Length>1 && SameText(m_buf[1], "EditMenuFile")) m_buf[1].sprintf(_T("FileEdit_\"%s\""), fnam.c_str());
 
 				//アイコンファイル
 				UnicodeString inam = (m_buf.Length==3)? m_buf[2] : (m_buf.Length==2)? get_file_from_cmd(m_buf[1]) : EmptyStr;
@@ -7746,7 +7743,7 @@ TColor get_ExtColor(
 	if (fext.Pos("<DIR>")) return col_Folder;
 
 	TColor col_f = col_fgList;
-	if (USAME_TS(fext, ".")) fext = EmptyStr;
+	if (SameStr(fext, ".")) fext = EmptyStr;
 	if (!fext.IsEmpty()) {
 		for (int i=0; i<ExtColList->Count; i++) {
 			UnicodeString ibuf = ExtColList->Strings[i];
@@ -7759,7 +7756,7 @@ TColor get_ExtColor(
 	else {
 		for (int i=0; i<ExtColList->Count; i++) {
 			UnicodeString ibuf = ExtColList->Strings[i];
-			if (USAME_TS(get_tkn_r(ibuf, ','), ".")) {
+			if (SameStr(get_tkn_r(ibuf, ','), ".")) {
 				col_f = (TColor)get_tkn(ibuf, ',').ToIntDef(col_fgList);  break;
 			}
 		}
@@ -7825,13 +7822,13 @@ TColor get_LogColor(UnicodeString s)
 	bool has_tm = (s.Pos(':')==5);
 	bool is_err = StartsStr("         エラー: ", s)
 					|| (has_tm && s.Pos("終了  ") && (s.Pos("  NG:") || s.Pos("  ERR:")))
-					|| is_match_regex(s, _T("^.>([ECW]|     [45]\\d{2})\\s"));
+					|| TRegEx::IsMatch(s, "^.>([ECW]|     [45]\\d{2})\\s");
 
-	return (					 			  is_err? col_Error :
-		 (has_tm && contains_wd_i(s, _T("開始|>>")))? col_Headline :
-							 StartsText("$ git ", s)? col_Headline :
-									(s.Pos('!')==10)? AdjustColor(col_fgLog, ADJCOL_FGLIST)
-													: col_fgLog
+	return (					 		  is_err? col_Error :
+		 (has_tm && contains_wd_i(s, "開始|>>"))? col_Headline :
+						 StartsText("$ git ", s)? col_Headline :
+								(s.Pos('!')==10)? AdjustColor(col_fgLog, ADJCOL_FGLIST)
+												: col_fgLog
 		);
 }
 
@@ -8005,7 +8002,7 @@ UnicodeString get_PathFrom_SF(file_rec *fp)
 		dnam = get_top_line(fp->f_name);
 	}
 
-	dnam = get_tkn_r(dnam, _T("_SF:"));
+	dnam = get_tkn_r(dnam, "_SF:");
 
 	return dnam;
 }
@@ -8379,7 +8376,7 @@ void GetFileInfList(
 		}
 	}
 
-	fp->is_video = USAME_TI(fp->f_ext, ".ts")?
+	fp->is_video = SameText(fp->f_ext, ".ts")?
 					 is_MPEG2_TS(fp->f_name) : test_FileExt(fp->f_ext, FEXT_VIDEO);
 
 	if (!force) {
@@ -8472,7 +8469,7 @@ void assign_InfListBox(
 		for (int i=((lp->Tag & LBTAG_OPT_FIF1)? 3: 0); i<i_lst->Count; i++) {
 			if ((int)i_lst->Objects[i] & LBFLG_FEXT_FIF) continue;
 			UnicodeString lbuf = i_lst->Strings[i];
-			if (lbuf.Pos(": ")>1) w_max = std::max(w_max, get_TextWidth(cv, get_tkn(lbuf, _T(": ")), is_irreg));
+			if (lbuf.Pos(": ")>1) w_max = std::max(w_max, get_TextWidth(cv, get_tkn(lbuf, ": "), is_irreg));
 		}
 
 		lp->Tag &= 0x7fff0000;
@@ -8520,7 +8517,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 
 	//項目名
 	int w_max = LOWORD(lp->Tag);	//最大項目名幅
-	UnicodeString inam = Trim(split_tkn(lbuf, _T(": ")));
+	UnicodeString inam = Trim(split_tkn(lbuf, ": "));
 	UnicodeString fext;
 	if (flag & LBFLG_FEXT_FIF) {
 		fext = inam;
@@ -8567,7 +8564,7 @@ void draw_InfListBox(TListBox *lp, TRect &Rect, int Index, TOwnerDrawState State
 		cv->TextOut(xp, yp, lbuf);
 	}
 	else if (flag & LBFLG_CRCD_FIF) {
-		if (!use_fgsel && USAME_TS(lbuf, "混在")) cv->Font->Color = col_Error;
+		if (!use_fgsel && SameStr(lbuf, "混在")) cv->Font->Color = col_Error;
 		cv->TextOut(xp, yp, lbuf);
 	}
 	else if (flag & LBFLG_DEBUG) {
@@ -8741,7 +8738,7 @@ bool get_FileInfList(
 		//項目の種類
 		//----------------------
 		UnicodeString tnam = (!fp->is_dir && fp->is_sym)? UnicodeString("シンボリックリンク") :
-				(USAME_TI(fext, ".ts") && !fp->is_video)? UnicodeString("TypeScript ソースファイル")
+				(SameText(fext, ".ts") && !fp->is_video)? UnicodeString("TypeScript ソースファイル")
 														: usr_SH->get_FileTypeStr(fnam);
 		//NyanFi 固有のファイル
 		UnicodeString typ_str = get_IniTypeStr(fp);
@@ -8755,12 +8752,13 @@ bool get_FileInfList(
 		else if (is_ResultList(fp))		tnam += " [結果リスト]";
 		else if (is_ExePath(pnam)) {
 			UnicodeString nnam = ExtractFileName(fnam);
+			TRegExOptions opt; opt << roIgnoreCase;
 			if		(SameText(nnam, TAGDATA_FILE))	tnam += " [タグデータ]";
 			else if (SameText(nnam, WEBMAP_TPLT))	tnam += " [マップ表示テンプレート]";
 			else if (SameText(nnam, DRVLOG_FILE))	tnam += " [ドライブ容量ログ]";
 			else if (SameText(nnam, RENLOG_FILE))	tnam += " [改名ログ]";
 			else if (SameText(nnam, "NyanFi.exe"))	tnam += " [実行中]";
-			else if (is_match_regex_i(nnam, _T("^tasklog\\d?(~\\d)?\\.txt"))) tnam += " [タスクログ]";
+			else if (TRegEx::IsMatch(nnam, "^tasklog\\d?(~\\d)?\\.txt", opt)) tnam += " [タスクログ]";
 		}
 
 		add_PropLine(_T("種類"), tnam, lst, LBFLG_TYPE_FIF);
@@ -8861,7 +8859,7 @@ bool get_FileInfList(
 			get_AniInf(fnam,  lst);
 		}
 		//WebP
-		else if (USAME_TI(fext, ".webp")) {
+		else if (SameText(fext, ".webp")) {
 			get_WebpInf(fnam, lst);
 		}
 		//PSP
@@ -8895,7 +8893,7 @@ bool get_FileInfList(
 			get_ExifInf(fnam, lst, &fp->img_ori);
 		}
 		//WAV
-		else if (USAME_TI(fext, ".wav")) {
+		else if (SameText(fext, ".wav")) {
 			get_WavInf(fnam, lst);
 			UnicodeString tmp = "ビット レート";
 			if (!ContainsStr(lst->Text, "長さ: ")) tmp.Insert("長さ,", 1);
@@ -8911,15 +8909,15 @@ bool get_FileInfList(
 			get_FlacInf(fnam, lst);
 		}
 		//Opus
-		else if (USAME_TI(fext, ".opus")) {
+		else if (SameText(fext, ".opus")) {
 			usr_SH->get_PropInf(fnam, lst, "長さ");
 			get_OpusInf(fnam, lst);
 		}
 		//CDA
-		else if (USAME_TI(fext, ".cda")) {
+		else if (SameText(fext, ".cda")) {
 			get_CdaInf(fnam, lst);
 		}
-		else if (USAME_TI(fext, ".url")) {
+		else if (SameText(fext, ".url")) {
 			std::unique_ptr<UsrIniFile> url_file(new UsrIniFile(fnam));
 			add_PropLine(_T("URL"), url_file->ReadString("InternetShortcut", "URL"), lst);
 			add_PropLine_if(_T("IconFile"), url_file->ReadString("InternetShortcut", "IconFile"), lst);
@@ -8938,7 +8936,7 @@ bool get_FileInfList(
 			get_HtmlInf(fnam, lst);
 		}
 		//スタイルシート
-		else if (USAME_TI(fext, ".css")) {
+		else if (SameText(fext, ".css")) {
 			UnicodeString lbuf = Trim(get_top_line(fnam));
 			if (StartsText("@charset", lbuf))
 				add_PropLine(_T("charset"), exclude_quot(Trim(get_tkn(lbuf.Delete(1, 8), ';'))), lst);
@@ -8966,13 +8964,13 @@ bool get_FileInfList(
 			xd2tx_GetInfo(fnam, lst);
 		}
 		//tags
-		else if (USAME_TI(fp->n_name, "tags")) {
+		else if (SameText(fp->n_name, "tags")) {
 			get_TagsInf(fnam, lst);
 		}
 		//その他
 		else {
 			//動画
-			if (USAME_TS(usr_SH->get_PropInf(fnam, lst), "ビデオ")) {
+			if (SameStr(usr_SH->get_PropInf(fnam, lst), "ビデオ")) {
 				fp->is_video = true;
 			}
 			//実行可能ファイル(チェック)
@@ -9001,7 +8999,7 @@ bool get_FileInfList(
 				if (is_enc)		lst->Add(make_PropLine(_T("パスワード保護"), "あり"));
 				UnicodeString mnam = IniFile->MarkedInArc(fnam);
 				if (!mnam.IsEmpty()) {
-					lst->Add(make_PropLine(_T("マーク項目"), yen_to_delimiter(get_tkn_r(mnam, "/"))));
+					lst->Add(make_PropLine(_T("マーク項目"), yen_to_delimiter(get_tkn_r(mnam, '/'))));
 				}
 				//拡張子別ファイル数
 				add_FExtInfList(r_lst.get(), lst);
@@ -9265,7 +9263,7 @@ bool is_NoInfPath(
 			if (c0=='C' && dp->drv_type==DRIVE_CDROM)		return true;
 			if (c0=='N' && dp->drv_type==DRIVE_REMOTE)		return true;
 			if (c0=='R' && dp->drv_type==DRIVE_REMOVABLE)	return true;
-			if (c0=='U' && USAME_TI(dp->bus_type, "USB")) {
+			if (c0=='U' && SameText(dp->bus_type, "USB")) {
 				if (lnam.Length()>1) {
 					WideChar c1 = lnam[2];
 					if (c0=='H' && dp->drv_type==DRIVE_FIXED && !dp->is_SSD) return true;
@@ -9358,7 +9356,7 @@ int get_FileCodePage(
 	if (test_FileExt(fext, FEXT_XML _T(".xhtml"))) {
 		UnicodeString lbuf = get_top_line(fnam);
 		if (ContainsText(lbuf, "<?xml ")) {
-			int p = pos_i(_T("encoding="), lbuf);
+			int p = pos_i("encoding=", lbuf);
 			if (p>0) {
 				lbuf = lbuf.SubString(p, lbuf.Length() - p + 1);
 				lbuf = get_tkn(get_tkn_m(lbuf, '=', ' '), '?');
@@ -9369,7 +9367,7 @@ int get_FileCodePage(
 	//HTML
 	else if (test_HtmlExt(fext)) {
 		UnicodeString lbuf = get_html_header(fnam);
-		int p = pos_i(_T("charset="), lbuf);
+		int p = pos_i("charset=", lbuf);
 		if (p>0) {
 			lbuf = lbuf.SubString(p, lbuf.Length() - p + 1);
 			lbuf = get_tkn(get_tkn_m(lbuf, '=', '>'), '/');
@@ -9411,7 +9409,7 @@ bool is_TextFile(
 	if (!file_exists(fnam)) return false;
 
 	UnicodeString fext = get_extension(fnam);
-	if (USAME_TI(fext, ".ts")) {
+	if (SameText(fext, ".ts")) {
 		//.ts が動画ならはねる
 		if (is_MPEG2_TS(fnam)) return false;
 	}
@@ -9537,7 +9535,7 @@ bool is_MenuFile(file_rec *fp)
 {
 	return (fp && !fp->is_dummy && !fp->is_ftp && !fp->is_virtual
 			&& test_FileExt(fp->f_ext, ".txt")
-			&& USAME_TI(get_top_line(fp->f_name), ";[MenuFile]"));
+			&& SameText(get_top_line(fp->f_name), ";[MenuFile]"));
 }
 //---------------------------------------------------------------------------
 //結果リストファイルか？
@@ -9546,7 +9544,7 @@ bool is_ResultList(file_rec *fp)
 {
 	return (fp && !fp->is_dummy && !fp->is_ftp && !fp->is_virtual
 			&& test_FileExt(fp->f_ext, ".txt")
-			&& USAME_TI(get_top_line(fp->f_name), ";[ResultList]"));
+			&& SameText(get_top_line(fp->f_name), ";[ResultList]"));
 }
 
 //---------------------------------------------------------------------------
@@ -9555,7 +9553,7 @@ bool is_ResultList(file_rec *fp)
 bool is_AudioVideo(UnicodeString fnam)
 {
 	if (test_FileExt(ExtractFileExt(fnam), FEXT_DURATION)) return true;
-	if (contained_wd_i(_T("ビデオ|オーディオ"), usr_SH->get_PropInf(fnam))) return true;
+	if (contained_wd_i("ビデオ|オーディオ", usr_SH->get_PropInf(fnam))) return true;
 	return false;
 }
 
@@ -9676,7 +9674,7 @@ bool test_TxtFile(UnicodeString fnam)
 	if (test_TxtExt(fext)) return true;
 
 	if (fext.IsEmpty()) {
-		if (USAME_TI(nnam, "tags") || StartsText(".nyanfi", nnam)) return true;
+		if (SameText(nnam, "tags") || StartsText(".nyanfi", nnam)) return true;
 	}
 
 	return false;
@@ -9705,7 +9703,7 @@ void add_FExtInfList(
 
 			UnicodeString lbuf = f_lst->Strings[i];
 			UnicodeString xnam = ends_PathDlmtr(lbuf)? UnicodeString(" <DIR>")
-													 : def_if_empty(get_extension(lbuf).LowerCase(), _T("."));
+													 : def_if_empty(get_extension(lbuf).LowerCase(), ".");
 			int idx = x_lst->IndexOf(xnam);
 			if (idx!=-1)
 				x_lst->Objects[idx] = (TObject*)((NativeInt)x_lst->Objects[idx] + 1);
@@ -10324,12 +10322,12 @@ UnicodeString Key_to_CmdV(UnicodeString key)
 //---------------------------------------------------------------------------
 bool is_ToLeftOpe(UnicodeString keystr, UnicodeString cmdstr)
 {
-	return (equal_LEFT(keystr) || contained_wd_i(_T("ToLeft|ToParentOnLeft|PrevTab"), get_CmdStr(cmdstr)));
+	return (equal_LEFT(keystr) || contained_wd_i("ToLeft|ToParentOnLeft|PrevTab", get_CmdStr(cmdstr)));
 }
 //---------------------------------------------------------------------------
 bool is_ToRightOpe(UnicodeString keystr, UnicodeString cmdstr)
 {
-	return (equal_RIGHT(keystr) || contained_wd_i(_T("ToRight|ToParentOnRight|NextTab"), get_CmdStr(cmdstr)));
+	return (equal_RIGHT(keystr) || contained_wd_i("ToRight|ToParentOnRight|NextTab", get_CmdStr(cmdstr)));
 
 }
 
@@ -10355,9 +10353,9 @@ UnicodeString get_CmdDesc(
 	//説明
 	UnicodeString dsc = split_dsc(prm);
 	if (dsc.IsEmpty()) {
-		if (contained_wd_i(_T("ExeExtMenu|ExeExtTool"), cmd)) {
+		if (contained_wd_i("ExeExtMenu|ExeExtTool", cmd)) {
 			//該当するメニュー項目を取得
-			TStrings *lst= USAME_TI(cmd, "ExeExtMenu")? menu_list : tool_list;
+			TStrings *lst= SameText(cmd, "ExeExtMenu")? menu_list : tool_list;
 			for (int i=0; i<lst->Count && dsc.IsEmpty(); i++) {
 				UnicodeString ibuf = get_csv_item(lst->Strings[i], 0);
 				if (!ContainsStr(ibuf, "&")) continue;
@@ -10423,12 +10421,6 @@ UnicodeString ApplyCnvCharList(UnicodeString s)
 }
 
 //---------------------------------------------------------------------------
-void init_ColorList(UnicodeString key, UnicodeString def)
-{
-	if (ColorList->Values[key].IsEmpty()) ColorList->Values[key] = ColorList->Values[def];
-}
-
-//---------------------------------------------------------------------------
 TColor read_ColorList(UnicodeString key, TColor def, TStringList *lst)
 {
 	TColor col = def;
@@ -10445,7 +10437,6 @@ TColor read_ColorList(const _TCHAR *key, TColor def, TStringList *lst)
 {
 	return read_ColorList(UnicodeString(key), def, lst);
 }
-
 
 //---------------------------------------------------------------------------
 //ColorList から個々の配色を取得
@@ -10620,19 +10611,10 @@ void set_col_from_ColorList()
 		{&col_DkIlleg,	_T("DkIlleg"),		TColor(RGB(0x66, 0x00, 0x00))}
 	};
 
-	//V14.42 追加項目の初期化
-	init_ColorList("Tim6H",		"Tim1D");
-	init_ColorList("Size2G", 	"Size1G");
-	init_ColorList("Size512M",	"Size1M");
-	init_ColorList("Size256M",	"Size1M");
-	init_ColorList("Size128M",	"Size1M");
-	init_ColorList("Size64M",	"Size1M");
-	init_ColorList("Size32M",	"Size1M");
-	init_ColorList("Size16M",	"Size1M");
-
 	int cnt = sizeof(col_def_list)/sizeof(col_def_list[0]);
-	for (int i=0; i<cnt; i++)
+	for (int i=0; i<cnt; i++) {
 		*col_def_list[i].vp = read_ColorList(col_def_list[i].key, col_def_list[i].def);
+	}
 
 	//デフォルトのタグ色
 	usr_TAG->SetColor(EmptyStr, col_fgTagNam);
@@ -10669,7 +10651,7 @@ bool register_HotKey(int id, UnicodeString kstr)
 		}
 
 		if (!kstr.IsEmpty()) {
-			bool windows_key   = remove_text(kstr, _T("Win+"));
+			bool windows_key   = remove_text(kstr, "Win+");
 			TShortCut shortcut = TextToShortCut(kstr);
 			Word vkcode;
 			TShiftState ss;
@@ -10776,8 +10758,8 @@ bool mute_Volume(
 		if (FAILED(endp_vol->GetMute(&mute))) Abort();
 		IsMuted = mute;
 
-		if (!USAME_TI(prm, "GET")) {
-			IsMuted = USAME_TI(prm, "ON")? true : USAME_TI(prm, "OFF")? false : !IsMuted;
+		if (!SameText(prm, "GET")) {
+			IsMuted = SameText(prm, "ON")? true : SameText(prm, "OFF")? false : !IsMuted;
 			mute = IsMuted;
 			if (FAILED(endp_vol->SetMute(mute, NULL))) Abort();
 		}
@@ -10881,7 +10863,7 @@ bool add_PlayList(UnicodeString lnam)
 	//ディレクトリ
 	if (dir_exists(lnam)) {
 		std::unique_ptr<TStringList> fbuf(new TStringList());
-		get_files(lnam, _T("*.*"), fbuf.get(), true);
+		get_files(lnam, "*.*", fbuf.get(), true);
 		for (int i=0; i<fbuf->Count; i++) add_PlayFile(fbuf->Strings[i]);
 	}
 	//ファイル
@@ -10901,7 +10883,7 @@ bool add_PlayList(UnicodeString lnam)
 					//ディレクトリ
 					if (dir_exists(inam)) {
 						std::unique_ptr<TStringList> fbuf(new TStringList());
-						get_files(inam, _T("*.*"), fbuf.get(), true);
+						get_files(inam, "*.*", fbuf.get(), true);
 						for (int i=0; i<fbuf->Count; i++) add_PlayFile(fbuf->Strings[i]);
 					}
 					//ファイル
@@ -11305,7 +11287,7 @@ void TabCrTextOut(
 		}
 		//タブ/改行
 		int w = get_TextWidth(cv, "W", is_irreg);
-		if (USAME_TS(s.SubString(p1, 1), "\t"))
+		if (SameStr(s.SubString(p1, 1), "\t"))
 			draw_TAB(cv, x, y, w, cv->TextHeight("Q"));
 		else
 			draw_CR(cv, x, y, w, cv->TextHeight("Q"));
@@ -11366,31 +11348,31 @@ void RuledLnTextOut(
 		int w  = get_TextWidth(cv, sbuf, is_irreg);
 		int xc = xp + w/2;
 		int yc = rc.Top + (rc.Bottom - rc.Top) / 2;
-		if (starts_tchs(_T("│├┤"), sbuf)) {
+		if (starts_tchs("│├┤", sbuf)) {
 			cv->MoveTo(xc, rc.Top);  cv->LineTo(xc, rc.Bottom);	//縦線
-			if (starts_tchs(_T("├┤"), sbuf)) {
-				cv->MoveTo(xc, yc); cv->LineTo(USAME_TS(sbuf, "├")? xc + w : xp - 1, yc);
+			if (starts_tchs("├┤", sbuf)) {
+				cv->MoveTo(xc, yc); cv->LineTo(SameStr(sbuf, "├")? xc + w : xp - 1, yc);
 			}
 		}
-		else if (starts_tchs(_T("―─┼┬┴"), sbuf)) {
+		else if (starts_tchs("―─┼┬┴", sbuf)) {
 			cv->MoveTo(xp, yc);  cv->LineTo(xp + w, yc);	//横線
-			if (USAME_TS(sbuf, "┼")) {
+			if (SameStr(sbuf, "┼")) {
 				cv->MoveTo(xc, rc.Top);  cv->LineTo(xc, rc.Bottom);
 			}
-			else if (starts_tchs(_T("┬┴"), sbuf)) {
-				cv->MoveTo(xc, yc); cv->LineTo(xc, USAME_TS(sbuf, "┬")? rc.Bottom : rc.Top - 1);
+			else if (starts_tchs("┬┴", sbuf)) {
+				cv->MoveTo(xc, yc); cv->LineTo(xc, SameStr(sbuf, "┬")? rc.Bottom : rc.Top - 1);
 			}
 		}
-		else if (starts_tchs(_T("┌┐"), sbuf)) {
+		else if (starts_tchs("┌┐", sbuf)) {
 			cv->MoveTo(xc, rc.Bottom); cv->LineTo(xc, yc);
-			cv->LineTo(USAME_TS(sbuf, "┌")? xp + w : xp - 1, yc);
+			cv->LineTo(SameStr(sbuf, "┌")? xp + w : xp - 1, yc);
 		}
-		else if (starts_tchs(_T("└┘"), sbuf)) {
+		else if (starts_tchs("└┘", sbuf)) {
 			cv->MoveTo(xc, rc.Top);  cv->LineTo(xc, yc);
-			cv->LineTo(USAME_TS(sbuf, "└")? xp + w : xp - 1, yc);
+			cv->LineTo(SameStr(sbuf, "└")? xp + w : xp - 1, yc);
 		}
 		//タブ
-		else if (USAME_TS(sbuf, "\t")) {
+		else if (SameStr(sbuf, "\t")) {
 			int dt = (xp - (rc.Left + 2)) % w_tab;
 			w = get_TextWidth(cv, "W", is_irreg);
 			xp += (w_tab - dt - w);
@@ -11436,7 +11418,7 @@ void PrvTextOut(
 	int p = 0;
 	if (EmpComment && fg!=col_fgSelItem && !s.IsEmpty()) {
 		UnicodeString s0 = lp->Items->Strings[0];
-		if ((USAME_TI(s0, ";[MenuFile]") || USAME_TI(s0, ";[ResultList]")) && s[1]==';')
+		if ((SameText(s0, ";[MenuFile]") || SameText(s0, ";[ResultList]")) && s[1]==';')
 			p = 1;
 		else
 			p = UserHighlight->GetCommentPos(fnam, lp, idx, en_mlt);
@@ -12306,7 +12288,7 @@ void get_xml_inf(
 	UnicodeString lbuf = fnam;
 	if (!ContainsText(lbuf, "<?xml ")) lbuf = get_top_line(fnam);
 	if (ContainsText(lbuf, "<?xml ") && ContainsText(lbuf, "?>")) {
-		lbuf = Trim(get_tkn_m(lbuf, _T("<?xml "), _T("?>")));
+		lbuf = Trim(get_tkn_m(lbuf, "<?xml ", "?>"));
 		while (!lbuf.IsEmpty()) {
 			UnicodeString vstr = exclude_quot(get_tkn_m(lbuf, '=', ' '));
 			if (vstr.IsEmpty()) break;
@@ -12330,7 +12312,7 @@ UnicodeString get_autorun_ico(UnicodeString fnam)
 		bool s_flag = false;
 		for (int i=0; i<fbuf->Count; i++) {
 			UnicodeString lbuf = Trim(fbuf->Strings[i]);
-			if (USAME_TI(lbuf, "[autorun]")) {
+			if (SameText(lbuf, "[autorun]")) {
 				s_flag = true;
 			}
 			else if (s_flag && StartsText("icon=", lbuf)) {
@@ -12452,7 +12434,7 @@ bool divide_FileName_LineNo(
 			if (mts.Count==1 || pos<p1) {
 				fnam = exclude_quot(Trim(get_tkn_r(mts.Item[i].Value, '=')));
 				fnam = get_tkn(fnam, '#');
-				remove_top_text(fnam, _T("file:///"));
+				remove_top_text(fnam, "file:///");
 				fnam = slash_to_yen(fnam);
 				lno = 1; found = true;
 			}
@@ -12479,7 +12461,7 @@ bool divide_FileName_LineNo(
 		for (int i=0; i<mts.Count && !found; i++) {
 			int p1 = mts.Item[i].Index + mts.Item[i].Length;
 			if (mts.Count==1 || pos<p1) {
-				fnam = exclude_quot(Trim(get_tkn_r(mts.Item[i].Value, _T("file:///"))));
+				fnam = exclude_quot(Trim(get_tkn_r(mts.Item[i].Value, "file:///")));
 				fnam = get_tkn(fnam, '#');
 				fnam = slash_to_yen(fnam);
 				remove_end_s(fnam, ')');
@@ -12490,7 +12472,7 @@ bool divide_FileName_LineNo(
 
 		//c インクルード
 		if (ContainsStr(fnam, "#include")) {
-			fnam = exclude_quot(Trim(get_tkn_r(fnam, _T("#include"))));
+			fnam = exclude_quot(Trim(get_tkn_r(fnam, "#include")));
 			if (ContainsStr(fnam, "<")) fnam = get_tkn_m(fnam, '<', '>');
 			lno = 1;	break;
 		}
@@ -12638,7 +12620,6 @@ int get_FileNameByTag(
 	}
 }
 
-
 //---------------------------------------------------------------------------
 //HtmConv をデフォルトで初期化
 //---------------------------------------------------------------------------
@@ -12650,14 +12631,14 @@ void ini_HtmConv_def(HtmConv *htmcnv, UnicodeString fnam, UnicodeString url)
 	htmcnv->Scheme   = EmptyStr;
 	htmcnv->BaseUrl  = EmptyStr;
 
-	if (is_match_regex(url, _T("^https?://"))) {
+	if (TRegEx::IsMatch(url, "^https?://")) {
 		try {
 			if (url.Pos("%")==0) url = TIdURI::URLEncode(url, IndyTextEncoding_UTF8());
 			htmcnv->UrlStr   = url;
 			htmcnv->TopLevel = TRegEx::Replace(url, "(^https?://[\\w\\.\\-]+)(/.*)*", "$1");
 			htmcnv->Scheme   = get_tkn(htmcnv->TopLevel, "//");
 			if (!EndsStr("/", url)) {
-				int p = pos_r(_T("/"), url);
+				int p = pos_r("/", url);
 				if (p>0) url = url.SubString(1, p);
 			}
 			htmcnv->BaseUrl = url;
@@ -12755,7 +12736,7 @@ bool Execute_cmdln(
 		HANDLE hRead  = NULL;
 		HANDLE hWrite = NULL;
 		//名前なしパイプを作成
-		if (contains_wd_i(opt, _T("O|L"))) {
+		if (contains_wd_i(opt, "O|L")) {
 			SECURITY_ATTRIBUTES sa  = {sizeof(SECURITY_ATTRIBUTES)};
 			sa.lpSecurityDescriptor = 0;
 			sa.bInheritHandle		= TRUE;
@@ -12774,7 +12755,7 @@ bool Execute_cmdln(
 		PROCESS_INFORMATION pi;
 		if (::CreateProcess(NULL, cmdln.c_str(), NULL, NULL, TRUE, 0, NULL, wdir.c_str(), &si, &pi)) {
 			//終了待ち
-			if (contains_wd_i(opt, _T("W|O|L"))) {
+			if (contains_wd_i(opt, "W|O|L")) {
 				bool exited = false;
 
 				//コンソール出力の取り込み
@@ -12812,7 +12793,7 @@ bool Execute_cmdln(
 									std::unique_ptr<TMemoryStream> mbuf(new TMemoryStream());
 									mbuf->Write(buf.get(), len);
 									log_buf += get_MemoryStrins(mbuf.get());
-									int p = pos_r(_T("\r\n"), log_buf);
+									int p = pos_r("\r\n", log_buf);
 									if (p>0) {
 										AddLog(log_buf.SubString(1, p + 1), false, true);
 										log_buf.Delete(1, p + 1);
@@ -12890,10 +12871,10 @@ bool Execute_demote(
 	}
 
 	bool res = false;
-    HANDLE hShell = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
-    if (hShell) {
+	HANDLE hShell = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
+	if (hShell) {
 		HANDLE hShToken;
-   		if (::OpenProcessToken(hShell, TOKEN_DUPLICATE, &hShToken)) {
+		if (::OpenProcessToken(hShell, TOKEN_DUPLICATE, &hShToken)) {
 		    HANDLE hPriToken;
 			if (::DuplicateTokenEx(
 	            hShToken,
@@ -12905,9 +12886,7 @@ bool Execute_demote(
 
 				STARTUPINFOW si = {sizeof(STARTUPINFOW)};
 				PROCESS_INFORMATION pi = {};
-    			if (::CreateProcessWithTokenW(
-						hPriToken, 0, NULL, cmdln.c_str(), 0, NULL, wdir.c_str(), &si, &pi))
-				{
+				if (::CreateProcessWithTokenW(hPriToken, 0, NULL, cmdln.c_str(), 0, NULL, wdir.c_str(), &si, &pi)) {
 					::CloseHandle(pi.hProcess);
 					::CloseHandle(pi.hThread);
 					res = true;
@@ -12919,7 +12898,7 @@ bool Execute_demote(
 			}
 		    ::CloseHandle(hShToken);
 		}
-    	::CloseHandle(hShell);
+		::CloseHandle(hShell);
 	}
 
 	if (!res && GlobalErrMsg.IsEmpty()) GlobalErrMsg = LoadUsrMsg(USTR_FaildProc);
@@ -13171,7 +13150,7 @@ UnicodeString get_LogErrMsg(
 					}
 				}
 			}
-			remove_top_text(ret_str, _T("%1 は"));
+			remove_top_text(ret_str, "%1 は");
 		}
 
 		if (add_cr && !ret_str.IsEmpty() && !StartsStr("\r\n", ret_str))
@@ -13219,7 +13198,7 @@ UnicodeString GetClockStr()
 		ret_str = ReplaceStr(ret_str, "$BT", tmp.sprintf(_T("\"%s\""),  get_BatteryTimeStr().c_str()));
 		//電源状態
 		if (ContainsStr(ret_str, "$PS(")) {
-			lbuf = split_tkn(ret_str, _T("$PS(")) + "\"";
+			lbuf = split_tkn(ret_str, "$PS(") + "\"";
 			s    = split_tkn(ret_str, ')');
 			SYSTEM_POWER_STATUS ps;
 			::GetSystemPowerStatus(&ps);
@@ -13228,7 +13207,7 @@ UnicodeString GetClockStr()
 		}
 		//接続状態
 		if (ContainsStr(ret_str, "$NS(")) {
-			lbuf = split_tkn(ret_str, _T("$NS(")) + "\"";
+			lbuf = split_tkn(ret_str, "$NS(") + "\"";
 			s    = split_tkn(ret_str, ')');
 			lbuf += ((InternetConnected()? get_tkn(s, ':') : get_tkn_r(s, ':')) + "\"");
 			ret_str.Insert(lbuf, 1);
@@ -13236,14 +13215,14 @@ UnicodeString GetClockStr()
 
 		//日付カウントダウン
 		while (ContainsStr(ret_str, "$CD(")) {
-			lbuf = split_tkn(ret_str, _T("$CD("));
+			lbuf = split_tkn(ret_str, "$CD(");
 			s    = split_tkn(ret_str, ')');
 
 			try {
 				TDateTime dt;
 				UnicodeString dstr = Trim(split_tkn(s, ';'));
 				//yyyy/mm/dd
-				if (is_match_regex(dstr + ";", _T("^\\d{4}/\\d{1,2}/\\d{1,2};"))) {
+				if (TRegEx::IsMatch(dstr + ";", "^\\d{4}/\\d{1,2}/\\d{1,2};")) {
 					if (!ToDateTime(dstr, &dt)) Abort();
 				}
 				//省略あり
@@ -13251,7 +13230,7 @@ UnicodeString GetClockStr()
 					bool to_sw	 = remove_top_s(dstr, '+');
 					bool from_sw = remove_top_s(dstr, '-');
 					//年/月が省略されている(日のみ)
-					if (is_match_regex(dstr + ";", _T("^\\d{1,2};"))) {
+					if (TRegEx::IsMatch(dstr + ";", "^\\d{1,2};")) {
 						unsigned short y = YearOf(Now());
 						unsigned short m = YearOf(Now());
 						unsigned short d = dstr.ToIntDef(0);	if (d==0) Abort();
@@ -13264,7 +13243,7 @@ UnicodeString GetClockStr()
 						}
 					}
 					//年が省略されている
-					else if (is_match_regex(dstr + ";", _T("^\\d{1,2}/\\d{1,2};"))) {
+					else if (TRegEx::IsMatch(dstr + ";", "^\\d{1,2}/\\d{1,2};")) {
 						unsigned short y = YearOf(Now());
 						unsigned short m = get_tkn(dstr, '/').ToIntDef(0);
 						unsigned short d = get_tkn_r(dstr, '/').ToIntDef(0);
@@ -13329,7 +13308,7 @@ void RenameOptCmdFile()
 			//追加メニュー
 			for (int i=0; i<ExtMenuList->Count; i++) {
 				TStringDynArray itm_buf = get_csv_array(ExtMenuList->Strings[i], EXTMENU_CSVITMCNT, true);
-				if (is_separator(itm_buf[0]) || !USAME_TI(itm_buf[1], "ExeCommands")) continue;
+				if (is_separator(itm_buf[0]) || !SameText(itm_buf[1], "ExeCommands")) continue;
 				UnicodeString prm = itm_buf[2];
 				if (!remove_top_AT(prm)) continue;
 				if (is_same_file(org_nam, prm)) {
@@ -13356,7 +13335,7 @@ void RenameOptCmdFile()
 			//関連付け(OpenStandard)
 			for (int i=0; i<OpenStdCmdList->Count; i++) {
 				UnicodeString vbuf = OpenStdCmdList->ValueFromIndex[i];
-				if (!remove_top_text(vbuf, _T("ExeCommands_@"))) continue;
+				if (!remove_top_text(vbuf, "ExeCommands_@")) continue;
 				if (is_same_file(org_nam, vbuf)) OpenStdCmdList->ValueFromIndex[i] = "ExeCommands_@" + new_rel;
 			}
 		}
@@ -13377,7 +13356,7 @@ UnicodeString get_ref_CmdFile(
 	int K_cnt = 0;
 	for (int i=0; i<KeyFuncList->Count; i++) {
 		UnicodeString vbuf = KeyFuncList->ValueFromIndex[i];
-		if (!remove_top_text(vbuf, _T("ExeCommands_")))	continue;
+		if (!remove_top_text(vbuf, "ExeCommands_"))	continue;
 		UnicodeString dsc = split_dsc(vbuf);
 		if (!remove_top_AT(vbuf)) 						continue;
 		if (!is_same_file(fnam, exclude_quot(vbuf)))	continue;
@@ -13394,7 +13373,7 @@ UnicodeString get_ref_CmdFile(
 	int M_cnt = 0;
 	for (int i=0; i<ExtMenuList->Count; i++) {
 		TStringDynArray itm_buf = get_csv_array(ExtMenuList->Strings[i], EXTMENU_CSVITMCNT, true);
-		if (is_separator(itm_buf[0]) || !USAME_TI(itm_buf[1], "ExeCommands")) continue;
+		if (is_separator(itm_buf[0]) || !SameText(itm_buf[1], "ExeCommands")) continue;
 		UnicodeString prm = itm_buf[2];
 		if (!remove_top_AT(prm)) 					continue;
 		if (!is_same_file(fnam, exclude_quot(prm))) continue;
@@ -13437,7 +13416,7 @@ UnicodeString get_ref_CmdFile(
 	int S_cnt = 0;
 	for (int i=0; i<OpenStdCmdList->Count; i++) {
 		UnicodeString vbuf = OpenStdCmdList->ValueFromIndex[i];
-		if (!remove_top_text(vbuf, _T("ExeCommands_@"))) continue;
+		if (!remove_top_text(vbuf, "ExeCommands_@")) continue;
 		if (!is_same_file(fnam, vbuf))	continue;
 		S_cnt++;
 		if (lst) add_PropLine(ref_str, "関連付け(OpenStandard): " + OpenStdCmdList->Names[i], lst);
@@ -13540,7 +13519,7 @@ UnicodeString make_LogHdr(
 	bool is_dir,			//fnam が ディレクトリ名 (default = false)
 	int wd)					//表示幅 (default = 0)
 {
-	bool full  = (LogFullPath && !USAME_TI(cmd, "LOAD")) || USAME_TI(cmd, "EDIT");
+	bool full  = (LogFullPath && !SameText(cmd, "LOAD")) || SameText(cmd, "EDIT");
 
 	bool slash = StartsStr('/', fnam);
 	if (slash) fnam = slash_to_yen(fnam);
@@ -13659,7 +13638,7 @@ void StartLog(const _TCHAR *msg, int task_no)
 //---------------------------------------------------------------------------
 void EndLog(UnicodeString msg, UnicodeString inf)
 {
-	if (contained_wd_i(_T("圧縮|解凍"), msg)) NotifyPrimNyan(msg + "が終了しました");
+	if (contained_wd_i("圧縮|解凍", msg)) NotifyPrimNyan(msg + "が終了しました");
 
 	AddLog(msg.cat_sprintf(_T("終了%s"), inf.c_str()), true);
 }
@@ -13686,7 +13665,7 @@ void ExeErrLog(UnicodeString fnam, UnicodeString msg)
 //---------------------------------------------------------------------------
 //結果カウントを文字列に
 //---------------------------------------------------------------------------
-UnicodeString get_ResCntStr(int ok_cnt, int er_cnt, int sk_cnt, int ng_cnt, 
+UnicodeString get_ResCntStr(int ok_cnt, int er_cnt, int sk_cnt, int ng_cnt,
 	bool is_task)	//タスクの結果	(default = false)
 {
 	UnicodeString ret_str;
@@ -13829,7 +13808,7 @@ bool __fastcall SpecialKeyProc(
 	//Shift+F10 によるポップアップメニュー表示
 	//※コンボボックスでデフォルトのメニューが出てしまう現象に対応
 	//  OnMessage で拾えないようなのでここで処理
-	if (USAME_TI(KeyStr, "Shift+F10")) {
+	if (SameText(KeyStr, "Shift+F10")) {
 		if (UserModule->ShowPopupMenu()) Key = 0;
 		return true;
 	}
@@ -13867,7 +13846,7 @@ bool __fastcall SpecialKeyProc(
 		}
 	}
 	//閉じる
-	else if (USAME_TI(KeyStr, "Alt+F4")) {
+	else if (SameText(KeyStr, "Alt+F4")) {
 		frm->Close();
 	}
 	else {
@@ -13916,8 +13895,8 @@ bool __fastcall SpecialEditProc(TObject *Sender, WORD &Key, TShiftState Shift)
 		if (ep->SelLength==0 && ep->SelStart<s.Length()) {
 			int p = ep->SelStart + 1;
 			handled = true;
-			if		(USAME_TI(KeyStr, "Ctrl+U")) s[p] = toupper(s[p]);	//大文字化
-			else if (USAME_TI(KeyStr, "Ctrl+L")) s[p] = tolower(s[p]);	//小文字化
+			if		(SameText(KeyStr, "Ctrl+U")) s[p] = toupper(s[p]);	//大文字化
+			else if (SameText(KeyStr, "Ctrl+L")) s[p] = tolower(s[p]);	//小文字化
 			else handled = false;
 
 			if (handled) {
@@ -13968,7 +13947,7 @@ bool is_IniSeaKey(UnicodeString &keystr)
 	if (!IniSeaShift.IsEmpty() && !remove_top_text(k, IniSeaShift)) return false;
 	if (k.Length()!=1) return false;
 
-	if (_istalpha(k[1]) || USAME_TS(k, "＼") || ((IniSeaByNum || IniSeaBySign) && _istdigit(k[1]))) {
+	if (_istalpha(k[1]) || SameStr(k, "＼") || ((IniSeaByNum || IniSeaBySign) && _istdigit(k[1]))) {
 		k = ReplaceStr(k, "＼", "_");
 		if (IniSeaBySign) {
 			//Shift+数字キーの記号もサーチ
@@ -13998,7 +13977,7 @@ bool update_IncSeaWord(
 	bool is_char = false;
 	bool is_cap  = false;
 
-	remove_text(keystr, _T("10Key_"));
+	remove_text(keystr, "10Key_");
 	keystr = ReplaceStr(keystr, "＝", "=");
 
 	if (remove_top_text(keystr, KeyStr_Shift)) {
@@ -14060,13 +14039,13 @@ bool update_IncSeaWord(
 				is_char = ContainsStr((is_JpKeybd()? "-^\\@[];:,./" : "-=[];,.`'\\/"), keystr);
 		}
 	}
-	else if (USAME_TI(keystr, "SPACE")) {
+	else if (SameText(keystr, "SPACE")) {
 		keystr	= " ";
 		is_char = true;
 	}
 
 	//一文字後退
-	if (contained_wd_i(_T("BKSP|Ctrl+H"), keystr)) {
+	if (contained_wd_i("BKSP|Ctrl+H", keystr)) {
 		if (!kwd.IsEmpty()) delete_end(kwd);
 		return true;
 	}
@@ -14139,9 +14118,9 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 	int pn	= lp->ClientHeight/lp->ItemHeight;
 	int mov_n;
 
-	if (prm.IsEmpty() && USAME_TI(cmd, "Scroll")) mov_n = ViewWheelScrLn;
-	else if (USAME_TI(prm, "HP")) mov_n = pn/2;
-	else if (USAME_TI(prm, "FP")) mov_n = pn;
+	if (prm.IsEmpty() && SameText(cmd, "Scroll")) mov_n = ViewWheelScrLn;
+	else if (SameText(prm, "HP")) mov_n = pn/2;
+	else if (SameText(prm, "FP")) mov_n = pn;
 	else mov_n = prm.ToIntDef(1);
 
 	TFont *l_font = (lp->Tag & LBTAG_GEN_LIST)? GenListFont :
@@ -14149,8 +14128,8 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 
 	//移動
 	int cmd_id = idx_of_word_i(
-		_T("CursorDown|CursorUp|CursorTop|TextTop|CursorEnd|TextEnd|")				//0～5
-		_T("PageDown|PageUp|ScrollDown|ScrollUp|ScrollCursorDown|ScrollCursorUp"),	//6～11
+		"CursorDown|CursorUp|CursorTop|TextTop|CursorEnd|TextEnd|"				//0～5
+		"PageDown|PageUp|ScrollDown|ScrollUp|ScrollCursorDown|ScrollCursorUp",	//6～11
 		cmd);
 
 	bool zoomed = false;
@@ -14174,18 +14153,18 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 		}
 	}
 	//選択
-	else if (lp->MultiSelect && USAME_TI(cmd, "Select")) {
+	else if (lp->MultiSelect && SameText(cmd, "Select")) {
 		if (idx!=-1) {
 			lp->Selected[idx] = !lp->Selected[idx];
 			ListBoxCursorDown(lp);
 		}
 	}
 	//すべて選択
-	else if (lp->MultiSelect && (StartsText("SelAll",cmd) || USAME_TI(cmd, "SelectAll"))) {
+	else if (lp->MultiSelect && (StartsText("SelAll",cmd) || SameText(cmd, "SelectAll"))) {
 		ListBoxSelectAll(lp, lp->SelCount==0);
 	}
 	//コピー
-	else if (USAME_TI(cmd, "ClipCopy")) {
+	else if (SameText(cmd, "ClipCopy")) {
 		//選択行コピー
 		if (lp->MultiSelect && lp->SelCount>0) {
 			cursor_HourGlass();
@@ -14202,7 +14181,7 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 			lp->Perform(WM_SETREDRAW, 1, (NativeInt)0);
 			::InvalidateRect(lp->Handle, NULL, TRUE);
 			//追加
-			if (USAME_TI(prm, "AD")) cb_buf->Text.Insert(GetClipboardText(), 1);
+			if (SameText(prm, "AD")) cb_buf->Text.Insert(GetClipboardText(), 1);
 			cursor_Default();
 			copy_to_Clipboard(cb_buf->Text);
 		}
@@ -14216,24 +14195,24 @@ bool ExeCmdListBox(TListBox *lp, UnicodeString cmd, UnicodeString prm)
 		}
 	}
 	//URLを開く
-	else if (USAME_TI(cmd, "OpenURL")) {
+	else if (SameText(cmd, "OpenURL")) {
 		if (idx!=-1) Execute_ex(extract_URL(lp->Items->Strings[idx]));
 	}
 	//ズーム
-	else if ((lp->Tag & LBTAG_OPT_ZOOM) && contained_wd_i(_T("ZoomIn|ZoomOut"), cmd)) {
+	else if ((lp->Tag & LBTAG_OPT_ZOOM) && contained_wd_i("ZoomIn|ZoomOut", cmd)) {
 		int d_sz = std::min(prm.ToIntDef(1), 12);
-		int z_sz = USAME_TI(cmd, "ZoomIn") ? std::min(lp->Font->Size + d_sz, MAX_FNTZOOM_SZ)
+		int z_sz = SameText(cmd, "ZoomIn") ? std::min(lp->Font->Size + d_sz, MAX_FNTZOOM_SZ)
 										   : std::max(lp->Font->Size - d_sz, MIN_FNTZOOM_SZ);
 		lp->Font->Size = z_sz;
 		lp->ItemHeight = get_FontHeightMgn(lp->Font, abs(lp->Font->Height) / 3.0 + 1);
 		zoomed = true;
 	}
-	else if ((lp->Tag & LBTAG_OPT_ZOOM) && USAME_TI(cmd, "ZoomReset")) {
+	else if ((lp->Tag & LBTAG_OPT_ZOOM) && SameText(cmd, "ZoomReset")) {
 		set_ListBoxItemHi(lp, l_font);
 		zoomed = true;
 	}
 	//フォントサイズ変更
-	else if ((lp->Tag & LBTAG_OPT_ZOOM) && USAME_TI(cmd, "SetFontSize")) {
+	else if ((lp->Tag & LBTAG_OPT_ZOOM) && SameText(cmd, "SetFontSize")) {
 		bool x_sw = remove_top_s(prm, '^');
 		if (!prm.IsEmpty()) {
 			int f_sz = std::max(std::min(prm.ToIntDef(l_font->Size), MAX_FNTZOOM_SZ), MIN_FNTZOOM_SZ);
@@ -14316,15 +14295,14 @@ HWND get_PrimNyanWnd()
 //---------------------------------------------------------------------------
 bool IsNyanfiWnd(HWND hWnd)
 {
-	return USAME_TS(get_WndClassName(hWnd), "TNyanFiForm");
+	return SameStr(get_WndClassName(hWnd), "TNyanFiForm");
 }
 //---------------------------------------------------------------------------
 // ウィイドウは二重起動された NyanFi のメイン画面か?
 //---------------------------------------------------------------------------
 bool IsNyanfi2Wnd(HWND hWnd)
 {
-	return (USAME_TS(get_WndClassName(hWnd), "TNyanFiForm")
-			&& is_match_regex(get_WndText(hWnd), _T("NyanFi-\\d+$")));
+	return (SameStr(get_WndClassName(hWnd), "TNyanFiForm") && TRegEx::IsMatch(get_WndText(hWnd), "NyanFi-\\d+$"));
 }
 
 //---------------------------------------------------------------------------
@@ -14357,7 +14335,7 @@ BOOL CALLBACK EnumModalWndProc(HWND hWnd, LPARAM hTop)
 	::GetWindowThreadProcessId(hWnd, &pid);
 	if (ProcessId!=pid) return TRUE;
 
-	if (::IsWindowVisible(hWnd) && USAME_TS(get_WndClassName(hWnd), "#32770")) {
+	if (::IsWindowVisible(hWnd) && SameStr(get_WndClassName(hWnd), "#32770")) {
 		*((HWND*)hTop) = hWnd;
 		return FALSE;
 	}
@@ -14448,7 +14426,7 @@ BOOL CALLBACK EnumNyanWndProc(HWND hWnd, LPARAM lst)
 {
 	if (IsNyanfiWnd(hWnd)) {
 		UnicodeString tbuf = get_WndText(hWnd);
-		int p = pos_r(_T(" - "), tbuf);
+		int p = pos_r(" - ", tbuf);
 		UnicodeString lbuf = (p>0)? tbuf.SubString(p + 3, 16) : tbuf;
 		if (lbuf.Pos('-')) lbuf = get_tkn_r(lbuf, '-'); else lbuf = "1";
 
@@ -14603,7 +14581,7 @@ BOOL CALLBACK EnumHelpWndProc(HWND hWnd, LPARAM hHelp)
 	DWORD pid;
 	::GetWindowThreadProcessId(hWnd, &pid);
 	if (ProcessId!=pid) return TRUE;
-	if (!USAME_TI(get_WndClassName(hWnd), "HH Parent")) return TRUE;
+	if (!SameText(get_WndClassName(hWnd), "HH Parent")) return TRUE;
 	*((HWND*)hHelp) = hWnd;
 	return FALSE;
 }
@@ -14624,7 +14602,7 @@ BOOL CALLBACK EnumMenuWndProc(HWND hWnd, LPARAM hMenu)
 	::GetWindowThreadProcessId(hWnd, &pid);
 	if (ProcessId!=pid) return TRUE;
 
-	if (!USAME_TS(get_WndClassName(hWnd), "#32768")) return TRUE;
+	if (!SameStr(get_WndClassName(hWnd), "#32768")) return TRUE;
 	*((HWND*)hMenu) = hWnd;
 	return FALSE;
 }
@@ -14959,7 +14937,7 @@ void MakeTreeList(
 
 	//表示項目の準備
 	for (int i=0; i<lst->Count; i++) {
-		TStringDynArray plst = split_path(get_tkn_r(ReplaceStr(lst->Strings[i], "/", "\\"), pnam));
+		TStringDynArray plst = split_path(get_tkn_r(ReplaceStr(lst->Strings[i], "/", '\\'), pnam));
 		int n = plst.Length;
 		if (n>=1) {
 			UnicodeString lbuf = lst->Strings[i];
@@ -15222,13 +15200,13 @@ UnicodeString get_GitUrl(file_rec *fp)
 			int cnt = 0;
 			for (int i=0; i<cfg_lst->Count; i++) {
 				UnicodeString lbuf = Trim(cfg_lst->Strings[i]);
-				if (cnt==0 && USAME_TI(lbuf, "[remote \"origin\"]")) {
+				if (cnt==0 && SameText(lbuf, "[remote \"origin\"]")) {
 					cnt = 1;
 				}
 				else if (cnt==1) {
 					if (StartsStr("[", lbuf)) break;
 					UnicodeString key = Trim(split_tkn(lbuf, "="));
-					if (USAME_TI(key, "url")) {
+					if (SameText(key, "url")) {
 						url = Trim(lbuf);
 						if (url.Pos('@')) {
 							url = TRegEx::Replace(url, "(https?://)(\\w+@)([\\w/:%#$&?()~.=+-]+)", "\\1\\3");
@@ -15381,7 +15359,7 @@ UnicodeString get_GitStatusStr(
 			}
 		}
 
-		stt_all = Trim(replace_regex(stt_all, _T("\\b0\\b"), _T("_")));
+		stt_all = Trim(TRegEx::Replace(stt_all, "\\b0\\b", "_"));
 		stt_all = def_if_empty(stt_all, "Clean");
 		stt_wk	= def_if_empty(Trim(stt_wk), "Clean");
 		stt_ix	= def_if_empty(Trim(stt_ix), "Nothing to commit");
