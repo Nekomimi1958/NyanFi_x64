@@ -84,13 +84,13 @@ void __fastcall TCvImageDlg::FormShow(TObject *Sender)
 	ScalePrm1Edit->Text 		 = IniFile->ReadIntGen( (pfx + "ScalePrm1").c_str(),	100);
 	ScalePrm2Edit->Text 		 = IniFile->ReadIntGen( (pfx + "ScalePrm2").c_str(),	100);
 	ScaleOptComboBox->ItemIndex  = IniFile->ReadIntGen( (pfx + "ScaleOpt").c_str());
-	MgnColPanel->Color	 = (TColor)IniFile->ReadIntGen( (pfx + "MgnColor").c_str(),		clBlack);
 
 	ScaleModeComboBoxChange(NULL);
 	CvFmtRadioGroupClick(NULL);
 	if (fromClip) ClipNameComboBoxChange(NULL);
 
 	SetDarkWinTheme(this);
+	MgnColPanel->Color = (TColor)IniFile->ReadIntGen( (pfx + "MgnColor").c_str(),	clBlack);
 }
 //---------------------------------------------------------------------------
 void __fastcall TCvImageDlg::FormClose(TObject *Sender, TCloseAction &Action)

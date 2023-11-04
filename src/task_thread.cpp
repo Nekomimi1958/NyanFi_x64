@@ -1292,234 +1292,242 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 	CurFileName = fnam;
 	bool is_wmf = test_MetaExt(ExtractFileExt(fnam));
 
-	UnicodeString msg  = make_LogHdr(_T("CVIMG"), fnam);
+	UnicodeString msg = make_LogHdr(_T("CVIMG"), fnam);
 
+	std::unique_ptr<Graphics::TBitmap> i_img(new Graphics::TBitmap());
+	std::unique_ptr<Graphics::TBitmap> r_img(new Graphics::TBitmap());
 	try {
-		WaitIfPause();
-		if (!is_clip && !EX_file_exists(fnam)) throw Exception(EmptyStr);
+		i_img->Canvas->Lock();
+		r_img->Canvas->Lock();
+		try {
+			WaitIfPause();
+			if (!is_clip && !EX_file_exists(fnam)) throw Exception(EmptyStr);
 
-		//処理前にタイムスタンプを取っておく
-		TDateTime ft;
-		if (!is_clip && Config->KeepTime) ft = get_file_age(fnam);
+			//処理前にタイムスタンプを取っておく
+			TDateTime ft;
+			if (!is_clip && Config->KeepTime) ft = get_file_age(fnam);
 
-		//読み込み
-		std::unique_ptr<Graphics::TBitmap> i_img(new Graphics::TBitmap());
-		std::unique_ptr<TMetafile> mf(new TMetafile());
-		unsigned int i_wd, i_hi;
-		//クリップボード
-		if (is_clip) {
-			if (!Clipboard()->HasFormat(CF_BITMAP)) UserAbort(USTR_NoObject);
-			i_img->Assign(Clipboard());
-			i_wd = i_img->Width;
-			i_hi = i_img->Height;
-		}
-		//メタファイル
-		else if (is_wmf) {
-			mf->LoadFromFile(fnam);
-			i_wd = mf->Width;
-			i_hi = mf->Height;
-		}
-		//画像ファイル
-		else {
-			TColor bg = test_FileExt(ExtractFileExt(fnam), ".png.gif")? Config->CvImg_mgn_color : col_None;
-			if (load_ImageFile(fnam, i_img.get(), (Config->CvImg_not_use_prvw? WICIMG_FRAME : WICIMG_PREVIEW), bg)==0)
-				UserAbort(USTR_FaildLoad);
-			i_wd = i_img->Width;
-			i_hi = i_img->Height;
-		}
-		if (i_wd==0 || i_hi==0) TextAbort(_T("元画像のサイズが不正です。"));
-
-		//縮小・拡大
-		if (Config->CvImg_scale_mode>0) {
-			float r, r0, r1;
-			std::unique_ptr<Graphics::TBitmap> r_img(new Graphics::TBitmap());
-
-			//パラメータチェック
-			switch (Config->CvImg_scale_mode) {
-			case 1:
-				if (Config->CvImg_scale_prm1==0) UserAbort(USTR_IllegalParam);
-				break;
-			case 5: case 6: case 7: case 8:
-				if (Config->CvImg_scale_prm1==0 || Config->CvImg_scale_prm2==0) UserAbort(USTR_IllegalParam);
-				break;
-			default:
-				if (Config->CvImg_scale_prm1==0) UserAbort(USTR_IllegalParam);
+			//読み込み
+			std::unique_ptr<TMetafile> mf(new TMetafile());
+			unsigned int i_wd, i_hi;
+			//クリップボード
+			if (is_clip) {
+				if (!Clipboard()->HasFormat(CF_BITMAP)) UserAbort(USTR_NoObject);
+				i_img->Assign(Clipboard());
+				i_wd = i_img->Width;
+				i_hi = i_img->Height;
 			}
-
-			//変更サイズを求める
-			switch (Config->CvImg_scale_mode) {
-			case 2:	//縦横の長い方
-				if (i_wd>i_hi) {	//横の方が長い
-					r = 1.0 * i_hi / i_wd;
-					i_wd = Config->CvImg_scale_prm1;
-					i_hi = i_wd * r;
-				}
-				else {			//縦の方が長い
-					r = 1.0 * i_wd / i_hi;
-					i_hi = Config->CvImg_scale_prm1;
-					i_wd = i_hi * r;
-				}
-				break;
-			case 3:	//横サイズを指定
-				r = 1.0 * i_hi / i_wd;
-				i_wd = Config->CvImg_scale_prm1;
-				i_hi = i_wd * r;
-				break;
-			case 4:	//縦サイズを指定
-				r = 1.0 * i_wd / i_hi;
-				i_hi = Config->CvImg_scale_prm1;
-				i_wd = i_hi * r;
-				break;
-			case 5: case 7: //指定サイズに収める/ 余白付き
-				r0 = 1.0 * i_wd / i_hi;
-				r1 = 1.0 * Config->CvImg_scale_prm1 / Config->CvImg_scale_prm2;
-				if (r0>r1) {
-					r = 1.0 * i_hi / i_wd;
-					i_wd = Config->CvImg_scale_prm1;
-					i_hi = i_wd * r;
-				}
-				else {
-					r = 1.0 * i_wd / i_hi;
-					i_hi = Config->CvImg_scale_prm2;
-					i_wd = i_hi * r;
-				}
-				break;
-			case 6:	//指定サイズにストレッチ
-				i_wd = Config->CvImg_scale_prm1;
-				i_hi = Config->CvImg_scale_prm2;
-				break;
-			case 8:	//指定サイズに合わせて切り出し
-				r0 = 1.0 * i_wd / i_hi;
-				r1 = 1.0 * Config->CvImg_scale_prm1 / Config->CvImg_scale_prm2;
-				if (r0<r1) {
-					r = 1.0 * i_hi / i_wd;
-					i_wd = Config->CvImg_scale_prm1;
-					i_hi = i_wd * r;
-				}
-				else {
-					r = 1.0 * i_wd / i_hi;
-					i_hi = Config->CvImg_scale_prm2;
-					i_wd = i_hi * r;
-				}
-				break;
-			}
-
-			//縮小・拡大
 			//メタファイル
-			if (is_wmf) {
-				if (Config->CvImg_scale_mode==1) {
-					//倍率指定
-					float r = Config->CvImg_scale_prm1/100.0;
-					r_img->SetSize(i_wd * r, i_hi * r);
-				}
-				else {
-					//縦・横サイズ指定
-					r_img->SetSize(i_wd, i_hi);
-				}
-				TRect rc = Rect(0, 0, r_img->Width, r_img->Height);
-				r_img->Canvas->Brush->Color = Config->CvImg_mgn_color;
-				r_img->Canvas->FillRect(rc);
-				r_img->Canvas->StretchDraw(rc, mf.get());
+			else if (is_wmf) {
+				mf->LoadFromFile(fnam);
+				i_wd = mf->Width;
+				i_hi = mf->Height;
 			}
 			//画像ファイル
 			else {
-				//補間する
-				if (Config->CvImg_scale_opt>=0 && Config->CvImg_scale_opt<=3) {
-					//倍率指定
-					if (Config->CvImg_scale_mode==1) {
-						if (!WIC_resize_image(i_img.get(), r_img.get(),
-							Config->CvImg_scale_prm1/100.0, 0, 0, Config->CvImg_scale_opt))
-								UserAbort(USTR_FaildProc);
+				TColor bg = test_FileExt(ExtractFileExt(fnam), ".png.gif")? Config->CvImg_mgn_color : col_None;
+				if (load_ImageFile(fnam, i_img.get(), (Config->CvImg_not_use_prvw? WICIMG_FRAME : WICIMG_PREVIEW), bg)==0)
+					UserAbort(USTR_FaildLoad);
+				i_wd = i_img->Width;
+				i_hi = i_img->Height;
+			}
+			if (i_wd==0 || i_hi==0) TextAbort(_T("元画像のサイズが不正です。"));
+
+			//縮小・拡大
+			if (Config->CvImg_scale_mode>0) {
+				float r, r0, r1;
+
+				//パラメータチェック
+				switch (Config->CvImg_scale_mode) {
+				case 1:
+					if (Config->CvImg_scale_prm1==0) UserAbort(USTR_IllegalParam);
+					break;
+				case 5: case 6: case 7: case 8:
+					if (Config->CvImg_scale_prm1==0 || Config->CvImg_scale_prm2==0) UserAbort(USTR_IllegalParam);
+					break;
+				default:
+					if (Config->CvImg_scale_prm1==0) UserAbort(USTR_IllegalParam);
+				}
+
+				//変更サイズを求める
+				switch (Config->CvImg_scale_mode) {
+				case 2:	//縦横の長い方
+					if (i_wd>i_hi) {	//横の方が長い
+						r = 1.0 * i_hi / i_wd;
+						i_wd = Config->CvImg_scale_prm1;
+						i_hi = i_wd * r;
 					}
-					//縦・横サイズ指定
+					else {			//縦の方が長い
+						r = 1.0 * i_wd / i_hi;
+						i_hi = Config->CvImg_scale_prm1;
+						i_wd = i_hi * r;
+					}
+					break;
+				case 3:	//横サイズを指定
+					r = 1.0 * i_hi / i_wd;
+					i_wd = Config->CvImg_scale_prm1;
+					i_hi = i_wd * r;
+					break;
+				case 4:	//縦サイズを指定
+					r = 1.0 * i_wd / i_hi;
+					i_hi = Config->CvImg_scale_prm1;
+					i_wd = i_hi * r;
+					break;
+				case 5: case 7: //指定サイズに収める/ 余白付き
+					r0 = 1.0 * i_wd / i_hi;
+					r1 = 1.0 * Config->CvImg_scale_prm1 / Config->CvImg_scale_prm2;
+					if (r0>r1) {
+						r = 1.0 * i_hi / i_wd;
+						i_wd = Config->CvImg_scale_prm1;
+						i_hi = i_wd * r;
+					}
 					else {
-						if (!WIC_resize_image(i_img.get(), r_img.get(), 0.0, i_wd, i_hi, Config->CvImg_scale_opt))
-							UserAbort(USTR_FaildProc);
+						r = 1.0 * i_wd / i_hi;
+						i_hi = Config->CvImg_scale_prm2;
+						i_wd = i_hi * r;
 					}
+					break;
+				case 6:	//指定サイズにストレッチ
+					i_wd = Config->CvImg_scale_prm1;
+					i_hi = Config->CvImg_scale_prm2;
+					break;
+				case 8:	//指定サイズに合わせて切り出し
+					r0 = 1.0 * i_wd / i_hi;
+					r1 = 1.0 * Config->CvImg_scale_prm1 / Config->CvImg_scale_prm2;
+					if (r0<r1) {
+						r = 1.0 * i_hi / i_wd;
+						i_wd = Config->CvImg_scale_prm1;
+						i_hi = i_wd * r;
+					}
+					else {
+						r = 1.0 * i_wd / i_hi;
+						i_hi = Config->CvImg_scale_prm2;
+						i_wd = i_hi * r;
+					}
+					break;
 				}
-				//補間しない
-				else {
-					int r_wd = i_wd;
-					int r_hi = i_hi;
+
+				//縮小・拡大
+				//メタファイル
+				if (is_wmf) {
 					if (Config->CvImg_scale_mode==1) {
+						//倍率指定
 						float r = Config->CvImg_scale_prm1/100.0;
-						r_wd = i_wd * r;
-						r_hi = i_hi * r;
+						r_img->SetSize(i_wd * r, i_hi * r);
 					}
-					r_img->PixelFormat = pf24bit;
-					r_img->SetSize(r_wd, r_hi);
-					r_img->Canvas->StretchDraw(Rect(0, 0, r_wd, r_hi), i_img.get());
+					else {
+						//縦・横サイズ指定
+						r_img->SetSize(i_wd, i_hi);
+					}
+					TRect rc = Rect(0, 0, r_img->Width, r_img->Height);
+					r_img->Canvas->Brush->Color = Config->CvImg_mgn_color;
+					r_img->Canvas->FillRect(rc);
+					r_img->Canvas->StretchDraw(rc, mf.get());
+				}
+				//画像ファイル
+				else {
+					//補間する
+					if (Config->CvImg_scale_opt>=0 && Config->CvImg_scale_opt<=3) {
+						//倍率指定
+						if (Config->CvImg_scale_mode==1) {
+							if (!WIC_resize_image(i_img.get(), r_img.get(),
+								Config->CvImg_scale_prm1/100.0, 0, 0, Config->CvImg_scale_opt))
+									UserAbort(USTR_FaildProc);
+						}
+						//縦・横サイズ指定
+						else {
+							if (!WIC_resize_image(i_img.get(), r_img.get(), 0.0, i_wd, i_hi, Config->CvImg_scale_opt))
+								UserAbort(USTR_FaildProc);
+						}
+					}
+					//補間しない
+					else {
+						int r_wd = i_wd;
+						int r_hi = i_hi;
+						if (Config->CvImg_scale_mode==1) {
+							float r = Config->CvImg_scale_prm1/100.0;
+							r_wd = i_wd * r;
+							r_hi = i_hi * r;
+						}
+						r_img->PixelFormat = pf24bit;
+						r_img->SetSize(r_wd, r_hi);
+						r_img->Canvas->StretchDraw(Rect(0, 0, r_wd, r_hi), i_img.get());
+					}
+				}
+
+				//結果を割り当てる
+				int xp, yp;
+				switch (Config->CvImg_scale_mode) {
+				case 7:	//余白を付ける
+					xp = (Config->CvImg_scale_prm1 - i_wd)/2;
+					yp = (Config->CvImg_scale_prm2 - i_hi)/2;
+					i_img->SetSize(Config->CvImg_scale_prm1, Config->CvImg_scale_prm2);
+					i_img->Canvas->Brush->Color = Config->CvImg_mgn_color;
+					i_img->Canvas->FillRect(Rect(0, 0, Config->CvImg_scale_prm1, Config->CvImg_scale_prm2));
+					i_img->Canvas->Draw(xp, yp, r_img.get());
+					break;
+				case 8:	//切り出し
+					xp = (i_wd - Config->CvImg_scale_prm1)/2;
+					yp = (i_hi - Config->CvImg_scale_prm2)/2;
+					i_img->SetSize(Config->CvImg_scale_prm1, Config->CvImg_scale_prm2);
+					i_img->Canvas->CopyRect(Rect(0, 0, Config->CvImg_scale_prm1, Config->CvImg_scale_prm2),
+						r_img->Canvas, Rect(xp, yp, xp + Config->CvImg_scale_prm1, yp + Config->CvImg_scale_prm2));
+					break;
+				default:
+					i_img->Handle = r_img->ReleaseHandle();
 				}
 			}
 
-			//結果を割り当てる
-			int xp, yp;
-			switch (Config->CvImg_scale_mode) {
-			case 7:	//余白を付ける
-				xp = (Config->CvImg_scale_prm1 - i_wd)/2;
-				yp = (Config->CvImg_scale_prm2 - i_hi)/2;
-				i_img->SetSize(Config->CvImg_scale_prm1, Config->CvImg_scale_prm2);
-				i_img->Canvas->Brush->Color = Config->CvImg_mgn_color;
-				i_img->Canvas->FillRect(Rect(0, 0, Config->CvImg_scale_prm1, Config->CvImg_scale_prm2));
-				i_img->Canvas->Draw(xp, yp, r_img.get());
-				break;
-			case 8:	//切り出し
-				xp = (i_wd - Config->CvImg_scale_prm1)/2;
-				yp = (i_hi - Config->CvImg_scale_prm2)/2;
-				i_img->SetSize(Config->CvImg_scale_prm1, Config->CvImg_scale_prm2);
-				i_img->Canvas->CopyRect(Rect(0, 0, Config->CvImg_scale_prm1, Config->CvImg_scale_prm2),
-					r_img->Canvas, Rect(xp, yp, xp + Config->CvImg_scale_prm1, yp + Config->CvImg_scale_prm2));
-				break;
-			default:
-				i_img->Handle = r_img->ReleaseHandle();
+			//グレースケール化
+			if (Config->CvImg_grayscale) WIC_grayscale_image(i_img.get());
+
+			//ファイル名の変更
+			UnicodeString bnam;
+			if (is_clip) {
+				bnam = Config->CvImg_clip_name;
 			}
-		}
-
-		//グレースケール化
-		if (Config->CvImg_grayscale) WIC_grayscale_image(i_img.get());
-
-		//ファイル名の変更
-		UnicodeString bnam;
-		if (is_clip) {
-			bnam = Config->CvImg_clip_name;
-		}
-		else {
-			bnam = get_base_name(fnam);
-			if (!Config->CvImg_chg_name_str.IsEmpty()) {
-				switch (Config->CvImg_chg_name_mode) {
-				case 0: bnam  = Config->CvImg_chg_name_str + bnam;	break;
-				case 1: bnam += Config->CvImg_chg_name_str;			break;
+			else {
+				bnam = get_base_name(fnam);
+				if (!Config->CvImg_chg_name_str.IsEmpty()) {
+					switch (Config->CvImg_chg_name_mode) {
+					case 0: bnam  = Config->CvImg_chg_name_str + bnam;	break;
+					case 1: bnam += Config->CvImg_chg_name_str;			break;
+					}
 				}
 			}
-		}
 
-		UnicodeString cv_nam = dst_path + bnam + Config->CvImg_f_ext;
-		if (is_clip) {
-			if (file_exists(cv_nam) && Config->CopyMode==CPYMD_AUT_REN) {
-				cv_nam = format_CloneName(Config->CopyFmt, cv_nam, dst_path);
+			UnicodeString cv_nam = dst_path + bnam + Config->CvImg_f_ext;
+			if (is_clip) {
+				if (file_exists(cv_nam) && Config->CopyMode==CPYMD_AUT_REN) {
+					cv_nam = format_CloneName(Config->CopyFmt, cv_nam, dst_path);
+				}
+				LastDstName = cv_nam;
 			}
-			LastDstName = cv_nam;
+			cat_DestFile(msg, cv_nam);
+			DstFileName = cv_nam;
+
+			//形式変換して保存
+			if (!WIC_save_image(cv_nam, i_img.get(),
+				Config->CvImg_quality, Config->CvImg_ycrcb, Config->CvImg_grayscale, Config->CvImg_cmp_mode))
+					UserAbort(USTR_FaildSave);
+
+			//タイムスタンプを設定
+			if (!is_clip && Config->KeepTime && ft>(TDateTime)0) set_file_age(cv_nam, ft);
+
+			OkCount++;
 		}
-		cat_DestFile(msg, cv_nam);
-		DstFileName = cv_nam;
-
-		//形式変換して保存
-		if (!WIC_save_image(cv_nam, i_img.get(),
-			Config->CvImg_quality, Config->CvImg_ycrcb, Config->CvImg_grayscale, Config->CvImg_cmp_mode))
-				UserAbort(USTR_FaildSave);
-
-		//タイムスタンプを設定
-		if (!is_clip && Config->KeepTime && ft>(TDateTime)0) set_file_age(cv_nam, ft);
-
-		OkCount++;
+		catch (EAbort &e) {
+			ErrCount++;
+			set_LogErrMsg(msg, e.Message);
+		}
+		catch (...) {
+			ErrCount++;
+			msg[1] = 'E';
+		}
 	}
-	catch (EAbort &e) {
-		ErrCount++;
-		set_LogErrMsg(msg, e.Message);
-	}
-	catch (...) {
-		ErrCount++;
-		msg[1] = 'E';
+	__finally {
+		i_img->Canvas->Unlock();
+		r_img->Canvas->Unlock();
 	}
 
 	AddLog(msg);

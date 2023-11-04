@@ -101,11 +101,13 @@ void __fastcall TLoupeForm::DrawImage(Graphics::TBitmap *bmp, int x, int y)
 
 		std::unique_ptr<Graphics::TBitmap> tmp_bmp(new Graphics::TBitmap());
 		tmp_bmp->SetSize(LoupeImage->Width, LoupeImage->Height);
+		tmp_bmp->Canvas->Lock();
 		tmp_bmp->Canvas->Brush->Color = col_bgImage;
 		tmp_bmp->Canvas->FillRect(LoupeImage->ClientRect);
 		tmp_bmp->Canvas->CopyRect(LoupeImage->ClientRect, bmp->Canvas, irc);
 		if (ImgViewThread->GrayScaled) WIC_grayscale_image(tmp_bmp.get());
 		LoupeImage->Picture->Bitmap->Assign(tmp_bmp.get());
+		tmp_bmp->Canvas->Unlock();
 	}
 	else {
 		LoupeImage->Picture->Bitmap->Handle = NULL;

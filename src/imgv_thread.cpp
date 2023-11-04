@@ -122,10 +122,8 @@ void __fastcall TImgViewThread::ClearImage()
 		v_img->Picture->Bitmap->SetSize(v_img->ClientWidth, v_img->ClientHeight);
 		TCanvas *cv = v_img->Picture->Bitmap->Canvas;
 		cv->Lock();
-		{
-			cv->Brush->Color = col_bgImage;
-			cv->FillRect(v_img->ClientRect);
-		}
+		cv->Brush->Color = col_bgImage;
+		cv->FillRect(v_img->ClientRect);
 		cv->Unlock();
 	}
 
@@ -201,11 +199,9 @@ void __fastcall TImgViewThread::DrawImage()
 			TRect rc = Rect(0, 0, iw, ih);
 			TCanvas *cv = ViewBuff->Canvas;
 			cv->Lock();
-			{
-				cv->Brush->Color = col_bgWMF;
-				cv->FillRect(rc);
-				cv->StretchDraw(rc, MetaBuff);
-			}
+			cv->Brush->Color = col_bgWMF;
+			cv->FillRect(rc);
+			cv->StretchDraw(rc, MetaBuff);
 			cv->Unlock();
 			//‰ñ“]E”½“]
 			if (Rotation>0) {
