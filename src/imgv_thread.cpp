@@ -224,9 +224,11 @@ void __fastcall TImgViewThread::DrawImage()
 				}
 				else {
 					iw *= r;  ih *= r;
+					ViewBuff->Canvas->Lock();
 					ViewBuff->PixelFormat = pf24bit;
 					ViewBuff->SetSize(iw, ih);
 					ViewBuff->Canvas->StretchDraw(Rect(0, 0, iw, ih), ImgBuff);
+					ViewBuff->Canvas->Unlock();
 				}
 			}
 			else {

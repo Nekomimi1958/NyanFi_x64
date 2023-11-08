@@ -9777,17 +9777,31 @@ int load_ImageFile(
 			if (fnam.IsEmpty()) Abort();
 			UnicodeString fext = get_extension(fnam);
 			//PNG/GIF‚Í“Æ©‚Éˆ—
-			if (test_PngExt(fext) || test_GifExt(fext)) {
-				std::unique_ptr<TWICImage>wic_img(new TWICImage());
-				wic_img->LoadFromFile(fnam);
-				wic_img->Transparent = true;
-				o_bmp->SetSize(wic_img->Width, wic_img->Height);
+			//¦TWICImage ‚¾‚Æƒƒ‚ƒŠƒŠ[ƒN‚·‚é‚İ‚½‚¢?
+			if (test_PngExt(fext)){
+				std::unique_ptr<TPngImage>png_img(new TPngImage());
+				png_img->LoadFromFile(fnam);
+				png_img->Transparent = true;
+				o_bmp->SetSize(png_img->Width, png_img->Height);
+				TRect rc = Rect(0, 0, o_bmp->Width, o_bmp->Height);
+				if (png_img->SupportsPartialTransparency && trans_bg!=col_None) {
+					o_bmp->Canvas->Brush->Color = trans_bg;
+					o_bmp->Canvas->FillRect(rc);
+				}
+				o_bmp->Canvas->Draw(0, 0, png_img.get());
+				res = LOADED_BY_STD;
+			}
+			else if (test_GifExt(fext)) {
+				std::unique_ptr<TGIFImage>gif_img(new TGIFImage());
+				gif_img->LoadFromFile(fnam);
+				gif_img->Transparent = true;
+				o_bmp->SetSize(gif_img->Width, gif_img->Height);
 				TRect rc = Rect(0, 0, o_bmp->Width, o_bmp->Height);
 				if (trans_bg!=col_None) {
 					o_bmp->Canvas->Brush->Color = trans_bg;
 					o_bmp->Canvas->FillRect(rc);
 				}
-				o_bmp->Canvas->Draw(0, 0, wic_img.get());
+				o_bmp->Canvas->Draw(0, 0, gif_img.get());
 				res = LOADED_BY_STD;
 			}
 			else {
