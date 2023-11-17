@@ -2437,7 +2437,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Deactivate(TObject *Sender)
 //---------------------------------------------------------------------------
 //特殊キー、ホイール、マウスボタンなどの処理
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handled)
+void __fastcall TNyanFiForm::ApplicationEvents1Message(TMsg &Msg, bool &Handled)
 {
 	if (!Initialized || UnInitializing || CurWorking) return;
 
@@ -3092,6 +3092,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(tagMSG &Msg, bool &Handle
 		else Handled = false;
 	}
 }
+
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ApplicationEvents1Minimize(TObject *Sender)
 {
@@ -3237,7 +3238,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1ShowHint(UnicodeString &HintStr, 
 //---------------------------------------------------------------------------
 //ヘルプ
 //---------------------------------------------------------------------------
-bool __fastcall TNyanFiForm::ApplicationEvents1Help(WORD Command, NativeInt Data, bool &CallHelp)
+bool __fastcall TNyanFiForm::ApplicationEvents1Help(WORD Command, THelpEventData Data, bool &CallHelp)
 {
 	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
 		if (CancelHelp) {	//キーにF1が割り当てられていたら抑止
@@ -3268,6 +3269,7 @@ bool __fastcall TNyanFiForm::ApplicationEvents1Help(WORD Command, NativeInt Data
 	}
 	return true;
 }
+
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ApplicationEvents1Idle(TObject *Sender, bool &Done)
 {
@@ -9382,7 +9384,7 @@ int __fastcall TNyanFiForm::ChangeWorkList(
 			if (fp->is_dummy && fp->alias.IsEmpty()) del_FileListItem(WorkList, i); else i++;
 		}
 		//必要なら末尾にダミーを追加
-		if (RegWorkCsrPos) {
+		if (RegWorkCsrPos && (NotSortWorkList || WorkListHasSep)) {
 			file_rec *fp = cre_new_file_rec(EmptyStr, tag);
 			WorkList->AddObject(fp->f_name, (TObject*)fp);
 		}
@@ -11801,8 +11803,8 @@ void __fastcall TNyanFiForm::ViewerImageMouseLeave(TObject *Sender)
 //---------------------------------------------------------------------------
 //サムネイルの描画
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ThumbnailGridDrawCell(TObject *Sender, int ACol, int ARow,
-		TRect &Rect, TGridDrawState State)
+void __fastcall TNyanFiForm::ThumbnailGridDrawCell(TObject *Sender, System::LongInt ACol,
+	System::LongInt ARow, TRect &Rect, TGridDrawState State)
 {
 	if (ThumbnailThread->ReqClear) return;
 
@@ -11952,9 +11954,10 @@ void __fastcall TNyanFiForm::ThumbnailGridDrawCell(TObject *Sender, int ACol, in
 	cv->Pen->Color = col_bdrThumb;
 	cv->Rectangle(Rect.Left - dw - 1, Rect.Top - dw - 1, Rect.Right + dw + 1, Rect.Bottom + dw + 1);
 }
+
 //---------------------------------------------------------------------------
-void __fastcall TNyanFiForm::ThumbnailGridSelectCell(TObject *Sender, int ACol, int ARow,
-		bool &CanSelect)
+void __fastcall TNyanFiForm::ThumbnailGridSelectCell(TObject *Sender, System::LongInt ACol,
+	System::LongInt ARow, bool &CanSelect)
 {
 	CanSelect = (ViewFileList->Count>0) ? ((ARow * ThumbnailGrid->ColCount + ACol) < ViewFileList->Count)
 										: (ARow==0 && ACol==0);
@@ -16303,7 +16306,12 @@ void __fastcall TNyanFiForm::CursorEndActionExecute(TObject *Sender)
 {
 	TListBox *lp = FileListBox[CurListTag];
 	if (lp->Count>1) {
-		lp->ItemIndex = lp->Count - 1;
+		int idx = lp->Count - 1;
+		if (CurStt->is_Work && TEST_ActParam("AO")) {
+			TStringList *lst = GetCurList();
+			while (idx>0 && ((file_rec*)lst->Objects[idx])->is_dummy) idx--;
+		}
+		lp->ItemIndex = idx;
 		lp->Invalidate();
 		SetDriveFileInfo(CurListTag, false, false);
 	}
@@ -27889,7 +27897,7 @@ bool __fastcall TNyanFiForm::CopyAdsCore(
 			ProgressSubLabel->Caption = ExtractFileName(src_nam);
 			__int64 cpy_sz = 0;
 			while (!CancelWork) {
-				int sz = s_fs->Read(fbuf.get(), 1048576ul);  if (sz==0) break;
+				int sz = s_fs->Read(fbuf.get(), (System::LongInt)1048576ul);  if (sz==0) break;
 				d_fs->Write(fbuf.get(), sz);
 				cpy_sz += sz;
 				PosWorkProgress(cpy_sz, s_fs->Size);

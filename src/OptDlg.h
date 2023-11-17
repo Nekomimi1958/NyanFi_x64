@@ -777,7 +777,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
-	bool __fastcall FormHelp(WORD Command, NativeInt Data, bool &CallHelp);
+	bool __fastcall FormHelp(WORD Command, THelpEventData Data, bool &CallHelp);
 	void __fastcall FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall PageControl1Change(TObject *Sender);
 	void __fastcall PageControl1DrawTab(TCustomTabControl *Control, int TabIndex, const TRect &Rect, bool Active);

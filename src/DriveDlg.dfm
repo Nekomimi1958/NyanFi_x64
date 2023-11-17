@@ -32,8 +32,6 @@ object SelDriveDlg: TSelDriveDlg
     ModalResult = 2
     TabOrder = 1
     TabStop = False
-    ExplicitTop = 308
-    ExplicitWidth = 640
   end
   object OptPanel: TPanel
     Left = 0
@@ -43,8 +41,6 @@ object SelDriveDlg: TSelDriveDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 308
-    ExplicitWidth = 640
     DesignSize = (
       644
       32)
@@ -184,7 +180,6 @@ object SelDriveDlg: TSelDriveDlg
     OnDrawSection = DriveHeaderDrawSection
     OnSectionResize = DriveHeaderSectionResize
     OnResize = DriveHeaderResize
-    ExplicitWidth = 640
   end
   object GridPanel: TPanel
     Left = 0
@@ -194,8 +189,6 @@ object SelDriveDlg: TSelDriveDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitWidth = 640
-    ExplicitHeight = 288
     DesignSize = (
       644
       289)
@@ -226,8 +219,6 @@ object SelDriveDlg: TSelDriveDlg
       OnDrawCell = DriveGridDrawCell
       OnKeyDown = DriveGridKeyDown
       OnMouseUp = DriveGridMouseUp
-      ExplicitWidth = 636
-      ExplicitHeight = 286
       ColWidths = (
         60
         60
@@ -256,8 +247,6 @@ object SelDriveDlg: TSelDriveDlg
       TabOrder = 1
       Visible = False
       StyleElements = [seBorder]
-      ExplicitLeft = 622
-      ExplicitTop = 272
       object ShowOptBtn: TSpeedButton
         Left = 0
         Top = 0
@@ -290,7 +279,7 @@ object SelDriveDlg: TSelDriveDlg
   end
   object PopupMenu1: TPopupMenu
     Left = 48
-    Top = 144
+    Top = 152
     object EjectDrvItem: TMenuItem
       Action = EjectDriveAction
     end

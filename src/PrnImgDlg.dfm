@@ -30,8 +30,6 @@ object PrintImgDlg: TPrintImgDlg
     ParentBackground = False
     TabOrder = 1
     StyleElements = []
-    ExplicitLeft = 290
-    ExplicitHeight = 371
     object SizeLabel: TLabel
       Left = 0
       Top = 336
@@ -58,8 +56,6 @@ object PrintImgDlg: TPrintImgDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 290
-    ExplicitHeight = 371
     DesignSize = (
       294
       372)
@@ -73,7 +69,6 @@ object PrintImgDlg: TPrintImgDlg
       Caption = #38281#12376#12427
       ModalResult = 1
       TabOrder = 7
-      ExplicitTop = 339
     end
     object PageControl1: TPageControl
       Left = 8
@@ -95,6 +90,7 @@ object PrintImgDlg: TPrintImgDlg
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
+          StyleElements = []
           object GrayCheckBox: TCheckBox
             Left = 14
             Top = 160
@@ -213,6 +209,7 @@ object PrintImgDlg: TPrintImgDlg
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 0
+          StyleElements = []
           object StrFmtEdit: TLabeledEdit
             Left = 8
             Top = 103
@@ -323,7 +320,6 @@ object PrintImgDlg: TPrintImgDlg
       Anchors = [akLeft, akBottom]
       Default = True
       TabOrder = 2
-      ExplicitTop = 339
     end
     object PrnGroupBox: TGroupBox
       Left = 8

@@ -1127,7 +1127,7 @@ void __fastcall TOptionDlg::FormDestroy(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-bool __fastcall TOptionDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
+bool __fastcall TOptionDlg::FormHelp(WORD Command, THelpEventData Data, bool &CallHelp)
 {
 	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
 		if (PageControl1->ActivePage==KeySetSheet && (CmdComboBox->Focused() || PrmComboBox->Focused())) {

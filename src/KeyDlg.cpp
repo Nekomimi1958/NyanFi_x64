@@ -248,7 +248,7 @@ void __fastcall TKeyListDlg::SortKeyActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 //ƒZƒ‹‚Ì•`‰æ
 //---------------------------------------------------------------------------
-void __fastcall TKeyListDlg::KeyListGridDrawCell(TObject *Sender, int ACol, int ARow,
+void __fastcall TKeyListDlg::KeyListGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow,
 		TRect &Rect, TGridDrawState State)
 {
 	TStringGrid *gp = (TStringGrid*)Sender;

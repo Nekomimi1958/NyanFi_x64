@@ -30,8 +30,6 @@ object GrepExOptDlg: TGrepExOptDlg
     TabOrder = 0
     TabWidth = 100
     OnDrawTab = PageControl1DrawTab
-    ExplicitWidth = 510
-    ExplicitHeight = 318
     object OutModeSheet: TTabSheet
       Caption = #20986#21147#26041#27861
       ImageIndex = -1
@@ -43,8 +41,7 @@ object GrepExOptDlg: TGrepExOptDlg
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 502
-        ExplicitHeight = 288
+        StyleElements = []
         DesignSize = (
           506
           289)
@@ -56,7 +53,6 @@ object GrepExOptDlg: TGrepExOptDlg
           Anchors = [akLeft, akTop, akRight]
           Caption = #36215#21205#12450#12503#12522#12465#12540#12471#12519#12531
           TabOrder = 2
-          ExplicitWidth = 484
           DesignSize = (
             488
             110)
@@ -69,7 +65,6 @@ object GrepExOptDlg: TGrepExOptDlg
             Caption = '...'
             TabOrder = 2
             OnClick = RefAppBtnClick
-            ExplicitLeft = 440
           end
           object AppParamEdit: TLabeledEdit
             Left = 101
@@ -84,7 +79,6 @@ object GrepExOptDlg: TGrepExOptDlg
             LabelPosition = lpLeft
             TabOrder = 3
             Text = ''
-            ExplicitWidth = 335
           end
           object AppDirEdit: TLabeledEdit
             Left = 101
@@ -98,7 +92,6 @@ object GrepExOptDlg: TGrepExOptDlg
             LabelPosition = lpLeft
             TabOrder = 4
             Text = ''
-            ExplicitWidth = 335
           end
           object RefDirBtn: TButton
             Left = 444
@@ -109,7 +102,6 @@ object GrepExOptDlg: TGrepExOptDlg
             Caption = '...'
             TabOrder = 5
             OnClick = RefDirBtnClick
-            ExplicitLeft = 440
           end
           object AppEnabledCheckBox: TCheckBox
             Left = 12
@@ -126,7 +118,6 @@ object GrepExOptDlg: TGrepExOptDlg
             Height = 23
             Anchors = [akLeft, akTop, akRight]
             TabOrder = 1
-            ExplicitWidth = 335
           end
         end
         object FileGroupBox: TGroupBox
@@ -137,7 +128,6 @@ object GrepExOptDlg: TGrepExOptDlg
           Anchors = [akLeft, akTop, akRight]
           Caption = #20986#21147#12501#12449#12452#12523
           TabOrder = 1
-          ExplicitWidth = 484
           DesignSize = (
             488
             77)
@@ -153,7 +143,6 @@ object GrepExOptDlg: TGrepExOptDlg
             LabelPosition = lpLeft
             TabOrder = 0
             Text = ''
-            ExplicitWidth = 335
           end
           object RefOutBtn: TButton
             Left = 444
@@ -164,7 +153,6 @@ object GrepExOptDlg: TGrepExOptDlg
             Caption = '...'
             TabOrder = 1
             OnClick = RefOutBtnClick
-            ExplicitLeft = 440
           end
           object AppendCheckBox: TCheckBox
             Left = 101
@@ -216,10 +204,11 @@ object GrepExOptDlg: TGrepExOptDlg
         Left = 0
         Top = 0
         Width = 506
-        Height = 291
+        Height = 289
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
+        StyleElements = []
         DesignSize = (
           506
           289)
@@ -246,9 +235,9 @@ object GrepExOptDlg: TGrepExOptDlg
             Left = 341
             Top = 37
             Width = 100
-            Height = 21
+            Height = 23
             EditLabel.Width = 39
-            EditLabel.Height = 21
+            EditLabel.Height = 23
             EditLabel.Caption = #25313#24373#23376
             LabelPosition = lpLeft
             TabOrder = 1
@@ -258,9 +247,9 @@ object GrepExOptDlg: TGrepExOptDlg
             Left = 64
             Top = 65
             Width = 377
-            Height = 21
+            Height = 23
             EditLabel.Width = 39
-            EditLabel.Height = 21
+            EditLabel.Height = 23
             EditLabel.Caption = #20445#23384#20808
             LabelPosition = lpLeft
             TabOrder = 2
@@ -292,9 +281,9 @@ object GrepExOptDlg: TGrepExOptDlg
             Left = 97
             Top = 44
             Width = 344
-            Height = 21
+            Height = 23
             EditLabel.Width = 50
-            EditLabel.Height = 21
+            EditLabel.Height = 23
             EditLabel.Caption = #12501#12449#12452#12523#21517
             LabelPosition = lpLeft
             TabOrder = 1
@@ -348,7 +337,7 @@ object GrepExOptDlg: TGrepExOptDlg
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitHeight = 291
+        StyleElements = []
         object Label1: TLabel
           Left = 149
           Top = 33
@@ -368,9 +357,9 @@ object GrepExOptDlg: TGrepExOptDlg
           Left = 180
           Top = 59
           Width = 120
-          Height = 21
+          Height = 23
           EditLabel.Width = 143
-          EditLabel.Height = 21
+          EditLabel.Height = 23
           EditLabel.Caption = #12510#12483#12481#35486#21069#24460#12398#25407#20837#25991#23383#21015
           LabelPosition = lpLeft
           TabOrder = 1
@@ -381,9 +370,9 @@ object GrepExOptDlg: TGrepExOptDlg
           Left = 339
           Top = 59
           Width = 120
-          Height = 21
+          Height = 23
           EditLabel.Width = 22
-          EditLabel.Height = 21
+          EditLabel.Height = 23
           EditLabel.Caption = #65374#12288
           LabelPosition = lpLeft
           TabOrder = 2
@@ -394,9 +383,9 @@ object GrepExOptDlg: TGrepExOptDlg
           Left = 112
           Top = 8
           Width = 381
-          Height = 21
+          Height = 23
           EditLabel.Width = 100
-          EditLabel.Height = 21
+          EditLabel.Height = 23
           EditLabel.Caption = #12501#12449#12452#12523#24773#22577#12398#26360#24335
           LabelPosition = lpLeft
           TabOrder = 0
@@ -448,7 +437,7 @@ object GrepExOptDlg: TGrepExOptDlg
           Left = 180
           Top = 123
           Width = 120
-          Height = 21
+          Height = 23
           TabOrder = 6
           OnChange = SampleChange
         end
@@ -463,8 +452,6 @@ object GrepExOptDlg: TGrepExOptDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 318
-    ExplicitWidth = 510
     object CanButton: TButton
       Left = 269
       Top = 10

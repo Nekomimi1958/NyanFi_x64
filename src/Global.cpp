@@ -12801,11 +12801,11 @@ bool Execute_cmdln(
 						if (::PeekNamedPipe(hRead, NULL, 0, NULL, &len, NULL) && len>0) {
 							std::unique_ptr<char[]> buf(new char[len + 4]);
 							if (::ReadFile(hRead, buf.get(), len, &len, NULL)) {
-								mp->Write(buf.get(), len);
+								mp->Write(buf.get(), (System::LongInt)len);
 								//ログに出力
 								if (l_sw) {
 									std::unique_ptr<TMemoryStream> mbuf(new TMemoryStream());
-									mbuf->Write(buf.get(), len);
+									mbuf->Write(buf.get(), (System::LongInt)len);
 									log_buf += get_MemoryStrins(mbuf.get());
 									int p = pos_r("\r\n", log_buf);
 									if (p>0) {
@@ -12820,11 +12820,11 @@ bool Execute_cmdln(
 					if (::PeekNamedPipe(hRead, NULL, 0, NULL, &len, NULL) && len>0) {
 						std::unique_ptr<char[]> buf(new char[len + 4]);
 						if (::ReadFile(hRead, buf.get(), len, &len, NULL)) {
-							mp->Write(buf.get(), len);
+							mp->Write(buf.get(), (System::LongInt)len);
 							//ログに出力
 							if (l_sw) {
 								std::unique_ptr<TMemoryStream> mbuf(new TMemoryStream());
-								mbuf->Write(buf.get(), len);
+								mbuf->Write(buf.get(), (System::LongInt)len);
 								log_buf += get_MemoryStrins(mbuf.get());
 								AddLog(log_buf, false, true);
 							}

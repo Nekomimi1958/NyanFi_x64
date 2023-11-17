@@ -93,7 +93,7 @@ void __fastcall TColorDlg::FormDestroy(TObject *Sender)
 //---------------------------------------------------------------------------
 //ƒwƒ‹ƒv
 //---------------------------------------------------------------------------
-bool __fastcall TColorDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
+bool __fastcall TColorDlg::FormHelp(WORD Command, THelpEventData Data, bool &CallHelp)
 {
 	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
 		HtmlHelpTopic(_T(HELPTOPIC_TV) _T("#SetColor"));

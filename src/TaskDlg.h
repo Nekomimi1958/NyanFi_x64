@@ -53,7 +53,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall TaskHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
 			const TRect &Rect, bool Pressed);
 	void __fastcall Timer1Timer(TObject *Sender);
-	void __fastcall TaskGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
+	void __fastcall TaskGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall TaskGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CancelTaskActionExecute(TObject *Sender);
 	void __fastcall CancelTaskActionUpdate(TObject *Sender);

@@ -1363,7 +1363,7 @@ object RenameDlg: TRenameDlg
   object Timer1: TTimer
     Enabled = False
     OnTimer = Timer1Timer
-    Left = 148
-    Top = 154
+    Left = 140
+    Top = 162
   end
 end

@@ -739,7 +739,7 @@ bool __fastcall TEditHistoryDlg::set_FileName(int idx)
 //---------------------------------------------------------------------------
 //ƒZƒ‹‚Ì•`‰æ
 //---------------------------------------------------------------------------
-void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, int ACol, int ARow,
+void __fastcall TEditHistoryDlg::EditHistGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow,
 	TRect &Rect, TGridDrawState State)
 {
 	TStringGrid *gp = (TStringGrid*)Sender;

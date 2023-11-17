@@ -42,7 +42,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormDestroy(TObject *Sender);
-	bool __fastcall FormHelp(WORD Command, NativeInt Data, bool &CallHelp);
+	bool __fastcall FormHelp(WORD Command, THelpEventData Data, bool &CallHelp);
 	void __fastcall ColorListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall RefColBtnClick(TObject *Sender);
 	void __fastcall SpuitImageMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);

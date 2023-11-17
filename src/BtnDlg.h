@@ -46,7 +46,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 	void __fastcall FormResize(TObject *Sender);
-	bool __fastcall FormHelp(WORD Command, NativeInt Data, bool &CallHelp);
+	bool __fastcall FormHelp(WORD Command, THelpEventData Data, bool &CallHelp);
 	void __fastcall OkButtonClick(TObject *Sender);
 	void __fastcall BtnCmdsComboBoxChange(TObject *Sender);
 	void __fastcall RefCmdsBtnClick(TObject *Sender);

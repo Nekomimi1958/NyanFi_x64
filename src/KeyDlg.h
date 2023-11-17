@@ -67,7 +67,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall KeyListHeaderSectionClick(THeaderControl *HeaderControl, THeaderSection *Section);
 	void __fastcall SortKeyActionExecute(TObject *Sender);
 	void __fastcall SortKeyActionUpdate(TObject *Sender);
-	void __fastcall KeyListGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
+	void __fastcall KeyListGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall MigemoActionExecute(TObject *Sender);
 	void __fastcall FilterEditEnter(TObject *Sender);
 	void __fastcall FilterEditExit(TObject *Sender);

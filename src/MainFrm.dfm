@@ -3017,7 +3017,7 @@ object NyanFiForm: TNyanFiForm
   object ActionList1: TActionList
     OnExecute = ActionList1Execute
     Left = 40
-    Top = 88
+    Top = 80
     object ClipCopyAction: TAction
       Category = 'CommandI'
       Caption = #30011#20687#12434#12463#12522#12483#12503#12508#12540#12489#12395#12467#12500#12540'(&C)'
@@ -5736,11 +5736,11 @@ object NyanFiForm: TNyanFiForm
     OnModalEnd = ApplicationEvents1ModalEnd
     OnShowHint = ApplicationEvents1ShowHint
     Left = 148
-    Top = 88
+    Top = 80
   end
   object LogPopupMenu: TPopupMenu
     Left = 448
-    Top = 406
+    Top = 398
     object PopCopyItem: TMenuItem
       Action = Log_EditCopy
     end
@@ -5838,7 +5838,7 @@ object NyanFiForm: TNyanFiForm
   object InfPopupMenu: TPopupMenu
     OnPopup = InfPopupMenuPopup
     Left = 184
-    Top = 406
+    Top = 398
     object PopCopyFileInfoItm: TMenuItem
       Action = CopyFileInfoAction
     end
@@ -6094,13 +6094,13 @@ object NyanFiForm: TNyanFiForm
       F3040000F3040000F3040000F3040000F3040000F3040000F3048001F304}
     PopupMenu = TrayPopupMenu
     OnClick = TrayIcon1Click
-    Left = 562
-    Top = 403
+    Left = 554
+    Top = 395
   end
   object TrayPopupMenu: TPopupMenu
     OnPopup = TrayPopupMenuPopup
     Left = 650
-    Top = 403
+    Top = 395
     object Sep_r_1: TMenuItem
       Caption = '-'
     end

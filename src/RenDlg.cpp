@@ -1449,7 +1449,7 @@ UnicodeString __fastcall TRenameDlg::ConvCharType(UnicodeString s, int idx)
 //---------------------------------------------------------------------------
 //ÉvÉåÉrÉÖÅ[ÇÃï`âÊ
 //---------------------------------------------------------------------------
-void __fastcall TRenameDlg::PreviewGridDrawCell(TObject *Sender, int ACol, int ARow,
+void __fastcall TRenameDlg::PreviewGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow,
 	TRect &Rect, TGridDrawState State)
 {
 	TStringGrid *gp = (TStringGrid*)Sender;

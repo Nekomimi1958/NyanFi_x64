@@ -207,7 +207,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall SerFmtComboBoxClick(TObject *Sender);
 	void __fastcall DelItemActionExecute(TObject *Sender);
 	void __fastcall DelItemActionUpdate(TObject *Sender);
-	void __fastcall PreviewGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
+	void __fastcall PreviewGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall PreviewGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall CnvCharListBoxDrawItem(TWinControl *Control, int Index, TRect &Rect, TOwnerDrawState State);
 	void __fastcall CnvCharListBoxClick(TObject *Sender);

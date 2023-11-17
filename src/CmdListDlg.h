@@ -68,7 +68,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CmdFileHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
 	void __fastcall CmdFileHeaderDrawSection(THeaderControl *HeaderControl, THeaderSection *Section,
 		const TRect &Rect, bool Pressed);
-	void __fastcall CmdFileGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
+	void __fastcall CmdFileGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow,
+		TRect &Rect, TGridDrawState State);
 	void __fastcall FilterBtnClick(TObject *Sender);
 	void __fastcall FilterEditEnter(TObject *Sender);
 	void __fastcall FilterEditExit(TObject *Sender);

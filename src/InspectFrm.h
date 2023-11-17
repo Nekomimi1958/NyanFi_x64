@@ -61,7 +61,8 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall CodePageHeaderResize(TObject *Sender);
 	void __fastcall CodePageHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
 	void __fastcall OptCheckBoxClick(TObject *Sender);
-	void __fastcall InspectGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
+	void __fastcall InspectGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow,
+		TRect &Rect, TGridDrawState State);
 	void __fastcall CopyItemClick(TObject *Sender);
 	void __fastcall UnsignedActionExecute(TObject *Sender);
 	void __fastcall BigEndianActionExecute(TObject *Sender);

@@ -1110,12 +1110,12 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall DropMenuItemClick(TObject *Sender);
 	void __fastcall ApplicationEvents1Activate(TObject *Sender);
 	void __fastcall ApplicationEvents1Deactivate(TObject *Sender);
-	void __fastcall ApplicationEvents1Message(tagMSG &Msg, bool &Handled);
+	void __fastcall ApplicationEvents1Message(TMsg &Msg, bool &Handled);
 	void __fastcall ApplicationEvents1Minimize(TObject *Sender);
 	void __fastcall ApplicationEvents1ModalBegin(TObject *Sender);
 	void __fastcall ApplicationEvents1ModalEnd(TObject *Sender);
 	void __fastcall ApplicationEvents1ShowHint(UnicodeString &HintStr, bool &CanShow, THintInfo &HintInfo);
-	bool __fastcall ApplicationEvents1Help(WORD Command, NativeInt Data, bool &CallHelp);
+	bool __fastcall ApplicationEvents1Help(WORD Command, THelpEventData Data, bool &CallHelp);
 	void __fastcall ApplicationEvents1Idle(TObject *Sender, bool &Done);
 	void __fastcall TabControl1Resize(TObject *Sender);
 	void __fastcall ListPanelResize(TObject *Sender);
@@ -1208,8 +1208,10 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall ViewerImageMouseUp(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall ViewerImageDblClick(TObject *Sender);
 	void __fastcall ViewerImageMouseLeave(TObject *Sender);
-	void __fastcall ThumbnailGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
-	void __fastcall ThumbnailGridSelectCell(TObject *Sender, int ACol, int ARow, bool &CanSelect);
+	void __fastcall ThumbnailGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow,
+          TRect &Rect, TGridDrawState State);
+	void __fastcall ThumbnailGridSelectCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow,
+          bool &CanSelect);
 	void __fastcall ThumbnailGridMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall ThumbnailGridClick(TObject *Sender);
 	void __fastcall ThumbnailGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);

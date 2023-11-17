@@ -13,4 +13,4 @@ Windows Vista ～ Windows 11 で動作します。
 
 ## 開発環境
 
-C++Builder 11.3 (BCC64)
+C++Builder 12 (BCC64)

@@ -74,7 +74,6 @@ object TaskManDlg: TTaskManDlg
     OnDrawSection = TaskHeaderDrawSection
     OnSectionResize = TaskHeaderSectionResize
     OnResize = TaskHeaderResize
-    ExplicitWidth = 612
   end
   object OpePanel: TPanel
     Left = 0
@@ -84,8 +83,6 @@ object TaskManDlg: TTaskManDlg
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 199
-    ExplicitWidth = 612
     object btnStartAction: TButton
       Left = 442
       Top = 8
@@ -120,7 +117,6 @@ object TaskManDlg: TTaskManDlg
       Cancel = True
       ModalResult = 2
       TabOrder = 0
-      ExplicitLeft = 612
     end
     object PauseBtn: TButton
       Left = 188
@@ -163,8 +159,6 @@ object TaskManDlg: TTaskManDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 612
-    ExplicitHeight = 182
     DesignSize = (
       616
       183)
@@ -191,8 +185,6 @@ object TaskManDlg: TTaskManDlg
       StyleElements = [seBorder]
       OnDrawCell = TaskGridDrawCell
       OnKeyDown = TaskGridKeyDown
-      ExplicitWidth = 608
-      ExplicitHeight = 184
       ColWidths = (
         64
         64
@@ -216,7 +208,7 @@ object TaskManDlg: TTaskManDlg
     Top = 44
   end
   object ActionList1: TActionList
-    Left = 80
+    Left = 96
     Top = 44
     object CancelTaskAction: TAction
       Caption = #20013#27490'(&C)'

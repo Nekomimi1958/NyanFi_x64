@@ -56,8 +56,6 @@ object CsvRecForm: TCsvRecForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 302
-    ExplicitHeight = 270
     object OptPanel: TPanel
       Left = 0
       Top = 250
@@ -66,8 +64,6 @@ object CsvRecForm: TCsvRecForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitTop = 238
-      ExplicitWidth = 302
       DesignSize = (
         310
         32)
@@ -89,7 +85,6 @@ object CsvRecForm: TCsvRecForm
         Caption = #38598#35336
         TabOrder = 1
         OnClick = CalcBtnClick
-        ExplicitLeft = 145
       end
       object GraphBtn: TButton
         Left = 231
@@ -100,7 +95,6 @@ object CsvRecForm: TCsvRecForm
         Caption = #12464#12521#12501
         TabOrder = 2
         OnClick = GraphBtnClick
-        ExplicitLeft = 223
       end
     end
     object GridPanel: TPanel
@@ -111,8 +105,6 @@ object CsvRecForm: TCsvRecForm
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 302
-      ExplicitHeight = 218
       DesignSize = (
         310
         230)
@@ -135,8 +127,6 @@ object CsvRecForm: TCsvRecForm
         StyleElements = []
         OnClick = RecordGridClick
         OnDrawCell = RecordGridDrawCell
-        ExplicitWidth = 302
-        ExplicitHeight = 220
         ColWidths = (
           100
           100)
@@ -175,7 +165,6 @@ object CsvRecForm: TCsvRecForm
       OnDrawSection = RecordHeaderDrawSection
       OnSectionResize = RecordHeaderSectionResize
       OnResize = RecordHeaderResize
-      ExplicitWidth = 302
     end
   end
   object PopupMenu1: TPopupMenu
@@ -190,7 +179,7 @@ object CsvRecForm: TCsvRecForm
     end
   end
   object ActionList1: TActionList
-    Left = 137
+    Left = 145
     Top = 135
     object OpenUrlAction: TAction
       Caption = 'URL'#12434#38283#12367'(&W)'

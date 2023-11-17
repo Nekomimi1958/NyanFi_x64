@@ -111,7 +111,7 @@ __published:	// IDE で管理されるコンポーネント
 	void __fastcall EditHistHeaderSectionResize(THeaderControl *HeaderControl, THeaderSection *Section);
 	void __fastcall StatusBar1DrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect);
 	void __fastcall ShowStatusBarActionExecute(TObject *Sender);
-	void __fastcall EditHistGridDrawCell(TObject *Sender, int ACol, int ARow, TRect &Rect, TGridDrawState State);
+	void __fastcall EditHistGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow, TRect &Rect, TGridDrawState State);
 	void __fastcall EditHistGridKeyDown(TObject *Sender, WORD &Key, TShiftState Shift);
 	void __fastcall EditHistGridClick(TObject *Sender);
 	void __fastcall EditHistGridDblClick(TObject *Sender);

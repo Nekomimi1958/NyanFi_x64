@@ -208,7 +208,7 @@ TTaskThread * __fastcall TTaskManDlg::get_CurTask()
 //---------------------------------------------------------------------------
 //ˆê——‚Ì•`‰æ
 //---------------------------------------------------------------------------
-void __fastcall TTaskManDlg::TaskGridDrawCell(TObject *Sender, int ACol, int ARow,
+void __fastcall TTaskManDlg::TaskGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow,
 		TRect &Rect, TGridDrawState State)
 {
 	if (UnInitializing) return;

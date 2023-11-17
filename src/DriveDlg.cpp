@@ -209,7 +209,7 @@ void __fastcall TSelDriveDlg::ToRootCheckBoxClick(TObject *Sender)
 //---------------------------------------------------------------------------
 //ƒZƒ‹‚Ì•`‰æ
 //---------------------------------------------------------------------------
-void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, int ACol, int ARow,
+void __fastcall TSelDriveDlg::DriveGridDrawCell(TObject *Sender, System::LongInt ACol, System::LongInt ARow,
 		TRect &Rect, TGridDrawState State)
 {
 	TStringGrid *gp = (TStringGrid*)Sender;

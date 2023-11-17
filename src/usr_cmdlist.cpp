@@ -687,6 +687,9 @@ void get_PrmList(
 		params = "\nSL : 選択状態を反映\n";
 		if (SameText(cmd, "CurrToOpp")) params += "TO : 反対側へ移動\n";
 	}
+	else if (SameText(cmd, "CursorEnd")) {
+		params = "\nAO : 有効なワークリスト項目に移動\n";
+	}
 	else if (SameText(cmd, "DeleteADS")) {
 		params = "\nZI : Zone.Identifier のみ削除\nTC : サムネイルキャッシュのみ削除\n";
 	}

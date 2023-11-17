@@ -30,8 +30,6 @@ object EditHistoryDlg: TEditHistoryDlg
     Cancel = True
     ModalResult = 2
     TabOrder = 0
-    ExplicitTop = 259
-    ExplicitWidth = 626
   end
   object EditHistHeader: THeaderControl
     Left = 0
@@ -44,7 +42,6 @@ object EditHistoryDlg: TEditHistoryDlg
     OnSectionClick = EditHistHeaderSectionClick
     OnSectionResize = EditHistHeaderSectionResize
     OnResize = EditHistHeaderResize
-    ExplicitWidth = 626
   end
   object GridPanel: TPanel
     Left = 0
@@ -54,8 +51,6 @@ object EditHistoryDlg: TEditHistoryDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 626
-    ExplicitHeight = 242
     DesignSize = (
       630
       243)
@@ -84,8 +79,6 @@ object EditHistoryDlg: TEditHistoryDlg
       OnDblClick = EditHistGridDblClick
       OnDrawCell = EditHistGridDrawCell
       OnKeyDown = EditHistGridKeyDown
-      ExplicitWidth = 618
-      ExplicitHeight = 259
       ColWidths = (
         64
         64
@@ -111,8 +104,6 @@ object EditHistoryDlg: TEditHistoryDlg
       end>
     StyleElements = [seBorder]
     OnDrawPanel = StatusBar1DrawPanel
-    ExplicitTop = 259
-    ExplicitWidth = 626
   end
   object OpeToolBar: TToolBar
     Left = 0
@@ -129,8 +120,6 @@ object EditHistoryDlg: TEditHistoryDlg
     ShowCaptions = True
     AllowTextButtons = True
     TabOrder = 3
-    ExplicitTop = 278
-    ExplicitWidth = 626
     object FilterBtn: TToolButton
       Left = 0
       Top = 0
@@ -250,7 +239,7 @@ object EditHistoryDlg: TEditHistoryDlg
     end
   end
   object HistPopupMenu: TPopupMenu
-    Left = 48
+    Left = 40
     Top = 64
     object ClearAllItem: TMenuItem
       Caption = #23653#27508#12434#12377#12409#12390#21066#38500'(&A)'
@@ -280,7 +269,7 @@ object EditHistoryDlg: TEditHistoryDlg
     end
   end
   object RecentPopupMenu: TPopupMenu
-    Left = 248
+    Left = 256
     Top = 65
     object CleAllRecentItem: TMenuItem
       Action = ClrAllRecentAction
@@ -381,7 +370,7 @@ object EditHistoryDlg: TEditHistoryDlg
     end
   end
   object RepoPopupMenu: TPopupMenu
-    Left = 360
+    Left = 376
     Top = 65
     object UpdGitInfItem: TMenuItem
       Action = UpdateGitInfAction

@@ -79,7 +79,7 @@ bool MemMapFile::OpenRO(UnicodeString fnam, __int64 top_adr, unsigned int max_si
 				new TFileStream(fnam, fmOpenRead | fmShareDenyNone));
 			ByteBuff.Length = BuffSize;
 			fs->Seek(top_adr, (TSeekOrigin)soFromBeginning);
-			BuffSize = fs->Read(ByteBuff, BuffSize);
+			BuffSize = fs->Read(ByteBuff, (System::LongInt)BuffSize);
 			return true;
 		}
 		catch (...) {

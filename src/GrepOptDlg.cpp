@@ -92,7 +92,7 @@ void __fastcall TGrepExOptDlg::FormClose(TObject *Sender, TCloseAction &Action)
 //---------------------------------------------------------------------------
 //ƒwƒ‹ƒv
 //---------------------------------------------------------------------------
-bool __fastcall TGrepExOptDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
+bool __fastcall TGrepExOptDlg::FormHelp(WORD Command, THelpEventData Data, bool &CallHelp)
 {
 	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
 		UnicodeString topic = (NyanFiForm->GrepPageControl->ActivePage==NyanFiForm->FindSheet)? HELPTOPIC_GR : HELPTOPIC_RP;

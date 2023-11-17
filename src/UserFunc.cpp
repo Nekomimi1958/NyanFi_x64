@@ -1374,7 +1374,7 @@ int get_OnlineFile(UnicodeString url, UnicodeString fnam, bool *cancel,
 				for (;;) {
 					if (!InternetReadFile(hConnect, ldbuf.get(), FILE_RBUF_SIZE, &dwSize)) break;
 					if (dwSize==0) break;
-					ms->Write(ldbuf.get(), dwSize);
+					ms->Write(ldbuf.get(), (System::LongInt)dwSize);
 					f_size += dwSize;
 					//i’»ƒo[
 					if (prg_box && prg_ratio && dwFsize>0) {

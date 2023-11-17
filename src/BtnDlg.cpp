@@ -108,7 +108,7 @@ void __fastcall TToolBtnDlg::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-bool __fastcall TToolBtnDlg::FormHelp(WORD Command, NativeInt Data, bool &CallHelp)
+bool __fastcall TToolBtnDlg::FormHelp(WORD Command, THelpEventData Data, bool &CallHelp)
 {
 	if (Command==HELP_CONTEXT || Command==HELP_CONTEXTPOPUP) {
 		bool handled = false;

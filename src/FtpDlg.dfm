@@ -32,8 +32,6 @@ object FtpConnectDlg: TFtpConnectDlg
     TabOrder = 0
     TabWidth = 100
     OnDrawTab = PageControl1DrawTab
-    ExplicitWidth = 608
-    ExplicitHeight = 396
     object HostSheet: TTabSheet
       Caption = #12507#12473#12488
       object HostPanel: TPanel
@@ -44,8 +42,7 @@ object FtpConnectDlg: TFtpConnectDlg
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 600
-        ExplicitHeight = 366
+        StyleElements = []
         DesignSize = (
           604
           367)
@@ -65,7 +62,6 @@ object FtpConnectDlg: TFtpConnectDlg
           Action = AddHostAction
           Anchors = [akLeft, akBottom]
           TabOrder = 13
-          ExplicitTop = 337
         end
         object AnonyCheckBox: TCheckBox
           Left = 505
@@ -86,7 +82,6 @@ object FtpConnectDlg: TFtpConnectDlg
           Caption = #12461#12515#12531#12475#12523
           ModalResult = 2
           TabOrder = 19
-          ExplicitTop = 335
         end
         object ChgMenuBtn: TButton
           Left = 73
@@ -96,7 +91,6 @@ object FtpConnectDlg: TFtpConnectDlg
           Action = ChgHostAction
           Anchors = [akLeft, akBottom]
           TabOrder = 14
-          ExplicitTop = 337
         end
         object ConnectBtn: TButton
           Left = 418
@@ -108,7 +102,6 @@ object FtpConnectDlg: TFtpConnectDlg
           Default = True
           ModalResult = 1
           TabOrder = 18
-          ExplicitTop = 335
         end
         object DelMenuBtn: TButton
           Left = 137
@@ -118,7 +111,6 @@ object FtpConnectDlg: TFtpConnectDlg
           Action = UserModule.DelListItemAction
           Anchors = [akLeft, akBottom]
           TabOrder = 15
-          ExplicitTop = 337
         end
         object DowButton: TButton
           Left = 235
@@ -128,7 +120,6 @@ object FtpConnectDlg: TFtpConnectDlg
           Action = UserModule.DownListItemAction
           Anchors = [akLeft, akBottom]
           TabOrder = 17
-          ExplicitTop = 337
         end
         object HostAddrEdit: TLabeledEdit
           Left = 264
@@ -143,7 +134,6 @@ object FtpConnectDlg: TFtpConnectDlg
           LabelPosition = lpLeft
           TabOrder = 2
           Text = ''
-          ExplicitWidth = 330
         end
         object HostDirEdit: TLabeledEdit
           Left = 214
@@ -156,7 +146,6 @@ object FtpConnectDlg: TFtpConnectDlg
           EditLabel.Caption = #12507#12473#12488#38283#22987#12487#12451#12524#12463#12488#12522
           TabOrder = 8
           Text = ''
-          ExplicitWidth = 380
         end
         object UserIdEdit: TLabeledEdit
           Left = 264
@@ -170,7 +159,6 @@ object FtpConnectDlg: TFtpConnectDlg
           LabelPosition = lpLeft
           TabOrder = 3
           Text = ''
-          ExplicitWidth = 224
         end
         object LocalDirEdit: TLabeledEdit
           Left = 214
@@ -183,7 +171,6 @@ object FtpConnectDlg: TFtpConnectDlg
           EditLabel.Caption = #12525#12540#12459#12523#38283#22987#12487#12451#12524#12463#12488#12522
           TabOrder = 9
           Text = ''
-          ExplicitWidth = 342
         end
         object HostListBox: TListBox
           Left = 8
@@ -201,7 +188,6 @@ object FtpConnectDlg: TFtpConnectDlg
           OnDblClick = HostListBoxDblClick
           OnDrawItem = HostListBoxDrawItem
           OnKeyDown = HostListBoxKeyDown
-          ExplicitHeight = 316
         end
         object RefDirBtn: TButton
           Tag = 100
@@ -213,7 +199,6 @@ object FtpConnectDlg: TFtpConnectDlg
           Caption = '...'
           TabOrder = 10
           OnClick = RefDirBtnClick
-          ExplicitLeft = 558
         end
         object PassWdEdit: TLabeledEdit
           Left = 264
@@ -228,7 +213,6 @@ object FtpConnectDlg: TFtpConnectDlg
           PasswordChar = '*'
           TabOrder = 5
           Text = ''
-          ExplicitWidth = 224
         end
         object SyncLRCheckBox: TCheckBox
           Left = 214
@@ -246,7 +230,6 @@ object FtpConnectDlg: TFtpConnectDlg
           Action = UserModule.UpListItemAction
           Anchors = [akLeft, akBottom]
           TabOrder = 16
-          ExplicitTop = 337
         end
         object SSLComboBox: TComboBox
           Left = 456
@@ -268,7 +251,6 @@ object FtpConnectDlg: TFtpConnectDlg
           LabelPosition = lpLeft
           TabOrder = 1
           Text = ''
-          ExplicitWidth = 330
         end
         object PasvCheckBox: TCheckBox
           Left = 264
@@ -301,6 +283,7 @@ object FtpConnectDlg: TFtpConnectDlg
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
+        StyleElements = []
         DesignSize = (
           604
           367)
@@ -324,7 +307,6 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '...'
             TabOrder = 1
             OnClick = RefSoundBtnClick
-            ExplicitLeft = 499
           end
           object TestSndConnectBtn: TButton
             Left = 546
@@ -336,7 +318,6 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '>'
             TabOrder = 2
             OnClick = TestSoundBtnClick
-            ExplicitLeft = 536
           end
           object SndConnectEdit: TLabeledEdit
             Left = 72
@@ -373,7 +354,6 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '>'
             TabOrder = 5
             OnClick = TestSoundBtnClick
-            ExplicitLeft = 536
           end
           object RefSndDisconBtn: TButton
             Tag = 1
@@ -386,7 +366,6 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '...'
             TabOrder = 4
             OnClick = RefSoundBtnClick
-            ExplicitLeft = 499
           end
           object SndTransferEdit: TLabeledEdit
             Left = 72
@@ -411,7 +390,6 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '>'
             TabOrder = 8
             OnClick = TestSoundBtnClick
-            ExplicitLeft = 536
           end
           object RefSndTransferBtn: TButton
             Tag = 2
@@ -424,7 +402,6 @@ object FtpConnectDlg: TFtpConnectDlg
             Caption = '...'
             TabOrder = 7
             OnClick = RefSoundBtnClick
-            ExplicitLeft = 499
           end
         end
         object TextFExtEdit: TLabeledEdit

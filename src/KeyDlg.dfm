@@ -41,8 +41,6 @@ object KeyListDlg: TKeyListDlg
     TabWidth = 120
     OnChange = KeyTabControlChange
     OnDrawTab = KeyTabControlDrawTab
-    ExplicitTop = 380
-    ExplicitWidth = 466
     object OpePanel: TPanel
       Left = 4
       Top = 4
@@ -51,7 +49,6 @@ object KeyListDlg: TKeyListDlg
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 458
       DesignSize = (
         462
         32)
@@ -73,7 +70,6 @@ object KeyListDlg: TKeyListDlg
         OnExit = FilterEditExit
         OnKeyDown = FilterEditKeyDown
         OnKeyPress = FilterEditKeyPress
-        ExplicitWidth = 53
       end
       object MigemoCheckBox: TCheckBox
         Left = 137
@@ -84,7 +80,6 @@ object KeyListDlg: TKeyListDlg
         Anchors = [akTop, akRight]
         Caption = '&Migemo'
         TabOrder = 1
-        ExplicitLeft = 133
       end
       object CnfExeCheckBox: TCheckBox
         Left = 374
@@ -94,7 +89,6 @@ object KeyListDlg: TKeyListDlg
         Anchors = [akTop, akRight]
         Caption = #30906#23450#21363#23455#34892
         TabOrder = 2
-        ExplicitLeft = 370
       end
       object ShowAllCmdCheckBox: TCheckBox
         Left = 213
@@ -105,7 +99,6 @@ object KeyListDlg: TKeyListDlg
         Anchors = [akTop, akRight]
         Caption = #26410#30331#37682#12467#12510#12531#12489#12418#34920#31034
         TabOrder = 3
-        ExplicitLeft = 209
       end
     end
   end
@@ -118,8 +111,6 @@ object KeyListDlg: TKeyListDlg
     Cancel = True
     ModalResult = 2
     TabOrder = 3
-    ExplicitTop = 380
-    ExplicitWidth = 466
   end
   object KeyListHeader: THeaderControl
     Left = 0
@@ -151,7 +142,6 @@ object KeyListDlg: TKeyListDlg
     OnSectionClick = KeyListHeaderSectionClick
     OnSectionResize = KeyListHeaderSectionResize
     OnResize = KeyListHeaderResize
-    ExplicitWidth = 466
   end
   object GridPanel: TPanel
     Left = 0
@@ -161,8 +151,6 @@ object KeyListDlg: TKeyListDlg
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 466
-    ExplicitHeight = 360
     DesignSize = (
       470
       361)
@@ -192,8 +180,6 @@ object KeyListDlg: TKeyListDlg
       OnDblClick = KeyListGridDblClick
       OnDrawCell = KeyListGridDrawCell
       OnKeyDown = KeyListGridKeyDown
-      ExplicitWidth = 462
-      ExplicitHeight = 362
       ColWidths = (
         64
         64
@@ -208,7 +194,7 @@ object KeyListDlg: TKeyListDlg
   end
   object PopupMenu1: TPopupMenu
     Left = 40
-    Top = 128
+    Top = 136
     object CopyListItem: TMenuItem
       Caption = #19968#35239#12434#12467#12500#12540'(&C)'
       OnClick = CopyListItemClick
