@@ -285,34 +285,6 @@ bool has_Leading(TCanvas *cv)
 }
 
 //---------------------------------------------------------------------------
-//指定フォントの描画高を取得
-//---------------------------------------------------------------------------
-int get_FontHeightMgn(TFont *font,
-	int mgn,		//	マージン		(default = 0)
-	int min_mgn)	//	最小マージン	(default = 2)
-{
-	std::unique_ptr<Graphics::TBitmap> bmp(new Graphics::TBitmap());
-	TCanvas *cv = bmp->Canvas;
-	cv->Font->Assign(font);
-	int fh = cv->TextHeight("Q");
-	if (mgn>0) {
-		//内部レディングと相殺
-		int ld = fh - abs(cv->Font->Height);
-		if (ld>0) mgn -= ld;
-		if (mgn<min_mgn) mgn = min_mgn;
-		fh += mgn;
-	}
-	return fh;
-}
-//---------------------------------------------------------------------------
-int get_FontHeightMgnS(TFont *font,
-	int mgn,		//	マージン		(default = 0)
-	int min_mgn)	//	最小マージン	(default = 2)
-{
-	return get_FontHeightMgn(font, ScaledInt(mgn), ScaledInt(min_mgn));
-}
-
-//---------------------------------------------------------------------------
 //指定フォントによる描画幅を取得
 //---------------------------------------------------------------------------
 int get_CharWidth_Font(

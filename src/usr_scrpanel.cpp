@@ -153,6 +153,7 @@ void __fastcall UsrScrollPanel::InitializePanel()
 	ScrCatchXp	 = 0;
 
 	ScrCatchKnob = false;
+	ScrCatchTag	 = -1;
 
 	ScrPage 	 = 0;
 
@@ -454,7 +455,7 @@ void __fastcall UsrScrollPanel::ScrPaintBoxPaint(TObject *Sender)
 		}
 		else {
 			cv->Brush->Style = bsSolid;
-			cv->Brush->Color = (ScrCatchKnob && KnobActColor!=Graphics::clNone)? KnobActColor : KnobColor;
+			cv->Brush->Color = (ScrCatchKnob && ScrCatchTag==pp->Tag && KnobActColor!=Graphics::clNone)? KnobActColor : KnobColor;
 			if (KnobBdrColor==Graphics::clNone) {
 				InflateRect(rc, -1, -1);
 				if (pp->Tag==USCRPNL_SCRTYPE_H) rc.Right += 1; else rc.Bottom += 1;
@@ -583,6 +584,7 @@ void __fastcall UsrScrollPanel::ScrPaintBoxMouseDown(TObject *Sender, TMouseButt
 		TPaintBox *pp = (TPaintBox *)Sender;
 		TRect rc = (pp->Tag==USCRPNL_SCRTYPE_H)? ScrKnobRectH : ScrKnobRectV;
 		ScrCatchKnob = rc.PtInRect(Point(X, Y));
+		ScrCatchTag  = pp->Tag;
 		//ƒmƒuˆÚ“®ŠJŽn
 		if (ScrCatchKnob) {
 			if (pp->Tag==USCRPNL_SCRTYPE_V)

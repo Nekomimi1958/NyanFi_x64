@@ -53,6 +53,9 @@ inline int get_SysMetricsForPPI(int idx, int ppi)
 }
 
 //---------------------------------------------------------------------------
+int  get_FontHeightMgn(TFont *font, int mgn = 0, int min_mgn = 2);
+int  get_FontHeightMgnS(TFont *font, int mgn = 0, int min_mgn = 2);
+
 void AssignScaledFont(TFont *s_font, TFont *font, TControl *cp, int size = 0, TColor bg = Graphics::clNone);
 void AssignScaledFont(TWinControl *cp, TFont *font = NULL);
 void AssignScaledFont(TLabel *lp, TFont *font = NULL);

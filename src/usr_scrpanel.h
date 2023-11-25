@@ -46,6 +46,7 @@ private:
 	int   ScrKnobMaxX;
 
 	bool  ScrCatchKnob;				//ƒmƒu‚ð‚Â‚©‚ñ‚Å‚¢‚é
+	int	  ScrCatchTag;
 	int   ScrCatchYp;
 	int   ScrCatchXp;
 	int   ScrPage;

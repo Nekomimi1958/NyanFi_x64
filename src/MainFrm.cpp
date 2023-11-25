@@ -1598,6 +1598,7 @@ void __fastcall TNyanFiForm::WmActivate(TMessage &msg)
 		HWND hWnd = get_ModalWnd();
 		if (!KeepModalScr && !hWnd) ModalScrForm->Visible = false;
 		if (hWnd) ::SetFocus(hWnd);
+		KeepCurCsr = 0;
 	}
 
 	TForm::Dispatch(&msg);
@@ -7291,7 +7292,8 @@ void __fastcall TNyanFiForm::SetDirCaption(int tag)
 
 	bool div_p = (DivFileListUD && DivDirInfUD);
 	TPanel *pp = (tag==0)? (div_p? L_DirPanel2 : L_DirPanel) : (div_p? R_DirPanel2 : R_DirPanel);
-	pp->BevelOuter = FlatInfPanel? bvNone : lst_stt->is_Work? bvRaised : bvLowered;
+	pp->Font->Color = lst_stt->color_fgDirInf;
+	pp->BevelOuter  = FlatInfPanel? bvNone : lst_stt->is_Work? bvRaised : bvLowered;
 	if (lst_stt->is_Work) {
 		 if (WorkListChanged) pnam.Insert("*", 1); else if (WorkListFiltered) pnam.Insert("!", 1);
 	}
@@ -34093,6 +34095,18 @@ void __fastcall TNyanFiForm::ClearViewImage()
 }
 
 //---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SetSeekStat(int idx)
+{
+	if (idx!=-1) {
+		UnicodeString tmp; tmp.sprintf(_T("%3u/%3u"), idx + 1, ViewFileList->Count);
+		SeekSttPanel->Caption = tmp;
+		int sel_cnt = GetSelCount(ViewFileList);
+		if (sel_cnt>0) tmp.cat_sprintf(_T(" (‘I‘ð %u)"), sel_cnt);
+		ImgSttHeader->Panels->Items[4]->Text = tmp;
+		ImgInfBar->Panels->Items[0]->Text	 = tmp;
+	}
+}
+//---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetViewFileIdx()
 {
 	InhSeekBar++;
@@ -34119,13 +34133,7 @@ void __fastcall TNyanFiForm::SetViewFileIdx()
 		if (idx!=-1) {
 			IsEvenPage = (idx%2==0);
 			SeekBar->Position = (SeekBar->Min<0)? -idx : idx;
-			//ó‘Ô•\Ž¦
-			UnicodeString tmp; tmp.sprintf(_T("%3u/%3u"), idx + 1, ViewFileList->Count);
-			SeekSttPanel->Caption = tmp;
-			int sel_cnt = GetSelCount(ViewFileList);
-			if (sel_cnt>0) tmp.cat_sprintf(_T(" (‘I‘ð %u)"), sel_cnt);
-			ImgSttHeader->Panels->Items[4]->Text = tmp;
-			ImgInfBar->Panels->Items[0]->Text	 = tmp;
+			SetSeekStat(idx);
 		}
 	}
 	InhSeekBar--;
@@ -34534,7 +34542,15 @@ void __fastcall TNyanFiForm::EndFileActionExecute(TObject *Sender)
 	for (int i=ViewFileList->Count-1; i>=0; i--) {
 		if (!((file_rec*)ViewFileList->Objects[i])->failed) { new_idx = i; break; }
 	}
-	if (!OpenImgViewer(new_idx)) SetActionAbort();
+	if (OpenImgViewer(new_idx)) {
+		InhSeekBar++;
+		SeekBar->Position = (SeekBar->Min<0)? -new_idx : new_idx;
+		SetSeekStat(new_idx);
+		InhSeekBar--;
+	}
+	else {
+		SetActionAbort();
+	}	
 }
 
 //---------------------------------------------------------------------------
@@ -35402,7 +35418,15 @@ void __fastcall TNyanFiForm::TopFileActionExecute(TObject *Sender)
 	for (int i=0; i<ViewFileList->Count; i++) {
 		if (!((file_rec*)ViewFileList->Objects[i])->failed) { new_idx = i; break; }
 	}
-	if (!OpenImgViewer(new_idx)) SetActionAbort();
+	if (OpenImgViewer(new_idx)) {
+		InhSeekBar++;
+		SeekBar->Position = (SeekBar->Min<0)? -new_idx : new_idx;
+		SetSeekStat(new_idx);
+		InhSeekBar--;
+	}
+	else {
+		SetActionAbort();
+	}	
 }
 
 //---------------------------------------------------------------------------
