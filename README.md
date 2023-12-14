@@ -1,5 +1,9 @@
 ﻿# NyanFi_x64
 
+NyanFi_x64s VCLスタイル版の公開にともない、こちらは従来版とします。  
+以後は、重大な不具合の修正を除き、機能拡張などは行いません。  
+<br>
+
 ![Screenshot](screenshot.png)
 
 ## 概要
