@@ -134,7 +134,6 @@ void __fastcall TThumbnailThread::MakeThumbnail(int idx)
 						i_bp->Canvas->StretchDraw(rc, mf.get());
 					}
 					i_bp->Canvas->Unlock();
-
 					SetListItem(idx, tmp.sprintf(_T("%s\t%s"), fnam.c_str(), get_wd_x_hi_str(mf->Width, mf->Height).c_str()));
 				}
 				//ビットマップ
@@ -193,9 +192,9 @@ void __fastcall TThumbnailThread::MakeThumbnail(int idx)
 						else if (img_ori==3) WIC_rotate_image(i_bp.get(), 2);
 						else if (img_ori==8) WIC_rotate_image(i_bp.get(), 3);
 					}
-
-					bp->Handle = i_bp->ReleaseHandle();
 				}
+
+				bp->Handle = i_bp->ReleaseHandle();
 
 				//ADSにキャッシュ
 				UnicodeString pnam = ExtractFilePath(fnam);

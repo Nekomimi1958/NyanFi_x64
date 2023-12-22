@@ -1477,6 +1477,13 @@ void __fastcall TTaskThread::Task_CVIMG(UnicodeString prm)
 					i_img->Handle = r_img->ReleaseHandle();
 				}
 			}
+			//縮小・拡大しない
+			else if (is_wmf) {
+				i_img->SetSize(mf->Width, mf->Height);
+				i_img->Canvas->Brush->Color = Config->CvImg_mgn_color;
+				i_img->Canvas->FillRect(Rect(0, 0, i_img->Width, i_img->Height));
+				i_img->Canvas->Draw(0, 0, mf.get());
+			}
 
 			//グレースケール化
 			if (Config->CvImg_grayscale) WIC_grayscale_image(i_img.get());

@@ -36,10 +36,10 @@ UnicodeString get_WndClassName(HWND hWnd)
 UnicodeString get_LocalFlderName(UnicodeString pnam)
 {
 	UnicodeString ret_str;
-	UnicodeString inam = IncludeTrailingPathDelimiter(pnam) + "\\desktop.ini";
-	if (file_exists(inam)) {
-		std::unique_ptr<UsrIniFile> d_ini(new UsrIniFile(inam));
-		ret_str = d_ini->ReadString(".ShellClassInfo", "LocalizedResourceName", EmptyStr);
+	UnicodeString dt_nam = IncludeTrailingPathDelimiter(pnam) + "\\desktop.ini";
+	if (file_exists(dt_nam)) {
+		std::unique_ptr<UsrIniFile> dt_ini(new UsrIniFile(dt_nam));
+		ret_str = dt_ini->ReadString(".ShellClassInfo", "LocalizedResourceName", EmptyStr);
 		if (StartsStr("@", ret_str)) {
 			_TCHAR sbuf[MAX_PATH];
 			if (SUCCEEDED(SHLoadIndirectString(ret_str.c_str(), sbuf, ARRAYSIZE(sbuf), NULL))) ret_str = sbuf;
@@ -1900,7 +1900,8 @@ void UserShell::AddEnvPath(
 {
 	UnicodeString dnam = cv_env_str(enam);
 	if (!dnam.IsEmpty() && dnam.Pos('%')==0) {
-		UnicodeString rnam = ExtractFileName(ExcludeTrailingPathDelimiter(dnam));
+		UnicodeString rnam = (SameText(enam, "%TEMP%") || SameText(enam, "%TMP%"))?
+								exclude_top_end(enam) : ExtractFileName(ExcludeTrailingPathDelimiter(dnam));
 		if (brk_sw) rnam.Insert("|", 1);
 		lst->Add(UnicodeString().sprintf(_T("%s\t%s"), IncludeTrailingPathDelimiter(dnam).c_str(), rnam.c_str()));
 	}
