@@ -3,7 +3,7 @@ object ColorDlg: TColorDlg
   Top = 0
   HelpContext = 6
   BorderStyle = bsDialog
-  Caption = #12486#12461#12473#12488#12499#12517#12450#12540#12398#37197#33394
+  Caption = #12486#12461#12473#12488#12499#12517#12540#12450#12398#37197#33394
   ClientHeight = 473
   ClientWidth = 354
   Color = clBtnFace

@@ -141,7 +141,7 @@ object FindTagForm: TFindTagForm
     Left = 48
     Top = 48
     object TagViewAction: TAction
-      Caption = #12499#12517#12450#12540#12391#12480#12452#12524#12463#12488#12479#12464#12472#12515#12531#12503'(&V)'
+      Caption = #12499#12517#12540#12450#12391#12480#12452#12524#12463#12488#12479#12464#12472#12515#12531#12503'(&V)'
       OnExecute = TagViewActionExecute
       OnUpdate = PopupItemUpdate
     end

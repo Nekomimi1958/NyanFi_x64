@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  テキストビュアー													//
+//  テキストビューア													//
 //----------------------------------------------------------------------//
 #ifndef TxtViewerH
 #define TxtViewerH
@@ -36,7 +36,7 @@ struct line_rec {
 class TTxtViewer
 {
 private:
-	TPaintBox	*ViewBox;		//ビュアー描画用PaintBox
+	TPaintBox	*ViewBox;		//ビューア描画用PaintBox
 	TCanvas		*ViewCanvas;
 	TScrollBar	*ScrBar;
 	UsrScrollPanel *ScrPanel;
@@ -243,12 +243,12 @@ public:
 	TColor color_fgSelItem;		//選択項目の文字色
 	TColor color_Folder;		//ディレクトリの文字色
 	TColor color_Error;			//エラーの文字色
-	TColor color_bgView;		//テキストビュアーの背景色
-	TColor color_fgView;		//テキストビュアーの文字色
-	TColor color_Margin;		//テキストビュアーの余白白
-	TColor color_bgLineNo;		//テキストビュアーの行番号背景色
-	TColor color_LineNo;		//テキストビュアーの行番号文字色
-	TColor color_Mark;			//テキストビュアーのマーク
+	TColor color_bgView;		//テキストビューアの背景色
+	TColor color_fgView;		//テキストビューアの文字色
+	TColor color_Margin;		//テキストビューアの余白白
+	TColor color_bgLineNo;		//テキストビューアの行番号背景色
+	TColor color_LineNo;		//テキストビューアの行番号文字色
+	TColor color_Mark;			//テキストビューアのマーク
 	TColor color_bgRuler;		//ルーラの背景色
 	TColor color_fgRuler;		//ルーラの目盛色
 	TColor color_bdrLine;		//行番号の境界線

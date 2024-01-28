@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  テキストビュアー(外部ウィンドウ)									//
+//  テキストビューア(外部ウィンドウ)									//
 //----------------------------------------------------------------------//
 #include "UserFunc.h"
 #include "UserMdl.h"
@@ -39,7 +39,7 @@ void __fastcall TExTxtViewer::FormCreate(TObject *Sender)
 	TxtViewScrPanel = new UsrScrollPanel(TxtScrollPanel, TextScrollBar, USCRPNL_FLAG_TV|USCRPNL_FLAG_L_WP);
 
 	ExViewer = new TTxtViewer(this, TextPaintBox, TextScrollBar, TxtViewScrPanel, TxtSttHeader, TextRulerBox, TextCurColPanel);
-	ExViewer->isHtm2Txt   = TxtViewer->isHtm2Txt;	//内部ビュアーから反映
+	ExViewer->isHtm2Txt   = TxtViewer->isHtm2Txt;	//内部ビューアから反映
 	ExViewer->isFixedLen  = TxtViewer->isFixedLen;
 	ExViewer->ShowRuby	  = IniFile->ReadBoolGen(_T("ShowRuby"), true);
 	ExViewer->TopIsHeader = IniFile->ReadBoolGen(_T("TopIsHeader"));
@@ -92,7 +92,7 @@ void __fastcall TExTxtViewer::WmFormShowed(TMessage &msg)
 
 		//クリップボード
 		if (isClip) {
-			set_FormTitle(this, _T("クリップボード - テキストビュアー"));
+			set_FormTitle(this, _T("クリップボード - テキストビューア"));
 			std::unique_ptr<TStringList> vbuf(new TStringList());
 			vbuf->Text = GetClipboardText();
 			ExViewer->isClip = isClip;
@@ -101,7 +101,7 @@ void __fastcall TExTxtViewer::WmFormShowed(TMessage &msg)
 		}
 		//ログ
 		else {
-			set_FormTitle(this, _T("タスクログ - テキストビュアー"));
+			set_FormTitle(this, _T("タスクログ - テキストビューア"));
 			ExViewer->AssignText(LogBufList);
 			ExViewer->SttHdrInf = tmp.sprintf(_T("タスクログ  行数:%s"), get_size_str_B(ExViewer->MaxLine, 0).c_str());
 		}
@@ -327,7 +327,7 @@ bool __fastcall TExTxtViewer::OpenViewer(
 
 		if (!file_exists(FileName)) Abort();
 		UnicodeString fext = get_extension(FileName);
-		Caption = UnicodeString().sprintf(_T("%s - テキストビュアー"), yen_to_delimiter(OrgName).c_str());
+		Caption = UnicodeString().sprintf(_T("%s - テキストビューア"), yen_to_delimiter(OrgName).c_str());
 
 		int cpag = 0;
 
@@ -637,7 +637,7 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 		else if (contained_wd_i("TagJumpDirect|TagViewDirect", cmd)) {
 			DirectTagJumpCore(ContainsText(cmd, "Jump"), ActionParam);
 		}
-		//ビュアーの履歴を戻る
+		//ビューアの履歴を戻る
 		else if (SameText(cmd, "BackViewHist")) {
 			if (TextViewHistory->Count==0) Abort();
 			TStringDynArray itm_buf = get_csv_array(TextViewHistory->Strings[0], 2, true);
@@ -672,7 +672,7 @@ bool __fastcall TExTxtViewer::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 			ExViewer->isIncSea   = true;
 			ExViewer->SetSttInf();
 		}
-		//テキストビュアーを閉じる
+		//テキストビューアを閉じる
 		else if (SameText(cmd, "Close")) {
 			req_close = true;
 			if (SameText(ActionParam, "AL")) close_all_ExViewer(this);

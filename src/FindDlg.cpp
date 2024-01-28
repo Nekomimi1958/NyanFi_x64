@@ -256,7 +256,7 @@ void __fastcall TFindFileDlg::FormCloseQuery(TObject *Sender, bool &CanClose)
 				FindDate	= 0;
 			}
 			else {
-				FindDate	= str_to_DateTime(DateMaskEdit->Text);
+				if (DateRadioGroup->ItemIndex!=0) FindDate = str_to_DateTime(DateMaskEdit->Text);
 				FindDateStr = EmptyStr;
 			}
 

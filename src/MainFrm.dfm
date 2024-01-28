@@ -3970,7 +3970,7 @@ object NyanFiForm: TNyanFiForm
     end
     object GitViewerAction: TAction
       Category = 'Command'
-      Caption = 'Git'#12499#12517#12450#12540'...'
+      Caption = 'Git'#12499#12517#12540#12450'...'
       OnExecute = GitViewerActionExecute
       OnUpdate = GitViewerActionUpdate
     end
@@ -4063,7 +4063,7 @@ object NyanFiForm: TNyanFiForm
     end
     object JsonViewerAction: TAction
       Category = 'Command'
-      Caption = 'JSON'#12499#12517#12450#12540'(&J)...'
+      Caption = 'JSON'#12499#12517#12540#12450'(&J)...'
       OnExecute = JsonViewerActionExecute
       OnUpdate = MenuFActionUpdate
     end
@@ -4694,7 +4694,7 @@ object NyanFiForm: TNyanFiForm
     end
     object SetColorAction: TAction
       Category = 'Command'
-      Caption = #12486#12461#12473#12488#12499#12517#12450#12540#12398#37197#33394'(&C)...'
+      Caption = #12486#12461#12473#12488#12499#12517#12540#12450#12398#37197#33394'(&C)...'
       OnExecute = SetColorActionExecute
       OnUpdate = SetColorActionUpdate
     end
@@ -4896,7 +4896,7 @@ object NyanFiForm: TNyanFiForm
     end
     object SubViewerAction: TAction
       Category = 'Command'
-      Caption = #12469#12502#12499#12517#12450#12540
+      Caption = #12469#12502#12499#12517#12540#12450
       OnExecute = SubViewerActionExecute
       OnUpdate = SubViewerActionUpdate
     end
@@ -5522,7 +5522,7 @@ object NyanFiForm: TNyanFiForm
     end
     object XmlViewerAction: TAction
       Category = 'Command'
-      Caption = 'XML'#12499#12517#12450#12540'(&X)...'
+      Caption = 'XML'#12499#12517#12540#12450'(&X)...'
       OnExecute = XmlViewerActionExecute
       OnUpdate = MenuFActionUpdate
     end

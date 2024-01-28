@@ -2,7 +2,7 @@ object JsonViewer: TJsonViewer
   Left = 0
   Top = 0
   HelpContext = 92
-  Caption = 'JSON'#12499#12517#12450#12540
+  Caption = 'JSON'#12499#12517#12540#12450
   ClientHeight = 371
   ClientWidth = 592
   Color = clBtnFace

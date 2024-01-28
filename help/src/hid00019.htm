@@ -128,13 +128,13 @@
 
       <img src="chkbox.png" alt=""> <b>あいまい検索</b>
       <div class="indent1">
-        検索語の各文字間に任意の文字列があってもマッチする<b>あいまい検索</b>になります。なお半角空白は、AND検索ではなく文字と見なされます。例えば、大小文字の区別が有効な場合、検索語 &quot;NF&quot; は &quot;hogeNF&quot;、&quot;NyanFi&quot; などにマッチします。<br>
+        検索語の各文字間に任意の文字列があってもマッチする<b>あいまい検索</b>になります。なお半角空白は、AND検索ではなく文字と見なされます。例えば、大小文字の区別が有効な場合、検索語 "NF" は "hogeNF"、"NyanFi" などにマッチします。<br>
       </div>
 
       <img src="chkbox.png" alt=""> <b>上下端でループ</b>
       <div class="indent1">
         ファイラーで、下方向に検索して見つからなかった場合は先頭から、上方向で見つからなかった場合は最後から再検索します。マッチ数が1だった場合は、設定にかかわらずその項目に移動します。<br>
-        この設定は、フィルタマスク・モードおよびテキストビュアーでは無効です。<br>
+        この設定は、フィルタマスク・モードおよびテキストビューアでは無効です。<br>
         なおこれをチェックしていない場合でも、<a href="hid00050.htm#IncSearchTop">IncSearchTop</a> コマンドによって先頭から再検索できます。<br>
       </div>
       <img src="chkbox.png" alt=""> <b>マッチ数1で抜ける</b>
@@ -199,7 +199,7 @@
       <div class="indent1">
         特定のファイル拡張子に対して、標準とは異なるコマンド動作を指定できます。<br>
         コマンドは、「<b>Windowsの関連付けで開く</b> (<a href="hid00005.htm#OpenByWin">OpenByWin</a>)」、「<b>独自の関連付けで開く</b> (<a
-          href="hid00005.htm#OpenByApp">OpenByApp</a>)」、「<b>テキストビュアーで開く</b> (<a
+          href="hid00005.htm#OpenByApp">OpenByApp</a>)」、「<b>テキストビューアで開く</b> (<a
           href="hid00005.htm#TextViewer">TextViewer</a>)」、「<b>エディタで開く</b> (<a
           href="hid00005.htm#FileEdit">FileEdit</a>)」、「<b>バイナリエディタで開く</b> (<a
           href="hid00005.htm#BinaryEdit">BinaryEdit</a>)」、「<b>コマンドファイルとして実行</b> (<a
@@ -224,11 +224,11 @@
       </div>
       <img src="chkbox.png" alt=""> <b>メニュー定義</b><br>
       <div class="indent1">
-        カーソル位置がメニュー定義ファイル(一行目が &quot;;[MenuFile]&quot;)の場合、<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a> コマンドで開きます。
+        カーソル位置がメニュー定義ファイル(一行目が ";[MenuFile]")の場合、<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a> コマンドで開きます。
       </div>
       <img src="chkbox.png" alt=""> <b>結果リスト</b><br>
       <div class="indent1">
-        カーソル位置が結果リストファイル(一行目が &quot;;[ResultList]&quot;)の場合、<a href="hid00005.htm#LoadResultList">LoadResultList</a>
+        カーソル位置が結果リストファイル(一行目が ";[ResultList]")の場合、<a href="hid00005.htm#LoadResultList">LoadResultList</a>
         コマンドで開きます。
       </div>
       <br>
@@ -236,7 +236,7 @@
       <img src="chkbox.png" alt=""> <b>実行後にカーソルを下に移動</b><br>
       <div class="indent1">
         実行後にカーソルを一つ下に移動します。<br>
-        ただし <b>ExeCommands</b> コマンドに関連付けられている場合は移動しません。またビュアーが開かれて、PrevFile/NextFile や Delete
+        ただし <b>ExeCommands</b> コマンドに関連付けられている場合は移動しません。またビューアが開かれて、PrevFile/NextFile や Delete
         コマンドを実行した場合は、閉じるときに表示していたファイルの位置に移ります。
       </div>
 

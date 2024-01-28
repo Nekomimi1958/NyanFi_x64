@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  テキストビュアー													//
+//  テキストビューア													//
 //----------------------------------------------------------------------//
 #include <IdURI.hpp>
 #include "htmconv.h"
@@ -4804,7 +4804,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 		//HTML→テキスト変換
 		if (SameText(cmd, "HtmlToText")) {
 			SetHtmlToText(prm);
-			if (isExtWnd) TxtViewer->isHtm2Txt = isHtm2Txt;		//内部ビュアーに反映
+			if (isExtWnd) TxtViewer->isHtm2Txt = isHtm2Txt;		//内部ビューアに反映
 			AssignText();
 		}
 		//CSV/TSVを固定長表示
@@ -4815,7 +4815,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 				prm = "ON";
 			}
 			SetToggleSw(isFixedLen, prm);
-			if (isExtWnd) TxtViewer->isFixedLen = isFixedLen;	//内部ビュアーに反映
+			if (isExtWnd) TxtViewer->isFixedLen = isFixedLen;	//内部ビューアに反映
 			AssignText(NULL, cur_lno);
 		}
 		//ルビを表示
@@ -4953,7 +4953,7 @@ bool __fastcall TTxtViewer::ExeCommand(const _TCHAR *t_cmd, UnicodeString prm)
 }
 
 //---------------------------------------------------------------------------
-//テキストビュアーで利用可能なコマンドか?
+//テキストビューアで利用可能なコマンドか?
 //---------------------------------------------------------------------------
 bool __fastcall TTxtViewer::IsCmdAvailable(UnicodeString cmd)
 {

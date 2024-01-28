@@ -14,7 +14,7 @@
     <param name="Keyword" value="git-bash.exe">
     <param name="Keyword" value="git-gui.exe">
     <param name="Keyword" value="GitViewer">
-    <param name="Keyword" value="Gitビュアー">
+    <param name="Keyword" value="Gitビューア">
     <param name="Keyword" value="OpenGitURL">
     <param name="Keyword" value="Pack">
     <param name="Keyword" value="RepositoryList">
@@ -37,7 +37,7 @@
   </p>
 
   <p class="link_box">
-    <a href="#FileInfo">ファイル情報の表示</a> ／ <a href="#GitViewer">Gitビュアー</a> ／ <a href="#RepositoryList">リポジトリ一覧</a> ／ <a
+    <a href="#FileInfo">ファイル情報の表示</a> ／ <a href="#GitViewer">Gitビューア</a> ／ <a href="#RepositoryList">リポジトリ一覧</a> ／ <a
       href="#GitCommand">Git 補助コマンドの利用</a>
   </p>
 
@@ -47,18 +47,18 @@
   <dl>
     <dt class="no_bg">Remote URL</dt>
     <dd>リモートリポジトリのURL(https://～)です。<br>
-      .git/config 内の [remote &quot;origin&quot;] の内容から想定されるURLを表示しています。<br>
+      .git/config 内の [remote "origin"] の内容から想定されるURLを表示しています。<br>
       GitHub、GitLab、BitBucket では多分大丈夫だと思います。<br>
       <a href="hid00005.htm#OpenGitURL">OpenGitURL</a> コマンドを実行すると、カーソル位置項目に対応するページをブラウザで開けます(ファイル情報の右クリックメニューからも可能)。<br>
     </dd>
 
     <dt class="no_bg">Git-Commit</dt>
-    <dd>直前のコミット情報です。括弧内はローカル参照、&#x25b6 は &quot;HEAD -&gt;&quot; を表しています。</dd>
+    <dd>直前のコミット情報です。括弧内はローカル参照、&#x25b6 は "HEAD -&gt;" を表しています。</dd>
 
     <dt class="no_bg">Git-Status</dt>
-    <dd>&quot;git status --porcelain&quot; の取得結果から、フラグごとのファイル数(インデックス/ワーキングツリー)を表示します。<br>
-      例えば、ワーキングツリーに2個の変更されたファイルがある場合、&quot;M:_/2&quot; と表示されます。<br>
-      <a href="hid00005.htm#SelGitChanged">SelGitChanged</a> コマンドを実行すると、カレントで変更されているファイル(フラグが &quot;?&quot;
+    <dd>"git status --porcelain" の取得結果から、フラグごとのファイル数(インデックス/ワーキングツリー)を表示します。<br>
+      例えば、ワーキングツリーに2個の変更されたファイルがある場合、"M:_/2" と表示されます。<br>
+      <a href="hid00005.htm#SelGitChanged">SelGitChanged</a> コマンドを実行すると、カレントで変更されているファイル(フラグが "?"
       以外)が選択されます。<br>
     </dd>
   </dl>
@@ -88,8 +88,8 @@
 
   <p>
     キー操作などは他の一覧と同様です。数字キーまたは<span class="btn_frame">ENTER</span>キーで確定すると、そのディレクトリに移動します。<br>
-    また右クリックメニューの「<b>Gitビュアーを開く</b>」(<a href="hid00005.htm#GitViewer">GitViewer</a>、<a
-      href="hid00005.htm#TextViewer">TextViewer</a> コマンドのキーでも可)では、ディレクトリ移動後に<a href="#GitViewer">Gitビュアー</a>を開きます。<br>
+    また右クリックメニューの「<b>Gitビューアを開く</b>」(<a href="hid00005.htm#GitViewer">GitViewer</a>、<a
+      href="hid00005.htm#TextViewer">TextViewer</a> コマンドのキーでも可)では、ディレクトリ移動後に<a href="#GitViewer">Gitビューア</a>を開きます。<br>
     <span class="btn_frame">DEL</span>キー、または <a href="hid00005.htm#Delete">Delete</a>
     コマンドが割り当てられているキーを押すと、カーソル位置の項目をキャッシュ内容ごと削除できます。
   </p>
@@ -101,12 +101,12 @@
   </p>
   <br>
 
-  <h3 id="GitViewer">Gitビュアー</h3>
+  <h3 id="GitViewer">Gitビューア</h3>
   <div class="spc_box_p">
-    Gitの作業ディレクトリ内で <a href="hid00005.htm#GitViewer">GitViewer</a> コマンドを実行すると、<b>Gitビュアー</b>が表示されます。<br>
+    Gitの作業ディレクトリ内で <a href="hid00005.htm#GitViewer">GitViewer</a> コマンドを実行すると、<b>Gitビューア</b>が表示されます。<br>
   </div>
   <div class="spc_box_p info_text">
-    Gitビュアーから git.exe やその他のツールを実行する際の作業ディレクトリは、Git作業ディレクトリのトップ(直下に .git があるディレクトリ)になります。
+    Gitビューアから git.exe やその他のツールを実行する際の作業ディレクトリは、Git作業ディレクトリのトップ(直下に .git があるディレクトリ)になります。
   </div>
 
   <dl>
@@ -165,7 +165,7 @@
         <dt class="no_bg"><span class="btn_frame">追加</span><span style="font-weight: normal;">(作業ツリーのみ)</span></dt>
         <dd>ファイルをインデックスに追加します。</dd>
         <dt class="no_bg"><span class="btn_frame">取消</span><span style="font-weight: normal;">(インデックスのみ)</span></dt>
-        <dd>ステージングを取り消します。通常は &quot;git reset HEAD ～&quot; を、HEAD がない場合は &quot;git rm --cached ～&quot; を実行します。</dd>
+        <dd>ステージングを取り消します。通常は "git reset HEAD ～" を、HEAD がない場合は "git rm --cached ～" を実行します。</dd>
         <dt class="no_bg"><span class="btn_frame">コミット</span></dt>
         <dd>ステージングされているファイルをコミットします。メッセージを入力するためのダイアログが表示されます。<br>
           なお、入力欄からキーで確定したい場合は<span class="btn_frame">Ctrl</span>+<span class="btn_frame">ENTER</span>を押してください。<br>
@@ -176,7 +176,7 @@
         <dd>親コミットからの差分詳細を<a href="hid00073.htm">一覧ダイアログ</a>で表示します。</dd>
         <dt class="no_bg"><span class="btn_frame">編集</span><span style="font-weight: normal;">(<a
               href="hid00005.htm#ToParentOnLeft">FileEdit</a> コマンドのキーでも可)</span></dt>
-        <dd>ファイルをテキストエディタで開きます。リポジトリ内のファイルは <b>NyanFi</b> の一時ディレクトリに出力して開きます(&quot;core.autocrlf=true&quot;
+        <dd>ファイルをテキストエディタで開きます。リポジトリ内のファイルは <b>NyanFi</b> の一時ディレクトリに出力して開きます("core.autocrlf=true"
           なら改行をCR/LFに変換)。<br>
           なお右クリックメニューの「<b>このファイルの内容を表示</b>」(<a href="hid00005.htm#TextViewer">TextViewer</a> コマンドのキーでも可)によって、内容を<a
             href="hid00073.htm">一覧ダイアログ</a>で表示することも可能。<br>
@@ -194,7 +194,7 @@
   </dl>
 
   <div class="spc_box_p">
-    カーソル移動などは、ファイラーやテキストビュアーで割り当てられているのと同じキー操作でできます。<br>
+    カーソル移動などは、ファイラーやテキストビューアで割り当てられているのと同じキー操作でできます。<br>
     ブランチ一覧/コミット履歴間のフォーカス移動は、<a href="hid00005.htm#ToLeft">ToLeft</a> / <a href="hid00005.htm#ToRight">ToRight</a>、<a
       href="hid00005.htm#ToParentOnLeft">ToParentOnLeft</a> / <a href="hid00005.htm#ToParentOnRight">ToParentOnRight</a>
     コマンドが割り当てられているキーや、<span class="btn_frame">←</span> / <span class="btn_frame">→</span>キーで行えます。<br>
@@ -217,10 +217,10 @@
     結果は、ログおよび定義済み変数 <b>Buffer</b> に出力されます。<br>
   </p>
   <div class="spc_box_p">
-    なお Git 補助コマンドの結果(1行目が &quot;$ git ～&quot;)を<a href="hid00073.htm">一覧ダイアログ</a>で表示した場合、行頭部の
-    &quot;<b>*</b>&quot;、&quot;<b>|</b>&quot;、&quot;<b>/</b>&quot;、&quot;<b>\</b>&quot;、&quot;<b>_</b>&quot;
-    からなる部分はグラフィック表示になります(* は「Git: コミットマーク」の●印に、線は「罫線の色」で描画)。また &quot;$ git ～&quot; で始まる行は「見出しの文字色」で、&quot;<b>+</b>&quot;
-    で始まる行は「Git: + 行」、&quot;<b>-</b>&quot; で始まる行は「Git: - 行」の色で表示されます。
+    なお Git 補助コマンドの結果(1行目が "$ git ～")を<a href="hid00073.htm">一覧ダイアログ</a>で表示した場合、行頭部の
+    "<b>*</b>"、"<b>|</b>"、"<b>/</b>"、"<b>\</b>"、"<b>_</b>"
+    からなる部分はグラフィック表示になります(* は「Git: コミットマーク」の●印に、線は「罫線の色」で描画)。また "$ git ～" で始まる行は「見出しの文字色」で、"<b>+</b>"
+    で始まる行は「Git: + 行」、"<b>-</b>" で始まる行は「Git: - 行」の色で表示されます。
   </div>
 
   <div class="indent1">

@@ -307,9 +307,9 @@ void __fastcall TInpCmdsDlg::CmdsComboBoxKeyDown(TObject *Sender, WORD &Key, TSh
 			topic = (SubCmdList->IndexOf(kwd)!=-1)?
 						HELPTOPIC_XC :		//補助コマンド
 					((IsRef && ModeTabControl->TabIndex==1) || (!IsRef && ScrMode==SCMD_TVIEW))?
-						HELPTOPIC_TV :		//テキストビュアー
+						HELPTOPIC_TV :		//テキストビューア
 					((IsRef && ModeTabControl->TabIndex==2) || (!IsRef && ScrMode==SCMD_IVIEW))?
-						HELPTOPIC_IV :		//イメージビュアー
+						HELPTOPIC_IV :		//イメージビューア
 					(IsRef && ModeTabControl->TabIndex==3)?
 						HELPTOPIC_CILW :	//ログ
 						HELPTOPIC_FL;		//ファイラー

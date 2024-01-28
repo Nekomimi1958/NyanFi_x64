@@ -2,7 +2,7 @@ object XmlViewer: TXmlViewer
   Left = 0
   Top = 0
   HelpContext = 81
-  Caption = 'XML'#12499#12517#12450#12540
+  Caption = 'XML'#12499#12517#12540#12450
   ClientHeight = 371
   ClientWidth = 592
   Color = clBtnFace

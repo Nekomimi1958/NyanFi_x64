@@ -55,8 +55,8 @@
 #define CPYDTID_OPTIONS	1		//起動オプション
 #define CPYDTID_DPL_INF	2		//二重起動側からの画面情報
 #define CPYDTID_DPL_MSG	3		//二重起動側からの通知メッセージ
-#define CPYDTID_TXTVIEW	4		//テキストビュアーで開く
-#define CPYDTID_IMGVIEW	5		//イメージビュアーで開く
+#define CPYDTID_TXTVIEW	4		//テキストビューアで開く
+#define CPYDTID_IMGVIEW	5		//イメージビューアで開く
 #define CPYDTID_EXECMDS	6		//コマンドを実行
 
 //---------------------------------------------------------------------------
@@ -77,8 +77,8 @@ void HtmlHelpClose();
 
 #define HELPTOPIC_TOP	"hid00001.htm"		//表紙
 #define HELPTOPIC_FL	"hid00005.htm"		//ファイラー - コマンド
-#define HELPTOPIC_TV	"hid00006.htm"		//テキストビュアー
-#define HELPTOPIC_IV	"hid00007.htm"		//イメージビュアー
+#define HELPTOPIC_TV	"hid00006.htm"		//テキストビューア
+#define HELPTOPIC_IV	"hid00007.htm"		//イメージビューア
 #define HELPTOPIC_IS	"hid00050.htm"		//インクリメンタルサーチ
 #define HELPTOPIC_CI	"hid00100.htm"		//コマンドの索引
 #define HELPTOPIC_CILW	"hid00100.htm#LW"	//コマンドの索引(ログウィンドウ)
@@ -107,8 +107,8 @@ typedef Set <SeaOpt, soMigemo, soTree> SearchOption;
 //---------------------------------------------------------------------------
 //画面モード(ScrMode)
 #define SCMD_FLIST	1					//ファイラー
-#define SCMD_TVIEW	2					//テキストビュアー
-#define SCMD_IVIEW	4					//イメージビュアー
+#define SCMD_TVIEW	2					//テキストビューア
+#define SCMD_IVIEW	4					//イメージビューア
 #define SCMD_GREP	8					//GREP
 
 #define MAX_FILELIST	 2				//ファイルリスト数 (左右)
@@ -760,6 +760,7 @@ extern TStringList *GrepPathList;
 extern TStringList *GrepFileList;
 extern TStringList *GrepResultList;
 extern TStringList *GrepResultBuff;
+extern TStringList *GrepUnsortBuff;
 
 extern TStringList *ViewFileList;
 extern bool isViewIcon;
@@ -1293,7 +1294,7 @@ struct file_rec {
 	bool is_ads;				//代替データストリーム
 	bool is_dummy;				//ダミー(空のドライブ、ワークリストのセパレータ、比較結果の不在項目など)
 	bool selected;				//選択中
-	bool failed;				//ファイラー: 一時解凍失敗/  イメージビュアー: 読込失敗
+	bool failed;				//ファイラー: 一時解凍失敗/  イメージビューア: 読込失敗
 
 	__int64 f_size;				//サイズ
 	__int64 o_size;				//ディスク上の占有サイズ

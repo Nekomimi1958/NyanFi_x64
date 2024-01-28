@@ -163,9 +163,9 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 		"Error=エラー/注意の文字色\n"
 		"bgInfHdr=|情報ヘッダの背景色\n"
 		"fgInfHdr=情報ヘッダの文字色\n"
-		"bgView=|テキストビュアーの背景色\n"
-		"fgView=テキストビュアーの文字色\n"
-		"Margin=テキストビュアーの余白白\n"
+		"bgView=|テキストビューアの背景色\n"
+		"fgView=テキストビューアの文字色\n"
+		"Margin=テキストビューアの余白白\n"
 		"bgRuler=ルーラの背景色\n"
 		"fgRuler=ルーラの目盛色\n"
 		"bgLineNo=行番号背景色\n"
@@ -407,7 +407,7 @@ void __fastcall TOptionDlg::FormCreate(TObject *Sender)
 	set_ComboBoxText(StdCmdComboBox,
 		_T("Windowsの関連付けで開く (OpenByWin)\n")
 		_T("独自の関連付けで開く (OpenByApp)\n")
-		_T("テキストビュアーで開く (TextViewer)\n")
+		_T("テキストビューアで開く (TextViewer)\n")
 		_T("エディタで開く (FileEdit)\n")
 		_T("バイナリエディタで開く (BinaryEdit)\n")
 		_T("コマンドファイルとして実行 (ExeCommands)\n")
@@ -1135,8 +1135,8 @@ bool __fastcall TOptionDlg::FormHelp(WORD Command, THelpEventData Data, bool &Ca
 			switch (KeyTabControl->TabIndex) {
 			case 0: topic = HELPTOPIC_FL;	break;	//ファイラー
 			case 1: topic = HELPTOPIC_IS;	break;	//INC.サーチ
-			case 2: topic = HELPTOPIC_TV;	break;	//テキストビュアー
-			case 3: topic = HELPTOPIC_IV;	break;	//イメージビュアー
+			case 2: topic = HELPTOPIC_TV;	break;	//テキストビューア
+			case 3: topic = HELPTOPIC_IV;	break;	//イメージビューア
 			case 4: topic = HELPTOPIC_CILW;	break;	//ログ
 			}
 
@@ -1542,13 +1542,13 @@ void __fastcall TOptionDlg::EtcEditorListBoxClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//エディタ/ビュアーの参照
+//エディタ/ビューアの参照
 //---------------------------------------------------------------------------
 void __fastcall TOptionDlg::RefEditorBtnClick(TObject *Sender)
 {
 	int tag = ((TComponent*)Sender)->Tag;
 	UnicodeString tit = get_word_i_idx(
-		"テキストエディタ|イメージエディタ|バイナリエディタ|その他のエディタ|外部テキストビュアー", tag);
+		"テキストエディタ|イメージエディタ|バイナリエディタ|その他のエディタ|外部テキストビューア", tag);
 	UserModule->PrepareOpenDlg(tit.c_str(), F_FILTER_EXE2);
 	UnicodeString fnam;
 	if (UserModule->OpenDlgToStr(fnam)) {
@@ -1690,8 +1690,8 @@ void __fastcall TOptionDlg::RefFontBtnClick(TObject *Sender)
 	if (idx>=0 && idx<FontComboBox->Items->Count && idx<FontBufList->Count) {
 		TFont *f = (TFont*)FontBufList->Objects[idx];
 		UserModule->FontDlg->Options.Clear();
-		if (SameText(FontBufList->ValueFromIndex[idx], "テキストビュアー"))
-			UserModule->FontDlg->Options << fdFixedPitchOnly;	//テキストビュアーは等幅
+		if (SameText(FontBufList->ValueFromIndex[idx], "テキストビューア"))
+			UserModule->FontDlg->Options << fdFixedPitchOnly;	//テキストビューアは等幅
 
 		if (UserModule->FontDlgToFont(f)) {
 			if (SameText(FontBufList->ValueFromIndex[idx], "ダイアログ")) {

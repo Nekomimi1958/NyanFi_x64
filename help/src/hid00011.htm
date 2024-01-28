@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-  <title>オプション設定 - テキストビュアー</title>
+  <title>オプション設定 - テキストビューア</title>
   <link rel="stylesheet" type="text/css" href="help.css">
   <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
     <param name="Keyword" value="CSV">
@@ -20,12 +20,12 @@
     <param name="Keyword" value="ShowLineNo">
     <param name="Keyword" value="ShowRuler">
     <param name="Keyword" value="TSV">
-    <param name="Keyword" value="テキストビュアー">
+    <param name="Keyword" value="テキストビューア">
     <param name="Keyword" value="バイナリ・ダンプ表示">
     <param name="Keyword" value="メモリマップドファイル">
     <param name="Keyword" value="リッチテキスト">
     <param name="Keyword" value="ルーラ">
-    <param name="Keyword" value="外部ビュアー">
+    <param name="Keyword" value="外部ビューア">
     <param name="Keyword" value="強調表示">
     <param name="Keyword" value="青空文庫">
   </object>
@@ -33,13 +33,13 @@
 
 <body>
 
-  <h1>オプション設定 - テキストビュアー</h1>
+  <h1>オプション設定 - テキストビューア</h1>
 
-  <p><a href="hid00006.htm">テキストビュアー</a>に関する設定を行います。</p>
+  <p><a href="hid00006.htm">テキストビューア</a>に関する設定を行います。</p>
 
   <p class="link_box">
     <a href="#FoldWidth">折り返し幅</a> ／ <a href="#Emphasis">強調表示</a> ／ <a href="#HtmlToText">HTML→テキスト変換</a> ／ <a
-      href="#External">外部ビュアー</a>
+      href="#External">外部ビューア</a>
   </p>
   <br>
 
@@ -48,7 +48,7 @@
     <dd>テキスト表示の場合の折り返し幅を設定します。<br>
       <img src="radio.png" alt=""> <b>ウィンドウの幅に合わせる</b> または <img src="radio.png" alt=""> <b>指定(半角単位)</b>
       のいずれかを選択できます。<br>
-      テキストビュアーで<b>ルーラ</b>を表示している場合は、任意の位置をダブルクリックして設定することもできます(0以前の位置ではウィンドウ幅)。<br>
+      テキストビューアで<b>ルーラ</b>を表示している場合は、任意の位置をダブルクリックして設定することもできます(0以前の位置ではウィンドウ幅)。<br>
       <a href="hid00006.htm#SetWidth">→ SetWidth</a><br>
       <hr><br>
     </dd>
@@ -60,7 +60,7 @@
     </dd>
 
     <dt class="no_bg"><img src="chkbox.png" alt=""> 情報ヘッダを下部に表示</dt>
-    <dd>ビュアーの情報ヘッダを下部(ステータスバーの上)に移動します。</dd>
+    <dd>ビューアの情報ヘッダを下部(ステータスバーの上)に移動します。</dd>
 
     <dt class="no_bg"><img src="chkbox.png" alt=""> 行番号を表示</dt>
     <dd>テキスト表示の際に、行番号を表示します。<br>
@@ -72,8 +72,8 @@
     <dd>現在行にラインカーソルを表示します。</dd>
 
     <dt class="no_bg"><img src="chkbox.png" alt=""> 行位置を復元</dt>
-    <dd>前回ビュアーを閉じたときのカーソルの行位置を復元します。<br>
-      ビュアーの履歴数は、<b>NyanFi</b> 起動中は無制限ですが、終了時に保存されるのは最大50です。
+    <dd>前回ビューアを閉じたときのカーソルの行位置を復元します。<br>
+      ビューアの履歴数は、<b>NyanFi</b> 起動中は無制限ですが、終了時に保存されるのは最大50です。
     </dd>
 
     <dt class="no_bg"><img src="chkbox.png" alt=""> スクロールバーを折り返し位置に表示</dt>
@@ -137,7 +137,7 @@
     <dt class="no_bg"><img src="chkbox.png" alt=""> ダブルクリックでURLを開く</dt>
     <dd>チェックすると、その行にURLが含まれていた場合にそれを開きます。チェックを外すと、URLをダブルクリックした場合、それが選択されます(<a
         href="hid00006.htm#SelCurWord">SelCurWord</a> に相当)。<br>
-      なお、行末より後の部分をダブルクリックしたときはテキストビュアーを閉じます。<br>
+      なお、行末より後の部分をダブルクリックしたときはテキストビューアを閉じます。<br>
       <br>
     </dd>
 
@@ -205,9 +205,9 @@
       <div class="indent1">
         チェックすると、Markdown記法に準じた変換を行います。<br>
         「<b>見出し文字</b>」の設定は無効となり、<b>#</b> を用いた表記で変換されます。<br>
-        画像は &quot;![alt属性](ファイル名)&quot; という形で挿入されます(alt無指定の場合&quot;画像&quot;)。<br>
-        定義リストでは、<b>dd</b> 要素の前に &quot;:&nbsp;&nbsp;&nbsp;&quot; が挿入されます。<br>
-        <b>table</b> には対応していませんが、&quot;---- ---- ～&quot; という形の区切りが挿入されます。<br>
+        画像は "![alt属性](ファイル名)" という形で挿入されます(alt無指定の場合"画像")。<br>
+        定義リストでは、<b>dd</b> 要素の前に ":&nbsp;&nbsp;&nbsp;" が挿入されます。<br>
+        <b>table</b> には対応していませんが、"---- ---- ～" という形の区切りが挿入されます。<br>
         なお、<a href="hid00006.htm#HtmlToText">HtmlToText</a> コマンドのパラメータでこの設定を切り替えることもできます(<b>MD</b> で有効、<b>TX</b> で無効)。
       </div>
       <hr><br>
@@ -217,7 +217,7 @@
     <dd><b>xd2txlib.dll</b> がインストールされている場合、チェックすると、各種バイナリ文書からテキストを抽出して表示します。<br>
       <div class="note_text">
         <b>.docx</b>、<b>.pptx</b>、<b>.xlsx</b> ファイルは実態がZIPファイルであるため、<a href="hid00005.htm#OpenStandard">OpenStandard</a>
-        コマンドに対してはデフォルトでアーカイブとして認識されますので注意してください。テキストビュアーで開きたい場合は、これらの拡張子に対して <a href="hid00019.htm#OpenStandard">オプション設定
+        コマンドに対してはデフォルトでアーカイブとして認識されますので注意してください。テキストビューアで開きたい場合は、これらの拡張子に対して <a href="hid00019.htm#OpenStandard">オプション設定
           - コマンド - OpenStandard</a> - 「<b>コマンドへの関連付け</b>」を設定するか、<a href="hid00005.htm#TextViewer">TextViewer</a>
         コマンドを使用してください。<br>
       </div>
@@ -227,25 +227,25 @@
     </dd>
 
     <dt class="no_bg"><img src="chkbox.png" alt=""> 青空文庫形式に対応する</dt>
-    <dd>&quot;［＃～］&quot; という書式を含むテキストファイル(.txt)を青空文庫形式とみなし、以下のように表示します。<br>
-      &quot;［＃～］&quot; 部分はコメント色で、&quot;《～》&quot; 部分はルビ色で表示します(色は <a href="hid00023.htm">オプション設定 - フォント・配色</a> または <a
+    <dd>"［＃～］" という書式を含むテキストファイル(.txt)を青空文庫形式とみなし、以下のように表示します。<br>
+      "［＃～］" 部分はコメント色で、"《～》" 部分はルビ色で表示します(色は <a href="hid00023.htm">オプション設定 - フォント・配色</a> または <a
         href="hid00006.htm#SetColor">SetColor</a> コマンドで設定)。<br>
       「字下げ」や「地からの字上げ」にほぼ対応しています。<br>
       <a href="hid00006.htm#FunctionList">FunctionList</a> コマンドでは見出し一覧を表示します。<br>
     </dd>
 
-    <dt class="no_bg"><img src="chkbox.png" alt=""> &quot;\&quot; を &quot;&#x2216&quot;(U+2216)で表示</dt>
-    <dd>日本語フォントで &quot;<b>\</b>&quot; として表示される文字(U+005C)を、&quot;<b>&#x2216</b>&quot;(U+2216) で代替表示します。<br>
+    <dt class="no_bg"><img src="chkbox.png" alt=""> "\" を "&#x2216"(U+2216)で表示</dt>
+    <dd>日本語フォントで "<b>\</b>" として表示される文字(U+005C)を、"<b>&#x2216</b>"(U+2216) で代替表示します。<br>
       変わるのは表示だけで、コピーした際の内容などは変化しません。<br>
       <div class="note_text">
         フォントによってはこの文字がない場合があります。
       </div>
       この設定は、テキストプレビューや<a href="hid00073.htm">一覧ダイアログ</a>での表示にも適用されます。<br>
-      テキストビュアーでの表示については、<a href="hid00084.htm">構文強調表示定義ファイル</a>で <b>AltBackSlash</b> キーによって個別に設定を変えることも可能です。<br>
+      テキストビューアでの表示については、<a href="hid00084.htm">構文強調表示定義ファイル</a>で <b>AltBackSlash</b> キーによって個別に設定を変えることも可能です。<br>
     </dd>
 
     <dt class="no_bg"><img src="chkbox.png" alt=""> .dfm ファイルの文字列値をデコード</dt>
-    <dd><b>.dfm</b> (Delphiフォームファイル)で用いられる &quot;#文字コード&quot; 形式の値表記を、実際の文字列に変換して表示します。<br>
+    <dd><b>.dfm</b> (Delphiフォームファイル)で用いられる "#文字コード" 形式の値表記を、実際の文字列に変換して表示します。<br>
       <div class="note_text">
         コピーした場合、元の内容と異なりますので注意してください。<br>
       </div>
@@ -286,10 +286,10 @@
       <br>
     </dd>
 
-    <dt id="External"><img src="grpbox.png" alt=""> 外部ビュアー</dt>
-    <dd>内部テキストビュアーの代わりに外部ビュアーを用いたい場合は、ここで指定してください。<br>
+    <dt id="External"><img src="grpbox.png" alt=""> 外部ビューア</dt>
+    <dd>内部テキストビューアの代わりに外部ビューアを用いたい場合は、ここで指定してください。<br>
       ただし、リッチテキストやバイナリ・ダンプ表示、現在のログ閲覧(<a href="hid00005.htm#ViewLog">ViewLog</a>)、末尾の閲覧(<a
-        href="hid00005.htm#ViewTail">ViewTail</a>)の場合は、内部テキストビュアーが用いられます。<br>
+        href="hid00005.htm#ViewTail">ViewTail</a>)の場合は、内部テキストビューアが用いられます。<br>
       <br>
       パラメータとして以下の書式文字列を使えます。<br>
       　<b>$F</b> : パス付ファイル名<br>

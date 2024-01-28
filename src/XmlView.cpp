@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  XMLビュアー															//
+//  XMLビューア															//
 //----------------------------------------------------------------------//
 #include "UserFunc.h"
 #include "UserMdl.h"
@@ -45,7 +45,7 @@ void __fastcall TXmlViewer::FormShow(TObject *Sender)
 	AssignScaledFont(XmlTreeView, ListFont);
 	AssignScaledFont(StatusBar1, SttBarFont);
 
-	Caption = yen_to_delimiter(FileName) + " - XMLビュアー";
+	Caption = yen_to_delimiter(FileName) + " - XMLビューア";
 
 	SetDarkWinTheme(this);
 

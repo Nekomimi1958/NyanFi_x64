@@ -750,7 +750,7 @@ file_rec *XCMD_set_cfp(UnicodeString fnam, UnicodeString cnam, file_rec *cfp)
 		XCMD_is_end = (lp->ItemIndex == lp->Count-1);
 		XCMD_marked = IniFile->IsMarked(XCMD_cur_r_name);
 		break;
-	case SCMD_TVIEW:	//テキストビュアー
+	case SCMD_TVIEW:	//テキストビューア
 		if (TxtViewer->isReady) {
 			XCMD_is_top	= (TxtViewer->CurPos.y == 0);
 			XCMD_is_end	= (TxtViewer->CurPos.y == TxtViewer->MaxDispLine-1);
@@ -758,7 +758,7 @@ file_rec *XCMD_set_cfp(UnicodeString fnam, UnicodeString cnam, file_rec *cfp)
 			XCMD_marked = TxtViewer->IsMarked();
 		}
 		break;
-	case SCMD_IVIEW:	//イメージビュアー
+	case SCMD_IVIEW:	//イメージビューア
 		XCMD_is_top	= (v_idx == 0);
 		XCMD_is_end	= (v_idx == ViewFileList->Count-1);
 		XCMD_marked	= IniFile->IsMarked(ViewFileName);

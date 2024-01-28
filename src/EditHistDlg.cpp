@@ -1389,7 +1389,7 @@ void __fastcall TEditHistoryDlg::NoRepoItemClick(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
-//Gitビュアーを開く
+//Gitビューアを開く
 //---------------------------------------------------------------------------
 void __fastcall TEditHistoryDlg::GitViewerActionExecute(TObject *Sender)
 {

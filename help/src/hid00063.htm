@@ -14,12 +14,12 @@
     <param name="Keyword" value="Git for Windows">
     <param name="Keyword" value="git.exe">
     <param name="Keyword" value="xdoc2txt">
-    <param name="Keyword" value="イメージビュアー">
+    <param name="Keyword" value="イメージビューア">
     <param name="Keyword" value="エイリアス">
     <param name="Keyword" value="コマンドファイル">
     <param name="Keyword" value="コマンドファイル一覧">
     <param name="Keyword" value="ツールバー">
-    <param name="Keyword" value="テキストビュアー">
+    <param name="Keyword" value="テキストビューア">
     <param name="Keyword" value="デバッグウィンドウ">
     <param name="Keyword" value="デバッグモード">
     <param name="Keyword" value="ファイラー">
@@ -46,7 +46,7 @@
   <h1>ExeCommands コマンド</h1>
 
   <p>
-    ファイラー、<a href="hid00006.htm">テキストビュアー</a>、<a href="hid00007.htm">イメージビュアー</a>、 <a href="hid00013.htm">オプション設定 -
+    ファイラー、<a href="hid00006.htm">テキストビューア</a>、<a href="hid00007.htm">イメージビューア</a>、 <a href="hid00013.htm">オプション設定 -
       関連付け</a>、<a href="hid00014.htm">オプション設定 - 追加メニュー</a> で <a href="hid00005.htm#ExeCommands">ExeCommands</a>
     コマンドを用いると、一連の複数コマンドを実行できます。制御文などを用いたバッチ処理も可能です。なお、<b>ExeCommands</b> コマンドの中でさらに <b>ExeCommands</b>
     コマンドを実行することはできません。<br>
@@ -103,13 +103,13 @@ ExeCommands_MsgBox_":エラー:処理に失敗しました"
         <dt class="no_bg_indent1"><span class="format_text">%変数名[行インデックス]%</span></dt>
         <dd>
           変数が1行以上の文字列を含む場合、行インデックスで指定した行内容を参照します。行末の改行コードは含まれません。行インデックスは0から始まる整数で、変数名も使えます。範囲外の値を指定した場合は空文字列になります。<br>
-          <b>例</b>: MsgBox_&quot;:クリップボードの先頭行:%Clipboard[0]%&quot;
+          <b>例</b>: MsgBox_":クリップボードの先頭行:%Clipboard[0]%"
         </dd>
         <dt class="no_bg_indent1"><span class="format_text">%変数名.Count%</span></dt>
         <dd>変数内容の行数です。</dd>
         <dt class="no_bg_indent1"><span class="format_text">%変数名.Length%</span></dt>
         <dd>変数内容の総文字数です。複数行の場合、行末の改行コードもカウントされます。<br>
-          <b>例</b>: MsgBox_&quot;:クリップボード:%Clipboard.Length%文字 %Clipboard.Count%行&quot;
+          <b>例</b>: MsgBox_":クリップボード:%Clipboard.Length%文字 %Clipboard.Count%行"
         </dd>
       </dl>
       <br>
@@ -138,7 +138,7 @@ ExeCommands_MsgBox_":エラー:処理に失敗しました"
       変数名の大文字・小文字は区別されません。また日本語も使えます。<br>
       値は文字列として設定されますが、<a href="#Set">Set</a> コマンドで複合代入演算子(+=、-=、*=、/=、%=)を用いた場合、整数値とみなして演算できます。<br>
       また <a href="#Test">Test</a> コマンドで、変数の内容と文字列を自然順で比較できます。<br>
-      設定された変数は、&quot;%変数名%&quot; などの書式を用いてパラメータ内で参照できます。
+      設定された変数は、"%変数名%" などの書式を用いてパラメータ内で参照できます。
     </p>
 
     <b>例</b>: 2つの数を入力し、それらの積を表示<br>
@@ -151,7 +151,7 @@ MsgBox_%A%×%B%=%答%
 </pre>
 
     <p>
-      通常、ユーザ定義変数の内容は <b>ExeCommands</b> コマンドが終了すると失われますが、変数名の先頭に &quot;<b>..</b>&quot; を付けると、コマンド終了後も <b>NyanFi</b>
+      通常、ユーザ定義変数の内容は <b>ExeCommands</b> コマンドが終了すると失われますが、変数名の先頭に "<b>..</b>" を付けると、コマンド終了後も <b>NyanFi</b>
       が終了するまでそのまま保持されます。
     </p>
     <b>例</b>: 実行されるたびに変数に1を加算
@@ -166,7 +166,7 @@ MsgBox_%..N%回目です
   <div class="indent1">
     <b>ExeCommands</b> コマンドの実行中に参照できる<b>定義済み変数</b>として以下のものがあります。<br>
     変数名の大文字・小文字は区別されません。<br>
-    これらは、&quot;%変数名%&quot; などの書式を用いてパラメータ内で参照できます。<br>
+    これらは、"%変数名%" などの書式を用いてパラメータ内で参照できます。<br>
     <br>
 
     <div class="indent1">
@@ -278,7 +278,7 @@ MsgBox_%..N%回目です
         </tr>
         <tr>
           <th id="ScrMode">ScrMode</th>
-          <td>画面モード (FL:ファイラー、TV:テキストビュアー、IV:イメージビュアー、GR:文字列検索(GREP))</td>
+          <td>画面モード (FL:ファイラー、TV:テキストビューア、IV:イメージビューア、GR:文字列検索(GREP))</td>
         </tr>
         <tr>
           <th>SortMode</th>
@@ -286,27 +286,27 @@ MsgBox_%..N%回目です
         </tr>
         <tr>
           <th>SelText</th>
-          <td>テキストビュアーで選択中のテキスト</td>
+          <td>テキストビューアで選択中のテキスト</td>
         </tr>
         <tr>
           <th>LineNo</th>
-          <td>テキストビュアーでのカーソル位置の行番号(改行単位)</td>
+          <td>テキストビューアでのカーソル位置の行番号(改行単位)</td>
         </tr>
         <tr>
           <th>LineText</th>
-          <td>テキストビュアーでのカーソル位置の行内容(改行まで)</td>
+          <td>テキストビューアでのカーソル位置の行内容(改行まで)</td>
         </tr>
         <tr>
           <th>CursorPosY</th>
-          <td>テキストビュアーでのカーソルのY位置(0～)</td>
+          <td>テキストビューアでのカーソルのY位置(0～)</td>
         </tr>
         <tr>
           <th>CursorPosX</th>
-          <td>テキストビュアーでのカーソルのX位置(0～)</td>
+          <td>テキストビューアでのカーソルのX位置(0～)</td>
         </tr>
         <tr>
           <th>PageSize</th>
-          <td>テキストビュアーの1ページ中の表示行数</td>
+          <td>テキストビューアの1ページ中の表示行数</td>
         </tr>
         <tr>
           <th>Battery</th>
@@ -324,7 +324,7 @@ MsgBox_%..N%回目です
         <tr>
           <th>CodePage</th>
           <td>コードページ(Buffer の読み込み/保存に使用)<br>
-            テキストビュアーでは表示中テキストのコードページ(変更するとその値が優先)</td>
+            テキストビューアでは表示中テキストのコードページ(変更するとその値が優先)</td>
         </tr>
         <tr>
           <th>MenuIndex</th>
@@ -332,7 +332,7 @@ MsgBox_%..N%回目です
         </tr>
         <tr>
           <th>MenuStr</th>
-          <td><a href="#PopupMenu">PopupMenu</a> で選択された項目文字列(アクセラレータ部分や前後の空白は削除、キャンセル時は &quot;&quot;)</td>
+          <td><a href="#PopupMenu">PopupMenu</a> で選択された項目文字列(アクセラレータ部分や前後の空白は削除、キャンセル時は "")</td>
         </tr>
         <tr>
           <th>ModalResult</th>
@@ -365,7 +365,7 @@ MsgBox_%..N%回目です
         </tr>
         <tr>
           <th>LastLogText</th>
-          <td>ログウィンドウの直前の行内容(空行や &quot; &gt;All Task Ready&quot; はスキップ)</td>
+          <td>ログウィンドウの直前の行内容(空行や " &gt;All Task Ready" はスキップ)</td>
         </tr>
         <tr>
           <th>Buffer</th>
@@ -422,7 +422,7 @@ MsgBox_%..N%回目です
     <b>Clipboard</b> は、<a href="#SetClipboard">SetClipboard</a> によって設定可能です。<br>
     <div class="spc_box">
       <b>CodePage</b> は設定可能ですが、<a href="#LoadBuffer">LoadBuffer</a>
-      を実行すると、そのとき判定されたコードページが設定されます。またテキストビュアーでは表示中テキストのコードページになりますが、<b>ExeCommands</b> コマンド実行中に変更された場合はその値が優先されます。<br>
+      を実行すると、そのとき判定されたコードページが設定されます。またテキストビューアでは表示中テキストのコードページになりますが、<b>ExeCommands</b> コマンド実行中に変更された場合はその値が優先されます。<br>
     </div>
     それ以外の定義済み変数は<b>参照専用</b>です。<br>
   </div>
@@ -454,7 +454,7 @@ IfFalse
 EndIf
 </pre>
 
-          <b>例</b>: 前方一致で &quot;hoge&quot; がマッチする HogeClass クラスのウィンドウをアクティブに、なければ起動
+          <b>例</b>: 前方一致で "hoge" がマッチする HogeClass クラスのウィンドウをアクティブに、なければ起動
           <pre class="example_box">
 ActivateWnd_HogeClass;/^hoge/
 IfFalse
@@ -472,7 +472,7 @@ EndIf
 
       <dt id="AppendBuffer" class="no_bg">AppendBuffer<span class="pram_text">_ファイル名[;NB]</span></dt>
       <dd>定義済み変数 <b>Buffer</b> の内容を指定したファイルに追記保存します。<br>
-        ファイル名にドライブ指定がない場合、ファイラーではカレント、ビュアーでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
+        ファイル名にドライブ指定がない場合、ファイラーではカレント、ビューアでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
         保存の際のエンコーディングには、定義済み変数 <b>CodePage</b> が用いられます。ファイルが存在しない場合は新規作成します。<br>
         パラメータに <b>NB</b> を指定すると、新規作成の場合に Unicode ファイルをBOM無しで保存します。既存ファイルに対する追記保存ではこのパラメータが効きませんので、<a href="hid00005.htm#ConvertTextEnc">ConvertTextEnc</a> コマンドであらかじめBOM無しに変換しておいてください。<br>
         <div class="spc_box">
@@ -526,11 +526,11 @@ AppendBuffer_"nyan.log"
       <dt id="Download" class="no_bg">Download<span class="pram_text">_URL[&gt;&gt;[テキストファイル名][;{MD|TX}]]</span></dt>
       <dd>パラメータで指定したURLのファイルを、一時ディレクトリにダウンロードします(進捗ダイアログを表示)。<br>
         ダウンロードしたファイル名は、定義済み変数 <b>DownloadName</b> で参照できます(キャンセル、失敗時は空文字列)。<br>
-        なお、URLの末尾が <b>/</b> の場合 &quot;<b>index.htm</b>&quot; が付加されます。<br>
+        なお、URLの末尾が <b>/</b> の場合 "<b>index.htm</b>" が付加されます。<br>
         <div class="spc_box">
           URLの後に &gt;&gt;[テキストファイル名]
           を指定すると、ダウンロードしたファイルがHTML文書の場合、それをテキストに変換して保存します。<br>
-          変換はテキストビュアーでのHTML→テキスト変換表示に準じます。ただし拡張子を .md にすると、オプション設定にかかわらずMarkdown記法に変換します。また、パラメータに <b>MD</b>
+          変換はテキストビューアでのHTML→テキスト変換表示に準じます。ただし拡張子を .md にすると、オプション設定にかかわらずMarkdown記法に変換します。また、パラメータに <b>MD</b>
           を指定するとMarkdown記法に、<b>TX</b> を指定すると通常テキストに変換します。<br>
           ファイル名にドライブ指定がない場合はカレントからの相対指定とみなされます。ファイル名を指定しない場合は、ダウンロードしたファイルの拡張子を .txt または .md に変えて一時ディレクトリに保存します。
           <b>DownloadName</b> は変換保存したファイル名になります。<br>
@@ -565,10 +565,10 @@ ListText_%DownloadName%
       <dd>指定した文字列の前に時刻情報を付けてログウィンドウに表示します。</dd>
 
       <dt id="Edit" class="no_bg">Edit<span class="pram_text">_変数名</span><br>
-        Edit<span class="pram_text">_&quot;:タイトル:変数名&quot;</span></dt>
+        Edit<span class="pram_text">_":タイトル:変数名"</span></dt>
       <dd>複数行入力可能なテキストボックスによって、変数の内容を編集します。<br>
         バラメータでタイトルを指定できます。その場合、パラメータ全体をダブルクォーテーションで囲んでください。タイトル内では <b>:\</b> を表示文字として使えます。<br>
-        フォントや文字色/背景色はテキストビュアーのものが用いられますが、文字色/背景色については右クリックメニューで変更可能です。<br>
+        フォントや文字色/背景色はテキストビューアのものが用いられますが、文字色/背景色については右クリックメニューで変更可能です。<br>
         <div class="spc_box">
           ボックスにフォーカスがある場合、<span class="btn_frame">ENTER</span>キーは改行になります。<span class="btn_frame">OK</span>は、<span
             class="btn_frame">Ctrl</span>+<span class="btn_frame">ENTER</span>で行ってください。<br>
@@ -603,7 +603,7 @@ EndIf
 
       <dt id="FileExists" class="no_bg">FileExists<span class="pram_text">_ファイル名|ディレクトリ名</span></dt>
       <dd>パラメータで指定したファイルまたはディレクトリが存在するかを調べます。<br>
-        名前にドライブ指定がない場合、ファイラーではカレント、ビュアーでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
+        名前にドライブ指定がない場合、ファイラーではカレント、ビューアでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
         結果を後続の <a href="#IfStatement">If 文</a>の条件(<b>True</b>、<b>False</b>)として利用できます。<br>
       </dd>
 
@@ -645,7 +645,7 @@ MsgBox_%Buffer%
         カレントのドライブ情報を書式にしたがって変数に設定します。<br>
         使用できる書式文字列は、<a href="hid00010.htm#DriveInfo">オプション設定 - デザイン</a> - <b>ドライブ情報の書式</b> のものと同じです。<br>
         <div class="spc_box">
-          <b>例</b>: FormatDI_空き容量=&quot;$DN $FS ($FR)&quot;
+          <b>例</b>: FormatDI_空き容量="$DN $FS ($FR)"
         </div>
       </dd>
 
@@ -661,8 +661,8 @@ MsgBox_%Buffer%
         なおシングルクォーテーションで囲まれた文字はそのまま表示されます。ここに挙げた以外にも指定子として機能する文字があるため、英字はシングルクォーテーションで囲んでおいた方がよいでしょう。<br>
 
         <div class="spc_box">
-          <b>例</b>: FormatDT_今日の日付=&quot;yyyy年mm月dd日 (ddd)&quot;<br>
-          <b>例</b>: FormatDT_Today=&quot;$EN'Date:' dddd, mmmm dd, yyyy&quot;
+          <b>例</b>: FormatDT_今日の日付="yyyy年mm月dd日 (ddd)"<br>
+          <b>例</b>: FormatDT_Today="$EN'Date:' dddd, mmmm dd, yyyy"
         </div>
       </dd>
 
@@ -684,10 +684,10 @@ MsgBox_%Buffer%
             Windows)</b> で設定してください。<br>
         </div>
         <div class="spc_box">
-          <b>例</b>: Git_&quot;clone https://github.com/Nekomimi1958/NyanFi_x64.git&quot;<br>
-          <b>例</b>: Git_&quot;add %NamePart%&quot;<br>
-          <b>例</b>: Git_&quot;config --global -l&quot;: ListBuffer_Git<br>
-          <b>例</b>: Git_&quot;log --oneline&quot;: ListBuffer_&quot;Git - %CurPath%&quot;
+          <b>例</b>: Git_"clone https://github.com/Nekomimi1958/NyanFi_x64.git"<br>
+          <b>例</b>: Git_"add %NamePart%"<br>
+          <b>例</b>: Git_"config --global -l": ListBuffer_Git<br>
+          <b>例</b>: Git_"log --oneline": ListBuffer_"Git - %CurPath%"
         </div>
         <a href="hid00090.htm">→ Git の利用について</a>
       </dd>
@@ -726,13 +726,13 @@ Hint
       </dd>
 
       <dt id="Input" class="no_bg">Input<span class="pram_text">_変数名</span><br>
-        Input<span class="pram_text">_&quot;:タイトル:[プロンプト:]変数名&quot;</span></dt>
+        Input<span class="pram_text">_":タイトル:[プロンプト:]変数名"</span></dt>
       <dd>入力ボックスによって、変数に文字列を設定します。<br>
         バラメータでタイトルおよびプロンプトを指定することも可能です。その場合、パラメータ全体をダブルクォーテーションで囲んでください。タイトルやプロンプト内では <b>:\</b> を表示文字として使えます。<br>
         既存のユーザ定義変数の場合、その内容がデフォルトとして入力ボックスに表示されます。<br>
         キャンセルすると後続 <a href="#IfStatement">If 文</a>の <b>Cancel</b> が真になります(OK なら <b>Yes</b> が真)。<br>
         <div class="spc_box">
-          <b>例</b>: Input_&quot;:設定:回数を入力してください:N&quot;<br>
+          <b>例</b>: Input_":設定:回数を入力してください:N"<br>
         </div>
         <a href="#Set">→ Set</a>　<a href="#Test">→ Test</a>
       </dd>
@@ -767,7 +767,7 @@ Hint
       <dd>指定したテキストファイルを、定義済み変数 <b>Buffer</b> に読み込みます。<br>
         パラメータにファイル名を指定しないとダイアログが表示されます。<br>
         またファイル名に <b>*</b> や <b>?</b> が含まれている場合、それをファイルマスクとしてダイアログが出ます。<br>
-        ファイル名/ファイルマスクにドライブ指定がない場合、ファイラーではカレント、ビュアーでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
+        ファイル名/ファイルマスクにドライブ指定がない場合、ファイラーではカレント、ビューアでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
         ファイルが読み込まれると、判定されたコードページが定義済み変数 <b>CodePage</b> に設定されます。<br>
         なお、定義済み変数 <b>BufferIndex</b> は 0 にリセットします。<br>
 
@@ -842,7 +842,7 @@ IfTrue_Exit
       </dd>
 
       <dt id="MsgBox" class="no_bg">MsgBox<span class="pram_text">_メッセージ</span><br>
-        MsgBox<span class="pram_text">_&quot;:タイトル:メッセージ&quot;</span></dt>
+        MsgBox<span class="pram_text">_":タイトル:メッセージ"</span></dt>
       <dd>指定したメッセージを表示します。<br>
         タイトルを指定することも可能です。その場合、パラメータ全体をダブルクォーテーションで囲んでください。タイトル内では <b>:\</b> を表示文字として使えます。<br>
         <div class="spc_box">
@@ -852,8 +852,8 @@ IfTrue_Exit
           と記述してください。<br>
         </div>
         <div class="spc_box">
-          <b>例</b>: MsgBox_&quot;:エラー:失敗しました\n設定を確認してください&quot;<br>
-          <b>例</b>: MsgBox_&quot;:カレント:'%CurPath%'&quot;
+          <b>例</b>: MsgBox_":エラー:失敗しました\n設定を確認してください"<br>
+          <b>例</b>: MsgBox_":カレント:'%CurPath%'"
         </div>
       </dd>
 
@@ -891,7 +891,7 @@ IfTrue_Exit
         <div class="note_text">
           <b>.mp3</b> の場合ID3タグの内容によっては再生できない場合があります。適切なコーデックを別途インストールすれば再生できるようになります。<br>
         </div>
-        <b>例</b>: PlaySound_&quot;d:\sound\BGM.mp3&quot;<br>
+        <b>例</b>: PlaySound_"d:\sound\BGM.mp3"<br>
         <div class="spc_box">
           ファイル名の代わりに <a href="hid00093.htm">定義済みサウンド識別子</a> を指定することもできます。<br>
           <b>例</b>: PlaySound_WindowsUnlock<br>
@@ -935,7 +935,7 @@ IfTrue_Exit
       <dt id="PopupMenu" class="no_bg">PopupMenu<span class="pram_text">_変数名</span></dt>
       <dd>変数に設定された項目をポップアップメニューで表示します。<br>
         メニュー項目が選択されると、定義済み変数 <b>MenuIndex</b> に項目番号(1～、キャンセル時は0)が、<b>MenuStr</b> には項目の文字列(アクセラレータ部分や前後の空白は削除、キャンセル時は
-        &quot;&quot;)が設定されます。<br>
+        "")が設定されます。<br>
         <div class="spc_box">
           <b>例</b>:
           <pre class="example_box">
@@ -1017,7 +1017,7 @@ EndRepeat
           <b>例</b>: カーソル位置のHTML文書からタグを削除し連続改行をつめて表示
           <pre class="example_box">
 LoadBuffer_%FileName%
-ReplaceBuffer_/&lt;[^&lt;&gt;]+&gt;/=&quot;&quot;
+ReplaceBuffer_/&lt;[^&lt;&gt;]+&gt;/=""
 ReplaceBuffer_/(\r\n){3,}/=\r\n
 MsgBox_%Buffer%
 </pre>
@@ -1039,7 +1039,7 @@ MsgBox_%Buffer%
       </dd>
 
       <dt id="SaveBuffer" class="no_bg">SaveBuffer<span class="pram_text">[_ファイル名[;NB]]</span></dt>
-      <dd>定義済み変数 <b>Buffer</b> の内容を指定したファイル名で保存します。ファイル名にドライブ指定がない場合、ファイラーではカレント、ビュアーでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
+      <dd>定義済み変数 <b>Buffer</b> の内容を指定したファイル名で保存します。ファイル名にドライブ指定がない場合、ファイラーではカレント、ビューアでは閲覧中ファイルのディレクトリからの相対指定とみなされます。<br>
         ファイル名をパラメータで指定しない場合、ダイアログが表示されます。<br>
         ファイル名をパラメータで指定した場合、エンコーディングには定義済み変数 <b>CodePage</b> が用いられます。また、パラメータに <b>NB</b> を追加指定すると、Unicode ファイルがBOM無しで保存されます。なお、改行コードは CR/LF になります。<br>
         <div class="spc_box">
@@ -1109,14 +1109,14 @@ SendCommands_"ChangeOppDir_%OppPath%"
 
         <div class="spc_box">
           <b>例</b>: 現在 2015/01/01 12:00:00 とすると<br>
-          　1時間後　Set_時刻=%Time%: Set_時刻+=&quot;01:00:00&quot;　　→ &quot;13:00:00&quot;<br>
-          　7日前　Set_日付=%Date%: Set_日付-=7　　→ &quot;2014/12/25&quot;<br>
+          　1時間後　Set_時刻=%Time%: Set_時刻+="01:00:00"　　→ "13:00:00"<br>
+          　7日前　Set_日付=%Date%: Set_日付-=7　　→ "2014/12/25"<br>
           <div class="spc_box">
             それ以外で複合代入演算子(+=、-=、*=、/=、%=)を用いたとき、変数と文字列の内容がともに整数値とみなせる場合は、数値として演算します。結果の桁幅は元の設定値の文字数になります。<br>
           </div>
-          <b>例</b>: Set_A=0001: Set_A+=10　　→ &quot;0011&quot;<br>
+          <b>例</b>: Set_A=0001: Set_A+=10　　→ "0011"<br>
           また、内容が整数値とみなせない場合に複合代入演算子 += を用いると、文字列の連結になります。<br>
-          <b>例</b>: Set_A=ABC: Set_A+=10　　→ &quot;ABC10&quot;<br>
+          <b>例</b>: Set_A=ABC: Set_A+=10　　→ "ABC10"<br>
         </div>
         <a href="#Add">→ Add</a>　<a href="#Input">→ Input</a>　<a href="#Random">→ Random</a>　<a href="#Test">→ Test</a>
       </dd>
@@ -1194,8 +1194,8 @@ EndIf
         <pre class="example_box">
 Set_i=0
 Repeat_%SelCount%
-  SetExeFile_&quot;hoge.exe&quot;
-  SetExeParam_&quot;-xxx %SelFiles[i]%&quot;
+  SetExeFile_"hoge.exe"
+  SetExeParam_"-xxx %SelFiles[i]%"
   SetExeOpt_WH
   ShellExecute
   Set_i+=1
@@ -1204,12 +1204,12 @@ EndRepeat
         <br>
       </dd>
 
-      <dt id="SetFileTime" class="no_bg">SetFileTime<span class="pram_text">_&quot;yyyy/mm/dd hh:nn:ss&quot;</span></dt>
+      <dt id="SetFileTime" class="no_bg">SetFileTime<span class="pram_text">_"yyyy/mm/dd hh:nn:ss"</span></dt>
       <dd>カーソル位置項目のタイムスタンプを設定します。<br>
         書式が yyyy/mm/dd のみの場合はその日付の 00:00:00 に、hh:nn:ss のみの場合は日付は元のままになります。<br>
         <div class="spc_box">
-          <b>例</b>: 時刻部分のみ変更: SetFileTime_&quot;12:00:00&quot;<br>
-          <b>例</b>: 現在の日時に設定: SetFileTime_&quot;%Date% %Time%&quot;<br>
+          <b>例</b>: 時刻部分のみ変更: SetFileTime_"12:00:00"<br>
+          <b>例</b>: 現在の日時に設定: SetFileTime_"%Date% %Time%"<br>
         </div>
       </dd>
 
@@ -1234,13 +1234,13 @@ EndRepeat
       </dd>
 
       <dt id="Timer" class="no_bg">Timer<span class="pram_text">_時間[S|M|H]</span><br>
-        Timer<span class="pram_text">_&quot;hh:mm[:ss]&quot;</span></dt>
+        Timer<span class="pram_text">_"hh:mm[:ss]"</span></dt>
       <dd>設定した時間が経過するか、設定時刻を過ぎると、<a href="#IfStatement">If 文</a>の <b>TimeOut</b> 条件が成立します。<br>
         時間が数字だけの場合はミリ秒単位、数字の後に <b>S</b> を付けると秒、<b>M</b> で分、<b>H</b> で時間単位になります。<br>
         なお、すでに設定時刻を過ぎている場合は、翌日の時刻とみなします。
         <div class="spc_box">
           <b>例</b>: Timer_90M<br>
-          <b>例</b>: Timer_&quot;12:00:00&quot;<br>
+          <b>例</b>: Timer_"12:00:00"<br>
           <div class="note_text">
             時刻は : を含むため必ずダブルクォーテーションで囲んでください。
           </div>
@@ -1311,11 +1311,11 @@ IfFalse_Exit
           <table>
             <tr>
               <th>Top</th>
-              <td>ファイラーでリストの最上行/ テキストビュアーで最上行/ イメージビュアーで最初の画像</td>
+              <td>ファイラーでリストの最上行/ テキストビューアで最上行/ イメージビューアで最初の画像</td>
             </tr>
             <tr>
               <th>End</th>
-              <td>ファイラーでリストの最下行/ テキストビュアーで最下行/ イメージビュアーで最後の画像</td>
+              <td>ファイラーでリストの最下行/ テキストビューアで最下行/ イメージビューアで最後の画像</td>
             </tr>
             <tr>
               <th>Left</th>
@@ -1327,7 +1327,7 @@ IfFalse_Exit
             </tr>
             <tr>
               <th>Sel</th>
-              <td>ファイラーのカレント側で選択あり/ テキストビュアーで選択中/ イメージビュアーで選択あり<br></td>
+              <td>ファイラーのカレント側で選択あり/ テキストビューアで選択中/ イメージビューアで選択あり<br></td>
             </tr>
             <tr>
               <th>SelMask</th>
@@ -1359,7 +1359,7 @@ IfFalse_Exit
             </tr>
             <tr>
               <th><b>Found</b></th>
-              <td>ファイラーでカレントが検索結果リスト/ テキストビュアーで直前の文字列/リンク先/マーク行検索で発見</td>
+              <td>ファイラーでカレントが検索結果リスト/ テキストビューアで直前の文字列/リンク先/マーク行検索で発見</td>
             </tr>
             <tr>
               <th>Work</th>
@@ -1383,7 +1383,7 @@ IfFalse_Exit
             </tr>
             <tr>
               <th>Marked</th>
-              <td>カーソル位置が栞マーク項目/ テキストビュアーでカーソル行がマークされている</td>
+              <td>カーソル位置が栞マーク項目/ テキストビューアでカーソル行がマークされている</td>
             </tr>
             <tr>
               <th>Dir</th>
@@ -1403,19 +1403,19 @@ IfFalse_Exit
             </tr>
             <tr>
               <th>Binary</th>
-              <td>カーソル位置がバイナリ・ファイル/ テキストビュアーでバイナリ・ダンプ表示</td>
+              <td>カーソル位置がバイナリ・ファイル/ テキストビューアでバイナリ・ダンプ表示</td>
             </tr>
             <tr>
               <th>Log</th>
-              <td>カーソル位置が NyanFi ログファイル/ テキストビュアーでログを閲覧中</td>
+              <td>カーソル位置が NyanFi ログファイル/ テキストビューアでログを閲覧中</td>
             </tr>
             <tr>
               <th>HtmTxt</th>
-              <td>テキストビュアーでHTML→テキスト変換表示</td>
+              <td>テキストビューアでHTML→テキスト変換表示</td>
             </tr>
             <tr>
               <th>Grep</th>
-              <td><a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからテキストビュアーを開いている</td>
+              <td><a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからテキストビューアを開いている</td>
             </tr>
             <tr>
               <th>Task</th>
@@ -1538,9 +1538,9 @@ EndRepeat
 
       <b>例</b>: 複数の指定ディレクトリで共通処理<br>
       <pre class="example_box">
-Add_DirList&lt;&lt;&quot;D:\data\hoge&quot;
-Add_DirList&lt;&lt;&quot;D:\data\foo&quot;
-Add_DirList&lt;&lt;&quot;D:\data\nyan&quot;
+Add_DirList&lt;&lt;"D:\data\hoge"
+Add_DirList&lt;&lt;"D:\data\foo"
+Add_DirList&lt;&lt;"D:\data\nyan"
 
 Set_i=0
 Repeat_%DirList.Count%
@@ -1562,7 +1562,7 @@ EndRepeat
 
       <div class="spc_box">
         指定したラベル位置へジャンプします。<br>
-        ラベルは、文字列の先頭に &quot;<b>#</b>&quot; を付けて定義してください。<br>
+        ラベルは、文字列の先頭に "<b>#</b>" を付けて定義してください。<br>
         なお、<b>Repeat</b> 文内ではラベルを使用できません。<br>
       </div>
 
@@ -1690,7 +1690,7 @@ PushDir
 PopDir
 </pre>
 
-    (カーソル位置がディレクトリまたはアーカイブならその中へ入り)最初の栞マークファイル(無ければ最初の .jpg)をイメージビュアーで開く。
+    (カーソル位置がディレクトリまたはアーカイブならその中へ入り)最初の栞マークファイル(無ければ最初の .jpg)をイメージビューアで開く。
     <pre class="example_box">
 IfDir
   OpenStandard
@@ -1780,7 +1780,7 @@ EndIf
 WriteINI_LogOnly=%状態%
 </pre>
 
-    テキストビュアーで、マーク行の一覧をクルップボードに取得。
+    テキストビューアで、マーク行の一覧をクルップボードに取得。
     <pre class="example_box">
 Test_ScrMode==TV: IfFalse_Exit
 
@@ -1832,7 +1832,7 @@ EndIf
 ClearAll
 </pre>
 
-    掲示板「NyanFiだニャン その3」をテキストビュアーで表示し、最新位置へ移動。
+    掲示板「NyanFiだニャン その3」をテキストビューアで表示し、最新位置へ移動。
     <pre class="example_box">
 IfConnected
   HtmlToText_ON
@@ -1856,7 +1856,7 @@ Else
 EndIf
 </pre>
 
-    カーソル位置がインターネットショートカットなら、そのページをテキストビュアーで表示
+    カーソル位置がインターネットショートカットなら、そのページをテキストビューアで表示
     <pre class="example_box">
 MatchExt_.url
 IfFalse_Exit

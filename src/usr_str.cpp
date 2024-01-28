@@ -1759,6 +1759,8 @@ UnicodeString minimize_str(
 	bool omit_end,		//末尾を省略 (default = false : 中間を省略)
 	bool spc_sw)		//半/全角空白の代替文字を考慮	(default = false)
 {
+	if (s.IsEmpty()) return EmptyStr;
+
 	bool is_irreg = IsIrregularFont(cv->Font);
 
 	int ww = get_TextWidth(cv, s, is_irreg, spc_sw);
@@ -1766,8 +1768,16 @@ UnicodeString minimize_str(
 		s = EmptyStr;
 	}
 	else if (ww > wd) {
+		int wz = std::max(ww/s.Length() * 12 / 10, 1);	//***
+
 		if (omit_end) {
+			for (int i=0; i<3; i++) {
+				int n = std::max((ww - wd)/wz, 1);  if (n<=1) break;
+				s = s.SubString(1, s.Length() - n);
+				ww = get_TextWidth(cv, s, is_irreg, spc_sw);
+			}
 			s += "…";
+
 			int p = s.Length() - 1;
 			while (p>0) {
 				s.Delete(p--, 1);
@@ -1783,6 +1793,13 @@ UnicodeString minimize_str(
 			}
 			if (p==0) p = 1;
 			s.Insert("…", p);	p += 1;
+
+			for (int i=0; i<3; i++) {
+				int n = std::max((ww - wd)/wz, 1);  if (n<=1) break;
+				s.Delete(p, n);
+				ww = get_TextWidth(cv, s, is_irreg, spc_sw);
+			}
+
 			while (s.Length()>=p) {
 				s.Delete(p, 1);
 				if (get_TextWidth(cv, s, is_irreg, spc_sw) <= wd) break;

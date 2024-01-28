@@ -46,7 +46,7 @@
       ファイラーで割り当てられているのと同じキーで、カーソル移動や、ファイルの閲覧(<a href="hid00005.htm#TextViewer">TextViewer</a> /
       <b>TextViewer</b>_XW)、編集(<a href="hid00005.htm#FileEdit">FileEdit</a>)が行えます。また <a
         href="hid00005.htm#OpenByApp">OpenByApp</a>、<a href="hid00005.htm#OpenByWin">OpenByWin</a> コマンドも実行できます。<br>
-      <b>TextViewer</b>_XW で別ウィンドウのテキストビュアーを開いている場合、<span class="btn_frame">TAB</span>キーで結果リストとの間を行き来できます。<br>
+      <b>TextViewer</b>_XW で別ウィンドウのテキストビューアを開いている場合、<span class="btn_frame">TAB</span>キーで結果リストとの間を行き来できます。<br>
       <a href="hid00012.htm">オプション設定 - エディタ</a> - テキストエディタ
       の「<b>パラメータ(GREP用)</b>」を設定しておけば、エディタで開いてその行位置に移動(タグジャンプ)できます。バイナリ文書では対応するエディタで開きます。<br>
       また<span class="btn_frame">ENTER</span>キーを押すと、結果リストから抜けて、そのファイルのある位置に移動します。<br>
@@ -68,7 +68,7 @@
       <div class="note_text">
         ※<b>Migemo</b> モードだと処理が重くなります。フィルタ欄には日本語も入力できるので、項目数が多い場合は通常モードにした方がよいでしょう。<br>
       </div>
-      <img src="chkbox.png" alt=""> <b>AND/OR</b> をチェックしていると、複数のキーワードを空白で区切って入力した場合にAND検索、&quot;<b>|</b>&quot;
+      <img src="chkbox.png" alt=""> <b>AND/OR</b> をチェックしていると、複数のキーワードを空白で区切って入力した場合にAND検索、"<b>|</b>"
       で区切るとOR検索で絞り込めます。区切りが混在しているその場合は、空白(AND)の方が | (OR)よりも優先順位が高くなります。<br>
       なお、大小文字は区別されません。<br>
       入力欄の幅は、状態表示との間にある境界線をドラッグすることで変更できます。<br>
@@ -77,7 +77,7 @@
     <dt class="no_bg">フォーカス移動など</dt>
     <dd>
       結果リストにフォーカスがある場合、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">F</span>キーでフィルタ欄に、<span
-        class="btn_frame">Ctrl</span>+<span class="btn_frame">S</span>キーで検索文字列欄に移れます。また、別ウィンドウのテキストビュアーがなければ、<span
+        class="btn_frame">Ctrl</span>+<span class="btn_frame">S</span>キーで検索文字列欄に移れます。また、別ウィンドウのテキストビューアがなければ、<span
         class="btn_frame">TAB</span>キーでも移れます。<br>
       フィルタ欄からは、<span class="btn_frame">Ctrl</span>+<span class="btn_frame">L</span>で結果リストに、<span
         class="btn_frame">Ctrl</span>+<span class="btn_frame">F</span>(or <span class="btn_frame">Ctrl</span>+<span
@@ -93,7 +93,7 @@
         除外</b>」で、結果リストを絞り込めます。キーワードは、空白で区切って複数指定可能。その場合、抽出ではいずれかを含むものが、除外ではいずれも含まないものが残ります。大小文字は区別されません。「<b>絞り込みの解除</b>」で、絞り込みを解除できます。「<b>絞り込みを確定</b>」で、絞り込みによって表示から除外された項目を結果リストから削除します。<br>
 
       <div class="spc_box">
-        「<b>行内容でソート</b>」では、マッチ行(次行部分は無視)の内容に基づいて結果リストをソートをできます。なお、絞り込みが行われた状態でソートを解除すると、絞り込みも解除されます。<br>
+        「<b>行内容でソート</b>」では、マッチ行(次行部分は無視)の内容に基づいて結果リストをソートをできます。<br>
       </div>
 
       <div class="spc_box">
@@ -204,9 +204,9 @@
     <dd>結果出力後に、外部アプリケーションを起動したい場合に設定してください。チェックを外していると起動しません。<br>
       実行ファイル名には以下の書式文字列が使えます。<br>
       　<b>$X</b>　<b>NyanFi</b> の起動パス(末尾の \ は無し)<br>
-      　<b>$D</b>　<b>NyanFi</b> の起動ドライブ(末尾の \ は無し、例: &quot;D:&quot;)<br>
+      　<b>$D</b>　<b>NyanFi</b> の起動ドライブ(末尾の \ は無し、例: "D:")<br>
       　<b>$$</b>　$ そのもの<br>
-      また &quot;%変数名%&quot; という書式で環境変数を用いることも可能です。<br>
+      また "%変数名%" という書式で環境変数を用いることも可能です。<br>
       出力ファイルを渡したい場合は、<b>パラメータ</b>に書式文字列 <b>$F</b> を指定してください。また既存ファイルに追加する場合、<b>$L</b> (行番号) も指定すると、追加した先頭位置に移動できます。<br>
       <br>
     </dd>
@@ -218,13 +218,13 @@
 
     <dt class="no_bg_indent1">ファイル情報の書式 <img src="edit.png" alt=""></dt>
     <dd>ファイル名や行番号の書式を指定します。<br>
-      書式には以下の書式文字列を使えます。空欄の場合は &quot;<b>$F $L:</b>&quot; とみなされます。<br>
+      書式には以下の書式文字列を使えます。空欄の場合は "<b>$F $L:</b>" とみなされます。<br>
       　<b>$F</b> : パス付ファイル名<br>
       　<b>$B</b> : パス無しファイル名<br>
       　<b>$L</b> : 行番号<br>
       　<b>\t</b> : タブ<br>
       　<b>\n</b> : 改行<br>
-      　<b>\s</b> : 空白 (&quot; &quot; でよいのですが、わかりやするために)<br>
+      　<b>\s</b> : 空白 (" " でよいのですが、わかりやするために)<br>
       　<b>\\</b> : \ そのもの<br>
     </dd>
 

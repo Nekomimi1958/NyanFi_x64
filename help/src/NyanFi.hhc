@@ -28,16 +28,16 @@
 			</OBJECT>
 	</UL>
 	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="ビュアー">
+		<param name="Name" value="ビューア">
 		<param name="Local" value="hid00201.htm">
 		</OBJECT>
 	<UL>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="テキストビュアー">
+			<param name="Name" value="テキストビューア">
 			<param name="Local" value="hid00006.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="イメージビュアー">
+			<param name="Name" value="イメージビューア">
 			<param name="Local" value="hid00007.htm">
 			</OBJECT>
 	</UL>
@@ -107,11 +107,11 @@
 			<param name="Local" value="hid00073.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="XMLビュアー">
+			<param name="Name" value="XMLビューア">
 			<param name="Local" value="hid00081.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="JSONビュアー">
+			<param name="Name" value="JSONビューア">
 			<param name="Local" value="hid00092.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
@@ -233,11 +233,11 @@
 			<param name="Local" value="hid00023.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="テキストビュアー">
+			<param name="Name" value="テキストビューア">
 			<param name="Local" value="hid00011.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="イメージビュアー">
+			<param name="Name" value="イメージビューア">
 			<param name="Local" value="hid00020.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">

@@ -11,7 +11,7 @@
     <param name="Keyword" value="SearchPair">
     <param name="Keyword" value="SetColor">
     <param name="Keyword" value="TextViewer">
-    <param name="Keyword" value="テキストビュアー">
+    <param name="Keyword" value="テキストビューア">
     <param name="Keyword" value="関数一覧">
     <param name="Keyword" value="構文強調表示定義ファイル">
   </object>
@@ -21,8 +21,8 @@
   <h1>構文強調表示定義ファイル</h1>
 
   <p>
-    <a href="hid00006.htm">テキストビュアー</a>での構文強調表示などを、ファイルによってユーザ定義できます。<br>
-    定義ファイルは、<b>NyanFi</b> 実行ディレクトリに &quot;<b>Highlight.INI</b>&quot; という名前で作成してください。<br>
+    <a href="hid00006.htm">テキストビューア</a>での構文強調表示などを、ファイルによってユーザ定義できます。<br>
+    定義ファイルは、<b>NyanFi</b> 実行ディレクトリに "<b>Highlight.INI</b>" という名前で作成してください。<br>
     <b>NyanFi</b> がデフォルトで対応している拡張子についても、ファイルで定義し直すと、それが優先的に適用されます。<br>
     一旦読み込まれた定義ファイルは、内容を保持して再利用します。タイムスタンプが変化していたら読み込み直します。<br>
   </p>
@@ -183,13 +183,13 @@ CommentBgn2=(*
 CommentEnd2=*)
 </pre>
 
-      先頭と末尾が同じ引用符になる場合は、全体を &quot; または ' で囲んでください。<br>
+      先頭と末尾が同じ引用符になる場合は、全体を " または ' で囲んでください。<br>
 
       <pre class="example_box">
-CommentBgn1='&quot;&quot;&quot;'
-CommentEnd1='&quot;&quot;&quot;'
-CommentBgn2=&quot;'''&quot;
-CommentEnd2=&quot;'''&quot;
+CommentBgn1='"""'
+CommentEnd1='"""'
+CommentBgn2="'''"
+CommentEnd2="'''"
 </pre>
       <br>
     </dd>
@@ -257,8 +257,8 @@ HeadlinePtn=^[●○◎]\.+
     </dd>
 
     <dt class="no_bg">ColorIniFile</dt>
-    <dd>指定したカラー設定ファイル(.INI)によって、テキストビュアーの配色を一時的に変更します。<br>
-      設定ファイルには、<b>テキストビュアーの配色</b>ダイアログ(<a href="hid00006.htm#SetColor">SetColor</a>)や <a href="hid00023.htm">オプション設定 -
+    <dd>指定したカラー設定ファイル(.INI)によって、テキストビューアの配色を一時的に変更します。<br>
+      設定ファイルには、<b>テキストビューアの配色</b>ダイアログ(<a href="hid00006.htm#SetColor">SetColor</a>)や <a href="hid00023.htm">オプション設定 -
         フォント・配色</a> でエクスポートしたもの、あるいは <b>NyanFi</b> のINIファイルを利用できます。ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
       <pre class="example_box">
 ColorIniFile=DarkColor.INI
@@ -321,8 +321,8 @@ FuncNamePtn=\b[_a-zA-Z]\w*\(
     </dd>
 
     <dt class="no_bg">AltBackSlash</dt>
-    <dd><a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>&quot;\&quot; を
-        &quot;&#x2216&quot;(U+2216)で表示</b>」の設定内容を変更できます。<br>
+    <dd><a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>"\" を
+        "&#x2216"(U+2216)で表示</b>」の設定内容を変更できます。<br>
       有効にする場合は <b>1</b> を、無効にする場合は <b>0</b> を指定してください。このキーがない場合は、オプション設定に従います。<br>
       <br>
     </dd>

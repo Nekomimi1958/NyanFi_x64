@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------//
 // NyanFi																//
-//  Gitビュアー															//
+//  Gitビューア															//
 //----------------------------------------------------------------------//
 #include "UserFunc.h"
 #include "UserMdl.h"
@@ -42,7 +42,7 @@ void __fastcall TGitViewer::FormCreate(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TGitViewer::FormShow(TObject *Sender)
 {
-	Caption = yen_to_delimiter(WorkDir) + " - Gitビュアー";
+	Caption = yen_to_delimiter(WorkDir) + " - Gitビューア";
 
 	IniFile->LoadPosInfo(this, DialogCenter);
 

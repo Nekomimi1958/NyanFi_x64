@@ -63,11 +63,11 @@
 
     <dt id="FolderIcon">FolderIcon.INI</dt>
     <dd><a href="hid00005.htm#SetFolderIcon">SetFolderIcon</a> コマンドによって設定されたフォルダアイコンの内容です。<br>
-      [<b>FolderIcon</b>] セクションに &quot;ディレクトリ名=アイコンファイル名&quot; の形で保存されます。<br>
+      [<b>FolderIcon</b>] セクションに "ディレクトリ名=アイコンファイル名" の形で保存されます。<br>
     </dd>
 
     <dt>Highlight.INI</dt>
-    <dd><a href="hid00006.htm">テキストビュアー</a>での構文強調表示をユーザ定義できます。<br>
+    <dd><a href="hid00006.htm">テキストビューア</a>での構文強調表示をユーザ定義できます。<br>
       <a href="hid00084.htm">→ 構文強調表示定義ファイル</a><br>
     </dd>
 
@@ -99,7 +99,7 @@
         アーカイブの <b>sample_etc</b> ディレクトリには、デフォルトとは異なる色見本のサンプルファイルがあります。<br>
       </div>
       <div class="spc_box">
-        なお名前が Swatchbook で始まり、1行目が &quot;[Swatchbook]&quot; の .INI ファイル(アーカイブ内は除く)は、イメージプレビューで内容を確認できます。<br>
+        なお名前が Swatchbook で始まり、1行目が "[Swatchbook]" の .INI ファイル(アーカイブ内は除く)は、イメージプレビューで内容を確認できます。<br>
       </div>
     </dd>
 
@@ -176,13 +176,13 @@
 
     <dt>xxxx.txt</dt>
     <dd>ポップアップメニュー用の定義ファイルです。<a href="hid00005.htm#ExeMenuFile">ExeMenuFile</a> コマンドで表示できます。<br>
-      一行目に &quot;;[MenuFile]&quot; と記述しておくと、<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a>
+      一行目に ";[MenuFile]" と記述しておくと、<a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a>
       で「<b>メニュー定義</b>」をチェックすることで <a href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
     </dd>
 
     <dt>xxxx.txt</dt>
     <dd>検索結果リストを <a href="hid00005.htm#SaveAsResultList">SaveAsResultList</a> コマンドで保存できます。<br>
-      内容はワークリストと同様ですが、先頭に &quot;;[ResultList]&quot; という識別行が、その後に &quot;;&quot; で始まるコメントの形で検索情報が付加されます。<br>
+      内容はワークリストと同様ですが、先頭に ";[ResultList]" という識別行が、その後に ";" で始まるコメントの形で検索情報が付加されます。<br>
       保存したファイルは、<a href="hid00005.htm#LoadResultList">LoadResultList</a> コマンドで読み込んで再利用できます。<br>
       また <a href="hid00019.htm#OpenStandard">オプション設定 - コマンド - OpenStandard</a> で「<b>結果リスト</b>」をチェックしていると、<a
         href="hid00005.htm#OpenStandard">OpenStandard</a> コマンドでも開けます。<br>
@@ -205,8 +205,8 @@ icon=SSD.ico
 
     <dt>thumbnail.jpg　<span class="small_nrm">(代替データストリーム)</span></dt>
     <dd>サムネイルキャッシュ画像です。<br>
-      <a href="hid00020.htm#ThumbCache">オプション設定 - イメージビュアー - サムネイル - 「代替データストリームにキャッシュ」</a>
-      が有効な場合、イメージビュアーで閲覧した画像ファイルに代替データストリームとして保存されます。<br>
+      <a href="hid00020.htm#ThumbCache">オプション設定 - イメージビューア - サムネイル - 「代替データストリームにキャッシュ」</a>
+      が有効な場合、イメージビューアで閲覧した画像ファイルに代替データストリームとして保存されます。<br>
       <div class="spc_box">
         なおディレクトリやアーカイブの代替データストリームに <b>thumbnail.jpg</b> という名前の画像を保存しておくと、それが優先的にイメージプレビューされます。<br>
       </div>
@@ -214,18 +214,18 @@ icon=SSD.ico
 
     <dt>thumbnail.txt　<span class="small_nrm">(代替データストリーム)</span></dt>
     <dd>サムネイルキャッシュ情報です。<br>
-      <a href="hid00020.htm#ThumbCache">オプション設定 - イメージビュアー - サムネイル - 「代替データストリームにキャッシュ」</a>
-      が有効な場合、イメージビュアーで閲覧した画像ファイルに代替データストリームとして保存されます。<br>
-      内容は、&quot;表示文字列 <span class="ctrl_text">[TAB]</span> タイムスタンプ <span class="ctrl_text">[TAB]</span> サムネイルサイズ <span
-        class="ctrl_text">[TAB]</span> 縮小アルゴリズム番号&quot; という一行です。<br>
+      <a href="hid00020.htm#ThumbCache">オプション設定 - イメージビューア - サムネイル - 「代替データストリームにキャッシュ」</a>
+      が有効な場合、イメージビューアで閲覧した画像ファイルに代替データストリームとして保存されます。<br>
+      内容は、"表示文字列 <span class="ctrl_text">[TAB]</span> タイムスタンプ <span class="ctrl_text">[TAB]</span> サムネイルサイズ <span
+        class="ctrl_text">[TAB]</span> 縮小アルゴリズム番号" という一行です。<br>
     </dd>
 
     <dt id="NyanfiDef">nyanfi.def　<span class="small_nrm">(代替データストリーム)</span></dt>
     <dd>ファイルに固有の設定情報です。<br>
       <a
-        href="hid00006.htm">テキストビュアー</a>でCSV/TSVファイルを開いた場合に、「先頭行が項目名」設定(TopIsHeader)と、「項目列の最小化」情報(MinFixedCols=列インデックス番号,…)が保存されます。<br>
+        href="hid00006.htm">テキストビューア</a>でCSV/TSVファイルを開いた場合に、「先頭行が項目名」設定(TopIsHeader)と、「項目列の最小化」情報(MinFixedCols=列インデックス番号,…)が保存されます。<br>
       また、<a href="hid00082.htm">テキストプレビュー</a>や<a
-        href="hid00006.htm">テキストビュアー</a>で文字コードを変更すると、そのコードページ(CodePage)が保存されます。<br>
+        href="hid00006.htm">テキストビューア</a>で文字コードを変更すると、そのコードページ(CodePage)が保存されます。<br>
     </dd>
 
     <dt>favicon　<span class="small_nrm">(代替データストリーム)</span></dt>

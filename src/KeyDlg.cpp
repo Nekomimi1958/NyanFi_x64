@@ -512,9 +512,9 @@ void __fastcall TKeyListDlg::HelpCmdActionExecute(TObject *Sender)
 		UnicodeString kwd = get_CmdStr(CurList->ValueFromIndex[idx]);
 		UnicodeString topic;
 		switch (KeyTabControl->TabIndex) {
-		case  1: topic = HELPTOPIC_IS;		break;	//テキストビュアー
-		case  2: topic = HELPTOPIC_TV;		break;	//テキストビュアー
-		case  3: topic = HELPTOPIC_IV;		break;	//イメージビュアー
+		case  1: topic = HELPTOPIC_IS;		break;	//テキストビューア
+		case  2: topic = HELPTOPIC_TV;		break;	//テキストビューア
+		case  3: topic = HELPTOPIC_IV;		break;	//イメージビューア
 		case  4: topic = HELPTOPIC_CILW;	break;	//ログ
 		default: topic = HELPTOPIC_FL;		break;	//ファイラー
 		}

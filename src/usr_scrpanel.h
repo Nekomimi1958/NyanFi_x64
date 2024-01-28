@@ -15,7 +15,7 @@
 //Flag
 #define USCRPNL_FLAG_FL		0x0001	//ファイルリスト
 #define USCRPNL_FLAG_GL		0x0002	//一覧リスト
-#define USCRPNL_FLAG_TV		0x0004	//テキストビュアー
+#define USCRPNL_FLAG_TV		0x0004	//テキストビューア
 
 #define USCRPNL_FLAG_P_WP	0x0020	//親パネルの WindowProc 入れ替え
 #define USCRPNL_FLAG_L_WP	0x0040	//リストボックスの WindowProc 入れ替え

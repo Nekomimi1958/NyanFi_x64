@@ -57,7 +57,7 @@
       <br>
       <b>例</b>: 左右のディレクトリを指定し、右側をカレントにする<br>
       <pre class="example_box">
-NyanFi.exe -Ld:\hoge -R&quot;d:\nyan\hoge hoge&quot; -CR
+NyanFi.exe -Ld:\hoge -R"d:\nyan\hoge hoge" -CR
 </pre>
       <br>
     </dd>
@@ -81,11 +81,11 @@ NyanFi.exe -Ld:\hoge -R&quot;d:\nyan\hoge hoge&quot; -CR
       <br>
       <b>例</b>: 右側をカレントにし、指定ファイル位置にカーソルを移動する<br>
       <pre class="example_box">
-NyanFi.exe -CR -F&quot;d:\nyan\doko doko.txt&quot;
+NyanFi.exe -CR -F"d:\nyan\doko doko.txt"
 </pre>
       -<b>F</b>オプションを用いずにファイル名を指定しても同じ結果になります(V8.78 以降)。<br>
       <pre class="example_box">
-NyanFi.exe -CR &quot;d:\nyan\doko doko.txt&quot;
+NyanFi.exe -CR "d:\nyan\doko doko.txt"
 </pre>
       <br>
     </dd>
@@ -107,14 +107,14 @@ NyanFi.exe -CR &quot;d:\nyan\doko doko.txt&quot;
 NyanFi.exe -XPlaySound_start.wav
 </pre>
 
-      <b>例</b>: 指定ファイルをテキストビュアーで開き、関数一覧を表示<br>
+      <b>例</b>: 指定ファイルをテキストビューアで開き、関数一覧を表示<br>
       <pre class="example_box">
-NyanFi.exe -XTextViewer_&quot;d:\hoge.txt&quot;:FunctionList
+NyanFi.exe -XTextViewer_"d:\hoge.txt":FunctionList
 </pre>
 
       <b>例</b>: カレントと検索文字列、マスクを指定し <a href="hid00056.htm">GREP</a> を実行<br>
       <pre class="example_box">
-NyanFi.exe -Ld:\hoge -CL -XGrep_&quot;にゃぁ&quot;:GrepSetMask_*.txt:GrepStart
+NyanFi.exe -Ld:\hoge -CL -XGrep_"にゃぁ":GrepSetMask_*.txt:GrepStart
 </pre>
 
       <b>例</b>: <a href="hid00085.htm">正規表現チェッカー</a>を開く<br>

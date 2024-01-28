@@ -18,7 +18,7 @@
     <param name="Keyword" value="TextViewer">
     <param name="Keyword" value="ダイレクトタグジャンプ">
     <param name="Keyword" value="タグ名検索">
-    <param name="Keyword" value="テキストビュアー">
+    <param name="Keyword" value="テキストビューア">
     <param name="Keyword" value="外部ツール">
   </object>
 </head>
@@ -27,8 +27,8 @@
 
   <h1>ダイレクトタグジャンプ</h1>
   <p>
-    <a href="hid00006.htm">テキストビュアー</a>で、<a href="hid00006.htm#TagJumpDirect">TagJumpDirect</a> (エディタ)/ <a
-      href="hid00006.htm#TagViewDirect">TagViewDirect</a> (ビュアー) コマンドを実行すると、カーソル位置の単語でダイレクトタグジャンプを行います。<br>
+    <a href="hid00006.htm">テキストビューア</a>で、<a href="hid00006.htm#TagJumpDirect">TagJumpDirect</a> (エディタ)/ <a
+      href="hid00006.htm#TagViewDirect">TagViewDirect</a> (ビューア) コマンドを実行すると、カーソル位置の単語でダイレクトタグジャンプを行います。<br>
     また <a href="hid00006.htm#TagJump">TagJump</a>_DJ /<a href="hid00006.htm#TagView">TagView</a>_DJ
     でタグジャンプができなかった場合もダイレクトタグジャンプを試みます。<br>
     なお、テキストエディタへの行番号指定は、<a href="hid00012.htm">オプション設定 - エディタ</a> で設定しておいてください。<br>
@@ -51,7 +51,7 @@
       一覧には、「ファイル名」、「更新日時」、「場所」(tags から相対)、「行番号」/「パターン」、「備考」(拡張フィールド)が表示されます。不要な項目は、列幅を変更すれば隠せます。<br>
       一覧で <span class="btn_frame">1</span>～<span class="btn_frame">9</span>、<span class="btn_frame">0</span>や<span
         class="btn_frame">ENTER</span>キーを押すと、<b>TagJumpDirect</b> ではテキストエディタで、<b>TagViewDirect</b>
-      ではテキストビュアーで開いて定義位置にジャンプします。<br>
+      ではテキストビューアで開いて定義位置にジャンプします。<br>
       カーソル移動は、ファイラーで割り当てられているのと同じキーで行えます。<br>
       なお、2ストロークキー操作には対応していません。<br>
     </dd>
@@ -60,15 +60,15 @@
 
   <h3 id="Dialog">タグ名検索</h3>
   <p>
-    ファイラーまたは<a href="hid00006.htm">テキストビュアー</a>で <a href="hid00005.htm#FindTagName">FindTagName</a>
+    ファイラーまたは<a href="hid00006.htm">テキストビューア</a>で <a href="hid00005.htm#FindTagName">FindTagName</a>
     コマンドを実行すると、タグ名検索ダイアログが開きます。<br>
   </p>
 
   <p>
     キーワードを入力すると、それが含まれるタグ名の候補が下の一覧に表示されます(インクリメンタルサーチ)。<br>
-    複数のキーワードを空白で区切って入力すると<b>AND</b>検索、&quot;<b>|</b>&quot; で区切ると<b>OR</b>検索になります。区切りが混在しているその場合は、空白(AND)の方が |
+    複数のキーワードを空白で区切って入力すると<b>AND</b>検索、"<b>|</b>" で区切ると<b>OR</b>検索になります。区切りが混在しているその場合は、空白(AND)の方が |
     (OR)よりも優先順位が高くなります。<br>
-    <b>例</b>: &quot;set&quot; と &quot;nyan&quot; の両方が含まれているか、&quot;get&quot; と &quot;nyan&quot; の両方が含まれている。<br>
+    <b>例</b>: "set" と "nyan" の両方が含まれているか、"get" と "nyan" の両方が含まれている。<br>
     　<span class="inp_box">set nayn|get nyan</span><br>
     <br>
 
@@ -84,18 +84,18 @@
       class="btn_frame">Ctrl</span>+<span class="btn_frame">R</span>) / <span class="btn_frame">PGDN</span>(or <span
       class="btn_frame">Ctrl</span>+<span class="btn_frame">C</span>)キーでページ移動が可能です。<br>
     <span class="btn_frame">ENTER</span>キーを押すと、一覧で選択されているタグ名でダイレクトタグジャンプを行います。一覧の項目をダブルクリックしてもかまいません。<b>FindTagName</b>
-    のパラメータに <b>EJ</b> が指定されている場合はテキストエディタで、そうでない場合はテキストビュアーでダイレクトタグジャンプします。ジャンプ先の候補が複数ある場合は、<b>候補一覧</b>が表示されます。
+    のパラメータに <b>EJ</b> が指定されている場合はテキストエディタで、そうでない場合はテキストビューアでダイレクトタグジャンプします。ジャンプ先の候補が複数ある場合は、<b>候補一覧</b>が表示されます。
   </p>
 
   <p>
-    ファイラーやテキストビュアーで割り当てられているのと同じキー操作でも、一覧でのカーソル移動などを行えます。<br>
+    ファイラーやテキストビューアで割り当てられているのと同じキー操作でも、一覧でのカーソル移動などを行えます。<br>
     また <a href="hid00050.htm">インクリメンタルサーチ</a>で <a href="hid00050.htm#IncSearchDown">IncSearchDown</a>/ <a
       href="hid00050.htm#IncSearchUp">IncSearchUp</a> コマンドが割り当てられているキーでも、上下移動できます。<br>
   </p>
 
   <p>
     <a href="hid00005.htm#FileEdit">FileEdit</a> コマンドが割り当てられているキーを押すと、パラメータ指定にかかわらずテキストエディタで、また <a
-      href="hid00005.htm#TextViewer">TextViewer</a> コマンドが割り当てられているキーを押すとテキストビュアーでダイレクトタグジャンプします。なお、テキストビュアーで <a
+      href="hid00005.htm#TextViewer">TextViewer</a> コマンドが割り当てられているキーを押すとテキストビューアでダイレクトタグジャンプします。なお、テキストビューアで <a
       href="hid00006.htm#ClipCopy">ClipCopy</a> コマンドが割り当てられているキーを押すと、選択されているタグ名のコピーだけを行ってダイアログを閉じます。<br>
     これらは、右クリックメニューからも可能です。<br>
   </p>

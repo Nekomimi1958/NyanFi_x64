@@ -347,7 +347,7 @@ void __fastcall TFindTagForm::InfoListBoxDblClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//ビュアーでダイレクトタグジャンプ
+//ビューアでダイレクトタグジャンプ
 //---------------------------------------------------------------------------
 void __fastcall TFindTagForm::TagViewActionExecute(TObject *Sender)
 {

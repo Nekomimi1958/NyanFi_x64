@@ -12,11 +12,11 @@
     <param name="Keyword" value="SMAIL">
     <param name="Keyword" value="WatchTail">
     <param name="Keyword" value="イベント">
-    <param name="Keyword" value="イメージビュアー">
+    <param name="Keyword" value="イメージビューア">
     <param name="Keyword" value="コマンドファイル">
     <param name="Keyword" value="コマンドファイル一覧">
     <param name="Keyword" value="タイマーイベント">
-    <param name="Keyword" value="テキストビュアー">
+    <param name="Keyword" value="テキストビューア">
     <param name="Keyword" value="メニュー定義ファイル">
   </object>
 </head>
@@ -48,7 +48,7 @@
   </p>
 
   <p>
-    イベント名で括弧内は、コマンドが実行される画面モード(<b>FL</b>:ファイラー、<b>TV</b>:テキストビュアー、<b>IV</b>:イメージビュアー)です。モードに固有のコマンドを用いる際は注意してください。
+    イベント名で括弧内は、コマンドが実行される画面モード(<b>FL</b>:ファイラー、<b>TV</b>:テキストビューア、<b>IV</b>:イメージビューア)です。モードに固有のコマンドを用いる際は注意してください。
   </p>
 
   <p>
@@ -153,7 +153,7 @@
     </dd>
 
     <dt class="no_bg_indent1">文字列検索(GREP)を開く直前(FL,TV)</dt>
-    <dd>ファイラー、テキストビュアーから文字列検索(GREP)を開く直前に実行されます。<br>
+    <dd>ファイラー、テキストビューアから文字列検索(GREP)を開く直前に実行されます。<br>
       拡張子によって検索ファイルのマスクを設定したいような場合に利用できます。
     </dd>
 
@@ -272,70 +272,70 @@ Echo_%Buffer%
       <br>
     </dd>
 
-    <dt class="no_bg_indent1">テキストビュアーを開く直前(FL)</dt>
-    <dd>テキストビュアーを開く直前に実行されます。<br>
+    <dt class="no_bg_indent1">テキストビューアを開く直前(FL)</dt>
+    <dd>テキストビューアを開く直前に実行されます。<br>
       拡張子別に表示設定を変えたいような場合に利用できます。また、折り返し幅などを事前に設定しておくことで、余計な処理を抑止できます。<br>
       サンプルとして <b>OnTxViewerOpen.nbt</b> が同梱されています。<br>
     </dd>
 
-    <dt class="no_bg_indent1">テキストビュアーを開いた直後(TV)</dt>
-    <dd>テキストビュアーを開いた直後に実行されます。<br>
+    <dt class="no_bg_indent1">テキストビューアを開いた直後(TV)</dt>
+    <dd>テキストビューアを開いた直後に実行されます。<br>
       サンプルとして <b>OnTxViewerOpened.nbt</b> が同梱されています。<br>
     </dd>
 
-    <dt class="no_bg_indent1">テキストビュアーを閉じる直前(TV)</dt>
-    <dd>テキストビュアーを閉じる前に実行されます。</dd>
+    <dt class="no_bg_indent1">テキストビューアを閉じる直前(TV)</dt>
+    <dd>テキストビューアを閉じる前に実行されます。</dd>
 
-    <dt class="no_bg_indent1">テキストビュアーを閉じた直後(FL)</dt>
-    <dd>テキストビュアーを閉じてファイラー画面に戻ったときに実行されます。</dd>
+    <dt class="no_bg_indent1">テキストビューアを閉じた直後(FL)</dt>
+    <dd>テキストビューアを閉じてファイラー画面に戻ったときに実行されます。</dd>
 
-    <dt class="no_bg_indent1">テキストビュアーのツールバーを右クリック(TV)</dt>
-    <dd>テキストビュアーのツールバーを右クリックしたときに実行されます。</dd>
+    <dt class="no_bg_indent1">テキストビューアのツールバーを右クリック(TV)</dt>
+    <dd>テキストビューアのツールバーを右クリックしたときに実行されます。</dd>
 
-    <dt class="no_bg_indent1">テキストビュアーで情報ヘッダを右クリック(TV)</dt>
-    <dd>テキストビュアーで、情報ヘッダを右クリックしたときに実行されます。<br>
+    <dt class="no_bg_indent1">テキストビューアで情報ヘッダを右クリック(TV)</dt>
+    <dd>テキストビューアで、情報ヘッダを右クリックしたときに実行されます。<br>
       ルーラが表示されている場合は、ルーラの右クリックでも実行されます。<br>
       <br>
     </dd>
 
-    <dt class="no_bg_indent1">イメージビュアーを開いた直後(IV)</dt>
-    <dd>イメージビュアーを開いた直後に実行されます。</dd>
+    <dt class="no_bg_indent1">イメージビューアを開いた直後(IV)</dt>
+    <dd>イメージビューアを開いた直後に実行されます。</dd>
 
-    <dt class="no_bg_indent1">イメージビュアーを閉じた直後(FL)</dt>
+    <dt class="no_bg_indent1">イメージビューアを閉じた直後(FL)</dt>
     <dd>イメージプレビューを閉じてファイラー画面に戻ったときに実行されます。</dd>
 
-    <dt class="no_bg_indent1">イメージビュアーで全画面表示にした(IV)</dt>
+    <dt class="no_bg_indent1">イメージビューアで全画面表示にした(IV)</dt>
     <dd>イメージプレビューで、全画面表示に切り替えたときに実行されます。</dd>
 
-    <dt class="no_bg_indent1">イメージビュアーで通常表示に戻った(IV)</dt>
+    <dt class="no_bg_indent1">イメージビューアで通常表示に戻った(IV)</dt>
     <dd>イメージプレビューで、全画面表示から通常表示に戻ったときに実行されます。</dd>
 
-    <dt class="no_bg_indent1">イメージビュアーのツールバーを右クリック(IV)</dt>
-    <dd>イメージビュアーのツールバーを右クリックしたときに実行されます。</dd>
+    <dt class="no_bg_indent1">イメージビューアのツールバーを右クリック(IV)</dt>
+    <dd>イメージビューアのツールバーを右クリックしたときに実行されます。</dd>
 
-    <dt class="no_bg_indent1">イメージビュアーで画像部分をダブルクリック(IV)</dt>
+    <dt class="no_bg_indent1">イメージビューアで画像部分をダブルクリック(IV)</dt>
     <dd>イメージプレビューで、表示されてい画像部分をダブルクリックしたときに実行されます。<br>
       これが指定されている場合、画像部分のクリックによる一時的な等倍表示は行われません。<br>
     </dd>
 
-    <dt class="no_bg_indent1">イメージビュアーで画像表示部を右クリック(IV)</dt>
+    <dt class="no_bg_indent1">イメージビューアで画像表示部を右クリック(IV)</dt>
     <dd>イメージプレビューで、画像表示部を右クリックしたときに実行されます。</dd>
 
-    <dt class="no_bg_indent1">イメージビュアーで余白部分をダブルクリック(IV)</dt>
+    <dt class="no_bg_indent1">イメージビューアで余白部分をダブルクリック(IV)</dt>
     <dd>イメージプレビューで、表示されてい画像の余白部分をダブルクリックしたときに実行されます。</dd>
 
-    <dt class="no_bg_indent1">イメージビュアーでサムネイルをダブルクリック(IV)</dt>
+    <dt class="no_bg_indent1">イメージビューアでサムネイルをダブルクリック(IV)</dt>
     <dd>イメージプレビューで、サムネイルをダブルクリックしたときに実行されます。<br>
-      なお、サムネイル外をダブルクリックした場合は、イメージビュアーが閉じられます。<br>
+      なお、サムネイル外をダブルクリックした場合は、イメージビューアが閉じられます。<br>
     </dd>
 
-    <dt class="no_bg_indent1">イメージビュアーでサムネイルを右クリック(IV)</dt>
+    <dt class="no_bg_indent1">イメージビューアでサムネイルを右クリック(IV)</dt>
     <dd>イメージプレビューで、サムネイルを右クリックしたときに実行されます。</dd>
 
-    <dt class="no_bg_indent1">イメージビュアーでファイル情報をダブルクリック(IV)</dt>
+    <dt class="no_bg_indent1">イメージビューアでファイル情報をダブルクリック(IV)</dt>
     <dd>イメージプレビューで、サイドバーのファイル情報をダブルクリックしたときに実行されます。</dd>
 
-    <dt class="no_bg_indent1">イメージビュアーでシークバーを右クリック(IV)</dt>
+    <dt class="no_bg_indent1">イメージビューアでシークバーを右クリック(IV)</dt>
     <dd>イメージプレビューで、シークバーを右クリックしたときに実行されます。</dd>
 
     <dt class="no_bg_indent1">サムネイルからのドラッグ開始時(IV)</dt>
@@ -377,7 +377,7 @@ AppendBuffer_%ExePath%CLIPMEMO.TXT
       <b>例</b>: <span class="inp_box">!3M</span> <span class="inp_box">WinMinimize</span>　3分間無操作だったら最小化<br>
       <br>
       <b>hh:mm[:ss]</b> の書式だと時刻指定になります。<b>,</b> (カンマ)で区切って最大6つまで時刻を指定できます。<br>
-      先頭(時)が &quot;??:&quot; の場合、毎時の設定になります。また、設定時刻を過ぎると、翌日の時刻として再設定されます。<br>
+      先頭(時)が "??:" の場合、毎時の設定になります。また、設定時刻を過ぎると、翌日の時刻として再設定されます。<br>
       <b>例</b>: <span class="inp_box">09:30,12:00,17:45</span> <span
         class="inp_box">PlaySound_アラーム.wav</span>　9:30、12:00、17:45 にアラーム音を鳴らす<br>
       <b>例</b>: <span class="inp_box">??:00,17:30</span> <span class="inp_box">PlaySound_アラーム.wav</span>　毎正時と17:30

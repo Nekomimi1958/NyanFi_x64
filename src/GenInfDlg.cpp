@@ -1283,7 +1283,7 @@ void __fastcall TGeneralInfoDlg::SaveAsActionExecute(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
-//一覧をテキストビュアーで開く
+//一覧をテキストビューアで開く
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::ViewListActionExecute(TObject *Sender)
 {
@@ -1299,7 +1299,7 @@ void __fastcall TGeneralInfoDlg::ViewListActionUpdate(TObject *Sender)
 	ap->Enabled = (GenListBox->Count>0) && !fromGitView;
 }
 //---------------------------------------------------------------------------
-//ファイルをテキストビュアーで開く
+//ファイルをテキストビューアで開く
 //---------------------------------------------------------------------------
 void __fastcall TGeneralInfoDlg::ViewFileActionExecute(TObject *Sender)
 {

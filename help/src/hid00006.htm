@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-  <title>テキストビュアー</title>
+  <title>テキストビューア</title>
   <link rel="stylesheet" type="text/css" href="help.css">
   <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
     <param name="Keyword" value="CSV">
@@ -17,7 +17,7 @@
     <param name="Keyword" value="ダイレクトタグジャンプ">
     <param name="Keyword" value="タグジャンプ">
     <param name="Keyword" value="ツールバー">
-    <param name="Keyword" value="テキストビュアー">
+    <param name="Keyword" value="テキストビューア">
     <param name="Keyword" value="バイナリ・ダンプ表示">
     <param name="Keyword" value="ビットマップビュー">
     <param name="Keyword" value="メニュー定義ファイル">
@@ -29,18 +29,18 @@
 
 <body>
 
-  <h1>テキストビュアー</h1>
+  <h1>テキストビューア</h1>
 
   <p>
     ファイルリストで<span class="btn_frame">ENTER</span>キーを押すか、<a href="hid00005.htm#TextViewer">TextViewer</a>
-    コマンドを実行すると、テキストビュアー画面に変わり、カーソル位置のファイル内容を表示します。<br>
-    ビュアーに読み込まれるサイズは、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」によって制限されます。
+    コマンドを実行すると、テキストビューア画面に変わり、カーソル位置のファイル内容を表示します。<br>
+    ビューアに読み込まれるサイズは、<a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>テキスト最大読込サイズ</b>」によって制限されます。
   </p>
   <div class="spc_box_p">
     プログラムソース(.as .au3 .bat .c .cpp .fs .go .hs .hsp .java .js .jsx .kt .lua .pas .php .pl .ps1 .py .rb .rs .scala .sh
     .st .swift .ts .v .vbs .vhd などに対応)の場合、コメント、文字列、予約語、シンボルを別色で強調表示できます(<span
       class="note_text">厳密ではないため対応できない場合もあり</span>)。<a href="hid00084.htm">構文強調表示定義ファイル</a>を作成することによってユーザ定義も可能です。<br>
-    強調表示の切り替えは <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>強調表示</b>」で、文字色は <a href="hid00023.htm">オプション設定 -
+    強調表示の切り替えは <a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>強調表示</b>」で、文字色は <a href="hid00023.htm">オプション設定 -
       フォント・配色</a> で指定してください。<br>
   </div>
 
@@ -52,8 +52,8 @@
   </div>
 
   <div class="spc_box_p">
-    <a href="hid00011.htm">オプション設定 - テキストビュアー</a> で「<b>青空文庫形式に対応する</b>」をチェックしている場合、&quot;［＃～］&quot;
-    という書式を含むテキストファイル(.txt)を青空文庫形式とみなし、&quot;［＃～］&quot; 部分はコメント色で、&quot;《～》&quot;
+    <a href="hid00011.htm">オプション設定 - テキストビューア</a> で「<b>青空文庫形式に対応する</b>」をチェックしている場合、"［＃～］"
+    という書式を含むテキストファイル(.txt)を青空文庫形式とみなし、"［＃～］" 部分はコメント色で、"《～》"
     部分はルビ色で表示します。また「字下げ」や「地からの字上げ」にほぼ対応しています。<br>
   </div>
 
@@ -62,26 +62,26 @@
   </div>
 
   <div class="spc_box_p">
-    <b>xd2txlib.dll</b> (hishida 氏作 xdoc2txt のDLL版)がインストールされていて、<a href="hid00011.htm">オプション設定 - テキストビュアー</a>
+    <b>xd2txlib.dll</b> (hishida 氏作 xdoc2txt のDLL版)がインストールされていて、<a href="hid00011.htm">オプション設定 - テキストビューア</a>
     で「<b>xd2txlib.dll でテキスト表示</b>」をチェックしている場合、PDF、WORD、EXCEL、一太郎などの各種バイナリ文書からテキストを抽出して表示できます。読込サイズは制限されません。<br>
   </div>
 
   <div class="spc_box_p">
     ファイルをテキスト表示できない場合は、<b>バイナリ・ダンプ表示</b>します。<br>
-    表示範囲は <a href="hid00011.htm">オプション設定 - テキストビュアー</a>
+    表示範囲は <a href="hid00011.htm">オプション設定 - テキストビューア</a>
     の「<b>バイナリ最大読込サイズ</b>」によって制限されますが、最上/最下行からカーソルをさらに移動すると自動的に先頭アドレスが切り替わるので、大きなファイル(4GB超も可)も任意の部分を閲覧できます。<br>
   </div>
 
   <hr id="XW">
   <p>
-    <a href="hid00005.htm#TextViewer">TextViewer</a>_XW コマンドを実行すると、テキストビュアーを別ウィンドウで開きます。<br>
+    <a href="hid00005.htm#TextViewer">TextViewer</a>_XW コマンドを実行すると、テキストビューアを別ウィンドウで開きます。<br>
     これはモーダルウィンドウではないので、表示したままメイン画面での操作が可能です。また複数のウィンドウを開くこともできます。<br>
-    ビュアーからは<span class="btn_frame">TAB</span>キーでファイラーにフォーカスが戻ります。ファイラーからは <a
+    ビューアからは<span class="btn_frame">TAB</span>キーでファイラーにフォーカスが戻ります。ファイラーからは <a
       href="hid00005.htm#ToExViewer">ToExViewer</a>
-    コマンドで、開いているビュアーに移れます(複数ある場合はポップアップメニューで選択)。また、内部と別ウィンドウの両方でテキストビュアーを開いている場合、<span
+    コマンドで、開いているビューアに移れます(複数ある場合はポップアップメニューで選択)。また、内部と別ウィンドウの両方でテキストビューアを開いている場合、<span
       class="btn_frame">TAB</span>キーで両者の間を行き来できます。<br>
     <br>
-    別ウィンドウのテキストビュアーでは以下のような制限や違いがあります。
+    別ウィンドウのテキストビューアでは以下のような制限や違いがあります。
   </p>
 
   <ul>
@@ -95,7 +95,7 @@
         href="#SetWidth">SetWidth</a>、<a href="#ShowFileInfo">ShowFileInfo</a>、<a href="#UserDefList">UserDefList</a>
       コマンドや、<a href="#ExeCommands">ExeCommands</a>、<a href="#Grep">Grep</a>、<a
         href="#InputCommands">InputCommands</a>、<a href="#KeyList">KeyList</a> コマンドなどは使えません。実行しようとすると警告が出ます。</li>
-    <li>対応している<a href="hid00021.htm">イベント</a>は、「<b>テキストビュアーを開く直前</b>」のみです。</li>
+    <li>対応している<a href="hid00021.htm">イベント</a>は、「<b>テキストビューアを開く直前</b>」のみです。</li>
     <li><a href="#NextFile">NextFile</a>/<a href="#PrevFile">PrevFile</a> コマンドは、複数開いている場合のウィンドウ切り替えとして機能します。</li>
     <li>表示ファイルが切り替わっても、ファイルリストのカーソル位置は同期しません。</li>
   </ul>
@@ -103,7 +103,7 @@
 
   <h3 id="Command">コマンド</h3>
   <p>
-    テキストビュアーでは以下のコマンドを使用できます。<br>
+    テキストビューアでは以下のコマンドを使用できます。<br>
     これらは、<a href="hid00016.htm">オプション設定 - キー設定</a>でキーに割り当てることができます(2ストロークキー操作可能)。<br>
     <a href="hid00055.htm">キー割り当て一覧</a>は、<b>一覧メニュー</b> - [<b>キー割り当て一覧</b>] や、<b>KeyList</b> コマンドで表示できます。<br>
     パラメータに文字列を指定できるコマンドの場合、先頭に :文字列: という形で説明を付けると、キー割り当て一覧や2ストローク・ヒントの説明部分に表示されます。
@@ -143,7 +143,7 @@
     </dd>
 
     <dt id="BackViewHist">BackViewHist</dt>
-    <dd>テキストビュアーで開いたファイルの履歴を戻ります。</dd>
+    <dd>テキストビューアで開いたファイルの履歴を戻ります。</dd>
 
     <dt id="BinaryEdit">BinaryEdit</dt>
     <dd>現在のファイルをバイナリエディタで開きます。使用するバイナリエディタは、<a href="hid00012.htm">オプション設定 - エディタ</a>で設定しておいてください。<br>
@@ -168,7 +168,7 @@
       Calculator<span class="pram_text">_CB[;計算式]</span></dt>
     <dd><a href="hid00087.htm">電卓</a>が開きます。<br>
       パラメータで<b>計算式</b>を指定すると、入力欄にそれを設定して開きます。<br>
-      無指定の場合、選択中の文字列があれば、それが入力欄に設定されます。複数行が選択されていたら、それらの内容を &quot;<b>+</b>&quot;
+      無指定の場合、選択中の文字列があれば、それが入力欄に設定されます。複数行が選択されていたら、それらの内容を "<b>+</b>"
       記号で連結したものが設定されます(空白行などは無視)。例えば、固定長表示で数値項目を箱形選択すれば、それらの合計を計算できます。<br>
       パラメータに <b>CB</b> を用いた書式については、ファイラーの同コマンドを参照してください(<a href="hid00005.htm#Calculator">→ ファイラー: Calculator</a>)。
     </dd>
@@ -208,12 +208,12 @@
     </dd>
 
     <dt id="Close">Close<span class="pram_text">[_AL]</span></dt>
-    <dd>テキストビュアーを閉じます。<br>
+    <dd>テキストビューアを閉じます。<br>
       <span class="btn_frame">ENTER</span>キーを押すか、画面のテキスト外部分をダブルクリックしても閉じることができます。<br>
       また<span
         class="btn_frame">ESC</span>キーを押すと、<b>文字情報</b>、<b>CSV/TSVレコード</b>、<b>ビットマップビュー</b>、<b>インスペクタ</b>、<b>イメージプレビュー</b>
-      が表示されていたらそれを閉じ、なにも表示されていなかったらビュアーを閉じます。<br>
-      パラメータに <b>AL</b> を指定すると、別ウィンドウで開いているすべてのテキストビュアーを閉じます。
+      が表示されていたらそれを閉じ、なにも表示されていなかったらビューアを閉じます。<br>
+      パラメータに <b>AL</b> を指定すると、別ウィンドウで開いているすべてのテキストビューアを閉じます。
     </dd>
 
     <dt id="ClearMark">ClearMark</dt>
@@ -242,21 +242,21 @@
       右クリックメニューや<b>CSV/TSVレコード</b>で「<b>先頭行が項目名</b>」をチェックしていると、先頭行は集計対象から除外されますので注意してください。<br>
       なおCSV/TSVファイルでなくても、数値で始まる行からなるテキストファイルは集計が可能です。<br>
       <div class="note_text">
-        <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合、読み込まれていない行は集計対象になりません。<br>
+        <a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合、読み込まれていない行は集計対象になりません。<br>
       </div>
       <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvGraph">→ CsvGraph</a>　<a href="#CsvRecord">→ CsvRecord</a>
     </dd>
 
     <dt id="CsvGraph">CsvGraph</dt>
     <dd>CSV/TSVファイルを固定長表示していて、カーソル位置の項目に有効な数値がある場合、最小値/最大値間の相対的な変化を折れ線グラフで表示します。<br>
-      グラフ上をクリックすると、テキストビュアーのカーソルがその項目位置に移動します。<br>
+      グラフ上をクリックすると、テキストビューアのカーソルがその項目位置に移動します。<br>
       右クリックメニューでは、画像としてのコピーや基準ラインの表示/非表示が可能です。<br>
       なおCSV/TSVファイルでなくても、数値で始まる行からなるテキストファイルはグラフ表示が可能です。<br>
       <div class="spc_box">
         グラフの背景/ライン/グリッド/文字色は <a href="hid00023.htm">オプション設定 - フォント・配色</a> で設定できます。<br>
       </div>
       <div class="note_text">
-        <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合、読み込まれていない行はグラフ化されません。<br>
+        <a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合、読み込まれていない行はグラフ化されません。<br>
       </div>
       <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvCalc">→ CsvCalc</a>　<a href="#CsvRecord">→ CsvRecord</a>
     </dd>
@@ -266,7 +266,7 @@
       パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
       ファイルの先頭行に TAB が含まれていたら <b>TSV</b>、そうでない場合は <b>CSV</b> とみなし、カーソル行を一つのレコードとして内容を一覧表示します。<br>
       <div class="spc_box">
-        「<b>先頭行が項目名</b>」をチェックしていると、ファイルの一行目を項目名とみなしてそれを表示します(テキストビュアーの右クリックメニューと連動)。この設定は、CSV/TSVファイルの代替データストリームに <a
+        「<b>先頭行が項目名</b>」をチェックしていると、ファイルの一行目を項目名とみなしてそれを表示します(テキストビューアの右クリックメニューと連動)。この設定は、CSV/TSVファイルの代替データストリームに <a
           href="hid00102.htm#NyanfiDef">nyanfi.def</a> という名前で保存されます。<br>
       </div>
       <div class="spc_box">
@@ -330,7 +330,7 @@
 
     <dt id="Delete">Delete<span class="pram_text">[_SO]</span></dt>
     <dd>選択中(無ければ表示中)のファイルを削除します。表示中のファイルが削除された場合、次のファイルを表示します。<br>
-      このコマンドは、通常のファイルリストおよび検索結果リストにおいてのみ有効です。選択中のディレクトリは削除されません。また、バイナリ・ダンプ表示中のファイルは削除できません。なおテキストビュアーでの削除は、バックグラウンド・タスクでは行いません。<br>
+      このコマンドは、通常のファイルリストおよび検索結果リストにおいてのみ有効です。選択中のディレクトリは削除されません。また、バイナリ・ダンプ表示中のファイルは削除できません。なおテキストビューアでの削除は、バックグラウンド・タスクでは行いません。<br>
       パラメータに <b>SO</b> を指定すると、選択されているファイルのみを削除します。<br>
       <a href="#SelectFile">→ SelectFile</a>
     </dd>
@@ -374,7 +374,7 @@
       ファイル名にドライブ名がない場合は、閲覧中ファイルからの相対指定とみなされます。<br>
       なお <a href="#Sort">Sort</a> コマンドでソートしていると、その内容でエクスポートされます。<br>
       <div class="note_text">
-        処理は元ファイル全体を一時バッファに読み込んで行うため、<a href="hid00011.htm">オプション設定 - テキストビュアー</a>
+        処理は元ファイル全体を一時バッファに読み込んで行うため、<a href="hid00011.htm">オプション設定 - テキストビューア</a>
         の「<b>テキスト最大読込サイズ</b>」による制限がかかっている場合でも、すべての行内容がエクスポートされます(ソート状態も考慮)。<br>
       </div>
       <a href="#FixedLen">→ FixedLen</a>　<a href="#CsvRecord">→ CsvRecord</a>　<a href="#Sort">→ Sort</a>
@@ -405,7 +405,7 @@
     <dt id="FindDown">FindDown<span class="pram_text">[_文字列|/正規表現パターン/]</span></dt>
     <dd>直前に<a href="hid00065.htm">文字列検索ダイアログ</a>で行った検索条件で、下方向に再検索します。<br>
       パラメータで文字列を指定して検索することも可能です。その場合、文字列を / で囲むと正規表現とみなされます。<br>
-      <b>例</b>: FindDown_:URLを検索:&quot;/https?://[\w/:%#\$&amp;\?\(\)~\.=\+\-]+/&quot;<br>
+      <b>例</b>: FindDown_:URLを検索:"/https?://[\w/:%#\$&amp;\?\(\)~\.=\+\-]+/"<br>
       <a href="#FindSelDown">→ FindSelDown</a>　<a href="#FindSelUp">→ FindSelUp</a>
     </dd>
 
@@ -416,12 +416,12 @@
     </dd>
 
     <dt id="FindLinkDown">FindLinkDown</dt>
-    <dd>リンク先(&quot;http://～&quot;、&quot;mailto:～&quot; または &quot;file://～&quot;)を下方向に検索します。<br>
+    <dd>リンク先("http://～"、"mailto:～" または "file://～")を下方向に検索します。<br>
       HTML→テキスト変換表示で <a href="#TagView">TagView</a> コマンドで移動する場合などに便利です。<br>
     </dd>
 
     <dt id="FindLinkUp">FindLinkUp</dt>
-    <dd>リンク先(&quot;http://～&quot;、&quot;mailto:～&quot; または &quot;file://～&quot;)を上方向に検索します。<br>
+    <dd>リンク先("http://～"、"mailto:～" または "file://～")を上方向に検索します。<br>
       HTML→テキスト変換表示で <a href="#TagView">TagView</a> コマンドで移動する場合などに便利です。<br>
     </dd>
 
@@ -455,7 +455,7 @@
 
     <dt id="FindTagName">FindTagName<span class="pram_text">[_EJ][;CO]</span></dt>
     <dd><a href="hid00083.htm#Dialog">タグ名検索ダイアログ</a> を開いて <b>tags</b> からタグ名を検索した後、ダイレクトタグジャンプを行います。<br>
-      パラメータに <b>EJ</b> を指定すると ダイレクトタグジャンプをテキストエディタで(<a href="#TagJumpDirect">TagJumpDirect</a>)、そうでない場合はテキストビュアーで(<a
+      パラメータに <b>EJ</b> を指定すると ダイレクトタグジャンプをテキストエディタで(<a href="#TagJumpDirect">TagJumpDirect</a>)、そうでない場合はテキストビューアで(<a
         href="#TagViewDirect">TagViewDirect</a>)行います。<br>
       パラメータに <b>CO</b> を指定すると、現在閲覧中のファイルに関するタグ名だけを検索します。この場合、ダイアログで何も入力していないと、すべてのタグが一覧表示されます。用途によっては<a
         href="hid00066.htm">関数一覧</a>より便利かもしれません。<br>
@@ -471,7 +471,7 @@
       <b>CSV</b> とみなします。<br>
       <div class="spc_box">
         固定長表示では、項目ごとに最大幅で桁位置を合わせて整形表示します。項目数は1行目の内容に基づいています。<br>
-        1レコードが1行に収まらないと見にくくなりますが、<a href="hid00011.htm#FixedLimit">オプション設定 - テキストビュアー</a>
+        1レコードが1行に収まらないと見にくくなりますが、<a href="hid00011.htm#FixedLimit">オプション設定 - テキストビューア</a>
         の「<b>固定長表示の制限幅</b>」を設定して省略表示すると収まるかもしれません。この値はパラメータでも指定できます。<br>
         また右クリックメニューの「<b>列幅の最小化</b>」で項目を選んでチェックすると、その列幅が最小化され内容が非表示になります。設定内容は、CSV/TSVファイルの代替データストリームに <a
           href="hid00102.htm#NyanfiDef">nyanfi.def</a> という名前で保存されます。<br>
@@ -509,7 +509,7 @@
     <dt id="HelpCurWord">HelpCurWord<span class="pram_text">_ヘルプファイル名</span></dt>
     <dd>指定したHTMLヘルプファイル(.chm)を用いて、カーソル位置の単語を検索します。選択中の文字列がある場合は、それを検索語とします。<br>
       見つからなかった場合は、ヘルプ画面がキーワードタブになります。<br>
-      <b>例</b>: HelpCurWord_&quot;C:\Program Files (x86)\Embarcadero\Studio\19.0\Help\Doc\ja\vcl.chm&quot;
+      <b>例</b>: HelpCurWord_"C:\Program Files (x86)\Embarcadero\Studio\19.0\Help\Doc\ja\vcl.chm"
     </dd>
 
     <dt id="Highlight">Highlight<span class="pram_text">[_{ON|OFF}]</span></dt>
@@ -525,15 +525,15 @@
       &lt;H1&gt;～&lt;H6&gt; は、見出しマーク文字が付加されます。箇条書きなどにも対応。リンク先のURLは括弧内に表示されます。また存在するローカルファイルへのリンクも表示され、<a
         href="#TagJump">TagJump</a> や <a href="#TagView">TagView</a> コマンドで開けます(name や id による指定は無効)。<br>
       <div class="spc_box">
-        さらに <b>MD</b> を指定すると、<a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビュアー -「HTML→テキスト変換」</a> の 「<b>Markdown記法に変換</b>」オプションが有効に、<b>TX</b> を指定するとオプションが無効になります。また、<b>^MD</b> では状態が反転します。<br>
+        さらに <b>MD</b> を指定すると、<a href="hid00011.htm#HtmlToText">→ オプション設定 - テキストビューア -「HTML→テキスト変換」</a> の 「<b>Markdown記法に変換</b>」オプションが有効に、<b>TX</b> を指定するとオプションが無効になります。また、<b>^MD</b> では状態が反転します。<br>
         <b>例</b>: HtmlToText_ON;MD
       </div>
-      なお、<a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビュアーを開いたり、通常テキストから <a href="#TagView">TagView</a>
+      なお、<a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビューアを開いたり、通常テキストから <a href="#TagView">TagView</a>
       コマンドで開いたりした場合は通常表示に戻ります。<br>
     </dd>
 
     <dt id="ImgPreview">ImgPreview</dt>
-    <dd>カーソル位置に表示可能な画像ファイル名がある場合、イメージプレビューを表示します(イメージビュアーのサブビュアーを利用 <a href="hid00007.htm#SubViewer">→
+    <dd>カーソル位置に表示可能な画像ファイル名がある場合、イメージプレビューを表示します(イメージビューアのサブビューアを利用 <a href="hid00007.htm#SubViewer">→
         SubViewer</a>)。<br>
       ドライブ名がない場合は閲覧中ファイルからの相対指定とみなされます。<br>
       プレビュー中に、カーソルを別の画像ファイル名に移すと、それにあわせて表示も変わります。<br>
@@ -609,7 +609,7 @@
     <dt id="Mark">Mark</dt>
     <dd>カーソル行をマークします。すでにマークされている場合は解除します。マーク情報は、ファイルの閲覧履歴に保存されます。<br>
       <div class="note_text">
-        ファイラーやイメージビュアーの <b>Mark</b> コマンドと混同しないでください。<br>
+        ファイラーやイメージビューアの <b>Mark</b> コマンドと混同しないでください。<br>
       </div>
       <a href="#ClearMark">→ ClearMark</a>　<a href="#FindMarkDown">→ FindMarkDown</a>　<a href="#FindMarkUp">→
         FindMarkUp</a>
@@ -619,7 +619,7 @@
     <dd>テキスト表示で、<a href="hid00066.htm">マーク行一覧</a>を表示します。<br>
       パラメータに <b>FF</b> を指定すると、開いたときフィルタ欄にフォーカスします。<br>
       <div class="note_text">
-        ファイラーやイメージビュアーの <b>MarkList</b> コマンド(<a href="hid00070.htm">栞マーク一覧</a>)と混同しないでください。<br>
+        ファイラーやイメージビューアの <b>MarkList</b> コマンド(<a href="hid00070.htm">栞マーク一覧</a>)と混同しないでください。<br>
       </div>
       <a href="#FunctionList">→ FunctionList</a>　<a href="#UserDefList">→ UserDefList</a>
     </dd>
@@ -637,8 +637,8 @@
 
     <dt id="NextFile">NextFile</dt>
     <dd>次のファイルを表示します。<br>
-      別ウィンドウのテキストビュアーの場合、複数開いていれば次のウィンドウにフォーカスを移します。<br>
-      <a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビュアーを開いている場合は、結果リストの次の項目を表示します。<br>
+      別ウィンドウのテキストビューアの場合、複数開いていれば次のウィンドウにフォーカスを移します。<br>
+      <a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビューアを開いている場合は、結果リストの次の項目を表示します。<br>
       <a href="hid00080.htm">FTP接続</a>時のリモート側では無効です。<br>
       <a href="#PrevFile">→ PrevFile</a>
     </dd>
@@ -651,21 +651,21 @@
 
     <dt id="OpenURL">OpenURL<span class="pram_text">[_URL]</span></dt>
     <dd>選択中の文字列(なければ現在行)からURLを抽出して開きます(<b>ttp://</b>～の場合、先頭の<b>h</b>を補完)。また <b>mailto:～</b> の場合は既定のメーラで開きます。<br />
-      なお、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> で「<b>ダブルクリックでURLを開く</b>」をチェックしていると、テキスト上のダブルクリックでも実行されます。<br>
+      なお、<a href="hid00011.htm">オプション設定 - テキストビューア</a> で「<b>ダブルクリックでURLを開く</b>」をチェックしていると、テキスト上のダブルクリックでも実行されます。<br>
       パラメータで URL を指定することもできます。その場合、URL に日本語などが含まれていたら UTF-8 でエンコードします。<br>
-      <b>例</b>: OpenURL_:googleで「猫を」検索:&quot;https://www.google.co.jp/search?q=猫&amp;ie=UTF-8&quot;<br>
+      <b>例</b>: OpenURL_:googleで「猫を」検索:"https://www.google.co.jp/search?q=猫&amp;ie=UTF-8"<br>
       <a href="#WebSearch">→ WebSearch</a>
     </dd>
 
     <dt id="OptionDlg">OptionDlg<span class="pram_text">[_{GN|G2|MO|DS|FC|TV|IV|ED|KY|AC|XM|XT|ST|NT|CM|EV}]</span><br>
       OptionDlg<span class="pram_text">_KYO</span></dt>
-    <dd>「<a href="hid00008.htm">オプション設定</a>」ダイアログを開きます。このとき、ビュアーは安全のため一旦閉じます。<br>
+    <dd>「<a href="hid00008.htm">オプション設定</a>」ダイアログを開きます。このとき、ビューアは安全のため一旦閉じます。<br>
       パラメータを指定すると特定のタブを開くことができます。パラメータとタブの対応は次の通りです。<b>GN</b>: 一般、<b>G2</b>: 一般2、<b>MO</b>: マウス操作、<b>DS</b>:
-      デザイン、<b>FC</b>: フォント・配色、<b>TV</b>: テキストビュアー、<b>IV</b>: イメージビュアー、<b>ED</b>: エディタ、<b>KY</b>: キー設定、<b>AC</b>:
+      デザイン、<b>FC</b>: フォント・配色、<b>TV</b>: テキストビューア、<b>IV</b>: イメージビューア、<b>ED</b>: エディタ、<b>KY</b>: キー設定、<b>AC</b>:
       関連付け、<b>XM</b>: 追加メニュー、<b>XT</b>: 外部ツール、<b>ST</b>: 起動時、<b>NT</b>: 通知・確認、<b>CM</b>: コマンド、<b>EV</b>: イベント。<br>
       <div class="spc_box">
         パラメータに <b>KYO</b> を指定すると、「キー設定」のみのダイアログが開きます。<br>
-        この場合、ビュアーは開いたままで設定を行えます。また通常のダイアログよりも若干速く開きます。<br>
+        この場合、ビューアは開いたままで設定を行えます。また通常のダイアログよりも若干速く開きます。<br>
       </div>
       このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。
     </dd>
@@ -703,8 +703,8 @@
 
     <dt id="PrevFile">PrevFile</dt>
     <dd>前のファイルを表示します。<br>
-      別ウィンドウのテキストビュアーの場合、複数開いていれば前のウィンドウにフォーカスを移します。<br>
-      <a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビュアーを開いている場合は、結果リストの前の項目を表示します。<br>
+      別ウィンドウのテキストビューアの場合、複数開いていれば前のウィンドウにフォーカスを移します。<br>
+      <a href="hid00056.htm">文字列検索(GREP)</a>の結果リストからビューアを開いている場合は、結果リストの前の項目を表示します。<br>
       <a href="hid00080.htm">FTP接続</a>時のリモート側では無効です。<br>
       <a href="#NextFile">→ NextFile</a>
     </dd>
@@ -782,7 +782,7 @@
 
     <dt id="SelCurWord">SelCurWord</dt>
     <dd>カーソル位置の単語またはURLを選択します。<br>
-      なお、ダブルクリックした場合にも、その位置の単語が選択されます。ただし、<a href="hid00011.htm">オプション設定 - テキストビュアー</a>
+      なお、ダブルクリックした場合にも、その位置の単語が選択されます。ただし、<a href="hid00011.htm">オプション設定 - テキストビューア</a>
       で「<b>ダブルクリックでURLを開く</b>」をチェックしていると、その行にURLが含まれている場合、それが開かれます。
     </dd>
 
@@ -814,13 +814,13 @@
 
     <dt id="SetColor">SetColor<span class="pram_text">[_{ファイル名|RS}]</span></dt>
     <dd>
-      <b>テキストビュアーの配色</b>ダイアログを開きます。このダイアログでの設定は一時的なもので、テキストビュアーを閉じるとリセットされます。<br>
+      <b>テキストビューアの配色</b>ダイアログを開きます。このダイアログでの設定は一時的なもので、テキストビューアを閉じるとリセットされます。<br>
       ただし<span class="btn_frame">全体に反映</span>ボタンを押すと、全体のオプション設定にも反映されます。<br>
-      パラメータにファイル名を指定すると、カラー設定ファイル(.INI)を読み込んで、テキストビュアーの配色を一時的に変更します。ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
+      パラメータにファイル名を指定すると、カラー設定ファイル(.INI)を読み込んで、テキストビューアの配色を一時的に変更します。ドライブ名がない場合、<b>NyanFi</b> ディレクトリからの相対指定とみなされます。<br>
       また <b>RS</b> を指定すると配色をリセットします。<br>
       <div class="spc_box">
         設定ファイルには、このダイアログでエクスポートしたもの、<a href="hid00023.htm">オプション設定 - フォント・配色</a> - 配色の「エクスポート」で保存したもの、あるいは <b>NyanFi</b>
-        のINIファイルのいずれかを利用できます。読み込む際には、テキストビュアーに関する設定内容だけが用いられます。<br>
+        のINIファイルのいずれかを利用できます。読み込む際には、テキストビューアに関する設定内容だけが用いられます。<br>
         なお、<a href="hid00084.htm">構文強調表示定義ファイル</a>でも、このカラー設定ファイルを用いて配色を変更できます。<br>
         このコマンドは、二重起動した <b>NyanFi</b> からは実行できません。<br>
       </div>
@@ -836,18 +836,18 @@
     </dd>
 
     <dt id="SetMargin">SetMargin<span class="pram_text">_左側余白幅</span></dt>
-    <dd><a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>左側余白幅</b>」を設定します。</dd>
+    <dd><a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>左側余白幅</b>」を設定します。</dd>
 
     <dt id="SetTab">SetTab<span class="pram_text">[_タブストップ幅]</span></dt>
     <dd>タブストップを任意の幅に変更します。<br>
-      0 または無指定の場合は、<a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>タブストップ4の拡張子</b>」や「<b>タブストップ ～
+      0 または無指定の場合は、<a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>タブストップ4の拡張子</b>」や「<b>タブストップ ～
         の拡張子</b>」の設定にしたがいます(デフォルト=8)。<br>
-      この変更は一時的なもので、テキストビュアーを閉じるとリセットされます。
+      この変更は一時的なもので、テキストビューアを閉じるとリセットされます。
     </dd>
 
     <dt id="SetTopAddr">SetTopAddr<span class="pram_text">[_{TP|PR|NX|ED}]</span></dt>
     <dd>バイナリ・ダンプ表示の場合、先頭アドレスを設定して、ファイルの再読み込みを行います。<br>
-      これにより、<a href="hid00011.htm">オプション設定 - テキストビュアー</a>
+      これにより、<a href="hid00011.htm">オプション設定 - テキストビューア</a>
       「<b>バイナリ最大読込サイズ</b>」よりも大きなファイル(4GB超も可)でも、任意の部分を閲覧できます。なお<b>ビットマップビュー</b>のファイルマップ表示をクリックすることでも先頭アドレスを変更できます。<br>
       <div class="spc_box">
         パラメータに <b>TP</b> を指定すると、入力ボックスを出さずに、先頭アドレスをファイルの先頭に設定します。<b>PR</b> を指定すると先頭アドレスをファイルの先行部に、<b>NX</b>
@@ -864,7 +864,7 @@
     </dd>
 
     <dt id="SetWidth">SetWidth<span class="pram_text">[_折り返し幅]</span></dt>
-    <dd><a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>折り返し幅</b>」を設定します。入力値を 0 (または空欄)にするとウィンドウの幅に合わせます。<br>
+    <dd><a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>折り返し幅</b>」を設定します。入力値を 0 (または空欄)にするとウィンドウの幅に合わせます。<br>
       パラメータで幅を指定すると、入力ボックスを出さずに、その値を設定します。<br>
       なおルーラを表示している場合、ダブルクリックで折り返し幅を変更することもできます。<br>
       <a href="#ShowRuler">→ ShowRuler</a>
@@ -873,14 +873,14 @@
     <dt id="ShowCR">ShowCR<span class="pram_text">[_{ON|OFF}]</span></dt>
     <dd>パラメータを指定しない場合、改行マーク(<b>&#x21b5;</b>)の表示/非表示をトグルで切り替えます。<br>
       パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
-      <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>改行を表示</b>」に反映されます。<br>
+      <a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>改行を表示</b>」に反映されます。<br>
       <a href="#ShowTAB">→ ShowTAB</a>
     </dd>
 
     <dt id="ShowFileInfo">ShowFileInfo</dt>
     <dd>表示中ファイルのファイル情報をダイアログで表示します。<br>
       <a href="#ListFileInfo">ListFileInfo</a> コマンドでも同じです。<br>
-      ファイラーやイメージビュアーの場合とは異なり、パラメータはありません。<br>
+      ファイラーやイメージビューアの場合とは異なり、パラメータはありません。<br>
       <a href="#ListFileInfo">→ ListFileInfo</a>　<a href="#PropertyDlg">→ PropertyDlg</a>
     </dd>
 
@@ -895,7 +895,7 @@
     <dt id="ShowLineNo">ShowLineNo<span class="pram_text">[_{ON|OFF}]</span></dt>
     <dd>パラメータを指定しない場合、行番号の表示/非表示をトグルで切り替えます。<br>
       パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-      <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>行番号を表示</b>」に反映されます。
+      <a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>行番号を表示</b>」に反映されます。
     </dd>
 
     <dt id="ShowRuby">ShowRuby<span class="pram_text">[_{ON|OFF}]</span></dt>
@@ -906,7 +906,7 @@
     <dt id="ShowRuler">ShowRuler<span class="pram_text">[_{ON|OFF}]</span></dt>
     <dd>パラメータを指定しない場合、ルーラの表示/非表示をトグルで切り替えます。<br>
       パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> では非表示になります。<br>
-      <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>ルーラを表示</b>」に反映されます。<br>
+      <a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>ルーラを表示</b>」に反映されます。<br>
       ルーラを表示していると、ダブルクリックで折り返し幅を変更することもできます。<br>
       <a href="#SetWidth">→ SetWidth</a>
     </dd>
@@ -920,7 +920,7 @@
     <dd>パラメータを指定しない場合、タブマーク(<b>&#x21c0;</b>)の表示/非表示をトグルで切り替えます。<br>
       パラメータに <b>ON</b> を指定すると表示、<b>OFF</b> で非表示になります。<br>
       これは、テキストプレビューや<a href="hid00073.htm">一覧ダイアログ</a>でのテキスト表示にも適用されます。<br>
-      <a href="hid00011.htm">オプション設定 - テキストビュアー</a> の「<b>タブを表示</b>」に反映されます。<br>
+      <a href="hid00011.htm">オプション設定 - テキストビューア</a> の「<b>タブを表示</b>」に反映されます。<br>
       <a href="#ShowCR">→ ShowCR</a>
     </dd>
 
@@ -965,7 +965,7 @@
     </dd>
 
     <dt id="TagView">TagView<span class="pram_text">[_DJ]</span></dt>
-    <dd>現在行の内容でタグジャンプを行い、テキストビュアーで開きます。<br>
+    <dd>現在行の内容でタグジャンプを行い、テキストビューアで開きます。<br>
       選択中ならその文字列、そうでない場合はカーソル行を対象とします。行内に複数のジャンプ先がある場合、カーソル位置から最初に見つかったものを開きます。<br>
       HTML→テキスト変換表示の場合、file:://～ という形式のローカルファイルへのリンクにも対応(name や id による移動先指定は無効)。また #include 相対ファイル名 という形式も開けます。<br>
       パラメータに <b>DJ</b> を指定すると、タグジャンプができなかった場合、カーソル位置の単語で<a href="hid00083.htm">ダイレクトタグジャンプ</a> (<a
@@ -974,7 +974,7 @@
     </dd>
 
     <dt id="TagViewDirect">TagViewDirect<span class="pram_text">[_タグ名]</span></dt>
-    <dd>カーソル位置の単語で<a href="hid00083.htm">ダイレクトタグジャンプ</a>を行い、テキストビュアーで開きます。ジャンプ先の候補が複数ある場合、一覧で選択できます。<br>
+    <dd>カーソル位置の単語で<a href="hid00083.htm">ダイレクトタグジャンプ</a>を行い、テキストビューアで開きます。ジャンプ先の候補が複数ある場合、一覧で選択できます。<br>
       パラメータでタグ名を指定すると、その単語でダイレクトタグジャンプを行います。<br>
       <a href="#TagJumpDirect">→ TagJumpDirect</a>　<a href="#FindTagName">→ FindTagName</a>
     </dd>

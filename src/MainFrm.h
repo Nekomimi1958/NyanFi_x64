@@ -1975,12 +1975,13 @@ private:	// ユーザー宣言
 	bool isRichText;					//リッチテキスト表示
 	bool isXDoc2Txt;					//xdoc2txt を利用して表示
 	bool fromGrep;						//GREPから開いている
-	bool isViewWork;					//イメージビュアーでワークリストを表示中
+	bool isViewWork;					//イメージビューアでワークリストを表示中
 	bool VListMaking;					//ViewFileList 作成中
-	bool ImgMoving;						//ビュアーイメージ移動中
+	bool ImgMoving;						//ビューアイメージ移動中
 	bool TmpEqualSize;					//一時的な等倍表示
 	bool ThumbExtended;					//サムネイルの拡張表示
 	bool ThumbClicked;					//直前にサムネイルがクリックされている
+	int  InhThumbGrid;					//サムネイル・グリッド処理の抑止
 	bool FinfSkipped;					//ファイル情報取得がスキップされた
 	bool isLoopHint;
 	TPoint LastP;						//イメージ移動中の前回のマウス位置
@@ -2035,7 +2036,7 @@ private:	// ユーザー宣言
 	bool GrepLnSorted;					//行内容でソート中
 	bool GrepWorkList;					//対象がワークリスト
 
-	bool fromViewer;					//テキストビュアーから
+	bool fromViewer;					//テキストビューアから
 
 	SttProgressBar *SttPrgBar;			//Grep用プログレスバー
 	UsrHintWindow *MsgHint;				//メッセージ、警告のヒント表示ウィンドウ
@@ -2407,6 +2408,7 @@ private:	// ユーザー宣言
 	bool __fastcall OpenImgViewer(file_rec *fp, bool fitted = false, int zoom = 0);
 	bool __fastcall OpenImgViewer(int idx);
 	bool __fastcall ViewClipImage(bool fitted = false, int zoom = 0);
+	void __fastcall SetThumbnailIndex(int idx, int max_count, bool center = false);
 	void __fastcall SetImgInfListBox(file_rec *fp);
 	void __fastcall ClearViewImage();
 	void __fastcall SetSeekStat(int idx);
@@ -2604,7 +2606,7 @@ public:		// ユーザー宣言
 	UsrScrollPanel *InfScrPanel;				//独自スクロールバー(ファイル情報)
 	UsrScrollPanel *LogScrPanel;				//独自スクロールバー(ログ)
 	UsrScrollPanel *ImgInfScrPanel;				//独自スクロールバー(ファイル情報)
-	UsrScrollPanel *TxtViewScrPanel;			//独自スクロールバー(テキストビュアー)
+	UsrScrollPanel *TxtViewScrPanel;			//独自スクロールバー(テキストビューア)
 	UsrScrollPanel *ResultScrPanel;				//独自スクロールバー(Grep結果)
 
 	int CurListWidth, CurListHeight;
@@ -2650,6 +2652,7 @@ public:		// ユーザー宣言
 	bool __fastcall ViewClipText();
 
 	void __fastcall UpdateLoupe();
+	void __fastcall TempTopThumbnailGrid(bool sw_repaint = false);
 	bool __fastcall DeleteICore(int idx);
 	void __fastcall NextPrevFileICore(bool is_next);
 

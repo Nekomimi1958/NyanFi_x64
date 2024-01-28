@@ -287,6 +287,7 @@ __fastcall TNyanFiForm::TNyanFiForm(TComponent* Owner)
 	TmpEqualSize  = false;
 	ThumbExtended = false;
 	ThumbClicked  = false;
+	InhThumbGrid  = 0;
 	isLoopHint	  = false;
 	IsEvenPage	  = true;
 	InhSeekBar	  = 0;
@@ -517,7 +518,7 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 	FileInfFont = IniFile->ReadFontInf(_T("FileInf"),	defFont.get(), FontList, _T("ファイル情報"));
 	TxtPrvFont	= IniFile->ReadFontInf(_T("TxtPrv"),	FileInfFont,   FontList, _T("テキストプレビュー"));
 	LogFont 	= IniFile->ReadFontInf(_T("Log"),		defFont.get(), FontList, _T("ログ"));
-	ViewerFont	= IniFile->ReadFontInf(_T("Viewer"),	defFont.get(), FontList, _T("テキストビュアー"));
+	ViewerFont	= IniFile->ReadFontInf(_T("Viewer"),	defFont.get(), FontList, _T("テキストビューア"));
 	GrepResFont = IniFile->ReadFontInf(_T("GrepRes"),	ListFont,	   FontList, _T("GREP結果リスト"));
 	DirInfFont	= IniFile->ReadFontInf(_T("DirInf"),	defFont.get(), FontList, _T("ディレクトリ情報"));
 	DrvInfFont	= IniFile->ReadFontInf(_T("DrvInf"),	defFont.get(), FontList, _T("ドライブ情報"));
@@ -634,7 +635,7 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 		HideBgImg[i] = false;
 	}
 
-	//テキストビュアー
+	//テキストビューア
 	TxtViewer = new TTxtViewer(this, TextPaintBox, TextScrollBar, TxtViewScrPanel,
 								TxtSttHeader, TextRulerBox, TextCurColPanel, TextMarginBox);
 	TxtViewer->isHtm2Txt   = IniFile->ReadBoolGen(_T("Htm2Txt"));
@@ -741,7 +742,7 @@ void __fastcall TNyanFiForm::FormCreate(TObject *Sender)
 		if (!wnam.IsEmpty()) WorkListName = wnam;
 	}
 
-	//ドロップターゲット(テキストビュアー)を設定
+	//ドロップターゲット(テキストビューア)を設定
 	usr_SH->AddTargetList(this, TxtScrollPanel);
 
 	if (SplashForm) SplashForm->SetMsgLabel(_T("画面準備中..."));
@@ -1308,7 +1309,7 @@ void __fastcall TNyanFiForm::FormResize(TObject *Sender)
 		StatusBar1->Panels->Items[0]->Width = ClientWidth
 			- set_SttBarPanelWidth(StatusBar1, 1, str_len_half(GetClockStr())) - SCALED_THIS(20);
 
-		//テキストビュアーヘッダ
+		//テキストビューアヘッダ
 		TxtSttHeader->Panels->Items[0]->Width = ClientWidth
 			- set_SttBarPanelWidth(TxtSttHeader, 1, "UTF-16(BE) BOM付")
 			- set_SttBarPanelWidth(TxtSttHeader, 2, "CR/LF")
@@ -1320,7 +1321,7 @@ void __fastcall TNyanFiForm::FormResize(TObject *Sender)
 			TxtViewer->Repaint(true);
 		}
 
-		//イメージビュアー情報ヘッダ
+		//イメージビューア情報ヘッダ
 		TStatusPanels *pp = ImgSttHeader->Panels;
 		int p_wd = (ClientWidth - pp->Items[2]->Width - pp->Items[3]->Width - pp->Items[4]->Width) / 3;
 		pp->Items[0]->Width = p_wd;
@@ -1343,14 +1344,14 @@ void __fastcall TNyanFiForm::FormResize(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//ビュアーでのキー操作
+//ビューアでのキー操作
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
 {
 	if (!Initialized || UnInitializing) return;
 
 	//--------------------------
-	//テキストビュアー
+	//テキストビューア
 	//--------------------------
 	if (ScrMode==SCMD_TVIEW) {
 		try {
@@ -1377,7 +1378,7 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 				else if (contained_wd_i(KeysStr_Popup, KeyStr) || StartsText("ContextMenu", cmd_F)) {
 					show_PopupMenu(ViewPopupMenu, TextPaintBox);
 				}
-				//補助画面(なければビュアー)を閉じる
+				//補助画面(なければビューア)を閉じる
 				else if (equal_ESC(KeyStr)) {
 					if (ExeCmdsBusy) {
 						if (msgbox_Sure(USTR_CancelCmdQ)) XCMD_Aborted = true;
@@ -1386,7 +1387,7 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 						if (!TxtViewer->CloseAuxForm()) ExeCommandV(_T("Close"));
 					}
 				}
-				//ビュアーを閉じる
+				//ビューアを閉じる
 				else if (equal_ENTER(KeyStr)) {
 					ExeCommandV(_T("Close"));
 				}
@@ -1400,7 +1401,7 @@ void __fastcall TNyanFiForm::FormKeyDown(TObject *Sender, WORD &Key, TShiftState
 		}
 	}
 	//--------------------------
-	//イメージビュアー
+	//イメージビューア
 	//--------------------------
 	else if (ScrMode==SCMD_IVIEW && ImgViewPanel->Visible) {
 		UnicodeString KeyStr = TwoStrokeSeq(Key, Shift);	if (KeyStr.IsEmpty()) return;
@@ -1769,7 +1770,7 @@ void __fastcall TNyanFiForm::WmCopyData(TMessage& msg)
 	else if (cd->dwData==CPYDTID_DPL_MSG) {
 		if (Active) ShowMessageHint((LPTSTR)cd->lpData, col_bgHint, false, false, true);
 	}
-	//テキストビュアーで指定ファイルを開く
+	//テキストビューアで指定ファイルを開く
 	else if (cd->dwData==CPYDTID_TXTVIEW) {
 		UnicodeString fnam = (LPTSTR)cd->lpData;
 		if (!fnam.IsEmpty()) {
@@ -1777,7 +1778,7 @@ void __fastcall TNyanFiForm::WmCopyData(TMessage& msg)
 			if (!SetAndOpenTxtViewer(fnam)) SetActionAbort(USTR_FileNotOpen);
 		}
 	}
-	//イメージビュアーで指定ファイルを開く
+	//イメージビューアで指定ファイルを開く
 	else if (cd->dwData==CPYDTID_IMGVIEW) {
 		UnicodeString fnam = (LPTSTR)cd->lpData;
 		if (!fnam.IsEmpty()) {
@@ -2083,7 +2084,7 @@ void __fastcall TNyanFiForm::WmDropped(TMessage &msg)
 
 	HWND hWnd = get_window_from_pos();
 
-	//テキストビュアー
+	//テキストビューア
 	if (hWnd==TxtScrollPanel->Handle) {
 		if (DroppedList->Count>0) {
 			TxtViewer->add_ViewHistory();
@@ -2587,7 +2588,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(TMsg &Msg, bool &Handled)
 				}
 			}
 		}
-		//テキストビュアー/ イメージビュアー
+		//テキストビューア/ イメージビューア
 		else if (pCtrl==this || pCtrl==ThumbnailGrid) {
 			if (is_DialogKey(Key) && (ScrMode==SCMD_TVIEW || ScrMode==SCMD_IVIEW || ex_tv)) {
 				if (Wait2ndKey) {
@@ -2595,19 +2596,19 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(TMsg &Msg, bool &Handled)
 					KeyStr.sprintf(_T("%s~%s"), FirstKey.c_str(), KeyStrK.c_str());
 				}
 				CancelKeySeq();
-				//テキストビュアー
+				//テキストビューア
 				if (ScrMode==SCMD_TVIEW) {
 					if (ExeCommandV(Key_to_CmdV(KeyStr)))
 						Handled = true;
-					//別テキストビュアーがあればフォーカスを移す
+					//別テキストビューアがあればフォーカスを移す
 					else if (equal_TAB(KeyStr))
 						Handled = focus_ExViewer();
 				}
-				//別テキストビュアー
+				//別テキストビューア
 				else if (ex_tv) {
 					if (ex_tv->ExeCommandV(Key_to_CmdV(KeyStr))) Handled = true;
 				}
-				//イメージビュアー
+				//イメージビューア
 				else {
 					UnicodeString CmdStr = KeyFuncList->Values["I:" + KeyStr];
 					//右綴じでNext/PrevFile入替
@@ -2656,7 +2657,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(TMsg &Msg, bool &Handled)
 		else if (equal_TAB(KeyStr)) {
 			Handled = true;
 
-			//別テキストビュアーから
+			//別テキストビューアから
 			if (ex_tv) {
 				SetFocus();
 			}
@@ -2787,13 +2788,13 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(TMsg &Msg, bool &Handled)
 			if (ListStt[fl_tag].is_IncSea && ListStt[fl_tag].is_Filter && lst_idx!=lp->ItemIndex) lp->Invalidate();
 			Handled = true;
 		}
-		//テキストビュアー
+		//テキストビューア
 		else if (Active && ScrMode==SCMD_TVIEW) {
 			CancelKeySeq();
 			if (TxtScrollPanel->Visible) ExeCommandV(cmd_V);
 			Handled = true;
 		}
-		//イメージビュアー
+		//イメージビューア
 		else if (Active && ScrMode==SCMD_IVIEW) {
 			UnicodeString cmd = WheelCmdI[kmd];
 			cmd = Trim((delta>0)? get_tkn(cmd, '/') : get_tkn_r(cmd, '/'));
@@ -2981,7 +2982,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(TMsg &Msg, bool &Handled)
 			if (ThumbClicked)
 				ExeEventCommand(OnThmDClick);
 			else
-				ExeCommandI("Close");	//サムネイル外ならビュアーを閉じる
+				ExeCommandI("Close");	//サムネイル外ならビューアを閉じる
 		}
 		//左右分割境界
 		else if (in_Splitter) {
@@ -3066,19 +3067,19 @@ void __fastcall TNyanFiForm::ApplicationEvents1Message(TMsg &Msg, bool &Handled)
 		else if (pCtrl==ClockBar) {
 			ExeEventCommandMP(OnTimRClick);
 		}
-		//テキストビュアーのツールバー
+		//テキストビューアのツールバー
 		else if (pCtrl==ToolBarV) {
 			ExeEventCommandMP(OnTvTbRClick);
 		}
-		//テキストビュアーで情報ヘッダ
+		//テキストビューアで情報ヘッダ
 		else if (pCtrl==TxtSttHeader) {
 			ExeEventCommandMP(OnTvHRClick);
 		}
-		//イメージビュアーのツールバー
+		//イメージビューアのツールバー
 		else if (pCtrl==ToolBarI || pCtrl==ToolBarI2) {
 			ExeEventCommandMP(OnIvTbRClick);
 		}
-		//イメージビュアーのシークバー
+		//イメージビューアのシークバー
 		else if (pCtrl==SeekBar || pCtrl==SeekSttPanel) {
 			ExeEventCommandMP(OnIvSbRClick);
 		}
@@ -3275,7 +3276,7 @@ bool __fastcall TNyanFiForm::ApplicationEvents1Help(WORD Command, THelpEventData
 void __fastcall TNyanFiForm::ApplicationEvents1Idle(TObject *Sender, bool &Done)
 {
 	//ツールバーの状態を更新
-	//※テキスト/イメージビュアーだとうまく更新されないため(謎)
+	//※テキスト/イメージビューアだとうまく更新されないため(謎)
 	TToolBar *tp = (ScrMode==SCMD_TVIEW)? ToolBarV :
 				   (ScrMode==SCMD_IVIEW)? (ToolBarISide? ToolBarI2 : ToolBarI) : NULL;
 	if (tp) {
@@ -3288,7 +3289,7 @@ void __fastcall TNyanFiForm::ApplicationEvents1Idle(TObject *Sender, bool &Done)
 	//アクティブなコンボボックスの状態を保存
 	UserModule->SaveLastComboBox();
 
-	//イメージビュアーで抑止されたカーソル移動の再試行
+	//イメージビューアで抑止されたカーソル移動の再試行
 	if (NextDenied && !usr_ARC->Busy) {
 		NextDenied = false;
 		NextFileAction->Execute();
@@ -4592,6 +4593,8 @@ void __fastcall TNyanFiForm::SetupThumbnail(
 	int idx)	//インデックス	(default = -1)
 {
 	TStringGrid *gp = ThumbnailGrid;
+	gp->LockDrawing();
+
 	if (ThumbExtended) {
 		gp->Align	   = alClient;
 		gp->ScrollBars = ShowThumbScroll? ssVertical : ssNone;
@@ -4646,9 +4649,11 @@ void __fastcall TNyanFiForm::SetupThumbnail(
 		gp->Width	 = gp->DefaultColWidth + (ShowThumbScroll? get_SysMetricsForPPI(SM_CXVSCROLL, CurrentPPI) : 0) + 2;
 	}
 
+	gp->UnlockDrawing();
+
 	SetDarkWinTheme(gp);
 
-	if (idx!=-1) set_GridIndex(gp, idx, ViewFileList->Count, true);
+	if (idx!=-1) SetThumbnailIndex(idx, ViewFileList->Count, true);
 }
 
 //---------------------------------------------------------------------------
@@ -5031,7 +5036,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 	}
 
 	//---------------------------------------
-	//イメージビュアーサイドバー
+	//イメージビューアサイドバー
 	//---------------------------------------
 	if (initial) {
 		ImgSidePanel->Visible = ShowImgSidebar;
@@ -5045,7 +5050,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 				LoupeDockPanel->Constraints->MaxHeight = 0;
 				SideDockPanel->Height = HistDockPanel->Height + IniFile->ReadScaledIntGen(_T("LoupeHeight"), 200);
 				if (initial) {
-					//※イメージビュアーを一旦表示状態にしないと倍率ボタンが表示されない
+					//※イメージビューアを一旦表示状態にしないと倍率ボタンが表示されない
 					ImgViewPanel->Visible = true;
 					ImgViewPanel->Visible = false;
 				}
@@ -5087,7 +5092,7 @@ void __fastcall TNyanFiForm::SetupDesign(
 
 	if (initial) {
 		ThumbnailGrid->Visible = IniFile->ReadBoolGen(_T("ShowThumbnail"),	true);
-		//※テキストビュアーを一旦表示状態にしないと幅が初期化されない
+		//※テキストビューアを一旦表示状態にしないと幅が初期化されない
 		TxtViewPanel->Visible	= true;
 		TxtScrollPanel->Visible = true;
 		TxtScrollPanel->Visible = false;
@@ -5605,14 +5610,14 @@ void __fastcall TNyanFiForm::SetScrMode(
 	UpdateFKeyBtn();
 
 	switch (ScrMode) {
-	case SCMD_TVIEW:	//テキストビュアー
+	case SCMD_TVIEW:	//テキストビューア
 		TxtViewPanel->Visible = true;
 		MainPanel->Visible	  = false;
 		GrepPanel->Visible	  = false;
 		ImgViewPanel->Visible = false;
 		break;
 
-	case SCMD_IVIEW:	//イメージビュアー
+	case SCMD_IVIEW:	//イメージビューア
 		ImgViewPanel->Visible = true;
 		MainPanel->Visible	  = false;
 		GrepPanel->Visible	  = false;
@@ -5629,6 +5634,7 @@ void __fastcall TNyanFiForm::SetScrMode(
 		TxtViewPanel->Visible = false;
 		ImgViewPanel->Visible = false;
 		GrepSttSplitterMoved(GrepSttSplitter);
+		ResultScrPanel->UpdateKnob();
 		break;
 
 	default:			//ファイルリスト
@@ -5774,7 +5780,7 @@ int __fastcall TNyanFiForm::SelectMask(TStringList *lst, UnicodeString masks)
 		RepaintList(CurListTag);
 		break;
 	case SCMD_IVIEW:
-		if (s_idx!=-1) set_GridIndex(ThumbnailGrid, s_idx, lst->Count);
+		if (s_idx!=-1) SetThumbnailIndex(s_idx, lst->Count);
 		break;
 	}
 
@@ -5982,11 +5988,11 @@ file_rec * __fastcall TNyanFiForm::GetCurFrecPtr(
 	bool inc_up)		//ファイラーで .. を含	(default = false);
 {
 	file_rec *fp = NULL;
-	//テキストビュアー
+	//テキストビューア
 	if (!only_filer && ScrMode==SCMD_TVIEW) {
 		fp = TxtViewer->FileRec;
 	}
-	//イメージビュアー
+	//イメージビューア
 	else if (!only_filer && ScrMode==SCMD_IVIEW) {
 		int idx = GetCurIndex();
 		if (idx!=-1) fp = (file_rec*)ViewFileList->Objects[idx];
@@ -6062,7 +6068,7 @@ bool __fastcall TNyanFiForm::SetCurIndex(int idx)
 			SetFileInf();
 			break;
 		case SCMD_IVIEW:
-			set_GridIndex(ThumbnailGrid, idx, lst->Count);
+			SetThumbnailIndex(idx, lst->Count);
 			if (SetCurFrecPtr(GetFrecPtrFromViewList(idx)) != -1)
 				res = OpenImgViewer((file_rec*)lst->Objects[idx]);
 			break;
@@ -7686,7 +7692,7 @@ void __fastcall TNyanFiForm::SetFileInfCore()
 		file_rec *cfp2 = GetCurFrecPtr(true, true);
 		if (cfp2 && SameStr(cfp->f_name, cfp2->f_name)) copy_file_rec(cfp, cfp2);
 
-		//サブビュアー
+		//サブビューア
 		if (SubViewer->Visible) {
 			UnicodeString fnam;
 			if (cfp && !cfp->is_ftp  && !cfp->is_dir) {
@@ -11487,7 +11493,7 @@ void __fastcall TNyanFiForm::TextPaintBoxPaint(TObject *Sender)
 	TxtViewer->Repaint();
 }
 //---------------------------------------------------------------------------
-//テキストビュアーでのマウス操作
+//テキストビューアでのマウス操作
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TextPaintBoxMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
 {
@@ -11668,7 +11674,7 @@ void __fastcall TNyanFiForm::TaskPaintBoxMouseUp(TObject *Sender, TMouseButton B
 	if (Button==mbRight) ExeEventCommandMP(OnTskRClick);
 }
 //---------------------------------------------------------------------------
-//イメージビュアーでのマウス操作
+//イメージビューアでのマウス操作
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ViewerImageMouseDown(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y)
 {
@@ -11981,6 +11987,8 @@ void __fastcall TNyanFiForm::ThumbnailGridMouseDown(TObject *Sender, TMouseButto
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ThumbnailGridClick(TObject *Sender)
 {
+	if (InhThumbGrid>0) return;
+
 	CancelKeySeq();
 	if (InhDrawImg>0 || usr_ARC->Busy) return;
 
@@ -19315,7 +19323,7 @@ void __fastcall TNyanFiForm::GitDiffActionExecute(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
-//Gitビュアー
+//Gitビューア
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GitViewerActionExecute(TObject *Sender)
 {
@@ -19539,7 +19547,7 @@ void __fastcall TNyanFiForm::HomeWorkListActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//イメージビュアー
+//イメージビューア
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ImageViewerActionExecute(TObject *Sender)
 {
@@ -20250,7 +20258,7 @@ void __fastcall TNyanFiForm::JoinTextActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//JSONビュアー
+//JSONビューア
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::JsonViewerActionExecute(TObject *Sender)
 {
@@ -21974,7 +21982,7 @@ void __fastcall TNyanFiForm::MatchSelectActionExecute(TObject *Sender)
 			RepaintList(CurListTag);
 			break;
 		case SCMD_IVIEW:
-			if (s_idx!=-1) set_GridIndex(ThumbnailGrid, s_idx, lst->Count);
+			if (s_idx!=-1) SetThumbnailIndex(s_idx, lst->Count);
 			break;
 		}
 	}
@@ -22828,7 +22836,7 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 				else if (test_MciSndExt(cfp->f_ext)) {
 					if (!play_sound_ex(cfp->tmp_name)) UserAbort(USTR_CantPlay);
 				}
-				//イメージビュアー
+				//イメージビューア
 				else if (is_Viewable(cfp) || test_IcoExt(cfp->f_ext)) {
 					if (!ExeCmdAction(ImageViewerAction)) ActionAbort();
 				}
@@ -22847,7 +22855,7 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 					}
 					not_down = true;
 				}
-				//テキストビュアー
+				//テキストビューア
 				else if (!ExeCmdAction(TextViewerAction)) {
 					ActionAbort();
 				}
@@ -22869,11 +22877,11 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 				if (test_MciSndExt(cfp->f_ext)) {
 					if (!play_sound_ex(cfp->f_name)) UserAbort(USTR_CantPlay);
 				}
-				//イメージビュアー
+				//イメージビューア
 				else if (is_Viewable(cfp) || test_IcoExt(cfp->f_ext)) {
 					if (!ExeCmdAction(ImageViewerAction)) ActionAbort();
 				}
-				//テキストビュアー
+				//テキストビューア
 				else if (!ExeCmdAction(TextViewerAction)) {
 					ActionAbort();
 				}
@@ -22995,7 +23003,7 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 				else if (test_MciSndExt(cfp->f_ext)) {
 					if (!play_sound_ex(cfp->f_name)) UserAbort(USTR_CantPlay);
 				}
-				//イメージビュアー
+				//イメージビューア
 				else if (is_Viewable(cfp) || test_IcoExt(cfp->f_ext)) {
 					if (!ExeCmdAction(ImageViewerAction)) ActionAbort();
 				}
@@ -23066,7 +23074,7 @@ void __fastcall TNyanFiForm::OpenStandardActionExecute(TObject *Sender)
 						}
 					}
 				}
-				//テキストビュアー
+				//テキストビューア
 				else if (!ExeCmdAction(TextViewerAction)) {
 					ActionAbort();
 				}
@@ -23115,7 +23123,7 @@ void __fastcall TNyanFiForm::OptionDlgActionExecute(TObject *Sender)
 		OptionDlg->SetSheet(ActionParam);
 
 	if (!is_kyo) {
-		//安全のためビュアーを閉じる
+		//安全のためビューアを閉じる
 		if		(ScrMode==SCMD_IVIEW) CloseIAction->Execute();
 		else if (ScrMode==SCMD_TVIEW) ExeCommandV(_T("Close"));
 
@@ -24984,7 +24992,7 @@ void __fastcall TNyanFiForm::SelMarkActionExecute(TObject *Sender)
 			if (EqualDirLR()) InvalidateFileList(OppListTag);
 			break;
 		case SCMD_IVIEW:
-			set_GridIndex(ThumbnailGrid, top_idx, lst->Count);
+			SetThumbnailIndex(top_idx, lst->Count);
 			break;
 		}
 	}
@@ -25223,7 +25231,7 @@ void __fastcall TNyanFiForm::SelSameExtActionExecute(TObject *Sender)
 			RepaintList(CurListTag);
 			break;
 		case SCMD_IVIEW:
-			if (s_idx!=-1) set_GridIndex(ThumbnailGrid, s_idx, lst->Count);
+			if (s_idx!=-1) SetThumbnailIndex(s_idx, lst->Count);
 			break;
 		}
 
@@ -25275,7 +25283,7 @@ void __fastcall TNyanFiForm::SelWorkItemActionExecute(TObject *Sender)
 			RepaintList(CurListTag);
 			break;
 		case SCMD_IVIEW:
-			set_GridIndex(ThumbnailGrid, s_idx, lst->Count);
+			SetThumbnailIndex(s_idx, lst->Count);
 			break;
 		}
 	}
@@ -26325,7 +26333,7 @@ void __fastcall TNyanFiForm::SubDirListActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//サブビュアーの表示
+//サブビューアの表示
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SubViewerActionExecute(TObject *Sender)
 {
@@ -26658,7 +26666,7 @@ void __fastcall TNyanFiForm::TagSelectActionExecute(TObject *Sender)
 			SetFileInf();
 			break;
 		case SCMD_IVIEW:
-			if (s_idx!=-1) set_GridIndex(ThumbnailGrid, s_idx, lst->Count);
+			if (s_idx!=-1) SetThumbnailIndex(s_idx, lst->Count);
 			break;
 		}
 	}
@@ -26714,7 +26722,7 @@ void __fastcall TNyanFiForm::TestArchiveActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//テキストビュアー
+//テキストビューア
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TextViewerActionExecute(TObject *Sender)
 {
@@ -26764,7 +26772,7 @@ void __fastcall TNyanFiForm::TextViewerActionExecute(TObject *Sender)
 			}
 
 			if (xtv) {
-				//イベント: テキストビュアーを開く直前
+				//イベント: テキストビューアを開く直前
 				if (xtv->isClip)
 					ExeEventCommand(OnTvOpen, "ViewClip");
 				else
@@ -26837,7 +26845,7 @@ void __fastcall TNyanFiForm::TextViewerActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//別ウィンドウのテキストビュアーへ
+//別ウィンドウのテキストビューアへ
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ToExViewerActionExecute(TObject *Sender)
 {
@@ -26852,7 +26860,7 @@ void __fastcall TNyanFiForm::ToExViewerActionExecute(TObject *Sender)
 		//ポップアップメニューで選択
 		std::unique_ptr<TStringList> m_buf(new TStringList());
 		for (int i=0; i<lst->Count; i++) {
-			m_buf->Add(make_MenuAccStr(i) + get_tkn(((TForm *)lst->Objects[i])->Caption, " - テキストビュアー"));
+			m_buf->Add(make_MenuAccStr(i) + get_tkn(((TForm *)lst->Objects[i])->Caption, " - テキストビューア"));
 		}
 		ExePopMenuList(m_buf.get(), true);
 		Application->ProcessMessages();
@@ -27452,7 +27460,7 @@ void __fastcall TNyanFiForm::ViewLogActionExecute(TObject *Sender)
 {
 	//別ウィンドウで開く
 	if (TEST_ActParam("XW")) {
-		//イベント: テキストビュアーを開く直前
+		//イベント: テキストビューアを開く直前
 		ExeEventCommand(OnTvOpen, "ViewLog");
 
 		TExTxtViewer *xtv = new TExTxtViewer(this);
@@ -27464,7 +27472,7 @@ void __fastcall TNyanFiForm::ViewLogActionExecute(TObject *Sender)
 		TxtMainPanel->Visible	= false;
 		TxtScrollPanel->Visible = false;
 
-		//イベント: テキストビュアーを開く直前
+		//イベント: テキストビューアを開く直前
 		ExeEventCommand(OnTvOpen, "ViewLog");
 
 		SetScrMode(SCMD_TVIEW);
@@ -27476,13 +27484,13 @@ void __fastcall TNyanFiForm::ViewLogActionExecute(TObject *Sender)
 		TxtScrollPanel->Visible = true;
 		TxtMainPanel->Visible	= true;
 
-		//イベント: テキストビュアーを開いた直後
+		//イベント: テキストビューアを開いた直後
 		ExeEventCommand(OnTvOpened, "ViewLog");
 	}
 }
 
 //---------------------------------------------------------------------------
-//テキストの末尾を指定行分ビュアーで表示
+//テキストの末尾を指定行分ビューアで表示
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ViewTailActionExecute(TObject *Sender)
 {
@@ -27736,7 +27744,7 @@ void __fastcall TNyanFiForm::WorkItemActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//XMLビュアー
+//XMLビューア
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::XmlViewerActionExecute(TObject *Sender)
 {
@@ -30148,13 +30156,13 @@ void __fastcall TNyanFiForm::ResultListBoxDrawItem(TWinControl *Control, int Ind
 	}
 
 	UnicodeString ln_str = itmstr;
-	if (!NextLineCheckBox->Checked) ln_str = get_tkn(ln_str, '\n');
+	if (GrepPageControl->ActivePage==FindSheet && !NextLineCheckBox->Checked) ln_str = get_tkn(ln_str, '\n');
 	if (GrepTrimTop) ln_str = TrimLeft(ln_str);
 
 	TRect tmp_rc = Rect;
 	OffsetRect(tmp_rc, 0, -tmp_rc.Top);
 
-	int xp_L = tmp_rc.Left + 4;
+	int xp_L = tmp_rc.Left + SCALED_THIS(4);
 	int xp_R = tmp_rc.Right;
 
 	//一時ビットマップを作成し、それに一旦描画(ちらつき防止)
@@ -30342,7 +30350,7 @@ void __fastcall TNyanFiForm::ResultListBoxKeyDown(TObject *Sender, WORD &Key, TS
 				if (test_HtmlExt(get_extension(fnam))) TxtViewer->isHtm2Txt = false;
 				//別ウィンドウ
 				if (SameText(prm, "XW")) {
-					//イベント: テキストビュアーを開く直前
+					//イベント: テキストビューアを開く直前
 					ExeEventCommand(OnTvOpen, EmptyStr, fnam);
 
 					TExTxtViewer *xtv = new TExTxtViewer(this);
@@ -31111,6 +31119,7 @@ void __fastcall TNyanFiForm::GrepSortLineActionExecute(TObject *Sender)
 	cursor_HourGlass();
 	std::unique_ptr<TStringList> r_lst(new TStringList());
 	r_lst->Assign(ResultListBox->Items);
+	GrepUnsortBuff->Assign(r_lst.get());
 	r_lst->CustomSort(comp_GrepLine);
 	GrepLnSorted = true;
 	ResultListBox->Items->Assign(r_lst.get());
@@ -31125,22 +31134,14 @@ void __fastcall TNyanFiForm::GrepSortLineActionUpdate(TObject *Sender)
 	ap->Enabled = ap->Visible && !FindBusy && ResultListBox->Count>0 && !GrepLnSorted;
 }
 //---------------------------------------------------------------------------
-//ソート/絞り込み解除
+//ソート解除
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::GrepOrgOrderActionExecute(TObject *Sender)
 {
-	if (GrepFiltered) {
-		GrepReleaseAction->Execute();
-	}
-	else {
-		cursor_HourGlass();
-		std::unique_ptr<TStringList> r_lst(new TStringList());
-		r_lst->Assign(ResultListBox->Items);
-		r_lst->CustomSort(comp_ObjectsOrder);
+	if (GrepLnSorted) {
 		GrepLnSorted = false;
-		ResultListBox->Items->Assign(r_lst.get());
+		ResultListBox->Items->Assign(GrepUnsortBuff);
 		ResultScrPanel->UpdateKnob();
-		cursor_Default();
 	}
 }
 //---------------------------------------------------------------------------
@@ -31149,7 +31150,6 @@ void __fastcall TNyanFiForm::GrepOrgOrderActionUpdate(TObject *Sender)
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = ScrMode==SCMD_GREP;
 	ap->Enabled = ap->Visible && !FindBusy && ResultListBox->Count>0 && GrepLnSorted;
-	ap->Caption = (ap->Enabled && GrepFiltered)? "ソート/絞り込み解除" : "ソート解除";
 }
 
 //---------------------------------------------------------------------------
@@ -31721,11 +31721,11 @@ void __fastcall TNyanFiForm::GrepCanBtnClick(TObject *Sender)
 //---------------------------------------------------------------------------
 
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-// テキストビュアー
+// テキストビューア
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
 //---------------------------------------------------------------------------
-//テキストビュアーを開く
+//テキストビューアを開く
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::OpenTxtViewer(
 	file_rec *fp,
@@ -31746,14 +31746,14 @@ bool __fastcall TNyanFiForm::OpenTxtViewer(
 		UnicodeString fnam = (cfp->is_virtual || cfp->is_ftp)? cfp->tmp_name : cfp->f_name;
 		if (!file_exists(fnam)) SttBarWarnUstr(USTR_FileNotOpen);
 
-		//外部ビュアーで開く
+		//外部ビューアで開く
 		if (!ExtTxViewer.IsEmpty() && isViewText) {
 			if (lno==0) lno = 1;
 			if (!open_by_ExtTextViewer(fnam, lno)) GlobalAbort();
 			return true;
 		}
 
-		//イベント: テキストビュアーを開く直前
+		//イベント: テキストビューアを開く直前
 		TxtViewer->FileName = fnam;
 		ExeEventCommand(OnTvOpen, EmptyStr, fnam);
 
@@ -31768,7 +31768,7 @@ bool __fastcall TNyanFiForm::OpenTxtViewer(
 		TxtMainPanel->Visible	= false;
 		TxtScrollPanel->Visible = false;
 
-		//ここからテキストビュアー・モード
+		//ここからテキストビューア・モード
 		cursor_HourGlass();
 		SetScrMode(SCMD_TVIEW);
 
@@ -31833,7 +31833,7 @@ bool __fastcall TNyanFiForm::OpenTxtViewer(
 
 		cursor_Default();
 
-		//イベント: テキストビュアーを開いた直後
+		//イベント: テキストビューアを開いた直後
 		ExeEventCommand(OnTvOpened);
 
 		if (!TxtViewer->JsonErrMsg.IsEmpty()) msgbox_ERR(TxtViewer->JsonErrMsg);
@@ -31846,7 +31846,7 @@ bool __fastcall TNyanFiForm::OpenTxtViewer(
 		del_file_rec(cfp);
 		cursor_Default();
 
-		//テキストビュアー・モードになってからの予期せぬ例外に対処
+		//テキストビューア・モードになってからの予期せぬ例外に対処
 		//  ファイラーに戻す
 		if (ScrMode==SCMD_TVIEW) {
 			TxtViewer->CloseAuxForm();
@@ -31896,7 +31896,7 @@ bool __fastcall TNyanFiForm::SetAndOpenTxtViewer(
 }
 
 //---------------------------------------------------------------------------
-//テキストの末尾を指定行分テキストビュアーを表示
+//テキストの末尾を指定行分テキストビューアを表示
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::OpenTxtViewerTail(file_rec *fp, int limit_ln, bool reverse)
 {
@@ -31915,7 +31915,7 @@ bool __fastcall TNyanFiForm::OpenTxtViewerTail(file_rec *fp, int limit_ln, bool 
 		int cpag;
 		if (!is_TextFile(fnam, &cpag)) UserAbort(USTR_NotText);
 
-		//イベント: テキストビュアーを開く直前
+		//イベント: テキストビューアを開く直前
 		ExeEventCommand(OnTvOpen, EmptyStr, fnam);
 
 		if (cfp->inf_list->Count==0) GetFileInfList(cfp, true);
@@ -31925,7 +31925,7 @@ bool __fastcall TNyanFiForm::OpenTxtViewerTail(file_rec *fp, int limit_ln, bool 
 		TxtMainPanel->Visible	= false;
 		TxtScrollPanel->Visible = false;
 
-		//ここからテキストビュアー・モード
+		//ここからテキストビューア・モード
 		cursor_HourGlass();
 		SetScrMode(SCMD_TVIEW);
 
@@ -31959,7 +31959,7 @@ bool __fastcall TNyanFiForm::OpenTxtViewerTail(file_rec *fp, int limit_ln, bool 
 		SetSttBarInf(cfp);
 		cursor_Default();
 
-		//イベント: テキストビュアーを開いた直後
+		//イベント: テキストビューアを開いた直後
 		ExeEventCommand(OnTvOpened);
 		res = true;
 	}
@@ -31981,7 +31981,7 @@ bool __fastcall TNyanFiForm::OpenTxtViewerTail(UnicodeString fnam, int limit_ln,
 }
 
 //---------------------------------------------------------------------------
-//クリップボードをテキストビュアーを開く
+//クリップボードをテキストビューアを開く
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::ViewClipText()
 {
@@ -32000,7 +32000,7 @@ bool __fastcall TNyanFiForm::ViewClipText()
 	SetSttBarInf();
 	TxtScrollPanel->Visible = true;
 
-	//イベント: テキストビュアーを開いた直後
+	//イベント: テキストビューアを開いた直後
 	ExeEventCommand(OnTvOpened, "ViewClip");
 
 	return true;
@@ -32056,7 +32056,7 @@ void __fastcall TNyanFiForm::CodePageActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//テキストビュアーでの文字列検索
+//テキストビューアでの文字列検索
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::PopFindItemClick(TObject *Sender)
 {
@@ -32064,7 +32064,7 @@ void __fastcall TNyanFiForm::PopFindItemClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//テキストビュアーでのコマンド処理
+//テキストビューアでのコマンド処理
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 {
@@ -32269,7 +32269,7 @@ bool __fastcall TNyanFiForm::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 			if (TxtViewer->isBinary) UserAbort(USTR_InvalidCmd);
 			DirectTagJumpCore(ContainsText(cmd, "Jump"), ActionParam);
 		}
-		//ビュアーの履歴を戻る
+		//ビューアの履歴を戻る
 		else if (SameText(cmd, "BackViewHist")) {
 			if (TextViewHistory->Count==0) Abort();
 			TStringDynArray itm_buf = get_csv_array(TextViewHistory->Strings[0], 2, true);
@@ -32323,7 +32323,7 @@ bool __fastcall TNyanFiForm::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 			else if (SameText(cmd, "UserDefList"))	UserDefListAction->Execute();
 			else									MarkListVAction->Execute();
 		}
-		//テキストビュアーを閉じる
+		//テキストビューアを閉じる
 		else if (SameText(cmd, "Close")) {
 			req_close = true;
 			if (TEST_ActParam("AL")) close_all_ExViewer(this);
@@ -32337,7 +32337,7 @@ bool __fastcall TNyanFiForm::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 		//------------------
 		if (req_close) {
 			UnicodeString fnam = TxtViewer->FileName;
-			//イベント: テキストビュアーを閉じる直前
+			//イベント: テキストビューアを閉じる直前
 			ExeEventCommand(OnTvClose);
 
 			TxtViewer->CloseAuxForm();
@@ -32363,7 +32363,7 @@ bool __fastcall TNyanFiForm::ExeCommandV(UnicodeString cmd, UnicodeString prm)
 					SetFileInf();
 				}
 
-				//イベント: テキストビュアーを閉じた直後
+				//イベント: テキストビューアを閉じた直後
 				ExeEventCommand(OnTvClosed);
 			}
 
@@ -32449,7 +32449,7 @@ void __fastcall TNyanFiForm::DirectTagJumpCore(
 }
 
 //---------------------------------------------------------------------------
-//テキストビュアーの右クリックメニュー
+//テキストビューアの右クリックメニュー
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ViewPopupMenuPopup(TObject *Sender)
 {
@@ -33151,7 +33151,7 @@ void __fastcall TNyanFiForm::CsvRecordActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//テキストビュアーからファイルを削除
+//テキストビューアからファイルを削除
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::DeleteVCore(UnicodeString fnam)
 {
@@ -33430,7 +33430,7 @@ void __fastcall TNyanFiForm::SetWidthActionExecute(TObject *Sender)
 		ViewFoldWidth  = wd;
 	}
 
-	if (ScrMode==SCMD_TVIEW) TxtViewer->UpdateScr(0);
+	if (ScrMode==SCMD_TVIEW && TxtViewer->isReady) TxtViewer->UpdateScr(0);
 }
 //---------------------------------------------------------------------------
 //左側余白を設定
@@ -33464,7 +33464,7 @@ void __fastcall TNyanFiForm::SetTvMetricActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//テキストビュアーの配色
+//テキストビューアの配色
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetColorActionExecute(TObject *Sender)
 {
@@ -33647,7 +33647,7 @@ void __fastcall TNyanFiForm::WebSearchActionUpdate(TObject *Sender)
 //---------------------------------------------------------------------------
 
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-// イメージビュアー
+// イメージビューア
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
 //---------------------------------------------------------------------------
@@ -33663,7 +33663,7 @@ void __fastcall TNyanFiForm::WaitForImgReady(
 }
 
 //---------------------------------------------------------------------------
-//イメージビュアーを開く
+//イメージビューアを開く
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 {
@@ -33696,7 +33696,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(file_rec *fp, bool fitted, int zoom)
 	if (ScrMode!=SCMD_IVIEW) {
 		ViewerImage->Picture->Bitmap->Handle = NULL;
 		SetScrMode(SCMD_IVIEW);
-		//イベント: イメージビュアーを開いた直後
+		//イベント: イメージビューアを開いた直後
 		ExeEventCommand(OnIvOpened);
 	}
 
@@ -33968,7 +33968,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(int idx)
 	if (idx<0 || idx>=ViewFileList->Count) return false;
 
 	handling = true;
-	set_GridIndex(ThumbnailGrid, idx, ViewFileList->Count);
+	SetThumbnailIndex(idx, ViewFileList->Count);
 	SetCurFrecPtr(GetFrecPtrFromViewList(idx));
 	file_rec *vfp = (file_rec*)ViewFileList->Objects[idx];
 	if (OpenImgViewer(vfp) && NotThumbIfArc) {
@@ -33992,7 +33992,7 @@ bool __fastcall TNyanFiForm::OpenImgViewer(int idx)
 }
 
 //---------------------------------------------------------------------------
-//クリップボードのビットマップをイメージビュアーで開く
+//クリップボードのビットマップをイメージビューアで開く
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::ViewClipImage(bool fitted, int zoom)
 {
@@ -34011,7 +34011,7 @@ bool __fastcall TNyanFiForm::ViewClipImage(bool fitted, int zoom)
 	if (ScrMode!=SCMD_IVIEW) {
 		ViewerImage->Picture->Bitmap->Handle = NULL;
 		SetScrMode(SCMD_IVIEW);
-		//イベント: イメージビュアーを開いた直後
+		//イベント: イメージビューアを開いた直後
 		ExeEventCommand(OnIvOpened);
 		rqThumbnail = ThumbnailGrid->Visible;
 	}
@@ -34064,7 +34064,60 @@ bool __fastcall TNyanFiForm::ViewClipImage(bool fitted, int zoom)
 }
 
 //---------------------------------------------------------------------------
-//イメージビュアーのファイル情報を取得/設定
+//インデックスによってサムネイルグリッド位置を設定
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::SetThumbnailIndex(int idx, int max_count,
+	bool center)		//1列/行なら中央へ	(default = false)
+{
+	static bool handling = false;
+	if (handling) return;
+	handling = true;
+
+	TStringGrid *gp = ThumbnailGrid;
+	if (gp->Visible) gp->SetFocus();
+
+	if (idx<0) idx = 0;
+	if (idx>=max_count) idx = (max_count>0)? max_count - 1 : 0;
+	int c0 = gp->Col;
+	int c1 = idx%gp->ColCount;
+	int r1 = idx/gp->ColCount;
+
+	InhThumbGrid++;
+	gp->LockDrawing();
+	try {
+		if ((r1*gp->ColCount + c0) >= max_count) {
+			gp->Col = c1;
+			gp->Row = r1;
+		}
+		else {
+			gp->Row = r1;
+			gp->Col = c1;
+		}
+
+		if (center) {
+			if (gp->RowCount==1) {
+				int c0  = std::max(max_count - gp->VisibleColCount, 0);
+				int mgn = gp->VisibleColCount/2 - ((gp->VisibleColCount%2==0)? 1 : 0);
+				gp->LeftCol = std::min(std::max(gp->Col - mgn, 0), c0);
+			}
+			else if (gp->ColCount==1) {
+				int r0  = std::max(max_count - gp->VisibleRowCount, 0);
+				int mgn = gp->VisibleRowCount/2 - ((gp->VisibleRowCount%2==0)? 1 : 0);
+				gp->TopRow = std::min(std::max(gp->Row - mgn, 0), r0);
+			}
+		}
+	}
+	catch (...) {
+		gp->Col = 0; gp->Row = 0;
+	}
+	gp->UnlockDrawing();
+	InhThumbGrid--;
+
+	handling = false;
+}
+
+//---------------------------------------------------------------------------
+//イメージビューアのファイル情報を取得/設定
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetImgInfListBox(file_rec *fp)
 {
@@ -34086,7 +34139,7 @@ void __fastcall TNyanFiForm::SetImgInfListBox(file_rec *fp)
 }
 
 //---------------------------------------------------------------------------
-//ビュアーをクリア
+//ビューアをクリア
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ClearViewImage()
 {
@@ -34180,7 +34233,7 @@ void __fastcall TNyanFiForm::UpdateLoupe()
 }
 
 //---------------------------------------------------------------------------
-//イメージビュアーでのコマンド処理
+//イメージビューアでのコマンド処理
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::ExeCommandI(UnicodeString cmd, UnicodeString prm)
 {
@@ -34200,7 +34253,7 @@ bool __fastcall TNyanFiForm::ExeCommandI(UnicodeString cmd, UnicodeString prm)
 	InhCmdHistory = true;
 	try {
 		MsgHint->ReleaseHandle();
-		//イメージビュアー固有のコマンド
+		//イメージビューア固有のコマンド
 		bool handled = false;
 		for (int i=0; i<ActionList1->ActionCount && !handled; i++) {
 			TAction *ap = (TAction*)ActionList1->Actions[i];
@@ -34233,10 +34286,13 @@ bool __fastcall TNyanFiForm::ExeCommandI(UnicodeString cmd, UnicodeString prm)
 }
 
 //---------------------------------------------------------------------------
-//イメージビューアーを閉じる
+//イメージビューアを閉じる
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::CloseIActionExecute(TObject *Sender)
 {
+	InhThumbGrid++;
+	Application->ProcessMessages();
+
 	ThumbnailThread->ReqClear = true;
 	if (rqThumbnail) ThumbnailGrid->Visible = true;
 
@@ -34270,11 +34326,7 @@ void __fastcall TNyanFiForm::CloseIActionExecute(TObject *Sender)
 	}
 	clear_FileList(ViewFileList);
 
-	//インデックスエラーの回避
-	TStringGrid *gp = ThumbnailGrid;
-	InhDrawImg++; {
-		gp->Col = 0; gp->Row = 0; gp->Repaint();
-	} InhDrawImg--;
+	TempTopThumbnailGrid(true);		//インデックスエラーの回避
 
 	SetScrMode(SCMD_FLIST, CurListTag);
 	if (ViewFromArc) RecoverFileList(CurListTag);
@@ -34283,7 +34335,9 @@ void __fastcall TNyanFiForm::CloseIActionExecute(TObject *Sender)
 	isViewIcon = isViewAGif = false;
 	ViewFromArc = false;
 
-	//イベント: イメージビュアーを閉じた直後
+	InhThumbGrid--;
+
+	//イベント: イメージビューアを閉じた直後
 	ExeEventCommand(OnIvClosed);
 }
 
@@ -34347,7 +34401,23 @@ void __fastcall TNyanFiForm::ColorPickerActionExecute(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//イメージビュアーから画像ファイルを削除
+//ThumbnailGrid を一時的に先頭に
+// インデックスエラーを回避、画像は表示させない
+//---------------------------------------------------------------------------
+void __fastcall TNyanFiForm::TempTopThumbnailGrid(
+	bool sw_repaint)	//	(default = false)
+{
+	InhThumbGrid++;
+	InhDrawImg++;
+	ThumbnailGrid->Col = 0;
+	ThumbnailGrid->Row = 0;
+	if (sw_repaint) ThumbnailGrid->Repaint();
+	InhDrawImg--;
+	InhThumbGrid--;
+}
+
+//---------------------------------------------------------------------------
+//イメージビューアから画像ファイルを削除
 //---------------------------------------------------------------------------
 bool __fastcall TNyanFiForm::DeleteICore(int idx)
 {
@@ -34393,7 +34463,7 @@ void __fastcall TNyanFiForm::DeleteIActionExecute(TObject *Sender)
 			//選択画像
 			if (sel_cnt>0) {
 				if (msgbox_Sure(_T("選択ファイルをワークリストから外しますか?"), SureDelete)) {
-					gp->Col = 0; gp->Row = 0;
+					TempTopThumbnailGrid();
 					int i = 0;
 					while (i<ViewFileList->Count) {
 						file_rec *vfp = (file_rec*)ViewFileList->Objects[i];
@@ -34416,7 +34486,7 @@ void __fastcall TNyanFiForm::DeleteIActionExecute(TObject *Sender)
 				if (msgbox_Sure(_T("このファイルをワークリストから外しますか?"), SureDelete)) {
 					int w_idx = WorkList->IndexOf(ViewFileList->Strings[v_idx]);
 					if (v_idx!=-1) {
-						gp->Col = 0; gp->Row = 0;
+						TempTopThumbnailGrid();
 						del_FileListItem(WorkList,		w_idx);
 						del_FileListItem(ViewFileList,	v_idx);
 					}
@@ -34432,7 +34502,7 @@ void __fastcall TNyanFiForm::DeleteIActionExecute(TObject *Sender)
 			if (sel_cnt>0) {
 				if (msgbox_Sure(LoadUsrMsg(USTR_DeleteQ, _T("選択ファイル")), SureDelete)) {
 					StartLog(LoadUsrMsg(USTR_BeginDelete, CurPath[CurListTag]));
-					gp->Col = 0; gp->Row = 0;
+					TempTopThumbnailGrid();
 					int i = 0;
 					while (i<ViewFileList->Count) {
 						if (((file_rec*)ViewFileList->Objects[i])->selected) {
@@ -34447,7 +34517,7 @@ void __fastcall TNyanFiForm::DeleteIActionExecute(TObject *Sender)
 				if (v_idx==-1) Abort();
 				if (msgbox_Sure(LoadUsrMsg(USTR_DeleteQ, _T("このファイル")), SureDelete)) {
 					StartLog(LoadUsrMsg(USTR_BeginDelete, CurPath[CurListTag]));
-					gp->Col = 0; gp->Row = 0;
+					TempTopThumbnailGrid();
 					if (!DeleteICore(v_idx)) UserAbort(USTR_FaildDelete);
 				}
 			}
@@ -34457,7 +34527,7 @@ void __fastcall TNyanFiForm::DeleteIActionExecute(TObject *Sender)
 		//カーソル位置
 		if (ViewFileList->Count>0) {
 			if (v_idx>=ViewFileList->Count) v_idx = std::max(ViewFileList->Count - 1, 0);
-			set_GridIndex(gp, v_idx, ViewFileList->Count);
+			SetThumbnailIndex(v_idx, ViewFileList->Count);
 			//全面表示の場合、不要になった行を減らす
 			if (ThumbExtended) {
 				int rn = ViewFileList->Count/gp->ColCount + ((ViewFileList->Count%gp->ColCount>0)? 1 : 0);
@@ -34482,10 +34552,9 @@ void __fastcall TNyanFiForm::DeleteIActionExecute(TObject *Sender)
 		}
 		else {
 			//すべて削除された
-			InhDrawImg++; {
-				gp->Col = 0; gp->Row = 0; gp->Repaint();
-				gp->ColCount = 1;	gp->RowCount = 1;
-			} InhDrawImg--;
+			TempTopThumbnailGrid(true);
+			gp->ColCount = 1;
+			gp->RowCount = 1;
 			ImgViewThread->AddRequest(_T("CLEAR"));
 		}
 	}
@@ -34631,7 +34700,7 @@ void __fastcall TNyanFiForm::JumpIndexActionExecute(TObject *Sender)
 			idx = std::clamp(idx - 1, 0, max_idx);
 		}
 
-		set_GridIndex(ThumbnailGrid, idx, ViewFileList->Count);
+		SetThumbnailIndex(idx, ViewFileList->Count);
 	}
 	catch (EAbort &e) {
 		SetActionAbort(e.Message);
@@ -34748,10 +34817,13 @@ void __fastcall TNyanFiForm::NextPrevFileICore(bool is_next)
 		}
 		else {
 			isLoopHint = false;
-			if (new_idx==-1)
+			if (new_idx!=-1) {
+				if (!OpenImgViewer(new_idx)) Abort();
+			}
+			else {
 				ImgViewThread->AddRequest(_T("REDRAW"));
-			else if (!OpenImgViewer(new_idx))
-				Abort();
+			}
+
 		}
 	}
 	catch (EAbort &e) {
@@ -34786,7 +34858,7 @@ void __fastcall TNyanFiForm::NextPageActionExecute(TObject *Sender)
 		TStringGrid *gp = ThumbnailGrid;
 		idx += ThumbExtended ? gp->ColCount
 							 : (ThumbnailPos<2)? gp->VisibleColCount : gp->VisibleRowCount;
-		set_GridIndex(gp, idx, ViewFileList->Count);
+		SetThumbnailIndex(idx, ViewFileList->Count);
 		if (!OpenImgViewer(get_GridIndex(gp, ViewFileList->Count))) Abort();
 		if (HintTopEndImg && is_end) {
 			ShowMessageHint(_T("最後のページ"), col_bgHint, BeepTopEndImg, false, true);
@@ -34824,7 +34896,8 @@ void __fastcall TNyanFiForm::PageBindActionUpdate(TObject *Sender)
 void __fastcall TNyanFiForm::PageUpIActionExecute(TObject *Sender)
 {
 	TStringGrid *gp = ThumbnailGrid;
-	set_GridIndex(gp, GetCurIndex() - gp->VisibleRowCount * gp->VisibleColCount, ViewFileList->Count);
+	SetThumbnailIndex(GetCurIndex() - gp->VisibleRowCount * gp->VisibleColCount, ViewFileList->Count);
+	if (!OpenImgViewer(GetCurIndex())) SetActionAbort();
 }
 //---------------------------------------------------------------------------
 //サムネイル全面表示で1ページ下に移動
@@ -34832,7 +34905,8 @@ void __fastcall TNyanFiForm::PageUpIActionExecute(TObject *Sender)
 void __fastcall TNyanFiForm::PageDownIActionExecute(TObject *Sender)
 {
 	TStringGrid *gp = ThumbnailGrid;
-	set_GridIndex(gp, GetCurIndex() + gp->VisibleRowCount * gp->VisibleColCount, ViewFileList->Count);
+	SetThumbnailIndex(GetCurIndex() + gp->VisibleRowCount * gp->VisibleColCount, ViewFileList->Count);
+	if (!OpenImgViewer(GetCurIndex())) SetActionAbort();
 }
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::PageIxActionUpdate(TObject *Sender)
@@ -34855,7 +34929,7 @@ void __fastcall TNyanFiForm::PrevPageActionExecute(TObject *Sender)
 		TStringGrid *gp = ThumbnailGrid;
 		idx -= ThumbExtended ? gp->ColCount
 							 : (ThumbnailPos<2)? gp->VisibleColCount : gp->VisibleRowCount;
-		set_GridIndex(gp, idx, ViewFileList->Count);
+		SetThumbnailIndex(idx, ViewFileList->Count);
 		if (!OpenImgViewer(get_GridIndex(gp, ViewFileList->Count))) Abort();
 		if (HintTopEndImg && is_top) {
 			ShowMessageHint(_T("最初のページ"), col_bgHint, BeepTopEndImg, false, true);
@@ -34967,7 +35041,7 @@ void __fastcall TNyanFiForm::SetFullScreen(
 		else
 			SetupThumbnail(idx);
 
-		//イベント: イメージビュアーで全画面表示にした時
+		//イベント: イメージビューアで全画面表示にした時
 		ExeEventCommand(OnFullScr);
 	}
 	//通常表示へ
@@ -34990,7 +35064,7 @@ void __fastcall TNyanFiForm::SetFullScreen(
 		ThumbnailGrid->Visible = nrmThumbnail;
 		SetupThumbnail(idx);
 
-		//イベント: イメージビュアーで通常表示に戻った時
+		//イベント: イメージビューアで通常表示に戻った時
 		ExeEventCommand(OnNormScr);
 	}
 
@@ -35065,7 +35139,7 @@ void __fastcall TNyanFiForm::SortDlgIActionExecute(TObject *Sender)
 	//ソート
 	if (ok) {
 		SortList(ViewFileList);
-		set_GridIndex(ThumbnailGrid, ViewFileList->IndexOf(cur_fnam), ViewFileList->Count);
+		SetThumbnailIndex(ViewFileList->IndexOf(cur_fnam), ViewFileList->Count);
 	}
 }
 
@@ -35119,7 +35193,7 @@ void __fastcall TNyanFiForm::SeekBarChange(TObject *Sender)
 		}
 	}
 	InhSeekBar--;
-	set_GridIndex(ThumbnailGrid, idx, ViewFileList->Count);
+	SetThumbnailIndex(idx, ViewFileList->Count);
 }
 
 //---------------------------------------------------------------------------
@@ -35320,7 +35394,7 @@ void __fastcall TNyanFiForm::SimilarImageActionExecute(TObject *Sender)
 			if (is_CB)
 				TopFileAction->Execute();
 			else
-				set_GridIndex(ThumbnailGrid, ViewFileList->IndexOf(ViewFileName), ViewFileList->Count);
+				SetThumbnailIndex(ViewFileList->IndexOf(ViewFileName), ViewFileList->Count);
 		}
 	}
 	catch (EAbort &e) {
@@ -35387,7 +35461,8 @@ void __fastcall TNyanFiForm::ThumbnailExActionExecute(TObject *Sender)
 	SetToggleAction(ThumbExtended);
 
 	ImgScrollPanel->Visible = !ThumbExtended;
-
+	TempTopThumbnailGrid();
+	ClearViewImage();
 	LoupeForm->DrawImage();
 
 	int idx = ViewFileList->IndexOf(ViewFileName);
@@ -35405,7 +35480,7 @@ void __fastcall TNyanFiForm::ThumbnailExActionUpdate(TObject *Sender)
 {
 	TAction *ap = (TAction*)Sender;
 	ap->Visible = ScrMode==SCMD_IVIEW;
-	ap->Enabled = ap->Visible && ThumbnailGrid->Visible;
+	ap->Enabled = ap->Visible && ThumbnailGrid->Visible && ImgViewThread->IsReady();;
 	ap->Checked = ThumbExtended;
 }
 
@@ -35449,15 +35524,11 @@ void __fastcall TNyanFiForm::WarnHighlightActionUpdate(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//イメージビュアーにワークリストを表示/カレントに戻す
+//イメージビューアにワークリストを表示/カレントに戻す
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::WorkListIActionExecute(TObject *Sender)
 {
-	//インデックスエラーの回避
-	InhDrawImg++; {
-		TStringGrid *gp = ThumbnailGrid;
-		gp->Col = 0; gp->Row = 0; gp->Repaint();
-	} InhDrawImg--;
+	TempTopThumbnailGrid(true);	//インデックスエラーの回避
 
 	isViewWork = !isViewWork;
 	SetViewFileList(true, true);
@@ -35529,14 +35600,19 @@ void __fastcall TNyanFiForm::ZoomIActionUpdate(TObject *Sender)
 //サムネイル
 //===========================================================================
 //---------------------------------------------------------------------------
-//イメージビュアーのリストを設定/サムネイル作成要求
+//イメージビューアのリストを設定/サムネイル作成要求
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::SetViewFileList(
 	bool clr_thumb,		//リストをクリア	(default = true)
 	bool draw_img)		//画像の描画		(default = false)
 {
+	static bool handling = false;
+
+	if (handling) return;
+	handling = true;
+
 	//---------------------------------------
-	//イメージビュアー用ファイルリストを作成
+	//イメージビューア用ファイルリストを作成
 	//---------------------------------------
 	//直前の選択状態を取得
 	std::unique_ptr<TStringList> sel_lst(new TStringList());
@@ -35585,7 +35661,7 @@ void __fastcall TNyanFiForm::SetViewFileList(
 	try {
 		VListMaking = true;
 		for (int i=0; i<lst->Count; i++) {
-			if (ScrMode!=SCMD_IVIEW) Abort();	//途中でビュアーが閉じられた
+			if (ScrMode!=SCMD_IVIEW) Abort();	//途中でビューアが閉じられた
 			file_rec *fp = (file_rec*)lst->Objects[i];
 			if (fp->is_dir || contains_Slash(fp->f_name) || fp->f_attr==faInvalid)	continue;
 			if (test_FileExt(fp->f_ext, FExtNoIView))		continue;
@@ -35610,6 +35686,7 @@ void __fastcall TNyanFiForm::SetViewFileList(
 	catch (EAbort &e) {
 		VListMaking = false;
 		ThumbnailThread->ReqClear = true;
+		handling = false;
 		return;
 	}
 
@@ -35661,36 +35738,35 @@ void __fastcall TNyanFiForm::SetViewFileList(
 	//サムネイル初期化
 	//---------------------------------------
 	if (clr_thumb) ThumbnailThread->ReqClear = true;
-	if (!gp->Visible) return;
+	if (gp->Visible) {
+		SetThumbnailIndex(idx, ViewFileList->Count, true);
+		//サムネイルリスト作成要求
+		if (ThumbnailThread->IsEmpty && ViewFileList->Count>0) {
+			while (ThumbnailThread->ReqClear) { Application->ProcessMessages();  Sleep(1); }
 
-	set_GridIndex(gp, idx, ViewFileList->Count, true);
-
-	//---------------------------------------
-	//サムネイルリスト作成要求
-	//---------------------------------------
-	if (ThumbnailThread->IsEmpty && ViewFileList->Count>0) {
-		while (ThumbnailThread->ReqClear) { Application->ProcessMessages();  Sleep(1); }
-
-		//サムネイルリスト登録
-		for (int i=0; i<ViewFileList->Count; i++) {
-			Graphics::TBitmap *bp = new Graphics::TBitmap();
-			ThumbnailThread->ThumbnailList->AddObject(ViewFileList->Strings[i], (TObject*)bp);
-		}
-
-		//サムネイル作成開始
-		if (ViewFileList->Count>0) {
-			gp->Invalidate();
-			if (idx==-1) idx = 0;
-			if (!has_vir || !NotThumbIfArc) {
-				ThumbnailThread->StartIndex = idx;
-				ThumbnailThread->ReqStart	= true;
+			//サムネイルリスト登録
+			for (int i=0; i<ViewFileList->Count; i++) {
+				Graphics::TBitmap *bp = new Graphics::TBitmap();
+				ThumbnailThread->ThumbnailList->AddObject(ViewFileList->Strings[i], (TObject*)bp);
 			}
-			else {
-				ThumbnailThread->MakeIndex	= idx;
-				ThumbnailThread->ReqMake	= true;
+
+			//サムネイル作成開始
+			if (ViewFileList->Count>0) {
+				gp->Invalidate();
+				if (idx==-1) idx = 0;
+				if (!has_vir || !NotThumbIfArc) {
+					ThumbnailThread->StartIndex = idx;
+					ThumbnailThread->ReqStart	= true;
+				}
+				else {
+					ThumbnailThread->MakeIndex	= idx;
+					ThumbnailThread->ReqMake	= true;
+				}
 			}
 		}
 	}
+
+	handling = false;
 }
 
 //---------------------------------------------------------------------------
@@ -35934,7 +36010,7 @@ void __fastcall TNyanFiForm::SidePanelUnDock(TObject *Sender, TControl *Client,
 }
 
 //---------------------------------------------------------------------------
-//イメージビュアー情報ヘッダの描画
+//イメージビューア情報ヘッダの描画
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::ImgSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect)
 {
@@ -36885,7 +36961,7 @@ void __fastcall TNyanFiForm::ShowNyanFiClick(TObject *Sender)
 }
 
 //---------------------------------------------------------------------------
-//テキストビュアー情報ヘッダの描画
+//テキストビューア情報ヘッダの描画
 //---------------------------------------------------------------------------
 void __fastcall TNyanFiForm::TxtSttHeaderDrawPanel(TStatusBar *StatusBar, TStatusPanel *Panel, const TRect &Rect)
 {

@@ -247,7 +247,7 @@ void __fastcall TFuncListDlg::InitializeList(int mode)
 //一覧の表示更新
 //---------------------------------------------------------------------------
 void __fastcall TFuncListDlg::UpdateList(
-	bool link)	//ビュアー行を項目に連動 (default = false)
+	bool link)	//ビューア行を項目に連動 (default = false)
 {
 	std::unique_ptr<TStringList> flst(new TStringList());
 	flst->Assign((ListMode==0)? FunctionList : ((ListMode==1)? UserDefList : MarkLineList));

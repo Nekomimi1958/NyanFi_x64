@@ -1676,7 +1676,7 @@ object OptionDlg: TOptionDlg
         Top = 287
         Width = 434
         Height = 234
-        Caption = #12452#12513#12540#12472#12499#12517#12450#12540
+        Caption = #12452#12513#12540#12472#12499#12517#12540#12450
         TabOrder = 2
         DesignSize = (
           434
@@ -1813,7 +1813,7 @@ object OptionDlg: TOptionDlg
         Top = 10
         Width = 434
         Height = 267
-        Caption = #12486#12461#12473#12488#12499#12517#12450#12540
+        Caption = #12486#12461#12473#12488#12499#12517#12540#12450
         TabOrder = 1
         DesignSize = (
           434
@@ -3363,7 +3363,7 @@ object OptionDlg: TOptionDlg
     end
     object TxtViewerSheet: TTabSheet
       HelpContext = 11
-      Caption = #12486#12461#12473#12488#12499#12517#12450#12540
+      Caption = #12486#12461#12473#12488#12499#12517#12540#12450
       ImageIndex = -1
       DesignSize = (
         906
@@ -3573,7 +3573,7 @@ object OptionDlg: TOptionDlg
         Width = 429
         Height = 76
         Anchors = [akLeft, akTop, akRight]
-        Caption = #22806#37096#12499#12517#12450#12540
+        Caption = #22806#37096#12499#12517#12540#12450
         TabOrder = 30
         object ExtTxViewerEdit: TEdit
           Left = 10
@@ -3932,7 +3932,7 @@ object OptionDlg: TOptionDlg
     end
     object ImgViewerSheet: TTabSheet
       HelpContext = 20
-      Caption = #12452#12513#12540#12472#12499#12517#12450#12540
+      Caption = #12452#12513#12540#12472#12499#12517#12540#12450
       ImageIndex = -1
       DesignSize = (
         906
@@ -4591,7 +4591,7 @@ object OptionDlg: TOptionDlg
           Hint = '$F '#12501#12449#12452#12523#21517'/  $L '#34892#30058#21495
           EditLabel.Width = 232
           EditLabel.Height = 23
-          EditLabel.Caption = #12497#12521#12513#12540#12479' (GREP'#12420#12499#12517#12450#12540#12391#12398#12479#12464#12472#12515#12531#12503#29992')'
+          EditLabel.Caption = #12497#12521#12513#12540#12479' (GREP'#12420#12499#12517#12540#12450#12391#12398#12479#12464#12472#12515#12531#12503#29992')'
           LabelPosition = lpLeft
           TabOrder = 2
           Text = ''
@@ -4627,8 +4627,8 @@ object OptionDlg: TOptionDlg
         Tabs.Strings = (
           #12501#12449#12452#12521#12540
           'INC.'#12469#12540#12481
-          #12486#12461#12473#12488#12499#12517#12450#12540
-          #12452#12513#12540#12472#12499#12517#12450#12540
+          #12486#12461#12473#12488#12499#12517#12540#12450
+          #12452#12513#12540#12472#12499#12517#12540#12450
           #12525#12464#12454#12451#12531#12489#12454)
         TabIndex = 0
         TabWidth = 120

@@ -364,7 +364,7 @@ object EditHistoryDlg: TEditHistoryDlg
       OnUpdate = UpdateGitInfActionUpdate
     end
     object GitViewerAction: TAction
-      Caption = 'Git'#12499#12517#12450#12540#12434#38283#12367'(&V)'
+      Caption = 'Git'#12499#12517#12540#12450#12434#38283#12367'(&V)'
       OnExecute = GitViewerActionExecute
       OnUpdate = ShowFileInfoActionUpdate
     end

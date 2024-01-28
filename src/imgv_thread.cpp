@@ -105,7 +105,7 @@ void __fastcall TImgViewThread::ClearImage()
 {
 	TImage *v_img = NULL;
 
-	//イメージビュアー
+	//イメージビューア
 	if (NyanFiForm->ImgViewPanel->Visible) {
 		v_img = NyanFiForm->ViewerImage;
 	}
@@ -146,7 +146,7 @@ void __fastcall TImgViewThread::DrawImage()
 	TImage *v_img	= NULL;
 	TPanel *v_panel = NULL;
 
-	//イメージビュアー
+	//イメージビューア
 	if (NyanFiForm->ImgViewPanel->Visible) {
 		v_img	= NyanFiForm->ViewerImage;
 		v_panel = NyanFiForm->ImgScrollPanel;
@@ -251,7 +251,7 @@ void __fastcall TImgViewThread::DrawImage()
 	//描画
 	v_img->Center = true;
 
-	//イメージビュアー
+	//イメージビューア
 	if (is_viewer) {
 		TControlScrollBar *hbar = NyanFiForm->ImgScrollBox->HorzScrollBar;
 		TControlScrollBar *vbar = NyanFiForm->ImgScrollBox->VertScrollBar;
@@ -338,7 +338,7 @@ void __fastcall TImgViewThread::DrawMessage()
 		}
 	}
 	else {
-		//イメージビュアー
+		//イメージビューア
 		if (NyanFiForm->ImgViewPanel->Visible) {
 			if (ShowSttBar) {
 				NyanFiForm->StatusBar1->Panels->Items[0]->Text = MsgStr;
